@@ -58,10 +58,10 @@ skeptic and volunteer Claude reviewers via the CLI:
 
 * 6 consensus dips, 6 passed vetting, one of them flagged `off_ephemeris`.
 * Five of them lie on the published pi Men c ephemeris. All five predicted epochs in the
-  25-day window are recovered, with a mean timing offset of +8 minutes against the
-  NASA Exoplanet Archive value. Depth is 0.83 and duration 0.68 of the published values
+  25-day window are recovered, with a mean timing offset of -8 minutes against the
+  NASA Exoplanet Archive value. Depth is 0.91 and duration 0.62 of the published values
   (see [docs/results/pi_men_validation.md](docs/results/pi_men_validation.md)).
-* The sixth passed event (BTJD 1348.9, 0.87 h, SNR 7.4) does not fit the ephemeris and
+* The sixth passed event (BTJD 1348.9, 0.87 h, SNR 9.5) does not fit the ephemeris and
   is a likely false positive. It is kept and flagged, not hidden.
 
 **What Claude did in this run, reported as found:**
@@ -80,6 +80,28 @@ Injection-recovery benchmark for the deterministic panel:
 Claude reviewers are not in the benchmark. Each injected subject would need its own CLI
 call, so Claude is calibrated separately on a small sample.
 
+## Continuous discovery
+
+`exoplan discover` runs one batch of TESS targets. It rotates through the TOI host list
+so coverage advances each day, reviews the two latest sectors of each target, and keeps
+every new dip in a deduplicated catalogue. A dip is `known_toi` when it matches a
+published TOI period, and `new_candidate` otherwise.
+
+- [`.github/workflows/discover.yml`](.github/workflows/discover.yml) runs a batch every six hours
+  on GitHub Actions, commits the catalogue, and deploys the site. Claude's API reviewer
+  runs when the `ANTHROPIC_API_KEY` secret is set.
+- [`scripts/improve.py`](scripts/improve.py) sweeps panel thresholds on injection benchmarks.
+  It promotes a setting only if it wins on a held-out seed. Every trial is in
+  [docs/leaderboard.md](docs/leaderboard.md), including losers.
+
+**What this can and cannot claim.** Every entry is a candidate. A detection here means the
+pipeline saw a vetted dip that matches no published ephemeris. It does not mean a planet has
+been found. Confirmation needs radial velocities, ground-based photometry, or the
+community's TESS follow-up. The pipeline also has no centroid or pixel check, so blended
+eclipsing binaries can survive vetting. The claim this project can defend is a reproducible,
+calibrated search with open provenance. It is not a claim of new planets or of beating
+published pipelines.
+
 ## Honest limits
 
 * **Claude's panel is calibrated on a small sample only.** The full benchmark needs many
@@ -92,6 +114,7 @@ call, so Claude is calibrated separately on a small sample.
 * **Vetting uses only light curves.** There is no centroid or pixel-level check, so
   blended eclipsing binaries can pass.
 * **Edge events are the weak spot** for both the statistics and the reviewers.
+* **Discovery candidates are unconfirmed.** Nothing on the discovery feed is a confirmed planet.
 
 ## Repository layout
 

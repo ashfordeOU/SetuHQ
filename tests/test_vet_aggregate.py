@@ -129,3 +129,15 @@ def test_off_ephemeris_flag_does_not_change_pass_result(transit_subject):
     flagged = _vet(event, subject, periodic)
     assert "off_ephemeris" in flagged.flags
     assert flagged.passed == baseline.passed
+
+
+def test_vet_flags_large_eclipsing_binary_mismatch_at_half_period(rng):
+    subject = synthetic_subject(rng, subject_id="eb-half", white_ppm=150.0, red_ppm=0.0)
+    periodic = PeriodicSignal(
+        period=4.0, t0=2.075, duration=0.15, depth=0.0058, snr=40.0, n_transits=3,
+        odd_depth=0.010, odd_err=1e-4, even_depth=0.0015, even_err=1e-4,
+        secondary_depth=0.0, secondary_err=1e-4,
+    )
+    result = vet_event(2.0, 2.15, subject, periodic)
+    assert "odd_even_mismatch" in result.flags
+    assert not result.passed

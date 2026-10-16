@@ -66,7 +66,11 @@ def vet_event(
 
     if periodic is not None:
         odd_even_sigma = np.hypot(periodic.odd_err, periodic.even_err)
-        both_present = min(periodic.odd_depth, periodic.even_depth) >= 0.5 * periodic.depth
+        # Both parities must show a real dip, else one lone transit fakes a mismatch.
+        both_present = min(
+            periodic.odd_depth / periodic.odd_err if periodic.odd_err > 0 else 0.0,
+            periodic.even_depth / periodic.even_err if periodic.even_err > 0 else 0.0,
+        ) >= 5.0
         if (
             both_present
             and odd_even_sigma > 0

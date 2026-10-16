@@ -103,6 +103,26 @@ def cmd_report(args) -> int:
     return 0
 
 
+def cmd_discover(args) -> int:
+    from exoplan.discover import run_discovery
+    from exoplan.report import build_discovery_site
+
+    log = run_discovery(
+        args.config,
+        args.catalog,
+        batch_size=args.batch_size,
+        time_budget_s=args.time_budget_min * 60.0,
+        work_dir=args.work_dir,
+        cache_root=args.cache,
+    )
+    site = build_discovery_site(args.catalog, args.site)
+    print(f"targets reviewed this run: {len(log['targets'])}, new candidates: {log['new']}, known: {log['known']}")
+    for error in log["errors"]:
+        print(f"error: {error}")
+    print(f"catalogue {args.catalog}, site {site}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="exoplan", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -137,6 +157,16 @@ def build_parser() -> argparse.ArgumentParser:
     bench.add_argument("--image-dir")
     bench.add_argument("--cache", default="cache")
     bench.set_defaults(func=cmd_benchmark)
+    discover = sub.add_parser("discover", help="run one scheduled discovery batch and update the catalogue")
+    discover.add_argument("config")
+    discover.add_argument("--catalog", default="docs/discoveries/catalog.json")
+    discover.add_argument("--site", default="site/discoveries")
+    discover.add_argument("--batch-size", type=int, default=20)
+    discover.add_argument("--time-budget-min", type=float, default=270.0)
+    discover.add_argument("--work-dir", default="runs/discovery")
+    discover.add_argument("--cache", default="cache")
+    discover.set_defaults(func=cmd_discover)
+
     report = sub.add_parser("report", help="build a static HTML report site from a run directory")
     report.add_argument("run_dir")
     report.add_argument("--out", required=True, help="site directory to write")

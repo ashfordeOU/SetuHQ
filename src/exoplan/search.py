@@ -145,7 +145,7 @@ def single_event_search(
         scale = mad_sigma(mean_dip)
         if not np.isfinite(scale) or scale <= 0:
             continue
-        contiguous = (time[starts + n - 1] - time[starts]) <= 1.5 * n * cadence
+        contiguous = (time[starts + n - 1] - time[starts]) <= 1.5 * max(n - 1, 1) * cadence
         snr = np.where(contiguous, mean_dip / scale, -np.inf)
         for i in np.flatnonzero(snr >= snr_threshold):
             candidates.append((float(snr[i]), int(i), int(i + n - 1), float(mean_dip[i]), float(duration)))

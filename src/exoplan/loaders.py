@@ -78,6 +78,9 @@ def load_tess(
         quality = _plain(lc.quality)
         good = (quality == 0) & np.isfinite(time) & np.isfinite(flux) & np.isfinite(flux_err)
         sector = int(lc.sector)
+        median = np.median(flux[good])
+        flux = flux / median
+        flux_err = flux_err / median
         curves.append(
             LightCurve(
                 target=target,
@@ -177,8 +180,10 @@ def load_csv(path: str | Path, *, target: str, mission: str = "custom") -> Light
         raise ValueError(f"{path.name}: CSV needs 'time' and 'flux' columns")
     time = np.asarray(table[columns["time"]], dtype=float)
     flux = np.asarray(table[columns["flux"]], dtype=float)
+    median = np.nanmedian(flux)
+    flux = flux / median
     if "flux_err" in columns:
-        flux_err = np.asarray(table[columns["flux_err"]], dtype=float)
+        flux_err = np.asarray(table[columns["flux_err"]], dtype=float) / median
     else:
         flux_err = np.full_like(flux, np.nanstd(flux))
     return LightCurve(

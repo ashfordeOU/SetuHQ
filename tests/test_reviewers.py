@@ -128,3 +128,10 @@ def test_classification_validates_label_and_reason():
         Classification("r", "s", NOISE, reason="aliens")
     with pytest.raises(ValueError):
         Mark(2.0, 1.0)
+
+
+def test_parse_response_skips_prose_braces(transit_subject):
+    subject, _ = transit_subject
+    text = '{"label": "noise", "marks": []} (see {note} for details)'
+    result = parse_response(text, subject, "c")
+    assert result.label == "noise"

@@ -16,6 +16,7 @@ import csv
 import json
 import platform
 import sys
+import warnings
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from importlib import metadata
@@ -28,7 +29,7 @@ from exoplan.lightcurve import LightCurve
 from exoplan.preprocess import bin_lightcurve, clean, detrend
 from exoplan.render import render_subject
 from exoplan.reviewers.base import Classification
-from exoplan.reviewers.claude import PROMPT_VERSION
+from exoplan.reviewers.claude import PROMPT_VERSION, ReviewError
 from exoplan.search import PeriodicSignal, bls_search
 from exoplan.store import Store
 from exoplan.subjects import Subject, split_subjects
@@ -105,7 +106,11 @@ def review_subjects(
         if store is not None:
             store.add_subject(subject, image)
         for reviewer in reviewers:
-            classification = reviewer.review(subject, image)
+            try:
+                classification = reviewer.review(subject, image)
+            except ReviewError as exc:
+                warnings.warn(f"{reviewer.reviewer_id} skipped {subject.subject_id}: {exc}", stacklevel=2)
+                continue
             classifications.append(classification)
             if store is not None:
                 store.add_classification(classification)

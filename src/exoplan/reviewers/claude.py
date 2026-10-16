@@ -57,8 +57,6 @@ OUTPUT_SCHEMA = (
     '"confidence": <number between 0 and 1>, "rationale": "<one or two sentences>"}'
 )
 
-_JSON_PATTERN = re.compile(r"\{.*\}", re.DOTALL)
-
 
 class ReviewError(RuntimeError):
     """Raised when the model's answer cannot be used after all retries."""
@@ -81,15 +79,22 @@ def build_prompt(subject: Subject, persona: str) -> tuple[str, str]:
     return system, user
 
 
+def _first_json_object(text: str) -> dict:
+    """Return the first decodable JSON object with a 'label' key, scanning from each '{' in turn."""
+    decoder = json.JSONDecoder()
+    for start in (m.start() for m in re.finditer(r"\{", text)):
+        try:
+            candidate, _ = decoder.raw_decode(text, start)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(candidate, dict) and "label" in candidate:
+            return candidate
+    raise ReviewError("no JSON object with a label in response")
+
+
 def parse_response(text: str, subject: Subject, reviewer_id: str) -> Classification:
     """Validate the model's JSON and turn it into a :class:`Classification`. Raises :class:`ReviewError` if unusable."""
-    match = _JSON_PATTERN.search(text)
-    if match is None:
-        raise ReviewError("no JSON object in response")
-    try:
-        payload = json.loads(match.group(0))
-    except json.JSONDecodeError as exc:
-        raise ReviewError(f"invalid JSON: {exc}") from exc
+    payload = _first_json_object(text)
 
     label = payload.get("label")
     if label not in LABELS:

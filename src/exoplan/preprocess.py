@@ -104,7 +104,7 @@ def detrend(lc: LightCurve, *, window_days: float = 1.0, mask_sigma: float = 3.0
     """
     trend = running_median(lc.time, lc.flux, window_days)
     relative = lc.flux / trend - 1.0
-    scatter = diff_sigma(lc.flux)
+    scatter = diff_sigma(lc.flux / trend)
     keep = relative > -mask_sigma * scatter if np.isfinite(scatter) and scatter > 0 else np.ones(len(lc), bool)
     if keep.sum() >= 10:
         fit, ok = local_quadratic(lc.time, lc.flux, keep, window_days)

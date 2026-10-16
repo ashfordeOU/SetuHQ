@@ -43,3 +43,16 @@ def test_bls_recovers_period_of_periodic_transits(rng):
 def test_bls_returns_none_for_too_short_subject(rng):
     subject = synthetic_subject(rng, subject_id="short", length_days=0.5)
     assert bls_search(subject) is None
+
+
+def test_single_event_window_cannot_bridge_gap(rng):
+    from exoplan.subjects import Subject
+
+    time = np.arange(0, 13, 10 / 1440)
+    keep = ~((time > 5.00) & (time < 5.03))  # a 40-minute hole inside a 1-hour box
+    t = time[keep]
+    flux = np.ones(t.size) + rng.normal(0, 2e-4, t.size)
+    flux[(t > 5.03) & (t < 5.17)] -= 0.01
+    subject = Subject("gap", "TESS", "BTJD", t, flux, np.full(t.size, 2e-4))
+    for event in single_event_search(subject, durations=(1 / 24,)):
+        assert event.t_end - event.t_start < 1.5 * (1 / 24)

@@ -51,3 +51,17 @@ def test_bin_lightcurve_reduces_points_and_adds_errors_in_quadrature():
     assert len(binned) == 144
     expected = 1e-3 / np.sqrt(10)
     assert abs(np.median(binned.flux_err) - expected) / expected < 0.05
+
+
+def test_detrend_mask_does_not_depend_on_flux_units(rng):
+    time = np.arange(0, 13, 2 / 1440)
+    transit = trapezoid(time, 6.0, 6.15, 0.005)
+    relative = (1 - transit) + rng.normal(0, 1e-4, time.size)
+    depths = []
+    for scale in (1.0, 1e4):
+        lc = LightCurve("t", "TESS", time, relative * scale, np.full(time.size, 1e-4 * scale))
+        out = detrend(lc, window_days=1.0)
+        inside = (time > 6.03) & (time < 6.12)
+        depths.append(1 - np.mean(out.flux[inside]))
+    assert abs(depths[0] - depths[1]) < 2e-4
+    assert depths[0] > 0.0045

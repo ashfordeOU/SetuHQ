@@ -1,0 +1,45 @@
+name: discover
+
+# Runs one discovery batch every six hours, updates the catalogue and republishes the site.
+# Claude's API reviewer runs when the ANTHROPIC_API_KEY repository secret is set.
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: discover
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[tess,claude]"
+      - name: Run one discovery batch
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: exoplan discover configs/discovery.toml --batch-size 20 --time-budget-min 300
+      - name: Commit catalogue
+        run: |
+          git config user.name "exoplan-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add docs/discoveries site/discoveries
+          git diff --cached --quiet || git commit -m "Discovery batch $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - uses: actions/deploy-pages@v4
+        id: deployment
