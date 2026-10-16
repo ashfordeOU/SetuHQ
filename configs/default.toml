@@ -1,0 +1,28 @@
+# Reference configuration. Every key has a default, so this file is also the documentation of the defaults.
+
+[run]
+name = "default"
+subject_days = 13.0        # length of each blind-coded subject
+min_points = 300           # shorter segments are skipped
+bin_minutes = 10.0         # bin width before review
+detrend_window_days = 1.0  # must be several times the longest transit of interest
+
+[search]
+min_period = 0.5           # shortest period for the periodic (BLS) channel, days
+
+[aggregate]
+cluster_gap_days = 0.05    # marks closer than this (in days) are one dip
+min_score = 0.5            # share of the skill-weighted panel that must mark a dip
+min_planet_fraction = 0.5  # share of the skill-weighted panel that must say "potential_planet"
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-typical"
+snr_threshold = 5.0
+miss_probability = 0.10
+seed = 0
+
+[[reviewers]]
+type = "claude_code"      # subscription via the Claude Code CLI; use type = "claude" for the API
+id = "claude-volunteer"
+persona = "volunteer"

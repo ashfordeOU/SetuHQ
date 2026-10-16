@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>exoplan: pi Men (TESS sector 1)</title>
+<style>
+:root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#16a34a;--bad:#dc2626;--warn:#d97706;--radius:14px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}}
+:root[data-theme="dark"]{--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.hero{padding:56px 16px 36px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+h1{font-size:clamp(28px,5vw,42px);margin:0 0 8px;letter-spacing:-.02em}
+h2{font-size:24px;margin:40px 0 12px;letter-spacing:-.01em}
+h3{font-size:17px;margin:0 0 6px}
+p.lead{font-size:18px;max-width:760px;margin:0;opacity:.95}
+nav{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:18px;overflow-x:auto;padding-top:12px;padding-bottom:12px}
+nav a{color:var(--muted);text-decoration:none;white-space:nowrap;font-size:14px}
+nav a:hover{color:var(--accent)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.stat{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.stat small{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px}
+.pipeline{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.step{flex:1 1 150px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+.step b{display:block;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+.step span{font-size:14px;color:var(--muted)}
+.arrow{align-self:center;color:var(--muted)}
+.cands{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.cand img{width:100%;border-radius:10px;border:1px solid var(--line);background:#fff}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;margin:2px 4px 2px 0;border:1px solid var(--line);color:var(--muted)}
+.tag.pass{color:var(--good);border-color:var(--good)}
+.tag.fail{color:var(--bad);border-color:var(--bad)}
+.tag.flag{color:var(--warn);border-color:var(--warn)}
+.bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin:8px 0}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
+.kv>div{min-width:0;overflow-wrap:anywhere}
+.grid>*,.cands>*{min-width:0}
+code{overflow-wrap:anywhere}
+.kv div:nth-child(odd){color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.scroll{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:4px 14px}
+.note{font-size:14px;color:var(--muted)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto}
+footer{margin:48px 0 24px;color:var(--muted);font-size:13px}
+@media (max-width:600px){.cands{grid-template-columns:1fr}.step{flex-basis:100%}.arrow{display:none}}
+</style></head>
+<body>
+<header class='hero' id='overview'><div class='wrap'>
+  <h1>exoplan: pi Men (TESS sector 1)</h1>
+  <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p>
+</div></header>
+<nav><div class='wrap'><a href='#overview'>Overview</a><a href='#pipeline'>Pipeline</a><a href='#candidates'>Candidates</a><a href='#panel'>Panel</a><a href='#validation'>Validation</a><a href='#benchmark'>Benchmark</a><a href='#provenance'>Provenance</a></div></nav>
+<main class='wrap'>
+
+<section class='grid' style='margin-top:28px'>
+  <div class='card stat'>1<small>light curves</small></div>
+  <div class='card stat'>2<small>blind-coded subjects</small></div>
+  <div class='card stat'>10<small>independent reviews</small></div>
+  <div class='card stat'>6<small>consensus dips</small></div>
+  <div class='card stat' style='color:var(--good)'>6<small>passed vetting</small></div>
+</section>
+
+<section id='pipeline'><h2>How a run works</h2>
+<div class='pipeline'>
+  <div class='step'><b>1 · Ingest</b><span>TESS SPOC from MAST or CHEOPS FITS, time system kept as delivered</span></div><div class='arrow'>→</div>
+  <div class='step'><b>2 · Clean &amp; detrend</b><span>Spike clip, masked local-quadratic baseline, 10-min bins</span></div><div class='arrow'>→</div>
+  <div class='step'><b>3 · Blind subjects</b><span>13-day segments with opaque IDs. The target name never reaches a reviewer</span></div><div class='arrow'>→</div>
+  <div class='step'><b>4 · Review panel</b><span>Each subject marked and labelled by every reviewer, independently</span></div><div class='arrow'>→</div>
+  <div class='step'><b>5 · Consensus</b><span>Clustered marks, skill-weighted score, panel must say "potential planet"</span></div><div class='arrow'>→</div>
+  <div class='step'><b>6 · Vet</b><span>SNR, duration, edges, odd/even depth, secondary eclipse, ephemeris fit</span></div>
+</div>
+<p class='note'>Thresholds, weights and every input are written to <code>manifest.json</code>, so a result can be rerun exactly.</p>
+</section>
+
+<section id='candidates'><h2>Candidates</h2>
+<p class='note'>Passed candidates are the catalogue. Rejected and flagged events are kept on purpose, so a reader can see what the vetting decided and why.</p>
+<div class='cands'>
+<article class='card cand'>
+  <h3>tess-04b815001aa6-000</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-04b815001aa6.png' alt='Blind-coded subject plot for tess-04b815001aa6-000' loading='lazy'>
+  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1344.332 BTJD</div>
+    <div>Duration</div><div>2.02 h</div>
+    <div>Depth</div><div>204 ppm</div>
+    <div>SNR</div><div>10.5</div>
+    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 5 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>6.262 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-04b815001aa6-001</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-04b815001aa6.png' alt='Blind-coded subject plot for tess-04b815001aa6-001' loading='lazy'>
+  <div class='bar' title='consensus score 0.80'><i style='width:80%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1350.581 BTJD</div>
+    <div>Duration</div><div>2.05 h</div>
+    <div>Depth</div><div>226 ppm</div>
+    <div>SNR</div><div>11.7</div>
+    <div>Panel agreement</div><div>80% of skill-weighted reviewers, 4 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>6.262 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-fa3483ce6f83-002</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-fa3483ce6f83.png' alt='Blind-coded subject plot for tess-fa3483ce6f83-002' loading='lazy'>
+  <div class='bar' title='consensus score 0.60'><i style='width:60%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1338.051 BTJD</div>
+    <div>Duration</div><div>2.15 h</div>
+    <div>Depth</div><div>216 ppm</div>
+    <div>SNR</div><div>13.1</div>
+    <div>Panel agreement</div><div>60% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>60% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>6.273 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-fa3483ce6f83-003</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-fa3483ce6f83.png' alt='Blind-coded subject plot for tess-fa3483ce6f83-003' loading='lazy'>
+  <div class='bar' title='consensus score 0.60'><i style='width:60%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1331.767 BTJD</div>
+    <div>Duration</div><div>2.07 h</div>
+    <div>Depth</div><div>223 ppm</div>
+    <div>SNR</div><div>13.5</div>
+    <div>Panel agreement</div><div>60% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>60% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>6.273 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-fa3483ce6f83-004</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-fa3483ce6f83.png' alt='Blind-coded subject plot for tess-fa3483ce6f83-004' loading='lazy'>
+  <div class='bar' title='consensus score 0.60'><i style='width:60%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1325.499 BTJD</div>
+    <div>Duration</div><div>1.99 h</div>
+    <div>Depth</div><div>219 ppm</div>
+    <div>SNR</div><div>12.8</div>
+    <div>Panel agreement</div><div>60% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>60% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>6.273 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-04b815001aa6-005</h3>
+  <span class='tag pass'>passed vetting</span><span class='tag flag'>off_ephemeris</span>
+  <img src='assets/tess-04b815001aa6.png' alt='Blind-coded subject plot for tess-04b815001aa6-005' loading='lazy'>
+  <div class='bar' title='consensus score 0.60'><i style='width:60%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1348.936 BTJD</div>
+    <div>Duration</div><div>0.87 h</div>
+    <div>Depth</div><div>203 ppm</div>
+    <div>SNR</div><div>7.4</div>
+    <div>Panel agreement</div><div>60% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>n/a</div>
+  </div>
+</article></div>
+</section>
+
+<section id='panel'><h2>Panel decisions</h2>
+<p class='note'>Every reviewer's answer for every blind-coded subject. Disagreement is kept visible, because it is where the consensus is earned.</p>
+<div class='card' style='margin-bottom:14px'><h3>tess-04b815001aa6</h3><div class='scroll'><table><thead><tr><th>reviewer</th><th>label</th><th>marks (BTJD)</th><th>rationale</th></tr></thead><tbody><tr><td>volunteer-sensitive</td><td>potential planet</td><td>1344.251–1344.278, 1344.286–1344.366, 1348.205–1348.674, 1348.923–1348.955, 1350.537–1350.624</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-typical</td><td>potential planet</td><td>1344.248–1344.281, 1344.301–1344.373, 1348.918–1348.947, 1350.558–1350.616</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-cautious</td><td>potential planet</td><td>1344.243–1344.276, 1344.290–1344.363, 1348.917–1348.955, 1350.539–1350.623</td><td class='note'>simulated detector</td></tr><tr><td>claude-volunteer</td><td>potential planet</td><td>1344.260–1344.420, 1350.500–1350.660</td><td class='note'>Two short, sharp dips of about 250 ppm, at roughly BTJD 1344.3 and 1350.55, are separated by about 6.2 days and look similar in depth and duration. Both stand out clearly from the scatter, which makes a periodic transit likely.</td></tr><tr><td>claude-skeptic</td><td>potential planet</td><td>1344.290–1344.470, 1350.430–1350.590</td><td class='note'>Two short, flat-bottomed dips of similar depth (about 250 ppm) and duration, spaced about 6.2 d apart, with no secondary eclipse or V shape. The scatter is higher in the later part of the light curve, so confidence is moderate.</td></tr></tbody></table></div></div><div class='card' style='margin-bottom:14px'><h3>tess-fa3483ce6f83</h3><div class='scroll'><table><thead><tr><th>reviewer</th><th>label</th><th>marks (BTJD)</th><th>rationale</th></tr></thead><tbody><tr><td>volunteer-sensitive</td><td>potential planet</td><td>1325.452–1325.541, 1331.718–1331.822, 1332.197–1332.260, 1338.017–1338.073</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-typical</td><td>potential planet</td><td>1325.458–1325.555, 1331.746–1331.804, 1337.999–1338.098</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-cautious</td><td>potential planet</td><td>1325.463–1325.530, 1331.724–1331.810, 1338.006–1338.095</td><td class='note'>simulated detector</td></tr><tr><td>claude-volunteer</td><td>noise</td><td>none</td><td class='note'>The only drops sit right at the start of the data, just before the gap near 1331.8, and at the end of the data. They are steep, one-sided ramps typical of edge or momentum-dump systematics, not transit-shaped dips with a clear start and end. The rest of the li</td></tr><tr><td>claude-skeptic</td><td>noise</td><td>none</td><td class='note'>The only deep features are sharp downward ramps at the start of the sector (~1325.4), just before a gap and step at ~1331.8, and at the end (~1338.2). They sit at data edges and discontinuities with no flat-bottomed, symmetric transit shape, which points to sy</td></tr></tbody></table></div></div>
+</section>
+
+<section id='validation'><h2>Validation against known planets</h2><p class='note'>Run: runs/tess-pi-men-s1. Vetted candidates: 6. Time span searched: 1325.50 to 1350.58 BTJD.</p>
+<div class='scroll'><table><thead><tr><th>planet</th><th>P (d)</th><th>predicted epochs in span</th><th>recovered</th><th>mean timing offset (min)</th><th>depth ratio (ours/catalogue)</th><th>duration ratio (ours/catalogue)</th></tr></thead><tbody><tr><td>pi Men c</td><td>6.26784</td><td>5</td><td>5</td><td>+9.2</td><td>0.81</td><td>0.70</td></tr></tbody></table></div>
+<p class='note'>Depth is in ppm (catalogue depth is a percentage, converted by x 10^4). Duration is in hours. A ratio near 1 means the detection matches the published transit. Box fits are expected to be somewhat shallower and shorter than published trapezoid fits.</p></section>
+<section id='benchmark'><h2>Injection recovery</h2><p class='note'>No benchmark attached.</p></section>
+
+<section id='provenance'><h2>Provenance</h2>
+<div class='grid'>
+ <div class='card'><h3>Reviewer panel</h3><table><thead><tr><th>id</th><th>kind</th><th>weight</th></tr></thead><tbody><tr><td>volunteer-sensitive</td><td>simulated</td><td>1.000</td></tr><tr><td>volunteer-typical</td><td>simulated</td><td>1.000</td></tr><tr><td>volunteer-cautious</td><td>simulated</td><td>1.000</td></tr><tr><td>claude-volunteer</td><td>claude_code</td><td>1.000</td></tr><tr><td>claude-skeptic</td><td>claude_code</td><td>1.000</td></tr></tbody></table>
+ <p class='note'>Skipped (unavailable here): none</p></div>
+ <div class='card'><h3>Run</h3><div class='kv'>
+   <div>Config</div><div>tess-pi-men-s1</div>
+   <div>Config SHA-256</div><div><code>fd677ce6cc4ece78…</code></div>
+   <div>Created</div><div>2026-10-16T22:55:07+00:00</div>
+   <div>exoplan</div><div>0.1.0</div>
+   <div>Packages</div><div class='note'>numpy 2.5.4 · scipy 1.18.1 · astropy 8.0.2 · matplotlib 3.11.2 · lightkurve 2.6.0 · anthropic 1.15.0</div>
+ </div></div>
+</div>
+<details style='margin-top:14px'><summary>Raw manifest</summary><pre>{
+  &quot;exoplan_version&quot;: &quot;0.1.0&quot;,
+  &quot;created_at&quot;: &quot;2026-10-16T22:55:07+00:00&quot;,
+  &quot;python&quot;: &quot;3.13.16&quot;,
+  &quot;platform&quot;: &quot;Linux-6.18.44-fc-v139-x86_64-with-glibc2.39&quot;,
+  &quot;packages&quot;: {
+    &quot;numpy&quot;: &quot;2.5.4&quot;,
+    &quot;scipy&quot;: &quot;1.18.1&quot;,
+    &quot;astropy&quot;: &quot;8.0.2&quot;,
+    &quot;matplotlib&quot;: &quot;3.11.2&quot;,
+    &quot;lightkurve&quot;: &quot;2.6.0&quot;,
+    &quot;anthropic&quot;: &quot;1.15.0&quot;
+  },
+  &quot;config_name&quot;: &quot;tess-pi-men-s1&quot;,
+  &quot;config_sha256&quot;: &quot;fd677ce6cc4ece7896618730d84ab4208d18dc87fd388108bed6072d7aeb72ad&quot;,
+  &quot;claude_prompt_version&quot;: &quot;2026-10-16.1&quot;,
+  &quot;inputs&quot;: [
+    {
+      &quot;source&quot;: &quot;MAST&quot;,
+      &quot;author&quot;: &quot;SPOC&quot;,
+      &quot;sector&quot;: 1,
+      &quot;exptime_s&quot;: 120,
+      &quot;flux_column&quot;: &quot;pdcsap_flux&quot;,
+      &quot;time_unit&quot;: &quot;BTJD&quot;,
+      &quot;lightkurve_version&quot;: &quot;2.6.0&quot;,
+      &quot;target&quot;: &quot;TIC 261136679&quot;,
+      &quot;mission&quot;: &quot;TESS&quot;
+    }
+  ],
+  &quot;reviewers&quot;: [
+    {
+      &quot;id&quot;: &quot;volunteer-sensitive&quot;,
+      &quot;kind&quot;: &quot;simulated&quot;,
+      &quot;weight&quot;: 1.0
+    },
+    {
+      &quot;id&quot;: &quot;volunteer-typical&quot;,
+      &quot;kind&quot;: &quot;simulated&quot;,
+      &quot;weight&quot;: 1.0
+    },
+    {
+      &quot;id&quot;: &quot;volunteer-cautious&quot;,
+      &quot;kind&quot;: &quot;simulated&quot;,
+      &quot;weight&quot;: 1.0
+    },
+    {
+      &quot;id&quot;: &quot;claude-volunteer&quot;,
+      &quot;kind&quot;: &quot;claude_code&quot;,
+      &quot;weight&quot;: 1.0
+    },
+    {
+      &quot;id&quot;: &quot;claude-skeptic&quot;,
+      &quot;kind&quot;: &quot;claude_code&quot;,
+      &quot;weight&quot;: 1.0
+    }
+  ],
+  &quot;skipped_reviewers&quot;: [],
+  &quot;counts&quot;: {
+    &quot;light_curves&quot;: 1,
+    &quot;subjects&quot;: 2,
+    &quot;classifications&quot;: 10,
+    &quot;consensus_events&quot;: 6,
+    &quot;passed_vetting&quot;: 6
+  }
+}</pre></details>
+</section>
+
+<footer>Generated by exoplan. MIT licensed. Results on synthetic data are not claims about real sky data.</footer>
+</main></body></html>

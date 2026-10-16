@@ -1,0 +1,38 @@
+# Injection-recovery benchmark for the deterministic panel only (no Claude calls).
+# Claude reviewers are costly per subject, so their calibration runs separately with a small n.
+
+[run]
+name = "benchmark-simulated"
+subject_days = 13.0
+min_points = 300
+bin_minutes = 10.0
+detrend_window_days = 1.0
+
+[search]
+min_period = 0.5
+
+[aggregate]
+cluster_gap_days = 0.05
+min_score = 0.5
+min_planet_fraction = 0.5
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-sensitive"
+snr_threshold = 4.5
+miss_probability = 0.05
+seed = 11
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-typical"
+snr_threshold = 5.0
+miss_probability = 0.10
+seed = 12
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-cautious"
+snr_threshold = 5.5
+miss_probability = 0.15
+seed = 13
