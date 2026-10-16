@@ -1,0 +1,95 @@
+{
+  "decision": {
+    "promote": false,
+    "chosen": {
+      "snr_threshold": 5.0,
+      "miss_probability": 0.1
+    },
+    "best_search_setting": {
+      "snr_threshold": 4.0,
+      "miss_probability": 0.05
+    },
+    "best_holdout_score": 0.875,
+    "default_holdout_score": 0.875,
+    "rule": "promote only if the best search setting beats the default on the held-out seed"
+  },
+  "trials": [
+    {
+      "setting": {
+        "snr_threshold": 4.0,
+        "miss_probability": 0.05
+      },
+      "seed": 101,
+      "completeness": 0.9375,
+      "false_positives_per_subject": 0.0,
+      "score": 0.9375,
+      "stage": "search"
+    },
+    {
+      "setting": {
+        "snr_threshold": 4.5,
+        "miss_probability": 0.05
+      },
+      "seed": 101,
+      "completeness": 0.9375,
+      "false_positives_per_subject": 0.0,
+      "score": 0.9375,
+      "stage": "search"
+    },
+    {
+      "setting": {
+        "snr_threshold": 5.0,
+        "miss_probability": 0.1
+      },
+      "seed": 101,
+      "completeness": 0.9167,
+      "false_positives_per_subject": 0.0,
+      "score": 0.9167,
+      "stage": "search"
+    },
+    {
+      "setting": {
+        "snr_threshold": 5.5,
+        "miss_probability": 0.1
+      },
+      "seed": 101,
+      "completeness": 0.9167,
+      "false_positives_per_subject": 0.0,
+      "score": 0.9167,
+      "stage": "search"
+    },
+    {
+      "setting": {
+        "snr_threshold": 6.0,
+        "miss_probability": 0.1
+      },
+      "seed": 101,
+      "completeness": 0.9167,
+      "false_positives_per_subject": 0.0,
+      "score": 0.9167,
+      "stage": "search"
+    },
+    {
+      "setting": {
+        "snr_threshold": 4.0,
+        "miss_probability": 0.05
+      },
+      "seed": 202,
+      "completeness": 0.875,
+      "false_positives_per_subject": 0.0,
+      "score": 0.875,
+      "stage": "holdout"
+    },
+    {
+      "setting": {
+        "snr_threshold": 5.0,
+        "miss_probability": 0.1
+      },
+      "seed": 202,
+      "completeness": 0.875,
+      "false_positives_per_subject": 0.0,
+      "score": 0.875,
+      "stage": "holdout"
+    }
+  ]
+}
