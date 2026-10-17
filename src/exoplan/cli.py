@@ -1,4 +1,4 @@
-"""Command-line interface: ``exoplan run``, ``exoplan benchmark``, ``exoplan calibrate``, ``exoplan app`` and more."""
+"""Command-line interface: ``exoplan run``, ``exoplan benchmark``, ``exoplan calibrate``, ``exoplan app``, ``exoplan plate`` and more."""
 
 from __future__ import annotations
 
@@ -152,6 +152,14 @@ def cmd_app(args) -> int:
     return 0
 
 
+def cmd_plate(args) -> int:
+    from exoplan.plate import build_plate
+
+    path = build_plate(args.run_dir, args.out, title=args.title, catalog_path=args.catalog, star=args.star)
+    print(f"plates written to {path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="exoplan", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -220,6 +228,14 @@ def build_parser() -> argparse.ArgumentParser:
                      help="calibrated reviewer weights JSON shown in the Panel section")
     app.add_argument("--star", help="star name for the Docket's archive cross-match, as in 'exoplan docket'")
     app.set_defaults(func=cmd_app)
+
+    plate = sub.add_parser("plate", help="build the print-ready plates page: one plate per star, with captions")
+    plate.add_argument("run_dir")
+    plate.add_argument("--out", required=True)
+    plate.add_argument("--title", default="exoplan plates")
+    plate.add_argument("--catalog", help="discovery catalogue JSON: its stars get plates and join the river of time")
+    plate.add_argument("--star", help="star name for the archive cross-match, as in 'exoplan docket'")
+    plate.set_defaults(func=cmd_plate)
 
     report = sub.add_parser("report", help="build a static HTML report site from a run directory")
     report.add_argument("run_dir")
