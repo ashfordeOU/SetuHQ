@@ -5,9 +5,14 @@ advances steadily and a rerun on the same day gives the same batch. For each
 target the two most recent sectors are reviewed. A candidate is compared with the
 NASA Exoplanet Archive TOI table:
 
-* ``known_toi``: a TOI on this TIC with a period within tolerance. Not new.
+* ``known_toi``: the dip falls on a predicted transit of a TOI on this TIC
+  (:func:`match_toi`). The matched TOI and the timing offset are stored. Not new.
 * ``new_candidate``: a passed dip that matches no known ephemeris. A candidate, not a
   confirmed planet. Confirmation needs radial velocities or independent photometry.
+
+A dip enters the feed only when it passed vetting, is on its own target's
+periodic signal, is shallower than 5000 ppm, and that periodic signal has at
+least two transits and an empirical false-alarm probability below 0.01.
 
 Candidates flagged ``off_ephemeris`` are excluded, since they are not explained by
 the strong periodic signal of their own target.
@@ -33,7 +38,10 @@ from exoplan.loaders import load_tess
 from exoplan.pipeline import run_pipeline
 
 EPOCH = datetime(2026, 1, 1, tzinfo=timezone.utc)
-PERIOD_TOLERANCE_DAYS = 0.05
+PERIOD_TOLERANCE_DAYS = 0.05  # period-only fallback, for a TOI without a transit midtime
+PERIOD_MATCH_FRACTION = 0.01  # candidate period within 1 percent of P or 2P
+MIN_EPOCH_TOLERANCE_HOURS = 1.0
+BTJD_OFFSET = 2457000.0
 MID_TIME_DEDUPE_DAYS = 0.05
 MAX_FEED_DEPTH_PPM = 5000.0  # deeper dips are almost always binaries, so they stay out of the feed
 MIN_FEED_TRANSITS = 2        # a candidate needs a periodic signal with at least two transits
@@ -41,27 +49,68 @@ MAX_FEED_FAP = 0.01          # and that signal's empirical false-alarm probabili
 
 
 @dataclass
+class Toi:
+    """One TOI's published ephemeris. ``tranmid`` is BJD (TDB); errors are 1 sigma; None when not published."""
+
+    name: str
+    period: float | None = None
+    tranmid: float | None = None
+    period_err: float | None = None
+    tranmid_err: float | None = None
+    duration_hours: float | None = None
+    disposition: str | None = None
+
+
+@dataclass
 class Target:
     tic: int
     toi_periods: list[float] = field(default_factory=list)
     toi_names: list[str] = field(default_factory=list)
+    tois: list[Toi] = field(default_factory=list)
+
+
+def _value(row, key):
+    try:
+        value = row[key]
+    except (KeyError, IndexError):
+        return None
+    if value is None or np.ma.is_masked(value):
+        return None
+    value = getattr(value, "value", value)
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        return None
+    return value if math.isfinite(value) else None
 
 
 def fetch_toi_targets() -> dict[int, Target]:
-    """TOI table as a dict keyed by TIC ID. Each entry lists the known periods of that host."""
+    """TOI table as a dict keyed by TIC ID. Each entry lists the TOIs of that host with their ephemerides."""
     from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive
 
-    table = NasaExoplanetArchive.query_criteria(table="toi", select="toi,tid,pl_orbper,tfopwg_disp")
+    table = NasaExoplanetArchive.query_criteria(
+        table="toi",
+        select="toi,tid,pl_orbper,pl_orbpererr1,pl_tranmid,pl_tranmiderr1,pl_trandurh,tfopwg_disp",
+    )
     targets: dict[int, Target] = {}
     for row in table:
         if row["tid"] is None or np.ma.is_masked(row["tid"]):
             continue
         tic = int(row["tid"])
         target = targets.setdefault(tic, Target(tic))
-        period = row["pl_orbper"]
-        if period is not None and not np.ma.is_masked(period):
-            target.toi_periods.append(float(getattr(period, "value", period)))
-        target.toi_names.append(str(row["toi"]))
+        toi = Toi(
+            name=str(row["toi"]),
+            period=_value(row, "pl_orbper"),
+            tranmid=_value(row, "pl_tranmid"),
+            period_err=_value(row, "pl_orbpererr1"),
+            tranmid_err=_value(row, "pl_tranmiderr1"),
+            duration_hours=_value(row, "pl_trandurh"),
+            disposition=None if np.ma.is_masked(row["tfopwg_disp"]) else str(row["tfopwg_disp"]),
+        )
+        target.tois.append(toi)
+        if toi.period is not None:
+            target.toi_periods.append(toi.period)
+        target.toi_names.append(toi.name)
     return targets
 
 
@@ -76,14 +125,90 @@ def batch_for(targets: dict[int, Target], run_time: datetime, batch_size: int) -
     return [targets[tic] for tic in chosen]
 
 
-def classify_against_toi(candidate: dict, target: Target) -> str:
+def match_toi(candidate: dict, target: Target) -> dict | None:
+    """The TOI whose ephemeris explains this dip, or None.
+
+    ``candidate`` needs ``t_center`` (BTJD, or BJD when ``time_unit`` is not
+    "BTJD"), ``duration_hours`` and ``period_days`` (may be None). For each
+    TOI with a period and a transit midtime, the nearest predicted epoch
+    T0 + n P is found and the offset of the dip's mid-time from it measured.
+    The ephemeris uncertainty propagated to that epoch, sqrt(sT0^2 + (n sP)^2),
+    is added at 3 sigma to each tolerance below. A dip matches when either
+
+    * the offset is within max(1 h, half the dip's duration, half the TOI's
+      published duration): the dip lies inside a predicted transit; or
+    * the dip's BLS period is within 1 percent of P or 2P and the offset is
+      within max(1 h, the dip's duration, the TOI's duration).
+
+    The half-TOI-duration term matters: a box fit can catch only part of a
+    long transit, and its mid-time then sits off the published mid-time
+    (TOI-2669.01 at BTJD 3711.33 is 1.9 h off a 5.7 h transit). A TOI with a
+    period but no midtime matches on period alone (P or 2P within 0.05 d),
+    and the offset is then None. Of several matches the smallest offset wins.
+    """
+    t = candidate.get("t_center")
+    if t is None:
+        return None
+    t_bjd = float(t) + (BTJD_OFFSET if candidate.get("time_unit", "BTJD") == "BTJD" else 0.0)
+    dur_h = float(candidate.get("duration_hours") or 0.0)
     period = candidate.get("period_days")
-    if period is None or not target.toi_periods:
-        return "new_candidate"
-    for known in target.toi_periods:
-        if abs(known - period) <= PERIOD_TOLERANCE_DAYS or abs(known - 2 * period) <= PERIOD_TOLERANCE_DAYS:
-            return "known_toi"
-    return "new_candidate"
+    tois = target.tois or [Toi(name=n, period=p) for n, p in zip(target.toi_names, target.toi_periods)]
+    best = None
+    for toi in tois:
+        if toi.period is None or toi.period <= 0:
+            continue
+        period_ok = period is not None and any(
+            abs(period - k * toi.period) <= PERIOD_MATCH_FRACTION * k * toi.period for k in (1, 2))
+        if toi.tranmid is None:
+            close = period is not None and any(
+                abs(k * toi.period - period) <= PERIOD_TOLERANCE_DAYS for k in (1, 2))
+            if close and best is None:
+                best = {"toi": toi.name, "offset_hours": None, "rule": "period only (no published midtime)"}
+            continue
+        n = round((t_bjd - toi.tranmid) / toi.period)
+        offset_h = (t_bjd - (toi.tranmid + n * toi.period)) * 24.0
+        sigma_h = 24.0 * math.hypot(toi.tranmid_err or 0.0, n * (toi.period_err or 0.0))
+        toi_dur = toi.duration_hours or 0.0
+        in_transit = max(MIN_EPOCH_TOLERANCE_HOURS, 0.5 * dur_h, 0.5 * toi_dur) + 3.0 * sigma_h
+        with_period = max(MIN_EPOCH_TOLERANCE_HOURS, dur_h, toi_dur) + 3.0 * sigma_h
+        rule = None
+        if abs(offset_h) <= in_transit:
+            rule = "mid-time on a predicted transit"
+        elif period_ok and abs(offset_h) <= with_period:
+            rule = "period and mid-time match"
+        if rule and (best is None or best["offset_hours"] is None or abs(offset_h) < abs(best["offset_hours"])):
+            best = {"toi": toi.name, "offset_hours": offset_h, "rule": rule, "epoch": int(n),
+                    "ephemeris_sigma_hours": sigma_h, "disposition": toi.disposition}
+    return best
+
+
+def classify_against_toi(candidate: dict, target: Target) -> str:
+    return "known_toi" if match_toi(candidate, target) else "new_candidate"
+
+
+def toi_fields(candidate: dict, target: Target) -> dict:
+    """Status plus the matched TOI and offset, as stored on a feed entry."""
+    match = match_toi(candidate, target)
+    return {
+        "status": "known_toi" if match else "new_candidate",
+        "toi_match": match["toi"] if match else None,
+        "toi_offset_hours": match["offset_hours"] if match else None,
+        "toi_match_rule": match["rule"] if match else None,
+    }
+
+
+def reclassify_catalog(catalog: dict, targets: dict[int, Target]) -> int:
+    """Re-match every stored entry against the TOI ephemerides. Returns how many statuses changed."""
+    changed = 0
+    for entry in catalog.get("candidates", []):
+        target = targets.get(int(entry["tic"]))
+        if target is None:
+            continue
+        fields = toi_fields(entry, target)
+        if fields["status"] != entry.get("status"):
+            changed += 1
+        entry.update(fields)
+    return changed
 
 
 def admits_fap(fap: float | None) -> bool:
@@ -168,13 +293,11 @@ def run_discovery(
                     "period_days": candidate.period_days,
                     "n_transits": candidate.n_transits,
                     "fap": candidate.fap,
-                    "status": classify_against_toi(
-                        {"period_days": candidate.period_days}, target
-                    ),
                     "candidate_id": candidate.candidate_id,
                     "found": run_time.isoformat(timespec="seconds"),
                     "status_note": "candidate only, not confirmed",
                 }
+                entry.update(toi_fields(entry, target))
                 if is_duplicate(entry, catalog["candidates"]):
                     continue
                 catalog["candidates"].append(entry)
@@ -186,6 +309,7 @@ def run_discovery(
             run_log["errors"].append(f"{label}: {type(exc).__name__}: {exc}")
             run_log.setdefault("tracebacks", []).append(traceback.format_exc(limit=2))
 
+    run_log["reclassified"] = reclassify_catalog(catalog, targets)
     catalog["targets_reviewed"] = catalog.get("targets_reviewed", 0) + len(run_log["targets"])
     catalog["runs"].append(run_log)
     catalog["runs"] = catalog["runs"][-200:]
