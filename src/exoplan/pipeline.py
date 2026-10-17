@@ -35,7 +35,7 @@ from exoplan.reviewers.claude import PROMPT_VERSION, ReviewError
 from exoplan.search import PeriodicSignal, bls_search
 from exoplan.store import Store
 from exoplan.subjects import Subject, split_subjects
-from exoplan.vet import VettingResult, vet_event
+from exoplan.vet import VettingResult, measure_epochs, vet_event
 
 
 @dataclass(frozen=True)
@@ -58,6 +58,13 @@ class Candidate:
     n_transits: int = 0
     metrics: dict = field(default_factory=dict)
     candidate_id: str = ""
+    # BLS ephemeris of the subject's periodic signal, set only when it covers this dip.
+    # Like period_days, these are per subject, not per sector.
+    bls_t0: float | None = None
+    bls_duration_days: float | None = None
+    # Stored per-epoch measurements at each BLS-predicted epoch inside the subject.
+    epochs: tuple = ()
+    secondary_epochs: tuple = ()
 
     @property
     def t_center(self) -> float:
@@ -67,6 +74,8 @@ class Candidate:
         row = asdict(self)
         row["reviewers"] = ";".join(self.reviewers)
         row["flags"] = ";".join(self.flags)
+        row["epochs"] = list(self.epochs)
+        row["secondary_epochs"] = list(self.secondary_epochs)
         row["t_center"] = self.t_center
         row["duration_hours"] = (self.t_end - self.t_start) * 24.0
         return row
@@ -94,14 +103,25 @@ def prepare_subjects(lightcurves: list[LightCurve], config: RunConfig) -> list[S
     return subjects
 
 
-def plot_arrays(subject: Subject, points: int = 480) -> dict:
-    """Downsampled arrays for the dashboard. Bins keep the shape and drop the bulk of the points."""
-    edges = np.linspace(subject.start, subject.end, points + 1)
-    index = np.clip(np.searchsorted(edges, subject.time, side="right") - 1, 0, points - 1)
-    counts = np.bincount(index, minlength=points)
-    keep = counts > 0
-    time = np.bincount(index, weights=subject.time, minlength=points)[keep] / counts[keep]
-    flux = np.bincount(index, weights=subject.flux, minlength=points)[keep] / counts[keep]
+def plot_arrays(subject: Subject, points: int | None = None) -> dict:
+    """Plot arrays for the dashboard and the Docket.
+
+    By default these are the subject's own bins (``bin_minutes`` from the run
+    config), with ``flux_err`` the error of each bin mean that
+    :func:`exoplan.preprocess.bin_lightcurve` propagated from the same bin sums
+    as the flux. Pass ``points`` to re-bin coarser; the error is then propagated
+    the same way, sqrt(sum of squared errors) / n.
+    """
+    if points is None:
+        time, flux, flux_err = subject.time, subject.flux, subject.flux_err
+    else:
+        edges = np.linspace(subject.start, subject.end, points + 1)
+        index = np.clip(np.searchsorted(edges, subject.time, side="right") - 1, 0, points - 1)
+        counts = np.bincount(index, minlength=points)
+        keep = counts > 0
+        time = np.bincount(index, weights=subject.time, minlength=points)[keep] / counts[keep]
+        flux = np.bincount(index, weights=subject.flux, minlength=points)[keep] / counts[keep]
+        flux_err = np.sqrt(np.bincount(index, weights=subject.flux_err**2, minlength=points)[keep]) / counts[keep]
     return {
         "subject_id": subject.subject_id,
         "time_unit": subject.time_unit,
@@ -109,6 +129,7 @@ def plot_arrays(subject: Subject, points: int = 480) -> dict:
         "end": subject.end,
         "time": [round(float(t), 5) for t in time],
         "flux": [round(float(f), 6) for f in flux],
+        "flux_err": [round(float(e), 7) for e in flux_err],
     }
 
 
@@ -163,7 +184,7 @@ def build_candidates(
         result = _vet(event, subject, periodic_cache[event.subject_id])
         periodic = periodic_cache[event.subject_id]
         supported = periodic if periodic is not None and periodic.covers(event.center) else None
-        candidates.append(_to_candidate(event, subject, result, supported.n_transits if supported else 0))
+        candidates.append(_to_candidate(event, subject, result, supported))
     candidates.sort(key=lambda c: (not c.passed, -c.score))
     for index, candidate in enumerate(candidates):
         object.__setattr__(candidate, "candidate_id", f"{candidate.subject_id}-{index:03d}")
@@ -212,7 +233,7 @@ def write_candidates(candidates: list[Candidate], out: Path) -> None:
     fields = [
         "candidate_id", "target", "mission", "subject_id", "t_start", "t_end", "t_center", "time_unit",
         "duration_hours", "score", "n_reviewers", "planet_fraction", "reviewers", "passed", "flags",
-        "depth_ppm", "snr", "period_days",
+        "depth_ppm", "snr", "period_days", "n_transits", "bls_t0", "bls_duration_days",
     ]
     with (out / "candidates.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
@@ -230,6 +251,7 @@ def write_manifest(out, config, lightcurves, active, skipped, weights, subjects,
         "packages": _package_versions(["numpy", "scipy", "astropy", "matplotlib", "lightkurve", "anthropic"]),
         "config_name": config.name,
         "config_sha256": config.digest(),
+        "subject_days": config.subject_days,
         "claude_prompt_version": PROMPT_VERSION,
         "inputs": [lc.provenance | {"target": lc.target, "mission": lc.mission} for lc in lightcurves],
         "reviewers": [
@@ -263,8 +285,10 @@ def _vet(event: Consensus, subject: Subject, periodic: PeriodicSignal | None) ->
     return result
 
 
-def _to_candidate(event: Consensus, subject: Subject, result: VettingResult, n_transits: int = 0) -> Candidate:
+def _to_candidate(event: Consensus, subject: Subject, result: VettingResult, supported: PeriodicSignal | None = None) -> Candidate:
     period = result.metrics.get("period")
+    epochs = measure_epochs(subject, supported) if supported is not None else ()
+    secondary = measure_epochs(subject, supported, phase=0.5) if supported is not None else ()
     return Candidate(
         subject_id=event.subject_id,
         target=str(subject.provenance.get("target", "")),
@@ -281,7 +305,11 @@ def _to_candidate(event: Consensus, subject: Subject, result: VettingResult, n_t
         depth_ppm=float(result.metrics.get("depth", 0.0)) * 1e6,
         snr=float(result.metrics.get("snr", 0.0)),
         period_days=float(period) if period is not None else None,
-        n_transits=n_transits,
+        n_transits=supported.n_transits if supported is not None else 0,
+        bls_t0=supported.t0 if supported is not None else None,
+        bls_duration_days=supported.duration if supported is not None else None,
+        epochs=tuple(epochs),
+        secondary_epochs=tuple(secondary),
         metrics={k: (float(v) if isinstance(v, (int, float, np.floating)) else v) for k, v in result.metrics.items()},
     )
 

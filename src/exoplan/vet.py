@@ -84,3 +84,34 @@ def vet_event(
 
     passed = not (set(flags) & DISQUALIFYING)
     return VettingResult(passed, tuple(flags), metrics)
+
+
+def measure_epochs(subject: Subject, periodic: PeriodicSignal, *, phase: float = 0.0) -> list[dict]:
+    """Measure the depth at every BLS-predicted epoch inside the subject.
+
+    Each window is centred on ``t0 + (k + phase) * period`` and is one BLS
+    duration wide. ``phase=0.5`` measures the secondary windows. The depth is
+    1 minus the mean flux of the points inside; its sigma is the subject's
+    robust scatter divided by sqrt(n), the same noise model as the SNR check.
+    An epoch with fewer than two points stores ``None`` for depth and sigma,
+    which means the data do not cover it, not that a dip is absent.
+
+    Epochs are predicted within this one subject, never across the sector.
+    """
+    if periodic.period <= 0:
+        return []
+    noise = mad_sigma(subject.flux - 1.0)
+    half = 0.5 * periodic.duration
+    k_lo = int(np.ceil((subject.start - periodic.t0) / periodic.period - phase))
+    k_hi = int(np.floor((subject.end - periodic.t0) / periodic.period - phase))
+    out: list[dict] = []
+    for k in range(k_lo, k_hi + 1):
+        mid = periodic.t0 + (k + phase) * periodic.period
+        inside = np.abs(subject.time - mid) <= half
+        n = int(inside.sum())
+        depth = sigma = None
+        if n >= 2:
+            depth = float(1.0 - np.mean(subject.flux[inside])) * 1e6
+            sigma = float(noise / np.sqrt(n)) * 1e6 if np.isfinite(noise) else None
+        out.append({"epoch": k, "t_mid": float(mid), "n_points": n, "depth_ppm": depth, "sigma_ppm": sigma})
+    return out

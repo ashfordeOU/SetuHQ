@@ -1,11 +1,17 @@
 """The Docket: a case file for each candidate.
 
-A candidate list sits on the left. The dossier on the right stacks the evidence
-on one shared time axis: a context strip for the whole subject, the dip itself
-at a size where its shape reads, a panel strip showing each reviewer's marks, and
-a row of comparisons (phase fold, odd and even depths, secondary window). Below
-them: a verdict ledger of named checks with measured values, the reviewers'
-decisions, and provenance.
+A candidate list sits on the left. The dossier on the right leads with the
+transit strip: the dip at a scale where its shape reads, drawn from stored
+measurements only. Its upper panel shows the binned flux with the stored ±1σ
+of each bin and the box model at the measured depth and duration (nothing is
+fitted); its lower panel gives each reviewer a lane of marks on the same time
+axis, and the consensus band runs through both. Below it: a context strip for
+the whole subject, comparisons (phase fold, stored per-epoch depths, secondary
+window), a verdict ledger that keeps vetting checks apart from feed admission
+rules, the reviewers' decisions, and provenance.
+
+BLS periods and epochs are per subject (a fixed-length cut of a sector), not
+per sector, and every candidate is unconfirmed.
 
 Keyboard: j and k move through the list, 1, 2 and 3 filter by status.
 Every key has a click equivalent.
@@ -75,6 +81,19 @@ svg .hl{fill:var(--ink)}
 .empty{color:var(--muted);font-style:italic;padding:12px 0}
 .hint{font:12px "JetBrains Mono",monospace;color:var(--muted)}
 kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--rule);border-radius:4px;padding:0 4px}
+.strip{position:relative;padding:8px;min-width:0;overflow:hidden}
+.strip svg{width:100%;touch-action:pan-y}
+.strip .lanelbl,.strip .halo{paint-order:stroke;stroke:var(--panel);stroke-width:3px;stroke-linejoin:round}
+.tip{position:absolute;z-index:2;max-width:min(320px,80%);background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:6px 8px;font:11px/1.45 "JetBrains Mono",monospace;color:var(--ink);pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.readout{margin-top:6px;min-height:6.2em;font:11px/1.45 "JetBrains Mono",monospace;color:var(--ink);overflow-wrap:anywhere}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font:12px "Inter Tight",sans-serif;color:var(--muted)}
+.legend i{display:inline-block;vertical-align:middle;margin-right:6px}
+.legend .k-pt{width:6px;height:6px;border-radius:50%;background:var(--ink)}
+.legend .k-box{width:16px;height:0;border-top:2px solid var(--fit)}
+.legend .k-band{width:12px;height:10px;background:var(--fit);opacity:.25}
+.legend .k-lane{width:14px;height:8px;border-radius:2px;background:var(--l-det)}
+.scope{margin:0;font:12px/1.5 "Inter Tight",sans-serif;color:var(--muted)}
+.epochs{margin:6px 0 0;padding-left:16px;font:12px "JetBrains Mono",monospace;color:var(--ink)}
 @media (max-width:900px){.app{grid-template-columns:minmax(0,1fr)}.list{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule)}.compare{grid-template-columns:minmax(0,1fr)}.dossier{padding:16px}}
 """
 
@@ -143,45 +162,122 @@ function moveSelection(step){
 }
 
 // ---------- dossier ----------
-function trapezoid(t, t0, dur, depthPpm){
-  const half = dur/2, tau = 0.1*dur, x = Math.abs(t - t0);
-  if (x >= half) return 0;
-  return x <= half - tau ? depthPpm : depthPpm * (half - x)/tau;
+function niceTicks(lo, hi, n){
+  const raw = (hi-lo)/Math.max(1,n), mag = Math.pow(10, Math.floor(Math.log10(raw))), r = raw/mag;
+  const step = (r < 1.5 ? 1 : r < 3 ? 2 : r < 7 ? 5 : 10) * mag, out = [];
+  for (let v = Math.ceil(lo/step)*step; v <= hi + 1e-12; v += step) out.push(+v.toPrecision(12));
+  return out;
 }
 
-function hero(c, subj, marks){
-  const W=900, H=360, pl=72, pr=18, pt=18, pb=34;
-  const D2 = c.duration_hours/24, span = 3*D2 + D2;
-  const t0 = c.t_center - span, t1 = c.t_center + span;
-  const pts = subj.time.map((t,i)=>({t, p:(subj.flux[i]-1)*1e6})).filter(q => q.t >= t0 && q.t <= t1);
-  const base = pts.length ? [...pts].map(q=>q.p).sort((a,b)=>a-b)[Math.floor(pts.length/2)] : 0;
-  const depth = Math.max(c.depth_ppm, 50);
-  const ylo = -1.6*depth, yhi = 0.6*depth;
-  const X = t => pl + (t-t0)/(t1-t0)*(W-pl-pr), Y = p => pt + (yhi - p)/(yhi-ylo)*(H-pt-pb);
-  const svg = el('svg', {viewBox:`0 0 ${W} ${H}`, role:'img', 'aria-label': `Dip ${c.candidate_id}`});
-  // edge of subject shading
-  if (t0 < subj.start) el('rect', {x:pl, y:pt, width:X(subj.start)-pl, height:H-pt-pb, fill:'var(--sel)'}, svg);
-  if (t1 > subj.end) el('rect', {x:X(subj.end), y:pt, width:W-pr-X(subj.end), height:H-pt-pb, fill:'var(--sel)'}, svg);
-  // dip window and consensus
-  el('rect', {x:X(c.t_start), y:pt, width:Math.max(2,X(c.t_end)-X(c.t_start)), height:H-pt-pb, fill:'var(--fit)', opacity:.07}, svg);
-  for (let k=0;k<=4;k++){ const p = ylo + (yhi-ylo)*k/4; el('line', {x1:pl,x2:W-pr,y1:Y(p),y2:Y(p),class:'grid'}, svg); tx(svg, pl-8, Y(p)+4, Math.round(p), 'end'); }
-  for (let k=0;k<=6;k++){ const t = t0 + (t1-t0)*k/6; tx(svg, X(t), H-12, t.toFixed(2), 'middle'); }
-  tx(svg, pl, pt-6, 'ppm vs baseline', 'start');
-  // points with error bars
-  for (const q of pts){ el('circle', {cx:X(q.t), cy:Y(q.p-base), r:2.6, fill:'var(--ink)'}, svg); }
-  // fit
-  let d=''; for (let i=0;i<=200;i++){ const t = t0 + (t1-t0)*i/200; d += (i?'L':'M')+X(t).toFixed(1)+','+Y(-trapezoid(t, c.t_center, D2, c.depth_ppm)).toFixed(1); }
-  el('path', {d, fill:'none', stroke:'var(--fit)', 'stroke-width':1.6}, svg);
-  // dimension lines: duration at -depth, depth at right edge
-  const yd = Y(-c.depth_ppm);
-  el('line', {x1:X(c.t_center-D2/2), x2:X(c.t_center+D2/2), y1:yd-14, y2:yd-14, stroke:'var(--ink)'}, svg);
-  el('line', {x1:X(c.t_center-D2/2), x2:X(c.t_center-D2/2), y1:yd-18, y2:yd-10, stroke:'var(--ink)'}, svg);
-  el('line', {x1:X(c.t_center+D2/2), x2:X(c.t_center+D2/2), y1:yd-18, y2:yd-10, stroke:'var(--ink)'}, svg);
-  tx(svg, X(c.t_center), yd-20, fmt(c.duration_hours,2)+' h', 'middle', 'hl');
-  const xr = X(t1) - 6;
-  el('line', {x1:xr, x2:xr, y1:Y(0), y2:Y(-c.depth_ppm), stroke:'var(--ink)'}, svg);
-  tx(svg, xr-6, (Y(0)+Y(-c.depth_ppm))/2+4, fmt(c.depth_ppm,0)+' ppm', 'end', 'hl');
-  if (pts.length < 12) tx(svg, pl+8, pt+16, `only ${pts.length} binned points in this window`, 'start');
+// The transit strip: stored binned flux with stored ±1σ, the box model at the
+// measured depth and duration (c.box, built in Python, nothing fitted), and one
+// lane per reviewer on the same time axis. The consensus band runs through both.
+function strip(c, subj, marks, decisions, wrap){
+  wrap.innerHTML = '';
+  const narrow = wrap.clientWidth < 600;
+  const W = Math.max(240, Math.round(wrap.clientWidth - 16)), H = narrow ? 280 : 440;
+  const names = Object.keys(D.reviewers), lh = narrow ? 15 : 22;
+  const pl = narrow ? 42 : 150, pr = narrow ? 8 : 18, pt = 16, gap = narrow ? 10 : 18, axisH = narrow ? 24 : 30;
+  const lanesTop = H - axisH - names.length*lh, upperBottom = lanesTop - gap;
+  const dur = c.t_end - c.t_start, half = Math.max(4*dur, 0.25);
+  const t0 = c.t_center - half, t1 = c.t_center + half;
+  const hasErr = Array.isArray(subj.flux_err) && subj.flux_err.length === subj.flux.length;
+  const pts = [];
+  subj.time.forEach((t,i) => { if (t >= t0 && t <= t1) pts.push({t, p:(subj.flux[i]-1)*1e6, e: hasErr ? subj.flux_err[i]*1e6 : null}); });
+  const depth = c.depth_ppm;
+  let lo = Math.min(0, -depth), hi = Math.max(0, -depth);
+  for (const q of pts){ lo = Math.min(lo, q.p - (q.e||0)); hi = Math.max(hi, q.p + (q.e||0)); }
+  const yr = (hi - lo) || 100; lo -= 0.22*yr; hi += 0.08*yr;
+  const X = t => pl + (t-t0)/(t1-t0)*(W-pl-pr), Y = p => pt + (hi-p)/(hi-lo)*(upperBottom-pt);
+  const svg = el('svg', {viewBox:`0 0 ${W} ${H}`, role:'img', class:'stripsvg',
+    'aria-label': `Transit strip for ${c.candidate_id}: ${pts.length} binned points, box model at measured depth ${fmt(depth,0)} ppm and duration ${fmt(c.duration_hours,2)} h, ${names.length} reviewer lanes`}, wrap);
+  svg.style.height = H + 'px';
+  const fs = narrow ? 9 : 11;
+  const T = (x, y, s, a='start', cls='') => { const t = tx(svg, x, y, s, a, cls); t.style.fontSize = fs + 'px'; return t; };
+  // subject edges: outside the subject there is no data, shaded so it is not read as flat flux
+  if (t0 < subj.start) el('rect', {x:pl, y:pt, width:Math.max(0,X(subj.start)-pl), height:H-axisH-pt, fill:'var(--sel)'}, svg);
+  if (t1 > subj.end) el('rect', {x:X(subj.end), y:pt, width:Math.max(0,W-pr-X(subj.end)), height:H-axisH-pt, fill:'var(--sel)'}, svg);
+  // consensus band through both panels
+  el('rect', {x:X(c.t_start), y:pt, width:Math.max(2,X(c.t_end)-X(c.t_start)), height:H-axisH-pt, fill:'var(--fit)', opacity:.09}, svg);
+  for (const t of [c.t_start, c.t_end]) el('line', {x1:X(t), x2:X(t), y1:pt, y2:H-axisH, stroke:'var(--fit)', 'stroke-dasharray':'3 3', opacity:.6}, svg);
+  // axes
+  for (const p of niceTicks(lo, hi, narrow ? 3 : 5)){ el('line', {x1:pl,x2:W-pr,y1:Y(p),y2:Y(p),class:'grid'}, svg); T(pl-6, Y(p)+3, Math.round(p), 'end'); }
+  for (const t of niceTicks(t0, t1, narrow ? 3 : 6)){ el('line', {x1:X(t),x2:X(t),y1:H-axisH,y2:H-axisH+4,stroke:'var(--muted)'}, svg); T(X(t), H-axisH+(narrow?13:16), t.toFixed(2), 'middle'); }
+  T(pl, pt-5, 'ppm vs 1.0', 'start');
+  T(W-pr, pt-5, `time (${c.time_unit})`, 'end');
+  el('line', {x1:pl,x2:W-pr,y1:upperBottom,y2:upperBottom,stroke:'var(--rule)'}, svg);
+  // binned points with stored ±1σ
+  for (const q of pts){
+    if (q.e !== null) el('line', {x1:X(q.t), x2:X(q.t), y1:Y(q.p-q.e), y2:Y(q.p+q.e), stroke:'var(--ink)', opacity:.45}, svg);
+    el('circle', {cx:X(q.t), cy:Y(q.p), r:narrow ? 2 : 2.6, fill:'var(--ink)'}, svg);
+  }
+  // box model at measured depth and duration
+  const box = c.box || [];
+  if (box.length){
+    let d = `M${X(t0).toFixed(1)},${Y(0).toFixed(1)}`;
+    for (const [t, p] of box) d += `L${X(t).toFixed(1)},${Y(p).toFixed(1)}`;
+    d += `L${X(t1).toFixed(1)},${Y(0).toFixed(1)}`;
+    el('path', {d, fill:'none', stroke:'var(--fit)', 'stroke-width':1.8}, svg);
+  }
+  // dimension lines: depth beside the box, duration below it
+  const xd = X(c.t_end) + (narrow ? 8 : 12), y0 = Y(0), yd = Y(-depth);
+  el('line', {x1:xd, x2:xd, y1:y0, y2:yd, stroke:'var(--ink)'}, svg);
+  for (const y of [y0, yd]) el('line', {x1:xd-4, x2:xd+4, y1:y, y2:y, stroke:'var(--ink)'}, svg);
+  T(xd+6, (y0+yd)/2+4, fmt(depth,0)+' ppm', 'start', 'hl halo');
+  const yb = yd + (narrow ? 12 : 16);
+  el('line', {x1:X(c.t_start), x2:X(c.t_end), y1:yb, y2:yb, stroke:'var(--ink)'}, svg);
+  for (const t of [c.t_start, c.t_end]) el('line', {x1:X(t), x2:X(t), y1:yb-4, y2:yb+4, stroke:'var(--ink)'}, svg);
+  T((X(c.t_start)+X(c.t_end))/2, yb+(narrow?11:14), fmt(c.duration_hours,2)+' h', 'middle', 'hl halo');
+  if (pts.length < 12) T(pl+6, pt+14, `only ${pts.length} binned points in this window`, 'start');
+  // reviewer lanes, marks as bars
+  const inWin = n => (marks[n] || []).filter(([a,b]) => b >= t0 && a <= t1);
+  names.forEach((n, i) => {
+    const y = lanesTop + i*lh, col = colourOf(n), spans = inWin(n);
+    el('line', {x1:pl, x2:W-pr, y1:y+lh-1, y2:y+lh-1, class:'grid'}, svg);
+    const lbl = decisions[n]?.label || '';
+    const strong = lbl === 'potential planet' || lbl === 'potential_planet';
+    for (const [a,b] of spans){
+      const xa = X(Math.max(a,t0)), xb = X(Math.min(b,t1));
+      el('rect', {x:xa, y:y+2, width:Math.max(3, xb-xa), height:lh-5, rx:2, fill:col, opacity: strong ? .85 : .45}, svg);
+    }
+    if (narrow){ const t = T(pl+3, y+lh-4, n, 'start', 'lanelbl'); t.setAttribute('fill', col); }
+    else { const t = T(pl-10, y+lh/2+4, n, 'end'); t.setAttribute('fill', col); }
+    if (!spans.length) T(W-pr-4, y+lh-4, 'no mark in window', 'end');
+  });
+  // hover: crosshair snapped to the nearest stored bin, with its value ± error and the reviewer spans there
+  // On a phone the readout sits under the strip so it never covers the dip.
+  const tip = document.createElement('div'); tip.className = narrow ? 'readout' : 'tip'; wrap.appendChild(tip);
+  const idle = 'Tap or drag on the strip to read a bin.';
+  if (narrow) tip.textContent = idle; else tip.hidden = true;
+  const cross = el('g', {visibility:'hidden', 'pointer-events':'none'}, svg);
+  const vx = el('line', {y1:pt, y2:H-axisH, stroke:'var(--ink)', 'stroke-width':1, opacity:.7}, cross);
+  const hy = el('line', {x1:pl, x2:W-pr, stroke:'var(--ink)', 'stroke-width':1, opacity:.4, 'stroke-dasharray':'2 3'}, cross);
+  const dot = el('circle', {r:4.5, fill:'none', stroke:'var(--fit)', 'stroke-width':2}, cross);
+  const hit = el('rect', {x:pl, y:pt, width:W-pl-pr, height:H-axisH-pt, fill:'transparent'}, svg);
+  const move = e => {
+    if (!pts.length) return;
+    const r = svg.getBoundingClientRect(), sx = (e.clientX - r.left) * W / r.width;
+    const t = t0 + (sx - pl)/(W-pl-pr)*(t1-t0);
+    let q = pts[0]; for (const o of pts) if (Math.abs(o.t-t) < Math.abs(q.t-t)) q = o;
+    vx.setAttribute('x1', X(q.t)); vx.setAttribute('x2', X(q.t));
+    hy.setAttribute('y1', Y(q.p)); hy.setAttribute('y2', Y(q.p));
+    dot.setAttribute('cx', X(q.t)); dot.setAttribute('cy', Y(q.p));
+    cross.setAttribute('visibility', 'visible');
+    const at = names.map(n => [n, (marks[n]||[]).filter(([a,b]) => q.t >= a && q.t <= b)]).filter(([,s]) => s.length);
+    const inside = q.t >= c.t_start && q.t <= c.t_end;
+    tip.innerHTML = `<b>${fmt(q.t,4)} ${esc(c.time_unit)}</b><br>bin: ${fmt(q.p,0)}${q.e!==null ? ' ± '+fmt(q.e,0) : ''} ppm${q.e===null ? ' (no stored error)' : ''}`
+      + `<br>${inside ? 'inside' : 'outside'} the consensus window`
+      + (at.length ? at.map(([n,s]) => `<br><span style="color:${colourOf(n)}">${esc(n)}</span> ${s.map(([a,b]) => fmt(a,3)+'–'+fmt(b,3)).join(', ')}`).join('') : '<br>no reviewer span at this time');
+    if (narrow) return;
+    tip.hidden = false;
+    const px = X(q.t) * r.width / W, w = tip.offsetWidth;
+    tip.style.left = Math.max(4, Math.min(px + 14, r.width - w - 4)) + 'px';
+    tip.style.top = '18px';
+  };
+  hit.addEventListener('pointermove', move);
+  hit.addEventListener('pointerdown', move);
+  // A touch keeps its last reading; a mouse leaving the strip clears it.
+  hit.addEventListener('pointerleave', e => { if (e.pointerType !== 'mouse') return; cross.setAttribute('visibility','hidden'); if (narrow) tip.textContent = idle; else tip.hidden = true; });
   return svg;
 }
 
@@ -201,33 +297,29 @@ function context(c, subj){
   return svg;
 }
 
-function panels(c, subj, marks, decisions){
-  const names = Object.keys(D.reviewers), W=900, lh=24, pl=150, pr=18;
-  const D2 = c.duration_hours/24, t0 = c.t_center - 4*D2, t1 = c.t_center + 4*D2;
-  const H = names.length*lh + 30;
-  const svg = el('svg', {viewBox:`0 0 ${W} ${H}`});
-  const X = t => pl + (t-t0)/(t1-t0)*(W-pl-pr);
-  // consensus bracket
-  el('line', {x1:X(c.t_start), x2:X(c.t_end), y1:12, y2:12, stroke:'var(--cons)', 'stroke-width':1.5}, svg);
-  el('line', {x1:X(c.t_start), x2:X(c.t_start), y1:12, y2:18, stroke:'var(--cons)'}, svg);
-  el('line', {x1:X(c.t_end), x2:X(c.t_end), y1:12, y2:18, stroke:'var(--cons)'}, svg);
-  names.forEach((n, i) => {
-    const y = 22 + i*lh, col = colourOf(n), spans = (marks[n] || []).filter(([a,b]) => b>=t0 && a<=t1);
-    tx(svg, pl-10, y+15, n, 'end').setAttribute('fill', col);
-    el('line', {x1:pl, x2:W-pr, y1:y+lh-2, y2:y+lh-2, class:'grid'}, svg);
-    if (!spans.length){
-      const r = el('rect', {x:pl, y:y+3, width:W-pl-pr, height:lh-8, fill:'url(#hatch)', opacity:.7}, svg);
-      tx(svg, pl+8, y+15, 'no mark', 'start');
-      void r;
-    }
-    for (const [a,b] of spans){
-      const w = (decisions[n]?.label === 'potential planet' || decisions[n]?.label === 'potential_planet') ? .85 : .45;
-      el('rect', {x:X(a), y:y+3, width:Math.max(3, X(b)-X(a)), height:lh-8, rx:3, fill:col, opacity:w}, svg);
-    }
+function epochList(rows, what){
+  if (!rows || !rows.length) return '<p>No stored per-epoch measurement for this candidate.</p>';
+  return '<ul class="epochs">' + rows.map(r => r.depth_ppm === null || r.depth_ppm === undefined
+    ? `<li>epoch ${r.epoch}${what}: no stored points in window (${r.n_points} points)</li>`
+    : `<li>measured: ${fmt(r.depth_ppm,0)} ± ${fmt(r.sigma_ppm,0)} ppm at epoch ${r.epoch}${what}</li>`).join('') + '</ul>';
+}
+
+function epochPlot(rows, title, depth, colour){
+  const W=300, H=200, pl=44, pr=10, pt=14, pb=26, svg = el('svg', {viewBox:`0 0 ${W} ${H}`});
+  const vals = rows.filter(r => r.depth_ppm !== null && r.depth_ppm !== undefined);
+  let lo = 0, hi = depth;
+  for (const v of vals){ lo = Math.min(lo, v.depth_ppm - (v.sigma_ppm||0)); hi = Math.max(hi, v.depth_ppm + (v.sigma_ppm||0)); }
+  const pad = 0.15*((hi-lo)||1); lo -= pad; hi += pad;
+  const Y = p => pt + (hi-p)/(hi-lo)*(H-pt-pb), X = i => pl + (i+.5)*(W-pl-pr)/Math.max(1,rows.length);
+  for (const p of niceTicks(lo, hi, 4)){ el('line', {x1:pl,x2:W-pr,y1:Y(p),y2:Y(p),class:'grid'}, svg); tx(svg, pl-6, Y(p)+4, Math.round(p), 'end'); }
+  el('line', {x1:pl,x2:W-pr,y1:Y(depth),y2:Y(depth),stroke:'var(--fit)','stroke-dasharray':'3 3'}, svg);
+  rows.forEach((r,i) => {
+    tx(svg, X(i), H-8, 'E'+r.epoch, 'middle');
+    if (r.depth_ppm === null || r.depth_ppm === undefined) return;
+    if (r.sigma_ppm !== null) el('line', {x1:X(i),x2:X(i),y1:Y(r.depth_ppm-r.sigma_ppm),y2:Y(r.depth_ppm+r.sigma_ppm),stroke:'var(--ink)'}, svg);
+    el('circle', {cx:X(i), cy:Y(r.depth_ppm), r:4.5, fill: colour(r)}, svg);
   });
-  const defs = el('defs', {}, svg);
-  const pat = el('pattern', {id:'hatch', width:6, height:6, patternUnits:'userSpaceOnUse', patternTransform:'rotate(45)'}, defs);
-  el('line', {x1:0,y1:0,x2:0,y2:6,stroke:'var(--rule)','stroke-width':1.5}, pat);
+  tx(svg, pl, pt-4, title);
   return svg;
 }
 
@@ -235,43 +327,29 @@ function comparisons(c, subj){
   const out = {fold: null, oddeven: null, secondary: null};
   const P = c.period_days;
   if (!P){
-    for (const k of Object.keys(out)) out[k] = Object.assign(document.createElement('div'), {className:'empty', textContent:'no ephemeris: single event'});
+    for (const k of Object.keys(out)) out[k] = Object.assign(document.createElement('div'), {className:'empty', textContent:'no ephemeris in this subject: single event'});
     return out;
   }
   const W=300, H=200, pl=44, pr=10, pt=14, pb=26, win = c.duration_hours/24 * 3;
-  const epochs = [];
-  for (let k=-30; k<=30; k++){ const tc = c.t_center + k*P; if (tc>=subj.start && tc<=subj.end) epochs.push({k, tc}); }
-  const depthAt = (tc) => { const m = subj.time.map((t,i)=>[t,(subj.flux[i]-1)*1e6]).filter(([t]) => Math.abs(t-tc) <= (c.duration_hours/24)/2); return m.length ? -(m.reduce((s,q)=>s+q[1],0)/m.length) : null; };
-  // fold
+  const ref = (c.bls_t0 !== null && c.bls_t0 !== undefined) ? c.bls_t0 : c.t_center;
+  // fold: the stored binned points, folded on the stored BLS period and t0
   {
     const svg = el('svg', {viewBox:`0 0 ${W} ${H}`}), ylo=-1.6*c.depth_ppm, yhi=0.6*c.depth_ppm;
     const X = ph => pl + (ph+win)/(2*win)*(W-pl-pr), Y = p => pt + (yhi-p)/(yhi-ylo)*(H-pt-pb);
-    for (const q of subj.time.map((t,i)=>[t,(subj.flux[i]-1)*1e6])){ const ph = ((q[0]-c.t_center + P/2) % P) - P/2; if (Math.abs(ph) <= win) el('circle', {cx:X(ph), cy:Y(q[1]), r:1.6, fill:'var(--muted)', opacity:.6}, svg); }
+    for (const q of subj.time.map((t,i)=>[t,(subj.flux[i]-1)*1e6])){ const ph = (((q[0]-ref + P/2) % P) + P) % P - P/2; if (Math.abs(ph) <= win) el('circle', {cx:X(ph), cy:Y(q[1]), r:1.6, fill:'var(--muted)', opacity:.6}, svg); }
     el('line', {x1:pl,x2:W-pr,y1:Y(0),y2:Y(0),class:'grid'}, svg);
     el('line', {x1:pl,x2:W-pr,y1:Y(-c.depth_ppm),y2:Y(-c.depth_ppm),stroke:'var(--fit)','stroke-dasharray':'3 3'}, svg);
     tx(svg, pl, pt-4, `phase fold · P ${fmt(P,3)} d`);
     out.fold = svg;
   }
-  // odd / even
-  {
-    const svg = el('svg', {viewBox:`0 0 ${W} ${H}`}), vals = epochs.map(e => ({k:e.k, d: depthAt(e.tc)})).filter(v => v.d !== null);
-    const mx = Math.max(c.depth_ppm*1.5, ...vals.map(v=>Math.abs(v.d)));
-    const Y = p => pt + (1-p/mx)*(H-pt-pb), X = i => pl + (i+.5)*(W-pl-pr)/Math.max(1,vals.length);
-    el('line', {x1:pl,x2:W-pr,y1:Y(0),y2:Y(0),class:'grid'}, svg);
-    vals.forEach((v,i) => el('circle', {cx:X(i), cy:Y(v.d), r:5, fill: (Math.abs(v.k)%2) ? 'var(--ink)' : 'var(--fit)'}, svg));
-    tx(svg, pl, pt-4, 'per-epoch depth · ink odd, blue even');
-    out.oddeven = svg;
-  }
-  // secondary
-  {
-    const svg = el('svg', {viewBox:`0 0 ${W} ${H}`}), sec = epochs.map(e => depthAt(e.tc + P/2)).filter(v => v !== null);
-    const mx = Math.max(c.depth_ppm*1.5, ...sec.map(Math.abs), 1);
-    const Y = p => pt + (1-p/mx)*(H-pt-pb), X = i => pl + (i+.5)*(W-pl-pr)/Math.max(1,sec.length);
-    el('line', {x1:pl,x2:W-pr,y1:Y(0),y2:Y(0),class:'grid'}, svg);
-    sec.forEach((v,i) => el('circle', {cx:X(i), cy:Y(v), r:4, fill:'var(--muted)'}, svg));
-    tx(svg, pl, pt-4, 'phase 0.5 · secondary window');
-    out.secondary = svg;
-  }
+  const oe = document.createElement('div');
+  if (c.epochs && c.epochs.length) oe.appendChild(epochPlot(c.epochs, 'depth per epoch · ink odd, blue even', c.depth_ppm, r => (Math.abs(r.epoch)%2) ? 'var(--ink)' : 'var(--fit)'));
+  oe.insertAdjacentHTML('beforeend', epochList(c.epochs, ''));
+  out.oddeven = oe;
+  const se = document.createElement('div');
+  if (c.secondary_epochs && c.secondary_epochs.length) se.appendChild(epochPlot(c.secondary_epochs, 'stored depth at phase 0.5', 0, () => 'var(--muted)'));
+  se.insertAdjacentHTML('beforeend', epochList(c.secondary_epochs, ' + 0.5'));
+  out.secondary = se;
   return out;
 }
 
@@ -311,7 +389,18 @@ function rationales(c){
   }).join('');
 }
 
+let redraw = null;
+let resizeTimer = 0;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => redraw && redraw(), 120); });
+
+function scopeNote(c){
+  const days = D.subject_days ? `${fmt(D.subject_days,0)}-day` : 'per-subject';
+  const eph = c.period_days ? `BLS period ${fmt(c.period_days,3)} d, t0 ${fmt(c.bls_t0,4)}, duration ${fmt((c.bls_duration_days||0)*24,1)} h; ${(c.epochs||[]).length} predicted epochs measured in this subject.` : 'No BLS ephemeris covers this dip.';
+  return `Scope: the BLS search and its epochs are per ${days} subject, not per TESS sector. ${eph} Depth and duration are the consensus window's measured values. This is a candidate, unconfirmed.`;
+}
+
 function renderDossier(){
+  redraw = null;
   const box = $('#dossier');
   const c = D.candidates.find(x => x.candidate_id === state.selected);
   if (!c){ box.innerHTML = '<div class="empty">Choose a candidate from the list. Use j and k to move.</div>'; return; }
@@ -319,7 +408,7 @@ function renderDossier(){
   const s = statusOf(c), siblings = D.candidates.filter(x => x.subject_id === c.subject_id && x.candidate_id !== c.candidate_id).length;
   box.innerHTML = `
     <div class="head">
-      <div><div class="hint">${esc(c.target)} · ${esc(c.mission)} · subject ${esc(c.subject_id)}</div><h2>${esc(c.candidate_id)}</h2></div>
+      <div><div class="hint">candidate, unconfirmed · ${esc(c.target)} · ${esc(c.mission)} · subject ${esc(c.subject_id)}</div><h2>${esc(c.candidate_id)}</h2></div>
       <div class="verdict g-${s}">${GLYPH[s]} ${s==='pass' ? 'passed vetting' : s==='flag' ? 'passed, flagged for review' : 'rejected by vetting'}${c.flags.length ? ' · '+esc(c.flags.join(', ')) : ''}</div>
     </div>
     <div class="facts">
@@ -329,21 +418,26 @@ function renderDossier(){
       <div><span>SNR</span>${fmt(c.snr,1)}</div>
       <div><span>panel</span>${fmt(c.score,2)} · ${c.n_reviewers} of ${Object.keys(D.reviewers).length}</div>
       <div><span>BLS period</span>${c.period_days ? fmt(c.period_days,3)+' d (this subject)' : 'none'}</div>
+      <div><span>BLS t0</span>${(c.bls_t0 !== null && c.bls_t0 !== undefined) ? fmt(c.bls_t0,4) : '–'}</div>
       <div><span>same subject</span>${siblings} other dip${siblings===1?'':'s'}</div>
     </div>
+    <section class="sec"><header><h3>Transit strip</h3><em>stored measurements only · nothing is fitted</em></header>
+      <div class="hero-wrap strip" id="strip"></div>
+      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each</span></div>
+      <p class="scope">${scopeNote(c)}</p></section>
     <section class="sec"><header><h3>Subject in context</h3><em>highlighted: this dip · grey: other dips here</em></header><div class="hero-wrap" id="ctx"></div></section>
-    <section class="sec"><header><h3>The dip</h3><em>points: binned flux · blue: fit · the bars show depth and duration</em></header><div class="hero-wrap" id="hero"></div></section>
-    <section class="sec"><header><h3>Panel</h3><em>each lane is one reviewer's marks, on the same time axis as the dip</em></header><div class="hero-wrap" id="panel"></div></section>
-    <section class="sec"><header><h3>Comparisons</h3><em>phase fold · odd and even depths · secondary window</em></header><div class="compare" id="cmp"></div></section>
+    <section class="sec"><header><h3>Comparisons</h3><em>phase fold · stored per-epoch depths · secondary window</em></header><div class="compare" id="cmp"></div></section>
     <section class="sec"><header><h3>Verdict</h3><em>every check, measured value, rule</em></header><div class="scroll"><table class="ledger"><tbody>${ledger(c)}</tbody></table></div></section>
     <section class="sec"><header><h3>Reviewers</h3><em>decisions and reasons, as recorded</em></header><div class="rat">${rationales(c)}</div></section>
     <div class="prov">run ${esc(D.provenance.run_time)} · config ${esc(D.provenance.config_sha256.slice(0,16))} · pipeline ${esc(D.provenance.exoplan_version)} · ${esc(D.provenance.claude_prompt_version || '')}<br>candidate ${esc(c.candidate_id)} · subject ${esc(c.subject_id)}</div>`;
   if (subj){
+    const sw = $('#strip');
+    strip(c, subj, marks, dec, sw);
+    let lastW = sw.clientWidth;
+    redraw = () => { if (sw.isConnected && sw.clientWidth !== lastW){ lastW = sw.clientWidth; strip(c, subj, marks, dec, sw); } };
     $('#ctx').appendChild(context(c, subj));
-    $('#hero').appendChild(hero(c, subj, marks));
-    $('#panel').appendChild(panels(c, subj, marks, dec));
     const cmp = comparisons(c, subj);
-    for (const k of ['fold','oddeven','secondary']){ const wrap = document.createElement('div'); wrap.appendChild(cmp[k]); if (k==='fold') wrap.insertAdjacentHTML('beforeend','<p>Every transit folded on the period. A planet repeats at one phase.</p>'); if (k==='oddeven') wrap.insertAdjacentHTML('beforeend','<p>Alternating depths point to a binary at twice the period.</p>'); if (k==='secondary') wrap.insertAdjacentHTML('beforeend','<p>A dip here would point to an eclipsing binary.</p>'); $('#cmp').appendChild(wrap); }
+    for (const k of ['fold','oddeven','secondary']){ const wrap = document.createElement('div'); wrap.appendChild(cmp[k]); if (k==='fold') wrap.insertAdjacentHTML('beforeend','<p>Every transit folded on the period. A planet repeats at one phase.</p>'); if (k==='oddeven') wrap.insertAdjacentHTML('beforeend','<p>Alternating depths point to a binary at twice the period. Each value is stored by the pipeline at a BLS-predicted epoch.</p>'); if (k==='secondary') wrap.insertAdjacentHTML('beforeend','<p>A dip here would point to an eclipsing binary.</p>'); $('#cmp').appendChild(wrap); }
   } else {
     box.insertAdjacentHTML('beforeend', '<div class="empty">No plot data stored for this subject.</div>');
   }
@@ -366,6 +460,17 @@ if (first) select(first.candidate_id); else renderDossier();
 """
 
 
+def box_model(row: dict) -> list[list[float]]:
+    """Box model at measured depth and duration, as (time, ppm) vertices.
+
+    Zero outside the consensus window, minus the measured depth inside it.
+    Nothing is fitted: the edges are the stored ``t_start`` and ``t_end`` and the
+    level is the stored ``depth_ppm``.
+    """
+    t_start, t_end, depth = float(row["t_start"]), float(row["t_end"]), float(row["depth_ppm"])
+    return [[t_start, 0.0], [t_start, -depth], [t_end, -depth], [t_end, 0.0]]
+
+
 def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str) -> Path:
     run_dir = Path(run_dir)
     run = _load_run(run_dir)
@@ -376,6 +481,12 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str) -> Pat
         c["target"] = by_id[c["candidate_id"]].get("target", "")
         c["mission"] = by_id[c["candidate_id"]].get("mission", "")
         c["flags"] = [f for f in c["flags"] if f]
+        row = by_id[c["candidate_id"]]
+        c["bls_t0"] = row.get("bls_t0")
+        c["bls_duration_days"] = row.get("bls_duration_days")
+        c["epochs"] = row.get("epochs") or []
+        c["secondary_epochs"] = row.get("secondary_epochs") or []
+        c["box"] = box_model(c)
     counts = run["manifest"]["counts"]
     passed = sum(1 for c in run["candidates"] if c["passed"] and not c["flags"])
     flagged = sum(1 for c in run["candidates"] if c["passed"] and c["flags"])
@@ -387,6 +498,7 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str) -> Pat
         "marks": run["marks"],
         "decisions": run["reviewerDecisions"],
         "reviewers": run["reviewers"],
+        "subject_days": run["manifest"].get("subject_days"),
         "counts": {"consensus": counts["consensus_events"], "passed": passed, "flagged": flagged, "rejected": rejected},
         "provenance": {
             "run_time": run["manifest"]["created_at"],
