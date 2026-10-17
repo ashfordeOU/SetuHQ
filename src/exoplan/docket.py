@@ -2,6 +2,9 @@
 
 The unit of analysis is the signal: one per (subject, BLS period), with the
 dips at its epochs as children; a dip with no BLS period is its own signal.
+Per-subject results of the same target whose periods agree within 1 percent
+and whose predicted epochs line up are merged into one signal, each subject's
+BLS result kept under it as provenance.
 The list on the left groups dips under their signal and the run header counts
 both ("N signals · M dips").
 
@@ -13,7 +16,8 @@ never a pass. Feed admission rules from discover.py are shown apart from vetting
 
 The dossier leads with that outcome, the feed-rule result and a known-planet
 line from the NASA Exoplanet Archive (fetched at build time and stored in the
-run directory as crossmatch.json, or stored as "not run" when offline). Then the
+run directory as crossmatch.json, or stored as "not run" when offline), with a
+per-dip comparison (ΔP and nearest archive epoch offset) stored there too. Then the
 transit strip: binned flux with stored ±1σ, the box model at measured depth and
 duration (nothing is fitted), and one lane per reviewer, each labelled with its
 kind (simulated detector or Claude). Then the signal's dips, the subject in
@@ -140,6 +144,10 @@ kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--rule);border-rad
 .legend .k-band{width:12px;height:10px;background:var(--fit);opacity:.25}
 .legend .k-lane{width:14px;height:8px;border-radius:2px;background:var(--l-det)}
 .scope{margin:0;font:12px/1.5 "Inter Tight",sans-serif;color:var(--muted)}
+.filternote{margin:0;border:1px dashed var(--flag);border-radius:6px;padding:8px 12px;font:13px/1.5 "Inter Tight",sans-serif}
+.filternote[hidden]{display:none}
+.xm-cmp{display:block;margin-top:2px}
+.ledger thead th{text-align:left;font:600 11px "JetBrains Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;border-bottom:1px solid var(--ink)}
 .epochs{margin:6px 0 0;padding-left:16px;font:12px "JetBrains Mono",monospace;color:var(--ink)}
 @media (max-width:900px){
   .app{grid-template-columns:minmax(0,1fr)}
@@ -151,11 +159,11 @@ kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--rule);border-rad
   #listbody[data-collapsed="true"]{display:none}
   .out-main{font-size:18px}
   .head h2{font-size:19px}
-  #sec-strip{order:2}
-  #dtop .facts{order:3}
 }
 @media (max-width:640px){
-  .ledger,.ledger tbody{display:block}
+  .ledger,.ledger thead,.ledger tbody{display:block}
+  .ledger thead th{padding:4px 6px}
+  .ledger thead th:last-child{grid-column:1/-1}
   .ledger tr{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--rule)}
   .ledger th.grp{display:block;grid-column:1/-1}
   .ledger td{border-bottom:0;padding:6px 6px 2px}
@@ -208,8 +216,15 @@ function saveView(){
   try { localStorage.setItem(STORE_KEY, JSON.stringify({filter: state.filter, dip: state.selected, signal: state.selected ? byId[state.selected].signal_id : null, collapsed: state.collapsed, listCollapsed: state.listCollapsed})); } catch (e) { /* storage unavailable: the page works without it */ }
 }
 
-function sigLabel(s){ return s.period_days ? `P ${fmt(s.period_days,3)} d` : 'single dip, no BLS period'; }
-function epochOf(c){ return (c.period_days && c.bls_t0 !== null && c.bls_t0 !== undefined) ? Math.round((c.t_center - c.bls_t0)/c.period_days) : null; }
+// A merged signal names every subject's BLS period: they are separate per-subject results, not one fit.
+function sigLabel(s){
+  if (!s.period_days) return 'single dip, no BLS period';
+  const ps = (s.bls || []).map(b => b.period_days).filter(p => p);
+  return ps.length > 1 ? `P ${ps.map(p => fmt(p,3)).join(' / ')} d` : `P ${fmt(s.period_days,3)} d`;
+}
+function sigSubjects(s){ const ids = s.subject_ids || [s.subject_id]; return `${ids.length > 1 ? 'subjects' : 'subject'} ${ids.join(', ')}`; }
+// Epoch on the signal's reference ephemeris (Python: docket.signal_epoch), one count across subjects.
+function epochOf(c){ return (c.signal_epoch === null || c.signal_epoch === undefined) ? null : c.signal_epoch; }
 function visibleSignals(){ return D.signals.filter(s => state.filter === 'all' || s.outcome === state.filter); }
 function visibleDips(){ return visibleSignals().flatMap(s => s.dips); }
 function reviewerSummary(names){
@@ -220,7 +235,8 @@ function reviewerSummary(names){
 
 function renderRunHeader(){
   const c = D.counts, box = $('#run');
-  const chips = [['all', 'all'], ['passed', `${c.passed} passed`], ['flagged', `${c.flagged} flagged`], ['rejected', `${c.rejected} rejected`]];
+  const n = k => `${k} signal${k===1?'':'s'}`;
+  const chips = [['all', `all ${n(c.signals)}`], ['passed', `${n(c.passed)} passed`], ['flagged', `${n(c.flagged)} flagged`], ['rejected', `${n(c.rejected)} rejected`]];
   box.innerHTML = `<h1>${esc(D.title)}</h1>
     <p class="counts"><b>${c.signals} signal${c.signals===1?'':'s'} · ${c.dips} dip${c.dips===1?'':'s'}</b><br>
     <span class="revcount">${c.reviewers} reviewers: ${reviewerSummary(Object.keys(D.reviewers))}</span></p>
@@ -237,7 +253,19 @@ function applyListCollapse(){
   t.textContent = `${state.listCollapsed ? 'Show' : 'Hide'} the signal list`;
   $('#listbody').dataset.collapsed = String(state.listCollapsed);
 }
-function setFilter(f){ state.filter = f; renderRunHeader(); renderList(); saveView(); }
+function setFilter(f){
+  state.filter = f; renderRunHeader(); renderList(); saveView(); updateFilterNote();
+  const n = visibleSignals().length;
+  $('#filterlive').textContent = `Showing ${n} signal${n===1?'':'s'}, filter: ${f}.` + (hiddenBySelection() ? ` The selected dip ${state.selected} is hidden by this filter; the dossier stays on it.` : '');
+  const b = document.querySelector(`.chip[data-f="${f}"]`); if (b && document.activeElement?.classList?.contains('chip')) b.focus();
+}
+function hiddenBySelection(){ return !!(state.selected && !visibleDips().includes(state.selected)); }
+// When the filter hides the selected dip, the dossier stays on that dip and says so.
+function updateFilterNote(){
+  const note = $('#filternote'); if (!note) return;
+  if (hiddenBySelection()){ note.hidden = false; note.textContent = `The filter "${state.filter}" hides this dip's signal in the list; the dossier stays on the selected dip. Press 0 to show all signals.`; }
+  else { note.hidden = true; note.textContent = ''; }
+}
 
 function miniSpark(c){
   const subj = D.subjects[c.subject_id]; if (!subj) return '';
@@ -258,7 +286,7 @@ function renderList(){
     const g = document.createElement('div'); g.setAttribute('role','group'); g.className = 'sig';
     g.setAttribute('aria-labelledby', 'lbl-' + s.signal_id);
     const head = document.createElement('div'); head.className = 'sighead'; head.id = 'lbl-' + s.signal_id;
-    head.innerHTML = `<div><div class="mono signame">${esc(sigLabel(s))}</div><small>subject ${esc(s.subject_id)} · ${s.dips.length} dip${s.dips.length===1?'':'s'}${s.period_days ? ` · ${s.n_transits} BLS transits` : ''}</small></div>${outBadge(s.outcome)}`;
+    head.innerHTML = `<div><div class="mono signame">${esc(sigLabel(s))}</div><small>${esc(sigSubjects(s))} · ${s.dips.length} dip${s.dips.length===1?'':'s'}${s.period_days ? ` · ${(s.bls||[]).map(b => b.n_transits).join(' + ')} BLS transits` : ''}</small></div>${outBadge(s.outcome)}`;
     head.addEventListener('click', () => select(s.dips[0]));
     g.appendChild(head);
     for (const id of s.dips){
@@ -503,7 +531,7 @@ function comparisons(c, subj){
     out.fold = svg;
   }
   const oe = document.createElement('div');
-  if (c.epochs && c.epochs.length) oe.appendChild(epochPlot(c.epochs, 'depth per epoch · ink odd, blue even', c.depth_ppm, r => (Math.abs(r.epoch)%2) ? 'var(--ink)' : 'var(--fit)'));
+  if (c.epochs && c.epochs.length) oe.appendChild(epochPlot(c.epochs, 'depth per subject epoch · ink odd, blue even', c.depth_ppm, r => (Math.abs(r.epoch)%2) ? 'var(--ink)' : 'var(--fit)'));
   oe.insertAdjacentHTML('beforeend', epochList(c.epochs, ''));
   out.oddeven = oe;
   const se = document.createElement('div');
@@ -518,13 +546,13 @@ function comparisons(c, subj){
 function checkRow(k){
   const value = (k.value === null || k.value === undefined) ? '–' : k.value;
   const why = k.why + (k.note ? ` (${k.note})` : '') + (k.state === 'not_measured' ? ' This check did not run, so it is not a pass.' : '');
-  return `<tr tabindex="0" class="chk chk-${k.state}" aria-label="${esc(k.name)}: ${esc(CHK_WORD[k.state])}. value ${esc(value)}. rule ${esc(k.rule)}. ${esc(why)}">`
-    + `<td class="c-name"><span class="glyph ${CHK_CLS[k.state]}"><span aria-hidden="true">${CHK_GLYPH[k.state]}</span> <span class="word">${esc(CHK_WORD[k.state])}</span></span> ${esc(k.name)}</td>`
-    + `<td class="c-val">${esc(value)}</td><td class="c-rule">${esc(k.rule)}</td><td class="why">${esc(why)}</td></tr>`;
+  return `<tr role="row" tabindex="0" class="chk chk-${k.state}" aria-label="${esc(k.name)}: ${esc(CHK_WORD[k.state])}. value ${esc(value)}. rule ${esc(k.rule)}. ${esc(why)}">`
+    + `<td role="cell" class="c-name"><span class="glyph ${CHK_CLS[k.state]}"><span aria-hidden="true">${CHK_GLYPH[k.state]}</span> <span class="word">${esc(CHK_WORD[k.state])}</span></span> ${esc(k.name)}</td>`
+    + `<td role="cell" class="c-val">${esc(value)}</td><td role="cell" class="c-rule">${esc(k.rule)}</td><td role="cell" class="why">${esc(why)}</td></tr>`;
 }
 function ledger(c){
-  return `<tr><th colspan="4" class="grp" scope="colgroup">Vetting checks (light curve only) · outcome: ${esc(OUT_LABEL[c.outcome])}</th></tr>${c.checks.map(checkRow).join('')}`
-    + `<tr><th colspan="4" class="grp" scope="colgroup">Feed admission rules (discover.py), not vetting · ${esc(c.feed.result)}</th></tr>${c.feed.rules.map(checkRow).join('')}`;
+  return `<tr role="row"><th role="cell" colspan="4" class="grp" scope="colgroup">Vetting checks (light curve only) · outcome: ${esc(OUT_LABEL[c.outcome])}</th></tr>${c.checks.map(checkRow).join('')}`
+    + `<tr role="row"><th role="cell" colspan="4" class="grp" scope="colgroup">Feed admission rules (discover.py), not vetting · ${esc(c.feed.result)}</th></tr>${c.feed.rules.map(checkRow).join('')}`;
 }
 
 function rationales(c){
@@ -544,18 +572,27 @@ let redraw = null;
 let resizeTimer = 0;
 window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => redraw && redraw(), 120); });
 
+// Provenance of a merged signal: each subject's own BLS result, as stored.
+function blsTable(s){
+  if (!s.bls || !s.bls.length) return '';
+  return `<ul class="epochs" aria-label="Per-subject BLS results">${s.bls.map(b => `<li>subject ${esc(b.subject_id)}: BLS P ${fmt(b.period_days,4)} d, t0 ${fmt(b.bls_t0,4)}, duration ${fmt((b.bls_duration_days||0)*24,1)} h, ${b.n_transits} transits, ${b.dips.length} dip${b.dips.length===1?'':'s'}${b.reference ? ' · reference for epoch numbers' : ''}</li>`).join('')}</ul>`
+    + (s.bls.length > 1 ? `<p class="scope">Merged because these per-subject results are on the same target, their periods agree within 1 percent, and each one's predicted epochs fall within one transit duration of the other's. Each BLS result is kept as is; no combined period is fitted.</p>` : '');
+}
+
 function scopeNote(c){
   const days = D.subject_days ? `${fmt(D.subject_days,0)}-day` : 'per-subject';
   const eph = c.period_days ? `BLS period ${fmt(c.period_days,3)} d, t0 ${fmt(c.bls_t0,4)}, duration ${fmt((c.bls_duration_days||0)*24,1)} h; ${(c.epochs||[]).length} predicted epochs measured in this subject.` : 'No BLS ephemeris covers this dip.';
-  return `Scope: the BLS search and its epochs are per ${days} subject, not per TESS sector. ${eph} Depth and duration are the consensus window's measured values. This is a candidate, unconfirmed.`;
+  const s = sigById[c.signal_id], merged = s && (s.bls||[]).length > 1 ? ` This signal merges ${s.bls.length} per-subject BLS results; epoch numbers E count on the reference subject's ephemeris.` : '';
+  return `Scope: the BLS search and its epochs are per ${days} subject, not per TESS sector. ${eph}${merged} Depth and duration are the consensus window's measured values. This is a candidate, unconfirmed.`;
 }
 
-function crossmatchLine(){
+function crossmatchLine(c){
   const x = D.crossmatch || {};
+  const cmp = ((x.comparison || {}).by_candidate || {})[c.candidate_id];
   const when = x.fetched_at ? ` stored ${esc(x.fetched_at.slice(0,10))}` : '';
   const cls = x.status === 'matched' ? 'xm-hit' : x.status === 'no_match' ? 'xm-none' : 'xm-notrun';
   const ran = x.status === 'matched' || x.status === 'no_match';
-  const text = ran ? esc(x.line) + '.' : 'Known-planet cross-match not run: the archive was unreachable when this page was built.';
+  const text = ran ? esc(x.line) + '.' + (cmp ? ` <span class="xm-cmp"><b>Comparison for this dip:</b> ${esc(cmp.line)}.</span>` : '') : 'Known-planet cross-match not run: the archive was unreachable when this page was built.';
   return `<p class="xm ${cls}"><span class="xm-k">NASA Exoplanet Archive${when}:</span> ${text} <span class="hint">Archive values only; this page claims no detection either way.</span></p>`;
 }
 
@@ -587,13 +624,17 @@ function renderDossier(){
       <div class="out-main"><span class="glyph" aria-hidden="true">${OUT_GLYPH[c.outcome]}</span> ${esc(OUT_LABEL[c.outcome])}</div>
       <div class="out-why">${reasons.length ? 'because: ' + esc(reasons.join(' · ')) : 'every vetting check measured and passing'}</div>
       <div class="out-feed"><span class="xm-k">Feed admission rule (discover.py), not vetting:</span> ${esc(c.feed.result)}${feedFail.length ? ' · ' + esc(feedFail.join(', ')) : ''}</div>
-      ${crossmatchLine()}
+      ${crossmatchLine(c)}
     </section>
+    <p class="filternote" id="filternote" hidden></p>
     <div class="head">
       <div><div class="hint">candidate, unconfirmed · ${esc(c.target)} · ${esc(c.mission)} · subject ${esc(c.subject_id)}</div>
       <h2>Signal ${esc(sigLabel(s))} <span class="dipid">· dip ${e !== null ? 'E'+e+' · ' : ''}${esc(c.candidate_id)}</span></h2></div>
       <div class="sigout">signal: ${outBadge(s.outcome)}</div>
     </div>
+    ${sec('strip', 'Transit strip', 'stored measurements only · nothing is fitted · <kbd>s</kbd> collapses', `<div class="hero-wrap strip" id="strip" tabindex="0" role="group" aria-label="Transit strip for ${esc(c.candidate_id)}. Use left and right arrow keys to step through the stored bins, Shift for ten, Home and End for the ends."></div>
+      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each · SIM = simulated detector (not a person), CLAUDE = Claude model</span></div>
+      <p class="scope">${scopeNote(c)}</p>`)}
     <div class="facts">
       <div><span>mid-time</span>${fmt(c.t_center,3)} ${esc(c.time_unit)}</div>
       <div><span>duration</span>${fmt(c.duration_hours,2)} h</div>
@@ -602,16 +643,13 @@ function renderDossier(){
       <div><span>panel</span>${fmt(c.score,2)} · marked by ${c.n_reviewers} of ${nAll} reviewers: ${esc(reviewerSummary(c.reviewers))} (panel: ${esc(reviewerSummary(Object.keys(D.reviewers)))})</div>
       <div><span>BLS period</span>${c.period_days ? fmt(c.period_days,3)+' d (this subject)' : 'none'}</div>
       <div><span>BLS t0</span>${(c.bls_t0 !== null && c.bls_t0 !== undefined) ? fmt(c.bls_t0,4) : '–'}</div>
-    </div>
-    ${sec('strip', 'Transit strip', 'stored measurements only · nothing is fitted · <kbd>s</kbd> collapses', `<div class="hero-wrap strip" id="strip" tabindex="0" role="group" aria-label="Transit strip for ${esc(c.candidate_id)}. Use left and right arrow keys to step through the stored bins, Shift for ten, Home and End for the ends."></div>
-      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each · SIM = simulated detector (not a person), CLAUDE = Claude model</span></div>
-      <p class="scope">${scopeNote(c)}</p>`)}`;
+    </div>`;
   const dipBtns = s.dips.map(id => { const d = byId[id], ep = epochOf(d); return `<button class="dipbtn${id===c.candidate_id?' cur':''}" data-dip="${esc(id)}" aria-current="${id===c.candidate_id}">${ep !== null ? 'E'+ep+' · ' : ''}${fmt(d.t_center,3)} · ${fmt(d.depth_ppm,0)} ppm · <span class="${OUT_CLS[d.outcome]}"><span aria-hidden="true">${OUT_GLYPH[d.outcome]}</span> ${esc(d.outcome)}</span></button>`; }).join('');
   rest.innerHTML = `
-    ${sec('signal', `Signal · ${s.dips.length} dip${s.dips.length===1?'':'s'}`, s.period_days ? `one BLS period in subject ${esc(s.subject_id)}; each dip vetted on its own` : 'no BLS period: this dip is its own signal', `<div class="dips">${dipBtns}</div>`)}
+    ${sec('signal', `Signal · ${s.dips.length} dip${s.dips.length===1?'':'s'}`, s.period_days ? ((s.bls||[]).length > 1 ? `one signal from ${s.bls.length} per-subject BLS results that agree; each dip vetted on its own` : `one BLS period in subject ${esc(s.subject_id)}; each dip vetted on its own`) : 'no BLS period: this dip is its own signal', `<div class="dips">${dipBtns}</div>${blsTable(s)}`)}
     ${sec('ctx', 'Subject in context', 'blue: this dip · pale blue: same signal · grey: other dips here', '<div class="hero-wrap" id="ctx"></div>')}
     ${sec('cmp', 'Comparisons', 'phase fold · stored per-epoch depths · secondary window', '<div class="compare" id="cmp"></div>')}
-    ${sec('ledger', 'Verdict ledger', 'every check, measured value, rule', `<div class="scroll"><table class="ledger"><tbody>${ledger(c)}</tbody></table></div>`)}
+    ${sec('ledger', 'Verdict ledger', 'every check, measured value, rule', `<div class="scroll"><table class="ledger" role="table" aria-label="Verdict ledger for ${esc(c.candidate_id)}"><thead role="rowgroup"><tr role="row" class="lhead"><th role="columnheader" scope="col">Check</th><th role="columnheader" scope="col">Value</th><th role="columnheader" scope="col">Rule</th><th role="columnheader" scope="col">Why</th></tr></thead><tbody role="rowgroup">${ledger(c)}</tbody></table></div><p class="scope">Rows marked signal-level are measured once per BLS ephemeris over all its epochs in the subject, not per dip, so every dip from that subject shows the same value (a merged signal shows each subject's own value). σ values are the stored errors; Δ uses √(σ_odd² + σ_even²), as the vetting code does.</p>`)}
     ${sec('rev', 'Reviewers', `${nAll} reviewers: ${esc(reviewerSummary(Object.keys(D.reviewers)))}`, `<div class="rat">${rationales(c)}</div>`)}
     <div class="prov">run ${esc(D.provenance.run_time)} · config ${esc(D.provenance.config_sha256.slice(0,16))} · pipeline ${esc(D.provenance.exoplan_version)} · ${esc(D.provenance.claude_prompt_version || '')}<br>candidate ${esc(c.candidate_id)} · signal ${esc(s.signal_id)} · subject ${esc(c.subject_id)}<br>cross-match: ${esc((D.crossmatch||{}).source || '')} · status ${esc((D.crossmatch||{}).status || 'not_run')}</div>`;
   document.querySelectorAll('.sectoggle').forEach(b => b.addEventListener('click', () => toggleSection(b.dataset.sec)));
@@ -623,10 +661,11 @@ function renderDossier(){
     redraw(true);
     $('#ctx').appendChild(context(c, subj));
     const cmp = comparisons(c, subj);
-    for (const k of ['fold','oddeven','secondary']){ const wrap = document.createElement('div'); wrap.appendChild(cmp[k]); if (k==='fold') wrap.insertAdjacentHTML('beforeend','<p>Every transit folded on the period. A planet repeats at one phase.</p>'); if (k==='oddeven') wrap.insertAdjacentHTML('beforeend','<p>Alternating depths point to a binary at twice the period. Each value is stored by the pipeline at a BLS-predicted epoch.</p>'); if (k==='secondary') wrap.insertAdjacentHTML('beforeend','<p>A dip here would point to an eclipsing binary.</p>'); $('#cmp').appendChild(wrap); }
+    for (const k of ['fold','oddeven','secondary']){ const wrap = document.createElement('div'); wrap.appendChild(cmp[k]); if (k==='fold') wrap.insertAdjacentHTML('beforeend','<p>Every transit folded on the period. A planet repeats at one phase.</p>'); if (k==='oddeven') wrap.insertAdjacentHTML('beforeend','<p>Alternating depths point to a binary at twice the period. Each value is stored by the pipeline at a BLS-predicted epoch of this dip’s subject (epochs numbered within the subject).</p>'); if (k==='secondary') wrap.insertAdjacentHTML('beforeend','<p>A dip here would point to an eclipsing binary.</p>'); $('#cmp').appendChild(wrap); }
   } else {
     $('#strip').outerHTML = '<div class="empty">No plot data stored for this subject.</div>';
   }
+  updateFilterNote();
 }
 
 // On a phone the outcome and the strip come first; the list follows as a collapsible section.
@@ -699,6 +738,38 @@ def _check(key, name, value, rule, state, why, note=""):
     return {"key": key, "name": name, "value": value, "rule": rule, "state": state, "why": why, "note": note}
 
 
+def _ppm(x: float) -> str:
+    """A depth in ppm, with a true minus sign."""
+    return f"{x * 1e6:.0f}".replace("-", "−")
+
+
+def _sig(x: float) -> str:
+    return f"{x:.1f}".replace("-", "−")
+
+
+def odd_even_value(od, ev, oe, ee) -> str | None:
+    """'251 ± 12 / 247 ± 8 ppm, Δ = 0.3σ' from the stored depths and errors.
+
+    The σ of the difference is √(odd_err² + even_err²), as vet.py uses it.
+    """
+    if od is None or ev is None:
+        return None
+    if oe is None or ee is None:
+        return f"{_ppm(od)} / {_ppm(ev)} ppm (no stored errors)"
+    text = f"{_ppm(od)} ± {_ppm(oe)} / {_ppm(ev)} ± {_ppm(ee)} ppm"
+    sigma = math.hypot(oe, ee)
+    return text + (f", Δ = {_sig(abs(od - ev) / sigma)}σ" if sigma > 0 else "")
+
+
+def secondary_value(sd, se) -> str | None:
+    """'−10 ± 8 ppm (−1.2σ)' from the stored secondary depth and error."""
+    if sd is None:
+        return None
+    if se is None or se <= 0:
+        return f"{_ppm(sd)} ppm (no stored error)"
+    return f"{_ppm(sd)} ± {_ppm(se)} ppm ({_sig(sd / se)}σ)"
+
+
 def vetting_checks(c: dict) -> list[dict]:
     """Every vetting check for one dip, from stored metrics and flags only.
 
@@ -733,14 +804,15 @@ def vetting_checks(c: dict) -> list[dict]:
     # Odd/even is compared only when both parities show a dip at ≥ 5σ (vet.py); otherwise it never ran.
     od, ev, oe, ee = (_num(m.get(k)) for k in ("odd_depth", "even_depth", "odd_err", "even_err"))
     oe_ran = None not in (od, ev, oe, ee) and oe > 0 and ee > 0 and min(od / oe, ev / ee) >= 5.0
-    oe_value = None if None in (od, ev) else f"{od * 1e6:.0f} / {ev * 1e6:.0f} ppm"
-    oe_note = "" if oe_ran or oe_value is None else "one parity has no dip at ≥ 5σ, so the comparison did not run"
-    out.append(_check("oddeven", "odd / even", oe_value, "agree within 3σ",
-                      flagged("odd_even_mismatch", oe_ran, True), "Alternating depths would mean a binary at twice the period.", oe_note))
+    out.append(_check("oddeven", "odd / even (signal-level)", odd_even_value(od, ev, oe, ee), "|Δ| ≤ 3σ, σ = √(σ_odd² + σ_even²)",
+                      flagged("odd_even_mismatch", oe_ran, True),
+                      "Alternating depths would mean a binary at twice the period. Measured once per BLS ephemeris over all its epochs in the subject, not per dip.",
+                      "" if oe_ran or None in (od, ev) else "one parity has no dip at ≥ 5σ, so the comparison did not run"))
     sd, se = _num(m.get("secondary_depth")), _num(m.get("secondary_err"))
     sec_ran = sd is not None and se is not None and se > 0
-    out.append(_check("secondary", "secondary eclipse", None if sd is None else f"{sd * 1e6:.0f} ppm", "not significant",
-                      flagged("secondary_eclipse", sec_ran, True), "A dip at phase 0.5 would mean an eclipsing binary."))
+    out.append(_check("secondary", "secondary eclipse (signal-level)", secondary_value(sd, se), "depth ≤ 3σ (one-sided)",
+                      flagged("secondary_eclipse", sec_ran, True),
+                      "A dip at phase 0.5 would mean an eclipsing binary. Measured once per BLS ephemeris at phase 0.5 in the subject, not per dip."))
     # Ephemeris: measured when the dip sits on a BLS ephemeris, or the code flagged it off one.
     eph_measured = _num(c.get("period_days")) is not None or "off_ephemeris" in flags
     out.append(_check("ephemeris", "ephemeris", None if not eph_measured else ("off" if "off_ephemeris" in flags else "on"),
@@ -786,37 +858,142 @@ def feed_rules(c: dict) -> dict:
     return {"rules": rules, "result": admitted}
 
 
-def group_signals(candidates: list[dict]) -> list[dict]:
-    """Group dips into signals: one per (subject, BLS period), epochs as children.
+MERGE_PERIOD_TOL = 0.01  # periods of one signal agree within 1 percent
 
-    A dip with no BLS period is its own signal. Signal outcome is the most
-    severe outcome among its dips, so a signal never reads better than a dip in it.
+
+def _bls_duration(dips: list[dict]) -> float | None:
+    """The stored BLS duration of a subject's ephemeris, else the widest stored window."""
+    d = _num(dips[0].get("bls_duration_days"))
+    if d is not None and d > 0:
+        return d
+    widths = [_num(x.get("t_end")) - _num(x.get("t_start")) for x in dips
+              if _num(x.get("t_end")) is not None and _num(x.get("t_start")) is not None]
+    return max(widths) if widths else None
+
+
+def _predicted_offset(t0: float, period: float, t: float) -> float:
+    """Distance (days) from time t to the nearest epoch predicted by (t0, period)."""
+    n = round((t - t0) / period)
+    return abs(t0 + n * period - t)
+
+
+def same_ephemeris(a: dict, b: dict, tol: float = MERGE_PERIOD_TOL) -> bool:
+    """Whether two per-subject BLS results describe one signal.
+
+    Both must be on the same target, their periods must agree within ``tol``
+    (relative to the shorter), and each one's predicted epochs must land within
+    one transit duration of the other's epochs (its stored t0 and its dips).
+    """
+    if not a.get("target") or a.get("target") != b.get("target"):
+        return False
+    pa, pb = a["period_days"], b["period_days"]
+    if abs(pa - pb) / min(pa, pb) >= tol:
+        return False
+    dur = max(x for x in (a.get("duration_days"), b.get("duration_days"), 0.0) if x is not None)
+    if dur <= 0:
+        return False
+    for x, y in ((a, b), (b, a)):
+        times = [y["t0"], *y["dip_times"]]
+        if any(_predicted_offset(x["t0"], x["period_days"], t) > dur for t in times):
+            return False
+    return True
+
+
+def group_signals(candidates: list[dict]) -> list[dict]:
+    """Group dips into signals, epochs as children.
+
+    First one group per (subject, BLS period). The BLS runs per subject, so one
+    planet seen in two subjects gives two slightly different periods; groups of
+    the same target whose ephemerides agree (``same_ephemeris``) are merged into
+    one signal, and each subject's BLS result is kept under ``bls`` as provenance.
+    Groups of different targets never merge. A dip with no BLS period is its own
+    signal. Signal outcome is the most severe outcome among its dips, so a signal
+    never reads better than a dip in it.
     """
     groups: dict = {}
     for c in candidates:
         period = _num(c.get("period_days"))
         key = (c["subject_id"], round(period, 9)) if period is not None else (c["subject_id"], "dip", c["candidate_id"])
         groups.setdefault(key, []).append(c)
-    signals = []
+
+    # One BLS result per periodic group, then merge agreeing ones (union-find).
+    results = []
     for key, dips in groups.items():
         dips = sorted(dips, key=lambda d: d["t_center"])
         first = dips[0]
         period = _num(first.get("period_days"))
-        sid = f"{first['subject_id']}-P{period:.4f}" if period is not None else f"{first['candidate_id']}-single"
+        t0 = _num(first.get("bls_t0"))
+        results.append({
+            "subject_id": first["subject_id"],
+            "target": first.get("target") or "",
+            "period_days": period,
+            "t0": t0 if t0 is not None else (first["t_center"] if period is not None else None),
+            "bls_t0": first.get("bls_t0"),
+            "duration_days": _bls_duration(dips) if period is not None else None,
+            "n_transits": first.get("n_transits"),
+            "dip_times": [d["t_center"] for d in dips],
+            "dips": dips,
+        })
+    parent = list(range(len(results)))
+
+    def root(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    for i, a in enumerate(results):
+        for j in range(i + 1, len(results)):
+            b = results[j]
+            if a["period_days"] is not None and b["period_days"] is not None and same_ephemeris(a, b):
+                parent[root(j)] = root(i)
+    merged: dict = {}
+    for i, r in enumerate(results):
+        merged.setdefault(root(i), []).append(r)
+
+    signals = []
+    for parts in merged.values():
+        parts.sort(key=lambda r: r["dip_times"][0])
+        dips = sorted((d for r in parts for d in r["dips"]), key=lambda d: d["t_center"])
         outcomes = [d.get("outcome") for d in dips if d.get("outcome")]
         sig_outcome = max(outcomes, key=_SEVERITY.__getitem__) if outcomes else None
+        # Reference ephemeris: the subject result with the most BLS transits (ties: the earliest).
+        ref = max(parts, key=lambda r: (r["n_transits"] or 0, -r["dip_times"][0]))
+        period = ref["period_days"]
+        if period is not None:
+            sid = f"{ref['subject_id']}-P{period:.4f}" + (f"+{len(parts) - 1}" if len(parts) > 1 else "")
+        else:
+            sid = f"{dips[0]['candidate_id']}-single"
         signals.append({
             "signal_id": sid,
-            "subject_id": first["subject_id"],
+            "target": ref["target"],
+            "subject_id": ref["subject_id"],
+            "subject_ids": [r["subject_id"] for r in parts],
             "period_days": period,
-            "bls_t0": first.get("bls_t0"),
-            "n_transits": first.get("n_transits"),
+            "bls_t0": ref["bls_t0"],
+            "n_transits": sum(r["n_transits"] or 0 for r in parts) if period is not None else ref["n_transits"],
+            "bls": [{
+                "subject_id": r["subject_id"],
+                "period_days": r["period_days"],
+                "bls_t0": r["bls_t0"],
+                "bls_duration_days": r["duration_days"],
+                "n_transits": r["n_transits"],
+                "dips": [d["candidate_id"] for d in r["dips"]],
+                "reference": r is ref,
+            } for r in parts] if period is not None else [],
             "dips": [d["candidate_id"] for d in dips],
             "outcome": sig_outcome,
         })
-    first_t = {c["candidate_id"]: c["t_center"] for c in candidates}
-    signals.sort(key=lambda s: (s["period_days"] is None, first_t[s["dips"][0]]))
+    signals.sort(key=lambda s: (s["period_days"] is None, min(c["t_center"] for c in candidates if c["candidate_id"] in s["dips"])))
     return signals
+
+
+def signal_epoch(c: dict, signal: dict) -> int | None:
+    """Epoch number of a dip on its signal's reference ephemeris (one count across subjects)."""
+    period, t0 = _num(signal.get("period_days")), _num(signal.get("bls_t0"))
+    if period is None or t0 is None or _num(c.get("period_days")) is None:
+        return None
+    return int(round((c["t_center"] - t0) / period))
 
 
 # ---------- known-planet cross-match (NASA Exoplanet Archive) ----------
@@ -843,15 +1020,18 @@ def query_archive(target: str, star: str | None = None) -> list[dict]:
     if not clauses:
         return []
     where = "default_flag = 1 and (" + " or ".join(clauses) + ")"
-    table = NasaExoplanetArchive.query_criteria(table="ps", select="pl_name,hostname,pl_orbper,tic_id", where=where)
+    table = NasaExoplanetArchive.query_criteria(table="ps", select="pl_name,hostname,pl_orbper,pl_tranmid,tic_id", where=where)
     planets = []
     for row in table:
         per = row["pl_orbper"]
         per = getattr(per, "value", per)
+        mid = row["pl_tranmid"]
+        mid = getattr(mid, "value", mid)
         planets.append({
             "pl_name": str(row["pl_name"]),
             "hostname": str(row["hostname"]),
             "pl_orbper": _num(per),
+            "pl_tranmid": _num(mid),
             "tic_id": str(row["tic_id"]),
         })
     planets.sort(key=lambda p: (p["pl_orbper"] is None, p["pl_orbper"] or 0))
@@ -884,6 +1064,52 @@ def crossmatch(run_dir: Path, targets: list[str], star: str | None = None, *, re
         result["error"] = f"{type(exc).__name__}: {exc}"[:300]
     path.write_text(json.dumps(result, indent=2))
     return result
+
+
+# Offsets from a mission time system to BJD (TDB), the archive's pl_tranmid system.
+TIME_OFFSETS_BJD = {"BTJD": 2457000.0, "BKJD": 2454833.0, "BJD": 0.0}
+
+
+def compare_with_archive(planets: list[dict], dips: list[dict], tol: float = MERGE_PERIOD_TOL) -> dict:
+    """Compare each dip with each archive planet, from stored values only.
+
+    For every archive planet with a period: ΔP = |P_bls - P_archive| / P_archive
+    (percent of the archive period), and the offset in minutes of the nearest
+    transit predicted by the archive's pl_tranmid and pl_orbper from the dip's
+    stored mid-time (positive: the predicted transit comes later). A planet is
+    consistent when ΔP is below ``tol``. Archive values only; this claims no
+    detection either way.
+    """
+    out = {}
+    for c in dips:
+        P = _num(c.get("period_days"))
+        t = _num(c.get("t_center"))
+        offset = TIME_OFFSETS_BJD.get(str(c.get("time_unit") or "").upper())
+        rows = []
+        for p in planets:
+            pa = _num(p.get("pl_orbper"))
+            if pa is None or pa <= 0:
+                continue
+            row = {"pl_name": p["pl_name"], "pl_orbper": pa, "dP_pct": None, "epoch_offset_min": None}
+            if P is not None:
+                row["dP_pct"] = abs(P - pa) / pa * 100.0
+            mid = _num(p.get("pl_tranmid"))
+            if mid is not None and t is not None and offset is not None:
+                t_bjd = t + offset
+                n = round((t_bjd - mid) / pa)
+                row["epoch_offset_min"] = (mid + n * pa - t_bjd) * 1440.0
+            rows.append(row)
+        hits = sorted((r for r in rows if r["dP_pct"] is not None and r["dP_pct"] < tol * 100), key=lambda r: r["dP_pct"])
+        if hits:
+            h = hits[0]
+            off = "not computed (no archive mid-time stored)" if h["epoch_offset_min"] is None else f"{h['epoch_offset_min']:.0f} min".replace("-", "−")
+            line = f"consistent with {h['pl_name']}: ΔP {h['dP_pct']:.2f}%, nearest epoch offset {off}"
+        elif P is None:
+            line = "no archive planet within tolerance (this dip has no BLS period to compare)"
+        else:
+            line = "no archive planet within tolerance"
+        out[c["candidate_id"]] = {"planets": rows, "consistent_with": hits[0]["pl_name"] if hits else None, "line": line}
+    return {"tolerance_dP_pct": tol * 100, "time_offsets_bjd": TIME_OFFSETS_BJD, "by_candidate": out}
 
 
 def crossmatch_line(result: dict) -> str:
@@ -919,15 +1145,22 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
         c["outcome"] = outcome(c["checks"], c["flags"], c["passed"])
         c["feed"] = feed_rules(c)
     signals = group_signals(run["candidates"])
+    cands = {c["candidate_id"]: c for c in run["candidates"]}
     for s in signals:
         for cid in s["dips"]:
-            next(c for c in run["candidates"] if c["candidate_id"] == cid)["signal_id"] = s["signal_id"]
+            cands[cid]["signal_id"] = s["signal_id"]
+            cands[cid]["signal_epoch"] = signal_epoch(cands[cid], s)
     kinds = list(run["reviewers"].values())
     n_sim = sum(1 for k in kinds if k == "simulated")
     n_claude = sum(1 for k in kinds if k in ("claude", "claude_code"))
     targets = sorted({c["target"] for c in run["candidates"] if c["target"]})
     xm = crossmatch(run_dir, targets, star, refresh=refresh_crossmatch)
     xm["line"] = crossmatch_line(xm)
+    if xm.get("status") in ("matched", "no_match"):
+        # Stored with the archive values, so the page rebuilds offline.
+        xm["comparison"] = compare_with_archive(xm.get("planets") or [], run["candidates"])
+        stored = {k: v for k, v in xm.items() if k != "line"}
+        (run_dir / CROSSMATCH_FILE).write_text(json.dumps(stored, indent=2))
     data = {
         "title": title,
         "candidates": run["candidates"],
@@ -973,6 +1206,7 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
   <main class="dossier" id="dossier"><div id="dtop"></div><div id="listslot"></div><div id="drest"></div></main>
 </div>
 <div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
+<div id="filterlive" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
 <script id="data" type="application/json">{payload}</script>
 <script>{DOCKET_JS}</script>
 </body></html>

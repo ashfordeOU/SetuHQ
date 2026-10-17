@@ -10,6 +10,7 @@ from exoplan.docket import (
     DOCKET_JS,
     box_model,
     build_docket,
+    compare_with_archive,
     crossmatch_line,
     group_signals,
     outcome,
@@ -146,20 +147,20 @@ PERIODIC_METRICS = {
 }
 
 
-def _dip(cid, t, period=6.27, subject="s1", flags=(), metrics=None, passed=True):
-    return {"candidate_id": cid, "subject_id": subject, "t_center": t, "period_days": period, "bls_t0": 1325.5 if period else None,
+def _dip(cid, t, period=6.27, subject="s1", flags=(), metrics=None, passed=True, target="TIC 1", t0=1325.5):
+    return {"candidate_id": cid, "subject_id": subject, "target": target, "t_center": t, "period_days": period,
+            "bls_t0": t0 if period else None, "bls_duration_days": 0.0833 if period else None, "time_unit": "BTJD",
             "n_transits": 3 if period else 0, "flags": list(flags), "passed": passed, "depth_ppm": 240.0,
             "metrics": dict(PERIODIC_METRICS if metrics is None else metrics)}
 
 
 def test_three_epochs_of_one_period_are_one_signal_with_three_dips():
     dips = [_dip("s1-000", 1331.77), _dip("s1-001", 1338.05), _dip("s1-003", 1325.50),
-            _dip("s2-002", 1344.26, period=6.26, subject="s2"),
             _dip("s2-005", 1348.94, period=None, subject="s2", flags=["off_ephemeris"])]
     for d in dips:
         d["outcome"] = outcome(vetting_checks(d), d["flags"], d["passed"])
     signals = group_signals(dips)
-    assert len(signals) == 3
+    assert len(signals) == 2
     first = next(s for s in signals if s["subject_id"] == "s1")
     assert first["dips"] == ["s1-003", "s1-000", "s1-001"]  # one signal, three dips in time order
     singles = [s for s in signals if s["period_days"] is None]
@@ -253,3 +254,62 @@ def test_reviewer_kinds_are_counted_in_the_header(run_dir, tmp_path):
     data = _page_data(build_docket(run_dir, tmp_path / "docket", title="t").read_text())
     assert data["counts"]["simulated"] == 2 and data["counts"]["reviewers"] == 2
     assert "reviewers: ${reviewerSummary(" in DOCKET_JS
+
+
+def test_one_ephemeris_in_two_subjects_is_one_signal():
+    # pi Men c as the run stores it: P 6.2726 d in one subject, 6.2616 d in the next.
+    a = [_dip(f"s1-{i}", t, period=6.272620, t0=1325.5004) for i, t in enumerate((1325.4993, 1331.7711, 1338.0495))]
+    b = [_dip(f"s2-{i}", t, period=6.261557, subject="s2", t0=1344.3218) for i, t in enumerate((1344.2644, 1350.5849))]
+    for d in a + b:
+        d["outcome"] = outcome(vetting_checks(d), d["flags"], d["passed"])
+    signals = group_signals(a + b)
+    assert len(signals) == 1
+    s = signals[0]
+    assert s["dips"] == ["s1-0", "s1-1", "s1-2", "s2-0", "s2-1"]
+    assert s["subject_ids"] == ["s1", "s2"]
+    # Each subject's BLS result is kept as provenance, unchanged.
+    assert [(b_["subject_id"], b_["period_days"], b_["bls_t0"]) for b_ in s["bls"]] == [("s1", 6.272620, 1325.5004), ("s2", 6.261557, 1344.3218)]
+    from exoplan.docket import signal_epoch
+    assert [signal_epoch(d, s) for d in a + b] == [0, 1, 2, 3, 4]
+
+
+def test_different_targets_or_ephemerides_never_merge():
+    a = [_dip("a-0", 1325.50, period=6.2726, t0=1325.50, target="TIC 1")]
+    b = [_dip("b-0", 1344.32, period=6.2616, subject="s2", t0=1344.32, target="TIC 2")]
+    assert len(group_signals(a + b)) == 2
+    # Same target, periods within 1 percent, but the epochs do not line up: two signals.
+    c = [_dip("c-0", 1347.00, period=6.2616, subject="s3", t0=1347.00, target="TIC 1")]
+    assert len(group_signals(a + c)) == 2
+    # Same target, epochs line up, periods 2 percent apart: two signals.
+    d = [_dip("d-0", 1344.32, period=6.40, subject="s4", t0=1344.32, target="TIC 1")]
+    assert len(group_signals(a + d)) == 2
+
+
+def test_ledger_shows_uncertainties_and_the_statistic():
+    checks = {k["key"]: k for k in vetting_checks(_dip("a", 1.0, metrics=dict(
+        PERIODIC_METRICS, odd_depth=2.512e-4, even_depth=2.471e-4, odd_err=1.164e-5, even_err=8.18e-6,
+        secondary_depth=-9.73e-6, secondary_err=8.22e-6)))}
+    assert checks["oddeven"]["value"] == "251 ± 12 / 247 ± 8 ppm, Δ = 0.3σ"
+    assert checks["secondary"]["value"] == "−10 ± 8 ppm (−1.2σ)"
+    assert "signal-level" in checks["oddeven"]["name"] and "signal-level" in checks["secondary"]["name"]
+
+
+def test_archive_comparison_match_and_no_match():
+    planets = [{"pl_name": "pi Men c", "pl_orbper": 6.2678399, "pl_tranmid": 2458325.50400},
+               {"pl_name": "pi Men d", "pl_orbper": 124.64, "pl_tranmid": None}]
+    hit = _dip("hit", 1338.0495, period=6.272620)
+    miss = _dip("miss", 1338.0495, period=4.0)
+    single = _dip("single", 1348.94, period=None)
+    out = compare_with_archive(planets, [hit, miss, single])["by_candidate"]
+    h = out["hit"]
+    assert h["consistent_with"] == "pi Men c"
+    c = next(r for r in h["planets"] if r["pl_name"] == "pi Men c")
+    assert c["dP_pct"] == pytest.approx(abs(6.272620 - 6.2678399) / 6.2678399 * 100)
+    # Archive epoch 2: 2458325.504 + 2 * 6.2678399 = 2458338.0397 BJD = 1338.0397 BTJD, 0.0098 d before the dip.
+    assert c["epoch_offset_min"] == pytest.approx((2458325.504 + 2 * 6.2678399 - 2458338.0495) * 1440)
+    assert h["line"].startswith("consistent with pi Men c: ΔP 0.08%, nearest epoch offset −14 min")
+    assert out["miss"]["consistent_with"] is None
+    assert out["miss"]["line"] == "no archive planet within tolerance"
+    assert out["single"]["line"].startswith("no archive planet within tolerance")
+    d = next(r for r in h["planets"] if r["pl_name"] == "pi Men d")
+    assert d["epoch_offset_min"] is None
