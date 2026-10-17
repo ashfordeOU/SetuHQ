@@ -27,6 +27,8 @@ class Consensus:
     n_reviewers: int
     reviewers: tuple[str, ...]
     planet_fraction: float
+    # The marks that counted, one per reviewer: (reviewer_id, t_start, t_end).
+    marks: tuple = ()
 
     @property
     def center(self) -> float:
@@ -90,9 +92,63 @@ def aggregate(
                     n_reviewers=len(first_mark),
                     reviewers=tuple(sorted(first_mark)),
                     planet_fraction=planet_fraction,
+                    marks=tuple((r, a, b) for r, (a, b) in sorted(first_mark.items())),
                 )
             )
     return sorted(_merge_duplicates(results, gap_days), key=lambda c: c.score, reverse=True)
+
+
+def counting_rule(gap_days: float, min_score: float) -> str:
+    """The rule that decides which marks count toward a consensus event, in words."""
+    return (
+        f"marks are taken in order of centre and a mark joins the cluster only when its centre lies within "
+        f"{gap_days:g} d of the previous mark's centre (single-linkage clustering, aggregate.py); a cluster whose weighted "
+        f"share is below {min_score:g} is dropped, and of two clusters on one dip only the stronger is kept. "
+        f"Overlap with the consensus window is not part of the rule"
+    )
+
+
+def audit_marks(event: Consensus, classifications: list[Classification], gap_days: float) -> list[dict]:
+    """For one event, every reviewer's marks over its window and whether each counted.
+
+    This only reports the rule in :func:`aggregate`; it does not change it. A
+    mark counts when it is the reviewer's mark in the event's cluster
+    (``event.marks``). ``overlap_frac`` is the share of the consensus window
+    [t_start, t_end] the mark covers. ``centre_gap_days`` is the distance from
+    the mark's centre to the nearest centre of a counted mark (another one, for
+    a counted mark). A mark whose centre is more than ``gap_days`` from every
+    counted centre fell in a separate cluster, whatever its overlap.
+    """
+    panel = _latest_per_reviewer([c for c in classifications if c.subject_id == event.subject_id])
+    counted = {r: (a, b) for r, a, b in event.marks}
+    centres = {r: 0.5 * (a + b) for r, (a, b) in counted.items()}
+    width = event.t_end - event.t_start
+    out = []
+    for reviewer_id in sorted(panel):
+        rows = []
+        for m in panel[reviewer_id].marks:
+            overlap = max(0.0, min(m.t_end, event.t_end) - max(m.t_start, event.t_start))
+            is_counted = counted.get(reviewer_id) == (m.t_start, m.t_end)
+            if overlap <= 0 and not is_counted:
+                continue
+            centre = 0.5 * (m.t_start + m.t_end)
+            others = [c for r, c in centres.items() if not (is_counted and r == reviewer_id)]
+            rows.append({
+                "t_start": m.t_start,
+                "t_end": m.t_end,
+                "overlap_frac": overlap / width if width > 0 else None,
+                "centre_gap_days": min(abs(centre - c) for c in others) if others else None,
+                "counted": is_counted,
+            })
+        out.append({
+            "reviewer_id": reviewer_id,
+            "counted": reviewer_id in counted,
+            # The counted mark's overlap when one counted, else the largest overlap of any mark.
+            "overlap_frac": (next((r["overlap_frac"] for r in rows if r["counted"]), None) if reviewer_id in counted
+                             else max((r["overlap_frac"] or 0.0 for r in rows), default=0.0)) if width > 0 else None,
+            "marks": rows,
+        })
+    return out
 
 
 def _merge_duplicates(events: list[Consensus], gap_days: float) -> list[Consensus]:

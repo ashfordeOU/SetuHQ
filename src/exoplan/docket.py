@@ -143,6 +143,10 @@ kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--rule);border-rad
 .legend .k-box{width:16px;height:0;border-top:2px solid var(--fit)}
 .legend .k-band{width:12px;height:10px;background:var(--fit);opacity:.25}
 .legend .k-lane{width:14px;height:8px;border-radius:2px;background:var(--l-det)}
+.legend .k-hatch{width:14px;height:8px;border-radius:2px;border:1px solid var(--muted);background:repeating-linear-gradient(45deg,var(--muted) 0 2px,transparent 2px 4px)}
+.panelfact{flex-basis:100%;min-width:0;overflow-wrap:anywhere}
+.countrule{margin:4px 0 0;font:12px/1.5 "Inter Tight",sans-serif;color:var(--muted)}
+.countlist{color:var(--muted)}
 .scope{margin:0;font:12px/1.5 "Inter Tight",sans-serif;color:var(--muted)}
 .filternote{margin:0;border:1px dashed var(--flag);border-radius:6px;padding:8px 12px;font:13px/1.5 "Inter Tight",sans-serif}
 .filternote[hidden]{display:none}
@@ -364,6 +368,14 @@ function strip(c, subj, marks, decisions, wrap){
   svg.style.height = H + 'px';
   const fs = narrow ? 9 : 11;
   const T = (x, y, s, a='start', cls='') => { const t = tx(svg, x, y, s, a, cls); t.style.fontSize = fs + 'px'; return t; };
+  // Hatched fill for a span that did not count toward this dip (stored in c.mark_audit).
+  const defs = el('defs', {}, svg);
+  names.forEach((n, i) => {
+    const pat = el('pattern', {id:`hatch-${i}`, width:5, height:5, patternUnits:'userSpaceOnUse', patternTransform:'rotate(45)'}, defs);
+    el('rect', {width:5, height:5, fill:'var(--panel)'}, pat);
+    el('line', {x1:0, y1:0, x2:0, y2:5, stroke:colourOf(n), 'stroke-width':2.4}, pat);
+  });
+  const countedSpan = (n, a, b) => (c.mark_audit || []).some(r => r.reviewer_id === n && (r.marks || []).some(m => m.counted && Math.abs(m.t_start - a) < 1e-9 && Math.abs(m.t_end - b) < 1e-9));
   if (t0 < subj.start) el('rect', {x:pl, y:pt, width:Math.max(0,X(subj.start)-pl), height:H-axisH-pt, fill:'var(--sel)'}, svg);
   if (t1 > subj.end) el('rect', {x:X(subj.end), y:pt, width:Math.max(0,W-pr-X(subj.end)), height:H-axisH-pt, fill:'var(--sel)'}, svg);
   el('rect', {x:X(c.t_start), y:pt, width:Math.max(2,X(c.t_end)-X(c.t_start)), height:H-axisH-pt, fill:'var(--fit)', opacity:.09}, svg);
@@ -401,8 +413,8 @@ function strip(c, subj, marks, decisions, wrap){
     const lbl = decisions[n]?.label || '';
     const strong = lbl === 'potential planet' || lbl === 'potential_planet';
     for (const [a,b] of spans){
-      const xa = X(Math.max(a,t0)), xb = X(Math.min(b,t1));
-      el('rect', {x:xa, y:y+2, width:Math.max(3, xb-xa), height:lh-5, rx:2, fill:col, opacity: strong ? .85 : .45}, svg);
+      const xa = X(Math.max(a,t0)), xb = X(Math.min(b,t1)), ok = countedSpan(n, a, b);
+      el('rect', {x:xa, y:y+2, width:Math.max(3, xb-xa), height:lh-5, rx:2, fill: ok ? col : `url(#hatch-${i})`, stroke: ok ? 'none' : col, 'stroke-width':1, opacity: ok ? (strong ? .85 : .45) : .9, 'data-counted': String(ok)}, svg);
     }
     const label = `${KIND_TAG(D.reviewers[n])} ${n}`;
     if (narrow){ const t = T(pl+3, y+lh-4, label, 'start', 'lanelbl'); t.setAttribute('fill', col); }
@@ -435,7 +447,7 @@ function strip(c, subj, marks, decisions, wrap){
     const lines = [`bin ${cur+1} of ${pts.length} · ${fmt(q.t,4)} ${c.time_unit}`,
       `flux ${fmt(q.p,0)}${q.e!==null ? ' ± '+fmt(q.e,0) : ''} ppm${q.e===null ? ' (no stored error)' : ''}`,
       `${inside ? 'inside' : 'outside'} the consensus window`,
-      ...(at.length ? at.map(([n,s]) => `${KIND_TAG(D.reviewers[n])} ${n}: ${s.map(([a,b]) => fmt(a,3)+'–'+fmt(b,3)).join(', ')}`) : ['no reviewer span at this time'])];
+      ...(at.length ? at.map(([n,s]) => `${KIND_TAG(D.reviewers[n])} ${n}: ${s.map(([a,b]) => fmt(a,3)+'–'+fmt(b,3) + (countedSpan(n,a,b) ? ' (counted)' : ' (not counted)')).join(', ')}`) : ['no reviewer span at this time'])];
     if (narrow || viaKey){ readout.textContent = lines.join(' · '); }
     if (narrow) return;
     tip.innerHTML = lines.map((l,k) => k ? esc(l) : `<b>${esc(l)}</b>`).join('<br>');
@@ -486,15 +498,21 @@ function context(c, subj){
   return svg;
 }
 
+// "signal epoch E3 (S2 epoch 0, even)": the signal's count, then the subject's own number and parity.
+function epochName(r, what){
+  if (r.signal_epoch === null || r.signal_epoch === undefined) return `epoch ${r.epoch}${what}`;
+  return `signal epoch E${r.signal_epoch}${what} (${esc(r.subject_label || 'subject')} epoch ${r.epoch}${what}, ${r.subject_parity} in its subject)`;
+}
 function epochList(rows, what){
   if (!rows || !rows.length) return '<p>No stored per-epoch measurement for this candidate.</p>';
   return '<ul class="epochs">' + rows.map(r => r.depth_ppm === null || r.depth_ppm === undefined
-    ? `<li>epoch ${r.epoch}${what}: no stored points in window (${r.n_points} points)</li>`
-    : `<li>measured: ${fmt(r.depth_ppm,0)} ± ${fmt(r.sigma_ppm,0)} ppm at epoch ${r.epoch}${what}</li>`).join('') + '</ul>';
+    ? `<li>${epochName(r, what)}: no stored points in window (${r.n_points} points)</li>`
+    : `<li>measured: ${fmt(r.depth_ppm,0)} ± ${fmt(r.sigma_ppm,0)} ppm at ${epochName(r, what)}</li>`).join('') + '</ul>';
 }
 
+// Axis: signal epoch E (one count across subjects) and, under it, the subject's own label and parity.
 function epochPlot(rows, title, depth, colour){
-  const W=300, H=200, pl=44, pr=10, pt=14, pb=26, svg = el('svg', {viewBox:`0 0 ${W} ${H}`, 'aria-hidden':'true'});
+  const W=300, H=212, pl=44, pr=10, pt=14, pb=38, svg = el('svg', {viewBox:`0 0 ${W} ${H}`, 'aria-hidden':'true'});
   const vals = rows.filter(r => r.depth_ppm !== null && r.depth_ppm !== undefined);
   let lo = 0, hi = depth;
   for (const v of vals){ lo = Math.min(lo, v.depth_ppm - (v.sigma_ppm||0)); hi = Math.max(hi, v.depth_ppm + (v.sigma_ppm||0)); }
@@ -503,7 +521,9 @@ function epochPlot(rows, title, depth, colour){
   for (const p of niceTicks(lo, hi, 4)){ el('line', {x1:pl,x2:W-pr,y1:Y(p),y2:Y(p),class:'grid'}, svg); tx(svg, pl-6, Y(p)+4, Math.round(p), 'end'); }
   el('line', {x1:pl,x2:W-pr,y1:Y(depth),y2:Y(depth),stroke:'var(--fit)','stroke-dasharray':'3 3'}, svg);
   rows.forEach((r,i) => {
-    tx(svg, X(i), H-8, 'E'+r.epoch, 'middle');
+    const hasSig = r.signal_epoch !== null && r.signal_epoch !== undefined;
+    tx(svg, X(i), H-22, 'E'+(hasSig ? r.signal_epoch : r.epoch), 'middle', 'hl');
+    if (hasSig){ const t = tx(svg, X(i), H-8, `${r.subject_label || ''} ${r.subject_parity}`.trim(), 'middle'); t.style.fontSize = '9px'; }
     if (r.depth_ppm === null || r.depth_ppm === undefined) return;
     if (r.sigma_ppm !== null) el('line', {x1:X(i),x2:X(i),y1:Y(r.depth_ppm-r.sigma_ppm),y2:Y(r.depth_ppm+r.sigma_ppm),stroke:'var(--ink)'}, svg);
     el('circle', {cx:X(i), cy:Y(r.depth_ppm), r:4.5, fill: colour(r)}, svg);
@@ -531,11 +551,13 @@ function comparisons(c, subj){
     out.fold = svg;
   }
   const oe = document.createElement('div');
-  if (c.epochs && c.epochs.length) oe.appendChild(epochPlot(c.epochs, 'depth per subject epoch · ink odd, blue even', c.depth_ppm, r => (Math.abs(r.epoch)%2) ? 'var(--ink)' : 'var(--fit)'));
-  oe.insertAdjacentHTML('beforeend', epochList(c.epochs, ''));
+  // A merged signal plots every subject's stored epochs on one axis; colour is the subject's own parity.
+  const s = sigById[c.signal_id], merged = s && (s.bls||[]).length > 1, rowsOE = merged && (s.epoch_rows||[]).length ? s.epoch_rows : c.epochs;
+  if (rowsOE && rowsOE.length) oe.appendChild(epochPlot(rowsOE, 'depth per epoch · ink odd, blue even', c.depth_ppm, r => (Math.abs(r.epoch)%2) ? 'var(--ink)' : 'var(--fit)'));
+  oe.insertAdjacentHTML('beforeend', epochList(rowsOE, ''));
   out.oddeven = oe;
   const se = document.createElement('div');
-  if (c.secondary_epochs && c.secondary_epochs.length) se.appendChild(epochPlot(c.secondary_epochs, 'stored depth at phase 0.5', 0, () => 'var(--muted)'));
+  if (c.secondary_epochs && c.secondary_epochs.length) se.appendChild(epochPlot(c.secondary_epochs, 'stored depth at phase 0.5 · E + 0.5', 0, () => 'var(--muted)'));
   se.insertAdjacentHTML('beforeend', epochList(c.secondary_epochs, ' + 0.5'));
   out.secondary = se;
   return out;
@@ -577,6 +599,23 @@ function blsTable(s){
   if (!s.bls || !s.bls.length) return '';
   return `<ul class="epochs" aria-label="Per-subject BLS results">${s.bls.map(b => `<li>subject ${esc(b.subject_id)}: BLS P ${fmt(b.period_days,4)} d, t0 ${fmt(b.bls_t0,4)}, duration ${fmt((b.bls_duration_days||0)*24,1)} h, ${b.n_transits} transits, ${b.dips.length} dip${b.dips.length===1?'':'s'}${b.reference ? ' · reference for epoch numbers' : ''}</li>`).join('')}</ul>`
     + (s.bls.length > 1 ? `<p class="scope">Merged because these per-subject results are on the same target, their periods agree within 1 percent, and each one's predicted epochs fall within one transit duration of the other's. Each BLS result is kept as is; no combined period is fitted.</p>` : '');
+}
+
+// Why a mark did or did not count, from stored values only (c.count_rule, c.mark_audit).
+function notCountedLegend(c){
+  const g = (c.count_rule || {}).gap_days;
+  return g === undefined ? 'not counted for this dip' : `not counted: centre more than ${g} d from every counted mark (clustering gap)`;
+}
+function countNote(c){
+  const rule = c.count_rule || {}, audit = c.mark_audit || [];
+  if (!rule.text && !audit.length) return '';
+  const pct = x => (x === null || x === undefined) ? '–' : Math.round(x*100) + '%';
+  const items = audit.map(r => {
+    const m = (r.marks || []).find(x => x.counted) || (r.marks || []).slice().sort((p,q) => (q.overlap_frac||0) - (p.overlap_frac||0))[0];
+    const gap = m && m.centre_gap_days !== null && m.centre_gap_days !== undefined ? `, centre gap ${fmt(m.centre_gap_days,3)} d` : '';
+    return `<li>${esc(KIND_TAG(D.reviewers[r.reviewer_id]))} ${esc(r.reviewer_id)}: overlap ${pct(r.overlap_frac)} of the window${m ? gap : ', no mark over the window'} · ${r.counted ? 'counted' : 'not counted'}</li>`;
+  }).join('');
+  return `<p class="countrule"><b>Counting rule:</b> ${esc(rule.text || 'not stored')}.</p>${items ? `<ul class="epochs countlist" aria-label="Overlap of each reviewer with the consensus window">${items}</ul>` : ''}`;
 }
 
 function scopeNote(c){
@@ -633,14 +672,14 @@ function renderDossier(){
       <div class="sigout">signal: ${outBadge(s.outcome)}</div>
     </div>
     ${sec('strip', 'Transit strip', 'stored measurements only · nothing is fitted · <kbd>s</kbd> collapses', `<div class="hero-wrap strip" id="strip" tabindex="0" role="group" aria-label="Transit strip for ${esc(c.candidate_id)}. Use left and right arrow keys to step through the stored bins, Shift for ten, Home and End for the ends."></div>
-      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each · SIM = simulated detector (not a person), CLAUDE = Claude model</span></div>
+      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each · SIM = simulated detector (not a person), CLAUDE = Claude model</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
       <p class="scope">${scopeNote(c)}</p>`)}
     <div class="facts">
       <div><span>mid-time</span>${fmt(c.t_center,3)} ${esc(c.time_unit)}</div>
       <div><span>duration</span>${fmt(c.duration_hours,2)} h</div>
       <div><span>depth</span>${fmt(c.depth_ppm,0)} ppm</div>
       <div><span>SNR</span>${fmt(c.snr,1)}</div>
-      <div><span>panel</span>${fmt(c.score,2)} · marked by ${c.n_reviewers} of ${nAll} reviewers: ${esc(reviewerSummary(c.reviewers))} (panel: ${esc(reviewerSummary(Object.keys(D.reviewers)))})</div>
+      <div class="panelfact"><span>panel</span>${fmt(c.score,2)} · marked by ${c.n_reviewers} of ${nAll} reviewers: ${esc(reviewerSummary(c.reviewers))} (panel: ${esc(reviewerSummary(Object.keys(D.reviewers)))})${countNote(c)}</div>
       <div><span>BLS period</span>${c.period_days ? fmt(c.period_days,3)+' d (this subject)' : 'none'}</div>
       <div><span>BLS t0</span>${(c.bls_t0 !== null && c.bls_t0 !== undefined) ? fmt(c.bls_t0,4) : '–'}</div>
     </div>`;
@@ -649,7 +688,7 @@ function renderDossier(){
     ${sec('signal', `Signal · ${s.dips.length} dip${s.dips.length===1?'':'s'}`, s.period_days ? ((s.bls||[]).length > 1 ? `one signal from ${s.bls.length} per-subject BLS results that agree; each dip vetted on its own` : `one BLS period in subject ${esc(s.subject_id)}; each dip vetted on its own`) : 'no BLS period: this dip is its own signal', `<div class="dips">${dipBtns}</div>${blsTable(s)}`)}
     ${sec('ctx', 'Subject in context', 'blue: this dip · pale blue: same signal · grey: other dips here', '<div class="hero-wrap" id="ctx"></div>')}
     ${sec('cmp', 'Comparisons', 'phase fold · stored per-epoch depths · secondary window', '<div class="compare" id="cmp"></div>')}
-    ${sec('ledger', 'Verdict ledger', 'every check, measured value, rule', `<div class="scroll"><table class="ledger" role="table" aria-label="Verdict ledger for ${esc(c.candidate_id)}"><thead role="rowgroup"><tr role="row" class="lhead"><th role="columnheader" scope="col">Check</th><th role="columnheader" scope="col">Value</th><th role="columnheader" scope="col">Rule</th><th role="columnheader" scope="col">Why</th></tr></thead><tbody role="rowgroup">${ledger(c)}</tbody></table></div><p class="scope">Rows marked signal-level are measured once per BLS ephemeris over all its epochs in the subject, not per dip, so every dip from that subject shows the same value (a merged signal shows each subject's own value). σ values are the stored errors; Δ uses √(σ_odd² + σ_even²), as the vetting code does.</p>`)}
+    ${sec('ledger', 'Verdict ledger', 'every check, measured value, rule', `<div class="scroll"><table class="ledger" role="table" aria-label="Verdict ledger for ${esc(c.candidate_id)}"><thead role="rowgroup"><tr role="row" class="lhead"><th role="columnheader" scope="col">Check</th><th role="columnheader" scope="col">Value</th><th role="columnheader" scope="col">Rule</th><th role="columnheader" scope="col">Why</th></tr></thead><tbody role="rowgroup">${ledger(c)}</tbody></table></div><p class="scope">Rows marked signal-level are measured once per BLS ephemeris over all its epochs in the subject, not per dip, so every dip from that subject shows the same value (a merged signal shows each subject's own value). σ values are the stored errors; Δ uses √(σ_odd² + σ_even²), as the vetting code does.${(s.bls||[]).length > 1 ? ' <b>' + esc(D.cross_subject_note) + '</b>' : ''}</p>`)}
     ${sec('rev', 'Reviewers', `${nAll} reviewers: ${esc(reviewerSummary(Object.keys(D.reviewers)))}`, `<div class="rat">${rationales(c)}</div>`)}
     <div class="prov">run ${esc(D.provenance.run_time)} · config ${esc(D.provenance.config_sha256.slice(0,16))} · pipeline ${esc(D.provenance.exoplan_version)} · ${esc(D.provenance.claude_prompt_version || '')}<br>candidate ${esc(c.candidate_id)} · signal ${esc(s.signal_id)} · subject ${esc(c.subject_id)}<br>cross-match: ${esc((D.crossmatch||{}).source || '')} · status ${esc((D.crossmatch||{}).status || 'not_run')}</div>`;
   document.querySelectorAll('.sectoggle').forEach(b => b.addEventListener('click', () => toggleSection(b.dataset.sec)));
@@ -661,7 +700,7 @@ function renderDossier(){
     redraw(true);
     $('#ctx').appendChild(context(c, subj));
     const cmp = comparisons(c, subj);
-    for (const k of ['fold','oddeven','secondary']){ const wrap = document.createElement('div'); wrap.appendChild(cmp[k]); if (k==='fold') wrap.insertAdjacentHTML('beforeend','<p>Every transit folded on the period. A planet repeats at one phase.</p>'); if (k==='oddeven') wrap.insertAdjacentHTML('beforeend','<p>Alternating depths point to a binary at twice the period. Each value is stored by the pipeline at a BLS-predicted epoch of this dip’s subject (epochs numbered within the subject).</p>'); if (k==='secondary') wrap.insertAdjacentHTML('beforeend','<p>A dip here would point to an eclipsing binary.</p>'); $('#cmp').appendChild(wrap); }
+    for (const k of ['fold','oddeven','secondary']){ const wrap = document.createElement('div'); wrap.appendChild(cmp[k]); if (k==='fold') wrap.insertAdjacentHTML('beforeend','<p>Every transit folded on the period. A planet repeats at one phase.</p>'); if (k==='oddeven') wrap.insertAdjacentHTML('beforeend', `<p>Alternating depths point to a binary at twice the period. Each value is stored by the pipeline at a BLS-predicted epoch of its subject. The axis numbers signal epochs E on the reference ephemeris; under each is the subject (S1, S2 in time order) and the epoch's parity in that subject, which the odd/even test uses.${(sigById[c.signal_id].bls||[]).length > 1 ? ' ' + esc(D.cross_subject_note) : ''}</p>`); if (k==='secondary') wrap.insertAdjacentHTML('beforeend','<p>A dip here would point to an eclipsing binary.</p>'); $('#cmp').appendChild(wrap); }
   } else {
     $('#strip').outerHTML = '<div class="empty">No plot data stored for this subject.</div>';
   }
@@ -996,6 +1035,45 @@ def signal_epoch(c: dict, signal: dict) -> int | None:
     return int(round((c["t_center"] - t0) / period))
 
 
+CROSS_SUBJECT_NOTE = ("Odd/even and secondary were tested within each subject only; parity is numbered per subject. "
+                      "No cross-subject test ran.")
+
+
+def parity(k: int) -> str:
+    return "odd" if abs(int(k)) % 2 else "even"
+
+
+def annotate_signal_epochs(signal: dict, cands: dict) -> None:
+    """Number every stored per-epoch row on the signal's reference ephemeris.
+
+    The pipeline numbers epochs within each subject (``epoch``), and the
+    odd/even and secondary tests use that numbering, so one signal epoch can be
+    even in one subject and odd in another. Each row keeps its subject epoch and
+    parity and gains ``signal_epoch`` (E on the reference ephemeris) and the
+    subject's short label (S1, S2, ... in time order). ``signal["epoch_rows"]``
+    collects the rows of every subject, one row per predicted epoch.
+    """
+    period, t0 = _num(signal.get("period_days")), _num(signal.get("bls_t0"))
+    signal["epoch_rows"] = []
+    if period is None or t0 is None:
+        return
+    for i, part in enumerate(signal.get("bls") or []):
+        label = f"S{i + 1}"
+        part["label"] = label
+        for k, cid in enumerate(part["dips"]):
+            c = cands[cid]
+            c["subject_label"] = label
+            for rows, phase in ((c.get("epochs") or [], 0.0), (c.get("secondary_epochs") or [], 0.5)):
+                for r in rows:
+                    r["signal_epoch"] = int(round((r["t_mid"] - t0) / period - phase))
+                    r["subject_parity"] = parity(r["epoch"])
+                    r["subject_id"] = c["subject_id"]
+                    r["subject_label"] = label
+            if k == 0:
+                signal["epoch_rows"].extend(dict(r) for r in c.get("epochs") or [])
+    signal["epoch_rows"].sort(key=lambda r: r["t_mid"])
+
+
 # ---------- known-planet cross-match (NASA Exoplanet Archive) ----------
 
 CROSSMATCH_FILE = "crossmatch.json"
@@ -1020,7 +1098,8 @@ def query_archive(target: str, star: str | None = None) -> list[dict]:
     if not clauses:
         return []
     where = "default_flag = 1 and (" + " or ".join(clauses) + ")"
-    table = NasaExoplanetArchive.query_criteria(table="ps", select="pl_name,hostname,pl_orbper,pl_tranmid,tic_id", where=where)
+    table = NasaExoplanetArchive.query_criteria(
+        table="ps", select="pl_name,hostname,pl_orbper,pl_tranmid,tran_flag,rv_flag,tic_id", where=where)
     planets = []
     for row in table:
         per = row["pl_orbper"]
@@ -1032,10 +1111,18 @@ def query_archive(target: str, star: str | None = None) -> list[dict]:
             "hostname": str(row["hostname"]),
             "pl_orbper": _num(per),
             "pl_tranmid": _num(mid),
+            "tran_flag": _flag(row["tran_flag"]),
+            "rv_flag": _flag(row["rv_flag"]),
             "tic_id": str(row["tic_id"]),
         })
     planets.sort(key=lambda p: (p["pl_orbper"] is None, p["pl_orbper"] or 0))
     return planets
+
+
+def _flag(value) -> bool | None:
+    """An archive 0/1 flag as True or False, or None when it is masked or missing."""
+    x = _num(getattr(value, "value", value))
+    return None if x is None else bool(x)
 
 
 def crossmatch(run_dir: Path, targets: list[str], star: str | None = None, *, refresh: bool = False) -> dict:
@@ -1046,13 +1133,20 @@ def crossmatch(run_dir: Path, targets: list[str], star: str | None = None, *, re
     which the page states; it is never a silent blank.
     """
     path = Path(run_dir) / CROSSMATCH_FILE
-    if path.exists() and not refresh:
+    stored = None
+    if path.exists():
         try:
             stored = json.loads(path.read_text())
-            if stored.get("status") in ("matched", "no_match") and stored.get("targets") == targets and stored.get("star") == star:
-                return stored
         except (OSError, ValueError):
-            pass
+            stored = None
+        if not (stored and stored.get("status") in ("matched", "no_match")
+                and stored.get("targets") == targets and stored.get("star") == star):
+            stored = None
+    # A stored result from before the transit flag was queried is fetched again once;
+    # if the archive is unreachable it is kept, and its planets get no epoch offset.
+    has_flags = stored is not None and all("tran_flag" in p for p in stored.get("planets") or [])
+    if stored is not None and not refresh and has_flags:
+        return stored
     result = {"source": "NASA Exoplanet Archive, table ps (default_flag = 1)", "targets": targets, "star": star,
               "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "planets": []}
     try:
@@ -1060,6 +1154,8 @@ def crossmatch(run_dir: Path, targets: list[str], star: str | None = None, *, re
             result["planets"].extend(query_archive(target, star))
         result["status"] = "matched" if result["planets"] else "no_match"
     except Exception as exc:  # network, DNS, service or missing package: the cross-match did not run
+        if stored is not None:
+            return stored
         result["status"] = "not_run"
         result["error"] = f"{type(exc).__name__}: {exc}"[:300]
     path.write_text(json.dumps(result, indent=2))
@@ -1070,15 +1166,49 @@ def crossmatch(run_dir: Path, targets: list[str], star: str | None = None, *, re
 TIME_OFFSETS_BJD = {"BTJD": 2457000.0, "BKJD": 2454833.0, "BJD": 0.0}
 
 
+# A transit mid-time outside this BJD range (1858 to 2405) is not a usable ephemeris.
+PLAUSIBLE_TRANMID_BJD = (2400000.0, 2600000.0)
+NO_TRANSIT_EPHEMERIS = "no transit ephemeris to compare"
+
+
+def transit_ephemeris(p: dict) -> tuple[bool, str]:
+    """Whether an archive planet has a transit ephemeris to compare, and why not.
+
+    Only a planet the archive flags as transiting (tran_flag true) with a
+    plausible transit mid-time has one. A radial-velocity planet's pl_tranmid,
+    when stored, is a predicted conjunction, not an observed transit.
+    """
+    flag = p.get("tran_flag")
+    if flag is None:
+        return False, "transit flag not stored"
+    if not flag:
+        return False, "non-transiting"
+    mid = _num(p.get("pl_tranmid"))
+    if mid is None:
+        return False, "no transit mid-time stored"
+    if not PLAUSIBLE_TRANMID_BJD[0] <= mid <= PLAUSIBLE_TRANMID_BJD[1]:
+        return False, "transit mid-time implausible"
+    return True, ""
+
+
+def planet_label(p: dict) -> str:
+    """'pi Men c (P 6.268 d)', or 'pi Men d (RV, non-transiting)' when the archive says it does not transit."""
+    if p.get("tran_flag") is False:
+        return f"{p['pl_name']} ({'RV, ' if p.get('rv_flag') else ''}non-transiting)"
+    return f"{p['pl_name']} (P {p['pl_orbper']:.3f} d)" if p.get("pl_orbper") is not None else p["pl_name"]
+
+
 def compare_with_archive(planets: list[dict], dips: list[dict], tol: float = MERGE_PERIOD_TOL) -> dict:
     """Compare each dip with each archive planet, from stored values only.
 
     For every archive planet with a period: ΔP = |P_bls - P_archive| / P_archive
-    (percent of the archive period), and the offset in minutes of the nearest
-    transit predicted by the archive's pl_tranmid and pl_orbper from the dip's
-    stored mid-time (positive: the predicted transit comes later). A planet is
-    consistent when ΔP is below ``tol``. Archive values only; this claims no
-    detection either way.
+    (percent of the archive period). For a planet with a transit ephemeris
+    (``transit_ephemeris``: flagged transiting, plausible pl_tranmid), also the
+    offset in minutes of the nearest transit predicted by pl_tranmid and
+    pl_orbper from the dip's stored mid-time (positive: the predicted transit
+    comes later). Any other planet gets no offset: there is no transit
+    ephemeris to compare. A planet is consistent when ΔP is below ``tol``.
+    Archive values only; this claims no detection either way.
     """
     out = {}
     for c in dips:
@@ -1090,11 +1220,13 @@ def compare_with_archive(planets: list[dict], dips: list[dict], tol: float = MER
             pa = _num(p.get("pl_orbper"))
             if pa is None or pa <= 0:
                 continue
-            row = {"pl_name": p["pl_name"], "pl_orbper": pa, "dP_pct": None, "epoch_offset_min": None}
+            has_eph, why = transit_ephemeris(p)
+            row = {"pl_name": p["pl_name"], "pl_orbper": pa, "dP_pct": None, "epoch_offset_min": None,
+                   "transit_ephemeris": has_eph, "offset_note": "" if has_eph else f"{NO_TRANSIT_EPHEMERIS} ({why})"}
             if P is not None:
                 row["dP_pct"] = abs(P - pa) / pa * 100.0
             mid = _num(p.get("pl_tranmid"))
-            if mid is not None and t is not None and offset is not None:
+            if has_eph and t is not None and offset is not None:
                 t_bjd = t + offset
                 n = round((t_bjd - mid) / pa)
                 row["epoch_offset_min"] = (mid + n * pa - t_bjd) * 1440.0
@@ -1102,12 +1234,20 @@ def compare_with_archive(planets: list[dict], dips: list[dict], tol: float = MER
         hits = sorted((r for r in rows if r["dP_pct"] is not None and r["dP_pct"] < tol * 100), key=lambda r: r["dP_pct"])
         if hits:
             h = hits[0]
-            off = "not computed (no archive mid-time stored)" if h["epoch_offset_min"] is None else f"{h['epoch_offset_min']:.0f} min".replace("-", "−")
-            line = f"consistent with {h['pl_name']}: ΔP {h['dP_pct']:.2f}%, nearest epoch offset {off}"
+            if not h["transit_ephemeris"]:
+                off = NO_TRANSIT_EPHEMERIS
+            elif h["epoch_offset_min"] is None:
+                off = "nearest epoch offset not computed (time system unknown)"
+            else:
+                off = "nearest epoch offset " + f"{h['epoch_offset_min']:.0f} min".replace("-", "−")
+            line = f"consistent with {h['pl_name']}: ΔP {h['dP_pct']:.2f}%, {off}"
         elif P is None:
             line = "no archive planet within tolerance (this dip has no BLS period to compare)"
         else:
             line = "no archive planet within tolerance"
+        no_eph = [r["pl_name"] for r in rows if not r["transit_ephemeris"] and not (hits and r is hits[0])]
+        if no_eph:
+            line += f"; {', '.join(no_eph)}: {NO_TRANSIT_EPHEMERIS}"
         out[c["candidate_id"]] = {"planets": rows, "consistent_with": hits[0]["pl_name"] if hits else None, "line": line}
     return {"tolerance_dP_pct": tol * 100, "time_offsets_bjd": TIME_OFFSETS_BJD, "by_candidate": out}
 
@@ -1116,7 +1256,7 @@ def crossmatch_line(result: dict) -> str:
     status = result.get("status")
     if status == "matched":
         planets = result.get("planets") or []
-        parts = [f"{p['pl_name']} (P {p['pl_orbper']:.3f} d)" if p.get("pl_orbper") is not None else p["pl_name"] for p in planets]
+        parts = [planet_label(p) for p in planets]
         noun = "planet" if len(parts) == 1 else "planets"
         return f"Host of published {noun} {', '.join(parts)}"
     if status == "no_match":
@@ -1141,6 +1281,8 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
         c["epochs"] = row.get("epochs") or []
         c["secondary_epochs"] = row.get("secondary_epochs") or []
         c["box"] = box_model(c)
+        c["mark_audit"] = row.get("mark_audit") or []
+        c["count_rule"] = row.get("count_rule") or {}
         c["checks"] = vetting_checks(c)
         c["outcome"] = outcome(c["checks"], c["flags"], c["passed"])
         c["feed"] = feed_rules(c)
@@ -1150,6 +1292,7 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
         for cid in s["dips"]:
             cands[cid]["signal_id"] = s["signal_id"]
             cands[cid]["signal_epoch"] = signal_epoch(cands[cid], s)
+        annotate_signal_epochs(s, cands)
     kinds = list(run["reviewers"].values())
     n_sim = sum(1 for k in kinds if k == "simulated")
     n_claude = sum(1 for k in kinds if k in ("claude", "claude_code"))
@@ -1176,6 +1319,7 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
             **{o: sum(1 for s in signals if s["outcome"] == o) for o in (PASSED, FLAGGED, REJECTED)},
             "reviewers": len(kinds), "simulated": n_sim, "claude": n_claude, "other": len(kinds) - n_sim - n_claude,
         },
+        "cross_subject_note": CROSS_SUBJECT_NOTE,
         "outcome_label": OUTCOME_LABEL,
         "crossmatch": xm,
         "provenance": {

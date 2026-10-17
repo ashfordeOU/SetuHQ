@@ -125,7 +125,7 @@ def test_no_epoch_is_labelled_missed(run_dir, tmp_path):
     assert not pattern.search(DOCKET_JS)
     assert not pattern.search(page)
     # Every epoch the page can show is a stored measurement or an explicit data-coverage note.
-    assert "measured: ${fmt(r.depth_ppm,0)} ± ${fmt(r.sigma_ppm,0)} ppm at epoch ${r.epoch}" in DOCKET_JS
+    assert "measured: ${fmt(r.depth_ppm,0)} ± ${fmt(r.sigma_ppm,0)} ppm at ${epochName(r, what)}" in DOCKET_JS
 
 
 def test_measure_epochs_stay_inside_the_subject(transit_subject):
@@ -295,8 +295,8 @@ def test_ledger_shows_uncertainties_and_the_statistic():
 
 
 def test_archive_comparison_match_and_no_match():
-    planets = [{"pl_name": "pi Men c", "pl_orbper": 6.2678399, "pl_tranmid": 2458325.50400},
-               {"pl_name": "pi Men d", "pl_orbper": 124.64, "pl_tranmid": None}]
+    planets = [{"pl_name": "pi Men c", "pl_orbper": 6.2678399, "pl_tranmid": 2458325.50400, "tran_flag": True},
+               {"pl_name": "pi Men d", "pl_orbper": 124.64, "pl_tranmid": None, "tran_flag": False, "rv_flag": True}]
     hit = _dip("hit", 1338.0495, period=6.272620)
     miss = _dip("miss", 1338.0495, period=4.0)
     single = _dip("single", 1348.94, period=None)
@@ -309,7 +309,92 @@ def test_archive_comparison_match_and_no_match():
     assert c["epoch_offset_min"] == pytest.approx((2458325.504 + 2 * 6.2678399 - 2458338.0495) * 1440)
     assert h["line"].startswith("consistent with pi Men c: ΔP 0.08%, nearest epoch offset −14 min")
     assert out["miss"]["consistent_with"] is None
-    assert out["miss"]["line"] == "no archive planet within tolerance"
+    assert out["miss"]["line"] == "no archive planet within tolerance; pi Men d: no transit ephemeris to compare"
     assert out["single"]["line"].startswith("no archive planet within tolerance")
     d = next(r for r in h["planets"] if r["pl_name"] == "pi Men d")
     assert d["epoch_offset_min"] is None
+
+
+def test_rv_planet_gets_no_transit_epoch_offset():
+    # As the archive stores pi Men: c transits; d and HD 39091 b are radial-velocity planets.
+    # HD 39091 b carries a pl_tranmid, but with tran_flag 0 it is not a transit ephemeris.
+    planets = [
+        {"pl_name": "pi Men c", "pl_orbper": 6.2678399, "pl_tranmid": 2458425.789204, "tran_flag": True, "rv_flag": True},
+        {"pl_name": "pi Men d", "pl_orbper": 124.64, "pl_tranmid": None, "tran_flag": False, "rv_flag": True},
+        {"pl_name": "HD 39091 b", "pl_orbper": 2088.8, "pl_tranmid": 2458632.6, "tran_flag": False, "rv_flag": True},
+    ]
+    out = compare_with_archive(planets, [_dip("hit", 1338.0495, period=6.272620)])["by_candidate"]["hit"]
+    rows = {r["pl_name"]: r for r in out["planets"]}
+    assert rows["pi Men c"]["epoch_offset_min"] is not None and rows["pi Men c"]["transit_ephemeris"]
+    for name in ("pi Men d", "HD 39091 b"):
+        assert rows[name]["epoch_offset_min"] is None
+        assert rows[name]["transit_ephemeris"] is False
+        assert rows[name]["offset_note"].startswith("no transit ephemeris to compare")
+    assert out["line"].endswith("; pi Men d, HD 39091 b: no transit ephemeris to compare")
+    line = crossmatch_line({"status": "matched", "planets": planets})
+    assert line == "Host of published planets pi Men c (P 6.268 d), pi Men d (RV, non-transiting), HD 39091 b (RV, non-transiting)"
+    # No flag stored, or an implausible mid-time: no offset either.
+    unflagged = compare_with_archive([{"pl_name": "X b", "pl_orbper": 6.2678399, "pl_tranmid": 2458425.79}], [_dip("a", 1338.05, period=6.2726)])
+    assert unflagged["by_candidate"]["a"]["planets"][0]["epoch_offset_min"] is None
+    assert unflagged["by_candidate"]["a"]["line"].endswith("ΔP 0.08%, no transit ephemeris to compare")
+    odd = compare_with_archive([{"pl_name": "Y b", "pl_orbper": 6.27, "pl_tranmid": 58425.79, "tran_flag": True}], [_dip("a", 1338.05)])
+    assert odd["by_candidate"]["a"]["planets"][0]["offset_note"] == "no transit ephemeris to compare (transit mid-time implausible)"
+
+
+def test_merged_signal_epochs_carry_signal_number_and_subject_parity():
+    from exoplan.docket import CROSS_SUBJECT_NOTE, annotate_signal_epochs, signal_epoch
+
+    def ep(k, t0, period=6.27262):
+        return {"epoch": k, "t_mid": t0 + k * period, "n_points": 12, "depth_ppm": 240.0, "sigma_ppm": 10.0}
+
+    a = [_dip(f"s1-{i}", t, period=6.272620, t0=1325.5004) for i, t in enumerate((1325.4993, 1331.7711, 1338.0495))]
+    b = [_dip(f"s2-{i}", t, period=6.261557, subject="s2", t0=1344.3218) for i, t in enumerate((1344.2644, 1350.5849))]
+    for d in a:
+        d["epochs"] = [ep(k, 1325.5004) for k in range(3)]
+    for d in b:
+        d["epochs"] = [ep(k, 1344.3218, 6.261557) for k in range(2)]
+    for d in a + b:
+        d["outcome"] = outcome(vetting_checks(d), d["flags"], d["passed"])
+    (s,) = group_signals(a + b)
+    cands = {d["candidate_id"]: d for d in a + b}
+    annotate_signal_epochs(s, cands)
+    rows = [(r["signal_epoch"], r["subject_label"], r["epoch"], r["subject_parity"]) for r in s["epoch_rows"]]
+    # Signal epoch E3 is even in its own subject: parity is numbered per subject.
+    assert rows == [(0, "S1", 0, "even"), (1, "S1", 1, "odd"), (2, "S1", 2, "even"), (3, "S2", 0, "even"), (4, "S2", 1, "odd")]
+    assert [signal_epoch(d, s) for d in a + b] == [0, 1, 2, 3, 4]
+    assert CROSS_SUBJECT_NOTE == ("Odd/even and secondary were tested within each subject only; parity is numbered per subject. "
+                                  "No cross-subject test ran.")
+    assert "D.cross_subject_note" in DOCKET_JS and "subject_parity" in DOCKET_JS
+
+
+def test_mark_audit_reports_overlap_and_the_centre_gap_rule():
+    from exoplan.aggregate import aggregate, audit_marks
+    from exoplan.reviewers.base import Classification, Mark, POTENTIAL_PLANET
+
+    def cls(r, a, b):
+        return Classification(subject_id="s", reviewer_id=r, label=POTENTIAL_PLANET, marks=(Mark(a, b),))
+
+    # Three narrow marks on the dip, two wide ones whose centres sit 0.07 d early,
+    # as on pi Men E0: the wide ones cover the whole window but do not count.
+    panel = [cls("v1", 1325.452, 1325.541), cls("v2", 1325.458, 1325.555), cls("v3", 1325.463, 1325.530),
+             cls("c1", 1325.300, 1325.550), cls("c2", 1325.300, 1325.460)]
+    (event,) = aggregate(panel, {}, gap_days=0.05, min_score=0.5, min_planet_fraction=0.5)
+    assert event.reviewers == ("v1", "v2", "v3")
+    audit = {r["reviewer_id"]: r for r in audit_marks(event, panel, 0.05)}
+    assert audit["c1"]["counted"] is False and audit["c1"]["overlap_frac"] == pytest.approx(1.0)
+    assert audit["c1"]["marks"][0]["centre_gap_days"] > 0.05
+    assert all(audit[r]["counted"] for r in ("v1", "v2", "v3"))
+    assert audit["v3"]["marks"][0]["centre_gap_days"] <= 0.05
+
+
+def test_candidates_store_mark_audit_and_counting_rule(run_dir, tmp_path):
+    rows = json.loads((run_dir / "candidates.json").read_text())
+    for r in rows:
+        assert r["count_rule"]["gap_days"] == 0.05 and "centre" in r["count_rule"]["text"]
+        counted = {a["reviewer_id"] for a in r["mark_audit"] if a["counted"]}
+        assert counted == set(r["reviewers"].split(";"))
+        for a in r["mark_audit"]:
+            assert a["overlap_frac"] is None or 0.0 <= a["overlap_frac"] <= 1.0
+    data = _page_data(build_docket(run_dir, tmp_path / "docket", title="t").read_text())
+    assert all("mark_audit" in c and "count_rule" in c for c in data["candidates"])
+    assert "not counted: centre more than" in DOCKET_JS and "url(#hatch-" in DOCKET_JS

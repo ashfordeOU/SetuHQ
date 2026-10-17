@@ -25,7 +25,7 @@ from pathlib import Path
 from exoplan import __version__
 import numpy as np
 
-from exoplan.aggregate import Consensus, aggregate
+from exoplan.aggregate import Consensus, aggregate, audit_marks, counting_rule
 from exoplan.config import RunConfig
 from exoplan.lightcurve import LightCurve
 from exoplan.preprocess import bin_lightcurve, clean, detrend
@@ -65,6 +65,11 @@ class Candidate:
     # Stored per-epoch measurements at each BLS-predicted epoch inside the subject.
     epochs: tuple = ()
     secondary_epochs: tuple = ()
+    # Every reviewer's marks over the consensus window, each with its overlap
+    # fraction, centre gap and whether it counted (aggregate.audit_marks), and
+    # the counting rule they were judged by. Reported, not used to count.
+    mark_audit: tuple = ()
+    count_rule: dict = field(default_factory=dict)
 
     @property
     def t_center(self) -> float:
@@ -76,6 +81,7 @@ class Candidate:
         row["flags"] = ";".join(self.flags)
         row["epochs"] = list(self.epochs)
         row["secondary_epochs"] = list(self.secondary_epochs)
+        row["mark_audit"] = list(self.mark_audit)
         row["t_center"] = self.t_center
         row["duration_hours"] = (self.t_end - self.t_start) * 24.0
         return row
@@ -184,7 +190,14 @@ def build_candidates(
         result = _vet(event, subject, periodic_cache[event.subject_id])
         periodic = periodic_cache[event.subject_id]
         supported = periodic if periodic is not None and periodic.covers(event.center) else None
-        candidates.append(_to_candidate(event, subject, result, supported))
+        candidate = _to_candidate(event, subject, result, supported)
+        object.__setattr__(candidate, "mark_audit", tuple(audit_marks(event, classifications, config.cluster_gap_days)))
+        object.__setattr__(candidate, "count_rule", {
+            "gap_days": config.cluster_gap_days,
+            "min_score": config.min_score,
+            "text": counting_rule(config.cluster_gap_days, config.min_score),
+        })
+        candidates.append(candidate)
     candidates.sort(key=lambda c: (not c.passed, -c.score))
     for index, candidate in enumerate(candidates):
         object.__setattr__(candidate, "candidate_id", f"{candidate.subject_id}-{index:03d}")
