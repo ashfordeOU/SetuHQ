@@ -123,3 +123,60 @@ def test_river_status_has_words_and_print_is_first_class(run_dir, catalog, tmp_p
     assert "nav.toc{display:none}" in printing
     assert "article.plate{break-before:page" in printing
     assert "break-inside:avoid" in PLATE_CSS
+
+
+def _print_css() -> str:
+    return PLATE_CSS[PLATE_CSS.index("@media print{"):]
+
+
+def test_plate_labels_are_unique(run_dir, catalog, tmp_path):
+    from exoplan.plate import plate_labels
+
+    page = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog).read_text()
+    labels = plate_labels(page)
+    assert len(labels) == len(set(labels))
+    # Subject panels are numbered with roman numerals; candidate captions keep their letters.
+    assert "Plate 1, panel i" in labels and "1a" in labels
+    assert not re.search(r"<b>Plate \d+[a-z]\.", page)
+    n_caps = len(_captions(page))
+    assert sum(1 for x in labels if not x.startswith("Plate")) == n_caps
+
+
+def test_print_keeps_each_plate_and_caption_block_whole():
+    printing = re.sub(r"/\*.*?\*/", "", _print_css(), flags=re.S)
+    covered = {}
+    for sels, body in re.findall(r"([^{}]+)\{([^{}]*)\}", printing[printing.index("{") + 1:]):
+        for sel in sels.split(","):
+            covered[sel.strip()] = covered.get(sel.strip(), "") + body
+    for block in ("article.plate", "ol.captions li", "figure", "figcaption", ".archive"):
+        assert "break-inside:avoid" in covered[block], block
+    assert "columns:2" in covered["ol.captions"]
+    assert "widows:3" in covered["ol.captions"] and "orphans:3" in covered["ol.captions"]
+
+
+def test_print_svg_text_is_at_least_8pt_on_paper():
+    printing = _print_css()
+    px = float(re.search(r"svg text\{font-size:([\d.]+)px\}", printing).group(1))
+    # A4 less the @page side margins (13 mm each) is 184 mm; the figures fill it as laid out in print.
+    page_pt = (210 - 26) / 25.4 * 72
+    lc_pt, fold_pt = page_pt * 2.1 / 3.1, page_pt * 1 / 3.1
+    for width_pt, view_w in ((page_pt, 760), (lc_pt, 520), (fold_pt, 250)):
+        assert px * width_pt / view_w >= 8.0, (width_pt, view_w)
+
+
+def test_river_segments_are_labelled_at_start_and_end_with_their_span(run_dir, catalog, tmp_path):
+    from exoplan.plate import river_segments, river_svg
+
+    data = plate_data(run_dir, title="t", catalog_path=catalog)
+    segs = river_segments(data["stars"])
+    assert len(segs) >= 2  # the run and the feed are years apart
+    svg = river_svg(data["stars"])
+    view_w = float(re.search(r'viewBox="0 0 ([\d.]+) ', svg).group(1))
+    assert view_w <= 760  # wider would print the text below 8 pt
+    for g, (a, b) in zip(re.findall(r'<g class="seg">(.*?)</g>', svg, re.S), segs):
+        ticks = re.findall(r'<text class="tick"[^>]*text-anchor="(\w+)">([^<]+)</text>', g)
+        assert ticks[0] == ("start", f"{a:.0f}") and ticks[-1] == ("end", f"{b:.0f}")
+        assert re.search(rf'<text class="span"[^>]*>{b - a:.0f} d</text>', g)
+    page = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog).read_text()
+    river = re.search(r'<section class="river".*?</section>', page, re.S).group(0)
+    assert "not drawn to a common time scale" in river

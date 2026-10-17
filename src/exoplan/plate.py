@@ -27,6 +27,7 @@ from __future__ import annotations
 import html
 import json
 import math
+import re
 from pathlib import Path
 
 from exoplan.docket import OUTCOME_LABEL, docket_data
@@ -128,15 +129,27 @@ footer.colophon p{margin:3px 0}
   section.river,article.plate{margin-top:0;padding-top:4pt;border-top-width:.5pt}
   header.mast,footer.colophon{border-width:.5pt}
   .notes li,ol.captions li,ol.captions{border-width:.5pt}
-  article.plate{break-before:page;page-break-before:always}
+  /* One plate, one page: the plate is kept whole, its captions set in two columns under the figure. */
+  article.plate{break-before:page;page-break-before:always;break-inside:avoid;page-break-inside:avoid}
+  figure,figcaption,.archive,.nocurve,.legend{break-inside:avoid;page-break-inside:avoid}
+  ol.captions{columns:2;column-gap:6mm;column-fill:balance;widows:3;orphans:3;margin-top:6pt}
+  ol.captions li{break-inside:avoid;page-break-inside:avoid;widows:3;orphans:3;padding:3pt 0}
+  p.caption{widows:3;orphans:3}
   h2.ptitle{break-after:avoid;page-break-after:avoid;font-size:13pt}
-  .psub{break-after:avoid;page-break-after:avoid}
+  .psub{break-after:avoid;page-break-after:avoid;margin:1pt 0 4pt}
+  .panel h3{font-size:8pt}
+  figcaption{margin-top:2pt}
+  .archive{margin-top:6pt;padding:4pt 6pt}
   .figrow{grid-template-columns:minmax(0,2.1fr) minmax(0,1fr)}
   .scroll{overflow:visible;border:0}
   .scroll>svg.wide{min-width:0}
-  p.caption{font-size:9pt}
+  p.caption{font-size:8.5pt;line-height:1.36}
+  .word{font-size:7pt;padding:1px 3px}
+  figure{margin-top:6pt}
+  figcaption,.nocurve,.archive{font-size:8.5pt}
   a{color:inherit;text-decoration:none}
-  svg text{font-size:9px}
+  /* Figures print at about 0.66 to 0.69 pt per SVG unit, so 12.5 units is at least 8.2 pt on paper. */
+  svg text{font-size:12.5px}
 }
 """
 
@@ -307,34 +320,53 @@ def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | No
 # ---------- figures ----------
 
 
-def river_svg(stars: list[dict]) -> str:
-    """The river of time: one row per star, a tick per candidate, height log SNR, colour status.
+RIVER_MIN_SEGMENT = 76.0  # SVG units: room for a start and an end label on every segment, at the print text size
 
-    Stretches longer than ``RIVER_GAP_DAYS`` with no candidate are cut and marked with a break,
-    so stars observed years apart share one strip.
+
+def river_segments(stars: list[dict]) -> list[tuple[float, float]]:
+    """The river's segments: candidate mid-times grouped where no gap exceeds ``RIVER_GAP_DAYS``.
+
+    Each segment runs from a whole day before its first candidate to a whole day after its last,
+    so its start and end labels are whole days and its span is a whole number of days.
     """
-    events = [(s["star"], c) for s in stars for c in s["candidates"]]
-    if not events:
-        return '<p class="nocurve">No candidates are stored.</p>'
-    times = sorted(c["t_center"] for _, c in events)
+    times = sorted(c["t_center"] for s in stars for c in s["candidates"])
+    if not times:
+        return []
     clusters = [[times[0], times[0]]]
     for t in times[1:]:
         if t - clusters[-1][1] > RIVER_GAP_DAYS:
             clusters.append([t, t])
         else:
             clusters[-1][1] = t
-    for c in clusters:
-        pad = max(1.0, (c[1] - c[0]) * 0.04)
-        c[0] -= pad
-        c[1] += pad
-    W, label_w, right_w, gap = 760, 112, 172, 16
-    rh, top, bottom = 34, 8, 44
+    out = []
+    for lo, hi in clusters:
+        pad = max(1.0, (hi - lo) * 0.04)
+        out.append((float(math.floor(lo - pad)), float(math.ceil(hi + pad))))
+    return out
+
+
+def river_svg(stars: list[dict]) -> str:
+    """The river of time: one row per star, a tick per candidate, height log SNR, colour status.
+
+    Stretches longer than ``RIVER_GAP_DAYS`` with no candidate are cut and marked with a break,
+    so stars observed years apart share one strip. The segments are not drawn to a common time
+    scale: each has its own, labelled at its start and end, with its span written beneath it.
+    """
+    events = [(s["star"], c) for s in stars for c in s["candidates"]]
+    if not events:
+        return '<p class="nocurve">No candidates are stored.</p>'
+    clusters = river_segments(stars)
+    label_w, right_w, gap = 112, 172, 16
+    line_h = 15  # status lines beside a row, and text lines under the axis
+    n_lines = max(len({c.get("status") for c in s["candidates"]}) for s in stars)
+    rh, top, bottom = max(34, line_h * n_lines + 12), 8, 6 + 4 * line_h + 22
+    # Every segment gets a floor width, room for its start and end labels; the rest is shared by span.
+    W = max(760.0, label_w + right_w + gap * (len(clusters) - 1) + RIVER_MIN_SEGMENT * len(clusters))
     plot_w = W - label_w - right_w - gap * (len(clusters) - 1)
-    spans = [c[1] - c[0] for c in clusters]
-    # Each cut stretch gets width in proportion to its span, with a floor so a short one stays readable.
-    weights = [max(s, sum(spans) * 0.08) for s in spans]
-    widths = [plot_w * w / sum(weights) for w in weights]
-    x0s, x = [], label_w
+    spans = [b - a for a, b in clusters]
+    extra = plot_w - RIVER_MIN_SEGMENT * len(clusters)
+    widths = [RIVER_MIN_SEGMENT + extra * sp / sum(spans) for sp in spans]
+    x0s, x = [], float(label_w)
     for w in widths:
         x0s.append(x)
         x += w + gap
@@ -349,13 +381,14 @@ def river_svg(stars: list[dict]) -> str:
     lmax = math.log10(max(max(snrs), 10.0))
     H = top + rh * len(stars) + bottom
     unit = events[0][1].get("time_unit") or ""
-    out = [f'<svg class="wide" viewBox="0 0 {W} {H}" role="img" aria-labelledby="river-t river-d">'
+    out = [f'<svg class="wide" viewBox="0 0 {W:g} {H}" role="img" aria-labelledby="river-t river-d">'
            f'<title id="river-t">River of time</title>'
            f'<desc id="river-d">{len(events)} candidates on {len(stars)} stars by mid-time ({_e(unit)}); tick height is log SNR '
-           f'and colour is status, written beside each row. Empty stretches longer than {RIVER_GAP_DAYS:.0f} days are cut.</desc>']
+           f'and colour is status, written beside each row. Empty stretches longer than {RIVER_GAP_DAYS:.0f} days are cut, and the '
+           f'{len(clusters)} segments are not drawn to a common time scale: each is labelled at its start and end, with its span.</desc>']
     for i, s in enumerate(stars):
         base = top + rh * (i + 1) - 6
-        out.append(f'<line class="grid" x1="{label_w}" x2="{W - right_w}" y1="{base}" y2="{base}"/>')
+        out.append(f'<line class="grid" x1="{label_w}" x2="{W - right_w:g}" y1="{base}" y2="{base}"/>')
         out.append(f'<text class="ink" x="{label_w - 8}" y="{base - 2}" text-anchor="end">{_e(s["star"])}</text>')
         counts: dict[str, int] = {}
         for c in s["candidates"]:
@@ -371,23 +404,25 @@ def river_svg(stars: list[dict]) -> str:
         # The statuses in words, one per line, beside the row.
         lines = [f"{n} {STATUS_WORD.get(k, k)}" for k, n in sorted(counts.items())]
         for j, words in enumerate(lines):
-            out.append(f'<text x="{W - right_w + 8}" y="{base - 2 - 11 * (len(lines) - 1 - j)}">{_e(words)}</text>')
+            out.append(f'<text x="{W - right_w + 8:g}" y="{base - 2 - line_h * (len(lines) - 1 - j)}">{_e(words)}</text>')
     axis_y = top + rh * len(stars) - 6
     for (a, b), x0, w in zip(clusters, x0s, widths):
-        out.append(f'<line class="axis" x1="{x0:.1f}" x2="{x0 + w:.1f}" y1="{axis_y}" y2="{axis_y}"/>')
-        ticks = [t for t in _ticks(a, b, max(1, int(w // 70))) if a <= t <= b] or [round((a + b) / 2)]
-        if w < 90:  # a short stretch carries one label, so neighbouring labels never collide
-            ticks = ticks[:1]
-        for t in ticks:
+        out.append(f'<g class="seg"><line class="axis" x1="{x0:.1f}" x2="{x0 + w:.1f}" y1="{axis_y}" y2="{axis_y}"/>')
+        # Start and end, always labelled (inside the segment); between them only ticks with room for a label.
+        inner = [t for t in _ticks(a, b, max(1, int(w // 80))) if a < t < b
+                 and x0 + (t - a) / (b - a) * w - x0 > 52 and x0 + w - (x0 + (t - a) / (b - a) * w) > 52]
+        for t, anchor in [(a, "start"), *((t, "middle") for t in inner), (b, "end")]:
             xt = x0 + (t - a) / (b - a) * w
-            out.append(f'<line class="axis" x1="{xt:.1f}" x2="{xt:.1f}" y1="{axis_y}" y2="{axis_y + 3}"/>'
-                       f'<text x="{xt:.1f}" y="{axis_y + 14}" text-anchor="middle">{_tick_label(t)}</text>')
+            out.append(f'<line class="axis" x1="{xt:.1f}" x2="{xt:.1f}" y1="{axis_y}" y2="{axis_y + 4}"/>'
+                       f'<text class="tick" x="{xt:.1f}" y="{axis_y + line_h + 3}" text-anchor="{anchor}">{_tick_label(t)}</text>')
+        out.append(f'<text class="span" x="{x0 + w / 2:.1f}" y="{axis_y + 2 * line_h + 5}" text-anchor="middle">'
+                   f'{_tick_label(b - a)} d</text></g>')
     for x0 in x0s[1:]:
         xb = x0 - gap / 2
         out.append(f'<path class="brk" d="M{xb - 4:.1f},{axis_y + 4} l4,-8 M{xb:.1f},{axis_y + 4} l4,-8"/>')
-    out.append(f'<text x="{W - right_w}" y="{H - 18}" text-anchor="end">mid-time ({_e(unit)}), cut where empty</text>')
+    out.append(f'<text x="{W - right_w:g}" y="{axis_y + 3 * line_h + 9}" text-anchor="end">mid-time ({_e(unit)}); each segment on its own scale</text>')
     # Height key: the tick heights for SNR 10 and the largest stored SNR.
-    out.append(f'<text x="{label_w}" y="{H - 4}">tick height: log SNR (full row = SNR {max(max(snrs), 10.0):.1f})</text>')
+    out.append(f'<text x="{label_w}" y="{axis_y + 4 * line_h + 13}">tick height: log SNR (full row = SNR {max(max(snrs), 10.0):.1f})</text>')
     out.append("</svg>")
     return "".join(out)
 
@@ -397,7 +432,7 @@ def light_curve_svg(subj: dict, cands: list[dict], letters: dict[str, str]) -> t
 
     Returns the SVG and a note on any points outside the drawn flux range.
     """
-    W, H, pl, pr, pt, pb = 520, 210, 52, 8, 20, 32
+    W, H, pl, pr, pt, pb = 520, 188, 52, 8, 20, 32
     t, f = subj["time"], subj["flux"]
     ppm = [(v - 1.0) * 1e6 for v in f]
     depth = max((_num(c["depth_ppm"]) or 0 for c in cands), default=0) or 300.0
@@ -440,7 +475,7 @@ def light_curve_svg(subj: dict, cands: list[dict], letters: dict[str, str]) -> t
 
 def fold_svg(subj: dict, cands: list[dict], letters: dict[str, str]) -> str:
     """The subject's stored flux folded on its stored BLS t0 and period, hours from mid-transit."""
-    W, H, pl, pr, pt, pb = 250, 210, 44, 8, 20, 32
+    W, H, pl, pr, pt, pb = 250, 188, 44, 8, 20, 32
     period, t0 = _num(subj["period_days"]), _num(subj["bls_t0"])
     dur_d = _num(subj.get("bls_duration_days")) or 0.1
     half = max(3 * dur_d * 24, 6.0)
@@ -478,7 +513,7 @@ def fold_svg(subj: dict, cands: list[dict], letters: dict[str, str]) -> str:
 
 def feed_strip_svg(s: dict) -> str:
     """A star known only from the catalogue: its candidates on a time strip (no light curve is stored)."""
-    W, H, pl, pr, pt, pb = 760, 92, 16, 16, 14, 30
+    W, H, pl, pr, pt, pb = 760, 106, 16, 16, 14, 38
     cands = s["candidates"]
     ts = [c["t_center"] for c in cands]
     pad = max(1.0, (max(ts) - min(ts)) * 0.04)
@@ -501,8 +536,8 @@ def feed_strip_svg(s: dict) -> str:
     for x in _ticks(a, b, 8):
         if a <= x <= b:
             out.append(f'<line class="axis" x1="{X(x):.1f}" x2="{X(x):.1f}" y1="{base}" y2="{base + 3}"/>'
-                       f'<text x="{X(x):.1f}" y="{base + 14}" text-anchor="middle">{_tick_label(x)}</text>')
-    out.append(f'<text x="{W - pr}" y="{H - 3}" text-anchor="end">mid-time ({_e(unit)}) · tick height log SNR</text>')
+                       f'<text x="{X(x):.1f}" y="{base + 15}" text-anchor="middle">{_tick_label(x)}</text>')
+    out.append(f'<text x="{W - pr}" y="{H - 4}" text-anchor="end">mid-time ({_e(unit)}) · tick height log SNR</text>')
     out.append("</svg>")
     return "".join(out)
 
@@ -511,7 +546,26 @@ def feed_strip_svg(s: dict) -> str:
 
 
 def _letters(n: int) -> list[str]:
+    """Candidate captions are lettered a, b, c, ... (the letters on the figures' consensus bands)."""
     return [chr(ord("a") + i) if i < 26 else f"a{i}" for i in range(n)]
+
+
+def _roman(n: int) -> str:
+    """Figure panels are numbered i, ii, iii, ... so they never share a label with a lettered caption."""
+    out = ""
+    for value, numeral in ((1000, "m"), (900, "cm"), (500, "d"), (400, "cd"), (100, "c"), (90, "xc"), (50, "l"),
+                           (40, "xl"), (10, "x"), (9, "ix"), (5, "v"), (4, "iv"), (1, "i")):
+        while n >= value:
+            out += numeral
+            n -= value
+    return out
+
+
+def plate_labels(page: str) -> list[str]:
+    """Every figure and caption label on the page, in order (Plate 1, panel i; 1a; ...), for collision checks."""
+    panels = re.findall(r'<b class="flabel">(Plate \d+, panel [ivxlcdm]+)\.</b>', page)
+    caps = re.findall(r'<b class="fig">(\d+[a-z]\d*)\.', page)
+    return panels + caps
 
 
 def _word(status: str) -> str:
@@ -541,10 +595,10 @@ def _plate(s: dict, i: int) -> str:
                    if subj["period_days"] is not None else "no BLS period")
             figs.append(f'''<figure aria-labelledby="{pid}-f{k}">
   <div class="figrow">
-    <div class="panel"><h3>Whole subject {_e(subj["subject_id"])}</h3><div class="scroll" tabindex="0" role="region" aria-label="Light curve of subject {_e(subj["subject_id"])}, scrolls sideways on a narrow screen">{lc}</div></div>
+    <div class="panel"><h3>{_roman(k + 1)} · whole subject {_e(subj["subject_id"])}</h3><div class="scroll" tabindex="0" role="region" aria-label="Light curve of subject {_e(subj["subject_id"])}, scrolls sideways on a narrow screen">{lc}</div></div>
     <div class="panel"><h3>Phase-folded</h3>{fold}</div>
   </div>
-  <figcaption id="{pid}-f{k}"><b>Plate {i}{chr(ord("a") + k)}.</b> Stored flux of subject {_e(subj["subject_id"])} ({_e(subj["time_unit"])} {_f(subj["start"], 2)} to {_f(subj["end"], 2)}), relative flux − 1 in ppm. Shaded bands are consensus intervals, lettered as in the captions; triangles are the BLS epochs. Right: {per}.{clip_note}</figcaption>
+  <figcaption id="{pid}-f{k}"><b class="flabel">Plate {i}, panel {_roman(k + 1)}.</b> Stored flux of subject {_e(subj["subject_id"])} ({_e(subj["time_unit"])} {_f(subj["start"], 2)} to {_f(subj["end"], 2)}), relative flux − 1 in ppm. Shaded bands are consensus intervals, lettered as in the captions; triangles are the BLS epochs. Right: {per}.{clip_note}</figcaption>
 </figure>''')
         archive = (f'<div class="archive"><p><b>Archive.</b> {_e(s["crossmatch_line"])}, from {_e(s["crossmatch_source"])}, fetched {_e(s["crossmatch_fetched"])}. '
                    f'{_e(NO_DETECTION)}</p></div>') if s.get("crossmatch_line") else ""
@@ -555,7 +609,7 @@ def _plate(s: dict, i: int) -> str:
         figs.append(f'''<figure aria-labelledby="{pid}-f0">
   <div class="scroll" tabindex="0" role="region" aria-label="Time strip for {_e(s["star"])}, scrolls sideways on a narrow screen">{feed_strip_svg(s)}</div>
   {_legend(sorted({c.get("status") for c in s["candidates"]}))}
-  <figcaption id="{pid}-f0"><b>Plate {i}.</b> The catalogue's candidates for {_e(s["star"])} by mid-time; tick height is log SNR, colour and word give the status.</figcaption>
+  <figcaption id="{pid}-f0"><b class="flabel">Plate {i}, panel i.</b> The catalogue's candidates for {_e(s["star"])} by mid-time; tick height is log SNR, colour and word give the status.</figcaption>
 </figure>
 <p class="nocurve">No light curve is stored for this star in this build: the discovery catalogue keeps measured values only, so there is no whole-subject curve and no folded panel.</p>''')
         archive = ""
@@ -609,7 +663,7 @@ def plate_page(data: dict) -> str:
 <nav class="toc" aria-label="Plates"><h2>Plates</h2><ol>{toc}</ol></nav>
 <section class="river" aria-labelledby="river-h">
   <h2 class="ptitle" id="river-h"><span class="num">River of time</span> the whole feed</h2>
-  <p class="psub">One row per star, a tick per candidate. Height is log SNR; colour is status, and each row lists its statuses in words. A known TOI period is an archive value: {_e(NO_DETECTION)} Candidate, unconfirmed.</p>
+  <p class="psub">One row per star, a tick per candidate. Height is log SNR; colour is status, and each row lists its statuses in words. Stretches of more than {RIVER_GAP_DAYS:.0f} days with no candidate are cut, so the segments are not drawn to a common time scale: each has its own, labelled at its start and end, with its span in days (d) beneath it. A known TOI period is an archive value: {_e(NO_DETECTION)} Candidate, unconfirmed.</p>
   <div class="scroll" tabindex="0" role="region" aria-label="River of time, scrolls sideways on a narrow screen">{river_svg(stars)}</div>
   {_legend(statuses)}
 </section>
