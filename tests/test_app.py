@@ -18,8 +18,10 @@ from exoplan.app import (
     SECTIONS,
     UNCONFIRMED,
     WIDGETS,
+    ISO_WEIGHTS,
     app_data,
     build_app,
+    calibration_plane,
     DEFAULT_FEED_VIEW,
     decode_feed_view,
     decode_layout,
@@ -622,3 +624,68 @@ def test_top_candidate_rows_are_one_44px_line_on_a_phone():
     assert ".toplist .unc{display:none}" in phone and ".phonehedge{display:inline}" in phone
     widgets = re.search(r"function widgetBody\(id\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert 'class="phonehedge"> · each a ${esc(D.unconfirmed)}' in widgets
+
+
+def _weights_files(tmp_path, *, with_record=True):
+    weights = tmp_path / "w.json"
+    weights.write_text(json.dumps({"vol-a": 0.6, "vol-b": 0.05, "claude-x": 0.5}))
+    if with_record:
+        (tmp_path / "w.calibration.json").write_text(json.dumps({
+            "floor": 0.05, "source": "test record",
+            "reviewers": {"vol-a": {"tpr": 0.7, "fpr": 0.1, "weight": 0.6, "n_injected": 10, "n_empty": 10},
+                          "vol-b": {"tpr": 0.2, "fpr": 0.3, "weight": 0.05, "n_injected": 10, "n_empty": 10},
+                          "claude-x": {"tpr": 0.5, "fpr": 0.0, "weight": 0.5, "n_injected": 10, "n_empty": 10}}}))
+    return weights
+
+
+def test_calibration_plane_is_read_from_the_weights_file(run_dir, tmp_path):
+    weights = _weights_files(tmp_path)
+    page = build_app(run_dir, tmp_path / "app", title="t", weights_path=weights).read_text()
+    cal = _page_data(page)["calibration"]
+    pts = {p["id"]: p for p in cal["points"]}
+    assert set(pts) == {"vol-a", "vol-b", "claude-x"}
+    # Weight from the weights file; TPR, FPR and the sample size from the record stored next to it.
+    assert pts["vol-a"]["weight"] == 0.6 and pts["vol-a"]["tpr"] == 0.7 and pts["vol-a"]["fpr"] == 0.1
+    assert pts["vol-b"]["weight"] == 0.05 and pts["vol-b"]["consistent"] is True  # floored
+    assert pts["claude-x"]["n_injected"] == 10 and pts["claude-x"]["n_empty"] == 10
+    assert pts["vol-a"]["kind"] == "simulated" and pts["claude-x"]["kind"] == "not in this run"
+    assert cal["iso"] == list(ISO_WEIGHTS) and cal["floor"] == 0.05
+    assert cal["record_path"].endswith("w.calibration.json")
+    # The page draws iso-weight lines, labels the sample size on the plane, and names the kinds.
+    plane = re.search(r"function calPlane\(box\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "for (const w of C.iso)" in plane and "`weight ${w}`" in plane
+    assert "`Claude: ${fmtN(cl[0])} only`" in plane
+    assert "R = w => 3 + 10 * " in plane and "R(g.items[0].weight)" in plane  # size from the stored weight
+    sample = re.search(r"function calSample\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "The Claude reviewers were calibrated on" in sample and "subjects only" in sample
+    assert "not people" in sample
+    panel = _route(page, "panel")
+    assert "simulated detector, not a person" in panel and "Claude reviewer, not a person" in panel
+    assert 'id="calplane"' in panel and "floored at 0.05" in panel
+
+
+def test_calibration_plane_never_invents_rates(run_dir, tmp_path):
+    # Weights alone: listed with their weight, no rates, nothing plotted.
+    weights = _weights_files(tmp_path, with_record=False)
+    cal = calibration_plane(json.loads(weights.read_text()), None, {"vol-a": "simulated"})
+    assert all(p["tpr"] is None and p["fpr"] is None and p["n_injected"] is None for p in cal["points"])
+    assert "nothing to plot" in re.search(r"function calPlane\(box\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    # A weights file whose entries carry their own rates is read directly.
+    cal = calibration_plane({"c": {"weight": 0.4, "tpr": 0.5, "fpr": 0.1, "n_injected": 10, "n_empty": 10}}, None, {"c": "claude_code"})
+    assert cal["points"][0] | {} == {"id": "c", "kind": "claude_code", "weight": 0.4, "tpr": 0.5, "fpr": 0.1,
+                                      "n_injected": 10, "n_empty": 10, "consistent": True}
+    # The Panel cards still read a flat weight from either form.
+    page = build_app(run_dir, tmp_path / "app", title="t", weights_path=weights).read_text()
+    assert {r["id"]: r["calibrated_weight"] for r in _page_data(page)["panel"]} == {"vol-a": 0.6, "vol-b": 0.05}
+
+
+def test_repository_calibration_record_matches_the_weights_file():
+    from exoplan.calibrate import calibration_path
+
+    weights_path = "docs/results/reviewer_weights_full_panel.json"
+    weights = json.loads(open(weights_path).read())
+    record = json.loads(calibration_path(weights_path).read_text())
+    assert set(record["reviewers"]) == set(weights)
+    for rid, r in record["reviewers"].items():
+        assert r["weight"] == weights[rid] == max(r["tpr"] - r["fpr"], record["floor"])
+        assert (r["n_injected"], r["n_empty"]) == (10, 10)

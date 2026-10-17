@@ -253,6 +253,37 @@ def panel_cards(manifest: dict, marks: dict, decisions: dict, calibrated: dict |
     return out
 
 
+ISO_WEIGHTS = (0.05, 0.2, 0.4, 0.6, 0.8)  # lines of constant weight drawn on the calibration plane
+
+
+def calibration_plane(weights: dict | None, record: dict | None, kinds: dict[str, str]) -> dict:
+    """Points for the Panel's calibration plane: x = false-alarm rate (FPR), y = recall (TPR).
+
+    The weight is the calibrated weight in the weights file. TPR, FPR and the sample size
+    are read from the same entry when it is a dict, else from the calibration record stored
+    next to the weights file (``calibrate.calibration_path``). Nothing is estimated: a
+    reviewer whose rates are not stored has ``tpr`` and ``fpr`` None and is listed, not plotted.
+    """
+    from exoplan.calibrate import WEIGHT_FLOOR
+
+    rec = (record or {}).get("reviewers") or {}
+    points = []
+    for rid, entry in (weights or {}).items():
+        stored = entry if isinstance(entry, dict) else rec.get(rid) or {}
+        weight = entry.get("weight") if isinstance(entry, dict) else entry
+        tpr, fpr = stored.get("tpr"), stored.get("fpr")
+        floor = (record or {}).get("floor", WEIGHT_FLOOR)
+        points.append({
+            "id": rid, "kind": kinds.get(rid, "not in this run"), "weight": weight, "tpr": tpr, "fpr": fpr,
+            "n_injected": stored.get("n_injected"), "n_empty": stored.get("n_empty"),
+            # The stored weight should be max(TPR - FPR, floor); say so when it is not.
+            "consistent": None if None in (tpr, fpr, weight) else abs(max(tpr - fpr, floor) - weight) < 1e-9,
+        })
+    points.sort(key=lambda p: (p["kind"] != "simulated", p["id"]))
+    return {"points": points, "iso": list(ISO_WEIGHTS), "floor": (record or {}).get("floor", WEIGHT_FLOOR),
+            "source": (record or {}).get("source", ""), "rule": (record or {}).get("rule", "weight = max(TPR - FPR, floor)")}
+
+
 def dip_agreement(dips: list[dict], kinds: dict[str, str]) -> list[dict]:
     """Per dip: which reviewers marked it, with simulated and Claude counts out of the panel."""
     sim_all = [r for r, k in kinds.items() if k == "simulated"]
@@ -359,10 +390,17 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     if catalog_path is not None and Path(catalog_path).exists():
         catalog = json.loads(Path(catalog_path).read_text())
         catalog_name = str(catalog_path)
-    calibrated, weights_name = None, ""
+    calibrated, weights_name, record, record_name = None, "", None, ""
     if weights_path is not None and Path(weights_path).exists():
+        from exoplan.calibrate import calibration_path
+
         calibrated = json.loads(Path(weights_path).read_text())
         weights_name = str(weights_path)
+        if calibration_path(weights_path).exists():
+            record = json.loads(calibration_path(weights_path).read_text())
+            record_name = str(calibration_path(weights_path))
+    # A weights entry may be a bare weight or a dict holding it with its rates.
+    flat = {k: (v.get("weight") if isinstance(v, dict) else v) for k, v in (calibrated or {}).items()} if calibrated else None
     from exoplan.dashboard import _load_run
 
     run = _load_run(run_dir)
@@ -427,7 +465,8 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "planets": planet_cards(cands, run_name, feed, crossmatch),
         "crossmatch_line": crossmatch.get("line", ""),
         "crossmatch_targets": crossmatch.get("targets") or [],
-        "panel": panel_cards(manifest, run["marks"], run["reviewerDecisions"], calibrated, cands),
+        "panel": panel_cards(manifest, run["marks"], run["reviewerDecisions"], flat, cands),
+        "calibration": {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name},
         "agreement": dip_agreement(cands, dock["reviewers"]),
         "weights_path": weights_name,
         "docket_html": with_frame_bridge(docket_page(dock)),
@@ -550,6 +589,19 @@ svg .lbl{fill:var(--ink)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .legend .k-new{background:var(--fit)}
 .legend .k-known{border:2px solid var(--muted)}
+.legend .k-sim{border:2px solid var(--muted)}
+.legend .k-cl{background:var(--fit)}
+svg.calplane{margin:0 auto}
+svg.calplane .floor{fill:var(--sel)}
+svg.calplane .iso{stroke:var(--muted);stroke-dasharray:4 3}
+svg.calplane .floorline{stroke:var(--flag)}
+svg.calplane .isolbl{fill:var(--muted);font-size:10px}
+svg.calplane .samplelbl{fill:var(--flag);font-weight:600}
+svg.calplane .pt.sim{fill:var(--panel);fill-opacity:.85;stroke:var(--muted);stroke-width:2}
+svg.calplane .lbl,svg.calplane .samplelbl,svg.calplane .isolbl{paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
+#caltable th,#caltable td{white-space:nowrap}
+#caltable tbody th{font:400 13px "JetBrains Mono",monospace;text-transform:none;letter-spacing:0;color:var(--ink)}
+svg.calplane .pt.cl{fill:var(--fit);fill-opacity:.85;stroke:var(--fit);stroke-width:1.5}
 /* planets */
 .ratio{display:grid;gap:4px;border-top:1px solid var(--rule);padding-top:8px;margin-top:8px}
 .ratio .formula{font:12px "JetBrains Mono",monospace;overflow-wrap:anywhere}
@@ -1141,6 +1193,7 @@ function renderPlanets(){
 
 // ---------- panel ----------
 function renderPanel(){
+  renderCalibration(); calWidth = $('#calplane').clientWidth;
   const ag = D.agreement;
   $('#agreement').innerHTML = ag.length ? `<ul class="agree">${ag.map(a => `<li>
       <span>${dipLink(a.id)}<small class="muted" style="display:block;font-size:11px">${esc(a.target)} · ${esc(a.outcome_label)} · ${esc(D.unconfirmed)}</small></span>
@@ -1157,6 +1210,74 @@ function renderPanel(){
       <dt>dips marked</dt><dd>${r.marked_dips.length} of ${D.dossier_ids.length}<div class="marks">${r.marked_dips.map(dipLink).join('') || '<span class="muted">none</span>'}</div></dd>
     </dl></article>`).join('') : '<p class="empty">The manifest lists no reviewers.</p>';
 }
+
+// ---------- calibration plane ----------
+// x = false-alarm rate (FPR on empty subjects), y = recall (TPR on injected transits), point size =
+// calibrated weight, with the lines of constant weight = TPR − FPR (floored). Stored values only.
+const fmtN = p => (p.n_injected !== null && p.n_injected !== undefined) ? `${p.n_injected} injected, ${p.n_empty} empty` : 'sample size not stored';
+function calSample(){
+  const pts = D.calibration.points, cl = pts.filter(p => isClaude(p.kind)), sim = pts.filter(p => p.kind === 'simulated');
+  const sizes = list => [...new Set(list.map(fmtN))];
+  const parts = [];
+  if (cl.length) parts.push(`<b>The Claude reviewers were calibrated on ${esc(sizes(cl).join(' / '))} subjects only.</b>`);
+  if (sim.length) parts.push(`The simulated detectors (code, not people) on ${esc(sizes(sim).join(' / '))}.`);
+  const n = Math.max(0, ...pts.map(p => p.n_injected || 0));
+  if (n) parts.push(`With ${n} injected subjects a recall moves in steps of ${fmt(1 / n, 2)}, so one subject more or less changes a weight by that much. These weights are rough.`);
+  return parts.join(' ');
+}
+function calPlane(box){
+  box.innerHTML = '';
+  const C = D.calibration, pts = C.points.filter(p => p.tpr !== null && p.tpr !== undefined && p.fpr !== null && p.fpr !== undefined);
+  if (!C.points.length){ box.innerHTML = '<p class="empty">No weights file was given to this build.</p>'; return; }
+  if (!pts.length){ box.innerHTML = '<p class="empty">The weights file stores no recall or false-alarm rates, so there is nothing to plot.</p>'; return; }
+  const W = Math.min(560, Math.max(260, box.clientWidth || 520)), pl = 46, pr = 14, pt = 12, pb = 42;
+  // pad keeps a point at FPR 0 clear of the axis labels; narrow drops the floor-region note.
+  const pad = 14, side = W - pl - pr - pad, H = pt + side + pb, narrow = W < 420;
+  const X = v => pl + pad + v * side, Y = v => pt + (1 - v) * side, R = w => 3 + 10 * Math.max(0, Number(w) || 0);
+  const groups = [];
+  for (const p of pts){ let g = groups.find(g => g.fpr === p.fpr && g.tpr === p.tpr && g.kind === (isClaude(p.kind) ? 'claude' : p.kind)); if (!g){ g = {fpr: p.fpr, tpr: p.tpr, kind: isClaude(p.kind) ? 'claude' : p.kind, items: []}; groups.push(g); } g.items.push(p); }
+  const label = `Calibration plane: ${pts.length} reviewers by false-alarm rate and recall. ` + groups.map(g => `${g.items.map(p => p.id).join(' and ')}: recall ${fmt(g.tpr,2)}, false-alarm rate ${fmt(g.fpr,2)}, weight ${fmt(g.items[0].weight,2)}`).join('; ') + '. ' + calSample().replace(/<[^>]+>/g, '');
+  const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': label, class: 'calplane'}, box);
+  svg.style.maxWidth = W + 'px';
+  // The floor: below TPR − FPR = floor every reviewer gets the floor weight.
+  const f = C.floor;
+  el('polygon', {points: `${X(0) - pad},${Y(f)} ${X(0)},${Y(f)} ${X(1-f)},${Y(1)} ${X(1)},${Y(1)} ${X(1)},${Y(0)} ${X(0) - pad},${Y(0)}`, class: 'floor'}, svg);
+  for (const t of [0, 0.2, 0.4, 0.6, 0.8, 1]){
+    el('line', {x1: X(t), x2: X(t), y1: Y(0), y2: Y(0) + 4, stroke: 'var(--muted)'}, svg); tx(svg, X(t), Y(0) + 16, String(t), 'middle');
+    el('line', {x1: X(0) - pad - 4, x2: X(0) - pad, y1: Y(t), y2: Y(t), stroke: 'var(--muted)'}, svg); tx(svg, X(0) - pad - 7, Y(t) + 4, String(t), 'end');
+  }
+  el('rect', {x: X(0) - pad, y: Y(1), width: side + pad, height: side, fill: 'none', stroke: 'var(--rule)'}, svg);
+  tx(svg, X(0.5), H - 6, 'false-alarm rate (FPR, empty subjects)', 'middle', 'lbl');
+  const yl = tx(svg, 12, Y(0.5), 'recall (TPR, injected transits)', 'middle', 'lbl'); yl.setAttribute('transform', `rotate(-90 12 ${Y(0.5)})`);
+  // Lines of constant weight: TPR = FPR + w, labelled along the line.
+  for (const w of C.iso){
+    el('line', {x1: X(0), y1: Y(w), x2: X(1 - w), y2: Y(1), class: w === f ? 'iso floorline' : 'iso'}, svg);
+    const a = w === f ? 0.55 : 0.72, lx = X(a * (1 - w)), ly = Y(w + a * (1 - w));
+    const t = tx(svg, lx, ly - 5, w === f ? `weight ${w} (floor)` : `weight ${w}`, 'middle', 'isolbl'); t.setAttribute('transform', `rotate(-45 ${lx} ${ly})`);
+  }
+  if (!narrow) tx(svg, X(0.97), Y(0.30), `below the floor line: weight ${f}`, 'end');
+  // The sample size, on the plane.
+  const cl = pts.filter(p => isClaude(p.kind));
+  if (cl.length) tx(svg, X(0.97), Y(0.08), `Claude: ${fmtN(cl[0])} only`, 'end', 'samplelbl');
+  if (pts.some(p => p.kind === 'simulated')) tx(svg, X(0.97), Y(0.08) + 14, `simulated: ${fmtN(pts.find(p => p.kind === 'simulated'))}`, 'end');
+  for (const g of groups){
+    const r = R(g.items[0].weight), cx = X(g.fpr), cy = Y(g.tpr);
+    const c = el('circle', {cx, cy, r, class: g.kind === 'claude' ? 'pt cl' : 'pt sim'}, svg);
+    el('title', {}, c).textContent = g.items.map(p => `${p.id} (${p.kind === 'simulated' ? 'simulated, not a person' : isClaude(p.kind) ? 'Claude' : p.kind}): TPR ${fmt(p.tpr,2)}, FPR ${fmt(p.fpr,2)}, weight ${fmt(p.weight,2)}, ${fmtN(p)}`).join('\n');
+    const word = g.kind === 'claude' ? 'Claude' : g.kind === 'simulated' ? 'simulated' : g.kind;
+    tx(svg, cx + r + 6, cy + 4, `${g.items.length} ${word} · w ${fmt(g.items[0].weight,2)}`, 'start', 'lbl');
+  }
+}
+function renderCalibration(){
+  const C = D.calibration;
+  $('#calsample').innerHTML = C.points.some(p => p.n_injected) ? calSample() : 'The sample size is not stored with these weights.';
+  calPlane($('#calplane'));
+  const kindWord = k => k === 'simulated' ? 'simulated · not a person' : isClaude(k) ? 'Claude' : esc(k);
+  $('#caltable').innerHTML = C.points.length ? `<table><caption class="sr">Calibration rates and weights per reviewer, as stored</caption><thead><tr><th scope="col">reviewer</th><th scope="col">kind</th><th scope="col" class="num">recall (TPR)</th><th scope="col" class="num">false alarms (FPR)</th><th scope="col" class="num">weight</th><th scope="col">sample</th></tr></thead><tbody>${C.points.map(p => `<tr><th scope="row" class="mono">${esc(p.id)}</th><td>${kindWord(p.kind)}</td><td class="num">${fmt(p.tpr,2)}</td><td class="num">${fmt(p.fpr,2)}</td><td class="num">${fmt(p.weight,2)}${p.consistent === false ? '<small>not max(TPR − FPR, floor)</small>' : ''}</td><td>${esc(fmtN(p))}</td></tr>`).join('')}</tbody></table>` : '';
+  $('#calsource').textContent = C.source ? `Rates: ${C.record_path || 'the weights file'}. ${C.source}` : (C.record_path ? `Rates: ${C.record_path}.` : '');
+}
+let calWidth = -1;
+function resizeCalibration(){ const box = $('#calplane'); if (!box || $('#route-panel').hidden || box.clientWidth === calWidth) return; calWidth = box.clientWidth; calPlane(box); }
 
 // ---------- runs ----------
 function renderRuns(){
@@ -1284,7 +1405,7 @@ $$('.nav a').forEach(a => a.addEventListener('click', () => { if (a.getAttribute
 setDrawerRole();
 if (drawerMQ.addEventListener) drawerMQ.addEventListener('change', () => { closeDrawer(false); setDrawerRole(); });
 let rt = null;
-window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!$('#route-discoveries').hidden) renderDiscCharts(false); fitFrame(); }, 120); });
+window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!$('#route-discoveries').hidden) renderDiscCharts(false); resizeCalibration(); fitFrame(); }, 120); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitFrame);  // web fonts can rewrap the header
 go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()}, false);
 """
@@ -1384,6 +1505,15 @@ def app_page(data: dict) -> str:
     <section class="route" id="route-panel" data-route="panel" aria-labelledby="h-panel" hidden>
       <header><h1 id="h-panel" tabindex="-1">Panel</h1><p>The reviewers that marked dips in run {html.escape(run["name"])}. Simulated reviewers are code; Claude reviewers are model calls. None of them is a person.</p></header>
       <p class="note rule"><b>Weights.</b> A reviewer's weight is its calibration skill from injection tests: the true-positive rate on injected transits minus the false-positive rate on empty light curves, floored (calibrate.py). The calibrated weights are stored in {html.escape(data["weights_path"] or "no weights file")}. The weight in this run is the one manifest.json records; when it differs from the calibrated weight, the run did not use the calibrated weights.</p>
+      <section class="card" aria-labelledby="h-cal" style="display:grid;gap:8px">
+        <h2 id="h-cal">Calibration plane</h2>
+        <p class="muted" style="margin:0;font-size:13px">Each reviewer at its false-alarm rate (x: share of empty subjects it marked) and recall (y: share of injected transits it found) in calibration. Point size is its calibrated weight. The lines join points of equal weight, weight = TPR − FPR, floored at {data["calibration"]["floor"]}; up and to the left is better. Stored values only.</p>
+        <div class="legend"><span><i class="k-sim"></i>simulated detector, not a person</span><span><i class="k-cl"></i>Claude reviewer, not a person</span><span>size: calibrated weight</span></div>
+        <div id="calplane"></div>
+        <p class="note" id="calsample" style="margin:0"></p>
+        <div class="tablewrap" id="caltable" tabindex="0" role="region" aria-label="Calibration rates per reviewer"></div>
+        <p class="muted" id="calsource" style="margin:0;font-size:12px;overflow-wrap:anywhere"></p>
+      </section>
       <section class="card" aria-labelledby="h-agree" style="display:grid;gap:8px">
         <h2 id="h-agree">Marks per dip</h2>
         <p class="muted" style="margin:0;font-size:13px">Which reviewers marked each consensus dip, from the stored reviewer list in candidates.json. The verdict ledger link opens the dip's checks in the Docket.</p>

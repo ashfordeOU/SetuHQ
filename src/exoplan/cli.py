@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-from exoplan.calibrate import calibrate_weights, weights_from_skills
+from exoplan.calibrate import calibrate_weights, calibration_path, calibration_record, weights_from_skills
 from exoplan.config import build_reviewers, load_config
 from exoplan.loaders import load_cheops, load_tess
 from exoplan.pipeline import run_pipeline
@@ -59,9 +59,13 @@ def cmd_calibrate(args) -> int:
     weights = weights_from_skills(skills)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(weights, indent=2, sort_keys=True))
+    # The rates and sample sizes behind the weights, next to them, for the Panel's calibration plane.
+    record = calibration_record(skills, weights_file=Path(args.out).name,
+                                source=f"exoplan calibrate {args.config} (seed {args.seed})")
+    calibration_path(args.out).write_text(json.dumps(record, indent=2))
     for skill in skills.values():
         print(f"{skill.reviewer_id:24s} TPR={skill.tpr:.3f} FPR={skill.fpr:.3f} weight={skill.weight:.3f}")
-    print(f"weights written to {args.out}")
+    print(f"weights written to {args.out}, rates to {calibration_path(args.out)}")
     return 0
 
 

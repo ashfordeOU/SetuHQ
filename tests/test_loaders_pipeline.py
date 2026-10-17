@@ -120,6 +120,13 @@ def test_calibration_gives_real_volunteer_higher_weight_than_blind_one(tmp_path)
     assert skills["good"].tpr > skills["blind"].tpr
     assert skills["blind"].weight == pytest.approx(0.05)
     assert skills["good"].weight > skills["blind"].weight
+    # The rates and sample sizes behind the weights are kept next to the weights file.
+    from exoplan.calibrate import calibration_path, calibration_record
+
+    assert calibration_path("docs/w.json").as_posix() == "docs/w.calibration.json"
+    record = calibration_record(skills, weights_file="w.json")
+    assert record["reviewers"]["good"] == {"tpr": skills["good"].tpr, "fpr": skills["good"].fpr,
+                                           "weight": skills["good"].weight, "n_injected": 12, "n_empty": 12}
 
 
 def test_fixed_injection_is_centred():

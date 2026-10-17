@@ -12,7 +12,7 @@ still carry some information. The weights feed :func:`exoplan.aggregate.aggregat
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import numpy as np
@@ -20,6 +20,9 @@ import numpy as np
 from exoplan.injection import detrended, random_injection, synthetic_subject
 from exoplan.render import render_subject
 from exoplan.reviewers.base import POTENTIAL_PLANET
+
+
+WEIGHT_FLOOR = 0.05
 
 
 @dataclass(frozen=True)
@@ -40,7 +43,7 @@ def calibrate_weights(
     seed: int = 0,
     length_days: float = 13.0,
     cadence_min: float = 10.0,
-    floor: float = 0.05,
+    floor: float = WEIGHT_FLOOR,
     depth_ppm: tuple[float, float] = (300.0, 3000.0),
     duration_hours: tuple[float, float] = (1.0, 6.0),
     image_dir: str | Path | None = None,
@@ -101,3 +104,24 @@ def _render_for(subject, image_dir: str | Path | None) -> Path | None:
 
 def weights_from_skills(skills: dict[str, ReviewerSkill]) -> dict[str, float]:
     return {reviewer_id: skill.weight for reviewer_id, skill in skills.items()}
+
+
+def calibration_path(weights_path: str | Path) -> Path:
+    """Where the per-reviewer rates behind a weights file are kept: ``x.json`` -> ``x.calibration.json``.
+
+    The weights file itself stays a flat ``{reviewer: weight}`` map, which ``exoplan run --weights`` reads.
+    """
+    p = Path(weights_path)
+    return p.with_name(p.stem + ".calibration.json")
+
+
+def calibration_record(skills: dict[str, ReviewerSkill], *, weights_file: str, floor: float = WEIGHT_FLOOR,
+                       source: str = "") -> dict:
+    """The rates and sample sizes behind a weights file, as stored next to it."""
+    return {
+        "weights_file": weights_file,
+        "floor": floor,
+        "rule": "weight = max(TPR - FPR, floor)",
+        "source": source,
+        "reviewers": {rid: {k: v for k, v in asdict(s).items() if k != "reviewer_id"} for rid, s in sorted(skills.items())},
+    }
