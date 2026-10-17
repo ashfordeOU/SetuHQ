@@ -20,8 +20,12 @@ from exoplan.app import (
     WIDGETS,
     app_data,
     build_app,
+    DEFAULT_FEED_VIEW,
+    decode_feed_view,
     decode_layout,
+    encode_feed_view,
     encode_layout,
+    feed_view,
     radius_ratio,
     widget_layout,
 )
@@ -439,7 +443,10 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     assert "decodeLayout(p.params.get('layout')" in go and "saveLayout" not in go
     assert "layout = ownLayout.map(x => ({...x}))" in go
     # Storage is written only by saveLayout, and saveLayout runs only after a layout control is used.
-    assert APP_JS.count("setItem(") == 1 and "s.setItem(LAYOUT_KEY" in re.search(r"function saveLayout\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    # (The only other write is the Feed's own default, in saveFeedView.)
+    assert APP_JS.count("setItem(") == 2 and APP_JS.count("setItem(LAYOUT_KEY") == 1
+    assert "s.setItem(LAYOUT_KEY" in re.search(r"function saveLayout\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "s.setItem(FEED_KEY" in re.search(r"function saveFeedView\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     callers = [m.start() for m in re.finditer(r"saveLayout\(\);", APP_JS)]
     action = re.search(r"function layoutAction\(.*?\n\}\n", APP_JS, re.S)
     reset = re.search(r"\$\('#resetlayout'\)\.addEventListener.*?\n", APP_JS)
@@ -541,3 +548,77 @@ def test_desktop_frame_height_is_fitted_from_the_measured_header():
     resize = re.search(r"window.addEventListener\('resize'.*", APP_JS).group(0)
     assert "fitFrame()" in resize
     assert "fitFrame();" in re.search(r"function frameStatus\(text\)\{.*", APP_JS).group(0)
+
+
+def test_feed_sort_and_filter_round_trip_through_the_url():
+    view = {"sort": "depth", "dir": "desc", "filter": "new"}
+    assert encode_feed_view(view) == "sort=depth&filter=new"
+    assert decode_feed_view("sort=depth&filter=new") == view
+    # A direction that is not the column's default is kept in the URL.
+    asc = {"sort": "depth", "dir": "asc", "filter": "known"}
+    assert encode_feed_view(asc) == "sort=depth&dir=asc&filter=known"
+    assert decode_feed_view(encode_feed_view(asc)) == asc
+    assert decode_feed_view("?sort=status&filter=all") == {"sort": "status", "dir": "asc", "filter": "all"}
+    # Anything malformed falls back to the default view.
+    assert decode_feed_view("") == feed_view(None) == DEFAULT_FEED_VIEW
+    assert decode_feed_view("sort=radius&dir=up&filter=planets") == DEFAULT_FEED_VIEW
+    # The page reads the same query on load and writes it back when the viewer changes a control.
+    assert "'#/discoveries?' + encodeFeedView(currentFeedView())" in APP_JS
+    go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "decodeFeedView(p.params)" in go and "ownFeedView" in go and "syncFeedURL()" in go
+    sort_click = re.search(r"\$\('#disctable'\).addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
+    chip_click = re.search(r"\$\('#discchips'\).addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
+    for handler in (sort_click, chip_click):
+        assert "saveFeedView(); syncFeedURL();" in handler
+    # localStorage keeps the viewer's default, read inside try/catch.
+    assert "s.setItem(FEED_KEY, JSON.stringify(ownFeedView))" in APP_JS
+    assert "JSON.parse(s.getItem(FEED_KEY))" in APP_JS
+
+
+def test_feed_view_round_trips_in_the_page_script(run_dir, catalog, tmp_path):
+    """The page's own encode and decode, run under Node, agree with the Python pair."""
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node is not installed")
+    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    data = _page_data(page)
+    funcs = re.search(r"const shortOf = .*?\nfunction decodeFeedView\(params\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    script = ("const D = " + json.dumps({"feed_view": data["feed_view"]}) + ";\n"
+              "const FEED_SORTS = D.feed_view.sorts, FEED_FILTERS = D.feed_view.filters, FEED_NUMERIC = D.feed_view.numeric;\n"
+              + funcs +
+              "const cases = ['sort=depth&filter=new', 'sort=depth&dir=asc&filter=known', '', 'sort=x&filter=y', 'sort=status'];\n"
+              "console.log(JSON.stringify(cases.map(c => { const v = decodeFeedView(new URLSearchParams(c)); return [v, encodeFeedView(v)]; })));\n")
+    out = json.loads(subprocess.run([node, "-e", script], capture_output=True, text=True, check=True).stdout)
+    for (view, text), case in zip(out, ["sort=depth&filter=new", "sort=depth&dir=asc&filter=known", "", "sort=x&filter=y", "sort=status"]):
+        assert view == decode_feed_view(case)
+        assert text == encode_feed_view(view)
+
+
+def test_frame_is_hidden_until_the_docket_reports_ready(run_dir, tmp_path):
+    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    cand = _route(page, "candidates")
+    # The frame starts hidden (no height, not visible) and the loading line holds its slot.
+    assert '<iframe class="frame waiting" id="docketframe"' in cand
+    rule = re.search(r"\.frame\.waiting,[^{]*\{([^}]*)\}", APP_CSS).group(1)
+    assert "height:0" in rule and "visibility:hidden" in rule and "min-height:0" in rule
+    load = re.search(r"function loadDocket\(dip, section, mode\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "f.classList.add('waiting')" in load
+    ready = re.search(r"function onFrameReady\(m\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "f.classList.remove('waiting')" in ready
+    # The blocked path still hides the frame and shows the message.
+    blocked = re.search(r"function showBlocked\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "f.hidden = true" in blocked and "$('#frameblocked').hidden = false" in blocked
+    fit = re.search(r"function fitFrame\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "f.classList.contains('waiting')" in fit
+
+
+def test_top_candidate_rows_are_one_44px_line_on_a_phone():
+    phone = _phone_css()
+    row = re.search(r"\.toplist ul li\.toprow\{([^}]*)\}", phone).group(1)
+    assert "height:44px" in row and "white-space:nowrap" in row and "align-items:center" in row
+    link = re.search(r"\.toplist ul li\.toprow a\.dip\{([^}]*)\}", phone).group(1)
+    assert "height:44px" in link and "padding:0" in link
+    # The status keeps a word on the row, and the hedge moves to the signal line.
+    assert ".toplist .unc{display:none}" in phone and ".phonehedge{display:inline}" in phone
+    widgets = re.search(r"function widgetBody\(id\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert 'class="phonehedge"> · each a ${esc(D.unconfirmed)}' in widgets

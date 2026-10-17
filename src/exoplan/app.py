@@ -3,7 +3,8 @@
 Each section is a route in the URL hash (``#/overview``, ``#/candidates``,
 ``#/discoveries``, ``#/planets``, ``#/panel``, ``#/runs``), with an optional
 query: ``#/candidates?dip=<candidate_id>`` opens the Docket on that dip and
-``#/overview?layout=kpis.L,top.L,...`` carries a widget layout. Hashes that do
+``#/overview?layout=kpis.L,top.L,...`` carries a widget layout and
+``#/discoveries?sort=depth&filter=new`` the Feed's sort and filter. Hashes that do
 not start with ``#/`` (the skip link's ``#content``) are not routes.
 
 * Overview: a widget grid (run figures, feed count, recent runs, top
@@ -114,6 +115,45 @@ def decode_layout(text) -> list[dict]:
         items.append({"id": bits[0], "size": bits[1] if len(bits) > 1 else None,
                       "visible": not (len(bits) > 2 and bits[2] == "hidden")})
     return widget_layout(items)
+
+
+# The Feed's sort and filter in the URL hash, as #/discoveries?sort=depth&filter=new (with &dir=asc or
+# &dir=desc only when the direction is not the column's default). Short names for the URL, keys for the table.
+FEED_SORTS = {"tic": "tic", "dip": "candidate_id", "time": "t_center", "period": "period_days",
+              "depth": "depth_ppm", "snr": "snr", "status": "status"}
+FEED_FILTERS = {"all": "all", "new": "new_candidate", "known": "known_toi"}
+FEED_NUMERIC = ("tic", "time", "period", "depth", "snr")
+DEFAULT_FEED_VIEW = {"sort": "snr", "dir": "desc", "filter": "all"}
+
+
+def feed_view(stored=None) -> dict:
+    """A valid Feed view (sort, dir, filter) from whatever the URL or storage held.
+
+    Unknown values fall back to the default; a missing direction is the column's default
+    (descending for numbers, ascending for text). The page's ``normaliseFeedView`` applies
+    the same rule in JavaScript.
+    """
+    stored = stored if isinstance(stored, dict) else {}
+    sort = stored.get("sort") if stored.get("sort") in FEED_SORTS else DEFAULT_FEED_VIEW["sort"]
+    default_dir = "desc" if sort in FEED_NUMERIC else "asc"
+    direction = stored.get("dir") if stored.get("dir") in ("asc", "desc") else default_dir
+    filt = stored.get("filter") if stored.get("filter") in FEED_FILTERS else DEFAULT_FEED_VIEW["filter"]
+    return {"sort": sort, "dir": direction, "filter": filt}
+
+
+def encode_feed_view(view: dict) -> str:
+    """The view as the query of the Feed's hash: ``sort=depth&filter=new`` (``&dir=`` only when not the default)."""
+    v = feed_view(view)
+    default_dir = "desc" if v["sort"] in FEED_NUMERIC else "asc"
+    return f"sort={v['sort']}" + ("" if v["dir"] == default_dir else f"&dir={v['dir']}") + f"&filter={v['filter']}"
+
+
+def decode_feed_view(query) -> dict:
+    """Inverse of :func:`encode_feed_view`; anything malformed falls back as in :func:`feed_view`."""
+    from urllib.parse import parse_qs
+
+    q = parse_qs(str(query or "").lstrip("?"))
+    return feed_view({k: q[k][0] for k in ("sort", "dir", "filter") if q.get(k)})
 
 
 def feed_label(feed: list[dict]) -> str:
@@ -381,6 +421,8 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
             "found_times": sorted({str(r["found"]) for r in feed if r.get("found")}),
         },
         "feed_rule": {"max_depth_ppm": MAX_FEED_DEPTH_PPM, "min_transits": MIN_FEED_TRANSITS},
+        "feed_view": {"sorts": FEED_SORTS, "filters": FEED_FILTERS, "numeric": list(FEED_NUMERIC),
+                      "default": DEFAULT_FEED_VIEW},
         "status_label": STATUS_LABEL,
         "planets": planet_cards(cands, run_name, feed, crossmatch),
         "crossmatch_line": crossmatch.get("line", ""),
@@ -464,6 +506,7 @@ h3{font:600 14px/1.3 "Inter Tight",sans-serif;margin:0}
 .toplist,.toplist ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .toplist>li{border-top:1px solid var(--rule);padding-top:8px;display:grid;gap:6px}
 .toplist ul li{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline;font-size:13px}
+.toplist .st .short,.phonehedge{display:none}
 .toplist .note{font-size:12px}
 .kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
 .kpi{border-top:2px solid var(--rule);padding-top:6px}
@@ -532,6 +575,8 @@ details.cfg>div{padding:0 16px 14px;display:grid;gap:14px}
 pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;background:var(--sel);padding:6px 8px;border-radius:4px}
 .frame{width:100%;height:calc(100vh - 190px);height:calc(100vh - var(--frame-offset, 190px));min-height:520px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);display:block}
 .frame[hidden]{display:none}
+/* Until the Docket reports ready the frame takes no space and the status line holds the slot. */
+.frame.waiting,body[data-route="candidates"] .frame.waiting{height:0;min-height:0;flex:0 0 0;border:0;visibility:hidden}
 .drawerclose{display:none}
 .topfull{display:none}
 .note.blocked{border-left-color:var(--reject);font-size:14px}
@@ -574,6 +619,17 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   td a.dip{padding:12px 0;line-height:20px}
   summary{min-height:44px;padding:12px 0;line-height:20px;box-sizing:border-box}
   .copyfallback{min-height:44px}
+  /* Top candidates: each dip is one 44 px line. The link fills the row height, so the row needs no
+     extra padding; the status shows its short word and the hedge sits on the signal line above. */
+  .toplist ul{gap:0}
+  .toplist ul li.toprow{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);gap:0 10px;align-items:center;height:44px;white-space:nowrap;border-top:1px solid var(--rule);font-size:12px}
+  .toplist ul li.toprow:first-child{border-top:0}
+  .toplist ul li.toprow a.dip{display:flex;align-items:center;height:44px;padding:0;font-size:11px}
+  .toplist .st .long{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .toplist .st .short{display:inline;overflow:hidden;text-overflow:ellipsis}
+  .toplist .st{min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .toplist .unc{display:none}
+  .phonehedge{display:inline}
   /* The feed table scrolls sideways in its own region; the page alone scrolls vertically. */
   .tablewrap.scrollbox{max-height:none}
   /* Candidates: the header collapses and the Docket fills the screen under the top bar, so only the frame scrolls. */
@@ -609,6 +665,7 @@ function tx(svg, x, y, s, anchor='start', cls=''){ const t = el('text', {x, y, '
 const UNC = `<span class="tag unc">${esc(D.unconfirmed)}</span>`;
 const say = msg => { const a = $('#announce'); a.textContent = ''; setTimeout(() => { a.textContent = msg; }, 30); };
 const isClaude = k => k === 'claude' || k === 'claude_code';
+const OUTCOME_SHORT = {passed: 'passed', flagged: 'flagged', rejected: 'rejected'};
 const kindTag = k => k === 'simulated' ? '<span class="tag sim">simulated · not a person</span>' : isClaude(k) ? `<span class="tag cl">Claude · ${esc(k)}</span>` : `<span class="tag">${esc(k || 'unknown')}</span>`;
 function niceTicks(lo, hi, n){
   if (!(hi > lo)) return [lo];
@@ -685,9 +742,11 @@ function widgetBody(id){
     for (const x of r.top){ let g = groups.find(g => g.signal_id === x.signal_id); if (!g){ g = {signal_id: x.signal_id, dips: []}; groups.push(g); } g.dips.push(x); }
     return `<ul class="toplist">${groups.map(g => {
       const f = g.dips[0], n = g.dips.length, xm = g.dips.find(x => x.consistent_with);
-      const head = `<div><b>${esc(f.target)}</b> <span class="muted">· signal ${f.period_days ? 'P ' + fmt(f.period_days,3) + ' d' : 'with no period (one transit)'} · ${n} of the top dips${f.signal_dips > n ? `, ${f.signal_dips} dips in the run` : ''}</span></div>`;
+      const head = `<div><b>${esc(f.target)}</b> <span class="muted">· signal ${f.period_days ? 'P ' + fmt(f.period_days,3) + ' d' : 'with no period (one transit)'} · ${n} of the top dips${f.signal_dips > n ? `, ${f.signal_dips} dips in the run` : ''}<span class="phonehedge"> · each a ${esc(D.unconfirmed)}</span></span></div>`;
       const note = xm ? `<p class="note">Archive cross-match: ${n === 1 ? 'this dip is' : `these ${n} dips are`} consistent with <b>${esc(xm.consistent_with)}</b>, a published planet${xm.dP_pct !== null && xm.dP_pct !== undefined ? ` (period difference ${fmt(xm.dP_pct,2)}%)` : ''}. ${n === 1 ? 'It is a transit' : 'They are repeat transits'} of one known planet, not ${n === 1 ? 'a discovery' : n + ' discoveries'}. ${esc(D.no_detection)}</p>` : '';
-      return `<li>${head}${note}<ul>${g.dips.map(x => `<li>${dipLink(x.id)}<span class="mono">SNR ${fmt(x.snr,1)}</span><span class="mono">${fmt(x.depth_ppm,0)} ppm</span><span>${esc(x.outcome_label)}</span><span class="muted">${esc(D.unconfirmed)}</span></li>`).join('')}</ul></li>`;
+      // One line per dip. On a phone the status shows as its short word and the hedge moves to the
+      // signal line above, so each row stays one 44 px line; the full words stay for screen readers.
+      return `<li>${head}${note}<ul>${g.dips.map(x => `<li class="toprow">${dipLink(x.id)}<span class="mono">SNR ${fmt(x.snr,1)}</span><span class="mono">${fmt(x.depth_ppm,0)} ppm</span><span class="st"><span class="long">${esc(x.outcome_label)}</span><span class="short" aria-hidden="true">${esc(OUTCOME_SHORT[x.outcome] || x.outcome_label)}</span></span><span class="muted unc">${esc(D.unconfirmed)}</span></li>`).join('')}</ul></li>`;
     }).join('')}</ul>`;
   }
   const r = D.run, c = r.counts || {}, dc = r.docket_counts || {};
@@ -814,14 +873,14 @@ function readyStatus(){
 // The CSS keeps calc(100vh - 190px) as the fallback until this has run.
 function fitFrame(){
   const f = $('#docketframe');
-  if (!f || f.hidden || $('#route-candidates').hidden || matchMedia('(max-width:699.98px)').matches) return;
+  if (!f || f.hidden || f.classList.contains('waiting') || $('#route-candidates').hidden || matchMedia('(max-width:699.98px)').matches) return;
   const top = f.getBoundingClientRect().top + window.scrollY;
   const below = parseFloat(getComputedStyle($('#main')).paddingBottom) || 0;
   document.documentElement.style.setProperty('--frame-offset', Math.ceil(top + below) + 'px');
 }
 function showBlocked(){
   clearTimeout(frame.timer);
-  const f = $('#docketframe'); f.hidden = true;
+  const f = $('#docketframe'); f.hidden = true; f.classList.remove('waiting');
   $('#frameblocked').hidden = false; frameStatus('');
   document.documentElement.style.removeProperty('--frame-offset');
   setFullHrefs(frame.dip);
@@ -833,7 +892,7 @@ function frameLoadFailed(gen){
 }
 function onFrameReady(m){
   frame.ready = true; clearTimeout(frame.timer);
-  const f = $('#docketframe'); f.hidden = false; $('#frameblocked').hidden = true;
+  const f = $('#docketframe'); f.hidden = false; f.classList.remove('waiting'); $('#frameblocked').hidden = true;
   try { void f.contentWindow.document.body; frame.crossOrigin = false; } catch (e) { frame.crossOrigin = true; }
   readyStatus();
   const p = frame.pending; frame.pending = null;
@@ -855,7 +914,8 @@ function loadDocket(dip, section, mode){
   const f = $('#docketframe'), url = mode === 'srcdoc' ? null : docketURL(dip), gen = ++frame.gen;
   Object.assign(frame, {ready: false, mode: url ? 'blob' : 'srcdoc', dip, section: section || null, pending: {dip, section: section || null},
     frameURLFailed: false});
-  f.hidden = false; $('#frameblocked').hidden = true;
+  // Not shown until it reports ready: an empty bordered box would sit under the loading line.
+  f.hidden = false; f.classList.add('waiting'); $('#frameblocked').hidden = true;
   frameStatus(LOADING_TEXT);
   clearTimeout(frame.timer);
   // A frame that never reports ready did not load (blocked by frame-src, say): try srcdoc, then say so.
@@ -884,6 +944,44 @@ function renderCandidates(){ /* the frame loads in openDip, with the dip from th
 
 // ---------- discoveries (the feed) ----------
 const disc = {sort: 'snr', dir: -1, filter: 'all'};
+// The Feed's sort and filter live in the URL (#/discoveries?sort=depth&filter=new) like the Overview
+// layout, and in localStorage as the viewer's default. A view opened from a link is shown for that
+// view only; storage is written only when the viewer changes the sort or the filter.
+const FEED_SORTS = D.feed_view.sorts, FEED_FILTERS = D.feed_view.filters, FEED_NUMERIC = D.feed_view.numeric;
+const FEED_KEY = 'exoplan-app:feed:' + D.title;
+const shortOf = (map, key) => Object.keys(map).find(k => map[k] === key);
+// Same rule as app.feed_view in Python.
+function normaliseFeedView(raw){
+  raw = raw && typeof raw === 'object' ? raw : {};
+  const sort = Object.prototype.hasOwnProperty.call(FEED_SORTS, raw.sort) ? raw.sort : D.feed_view.default.sort;
+  const defDir = FEED_NUMERIC.includes(sort) ? 'desc' : 'asc';
+  const dir = raw.dir === 'asc' || raw.dir === 'desc' ? raw.dir : defDir;
+  const filter = Object.prototype.hasOwnProperty.call(FEED_FILTERS, raw.filter) ? raw.filter : D.feed_view.default.filter;
+  return {sort, dir, filter};
+}
+// Same format as app.encode_feed_view / app.decode_feed_view.
+function encodeFeedView(v){
+  v = normaliseFeedView(v);
+  const defDir = FEED_NUMERIC.includes(v.sort) ? 'desc' : 'asc';
+  return `sort=${v.sort}${v.dir === defDir ? '' : '&dir=' + v.dir}&filter=${v.filter}`;
+}
+function decodeFeedView(params){
+  const get = k => params.get(k) || undefined;
+  return normaliseFeedView({sort: get('sort'), dir: get('dir'), filter: get('filter')});
+}
+const currentFeedView = () => ({sort: shortOf(FEED_SORTS, disc.sort), dir: disc.dir > 0 ? 'asc' : 'desc', filter: shortOf(FEED_FILTERS, disc.filter)});
+function applyFeedView(v){ v = normaliseFeedView(v); disc.sort = FEED_SORTS[v.sort]; disc.dir = v.dir === 'asc' ? 1 : -1; disc.filter = FEED_FILTERS[v.filter]; }
+let ownFeedView = (() => { let raw = null; try { const s = getStorage(); raw = s ? JSON.parse(s.getItem(FEED_KEY)) : null; } catch (e) { raw = null; } return normaliseFeedView(raw); })();
+function saveFeedView(){
+  ownFeedView = currentFeedView();
+  try { const s = getStorage(); if (s) s.setItem(FEED_KEY, JSON.stringify(ownFeedView)); } catch (e) { /* storage blocked: the view lasts for this visit */ }
+}
+function syncFeedURL(){
+  if (current !== 'discoveries') return;
+  const h = '#/discoveries?' + encodeFeedView(currentFeedView());
+  if (location.hash !== h) try { history.replaceState(null, '', h); } catch (e) { /* the view still applies */ }
+}
+applyFeedView(ownFeedView);
 const COLS = [
   ['tic', 'TIC', x => x.tic, x => esc(x.tic)],
   ['candidate_id', 'dip', x => x.candidate_id, x => dipLink(x.candidate_id)],
@@ -928,13 +1026,14 @@ $('#disctable').addEventListener('click', e => {
   const b = e.target.closest('button[data-sort]'); if (!b) return;
   const k = b.dataset.sort;
   if (disc.sort === k) disc.dir = -disc.dir; else { disc.sort = k; disc.dir = NUMERIC.has(k) ? -1 : 1; }
+  saveFeedView(); syncFeedURL();
   renderDiscTable();
   $(`#disctable button[data-sort="${k}"]`).focus();
   say(`Sorted by ${b.textContent.replace(/[▲▼]/g,'')}, ${disc.dir > 0 ? 'ascending' : 'descending'}.`);
 });
 $('#discchips').addEventListener('click', e => {
   const b = e.target.closest('button[data-f]'); if (!b) return;
-  disc.filter = b.dataset.f; renderDiscChips(); renderDiscTable();
+  disc.filter = b.dataset.f; saveFeedView(); syncFeedURL(); renderDiscChips(); renderDiscTable();
   $(`#discchips button[data-f="${disc.filter}"]`).focus();
   say($('#disccount').textContent);
 });
@@ -1122,8 +1221,15 @@ function go(p, moveFocus){
       sharedView = encodeLayout(layout) !== encodeLayout(ownLayout);
     } else { layout = ownLayout.map(x => ({...x})); sharedView = false; }
   }
+  if (p.route === 'discoveries'){
+    const fromURL = ['sort', 'dir', 'filter'].some(k => p.params.has(k));
+    const before = currentFeedView();
+    applyFeedView(fromURL ? decodeFeedView(p.params) : ownFeedView);
+    if (rendered.has('discoveries') && encodeFeedView(before) !== encodeFeedView(currentFeedView())){ renderDiscChips(); renderDiscTable(); }
+  }
   current = p.route;
   show(p.route, moveFocus && changed);
+  if (p.route === 'discoveries') syncFeedURL();
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));
 }
 window.addEventListener('hashchange', () => { const p = parseHash(location.hash); if (!p) return; closeDrawer(false); go(p, true); });
@@ -1247,7 +1353,7 @@ def app_page(data: dict) -> str:
       <div class="frametools"><a id="fullpage" href="../docket/">Open full page</a><span class="muted">The Docket on its own page, at the same dip.</span></div>
       <p class="note" id="framestatus" role="status" hidden></p>
       <p class="note blocked" id="frameblocked" role="alert" hidden>The dossier could not load in this view. <a id="blockedlink" href="../docket/">Open it on its own page.</a></p>
-      <iframe class="frame" id="docketframe" title="Docket for run {html.escape(run["name"])}: signals, dips and vetting"></iframe>
+      <iframe class="frame waiting" id="docketframe" title="Docket for run {html.escape(run["name"])}: signals, dips and vetting"></iframe>
     </section>
     <section class="route" id="route-discoveries" data-route="discoveries" aria-labelledby="h-discoveries" hidden>
       <header><h1 id="h-discoveries" tabindex="-1">{label["discoveries"]}</h1><p>The feed from the discovery catalogue: {len(feed)} entries, {n_known} of them match a known TOI period. Every entry is a {unc}: a dip the panel marked, not a planet.</p></header>
