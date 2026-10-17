@@ -1264,8 +1264,9 @@ def crossmatch_line(result: dict) -> str:
     return "Known-planet cross-match not run (archive unreachable at docket build time)"
 
 
-def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: str | None = None,
-                 refresh_crossmatch: bool = False) -> Path:
+def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
+                refresh_crossmatch: bool = False) -> dict:
+    """The Docket's page data for a run: candidates with checks and outcomes, signals, cross-match."""
     run_dir = Path(run_dir)
     run = _load_run(run_dir)
     rows = json.loads((run_dir / "candidates.json").read_text())
@@ -1329,8 +1330,14 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
             "claude_prompt_version": run["manifest"].get("claude_prompt_version", ""),
         },
     }
+    return data
+
+
+def docket_page(data: dict) -> str:
+    """The Docket as one self-contained HTML page for the given ``docket_data``."""
+    title = data["title"]
     payload = json.dumps(data).replace("</", "<\\/")
-    page = f"""<!doctype html>
+    return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1355,8 +1362,13 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
 <script>{DOCKET_JS}</script>
 </body></html>
 """
+
+
+def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: str | None = None,
+                 refresh_crossmatch: bool = False) -> Path:
+    data = docket_data(run_dir, title=title, star=star, refresh_crossmatch=refresh_crossmatch)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"
-    path.write_text(page)
+    path.write_text(docket_page(data))
     return path

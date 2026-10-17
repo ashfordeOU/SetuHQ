@@ -1,4 +1,4 @@
-"""Command-line interface: ``exoplan run``, ``exoplan benchmark``, ``exoplan calibrate``."""
+"""Command-line interface: ``exoplan run``, ``exoplan benchmark``, ``exoplan calibrate``, ``exoplan app`` and more."""
 
 from __future__ import annotations
 
@@ -139,6 +139,15 @@ def cmd_docket(args) -> int:
     return 0
 
 
+def cmd_app(args) -> int:
+    from exoplan.app import build_app
+
+    path = build_app(args.run_dir, args.out, title=args.title, catalog_path=args.catalog,
+                     weights_path=args.weights, star=args.star)
+    print(f"app written to {path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="exoplan", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -197,6 +206,16 @@ def build_parser() -> argparse.ArgumentParser:
     docket.add_argument("--star", help="star name for the archive cross-match (hostname or pl_name); TIC targets also match on tic_id")
     docket.add_argument("--refresh-crossmatch", action="store_true", help="query the archive again instead of reusing crossmatch.json")
     docket.set_defaults(func=cmd_docket)
+
+    app = sub.add_parser("app", help="build the sidebar app shell (overview, candidates, discoveries, planets, panel, runs)")
+    app.add_argument("run_dir")
+    app.add_argument("--out", required=True)
+    app.add_argument("--title", default="exoplan")
+    app.add_argument("--catalog", help="discovery catalogue JSON for the Discoveries, Planets and Runs sections")
+    app.add_argument("--weights", default="docs/results/reviewer_weights_full_panel.json",
+                     help="calibrated reviewer weights JSON shown in the Panel section")
+    app.add_argument("--star", help="star name for the Docket's archive cross-match, as in 'exoplan docket'")
+    app.set_defaults(func=cmd_app)
 
     report = sub.add_parser("report", help="build a static HTML report site from a run directory")
     report.add_argument("run_dir")
