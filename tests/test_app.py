@@ -482,7 +482,7 @@ console.log(JSON.stringify([noDossierLine([{candidate_id: 'x'}, {candidate_id: '
     assert ">No dossier stored for these rows in this run.<" in none
     assert all_linked == ""
     assert "No dossier stored for 1 of these rows in this run" in some
-    assert "${noDossierLine(rows)}</caption>" in APP_JS
+    assert "${noDossierLine(rows)}${archiveNote(rows)}</caption>" in APP_JS
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
@@ -689,3 +689,69 @@ def test_repository_calibration_record_matches_the_weights_file():
     for rid, r in record["reviewers"].items():
         assert r["weight"] == weights[rid] == max(r["tpr"] - r["fpr"], record["floor"])
         assert (r["n_injected"], r["n_empty"]) == (10, 10)
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_feed_states_no_detection_when_a_row_is_a_known_toi(run_dir, catalog, tmp_path):
+    fn = re.search(r"function archiveNote\(rows\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    head = re.search(r"function renderDiscHead\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    when = re.search(r"function when\(iso\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    esc = re.search(r"const esc = .*\n", APP_JS).group(0)
+    script = (esc + when + "const D = " + json.dumps({"no_detection": NO_DETECTION, "unconfirmed": UNCONFIRMED}) + ";\n"
+              "let out = ''; const $ = () => ({set innerHTML(v){ out = v; }});\n" + fn + head + """
+const known = {candidate_id: 'k', status: 'known_toi'}, fresh = {candidate_id: 'n', status: 'new_candidate'};
+const heads = [];
+for (const c of [[known, fresh], [fresh]]){ D.catalog = {candidates: c, found_times: []}; renderDiscHead(); heads.push(out); }
+console.log(JSON.stringify([archiveNote([known, fresh]), archiveNote([fresh]), heads]));""")
+    with_known, without, (head_known, head_new) = json.loads(
+        subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
+    assert NO_DETECTION in with_known and "archive" in with_known
+    assert without == ""
+    assert NO_DETECTION in head_known and NO_DETECTION not in head_new
+    assert "${noDossierLine(rows)}${archiveNote(rows)}</caption>" in APP_JS
+    # The route's header line says it too when the catalogue holds a known TOI match.
+    feed = _route(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text(), "discoveries")
+    header = re.search(r"<header>.*?</header>", feed, re.S).group(0)
+    assert "match a known TOI period" in header and NO_DETECTION in header
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_narrow_calibration_plane_keeps_weight_labels_level_and_inside():
+    """On a phone the weight labels are level, sit above their line's right-hand end and inside the figure."""
+    plane = re.search(r"function calPlane\(box\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    sample = re.search(r"function calSample\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    fmt = re.search(r"const fmt = .*\n", APP_JS).group(0)
+    fmt_n = re.search(r"const fmtN = .*\n", APP_JS).group(0)
+    esc = re.search(r"const esc = .*\n", APP_JS).group(0)
+    claude = re.search(r"const isClaude = .*\n", APP_JS).group(0)
+    points = [{"id": "a", "kind": "simulated", "weight": 0.6, "tpr": 0.7, "fpr": 0.1, "n_injected": 10, "n_empty": 10},
+              {"id": "c", "kind": "claude_code", "weight": 0.5, "tpr": 0.6, "fpr": 0.1, "n_injected": 10, "n_empty": 10}]
+    script = (esc + fmt + claude + "const D = " + json.dumps({"calibration": {"points": points, "iso": list(ISO_WEIGHTS), "floor": 0.05}}) + ";\n"
+              """
+function mk(tag){ const n = {tag, a: {}, kids: [], text: '', style: {}, setAttribute(k, v){ this.a[k] = String(v); }, appendChild(c){ this.kids.push(c); return c; }};
+  Object.defineProperty(n, 'textContent', {get(){ return this.text; }, set(v){ this.text = v; }}); return n; }
+function el(tag, a={}, p){ const e = mk(tag); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+function tx(svg, x, y, s, anchor='start', cls=''){ const t = el('text', {x, y, 'text-anchor': anchor, class: cls}, svg); t.textContent = s; return t; }
+""" + fmt_n + sample + plane + """
+const out = {};
+for (const w of [330, 560]){
+  const box = {clientWidth: w, kids: [], set innerHTML(v){ this.kids = []; }, appendChild(c){ this.kids.push(c); return c; }};
+  calPlane(box);
+  const svg = box.kids[0], vb = svg.a.viewBox.split(' ').map(Number);
+  const iso = svg.kids.filter(k => k.tag === 'text' && (k.a.class || '').includes('isolbl'));
+  out[w] = {vb, iso: iso.map(t => ({s: t.text, x: +t.a.x, y: +t.a.y, rot: 'transform' in t.a}))};
+}
+console.log(JSON.stringify(out));""")
+    out = json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
+    narrow, wide = out["330"], out["560"]
+    labels = {t["s"]: t for t in narrow["iso"]}
+    for w in ISO_WEIGHTS:
+        assert str(w) in labels and not labels[str(w)]["rot"]
+    assert "0.05 is the floor" in labels
+    for t in narrow["iso"]:
+        assert t["y"] >= 11 and t["y"] <= narrow["vb"][3]  # a 10 px label whose baseline is at least 11 px down is not cut
+    # Level labels left to right in the order their lines end on the top edge.
+    xs = [labels[str(w)]["x"] for w in sorted(ISO_WEIGHTS, reverse=True)]
+    assert xs == sorted(xs) and min(b - a for a, b in zip(xs, xs[1:])) > 25
+    # A wide plane keeps the labels along the lines.
+    assert all(t["rot"] for t in wide["iso"]) and len(wide["iso"]) == len(ISO_WEIGHTS)
