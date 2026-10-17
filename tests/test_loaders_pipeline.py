@@ -133,3 +133,55 @@ def test_fixed_injection_is_centred():
     injection = fixed_injection(13.0, 1000.0, 2.0)
     assert abs(0.5 * (injection.t_start + injection.t_end) - 6.5) < 1e-9
     assert injection.depth == pytest.approx(1e-3)
+
+
+_TWO_VOLUNTEERS = """
+[run]
+name = "weights"
+min_points = 100
+
+[[reviewers]]
+type = "simulated"
+id = "vol-a"
+seed = 1
+
+[[reviewers]]
+type = "simulated"
+id = "vol-b"
+seed = 2
+"""
+
+
+def test_run_uses_calibrated_weights_when_reviewer_ids_match(tmp_path, lightcurve_with_transits, monkeypatch):
+    from exoplan import cli
+
+    config_path = tmp_path / "c.toml"
+    config_path.write_text(_TWO_VOLUNTEERS)
+    calibrated = tmp_path / "w.json"
+    calibrated.write_text(json.dumps({"vol-a": 0.6, "vol-b": 0.4}))
+    monkeypatch.setattr(cli, "_load_targets", lambda config: [lightcurve_with_transits])
+
+    cli.main(["run", str(config_path), "--out", str(tmp_path / "run"), "--calibrated-weights", str(calibrated)])
+    manifest = json.loads((tmp_path / "run" / "manifest.json").read_text())
+    assert manifest["weights"] == {"vol-a": 0.6, "vol-b": 0.4}
+    assert {r["id"]: r["weight"] for r in manifest["reviewers"]} == {"vol-a": 0.6, "vol-b": 0.4}
+    assert manifest["weights_source"] == str(calibrated)
+
+    # A file whose reviewer ids differ from the config's is not used.
+    calibrated.write_text(json.dumps({"vol-a": 0.6, "someone-else": 0.4}))
+    cli.main(["run", str(config_path), "--out", str(tmp_path / "run2"), "--calibrated-weights", str(calibrated)])
+    manifest = json.loads((tmp_path / "run2" / "manifest.json").read_text())
+    assert manifest["weights"] == {"vol-a": 1.0, "vol-b": 1.0}
+    assert manifest["weights_source"].startswith("uniform 1.0")
+
+
+def test_pi_men_config_matches_the_stored_full_panel_weights():
+    from pathlib import Path
+
+    from exoplan.cli import resolve_weights
+
+    root = Path(__file__).resolve().parents[1]
+    config = load_config(root / "configs" / "tess_pi_men_s1.toml")
+    weights, source = resolve_weights(config, None, str(root / "docs/results/reviewer_weights_full_panel.json"))
+    assert weights is not None and source.endswith("reviewer_weights_full_panel.json")
+    assert any(w != 1.0 for w in weights.values())

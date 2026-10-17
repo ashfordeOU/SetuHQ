@@ -29,13 +29,34 @@ def _load_targets(config):
     return lightcurves
 
 
+DEFAULT_WEIGHTS = "docs/results/reviewer_weights_full_panel.json"
+
+
+def resolve_weights(config, explicit: str | None, default: str | None = DEFAULT_WEIGHTS) -> tuple[dict | None, str]:
+    """The reviewer weights a run uses, and where they came from.
+
+    An explicit ``--weights`` file always wins. Otherwise the calibrated
+    weights in ``default`` are used when the file exists and its reviewer ids
+    are exactly the config's reviewer ids. If not, every reviewer weighs 1.0.
+    """
+    if explicit:
+        return json.loads(Path(explicit).read_text()), str(explicit)
+    if default and Path(default).exists():
+        calibrated = json.loads(Path(default).read_text())
+        ids = {str(spec.get("id")) for spec in config.reviewers}
+        if ids and set(calibrated) == ids:
+            return {k: float(v) for k, v in calibrated.items()}, str(default)
+        return None, f"uniform 1.0 ({default} reviewer ids do not match the config)"
+    return None, "uniform 1.0 (no calibrated weights file)"
+
+
 def cmd_run(args) -> int:
     config = load_config(args.config)
     reviewers = build_reviewers(config.reviewers, cache_root=args.cache)
-    weights = None
-    if args.weights:
-        weights = json.loads(Path(args.weights).read_text())
-    summary = run_pipeline(config, _load_targets(config), reviewers, args.out, weights=weights)
+    default = None if args.uniform_weights else args.calibrated_weights
+    weights, source = resolve_weights(config, args.weights, default)
+    print(f"reviewer weights: {source}")
+    summary = run_pipeline(config, _load_targets(config), reviewers, args.out, weights=weights, weights_source=source)
     print(f"light curves: {summary.n_light_curves}")
     print(f"subjects:     {summary.n_subjects}")
     print(f"classifications: {summary.n_classifications}")
@@ -167,7 +188,10 @@ def build_parser() -> argparse.ArgumentParser:
     run = sub.add_parser("run", help="run the pipeline on the targets in a config file")
     run.add_argument("config")
     run.add_argument("--out", required=True, help="output directory")
-    run.add_argument("--weights", help="JSON file of reviewer weights from 'exoplan calibrate'")
+    run.add_argument("--weights", help="JSON file of reviewer weights from 'exoplan calibrate' (overrides the default)")
+    run.add_argument("--calibrated-weights", default=DEFAULT_WEIGHTS,
+                     help="calibrated weights used by default when their reviewer ids match the config's")
+    run.add_argument("--uniform-weights", action="store_true", help="weigh every reviewer 1.0")
     run.add_argument("--cache", default="cache", help="cache root for Claude responses")
     run.set_defaults(func=cmd_run)
 

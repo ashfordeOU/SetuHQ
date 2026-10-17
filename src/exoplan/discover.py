@@ -134,7 +134,8 @@ def run_discovery(
                 run_log["errors"].append(f"{label}: no SPOC 2-minute data")
                 continue
             out = Path(work_dir) / f"tic{target.tic}"
-            summary = run_pipeline(config, curves, reviewers, out, weights=weights)
+            summary = run_pipeline(config, curves, reviewers, out, weights=weights,
+                                   weights_source=str(weights_file) if weights else None)
             run_log["targets"].append(target.tic)
             for candidate in summary.candidates:
                 if not candidate.passed or "off_ephemeris" in candidate.flags:

@@ -211,11 +211,14 @@ def run_pipeline(
     out_dir: str | Path,
     *,
     weights: dict[str, float] | None = None,
+    weights_source: str | None = None,
 ) -> RunSummary:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     active = [r for r in reviewers if r.available()]
     skipped = [r.reviewer_id for r in reviewers if not r.available()]
+    if weights_source is None:
+        weights_source = "supplied by caller" if weights else "uniform 1.0"
     weights = {r.reviewer_id: 1.0 for r in active} | (weights or {})
 
     subjects = prepare_subjects(lightcurves, config)
@@ -228,7 +231,8 @@ def run_pipeline(
         store.close()
 
     write_candidates(candidates, out)
-    write_manifest(out, config, lightcurves, active, skipped, weights, subjects, classifications, candidates)
+    write_manifest(out, config, lightcurves, active, skipped, weights, subjects, classifications, candidates,
+                   weights_source=weights_source)
     return RunSummary(
         run_dir=out,
         n_light_curves=len(lightcurves),
@@ -255,7 +259,8 @@ def write_candidates(candidates: list[Candidate], out: Path) -> None:
     (out / "candidates.json").write_text(json.dumps(rows, indent=2, default=str))
 
 
-def write_manifest(out, config, lightcurves, active, skipped, weights, subjects, classifications, candidates) -> None:
+def write_manifest(out, config, lightcurves, active, skipped, weights, subjects, classifications, candidates,
+                   *, weights_source: str = "uniform 1.0") -> None:
     manifest = {
         "exoplan_version": __version__,
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -271,6 +276,9 @@ def write_manifest(out, config, lightcurves, active, skipped, weights, subjects,
             {"id": r.reviewer_id, "kind": r.kind, "weight": weights.get(r.reviewer_id, 1.0)} for r in active
         ],
         "skipped_reviewers": skipped,
+        # The weights used for consensus, for every reviewer the run knew about, and their source.
+        "weights": {k: float(v) for k, v in sorted(weights.items())},
+        "weights_source": weights_source,
         "counts": {
             "light_curves": len(lightcurves),
             "subjects": len(subjects),
