@@ -11,7 +11,7 @@ Two complementary searches:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import numpy as np
 from astropy.timeseries import BoxLeastSquares
@@ -37,6 +37,9 @@ class PeriodicSignal:
     even_err: float
     secondary_depth: float
     secondary_err: float
+    # Empirical false-alarm probability from block-bootstrap trials (false_alarm_probability), or None if not run.
+    fap: float | None = None
+    fap_trials: int = 0
 
     def covers(self, time: float) -> bool:
         """True if ``time`` falls within one duration of a predicted transit."""
@@ -119,6 +122,63 @@ def bls_search(
         secondary_depth=float(sec_depth),
         secondary_err=float(sec_err),
     )
+
+
+FAP_TRIALS = 20
+FAP_BLOCK_DAYS = 0.5
+
+
+def false_alarm_probability(
+    subject: Subject,
+    signal: PeriodicSignal,
+    *,
+    min_period: float = 0.5,
+    max_period: float | None = None,
+    durations=DEFAULT_DURATIONS_DAYS,
+    n_trials: int = FAP_TRIALS,
+    block_days: float = FAP_BLOCK_DAYS,
+    seed: int = 0,
+) -> float:
+    """Empirical false-alarm probability of a BLS peak, with red noise kept.
+
+    The BLS SNR assumes white noise. Here the detected box model is removed
+    from the flux, the residuals are cut into contiguous blocks of about
+    ``block_days`` and the blocks are shuffled in time (a block bootstrap), so
+    correlated noise within a block survives but any periodicity is destroyed.
+    BLS runs on each of ``n_trials`` scrambled copies with the same grid
+    limits. The FAP is the fraction of copies whose peak SNR is at least the
+    observed SNR. With 20 trials the resolution is 0.05: 0.0 means no copy
+    reached the observed SNR.
+    """
+    time, flux = subject.time, subject.flux
+    phase = (time - signal.t0 + 0.5 * signal.period) % signal.period - 0.5 * signal.period
+    residual = flux + signal.depth * (np.abs(phase) <= 0.5 * signal.duration)
+    cadence = float(np.median(np.diff(time))) if time.size > 1 else 0.0
+    per_block = max(2, int(round(block_days / cadence))) if cadence > 0 else time.size
+    blocks = [np.arange(i, min(i + per_block, time.size)) for i in range(0, time.size, per_block)]
+    rng = np.random.default_rng(seed)
+    exceed = 0
+    for _ in range(n_trials):
+        order = np.concatenate([blocks[i] for i in rng.permutation(len(blocks))])
+        scrambled = Subject(subject.subject_id, subject.mission, subject.time_unit, time,
+                            residual[order], subject.flux_err[order], subject.provenance)
+        trial = bls_search(scrambled, min_period=min_period, max_period=max_period, durations=durations)
+        if trial is not None and trial.snr >= signal.snr:
+            exceed += 1
+    return exceed / n_trials if n_trials > 0 else float("nan")
+
+
+def with_fap(subject: Subject, signal: PeriodicSignal | None, *, min_period: float = 0.5,
+             n_trials: int = FAP_TRIALS, seed: int | None = None) -> PeriodicSignal | None:
+    """``signal`` with its false-alarm probability filled in. The seed defaults to one derived from the subject id."""
+    if signal is None or n_trials <= 0:
+        return signal
+    if seed is None:
+        import hashlib
+
+        seed = int(hashlib.sha256(subject.subject_id.encode()).hexdigest()[:8], 16)
+    fap = false_alarm_probability(subject, signal, min_period=min_period, n_trials=n_trials, seed=seed)
+    return replace(signal, fap=fap, fap_trials=n_trials)
 
 
 def stitch(subjects_or_curves, *, subject_id: str | None = None) -> Subject:

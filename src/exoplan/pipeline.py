@@ -32,7 +32,7 @@ from exoplan.preprocess import bin_lightcurve, clean, detrend
 from exoplan.render import render_subject
 from exoplan.reviewers.base import Classification
 from exoplan.reviewers.claude import PROMPT_VERSION, ReviewError
-from exoplan.search import PeriodicSignal, bls_search, stitch
+from exoplan.search import PeriodicSignal, bls_search, stitch, with_fap
 from exoplan.store import Store
 from exoplan.subjects import Subject, split_subjects
 from exoplan.vet import VettingResult, measure_epochs, vet_event
@@ -56,6 +56,8 @@ class Candidate:
     snr: float
     period_days: float | None
     n_transits: int = 0
+    # Empirical false-alarm probability of the periodic signal that covers this dip (search.false_alarm_probability).
+    fap: float | None = None
     metrics: dict = field(default_factory=dict)
     candidate_id: str = ""
     # BLS ephemeris of the periodic signal, set only when it covers this dip.
@@ -130,7 +132,12 @@ def sector_signals(prepared: list[LightCurve], config: RunConfig) -> dict[str, P
     for lc in prepared:
         if len(lc):
             by_target.setdefault(lc.target, []).append(lc)
-    return {target: bls_search(stitch(curves), min_period=config.min_period) for target, curves in by_target.items()}
+    out: dict[str, PeriodicSignal | None] = {}
+    for target, curves in by_target.items():
+        stitched = stitch(curves)
+        signal = bls_search(stitched, min_period=config.min_period)
+        out[target] = with_fap(stitched, signal, min_period=config.min_period, n_trials=config.fap_trials)
+    return out
 
 
 def plot_arrays(subject: Subject, points: int | None = None) -> dict:
@@ -217,7 +224,9 @@ def build_candidates(
             if target_signals is not None:
                 periodic_cache[event.subject_id] = target_signals.get(str(subject.provenance.get("target", "")))
             else:
-                periodic_cache[event.subject_id] = bls_search(subject, min_period=config.min_period)
+                signal = bls_search(subject, min_period=config.min_period)
+                periodic_cache[event.subject_id] = with_fap(subject, signal, min_period=config.min_period,
+                                                            n_trials=config.fap_trials)
         result = _vet(event, subject, periodic_cache[event.subject_id])
         periodic = periodic_cache[event.subject_id]
         supported = periodic if periodic is not None and periodic.covers(event.center) else None
@@ -284,7 +293,7 @@ def write_candidates(candidates: list[Candidate], out: Path) -> None:
     fields = [
         "candidate_id", "target", "mission", "subject_id", "t_start", "t_end", "t_center", "time_unit",
         "duration_hours", "score", "n_reviewers", "planet_fraction", "reviewers", "passed", "flags",
-        "depth_ppm", "snr", "period_days", "n_transits", "bls_t0", "bls_duration_days",
+        "depth_ppm", "snr", "period_days", "n_transits", "fap", "bls_t0", "bls_duration_days",
     ]
     with (out / "candidates.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
@@ -363,6 +372,7 @@ def _to_candidate(event: Consensus, subject: Subject, result: VettingResult, sup
         snr=float(result.metrics.get("snr", 0.0)),
         period_days=float(period) if period is not None else None,
         n_transits=supported.n_transits if supported is not None else 0,
+        fap=supported.fap if supported is not None else None,
         bls_t0=supported.t0 if supported is not None else None,
         bls_duration_days=supported.duration if supported is not None else None,
         epochs=tuple(epochs),

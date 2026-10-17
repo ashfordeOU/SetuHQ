@@ -10,6 +10,7 @@ search = "subject"         # BLS scope: "subject" (each subject alone) or "secto
 
 [search]
 min_period = 0.5           # shortest period for the periodic (BLS) channel, days
+fap_trials = 20            # block-bootstrap BLS reruns behind the periodic signal's false-alarm probability
 
 [aggregate]
 cluster_gap_days = 0.05    # marks closer than this (in days) are one dip

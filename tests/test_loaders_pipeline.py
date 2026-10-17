@@ -99,6 +99,10 @@ def test_end_to_end_pipeline_recovers_injected_transits(tmp_path, lightcurve_wit
     assert manifest["counts"]["subjects"] == summary.n_subjects
     assert manifest["reviewers"][0]["id"] == "vol-a"
     assert (tmp_path / "run" / "candidates.csv").exists()
+    rows = json.loads((tmp_path / "run" / "candidates.json").read_text())
+    periodic = [r for r in rows if r["period_days"] is not None]
+    assert periodic and all(r["fap"] is not None and 0.0 <= r["fap"] <= 1.0 for r in periodic)
+    assert all(r["fap"] is None for r in rows if r["period_days"] is None)
     assert (tmp_path / "run" / "classifications.csv").exists()
     assert len(list((tmp_path / "run" / "subjects").glob("*.png"))) == summary.n_subjects
 
@@ -139,6 +143,9 @@ _TWO_VOLUNTEERS = """
 [run]
 name = "weights"
 min_points = 100
+
+[search]
+fap_trials = 0
 
 [[reviewers]]
 type = "simulated"

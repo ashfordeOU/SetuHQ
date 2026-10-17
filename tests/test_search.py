@@ -81,7 +81,7 @@ def test_sector_search_recovers_a_9_day_period_that_subject_search_cannot():
     from exoplan.config import RunConfig
     from exoplan.pipeline import prepare_lightcurves, prepare_subjects, sector_signals
 
-    config = RunConfig(name="t", subject_days=13.0, min_points=100, bin_minutes=10.0, search="sector")
+    config = RunConfig(name="t", subject_days=13.0, min_points=100, bin_minutes=10.0, search="sector", fap_trials=0)
     prepared = prepare_lightcurves(_two_sectors_with_9_day_planet(), config)
     signal = sector_signals(prepared, config)["TIC SYN-9"]
     assert signal is not None and abs(signal.period - 9.0) < 0.09
@@ -103,7 +103,7 @@ def test_pipeline_sector_mode_reports_the_9_day_period(tmp_path):
     reviewers = [SimulatedVolunteer(f"vol-{i}", snr_threshold=4.5, miss_probability=0.0, seed=i) for i in range(3)]
     periods = {}
     for mode in ("subject", "sector"):
-        config = RunConfig(name=mode, subject_days=13.0, min_points=100, bin_minutes=10.0, search=mode)
+        config = RunConfig(name=mode, subject_days=13.0, min_points=100, bin_minutes=10.0, search=mode, fap_trials=0)
         summary = run_pipeline(config, _two_sectors_with_9_day_planet(), reviewers, tmp_path / mode)
         periods[mode] = [c.period_days for c in summary.candidates if c.period_days]
         manifest = json.loads((tmp_path / mode / "manifest.json").read_text())
@@ -123,3 +123,48 @@ def test_config_reads_search_scope(tmp_path):
     path.write_text('[run]\nsearch = "galaxy"\n')
     with pytest.raises(ValueError):
         load_config(path)
+
+
+def _fap_subject(seed, *, red_ppm, signal):
+    from exoplan.injection import Injection
+
+    rng = np.random.default_rng(seed)
+    injections = tuple(Injection(1.0 + 3.1 * k, 1.125 + 3.1 * k, 0.003) for k in range(4)) if signal else ()
+    return synthetic_subject(rng, subject_id=f"fap-{seed}-{red_ppm}-{signal}", injections=injections,
+                             white_ppm=300.0, red_ppm=red_ppm)
+
+
+@pytest.mark.parametrize("red_ppm", [0.0, 600.0])
+def test_fap_is_high_on_pure_noise(red_ppm):
+    from exoplan.search import with_fap
+
+    subject = _fap_subject(1, red_ppm=red_ppm, signal=False)
+    signal = with_fap(subject, bls_search(subject))
+    assert signal.fap_trials == 20
+    assert signal.fap >= 0.3
+
+
+def test_fap_is_low_for_an_injected_3000_ppm_periodic_signal_in_white_and_red_noise():
+    from exoplan.search import with_fap
+
+    for red_ppm in (0.0, 600.0):
+        subject = _fap_subject(2, red_ppm=red_ppm, signal=True)
+        signal = with_fap(subject, bls_search(subject))
+        assert abs(signal.period - 3.1) < 0.05
+        assert signal.fap < 0.01
+
+
+def test_red_noise_fools_the_white_noise_snr_but_not_the_fap():
+    from exoplan.search import with_fap
+
+    subject = _fap_subject(1, red_ppm=600.0, signal=False)
+    signal = with_fap(subject, bls_search(subject))
+    assert signal.snr > 10.0 and signal.fap >= 0.3
+
+
+def test_feed_admission_requires_fap_below_one_percent():
+    from exoplan.discover import admits_fap
+
+    assert admits_fap(0.0)
+    assert not admits_fap(0.05)
+    assert not admits_fap(None)

@@ -30,6 +30,7 @@ class RunConfig:
     # "sector": BLS runs once per target on all its sectors stitched together.
     search: str = "subject"
     min_period: float = 0.5
+    fap_trials: int = 20       # block-bootstrap trials for the periodic signal's false-alarm probability
     cluster_gap_days: float = 0.05
     min_score: float = 0.5
     min_planet_fraction: float = 0.5
@@ -68,6 +69,7 @@ def load_config(path: str | Path) -> RunConfig:
         detrend_window_days=float(run.get("detrend_window_days", 1.0)),
         search=search_scope,
         min_period=float(search.get("min_period", 0.5)),
+        fap_trials=int(search.get("fap_trials", 20)),
         cluster_gap_days=float(aggregate.get("cluster_gap_days", 0.05)),
         min_score=float(aggregate.get("min_score", 0.5)),
         min_planet_fraction=float(aggregate.get("min_planet_fraction", 0.5)),

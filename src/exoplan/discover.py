@@ -37,6 +37,7 @@ PERIOD_TOLERANCE_DAYS = 0.05
 MID_TIME_DEDUPE_DAYS = 0.05
 MAX_FEED_DEPTH_PPM = 5000.0  # deeper dips are almost always binaries, so they stay out of the feed
 MIN_FEED_TRANSITS = 2        # a candidate needs a periodic signal with at least two transits
+MAX_FEED_FAP = 0.01          # and that signal's empirical false-alarm probability must be below this
 
 
 @dataclass
@@ -83,6 +84,11 @@ def classify_against_toi(candidate: dict, target: Target) -> str:
         if abs(known - period) <= PERIOD_TOLERANCE_DAYS or abs(known - 2 * period) <= PERIOD_TOLERANCE_DAYS:
             return "known_toi"
     return "new_candidate"
+
+
+def admits_fap(fap: float | None) -> bool:
+    """Feed admission on the periodic signal's false-alarm probability. A signal without one is not admitted."""
+    return fap is not None and fap < MAX_FEED_FAP
 
 
 def load_catalog(path: Path) -> dict:
@@ -146,6 +152,9 @@ def run_discovery(
                 if candidate.period_days is None or candidate.n_transits < MIN_FEED_TRANSITS:
                     run_log["filtered_single"] = run_log.get("filtered_single", 0) + 1
                     continue
+                if not admits_fap(candidate.fap):
+                    run_log["filtered_fap"] = run_log.get("filtered_fap", 0) + 1
+                    continue
                 entry = {
                     "tic": target.tic,
                     "sector_span": sorted({c.provenance.get("sector") for c in curves}),
@@ -158,6 +167,7 @@ def run_discovery(
                     "n_reviewers": candidate.n_reviewers,
                     "period_days": candidate.period_days,
                     "n_transits": candidate.n_transits,
+                    "fap": candidate.fap,
                     "status": classify_against_toi(
                         {"period_days": candidate.period_days}, target
                     ),
