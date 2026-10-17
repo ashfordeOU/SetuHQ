@@ -8,7 +8,9 @@ import pytest
 
 from exoplan import docket as docket_mod
 from exoplan.app import (
+    APP_CSS,
     APP_JS,
+    FRAME_BRIDGE_JS,
     DEFAULT_SIZE,
     NO_DETECTION,
     NO_STELLAR_RADIUS,
@@ -252,7 +254,13 @@ def test_drawer_is_a_dialog_with_a_close_button(run_dir, tmp_path):
     side = re.search(r'<aside class="sidebar".*?</aside>', page, re.S).group(0)
     assert 'id="drawerclose"' in side and "Close menu" in side
     assert "side.setAttribute('role', 'dialog')" in APP_JS and "side.setAttribute('aria-modal', 'true')" in APP_JS
-    assert "document.body.style.overflow = 'hidden'" in APP_JS and "document.body.style.overflow = ''" in APP_JS
+    # The lock is on html: with html's overflow-x:hidden, overflow on body alone does not stop the viewport.
+    lock = re.search(r"function lockScroll\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    unlock = re.search(r"function unlockScroll\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "document.documentElement.style.overflow = 'hidden'" in lock and "lockedY = window.scrollY" in lock
+    assert "document.documentElement.style.overflow = ''" in unlock and "window.scrollTo(0, y)" in unlock
+    assert "lockScroll();" in re.search(r"function openDrawer\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "unlockScroll();" in re.search(r"function closeDrawer\(returnFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
 
 
 def test_shell_loads_the_docket_fonts(run_dir, tmp_path):
@@ -356,3 +364,108 @@ def test_app_data_keeps_docket_counts(run_dir, catalog):
     counts = data["run"]["docket_counts"]
     assert counts["dips"] == len(json.loads((run_dir / "candidates.json").read_text()))
     assert counts["passed"] + counts["flagged"] + counts["rejected"] == counts["signals"]
+
+
+def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path):
+    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    docket_html = _page_data(page)["docket_html"]
+    # The shell's copy of the Docket carries the bridge; the standalone Docket page does not.
+    assert FRAME_BRIDGE_JS in docket_html and docket_html.index(FRAME_BRIDGE_JS) < docket_html.index("</head>")
+    standalone = docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t"))
+    assert FRAME_BRIDGE_JS not in standalone and "postMessage" not in standalone
+    assert docket_html.replace(f"<script>{FRAME_BRIDGE_JS}</script>", "") == docket_mod.docket_page(
+        docket_mod.docket_data(run_dir, title="t · candidates"))
+    # The bridge reports every selection (the Docket selects by history.replaceState) and section anchors.
+    assert "if (window.parent === window) return;" in FRAME_BRIDGE_JS
+    assert "history.replaceState = function(){" in FRAME_BRIDGE_JS and "send({kind: 'dip'})" in FRAME_BRIDGE_JS
+    assert "addEventListener('hashchange'" in FRAME_BRIDGE_JS and "kind: 'section'" in FRAME_BRIDGE_JS
+    assert "P.postMessage(m, '*')" in FRAME_BRIDGE_JS
+    # The shell takes messages only from its own frame and writes them to its URL and full-page links.
+    listener = re.search(r"window.addEventListener\('message', e => \{.*?\n\}\);\n", APP_JS, re.S).group(0)
+    assert "e.source !== f.contentWindow" in listener and "m.source !== 'exoplan-docket'" in listener
+    sync = re.search(r"function syncShellURL\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "history.replaceState(null, '', h)" in sync and "setFullHrefs(frame.dip)" in sync
+    assert "'#fullpage, #topfull, #blockedlink'" in APP_JS
+    # A cross-origin frame (file://) is named in the page rather than failing silently.
+    assert "frame.crossOrigin = true" in APP_JS and "separate origin" in APP_JS
+
+
+def test_blocked_frame_shows_a_message_and_a_link(run_dir, tmp_path):
+    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    cand = _route(page, "candidates")
+    msg = re.search(r'<p class="note blocked" id="frameblocked" role="alert" hidden>(.*?)</p>', cand).group(1)
+    assert msg == 'The dossier could not load in this view. <a id="blockedlink" href="../docket/">Open it on its own page.</a>'
+    # A frame that never reports ready falls back to srcdoc, then to the message; the frame is hidden.
+    failed = re.search(r"function frameLoadFailed\(gen\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "loadDocket(frame.dip, frame.section, 'srcdoc')" in failed and "showBlocked()" in failed
+    blocked = re.search(r"function showBlocked\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "f.hidden = true" in blocked and "$('#frameblocked').hidden = false" in blocked
+    assert "setTimeout(() => frameLoadFailed(gen), 6000)" in APP_JS
+    assert ".frame[hidden]{display:none}" in APP_CSS
+
+
+def _phone_css() -> str:
+    start = APP_CSS.index("@media (max-width:699.98px){")
+    return APP_CSS[start:APP_CSS.index("\n}\n", start)]
+
+
+def test_phone_touch_targets_are_at_least_44px():
+    phone = _phone_css()
+    rules = dict(re.findall(r"^\s*([^{}\n]+)\{([^}]*)\}", phone, re.M))
+
+    def has(selector, prop):
+        return any(selector in [x.strip() for x in sel.split(",")] and prop in body for sel, body in rules.items())
+
+    for sel in ("main a", "summary", ".btn", ".chip", ".nav a", "th button"):
+        assert has(sel, "min-height:44px"), sel
+    assert has("main a", "min-width:44px") and has("th button", "min-width:44px")
+    assert has("main a", "padding:12px 0") and has("summary", "padding:12px 0")
+    assert "min-height:44px" in re.search(r"\.skip\{[^}]*\}", APP_CSS).group(0)
+    # Targets grow by min-height and padding, not by a larger font.
+    assert "font-size" not in rules["main a"] and "font-size" not in rules["summary"]
+    # Candidates fills the screen under the top bar and the feed table has no vertical scroller of its own.
+    assert 'body[data-route="candidates"] #route-candidates' in phone and "calc(100dvh - var(--top))" in phone
+    assert ".tablewrap.scrollbox{max-height:none}" in phone
+    assert "document.body.dataset.route = r;" in APP_JS
+
+
+def test_shared_layout_link_does_not_write_the_viewers_default():
+    go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "decodeLayout(p.params.get('layout')" in go and "saveLayout" not in go
+    assert "layout = ownLayout.map(x => ({...x}))" in go
+    # Storage is written only by saveLayout, and saveLayout runs only after a layout control is used.
+    assert APP_JS.count("setItem(") == 1 and "s.setItem(LAYOUT_KEY" in re.search(r"function saveLayout\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    callers = [m.start() for m in re.finditer(r"saveLayout\(\);", APP_JS)]
+    action = re.search(r"function layoutAction\(.*?\n\}\n", APP_JS, re.S)
+    reset = re.search(r"\$\('#resetlayout'\)\.addEventListener.*?\n", APP_JS)
+    assert callers and all(action.start() < c < action.end() or reset.start() < c < reset.end() for c in callers)
+    # The page says when a shared layout is showing, and offers a link to copy the current one.
+    assert "navigator.clipboard.writeText(url)" in APP_JS and "'#/overview?layout=' + encodeLayout(layout)" in APP_JS
+
+
+def test_overview_has_shared_note_and_copy_link(run_dir, tmp_path):
+    overview = _route(build_app(run_dir, tmp_path / "app", title="t").read_text(), "overview")
+    assert 'id="copylayout"' in overview and "Copy link to this layout" in overview
+    assert 'id="sharednote" hidden>This is a shared layout, shown for this view only.' in overview
+
+
+def test_archive_box_states_no_detection_once():
+    body = re.search(r"function renderPlanets\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    arch = re.findall(r"arch = `(.*?)`;\n", body)
+    assert len(arch) == 3
+    for line in arch:
+        assert line.count("${esc(D.no_detection)}") == 1
+        assert "archive values only" not in line.lower()
+    assert NO_DETECTION.count("This page claims no detection.") == 1
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_feed_says_when_rows_have_no_dossier():
+    fn = re.search(r"function noDossierLine\(rows\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    script = "const DIP_IDS = new Set(['a']);\n" + fn + """
+console.log(JSON.stringify([noDossierLine([{candidate_id: 'x'}, {candidate_id: 'y'}]), noDossierLine([{candidate_id: 'a'}]), noDossierLine([{candidate_id: 'a'}, {candidate_id: 'y'}])]));"""
+    none, all_linked, some = json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
+    assert ">No dossier stored for these rows in this run.<" in none
+    assert all_linked == ""
+    assert "No dossier stored for 1 of these rows in this run" in some
+    assert "${noDossierLine(rows)}</caption>" in APP_JS

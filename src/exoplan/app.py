@@ -9,10 +9,15 @@ not start with ``#/`` (the skip link's ``#content``) are not routes.
 * Overview: a widget grid (run figures, feed count, recent runs, top
   candidates). Each widget's header hides it, moves it and sets its size; the
   layout lives in the URL and, when the browser allows it, in localStorage as
-  the viewer's default.
+  the viewer's default. A layout opened from a shared link is shown for that
+  view only; storage is written only when the viewer changes a control.
 * Candidates: the Docket, rendered by :mod:`exoplan.docket` and embedded as an
   inline frame, so its code, honesty rules and keyboard handling are unchanged.
   The dip id is handed to the frame as its location hash, which the Docket reads.
+  The shell's copy of the Docket carries :data:`FRAME_BRIDGE_JS`, which reports the
+  selected dip and section back, so the shell URL follows in-frame navigation. A
+  frame that never reports in (blocked by frame-src, say) is replaced by a message
+  and a link to the Docket's own page.
 * Discoveries (titled "Feed" when most entries match a known TOI): the feed
   from the discovery catalogue, with histograms and a timeline by star.
 * Planets: one card per star with the planet-to-star radius ratio sqrt(depth).
@@ -224,6 +229,65 @@ def dip_agreement(dips: list[dict], kinds: dict[str, str]) -> list[dict]:
     return out
 
 
+# Added to the shell's copy of the Docket only (the standalone page in site/docket is untouched).
+# Inside a frame it tells the shell which dip and section are showing, by postMessage, so the
+# shell's address bar and "Open full page" link follow in-frame navigation even when the frame
+# is cross-origin (file://). It also lets the shell select a dip and scroll to a section.
+FRAME_BRIDGE_JS = r"""
+(function(){
+  if (window.parent === window) return;
+  var P = window.parent, SECS = ['strip', 'signal', 'ctx', 'cmp', 'ledger', 'rev'], lastSec = null, timer = null;
+  function selected(){ try { return typeof state !== 'undefined' ? state.selected : null; } catch (e) { return null; } }
+  function send(m){ m.source = 'exoplan-docket'; m.dip = m.dip || selected(); try { P.postMessage(m, '*'); } catch (e) {} }
+  var replace = history.replaceState;
+  history.replaceState = function(){ var r = replace.apply(this, arguments); send({kind: 'dip'}); return r; };
+  function scroller(el){
+    for (var p = el.parentElement; p && p !== document.body && p !== document.documentElement; p = p.parentElement){
+      var s = getComputedStyle(p); if (/(auto|scroll)/.test(s.overflowY) && p.scrollHeight > p.clientHeight) return p;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  function scrollToSection(key){
+    var s = document.getElementById('sec-' + key); if (!s) return;
+    var sc = scroller(s), top = s.getBoundingClientRect().top;
+    if (sc !== document.scrollingElement && sc !== document.documentElement) top -= sc.getBoundingClientRect().top;
+    sc.scrollTop += top;  // no scrollIntoView, which would also scroll the shell around the frame
+  }
+  // The section at the top of the view: null at the top of the page, else the first section header
+  // in the upper three quarters, else the section the view is inside.
+  function currentSection(){
+    var h = window.innerHeight, inside = null;
+    if (window.scrollY < 5) return null;
+    for (var i = 0; i < SECS.length; i++){
+      var s = document.getElementById('sec-' + SECS[i]); if (!s) continue;
+      var t = s.getBoundingClientRect().top;
+      if (t >= -10 && t < h * 0.75) return SECS[i];
+      if (t < -10) inside = SECS[i];
+    }
+    return inside;
+  }
+  function reportSection(){ var k = currentSection(); if (k !== lastSec){ lastSec = k; send({kind: 'section', section: k}); } }
+  window.addEventListener('scroll', function(){ clearTimeout(timer); timer = setTimeout(reportSection, 150); });
+  window.addEventListener('hashchange', function(){
+    var h = decodeURIComponent(location.hash.slice(1));
+    if (h.indexOf('sec-') === 0 && SECS.indexOf(h.slice(4)) >= 0){ lastSec = h.slice(4); send({kind: 'section', section: lastSec}); }
+    else send({kind: 'dip'});
+  });
+  window.addEventListener('message', function(e){
+    var m = e.data; if (e.source !== P || !m || m.source !== 'exoplan-shell') return;
+    if (m.dip && m.dip !== selected() && typeof select === 'function') select(m.dip, false);
+    if (m.section && SECS.indexOf(m.section) >= 0){ scrollToSection(m.section); lastSec = m.section; }
+  });
+  document.addEventListener('DOMContentLoaded', function(){ send({kind: 'ready'}); });
+})();
+"""
+
+
+def with_frame_bridge(docket_html: str) -> str:
+    """The Docket page with :data:`FRAME_BRIDGE_JS` in its head; it does nothing outside a frame."""
+    return docket_html.replace("</head>", f"<script>{FRAME_BRIDGE_JS}</script></head>", 1)
+
+
 def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
              weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None) -> dict:
     """Everything the shell shows, read from stored files only."""
@@ -304,7 +368,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "panel": panel_cards(manifest, run["marks"], run["reviewerDecisions"], calibrated, cands),
         "agreement": dip_agreement(cands, dock["reviewers"]),
         "weights_path": weights_name,
-        "docket_html": docket_page(dock),
+        "docket_html": with_frame_bridge(docket_page(dock)),
     }
 
 
@@ -318,13 +382,13 @@ body{background:var(--paper);color:var(--ink);font:14px/1.5 "Inter Tight",system
 .mono,code,pre{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
 :focus-visible{outline:2px solid var(--fit);outline-offset:2px}
 a{color:var(--fit)}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.skip{position:absolute;left:8px;top:-60px;background:var(--ink);color:var(--paper);padding:8px 12px;border-radius:4px;z-index:50}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:8px;top:-60px;background:var(--ink);color:var(--paper);padding:8px 12px;border-radius:4px;z-index:50;display:inline-flex;align-items:center;min-height:44px}
 .skip:focus{top:8px}
 #content:focus{outline:none}
 .topbar{display:none}
 .shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh;background:linear-gradient(to right,var(--side) 231px,var(--rule) 231px,var(--rule) 232px,transparent 232px)}
-.sidebar{background:var(--side);border-right:1px solid var(--rule);position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:16px;padding:18px 0}
+.sidebar{background:var(--side);border-right:1px solid var(--rule);position:sticky;top:0;height:100vh;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:16px;padding:18px 0}
 .brand{padding:0 18px}
 .brand b{display:block;font:600 17px/1.2 "Inter Tight",sans-serif}
 .brand span{font:12px "JetBrains Mono",monospace;color:var(--muted);overflow-wrap:anywhere}
@@ -447,7 +511,15 @@ details.cfg>div{padding:0 16px 14px;display:grid;gap:14px}
 .frametools{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px}
 pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;background:var(--sel);padding:6px 8px;border-radius:4px}
 .frame{width:100%;height:calc(100vh - 190px);min-height:520px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);display:block}
+.frame[hidden]{display:none}
 .drawerclose{display:none}
+.topfull{display:none}
+.note.blocked{border-left-color:var(--reject);font-size:14px}
+.copyfallback{font:12px "JetBrains Mono",monospace;width:min(100%,46ch);min-height:32px;padding:4px 8px;border:1px solid var(--rule);border-radius:5px;background:var(--panel);color:var(--ink)}
+#sharednote{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+#sharednote[hidden]{display:none}
+#disctable caption{caption-side:top;text-align:left}
+.capnote{position:sticky;left:0;display:inline-block;padding:8px 10px;font:12px "Inter Tight",sans-serif;color:var(--muted)}
 @media (max-width:1000px){
   .widget.size-S{grid-column:span 3}
   .agree li{grid-template-columns:minmax(0,1fr) auto}
@@ -475,7 +547,23 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .seg{display:none}
   .frametools a{display:inline-flex;align-items:center;min-height:44px}
   .drawerclose{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin:0 18px}
-  th button{min-height:44px}
+  th button{min-height:44px;min-width:44px}
+  .shell{min-height:0}
+  /* Every link and disclosure in the page is a 44 px target: min-height and padding, same font size. */
+  main a{display:inline-block;min-height:44px;min-width:44px;padding:12px 0;line-height:20px;box-sizing:border-box}
+  td a.dip{padding:12px 0;line-height:20px}
+  summary{min-height:44px;padding:12px 0;line-height:20px;box-sizing:border-box}
+  .copyfallback{min-height:44px}
+  /* The feed table scrolls sideways in its own region; the page alone scrolls vertically. */
+  .tablewrap.scrollbox{max-height:none}
+  /* Candidates: the header collapses and the Docket fills the screen under the top bar, so only the frame scrolls. */
+  body[data-route="candidates"] main{padding:0}
+  body[data-route="candidates"] #route-candidates{display:flex;flex-direction:column;gap:0;height:calc(100vh - var(--top));height:calc(100dvh - var(--top));max-width:none}
+  body[data-route="candidates"] #route-candidates>header{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  body[data-route="candidates"] #route-candidates .frametools{display:none}
+  body[data-route="candidates"] #route-candidates>.note{margin:8px 16px;flex:none}
+  body[data-route="candidates"] .frame{flex:1 1 auto;height:auto;min-height:0;margin:0;width:100%;border:0;border-radius:0}
+  body[data-route="candidates"] .topfull{display:inline-flex;align-items:center;min-height:44px;margin-left:auto;white-space:nowrap}
 }
 @media (prefers-reduced-motion: reduce){.sidebar,.sidebar.open{transition:none}}
 """
@@ -554,8 +642,15 @@ function decodeLayout(text, ids, sizes){
   return normaliseLayout(items, ids, sizes);
 }
 function getStorage(){ try { return window.localStorage; } catch (e) { return null; } }
-let layout = readLayout(getStorage(), LAYOUT_KEY, WIDGET_IDS, D.default_size);
-function saveLayout(){ try { const s = getStorage(); if (s) s.setItem(LAYOUT_KEY, JSON.stringify(layout)); } catch (e) { /* storage blocked: the layout lasts for this visit */ } }
+// ownLayout is the viewer's default. A layout from a shared link is shown for that view only and is
+// never written to storage; the default changes only when the viewer uses a layout control.
+let ownLayout = readLayout(getStorage(), LAYOUT_KEY, WIDGET_IDS, D.default_size);
+let layout = ownLayout.map(x => ({...x})), sharedView = false;
+function saveLayout(){
+  ownLayout = layout.map(x => ({...x})); sharedView = false;
+  try { const s = getStorage(); if (s) s.setItem(LAYOUT_KEY, JSON.stringify(ownLayout)); } catch (e) { /* storage blocked: the layout lasts for this visit */ }
+}
+const layoutLink = () => location.href.split('#')[0] + '#/overview?layout=' + encodeLayout(layout);
 function syncLayoutURL(){
   const h = location.hash;
   if (h && !h.startsWith('#/overview')) return;
@@ -622,7 +717,10 @@ function renderWidgets(){
   const hidden = layout.filter(x => !x.visible);
   $('#hiddenlist').innerHTML = hidden.length ? `<span>Hidden:</span>${hidden.map(x => `<button class="btn" data-act="show" data-id="${x.id}">Show ${esc(WIDGET_LABEL[x.id])}</button>`).join('')}` : '<span class="muted">All four widgets shown.</span>';
 }
-function renderOverview(){ renderWidgets(); syncLayoutURL(); }
+function renderOverview(){
+  renderWidgets(); syncLayoutURL();
+  $('#sharednote').hidden = !sharedView;
+}
 function layoutAction(act, id, size){
   const i = layout.findIndex(x => x.id === id); if (i < 0) return;
   const name = WIDGET_LABEL[id];
@@ -641,46 +739,97 @@ function layoutAction(act, id, size){
   const back = $('#route-overview ' + focusSel); if (back) back.focus();
 }
 $('#route-overview').addEventListener('click', e => { const b = e.target.closest('button[data-act]'); if (b) layoutAction(b.dataset.act, b.dataset.id, b.dataset.size); });
+$('#ownlayout').addEventListener('click', () => { layout = ownLayout.map(x => ({...x})); sharedView = false; renderOverview(); $('#copylayout').focus(); say('Showing your own layout.'); });
+$('#copylayout').addEventListener('click', async () => {
+  const url = layoutLink(), box = $('#copyfallback');
+  try { await navigator.clipboard.writeText(url); box.hidden = true; say('Link to this layout copied.'); $('#copystate').textContent = 'Link copied.'; }
+  catch (e) { box.hidden = false; box.value = url; box.focus(); box.select(); say('Copy the selected link to share this layout.'); $('#copystate').textContent = ''; }
+  setTimeout(() => { $('#copystate').textContent = ''; }, 4000);
+});
 $('#resetlayout').addEventListener('click', () => { layout = normaliseLayout(null, WIDGET_IDS, D.default_size); saveLayout(); renderOverview(); $('#resetlayout').focus(); say('Layout reset: every widget shown in the default order and size.'); });
 
 // ---------- candidates (the Docket) ----------
 const DOCKET_SECTIONS = ['strip', 'signal', 'ctx', 'cmp', 'ledger', 'rev'];
 // The Docket reads a dip id from its own location hash on load, so the frame loads the Docket page
-// from a blob URL with the dip as that hash. (A srcdoc frame cannot carry a hash.)
+// from a blob URL with the dip as that hash. (A srcdoc frame cannot carry a hash; it is the fallback.)
+// The shell's copy of the Docket carries a small bridge: it reports the selected dip and the section
+// in view by postMessage, and takes the same from the shell, so the address bar follows the frame.
+const BLOCKED_TEXT = 'The dossier could not load in this view.';
 let docketBlob = null;
+const frame = {ready: false, mode: null, dip: null, section: null, pending: null, crossOrigin: false, timer: null, gen: 0};
 function docketURL(dip){
   try { if (!docketBlob) docketBlob = URL.createObjectURL(new Blob([D.docket_html], {type: 'text/html'})); } catch (e) { docketBlob = null; }
   return docketBlob ? docketBlob + (dip ? '#' + encodeURIComponent(dip) : '') : null;
 }
-function frameSelect(dip){
-  try { const w = $('#docketframe').contentWindow; if (typeof w.select === 'function'){ w.select(dip, false); return true; } } catch (e) { /* not reachable */ }
-  return false;
+const fullHref = dip => '../docket/' + (dip ? '#' + encodeURIComponent(dip) : '');
+function setFullHrefs(dip){ for (const a of $$('#fullpage, #topfull, #blockedlink')) a.href = fullHref(dip); }
+// Keep the shell URL and the full-page links on the dip (and section) the frame shows.
+function syncShellURL(){
+  setFullHrefs(frame.dip);
+  if (current !== 'candidates') return;
+  const h = '#/candidates' + (frame.dip ? `?dip=${encodeURIComponent(frame.dip)}${frame.section ? '&section=' + frame.section : ''}` : '');
+  if (location.hash !== h){ try { history.replaceState(null, '', h); } catch (e) { /* the frame still shows the dip */ } }
 }
-function scrollDocketTo(section){
-  if (!DOCKET_SECTIONS.includes(section)) return;
-  // scrollIntoView would also scroll this page; keep the shell where it is and move only the frame.
-  const y = window.scrollY;
-  try { const s = $('#docketframe').contentDocument.getElementById('sec-' + section); if (s) s.scrollIntoView({block: 'start'}); } catch (e) { /* frame not reachable: the dossier is still open */ }
-  window.scrollTo(0, y);
+function tellFrame(dip, section){
+  if (dip) { frame.dip = dip; frame.section = section || null; }
+  else if (section) frame.section = section;
+  try { $('#docketframe').contentWindow.postMessage({source: 'exoplan-shell', dip, section}, '*'); } catch (e) { /* frame gone */ }
+  syncShellURL();
 }
-function loadDocket(dip, section){
-  const f = $('#docketframe'), url = docketURL(dip);
-  f.addEventListener('load', () => {
-    // Without a blob URL the Docket opens on its default dip; select the one asked for.
-    if (dip && !url) frameSelect(dip);
-    if (section) scrollDocketTo(section);
-  }, {once: true});
-  if (url){ f.removeAttribute('srcdoc'); f.src = url; } else f.srcdoc = D.docket_html;
+function frameStatus(text){ const s = $('#framestatus'); s.textContent = text || ''; s.hidden = !text; }
+function showBlocked(){
+  clearTimeout(frame.timer);
+  const f = $('#docketframe'); f.hidden = true;
+  $('#frameblocked').hidden = false; frameStatus('');
+  setFullHrefs(frame.dip);
+  say(BLOCKED_TEXT + ' Open it on its own page.');
+}
+function frameLoadFailed(gen){
+  if (gen !== frame.gen || frame.ready) return;
+  if (frame.mode === 'blob') loadDocket(frame.dip, frame.section, 'srcdoc'); else showBlocked();
+}
+function onFrameReady(m){
+  frame.ready = true; clearTimeout(frame.timer);
+  const f = $('#docketframe'); f.hidden = false; $('#frameblocked').hidden = true;
+  try { void f.contentWindow.document.body; frame.crossOrigin = false; } catch (e) { frame.crossOrigin = true; }
+  frameStatus(frame.crossOrigin ? 'The Docket runs in a separate origin here (as when this page is opened from a file), so this view follows it by messages only. If the address bar stops following the selected dip, use Open full page.' : '');
+  const p = frame.pending; frame.pending = null;
+  if (p && ((p.dip && p.dip !== m.dip) || p.section)) tellFrame(p.dip, p.section);
+  else { frame.dip = m.dip || frame.dip; syncShellURL(); }
+}
+window.addEventListener('message', e => {
+  const f = $('#docketframe'), m = e.data;
+  if (!f || e.source !== f.contentWindow || !m || m.source !== 'exoplan-docket') return;
+  if (m.kind === 'ready'){ onFrameReady(m); return; }
+  if (!frame.ready) return;  // the Docket's own first pick, before the shell's dip is applied
+  if (m.kind === 'dip' && m.dip){ if (m.dip !== frame.dip) frame.section = null; frame.dip = m.dip; }
+  else if (m.kind === 'section'){ frame.section = DOCKET_SECTIONS.includes(m.section) ? m.section : null; if (m.dip) frame.dip = m.dip; }
+  syncShellURL();
+});
+function loadDocket(dip, section, mode){
+  const f = $('#docketframe'), url = mode === 'srcdoc' ? null : docketURL(dip), gen = ++frame.gen;
+  Object.assign(frame, {ready: false, mode: url ? 'blob' : 'srcdoc', dip, section: section || null, pending: {dip, section: section || null}});
+  f.hidden = false; $('#frameblocked').hidden = true;
+  clearTimeout(frame.timer);
+  // A frame that never reports ready did not load (blocked by frame-src, say): try srcdoc, then say so.
+  frame.timer = setTimeout(() => frameLoadFailed(gen), 6000);
+  const onload = () => {
+    let blank = false;
+    try { blank = f.contentWindow.location.href === 'about:blank'; } catch (e) { /* cross-origin: an error page or file:// */ }
+    if (blank) { f.addEventListener('load', onload, {once: true}); return; }
+    setTimeout(() => frameLoadFailed(gen), 1200);
+  };
+  f.addEventListener('load', onload, {once: true});
+  if (url){ f.removeAttribute('srcdoc'); f.src = url; } else { f.removeAttribute('src'); f.srcdoc = D.docket_html; }
 }
 function openDip(dip, section){
   const f = $('#docketframe');
   if (dip && !DIP_IDS.has(dip)){ say(`No dossier for ${dip} in this run.`); dip = null; }
-  $('#fullpage').href = '../docket/' + (dip ? '#' + encodeURIComponent(dip) : '');
-  if (!f.dataset.loaded){ f.dataset.loaded = '1'; loadDocket(dip, section); }
-  else if (dip){
-    if (frameSelect(dip)){ if (section) scrollDocketTo(section); }
-    else loadDocket(dip, section);
-  }
+  if (!DOCKET_SECTIONS.includes(section)) section = null;
+  if (!f.dataset.loaded){ f.dataset.loaded = '1'; loadDocket(dip, section); setFullHrefs(dip); }
+  else if (!frame.ready){ if (dip || section) frame.pending = {dip: dip || frame.dip, section}; setFullHrefs(dip || frame.dip); }
+  else if (dip || section) tellFrame(dip, section);
+  else syncShellURL();
   if (dip) say(`Docket open on dip ${dip}${section === 'ledger' ? ', verdict ledger' : ''}.`);
 }
 function renderCandidates(){ /* the frame loads in openDip, with the dip from the URL */ }
@@ -702,9 +851,16 @@ function discRows(){
   const col = COLS.find(c => c[0] === disc.sort), key = col[2];
   return f.slice().sort((a, b) => { const va = key(a), vb = key(b); return (va < vb ? -1 : va > vb ? 1 : 0) * disc.dir; });
 }
+// Dip ids link to the Docket only when this run stored a dossier for them; say so when a row has none.
+function noDossierLine(rows){
+  const missing = rows.filter(x => !DIP_IDS.has(x.candidate_id)).length;
+  if (!missing) return '';
+  const text = missing === rows.length ? 'No dossier stored for these rows in this run.' : `No dossier stored for ${missing} of these rows in this run; their dip ids are plain text.`;
+  return `<span class="capnote" id="nodossier">${text}</span>`;
+}
 function renderDiscTable(){
   const rows = discRows();
-  $('#disctable').innerHTML = `<table><caption class="sr">Feed, sorted by ${esc(disc.sort)} ${disc.dir > 0 ? 'ascending' : 'descending'}. Every entry is a ${esc(D.unconfirmed)}.</caption>
+  $('#disctable').innerHTML = `<table><caption><span class="sr">Feed, sorted by ${esc(disc.sort)} ${disc.dir > 0 ? 'ascending' : 'descending'}. Every entry is a ${esc(D.unconfirmed)}.</span>${noDossierLine(rows)}</caption>
     <thead><tr>${COLS.map(c => `<th scope="col" class="${NUMERIC.has(c[0]) ? 'num' : ''}" aria-sort="${disc.sort === c[0] ? (disc.dir > 0 ? 'ascending' : 'descending') : 'none'}"><button data-sort="${c[0]}">${esc(c[1])}<span aria-hidden="true">${disc.sort === c[0] ? (disc.dir > 0 ? '▲' : '▼') : ''}</span></button></th>`).join('')}</tr></thead>
     <tbody>${rows.length ? rows.map(x => `<tr>${COLS.map((c, k) => k === 0 ? `<th scope="row" class="num">${c[3](x)}</th>` : `<td class="${NUMERIC.has(c[0]) ? 'num' : ''}">${c[3](x)}</td>`).join('')}</tr>`).join('') : `<tr><td colspan="${COLS.length}" class="empty">No feed entries with this status.</td></tr>`}</tbody></table>`;
   $('#disccount').textContent = `${rows.length} of ${D.catalog.candidates.length} entries shown.`;
@@ -830,7 +986,7 @@ function renderPlanets(){
     let arch = '';
     if (ar.status === 'not_run') arch = `<p style="margin:0">The archive cross-match did not run (archive unreachable at build time). ${esc(D.no_detection)}</p>`;
     else if (ar.status !== 'not_stored' && !ar.planets.length) arch = `<p style="margin:0">No published planet matched in the archive. ${esc(D.no_detection)}</p>`;
-    else if (ar.status !== 'not_stored') arch = `<p style="margin:0"><b>Published planets (archive values only).</b> ${esc(D.no_detection)}</p><ul>${ar.planets.map(p => `<li><b>${esc(p.pl_name)}</b> · host ${esc(p.hostname)} · P ${p.pl_orbper !== null && p.pl_orbper !== undefined ? esc(p.pl_orbper) + ' d' : 'not listed'} · ${p.tran_flag ? 'transiting' : 'not known to transit'}${p.rv_flag ? ' · radial-velocity detection' : ''}</li>`).join('')}</ul><p class="muted" style="margin:4px 0 0;font-size:12px">${esc(ar.source)}, fetched ${when(ar.fetched_at)}.</p>`;
+    else if (ar.status !== 'not_stored') arch = `<p style="margin:0"><b>Published planets.</b> ${esc(D.no_detection)}</p><ul>${ar.planets.map(p => `<li><b>${esc(p.pl_name)}</b> · host ${esc(p.hostname)} · P ${p.pl_orbper !== null && p.pl_orbper !== undefined ? esc(p.pl_orbper) + ' d' : 'not listed'} · ${p.tran_flag ? 'transiting' : 'not known to transit'}${p.rv_flag ? ' · radial-velocity detection' : ''}</li>`).join('')}</ul><p class="muted" style="margin:4px 0 0;font-size:12px">${esc(ar.source)}, fetched ${when(ar.fetched_at)}.</p>`;
     const hid = 'pl-' + String(s.star).replace(/\W/g,'_');
     return `<article class="card" aria-labelledby="${hid}"><h2 id="${hid}">${esc(s.star)} <span class="muted" style="font:12px 'JetBrains Mono',monospace">${esc(s.sources.join(' · '))} · ${s.entries.length} entr${s.entries.length===1?'y':'ies'}</span></h2>${rows}${arch ? `<div class="archive">${arch}</div>` : ''}</article>`;
   }).join('') : '<p class="empty">No stars in the run or the feed.</p>';
@@ -902,6 +1058,7 @@ function show(r, moveFocus){
   $$('.nav a').forEach(a => { if (a.dataset.route === r) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
   const label = D.sections.find(s => s.id === r).label;
   document.title = `${label} · ${D.title}`;
+  document.body.dataset.route = r;
   $('#curlabel').textContent = label;
   if (r === 'overview') renderOverview();
   else if (!rendered.has(r)){ RENDER[r](); rendered.add(r); }
@@ -910,7 +1067,12 @@ function show(r, moveFocus){
 }
 function go(p, moveFocus){
   const changed = p.route !== current;
-  if (p.route === 'overview' && p.params.has('layout')) layout = decodeLayout(p.params.get('layout'), WIDGET_IDS, D.default_size);
+  if (p.route === 'overview'){
+    if (p.params.has('layout')){
+      layout = decodeLayout(p.params.get('layout'), WIDGET_IDS, D.default_size);
+      sharedView = encodeLayout(layout) !== encodeLayout(ownLayout);
+    } else { layout = ownLayout.map(x => ({...x})); sharedView = false; }
+  }
   current = p.route;
   show(p.route, moveFocus && changed);
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));
@@ -924,18 +1086,34 @@ function setDrawerRole(){
   if (drawerMQ.matches){ side.setAttribute('role', 'dialog'); side.setAttribute('aria-modal', 'true'); side.setAttribute('aria-label', `${D.title} sections menu`); }
   else { side.removeAttribute('role'); side.removeAttribute('aria-modal'); side.setAttribute('aria-label', `${D.title} sections`); }
 }
+// html has overflow-x:hidden, so overflow on body alone would not stop the viewport scrolling:
+// lock the root itself while the drawer is open, and restore the saved position on close.
+let lockedY = null;
+function lockScroll(){
+  if (lockedY !== null) return;
+  lockedY = window.scrollY;
+  document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';
+}
+function unlockScroll(){
+  if (lockedY === null) return;
+  const y = lockedY; lockedY = null;
+  document.documentElement.style.overflow = ''; document.body.style.overflow = '';
+  if (window.scrollY !== y) window.scrollTo(0, y);
+}
+// Touch drags on the backdrop would otherwise scroll the page behind it on some phones.
+backdrop.addEventListener('touchmove', e => e.preventDefault(), {passive: false});
 function openDrawer(){
   side.classList.add('open'); backdrop.hidden = false; menu.setAttribute('aria-expanded', 'true');
   $('#main').inert = true; $('.topbar').inert = true;
-  document.body.style.overflow = 'hidden';
+  lockScroll();
   const cur = $('.nav a[aria-current="page"]') || $('.nav a'); setTimeout(() => cur.focus(), 20);
 }
 function closeDrawer(returnFocus){
   if (!side.classList.contains('open')) return;
   side.classList.remove('open'); backdrop.hidden = true; menu.setAttribute('aria-expanded', 'false');
   $('#main').inert = false; $('.topbar').inert = false;
-  document.body.style.overflow = '';
-  if (returnFocus) menu.focus();
+  unlockScroll();
+  if (returnFocus) menu.focus({preventScroll: true});
 }
 menu.addEventListener('click', () => side.classList.contains('open') ? closeDrawer(true) : openDrawer());
 $('#drawerclose').addEventListener('click', () => closeDrawer(true));
@@ -980,6 +1158,7 @@ def app_page(data: dict) -> str:
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{html.escape(GOOGLE_FONTS)}">
@@ -989,6 +1168,7 @@ def app_page(data: dict) -> str:
 <header class="topbar">
   <button class="btn menu" id="menubtn" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>Menu</button>
   <b>{title}</b><span class="cur" id="curlabel"></span>
+  <a class="topfull" id="topfull" href="../docket/">Full page</a>
 </header>
 <div class="shell">
   <aside class="sidebar" id="sidebar" aria-label="{title} sections">
@@ -1001,16 +1181,22 @@ def app_page(data: dict) -> str:
   <main id="main">
    <div id="content" tabindex="-1">
     <section class="route" id="route-overview" data-route="overview" aria-labelledby="h-overview" hidden>
-      <header><h1 id="h-overview" tabindex="-1">Overview</h1><p>Run {html.escape(run["name"])} and the feed at a glance. Each widget's header can hide it, move it or set its size. The layout is kept in the address bar, so a link shares it, and in this browser as your default when storage is allowed.</p></header>
+      <header><h1 id="h-overview" tabindex="-1">Overview</h1><p>Run {html.escape(run["name"])} and the feed at a glance. Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></header>
+      <p class="note rule" id="sharednote" hidden>This is a shared layout, shown for this view only. Your own default layout is unchanged unless you change a widget here. <button class="btn" id="ownlayout" type="button">Show my layout</button></p>
       <div class="layoutbar" role="group" aria-label="Layout">
         <div class="layoutbar" id="hiddenlist"></div>
         <button class="btn" id="resetlayout" type="button">Reset layout</button>
+        <button class="btn" id="copylayout" type="button">Copy link to this layout</button>
+        <span class="muted" id="copystate" role="status"></span>
+        <input class="copyfallback" id="copyfallback" type="text" readonly aria-label="Link to this layout" hidden>
       </div>
       <div class="widgets" id="widgets"></div>
     </section>
     <section class="route" id="route-candidates" data-route="candidates" aria-labelledby="h-candidates" hidden>
       <header><h1 id="h-candidates" tabindex="-1">Candidates</h1><p>The Docket for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
       <div class="frametools"><a id="fullpage" href="../docket/">Open full page</a><span class="muted">The Docket on its own page, at the same dip.</span></div>
+      <p class="note" id="framestatus" role="status" hidden></p>
+      <p class="note blocked" id="frameblocked" role="alert" hidden>The dossier could not load in this view. <a id="blockedlink" href="../docket/">Open it on its own page.</a></p>
       <iframe class="frame" id="docketframe" title="Docket for run {html.escape(run["name"])}: signals, dips and vetting"></iframe>
     </section>
     <section class="route" id="route-discoveries" data-route="discoveries" aria-labelledby="h-discoveries" hidden>
