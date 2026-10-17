@@ -65,6 +65,7 @@ def vet_event(
         flags.append("edge_event")
 
     if periodic is not None:
+        metrics.update(odd_err=periodic.odd_err, even_err=periodic.even_err, secondary_depth=periodic.secondary_depth, secondary_err=periodic.secondary_err)
         odd_even_sigma = np.hypot(periodic.odd_err, periodic.even_err)
         # Both parities must show a real dip, else one lone transit fakes a mismatch.
         both_present = min(

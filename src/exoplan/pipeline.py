@@ -56,6 +56,7 @@ class Candidate:
     snr: float
     period_days: float | None
     n_transits: int = 0
+    metrics: dict = field(default_factory=dict)
     candidate_id: str = ""
 
     @property
@@ -281,6 +282,7 @@ def _to_candidate(event: Consensus, subject: Subject, result: VettingResult, n_t
         snr=float(result.metrics.get("snr", 0.0)),
         period_days=float(period) if period is not None else None,
         n_transits=n_transits,
+        metrics={k: (float(v) if isinstance(v, (int, float, np.floating)) else v) for k, v in result.metrics.items()},
     )
 
 

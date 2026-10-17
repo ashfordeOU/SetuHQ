@@ -131,6 +131,14 @@ def cmd_dashboard(args) -> int:
     return 0
 
 
+def cmd_docket(args) -> int:
+    from exoplan.docket import build_docket
+
+    path = build_docket(args.run_dir, args.out, title=args.title)
+    print(f"docket written to {path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="exoplan", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -181,6 +189,12 @@ def build_parser() -> argparse.ArgumentParser:
     dash.add_argument("--title", default="exoplan dashboard")
     dash.add_argument("--catalog", help="discovery catalogue JSON to include")
     dash.set_defaults(func=cmd_dashboard)
+
+    docket = sub.add_parser("docket", help="build the candidate case-file view for a run")
+    docket.add_argument("run_dir")
+    docket.add_argument("--out", required=True)
+    docket.add_argument("--title", default="exoplan docket")
+    docket.set_defaults(func=cmd_docket)
 
     report = sub.add_parser("report", help="build a static HTML report site from a run directory")
     report.add_argument("run_dir")
