@@ -23,7 +23,9 @@ not start with ``#/`` (the skip link's ``#content``) are not routes.
   from the discovery catalogue, with histograms and a timeline by star.
 * Planets: one card per star with the planet-to-star radius ratio sqrt(depth).
   No stellar radius is stored, so nothing is converted to Earth or Jupiter radii.
-* Panel: which reviewers marked each dip, and one card per reviewer.
+* Panel: a calibration plane (each reviewer's false-alarm rate against its recall,
+  sized by calibrated weight, with lines of constant weight and the sample size
+  stated), which reviewers marked each dip, and one card per reviewer.
 * Runs: one line per discovery run with its errors, and the configuration.
 
 Every number on the page is read from the run directory, the catalogue or the

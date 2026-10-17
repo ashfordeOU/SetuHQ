@@ -609,7 +609,7 @@ def plate_page(data: dict) -> str:
 <nav class="toc" aria-label="Plates"><h2>Plates</h2><ol>{toc}</ol></nav>
 <section class="river" aria-labelledby="river-h">
   <h2 class="ptitle" id="river-h"><span class="num">River of time</span> the whole feed</h2>
-  <p class="psub">One row per star, a tick per candidate. Height is log SNR; colour is status, and each row lists its statuses in words. Candidate, unconfirmed.</p>
+  <p class="psub">One row per star, a tick per candidate. Height is log SNR; colour is status, and each row lists its statuses in words. A known TOI period is an archive value: {_e(NO_DETECTION)} Candidate, unconfirmed.</p>
   <div class="scroll" tabindex="0" role="region" aria-label="River of time, scrolls sideways on a narrow screen">{river_svg(stars)}</div>
   {_legend(statuses)}
 </section>

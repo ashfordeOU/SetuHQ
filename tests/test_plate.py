@@ -115,6 +115,7 @@ def test_river_status_has_words_and_print_is_first_class(run_dir, catalog, tmp_p
     river = re.search(r'<section class="river".*?</section>', page, re.S).group(0)
     assert "River of time" in river and "log SNR" in river
     assert "1 new candidate" in river and "1 known TOI period" in river  # status in words beside each row
+    assert NO_DETECTION in river  # known TOI periods are archive values
     assert 'class="word s-new">new candidate</span>' in page
     # Print: A4, no navigation, every page carries the hedge, plates start a page and stay whole.
     assert "@page{size:A4" in PLATE_CSS and 'content:"Candidate, unconfirmed.' in PLATE_CSS
