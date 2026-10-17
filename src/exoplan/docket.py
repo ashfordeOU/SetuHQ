@@ -65,6 +65,7 @@ svg .hl{fill:var(--ink)}
 .ledger td{padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
 .ledger td{min-width:0}
 .ledger td:nth-child(1){white-space:nowrap}
+.ledger th.grp{text-align:left;font:600 11px "JetBrains Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding-top:14px;border-bottom:1px solid var(--rule)}
 .ledger .why{font:13px "Inter Tight",sans-serif;color:var(--muted)}
 .rat{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));min-width:0}
 .rat>div{border-top:2px solid var(--rule);padding-top:8px;min-width:0}
@@ -287,10 +288,14 @@ function ledger(c){
     ['periodic support', c.n_transits ? `${c.n_transits} transits` : 'none', '≥ 2', (c.n_transits||0) >= 2, true, 'A repeated dip is needed for the feed.'],
     ['ephemeris', f.has('off_ephemeris') ? 'off' : 'on', 'on ephemeris', !f.has('off_ephemeris'), false, 'Not explained by the strong periodic signal of its star.'],
   ];
-  return rows.map(([name, value, rule, ok, disq, why]) => {
+  const line = ([name, value, rule, ok, disq, why]) => {
     const g = ok ? 'pass' : (disq ? 'fail' : 'flag');
     return `<tr><td><span class="glyph g-${g}">${GLYPH[g]}</span> ${esc(name)}</td><td>${esc(value)}</td><td>${esc(rule)}</td><td class="why">${esc(why)}</td></tr>`;
-  }).join('');
+  };
+  const feed = new Set(['depth cap', 'periodic support']);
+  const vetting = rows.filter(r => !feed.has(r[0])).map(line).join('');
+  const admission = rows.filter(r => feed.has(r[0])).map(line).join('');
+  return `<tr><th colspan="4" class="grp">Vetting checks (light curve only)</th></tr>${vetting}<tr><th colspan="4" class="grp">Feed admission rules (discover.py)</th></tr>${admission}`;
 }
 
 function rationales(c){
@@ -315,7 +320,7 @@ function renderDossier(){
   box.innerHTML = `
     <div class="head">
       <div><div class="hint">${esc(c.target)} · ${esc(c.mission)} · subject ${esc(c.subject_id)}</div><h2>${esc(c.candidate_id)}</h2></div>
-      <div class="verdict g-${s}">${GLYPH[s]} ${STATUS[s]}${c.flags.length ? ' · '+esc(c.flags.join(', ')) : ''}</div>
+      <div class="verdict g-${s}">${GLYPH[s]} ${s==='pass' ? 'passed vetting' : s==='flag' ? 'passed, flagged for review' : 'rejected by vetting'}${c.flags.length ? ' · '+esc(c.flags.join(', ')) : ''}</div>
     </div>
     <div class="facts">
       <div><span>mid-time</span>${fmt(c.t_center,3)} ${esc(c.time_unit)}</div>
@@ -323,7 +328,7 @@ function renderDossier(){
       <div><span>depth</span>${fmt(c.depth_ppm,0)} ppm</div>
       <div><span>SNR</span>${fmt(c.snr,1)}</div>
       <div><span>panel</span>${fmt(c.score,2)} · ${c.n_reviewers} of ${Object.keys(D.reviewers).length}</div>
-      <div><span>period</span>${c.period_days ? fmt(c.period_days,3)+' d' : 'none'}</div>
+      <div><span>BLS period</span>${c.period_days ? fmt(c.period_days,3)+' d (this subject)' : 'none'}</div>
       <div><span>same subject</span>${siblings} other dip${siblings===1?'':'s'}</div>
     </div>
     <section class="sec"><header><h3>Subject in context</h3><em>highlighted: this dip · grey: other dips here</em></header><div class="hero-wrap" id="ctx"></div></section>
