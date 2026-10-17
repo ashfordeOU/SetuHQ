@@ -35,6 +35,8 @@ from exoplan.pipeline import run_pipeline
 EPOCH = datetime(2026, 1, 1, tzinfo=timezone.utc)
 PERIOD_TOLERANCE_DAYS = 0.05
 MID_TIME_DEDUPE_DAYS = 0.05
+MAX_FEED_DEPTH_PPM = 5000.0  # deeper dips are almost always binaries, so they stay out of the feed
+MIN_FEED_TRANSITS = 2        # a candidate needs a periodic signal with at least two transits
 
 
 @dataclass
@@ -137,6 +139,12 @@ def run_discovery(
             for candidate in summary.candidates:
                 if not candidate.passed or "off_ephemeris" in candidate.flags:
                     continue
+                if candidate.depth_ppm > MAX_FEED_DEPTH_PPM:
+                    run_log["filtered_deep"] = run_log.get("filtered_deep", 0) + 1
+                    continue
+                if candidate.period_days is None or candidate.n_transits < MIN_FEED_TRANSITS:
+                    run_log["filtered_single"] = run_log.get("filtered_single", 0) + 1
+                    continue
                 entry = {
                     "tic": target.tic,
                     "sector_span": sorted({c.provenance.get("sector") for c in curves}),
@@ -148,6 +156,7 @@ def run_discovery(
                     "score": candidate.score,
                     "n_reviewers": candidate.n_reviewers,
                     "period_days": candidate.period_days,
+                    "n_transits": candidate.n_transits,
                     "status": classify_against_toi(
                         {"period_days": candidate.period_days}, target
                     ),

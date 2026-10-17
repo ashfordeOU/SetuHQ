@@ -53,6 +53,7 @@ class Candidate:
     depth_ppm: float
     snr: float
     period_days: float | None
+    n_transits: int = 0
     candidate_id: str = ""
 
     @property
@@ -138,7 +139,9 @@ def build_candidates(
         if event.subject_id not in periodic_cache:
             periodic_cache[event.subject_id] = bls_search(subject, min_period=config.min_period)
         result = _vet(event, subject, periodic_cache[event.subject_id])
-        candidates.append(_to_candidate(event, subject, result))
+        periodic = periodic_cache[event.subject_id]
+        supported = periodic if periodic is not None and periodic.covers(event.center) else None
+        candidates.append(_to_candidate(event, subject, result, supported.n_transits if supported else 0))
     candidates.sort(key=lambda c: (not c.passed, -c.score))
     for index, candidate in enumerate(candidates):
         object.__setattr__(candidate, "candidate_id", f"{candidate.subject_id}-{index:03d}")
@@ -238,7 +241,7 @@ def _vet(event: Consensus, subject: Subject, periodic: PeriodicSignal | None) ->
     return result
 
 
-def _to_candidate(event: Consensus, subject: Subject, result: VettingResult) -> Candidate:
+def _to_candidate(event: Consensus, subject: Subject, result: VettingResult, n_transits: int = 0) -> Candidate:
     period = result.metrics.get("period")
     return Candidate(
         subject_id=event.subject_id,
@@ -256,6 +259,7 @@ def _to_candidate(event: Consensus, subject: Subject, result: VettingResult) -> 
         depth_ppm=float(result.metrics.get("depth", 0.0)) * 1e6,
         snr=float(result.metrics.get("snr", 0.0)),
         period_days=float(period) if period is not None else None,
+        n_transits=n_transits,
     )
 
 
