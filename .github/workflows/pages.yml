@@ -1,10 +1,10 @@
 name: pages
 
-# Publishes the static site (report and discovery feed) on every push to main.
+# Publishes the static site (report and discovery feed) on every push to main and to claude/dreamy-pasteur-pyawgi.
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/dreamy-pasteur-pyawgi]
   workflow_dispatch:
 
 permissions:
