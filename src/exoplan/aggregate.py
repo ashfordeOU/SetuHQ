@@ -5,8 +5,11 @@ on the same dip are clustered in time. Each cluster is scored by the share of
 the panel's skill-weighted reviewers who marked it. A cluster counts only if
 the subject is also labelled ``potential_planet`` by enough of the weighted panel.
 
-Clustering is single-linkage in one dimension: a mark joins a cluster when its
-centre is within ``gap_days`` of the previous mark's centre.
+Clustering is single-linkage on intervals: marks are taken in order of start
+time, and a mark joins the current cluster when its interval overlaps the
+cluster's interval (the union of its marks so far) or its centre is within
+``gap_days`` of the previous mark's centre. A wide mark that covers a dip
+therefore counts even when its centre sits off the dip's centre.
 """
 
 from __future__ import annotations
@@ -36,18 +39,37 @@ class Consensus:
 
 
 def cluster_marks(entries, gap_days: float) -> list[list[tuple[str, float, float]]]:
-    """Group ``(reviewer_id, t_start, t_end)`` entries into time clusters. Input order does not matter."""
-    ordered = sorted(entries, key=lambda e: 0.5 * (e[1] + e[2]))
+    """Group ``(reviewer_id, t_start, t_end)`` entries into time clusters. Input order does not matter.
+
+    A mark joins the current cluster when its interval overlaps the cluster's
+    interval, or when its centre is within ``gap_days`` of the previous mark's centre.
+    """
+    ordered = sorted(entries, key=lambda e: (e[1], e[2]))
     clusters: list[list[tuple[str, float, float]]] = []
-    last_center = None
+    hi = last_center = None
     for entry in ordered:
-        center = 0.5 * (entry[1] + entry[2])
-        if last_center is None or center - last_center > gap_days:
-            clusters.append([entry])
-        else:
+        t_start, t_end = entry[1], entry[2]
+        center = 0.5 * (t_start + t_end)
+        joins = hi is not None and (t_start <= hi or abs(center - last_center) <= gap_days)
+        if joins:
             clusters[-1].append(entry)
+            hi = max(hi, t_end)
+        else:
+            clusters.append([entry])
+            hi = t_end
         last_center = center
     return clusters
+
+
+def _one_mark_per_reviewer(cluster) -> dict[str, tuple[float, float]]:
+    """Each reviewer's mark in a cluster: the one whose centre is nearest the cluster's median centre."""
+    middle = median(0.5 * (a + b) for _, a, b in cluster)
+    chosen: dict[str, tuple[float, float]] = {}
+    for reviewer_id, t_start, t_end in cluster:
+        best = chosen.get(reviewer_id)
+        if best is None or abs(0.5 * (t_start + t_end) - middle) < abs(0.5 * sum(best) - middle):
+            chosen[reviewer_id] = (t_start, t_end)
+    return chosen
 
 
 def aggregate(
@@ -77,9 +99,7 @@ def aggregate(
 
         entries = [(c.reviewer_id, m.t_start, m.t_end) for c in panel.values() for m in c.marks]
         for cluster in cluster_marks(entries, gap_days):
-            first_mark: dict[str, tuple[float, float]] = {}
-            for reviewer_id, t_start, t_end in cluster:
-                first_mark.setdefault(reviewer_id, (t_start, t_end))
+            first_mark = _one_mark_per_reviewer(cluster)
             score = sum(_weight(weights, r) for r in first_mark) / total_weight
             if score < min_score:
                 continue
@@ -101,10 +121,11 @@ def aggregate(
 def counting_rule(gap_days: float, min_score: float) -> str:
     """The rule that decides which marks count toward a consensus event, in words."""
     return (
-        f"marks are taken in order of centre and a mark joins the cluster only when its centre lies within "
-        f"{gap_days:g} d of the previous mark's centre (single-linkage clustering, aggregate.py); a cluster whose weighted "
-        f"share is below {min_score:g} is dropped, and of two clusters on one dip only the stronger is kept. "
-        f"Overlap with the consensus window is not part of the rule"
+        f"marks are taken in order of start time and a mark joins the cluster when its interval overlaps the "
+        f"cluster's interval or its centre lies within {gap_days:g} d of the previous mark's centre (interval "
+        f"single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's "
+        f"median centre; a cluster whose weighted share is below {min_score:g} is dropped, and of two clusters on one "
+        f"dip only the stronger is kept"
     )
 
 
@@ -116,8 +137,8 @@ def audit_marks(event: Consensus, classifications: list[Classification], gap_day
     (``event.marks``). ``overlap_frac`` is the share of the consensus window
     [t_start, t_end] the mark covers. ``centre_gap_days`` is the distance from
     the mark's centre to the nearest centre of a counted mark (another one, for
-    a counted mark). A mark whose centre is more than ``gap_days`` from every
-    counted centre fell in a separate cluster, whatever its overlap.
+    a counted mark). A mark that overlaps no counted mark and whose centre is
+    more than ``gap_days`` from every counted centre fell in a separate cluster.
     """
     panel = _latest_per_reviewer([c for c in classifications if c.subject_id == event.subject_id])
     counted = {r: (a, b) for r, a, b in event.marks}

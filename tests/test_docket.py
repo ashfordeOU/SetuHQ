@@ -367,34 +367,36 @@ def test_merged_signal_epochs_carry_signal_number_and_subject_parity():
     assert "D.cross_subject_note" in DOCKET_JS and "subject_parity" in DOCKET_JS
 
 
-def test_mark_audit_reports_overlap_and_the_centre_gap_rule():
+def test_mark_audit_reports_overlap_and_the_interval_rule():
     from exoplan.aggregate import aggregate, audit_marks
     from exoplan.reviewers.base import Classification, Mark, POTENTIAL_PLANET
 
     def cls(r, a, b):
         return Classification(subject_id="s", reviewer_id=r, label=POTENTIAL_PLANET, marks=(Mark(a, b),))
 
-    # Three narrow marks on the dip, two wide ones whose centres sit 0.07 d early,
-    # as on pi Men E0: the wide ones cover the whole window but do not count.
+    # Three narrow marks on the dip and a wide one whose centre sits 0.07 d early,
+    # as on pi Men E0. The wide mark covers the whole window, so it counts.
+    # A mark well clear of the dip does not.
     panel = [cls("v1", 1325.452, 1325.541), cls("v2", 1325.458, 1325.555), cls("v3", 1325.463, 1325.530),
-             cls("c1", 1325.300, 1325.550), cls("c2", 1325.300, 1325.460)]
-    (event,) = aggregate(panel, {}, gap_days=0.05, min_score=0.5, min_planet_fraction=0.5)
-    assert event.reviewers == ("v1", "v2", "v3")
+             cls("c1", 1325.300, 1325.550), cls("c2", 1325.700, 1325.800)]
+    events = aggregate(panel, {}, gap_days=0.05, min_score=0.5, min_planet_fraction=0.5)
+    (event,) = events
+    assert event.reviewers == ("c1", "v1", "v2", "v3")
     audit = {r["reviewer_id"]: r for r in audit_marks(event, panel, 0.05)}
-    assert audit["c1"]["counted"] is False and audit["c1"]["overlap_frac"] == pytest.approx(1.0)
+    assert audit["c1"]["counted"] is True and audit["c1"]["overlap_frac"] == pytest.approx(1.0)
     assert audit["c1"]["marks"][0]["centre_gap_days"] > 0.05
     assert all(audit[r]["counted"] for r in ("v1", "v2", "v3"))
-    assert audit["v3"]["marks"][0]["centre_gap_days"] <= 0.05
+    assert audit["c2"]["counted"] is False and audit["c2"]["overlap_frac"] == 0.0
 
 
 def test_candidates_store_mark_audit_and_counting_rule(run_dir, tmp_path):
     rows = json.loads((run_dir / "candidates.json").read_text())
     for r in rows:
-        assert r["count_rule"]["gap_days"] == 0.05 and "centre" in r["count_rule"]["text"]
+        assert r["count_rule"]["gap_days"] == 0.05 and "overlaps" in r["count_rule"]["text"]
         counted = {a["reviewer_id"] for a in r["mark_audit"] if a["counted"]}
         assert counted == set(r["reviewers"].split(";"))
         for a in r["mark_audit"]:
             assert a["overlap_frac"] is None or 0.0 <= a["overlap_frac"] <= 1.0
     data = _page_data(build_docket(run_dir, tmp_path / "docket", title="t").read_text())
     assert all("mark_audit" in c and "count_rule" in c for c in data["candidates"])
-    assert "not counted: centre more than" in DOCKET_JS and "url(#hatch-" in DOCKET_JS
+    assert "not counted: overlaps no counted mark" in DOCKET_JS and "url(#hatch-" in DOCKET_JS

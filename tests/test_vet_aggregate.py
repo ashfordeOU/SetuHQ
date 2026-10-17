@@ -141,3 +141,22 @@ def test_vet_flags_large_eclipsing_binary_mismatch_at_half_period(rng):
     result = vet_event(2.0, 2.15, subject, periodic)
     assert "odd_even_mismatch" in result.flags
     assert not result.passed
+
+
+def test_cluster_marks_joins_overlapping_interval_beyond_the_centre_gap():
+    entries = [("a", 1.00, 1.10), ("b", 0.93, 1.31), ("c", 5.00, 5.10)]
+    clusters = cluster_marks(entries, gap_days=0.05)
+    assert [sorted(e[0] for e in c) for c in clusters] == [["a", "b"], ["c"]]
+
+
+def test_full_overlap_mark_off_centre_by_0_07_days_counts():
+    # r1 and r2 mark the dip at 1.00-1.10 (centre 1.05). r3's wide mark covers the
+    # whole consensus window but its centre is 0.07 d away, beyond the 0.05 d gap.
+    panel = [_cls("r1", [(1.00, 1.10)]), _cls("r2", [(1.00, 1.10)]), _cls("r3", [(0.93, 1.31)])]
+    assert abs(0.5 * (0.93 + 1.31) - 1.05 - 0.07) < 1e-9
+    (event,) = aggregate(panel, {}, gap_days=0.05, min_score=0.5, min_planet_fraction=0.5)
+    assert event.reviewers == ("r1", "r2", "r3")
+    assert abs(event.score - 1.0) < 1e-9
+    from exoplan.aggregate import audit_marks
+    audit = {a["reviewer_id"]: a for a in audit_marks(event, panel, 0.05)}
+    assert audit["r3"]["counted"] and abs(audit["r3"]["overlap_frac"] - 1.0) < 1e-9

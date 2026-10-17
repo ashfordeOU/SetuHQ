@@ -604,7 +604,7 @@ function blsTable(s){
 // Why a mark did or did not count, from stored values only (c.count_rule, c.mark_audit).
 function notCountedLegend(c){
   const g = (c.count_rule || {}).gap_days;
-  return g === undefined ? 'not counted for this dip' : `not counted: centre more than ${g} d from every counted mark (clustering gap)`;
+  return g === undefined ? 'not counted for this dip' : `not counted: overlaps no counted mark and centre more than ${g} d from every counted mark`;
 }
 function countNote(c){
   const rule = c.count_rule || {}, audit = c.mark_audit || [];
