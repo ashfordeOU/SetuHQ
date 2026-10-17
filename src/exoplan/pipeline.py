@@ -23,6 +23,8 @@ from importlib import metadata
 from pathlib import Path
 
 from exoplan import __version__
+import numpy as np
+
 from exoplan.aggregate import Consensus, aggregate
 from exoplan.config import RunConfig
 from exoplan.lightcurve import LightCurve
@@ -91,6 +93,24 @@ def prepare_subjects(lightcurves: list[LightCurve], config: RunConfig) -> list[S
     return subjects
 
 
+def plot_arrays(subject: Subject, points: int = 480) -> dict:
+    """Downsampled arrays for the dashboard. Bins keep the shape and drop the bulk of the points."""
+    edges = np.linspace(subject.start, subject.end, points + 1)
+    index = np.clip(np.searchsorted(edges, subject.time, side="right") - 1, 0, points - 1)
+    counts = np.bincount(index, minlength=points)
+    keep = counts > 0
+    time = np.bincount(index, weights=subject.time, minlength=points)[keep] / counts[keep]
+    flux = np.bincount(index, weights=subject.flux, minlength=points)[keep] / counts[keep]
+    return {
+        "subject_id": subject.subject_id,
+        "time_unit": subject.time_unit,
+        "start": subject.start,
+        "end": subject.end,
+        "time": [round(float(t), 5) for t in time],
+        "flux": [round(float(f), 6) for f in flux],
+    }
+
+
 def review_subjects(
     subjects: list[Subject],
     reviewers,
@@ -104,6 +124,7 @@ def review_subjects(
         image = None
         if image_dir is not None:
             image = render_subject(subject, Path(image_dir) / f"{subject.subject_id}.png")
+            (Path(image_dir) / f"{subject.subject_id}.json").write_text(json.dumps(plot_arrays(subject)))
         if store is not None:
             store.add_subject(subject, image)
         for reviewer in reviewers:

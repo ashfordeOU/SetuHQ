@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>exoplan: pi Men (TESS sector 1)</title>
+<style>
+:root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#16a34a;--bad:#dc2626;--warn:#d97706;--radius:14px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}}
+:root[data-theme="dark"]{--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.hero{padding:56px 16px 36px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+h1{font-size:clamp(28px,5vw,42px);margin:0 0 8px;letter-spacing:-.02em}
+h2{font-size:24px;margin:40px 0 12px;letter-spacing:-.01em}
+h3{font-size:17px;margin:0 0 6px}
+p.lead{font-size:18px;max-width:760px;margin:0;opacity:.95}
+nav{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:18px;overflow-x:auto;padding-top:12px;padding-bottom:12px}
+nav a{color:var(--muted);text-decoration:none;white-space:nowrap;font-size:14px}
+nav a:hover{color:var(--accent)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.stat{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.stat small{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px}
+.pipeline{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.step{flex:1 1 150px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+.step b{display:block;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+.step span{font-size:14px;color:var(--muted)}
+.arrow{align-self:center;color:var(--muted)}
+.cands{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.cand img{width:100%;border-radius:10px;border:1px solid var(--line);background:#fff}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;margin:2px 4px 2px 0;border:1px solid var(--line);color:var(--muted)}
+.tag.pass{color:var(--good);border-color:var(--good)}
+.tag.fail{color:var(--bad);border-color:var(--bad)}
+.tag.flag{color:var(--warn);border-color:var(--warn)}
+.bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin:8px 0}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
+.kv>div{min-width:0;overflow-wrap:anywhere}
+.grid>*,.cands>*{min-width:0}
+code{overflow-wrap:anywhere}
+.kv div:nth-child(odd){color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.scroll{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:4px 14px}
+.note{font-size:14px;color:var(--muted)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto}
+footer{margin:48px 0 24px;color:var(--muted);font-size:13px}
+@media (max-width:600px){.cands{grid-template-columns:1fr}.step{flex-basis:100%}.arrow{display:none}}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0}
+.toolbar input,.toolbar select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.toolbar input{flex:1 1 220px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:7px 12px;border-radius:999px;font-size:13px}
+.tab.on{color:#fff;background:var(--accent);border-color:var(--accent)}
+.split{display:grid;gap:16px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.split>*,.charts>*{min-width:0}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
+.charts{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.chart h3{margin-bottom:2px}
+.chart .note{margin:0 0 6px}
+svg text{fill:var(--muted);font:11px system-ui,sans-serif}
+svg .axis{stroke:var(--line)}
+tr.row{cursor:pointer}
+tr.row:hover td{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+tr.row.sel td{background:color-mix(in srgb,var(--accent) 16%,transparent)}
+.pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);margin:2px 4px 2px 0}
+.pill.pass{color:var(--good);border-color:var(--good)}
+.pill.fail{color:var(--bad);border-color:var(--bad)}
+.pill.flag{color:var(--warn);border-color:var(--warn)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:6px 0}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+.heat td{text-align:center;font-size:12px;padding:6px}
+.empty{color:var(--muted);padding:24px;text-align:center}
+</style></head>
+<body>
+<header class='hero'><div class='wrap'>
+  <h1>exoplan: pi Men (TESS sector 1)</h1>
+  <p class='lead'>Blind-coded light curves, an AI-and-simulated review panel, skill-weighted consensus, and vetting. Click any candidate to see its light curve and each reviewer's marks.</p>
+</div></header>
+<main class='wrap'>
+<section class='grid' id='kpis' style='margin-top:26px'></section>
+
+<div class='toolbar'>
+  <div class='tabs'>
+    <span class='tab on' data-f='all'>all</span>
+    <span class='tab' data-f='pass'>passed</span>
+    <span class='tab' data-f='flag'>flagged</span>
+    <span class='tab' data-f='fail'>rejected</span>
+  </div>
+  <input id='q' type='search' placeholder='search candidate, reviewer or flag'>
+  <select id='sort'>
+    <option value='score'>sort: panel score</option>
+    <option value='snr'>sort: SNR</option>
+    <option value='depth'>sort: depth</option>
+    <option value='time'>sort: mid-time</option>
+  </select>
+</div>
+
+<section class='split'>
+  <div class='card'>
+    <div class='scroll' style='border:none;padding:0'>
+      <table id='cands'><thead><tr><th>candidate</th><th>mid-time</th><th>dur h</th><th>ppm</th><th>SNR</th><th>score</th><th>status</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+  <div class='card' id='detail'></div>
+</section>
+
+<section class='charts' style='margin-top:20px'>
+  <div class='card chart'><h3>Depth versus SNR</h3><p class='note'>Colour is vetting status. Click a point to open the candidate.</p><div id='c-scatter'></div></div>
+  <div class='card chart'><h3>Panel score distribution</h3><p class='note'>How strongly the weighted panel agrees on each dip.</p><div id='c-hist'></div></div>
+  <div class='card chart'><h3>Reviewer agreement</h3><p class='note'>Each reviewer's label and mark count, per subject.</p><div id='c-agree'></div></div>
+</section>
+
+<section id='disc' style='margin-top:28px'>
+  <h2>Discovery feed</h2>
+  <p class='note'>Candidates from scheduled batches of TESS targets. Unconfirmed: a candidate is a dip that passed the pipeline's vetting, not a confirmed planet.</p>
+  <div class='charts'>
+    <div class='card chart'><h3>Discovery timeline</h3><div id='c-timeline'></div></div>
+    <div class='card chart'><h3>Status</h3><div id='c-status'></div></div>
+  </div>
+</section>
+<footer>Generated by exoplan. Results on synthetic data are not claims about real sky data.</footer>
+</main>
+<script id='data' type='application/json'>{"candidates": [{"candidate_id": "tess-fa3483ce6f83-000", "subject_id": "tess-fa3483ce6f83", "t_start": 1331.72, "t_end": 1331.822295737961, "t_center": 1331.7711478689805, "time_unit": "BTJD", "duration_hours": 2.45509771106299, "depth_ppm": 240.97638049369596, "snr": 15.99541147816913, "score": 1.0, "n_reviewers": 5, "planet_fraction": 1.0, "reviewers": ["claude-skeptic", "claude-volunteer", "volunteer-cautious", "volunteer-sensitive", "volunteer-typical"], "passed": true, "flags": [], "period_days": 6.272619606532485, "n_transits": 3}, {"candidate_id": "tess-fa3483ce6f83-001", "subject_id": "tess-fa3483ce6f83", "t_start": 1338.0024556711442, "t_end": 1338.0964719505237, "t_center": 1338.049463810834, "time_unit": "BTJD", "duration_hours": 2.2563907051080605, "depth_ppm": 241.28575962123477, "snr": 14.910035502314475, "score": 0.8, "n_reviewers": 4, "planet_fraction": 1.0, "reviewers": ["claude-volunteer", "volunteer-cautious", "volunteer-sensitive", "volunteer-typical"], "passed": true, "flags": [], "period_days": 6.272619606532485, "n_transits": 3}, {"candidate_id": "tess-04b815001aa6-002", "subject_id": "tess-04b815001aa6", "t_start": 1344.2471200203136, "t_end": 1344.281706198165, "t_center": 1344.2644131092393, "time_unit": "BTJD", "duration_hours": 0.830068268434843, "depth_ppm": 246.84141710196172, "snr": 8.188258435931115, "score": 0.8, "n_reviewers": 4, "planet_fraction": 1.0, "reviewers": ["claude-skeptic", "volunteer-cautious", "volunteer-sensitive", "volunteer-typical"], "passed": true, "flags": [], "period_days": 6.26155662321977, "n_transits": 2}, {"candidate_id": "tess-fa3483ce6f83-003", "subject_id": "tess-fa3483ce6f83", "t_start": 1325.4579654210158, "t_end": 1325.5407337712481, "t_center": 1325.499349596132, "time_unit": "BTJD", "duration_hours": 1.9864404055751947, "depth_ppm": 243.12064822884506, "snr": 14.434035805708621, "score": 0.6, "n_reviewers": 3, "planet_fraction": 1.0, "reviewers": ["volunteer-cautious", "volunteer-sensitive", "volunteer-typical"], "passed": true, "flags": [], "period_days": 6.272619606532485, "n_transits": 3}, {"candidate_id": "tess-04b815001aa6-004", "subject_id": "tess-04b815001aa6", "t_start": 1350.5505984768881, "t_end": 1350.619229858928, "t_center": 1350.5849141679082, "time_unit": "BTJD", "duration_hours": 1.647153168958539, "depth_ppm": 251.15041376866375, "snr": 11.782091906185634, "score": 0.6, "n_reviewers": 3, "planet_fraction": 1.0, "reviewers": ["volunteer-cautious", "volunteer-sensitive", "volunteer-typical"], "passed": true, "flags": [], "period_days": 6.26155662321977, "n_transits": 2}, {"candidate_id": "tess-04b815001aa6-005", "subject_id": "tess-04b815001aa6", "t_start": 1348.9182231522316, "t_end": 1348.9546698926204, "t_center": 1348.936446522426, "time_unit": "BTJD", "duration_hours": 0.8747217693307903, "depth_ppm": 261.1116852069273, "snr": 9.488344423148439, "score": 0.6, "n_reviewers": 3, "planet_fraction": 1.0, "reviewers": ["volunteer-cautious", "volunteer-sensitive", "volunteer-typical"], "passed": true, "flags": ["off_ephemeris"], "period_days": null, "n_transits": 0}], "subjects": {"tess-fa3483ce6f83": {"subject_id": "tess-fa3483ce6f83", "time_unit": "BTJD", "start": 1325.3004326687799, "end": 1338.2940052401314, "time": [1325.31137, 1325.33932, 1325.3671, 1325.39488, 1325.42265, 1325.45043, 1325.47821, 1325.50599, 1325.53029, 1325.5546, 1325.58237, 1325.61015, 1325.63793, 1325.66571, 1325.69348, 1325.72126, 1325.74904, 1325.77682, 1325.80112, 1325.82543, 1325.8532, 1325.88098, 1325.90876, 1325.93654, 1325.96414, 1325.99209, 1326.01987, 1326.04765, 1326.07195, 1326.09626, 1326.12403, 1326.15181, 1326.17959, 1326.20737, 1326.23514, 1326.26292, 1326.2907, 1326.31848, 1326.34278, 1326.36709, 1326.39486, 1326.42264, 1326.45042, 1326.4782, 1326.50597, 1326.53375, 1326.56153, 1326.58931, 1326.61361, 1326.63792, 1326.66569, 1326.69356, 1326.72107, 1326.74903, 1326.7768, 1326.80458, 1326.83236, 1326.85666, 1326.88097, 1326.90875, 1326.93652, 1326.9643, 1326.99208, 1327.01986, 1327.04763, 1327.07541, 1327.10319, 1327.12715, 1327.15154, 1327.17958, 1327.20735, 1327.23513, 1327.26291, 1327.29069, 1327.31846, 1327.34624, 1327.37402, 1327.39832, 1327.42272, 1327.45041, 1327.47818, 1327.50596, 1327.53374, 1327.56152, 1327.58929, 1327.61707, 1327.64485, 1327.66915, 1327.69337, 1327.72124, 1327.74901, 1327.77688, 1327.80457, 1327.82864, 1327.8603, 1327.8879, 1327.91568, 1327.93998, 1327.96429, 1327.99207, 1328.01984, 1328.04762, 1328.0754, 1328.10318, 1328.13095, 1328.15873, 1328.18304, 1328.20734, 1328.23512, 1328.2629, 1328.29067, 1328.31845, 1328.34623, 1328.37401, 1328.40178, 1328.42956, 1328.45387, 1328.47826, 1328.50595, 1328.53373, 1328.5615, 1328.58928, 1328.61706, 1328.64484, 1328.67261, 1328.70039, 1328.7247, 1328.749, 1328.77661, 1328.80456, 1328.83233, 1328.86011, 1328.88789, 1328.91567, 1328.94344, 1328.97122, 1328.99553, 1329.01983, 1329.04761, 1329.07539, 1329.10316, 1329.13094, 1329.15881, 1329.1865, 1329.21436, 1329.24223, 1329.26636, 1329.29066, 1329.31844, 1329.34622, 1329.37399, 1329.40195, 1329.42955, 1329.45715, 1329.4851, 1329.51288, 1329.53719, 1329.56149, 1329.58927, 1329.61705, 1329.64482, 1329.6726, 1329.70038, 1329.72798, 1329.75593, 1329.78024, 1329.80454, 1329.83241, 1329.8601, 1329.88788, 1329.91548, 1329.94343, 1329.97138, 1329.99919, 1330.02659, 1330.0513, 1330.07572, 1330.10315, 1330.13093, 1330.15871, 1330.18648, 1330.21426, 1330.24204, 1330.26982, 1330.29759, 1330.3252, 1330.3535, 1330.37398, 1330.40176, 1330.42954, 1330.45731, 1330.48509, 1330.51287, 1330.54065, 1330.56842, 1330.59273, 1330.61703, 1330.64481, 1330.67259, 1330.70037, 1330.72814, 1330.75592, 1330.7837, 1330.81148, 1330.83925, 1330.86356, 1330.88786, 1330.91564, 1330.94342, 1330.9712, 1330.99897, 1331.02675, 1331.05453, 1331.08231, 1331.10661, 1331.13092, 1331.15869, 1331.18665, 1331.21425, 1331.24203, 1331.2698, 1331.29758, 1331.32536, 1331.35314, 1331.37744, 1331.40175, 1331.42952, 1331.4573, 1331.48508, 1331.51286, 1331.54063, 1331.56841, 1331.59619, 1331.62397, 1331.64827, 1331.67258, 1331.70035, 1331.72813, 1331.75591, 1331.78369, 1331.81164, 1331.83924, 1331.86702, 1331.8948, 1331.9191, 1331.94341, 1331.97118, 1331.99896, 1332.02674, 1332.05452, 1332.08229, 1332.1099, 1332.13785, 1332.16563, 1332.18993, 1332.21424, 1332.24227, 1332.26979, 1332.29766, 1332.32517, 1332.35312, 1332.38081, 1332.40868, 1332.43646, 1332.46076, 1332.4853, 1332.51284, 1332.54062, 1332.5684, 1332.59618, 1332.62395, 1332.65173, 1332.67942, 1332.70381, 1332.72812, 1332.7559, 1332.78367, 1332.81134, 1332.83807, 1332.86701, 1332.89478, 1332.92256, 1332.95034, 1332.97464, 1332.99895, 1333.02673, 1333.0545, 1333.08228, 1333.11006, 1333.13784, 1333.16561, 1333.19339, 1333.22117, 1333.24547, 1333.26978, 1333.29756, 1333.32533, 1333.35311, 1333.38089, 1333.40858, 1333.43644, 1333.46422, 1333.492, 1333.5163, 1333.54061, 1333.56839, 1333.59616, 1333.62394, 1333.65172, 1333.67949, 1333.70727, 1333.73505, 1333.76283, 1333.78713, 1333.81144, 1333.83921, 1333.86699, 1333.89477, 1333.92255, 1333.95032, 1333.9781, 1334.00588, 1334.03018, 1334.05449, 1334.08227, 1334.11004, 1334.13782, 1334.1656, 1334.19338, 1334.22115, 1334.24893, 1334.27671, 1334.30101, 1334.32532, 1334.3531, 1334.38087, 1334.40865, 1334.43643, 1334.46421, 1334.49198, 1334.51976, 1334.54754, 1334.57184, 1334.59615, 1334.62393, 1334.6517, 1334.67965, 1334.70726, 1334.73504, 1334.76281, 1334.79059, 1334.81837, 1334.84267, 1334.86698, 1334.89476, 1334.92262, 1334.95014, 1334.97826, 1335.00604, 1335.03373, 1335.06142, 1335.0892, 1335.1135, 1335.13781, 1335.16558, 1335.19336, 1335.22114, 1335.24892, 1335.27669, 1335.30447, 1335.32854, 1335.3602, 1335.38433, 1335.40881, 1335.43641, 1335.46419, 1335.49197, 1335.51975, 1335.54752, 1335.5753, 1335.60308, 1335.62738, 1335.65186, 1335.67947, 1335.70724, 1335.73502, 1335.7628, 1335.79058, 1335.81835, 1335.84613, 1335.87391, 1335.89821, 1335.92252, 1335.95029, 1335.97807, 1336.00585, 1336.03363, 1336.0614, 1336.08918, 1336.11696, 1336.14474, 1336.16904, 1336.19335, 1336.22112, 1336.2489, 1336.27668, 1336.30446, 1336.33223, 1336.36001, 1336.38779, 1336.41557, 1336.43987, 1336.46418, 1336.49195, 1336.51973, 1336.54751, 1336.57528, 1336.60306, 1336.63084, 1336.65862, 1336.68639, 1336.7107, 1336.73509, 1336.76278, 1336.79056, 1336.81834, 1336.84611, 1336.87389, 1336.90167, 1336.92945, 1336.95375, 1336.97806, 1337.00583, 1337.03361, 1337.06139, 1337.08917, 1337.11694, 1337.14472, 1337.1725, 1337.20027, 1337.22458, 1337.24888, 1337.27666, 1337.30444, 1337.33222, 1337.35999, 1337.38777, 1337.41555, 1337.44333, 1337.47081, 1337.49541, 1337.51971, 1337.54749, 1337.57509, 1337.60305, 1337.63082, 1337.6586, 1337.68655, 1337.71415, 1337.74193, 1337.76612, 1337.79054, 1337.81832, 1337.84725, 1337.87387, 1337.90165, 1337.92943, 1337.95721, 1337.98498, 1338.01276, 1338.03707, 1338.06137, 1338.08915, 1338.11675, 1338.1447, 1338.17248, 1338.20026, 1338.22803, 1338.25581, 1338.28359], "flux": [0.999951, 1.000031, 1.000103, 1.00007, 1.000058, 0.999856, 0.999754, 0.999767, 0.999745, 0.999863, 1.000056, 1.000115, 1.000021, 1.000064, 1.000044, 1.000009, 0.999987, 1.000043, 1.000024, 1.000011, 1.00004, 0.999961, 1.000023, 0.999976, 0.999966, 0.99997, 0.999974, 0.999966, 1.000062, 0.999971, 1.000033, 1.000035, 0.999988, 1.000001, 0.999967, 0.999998, 0.999979, 1.00001, 1.000021, 0.999998, 1.000019, 1.0, 1.000005, 0.999982, 1.000012, 1.000015, 1.000009, 1.000013, 0.999994, 1.000007, 0.99996, 0.999958, 0.999992, 0.999988, 1.00001, 1.000027, 0.999979, 1.000003, 1.000057, 0.999975, 1.000006, 0.999972, 1.000015, 1.000002, 1.000004, 0.999996, 1.000036, 1.000076, 0.999982, 1.000021, 1.0, 0.999976, 0.999965, 0.99997, 1.000005, 0.999932, 0.999999, 0.999935, 1.000007, 1.000015, 1.000021, 1.000005, 0.999999, 1.000079, 1.000028, 0.999997, 1.000013, 0.999967, 0.99998, 0.999955, 1.000007, 0.999989, 0.999972, 0.99997, 1.000004, 0.999987, 1.000004, 1.000034, 0.999985, 1.000004, 0.999997, 1.000027, 0.999971, 0.999978, 1.000014, 1.00003, 1.00004, 1.000011, 0.999996, 1.00001, 0.999991, 1.000035, 0.999992, 1.000008, 0.999939, 0.99995, 1.000018, 1.000008, 0.999997, 0.999964, 0.999995, 0.999976, 1.000045, 0.999998, 1.000052, 1.000002, 0.999999, 1.000007, 1.000013, 0.999982, 1.000015, 1.000003, 0.999972, 1.000006, 0.999996, 0.999978, 1.000002, 1.000012, 0.999949, 0.999997, 0.999999, 0.999973, 1.000025, 1.000014, 0.999968, 1.000003, 1.000025, 1.00002, 1.000031, 1.000059, 1.000023, 0.999984, 0.999967, 0.999949, 1.000035, 0.999997, 0.999984, 0.99999, 0.999979, 0.999983, 0.999976, 1.000008, 0.999996, 1.000033, 0.999975, 0.999974, 1.000047, 1.000011, 0.999999, 0.99997, 0.999973, 1.000065, 0.999998, 0.999979, 0.999991, 0.999997, 1.000039, 0.999941, 1.000041, 1.000002, 1.000001, 0.999956, 1.000014, 1.000031, 1.000014, 1.000024, 0.999971, 1.000014, 0.999982, 0.999962, 0.999985, 0.999954, 1.000006, 0.999987, 0.999986, 1.000053, 1.000004, 1.000017, 1.000038, 1.000034, 0.999982, 0.999987, 0.99999, 0.999976, 1.000002, 0.999961, 0.999989, 1.00007, 1.00004, 0.999951, 0.999996, 1.000006, 0.999986, 0.999986, 1.000057, 0.999987, 0.99997, 1.000021, 0.999998, 0.999972, 0.999967, 1.00001, 0.999956, 1.000007, 0.999986, 1.000056, 0.999971, 1.000042, 0.999974, 1.000023, 1.00005, 1.000104, 1.000061, 1.000041, 1.000027, 1.000007, 1.000069, 0.99976, 0.999782, 0.999746, 0.999752, 0.999984, 0.999991, 1.000002, 1.000014, 1.00004, 1.000015, 1.000097, 1.000062, 1.000039, 1.000069, 1.000034, 1.000034, 0.999995, 1.000011, 0.999922, 0.999887, 0.999961, 1.000029, 0.999977, 0.999967, 1.000034, 0.999996, 1.000003, 0.999999, 1.000047, 1.000018, 0.99999, 0.999972, 1.000015, 0.999973, 0.999962, 1.000082, 1.000007, 0.999956, 0.999974, 1.00001, 0.999968, 0.99998, 1.000032, 0.999992, 0.999996, 1.000037, 0.999954, 0.999998, 1.000033, 0.999982, 1.000044, 0.999986, 0.999979, 0.999938, 1.000014, 1.000013, 0.999946, 1.000007, 1.000052, 1.000058, 1.000003, 1.000002, 0.999946, 1.000022, 0.999969, 0.999973, 1.0, 1.000005, 1.00001, 0.999965, 1.000021, 1.000012, 0.999992, 1.000015, 0.999975, 1.000019, 0.999978, 1.000019, 1.000036, 0.99998, 1.000029, 1.000014, 0.999968, 0.999956, 0.999997, 1.000003, 1.000065, 1.000049, 0.999986, 0.999977, 0.999973, 1.000007, 0.999973, 0.999945, 0.99995, 1.000009, 0.999987, 1.000082, 1.000001, 0.99996, 1.000054, 1.000012, 0.999998, 1.000017, 0.999938, 1.000032, 0.999979, 0.999994, 0.999999, 0.999999, 1.00001, 0.999986, 1.000056, 0.999969, 0.999978, 1.000053, 1.000001, 0.999965, 1.000009, 1.000044, 0.999983, 0.999997, 1.000011, 1.0, 0.999999, 0.999971, 0.999987, 0.999969, 1.000018, 1.000029, 0.999963, 0.999985, 0.999993, 0.999907, 1.000051, 1.000014, 0.999983, 1.000027, 0.999958, 1.000017, 1.000008, 1.000017, 1.000003, 1.000042, 0.999972, 0.999972, 1.000024, 0.999989, 1.000023, 0.999949, 1.000003, 0.999959, 0.999986, 1.000004, 1.000013, 1.000003, 1.000012, 0.999992, 1.000005, 0.999969, 1.000048, 1.00001, 1.000025, 1.000004, 1.000007, 1.000003, 0.999992, 1.000031, 0.999965, 0.999973, 0.999997, 0.999991, 0.999971, 1.000005, 0.999986, 0.999982, 0.999993, 0.999993, 1.000067, 1.000005, 1.000011, 0.999976, 1.00002, 1.000019, 1.000016, 0.999933, 1.000009, 1.00004, 0.99996, 1.000017, 1.000003, 1.000052, 1.000006, 1.000002, 0.999973, 0.999928, 0.999992, 0.999994, 1.000023, 0.999994, 0.999963, 1.000039, 0.999956, 0.999997, 1.000041, 1.00002, 0.999989, 1.000063, 0.999962, 1.000019, 1.000031, 0.999976, 0.999977, 1.000024, 0.999983, 0.999976, 0.999977, 1.000005, 1.000019, 0.999945, 0.999984, 0.999991, 1.000016, 1.000068, 1.000013, 0.999996, 1.000039, 1.000066, 1.000071, 1.000082, 1.000067, 0.999912, 0.999737, 0.99973, 0.999804, 0.999819, 1.000073, 0.999994, 1.00002, 1.000117, 1.0, 1.000026, 1.000023]}, "tess-04b815001aa6": {"subject_id": "tess-04b815001aa6", "time_unit": "BTJD", "start": 1338.300949553523, "end": 1351.2937739830866, "time": [1338.31137, 1338.33914, 1338.36692, 1338.3947, 1338.42248, 1338.45025, 1338.47803, 1338.50581, 1338.52108, 1339.66603, 1339.69328, 1339.72106, 1339.74884, 1339.77662, 1339.80439, 1339.83217, 1339.85995, 1339.88425, 1339.90856, 1339.93633, 1339.96411, 1339.99189, 1340.01967, 1340.04744, 1340.07522, 1340.103, 1340.13078, 1340.15508, 1340.17939, 1340.20716, 1340.23494, 1340.26272, 1340.29049, 1340.31827, 1340.34605, 1340.37383, 1340.4016, 1340.42591, 1340.45021, 1340.47799, 1340.50577, 1340.53355, 1340.56132, 1340.5891, 1340.61688, 1340.64466, 1340.67243, 1340.69674, 1340.72104, 1340.74882, 1340.7766, 1340.80437, 1340.83215, 1340.85993, 1340.88771, 1340.91548, 1340.93967, 1340.96375, 1340.99187, 1341.01965, 1341.04743, 1341.0752, 1341.10298, 1341.13076, 1341.15854, 1341.18631, 1341.21062, 1341.23492, 1341.2627, 1341.29048, 1341.31826, 1341.34603, 1341.37381, 1341.4015, 1341.42954, 1341.45367, 1341.47815, 1341.50575, 1341.53353, 1341.56131, 1341.58908, 1341.61686, 1341.64464, 1341.67224, 1341.69985, 1341.72797, 1341.75228, 1341.77658, 1341.80436, 1341.83214, 1341.85991, 1341.8876, 1341.91547, 1341.94325, 1341.97102, 1341.99533, 1342.01972, 1342.04741, 1342.07484, 1342.10296, 1342.13074, 1342.15852, 1342.18612, 1342.21407, 1342.24185, 1342.26616, 1342.29046, 1342.31824, 1342.34602, 1342.37379, 1342.40157, 1342.42935, 1342.45713, 1342.4849, 1342.51268, 1342.53699, 1342.56129, 1342.58907, 1342.61685, 1342.64462, 1342.6724, 1342.70018, 1342.72795, 1342.75573, 1342.78351, 1342.80781, 1342.83212, 1342.8599, 1342.88767, 1342.91545, 1342.94323, 1342.97101, 1342.99878, 1343.02656, 1343.05434, 1343.07864, 1343.10295, 1343.13073, 1343.1585, 1343.18628, 1343.21406, 1343.24183, 1343.26961, 1343.29739, 1343.32517, 1343.34947, 1343.37378, 1343.40155, 1343.42933, 1343.45728, 1343.48489, 1343.51232, 1343.54027, 1343.56839, 1343.59252, 1343.61683, 1343.64461, 1343.67238, 1343.70025, 1343.72794, 1343.75572, 1343.78349, 1343.81127, 1343.83905, 1343.86335, 1343.88766, 1343.91543, 1343.94321, 1343.97125, 1343.99877, 1344.02654, 1344.05432, 1344.0821, 1344.10988, 1344.13418, 1344.15849, 1344.18626, 1344.21404, 1344.24182, 1344.26925, 1344.2972, 1344.32515, 1344.35293, 1344.38062, 1344.40524, 1344.42923, 1344.45701, 1344.48478, 1344.51265, 1344.54051, 1344.56826, 1344.59598, 1344.62376, 1344.65171, 1344.67491, 1344.70066, 1344.72792, 1344.7557, 1344.78348, 1344.81125, 1344.83903, 1344.86681, 1344.89459, 1344.91889, 1344.9432, 1344.97097, 1344.99875, 1345.02653, 1345.0543, 1345.08208, 1345.10986, 1345.13764, 1345.16541, 1345.18972, 1345.21402, 1345.2418, 1345.26958, 1345.29736, 1345.32513, 1345.35291, 1345.38069, 1345.40847, 1345.43624, 1345.46055, 1345.48485, 1345.51263, 1345.54041, 1345.56819, 1345.59596, 1345.62374, 1345.65152, 1345.67929, 1345.70707, 1345.73138, 1345.75568, 1345.78346, 1345.81124, 1345.83901, 1345.86679, 1345.89457, 1345.92235, 1345.95012, 1345.9779, 1346.00221, 1346.02651, 1346.05429, 1346.08207, 1346.10984, 1346.13762, 1346.1654, 1346.19317, 1346.22095, 1346.24526, 1346.26956, 1346.29734, 1346.32512, 1346.35289, 1346.38067, 1346.40845, 1346.43623, 1346.46366, 1346.49178, 1346.51609, 1346.54039, 1346.56817, 1346.59595, 1346.62372, 1346.6515, 1346.67916, 1346.70705, 1346.73492, 1346.76261, 1346.78691, 1346.81122, 1346.83891, 1346.86677, 1346.89455, 1346.92224, 1346.95011, 1346.97788, 1347.00566, 1347.03344, 1347.05786, 1347.08205, 1347.10982, 1347.1376, 1347.16538, 1347.19298, 1347.22093, 1347.24871, 1347.27649, 1347.30418, 1347.32857, 1347.35253, 1347.38187, 1347.40843, 1347.43621, 1347.46459, 1347.4913, 1347.52006, 1347.54315, 1347.57535, 1347.59905, 1347.6237, 1347.65148, 1347.67926, 1347.70712, 1347.7244, 1347.76629, 1347.7862, 1347.81849, 1347.84245, 1347.86658, 1347.89453, 1347.92266, 1347.95009, 1347.97786, 1347.99835, 1348.08967, 1348.11675, 1348.13724, 1348.16606, 1348.19331, 1348.22092, 1348.24661, 1348.26987, 1348.32953, 1348.36189, 1348.38116, 1348.41161, 1348.43133, 1348.49203, 1348.51883, 1348.55424, 1348.57126, 1348.60771, 1348.62643, 1348.64383, 1348.7348, 1348.75632, 1348.80077, 1348.81917, 1348.83844, 1348.86552, 1348.90215, 1348.92623, 1348.94885, 1348.97507, 1349.01187, 1349.03757, 1349.05724, 1349.09351, 1349.11226, 1349.13722, 1349.20169, 1349.22151, 1349.23826, 1349.31152, 1349.33201, 1349.35987, 1349.38773, 1349.41551, 1349.43964, 1349.46395, 1349.49152, 1349.51976, 1349.54754, 1349.57497, 1349.60283, 1349.63061, 1349.65856, 1349.68599, 1349.71047, 1349.73478, 1349.76255, 1349.79033, 1349.81811, 1349.84589, 1349.87366, 1349.90144, 1349.92922, 1349.95699, 1349.9813, 1350.00561, 1350.03338, 1350.06116, 1350.08894, 1350.11671, 1350.14449, 1350.17227, 1350.20005, 1350.22435, 1350.24866, 1350.27643, 1350.30421, 1350.33199, 1350.35994, 1350.38754, 1350.41532, 1350.4431, 1350.47087, 1350.49518, 1350.51948, 1350.54726, 1350.57504, 1350.60282, 1350.63059, 1350.65837, 1350.68615, 1350.71392, 1350.7417, 1350.76601, 1350.79031, 1350.81809, 1350.84587, 1350.87364, 1350.90142, 1350.9292, 1350.95698, 1350.98467, 1351.01253, 1351.03683, 1351.06131, 1351.08892, 1351.11669, 1351.14447, 1351.17225, 1351.19985, 1351.2278, 1351.25549, 1351.28336], "flux": [1.000041, 1.000032, 1.000034, 0.999945, 0.999999, 0.999946, 0.999973, 1.000084, 1.000234, 1.000036, 1.000013, 0.999953, 0.999983, 1.000011, 0.99997, 1.000025, 1.000016, 0.999964, 0.999958, 0.999972, 0.999994, 0.999993, 0.999982, 1.000022, 1.000001, 0.999997, 0.999988, 0.999946, 1.000015, 1.000006, 1.000068, 1.000048, 1.000035, 0.999959, 0.999959, 1.000043, 0.999989, 1.000015, 1.000036, 1.000002, 0.99995, 0.999931, 1.0, 1.000013, 0.999984, 1.000015, 1.000003, 0.99996, 1.000019, 0.999963, 1.0, 0.999987, 0.999983, 1.000037, 1.000069, 0.99999, 1.000017, 1.000059, 0.999982, 0.999982, 1.0, 1.000004, 1.000029, 1.000012, 1.000045, 1.000013, 0.999955, 0.999949, 0.999951, 0.999983, 0.99997, 0.999929, 0.999956, 1.000003, 0.999948, 0.999965, 1.000033, 0.999987, 1.000011, 1.000017, 1.000036, 1.000002, 1.000042, 0.999967, 1.000028, 1.000054, 0.99999, 1.000001, 1.000025, 0.99997, 1.000014, 1.000001, 0.999941, 1.000023, 0.999971, 1.000037, 0.999902, 0.999972, 0.999955, 0.99996, 0.999993, 0.99994, 0.999984, 1.000052, 1.00006, 0.999993, 1.000037, 1.00002, 0.999963, 1.000017, 1.000011, 0.999995, 0.999995, 1.000016, 0.999996, 0.999996, 0.999996, 0.999965, 1.000004, 1.000013, 0.999972, 1.000008, 1.000047, 0.999944, 1.000009, 1.000009, 1.000007, 1.000025, 1.000064, 1.000028, 0.999991, 0.999946, 0.999968, 0.999988, 1.000045, 0.999975, 0.999978, 0.999997, 0.999976, 0.999943, 1.000011, 1.000007, 0.999974, 1.000004, 0.999991, 1.000077, 1.000042, 1.000016, 1.000001, 1.000016, 0.999987, 1.000013, 0.999988, 1.000017, 0.999975, 0.99998, 0.999984, 0.999959, 0.999986, 1.000025, 1.000082, 0.999961, 1.000009, 0.999917, 0.999991, 0.999998, 1.000012, 0.999972, 1.000031, 1.000013, 0.999981, 1.000034, 1.000026, 1.000068, 1.000047, 0.999985, 1.000075, 1.00003, 0.999986, 0.999743, 0.999779, 0.999746, 0.999723, 1.000056, 1.000056, 1.000011, 0.999993, 1.000073, 1.000011, 0.999973, 1.000031, 1.000041, 0.999957, 1.000004, 0.999978, 1.000016, 1.000065, 0.999973, 0.999981, 1.000011, 1.000026, 0.999981, 1.000024, 0.999986, 1.000003, 0.99999, 0.999983, 0.999991, 0.999983, 0.999995, 0.999987, 0.999948, 0.999972, 0.999994, 1.000028, 0.999974, 1.000043, 1.000034, 1.000071, 0.999985, 1.000015, 0.999958, 0.999989, 0.999948, 1.000053, 1.000046, 0.999963, 1.000027, 1.00001, 0.999928, 0.999994, 1.000001, 1.000015, 0.999996, 1.00001, 0.999992, 0.999988, 0.999963, 0.99994, 1.000018, 1.000038, 0.999968, 1.000045, 1.000054, 0.999989, 1.000026, 0.999991, 0.999989, 0.999936, 1.000023, 0.999974, 1.000008, 1.000003, 1.000034, 1.000032, 0.999996, 0.999994, 1.000005, 0.999951, 1.000016, 1.0, 0.999975, 1.000012, 0.999992, 0.999999, 1.000054, 1.000022, 0.999964, 0.999925, 0.999955, 1.000029, 1.000002, 1.000014, 1.000033, 1.000029, 0.999997, 0.999982, 1.000027, 1.000008, 1.000001, 1.000001, 1.000008, 0.999957, 0.999967, 0.999948, 0.999958, 0.999952, 0.999985, 1.000007, 1.000048, 1.000072, 1.000012, 1.000104, 1.000019, 0.999922, 1.000004, 1.000019, 0.99995, 0.999991, 0.999893, 1.000001, 0.999991, 0.999942, 0.999994, 0.99998, 0.999936, 0.999946, 1.00009, 1.000083, 0.999943, 1.000025, 0.999896, 0.99999, 0.999931, 0.999975, 0.999908, 0.999965, 0.999947, 1.000222, 0.999895, 0.999843, 0.999933, 0.99984, 0.999949, 0.999726, 1.000119, 0.999882, 0.999916, 0.999911, 1.000055, 0.999694, 1.000091, 0.999869, 0.999871, 0.999931, 0.999862, 1.00012, 1.000024, 1.000073, 0.999766, 1.000184, 1.000025, 1.000177, 0.999905, 0.999712, 0.999744, 0.9999, 0.99987, 0.999734, 1.000103, 0.99982, 0.999852, 1.000095, 0.999915, 0.999887, 1.000132, 1.000019, 1.000061, 0.999939, 0.999975, 0.999969, 1.000013, 1.000038, 1.000087, 0.999996, 1.000008, 0.999975, 1.000013, 0.999893, 0.999944, 0.999932, 0.999996, 0.999999, 0.999999, 1.000044, 1.000031, 1.000026, 0.999986, 0.999991, 1.000029, 1.000063, 1.000014, 0.99996, 1.000041, 1.000048, 0.999952, 0.999903, 0.999988, 0.999993, 1.000004, 0.999994, 0.999989, 1.000005, 0.999968, 0.999991, 0.999979, 1.000021, 1.0001, 1.000091, 1.000116, 1.000049, 1.000069, 0.999901, 0.999742, 0.999756, 0.999759, 0.999936, 1.00001, 1.000063, 1.000026, 0.999997, 1.00005, 1.000012, 1.000056, 1.000047, 1.000016, 0.999996, 0.999992, 1.000023, 1.000005, 0.999986, 0.999913, 0.999985, 1.000034, 0.999961, 0.999992, 0.999999, 1.000012, 1.000001, 0.999998, 1.000014]}}, "marks": {"tess-fa3483ce6f83": {"volunteer-sensitive": [[1325.4524017574265, 1325.5407337712481], [1331.717962775153, 1331.822295737961], [1332.1970907893278, 1332.2604290128568], [1338.016606330773, 1338.0731029522772]], "volunteer-typical": [[1325.4579654210158, 1325.5546365124633], [1331.74600889034, 1331.803957940854], [1337.9990695305332, 1338.0975488344557]], "volunteer-cautious": [[1325.4631826327702, 1325.530168420714], [1331.7238490778989, 1331.8102435006176], [1338.0058418117549, 1338.0953950665914]], "claude-volunteer": [[1325.3004326687799, 1325.55], [1331.72, 1331.9], [1337.97, 1338.15]], "claude-skeptic": [[1325.3004326687799, 1325.46], [1331.68, 1331.84], [1338.03, 1338.29]]}, "tess-04b815001aa6": {"volunteer-sensitive": [[1344.2499352082382, 1344.2841840093772], [1348.2250890711964, 1348.5888852960118], [1348.9229169114308, 1348.9553370933872], [1350.532361852053, 1350.6110905869143]], "volunteer-typical": [[1344.2451067076133, 1344.2786188993327], [1348.1774247456767, 1348.6292157899902], [1348.9182231522316, 1348.9467477534447], [1349.0611991399553, 1349.0956672649945], [1350.556628429054, 1350.6245155455056]], "volunteer-cautious": [[1344.249133333014, 1344.2792283869526], [1344.2825404505068, 1344.3659861758938], [1348.1072902532858, 1348.5675605117535], [1348.9168519267214, 1348.9546698926204], [1350.5505984768881, 1350.619229858928]], "claude-volunteer": [[1344.32, 1344.47], [1350.45, 1350.57]], "claude-skeptic": [[1344.2, 1344.34], [1350.38, 1350.51]]}}, "reviewerDecisions": {"tess-fa3483ce6f83": {"volunteer-sensitive": {"label": "potential_planet", "rationale": "simulated detector"}, "volunteer-typical": {"label": "potential_planet", "rationale": "simulated detector"}, "volunteer-cautious": {"label": "potential_planet", "rationale": "simulated detector"}, "claude-volunteer": {"label": "potential_planet", "rationale": "Three similar dips of about 0.0003 depth, each lasting a few hours, recur at roughly 6.3-day spacing (near 1325.4, 1331.8 and 1338.05). The first falls at the start of the data and the last at the end, so the shapes are only partly covered, but the repeat and the depth fit a transit."}, "claude-skeptic": {"label": "potential_planet", "rationale": "Three similar flat-bottomed dips about 250-300 ppm deep recur every ~6.3 days, and there is no alternating depth or secondary eclipse. The first and last dips sit at the edges of the data, so they are only partly covered, but the periodic repeat favours a transiting planet."}}, "tess-04b815001aa6": {"volunteer-sensitive": {"label": "potential_planet", "rationale": "simulated detector"}, "volunteer-typical": {"label": "potential_planet", "rationale": "simulated detector"}, "volunteer-cautious": {"label": "potential_planet", "rationale": "simulated detector"}, "claude-volunteer": {"label": "potential_planet", "rationale": "Two short, sharp drops of about 300 ppm are visible near 1344.4 and 1350.5, each lasting about 3 hours and each made up of several consecutive points. They could be transits, but the scatter is high and increases in the later part of the light curve, so they could also be instrumental."}, "claude-skeptic": {"label": "potential_planet", "rationale": "Two short, flat-bottomed dips of about 300 ppm at ~1344.27 and ~1350.45 (spacing ~6.2 d) have matching depth and duration, as expected for a periodic transit. Neither shows a V shape, a secondary eclipse, a ramp or a step, but the data around the second dip is scattered, so I am only moderately conf"}}}, "reviewers": {"volunteer-sensitive": "simulated", "volunteer-typical": "simulated", "volunteer-cautious": "simulated", "claude-volunteer": "claude_code", "claude-skeptic": "claude_code"}, "kpis": [["1", "light curves", null], ["2", "blind-coded subjects", null], ["10", "independent reviews", null], ["6", "consensus dips", null], ["6", "passed vetting", "var(--good)"]], "discovery": null}</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const C = {pass:'var(--good)', fail:'var(--bad)', flag:'var(--warn)', accent:'var(--accent)', teal:'var(--accent-2)', muted:'var(--muted)'};
+const LANES = ['#818cf8','#2dd4bf','#f59e0b','#f472b6','#60a5fa','#a3e635','#fb7185','#c084fc'];
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = (x, d=2) => (x === null || x === undefined || Number.isNaN(x)) ? '–' : Number(x).toFixed(d);
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs={}, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function statusOf(c){ if (c.passed === false) return 'fail'; if (c.flags && c.flags.length) return 'flag'; return 'pass'; }
+
+// ---------- KPIs ----------
+function renderKpis(){
+  const k = D.kpis, wrap = $('#kpis'); wrap.innerHTML = '';
+  for (const [v, label, color] of k){
+    const d = document.createElement('div'); d.className = 'card stat';
+    d.innerHTML = `<span style="${color?`color:${color}`:''}">${esc(v)}</span><small>${esc(label)}</small>`;
+    wrap.appendChild(d);
+  }
+}
+
+// ---------- candidate table ----------
+let state = {filter:'all', q:'', sort:'score', selected:null};
+function visibleCandidates(){
+  let rows = D.candidates.slice();
+  if (state.filter !== 'all') rows = rows.filter(c => statusOf(c) === state.filter);
+  if (state.q) { const q = state.q.toLowerCase(); rows = rows.filter(c => (c.candidate_id + ' ' + c.reviewers.join(' ') + ' ' + c.flags.join(' ')).toLowerCase().includes(q)); }
+  const key = {score:c=>-c.score, snr:c=>-c.snr, depth:c=>-c.depth_ppm, time:c=>c.t_center}[state.sort];
+  rows.sort((a,b) => key(a) - key(b));
+  return rows;
+}
+function renderTable(){
+  const rows = visibleCandidates(), body = $('#cands tbody');
+  body.innerHTML = '';
+  if (!rows.length){ body.innerHTML = `<tr><td colspan="7" class="empty">No candidates match this filter.</td></tr>`; return; }
+  for (const c of rows){
+    const tr = document.createElement('tr'); tr.className = 'row' + (state.selected === c.candidate_id ? ' sel' : '');
+    tr.dataset.id = c.candidate_id;
+    const st = statusOf(c);
+    tr.innerHTML = `<td>${esc(c.candidate_id)}</td>
+      <td>${fmt(c.t_center,3)}</td><td>${fmt(c.duration_hours)}</td><td>${fmt(c.depth_ppm,0)}</td>
+      <td>${fmt(c.snr,1)}</td><td>${fmt(c.score,2)}</td>
+      <td><span class="pill ${st==='pass'?'pass':st==='fail'?'fail':'flag'}">${st==='pass'?'passed':st==='fail'?'rejected':'flagged'}</span></td>`;
+    tr.addEventListener('click', () => { state.selected = c.candidate_id; renderTable(); renderDetail(); });
+    body.appendChild(tr);
+  }
+}
+
+// ---------- light curve with reviewer lanes ----------
+function lightcurve(c){
+  const subj = D.subjects[c.subject_id];
+  const W = 760, H = 380, pad = {l:64, r:14, t:14, b:34}, lanes = Object.keys(D.reviewers).length;
+  const svg = el('svg', {viewBox:`0 0 ${W} ${H}`, width:'100%', role:'img', 'aria-label':`Light curve for ${c.candidate_id}`});
+  if (!subj){ svg.appendChild(Object.assign(el('text',{x:10,y:20}), {textContent:'No plot data for this subject.'})); return svg; }
+  const x0 = subj.start, x1 = subj.end;
+  const ys = subj.flux.slice().sort((a,b)=>a-b);
+  const lo = ys[Math.floor(ys.length*0.005)], hi = ys[Math.floor(ys.length*0.995)];
+  const span = (hi - lo) || 1e-4, y0 = lo - 0.1*span, y1 = hi + 0.1*span;
+  const X = t => pad.l + (t - x0)/(x1 - x0) * (W - pad.l - pad.r);
+  const LANE_H = 14, lanesTop = H - pad.b - lanes*LANE_H - 6;
+  const Y = f => pad.t + (1 - (f - y0)/(y1 - y0)) * (lanesTop - pad.t - 4);
+  // consensus band
+  el('rect', {x:X(c.t_start), y:pad.t, width:Math.max(2, X(c.t_end)-X(c.t_start)), height:H-pad.t-pad.b, fill:'var(--accent)', opacity:0.12}, svg);
+  // axes
+  for (let i=0;i<=4;i++){ const f = y0 + (y1-y0)*i/4, y = Y(f);
+    el('line', {x1:pad.l, x2:W-pad.r, y1:y, y2:y, class:'axis'}, svg);
+    const tx = el('text', {x:pad.l-6, y:y+4, 'text-anchor':'end'}, svg); tx.textContent = (f).toFixed(4); }
+  for (let i=0;i<=4;i++){ const t = x0 + (x1-x0)*i/4, x = X(t);
+    const tx = el('text', {x:x, y:H-pad.b+16, 'text-anchor':'middle'}, svg); tx.textContent = t.toFixed(2); }
+  const lbl = el('text', {x:W/2, y:H-4, 'text-anchor':'middle'}, svg); lbl.textContent = `time (${subj.time_unit})`;
+  // flux path, downsampled to pixels
+  let d = '';
+  for (let i=0;i<subj.time.length;i++){ d += (i?'L':'M') + X(subj.time[i]).toFixed(1) + ',' + Y(subj.flux[i]).toFixed(1); }
+  el('path', {d, fill:'none', stroke:'var(--ink)', 'stroke-width':1, opacity:0.75}, svg);
+  // reviewer lanes
+  const names = Object.keys(D.reviewers);
+  names.forEach((name, li) => {
+    const colour = LANES[li % LANES.length], yl = lanesTop + li*LANE_H;
+    const lab = el('text', {x:pad.l-6, y:yl+10, 'text-anchor':'end', fill:colour}, svg); lab.textContent = name.length > 12 ? name.slice(0,11)+'…' : name;
+    el('line', {x1:pad.l, x2:W-pad.r, y1:yl+LANE_H/2, y2:yl+LANE_H/2, class:'axis', opacity:0.4}, svg);
+    for (const m of (D.marks[c.subject_id]?.[name] || [])){
+      const w = Math.max(3, X(m[1])-X(m[0]));
+      const r = el('rect', {x:X(m[0]), y:yl+2, width:w, height:LANE_H-4, rx:3, fill:colour, opacity:0.9}, svg);
+      el('title', {}, r).textContent = `${name}: ${fmt(m[0],3)} to ${fmt(m[1],3)}`;
+    }
+  });
+  // consensus edges
+  for (const t of [c.t_start, c.t_end]) el('line', {x1:X(t), x2:X(t), y1:pad.t, y2:H-pad.b, stroke:'var(--accent)', 'stroke-dasharray':'3 3'}, svg);
+  return svg;
+}
+
+function renderDetail(){
+  const box = $('#detail');
+  const c = D.candidates.find(x => x.candidate_id === state.selected);
+  if (!c){ box.innerHTML = `<div class="empty">Select a candidate to see its light curve, the panel's marks and the vetting decision.</div>`; return; }
+  const st = statusOf(c);
+  box.innerHTML = `
+    <h3>${esc(c.candidate_id)}</h3>
+    <span class="pill ${st==='pass'?'pass':st==='fail'?'fail':'flag'}">${st==='pass'?'passed vetting':st==='fail'?'rejected':'passed, flagged'}</span>
+    ${(c.flags||[]).map(f=>`<span class="pill flag">${esc(f)}</span>`).join('')}
+    <div class="legend" id="lg"></div>
+    <div id="lc"></div>
+    <div class="kv" style="margin-top:12px">
+      <div>Mid-time</div><div>${fmt(c.t_center,3)} ${esc(c.time_unit)}</div>
+      <div>Duration</div><div>${fmt(c.duration_hours)} h</div>
+      <div>Depth</div><div>${fmt(c.depth_ppm,0)} ppm</div>
+      <div>SNR</div><div>${fmt(c.snr,1)}</div>
+      <div>Panel score</div><div>${fmt(c.score,2)} (${c.n_reviewers} reviewers marked it)</div>
+      <div>Says planet</div><div>${fmt(c.planet_fraction*100,0)}% of weighted panel</div>
+      <div>Periodic hint</div><div>${c.period_days ? fmt(c.period_days,3)+' d, '+c.n_transits+' transits' : 'none'}</div>
+    </div>`;
+  const lg = $('#lg', box);
+  lg.innerHTML = `<span><i style="background:var(--accent);opacity:.35"></i>consensus interval</span>` +
+    Object.keys(D.reviewers).map((n,li)=>`<span><i style="background:${LANES[li%LANES.length]}"></i>${esc(n)}</span>`).join('');
+  $('#lc', box).appendChild(lightcurve(c));
+  const rv = D.marks[c.subject_id] || {};
+  const rows = Object.keys(D.reviewers).map(n => {
+    const info = (D.reviewerDecisions[c.subject_id] || {})[n];
+    if (!info) return '';
+    return `<tr><td>${esc(n)}</td><td>${esc(info.label.replace(/_/g,' '))}</td><td>${(rv[n]||[]).length}</td><td class="note">${esc(info.rationale||'')}</td></tr>`;
+  }).join('');
+  box.insertAdjacentHTML('beforeend', `<h3 style="margin-top:16px">Panel decisions for this subject</h3>
+    <div class="scroll"><table><thead><tr><th>reviewer</th><th>label</th><th>marks</th><th>rationale</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+}
+
+// ---------- charts ----------
+function scatter(){
+  const W=560,H=300,pad={l:50,r:14,t:12,b:34}, box=$('#c-scatter'); box.innerHTML='';
+  const pts = D.candidates; if (!pts.length){ box.innerHTML='<div class="empty">No candidates yet.</div>'; return; }
+  const sx=Math.max(...pts.map(p=>p.snr))*1.05;
+  const dmin=Math.min(...pts.map(p=>p.depth_ppm))*0.8, dmax=Math.max(...pts.map(p=>p.depth_ppm))*1.2;
+  const lo=Math.log10(dmin), hi=Math.log10(dmax);
+  const X=v=>pad.l+v/sx*(W-pad.l-pad.r), Y=v=>pad.t+(1-(Math.log10(v)-lo)/(hi-lo))*(H-pad.t-pad.b);
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,width:'100%'},box);
+  for(let i=0;i<=4;i++){ const yv=Math.pow(10, lo+(hi-lo)*i/4), xv=sx*i/4;
+    el('line',{x1:pad.l,x2:W-pad.r,y1:Y(yv),y2:Y(yv),class:'axis'},svg);
+    el('text',{x:pad.l-6,y:Y(yv)+4,'text-anchor':'end'},svg).textContent=Math.round(yv);
+    el('text',{x:X(xv),y:H-pad.b+16,'text-anchor':'middle'},svg).textContent=xv.toFixed(0); }
+  el('text',{x:W/2,y:H-4,'text-anchor':'middle'},svg).textContent='SNR';
+  el('text',{x:12,y:H/2,transform:`rotate(-90 12 ${H/2})`,'text-anchor':'middle'},svg).textContent='depth (ppm, log)';
+  for(const p of pts){ const s=statusOf(p);
+    const c=el('circle',{cx:X(p.snr),cy:Y(p.depth_ppm),r:6,fill:C[s],opacity:.8,stroke:'var(--panel)','stroke-width':1.5,style:'cursor:pointer'},svg);
+    const t=el('title',{},c); t.textContent=`${p.candidate_id}: ${fmt(p.depth_ppm,0)} ppm, SNR ${fmt(p.snr,1)}`;
+    c.addEventListener('click',()=>{state.selected=p.candidate_id;renderTable();renderDetail();}); }
+}
+function histogram(){
+  const W=560,H=260,pad={l:40,r:14,t:12,b:34}, box=$('#c-hist'); box.innerHTML='';
+  const bins=10, counts=Array(bins).fill(0);
+  for(const p of D.candidates){ counts[Math.min(bins-1, Math.floor(p.score*bins))]++; }
+  const m=Math.max(1,...counts), svg=el('svg',{viewBox:`0 0 ${W} ${H}`,width:'100%'},box);
+  const bw=(W-pad.l-pad.r)/bins;
+  counts.forEach((n,i)=>{ const h=(H-pad.t-pad.b)*n/m, x=pad.l+i*bw;
+    el('rect',{x:x+3,y:H-pad.b-h,width:bw-6,height:h,rx:4,fill:'var(--accent)',opacity:.85},svg);
+    if(n) el('text',{x:x+bw/2,y:H-pad.b-h-4,'text-anchor':'middle'},svg).textContent=n;
+    el('text',{x:x+bw/2,y:H-pad.b+16,'text-anchor':'middle'},svg).textContent=(i/bins).toFixed(1); });
+  el('text',{x:W/2,y:H-4,'text-anchor':'middle'},svg).textContent='consensus score';
+}
+function agreement(){
+  const box=$('#c-agree'); box.innerHTML='';
+  const names=Object.keys(D.reviewers), subs=Object.keys(D.reviewerDecisions);
+  if(!subs.length){ box.innerHTML='<div class="empty">No subjects reviewed.</div>'; return; }
+  let html='<div class="scroll"><table class="heat"><thead><tr><th>subject</th>'+names.map(n=>`<th>${esc(n)}</th>`).join('')+'</tr></thead><tbody>';
+  for(const s of subs){
+    html+=`<tr><td style="text-align:left">${esc(s)}</td>`;
+    for(const n of names){ const info=(D.reviewerDecisions[s]||{})[n]; const k=(D.marks[s]||{})[n]||[];
+      if(!info){ html+='<td>–</td>'; continue; }
+      const planet=info.label==='potential_planet';
+      const bg=planet?'color-mix(in srgb,var(--good) '+(k.length?'55':'20')+'%,transparent)':'color-mix(in srgb,var(--bad) 18%,transparent)';
+      html+=`<td style="background:${bg}">${planet?'planet':'noise'}<br><span class="note">${k.length} marks</span></td>`; }
+    html+='</tr>'; }
+  box.innerHTML=html+'</tbody></table></div>';
+}
+
+// ---------- discovery feed ----------
+function discovery(){
+  const F = D.discovery; if (!F){ $('#disc').style.display='none'; return; }
+  const box=$('#c-timeline'); box.innerHTML='';
+  const W=560,H=260,pad={l:46,r:14,t:12,b:34};
+  const rows=F.candidates; if(!rows.length){ box.innerHTML='<div class="empty">No discovery candidates yet.</div>'; }
+  else {
+    const tmin=Math.min(...rows.map(r=>r.t_center)), tmax=Math.max(...rows.map(r=>r.t_center));
+    const tics=[...new Set(rows.map(r=>r.tic))].sort((a,b)=>a-b), ti=new Map(tics.map((t,i)=>[t,i]));
+    const X=t=>pad.l+(t-tmin)/((tmax-tmin)||1)*(W-pad.l-pad.r), Y=tic=>pad.t+ti.get(tic)/Math.max(1,tics.length-1)*(H-pad.t-pad.b);
+    const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,width:'100%'},box);
+    tics.forEach(t=>{ el('line',{x1:pad.l,x2:W-pad.r,y1:Y(t),y2:Y(t),class:'axis'},svg); el('text',{x:pad.l-6,y:Y(t)+4,'text-anchor':'end'},svg).textContent=t; });
+    for(const r of rows){ const c=el('circle',{cx:X(r.t_center),cy:Y(r.tic),r:Math.max(4,Math.min(12,Math.sqrt(r.snr)*1.6)),fill:r.status==='new_candidate'?'var(--accent-2)':'var(--muted)',opacity:.8},svg);
+      el('title',{},c).textContent=`TIC ${r.tic} at ${fmt(r.t_center,2)} BTJD, SNR ${fmt(r.snr,1)}, ${r.status}`; }
+    el('text',{x:W/2,y:H-4,'text-anchor':'middle'},svg).textContent='mid-time (BTJD), colour = status';
+  }
+  const bs=$('#c-status'); bs.innerHTML='';
+  const groups=[['new candidate',F.candidates.filter(r=>r.status==='new_candidate').length,'var(--accent-2)'],['known TOI match',F.candidates.filter(r=>r.status==='known_toi').length,'var(--muted)']];
+  const total=Math.max(1,groups.reduce((a,g)=>a+g[1],0));
+  bs.innerHTML = groups.map(([l,n,c])=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><span>${l}</span><span>${n}</span></div><div class="bar"><i style="width:${(n/total*100).toFixed(0)}%;background:${c}"></i></div></div>`).join('') +
+    `<p class="note">${F.targets_reviewed} targets reviewed in total. Every entry is an unconfirmed candidate.</p>`;
+}
+
+// ---------- wiring ----------
+function setup(){
+  renderKpis();
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); t.classList.add('on');
+    state.filter = t.dataset.f; renderTable(); }));
+  $('#q').addEventListener('input', e => { state.q = e.target.value; renderTable(); });
+  $('#sort').addEventListener('change', e => { state.sort = e.target.value; renderTable(); });
+  renderTable(); renderDetail(); scatter(); histogram(); agreement(); discovery();
+  const first = visibleCandidates()[0]; if (first){ state.selected = first.candidate_id; renderTable(); renderDetail(); }
+}
+setup();
+</script>
+</body></html>

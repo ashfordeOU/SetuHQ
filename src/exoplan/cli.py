@@ -123,6 +123,14 @@ def cmd_discover(args) -> int:
     return 0
 
 
+def cmd_dashboard(args) -> int:
+    from exoplan.dashboard import build_dashboard
+
+    path = build_dashboard(args.run_dir, args.out, title=args.title, catalog_path=args.catalog)
+    print(f"dashboard written to {path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="exoplan", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -166,6 +174,13 @@ def build_parser() -> argparse.ArgumentParser:
     discover.add_argument("--work-dir", default="runs/discovery")
     discover.add_argument("--cache", default="cache")
     discover.set_defaults(func=cmd_discover)
+
+    dash = sub.add_parser("dashboard", help="build the interactive dashboard from a run and optional discovery catalogue")
+    dash.add_argument("run_dir")
+    dash.add_argument("--out", required=True)
+    dash.add_argument("--title", default="exoplan dashboard")
+    dash.add_argument("--catalog", help="discovery catalogue JSON to include")
+    dash.set_defaults(func=cmd_dashboard)
 
     report = sub.add_parser("report", help="build a static HTML report site from a run directory")
     report.add_argument("run_dir")
