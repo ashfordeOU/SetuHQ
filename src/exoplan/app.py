@@ -239,8 +239,15 @@ FRAME_BRIDGE_JS = r"""
   var P = window.parent, SECS = ['strip', 'signal', 'ctx', 'cmp', 'ledger', 'rev'], lastSec = null, timer = null;
   function selected(){ try { return typeof state !== 'undefined' ? state.selected : null; } catch (e) { return null; } }
   function send(m){ m.source = 'exoplan-docket'; m.dip = m.dip || selected(); try { P.postMessage(m, '*'); } catch (e) {} }
+  // A srcdoc frame cannot change its own URL (replaceState throws a SecurityError). The Docket
+  // catches that itself, so the wrapper swallows it too, and the dip is reported either way.
   var replace = history.replaceState;
-  history.replaceState = function(){ var r = replace.apply(this, arguments); send({kind: 'dip'}); return r; };
+  history.replaceState = function(){
+    var r, failed = false;
+    try { r = replace.apply(this, arguments); } catch (e) { failed = true; }
+    send({kind: 'dip', urlFailed: failed});
+    return r;
+  };
   function scroller(el){
     for (var p = el.parentElement; p && p !== document.body && p !== document.documentElement; p = p.parentElement){
       var s = getComputedStyle(p); if (/(auto|scroll)/.test(s.overflowY) && p.scrollHeight > p.clientHeight) return p;
@@ -283,9 +290,22 @@ FRAME_BRIDGE_JS = r"""
 """
 
 
+# Also only in the shell's copy: on a phone-width frame the Docket's small controls become 44 px
+# targets (min-height and padding, same font size). The standalone Docket page is unchanged.
+FRAME_PHONE_CSS = (
+    "@media (max-width:700px){"
+    ".dipbtn,.chip,.listtoggle{min-height:44px;padding:10px 12px;box-sizing:border-box}"
+    ".sectoggle{min-height:44px;padding:12px 0;box-sizing:border-box}"
+    "}"
+)
+
+
 def with_frame_bridge(docket_html: str) -> str:
-    """The Docket page with :data:`FRAME_BRIDGE_JS` in its head; it does nothing outside a frame."""
-    return docket_html.replace("</head>", f"<script>{FRAME_BRIDGE_JS}</script></head>", 1)
+    """The Docket page with :data:`FRAME_PHONE_CSS` and :data:`FRAME_BRIDGE_JS` in its head.
+
+    The bridge does nothing outside a frame; the phone rule applies to this copy only."""
+    return docket_html.replace(
+        "</head>", f"<style>{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script></head>", 1)
 
 
 def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
@@ -510,7 +530,7 @@ details.cfg>summary{padding:12px 16px;font-weight:600}
 details.cfg>div{padding:0 16px 14px;display:grid;gap:14px}
 .frametools{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px}
 pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;background:var(--sel);padding:6px 8px;border-radius:4px}
-.frame{width:100%;height:calc(100vh - 190px);min-height:520px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);display:block}
+.frame{width:100%;height:calc(100vh - 190px);height:calc(100vh - var(--frame-offset, 190px));min-height:520px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);display:block}
 .frame[hidden]{display:none}
 .drawerclose{display:none}
 .topfull{display:none}
@@ -756,7 +776,9 @@ const DOCKET_SECTIONS = ['strip', 'signal', 'ctx', 'cmp', 'ledger', 'rev'];
 // in view by postMessage, and takes the same from the shell, so the address bar follows the frame.
 const BLOCKED_TEXT = 'The dossier could not load in this view.';
 let docketBlob = null;
-const frame = {ready: false, mode: null, dip: null, section: null, pending: null, crossOrigin: false, timer: null, gen: 0};
+const LOADING_TEXT = 'Loading the Docket…';
+const frame = {ready: false, mode: null, dip: null, section: null, pending: null, crossOrigin: false, timer: null, gen: 0,
+  frameURLFailed: false, shellURLFailed: false};
 function docketURL(dip){
   try { if (!docketBlob) docketBlob = URL.createObjectURL(new Blob([D.docket_html], {type: 'text/html'})); } catch (e) { docketBlob = null; }
   return docketBlob ? docketBlob + (dip ? '#' + encodeURIComponent(dip) : '') : null;
@@ -768,7 +790,10 @@ function syncShellURL(){
   setFullHrefs(frame.dip);
   if (current !== 'candidates') return;
   const h = '#/candidates' + (frame.dip ? `?dip=${encodeURIComponent(frame.dip)}${frame.section ? '&section=' + frame.section : ''}` : '');
-  if (location.hash !== h){ try { history.replaceState(null, '', h); } catch (e) { /* the frame still shows the dip */ } }
+  if (location.hash !== h){
+    try { history.replaceState(null, '', h); frame.shellURLFailed = false; } catch (e) { frame.shellURLFailed = true; }
+    if (frame.ready) readyStatus();
+  }
 }
 function tellFrame(dip, section){
   if (dip) { frame.dip = dip; frame.section = section || null; }
@@ -776,11 +801,29 @@ function tellFrame(dip, section){
   try { $('#docketframe').contentWindow.postMessage({source: 'exoplan-shell', dip, section}, '*'); } catch (e) { /* frame gone */ }
   syncShellURL();
 }
-function frameStatus(text){ const s = $('#framestatus'); s.textContent = text || ''; s.hidden = !text; }
+function frameStatus(text){ const s = $('#framestatus'); s.textContent = text || ''; s.hidden = !text; fitFrame(); }
+// The status line once the Docket is showing: say when an address cannot follow the selected dip.
+function readyStatus(){
+  frameStatus(frame.shellURLFailed ? 'Address bar not updated in this view. Open full page goes to the selected dip.'
+    : frame.crossOrigin ? 'The Docket runs in a separate origin here (as when this page is opened from a file), so this view follows it by messages only. If the address bar stops following the selected dip, use Open full page.'
+    : frame.frameURLFailed ? 'Address bar not updated inside the Docket in this view (a fallback frame cannot change its own address). The address bar above and Open full page follow the selected dip by messages.'
+    : '');
+}
+// Desktop: the frame takes the viewport height less what sits above it (the route header, the tools,
+// the status line) and the page's bottom padding, so the page itself does not scroll.
+// The CSS keeps calc(100vh - 190px) as the fallback until this has run.
+function fitFrame(){
+  const f = $('#docketframe');
+  if (!f || f.hidden || $('#route-candidates').hidden || matchMedia('(max-width:699.98px)').matches) return;
+  const top = f.getBoundingClientRect().top + window.scrollY;
+  const below = parseFloat(getComputedStyle($('#main')).paddingBottom) || 0;
+  document.documentElement.style.setProperty('--frame-offset', Math.ceil(top + below) + 'px');
+}
 function showBlocked(){
   clearTimeout(frame.timer);
   const f = $('#docketframe'); f.hidden = true;
   $('#frameblocked').hidden = false; frameStatus('');
+  document.documentElement.style.removeProperty('--frame-offset');
   setFullHrefs(frame.dip);
   say(BLOCKED_TEXT + ' Open it on its own page.');
 }
@@ -792,7 +835,7 @@ function onFrameReady(m){
   frame.ready = true; clearTimeout(frame.timer);
   const f = $('#docketframe'); f.hidden = false; $('#frameblocked').hidden = true;
   try { void f.contentWindow.document.body; frame.crossOrigin = false; } catch (e) { frame.crossOrigin = true; }
-  frameStatus(frame.crossOrigin ? 'The Docket runs in a separate origin here (as when this page is opened from a file), so this view follows it by messages only. If the address bar stops following the selected dip, use Open full page.' : '');
+  readyStatus();
   const p = frame.pending; frame.pending = null;
   if (p && ((p.dip && p.dip !== m.dip) || p.section)) tellFrame(p.dip, p.section);
   else { frame.dip = m.dip || frame.dip; syncShellURL(); }
@@ -800,24 +843,29 @@ function onFrameReady(m){
 window.addEventListener('message', e => {
   const f = $('#docketframe'), m = e.data;
   if (!f || e.source !== f.contentWindow || !m || m.source !== 'exoplan-docket') return;
+  if (m.urlFailed) frame.frameURLFailed = true;
   if (m.kind === 'ready'){ onFrameReady(m); return; }
   if (!frame.ready) return;  // the Docket's own first pick, before the shell's dip is applied
   if (m.kind === 'dip' && m.dip){ if (m.dip !== frame.dip) frame.section = null; frame.dip = m.dip; }
   else if (m.kind === 'section'){ frame.section = DOCKET_SECTIONS.includes(m.section) ? m.section : null; if (m.dip) frame.dip = m.dip; }
   syncShellURL();
+  if (m.urlFailed) readyStatus();
 });
 function loadDocket(dip, section, mode){
   const f = $('#docketframe'), url = mode === 'srcdoc' ? null : docketURL(dip), gen = ++frame.gen;
-  Object.assign(frame, {ready: false, mode: url ? 'blob' : 'srcdoc', dip, section: section || null, pending: {dip, section: section || null}});
+  Object.assign(frame, {ready: false, mode: url ? 'blob' : 'srcdoc', dip, section: section || null, pending: {dip, section: section || null},
+    frameURLFailed: false});
   f.hidden = false; $('#frameblocked').hidden = true;
+  frameStatus(LOADING_TEXT);
   clearTimeout(frame.timer);
   // A frame that never reports ready did not load (blocked by frame-src, say): try srcdoc, then say so.
-  frame.timer = setTimeout(() => frameLoadFailed(gen), 6000);
+  // The srcdoc copy needs no fetch, so its wait is shorter.
+  frame.timer = setTimeout(() => frameLoadFailed(gen), url ? 3000 : 1500);
   const onload = () => {
     let blank = false;
     try { blank = f.contentWindow.location.href === 'about:blank'; } catch (e) { /* cross-origin: an error page or file:// */ }
     if (blank) { f.addEventListener('load', onload, {once: true}); return; }
-    setTimeout(() => frameLoadFailed(gen), 1200);
+    setTimeout(() => frameLoadFailed(gen), 800);
   };
   f.addEventListener('load', onload, {once: true});
   if (url){ f.removeAttribute('srcdoc'); f.src = url; } else { f.removeAttribute('src'); f.srcdoc = D.docket_html; }
@@ -1064,6 +1112,7 @@ function show(r, moveFocus){
   else if (!rendered.has(r)){ RENDER[r](); rendered.add(r); }
   else if (r === 'discoveries') renderDiscCharts(false);
   if (moveFocus){ const h = $('#route-' + r + ' h1'); if (h) h.focus({preventScroll: true}); window.scrollTo(0, 0); }
+  if (r === 'candidates') fitFrame();
 }
 function go(p, moveFocus){
   const changed = p.route !== current;
@@ -1129,7 +1178,8 @@ $$('.nav a').forEach(a => a.addEventListener('click', () => { if (a.getAttribute
 setDrawerRole();
 if (drawerMQ.addEventListener) drawerMQ.addEventListener('change', () => { closeDrawer(false); setDrawerRole(); });
 let rt = null;
-window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!$('#route-discoveries').hidden) renderDiscCharts(false); }, 120); });
+window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!$('#route-discoveries').hidden) renderDiscCharts(false); fitFrame(); }, 120); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitFrame);  // web fonts can rewrap the header
 go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()}, false);
 """
 

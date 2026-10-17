@@ -11,6 +11,7 @@ from exoplan.app import (
     APP_CSS,
     APP_JS,
     FRAME_BRIDGE_JS,
+    FRAME_PHONE_CSS,
     DEFAULT_SIZE,
     NO_DETECTION,
     NO_STELLAR_RADIUS,
@@ -373,7 +374,9 @@ def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path
     assert FRAME_BRIDGE_JS in docket_html and docket_html.index(FRAME_BRIDGE_JS) < docket_html.index("</head>")
     standalone = docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t"))
     assert FRAME_BRIDGE_JS not in standalone and "postMessage" not in standalone
-    assert docket_html.replace(f"<script>{FRAME_BRIDGE_JS}</script>", "") == docket_mod.docket_page(
+    assert FRAME_PHONE_CSS not in standalone
+    injected = f"<style>{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script>"
+    assert docket_html.replace(injected, "") == docket_mod.docket_page(
         docket_mod.docket_data(run_dir, title="t · candidates"))
     # The bridge reports every selection (the Docket selects by history.replaceState) and section anchors.
     assert "if (window.parent === window) return;" in FRAME_BRIDGE_JS
@@ -400,7 +403,9 @@ def test_blocked_frame_shows_a_message_and_a_link(run_dir, tmp_path):
     assert "loadDocket(frame.dip, frame.section, 'srcdoc')" in failed and "showBlocked()" in failed
     blocked = re.search(r"function showBlocked\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "f.hidden = true" in blocked and "$('#frameblocked').hidden = false" in blocked
-    assert "setTimeout(() => frameLoadFailed(gen), 6000)" in APP_JS
+    # About three seconds for the blob frame, then a shorter wait for the srcdoc copy, which needs no fetch.
+    assert "setTimeout(() => frameLoadFailed(gen), url ? 3000 : 1500)" in APP_JS
+    assert "6000" not in APP_JS
     assert ".frame[hidden]{display:none}" in APP_CSS
 
 
@@ -469,3 +474,70 @@ console.log(JSON.stringify([noDossierLine([{candidate_id: 'x'}, {candidate_id: '
     assert all_linked == ""
     assert "No dossier stored for 1 of these rows in this run" in some
     assert "${noDossierLine(rows)}</caption>" in APP_JS
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_bridge_reports_the_dip_even_when_replace_state_throws():
+    # A srcdoc frame: replaceState throws a SecurityError. The dip is still reported, flagged.
+    script = """
+    const sent = [];
+    const parent = {postMessage: m => sent.push(m)};
+    global.window = {parent, addEventListener(){}, innerHeight: 800, scrollY: 0};
+    global.document = {addEventListener(){}, getElementById(){ return null; }};
+    global.location = {hash: ''};
+    global.state = {selected: 'D-1'};
+    let mode = 'throw';
+    global.history = {replaceState(){ if (mode === 'throw') { const e = new Error('blocked'); e.name = 'SecurityError'; throw e; } return 'ok'; }};
+    """ + FRAME_BRIDGE_JS + """
+    let threw = false;
+    try { history.replaceState(null, '', '#D-2'); } catch (e) { threw = true; }
+    mode = 'ok';
+    const r = history.replaceState(null, '', '#D-3');
+    console.log(JSON.stringify({sent, threw, r}));
+    """
+    out = json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
+    assert out["threw"] is False and out["r"] == "ok"
+    assert [m["kind"] for m in out["sent"]] == ["dip", "dip"]
+    assert out["sent"][0]["urlFailed"] is True and out["sent"][0]["dip"] == "D-1"
+    assert out["sent"][1]["urlFailed"] is False
+    # The shell names the failure in the frame status line.
+    listener = re.search(r"window.addEventListener\('message', e => \{.*?\n\}\);\n", APP_JS, re.S).group(0)
+    assert "if (m.urlFailed) frame.frameURLFailed = true;" in listener and "readyStatus()" in listener
+    status = re.search(r"function readyStatus\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "Address bar not updated in this view." in status and "frame.frameURLFailed" in status
+    assert "frame.shellURLFailed = true" in APP_JS
+
+
+def test_frame_shows_a_loading_status_while_it_loads():
+    load = re.search(r"function loadDocket\(dip, section, mode\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "frameStatus(LOADING_TEXT);" in load
+    assert "const LOADING_TEXT = 'Loading the Docket…';" in APP_JS
+    # Once ready, the loading line is replaced (cleared, or a note on the frame's origin or address).
+    ready = re.search(r"function onFrameReady\(m\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "readyStatus();" in ready
+
+
+def test_phone_rule_in_the_framed_docket_makes_44px_targets(run_dir, tmp_path):
+    assert FRAME_PHONE_CSS.startswith("@media (max-width:700px){")
+    rules = dict(re.findall(r"([^{}]+)\{([^{}]*)\}", FRAME_PHONE_CSS[FRAME_PHONE_CSS.index("{") + 1:]))
+    covered = {sel.strip(): body for sels, body in rules.items() for sel in sels.split(",")}
+    for cls in (".dipbtn", ".chip", ".sectoggle", ".listtoggle"):
+        assert "min-height:44px" in covered[cls] and "padding:" in covered[cls], cls
+        assert "font-size" not in covered[cls]
+    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    docket_html = _page_data(page)["docket_html"]
+    head = docket_html[:docket_html.index("</head>")]
+    # After the Docket's own styles, so it wins at equal specificity.
+    assert head.rindex(FRAME_PHONE_CSS) > head.index(".dipbtn{")
+
+
+def test_desktop_frame_height_is_fitted_from_the_measured_header():
+    frame_rule = re.search(r"\.frame\{[^}]*\}", APP_CSS).group(0)
+    # The CSS fallback first, then the measured offset with the same fallback value.
+    assert "height:calc(100vh - 190px);height:calc(100vh - var(--frame-offset, 190px))" in frame_rule
+    fit = re.search(r"function fitFrame\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "f.getBoundingClientRect().top + window.scrollY" in fit and "paddingBottom" in fit
+    assert "setProperty('--frame-offset'" in fit and "(max-width:699.98px)" in fit
+    resize = re.search(r"window.addEventListener\('resize'.*", APP_JS).group(0)
+    assert "fitFrame()" in resize
+    assert "fitFrame();" in re.search(r"function frameStatus\(text\)\{.*", APP_JS).group(0)
