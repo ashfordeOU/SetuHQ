@@ -26,6 +26,9 @@ class RunConfig:
     min_points: int = 300
     bin_minutes: float = 10.0
     detrend_window_days: float = 1.0
+    # "subject": BLS runs on each subject alone (periods up to half a subject).
+    # "sector": BLS runs once per target on all its sectors stitched together.
+    search: str = "subject"
     min_period: float = 0.5
     cluster_gap_days: float = 0.05
     min_score: float = 0.5
@@ -45,6 +48,9 @@ def load_config(path: str | Path) -> RunConfig:
     run = raw.get("run", {})
     search = raw.get("search", {})
     aggregate = raw.get("aggregate", {})
+    search_scope = str(run.get("search", "subject")).lower()
+    if search_scope not in ("subject", "sector"):
+        raise ValueError(f"run.search must be 'subject' or 'sector', not {search_scope!r}")
     targets = tuple(
         TargetConfig(
             mission=str(t["mission"]).upper(),
@@ -60,6 +66,7 @@ def load_config(path: str | Path) -> RunConfig:
         min_points=int(run.get("min_points", 300)),
         bin_minutes=float(run.get("bin_minutes", 10.0)),
         detrend_window_days=float(run.get("detrend_window_days", 1.0)),
+        search=search_scope,
         min_period=float(search.get("min_period", 0.5)),
         cluster_gap_days=float(aggregate.get("cluster_gap_days", 0.05)),
         min_score=float(aggregate.get("min_score", 0.5)),

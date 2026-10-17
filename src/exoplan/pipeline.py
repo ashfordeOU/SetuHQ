@@ -32,7 +32,7 @@ from exoplan.preprocess import bin_lightcurve, clean, detrend
 from exoplan.render import render_subject
 from exoplan.reviewers.base import Classification
 from exoplan.reviewers.claude import PROMPT_VERSION, ReviewError
-from exoplan.search import PeriodicSignal, bls_search
+from exoplan.search import PeriodicSignal, bls_search, stitch
 from exoplan.store import Store
 from exoplan.subjects import Subject, split_subjects
 from exoplan.vet import VettingResult, measure_epochs, vet_event
@@ -58,8 +58,8 @@ class Candidate:
     n_transits: int = 0
     metrics: dict = field(default_factory=dict)
     candidate_id: str = ""
-    # BLS ephemeris of the subject's periodic signal, set only when it covers this dip.
-    # Like period_days, these are per subject, not per sector.
+    # BLS ephemeris of the periodic signal, set only when it covers this dip.
+    # Per subject by default; per target over all stitched sectors when search_scope is "sector".
     bls_t0: float | None = None
     bls_duration_days: float | None = None
     # Stored per-epoch measurements at each BLS-predicted epoch inside the subject.
@@ -70,6 +70,7 @@ class Candidate:
     # the counting rule they were judged by. Reported, not used to count.
     mark_audit: tuple = ()
     count_rule: dict = field(default_factory=dict)
+    search_scope: str = "subject"
 
     @property
     def t_center(self) -> float:
@@ -99,14 +100,37 @@ class RunSummary:
     candidates: list[Candidate] = field(default_factory=list)
 
 
-def prepare_subjects(lightcurves: list[LightCurve], config: RunConfig) -> list[Subject]:
-    subjects: list[Subject] = []
+def prepare_lightcurves(lightcurves: list[LightCurve], config: RunConfig) -> list[LightCurve]:
+    """Clean, normalise, detrend and bin each light curve (each sector on its own)."""
+    out = []
     for lc in lightcurves:
         cleaned = clean(lc)
+        level = float(np.median(cleaned.flux)) if len(cleaned) else 1.0
+        if np.isfinite(level) and level > 0:
+            cleaned = cleaned.with_data(cleaned.time, cleaned.flux / level, cleaned.flux_err / level)
         detrended = detrend(cleaned, window_days=config.detrend_window_days)
-        binned = bin_lightcurve(detrended, config.bin_minutes)
+        out.append(bin_lightcurve(detrended, config.bin_minutes))
+    return out
+
+
+def prepare_subjects(lightcurves: list[LightCurve], config: RunConfig, *, prepared: list[LightCurve] | None = None) -> list[Subject]:
+    subjects: list[Subject] = []
+    for binned in prepared if prepared is not None else prepare_lightcurves(lightcurves, config):
         subjects.extend(split_subjects(binned, length_days=config.subject_days, min_points=config.min_points))
     return subjects
+
+
+def sector_signals(prepared: list[LightCurve], config: RunConfig) -> dict[str, PeriodicSignal | None]:
+    """One BLS search per target over all its sectors stitched together, keyed by target.
+
+    The maximum period is half the stitched time span, so a period longer than
+    half a subject can be found when the sectors cover two transits.
+    """
+    by_target: dict[str, list[LightCurve]] = {}
+    for lc in prepared:
+        if len(lc):
+            by_target.setdefault(lc.target, []).append(lc)
+    return {target: bls_search(stitch(curves), min_period=config.min_period) for target, curves in by_target.items()}
 
 
 def plot_arrays(subject: Subject, points: int | None = None) -> dict:
@@ -172,7 +196,11 @@ def build_candidates(
     classifications: list[Classification],
     weights: dict[str, float],
     config: RunConfig,
+    *,
+    target_signals: dict[str, PeriodicSignal | None] | None = None,
 ) -> list[Candidate]:
+    """Aggregate, search and vet. With ``target_signals`` (sector mode), each subject uses its
+    target's multi-sector BLS signal instead of a search of the subject alone."""
     subject_by_id = {s.subject_id: s for s in subjects}
     consensus = aggregate(
         classifications,
@@ -186,11 +214,15 @@ def build_candidates(
     for event in consensus:
         subject = subject_by_id[event.subject_id]
         if event.subject_id not in periodic_cache:
-            periodic_cache[event.subject_id] = bls_search(subject, min_period=config.min_period)
+            if target_signals is not None:
+                periodic_cache[event.subject_id] = target_signals.get(str(subject.provenance.get("target", "")))
+            else:
+                periodic_cache[event.subject_id] = bls_search(subject, min_period=config.min_period)
         result = _vet(event, subject, periodic_cache[event.subject_id])
         periodic = periodic_cache[event.subject_id]
         supported = periodic if periodic is not None and periodic.covers(event.center) else None
         candidate = _to_candidate(event, subject, result, supported)
+        object.__setattr__(candidate, "search_scope", "sector" if target_signals is not None else "subject")
         object.__setattr__(candidate, "mark_audit", tuple(audit_marks(event, classifications, config.cluster_gap_days)))
         object.__setattr__(candidate, "count_rule", {
             "gap_days": config.cluster_gap_days,
@@ -221,11 +253,13 @@ def run_pipeline(
         weights_source = "supplied by caller" if weights else "uniform 1.0"
     weights = {r.reviewer_id: 1.0 for r in active} | (weights or {})
 
-    subjects = prepare_subjects(lightcurves, config)
+    prepared = prepare_lightcurves(lightcurves, config)
+    subjects = prepare_subjects(lightcurves, config, prepared=prepared)
+    target_signals = sector_signals(prepared, config) if config.search == "sector" else None
     store = Store(out / "exoplan.sqlite")
     try:
         classifications = review_subjects(subjects, active, image_dir=out / "subjects", store=store)
-        candidates = build_candidates(subjects, classifications, weights, config)
+        candidates = build_candidates(subjects, classifications, weights, config, target_signals=target_signals)
         store.export_classifications_csv(out / "classifications.csv")
     finally:
         store.close()
@@ -270,6 +304,8 @@ def write_manifest(out, config, lightcurves, active, skipped, weights, subjects,
         "config_name": config.name,
         "config_sha256": config.digest(),
         "subject_days": config.subject_days,
+        # Where the periodic (BLS) search ran: each subject alone, or all sectors of a target stitched.
+        "search_scope": config.search,
         "claude_prompt_version": PROMPT_VERSION,
         "inputs": [lc.provenance | {"target": lc.target, "mission": lc.mission} for lc in lightcurves],
         "reviewers": [

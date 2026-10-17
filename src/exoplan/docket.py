@@ -23,8 +23,10 @@ duration (nothing is fitted), and one lane per reviewer, each labelled with its
 kind (simulated detector or Claude). Then the signal's dips, the subject in
 context, comparisons, the verdict ledger, the reviewers and provenance.
 
-BLS periods and epochs are per subject (a fixed-length cut of a sector), not
-per sector, and every candidate is unconfirmed.
+BLS periods are per subject (a fixed-length cut of a sector) unless the run's
+search scope is "sector", when one BLS search runs over all of the target's
+sectors stitched together. Epochs are measured within each subject, and every
+candidate is unconfirmed.
 
 Keyboard: j and k move through the dips, ↑ and ↓ too when the list has focus;
 1, 2, 3 and 0 filter signals by outcome; s collapses the strip. With the strip
@@ -622,7 +624,8 @@ function scopeNote(c){
   const days = D.subject_days ? `${fmt(D.subject_days,0)}-day` : 'per-subject';
   const eph = c.period_days ? `BLS period ${fmt(c.period_days,3)} d, t0 ${fmt(c.bls_t0,4)}, duration ${fmt((c.bls_duration_days||0)*24,1)} h; ${(c.epochs||[]).length} predicted epochs measured in this subject.` : 'No BLS ephemeris covers this dip.';
   const s = sigById[c.signal_id], merged = s && (s.bls||[]).length > 1 ? ` This signal merges ${s.bls.length} per-subject BLS results; epoch numbers E count on the reference subject's ephemeris.` : '';
-  return `Scope: the BLS search and its epochs are per ${days} subject, not per TESS sector. ${eph}${merged} Depth and duration are the consensus window's measured values. This is a candidate, unconfirmed.`;
+  const where = D.search_scope === 'sector' ? `the BLS search ran once on all of this target's sectors stitched together; epochs are measured per ${days} subject.` : `the BLS search and its epochs are per ${days} subject, not per TESS sector.`;
+  return `Scope: ${where} ${eph}${merged} Depth and duration are the consensus window's measured values. This is a candidate, unconfirmed.`;
 }
 
 function crossmatchLine(c){
@@ -680,7 +683,7 @@ function renderDossier(){
       <div><span>depth</span>${fmt(c.depth_ppm,0)} ppm</div>
       <div><span>SNR</span>${fmt(c.snr,1)}</div>
       <div class="panelfact"><span>panel</span>${fmt(c.score,2)} · marked by ${c.n_reviewers} of ${nAll} reviewers: ${esc(reviewerSummary(c.reviewers))} (panel: ${esc(reviewerSummary(Object.keys(D.reviewers)))})${countNote(c)}</div>
-      <div><span>BLS period</span>${c.period_days ? fmt(c.period_days,3)+' d (this subject)' : 'none'}</div>
+      <div><span>BLS period</span>${c.period_days ? fmt(c.period_days,3)+(D.search_scope === 'sector' ? ' d (all sectors)' : ' d (this subject)') : 'none'}</div>
       <div><span>BLS t0</span>${(c.bls_t0 !== null && c.bls_t0 !== undefined) ? fmt(c.bls_t0,4) : '–'}</div>
     </div>`;
   const dipBtns = s.dips.map(id => { const d = byId[id], ep = epochOf(d); return `<button class="dipbtn${id===c.candidate_id?' cur':''}" data-dip="${esc(id)}" aria-current="${id===c.candidate_id}">${ep !== null ? 'E'+ep+' · ' : ''}${fmt(d.t_center,3)} · ${fmt(d.depth_ppm,0)} ppm · <span class="${OUT_CLS[d.outcome]}"><span aria-hidden="true">${OUT_GLYPH[d.outcome]}</span> ${esc(d.outcome)}</span></button>`; }).join('');
@@ -1314,6 +1317,7 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
         "decisions": run["reviewerDecisions"],
         "reviewers": run["reviewers"],
         "subject_days": run["manifest"].get("subject_days"),
+        "search_scope": run["manifest"].get("search_scope", "subject"),
         "counts": {
             "signals": len(signals),
             "dips": len(run["candidates"]),

@@ -20,6 +20,7 @@ from exoplan.preprocess import mad_sigma
 from exoplan.subjects import Subject
 
 DEFAULT_DURATIONS_DAYS = (1 / 24, 2 / 24, 4 / 24, 8 / 24)
+MAX_PERIODS = 200_000  # cap on the BLS period grid; a longer baseline gets a coarser grid
 
 
 @dataclass(frozen=True)
@@ -65,8 +66,15 @@ def bls_search(
     min_period: float = 0.5,
     max_period: float | None = None,
     durations=DEFAULT_DURATIONS_DAYS,
+    max_periods: int = MAX_PERIODS,
 ) -> PeriodicSignal | None:
-    """Return the strongest periodic box signal in a subject, or ``None`` if there is none to search."""
+    """Return the strongest periodic box signal in a subject, or ``None`` if there is none to search.
+
+    The subject may be one segment or a stitched multi-sector light curve
+    (:func:`stitch`). The default ``max_period`` is half the time span. When
+    the span makes the period grid longer than ``max_periods``, the grid is
+    thinned evenly in frequency to that many periods.
+    """
     span = subject.end - subject.start
     if max_period is None:
         max_period = span / 2.0
@@ -83,6 +91,8 @@ def bls_search(
     )
     if periods.size == 0:
         return None
+    if periods.size > max_periods:
+        periods = periods[np.linspace(0, periods.size - 1, max_periods).round().astype(int)]
 
     result = model.power(periods, durations, objective="snr")
     i = int(np.argmax(result.power))
@@ -108,6 +118,41 @@ def bls_search(
         even_err=float(even_err),
         secondary_depth=float(sec_depth),
         secondary_err=float(sec_err),
+    )
+
+
+def stitch(subjects_or_curves, *, subject_id: str | None = None) -> Subject:
+    """Join light curves (or subjects) of one target into one time series for a multi-sector search.
+
+    Each piece is divided by its own median flux first, so sectors with
+    different flux levels line up at 1.0. The pieces should already be
+    detrended. Times are sorted.
+    """
+    pieces = [p for p in subjects_or_curves if len(p) > 0]
+    if not pieces:
+        raise ValueError("nothing to stitch")
+    time, flux, flux_err = [], [], []
+    for piece in pieces:
+        level = float(np.median(piece.flux))
+        level = level if np.isfinite(level) and level != 0 else 1.0
+        time.append(np.asarray(piece.time, float))
+        flux.append(np.asarray(piece.flux, float) / level)
+        flux_err.append(np.asarray(piece.flux_err, float) / abs(level))
+    time, flux, flux_err = (np.concatenate(a) for a in (time, flux, flux_err))
+    order = np.argsort(time, kind="stable")
+    first = pieces[0]
+    target = getattr(first, "target", None) or first.provenance.get("target", "")
+    sectors = sorted({str(p.provenance.get("sector", "")) for p in pieces})
+    from exoplan.subjects import TIME_UNITS
+
+    return Subject(
+        subject_id=subject_id or f"stitched-{target}",
+        mission=first.mission,
+        time_unit=getattr(first, "time_unit", None) or TIME_UNITS.get(first.mission, first.provenance.get("time_unit", "unknown")),
+        time=time[order],
+        flux=flux[order],
+        flux_err=flux_err[order],
+        provenance={"target": target, "sectors": sectors, "stitched_pieces": len(pieces)},
     )
 
 
