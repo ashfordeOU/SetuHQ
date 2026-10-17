@@ -134,7 +134,7 @@ def cmd_dashboard(args) -> int:
 def cmd_docket(args) -> int:
     from exoplan.docket import build_docket
 
-    path = build_docket(args.run_dir, args.out, title=args.title)
+    path = build_docket(args.run_dir, args.out, title=args.title, star=args.star, refresh_crossmatch=args.refresh_crossmatch)
     print(f"docket written to {path}")
     return 0
 
@@ -194,6 +194,8 @@ def build_parser() -> argparse.ArgumentParser:
     docket.add_argument("run_dir")
     docket.add_argument("--out", required=True)
     docket.add_argument("--title", default="exoplan docket")
+    docket.add_argument("--star", help="star name for the archive cross-match (hostname or pl_name); TIC targets also match on tic_id")
+    docket.add_argument("--refresh-crossmatch", action="store_true", help="query the archive again instead of reusing crossmatch.json")
     docket.set_defaults(func=cmd_docket)
 
     report = sub.add_parser("report", help="build a static HTML report site from a run directory")
