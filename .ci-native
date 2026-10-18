@@ -1,1 +1,1 @@
-python3 -m pytest -q
+scripts/ci_local.sh --quick

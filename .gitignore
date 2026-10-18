@@ -8,3 +8,4 @@ runs/
 cache/
 data/raw/
 *.sqlite
+.ci-local.log
