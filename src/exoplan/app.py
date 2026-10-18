@@ -41,7 +41,7 @@ import math
 from pathlib import Path
 
 from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
-from exoplan.galaxy import (CSV_NAME, DEFAULT_MAP, DEFAULT_NOTABLE, GALAXY_CSS, GALAXY_JS, TEASER_JS, galaxy_data,
+from exoplan.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, TEASER_JS, galaxy_data,
                             galaxy_meta, galaxy_section, map_csv, teaser_html, teaser_points)
 from exoplan.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
 from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
@@ -533,7 +533,8 @@ def with_frame_bridge(docket_html: str) -> str:
 def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
              weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None,
              require_crossmatch: bool = False, targets_path: str | Path | None = DEFAULT_TARGETS,
-             map_path: str | Path | None = DEFAULT_MAP, notable_path: str | Path | None = DEFAULT_NOTABLE) -> dict:
+             map_path: str | Path | None = DEFAULT_MAP, notable_path: str | Path | None = DEFAULT_NOTABLE,
+             coverage_path: str | Path | None = DEFAULT_COVERAGE) -> dict:
     """Everything the shell shows, read from stored files only.
 
     With ``require_crossmatch`` the build fails (``CrossmatchUnavailable``) when no stored archive
@@ -587,7 +588,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     hero = overview_hero(dock, top_rows)
     calib = {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name}
     story = story_data(run_dir, dock, feed, calib, hero, targets_path=targets_path)
-    galaxy = galaxy_data(map_path, notable_path, exoplan_star=story["star"]["name"] or "pi Men",
+    galaxy = galaxy_data(map_path, notable_path, coverage_path=coverage_path, exoplan_star=story["star"]["name"] or "pi Men",
                          exoplan_planet=story.get("planet"), lead_dip=story.get("lead_dip"))
     return {
         "title": title,
@@ -628,6 +629,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "hero": hero,
         "story": story,
         "galaxy": galaxy,
+        "coverage": load_coverage(coverage_path),
         "galaxy_meta": galaxy_meta(galaxy),
         "galaxy_teaser": teaser_points(galaxy),
         "sky_geo": sky_geometry(story["star"]["ra_deg"], story["star"]["dec_deg"]),
@@ -820,6 +822,9 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 /* Sky */
 .skymap{flex:999 1 640px;padding:18px;background:radial-gradient(120% 120% at 50% 0%,#0B1220 0%,#000 60%)}
 .skymap svg{display:block;width:100%;height:auto}
+.skycov{display:grid;gap:8px;padding:14px 16px;border-radius:var(--r)}
+.skycov p{margin:0;font-size:13px;color:var(--ink-2)}
+.skycov a{display:inline-flex;align-items:center;min-height:44px}
 .skypin{position:absolute;min-height:44px;padding:10px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(28,28,30,.72);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:#F5F5F7;text-decoration:none;line-height:1.35;font-size:12px}
 .skypin b{font-size:15px;font-weight:600;display:block}
 .skypin span{display:block;color:#A1A1A6}
@@ -1904,7 +1909,21 @@ function decodeSkyView(params){
 const encodeSkyView = v => `status=${v.status.length ? SKY_STATUS.filter(k => v.status.includes(k)).join(',') : 'none'}&who=${v.who}`;
 const currentSky = () => ({status: SKY_STATUS.filter(k => sky[k]), who: sky.rev});
 function applySky(v){ for (const k of SKY_STATUS) sky[k] = v.status.includes(k); sky.rev = v.who; }
-function syncSkyURL(push){ if (current === 'sky') setHash('#/sky?' + encodeSkyView(currentSky()), !!push); }
+// Survey-coverage layers on the sky map, kept in the URL as layers=... beside the filters.
+const COVL = (D.galaxy_meta && D.galaxy_meta.layers) || [];
+let skyLayers = [];
+const decodeLayers = p => { const ls = (p.get('layers') || '').split(','); return COVL.filter(k => ls.includes(k)); };
+function applySkyLayers(ls){
+  skyLayers = ls;
+  $$('#route-sky .covl').forEach(g => { g.style.display = ls.includes(g.dataset.layer) ? '' : 'none'; });
+  $$('#skycov [data-cov]').forEach(b => b.setAttribute('aria-pressed', String(ls.includes(b.dataset.cov))));
+}
+function syncSkyURL(push){ if (current === 'sky') setHash('#/sky?' + encodeSkyView(currentSky()) + (skyLayers.length ? '&layers=' + skyLayers.join(',') : ''), !!push); }
+if ($('#skycov')) $('#skycov').addEventListener('click', e => {
+  const b = e.target.closest('button[data-cov]'); if (!b) return;
+  const k = b.dataset.cov, on = skyLayers.includes(k);
+  applySkyLayers(COVL.filter(x => x === k ? !on : skyLayers.includes(x))); syncSkyURL(true);
+});
 function renderSky(){
   const n = k => S.counts[k];
   $('#skychips').innerHTML = [['known', S.planet ? S.planet : 'Known'], ['open', 'Open'], ['rejected', 'Rejected']].map(([k, l]) =>
@@ -2186,6 +2205,7 @@ function go(p, moveFocus){
   }
   if (p.route === 'sky'){
     applySky(decodeSkyView(p.params));
+    applySkyLayers(decodeLayers(p.params));
     if (rendered.has('sky')) renderSky();
   }
   if (p.route === 'galaxy' && GXM) applyGalaxy(decodeGalaxyView(p.params));
@@ -2365,6 +2385,7 @@ def _sky(data: dict) -> str:
             <ellipse rx="452" ry="226" fill="rgba(255,255,255,.015)" stroke="rgba(255,255,255,.14)" stroke-width=".8"/>
             <path d="{geo['grat']}" stroke="rgba(255,255,255,.06)" stroke-width=".8" fill="none"/>
             <path class="twinkle" d="{geo['stars']}" stroke="#E8EEFF" stroke-width="1.1" stroke-linecap="round"/>
+            {sky_layers_svg(data.get("coverage"))}
             <path d="{geo['ecl']}" stroke="#FFB340" stroke-width=".9" fill="none" stroke-dasharray="2 6" opacity=".7"/>
             {marker}
           </svg>
@@ -2377,11 +2398,22 @@ def _sky(data: dict) -> str:
           <div id="skydips"></div>
         </aside>
       </div>
+      {_sky_coverage(data)}
       <section class="glass runline" aria-labelledby="h-skytl">
         <h2 id="h-skytl" class="sr">The run's light curve</h2>
         <div class="cap" id="skytlcap"></div>
         <div id="skytimeline"></div>
       </section>"""
+
+
+def _sky_coverage(data: dict) -> str:
+    cov = data.get("coverage")
+    if not cov:
+        return ""
+    f = cov["fractions"]
+    return (f'<section class="glass skycov" aria-label="Survey coverage">{coverage_chips(cov, "sky")}<p>Survey coverage: TESS has observed {f["tess"] * 100:.0f}% of the sky '
+            f'(sectors 1–{cov["tess_last_sector"]}); {f["unmapped"] * 100:.1f}% has never been in a TESS, Kepler or K2 footprint. '
+            f'Shading shows where surveys looked, not where planets are. <a href="#/galaxy">Figures and sources in the Galaxy ›</a></p></section>')
 
 
 def _transit(data: dict) -> str:
@@ -2455,7 +2487,7 @@ def app_page(data: dict) -> str:
     title = html.escape(data["title"])
     run = data["run"]
     rule = data["feed_rule"]
-    payload = json.dumps({k: v for k, v in data.items() if k != "galaxy"}).replace("</", "<\\/")
+    payload = json.dumps({k: v for k, v in data.items() if k not in ("galaxy", "coverage")}).replace("</", "<\\/")
     galaxy_payload = ""
     if data.get("galaxy"):  # galactic l and b go to the CSV only; the page draws from x, y, z
         g = {**data["galaxy"], "hosts": {k: v for k, v in data["galaxy"]["hosts"].items() if k not in ("l", "b")}}
@@ -2507,7 +2539,7 @@ def app_page(data: dict) -> str:
       {_sky(data)}
     </section>
     <section class="route" id="route-galaxy" data-route="galaxy" aria-labelledby="h-galaxy" hidden>
-      {galaxy_section(data.get("galaxy"), _eyebrow("Galaxy"), UNCONFIRMED)}
+      {galaxy_section(data.get("galaxy"), _eyebrow("Galaxy"), UNCONFIRMED, data.get("coverage"))}
     </section>
     <section class="route" id="route-transit" data-route="transit" aria-labelledby="h-transit" hidden>
       {_transit(data)}

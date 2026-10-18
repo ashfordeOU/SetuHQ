@@ -93,7 +93,7 @@ def _r(x, n):
 
 
 def galaxy_data(map_path: str | Path | None = DEFAULT_MAP, notable_path: str | Path | None = DEFAULT_NOTABLE,
-                *, exoplan_star: str = "pi Men", exoplan_planet: str | None = "pi Men c",
+                *, coverage_path: str | Path | None = None, exoplan_star: str = "pi Men", exoplan_planet: str | None = "pi Men c",
                 lead_dip: str | None = None) -> dict | None:
     """The Galaxy section's data: hosts with galactic positions (light-years), planets as columns,
     notable planets resolved against the dataset, and the counts the page states."""
@@ -188,6 +188,7 @@ def galaxy_data(map_path: str | Path | None = DEFAULT_MAP, notable_path: str | P
         "years": [y0, y1], "cum": cum, "kepler": kepler, "lensing": lensing, "notable": notable, "exocomets": exocomets,
         "star": {"host": star_h, "name": exoplan_star, "planet": exoplan_planet, "lead_dip": lead_dip},
         "feed_tics": list(FEED_TICS),
+        "coverage": coverage_gl(load_coverage(coverage_path)),
     }
 
 
@@ -198,7 +199,8 @@ def galaxy_meta(g: dict | None) -> dict | None:
     return {"methods": g["methods"], "method_label": g["method_label"], "method_colour": g["method_colour"],
             "years": g["years"], "dist_steps": DIST_STEPS, "presets": [p for p, _ in PRESETS],
             "preset_label": dict(PRESETS), "tour": [e["name"] for e in g["notable"]],
-            "n_planets": g["counts"]["kept"], "n_hosts": g["counts"]["hosts"]}
+            "n_planets": g["counts"]["kept"], "n_hosts": g["counts"]["hosts"],
+            "layers": [k for k, _ in COV_LAYERS] if g.get("coverage") else []}
 
 
 def teaser_points(g: dict | None, n: int = 1400) -> dict | None:
@@ -283,7 +285,7 @@ def map_csv(g: dict) -> str:
     return buf.getvalue()
 
 
-def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str) -> str:
+def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | None = None) -> str:
     """The Galaxy route's HTML (header, stage, HUD, controls, notes, notable list and table)."""
     e = html.escape
     if g is None:
@@ -356,6 +358,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str) -> str:
             <button class="chip" type="button" id="gxshowcase" aria-pressed="false">Cards: one per method</button>
             <button class="btn" type="button" id="gxtour">Take the tour</button>
           </div>
+          {coverage_chips(cov, "gx")}
         </div>
       </details>
       <p class="gxkeys muted" id="gxkeys">Drag to orbit · scroll or pinch to zoom · double-click a star to centre on it · arrow keys orbit · + and − zoom · Enter selects the star under the reticle · Esc clears.</p>
@@ -365,6 +368,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str) -> str:
         <p class="note"><b>How to read it.</b> Positions: heliocentric galactic coordinates from RA, Dec (J2000) and distance; x points to the Galactic centre and the grid is the Galactic plane. Axis ticks are in light-years (1 pc = {LY_PER_PC:.3f} ly). Colour: the detection method of the earliest planet shown for each star ({e(g['method_rule'])}). Size: planets per star. Microlensing distances come from models of each event and are uncertain. The bias in the cloud is where surveys looked and what each method can see, not where planets are. The Milky Way is an artist's impression drawn by the page, not data; the Sun's position in it is approximate.</p>
         <p class="note">{e(CLASS_RULE)}</p>
       </div>
+      {coverage_panel(cov, g)}
       <section class="card gxnotable" aria-labelledby="h-gxnot">
         <h2 id="h-gxnot">Notable planets</h2>
         <p class="muted">Pinned on the map. Distance, year and method come from the dataset; each line has the reference that supports it.</p>
@@ -480,6 +484,11 @@ GALAXY_CSS = r"""
 .gxtime{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .gxtime input{flex:1 1 240px;min-width:0;min-height:44px;accent-color:#0A84FF}
 .gxtime output{font-size:14px;min-width:150px}
+.covchips .chip i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px}
+.covchips .chip[aria-pressed="false"]{opacity:.6}
+.covpanel{display:grid;gap:10px}
+.covpanel h3{margin:6px 0 0;font-size:15px}
+.covpanel p{margin:0}
 .gxmethods .chip i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
 .gxmethods .chip .mono{color:var(--ink-3);margin-left:6px;font-size:12px}
 .gxmethods .chip[aria-pressed="false"]{opacity:.55}
@@ -598,7 +607,9 @@ function decodeGalaxyView(params){
   if (!GXM.presets.includes(view)) view = GXM.presets[0];
   let tour = parseInt(params.get('tour'), 10);
   if (!(tour >= 1 && tour <= GXM.tour.length)) tour = 0;
-  return {year, methods, dist, multi: params.get('multi') === '1', view, tour, showcase: params.get('cards') === 'methods'};
+  const ls = (params.get('layers') || '').split(',');
+  return {year, methods, dist, multi: params.get('multi') === '1', view, tour, showcase: params.get('cards') === 'methods',
+    layers: (GXM.layers || []).filter(k => ls.includes(k))};
 }
 function encodeGalaxyView(v){
   const out = [];
@@ -607,6 +618,7 @@ function encodeGalaxyView(v){
   if (v.dist) out.push('dist=' + v.dist);
   if (v.multi) out.push('multi=1');
   if (v.showcase) out.push('cards=methods');
+  if (v.layers && v.layers.length) out.push('layers=' + GXM.layers.filter(k => v.layers.includes(k)).join(','));
   if (v.view !== GXM.presets[0]) out.push('view=' + v.view);
   if (v.tour) out.push('tour=' + v.tour);
   return out.join('&');
@@ -661,8 +673,8 @@ function gxProject(x, y, z){
 }
 
 // ---------- shaders ----------
-const GX_PT_VS = 'attribute vec3 a_pos;attribute float a_size;attribute vec3 a_col;uniform mat4 u_mvp;uniform float u_px;uniform float u_alpha;varying vec3 v_col;varying float v_a;' +
-  'void main(){gl_Position=u_mvp*vec4(a_pos,1.0);gl_PointSize=a_size*u_px;v_col=a_col;v_a=u_alpha;if(a_size<=0.0){gl_Position=vec4(2.0,2.0,2.0,1.0);gl_PointSize=0.0;}}';
+const GX_PT_VS = 'attribute vec3 a_pos;attribute float a_size;attribute vec3 a_col;uniform mat4 u_mvp;uniform float u_px;uniform float u_scale;uniform float u_alpha;varying vec3 v_col;varying float v_a;' +
+  'void main(){gl_Position=u_mvp*vec4(a_pos*u_scale,1.0);gl_PointSize=a_size*u_px;v_col=a_col;v_a=u_alpha;if(a_size<=0.0){gl_Position=vec4(2.0,2.0,2.0,1.0);gl_PointSize=0.0;}}';
 const GX_PT_FS = 'precision mediump float;varying vec3 v_col;varying float v_a;' +
   'void main(){vec2 q=gl_PointCoord*2.0-1.0;float r=dot(q,q);if(r>1.0)discard;float core=1.0-smoothstep(0.0,0.42,r);float halo=exp(-r*3.5)*0.55;gl_FragColor=vec4(v_col*(core+halo)*v_a,1.0);}';
 const GX_LN_VS = 'attribute vec3 a_pos;uniform mat4 u_mvp;uniform float u_scale;uniform vec3 u_off;uniform float u_fade;varying float v_f;' +
@@ -748,7 +760,7 @@ function gxInitGL(){
   try { gl = cv.getContext('webgl', {antialias: true, alpha: false, depth: false, powerPreference: 'high-performance'}); } catch (e) { gl = null; }
   if (!gl) return false;
   gx.gl = gl;
-  gx.pt = gxProgram(gl, GX_PT_VS, GX_PT_FS, ['a_pos', 'a_size', 'a_col'], ['u_mvp', 'u_px', 'u_alpha']);
+  gx.pt = gxProgram(gl, GX_PT_VS, GX_PT_FS, ['a_pos', 'a_size', 'a_col'], ['u_mvp', 'u_px', 'u_alpha', 'u_scale']);
   gx.ln = gxProgram(gl, GX_LN_VS, GX_LN_FS, ['a_pos'], ['u_mvp', 'u_scale', 'u_off', 'u_fade', 'u_col']);
   gx.mwp = gxProgram(gl, GX_MW_VS, GX_MW_FS, ['a_q'], ['u_mvp', 'u_gc', 'u_R', 'u_alpha']);
   const H = gx.G.hosts, n = H.n.length, pos = new Float32Array(n * 3);
@@ -762,14 +774,32 @@ function gxInitGL(){
   gx.lines = {};
   for (const k of Object.keys(L)) gx.lines[k] = {b: gxBuf(gl, L[k]), n: L[k].length / 3};
   gx.bQuad = gxBuf(gl, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]));
+  // Survey coverage: sky cells on the celestial sphere (TESS sectors, and the sky no transit survey has
+  // covered), and footprint outlines (Kepler with its cone from the Sun, K2, CoRoT, the bulge).
+  const C = gx.G.coverage;
+  if (C){
+    const kk = new Set(C.kepler_cells.concat(C.k2_cells)), mk = (want) => {
+      const pos = [], size = [], col = [];
+      for (let i = 0; i < C.tess.length; i++){
+        const w = want(i); if (!w) continue;
+        pos.push(C.cells[i * 3], C.cells[i * 3 + 1], C.cells[i * 3 + 2]); size.push(1); col.push(...w);
+      }
+      return {pos: gxBuf(gl, new Float32Array(pos)), size: gxBuf(gl, new Float32Array(size)), col: gxBuf(gl, new Float32Array(col)), n: size.length};
+    };
+    const blue = gxHex(C.colours.tess), grey = gxHex(C.colours.unmapped);
+    gx.cov = {tess: mk(i => { const n = C.tess[i]; return n ? blue.map(v => v * (n >= 13 ? .3 : n >= 3 ? .15 : .07)) : null; }),
+      unmapped: mk(i => (!C.tess[i] && !kk.has(i)) ? grey.map(v => v * .45) : null), lines: {}};
+    for (const k of ['kepler', 'k2', 'corot', 'bulge']){ const a = new Float32Array(C.lines[k]); gx.lines['cov_' + k] = {b: gxBuf(gl, a), n: a.length / 3}; }
+  }
   gx.mwData = null;
   return true;
 }
-function gxPoints(prog, pos, size, col, n, alpha){
+function gxPoints(prog, pos, size, col, n, alpha, scale, px){
   const gl = gx.gl;
   gl.useProgram(prog.p);
   gl.uniformMatrix4fv(prog.u.u_mvp, false, gx.mvp);
-  gl.uniform1f(prog.u.u_px, gx.dpr);
+  gl.uniform1f(prog.u.u_px, px || gx.dpr);
+  gl.uniform1f(prog.u.u_scale, scale || 1);
   gl.uniform1f(prog.u.u_alpha, alpha);
   for (const [b, a, k] of [[pos, 'a_pos', 3], [size, 'a_size', 1], [col, 'a_col', 3]]){
     gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.enableVertexAttribArray(prog.a[a]); gl.vertexAttribPointer(prog.a[a], k, gl.FLOAT, false, 0, 0);
@@ -826,6 +856,11 @@ function gxDraw(){
     gxLine('ring', R, [0, 0, 0], [0.39, 0.82, 1, 0.42 * sa]);
   }
   gxLine('axes', Math.min(27000, d * 2.6), [0, 0, 0], [0.39, 0.82, 1, 0.55]);
+  if (gx.cov && gx.view.layers.length){
+    const ly = gx.view.layers, cellPx = 0.04 * gx.cssH * gx.dpr;
+    for (const k of ['tess', 'unmapped']) if (ly.includes(k)){ const c = gx.cov[k]; gxPoints(gx.pt, c.pos, c.size, c.col, c.n, 1, R, cellPx); }
+    for (const k of ['kepler', 'k2', 'corot', 'bulge']) if (ly.includes(k)) gxLine('cov_' + k, R, [0, 0, 0], gxHex(gx.G.coverage.colours[k]).concat([0.85]));
+  }
   gxPoints(gx.pt, gx.bHostPos, gx.bHostSize, gx.bHostCol, gx.G.hosts.n.length, 1 - 0.55 * gx.mw);
   gxPoints(gx.pt, gx.bSun[0], gx.bSun[1], gx.bSun[2], 1, 1);
 }
@@ -870,6 +905,7 @@ function gxControls(){
   $('#gxdist').value = String(v.dist);
   $('#gxmulti').setAttribute('aria-pressed', String(v.multi));
   $('#gxshowcase').setAttribute('aria-pressed', String(!!v.showcase));
+  $$('#gxcov [data-cov]').forEach(b => b.setAttribute('aria-pressed', String(v.layers.includes(b.dataset.cov))));
   $$('#gxpresets [data-gxview]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.gxview === v.view)));
 }
 
@@ -1272,6 +1308,13 @@ function renderGalaxy(){
   });
   $('#gxdist').addEventListener('change', e => { gx.view.dist = Number(e.target.value); gxRefilter(); syncGalaxyURL(true); });
   $('#gxmulti').addEventListener('click', () => { gx.view.multi = !gx.view.multi; gxRefilter(); gxControls(); syncGalaxyURL(true); });
+  const cov = $('#gxcov');
+  if (cov) cov.addEventListener('click', e => {
+    const b = e.target.closest('button[data-cov]'); if (!b) return;
+    const k = b.dataset.cov, on = gx.view.layers.includes(k);
+    gx.view.layers = GXM.layers.filter(x => x === k ? !on : gx.view.layers.includes(x));
+    gxControls(); gxKick(); syncGalaxyURL(true);
+  });
   $('#gxshowcase').addEventListener('click', () => { gx.view.showcase = !gx.view.showcase; gxControls(); gx.cards = null; gxKick(); syncGalaxyURL(true); });
   $('#gxtour').addEventListener('click', () => { if (gx.tour) gx.tour.paused = false; gxTourGo(gx.tour ? gx.tour.k : 0, true); $('#gxtpause').focus(); });
   $('#gxtprev').addEventListener('click', () => gxTourGo(gx.tour.k - 1, true));
@@ -1288,3 +1331,206 @@ function renderGalaxy(){
 }
 function gxPinch(){ const p = [...gx.pointers.values()]; return Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]) || 1; }
 """
+
+
+# ---------- survey coverage (scripts/survey_coverage.py writes it) ----------
+DEFAULT_COVERAGE = "docs/results/survey_coverage.json"
+COV_LAYERS = [("tess", "TESS sectors"), ("kepler", "Kepler field"), ("k2", "K2 campaigns"), ("corot", "CoRoT zones"),
+              ("bulge", "Bulge microlensing"), ("unmapped", "Unmapped by transit surveys")]
+COV_COLOUR = {"tess": "#0A84FF", "kepler": "#FFB340", "k2": "#30D158", "corot": "#BF5AF2", "bulge": "#FF6961",
+              "unmapped": "#8E8E93"}
+
+
+def load_coverage(path: str | Path | None = DEFAULT_COVERAGE) -> dict | None:
+    if path is None or not Path(path).exists():
+        return None
+    return json.loads(Path(path).read_text())
+
+
+def _gal_unit(ra: float, dec: float) -> list[float]:
+    return [round(v, 4) for v in _rot(_unit(ra, dec))]
+
+
+def _ring(ra0: float, dec0: float, radius_deg: float, n: int = 72) -> list[tuple[float, float]]:
+    """Points on a small circle of the sky, as (ra, dec)."""
+    c = _unit(ra0, dec0)
+    # Two axes perpendicular to the centre.
+    a = (-math.sin(math.radians(ra0)), math.cos(math.radians(ra0)), 0.0)
+    b = (c[1] * a[2] - c[2] * a[1], c[2] * a[0] - c[0] * a[2], c[0] * a[1] - c[1] * a[0])
+    r = math.radians(radius_deg)
+    out = []
+    for k in range(n + 1):
+        t = 2 * math.pi * k / n
+        v = [math.cos(r) * c[i] + math.sin(r) * (math.cos(t) * a[i] + math.sin(t) * b[i]) for i in range(3)]
+        out.append((math.degrees(math.atan2(v[1], v[0])) % 360, math.degrees(math.asin(max(-1, min(1, v[2]))))))
+    return out
+
+
+def _bulge_outline(b: dict, n: int = 24) -> list[tuple[float, float]]:
+    """The bulge box (galactic l, b) as ICRS (ra, dec) points."""
+    l0, l1 = b["l"]
+    b0, b1 = b["b"]
+    pts = ([(l0 + (l1 - l0) * k / n, b0) for k in range(n)] + [(l1, b0 + (b1 - b0) * k / n) for k in range(n)]
+           + [(l1 - (l1 - l0) * k / n, b1) for k in range(n)] + [(l0, b1 - (b1 - b0) * k / n) for k in range(n + 1)])
+    out = []
+    for lon, lat in pts:
+        g = _unit(lon, lat)  # galactic unit vector; the transpose rotates it back to ICRS
+        v = [sum(ICRS_TO_GAL[j][i] * g[j] for j in range(3)) for i in range(3)]
+        out.append((math.degrees(math.atan2(v[1], v[0])) % 360, math.degrees(math.asin(max(-1, min(1, v[2]))))))
+    return out
+
+
+def modules(channels: list) -> list:
+    """Kepler's 84 science channels, four per CCD module, merged into 21 module outlines (convex hulls)."""
+    out = []
+    for k in range(0, len(channels), 4):
+        pts = [pt for c in channels[k:k + 4] for pt in c]
+        ra0 = pts[0][0]
+        loc = sorted({(((p[0] - ra0 + 180) % 360 - 180), p[1]) for p in pts})
+        cross = lambda o, a, b: (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])  # noqa: E731
+        lower, upper = [], []
+        for q in loc:
+            while len(lower) >= 2 and cross(lower[-2], lower[-1], q) <= 0:
+                lower.pop()
+            lower.append(q)
+        for q in reversed(loc):
+            while len(upper) >= 2 and cross(upper[-2], upper[-1], q) <= 0:
+                upper.pop()
+            upper.append(q)
+        out.append([[round((x + ra0) % 360, 3), y] for x, y in lower[:-1] + upper[:-1]])
+    return out
+
+
+def coverage_gl(cov: dict | None) -> dict | None:
+    """What the 3D map draws: sky cells as galactic unit vectors with their TESS count and flags, and the
+    footprint outlines as unit-vector line segments."""
+    if cov is None:
+        return None
+    dr = cov["draw"]
+    cells = [_gal_unit(a, d) for a, d in zip(dr["ra"], dr["dec"])]
+    kep, k2 = set(dr["kepler"]), set(dr["k2"])
+
+    def segs(polys):
+        out = []
+        for p in polys:
+            for k in range(len(p)):
+                a, b = p[k], p[(k + 1) % len(p)]
+                out += _gal_unit(*a) + _gal_unit(*b)
+        return out
+
+    def strip(pts):
+        out = []
+        for a, b in zip(pts, pts[1:]):
+            out += _gal_unit(*a) + _gal_unit(*b)
+        return out
+
+    kc = cov["kepler"]["channels"]
+    # The cone: lines from the Sun to the four corner points of the field farthest from its centre.
+    centre = _unit(cov["kepler"]["ra"], cov["kepler"]["dec"])
+    corners = sorted((pt for p in kc for pt in p), key=lambda q: sum(x * y for x, y in zip(_unit(*q), centre)))[:40]
+    picks = []
+    for q in corners:
+        if all(sum(x * y for x, y in zip(_unit(*q), _unit(*r))) < math.cos(math.radians(5)) for r in picks):
+            picks.append(q)
+        if len(picks) == 4:
+            break
+    cone = []
+    for q in picks:
+        cone += [0, 0, 0] + _gal_unit(*q)
+    return {
+        "cells": [v for c in cells for v in c], "tess": dr["tess"],
+        "kepler_cells": sorted(kep), "k2_cells": sorted(k2),
+        "lines": {"kepler": segs(modules(kc)) + cone, "k2": segs([p for c in cov["k2"] for p in modules(c["channels"])]),
+                  "corot": [v for e in cov["corot"]["eyes"] for v in strip(_ring(e["ra"], e["dec"], cov["corot"]["radius_deg"]))],
+                  "bulge": strip(_bulge_outline(cov["bulge"]))},
+        "colours": COV_COLOUR, "layers": [k for k, _ in COV_LAYERS],
+    }
+
+
+def _moll_path(pts, close=False) -> str:
+    from exoplan.story import mollweide
+
+    out, last = [], None
+    for ra, dec in pts:
+        x, y = mollweide(ra, dec)
+        out.append(("M" if last is None or abs(x - last[0]) > 300 else "L") + f"{x:.1f} {y:.1f}")
+        last = (x, y)
+    s = "".join(out)
+    return s + ("Z" if close and "M" not in s[1:] else "")
+
+
+def sky_layers_svg(cov: dict | None) -> str:
+    """The coverage layers on the Sky section's Mollweide map, each a group the page shows or hides."""
+    if cov is None:
+        return ""
+    from exoplan.story import mollweide
+
+    dr = cov["draw"]
+    kep, k2 = set(dr["kepler"]), set(dr["k2"])
+    buckets = {1: [], 3: [], 13: []}
+    unm = []
+    for i, (a, d) in enumerate(zip(dr["ra"], dr["dec"])):
+        x, y = mollweide(a, d)
+        n = dr["tess"][i]
+        if n >= 13:
+            buckets[13].append((x, y))
+        elif n >= 3:
+            buckets[3].append((x, y))
+        elif n >= 1:
+            buckets[1].append((x, y))
+        elif i not in kep and i not in k2:
+            unm.append((x, y))
+    dots = lambda pts: "".join(f"M{x:.1f} {y:.1f}h0" for x, y in pts)  # noqa: E731
+    tess = "".join(f'<path d="{dots(buckets[k])}" stroke="#0A84FF" stroke-opacity="{o}" stroke-width="13" stroke-linecap="round"/>'
+                   for k, o in ((1, .14), (3, .28), (13, .55)))
+    polys = lambda ps, c: "".join(f'<path d="{_moll_path(p, True)}" fill="{c}" fill-opacity=".35" stroke="{c}" stroke-width=".5"/>' for p in ps)  # noqa: E731
+    corot = "".join(f'<path d="{_moll_path(_ring(e["ra"], e["dec"], cov["corot"]["radius_deg"]))}" fill="none" stroke="{COV_COLOUR["corot"]}" stroke-width="1.2"/>'
+                    for e in cov["corot"]["eyes"])
+    bulge = f'<path d="{_moll_path(_bulge_outline(cov["bulge"]))}" fill="{COV_COLOUR["bulge"]}" fill-opacity=".18" stroke="{COV_COLOUR["bulge"]}" stroke-dasharray="3 3" stroke-width="1"/>'
+    return (f'<g class="covl" data-layer="tess" style="display:none">{tess}</g>'
+            f'<g class="covl" data-layer="kepler" style="display:none">{polys(modules(cov["kepler"]["channels"]), COV_COLOUR["kepler"])}</g>'
+            f'<g class="covl" data-layer="k2" style="display:none">{polys([p for c in cov["k2"] for p in modules(c["channels"])], COV_COLOUR["k2"])}</g>'
+            f'<g class="covl" data-layer="corot" style="display:none">{corot}</g>'
+            f'<g class="covl" data-layer="bulge" style="display:none">{bulge}</g>'
+            f'<g class="covl" data-layer="unmapped" style="display:none"><path d="{dots(unm)}" stroke="{COV_COLOUR["unmapped"]}" stroke-opacity=".55" stroke-width="13" stroke-linecap="round"/></g>')
+
+
+def coverage_chips(cov: dict | None, scope: str) -> str:
+    if cov is None:
+        return ""
+    return (f'<div class="chips covchips" id="{scope}cov" role="group" aria-label="Survey coverage layers">'
+            + "".join(f'<button class="chip" type="button" data-cov="{k}" aria-pressed="false"><i style="background:{COV_COLOUR[k]}"></i>{html.escape(v)}</button>'
+                      for k, v in COV_LAYERS) + "</div>")
+
+
+def coverage_panel(cov: dict | None, g: dict | None) -> str:
+    """The coverage figures: sky fraction and catalogue hosts inside each footprint, with how they were computed."""
+    if cov is None:
+        return ""
+    e = html.escape
+    f, h, s = cov["fractions"], cov["hosts_in"], cov["sources"]
+    rows = [("TESS (1 sector or more)", f["tess"], h["tess"], s["tess"]),
+            ("TESS, 13 sectors or more (near the ecliptic poles)", f["tess_cvz_13plus"], None, s["tess"]),
+            ("Kepler prime field", f["kepler"], h["kepler"], s["kepler"]), ("K2 campaigns C0–C19", f["k2"], h["k2"], s["k2"]),
+            ("CoRoT observing zones", f["corot"], h["corot"], s["corot"]),
+            ("Bulge microlensing region (approximate)", f["bulge"], h["bulge"], s["bulge"]),
+            ("Never in a TESS, Kepler or K2 footprint", f["unmapped"], h["none"], None)]
+    def row(n, fr, hh, src):
+        link = f"<a href='{e(src['ref'])}' rel='noopener'>{e(src['ref_label'])}</a>" if src else ""
+        hosts = "" if hh is None else f"{hh:,}"
+        return (f"<tr><th scope='row'>{e(n)}</th><td class='num'>{fr * 100:.1f}%</td><td class='num'>{fr * 41253:,.0f}</td>"
+                f"<td class='num'>{hosts}</td><td>{link}</td></tr>")
+
+    body = "".join(row(*r) for r in rows)
+    reach = ""
+    if g is not None:
+        reach = "".join(f"<tr><th scope='row'>{e(g['method_label'][m])}</th><td class='num'>{r['hosts']:,}</td><td class='num'>{r['median_ly']:,}</td>"
+                        f"<td class='num'>{r['p90_ly']:,}</td></tr>" for m, r in cov["reach"].items())
+    return f"""<section class="card covpanel" aria-labelledby="h-cov">
+        <h2 id="h-cov">Where we have looked</h2>
+        <p class="muted">The cloud's shape is where surveys looked and what each method can see, not where planets are. {e(cov['tess_rule'])} {e(cov['method'])} Catalogue hosts: {h['all']:,} stars in exoplanet_map.json, each tested at its own position. {e(cov['gaia'])}</p>
+        <div class="tablewrap" tabindex="0" role="region" aria-label="Survey coverage"><table class="gxtable"><thead><tr><th scope="col">Footprint</th><th scope="col" class="num">Sky</th><th scope="col" class="num">Square degrees</th><th scope="col" class="num">Catalogue hosts inside</th><th scope="col">Source</th></tr></thead><tbody>{body}</tbody></table></div>
+        <h3>How far each method reaches in this catalogue</h3>
+        <p class="muted">Distances of the stars each method found planets around, from the dataset: half lie within the median, nine in ten within the 90th percentile. Microlensing distances are model-dependent.</p>
+        <div class="tablewrap" tabindex="0" role="region" aria-label="Reach by method"><table class="gxtable"><thead><tr><th scope="col">Method</th><th scope="col" class="num">Stars</th><th scope="col" class="num">Median (ly)</th><th scope="col" class="num">90th percentile (ly)</th></tr></thead><tbody>{reach}</tbody></table></div>
+      </section>"""

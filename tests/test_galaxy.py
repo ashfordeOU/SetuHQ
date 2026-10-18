@@ -168,7 +168,8 @@ def test_page_states_source_definition_and_what_is_not_plotted(run_dir, tmp_path
     assert "TIC 348835438, TIC 349088467, TIC 348770361" in sec and "not on this map" in sec
     assert "Milky Way: artist's impression; Sun's position approximate (~26,000 ly from the centre)" in sec.replace("&#x27;", "'")
     assert 'role="img"' in sec and "View as table: the 50 nearest systems" in sec and "How we classify" in sec
-    assert sec.count("<tr>") == 51
+    table = re.search(r"<table class='gxtable'><caption class='sr'>The 50 nearest.*?</table>", sec, re.S).group(0)
+    assert table.count("<tr>") == 51
     csv_text = (tmp_path / "app" / "assets" / "data" / "exoplanet_map.csv").read_text()
     assert csv_text.count("\n") == 8049 + 1
     assert 'href="assets/data/exoplanet_map.csv" download' in sec
@@ -225,3 +226,58 @@ const { chromium } = require(%s);
     for r in json.loads(res.stdout.strip().splitlines()[-1]):
         assert r["errs"] == [] and r["reqs"] == [] and r["gl"], r
         assert r["overlap"] == [0, 0, 0] and r["small"] == [] and not r["hs"], r
+
+
+# ---------- survey coverage ----------
+from exoplan.galaxy import DEFAULT_COVERAGE, KEPLER_FIELD, coverage_gl, load_coverage  # noqa: E402
+
+
+def test_coverage_footprint_maths():
+    cov = load_coverage(DEFAULT_COVERAGE)
+    # The Kepler field centre, from the K2fov pointing table (RA 19h22m40s, Dec +44°30').
+    assert cov["kepler"]["ra"] == pytest.approx(290.6667, abs=1e-3) and cov["kepler"]["dec"] == 44.5
+    assert (KEPLER_FIELD["ra"], KEPLER_FIELD["dec"]) == (pytest.approx(290.6667, abs=1e-3), 44.5)
+    assert len(cov["kepler"]["channels"]) == 84 and [c["c"] for c in cov["k2"]] == list(range(20))
+    f = cov["fractions"]
+    # CoRoT's two 10° zones and the bulge box have closed-form areas; the cell counts reproduce them.
+    assert f["corot"] == pytest.approx(1 - math.cos(math.radians(10)), rel=0.03)
+    bulge = math.radians(20) * (math.sin(math.radians(5)) + math.sin(math.radians(8))) / (4 * math.pi)
+    assert f["bulge"] == pytest.approx(bulge, rel=0.03)
+    # Kepler's union of four seasonal rolls is roughly 105-125 square degrees.
+    assert 100 < f["kepler"] * 41253 < 130
+    assert 0.9 < f["tess"] <= 1 and 0 < f["unmapped"] < 0.1
+    h = cov["hosts_in"]
+    assert h["all"] == json.loads(Path(DEFAULT_MAP).read_text())["counts"]["hosts"] and h["none"] < h["all"]
+    gl = coverage_gl(cov)
+    assert len(gl["cells"]) == 3 * cov["draw"]["n"] and all(len(v) % 6 == 0 for v in gl["lines"].values())
+
+
+def test_pi_men_tess_sectors_match_tess_point():
+    cov = load_coverage(DEFAULT_COVERAGE)
+    tp = pytest.importorskip("tess_stars2px")
+    out = tp.tess_stars2px_function_entry([1], [84.2912083366], [-80.4691111224])
+    sectors = {int(s) for s in out[3] if 1 <= s <= cov["tess_last_sector"]}
+    assert cov["pi_men_tess_sectors"] == len(sectors) and 1 in sectors  # exoplan's run is sector 1
+    assert cov["tess_last_sector"] == 110 and cov["as_of"] == "2026-10-18"
+
+
+def test_coverage_honesty_labels_and_layers(run_dir, tmp_path):  # noqa: F811
+    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    gal = re.search(r'<section class="route" id="route-galaxy".*?(?=<section class="route" id="route-transit")', page, re.S).group(0)
+    sky = re.search(r'<section class="route" id="route-sky".*?(?=<section class="route" id="route-)', page, re.S).group(0)
+    assert "not where planets are" in gal and "Gaia observes the whole sky" in gal and "Where we have looked" in gal
+    assert "Kepler&#x27;s single deep field, not a real structure." in GALAXY_JS.replace("'", "&#x27;")
+    for k in ("tess", "kepler", "k2", "corot", "bulge", "unmapped"):
+        assert f'data-cov="{k}"' in gal and f'data-cov="{k}"' in sky and f'data-layer="{k}"' in sky
+    assert "Shading shows where surveys looked, not where planets are." in sky
+    assert "applySkyLayers(decodeLayers(p.params))" in APP_JS
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_coverage_layers_round_trip_through_the_galaxy_url():
+    g = galaxy_data(DEFAULT_MAP, DEFAULT_NOTABLE, coverage_path=DEFAULT_COVERAGE)
+    meta = galaxy_meta(g)
+    fns = re.search(r"function decodeGalaxyView\(params\)\{.*?\n\}\nfunction encodeGalaxyView\(v\)\{.*?\n\}\n", GALAXY_JS, re.S).group(0)
+    cases = ["layers=unmapped,tess,zzz", "layers=", "view=kepler&layers=kepler,k2"]
+    out = _node(f"const GXM = {json.dumps(meta)};\n{fns}\nconsole.log(JSON.stringify({json.dumps(cases)}.map(c => encodeGalaxyView(decodeGalaxyView(new URLSearchParams(c))))));")
+    assert out == ["layers=tess,unmapped", "", "layers=kepler,k2&view=kepler"]

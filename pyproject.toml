@@ -21,6 +21,8 @@ dependencies = [
 tess = ["lightkurve>=2.4"]
 claude = ["anthropic>=0.40"]
 dev = ["pytest>=8"]
+# scripts/survey_coverage.py: TESS sector pointings and the Kepler/K2 footprint model
+survey = ["tess-point>=0.9", "K2fov>=7"]
 
 [project.scripts]
 exoplan = "exoplan.cli:main"
