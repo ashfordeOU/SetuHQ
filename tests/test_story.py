@@ -178,3 +178,19 @@ def test_landing_page_is_the_overview_linking_into_the_app(run_dir, tmp_path):
     assert main(["app", str(run_dir), "--out", str(tmp_path / "s2" / "app"), "--title", "t",
                  "--landing", str(tmp_path / "s2" / "index.html"), "--allow-missing-crossmatch"]) == 0
     assert (tmp_path / "s2" / "index.html").exists()
+
+
+def test_round_four_polish_in_the_framed_docket():
+    from exoplan.app import FRAME_BRIDGE_JS, FRAME_PHONE_CSS
+
+    jump = re.search(r"function jumpToList\(\)\{.*?\n  \}\n", FRAME_BRIDGE_JS, re.S).group(0)
+    # Focus lands on the header the view lands on.
+    assert "target.setAttribute('tabindex', '-1')" in jump and "target.focus({preventScroll: true})" in jump
+    acc = re.search(r"function accordion\(\)\{.*?\n  \}\n", FRAME_BRIDGE_JS, re.S).group(0)
+    assert "h.setAttribute('role', 'button'); h.setAttribute('aria-expanded', String(cur))" in acc
+    assert "'show ' + n + ' dip'" in acc and "e.key === 'Enter' || e.key === ' '" in acc
+    assert "if (!phone.matches)" in acc  # only a phone's list is an accordion
+    assert "#rows .sighead[role=button]{min-height:44px" in FRAME_PHONE_CSS
+    css = docket_mod.DOCKET_CSS
+    assert ".xm-prov summary{cursor:pointer;display:flex;align-items:center;min-height:28px" in css
+    assert ".xm-prov summary:focus-visible{outline:2px solid var(--fit)" in css

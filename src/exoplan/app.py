@@ -1980,7 +1980,8 @@ function theatre(d){
   const R = 150, k = d.ratio || 0, r = Math.max(1.2, R * k), dur = Math.max(1e-3, d.t_end - d.t_start);
   // The shadow is on the disc exactly while the stored window runs: R each side of centre in half a duration.
   const travel = R * d.half / (dur / 2), known = d.status === 'known';
-  const [lo, hi] = dipRange([d]), W = 800, H = 150, Y = v => 10 + (hi - Math.max(lo, Math.min(hi, v))) / (hi - lo) * (H - 30);
+  const narrow = window.matchMedia && window.matchMedia('(max-width:699.98px)').matches;
+  const [lo, hi] = dipRange([d]), W = 800, H = narrow ? 360 : 150, Y = v => 10 + (hi - Math.max(lo, Math.min(hi, v))) / (hi - lo) * (H - 30);
   const X = dt => (dt + d.half) / (2 * d.half) * W;
   const clipped = d.pts.filter(p => p[1] < lo || p[1] > hi).length;
   const box = d.box.length ? `M0 ${Y(0).toFixed(1)}` + d.box.map(p => `L${X(p[0]).toFixed(1)} ${Y(p[1]).toFixed(1)}`).join('') + `L${W} ${Y(0).toFixed(1)}` : '';
@@ -2002,12 +2003,12 @@ function theatre(d){
     <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Stored flux around the dip: ${d.pts.length} points within ${fmt(d.half * 24, 1)} hours of mid-time, drawn in as the shadow crosses, with the box at the stored depth and duration.">
       <defs><clipPath id="rvclip"><rect class="reveal" x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>
       <line x1="0" x2="${W}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="rgba(255,255,255,.1)"/>
-      <path d="${box}" stroke="${c}" stroke-width="1.3" fill="none" stroke-dasharray="5 4" opacity=".85"/>
-      <g clip-path="url(#rvclip)"><path d="${dotPath(d.pts, X, Y)}" stroke="#F5F5F7" stroke-width="3.2" stroke-linecap="round" opacity=".85"/></g>
-      <g class="playhead" style="--w:${W}px"><line x1="0" y1="0" x2="0" y2="${H - 18}" stroke="#FFB340"/><circle cx="0" cy="5" r="3" fill="#FFB340"/></g>
+      <path d="${box}" stroke="${c}" stroke-width="${narrow ? 3 : 1.3}" fill="none" stroke-dasharray="${narrow ? '12 9' : '5 4'}" opacity=".85"/>
+      <g clip-path="url(#rvclip)"><path d="${dotPath(d.pts, X, Y)}" stroke="#F5F5F7" stroke-width="${narrow ? 8 : 3.2}" stroke-linecap="round" opacity=".85"/></g>
+      <g class="playhead" style="--w:${W}px"><line x1="0" y1="0" x2="0" y2="${H - 18}" stroke="#FFB340" stroke-width="${narrow ? 2.5 : 1}"/><circle cx="0" cy="${narrow ? 10 : 5}" r="${narrow ? 7 : 3}" fill="#FFB340"/></g>
     </svg>
-    <div class="axisrow"><span>${fmtSigned(-d.half * 24, 1)} h</span><span>mid-time ${esc(d.time_unit)} ${fmt(d.t, 3)} · the line above the star marks ${known ? esc(d.planet) + ', to scale' : 'what a planet this deep would be'}</span><span>${fmtSigned(d.half * 24, 1)} h</span></div>
-    <p class="foot">Shadow to scale: Rp/R* = √depth = ${fmt(k, 4)}, from the stored depth. Path through the centre; impact parameter not fitted. Dots: the ${d.pts.length} stored flux values in this window${clipped ? ` (${clipped} outside the drawn range not shown)` : ''}. Dashed: a box at the stored depth and duration, not a fit. The star's surface texture is decorative.</p>`;
+    <div class="axisrow"><span>${fmtSigned(-d.half * 24, 1)} h</span><span>mid-time ${esc(d.time_unit)} ${fmt(d.t, 3)}</span><span>${fmtSigned(d.half * 24, 1)} h</span></div>
+    <p class="foot">The ringed dot crossing the star is ${known ? esc(d.planet) + "'s shadow, to scale" : 'the shadow a planet this deep would cast, to scale'}: Rp/R* = √depth = ${fmt(k, 4)}, from the stored depth. Path through the centre; impact parameter not fitted. Dots: the ${d.pts.length} stored flux values in this window${clipped ? ` (${clipped} outside the drawn range not shown)` : ''}. Dashed: a box at the stored depth and duration, not a fit. The star's surface texture is decorative.</p>`;
 }
 function lanesHTML(d){
   const pct = v => Math.max(0, Math.min(100, (v + d.half) / (2 * d.half) * 100));
@@ -2054,6 +2055,9 @@ function renderTransit(){
   $('#txsub').textContent = `${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} hours · SNR ${fmt(d.snr, 1)} · ${D.unconfirmed}`;
   $('#txnav').innerHTML = `<a class="roundbtn" href="${transitHref(prev.id)}" aria-label="Previous dip, ${esc(prev.time_unit)} ${tval(prev.t)}">‹</a><a class="roundbtn" href="${transitHref(next.id)}" aria-label="Next dip, ${esc(next.time_unit)} ${tval(next.t)}">›</a><button type="button" class="cmpbtn" id="cmptoggle" aria-pressed="${inCmp}">${inCmp ? 'In compare' : 'Add to compare'}</button>`;
   $('#txchips').innerHTML = DIPS.map(x => `<a href="${transitHref(x.id)}" aria-current="${x.id === d.id}" style="--c:${STC[x.status]}" title="${esc(x.id)} · ${esc(x.status_label)}"><i></i>${esc(x.letter)} · ${tval(x.t)}</a>`).join('');
+  // Keep the current dip's chip in view in the sideways-scrolling row (without moving the page).
+  const row = $('#txchips'), chip = $('#txchips a[aria-current="true"]');
+  if (row && chip) row.scrollLeft = chip.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2;
   $('#txtheatre').innerHTML = theatre(d);
   $('#txscore').innerHTML = `<div class="top"><span>Panel score (weighted share that marked it)</span><b>${fmt(d.score, 2)}</b></div><div class="bar" style="--c:${STC[d.status]}"><i style="width:${Math.round((d.score || 0) * 100)}%"></i></div><p>${esc(d.verdict)}</p>`;
   $('#txlanes').innerHTML = lanesHTML(d);
@@ -2135,7 +2139,7 @@ function renderSentinels(){
       <circle cx="180" cy="180" r="18" fill="#FFB340"/><circle cx="180" cy="180" r="80" fill="none" stroke="rgba(191,90,242,.35)" stroke-width=".8"/><circle cx="180" cy="180" r="150" fill="none" stroke="rgba(100,210,255,.35)" stroke-width=".8"/>
       <g class="orbit" style="transform-origin:180px 180px">${ring(probes, 80, 'p', '#BF5AF2')}</g>
       <g class="orbitslow" style="transform-origin:180px 180px">${ring(sents, 150, 's', '#64D2FF')}</g></svg>
-    <figcaption>Inner ring: Probes. Outer ring: Sentinels. Size is calibrated weight. Decorative motion; the rings carry no data.</figcaption>`;
+    <figcaption>Inner ring: Probes. Outer ring: Sentinels. Size is calibrated weight. The motion is decorative.</figcaption>`;
   $('#senfilter').innerHTML = [['all', 'All'], ['sentinel', 'Sentinels'], ['probe', 'Probes']].map(([k, l]) => `<button type="button" data-sf="${k}" aria-pressed="${sen.filter === k}">${l}</button>`).join('');
   $('#sencards').innerHTML = R.filter(r => sen.filter === 'all' || r.role === sen.filter).map(r => {
     const c = r.role === 'sentinel' ? 'var(--sen)' : 'var(--prb-ink)', n = r.n_injected || 0;
