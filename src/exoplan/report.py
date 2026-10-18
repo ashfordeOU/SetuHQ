@@ -27,7 +27,7 @@ h3{font-size:17px;margin:0 0 6px}
 p.lead{font-size:18px;max-width:760px;margin:0;opacity:.95}
 nav{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
 nav .wrap{display:flex;gap:18px;overflow-x:auto;padding-top:12px;padding-bottom:12px}
-nav a{color:var(--muted);text-decoration:none;white-space:nowrap;font-size:14px}
+nav a{color:var(--muted);text-decoration:none;white-space:nowrap;font-size:14px;display:inline-flex;align-items:center;min-height:44px}
 nav a:hover{color:var(--accent)}
 .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
@@ -214,6 +214,7 @@ def build_report(
     page = f"""<!doctype html>
 <html lang='en'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
+<link rel='icon' href='data:,'>
 <title>{html.escape(title)}</title>
 <style>{STYLE}</style></head>
 <body>
@@ -259,7 +260,7 @@ def build_report(
 
 <section id='provenance'><h2>Provenance</h2>
 <div class='grid'>
- <div class='card'><h3>Reviewer panel</h3><table><thead><tr><th>id</th><th>kind</th><th>weight</th></tr></thead><tbody>{reviewers}</tbody></table>
+ <div class='card'><h3>Reviewer panel</h3><div class='scroll' tabindex='0' role='region' aria-label='Reviewer panel table'><table><thead><tr><th>id</th><th>kind</th><th>weight</th></tr></thead><tbody>{reviewers}</tbody></table></div>
  <p class='note'>Skipped (unavailable here): {html.escape(skipped)}</p></div>
  <div class='card'><h3>Run</h3><div class='kv'>
    <div>Config</div><div>{html.escape(manifest['config_name'])}</div>
@@ -316,6 +317,7 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
     page = f"""<!doctype html>
 <html lang='en'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
+<link rel='icon' href='data:,'>
 <title>exoplan discoveries</title>
 <style>{STYLE}</style></head>
 <body>

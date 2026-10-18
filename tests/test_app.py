@@ -284,11 +284,10 @@ def test_top_bar_is_a_pill_switcher_with_no_drawer(run_dir, tmp_path):
     assert "-webkit-backdrop-filter:saturate(180%) blur(24px)" in APP_CSS
 
 
-def test_shell_and_framed_docket_share_the_self_hosted_kshana_fonts(run_dir, tmp_path):
+def test_shell_and_docket_use_only_self_hosted_fonts(run_dir, tmp_path):
     out = build_app(run_dir, tmp_path / "app", title="t")
     page = out.read_text()
     data = _page_data(page)
-    # Self-hosted, as Kshana serves them: no font request leaves the site.
     assert "fonts.googleapis.com" not in page and "fonts.gstatic.com" not in page
     assert f'<link rel="stylesheet" href="{FONTS_CSS}">' in page
     css = (out.parent / FONTS_CSS).read_text()
@@ -301,10 +300,11 @@ def test_shell_and_framed_docket_share_the_self_hosted_kshana_fonts(run_dir, tmp
     assert FRAME_FONTS_HREF in data["docket_html"] and "fonts.googleapis.com" not in data["docket_html"]
     assert data["fonts_css"] == FONTS_CSS and "split(D.frame_fonts_href).join(href)" in APP_JS
     assert "Inter Tight" not in data["docket_html"] and "JetBrains Mono" not in data["docket_html"]
-    assert "Inter Tight" not in APP_CSS and "JetBrains" not in APP_CSS and "JetBrains" not in APP_JS
-    # Only the shell's copy is re-dressed: the standalone Docket keeps its own fonts.
-    standalone = docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t"))
-    assert "Inter+Tight" in standalone and "Geist" not in standalone
+    # The standalone Docket loads its own copy of the same fonts, beside it.
+    docket = docket_mod.build_docket(run_dir, tmp_path / "docket", title="t")
+    standalone = docket.read_text()
+    assert "fonts.googleapis.com" not in standalone and '<link rel="stylesheet" href="assets/fonts/fonts.css">' in standalone
+    assert (docket.parent / "assets" / "fonts" / "fonts.css").exists() and '"Geist"' in standalone
 
 
 def test_tokens_follow_the_approved_design():

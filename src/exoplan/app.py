@@ -41,7 +41,7 @@ import math
 from pathlib import Path
 
 from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
-from exoplan.docket import OUTCOME_LABEL, docket_data, docket_page
+from exoplan.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
 from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
 from exoplan.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
 
@@ -519,12 +519,13 @@ FRAME_BRIDGE_JS = r"""
   function accordion(){
     var heads = document.querySelectorAll('#rows .sig > .sighead');
     if (!phone.matches){
-      for (var j = 0; j < heads.length; j++){ heads[j].removeAttribute('role'); heads[j].removeAttribute('aria-expanded'); var t0 = heads[j].querySelector('.showdips'); if (t0) t0.remove(); }
+      for (var j = 0; j < heads.length; j++){ heads[j].removeAttribute('role'); heads[j].removeAttribute('aria-expanded'); heads[j].removeAttribute('aria-controls'); var t0 = heads[j].querySelector('.showdips'); if (t0) t0.remove(); }
       return;
     }
     for (var i = 0; i < heads.length; i++){
       var h = heads[i], g = h.parentElement, n = g.querySelectorAll('.row').length, cur = g.classList.contains('cur');
       h.setAttribute('role', 'button'); h.setAttribute('aria-expanded', String(cur));
+      var lst = g.querySelector('.diplist'); if (lst && lst.id) h.setAttribute('aria-controls', lst.id);
       if (h.getAttribute('tabindex') === null || h.getAttribute('tabindex') === '-1') h.setAttribute('tabindex', '0');
       var tip = h.querySelector('.showdips');
       if (!tip){ tip = document.createElement('span'); tip.className = 'showdips'; h.appendChild(tip); }
@@ -569,8 +570,7 @@ FRAME_PHONE_CSS = (
 
 # Also only in the shell's copy: the Docket in the shell's family dress (Kshana's Observatory tokens and
 # Geist type), so the framed page reads as part of the app. Same layout and rules; only colour and type change.
-DOCKET_FONTS = ("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600"
-                       "&family=JetBrains+Mono:wght@400;500;600&display=swap")
+DOCKET_FONTS = DOCKET_FONTS_CSS  # the standalone Docket's own (self-hosted) font stylesheet
 FRAME_THEME_CSS = (
     # The shell's dark-first palette: black ground, near-white ink, system colours; a light variant on request.
     ":root{--paper:#000;--ink:#F5F5F7;--rule:rgba(255,255,255,.14);--muted:#8E8E93;--fit:#0A84FF;--pass:#30D158;"
@@ -723,7 +723,7 @@ APP_CSS = """
   --blue:#0A84FF;--yellow:#FFD60A;--red:#FF453A;--sen:#64D2FF;--prb:#BF5AF2;--prb-ink:#D0A8FF;--star:#FFB340;--green:#30D158;
   --cyan:#64D2FF;--lime:#30D158;--amber:#FFB340;--coral:#FF6961;--magenta:#BF5AF2;
   --cyan-soft:rgba(100,210,255,.12);--lime-soft:rgba(48,209,88,.14);--amber-soft:rgba(255,179,64,.14);--coral-soft:rgba(255,69,58,.16);
-  --seg-bg:#F5F5F7;--seg-ink:#000;--btn-bg:#0A84FF;--btn-ink:#FFFFFF;
+  --seg-bg:#F5F5F7;--seg-ink:#000;--btn-bg:#0071E3;--btn-ink:#FFFFFF;
   --shadow:none;--gloss:none;
   --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;--display:var(--sans);
@@ -734,8 +734,8 @@ APP_CSS = """
   --bg:#F5F5F7;--bg-2:#FFFFFF;--bg-3:#E8E8ED;
   --glass:rgba(255,255,255,.72);--glass-2:rgba(255,255,255,.6);--panel:#FFFFFF;--panel-2:rgba(0,0,0,.05);
   --line:rgba(0,0,0,.08);--line-2:rgba(0,0,0,.14);--line-3:rgba(0,0,0,.26);
-  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#6E6E73;
-  --blue:#0066CC;--yellow:#8A6100;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
+  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#5E5E63;
+  --blue:#0066CC;--yellow:#7A5600;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
   --cyan:#0066CC;--lime:#1F7A35;--amber:#A05A00;--coral:#C9001B;--magenta:#8944AB;
   --cyan-soft:rgba(0,102,204,.1);--lime-soft:rgba(31,122,53,.12);--amber-soft:rgba(160,90,0,.12);--coral-soft:rgba(201,0,27,.1);
   --seg-bg:#1D1D1F;--seg-ink:#FFFFFF;--btn-bg:#0071E3;--btn-ink:#FFFFFF}
@@ -743,8 +743,8 @@ APP_CSS = """
   --bg:#F5F5F7;--bg-2:#FFFFFF;--bg-3:#E8E8ED;
   --glass:rgba(255,255,255,.72);--glass-2:rgba(255,255,255,.6);--panel:#FFFFFF;--panel-2:rgba(0,0,0,.05);
   --line:rgba(0,0,0,.08);--line-2:rgba(0,0,0,.14);--line-3:rgba(0,0,0,.26);
-  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#6E6E73;
-  --blue:#0066CC;--yellow:#8A6100;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
+  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#5E5E63;
+  --blue:#0066CC;--yellow:#7A5600;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
   --cyan:#0066CC;--lime:#1F7A35;--amber:#A05A00;--coral:#C9001B;--magenta:#8944AB;
   --cyan-soft:rgba(0,102,204,.1);--lime-soft:rgba(31,122,53,.12);--amber-soft:rgba(160,90,0,.12);--coral-soft:rgba(201,0,27,.1);
   --seg-bg:#1D1D1F;--seg-ink:#FFFFFF;--btn-bg:#0071E3;--btn-ink:#FFFFFF}}
@@ -1594,7 +1594,7 @@ function saveFeedView(){
 // push: the viewer changed the sort or the filter, so Back returns to the previous view.
 function syncFeedURL(push){
   if (current !== 'explorer') return;
-  setHash('#/explorer?' + encodeFeedView(currentFeedView()), !!push);
+  setHash('#/explorer?' + encodeFeedView(currentFeedView()) + '&' + encodeExView(currentEx()), !!push);
 }
 applyFeedView(ownFeedView);
 const COLS = [
@@ -1946,6 +1946,20 @@ function revOk(d){
   return true;
 }
 const skyShown = d => sky[d.status] && revOk(d);
+// The Sky's filters live in the URL (#/sky?status=known,open&who=probes), like the Feed's sort: a viewer's
+// change is a new history entry, a link opens the same view, and anything malformed falls back to the default.
+const SKY_STATUS = ['known', 'open', 'rejected'], SKY_WHO = ['all', 'sentinels', 'probes', 'split'];
+function decodeSkyView(params){
+  const st = params.get('status'), who = params.get('who');
+  let on = SKY_STATUS.slice();
+  if (st === 'none') on = [];
+  else if (st !== null){ const want = st.split(','); const ok = SKY_STATUS.filter(k => want.includes(k)); if (ok.length) on = ok; }
+  return {status: on, who: SKY_WHO.includes(who) ? who : 'all'};
+}
+const encodeSkyView = v => `status=${v.status.length ? SKY_STATUS.filter(k => v.status.includes(k)).join(',') : 'none'}&who=${v.who}`;
+const currentSky = () => ({status: SKY_STATUS.filter(k => sky[k]), who: sky.rev});
+function applySky(v){ for (const k of SKY_STATUS) sky[k] = v.status.includes(k); sky.rev = v.who; }
+function syncSkyURL(push){ if (current === 'sky') setHash('#/sky?' + encodeSkyView(currentSky()), !!push); }
 function renderSky(){
   const n = k => S.counts[k];
   $('#skychips').innerHTML = [['known', S.planet ? S.planet : 'Known'], ['open', 'Open'], ['rejected', 'Rejected']].map(([k, l]) =>
@@ -1970,8 +1984,8 @@ function skyTimeline(){
 }
 $('#route-sky').addEventListener('click', e => {
   const s = e.target.closest('button[data-st]'), r = e.target.closest('button[data-rev]');
-  if (s){ sky[s.dataset.st] = !sky[s.dataset.st]; renderSky(); $(`#skychips button[data-st="${s.dataset.st}"]`).focus(); say(`${DIPS.filter(skyShown).length} of ${DIPS.length} dips shown.`); }
-  if (r){ sky.rev = r.dataset.rev; renderSky(); $(`#skyrev button[data-rev="${r.dataset.rev}"]`).focus(); say(`${DIPS.filter(skyShown).length} of ${DIPS.length} dips shown.`); }
+  if (s){ sky[s.dataset.st] = !sky[s.dataset.st]; syncSkyURL(true); renderSky(); $(`#skychips button[data-st="${s.dataset.st}"]`).focus(); say(`${DIPS.filter(skyShown).length} of ${DIPS.length} dips shown.`); }
+  if (r){ sky.rev = r.dataset.rev; syncSkyURL(true); renderSky(); $(`#skyrev button[data-rev="${r.dataset.rev}"]`).focus(); say(`${DIPS.filter(skyShown).length} of ${DIPS.length} dips shown.`); }
 });
 
 // ---------- Transit (the per-dip cockpit) ----------
@@ -2088,6 +2102,22 @@ const TICS = [...new Set(EXF.map(f => f.tic))];
 const ex = {stars: Object.fromEntries(TICS.map(t => [t, true])), fNew: true, fKnown: true, snrMin: 0, sel: EXF.length ? EXF[0].i : null};
 const starColour = tic => STAR_COL[TICS.indexOf(tic) % STAR_COL.length];
 const exShown = f => ex.stars[f.tic] && (f.status === 'new_candidate' ? ex.fNew : ex.fKnown) && (f.snr || 0) >= ex.snrMin;
+// The Explorer's filters live in the URL beside the Feed table's sort and filter:
+// #/explorer?sort=snr&filter=all&stars=all&snr=8&new=1&known=1 (stars: all, none or a list of TIC ids).
+const EX_SNR = [0, 7, 8, 9, 10];
+function decodeExView(params){
+  const st = params.get('stars'), snr = Number(params.get('snr'));
+  let stars = TICS.map(String);
+  if (st === 'none') stars = [];
+  else if (st !== null && st !== 'all'){ const want = st.split(','); const ok = TICS.map(String).filter(t => want.includes(t)); if (ok.length) stars = ok; }
+  return {stars, snr: EX_SNR.includes(snr) ? snr : 0, new: params.get('new') !== '0', known: params.get('known') !== '0'};
+}
+function encodeExView(v){
+  const all = TICS.map(String), on = all.filter(t => v.stars.includes(t));
+  return `stars=${on.length === all.length ? 'all' : on.length ? on.join(',') : 'none'}&snr=${v.snr}&new=${v.new ? 1 : 0}&known=${v.known ? 1 : 0}`;
+}
+const currentEx = () => ({stars: TICS.map(String).filter(t => ex.stars[t]), snr: ex.snrMin, new: ex.fNew, known: ex.fKnown});
+function applyEx(v){ for (const t of TICS) ex.stars[t] = v.stars.includes(String(t)); ex.snrMin = v.snr; ex.fNew = v.new; ex.fKnown = v.known; }
 function renderExplorer(){
   if (!EXF.length){ $('#exscatter').innerHTML = '<p class="empty">No discovery catalogue was given to this build.</p>'; return; }
   const nNew = EXF.filter(f => f.status === 'new_candidate').length, nKnown = EXF.length - nNew;
@@ -2123,9 +2153,9 @@ function renderExSel(){
 const _cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 $('#route-explorer').addEventListener('click', e => {
   const t = e.target.closest('button[data-tic]'), f = e.target.closest('#exstatus button[data-f]'), n = e.target.closest('button[data-snr]'), p = e.target.closest('#exscatter button[data-i]');
-  if (t){ ex.stars[t.dataset.tic] = !ex.stars[t.dataset.tic]; renderExplorer(); $(`#exstars button[data-tic="${t.dataset.tic}"]`).focus(); say($('#excount').textContent); }
-  else if (f){ ex[f.dataset.f] = !ex[f.dataset.f]; renderExplorer(); $(`#exstatus button[data-f="${f.dataset.f}"]`).focus(); say($('#excount').textContent); }
-  else if (n){ ex.snrMin = +n.dataset.snr; renderExplorer(); $(`#exsnr button[data-snr="${n.dataset.snr}"]`).focus(); say($('#excount').textContent); }
+  if (t){ ex.stars[t.dataset.tic] = !ex.stars[t.dataset.tic]; syncFeedURL(true); renderExplorer(); $(`#exstars button[data-tic="${t.dataset.tic}"]`).focus(); say($('#excount').textContent); }
+  else if (f){ ex[f.dataset.f] = !ex[f.dataset.f]; syncFeedURL(true); renderExplorer(); $(`#exstatus button[data-f="${f.dataset.f}"]`).focus(); say($('#excount').textContent); }
+  else if (n){ ex.snrMin = +n.dataset.snr; syncFeedURL(true); renderExplorer(); $(`#exsnr button[data-snr="${n.dataset.snr}"]`).focus(); say($('#excount').textContent); }
   else if (p){ ex.sel = +p.dataset.i; for (const b of $$('#exscatter button[data-i]')) b.setAttribute('aria-pressed', String(+b.dataset.i === ex.sel)); renderExSel(); }
 });
 
@@ -2202,7 +2232,14 @@ function go(p, moveFocus){
       sharedView = encodeLayout(layout) !== encodeLayout(ownLayout);
     } else { layout = ownLayout.map(x => ({...x})); sharedView = false; }
   }
+  if (p.route === 'sky'){
+    applySky(decodeSkyView(p.params));
+    if (rendered.has('sky')) renderSky();
+  }
   if (p.route === 'explorer'){
+    const beforeEx = encodeExView(currentEx());
+    applyEx(decodeExView(p.params));
+    if (rendered.has('explorer') && beforeEx !== encodeExView(currentEx())) renderExplorer();
     const fromURL = ['sort', 'dir', 'filter'].some(k => p.params.has(k));
     const before = currentFeedView();
     applyFeedView(fromURL ? decodeFeedView(p.params) : ownFeedView);
@@ -2211,6 +2248,7 @@ function go(p, moveFocus){
   current = p.route;
   show(p.route, moveFocus && changed);
   if (p.route === 'explorer') syncFeedURL();
+  if (p.route === 'sky') syncSkyURL(false);
   if (p.route === 'transit') openTransit(p.params.get('dip'));
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));
 }
@@ -2230,7 +2268,7 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { me
 // ---------- theme: dark (the default), light or system ----------
 // The design is dark first. The choice is stored as exoplan-theme (when storage is allowed); the head
 // script applies it before first paint. The Docket frame is told too, so it follows.
-const THEMES = ['dark', 'light', 'system'], THEME_NAME = {system: 'System', light: 'Light', dark: 'Dark'};
+const THEMES = ['dark', 'light', 'system'], THEME_NAME = {system: 'System', light: 'Light', dark: 'Dark (default)'};
 function currentTheme(){ const t = document.documentElement.getAttribute('data-theme'); return THEMES.includes(t) ? t : 'dark'; }
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme', t);
@@ -2249,9 +2287,9 @@ go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()
 THEME_KEY = "exoplan-theme"
 THEME_HEAD_JS = ("(function(){var t='dark';try{var s=localStorage.getItem('" + THEME_KEY + "');"
                  "if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();")
-THEME_BUTTON = ('<button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Change theme">'
+THEME_BUTTON = ('<button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark (default). Change theme">'
                 '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg>'
-                '<span class="themelbl">Dark</span></button>')
+                '<span class="themelbl">Dark (default)</span></button>')
 
 
 def _nav(sections: list[dict]) -> str:
@@ -2346,7 +2384,8 @@ def _sky(data: dict) -> str:
         bt = (geo["y"] + 235) / 470 * 100 - 34
         lead = st.get("lead_dip")
         known = f"{e(st['planet'])} · known planet" if st.get("planet") else f"{len(st['dips'])} dips · {UNCONFIRMED}"
-        pin = (f'<a class="skypin" href="#/transit?dip={e(lead or "")}" style="left:{bl:.1f}%;top:{bt:.1f}%">'
+        pin = (f'<a class="skypin" href="#/transit?dip={e(lead or "")}" style="left:{bl:.1f}%;top:{bt:.1f}%" '
+               f'title="{e(star["name"])} placed from SIMBAD (ICRS J2000): RA {star["ra_deg"]:.2f}°, Dec {star["dec_deg"]:.2f}°">'
                f'<b>{e(star["name"])}</b><span>{known}</span><em>Open ›</em></a>')
         marker = (f'<circle class="pulse" cx="{geo["x"]}" cy="{geo["y"]}" r="22" fill="url(#pmg)"/>'
                   f'<circle cx="{geo["x"]}" cy="{geo["y"]}" r="10" fill="none" stroke="#64D2FF" stroke-width=".8"/>'
@@ -2354,6 +2393,7 @@ def _sky(data: dict) -> str:
         where = (f"{e(star['name'])} at RA {star['ra_deg']:.2f}°, Dec {star['dec_deg']:.2f}° ({e(star['source'])})")
     else:
         marker, where = "", "The target's sky position is not stored, so it is not plotted."
+    placed = f'{e(star["name"])} placed from SIMBAD (ICRS J2000) · ' if geo.get("x") is not None else "target not plotted (no position stored) · "
     t1, t2 = st["sky_title"]
     return f"""<header class="headrow">
         <div>{_eyebrow("Sky")}<h1 class="lead-h" id="h-sky" tabindex="-1">{e(t1)}<br><span class="grey">{e(t2)}</span></h1></div>
@@ -2372,7 +2412,7 @@ def _sky(data: dict) -> str:
             {marker}
           </svg>
           {pin}
-          <p class="skynote">Field stars decorative · feed stars not plotted (positions not stored) · dashed: the ecliptic</p>
+          <p class="skynote">Field stars decorative · feed stars not plotted (positions not stored) · {placed}dashed: the ecliptic</p>
         </section>
         <aside class="glass dipsbox" aria-labelledby="h-skydips">
           <div class="dhead"><b id="h-skydips">Dips</b><span class="muted" id="skycount"></span></div>
@@ -2590,7 +2630,7 @@ def _input_label(data: dict) -> str:
 LANDING_JS = r"""
 // The landing page's only script: the theme control (dark, light or system), as in the app.
 (function(){
-  var THEMES = ['dark', 'light', 'system'], NAME = {dark: 'Dark', light: 'Light', system: 'System'};
+  var THEMES = ['dark', 'light', 'system'], NAME = {dark: 'Dark (default)', light: 'Light', system: 'System'};
   var b = document.querySelector('[data-theme-toggle]'); if (!b) return;
   function cur(){ var t = document.documentElement.getAttribute('data-theme'); return THEMES.indexOf(t) >= 0 ? t : 'dark'; }
   function apply(t){
@@ -2617,7 +2657,7 @@ def landing_page(data: dict, app_href: str = "app/") -> str:
     fonts = app_href + FONTS_CSS
     links = (f'<a href="{app_href}#/sky">Sky</a><a href="{app_href}#/transit">Transit</a><a href="{app_href}#/explorer">Explorer</a>'
              f'<a href="{app_href}#/sentinels">Sentinels</a><a href="docket/">The Docket</a><a href="plate/">Plates</a>'
-             f'<a href="report/">Full run report</a>')
+             f'<a href="report/">Full run report (archived)</a>')
     return f"""<!doctype html>
 <html lang="en" data-theme="dark"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">

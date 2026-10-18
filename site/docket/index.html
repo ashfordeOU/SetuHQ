@@ -1,102 +1,103 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="data:,">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>exoplan docket: pi Men (TESS sector 1)</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <style>
 :root{--paper:#f7f6f2;--ink:#16181d;--rule:#d9d7d0;--muted:#6b6e76;--fit:#1f5fbf;--pass:#2e7d4f;--flag:#946c00;--reject:#b23a3a;--panel:#fcfbf8;--sel:#ebe9e1;
 --l-det:#8a7e57;--l-det2:#5c7f8f;--l-cl1:#7b5ea7;--l-cl2:#b0623a;--cons:#16181d}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#121317;--ink:#ecebe6;--rule:#2a2c33;--muted:#9a9ca4;--fit:#6fa0ff;--pass:#5cc08a;--flag:#e0b243;--reject:#ef7070;--panel:#17181d;--sel:#22242b;--l-det:#b5a777;--l-det2:#8bb0c0;--l-cl1:#a98bd6;--l-cl2:#d88a62;--cons:#ecebe6;color-scheme:dark}}
 :root[data-theme="dark"]{--paper:#121317;--ink:#ecebe6;--rule:#2a2c33;--muted:#9a9ca4;--fit:#6fa0ff;--pass:#5cc08a;--flag:#e0b243;--reject:#ef7070;--panel:#17181d;--sel:#22242b;--l-det:#b5a777;--l-det2:#8bb0c0;--l-cl1:#a98bd6;--l-cl2:#d88a62;--cons:#ecebe6;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 "Inter Tight",system-ui,sans-serif;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-width:0}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 "Geist",system-ui,sans-serif;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-width:0}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.mono{font-family:"Geist Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
 :focus-visible{outline:2px solid var(--fit);outline-offset:2px}
 .app{display:grid;grid-template-columns:340px minmax(0,1fr);min-height:100vh;min-width:0}
 .list{border-right:1px solid var(--rule);padding:18px 0;overflow:auto;max-height:100vh;position:sticky;top:0;min-width:0}
 .run{padding:0 16px 14px;border-bottom:1px solid var(--rule);margin-bottom:8px}
-.run h1{font:600 17px/1.2 "Inter Tight",sans-serif;margin:0 0 6px}
-.counts{margin:0 0 8px;font:13px/1.5 "JetBrains Mono",monospace}
+.run h1{font:600 17px/1.2 "Geist",sans-serif;margin:0 0 6px}
+.counts{margin:0 0 8px;font:13px/1.5 "Geist Mono",monospace}
 .revcount{color:var(--ink)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font:12px "JetBrains Mono",monospace;border:1px solid var(--rule);background:none;color:var(--muted);padding:3px 8px;border-radius:999px;cursor:pointer}
+.chip{font:12px "Geist Mono",monospace;border:1px solid var(--rule);background:none;color:var(--muted);padding:3px 8px;border-radius:999px;cursor:pointer}
 .chip[aria-pressed="true"]{color:var(--ink);border-color:var(--ink)}
-.listtoggle{display:none;margin-top:10px;font:12px "JetBrains Mono",monospace;background:none;border:1px solid var(--rule);color:var(--ink);border-radius:4px;padding:4px 10px;cursor:pointer}
+.listtoggle{display:none;margin-top:10px;font:12px "Geist Mono",monospace;background:none;border:1px solid var(--rule);color:var(--ink);border-radius:4px;padding:4px 10px;cursor:pointer}
 #rows:focus-visible{outline:2px solid var(--fit);outline-offset:-2px}
 .sig{border-bottom:1px solid var(--rule);padding:4px 0 6px}
 .sighead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 16px 4px;cursor:pointer}
-.sighead small,.row small{display:block;font:11px "JetBrains Mono",monospace;color:var(--muted)}
+.sighead small,.row small{display:block;font:11px "Geist Mono",monospace;color:var(--muted)}
 .signame{font-weight:600;font-size:13px}
 .row{display:grid;grid-template-columns:90px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 16px 6px 28px;cursor:pointer;border-left:3px solid transparent}
 .row:hover{background:var(--sel)}
 .row[aria-selected="true"]{border-left-color:var(--ink);background:var(--sel)}
 #rows:focus-visible .row[aria-selected="true"]{outline:2px solid var(--fit);outline-offset:-2px}
-.glyph{font:600 12px "JetBrains Mono",monospace;white-space:nowrap}
+.glyph{font:600 12px "Geist Mono",monospace;white-space:nowrap}
 .word{font-weight:500}
-.badge{font:600 11px "JetBrains Mono",monospace;white-space:nowrap}
+.badge{font:600 11px "Geist Mono",monospace;white-space:nowrap}
 .g-pass{color:var(--pass)}.g-flag{color:var(--flag)}.g-fail{color:var(--reject)}.g-nm{color:var(--muted)}
 .dossier{padding:22px 28px 40px;min-width:0;display:grid;gap:22px;align-content:start}
 #dtop,#drest{display:grid;gap:22px;min-width:0;align-content:start}
 #listslot:empty{display:none}
 .outcome{border:1px solid currentColor;border-left-width:6px;border-radius:6px;padding:12px 14px;display:grid;gap:4px;background:var(--panel)}
-.out-main{font:600 20px/1.2 "Inter Tight",sans-serif}
+.out-main{font:600 20px/1.2 "Geist",sans-serif}
 .out-main .glyph{font:inherit}
-.out-why,.out-feed,.xm{margin:0;font:13px/1.5 "Inter Tight",sans-serif;color:var(--ink)}
+.out-why,.out-feed,.xm{margin:0;font:13px/1.5 "Geist",sans-serif;color:var(--ink)}
 .xm-k{color:var(--muted)}
 .head{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--rule);padding-bottom:12px}
-.head h2{font:600 22px/1.25 "Inter Tight",sans-serif;margin:0}
-.dipid{font:500 14px "JetBrains Mono",monospace;color:var(--muted);overflow-wrap:anywhere}
-.sigout{font:12px "JetBrains Mono",monospace;color:var(--muted)}
-.facts{display:flex;flex-wrap:wrap;gap:6px 22px;font:13px "JetBrains Mono",monospace}
+.head h2{font:600 22px/1.25 "Geist",sans-serif;margin:0}
+.dipid{font:500 14px "Geist Mono",monospace;color:var(--muted);overflow-wrap:anywhere}
+.sigout{font:12px "Geist Mono",monospace;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:6px 22px;font:13px "Geist Mono",monospace}
 .facts span{color:var(--muted);margin-right:6px}
 .sec{display:grid;gap:8px;min-width:0}
 .sec>header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px}
 .sec>header h3{margin:0}
-.sectoggle{font:600 12px/1 "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:none;border:0;padding:4px 0;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.sectoggle{font:600 12px/1 "Geist Mono",monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:none;border:0;padding:4px 0;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .sectoggle:hover{color:var(--ink)}
 .caret{display:inline-block;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid currentColor;transition:transform .15s}
 .sectoggle[aria-expanded="false"] .caret{transform:rotate(-90deg)}
-.sec>header em{font:12px "Inter Tight",sans-serif;color:var(--muted);font-style:normal}
+.sec>header em{font:12px "Geist",sans-serif;color:var(--muted);font-style:normal}
 .secbody{display:grid;gap:8px;min-width:0}
 .secbody[hidden]{display:none}
 svg{display:block;width:100%;height:auto;overflow:visible}
-svg text{font:11px "JetBrains Mono",monospace;fill:var(--muted)}
+svg text{font:11px "Geist Mono",monospace;fill:var(--muted)}
 svg .grid{stroke:var(--rule);stroke-width:1}
 svg .hl{fill:var(--ink)}
 .hero-wrap{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:8px}
 .dips{display:flex;flex-wrap:wrap;gap:6px}
-.dipbtn{font:12px "JetBrains Mono",monospace;background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:5px 9px;cursor:pointer}
+.dipbtn{font:12px "Geist Mono",monospace;background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:5px 9px;cursor:pointer}
 .dipbtn.cur{border-color:var(--ink);background:var(--sel)}
 .compare{display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
 .compare>div{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:8px;min-width:0}
-.compare p{margin:4px 0 0;font:12px "Inter Tight",sans-serif;color:var(--muted)}
+.compare p{margin:4px 0 0;font:12px "Geist",sans-serif;color:var(--muted)}
 .scroll{min-width:0}
-.ledger{width:100%;border-collapse:collapse;font:13px "JetBrains Mono",monospace}
+.ledger{width:100%;border-collapse:collapse;font:13px "Geist Mono",monospace}
 .ledger td{padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:top;min-width:0;overflow-wrap:anywhere}
 .ledger td.c-name{white-space:nowrap}
 .ledger tr.chk:focus-visible{outline:2px solid var(--fit);outline-offset:-2px}
 .ledger tr.chk-not_measured td.c-val{color:var(--muted)}
-.ledger th.grp{text-align:left;font:600 11px "JetBrains Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:14px 8px 6px;border-bottom:1px solid var(--rule)}
-.ledger .why{font:13px "Inter Tight",sans-serif;color:var(--muted)}
+.ledger th.grp{text-align:left;font:600 11px "Geist Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:14px 8px 6px;border-bottom:1px solid var(--rule)}
+.ledger .why{font:13px "Geist",sans-serif;color:var(--muted)}
 .rat{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));min-width:0}
 .rat>div{border-top:2px solid var(--rule);padding-top:8px;min-width:0}
-.rat b{font:600 12px "JetBrains Mono",monospace}
+.rat b{font:600 12px "Geist Mono",monospace}
 .rat p{margin:6px 0 0;color:var(--muted);font-size:13px}
-.kind{display:inline-block;font:600 11px "JetBrains Mono",monospace;border-radius:3px;padding:0 5px;border:1px solid currentColor}
+.kind{display:inline-block;font:600 11px "Geist Mono",monospace;border-radius:3px;padding:0 5px;border:1px solid currentColor}
 .kind-sim{color:var(--l-det)}.kind-cl{color:var(--l-cl1)}
-.prov{font:11px/1.6 "JetBrains Mono",monospace;color:var(--muted);border-top:1px solid var(--rule);padding-top:10px;overflow-wrap:anywhere}
+.prov{font:11px/1.6 "Geist Mono",monospace;color:var(--muted);border-top:1px solid var(--rule);padding-top:10px;overflow-wrap:anywhere}
 .empty{color:var(--muted);font-style:italic;padding:12px 0}
-.hint{font:12px "JetBrains Mono",monospace;color:var(--muted)}
-kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--rule);border-radius:4px;padding:0 4px}
+.hint{font:12px "Geist Mono",monospace;color:var(--muted)}
+kbd{font:11px "Geist Mono",monospace;border:1px solid var(--rule);border-radius:4px;padding:0 4px}
 .strip{position:relative;padding:8px;min-width:0;overflow:hidden}
 .strip svg{width:100%;touch-action:pan-y}
 .strip .lanelbl,.strip .halo{paint-order:stroke;stroke:var(--panel);stroke-width:3px;stroke-linejoin:round}
-.tip{position:absolute;z-index:2;max-width:min(340px,80%);background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:6px 8px;font:11px/1.45 "JetBrains Mono",monospace;color:var(--ink);pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.12)}
-.readout{margin-top:6px;min-height:3em;font:11px/1.45 "JetBrains Mono",monospace;color:var(--ink);overflow-wrap:anywhere}
-.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font:12px "Inter Tight",sans-serif;color:var(--muted)}
+.tip{position:absolute;z-index:2;max-width:min(340px,80%);background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:6px 8px;font:11px/1.45 "Geist Mono",monospace;color:var(--ink);pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.readout{margin-top:6px;min-height:3em;font:11px/1.45 "Geist Mono",monospace;color:var(--ink);overflow-wrap:anywhere}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font:12px "Geist",sans-serif;color:var(--muted)}
 .legend i{display:inline-block;vertical-align:middle;margin-right:6px}
 .legend .k-pt{width:6px;height:6px;border-radius:50%;background:var(--ink)}
 .legend .k-box{width:16px;height:0;border-top:2px solid var(--fit)}
@@ -104,21 +105,21 @@ kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--rule);border-rad
 .legend .k-lane{width:14px;height:8px;border-radius:2px;background:var(--l-det)}
 .legend .k-hatch{width:14px;height:8px;border-radius:2px;border:1px solid var(--muted);background:repeating-linear-gradient(45deg,var(--muted) 0 2px,transparent 2px 4px)}
 .panelfact{flex-basis:100%;min-width:0;overflow-wrap:anywhere}
-.countrule{margin:4px 0 0;font:12px/1.5 "Inter Tight",sans-serif;color:var(--muted)}
+.countrule{margin:4px 0 0;font:12px/1.5 "Geist",sans-serif;color:var(--muted)}
 .countlist{color:var(--muted)}
-.scope{margin:0;font:12px/1.5 "Inter Tight",sans-serif;color:var(--muted)}
-.filternote{margin:0;border:1px dashed var(--flag);border-radius:6px;padding:8px 12px;font:13px/1.5 "Inter Tight",sans-serif}
+.scope{margin:0;font:12px/1.5 "Geist",sans-serif;color:var(--muted)}
+.filternote{margin:0;border:1px dashed var(--flag);border-radius:6px;padding:8px 12px;font:13px/1.5 "Geist",sans-serif}
 .filternote[hidden]{display:none}
 .xm-cmp{display:block;margin-top:2px}
 .xm-one{margin:0}
 .xm-prov{margin-top:4px;font-size:12px;color:var(--muted)}
-.xm-prov summary{cursor:pointer;display:flex;align-items:center;min-height:28px;font:600 12px "JetBrains Mono",monospace;color:var(--muted);border-radius:4px}
+.xm-prov summary{cursor:pointer;display:flex;align-items:center;min-height:28px;font:600 12px "Geist Mono",monospace;color:var(--muted);border-radius:4px}
 .xm-prov summary:focus-visible{outline:2px solid var(--fit);outline-offset:2px}
 .xm-prov ul{margin:4px 0 0;padding-left:18px;overflow-wrap:anywhere}
 .sighead{scroll-margin-top:calc(var(--top, 0px) + 8px)}
 @media (max-width:699.98px){.xm-prov summary{display:flex;align-items:center;min-height:44px;padding:12px 0;box-sizing:border-box}}
-.ledger thead th{text-align:left;font:600 11px "JetBrains Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;border-bottom:1px solid var(--ink)}
-.epochs{margin:6px 0 0;padding-left:16px;font:12px "JetBrains Mono",monospace;color:var(--ink)}
+.ledger thead th{text-align:left;font:600 11px "Geist Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;border-bottom:1px solid var(--ink)}
+.epochs{margin:6px 0 0;padding-left:16px;font:12px "Geist Mono",monospace;color:var(--ink)}
 @media (max-width:900px){
   .app{grid-template-columns:minmax(0,1fr)}
   .list{display:none}
@@ -278,6 +279,9 @@ function renderList(){
     head.innerHTML = `<div><div class="mono signame">${esc(sigLabel(s))}</div><small>${esc(sigSubjects(s))} · ${s.dips.length} dip${s.dips.length===1?'':'s'}${s.period_days ? ` · ${(s.bls||[]).map(b => b.n_transits).join(' + ')} BLS transits` : ''}</small></div>${outBadge(s.outcome)}`;
     head.addEventListener('click', () => select(s.dips[0]));
     g.appendChild(head);
+    // The signal's dips sit in their own list, which a collapsed header (on a phone) names with aria-controls.
+    const list = document.createElement('div'); list.className = 'diplist'; list.id = 'dips-' + s.signal_id.replace(/[^A-Za-z0-9_-]/g, '_');
+    g.appendChild(list);
     for (const id of s.dips){
       const c = byId[id], e = epochOf(c), d = document.createElement('div');
       d.className = 'row'; d.setAttribute('role','option'); d.id = optId(id); d.dataset.id = id;
@@ -285,7 +289,7 @@ function renderList(){
       d.setAttribute('aria-label', `${id}${e !== null ? ', epoch ' + e : ''}, ${fmt(c.t_center,3)} ${c.time_unit}, ${fmt(c.depth_ppm,0)} ppm, SNR ${fmt(c.snr,1)}, ${OUT_LABEL[c.outcome]}`);
       d.innerHTML = `${miniSpark(c)}<div><div class="mono" style="font-size:12px">${e !== null ? 'epoch E'+e+' · ' : ''}${esc(id.split('-').pop())}</div><small>${fmt(c.t_center,3)} ${esc(c.time_unit)} · ${fmt(c.depth_ppm,0)} ppm · SNR ${fmt(c.snr,1)}</small></div><span class="glyph ${OUT_CLS[c.outcome]}"><span aria-hidden="true">${OUT_GLYPH[c.outcome]}</span> <span class="word">${esc(c.outcome)}</span></span>`;
       d.addEventListener('click', () => { select(id); box.focus({preventScroll:true}); });
-      g.appendChild(d);
+      list.appendChild(d);
     }
     box.appendChild(g);
   }

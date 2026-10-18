@@ -21,7 +21,7 @@
   --blue:#0A84FF;--yellow:#FFD60A;--red:#FF453A;--sen:#64D2FF;--prb:#BF5AF2;--prb-ink:#D0A8FF;--star:#FFB340;--green:#30D158;
   --cyan:#64D2FF;--lime:#30D158;--amber:#FFB340;--coral:#FF6961;--magenta:#BF5AF2;
   --cyan-soft:rgba(100,210,255,.12);--lime-soft:rgba(48,209,88,.14);--amber-soft:rgba(255,179,64,.14);--coral-soft:rgba(255,69,58,.16);
-  --seg-bg:#F5F5F7;--seg-ink:#000;--btn-bg:#0A84FF;--btn-ink:#FFFFFF;
+  --seg-bg:#F5F5F7;--seg-ink:#000;--btn-bg:#0071E3;--btn-ink:#FFFFFF;
   --shadow:none;--gloss:none;
   --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;--display:var(--sans);
@@ -32,8 +32,8 @@
   --bg:#F5F5F7;--bg-2:#FFFFFF;--bg-3:#E8E8ED;
   --glass:rgba(255,255,255,.72);--glass-2:rgba(255,255,255,.6);--panel:#FFFFFF;--panel-2:rgba(0,0,0,.05);
   --line:rgba(0,0,0,.08);--line-2:rgba(0,0,0,.14);--line-3:rgba(0,0,0,.26);
-  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#6E6E73;
-  --blue:#0066CC;--yellow:#8A6100;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
+  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#5E5E63;
+  --blue:#0066CC;--yellow:#7A5600;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
   --cyan:#0066CC;--lime:#1F7A35;--amber:#A05A00;--coral:#C9001B;--magenta:#8944AB;
   --cyan-soft:rgba(0,102,204,.1);--lime-soft:rgba(31,122,53,.12);--amber-soft:rgba(160,90,0,.12);--coral-soft:rgba(201,0,27,.1);
   --seg-bg:#1D1D1F;--seg-ink:#FFFFFF;--btn-bg:#0071E3;--btn-ink:#FFFFFF}
@@ -41,8 +41,8 @@
   --bg:#F5F5F7;--bg-2:#FFFFFF;--bg-3:#E8E8ED;
   --glass:rgba(255,255,255,.72);--glass-2:rgba(255,255,255,.6);--panel:#FFFFFF;--panel-2:rgba(0,0,0,.05);
   --line:rgba(0,0,0,.08);--line-2:rgba(0,0,0,.14);--line-3:rgba(0,0,0,.26);
-  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#6E6E73;
-  --blue:#0066CC;--yellow:#8A6100;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
+  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#5E5E63;
+  --blue:#0066CC;--yellow:#7A5600;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
   --cyan:#0066CC;--lime:#1F7A35;--amber:#A05A00;--coral:#C9001B;--magenta:#8944AB;
   --cyan-soft:rgba(0,102,204,.1);--lime-soft:rgba(31,122,53,.12);--amber-soft:rgba(160,90,0,.12);--coral-soft:rgba(201,0,27,.1);
   --seg-bg:#1D1D1F;--seg-ink:#FFFFFF;--btn-bg:#0071E3;--btn-ink:#FFFFFF}}
@@ -524,7 +524,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 <header class="topbar">
   <a class="brand" href="./" aria-label="exoplan, home"><svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="10" fill="none" stroke="currentColor" stroke-opacity=".5"/><circle cx="11" cy="11" r="3.5" fill="#FFB340"/><circle cx="19" cy="7.5" r="1.8" fill="currentColor"/></svg><span>exoplan</span></a>
   <nav class="nav" aria-label="Sections"><ul><li><a href="app/#/overview" data-route="overview" aria-current="page">Overview</a></li><li><a href="app/#/sky" data-route="sky">Sky</a></li><li><a href="app/#/transit" data-route="transit">Transit</a></li><li><a href="app/#/explorer" data-route="explorer">Explorer</a></li><li><a href="app/#/sentinels" data-route="sentinels">Sentinels</a></li></ul></nav>
-  <div class="topmeta"><span class="mono">pi Men · TESS Sector 1</span><button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Change theme"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg><span class="themelbl">Dark</span></button></div>
+  <div class="topmeta"><span class="mono">pi Men · TESS Sector 1</span><button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark (default). Change theme"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg><span class="themelbl">Dark (default)</span></button></div>
 </header>
 <main id="main"><div id="content" tabindex="-1">
   <section class="route" aria-labelledby="h-overview">
@@ -565,14 +565,14 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
         </ul>
       </section>
       
-    <nav class="sitelinks" aria-label="More"><a href="app/#/sky">Sky</a><a href="app/#/transit">Transit</a><a href="app/#/explorer">Explorer</a><a href="app/#/sentinels">Sentinels</a><a href="docket/">The Docket</a><a href="plate/">Plates</a><a href="report/">Full run report</a></nav>
+    <nav class="sitelinks" aria-label="More"><a href="app/#/sky">Sky</a><a href="app/#/transit">Transit</a><a href="app/#/explorer">Explorer</a><a href="app/#/sentinels">Sentinels</a><a href="docket/">The Docket</a><a href="plate/">Plates</a><a href="report/">Full run report (archived)</a></nav>
     <p class="small">Built from runs/tess-pi-men-s1 and docs/discoveries/catalog.json. Stored values only.</p>
   </section>
 </div></main>
 <script>
 // The landing page's only script: the theme control (dark, light or system), as in the app.
 (function(){
-  var THEMES = ['dark', 'light', 'system'], NAME = {dark: 'Dark', light: 'Light', system: 'System'};
+  var THEMES = ['dark', 'light', 'system'], NAME = {dark: 'Dark (default)', light: 'Light', system: 'System'};
   var b = document.querySelector('[data-theme-toggle]'); if (!b) return;
   function cur(){ var t = document.documentElement.getAttribute('data-theme'); return THEMES.indexOf(t) >= 0 ? t : 'dark'; }
   function apply(t){

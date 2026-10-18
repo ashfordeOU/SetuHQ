@@ -52,8 +52,17 @@ step "plate builds from the stored run"
 "$EX" plate "$RUN" --catalog "$CAT" --out site/plate --title "exoplan plates" >> "$LOG" 2>&1
 ok
 
+step "archived run report builds from the stored run"
+"$EX" report "$RUN" --out site/report --title "exoplan: pi Men (TESS sector 1)" \
+  --validation docs/results/pi_men_validation.md --benchmark docs/results/injection_recovery_simulated_panel.md >> "$LOG" 2>&1
+ok
+
+step "no built page loads fonts or scripts from another site"
+if grep -rl "fonts.googleapis\|fonts.gstatic" site --include=*.html; then echo "external fonts found" | tee -a "$LOG"; exit 1; fi
+ok
+
 step "site files exist"
-for f in site/index.html site/app/index.html site/docket/index.html site/plate/index.html; do
+for f in site/index.html site/app/index.html site/docket/index.html site/plate/index.html site/report/index.html; do
   test -s "$f" || { echo "missing $f" | tee -a "$LOG"; exit 1; }
 done
 ok
