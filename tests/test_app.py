@@ -12,6 +12,9 @@ from exoplan.app import (
     APP_JS,
     FRAME_BRIDGE_JS,
     FRAME_PHONE_CSS,
+    FRAME_THEME_CSS,
+    DOCKET_FONTS,
+    GOOGLE_FONTS,
     DEFAULT_SIZE,
     NO_DETECTION,
     NO_STELLAR_RADIUS,
@@ -270,12 +273,63 @@ def test_drawer_is_a_dialog_with_a_close_button(run_dir, tmp_path):
     assert "unlockScroll();" in re.search(r"function closeDrawer\(returnFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
 
 
-def test_shell_loads_the_docket_fonts(run_dir, tmp_path):
+def test_shell_and_framed_docket_share_the_kshana_fonts(run_dir, tmp_path):
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
     data = _page_data(page)
     link = re.search(r'<link rel="stylesheet" href="(https://fonts.googleapis.com/[^"]+)">', page).group(1)
+    # The shell and its copy of the Docket load the same families: Kshana's Geist, Geist Mono and Unbounded.
     assert html_unescape(link) in data["docket_html"]
-    assert "Inter+Tight" in link and "JetBrains+Mono" in link
+    assert "family=Geist:" in link and "Geist+Mono" in link and "Unbounded" in link
+    assert "Inter Tight" not in data["docket_html"] and "JetBrains Mono" not in data["docket_html"]
+    assert "Inter Tight" not in APP_CSS and "JetBrains" not in APP_CSS and "JetBrains" not in APP_JS
+    # Only the shell's copy is re-dressed: the standalone Docket keeps its own fonts.
+    standalone = docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t"))
+    assert "Inter+Tight" in standalone and "Geist" not in standalone
+
+
+def test_tokens_follow_the_kshana_observatory_system():
+    root = re.search(r":root\{color-scheme:light;(.*?)\}", APP_CSS, re.S).group(1)
+    for token in ("--bg:#E8ECF3", "--ink:#182033", "--cyan:#066A86", "--lime:#2F6E0A", "--amber:#764600",
+                  "--coral:#B42D1B", "--space:#060A14", "--r:14px"):
+        assert token in root, token
+    # Light, dark by preference unless forced light, and forced dark.
+    assert '@media (prefers-color-scheme: dark){:root:not([data-theme="light"])' in APP_CSS
+    assert ':root[data-theme="dark"]{' in APP_CSS
+
+
+def test_feed_no_detection_wording_matches_the_plate():
+    from exoplan import plate
+
+    assert NO_DETECTION == plate.NO_DETECTION == "Archive values only. This page claims no detection."
+
+
+def test_overview_hero_states_the_argument_from_stored_values(run_dir, catalog, tmp_path):
+    data = app_data(run_dir, title="t", catalog_path=catalog)
+    hero = data["hero"]
+    lead = hero["lead"]
+    # The lead signal is a periodic signal; its depth is the median stored depth of its dips.
+    assert lead is not None and lead["period_days"] > 0 and lead["n_dips"] >= 2
+    assert f"{lead['depth_ppm']:,.0f} ppm dip every {lead['period_days']:,.2f} days" in hero["headline"]
+    assert hero["accent"] == "Candidate, unconfirmed."
+    # No claim of a planet, a radius or a detection; the archive line says the cross-match did not run.
+    text = " ".join([hero["headline"], hero["lede"], hero["archive"]])
+    assert not re.search(r"\b(planet found|discovered|confirmed planet|radius of)\b", text, re.I)
+    assert "none of them a person" in hero["lede"]
+    assert "did not run" in hero["archive"] and "does not say whether" in hero["archive"]
+    # Windows are lettered in time order and carry their outcome; the curve is the stored flux in ppm.
+    assert [w["letter"] for w in hero["windows"]][:3] == ["A", "B", "C"][:len(hero["windows"])]
+    assert [w["t_start"] for w in hero["windows"]] == sorted(w["t_start"] for w in hero["windows"])
+    assert sum(len(s["t"]) for s in hero["subjects"]) == hero["n_points"]
+    subj = hero["subjects"][0]
+    assert len(subj["t"]) == len(subj["ppm"])
+    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    overview = _route(page, "overview")
+    assert 'class="instrument"' in overview and 'id="herocurve"' in overview and 'id="herofold"' in overview
+    assert "What this page does not claim" in overview and "No stellar radius is stored" in overview
+    assert UNCONFIRMED in overview and NO_DETECTION.split(". ")[1] in overview
+    # The fold draws a box at the stored depth and duration and says it is not a fit.
+    fold = re.search(r"function heroFold\(box\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "not a fit" in fold and "L.depth_ppm" in fold
 
 
 def html_unescape(text: str) -> str:
@@ -381,9 +435,12 @@ def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path
     standalone = docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t"))
     assert FRAME_BRIDGE_JS not in standalone and "postMessage" not in standalone
     assert FRAME_PHONE_CSS not in standalone
-    injected = f"<style>{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script>"
-    assert docket_html.replace(injected, "") == docket_mod.docket_page(
-        docket_mod.docket_data(run_dir, title="t · candidates"))
+    injected = f"<style>{FRAME_THEME_CSS}{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script>"
+    # Apart from the injected block, the copy differs from the Docket only in its font families.
+    expected = (docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t · candidates"))
+                .replace(DOCKET_FONTS, GOOGLE_FONTS).replace('"Inter Tight"', '"Geist"').replace('"JetBrains Mono"', '"Geist Mono"'))
+    assert docket_html.replace(injected, "") == expected
+    assert FRAME_THEME_CSS not in standalone
     # The bridge reports every selection (the Docket selects by history.replaceState) and section anchors.
     assert "if (window.parent === window) return;" in FRAME_BRIDGE_JS
     assert "history.replaceState = function(){" in FRAME_BRIDGE_JS and "send({kind: 'dip'})" in FRAME_BRIDGE_JS

@@ -69,8 +69,9 @@ STATUS_LABEL = {"new_candidate": "new candidate", "known_toi": "period matches a
 ARCHIVE_FIELDS = ("pl_name", "hostname", "pl_orbper", "tran_flag", "rv_flag", "tic_id")
 DEFAULT_WEIGHTS = "docs/results/reviewer_weights_full_panel.json"
 RATIO_SCALE_MAX = 0.1  # Planets: every ratio bar runs from 0 to this Rp/R* value, labelled on the page.
-GOOGLE_FONTS = ("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600"
-                "&family=JetBrains+Mono:wght@400;500;600&display=swap")  # the Docket's families
+# Kshana's families (the Observatory system): Geist for text, Geist Mono for numbers, Unbounded for the wordmark.
+GOOGLE_FONTS = ("https://fonts.googleapis.com/css2?family=Geist:wght@300..700"
+                "&family=Geist+Mono:wght@400;500;600&family=Unbounded:wght@400;500;600&display=swap")
 
 
 def default_layout() -> list[dict]:
@@ -302,6 +303,106 @@ def dip_agreement(dips: list[dict], kinds: dict[str, str]) -> list[dict]:
     return out
 
 
+OUTCOME_ORDER = {"passed": 0, "flagged": 1, "rejected": 2}
+
+
+def _letter(i: int) -> str:
+    """A, B, ... Z, AA, AB ...: a short label for the i-th marked window on the light curve."""
+    out = ""
+    i += 1
+    while i:
+        i, r = divmod(i - 1, 26)
+        out = chr(65 + r) + out
+    return out
+
+
+def _median(values: list[float]) -> float | None:
+    v = sorted(x for x in values if x is not None and math.isfinite(x))
+    if not v:
+        return None
+    m = len(v) // 2
+    return v[m] if len(v) % 2 else (v[m - 1] + v[m]) / 2
+
+
+def _fmt_num(x: float, d: int) -> str:
+    return f"{x:,.{d}f}"
+
+
+def overview_hero(dock: dict, top: list[dict] | None = None) -> dict:
+    """The Overview's argument: the stored light curve, the marked windows and the lead signal.
+
+    The lead signal is the periodic signal with the best vetting outcome, then the highest
+    stored SNR. Its depth is the median stored depth of its dips; its period, t0 and duration
+    are the stored BLS values. The headline and lede are built from these stored values only
+    and always say the signal is a candidate, unconfirmed. Points are rounded for the page
+    (time to 1e-5 d, flux to 0.1 ppm); nothing is fitted.
+    """
+    subjects = sorted(dock.get("subjects", {}).values(), key=lambda s: s["start"])
+    cands = sorted(dock.get("candidates", []), key=lambda c: c["t_start"])
+    by_id = {c["candidate_id"]: c for c in cands}
+    letters = {c["candidate_id"]: _letter(i) for i, c in enumerate(cands)}
+    counts = dock.get("counts", {})
+    target = next((c.get("target") for c in cands if c.get("target")), "") or "this star"
+    unit = (subjects[0].get("time_unit") if subjects else "") or (cands[0]["time_unit"] if cands else "")
+
+    def best_snr(sig: dict) -> float:
+        return max((by_id[d]["snr"] for d in sig["dips"] if d in by_id), default=0.0)
+
+    periodic = [s for s in dock.get("signals", []) if s.get("period_days")]
+    lead = min(periodic, key=lambda s: (OUTCOME_ORDER.get(s.get("outcome"), 3), -best_snr(s))) if periodic else None
+    lead_out = None
+    if lead:
+        dips = [by_id[d] for d in lead["dips"] if d in by_id]
+        ref = next((b for b in lead.get("bls") or [] if b.get("reference")), (lead.get("bls") or [{}])[0])
+        top_dip = max(dips, key=lambda c: c["snr"]) if dips else None
+        lead_out = {
+            "signal_id": lead["signal_id"], "period_days": lead["period_days"], "t0": lead.get("bls_t0"),
+            "duration_days": ref.get("bls_duration_days"),
+            "depth_ppm": _median([c["depth_ppm"] for c in dips]),
+            "n_dips": len(dips), "n_transits": lead.get("n_transits"),
+            "outcome": lead.get("outcome"), "outcome_label": OUTCOME_LABEL.get(lead.get("outcome"), ""),
+            "dip": top_dip["candidate_id"] if top_dip else None,
+            "letters": [letters[c["candidate_id"]] for c in dips],
+        }
+    match = next((x for x in top or [] if lead_out and x.get("signal_id") == lead_out["signal_id"] and x.get("consistent_with")), None)
+    xm = dock.get("crossmatch") or {}
+
+    n_points = sum(len(s["time"]) for s in subjects)
+    span = (subjects[-1]["end"] - subjects[0]["start"]) if subjects else 0.0
+    if lead_out and lead_out["depth_ppm"]:
+        headline = (f"A {_fmt_num(lead_out['depth_ppm'], 0)} ppm dip every "
+                    f"{_fmt_num(lead_out['period_days'], 2)} days in {target}.")
+    else:
+        headline = f"{len(cands)} marked dip{'s' if len(cands) != 1 else ''} in {target}."
+    accent = "Candidate, unconfirmed."
+    lede = (f"{n_points:,} stored brightness measurements over {span:.1f} days. "
+            f"{counts.get('reviewers', 0)} reviewers ({counts.get('simulated', 0)} simulated detectors and "
+            f"{counts.get('claude', 0)} Claude reviewers; none of them a person) marked {counts.get('dips', len(cands))} dips, "
+            f"which the vetting code grouped into {counts.get('signals', 0)} signals: {counts.get('passed', 0)} passed, "
+            f"{counts.get('flagged', 0)} flagged, {counts.get('rejected', 0)} rejected.")
+    if match:
+        archive = (f"The stored archive cross-match finds the lead signal consistent with {match['consistent_with']}, "
+                   f"a published planet: a known planet, not a discovery. {NO_DETECTION}")
+    elif xm.get("status") == "not_run":
+        archive = ("The archive cross-match did not run for this build, so this page does not say whether "
+                   "a published planet matches the lead signal.")
+    elif xm.get("status") == "no_match":
+        archive = f"No published planet in the stored archive cross-match matches the lead signal. {NO_DETECTION}"
+    else:
+        archive = "No archive cross-match is stored for this run."
+    return {
+        "target": target, "time_unit": unit, "n_points": n_points, "span_days": span,
+        "headline": headline, "accent": accent, "lede": lede, "archive": archive,
+        "subjects": [{"id": s["subject_id"], "start": s["start"], "end": s["end"],
+                      "t": [round(t, 5) for t in s["time"]],
+                      "ppm": [round((f - 1.0) * 1e6, 1) for f in s["flux"]]} for s in subjects],
+        "windows": [{"id": c["candidate_id"], "letter": letters[c["candidate_id"]], "t_start": c["t_start"],
+                     "t_end": c["t_end"], "outcome": c.get("outcome"), "snr": c["snr"], "depth_ppm": c["depth_ppm"],
+                     "lead": bool(lead_out and c.get("signal_id") == lead_out["signal_id"])} for c in cands],
+        "lead": lead_out,
+    }
+
+
 # Added to the shell's copy of the Docket only (the standalone page in site/docket is untouched).
 # Inside a frame it tells the shell which dip and section are showing, by postMessage, so the
 # shell's address bar and "Open full page" link follow in-frame navigation even when the frame
@@ -373,12 +474,28 @@ FRAME_PHONE_CSS = (
 )
 
 
-def with_frame_bridge(docket_html: str) -> str:
-    """The Docket page with :data:`FRAME_PHONE_CSS` and :data:`FRAME_BRIDGE_JS` in its head.
+# Also only in the shell's copy: the Docket in the shell's family dress (Kshana's Observatory tokens and
+# Geist type), so the framed page reads as part of the app. Same layout and rules; only colour and type change.
+DOCKET_FONTS = ("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600"
+                       "&family=JetBrains+Mono:wght@400;500;600&display=swap")
+FRAME_THEME_CSS = (
+    ":root{--paper:#E8ECF3;--ink:#182033;--rule:rgba(28,44,84,.2);--muted:#4E5971;--fit:#066A86;--pass:#2F6E0A;"
+    "--flag:#764600;--reject:#B42D1B;--panel:#F5F7FB;--sel:#DEE4EE;--cons:#182033}"
+    "@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]){--paper:#060A14;--ink:#EAF0FF;"
+    "--rule:rgba(150,175,230,.2);--muted:#8190B0;--fit:#3DDCF7;--pass:#A8EE5E;--flag:#FFB547;--reject:#FF6A5C;"
+    "--panel:#0D1528;--sel:#0E1730;--cons:#EAF0FF}}"
+    "body{-webkit-font-smoothing:antialiased;letter-spacing:-.006em}"
+)
 
-    The bridge does nothing outside a frame; the phone rule applies to this copy only."""
-    return docket_html.replace(
-        "</head>", f"<style>{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script></head>", 1)
+
+def with_frame_bridge(docket_html: str) -> str:
+    """The Docket page with the shell's fonts and tokens, :data:`FRAME_PHONE_CSS` and :data:`FRAME_BRIDGE_JS`.
+
+    The bridge does nothing outside a frame; the phone rule and the family dress apply to this copy only."""
+    themed = (docket_html.replace(DOCKET_FONTS, GOOGLE_FONTS)
+              .replace('"Inter Tight"', '"Geist"').replace('"JetBrains Mono"', '"Geist Mono"'))
+    return themed.replace(
+        "</head>", f"<style>{FRAME_THEME_CSS}{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script></head>", 1)
 
 
 def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
@@ -423,6 +540,11 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         return {"consistent_with": name, "dP_pct": hit.get("dP_pct"), "pl_orbper": hit.get("pl_orbper"),
                 "archive_line": cmp.get("line", "")}
 
+    top_rows = [{"id": c["candidate_id"], "target": c.get("target", ""), "depth_ppm": c["depth_ppm"], "snr": c["snr"],
+                     "period_days": c.get("period_days"), "outcome": c["outcome"],
+                     "outcome_label": OUTCOME_LABEL[c["outcome"]], "signal_id": c.get("signal_id", ""),
+                     "signal_dips": per_signal.get(c.get("signal_id", ""), 1), **archive_match(c["candidate_id"])}
+                    for c in top]
     sections = [{"id": s, "label": feed_label(feed) if s == "discoveries" else label} for s, label in SECTIONS]
     return {
         "title": title,
@@ -440,11 +562,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
             "counts": manifest.get("counts", {}),
             "docket_counts": dock["counts"],
             "reviewer_kinds": dock["reviewers"],
-            "top": [{"id": c["candidate_id"], "target": c.get("target", ""), "depth_ppm": c["depth_ppm"], "snr": c["snr"],
-                     "period_days": c.get("period_days"), "outcome": c["outcome"],
-                     "outcome_label": OUTCOME_LABEL[c["outcome"]], "signal_id": c.get("signal_id", ""),
-                     "signal_dips": per_signal.get(c.get("signal_id", ""), 1), **archive_match(c["candidate_id"])}
-                    for c in top],
+            "top": top_rows,
         },
         "config": {
             "config_name": manifest.get("config_name", ""), "config_sha256": manifest.get("config_sha256", ""),
@@ -464,6 +582,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "feed_view": {"sorts": FEED_SORTS, "filters": FEED_FILTERS, "numeric": list(FEED_NUMERIC),
                       "default": DEFAULT_FEED_VIEW},
         "status_label": STATUS_LABEL,
+        "hero": overview_hero(dock, top_rows),
         "planets": planet_cards(cands, run_name, feed, crossmatch),
         "crossmatch_line": crossmatch.get("line", ""),
         "crossmatch_targets": crossmatch.get("targets") or [],
@@ -476,118 +595,250 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
 
 
 APP_CSS = """
-:root{--paper:#f7f6f2;--ink:#16181d;--rule:#d9d7d0;--muted:#62656d;--fit:#1f5fbf;--pass:#2e7d4f;--flag:#8a6400;--reject:#b23a3a;--panel:#fcfbf8;--sel:#ebe9e1;--side:#efede7;--top:56px}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#121317;--ink:#ecebe6;--rule:#2a2c33;--muted:#9a9ca4;--fit:#6fa0ff;--pass:#5cc08a;--flag:#e0b243;--reject:#ef7070;--panel:#17181d;--sel:#22242b;--side:#0e0f12;color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#121317;--ink:#ecebe6;--rule:#2a2c33;--muted:#9a9ca4;--fit:#6fa0ff;--pass:#5cc08a;--flag:#e0b243;--reject:#ef7070;--panel:#17181d;--sel:#22242b;--side:#0e0f12;color-scheme:dark}
+/* Tokens: the Kshana Observatory system (kshana web/theme.css), so the two products read as one family.
+   Text colours keep WCAG AA (4.5:1) on the ground they sit on, in both themes. The "space" tokens are the
+   instrument panels: they stay dark in both themes, like Kshana's charts and consoles. */
+:root{color-scheme:light;
+  --bg:#E8ECF3;--bg-2:#DEE4EE;--bg-3:#D3DBE8;
+  --glass:rgba(247,249,252,.9);--panel-2:rgba(238,242,248,.86);--panel:#F5F7FB;
+  --line:rgba(28,44,84,.12);--line-2:rgba(28,44,84,.2);--line-3:rgba(28,44,84,.32);
+  --ink:#182033;--ink-2:#3A455E;--ink-3:#4E5971;
+  --cyan:#066A86;--lime:#2F6E0A;--amber:#764600;--coral:#B42D1B;--magenta:#A8247F;
+  --cyan-soft:rgba(7,130,163,.12);--lime-soft:rgba(47,110,10,.12);--amber-soft:rgba(158,95,0,.12);--coral-soft:rgba(180,45,27,.11);
+  --btn-bg:#182033;--btn-ink:#FFFFFF;
+  --shadow:0 1px 0 rgba(255,255,255,.7) inset,0 18px 40px -28px rgba(24,40,80,.3),0 1px 3px rgba(24,40,80,.08);
+  --gloss:linear-gradient(180deg,rgba(255,255,255,.4),transparent 46%);
+  --dot:rgba(28,44,84,.065);
+  --space:#060A14;--space-2:#0A1122;--space-3:#0E1730;--space-ink:#EAF0FF;--space-ink-2:#A7B4D2;--space-ink-3:#8190B0;--space-line:rgba(150,175,230,.14);
+  --s-cyan:#3DDCF7;--s-lime:#A8EE5E;--s-amber:#FFB547;--s-coral:#FF6A5C;
+  --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --display:"Unbounded","Geist",sans-serif;
+  --r:14px;--ease:cubic-bezier(.22,.9,.24,1);
+  /* the shell's own names, pointed at the family tokens */
+  --paper:var(--bg);--rule:var(--line-2);--muted:var(--ink-3);--fit:var(--cyan);--pass:var(--lime);--flag:var(--amber);--reject:var(--coral);--sel:var(--bg-2);--side:#DEE4EE;
+  --top:56px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --bg:#060A14;--bg-2:#0A1122;--bg-3:#0E1730;--glass:rgba(16,24,44,.62);--panel-2:rgba(22,33,60,.55);--panel:#0D1528;
+  --line:rgba(150,175,230,.11);--line-2:rgba(150,175,230,.2);--line-3:rgba(150,175,230,.32);
+  --ink:#EAF0FF;--ink-2:#A7B4D2;--ink-3:#8190B0;
+  --cyan:#3DDCF7;--lime:#A8EE5E;--amber:#FFB547;--coral:#FF6A5C;--magenta:#F45CCB;
+  --cyan-soft:rgba(61,220,247,.14);--lime-soft:rgba(168,238,94,.14);--amber-soft:rgba(255,181,71,.14);--coral-soft:rgba(255,106,92,.14);
+  --btn-bg:#EAF0FF;--btn-ink:#070B16;
+  --shadow:0 1px 0 rgba(255,255,255,.05) inset,0 24px 60px -28px rgba(0,0,0,.75),0 2px 8px -2px rgba(0,0,0,.35);
+  --gloss:linear-gradient(180deg,rgba(255,255,255,.045),transparent 40%);--dot:rgba(150,175,230,.075);--side:#0A1122}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --bg:#060A14;--bg-2:#0A1122;--bg-3:#0E1730;--glass:rgba(16,24,44,.62);--panel-2:rgba(22,33,60,.55);--panel:#0D1528;
+  --line:rgba(150,175,230,.11);--line-2:rgba(150,175,230,.2);--line-3:rgba(150,175,230,.32);
+  --ink:#EAF0FF;--ink-2:#A7B4D2;--ink-3:#8190B0;
+  --cyan:#3DDCF7;--lime:#A8EE5E;--amber:#FFB547;--coral:#FF6A5C;--magenta:#F45CCB;
+  --cyan-soft:rgba(61,220,247,.14);--lime-soft:rgba(168,238,94,.14);--amber-soft:rgba(255,181,71,.14);--coral-soft:rgba(255,106,92,.14);
+  --btn-bg:#EAF0FF;--btn-ink:#070B16;
+  --shadow:0 1px 0 rgba(255,255,255,.05) inset,0 24px 60px -28px rgba(0,0,0,.75),0 2px 8px -2px rgba(0,0,0,.35);
+  --gloss:linear-gradient(180deg,rgba(255,255,255,.045),transparent 40%);--dot:rgba(150,175,230,.075);--side:#0A1122}
 *{box-sizing:border-box}
+html{background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;overflow-x:hidden}
-body{background:var(--paper);color:var(--ink);font:14px/1.5 "Inter Tight",system-ui,-apple-system,"Segoe UI",sans-serif}
-.mono,code,pre{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
-:focus-visible{outline:2px solid var(--fit);outline-offset:2px}
-a{color:var(--fit)}
+body{background:transparent;color:var(--ink);font:400 15px/1.55 var(--sans);letter-spacing:-.006em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+/* the Observatory ground: a soft radial field with a faint dot grid that fades down the page */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(1100px 640px at 78% -12%,var(--bg-3),transparent 70%),radial-gradient(900px 600px at -10% 40%,var(--bg-2),transparent 70%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(var(--dot) 1px,transparent 1.2px);background-size:24px 24px;-webkit-mask-image:linear-gradient(to bottom,#000,rgba(0,0,0,.3) 60%,transparent);mask-image:linear-gradient(to bottom,#000,rgba(0,0,0,.3) 60%,transparent)}
+.mono,code,pre{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:0}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+::selection{background:var(--cyan);color:var(--bg)}
+a{color:var(--cyan);text-underline-offset:3px;text-decoration-thickness:1px}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.skip{position:absolute;left:8px;top:-60px;background:var(--ink);color:var(--paper);padding:8px 12px;border-radius:4px;z-index:50;display:inline-flex;align-items:center;min-height:44px}
-.skip:focus{top:8px}
+.skip{position:absolute;left:12px;top:-60px;background:var(--btn-bg);color:var(--btn-ink);padding:10px 14px;border-radius:10px;z-index:50;display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
+.skip:focus{top:12px}
 #content:focus{outline:none}
 .topbar{display:none}
-.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh;background:linear-gradient(to right,var(--side) 231px,var(--rule) 231px,var(--rule) 232px,transparent 232px)}
-.sidebar{background:var(--side);border-right:1px solid var(--rule);position:sticky;top:0;height:100vh;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:16px;padding:18px 0}
-.brand{padding:0 18px}
-.brand b{display:block;font:600 17px/1.2 "Inter Tight",sans-serif}
-.brand span{font:12px "JetBrains Mono",monospace;color:var(--muted);overflow-wrap:anywhere}
-.nav ul{list-style:none;margin:0;padding:0 10px;display:grid;gap:2px}
-.nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;color:var(--ink);text-decoration:none;font-weight:500}
-.nav a:hover{background:var(--sel)}
-.nav a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh;background:linear-gradient(to right,var(--side) 247px,var(--line) 247px 248px,transparent 248px)}
+.sidebar{background:color-mix(in oklab,var(--side) 82%,transparent);-webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:22px;padding:22px 0 18px}
+.brand{padding:0 20px;display:grid;gap:6px}
+.brand b{display:flex;align-items:center;gap:9px;font:500 17px/1 var(--display);letter-spacing:-.01em}
+.brand b::before{content:"";width:16px;height:16px;flex:none;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--bg) 0 34%,transparent 36%),conic-gradient(from 200deg,var(--cyan),var(--lime),var(--cyan))}
+.brand span{font:500 11px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;overflow-wrap:anywhere}
+.navlabel{padding:0 20px;font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 -12px}
+.nav ul{list-style:none;margin:0;padding:0 12px;display:grid;gap:2px}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:10px;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:14.5px;transition:color .2s,background-color .2s}
+.nav a .ix{margin-left:auto;font:500 10px/1 var(--display);color:var(--ink-3);letter-spacing:0}
+.nav a:hover{background:var(--panel-2);color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--glass);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2),var(--shadow)}
+.nav a[aria-current="page"] .ix{color:var(--cyan)}
 .nav svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6}
-.sidefoot{margin-top:auto;padding:0 18px;font:11px/1.6 "JetBrains Mono",monospace;color:var(--muted);overflow-wrap:anywhere}
+.sidefoot{margin-top:auto;padding:14px 20px 0;border-top:1px solid var(--line);font:400 11px/1.6 var(--mono);color:var(--ink-3);overflow-wrap:anywhere;display:grid;gap:6px}
+.sidefoot .stored{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase;font-size:10.5px}
+.sidefoot .stored i{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px var(--lime-soft)}
 .backdrop{display:none}
-main{min-width:0;padding:24px 32px 48px}
+main{min-width:0;padding:30px clamp(18px,3vw,44px) 64px}
 main:focus{outline:none}
-.route{display:grid;gap:18px;min-width:0;max-width:1180px}
+.route{display:grid;gap:22px;min-width:0;max-width:1180px}
 .route[hidden]{display:none}
-.route>header h1{font:600 24px/1.25 "Inter Tight",sans-serif;margin:0}
+.route>header{display:grid;gap:10px;padding-bottom:6px}
+.route>header h1{display:flex;align-items:center;gap:12px;font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0}
+.route>header h1 .idx{font:500 11px/1 var(--display);letter-spacing:0;color:var(--cyan)}
+.route>header h1::after{content:"";height:1px;width:48px;background:var(--line-2);flex:none}
 .route>header h1:focus{outline:none}
-.route>header p{margin:4px 0 0;color:var(--muted);max-width:78ch}
-h2{font:600 16px/1.3 "Inter Tight",sans-serif;margin:0}
-h3{font:600 14px/1.3 "Inter Tight",sans-serif;margin:0}
-.note{margin:0;border-left:3px solid var(--flag);background:var(--panel);padding:8px 12px;font-size:13px;max-width:90ch}
-.note.rule{border-left-color:var(--fit)}
-.tag{display:inline-block;font:600 11px/1.6 "JetBrains Mono",monospace;border:1px solid currentColor;border-radius:3px;padding:0 5px;white-space:nowrap}
-.tag.unc{color:var(--flag)}
-.tag.sim{color:var(--muted)}
-.tag.cl{color:var(--fit)}
-.muted{color:var(--muted)}
-.btn{font:500 13px "Inter Tight",sans-serif;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:5px;padding:5px 10px;cursor:pointer;min-height:32px}
-.btn:hover{border-color:var(--ink)}
+.route>header p{margin:0;color:var(--ink-2);max-width:72ch;font-size:clamp(15px,1.15vw,16.5px);line-height:1.55}
+.route>header .lead-h{font:600 clamp(26px,3.1vw,42px)/1.05 var(--sans);letter-spacing:-.035em;color:var(--ink);max-width:24ch;text-wrap:balance}
+#route-candidates>header .lead-h{font-size:clamp(22px,2.3vw,30px);max-width:40ch}
+h2{font:600 18px/1.25 var(--sans);letter-spacing:-.015em;margin:0}
+h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
+.note{margin:0;border-top:1px solid var(--line-2);padding:14px 0 0;font-size:14px;color:var(--ink-2);max-width:86ch}
+.note b{color:var(--ink);font-weight:600}
+.note.rule{border-top-color:var(--line-2)}
+.tag{display:inline-flex;align-items:center;gap:6px;font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2);white-space:nowrap;vertical-align:1px}
+.tag.unc{color:var(--amber);border-color:color-mix(in oklab,var(--amber) 30%,transparent);background:var(--amber-soft)}
+.tag.unc::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.tag.sim{color:var(--ink-3)}
+.tag.cl{color:var(--cyan);background:var(--cyan-soft);border-color:transparent}
+.muted{color:var(--ink-3)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 13px/1.2 var(--sans);color:var(--ink);background:var(--glass);border:1px solid var(--line-2);border-radius:10px;padding:6px 12px;cursor:pointer;min-height:34px;text-decoration:none;transition:border-color .2s,background-color .2s,transform .25s var(--ease)}
+.btn:hover{border-color:var(--line-3);background:var(--panel-2)}
 .btn[aria-disabled="true"]{opacity:.45;cursor:default}
-.chip{font:12px "JetBrains Mono",monospace;border:1px solid var(--rule);background:none;color:var(--muted);padding:4px 10px;border-radius:999px;cursor:pointer;min-height:32px}
-.chip[aria-pressed="true"]{color:var(--ink);border-color:var(--ink)}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.card{background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;min-width:0}
-.cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
-/* overview */
-.layoutbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:13px}
+.btn.primary{background:var(--btn-bg);color:var(--btn-ink);border-color:transparent;min-height:44px;padding:0 18px;font-size:14.5px;box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 10px 30px -12px color-mix(in oklab,var(--btn-bg) 50%,transparent)}
+.btn.primary:hover{transform:translateY(-1px);background:var(--btn-bg)}
+.btn.ghost{min-height:44px;padding:0 18px;font-size:14.5px}
+.chip{font:500 12px/1.2 var(--mono);border:1px solid var(--line-2);background:var(--glass);color:var(--ink-2);padding:6px 12px;border-radius:999px;cursor:pointer;min-height:34px}
+.chip[aria-pressed="true"]{color:var(--btn-ink);background:var(--btn-bg);border-color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px;min-width:0;position:relative;isolation:isolate;-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%)}
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:var(--gloss);z-index:-1}
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
+/* overview: the argument first (hero), then the instrument, then what the page does not claim, then the widgets */
+.hero{display:grid;gap:18px;min-width:0}
+.consolebar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;font:500 11.5px/1.2 var(--mono);color:var(--ink-3);letter-spacing:.04em;text-transform:uppercase;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0}
+.consolebar b{color:var(--ink);font-weight:500;text-transform:none;letter-spacing:0;font-variant-numeric:tabular-nums}
+.consolebar .live{display:inline-flex;align-items:center;gap:8px;color:var(--ink-2)}
+.consolebar .live i{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px var(--lime-soft)}
+.consolebar .sep{width:1px;height:12px;background:var(--line-2);flex:none}
+.consolebar .right{margin-left:auto}
+.hero-copy{display:grid;gap:16px;max-width:62ch}
+.hero-h{font:600 clamp(34px,4.6vw,62px)/1 var(--sans);letter-spacing:-.045em;margin:0;max-width:17ch;text-wrap:balance}
+.hero-h em{font-style:normal;color:var(--amber)}
+.lede{margin:0;font-size:clamp(15.5px,1.25vw,17.5px);line-height:1.55;color:var(--ink-2);max-width:60ch}
+.lede b{color:var(--ink);font-weight:560}
+.ctas{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+/* the instrument: Kshana's dark chart panel, dark in both themes */
+.instrument{background:linear-gradient(180deg,var(--space-2),var(--space));color:var(--space-ink);border:1px solid var(--space-line);border-radius:var(--r);box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 40px 90px -50px rgba(6,10,20,.75),0 6px 18px -10px rgba(6,10,20,.4);padding:16px 18px 14px;display:grid;gap:12px;min-width:0}
+.instrument .ihead{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:8px 16px}
+.instrument .ititle{font-size:13.5px;color:var(--space-ink);line-height:1.3;min-width:0}
+.instrument .ititle small{display:block;font:500 10.5px/1.5 var(--mono);color:var(--space-ink-2);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;overflow-wrap:anywhere}
+.instrument .ival{font:500 26px/1 var(--mono);letter-spacing:-.02em;color:var(--s-lime);text-align:right;white-space:nowrap}
+.instrument .ival small{display:block;font:500 10.5px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--space-ink-2);margin-top:4px}
+.instrument .igrid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1.15fr);gap:14px;min-width:0}
+.instrument figure{margin:0;min-width:0;display:grid;gap:6px}
+.instrument figcaption{font:400 11.5px/1.5 var(--mono);color:var(--space-ink-2)}
+.instrument .fold{border-left:1px solid var(--space-line);padding-left:14px}
+.instrument svg text{fill:var(--space-ink-2);font:10.5px var(--mono)}
+.instrument svg .grid{stroke:var(--space-line)}
+.instrument svg .axis{stroke:rgba(150,175,230,.35)}
+.instrument svg .pts{stroke:var(--space-ink-3);stroke-opacity:.55;stroke-width:2.2;stroke-linecap:round;fill:none}
+.instrument svg .mean{stroke:var(--s-cyan);stroke-width:1.2;stroke-opacity:.9;fill:none;stroke-linejoin:round}
+.instrument svg .box{stroke:var(--s-lime);stroke-width:1.4;stroke-dasharray:4 3;fill:none}
+.instrument svg .win{opacity:.2}
+.instrument svg .win.passed{fill:var(--s-lime)}
+.instrument svg .win.flagged{fill:var(--s-amber)}
+.instrument svg .win.rejected{fill:var(--s-coral)}
+.instrument svg text.wl{font:600 10.5px var(--mono)}
+.instrument svg text.wl.passed{fill:var(--s-lime)}
+.instrument svg text.wl.flagged{fill:var(--s-amber)}
+.instrument svg text.wl.rejected{fill:var(--s-coral)}
+.instrument svg .epoch{fill:var(--s-lime)}
+.instrument svg .dur{fill:var(--s-lime);opacity:.1}
+.ikey{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 11px/1.5 var(--mono);color:var(--space-ink-2);border-top:1px solid var(--space-line);padding-top:10px}
+.ikey i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.ikey .k-passed{background:var(--s-lime)}.ikey .k-flagged{background:var(--s-amber)}.ikey .k-rejected{background:var(--s-coral)}
+.ikey .k-mean{height:2px;background:var(--s-cyan);vertical-align:3px}
+.ikey .k-ep{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--s-lime);border-radius:0}
+.ikey .unc{color:var(--s-amber)}
+/* the vetting flow: one line of stored counts, read left to right, instead of a wall of number tiles */
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.45fr);border:1px solid var(--line);border-radius:var(--r);background:var(--glass);box-shadow:var(--shadow);overflow:hidden}
+.flow li{display:grid;gap:4px;align-content:start;padding:14px 16px;border-left:1px solid var(--line);position:relative;min-width:0}
+.flow li:first-child{border-left:0}
+.flow li b{font:500 clamp(24px,2.4vw,32px)/1 var(--mono);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.flow li span{font-size:12.5px;color:var(--ink-2);line-height:1.35}
+.flow li small{font:500 10px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.vet3{display:flex;flex-wrap:wrap;gap:4px 14px}
+.vet3 span{display:grid;gap:2px;font:500 11px/1.3 var(--mono);color:var(--ink-3)}
+.vet3 .pass b{color:var(--lime)}.vet3 .flag b{color:var(--amber)}.vet3 .rej b{color:var(--coral)}
+.flow li+li::before{content:"→";position:absolute;left:-8px;top:15px;width:16px;height:16px;display:grid;place-items:center;font:500 11px/1 var(--mono);color:var(--ink-3);background:var(--panel);border:1px solid var(--line);border-radius:50%}
+.honest{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.2fr);gap:12px 32px;border-top:1px solid var(--line-2);padding-top:20px}
+.honest h2{font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.honest ul{list-style:none;margin:0;padding:0;display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.honest li{font-size:14px;color:var(--ink-2);line-height:1.5;padding-left:16px;position:relative}
+.honest li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:2px;background:var(--amber)}
+.honest li b{color:var(--ink);font-weight:600}
+.secthead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;border-top:1px solid var(--line-2);padding-top:20px}
+.secthead h2{font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.secthead p{margin:0;font-size:13px;color:var(--ink-3);max-width:70ch}
+.layoutbar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;font-size:13px}
 .layoutbar .muted{font-size:12px}
-.widgets{display:grid;gap:14px;grid-template-columns:repeat(6,minmax(0,1fr));min-width:0}
-.widget{display:grid;gap:10px;align-content:start}
+.widgets{display:grid;gap:16px;grid-template-columns:repeat(6,minmax(0,1fr));min-width:0}
+.widget{display:grid;gap:12px;align-content:start}
 .widget.size-S{grid-column:span 2}
 .widget.size-M{grid-column:span 3}
 .widget.size-L{grid-column:1/-1}
 .widget>header{display:flex;justify-content:space-between;align-items:center;gap:6px 8px;flex-wrap:wrap}
+.widget>header h2{display:flex;align-items:center;gap:10px}
+.widget>header h2 .idx{font:500 10px/1 var(--display);color:var(--cyan)}
 .wctl{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
-.wctl .btn{padding:2px 8px;min-height:30px;min-width:30px;font-size:12px}
+.wctl .btn{padding:2px 8px;min-height:30px;min-width:30px;font-size:12px;border-radius:8px}
 .seg{display:inline-flex}
 .seg .btn{border-radius:0;margin-left:-1px}
-.seg .btn:first-child{border-radius:5px 0 0 5px;margin-left:0}
-.seg .btn:last-child{border-radius:0 5px 5px 0}
-.seg .btn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.wopen{font-size:12px}
-.dip{font:12px "JetBrains Mono",monospace;white-space:nowrap}
+.seg .btn:first-child{border-radius:8px 0 0 8px;margin-left:0}
+.seg .btn:last-child{border-radius:0 8px 8px 0}
+.seg .btn[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink);border-color:var(--btn-bg)}
+.wopen{font-size:13px;font-weight:500;justify-self:start}
+.dip{font:500 12px var(--mono);white-space:nowrap}
 .toplist,.toplist ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.toplist>li{border-top:1px solid var(--rule);padding-top:8px;display:grid;gap:6px}
-.toplist ul li{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline;font-size:13px}
+.toplist>li{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}
+.toplist>li:first-child{border-top:0;padding-top:0}
+.toplist ul li{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline;font-size:13px}
 .toplist .st .short,.phonehedge{display:none}
-.toplist .note{font-size:12px}
+.toplist .note{font-size:12.5px}
 .kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
-.kpi{border-top:2px solid var(--rule);padding-top:6px}
-.kpi b{display:block;font:600 26px/1.1 "JetBrains Mono",monospace}
-.kpi span{font-size:12px;color:var(--muted)}
-.big{font:600 40px/1 "JetBrains Mono",monospace}
-.empty{color:var(--muted);font-style:italic}
+.kpi{border-top:1px solid var(--line-2);padding-top:8px}
+.kpi b{display:block;font:500 26px/1.1 var(--mono);letter-spacing:-.03em}
+.kpi span{font-size:12px;color:var(--ink-3)}
+.big{font:500 44px/1 var(--mono);letter-spacing:-.04em}
+.empty{color:var(--ink-3);font-style:italic}
+.small{margin:0;font-size:12.5px;color:var(--ink-3)}
 .runlist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.runlist li{display:grid;gap:2px;border-top:1px solid var(--rule);padding-top:6px;font-size:13px}
+.runlist li{display:grid;gap:2px;border-top:1px solid var(--line);padding-top:8px;font-size:13px}
 .runlines{list-style:none;margin:0;padding:0;display:grid;gap:0}
-.runlines>li{border-top:1px solid var(--rule);padding:8px 0;font-size:13px;display:grid;gap:4px}
+.runlines>li{border-top:1px solid var(--line);padding:10px 0;font-size:13px;display:grid;gap:4px}
 .runlines>li:first-child{border-top:0}
-.runlines .line{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline}
+.runlines .line{display:flex;flex-wrap:wrap;gap:2px 14px;align-items:baseline}
 .runlines .err{color:var(--reject)}
 .ratio summary{font-size:13px}
-/* tables */
-.tablewrap{overflow-x:auto;min-width:0;border:1px solid var(--rule);border-radius:8px;background:var(--panel)}
+/* tables: Kshana's table treatment, mono uppercase heads over hairlines */
+.tablewrap{overflow-x:auto;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .tablewrap.scrollbox{max-height:70vh;overflow:auto}
 .scrollbox thead th{position:sticky;top:0;background:var(--panel);z-index:2}
-.scrollbox th:first-child,.scrollbox td:first-child{position:sticky;left:0;background:var(--panel);z-index:1;box-shadow:1px 0 0 var(--rule)}
+.scrollbox th:first-child,.scrollbox td:first-child{position:sticky;left:0;background:var(--panel);z-index:1;box-shadow:1px 0 0 var(--line)}
 .scrollbox thead th:first-child{z-index:3}
 .scrollbox td,.scrollbox tbody th{white-space:nowrap}
-.scrollbox tbody th{font:400 13px "JetBrains Mono",monospace;color:var(--ink);text-transform:none;letter-spacing:0}
-td .dip{font-size:11px;display:inline-block;max-width:24ch;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
-table{width:100%;border-collapse:collapse;font:13px "JetBrains Mono",monospace}
-th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
-th{font:600 11px "JetBrains Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.scrollbox tbody th{font:400 13px var(--mono);color:var(--ink);text-transform:none;letter-spacing:0}
+td .dip{font-size:11.5px;display:inline-block;max-width:24ch;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
+table{width:100%;border-collapse:collapse;font:13px var(--mono);font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 10.5px/1.3 var(--mono);color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+tbody tr:hover td,tbody tr:hover th{background:color-mix(in oklab,var(--panel) 92%,var(--cyan))}
 td.num,th.num{text-align:right}
 th button{font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;background:none;border:0;padding:2px 0;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
 th[aria-sort="ascending"] button,th[aria-sort="descending"] button{color:var(--ink)}
-tbody tr:last-child td{border-bottom:0}
-td small{display:block;color:var(--muted);font-size:11px}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+td small{display:block;color:var(--ink-3);font-size:11px}
 /* charts */
-.charts{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.charts{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
 svg{display:block;width:100%;height:auto}
-svg text{font:11px "JetBrains Mono",monospace;fill:var(--muted)}
-svg .grid{stroke:var(--rule)}
+svg text{font:11px var(--mono);fill:var(--ink-3)}
+svg .grid{stroke:var(--line)}
 svg .bar{fill:var(--fit)}
 svg .lbl{fill:var(--ink)}
-.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font:500 11.5px/1.5 var(--mono);color:var(--ink-3)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .legend .k-new{background:var(--fit)}
 .legend .k-known{border:2px solid var(--muted)}
@@ -603,64 +854,84 @@ svg.calplane .samplelbl{fill:var(--flag);font-weight:600}
 svg.calplane .pt.sim{fill:var(--panel);fill-opacity:.85;stroke:var(--muted);stroke-width:2}
 svg.calplane .lbl,svg.calplane .samplelbl,svg.calplane .isolbl{paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
 #caltable th,#caltable td{white-space:nowrap}
-#caltable tbody th{font:400 13px "JetBrains Mono",monospace;text-transform:none;letter-spacing:0;color:var(--ink)}
+#caltable tbody th{font:400 13px var(--mono);text-transform:none;letter-spacing:0;color:var(--ink)}
 svg.calplane .pt.cl{fill:var(--fit);fill-opacity:.85;stroke:var(--fit);stroke-width:1.5}
 /* planets */
-.ratio{display:grid;gap:4px;border-top:1px solid var(--rule);padding-top:8px;margin-top:8px}
-.ratio .formula{font:12px "JetBrains Mono",monospace;overflow-wrap:anywhere}
-.scale{position:relative;height:10px;background:var(--sel);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
-.scale i{position:absolute;left:0;top:0;bottom:0;background:var(--fit);min-width:2px}
-.scalecap{display:flex;justify-content:space-between;font:11px "JetBrains Mono",monospace;color:var(--muted)}
-.archive{margin-top:12px;border:1px dashed var(--rule);border-radius:6px;padding:8px 10px;font-size:13px}
+.ratio{display:grid;gap:5px;border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.ratio .formula{font:12px var(--mono);overflow-wrap:anywhere}
+.scale{position:relative;height:8px;background:var(--bg-2);border-radius:999px;overflow:hidden}
+.scale i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--cyan),color-mix(in oklab,var(--cyan) 60%,var(--lime)));border-radius:999px;min-width:3px}
+.scalecap{display:flex;justify-content:space-between;font:11px var(--mono);color:var(--ink-3)}
+.archive{margin-top:14px;border:1px dashed var(--line-2);border-radius:10px;padding:10px 12px;font-size:13px}
 .archive ul{margin:6px 0 0;padding-left:18px}
 .card h2{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.card h2 .sub{font:500 11px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.04em}
 details summary{cursor:pointer}
 /* panel, runs */
-.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 14px;font-size:13px;margin:8px 0 0}
-.kv dt{color:var(--muted)}
-.kv dd{margin:0;font-family:"JetBrains Mono",monospace;overflow-wrap:anywhere;min-width:0}
+.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;font-size:13px;margin:10px 0 0}
+.kv dt{color:var(--ink-3)}
+.kv dd{margin:0;font-family:var(--mono);overflow-wrap:anywhere;min-width:0}
 .agree{list-style:none;margin:0;padding:0;display:grid}
-.agree li{display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr) auto;gap:4px 14px;align-items:baseline;border-top:1px solid var(--rule);padding:8px 0;font-size:13px}
+.agree li{display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr) auto;gap:4px 14px;align-items:baseline;border-top:1px solid var(--line);padding:10px 0;font-size:13px}
 .agree li:first-child{border-top:0}
 .marks{display:flex;flex-wrap:wrap;gap:4px 10px;margin:4px 0 0}
 details.cfg{padding:0}
-details.cfg>summary{padding:12px 16px;font-weight:600}
-details.cfg>div{padding:0 16px 14px;display:grid;gap:14px}
+details.cfg>summary{padding:14px 20px;font-weight:600}
+details.cfg>div{padding:0 20px 16px;display:grid;gap:14px}
 .frametools{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px}
-pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;background:var(--sel);padding:6px 8px;border-radius:4px}
-.frame{width:100%;height:calc(100vh - 190px);height:calc(100vh - var(--frame-offset, 190px));min-height:520px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);display:block}
+pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;background:var(--coral-soft);color:var(--ink);padding:8px 10px;border-radius:8px}
+.frame{width:100%;height:calc(100vh - 190px);height:calc(100vh - var(--frame-offset, 190px));min-height:520px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--bg);display:block;box-shadow:var(--shadow)}
 .frame[hidden]{display:none}
 /* Until the Docket reports ready the frame takes no space and the status line holds the slot. */
 .frame.waiting,body[data-route="candidates"] .frame.waiting{height:0;min-height:0;flex:0 0 0;border:0;visibility:hidden}
 .drawerclose{display:none}
 .topfull{display:none}
-.note.blocked{border-left-color:var(--reject);font-size:14px}
-.copyfallback{font:12px "JetBrains Mono",monospace;width:min(100%,46ch);min-height:32px;padding:4px 8px;border:1px solid var(--rule);border-radius:5px;background:var(--panel);color:var(--ink)}
+.note.blocked{border-top-color:var(--reject);font-size:14px}
+.copyfallback{font:12px var(--mono);width:min(100%,46ch);min-height:34px;padding:4px 8px;border:1px solid var(--line-2);border-radius:8px;background:var(--panel);color:var(--ink)}
 #sharednote{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
 #sharednote[hidden]{display:none}
 #disctable{container-type:inline-size}
 #disctable caption{caption-side:top;text-align:left}
-.capnote{position:sticky;left:0;display:block;max-width:min(100cqw,90ch);padding:8px 10px;font:12px "Inter Tight",sans-serif;color:var(--muted)}
+.capnote{position:sticky;left:0;display:block;max-width:min(100cqw,90ch);padding:10px 12px 0;font:12.5px/1.5 var(--sans);color:var(--ink-2)}
+#archivenote{color:var(--amber);font-weight:500}
+#archivenote+*,.capnote:last-child{padding-bottom:10px}
 @media (max-width:1000px){
   .widget.size-S{grid-column:span 3}
   .agree li{grid-template-columns:minmax(0,1fr) auto}
   .agree li>:nth-child(2){grid-column:1/-1;grid-row:2}
+  .instrument .igrid{grid-template-columns:minmax(0,1fr)}
+  .instrument .fold{border-left:0;padding-left:0;border-top:1px solid var(--space-line);padding-top:12px}
+  .honest{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:820px){
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow li{border-left:0;border-top:1px solid var(--line)}
+  .flow li:nth-child(-n+2){border-top:0}
+  .flow li:nth-child(even){border-left:1px solid var(--line)}
+  .flow li+li::before{display:none}
 }
 @media (max-width:699.98px){
-  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;height:var(--top);padding:0 16px;background:var(--side);border-bottom:1px solid var(--rule)}
-  .topbar b{font:600 16px "Inter Tight",sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;height:var(--top);padding:0 16px;background:color-mix(in oklab,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%);border-bottom:1px solid var(--line)}
+  .topbar b{font:500 15px var(--display);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
   .topbar .cur{color:var(--muted);font-size:13px;white-space:nowrap}
   .menu{display:inline-flex;align-items:center;gap:8px}
   .menu svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8}
   .shell{display:block}
-  .sidebar{position:fixed;z-index:40;left:0;top:0;bottom:0;height:auto;width:min(280px,84vw);transform:translateX(-102%);visibility:hidden;transition:transform .18s ease,visibility 0s linear .18s;box-shadow:0 0 24px rgba(0,0,0,.25)}
+  .sidebar{background:var(--side);position:fixed;z-index:40;left:0;top:0;bottom:0;height:auto;width:min(280px,84vw);transform:translateX(-102%);visibility:hidden;transition:transform .18s ease,visibility 0s linear .18s;box-shadow:0 0 24px rgba(0,0,0,.25)}
   .sidebar.open{transform:none;visibility:visible;transition:transform .18s ease}
   .backdrop{display:block;position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.35)}
   .backdrop[hidden]{display:none}
   main{padding:16px 16px 40px}
   .widgets{grid-template-columns:minmax(0,1fr)}
   .widget.size-S,.widget.size-M,.widget.size-L{grid-column:1/-1}
-  .route>header h1{font-size:20px}
+  .route>header h1{letter-spacing:.1em}
+  .route{gap:20px}
+  .hero-h{font-size:clamp(30px,8.6vw,40px);letter-spacing:-.04em}
+  .consolebar{gap:6px 12px;font-size:10.5px}
+  .consolebar .right{margin-left:0}
+  .instrument{padding:14px 12px 12px}
+  .instrument .ival{font-size:22px;text-align:left}
+  .ctas .btn{flex:1 1 auto}
   .frame{height:calc(100vh - var(--top));height:calc(100dvh - var(--top));min-height:0;border-radius:0;border-left:0;border-right:0;margin:0 -16px;width:calc(100% + 32px)}
   .btn,.chip,.wctl .btn,.nav a{min-height:44px}
   .wctl .btn{min-width:44px}
@@ -790,6 +1061,106 @@ function syncLayoutURL(){
   try { history.replaceState(null, '', '#/overview?layout=' + encodeLayout(layout)); } catch (e) { /* the layout still applies */ }
 }
 
+// ---------- overview hero: the stored light curve and the lead signal folded ----------
+// Stored points only. The line is a plain mean of the stored points in fixed bins, drawn for reading;
+// the dashed box in the fold sits at the stored depth and duration. Nothing is fitted.
+function binMean(xs, ys, width){
+  const out = [];
+  let k0 = null, sx = 0, sy = 0, n = 0;
+  for (let i = 0; i < xs.length; i++){
+    const k = Math.floor(xs[i] / width);
+    if (k !== k0 && n){ out.push([sx / n, sy / n, k0]); sx = sy = n = 0; }
+    k0 = k; sx += xs[i]; sy += ys[i]; n++;
+  }
+  if (n) out.push([sx / n, sy / n, k0]);
+  return out;
+}
+function meanPath(bins, X, Y){
+  // A gap of more than one empty bin starts a new segment, so the line never bridges missing data.
+  return bins.map((b, i) => `${i && b[2] - bins[i-1][2] <= 2 ? 'L' : 'M'}${X(b[0]).toFixed(1)},${Y(b[1]).toFixed(1)}`).join('');
+}
+function heroRange(){
+  const L = D.hero.lead, depth = (L && L.depth_ppm) || Math.max(100, ...D.hero.windows.map(w => w.depth_ppm || 0));
+  return [-2.6 * depth, 1.6 * depth];
+}
+let heroH = 300;
+function heroCurve(box){
+  box.innerHTML = '';
+  const H0 = D.hero, subs = H0.subjects;
+  if (!subs.length){ box.innerHTML = '<p class="empty">No light curve is stored for this run.</p>'; return; }
+  const W = Math.max(280, box.clientWidth || 640), narrow = W < 520;
+  const H = narrow ? 240 : 310, pl = 44, pr = 8, pt = 34, pb = 40;
+  heroH = H;
+  const a = subs[0].start, b = subs[subs.length - 1].end, [lo, hi] = heroRange();
+  const X = t => pl + (t - a) / (b - a) * (W - pl - pr), Y = v => pt + (hi - v) / (hi - lo) * (H - pt - pb);
+  const n = subs.reduce((s, x) => s + x.t.length, 0);
+  let clipped = 0;
+  for (const s of subs) for (const v of s.ppm) if (v < lo || v > hi) clipped++;
+  const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Light curve of ${H0.target}: ${n} stored points, ${H0.time_unit} ${fmt(a,1)} to ${fmt(b,1)}, with ${H0.windows.length} marked windows: ` + H0.windows.map(w => `${w.letter} at ${fmt((w.t_start + w.t_end)/2, 2)}, ${w.outcome}`).join('; ') + `. Every window is a ${D.unconfirmed}.`}, box);
+  svg.style.height = H + 'px';
+  const cid = 'hc-clip';
+  const defs = el('defs', {}, svg), cp = el('clipPath', {id: cid}, defs);
+  el('rect', {x: pl, y: pt, width: W - pl - pr, height: H - pt - pb}, cp);
+  for (const v of niceTicks(lo, hi, 4)){ el('line', {x1: pl, x2: W - pr, y1: Y(v), y2: Y(v), class: 'grid'}, svg); tx(svg, pl - 6, Y(v) + 3.5, String(v), 'end'); }
+  // Marked windows, shaded by outcome and lettered in time order. Letters that would touch move up a row.
+  let lastX = -99, row = 0;
+  for (const w of H0.windows){
+    const x1 = X(w.t_start), x2 = X(w.t_end), xm = (x1 + x2) / 2;
+    const r = el('rect', {x: Math.min(x1, xm - 1.5), y: pt, width: Math.max(3, x2 - x1), height: H - pt - pb, class: 'win ' + w.outcome}, svg);
+    el('title', {}, r).textContent = `${w.letter}: ${w.id} · ${w.outcome} · SNR ${fmt(w.snr,1)} · ${fmt(w.depth_ppm,0)} ppm · ${D.unconfirmed}`;
+    row = xm - lastX < 14 ? 1 - row : 0; lastX = xm;
+    tx(svg, xm, pt - 6 - row * 13, w.letter, 'middle', 'wl ' + w.outcome);
+  }
+  const pts = subs.map(s => s.t.map((t, i) => `M${X(t).toFixed(1)},${Y(s.ppm[i]).toFixed(1)}h0`).join('')).join('');
+  el('path', {d: pts, class: 'pts', 'clip-path': `url(#${cid})`}, svg);
+  for (const s of subs) el('path', {d: meanPath(binMean(s.t, s.ppm, 1/24), X, Y), class: 'mean', 'clip-path': `url(#${cid})`}, svg);
+  const L = H0.lead;
+  if (L && L.t0 !== null && L.t0 !== undefined){
+    for (let k = Math.ceil((a - L.t0) / L.period_days); L.t0 + k * L.period_days <= b; k++){
+      const xe = X(L.t0 + k * L.period_days);
+      el('path', {d: `M${xe.toFixed(1)},${H - pb + 1} l-4,7 h8 z`, class: 'epoch'}, svg);
+    }
+  }
+  el('line', {x1: pl, x2: W - pr, y1: H - pb, y2: H - pb, class: 'axis'}, svg);
+  // Tick labels sit on their own row above the unit label, so the two never touch.
+  for (const t of niceTicks(a, b, narrow ? 3 : 6)){ if (t < a || t > b) continue; tx(svg, X(t), H - pb + 16, String(t), 'middle'); }
+  tx(svg, pl - 6, pt - 20, 'ppm', 'end');
+  tx(svg, W - pr, H - 2, `time (${H0.time_unit})`, 'end');
+  $('#herocurvecap').textContent = `${n.toLocaleString()} stored points, ${H0.time_unit} ${fmt(a,1)} to ${fmt(b,1)}. Shaded: the ${H0.windows.length} windows the reviewers marked, lettered in time order.` + (clipped ? ` ${clipped} point${clipped === 1 ? '' : 's'} outside the drawn range are not shown.` : '');
+}
+function heroFold(box){
+  box.innerHTML = '';
+  const L = D.hero.lead;
+  if (!L || L.t0 === null || L.t0 === undefined){ box.closest('figure').hidden = true; return; }
+  const W = Math.max(240, box.clientWidth || 300), H = heroH;
+  const pl = 44, pr = 8, pt = 34, pb = 40, dur = (L.duration_days || 0.1) * 24, half = Math.max(3 * dur, 6);
+  const [lo, hi] = heroRange(), ph = [], pv = [];
+  for (const s of D.hero.subjects) s.t.forEach((t, i) => { const h = (((t - L.t0) % L.period_days + 1.5 * L.period_days) % L.period_days - L.period_days / 2) * 24; if (h >= -half && h <= half){ ph.push(h); pv.push(s.ppm[i]); } });
+  const X = h => pl + (h + half) / (2 * half) * (W - pl - pr), Y = v => pt + (hi - v) / (hi - lo) * (H - pt - pb);
+  const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `The lead signal folded on its stored period ${fmt(L.period_days,4)} d and t0 ${fmt(L.t0,4)}: ${ph.length} stored points within ${fmt(half,1)} h of mid-transit. Dashed: a box at the stored depth ${fmt(L.depth_ppm,0)} ppm and duration ${fmt(dur,1)} h, not a fit.`}, box);
+  svg.style.height = H + 'px';
+  const defs = el('defs', {}, svg), cp = el('clipPath', {id: 'hf-clip'}, defs);
+  el('rect', {x: pl, y: pt, width: W - pl - pr, height: H - pt - pb}, cp);
+  el('rect', {x: X(-dur / 2), y: pt, width: X(dur / 2) - X(-dur / 2), height: H - pt - pb, class: 'dur'}, svg);
+  for (const v of niceTicks(lo, hi, 4)){ el('line', {x1: pl, x2: W - pr, y1: Y(v), y2: Y(v), class: 'grid'}, svg); tx(svg, pl - 6, Y(v) + 3.5, String(v), 'end'); }
+  el('path', {d: ph.map((h, i) => `M${X(h).toFixed(1)},${Y(pv[i]).toFixed(1)}h0`).join(''), class: 'pts', 'clip-path': 'url(#hf-clip)'}, svg);
+  const order = ph.map((h, i) => i).sort((p, q) => ph[p] - ph[q]);
+  el('path', {d: meanPath(binMean(order.map(i => ph[i]), order.map(i => pv[i]), 0.5), X, Y), class: 'mean', 'clip-path': 'url(#hf-clip)'}, svg);
+  el('path', {d: `M${X(-half)},${Y(0)}H${X(-dur/2)}V${Y(-L.depth_ppm)}H${X(dur/2)}V${Y(0)}H${X(half)}`, class: 'box'}, svg);
+  el('line', {x1: pl, x2: W - pr, y1: H - pb, y2: H - pb, class: 'axis'}, svg);
+  for (const h of niceTicks(-half, half, 4)) tx(svg, X(h), H - pb + 16, String(h), 'middle');
+  tx(svg, X(0), pt - 6, (L.letters || []).join(' '), 'middle', 'wl ' + L.outcome);
+  tx(svg, W - pr, H - 2, 'hours from mid-transit', 'end');
+  $('#herofoldcap').textContent = `Folded on the stored period ${fmt(L.period_days,4)} d and t0 ${fmt(L.t0,3)}. Line: 30-minute mean of the stored points. Dashed: a box at the stored depth and duration, not a fit.`;
+}
+let heroWidth = -1;
+function renderHero(force){
+  const box = $('#herocurve');
+  if (!box || (!force && box.clientWidth === heroWidth)) return;
+  heroWidth = box.clientWidth;
+  heroCurve(box); heroFold($('#herofold'));
+}
+
 // ---------- overview ----------
 function widgetBody(id){
   function topBody(r){
@@ -853,7 +1224,7 @@ function renderWidgets(){
   $('#hiddenlist').innerHTML = hidden.length ? `<span>Hidden:</span>${hidden.map(x => `<button class="btn" data-act="show" data-id="${x.id}">Show ${esc(WIDGET_LABEL[x.id])}</button>`).join('')}` : '<span class="muted">All four widgets shown.</span>';
 }
 function renderOverview(){
-  renderWidgets(); syncLayoutURL();
+  renderHero(false); renderWidgets(); syncLayoutURL();
   $('#sharednote').hidden = !sharedView;
 }
 function layoutAction(act, id, size){
@@ -1196,7 +1567,7 @@ function renderPlanets(){
     else if (ar.status !== 'not_stored' && !ar.planets.length) arch = `<p style="margin:0">No published planet matched in the archive. ${esc(D.no_detection)}</p>`;
     else if (ar.status !== 'not_stored') arch = `<p style="margin:0"><b>Published planets.</b> ${esc(D.no_detection)}</p><ul>${ar.planets.map(p => `<li><b>${esc(p.pl_name)}</b> · host ${esc(p.hostname)} · P ${p.pl_orbper !== null && p.pl_orbper !== undefined ? esc(p.pl_orbper) + ' d' : 'not listed'} · ${p.tran_flag ? 'transiting' : 'not known to transit'}${p.rv_flag ? ' · radial-velocity detection' : ''}</li>`).join('')}</ul><p class="muted" style="margin:4px 0 0;font-size:12px">${esc(ar.source)}, fetched ${when(ar.fetched_at)}.</p>`;
     const hid = 'pl-' + String(s.star).replace(/\W/g,'_');
-    return `<article class="card" aria-labelledby="${hid}"><h2 id="${hid}">${esc(s.star)} <span class="muted" style="font:12px 'JetBrains Mono',monospace">${esc(s.sources.join(' · '))} · ${s.entries.length} entr${s.entries.length===1?'y':'ies'}</span></h2>${rows}${arch ? `<div class="archive">${arch}</div>` : ''}</article>`;
+    return `<article class="card" aria-labelledby="${hid}"><h2 id="${hid}">${esc(s.star)} <span class="muted" style="font:500 11px var(--mono)">${esc(s.sources.join(' · '))} · ${s.entries.length} entr${s.entries.length===1?'y':'ies'}</span></h2>${rows}${arch ? `<div class="archive">${arch}</div>` : ''}</article>`;
   }).join('') : '<p class="empty">No stars in the run or the feed.</p>';
 }
 
@@ -1206,14 +1577,14 @@ function renderPanel(){
   const ag = D.agreement;
   $('#agreement').innerHTML = ag.length ? `<ul class="agree">${ag.map(a => `<li>
       <span>${dipLink(a.id)}<small class="muted" style="display:block;font-size:11px">${esc(a.target)} · ${esc(a.outcome_label)} · ${esc(D.unconfirmed)}</small></span>
-      <span><b>${a.n} of ${a.of} reviewers</b> marked it: ${a.n_sim} of ${a.of_sim} simulated, ${a.n_claude} of ${a.of_claude} Claude<small class="muted" style="display:block;font-size:11px;font-family:'JetBrains Mono',monospace">${esc(a.reviewers.join(', ') || 'none')}</small></span>
+      <span><b>${a.n} of ${a.of} reviewers</b> marked it: ${a.n_sim} of ${a.of_sim} simulated, ${a.n_claude} of ${a.of_claude} Claude<small class="muted" style="display:block;font-size:11px;font-family:var(--mono)">${esc(a.reviewers.join(', ') || 'none')}</small></span>
       <a href="${dipHref(a.id, 'ledger')}">Verdict ledger</a></li>`).join('')}</ul>` : '<p class="empty">The run stored no dips.</p>';
   $('#panelcards').innerHTML = D.panel.length ? D.panel.map(r => `<article class="card"><h2 class="mono">${esc(r.id)}</h2>
     <p style="margin:6px 0 0">${kindTag(r.kind)}</p>
     <p class="muted" style="margin:6px 0 0;font-size:13px">${r.kind === 'simulated' ? 'Code that marks dips above an SNR threshold in the light curve. It is not a person.' : isClaude(r.kind) ? 'A Claude model that reads the plotted light curve and marks dips. It is not a person.' : ''}</p>
     <dl class="kv">
       <dt>weight in this run</dt><dd>${r.run_weight === null || r.run_weight === undefined ? 'not stored' : esc(r.run_weight)} <span class="muted">(manifest.json)</span></dd>
-      <dt>calibrated weight</dt><dd>${r.calibrated_weight === null || r.calibrated_weight === undefined ? 'not in the weights file' : fmt(r.calibrated_weight,3)}${D.weights_path ? ` <span class="muted">(${esc(D.weights_path)})</span>` : ''}</dd>
+      <dt>calibrated weight</dt><dd>${r.calibrated_weight === null || r.calibrated_weight === undefined ? 'not in the weights file' : fmt(r.calibrated_weight,3)}${D.weights_path ? `<small class="muted" style="display:block;font-size:11px">${esc(D.weights_path)}</small>` : ''}</dd>
       <dt>marks</dt><dd>${r.n_marks} span${r.n_marks===1?'':'s'} on ${r.n_subjects} subject${r.n_subjects===1?'':'s'}</dd>
       <dt>labels</dt><dd>${Object.entries(r.labels).map(([k,v]) => `${esc(k.replace(/_/g,' '))} ${v}`).join(' · ') || 'none'}</dd>
       <dt>dips marked</dt><dd>${r.marked_dips.length} of ${D.dossier_ids.length}<div class="marks">${r.marked_dips.map(dipLink).join('') || '<span class="muted">none</span>'}</div></dd>
@@ -1425,7 +1796,7 @@ $$('.nav a').forEach(a => a.addEventListener('click', () => { if (a.getAttribute
 setDrawerRole();
 if (drawerMQ.addEventListener) drawerMQ.addEventListener('change', () => { closeDrawer(false); setDrawerRole(); });
 let rt = null;
-window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!$('#route-discoveries').hidden) renderDiscCharts(false); resizeCalibration(); fitFrame(); }, 120); });
+window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!$('#route-discoveries').hidden) renderDiscCharts(false); if (!$('#route-overview').hidden) renderHero(false); resizeCalibration(); fitFrame(); }, 120); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitFrame);  // web fonts can rewrap the header
 go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()}, false);
 """
@@ -1433,10 +1804,78 @@ go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()
 
 def _nav(sections: list[dict]) -> str:
     items = "".join(
-        f'<li><a href="#/{s["id"]}" data-route="{s["id"]}"><svg viewBox="0 0 16 16" aria-hidden="true">{ICONS[s["id"]]}</svg>{html.escape(s["label"])}</a></li>'
-        for s in sections
+        f'<li><a href="#/{s["id"]}" data-route="{s["id"]}"><svg viewBox="0 0 16 16" aria-hidden="true">{ICONS[s["id"]]}</svg>{html.escape(s["label"])}'
+        f'<span class="ix" aria-hidden="true">{i:02d}</span></a></li>'
+        for i, s in enumerate(sections, 1)
     )
     return f'<nav class="nav" aria-label="Sections"><ul>{items}</ul></nav>'
+
+
+def _hero(data: dict) -> str:
+    """The Overview's opening: the argument, the stored light curve, the vetting flow, and what the page does not claim."""
+    e = html.escape
+    h, run, cfg = data["hero"], data["run"], data["config"]
+    inp = (cfg.get("inputs") or [{}])[0]
+    dc, c = run.get("docket_counts") or {}, run.get("counts") or {}
+    lead = h.get("lead")
+    feed_label_ = next((s["label"] for s in data["sections"] if s["id"] == "discoveries"), "Discoveries")
+    source = " · ".join(str(x) for x in (inp.get("mission"), f"sector {inp['sector']}" if inp.get("sector") is not None else None,
+                                          inp.get("author"), f"{inp['exptime_s']} s" if inp.get("exptime_s") else None) if x)
+    open_lead = (f'<a class="btn primary" href="#/candidates?dip={e(lead["dip"])}">Open the lead dip in the Docket <span aria-hidden="true">→</span></a>'
+                 if lead and lead.get("dip") else '<a class="btn primary" href="#/candidates">Open the Docket <span aria-hidden="true">→</span></a>')
+    value = (f'<div class="ival">{lead["depth_ppm"]:,.0f} ppm<small>lead signal depth, median of {lead["n_dips"]} dips</small></div>'
+             if lead and lead.get("depth_ppm") else "")
+    cal = data.get("calibration") or {}
+    n_inj = max([p.get("n_injected") or 0 for p in cal.get("points") or []] or [0])
+    weights = (f" Their weights rest on calibration with {n_inj} injected subjects, so they are rough." if n_inj else "")
+    flow = [
+        ("", c.get("subjects", "–"), f"light-curve subjects of {cfg.get('subject_days') or '–'} days", "input"),
+        ("", c.get("classifications", "–"), f"reviews from {dc.get('reviewers', '–')} reviewers, none of them a person", "marks"),
+        ("", dc.get("dips", "–"), "dips the panel agreed on", "consensus"),
+        ("", dc.get("signals", "–"), "signals, once repeat dips are grouped", "grouping"),
+    ]
+    flow_html = "".join(f'<li class="{k}"><small>{e(sm)}</small><b>{e(str(v))}</b><span>{e(t)}</span></li>' for k, v, t, sm in flow)
+    flow_html += (f'<li class="vet"><small>vetting, signals by outcome</small><div class="vet3">'
+                  f'<span class="pass"><b>{e(str(dc.get("passed", 0)))}</b>passed</span>'
+                  f'<span class="flag"><b>{e(str(dc.get("flagged", 0)))}</b>flagged</span>'
+                  f'<span class="rej"><b>{e(str(dc.get("rejected", 0)))}</b>rejected</span></div>'
+                  f'<span>Passing makes a {UNCONFIRMED}, not a planet.</span></li>')
+    return f"""<div class="hero">
+        <div class="consolebar" aria-label="Run summary">
+          <span class="live"><i></i>Stored run</span><span class="sep"></span>
+          <span>Run <b>{e(run["name"])}</b></span><span class="sep"></span>
+          <span>{e(source or "stored input")}</span><span class="sep"></span>
+          <span><b>{e(h["target"])}</b></span>
+          <span class="right">config <b>{e((cfg.get("config_sha256") or "")[:12] or "not stored")}</b></span>
+        </div>
+        <div class="hero-copy">
+          <h2 class="hero-h" id="h-hero">{e(h["headline"])} <em>{e(h["accent"])}</em></h2>
+          <p class="lede">{e(h["lede"])} Every one is a <b>{UNCONFIRMED}</b>.</p>
+          <p class="lede" style="font-size:14.5px;color:var(--ink-3)">{e(h["archive"])}</p>
+          <div class="ctas">{open_lead}<a class="btn ghost" href="#/discoveries">See the {e(feed_label_)}</a></div>
+        </div>
+        <section class="instrument" aria-labelledby="h-lc">
+          <div class="ihead"><div class="ititle"><span id="h-lc">The light curve · {e(h["target"])}</span><small>{e(source or "stored input")} · {e(inp.get("flux_column") or "flux")} · normalised, in ppm</small></div>{value}</div>
+          <div class="igrid">
+            <figure><div id="herocurve"></div><figcaption id="herocurvecap"></figcaption></figure>
+            <figure class="fold"><div id="herofold"></div><figcaption id="herofoldcap"></figcaption></figure>
+          </div>
+          <div class="ikey"><span><i class="k-passed"></i>passed vetting</span><span><i class="k-flagged"></i>flagged</span><span><i class="k-rejected"></i>rejected</span><span><i class="k-mean"></i>1-hour mean of the stored points, for reading only</span>{'<span><i class="k-ep"></i>transit times predicted by the stored period and t0</span>' if lead else ''}<span class="unc">each window: {UNCONFIRMED}</span></div>
+        </section>
+      </div>
+      <section aria-labelledby="h-flow" style="display:grid;gap:14px">
+        <div class="secthead"><h2 id="h-flow">02 · How the dips were vetted</h2><p>Read left to right. Counts from manifest.json and the Docket; nothing is re-estimated here.</p></div>
+        <ol class="flow">{flow_html}</ol>
+      </section>
+      <section class="honest" aria-labelledby="h-honest">
+        <h2 id="h-honest">03 · What this page does not claim</h2>
+        <ul>
+          <li><b>No confirmed planet.</b> Every dip, signal and feed entry here is a {UNCONFIRMED}. Passing vetting is not a confirmation.</li>
+          <li><b>No planet sizes.</b> No stellar radius is stored, so a depth gives only a planet-to-star radius ratio. The Planets section shows the working.</li>
+          <li><b>No people on the panel.</b> The reviewers are simulated detectors and Claude model calls.{e(weights)}</li>
+          <li><b>{e(NO_DETECTION.split(". ")[0])}.</b> {e(NO_DETECTION.split(". ", 1)[1])} A TOI or archive match compares a stored period with published values.</li>
+        </ul>
+      </section>"""
 
 
 def app_page(data: dict) -> str:
@@ -1471,14 +1910,17 @@ def app_page(data: dict) -> str:
   <aside class="sidebar" id="sidebar" aria-label="{title} sections">
     <button class="btn drawerclose" id="drawerclose" type="button"><span aria-hidden="true">✕</span> Close menu</button>
     <div class="brand"><b>{title}</b><span>run {html.escape(run["name"])}</span></div>
+    <p class="navlabel" aria-hidden="true">Sections</p>
     {_nav(data["sections"])}
-    <div class="sidefoot">built from {html.escape(run["dir"])}<br>{html.escape(data["catalog"]["path"] or "no catalogue")}<br>stored values only</div>
+    <div class="sidefoot"><span class="stored"><i></i>Stored values only</span><span>built from {html.escape(run["dir"])}</span><span>{html.escape(data["catalog"]["path"] or "no catalogue")}</span></div>
   </aside>
   <div class="backdrop" id="backdrop" hidden></div>
   <main id="main">
    <div id="content" tabindex="-1">
     <section class="route" id="route-overview" data-route="overview" aria-labelledby="h-overview" hidden>
-      <header><h1 id="h-overview" tabindex="-1">Overview</h1><p>Run {html.escape(run["name"])} and the feed at a glance. Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></header>
+      <header><h1 id="h-overview" tabindex="-1"><span class="idx">01</span>Overview</h1></header>
+      {_hero(data)}
+      <div class="secthead"><h2 id="h-view">04 · Your view</h2><p>Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></div>
       <p class="note rule" id="sharednote" hidden>This is a shared layout, shown for this view only. Your own default layout is unchanged unless you change a widget here. <button class="btn" id="ownlayout" type="button">Show my layout</button></p>
       <div class="layoutbar" role="group" aria-label="Layout">
         <div class="layoutbar" id="hiddenlist"></div>
@@ -1490,14 +1932,14 @@ def app_page(data: dict) -> str:
       <div class="widgets" id="widgets"></div>
     </section>
     <section class="route" id="route-candidates" data-route="candidates" aria-labelledby="h-candidates" hidden>
-      <header><h1 id="h-candidates" tabindex="-1">Candidates</h1><p>The Docket for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
+      <header><h1 id="h-candidates" tabindex="-1"><span class="idx">02</span>Candidates</h1><p class="lead-h">Every signal, its dips, and the checks behind each verdict.</p><p>The Docket for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
       <div class="frametools"><a id="fullpage" href="../docket/">Open full page</a><span class="muted">The Docket on its own page, at the same dip.</span></div>
       <p class="note" id="framestatus" role="status" hidden></p>
       <p class="note blocked" id="frameblocked" role="alert" hidden>The dossier could not load in this view. <a id="blockedlink" href="../docket/">Open it on its own page.</a></p>
       <iframe class="frame waiting" id="docketframe" title="Docket for run {html.escape(run["name"])}: signals, dips and vetting"></iframe>
     </section>
     <section class="route" id="route-discoveries" data-route="discoveries" aria-labelledby="h-discoveries" hidden>
-      <header><h1 id="h-discoveries" tabindex="-1">{label["discoveries"]}</h1><p>The feed from the discovery catalogue: {len(feed)} entries, {n_known} of them match a known TOI period. Every entry is a {unc}: a dip the panel marked, not a planet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></header>
+      <header><h1 id="h-discoveries" tabindex="-1"><span class="idx">03</span>{label["discoveries"]}</h1><p class="lead-h">What the discovery runs admitted, and how much of it the archive already knows.</p><p>The feed from the discovery catalogue: {len(feed)} entries, {n_known} of them match a known TOI period. Every entry is a {unc}: a dip the panel marked, not a planet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></header>
       <p class="note rule"><b>Feed rule</b> (discover.py): an entry joins the feed when its depth is at most {rule["max_depth_ppm"]:,.0f} ppm and its signal has at least {rule["min_transits"]} transits. This is an admission rule, not a vetting result.</p>
       <section class="card" aria-labelledby="h-feed" style="display:grid;gap:10px">
         <h2 id="h-feed">Feed entries</h2>
@@ -1517,13 +1959,13 @@ def app_page(data: dict) -> str:
       </section>
     </section>
     <section class="route" id="route-planets" data-route="planets" aria-labelledby="h-planets" hidden>
-      <header><h1 id="h-planets" tabindex="-1">Planets</h1><p>One card per star in the run or the feed. Each entry is a {unc}; the ratio below is what its stored depth implies if it were a planet.</p></header>
+      <header><h1 id="h-planets" tabindex="-1"><span class="idx">04</span>Planets</h1><p class="lead-h">What each depth would imply, if it were a planet.</p><p>One card per star in the run or the feed. Each entry is a {unc}; the ratio below is what its stored depth implies if it were a planet.</p></header>
       <p class="note"><b>Radius ratio only.</b> Rp/R* = √depth, with depth as a fraction (ppm × 10⁻⁶). This assumes a full, undiluted transit and ignores limb darkening. {html.escape(NO_STELLAR_RADIUS)} Each bar is a ratio scale from 0 to {data["ratio_scale_max"]:.2f}, the same on every card.</p>
       <p class="note">Published planets come from the stored archive cross-match (crossmatch.json), which covers {xm_targets}. The other stars have no stored cross-match, so their cards have no archive box. {nodet}</p>
       <div class="cards" id="planetcards"></div>
     </section>
     <section class="route" id="route-panel" data-route="panel" aria-labelledby="h-panel" hidden>
-      <header><h1 id="h-panel" tabindex="-1">Panel</h1><p>The reviewers that marked dips in run {html.escape(run["name"])}. Simulated reviewers are code; Claude reviewers are model calls. None of them is a person.</p></header>
+      <header><h1 id="h-panel" tabindex="-1"><span class="idx">05</span>Panel</h1><p class="lead-h">Who marked the dips, and how far to trust each of them.</p><p>The reviewers that marked dips in run {html.escape(run["name"])}. Simulated reviewers are code; Claude reviewers are model calls. None of them is a person.</p></header>
       <p class="note rule"><b>Weights.</b> A reviewer's weight is its calibration skill from injection tests: the true-positive rate on injected transits minus the false-positive rate on empty light curves, floored (calibrate.py). The calibrated weights are stored in {html.escape(data["weights_path"] or "no weights file")}. The weight in this run is the one manifest.json records; when it differs from the calibrated weight, the run did not use the calibrated weights.</p>
       <section class="card" aria-labelledby="h-cal" style="display:grid;gap:8px">
         <h2 id="h-cal">Calibration plane</h2>
@@ -1542,7 +1984,7 @@ def app_page(data: dict) -> str:
       <div class="cards" id="panelcards"></div>
     </section>
     <section class="route" id="route-runs" data-route="runs" aria-labelledby="h-runs" hidden>
-      <header><h1 id="h-runs" tabindex="-1">Runs</h1><p>The discovery run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
+      <header><h1 id="h-runs" tabindex="-1"><span class="idx">06</span>Runs</h1><p class="lead-h">Every discovery run, its errors as stored, and the configuration behind this page.</p><p>The discovery run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
       <section class="card" aria-labelledby="h-hist" style="display:grid;gap:4px"><h2 id="h-hist">Discovery runs</h2><div id="runtable"></div></section>
       <details class="card cfg"><summary>Configuration: run {html.escape(run["name"])} and the discovery catalogue</summary><div>
         <section aria-labelledby="h-cfg"><h3 id="h-cfg">This run's configuration</h3><div id="runconfig"></div></section>
