@@ -462,3 +462,40 @@ def test_candidates_store_mark_audit_and_counting_rule(run_dir, tmp_path):
     data = _page_data(build_docket(run_dir, tmp_path / "docket", title="t").read_text())
     assert all("mark_audit" in c and "count_rule" in c for c in data["candidates"])
     assert "not counted: overlaps no counted mark" in DOCKET_JS and "url(#hatch-" in DOCKET_JS
+
+
+def test_verdict_card_archive_is_one_sentence_with_provenance_behind_a_disclosure():
+    fn = re.search(r"function crossmatchLine\(c\)\{.*?\n\}\n", DOCKET_JS, re.S).group(0)
+    assert '<p class="xm-one">${sentence}' in fn and "<details class=\"xm-prov\"><summary>Provenance</summary>" in fn
+    assert "from the repository's stored cross-match ${esc(x.fallback_from)}; this run's own cross-match ${x.run_status === 'not_run' ? 'did not run'" in fn
+    assert "consistent with ${esc(hit.pl_name)} (P ${fmt(hit.pl_orbper,3)} d, ΔP ${fmt(hit.dP_pct,2)}%)" in fn
+    # The full source and the verbatim errors sit in the disclosure.
+    assert "Source: ${esc(x.source)}" in fn and "Stored error, verbatim" in fn and "esc(x.run_error)" in fn
+    # A fallback was recorded, not fetched for this page.
+    assert "recorded ${dayUTC(x.fetched_at)}${x.recorded_commit ? ` (commit ${esc(x.recorded_commit)})` : ''}" in fn
+    assert "fetched ${dayUTC(x.fetched_at)}" in fn
+
+
+def test_validation_note_supplies_the_timing_offset():
+    from pathlib import Path
+
+    stored = json.loads(Path(docket_mod.DEFAULT_CROSSMATCH).read_text())
+    v = stored["validation"]
+    note = Path(v["source"]).read_text()
+    row = next(line for line in note.splitlines() if line.startswith("| pi Men c |"))
+    cells = [c.strip() for c in row.strip("|").split("|")]
+    # Values as the validation note states them: predicted 5, recovered 5, mean offset -8.0 min.
+    assert v["epochs_recovered"] == f"{cells[3]} of {cells[2]}" == "5 of 5"
+    assert v["mean_timing_offset_min"] == float(cells[4]) == -8.0
+    assert stored["recorded_commit"] == "0f6dbdc"
+    planets = stored["planets"]
+    out = compare_with_archive(planets, [_dip("a", 1338.05, period=6.2726)], validation=v)["by_candidate"]["a"]
+    assert out["line"] == "consistent with pi Men c: ΔP 0.08%, timing offset from the validation note: −8.0 min mean over 5 epochs"
+    bare = compare_with_archive(planets, [_dip("a", 1338.05, period=6.2726)])["by_candidate"]["a"]
+    assert "no transit ephemeris to compare" in bare["line"]
+
+
+def test_odd_even_subject_labels_are_11px_and_stack_on_a_narrow_screen():
+    fn = re.search(r"function epochPlot\(rows, title, depth, colour\)\{.*?\n\}\n", DOCKET_JS, re.S).group(0)
+    assert "9px" not in fn and fn.count("t.style.fontSize = '11px'") == 2
+    assert "matchMedia('(max-width:419.98px)')" in fn and "[[0, r.subject_label || ''], [1, r.subject_parity || '']]" in fn

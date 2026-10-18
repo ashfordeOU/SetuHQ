@@ -231,7 +231,10 @@ def planet_cards(run_candidates: list[dict], run_name: str, feed: list[dict], cr
                 if str(p.get("tic_id", "")).upper() == star.upper() or len(covered) == 1]
         entry["archive"] = {"status": status, "planets": mine, "source": (crossmatch or {}).get("source", ""),
                             "fetched_at": (crossmatch or {}).get("fetched_at", ""), "error": (crossmatch or {}).get("error", ""),
-                            "fallback_from": (crossmatch or {}).get("fallback_from", "")}
+                            "fallback_from": (crossmatch or {}).get("fallback_from", ""),
+                            "recorded_commit": (crossmatch or {}).get("recorded_commit", ""),
+                            "run_error": (crossmatch or {}).get("run_error", ""),
+                            "run_status": (crossmatch or {}).get("run_status", "")}
     for entry in stars.values():
         entry["entries"].sort(key=lambda e: (e["source"] != "run", e["period_days"] is None, e["period_days"] or 0, e["t_center"]))
     return sorted(stars.values(), key=lambda s: (not any(e["source"] == "run" for e in s["entries"]), s["star"]))
@@ -309,6 +312,8 @@ def dip_agreement(dips: list[dict], kinds: dict[str, str]) -> list[dict]:
 
 
 OUTCOME_ORDER = {"passed": 0, "flagged": 1, "rejected": 2}
+MATCH_QUALIFIER = ("Each dip is this pipeline's own candidate, unconfirmed as an independent detection; the archive "
+                   "match says the planet is already known, not that this run confirmed it.")
 
 
 def _letter(i: int) -> str:
@@ -402,9 +407,12 @@ def overview_hero(dock: dict, top: list[dict] | None = None) -> dict:
         archive = f"No published planet in the stored archive cross-match matches the lead signal. {NO_DETECTION}"
     else:
         archive = "No archive cross-match is stored for this run."
+    # With an archive match the headline names a known planet; the lede says what that does and does not mean.
+    qualifier = (MATCH_QUALIFIER if match else f"Every one is a {UNCONFIRMED}.")
     return {
         "target": target, "time_unit": unit, "n_points": n_points, "span_days": span,
-        "headline": headline, "accent": accent, "lede": lede, "archive": archive,
+        "headline": headline, "accent": accent, "lede": lede, "archive": archive, "qualifier": qualifier,
+        "match": match["consistent_with"] if match else None,
         "subjects": [{"id": s["subject_id"], "start": s["start"], "end": s["end"],
                       "t": [round(t, 5) for t in s["time"]],
                       "ppm": [round((f - 1.0) * 1e6, 1) for f in s["flux"]]} for s in subjects],
@@ -473,14 +481,23 @@ FRAME_BRIDGE_JS = r"""
     if (m.theme === 'light' || m.theme === 'dark') document.documentElement.setAttribute('data-theme', m.theme);
     else if (m.theme === 'system') document.documentElement.removeAttribute('data-theme');
   });
-  // On a phone the signal list sits below the dossier: a fixed "Signals" button jumps to it.
+  // On a phone the signal list sits below the dossier: a fixed "Signals" button jumps to it. It lands on the
+  // current signal's header (else the first), not the panel header, clear of any sticky row above it.
+  function stickyHeight(root){
+    var h = 0, all = root.querySelectorAll('*');
+    for (var i = 0; i < all.length; i++){ var s = getComputedStyle(all[i]); if (s.position === 'sticky' && parseFloat(s.top || '0') <= 1 && all[i].offsetParent) h = Math.max(h, all[i].getBoundingClientRect().height); }
+    return h;
+  }
   function jumpToList(){
     var l = document.getElementById('listpanel'); if (!l) return;
     var body = document.getElementById('listbody'), t = document.getElementById('listtoggle');
     if (body && body.getAttribute('data-collapsed') === 'true' && t) t.click();
-    var sc = scroller(l), top = l.getBoundingClientRect().top;
+    var sel = l.querySelector('.row[aria-selected="true"]'), target = (sel && sel.closest('.sig') && sel.closest('.sig').querySelector('.sighead')) || l.querySelector('.sighead') || l;
+    var margin = stickyHeight(document.body) + 8;
+    target.style.scrollMarginTop = margin + 'px';
+    var sc = scroller(target), top = target.getBoundingClientRect().top;
     if (sc !== document.scrollingElement && sc !== document.documentElement) top -= sc.getBoundingClientRect().top;
-    sc.scrollTop += top - 8;
+    sc.scrollTop += top - margin;  // block: start, less the scroll margin; no scrollIntoView, which would move the shell
     var rows = document.getElementById('rows'); if (rows) rows.focus({preventScroll: true});
   }
   document.addEventListener('DOMContentLoaded', function(){
@@ -627,6 +644,10 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "crossmatch_line": crossmatch.get("line", ""),
         "crossmatch_targets": crossmatch.get("targets") or [],
         "crossmatch_file": crossmatch.get("fallback_from") or "crossmatch.json in the run",
+        "crossmatch_info": {"file": crossmatch.get("fallback_from") or str(run_dir / "crossmatch.json"),
+                            "fallback": bool(crossmatch.get("fallback_from")), "status": crossmatch.get("status", "not_run"),
+                            "run_status": crossmatch.get("run_status", ""), "run_error": crossmatch.get("run_error", ""),
+                            "error": crossmatch.get("error", "")},
         "panel": panel_cards(manifest, run["marks"], run["reviewerDecisions"], flat, cands),
         "calibration": {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name},
         "agreement": dip_agreement(cands, dock["reviewers"]),
@@ -940,6 +961,8 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .dippicker{display:none}
 .calcards{display:none}
 .calcard{border-top:1px solid var(--line);padding-top:10px;margin:0}
+.sortbar,.feedcards{display:none}
+.feedcards{list-style:none;margin:0;padding:0}
 #disctable caption{caption-side:top;text-align:left}
 .capnote{position:sticky;left:0;display:block;max-width:min(100cqw,90ch);padding:11px 12px 0;font:12.5px/1.5 var(--sans);color:var(--ink-2)}
 #archivenote{color:var(--amber);font-weight:500}
@@ -992,22 +1015,22 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   /* Panel: the calibration rows as one card per reviewer. */
   #caltable{display:none}
   .calcards{display:grid;gap:4px}
-  /* Feed: one card per entry, every value labelled; the column heads become a row of sort buttons. */
+  /* Feed: the table's caption stays; its rows become three-line cards, sorted from a labelled group. */
   #disctable{border:0;background:none;overflow:visible}
-  #disctable table,#disctable thead,#disctable tbody,#disctable caption{display:block}
-  #disctable thead tr{display:flex;flex-wrap:wrap;gap:6px;padding:0 0 10px}
-  #disctable thead th{position:static;border:0;padding:0;background:none;box-shadow:none}
-  #disctable thead th button{border:1px solid var(--line-2);border-radius:999px;padding:0 12px;background:var(--panel)}
-  #disctable tbody tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 12px;padding:12px 14px;margin-bottom:8px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
-  #disctable tbody th,#disctable tbody td{display:block;position:static;border:0;padding:0;white-space:normal;text-align:left;background:none;box-shadow:none;min-width:0}
-  #disctable tbody [data-label]::before{content:attr(data-label);display:block;font:500 11px/1.4 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
-  #disctable tbody .c-candidate_id,#disctable tbody .c-status{grid-column:1/-1}
-  /* first line: TIC, SNR, depth; then the dip; then mid-time and period; then the status */
-  #disctable tbody th{order:1}#disctable tbody .c-snr{order:2}#disctable tbody .c-depth_ppm{order:3}
-  #disctable tbody .c-candidate_id{order:4}#disctable tbody .c-t_center{order:5}#disctable tbody .c-period_days{order:6}
-  #disctable tbody .c-status{order:7}
-  #disctable tbody td .dip{max-width:none}
+  #disctable table,#disctable caption{display:block}
+  #disctable thead,#disctable tbody{display:none}
   #disctable caption .capnote{padding:0 0 8px;position:static}
+  .sortbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:4px 0 10px}
+  .sortlbl{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-right:4px}
+  .sortbtn{min-height:44px;padding:0 10px;border:1px dashed var(--line-3);border-radius:6px;background:transparent;color:var(--ink-2);font:500 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
+  .sortbtn[aria-pressed="true"]{border-style:solid;border-color:var(--cyan);color:var(--cyan)}
+  .feedcards{display:grid;gap:8px}
+  .feedcards li{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:2px 12px 8px;display:grid;gap:2px}
+  .fc1{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
+  .fc1 .dip{font-size:12px;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .fcst{font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+  .fc2{font-size:11px;letter-spacing:-.035em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fc3{font-size:11.5px;color:var(--amber)}
   .frame{height:calc(100vh - var(--top));height:calc(100dvh - var(--top));min-height:0;border-radius:0;border-left:0;border-right:0;margin:0 -16px;width:calc(100% + 32px)}
   .btn,.chip,.wctl .btn,.nav a{min-height:44px}
   .wctl .btn{min-width:44px}
@@ -1554,7 +1577,17 @@ function renderDiscTable(){
   $('#disctable').innerHTML = `<table><caption><span class="sr">Feed, sorted by ${esc(disc.sort)} ${disc.dir > 0 ? 'ascending' : 'descending'}. Every entry is a ${esc(D.unconfirmed)}.</span>${noDossierLine(rows)}${archiveNote(rows)}</caption>
     <thead><tr>${COLS.map(c => `<th scope="col" class="${NUMERIC.has(c[0]) ? 'num' : ''}" aria-sort="${disc.sort === c[0] ? (disc.dir > 0 ? 'ascending' : 'descending') : 'none'}"><button data-sort="${c[0]}">${esc(c[1])}<span aria-hidden="true">${disc.sort === c[0] ? (disc.dir > 0 ? '▲' : '▼') : ''}</span></button></th>`).join('')}</tr></thead>
     <tbody>${rows.length ? rows.map(x => `<tr>${COLS.map((c, k) => k === 0 ? `<th scope="row" class="num" data-label="${esc(c[1])}">${c[3](x)}</th>` : `<td class="${NUMERIC.has(c[0]) ? 'num' : ''} c-${c[0]}" data-label="${esc(c[1])}">${c[3](x)}</td>`).join('')}</tr>`).join('') : `<tr><td colspan="${COLS.length}" class="empty">No feed entries with this status.</td></tr>`}</tbody></table>`;
+  // Phone: a labelled "Sort" group (outlined, unlike the filled filter chips) and one three-line card per entry.
+  $('#disctable').insertAdjacentHTML('beforeend', feedSortBar() + feedCards(rows));
   $('#disccount').textContent = `${rows.length} of ${D.catalog.candidates.length} entries shown.`;
+}
+function feedSortBar(){
+  return `<div class="sortbar" role="group" aria-label="Sort by"><span class="sortlbl" aria-hidden="true">Sort</span>${COLS.filter(c => c[0] !== 't_center').map(c => `<button class="sortbtn" data-sort="${c[0]}" aria-pressed="${disc.sort === c[0]}">${esc(c[1])}${disc.sort === c[0] ? `<span aria-hidden="true"> ${disc.dir > 0 ? '▲' : '▼'}</span><span class="sr">, ${disc.dir > 0 ? 'ascending' : 'descending'}</span>` : ''}</button>`).join('')}</div>`;
+}
+// One card per entry, three lines: the dip and its status; TIC · P · depth · SNR on one mono line; the hedge.
+function feedCards(rows){
+  if (!rows.length) return '<p class="empty feedcards">No feed entries with this status.</p>';
+  return `<ol class="feedcards">${rows.map(x => `<li><div class="fc1">${dipLink(x.candidate_id)}<span class="fcst">${esc(D.status_label[x.status] || x.status)}</span></div><div class="fc2 mono">TIC ${esc(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}</div><div class="fc3">${esc(D.unconfirmed)} · mid-time ${fmt(x.t_center,2)} ${esc(x.time_unit)}</div></li>`).join('')}</ol>`;
 }
 function renderDiscHead(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length, ft = D.catalog.found_times;
@@ -1573,7 +1606,7 @@ $('#disctable').addEventListener('click', e => {
   if (disc.sort === k) disc.dir = -disc.dir; else { disc.sort = k; disc.dir = NUMERIC.has(k) ? -1 : 1; }
   saveFeedView(); syncFeedURL(true);
   renderDiscTable();
-  $(`#disctable button[data-sort="${k}"]`).focus();
+  const again = $(`#disctable ${b.closest('.sortbar') ? '.sortbar' : 'thead'} button[data-sort="${k}"]`); if (again) again.focus();
   say(`Sorted by ${b.textContent.replace(/[▲▼]/g,'')}, ${disc.dir > 0 ? 'ascending' : 'descending'}.`);
 });
 $('#discchips').addEventListener('click', e => {
@@ -1678,7 +1711,7 @@ function renderPlanets(){
     let arch = '';
     if (ar.status === 'not_run') arch = `<p style="margin:0">The archive cross-match did not run. Stored error, verbatim: <code>${esc(ar.error || 'none stored')}</code>. ${esc(D.no_detection)}</p>`;
     else if (ar.status !== 'not_stored' && !ar.planets.length) arch = `<p style="margin:0">No published planet matched in the archive. ${esc(D.no_detection)}</p>`;
-    else if (ar.status !== 'not_stored') arch = `<p style="margin:0"><b>Published planets.</b> ${esc(D.no_detection)}</p><ul>${ar.planets.map(p => `<li><b>${esc(p.pl_name)}</b> · host ${esc(p.hostname)} · P ${p.pl_orbper !== null && p.pl_orbper !== undefined ? esc(p.pl_orbper) + ' d' : 'not listed'} · ${p.tran_flag ? 'transiting' : 'not known to transit'}${p.rv_flag ? ' · radial-velocity detection' : ''}</li>`).join('')}</ul><p class="muted" style="margin:4px 0 0;font-size:12px">${esc(ar.source)}, fetched ${when(ar.fetched_at)}.</p>`;
+    else if (ar.status !== 'not_stored') arch = `<p style="margin:0"><b>Published planets.</b> ${esc(D.no_detection)}</p><ul>${ar.planets.map(p => `<li><b>${esc(p.pl_name)}</b> · host ${esc(p.hostname)} · P ${p.pl_orbper !== null && p.pl_orbper !== undefined ? esc(p.pl_orbper) + ' d' : 'not listed'} · ${p.tran_flag ? 'transiting' : 'not known to transit'}${p.rv_flag ? ' · radial-velocity detection' : ''}</li>`).join('')}</ul><p class="muted" style="margin:4px 0 0;font-size:12px">${esc(ar.source)}, ${ar.fallback_from ? `recorded ${when(ar.fetched_at)}${ar.recorded_commit ? ` (commit ${esc(ar.recorded_commit)})` : ''} in ${esc(ar.fallback_from)}; this run's own cross-match ${ar.run_status === 'not_run' ? 'did not run' : 'is not stored'}${ar.run_error ? ` (stored error, verbatim: <code>${esc(ar.run_error)}</code>)` : ''}` : `fetched ${when(ar.fetched_at)}`}.</p>`;
     const hid = 'pl-' + String(s.star).replace(/\W/g,'_');
     return `<article class="card" aria-labelledby="${hid}"><h2 id="${hid}">${esc(s.star)} <span class="muted" style="font:500 11px var(--mono)">${esc(s.sources.join(' · '))} · ${s.entries.length} entr${s.entries.length===1?'y':'ies'}</span></h2>${rows}${arch ? `<div class="archive">${arch}</div>` : ''}</article>`;
   }).join('') : '<p class="empty">No stars in the run or the feed.</p>';
@@ -1806,11 +1839,21 @@ function renderRuns(){
     <dt>Claude prompt version</dt><dd>${esc(c.claude_prompt_version || 'not stored')}</dd>
     <dt>subject length</dt><dd>${esc(c.subject_days)} d</dd>
     <dt>skipped reviewers</dt><dd>${(c.skipped_reviewers||[]).length ? esc(c.skipped_reviewers.join(', ')) : 'none'}</dd>
+    <dt>archive cross-match</dt><dd>${xmConfig(D.crossmatch_info)}</dd>
     ${pk.map(([k,v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}
   </dl>
   <h3 style="margin-top:14px">Measured inputs</h3>
   ${(c.inputs||[]).map(x => `<p style="margin:4px 0 0" class="mono">${esc(Object.entries(x).map(([k,v]) => k + ' ' + v).join(' · '))}</p>`).join('') || '<p class="empty">No inputs stored.</p>'}`;
   $('#catconfig').innerHTML = D.catalog.path ? `<dl class="kv"><dt>catalogue</dt><dd>${esc(D.catalog.path)}</dd><dt>config</dt><dd>${esc(D.catalog.config)}</dd><dt>config hash (sha256)</dt><dd>${esc(D.catalog.config_sha256)}</dd><dt>updated</dt><dd>${when(D.catalog.updated)}</dd><dt>targets reviewed</dt><dd>${esc(D.catalog.targets_reviewed)}</dd></dl>` : '<p class="empty">No discovery catalogue was given to this build.</p>';
+}
+
+// The archive cross-match this page was built from: the file, and when it is the repository's fallback,
+// what the run's own cross-match stored (its status and its error, verbatim).
+function xmConfig(x){
+  if (!x) return 'not stored';
+  if (x.fallback) return `${esc(x.file)} (fallback; run's own: ${esc(x.run_status || 'not stored')}${x.run_error ? ', ' + esc(x.run_error) : ''})`;
+  if (x.status === 'not_run') return `not run (${esc(x.error || 'no error stored')})`;
+  return `${esc(x.file)} (${esc(x.status)})`;
 }
 
 // ---------- router and drawer ----------
@@ -1995,7 +2038,7 @@ def _hero(data: dict) -> str:
         </div>
         <div class="hero-copy">
           <h1 class="hero-h" id="h-overview" tabindex="-1">{e(h["headline"])} <em>{e(h["accent"])}</em></h1>
-          <p class="lede">{e(h["lede"])} Every one is a <b>{UNCONFIRMED}</b>.</p>
+          <p class="lede">{e(h["lede"])} {e(h["qualifier"]).replace(UNCONFIRMED, f"<b>{UNCONFIRMED}</b>", 1)}</p>
           <p class="lede" style="font-size:14.5px;color:var(--ink-3)">{e(h["archive"])}</p>
           <div class="ctas">{open_lead}<a class="btn ghost" href="#/discoveries">See the {e(feed_label_)}</a></div>
         </div>
@@ -2015,7 +2058,7 @@ def _hero(data: dict) -> str:
       <section class="honest" aria-labelledby="h-honest">
         <h2 id="h-honest">03 · What this page does not claim</h2>
         <ul>
-          <li><b>No confirmed planet.</b> Every dip, signal and feed entry here is a {UNCONFIRMED}. Passing vetting is not a confirmation.</li>
+          <li><b>No confirmed planet.</b> Every dip, signal and feed entry here is a {UNCONFIRMED}. Passing vetting is not a confirmation.{f" The match with {e(h['match'])} says the planet is already known, not that this run confirmed it." if h.get("match") else ""}</li>
           <li><b>No planet sizes.</b> No stellar radius is stored, so a depth gives only a planet-to-star radius ratio. The Planets section shows the working.</li>
           <li><b>No people on the panel.</b> The reviewers are simulated detectors and Claude model calls.{e(weights)}</li>
           <li><b>{e(NO_DETECTION.split(". ")[0])}.</b> {e(NO_DETECTION.split(". ", 1)[1])} A TOI or archive match compares a stored period with published values.</li>

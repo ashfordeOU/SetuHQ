@@ -250,6 +250,16 @@ def feed_caption(r: dict) -> str:
 # ---------- data ----------
 
 
+def _xm_dated(xm: dict) -> str:
+    """'recorded 2026-10-16 (commit 0f6dbdc), from docs/results/...; this run's own cross-match: not_run' for a
+    fallback file, which was recorded from a validation note rather than fetched; else 'fetched <time>'."""
+    if xm.get("fallback_from"):
+        commit = f" (commit {xm['recorded_commit']})" if xm.get("recorded_commit") else ""
+        return (f"recorded {str(xm.get('fetched_at', ''))[:10]}{commit} in {xm['fallback_from']}; this run's own "
+                f"cross-match: {xm.get('run_status', 'not stored')}{', ' + xm['run_error'] if xm.get('run_error') else ''}")
+    return f"fetched {xm.get('fetched_at', '')}"
+
+
 def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
                star: str | None = None, require_crossmatch: bool = False) -> dict:
     """Everything the plates show, read from the run directory and the catalogue."""
@@ -295,6 +305,7 @@ def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | No
             "crossmatch_line": (dock.get("crossmatch") or {}).get("line", ""),
             "crossmatch_source": (dock.get("crossmatch") or {}).get("source", ""),
             "crossmatch_fetched": (dock.get("crossmatch") or {}).get("fetched_at", ""),
+            "crossmatch_dated": _xm_dated(dock.get("crossmatch") or {}),
         })
     feed_stars: dict[str, list[dict]] = {}
     for r in feed:
@@ -600,7 +611,7 @@ def _plate(s: dict, i: int) -> str:
   </div>
   <figcaption id="{pid}-f{k}"><b class="flabel">Plate {i}, panel {_roman(k + 1)}.</b> Stored flux of subject {_e(subj["subject_id"])} ({_e(subj["time_unit"])} {_f(subj["start"], 2)} to {_f(subj["end"], 2)}), relative flux − 1 in ppm. Shaded bands are consensus intervals, lettered as in the captions; triangles are the BLS epochs. Right: {per}.{clip_note}</figcaption>
 </figure>''')
-        archive = (f'<div class="archive"><p><b>Archive.</b> {_e(s["crossmatch_line"])}, from {_e(s["crossmatch_source"])}, fetched {_e(s["crossmatch_fetched"])}. '
+        archive = (f'<div class="archive"><p><b>Archive.</b> {_e(s["crossmatch_line"])}, from {_e(s["crossmatch_source"])}, {_e(s["crossmatch_dated"])}. '
                    f'{_e(NO_DETECTION)}</p></div>') if s.get("crossmatch_line") else ""
     else:
         span = s.get("sector_span") or []

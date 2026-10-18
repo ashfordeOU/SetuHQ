@@ -180,3 +180,14 @@ def test_river_segments_are_labelled_at_start_and_end_with_their_span(run_dir, c
     page = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog).read_text()
     river = re.search(r'<section class="river".*?</section>', page, re.S).group(0)
     assert "not drawn to a common time scale" in river
+
+
+def test_plate_says_a_fallback_cross_match_was_recorded_not_fetched():
+    from exoplan.plate import _xm_dated
+
+    fb = {"fallback_from": "docs/results/pi_men_crossmatch.json", "fetched_at": "2026-10-16T22:59:37+00:00",
+          "recorded_commit": "0f6dbdc", "run_status": "not_run", "run_error": "ModuleNotFoundError: x"}
+    text = _xm_dated(fb)
+    assert text.startswith("recorded 2026-10-16 (commit 0f6dbdc) in docs/results/pi_men_crossmatch.json")
+    assert "fetched" not in text and "ModuleNotFoundError: x" in text
+    assert _xm_dated({"fetched_at": "2026-10-18T00:00:00+00:00"}) == "fetched 2026-10-18T00:00:00+00:00"

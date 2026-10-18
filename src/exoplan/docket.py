@@ -153,6 +153,10 @@ kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--rule);border-rad
 .filternote{margin:0;border:1px dashed var(--flag);border-radius:6px;padding:8px 12px;font:13px/1.5 "Inter Tight",sans-serif}
 .filternote[hidden]{display:none}
 .xm-cmp{display:block;margin-top:2px}
+.xm-one{margin:0}
+.xm-prov{margin-top:4px;font-size:12px;color:var(--muted)}
+.xm-prov summary{cursor:pointer;font:600 12px "JetBrains Mono",monospace;color:var(--muted)}
+.xm-prov ul{margin:4px 0 0;padding-left:18px;overflow-wrap:anywhere}
 .ledger thead th{text-align:left;font:600 11px "JetBrains Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;border-bottom:1px solid var(--ink)}
 .epochs{margin:6px 0 0;padding-left:16px;font:12px "JetBrains Mono",monospace;color:var(--ink)}
 @media (max-width:900px){
@@ -526,8 +530,10 @@ function epochList(rows, what){
 }
 
 // Axis: signal epoch E (one count across subjects) and, under it, the subject's own label and parity.
+// Below 420 px the subject label and its parity stack on two lines, each at 11 px (no 9 px text).
 function epochPlot(rows, title, depth, colour){
-  const W=300, H=212, pl=44, pr=10, pt=14, pb=38, svg = el('svg', {viewBox:`0 0 ${W} ${H}`, 'aria-hidden':'true'});
+  const stack = window.matchMedia && window.matchMedia('(max-width:419.98px)').matches;
+  const W=300, H=stack ? 226 : 212, pl=44, pr=10, pt=14, pb=stack ? 52 : 38, svg = el('svg', {viewBox:`0 0 ${W} ${H}`, 'aria-hidden':'true'});
   const vals = rows.filter(r => r.depth_ppm !== null && r.depth_ppm !== undefined);
   let lo = 0, hi = depth;
   for (const v of vals){ lo = Math.min(lo, v.depth_ppm - (v.sigma_ppm||0)); hi = Math.max(hi, v.depth_ppm + (v.sigma_ppm||0)); }
@@ -537,8 +543,10 @@ function epochPlot(rows, title, depth, colour){
   el('line', {x1:pl,x2:W-pr,y1:Y(depth),y2:Y(depth),stroke:'var(--fit)','stroke-dasharray':'3 3'}, svg);
   rows.forEach((r,i) => {
     const hasSig = r.signal_epoch !== null && r.signal_epoch !== undefined;
-    tx(svg, X(i), H-22, 'E'+(hasSig ? r.signal_epoch : r.epoch), 'middle', 'hl');
-    if (hasSig){ const t = tx(svg, X(i), H-8, `${r.subject_label || ''} ${r.subject_parity}`.trim(), 'middle'); t.style.fontSize = '9px'; }
+    tx(svg, X(i), H-pb+16, 'E'+(hasSig ? r.signal_epoch : r.epoch), 'middle', 'hl');
+    if (hasSig && stack){
+      for (const [k, s] of [[0, r.subject_label || ''], [1, r.subject_parity || '']]){ const t = tx(svg, X(i), H-pb+30+k*13, s, 'middle', 'sublbl'); t.style.fontSize = '11px'; }
+    } else if (hasSig){ const t = tx(svg, X(i), H-8, `${r.subject_label || ''} ${r.subject_parity}`.trim(), 'middle', 'sublbl'); t.style.fontSize = '11px'; }
     if (r.depth_ppm === null || r.depth_ppm === undefined) return;
     if (r.sigma_ppm !== null) el('line', {x1:X(i),x2:X(i),y1:Y(r.depth_ppm-r.sigma_ppm),y2:Y(r.depth_ppm+r.sigma_ppm),stroke:'var(--ink)'}, svg);
     el('circle', {cx:X(i), cy:Y(r.depth_ppm), r:4.5, fill: colour(r)}, svg);
@@ -641,15 +649,34 @@ function scopeNote(c){
   return `Scope: ${where} ${eph}${merged} Depth and duration are the consensus window's measured values. This is a candidate, unconfirmed.`;
 }
 
+// The archive line in the verdict card: one sentence, with the full provenance one click away.
+const dayUTC = iso => { const d = new Date(iso); if (!iso || Number.isNaN(d.getTime())) return ''; try { return d.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'}); } catch (e) { return iso.slice(0, 10); } };
 function crossmatchLine(c){
   const x = D.crossmatch || {};
   const cmp = ((x.comparison || {}).by_candidate || {})[c.candidate_id];
-  const when = x.fetched_at ? ` stored ${esc(x.fetched_at.slice(0,10))}` : '';
   const cls = x.status === 'matched' ? 'xm-hit' : x.status === 'no_match' ? 'xm-none' : 'xm-notrun';
   const ran = x.status === 'matched' || x.status === 'no_match';
-  const fb = x.fallback_from ? ` <span class="xm-cmp">Values from the repository's stored cross-match <code>${esc(x.fallback_from)}</code> (${esc(x.source || '')}); this run's own cross-match: ${esc(x.run_status || 'not stored')}${x.run_error ? ', ' + esc(x.run_error) : ''}.</span>` : '';
-  const text = ran ? esc(x.line) + '.' + fb + (cmp ? ` <span class="xm-cmp"><b>Comparison for this dip:</b> ${esc(cmp.line)}.</span>` : '') : `Known-planet cross-match not run. Stored error, verbatim: <code>${esc(x.error || 'none stored')}</code>`;
-  return `<p class="xm ${cls}"><span class="xm-k">NASA Exoplanet Archive${when}:</span> ${text} <span class="hint">Archive values only; this page claims no detection either way.</span></p>`;
+  // A fallback file was recorded from a validation note, not fetched for this page: say which.
+  const dated = x.fallback_from ? `recorded ${dayUTC(x.fetched_at)}${x.recorded_commit ? ` (commit ${esc(x.recorded_commit)})` : ''}` : (x.fetched_at ? `fetched ${dayUTC(x.fetched_at)}` : '');
+  let sentence;
+  if (!ran) sentence = 'Archive: known-planet cross-match not run.';
+  else {
+    const hit = cmp && cmp.consistent_with ? (cmp.planets || []).find(p => p.pl_name === cmp.consistent_with) : null;
+    const what = hit ? `consistent with ${esc(hit.pl_name)} (P ${fmt(hit.pl_orbper,3)} d, ΔP ${fmt(hit.dP_pct,2)}%)`
+      : x.status === 'no_match' ? 'no published planet for this star' : `no published planet within tolerance of this dip (${esc(x.line)})`;
+    const where = x.fallback_from ? `from the repository's stored cross-match ${esc(x.fallback_from)}; this run's own cross-match ${x.run_status === 'not_run' ? 'did not run' : 'is ' + esc(x.run_status || 'not stored')}`
+      : `from this run's stored cross-match, ${dated}`;
+    sentence = `Archive: ${what}, ${where}.`;
+  }
+  const prov = [
+    ran ? `<li>${esc(x.line)}.</li>` : '',
+    dated ? `<li>${dated}.</li>` : '',
+    x.source ? `<li>Source: ${esc(x.source)}</li>` : '',
+    cmp ? `<li>Comparison for this dip: ${esc(cmp.line)}.</li>` : '',
+    !ran ? `<li>Stored error, verbatim: <code>${esc(x.error || 'none stored')}</code></li>` : '',
+    x.fallback_from && x.run_error ? `<li>This run's own cross-match, stored error, verbatim: <code>${esc(x.run_error)}</code></li>` : '',
+  ].join('');
+  return `<div class="xm ${cls}"><p class="xm-one">${sentence} <span class="hint">Archive values only; this page claims no detection either way.</span></p><details class="xm-prov"><summary>Provenance</summary><ul>${prov}</ul></details></div>`;
 }
 
 function sec(key, title, sub, body){
@@ -1254,7 +1281,15 @@ def planet_label(p: dict) -> str:
     return f"{p['pl_name']} (P {p['pl_orbper']:.3f} d)" if p.get("pl_orbper") is not None else p["pl_name"]
 
 
-def compare_with_archive(planets: list[dict], dips: list[dict], tol: float = MERGE_PERIOD_TOL) -> dict:
+def _validation_note(v: dict) -> str:
+    """'timing offset from the validation note: −8.0 min mean over 5 epochs' from a stored validation record."""
+    n = str(v.get("epochs_recovered", "")).split(" ")[0] or "?"
+    off = f"{v['mean_timing_offset_min']:.1f}".replace("-", "−")
+    return f"timing offset from the validation note: {off} min mean over {n} epochs"
+
+
+def compare_with_archive(planets: list[dict], dips: list[dict], tol: float = MERGE_PERIOD_TOL,
+                         validation: dict | None = None) -> dict:
     """Compare each dip with each archive planet, from stored values only.
 
     For every archive planet with a period: ΔP = |P_bls - P_archive| / P_archive
@@ -1290,7 +1325,12 @@ def compare_with_archive(planets: list[dict], dips: list[dict], tol: float = MER
         hits = sorted((r for r in rows if r["dP_pct"] is not None and r["dP_pct"] < tol * 100), key=lambda r: r["dP_pct"])
         if hits:
             h = hits[0]
-            if not h["transit_ephemeris"]:
+            if not h["transit_ephemeris"] and validation and validation.get("pl_name") == h["pl_name"] \
+                    and validation.get("mean_timing_offset_min") is not None:
+                # No mid-time stored, but a validation note measured the timing against the archive.
+                off = _validation_note(validation)
+                h["offset_note"] = f"{off} ({validation.get('source', 'validation note')})"
+            elif not h["transit_ephemeris"]:
                 off = NO_TRANSIT_EPHEMERIS
             elif h["epoch_offset_min"] is None:
                 off = "nearest epoch offset not computed (time system unknown)"
@@ -1363,7 +1403,7 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
     xm["line"] = crossmatch_line(xm)
     if xm.get("status") in ("matched", "no_match"):
         # Computed from the stored archive values at build time; nothing is written.
-        xm["comparison"] = compare_with_archive(xm.get("planets") or [], run["candidates"])
+        xm["comparison"] = compare_with_archive(xm.get("planets") or [], run["candidates"], validation=xm.get("validation"))
     data = {
         "title": title,
         "candidates": run["candidates"],

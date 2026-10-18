@@ -16,5 +16,12 @@
       "tic_id": "TIC 261136679"
     }
   ],
-  "status": "matched"
+  "status": "matched",
+  "recorded_commit": "0f6dbdc",
+  "validation": {
+    "pl_name": "pi Men c",
+    "mean_timing_offset_min": -8.0,
+    "epochs_recovered": "5 of 5",
+    "source": "docs/results/pi_men_validation.md"
+  }
 }

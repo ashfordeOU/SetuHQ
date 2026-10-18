@@ -928,19 +928,78 @@ def test_theme_control_meta_and_first_paint(run_dir, tmp_path):
     assert ':root[data-theme=\\"dark\\"]' in FRAME_THEME_CSS or ':root[data-theme="dark"]' in FRAME_THEME_CSS
 
 
-def test_phone_feed_rows_are_labelled_cards_and_calibration_is_stacked(run_dir, catalog, tmp_path):
+def test_phone_feed_is_three_line_cards_with_a_distinct_sort_group(run_dir, catalog, tmp_path):
     phone = _phone_css()
-    assert "#disctable tbody tr{display:grid" in phone
-    assert "#disctable tbody [data-label]::before{content:attr(data-label)" in phone
+    # The table's caption (with the no-detection line) stays; its head and body give way to cards.
+    assert "#disctable thead,#disctable tbody{display:none}" in phone and "#disctable table,#disctable caption{display:block}" in phone
+    assert ".feedcards{display:grid" in phone and ".sortbar{display:flex" in phone
+    # Sort buttons are outlined (dashed), unlike the filled filter chips, inside a labelled group.
+    assert "border:1px dashed var(--line-3)" in re.search(r"\.sortbtn\{[^}]*\}", phone).group(0)
+    bar = re.search(r"function feedSortBar\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert 'role="group" aria-label="Sort by"' in bar and '<span class="sortlbl" aria-hidden="true">Sort</span>' in bar
+    assert "aria-pressed" in bar
+    cards = re.search(r"function feedCards\(rows\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert cards.count('<div class="fc') == 3 and "D.unconfirmed" in cards
+    assert "TIC ${esc(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}" in cards
     assert "#caltable{display:none}" in phone and ".calcards{display:grid" in phone
-    body = re.search(r"function renderDiscTable\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert 'data-label="${esc(c[1])}"' in body
     cal = re.search(r"function renderCalibration\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "$('#calcards').innerHTML" in cal and "<dl class=\"kv calcard\">" in cal
     # Desktop: every feed row shows (no clipped scroll box), and the region's name says so.
     assert ".tablewrap.scrollbox{overflow-x:auto}" in APP_CSS and "max-height:70vh" not in APP_CSS
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
     assert 'aria-label="Feed table, every entry shown; scrolls sideways when wider than the screen"' in page
+
+
+def test_hero_qualifies_an_archive_match_in_the_lede_and_the_box(run_dir, tmp_path):
+    from exoplan import app as app_mod
+
+    dock = docket_mod.docket_data(run_dir, title="t")
+    sig = dock["candidates"][0]["signal_id"]
+    matched = app_mod.overview_hero(dock, [{"signal_id": sig, "consistent_with": "Test c"}])
+    assert matched["qualifier"] == app_mod.MATCH_QUALIFIER and matched["match"] == "Test c"
+    assert "unconfirmed as an independent detection" in matched["qualifier"]
+    assert "not that this run confirmed it" in matched["qualifier"]
+    plain = app_mod.overview_hero(dock, [])
+    assert plain["qualifier"] == f"Every one is a {UNCONFIRMED}." and plain["match"] is None
+    data = app_data(run_dir, title="t")
+    data["hero"] = matched
+    page = app_mod.app_page(data)
+    lede = re.search(r'<p class="lede">(.*?)</p>', page, re.S).group(1)
+    assert lede.rstrip().endswith("not that this run confirmed it.")
+    box = re.search(r"<li><b>No confirmed planet.</b>(.*?)</li>", page, re.S).group(1)
+    assert "The match with Test c says the planet is already known, not that this run confirmed it." in box
+
+
+def test_runs_page_names_the_cross_match_file_and_the_runs_own_error(run_dir, tmp_path):
+    fn = re.search(r"function xmConfig\(x\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "(fallback; run's own: " in fn and "esc(x.run_error)" in fn
+    assert "<dt>archive cross-match</dt><dd>${xmConfig(D.crossmatch_info)}</dd>" in APP_JS
+    target = json.loads((run_dir / "candidates.json").read_text())[0]["target"]
+    fb = tmp_path / "fb.json"
+    fb.write_text(json.dumps({"status": "matched", "targets": [target], "star": None, "source": "s", "planets": []}))
+    (run_dir / "crossmatch.json").write_text(json.dumps({"status": "not_run", "error": "E: verbatim"}))
+    try:
+        from unittest import mock
+
+        with mock.patch.object(docket_mod, "DEFAULT_CROSSMATCH", str(fb)):
+            dock = docket_mod.docket_data(run_dir, title="t", crossmatch_fallback=fb)
+        assert dock["crossmatch"]["run_error"] == "E: verbatim"
+    finally:
+        (run_dir / "crossmatch.json").unlink()
+    info = app_data(run_dir, title="t")["crossmatch_info"]
+    assert info["fallback"] is False and info["status"] == "not_run" and NO_STORED_CROSSMATCH in info["error"]
+    if shutil.which("node"):
+        esc = re.search(r"const esc = .*\n", APP_JS).group(0)
+        out = subprocess.run(["node", "-e", esc + fn + "console.log(xmConfig({file: 'docs/results/pi_men_crossmatch.json', fallback: true, run_status: 'not_run', run_error: \"ModuleNotFoundError: No module named 'astroquery'\"}))"],
+                             capture_output=True, text=True, check=True).stdout.strip()
+        assert out == "docs/results/pi_men_crossmatch.json (fallback; run's own: not_run, ModuleNotFoundError: No module named &#39;astroquery&#39;)"
+
+
+def test_signals_button_lands_on_the_current_signal_header():
+    js = re.search(r"function jumpToList\(\)\{.*?\n  \}\n", FRAME_BRIDGE_JS, re.S).group(0)
+    assert "querySelector('.row[aria-selected=\"true\"]')" in js and ".querySelector('.sighead')" in js
+    assert "target.style.scrollMarginTop = margin + 'px'" in js and "stickyHeight(document.body) + 8" in js
+    assert "scrollIntoView(" not in js
 
 
 def test_phone_dip_picker_lists_every_dip_with_its_outcome(run_dir, tmp_path):
