@@ -69,9 +69,13 @@ STATUS_LABEL = {"new_candidate": "new candidate", "known_toi": "period matches a
 ARCHIVE_FIELDS = ("pl_name", "hostname", "pl_orbper", "tran_flag", "rv_flag", "tic_id")
 DEFAULT_WEIGHTS = "docs/results/reviewer_weights_full_panel.json"
 RATIO_SCALE_MAX = 0.1  # Planets: every ratio bar runs from 0 to this Rp/R* value, labelled on the page.
-# Kshana's families (the Observatory system): Geist for text, Geist Mono for numbers, Unbounded for the wordmark.
-GOOGLE_FONTS = ("https://fonts.googleapis.com/css2?family=Geist:wght@300..700"
-                "&family=Geist+Mono:wght@400;500;600&family=Unbounded:wght@400;500;600&display=swap")
+# Kshana's families (the Observatory system): Geist for text, Geist Mono for numbers, Unbounded for the
+# wordmark. Self-hosted as Kshana does: build_app copies src/exoplan/fonts to <out>/assets/fonts.
+FONTS_DIR = Path(__file__).parent / "fonts"
+FONTS_CSS = "assets/fonts/fonts.css"  # relative to the app page
+# The shell's copy of the Docket runs from a blob URL, which cannot resolve a relative address; the shell
+# swaps this placeholder for the absolute address of FONTS_CSS before it makes the blob.
+FRAME_FONTS_HREF = "__EXOPLAN_FONTS_CSS__"
 
 
 def default_layout() -> list[dict]:
@@ -226,7 +230,8 @@ def planet_cards(run_candidates: list[dict], run_name: str, feed: list[dict], cr
         mine = [{k: p.get(k) for k in ARCHIVE_FIELDS} for p in planets
                 if str(p.get("tic_id", "")).upper() == star.upper() or len(covered) == 1]
         entry["archive"] = {"status": status, "planets": mine, "source": (crossmatch or {}).get("source", ""),
-                            "fetched_at": (crossmatch or {}).get("fetched_at", "")}
+                            "fetched_at": (crossmatch or {}).get("fetched_at", ""), "error": (crossmatch or {}).get("error", ""),
+                            "fallback_from": (crossmatch or {}).get("fallback_from", "")}
     for entry in stars.values():
         entry["entries"].sort(key=lambda e: (e["source"] != "run", e["period_days"] is None, e["period_days"] or 0, e["t_center"]))
     return sorted(stars.values(), key=lambda s: (not any(e["source"] == "run" for e in s["entries"]), s["star"]))
@@ -369,23 +374,30 @@ def overview_hero(dock: dict, top: list[dict] | None = None) -> dict:
 
     n_points = sum(len(s["time"]) for s in subjects)
     span = (subjects[-1]["end"] - subjects[0]["start"]) if subjects else 0.0
+    accent = "Candidate, unconfirmed."
     if lead_out and lead_out["depth_ppm"]:
         headline = (f"A {_fmt_num(lead_out['depth_ppm'], 0)} ppm dip every "
-                    f"{_fmt_num(lead_out['period_days'], 2)} days in {target}.")
+                    f"{_fmt_num(lead_out['period_days'], 2)} days in {target}")
+        if match:
+            # The archive already lists a planet at this period: say so in the headline itself.
+            headline += f", consistent with {match['consistent_with']}."
+            accent = "A known planet, not a discovery."
+        else:
+            headline += "."
     else:
         headline = f"{len(cands)} marked dip{'s' if len(cands) != 1 else ''} in {target}."
-    accent = "Candidate, unconfirmed."
     lede = (f"{n_points:,} stored brightness measurements over {span:.1f} days. "
             f"{counts.get('reviewers', 0)} reviewers ({counts.get('simulated', 0)} simulated detectors and "
             f"{counts.get('claude', 0)} Claude reviewers; none of them a person) marked {counts.get('dips', len(cands))} dips, "
             f"which the vetting code grouped into {counts.get('signals', 0)} signals: {counts.get('passed', 0)} passed, "
             f"{counts.get('flagged', 0)} flagged, {counts.get('rejected', 0)} rejected.")
+    where = f" ({xm['fallback_from']})" if xm.get("fallback_from") else ""
     if match:
-        archive = (f"The stored archive cross-match finds the lead signal consistent with {match['consistent_with']}, "
+        archive = (f"The stored archive cross-match{where} finds the lead signal consistent with {match['consistent_with']}, "
                    f"a published planet: a known planet, not a discovery. {NO_DETECTION}")
     elif xm.get("status") == "not_run":
-        archive = ("The archive cross-match did not run for this build, so this page does not say whether "
-                   "a published planet matches the lead signal.")
+        archive = (f"No archive cross-match is stored for this build, so this page does not say whether a published "
+                   f"planet matches the lead signal. Stored error, verbatim: {xm.get('error') or 'none stored'}")
     elif xm.get("status") == "no_match":
         archive = f"No published planet in the stored archive cross-match matches the lead signal. {NO_DETECTION}"
     else:
@@ -458,8 +470,25 @@ FRAME_BRIDGE_JS = r"""
     var m = e.data; if (e.source !== P || !m || m.source !== 'exoplan-shell') return;
     if (m.dip && m.dip !== selected() && typeof select === 'function') select(m.dip, false);
     if (m.section && SECS.indexOf(m.section) >= 0){ scrollToSection(m.section); lastSec = m.section; }
+    if (m.theme === 'light' || m.theme === 'dark') document.documentElement.setAttribute('data-theme', m.theme);
+    else if (m.theme === 'system') document.documentElement.removeAttribute('data-theme');
   });
-  document.addEventListener('DOMContentLoaded', function(){ send({kind: 'ready'}); });
+  // On a phone the signal list sits below the dossier: a fixed "Signals" button jumps to it.
+  function jumpToList(){
+    var l = document.getElementById('listpanel'); if (!l) return;
+    var body = document.getElementById('listbody'), t = document.getElementById('listtoggle');
+    if (body && body.getAttribute('data-collapsed') === 'true' && t) t.click();
+    var sc = scroller(l), top = l.getBoundingClientRect().top;
+    if (sc !== document.scrollingElement && sc !== document.documentElement) top -= sc.getBoundingClientRect().top;
+    sc.scrollTop += top - 8;
+    var rows = document.getElementById('rows'); if (rows) rows.focus({preventScroll: true});
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'jumplist'; b.textContent = 'Signals ↑'; b.setAttribute('aria-label', 'Jump to the list of signals and dips');
+    b.addEventListener('click', jumpToList); document.body.appendChild(b);
+    send({kind: 'ready'});
+  });
 })();
 """
 
@@ -468,9 +497,13 @@ FRAME_BRIDGE_JS = r"""
 # targets (min-height and padding, same font size). The standalone Docket page is unchanged.
 FRAME_PHONE_CSS = (
     "@media (max-width:700px){"
+    ".jumplist{display:inline-flex;align-items:center;position:fixed;right:12px;bottom:max(12px,env(safe-area-inset-bottom,0px));"
+    "z-index:30;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--rule);background:var(--ink);"
+    "color:var(--paper);font:500 14px/1 \"Geist\",sans-serif;box-shadow:0 10px 30px -12px rgba(0,0,0,.5);cursor:pointer}"
     ".dipbtn,.chip,.listtoggle{min-height:44px;padding:10px 12px;box-sizing:border-box}"
     ".sectoggle{min-height:44px;padding:12px 0;box-sizing:border-box}"
     "}"
+    "@media (min-width:700.02px){.jumplist{display:none}}"
 )
 
 
@@ -484,6 +517,9 @@ FRAME_THEME_CSS = (
     "@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]){--paper:#060A14;--ink:#EAF0FF;"
     "--rule:rgba(150,175,230,.2);--muted:#8190B0;--fit:#3DDCF7;--pass:#A8EE5E;--flag:#FFB547;--reject:#FF6A5C;"
     "--panel:#0D1528;--sel:#0E1730;--cons:#EAF0FF}}"
+    ":root[data-theme=\"dark\"]{--paper:#060A14;--ink:#EAF0FF;--rule:rgba(150,175,230,.2);--muted:#8190B0;--fit:#3DDCF7;"
+    "--pass:#A8EE5E;--flag:#FFB547;--reject:#FF6A5C;--panel:#0D1528;--sel:#0E1730;--cons:#EAF0FF;color-scheme:dark}"
+    ":root[data-theme=\"light\"]{color-scheme:light}"
     "body{-webkit-font-smoothing:antialiased;letter-spacing:-.006em}"
 )
 
@@ -492,17 +528,21 @@ def with_frame_bridge(docket_html: str) -> str:
     """The Docket page with the shell's fonts and tokens, :data:`FRAME_PHONE_CSS` and :data:`FRAME_BRIDGE_JS`.
 
     The bridge does nothing outside a frame; the phone rule and the family dress apply to this copy only."""
-    themed = (docket_html.replace(DOCKET_FONTS, GOOGLE_FONTS)
+    themed = (docket_html.replace(DOCKET_FONTS, FRAME_FONTS_HREF)
               .replace('"Inter Tight"', '"Geist"').replace('"JetBrains Mono"', '"Geist Mono"'))
     return themed.replace(
         "</head>", f"<style>{FRAME_THEME_CSS}{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script></head>", 1)
 
 
 def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
-             weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None) -> dict:
-    """Everything the shell shows, read from stored files only."""
+             weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None,
+             require_crossmatch: bool = False) -> dict:
+    """Everything the shell shows, read from stored files only.
+
+    With ``require_crossmatch`` the build fails (``CrossmatchUnavailable``) when no stored archive
+    cross-match is usable, instead of building a page that cannot say what the archive knows."""
     run_dir = Path(run_dir)
-    dock = docket_data(run_dir, title=f"{title} · candidates", star=star)
+    dock = docket_data(run_dir, title=f"{title} · candidates", star=star, require_crossmatch=require_crossmatch)
     manifest = json.loads((run_dir / "manifest.json").read_text())
     catalog = {"candidates": [], "runs": []}
     catalog_name = ""
@@ -586,11 +626,13 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "planets": planet_cards(cands, run_name, feed, crossmatch),
         "crossmatch_line": crossmatch.get("line", ""),
         "crossmatch_targets": crossmatch.get("targets") or [],
+        "crossmatch_file": crossmatch.get("fallback_from") or "crossmatch.json in the run",
         "panel": panel_cards(manifest, run["marks"], run["reviewerDecisions"], flat, cands),
         "calibration": {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name},
         "agreement": dip_agreement(cands, dock["reviewers"]),
         "weights_path": weights_name,
         "docket_html": with_frame_bridge(docket_page(dock)),
+        "fonts_css": FONTS_CSS, "frame_fonts_href": FRAME_FONTS_HREF,
     }
 
 
@@ -649,7 +691,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 ::selection{background:var(--cyan);color:var(--bg)}
 a{color:var(--cyan);text-underline-offset:3px;text-decoration-thickness:1px}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.skip{position:absolute;left:12px;top:-60px;background:var(--btn-bg);color:var(--btn-ink);padding:10px 14px;border-radius:10px;z-index:50;display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
+.skip{position:absolute;left:12px;top:-60px;background:var(--btn-bg);color:var(--btn-ink);padding:11px 14px;border-radius:11px;z-index:50;display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
 .skip:focus{top:12px}
 #content:focus{outline:none}
 .topbar{display:none}
@@ -659,45 +701,45 @@ a{color:var(--cyan);text-underline-offset:3px;text-decoration-thickness:1px}
 .brand b{display:flex;align-items:center;gap:9px;font:500 17px/1 var(--display);letter-spacing:-.01em}
 .brand b::before{content:"";width:16px;height:16px;flex:none;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--bg) 0 34%,transparent 36%),conic-gradient(from 200deg,var(--cyan),var(--lime),var(--cyan))}
 .brand span{font:500 11px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;overflow-wrap:anywhere}
-.navlabel{padding:0 20px;font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 -12px}
+.navlabel{padding:0 20px;font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 -12px}
 .nav ul{list-style:none;margin:0;padding:0 12px;display:grid;gap:2px}
-.nav a{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:10px;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:14.5px;transition:color .2s,background-color .2s}
-.nav a .ix{margin-left:auto;font:500 10px/1 var(--display);color:var(--ink-3);letter-spacing:0}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:11px;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:14.5px;transition:color .2s,background-color .2s}
+.nav a .ix{margin-left:auto;font:500 11px/1 var(--display);color:var(--ink-3);letter-spacing:0}
 .nav a:hover{background:var(--panel-2);color:var(--ink)}
 .nav a[aria-current="page"]{background:var(--glass);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2),var(--shadow)}
 .nav a[aria-current="page"] .ix{color:var(--cyan)}
 .nav svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6}
 .sidefoot{margin-top:auto;padding:14px 20px 0;border-top:1px solid var(--line);font:400 11px/1.6 var(--mono);color:var(--ink-3);overflow-wrap:anywhere;display:grid;gap:6px}
-.sidefoot .stored{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase;font-size:10.5px}
+.sidefoot .stored{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase;font-size:11px}
 .sidefoot .stored i{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px var(--lime-soft)}
 .backdrop{display:none}
 main{min-width:0;padding:30px clamp(18px,3vw,44px) 64px}
 main:focus{outline:none}
 .route{display:grid;gap:22px;min-width:0;max-width:1180px}
 .route[hidden]{display:none}
-.route>header{display:grid;gap:10px;padding-bottom:6px}
-.route>header h1{display:flex;align-items:center;gap:12px;font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0}
-.route>header h1 .idx{font:500 11px/1 var(--display);letter-spacing:0;color:var(--cyan)}
-.route>header h1::after{content:"";height:1px;width:48px;background:var(--line-2);flex:none}
-.route>header h1:focus{outline:none}
+.route>header{display:grid;gap:11px;padding-bottom:6px}
+.route>header .eyebrow{display:flex;align-items:center;gap:12px;font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0}
+.route>header .eyebrow .idx{font:500 11px/1 var(--display);letter-spacing:0;color:var(--cyan)}
+.route>header .eyebrow::after{content:"";height:1px;width:48px;background:var(--line-2);flex:none}
+.route h1:focus{outline:none}
 .route>header p{margin:0;color:var(--ink-2);max-width:72ch;font-size:clamp(15px,1.15vw,16.5px);line-height:1.55}
-.route>header .lead-h{font:600 clamp(26px,3.1vw,42px)/1.05 var(--sans);letter-spacing:-.035em;color:var(--ink);max-width:24ch;text-wrap:balance}
+.route>header .lead-h{margin:0;font:600 clamp(26px,3.1vw,42px)/1.05 var(--sans);letter-spacing:-.035em;color:var(--ink);max-width:24ch;text-wrap:balance}
 #route-candidates>header .lead-h{font-size:clamp(22px,2.3vw,30px);max-width:40ch}
 h2{font:600 18px/1.25 var(--sans);letter-spacing:-.015em;margin:0}
 h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .note{margin:0;border-top:1px solid var(--line-2);padding:14px 0 0;font-size:14px;color:var(--ink-2);max-width:86ch}
 .note b{color:var(--ink);font-weight:600}
 .note.rule{border-top-color:var(--line-2)}
-.tag{display:inline-flex;align-items:center;gap:6px;font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2);white-space:nowrap;vertical-align:1px}
+.tag{display:inline-flex;align-items:center;gap:6px;font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2);white-space:nowrap;vertical-align:1px}
 .tag.unc{color:var(--amber);border-color:color-mix(in oklab,var(--amber) 30%,transparent);background:var(--amber-soft)}
 .tag.unc::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
 .tag.sim{color:var(--ink-3)}
 .tag.cl{color:var(--cyan);background:var(--cyan-soft);border-color:transparent}
 .muted{color:var(--ink-3)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 13px/1.2 var(--sans);color:var(--ink);background:var(--glass);border:1px solid var(--line-2);border-radius:10px;padding:6px 12px;cursor:pointer;min-height:34px;text-decoration:none;transition:border-color .2s,background-color .2s,transform .25s var(--ease)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 13px/1.2 var(--sans);color:var(--ink);background:var(--glass);border:1px solid var(--line-2);border-radius:11px;padding:6px 12px;cursor:pointer;min-height:34px;text-decoration:none;transition:border-color .2s,background-color .2s,transform .25s var(--ease)}
 .btn:hover{border-color:var(--line-3);background:var(--panel-2)}
 .btn[aria-disabled="true"]{opacity:.45;cursor:default}
-.btn.primary{background:var(--btn-bg);color:var(--btn-ink);border-color:transparent;min-height:44px;padding:0 18px;font-size:14.5px;box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 10px 30px -12px color-mix(in oklab,var(--btn-bg) 50%,transparent)}
+.btn.primary{background:var(--btn-bg);color:var(--btn-ink);border-color:transparent;min-height:44px;padding:0 18px;font-size:14.5px;box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 11px 30px -12px color-mix(in oklab,var(--btn-bg) 50%,transparent)}
 .btn.primary:hover{transform:translateY(-1px);background:var(--btn-bg)}
 .btn.ghost{min-height:44px;padding:0 18px;font-size:14.5px}
 .chip{font:500 12px/1.2 var(--mono);border:1px solid var(--line-2);background:var(--glass);color:var(--ink-2);padding:6px 12px;border-radius:999px;cursor:pointer;min-height:34px}
@@ -719,19 +761,19 @@ h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .hero-h em{font-style:normal;color:var(--amber)}
 .lede{margin:0;font-size:clamp(15.5px,1.25vw,17.5px);line-height:1.55;color:var(--ink-2);max-width:60ch}
 .lede b{color:var(--ink);font-weight:560}
-.ctas{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ctas{display:flex;flex-wrap:wrap;gap:11px;align-items:center}
 /* the instrument: Kshana's dark chart panel, dark in both themes */
-.instrument{background:linear-gradient(180deg,var(--space-2),var(--space));color:var(--space-ink);border:1px solid var(--space-line);border-radius:var(--r);box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 40px 90px -50px rgba(6,10,20,.75),0 6px 18px -10px rgba(6,10,20,.4);padding:16px 18px 14px;display:grid;gap:12px;min-width:0}
+.instrument{background:linear-gradient(180deg,var(--space-2),var(--space));color:var(--space-ink);border:1px solid var(--space-line);border-radius:var(--r);box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 40px 90px -50px rgba(6,10,20,.75),0 6px 18px -11px rgba(6,10,20,.4);padding:16px 18px 14px;display:grid;gap:12px;min-width:0}
 .instrument .ihead{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:8px 16px}
 .instrument .ititle{font-size:13.5px;color:var(--space-ink);line-height:1.3;min-width:0}
-.instrument .ititle small{display:block;font:500 10.5px/1.5 var(--mono);color:var(--space-ink-2);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;overflow-wrap:anywhere}
+.instrument .ititle small{display:block;font:500 11px/1.5 var(--mono);color:var(--space-ink-2);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;overflow-wrap:anywhere}
 .instrument .ival{font:500 26px/1 var(--mono);letter-spacing:-.02em;color:var(--s-lime);text-align:right;white-space:nowrap}
-.instrument .ival small{display:block;font:500 10.5px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--space-ink-2);margin-top:4px}
+.instrument .ival small{display:block;font:500 11px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--space-ink-2);margin-top:4px}
 .instrument .igrid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1.15fr);gap:14px;min-width:0}
 .instrument figure{margin:0;min-width:0;display:grid;gap:6px}
 .instrument figcaption{font:400 11.5px/1.5 var(--mono);color:var(--space-ink-2)}
 .instrument .fold{border-left:1px solid var(--space-line);padding-left:14px}
-.instrument svg text{fill:var(--space-ink-2);font:10.5px var(--mono)}
+.instrument svg text{fill:var(--space-ink-2);font:11px var(--mono)}
 .instrument svg .grid{stroke:var(--space-line)}
 .instrument svg .axis{stroke:rgba(150,175,230,.35)}
 .instrument svg .pts{stroke:var(--space-ink-3);stroke-opacity:.55;stroke-width:2.2;stroke-linecap:round;fill:none}
@@ -741,14 +783,14 @@ h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .instrument svg .win.passed{fill:var(--s-lime)}
 .instrument svg .win.flagged{fill:var(--s-amber)}
 .instrument svg .win.rejected{fill:var(--s-coral)}
-.instrument svg text.wl{font:600 10.5px var(--mono)}
+.instrument svg text.wl{font:600 11px var(--mono)}
 .instrument svg text.wl.passed{fill:var(--s-lime)}
 .instrument svg text.wl.flagged{fill:var(--s-amber)}
 .instrument svg text.wl.rejected{fill:var(--s-coral)}
 .instrument svg .epoch{fill:var(--s-lime)}
 .instrument svg .dur{fill:var(--s-lime);opacity:.1}
-.ikey{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 11px/1.5 var(--mono);color:var(--space-ink-2);border-top:1px solid var(--space-line);padding-top:10px}
-.ikey i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.ikey{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 11px/1.5 var(--mono);color:var(--space-ink-2);border-top:1px solid var(--space-line);padding-top:11px}
+.ikey i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
 .ikey .k-passed{background:var(--s-lime)}.ikey .k-flagged{background:var(--s-amber)}.ikey .k-rejected{background:var(--s-coral)}
 .ikey .k-mean{height:2px;background:var(--s-cyan);vertical-align:3px}
 .ikey .k-ep{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--s-lime);border-radius:0}
@@ -759,21 +801,21 @@ h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .flow li:first-child{border-left:0}
 .flow li b{font:500 clamp(24px,2.4vw,32px)/1 var(--mono);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 .flow li span{font-size:12.5px;color:var(--ink-2);line-height:1.35}
-.flow li small{font:500 10px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.flow li small{font:500 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
 .vet3{display:flex;flex-wrap:wrap;gap:4px 14px}
 .vet3 span{display:grid;gap:2px;font:500 11px/1.3 var(--mono);color:var(--ink-3)}
 .vet3 .pass b{color:var(--lime)}.vet3 .flag b{color:var(--amber)}.vet3 .rej b{color:var(--coral)}
 .flow li+li::before{content:"→";position:absolute;left:-8px;top:15px;width:16px;height:16px;display:grid;place-items:center;font:500 11px/1 var(--mono);color:var(--ink-3);background:var(--panel);border:1px solid var(--line);border-radius:50%}
 .honest{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.2fr);gap:12px 32px;border-top:1px solid var(--line-2);padding-top:20px}
 .honest h2{font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.honest ul{list-style:none;margin:0;padding:0;display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.honest ul{list-style:none;margin:0;padding:0;display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
 .honest li{font-size:14px;color:var(--ink-2);line-height:1.5;padding-left:16px;position:relative}
 .honest li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:2px;background:var(--amber)}
 .honest li b{color:var(--ink);font-weight:600}
 .secthead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;border-top:1px solid var(--line-2);padding-top:20px}
 .secthead h2{font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
 .secthead p{margin:0;font-size:13px;color:var(--ink-3);max-width:70ch}
-.layoutbar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;font-size:13px}
+.layoutbar{display:flex;flex-wrap:wrap;gap:8px 11px;align-items:center;font-size:13px}
 .layoutbar .muted{font-size:12px}
 .widgets{display:grid;gap:16px;grid-template-columns:repeat(6,minmax(0,1fr));min-width:0}
 .widget{display:grid;gap:12px;align-content:start}
@@ -781,8 +823,8 @@ h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .widget.size-M{grid-column:span 3}
 .widget.size-L{grid-column:1/-1}
 .widget>header{display:flex;justify-content:space-between;align-items:center;gap:6px 8px;flex-wrap:wrap}
-.widget>header h2{display:flex;align-items:center;gap:10px}
-.widget>header h2 .idx{font:500 10px/1 var(--display);color:var(--cyan)}
+.widget>header h2{display:flex;align-items:center;gap:11px}
+.widget>header h2 .idx{font:500 11px/1 var(--display);color:var(--cyan)}
 .wctl{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .wctl .btn{padding:2px 8px;min-height:30px;min-width:30px;font-size:12px;border-radius:8px}
 .seg{display:inline-flex}
@@ -793,12 +835,12 @@ h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .wopen{font-size:13px;font-weight:500;justify-self:start}
 .dip{font:500 12px var(--mono);white-space:nowrap}
 .toplist,.toplist ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.toplist>li{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}
+.toplist>li{border-top:1px solid var(--line);padding-top:11px;display:grid;gap:6px}
 .toplist>li:first-child{border-top:0;padding-top:0}
 .toplist ul li{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline;font-size:13px}
 .toplist .st .short,.phonehedge{display:none}
 .toplist .note{font-size:12.5px}
-.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
+.kpis{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
 .kpi{border-top:1px solid var(--line-2);padding-top:8px}
 .kpi b{display:block;font:500 26px/1.1 var(--mono);letter-spacing:-.03em}
 .kpi span{font-size:12px;color:var(--ink-3)}
@@ -808,14 +850,14 @@ h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .runlist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .runlist li{display:grid;gap:2px;border-top:1px solid var(--line);padding-top:8px;font-size:13px}
 .runlines{list-style:none;margin:0;padding:0;display:grid;gap:0}
-.runlines>li{border-top:1px solid var(--line);padding:10px 0;font-size:13px;display:grid;gap:4px}
+.runlines>li{border-top:1px solid var(--line);padding:11px 0;font-size:13px;display:grid;gap:4px}
 .runlines>li:first-child{border-top:0}
 .runlines .line{display:flex;flex-wrap:wrap;gap:2px 14px;align-items:baseline}
 .runlines .err{color:var(--reject)}
 .ratio summary{font-size:13px}
 /* tables: Kshana's table treatment, mono uppercase heads over hairlines */
 .tablewrap{overflow-x:auto;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
-.tablewrap.scrollbox{max-height:70vh;overflow:auto}
+.tablewrap.scrollbox{overflow-x:auto}  /* every row shows; only a table wider than its box scrolls, sideways */
 .scrollbox thead th{position:sticky;top:0;background:var(--panel);z-index:2}
 .scrollbox th:first-child,.scrollbox td:first-child{position:sticky;left:0;background:var(--panel);z-index:1;box-shadow:1px 0 0 var(--line)}
 .scrollbox thead th:first-child{z-index:3}
@@ -824,7 +866,7 @@ h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 td .dip{font-size:11.5px;display:inline-block;max-width:24ch;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
 table{width:100%;border-collapse:collapse;font:13px var(--mono);font-variant-numeric:tabular-nums}
 th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font:600 10.5px/1.3 var(--mono);color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+th{font:600 11px/1.3 var(--mono);color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
 tbody tr:hover td,tbody tr:hover th{background:color-mix(in oklab,var(--panel) 92%,var(--cyan))}
 td.num,th.num{text-align:right}
 th button{font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;background:none;border:0;padding:2px 0;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
@@ -839,7 +881,7 @@ svg .grid{stroke:var(--line)}
 svg .bar{fill:var(--fit)}
 svg .lbl{fill:var(--ink)}
 .legend{display:flex;flex-wrap:wrap;gap:4px 16px;font:500 11.5px/1.5 var(--mono);color:var(--ink-3)}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .legend .k-new{background:var(--fit)}
 .legend .k-known{border:2px solid var(--muted)}
 .legend .k-sim{border:2px solid var(--muted)}
@@ -848,38 +890,38 @@ svg.calplane{margin:0 auto}
 svg.calplane .floor{fill:var(--sel)}
 svg.calplane .iso{stroke:var(--muted);stroke-dasharray:4 3}
 svg.calplane .floorline{stroke:var(--flag)}
-svg.calplane .isolbl{fill:var(--muted);font-size:10px}
+svg.calplane .isolbl{fill:var(--muted);font-size:11px}
 svg.calplane .floorlbl{fill:var(--flag)}
 svg.calplane .samplelbl{fill:var(--flag);font-weight:600}
 svg.calplane .pt.sim{fill:var(--panel);fill-opacity:.85;stroke:var(--muted);stroke-width:2}
-svg.calplane .lbl,svg.calplane .samplelbl,svg.calplane .isolbl{paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
+svg.calplane .lbl,svg.calplane .samplelbl,svg.calplane .isolbl{paint-order:stroke;stroke:var(--panel);stroke-width:7px;stroke-linejoin:round}
 #caltable th,#caltable td{white-space:nowrap}
 #caltable tbody th{font:400 13px var(--mono);text-transform:none;letter-spacing:0;color:var(--ink)}
 svg.calplane .pt.cl{fill:var(--fit);fill-opacity:.85;stroke:var(--fit);stroke-width:1.5}
 /* planets */
-.ratio{display:grid;gap:5px;border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.ratio{display:grid;gap:5px;border-top:1px solid var(--line);padding-top:11px;margin-top:11px}
 .ratio .formula{font:12px var(--mono);overflow-wrap:anywhere}
 .scale{position:relative;height:8px;background:var(--bg-2);border-radius:999px;overflow:hidden}
 .scale i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--cyan),color-mix(in oklab,var(--cyan) 60%,var(--lime)));border-radius:999px;min-width:3px}
 .scalecap{display:flex;justify-content:space-between;font:11px var(--mono);color:var(--ink-3)}
-.archive{margin-top:14px;border:1px dashed var(--line-2);border-radius:10px;padding:10px 12px;font-size:13px}
+.archive{margin-top:14px;border:1px dashed var(--line-2);border-radius:11px;padding:11px 12px;font-size:13px}
 .archive ul{margin:6px 0 0;padding-left:18px}
-.card h2{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.card h2{display:flex;flex-wrap:wrap;gap:6px 11px;align-items:baseline}
 .card h2 .sub{font:500 11px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.04em}
 details summary{cursor:pointer}
 /* panel, runs */
-.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;font-size:13px;margin:10px 0 0}
+.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;font-size:13px;margin:11px 0 0}
 .kv dt{color:var(--ink-3)}
 .kv dd{margin:0;font-family:var(--mono);overflow-wrap:anywhere;min-width:0}
 .agree{list-style:none;margin:0;padding:0;display:grid}
-.agree li{display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr) auto;gap:4px 14px;align-items:baseline;border-top:1px solid var(--line);padding:10px 0;font-size:13px}
+.agree li{display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr) auto;gap:4px 14px;align-items:baseline;border-top:1px solid var(--line);padding:11px 0;font-size:13px}
 .agree li:first-child{border-top:0}
-.marks{display:flex;flex-wrap:wrap;gap:4px 10px;margin:4px 0 0}
+.marks{display:flex;flex-wrap:wrap;gap:4px 11px;margin:4px 0 0}
 details.cfg{padding:0}
 details.cfg>summary{padding:14px 20px;font-weight:600}
 details.cfg>div{padding:0 20px 16px;display:grid;gap:14px}
 .frametools{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px}
-pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;background:var(--coral-soft);color:var(--ink);padding:8px 10px;border-radius:8px}
+pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;background:var(--coral-soft);color:var(--ink);padding:8px 11px;border-radius:8px}
 .frame{width:100%;height:calc(100vh - 190px);height:calc(100vh - var(--frame-offset, 190px));min-height:520px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--bg);display:block;box-shadow:var(--shadow)}
 .frame[hidden]{display:none}
 /* Until the Docket reports ready the frame takes no space and the status line holds the slot. */
@@ -891,10 +933,17 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 #sharednote{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
 #sharednote[hidden]{display:none}
 #disctable{container-type:inline-size}
+.themebtn{min-height:44px;justify-content:flex-start;gap:8px;font-size:13px}
+.themebtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
+.sidefoot .themebtn{justify-self:start;margin-bottom:6px}
+.topbar .themebtn{display:none}
+.dippicker{display:none}
+.calcards{display:none}
+.calcard{border-top:1px solid var(--line);padding-top:10px;margin:0}
 #disctable caption{caption-side:top;text-align:left}
-.capnote{position:sticky;left:0;display:block;max-width:min(100cqw,90ch);padding:10px 12px 0;font:12.5px/1.5 var(--sans);color:var(--ink-2)}
+.capnote{position:sticky;left:0;display:block;max-width:min(100cqw,90ch);padding:11px 12px 0;font:12.5px/1.5 var(--sans);color:var(--ink-2)}
 #archivenote{color:var(--amber);font-weight:500}
-#archivenote+*,.capnote:last-child{padding-bottom:10px}
+#archivenote+*,.capnote:last-child{padding-bottom:11px}
 @media (max-width:1000px){
   .widget.size-S{grid-column:span 3}
   .agree li{grid-template-columns:minmax(0,1fr) auto}
@@ -924,14 +973,41 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   main{padding:16px 16px 40px}
   .widgets{grid-template-columns:minmax(0,1fr)}
   .widget.size-S,.widget.size-M,.widget.size-L{grid-column:1/-1}
-  .route>header h1{letter-spacing:.1em}
+  .route>header .eyebrow{letter-spacing:.1em}
   .route{gap:20px}
   .hero-h{font-size:clamp(30px,8.6vw,40px);letter-spacing:-.04em}
-  .consolebar{gap:6px 12px;font-size:10.5px}
+  .consolebar{gap:6px 12px;font-size:11px}
   .consolebar .right{margin-left:0}
   .instrument{padding:14px 12px 12px}
   .instrument .ival{font-size:22px;text-align:left}
   .ctas .btn{flex:1 1 auto}
+  .topbar .themebtn{display:inline-flex;margin-left:auto;padding:0 10px}
+  .topbar .themebtn .themelbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .topbar .themebtn{min-width:44px;justify-content:center}
+  body[data-route="candidates"] .topbar .themebtn{margin-left:0}
+  /* Candidates: a dip picker above the frame, so no dip is a long scroll away inside it. */
+  body[data-route="candidates"] .dippicker{display:flex;align-items:center;gap:10px;margin:8px 16px 4px;flex:none}
+  .dippicker label{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+  .dippicker select{flex:1;min-width:0;min-height:44px;font:500 16px var(--mono);color:var(--ink);background:var(--panel);border:1px solid var(--line-2);border-radius:10px;padding:0 10px}
+  /* Panel: the calibration rows as one card per reviewer. */
+  #caltable{display:none}
+  .calcards{display:grid;gap:4px}
+  /* Feed: one card per entry, every value labelled; the column heads become a row of sort buttons. */
+  #disctable{border:0;background:none;overflow:visible}
+  #disctable table,#disctable thead,#disctable tbody,#disctable caption{display:block}
+  #disctable thead tr{display:flex;flex-wrap:wrap;gap:6px;padding:0 0 10px}
+  #disctable thead th{position:static;border:0;padding:0;background:none;box-shadow:none}
+  #disctable thead th button{border:1px solid var(--line-2);border-radius:999px;padding:0 12px;background:var(--panel)}
+  #disctable tbody tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 12px;padding:12px 14px;margin-bottom:8px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  #disctable tbody th,#disctable tbody td{display:block;position:static;border:0;padding:0;white-space:normal;text-align:left;background:none;box-shadow:none;min-width:0}
+  #disctable tbody [data-label]::before{content:attr(data-label);display:block;font:500 11px/1.4 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+  #disctable tbody .c-candidate_id,#disctable tbody .c-status{grid-column:1/-1}
+  /* first line: TIC, SNR, depth; then the dip; then mid-time and period; then the status */
+  #disctable tbody th{order:1}#disctable tbody .c-snr{order:2}#disctable tbody .c-depth_ppm{order:3}
+  #disctable tbody .c-candidate_id{order:4}#disctable tbody .c-t_center{order:5}#disctable tbody .c-period_days{order:6}
+  #disctable tbody .c-status{order:7}
+  #disctable tbody td .dip{max-width:none}
+  #disctable caption .capnote{padding:0 0 8px;position:static}
   .frame{height:calc(100vh - var(--top));height:calc(100dvh - var(--top));min-height:0;border-radius:0;border-left:0;border-right:0;margin:0 -16px;width:calc(100% + 32px)}
   .btn,.chip,.wctl .btn,.nav a{min-height:44px}
   .wctl .btn{min-width:44px}
@@ -949,7 +1025,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   /* Top candidates: each dip is one 44 px line. The link fills the row height, so the row needs no
      extra padding; the status shows its short word and the hedge sits on the signal line above. */
   .toplist ul{gap:0}
-  .toplist ul li.toprow{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);gap:0 10px;align-items:center;height:44px;white-space:nowrap;border-top:1px solid var(--rule);font-size:12px}
+  .toplist ul li.toprow{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);gap:0 11px;align-items:center;height:44px;white-space:nowrap;border-top:1px solid var(--rule);font-size:12px}
   .toplist ul li.toprow:first-child{border-top:0}
   .toplist ul li.toprow a.dip{display:flex;align-items:center;height:44px;padding:0;font-size:11px}
   .toplist .st .long{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -1002,6 +1078,16 @@ function niceTicks(lo, hi, n){
   return out;
 }
 
+// ---------- history ----------
+// A change the viewer makes (a dip picked, a sort or filter changed) is a new history entry, so the
+// browser's Back returns to the previous view. Rewrites that only tidy the address (the layout on
+// load, a section scrolled into view) replace the current entry. Returns false when the browser
+// refuses (a sandboxed or srcdoc context), so the caller can say so.
+function setHash(h, push){
+  if (location.hash === h) return true;
+  try { if (push) history.pushState(null, '', h); else history.replaceState(null, '', h); return true; } catch (e) { return false; }
+}
+
 // ---------- links and dates ----------
 const DIP_IDS = new Set(D.dossier_ids);
 const dipHref = (id, section) => `#/candidates?dip=${encodeURIComponent(id)}${section ? '&section=' + section : ''}`;
@@ -1012,7 +1098,8 @@ function when(iso){
   const d = new Date(iso);
   if (!iso || Number.isNaN(d.getTime())) return esc(iso || 'not stored');
   let s;
-  try { s = d.toLocaleString(undefined, {day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'}); } catch (e) { s = d.toUTCString(); }
+  // Shown in UTC, and said so, whatever the viewer's zone; the stored ISO value stays in the title.
+  try { s = d.toLocaleString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC'}) + ' UTC'; } catch (e) { s = d.toUTCString(); }
   return `<time datetime="${esc(iso)}" title="${esc(iso)}">${esc(s)}</time>`;
 }
 
@@ -1058,7 +1145,7 @@ const layoutLink = () => location.href.split('#')[0] + '#/overview?layout=' + en
 function syncLayoutURL(){
   const h = location.hash;
   if (h && !h.startsWith('#/overview')) return;
-  try { history.replaceState(null, '', '#/overview?layout=' + encodeLayout(layout)); } catch (e) { /* the layout still applies */ }
+  setHash('#/overview?layout=' + encodeLayout(layout), false);  /* a tidy-up of the address: replace, not push */
 }
 
 // ---------- overview hero: the stored light curve and the lead signal folded ----------
@@ -1265,8 +1352,13 @@ let docketBlob = null;
 const LOADING_TEXT = 'Loading the Docket…';
 const frame = {ready: false, mode: null, dip: null, section: null, pending: null, crossOrigin: false, timer: null, gen: 0,
   frameURLFailed: false, shellURLFailed: false};
+// The Docket copy with the self-hosted font stylesheet at an absolute address (a blob URL has no base).
+function frameHTML(){
+  let href = D.fonts_css; try { href = new URL(D.fonts_css, location.href).href; } catch (e) { /* keep relative */ }
+  return D.docket_html.split(D.frame_fonts_href).join(href);
+}
 function docketURL(dip){
-  try { if (!docketBlob) docketBlob = URL.createObjectURL(new Blob([D.docket_html], {type: 'text/html'})); } catch (e) { docketBlob = null; }
+  try { if (!docketBlob) docketBlob = URL.createObjectURL(new Blob([frameHTML()], {type: 'text/html'})); } catch (e) { docketBlob = null; }
   return docketBlob ? docketBlob + (dip ? '#' + encodeURIComponent(dip) : '') : null;
 }
 const fullHref = dip => '../docket/' + (dip ? '#' + encodeURIComponent(dip) : '');
@@ -1274,10 +1366,14 @@ function setFullHrefs(dip){ for (const a of $$('#fullpage, #topfull, #blockedlin
 // Keep the shell URL and the full-page links on the dip (and section) the frame shows.
 function syncShellURL(){
   setFullHrefs(frame.dip);
+  const pick = $('#dippick'); if (pick && frame.dip && pick.value !== frame.dip) pick.value = frame.dip;
   if (current !== 'candidates') return;
   const h = '#/candidates' + (frame.dip ? `?dip=${encodeURIComponent(frame.dip)}${frame.section ? '&section=' + frame.section : ''}` : '');
   if (location.hash !== h){
-    try { history.replaceState(null, '', h); frame.shellURLFailed = false; } catch (e) { frame.shellURLFailed = true; }
+    // A new dip is a new history entry (Back returns to the last dip); a section change only replaces.
+    const shown = (parseHash(location.hash) || {params: new URLSearchParams()}).params.get('dip');
+    const push = !!frame.dip && !!shown && shown !== frame.dip;
+    frame.shellURLFailed = !setHash(h, push);
     if (frame.ready) readyStatus();
   }
 }
@@ -1287,7 +1383,8 @@ function tellFrame(dip, section){
   try { $('#docketframe').contentWindow.postMessage({source: 'exoplan-shell', dip, section}, '*'); } catch (e) { /* frame gone */ }
   syncShellURL();
 }
-function frameStatus(text){ const s = $('#framestatus'); s.textContent = text || ''; s.hidden = !text; fitFrame(); }
+// The status line: a notice about the address (an unknown dip, say) comes first, then the frame's state.
+function frameStatus(text){ const t = [frame.notice, text].filter(Boolean).join(' '); const s = $('#framestatus'); s.textContent = t; s.hidden = !t; fitFrame(); }
 // The status line once the Docket is showing: say when an address cannot follow the selected dip.
 function readyStatus(){
   frameStatus(frame.shellURLFailed ? 'Address bar not updated in this view. Open full page goes to the selected dip.'
@@ -1325,6 +1422,7 @@ function onFrameReady(m){
   const p = frame.pending; frame.pending = null;
   if (p && ((p.dip && p.dip !== m.dip) || p.section)) tellFrame(p.dip, p.section);
   else { frame.dip = m.dip || frame.dip; syncShellURL(); }
+  try { $('#docketframe').contentWindow.postMessage({source: 'exoplan-shell', theme: currentTheme()}, '*'); } catch (e) { /* frame gone */ }
 }
 window.addEventListener('message', e => {
   const f = $('#docketframe'), m = e.data;
@@ -1332,7 +1430,7 @@ window.addEventListener('message', e => {
   if (m.urlFailed) frame.frameURLFailed = true;
   if (m.kind === 'ready'){ onFrameReady(m); return; }
   if (!frame.ready) return;  // the Docket's own first pick, before the shell's dip is applied
-  if (m.kind === 'dip' && m.dip){ if (m.dip !== frame.dip) frame.section = null; frame.dip = m.dip; }
+  if (m.kind === 'dip' && m.dip){ if (m.dip !== frame.dip){ frame.section = null; if (frame.notice){ frame.notice = ''; readyStatus(); } } frame.dip = m.dip; }
   else if (m.kind === 'section'){ frame.section = DOCKET_SECTIONS.includes(m.section) ? m.section : null; if (m.dip) frame.dip = m.dip; }
   syncShellURL();
   if (m.urlFailed) readyStatus();
@@ -1355,11 +1453,18 @@ function loadDocket(dip, section, mode){
     setTimeout(() => frameLoadFailed(gen), 800);
   };
   f.addEventListener('load', onload, {once: true});
-  if (url){ f.removeAttribute('srcdoc'); f.src = url; } else { f.removeAttribute('src'); f.srcdoc = D.docket_html; }
+  if (url){ f.removeAttribute('srcdoc'); f.src = url; } else { f.removeAttribute('src'); f.srcdoc = frameHTML(); }
 }
 function openDip(dip, section){
   const f = $('#docketframe');
-  if (dip && !DIP_IDS.has(dip)){ say(`No dossier for ${dip} in this run.`); dip = null; }
+  if (dip && !DIP_IDS.has(dip)){
+    // An unknown dip id: say so, and rewrite the address to the lead dip (replace, not a new entry).
+    const lead = leadDip();
+    frame.notice = `No dip ${dip} in run ${D.run.name}; showing the lead dip${lead ? ' ' + lead : ''}.`;
+    say(frame.notice); dip = lead;
+    setHash('#/candidates' + (lead ? '?dip=' + encodeURIComponent(lead) : ''), false);
+    if (frame.ready) readyStatus(); else frameStatus(f.dataset.loaded ? LOADING_TEXT : '');
+  } else if (dip) frame.notice = '';
   if (!DOCKET_SECTIONS.includes(section)) section = null;
   if (!f.dataset.loaded){ f.dataset.loaded = '1'; loadDocket(dip, section); setFullHrefs(dip); }
   else if (!frame.ready){ if (dip || section) frame.pending = {dip: dip || frame.dip, section}; setFullHrefs(dip || frame.dip); }
@@ -1367,7 +1472,15 @@ function openDip(dip, section){
   else syncShellURL();
   if (dip) say(`Docket open on dip ${dip}${section === 'ledger' ? ', verdict ledger' : ''}.`);
 }
-function renderCandidates(){ /* the frame loads in openDip, with the dip from the URL */ }
+// The lead dip: the highest-SNR dip of the Overview's lead signal, else the first dossier.
+const leadDip = () => (D.hero && D.hero.lead && D.hero.lead.dip) || D.dossier_ids[0] || null;
+// The phone dip picker above the frame: every dip in time order, with its letter and outcome.
+function renderDipPicker(){
+  const sel = $('#dippick'); if (!sel) return;
+  sel.innerHTML = D.hero.windows.map(w => `<option value="${esc(w.id)}">${esc(w.letter)} · ${esc(w.outcome)} · ${esc(w.id)}</option>`).join('');
+  if (frame.dip) sel.value = frame.dip;
+}
+function renderCandidates(){ renderDipPicker(); /* the frame loads in openDip, with the dip from the URL */ }
 
 // ---------- discoveries (the feed) ----------
 const disc = {sort: 'snr', dir: -1, filter: 'all'};
@@ -1403,10 +1516,10 @@ function saveFeedView(){
   ownFeedView = currentFeedView();
   try { const s = getStorage(); if (s) s.setItem(FEED_KEY, JSON.stringify(ownFeedView)); } catch (e) { /* storage blocked: the view lasts for this visit */ }
 }
-function syncFeedURL(){
+// push: the viewer changed the sort or the filter, so Back returns to the previous view.
+function syncFeedURL(push){
   if (current !== 'discoveries') return;
-  const h = '#/discoveries?' + encodeFeedView(currentFeedView());
-  if (location.hash !== h) try { history.replaceState(null, '', h); } catch (e) { /* the view still applies */ }
+  setHash('#/discoveries?' + encodeFeedView(currentFeedView()), !!push);
 }
 applyFeedView(ownFeedView);
 const COLS = [
@@ -1440,7 +1553,7 @@ function renderDiscTable(){
   const rows = discRows();
   $('#disctable').innerHTML = `<table><caption><span class="sr">Feed, sorted by ${esc(disc.sort)} ${disc.dir > 0 ? 'ascending' : 'descending'}. Every entry is a ${esc(D.unconfirmed)}.</span>${noDossierLine(rows)}${archiveNote(rows)}</caption>
     <thead><tr>${COLS.map(c => `<th scope="col" class="${NUMERIC.has(c[0]) ? 'num' : ''}" aria-sort="${disc.sort === c[0] ? (disc.dir > 0 ? 'ascending' : 'descending') : 'none'}"><button data-sort="${c[0]}">${esc(c[1])}<span aria-hidden="true">${disc.sort === c[0] ? (disc.dir > 0 ? '▲' : '▼') : ''}</span></button></th>`).join('')}</tr></thead>
-    <tbody>${rows.length ? rows.map(x => `<tr>${COLS.map((c, k) => k === 0 ? `<th scope="row" class="num">${c[3](x)}</th>` : `<td class="${NUMERIC.has(c[0]) ? 'num' : ''}">${c[3](x)}</td>`).join('')}</tr>`).join('') : `<tr><td colspan="${COLS.length}" class="empty">No feed entries with this status.</td></tr>`}</tbody></table>`;
+    <tbody>${rows.length ? rows.map(x => `<tr>${COLS.map((c, k) => k === 0 ? `<th scope="row" class="num" data-label="${esc(c[1])}">${c[3](x)}</th>` : `<td class="${NUMERIC.has(c[0]) ? 'num' : ''} c-${c[0]}" data-label="${esc(c[1])}">${c[3](x)}</td>`).join('')}</tr>`).join('') : `<tr><td colspan="${COLS.length}" class="empty">No feed entries with this status.</td></tr>`}</tbody></table>`;
   $('#disccount').textContent = `${rows.length} of ${D.catalog.candidates.length} entries shown.`;
 }
 function renderDiscHead(){
@@ -1458,14 +1571,14 @@ $('#disctable').addEventListener('click', e => {
   const b = e.target.closest('button[data-sort]'); if (!b) return;
   const k = b.dataset.sort;
   if (disc.sort === k) disc.dir = -disc.dir; else { disc.sort = k; disc.dir = NUMERIC.has(k) ? -1 : 1; }
-  saveFeedView(); syncFeedURL();
+  saveFeedView(); syncFeedURL(true);
   renderDiscTable();
   $(`#disctable button[data-sort="${k}"]`).focus();
   say(`Sorted by ${b.textContent.replace(/[▲▼]/g,'')}, ${disc.dir > 0 ? 'ascending' : 'descending'}.`);
 });
 $('#discchips').addEventListener('click', e => {
   const b = e.target.closest('button[data-f]'); if (!b) return;
-  disc.filter = b.dataset.f; saveFeedView(); syncFeedURL(); renderDiscChips(); renderDiscTable();
+  disc.filter = b.dataset.f; saveFeedView(); syncFeedURL(true); renderDiscChips(); renderDiscTable();
   $(`#discchips button[data-f="${disc.filter}"]`).focus();
   say($('#disccount').textContent);
 });
@@ -1563,7 +1676,7 @@ function renderPlanets(){
     const ar = s.archive || {status: 'not_stored', planets: []};
     // Stars with no stored cross-match get no box; the section header says so once.
     let arch = '';
-    if (ar.status === 'not_run') arch = `<p style="margin:0">The archive cross-match did not run (archive unreachable at build time). ${esc(D.no_detection)}</p>`;
+    if (ar.status === 'not_run') arch = `<p style="margin:0">The archive cross-match did not run. Stored error, verbatim: <code>${esc(ar.error || 'none stored')}</code>. ${esc(D.no_detection)}</p>`;
     else if (ar.status !== 'not_stored' && !ar.planets.length) arch = `<p style="margin:0">No published planet matched in the archive. ${esc(D.no_detection)}</p>`;
     else if (ar.status !== 'not_stored') arch = `<p style="margin:0"><b>Published planets.</b> ${esc(D.no_detection)}</p><ul>${ar.planets.map(p => `<li><b>${esc(p.pl_name)}</b> · host ${esc(p.hostname)} · P ${p.pl_orbper !== null && p.pl_orbper !== undefined ? esc(p.pl_orbper) + ' d' : 'not listed'} · ${p.tran_flag ? 'transiting' : 'not known to transit'}${p.rv_flag ? ' · radial-velocity detection' : ''}</li>`).join('')}</ul><p class="muted" style="margin:4px 0 0;font-size:12px">${esc(ar.source)}, fetched ${when(ar.fetched_at)}.</p>`;
     const hid = 'pl-' + String(s.star).replace(/\W/g,'_');
@@ -1665,6 +1778,8 @@ function renderCalibration(){
   calPlane($('#calplane'));
   const kindWord = k => k === 'simulated' ? 'simulated · not a person' : isClaude(k) ? 'Claude' : esc(k);
   $('#caltable').innerHTML = C.points.length ? `<table><caption class="sr">Calibration rates and weights per reviewer, as stored</caption><thead><tr><th scope="col">reviewer</th><th scope="col">kind</th><th scope="col" class="num">recall (TPR)</th><th scope="col" class="num">false alarms (FPR)</th><th scope="col" class="num">weight</th><th scope="col">sample</th></tr></thead><tbody>${C.points.map(p => `<tr><th scope="row" class="mono">${esc(p.id)}</th><td>${kindWord(p.kind)}</td><td class="num">${fmt(p.tpr,2)}</td><td class="num">${fmt(p.fpr,2)}</td><td class="num">${fmt(p.weight,2)}${p.consistent === false ? '<small>not max(TPR − FPR, floor)</small>' : ''}</td><td>${esc(fmtN(p))}</td></tr>`).join('')}</tbody></table>` : '';
+  // On a phone the same rows read as one card per reviewer (the table is hidden there, the cards elsewhere).
+  $('#calcards').innerHTML = C.points.map(p => `<dl class="kv calcard"><dt>reviewer</dt><dd><b>${esc(p.id)}</b></dd><dt>kind</dt><dd>${kindWord(p.kind)}</dd><dt>recall (TPR)</dt><dd>${fmt(p.tpr,2)}</dd><dt>false alarms (FPR)</dt><dd>${fmt(p.fpr,2)}</dd><dt>weight</dt><dd>${fmt(p.weight,2)}${p.consistent === false ? ' (not max(TPR − FPR, floor))' : ''}</dd><dt>sample</dt><dd>${esc(fmtN(p))}</dd></dl>`).join('');
   $('#calsource').textContent = C.source ? `Rates: ${C.record_path || 'the weights file'}. ${C.source}` : (C.record_path ? `Rates: ${C.record_path}.` : '');
 }
 let calWidth = -1;
@@ -1709,7 +1824,8 @@ function parseHash(h){
   const body = h.slice(2), q = body.indexOf('?');
   let route = q < 0 ? body : body.slice(0, q);
   try { route = decodeURIComponent(route); } catch (e) { /* keep as typed */ }
-  return {route: ROUTES.includes(route) ? route : 'overview', params: new URLSearchParams(q < 0 ? '' : body.slice(q + 1))};
+  return {route: ROUTES.includes(route) ? route : 'overview', unknown: ROUTES.includes(route) ? null : route,
+          params: new URLSearchParams(q < 0 ? '' : body.slice(q + 1))};
 }
 let current = null;
 function show(r, moveFocus){
@@ -1726,6 +1842,8 @@ function show(r, moveFocus){
   if (r === 'candidates') fitFrame();
 }
 function go(p, moveFocus){
+  // An unknown section: rewrite the address to the Overview, and say so.
+  if (p.unknown){ setHash('#/overview', false); say(`No section ${p.unknown}; showing the Overview.`); p = {route: 'overview', params: new URLSearchParams()}; }
   const changed = p.route !== current;
   if (p.route === 'overview'){
     if (p.params.has('layout')){
@@ -1744,7 +1862,11 @@ function go(p, moveFocus){
   if (p.route === 'discoveries') syncFeedURL();
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));
 }
-window.addEventListener('hashchange', () => { const p = parseHash(location.hash); if (!p) return; closeDrawer(false); go(p, true); });
+// Back and Forward: hashchange for typed or linked hashes, popstate for entries made by pushState.
+// Either way the shell re-reads the hash and pushes the dip (or the Feed view) into the view.
+function onNavigate(){ const p = parseHash(location.hash); if (!p) return; closeDrawer(false); go(p, true); }
+window.addEventListener('hashchange', onNavigate);
+window.addEventListener('popstate', onNavigate);
 $('.skip').addEventListener('click', e => { e.preventDefault(); const c = $('#content'); c.focus({preventScroll: true}); c.scrollIntoView(); });
 const drawerMQ = window.matchMedia('(max-width: 699.98px)');
 const side = $('#sidebar'), menu = $('#menubtn'), backdrop = $('#backdrop');
@@ -1798,8 +1920,31 @@ if (drawerMQ.addEventListener) drawerMQ.addEventListener('change', () => { close
 let rt = null;
 window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!$('#route-discoveries').hidden) renderDiscCharts(false); if (!$('#route-overview').hidden) renderHero(false); resizeCalibration(); fitFrame(); }, 120); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitFrame);  // web fonts can rewrap the header
+// ---------- theme: system, light or dark ----------
+// The choice is stored as exoplan-theme (when storage is allowed); the head script applies it before
+// first paint. The Docket frame is told too, so it follows.
+const THEMES = ['system', 'light', 'dark'], THEME_NAME = {system: 'System', light: 'Light', dark: 'Dark'};
+function currentTheme(){ const t = document.documentElement.getAttribute('data-theme'); return t === 'light' || t === 'dark' ? t : 'system'; }
+function applyTheme(t){
+  if (t === 'system') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', t);
+  try { const s = getStorage(); if (s){ if (t === 'system') s.removeItem('exoplan-theme'); else s.setItem('exoplan-theme', t); } } catch (e) { /* storage blocked: the theme lasts for this visit */ }
+  for (const b of $$('[data-theme-toggle]')){ b.setAttribute('aria-label', `Colour theme: ${THEME_NAME[t].toLowerCase()}. Change theme`); b.querySelector('.themelbl').textContent = THEME_NAME[t]; }
+  try { $('#docketframe').contentWindow.postMessage({source: 'exoplan-shell', theme: t}, '*'); } catch (e) { /* no frame yet */ }
+}
+for (const b of $$('[data-theme-toggle]')) b.addEventListener('click', () => { const t = THEMES[(THEMES.indexOf(currentTheme()) + 1) % THEMES.length]; applyTheme(t); say(`Theme: ${THEME_NAME[t]}.`); });
+applyTheme(currentTheme());
+$('#dippick').addEventListener('change', e => { location.hash = dipHref(e.target.value); });
 go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()}, false);
 """
+
+
+# Before first paint: apply the stored theme choice (system, light or dark), so the page never flashes.
+THEME_KEY = "exoplan-theme"
+THEME_HEAD_JS = ("(function(){try{var t=localStorage.getItem('" + THEME_KEY + "');"
+                 "if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();")
+THEME_BUTTON = ('<button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: system. Change theme">'
+                '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg>'
+                '<span class="themelbl">System</span></button>')
 
 
 def _nav(sections: list[dict]) -> str:
@@ -1849,7 +1994,7 @@ def _hero(data: dict) -> str:
           <span class="right">config <b>{e((cfg.get("config_sha256") or "")[:12] or "not stored")}</b></span>
         </div>
         <div class="hero-copy">
-          <h2 class="hero-h" id="h-hero">{e(h["headline"])} <em>{e(h["accent"])}</em></h2>
+          <h1 class="hero-h" id="h-overview" tabindex="-1">{e(h["headline"])} <em>{e(h["accent"])}</em></h1>
           <p class="lede">{e(h["lede"])} Every one is a <b>{UNCONFIRMED}</b>.</p>
           <p class="lede" style="font-size:14.5px;color:var(--ink-3)">{e(h["archive"])}</p>
           <div class="ctas">{open_lead}<a class="btn ghost" href="#/discoveries">See the {e(feed_label_)}</a></div>
@@ -1889,21 +2034,27 @@ def app_page(data: dict) -> str:
     label = {s["id"]: html.escape(s["label"]) for s in data["sections"]}
     feed = data["catalog"]["candidates"]
     n_known = sum(1 for r in feed if r.get("status") == "known_toi")
+    description = (f"exoplan run {run['name']}: {data['hero']['headline']} Every dip is a {UNCONFIRMED}; "
+                   f"stored values only.")
     xm_targets = ", ".join(html.escape(str(t)) for t in data.get("crossmatch_targets") or []) or "no star"
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
+<meta name="description" content="{html.escape(description)}">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#E8ECF3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#060A14" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:,">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{html.escape(GOOGLE_FONTS)}">
+<script>{THEME_HEAD_JS}</script>
+<link rel="stylesheet" href="{FONTS_CSS}">
 <style>{APP_CSS}</style></head>
 <body>
 <a class="skip" href="#content">Skip to the section</a>
 <header class="topbar">
   <button class="btn menu" id="menubtn" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>Menu</button>
   <b>{title}</b><span class="cur" id="curlabel"></span>
+  {THEME_BUTTON}
   <a class="topfull" id="topfull" href="../docket/">Full page</a>
 </header>
 <div class="shell">
@@ -1912,13 +2063,13 @@ def app_page(data: dict) -> str:
     <div class="brand"><b>{title}</b><span>run {html.escape(run["name"])}</span></div>
     <p class="navlabel" aria-hidden="true">Sections</p>
     {_nav(data["sections"])}
-    <div class="sidefoot"><span class="stored"><i></i>Stored values only</span><span>built from {html.escape(run["dir"])}</span><span>{html.escape(data["catalog"]["path"] or "no catalogue")}</span></div>
+    <div class="sidefoot">{THEME_BUTTON}<span class="stored"><i></i>Stored values only</span><span>built from {html.escape(run["dir"])}</span><span>{html.escape(data["catalog"]["path"] or "no catalogue")}</span></div>
   </aside>
   <div class="backdrop" id="backdrop" hidden></div>
   <main id="main">
    <div id="content" tabindex="-1">
     <section class="route" id="route-overview" data-route="overview" aria-labelledby="h-overview" hidden>
-      <header><h1 id="h-overview" tabindex="-1"><span class="idx">01</span>Overview</h1></header>
+      <header><p class="eyebrow"><span class="idx">01</span>Overview</p></header>
       {_hero(data)}
       <div class="secthead"><h2 id="h-view">04 · Your view</h2><p>Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></div>
       <p class="note rule" id="sharednote" hidden>This is a shared layout, shown for this view only. Your own default layout is unchanged unless you change a widget here. <button class="btn" id="ownlayout" type="button">Show my layout</button></p>
@@ -1932,20 +2083,21 @@ def app_page(data: dict) -> str:
       <div class="widgets" id="widgets"></div>
     </section>
     <section class="route" id="route-candidates" data-route="candidates" aria-labelledby="h-candidates" hidden>
-      <header><h1 id="h-candidates" tabindex="-1"><span class="idx">02</span>Candidates</h1><p class="lead-h">Every signal, its dips, and the checks behind each verdict.</p><p>The Docket for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
+      <header><p class="eyebrow"><span class="idx">02</span>Candidates</p><h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The Docket for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
       <div class="frametools"><a id="fullpage" href="../docket/">Open full page</a><span class="muted">The Docket on its own page, at the same dip.</span></div>
+      <div class="dippicker"><label for="dippick">Dip</label><select id="dippick" aria-describedby="dippickhint"></select><span class="sr" id="dippickhint">Every dip in this run, lettered in time order, with its vetting outcome. Each is a {unc}.</span></div>
       <p class="note" id="framestatus" role="status" hidden></p>
       <p class="note blocked" id="frameblocked" role="alert" hidden>The dossier could not load in this view. <a id="blockedlink" href="../docket/">Open it on its own page.</a></p>
       <iframe class="frame waiting" id="docketframe" title="Docket for run {html.escape(run["name"])}: signals, dips and vetting"></iframe>
     </section>
     <section class="route" id="route-discoveries" data-route="discoveries" aria-labelledby="h-discoveries" hidden>
-      <header><h1 id="h-discoveries" tabindex="-1"><span class="idx">03</span>{label["discoveries"]}</h1><p class="lead-h">What the discovery runs admitted, and how much of it the archive already knows.</p><p>The feed from the discovery catalogue: {len(feed)} entries, {n_known} of them match a known TOI period. Every entry is a {unc}: a dip the panel marked, not a planet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></header>
+      <header><p class="eyebrow"><span class="idx">03</span>{label["discoveries"]}</p><h1 class="lead-h" id="h-discoveries" tabindex="-1">What the discovery runs admitted, and how much of it the archive already knows.</h1><p>The feed from the discovery catalogue: {len(feed)} entries, {n_known} of them match a known TOI period. Every entry is a {unc}: a dip the panel marked, not a planet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></header>
       <p class="note rule"><b>Feed rule</b> (discover.py): an entry joins the feed when its depth is at most {rule["max_depth_ppm"]:,.0f} ppm and its signal has at least {rule["min_transits"]} transits. This is an admission rule, not a vetting result.</p>
       <section class="card" aria-labelledby="h-feed" style="display:grid;gap:10px">
         <h2 id="h-feed">Feed entries</h2>
         <p class="muted" id="feedhead" style="margin:0;font-size:13px"></p>
         <div class="chips" id="discchips" role="group" aria-label="Filter the feed by status"></div>
-        <div class="tablewrap scrollbox" id="disctable" tabindex="0" role="region" aria-label="Feed table, scrolls in both directions"></div>
+        <div class="tablewrap scrollbox" id="disctable" tabindex="0" role="region" aria-label="Feed table, every entry shown; scrolls sideways when wider than the screen"></div>
         <p class="muted" id="disccount" style="margin:0;font-size:12px"></p>
       </section>
       <section aria-labelledby="h-dist" style="display:grid;gap:10px">
@@ -1959,13 +2111,13 @@ def app_page(data: dict) -> str:
       </section>
     </section>
     <section class="route" id="route-planets" data-route="planets" aria-labelledby="h-planets" hidden>
-      <header><h1 id="h-planets" tabindex="-1"><span class="idx">04</span>Planets</h1><p class="lead-h">What each depth would imply, if it were a planet.</p><p>One card per star in the run or the feed. Each entry is a {unc}; the ratio below is what its stored depth implies if it were a planet.</p></header>
+      <header><p class="eyebrow"><span class="idx">04</span>Planets</p><h1 class="lead-h" id="h-planets" tabindex="-1">What each depth would imply, if it were a planet.</h1><p>One card per star in the run or the feed. Each entry is a {unc}; the ratio below is what its stored depth implies if it were a planet.</p></header>
       <p class="note"><b>Radius ratio only.</b> Rp/R* = √depth, with depth as a fraction (ppm × 10⁻⁶). This assumes a full, undiluted transit and ignores limb darkening. {html.escape(NO_STELLAR_RADIUS)} Each bar is a ratio scale from 0 to {data["ratio_scale_max"]:.2f}, the same on every card.</p>
-      <p class="note">Published planets come from the stored archive cross-match (crossmatch.json), which covers {xm_targets}. The other stars have no stored cross-match, so their cards have no archive box. {nodet}</p>
+      <p class="note">Published planets come from the stored archive cross-match ({html.escape(data.get("crossmatch_file") or "crossmatch.json")}), which covers {xm_targets}. The other stars have no stored cross-match, so their cards have no archive box. {nodet}</p>
       <div class="cards" id="planetcards"></div>
     </section>
     <section class="route" id="route-panel" data-route="panel" aria-labelledby="h-panel" hidden>
-      <header><h1 id="h-panel" tabindex="-1"><span class="idx">05</span>Panel</h1><p class="lead-h">Who marked the dips, and how far to trust each of them.</p><p>The reviewers that marked dips in run {html.escape(run["name"])}. Simulated reviewers are code; Claude reviewers are model calls. None of them is a person.</p></header>
+      <header><p class="eyebrow"><span class="idx">05</span>Panel</p><h1 class="lead-h" id="h-panel" tabindex="-1">Who marked the dips, and how far to trust each of them.</h1><p>The reviewers that marked dips in run {html.escape(run["name"])}. Simulated reviewers are code; Claude reviewers are model calls. None of them is a person.</p></header>
       <p class="note rule"><b>Weights.</b> A reviewer's weight is its calibration skill from injection tests: the true-positive rate on injected transits minus the false-positive rate on empty light curves, floored (calibrate.py). The calibrated weights are stored in {html.escape(data["weights_path"] or "no weights file")}. The weight in this run is the one manifest.json records; when it differs from the calibrated weight, the run did not use the calibrated weights.</p>
       <section class="card" aria-labelledby="h-cal" style="display:grid;gap:8px">
         <h2 id="h-cal">Calibration plane</h2>
@@ -1974,6 +2126,7 @@ def app_page(data: dict) -> str:
         <div id="calplane"></div>
         <p class="note" id="calsample" style="margin:0"></p>
         <div class="tablewrap" id="caltable" tabindex="0" role="region" aria-label="Calibration rates per reviewer"></div>
+        <div class="calcards" id="calcards"></div>
         <p class="muted" id="calsource" style="margin:0;font-size:12px;overflow-wrap:anywhere"></p>
       </section>
       <section class="card" aria-labelledby="h-agree" style="display:grid;gap:8px">
@@ -1984,7 +2137,7 @@ def app_page(data: dict) -> str:
       <div class="cards" id="panelcards"></div>
     </section>
     <section class="route" id="route-runs" data-route="runs" aria-labelledby="h-runs" hidden>
-      <header><h1 id="h-runs" tabindex="-1"><span class="idx">06</span>Runs</h1><p class="lead-h">Every discovery run, its errors as stored, and the configuration behind this page.</p><p>The discovery run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
+      <header><p class="eyebrow"><span class="idx">06</span>Runs</p><h1 class="lead-h" id="h-runs" tabindex="-1">Every discovery run, its errors as stored, and the configuration behind this page.</h1><p>The discovery run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
       <section class="card" aria-labelledby="h-hist" style="display:grid;gap:4px"><h2 id="h-hist">Discovery runs</h2><div id="runtable"></div></section>
       <details class="card cfg"><summary>Configuration: run {html.escape(run["name"])} and the discovery catalogue</summary><div>
         <section aria-labelledby="h-cfg"><h3 id="h-cfg">This run's configuration</h3><div id="runconfig"></div></section>
@@ -2002,10 +2155,17 @@ def app_page(data: dict) -> str:
 
 
 def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
-              weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None) -> Path:
-    data = app_data(run_dir, title=title, catalog_path=catalog_path, weights_path=weights_path, star=star)
+              weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None,
+              require_crossmatch: bool = False) -> Path:
+    data = app_data(run_dir, title=title, catalog_path=catalog_path, weights_path=weights_path, star=star,
+                    require_crossmatch=require_crossmatch)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"
     path.write_text(app_page(data))
+    # The fonts the page links to, self-hosted beside it (as Kshana serves them).
+    import shutil
+
+    shutil.copytree(FONTS_DIR, out / "assets" / "fonts", dirs_exist_ok=True,
+                    ignore=shutil.ignore_patterns("__pycache__"))
     return path

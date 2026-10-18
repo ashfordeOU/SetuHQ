@@ -14,7 +14,8 @@ from exoplan.app import (
     FRAME_PHONE_CSS,
     FRAME_THEME_CSS,
     DOCKET_FONTS,
-    GOOGLE_FONTS,
+    FONTS_CSS,
+    FRAME_FONTS_HREF,
     DEFAULT_SIZE,
     NO_DETECTION,
     NO_STELLAR_RADIUS,
@@ -35,6 +36,7 @@ from exoplan.app import (
     widget_layout,
 )
 from exoplan.cli import main
+from exoplan.docket import NO_STORED_CROSSMATCH
 from exoplan.config import RunConfig
 from exoplan.lightcurve import LightCurve
 from exoplan.pipeline import run_pipeline
@@ -101,7 +103,8 @@ def _route(page: str, sid: str) -> str:
 
 
 def test_app_builds_from_run_dir_and_catalogue(run_dir, catalog, tmp_path):
-    assert main(["app", str(run_dir), "--catalog", str(catalog), "--out", str(tmp_path / "app"), "--title", "exoplan"]) == 0
+    assert main(["app", str(run_dir), "--catalog", str(catalog), "--out", str(tmp_path / "app"), "--title", "exoplan",
+                 "--allow-missing-crossmatch"]) == 0
     page = (tmp_path / "app" / "index.html").read_text()
     data = _page_data(page)
     assert data["title"] == "exoplan"
@@ -128,7 +131,9 @@ def test_all_six_routes_exist(run_dir, catalog, tmp_path):
     for sid, label in SECTIONS:
         assert f'id="route-{sid}"' in page
         assert f'href="#/{sid}"' in page
-        assert f">{label}</h1>" in page
+        # The section name is the eyebrow; the section's statement is its h1.
+        assert f'<span class="idx">' in page and f">{label}</p>" in page
+        assert re.search(rf'<h1 [^>]*id="h-{sid}" tabindex="-1">', page), sid
     assert '<nav class="nav" aria-label="Sections">' in page
     assert "aria-current" in APP_JS
 
@@ -273,13 +278,22 @@ def test_drawer_is_a_dialog_with_a_close_button(run_dir, tmp_path):
     assert "unlockScroll();" in re.search(r"function closeDrawer\(returnFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
 
 
-def test_shell_and_framed_docket_share_the_kshana_fonts(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+def test_shell_and_framed_docket_share_the_self_hosted_kshana_fonts(run_dir, tmp_path):
+    out = build_app(run_dir, tmp_path / "app", title="t")
+    page = out.read_text()
     data = _page_data(page)
-    link = re.search(r'<link rel="stylesheet" href="(https://fonts.googleapis.com/[^"]+)">', page).group(1)
-    # The shell and its copy of the Docket load the same families: Kshana's Geist, Geist Mono and Unbounded.
-    assert html_unescape(link) in data["docket_html"]
-    assert "family=Geist:" in link and "Geist+Mono" in link and "Unbounded" in link
+    # Self-hosted, as Kshana serves them: no font request leaves the site.
+    assert "fonts.googleapis.com" not in page and "fonts.gstatic.com" not in page
+    assert f'<link rel="stylesheet" href="{FONTS_CSS}">' in page
+    css = (out.parent / FONTS_CSS).read_text()
+    for family in ("Geist", "Geist Mono", "Unbounded"):
+        assert f"font-family: '{family}'" in css
+    for url in re.findall(r"url\((files/[^)]+)\)", css):
+        assert (out.parent / "assets" / "fonts" / url).stat().st_size > 1000, url
+    assert (out.parent / "assets" / "fonts" / "OFL-geist.txt").exists()
+    # The framed copy carries a placeholder the shell swaps for the absolute address (a blob has no base).
+    assert FRAME_FONTS_HREF in data["docket_html"] and "fonts.googleapis.com" not in data["docket_html"]
+    assert data["fonts_css"] == FONTS_CSS and "split(D.frame_fonts_href).join(href)" in APP_JS
     assert "Inter Tight" not in data["docket_html"] and "JetBrains Mono" not in data["docket_html"]
     assert "Inter Tight" not in APP_CSS and "JetBrains" not in APP_CSS and "JetBrains" not in APP_JS
     # Only the shell's copy is re-dressed: the standalone Docket keeps its own fonts.
@@ -315,7 +329,8 @@ def test_overview_hero_states_the_argument_from_stored_values(run_dir, catalog, 
     text = " ".join([hero["headline"], hero["lede"], hero["archive"]])
     assert not re.search(r"\b(planet found|discovered|confirmed planet|radius of)\b", text, re.I)
     assert "none of them a person" in hero["lede"]
-    assert "did not run" in hero["archive"] and "does not say whether" in hero["archive"]
+    assert "does not say whether" in hero["archive"]
+    assert "Stored error, verbatim: " + NO_STORED_CROSSMATCH in hero["archive"] and "unreachable" not in hero["archive"]
     # Windows are lettered in time order and carry their outcome; the curve is the stored flux in ppm.
     assert [w["letter"] for w in hero["windows"]][:3] == ["A", "B", "C"][:len(hero["windows"])]
     assert [w["t_start"] for w in hero["windows"]] == sorted(w["t_start"] for w in hero["windows"])
@@ -405,7 +420,7 @@ def test_feed_is_named_for_what_it_holds(run_dir, catalog, tmp_path):
     path = tmp_path / "known.json"
     path.write_text(json.dumps(mostly_known))
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=path).read_text()
-    assert ">Feed</h1>" in page and 'data-route="discoveries"><svg' in page
+    assert ">Feed</p>" in page and 'data-route="discoveries"><svg' in page
     assert "2 of them match a known TOI period" in _route(page, "discoveries")
 
 
@@ -438,7 +453,7 @@ def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path
     injected = f"<style>{FRAME_THEME_CSS}{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script>"
     # Apart from the injected block, the copy differs from the Docket only in its font families.
     expected = (docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t · candidates"))
-                .replace(DOCKET_FONTS, GOOGLE_FONTS).replace('"Inter Tight"', '"Geist"').replace('"JetBrains Mono"', '"Geist Mono"'))
+                .replace(DOCKET_FONTS, FRAME_FONTS_HREF).replace('"Inter Tight"', '"Geist"').replace('"JetBrains Mono"', '"Geist Mono"'))
     assert docket_html.replace(injected, "") == expected
     assert FRAME_THEME_CSS not in standalone
     # The bridge reports every selection (the Docket selects by history.replaceState) and section anchors.
@@ -450,7 +465,7 @@ def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path
     listener = re.search(r"window.addEventListener\('message', e => \{.*?\n\}\);\n", APP_JS, re.S).group(0)
     assert "e.source !== f.contentWindow" in listener and "m.source !== 'exoplan-docket'" in listener
     sync = re.search(r"function syncShellURL\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "history.replaceState(null, '', h)" in sync and "setFullHrefs(frame.dip)" in sync
+    assert "setHash(h, push)" in sync and "setFullHrefs(frame.dip)" in sync
     assert "'#fullpage, #topfull, #blockedlink'" in APP_JS
     # A cross-origin frame (file://) is named in the page rather than failing silently.
     assert "frame.crossOrigin = true" in APP_JS and "separate origin" in APP_JS
@@ -503,7 +518,9 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     assert "layout = ownLayout.map(x => ({...x}))" in go
     # Storage is written only by saveLayout, and saveLayout runs only after a layout control is used.
     # (The only other write is the Feed's own default, in saveFeedView.)
-    assert APP_JS.count("setItem(") == 2 and APP_JS.count("setItem(LAYOUT_KEY") == 1
+    # (and the theme choice, in applyTheme).
+    assert APP_JS.count("setItem(") == 3 and APP_JS.count("setItem(LAYOUT_KEY") == 1
+    assert "s.setItem('exoplan-theme', t)" in re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LAYOUT_KEY" in re.search(r"function saveLayout\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(FEED_KEY" in re.search(r"function saveFeedView\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     callers = [m.start() for m in re.finditer(r"saveLayout\(\);", APP_JS)]
@@ -571,7 +588,7 @@ def test_bridge_reports_the_dip_even_when_replace_state_throws():
     assert "if (m.urlFailed) frame.frameURLFailed = true;" in listener and "readyStatus()" in listener
     status = re.search(r"function readyStatus\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "Address bar not updated in this view." in status and "frame.frameURLFailed" in status
-    assert "frame.shellURLFailed = true" in APP_JS
+    assert "frame.shellURLFailed = !setHash(h, push)" in APP_JS
 
 
 def test_frame_shows_a_loading_status_while_it_loads():
@@ -585,6 +602,7 @@ def test_frame_shows_a_loading_status_while_it_loads():
 
 def test_phone_rule_in_the_framed_docket_makes_44px_targets(run_dir, tmp_path):
     assert FRAME_PHONE_CSS.startswith("@media (max-width:700px){")
+    assert "@media (min-width:700.02px){.jumplist{display:none}}" in FRAME_PHONE_CSS
     rules = dict(re.findall(r"([^{}]+)\{([^{}]*)\}", FRAME_PHONE_CSS[FRAME_PHONE_CSS.index("{") + 1:]))
     covered = {sel.strip(): body for sels, body in rules.items() for sel in sels.split(",")}
     for cls in (".dipbtn", ".chip", ".sectoggle", ".listtoggle"):
@@ -628,7 +646,7 @@ def test_feed_sort_and_filter_round_trip_through_the_url():
     sort_click = re.search(r"\$\('#disctable'\).addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
     chip_click = re.search(r"\$\('#discchips'\).addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
     for handler in (sort_click, chip_click):
-        assert "saveFeedView(); syncFeedURL();" in handler
+        assert "saveFeedView(); syncFeedURL(true);" in handler  # a viewer's change is a new history entry
     # localStorage keeps the viewer's default, read inside try/catch.
     assert "s.setItem(FEED_KEY, JSON.stringify(ownFeedView))" in APP_JS
     assert "JSON.parse(s.getItem(FEED_KEY))" in APP_JS
@@ -812,3 +830,143 @@ console.log(JSON.stringify(out));""")
     assert xs == sorted(xs) and min(b - a for a, b in zip(xs, xs[1:])) > 25
     # A wide plane keeps the labels along the lines.
     assert all(t["rot"] for t in wide["iso"]) and len(wide["iso"]) == len(ISO_WEIGHTS)
+
+
+def test_overview_names_the_archive_match_from_the_stored_fallback(run_dir, tmp_path):
+    """A run whose own cross-match did not run uses the repository's stored one, and says so."""
+    target = json.loads((run_dir / "candidates.json").read_text())[0]["target"]
+    data0 = app_data(run_dir, title="t")
+    period = data0["hero"]["lead"]["period_days"]
+    fb = {"status": "matched", "targets": [target], "star": None, "source": "test fallback",
+          "fetched_at": "2026-10-16T22:59:37+00:00",
+          "planets": [{"pl_name": "Test c", "hostname": "Test", "pl_orbper": period * 1.0005, "pl_tranmid": None,
+                       "tran_flag": True, "rv_flag": None, "tic_id": target}]}
+    path = tmp_path / "fb.json"
+    path.write_text(json.dumps(fb))
+    stored = {"status": "not_run", "targets": [target], "star": None, "planets": [],
+              "error": "ModuleNotFoundError: No module named 'astroquery'"}
+    (run_dir / "crossmatch.json").write_text(json.dumps(stored))
+    try:
+        dock = docket_mod.docket_data(run_dir, title="t", crossmatch_fallback=path)
+        assert dock["crossmatch"]["fallback_from"] == str(path) and dock["crossmatch"]["run_error"] == stored["error"]
+        from exoplan import app as app_mod
+
+        hero = app_mod.overview_hero(dock, [{"signal_id": dock["candidates"][0]["signal_id"], "consistent_with": "Test c"}])
+        assert hero["headline"].endswith(", consistent with Test c.") and hero["accent"] == "A known planet, not a discovery."
+        assert "consistent with Test c, a published planet: a known planet, not a discovery." in hero["archive"]
+        assert str(path) in hero["archive"] and NO_DETECTION in hero["archive"]
+    finally:
+        (run_dir / "crossmatch.json").unlink()
+
+
+def test_repository_pi_men_crossmatch_states_its_source():
+    from pathlib import Path
+
+    from exoplan.docket import DEFAULT_CROSSMATCH
+
+    stored = json.loads(Path(DEFAULT_CROSSMATCH).read_text())
+    assert stored["status"] == "matched" and stored["targets"] == ["TIC 261136679"]
+    assert [p["pl_name"] for p in stored["planets"]] == ["pi Men c"]
+    assert stored["planets"][0]["pl_orbper"] == 6.26784  # as docs/results/pi_men_validation.md records it
+    assert "pi_men_validation.md" in stored["source"] and "exoplan crossmatch" in stored["source"]
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_unknown_dip_shows_a_notice_and_rewrites_to_the_lead_dip():
+    open_dip = re.search(r"function openDip\(dip, section\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    status = re.search(r"function frameStatus\(text\)\{.*?\}\n", APP_JS, re.S).group(0)
+    lead = re.search(r"const leadDip = .*\n", APP_JS).group(0)
+    script = ("const D = {run: {name: 'run-1'}, dossier_ids: ['a', 'b'], hero: {lead: {dip: 'b'}}};\n"
+              "const DIP_IDS = new Set(D.dossier_ids), DOCKET_SECTIONS = ['ledger'], LOADING_TEXT = 'Loading';\n"
+              "const frame = {ready: true, notice: ''}; const said = [], hashes = [], told = [];\n"
+              "const el = {dataset: {loaded: '1'}, textContent: '', hidden: true};\n"
+              "const $ = () => el; const say = m => said.push(m); const fitFrame = () => {};\n"
+              "const setHash = (h, push) => { hashes.push([h, push]); return true; };\n"
+              "const readyStatus = () => frameStatus(''); const tellFrame = d => told.push(d);\n"
+              "const loadDocket = () => {}; const setFullHrefs = () => {}; const syncShellURL = () => {};\n"
+              + lead + status + open_dip +
+              "openDip('zzz', null);\n"
+              "console.log(JSON.stringify({said, hashes, told, status: el.textContent, hidden: el.hidden}));")
+    out = json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
+    assert out["status"] == "No dip zzz in run run-1; showing the lead dip b." and out["hidden"] is False
+    assert out["hashes"] == [["#/candidates?dip=b", False]]  # replaced, not a new history entry
+    assert out["told"] == ["b"] and out["said"][0].startswith("No dip zzz")
+    # Unknown sections go to the Overview, rewritten the same way.
+    go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "if (p.unknown){ setHash('#/overview', false);" in go
+    assert "unknown: ROUTES.includes(route) ? null : route" in APP_JS
+
+
+def test_viewer_changes_are_history_entries_and_back_is_followed():
+    hist = re.search(r"function setHash\(h, push\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "history.pushState(null, '', h)" in hist and "history.replaceState(null, '', h)" in hist
+    sync = re.search(r"function syncShellURL\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "const push = !!frame.dip && !!shown && shown !== frame.dip;" in sync
+    assert "window.addEventListener('popstate', onNavigate);" in APP_JS
+    assert "window.addEventListener('hashchange', onNavigate);" in APP_JS
+    # The layout rewrite on load replaces; it is not a viewer's change.
+    assert "setHash('#/overview?layout=' + encodeLayout(layout), false)" in APP_JS
+
+
+def test_theme_control_meta_and_first_paint(run_dir, tmp_path):
+    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    head = page[:page.index("</head>")]
+    assert '<meta name="description" content="exoplan run ' in head and "candidate, unconfirmed" in head
+    assert '<meta name="color-scheme" content="light dark">' in head
+    assert head.count('<meta name="theme-color"') == 2
+    # The stored choice is applied by an inline script before the stylesheet: no flash of the wrong theme.
+    assert head.index("localStorage.getItem('exoplan-theme')") < head.index('<style>')
+    assert "try{" in head and "catch(e){}" in head
+    # One control in the sidebar footer and one in the phone top bar, each a 44 px target.
+    assert page.count("<button class=\"btn themebtn\" type=\"button\" data-theme-toggle") == 2
+    assert ".themebtn{min-height:44px" in APP_CSS and "min-width:44px" in _phone_css()
+    apply = re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "removeAttribute('data-theme')" in apply and "try {" in apply and "postMessage({source: 'exoplan-shell', theme: t}" in apply
+    assert "THEMES = ['system', 'light', 'dark']" in APP_JS
+    # The framed Docket follows the theme.
+    assert "document.documentElement.setAttribute('data-theme', m.theme)" in FRAME_BRIDGE_JS
+    assert ':root[data-theme=\\"dark\\"]' in FRAME_THEME_CSS or ':root[data-theme="dark"]' in FRAME_THEME_CSS
+
+
+def test_phone_feed_rows_are_labelled_cards_and_calibration_is_stacked(run_dir, catalog, tmp_path):
+    phone = _phone_css()
+    assert "#disctable tbody tr{display:grid" in phone
+    assert "#disctable tbody [data-label]::before{content:attr(data-label)" in phone
+    assert "#caltable{display:none}" in phone and ".calcards{display:grid" in phone
+    body = re.search(r"function renderDiscTable\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert 'data-label="${esc(c[1])}"' in body
+    cal = re.search(r"function renderCalibration\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "$('#calcards').innerHTML" in cal and "<dl class=\"kv calcard\">" in cal
+    # Desktop: every feed row shows (no clipped scroll box), and the region's name says so.
+    assert ".tablewrap.scrollbox{overflow-x:auto}" in APP_CSS and "max-height:70vh" not in APP_CSS
+    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    assert 'aria-label="Feed table, every entry shown; scrolls sideways when wider than the screen"' in page
+
+
+def test_phone_dip_picker_lists_every_dip_with_its_outcome(run_dir, tmp_path):
+    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    cand = _route(page, "candidates")
+    assert '<select id="dippick"' in cand and '<label for="dippick">' in cand
+    pick = re.search(r"function renderDipPicker\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "D.hero.windows.map" in pick and "w.outcome" in pick
+    assert "$('#dippick').addEventListener('change', e => { location.hash = dipHref(e.target.value); });" in APP_JS
+    assert ".dippicker select{flex:1;min-width:0;min-height:44px" in _phone_css()
+    # Inside the framed Docket, a fixed "Signals" button jumps back to the list on a phone.
+    assert "jumpToList" in FRAME_BRIDGE_JS and ".jumplist{display:inline-flex" in FRAME_PHONE_CSS
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_times_are_shown_in_utc_and_say_so():
+    esc = re.search(r"const esc = .*?\n", APP_JS).group(0)
+    fn = re.search(r"function when\(iso\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    script = esc + fn + "console.log(JSON.stringify(when('2026-10-17T17:24:19+00:00')));"
+    out = json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True,
+                                    env={"TZ": "Asia/Kolkata", "PATH": "/usr/bin:/bin:/usr/local/bin:/opt/node22/bin"}).stdout)
+    text = re.sub(r"<[^>]+>", "", out)
+    assert text.endswith("17:24 UTC") and 'title="2026-10-17T17:24:19+00:00"' in out
+
+
+def test_no_ui_text_below_11px():
+    sizes = [float(x) for x in re.findall(r"(?<![\d.])(\d+(?:\.\d+)?)px", " ".join(re.findall(r"font(?:-size)?:[^;}]*", APP_CSS)))]
+    assert sizes and min(sizes) >= 11
+    assert "const fs = 11;" in docket_mod.DOCKET_JS

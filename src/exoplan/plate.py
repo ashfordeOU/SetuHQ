@@ -251,10 +251,10 @@ def feed_caption(r: dict) -> str:
 
 
 def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
-               star: str | None = None) -> dict:
+               star: str | None = None, require_crossmatch: bool = False) -> dict:
     """Everything the plates show, read from the run directory and the catalogue."""
     run_dir = Path(run_dir)
-    dock = docket_data(run_dir, title=title, star=star)
+    dock = docket_data(run_dir, title=title, star=star, require_crossmatch=require_crossmatch)
     manifest = json.loads((run_dir / "manifest.json").read_text())
     kinds = dock["reviewers"]
     comparison = ((dock.get("crossmatch") or {}).get("comparison") or {}).get("by_candidate") or {}
@@ -679,8 +679,8 @@ def plate_page(data: dict) -> str:
 
 
 def build_plate(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
-                star: str | None = None) -> Path:
-    data = plate_data(run_dir, title=title, catalog_path=catalog_path, star=star)
+                star: str | None = None, require_crossmatch: bool = False) -> Path:
+    data = plate_data(run_dir, title=title, catalog_path=catalog_path, star=star, require_crossmatch=require_crossmatch)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"

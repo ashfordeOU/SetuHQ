@@ -159,7 +159,8 @@ def cmd_dashboard(args) -> int:
 def cmd_docket(args) -> int:
     from exoplan.docket import build_docket
 
-    path = build_docket(args.run_dir, args.out, title=args.title, star=args.star, refresh_crossmatch=args.refresh_crossmatch)
+    path = build_docket(args.run_dir, args.out, title=args.title, star=args.star, refresh_crossmatch=args.refresh_crossmatch,
+                        require_crossmatch=not args.allow_missing_crossmatch)
     print(f"docket written to {path}")
     return 0
 
@@ -168,7 +169,7 @@ def cmd_app(args) -> int:
     from exoplan.app import build_app
 
     path = build_app(args.run_dir, args.out, title=args.title, catalog_path=args.catalog,
-                     weights_path=args.weights, star=args.star)
+                     weights_path=args.weights, star=args.star, require_crossmatch=not args.allow_missing_crossmatch)
     print(f"app written to {path}")
     return 0
 
@@ -176,8 +177,21 @@ def cmd_app(args) -> int:
 def cmd_plate(args) -> int:
     from exoplan.plate import build_plate
 
-    path = build_plate(args.run_dir, args.out, title=args.title, catalog_path=args.catalog, star=args.star)
+    path = build_plate(args.run_dir, args.out, title=args.title, catalog_path=args.catalog, star=args.star,
+                       require_crossmatch=not args.allow_missing_crossmatch)
     print(f"plates written to {path}")
+    return 0
+
+
+def cmd_crossmatch(args) -> int:
+    from exoplan.docket import CrossmatchUnavailable, run_crossmatch
+
+    try:
+        result = run_crossmatch(args.run_dir, args.star)
+    except CrossmatchUnavailable as exc:
+        print(f"exoplan crossmatch: {exc}", file=sys.stderr)
+        return 1
+    print(f"cross-match {result['status']}: {len(result['planets'])} archive planet(s) stored in {args.run_dir}/crossmatch.json")
     return 0
 
 
@@ -240,7 +254,9 @@ def build_parser() -> argparse.ArgumentParser:
     docket.add_argument("--out", required=True)
     docket.add_argument("--title", default="exoplan docket")
     docket.add_argument("--star", help="star name for the archive cross-match (hostname or pl_name); TIC targets also match on tic_id")
-    docket.add_argument("--refresh-crossmatch", action="store_true", help="query the archive again instead of reusing crossmatch.json")
+    docket.add_argument("--refresh-crossmatch", action="store_true", help="run 'exoplan crossmatch' first: query the archive and store crossmatch.json")
+    docket.add_argument("--allow-missing-crossmatch", action="store_true",
+                     help="build even when no stored archive cross-match is usable; the page then prints the stored error")
     docket.set_defaults(func=cmd_docket)
 
     app = sub.add_parser("app", help="build the sidebar app shell (overview, candidates, discoveries, planets, panel, runs)")
@@ -251,7 +267,14 @@ def build_parser() -> argparse.ArgumentParser:
     app.add_argument("--weights", default="docs/results/reviewer_weights_full_panel.json",
                      help="calibrated reviewer weights JSON shown in the Panel section")
     app.add_argument("--star", help="star name for the Docket's archive cross-match, as in 'exoplan docket'")
+    app.add_argument("--allow-missing-crossmatch", action="store_true",
+                     help="build even when no stored archive cross-match is usable; the page then prints the stored error")
     app.set_defaults(func=cmd_app)
+
+    xmatch = sub.add_parser("crossmatch", help="query the NASA Exoplanet Archive for the run's targets and store crossmatch.json")
+    xmatch.add_argument("run_dir")
+    xmatch.add_argument("--star", help="star name (hostname or pl_name); TIC targets also match on tic_id")
+    xmatch.set_defaults(func=cmd_crossmatch)
 
     plate = sub.add_parser("plate", help="build the print-ready plates page: one plate per star, with captions")
     plate.add_argument("run_dir")
@@ -259,6 +282,8 @@ def build_parser() -> argparse.ArgumentParser:
     plate.add_argument("--title", default="exoplan plates")
     plate.add_argument("--catalog", help="discovery catalogue JSON: its stars get plates and join the river of time")
     plate.add_argument("--star", help="star name for the archive cross-match, as in 'exoplan docket'")
+    plate.add_argument("--allow-missing-crossmatch", action="store_true",
+                     help="build even when no stored archive cross-match is usable; the page then prints the stored error")
     plate.set_defaults(func=cmd_plate)
 
     report = sub.add_parser("report", help="build a static HTML report site from a run directory")
@@ -273,7 +298,14 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
-    return args.func(args)
+    from exoplan.docket import CrossmatchUnavailable
+
+    try:
+        return args.func(args)
+    except CrossmatchUnavailable as exc:
+        print(f"exoplan {args.command}: {exc}. Run 'exoplan crossmatch {getattr(args, 'run_dir', '<run>')}', "
+              "or pass --allow-missing-crossmatch to build a page that states the error.", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

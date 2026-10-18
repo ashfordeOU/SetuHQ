@@ -348,12 +348,23 @@ function niceTicks(lo, hi, n){
 // lane per reviewer on the same time axis. The consensus band runs through both.
 // Keyboard: with the strip focused, ← and → step through the stored bins
 // (Shift for ten), Home and End jump; the readout below is an aria-live region.
+const LANE_GUTTER = {desktop: 120, phone: 96};
+// A lane label that fits its gutter: the kind's short tag and the id, shortened from the front with an
+// ellipsis until the measured text fits (ids share prefixes such as "volunteer-", so the end tells them
+// apart). The full kind and id stay in the label's title.
+const KIND_SHORT = k => k === 'simulated' ? 'SIM' : isClaude(k) ? 'CL' : String(k || '?').toUpperCase().slice(0, 3);
+function fitLabel(t, kind, id, room){
+  let s = id;
+  t.textContent = `${kind} ${s}`;
+  while (s.length > 3 && t.getComputedTextLength && t.getComputedTextLength() > room){ s = s.slice(1); t.textContent = `${kind} …${s}`; }
+}
 function strip(c, subj, marks, decisions, wrap){
   wrap.innerHTML = '';
   const narrow = wrap.clientWidth < 600;
   const W = Math.max(240, Math.round(wrap.clientWidth - 16)), H = narrow ? 280 : 440;
-  const names = Object.keys(D.reviewers), lh = narrow ? 15 : 22;
-  const pl = narrow ? 42 : 190, pr = narrow ? 8 : 18, pt = 16, gap = narrow ? 10 : 18, axisH = narrow ? 24 : 30;
+  const names = Object.keys(D.reviewers), lh = narrow ? 18 : 22;
+  // A fixed label gutter left of the plot (LANE_GUTTER): lane labels live there, never over the bars.
+  const pl = narrow ? LANE_GUTTER.phone : LANE_GUTTER.desktop, pr = narrow ? 8 : 18, pt = 16, gap = narrow ? 10 : 18, axisH = narrow ? 24 : 30;
   const lanesTop = H - axisH - names.length*lh, upperBottom = lanesTop - gap;
   const dur = c.t_end - c.t_start, half = Math.max(4*dur, 0.25);
   const t0 = c.t_center - half, t1 = c.t_center + half;
@@ -368,10 +379,12 @@ function strip(c, subj, marks, decisions, wrap){
   const svg = el('svg', {viewBox:`0 0 ${W} ${H}`, role:'img', class:'stripsvg',
     'aria-label': `Transit strip for ${c.candidate_id}: ${pts.length} binned points, box model at measured depth ${fmt(depth,0)} ppm and duration ${fmt(c.duration_hours,2)} h, ${names.length} reviewer lanes (${reviewerSummary(names)})`}, wrap);
   svg.style.height = H + 'px';
-  const fs = narrow ? 9 : 11;
+  const fs = 11;  // no UI text below 11 px, on a phone too
   const T = (x, y, s, a='start', cls='') => { const t = tx(svg, x, y, s, a, cls); t.style.fontSize = fs + 'px'; return t; };
   // Hatched fill for a span that did not count toward this dip (stored in c.mark_audit).
   const defs = el('defs', {}, svg);
+  const lanesClip = 'lanes-' + Math.random().toString(36).slice(2, 8);
+  el('rect', {x:pl, y:0, width:W-pl-pr, height:H}, el('clipPath', {id:lanesClip}, defs));
   names.forEach((n, i) => {
     const pat = el('pattern', {id:`hatch-${i}`, width:5, height:5, patternUnits:'userSpaceOnUse', patternTransform:'rotate(45)'}, defs);
     el('rect', {width:5, height:5, fill:'var(--panel)'}, pat);
@@ -416,11 +429,11 @@ function strip(c, subj, marks, decisions, wrap){
     const strong = lbl === 'potential planet' || lbl === 'potential_planet';
     for (const [a,b] of spans){
       const xa = X(Math.max(a,t0)), xb = X(Math.min(b,t1)), ok = countedSpan(n, a, b);
-      el('rect', {x:xa, y:y+2, width:Math.max(3, xb-xa), height:lh-5, rx:2, fill: ok ? col : `url(#hatch-${i})`, stroke: ok ? 'none' : col, 'stroke-width':1, opacity: ok ? (strong ? .85 : .45) : .9, 'data-counted': String(ok)}, svg);
+      el('rect', {x:xa, y:y+2, width:Math.max(3, xb-xa), height:lh-5, rx:2, fill: ok ? col : `url(#hatch-${i})`, stroke: ok ? 'none' : col, 'stroke-width':1, opacity: ok ? (strong ? .85 : .45) : .9, 'data-counted': String(ok), 'clip-path': `url(#${lanesClip})`}, svg);
     }
-    const label = `${KIND_TAG(D.reviewers[n])} ${n}`;
-    if (narrow){ const t = T(pl+3, y+lh-4, label, 'start', 'lanelbl'); t.setAttribute('fill', col); }
-    else { const t = T(pl-10, y+lh/2+4, label, 'end'); t.setAttribute('fill', col); }
+    const t = T(pl-6, y+lh/2+4, '', 'end', 'lanelbl'); t.setAttribute('fill', col);
+    fitLabel(t, KIND_SHORT(D.reviewers[n]), n, pl - 10);
+    el('title', {}, t).textContent = `${KIND_TAG(D.reviewers[n])} ${n}`;
     if (!spans.length) T(W-pr-4, y+lh-4, 'no mark in window', 'end');
   });
   // crosshair snapped to a stored bin: pointer (hover or tap) and keyboard
@@ -634,7 +647,8 @@ function crossmatchLine(c){
   const when = x.fetched_at ? ` stored ${esc(x.fetched_at.slice(0,10))}` : '';
   const cls = x.status === 'matched' ? 'xm-hit' : x.status === 'no_match' ? 'xm-none' : 'xm-notrun';
   const ran = x.status === 'matched' || x.status === 'no_match';
-  const text = ran ? esc(x.line) + '.' + (cmp ? ` <span class="xm-cmp"><b>Comparison for this dip:</b> ${esc(cmp.line)}.</span>` : '') : 'Known-planet cross-match not run: the archive was unreachable when this page was built.';
+  const fb = x.fallback_from ? ` <span class="xm-cmp">Values from the repository's stored cross-match <code>${esc(x.fallback_from)}</code> (${esc(x.source || '')}); this run's own cross-match: ${esc(x.run_status || 'not stored')}${x.run_error ? ', ' + esc(x.run_error) : ''}.</span>` : '';
+  const text = ran ? esc(x.line) + '.' + fb + (cmp ? ` <span class="xm-cmp"><b>Comparison for this dip:</b> ${esc(cmp.line)}.</span>` : '') : `Known-planet cross-match not run. Stored error, verbatim: <code>${esc(x.error || 'none stored')}</code>`;
   return `<p class="xm ${cls}"><span class="xm-k">NASA Exoplanet Archive${when}:</span> ${text} <span class="hint">Archive values only; this page claims no detection either way.</span></p>`;
 }
 
@@ -675,7 +689,7 @@ function renderDossier(){
       <div class="sigout">signal: ${outBadge(s.outcome)}</div>
     </div>
     ${sec('strip', 'Transit strip', 'stored measurements only · nothing is fitted · <kbd>s</kbd> collapses', `<div class="hero-wrap strip" id="strip" tabindex="0" role="group" aria-label="Transit strip for ${esc(c.candidate_id)}. Use left and right arrow keys to step through the stored bins, Shift for ten, Home and End for the ends."></div>
-      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each · SIM = simulated detector (not a person), CLAUDE = Claude model</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
+      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each · SIM = simulated detector (not a person), CL = Claude model (not a person)</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
       <p class="scope">${scopeNote(c)}</p>`)}
     <div class="facts">
       <div><span>mid-time</span>${fmt(c.t_center,3)} ${esc(c.time_unit)}</div>
@@ -1128,41 +1142,80 @@ def _flag(value) -> bool | None:
     return None if x is None else bool(x)
 
 
-def crossmatch(run_dir: Path, targets: list[str], star: str | None = None, *, refresh: bool = False) -> dict:
-    """Fetch (or reuse) the stored cross-match for the run's targets.
+ARCHIVE_SOURCE = "NASA Exoplanet Archive, table ps (default_flag = 1)"
+# A stored cross-match committed with the repository, used when a run's own crossmatch.json did not
+# run. It covers only the targets it lists, and its "source" says where its values come from.
+DEFAULT_CROSSMATCH = "docs/results/pi_men_crossmatch.json"
+NO_STORED_CROSSMATCH = "no crossmatch.json is stored in this run; run 'exoplan crossmatch <run>' to fetch one"
 
-    The result is stored in the run directory, so the page rebuilds offline.
-    When the archive cannot be reached the stored status is ``not_run``,
-    which the page states; it is never a silent blank.
-    """
-    path = Path(run_dir) / CROSSMATCH_FILE
-    stored = None
-    if path.exists():
-        try:
-            stored = json.loads(path.read_text())
-        except (OSError, ValueError):
-            stored = None
-        if not (stored and stored.get("status") in ("matched", "no_match")
-                and stored.get("targets") == targets and stored.get("star") == star):
-            stored = None
-    # A stored result from before the transit flag was queried is fetched again once;
-    # if the archive is unreachable it is kept, and its planets get no epoch offset.
-    has_flags = stored is not None and all("tran_flag" in p for p in stored.get("planets") or [])
-    if stored is not None and not refresh and has_flags:
-        return stored
-    result = {"source": "NASA Exoplanet Archive, table ps (default_flag = 1)", "targets": targets, "star": star,
+
+class CrossmatchUnavailable(RuntimeError):
+    """A build needs a stored cross-match and none is usable. The message carries the stored error."""
+
+
+def fetch_crossmatch(targets: list[str], star: str | None = None) -> dict:
+    """Query the archive for the targets now. Raises on any network, service or package error."""
+    result = {"source": ARCHIVE_SOURCE, "targets": targets, "star": star,
               "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "planets": []}
+    for target in targets:
+        result["planets"].extend(query_archive(target, star))
+    result["status"] = "matched" if result["planets"] else "no_match"
+    return result
+
+
+def _read_json(path: Path) -> dict | None:
     try:
-        for target in targets:
-            result["planets"].extend(query_archive(target, star))
-        result["status"] = "matched" if result["planets"] else "no_match"
-    except Exception as exc:  # network, DNS, service or missing package: the cross-match did not run
-        if stored is not None:
-            return stored
-        result["status"] = "not_run"
-        result["error"] = f"{type(exc).__name__}: {exc}"[:300]
+        return json.loads(Path(path).read_text())
+    except (OSError, ValueError):
+        return None
+
+
+def run_crossmatch(run_dir: str | Path, star: str | None = None) -> dict:
+    """``exoplan crossmatch``: query the archive and store the result as the run's crossmatch.json.
+
+    This is the only place crossmatch.json is written. On failure a good stored result is kept;
+    otherwise a ``not_run`` record with the error, verbatim, is stored. Either way the error is raised.
+    """
+    run_dir = Path(run_dir)
+    rows = json.loads((run_dir / "candidates.json").read_text())
+    targets = sorted({r.get("target") for r in rows if r.get("target")})
+    path = run_dir / CROSSMATCH_FILE
+    try:
+        result = fetch_crossmatch(targets, star)
+    except Exception as exc:  # network, DNS, service or missing package
+        error = f"{type(exc).__name__}: {exc}"[:300]
+        old = _read_json(path) if path.exists() else None
+        if not (old and old.get("status") in ("matched", "no_match")):
+            path.write_text(json.dumps({"source": ARCHIVE_SOURCE, "targets": targets, "star": star,
+                                        "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                                        "planets": [], "status": "not_run", "error": error}, indent=2))
+        raise CrossmatchUnavailable(f"archive cross-match failed: {error}") from exc
     path.write_text(json.dumps(result, indent=2))
     return result
+
+
+def crossmatch(run_dir: Path, targets: list[str], star: str | None = None, *,
+               fallback: str | Path | None = DEFAULT_CROSSMATCH) -> dict:
+    """The stored cross-match for the run's targets. Read only: a build never queries or writes.
+
+    In order: the run's crossmatch.json when it ran (matched or no_match) for these targets; else
+    the ``fallback`` file when it ran and covers every target (its ``fallback_from`` names it);
+    else a ``not_run`` record whose ``error`` is the run's stored error, verbatim, or says no
+    file is stored. The page states that error; it is never a silent blank.
+    """
+    path = Path(run_dir) / CROSSMATCH_FILE
+    stored = _read_json(path) if path.exists() else None
+    if stored and stored.get("status") in ("matched", "no_match") and stored.get("targets") == targets \
+            and stored.get("star") == star:
+        return stored
+    if fallback is not None and Path(fallback).exists():
+        fb = _read_json(fallback)
+        if fb and fb.get("status") in ("matched", "no_match") and targets and set(targets) <= set(fb.get("targets") or []):
+            return {**fb, "fallback_from": str(fallback),
+                    "run_status": (stored or {}).get("status", "not stored"), "run_error": (stored or {}).get("error", "")}
+    error = (stored or {}).get("error") or NO_STORED_CROSSMATCH
+    return {"source": ARCHIVE_SOURCE, "targets": targets, "star": star,
+            "fetched_at": (stored or {}).get("fetched_at", ""), "planets": [], "status": "not_run", "error": error}
 
 
 # Offsets from a mission time system to BJD (TDB), the archive's pl_tranmid system.
@@ -1264,11 +1317,12 @@ def crossmatch_line(result: dict) -> str:
         return f"Host of published {noun} {', '.join(parts)}"
     if status == "no_match":
         return "No published planet matched in the archive"
-    return "Known-planet cross-match not run (archive unreachable at docket build time)"
+    return f"Known-planet cross-match not run ({result.get('error') or NO_STORED_CROSSMATCH})"
 
 
 def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
-                refresh_crossmatch: bool = False) -> dict:
+                refresh_crossmatch: bool = False, crossmatch_fallback: str | Path | None = DEFAULT_CROSSMATCH,
+                require_crossmatch: bool = False) -> dict:
     """The Docket's page data for a run: candidates with checks and outcomes, signals, cross-match."""
     run_dir = Path(run_dir)
     run = _load_run(run_dir)
@@ -1301,13 +1355,15 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
     n_sim = sum(1 for k in kinds if k == "simulated")
     n_claude = sum(1 for k in kinds if k in ("claude", "claude_code"))
     targets = sorted({c["target"] for c in run["candidates"] if c["target"]})
-    xm = crossmatch(run_dir, targets, star, refresh=refresh_crossmatch)
+    if refresh_crossmatch:
+        run_crossmatch(run_dir, star)
+    xm = crossmatch(run_dir, targets, star, fallback=crossmatch_fallback)
+    if require_crossmatch and xm.get("status") == "not_run":
+        raise CrossmatchUnavailable(f"no usable archive cross-match for {', '.join(targets) or 'this run'}: {xm['error']}")
     xm["line"] = crossmatch_line(xm)
     if xm.get("status") in ("matched", "no_match"):
-        # Stored with the archive values, so the page rebuilds offline.
+        # Computed from the stored archive values at build time; nothing is written.
         xm["comparison"] = compare_with_archive(xm.get("planets") or [], run["candidates"])
-        stored = {k: v for k, v in xm.items() if k != "line"}
-        (run_dir / CROSSMATCH_FILE).write_text(json.dumps(stored, indent=2))
     data = {
         "title": title,
         "candidates": run["candidates"],
@@ -1369,8 +1425,9 @@ def docket_page(data: dict) -> str:
 
 
 def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: str | None = None,
-                 refresh_crossmatch: bool = False) -> Path:
-    data = docket_data(run_dir, title=title, star=star, refresh_crossmatch=refresh_crossmatch)
+                 refresh_crossmatch: bool = False, require_crossmatch: bool = False) -> Path:
+    data = docket_data(run_dir, title=title, star=star, refresh_crossmatch=refresh_crossmatch,
+                       require_crossmatch=require_crossmatch)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"

@@ -57,7 +57,7 @@ def _captions(page: str) -> list[str]:
 
 def test_one_caption_per_candidate_each_unconfirmed(run_dir, catalog, tmp_path):
     assert main(["plate", str(run_dir), "--catalog", str(catalog), "--out", str(tmp_path / "plate"),
-                 "--title", "exoplan plates"]) == 0
+                 "--title", "exoplan plates", "--allow-missing-crossmatch"]) == 0
     page = (tmp_path / "plate" / "index.html").read_text()
     data = plate_data(run_dir, title="t", catalog_path=catalog)
     ids = [c["candidate_id"] for s in data["stars"] for c in s["candidates"]]

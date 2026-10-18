@@ -6,8 +6,11 @@ import pytest
 
 from exoplan.config import RunConfig
 from exoplan import docket as docket_mod
+from exoplan.cli import main
 from exoplan.docket import (
     DOCKET_JS,
+    NO_STORED_CROSSMATCH,
+    CrossmatchUnavailable,
     box_model,
     build_docket,
     compare_with_archive,
@@ -222,14 +225,73 @@ def test_feed_rules_are_separate_from_vetting(run_dir, tmp_path):
     assert "Feed admission rules (discover.py), not vetting" in DOCKET_JS
 
 
-def test_known_planet_line_says_not_run_when_archive_unreachable(run_dir, tmp_path):
+def test_known_planet_line_says_not_run_with_the_stored_error(run_dir, tmp_path):
     page = build_docket(run_dir, tmp_path / "docket", title="t").read_text()
     data = _page_data(page)
     assert data["crossmatch"]["status"] == "not_run"
-    assert "not run" in data["crossmatch"]["line"]
-    stored = json.loads((run_dir / "crossmatch.json").read_text())
-    assert stored["status"] == "not_run"
-    assert "cross-match not run" in DOCKET_JS
+    assert "not run" in data["crossmatch"]["line"] and NO_STORED_CROSSMATCH in data["crossmatch"]["line"]
+    # A build reads only: it never writes crossmatch.json.
+    assert not (run_dir / "crossmatch.json").exists()
+    assert "cross-match not run" in DOCKET_JS and "Stored error, verbatim" in DOCKET_JS
+    assert "unreachable" not in DOCKET_JS
+    # A stored error is printed as stored, never replaced by "unreachable".
+    stored = {"status": "not_run", "targets": ["TIC TEST-2"], "star": None, "planets": [],
+              "error": "ModuleNotFoundError: No module named 'astroquery'"}
+    path = run_dir / "crossmatch.json"
+    path.write_text(json.dumps(stored))
+    try:
+        data = _page_data(build_docket(run_dir, tmp_path / "d2", title="t").read_text())
+        assert data["crossmatch"]["error"] == stored["error"]
+        assert "No module named 'astroquery'" in data["crossmatch"]["line"]
+        assert json.loads(path.read_text()) == stored  # untouched by the build
+    finally:
+        path.unlink()
+
+
+def test_strict_build_fails_instead_of_building_a_page_that_cannot_say(run_dir, tmp_path):
+    with pytest.raises(CrossmatchUnavailable, match="no crossmatch.json is stored"):
+        build_docket(run_dir, tmp_path / "docket", title="t", require_crossmatch=True)
+    assert not (tmp_path / "docket" / "index.html").exists()
+    # The CLI builds strictly by default and exits non-zero with the reason.
+    assert main(["docket", str(run_dir), "--out", str(tmp_path / "d"), "--title", "t"]) == 2
+    assert main(["app", str(run_dir), "--out", str(tmp_path / "a"), "--title", "t"]) == 2
+    assert main(["docket", str(run_dir), "--out", str(tmp_path / "d"), "--title", "t", "--allow-missing-crossmatch"]) == 0
+
+
+def test_crossmatch_command_is_the_only_writer(run_dir, tmp_path, monkeypatch):
+    # Unreachable (the module fixture): the command fails, stores the error verbatim, and exits 1.
+    assert main(["crossmatch", str(run_dir)]) == 1
+    path = run_dir / "crossmatch.json"
+    try:
+        stored = json.loads(path.read_text())
+        assert stored["status"] == "not_run" and stored["error"] == "ConnectionError: archive unreachable (test)"
+        # Reachable: the result replaces it.
+        monkeypatch.setattr(docket_mod, "query_archive", lambda target, star=None: [
+            {"pl_name": "Test b", "hostname": "Test", "pl_orbper": 4.0, "pl_tranmid": None, "tran_flag": True,
+             "rv_flag": False, "tic_id": target}])
+        assert main(["crossmatch", str(run_dir)]) == 0
+        assert json.loads(path.read_text())["status"] == "matched"
+        # A later failure keeps the good stored result.
+        monkeypatch.setattr(docket_mod, "query_archive", lambda *a, **k: (_ for _ in ()).throw(OSError("down")))
+        assert main(["crossmatch", str(run_dir)]) == 1
+        assert json.loads(path.read_text())["status"] == "matched"
+    finally:
+        path.unlink()
+
+
+def test_fallback_crossmatch_covers_only_its_listed_targets(run_dir, tmp_path):
+    fb = {"status": "matched", "targets": ["TIC TEST-2"], "star": None, "source": "test fallback",
+          "fetched_at": "2026-10-16T00:00:00+00:00",
+          "planets": [{"pl_name": "Test b", "pl_orbper": 4.0, "pl_tranmid": None, "tran_flag": True, "tic_id": "TIC TEST-2"}]}
+    path = tmp_path / "fb.json"
+    path.write_text(json.dumps(fb))
+    data = docket_mod.docket_data(run_dir, title="t", crossmatch_fallback=path)
+    assert data["crossmatch"]["status"] == "matched" and data["crossmatch"]["fallback_from"] == str(path)
+    assert data["crossmatch"]["line"] == "Host of published planet Test b (P 4.000 d)"
+    assert "fallback_from" in DOCKET_JS
+    other = dict(fb, targets=["TIC 1"])
+    path.write_text(json.dumps(other))
+    assert docket_mod.docket_data(run_dir, title="t", crossmatch_fallback=path)["crossmatch"]["status"] == "not_run"
 
 
 def test_known_planet_line_from_stored_archive_values():

@@ -14,6 +14,7 @@ dependencies = [
     "scipy>=1.10",
     "astropy>=6.0",
     "matplotlib>=3.7",
+    "astroquery>=0.4.7",  # the archive cross-match ('exoplan crossmatch'); the page builds need its result
 ]
 
 [project.optional-dependencies]
@@ -26,6 +27,9 @@ exoplan = "exoplan.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+exoplan = ["fonts/*.css", "fonts/*.txt", "fonts/files/*.woff2"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

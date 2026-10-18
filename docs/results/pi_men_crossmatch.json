@@ -1,0 +1,20 @@
+{
+  "source": "NASA Exoplanet Archive, table ps (default_flag = 1), as recorded in docs/results/pi_men_validation.md by scripts/validate_known_planets.py (live archive query, commit 0f6dbdc). Only pi Men c is recorded there, so only pi Men c is listed; its transit mid-time was not recorded, so no epoch offset is computed from this file. Replace it with the output of 'exoplan crossmatch runs/tess-pi-men-s1' when the archive answers.",
+  "targets": [
+    "TIC 261136679"
+  ],
+  "star": null,
+  "fetched_at": "2026-10-16T22:59:37+00:00",
+  "planets": [
+    {
+      "pl_name": "pi Men c",
+      "hostname": "pi Men",
+      "pl_orbper": 6.26784,
+      "pl_tranmid": null,
+      "tran_flag": true,
+      "rv_flag": null,
+      "tic_id": "TIC 261136679"
+    }
+  ],
+  "status": "matched"
+}
