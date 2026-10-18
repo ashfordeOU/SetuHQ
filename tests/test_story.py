@@ -158,3 +158,23 @@ def test_explorer_and_sentinels_read_the_stored_feed_and_calibration(run_dir, tm
             assert r["hits"] == round(r["tpr"] * r["n_injected"])
     js = re.search(r"function renderSentinels\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "planted transits found" in js and "empty light curves marked" in js
+
+
+def test_landing_page_is_the_overview_linking_into_the_app(run_dir, tmp_path):
+    from exoplan.app import FONTS_CSS, build_landing
+    from exoplan.cli import main
+
+    path = build_landing(run_dir, tmp_path / "site" / "index.html", title="exoplan")
+    page = path.read_text()
+    assert "The sky, reviewed." in page and "What this page does not claim" in page
+    assert 'href="app/#/sky"' in page and 'href="app/#/overview" data-route="overview" aria-current="page"' in page
+    assert f'href="app/{FONTS_CSS}"' in page and "fonts.googleapis" not in page
+    assert "Artist&#x27;s impression" in page or "Artist's impression" in page
+    assert 'href="report/"' in page and "candidate, unconfirmed" in page
+    assert "Your view" not in page and 'id="widgets"' not in page
+    # No external script; the only script is the theme control (and the first-paint theme line).
+    assert not re.search(r"<script[^>]+src=", page)
+    # The CLI writes it beside the app.
+    assert main(["app", str(run_dir), "--out", str(tmp_path / "s2" / "app"), "--title", "t",
+                 "--landing", str(tmp_path / "s2" / "index.html"), "--allow-missing-crossmatch"]) == 0
+    assert (tmp_path / "s2" / "index.html").exists()

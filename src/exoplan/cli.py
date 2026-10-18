@@ -171,6 +171,12 @@ def cmd_app(args) -> int:
     path = build_app(args.run_dir, args.out, title=args.title, catalog_path=args.catalog,
                      weights_path=args.weights, star=args.star, require_crossmatch=not args.allow_missing_crossmatch)
     print(f"app written to {path}")
+    if args.landing:
+        from exoplan.app import build_landing
+
+        landing = build_landing(args.run_dir, args.landing, title=args.title, catalog_path=args.catalog,
+                                weights_path=args.weights, app_href=args.landing_app_href)
+        print(f"landing page written to {landing}")
     return 0
 
 
@@ -267,6 +273,8 @@ def build_parser() -> argparse.ArgumentParser:
     app.add_argument("--weights", default="docs/results/reviewer_weights_full_panel.json",
                      help="calibrated reviewer weights JSON shown in the Panel section")
     app.add_argument("--star", help="star name for the Docket's archive cross-match, as in 'exoplan docket'")
+    app.add_argument("--landing", help="also write the site's entry page (the Overview, linking into the app) to this path")
+    app.add_argument("--landing-app-href", default="app/", help="the app's address relative to the landing page")
     app.add_argument("--allow-missing-crossmatch", action="store_true",
                      help="build even when no stored archive cross-match is usable; the page then prints the stored error")
     app.set_defaults(func=cmd_app)

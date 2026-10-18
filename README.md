@@ -7,7 +7,7 @@ are on it. Sentinels run on Claude (Anthropic). Probes are deterministic matched
 detectors. Consensus is skill-weighted, and every candidate keeps its provenance.
 
 Research behind the design: [docs/RESEARCH.md](docs/RESEARCH.md).
-Live report for a real run: [site/index.html](site/index.html).
+The site: [site/index.html](site/index.html) (the Overview) leads into the app at [site/app/](site/app/index.html) (Sky, Transit, Explorer, Sentinels); the full report for the real run is at [site/report/](site/report/index.html).
 
 ## What it does
 

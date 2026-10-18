@@ -41,7 +41,7 @@ CAT="docs/discoveries/catalog.json"
 EX="$VENV/bin/exoplan"
 
 step "app shell builds from the stored run"
-"$EX" app "$RUN" --catalog "$CAT" --out site/app --title "exoplan" >> "$LOG" 2>&1
+"$EX" app "$RUN" --catalog "$CAT" --out site/app --title "exoplan" --landing site/index.html >> "$LOG" 2>&1
 ok
 
 step "docket builds from the stored run"
@@ -53,7 +53,7 @@ step "plate builds from the stored run"
 ok
 
 step "site files exist"
-for f in site/app/index.html site/docket/index.html site/plate/index.html; do
+for f in site/index.html site/app/index.html site/docket/index.html site/plate/index.html; do
   test -s "$f" || { echo "missing $f" | tee -a "$LOG"; exit 1; }
 done
 ok

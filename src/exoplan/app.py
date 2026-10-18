@@ -2308,7 +2308,7 @@ def _planet_figure(deco: dict) -> str:
       </figure>"""
 
 
-def _overview(data: dict) -> str:
+def _overview(data: dict, with_view: bool = True) -> str:
     e = html.escape
     st = data["story"]
     lead = st.get("lead_dip")
@@ -2325,7 +2325,11 @@ def _overview(data: dict) -> str:
       {_planet_figure(data["deco"])}
       <div class="proof" role="list" aria-label="What this run shows">{proof.replace('<div>', '<div role="listitem">')}</div>
       {_honest(data)}
-      <div class="secthead"><h2 id="h-view">Your view</h2><p>Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></div>"""
+      {_view_head() if with_view else ""}"""
+
+
+def _view_head() -> str:
+    return """<div class="secthead"><h2 id="h-view">Your view</h2><p>Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></div>"""
 
 
 def _sky(data: dict) -> str:
@@ -2577,6 +2581,80 @@ def _input_label(data: dict) -> str:
     inp = (data["config"].get("inputs") or [{}])[0]
     bits = [inp.get("mission"), f"Sector {inp['sector']}" if inp.get("sector") is not None else None]
     return " ".join(b for b in bits if b) or "stored input"
+
+
+LANDING_JS = r"""
+// The landing page's only script: the theme control (dark, light or system), as in the app.
+(function(){
+  var THEMES = ['dark', 'light', 'system'], NAME = {dark: 'Dark', light: 'Light', system: 'System'};
+  var b = document.querySelector('[data-theme-toggle]'); if (!b) return;
+  function cur(){ var t = document.documentElement.getAttribute('data-theme'); return THEMES.indexOf(t) >= 0 ? t : 'dark'; }
+  function apply(t){
+    document.documentElement.setAttribute('data-theme', t);
+    try { if (t === 'dark') localStorage.removeItem('exoplan-theme'); else localStorage.setItem('exoplan-theme', t); } catch (e) {}
+    b.setAttribute('aria-label', 'Colour theme: ' + NAME[t].toLowerCase() + '. Change theme'); b.querySelector('.themelbl').textContent = NAME[t];
+  }
+  b.addEventListener('click', function(){ apply(THEMES[(THEMES.indexOf(cur()) + 1) % THEMES.length]); });
+  apply(cur());
+})();
+"""
+
+
+def landing_page(data: dict, app_href: str = "app/") -> str:
+    """The public site's entry page: the app's Overview (launch hero, proof strip, what it does not claim),
+    standalone, with every section link pointing into the app. Same fonts, tokens and theme control."""
+    title = html.escape(data["title"])
+    run = data["run"]
+    deco = data["deco"]
+    body = _overview(data, with_view=False).replace('href="#/', f'href="{app_href}#/')
+    nav = _nav(data["sections"]).replace('href="#/', f'href="{app_href}#/').replace('data-route="overview">', 'data-route="overview" aria-current="page">')
+    description = (f"exoplan: a calibrated panel of Sentinels and Probes reads TESS light curves. Run {run['name']}: "
+                   f"{data['hero']['headline']} Every dip is a {UNCONFIRMED}.")
+    fonts = app_href + FONTS_CSS
+    links = (f'<a href="{app_href}#/sky">Sky</a><a href="{app_href}#/transit">Transit</a><a href="{app_href}#/explorer">Explorer</a>'
+             f'<a href="{app_href}#/sentinels">Sentinels</a><a href="docket/">The Docket</a><a href="plate/">Plates</a>'
+             f'<a href="report/">Full run report</a>')
+    return f"""<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title}: the sky, reviewed</title>
+<meta name="description" content="{html.escape(description)}">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:,">
+<script>{THEME_HEAD_JS}</script>
+<link rel="stylesheet" href="{html.escape(fonts)}">
+<style>{APP_CSS}
+.sitelinks{{display:flex;flex-wrap:wrap;gap:8px 18px;border-top:1px solid var(--line);padding-top:22px;font-size:14px}}
+.sitelinks a{{display:inline-flex;align-items:center;min-height:44px}}
+.landing .route{{display:grid}}</style></head>
+<body class="landing" data-route="overview">
+<svg class="starfield" aria-hidden="true" viewBox="0 0 1440 1100" preserveAspectRatio="xMidYMid slice"><path class="twinkle" d="{deco['dust']}" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" opacity=".5"/><path class="twinkle2" d="{deco['bright']}" stroke="#E8EEFF" stroke-width="1.8" stroke-linecap="round"/></svg>
+<a class="skip" href="#content">Skip to the content</a>
+<header class="topbar">
+  <a class="brand" href="./" aria-label="{title}, home">{BRAND_SVG}<span>{title}</span></a>
+  {nav}
+  <div class="topmeta"><span class="mono">{html.escape(data["story"]["star"]["name"] or run["name"])} · {html.escape(_input_label(data))}</span>{THEME_BUTTON}</div>
+</header>
+<main id="main"><div id="content" tabindex="-1">
+  <section class="route" aria-labelledby="h-overview">
+    {body}
+    <nav class="sitelinks" aria-label="More">{links}</nav>
+    <p class="small">Built from {html.escape(run["dir"])} and {html.escape(data["catalog"]["path"] or "no catalogue")}. Stored values only.</p>
+  </section>
+</div></main>
+<script>{LANDING_JS}</script>
+</body></html>
+"""
+
+
+def build_landing(run_dir: str | Path, out_path: str | Path, *, title: str, catalog_path: str | Path | None = None,
+                  weights_path: str | Path | None = DEFAULT_WEIGHTS, app_href: str = "app/") -> Path:
+    data = app_data(run_dir, title=title, catalog_path=catalog_path, weights_path=weights_path)
+    out = Path(out_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(landing_page(data, app_href=app_href))
+    return out
 
 
 def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
