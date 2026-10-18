@@ -486,62 +486,8 @@ FRAME_BRIDGE_JS = r"""
     if (m.section && SECS.indexOf(m.section) >= 0){ scrollToSection(m.section); lastSec = m.section; }
     if (m.theme === 'light' || m.theme === 'dark' || m.theme === 'system') document.documentElement.setAttribute('data-theme', m.theme);
   });
-  // On a phone the signal list sits below the dossier: a fixed "Signals" button jumps to it. It lands on the
-  // current signal's header (else the first), not the panel header, clear of any sticky row above it.
-  function stickyHeight(root){
-    var h = 0, all = root.querySelectorAll('*');
-    for (var i = 0; i < all.length; i++){ var s = getComputedStyle(all[i]); if (s.position === 'sticky' && parseFloat(s.top || '0') <= 1 && all[i].offsetParent) h = Math.max(h, all[i].getBoundingClientRect().height); }
-    return h;
-  }
-  function jumpToList(){
-    var l = document.getElementById('listpanel'); if (!l) return;
-    var body = document.getElementById('listbody'), t = document.getElementById('listtoggle');
-    if (body && body.getAttribute('data-collapsed') === 'true' && t) t.click();
-    var sel = l.querySelector('.row[aria-selected="true"]');
-    var target = l.querySelector('.sig.cur .sighead') || (sel && sel.closest('.sig') && sel.closest('.sig').querySelector('.sighead')) || l.querySelector('.sighead') || l;
-    var margin = stickyHeight(document.body) + 8;
-    target.style.scrollMarginTop = margin + 'px';
-    var sc = scroller(target), base = (sc !== document.scrollingElement && sc !== document.documentElement) ? sc.getBoundingClientRect().top : 0;
-    var top = target.getBoundingClientRect().top - base;
-    // Land with the signal's header at the top. If the current dip's button (in the Signal section just
-    // below the list) would then sit below the screen, move down only until its top is in view.
-    // No scrollIntoView, which would also move the shell around the frame.
-    var cur = document.querySelector('.dipbtn.cur'), vh = window.innerHeight, shift = top - margin;
-    if (cur){ var after = cur.getBoundingClientRect().top - base - shift, room = vh - 52; if (after > room) shift += after - room; }
-    sc.scrollTop += shift;
-    // Focus lands where the view lands: the signal's header (made focusable for this).
-    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
-    target.focus({preventScroll: true});
-  }
-  // On a phone the list is an accordion: each other signal's header is a button that says how many dips it
-  // would show, with aria-expanded; the current signal's header is expanded.
-  var phone = window.matchMedia ? window.matchMedia('(max-width:700px)') : {matches: false};
-  function accordion(){
-    var heads = document.querySelectorAll('#rows .sig > .sighead');
-    if (!phone.matches){
-      for (var j = 0; j < heads.length; j++){ heads[j].removeAttribute('role'); heads[j].removeAttribute('aria-expanded'); heads[j].removeAttribute('aria-controls'); var t0 = heads[j].querySelector('.showdips'); if (t0) t0.remove(); }
-      return;
-    }
-    for (var i = 0; i < heads.length; i++){
-      var h = heads[i], g = h.parentElement, n = g.querySelectorAll('.row').length, cur = g.classList.contains('cur');
-      h.setAttribute('role', 'button'); h.setAttribute('aria-expanded', String(cur));
-      var lst = g.querySelector('.diplist'); if (lst && lst.id) h.setAttribute('aria-controls', lst.id);
-      if (h.getAttribute('tabindex') === null || h.getAttribute('tabindex') === '-1') h.setAttribute('tabindex', '0');
-      var tip = h.querySelector('.showdips');
-      if (!tip){ tip = document.createElement('span'); tip.className = 'showdips'; h.appendChild(tip); }
-      tip.textContent = cur ? '' : 'show ' + n + ' dip' + (n === 1 ? '' : 's');
-      if (!h.dataset.keys){ h.dataset.keys = '1'; h.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); this.click(); } }); }
-    }
-  }
+  // The phone list (Signals jump, accordion, dip picker) is the Docket's own now, in both copies.
   document.addEventListener('DOMContentLoaded', function(){
-    var rowsBox = document.getElementById('rows');
-    accordion();
-    var obs = window.MutationObserver ? new MutationObserver(function(){ obs.disconnect(); accordion(); obs.observe(rowsBox, {childList: true, subtree: true, attributes: true, attributeFilter: ['class']}); }) : null;
-    if (obs && rowsBox) obs.observe(rowsBox, {childList: true, subtree: true, attributes: true, attributeFilter: ['class']});
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'jumplist'; b.textContent = 'Signals ↑'; b.setAttribute('aria-label', 'Jump to the list of signals and dips');
-    // First in the document (it is position: fixed, so this changes only the reading and tab order).
-    b.addEventListener('click', jumpToList); document.body.insertBefore(b, document.body.firstChild);
     send({kind: 'ready'});
   });
 })();
@@ -550,22 +496,9 @@ FRAME_BRIDGE_JS = r"""
 
 # Also only in the shell's copy: on a phone-width frame the Docket's small controls become 44 px
 # targets (min-height and padding, same font size). The standalone Docket page is unchanged.
-FRAME_PHONE_CSS = (
-    "@media (max-width:700px){"
-    ".jumplist{display:inline-flex;align-items:center;position:fixed;right:12px;bottom:max(12px,env(safe-area-inset-bottom,0px));"
-    "z-index:30;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--rule);background:var(--ink);"
-    "color:var(--paper);font:500 14px/1 \"Geist\",sans-serif;box-shadow:0 10px 30px -12px rgba(0,0,0,.5);cursor:pointer}"
-    ".dipbtn,.chip,.listtoggle{min-height:44px;padding:10px 12px;box-sizing:border-box}"
-    ".sectoggle{min-height:44px;padding:12px 0;box-sizing:border-box}"
-    # The list works as an accordion on a phone: the current signal shows its dips, the others their
-    # header (a tap selects that signal), so the list and the current dip's buttons fit one screen.
-    "#rows .sig:not(.cur) .row{display:none}"
-    ".showdips{display:block;margin-top:4px;font:500 12px/1.4 \"Geist\",sans-serif;color:var(--fit)}"
-    "#rows .sighead[role=button]{min-height:44px;cursor:pointer}"
-    "}"
-    "@media (min-width:700.02px){.jumplist{display:none}}"
-    "@media (min-width:700.02px){.showdips{display:none}}"
-)
+# The phone rules (44 px targets, the Signals jump, the accordion) now ship in the Docket itself
+# (docket.DOCKET_CSS), so the standalone page has them too; the shell adds nothing for phones.
+FRAME_PHONE_CSS = ""
 
 
 # Also only in the shell's copy: the Docket in the shell's family dress (Kshana's Observatory tokens and
@@ -1594,7 +1527,9 @@ function saveFeedView(){
 // push: the viewer changed the sort or the filter, so Back returns to the previous view.
 function syncFeedURL(push){
   if (current !== 'explorer') return;
-  setHash('#/explorer?' + encodeFeedView(currentFeedView()) + '&' + encodeExView(currentEx()), !!push);
+  // The Feed table's sort and filter, then the scatter's filters; each left out when it is the default.
+  const fv = encodeFeedView(currentFeedView()), q = [fv === encodeFeedView(D.feed_view.default) ? '' : fv, encodeExView(currentEx())].filter(Boolean).join('&');
+  setHash('#/explorer' + (q ? '?' + q : ''), !!push);
 }
 applyFeedView(ownFeedView);
 const COLS = [
@@ -2112,9 +2047,15 @@ function decodeExView(params){
   else if (st !== null && st !== 'all'){ const want = st.split(','); const ok = TICS.map(String).filter(t => want.includes(t)); if (ok.length) stars = ok; }
   return {stars, snr: EX_SNR.includes(snr) ? snr : 0, new: params.get('new') !== '0', known: params.get('known') !== '0'};
 }
+// Parameters equal to their defaults are left out (all stars, any SNR, both statuses), so a plain
+// #/explorer stays plain; decodeExView still reads them, so older, longer links keep working.
 function encodeExView(v){
-  const all = TICS.map(String), on = all.filter(t => v.stars.includes(t));
-  return `stars=${on.length === all.length ? 'all' : on.length ? on.join(',') : 'none'}&snr=${v.snr}&new=${v.new ? 1 : 0}&known=${v.known ? 1 : 0}`;
+  const all = TICS.map(String), on = all.filter(t => v.stars.includes(t)), out = [];
+  if (on.length !== all.length) out.push(`stars=${on.length ? on.join(',') : 'none'}`);
+  if (v.snr) out.push(`snr=${v.snr}`);
+  if (!v.new) out.push('new=0');
+  if (!v.known) out.push('known=0');
+  return out.join('&');
 }
 const currentEx = () => ({stars: TICS.map(String).filter(t => ex.stars[t]), snr: ex.snrMin, new: ex.fNew, known: ex.fKnown});
 function applyEx(v){ for (const t of TICS) ex.stars[t] = v.stars.includes(String(t)); ex.snrMin = v.snr; ex.fNew = v.new; ex.fKnown = v.known; }

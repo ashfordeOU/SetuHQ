@@ -454,7 +454,7 @@ def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path
     assert FRAME_BRIDGE_JS in docket_html and docket_html.index(FRAME_BRIDGE_JS) < docket_html.index("</head>")
     standalone = docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t"))
     assert FRAME_BRIDGE_JS not in standalone and "postMessage" not in standalone
-    assert FRAME_PHONE_CSS not in standalone
+    assert FRAME_PHONE_CSS == ""  # the phone rules ship in the Docket itself now
     injected = f"<style>{FRAME_THEME_CSS}{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script>"
     # Apart from the injected block, the copy differs from the Docket only in its font families.
     expected = (docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t · candidates"))
@@ -605,19 +605,20 @@ def test_frame_shows_a_loading_status_while_it_loads():
     assert "readyStatus();" in ready
 
 
-def test_phone_rule_in_the_framed_docket_makes_44px_targets(run_dir, tmp_path):
-    assert FRAME_PHONE_CSS.startswith("@media (max-width:700px){")
-    assert "@media (min-width:700.02px){.jumplist{display:none}}" in FRAME_PHONE_CSS
-    rules = dict(re.findall(r"([^{}]+)\{([^{}]*)\}", FRAME_PHONE_CSS[FRAME_PHONE_CSS.index("{") + 1:]))
+def test_phone_rule_in_the_docket_makes_44px_targets(run_dir, tmp_path):
+    css = docket_mod.DOCKET_CSS
+    block = css[css.index("@media (max-width:700px){"):]
+    block = block[:block.index("\n}\n")]
+    assert ".jumplist,.dippick{display:none}" in css
+    rules = dict(re.findall(r"([^{}]+)\{([^{}]*)\}", block[block.index("{") + 1:]))
     covered = {sel.strip(): body for sels, body in rules.items() for sel in sels.split(",")}
     for cls in (".dipbtn", ".chip", ".sectoggle", ".listtoggle"):
         assert "min-height:44px" in covered[cls] and "padding:" in covered[cls], cls
         assert "font-size" not in covered[cls]
+    # After the Docket's own rules, so it wins at equal specificity; in both the standalone page and the shell's copy.
+    assert css.index("@media (max-width:700px){") > css.index(".dipbtn{")
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
-    docket_html = _page_data(page)["docket_html"]
-    head = docket_html[:docket_html.index("</head>")]
-    # After the Docket's own styles, so it wins at equal specificity.
-    assert head.rindex(FRAME_PHONE_CSS) > head.index(".dipbtn{")
+    assert "@media (max-width:700px){" in _page_data(page)["docket_html"]
 
 
 def test_desktop_frame_height_is_fitted_from_the_measured_header():
@@ -645,7 +646,7 @@ def test_feed_sort_and_filter_round_trip_through_the_url():
     assert decode_feed_view("") == feed_view(None) == DEFAULT_FEED_VIEW
     assert decode_feed_view("sort=radius&dir=up&filter=planets") == DEFAULT_FEED_VIEW
     # The page reads the same query on load and writes it back when the viewer changes a control.
-    assert "'#/explorer?' + encodeFeedView(currentFeedView())" in APP_JS
+    assert "fv === encodeFeedView(D.feed_view.default) ? '' : fv" in APP_JS and "'#/explorer' + (q ? '?' + q : '')" in APP_JS
     go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "decodeFeedView(p.params)" in go and "ownFeedView" in go and "syncFeedURL()" in go
     sort_click = re.search(r"\$\('#disctable'\).addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
@@ -1003,7 +1004,7 @@ def test_runs_page_names_the_cross_match_file_and_the_runs_own_error(run_dir, tm
 
 
 def test_signals_button_lands_on_the_current_signal_header():
-    js = re.search(r"function jumpToList\(\)\{.*?\n  \}\n", FRAME_BRIDGE_JS, re.S).group(0)
+    js = re.search(r"function jumpToList\(\)\{.*?\n  \}\n", docket_mod.DOCKET_JS, re.S).group(0)
     assert "querySelector('.row[aria-selected=\"true\"]')" in js and ".querySelector('.sighead')" in js
     assert "target.style.scrollMarginTop = margin + 'px'" in js and "stickyHeight(document.body) + 8" in js
     assert "scrollIntoView(" not in js
@@ -1018,7 +1019,7 @@ def test_phone_dip_picker_lists_every_dip_with_its_outcome(run_dir, tmp_path):
     assert "$('#dippick').addEventListener('change', e => { location.hash = dipHref(e.target.value); });" in APP_JS
     assert ".dippicker select{flex:1;min-width:0;min-height:44px" in _phone_css()
     # Inside the framed Docket, a fixed "Signals" button jumps back to the list on a phone.
-    assert "jumpToList" in FRAME_BRIDGE_JS and ".jumplist{display:inline-flex" in FRAME_PHONE_CSS
+    assert "jumpToList" in docket_mod.DOCKET_JS and ".jumplist{display:inline-flex" in docket_mod.DOCKET_CSS
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
@@ -1081,10 +1082,10 @@ def _page_data_docket(html_text: str) -> dict:
 
 
 def test_signals_button_targets_the_current_signal_in_the_list():
-    js = re.search(r"function jumpToList\(\)\{.*?\n  \}\n", FRAME_BRIDGE_JS, re.S).group(0)
+    js = re.search(r"function jumpToList\(\)\{.*?\n  \}\n", docket_mod.DOCKET_JS, re.S).group(0)
     assert "l.querySelector('.sig.cur .sighead')" in js and "data-collapsed') === 'true' && t) t.click()" in js
     assert "document.querySelector('.dipbtn.cur')" in js and "room = vh - 52" in js
     # First in the document, so it is the first "Signals" button a reader or a test finds.
-    assert "document.body.insertBefore(b, document.body.firstChild)" in FRAME_BRIDGE_JS
+    assert "document.body.insertBefore(b, document.body.firstChild)" in docket_mod.DOCKET_JS
     # On a phone the list is an accordion, so the list and the current dip's buttons fit one screen.
-    assert "#rows .sig:not(.cur) .row{display:none}" in FRAME_PHONE_CSS
+    assert "#rows .sig:not(.cur) .row{display:none}" in docket_mod.DOCKET_CSS

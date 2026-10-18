@@ -118,11 +118,12 @@ def test_explorer_filters_round_trip_through_the_url():
 const cases = ['stars=all&snr=0&new=1&known=1', 'stars=349088467&snr=8&new=0&known=1', 'stars=none&snr=10&new=1&known=0', '', 'stars=1,2&snr=5&new=x', 'stars=348770361,348835438'];
 console.log(JSON.stringify(cases.map(c => { const v = decodeExView(new URLSearchParams(c)); return [v, encodeExView(v)]; })));"""
     out = _node(script)
-    assert out[0][1] == "stars=all&snr=0&new=1&known=1"
-    assert out[1][1] == "stars=349088467&snr=8&new=0&known=1" and out[1][0]["new"] is False
-    assert out[2][1] == "stars=none&snr=10&new=1&known=0"
-    assert out[3][1] == out[4][1] == "stars=all&snr=0&new=1&known=1"  # missing or bad: the default
-    assert out[5][1] == "stars=348835438,348770361&snr=0&new=1&known=1"
+    # Defaults are left out of the URL, but the long form still parses (older links keep working).
+    assert out[0][1] == ""
+    assert out[1][1] == "stars=349088467&snr=8&new=0" and out[1][0]["new"] is False
+    assert out[2][1] == "stars=none&snr=10&known=0"
+    assert out[3][1] == out[4][1] == ""  # missing or bad: the default
+    assert out[5][1] == "stars=348835438,348770361"
     sync = re.search(r"function syncFeedURL\(push\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "encodeExView(currentEx())" in sync
     handler = re.search(r"\$\('#route-explorer'\)\.addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
@@ -134,7 +135,7 @@ console.log(JSON.stringify(cases.map(c => { const v = decodeExView(new URLSearch
 def test_collapsed_signal_buttons_name_their_dip_list():
     js = docket_mod.DOCKET_JS
     assert "list.id = 'dips-' + s.signal_id.replace(" in js and "list.appendChild(d)" in js
-    acc = re.search(r"function accordion\(\)\{.*?\n  \}\n", FRAME_BRIDGE_JS, re.S).group(0)
+    acc = re.search(r"function accordion\(\)\{.*?\n  \}\n", docket_mod.DOCKET_JS, re.S).group(0)
     assert "h.setAttribute('aria-controls', lst.id)" in acc and "removeAttribute('aria-controls')" in acc
 
 

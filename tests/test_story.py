@@ -181,7 +181,7 @@ def test_landing_page_is_the_overview_linking_into_the_app(run_dir, tmp_path):
 
 
 def test_round_four_polish_in_the_framed_docket():
-    from exoplan.app import FRAME_BRIDGE_JS, FRAME_PHONE_CSS
+    FRAME_BRIDGE_JS, FRAME_PHONE_CSS = docket_mod.DOCKET_JS, docket_mod.DOCKET_CSS  # the phone block lives in the Docket now
 
     jump = re.search(r"function jumpToList\(\)\{.*?\n  \}\n", FRAME_BRIDGE_JS, re.S).group(0)
     # Focus lands on the header the view lands on.

@@ -185,6 +185,23 @@ kbd{font:11px "Geist Mono",monospace;border:1px solid var(--rule);border-radius:
   .ledger td.why{grid-column:1/-1;padding:0 6px 8px}
   .row{grid-template-columns:70px minmax(0,1fr) auto;padding-left:20px}
 }
+/* Phone (both the standalone page and the shell's framed copy): 44 px targets, a fixed Signals jump, the
+   signal list as an accordion, and (standalone only; the shell has its own) a dip picker at the top. */
+.jumplist,.dippick{display:none}
+@media (max-width:700px){
+  .jumplist{display:inline-flex;align-items:center;position:fixed;right:12px;bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:30;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--rule);background:var(--ink);color:var(--paper);font:500 14px/1 "Geist",sans-serif;box-shadow:0 10px 30px -12px rgba(0,0,0,.5);cursor:pointer}
+  .dipbtn,.chip,.listtoggle{min-height:44px;padding:10px 12px;box-sizing:border-box}
+  .sectoggle{min-height:44px;padding:12px 0;box-sizing:border-box}
+  #rows .sig:not(.cur) .row{display:none}
+  .showdips{display:block;margin-top:4px;font:500 12px/1.4 "Geist",sans-serif;color:var(--fit)}
+  #rows .sighead[role=button]{min-height:44px;cursor:pointer}
+  .readout{min-height:44px;box-sizing:border-box}
+  .dippick{display:flex;align-items:center;gap:10px;margin:12px 0 4px}
+  .dippick label{font:500 12px "Geist",sans-serif;color:var(--muted)}
+  .dippick select{flex:1 1 0;width:0;min-width:0;min-height:44px;font:500 16px "Geist Mono",monospace;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:0 8px}
+  html.framed .dippick{display:none}
+}
+
 """
 
 DOCKET_JS = r"""
@@ -329,6 +346,7 @@ function syncActive(){
   document.querySelectorAll('.row').forEach(r => r.setAttribute('aria-selected', String(r.dataset.id === state.selected)));
   // The current signal's group carries .cur, so its header can be found (the shell's Signals button lands there).
   document.querySelectorAll('#rows .sig').forEach(g => g.classList.toggle('cur', !!g.querySelector('.row[aria-selected="true"]')));
+  const pick = document.getElementById('dippicksel'); if (pick && state.selected && pick.value !== state.selected) pick.value = state.selected;
   if (state.selected && document.getElementById(optId(state.selected))) box.setAttribute('aria-activedescendant', optId(state.selected));
   else box.removeAttribute('aria-activedescendant');
 }
@@ -796,6 +814,80 @@ document.addEventListener('keydown', e => {
   else if (e.key === 's' || e.key === 'S') toggleSection('strip');
 });
 
+
+// ---------- phone: the Signals jump, the accordion list and the dip picker (both copies) ----------
+if (window.parent !== window) document.documentElement.classList.add('framed');
+function scroller(el){
+  for (let p = el.parentElement; p && p !== document.body && p !== document.documentElement; p = p.parentElement){
+    const st = getComputedStyle(p); if (/(auto|scroll)/.test(st.overflowY) && p.scrollHeight > p.clientHeight) return p;
+  }
+  return document.scrollingElement || document.documentElement;
+}
+  // On a phone the signal list sits below the dossier: a fixed "Signals" button jumps to it. It lands on the
+  // current signal's header (else the first), not the panel header, clear of any sticky row above it.
+  function stickyHeight(root){
+    var h = 0, all = root.querySelectorAll('*');
+    for (var i = 0; i < all.length; i++){ var s = getComputedStyle(all[i]); if (s.position === 'sticky' && parseFloat(s.top || '0') <= 1 && all[i].offsetParent) h = Math.max(h, all[i].getBoundingClientRect().height); }
+    return h;
+  }
+  function jumpToList(){
+    var l = document.getElementById('listpanel'); if (!l) return;
+    var body = document.getElementById('listbody'), t = document.getElementById('listtoggle');
+    if (body && body.getAttribute('data-collapsed') === 'true' && t) t.click();
+    var sel = l.querySelector('.row[aria-selected="true"]');
+    var target = l.querySelector('.sig.cur .sighead') || (sel && sel.closest('.sig') && sel.closest('.sig').querySelector('.sighead')) || l.querySelector('.sighead') || l;
+    var margin = stickyHeight(document.body) + 8;
+    target.style.scrollMarginTop = margin + 'px';
+    var sc = scroller(target), base = (sc !== document.scrollingElement && sc !== document.documentElement) ? sc.getBoundingClientRect().top : 0;
+    var top = target.getBoundingClientRect().top - base;
+    // Land with the signal's header at the top. If the current dip's button (in the Signal section just
+    // below the list) would then sit below the screen, move down only until its top is in view.
+    // No scrollIntoView, which would also move the shell around the frame.
+    var cur = document.querySelector('.dipbtn.cur'), vh = window.innerHeight, shift = top - margin;
+    if (cur){ var after = cur.getBoundingClientRect().top - base - shift, room = vh - 52; if (after > room) shift += after - room; }
+    sc.scrollTop += shift;
+    // Focus lands where the view lands: the signal's header (made focusable for this).
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({preventScroll: true});
+  }
+  // On a phone the list is an accordion: each other signal's header is a button that says how many dips it
+  // would show, with aria-expanded; the current signal's header is expanded.
+  var phone = window.matchMedia ? window.matchMedia('(max-width:700px)') : {matches: false};
+  function accordion(){
+    var heads = document.querySelectorAll('#rows .sig > .sighead');
+    if (!phone.matches){
+      for (var j = 0; j < heads.length; j++){ heads[j].removeAttribute('role'); heads[j].removeAttribute('aria-expanded'); heads[j].removeAttribute('aria-controls'); var t0 = heads[j].querySelector('.showdips'); if (t0) t0.remove(); }
+      return;
+    }
+    for (var i = 0; i < heads.length; i++){
+      var h = heads[i], g = h.parentElement, n = g.querySelectorAll('.row').length, cur = g.classList.contains('cur');
+      h.setAttribute('role', 'button'); h.setAttribute('aria-expanded', String(cur));
+      var lst = g.querySelector('.diplist'); if (lst && lst.id) h.setAttribute('aria-controls', lst.id);
+      if (h.getAttribute('tabindex') === null || h.getAttribute('tabindex') === '-1') h.setAttribute('tabindex', '0');
+      var tip = h.querySelector('.showdips');
+      if (!tip){ tip = document.createElement('span'); tip.className = 'showdips'; h.appendChild(tip); }
+      tip.textContent = cur ? '' : 'show ' + n + ' dip' + (n === 1 ? '' : 's');
+      if (!h.dataset.keys){ h.dataset.keys = '1'; h.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); this.click(); } }); }
+    }
+  }
+    var rowsBox = document.getElementById('rows');
+    accordion();
+    var obs = window.MutationObserver ? new MutationObserver(function(){ obs.disconnect(); accordion(); obs.observe(rowsBox, {childList: true, subtree: true, attributes: true, attributeFilter: ['class']}); }) : null;
+    if (obs && rowsBox) obs.observe(rowsBox, {childList: true, subtree: true, attributes: true, attributeFilter: ['class']});
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'jumplist'; b.textContent = 'Signals ↑'; b.setAttribute('aria-label', 'Jump to the list of signals and dips');
+    // First in the document (it is position: fixed, so this changes only the reading and tab order).
+    b.addEventListener('click', jumpToList); document.body.insertBefore(b, document.body.firstChild);
+
+// The dip picker (standalone page; the shell has its own above its frame): every dip in time order.
+(function(){
+  const box = document.createElement('div'); box.className = 'dippick';
+  const dips = D.candidates.slice().sort((a, b) => a.t_center - b.t_center);
+  box.innerHTML = `<label for="dippicksel">Dip</label><select id="dippicksel">${dips.map(c => `<option value="${esc(c.candidate_id)}">${fmt(c.t_center,3)} · ${esc(c.outcome)} · ${esc(c.candidate_id)}</option>`).join('')}</select>`;
+  const dossier = $('#dossier'); dossier.insertBefore(box, dossier.firstChild);
+  const sel = $('#dippicksel'); if (state.selected) sel.value = state.selected;
+  sel.addEventListener('change', () => select(sel.value));
+})();
 renderRunHeader(); renderList();
 const fromHash = decodeURIComponent(location.hash.slice(1));
 const first = byId[fromHash] ? fromHash : (state.selected || visibleDips()[0] || (D.candidates[0] || {}).candidate_id);
