@@ -19,22 +19,23 @@ concurrency:
 
 jobs:
   discover:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install -e ".[tess,claude]"
+      - name: Install into a venv
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install -e ".[tess,claude]"
       - name: Run one discovery batch
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: exoplan discover configs/discovery.toml --batch-size 20 --time-budget-min 300
+        run: .venv/bin/exoplan discover configs/discovery.toml --batch-size 20 --time-budget-min 300
       - name: Commit catalogue
         run: |
-          git config user.name "exoplan-bot"
-          git config user.email "bot@users.noreply.github.com"
+          git config user.name "ashfordeOU"
+          git config user.email "236818772+ashfordeOU@users.noreply.github.com"
           git add docs/discoveries site/discoveries
           git diff --cached --quiet || git commit -m "Discovery batch $(date -u +%Y-%m-%dT%H:%MZ)"
           git push
