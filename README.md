@@ -96,7 +96,7 @@ every new dip in a deduplicated catalogue. A dip is `known_toi` when it matches 
 published TOI period, and `new_candidate` otherwise.
 
 - [`.github/workflows/discover.yml`](.github/workflows/discover.yml) runs a batch every six hours
-  on GitHub Actions, commits the catalogue, and deploys the site. Claude's API reviewer
+  on the self-hosted runner, commits the catalogue, and deploys the site. Claude's API reviewer
   runs when the `ANTHROPIC_API_KEY` secret is set.
 - [`scripts/improve.py`](scripts/improve.py) sweeps panel thresholds on injection benchmarks.
   It promotes a setting only if it wins on a held-out seed. Every trial is in
@@ -144,4 +144,11 @@ tests/            offline tests, plus a network test marked "network"
 ## Development
 
 Python 3.10 or later. MIT licensed. Tests run offline with `pytest`. CI runs the same
-command on every push (`.github/workflows/ci.yml`).
+command on every push (`.github/workflows/ci.yml`). `scripts/ci_local.sh` runs the same
+checks plus the site builds locally.
+
+All workflows run on a self-hosted runner (`runs-on: [self-hosted, linux]`). Runners are
+short-lived cloud sessions: `scripts/session_runner.sh` registers an ephemeral runner, serves
+the queued jobs, and stops. It needs `EXOPLAN_RUNNER_PAT` in the session's environment: a
+fine-grained token limited to this repository with "Administration: Read and write", which
+is the minimum GitHub requires to register a runner.
