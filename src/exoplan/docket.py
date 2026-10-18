@@ -45,6 +45,7 @@ from pathlib import Path
 
 from exoplan.dashboard import _load_run
 from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
+from exoplan.names import ATTRIBUTION, reviewer_names
 from exoplan.vet import DISQUALIFYING
 
 DOCKET_CSS = """
@@ -157,6 +158,8 @@ kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--rule);border-rad
 .xm-prov{margin-top:4px;font-size:12px;color:var(--muted)}
 .xm-prov summary{cursor:pointer;font:600 12px "JetBrains Mono",monospace;color:var(--muted)}
 .xm-prov ul{margin:4px 0 0;padding-left:18px;overflow-wrap:anywhere}
+.sighead{scroll-margin-top:calc(var(--top, 0px) + 8px)}
+@media (max-width:699.98px){.xm-prov summary{display:flex;align-items:center;min-height:44px;padding:12px 0;box-sizing:border-box}}
 .ledger thead th{text-align:left;font:600 11px "JetBrains Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;border-bottom:1px solid var(--ink)}
 .epochs{margin:6px 0 0;padding-left:16px;font:12px "JetBrains Mono",monospace;color:var(--ink)}
 @media (max-width:900px){
@@ -195,8 +198,12 @@ const REV_COLOUR = {'volunteer-sensitive':'var(--l-det)','volunteer-typical':'va
 const colourOf = name => REV_COLOUR[name] || 'var(--muted)';
 // Reviewer kind, always shown beside the name: a simulated detector is not a person.
 const isClaude = k => k === 'claude' || k === 'claude_code';
-const KIND_TAG = k => k === 'simulated' ? 'SIM' : isClaude(k) ? 'CLAUDE' : String(k || '?').toUpperCase();
-const KIND_LONG = k => k === 'simulated' ? 'simulated detector (not a person)' : isClaude(k) ? `Claude model reviewer (${k})` : String(k || 'unknown kind');
+// The panel's display names: Sentinels (Claude reviewers) and Probes (deterministic detectors). Ids are
+// unchanged in the data; NAME(id) is what the page shows, with the id beside it where it helps tracing.
+const NAME = n => ((D.reviewer_names || {})[n] || {}).name || n;
+const SHORT_NAME = n => ((D.reviewer_names || {})[n] || {}).short || n;
+const KIND_TAG = k => k === 'simulated' ? 'PRB' : isClaude(k) ? 'SEN' : String(k || '?').toUpperCase();
+const KIND_LONG = k => k === 'simulated' ? 'Probe: a deterministic matched-filter detector, not a person' : isClaude(k) ? 'Sentinel: a Claude model reviewer (Anthropic), not a person' : String(k || 'unknown kind');
 // Outcome of a dip or signal: three states, decided in Python (docket.outcome).
 const OUT_LABEL = D.outcome_label;
 const OUT_GLYPH = {passed:'✓', flagged:'!', rejected:'✕'};
@@ -240,7 +247,8 @@ function visibleDips(){ return visibleSignals().flatMap(s => s.dips); }
 function reviewerSummary(names){
   const kinds = names.map(n => D.reviewers[n]);
   const sim = kinds.filter(k => k === 'simulated').length, cl = kinds.filter(isClaude).length, other = kinds.length - sim - cl;
-  return [sim ? `${sim} simulated` : '', cl ? `${cl} Claude` : '', other ? `${other} other` : ''].filter(Boolean).join(', ') || 'none';
+  const parts = [cl ? `${cl} Sentinel${cl === 1 ? '' : 's'}` : '', sim ? `${sim} Probe${sim === 1 ? '' : 's'}` : '', other ? `${other} other` : ''].filter(Boolean);
+  return parts.length ? (parts.length === 1 ? parts[0] : parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1]) : 'none';
 }
 
 function renderRunHeader(){
@@ -315,6 +323,8 @@ function renderList(){
 function syncActive(){
   const box = $('#rows');
   document.querySelectorAll('.row').forEach(r => r.setAttribute('aria-selected', String(r.dataset.id === state.selected)));
+  // The current signal's group carries .cur, so its header can be found (the shell's Signals button lands there).
+  document.querySelectorAll('#rows .sig').forEach(g => g.classList.toggle('cur', !!g.querySelector('.row[aria-selected="true"]')));
   if (state.selected && document.getElementById(optId(state.selected))) box.setAttribute('aria-activedescendant', optId(state.selected));
   else box.removeAttribute('aria-activedescendant');
 }
@@ -356,7 +366,7 @@ const LANE_GUTTER = {desktop: 120, phone: 96};
 // A lane label that fits its gutter: the kind's short tag and the id, shortened from the front with an
 // ellipsis until the measured text fits (ids share prefixes such as "volunteer-", so the end tells them
 // apart). The full kind and id stay in the label's title.
-const KIND_SHORT = k => k === 'simulated' ? 'SIM' : isClaude(k) ? 'CL' : String(k || '?').toUpperCase().slice(0, 3);
+const KIND_SHORT = k => k === 'simulated' ? 'PRB' : isClaude(k) ? 'SEN' : String(k || '?').toUpperCase().slice(0, 3);
 function fitLabel(t, kind, id, room){
   let s = id;
   t.textContent = `${kind} ${s}`;
@@ -424,7 +434,7 @@ function strip(c, subj, marks, decisions, wrap){
   for (const t of [c.t_start, c.t_end]) el('line', {x1:X(t), x2:X(t), y1:yb-4, y2:yb+4, stroke:'var(--ink)'}, svg);
   T((X(c.t_start)+X(c.t_end))/2, yb+(narrow?11:14), fmt(c.duration_hours,2)+' h', 'middle', 'hl halo');
   if (pts.length < 12) T(pl+6, pt+14, `only ${pts.length} binned points in this window`, 'start');
-  // reviewer lanes: each label carries the reviewer's kind (SIM or CLAUDE)
+  // reviewer lanes: each label is the short display name (SEN Volunteer, PRB Sensitive); the id is in its title
   const inWin = n => (marks[n] || []).filter(([a,b]) => b >= t0 && a <= t1);
   names.forEach((n, i) => {
     const y = lanesTop + i*lh, col = colourOf(n), spans = inWin(n);
@@ -436,8 +446,9 @@ function strip(c, subj, marks, decisions, wrap){
       el('rect', {x:xa, y:y+2, width:Math.max(3, xb-xa), height:lh-5, rx:2, fill: ok ? col : `url(#hatch-${i})`, stroke: ok ? 'none' : col, 'stroke-width':1, opacity: ok ? (strong ? .85 : .45) : .9, 'data-counted': String(ok), 'clip-path': `url(#${lanesClip})`}, svg);
     }
     const t = T(pl-6, y+lh/2+4, '', 'end', 'lanelbl'); t.setAttribute('fill', col);
-    fitLabel(t, KIND_SHORT(D.reviewers[n]), n, pl - 10);
-    el('title', {}, t).textContent = `${KIND_TAG(D.reviewers[n])} ${n}`;
+    const sn = SHORT_NAME(n), sp = sn.indexOf(' ');
+    if (sp > 0) fitLabel(t, sn.slice(0, sp), sn.slice(sp + 1), pl - 8); else fitLabel(t, KIND_SHORT(D.reviewers[n]), n, pl - 8);
+    el('title', {}, t).textContent = `${NAME(n)} (id ${n})`;
     if (!spans.length) T(W-pr-4, y+lh-4, 'no mark in window', 'end');
   });
   // crosshair snapped to a stored bin: pointer (hover or tap) and keyboard
@@ -466,7 +477,7 @@ function strip(c, subj, marks, decisions, wrap){
     const lines = [`bin ${cur+1} of ${pts.length} · ${fmt(q.t,4)} ${c.time_unit}`,
       `flux ${fmt(q.p,0)}${q.e!==null ? ' ± '+fmt(q.e,0) : ''} ppm${q.e===null ? ' (no stored error)' : ''}`,
       `${inside ? 'inside' : 'outside'} the consensus window`,
-      ...(at.length ? at.map(([n,s]) => `${KIND_TAG(D.reviewers[n])} ${n}: ${s.map(([a,b]) => fmt(a,3)+'–'+fmt(b,3) + (countedSpan(n,a,b) ? ' (counted)' : ' (not counted)')).join(', ')}`) : ['no reviewer span at this time'])];
+      ...(at.length ? at.map(([n,s]) => `${NAME(n)}: ${s.map(([a,b]) => fmt(a,3)+'–'+fmt(b,3) + (countedSpan(n,a,b) ? ' (counted)' : ' (not counted)')).join(', ')}`) : ['no reviewer span at this time'])];
     if (narrow || viaKey){ readout.textContent = lines.join(' · '); }
     if (narrow) return;
     tip.innerHTML = lines.map((l,k) => k ? esc(l) : `<b>${esc(l)}</b>`).join('<br>');
@@ -607,9 +618,9 @@ function rationales(c){
     const kind = D.reviewers[n];
     const body = isClaude(kind)
       ? esc(d.rationale || 'no rationale recorded')
-      : `Simulated detector, not a person: ${k} mark${k===1?'':'s'} in this subject from an SNR threshold and a miss rate set in its config.`;
+      : `A Probe, a deterministic matched-filter detector, not a person: ${k} mark${k===1?'':'s'} in this subject from an SNR threshold and a miss rate set in its config.`;
     const label = (d.label || '').replace(/_/g,' ');
-    return `<div tabindex="0"><b style="color:${colourOf(n)}">${esc(n)}</b> <span class="kind kind-${kind === 'simulated' ? 'sim' : 'cl'}">${esc(KIND_LONG(kind))}</span> <span class="hint">${esc(label)} · ${k} mark${k===1?'':'s'}</span><p>${body}</p></div>`;
+    return `<div tabindex="0"><b style="color:${colourOf(n)}">${esc(NAME(n))}</b> <span class="mono hint" title="reviewer id">${esc(n)}</span> <span class="kind kind-${kind === 'simulated' ? 'sim' : 'cl'}">${esc(KIND_LONG(kind))}</span> <span class="hint">${esc(label)} · ${k} mark${k===1?'':'s'}</span><p>${body}</p></div>`;
   }).join('');
 }
 
@@ -636,7 +647,7 @@ function countNote(c){
   const items = audit.map(r => {
     const m = (r.marks || []).find(x => x.counted) || (r.marks || []).slice().sort((p,q) => (q.overlap_frac||0) - (p.overlap_frac||0))[0];
     const gap = m && m.centre_gap_days !== null && m.centre_gap_days !== undefined ? `, centre gap ${fmt(m.centre_gap_days,3)} d` : '';
-    return `<li>${esc(KIND_TAG(D.reviewers[r.reviewer_id]))} ${esc(r.reviewer_id)}: overlap ${pct(r.overlap_frac)} of the window${m ? gap : ', no mark over the window'} · ${r.counted ? 'counted' : 'not counted'}</li>`;
+    return `<li>${esc(NAME(r.reviewer_id))} <span class="mono hint">${esc(r.reviewer_id)}</span>: overlap ${pct(r.overlap_frac)} of the window${m ? gap : ', no mark over the window'} · ${r.counted ? 'counted' : 'not counted'}</li>`;
   }).join('');
   return `<p class="countrule"><b>Counting rule:</b> ${esc(rule.text || 'not stored')}.</p>${items ? `<ul class="epochs countlist" aria-label="Overlap of each reviewer with the consensus window">${items}</ul>` : ''}`;
 }
@@ -651,7 +662,9 @@ function scopeNote(c){
 
 // The archive line in the verdict card: one sentence, with the full provenance one click away.
 const dayUTC = iso => { const d = new Date(iso); if (!iso || Number.isNaN(d.getTime())) return ''; try { return d.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'}); } catch (e) { return iso.slice(0, 10); } };
-function crossmatchLine(c){
+// The card shows the verdict and this one sentence; the feed admission rule and the archive's
+// provenance sit in the disclosure below it.
+function crossmatchLine(c, feedLine){
   const x = D.crossmatch || {};
   const cmp = ((x.comparison || {}).by_candidate || {})[c.candidate_id];
   const cls = x.status === 'matched' ? 'xm-hit' : x.status === 'no_match' ? 'xm-none' : 'xm-notrun';
@@ -669,6 +682,7 @@ function crossmatchLine(c){
     sentence = `Archive: ${what}, ${where}.`;
   }
   const prov = [
+    feedLine ? `<li class="out-feed">${feedLine}</li>` : '',
     ran ? `<li>${esc(x.line)}.</li>` : '',
     dated ? `<li>${dated}.</li>` : '',
     x.source ? `<li>Source: ${esc(x.source)}</li>` : '',
@@ -706,8 +720,7 @@ function renderDossier(){
     <section class="outcome ${OUT_CLS[c.outcome]}" tabindex="0" aria-label="Vetting outcome for ${esc(c.candidate_id)}: ${esc(OUT_LABEL[c.outcome])}">
       <div class="out-main"><span class="glyph" aria-hidden="true">${OUT_GLYPH[c.outcome]}</span> ${esc(OUT_LABEL[c.outcome])}</div>
       <div class="out-why">${reasons.length ? 'because: ' + esc(reasons.join(' · ')) : 'every vetting check measured and passing'}</div>
-      <div class="out-feed"><span class="xm-k">Feed admission rule (discover.py), not vetting:</span> ${esc(c.feed.result)}${feedFail.length ? ' · ' + esc(feedFail.join(', ')) : ''}</div>
-      ${crossmatchLine(c)}
+      ${crossmatchLine(c, `<span class="xm-k">Feed admission rule (discover.py), not vetting:</span> ${esc(c.feed.result)}${feedFail.length ? ' · ' + esc(feedFail.join(', ')) : ''}`)}
     </section>
     <p class="filternote" id="filternote" hidden></p>
     <div class="head">
@@ -716,7 +729,7 @@ function renderDossier(){
       <div class="sigout">signal: ${outBadge(s.outcome)}</div>
     </div>
     ${sec('strip', 'Transit strip', 'stored measurements only · nothing is fitted · <kbd>s</kbd> collapses', `<div class="hero-wrap strip" id="strip" tabindex="0" role="group" aria-label="Transit strip for ${esc(c.candidate_id)}. Use left and right arrow keys to step through the stored bins, Shift for ten, Home and End for the ends."></div>
-      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each · SIM = simulated detector (not a person), CL = Claude model (not a person)</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
+      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each · SEN = Sentinel (Claude model, Anthropic; not a person), PRB = Probe (deterministic matched-filter detector; not a person)</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
       <p class="scope">${scopeNote(c)}</p>`)}
     <div class="facts">
       <div><span>mid-time</span>${fmt(c.t_center,3)} ${esc(c.time_unit)}</div>
@@ -733,8 +746,8 @@ function renderDossier(){
     ${sec('ctx', 'Subject in context', 'blue: this dip · pale blue: same signal · grey: other dips here', '<div class="hero-wrap" id="ctx"></div>')}
     ${sec('cmp', 'Comparisons', 'phase fold · stored per-epoch depths · secondary window', '<div class="compare" id="cmp"></div>')}
     ${sec('ledger', 'Verdict ledger', 'every check, measured value, rule', `<div class="scroll"><table class="ledger" role="table" aria-label="Verdict ledger for ${esc(c.candidate_id)}"><thead role="rowgroup"><tr role="row" class="lhead"><th role="columnheader" scope="col">Check</th><th role="columnheader" scope="col">Value</th><th role="columnheader" scope="col">Rule</th><th role="columnheader" scope="col">Why</th></tr></thead><tbody role="rowgroup">${ledger(c)}</tbody></table></div><p class="scope">Rows marked signal-level are measured once per BLS ephemeris over all its epochs in the subject, not per dip, so every dip from that subject shows the same value (a merged signal shows each subject's own value). σ values are the stored errors; Δ uses √(σ_odd² + σ_even²), as the vetting code does.${(s.bls||[]).length > 1 ? ' <b>' + esc(D.cross_subject_note) + '</b>' : ''}</p>`)}
-    ${sec('rev', 'Reviewers', `${nAll} reviewers: ${esc(reviewerSummary(Object.keys(D.reviewers)))}`, `<div class="rat">${rationales(c)}</div>`)}
-    <div class="prov">run ${esc(D.provenance.run_time)} · config ${esc(D.provenance.config_sha256.slice(0,16))} · pipeline ${esc(D.provenance.exoplan_version)} · ${esc(D.provenance.claude_prompt_version || '')}<br>candidate ${esc(c.candidate_id)} · signal ${esc(s.signal_id)} · subject ${esc(c.subject_id)}<br>cross-match: ${esc((D.crossmatch||{}).source || '')} · status ${esc((D.crossmatch||{}).status || 'not_run')}</div>`;
+    ${sec('rev', 'Reviewers', `${nAll} reviewers: ${esc(reviewerSummary(Object.keys(D.reviewers)))}`, `<p class="hint attribution">${esc(D.attribution)}</p><div class="rat">${rationales(c)}</div>`)}
+    <div class="prov">${esc(D.attribution)}<br>run ${esc(D.provenance.run_time)} · config ${esc(D.provenance.config_sha256.slice(0,16))} · pipeline ${esc(D.provenance.exoplan_version)} · ${esc(D.provenance.claude_prompt_version || '')}<br>candidate ${esc(c.candidate_id)} · signal ${esc(s.signal_id)} · subject ${esc(c.subject_id)}<br>cross-match: ${esc((D.crossmatch||{}).source || '')} · status ${esc((D.crossmatch||{}).status || 'not_run')}</div>`;
   document.querySelectorAll('.sectoggle').forEach(b => b.addEventListener('click', () => toggleSection(b.dataset.sec)));
   rest.querySelectorAll('.dipbtn').forEach(b => b.addEventListener('click', () => select(b.dataset.dip)));
   if (subj){
@@ -1412,6 +1425,8 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
         "marks": run["marks"],
         "decisions": run["reviewerDecisions"],
         "reviewers": run["reviewers"],
+        "reviewer_names": reviewer_names(run["reviewers"]),
+        "attribution": ATTRIBUTION,
         "subject_days": run["manifest"].get("subject_days"),
         "search_scope": run["manifest"].get("search_scope", "subject"),
         "counts": {

@@ -328,7 +328,7 @@ def test_overview_hero_states_the_argument_from_stored_values(run_dir, catalog, 
     # No claim of a planet, a radius or a detection; the archive line says the cross-match did not run.
     text = " ".join([hero["headline"], hero["lede"], hero["archive"]])
     assert not re.search(r"\b(planet found|discovered|confirmed planet|radius of)\b", text, re.I)
-    assert "none of them a person" in hero["lede"]
+    assert "(no people)" in hero["lede"] and "2 Probes" in hero["lede"]
     assert "does not say whether" in hero["archive"]
     assert "Stored error, verbatim: " + NO_STORED_CROSSMATCH in hero["archive"] and "unreachable" not in hero["archive"]
     # Windows are lettered in time order and carry their outcome; the curve is the stored flux in ppm.
@@ -377,7 +377,7 @@ def test_panel_lists_marks_per_dip(run_dir, catalog, tmp_path):
     for r in data["panel"]:
         assert r["marked_dips"] == [cid for cid, who in by_id.items() if r["id"] in who]
     body = re.search(r"function renderPanel\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "of ${a.of_sim} simulated" in body and "of ${a.of_claude} Claude" in body
+    assert "${a.n_claude} of ${plural(a.of_claude, 'Sentinel')}, ${a.n_sim} of ${plural(a.of_sim, 'Probe')}" in body
     assert "dipHref(a.id, 'ledger')" in body and "Verdict ledger" in body
     assert "not a person" in body
     assert "Marks per dip" in _route(page, "panel")
@@ -729,13 +729,14 @@ def test_calibration_plane_is_read_from_the_weights_file(run_dir, tmp_path):
     # The page draws iso-weight lines, labels the sample size on the plane, and names the kinds.
     plane = re.search(r"function calPlane\(box\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "for (const w of C.iso)" in plane and "`weight ${w}`" in plane
-    assert "`Claude: ${fmtN(cl[0])} only`" in plane
+    assert "`Sentinels: ${fmtN(cl[0])} only`" in plane
     assert "R = w => 3 + 10 * " in plane and "R(g.items[0].weight)" in plane  # size from the stored weight
     sample = re.search(r"function calSample\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "The Claude reviewers were calibrated on" in sample and "subjects only" in sample
+    assert "The Sentinels were calibrated on" in sample and "subjects only" in sample
+    assert "Calibrated weights: ${cl.length ? `Sentinels ${range(cl)}`" in sample
     assert "not people" in sample
     panel = _route(page, "panel")
-    assert "simulated detector, not a person" in panel and "Claude reviewer, not a person" in panel
+    assert "Probe (deterministic detector), not a person" in panel and "Sentinel (Claude), not a person" in panel
     assert 'id="calplane"' in panel and "floored at 0.05" in panel
 
 
@@ -799,6 +800,7 @@ def test_narrow_calibration_plane_keeps_weight_labels_level_and_inside():
     fmt_n = re.search(r"const fmtN = .*\n", APP_JS).group(0)
     esc = re.search(r"const esc = .*\n", APP_JS).group(0)
     claude = re.search(r"const isClaude = .*\n", APP_JS).group(0)
+    claude += "const D0 = {};\n" + re.search(r"const plural = .*\n", APP_JS).group(0) + "const NAME = id => id;\n"
     points = [{"id": "a", "kind": "simulated", "weight": 0.6, "tpr": 0.7, "fpr": 0.1, "n_injected": 10, "n_empty": 10},
               {"id": "c", "kind": "claude_code", "weight": 0.5, "tpr": 0.6, "fpr": 0.1, "n_injected": 10, "n_empty": 10}]
     script = (esc + fmt + claude + "const D = " + json.dumps({"calibration": {"points": points, "iso": list(ISO_WEIGHTS), "floor": 0.05}}) + ";\n"
@@ -1029,3 +1031,55 @@ def test_no_ui_text_below_11px():
     sizes = [float(x) for x in re.findall(r"(?<![\d.])(\d+(?:\.\d+)?)px", " ".join(re.findall(r"font(?:-size)?:[^;}]*", APP_CSS)))]
     assert sizes and min(sizes) >= 11
     assert "const fs = 11;" in docket_mod.DOCKET_JS
+
+
+def test_reviewer_display_names_are_sentinels_and_probes():
+    from exoplan.names import display_name, panel_phrase, reviewer_names, short_name
+
+    kinds = {"claude-volunteer": "claude_code", "claude-skeptic": "claude_code", "volunteer-sensitive": "simulated",
+             "volunteer-typical": "simulated", "volunteer-cautious": "simulated"}
+    names = reviewer_names(kinds)
+    assert [names[r]["name"] for r in kinds] == ["Sentinel · Volunteer", "Sentinel · Skeptic", "Probe · Sensitive",
+                                                  "Probe · Typical", "Probe · Cautious"]
+    assert [names[r]["short"] for r in kinds] == ["SEN Volunteer", "SEN Skeptic", "PRB Sensitive", "PRB Typical", "PRB Cautious"]
+    assert all(names[r]["id"] == r for r in kinds)  # ids unchanged
+    assert panel_phrase(2, 3) == "2 Sentinels and 3 Probes" and panel_phrase(0, 1) == "1 Probe"
+    assert display_name("someone", "human") == short_name("someone", "human") == "someone"
+
+
+def test_panel_page_attribution_and_ids_unchanged_in_data(run_dir, tmp_path):
+    from exoplan.names import ATTRIBUTION
+
+    assert ATTRIBUTION == "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors."
+    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    assert ATTRIBUTION in _route(page, "panel")
+    assert "superintelligence" not in page.lower()
+    data = _page_data(page)
+    # Ids stay as stored: the panel, calibration and agreement keep them; names are a separate map.
+    assert {r["id"] for r in data["panel"]} == {"vol-a", "vol-b"} == set(data["reviewer_names"])
+    assert data["reviewer_names"]["vol-a"]["name"] == "Probe · Vol A"
+    manifest = json.loads((run_dir / "manifest.json").read_text())
+    assert {r["id"] for r in manifest["reviewers"]} == {"vol-a", "vol-b"}
+    # The Docket shows the attribution in its provenance and names lanes by short display name.
+    assert _page_data_docket(data["docket_html"])["attribution"] == ATTRIBUTION
+    js = docket_mod.DOCKET_JS
+    assert "${esc(D.attribution)}<br>run" in js and "SHORT_NAME(n)" in js and "NAME(n)} (id ${n})" in js
+    # The reviewer cards and the calibration rows show the name with the id beside it.
+    assert "nameWithId(p.id)" in APP_JS and '<span class="sub mono" title="reviewer id">${esc(r.id)}</span>' in APP_JS
+    for word in ("Claude reviewers were", "simulated detector, not", "SIM = simulated"):
+        assert word not in APP_JS + js, word
+
+
+def _page_data_docket(html_text: str) -> dict:
+    raw = re.search(r'<script id="data" type="application/json">(.*?)</script>', html_text, re.S).group(1)
+    return json.loads(raw.replace("<\\/", "</"))
+
+
+def test_signals_button_targets_the_current_signal_in_the_list():
+    js = re.search(r"function jumpToList\(\)\{.*?\n  \}\n", FRAME_BRIDGE_JS, re.S).group(0)
+    assert "l.querySelector('.sig.cur .sighead')" in js and "data-collapsed') === 'true' && t) t.click()" in js
+    assert "document.querySelector('.dipbtn.cur')" in js and "room = vh - 52" in js
+    # First in the document, so it is the first "Signals" button a reader or a test finds.
+    assert "document.body.insertBefore(b, document.body.firstChild)" in FRAME_BRIDGE_JS
+    # On a phone the list is an accordion, so the list and the current dip's buttons fit one screen.
+    assert "#rows .sig:not(.cur) .row{display:none}" in FRAME_PHONE_CSS

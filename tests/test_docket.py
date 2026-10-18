@@ -465,7 +465,7 @@ def test_candidates_store_mark_audit_and_counting_rule(run_dir, tmp_path):
 
 
 def test_verdict_card_archive_is_one_sentence_with_provenance_behind_a_disclosure():
-    fn = re.search(r"function crossmatchLine\(c\)\{.*?\n\}\n", DOCKET_JS, re.S).group(0)
+    fn = re.search(r"function crossmatchLine\(c, feedLine\)\{.*?\n\}\n", DOCKET_JS, re.S).group(0)
     assert '<p class="xm-one">${sentence}' in fn and "<details class=\"xm-prov\"><summary>Provenance</summary>" in fn
     assert "from the repository's stored cross-match ${esc(x.fallback_from)}; this run's own cross-match ${x.run_status === 'not_run' ? 'did not run'" in fn
     assert "consistent with ${esc(hit.pl_name)} (P ${fmt(hit.pl_orbper,3)} d, ΔP ${fmt(hit.dP_pct,2)}%)" in fn
@@ -499,3 +499,34 @@ def test_odd_even_subject_labels_are_11px_and_stack_on_a_narrow_screen():
     fn = re.search(r"function epochPlot\(rows, title, depth, colour\)\{.*?\n\}\n", DOCKET_JS, re.S).group(0)
     assert "9px" not in fn and fn.count("t.style.fontSize = '11px'") == 2
     assert "matchMedia('(max-width:419.98px)')" in fn and "[[0, r.subject_label || ''], [1, r.subject_parity || '']]" in fn
+
+
+def test_verdict_card_is_the_verdict_and_the_archive_sentence_only():
+    top = re.search(r"top.innerHTML = `.*?</section>", DOCKET_JS, re.S).group(0)
+    assert '<div class="out-feed">' not in top  # the feed rule moved into the Provenance disclosure
+    assert "crossmatchLine(c, `<span class=\"xm-k\">Feed admission rule (discover.py), not vetting:</span>" in top
+    fn = re.search(r"function crossmatchLine\(c, feedLine\)\{.*?\n\}\n", DOCKET_JS, re.S).group(0)
+    assert 'feedLine ? `<li class="out-feed">${feedLine}</li>`' in fn
+    # The disclosure's summary is a 44 px target on a phone.
+    assert "@media (max-width:699.98px){.xm-prov summary{display:flex;align-items:center;min-height:44px;padding:12px 0;" in docket_mod.DOCKET_CSS
+
+
+def test_current_signal_is_marked_for_the_signals_button():
+    sync = re.search(r"function syncActive\(\)\{.*?\n\}\n", DOCKET_JS, re.S).group(0)
+    assert "g.classList.toggle('cur'" in sync
+    assert ".sighead{scroll-margin-top:calc(var(--top, 0px) + 8px)}" in docket_mod.DOCKET_CSS
+
+
+def test_stored_crossmatch_source_cites_the_validation_offset():
+    from pathlib import Path
+
+    src = json.loads(Path(docket_mod.DEFAULT_CROSSMATCH).read_text())["source"]
+    assert ("its transit mid-time was not recorded, so no per-epoch offset is computed here; the validation note's "
+            "mean timing offset (−8.0 min over 5 of 5 epochs) is cited instead.") in src
+
+
+def test_lane_labels_are_short_display_names():
+    js = DOCKET_JS
+    assert "fitLabel(t, sn.slice(0, sp), sn.slice(sp + 1), pl - 8)" in js
+    assert "SEN = Sentinel (Claude model, Anthropic; not a person), PRB = Probe (deterministic matched-filter detector; not a person)" in js
+    assert "reviewers: ${reviewerSummary(" in js and "Sentinel${cl === 1 ? '' : 's'}" in js

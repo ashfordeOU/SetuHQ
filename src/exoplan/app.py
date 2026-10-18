@@ -42,6 +42,7 @@ from pathlib import Path
 
 from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
 from exoplan.docket import OUTCOME_LABEL, docket_data, docket_page
+from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
 
 SECTIONS = [
     ("overview", "Overview"),
@@ -392,8 +393,8 @@ def overview_hero(dock: dict, top: list[dict] | None = None) -> dict:
     else:
         headline = f"{len(cands)} marked dip{'s' if len(cands) != 1 else ''} in {target}."
     lede = (f"{n_points:,} stored brightness measurements over {span:.1f} days. "
-            f"{counts.get('reviewers', 0)} reviewers ({counts.get('simulated', 0)} simulated detectors and "
-            f"{counts.get('claude', 0)} Claude reviewers; none of them a person) marked {counts.get('dips', len(cands))} dips, "
+            f"The panel, {panel_phrase(counts.get('claude', 0), counts.get('simulated', 0), counts.get('other', 0))} "
+            f"(no people), marked {counts.get('dips', len(cands))} dips, "
             f"which the vetting code grouped into {counts.get('signals', 0)} signals: {counts.get('passed', 0)} passed, "
             f"{counts.get('flagged', 0)} flagged, {counts.get('rejected', 0)} rejected.")
     where = f" ({xm['fallback_from']})" if xm.get("fallback_from") else ""
@@ -492,18 +493,25 @@ FRAME_BRIDGE_JS = r"""
     var l = document.getElementById('listpanel'); if (!l) return;
     var body = document.getElementById('listbody'), t = document.getElementById('listtoggle');
     if (body && body.getAttribute('data-collapsed') === 'true' && t) t.click();
-    var sel = l.querySelector('.row[aria-selected="true"]'), target = (sel && sel.closest('.sig') && sel.closest('.sig').querySelector('.sighead')) || l.querySelector('.sighead') || l;
+    var sel = l.querySelector('.row[aria-selected="true"]');
+    var target = l.querySelector('.sig.cur .sighead') || (sel && sel.closest('.sig') && sel.closest('.sig').querySelector('.sighead')) || l.querySelector('.sighead') || l;
     var margin = stickyHeight(document.body) + 8;
     target.style.scrollMarginTop = margin + 'px';
-    var sc = scroller(target), top = target.getBoundingClientRect().top;
-    if (sc !== document.scrollingElement && sc !== document.documentElement) top -= sc.getBoundingClientRect().top;
-    sc.scrollTop += top - margin;  // block: start, less the scroll margin; no scrollIntoView, which would move the shell
+    var sc = scroller(target), base = (sc !== document.scrollingElement && sc !== document.documentElement) ? sc.getBoundingClientRect().top : 0;
+    var top = target.getBoundingClientRect().top - base;
+    // Land with the signal's header at the top. If the current dip's button (in the Signal section just
+    // below the list) would then sit below the screen, move down only until its top is in view.
+    // No scrollIntoView, which would also move the shell around the frame.
+    var cur = document.querySelector('.dipbtn.cur'), vh = window.innerHeight, shift = top - margin;
+    if (cur){ var after = cur.getBoundingClientRect().top - base - shift, room = vh - 52; if (after > room) shift += after - room; }
+    sc.scrollTop += shift;
     var rows = document.getElementById('rows'); if (rows) rows.focus({preventScroll: true});
   }
   document.addEventListener('DOMContentLoaded', function(){
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'jumplist'; b.textContent = 'Signals ↑'; b.setAttribute('aria-label', 'Jump to the list of signals and dips');
-    b.addEventListener('click', jumpToList); document.body.appendChild(b);
+    // First in the document (it is position: fixed, so this changes only the reading and tab order).
+    b.addEventListener('click', jumpToList); document.body.insertBefore(b, document.body.firstChild);
     send({kind: 'ready'});
   });
 })();
@@ -519,6 +527,9 @@ FRAME_PHONE_CSS = (
     "color:var(--paper);font:500 14px/1 \"Geist\",sans-serif;box-shadow:0 10px 30px -12px rgba(0,0,0,.5);cursor:pointer}"
     ".dipbtn,.chip,.listtoggle{min-height:44px;padding:10px 12px;box-sizing:border-box}"
     ".sectoggle{min-height:44px;padding:12px 0;box-sizing:border-box}"
+    # The list works as an accordion on a phone: the current signal shows its dips, the others their
+    # header (a tap selects that signal), so the list and the current dip's buttons fit one screen.
+    "#rows .sig:not(.cur) .row{display:none}"
     "}"
     "@media (min-width:700.02px){.jumplist{display:none}}"
 )
@@ -651,6 +662,8 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "panel": panel_cards(manifest, run["marks"], run["reviewerDecisions"], flat, cands),
         "calibration": {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name},
         "agreement": dip_agreement(cands, dock["reviewers"]),
+        "reviewer_names": reviewer_names(dock["reviewers"]),
+        "attribution": ATTRIBUTION,
         "weights_path": weights_name,
         "docket_html": with_frame_bridge(docket_page(dock)),
         "fonts_css": FONTS_CSS, "frame_fonts_href": FRAME_FONTS_HREF,
@@ -929,6 +942,7 @@ svg.calplane .pt.cl{fill:var(--fit);fill-opacity:.85;stroke:var(--fit);stroke-wi
 .archive ul{margin:6px 0 0;padding-left:18px}
 .card h2{display:flex;flex-wrap:wrap;gap:6px 11px;align-items:baseline}
 .card h2 .sub{font:500 11px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.04em}
+.idtag{font:400 11px var(--mono);color:var(--ink-3);margin-left:4px;text-transform:none;letter-spacing:0}
 details summary{cursor:pointer}
 /* panel, runs */
 .kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;font-size:13px;margin:11px 0 0}
@@ -1092,7 +1106,11 @@ const UNC = `<span class="tag unc">${esc(D.unconfirmed)}</span>`;
 const say = msg => { const a = $('#announce'); a.textContent = ''; setTimeout(() => { a.textContent = msg; }, 30); };
 const isClaude = k => k === 'claude' || k === 'claude_code';
 const OUTCOME_SHORT = {passed: 'passed', flagged: 'flagged', rejected: 'rejected'};
-const kindTag = k => k === 'simulated' ? '<span class="tag sim">simulated · not a person</span>' : isClaude(k) ? `<span class="tag cl">Claude · ${esc(k)}</span>` : `<span class="tag">${esc(k || 'unknown')}</span>`;
+// The panel's display names (the Sentinels and the Probes); ids stay in the data and show beside the names.
+const NAME = id => ((D.reviewer_names || {})[id] || {}).name || id;
+const nameWithId = id => `${esc(NAME(id))} <span class="mono idtag" title="reviewer id">${esc(id)}</span>`;
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+const kindTag = k => k === 'simulated' ? '<span class="tag sim">Probe · not a person</span>' : isClaude(k) ? `<span class="tag cl">Sentinel · Claude</span>` : `<span class="tag">${esc(k || 'unknown')}</span>`;
 function niceTicks(lo, hi, n){
   if (!(hi > lo)) return [lo];
   const raw = (hi-lo)/Math.max(1,n), mag = Math.pow(10, Math.floor(Math.log10(raw))), r = raw/mag;
@@ -1291,7 +1309,7 @@ function widgetBody(id){
     const kinds = Object.values(r.reviewer_kinds), sim = kinds.filter(k => k === 'simulated').length, cl = kinds.filter(isClaude).length;
     const tiles = [[c.subjects, 'subjects'], [c.classifications, 'reviews'], [dc.signals, 'signals'], [dc.dips, 'dips'], [dc.passed, 'signals passed vetting'], [dc.flagged, 'signals flagged for review']];
     return `<div class="kpis">${tiles.map(([v,l]) => `<div class="kpi"><b>${esc(v ?? '–')}</b><span>${esc(l)}</span></div>`).join('')}</div>
-      <p class="muted" style="margin:0;font-size:12px">Run ${esc(r.name)}, ${when(r.created_at)}. ${esc(dc.rejected ?? 0)} signal${dc.rejected===1?'':'s'} rejected by vetting. The light curves are measured (${esc((D.config.inputs[0]||{}).source || 'stored input')}); the reviews come from ${sim} simulated detector${sim===1?'':'s'} (not people) and ${cl} Claude reviewer${cl===1?'':'s'}.</p>`;
+      <p class="muted" style="margin:0;font-size:12px">Run ${esc(r.name)}, ${when(r.created_at)}. ${esc(dc.rejected ?? 0)} signal${dc.rejected===1?'':'s'} rejected by vetting. The light curves are measured (${esc((D.config.inputs[0]||{}).source || 'stored input')}); the reviews come from ${plural(cl, 'Sentinel')} and ${plural(sim, 'Probe')}, no people.</p>`;
   }
   if (id === 'discoveries'){
     const f = D.catalog.candidates, nNew = f.filter(x => x.status === 'new_candidate').length, nKnown = f.filter(x => x.status === 'known_toi').length;
@@ -1723,11 +1741,11 @@ function renderPanel(){
   const ag = D.agreement;
   $('#agreement').innerHTML = ag.length ? `<ul class="agree">${ag.map(a => `<li>
       <span>${dipLink(a.id)}<small class="muted" style="display:block;font-size:11px">${esc(a.target)} · ${esc(a.outcome_label)} · ${esc(D.unconfirmed)}</small></span>
-      <span><b>${a.n} of ${a.of} reviewers</b> marked it: ${a.n_sim} of ${a.of_sim} simulated, ${a.n_claude} of ${a.of_claude} Claude<small class="muted" style="display:block;font-size:11px;font-family:var(--mono)">${esc(a.reviewers.join(', ') || 'none')}</small></span>
+      <span><b>${a.n} of ${a.of} reviewers</b> marked it: ${a.n_claude} of ${plural(a.of_claude, 'Sentinel')}, ${a.n_sim} of ${plural(a.of_sim, 'Probe')}<small class="muted" style="display:block;font-size:11px">${a.reviewers.map(r => `<span title="reviewer id ${esc(r)}">${esc(NAME(r))}</span>`).join(', ') || 'none'}</small></span>
       <a href="${dipHref(a.id, 'ledger')}">Verdict ledger</a></li>`).join('')}</ul>` : '<p class="empty">The run stored no dips.</p>';
-  $('#panelcards').innerHTML = D.panel.length ? D.panel.map(r => `<article class="card"><h2 class="mono">${esc(r.id)}</h2>
+  $('#panelcards').innerHTML = D.panel.length ? D.panel.map(r => `<article class="card"><h2>${esc(NAME(r.id))} <span class="sub mono" title="reviewer id">${esc(r.id)}</span></h2>
     <p style="margin:6px 0 0">${kindTag(r.kind)}</p>
-    <p class="muted" style="margin:6px 0 0;font-size:13px">${r.kind === 'simulated' ? 'Code that marks dips above an SNR threshold in the light curve. It is not a person.' : isClaude(r.kind) ? 'A Claude model that reads the plotted light curve and marks dips. It is not a person.' : ''}</p>
+    <p class="muted" style="margin:6px 0 0;font-size:13px">${r.kind === 'simulated' ? 'A Probe: a deterministic matched-filter detector that marks dips above an SNR threshold in the light curve. It is not a person.' : isClaude(r.kind) ? 'A Sentinel: a Claude model (Anthropic) that reads the plotted light curve and marks dips. It is not a person.' : ''}</p>
     <dl class="kv">
       <dt>weight in this run</dt><dd>${r.run_weight === null || r.run_weight === undefined ? 'not stored' : esc(r.run_weight)} <span class="muted">(manifest.json)</span></dd>
       <dt>calibrated weight</dt><dd>${r.calibrated_weight === null || r.calibrated_weight === undefined ? 'not in the weights file' : fmt(r.calibrated_weight,3)}${D.weights_path ? `<small class="muted" style="display:block;font-size:11px">${esc(D.weights_path)}</small>` : ''}</dd>
@@ -1745,8 +1763,11 @@ function calSample(){
   const pts = D.calibration.points, cl = pts.filter(p => isClaude(p.kind)), sim = pts.filter(p => p.kind === 'simulated');
   const sizes = list => [...new Set(list.map(fmtN))];
   const parts = [];
-  if (cl.length) parts.push(`<b>The Claude reviewers were calibrated on ${esc(sizes(cl).join(' / '))} subjects only.</b>`);
-  if (sim.length) parts.push(`The simulated detectors (code, not people) on ${esc(sizes(sim).join(' / '))}.`);
+  // The scores themselves, in one line: the Sentinels' weights and the Probes' range.
+  const range = list => { const w = list.map(p => p.weight).filter(x => x !== null && x !== undefined); if (!w.length) return 'not stored'; const lo = Math.min(...w), hi = Math.max(...w); return lo === hi ? fmt(lo,2) : `${fmt(lo,2)} to ${fmt(hi,2)}`; };
+  if (cl.length || sim.length) parts.push(`Calibrated weights: ${cl.length ? `Sentinels ${range(cl)}` : ''}${cl.length && sim.length ? '; ' : ''}${sim.length ? `Probes ${range(sim)}` : ''}.`);
+  if (cl.length) parts.push(`<b>The Sentinels were calibrated on ${esc(sizes(cl).join(' / '))} subjects only.</b>`);
+  if (sim.length) parts.push(`The Probes (code, not people) on ${esc(sizes(sim).join(' / '))}.`);
   const n = Math.max(0, ...pts.map(p => p.n_injected || 0));
   if (n) parts.push(`With ${n} injected subjects a recall moves in steps of ${fmt(1 / n, 2)}, so one subject more or less changes a weight by that much. These weights are rough.`);
   return parts.join(' ');
@@ -1763,7 +1784,7 @@ function calPlane(box){
   const X = v => pl + pad + v * side, Y = v => pt + (1 - v) * side, R = w => 3 + 10 * Math.max(0, Number(w) || 0);
   const groups = [];
   for (const p of pts){ let g = groups.find(g => g.fpr === p.fpr && g.tpr === p.tpr && g.kind === (isClaude(p.kind) ? 'claude' : p.kind)); if (!g){ g = {fpr: p.fpr, tpr: p.tpr, kind: isClaude(p.kind) ? 'claude' : p.kind, items: []}; groups.push(g); } g.items.push(p); }
-  const label = `Calibration plane: ${pts.length} reviewers by false-alarm rate and recall. ` + groups.map(g => `${g.items.map(p => p.id).join(' and ')}: recall ${fmt(g.tpr,2)}, false-alarm rate ${fmt(g.fpr,2)}, weight ${fmt(g.items[0].weight,2)}`).join('; ') + '. ' + calSample().replace(/<[^>]+>/g, '');
+  const label = `Calibration plane: ${pts.length} reviewers by false-alarm rate and recall. ` + groups.map(g => `${g.items.map(p => NAME(p.id)).join(' and ')}: recall ${fmt(g.tpr,2)}, false-alarm rate ${fmt(g.fpr,2)}, weight ${fmt(g.items[0].weight,2)}`).join('; ') + '. ' + calSample().replace(/<[^>]+>/g, '');
   const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': label, class: 'calplane'}, box);
   svg.style.maxWidth = W + 'px';
   // The floor: below TPR − FPR = floor every reviewer gets the floor weight.
@@ -1795,24 +1816,24 @@ function calPlane(box){
   if (!narrow) tx(svg, X(0.97), Y(0.30), `below the floor line: weight ${f}`, 'end');
   // The sample size, on the plane.
   const cl = pts.filter(p => isClaude(p.kind));
-  if (cl.length) tx(svg, X(0.97), Y(0.08), `Claude: ${fmtN(cl[0])} only`, 'end', 'samplelbl');
-  if (pts.some(p => p.kind === 'simulated')) tx(svg, X(0.97), Y(0.08) + 14, `simulated: ${fmtN(pts.find(p => p.kind === 'simulated'))}`, 'end');
+  if (cl.length) tx(svg, X(0.97), Y(0.08), `Sentinels: ${fmtN(cl[0])} only`, 'end', 'samplelbl');
+  if (pts.some(p => p.kind === 'simulated')) tx(svg, X(0.97), Y(0.08) + 14, `Probes: ${fmtN(pts.find(p => p.kind === 'simulated'))}`, 'end');
   for (const g of groups){
     const r = R(g.items[0].weight), cx = X(g.fpr), cy = Y(g.tpr);
     const c = el('circle', {cx, cy, r, class: g.kind === 'claude' ? 'pt cl' : 'pt sim'}, svg);
-    el('title', {}, c).textContent = g.items.map(p => `${p.id} (${p.kind === 'simulated' ? 'simulated, not a person' : isClaude(p.kind) ? 'Claude' : p.kind}): TPR ${fmt(p.tpr,2)}, FPR ${fmt(p.fpr,2)}, weight ${fmt(p.weight,2)}, ${fmtN(p)}`).join('\n');
-    const word = g.kind === 'claude' ? 'Claude' : g.kind === 'simulated' ? 'simulated' : g.kind;
-    tx(svg, cx + r + 6, cy + 4, `${g.items.length} ${word} · w ${fmt(g.items[0].weight,2)}`, 'start', 'lbl');
+    el('title', {}, c).textContent = g.items.map(p => `${NAME(p.id)} (id ${p.id}; ${p.kind === 'simulated' ? 'Probe, not a person' : isClaude(p.kind) ? 'Sentinel, Claude' : p.kind}): TPR ${fmt(p.tpr,2)}, FPR ${fmt(p.fpr,2)}, weight ${fmt(p.weight,2)}, ${fmtN(p)}`).join('\n');
+    const word = g.kind === 'claude' ? 'Sentinel' : g.kind === 'simulated' ? 'Probe' : g.kind;
+    tx(svg, cx + r + 6, cy + 4, `${plural(g.items.length, word)} · w ${fmt(g.items[0].weight,2)}`, 'start', 'lbl');
   }
 }
 function renderCalibration(){
   const C = D.calibration;
   $('#calsample').innerHTML = C.points.some(p => p.n_injected) ? calSample() : 'The sample size is not stored with these weights.';
   calPlane($('#calplane'));
-  const kindWord = k => k === 'simulated' ? 'simulated · not a person' : isClaude(k) ? 'Claude' : esc(k);
-  $('#caltable').innerHTML = C.points.length ? `<table><caption class="sr">Calibration rates and weights per reviewer, as stored</caption><thead><tr><th scope="col">reviewer</th><th scope="col">kind</th><th scope="col" class="num">recall (TPR)</th><th scope="col" class="num">false alarms (FPR)</th><th scope="col" class="num">weight</th><th scope="col">sample</th></tr></thead><tbody>${C.points.map(p => `<tr><th scope="row" class="mono">${esc(p.id)}</th><td>${kindWord(p.kind)}</td><td class="num">${fmt(p.tpr,2)}</td><td class="num">${fmt(p.fpr,2)}</td><td class="num">${fmt(p.weight,2)}${p.consistent === false ? '<small>not max(TPR − FPR, floor)</small>' : ''}</td><td>${esc(fmtN(p))}</td></tr>`).join('')}</tbody></table>` : '';
+  const kindWord = k => k === 'simulated' ? 'Probe · not a person' : isClaude(k) ? 'Sentinel · Claude' : esc(k);
+  $('#caltable').innerHTML = C.points.length ? `<table><caption class="sr">Calibration rates and weights per reviewer, as stored</caption><thead><tr><th scope="col">reviewer</th><th scope="col">kind</th><th scope="col" class="num">recall (TPR)</th><th scope="col" class="num">false alarms (FPR)</th><th scope="col" class="num">weight</th><th scope="col">sample</th></tr></thead><tbody>${C.points.map(p => `<tr><th scope="row">${nameWithId(p.id)}</th><td>${kindWord(p.kind)}</td><td class="num">${fmt(p.tpr,2)}</td><td class="num">${fmt(p.fpr,2)}</td><td class="num">${fmt(p.weight,2)}${p.consistent === false ? '<small>not max(TPR − FPR, floor)</small>' : ''}</td><td>${esc(fmtN(p))}</td></tr>`).join('')}</tbody></table>` : '';
   // On a phone the same rows read as one card per reviewer (the table is hidden there, the cards elsewhere).
-  $('#calcards').innerHTML = C.points.map(p => `<dl class="kv calcard"><dt>reviewer</dt><dd><b>${esc(p.id)}</b></dd><dt>kind</dt><dd>${kindWord(p.kind)}</dd><dt>recall (TPR)</dt><dd>${fmt(p.tpr,2)}</dd><dt>false alarms (FPR)</dt><dd>${fmt(p.fpr,2)}</dd><dt>weight</dt><dd>${fmt(p.weight,2)}${p.consistent === false ? ' (not max(TPR − FPR, floor))' : ''}</dd><dt>sample</dt><dd>${esc(fmtN(p))}</dd></dl>`).join('');
+  $('#calcards').innerHTML = C.points.map(p => `<dl class="kv calcard"><dt>reviewer</dt><dd><b>${nameWithId(p.id)}</b></dd><dt>kind</dt><dd>${kindWord(p.kind)}</dd><dt>recall (TPR)</dt><dd>${fmt(p.tpr,2)}</dd><dt>false alarms (FPR)</dt><dd>${fmt(p.fpr,2)}</dd><dt>weight</dt><dd>${fmt(p.weight,2)}${p.consistent === false ? ' (not max(TPR − FPR, floor))' : ''}</dd><dt>sample</dt><dd>${esc(fmtN(p))}</dd></dl>`).join('');
   $('#calsource').textContent = C.source ? `Rates: ${C.record_path || 'the weights file'}. ${C.source}` : (C.record_path ? `Rates: ${C.record_path}.` : '');
 }
 let calWidth = -1;
@@ -2018,7 +2039,7 @@ def _hero(data: dict) -> str:
     weights = (f" Their weights rest on calibration with {n_inj} injected subjects, so they are rough." if n_inj else "")
     flow = [
         ("", c.get("subjects", "–"), f"light-curve subjects of {cfg.get('subject_days') or '–'} days", "input"),
-        ("", c.get("classifications", "–"), f"reviews from {dc.get('reviewers', '–')} reviewers, none of them a person", "marks"),
+        ("", c.get("classifications", "–"), f"reviews from {panel_phrase(dc.get('claude', 0), dc.get('simulated', 0), dc.get('other', 0))}, no people", "marks"),
         ("", dc.get("dips", "–"), "dips the panel agreed on", "consensus"),
         ("", dc.get("signals", "–"), "signals, once repeat dips are grouped", "grouping"),
     ]
@@ -2060,7 +2081,7 @@ def _hero(data: dict) -> str:
         <ul>
           <li><b>No confirmed planet.</b> Every dip, signal and feed entry here is a {UNCONFIRMED}. Passing vetting is not a confirmation.{f" The match with {e(h['match'])} says the planet is already known, not that this run confirmed it." if h.get("match") else ""}</li>
           <li><b>No planet sizes.</b> No stellar radius is stored, so a depth gives only a planet-to-star radius ratio. The Planets section shows the working.</li>
-          <li><b>No people on the panel.</b> The reviewers are simulated detectors and Claude model calls.{e(weights)}</li>
+          <li><b>No people on the panel.</b> The panel is the Sentinels and the Probes: {e(panel_phrase(dc.get('claude', 0), dc.get('simulated', 0), dc.get('other', 0)))}. {e(ATTRIBUTION)}{e(weights)}</li>
           <li><b>{e(NO_DETECTION.split(". ")[0])}.</b> {e(NO_DETECTION.split(". ", 1)[1])} A TOI or archive match compares a stored period with published values.</li>
         </ul>
       </section>"""
@@ -2077,6 +2098,7 @@ def app_page(data: dict) -> str:
     label = {s["id"]: html.escape(s["label"]) for s in data["sections"]}
     feed = data["catalog"]["candidates"]
     n_known = sum(1 for r in feed if r.get("status") == "known_toi")
+    dcounts = run.get("docket_counts") or {}
     description = (f"exoplan run {run['name']}: {data['hero']['headline']} Every dip is a {UNCONFIRMED}; "
                    f"stored values only.")
     xm_targets = ", ".join(html.escape(str(t)) for t in data.get("crossmatch_targets") or []) or "no star"
@@ -2160,12 +2182,12 @@ def app_page(data: dict) -> str:
       <div class="cards" id="planetcards"></div>
     </section>
     <section class="route" id="route-panel" data-route="panel" aria-labelledby="h-panel" hidden>
-      <header><p class="eyebrow"><span class="idx">05</span>Panel</p><h1 class="lead-h" id="h-panel" tabindex="-1">Who marked the dips, and how far to trust each of them.</h1><p>The reviewers that marked dips in run {html.escape(run["name"])}. Simulated reviewers are code; Claude reviewers are model calls. None of them is a person.</p></header>
+      <header><p class="eyebrow"><span class="idx">05</span>Panel</p><h1 class="lead-h" id="h-panel" tabindex="-1">Who marked the dips, and how far to trust each of them.</h1><p>The panel that marked dips in run {html.escape(run["name"])}: the Sentinels and the Probes, {html.escape(panel_phrase(dcounts.get("claude", 0), dcounts.get("simulated", 0), dcounts.get("other", 0)))}, no people. <span class="attribution">{html.escape(ATTRIBUTION)}</span></p></header>
       <p class="note rule"><b>Weights.</b> A reviewer's weight is its calibration skill from injection tests: the true-positive rate on injected transits minus the false-positive rate on empty light curves, floored (calibrate.py). The calibrated weights are stored in {html.escape(data["weights_path"] or "no weights file")}. The weight in this run is the one manifest.json records; when it differs from the calibrated weight, the run did not use the calibrated weights.</p>
       <section class="card" aria-labelledby="h-cal" style="display:grid;gap:8px">
         <h2 id="h-cal">Calibration plane</h2>
         <p class="muted" style="margin:0;font-size:13px">Each reviewer at its false-alarm rate (x: share of empty subjects it marked) and recall (y: share of injected transits it found) in calibration. Point size is its calibrated weight. The lines join points of equal weight, weight = TPR − FPR, floored at {data["calibration"]["floor"]}; up and to the left is better. Stored values only.</p>
-        <div class="legend"><span><i class="k-sim"></i>simulated detector, not a person</span><span><i class="k-cl"></i>Claude reviewer, not a person</span><span>size: calibrated weight</span></div>
+        <div class="legend"><span><i class="k-sim"></i>Probe (deterministic detector), not a person</span><span><i class="k-cl"></i>Sentinel (Claude), not a person</span><span>size: calibrated weight</span></div>
         <div id="calplane"></div>
         <p class="note" id="calsample" style="margin:0"></p>
         <div class="tablewrap" id="caltable" tabindex="0" role="region" aria-label="Calibration rates per reviewer"></div>

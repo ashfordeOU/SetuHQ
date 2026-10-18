@@ -30,6 +30,7 @@ import math
 import re
 from pathlib import Path
 
+from exoplan.names import ATTRIBUTION
 from exoplan.docket import OUTCOME_LABEL, docket_data
 
 UNCONFIRMED = "Candidate, unconfirmed."
@@ -204,8 +205,8 @@ def run_caption(c: dict, n_panel: int, kinds: dict[str, str], comparison: dict |
         f"Dip at {unit} {_f(c['t_center'], 3)}, {_f(c['depth_ppm'], 0)} ppm, {_f(c.get('duration_hours'), 2)} h, "
         f"SNR {_f(c['snr'], 1)}.",
         f"Consensus interval {unit} {_f(c['t_start'], 3)} to {_f(c['t_end'], 3)}.",
-        f"Marked by {c.get('n_reviewers', len(who))} of {n_panel} reviewers ({n_sim} of {of_sim} simulated, "
-        f"{n_cl} of {of_cl} Claude).",
+        f"Marked by {c.get('n_reviewers', len(who))} of {n_panel} reviewers ({n_cl} of {of_cl} Sentinels, "
+        f"{n_sim} of {of_sim} Probes).",
     ]
     period = _num(c.get("period_days"))
     if period is not None:
@@ -666,7 +667,7 @@ def plate_page(data: dict) -> str:
   <p><span class="hedge">Candidate, unconfirmed.</span> {n} candidates on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the discovery catalogue" if cat["path"] else ""}. Every number is a stored value.</p>
   <ul class="notes">
     <li>{_e(scope)}</li>
-    <li>Reviewers are simulated detectors (code, not people) and Claude models (not people). A dip's consensus interval is where their marks agree.</li>
+    <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.</li>
     <li>{_e(NO_RADIUS)}</li>
     <li>Status is written as a word beside every colour.</li>
   </ul>

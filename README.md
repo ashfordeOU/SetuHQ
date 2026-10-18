@@ -1,9 +1,10 @@
 # exoplan
 
 An open-source transit search in the style of [Planet Hunters CHEOPS](https://www.zooniverse.org/projects/bmerin/planet-hunters-cheops).
-Where that project uses volunteers, exoplan uses a **reviewer panel**: independent
-reviewers, some of them Claude, that mark dips in blind-coded light curves. Consensus
-is skill-weighted, and every candidate keeps its provenance.
+Where that project uses volunteers, exoplan uses a **reviewer panel**: the Sentinels and
+the Probes, independent reviewers that mark dips in blind-coded light curves. No people
+are on it. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter
+detectors. Consensus is skill-weighted, and every candidate keeps its provenance.
 
 Research behind the design: [docs/RESEARCH.md](docs/RESEARCH.md).
 Live report for a real run: [site/index.html](site/index.html).
@@ -20,20 +21,26 @@ Live report for a real run: [site/index.html](site/index.html).
 
 ## Reviewer panel
 
-| Reviewer | What it is | Needs |
-|---|---|---|
-| `simulated` | Deterministic detector with human-like limits (threshold, miss rate, boundary jitter). A baseline and a calibration reference. | Nothing |
-| `claude_code` | Claude reviewing the rendered plot through the **Claude Code CLI**, which signs in with a Claude team or individual subscription. | `claude` on PATH, signed in |
-| `claude` | Claude through the **Anthropic API** (vision). | `ANTHROPIC_API_KEY` |
+| Reviewer kind | Shown as | What it is | Needs |
+|---|---|---|---|
+| `simulated` | **Probe** | Deterministic matched-filter detector with human-like limits (threshold, miss rate, boundary jitter). A baseline and a calibration reference. | Nothing |
+| `claude_code` | **Sentinel** | Claude reviewing the rendered plot through the **Claude Code CLI**, which signs in with a Claude team or individual subscription. | `claude` on PATH, signed in |
+| `claude` | **Sentinel** | Claude through the **Anthropic API** (vision). | `ANTHROPIC_API_KEY` |
 
-Claude reviewers receive the same task as volunteers, the blind-coded plot, and no
+The pages show display names; reviewer ids stay unchanged in every data file, CSV, JSON
+and URL. The default panel is 2 Sentinels and 3 Probes: Sentinel · Volunteer
+(`claude-volunteer`), Sentinel · Skeptic (`claude-skeptic`), and Probe · Sensitive,
+Probe · Typical and Probe · Cautious (`volunteer-sensitive`, `volunteer-typical`,
+`volunteer-cautious`).
+
+Sentinels receive the same task as volunteers, the blind-coded plot, and no
 target name. They return strict JSON, which is validated and clipped to the subject's
 time range. A reviewer that is not available is skipped and listed in the manifest.
 Responses are cached by a hash of model, prompt and image, so re-runs are free and
 reproducible.
 
-Two personas are included: `volunteer` (careful, marks dips) and `skeptic` (rejects
-binary and systematic signatures unless they are clear).
+The two Sentinels use two personas: `volunteer` (careful, marks dips) and `skeptic`
+(rejects binary and systematic signatures unless they are clear).
 
 ## Quick start
 
@@ -53,8 +60,8 @@ that changes a result is in the config, and its hash goes into the manifest.
 
 ## Results so far
 
-Real data, TESS SPOC sector 1 of pi Men (TIC 261136679), deterministic panel plus
-skeptic and volunteer Claude reviewers via the CLI:
+Real data, TESS SPOC sector 1 of pi Men (TIC 261136679), the three Probes plus the two
+Sentinels (Skeptic and Volunteer, on Claude via the CLI):
 
 * 6 consensus dips, 6 passed vetting, one of them flagged `off_ephemeris`.
 * Five of them lie on the published pi Men c ephemeris. All five predicted epochs in the
@@ -64,21 +71,22 @@ skeptic and volunteer Claude reviewers via the CLI:
 * The sixth passed event (BTJD 1348.9, 0.87 h, SNR 9.5) does not fit the ephemeris and
   is a likely false positive. It is kept and flagged, not hidden.
 
-**What Claude did in this run, reported as found:**
+**What the Sentinels did in this run, reported as found:**
 
-* On the second subject, both Claude reviewers independently marked the two real
+* On the second subject, both Sentinels independently marked the two real
   epochs at BTJD 1344.3 and 1350.55 (about 6.2 days apart). They rejected the spurious
   1348.9 dip, with sound reasons.
-* On the first subject, both Claude reviewers called the real epochs at BTJD 1325.5,
-  1331.8 and 1338.05 "instrumental" edge ramps and missed them. The simulated
-  volunteers found them. Those dips sit near the segment start and end, which is a
-  known weak spot for a reviewer that reads edges as systematics. This is exactly why
-  Claude is one voice in a calibrated panel, not the whole panel.
+* On the first subject, both Sentinels called the real epochs at BTJD 1325.5,
+  1331.8 and 1338.05 "instrumental" edge ramps and missed them. The Probes found
+  them. Those dips sit near the segment start and end, which is a known weak spot for
+  a reviewer that reads edges as systematics. This is exactly why the Sentinels are
+  voices in a calibrated panel, not the whole panel.
 
-Injection-recovery benchmark for the deterministic panel:
+Injection-recovery benchmark for the Probes:
 [docs/results/injection_recovery_simulated_panel.md](docs/results/injection_recovery_simulated_panel.md).
-Claude reviewers are not in the benchmark. Each injected subject would need its own CLI
-call, so Claude is calibrated separately on a small sample.
+The Sentinels are not in the benchmark. Each injected subject would need its own CLI
+call, so the Sentinels are calibrated separately on a small sample (10 injected and 10
+empty subjects: weight 0.5 each, against 0.4 to 0.6 for the Probes).
 
 ## Continuous discovery
 
@@ -104,7 +112,7 @@ published pipelines.
 
 ## Honest limits
 
-* **Claude's panel is calibrated on a small sample only.** The full benchmark needs many
+* **The Sentinels are calibrated on a small sample only.** The full benchmark needs many
   CLI or API calls. See the calibration file for the sample size used.
 * **Synthetic results are not sky results.** The benchmark uses white plus red noise. It
   measures the pipeline's logic, not real completeness.
