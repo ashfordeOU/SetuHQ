@@ -31,6 +31,7 @@ from exoplan.app import (
     decode_layout,
     encode_feed_view,
     encode_layout,
+    feed_label,
     feed_view,
     radius_ratio,
     widget_layout,
@@ -125,16 +126,25 @@ def test_app_builds_without_catalogue(run_dir, tmp_path):
     assert data["catalog"]["candidates"] == [] and data["catalog"]["runs"] == []
 
 
-def test_all_six_routes_exist(run_dir, catalog, tmp_path):
+def test_five_sections_and_three_pages_exist(run_dir, catalog, tmp_path):
+    from exoplan.app import ROUTE_ALIASES, SUBPAGES
+
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
-    assert [s for s, _ in SECTIONS] == ["overview", "candidates", "discoveries", "planets", "panel", "runs"]
+    assert [s for s, _ in SECTIONS] == ["overview", "sky", "transit", "explorer", "sentinels"]
+    assert [s for s, _, _ in SUBPAGES] == ["candidates", "planets", "runs"]
+    nav = re.search(r'<nav class="nav" aria-label="Sections">.*?</nav>', page, re.S).group(0)
     for sid, label in SECTIONS:
+        assert f'href="#/{sid}" data-route="{sid}">{label}</a>' in nav
+    for sid in [s for s, _ in SECTIONS] + [s for s, _, _ in SUBPAGES]:
         assert f'id="route-{sid}"' in page
-        assert f'href="#/{sid}"' in page
-        # The section name is the eyebrow; the section's statement is its h1.
-        assert f'<span class="idx">' in page and f">{label}</p>" in page
         assert re.search(rf'<h1 [^>]*id="h-{sid}" tabindex="-1">', page), sid
-    assert '<nav class="nav" aria-label="Sections">' in page
+    # Each page names the section it belongs to, and links back to it.
+    for sid, label, parent in SUBPAGES:
+        assert f'<a href="#/{parent}">' in _route(page, sid)
+    # Old addresses open the section that replaced them (the query is kept).
+    assert ROUTE_ALIASES["discoveries"] == "explorer" and ROUTE_ALIASES["panel"] == "sentinels"
+    assert _page_data(page)["aliases"] == ROUTE_ALIASES
+    assert "if (p.alias){ setHash('#/' + p.route + (p.query ? '?' + p.query : ''), false); }" in APP_JS
     assert "aria-current" in APP_JS
 
 
@@ -169,7 +179,7 @@ def test_every_discovery_surface_says_unconfirmed(run_dir, catalog, tmp_path):
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
     data = _page_data(page)
     assert data["unconfirmed"] == UNCONFIRMED == "candidate, unconfirmed"
-    for sid in ("candidates", "discoveries", "planets"):
+    for sid in ("candidates", "explorer", "planets", "transit", "sky"):
         assert UNCONFIRMED in _route(page, sid), sid
     # Rendered rows: the feed table status cell, the timeline dots, the top-candidates
     # widget, the discovery-count widget and every planet entry carry the wording.
@@ -183,7 +193,7 @@ def test_every_discovery_surface_says_unconfirmed(run_dir, catalog, tmp_path):
     assert "${UNC}" in planets and "D.no_detection" in planets
     assert "candidate, unconfirmed" in data["docket_html"]
     # The feed rule is shown as a rule, not a vetting result.
-    disc = _route(page, "discoveries")
+    disc = _route(page, "explorer")
     assert "at most 5,000 ppm" in disc and "at least 2 transits" in disc
     assert "not a vetting result" in disc
 
@@ -264,18 +274,14 @@ def test_skip_target_is_not_a_route(run_dir, tmp_path):
     assert "const p = parseHash(location.hash); if (!p) return;" in APP_JS
 
 
-def test_drawer_is_a_dialog_with_a_close_button(run_dir, tmp_path):
+def test_top_bar_is_a_pill_switcher_with_no_drawer(run_dir, tmp_path):
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
-    side = re.search(r'<aside class="sidebar".*?</aside>', page, re.S).group(0)
-    assert 'id="drawerclose"' in side and "Close menu" in side
-    assert "side.setAttribute('role', 'dialog')" in APP_JS and "side.setAttribute('aria-modal', 'true')" in APP_JS
-    # The lock is on html: with html's overflow-x:hidden, overflow on body alone does not stop the viewport.
-    lock = re.search(r"function lockScroll\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    unlock = re.search(r"function unlockScroll\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "document.documentElement.style.overflow = 'hidden'" in lock and "lockedY = window.scrollY" in lock
-    assert "document.documentElement.style.overflow = ''" in unlock and "window.scrollTo(0, y)" in unlock
-    assert "lockScroll();" in re.search(r"function openDrawer\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "unlockScroll();" in re.search(r"function closeDrawer\(returnFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    top = re.search(r'<header class="topbar">.*?</header>', page, re.S).group(0)
+    assert '<nav class="nav" aria-label="Sections">' in top and 'class="brand"' in top and "data-theme-toggle" in top
+    assert 'id="sidebar"' not in page and "openDrawer" not in APP_JS
+    # The bar's height (two rows on a phone) is measured into --top for the case file's frame.
+    assert "document.documentElement.style.setProperty('--top'" in APP_JS and "ResizeObserver" in APP_JS
+    assert "-webkit-backdrop-filter:saturate(180%) blur(24px)" in APP_CSS
 
 
 def test_shell_and_framed_docket_share_the_self_hosted_kshana_fonts(run_dir, tmp_path):
@@ -301,14 +307,14 @@ def test_shell_and_framed_docket_share_the_self_hosted_kshana_fonts(run_dir, tmp
     assert "Inter+Tight" in standalone and "Geist" not in standalone
 
 
-def test_tokens_follow_the_kshana_observatory_system():
-    root = re.search(r":root\{color-scheme:light;(.*?)\}", APP_CSS, re.S).group(1)
-    for token in ("--bg:#E8ECF3", "--ink:#182033", "--cyan:#066A86", "--lime:#2F6E0A", "--amber:#764600",
-                  "--coral:#B42D1B", "--space:#060A14", "--r:14px"):
+def test_tokens_follow_the_approved_design():
+    root = re.search(r":root\{color-scheme:dark;(.*?)\}", APP_CSS, re.S).group(1)
+    for token in ("--bg:#000", "--ink:#F5F5F7", "--blue:#0A84FF", "--yellow:#FFD60A", "--red:#FF453A",
+                  "--sen:#64D2FF", "--prb:#BF5AF2", "--star:#FFB340"):
         assert token in root, token
-    # Light, dark by preference unless forced light, and forced dark.
-    assert '@media (prefers-color-scheme: dark){:root:not([data-theme="light"])' in APP_CSS
-    assert ':root[data-theme="dark"]{' in APP_CSS
+    # Dark first; light on request, or with the system when the viewer chooses "system".
+    assert ':root[data-theme="light"]{color-scheme:light;' in APP_CSS
+    assert '@media (prefers-color-scheme: light){:root[data-theme="system"]' in APP_CSS
 
 
 def test_feed_no_detection_wording_matches_the_plate():
@@ -339,12 +345,11 @@ def test_overview_hero_states_the_argument_from_stored_values(run_dir, catalog, 
     assert len(subj["t"]) == len(subj["ppm"])
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
     overview = _route(page, "overview")
-    assert 'class="instrument"' in overview and 'id="herocurve"' in overview and 'id="herofold"' in overview
     assert "What this page does not claim" in overview and "No stellar radius is stored" in overview
     assert UNCONFIRMED in overview and NO_DETECTION.split(". ")[1] in overview
-    # The fold draws a box at the stored depth and duration and says it is not a fit.
-    fold = re.search(r"function heroFold\(box\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "not a fit" in fold and "L.depth_ppm" in fold
+    # The Sky section carries the run's argument: the lede, its qualifier and the archive line.
+    sky = _route(page, "sky")
+    assert html_unescape(hero["lede"]) in html_unescape(sky) and "does not say whether" in html_unescape(sky)
 
 
 def html_unescape(text: str) -> str:
@@ -380,7 +385,7 @@ def test_panel_lists_marks_per_dip(run_dir, catalog, tmp_path):
     assert "${a.n_claude} of ${plural(a.of_claude, 'Sentinel')}, ${a.n_sim} of ${plural(a.of_sim, 'Probe')}" in body
     assert "dipHref(a.id, 'ledger')" in body and "Verdict ledger" in body
     assert "not a person" in body
-    assert "Marks per dip" in _route(page, "panel")
+    assert "Marks per dip" in _route(page, "sentinels")
 
 
 ISO = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}")
@@ -414,14 +419,14 @@ def test_when_formats_a_readable_date_with_the_iso_in_the_title():
 
 def test_feed_is_named_for_what_it_holds(run_dir, catalog, tmp_path):
     data = app_data(run_dir, title="t", catalog_path=catalog)
-    assert next(s for s in data["sections"] if s["id"] == "discoveries")["label"] == "Discoveries"
+    assert feed_label(data["catalog"]["candidates"]) == "Discoveries"
     mostly_known = json.loads(catalog.read_text())
     mostly_known["candidates"][0]["status"] = "known_toi"
     path = tmp_path / "known.json"
     path.write_text(json.dumps(mostly_known))
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=path).read_text()
-    assert ">Feed</p>" in page and 'data-route="discoveries"><svg' in page
-    assert "2 of them match a known TOI period" in _route(page, "discoveries")
+    assert '<h2 id="h-feedsec">Feed</h2>' in page
+    assert "2 of them match a known TOI period" in _route(page, "explorer")
 
 
 def test_top_candidates_name_the_archive_match(run_dir, catalog, tmp_path):
@@ -640,7 +645,7 @@ def test_feed_sort_and_filter_round_trip_through_the_url():
     assert decode_feed_view("") == feed_view(None) == DEFAULT_FEED_VIEW
     assert decode_feed_view("sort=radius&dir=up&filter=planets") == DEFAULT_FEED_VIEW
     # The page reads the same query on load and writes it back when the viewer changes a control.
-    assert "'#/discoveries?' + encodeFeedView(currentFeedView())" in APP_JS
+    assert "'#/explorer?' + encodeFeedView(currentFeedView())" in APP_JS
     go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "decodeFeedView(p.params)" in go and "ownFeedView" in go and "syncFeedURL()" in go
     sort_click = re.search(r"\$\('#disctable'\).addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
@@ -735,7 +740,7 @@ def test_calibration_plane_is_read_from_the_weights_file(run_dir, tmp_path):
     assert "The Sentinels were calibrated on" in sample and "subjects only" in sample
     assert "Calibrated weights: ${cl.length ? `Sentinels ${range(cl)}`" in sample
     assert "not people" in sample
-    panel = _route(page, "panel")
+    panel = _route(page, "sentinels")
     assert "Probe (deterministic detector), not a person" in panel and "Sentinel (Claude), not a person" in panel
     assert 'id="calplane"' in panel and "floored at 0.05" in panel
 
@@ -786,8 +791,8 @@ console.log(JSON.stringify([archiveNote([known, fresh]), archiveNote([fresh]), h
     assert NO_DETECTION in head_known and NO_DETECTION not in head_new
     assert "${noDossierLine(rows)}${archiveNote(rows)}</caption>" in APP_JS
     # The route's header line says it too when the catalogue holds a known TOI match.
-    feed = _route(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text(), "discoveries")
-    header = re.search(r"<header>.*?</header>", feed, re.S).group(0)
+    feed = _route(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text(), "explorer")
+    header = re.search(r'<div class="secthead"><h2 id="h-feedsec">.*?</div>', feed, re.S).group(0)
     assert "match a known TOI period" in header and NO_DETECTION in header
 
 
@@ -914,20 +919,20 @@ def test_theme_control_meta_and_first_paint(run_dir, tmp_path):
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
     head = page[:page.index("</head>")]
     assert '<meta name="description" content="exoplan run ' in head and "candidate, unconfirmed" in head
-    assert '<meta name="color-scheme" content="light dark">' in head
+    assert '<meta name="color-scheme" content="dark light">' in head
     assert head.count('<meta name="theme-color"') == 2
     # The stored choice is applied by an inline script before the stylesheet: no flash of the wrong theme.
     assert head.index("localStorage.getItem('exoplan-theme')") < head.index('<style>')
     assert "try{" in head and "catch(e){}" in head
-    # One control in the sidebar footer and one in the phone top bar, each a 44 px target.
-    assert page.count("<button class=\"btn themebtn\" type=\"button\" data-theme-toggle") == 2
+    # One control, in the top bar, a 44 px target.
+    assert page.count("<button class=\"btn themebtn\" type=\"button\" data-theme-toggle") == 1
     assert ".themebtn{min-height:44px" in APP_CSS and "min-width:44px" in _phone_css()
     apply = re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "removeAttribute('data-theme')" in apply and "try {" in apply and "postMessage({source: 'exoplan-shell', theme: t}" in apply
-    assert "THEMES = ['system', 'light', 'dark']" in APP_JS
+    assert "setAttribute('data-theme', t)" in apply and "try {" in apply and "postMessage({source: 'exoplan-shell', theme: t}" in apply
+    assert "THEMES = ['dark', 'light', 'system']" in APP_JS and "var t='dark'" in head
     # The framed Docket follows the theme.
     assert "document.documentElement.setAttribute('data-theme', m.theme)" in FRAME_BRIDGE_JS
-    assert ':root[data-theme=\\"dark\\"]' in FRAME_THEME_CSS or ':root[data-theme="dark"]' in FRAME_THEME_CSS
+    assert ':root[data-theme=\"light\"]' in FRAME_THEME_CSS and "--paper:#000" in FRAME_THEME_CSS
 
 
 def test_phone_feed_is_three_line_cards_with_a_distinct_sort_group(run_dir, catalog, tmp_path):
@@ -966,8 +971,8 @@ def test_hero_qualifies_an_archive_match_in_the_lede_and_the_box(run_dir, tmp_pa
     data = app_data(run_dir, title="t")
     data["hero"] = matched
     page = app_mod.app_page(data)
-    lede = re.search(r'<p class="lede">(.*?)</p>', page, re.S).group(1)
-    assert lede.rstrip().endswith("not that this run confirmed it.")
+    lede = re.search(r'<p class="muted" style="margin:0;max-width:80ch">(.*?)</p>', page, re.S).group(1)
+    assert "not that this run confirmed it." in lede
     box = re.search(r"<li><b>No confirmed planet.</b>(.*?)</li>", page, re.S).group(1)
     assert "The match with Test c says the planet is already known, not that this run confirmed it." in box
 
@@ -1052,7 +1057,7 @@ def test_panel_page_attribution_and_ids_unchanged_in_data(run_dir, tmp_path):
 
     assert ATTRIBUTION == "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors."
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
-    assert ATTRIBUTION in _route(page, "panel")
+    assert ATTRIBUTION in _route(page, "sentinels")
     assert "superintelligence" not in page.lower()
     data = _page_data(page)
     # Ids stay as stored: the panel, calibration and agreement keep them; names are a separate map.

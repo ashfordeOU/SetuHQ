@@ -156,7 +156,8 @@ kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--rule);border-rad
 .xm-cmp{display:block;margin-top:2px}
 .xm-one{margin:0}
 .xm-prov{margin-top:4px;font-size:12px;color:var(--muted)}
-.xm-prov summary{cursor:pointer;font:600 12px "JetBrains Mono",monospace;color:var(--muted)}
+.xm-prov summary{cursor:pointer;display:flex;align-items:center;min-height:28px;font:600 12px "JetBrains Mono",monospace;color:var(--muted);border-radius:4px}
+.xm-prov summary:focus-visible{outline:2px solid var(--fit);outline-offset:2px}
 .xm-prov ul{margin:4px 0 0;padding-left:18px;overflow-wrap:anywhere}
 .sighead{scroll-margin-top:calc(var(--top, 0px) + 8px)}
 @media (max-width:699.98px){.xm-prov summary{display:flex;align-items:center;min-height:44px;padding:12px 0;box-sizing:border-box}}

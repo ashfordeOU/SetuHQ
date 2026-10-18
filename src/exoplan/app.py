@@ -43,15 +43,20 @@ from pathlib import Path
 from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
 from exoplan.docket import OUTCOME_LABEL, docket_data, docket_page
 from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
+from exoplan.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
 
+# The five sections of the top bar, and three pages each reached from one of them.
 SECTIONS = [
     ("overview", "Overview"),
-    ("candidates", "Candidates"),
-    ("discoveries", "Discoveries"),
-    ("planets", "Planets"),
-    ("panel", "Panel"),
-    ("runs", "Runs"),
+    ("sky", "Sky"),
+    ("transit", "Transit"),
+    ("explorer", "Explorer"),
+    ("sentinels", "Sentinels"),
 ]
+SUBPAGES = [("candidates", "Case file", "transit"), ("planets", "Planets", "explorer"), ("runs", "Runs", "sentinels")]
+# Old addresses keep working: each is rewritten to the section that took its place (query kept).
+ROUTE_ALIASES = {"discoveries": "explorer", "feed": "explorer", "panel": "sentinels", "home": "sky",
+                 "cockpit": "transit", "about": "overview"}
 
 WIDGETS = [
     ("kpis", "Run figures"),
@@ -479,8 +484,7 @@ FRAME_BRIDGE_JS = r"""
     var m = e.data; if (e.source !== P || !m || m.source !== 'exoplan-shell') return;
     if (m.dip && m.dip !== selected() && typeof select === 'function') select(m.dip, false);
     if (m.section && SECS.indexOf(m.section) >= 0){ scrollToSection(m.section); lastSec = m.section; }
-    if (m.theme === 'light' || m.theme === 'dark') document.documentElement.setAttribute('data-theme', m.theme);
-    else if (m.theme === 'system') document.documentElement.removeAttribute('data-theme');
+    if (m.theme === 'light' || m.theme === 'dark' || m.theme === 'system') document.documentElement.setAttribute('data-theme', m.theme);
   });
   // On a phone the signal list sits below the dossier: a fixed "Signals" button jumps to it. It lands on the
   // current signal's header (else the first), not the panel header, clear of any sticky row above it.
@@ -505,9 +509,34 @@ FRAME_BRIDGE_JS = r"""
     var cur = document.querySelector('.dipbtn.cur'), vh = window.innerHeight, shift = top - margin;
     if (cur){ var after = cur.getBoundingClientRect().top - base - shift, room = vh - 52; if (after > room) shift += after - room; }
     sc.scrollTop += shift;
-    var rows = document.getElementById('rows'); if (rows) rows.focus({preventScroll: true});
+    // Focus lands where the view lands: the signal's header (made focusable for this).
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({preventScroll: true});
+  }
+  // On a phone the list is an accordion: each other signal's header is a button that says how many dips it
+  // would show, with aria-expanded; the current signal's header is expanded.
+  var phone = window.matchMedia ? window.matchMedia('(max-width:700px)') : {matches: false};
+  function accordion(){
+    var heads = document.querySelectorAll('#rows .sig > .sighead');
+    if (!phone.matches){
+      for (var j = 0; j < heads.length; j++){ heads[j].removeAttribute('role'); heads[j].removeAttribute('aria-expanded'); var t0 = heads[j].querySelector('.showdips'); if (t0) t0.remove(); }
+      return;
+    }
+    for (var i = 0; i < heads.length; i++){
+      var h = heads[i], g = h.parentElement, n = g.querySelectorAll('.row').length, cur = g.classList.contains('cur');
+      h.setAttribute('role', 'button'); h.setAttribute('aria-expanded', String(cur));
+      if (h.getAttribute('tabindex') === null || h.getAttribute('tabindex') === '-1') h.setAttribute('tabindex', '0');
+      var tip = h.querySelector('.showdips');
+      if (!tip){ tip = document.createElement('span'); tip.className = 'showdips'; h.appendChild(tip); }
+      tip.textContent = cur ? '' : 'show ' + n + ' dip' + (n === 1 ? '' : 's');
+      if (!h.dataset.keys){ h.dataset.keys = '1'; h.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); this.click(); } }); }
+    }
   }
   document.addEventListener('DOMContentLoaded', function(){
+    var rowsBox = document.getElementById('rows');
+    accordion();
+    var obs = window.MutationObserver ? new MutationObserver(function(){ obs.disconnect(); accordion(); obs.observe(rowsBox, {childList: true, subtree: true, attributes: true, attributeFilter: ['class']}); }) : null;
+    if (obs && rowsBox) obs.observe(rowsBox, {childList: true, subtree: true, attributes: true, attributeFilter: ['class']});
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'jumplist'; b.textContent = 'Signals ↑'; b.setAttribute('aria-label', 'Jump to the list of signals and dips');
     // First in the document (it is position: fixed, so this changes only the reading and tab order).
@@ -530,8 +559,11 @@ FRAME_PHONE_CSS = (
     # The list works as an accordion on a phone: the current signal shows its dips, the others their
     # header (a tap selects that signal), so the list and the current dip's buttons fit one screen.
     "#rows .sig:not(.cur) .row{display:none}"
+    ".showdips{display:block;margin-top:4px;font:500 12px/1.4 \"Geist\",sans-serif;color:var(--fit)}"
+    "#rows .sighead[role=button]{min-height:44px;cursor:pointer}"
     "}"
     "@media (min-width:700.02px){.jumplist{display:none}}"
+    "@media (min-width:700.02px){.showdips{display:none}}"
 )
 
 
@@ -540,15 +572,15 @@ FRAME_PHONE_CSS = (
 DOCKET_FONTS = ("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600"
                        "&family=JetBrains+Mono:wght@400;500;600&display=swap")
 FRAME_THEME_CSS = (
-    ":root{--paper:#E8ECF3;--ink:#182033;--rule:rgba(28,44,84,.2);--muted:#4E5971;--fit:#066A86;--pass:#2F6E0A;"
-    "--flag:#764600;--reject:#B42D1B;--panel:#F5F7FB;--sel:#DEE4EE;--cons:#182033}"
-    "@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]){--paper:#060A14;--ink:#EAF0FF;"
-    "--rule:rgba(150,175,230,.2);--muted:#8190B0;--fit:#3DDCF7;--pass:#A8EE5E;--flag:#FFB547;--reject:#FF6A5C;"
-    "--panel:#0D1528;--sel:#0E1730;--cons:#EAF0FF}}"
-    ":root[data-theme=\"dark\"]{--paper:#060A14;--ink:#EAF0FF;--rule:rgba(150,175,230,.2);--muted:#8190B0;--fit:#3DDCF7;"
-    "--pass:#A8EE5E;--flag:#FFB547;--reject:#FF6A5C;--panel:#0D1528;--sel:#0E1730;--cons:#EAF0FF;color-scheme:dark}"
-    ":root[data-theme=\"light\"]{color-scheme:light}"
-    "body{-webkit-font-smoothing:antialiased;letter-spacing:-.006em}"
+    # The shell's dark-first palette: black ground, near-white ink, system colours; a light variant on request.
+    ":root{--paper:#000;--ink:#F5F5F7;--rule:rgba(255,255,255,.14);--muted:#8E8E93;--fit:#0A84FF;--pass:#30D158;"
+    "--flag:#FFD60A;--reject:#FF453A;--panel:#1C1C1E;--sel:rgba(255,255,255,.08);--cons:#F5F5F7;color-scheme:dark}"
+    ":root[data-theme=\"light\"]{--paper:#F5F5F7;--ink:#1D1D1F;--rule:rgba(0,0,0,.14);--muted:#6E6E73;--fit:#0066CC;"
+    "--pass:#1F7A35;--flag:#8A6100;--reject:#C9001B;--panel:#FFFFFF;--sel:rgba(0,0,0,.06);--cons:#1D1D1F;color-scheme:light}"
+    "@media (prefers-color-scheme: light){:root[data-theme=\"system\"]{--paper:#F5F5F7;--ink:#1D1D1F;--rule:rgba(0,0,0,.14);"
+    "--muted:#6E6E73;--fit:#0066CC;--pass:#1F7A35;--flag:#8A6100;--reject:#C9001B;--panel:#FFFFFF;--sel:rgba(0,0,0,.06);"
+    "--cons:#1D1D1F;color-scheme:light}}"
+    "body{-webkit-font-smoothing:antialiased;letter-spacing:-.01em}"
 )
 
 
@@ -564,7 +596,7 @@ def with_frame_bridge(docket_html: str) -> str:
 
 def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
              weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None,
-             require_crossmatch: bool = False) -> dict:
+             require_crossmatch: bool = False, targets_path: str | Path | None = DEFAULT_TARGETS) -> dict:
     """Everything the shell shows, read from stored files only.
 
     With ``require_crossmatch`` the build fails (``CrossmatchUnavailable``) when no stored archive
@@ -613,7 +645,11 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
                      "outcome_label": OUTCOME_LABEL[c["outcome"]], "signal_id": c.get("signal_id", ""),
                      "signal_dips": per_signal.get(c.get("signal_id", ""), 1), **archive_match(c["candidate_id"])}
                     for c in top]
-    sections = [{"id": s, "label": feed_label(feed) if s == "discoveries" else label} for s, label in SECTIONS]
+    sections = ([{"id": s, "label": label, "parent": None} for s, label in SECTIONS]
+                + [{"id": s, "label": label, "parent": parent} for s, label, parent in SUBPAGES])
+    hero = overview_hero(dock, top_rows)
+    calib = {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name}
+    story = story_data(run_dir, dock, feed, calib, hero, targets_path=targets_path)
     return {
         "title": title,
         "sections": sections,
@@ -650,7 +686,11 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "feed_view": {"sorts": FEED_SORTS, "filters": FEED_FILTERS, "numeric": list(FEED_NUMERIC),
                       "default": DEFAULT_FEED_VIEW},
         "status_label": STATUS_LABEL,
-        "hero": overview_hero(dock, top_rows),
+        "hero": hero,
+        "story": story,
+        "sky_geo": sky_geometry(story["star"]["ra_deg"], story["star"]["dec_deg"]),
+        "deco": decoration(),
+        "aliases": ROUTE_ALIASES,
         "planets": planet_cards(cands, run_name, feed, crossmatch),
         "crossmatch_line": crossmatch.get("line", ""),
         "crossmatch_targets": crossmatch.get("targets") or [],
@@ -660,7 +700,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
                             "run_status": crossmatch.get("run_status", ""), "run_error": crossmatch.get("run_error", ""),
                             "error": crossmatch.get("error", "")},
         "panel": panel_cards(manifest, run["marks"], run["reviewerDecisions"], flat, cands),
-        "calibration": {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name},
+        "calibration": calib,
         "agreement": dip_agreement(cands, dock["reviewers"]),
         "reviewer_names": reviewer_names(dock["reviewers"]),
         "attribution": ATTRIBUTION,
@@ -671,184 +711,283 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
 
 
 APP_CSS = """
-/* Tokens: the Kshana Observatory system (kshana web/theme.css), so the two products read as one family.
-   Text colours keep WCAG AA (4.5:1) on the ground they sit on, in both themes. The "space" tokens are the
-   instrument panels: they stay dark in both themes, like Kshana's charts and consoles. */
-:root{color-scheme:light;
-  --bg:#E8ECF3;--bg-2:#DEE4EE;--bg-3:#D3DBE8;
-  --glass:rgba(247,249,252,.9);--panel-2:rgba(238,242,248,.86);--panel:#F5F7FB;
-  --line:rgba(28,44,84,.12);--line-2:rgba(28,44,84,.2);--line-3:rgba(28,44,84,.32);
-  --ink:#182033;--ink-2:#3A455E;--ink-3:#4E5971;
-  --cyan:#066A86;--lime:#2F6E0A;--amber:#764600;--coral:#B42D1B;--magenta:#A8247F;
-  --cyan-soft:rgba(7,130,163,.12);--lime-soft:rgba(47,110,10,.12);--amber-soft:rgba(158,95,0,.12);--coral-soft:rgba(180,45,27,.11);
-  --btn-bg:#182033;--btn-ink:#FFFFFF;
-  --shadow:0 1px 0 rgba(255,255,255,.7) inset,0 18px 40px -28px rgba(24,40,80,.3),0 1px 3px rgba(24,40,80,.08);
-  --gloss:linear-gradient(180deg,rgba(255,255,255,.4),transparent 46%);
-  --dot:rgba(28,44,84,.065);
-  --space:#060A14;--space-2:#0A1122;--space-3:#0E1730;--space-ink:#EAF0FF;--space-ink-2:#A7B4D2;--space-ink-3:#8190B0;--space-line:rgba(150,175,230,.14);
-  --s-cyan:#3DDCF7;--s-lime:#A8EE5E;--s-amber:#FFB547;--s-coral:#FF6A5C;
+/* The approved design: a pure black ground, frosted glass, hairlines, Geist with bold tight headlines and a
+   grey second line, and system colours: blue for a known planet, yellow for open, red for rejected, cyan for
+   the Sentinels, purple for the Probes, amber for the star. Dark first; a light variant uses the same names.
+   The "space" panels (sky map, transit theatre, scatter, orbits) stay dark in both themes. */
+:root{color-scheme:dark;
+  --bg:#000;--bg-2:#0B0B0D;--bg-3:#161618;
+  --glass:rgba(28,28,30,.55);--glass-2:rgba(28,28,30,.45);--panel:#1C1C1E;--panel-2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);--line-3:rgba(255,255,255,.24);
+  --ink:#F5F5F7;--ink-2:#A1A1A6;--ink-3:#8E8E93;
+  --blue:#0A84FF;--yellow:#FFD60A;--red:#FF453A;--sen:#64D2FF;--prb:#BF5AF2;--prb-ink:#D0A8FF;--star:#FFB340;--green:#30D158;
+  --cyan:#64D2FF;--lime:#30D158;--amber:#FFB340;--coral:#FF6961;--magenta:#BF5AF2;
+  --cyan-soft:rgba(100,210,255,.12);--lime-soft:rgba(48,209,88,.14);--amber-soft:rgba(255,179,64,.14);--coral-soft:rgba(255,69,58,.16);
+  --seg-bg:#F5F5F7;--seg-ink:#000;--btn-bg:#0A84FF;--btn-ink:#FFFFFF;
+  --shadow:none;--gloss:none;
   --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
-  --display:"Unbounded","Geist",sans-serif;
-  --r:14px;--ease:cubic-bezier(.22,.9,.24,1);
-  /* the shell's own names, pointed at the family tokens */
-  --paper:var(--bg);--rule:var(--line-2);--muted:var(--ink-3);--fit:var(--cyan);--pass:var(--lime);--flag:var(--amber);--reject:var(--coral);--sel:var(--bg-2);--side:#DEE4EE;
-  --top:56px}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;
-  --bg:#060A14;--bg-2:#0A1122;--bg-3:#0E1730;--glass:rgba(16,24,44,.62);--panel-2:rgba(22,33,60,.55);--panel:#0D1528;
-  --line:rgba(150,175,230,.11);--line-2:rgba(150,175,230,.2);--line-3:rgba(150,175,230,.32);
-  --ink:#EAF0FF;--ink-2:#A7B4D2;--ink-3:#8190B0;
-  --cyan:#3DDCF7;--lime:#A8EE5E;--amber:#FFB547;--coral:#FF6A5C;--magenta:#F45CCB;
-  --cyan-soft:rgba(61,220,247,.14);--lime-soft:rgba(168,238,94,.14);--amber-soft:rgba(255,181,71,.14);--coral-soft:rgba(255,106,92,.14);
-  --btn-bg:#EAF0FF;--btn-ink:#070B16;
-  --shadow:0 1px 0 rgba(255,255,255,.05) inset,0 24px 60px -28px rgba(0,0,0,.75),0 2px 8px -2px rgba(0,0,0,.35);
-  --gloss:linear-gradient(180deg,rgba(255,255,255,.045),transparent 40%);--dot:rgba(150,175,230,.075);--side:#0A1122}}
-:root[data-theme="dark"]{color-scheme:dark;
-  --bg:#060A14;--bg-2:#0A1122;--bg-3:#0E1730;--glass:rgba(16,24,44,.62);--panel-2:rgba(22,33,60,.55);--panel:#0D1528;
-  --line:rgba(150,175,230,.11);--line-2:rgba(150,175,230,.2);--line-3:rgba(150,175,230,.32);
-  --ink:#EAF0FF;--ink-2:#A7B4D2;--ink-3:#8190B0;
-  --cyan:#3DDCF7;--lime:#A8EE5E;--amber:#FFB547;--coral:#FF6A5C;--magenta:#F45CCB;
-  --cyan-soft:rgba(61,220,247,.14);--lime-soft:rgba(168,238,94,.14);--amber-soft:rgba(255,181,71,.14);--coral-soft:rgba(255,106,92,.14);
-  --btn-bg:#EAF0FF;--btn-ink:#070B16;
-  --shadow:0 1px 0 rgba(255,255,255,.05) inset,0 24px 60px -28px rgba(0,0,0,.75),0 2px 8px -2px rgba(0,0,0,.35);
-  --gloss:linear-gradient(180deg,rgba(255,255,255,.045),transparent 40%);--dot:rgba(150,175,230,.075);--side:#0A1122}
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;--display:var(--sans);
+  --r:22px;--ease:cubic-bezier(.2,.8,.2,1);
+  --paper:var(--bg);--rule:var(--line-2);--muted:var(--ink-3);--fit:var(--blue);--pass:var(--green);--flag:var(--yellow);--reject:var(--red);--sel:var(--panel-2);--side:var(--bg-2);
+  --top:60px}
+:root[data-theme="light"]{color-scheme:light;
+  --bg:#F5F5F7;--bg-2:#FFFFFF;--bg-3:#E8E8ED;
+  --glass:rgba(255,255,255,.72);--glass-2:rgba(255,255,255,.6);--panel:#FFFFFF;--panel-2:rgba(0,0,0,.05);
+  --line:rgba(0,0,0,.08);--line-2:rgba(0,0,0,.14);--line-3:rgba(0,0,0,.26);
+  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#6E6E73;
+  --blue:#0066CC;--yellow:#8A6100;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
+  --cyan:#0066CC;--lime:#1F7A35;--amber:#A05A00;--coral:#C9001B;--magenta:#8944AB;
+  --cyan-soft:rgba(0,102,204,.1);--lime-soft:rgba(31,122,53,.12);--amber-soft:rgba(160,90,0,.12);--coral-soft:rgba(201,0,27,.1);
+  --seg-bg:#1D1D1F;--seg-ink:#FFFFFF;--btn-bg:#0071E3;--btn-ink:#FFFFFF}
+@media (prefers-color-scheme: light){:root[data-theme="system"]{color-scheme:light;
+  --bg:#F5F5F7;--bg-2:#FFFFFF;--bg-3:#E8E8ED;
+  --glass:rgba(255,255,255,.72);--glass-2:rgba(255,255,255,.6);--panel:#FFFFFF;--panel-2:rgba(0,0,0,.05);
+  --line:rgba(0,0,0,.08);--line-2:rgba(0,0,0,.14);--line-3:rgba(0,0,0,.26);
+  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#6E6E73;
+  --blue:#0066CC;--yellow:#8A6100;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
+  --cyan:#0066CC;--lime:#1F7A35;--amber:#A05A00;--coral:#C9001B;--magenta:#8944AB;
+  --cyan-soft:rgba(0,102,204,.1);--lime-soft:rgba(31,122,53,.12);--amber-soft:rgba(160,90,0,.12);--coral-soft:rgba(201,0,27,.1);
+  --seg-bg:#1D1D1F;--seg-ink:#FFFFFF;--btn-bg:#0071E3;--btn-ink:#FFFFFF}}
 *{box-sizing:border-box}
 html{background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;overflow-x:hidden}
-body{background:transparent;color:var(--ink);font:400 15px/1.55 var(--sans);letter-spacing:-.006em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-/* the Observatory ground: a soft radial field with a faint dot grid that fades down the page */
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(1100px 640px at 78% -12%,var(--bg-3),transparent 70%),radial-gradient(900px 600px at -10% 40%,var(--bg-2),transparent 70%)}
-body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(var(--dot) 1px,transparent 1.2px);background-size:24px 24px;-webkit-mask-image:linear-gradient(to bottom,#000,rgba(0,0,0,.3) 60%,transparent);mask-image:linear-gradient(to bottom,#000,rgba(0,0,0,.3) 60%,transparent)}
+body{background:transparent;color:var(--ink);font:400 15px/1.5 var(--sans);letter-spacing:-.01em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .mono,code,pre{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:0}
-:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
-::selection{background:var(--cyan);color:var(--bg)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px}
+::selection{background:var(--blue);color:#fff}
 a{color:var(--cyan);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--ink)}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.skip{position:absolute;left:12px;top:-60px;background:var(--btn-bg);color:var(--btn-ink);padding:11px 14px;border-radius:11px;z-index:50;display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
+.skip{position:absolute;left:12px;top:-60px;background:var(--btn-bg);color:var(--btn-ink);padding:11px 14px;border-radius:999px;z-index:50;display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
 .skip:focus{top:12px}
 #content:focus{outline:none}
-.topbar{display:none}
-.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh;background:linear-gradient(to right,var(--side) 247px,var(--line) 247px 248px,transparent 248px)}
-.sidebar{background:color-mix(in oklab,var(--side) 82%,transparent);-webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:22px;padding:22px 0 18px}
-.brand{padding:0 20px;display:grid;gap:6px}
-.brand b{display:flex;align-items:center;gap:9px;font:500 17px/1 var(--display);letter-spacing:-.01em}
-.brand b::before{content:"";width:16px;height:16px;flex:none;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--bg) 0 34%,transparent 36%),conic-gradient(from 200deg,var(--cyan),var(--lime),var(--cyan))}
-.brand span{font:500 11px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;overflow-wrap:anywhere}
-.navlabel{padding:0 20px;font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 -12px}
-.nav ul{list-style:none;margin:0;padding:0 12px;display:grid;gap:2px}
-.nav a{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:11px;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:14.5px;transition:color .2s,background-color .2s}
-.nav a .ix{margin-left:auto;font:500 11px/1 var(--display);color:var(--ink-3);letter-spacing:0}
-.nav a:hover{background:var(--panel-2);color:var(--ink)}
-.nav a[aria-current="page"]{background:var(--glass);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2),var(--shadow)}
-.nav a[aria-current="page"] .ix{color:var(--cyan)}
-.nav svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6}
-.sidefoot{margin-top:auto;padding:14px 20px 0;border-top:1px solid var(--line);font:400 11px/1.6 var(--mono);color:var(--ink-3);overflow-wrap:anywhere;display:grid;gap:6px}
-.sidefoot .stored{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase;font-size:11px}
-.sidefoot .stored i{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px var(--lime-soft)}
-.backdrop{display:none}
-main{min-width:0;padding:30px clamp(18px,3vw,44px) 64px}
+/* decorative star field behind everything (dark themes only) */
+.starfield{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+:root[data-theme="light"] .starfield{display:none}
+@media (prefers-color-scheme: light){:root[data-theme="system"] .starfield{display:none}}
+/* the top bar: brand, the pill section switcher, the run, the theme control */
+.topbar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 18px;padding:8px clamp(16px,3vw,32px);background:color-mix(in oklab,var(--bg) 62%,transparent);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:9px;min-height:44px;padding:0 4px;color:var(--ink);text-decoration:none;font-weight:600;font-size:17px;letter-spacing:-.02em}
+.brand:hover{color:var(--ink)}
+.brand svg{width:22px;height:22px;flex:none}
+.nav ul{list-style:none;margin:0;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
+.nav a{display:flex;align-items:center;min-height:36px;padding:0 16px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:13px;font-weight:500;white-space:nowrap;transition:background-color .25s var(--ease),color .25s var(--ease)}
+.nav a:hover{color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--seg-bg);color:var(--seg-ink)}
+.topmeta{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink-3)}
+.topmeta .cur{white-space:nowrap}
+main{min-width:0;padding:36px clamp(16px,3vw,40px) 56px}
 main:focus{outline:none}
-.route{display:grid;gap:22px;min-width:0;max-width:1180px}
+.route{display:grid;gap:22px;min-width:0;max-width:1280px;margin:0 auto;animation:rise .45s var(--ease) both}
 .route[hidden]{display:none}
-.route>header{display:grid;gap:11px;padding-bottom:6px}
-.route>header .eyebrow{display:flex;align-items:center;gap:12px;font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0}
-.route>header .eyebrow .idx{font:500 11px/1 var(--display);letter-spacing:0;color:var(--cyan)}
-.route>header .eyebrow::after{content:"";height:1px;width:48px;background:var(--line-2);flex:none}
+.route>header{display:grid;gap:8px;padding-bottom:4px}
+.route>header .eyebrow{margin:0;font-size:15px;font-weight:500;color:var(--star);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.route>header .eyebrow .idx{display:none}
+.route>header .eyebrow .parent{color:var(--ink-3);font-weight:400}
+.route>header .eyebrow .parent a{color:var(--ink-3)}
 .route h1:focus{outline:none}
-.route>header p{margin:0;color:var(--ink-2);max-width:72ch;font-size:clamp(15px,1.15vw,16.5px);line-height:1.55}
-.route>header .lead-h{margin:0;font:600 clamp(26px,3.1vw,42px)/1.05 var(--sans);letter-spacing:-.035em;color:var(--ink);max-width:24ch;text-wrap:balance}
-#route-candidates>header .lead-h{font-size:clamp(22px,2.3vw,30px);max-width:40ch}
-h2{font:600 18px/1.25 var(--sans);letter-spacing:-.015em;margin:0}
-h3{font:600 14.5px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
-.note{margin:0;border-top:1px solid var(--line-2);padding:14px 0 0;font-size:14px;color:var(--ink-2);max-width:86ch}
+.route>header p{margin:0;color:var(--ink-2);max-width:72ch;font-size:clamp(15px,1.2vw,17px);line-height:1.5}
+.route>header .lead-h,.headline{margin:0;font-weight:700;font-size:clamp(34px,4.4vw,60px);line-height:1.02;letter-spacing:-.045em;color:var(--ink);max-width:22ch;text-wrap:balance}
+.headline .grey,.lead-h .grey{color:var(--ink-3)}
+#route-candidates>header .lead-h,#route-planets>header .lead-h,#route-runs>header .lead-h{font-size:clamp(28px,3vw,42px)}
+.headrow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
+h2{font:600 19px/1.25 var(--sans);letter-spacing:-.02em;margin:0}
+h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
+.note{margin:0;border-top:1px solid var(--line);padding:14px 0 0;font-size:14px;color:var(--ink-2);max-width:90ch}
 .note b{color:var(--ink);font-weight:600}
-.note.rule{border-top-color:var(--line-2)}
-.tag{display:inline-flex;align-items:center;gap:6px;font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2);white-space:nowrap;vertical-align:1px}
-.tag.unc{color:var(--amber);border-color:color-mix(in oklab,var(--amber) 30%,transparent);background:var(--amber-soft)}
+.tag{display:inline-flex;align-items:center;gap:6px;font:500 11px/1 var(--sans);color:var(--ink-2);padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2);white-space:nowrap;vertical-align:1px}
+.tag.unc{color:var(--yellow);border-color:color-mix(in oklab,var(--yellow) 35%,transparent);background:color-mix(in oklab,var(--yellow) 10%,transparent)}
 .tag.unc::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
-.tag.sim{color:var(--ink-3)}
-.tag.cl{color:var(--cyan);background:var(--cyan-soft);border-color:transparent}
+.tag.sim{color:var(--prb-ink)}
+.tag.cl{color:var(--sen);background:var(--cyan-soft);border-color:transparent}
 .muted{color:var(--ink-3)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 13px/1.2 var(--sans);color:var(--ink);background:var(--glass);border:1px solid var(--line-2);border-radius:11px;padding:6px 12px;cursor:pointer;min-height:34px;text-decoration:none;transition:border-color .2s,background-color .2s,transform .25s var(--ease)}
-.btn:hover{border-color:var(--line-3);background:var(--panel-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 13px/1.2 var(--sans);color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;min-height:34px;text-decoration:none;transition:background-color .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),transform .25s var(--ease)}
+.btn:hover{border-color:var(--line-3);color:var(--ink)}
 .btn[aria-disabled="true"]{opacity:.45;cursor:default}
-.btn.primary{background:var(--btn-bg);color:var(--btn-ink);border-color:transparent;min-height:44px;padding:0 18px;font-size:14.5px;box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 11px 30px -12px color-mix(in oklab,var(--btn-bg) 50%,transparent)}
-.btn.primary:hover{transform:translateY(-1px);background:var(--btn-bg)}
-.btn.ghost{min-height:44px;padding:0 18px;font-size:14.5px}
-.chip{font:500 12px/1.2 var(--mono);border:1px solid var(--line-2);background:var(--glass);color:var(--ink-2);padding:6px 12px;border-radius:999px;cursor:pointer;min-height:34px}
-.chip[aria-pressed="true"]{color:var(--btn-ink);background:var(--btn-bg);border-color:transparent}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.card{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px;min-width:0;position:relative;isolation:isolate;-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%)}
-.card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:var(--gloss);z-index:-1}
+.btn.primary{background:var(--btn-bg);color:var(--btn-ink);border-color:transparent;min-height:48px;padding:0 24px;font-size:17px}
+.btn.primary:hover{transform:translateY(-1px);color:var(--btn-ink)}
+.btn.ghost{min-height:48px;padding:0 20px;font-size:17px;background:transparent;border-color:transparent;color:var(--cyan)}
+.btn.ghost:hover{color:var(--ink)}
+.chip{font:500 12px/1.2 var(--sans);border:1px solid var(--line);background:transparent;color:var(--ink-2);padding:6px 14px;border-radius:999px;cursor:pointer;min-height:34px}
+.chip[aria-pressed="true"]{color:var(--seg-ink);background:var(--seg-bg);border-color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;min-width:0;position:relative;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
 .cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
-/* overview: the argument first (hero), then the instrument, then what the page does not claim, then the widgets */
-.hero{display:grid;gap:18px;min-width:0}
-.consolebar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;font:500 11.5px/1.2 var(--mono);color:var(--ink-3);letter-spacing:.04em;text-transform:uppercase;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0}
-.consolebar b{color:var(--ink);font-weight:500;text-transform:none;letter-spacing:0;font-variant-numeric:tabular-nums}
-.consolebar .live{display:inline-flex;align-items:center;gap:8px;color:var(--ink-2)}
-.consolebar .live i{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px var(--lime-soft)}
-.consolebar .sep{width:1px;height:12px;background:var(--line-2);flex:none}
-.consolebar .right{margin-left:auto}
-.hero-copy{display:grid;gap:16px;max-width:62ch}
-.hero-h{font:600 clamp(34px,4.6vw,62px)/1 var(--sans);letter-spacing:-.045em;margin:0;max-width:17ch;text-wrap:balance}
-.hero-h em{font-style:normal;color:var(--amber)}
-.lede{margin:0;font-size:clamp(15.5px,1.25vw,17.5px);line-height:1.55;color:var(--ink-2);max-width:60ch}
-.lede b{color:var(--ink);font-weight:560}
-.ctas{display:flex;flex-wrap:wrap;gap:11px;align-items:center}
-/* the instrument: Kshana's dark chart panel, dark in both themes */
-.instrument{background:linear-gradient(180deg,var(--space-2),var(--space));color:var(--space-ink);border:1px solid var(--space-line);border-radius:var(--r);box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 40px 90px -50px rgba(6,10,20,.75),0 6px 18px -11px rgba(6,10,20,.4);padding:16px 18px 14px;display:grid;gap:12px;min-width:0}
-.instrument .ihead{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:8px 16px}
-.instrument .ititle{font-size:13.5px;color:var(--space-ink);line-height:1.3;min-width:0}
-.instrument .ititle small{display:block;font:500 11px/1.5 var(--mono);color:var(--space-ink-2);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;overflow-wrap:anywhere}
-.instrument .ival{font:500 26px/1 var(--mono);letter-spacing:-.02em;color:var(--s-lime);text-align:right;white-space:nowrap}
-.instrument .ival small{display:block;font:500 11px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--space-ink-2);margin-top:4px}
-.instrument .igrid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1.15fr);gap:14px;min-width:0}
-.instrument figure{margin:0;min-width:0;display:grid;gap:6px}
-.instrument figcaption{font:400 11.5px/1.5 var(--mono);color:var(--space-ink-2)}
-.instrument .fold{border-left:1px solid var(--space-line);padding-left:14px}
-.instrument svg text{fill:var(--space-ink-2);font:11px var(--mono)}
-.instrument svg .grid{stroke:var(--space-line)}
-.instrument svg .axis{stroke:rgba(150,175,230,.35)}
-.instrument svg .pts{stroke:var(--space-ink-3);stroke-opacity:.55;stroke-width:2.2;stroke-linecap:round;fill:none}
-.instrument svg .mean{stroke:var(--s-cyan);stroke-width:1.2;stroke-opacity:.9;fill:none;stroke-linejoin:round}
-.instrument svg .box{stroke:var(--s-lime);stroke-width:1.4;stroke-dasharray:4 3;fill:none}
-.instrument svg .win{opacity:.2}
-.instrument svg .win.passed{fill:var(--s-lime)}
-.instrument svg .win.flagged{fill:var(--s-amber)}
-.instrument svg .win.rejected{fill:var(--s-coral)}
-.instrument svg text.wl{font:600 11px var(--mono)}
-.instrument svg text.wl.passed{fill:var(--s-lime)}
-.instrument svg text.wl.flagged{fill:var(--s-amber)}
-.instrument svg text.wl.rejected{fill:var(--s-coral)}
-.instrument svg .epoch{fill:var(--s-lime)}
-.instrument svg .dur{fill:var(--s-lime);opacity:.1}
-.ikey{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 11px/1.5 var(--mono);color:var(--space-ink-2);border-top:1px solid var(--space-line);padding-top:11px}
-.ikey i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
-.ikey .k-passed{background:var(--s-lime)}.ikey .k-flagged{background:var(--s-amber)}.ikey .k-rejected{background:var(--s-coral)}
-.ikey .k-mean{height:2px;background:var(--s-cyan);vertical-align:3px}
-.ikey .k-ep{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--s-lime);border-radius:0}
-.ikey .unc{color:var(--s-amber)}
-/* the vetting flow: one line of stored counts, read left to right, instead of a wall of number tiles */
-.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.45fr);border:1px solid var(--line);border-radius:var(--r);background:var(--glass);box-shadow:var(--shadow);overflow:hidden}
-.flow li{display:grid;gap:4px;align-content:start;padding:14px 16px;border-left:1px solid var(--line);position:relative;min-width:0}
-.flow li:first-child{border-left:0}
-.flow li b{font:500 clamp(24px,2.4vw,32px)/1 var(--mono);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.flow li span{font-size:12.5px;color:var(--ink-2);line-height:1.35}
-.flow li small{font:500 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
-.vet3{display:flex;flex-wrap:wrap;gap:4px 14px}
-.vet3 span{display:grid;gap:2px;font:500 11px/1.3 var(--mono);color:var(--ink-3)}
-.vet3 .pass b{color:var(--lime)}.vet3 .flag b{color:var(--amber)}.vet3 .rej b{color:var(--coral)}
-.flow li+li::before{content:"→";position:absolute;left:-8px;top:15px;width:16px;height:16px;display:grid;place-items:center;font:500 11px/1 var(--mono);color:var(--ink-3);background:var(--panel);border:1px solid var(--line);border-radius:50%}
-.honest{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.2fr);gap:12px 32px;border-top:1px solid var(--line-2);padding-top:20px}
-.honest h2{font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.honest ul{list-style:none;margin:0;padding:0;display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+/* segmented controls (the prototype's grey track with a white pill) */
+.segctl{display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;border-radius:12px;background:var(--panel-2)}
+.segctl button{min-height:32px;padding:0 12px;border-radius:9px;border:0;background:transparent;color:var(--ink-2);font:500 12px var(--sans);cursor:pointer}
+.segctl button[aria-pressed="true"]{background:var(--seg-bg);color:var(--seg-ink)}
+/* status pills with a coloured dot */
+.pill{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px;border-radius:999px;font:500 13px var(--sans);border:1px solid var(--line);background:transparent;color:var(--ink-3);cursor:pointer}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--line-3)}
+.pill[aria-pressed="true"]{border-color:var(--line-3);background:var(--panel-2);color:var(--ink)}
+.pill[aria-pressed="true"] i{background:var(--c)}
+.pill .n{color:var(--ink-3)}
+/* space panels: dark in both themes */
+.space{border-radius:28px;border:1px solid rgba(255,255,255,.08);color:#F5F5F7;overflow:hidden;position:relative;min-width:0;--ink:#F5F5F7;--ink-2:#A1A1A6;--ink-3:#8E8E93;--line:rgba(255,255,255,.08);--cyan:#64D2FF}
+.space svg text{fill:#A1A1A6}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:24px;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);min-width:0}
+.row2{display:flex;flex-wrap:wrap;gap:18px;align-items:stretch}
+.grow{flex:999 1 620px;min-width:0}
+.side{flex:1 1 320px;min-width:0}
+.small{margin:0;font-size:12px;color:var(--ink-3)}
+/* motion: all of it decorative, all of it off under prefers-reduced-motion */
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.75}}
+@keyframes orbit{to{transform:rotate(360deg)}}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-400px)}}
+@keyframes pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.8;transform:scale(1.35)}}
+@keyframes breathe{0%,100%{opacity:.55}50%{opacity:.9}}
+@keyframes sweep{from{transform:translateX(var(--from))}to{transform:translateX(var(--to))}}
+@keyframes reveal{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes head{from{transform:translateX(0)}to{transform:translateX(var(--w))}}
+.twinkle{animation:twinkle 6s ease-in-out infinite}
+.twinkle2{animation:twinkle 9s ease-in-out infinite 2s}
+.orbit{animation:orbit 60s linear infinite}
+.orbitfast{animation:orbit 14s linear infinite}
+.orbitslow{animation:orbit 90s linear infinite reverse}
+.clouds{animation:drift 90s linear infinite}
+.pulse{animation:pulse 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.breathe{animation:breathe 7s ease-in-out infinite}
+/* the transit theatre: one 10 s clock for the shadow, the curve drawing in and the playhead */
+.sweep{animation:sweep 10s linear infinite}
+.reveal{transform-box:fill-box;transform-origin:0 0;animation:reveal 10s linear infinite}
+.playhead{animation:head 10s linear infinite}
+
+/* Overview: the launch hero */
+.route>header.launch{display:flex;flex-direction:column;align-items:center;text-align:center;padding:56px 0 0;gap:0}
+.launch .kick{margin:0;font-size:17px;font-weight:500;color:var(--star)}
+.launch h1{margin:10px 0 0;font-weight:700;font-size:clamp(52px,8.4vw,120px);line-height:1;letter-spacing:-.045em}
+.route>header.launch .sub{margin:20px auto 0;max-width:620px;font-size:clamp(17px,1.6vw,21px);line-height:1.45;color:var(--ink-2)}
+.launch .ctas{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:30px}
+.planetfig{margin:44px 0 0;width:100%;position:relative;border-radius:28px;overflow:hidden;background:#000}
+.planetfig figcaption{position:absolute;left:20px;top:16px;font-size:12px;color:#8E8E93}
+.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1px;width:min(100%,1100px);margin:-70px auto 0;background:var(--line);border-radius:22px;overflow:hidden;position:relative;text-align:left}
+.proof>div{background:color-mix(in oklab,var(--panel) 88%,transparent);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);padding:22px 24px}
+.proof b{display:block;font-size:40px;font-weight:600;letter-spacing:-.03em;line-height:1.05}
+.proof span{display:block;margin-top:8px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.honest{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.2fr);gap:12px 32px;border-top:1px solid var(--line);padding-top:22px}
+.honest h2{font-size:15px;color:var(--ink-3);font-weight:500}
+.honest ul{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
 .honest li{font-size:14px;color:var(--ink-2);line-height:1.5;padding-left:16px;position:relative}
-.honest li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:2px;background:var(--amber)}
+.honest li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--yellow)}
 .honest li b{color:var(--ink);font-weight:600}
-.secthead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;border-top:1px solid var(--line-2);padding-top:20px}
-.secthead h2{font:500 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.secthead p{margin:0;font-size:13px;color:var(--ink-3);max-width:70ch}
+.secthead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;border-top:1px solid var(--line);padding-top:22px}
+.secthead h2{font-size:15px;color:var(--ink-3);font-weight:500}
+.secthead p{margin:0;font-size:13px;color:var(--ink-3);max-width:72ch}
+/* Sky */
+.skymap{flex:999 1 640px;padding:18px;background:radial-gradient(120% 120% at 50% 0%,#0B1220 0%,#000 60%)}
+.skymap svg{display:block;width:100%;height:auto}
+.skypin{position:absolute;min-height:44px;padding:10px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(28,28,30,.72);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:#F5F5F7;text-decoration:none;line-height:1.35;font-size:12px}
+.skypin b{font-size:15px;font-weight:600;display:block}
+.skypin span{display:block;color:#A1A1A6}
+.skypin em{font-style:normal;color:#64D2FF}
+.skynote{position:absolute;right:20px;bottom:14px;font-size:11px;color:#8E8E93;text-align:right;max-width:60%}
+.dipsbox{flex:1 1 300px;max-width:380px;padding:10px;display:flex;flex-direction:column;gap:2px;border-radius:28px}
+.dipsbox .dhead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 6px}
+.dipsbox .dhead b{font-size:15px;font-weight:600}
+.dipsbox .segctl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:4px 8px 8px}
+.dipitem{display:grid;grid-template-columns:10px auto minmax(0,1fr);gap:2px 12px;align-items:center;min-height:56px;padding:8px 12px;border-radius:14px;color:var(--ink);text-decoration:none;border-top:1px solid var(--line)}
+.dipitem:hover{background:var(--panel-2);color:var(--ink)}
+.dipitem i{grid-row:span 2;width:8px;height:8px;border-radius:50%;background:var(--c)}
+.dipitem b{font-size:15px;font-weight:500;white-space:nowrap}
+.dipitem .st{font-size:12px;color:var(--c);text-align:right}
+.dipitem .sub{grid-column:2/-1;font-size:13px;color:var(--ink-3)}
+.runline{padding:14px 18px;background:var(--glass-2)}
+.runline .cap{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--ink-3);margin-bottom:6px}
+.runline svg{display:block;width:100%;height:auto}
+/* Transit cockpit */
+.roundbtn{width:44px;height:44px;border-radius:50%;border:0;background:var(--panel-2);color:var(--ink);font:inherit;font-size:20px;cursor:pointer;display:inline-grid;place-items:center;text-decoration:none}
+.cmpbtn{min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--panel-2);color:var(--ink);font:500 15px var(--sans);cursor:pointer}
+.cmpbtn[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
+.dipchips{display:flex;gap:2px;padding:3px;border-radius:14px;background:var(--panel-2);overflow-x:auto}
+.dipchips a{flex:1 0 auto;display:flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border-radius:11px;color:var(--ink-2);font-size:13px;text-decoration:none;white-space:nowrap}
+.dipchips a i{width:6px;height:6px;border-radius:50%;background:var(--c)}
+.dipchips a[aria-current="true"]{background:var(--seg-bg);color:var(--seg-ink)}
+.theatre{flex:999 1 620px;padding:22px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(90% 90% at 30% 20%,#1A1206 0%,#000 65%)}
+.theatre .cap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:#8E8E93}
+.theatre svg{display:block;width:100%;height:auto}
+.theatre .foot{font-size:12px;color:#8E8E93;line-height:1.5;margin:0}
+.axisrow{display:flex;justify-content:space-between;gap:8px;font:11px var(--mono);color:#8E8E93;margin-top:-6px}
+.axisrow span:nth-child(2){text-align:center}
+.tx-side{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.scorecard{padding:18px 20px}
+.scorecard .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.scorecard .top span{font-size:13px;color:var(--ink-3)}
+.scorecard .top b{font-size:34px;font-weight:600;letter-spacing:-.03em}
+.bar{height:4px;border-radius:2px;background:var(--panel-2);margin:10px 0 12px;overflow:hidden}
+.bar i{display:block;height:4px;border-radius:2px;background:var(--c)}
+.scorecard p{margin:0;font-size:15px;line-height:1.5;color:var(--ink-2)}
+.lanes{padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+.lanes .lane{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:center}
+.lanes .lane span{font-size:13px}
+.lanes .track{position:relative;height:8px;border-radius:4px;background:var(--panel-2)}
+.lanes .track i{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--c)}
+.lanes .track i.uncounted{background:transparent;border:1px dashed var(--c)}
+.lanes .track em{position:absolute;left:0;top:-5px;font-style:normal;font-size:11px;color:var(--ink-3)}
+.lanes .win{position:absolute;top:-4px;bottom:-4px;border-left:1px dashed var(--line-3);border-right:1px dashed var(--line-3)}
+.quote{padding:16px 20px;display:flex;flex-direction:column;gap:8px;border-radius:24px;background:linear-gradient(180deg,color-mix(in oklab,var(--sen) 14%,transparent),color-mix(in oklab,var(--sen) 4%,transparent));border:1px solid color-mix(in oklab,var(--sen) 26%,transparent)}
+.quote .who{display:flex;justify-content:space-between;gap:10px;font-size:13px}
+.quote .who b{color:var(--sen);font-weight:500}
+.quote .who span{color:var(--ink-3)}
+.quote p{margin:0;font-size:16px;line-height:1.45}
+.quote small{font-size:12px;color:var(--ink-3)}
+.orbitfig{flex:1 1 320px;margin:0;padding:16px;display:flex;gap:16px;align-items:center;background:var(--glass-2)}
+.orbitfig svg{width:160px;height:160px;flex:0 0 auto}
+.orbitfig figcaption{font-size:14px;line-height:1.5;color:var(--ink-2)}
+.orbitfig figcaption b{color:var(--ink);font-weight:600}
+.tray{flex:999 1 520px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;background:var(--glass-2)}
+.tray .cap{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink-3)}
+.tray .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.tray a{border-radius:16px;border:1px solid var(--line);background:rgba(0,0,0,.5);padding:10px;color:#F5F5F7;text-decoration:none;display:block}
+.tray a[aria-current="true"]{border-color:var(--c)}
+.tray a .h{display:flex;justify-content:space-between;font-size:12px}
+.tray a .h span{color:var(--c)}
+.tray svg{display:block;width:100%;height:auto}
+.txnotice{margin:0;font-size:14px;color:var(--yellow)}
+.txnotice[hidden]{display:none}
+.casefile{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13px;color:var(--ink-3)}
+/* Explorer */
+.scatterbox{flex:999 1 620px;padding:22px;background:radial-gradient(110% 110% at 50% 100%,#120A1E 0%,#000 60%)}
+.scatterbox .cap{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#8E8E93;margin-bottom:10px}
+.scatter{position:relative;width:100%;padding-bottom:52%}
+.scatter svg{position:absolute;inset:0;width:100%;height:100%}
+.scatter .ax{position:absolute;font-size:11px;color:#8E8E93}
+.scatter button{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border:0;padding:0;background:transparent;border-radius:50%;cursor:pointer}
+.scatter button i{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);border-radius:50%;background:var(--c);box-shadow:0 0 var(--g) var(--c)}
+.scatter button[aria-pressed="true"] i{outline:2px solid #fff;outline-offset:2px}
+.scatterbox .foot{margin-top:28px;font-size:12px;color:#8E8E93}
+.selpanel{flex:1 1 320px;max-width:400px;padding:22px;display:flex;flex-direction:column;gap:14px;border-radius:28px}
+.selpanel .st{margin:0;font-size:13px;font-weight:500;color:var(--c)}
+.selpanel h2{font-size:28px;font-weight:600;letter-spacing:-.03em}
+.selpanel svg{width:100%;max-width:260px;height:auto;align-self:center}
+.statgrid{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border-radius:16px;overflow:hidden}
+.statgrid div{background:var(--panel);padding:12px}
+.statgrid dt{font-size:12px;color:var(--ink-3)}
+.statgrid dd{margin:4px 0 0;font-size:20px;font-weight:600}
+.filters{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.filters>div{display:flex;gap:6px 10px;flex-wrap:wrap;justify-content:flex-end}
+/* Sentinels */
+.ringfig{flex:1 1 360px;margin:0;padding:18px;display:flex;flex-direction:column;align-items:center;gap:8px;background:radial-gradient(80% 80% at 50% 50%,#0B1220 0%,#000 70%)}
+.ringfig svg{width:100%;max-width:380px;height:auto}
+.ringfig figcaption{font-size:12px;color:#8E8E93;text-align:center}
+.revcards{flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.revcard{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;align-items:center;border-radius:20px;border:1px solid var(--line);background:var(--glass-2);padding:14px 18px;color:var(--ink);font:inherit;text-align:left;cursor:pointer;width:100%}
+.revcard[aria-pressed="true"]{border-color:var(--line-3);background:var(--panel-2)}
+.revcard .nm{font-size:17px;font-weight:600;color:var(--c)}
+.revcard .kd{display:block;font-size:12px;color:var(--ink-3)}
+.revcard .w{font-size:28px;font-weight:600;letter-spacing:-.03em}
+.revcard .hits{grid-column:1/-1;display:flex;gap:4px}
+.revcard .hits i{flex:1;height:4px;border-radius:2px;background:var(--panel-2)}
+.revcard .hits i.on{background:var(--c)}
+.revcard .hitcap{grid-column:1/-1;font-size:12px;color:var(--ink-3)}
+.marked{padding:16px 18px;display:flex;flex-direction:column;gap:10px;background:var(--glass-2)}
+.marked .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.marked a{min-height:60px;border-radius:14px;border:1px solid var(--line);color:var(--ink);text-decoration:none;padding:8px 12px;display:block}
+.marked a.on{border-color:var(--line-3);background:var(--panel-2)}
+.marked a b{font-size:14px;font-weight:500;display:block}
+.marked a span{font-size:12px;color:var(--c)}
+.attribution{color:var(--ink-2)}
 .layoutbar{display:flex;flex-wrap:wrap;gap:8px 11px;align-items:center;font-size:13px}
 .layoutbar .muted{font-size:12px}
 .widgets{display:grid;gap:16px;grid-template-columns:repeat(6,minmax(0,1fr));min-width:0}
@@ -961,17 +1100,14 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .frame[hidden]{display:none}
 /* Until the Docket reports ready the frame takes no space and the status line holds the slot. */
 .frame.waiting,body[data-route="candidates"] .frame.waiting{height:0;min-height:0;flex:0 0 0;border:0;visibility:hidden}
-.drawerclose{display:none}
 .topfull{display:none}
 .note.blocked{border-top-color:var(--reject);font-size:14px}
 .copyfallback{font:12px var(--mono);width:min(100%,46ch);min-height:34px;padding:4px 8px;border:1px solid var(--line-2);border-radius:8px;background:var(--panel);color:var(--ink)}
 #sharednote{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
 #sharednote[hidden]{display:none}
 #disctable{container-type:inline-size}
-.themebtn{min-height:44px;justify-content:flex-start;gap:8px;font-size:13px}
+.themebtn{min-height:44px;min-width:44px;justify-content:center;gap:8px;font-size:13px;padding:0 12px}
 .themebtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
-.sidefoot .themebtn{justify-self:start;margin-bottom:6px}
-.topbar .themebtn{display:none}
 .dippicker{display:none}
 .calcards{display:none}
 .calcard{border-top:1px solid var(--line);padding-top:10px;margin:0}
@@ -985,48 +1121,38 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .widget.size-S{grid-column:span 3}
   .agree li{grid-template-columns:minmax(0,1fr) auto}
   .agree li>:nth-child(2){grid-column:1/-1;grid-row:2}
-  .instrument .igrid{grid-template-columns:minmax(0,1fr)}
-  .instrument .fold{border-left:0;padding-left:0;border-top:1px solid var(--space-line);padding-top:12px}
   .honest{grid-template-columns:minmax(0,1fr)}
-}
-@media (max-width:820px){
-  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .flow li{border-left:0;border-top:1px solid var(--line)}
-  .flow li:nth-child(-n+2){border-top:0}
-  .flow li:nth-child(even){border-left:1px solid var(--line)}
-  .flow li+li::before{display:none}
+  .dipsbox,.selpanel{max-width:none}
 }
 @media (max-width:699.98px){
-  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;height:var(--top);padding:0 16px;background:color-mix(in oklab,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(16px) saturate(150%);backdrop-filter:blur(16px) saturate(150%);border-bottom:1px solid var(--line)}
-  .topbar b{font:500 15px var(--display);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-  .topbar .cur{color:var(--muted);font-size:13px;white-space:nowrap}
-  .menu{display:inline-flex;align-items:center;gap:8px}
-  .menu svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8}
-  .shell{display:block}
-  .sidebar{background:var(--side);position:fixed;z-index:40;left:0;top:0;bottom:0;height:auto;width:min(280px,84vw);transform:translateX(-102%);visibility:hidden;transition:transform .18s ease,visibility 0s linear .18s;box-shadow:0 0 24px rgba(0,0,0,.25)}
-  .sidebar.open{transform:none;visibility:visible;transition:transform .18s ease}
-  .backdrop{display:block;position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.35)}
-  .backdrop[hidden]{display:none}
-  main{padding:16px 16px 40px}
+  .topbar{padding:6px 12px;gap:4px 8px}
+  .topbar .nav{order:3;flex:1 1 100%;min-width:0}
+  .nav ul{overflow-x:auto;scrollbar-width:none;justify-content:space-between}
+  .nav ul::-webkit-scrollbar{display:none}
+  .nav a{min-height:44px;padding:0 12px;font-size:13px}
+  .topmeta .cur{display:none}
+  .themebtn .themelbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  main{padding:20px 16px 40px}
+  .route{gap:18px}
+  .launch{padding-top:28px}
+  .launch .ctas{flex-direction:column;align-items:stretch;width:100%}
+  .proof{margin-top:-30px}
+  .proof b{font-size:34px}
+  .skynote{position:static;max-width:none;text-align:left;margin-top:6px}
+  .skypin{padding:8px 12px}
+  .lanes .lane{grid-template-columns:118px minmax(0,1fr)}
+  .orbitfig{flex-direction:column;align-items:flex-start}
+  .filters{align-items:flex-start}
+  .filters>div{justify-content:flex-start}
+  .segctl button,.pill,.dipchips a,.cmpbtn{min-height:44px}
+  .segctl button{min-width:44px}
   .widgets{grid-template-columns:minmax(0,1fr)}
   .widget.size-S,.widget.size-M,.widget.size-L{grid-column:1/-1}
-  .route>header .eyebrow{letter-spacing:.1em}
-  .route{gap:20px}
-  .hero-h{font-size:clamp(30px,8.6vw,40px);letter-spacing:-.04em}
-  .consolebar{gap:6px 12px;font-size:11px}
-  .consolebar .right{margin-left:0}
-  .instrument{padding:14px 12px 12px}
-  .instrument .ival{font-size:22px;text-align:left}
-  .ctas .btn{flex:1 1 auto}
-  .topbar .themebtn{display:inline-flex;margin-left:auto;padding:0 10px}
-  .topbar .themebtn .themelbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-  .topbar .themebtn{min-width:44px;justify-content:center}
-  body[data-route="candidates"] .topbar .themebtn{margin-left:0}
-  /* Candidates: a dip picker above the frame, so no dip is a long scroll away inside it. */
+  /* Candidates (the case file): a dip picker above the frame, so no dip is a long scroll away inside it. */
   body[data-route="candidates"] .dippicker{display:flex;align-items:center;gap:10px;margin:8px 16px 4px;flex:none}
-  .dippicker label{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
-  .dippicker select{flex:1;min-width:0;min-height:44px;font:500 16px var(--mono);color:var(--ink);background:var(--panel);border:1px solid var(--line-2);border-radius:10px;padding:0 10px}
-  /* Panel: the calibration rows as one card per reviewer. */
+  .dippicker label{font:500 12px/1 var(--sans);color:var(--ink-3)}
+  .dippicker select{flex:1;min-width:0;min-height:44px;font:500 16px var(--mono);color:var(--ink);background:var(--panel);border:1px solid var(--line-2);border-radius:12px;padding:0 10px}
+  /* Sentinels: the calibration rows as one card per reviewer. */
   #caltable{display:none}
   .calcards{display:grid;gap:4px}
   /* Feed: the table's caption stays; its rows become three-line cards, sorted from a labelled group. */
@@ -1035,32 +1161,27 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   #disctable thead,#disctable tbody{display:none}
   #disctable caption .capnote{padding:0 0 8px;position:static}
   .sortbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:4px 0 10px}
-  .sortlbl{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-right:4px}
-  .sortbtn{min-height:44px;padding:0 10px;border:1px dashed var(--line-3);border-radius:6px;background:transparent;color:var(--ink-2);font:500 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
+  .sortlbl{font:500 12px/1 var(--sans);color:var(--ink-3);margin-right:4px}
+  .sortbtn{min-height:44px;padding:0 10px;border:1px dashed var(--line-3);border-radius:8px;background:transparent;color:var(--ink-2);font:500 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
   .sortbtn[aria-pressed="true"]{border-style:solid;border-color:var(--cyan);color:var(--cyan)}
   .feedcards{display:grid;gap:8px}
-  .feedcards li{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:2px 12px 8px;display:grid;gap:2px}
+  .feedcards li{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:2px 12px 8px;display:grid;gap:2px}
   .fc1{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
   .fc1 .dip{font-size:12px;overflow:hidden;text-overflow:ellipsis;min-width:0}
   .fcst{font-size:12.5px;color:var(--ink-2);white-space:nowrap}
   .fc2{font-size:11px;letter-spacing:-.035em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .fc3{font-size:11.5px;color:var(--amber)}
+  .fc3{font-size:11.5px;color:var(--yellow)}
   .frame{height:calc(100vh - var(--top));height:calc(100dvh - var(--top));min-height:0;border-radius:0;border-left:0;border-right:0;margin:0 -16px;width:calc(100% + 32px)}
-  .btn,.chip,.wctl .btn,.nav a{min-height:44px}
+  .btn,.chip,.wctl .btn{min-height:44px}
   .wctl .btn{min-width:44px}
-  .shell{background:none}
   .seg{display:none}
   .frametools a{display:inline-flex;align-items:center;min-height:44px}
-  .drawerclose{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin:0 18px}
   th button{min-height:44px;min-width:44px}
-  .shell{min-height:0}
   /* Every link and disclosure in the page is a 44 px target: min-height and padding, same font size. */
   main a{display:inline-block;min-height:44px;min-width:44px;padding:12px 0;line-height:20px;box-sizing:border-box}
   td a.dip{padding:12px 0;line-height:20px}
   summary{min-height:44px;padding:12px 0;line-height:20px;box-sizing:border-box}
   .copyfallback{min-height:44px}
-  /* Top candidates: each dip is one 44 px line. The link fills the row height, so the row needs no
-     extra padding; the status shows its short word and the hedge sits on the signal line above. */
   .toplist ul{gap:0}
   .toplist ul li.toprow{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);gap:0 11px;align-items:center;height:44px;white-space:nowrap;border-top:1px solid var(--rule);font-size:12px}
   .toplist ul li.toprow:first-child{border-top:0}
@@ -1074,14 +1195,27 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .tablewrap.scrollbox{max-height:none}
   /* Candidates: the header collapses and the Docket fills the screen under the top bar, so only the frame scrolls. */
   body[data-route="candidates"] main{padding:0}
-  body[data-route="candidates"] #route-candidates{display:flex;flex-direction:column;gap:0;height:calc(100vh - var(--top));height:calc(100dvh - var(--top));max-width:none}
+  body[data-route="candidates"] #route-candidates{display:flex;flex-direction:column;gap:0;height:calc(100vh - var(--top));height:calc(100dvh - var(--top));max-width:none;animation:none}
   body[data-route="candidates"] #route-candidates>header{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   body[data-route="candidates"] #route-candidates .frametools{display:none}
   body[data-route="candidates"] #route-candidates>.note{margin:8px 16px;flex:none}
   body[data-route="candidates"] .frame{flex:1 1 auto;height:auto;min-height:0;margin:0;width:100%;border:0;border-radius:0}
-  body[data-route="candidates"] .topfull{display:inline-flex;align-items:center;min-height:44px;margin-left:auto;white-space:nowrap}
+  /* Links styled as tiles or rows keep their own layout. */
+  main a.dipitem{display:grid;padding:8px 12px}
+  main a.btn{display:inline-flex;padding-top:0;padding-bottom:0}
+  main a.roundbtn{display:inline-grid;place-items:center;padding:0;line-height:1}
+  main .dipchips a,main .marked a,main .tray a{display:flex;padding:0 14px}
+  main .marked a,main .tray a{display:block;padding:8px 12px}
+  main a.skypin{display:block;position:static;margin-top:8px;padding:8px 12px;line-height:1.35}
 }
-@media (prefers-reduced-motion: reduce){.sidebar,.sidebar.open{transition:none}}
+/* Every animation is decorative; with reduced motion the page is still, and the theatre shows mid-transit. */
+@media (prefers-reduced-motion: reduce){
+  .route,.twinkle,.twinkle2,.orbit,.orbitfast,.orbitslow,.clouds,.pulse,.breathe,.sweep,.reveal,.playhead{animation:none!important}
+  .sweep{transform:none!important}
+  .reveal{transform:none!important}
+  .playhead{opacity:0}
+  .btn,.nav a,.pill{transition:none}
+}
 """
 
 ICONS = {
@@ -1189,106 +1323,6 @@ function syncLayoutURL(){
   setHash('#/overview?layout=' + encodeLayout(layout), false);  /* a tidy-up of the address: replace, not push */
 }
 
-// ---------- overview hero: the stored light curve and the lead signal folded ----------
-// Stored points only. The line is a plain mean of the stored points in fixed bins, drawn for reading;
-// the dashed box in the fold sits at the stored depth and duration. Nothing is fitted.
-function binMean(xs, ys, width){
-  const out = [];
-  let k0 = null, sx = 0, sy = 0, n = 0;
-  for (let i = 0; i < xs.length; i++){
-    const k = Math.floor(xs[i] / width);
-    if (k !== k0 && n){ out.push([sx / n, sy / n, k0]); sx = sy = n = 0; }
-    k0 = k; sx += xs[i]; sy += ys[i]; n++;
-  }
-  if (n) out.push([sx / n, sy / n, k0]);
-  return out;
-}
-function meanPath(bins, X, Y){
-  // A gap of more than one empty bin starts a new segment, so the line never bridges missing data.
-  return bins.map((b, i) => `${i && b[2] - bins[i-1][2] <= 2 ? 'L' : 'M'}${X(b[0]).toFixed(1)},${Y(b[1]).toFixed(1)}`).join('');
-}
-function heroRange(){
-  const L = D.hero.lead, depth = (L && L.depth_ppm) || Math.max(100, ...D.hero.windows.map(w => w.depth_ppm || 0));
-  return [-2.6 * depth, 1.6 * depth];
-}
-let heroH = 300;
-function heroCurve(box){
-  box.innerHTML = '';
-  const H0 = D.hero, subs = H0.subjects;
-  if (!subs.length){ box.innerHTML = '<p class="empty">No light curve is stored for this run.</p>'; return; }
-  const W = Math.max(280, box.clientWidth || 640), narrow = W < 520;
-  const H = narrow ? 240 : 310, pl = 44, pr = 8, pt = 34, pb = 40;
-  heroH = H;
-  const a = subs[0].start, b = subs[subs.length - 1].end, [lo, hi] = heroRange();
-  const X = t => pl + (t - a) / (b - a) * (W - pl - pr), Y = v => pt + (hi - v) / (hi - lo) * (H - pt - pb);
-  const n = subs.reduce((s, x) => s + x.t.length, 0);
-  let clipped = 0;
-  for (const s of subs) for (const v of s.ppm) if (v < lo || v > hi) clipped++;
-  const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Light curve of ${H0.target}: ${n} stored points, ${H0.time_unit} ${fmt(a,1)} to ${fmt(b,1)}, with ${H0.windows.length} marked windows: ` + H0.windows.map(w => `${w.letter} at ${fmt((w.t_start + w.t_end)/2, 2)}, ${w.outcome}`).join('; ') + `. Every window is a ${D.unconfirmed}.`}, box);
-  svg.style.height = H + 'px';
-  const cid = 'hc-clip';
-  const defs = el('defs', {}, svg), cp = el('clipPath', {id: cid}, defs);
-  el('rect', {x: pl, y: pt, width: W - pl - pr, height: H - pt - pb}, cp);
-  for (const v of niceTicks(lo, hi, 4)){ el('line', {x1: pl, x2: W - pr, y1: Y(v), y2: Y(v), class: 'grid'}, svg); tx(svg, pl - 6, Y(v) + 3.5, String(v), 'end'); }
-  // Marked windows, shaded by outcome and lettered in time order. Letters that would touch move up a row.
-  let lastX = -99, row = 0;
-  for (const w of H0.windows){
-    const x1 = X(w.t_start), x2 = X(w.t_end), xm = (x1 + x2) / 2;
-    const r = el('rect', {x: Math.min(x1, xm - 1.5), y: pt, width: Math.max(3, x2 - x1), height: H - pt - pb, class: 'win ' + w.outcome}, svg);
-    el('title', {}, r).textContent = `${w.letter}: ${w.id} · ${w.outcome} · SNR ${fmt(w.snr,1)} · ${fmt(w.depth_ppm,0)} ppm · ${D.unconfirmed}`;
-    row = xm - lastX < 14 ? 1 - row : 0; lastX = xm;
-    tx(svg, xm, pt - 6 - row * 13, w.letter, 'middle', 'wl ' + w.outcome);
-  }
-  const pts = subs.map(s => s.t.map((t, i) => `M${X(t).toFixed(1)},${Y(s.ppm[i]).toFixed(1)}h0`).join('')).join('');
-  el('path', {d: pts, class: 'pts', 'clip-path': `url(#${cid})`}, svg);
-  for (const s of subs) el('path', {d: meanPath(binMean(s.t, s.ppm, 1/24), X, Y), class: 'mean', 'clip-path': `url(#${cid})`}, svg);
-  const L = H0.lead;
-  if (L && L.t0 !== null && L.t0 !== undefined){
-    for (let k = Math.ceil((a - L.t0) / L.period_days); L.t0 + k * L.period_days <= b; k++){
-      const xe = X(L.t0 + k * L.period_days);
-      el('path', {d: `M${xe.toFixed(1)},${H - pb + 1} l-4,7 h8 z`, class: 'epoch'}, svg);
-    }
-  }
-  el('line', {x1: pl, x2: W - pr, y1: H - pb, y2: H - pb, class: 'axis'}, svg);
-  // Tick labels sit on their own row above the unit label, so the two never touch.
-  for (const t of niceTicks(a, b, narrow ? 3 : 6)){ if (t < a || t > b) continue; tx(svg, X(t), H - pb + 16, String(t), 'middle'); }
-  tx(svg, pl - 6, pt - 20, 'ppm', 'end');
-  tx(svg, W - pr, H - 2, `time (${H0.time_unit})`, 'end');
-  $('#herocurvecap').textContent = `${n.toLocaleString()} stored points, ${H0.time_unit} ${fmt(a,1)} to ${fmt(b,1)}. Shaded: the ${H0.windows.length} windows the reviewers marked, lettered in time order.` + (clipped ? ` ${clipped} point${clipped === 1 ? '' : 's'} outside the drawn range are not shown.` : '');
-}
-function heroFold(box){
-  box.innerHTML = '';
-  const L = D.hero.lead;
-  if (!L || L.t0 === null || L.t0 === undefined){ box.closest('figure').hidden = true; return; }
-  const W = Math.max(240, box.clientWidth || 300), H = heroH;
-  const pl = 44, pr = 8, pt = 34, pb = 40, dur = (L.duration_days || 0.1) * 24, half = Math.max(3 * dur, 6);
-  const [lo, hi] = heroRange(), ph = [], pv = [];
-  for (const s of D.hero.subjects) s.t.forEach((t, i) => { const h = (((t - L.t0) % L.period_days + 1.5 * L.period_days) % L.period_days - L.period_days / 2) * 24; if (h >= -half && h <= half){ ph.push(h); pv.push(s.ppm[i]); } });
-  const X = h => pl + (h + half) / (2 * half) * (W - pl - pr), Y = v => pt + (hi - v) / (hi - lo) * (H - pt - pb);
-  const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `The lead signal folded on its stored period ${fmt(L.period_days,4)} d and t0 ${fmt(L.t0,4)}: ${ph.length} stored points within ${fmt(half,1)} h of mid-transit. Dashed: a box at the stored depth ${fmt(L.depth_ppm,0)} ppm and duration ${fmt(dur,1)} h, not a fit.`}, box);
-  svg.style.height = H + 'px';
-  const defs = el('defs', {}, svg), cp = el('clipPath', {id: 'hf-clip'}, defs);
-  el('rect', {x: pl, y: pt, width: W - pl - pr, height: H - pt - pb}, cp);
-  el('rect', {x: X(-dur / 2), y: pt, width: X(dur / 2) - X(-dur / 2), height: H - pt - pb, class: 'dur'}, svg);
-  for (const v of niceTicks(lo, hi, 4)){ el('line', {x1: pl, x2: W - pr, y1: Y(v), y2: Y(v), class: 'grid'}, svg); tx(svg, pl - 6, Y(v) + 3.5, String(v), 'end'); }
-  el('path', {d: ph.map((h, i) => `M${X(h).toFixed(1)},${Y(pv[i]).toFixed(1)}h0`).join(''), class: 'pts', 'clip-path': 'url(#hf-clip)'}, svg);
-  const order = ph.map((h, i) => i).sort((p, q) => ph[p] - ph[q]);
-  el('path', {d: meanPath(binMean(order.map(i => ph[i]), order.map(i => pv[i]), 0.5), X, Y), class: 'mean', 'clip-path': 'url(#hf-clip)'}, svg);
-  el('path', {d: `M${X(-half)},${Y(0)}H${X(-dur/2)}V${Y(-L.depth_ppm)}H${X(dur/2)}V${Y(0)}H${X(half)}`, class: 'box'}, svg);
-  el('line', {x1: pl, x2: W - pr, y1: H - pb, y2: H - pb, class: 'axis'}, svg);
-  for (const h of niceTicks(-half, half, 4)) tx(svg, X(h), H - pb + 16, String(h), 'middle');
-  tx(svg, X(0), pt - 6, (L.letters || []).join(' '), 'middle', 'wl ' + L.outcome);
-  tx(svg, W - pr, H - 2, 'hours from mid-transit', 'end');
-  $('#herofoldcap').textContent = `Folded on the stored period ${fmt(L.period_days,4)} d and t0 ${fmt(L.t0,3)}. Line: 30-minute mean of the stored points. Dashed: a box at the stored depth and duration, not a fit.`;
-}
-let heroWidth = -1;
-function renderHero(force){
-  const box = $('#herocurve');
-  if (!box || (!force && box.clientWidth === heroWidth)) return;
-  heroWidth = box.clientWidth;
-  heroCurve(box); heroFold($('#herofold'));
-}
-
 // ---------- overview ----------
 function widgetBody(id){
   function topBody(r){
@@ -1332,7 +1366,7 @@ function widgetBody(id){
   }
   return '';
 }
-const WIDGET_LINK = {kpis:'candidates', discoveries:'discoveries', runs:'runs', top:'candidates'};
+const WIDGET_LINK = {kpis:'transit', discoveries:'explorer', runs:'runs', top:'transit'};
 function widgetControls(x, pos, nShown){
   const name = esc(WIDGET_LABEL[x.id]);
   return `<div class="wctl" role="group" aria-label="Arrange ${name}">
@@ -1352,7 +1386,7 @@ function renderWidgets(){
   $('#hiddenlist').innerHTML = hidden.length ? `<span>Hidden:</span>${hidden.map(x => `<button class="btn" data-act="show" data-id="${x.id}">Show ${esc(WIDGET_LABEL[x.id])}</button>`).join('')}` : '<span class="muted">All four widgets shown.</span>';
 }
 function renderOverview(){
-  renderHero(false); renderWidgets(); syncLayoutURL();
+  renderWidgets(); syncLayoutURL();
   $('#sharednote').hidden = !sharedView;
 }
 function layoutAction(act, id, size){
@@ -1525,7 +1559,7 @@ function renderCandidates(){ renderDipPicker(); /* the frame loads in openDip, w
 
 // ---------- discoveries (the feed) ----------
 const disc = {sort: 'snr', dir: -1, filter: 'all'};
-// The Feed's sort and filter live in the URL (#/discoveries?sort=depth&filter=new) like the Overview
+// The Feed's sort and filter live in the URL (#/explorer?sort=depth&filter=new) like the Overview
 // layout, and in localStorage as the viewer's default. A view opened from a link is shown for that
 // view only; storage is written only when the viewer changes the sort or the filter.
 const FEED_SORTS = D.feed_view.sorts, FEED_FILTERS = D.feed_view.filters, FEED_NUMERIC = D.feed_view.numeric;
@@ -1559,8 +1593,8 @@ function saveFeedView(){
 }
 // push: the viewer changed the sort or the filter, so Back returns to the previous view.
 function syncFeedURL(push){
-  if (current !== 'discoveries') return;
-  setHash('#/discoveries?' + encodeFeedView(currentFeedView()), !!push);
+  if (current !== 'explorer') return;
+  setHash('#/explorer?' + encodeFeedView(currentFeedView()), !!push);
 }
 applyFeedView(ownFeedView);
 const COLS = [
@@ -1837,7 +1871,7 @@ function renderCalibration(){
   $('#calsource').textContent = C.source ? `Rates: ${C.record_path || 'the weights file'}. ${C.source}` : (C.record_path ? `Rates: ${C.record_path}.` : '');
 }
 let calWidth = -1;
-function resizeCalibration(){ const box = $('#calplane'); if (!box || $('#route-panel').hidden || box.clientWidth === calWidth) return; calWidth = box.clientWidth; calPlane(box); }
+function resizeCalibration(){ const box = $('#calplane'); if (!box || $('#route-sentinels').hidden || box.clientWidth === calWidth) return; calWidth = box.clientWidth; calPlane(box); }
 
 // ---------- runs ----------
 function renderRuns(){
@@ -1877,35 +1911,284 @@ function xmConfig(x){
   return `${esc(x.file)} (${esc(x.status)})`;
 }
 
-// ---------- router and drawer ----------
-const RENDER = {overview: renderOverview, candidates: renderCandidates, discoveries: renderDiscoveries, planets: renderPlanets, panel: renderPanel, runs: renderRuns};
+
+// ---------- the five sections' figures (Sky, Transit, Explorer, Sentinels) ----------
+// Stored values only: the points are the run's stored flux, the marks the reviewers' stored spans,
+// the scores, flags, rationales and confidences as stored. Decorative art is labelled as such.
+const S = D.story;
+const DIPS = S.dips, DIP_BY = Object.fromEntries(DIPS.map(d => [d.id, d]));
+const STC = {known: 'var(--blue)', open: 'var(--yellow)', rejected: 'var(--red)'};
+const STC_SPACE = S.colours;  // the same colours as hex, for the space panels (dark in both themes)
+const fmtSigned = (x, d) => (x >= 0 ? '+' : '−') + Math.abs(x).toFixed(d);
+const dotPath = (pts, X, Y) => pts.map(p => `M${X(p[0]).toFixed(1)} ${Y(p[1]).toFixed(1)}h0`).join('');
+const transitHref = id => `#/transit?dip=${encodeURIComponent(id)}`;
+const tval = x => fmt(x, 2);
+// The y range of a dip's window: from its depth and the scatter of its stored points outside the window.
+function dipRange(list){
+  let depth = 0, noise = 0;
+  for (const d of list){
+    depth = Math.max(depth, d.depth_ppm || 0);
+    const out = d.pts.filter(p => p[0] < d.t_start - d.t || p[0] > d.t_end - d.t).map(p => p[1]);
+    if (out.length > 3){ const m = out.reduce((a, b) => a + b, 0) / out.length; noise = Math.max(noise, Math.sqrt(out.reduce((a, b) => a + (b - m) * (b - m), 0) / out.length)); }
+  }
+  const D0 = Math.max(depth, 3 * noise, 80);
+  return [-1.9 * D0, 1.1 * D0];
+}
+
+// ---------- Sky ----------
+const sky = {known: true, open: true, rejected: true, rev: 'all'};
+const REV_FILTERS = [['all', 'All'], ['sentinels', 'Sentinels'], ['probes', 'Probes only'], ['split', 'Split']];
+function revOk(d){
+  const w = d.who;
+  if (sky.rev === 'sentinels') return w.sentinels > 0;
+  if (sky.rev === 'probes') return w.sentinels === 0 && w.probes > 0;
+  if (sky.rev === 'split') return (w.sentinels + w.probes) < (w.of_sentinels + w.of_probes);
+  return true;
+}
+const skyShown = d => sky[d.status] && revOk(d);
+function renderSky(){
+  const n = k => S.counts[k];
+  $('#skychips').innerHTML = [['known', S.planet ? S.planet : 'Known'], ['open', 'Open'], ['rejected', 'Rejected']].map(([k, l]) =>
+    `<button type="button" class="pill" data-st="${k}" aria-pressed="${sky[k]}" style="--c:${STC[k]}"><i></i>${esc(l)} <span class="n">${n(k)}</span></button>`).join('');
+  $('#skyrev').innerHTML = REV_FILTERS.map(([k, l]) => `<button type="button" data-rev="${k}" aria-pressed="${sky.rev === k}">${esc(l)}</button>`).join('');
+  const shown = DIPS.filter(skyShown);
+  $('#skycount').textContent = `${shown.length} of ${DIPS.length}`;
+  $('#skydips').innerHTML = shown.length ? shown.map(d => `<a class="dipitem" href="${transitHref(d.id)}" style="--c:${STC[d.status]}"><i></i><b>${esc(d.time_unit)} ${tval(d.t)}</b><span class="st">${esc(d.status_label)}</span><span class="sub">${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} h · ${d.who.sentinels === d.who.of_sentinels && d.who.probes === d.who.of_probes ? `all ${d.who.of_sentinels + d.who.of_probes} reviewers` : `${d.who.probes} Probes, ${d.who.sentinels} Sentinels`} · ${esc(D.unconfirmed)}</span></a>`).join('')
+    : '<p class="empty" style="margin:12px">No dips match.</p>';
+  skyTimeline();
+}
+function skyTimeline(){
+  const box = $('#skytimeline'); if (!box) return;
+  const subs = D.hero.subjects; if (!subs.length){ box.innerHTML = '<p class="empty">No light curve is stored.</p>'; return; }
+  const a = subs[0].start, b = subs[subs.length - 1].end, W = 1000, H = 84;
+  const [lo, hi] = [-700, 400], X = t => (t - a) / (b - a) * W, Y = v => 6 + (hi - Math.max(lo, Math.min(hi, v))) / (hi - lo) * 56;
+  const pts = subs.map(s => s.t.map((t, i) => `M${X(t).toFixed(1)} ${Y(s.ppm[i]).toFixed(1)}h0`).join('')).join('');
+  let ticks = '';
+  for (const d of DIPS){ const on = skyShown(d), x = X(d.t).toFixed(1); ticks += `<path d="M${x} 66 V82" stroke="${on ? STC[d.status] : 'var(--line-2)'}" stroke-width="${on ? 2.5 : 1.5}" stroke-linecap="round"><title>${esc(d.time_unit)} ${tval(d.t)} · ${esc(d.status_label)}</title></path>`; }
+  $('#skytlcap').innerHTML = `<span>${esc(D.hero.time_unit)} ${fmt(a, 1)}</span><span>Stored brightness over the run, ${D.hero.n_points.toLocaleString('en-GB')} points; ticks: the dips shown above</span><span>${fmt(b, 1)}</span>`;
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Light curve of run ${esc(D.run.name)}: ${D.hero.n_points} stored points from ${esc(D.hero.time_unit)} ${fmt(a, 1)} to ${fmt(b, 1)}, with ${DIPS.filter(skyShown).length} of ${DIPS.length} dips ticked."><path d="${pts}" stroke="var(--ink)" stroke-width="1.1" stroke-linecap="round" opacity=".45"/>${ticks}</svg>`;
+}
+$('#route-sky').addEventListener('click', e => {
+  const s = e.target.closest('button[data-st]'), r = e.target.closest('button[data-rev]');
+  if (s){ sky[s.dataset.st] = !sky[s.dataset.st]; renderSky(); $(`#skychips button[data-st="${s.dataset.st}"]`).focus(); say(`${DIPS.filter(skyShown).length} of ${DIPS.length} dips shown.`); }
+  if (r){ sky.rev = r.dataset.rev; renderSky(); $(`#skyrev button[data-rev="${r.dataset.rev}"]`).focus(); say(`${DIPS.filter(skyShown).length} of ${DIPS.length} dips shown.`); }
+});
+
+// ---------- Transit (the per-dip cockpit) ----------
+const txs = {dip: null, cmp: []};
+function theatre(d){
+  const R = 150, k = d.ratio || 0, r = Math.max(1.2, R * k), dur = Math.max(1e-3, d.t_end - d.t_start);
+  // The shadow is on the disc exactly while the stored window runs: R each side of centre in half a duration.
+  const travel = R * d.half / (dur / 2), known = d.status === 'known';
+  const [lo, hi] = dipRange([d]), W = 800, H = 150, Y = v => 10 + (hi - Math.max(lo, Math.min(hi, v))) / (hi - lo) * (H - 30);
+  const X = dt => (dt + d.half) / (2 * d.half) * W;
+  const clipped = d.pts.filter(p => p[1] < lo || p[1] > hi).length;
+  const box = d.box.length ? `M0 ${Y(0).toFixed(1)}` + d.box.map(p => `L${X(p[0]).toFixed(1)} ${Y(p[1]).toFixed(1)}`).join('') + `L${W} ${Y(0).toFixed(1)}` : '';
+  const c = STC_SPACE[d.status];
+  return `<div class="cap"><span>The transit, played back</span><span>${known ? `${esc(d.planet)} to scale` : 'what a planet this deep would cast'}</span></div>
+    <svg viewBox="0 0 800 330" role="img" aria-label="The star, with a shadow to scale crossing it: Rp/R* ${fmt(k, 4)} from the stored depth ${fmt(d.depth_ppm, 0)} ppm. Path through the centre; impact parameter not fitted.">
+      <defs>
+        <radialGradient id="limb" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF8E7"/><stop offset=".55" stop-color="#FFE0A6"/><stop offset=".85" stop-color="#F5A443"/><stop offset="1" stop-color="#A9480E"/></radialGradient>
+        <radialGradient id="corona" cx="50%" cy="50%" r="50%"><stop offset=".62" stop-color="#FFB340" stop-opacity=".35"/><stop offset="1" stop-color="#FFB340" stop-opacity="0"/></radialGradient>
+        <filter id="gran" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 .85  0 0 0 0 .55  0 0 0 .22 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+        <clipPath id="disc"><circle cx="400" cy="165" r="${R}"/></clipPath>
+      </defs>
+      <circle class="breathe" cx="400" cy="165" r="200" fill="url(#corona)"/>
+      <circle cx="400" cy="165" r="${R}" fill="url(#limb)"/>
+      <rect x="250" y="15" width="300" height="300" fill="#FFFFFF" filter="url(#gran)" clip-path="url(#disc)"/>
+      <g clip-path="url(#disc)"><g class="sweep" style="--from:${(-travel).toFixed(1)}px;--to:${travel.toFixed(1)}px"><circle cx="400" cy="165" r="${r.toFixed(2)}" fill="#000"/></g></g>
+      <g class="sweep" style="--from:${(-travel).toFixed(1)}px;--to:${travel.toFixed(1)}px"><circle cx="400" cy="165" r="${Math.max(12, r + 6).toFixed(1)}" fill="none" stroke="rgba(0,0,0,.55)"/><line x1="400" y1="${(165 - Math.max(12, r + 6)).toFixed(1)}" x2="400" y2="40" stroke="rgba(255,255,255,.35)" stroke-width=".8"/></g>
+    </svg>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Stored flux around the dip: ${d.pts.length} points within ${fmt(d.half * 24, 1)} hours of mid-time, drawn in as the shadow crosses, with the box at the stored depth and duration.">
+      <defs><clipPath id="rvclip"><rect class="reveal" x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>
+      <line x1="0" x2="${W}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="rgba(255,255,255,.1)"/>
+      <path d="${box}" stroke="${c}" stroke-width="1.3" fill="none" stroke-dasharray="5 4" opacity=".85"/>
+      <g clip-path="url(#rvclip)"><path d="${dotPath(d.pts, X, Y)}" stroke="#F5F5F7" stroke-width="3.2" stroke-linecap="round" opacity=".85"/></g>
+      <g class="playhead" style="--w:${W}px"><line x1="0" y1="0" x2="0" y2="${H - 18}" stroke="#FFB340"/><circle cx="0" cy="5" r="3" fill="#FFB340"/></g>
+    </svg>
+    <div class="axisrow"><span>${fmtSigned(-d.half * 24, 1)} h</span><span>mid-time ${esc(d.time_unit)} ${fmt(d.t, 3)} · the line above the star marks ${known ? esc(d.planet) + ', to scale' : 'what a planet this deep would be'}</span><span>${fmtSigned(d.half * 24, 1)} h</span></div>
+    <p class="foot">Shadow to scale: Rp/R* = √depth = ${fmt(k, 4)}, from the stored depth. Path through the centre; impact parameter not fitted. Dots: the ${d.pts.length} stored flux values in this window${clipped ? ` (${clipped} outside the drawn range not shown)` : ''}. Dashed: a box at the stored depth and duration, not a fit. The star's surface texture is decorative.</p>`;
+}
+function lanesHTML(d){
+  const pct = v => Math.max(0, Math.min(100, (v + d.half) / (2 * d.half) * 100));
+  const w0 = pct(d.t_start - d.t), w1 = pct(d.t_end - d.t);
+  return `<span class="small">Who marked it · stored spans in this window; dashed box: the consensus window</span>` + d.lanes.map(l => {
+    const c = l.role === 'sentinel' ? 'var(--sen)' : 'var(--prb)';
+    const spans = l.spans.map(([a, b]) => `<i class="${l.counted ? '' : 'uncounted'}" style="left:${pct(a).toFixed(1)}%;width:${Math.max(1.5, pct(b) - pct(a)).toFixed(1)}%"></i>`).join('');
+    return `<div class="lane" style="--c:${c}"><span style="color:${l.role === 'sentinel' ? 'var(--sen)' : 'var(--prb-ink)'}" title="reviewer id ${esc(l.id)}">${esc(l.name)}</span><div class="track" role="img" aria-label="${esc(l.name)}: ${l.spans.length ? `${l.spans.length} span${l.spans.length === 1 ? '' : 's'} in this window, ${l.counted ? 'counted for this dip' : 'not counted'}` : 'no mark in this window'}"><span class="win" style="left:${w0.toFixed(1)}%;width:${Math.max(.5, w1 - w0).toFixed(1)}%"></span>${spans || '<em>no mark</em>'}</div></div>`;
+  }).join('');
+}
+function quoteHTML(d){
+  const q = d.quotes[0];
+  if (!q) return `<div class="quote"><p style="font-size:14px">No Sentinel rationale is stored for this subject.</p></div>`;
+  return `<div class="quote"><div class="who"><b title="reviewer id ${esc(q.id)}">${esc(q.name)}</b><span>${q.confidence === null || q.confidence === undefined ? 'confidence not stored' : 'confidence ' + fmt(q.confidence, 1)}</span></div>
+    <p>“${esc(q.text)}”</p><small>Its stored rationale for subject ${esc(d.subject_label || d.subject)} (${esc(d.time_unit)} ${fmt(d.subject_start, 1)} to ${fmt(d.subject_end, 1)}), one per subject, not per dip. It ${q.marked ? 'marked' : 'did not mark'} this dip. A Sentinel is a Claude model, not a person.</small></div>`;
+}
+function orbitHTML(d){
+  const L = D.hero.lead; if (!L || d.phase === null || d.phase === undefined) return '';
+  const ang = Math.PI / 2 + d.phase * 2 * Math.PI, px = 100 + 80 * Math.cos(ang), py = 100 + 80 * Math.sin(ang);
+  const who = S.planet ? `${esc(S.planet)}'s orbit` : "the lead signal's orbit";
+  const near = Math.abs(d.phase) < 0.02;
+  return `<figure class="glass orbitfig"><svg viewBox="0 0 200 200" role="img" aria-label="Orbit seen from above, with this dip at phase ${fmtSigned(d.phase, 2)} of the lead signal; the transit point faces us (bottom).">
+      <circle cx="100" cy="100" r="80" fill="none" stroke="var(--line-2)" stroke-width=".8"/>
+      <line x1="100" y1="100" x2="100" y2="196" stroke="var(--line-2)" stroke-dasharray="2 4"/>
+      <circle cx="100" cy="100" r="10" fill="var(--star)"/>
+      <g class="orbitfast" style="transform-origin:100px 100px"><circle cx="100" cy="20" r="4" fill="var(--ink)"/></g>
+      <circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="6" fill="none" stroke="${STC[d.status]}" stroke-width="1.6"/>
+    </svg><figcaption><b>Where this dip sits on ${who}.</b><br>Phase ${fmtSigned(d.phase, 2)} on the lead signal's stored BLS period (${fmt(L.period_days, 3)} d), t0 ${fmt(L.t0, 3)}. ${near ? 'At the transit point, facing us.' : 'Not at the transit point, so it is not a transit of that signal.'} The orbit is drawn to show phase only; not to scale.</figcaption></figure>`;
+}
+function trayHTML(){
+  if (!txs.cmp.length) return '';
+  const list = txs.cmp.map(id => DIP_BY[id]).filter(Boolean), [lo, hi] = dipRange(list), half = Math.max(...list.map(d => d.half));
+  const W = 300, H = 100, X = dt => (dt + half) / (2 * half) * W, Y = v => 6 + (hi - Math.max(lo, Math.min(hi, v))) / (hi - lo) * (H - 12);
+  return `<div class="glass tray"><div class="cap"><span>Compare · same scale (±${fmt(half * 24, 1)} h, ${fmt(lo, 0)} to ${fmt(hi, 0)} ppm)</span><button type="button" class="btn" id="cmpclear">Clear</button></div><div class="grid">${list.map(d => {
+    const box = d.box.length ? `M0 ${Y(0).toFixed(1)}` + d.box.map(p => `L${X(p[0]).toFixed(1)} ${Y(p[1]).toFixed(1)}`).join('') + `L${W} ${Y(0).toFixed(1)}` : '';
+    return `<a href="${transitHref(d.id)}" aria-current="${d.id === txs.dip}" style="--c:${STC_SPACE[d.status]}"><span class="h"><span style="color:#F5F5F7">${esc(d.time_unit)} ${tval(d.t)}</span><span>${esc(d.planet || d.status)}</span></span><svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${dotPath(d.pts, X, Y)}" stroke="#F5F5F7" stroke-width="2.4" stroke-linecap="round" opacity=".8"/><path d="${box}" stroke="${STC_SPACE[d.status]}" stroke-width="1.2" fill="none"/></svg></a>`; }).join('')}</div></div>`;
+}
+function renderTransit(){
+  const d = DIP_BY[txs.dip] || DIP_BY[S.lead_dip]; if (!d) return;
+  txs.dip = d.id;
+  const i = DIPS.indexOf(d), prev = DIPS[(i + DIPS.length - 1) % DIPS.length], next = DIPS[(i + 1) % DIPS.length], inCmp = txs.cmp.includes(d.id);
+  $('#txkicker').textContent = d.status_label; $('#txkicker').style.color = STC[d.status];
+  $('#h-transit').innerHTML = `${esc(d.time_unit)} ${tval(d.t)}<span class="sr">, dip ${esc(d.letter)}, ${esc(d.status_label)}</span>`;
+  $('#txsub').textContent = `${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} hours · SNR ${fmt(d.snr, 1)} · ${D.unconfirmed}`;
+  $('#txnav').innerHTML = `<a class="roundbtn" href="${transitHref(prev.id)}" aria-label="Previous dip, ${esc(prev.time_unit)} ${tval(prev.t)}">‹</a><a class="roundbtn" href="${transitHref(next.id)}" aria-label="Next dip, ${esc(next.time_unit)} ${tval(next.t)}">›</a><button type="button" class="cmpbtn" id="cmptoggle" aria-pressed="${inCmp}">${inCmp ? 'In compare' : 'Add to compare'}</button>`;
+  $('#txchips').innerHTML = DIPS.map(x => `<a href="${transitHref(x.id)}" aria-current="${x.id === d.id}" style="--c:${STC[x.status]}" title="${esc(x.id)} · ${esc(x.status_label)}"><i></i>${esc(x.letter)} · ${tval(x.t)}</a>`).join('');
+  $('#txtheatre').innerHTML = theatre(d);
+  $('#txscore').innerHTML = `<div class="top"><span>Panel score (weighted share that marked it)</span><b>${fmt(d.score, 2)}</b></div><div class="bar" style="--c:${STC[d.status]}"><i style="width:${Math.round((d.score || 0) * 100)}%"></i></div><p>${esc(d.verdict)}</p>`;
+  $('#txlanes').innerHTML = lanesHTML(d);
+  $('#txquote').innerHTML = quoteHTML(d);
+  $('#txorbit').innerHTML = orbitHTML(d) + trayHTML();
+  $('#txcase').innerHTML = `<a href="#/candidates?dip=${encodeURIComponent(d.id)}">Open the full case file ›</a><span>The Docket: every check, the stored measurements, the verdict ledger and the archive provenance.</span>`;
+  $('#txarchive').textContent = d.archive_line ? `Archive comparison: ${d.archive_line}. ${D.no_detection}` : '';
+}
+function openTransit(dip){
+  const n = $('#txnotice');
+  if (dip && !DIP_BY[dip]){
+    // An unknown dip id: say so, and rewrite the address to the lead dip (replace, not a new entry).
+    n.textContent = `No dip ${dip} in run ${D.run.name}; showing the lead dip ${S.lead_dip}.`; n.hidden = false; say(n.textContent);
+    dip = S.lead_dip; setHash(transitHref(dip), false);
+  } else n.hidden = true;
+  txs.dip = dip || txs.dip || S.lead_dip;
+  if (!dip) setHash(transitHref(txs.dip), false);
+  renderTransit();
+}
+$('#route-transit').addEventListener('click', e => {
+  if (e.target.closest('#cmptoggle')){ const k = txs.cmp.indexOf(txs.dip); if (k >= 0) txs.cmp.splice(k, 1); else txs.cmp.push(txs.dip); renderTransit(); $('#cmptoggle').focus(); say(k >= 0 ? 'Removed from compare.' : 'Added to compare.'); }
+  if (e.target.closest('#cmpclear')){ txs.cmp = []; renderTransit(); $('#cmptoggle').focus(); say('Compare cleared.'); }
+});
+
+// ---------- Explorer (the feed scatter) ----------
+const EXF = S.explorer, STAR_COL = ['#FF9F0A', '#0A84FF', '#BF5AF2', '#30D158', '#FF375F', '#64D2FF'];
+const TICS = [...new Set(EXF.map(f => f.tic))];
+const ex = {stars: Object.fromEntries(TICS.map(t => [t, true])), fNew: true, fKnown: true, snrMin: 0, sel: EXF.length ? EXF[0].i : null};
+const starColour = tic => STAR_COL[TICS.indexOf(tic) % STAR_COL.length];
+const exShown = f => ex.stars[f.tic] && (f.status === 'new_candidate' ? ex.fNew : ex.fKnown) && (f.snr || 0) >= ex.snrMin;
+function renderExplorer(){
+  if (!EXF.length){ $('#exscatter').innerHTML = '<p class="empty">No discovery catalogue was given to this build.</p>'; return; }
+  const nNew = EXF.filter(f => f.status === 'new_candidate').length, nKnown = EXF.length - nNew;
+  $('#exstars').innerHTML = TICS.map(t => `<button type="button" class="pill" data-tic="${t}" aria-pressed="${ex.stars[t]}" style="--c:${starColour(t)}"><i></i>TIC ${esc(t)}</button>`).join('');
+  $('#exstatus').innerHTML = `<button type="button" data-f="fNew" aria-pressed="${ex.fNew}">New ${nNew}</button><button type="button" data-f="fKnown" aria-pressed="${ex.fKnown}">Known TOI ${nKnown}</button>`;
+  const snrs = [0, 7, 8, 9, 10].filter(v => v === 0 || EXF.some(f => f.snr >= v));
+  $('#exsnr').innerHTML = snrs.map(v => `<button type="button" data-snr="${v}" aria-pressed="${ex.snrMin === v}">${v ? 'SNR ' + v + '+' : 'Any SNR'}</button>`).join('');
+  const per = EXF.map(f => f.period_days).filter(p => p > 0), dep = EXF.map(f => f.depth_ppm).filter(x => x > 0);
+  const p0 = Math.max(0.5, Math.floor(Math.min(...per))), p1 = Math.ceil(Math.max(...per) + 0.5), d1 = Math.ceil(Math.max(...dep) / 500) * 500;
+  const X = p => (Math.log(p) - Math.log(p0)) / (Math.log(p1) - Math.log(p0)) * 100, Yp = dp => (1 - dp / d1) * 100;
+  const pticks = [1, 2, 3, 5, 7, 10, 20].filter(p => p >= p0 && p <= p1), dticks = []; for (let v = 0; v <= d1; v += 500) dticks.push(v);
+  const grid = pticks.map(p => `M${X(p).toFixed(2)} 0V52`).join('') + dticks.map(v => `M0 ${(Yp(v) * .52).toFixed(2)}H100`).join('');
+  const shown = EXF.filter(exShown);
+  $('#excount').textContent = `${shown.length} of ${EXF.length} shown`;
+  $('#exscatter').innerHTML = `<svg viewBox="0 0 100 52" preserveAspectRatio="none" aria-hidden="true"><path d="${grid}" stroke="rgba(255,255,255,.07)" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>`
+    + shown.map(f => { const s = Math.round(7 + Math.max(0, (f.snr || 7) - 7) * 1.4), c = f.status === 'new_candidate' ? '#FFD60A' : starColour(f.tic);
+      return `<button type="button" data-i="${f.i}" aria-pressed="${f.i === ex.sel}" aria-label="TIC ${esc(f.tic)}, period ${fmt(f.period_days, 3)} days, depth ${fmt(f.depth_ppm, 0)} ppm, SNR ${fmt(f.snr, 1)}, ${esc(D.status_label[f.status] || f.status)}, ${esc(D.unconfirmed)}" style="left:${X(f.period_days).toFixed(2)}%;top:${Yp(f.depth_ppm).toFixed(2)}%;--s:${s}px;--c:${c};--g:${Math.round(Math.max(0, (f.snr || 6) - 6) * 2)}px"><i></i></button>`; }).join('')
+    + pticks.map(p => `<span class="ax" style="left:${X(p).toFixed(1)}%;bottom:-18px;transform:translateX(-50%)">${p}${p === pticks[0] ? ' d' : ''}</span>`).join('')
+    + `<span class="ax" style="left:0;top:-2px">${d1} ppm</span><span class="ax" style="left:0;bottom:2px">0</span>`;
+  renderExSel();
+}
+function renderExSel(){
+  const f = EXF.find(x => x.i === ex.sel); if (!f){ $('#exsel').innerHTML = '<p class="empty">Pick a signal.</p>'; return; }
+  const k = f.depth_ppm > 0 ? Math.sqrt(f.depth_ppm * 1e-6) : 0, isNew = f.status === 'new_candidate', c = isNew ? 'var(--yellow)' : 'var(--blue)';
+  $('#exsel').innerHTML = `<p class="st" style="--c:${c}">${isNew ? 'New candidate · unconfirmed' : 'At a known TOI period · ' + esc(D.unconfirmed)}</p><h2>TIC ${esc(f.tic)}</h2>
+    <svg viewBox="-110 -110 220 220" role="img" aria-label="Sketch: a star and a planet disc to scale from the stored depth (Rp/R* ${fmt(k, 4)}); the orbit is not to scale."><defs><radialGradient id="exs" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#FFF4DA"/><stop offset=".7" stop-color="#FFC46B"/><stop offset="1" stop-color="#C2620F"/></radialGradient></defs>
+      <circle r="100" fill="none" stroke="var(--line-2)" stroke-width=".8"/><circle r="46" fill="url(#exs)"/>
+      <g class="orbit" style="transform-origin:0 0"><circle cx="100" cy="0" r="${Math.max(1.2, 46 * k).toFixed(2)}" fill="var(--ink)"/><circle cx="100" cy="0" r="10" fill="none" stroke="var(--line-3)" stroke-width=".8"/></g></svg>
+    <p class="small" style="text-align:center">Planet disc to scale from depth: Rp/R* ${fmt(k, 4)} · orbit not to scale · no stellar radius stored</p>
+    <dl class="statgrid"><div><dt>Period</dt><dd>${fmt(f.period_days, 3)} d</dd></div><div><dt>Depth</dt><dd>${fmt(f.depth_ppm, 0)} ppm</dd></div><div><dt>Duration</dt><dd>${fmt(f.duration_hours, 2)} h</dd></div><div><dt>SNR</dt><dd>${fmt(f.snr, 1)}</dd></div></dl>
+    <p class="small">TESS sectors ${esc(f.sectors || 'not stored')}. Dip <span class="mono">${esc(f.id)}</span>. ${isNew ? '' : 'A TOI match compares a stored period with archive values. '}${esc(D.no_detection)} ${esc(_cap(D.unconfirmed))}.</p>`;
+}
+const _cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+$('#route-explorer').addEventListener('click', e => {
+  const t = e.target.closest('button[data-tic]'), f = e.target.closest('#exstatus button[data-f]'), n = e.target.closest('button[data-snr]'), p = e.target.closest('#exscatter button[data-i]');
+  if (t){ ex.stars[t.dataset.tic] = !ex.stars[t.dataset.tic]; renderExplorer(); $(`#exstars button[data-tic="${t.dataset.tic}"]`).focus(); say($('#excount').textContent); }
+  else if (f){ ex[f.dataset.f] = !ex[f.dataset.f]; renderExplorer(); $(`#exstatus button[data-f="${f.dataset.f}"]`).focus(); say($('#excount').textContent); }
+  else if (n){ ex.snrMin = +n.dataset.snr; renderExplorer(); $(`#exsnr button[data-snr="${n.dataset.snr}"]`).focus(); say($('#excount').textContent); }
+  else if (p){ ex.sel = +p.dataset.i; for (const b of $$('#exscatter button[data-i]')) b.setAttribute('aria-pressed', String(+b.dataset.i === ex.sel)); renderExSel(); }
+});
+
+// ---------- Sentinels (the panel) ----------
+const sen = {filter: 'all', sel: S.reviewers.length ? S.reviewers[0].id : null};
+function renderSentinels(){
+  const R = S.reviewers, probes = R.filter(r => r.role === 'probe'), sents = R.filter(r => r.role === 'sentinel');
+  const ring = (list, rad, cls, col) => list.map((r, i) => { const a = (-90 + i * 360 / list.length) * Math.PI / 180, x = 180 + rad * Math.cos(a), y = 180 + rad * Math.sin(a), s = 4 + 14 * (r.weight || 0);
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${s.toFixed(1)}" fill="${col}"><title>${esc(r.name)} (id ${esc(r.id)}): weight ${fmt(r.weight, 2)}</title></circle>`; }).join('');
+  $('#senring').innerHTML = `<svg viewBox="0 0 360 360" role="img" aria-label="The panel as an orbital diagram: ${probes.length} Probes on the inner ring and ${sents.length} Sentinels on the outer ring, each sized by its calibrated weight (${R.map(r => `${r.name} ${fmt(r.weight, 2)}`).join(', ')}).">
+      <circle cx="180" cy="180" r="18" fill="#FFB340"/><circle cx="180" cy="180" r="80" fill="none" stroke="rgba(191,90,242,.35)" stroke-width=".8"/><circle cx="180" cy="180" r="150" fill="none" stroke="rgba(100,210,255,.35)" stroke-width=".8"/>
+      <g class="orbit" style="transform-origin:180px 180px">${ring(probes, 80, 'p', '#BF5AF2')}</g>
+      <g class="orbitslow" style="transform-origin:180px 180px">${ring(sents, 150, 's', '#64D2FF')}</g></svg>
+    <figcaption>Inner ring: Probes. Outer ring: Sentinels. Size is calibrated weight. Decorative motion; the rings carry no data.</figcaption>`;
+  $('#senfilter').innerHTML = [['all', 'All'], ['sentinel', 'Sentinels'], ['probe', 'Probes']].map(([k, l]) => `<button type="button" data-sf="${k}" aria-pressed="${sen.filter === k}">${l}</button>`).join('');
+  $('#sencards').innerHTML = R.filter(r => sen.filter === 'all' || r.role === sen.filter).map(r => {
+    const c = r.role === 'sentinel' ? 'var(--sen)' : 'var(--prb-ink)', n = r.n_injected || 0;
+    const sq = Array.from({length: n}, (_, q) => `<i class="${q < (r.hits || 0) ? 'on' : ''}"></i>`).join('');
+    return `<button type="button" class="revcard" data-rev="${esc(r.id)}" aria-pressed="${sen.sel === r.id}" style="--c:${c}"><span><span class="nm">${esc(r.name)}</span><span class="kd">${r.role === 'sentinel' ? 'Sentinel, runs on Claude (Anthropic)' : 'Probe, deterministic matched filter'} · <span class="mono">${esc(r.id)}</span></span></span><span class="w" title="calibrated weight">${fmt(r.weight, 2)}</span>
+      <span class="hits" role="img" aria-label="${r.hits ?? '–'} hits in ${n} planted transits; ${r.false_alarms ?? '–'} false alarms in ${r.n_empty ?? '–'} empty light curves">${sq}</span><span class="hitcap">${r.hits ?? '–'} of ${n} planted transits found · ${r.false_alarms ?? '–'} of ${r.n_empty ?? '–'} empty light curves marked</span></button>`; }).join('');
+  const r = R.find(x => x.id === sen.sel) || R[0];
+  if (r) $('#senmarked').innerHTML = `<span class="small">${esc(r.name)}: what it marked in this run (counted for the dip)</span><div class="grid">${DIPS.map(d => { const on = r.marked.includes(d.id);
+    return `<a href="${transitHref(d.id)}" class="${on ? 'on' : ''}" style="--c:${on ? (r.role === 'sentinel' ? 'var(--sen)' : 'var(--prb-ink)') : 'var(--ink-3)'}"><b>${esc(d.letter)} · ${tval(d.t)}</b><span>${on ? 'marked' : 'no mark'}</span></a>`; }).join('')}</div>`;
+}
+$('#route-sentinels').addEventListener('click', e => {
+  const f = e.target.closest('button[data-sf]'), c = e.target.closest('button.revcard');
+  if (f){ sen.filter = f.dataset.sf; renderSentinels(); $(`#senfilter button[data-sf="${f.dataset.sf}"]`).focus(); }
+  else if (c){ sen.sel = c.dataset.rev; renderSentinels(); $(`#sencards button[data-rev="${c.dataset.rev}"]`).focus(); }
+});
+
+// ---------- router ----------
+const RENDER = {overview: renderOverview, sky: renderSky, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
+  sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns};
 const rendered = new Set();
 const ROUTES = D.sections.map(s => s.id);
+const SECTION = Object.fromEntries(D.sections.map(s => [s.id, s]));
 // Only hashes that start with "#/" are routes; anything else (such as the skip link's #content) is left to the browser.
+// An old address (#/discoveries, #/panel ...) is an alias: it opens the section that replaced it.
 function parseHash(h){
   if (!h || h === '#' || h === '#/') return {route: 'overview', params: new URLSearchParams()};
   if (!h.startsWith('#/')) return null;
   const body = h.slice(2), q = body.indexOf('?');
   let route = q < 0 ? body : body.slice(0, q);
   try { route = decodeURIComponent(route); } catch (e) { /* keep as typed */ }
+  const query = q < 0 ? '' : body.slice(q + 1), alias = D.aliases[route];
+  if (alias) return {route: alias, alias: route, query, params: new URLSearchParams(query)};
   return {route: ROUTES.includes(route) ? route : 'overview', unknown: ROUTES.includes(route) ? null : route,
-          params: new URLSearchParams(q < 0 ? '' : body.slice(q + 1))};
+          params: new URLSearchParams(query)};
 }
 let current = null;
 function show(r, moveFocus){
   for (const id of ROUTES) $('#route-' + id).hidden = id !== r;
-  $$('.nav a').forEach(a => { if (a.dataset.route === r) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-  const label = D.sections.find(s => s.id === r).label;
+  const top = SECTION[r].parent || r;
+  $$('.nav a').forEach(a => { if (a.dataset.route === top) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  const label = SECTION[r].label;
   document.title = `${label} · ${D.title}`;
   document.body.dataset.route = r;
-  $('#curlabel').textContent = label;
+  $('#curlabel').textContent = SECTION[r].parent ? `${SECTION[top].label} · ${label}` : label;
   if (r === 'overview') renderOverview();
   else if (!rendered.has(r)){ RENDER[r](); rendered.add(r); }
-  else if (r === 'discoveries') renderDiscCharts(false);
+  else if (r === 'explorer') renderDiscCharts(false);
   if (moveFocus){ const h = $('#route-' + r + ' h1'); if (h) h.focus({preventScroll: true}); window.scrollTo(0, 0); }
   if (r === 'candidates') fitFrame();
 }
 function go(p, moveFocus){
+  // An old address: rewrite it to the section that replaced it, keeping its query (a replace, not a new entry).
+  if (p.alias){ setHash('#/' + p.route + (p.query ? '?' + p.query : ''), false); }
   // An unknown section: rewrite the address to the Overview, and say so.
   if (p.unknown){ setHash('#/overview', false); say(`No section ${p.unknown}; showing the Overview.`); p = {route: 'overview', params: new URLSearchParams()}; }
   const changed = p.route !== current;
@@ -1915,83 +2198,39 @@ function go(p, moveFocus){
       sharedView = encodeLayout(layout) !== encodeLayout(ownLayout);
     } else { layout = ownLayout.map(x => ({...x})); sharedView = false; }
   }
-  if (p.route === 'discoveries'){
+  if (p.route === 'explorer'){
     const fromURL = ['sort', 'dir', 'filter'].some(k => p.params.has(k));
     const before = currentFeedView();
     applyFeedView(fromURL ? decodeFeedView(p.params) : ownFeedView);
-    if (rendered.has('discoveries') && encodeFeedView(before) !== encodeFeedView(currentFeedView())){ renderDiscChips(); renderDiscTable(); }
+    if (rendered.has('explorer') && encodeFeedView(before) !== encodeFeedView(currentFeedView())){ renderDiscChips(); renderDiscTable(); }
   }
   current = p.route;
   show(p.route, moveFocus && changed);
-  if (p.route === 'discoveries') syncFeedURL();
+  if (p.route === 'explorer') syncFeedURL();
+  if (p.route === 'transit') openTransit(p.params.get('dip'));
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));
 }
 // Back and Forward: hashchange for typed or linked hashes, popstate for entries made by pushState.
 // Either way the shell re-reads the hash and pushes the dip (or the Feed view) into the view.
-function onNavigate(){ const p = parseHash(location.hash); if (!p) return; closeDrawer(false); go(p, true); }
+function onNavigate(){ const p = parseHash(location.hash); if (!p) return; go(p, true); }
 window.addEventListener('hashchange', onNavigate);
 window.addEventListener('popstate', onNavigate);
 $('.skip').addEventListener('click', e => { e.preventDefault(); const c = $('#content'); c.focus({preventScroll: true}); c.scrollIntoView(); });
-const drawerMQ = window.matchMedia('(max-width: 699.98px)');
-const side = $('#sidebar'), menu = $('#menubtn'), backdrop = $('#backdrop');
-// On a phone the sidebar is a modal drawer: a dialog with its own name and close button.
-function setDrawerRole(){
-  if (drawerMQ.matches){ side.setAttribute('role', 'dialog'); side.setAttribute('aria-modal', 'true'); side.setAttribute('aria-label', `${D.title} sections menu`); }
-  else { side.removeAttribute('role'); side.removeAttribute('aria-modal'); side.setAttribute('aria-label', `${D.title} sections`); }
-}
-// html has overflow-x:hidden, so overflow on body alone would not stop the viewport scrolling:
-// lock the root itself while the drawer is open, and restore the saved position on close.
-let lockedY = null;
-function lockScroll(){
-  if (lockedY !== null) return;
-  lockedY = window.scrollY;
-  document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';
-}
-function unlockScroll(){
-  if (lockedY === null) return;
-  const y = lockedY; lockedY = null;
-  document.documentElement.style.overflow = ''; document.body.style.overflow = '';
-  if (window.scrollY !== y) window.scrollTo(0, y);
-}
-// Touch drags on the backdrop would otherwise scroll the page behind it on some phones.
-backdrop.addEventListener('touchmove', e => e.preventDefault(), {passive: false});
-function openDrawer(){
-  side.classList.add('open'); backdrop.hidden = false; menu.setAttribute('aria-expanded', 'true');
-  $('#main').inert = true; $('.topbar').inert = true;
-  lockScroll();
-  const cur = $('.nav a[aria-current="page"]') || $('.nav a'); setTimeout(() => cur.focus(), 20);
-}
-function closeDrawer(returnFocus){
-  if (!side.classList.contains('open')) return;
-  side.classList.remove('open'); backdrop.hidden = true; menu.setAttribute('aria-expanded', 'false');
-  $('#main').inert = false; $('.topbar').inert = false;
-  unlockScroll();
-  if (returnFocus) menu.focus({preventScroll: true});
-}
-menu.addEventListener('click', () => side.classList.contains('open') ? closeDrawer(true) : openDrawer());
-$('#drawerclose').addEventListener('click', () => closeDrawer(true));
-backdrop.addEventListener('click', () => closeDrawer(true));
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && side.classList.contains('open')) { closeDrawer(true); e.preventDefault(); } });
-side.addEventListener('keydown', e => {
-  if (e.key !== 'Tab' || !side.classList.contains('open')) return;
-  const f = $$('a, button', side).filter(x => x.offsetParent !== null), first = f[0], last = f[f.length - 1];
-  if (e.shiftKey && document.activeElement === first){ last.focus(); e.preventDefault(); }
-  else if (!e.shiftKey && document.activeElement === last){ first.focus(); e.preventDefault(); }
-});
-$$('.nav a').forEach(a => a.addEventListener('click', () => { if (a.getAttribute('aria-current') === 'page') closeDrawer(false); }));
-setDrawerRole();
-if (drawerMQ.addEventListener) drawerMQ.addEventListener('change', () => { closeDrawer(false); setDrawerRole(); });
+// The sticky top bar's height (it wraps to two rows on a phone) sets --top, which the case file's frame uses.
+function measureTop(){ const t = $('.topbar'); if (t) document.documentElement.style.setProperty('--top', Math.ceil(t.getBoundingClientRect().height) + 'px'); }
+measureTop();
+if (window.ResizeObserver) new ResizeObserver(measureTop).observe($('.topbar'));
 let rt = null;
-window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!$('#route-discoveries').hidden) renderDiscCharts(false); if (!$('#route-overview').hidden) renderHero(false); resizeCalibration(); fitFrame(); }, 120); });
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitFrame);  // web fonts can rewrap the header
-// ---------- theme: system, light or dark ----------
-// The choice is stored as exoplan-theme (when storage is allowed); the head script applies it before
-// first paint. The Docket frame is told too, so it follows.
-const THEMES = ['system', 'light', 'dark'], THEME_NAME = {system: 'System', light: 'Light', dark: 'Dark'};
-function currentTheme(){ const t = document.documentElement.getAttribute('data-theme'); return t === 'light' || t === 'dark' ? t : 'system'; }
+window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!$('#route-explorer').hidden) renderDiscCharts(false); resizeCalibration(); fitFrame(); }, 120); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measureTop(); fitFrame(); });  // web fonts can rewrap the header
+// ---------- theme: dark (the default), light or system ----------
+// The design is dark first. The choice is stored as exoplan-theme (when storage is allowed); the head
+// script applies it before first paint. The Docket frame is told too, so it follows.
+const THEMES = ['dark', 'light', 'system'], THEME_NAME = {system: 'System', light: 'Light', dark: 'Dark'};
+function currentTheme(){ const t = document.documentElement.getAttribute('data-theme'); return THEMES.includes(t) ? t : 'dark'; }
 function applyTheme(t){
-  if (t === 'system') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', t);
-  try { const s = getStorage(); if (s){ if (t === 'system') s.removeItem('exoplan-theme'); else s.setItem('exoplan-theme', t); } } catch (e) { /* storage blocked: the theme lasts for this visit */ }
+  document.documentElement.setAttribute('data-theme', t);
+  try { const s = getStorage(); if (s){ if (t === 'dark') s.removeItem('exoplan-theme'); else s.setItem('exoplan-theme', t); } } catch (e) { /* storage blocked: the theme lasts for this visit */ }
   for (const b of $$('[data-theme-toggle]')){ b.setAttribute('aria-label', `Colour theme: ${THEME_NAME[t].toLowerCase()}. Change theme`); b.querySelector('.themelbl').textContent = THEME_NAME[t]; }
   try { $('#docketframe').contentWindow.postMessage({source: 'exoplan-shell', theme: t}, '*'); } catch (e) { /* no frame yet */ }
 }
@@ -2004,87 +2243,206 @@ go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()
 
 # Before first paint: apply the stored theme choice (system, light or dark), so the page never flashes.
 THEME_KEY = "exoplan-theme"
-THEME_HEAD_JS = ("(function(){try{var t=localStorage.getItem('" + THEME_KEY + "');"
-                 "if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();")
-THEME_BUTTON = ('<button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: system. Change theme">'
+THEME_HEAD_JS = ("(function(){var t='dark';try{var s=localStorage.getItem('" + THEME_KEY + "');"
+                 "if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();")
+THEME_BUTTON = ('<button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Change theme">'
                 '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg>'
-                '<span class="themelbl">System</span></button>')
+                '<span class="themelbl">Dark</span></button>')
 
 
 def _nav(sections: list[dict]) -> str:
-    items = "".join(
-        f'<li><a href="#/{s["id"]}" data-route="{s["id"]}"><svg viewBox="0 0 16 16" aria-hidden="true">{ICONS[s["id"]]}</svg>{html.escape(s["label"])}'
-        f'<span class="ix" aria-hidden="true">{i:02d}</span></a></li>'
-        for i, s in enumerate(sections, 1)
-    )
+    items = "".join(f'<li><a href="#/{s["id"]}" data-route="{s["id"]}">{html.escape(s["label"])}</a></li>'
+                    for s in sections if not s.get("parent"))
     return f'<nav class="nav" aria-label="Sections"><ul>{items}</ul></nav>'
 
 
-def _hero(data: dict) -> str:
-    """The Overview's opening: the argument, the stored light curve, the vetting flow, and what the page does not claim."""
+BRAND_SVG = ('<svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="10" fill="none" stroke="currentColor" '
+             'stroke-opacity=".5"/><circle cx="11" cy="11" r="3.5" fill="#FFB340"/><circle cx="19" cy="7.5" r="1.8" fill="currentColor"/></svg>')
+
+
+def _eyebrow(label: str, parent: tuple[str, str] | None = None) -> str:
+    up = f'<span class="parent"><a href="#/{parent[0]}">{html.escape(parent[1])}</a> ›</span>' if parent else ""
+    return f'<p class="eyebrow">{up}{html.escape(label)}</p>'
+
+
+def _honest(data: dict) -> str:
     e = html.escape
-    h, run, cfg = data["hero"], data["run"], data["config"]
-    inp = (cfg.get("inputs") or [{}])[0]
-    dc, c = run.get("docket_counts") or {}, run.get("counts") or {}
-    lead = h.get("lead")
-    feed_label_ = next((s["label"] for s in data["sections"] if s["id"] == "discoveries"), "Discoveries")
-    source = " · ".join(str(x) for x in (inp.get("mission"), f"sector {inp['sector']}" if inp.get("sector") is not None else None,
-                                          inp.get("author"), f"{inp['exptime_s']} s" if inp.get("exptime_s") else None) if x)
-    open_lead = (f'<a class="btn primary" href="#/candidates?dip={e(lead["dip"])}">Open the lead dip in the Docket <span aria-hidden="true">→</span></a>'
-                 if lead and lead.get("dip") else '<a class="btn primary" href="#/candidates">Open the Docket <span aria-hidden="true">→</span></a>')
-    value = (f'<div class="ival">{lead["depth_ppm"]:,.0f} ppm<small>lead signal depth, median of {lead["n_dips"]} dips</small></div>'
-             if lead and lead.get("depth_ppm") else "")
+    h = data["hero"]
+    dc = data["run"].get("docket_counts") or {}
     cal = data.get("calibration") or {}
     n_inj = max([p.get("n_injected") or 0 for p in cal.get("points") or []] or [0])
-    weights = (f" Their weights rest on calibration with {n_inj} injected subjects, so they are rough." if n_inj else "")
-    flow = [
-        ("", c.get("subjects", "–"), f"light-curve subjects of {cfg.get('subject_days') or '–'} days", "input"),
-        ("", c.get("classifications", "–"), f"reviews from {panel_phrase(dc.get('claude', 0), dc.get('simulated', 0), dc.get('other', 0))}, no people", "marks"),
-        ("", dc.get("dips", "–"), "dips the panel agreed on", "consensus"),
-        ("", dc.get("signals", "–"), "signals, once repeat dips are grouped", "grouping"),
-    ]
-    flow_html = "".join(f'<li class="{k}"><small>{e(sm)}</small><b>{e(str(v))}</b><span>{e(t)}</span></li>' for k, v, t, sm in flow)
-    flow_html += (f'<li class="vet"><small>vetting, signals by outcome</small><div class="vet3">'
-                  f'<span class="pass"><b>{e(str(dc.get("passed", 0)))}</b>passed</span>'
-                  f'<span class="flag"><b>{e(str(dc.get("flagged", 0)))}</b>flagged</span>'
-                  f'<span class="rej"><b>{e(str(dc.get("rejected", 0)))}</b>rejected</span></div>'
-                  f'<span>Passing makes a {UNCONFIRMED}, not a planet.</span></li>')
-    return f"""<div class="hero">
-        <div class="consolebar" aria-label="Run summary">
-          <span class="live"><i></i>Stored run</span><span class="sep"></span>
-          <span>Run <b>{e(run["name"])}</b></span><span class="sep"></span>
-          <span>{e(source or "stored input")}</span><span class="sep"></span>
-          <span><b>{e(h["target"])}</b></span>
-          <span class="right">config <b>{e((cfg.get("config_sha256") or "")[:12] or "not stored")}</b></span>
-        </div>
-        <div class="hero-copy">
-          <h1 class="hero-h" id="h-overview" tabindex="-1">{e(h["headline"])} <em>{e(h["accent"])}</em></h1>
-          <p class="lede">{e(h["lede"])} {e(h["qualifier"]).replace(UNCONFIRMED, f"<b>{UNCONFIRMED}</b>", 1)}</p>
-          <p class="lede" style="font-size:14.5px;color:var(--ink-3)">{e(h["archive"])}</p>
-          <div class="ctas">{open_lead}<a class="btn ghost" href="#/discoveries">See the {e(feed_label_)}</a></div>
-        </div>
-        <section class="instrument" aria-labelledby="h-lc">
-          <div class="ihead"><div class="ititle"><span id="h-lc">The light curve · {e(h["target"])}</span><small>{e(source or "stored input")} · {e(inp.get("flux_column") or "flux")} · normalised, in ppm</small></div>{value}</div>
-          <div class="igrid">
-            <figure><div id="herocurve"></div><figcaption id="herocurvecap"></figcaption></figure>
-            <figure class="fold"><div id="herofold"></div><figcaption id="herofoldcap"></figcaption></figure>
-          </div>
-          <div class="ikey"><span><i class="k-passed"></i>passed vetting</span><span><i class="k-flagged"></i>flagged</span><span><i class="k-rejected"></i>rejected</span><span><i class="k-mean"></i>1-hour mean of the stored points, for reading only</span>{'<span><i class="k-ep"></i>transit times predicted by the stored period and t0</span>' if lead else ''}<span class="unc">each window: {UNCONFIRMED}</span></div>
-        </section>
-      </div>
-      <section aria-labelledby="h-flow" style="display:grid;gap:14px">
-        <div class="secthead"><h2 id="h-flow">02 · How the dips were vetted</h2><p>Read left to right. Counts from manifest.json and the Docket; nothing is re-estimated here.</p></div>
-        <ol class="flow">{flow_html}</ol>
-      </section>
-      <section class="honest" aria-labelledby="h-honest">
-        <h2 id="h-honest">03 · What this page does not claim</h2>
+    weights = f" Their weights rest on calibration with {n_inj} planted and {n_inj} empty light curves each, so they are rough." if n_inj else ""
+    match = f" The match with {e(h['match'])} says the planet is already known, not that this run confirmed it." if h.get("match") else ""
+    return f"""<section class="honest" aria-labelledby="h-honest">
+        <h2 id="h-honest">What this page does not claim</h2>
         <ul>
-          <li><b>No confirmed planet.</b> Every dip, signal and feed entry here is a {UNCONFIRMED}. Passing vetting is not a confirmation.{f" The match with {e(h['match'])} says the planet is already known, not that this run confirmed it." if h.get("match") else ""}</li>
-          <li><b>No planet sizes.</b> No stellar radius is stored, so a depth gives only a planet-to-star radius ratio. The Planets section shows the working.</li>
+          <li><b>No confirmed planet.</b> Every dip, signal and feed entry here is a {UNCONFIRMED}. Passing vetting is not a confirmation.{match}</li>
+          <li><b>No planet sizes.</b> No stellar radius is stored, so a depth gives only a planet-to-star radius ratio. The Planets page shows the working.</li>
           <li><b>No people on the panel.</b> The panel is the Sentinels and the Probes: {e(panel_phrase(dc.get('claude', 0), dc.get('simulated', 0), dc.get('other', 0)))}. {e(ATTRIBUTION)}{e(weights)}</li>
           <li><b>{e(NO_DETECTION.split(". ")[0])}.</b> {e(NO_DETECTION.split(". ", 1)[1])} A TOI or archive match compares a stored period with published values.</li>
+          <li><b>No image of the planet.</b> The planet on the Overview is an artist's impression; the field stars on the sky map are decorative.</li>
         </ul>
       </section>"""
+
+
+def _planet_figure(deco: dict) -> str:
+    """The Overview's artist's impression: a planet's limb lit by its star. Decorative, and labelled so."""
+    return f"""<figure class="planetfig">
+        <svg viewBox="0 0 1440 560" role="img" aria-label="Artist's impression of a planet's limb lit by its star. No image of pi Men c exists." style="display:block;width:100%;height:auto">
+          <defs>
+            <radialGradient id="pBody" cx="35%" cy="15%" r="85%"><stop offset="0" stop-color="#3C5E8C"/><stop offset=".35" stop-color="#1D3352"/><stop offset=".7" stop-color="#0A1222"/><stop offset="1" stop-color="#000"/></radialGradient>
+            <radialGradient id="pAtm" cx="50%" cy="100%" r="62%"><stop offset=".86" stop-color="#64D2FF" stop-opacity="0"/><stop offset=".92" stop-color="#64D2FF" stop-opacity=".55"/><stop offset=".97" stop-color="#0A84FF" stop-opacity=".18"/><stop offset="1" stop-color="#0A84FF" stop-opacity="0"/></radialGradient>
+            <radialGradient id="sGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF4D6"/><stop offset=".08" stop-color="#FFD28A" stop-opacity=".9"/><stop offset=".3" stop-color="#FF9F2E" stop-opacity=".18"/><stop offset="1" stop-color="#FF9F2E" stop-opacity="0"/></radialGradient>
+            <filter id="soft"><feGaussianBlur stdDeviation="9"/></filter>
+            <clipPath id="pClip"><circle cx="720" cy="1380" r="1000"/></clipPath>
+          </defs>
+          <path class="twinkle" d="{deco['bright']}" stroke="#E8EEFF" stroke-width="1.6" stroke-linecap="round"/>
+          <circle class="breathe" cx="1170" cy="120" r="230" fill="url(#sGlow)"/>
+          <circle cx="1170" cy="120" r="9" fill="#FFFBEF"/>
+          <circle cx="720" cy="1380" r="1060" fill="url(#pAtm)"/>
+          <circle cx="720" cy="1380" r="1000" fill="url(#pBody)"/>
+          <g clip-path="url(#pClip)"><g class="clouds" filter="url(#soft)" opacity=".35"><path d="{deco['bands']}" stroke="#BFD6F2" stroke-width="16" fill="none" stroke-linecap="round"/></g></g>
+          <path d="M-280 1380 A1000 1000 0 0 1 1720 1380" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
+        </svg>
+        <figcaption>Artist's impression. No image of pi Men c exists.</figcaption>
+      </figure>"""
+
+
+def _overview(data: dict) -> str:
+    e = html.escape
+    st = data["story"]
+    lead = st.get("lead_dip")
+    planet = st.get("planet")
+    watch = (f'<a class="btn ghost" href="#/transit?dip={e(lead)}">Watch it find {e(planet)} ›</a>' if planet and lead
+             else (f'<a class="btn ghost" href="#/transit?dip={e(lead)}">Watch the lead dip ›</a>' if lead else ""))
+    proof = "".join(f'<div><b style="color:{p["colour"]}">{e(p["big"])}</b><span>{e(p["text"])}</span></div>' for p in st["proof"])
+    return f"""<header class="launch">
+        <p class="kick">exoplan</p>
+        <h1 id="h-overview" tabindex="-1">The sky, reviewed.</h1>
+        <p class="sub">A calibrated panel of Sentinels (Claude) and Probes (deterministic detectors) reads every light curve. Every verdict, explained. Nothing called a planet until it is one.</p>
+        <div class="ctas"><a class="btn primary" href="#/sky">Explore the sky</a>{watch}</div>
+      </header>
+      {_planet_figure(data["deco"])}
+      <div class="proof" role="list" aria-label="What this run shows">{proof.replace('<div>', '<div role="listitem">')}</div>
+      {_honest(data)}
+      <div class="secthead"><h2 id="h-view">Your view</h2><p>Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></div>"""
+
+
+def _sky(data: dict) -> str:
+    e = html.escape
+    st, geo, h = data["story"], data["sky_geo"], data["hero"]
+    star = st["star"]
+    pin = ""
+    if geo.get("x") is not None:
+        bl = (geo["x"] + 460) / 920 * 100 + 3
+        bt = (geo["y"] + 235) / 470 * 100 - 34
+        lead = st.get("lead_dip")
+        known = f"{e(st['planet'])} · known planet" if st.get("planet") else f"{len(st['dips'])} dips · {UNCONFIRMED}"
+        pin = (f'<a class="skypin" href="#/transit?dip={e(lead or "")}" style="left:{bl:.1f}%;top:{bt:.1f}%">'
+               f'<b>{e(star["name"])}</b><span>{known}</span><em>Open ›</em></a>')
+        marker = (f'<circle class="pulse" cx="{geo["x"]}" cy="{geo["y"]}" r="22" fill="url(#pmg)"/>'
+                  f'<circle cx="{geo["x"]}" cy="{geo["y"]}" r="10" fill="none" stroke="#64D2FF" stroke-width=".8"/>'
+                  f'<circle cx="{geo["x"]}" cy="{geo["y"]}" r="3.2" fill="#FFFFFF"/>')
+        where = (f"{e(star['name'])} at RA {star['ra_deg']:.2f}°, Dec {star['dec_deg']:.2f}° ({e(star['source'])})")
+    else:
+        marker, where = "", "The target's sky position is not stored, so it is not plotted."
+    t1, t2 = st["sky_title"]
+    return f"""<header class="headrow">
+        <div>{_eyebrow("Sky")}<h1 class="lead-h" id="h-sky" tabindex="-1">{e(t1)}<br><span class="grey">{e(t2)}</span></h1></div>
+        <div class="chips" id="skychips" role="group" aria-label="Show dips by status"></div>
+      </header>
+      <p class="muted" style="margin:0;max-width:80ch">{e(h["lede"])} {e(h["qualifier"])} {e(h["archive"])}</p>
+      <div class="row2">
+        <section class="space skymap" aria-labelledby="h-skymap">
+          <h2 id="h-skymap" class="sr">Sky map</h2>
+          <svg viewBox="-460 -235 920 470" role="img" aria-label="All-sky map (Mollweide). {where}. Field stars are decorative; the feed's stars are not plotted because their positions are not stored.">
+            <defs><radialGradient id="pmg"><stop offset="0" stop-color="#64D2FF" stop-opacity=".9"/><stop offset="1" stop-color="#64D2FF" stop-opacity="0"/></radialGradient></defs>
+            <ellipse rx="452" ry="226" fill="rgba(255,255,255,.015)" stroke="rgba(255,255,255,.14)" stroke-width=".8"/>
+            <path d="{geo['grat']}" stroke="rgba(255,255,255,.06)" stroke-width=".8" fill="none"/>
+            <path class="twinkle" d="{geo['stars']}" stroke="#E8EEFF" stroke-width="1.1" stroke-linecap="round"/>
+            <path d="{geo['ecl']}" stroke="#FFB340" stroke-width=".9" fill="none" stroke-dasharray="2 6" opacity=".7"/>
+            {marker}
+          </svg>
+          {pin}
+          <p class="skynote">Field stars decorative · feed stars not plotted (positions not stored) · dashed: the ecliptic</p>
+        </section>
+        <aside class="glass dipsbox" aria-labelledby="h-skydips">
+          <div class="dhead"><b id="h-skydips">Dips</b><span class="muted" id="skycount"></span></div>
+          <div class="segctl" id="skyrev" role="group" aria-label="Who marked it"></div>
+          <div id="skydips"></div>
+        </aside>
+      </div>
+      <section class="glass runline" aria-labelledby="h-skytl">
+        <h2 id="h-skytl" class="sr">The run's light curve</h2>
+        <div class="cap" id="skytlcap"></div>
+        <div id="skytimeline"></div>
+      </section>"""
+
+
+def _transit(data: dict) -> str:
+    return f"""<header class="headrow">
+        <div><p class="eyebrow" id="txkicker"></p><h1 class="lead-h" id="h-transit" tabindex="-1"></h1><p id="txsub"></p></div>
+        <div style="display:flex;align-items:center;gap:8px" id="txnav"></div>
+      </header>
+      <p class="txnotice" id="txnotice" role="status" hidden></p>
+      <nav class="dipchips" id="txchips" aria-label="Dips"></nav>
+      <div class="row2">
+        <section class="space theatre" id="txtheatre" aria-label="Transit theatre"></section>
+        <aside class="tx-side">
+          <section class="glass scorecard" id="txscore" aria-label="Panel score and verdict"></section>
+          <section class="glass lanes" id="txlanes" aria-label="Who marked it"></section>
+          <section id="txquote" aria-label="A Sentinel's words"></section>
+        </aside>
+      </div>
+      <section class="row2" id="txorbit" aria-label="Orbit and compare"></section>
+      <p class="casefile" id="txcase"></p>
+      <p class="small" id="txarchive"></p>
+      <p class="small">Every dip here is a {UNCONFIRMED}. Stored values only: the points, marks, scores, flags and words are as the run stored them.</p>"""
+
+
+def _explorer(data: dict) -> str:
+    e = html.escape
+    feed = data["catalog"]["candidates"]
+    stars = len({r["tic"] for r in feed})
+    n_new = sum(1 for r in feed if r.get("status") == "new_candidate")
+    t1 = f"{len(feed)} signals. {stars} star{'s' if stars != 1 else ''}." if feed else "No discovery feed in this build."
+    t2 = f"{n_new} at no known TOI period. All unconfirmed." if feed else ""
+    return f"""<header class="headrow">
+        <div>{_eyebrow("Explorer")}<h1 class="lead-h" id="h-explorer" tabindex="-1">{e(t1)}<br><span class="grey">{e(t2)}</span></h1></div>
+        <div class="filters">
+          <div class="chips" id="exstars" role="group" aria-label="Stars"></div>
+          <div><div class="segctl" id="exstatus" role="group" aria-label="Status"></div><div class="segctl" id="exsnr" role="group" aria-label="Minimum SNR"></div></div>
+        </div>
+      </header>
+      <div class="row2">
+        <section class="space scatterbox" aria-labelledby="h-scatter">
+          <div class="cap"><span id="h-scatter">Depth against period · period on a log scale</span><span id="excount"></span></div>
+          <div class="scatter" id="exscatter"></div>
+          <p class="foot">Each point a feed entry; size and glow follow SNR; yellow: no known TOI period. {e(NO_DETECTION)} Every entry is a {UNCONFIRMED}.</p>
+        </section>
+        <aside class="glass selpanel" id="exsel" aria-label="Selected signal"></aside>
+      </div>
+      <p class="casefile"><a href="#/planets">Radius ratios by star ›</a><span>What each depth would imply, if it were a planet; the stellar-radius limitation is stated there.</span></p>"""
+
+
+def _sentinels(data: dict) -> str:
+    e = html.escape
+    st = data["story"]
+    n = len(st["reviewers"])
+    n_inj = max([r.get("n_injected") or 0 for r in st["reviewers"]] or [0])
+    caveat = (f" Weights come from {n_inj} planted and {n_inj} empty light curves each: too few to separate 0.6 from 0.5."
+              if n_inj else "")
+    return f"""<header class="headrow">
+        <div>{_eyebrow("Sentinels and Probes")}<h1 class="lead-h" id="h-sentinels" tabindex="-1">{e(number_words(n).capitalize())} reviewers.<br><span class="grey">Each one earns its vote.</span></h1>
+        <p>The panel that marked dips in run {e(data["run"]["name"])}: the Sentinels and the Probes, no people. <span class="attribution">{e(ATTRIBUTION)}</span></p></div>
+        <div class="segctl" id="senfilter" role="group" aria-label="Show"></div>
+      </header>
+      <div class="row2">
+        <figure class="space ringfig" id="senring"></figure>
+        <div class="revcards" id="sencards"></div>
+      </div>
+      <section class="glass marked" id="senmarked" aria-label="What the selected reviewer marked"></section>
+      <p class="muted" style="margin:0;font-size:13px">{e(ATTRIBUTION)}{e(caveat)}</p>"""
 
 
 def app_page(data: dict) -> str:
@@ -2095,48 +2453,37 @@ def app_page(data: dict) -> str:
     payload = json.dumps(data).replace("</", "<\\/")
     unc = html.escape(UNCONFIRMED)
     nodet = html.escape(NO_DETECTION)
-    label = {s["id"]: html.escape(s["label"]) for s in data["sections"]}
     feed = data["catalog"]["candidates"]
+    flabel = html.escape(feed_label(feed))
     n_known = sum(1 for r in feed if r.get("status") == "known_toi")
-    dcounts = run.get("docket_counts") or {}
     description = (f"exoplan run {run['name']}: {data['hero']['headline']} Every dip is a {UNCONFIRMED}; "
                    f"stored values only.")
     xm_targets = ", ".join(html.escape(str(t)) for t in data.get("crossmatch_targets") or []) or "no star"
+    deco = data["deco"]
     return f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{html.escape(description)}">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#E8ECF3" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#060A14" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
 <link rel="icon" href="data:,">
 <script>{THEME_HEAD_JS}</script>
 <link rel="stylesheet" href="{FONTS_CSS}">
 <style>{APP_CSS}</style></head>
 <body>
+<svg class="starfield" aria-hidden="true" viewBox="0 0 1440 1100" preserveAspectRatio="xMidYMid slice"><path class="twinkle" d="{deco['dust']}" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" opacity=".5"/><path class="twinkle2" d="{deco['bright']}" stroke="#E8EEFF" stroke-width="1.8" stroke-linecap="round"/></svg>
 <a class="skip" href="#content">Skip to the section</a>
 <header class="topbar">
-  <button class="btn menu" id="menubtn" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>Menu</button>
-  <b>{title}</b><span class="cur" id="curlabel"></span>
-  {THEME_BUTTON}
-  <a class="topfull" id="topfull" href="../docket/">Full page</a>
+  <a class="brand" href="#/overview" aria-label="{title}, Overview">{BRAND_SVG}<span>{title}</span></a>
+  {_nav(data["sections"])}
+  <div class="topmeta"><span class="cur" id="curlabel"></span><span class="mono">{html.escape(data["story"]["star"]["name"] or run["name"])} · {html.escape(_input_label(data))}</span>{THEME_BUTTON}</div>
 </header>
-<div class="shell">
-  <aside class="sidebar" id="sidebar" aria-label="{title} sections">
-    <button class="btn drawerclose" id="drawerclose" type="button"><span aria-hidden="true">✕</span> Close menu</button>
-    <div class="brand"><b>{title}</b><span>run {html.escape(run["name"])}</span></div>
-    <p class="navlabel" aria-hidden="true">Sections</p>
-    {_nav(data["sections"])}
-    <div class="sidefoot">{THEME_BUTTON}<span class="stored"><i></i>Stored values only</span><span>built from {html.escape(run["dir"])}</span><span>{html.escape(data["catalog"]["path"] or "no catalogue")}</span></div>
-  </aside>
-  <div class="backdrop" id="backdrop" hidden></div>
-  <main id="main">
-   <div id="content" tabindex="-1">
+<main id="main">
+ <div id="content" tabindex="-1">
     <section class="route" id="route-overview" data-route="overview" aria-labelledby="h-overview" hidden>
-      <header><p class="eyebrow"><span class="idx">01</span>Overview</p></header>
-      {_hero(data)}
-      <div class="secthead"><h2 id="h-view">04 · Your view</h2><p>Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></div>
+      {_overview(data)}
       <p class="note rule" id="sharednote" hidden>This is a shared layout, shown for this view only. Your own default layout is unchanged unless you change a widget here. <button class="btn" id="ownlayout" type="button">Show my layout</button></p>
       <div class="layoutbar" role="group" aria-label="Layout">
         <div class="layoutbar" id="hiddenlist"></div>
@@ -2147,16 +2494,15 @@ def app_page(data: dict) -> str:
       </div>
       <div class="widgets" id="widgets"></div>
     </section>
-    <section class="route" id="route-candidates" data-route="candidates" aria-labelledby="h-candidates" hidden>
-      <header><p class="eyebrow"><span class="idx">02</span>Candidates</p><h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The Docket for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
-      <div class="frametools"><a id="fullpage" href="../docket/">Open full page</a><span class="muted">The Docket on its own page, at the same dip.</span></div>
-      <div class="dippicker"><label for="dippick">Dip</label><select id="dippick" aria-describedby="dippickhint"></select><span class="sr" id="dippickhint">Every dip in this run, lettered in time order, with its vetting outcome. Each is a {unc}.</span></div>
-      <p class="note" id="framestatus" role="status" hidden></p>
-      <p class="note blocked" id="frameblocked" role="alert" hidden>The dossier could not load in this view. <a id="blockedlink" href="../docket/">Open it on its own page.</a></p>
-      <iframe class="frame waiting" id="docketframe" title="Docket for run {html.escape(run["name"])}: signals, dips and vetting"></iframe>
+    <section class="route" id="route-sky" data-route="sky" aria-labelledby="h-sky" hidden>
+      {_sky(data)}
     </section>
-    <section class="route" id="route-discoveries" data-route="discoveries" aria-labelledby="h-discoveries" hidden>
-      <header><p class="eyebrow"><span class="idx">03</span>{label["discoveries"]}</p><h1 class="lead-h" id="h-discoveries" tabindex="-1">What the discovery runs admitted, and how much of it the archive already knows.</h1><p>The feed from the discovery catalogue: {len(feed)} entries, {n_known} of them match a known TOI period. Every entry is a {unc}: a dip the panel marked, not a planet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></header>
+    <section class="route" id="route-transit" data-route="transit" aria-labelledby="h-transit" hidden>
+      {_transit(data)}
+    </section>
+    <section class="route" id="route-explorer" data-route="explorer" aria-labelledby="h-explorer" hidden>
+      {_explorer(data)}
+      <div class="secthead"><h2 id="h-feedsec">{flabel}</h2><p>The feed from the discovery catalogue: {len(feed)} entries, {n_known} of them match a known TOI period. Every entry is a {unc}: a dip the panel marked, not a planet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></div>
       <p class="note rule"><b>Feed rule</b> (discover.py): an entry joins the feed when its depth is at most {rule["max_depth_ppm"]:,.0f} ppm and its signal has at least {rule["min_transits"]} transits. This is an admission rule, not a vetting result.</p>
       <section class="card" aria-labelledby="h-feed" style="display:grid;gap:10px">
         <h2 id="h-feed">Feed entries</h2>
@@ -2175,14 +2521,8 @@ def app_page(data: dict) -> str:
         <div id="timeline"></div>
       </section>
     </section>
-    <section class="route" id="route-planets" data-route="planets" aria-labelledby="h-planets" hidden>
-      <header><p class="eyebrow"><span class="idx">04</span>Planets</p><h1 class="lead-h" id="h-planets" tabindex="-1">What each depth would imply, if it were a planet.</h1><p>One card per star in the run or the feed. Each entry is a {unc}; the ratio below is what its stored depth implies if it were a planet.</p></header>
-      <p class="note"><b>Radius ratio only.</b> Rp/R* = √depth, with depth as a fraction (ppm × 10⁻⁶). This assumes a full, undiluted transit and ignores limb darkening. {html.escape(NO_STELLAR_RADIUS)} Each bar is a ratio scale from 0 to {data["ratio_scale_max"]:.2f}, the same on every card.</p>
-      <p class="note">Published planets come from the stored archive cross-match ({html.escape(data.get("crossmatch_file") or "crossmatch.json")}), which covers {xm_targets}. The other stars have no stored cross-match, so their cards have no archive box. {nodet}</p>
-      <div class="cards" id="planetcards"></div>
-    </section>
-    <section class="route" id="route-panel" data-route="panel" aria-labelledby="h-panel" hidden>
-      <header><p class="eyebrow"><span class="idx">05</span>Panel</p><h1 class="lead-h" id="h-panel" tabindex="-1">Who marked the dips, and how far to trust each of them.</h1><p>The panel that marked dips in run {html.escape(run["name"])}: the Sentinels and the Probes, {html.escape(panel_phrase(dcounts.get("claude", 0), dcounts.get("simulated", 0), dcounts.get("other", 0)))}, no people. <span class="attribution">{html.escape(ATTRIBUTION)}</span></p></header>
+    <section class="route" id="route-sentinels" data-route="sentinels" aria-labelledby="h-sentinels" hidden>
+      {_sentinels(data)}
       <p class="note rule"><b>Weights.</b> A reviewer's weight is its calibration skill from injection tests: the true-positive rate on injected transits minus the false-positive rate on empty light curves, floored (calibrate.py). The calibrated weights are stored in {html.escape(data["weights_path"] or "no weights file")}. The weight in this run is the one manifest.json records; when it differs from the calibrated weight, the run did not use the calibrated weights.</p>
       <section class="card" aria-labelledby="h-cal" style="display:grid;gap:8px">
         <h2 id="h-cal">Calibration plane</h2>
@@ -2200,23 +2540,43 @@ def app_page(data: dict) -> str:
         <div id="agreement"></div>
       </section>
       <div class="cards" id="panelcards"></div>
+      <p class="casefile"><a href="#/runs">Runs and configuration ›</a><span>Every discovery run, its errors as stored, and the configuration behind this page.</span></p>
+    </section>
+    <section class="route" id="route-candidates" data-route="candidates" aria-labelledby="h-candidates" hidden>
+      <header>{_eyebrow("Case file", ("transit", "Transit"))}<h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The Docket for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
+      <div class="frametools"><a id="fullpage" href="../docket/">Open full page</a><span class="muted">The Docket on its own page, at the same dip.</span></div>
+      <div class="dippicker"><label for="dippick">Dip</label><select id="dippick" aria-describedby="dippickhint"></select><span class="sr" id="dippickhint">Every dip in this run, lettered in time order, with its vetting outcome. Each is a {unc}.</span></div>
+      <p class="note" id="framestatus" role="status" hidden></p>
+      <p class="note blocked" id="frameblocked" role="alert" hidden>The dossier could not load in this view. <a id="blockedlink" href="../docket/">Open it on its own page.</a></p>
+      <iframe class="frame waiting" id="docketframe" title="Docket for run {html.escape(run["name"])}: signals, dips and vetting"></iframe>
+    </section>
+    <section class="route" id="route-planets" data-route="planets" aria-labelledby="h-planets" hidden>
+      <header>{_eyebrow("Planets", ("explorer", "Explorer"))}<h1 class="lead-h" id="h-planets" tabindex="-1">What each depth would imply, if it were a planet.</h1><p>One card per star in the run or the feed. Each entry is a {unc}; the ratio below is what its stored depth implies if it were a planet.</p></header>
+      <p class="note"><b>Radius ratio only.</b> Rp/R* = √depth, with depth as a fraction (ppm × 10⁻⁶). This assumes a full, undiluted transit and ignores limb darkening. {html.escape(NO_STELLAR_RADIUS)} Each bar is a ratio scale from 0 to {data["ratio_scale_max"]:.2f}, the same on every card.</p>
+      <p class="note">Published planets come from the stored archive cross-match ({html.escape(data.get("crossmatch_file") or "crossmatch.json")}), which covers {xm_targets}. The other stars have no stored cross-match, so their cards have no archive box. {nodet}</p>
+      <div class="cards" id="planetcards"></div>
     </section>
     <section class="route" id="route-runs" data-route="runs" aria-labelledby="h-runs" hidden>
-      <header><p class="eyebrow"><span class="idx">06</span>Runs</p><h1 class="lead-h" id="h-runs" tabindex="-1">Every discovery run, its errors as stored, and the configuration behind this page.</h1><p>The discovery run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
+      <header>{_eyebrow("Runs", ("sentinels", "Sentinels"))}<h1 class="lead-h" id="h-runs" tabindex="-1">Every discovery run, its errors as stored, and the configuration behind this page.</h1><p>The discovery run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
       <section class="card" aria-labelledby="h-hist" style="display:grid;gap:4px"><h2 id="h-hist">Discovery runs</h2><div id="runtable"></div></section>
       <details class="card cfg"><summary>Configuration: run {html.escape(run["name"])} and the discovery catalogue</summary><div>
         <section aria-labelledby="h-cfg"><h3 id="h-cfg">This run's configuration</h3><div id="runconfig"></div></section>
         <section aria-labelledby="h-catcfg"><h3 id="h-catcfg">Discovery catalogue</h3><div id="catconfig"></div></section>
       </div></details>
     </section>
-   </div>
-  </main>
-</div>
+ </div>
+</main>
 <div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
 <script id="data" type="application/json">{payload}</script>
 <script>{APP_JS}</script>
 </body></html>
 """
+
+
+def _input_label(data: dict) -> str:
+    inp = (data["config"].get("inputs") or [{}])[0]
+    bits = [inp.get("mission"), f"Sector {inp['sector']}" if inp.get("sector") is not None else None]
+    return " ".join(b for b in bits if b) or "stored input"
 
 
 def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,

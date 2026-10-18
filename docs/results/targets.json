@@ -1,0 +1,6 @@
+{
+  "source": "SIMBAD, ICRS J2000 coordinates of the named star (pi Mensae, HD 39091). Used only to place the star on the all-sky map.",
+  "targets": {
+    "TIC 261136679": {"name": "pi Men", "ra_deg": 84.2912, "dec_deg": -80.4691}
+  }
+}
