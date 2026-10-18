@@ -1,0 +1,114 @@
+{
+ "about": "Notable planets pinned on the Galaxy map. Names match the exoplanet.eu rows in exoplanet_map.json; distance, discovery year and method on the page come from that dataset, not from this file. Each tagline is supported by the reference given. Entries marked showcase are the one-per-method set (transit, radial velocity, imaging, microlensing, astrometry, timing). All DOIs were checked against Crossref on 18 Oct 2026.",
+ "planets": [
+  {
+   "name": "51 Peg b",
+   "tagline": "The first planet found around a Sun-like star.",
+   "ref": "https://doi.org/10.1038/378355a0",
+   "ref_label": "Mayor & Queloz 1995, Nature 378, 355",
+   "showcase": true
+  },
+  {
+   "name": "KELT-9 Ab",
+   "tagline": "Among the hottest known planets: its dayside is near 4,600 K.",
+   "ref": "https://doi.org/10.1038/nature22392",
+   "ref_label": "Gaudi et al. 2017, Nature 546, 514"
+  },
+  {
+   "name": "WASP-121 b",
+   "tagline": "A hot Jupiter with metals escaping from its upper atmosphere.",
+   "ref": "https://doi.org/10.3847/1538-3881/ab2986",
+   "ref_label": "Sing et al. 2019, AJ 158, 91"
+  },
+  {
+   "name": "beta Pic b",
+   "tagline": "A directly imaged giant inside its star's debris disc.",
+   "ref": "https://doi.org/10.1126/science.1187187",
+   "ref_label": "Lagrange et al. 2010, Science 329, 57",
+   "showcase": true
+  },
+  {
+   "name": "TOI-700 d",
+   "tagline": "An Earth-size planet in its star's habitable zone.",
+   "ref": "https://doi.org/10.3847/1538-3881/aba4b2",
+   "ref_label": "Gilbert et al. 2020, AJ 160, 116"
+  },
+  {
+   "name": "GJ 1214 b",
+   "tagline": "A small transiting planet whose low density first suggested a water-rich world.",
+   "ref": "https://doi.org/10.1038/nature08679",
+   "ref_label": "Charbonneau et al. 2009, Nature 462, 891"
+  },
+  {
+   "name": "b Cen (AB)b",
+   "tagline": "A super-Jupiter imaged around a binary star.",
+   "ref": "https://doi.org/10.1038/s41586-021-04124-8",
+   "ref_label": "Janson et al. 2021, Nature 600, 231"
+  },
+  {
+   "name": "Proxima Centauri b",
+   "tagline": "Orbits Proxima Centauri, the nearest star to the Sun.",
+   "ref": "https://doi.org/10.1038/nature19106",
+   "ref_label": "Anglada-Escudé et al. 2016, Nature 536, 437"
+  },
+  {
+   "name": "TRAPPIST-1 e",
+   "tagline": "Earth-size, one of seven planets around TRAPPIST-1.",
+   "ref": "https://doi.org/10.1038/nature21360",
+   "ref_label": "Gillon et al. 2017, Nature 542, 456"
+  },
+  {
+   "name": "pi Men c",
+   "tagline": "Found by TESS; exoplan's run recovered its transits.",
+   "ref": "https://doi.org/10.3847/2041-8213/aaef91",
+   "ref_label": "Huang et al. 2018, ApJL 868, L39",
+   "exoplan": true
+  },
+  {
+   "name": "Kepler-40 b",
+   "tagline": "A hot Jupiter transiting an evolved F-type star, confirmed with SOPHIE radial velocities.",
+   "ref": "https://doi.org/10.1051/0004-6361/201015764",
+   "ref_label": "Santerne et al. 2011, A&A 528, A63",
+   "showcase": true
+  },
+  {
+   "name": "OGLE-2012-BLG-0026L b",
+   "tagline": "One of a pair of giant planets found together by microlensing.",
+   "ref": "https://doi.org/10.1088/2041-8205/762/2/L28",
+   "ref_label": "Han et al. 2013, ApJL 762, L28",
+   "showcase": true
+  },
+  {
+   "name": "PSR B1257+12 b",
+   "tagline": "Among the first planets found beyond the Sun, by timing a millisecond pulsar.",
+   "ref": "https://doi.org/10.1038/355145a0",
+   "ref_label": "Wolszczan & Frail 1992, Nature 355, 145",
+   "showcase": true
+  },
+  {
+   "name": "GJ 896 Ab",
+   "tagline": "Found from its red-dwarf host's astrometric wobble, in a binary star system.",
+   "ref": "https://doi.org/10.3847/1538-3881/ac7c66",
+   "ref_label": "Curiel et al. 2022, AJ 164, 93",
+   "showcase": true
+  },
+  {
+   "name": "BD+20 2457 b",
+   "tagline": "A very massive companion to an evolved K giant star, found by radial velocity.",
+   "ref": "https://doi.org/10.1088/0004-637X/707/1/768",
+   "ref_label": "Niedzielski et al. 2009, ApJ 707, 768"
+  },
+  {
+   "name": "HD 189733 Ab",
+   "tagline": "A hot Jupiter whose deep-blue colour was measured with Hubble.",
+   "ref": "https://doi.org/10.1088/2041-8205/772/2/L16",
+   "ref_label": "Evans et al. 2013, ApJL 772, L16"
+  },
+  {
+   "name": "Barnard's star b",
+   "tagline": "A sub-Earth-mass planet around Barnard's Star, one of the Sun's nearest neighbours.",
+   "ref": "https://doi.org/10.1051/0004-6361/202451311",
+   "ref_label": "González Hernández et al. 2024, A&A 690, A79"
+  }
+ ]
+}

@@ -41,14 +41,17 @@ import math
 from pathlib import Path
 
 from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
+from exoplan.galaxy import (CSV_NAME, DEFAULT_MAP, DEFAULT_NOTABLE, GALAXY_CSS, GALAXY_JS, TEASER_JS, galaxy_data,
+                            galaxy_meta, galaxy_section, map_csv, teaser_html, teaser_points)
 from exoplan.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
 from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
 from exoplan.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
 
-# The five sections of the top bar, and three pages each reached from one of them.
+# The six sections of the top bar, and three pages each reached from one of them.
 SECTIONS = [
     ("overview", "Overview"),
     ("sky", "Sky"),
+    ("galaxy", "Galaxy"),
     ("transit", "Transit"),
     ("explorer", "Explorer"),
     ("sentinels", "Sentinels"),
@@ -529,7 +532,8 @@ def with_frame_bridge(docket_html: str) -> str:
 
 def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
              weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None,
-             require_crossmatch: bool = False, targets_path: str | Path | None = DEFAULT_TARGETS) -> dict:
+             require_crossmatch: bool = False, targets_path: str | Path | None = DEFAULT_TARGETS,
+             map_path: str | Path | None = DEFAULT_MAP, notable_path: str | Path | None = DEFAULT_NOTABLE) -> dict:
     """Everything the shell shows, read from stored files only.
 
     With ``require_crossmatch`` the build fails (``CrossmatchUnavailable``) when no stored archive
@@ -583,6 +587,8 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     hero = overview_hero(dock, top_rows)
     calib = {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name}
     story = story_data(run_dir, dock, feed, calib, hero, targets_path=targets_path)
+    galaxy = galaxy_data(map_path, notable_path, exoplan_star=story["star"]["name"] or "pi Men",
+                         exoplan_planet=story.get("planet"), lead_dip=story.get("lead_dip"))
     return {
         "title": title,
         "sections": sections,
@@ -621,6 +627,9 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "status_label": STATUS_LABEL,
         "hero": hero,
         "story": story,
+        "galaxy": galaxy,
+        "galaxy_meta": galaxy_meta(galaxy),
+        "galaxy_teaser": teaser_points(galaxy),
         "sky_geo": sky_geometry(story["star"]["ra_deg"], story["star"]["dec_deg"]),
         "deco": decoration(),
         "aliases": ROUTE_ALIASES,
@@ -1150,6 +1159,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .btn,.nav a,.pill{transition:none}
 }
 """
+APP_CSS += GALAXY_CSS
 
 ICONS = {
     "overview": '<rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/>',
@@ -2128,7 +2138,7 @@ $('#route-sentinels').addEventListener('click', e => {
 });
 
 // ---------- router ----------
-const RENDER = {overview: renderOverview, sky: renderSky, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
+const RENDER = {overview: renderOverview, sky: renderSky, galaxy: renderGalaxy, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
   sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns};
 const rendered = new Set();
 const ROUTES = D.sections.map(s => s.id);
@@ -2160,6 +2170,7 @@ function show(r, moveFocus){
   else if (r === 'explorer') renderDiscCharts(false);
   if (moveFocus){ const h = $('#route-' + r + ' h1'); if (h) h.focus({preventScroll: true}); window.scrollTo(0, 0); }
   if (r === 'candidates') fitFrame();
+  gxShown(r === 'galaxy');
 }
 function go(p, moveFocus){
   // An old address: rewrite it to the section that replaced it, keeping its query (a replace, not a new entry).
@@ -2177,6 +2188,7 @@ function go(p, moveFocus){
     applySky(decodeSkyView(p.params));
     if (rendered.has('sky')) renderSky();
   }
+  if (p.route === 'galaxy' && GXM) applyGalaxy(decodeGalaxyView(p.params));
   if (p.route === 'explorer'){
     const beforeEx = encodeExView(currentEx());
     applyEx(decodeExView(p.params));
@@ -2190,6 +2202,7 @@ function go(p, moveFocus){
   show(p.route, moveFocus && changed);
   if (p.route === 'explorer') syncFeedURL();
   if (p.route === 'sky') syncSkyURL(false);
+  if (p.route === 'galaxy' && GXM) syncGalaxyURL(false);
   if (p.route === 'transit') openTransit(p.params.get('dip'));
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));
 }
@@ -2222,6 +2235,8 @@ applyTheme(currentTheme());
 $('#dippick').addEventListener('change', e => { location.hash = dipHref(e.target.value); });
 go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()}, false);
 """
+# The Galaxy section's code sits ahead of the router, which calls it.
+APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + "// ---------- router ----------\n", 1)
 
 
 # Before first paint: apply the stored theme choice (system, light or dark), so the page never flashes.
@@ -2307,6 +2322,7 @@ def _overview(data: dict, with_view: bool = True) -> str:
       </header>
       {_planet_figure(data["deco"])}
       <div class="proof" role="list" aria-label="What this run shows">{proof.replace('<div>', '<div role="listitem">')}</div>
+      {teaser_html(data.get("galaxy"), data.get("galaxy_teaser"))}
       {_honest(data)}
       {_view_head() if with_view else ""}"""
 
@@ -2439,7 +2455,11 @@ def app_page(data: dict) -> str:
     title = html.escape(data["title"])
     run = data["run"]
     rule = data["feed_rule"]
-    payload = json.dumps(data).replace("</", "<\\/")
+    payload = json.dumps({k: v for k, v in data.items() if k != "galaxy"}).replace("</", "<\\/")
+    galaxy_payload = ""
+    if data.get("galaxy"):  # galactic l and b go to the CSV only; the page draws from x, y, z
+        g = {**data["galaxy"], "hosts": {k: v for k, v in data["galaxy"]["hosts"].items() if k not in ("l", "b")}}
+        galaxy_payload = json.dumps(g, separators=(",", ":"), ensure_ascii=False).replace("</", "<\\/")
     unc = html.escape(UNCONFIRMED)
     nodet = html.escape(NO_DETECTION)
     feed = data["catalog"]["candidates"]
@@ -2485,6 +2505,9 @@ def app_page(data: dict) -> str:
     </section>
     <section class="route" id="route-sky" data-route="sky" aria-labelledby="h-sky" hidden>
       {_sky(data)}
+    </section>
+    <section class="route" id="route-galaxy" data-route="galaxy" aria-labelledby="h-galaxy" hidden>
+      {galaxy_section(data.get("galaxy"), _eyebrow("Galaxy"), UNCONFIRMED)}
     </section>
     <section class="route" id="route-transit" data-route="transit" aria-labelledby="h-transit" hidden>
       {_transit(data)}
@@ -2557,9 +2580,19 @@ def app_page(data: dict) -> str:
 </main>
 <div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
 <script id="data" type="application/json">{payload}</script>
+{_galaxy_scripts(data, galaxy_payload)}
 <script>{APP_JS}</script>
 </body></html>
 """
+
+
+def _galaxy_scripts(data: dict, galaxy_payload: str = "") -> str:
+    """The map's arrays (parsed only when the Galaxy opens) and the Overview teaser's points and code."""
+    out = f'<script id="galaxy-data" type="application/json">{galaxy_payload}</script>' if galaxy_payload else ""
+    if data.get("galaxy_teaser"):
+        teaser = json.dumps(data["galaxy_teaser"], separators=(",", ":")).replace("</", "<\\/")
+        out += f'<script id="teaser-data" type="application/json">{teaser}</script><script>{TEASER_JS}</script>'
+    return out
 
 
 def _input_label(data: dict) -> str:
@@ -2596,7 +2629,7 @@ def landing_page(data: dict, app_href: str = "app/") -> str:
     description = (f"exoplan: a calibrated panel of Sentinels and Probes reads TESS light curves. Run {run['name']}: "
                    f"{data['hero']['headline']} Every dip is a {UNCONFIRMED}.")
     fonts = app_href + FONTS_CSS
-    links = (f'<a href="{app_href}#/sky">Sky</a><a href="{app_href}#/transit">Transit</a><a href="{app_href}#/explorer">Explorer</a>'
+    links = (f'<a href="{app_href}#/sky">Sky</a><a href="{app_href}#/galaxy">Galaxy</a><a href="{app_href}#/transit">Transit</a><a href="{app_href}#/explorer">Explorer</a>'
              f'<a href="{app_href}#/sentinels">Sentinels</a><a href="docket/">The Docket</a><a href="plate/">Plates</a>'
              f'<a href="report/">Full run report (archived)</a>')
     return f"""<!doctype html>
@@ -2628,6 +2661,7 @@ def landing_page(data: dict, app_href: str = "app/") -> str:
     <p class="small">Built from {html.escape(run["dir"])} and {html.escape(data["catalog"]["path"] or "no catalogue")}. Stored values only.</p>
   </section>
 </div></main>
+{_galaxy_scripts(data)}
 <script>{LANDING_JS}</script>
 </body></html>
 """
@@ -2656,4 +2690,8 @@ def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_p
 
     shutil.copytree(FONTS_DIR, out / "assets" / "fonts", dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns("__pycache__"))
+    # The Galaxy's table of every plotted planet, as CSV, beside the page.
+    if data.get("galaxy"):
+        (out / "assets" / "data").mkdir(parents=True, exist_ok=True)
+        (out / "assets" / "data" / CSV_NAME).write_text(map_csv(data["galaxy"]))
     return path

@@ -126,11 +126,11 @@ def test_app_builds_without_catalogue(run_dir, tmp_path):
     assert data["catalog"]["candidates"] == [] and data["catalog"]["runs"] == []
 
 
-def test_five_sections_and_three_pages_exist(run_dir, catalog, tmp_path):
+def test_six_sections_and_three_pages_exist(run_dir, catalog, tmp_path):
     from exoplan.app import ROUTE_ALIASES, SUBPAGES
 
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
-    assert [s for s, _ in SECTIONS] == ["overview", "sky", "transit", "explorer", "sentinels"]
+    assert [s for s, _ in SECTIONS] == ["overview", "sky", "galaxy", "transit", "explorer", "sentinels"]
     assert [s for s, _, _ in SUBPAGES] == ["candidates", "planets", "runs"]
     nav = re.search(r'<nav class="nav" aria-label="Sections">.*?</nav>', page, re.S).group(0)
     for sid, label in SECTIONS:
@@ -154,7 +154,9 @@ def test_planet_cards_never_state_an_earth_or_jupiter_radius(run_dir, catalog, t
     planets = _route(page, "planets")
     no_radius = re.compile(r"\d\s*(R⊕|R_⊕|R♃|R_?J\b|R_?E\b|R_?earth|R_?jup|Earth radi|Jupiter radi|M⊕)", re.I)
     assert not no_radius.search(planets)
-    assert not no_radius.search(APP_JS)
+    # The Galaxy shows catalogue radii as the catalogue stores them; the run's own dips never get one.
+    from exoplan.galaxy import GALAXY_JS
+    assert not no_radius.search(APP_JS.replace(GALAXY_JS, ""))
     assert not no_radius.search(json.dumps(data["planets"], ensure_ascii=False))
     assert "No stellar radius is stored" in planets
     for card in data["planets"]:
@@ -488,7 +490,8 @@ def test_blocked_frame_shows_a_message_and_a_link(run_dir, tmp_path):
     assert "f.hidden = true" in blocked and "$('#frameblocked').hidden = false" in blocked
     # About three seconds for the blob frame, then a shorter wait for the srcdoc copy, which needs no fetch.
     assert "setTimeout(() => frameLoadFailed(gen), url ? 3000 : 1500)" in APP_JS
-    assert "6000" not in APP_JS
+    from exoplan.galaxy import GALAXY_JS
+    assert "6000" not in APP_JS.replace(GALAXY_JS, "")
     assert ".frame[hidden]{display:none}" in APP_CSS
 
 

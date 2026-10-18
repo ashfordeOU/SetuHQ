@@ -515,6 +515,153 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .btn,.nav a,.pill{transition:none}
 }
 
+/* ---------- galaxy ---------- */
+.gxpresets{flex-wrap:wrap}
+.gxstage{position:relative;height:min(76vh,780px);min-height:460px;background:#000;touch-action:none;user-select:none;-webkit-user-select:none}
+.gxstage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;outline:none}
+.gxstage canvas:active{cursor:grabbing}
+.gxstage canvas:focus-visible{box-shadow:inset 0 0 0 2px #0A84FF}
+.gxleaders,.gxlayer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.gxleaders line{stroke:rgba(255,255,255,.42);stroke-width:1;stroke-dasharray:3 4}
+.gxlbl{position:absolute;left:0;top:0;font:500 11px/1 var(--mono);color:#A1A1A6;white-space:nowrap;will-change:transform}
+.gxlbl.tick{color:#64D2FF}
+.gxlbl.tick::before{content:"";position:absolute;left:-3px;top:-3px;width:5px;height:5px;border-radius:50%;background:#64D2FF}
+.gxlbl.tick span{position:absolute;left:6px;top:4px}
+.gxlbl.axis{color:#64D2FF;font:600 12px/1 var(--sans)}
+.gxlbl.sun{color:#FFB340;font:600 12px/1 var(--sans)}
+.gxlbl.region{color:#F5F5F7;font:500 12px/1.3 var(--sans);background:rgba(28,28,30,.6);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:6px 9px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.gxlbl.region small{display:block;color:#A1A1A6;font:500 11px/1.3 var(--mono)}
+.gxring{position:absolute;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;border:1px solid rgba(255,255,255,.7);box-shadow:0 0 14px 3px rgba(100,210,255,.45),inset 0 0 8px rgba(100,210,255,.4)}
+.gxring.ex{border-color:#FFB340;box-shadow:0 0 14px 3px rgba(255,179,64,.5),inset 0 0 8px rgba(255,179,64,.4)}
+.gxcall{position:absolute;left:0;top:0;width:224px;padding:10px 12px;border-radius:14px;background:rgba(18,18,20,.72);border:1px solid rgba(255,255,255,.14);color:#F5F5F7;-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);pointer-events:auto;cursor:pointer;transition:opacity .25s var(--ease)}
+.gxcall.ex{border-color:rgba(255,179,64,.55)}
+.gxcall.sel{border-color:#64D2FF}
+.gxcall b{display:flex;align-items:center;gap:7px;font:600 14px/1.25 var(--sans)}
+.gxcall b i{flex:none;width:8px;height:8px;border-radius:50%}
+.gxcall p{margin:3px 0 7px;font:400 12px/1.35 var(--sans);color:#C7C7CC}
+.gxcall dl{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;margin:0;font:500 11px/1.45 var(--mono)}
+.gxcall dt{color:#8E8E93}
+.gxcall dd{margin:0;color:#F5F5F7}
+.gxreticle{position:absolute;left:50%;top:50%;width:38px;height:38px;margin:-19px 0 0 -19px;pointer-events:none;opacity:.55}
+.gxreticle::before,.gxreticle::after{content:"";position:absolute;background:rgba(255,255,255,.75)}
+.gxreticle::before{left:18px;top:0;width:1px;height:38px;-webkit-mask:linear-gradient(#000 0 13px,transparent 13px 25px,#000 25px);mask:linear-gradient(#000 0 13px,transparent 13px 25px,#000 25px)}
+.gxreticle::after{top:18px;left:0;height:1px;width:38px;-webkit-mask:linear-gradient(90deg,#000 0 13px,transparent 13px 25px,#000 25px);mask:linear-gradient(90deg,#000 0 13px,transparent 13px 25px,#000 25px)}
+.gxaim{position:absolute;left:0;top:0;width:26px;height:26px;margin:-13px 0 0 -13px;pointer-events:none;border:1px solid #64D2FF;border-radius:4px;-webkit-mask:conic-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);clip-path:polygon(0 0,35% 0,35% 4%,65% 4%,65% 0,100% 0,100% 35%,96% 35%,96% 65%,100% 65%,100% 100%,65% 100%,65% 96%,35% 96%,35% 100%,0 100%,0 65%,4% 65%,4% 35%,0 35%)}
+.gxhud{position:absolute;pointer-events:none;color:#F5F5F7}
+.gxtr{right:14px;top:14px;display:grid;justify-items:end;gap:8px;max-width:270px}
+.gxradar{width:104px;height:104px;overflow:visible}
+.gxradar circle{fill:none}
+.gxradar .r1{stroke:rgba(100,210,255,.55);fill:rgba(0,0,0,.35)}
+.gxradar .r2{stroke:rgba(100,210,255,.18)}
+.gxradar .cross{stroke:rgba(100,210,255,.18)}
+.gxradar .sw{stroke:rgba(100,210,255,.6)}
+.gxradar .swf{fill:rgba(100,210,255,.12)}
+.gxradar .fov{fill:rgba(255,255,255,.14);stroke:rgba(255,255,255,.55)}
+.gxradar text{fill:#64D2FF;font:600 11px var(--mono)}
+.gxradar .sun{fill:#FFB340}
+.gxradar .sweep{transform-origin:0 0;animation:gxsweep 4s linear infinite}
+@keyframes gxsweep{to{transform:rotate(360deg)}}
+.gxtel{margin:0;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);font:500 11px/1.5 var(--mono);color:#C7C7CC;white-space:pre;min-width:220px;max-width:270px;overflow:hidden;text-overflow:ellipsis}
+.gxtel b{color:#64D2FF;font-weight:600}
+.gxbl{left:14px;bottom:14px;display:flex;align-items:center;gap:10px}
+.gxorbit{width:40px;height:40px}
+.gxorbit .o{fill:none;stroke:rgba(255,255,255,.22)}
+.gxorbit .s{fill:#FFB340}
+.gxorbit circle:not(.o):not(.s){fill:#64D2FF}
+.gxorbit .spin1{animation:gxspin 6s linear infinite}
+.gxorbit .spin2{animation:gxspin 14s linear infinite}
+@keyframes gxspin{to{transform:rotate(360deg)}}
+.gxcounter{margin:0;font:600 22px/1 var(--mono);letter-spacing:.02em;color:#F5F5F7}
+.gxcounter i{font-style:normal;color:#64D2FF;margin:0 4px}
+.gxcounter small{display:block;margin-top:4px;font:500 11px/1 var(--sans);color:#A1A1A6;letter-spacing:0}
+.gxtip{position:absolute;left:0;top:0;z-index:4;pointer-events:none;padding:8px 10px;border-radius:12px;font:500 12px/1.45 var(--sans);color:#F5F5F7;background:rgba(18,18,20,.85);border:1px solid rgba(255,255,255,.14);max-width:260px}
+.gxtip .mono{font-size:11px;color:#A1A1A6}
+.gxcard{position:absolute;left:14px;top:14px;z-index:5;width:min(320px,calc(100% - 28px));max-height:calc(100% - 120px);overflow:auto;padding:14px;border-radius:18px;background:rgba(18,18,20,.82);border:1px solid rgba(255,255,255,.14);color:#F5F5F7;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.gxcard h3{margin:0 40px 2px 0;font:600 17px/1.25 var(--sans)}
+.gxcard .mono{font-size:12px;color:#A1A1A6}
+.gxcard ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px}
+.gxcard li button{all:unset;box-sizing:border-box;display:grid;gap:1px;width:100%;min-height:44px;padding:6px 10px;border-radius:10px;cursor:pointer;color:#F5F5F7;font:500 13px/1.3 var(--sans)}
+.gxcard li button span{font:500 11px/1.3 var(--mono);color:#A1A1A6}
+.gxcard li button:hover,.gxcard li button[aria-pressed="true"]{background:rgba(255,255,255,.08)}
+.gxcard li button:focus-visible{outline:2px solid #0A84FF}
+.gxcard .x{position:absolute;right:8px;top:8px;width:44px;height:44px;min-height:44px;padding:0;justify-content:center;border-radius:50%}
+.gxcard a{color:#64D2FF}
+.gxcard p{margin:8px 0 0;font-size:12px;color:#C7C7CC}
+.gxmw{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);margin:0;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);font:500 12px/1.3 var(--sans);color:#C7C7CC;text-align:center;max-width:calc(100% - 300px)}
+.gxnogl{position:absolute;inset:auto 20px 50% 20px;margin:0;text-align:center;color:#C7C7CC}
+.gxtourbar{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:rgba(18,18,20,.82);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#F5F5F7}
+.gxtourbar[hidden],.gxcard[hidden],.gxtip[hidden],.gxaim[hidden],.gxmw[hidden],.gxnogl[hidden]{display:none}
+.gxtourbar .btn{min-height:44px;min-width:44px;justify-content:center}
+.gxtourbar .mono{font-size:12px;padding:0 6px;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.gxsheet{border:1px solid var(--line);border-radius:var(--r);background:var(--glass);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.gxsheet>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:4px 16px;cursor:pointer;font-weight:600;font-size:14px;list-style:none}
+.gxsheet>summary::-webkit-details-marker{display:none}
+.gxsheet>summary .mono{font-weight:500;color:var(--ink-2);font-size:13px}
+.gxcontrols{display:grid;gap:12px;padding:0 16px 16px}
+.gxtime{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.gxtime input{flex:1 1 240px;min-width:0;min-height:44px;accent-color:#0A84FF}
+.gxtime output{font-size:14px;min-width:150px}
+.gxmethods .chip i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
+.gxmethods .chip .mono{color:var(--ink-3);margin-left:6px;font-size:12px}
+.gxmethods .chip[aria-pressed="false"]{opacity:.55}
+.gxmethods .chip[aria-pressed="false"] i{background:transparent!important;box-shadow:inset 0 0 0 1px var(--ink-3)}
+.gxrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.gxsel{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
+.gxsel select{min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
+.gxkeys{margin:0;font-size:12px}
+.gxnotes{display:grid;gap:8px}
+.gxnotes .note{margin:0}
+.gxnotes a{overflow-wrap:anywhere}
+.gxnotable ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.gxnotable li{display:grid;gap:2px;border:1px solid var(--line);border-radius:14px;padding:4px}
+.gxnot{all:unset;box-sizing:border-box;display:grid;gap:2px;min-height:44px;padding:8px 10px;border-radius:10px;cursor:pointer}
+.gxnot:hover{background:var(--panel-2)}
+.gxnot:focus-visible{outline:2px solid var(--blue)}
+.gxnot b{font-size:14px}
+.gxnot span{font-size:13px;color:var(--ink-2)}
+.gxref{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;font-size:12px}
+.gxtablecard summary{display:flex;align-items:center;min-height:44px;cursor:pointer;font-weight:600}
+.gxtable{width:100%;border-collapse:collapse;font-size:13px}
+.gxtable th,.gxtable td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.gxtable .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.gxtablecard a{display:inline-flex;align-items:center;min-height:44px}
+/* the Overview's teaser */
+.gxteaser{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;min-height:360px;background:#000}
+.gxtcanvas{width:100%;height:100%;min-height:360px;display:block}
+.gxtcopy{padding:28px 32px 28px 8px;display:grid;gap:10px;justify-items:start}
+.gxtcopy h2{margin:0;font:600 clamp(24px,3vw,34px)/1.1 var(--sans);letter-spacing:-.02em;color:#F5F5F7}
+.gxtcopy p{margin:0;color:#A1A1A6}
+.gxtcopy .small{font-size:12px}
+@media (max-width:699.98px){
+  .gxstage{height:64vh;min-height:380px;border-radius:20px}
+  .gxtr{right:8px;top:8px;gap:6px}
+  .gxradar{width:68px;height:68px}
+  .gxtel{display:none}
+  .gxstage.sel .gxtel{display:block;min-width:0;max-width:200px;font-size:11px;padding:6px 8px}
+  .gxbl{left:10px;bottom:10px}
+  .gxorbit{display:none}
+  .gxcounter{font-size:17px}
+  .gxcall{width:150px;padding:7px 9px}
+  .gxcall p,.gxcall dl dt:nth-of-type(n+3),.gxcall dl dd:nth-of-type(n+3){display:none}
+  .gxcard{left:8px;right:8px;top:auto;bottom:8px;width:auto;max-height:55%}
+  .gxmw{bottom:auto;top:84px;max-width:calc(100% - 100px);left:10px;transform:none;text-align:left;font-size:11px}
+  .gxtourbar{top:auto;bottom:62px;max-width:calc(100% - 16px)}
+  .gxtourbar .mono{max-width:96px}
+  .gxtourbar #gxtexit{padding:0 10px}
+  .gxsheet{position:sticky;bottom:max(8px,env(safe-area-inset-bottom,0px));z-index:15;box-shadow:0 -12px 30px -16px rgba(0,0,0,.6)}
+  .gxsheet[open] .gxcontrols{max-height:52vh;overflow:auto}
+  .gxtime output{min-width:0}
+  .gxmethods .chip,.gxsheet .chip,.gxsheet .btn{min-height:44px}
+  .gxteaser{grid-template-columns:1fr}
+  .gxtcanvas{min-height:260px;height:260px}
+  .gxtcopy{padding:0 18px 22px}
+  .gxkeys{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  .gxradar .sweep,.gxorbit .spin1,.gxorbit .spin2{animation:none!important}
+  .gxcall{transition:none}
+}
+
 .sitelinks{display:flex;flex-wrap:wrap;gap:8px 18px;border-top:1px solid var(--line);padding-top:22px;font-size:14px}
 .sitelinks a{display:inline-flex;align-items:center;min-height:44px}
 .landing .route{display:grid}</style></head>
@@ -523,7 +670,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 <a class="skip" href="#content">Skip to the content</a>
 <header class="topbar">
   <a class="brand" href="./" aria-label="exoplan, home"><svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="10" fill="none" stroke="currentColor" stroke-opacity=".5"/><circle cx="11" cy="11" r="3.5" fill="#FFB340"/><circle cx="19" cy="7.5" r="1.8" fill="currentColor"/></svg><span>exoplan</span></a>
-  <nav class="nav" aria-label="Sections"><ul><li><a href="app/#/overview" data-route="overview" aria-current="page">Overview</a></li><li><a href="app/#/sky" data-route="sky">Sky</a></li><li><a href="app/#/transit" data-route="transit">Transit</a></li><li><a href="app/#/explorer" data-route="explorer">Explorer</a></li><li><a href="app/#/sentinels" data-route="sentinels">Sentinels</a></li></ul></nav>
+  <nav class="nav" aria-label="Sections"><ul><li><a href="app/#/overview" data-route="overview" aria-current="page">Overview</a></li><li><a href="app/#/sky" data-route="sky">Sky</a></li><li><a href="app/#/galaxy" data-route="galaxy">Galaxy</a></li><li><a href="app/#/transit" data-route="transit">Transit</a></li><li><a href="app/#/explorer" data-route="explorer">Explorer</a></li><li><a href="app/#/sentinels" data-route="sentinels">Sentinels</a></li></ul></nav>
   <div class="topmeta"><span class="mono">pi Men · TESS Sector 1</span><button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark (default). Change theme"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg><span class="themelbl">Dark (default)</span></button></div>
 </header>
 <main id="main"><div id="content" tabindex="-1">
@@ -554,6 +701,16 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
         <figcaption>Artist's impression. No image of pi Men c exists.</figcaption>
       </figure>
       <div class="proof" role="list" aria-label="What this run shows"><div role="listitem"><b style="color:#64D2FF">5 of 5</b><span>transits of pi Men c found in blind-coded subjects, 8 minutes from the archive on average (validation note). A known planet, recovered.</span></div><div role="listitem"><b style="color:#F5F5F7">2 + 3</b><span>Sentinels and Probes, each weighted by how it scored on planted transits.</span></div><div role="listitem"><b style="color:#FFD60A">28</b><span>signals on 3 stars in the open feed. 3 new, every one a candidate, unconfirmed.</span></div><div role="listitem"><b style="color:#F5F5F7">1</b><span>dip still open. The Probes saw it (3 of 3). Both Sentinels passed it by.</span></div></div>
+      <section class="gxteaser space" aria-labelledby="h-gxteaser">
+        <canvas class="gxtcanvas" data-teaser role="img" aria-label="A slowly turning 3D view of the 1,400 nearest planet-hosting stars around the Sun, coloured by detection method."></canvas>
+        <div class="gxtcopy">
+          <p class="kick">Galaxy</p>
+          <h2 id="h-gxteaser">8,049 known exoplanets, around the Sun.</h2>
+          <p>Every planet with a stored distance, placed in 3D, from the Sun out to the Milky Way's bulge. Fly to the Kepler field, scrub the discovery years from 1988, or take the tour.</p>
+          <a class="btn primary" href="app/#/galaxy">Explore every known exoplanet ›</a>
+          <p class="small">Data: The Extrasolar Planets Encyclopaedia (exoplanet.eu), fetched 18 Oct 2026; 8,049 planets with a stored distance, around 5,433 stars. exoplan did not discover these planets.</p>
+        </div>
+      </section>
       <section class="honest" aria-labelledby="h-honest">
         <h2 id="h-honest">What this page does not claim</h2>
         <ul>
@@ -565,10 +722,44 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
         </ul>
       </section>
       
-    <nav class="sitelinks" aria-label="More"><a href="app/#/sky">Sky</a><a href="app/#/transit">Transit</a><a href="app/#/explorer">Explorer</a><a href="app/#/sentinels">Sentinels</a><a href="docket/">The Docket</a><a href="plate/">Plates</a><a href="report/">Full run report (archived)</a></nav>
+    <nav class="sitelinks" aria-label="More"><a href="app/#/sky">Sky</a><a href="app/#/galaxy">Galaxy</a><a href="app/#/transit">Transit</a><a href="app/#/explorer">Explorer</a><a href="app/#/sentinels">Sentinels</a><a href="docket/">The Docket</a><a href="plate/">Plates</a><a href="report/">Full run report (archived)</a></nav>
     <p class="small">Built from runs/tess-pi-men-s1 and docs/discoveries/catalog.json. Stored values only.</p>
   </section>
 </div></main>
+<script id="teaser-data" type="application/json">{"p":[[3,-3,0,1],[5,3,1,1],[2,-6,1,2],[2,-6,1,2],[-4,-6,3,2],[-2,-4,7,1],[-3,0,8,1],[-7,-2,-8,1],[4,0,-10,1],[0,-6,10,1],[0,10,5,1],[0,10,5,1],[-5,10,-4,1],[-2,1,-12,1],[7,-3,-9,1],[7,-3,-9,2],[-3,0,-11,1],[-2,-7,-10,1],[-10,-6,2,1],[-9,3,-8,1],[10,-6,-5,6],[-10,-9,1,2],[13,1,6,1],[-8,5,-11,1],[-2,12,8,1],[14,-4,-2,1],[3,15,2,2],[5,6,-13,1],[12,-9,-4,2],[0,6,-15,1],[2,-15,-4,2],[11,-2,-12,1],[-4,12,11,2],[-4,-16,6,2],[2,-15,10,2],[0,-13,-14,2],[8,16,6,2],[11,13,8,2],[-13,-6,-12,2],[-12,-13,-6,2],[17,-4,8,2],[15,-6,10,2],[15,12,-1,1],[-4,-10,-16,1],[-10,8,-16,2],[-13,-4,15,2],[15,-2,13,1],[14,-6,14,1],[-2,16,-13,4],[-2,10,18,2],[-15,4,14,1],[-7,-10,-17,2],[2,15,14,1],[-16,-13,-6,2],[-13,16,6,2],[-7,20,-1,0],[-21,-1,6,1],[-19,1,-9,2],[2,20,-9,2],[-16,-15,1,2],[22,-3,1,1],[-11,-4,-19,0],[9,7,20,2],[0,22,-4,2],[-12,6,19,2],[-7,-14,17,1],[-9,15,-15,2],[10,19,-8,2],[-23,-3,1,2],[-13,-18,8,2],[10,9,-19,1],[-16,2,-18,2],[7,-4,24,1],[-1,14,-21,2],[-22,10,7,1],[-9,22,-11,2],[2,-2,-26,2],[20,-6,15,2],[-9,6,24,1],[4,-7,25,0],[18,16,11,1],[-6,13,-22,2],[-26,4,0,2],[-15,22,4,1],[13,-15,19,1],[4,-14,24,2],[-20,2,-19,1],[-10,18,-20,2],[-10,18,-20,2],[-10,-3,27,2],[12,9,-25,1],[-8,25,-12,1],[-3,-18,-23,2],[27,10,2,2],[24,7,-14,1],[1,-21,-21,2],[22,-16,11,2],[16,20,13,2],[7,-25,14,1],[-27,-10,8,2],[-14,-26,-4,2],[12,17,-21,1],[-26,1,-15,2],[-24,16,7,2],[-24,16,7,2],[10,-26,11,1],[12,1,28,2],[3,-28,-11,2],[1,-30,3,0],[-29,0,-9,1],[-8,-27,12,0],[-23,10,19,1],[8,-26,14,2],[23,-2,-20,2],[-29,9,7,1],[-2,30,6,1],[-4,3,-31,1],[25,6,-19,0],[12,-27,-13,5],[16,5,28,1],[-18,27,0,1],[-17,27,2,6],[-28,3,-15,1],[5,25,20,1],[-23,-3,-22,2],[-23,-3,-22,2],[-31,-9,3,0],[-10,-31,-6,2],[-27,-7,17,2],[-1,-7,32,2],[-1,-7,32,2],[20,13,22,2],[17,-8,27,1],[25,-12,18,2],[1,-30,-14,2],[16,-18,23,2],[-8,-4,32,1],[5,-6,-32,1],[16,13,-26,1],[10,-4,32,2],[19,20,20,1],[-30,-7,13,1],[7,-24,-23,6],[15,23,-20,2],[15,23,-20,2],[18,-20,21,2],[17,12,26,2],[-12,17,27,2],[6,-33,-4,0],[19,2,-29,2],[-13,-10,30,2],[-34,4,5,2],[-23,24,-11,2],[-23,24,-11,2],[7,-32,-10,0],[-9,30,14,1],[19,-2,-29,2],[-12,-8,-32,2],[15,9,30,4],[-5,27,22,1],[2,-16,-31,1],[11,-31,-14,2],[6,-3,35,1],[3,20,29,2],[29,8,19,2],[-13,24,-24,1],[-12,4,34,1],[-15,26,-21,2],[-29,-8,20,2],[28,23,1,1],[13,-27,21,2],[13,-27,21,2],[20,29,10,2],[20,29,10,6],[27,25,-3,2],[20,9,30,1],[2,-6,-36,2],[34,-12,11,2],[12,22,-27,2],[-30,-21,-6,2],[18,-21,-26,1],[14,-3,-35,2],[-19,33,-3,2],[2,32,-21,2],[-37,-3,-9,1],[21,6,32,2],[33,4,-18,2],[19,-25,-22,2],[7,-7,37,2],[12,-33,16,2],[27,8,27,1],[-14,-5,36,1],[-13,-10,35,1],[-32,-16,-16,2],[-31,-13,19,2],[24,12,28,2],[24,12,28,2],[-25,-4,30,2],[5,-39,5,0],[4,39,1,0],[-21,33,4,2],[10,29,25,2],[8,20,-33,0],[-9,25,-30,0],[-10,-35,-16,2],[-36,-8,-16,1],[10,-5,-38,2],[10,-5,-38,2],[-23,-21,-25,2],[-4,8,-40,0],[-31,-9,25,1],[24,-27,-19,0],[0,-34,22,2],[18,-24,-28,2],[18,27,-25,2],[-31,-9,25,1],[-7,17,-37,2],[20,32,16,2],[-23,-33,9,1],[14,-39,2,1],[15,-22,32,2],[29,28,-10,1],[-30,-22,-18,2],[-36,-17,-12,2],[-21,-30,-20,2],[14,-38,12,0],[-1,-36,-21,1],[-31,10,27,2],[40,-13,5,1],[-11,15,-38,2],[26,17,28,2],[23,32,15,2],[33,20,-18,2],[35,17,17,0],[-34,5,25,2],[28,-23,-23,2],[25,-10,-34,1],[-3,-30,-31,2],[10,-39,-17,2],[-38,-11,-17,2],[-28,30,-16,1],[-16,-14,-38,2],[37,0,23,2],[-6,-27,-35,1],[12,-18,39,2],[18,6,-40,2],[6,1,44,1],[-21,38,12,1],[38,-6,-25,2],[12,-10,-42,2],[-20,2,41,1],[26,26,26,4],[11,39,22,2],[11,-38,-24,2],[-10,-35,-28,0],[19,7,42,2],[5,-12,45,1],[-16,16,41,1],[-40,22,-8,2],[1,-34,33,2],[43,-4,18,1],[0,40,25,1],[41,18,-14,2],[41,18,-14,2],[-39,13,23,2],[-22,33,26,2],[21,-12,41,2],[9,41,22,2],[40,-26,6,1],[26,-23,-34,0],[-28,-8,39,1],[-30,6,38,1],[21,43,9,2],[21,42,11,4],[-12,17,44,1],[-4,-34,-35,1],[-19,-44,10,1],[-45,-6,19,5],[-7,-16,-46,0],[31,23,31,2],[-39,-13,-28,2],[-39,-13,-28,2],[-2,-45,-21,0],[45,-19,11,1],[46,-17,-10,1],[-18,30,-36,2],[31,32,-25,2],[0,41,-29,1],[14,46,-16,1],[-13,39,-29,2],[20,46,7,2],[13,45,19,1],[14,0,49,1],[13,-15,-47,2],[15,31,38,1],[-46,-11,21,2],[4,-43,-28,2],[29,-42,9,1],[18,28,39,0],[46,-16,18,2],[46,-16,18,2],[18,18,-45,2],[18,18,-45,2],[-15,-9,49,2],[14,39,-32,1],[-14,49,9,1],[20,48,-1,1],[-50,5,14,2],[16,-17,47,2],[-25,-32,-33,2],[43,-4,31,2],[6,-37,-38,0],[-19,47,17,2],[-19,47,17,2],[18,-12,-49,2],[-43,32,0,2],[20,-6,-49,2],[49,-19,-9,1],[-16,-24,-46,2],[14,33,-40,1],[-20,32,38,2],[27,1,47,1],[11,-22,-48,1],[1,9,54,1],[29,-42,-19,4],[1,53,11,2],[32,-26,-36,2],[-30,44,13,1],[43,1,34,2],[-17,19,-49,2],[38,12,-38,2],[5,38,39,1],[52,19,-4,1],[-37,11,40,2],[-50,-17,19,2],[-2,55,8,4],[-1,-29,-48,1],[36,29,-32,2],[14,-34,43,2],[8,-26,-50,1],[-26,-48,17,2],[22,30,43,1],[-41,32,-23,2],[31,-7,47,2],[55,-13,-10,2],[15,-11,54,2],[-52,23,7,2],[26,-38,-35,1],[44,32,-18,2],[29,40,-29,1],[12,-56,3,1],[-14,-29,-48,1],[42,-26,-31,1],[-27,-51,1,2],[14,56,-6,0],[-33,-35,32,2],[-27,-51,1,1],[-33,-35,32,2],[44,28,26,1],[1,24,-53,1],[-32,-30,-39,1],[-28,46,-22,1],[13,44,36,1],[-19,-41,38,2],[32,-36,34,2],[29,18,48,2],[-6,-30,50,1],[14,45,36,1],[14,38,43,1],[-34,-7,48,1],[-23,23,-49,0],[0,-44,-40,1],[18,49,-28,2],[32,-24,43,2],[58,9,9,2],[23,15,53,2],[23,15,53,2],[-37,44,16,0],[59,-5,8,1],[-2,-46,38,2],[-22,28,48,1],[20,-48,-30,1],[45,8,39,2],[-22,1,56,2],[-27,-54,2,2],[7,-17,58,2],[-35,-6,49,0],[4,30,53,2],[22,25,51,2],[-3,-58,18,2],[6,-60,8,2],[1,-49,37,1],[-13,60,4,2],[25,5,56,2],[53,-10,29,1],[-52,-24,22,2],[-27,-55,-7,0],[-9,0,61,2],[27,43,35,2],[27,43,35,2],[5,3,62,2],[38,3,49,2],[56,-19,-20,2],[-9,-35,51,2],[10,-59,-19,2],[30,55,-4,0],[-11,-53,-32,2],[-54,0,34,2],[-18,-57,-22,2],[-29,52,24,1],[56,10,-29,0],[7,-4,64,2],[-28,-41,41,2],[13,36,-52,1],[-42,-47,-13,1],[-25,2,-59,2],[-25,2,-59,2],[-25,-57,19,2],[62,-17,-10,2],[-39,-42,30,1],[-21,-42,-44,0],[-37,20,49,2],[46,41,-21,1],[25,-20,57,2],[28,31,50,2],[-43,-47,-15,4],[-43,-47,-15,4],[-54,-33,-18,1],[4,51,42,2],[-43,31,-39,1],[-3,21,-62,0],[55,16,33,1],[-24,-11,61,2],[-24,-11,61,2],[6,-60,29,1],[51,-17,-39,0],[-1,65,-15,0],[32,-42,40,2],[45,23,44,2],[38,8,54,2],[23,-24,58,1],[-62,-1,-23,1],[36,55,-11,1],[-43,-30,41,2],[-43,-30,41,2],[50,11,-43,1],[-20,63,11,0],[37,-49,28,1],[-6,-67,-8,2],[24,27,58,2],[24,27,58,2],[15,-49,44,1],[2,38,-56,2],[4,-64,24,2],[20,-42,50,2],[20,-42,50,2],[-58,-21,-28,2],[-44,46,26,1],[12,-41,54,2],[12,-41,54,2],[6,-21,-65,2],[47,-44,24,2],[-58,-18,-32,2],[-22,-13,64,0],[-13,15,-66,1],[-24,-14,-63,2],[-58,-36,-13,2],[24,51,40,2],[29,38,-51,1],[-30,40,-48,2],[-44,44,31,1],[-18,67,2,1],[-58,9,37,4],[-58,9,37,1],[-39,27,-52,2],[8,68,16,1],[20,37,-56,1],[2,-63,31,4],[-46,-35,42,0],[-44,12,55,2],[25,-37,-56,1],[-37,-57,-22,1],[-20,-60,34,2],[38,5,61,2],[-30,22,-61,2],[56,17,41,2],[56,17,41,2],[4,42,-58,2],[-13,-48,-51,2],[18,-8,69,1],[-16,-56,43,0],[8,-9,-71,0],[-48,-44,-30,2],[36,36,-51,2],[36,36,-51,2],[41,-42,-42,6],[41,53,27,1],[-14,60,37,1],[-54,1,-48,2],[60,-23,33,1],[-24,46,-51,2],[4,-32,65,2],[4,-32,65,2],[-31,-59,-29,2],[-49,-1,-54,1],[-65,-15,30,0],[0,68,26,0],[8,-24,-69,0],[47,-49,27,0],[-10,-54,-49,0],[63,27,27,1],[-58,28,-35,1],[14,25,68,1],[-41,53,30,0],[27,61,31,0],[-28,-2,68,2],[53,12,50,0],[-41,62,-4,2],[-71,-12,19,1],[25,6,-71,2],[-21,70,16,2],[-50,22,51,2],[-50,22,51,2],[-29,-17,-67,1],[17,-13,-72,2],[3,75,6,0],[42,7,62,2],[42,7,62,2],[-37,-51,-41,1],[68,20,25,1],[20,66,32,1],[-50,-50,-27,1],[-4,26,-71,1],[52,-43,36,2],[52,-43,36,2],[-70,-29,-8,1],[-57,51,4,1],[-52,-49,30,2],[-20,63,-39,2],[43,-45,-45,0],[49,0,-59,1],[-24,-9,-73,1],[-40,48,-47,1],[-9,-4,77,1],[-48,8,-61,0],[-67,19,-36,2],[-14,-73,-24,2],[58,-49,18,1],[59,-52,-4,1],[-37,-58,39,1],[45,-44,-47,2],[45,-44,-47,2],[-25,-59,-46,2],[44,-51,-41,1],[42,53,42,1],[-47,56,33,6],[-47,56,33,2],[-47,56,33,6],[55,26,-53,2],[-36,46,-56,0],[9,75,28,0],[-8,14,-79,2],[17,-54,-58,0],[8,-60,-54,2],[-40,-61,36,2],[-65,18,-46,2],[-65,18,-46,2],[-69,6,44,2],[-54,-7,-61,1],[24,69,-36,2],[19,-71,35,2],[38,-30,-66,0],[34,-73,-17,0],[7,-77,28,2],[9,80,21,1],[-66,-40,30,0],[-34,14,74,1],[-18,-28,-76,1],[76,-24,-25,0],[-12,-51,-65,1],[10,-73,39,1],[-45,-71,-2,1],[-10,8,83,1],[-21,-5,82,1],[30,-12,78,4],[8,42,-73,2],[8,42,-73,2],[-83,10,16,2],[24,-69,-43,2],[63,-35,44,1],[50,-62,-28,0],[-41,8,74,2],[-41,8,74,2],[-38,73,22,2],[65,-38,-40,1],[-61,52,-29,1],[27,-21,-78,1],[-16,-17,82,2],[-16,-17,82,2],[-85,16,-2,2],[0,-61,61,2],[0,-61,61,2],[78,35,-11,1],[14,-72,-44,1],[-2,-67,54,0],[59,-61,-16,1],[-69,-30,-43,1],[45,-43,-60,1],[21,-66,52,1],[75,39,-19,4],[-12,66,55,2],[2,24,83,0],[45,30,-68,2],[-4,20,-85,2],[-66,-45,-36,2],[-48,-67,-32,2],[82,20,-24,1],[-75,33,-33,1],[12,72,50,1],[41,77,16,2],[28,-76,36,0],[-29,69,48,1],[83,31,-2,1],[27,13,84,2],[85,-25,-13,0],[-67,-53,27,0],[66,-53,30,1],[58,-49,47,2],[-25,77,38,1],[-1,-20,87,2],[-32,-72,42,1],[43,4,78,2],[43,4,78,2],[18,-88,7,0],[72,-30,45,0],[-85,28,-4,1],[62,-57,-32,1],[62,57,33,2],[-66,-38,-49,2],[13,8,-89,0],[61,-49,46,0],[85,18,-26,0],[50,74,-14,0],[-65,-32,55,0],[10,-91,4,2],[-4,20,-89,2],[57,7,71,2],[57,7,71,2],[49,-64,42,1],[-71,-57,-1,1],[32,75,-41,2],[34,35,77,0],[-84,32,18,2],[-35,49,-69,0],[-40,74,36,0],[-38,46,-71,0],[-50,-78,-11,1],[-34,-40,-77,0],[55,4,-75,4],[8,-47,-80,1],[-48,17,-79,2],[58,33,-66,1],[-20,-92,-3,1],[7,-87,36,1],[-72,15,-58,1],[49,71,37,1],[-13,-94,2,1],[-2,-46,83,1],[-53,-28,-73,2],[-53,-28,-73,2],[-76,-23,51,2],[-65,-48,49,2],[58,-57,48,2],[58,-57,48,2],[-65,-48,49,2],[63,53,-46,2],[51,-79,-9,1],[-35,-40,-79,1],[81,13,48,2],[46,-38,-74,1],[-78,-26,-49,2],[53,67,45,1],[-87,-42,-3,1],[58,-2,-78,2],[69,41,-54,2],[69,41,-54,2],[83,21,44,1],[-87,-26,-33,1],[-28,-65,66,2],[-28,-65,66,2],[77,3,59,2],[-10,-85,-47,0],[79,16,56,1],[-90,-1,-37,2],[15,54,-80,1],[61,-7,76,1],[0,35,-91,1],[42,78,41,0],[-65,-49,-55,2],[60,58,51,2],[60,58,51,2],[-63,-61,46,1],[8,53,-83,0],[78,-55,-28,4],[40,-91,6,1],[-23,88,40,0],[-52,-85,-3,2],[12,21,-97,2],[77,-63,-2,2],[1,-82,57,2],[-83,53,16,1],[-20,-19,96,0],[57,80,-20,1],[15,86,-50,2],[-83,-41,37,0],[-10,-6,-100,1],[-32,57,-76,2],[-65,-71,-30,2],[-100,6,10,0],[32,-26,92,2],[-55,-82,18,2],[-43,-46,79,1],[17,75,65,2],[33,64,70,2],[13,-99,-18,2],[-34,-85,42,2],[-88,-6,-50,2],[-51,-79,-37,2],[-51,-79,-37,2],[-24,-30,93,1],[-97,-20,20,1],[-19,-52,-85,0],[77,24,-61,4],[35,54,79,1],[9,-90,-46,0],[101,7,-10,1],[-44,-64,-66,1],[18,-76,65,2],[84,-29,-50,1],[52,74,47,0],[40,-16,93,1],[-5,68,77,1],[-66,-78,14,1],[-52,-84,30,0],[-19,70,-74,2],[85,-6,59,2],[-71,-52,54,2],[-53,25,-85,1],[-92,34,-33,1],[50,-63,-65,1],[-4,-96,-40,2],[-4,-96,-40,2],[-47,55,-75,1],[60,-68,-52,1],[-68,-24,75,2],[-56,32,82,2],[-96,-23,-34,2],[-22,28,-98,2],[-31,-35,-93,0],[38,97,3,0],[-3,18,103,2],[-3,18,103,2],[-64,83,6,0],[2,-13,104,0],[-51,-54,-74,0],[78,-70,13,1],[4,-70,-79,1],[-8,-71,78,1],[-97,-5,-42,2],[15,62,85,0],[-98,-2,40,0],[-61,52,-70,1],[-68,-38,72,1],[-51,-87,-34,1],[-5,-103,-26,1],[-60,-72,-50,0],[-2,76,75,2],[46,-96,-10,1],[-78,22,69,2],[-23,-69,79,1],[66,32,78,2],[64,-72,48,1],[106,9,18,1],[57,85,-33,1],[16,106,1,1],[-106,-11,-11,1],[-41,-87,49,0],[39,-52,-86,2],[-84,-68,7,1],[-85,30,60,1],[71,-61,-55,2],[-104,21,20,1],[54,-18,-93,1],[-51,-12,95,2],[-51,-12,95,2],[-20,-106,-10,1],[43,95,32,0],[-57,-22,90,1],[52,-2,96,2],[96,-14,49,1],[-49,-5,97,2],[-84,-8,-70,2],[0,-101,-44,2],[2,3,-110,1],[11,-110,6,1],[-42,8,-102,1],[-69,-10,86,2],[-59,-74,-58,2],[-59,-74,-58,2],[8,-103,42,2],[33,102,-29,2],[61,-72,-59,2],[90,-65,-10,1],[100,-24,44,2],[100,-24,44,2],[8,32,107,2],[5,106,-35,2],[-96,-47,-35,2],[-66,87,-26,0],[-4,53,-99,2],[23,-24,-108,2],[-58,67,-70,2],[-58,67,-70,2],[-2,24,-110,1],[17,-111,-14,1],[32,-45,-99,2],[32,-45,-99,2],[107,37,5,1],[-7,-73,-86,1],[-9,-105,-42,1],[26,-12,-110,1],[-39,88,-61,2],[-100,55,-9,2],[-100,55,-9,2],[26,71,86,1],[61,-77,58,1],[12,-108,-35,1],[20,-64,94,1],[-89,-35,63,0],[49,89,-54,0],[-103,43,-28,0],[-86,-75,17,0],[-44,-44,-97,1],[96,-41,49,2],[96,-41,49,1],[55,78,66,0],[47,16,-105,2],[-105,20,46,0],[79,-25,82,2],[58,16,100,2],[-54,-96,40,2],[37,-100,-48,1],[66,-85,-46,1],[-34,-22,110,0],[-66,7,-97,1],[-44,-72,81,1],[-59,-21,-100,2],[-79,39,-78,2],[-79,39,-78,2],[29,-100,54,2],[-15,-4,-116,2],[96,23,-63,2],[-110,-42,0,1],[37,-64,-91,1],[-76,26,-86,0],[-45,-45,-99,1],[-36,64,92,0],[20,72,91,1],[67,32,92,2],[67,32,92,2],[117,8,-17,1],[-18,-116,-17,1],[-9,-72,-94,2],[-107,6,-52,2],[33,111,26,0],[7,-44,-110,2],[-38,-112,13,1],[99,-43,51,2],[99,-43,51,2],[-5,98,69,1],[-44,-91,-64,0],[-118,3,19,2],[-82,-1,-88,2],[-37,61,97,1],[37,-114,6,0],[-33,-35,111,2],[-41,-75,85,2],[-77,-16,-92,1],[-120,4,15,1],[-80,60,-69,1],[47,-87,-70,0],[58,105,-24,1],[114,43,5,1],[2,-40,115,1],[-69,-47,-89,1],[-115,42,-7,0],[-60,-15,-106,0],[-72,71,-70,1],[33,110,43,2],[27,-102,-64,1],[-66,-99,-33,1],[-42,85,-79,2],[17,120,23,0],[-1,-5,-124,2],[-113,-4,-52,2],[8,-44,-116,2],[-90,-34,78,1],[77,-92,32,1],[75,-90,-42,1],[48,25,-112,1],[-27,25,-118,1],[-72,-32,95,1],[-15,-55,110,0],[-6,108,60,1],[91,-83,18,1],[35,13,-119,0],[122,-21,6,1],[90,-62,-60,4],[-72,83,-58,1],[-36,-89,79,2],[37,-104,58,2],[67,60,-87,2],[110,38,47,2],[-58,-43,102,1],[63,-109,-3,1],[5,-75,-101,0],[-75,-71,-72,1],[-30,-105,63,0],[-70,2,105,1],[20,-57,110,1],[28,120,27,0],[-84,-9,94,4],[13,-74,102,4],[-55,36,-108,2],[-57,26,-110,1],[-75,26,-99,1],[-6,27,-124,2],[-15,69,106,2],[-15,69,106,2],[-23,94,82,2],[-36,33,-117,1],[-2,-20,-126,2],[11,-90,-90,0],[33,119,-36,2],[-113,-51,-31,1],[72,-97,-42,1],[-45,81,89,0],[-93,-44,-77,1],[-14,-46,-119,2],[28,-67,-106,1],[128,5,-7,1],[-5,104,-75,2],[-40,-87,-87,2],[16,-112,62,2],[-3,-119,51,1],[66,-21,-109,1],[-75,61,86,0],[-91,64,-66,4],[15,-73,-106,2],[18,-79,-101,1],[126,31,-5,1],[15,19,-128,4],[-65,4,-113,2],[-30,126,16,0],[-38,92,85,1],[9,47,-122,2],[-22,116,58,2],[-22,116,58,2],[-123,-42,20,2],[-39,-83,-94,1],[14,-107,76,1],[-31,-112,62,1],[39,-4,-126,2],[-27,-30,-126,2],[115,2,65,2],[-33,-45,120,2],[-126,10,40,1],[36,128,3,2],[73,-21,-109,1],[-41,-122,31,1],[50,-62,-107,2],[-31,90,-94,2],[-125,34,-34,1],[-14,61,118,0],[-66,-41,-108,2],[-124,-22,-45,2],[-53,23,-121,2],[-20,130,-26,1],[-73,104,42,2],[-73,104,42,2],[-117,-51,-42,0],[-33,118,56,0],[16,-76,-110,2],[6,132,27,0],[-121,6,-60,1],[-26,110,74,0],[9,-73,114,1],[-128,17,42,2],[-64,-85,-85,1],[30,-132,-17,0],[-32,-105,80,2],[70,39,110,1],[18,-135,-14,2],[17,-20,-134,1],[18,52,125,0],[-36,118,59,0],[-20,-91,-100,2],[-128,-8,-48,2],[56,-125,7,1],[9,61,-122,1],[26,-31,131,2],[-90,75,71,2],[-41,-105,78,1],[81,-1,-112,1],[133,-22,-28,1],[11,-28,-135,1],[0,-103,-92,1],[-19,-78,-113,2],[8,-2,-138,2],[72,12,-117,0],[-32,134,5,0],[66,116,38,2],[34,-123,-54,0],[40,-62,-117,2],[-23,-125,56,1],[-31,-118,-66,1],[60,-104,70,1],[-2,33,135,0],[31,-116,-69,0],[18,81,-112,1],[103,76,-55,0],[29,-59,123,2],[-72,96,-72,2],[114,-79,-21,1],[64,96,80,1],[66,-55,-111,2],[66,-55,-111,2],[-31,-120,-66,1],[-126,26,-58,1],[133,46,2,1],[-90,70,82,0],[-133,-33,32,0],[-123,-22,-65,2],[-4,-44,134,0],[22,-134,38,1],[7,-74,-120,2],[30,-128,-52,0],[64,-85,-93,2],[-1,-61,-128,1],[-1,-141,16,1],[135,8,45,1],[53,105,-80,0],[11,-109,-92,1],[37,-101,-94,1],[-119,-58,-54,0],[33,-117,-75,2],[113,49,73,1],[-28,-34,-137,0],[-88,83,76,1],[-139,-14,-32,2],[-133,-8,-54,2],[76,-41,-115,1],[-132,-46,-32,1],[-17,34,139,2],[66,-73,-105,0],[27,36,137,4],[-104,91,-41,1],[7,-111,-92,1],[-80,89,-80,1],[91,-80,-79,1],[-122,43,65,1],[96,-107,14,1],[-2,-46,-137,1],[-115,62,-63,1],[72,-46,118,0],[-66,6,130,0],[-107,-72,69,0],[122,-32,74,0],[-41,-34,-136,0],[90,8,-116,1],[-3,132,63,1],[-45,66,123,2],[130,5,-67,1],[-84,118,24,0],[27,-92,-111,2],[-14,5,-146,1],[-7,-83,121,0],[-138,6,-50,1],[-133,4,-63,0],[37,-67,126,1],[78,123,-20,5],[115,-68,-64,1],[106,93,45,2],[-111,36,91,2],[-42,-96,-106,1],[100,53,-96,1],[-72,-4,-130,0],[98,-64,91,2],[-127,-4,-77,0],[112,-61,-79,2],[-21,99,110,0],[28,67,-131,1],[56,-119,-72,0],[22,-139,53,0],[71,-11,-133,0],[-144,-16,-42,2],[-140,-38,-44,1],[16,150,15,0],[-133,18,-71,1],[75,98,-89,2],[-34,-94,-115,2],[61,136,31,1],[-112,-31,-99,1],[144,47,18,1],[37,39,-143,1],[3,50,144,2],[109,85,67,2],[98,81,-86,2],[125,-57,68,1],[125,-57,68,1],[69,137,10,1],[31,131,-73,1],[-131,35,73,2],[-7,57,-143,2],[-113,104,-4,1],[36,-64,-136,2],[17,123,91,2],[-66,-134,-39,1],[-7,-137,-70,2],[65,60,127,0],[-34,74,-131,0],[17,146,-47,2],[99,52,-107,1],[63,-71,-122,2],[-30,-144,-46,0],[-151,14,-32,0],[50,-104,-104,0],[122,-96,-13,1],[6,-124,-94,0],[153,14,27,1],[136,72,-29,1],[90,32,123,1],[-71,84,-112,2],[132,34,-77,2],[156,-18,8,1],[-89,87,97,0],[-101,9,-122,0],[67,94,109,2],[-27,118,103,1],[-149,15,-55,2],[-130,-79,48,0],[57,25,-147,0],[54,139,57,0],[-92,-2,-130,4],[-92,-2,-130,4],[-92,-2,-130,4],[-92,-2,-130,4],[-72,-138,36,2],[-51,-70,-134,1],[32,-136,-78,1],[-119,-70,81,2],[-119,-70,81,2],[-119,-70,81,2],[-149,-14,-57,2],[108,-8,118,2],[108,-8,118,2],[38,-135,76,2],[6,63,-147,2],[-156,12,35,1],[-109,-50,106,1],[-44,-89,126,0],[-151,-9,-52,1],[-55,146,-34,1],[-17,-109,-116,1],[63,-145,32,1],[-117,110,-13,4],[-129,71,-65,2],[-115,-109,26,1],[82,-136,-24,1],[55,114,-100,1],[64,76,-128,0],[139,-43,-71,2],[155,-46,-4,1],[-103,-110,60,1],[-13,-20,-161,2],[-131,-38,-88,1],[13,151,-59,2],[65,136,-63,1],[19,143,75,1],[57,152,13,1],[101,97,-84,0],[-53,147,-47,2],[-19,-156,-45,1],[-127,87,-54,1],[-101,6,-129,2],[141,-82,10,1],[137,-20,87,1],[-27,131,94,0],[-49,-141,-67,0],[65,150,12,1],[161,17,-26,1],[-64,58,-140,2],[28,158,-37,1],[-42,-158,11,1],[-125,-102,-34,1],[148,-70,-19,2],[122,-54,-98,1],[16,149,-70,2],[81,-145,12,4],[-159,9,-49,2],[-86,39,-137,1],[-159,28,-43,0],[-46,-6,-161,1],[26,-83,143,1],[152,-38,-60,2],[74,94,118,0],[-123,-84,80,1],[44,-155,-52,1],[-89,144,-5,0],[148,76,33,1],[-152,69,-32,1],[128,-106,-36,2],[45,-116,116,0],[122,0,119,6],[-158,-24,60,0],[8,-45,-165,1],[27,-7,-169,2],[74,155,2,1],[-67,-157,-18,0],[-156,16,-69,2],[-108,133,-17,1],[167,-38,-19,1],[-119,-58,-110,0],[0,-103,138,1],[115,-63,112,1],[76,-60,-143,1],[-140,47,-89,1],[-60,74,144,0],[48,-151,-69,1],[82,8,-152,2],[123,121,-13,1],[31,-51,-162,1],[-101,105,-93,1],[159,-68,5,1],[-119,-48,116,2],[50,14,166,1],[-87,-8,150,2],[35,-26,-168,2],[-80,148,-44,2],[-80,148,-44,2],[-29,164,53,0],[-84,-142,59,1],[-124,115,-44,1],[53,-148,77,2],[-21,62,-162,1],[-108,-18,137,0],[-165,-21,-57,1],[73,-97,128,2],[-165,16,-59,2],[36,108,-134,2],[36,108,-134,2],[55,-48,-160,1],[-41,168,34,2],[152,15,-88,1],[95,-105,-106,1],[-12,-146,-100,2],[104,46,-136,1],[44,-38,-168,2],[-125,-111,-61,0],[37,-164,-60,1],[-6,-137,-114,1],[28,106,-141,1],[-20,148,99,0],[21,-108,141,1],[-152,-70,-63,1],[-92,-140,-63,1],[35,-132,-116,1],[-107,-101,-102,2],[26,-116,134,1],[20,-131,-121,1],[-128,-117,48,1],[43,-20,-173,1],[18,73,163,0],[42,-120,127,1],[169,-59,-20,1],[-74,149,-68,2],[-112,-66,125,0],[82,108,-118,2],[6,98,-151,0],[138,-47,-107,2],[160,-58,-60,2],[22,-59,170,1],[-69,-23,166,0],[124,50,-122,0],[-29,68,-166,0],[-43,42,-172,1],[-174,-2,-57,2],[170,16,-64,1],[37,150,-97,1],[105,14,149,2],[-2,-45,-178,1],[83,-128,-101,0],[-38,-116,137,1],[-27,-130,-126,1],[-63,168,39,1],[179,-18,-38,1],[-93,145,-64,2],[-137,61,106,1],[168,32,-68,2],[-30,147,107,2],[-4,9,-184,1],[154,-97,31,1],[-160,68,64,1],[151,-48,98,0],[44,-154,-95,2],[-96,-110,-115,1],[-21,-146,-113,0],[158,-48,-86,0],[73,146,90,2],[0,159,-98,2],[-1,-163,-91,0],[-73,-27,-170,1],[36,140,118,2],[-95,-94,-131,0],[185,28,-1,1],[23,-173,70,1],[151,86,-73,2],[176,-35,57,1],[50,-170,63,0],[-24,-125,139,0],[-78,123,120,0],[-102,-124,-99,2],[58,166,68,4],[145,85,86,1],[104,-63,-145,0],[-143,66,106,1],[77,-160,-65,2],[-51,178,42,0],[17,86,168,4],[-94,137,-92,1],[178,-13,-65,0],[-133,30,133,1],[6,1,191,1],[1,168,91,0],[63,47,174,2],[158,-70,-83,0],[16,-167,-92,0],[-81,42,169,1],[6,1,192,1],[102,161,29,1],[-139,103,-84,6],[27,-176,76,2],[-184,17,-58,0],[177,8,77,1],[174,-81,21,1],[106,142,-78,2],[22,-189,38,0],[-54,97,159,0],[-58,150,108,2],[-56,36,-182,0],[41,-184,-47,1],[-149,112,-56,1],[41,-177,-70,0],[181,-13,73,2],[181,-13,73,2],[181,-13,73,2],[27,-178,76,1],[141,120,-64,0],[-18,99,168,1],[-141,102,-92,1],[84,-154,90,0],[-106,140,-90,1],[-14,-114,161,1],[-135,144,17,2],[-78,136,120,5],[-143,-128,-48,0],[81,-49,174,2],[-148,80,105,0],[46,-65,182,1],[-156,-93,80,1],[-53,191,12,1],[19,108,-166,0],[-139,86,-114,0],[80,-167,-76,1],[97,175,13,1],[-59,-186,-44,1],[141,-81,-117,0],[114,-119,-114,0],[-123,129,-93,2],[29,-186,70,1],[127,84,-132,1],[-25,74,186,1],[71,41,-184,1],[73,-66,-176,0],[56,-114,157,1],[-156,-111,-66,1],[-79,-12,186,0],[121,-63,-151,0],[-130,92,-127,0],[28,169,109,0]],"colours":["#64D2FF","#FF6961","#30D158","#BF5AF2","#FFD60A","#7D7AFF","#A1A1A6"],"n":1400,"reach_ly":203}</script><script>
+// The Overview's Galaxy teaser: the nearest planet hosts, turning slowly (still under reduced motion).
+(function(){
+  var src = document.getElementById('teaser-data'); if (!src) return;
+  var T = JSON.parse(src.textContent), rm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  Array.prototype.forEach.call(document.querySelectorAll('canvas[data-teaser]'), function(cv){
+    var ctx = cv.getContext('2d'); if (!ctx) return;
+    var reach = T.reach_ly || 1, a = -0.6, on = false, raf = 0, last = 0;
+    function size(){ var r = cv.getBoundingClientRect(), k = Math.min(2, window.devicePixelRatio || 1); cv.width = Math.max(1, Math.round(r.width * k)); cv.height = Math.max(1, Math.round(r.height * k)); return k; }
+    var k = size();
+    function draw(){
+      var w = cv.width, h = cv.height, s = Math.min(w, h) * 0.46 / reach, ca = Math.cos(a), sa = Math.sin(a), tilt = 0.42, ct = Math.cos(tilt), st = Math.sin(tilt);
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(100,210,255,.22)'; ctx.lineWidth = k;
+      for (var r = 1; r <= 3; r++){ ctx.beginPath(); ctx.ellipse(w / 2, h / 2, reach * s * r / 3, reach * s * r / 3 * st, 0, 0, 2 * Math.PI); ctx.stroke(); }
+      for (var i = 0; i < T.p.length; i++){
+        var p = T.p[i], x = p[0] * ca - p[1] * sa, y = p[0] * sa + p[1] * ca, z = p[2];
+        var sy = y * st - z * ct, depth = y * ct + z * st, f = 1 + depth / reach * 0.25;
+        ctx.globalAlpha = Math.max(.25, Math.min(1, .75 + depth / reach * .4));
+        ctx.fillStyle = T.colours[p[3]];
+        ctx.fillRect(w / 2 + x * s * f - k, h / 2 + sy * s * f - k, 2 * k, 2 * k);
+      }
+      ctx.globalAlpha = 1; ctx.fillStyle = '#FFB340'; ctx.beginPath(); ctx.arc(w / 2, h / 2, 3.5 * k, 0, 2 * Math.PI); ctx.fill();
+    }
+    function tick(t){ raf = 0; if (!on) return; if (last) a += Math.min(50, t - last) * 0.00006; last = t; draw(); if (!rm.matches) raf = requestAnimationFrame(tick); }
+    function start(){ if (!on || raf) return; last = 0; raf = requestAnimationFrame(tick); }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ on = es[0].isIntersecting && !document.hidden; if (on) start(); }).observe(cv);
+    else { on = true; start(); }
+    document.addEventListener('visibilitychange', function(){ if (document.hidden) on = false; else { on = true; start(); } });
+    window.addEventListener('resize', function(){ k = size(); draw(); });
+    draw();
+  });
+})();
+</script>
 <script>
 // The landing page's only script: the theme control (dark, light or system), as in the app.
 (function(){
