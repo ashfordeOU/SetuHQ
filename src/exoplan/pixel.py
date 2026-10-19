@@ -56,7 +56,10 @@ TESS_PIXEL_ARCSEC = 21.0       # nominal TESS pixel (ATLAS C9); the TPF's WCS gi
 QUALITY_MIN = 0.7              # DV reliability threshold on the difference-image fit quality (ATLAS E6)
 CENTROID_SIGMA = 3.0           # offset significance (Gaussian-equivalent σ) that raises centroid_offset
 MOMENTUM_DUMP_BIT = 32         # TESS quality flag: reaction wheel desaturation event
-SATURATION_PLATEAU = 0.97      # a pixel within 3% of the brightest one counts toward a saturation plateau
+SATURATION_PLATEAU = 0.95      # a pixel within 5% of the brightest one counts toward a saturation plateau
+PSF_SIGMA_BOUNDS = (0.3, 5.0)  # the PSF fit's bounds on σ (pixels); a fit at the lower bound has collapsed
+PSF_SIGMA_RATIO_MAX = 2.0      # difference and out-of-transit PSF widths differing by more: the fit is not a star
+TMAG_ERR_DEFAULT = 0.25        # TESS-magnitude error assumed when the catalogue gives none (3σ ≈ a factor 2 in flux)
 S3_BUCKET = "https://stpubdata.s3.amazonaws.com"
 DISQUALIFYING = frozenset({"centroid_offset"})
 
@@ -337,12 +340,14 @@ def flux_weighted_centroid(image, err, mask) -> tuple[float, float, np.ndarray] 
     return xc, yc, cov
 
 
-def gaussian_psf(shape, x0: float, y0: float, sigma: float) -> np.ndarray:
-    """A unit-flux circular Gaussian integrated over each pixel (pixel (i, j) covers [j − ½, j + ½] in column)."""
+def gaussian_psf(shape, x0: float, y0: float, sigma: float, sigma_y: float | None = None) -> np.ndarray:
+    """A unit-flux Gaussian integrated over each pixel (pixel (i, j) covers [j − ½, j + ½] in column); circular unless
+    ``sigma_y`` (the row-direction width) is given, which the synthetic data use to model an elongated PSF."""
     ny, nx = shape
-    s = math.sqrt(2.0) * sigma
-    ex = 0.5 * (erf((np.arange(nx) + 0.5 - x0) / s) - erf((np.arange(nx) - 0.5 - x0) / s))
-    ey = 0.5 * (erf((np.arange(ny) + 0.5 - y0) / s) - erf((np.arange(ny) - 0.5 - y0) / s))
+    sx = math.sqrt(2.0) * sigma
+    sy = math.sqrt(2.0) * (sigma if sigma_y is None else sigma_y)
+    ex = 0.5 * (erf((np.arange(nx) + 0.5 - x0) / sx) - erf((np.arange(nx) - 0.5 - x0) / sx))
+    ey = 0.5 * (erf((np.arange(ny) + 0.5 - y0) / sy) - erf((np.arange(ny) - 0.5 - y0) / sy))
     return np.outer(ey, ex)
 
 
@@ -379,8 +384,8 @@ def fit_psf(image, err, mask, *, x0: float | None = None, y0: float | None = Non
         x, y, s, a, b = p
         return ((a * gaussian_psf(image.shape, x, y, s) + b - image) / err)[mask]
 
-    lo = [-0.5, -0.5, 0.3, 0.0, -np.inf]
-    hi = [nx - 0.5, ny - 0.5, 5.0, np.inf, np.inf]
+    lo = [-0.5, -0.5, PSF_SIGMA_BOUNDS[0], 0.0, -np.inf]
+    hi = [nx - 0.5, ny - 0.5, PSF_SIGMA_BOUNDS[1], np.inf, np.inf]
     start = [min(max(x0, lo[0] + 1e-3), hi[0] - 1e-3), min(max(y0, lo[1] + 1e-3), hi[1] - 1e-3), sigma0, amp0, 0.0]
     try:
         res = least_squares(resid, start, bounds=(lo, hi), x_scale="jac")
@@ -497,13 +502,20 @@ def centroid_test(tpf: TargetPixels, *, period: float, t0: float, duration: floa
                                         **offset_significance(tx, ty, cov)}
             out["diff_cov"] = cov.tolist()
         out["flag_reference"] = "catalogue position" if target else "out-of-transit centroid"
-        reliable = (p_diff.quality >= quality_min) and not sat["saturated"]
-        out["reliable"] = bool(reliable)
+        at_bound = p_diff.sigma <= PSF_SIGMA_BOUNDS[0] * 1.001
+        ratio = max(p_diff.sigma, p_oot.sigma) / max(min(p_diff.sigma, p_oot.sigma), 1e-9)
+        out["psf_sigma_ratio"] = ratio
         reasons = []
         if sat["saturated"]:
             reasons.append(f"saturated: a {sat['plateau_pixels']}-pixel plateau in column {sat['column']}")
         if p_diff.quality < quality_min:
             reasons.append(f"difference-image fit quality {p_diff.quality:.2f} < {quality_min}")
+        if at_bound:
+            reasons.append(f"difference-image PSF width at its {PSF_SIGMA_BOUNDS[0]} px bound")
+        if ratio > PSF_SIGMA_RATIO_MAX:
+            reasons.append(f"difference and out-of-transit PSF widths differ by {ratio:.1f}x (> {PSF_SIGMA_RATIO_MAX:g}x)")
+        reliable = not reasons
+        out["reliable"] = bool(reliable)
         out["unreliable_reasons"] = reasons
         if sat["saturated"]:
             out["flags"].append("saturated")
@@ -627,7 +639,9 @@ def neighbour_table(tpf: TargetPixels, stars: list[dict], *, depth: float, crowd
             x, y = pos
         flux = 10 ** (-0.4 * float(s["tmag"]))
         frac = aperture_fraction(shape, aperture, x, y, psf_sigma)
+        err = _float(s.get("tmag_err"))
         rows.append({"id": s.get("id"), "tmag": float(s["tmag"]), "x": x, "y": y, "flux": flux,
+                     "tmag_err": err if err else TMAG_ERR_DEFAULT, "tmag_err_assumed": not err,
                      "aperture_fraction": frac, "source": s.get("source")})
     if not rows:
         return {"stars": [], "delta_mag_limit": None}
@@ -643,9 +657,11 @@ def neighbour_table(tpf: TargetPixels, stars: list[dict], *, depth: float, crowd
         r["delta_mag"] = r["tmag"] - t["tmag"]
         reasons = []
         if r["needed_depth"] > 1.0:
-            # within a factor of two of 100% the exclusion rests on the Gaussian PSF approximation
-            reasons.append("needs a depth above 100%" + (" (marginal: within a factor 2, PSF-model dependent)"
-                                                         if r["needed_depth"] <= 2.0 else ""))
+            # marginal when brightening the star by 3σ of its catalogue magnitude would let it reach the depth
+            r["marginal"] = bool(r["needed_depth"] * 10 ** (-0.4 * 3.0 * r["tmag_err"]) <= 1.0)
+            reasons.append("needs a depth above 100%" + (
+                f" (marginal: within 3σ of its Tmag uncertainty, ±{r['tmag_err']:.2f} mag"
+                + (", assumed" if r["tmag_err_assumed"] else "") + ")" if r["marginal"] else ""))
         if centroid is not None and centroid_reliable:
             sig = offset_significance(centroid[0] - r["x"], centroid[1] - r["y"], centroid[2])
             r["centroid_sigma"] = sig["sigma"]
@@ -677,7 +693,8 @@ def fetch_neighbours(ra: float, dec: float, *, radius_arcsec: float = 150.0, cac
         for row in table:
             r, d = propagate_position(float(row["ra"]), float(row["dec"]), _float(row["pmRA"]), _float(row["pmDEC"]),
                                       years=epoch_years_since_2000)
-            stars.append({"id": f"TIC {row['ID']}", "ra": r, "dec": d, "tmag": float(row["Tmag"]), "source": "TIC"})
+            stars.append({"id": f"TIC {row['ID']}", "ra": r, "dec": d, "tmag": float(row["Tmag"]),
+                          "tmag_err": _float(row["e_Tmag"]) if "e_Tmag" in table.colnames else None, "source": "TIC"})
         source = "TIC v8.2 (MAST)"
     except Exception as exc:  # noqa: BLE001
         errors.append(f"TIC: {type(exc).__name__}: {str(exc)[:200]}")
@@ -792,6 +809,7 @@ def parse_dv_xml(path: str | Path) -> list[dict]:
 
 # ---------------------------------------------------------------- synthetic data for tests
 def synthetic_tpf(*, stars: list[dict], shape: tuple[int, int] = (11, 11), psf_sigma: float = 1.0,
+                  psf_sigma_y: float | None = None,
                   days: float = 13.0, cadence_minutes: float = 2.0, period: float = 3.0, t0: float = 1.5,
                   duration: float = 0.125, background: float = 50.0, exptime_s: float = 120.0,
                   read_noise: float = 30.0, seed: int = 0, aperture_threshold: float = 0.05,
@@ -810,7 +828,7 @@ def synthetic_tpf(*, stars: list[dict], shape: tuple[int, int] = (11, 11), psf_s
     phase = np.abs(((time - t0 + 0.5 * period) % period) - 0.5 * period)
     in_transit = phase <= 0.5 * duration
     cube = np.full((time.size,) + tuple(shape), background, float)
-    images = [gaussian_psf(shape, s["x"], s["y"], psf_sigma) * s["flux"] for s in stars]
+    images = [gaussian_psf(shape, s["x"], s["y"], psf_sigma, psf_sigma_y) * s["flux"] for s in stars]
     for s, img in zip(stars, images):
         series = np.ones(time.size)
         series[in_transit] -= s.get("eclipse", 0.0)

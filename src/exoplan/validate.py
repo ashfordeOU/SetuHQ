@@ -21,9 +21,12 @@ lower bound on the full one, and the label says "not validated" for that reason 
 
 Likelihoods, from the S2 measurements (each closed-form):
 
-* Secondary at phase 0.5, depth s ± σ_s: TP and EBx2P predict s ≈ 0, likelihood N(s; 0, σ_s); EB predicts a
-  secondary anywhere between 0 and the primary depth δ, likelihood (1/δ) ∫₀^δ N(s; x, σ_s) dx. (A planet's own
-  occultation is taken as zero; it is tens of ppm at most for hot Jupiters in TESS.)
+* Secondary, from the all-phase search: the strongest dip s ± σ_s at any phase, with σ_s widened by the scan's
+  robust spread (red noise). TP and EBx2P predict no secondary, so s is the largest of N_eff noise excursions
+  (N_eff = box positions/4): likelihood N_eff φ(z) Φ(z)^(N_eff−1)/σ_s with z = s/σ_s. EB predicts a secondary
+  anywhere between 0 and the primary depth δ: (1/δ) ∫₀^δ N(s; x, σ_s) dx. Without the all-phase search, the
+  phase-0.5 value is used with N(s; 0, σ_s). (A planet's own occultation is taken as zero; it is tens of ppm at
+  most for hot Jupiters in TESS.)
 * Odd − even depth d ± σ_d: TP and EB predict 0, N(d; 0, σ_d); EBx2P predicts a difference anywhere in [−δ, δ],
   (1/2δ) ∫ N(d; x, σ_d) dx.
 * Shape: when the transit fit is grazing, the binary scenarios gain exp(min(Δχ²_V, 50)/2), where Δχ²_V is how much
@@ -60,6 +63,7 @@ NO_CONTRAST = "not validated: no contrast curve"
 REDUCED_ONLY = "not validated: reduced FPP scheme, not TRICERATOPS"
 NOT_VALIDATED = "not validated"
 LABELS = (VALIDATED, NO_CONTRAST, REDUCED_ONLY, NOT_VALIDATED)
+REDUCED_CLASS_SUFFIX = " (by number, reduced scheme)"
 
 
 @dataclass(frozen=True)
@@ -142,16 +146,30 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
     fit = fit or {}
     like = {"tp": 1.0, "eb": 1.0, "eb2p": 1.0}
     evidence: dict = {}
-    sec = (dv.get("secondary") or {}).get("phase_05")
-    if sec and sec.get("sigma_ppm"):
+    scan = dv.get("secondary") or {}
+    sec = scan.get("phase_05")
+    have_secondary = True
+    if scan.get("sigma_ppm") and scan.get("n_trials"):
+        widen = max(1.0, scan.get("scan_robust_sigma") or 1.0)
+        s, ss = scan["depth_ppm"] * 1e-6, scan["sigma_ppm"] * 1e-6 * widen
+        n_eff = max(scan["n_trials"] * 0.25, 1.0)
+        z = s / ss
+        l0 = float(n_eff * norm.pdf(z) * norm.cdf(z) ** (n_eff - 1.0) / ss)
+        leb = _uniform_marginal(s, ss, 0.0, depth)
+        evidence["secondary_source"] = f"all-phase search (phase {scan.get('phase', float('nan')):.3f})"
+    elif sec and sec.get("sigma_ppm"):
         s, ss = sec["depth_ppm"] * 1e-6, sec["sigma_ppm"] * 1e-6
         l0, leb = _gauss(s, ss), _uniform_marginal(s, ss, 0.0, depth)
+        evidence["secondary_source"] = "phase 0.5"
+    else:
+        have_secondary = False
+    if have_secondary:
         like["tp"] *= l0
         like["eb2p"] *= l0
         like["eb"] *= leb
         evidence["secondary_bayes_factor_eb_vs_tp"] = leb / l0 if l0 > 0 else math.inf
     else:
-        notes.append("no phase-0.5 secondary measurement")
+        notes.append("no secondary measurement")
     oe = dv.get("odd_even_depth")
     if oe and oe.get("odd_err_ppm") and oe.get("even_err_ppm"):
         d = (oe["odd_depth_ppm"] - oe["even_depth_ppm"]) * 1e-6
@@ -179,10 +197,10 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
         notes.append("no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)")
     if nb_rows and not reliable:
         notes.append("no reliable difference-image centroid: positions carry no information")
-    marginal = [r for r in nb_rows[1:] if 1.0 < r.get("needed_depth", math.inf) <= 2.0]
+    marginal = [r for r in nb_rows[1:] if r.get("marginal")]
     if marginal:
-        notes.append(f"{len(marginal)} neighbour(s) excluded only marginally (needed depth 100-200%): "
-                     "the NFPP rests on the Gaussian PSF approximation")
+        notes.append(f"{len(marginal)} neighbour(s) excluded only marginally (within 3σ of the Tmag uncertainty "
+                     "of reaching the depth)")
     target_pos = 1.0
     if reliable and nb_rows:
         sig_t = nb_rows[0].get("centroid_sigma")
@@ -214,7 +232,7 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
                        priors={"tp": priors.tp, "eb": priors.eb, "eb2p": priors.eb2p, "nfp": priors.nfp,
                                "source": priors.source}, contrast_curve=contrast_curve, notes=tuple(notes))
     result.label = validation_label(fpp, nfpp, contrast_curve=bool(contrast_curve), method=method)
-    result.fpp_class = fpp_class(fpp, nfpp)
+    result.fpp_class = fpp_class(fpp, nfpp) + REDUCED_CLASS_SUFFIX
     return result
 
 

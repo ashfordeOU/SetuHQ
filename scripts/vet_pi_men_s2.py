@@ -138,7 +138,7 @@ def markdown(r: dict) -> str:
         f"{'crowded' if cr['crowded'] else 'none'} |",
         f"| secondary, all phases | strongest dip at phase {_fmt(sec.get('phase'), 3)}: {_fmt(sec.get('depth_ppm'), 1)} ± "
         f"{_fmt(sec.get('sigma_ppm'), 1)} ppm ({_fmt(sec.get('snr'), 1)}σ; largest brightening {_fmt(sec.get('max_brightening_snr'), 1)}σ; "
-        f"{sec.get('n_trials')} box positions); at phase 0.5: {_fmt((sec.get('phase_05') or {}).get('depth_ppm'), 1)} ± "
+        f"{sec.get('n_trials')} coarse positions); at phase 0.5: {_fmt((sec.get('phase_05') or {}).get('depth_ppm'), 1)} ± "
         f"{_fmt((sec.get('phase_05') or {}).get('sigma_ppm'), 1)} ppm | "
         f"{'secondary_any_phase' if 'secondary_any_phase' in r['lightcurve_flags'] else 'none'} |",
         f"| odd/even depth (box mean over T14) | odd {_fmt(oe.get('odd_depth_ppm'), 0)} ± {_fmt(oe.get('odd_err_ppm'), 0)} ppm (n = {oe.get('n_odd')}), "

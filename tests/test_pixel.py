@@ -186,3 +186,44 @@ def test_parse_dv_xml(tmp_path):
     assert row["toi"] == "144.01" and row["quality"] == pytest.approx(0.5756, abs=1e-4)
     assert row["ticCentroidOffsets"]["skyOffset"]["value"] == pytest.approx(40.459, abs=1e-3)
     assert row["odd_even"]["significance"] == pytest.approx(0.6535, abs=1e-4)
+
+
+def test_elongated_psf_still_flags_the_binary_and_spares_the_planet():
+    """A 2:1 elongated PSF (sigma 1.0 px in column, 2.0 px in row) against the circular-Gaussian model: the
+    neighbour's eclipse is still flagged and placed within 0.75 px (the model error, not the noise), and the planet
+    on the target is not flagged."""
+    nb = dict(x=TARGET["x"], y=TARGET["y"] - 3.0, flux=2e5 * FAINT, eclipse=0.3)
+    r = pixel_vet(synthetic_tpf(stars=[TARGET, nb], seed=1, psf_sigma_y=2.0, **EPH), depth=0.005, **EPH)
+    x, y = r["centroid"]["psf_control"]["diff"]
+    assert "centroid_offset" in r["flags"]
+    assert math.hypot(x - nb["x"], y - nb["y"]) < 0.75
+    p = pixel_vet(synthetic_tpf(stars=[dict(TARGET, eclipse=1e-3), dict(x=7.2, y=5.4, flux=2e5 * FAINT)], seed=1,
+                                psf_sigma_y=2.0, **EPH), depth=1e-3, **EPH)
+    assert "centroid_offset" not in p["flags"]
+
+
+def test_a_collapsed_difference_psf_is_unreliable():
+    """A dip confined to one pixel (a detector or systematics artefact, not a star) makes the difference-image fit
+    collapse to its 0.3 px width bound and differ from the star's width: the centroid is not trusted."""
+    tpf = synthetic_tpf(stars=[TARGET], seed=2, **EPH)
+    from exoplan.pixel import transit_windows
+
+    _, inside, _ = transit_windows(tpf.time, **EPH, in_fraction=1.2)
+    tpf.flux[inside, 5, 7] -= 300.0
+    c = pixel_vet(tpf, depth=1e-3, **EPH)["centroid"]
+    assert not c["reliable"] and "centroid_unreliable" in c["flags"] and "centroid_offset" not in c["flags"]
+    assert any("bound" in r or "differ" in r for r in c["unreliable_reasons"])
+
+
+def test_marginal_exclusion_uses_the_tmag_uncertainty():
+    tpf = synthetic_tpf(stars=[dict(x=5.0, y=5.0, flux=1e5)], seed=0, **EPH)
+    tpf.aperture[:] = True
+    # two stars sharing the aperture; the faint one needs a depth of about 1.5
+    faint = 10.0 - 2.5 * math.log10(1 / (1.5 / 0.01 - 1))
+    for err, marginal in ((0.2, True), (0.05, False)):
+        t = neighbour_table(tpf, [dict(id="a", x=5.0, y=5.0, tmag=10.0),
+                                  dict(id="b", x=5.0, y=5.0, tmag=faint, tmag_err=err)], depth=0.01)
+        b = t["stars"][1]
+        assert b["needed_depth"] == pytest.approx(1.5, rel=1e-3) and b["ruled_out"]
+        assert b["marginal"] is marginal
+        assert ("within 3σ of its Tmag uncertainty" in b["ruled_out_by"][0]) is marginal

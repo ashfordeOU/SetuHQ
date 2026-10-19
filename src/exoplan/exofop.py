@@ -84,7 +84,7 @@ def exclusion(row: dict) -> str | None:
     if bad:
         return "S2 flags: " + ", ".join(bad)
     val = (row.get("metrics") or {}).get("validation") or {}
-    if val.get("fpp_class") == "likely nearby false positive":
+    if str(val.get("fpp_class", "")).startswith("likely nearby false positive"):
         return "S3: likely nearby false positive"
     if val.get("fpp") is not None and val["fpp"] >= 0.5:
         return f"S3: reduced FPP {val['fpp']:.2f} ≥ 0.5"
