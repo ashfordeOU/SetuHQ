@@ -12,7 +12,7 @@ detrend_window_days = 1.0
 
 [search]
 min_period = 0.5
-fap_trials = 200      # the feed admits FAP < 1%: 200 trials resolve that (bound 1/201); 20 could not
+fap_trials = 200      # the feed admits FAP < 1%: with 200 trials that passes at k ≤ 1 (a ~1% cut with Poisson slack); 20 could not
 stellar = "tic"
 
 [aggregate]

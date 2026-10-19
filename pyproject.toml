@@ -35,5 +35,6 @@ exoplan = ["fonts/*.css", "fonts/*.txt", "fonts/files/*.woff2"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["network: needs internet access to MAST or the ESA CHEOPS archive"]
-addopts = "-m 'not network'"
+markers = ["network: needs internet access to MAST or the ESA CHEOPS archive",
+           "slow: long FAP trials; left out of a plain pytest run, run by scripts/ci_local.sh"]
+addopts = "-m 'not network and not slow'"

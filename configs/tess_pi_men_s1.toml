@@ -12,7 +12,8 @@ detrend_window_days = 1.0
 
 [search]
 min_period = 0.5
-fap_trials = 10000    # block-bootstrap trials: resolves FAPs down to 1e-4 (cached in cache/fap)
+fap_trials = 10000    # block-bootstrap trials: resolves FAPs down to 1e-4
+fap_cache = "runs/tess-pi-men-s1/fap_null"  # the null maxima, committed with the run so the Gumbel tail can be re-derived
 stellar = "tic"       # TIC Teff/log g for limb darkening, and ρ★ for the density check
 
 [aggregate]

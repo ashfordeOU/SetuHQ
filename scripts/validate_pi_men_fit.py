@@ -5,8 +5,10 @@ Reads ``runs/tess-pi-men-s1`` (candidates.json, after ``exoplan rebuild``; subje
 the reference rows in ``docs/results/pi_men_reference.json`` (NASA Exoplanet Archive ``ps`` table; refreshed
 with ``--refresh`` when the archive answers). Writes ``docs/results/pi_men_validation.md`` and the JSON beside it.
 
-Two fits are reported: the pipeline's own (one joint fit per 13-day subject, as written in candidates.json),
-and one joint fit of every recovered epoch across both subjects, done here with the same code. The old box
+Fits reported: the pipeline's own (one joint fit per 13-day subject, as written in candidates.json), and one
+joint fit of every recovered epoch across both subjects, done here with the same code, twice: free (depth, T14
+and k are robust; b, a/R★ and ρ★ are degenerate with five TESS transits) and with a Gaussian prior on ρ★ from
+the TIC density and its error (b, a/R★ and T23/T14 then constrained). The period is free in both. The old box
 measure (the mean flux over the panel's marked window) is shown beside them for comparison.
 """
 
@@ -26,7 +28,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from exoplan.transitfit import fit_transit, ld_coeffs, rho_catalogue  # noqa: E402
+from exoplan.transitfit import b_text, fit_transit, ld_coeffs, rho_catalogue, t23  # noqa: E402
 
 REF = Path("docs/results/pi_men_reference.json")
 TAP = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
@@ -82,8 +84,11 @@ def main(argv=None) -> int:
     period = (epochs[-1] - epochs[0]) / n if n else period
     pred = [epochs[0] + k * period for k in range(n + 1)]
     u1, u2 = ld_coeffs(star.get("teff"), star.get("logg"))
-    joint = fit_transit(t, f, e, t0=epochs[0], duration=huang["pl_trandur"] / 24, depth=2.5e-4, period=period,
-                        u1=u1, u2=u2, epochs=pred, stellar_density=star.get("rho")).as_dict()
+    common = dict(t0=epochs[0], duration=huang["pl_trandur"] / 24, depth=2.5e-4, period=period, u1=u1, u2=u2, epochs=pred,
+                  stellar_density=star.get("rho"))
+    joint = fit_transit(t, f, e, **common).as_dict()
+    prior = (fit_transit(t, f, e, **common, rho_prior=(star["rho"], star["rho_err"])).as_dict()
+             if star.get("rho") and star.get("rho_err") else None)
     box_depth = float(np.mean([c["depth_ppm"] for c in on]))
     box_dur = float(np.mean([c["duration_hours"] for c in on]))
     rho_huang = rho_catalogue(huang["st_mass"], huang["st_rad"]) if huang.get("st_mass") else None
@@ -94,7 +99,7 @@ def main(argv=None) -> int:
                         "box_duration": box_dur / r["pl_trandur"] if r.get("pl_trandur") else None}
     out = {"run": str(run), "reference": ref["source"], "reference_fetched_at": ref["fetched_at"],
            "huang_2018": huang, "archive_default": default, "star": star, "ld": [u1, u2],
-           "epochs_recovered": len(on), "epochs_predicted": len(pred), "joint_fit": joint,
+           "epochs_recovered": len(on), "epochs_predicted": len(pred), "joint_fit": joint, "joint_fit_density_prior": prior,
            "per_subject_fits": per_subject, "box": {"depth_ppm": box_depth, "duration_hours": box_dur},
            "ratios_vs_huang_2018": ratios(huang), "ratios_vs_archive_default": ratios(default),
            "rho_huang_mass_radius": rho_huang}
@@ -102,6 +107,19 @@ def main(argv=None) -> int:
     j = joint
     fmt = lambda x, d=2: "—" if x is None or (isinstance(x, float) and not math.isfinite(x)) else f"{x:.{d}f}"
     rh, rd = ratios(huang), ratios(default)
+
+    def pv(key, d=2):
+        if not prior or prior.get(key) is None:
+            return "—"
+        err = {"k": "k_err", "t14_hours": "t14_err_hours", "depth_ppm": "depth_err_ppm", "rho_star": "rho_star_err"}.get(key)
+        if key == "a_rs" and prior.get("a_rs_range"):
+            lo, hi = prior["a_rs_range"]
+            return f"{prior['a_rs']:.{d}f} (1σ {lo:.{d}f}–{hi:.{d}f})"
+        return f"{prior[key]:.{d}f}" + (f" ± {prior[err]:.{d}f}" if err and prior.get(err) is not None else "")
+    ars_free = (f"{fmt(j['a_rs'])} at the best-fit b, unconstrained (1σ {fmt(j['a_rs_range'][0])}–{fmt(j['a_rs_range'][1])})"
+                if j.get("a_rs_range") else fmt(j["a_rs"]))
+    t23_huang = (t23(huang["pl_trandur"] / 24, huang["pl_imppar"], huang["pl_ratror"], huang["pl_orbper"]) / (huang["pl_trandur"] / 24)
+                 if huang.get("pl_imppar") is not None and huang.get("pl_ratror") else None)
     lines = [
         "# pi Men c: the limb-darkened fit against Huang et al. 2018",
         "",
@@ -112,34 +130,48 @@ def main(argv=None) -> int:
         "",
         "## Joint fit of every recovered epoch",
         "",
-        "| quantity | exoplan (this fit) | Huang et al. 2018 | ratio | archive default (" + default["ref"].replace("_", " ").title() + ") | ratio |",
-        "|---|---:|---:|---:|---:|---:|",
-        f"| depth (ppm) | {fmt(j['depth_ppm'], 0)} ± {fmt(j['depth_err_ppm'], 0)} | {fmt(huang['pl_trandep'] * 1e4, 0)} | **{fmt(rh['depth'])}** | {fmt(default['pl_trandep'] * 1e4, 0)} | {fmt(rd['depth'])} |",
-        f"| T14 (h) | {fmt(j['t14_hours'])} ± {fmt(j['t14_err_hours'])} | {fmt(huang['pl_trandur'], 3)} | **{fmt(rh['duration'])}** | {fmt(default['pl_trandur'], 3)} | {fmt(rd['duration'])} |",
-        f"| Rp/R★ | {fmt(j['k'], 4)} ± {fmt(j['k_err'], 4)} | {fmt(huang['pl_ratror'], 5)} | {fmt(rh['k'])} | {fmt(default.get('pl_ratror'), 5)} | {fmt(rd['k'])} |",
-        f"| b | {fmt(j['b'])} (1σ {fmt(j['b_range'][0])}–{fmt(j['b_range'][1])}) | {fmt(huang['pl_imppar'])} | | {fmt(default.get('pl_imppar'))} | |",
-        f"| a/R★ | {fmt(j['a_rs'])} | {fmt(huang['pl_ratdor'])} | | | |",
-        f"| ρ★ transit (g/cm³) | {fmt(j['rho_star'], 3)} (1σ {fmt(j['rho_range'][0], 3)}–{fmt(j['rho_range'][1], 3)}) | {fmt(rho_huang, 3)} from M★, R★ | | | |",
-        f"| T23/T14 | {fmt(j['t23_hours'] / j['t14_hours'] if j['t14_hours'] else None)} | 0.95 (ATLAS E4) | | | |",
+        "Two lines. **Free**: depth, T14 and k are robust; b, a/R★ and ρ★ are degenerate with five TESS transits, so b",
+        "is an upper limit when its 1σ set reaches 0 and ρ★ is a range. **With the TIC density prior** (a Gaussian on ρ★,",
+        f"{fmt(star.get('rho'), 3)} ± {fmt(star.get('rho_err'), 3)} g/cm³): b, a/R★ and T23/T14, to compare with Huang's b = {fmt(huang['pl_imppar'])}.",
+        "Like-for-like comparisons lead: k and T14.",
+        "",
+        "| quantity | free | with the TIC density prior | Huang et al. 2018 | ratio (free / Huang) | archive default (" + default["ref"].replace("_", " ").title() + ") | ratio |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+        f"| Rp/R★ (k) | {fmt(j['k'], 4)} ± {fmt(j['k_err'], 4)} | {pv('k', 4)} | {fmt(huang['pl_ratror'], 5)} | **{fmt(rh['k'])}** | {fmt(default.get('pl_ratror'), 5)} | {fmt(rd['k'])} |",
+        f"| T14 (h) | {fmt(j['t14_hours'])} ± {fmt(j['t14_err_hours'])} | {pv('t14_hours')} | {fmt(huang['pl_trandur'], 3)} | **{fmt(rh['duration'])}** | {fmt(default['pl_trandur'], 3)} | {fmt(rd['duration'])} |",
+        f"| depth (ppm)¹ | {fmt(j['depth_ppm'], 0)} ± {fmt(j['depth_err_ppm'], 0)} | {pv('depth_ppm', 0)} | {fmt(huang['pl_trandep'] * 1e4, 0)} | {fmt(rh['depth'])} | {fmt(default['pl_trandep'] * 1e4, 0)} | {fmt(rd['depth'])} |",
+        f"| P (d), fitted near the BLS period | {fmt(j['period_days'], 4)} ± {fmt(j['period_err'], 4)} | {fmt(prior['period_days'], 4) if prior else '—'} | {fmt(huang['pl_orbper'], 5)} | | | |",
+        f"| b | {b_text(j)} | {b_text(prior) if prior else '—'} | {fmt(huang['pl_imppar'])} | | {fmt(default.get('pl_imppar'))} | |",
+        f"| a/R★ | {ars_free} | {pv('a_rs')} | {fmt(huang['pl_ratdor'])} | | | |",
+        f"| T23/T14 | {'unconstrained' if j['b_upper_limit'] else fmt(j['t23_over_t14'])} | {fmt(prior['t23_over_t14']) if prior else '—'} | {fmt(t23_huang)} (from Huang's b, k, a/R★) | | | |",
+        f"| ρ★ transit (g/cm³) | 1σ range {fmt(j['rho_range'][0], 3)}–{fmt(j['rho_range'][1], 3)} | {pv('rho_star', 3)} (prior-dominated; not a test) | {fmt(rho_huang, 3)} from M★, R★ | | | |",
+        "",
+        "¹ Depth definitions differ: exoplan's is the limb-darkened model's depth at mid-transit; the archive's `pl_trandep` "
+        "is the published transit depth as each paper defines it. Compare k and T14 first.",
+        "",
+        "Errors are conservative: the covariance at the best fit (scaled by √χ²ᵣ when above 1) added in quadrature to the "
+        "spread along the impact-parameter profile (Δχ² ≤ 1), which overlap.",
         "",
         f"The box measure used before (the mean flux over the panel's marked window): depth {box_depth:.0f} ppm, duration "
         f"{box_dur:.2f} h, ratios **{fmt(rh['box_depth'])}** and **{fmt(rh['box_duration'])}** against Huang 2018 "
         f"({fmt(rd['box_depth'])} and {fmt(rd['box_duration'])} against the archive default row the README used to cite).",
         "",
-        f"ρ★ check: the transit density against the TIC's {fmt(star.get('rho'), 3)} g/cm³ "
+        f"ρ★ check (free fit): the transit density against the TIC's {fmt(star.get('rho'), 3)} g/cm³ "
         f"({'flagged' if j['rho_flag'] else 'consistent within the illustrative 0.3–3 band at 3σ'}). V-shape test: "
         f"{'V-shaped' if j['v_shape'] else 'U-shaped (not grazing)' if not j['grazing'] else 'grazing best fit, but a full transit fits as well'}.",
         "",
         "## The pipeline's own fits (one joint fit per 13-day subject)",
         "",
-        "| subject | epochs | depth (ppm) | T14 (h) | b | ρ★ (g/cm³) |",
-        "|---|---:|---:|---:|---:|---:|",
+        "| subject | epochs | P (d) | depth (ppm) | T14 (h) | b | ρ★ (g/cm³), 1σ range |",
+        "|---|---:|---:|---:|---:|---:|---:|",
     ]
     for sid, fit in per_subject.items():
-        lines.append(f"| {sid} | {fit['n_epochs']} | {fmt(fit['depth_ppm'], 0)} ± {fmt(fit['depth_err_ppm'], 0)} | "
-                     f"{fmt(fit['t14_hours'])} ± {fmt(fit['t14_err_hours'])} | {fmt(fit['b'])} | {fmt(fit['rho_star'], 3)} |")
-    lines += ["", "Depth is the model's mid-transit depth. Errors combine the covariance at the best fit with the spread",
-              "along the impact-parameter profile (b is weakly constrained by five TESS transits).", "",
+        rr = fit.get("rho_range") or [None, None]
+        lines.append(f"| {sid} | {fit['n_epochs']} | {fmt(fit.get('period_days'), 4)} | {fmt(fit['depth_ppm'], 0)} ± {fmt(fit['depth_err_ppm'], 0)} | "
+                     f"{fmt(fit['t14_hours'])} ± {fmt(fit['t14_err_hours'])} | {b_text(fit) if 'b_upper_limit' in fit else fmt(fit['b'])} | "
+                     f"{fmt(rr[0], 3)}–{fmt(rr[1], 3)} |")
+    lines += ["", "Depth is the model's mid-transit depth; errors are conservative, as above. Each subject's fit frees the period "
+              "near that subject's BLS period.", "",
               "## Ephemeris recovery (recorded earlier)",
               "",
               "Recorded by `scripts/validate_known_planets.py` at commit 0f6dbdc from a live query of the archive's default row",

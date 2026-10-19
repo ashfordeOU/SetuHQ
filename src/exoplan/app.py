@@ -1988,13 +1988,14 @@ $('#route-sky').addEventListener('click', e => {
 // ---------- Transit (the per-dip cockpit) ----------
 const txs = {dip: null, cmp: []};
 // The transit, played back with the shared system view: the star from the catalogue (blackbody colour from its
-// Teff, limb darkening), the planet crossing it, a limb-darkened model curve, and this dip's stored points and box.
+// Teff, limb darkening), the planet crossing it, a limb-darkened model curve, and this dip's stored points and its
+// stored limb-darkened fit.
 // A dip matched to a known planet uses that planet's stored radii and orbit; any other dip shows what a planet
-// as deep as the stored depth would cast, with the orbit illustrative and the impact parameter not fitted.
+// as deep as the stored depth would cast, with the orbit and the impact parameter illustrative (b = 0).
 function txTheatre(d){
   const known = d.status === 'known', k = d.ratio || 0;
   const star = typeof MX !== 'undefined' && MX && S.planet ? MX.examples[S.planet] : null;
-  const box = (d.box || []).map(p => [p[0], p[1]]);
+  const model = (d.model || []).map(p => [p[0], p[1]]);
   let p, bNote;
   if (known && star){ p = Object.assign({name: S.planet}, star); bNote = `impact parameter ${star.impact_parameter != null ? 'as stored' : 'illustrative'}`; }
   else {
@@ -2003,22 +2004,22 @@ function txTheatre(d){
     const st = star || {};
     p = {name: 'a planet this deep', star_teff: st.star_teff || 5772, star_radius: st.star_radius || 1, radius: st.star_radius ? k * st.star_radius * 6.957e8 / 7.1492e7 : null,
       orbital_period: P, semi_major_axis: ars * (st.star_radius || 1) * 6.957e8 / 1.495978707e11, impact_parameter: 0};
-    bNote = 'impact parameter not fitted';
+    bNote = 'impact parameter illustrative (b = 0), not the fit\'s';
   }
   $('#txcap').textContent = known && star ? `${S.planet}, from stored values` : 'what a planet this deep would cast';
   $('#txfoot').textContent = (known && star
       ? `${S.planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}): the line is a limb-darkened model from those values, not a fit to this dip; ${bNote}. The match says the planet is already known; it does not confirm the dip.`
       : `If it were a planet: Rp/R★ = √depth = ${fmt(k, 4)}, from the stored depth ${fmt(d.depth_ppm, 0)} ppm; the star is the target as the catalogue stores it; orbit and period illustrative; ${bNote}.`)
-    + ` Dots: the ${d.pts.length} stored flux values within ${fmt(d.half * 24, 1)} hours of mid-time (${esc(d.time_unit)} ${fmt(d.t, 3)}). Dashed: a box at the stored depth and duration, not a fit. The star's surface texture is decorative.`;
-  const {st} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, box}, on: current === 'transit', caption: false});
-  if (!(known && star)){ st.opt.sys.bSrc = 'not fitted'; mxKick(st); }
+    + ` Dots: the ${d.pts.length} stored flux values within ${fmt(d.half * 24, 1)} hours of mid-time (${esc(d.time_unit)} ${fmt(d.t, 3)}). ${model.length ? 'Dashed: the limb-darkened fit stored for this dip.' : 'No transit fit is stored for this dip.'} The star's surface texture is decorative.`;
+  const {st} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}, on: current === 'transit', caption: false});
+  if (!(known && star)){ st.opt.sys.bSrc = 'illustrative'; mxKick(st); }
   // The canonical pages for the planet (when the dip matches one) and the star.
   $('#txlinks').innerHTML = (known && S.planet ? objLink('planet', S.planet, S.planet + ' ›') : '') + (S.star.name ? objLink('star', S.star.name, S.star.name + ' ›') : '');
 }
 function lanesHTML(d){
   const pct = v => Math.max(0, Math.min(100, (v + d.half) / (2 * d.half) * 100));
   const w0 = pct(d.t_start - d.t), w1 = pct(d.t_end - d.t);
-  return `<span class="small">Who marked it · stored spans in this window; dashed box: the consensus window</span>` + d.lanes.map(l => {
+  return `<span class="small">Who marked it · stored spans in this window; dashed outline: the consensus window</span>` + d.lanes.map(l => {
     const c = l.role === 'sentinel' ? 'var(--sen)' : 'var(--prb)';
     const spans = l.spans.map(([a, b]) => `<i class="${l.counted ? '' : 'uncounted'}" style="left:${pct(a).toFixed(1)}%;width:${Math.max(1.5, pct(b) - pct(a)).toFixed(1)}%"></i>`).join('');
     return `<div class="lane" style="--c:${c}"><span style="color:${l.role === 'sentinel' ? 'var(--sen)' : 'var(--prb-ink)'}" title="reviewer id ${esc(l.id)}">${esc(l.name)}</span><div class="track" role="img" aria-label="${esc(l.name)}: ${l.spans.length ? `${l.spans.length} span${l.spans.length === 1 ? '' : 's'} in this window, ${l.counted ? 'counted for this dip' : 'not counted'}` : 'no mark in this window'}"><span class="win" style="left:${w0.toFixed(1)}%;width:${Math.max(.5, w1 - w0).toFixed(1)}%"></span>${spans || '<em>no mark</em>'}</div></div>`;
@@ -2048,8 +2049,8 @@ function trayHTML(){
   const list = txs.cmp.map(id => DIP_BY[id]).filter(Boolean), [lo, hi] = dipRange(list), half = Math.max(...list.map(d => d.half));
   const W = 300, H = 100, X = dt => (dt + half) / (2 * half) * W, Y = v => 6 + (hi - Math.max(lo, Math.min(hi, v))) / (hi - lo) * (H - 12);
   return `<div class="glass tray"><div class="cap"><span>Compare · same scale (±${fmt(half * 24, 1)} h, ${fmt(lo, 0)} to ${fmt(hi, 0)} ppm)</span><button type="button" class="btn" id="cmpclear">Clear</button></div><div class="grid">${list.map(d => {
-    const box = d.box.length ? `M0 ${Y(0).toFixed(1)}` + d.box.map(p => `L${X(p[0]).toFixed(1)} ${Y(p[1]).toFixed(1)}`).join('') + `L${W} ${Y(0).toFixed(1)}` : '';
-    return `<a href="${transitHref(d.id)}" aria-current="${d.id === txs.dip}" style="--c:${STC_SPACE[d.status]}"><span class="h"><span style="color:#F5F5F7">${esc(d.time_unit)} ${tval(d.t)}</span><span>${esc(d.planet || d.status)}</span></span><svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${dotPath(d.pts, X, Y)}" stroke="#F5F5F7" stroke-width="2.4" stroke-linecap="round" opacity=".8"/><path d="${box}" stroke="${STC_SPACE[d.status]}" stroke-width="1.2" fill="none"/></svg></a>`; }).join('')}</div></div>`;
+    const model = (d.model || []).length ? d.model.map((p, i) => `${i ? 'L' : 'M'}${X(p[0]).toFixed(1)} ${Y(p[1]).toFixed(1)}`).join('') : '';
+    return `<a href="${transitHref(d.id)}" aria-current="${d.id === txs.dip}" style="--c:${STC_SPACE[d.status]}"><span class="h"><span style="color:#F5F5F7">${esc(d.time_unit)} ${tval(d.t)}</span><span>${esc(d.planet || d.status)}</span></span><svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="${dotPath(d.pts, X, Y)}" stroke="#F5F5F7" stroke-width="2.4" stroke-linecap="round" opacity=".8"/><path d="${model}" stroke="${STC_SPACE[d.status]}" stroke-width="1.2" fill="none"/></svg></a>`; }).join('')}</div></div>`;
 }
 function renderTransit(){
   const d = DIP_BY[txs.dip] || DIP_BY[S.lead_dip]; if (!d) return;

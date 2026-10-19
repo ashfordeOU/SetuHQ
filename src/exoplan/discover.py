@@ -12,7 +12,10 @@ NASA Exoplanet Archive TOI table:
 
 A dip enters the feed only when it passed vetting, is on its own target's
 periodic signal, is shallower than 5000 ppm, and that periodic signal has at
-least two transits and an empirical false-alarm probability below 0.01.
+least two transits and an empirical false-alarm probability below 0.01. With the
+discovery config's 200 block-bootstrap trials, FAP = (k + 1)/201, so the rule passes at
+k ≤ 1 of 200 trials: a cut at about 1% with Poisson slack. A 1% cut per target admits
+about N/100 noise signals by construction across N targets.
 
 Candidates flagged ``off_ephemeris`` are excluded, since they are not explained by
 the strong periodic signal of their own target.
@@ -45,7 +48,7 @@ BTJD_OFFSET = 2457000.0
 MID_TIME_DEDUPE_DAYS = 0.05
 MAX_FEED_DEPTH_PPM = 5000.0  # deeper dips are almost always binaries, so they stay out of the feed
 MIN_FEED_TRANSITS = 2        # a candidate needs a periodic signal with at least two transits
-MAX_FEED_FAP = 0.01          # and that signal's empirical false-alarm probability must be below this
+MAX_FEED_FAP = 0.01          # and that signal's empirical FAP must be below this (k ≤ 1 of 200 trials)
 
 
 @dataclass

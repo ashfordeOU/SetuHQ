@@ -11,7 +11,7 @@ import pytest
 
 from exoplan import catalogue as C
 from exoplan import docket as docket_mod
-from exoplan.app import APP_JS, SECTIONS, SUBPAGES, build_app
+from exoplan.app import APP_JS, SECTIONS, SUBPAGES
 from exoplan.methods import CHAPTERS
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
@@ -32,18 +32,8 @@ def archive_unreachable(monkeypatch):
 
 
 @pytest.fixture(scope="module")
-def built(tmp_path_factory):
-    """The app built from the committed pi Men run (so pi Men c is exoplan's own planet)."""
-    import exoplan.docket as dm
-
-    keep = dm.query_archive
-    dm.query_archive = lambda *a, **k: (_ for _ in ()).throw(ConnectionError("test"))
-    try:
-        out = build_app(Path("runs/tess-pi-men-s1"), tmp_path_factory.mktemp("cat") / "app", title="t",
-                        catalog_path="docs/discoveries/catalog.json")
-    finally:
-        dm.query_archive = keep
-    return out
+def built(pi_men_app):
+    return pi_men_app
 
 
 def _page_data(page):

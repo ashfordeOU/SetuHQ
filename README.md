@@ -70,15 +70,22 @@ Sentinels (Skeptic and Volunteer, on Claude via the CLI):
   NASA Exoplanet Archive value.
 * **Transit shape, limb-darkened fit** (re-vetted from the stored classifications; see
   [docs/results/pi_men_validation.md](docs/results/pi_men_validation.md)). A joint fit of
-  the five epochs gives a depth of 292 ± 8 ppm and T14 = 3.07 ± 0.17 h. Against Huang et al.
-  2018 (300 ppm, 2.953 h) that is **0.97 in depth and 1.04 in duration**. The box measure it
-  replaces gave 0.81 and 0.64 against the same values (0.91 and 0.64 against the archive's
-  current default row). The impact parameter is weakly constrained by five TESS transits
-  (b = 0.86, 1σ 0.00 to 0.87; Huang: 0.59). The transit density, 0.29 g/cm³ with a 1σ range
-  of 0.28 to 2.2, is therefore consistent with the TIC's 1.02 g/cm³ but does not pin it.
-  The fit is U-shaped, not V-shaped.
+  the five epochs, with the period free near the BLS period (6.2680 ± 0.0005 d; Huang:
+  6.26790 d), gives the like-for-like quantities first: **Rp/R★ = 0.0179 ± 0.0017 (1.05 against
+  Huang et al. 2018) and T14 = 3.07 ± 0.17 h (1.04)**. The mid-transit depth of the
+  limb-darkened model is 292 ± 8 ppm (0.97 against Huang's published 300 ppm, which is
+  defined by that paper, not by this model). The box measure it replaces gave 0.81 in depth
+  and 0.64 in duration. Errors are conservative: the covariance plus the spread along the
+  impact-parameter profile.
+* **The impact parameter needs the star.** Free, five TESS transits give only b < 0.87 (1σ),
+  so a/R★ and ρ★ are ranges (ρ★ 0.28 to 2.2 g/cm³ at 1σ, consistent with the TIC's 1.02). With
+  the TIC density as a Gaussian prior (1.02 ± 0.20 g/cm³), the fit gives b = 0.64 ± 0.12,
+  a/R★ = 12.85 (1σ 11.5 to 13.6) and T23/T14 = 0.95, against Huang's 0.59, 13.38 and 0.95. The
+  fit is U-shaped, not V-shaped.
 * The periodic signal's false-alarm probability is below 10⁻⁴ in both subjects. No one of
-  10,000 block-bootstrap trials reached the observed SNR, so 10⁻⁴ is a bound, not a value.
+  10,000 block-bootstrap trials reached the observed SNR, so 10⁻⁴ is a bound, not a value. The
+  null maxima are committed in `runs/tess-pi-men-s1/fap_null/`; a Gumbel fit to them, stored
+  as `fap_tail`, puts the tail below 10⁻⁶ (indicative only, see below).
 * The sixth passed event (BTJD 1348.9, 0.87 h, SNR 9.5) does not fit the ephemeris and
   is a likely false positive. It is kept and flagged, not hidden.
 
@@ -131,14 +138,20 @@ published pipelines.
   names and records the ones used. Check them against a real `SCI_COR_Lightcurve` file.
 * **Transit fits are light-curve fits.** Every consensus dip gets a limb-darkened fit (Claret
   2017 TESS coefficients from the TIC's Teff and log g) with depth, T14, impact parameter and
-  mid-time with errors, a ρ★ consistency check and a V-shape test. With a few TESS transits
-  the impact parameter, and so a/R★ and ρ★, is poorly constrained. The density band (0.3 to 3
+  mid-time with errors, a ρ★ consistency check and a V-shape test. On a periodic signal the
+  period is fitted too, near the BLS period, so an approximate search period does not smear
+  the epochs. With a few TESS transits the impact parameter, and so a/R★ and ρ★, is poorly
+  constrained: b is then printed as an upper limit and ρ★ as a range, and a second fit with
+  the TIC density as a prior is stored beside the free one. The density band (0.3 to 3
   times the catalogue value, at 3σ) is illustrative, not a published threshold.
 * **False-alarm probabilities are bounded by the trials.** A FAP is (k + 1)/(N + 1) over N
   block-bootstrap trials, and is never printed below 1/(N + 1). The stored pi Men run uses
-  10⁴ trials, the discovery batches 200 (enough for the feed's 1% rule), and the library
-  default 20. A Gumbel fit to the null maxima is stored beside it as an extrapolation and is
-  labelled indicative.
+  10⁴ trials, the discovery batches 200, and the library default 20. The feed's FAP < 0.01
+  rule with 200 trials passes at k ≤ 1 of 200: a cut at about 1% with Poisson slack, which
+  across N targets admits about N/100 noise signals by construction. A Gumbel fit to the null
+  maxima is stored with each candidate (`fap_tail`, with `fap_exceed` and `fap_method`). It
+  is indicative, extrapolated beyond the trials and conservative (BLS maxima are
+  lighter-tailed than Gumbel), and it is never given below 10⁻⁶.
 * **Vetting uses only light curves.** There is no centroid or pixel-level check, so
   blended eclipsing binaries can pass.
 * **Edge events are the weak spot** for both the statistics and the reviewers.

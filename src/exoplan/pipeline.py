@@ -14,10 +14,11 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import platform
 import sys
 import warnings
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from importlib import metadata
 from pathlib import Path
@@ -32,7 +33,7 @@ from exoplan.preprocess import bin_lightcurve, clean, detrend
 from exoplan.render import render_subject
 from exoplan.reviewers.base import Classification
 from exoplan.reviewers.claude import PROMPT_VERSION, ReviewError
-from exoplan.search import PeriodicSignal, bls_search, stitch, with_fap
+from exoplan.search import PeriodicSignal, bls_search, fap_tail_label, stitch, with_fap
 from exoplan.store import Store
 from exoplan.subjects import Subject, split_subjects
 from exoplan.stellar import tic_id, tic_params
@@ -78,6 +79,13 @@ class Candidate:
     # The limb-darkened transit fit of this dip (transitfit.TransitFit.as_dict), or {} when it was not run.
     fit: dict = field(default_factory=dict)
     fap_label: str = ""
+    # The FAP's working: trials, how many reached the observed SNR, the method, and the Gumbel tail (indicative).
+    fap_trials: int = 0
+    fap_exceed: int | None = None
+    fap_tail: float | None = None
+    fap_tail_label: str = ""
+    fap_method: str = ""
+    fap_snr: float | None = None  # the periodic signal's BLS SNR that the trials are compared with
 
     @property
     def t_center(self) -> float:
@@ -228,6 +236,9 @@ def build_candidates(
         min_planet_fraction=config.min_planet_fraction,
     )
     periodic_cache: dict[str, PeriodicSignal | None] = {}
+    # One joint fit per (subject, periodic signal): every dip on that signal shares it, with the reference
+    # mid-time moved to the dip's own epoch.
+    fit_cache: dict[tuple, tuple] = {}
     candidates: list[Candidate] = []
     for event in consensus:
         subject = subject_by_id[event.subject_id]
@@ -243,13 +254,27 @@ def build_candidates(
         supported = periodic if periodic is not None and periodic.covers(event.center) else None
         candidate = _to_candidate(event, subject, result, supported)
         if config.fit_transits:
-            fit = fit_candidate(event, subject, supported, (stars or {}).get(candidate.target) or {}, result.metrics.get("depth"))
+            key = (event.subject_id, supported.period, supported.t0) if supported is not None else None
+            if key is not None and key in fit_cache:
+                fit, prior = (_at_epoch(f, event.center) if f is not None else None for f in fit_cache[key])
+            else:
+                fit, prior = fit_candidate(event, subject, supported, (stars or {}).get(candidate.target) or {}, result.metrics.get("depth"))
+                if key is not None:
+                    fit_cache[key] = (fit, prior)
             if fit is not None:
                 extra = tuple(f for f, on in (("v_shape", fit.v_shape), ("density_mismatch", fit.rho_flag)) if on)
-                object.__setattr__(candidate, "fit", fit.as_dict())
+                d = fit.as_dict()
+                if prior is not None:
+                    d["with_density_prior"] = prior.as_dict()
+                object.__setattr__(candidate, "fit", d)
                 object.__setattr__(candidate, "flags", candidate.flags + extra)
         if supported is not None:
             object.__setattr__(candidate, "fap_label", supported.fap_label)
+            if supported.fap_trials:
+                for key, value in (("fap_trials", supported.fap_trials), ("fap_exceed", supported.fap_exceed),
+                                   ("fap_tail", supported.fap_tail), ("fap_tail_label", fap_tail_label(supported.fap_tail)),
+                                   ("fap_method", supported.fap_method), ("fap_snr", float(supported.snr))):
+                    object.__setattr__(candidate, key, value)
         object.__setattr__(candidate, "search_scope", "sector" if target_signals is not None else "subject")
         object.__setattr__(candidate, "mark_audit", tuple(audit_marks(event, classifications, config.cluster_gap_days)))
         object.__setattr__(candidate, "count_rule", {
@@ -336,6 +361,9 @@ def rebuild_run(config: RunConfig, lightcurves: list[LightCurve], run_dir: str |
         "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
         "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g" if config.fit_transits else "off",
         "fap_trials": config.fap_trials, "stellar": config.stellar, "config_sha256": config.digest(),
+        "code": _git_describe(),
+        "inputs": [{"target": lc.target, "sector": lc.provenance.get("sector"), "file": lc.provenance.get("file"),
+                    "file_sha256": lc.provenance.get("file_sha256")} for lc in lightcurves],
     })
     manifest["counts"]["consensus_events"] = len(candidates)
     manifest["counts"]["passed_vetting"] = sum(c.passed for c in candidates)
@@ -343,12 +371,25 @@ def rebuild_run(config: RunConfig, lightcurves: list[LightCurve], run_dir: str |
     return candidates
 
 
+def _git_describe() -> str | None:
+    """``git describe --always --dirty`` of the code that ran, or None outside a git checkout."""
+    import subprocess
+
+    try:
+        out = subprocess.run(["git", "describe", "--always", "--dirty"], cwd=Path(__file__).resolve().parent,
+                             capture_output=True, text=True, timeout=10)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return out.stdout.strip() or None
+
+
 def write_candidates(candidates: list[Candidate], out: Path) -> None:
     rows = [c.as_row() for c in candidates]
     fields = [
         "candidate_id", "target", "mission", "subject_id", "t_start", "t_end", "t_center", "time_unit",
         "duration_hours", "score", "n_reviewers", "planet_fraction", "reviewers", "passed", "flags",
-        "depth_ppm", "snr", "period_days", "n_transits", "fap", "fap_label", "bls_t0", "bls_duration_days",
+        "depth_ppm", "snr", "period_days", "n_transits", "fap", "fap_label", "fap_trials", "fap_exceed", "fap_tail",
+        "fap_tail_label", "fap_method", "fap_snr", "bls_t0", "bls_duration_days",
         "fit_t0", "fit_t0_err", "fit_depth_ppm", "fit_depth_err_ppm", "fit_t14_hours", "fit_t14_err_hours",
         "fit_b", "fit_b_err", "fit_k", "fit_rho_star", "fit_rho_star_err", "star_rho",
     ]
@@ -396,10 +437,13 @@ EPHEMERIS_SNR = 10.0  # a periodic signal this strong is trusted to explain the 
 
 
 def fit_candidate(event: Consensus, subject: Subject, supported: PeriodicSignal | None, star: dict,
-                  depth_guess: float | None) -> TransitFit | None:
-    """The limb-darkened fit of one consensus dip. On a periodic signal's ephemeris, every epoch of that signal
-    in the subject is fitted jointly (fixed BLS period, one shape, reference mid-time at this dip's epoch);
-    otherwise the dip alone. LD from the star's TIC Teff and log g (Sun-like when unknown)."""
+                  depth_guess: float | None) -> tuple[TransitFit | None, TransitFit | None]:
+    """The limb-darkened fit of one consensus dip, and the same fit with the density prior (or None). On a periodic signal's ephemeris, every epoch of that signal
+    in the subject is fitted jointly (one shape, reference mid-time at this dip's epoch, and with two or more
+    epochs the period free near the BLS period); otherwise the dip alone. LD from the star's TIC Teff and log g
+    (Sun-like when unknown). When the star has a catalogue density with an error, a second fit with that density
+    as a Gaussian prior is stored as ``fit["with_density_prior"]``: the free fit gives the robust depth, T14 and k;
+    the prior fit gives b, a/R★ and T23/T14."""
     u1, u2 = ld_coeffs(star.get("teff"), star.get("logg"))
     duration = max(event.t_end - event.t_start, 1 / 24)
     depth = max(float(depth_guess or 0.0), 2e-5)
@@ -412,11 +456,29 @@ def fit_candidate(event: Consensus, subject: Subject, supported: PeriodicSignal 
             epochs = cover
             t0 = min(cover, key=lambda c: abs(c - event.center))
             duration = max(duration, supported.duration)
+    args = dict(t0=t0, duration=duration, depth=depth, period=period, u1=u1, u2=u2, epochs=epochs, stellar_density=star.get("rho"))
     try:
-        return fit_transit(subject.time, subject.flux, subject.flux_err, t0=t0, duration=duration, depth=depth,
-                           period=period, u1=u1, u2=u2, epochs=epochs, stellar_density=star.get("rho"))
+        free = fit_transit(subject.time, subject.flux, subject.flux_err, **args)
     except (ValueError, np.linalg.LinAlgError):
-        return None
+        return None, None
+    if free is None or not period or not star.get("rho") or not star.get("rho_err"):
+        return free, None
+    try:
+        prior = fit_transit(subject.time, subject.flux, subject.flux_err, **args, rho_prior=(star["rho"], star["rho_err"]))
+    except (ValueError, np.linalg.LinAlgError):
+        prior = None
+    return (free, prior)
+
+
+def _at_epoch(fit: TransitFit, centre: float) -> TransitFit:
+    """A joint fit with its reference mid-time moved to the fitted epoch nearest ``centre`` (the same fit)."""
+    if not fit.period_days:
+        return fit
+    n = round((centre - fit.t0) / fit.period_days)
+    if n == 0:
+        return fit
+    t0_err = math.hypot(fit.t0_err, n * fit.period_err) if fit.period_err is not None and math.isfinite(fit.t0_err) else fit.t0_err
+    return replace(fit, t0=fit.t0 + n * fit.period_days, t0_err=t0_err)
 
 
 def star_parameters(lightcurves: list[LightCurve], config: RunConfig, out: Path | None = None) -> dict[str, dict]:

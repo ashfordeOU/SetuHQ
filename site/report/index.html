@@ -203,11 +203,14 @@ footer{margin:48px 0 24px;color:var(--muted);font-size:13px}
 </section>
 
 <section id='validation'><h2>Validation against known planets</h2><p class='note'>Run runs/tess-pi-men-s1 (TESS SPOC sector 1, 10-minute bins), rebuilt from its stored classifications with the limb-darkened fit (src/exoplan/transitfit.py). 5 of 5 predicted epochs are recovered by the panel. Limb darkening: Claret 2017 TESS quadratic u₁ = 0.341, u₂ = 0.224 for the TIC&#x27;s Teff 5992 K and log g 4.36. Reference: NASA Exoplanet Archive, table ps, pl_name = &#x27;pi Men c&#x27;, fetched 2026-10-19 (docs/results/pi_men_reference.json).</p>
-<div class='scroll'><table><thead><tr><th>quantity</th><th>exoplan (this fit)</th><th>Huang et al. 2018</th><th>ratio</th><th>archive default (Kunovac Hodzic Et Al 2021)</th><th>ratio</th></tr></thead><tbody><tr><td>depth (ppm)</td><td>292 ± 8</td><td>300</td><td>**0.97**</td><td>268</td><td>1.09</td></tr><tr><td>T14 (h)</td><td>3.07 ± 0.17</td><td>2.953</td><td>**1.04**</td><td>2.952</td><td>1.04</td></tr><tr><td>Rp/R★</td><td>0.0179 ± 0.0017</td><td>0.01703</td><td>1.05</td><td>0.01584</td><td>1.13</td></tr><tr><td>b</td><td>0.86 (1σ 0.00–0.87)</td><td>0.59</td><td></td><td>0.65</td><td></td></tr><tr><td>a/R★</td><td>8.48</td><td>13.38</td><td></td><td></td><td></td></tr><tr><td>ρ★ transit (g/cm³)</td><td>0.294 (1σ 0.278–2.220)</td><td>1.159 from M★, R★</td><td></td><td></td><td></td></tr><tr><td>T23/T14</td><td>0.87</td><td>0.95 (ATLAS E4)</td><td></td><td></td><td></td></tr></tbody></table></div>
+<p class='note'>Two lines. **Free**: depth, T14 and k are robust; b, a/R★ and ρ★ are degenerate with five TESS transits, so b is an upper limit when its 1σ set reaches 0 and ρ★ is a range. **With the TIC density prior** (a Gaussian on ρ★, 1.023 ± 0.199 g/cm³): b, a/R★ and T23/T14, to compare with Huang&#x27;s b = 0.59. Like-for-like comparisons lead: k and T14.</p>
+<div class='scroll'><table><thead><tr><th>quantity</th><th>free</th><th>with the TIC density prior</th><th>Huang et al. 2018</th><th>ratio (free / Huang)</th><th>archive default (Kunovac Hodzic Et Al 2021)</th><th>ratio</th></tr></thead><tbody><tr><td>Rp/R★ (k)</td><td>0.0179 ± 0.0017</td><td>0.0165 ± 0.0005</td><td>0.01703</td><td>**1.05**</td><td>0.01584</td><td>1.13</td></tr><tr><td>T14 (h)</td><td>3.07 ± 0.17</td><td>2.96 ± 0.04</td><td>2.953</td><td>**1.04**</td><td>2.952</td><td>1.04</td></tr><tr><td>depth (ppm)¹</td><td>292 ± 8</td><td>293 ± 8</td><td>300</td><td>0.97</td><td>268</td><td>1.09</td></tr><tr><td>P (d), fitted near the BLS period</td><td>6.2680 ± 0.0005</td><td>6.2680</td><td>6.26790</td><td></td><td></td><td></td></tr><tr><td>b</td><td>b &lt; 0.87 (1σ)</td><td>b = 0.64 ± 0.12</td><td>0.59</td><td></td><td>0.65</td><td></td></tr><tr><td>a/R★</td><td>8.54 at the best-fit b, unconstrained (1σ 8.32–16.64)</td><td>12.85 (1σ 11.54–13.58)</td><td>13.38</td><td></td><td></td><td></td></tr><tr><td>T23/T14</td><td>unconstrained</td><td>0.95</td><td>0.95 (from Huang&#x27;s b, k, a/R★)</td><td></td><td></td><td></td></tr><tr><td>ρ★ transit (g/cm³)</td><td>1σ range 0.277–2.216</td><td>1.023 ± 0.388 (prior-dominated; not a test)</td><td>1.159 from M★, R★</td><td></td><td></td><td></td></tr></tbody></table></div>
+<p class='note'>¹ Depth definitions differ: exoplan&#x27;s is the limb-darkened model&#x27;s depth at mid-transit; the archive&#x27;s pl_trandep is the published transit depth as each paper defines it. Compare k and T14 first.</p>
+<p class='note'>Errors are conservative: the covariance at the best fit (scaled by √χ²ᵣ when above 1) added in quadrature to the spread along the impact-parameter profile (Δχ² ≤ 1), which overlap.</p>
 <p class='note'>The box measure used before (the mean flux over the panel&#x27;s marked window): depth 243 ppm, duration 1.90 h, ratios **0.81** and **0.64** against Huang 2018 (0.91 and 0.64 against the archive default row the README used to cite).</p>
-<p class='note'>ρ★ check: the transit density against the TIC&#x27;s 1.023 g/cm³ (consistent within the illustrative 0.3–3 band at 3σ). V-shape test: U-shaped (not grazing).</p>
-<div class='scroll'><table><thead><tr><th>subject</th><th>epochs</th><th>depth (ppm)</th><th>T14 (h)</th><th>b</th><th>ρ★ (g/cm³)</th></tr></thead><tbody><tr><td>tess-fa3483ce6f83</td><td>3</td><td>297 ± 11</td><td>3.36 ± 0.15</td><td>0.95</td><td>0.068</td></tr><tr><td>tess-04b815001aa6</td><td>2</td><td>309 ± 14</td><td>3.17 ± 0.22</td><td>0.91</td><td>0.161</td></tr></tbody></table></div>
-<p class='note'>Depth is the model&#x27;s mid-transit depth. Errors combine the covariance at the best fit with the spread along the impact-parameter profile (b is weakly constrained by five TESS transits).</p>
+<p class='note'>ρ★ check (free fit): the transit density against the TIC&#x27;s 1.023 g/cm³ (consistent within the illustrative 0.3–3 band at 3σ). V-shape test: U-shaped (not grazing).</p>
+<div class='scroll'><table><thead><tr><th>subject</th><th>epochs</th><th>P (d)</th><th>depth (ppm)</th><th>T14 (h)</th><th>b</th><th>ρ★ (g/cm³), 1σ range</th></tr></thead><tbody><tr><td>tess-fa3483ce6f83</td><td>3</td><td>6.2681</td><td>294 ± 10</td><td>3.17 ± 0.25</td><td>b &lt; 0.94 (1σ)</td><td>0.091–2.249</td></tr><tr><td>tess-04b815001aa6</td><td>2</td><td>6.2674</td><td>310 ± 14</td><td>2.97 ± 0.09</td><td>b &lt; 0.87 (1σ)</td><td>0.270–2.124</td></tr></tbody></table></div>
+<p class='note'>Depth is the model&#x27;s mid-transit depth; errors are conservative, as above. Each subject&#x27;s fit frees the period near that subject&#x27;s BLS period.</p>
 <p class='note'>Recorded by scripts/validate_known_planets.py at commit 0f6dbdc from a live query of the archive&#x27;s default row then. Its timing columns stand; its depth and duration ratios came from the box measure and are superseded by the fit above.</p>
 <div class='scroll'><table><thead><tr><th>planet</th><th>P (d)</th><th>predicted epochs in span</th><th>recovered</th><th>mean timing offset (min)</th><th>depth ratio (box)</th><th>duration ratio (box)</th></tr></thead><tbody><tr><td>pi Men c</td><td>6.26784</td><td>5</td><td>5</td><td>-8.0</td><td>0.91</td><td>0.62</td></tr></tbody></table></div></section>
 <section id='benchmark'><h2>Injection recovery</h2><p class='note'>Panel: volunteer-sensitive, volunteer-typical, volunteer-cautious</p>
@@ -311,6 +314,51 @@ footer{margin:48px 0 24px;color:var(--muted);font-size:13px}
       &quot;fap_trials&quot;: 10000,
       &quot;stellar&quot;: &quot;tic&quot;,
       &quot;config_sha256&quot;: &quot;5144cd5273f6aa315915ed7d7fee28c9485303d2509ee7e6799c63d3796e35ba&quot;
+    },
+    {
+      &quot;at&quot;: &quot;2026-10-19T12:09:47+00:00&quot;,
+      &quot;exoplan_version&quot;: &quot;0.1.0&quot;,
+      &quot;reused&quot;: &quot;stored classifications (classifications.csv); the reviewers were not asked again&quot;,
+      &quot;transit_fit&quot;: &quot;limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g&quot;,
+      &quot;fap_trials&quot;: 10000,
+      &quot;stellar&quot;: &quot;tic&quot;,
+      &quot;config_sha256&quot;: &quot;585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6&quot;
+    },
+    {
+      &quot;at&quot;: &quot;2026-10-19T12:13:07+00:00&quot;,
+      &quot;exoplan_version&quot;: &quot;0.1.0&quot;,
+      &quot;reused&quot;: &quot;stored classifications (classifications.csv); the reviewers were not asked again&quot;,
+      &quot;transit_fit&quot;: &quot;limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g&quot;,
+      &quot;fap_trials&quot;: 10000,
+      &quot;stellar&quot;: &quot;tic&quot;,
+      &quot;config_sha256&quot;: &quot;585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6&quot;,
+      &quot;code&quot;: &quot;c78b981-dirty&quot;,
+      &quot;inputs&quot;: [
+        {
+          &quot;target&quot;: &quot;TIC 261136679&quot;,
+          &quot;sector&quot;: 1,
+          &quot;file&quot;: &quot;tess2018206045859-s0001-0000000261136679-0120-s_lc.fits&quot;,
+          &quot;file_sha256&quot;: &quot;1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609&quot;
+        }
+      ]
+    },
+    {
+      &quot;at&quot;: &quot;2026-10-19T12:33:09+00:00&quot;,
+      &quot;exoplan_version&quot;: &quot;0.1.0&quot;,
+      &quot;reused&quot;: &quot;stored classifications (classifications.csv); the reviewers were not asked again&quot;,
+      &quot;transit_fit&quot;: &quot;limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g&quot;,
+      &quot;fap_trials&quot;: 10000,
+      &quot;stellar&quot;: &quot;tic&quot;,
+      &quot;config_sha256&quot;: &quot;585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6&quot;,
+      &quot;code&quot;: &quot;c78b981-dirty&quot;,
+      &quot;inputs&quot;: [
+        {
+          &quot;target&quot;: &quot;TIC 261136679&quot;,
+          &quot;sector&quot;: 1,
+          &quot;file&quot;: &quot;tess2018206045859-s0001-0000000261136679-0120-s_lc.fits&quot;,
+          &quot;file_sha256&quot;: &quot;1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609&quot;
+        }
+      ]
     }
   ]
 }</pre></details>

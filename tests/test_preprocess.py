@@ -1,8 +1,15 @@
 import numpy as np
 
-from exoplan.injection import trapezoid
 from exoplan.lightcurve import LightCurve
 from exoplan.preprocess import bin_lightcurve, clean, detrend, mad_sigma, running_median
+
+
+def trapezoid(time: np.ndarray, t_start: float, t_end: float, depth: float) -> np.ndarray:
+    """Flux deficit of a trapezoidal transit with 10 % ingress and egress (a test signal for the detrender)."""
+    tau = 0.1 * (t_end - t_start)
+    ingress = np.clip((time - t_start) / tau, 0.0, 1.0)
+    egress = np.clip((t_end - time) / tau, 0.0, 1.0)
+    return depth * np.minimum(ingress, egress) * ((time >= t_start) & (time <= t_end))
 
 
 def test_running_median_of_constant_is_constant():

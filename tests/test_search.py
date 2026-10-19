@@ -154,11 +154,60 @@ def test_fap_is_low_for_an_injected_3000_ppm_periodic_signal_in_white_and_red_no
         assert abs(signal.period - 3.1) < 0.05
         assert signal.fap_exceed == 0 and signal.fap_bound and signal.fap == pytest.approx(1 / 21)
         assert signal.fap_label == "< 4.8e-02 (20 trials)"
+        # 40 trials: the bound tightens to 1/41, still not 1%; under 100 trials no tail is fitted.
+        signal = with_fap(subject, bls_search(subject), n_trials=40)
+        assert signal.fap_bound and signal.fap == pytest.approx(1 / 41) and signal.fap_tail is None
+
+
+@pytest.mark.slow
+def test_200_trials_resolve_one_percent_and_store_an_indicative_tail():
+    from exoplan.search import FAP_TAIL_FLOOR, with_fap
+
+    for red_ppm in (0.0, 600.0):
+        subject = _fap_subject(2, red_ppm=red_ppm, signal=True)
         # 200 trials resolve it: the bound is 1/201 < 1%.
         signal = with_fap(subject, bls_search(subject), n_trials=200)
         assert signal.fap_bound and signal.fap == pytest.approx(1 / 201) and signal.fap < 0.01
-        assert signal.fap_tail is not None and signal.fap_tail < signal.fap  # extrapolated, kept apart from the bound
-        assert "Gumbel" in signal.fap_method and "upper bound" in signal.fap_method
+        assert signal.fap_tail is not None and FAP_TAIL_FLOOR <= signal.fap_tail < signal.fap  # extrapolated, kept apart
+        assert "Gumbel" in signal.fap_method and "upper bound" in signal.fap_method and "conservative" in signal.fap_method
+
+
+def test_the_fap_cache_key_carries_its_version_and_tests_do_not_cache_by_default():
+    from exoplan.config import RunConfig
+    from exoplan.search import FAP_CACHE_VERSION, _fap_cache_key, fap_tail_label
+
+    t = np.arange(10.0)
+    params = (0.5, None, (0.1,), 0.5, 1, 20)
+    assert _fap_cache_key(t, t, t, params) != _fap_cache_key(t, t, t, params, version=None)
+    assert _fap_cache_key(t, t, t, params) == _fap_cache_key(t, t, t, params, version=FAP_CACHE_VERSION)
+    assert RunConfig(name="x").fap_cache is None  # the library default writes no cache; config files opt in
+    assert fap_tail_label(1e-9).startswith("< 1e-06 (indicative") and fap_tail_label(None).startswith("not computed")
+    assert fap_tail_label(3e-5).startswith("≈ 3.0e-05 (indicative, extrapolated beyond the trials, conservative")
+
+
+def test_the_stored_run_keeps_its_null_maxima_so_the_tail_can_be_rederived():
+    import json
+    from pathlib import Path
+
+    from scipy.stats import gumbel_r
+
+    from exoplan.search import FAP_CACHE_VERSION, FAP_TAIL_FLOOR
+
+    nulls = [json.loads(p.read_text()) for p in sorted(Path("runs/tess-pi-men-s1/fap_null").glob("*.json"))]
+    assert nulls and all(n["n_trials"] == 10000 and n["cache_version"] == FAP_CACHE_VERSION for n in nulls)
+    cands = [c for c in json.loads(Path("runs/tess-pi-men-s1/candidates.json").read_text()) if c.get("fap_trials")]
+    assert cands
+    for c in cands:
+        assert c["fap_trials"] == 10000 and c["fap_exceed"] == 0 and "conservative" in c["fap_method"]
+        assert c["fap_tail"] >= FAP_TAIL_FLOOR and "indicative" in c["fap_tail_label"]
+        # One of the stored null-maxima files reproduces the stored count and tail from the stored SNR.
+        ok = False
+        for n in nulls:
+            arr = np.asarray(n["null_max"], float)
+            loc, scale = gumbel_r.fit(arr[np.isfinite(arr)])
+            tail = max(float(gumbel_r.sf(c["fap_snr"], loc, scale)), FAP_TAIL_FLOOR)
+            ok |= int(np.count_nonzero(arr >= c["fap_snr"])) == c["fap_exceed"] and tail == pytest.approx(c["fap_tail"], rel=1e-6)
+        assert ok
 
 
 def test_red_noise_fools_the_white_noise_snr_but_not_the_fap():

@@ -81,6 +81,51 @@
       "fap_trials": 10000,
       "stellar": "tic",
       "config_sha256": "5144cd5273f6aa315915ed7d7fee28c9485303d2509ee7e6799c63d3796e35ba"
+    },
+    {
+      "at": "2026-10-19T12:09:47+00:00",
+      "exoplan_version": "0.1.0",
+      "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
+      "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g",
+      "fap_trials": 10000,
+      "stellar": "tic",
+      "config_sha256": "585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6"
+    },
+    {
+      "at": "2026-10-19T12:13:07+00:00",
+      "exoplan_version": "0.1.0",
+      "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
+      "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g",
+      "fap_trials": 10000,
+      "stellar": "tic",
+      "config_sha256": "585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6",
+      "code": "c78b981-dirty",
+      "inputs": [
+        {
+          "target": "TIC 261136679",
+          "sector": 1,
+          "file": "tess2018206045859-s0001-0000000261136679-0120-s_lc.fits",
+          "file_sha256": "1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-19T12:33:09+00:00",
+      "exoplan_version": "0.1.0",
+      "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
+      "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g",
+      "fap_trials": 10000,
+      "stellar": "tic",
+      "config_sha256": "585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6",
+      "code": "c78b981-dirty",
+      "inputs": [
+        {
+          "target": "TIC 261136679",
+          "sector": 1,
+          "file": "tess2018206045859-s0001-0000000261136679-0120-s_lc.fits",
+          "file_sha256": "1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609"
+        }
+      ]
     }
   ]
 }

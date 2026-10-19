@@ -112,7 +112,8 @@ def test_pipeline_skips_unavailable_reviewers(tmp_path, lightcurve_with_transits
     from exoplan.reviewers import ClaudeReviewer
 
     reviewers = [SimulatedVolunteer("vol-a", seed=1), ClaudeReviewer("claude-x")]
-    config = RunConfig(name="skip", subject_days=13.0, min_points=100)
+    # Only the reviewer bookkeeping is under test: no FAP trials, no transit fits.
+    config = RunConfig(name="skip", subject_days=13.0, min_points=100, fap_trials=0, fit_transits=False)
     summary = run_pipeline(config, [lightcurve_with_transits], reviewers, tmp_path / "run")
     assert summary.skipped_reviewers == ["claude-x"]
 
@@ -146,6 +147,7 @@ min_points = 100
 
 [search]
 fap_trials = 0
+fit_transits = false
 
 [[reviewers]]
 type = "simulated"

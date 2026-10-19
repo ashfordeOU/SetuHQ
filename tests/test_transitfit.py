@@ -161,3 +161,39 @@ def test_the_pipeline_fits_every_consensus_dip(tmp_path):
     assert passed and all(c.fit and abs(c.fit["depth_ppm"] - 2500) < 300 and abs(c.fit["t14_hours"] - 4.8) < 0.8 for c in passed)
     row = passed[0].as_row()
     assert row["fit_depth_ppm"] == passed[0].fit["depth_ppm"] and row["fit_b"] == passed[0].fit["b"]
+
+
+def test_a_wrong_search_period_does_not_bias_the_joint_fit():
+    # Fable B1: the BLS period is approximate; held fixed it smears the epochs into a long grazing shape.
+    t, f, e, eps, P, u1, u2 = _pi_men_like(seed=6, noise=6e-5, n=3)
+    wrong = P + 0.005
+    fit = T.fit_transit(t, f, e, t0=eps[1], duration=0.12, depth=2.4e-4, period=wrong, u1=u1, u2=u2,
+                        epochs=[eps[1] + n * wrong for n in (-1, 0, 1)], stellar_density=1.159)
+    right = T.fit_transit(t, f, e, t0=eps[1], duration=0.12, depth=2.4e-4, period=P, u1=u1, u2=u2,
+                          epochs=[eps[1] + n * P for n in (-1, 0, 1)], stellar_density=1.159)
+    # The wrong search period gives the same answer as the right one.
+    assert fit.b == pytest.approx(right.b, abs=0.05) and fit.rho_star == pytest.approx(right.rho_star, rel=0.1)
+    assert fit.t14_hours == pytest.approx(right.t14_hours, abs=0.05) and not fit.rho_flag and not fit.v_shape
+    truth_rho = T.rho_star(T.a_over_r(2.953 / 24, 0.59, 0.01703, P), P)
+    assert fit.period_free and fit.period_search == wrong
+    assert abs(fit.period_days - P) < max(3 * fit.period_err, 1e-3)
+    assert fit.b_range[0] - 0.02 <= 0.59 <= fit.b_range[1] + 0.02
+    assert truth_rho / 2 <= fit.rho_star <= truth_rho * 2
+    assert abs(fit.t14_hours - 2.953) < 3 * max(fit.t14_err_hours, 0.02)
+
+
+def test_a_density_prior_pins_b_and_a_over_r_and_an_unconstrained_b_prints_as_an_upper_limit():
+    t, f, e, eps, P, u1, u2 = _pi_men_like(seed=2, noise=2e-4, n=3)
+    free = T.fit_transit(t, f, e, t0=eps[0], duration=0.12, depth=2.4e-4, period=P, u1=u1, u2=u2, epochs=eps)
+    truth_ars = T.a_over_r(2.953 / 24, 0.59, 0.01703, P)
+    rho = T.rho_star(truth_ars, P)
+    pri = T.fit_transit(t, f, e, t0=eps[0], duration=0.12, depth=2.4e-4, period=P, u1=u1, u2=u2, epochs=eps,
+                        rho_prior=(rho, 0.05 * rho))
+    assert pri.rho_prior and abs(pri.rho_star - rho) < 0.15 * rho
+    assert abs(pri.a_rs - truth_ars) < 0.1 * truth_ars and abs(pri.b - 0.59) < 0.2
+    assert pri.t23_over_t14 == pytest.approx(T.t23(2.953 / 24, 0.59, 0.01703, P) / (2.953 / 24), abs=0.08)
+    assert (pri.b_range[1] - pri.b_range[0]) < (free.b_range[1] - free.b_range[0])
+    d = free.as_dict()
+    d.update(b_upper_limit=True, b_range=[0.0, 0.87])
+    assert T.b_text(d) == "b < 0.87 (1σ)"
+    assert T.b_text(dict(d, b_upper_limit=False, b=0.59, b_err=0.05)) == "b = 0.59 ± 0.05"

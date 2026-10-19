@@ -11,7 +11,7 @@ from exoplan.docket import (
     DOCKET_JS,
     NO_STORED_CROSSMATCH,
     CrossmatchUnavailable,
-    box_model,
+    fit_model,
     build_docket,
     compare_with_archive,
     crossmatch_line,
@@ -96,17 +96,26 @@ def test_candidates_json_has_bls_t0_and_duration(run_dir):
             assert r["bls_t0"] is None and r["epochs"] == []
 
 
-def test_box_model_is_a_box_at_measured_depth_and_duration():
-    row = {"t_start": 10.0, "t_end": 10.25, "depth_ppm": 300.0}
-    assert box_model(row) == [[10.0, 0.0], [10.0, -300.0], [10.25, -300.0], [10.25, 0.0]]
+def test_the_strip_draws_the_stored_limb_darkened_fit_not_a_box():
+    from exoplan.transitfit import model_depth
+
+    fit = {"t0": 10.125, "k": 0.017, "t14_hours": 3.0, "b": 0.5, "u1": 0.35, "u2": 0.2, "period_days": 6.27, "depth_ppm": 300.0}
+    row = {"t_start": 10.0, "t_end": 10.25, "depth_ppm": 250.0, "fit": fit}
+    model = fit_model(row)
+    ts, ps = [p[0] for p in model], [p[1] for p in model]
+    assert len(model) >= 200 and ts == sorted(ts) and ts[0] < 10.0 and ts[-1] > 10.25
+    assert min(ps) == pytest.approx(-model_depth(0.017, 0.5, 0.35, 0.2) * 1e6, rel=0.02)
+    assert ps[0] == 0 and ps[-1] == 0
+    assert len({round(p, 1) for p in ps if p < 0}) > 20  # a curved, limb-darkened profile, not a flat box bottom
+    assert fit_model({"t_start": 1, "t_end": 2, "depth_ppm": 9}) == []
 
 
-def test_docket_embeds_box_from_stored_values(run_dir, tmp_path):
+def test_docket_embeds_the_fit_from_stored_values(run_dir, tmp_path):
     page = build_docket(run_dir, tmp_path / "docket", title="t").read_text()
     data = json.loads(re.search(r'<script id="data" type="application/json">(.*?)</script>', page, re.S).group(1).replace("<\\/", "</"))
     for c in data["candidates"]:
-        assert c["box"] == box_model(c)
-    assert "box model at measured depth and duration" in page
+        assert c["model"] == fit_model(c) and "box" not in c
+    assert "box model" not in page and "limb-darkened fit (stored)" in page
     assert "candidate, unconfirmed" in page
     assert "not per TESS sector" in page
 

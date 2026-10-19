@@ -45,3 +45,53 @@ def lightcurve_with_transits(rng):
         flux_err=np.full(time.size, 2e-4),
         provenance={"sector": 1, "time_unit": "BTJD"},
     )
+
+
+@pytest.fixture(scope="session")
+def pi_men_app(tmp_path_factory):
+    """The app built once per session from the committed pi Men run and the discovery catalogue, with the archive
+    query refused (no network). Shared by every module that reads the built site; tests must not write into it."""
+    from pathlib import Path
+
+    import exoplan.docket as dm
+    from exoplan.app import build_app
+
+    keep = dm.query_archive
+    dm.query_archive = lambda *a, **k: (_ for _ in ()).throw(ConnectionError("test"))
+    try:
+        return build_app(Path("runs/tess-pi-men-s1"), tmp_path_factory.mktemp("pimen") / "app", title="t",
+                         catalog_path="docs/discoveries/catalog.json")
+    finally:
+        dm.query_archive = keep
+
+
+def _synthetic_run(out, *, seed, target, name):
+    """A 26-day synthetic TESS run (six 2500 ppm transits every 4 days) through the pipeline with two Probes."""
+    from exoplan.config import RunConfig
+    from exoplan.pipeline import run_pipeline
+    from exoplan.reviewers.simulated import SimulatedVolunteer
+
+    rng = np.random.default_rng(seed)
+    time = np.arange(0.0, 26.0, 10 / 1440)
+    flux = 1 + rng.normal(0, 2e-4, time.size)
+    for k in range(6):
+        centre = 2.5 + 4.0 * k
+        flux -= 2500e-6 * ((time > centre - 0.125) & (time < centre + 0.125))
+    lc = LightCurve(target=target, mission="TESS", time=time, flux=flux, flux_err=np.full(time.size, 2e-4),
+                    provenance={"sector": 1, "time_unit": "BTJD"})
+    reviewers = [SimulatedVolunteer("vol-a", snr_threshold=4.5, miss_probability=0.0, seed=1),
+                 SimulatedVolunteer("vol-b", snr_threshold=5.0, miss_probability=0.0, seed=2)]
+    run_pipeline(RunConfig(name=name, subject_days=13.0, min_points=100, bin_minutes=10.0), [lc], reviewers, out)
+    return out
+
+
+@pytest.fixture(scope="session")
+def app_run(tmp_path_factory):
+    """The synthetic run the app and plate tests read (built once per session; tests must not write into it)."""
+    return _synthetic_run(tmp_path_factory.mktemp("apprun"), seed=11, target="TIC TEST-3", name="app")
+
+
+@pytest.fixture(scope="session")
+def story_run(tmp_path_factory):
+    """The synthetic run the story, methods, galaxy and round-6/7 tests read (built once per session)."""
+    return _synthetic_run(tmp_path_factory.mktemp("storyrun"), seed=5, target="TIC STORY-1", name="story")

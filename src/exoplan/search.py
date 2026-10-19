@@ -142,7 +142,10 @@ FAP_BLOCK_DAYS = 0.5
 FAP_METHOD = ("block bootstrap: the detected box is removed, the residuals are cut into {block:g}-day blocks and "
               "shuffled, and BLS reruns on each of {n:,} copies; p = (k + 1)/(N + 1) with k copies reaching the observed "
               "SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the {n:,} null "
-              "maxima, extrapolated, indicative only")
+              "maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than "
+              "Gumbel), never given below 1e-6")
+FAP_CACHE_VERSION = 2  # part of the null-maxima cache key: bump it when the trial procedure changes
+FAP_TAIL_FLOOR = 1e-6  # the extrapolated tail is never given below this
 
 
 @dataclass(frozen=True)
@@ -159,6 +162,24 @@ def fap_label(fap: float | None, n_trials: int, bound: bool) -> str:
     if fap is None or n_trials <= 0:
         return "not computed"
     return (f"< {fap:.1e}" if bound else f"{fap:.2g}") + f" ({n_trials:,} trials)"
+
+
+def _fap_cache_key(time, residual, flux_err, params: tuple, version: int | None = FAP_CACHE_VERSION) -> str:
+    """The null-maxima cache key: the data, the grid and trial parameters, and FAP_CACHE_VERSION (None: the
+    key used before the version was added)."""
+    import hashlib
+
+    tail = params if version is None else params + (version,)
+    return hashlib.sha256(b"".join([np.ascontiguousarray(time).tobytes(), np.ascontiguousarray(residual).tobytes(),
+                                    np.ascontiguousarray(flux_err).tobytes(), repr(tail).encode()])).hexdigest()[:32]
+
+
+def fap_tail_label(tail: float | None) -> str:
+    """The Gumbel tail as it may be printed: indicative, and never below FAP_TAIL_FLOOR."""
+    if tail is None:
+        return "not computed (fewer than 100 trials)"
+    head = f"< {FAP_TAIL_FLOOR:.0e}" if tail <= FAP_TAIL_FLOOR else f"≈ {tail:.1e}"
+    return f"{head} (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)"
 
 
 def _null_maxima(args) -> list[float]:
@@ -200,13 +221,11 @@ def false_alarm_probability(
     reported from N trials. With N ≥ 100 a Gumbel fit to the null maxima gives
     an extrapolated tail value, kept separately and labelled indicative.
 
-    The null maxima are cached under ``cache_dir`` (keyed by the data, grid and
-    seed), so a re-run costs nothing; with ``workers`` > 1 the trials run in
+    The null maxima are cached under ``cache_dir`` (keyed by the data, grid,
+    seed and FAP_CACHE_VERSION), so a re-run costs nothing; with ``workers`` > 1 the trials run in
     parallel processes, each with its own fixed seed (the result does not
     depend on the number of workers).
     """
-    import hashlib
-
     time, flux = subject.time, subject.flux
     phase = (time - signal.t0 + 0.5 * signal.period) % signal.period - 0.5 * signal.period
     residual = flux + signal.depth * (np.abs(phase) <= 0.5 * signal.duration)
@@ -214,9 +233,7 @@ def false_alarm_probability(
     per_block = max(2, int(round(block_days / cadence))) if cadence > 0 else time.size
     blocks = [np.arange(i, min(i + per_block, time.size)) for i in range(0, time.size, per_block)]
     seeds = np.random.default_rng(seed).integers(0, 2**63 - 1, size=n_trials)
-    key = hashlib.sha256(b"".join([np.ascontiguousarray(time).tobytes(), np.ascontiguousarray(residual).tobytes(),
-                                   np.ascontiguousarray(subject.flux_err).tobytes(),
-                                   repr((min_period, max_period, tuple(durations), block_days, seed, n_trials)).encode()])).hexdigest()[:32]
+    key = _fap_cache_key(time, residual, subject.flux_err, (min_period, max_period, tuple(durations), block_days, seed, n_trials))
     path = Path(cache_dir) / f"{key}.json" if cache_dir else None
     null = None
     if path and path.exists():
@@ -237,7 +254,7 @@ def false_alarm_probability(
         if path:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps({"subject_id": subject.subject_id, "n_trials": n_trials, "seed": seed,
-                                        "block_days": block_days, "null_max": null}))
+                                        "block_days": block_days, "cache_version": FAP_CACHE_VERSION, "null_max": null}))
     if n_trials <= 0:
         return FapResult(float("nan"), 0, 0, False, None, "")
     arr = np.asarray(null, float)
@@ -249,7 +266,7 @@ def false_alarm_probability(
         from scipy.stats import gumbel_r
 
         loc, scale = gumbel_r.fit(finite)
-        tail = float(gumbel_r.sf(signal.snr, loc, scale))
+        tail = max(float(gumbel_r.sf(signal.snr, loc, scale)), FAP_TAIL_FLOOR)
     return FapResult(fap=float(fap), n_trials=n_trials, exceed=exceed, bound=exceed == 0, tail=tail,
                      method=FAP_METHOD.format(block=block_days, n=n_trials))
 

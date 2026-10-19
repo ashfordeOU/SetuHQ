@@ -43,16 +43,6 @@ class Injection:
         return self.t_start - pad <= t_center <= self.t_end + pad
 
 
-def trapezoid(time: np.ndarray, t_start: float, t_end: float, depth: float) -> np.ndarray:
-    """Flux deficit of a trapezoidal transit with 10 % ingress and egress."""
-    duration = t_end - t_start
-    tau = 0.1 * duration
-    ingress = np.clip((time - t_start) / tau, 0.0, 1.0)
-    egress = np.clip((t_end - time) / tau, 0.0, 1.0)
-    inside = (time >= t_start) & (time <= t_end)
-    return depth * np.minimum(ingress, egress) * inside
-
-
 def limb_darkened(time: np.ndarray, injection: Injection, *, exptime: float = 0.0) -> np.ndarray:
     """Relative flux of the injected transit: the fit's own limb-darkened model (single transit, long period)."""
     from exoplan.transitfit import inject_transit

@@ -783,7 +783,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                     ("k² (depth with no limb darkening)", f"{k_ratio ** 2 * 1e6:.0f} ppm", "[calc]"),
                     ("Model depth at the stored b", f"{depth_b:.0f} ppm", f"quadratic limb darkening u₁ = {u1:.3f}, u₂ = {u2:.3f} (Claret 2017, {pm.get('star_teff', 6037):.0f} K) [calc]"),
                     ("Model depth for a central crossing", f"{depth0:.0f} ppm", "[calc]"),
-                    ("exoplan's stored depth, lead dip", f"{dip.get('depth_ppm', 0):.0f} ppm" if dip else "—", "exoplan run, box fit (real data)"),
+                    ("exoplan's fitted depth, lead dip", f"{dip['fit_depth_ppm']:.0f} ppm" if dip and dip.get("fit_depth_ppm") else "—", "exoplan run, limb-darkened fit, mid-transit depth (real data)"),
                     ("T14 / T23", f"{t14 * 24:.2f} h / {(t23 or 0) * 24:.2f} h", f"Winn 2010 eqs. 14–15 from a/R★ = {a_rs:.2f}, b = {b_pm} [calc]; Huang 2018 publish 2.953 ± 0.047 h"),
                     ("Star", f"{cls} · ≈{row} · rgb({rgb[0]}, {rgb[1]}, {rgb[2]})", "nearest row of Mamajek's sequence; blackbody colour from the CIE 1931 fit")])}
         <p class="note">The curve is a model drawn from stored values (small-planet approximation of Mandel & Agol 2002, circular orbit), not observed data. The dots are exoplan's own stored points for its lead dip. The orbit is not to scale; its tilt is set so the planet crosses at the stored impact parameter.</p>
@@ -1389,15 +1389,15 @@ function mxDrawSystem(c, w, h, t, st){
   const gx0 = 54, gy0 = sceneH + 26, gw = w - gx0 - 18, gh = h - gy0 - 40;
   mxGlassPanel(c, 10, sceneH + 6, w - 20, h - sceneH - 12);
   const zOf = f => S.ars * Math.sqrt(Math.sin(2 * Math.PI * f) ** 2 + (S.b / S.ars) ** 2 * Math.cos(2 * Math.PI * f) ** 2);
-  const depth = 1 - mxFlux(S.b / 1, S.k, u1, u2), floor = Math.min(1 - 1.35 * Math.max(depth, 1e-5), ...(S.dip && S.dip.pts ? S.dip.pts.map(p => 1 + p[1] * 1e-6 - 0.00002) : [1]), ...(S.dip && S.dip.box ? S.dip.box.map(p => 1 + p[1] * 1e-6 - 0.00002) : [1]));
+  const depth = 1 - mxFlux(S.b / 1, S.k, u1, u2), floor = Math.min(1 - 1.35 * Math.max(depth, 1e-5), ...(S.dip && S.dip.pts ? S.dip.pts.map(p => 1 + p[1] * 1e-6 - 0.00002) : [1]), ...(S.dip && S.dip.model ? S.dip.model.map(p => 1 + p[1] * 1e-6 - 0.00002) : [1]));
   const X = f => gx0 + (f + win) / (2 * win) * gw, Y = v => gy0 + (1 - v) / (1 - floor) * gh * 0.86 + 6;
   mxAxes(c, gx0, gy0, gw, gh, {y: 'BRIGHTNESS (%)', x: 'TIME FROM MID-TRANSIT (h)'});
   for (const v of [1, 1 - depth]){ c.strokeStyle = 'rgba(255,255,255,.08)'; c.beginPath(); c.moveTo(gx0, Y(v)); c.lineTo(gx0 + gw, Y(v)); c.stroke(); mxText(c, (v * 100).toFixed(depth < 0.001 ? 3 : 2), gx0 - 6, Y(v) + 4, {size: 11, mono: true, align: 'right'}); }
   for (const hh of [-1, 0, 1]){ const f = hh * win * 0.8, xx = X(f); mxText(c, (f * P * 24).toFixed(1), xx, gy0 + gh + 13, {size: 11, mono: true, align: 'center'}); }
-  if (S.dip && S.dip.box && S.dip.box.length){
+  if (S.dip && S.dip.model && S.dip.model.length){
     c.save(); c.beginPath(); c.rect(gx0, gy0, gw, gh); c.clip();
     c.setLineDash([5, 4]); c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 1.2; c.beginPath();
-    S.dip.box.forEach((p, i) => { const x = X(p[0] / P), y = Y(1 + p[1] * 1e-6); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); c.setLineDash([]);
+    S.dip.model.forEach((p, i) => { const x = X(p[0] / P), y = Y(1 + p[1] * 1e-6); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); c.setLineDash([]);
     c.restore();
   }
   if (S.dip && S.dip.pts){
@@ -1411,7 +1411,7 @@ function mxDrawSystem(c, w, h, t, st){
   for (let i = 0; i <= 240; i++){ const f = -win + 2 * win * i / 240; if (f > upto) break; const v = mxFlux(zOf(f), S.k, u1, u2); i ? c.lineTo(X(f), Y(v)) : c.moveTo(X(f), Y(v)); }
   c.stroke();
   if (t < 0.5){ const v = mxFlux(zOf(phi), S.k, u1, u2); c.fillStyle = '#FFB340'; c.beginPath(); c.arc(X(phi), Y(v), 3.5, 0, 2 * Math.PI); c.fill(); }
-  const cap = S.dip ? 'line: model from stored values · dots: exoplan’s stored points' + (S.dip.box ? ' · dashed: stored box' : '') : 'line: model from stored values, not observed data';
+  const cap = S.dip ? 'line: model from stored values · dots: exoplan’s stored points' + (S.dip.model && S.dip.model.length ? ' · dashed: stored fit' : '') : 'line: model from stored values, not observed data';
   // On a narrow stage the key goes on its own lines in the free band under the dip, clear of the curve and the axis title.
   if (w < 600) cap.split(' · ').forEach((t, i, all) => mxText(c, t, gx0 + 6, gy0 + gh * 0.74 + i * 14 - (all.length - 2) * 7, {size: 11}));
   else mxText(c, cap, gx0 + gw, gy0 - 6, {size: 11, align: 'right'});

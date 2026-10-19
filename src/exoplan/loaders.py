@@ -96,10 +96,20 @@ def load_tess(
                     "flux_column": flux_column,
                     "time_unit": "BTJD",
                     "lightkurve_version": lk.__version__,
+                    **_file_provenance(lc),
                 },
             )
         )
     return curves
+
+
+def _file_provenance(lc) -> dict:
+    """The downloaded FITS file's name and sha256, so a later rebuild can show it read the same bytes."""
+    path = (getattr(lc, "meta", None) or {}).get("FILENAME")
+    if not path or not Path(path).exists():
+        return {}
+    digest = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    return {"file": Path(path).name, "file_sha256": digest}
 
 
 def _first_present(names: dict[str, str], candidates) -> str | None:

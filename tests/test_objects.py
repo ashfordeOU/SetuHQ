@@ -12,7 +12,7 @@ import pytest
 from exoplan import catalogue as C
 from exoplan import methods as M
 from exoplan import objects as O
-from exoplan.app import APP_JS, build_app
+from exoplan.app import APP_JS
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -24,16 +24,8 @@ STARS = set(CAT["stars"]["names"])
 
 
 @pytest.fixture(scope="module")
-def built(tmp_path_factory):
-    import exoplan.docket as dm
-
-    keep = dm.query_archive
-    dm.query_archive = lambda *a, **k: (_ for _ in ()).throw(ConnectionError("test"))
-    try:
-        return build_app(Path("runs/tess-pi-men-s1"), tmp_path_factory.mktemp("obj") / "app", title="t",
-                         catalog_path="docs/discoveries/catalog.json")
-    finally:
-        dm.query_archive = keep
+def built(pi_men_app):
+    return pi_men_app
 
 
 def _page_data(page):

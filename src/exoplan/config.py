@@ -31,7 +31,7 @@ class RunConfig:
     search: str = "subject"
     min_period: float = 0.5
     fap_trials: int = 20       # block-bootstrap trials for the periodic signal's false-alarm probability
-    fap_cache: str | None = "cache/fap"  # null maxima cached here (None: no cache)
+    fap_cache: str | None = None  # null maxima cached here (None: no cache); config files set cache/fap
     # The limb-darkened transit fit of every consensus dip (transitfit.py), and where stellar parameters
     # come from: "tic" (TESS Input Catalog via MAST, cached in cache/tic) or "none" (Sun-like LD, no ρ★ check).
     fit_transits: bool = True

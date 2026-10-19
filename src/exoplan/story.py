@@ -160,7 +160,9 @@ def story_data(run_dir: str | Path, dock: dict, feed: list[dict], calibration: d
             "status": status["key"], "status_label": status["label"], "planet": status["planet"],
             "ratio": math.sqrt(c["depth_ppm"] * 1e-6) if c["depth_ppm"] and c["depth_ppm"] > 0 else None,
             "half": half, "pts": pts,
-            "box": [[round(t - c["t_center"], 5), round(p, 1)] for t, p in c.get("box") or []],
+            # The stored limb-darkened fit of this dip, as (time from mid-dip, ppm); [] when no fit is stored.
+            "model": [[round(t - c["t_center"], 5), round(p, 1)] for t, p in c.get("model") or []],
+            "fit_depth_ppm": (c.get("fit") or {}).get("depth_ppm"), "fit_t14_hours": (c.get("fit") or {}).get("t14_hours"),
             "lanes": lanes, "who": who, "quotes": quotes, "phase": phase,
             "on_lead": c.get("signal_id") == lead.get("signal_id"),
             "verdict": verdict_text(c, status, who, cmp), "archive_line": cmp.get("line", ""),

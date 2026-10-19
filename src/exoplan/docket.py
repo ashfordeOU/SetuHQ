@@ -18,8 +18,8 @@ The dossier leads with that outcome, the feed-rule result and a known-planet
 line from the NASA Exoplanet Archive (fetched at build time and stored in the
 run directory as crossmatch.json, or stored as "not run" when offline), with a
 per-dip comparison (ΔP and nearest archive epoch offset) stored there too. Then the
-transit strip: binned flux with stored ±1σ, the box model at measured depth and
-duration (nothing is fitted), and one lane per reviewer, each labelled with its
+transit strip: binned flux with stored ±1σ, the stored limb-darkened fit drawn as a curve,
+the marked window as a shaded span, and one lane per reviewer, each labelled with its
 kind (simulated detector or Claude). Then the signal's dips, the subject in
 context, comparisons, the verdict ledger, the reviewers and provenance.
 
@@ -379,9 +379,9 @@ function niceTicks(lo, hi, n){
   return out;
 }
 
-// The transit strip: stored binned flux with stored ±1σ, the box model at the
-// measured depth and duration (c.box, built in Python, nothing fitted), and one
-// lane per reviewer on the same time axis. The consensus band runs through both.
+// The transit strip: stored binned flux with stored ±1σ, the stored limb-darkened
+// fit as a curve (c.model, computed in Python from c.fit), the marked window as a
+// shaded span, and one lane per reviewer on the same time axis. The consensus band runs through both.
 // Keyboard: with the strip focused, ← and → step through the stored bins
 // (Shift for ten), Home and End jump; the readout below is an aria-live region.
 const LANE_GUTTER = {desktop: 120, phone: 96};
@@ -407,13 +407,15 @@ function strip(c, subj, marks, decisions, wrap){
   const hasErr = Array.isArray(subj.flux_err) && subj.flux_err.length === subj.flux.length;
   const pts = [];
   subj.time.forEach((t,i) => { if (t >= t0 && t <= t1) pts.push({t, p:(subj.flux[i]-1)*1e6, e: hasErr ? subj.flux_err[i]*1e6 : null}); });
-  const depth = c.depth_ppm;
+  const model = c.model || [];
+  const fitDepth = c.fit && c.fit.depth_ppm != null ? c.fit.depth_ppm : null;
+  const depth = fitDepth != null ? fitDepth : c.depth_ppm;
   let lo = Math.min(0, -depth), hi = Math.max(0, -depth);
   for (const q of pts){ lo = Math.min(lo, q.p - (q.e||0)); hi = Math.max(hi, q.p + (q.e||0)); }
   const yr = (hi - lo) || 100; lo -= 0.22*yr; hi += 0.08*yr;
   const X = t => pl + (t-t0)/(t1-t0)*(W-pl-pr), Y = p => pt + (hi-p)/(hi-lo)*(upperBottom-pt);
   const svg = el('svg', {viewBox:`0 0 ${W} ${H}`, role:'img', class:'stripsvg',
-    'aria-label': `Transit strip for ${c.candidate_id}: ${pts.length} binned points, box model at measured depth ${fmt(depth,0)} ppm and duration ${fmt(c.duration_hours,2)} h, ${names.length} reviewer lanes (${reviewerSummary(names)})`}, wrap);
+    'aria-label': `Transit strip for ${c.candidate_id}: ${pts.length} binned points, ${model.length ? `limb-darkened fit, depth ${fmt(depth,0)} ppm` : `no transit fit stored; measured depth ${fmt(depth,0)} ppm`}, marked window ${fmt(c.duration_hours,2)} h, ${names.length} reviewer lanes (${reviewerSummary(names)})`}, wrap);
   svg.style.height = H + 'px';
   const fs = 11;  // no UI text below 11 px, on a phone too
   const T = (x, y, s, a='start', cls='') => { const t = tx(svg, x, y, s, a, cls); t.style.fontSize = fs + 'px'; return t; };
@@ -440,12 +442,10 @@ function strip(c, subj, marks, decisions, wrap){
     if (q.e !== null) el('line', {x1:X(q.t), x2:X(q.t), y1:Y(q.p-q.e), y2:Y(q.p+q.e), stroke:'var(--ink)', opacity:.45}, svg);
     el('circle', {cx:X(q.t), cy:Y(q.p), r:narrow ? 2 : 2.6, fill:'var(--ink)'}, svg);
   }
-  const box = c.box || [];
-  if (box.length){
-    let d = `M${X(t0).toFixed(1)},${Y(0).toFixed(1)}`;
-    for (const [t, p] of box) d += `L${X(t).toFixed(1)},${Y(p).toFixed(1)}`;
-    d += `L${X(t1).toFixed(1)},${Y(0).toFixed(1)}`;
-    el('path', {d, fill:'none', stroke:'var(--fit)', 'stroke-width':1.8}, svg);
+  if (model.length){
+    let d = '';
+    model.forEach(([t, p], i) => { d += `${i ? 'L' : 'M'}${X(t).toFixed(1)},${Y(p).toFixed(1)}`; });
+    el('path', {d, fill:'none', stroke:'var(--fit)', 'stroke-width':1.8, 'class':'fitline'}, svg);
   }
   const xd = X(c.t_end) + (narrow ? 8 : 12), y0 = Y(0), yd = Y(-depth);
   el('line', {x1:xd, x2:xd, y1:y0, y2:yd, stroke:'var(--ink)'}, svg);
@@ -751,7 +751,7 @@ function renderDossier(){
       <div class="sigout">signal: ${outBadge(s.outcome)}</div>
     </div>
     ${sec('strip', 'Transit strip', 'stored measurements only · nothing is fitted · <kbd>s</kbd> collapses', `<div class="hero-wrap strip" id="strip" tabindex="0" role="group" aria-label="Transit strip for ${esc(c.candidate_id)}. Use left and right arrow keys to step through the stored bins, Shift for ten, Home and End for the ends."></div>
-      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>box model at measured depth and duration</span><span><i class="k-band"></i>consensus window</span><span><i class="k-lane"></i>reviewer marks, one lane each · SEN = Sentinel (Claude model, Anthropic; not a person), PRB = Probe (deterministic matched-filter detector; not a person)</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
+      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>${c.model && c.model.length ? 'limb-darkened fit (stored)' : 'no transit fit stored'}</span><span><i class="k-band"></i>marked window (consensus)</span><span><i class="k-lane"></i>reviewer marks, one lane each · SEN = Sentinel (Claude model, Anthropic; not a person), PRB = Probe (deterministic matched-filter detector; not a person)</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
       <p class="scope">${scopeNote(c)}</p>`)}
     <div class="facts">
       <div><span>mid-time</span>${fmt(c.t_center,3)} ${esc(c.time_unit)}</div>
@@ -896,15 +896,28 @@ if (first) select(first, false); else renderDossier();
 """
 
 
-def box_model(row: dict) -> list[list[float]]:
-    """Box model at measured depth and duration, as (time, ppm) vertices.
+def fit_model(row: dict, n: int = 241) -> list[list[float]]:
+    """The stored limb-darkened fit (``row["fit"]``, transitfit.TransitFit) drawn over the strip's window, as
+    (time, ppm) points, or [] when the dip has no fit. Nothing is re-fitted: the curve is the model at the stored
+    mid-time, k, T14, b, period and limb-darkening coefficients."""
+    import numpy as np
 
-    Zero outside the consensus window, minus the measured depth inside it.
-    Nothing is fitted: the edges are the stored ``t_start`` and ``t_end`` and the
-    level is the stored ``depth_ppm``.
-    """
-    t_start, t_end, depth = float(row["t_start"]), float(row["t_end"]), float(row["depth_ppm"])
-    return [[t_start, 0.0], [t_start, -depth], [t_end, -depth], [t_end, 0.0]]
+    from exoplan.transitfit import transit_model
+
+    fit = row.get("fit") or {}
+    need = ("t0", "k", "t14_hours", "b", "u1", "u2")
+    if any(fit.get(k) is None for k in need):
+        return []
+    t_start, t_end = float(row["t_start"]), float(row["t_end"])
+    centre, half = 0.5 * (t_start + t_end), max(4 * (t_end - t_start), 0.25)
+    t14 = fit["t14_hours"] / 24
+    period = fit.get("period_days") or max(100.0 * t14, 30.0)
+    # A coarse grid over the window, and a fine one across the transit so the rounded bottom is drawn.
+    t = np.unique(np.concatenate([np.linspace(centre - half, centre + half, n // 2),
+                                  np.clip(np.linspace(fit["t0"] - 0.6 * t14, fit["t0"] + 0.6 * t14, n // 2), centre - half, centre + half)]))
+    # The fit's reference mid-time is the epoch nearest this dip; on a periodic signal the model repeats.
+    ppm = (transit_model(t, fit["t0"], fit["k"], t14, fit["b"], period, fit["u1"], fit["u2"]) - 1) * 1e6
+    return [[round(float(a), 6), round(float(b), 2)] for a, b in zip(t, ppm)]
 
 
 # ---------- checks and the three-state outcome ----------
@@ -1491,7 +1504,8 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
         c["bls_duration_days"] = row.get("bls_duration_days")
         c["epochs"] = row.get("epochs") or []
         c["secondary_epochs"] = row.get("secondary_epochs") or []
-        c["box"] = box_model(c)
+        c["fit"] = row.get("fit") or {}
+        c["model"] = fit_model(c)
         c["mark_audit"] = row.get("mark_audit") or []
         c["count_rule"] = row.get("count_rule") or {}
         c["checks"] = vetting_checks(c)

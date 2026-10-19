@@ -4,15 +4,10 @@ import re
 import shutil
 import subprocess
 
-import numpy as np
 import pytest
 
 from exoplan import docket as docket_mod
 from exoplan.app import APP_CSS, APP_JS, app_data, build_app
-from exoplan.config import RunConfig
-from exoplan.lightcurve import LightCurve
-from exoplan.pipeline import run_pipeline
-from exoplan.reviewers import SimulatedVolunteer
 from exoplan.story import decoration, mollweide, number_words, sky_geometry
 
 
@@ -25,20 +20,8 @@ def archive_unreachable(monkeypatch):
 
 
 @pytest.fixture(scope="module")
-def run_dir(tmp_path_factory):
-    rng = np.random.default_rng(5)
-    time = np.arange(0.0, 26.0, 10 / 1440)
-    flux = 1 + rng.normal(0, 2e-4, time.size)
-    for k in range(6):
-        centre = 2.5 + 4.0 * k
-        flux -= 2500e-6 * ((time > centre - 0.125) & (time < centre + 0.125))
-    lc = LightCurve(target="TIC STORY-1", mission="TESS", time=time, flux=flux, flux_err=np.full(time.size, 2e-4),
-                    provenance={"sector": 1, "time_unit": "BTJD"})
-    reviewers = [SimulatedVolunteer("vol-a", snr_threshold=4.5, miss_probability=0.0, seed=1),
-                 SimulatedVolunteer("vol-b", snr_threshold=5.0, miss_probability=0.0, seed=2)]
-    out = tmp_path_factory.mktemp("run")
-    run_pipeline(RunConfig(name="story", subject_days=13.0, min_points=100, bin_minutes=10.0), [lc], reviewers, out)
-    return out
+def run_dir(story_run):
+    return story_run
 
 
 @pytest.fixture
@@ -63,9 +46,10 @@ def test_dips_plot_the_stored_points_in_their_window(run_dir):
                   if d["t"] - d["half"] <= t <= d["t"] + d["half"]}
         assert {tuple(p) for p in d["pts"]} == stored and len(stored) > 10
         assert d["half"] >= 0.25 and d["ratio"] == pytest.approx(math.sqrt(d["depth_ppm"] * 1e-6))
-        # The box is the Docket's box at the stored depth and duration, shifted to the dip's mid-time.
+        # The model is the Docket's stored limb-darkened fit curve, shifted to the dip's mid-time; no box.
         c = next(c for c in dock["candidates"] if c["candidate_id"] == d["id"])
-        assert d["box"] == [[round(t - c["t_center"], 5), round(p, 1)] for t, p in c["box"]]
+        assert d["model"] == [[round(t - c["t_center"], 5), round(p, 1)] for t, p in c["model"]] and "box" not in d
+        assert d["fit_depth_ppm"] == (c["fit"] or {}).get("depth_ppm")
         # Marks are the stored spans that touch the window.
         for lane in d["lanes"]:
             for a, b in lane["spans"]:
@@ -108,10 +92,11 @@ def test_overview_labels_the_artists_impression_and_the_theatre_says_what_is_not
     assert "Artist's impression. No image of pi Men c exists." in page
     theatre = re.search(r"function txTheatre\(d\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     # The playback is the shared system view; every stored-values honesty line stays.
-    assert "impact parameter not fitted" in theatre and "Dashed: a box at the stored depth and duration, not a fit." in theatre
+    assert "impact parameter illustrative (b = 0)" in theatre and "Dashed: the limb-darkened fit stored for this dip." in theatre
+    assert "No transit fit is stored for this dip." in theatre and "box" not in theatre
     assert "Rp/R★ = √depth" in theatre and "orbit and period illustrative" in theatre
     assert "it does not confirm the dip" in theatre and "The star's surface texture is decorative." in theatre
-    assert "mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, box}" in theatre
+    assert "mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}" in theatre
     for cls in ("sweep", "reveal", "playhead"):
         assert f".{cls}{{" in APP_CSS and "10s linear infinite" in re.search(rf"\.{cls}\{{[^}}]*\}}", APP_CSS).group(0)
 

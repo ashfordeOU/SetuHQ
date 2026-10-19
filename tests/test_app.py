@@ -3,7 +3,6 @@ import re
 import shutil
 import subprocess
 
-import numpy as np
 import pytest
 
 from exoplan import docket as docket_mod
@@ -38,10 +37,6 @@ from exoplan.app import (
 )
 from exoplan.cli import main
 from exoplan.docket import NO_STORED_CROSSMATCH
-from exoplan.config import RunConfig
-from exoplan.lightcurve import LightCurve
-from exoplan.pipeline import run_pipeline
-from exoplan.reviewers import SimulatedVolunteer
 
 WIDGET_IDS = [w for w, _ in WIDGETS]
 
@@ -57,25 +52,8 @@ def archive_unreachable(monkeypatch):
 
 
 @pytest.fixture(scope="module")
-def run_dir(tmp_path_factory):
-    rng = np.random.default_rng(11)
-    time = np.arange(0.0, 26.0, 10 / 1440)
-    flux = 1 + rng.normal(0, 2e-4, time.size)
-    for k in range(6):
-        centre = 2.5 + 4.0 * k
-        flux -= 2500e-6 * ((time > centre - 0.125) & (time < centre + 0.125))
-    lc = LightCurve(
-        target="TIC TEST-3", mission="TESS", time=time, flux=flux,
-        flux_err=np.full(time.size, 2e-4), provenance={"sector": 1, "time_unit": "BTJD"},
-    )
-    reviewers = [
-        SimulatedVolunteer("vol-a", snr_threshold=4.5, miss_probability=0.0, seed=1),
-        SimulatedVolunteer("vol-b", snr_threshold=5.0, miss_probability=0.0, seed=2),
-    ]
-    config = RunConfig(name="app", subject_days=13.0, min_points=100, bin_minutes=10.0)
-    out = tmp_path_factory.mktemp("run")
-    run_pipeline(config, [lc], reviewers, out)
-    return out
+def run_dir(app_run):
+    return app_run
 
 
 @pytest.fixture

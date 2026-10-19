@@ -213,11 +213,19 @@ class TransitFit:
     rho_range: tuple | None = None
     depth_range_ppm: tuple | None = None
     t14_range_hours: tuple | None = None
+    # The period: fitted (free, near the search period) when two or more epochs are fitted jointly.
+    period_err: float | None = None
+    period_free: bool = False
+    period_search: float | None = None
+    b_upper_limit: bool = False
+    a_rs_range: tuple | None = None
+    t23_over_t14: float | None = None
+    rho_prior: tuple | None = None
 
     def as_dict(self) -> dict:
         d = asdict(self)
         d["notes"] = list(self.notes)
-        for key in ("b_range", "rho_range", "depth_range_ppm", "t14_range_hours"):
+        for key in ("b_range", "rho_range", "depth_range_ppm", "t14_range_hours", "a_rs_range", "rho_prior"):
             d[key] = list(d[key]) if d[key] is not None else None
         return d
 
@@ -228,10 +236,17 @@ def _cadence(time: np.ndarray) -> float:
 
 def fit_transit(time, flux, flux_err, *, t0: float, duration: float, depth: float, period: float | None = None,
                 u1: float, u2: float, epochs: list[float] | None = None, window: float = 2.5,
-                stellar_density: float | None = None, fit_t0: bool = True) -> TransitFit | None:
-    """Fit the limb-darkened model around one transit, or jointly around every epoch in ``epochs`` (same shape,
-    fixed period, one free reference mid-time). ``duration`` and ``depth`` are the starting guesses (days, and
-    a fraction). Returns ``None`` when there are too few points to fit."""
+                stellar_density: float | None = None, fit_t0: bool = True,
+                rho_prior: tuple[float, float] | None = None) -> TransitFit | None:
+    """Fit the limb-darkened model around one transit, or jointly around every epoch in ``epochs`` (one shape,
+    one free reference mid-time). With two or more epochs the period is free too, bounded near ``period`` (the
+    BLS period), so an approximate search period does not smear the epochs into a long, grazing shape; a/R★ and
+    ρ★ use the fitted period. ``duration`` and ``depth`` are the starting guesses (days, and a fraction).
+
+    ``rho_prior`` = (ρ★, σ) in g/cm³ adds a Gaussian prior on the transit density (the TIC value and its error):
+    the fit is then effectively in a/R★, which the prior pins, and b, a/R★ and T23/T14 become constrained.
+
+    Returns ``None`` when there are too few points to fit."""
     time, flux, flux_err = (np.asarray(a, float) for a in (time, flux, flux_err))
     centres = list(epochs) if epochs else [t0]
     half = window * max(duration, 1 / 24)
@@ -250,27 +265,42 @@ def fit_transit(time, flux, flux_err, *, t0: float, duration: float, depth: floa
         n_ep = np.round((t - t0) / period)
     else:
         n_ep = np.zeros_like(t)
+    span_n = float(np.max(np.abs(n_ep))) if n_ep.size else 0.0
+    free_p = bool(period and len(centres) >= 2 and span_n >= 1)
+    # The period may move by up to half a transit duration over the farthest epoch, and by at most 2%.
+    dp_max = min(0.5 * duration / span_n, 0.02 * period) if free_p else 0.0
     tref = float(np.median(t))
+    prior = rho_prior if (rho_prior and period and rho_prior[1] and rho_prior[1] > 0) else None
 
+    # x = [tc, k, t14, s, c0, c1, dp]: s = b/(1 + k), dp the period's offset from ``period``.
     def unpack(x):
-        tc, k, t14, s, c0, c1 = x
-        return tc, k, t14, s * (1 + k), c0, c1
+        tc, k, t14, s, c0, c1, dp = x
+        return tc, k, t14, s * (1 + k), c0, c1, dp
 
     def model(x, tt=t, nn=n_ep):
-        tc, k, t14, b, c0, c1 = unpack(x)
-        local = tt - nn * (period or 0.0)
-        return transit_model(local, tc, k, t14, b, p_model, u1, u2, exptime=cad, supersample=ss) * (c0 + c1 * (tt - tref))
+        tc, k, t14, b, c0, c1, dp = unpack(x)
+        pp = p_model + dp
+        local = tt - nn * ((period or 0.0) + dp)
+        return transit_model(local, tc, k, t14, b, pp, u1, u2, exptime=cad, supersample=ss) * (c0 + c1 * (tt - tref))
 
     def resid(x):
-        return (f - model(x)) / e
+        r = (f - model(x)) / e
+        if prior is None:
+            return r
+        _, k_, t14_, b_, _, _, dp_ = unpack(x)
+        ars_ = a_over_r(t14_, b_, k_, period + dp_)
+        rho_ = rho_star(ars_, period + dp_) if np.isfinite(ars_) and ars_ > 1 else 0.0
+        return np.append(r, (rho_ - prior[0]) / prior[1])
 
     k0 = math.sqrt(max(depth, 1e-6))
     dt = 0.5 * duration if fit_t0 else 1e-9
-    lo = [t0 - dt, 1e-3, max(2 * cad, 0.25 * duration), 0.0, 0.9, -1.0]
-    hi = [t0 + dt + 1e-9, 0.9, min(4.0 * duration, 0.45 * p_model), 0.999, 1.1, 1.0]
+    lo = [t0 - dt, 1e-3, max(2 * cad, 0.25 * duration), 0.0, 0.9, -1.0, -dp_max - 1e-12]
+    hi = [t0 + dt + 1e-9, 0.9, min(4.0 * duration, 0.45 * p_model), 0.999, 1.1, 1.0, dp_max + 1e-12]
+    lo_a, hi_a = np.asarray(lo), np.asarray(hi)
+    clip = lambda v: np.clip(np.asarray(v, float), lo_a + 1e-13, hi_a - 1e-13)
     best = None
     for s0 in (0.1, 0.45, 0.8):
-        x0 = [t0, min(max(k0, 1.1e-3), 0.85), min(max(duration, lo[2] * 1.01), hi[2] * 0.99), s0, 1.0, 0.0]
+        x0 = clip([t0, min(max(k0, 1.1e-3), 0.85), min(max(duration, lo[2] * 1.01), hi[2] * 0.99), s0, 1.0, 0.0, 0.0])
         try:
             r = least_squares(resid, x0, bounds=(lo, hi), x_scale="jac", max_nfev=400)
         except ValueError:
@@ -281,31 +311,37 @@ def fit_transit(time, flux, flux_err, *, t0: float, duration: float, depth: floa
         return None
     x = best.x
     chi2 = float(2 * best.cost)
-    dof = max(1, t.size - len(x))
+    dof = max(1, t.size - len(x) + (0 if free_p else 1))
     scale = max(1.0, chi2 / dof)
 
     def derived(xx):
-        tc_, k_, t14_, b_, _, _ = unpack(xx)
-        ars_ = a_over_r(t14_, b_, k_, period) if period else float("nan")
-        return {"depth": model_depth(k_, b_, u1, u2), "b": b_, "t14": t14_, "k": k_,
-                "rho": rho_star(ars_, period) if period and np.isfinite(ars_) and ars_ > 1 else float("nan")}
+        tc_, k_, t14_, b_, _, _, dp_ = unpack(xx)
+        pp = period + dp_ if period else None
+        ars_ = a_over_r(t14_, b_, k_, pp) if pp else float("nan")
+        return {"depth": model_depth(k_, b_, u1, u2), "b": b_, "t14": t14_, "k": k_, "ars": ars_,
+                "rho": rho_star(ars_, pp) if pp and np.isfinite(ars_) and ars_ > 1 else float("nan")}
 
     # The impact parameter trades off against a/R★ and k at modest S/N, so its error (and those of the depth,
     # duration and ρ★ that depend on it) comes from a profile: b is stepped across [0, 1 + k), the other
     # parameters refit at each step, and the 1σ range is where χ² is within 1 (× χ²ᵣ when > 1) of the best.
+    others = [0, 1, 2, 4, 5, 6]
+    lo6, hi6 = [lo[i] for i in others], [hi[i] for i in others]
+
+    def with_s(y, s_fix):
+        return [y[0], y[1], y[2], s_fix, y[3], y[4], y[5]]
+
     prof = []
     warm = list(x)
     for s_fix in np.linspace(0.0, 0.995, 15):
         def resid_s(y, s_fix=s_fix):
-            return resid([y[0], y[1], y[2], s_fix, y[3], y[4]])
-        lo5, hi5 = [lo[0], lo[1], lo[2], lo[4], lo[5]], [hi[0], hi[1], hi[2], hi[4], hi[5]]
+            return resid(with_s(y, s_fix))
         r = None
         # Start from the neighbouring step's solution; if that lands well above the best free fit, try again
         # from the best free fit's solution.
-        for y0 in ([warm[0], warm[1], warm[2], warm[4], warm[5]], [x[0], x[1], x[2], x[4], x[5]]):
-            y0 = [min(max(v, a + 1e-12), b_ - 1e-12) for v, a, b_ in zip(y0, lo5, hi5)]
+        for y0 in ([warm[i] for i in others], [x[i] for i in others]):
+            y0 = [min(max(v, a + 1e-12), b_ - 1e-12) for v, a, b_ in zip(y0, lo6, hi6)]
             try:
-                rr = least_squares(resid_s, y0, bounds=(lo5, hi5), x_scale="jac", max_nfev=300)
+                rr = least_squares(resid_s, y0, bounds=(lo6, hi6), x_scale="jac", max_nfev=300)
             except ValueError:
                 continue
             if r is None or rr.cost < r.cost:
@@ -314,13 +350,14 @@ def fit_transit(time, flux, flux_err, *, t0: float, duration: float, depth: floa
                 break
         if r is None:
             continue
-        xs = [r.x[0], r.x[1], r.x[2], s_fix, r.x[3], r.x[4]]
+        xs = with_s(r.x, s_fix)
         prof.append((float(2 * r.cost), xs))
         warm = xs
     if prof and min(c for c, _ in prof) < chi2:
         chi2, x = min(prof, key=lambda p: p[0])
         x = np.asarray(x)
-    tc, k, t14, b, _, _ = unpack(x)
+    tc, k, t14, b, _, _, dp = unpack(x)
+    p_fit = period + dp if period else None
     base = derived(x)
     near = [derived(np.asarray(xs)) for c, xs in prof if c <= chi2 + scale] + [base]
     near3 = [derived(np.asarray(xs)) for c, xs in prof if c <= chi2 + 9 * scale] + [base]
@@ -330,18 +367,23 @@ def fit_transit(time, flux, flux_err, *, t0: float, duration: float, depth: floa
         return (min(vals), max(vals)) if vals else (float("nan"), float("nan"))
 
     # Statistical errors at the best fit (the covariance, scaled by χ²ᵣ when above 1), carried to the derived
-    # quantities by finite differences; the profile's spread along b is added in quadrature below.
+    # quantities by finite differences; the profile's spread along b is added in quadrature below (a
+    # conservative treatment: the two overlap).
     try:
-        fin = least_squares(resid, np.clip(x, np.asarray(lo) + 1e-12, np.asarray(hi) - 1e-12), bounds=(lo, hi), x_scale="jac", max_nfev=50)
+        fin = least_squares(resid, clip(x), bounds=(lo, hi), x_scale="jac", max_nfev=50)
         cov = np.linalg.pinv(fin.jac.T @ fin.jac) * scale
     except (ValueError, np.linalg.LinAlgError):
         cov = np.full((len(x), len(x)), np.nan)
-    t0_err = float(np.sqrt(max(cov[0, 0], 0))) if np.isfinite(cov[0, 0]) else float("nan")
+    sd = lambda i: float(np.sqrt(max(cov[i, i], 0))) if np.isfinite(cov[i, i]) else float("nan")
+    t0_err = sd(0)
+    p_err = sd(6) if free_p else None
     keys = ("depth", "t14", "k", "b", "rho")
     vec = lambda xx: np.array([derived(xx)[kk] for kk in keys], float)
     v0 = vec(x)
     dj = np.zeros((len(keys), len(x)))
     for i in range(len(x)):
+        if hi[i] - lo[i] < 1e-9:
+            continue
         h = max(1e-8, 1e-4 * abs(x[i]) + 1e-9)
         xp = np.array(x, float)
         xp[i] = x[i] + h if x[i] + h <= hi[i] else x[i] - h
@@ -352,40 +394,83 @@ def fit_transit(time, flux, flux_err, *, t0: float, duration: float, depth: floa
     b_lo, b_hi = span("b")
     k_lo, k_hi = span("k")
     r_lo, r_hi = span("rho")
+    a_lo, a_hi = span("ars")
 
     # The V-shape test: the best fit is grazing, and the best full transit (b ≤ 1 − k) is worse by Δχ² > 9.
+    # The full-transit optimum is refined locally with b = q(1 − k), q in [0, 1], from the best full profile
+    # point; when the best fit is itself a full transit, Δχ² is 0.
     grazing = b > 1 - k
-    full = [c for c, xs in prof if xs[3] * (1 + xs[1]) <= 1 - xs[1]]
-    dchi2 = (min(full) - chi2) / scale if full else None
+    dchi2 = 0.0
+    if grazing:
+        full = [(c, xs) for c, xs in prof if xs[3] * (1 + xs[1]) <= 1 - xs[1]]
+        c_full = min((c for c, _ in full), default=None)
+        start = min(full, key=lambda p: p[0])[1] if full else list(x)
+
+        def resid_q(y):
+            tc_, k_, t14_, q_, c0_, c1_, dp_ = y
+            return resid([tc_, k_, t14_, q_ * (1 - k_) / (1 + k_), c0_, c1_, dp_])
+        kq = start[1]
+        q0 = min(max(start[3] * (1 + start[1]) / max(1 - start[1], 1e-6), 1e-6), 1 - 1e-6)
+        loq, hiq = list(lo), list(hi)
+        loq[3], hiq[3] = 0.0, 1.0
+        y0 = np.clip([start[0], kq, start[2], q0, start[4], start[5], start[6]], np.asarray(loq) + 1e-13, np.asarray(hiq) - 1e-13)
+        try:
+            rq = least_squares(resid_q, y0, bounds=(loq, hiq), x_scale="jac", max_nfev=300)
+            c_q = float(2 * rq.cost)
+            c_full = c_q if c_full is None else min(c_full, c_q)
+        except ValueError:
+            pass
+        dchi2 = max(0.0, (c_full - chi2) / scale) if c_full is not None else None
     v_shape = bool(grazing and dchi2 is not None and dchi2 > V_SHAPE_DCHI2)
-    ars = a_over_r(t14, b, k, period) if period else None
-    rho = base["rho"] if period and np.isfinite(base["rho"]) else None
+    ars = base["ars"] if p_fit and np.isfinite(base["ars"]) else None
+    rho = base["rho"] if p_fit and np.isfinite(base["rho"]) else None
     ratio = rho / stellar_density if rho is not None and stellar_density else None
     # Flag the density only when its whole 3σ range (Δχ² ≤ 9 on the b profile) lies outside the illustrative
     # band around the catalogue value: b is often weakly constrained, and a 1σ range would flag noise.
     r3_lo, r3_hi = span("rho", near3)
-    rho_flag = bool(rho is not None and stellar_density and np.isfinite(r3_lo) and np.isfinite(r3_hi)
+    rho_flag = bool(prior is None and rho is not None and stellar_density and np.isfinite(r3_lo) and np.isfinite(r3_hi)
                     and (r3_lo > RHO_BOUNDS[1] * stellar_density or r3_hi < RHO_BOUNDS[0] * stellar_density))
+    # When the 1σ set reaches b = 0 the impact parameter has only an upper limit, and a/R★ and ρ★ only ranges.
+    b_upper = bool(np.isfinite(b_lo) and b_lo <= 0.05)
     notes = []
     if not period:
         notes.append("single transit: no period, so a/R★ and ρ★ are not constrained")
+    if b_upper and prior is None:
+        notes.append(f"b < {b_hi:.2f} (1σ): b, a/R★ and ρ★ are degenerate; a/R★ {ars:.2f} is at the best-fit b, unconstrained"
+                     if ars is not None else f"b < {b_hi:.2f} (1σ)")
+    if prior is not None:
+        notes.append(f"with a Gaussian ρ★ prior {prior[0]:.3g} ± {prior[1]:.2g} g/cm³")
+
     def half_w(a, b_, key=None):
         prof_hw = float(0.5 * (b_ - a)) if np.isfinite(a) and np.isfinite(b_) else 0.0
         st = float(stat.get(key, 0.0)) if key else 0.0
         return float(math.hypot(prof_hw, st if np.isfinite(st) else 0.0))
+    t23_ = t23(t14, b, k, p_fit or p_model)
     return TransitFit(
         t0=float(tc), t0_err=t0_err, k=float(k), k_err=half_w(k_lo, k_hi, "k"),
         depth_ppm=float(base["depth"]) * 1e6, depth_err_ppm=half_w(d_lo, d_hi, "depth") * 1e6,
         t14_hours=float(t14) * 24, t14_err_hours=half_w(t_lo, t_hi, "t14") * 24,
-        b=float(b), b_err=half_w(b_lo, b_hi, "b"), t23_hours=t23(t14, b, k, p_model) * 24,
-        period_days=period, a_rs=float(ars) if ars is not None and np.isfinite(ars) else None,
+        b=float(b), b_err=half_w(b_lo, b_hi, "b"), t23_hours=t23_ * 24,
+        period_days=float(p_fit) if p_fit else None, a_rs=float(ars) if ars is not None else None,
         rho_star=rho, rho_star_err=half_w(r_lo, r_hi, "rho") if rho is not None else None, u1=u1, u2=u2,
         chi2=float(chi2), dof=int(dof), n_points=int(t.size), n_epochs=len(centres), grazing=bool(grazing),
         v_shape_dchi2=float(dchi2) if dchi2 is not None else None, v_shape=v_shape,
         rho_catalogue=stellar_density, rho_ratio=ratio, rho_flag=rho_flag, notes=tuple(notes),
         b_range=(float(b_lo), float(b_hi)), rho_range=(float(r_lo), float(r_hi)) if rho is not None else None,
         depth_range_ppm=(float(d_lo) * 1e6, float(d_hi) * 1e6), t14_range_hours=(float(t_lo) * 24, float(t_hi) * 24),
+        period_err=p_err, period_free=free_p, period_search=period, b_upper_limit=b_upper,
+        a_rs_range=(float(a_lo), float(a_hi)) if ars is not None else None,
+        t23_over_t14=float(t23_ / t14) if t14 > 0 else None, rho_prior=tuple(prior) if prior else None,
     )
+
+
+def b_text(fit: dict | TransitFit) -> str:
+    """The impact parameter as it should be printed: an upper limit when the 1σ set reaches b = 0."""
+    d = fit.as_dict() if isinstance(fit, TransitFit) else fit
+    lo_, hi_ = (d.get("b_range") or (None, None))
+    if d.get("b_upper_limit") and hi_ is not None:
+        return f"b < {hi_:.2f} (1σ)"
+    return f"b = {d['b']:.2f} ± {d['b_err']:.2f}"
 
 
 def inject_transit(time, t_mid: float, depth: float, duration: float, *, b: float = 0.3, u1: float | None = None,
