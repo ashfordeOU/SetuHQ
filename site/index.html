@@ -707,10 +707,15 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .mxctl select{min-height:44px;padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
 .mxctl input[type=range]{min-height:44px;accent-color:#0A84FF}
 .mxscrub{flex:1 1 200px;min-width:0}
+.mxtogs{display:inline-flex;flex-wrap:wrap;gap:6px}
+.mxtog{min-width:44px;justify-content:center}
+.mxtog[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
+.mxlab input[type=range]{width:140px}
 .mxdesc{font-size:13px;color:var(--ink-3);max-width:90ch}
 .mxtext{display:grid;gap:12px;max-width:100ch}
 .mxtext h3,.mxcheck h3{margin:6px 0 0;font-size:18px}
-.mxtext p{margin:0;line-height:1.6}
+.mxtext p{margin:0;line-height:1.6;overflow-wrap:anywhere}
+.mxtext{min-width:0}
 .mxnums{width:100%;border-collapse:collapse;font-size:13px}
 .mxnums th,.mxnums td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 .mxnums .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}

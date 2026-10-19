@@ -30,6 +30,10 @@ C_LIGHT = 299792458.0
 K_B = 1.380649e-23
 M_H = 1.6735575e-27
 DEFAULT_EXAMPLES = "docs/results/methods_examples.json"
+DEFAULT_JWST = "docs/results/wasp39b_jwst_spectrum.json"
+# The Atmosphere Lab's bands: centres from the atlas table (µm); Gaussian widths are chosen for display.
+LAB_BANDS = {"H2O": [(1.15, 0.05), (1.4, 0.08), (1.9, 0.10), (2.7, 0.15)], "CH4": [(1.65, 0.05), (2.4, 0.08), (3.3, 0.12)],
+             "CO2": [(4.26, 0.08)], "CO": [(4.67, 0.08)], "SO2": [(4.05, 0.05)], "Na": [(0.589, 0.006)], "K": [(0.767, 0.008)]}
 
 # Claret 2017 TESS quadratic limb-darkening coefficients (log g 4.5, [M/H] 0, PHOENIX-COND, LSM),
 # as tabulated in the atlas (VizieR J/A+A/600/A30, queried 2026-10-18).
@@ -228,6 +232,22 @@ def doppler_ratio(v_ms: float) -> float:
     return v_ms / C_LIGHT
 
 
+def atm_model(lam_um: float, base_ppm: float, dH_ppm: float, strengths: dict) -> float:
+    """The Atmosphere Lab's toy spectrum: the baseline depth plus, for each molecule switched on, its
+    strength (in scale heights) times the depth change per scale height, spread over Gaussian bands."""
+    v = base_ppm
+    for mol, n in strengths.items():
+        for c, w in LAB_BANDS[mol]:
+            v += n * dH_ppm * math.exp(-0.5 * ((lam_um - c) / w) ** 2)
+    return v
+
+
+def load_jwst(path: str | Path | None = DEFAULT_JWST) -> dict | None:
+    if path is None or not Path(path).exists():
+        return None
+    return json.loads(Path(path).read_text())
+
+
 def load_examples(path: str | Path | None = DEFAULT_EXAMPLES) -> dict:
     if path is None or not Path(path).exists():
         return {"planets": {}}
@@ -365,17 +385,15 @@ def year_chart(g: dict | None, method: str) -> str:
             f'<figcaption>{html.escape(label)} Source: {html.escape(g["source_short"])}, fetched {html.escape(g["fetched_at"][:10])}.</figcaption></figure>')
 
 
-def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = False) -> str:
+def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = False, static: bool = False) -> str:
     """A visual: a canvas with its honesty label, a text description for screen readers, and controls."""
     e = html.escape
     lab_cls = {LABEL_ILL: "ill", LABEL_MODEL: "model", LABEL_DATA: "data"}[label]
     return f"""<figure class="mxstage{' tall' if tall else ''}" data-vis="{vis}">
           <div class="mxcanvas"><canvas role="img" aria-label="{e(desc)}"></canvas></div>
           <div class="mxbadges"><span class="mxlabel {lab_cls}">{e(label)}</span><span class="mxexag" aria-live="polite"></span></div>
-          <div class="mxctl" role="group" aria-label="Animation controls">
-            <button class="btn mxplay" type="button" aria-pressed="false">Play</button>
-            <label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
-            <input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time">
+          <div class="mxctl" role="group" aria-label="{'Controls' if static else 'Animation controls'}">
+            {'' if static else '<button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time">'}
             {controls}
           </div>
           <figcaption class="mxdesc">{e(desc)}</figcaption>
@@ -505,7 +523,8 @@ def methods_meta(ex: dict, g: dict | None, story: dict, coverage: dict | None) -
             "source": ex.get("source", ""), "fetched_at": ex.get("fetched_at", ""),
             "claret": CLARET_TESS, "mamajek": MAMAJEK, "bands": BANDS,
             "lead_dip": {"id": lead, "depth_ppm": dip.get("depth_ppm"), "pts": dip.get("pts"), "half": dip.get("half")} if dip else None,
-            "molecules": [{k: m[k] for k in ("id", "name", "f", "geom")} for m in MOLECULES]}
+            "molecules": [{k: m[k] for k in ("id", "name", "f", "geom")} for m in MOLECULES],
+            "lab_bands": LAB_BANDS, "jwst": load_jwst()}
 
 
 def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None, eyebrow: str) -> str:
@@ -662,6 +681,22 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         <p class="note">HR 8799's planets on the canvas use exoplanet.eu's semi-major axes and eccentricities; their orientation on the sky is illustrative, and time is compressed. Contrasts from different instruments are measured at different separations, wavelengths and significances, so the rungs are not directly comparable.</p>
         {count_line("imaging")}
       </div>"""
+    jw = load_jwst()
+    if jw:
+        peak = max(jw["points"], key=lambda p: p[3])
+        jwst_stage = _stage("jwst", LABEL_DATA, f"JWST NIRSpec PRISM transmission spectrum of WASP-39 b: {len(jw['points'])} binned points with error bars and the paper's best-fit model; the deepest point is at {peak[0]:.2f} micrometres, the carbon dioxide band.", static=True)
+        jwst_note = (f'<p class="note"><b>Real data, cited.</b> {e(jw["citation"])}; data: <a href="{e(jw["doi"])}" rel="noopener">{e(jw["source"])}</a>, '
+                     f'licence {e(jw["licence"])}. File {e(jw["files"]["spectrum"])}, fetched {e(jw["fetched_at"][:10])}; {e(jw["note"])} The line is the paper\'s best-fit model, not exoplan\'s.</p>')
+    else:
+        jwst_stage = ""
+        jwst_note = '<p class="note">The JWST WASP-39 b spectrum (Zenodo doi:10.5281/zenodo.10161743) is not in this build, so no real spectrum is plotted.</p>'
+    lab_controls = ('<span class="mxtogs" role="group" aria-label="Molecules">' + "".join(
+        f'<button class="btn mxtog" type="button" data-mol="{m}" aria-pressed="{"true" if m in ("H2O", "CO2", "Na", "K") else "false"}">{e(lab)}</button>'
+        for m, lab in (("H2O", "H₂O"), ("CO2", "CO₂"), ("CO", "CO"), ("CH4", "CH₄"), ("SO2", "SO₂"), ("Na", "Na"), ("K", "K"))) + "</span>"
+        '<label class="mxlab"><span>Band strength</span><input type="range" data-ctl="n" min="0" max="60" value="20" aria-label="Band strength in scale heights"></label>'
+        '<label class="mxlab"><span>Temperature</span><input type="range" data-ctl="T" min="300" max="2000" step="10" value="1116" aria-label="Temperature in kelvin"></label>'
+        '<label class="mxlab"><span>μ</span><select data-ctl="mu"><option value="2.3" selected>2.3 (H₂-rich)</option><option value="4">4</option><option value="10">10</option><option value="18">18 (steam)</option><option value="44">44 (CO₂)</option></select></label>'
+        + ('<button class="btn mxtog" type="button" data-ctl="real" aria-pressed="false">Load real example: WASP-39 b</button>' if jw else ""))
     ch["spectroscopy"] = f"""
       <p class="mxlede">During a transit, a sliver of starlight passes through the planet's atmosphere at its edge. Where molecules absorb, the atmosphere is opaque higher up, so the planet looks slightly bigger at those wavelengths. <b>exoplan does not do spectroscopy</b>: this explains how JWST-class telescopes read atmospheres.</p>
       {_stage("transmission", LABEL_ILL, "A planet's limb with its thin atmosphere drawn ten times too thick, starlight passing through it. Two spectrum bars from 0.5 to 5.1 micrometres in false colour: starlight only, and during transit, which gains dark absorption bands at the real positions of sodium, potassium, water, methane, carbon dioxide and carbon monoxide as the planet crosses.", tall=True)}
@@ -673,8 +708,16 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                     ("pi Men c: per scale height, H₂-rich", f"{pm_dH_h2:.0f} ppm", f"Teq {pm_teq:.0f} K (exoplanet.eu) [calc]"),
                     ("pi Men c: per scale height, steam (μ = 18)", f"{pm_dH_steam:.1f} ppm", "[calc]"),
                     ("pi Men c: exoplan's stored transit depth", f"{dip.get('depth_ppm', 0):.0f} ppm" if dip else "—", "exoplan run (real data)")])}
-        <p class="note">The bars are schematic: band positions are real (NIST CCCBDB fundamentals and Schwieterman et al. 2018), shapes and strengths are not. False colour: infrared is invisible to the eye. JWST's benchmark WASP-39 b spectrum is public under CC-BY-4.0 (Carter et al. 2024); this page does not plot it yet.</p>
-      </div>"""
+        <p class="note">The bars are schematic: band positions are real (NIST CCCBDB fundamentals and Schwieterman et al. 2018), shapes and strengths are not. False colour: infrared is invisible to the eye.</p>
+        <h3>A real spectrum: WASP-39 b with JWST</h3>
+      </div>
+      {jwst_stage}
+      <div class="mxtext">
+        {jwst_note}
+        <h3>Atmosphere Lab</h3>
+        <p>Switch molecules on and off and change the temperature, the mean molecular weight and how strong the bands are. The lab computes the scale height and the depth per scale height from WASP-39 b's stored mass and radii, then adds each molecule's bands. It is a toy model, not a radiative-transfer calculation: band centres are real, band widths are chosen for display, and strengths are in scale heights set by the slider.</p>
+      </div>
+      {_stage("atmlab", LABEL_MODEL, "The Atmosphere Lab: a model transmission spectrum from 0.5 to 5.4 micrometres for the molecules switched on, at the chosen temperature, mean molecular weight and band strength, with WASP-39 b's JWST points overlaid when loaded.", lab_controls, static=True)}"""
     cards = "".join(_molecule_card(m) for m in MOLECULES)
     ch["molecules"] = f"""
       <p class="mxlede">Each gas absorbs at its own wavelengths. A molecule's shape sets how it vibrates, and its vibrations set where it absorbs in the infrared. No single gas proves life; a biosignature needs context.</p>
@@ -847,10 +890,11 @@ function mxSetup(fig, extra){
   fig._mx = st; mxStages.push(st);
   if (vis.init) vis.init(st);
   const play = fig.querySelector('.mxplay'), scrub = fig.querySelector('.mxscrub'), speed = fig.querySelector('.mxspeed select');
-  play.addEventListener('click', () => { mxPlay(st, !st.playing); });
-  speed.addEventListener('change', () => { st.speed = Number(speed.value); });
-  scrub.addEventListener('input', () => { st.t = Number(scrub.value) / 1000; mxDraw(st); });
-  fig.querySelectorAll('.mxctl select:not(.mxspeed select), .mxctl input[type=range]:not(.mxscrub), .mxctl .mxsize').forEach(c => {
+  st.still = !play;   // a static view (a chart or a lab): no clock, redrawn when a control changes
+  if (play) play.addEventListener('click', () => { mxPlay(st, !st.playing); });
+  if (speed) speed.addEventListener('change', () => { st.speed = Number(speed.value); });
+  if (scrub) scrub.addEventListener('input', () => { st.t = Number(scrub.value) / 1000; mxDraw(st); });
+  fig.querySelectorAll('.mxctl select:not(.mxspeed select), .mxctl input[type=range]:not(.mxscrub), .mxctl .mxsize, .mxctl .mxtog').forEach(c => {
     const ev = c.tagName === 'BUTTON' ? 'click' : (c.type === 'range' ? 'input' : 'change');
     c.addEventListener(ev, () => { if (c.tagName === 'BUTTON') c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true')); if (vis.control) vis.control(st, c); mxDraw(st); });
   });
@@ -860,6 +904,7 @@ function mxSetup(fig, extra){
   return st;
 }
 function mxPlay(st, on){
+  if (st.still) return;
   st.playing = on;
   const b = st.fig.querySelector('.mxplay'); b.textContent = on ? 'Pause' : 'Play'; b.setAttribute('aria-pressed', String(on));
   mxKick(st);
@@ -884,7 +929,7 @@ function mxDraw(st){
   st.vis.draw(c, w, h, st.t, st);
   const ex = st.fig.querySelector('.mxexag'); if (ex.textContent !== st.exag) ex.textContent = st.exag;
   ex.hidden = !st.exag;
-  const sc = st.fig.querySelector('.mxscrub'); if (document.activeElement !== sc) sc.value = Math.round(st.t * 1000);
+  const sc = st.fig.querySelector('.mxscrub'); if (sc && document.activeElement !== sc) sc.value = Math.round(st.t * 1000);
 }
 // Shown or hidden with its chapter: only the open chapter's stages run. Under reduced motion nothing
 // plays by itself; each stage shows its key frame and plays only when asked.
@@ -1307,28 +1352,73 @@ MXV.transmission = {key: 0.5, period: 12, draw(c, w, h, t, st){
   const L0 = 0.5, L1 = 5.1, bx = 24, bw = w - 48, X = l => bx + (l - L0) / (L1 - L0) * bw;
   const bar = (y, label, absorb) => {
     const g = c.createLinearGradient(bx, 0, bx + bw, 0); for (const [l, col] of MX_RAMP) g.addColorStop(Math.max(0, Math.min(1, (l - L0) / (L1 - L0))), col);
-    c.fillStyle = g; c.fillRect(bx, y, bw, 28);
-    if (absorb > 0) for (const [mol, l] of MX.bands){ const wd = mol === 'Na' || mol === 'K' ? 2 : 7; c.fillStyle = `rgba(0,0,0,${0.85 * absorb})`; c.fillRect(X(l) - wd / 2, y, wd, 28); }
+    c.fillStyle = g; c.fillRect(bx, y, bw, 36);
+    if (absorb > 0) for (const [mol, l] of MX.bands){ const wd = mol === 'Na' || mol === 'K' ? 2 : 7; c.fillStyle = `rgba(0,0,0,${0.85 * absorb})`; c.fillRect(X(l) - wd / 2, y, wd, 36); }
     mxText(c, label, bx, y - 6, {size: 11, w: 600, color: '#C7C7CC', mono: true});
   };
-  const y1 = sceneH + 18, y2 = y1 + 50;
+  const y1 = sceneH + 30, y2 = y1 + 70;
   bar(y1, 'STARLIGHT ONLY', 0);
   bar(y2, 'DURING TRANSIT', over);
   let last = -1;
-  for (const [mol, l] of MX.bands){ const x = X(l); if (x - last < 24) continue; last = x; mxText(c, mol, x, y2 + 44, {size: 11, align: 'center', color: '#F5F5F7'}); }
-  for (const l of [1, 2, 3, 4, 5]) mxText(c, l + ' µm', X(l), y2 + 60, {size: 11, mono: true, align: 'center'});
-  // Schematic transit depth against wavelength: bumps at the real band positions, growing as the planet crosses.
-  const cy0 = y2 + 78, ch = h - cy0 - 26;
-  if (ch > 40){
-    mxText(c, 'TRANSIT DEPTH (schematic)', bx, cy0 - 4, {size: 11, w: 600, color: '#C7C7CC', mono: true});
-    c.strokeStyle = 'rgba(255,255,255,.12)'; c.strokeRect(bx + .5, cy0 + .5, bw, ch);
-    c.strokeStyle = '#FFB340'; c.lineWidth = 1.6; c.beginPath();
-    for (let i = 0; i <= 400; i++){ const l = L0 + (L1 - L0) * i / 400; let v = 0.15;
-      for (const [mol, lb] of MX.bands){ const wd = mol === 'Na' || mol === 'K' ? 0.008 : 0.09; v += (mol === 'CO₂' ? 0.75 : 0.45) * Math.exp(-0.5 * ((l - lb) / wd) ** 2); }
-      const y = cy0 + ch - 6 - Math.min(1, v * over) * (ch - 14); i ? c.lineTo(X(l), y) : c.moveTo(X(l), y); }
-    c.stroke();
-  }
+  for (const [mol, l] of MX.bands){ const x = X(l); if (x - last < 24) continue; last = x; mxText(c, mol, x, y2 + 54, {size: 11, align: 'center', color: '#F5F5F7'}); }
+  for (const l of [1, 2, 3, 4, 5]) mxText(c, l + ' µm', X(l), y2 + 72, {size: 11, mono: true, align: 'center'});
   mxText(c, 'false colour: infrared is invisible to the eye · schematic, band positions real', bx, h - 8, {size: 11});
+}};
+
+// ---------- a real spectrum and the Atmosphere Lab ----------
+function mxAtm(lam, base, dH, S){ let v = base; for (const m in S) for (const [c, w] of MX.lab_bands[m]) v += S[m] * dH * Math.exp(-0.5 * ((lam - c) / w) ** 2); return v; }
+function mxSpecChart(c, w, h, o){
+  // A depth-against-wavelength chart, 0.5–5.4 µm, with the band positions marked along the bottom.
+  const L0 = 0.5, L1 = 5.4, gx = 64, gy = 34, gw = w - gx - 16, gh = h - gy - 58;
+  const X = l => gx + (l - L0) / (L1 - L0) * gw, Y = v => gy + gh - (v - o.lo) / (o.hi - o.lo) * gh;
+  mxAxes(c, gx, gy, gw, gh, {y: 'TRANSIT DEPTH (ppm)', x: 'WAVELENGTH (µm)'});
+  for (let k = 0; k <= 4; k++){ const v = o.lo + (o.hi - o.lo) * k / 4; c.strokeStyle = 'rgba(255,255,255,.06)'; c.beginPath(); c.moveTo(gx, Y(v)); c.lineTo(gx + gw, Y(v)); c.stroke(); mxText(c, Math.round(v).toLocaleString('en-GB'), gx - 6, Y(v) + 4, {size: 11, mono: true, align: 'right'}); }
+  for (const l of [1, 2, 3, 4, 5]) mxText(c, l + ' µm', X(l), gy + gh + 14, {size: 11, mono: true, align: 'center'});
+  let last = -1; for (const [mol, l] of MX.bands){ const x = X(l); c.strokeStyle = 'rgba(255,255,255,.12)'; c.setLineDash([2, 4]); c.beginPath(); c.moveTo(x, gy); c.lineTo(x, gy + gh); c.stroke(); c.setLineDash([]); if (x - last < 26) continue; last = x; mxText(c, mol, x, gy + gh + 30, {size: 11, align: 'center', color: '#C7C7CC'}); }
+  return {X, Y, gx, gy, gw, gh};
+}
+function mxJwstPoints(c, A, J){
+  c.strokeStyle = 'rgba(100,210,255,.8)'; c.fillStyle = '#64D2FF'; c.lineWidth = 1;
+  for (const [l, lo, hi, d, e] of J.points){ const x = A.X(l), y = A.Y(d);
+    c.beginPath(); c.moveTo(x, A.Y(d - e)); c.lineTo(x, A.Y(d + e)); c.moveTo(A.X(lo), y); c.lineTo(A.X(hi), y); c.stroke();
+    c.beginPath(); c.arc(x, y, 2.6, 0, 2 * Math.PI); c.fill(); }
+}
+MXV.jwst = {key: 0, period: 1, draw(c, w, h, t, st){
+  const J = MX.jwst; if (!J) return;
+  const ds = J.points.map(p => p[3]), lo = Math.min(...ds) - 400, hi = Math.max(...ds) + 400;
+  const A = mxSpecChart(c, w, h, {lo, hi});
+  c.strokeStyle = '#FFB340'; c.lineWidth = 1.4; c.beginPath(); let on = false;
+  for (const [l, d] of J.model){ if (l < 0.5 || l > 5.4) continue; on ? c.lineTo(A.X(l), A.Y(d)) : c.moveTo(A.X(l), A.Y(d)); on = true; } c.stroke();
+  mxJwstPoints(c, A, J);
+  const cap = `dots: JWST NIRSpec PRISM, ${J.licence} · line: the paper's best-fit model`;
+  mxText(c, 'WASP-39 b', A.gx + 8, A.gy + 16, {size: 13, w: 600, color: '#F5F5F7'});
+  if (w < 600) mxText(c, cap, A.gx + 8, A.gy + 32, {size: 11}); else mxText(c, cap, A.gx + A.gw, A.gy - 6, {size: 11, align: 'right'});
+}};
+MXV.atmlab = {key: 0, period: 1, init(st){
+  const w = MX.examples['WASP-39 b'] || {};
+  st.opt.lab = {mols: {H2O: 1, CO2: 1, Na: 1, K: 1}, n: 2, T: 1116, mu: 2.3, real: false, p: w};
+}, control(st, el){
+  const L = st.opt.lab;
+  if (el.dataset.mol){ const on = el.getAttribute('aria-pressed') === 'true'; if (on) L.mols[el.dataset.mol] = 1; else delete L.mols[el.dataset.mol]; }
+  else if (el.dataset.ctl === 'real') L.real = el.getAttribute('aria-pressed') === 'true';
+  else if (el.dataset.ctl === 'n') L.n = Number(el.value) / 10;
+  else if (el.dataset.ctl === 'T') L.T = Number(el.value);
+  else if (el.dataset.ctl === 'mu') L.mu = Number(el.value);
+}, draw(c, w, h, t, st){
+  const L = st.opt.lab, p = L.p, kB = 1.380649e-23, mH = 1.6735575e-27;
+  const g = p.mass * MX_GM.jup / (p.radius * MX_R.jup) ** 2, H = kB * L.T / (L.mu * mH * g), Rp = p.radius * MX_R.jup, Rs = p.star_radius * MX_R.sun;
+  const dH = 2 * H * Rp / (Rs * Rs) * 1e6, base = (Rp / Rs) ** 2 * 1e6, S = {};
+  for (const m in L.mols) S[m] = L.n;
+  const vals = []; for (let i = 0; i <= 500; i++){ const l = 0.5 + 4.9 * i / 500; vals.push([l, mxAtm(l, base, dH, S)]); }
+  let lo = base - 200, hi = Math.max(...vals.map(v => v[1])) + 300;
+  if (L.real && MX.jwst){ const ds = MX.jwst.points.map(q => q[3]); lo = Math.min(lo, Math.min(...ds) - 300); hi = Math.max(hi, Math.max(...ds) + 300); }
+  const A = mxSpecChart(c, w, h, {lo, hi});
+  c.strokeStyle = '#FFB340'; c.lineWidth = 1.8; c.beginPath(); vals.forEach(([l, v], i) => i ? c.lineTo(A.X(l), A.Y(v)) : c.moveTo(A.X(l), A.Y(v))); c.stroke();
+  if (L.real && MX.jwst) mxJwstPoints(c, A, MX.jwst);
+  const narrow = w < 600;
+  mxText(c, `H = ${Math.round(H / 1000).toLocaleString('en-GB')} km · 1 H = ${Math.round(dH)} ppm` + (narrow ? '' : ` · baseline (Rp/R★)² = ${Math.round(base).toLocaleString('en-GB')} ppm`), A.gx + 8, A.gy + 16, {size: 11, mono: true, color: '#F5F5F7'});
+  const cap = L.real ? 'line: model (toy) · dots: JWST data, cited' : 'line: model (toy), not data';
+  if (narrow) mxText(c, cap, A.gx + 8, A.gy + 32, {size: 11}); else mxText(c, cap, A.gx + A.gw, A.gy - 6, {size: 11, align: 'right'});
 }};
 
 // ---------- molecules: ball-and-stick at measured geometry ----------
@@ -1438,10 +1528,15 @@ METHODS_CSS = r"""
 .mxctl select{min-height:44px;padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
 .mxctl input[type=range]{min-height:44px;accent-color:#0A84FF}
 .mxscrub{flex:1 1 200px;min-width:0}
+.mxtogs{display:inline-flex;flex-wrap:wrap;gap:6px}
+.mxtog{min-width:44px;justify-content:center}
+.mxtog[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
+.mxlab input[type=range]{width:140px}
 .mxdesc{font-size:13px;color:var(--ink-3);max-width:90ch}
 .mxtext{display:grid;gap:12px;max-width:100ch}
 .mxtext h3,.mxcheck h3{margin:6px 0 0;font-size:18px}
-.mxtext p{margin:0;line-height:1.6}
+.mxtext p{margin:0;line-height:1.6;overflow-wrap:anywhere}
+.mxtext{min-width:0}
 .mxnums{width:100%;border-collapse:collapse;font-size:13px}
 .mxnums th,.mxnums td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 .mxnums .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}

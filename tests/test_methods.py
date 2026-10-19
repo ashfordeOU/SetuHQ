@@ -311,3 +311,44 @@ def test_transit_theatre_draws_the_system_only_for_known_planet_dips(page_html):
     tx = _route(page_html, "transit")
     assert 'id="txsysfig"' in tx and '<span class="mxlabel model">Model from stored values</span>' in tx
     assert "not observed data" in tx and "this dip's stored points" in tx
+
+
+# ---------- round 9b: a real spectrum and the Atmosphere Lab ----------
+def test_jwst_spectrum_is_the_cited_public_data():
+    J = M.load_jwst()
+    assert J["licence"] == "CC-BY-4.0" and J["doi"] == "https://doi.org/10.5281/zenodo.10161743"
+    assert "Carter et al. 2024" in J["citation"] and J["files"]["spectrum"].endswith("NIRSpec_PRISM/bins_scale5.csv")
+    assert len(J["points"]) == 36 and all(p[4] > 0 and p[1] < p[0] < p[2] for p in J["points"])
+    peak = max(J["points"], key=lambda p: p[3])
+    assert 4.2 < peak[0] < 4.5  # the CO₂ band (JWST ERS Team 2023)
+    # The baseline depth is (Rp/R★)² from the catalogue's radii, within a few per cent.
+    w = EX["planets"]["WASP-39 b"]
+    base = (w["radius"] * M.R_JUP / (w["star_radius"] * M.R_SUN)) ** 2 * 1e6
+    med = sorted(p[3] for p in J["points"])[len(J["points"]) // 2]
+    assert med == pytest.approx(base, rel=0.03)
+    # The feature is a few scale heights: the CO₂ peak sits 2–5 × Δδ_H above the continuum.
+    dH = M.depth_per_scale_height(1116, 2.3, w["mass"], w["radius"], w["star_radius"]) * 1e6
+    assert 2 < (peak[3] - min(p[3] for p in J["points"])) / dH < 5
+
+
+def test_atmosphere_lab_model():
+    assert M.atm_model(3.0, 21000, 400, {}) == 21000
+    # At an isolated band centre one molecule adds exactly n scale heights.
+    assert M.atm_model(0.589, 21000, 400, {"Na": 2.5}) == pytest.approx(21000 + 2.5 * 400)
+    assert M.atm_model(4.26, 0, 1, {"CO2": 1}) == pytest.approx(1.0)
+    for mol, bands in M.LAB_BANDS.items():
+        for c, w in bands:
+            assert 0.5 < c < 5.4 and 0 < w < 0.2
+    assert {b[1] for b in M.LAB_BANDS["H2O"]} and (4.26, 0.08) in M.LAB_BANDS["CO2"] and (4.67, 0.08) in M.LAB_BANDS["CO"]
+
+
+@pytest.mark.skipif(not HAVE_NODE, reason="node is not installed")
+def test_atmosphere_lab_js_matches_python(tmp_path):
+    script = _js_prelude(EX["planets"]).replace("const D = {methods: {", "const D = {methods: {lab_bands: " + json.dumps(M.LAB_BANDS) + ", ", 1)
+    script += (M.METHODS_JS[M.METHODS_JS.index("function mxAtm("):M.METHODS_JS.index("function mxSpecChart(")]
+               + "console.log(JSON.stringify([0.589, 1.4, 2.7, 4.26, 4.6].map(l => mxAtm(l, 21000, 430, {H2O: 2, CO2: 3, Na: 1, CO: 0.5}))));")
+    f = tmp_path / "t.js"
+    f.write_text(script)
+    out = json.loads(subprocess.run(["node", str(f)], capture_output=True, text=True, check=True).stdout)
+    S = {"H2O": 2, "CO2": 3, "Na": 1, "CO": 0.5}
+    assert out == [pytest.approx(M.atm_model(l, 21000, 430, S)) for l in (0.589, 1.4, 2.7, 4.26, 4.6)]
