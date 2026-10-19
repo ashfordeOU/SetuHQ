@@ -699,6 +699,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .mxlabel.ill{color:var(--ink-2);border-color:var(--line-3)}
 .mxlabel.model{color:var(--amber);border-color:var(--amber)}
 .mxlabel.data{color:var(--green);border-color:var(--green)}
+.mxlabel.spec{color:var(--magenta);border-color:var(--magenta)}
 .mxexag{min-width:0;padding:4px 10px;border-radius:10px;font:500 11px/1.4 var(--mono);color:var(--ink);background:var(--panel-2);border:1px solid var(--line-2)}
 .mxexag[hidden],.mxexag:empty{display:none}
 .mxctl{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
@@ -707,6 +708,19 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .mxctl select{min-height:44px;padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
 .mxctl input[type=range]{min-height:44px;accent-color:#0A84FF}
 .mxscrub{flex:1 1 200px;min-width:0}
+.mxeq{display:grid;gap:10px;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.mxeqf{margin:0;font-size:16px}
+.mxterms{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px 18px}
+.mxterm{display:grid;grid-template-columns:110px 1fr 64px;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
+.mxterm input{min-height:44px;accent-color:#0A84FF;min-width:0}
+.mxpresets{display:flex;flex-wrap:wrap;gap:8px}
+.mxpresets .btn{min-height:44px}
+.mxresult{margin:0;font:600 18px var(--sans)}
+.mxknown .kn{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid}
+.kn.measured{color:var(--green);border-color:var(--green)}
+.kn.constrained{color:var(--amber);border-color:var(--amber)}
+.kn.unknown{color:var(--ink-3);border-color:var(--line-3)}
+.mxlam input{width:140px}
 .mxtogs{display:inline-flex;flex-wrap:wrap;gap:6px}
 .mxtog{min-width:44px;justify-content:center}
 .mxtog[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
@@ -791,6 +805,13 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .mxtoc ol::-webkit-scrollbar{display:none}
   .mxtoc a{white-space:nowrap}
   .mxpaper{grid-template-columns:1fr}
+  /* Numbers tables become cards on a phone: one block per row, the value left-aligned under its name. */
+  .mxnums thead{display:none}
+  .mxnums,.mxnums tbody,.mxnums tr,.mxnums th,.mxnums td{display:block;width:auto}
+  .mxnums tr{padding:10px 0;border-bottom:1px solid var(--line)}
+  .mxnums th,.mxnums td{border:0;padding:2px 0;text-align:left}
+  .mxnums .num{text-align:left;white-space:normal;font-size:15px;color:var(--ink)}
+  .mxnums td:last-child{font-size:12px}
   .mxcontrast{height:520px;padding-left:52px}
   .mxcontrast li{left:52px}
   .mxsrc a{min-height:44px}

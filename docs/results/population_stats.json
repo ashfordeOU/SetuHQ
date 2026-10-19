@@ -1,0 +1,1993 @@
+{
+"source": "The Extrasolar Planets Encyclopaedia (exoplanet.eu)",
+"fetched_at": "2026-10-18T20:53:00Z",
+"valley": {
+"rule": "planets with a stored radius and period < 100 d; 40 log bins from 0.5 to 20 Earth radii",
+"edges_re": [
+0.5,
+0.5483,
+0.6013,
+0.6594,
+0.7231,
+0.7929,
+0.8695,
+0.9535,
+1.0456,
+1.1467,
+1.2574,
+1.3789,
+1.5121,
+1.6582,
+1.8184,
+1.9941,
+2.1867,
+2.398,
+2.6296,
+2.8837,
+3.1623,
+3.4678,
+3.8028,
+4.1702,
+4.5731,
+5.0148,
+5.4993,
+6.0306,
+6.6132,
+7.2521,
+7.9527,
+8.721,
+9.5635,
+10.4874,
+11.5006,
+12.6117,
+13.8301,
+15.1662,
+16.6313,
+18.2381,
+20.0
+],
+"counts": [
+6,
+4,
+13,
+17,
+37,
+49,
+64,
+84,
+113,
+189,
+192,
+196,
+251,
+232,
+212,
+282,
+332,
+326,
+331,
+230,
+146,
+107,
+77,
+49,
+52,
+44,
+36,
+36,
+33,
+30,
+44,
+52,
+72,
+145,
+168,
+153,
+139,
+93,
+65,
+41
+],
+"n": 4742
+},
+"hz": {
+"rule": "S/S⊕ = (R★/R☉)² (Teff/5772 K)⁴ / (a/AU)², for stars of 2600–7200 K with stored Teff, radius and a; limits from Kopparapu et al. 2014 Table 1 (1 M⊕)",
+"coefficients": {
+"recent_venus": [
+1.776,
+0.0002136,
+2.533e-08,
+-1.332e-11,
+-3.097e-15
+],
+"runaway_greenhouse": [
+1.107,
+0.0001332,
+1.58e-08,
+-8.308e-12,
+-1.931e-15
+],
+"maximum_greenhouse": [
+0.356,
+6.171e-05,
+1.698e-09,
+-3.198e-12,
+-5.575e-16
+],
+"early_mars": [
+0.32,
+5.547e-05,
+1.526e-09,
+-2.874e-12,
+-5.011e-16
+]
+},
+"sample": 4680,
+"n_conservative": 170,
+"n_optimistic": 266,
+"planets": [
+{
+"name": "109 Psc b",
+"teff": 5600.0,
+"s": 0.675,
+"conservative": true,
+"radius_re": 12.91
+},
+{
+"name": "2MASS J2057+1406 b",
+"teff": 4590.0,
+"s": 0.336,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "38 Vir b",
+"teff": 6557.0,
+"s": 1.057,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "47 UMa b",
+"teff": 5892.0,
+"s": 0.379,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "55 Cnc Af",
+"teff": 5250.0,
+"s": 0.987,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "55 Cnc Bc",
+"teff": 3286.0,
+"s": 0.467,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "82 Eri d",
+"teff": 5490.0,
+"s": 0.362,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "BD+63 974 b",
+"teff": 6060.0,
+"s": 0.857,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "BEBOP-4 (AB)b",
+"teff": 5701.0,
+"s": 0.545,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "CD-41 1115 b",
+"teff": 5589.0,
+"s": 0.651,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "G 123-45 b",
+"teff": 3153.0,
+"s": 0.269,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "G 165-52 b",
+"teff": 3949.84,
+"s": 0.275,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "G 65-52 b",
+"teff": 5681.68,
+"s": 0.95,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 1061 d",
+"teff": 2953.0,
+"s": 0.617,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 2126 b",
+"teff": 4159.0,
+"s": 0.283,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 229 d",
+"teff": 3564.0,
+"s": 0.38,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 3293 d",
+"teff": 3466.0,
+"s": 0.564,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 3378 b",
+"teff": 3280.0,
+"s": 0.924,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 357 d",
+"teff": 3505.0,
+"s": 0.371,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 687 b",
+"teff": 3413.0,
+"s": 0.805,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 752 Ab",
+"teff": 3557.0,
+"s": 0.263,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 876 b",
+"teff": 3350.0,
+"s": 0.321,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 876 c",
+"teff": 3350.0,
+"s": 0.819,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "GJ 887 d",
+"teff": 3688.0,
+"s": 0.812,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "Gl 725 Bc",
+"teff": 3739.0,
+"s": 0.715,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 103891 b",
+"teff": 6072.0,
+"s": 0.554,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 104289 b",
+"teff": 6108.74,
+"s": 0.422,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 108874 b",
+"teff": 5407.0,
+"s": 1.038,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 109286 b",
+"teff": 5694.0,
+"s": 0.709,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 110833 b",
+"teff": 4960.66,
+"s": 0.605,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 114729 Ab",
+"teff": 5662.0,
+"s": 0.456,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 115517 b",
+"teff": 5632.0,
+"s": 0.962,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 11964 Ab",
+"teff": 5248.0,
+"s": 0.325,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 125612 Ab",
+"teff": 5897.0,
+"s": 0.64,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 128356 b",
+"teff": 4875.0,
+"s": 0.486,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 135872 Ab",
+"teff": 4992.0,
+"s": 0.496,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 137010 b",
+"teff": 4770.0,
+"s": 0.301,
+"conservative": true,
+"radius_re": 1.06
+},
+{
+"name": "HD 137388 b",
+"teff": 5240.0,
+"s": 0.577,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 141399 d",
+"teff": 5600.0,
+"s": 0.432,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 141937 b",
+"teff": 5925.0,
+"s": 0.526,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 142415 b",
+"teff": 5834.0,
+"s": 1.004,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 145934 Ab",
+"teff": 4899.0,
+"s": 0.952,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 147379 Ab",
+"teff": 4090.0,
+"s": 0.785,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 147513 Ab",
+"teff": 5701.0,
+"s": 0.546,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 154391 b",
+"teff": 4807.0,
+"s": 0.619,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 159868 b",
+"teff": 5534.0,
+"s": 0.712,
+"conservative": true,
+"radius_re": 13.47
+},
+{
+"name": "HD 1605 c",
+"teff": 4757.0,
+"s": 0.538,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 16175 b",
+"teff": 6022.0,
+"s": 0.898,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 163607 c",
+"teff": 5522.0,
+"s": 0.454,
+"conservative": true,
+"radius_re": 13.47
+},
+{
+"name": "HD 165155 b",
+"teff": 5426.0,
+"s": 0.552,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 16760 Ab",
+"teff": 5593.0,
+"s": 0.526,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 17674 b",
+"teff": 5904.0,
+"s": 0.756,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 18015 Ab",
+"teff": 5599.0,
+"s": 0.579,
+"conservative": true,
+"radius_re": 13.11
+},
+{
+"name": "HD 183263 Ab",
+"teff": 5888.0,
+"s": 0.684,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 188015 Ab",
+"teff": 5520.0,
+"s": 0.715,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 191939 g",
+"teff": 5427.0,
+"s": 1.058,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 196885 Ab",
+"teff": 6340.0,
+"s": 0.723,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 20367 b",
+"teff": 6128.0,
+"s": 1.132,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 208487 c",
+"teff": 6134.0,
+"s": 0.456,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 20868 b",
+"teff": 4795.0,
+"s": 0.331,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 210277 b",
+"teff": 5532.0,
+"s": 0.844,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 213240 Ab",
+"teff": 5975.0,
+"s": 0.627,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 214823 Ab",
+"teff": 5933.0,
+"s": 0.49,
+"conservative": true,
+"radius_re": 12.13
+},
+{
+"name": "HD 218566 b",
+"teff": 4820.0,
+"s": 0.761,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 219415 b",
+"teff": 4815.9,
+"s": 0.863,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 222582 Ab",
+"teff": 5662.0,
+"s": 0.672,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 224538 b",
+"teff": 6288.0,
+"s": 0.549,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 23079 b",
+"teff": 5848.0,
+"s": 0.528,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 23596 Ab",
+"teff": 5888.0,
+"s": 0.652,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 27969 b",
+"teff": 5966.0,
+"s": 0.764,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 28185 b",
+"teff": 5615.0,
+"s": 0.972,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 28254 Ab",
+"teff": 5664.0,
+"s": 0.439,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 30562 b",
+"teff": 5861.0,
+"s": 0.539,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 34445 b",
+"teff": 5836.0,
+"s": 0.462,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 34445 f",
+"teff": 5836.0,
+"s": 0.836,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 38529 Ac",
+"teff": 5697.0,
+"s": 0.414,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 4113 Ab",
+"teff": 5655.45,
+"s": 0.661,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 43197 b",
+"teff": 5508.0,
+"s": 0.98,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 45350 b",
+"teff": 5754.0,
+"s": 0.432,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 4732 Ac",
+"teff": 4959.0,
+"s": 0.751,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 564 b",
+"teff": 5902.0,
+"s": 0.774,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 65216 Ab",
+"teff": 5623.44,
+"s": 0.412,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 7199 b",
+"teff": 5386.0,
+"s": 0.378,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 73534 b",
+"teff": 4952.0,
+"s": 0.383,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 80653 c",
+"teff": 5950.0,
+"s": 0.437,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 82943 b",
+"teff": 5874.0,
+"s": 0.95,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 86264 Ab",
+"teff": 6210.0,
+"s": 0.62,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 87646 Ac",
+"teff": 5770.0,
+"s": 0.961,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 87816 c",
+"teff": 4989.0,
+"s": 0.44,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HD 9174 b",
+"teff": 5577.0,
+"s": 0.502,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HIP 56640 b",
+"teff": 4769.0,
+"s": 0.547,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HIP 57050 b",
+"teff": 3358.0,
+"s": 0.518,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HIP 65040 Ab",
+"teff": 5386.93,
+"s": 0.811,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HN Lib b",
+"teff": 3347.0,
+"s": 0.503,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "HR 8799 f",
+"teff": 7193.0,
+"s": 0.868,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "K2-288 Bb",
+"teff": 3341.0,
+"s": 0.427,
+"conservative": true,
+"radius_re": 1.7
+},
+{
+"name": "KELT-6 c",
+"teff": 6272.0,
+"s": 0.571,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "KIC 10255705 b",
+"teff": 5030.0,
+"s": 1.013,
+"conservative": true,
+"radius_re": 7.29
+},
+{
+"name": "KIC 10916675 (AB)b",
+"teff": 6874.0,
+"s": 0.841,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "KIC 4574310 (AB)b",
+"teff": 6694.16,
+"s": 0.518,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "KIC 5010054 b",
+"teff": 5930.0,
+"s": 0.895,
+"conservative": true,
+"radius_re": 6.95
+},
+{
+"name": "KIC 5094412 b",
+"teff": 5313.0,
+"s": 0.755,
+"conservative": true,
+"radius_re": 5.72
+},
+{
+"name": "KIC 6372194 b",
+"teff": 5233.0,
+"s": 0.625,
+"conservative": true,
+"radius_re": 8.29
+},
+{
+"name": "KIC 7177553 (AB)b",
+"teff": 5911.0,
+"s": 0.375,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "KIC 7821010 (AB)b",
+"teff": 6451.75,
+"s": 0.74,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "KIC 8081389 (AB)b",
+"teff": 6962.0,
+"s": 0.586,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "KIC 9591503 b",
+"teff": 6519.0,
+"s": 1.143,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "KIC 9592145 (AB)b",
+"teff": 6718.69,
+"s": 0.932,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "KIC 9662267 b",
+"teff": 5602.0,
+"s": 0.56,
+"conservative": true,
+"radius_re": 3.81
+},
+{
+"name": "KOI-1623 Bb",
+"teff": 3909.0,
+"s": 0.323,
+"conservative": true,
+"radius_re": 10.02
+},
+{
+"name": "KOI-4427 Ab",
+"teff": 3748.0,
+"s": 0.316,
+"conservative": true,
+"radius_re": 1.84
+},
+{
+"name": "KOI-4878 b",
+"teff": 6031.0,
+"s": 1.052,
+"conservative": true,
+"radius_re": 1.04
+},
+{
+"name": "Kepler-1086 Bc",
+"teff": 4484.48,
+"s": 0.545,
+"conservative": true,
+"radius_re": 2.88
+},
+{
+"name": "Kepler-1143 Ac",
+"teff": 4832.0,
+"s": 0.567,
+"conservative": true,
+"radius_re": 3.23
+},
+{
+"name": "Kepler-1229 Ab",
+"teff": 3774.0,
+"s": 0.648,
+"conservative": true,
+"radius_re": 1.34
+},
+{
+"name": "Kepler-150 f",
+"teff": 5560.0,
+"s": 0.495,
+"conservative": true,
+"radius_re": 3.64
+},
+{
+"name": "Kepler-1540 Ab",
+"teff": 4323.0,
+"s": 0.776,
+"conservative": true,
+"radius_re": 3.14
+},
+{
+"name": "Kepler-16 (AB)b",
+"teff": 4450.0,
+"s": 0.3,
+"conservative": true,
+"radius_re": 8.45
+},
+{
+"name": "Kepler-1628 Ab",
+"teff": 3869.0,
+"s": 0.79,
+"conservative": true,
+"radius_re": 6.28
+},
+{
+"name": "Kepler-1647 (AB)b",
+"teff": 6210.0,
+"s": 0.58,
+"conservative": true,
+"radius_re": 11.88
+},
+{
+"name": "Kepler-1652 b",
+"teff": 3638.0,
+"s": 0.833,
+"conservative": true,
+"radius_re": 1.6
+},
+{
+"name": "Kepler-1704 b",
+"teff": 5746.0,
+"s": 0.688,
+"conservative": true,
+"radius_re": 11.95
+},
+{
+"name": "Kepler-1708 b",
+"teff": 6157.0,
+"s": 0.601,
+"conservative": true,
+"radius_re": 9.96
+},
+{
+"name": "Kepler-174 d",
+"teff": 4880.0,
+"s": 0.429,
+"conservative": true,
+"radius_re": 2.19
+},
+{
+"name": "Kepler-186 f",
+"teff": 3755.0,
+"s": 0.26,
+"conservative": true,
+"radius_re": 1.17
+},
+{
+"name": "Kepler-1868 b",
+"teff": 4548.13,
+"s": 0.554,
+"conservative": true,
+"radius_re": 3.15
+},
+{
+"name": "Kepler-1981 Ab",
+"teff": 5883.45,
+"s": 0.992,
+"conservative": true,
+"radius_re": 9.41
+},
+{
+"name": "Kepler-22 b",
+"teff": 5596.0,
+"s": 1.012,
+"conservative": true,
+"radius_re": 2.1
+},
+{
+"name": "Kepler-283 Ac",
+"teff": 4351.0,
+"s": 0.902,
+"conservative": true,
+"radius_re": 1.82
+},
+{
+"name": "Kepler-296 Ae",
+"teff": 3544.33,
+"s": 0.681,
+"conservative": true,
+"radius_re": 1.52
+},
+{
+"name": "Kepler-296 Af",
+"teff": 3544.33,
+"s": 0.299,
+"conservative": true,
+"radius_re": 1.8
+},
+{
+"name": "Kepler-34 (AB)b",
+"teff": 5913.0,
+"s": 1.122,
+"conservative": true,
+"radius_re": 8.56
+},
+{
+"name": "Kepler-442 b",
+"teff": 4402.0,
+"s": 0.728,
+"conservative": true,
+"radius_re": 1.35
+},
+{
+"name": "Kepler-443 b",
+"teff": 4723.0,
+"s": 0.922,
+"conservative": true,
+"radius_re": 2.35
+},
+{
+"name": "Kepler-454 Ac",
+"teff": 5687.0,
+"s": 0.635,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "Kepler-47 (AB)c",
+"teff": 5636.0,
+"s": 0.864,
+"conservative": true,
+"radius_re": 4.6
+},
+{
+"name": "Kepler-62 f",
+"teff": 4925.0,
+"s": 0.421,
+"conservative": true,
+"radius_re": 1.41
+},
+{
+"name": "Kepler-68 d",
+"teff": 5793.0,
+"s": 0.821,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "LHS 1140 b",
+"teff": 3131.0,
+"s": 0.342,
+"conservative": true,
+"radius_re": 1.73
+},
+{
+"name": "LP 890-9 c",
+"teff": 2850.0,
+"s": 0.907,
+"conservative": true,
+"radius_re": 1.37
+},
+{
+"name": "Proxima Centauri b",
+"teff": 3050.0,
+"s": 0.657,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "TIC 13344668 b",
+"teff": 4444.0,
+"s": 0.723,
+"conservative": true,
+"radius_re": 10.32
+},
+{
+"name": "TOI-1736 Ac",
+"teff": 5807.0,
+"s": 0.722,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "TOI-199 Ac",
+"teff": 5255.0,
+"s": 0.722,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "TOI-2257 b",
+"teff": 3430.0,
+"s": 0.574,
+"conservative": true,
+"radius_re": 2.19
+},
+{
+"name": "TOI-2295 c",
+"teff": 5733.0,
+"s": 0.502,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "TOI-2530 b",
+"teff": 4479.0,
+"s": 0.615,
+"conservative": true,
+"radius_re": 10.7
+},
+{
+"name": "TOI-5217 Ac",
+"teff": 6140.0,
+"s": 0.736,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "TOI-561 f",
+"teff": 5326.0,
+"s": 0.469,
+"conservative": true,
+"radius_re": 2.32
+},
+{
+"name": "TOI-6267 b",
+"teff": 5700.0,
+"s": 0.611,
+"conservative": true,
+"radius_re": 4.81
+},
+{
+"name": "TOI-6478 b",
+"teff": 3230.0,
+"s": 0.416,
+"conservative": true,
+"radius_re": 4.6
+},
+{
+"name": "TOI-6559 Ab",
+"teff": 5878.0,
+"s": 0.64,
+"conservative": true,
+"radius_re": 6.17
+},
+{
+"name": "TOI-6665 b",
+"teff": 5973.0,
+"s": 0.675,
+"conservative": true,
+"radius_re": 2.77
+},
+{
+"name": "TOI-6668 b",
+"teff": 6002.0,
+"s": 0.883,
+"conservative": true,
+"radius_re": 3.45
+},
+{
+"name": "TOI-6690 Ab",
+"teff": 5599.0,
+"s": 0.402,
+"conservative": true,
+"radius_re": 2.56
+},
+{
+"name": "TOI-700 d",
+"teff": 3480.0,
+"s": 0.874,
+"conservative": true,
+"radius_re": 1.07
+},
+{
+"name": "TOI-715 b",
+"teff": 3074.0,
+"s": 0.673,
+"conservative": true,
+"radius_re": 1.55
+},
+{
+"name": "TOI-904 c",
+"teff": 3770.0,
+"s": 0.519,
+"conservative": true,
+"radius_re": 2.17
+},
+{
+"name": "TYC 3873-761-1 b",
+"teff": 5349.0,
+"s": 0.393,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "TYC 7922-716-1 b",
+"teff": 5097.0,
+"s": 0.573,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "TYC 9255-929-1 b",
+"teff": 5188.16,
+"s": 0.568,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "UCAC2 9182345 b",
+"teff": 4430.0,
+"s": 0.777,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "WASP-41 c",
+"teff": 5450.0,
+"s": 0.708,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "WASP-47 c",
+"teff": 5552.0,
+"s": 0.56,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "Wolf 1069 b",
+"teff": 3158.0,
+"s": 0.652,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "mu Ara b",
+"teff": 5700.0,
+"s": 0.655,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "nu2 CMa b",
+"teff": 4792.0,
+"s": 0.81,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "nu2 CMa c",
+"teff": 4792.0,
+"s": 0.547,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "tau1 Gru b",
+"teff": 5767.0,
+"s": 0.608,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "ups And Ad",
+"teff": 6212.0,
+"s": 0.549,
+"conservative": true,
+"radius_re": null
+},
+{
+"name": "16 Cyg Bb",
+"teff": 5766.0,
+"s": 0.339,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "BD-11 4672 c",
+"teff": 4475.0,
+"s": 1.086,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "BEBOP-3 (AB)b",
+"teff": 6033.0,
+"s": 1.144,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "DoAr 21 (AB)c",
+"teff": 5080.0,
+"s": 1.261,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "FN Lyr b",
+"teff": 6745.0,
+"s": 1.596,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "GJ 1061 c",
+"teff": 2953.0,
+"s": 1.361,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "GJ 3293 b",
+"teff": 3466.0,
+"s": 1.032,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "GJ 3323 b",
+"teff": 3159.0,
+"s": 1.18,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "GJ 3998 d",
+"teff": 3722.0,
+"s": 1.162,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "GSC 04516-00523 b",
+"teff": 4319.0,
+"s": 1.323,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "Gl 514 b",
+"teff": 3714.0,
+"s": 0.241,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HAT-P-13 c",
+"teff": 5638.0,
+"s": 1.575,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HAT-P-44 Bc",
+"teff": 5295.0,
+"s": 1.389,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 103891 c",
+"teff": 6072.0,
+"s": 1.41,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 10647 Ab",
+"teff": 6039.0,
+"s": 0.352,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 12661 b",
+"teff": 5742.0,
+"s": 1.729,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 13167 Ab",
+"teff": 5671.0,
+"s": 0.317,
+"conservative": false,
+"radius_re": 13.08
+},
+{
+"name": "HD 136118 b",
+"teff": 6095.0,
+"s": 1.79,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 137510 b",
+"teff": 6131.0,
+"s": 1.3,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 153950 b",
+"teff": 6076.0,
+"s": 1.346,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 154857 b",
+"teff": 5445.0,
+"s": 1.472,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 156312 Bb",
+"teff": 5586.0,
+"s": 1.233,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 156411 b",
+"teff": 5900.0,
+"s": 1.441,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 164509 Ab",
+"teff": 5922.0,
+"s": 1.626,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 169830 c",
+"teff": 6266.0,
+"s": 0.363,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 190228 b",
+"teff": 5176.0,
+"s": 1.122,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 196050 Ab",
+"teff": 5893.05,
+"s": 0.361,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 202206 b",
+"teff": 5764.23,
+"s": 1.64,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 2039 b",
+"teff": 5947.0,
+"s": 0.332,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 216520 c",
+"teff": 5103.0,
+"s": 1.266,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 283869 b",
+"teff": 4655.0,
+"s": 1.152,
+"conservative": false,
+"radius_re": 1.96
+},
+{
+"name": "HD 33564 b",
+"teff": 6250.0,
+"s": 1.375,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 38801 b",
+"teff": 5207.0,
+"s": 1.396,
+"conservative": false,
+"radius_re": 12.71
+},
+{
+"name": "HD 4203 b",
+"teff": 5701.0,
+"s": 1.242,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 44219 b",
+"teff": 5752.0,
+"s": 1.213,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 5319 c",
+"teff": 5052.0,
+"s": 1.454,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 5388 b",
+"teff": 6253.0,
+"s": 1.544,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 69830 d",
+"teff": 5385.0,
+"s": 1.529,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 92788 b",
+"teff": 5744.0,
+"s": 1.355,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HD 94834 Ab",
+"teff": 4798.0,
+"s": 1.122,
+"conservative": false,
+"radius_re": 13.92
+},
+{
+"name": "HIP 107772 b",
+"teff": 4006.0,
+"s": 1.25,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HIP 109600 Ab",
+"teff": 5562.0,
+"s": 1.672,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HIP 117179 b",
+"teff": 5676.42,
+"s": 1.734,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HIP 38594 Ab",
+"teff": 3969.0,
+"s": 1.337,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "HIP 41378 f",
+"teff": 6199.0,
+"s": 1.209,
+"conservative": false,
+"radius_re": 9.2
+},
+{
+"name": "HIP 67851 c",
+"teff": 4807.0,
+"s": 1.079,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "K2-18 b",
+"teff": 3457.0,
+"s": 1.059,
+"conservative": false,
+"radius_re": 2.37
+},
+{
+"name": "K2-3 d",
+"teff": 3896.0,
+"s": 1.496,
+"conservative": false,
+"radius_re": 1.46
+},
+{
+"name": "K2-332 b",
+"teff": 3315.0,
+"s": 1.154,
+"conservative": false,
+"radius_re": 2.2
+},
+{
+"name": "K2-72 e",
+"teff": 3360.47,
+"s": 1.114,
+"conservative": false,
+"radius_re": 1.29
+},
+{
+"name": "KIC 10848807 (AB)b",
+"teff": 5965.15,
+"s": 1.194,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "KIC 3338660 (AB)b",
+"teff": 6005.26,
+"s": 1.563,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "KIC 5732155 b",
+"teff": 5755.0,
+"s": 1.694,
+"conservative": false,
+"radius_re": 12.78
+},
+{
+"name": "Kepler-1058 Ab",
+"teff": 4644.0,
+"s": 1.474,
+"conservative": false,
+"radius_re": 2.11
+},
+{
+"name": "Kepler-1341 Ab",
+"teff": 4511.0,
+"s": 1.136,
+"conservative": false,
+"radius_re": 2.51
+},
+{
+"name": "Kepler-138 e",
+"teff": 3841.0,
+"s": 1.168,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "Kepler-1653 Ab",
+"teff": 4807.0,
+"s": 1.034,
+"conservative": false,
+"radius_re": 2.17
+},
+{
+"name": "Kepler-1690 b",
+"teff": 5336.5,
+"s": 1.084,
+"conservative": false,
+"radius_re": 2.81
+},
+{
+"name": "Kepler-1701 b",
+"teff": 5116.26,
+"s": 1.314,
+"conservative": false,
+"radius_re": 2.22
+},
+{
+"name": "Kepler-1840 b",
+"teff": 4679.82,
+"s": 1.2,
+"conservative": false,
+"radius_re": 2.78
+},
+{
+"name": "Kepler-26 e",
+"teff": 3914.0,
+"s": 1.136,
+"conservative": false,
+"radius_re": 2.41
+},
+{
+"name": "Kepler-296 Ad",
+"teff": 3544.33,
+"s": 1.398,
+"conservative": false,
+"radius_re": 2.08
+},
+{
+"name": "Kepler-298 d",
+"teff": 4465.0,
+"s": 1.295,
+"conservative": false,
+"radius_re": 2.5
+},
+{
+"name": "Kepler-309 c",
+"teff": 4713.0,
+"s": 1.433,
+"conservative": false,
+"radius_re": 2.51
+},
+{
+"name": "Kepler-315 c",
+"teff": 5796.0,
+"s": 1.758,
+"conservative": false,
+"radius_re": 4.15
+},
+{
+"name": "Kepler-419 c",
+"teff": 6430.0,
+"s": 1.652,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "Kepler-421 Ab",
+"teff": 5265.34,
+"s": 0.307,
+"conservative": false,
+"radius_re": 4.16
+},
+{
+"name": "Kepler-424 c",
+"teff": 5460.0,
+"s": 1.328,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "Kepler-452 b",
+"teff": 5757.0,
+"s": 1.114,
+"conservative": false,
+"radius_re": 1.63
+},
+{
+"name": "Kepler-47 (AB)d",
+"teff": 5636.0,
+"s": 1.728,
+"conservative": false,
+"radius_re": 7.04
+},
+{
+"name": "Kepler-61 Ab",
+"teff": 4017.0,
+"s": 1.237,
+"conservative": false,
+"radius_re": 2.15
+},
+{
+"name": "Kepler-62 e",
+"teff": 4925.0,
+"s": 1.191,
+"conservative": false,
+"radius_re": 1.61
+},
+{
+"name": "Kepler-725 c",
+"teff": 5293.0,
+"s": 1.07,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "Kepler-86 b",
+"teff": 5629.0,
+"s": 1.332,
+"conservative": false,
+"radius_re": 9.49
+},
+{
+"name": "Kepler-90 h",
+"teff": 6080.0,
+"s": 1.738,
+"conservative": false,
+"radius_re": 11.3
+},
+{
+"name": "Kepler-967 c",
+"teff": 5178.0,
+"s": 1.06,
+"conservative": false,
+"radius_re": 3.65
+},
+{
+"name": "L 98-59 f",
+"teff": 3415.0,
+"s": 0.936,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "LTT 1445 Ad",
+"teff": 3340.0,
+"s": 1.009,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "Luyten's Star b",
+"teff": 3382.0,
+"s": 1.222,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "Ross 128 b",
+"teff": 3192.0,
+"s": 1.471,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "Ross 318 b",
+"teff": 3450.0,
+"s": 1.087,
+"conservative": false,
+"radius_re": 1.6
+},
+{
+"name": "Ross 508 b",
+"teff": 3071.0,
+"s": 1.27,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "TOI-1266 d",
+"teff": 3600.0,
+"s": 1.166,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "TOI-2088 b",
+"teff": 4902.0,
+"s": 1.609,
+"conservative": false,
+"radius_re": 3.68
+},
+{
+"name": "TOI-2094 Ab",
+"teff": 3403.0,
+"s": 0.963,
+"conservative": false,
+"radius_re": 1.91
+},
+{
+"name": "TOI-2134 c",
+"teff": 4406.0,
+"s": 1.463,
+"conservative": false,
+"radius_re": 7.27
+},
+{
+"name": "TOI-426 c",
+"teff": 5750.0,
+"s": 1.73,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "TOI-4600 c",
+"teff": 5170.0,
+"s": 0.318,
+"conservative": false,
+"radius_re": 9.42
+},
+{
+"name": "TOI-4633 Ac",
+"teff": 5800.0,
+"s": 1.567,
+"conservative": false,
+"radius_re": 3.19
+},
+{
+"name": "TOI-6002 b",
+"teff": 3241.0,
+"s": 1.339,
+"conservative": false,
+"radius_re": 1.65
+},
+{
+"name": "TOI-6690 Ac",
+"teff": 5599.0,
+"s": 0.32,
+"conservative": false,
+"radius_re": 2.73
+},
+{
+"name": "TOI-700 e",
+"teff": 3480.0,
+"s": 1.298,
+"conservative": false,
+"radius_re": 0.95
+},
+{
+"name": "TYC 4998-437-1 b",
+"teff": 5150.0,
+"s": 0.298,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "TYC 8321-266-1 b",
+"teff": 6137.0,
+"s": 1.223,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "Wolf 1061 c",
+"teff": 3342.0,
+"s": 1.337,
+"conservative": false,
+"radius_re": null
+},
+{
+"name": "mu Ara d",
+"teff": 5700.0,
+"s": 1.738,
+"conservative": false,
+"radius_re": null
+}
+]
+}
+}

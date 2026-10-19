@@ -21,7 +21,8 @@ OUT = Path("docs/results/methods_examples.json")
 NOTABLE = Path("docs/results/notable_planets.json")
 EXAMPLES = ["51 Peg b", "pi Men c", "WASP-39 b", "HD 209458 b", "TRAPPIST-1 e", "Proxima Centauri b", "HR 8799 b",
             "HR 8799 c", "HR 8799 d", "HR 8799 e", "OGLE-2005-BLG-390L b", "Gaia-4 b", "beta Pic b", "HD 189733 Ab",
-            "K2-18 b", "GJ 896 Ab", "GJ 1214 b", "HD 80606 b", "Kepler-16 (AB)b"]
+            "K2-18 b", "GJ 896 Ab", "GJ 1214 b", "HD 80606 b", "Kepler-16 (AB)b", "TRAPPIST-1 b",
+            "Kepler-9 b", "Kepler-9 c", "TOI-700 d"]
 NUM = ["orbital_period", "semi_major_axis", "eccentricity", "inclination", "omega", "mass", "mass_sini", "radius",
        "impact_parameter", "k", "temp_calculated", "star_teff", "star_radius", "star_mass", "star_distance", "mag_v"]
 TEXT = ["star_name", "star_sp_type", "detection_type", "molecules"]

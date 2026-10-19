@@ -156,7 +156,8 @@ def test_planet_cards_never_state_an_earth_or_jupiter_radius(run_dir, catalog, t
     assert not no_radius.search(planets)
     # The Galaxy shows catalogue radii as the catalogue stores them; the run's own dips never get one.
     from exoplan.galaxy import GALAXY_JS
-    assert not no_radius.search(APP_JS.replace(GALAXY_JS, ""))
+    from exoplan.methods import METHODS_JS
+    assert not no_radius.search(APP_JS.replace(GALAXY_JS, "").replace(METHODS_JS, ""))
     assert not no_radius.search(json.dumps(data["planets"], ensure_ascii=False))
     assert "No stellar radius is stored" in planets
     for card in data["planets"]:
@@ -491,7 +492,8 @@ def test_blocked_frame_shows_a_message_and_a_link(run_dir, tmp_path):
     # About three seconds for the blob frame, then a shorter wait for the srcdoc copy, which needs no fetch.
     assert "setTimeout(() => frameLoadFailed(gen), url ? 3000 : 1500)" in APP_JS
     from exoplan.galaxy import GALAXY_JS
-    assert "6000" not in APP_JS.replace(GALAXY_JS, "")
+    from exoplan.methods import METHODS_JS
+    assert "6000" not in APP_JS.replace(GALAXY_JS, "").replace(METHODS_JS, "")
     assert ".frame[hidden]{display:none}" in APP_CSS
 
 

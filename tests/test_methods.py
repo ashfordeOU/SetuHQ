@@ -172,7 +172,7 @@ def test_every_chapter_has_a_labelled_visual_and_sources(page_html):
         assert f'href="#/methods?ch={cid}"' in sec
         for fig in re.findall(r'<figure class="mxstage.*?</figure>', art, re.S):
             label = re.search(r'<span class="mxlabel (\w+)">([^<]+)</span>', fig)
-            assert label and label.group(2) in (M.LABEL_ILL, M.LABEL_MODEL, M.LABEL_DATA)
+            assert label and label.group(2) in (M.LABEL_ILL, M.LABEL_MODEL, M.LABEL_DATA, M.LABEL_SPEC)
             assert re.search(r'<canvas role="img" aria-label="[^"]{40,}"', fig)  # a text description
             assert 'class="mxdesc"' in fig
         if cid != "history":
@@ -352,3 +352,78 @@ def test_atmosphere_lab_js_matches_python(tmp_path):
     out = json.loads(subprocess.run(["node", str(f)], capture_output=True, text=True, check=True).stdout)
     S = {"H2O": 2, "CO2": 3, "Na": 1, "CO": 0.5}
     assert out == [pytest.approx(M.atm_model(l, 21000, 430, S)) for l in (0.589, 1.4, 2.7, 4.26, 4.6)]
+
+
+
+# ---------- round 9b: timing, false positives, population, equations of life ----------
+def test_timing_and_false_positive_physics():
+    assert M.rm_amplitude(3.5, 0.157) == pytest.approx(88, rel=0.03)  # HD 189733 b, Gaudi & Winn 2007
+    assert M.rm_amplitude(4.7, 0.121) == pytest.approx(70, rel=0.03)  # HD 209458 b
+    # Thermal eclipse: k² times the Planck ratio; equal temperatures give exactly k².
+    assert M.thermal_eclipse_depth(0.1, 3000, 3000, 15) == pytest.approx(0.01)
+    assert M.planck(15, 503) / M.planck(15, 2566) == pytest.approx(
+        math.expm1(1.4387769e-2 / (15e-6 * 2566)) / math.expm1(1.4387769e-2 / (15e-6 * 503)))
+    assert M.diluted_depth(0.5, 1e-3) == pytest.approx(500e-6)
+    t14, t23 = M.transit_durations(6.2679, 13.38, 0.01703, 0.59, 87.456)
+    assert t23 / t14 == pytest.approx(0.95, abs=0.01)  # U-shaped
+    assert M.transit_durations(6.2679, 13.38, 0.01703, 1 - 0.01703 + 1e-6, 87.456)[1] is None  # grazing: no T23
+    k9 = EX["planets"]
+    assert k9["Kepler-9 c"]["orbital_period"] / k9["Kepler-9 b"]["orbital_period"] == pytest.approx(2.03, abs=0.01)
+
+
+def test_habitable_zone_and_population():
+    assert [round(M.hz_distance_au(l, 5780, 1.0), 2) for l in M.KOPPARAPU] == [0.75, 0.95, 1.68, 1.77]  # atlas H4
+    L = 1.10 ** 2 * (6037 / 5772) ** 4
+    assert (round(M.hz_distance_au("runaway_greenhouse", 6037, L), 2), round(M.hz_distance_au("maximum_greenhouse", 6037, L), 2)) == (1.13, 1.97)
+    pop = M.load_population()
+    v = pop["valley"]
+    assert sum(v["counts"]) == v["n"] and len(v["edges_re"]) == len(v["counts"]) + 1
+    assert pop["hz"]["n_conservative"] == sum(1 for p in pop["hz"]["planets"] if p["conservative"]) <= pop["hz"]["n_optimistic"]
+    for p in pop["hz"]["planets"]:
+        lo, hi = M.hz_seff("early_mars", p["teff"]), M.hz_seff("recent_venus", p["teff"])
+        assert lo * 0.999 <= p["s"] <= hi * 1.001
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("population_stats", "scripts/population_stats.py")
+    ps = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ps)
+    assert ps.KOPPARAPU == M.KOPPARAPU  # the page and the script use the same coefficients
+
+
+def test_drake_monte_carlo_is_reproducible_and_honest():
+    a, b = M.drake_mc(5000, 7), M.drake_mc(5000, 7)
+    assert a == b and M.drake_mc(5000, 8) != a
+    r = M.drake_mc()
+    assert sum(r["share"].values()) == pytest.approx(1)
+    widths = {k: (hi - lo) for k, _, lo, hi in M.DRAKE_TERMS}
+    assert r["share"]["L"] == pytest.approx(widths["L"] ** 2 / sum(w * w for w in widths.values()))
+    # The mean of log10 N is the sum of the range midpoints, so the median sits near it.
+    mid = sum((lo + hi) / 2 for _, _, lo, hi in M.DRAKE_TERMS)
+    assert r["median_log10"] == pytest.approx(mid, abs=0.3)
+    assert 0 < r["p_lt_1"] < 1 and r["p05_log10"] < r["median_log10"] < r["p95_log10"]
+
+
+@pytest.mark.skipif(not HAVE_NODE, reason="node is not installed")
+def test_drake_js_matches_python(tmp_path):
+    script = _js_prelude(EX["planets"]).replace("const D = {methods: {", "const D = {methods: {drake_terms: " + json.dumps(M.DRAKE_TERMS) + ", ", 1)
+    js = M.METHODS_JS
+    script += js[js.index("function mxRand("):js.index("function mxSetup(")] + js[js.index("function mxDrakeMC("):js.index("MXV.drake = ")]
+    script += "const r = mxDrakeMC(20000, 42, 10); console.log(JSON.stringify({median: r.median, p05: r.p05, p95: r.p95, pLt1: r.pLt1, share: r.share}));"
+    f = tmp_path / "t.js"
+    f.write_text(script)
+    out = json.loads(subprocess.run(["node", str(f)], capture_output=True, text=True, check=True).stdout)
+    py = M.drake_mc()
+    assert out["median"] == pytest.approx(py["median_log10"], abs=1e-9) and out["pLt1"] == py["p_lt_1"]
+    assert out["p05"] == pytest.approx(py["p05_log10"], abs=1e-9) and out["share"] == pytest.approx(py["share"])
+
+
+def test_new_chapters_state_their_limits(page_html):
+    sec = _route(page_html, "methods")
+    assert "speculative frameworks, not predictions" in sec and 'class="mxlabel spec">Speculative model' in sec
+    assert "raw catalogue counts" in sec and "not occurrence rates" in sec
+    assert "necessary, not sufficient" in sec and "drawn ten times deeper" in sec
+    for flag in ("odd_even_mismatch", "secondary_eclipse", "low_snr", "too_short", "edge_event", "insufficient_points"):
+        assert f"<code>{flag}</code>" in sec
+    import exoplan.vet as vet
+    src = Path(vet.__file__).read_text()
+    for flag in ("odd_even_mismatch", "secondary_eclipse", "low_snr", "too_short", "edge_event", "insufficient_points"):
+        assert f'"{flag}"' in src  # the page names flags vet.py really raises

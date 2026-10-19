@@ -242,6 +242,81 @@ def atm_model(lam_um: float, base_ppm: float, dH_ppm: float, strengths: dict) ->
     return v
 
 
+def rm_amplitude(vsini_kms: float, k: float) -> float:
+    """Rossiter–McLaughlin semi-amplitude, K_R ≈ V sin I · k² (Gaudi & Winn 2007, eq. 6), in m/s."""
+    return vsini_kms * 1000 * k * k
+
+
+def planck(lam_um: float, T: float) -> float:
+    lam = lam_um * 1e-6
+    return 1 / (lam ** 5 * (math.exp(1.4387769e-2 / (lam * T)) - 1))
+
+
+def thermal_eclipse_depth(k: float, t_day: float, t_star: float, lam_um: float) -> float:
+    """Occultation depth with blackbodies: δ ≈ k² B_λ(T_day)/B_λ(T★) (Winn 2010)."""
+    return k * k * planck(lam_um, t_day) / planck(lam_um, t_star)
+
+
+def diluted_depth(depth: float, f_target: float) -> float:
+    """δ_obs = δ_true · F_target / F_total."""
+    return depth * f_target
+
+
+KOPPARAPU = {"recent_venus": (1.776, 2.136e-4, 2.533e-8, -1.332e-11, -3.097e-15),
+             "runaway_greenhouse": (1.107, 1.332e-4, 1.58e-8, -8.308e-12, -1.931e-15),
+             "maximum_greenhouse": (0.356, 6.171e-5, 1.698e-9, -3.198e-12, -5.575e-16),
+             "early_mars": (0.32, 5.547e-5, 1.526e-9, -2.874e-12, -5.011e-16)}
+
+
+def hz_seff(limit: str, teff: float) -> float:
+    """Kopparapu et al. 2014 (1 M⊕): S_eff = S☉ + a T + b T² + c T³ + d T⁴, T = Teff − 5780 K."""
+    s0, a, b, c, d = KOPPARAPU[limit]
+    t = teff - 5780.0
+    return s0 + a * t + b * t ** 2 + c * t ** 3 + d * t ** 4
+
+
+def hz_distance_au(limit: str, teff: float, lum_lsun: float) -> float:
+    return math.sqrt(lum_lsun / hz_seff(limit, teff))
+
+
+# Equations of life: the Drake terms' log10 ranges for the Monte Carlo, after Sandberg, Drexler & Ord 2018
+# (log-uniform priors). Their f_l uses a log-normal abiogenesis-rate model; the page uses a log-uniform
+# stand-in from 10^-k to 1 with k on a slider, and says so.
+DRAKE_TERMS = [("R", "R★ (stars formed per year)", 0, 2), ("fp", "f_p", -1, 0), ("ne", "n_e", -1, 0), ("fl", "f_l", -10, 0),
+               ("fi", "f_i", -3, 0), ("fc", "f_c", -2, 0), ("L", "L (years)", 2, 10)]
+
+
+def lcg(seed: int):
+    """The page's seeded generator (also mxRand in the page): s ← (1664525 s + 1013904223) mod 2³²."""
+    s = seed & 0xFFFFFFFF or 1
+    while True:
+        s = (s * 1664525 + 1013904223) & 0xFFFFFFFF
+        yield s / 4294967296
+
+
+def drake_mc(n: int = 20000, seed: int = 42, fl_orders: float = 10) -> dict:
+    """Monte Carlo over log-uniform term ranges: the median, the 5–95% interval and P(N < 1) of N, and each
+    term's share of the variance of log10 N (exact for independent log-uniform terms: width²/12 each)."""
+    rnd = lcg(seed)
+    ranges = [(k, lo, hi) if k != "fl" else (k, -fl_orders, 0) for k, _, lo, hi in DRAKE_TERMS]
+    logs = []
+    for _ in range(n):
+        logs.append(sum(lo + next(rnd) * (hi - lo) for _, lo, hi in ranges))
+    logs.sort()
+    q = lambda f: logs[min(n - 1, int(f * n))]  # noqa: E731
+    var = {k: (hi - lo) ** 2 / 12 for k, lo, hi in ranges}
+    tot = sum(var.values())
+    return {"median_log10": q(0.5), "p05_log10": q(0.05), "p95_log10": q(0.95),
+            "p_lt_1": sum(1 for v in logs if v < 0) / n, "share": {k: v / tot for k, v in var.items()}}
+
+
+def load_population(path: str | Path | None = None) -> dict | None:
+    path = path or DEFAULT_POPULATION
+    if not Path(path).exists():
+        return None
+    return json.loads(Path(path).read_text())
+
+
 def load_jwst(path: str | Path | None = DEFAULT_JWST) -> dict | None:
     if path is None or not Path(path).exists():
         return None
@@ -325,10 +400,32 @@ SOURCES = {
     "nobel": ("Royal Swedish Academy of Sciences, Nobel Prize in Physics 2019", "https://www.kva.se/en/news/nobelpriset-i-fysik-2019-2/"),
     "kovacs": ("Kovács et al. 2002, A&A 391, 369 (BLS)", "https://doi.org/10.1051/0004-6361:20020802"),
     "gilliland": ("Gilliland et al. 2011, stellar noise in Kepler", "https://arxiv.org/abs/1107.5207"),
+    "licquia": ("Licquia & Newman 2015, ApJ 806, 96 (Milky Way star formation rate)", "https://doi.org/10.1088/0004-637X/806/1/96"),
+    "burke15": ("Burke et al. 2015, ApJ 809, 8 (Kepler occurrence)", "https://doi.org/10.1088/0004-637X/809/1/8"),
+    "dressing15": ("Dressing & Charbonneau 2015, ApJ 807, 45 (M-dwarf occurrence)", "https://doi.org/10.1088/0004-637X/807/1/45"),
+    "bryson": ("Bryson et al. 2021, AJ 161, 36 (η⊕)", "https://doi.org/10.3847/1538-3881/abc418"),
+    "petigura": ("Petigura, Howard & Marcy 2013, PNAS 110, 19273", "https://doi.org/10.1073/pnas.1319909110"),
+    "sandberg": ("Sandberg, Drexler & Ord 2018, Dissolving the Fermi Paradox", "https://arxiv.org/abs/1806.02404"),
+    "seager18": ("Seager 2018, Int. J. Astrobiology 17, 294 (Seager equation)", "https://doi.org/10.1017/S1473550417000052"),
+    "kopparapu": ("Kopparapu et al. 2014, ApJL 787, L29 (habitable zones)", "https://doi.org/10.1088/2041-8205/787/2/L29"),
+    "fulton": ("Fulton et al. 2017, AJ 154, 109 (radius gap)", "https://doi.org/10.3847/1538-3881/aa80eb"),
+    "vaneylen": ("Van Eylen et al. 2018, MNRAS 479, 4786", "https://doi.org/10.1093/mnras/sty1783"),
+    "owen": ("Owen & Wu 2017, ApJ 847, 29 (photoevaporation)", "https://doi.org/10.3847/1538-4357/aa890a"),
+    "gupta": ("Gupta & Schlichting 2019, MNRAS 487, 24 (core-powered mass loss)", "https://doi.org/10.1093/mnras/stz1230"),
+    "fressin": ("Fressin et al. 2013, ApJ 766, 81 (Kepler false-positive rate)", "https://doi.org/10.1088/0004-637X/766/2/81"),
+    "guerrero": ("Guerrero et al. 2021, ApJS 254, 39 (TOI catalogue)", "https://doi.org/10.3847/1538-4365/abefe1"),
+    "twicken": ("Twicken et al. 2018, PASP 130, 064502 (Kepler DV tests)", "https://doi.org/10.1088/1538-3873/aab694"),
+    "holman": ("Holman et al. 2010, Science 330, 51 (Kepler-9 TTVs)", "https://doi.org/10.1126/science.1195778"),
+    "agol": ("Agol et al. 2021, PSJ 2, 1 (TRAPPIST-1)", "https://doi.org/10.3847/PSJ/abd022"),
+    "greene": ("Greene et al. 2023, Nature 618, 39 (TRAPPIST-1 b at 15 µm)", "https://doi.org/10.1038/s41586-023-05951-7"),
+    "knutson": ("Knutson et al. 2007, Nature 447, 183 (HD 189733 b map)", "https://doi.org/10.1038/nature05782"),
+    "albrecht": ("Albrecht, Dawson & Winn 2022, PASP 134, 082001 (obliquities)", "https://doi.org/10.1088/1538-3873/ac6c09"),
+    "deming05": ("Deming et al. 2005, Nature 434, 740 (first thermal emission)", "https://doi.org/10.1038/nature03507"),
 }
 LABEL_ILL = "Illustration"
 LABEL_MODEL = "Model from stored values"
 LABEL_DATA = "Real data, cited"
+LABEL_SPEC = "Speculative model"
 
 
 def _src(keys) -> str:
@@ -388,7 +485,7 @@ def year_chart(g: dict | None, method: str) -> str:
 def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = False, static: bool = False) -> str:
     """A visual: a canvas with its honesty label, a text description for screen readers, and controls."""
     e = html.escape
-    lab_cls = {LABEL_ILL: "ill", LABEL_MODEL: "model", LABEL_DATA: "data"}[label]
+    lab_cls = {LABEL_ILL: "ill", LABEL_MODEL: "model", LABEL_DATA: "data", LABEL_SPEC: "spec"}[label]
     return f"""<figure class="mxstage{' tall' if tall else ''}" data-vis="{vis}">
           <div class="mxcanvas"><canvas role="img" aria-label="{e(desc)}"></canvas></div>
           <div class="mxbadges"><span class="mxlabel {lab_cls}">{e(label)}</span><span class="mxexag" aria-live="polite"></span></div>
@@ -402,8 +499,10 @@ def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = Fal
 
 CHAPTERS = [("survey", "How a survey works"), ("transit", "Transit"), ("doppler", "Toward and away"),
             ("rv", "Radial velocity"), ("astrometry", "Astrometry"), ("microlensing", "Microlensing"),
-            ("imaging", "Blocking starlight"), ("spectroscopy", "Reading atmospheres"), ("molecules", "Molecules and life"),
-            ("history", "History and papers")]
+            ("imaging", "Blocking starlight"), ("timing", "Timing and phase"), ("falsepos", "False positives"),
+            ("spectroscopy", "Reading atmospheres"), ("molecules", "Molecules and life"), ("population", "Population"),
+            ("equations", "Equations of life"), ("history", "History and papers")]
+DEFAULT_POPULATION = "docs/results/population_stats.json"
 METHOD_OF = {"transit": "transit", "rv": "rv", "doppler": "rv", "astrometry": "astrometry", "microlensing": "microlensing",
              "imaging": "imaging"}
 
@@ -513,7 +612,7 @@ def _ex(ex: dict, name: str) -> dict:
 def methods_meta(ex: dict, g: dict | None, story: dict, coverage: dict | None) -> dict:
     """The small part of the Methods data the page's code needs: chapter ids and the stored example
     systems the animated views draw (as the catalogue gives them)."""
-    keep = ["pi Men c", "51 Peg b", "HD 80606 b", "WASP-39 b", "HR 8799 b", "HR 8799 c", "HR 8799 d", "HR 8799 e", "GJ 896 Ab",
+    keep = ["pi Men c", "51 Peg b", "HD 80606 b", "WASP-39 b", "TRAPPIST-1 b", "Kepler-9 b", "Kepler-9 c", "HR 8799 b", "HR 8799 c", "HR 8799 d", "HR 8799 e", "GJ 896 Ab",
             "Gaia-4 b", "TRAPPIST-1 e", "Proxima Centauri b"]
     notable = [n for n in (ex.get("planets") or {}) if n not in keep]
     lead = story.get("lead_dip")
@@ -524,7 +623,15 @@ def methods_meta(ex: dict, g: dict | None, story: dict, coverage: dict | None) -
             "claret": CLARET_TESS, "mamajek": MAMAJEK, "bands": BANDS,
             "lead_dip": {"id": lead, "depth_ppm": dip.get("depth_ppm"), "pts": dip.get("pts"), "half": dip.get("half")} if dip else None,
             "molecules": [{k: m[k] for k in ("id", "name", "f", "geom")} for m in MOLECULES],
-            "lab_bands": LAB_BANDS, "jwst": load_jwst()}
+            "lab_bands": LAB_BANDS, "jwst": load_jwst(),
+            "population": _pop_meta(), "drake_terms": DRAKE_TERMS, "kopparapu": KOPPARAPU}
+
+
+def _pop_meta() -> dict | None:
+    pop = load_population()
+    if not pop:
+        return None
+    return {"valley": pop["valley"], "hz": [[p["teff"], p["s"], int(p["conservative"]), p["name"], p["radius_re"]] for p in pop["hz"]["planets"]]}
 
 
 def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None, eyebrow: str) -> str:
@@ -750,7 +857,106 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
       <p class="mxlede">Key papers and milestones, summarised in our own words. Each links to its paper (DOI) and to the part of exoplan it relates to.</p>
       <ol class="mxtimeline">{hist}</ol>"""
 
+
+    # ----- timing and phase -----
+    t1b, k9b, k9c, hd189 = _ex(ex, "TRAPPIST-1 b"), _ex(ex, "Kepler-9 b"), _ex(ex, "Kepler-9 c"), _ex(ex, "HD 189733 Ab")
+    k_t1b = t1b["radius"] * R_JUP / (t1b["star_radius"] * R_SUN) if t1b else 0.087
+    occ_bb = thermal_eclipse_depth(k_t1b, 503, t1b.get("star_teff") or 2566, 15) * 1e6
+    ch["timing"] = f"""
+      <p class="mxlede">A transit is one moment in an orbit. The rest of the orbit carries information too: when transits arrive, how the planet glows as it turns, when it slips behind its star, and which half of the spinning star it covers.</p>
+      {_stage("timing", LABEL_ILL, "Four scenes. Transit timing: two planets near a 2:1 period ratio tug each other, so the inner planet's transits arrive early and late and an O−C diagram builds up. Secondary eclipse: the planet slips behind its star half an orbit after transit, a much smaller dip, drawn ten times deeper. Phase curve: a tidally locked planet shows more of its hot day side towards occultation, with its peak shifted by winds. Rossiter–McLaughlin: the planet covers the approaching and then the receding half of the rotating star, so the star's measured velocity swings during transit.",
+               '<label class="mxmode"><span>Scene</span><select><option value="ttv">Transit timing (TTV)</option><option value="eclipse">Secondary eclipse</option><option value="phase">Phase curve</option><option value="rm">Rossiter–McLaughlin</option></select></label><label class="mxlam"><span>Spin–orbit angle λ</span><input type="range" min="0" max="180" value="0" aria-label="Projected spin–orbit angle in degrees"></label>', tall=True)}
+      <div class="mxtext">
+        <h3>The numbers</h3>
+        {_num_rows([("Kepler-9 b and c periods", f"{k9b.get('orbital_period')} d and {k9c.get('orbital_period')} d", "exoplanet.eu; near 2:1, so their transits shift by minutes per orbit (Holman et al. 2010)"),
+                    ("TRAPPIST-1 b eclipse at 15 µm, measured", "861 ± 99 ppm", "JWST MIRI (Greene et al. 2023); dayside 503 K, as expected for bare rock"),
+                    ("Same, blackbody star and planet", f"{occ_bb:.0f} ppm", f"δ ≈ k² B(503 K)/B({t1b.get('star_teff', 2566):.0f} K) at 15 µm, k from exoplanet.eu radii [calc]; real analyses use a stellar model spectrum, not a blackbody"),
+                    ("HD 189733 b hot-spot offset", "16 ± 6° before opposition", "Spitzer 8 µm phase curve (Knutson et al. 2007)"),
+                    ("Rossiter–McLaughlin, HD 189733 b", f"{rm_amplitude(3.5, 0.157):.0f} m/s", "K_R ≈ V sin I · k² with V sin I = 3.5 km/s, k = 0.157 (Gaudi & Winn 2007, which lists 88 m/s) [calc]"),
+                    ("Rossiter–McLaughlin, HD 209458 b", f"{rm_amplitude(4.7, 0.121):.0f} m/s", "V sin I = 4.7 km/s, k = 0.121 (Gaudi & Winn 2007 list 70 m/s) [calc]")])}
+        <p class="note">exoplan measures each dip's time and checks the odd and even dips against each other; it does not fit timing variations, phase curves or eclipses. The secondary-eclipse depth on the canvas is drawn ten times deeper and says so; the TTV amplitude is illustrative. Spin–orbit angles span aligned, polar and retrograde orbits (Albrecht et al. 2022).</p>
+      </div>"""
+
+    # ----- false positives -----
+    ch["falsepos"] = f"""
+      <p class="mxlede">Many transit-like dips are not planets on the target star. A dip is evidence; vetting asks what else could make it. This is where exoplan's own checks live.</p>
+      {_stage("falsepos", LABEL_ILL, "Five ways to fake a planet, each with its sky geometry on a grid of TESS pixels (21 arcseconds each, drawn to scale) and the light curve it makes: an eclipsing binary with a V-shaped grazing eclipse; a background eclipsing binary diluted by the target's light; a hierarchical triple; odd and even eclipses of different depth when the period is half the true one; and an instrumental jump such as a momentum dump.",
+               '<label class="mxmode"><span>Scenario</span><select><option value="eb">Eclipsing binary (grazing, V-shaped)</option><option value="beb">Background eclipsing binary</option><option value="heb">Hierarchical triple</option><option value="oddeven">Odd and even depths differ</option><option value="sys">Systematics</option></select></label>', tall=True)}
+      <div class="mxtext">
+        <h3>How often, and what exoplan checks</h3>
+        {_num_rows([("Kepler candidates that were false positives", "9.4%", "overall; 17.7% for giants (Fressin et al. 2013)"),
+                    ("TESS prime-mission TOIs found false by follow-up", "565 of 2,241 (≈25%)", "Guerrero et al. 2021"),
+                    ("A 50% binary eclipse diluted 1,000 times", f"{diluted_depth(0.5, 1e-3) * 1e6:.0f} ppm", "δ_obs = δ_true · F_target/F_total [calc]: the depth of a small planet"),
+                    ("pi Men c's shape, T23/T14", f"{(t23 or 0) / t14:.2f}", "flat-bottomed (U), not V [calc from the transit chapter]")])}
+        <p>exoplan's vetting (vet.py) flags, from the light curve alone: <code>odd_even_mismatch</code> (odd and even depths differ), <code>secondary_eclipse</code> (a dip at phase 0.5), <code>low_snr</code>, <code>too_short</code>, <code>edge_event</code> and <code>insufficient_points</code>. It has no pixel-level centroid or difference-image check and no statistical validation, so a blended background binary can pass. <a href="#/sentinels">See the reviewers ›</a> · <a href="#/transit">See a vetted case ›</a></p>
+      </div>"""
+
+    # ----- population -----
+    pop = load_population()
+    if pop:
+        v, hzd = pop["valley"], pop["hz"]
+        pm_re = pm["radius"] * 11.209 if pm else None
+        L_pm = (pm["star_radius"] ** 2 * (pm["star_teff"] / 5772) ** 4) if pm else 1.45
+        hz_pm = [hz_distance_au(l, pm.get("star_teff", 6037), L_pm) for l in ("runaway_greenhouse", "maximum_greenhouse")]
+        s_pm = L_pm / pm["semi_major_axis"] ** 2 if pm else 309
+        pop_html = f"""
+      {_stage("valley", LABEL_DATA, f"Histogram of {v['n']:,} planet radii from exoplanet.eu (period under 100 days), on log bins from 0.5 to 20 Earth radii, with the 1.5–2 Earth-radius valley marked and pi Men c's radius shown.", static=True)}
+      <div class="mxtext">
+        <p>Small close-in planets come in two groups: rocky super-Earths below about 1.5 R⊕ and gas-wrapped sub-Neptunes around 2–3 R⊕, with fewer in between (Fulton et al. 2017 found at least a factor-of-two deficit at 1.5–2.0 R⊕ in a carefully measured sample). The leading explanations strip thin envelopes from small cores: photoevaporation (Owen & Wu 2017) or core-powered mass loss (Gupta & Schlichting 2019).</p>
+        <p class="note">These are raw catalogue counts ({e(v['rule'])}), not occurrence rates: nothing corrects for which planets are easier to find, and catalogue radii carry the stars' radius errors. The dip is shallower here than in Fulton et al.'s corrected, precise sample. pi Men c's stored radius is {pm_re:.2f} R⊕.</p>
+      </div>
+      {_stage("hz", LABEL_DATA, f"Stellar temperature against the starlight each planet receives, for the {hzd['n_optimistic']} catalogue planets inside the optimistic habitable zone, with the conservative and optimistic limits of Kopparapu et al. 2014 drawn as curves.", static=True)}
+      <div class="mxtext">
+        <p>The habitable zone is the range of starlight in which an Earth-like planet could keep liquid surface water. Its limits come from climate models as a flux that depends on the star's temperature (Kopparapu et al. 2014). Being in it is necessary, not sufficient: it says nothing about a planet's atmosphere, and many planets inside it are giants.</p>
+        {_num_rows([("Sun's conservative habitable zone", f"{hz_distance_au('runaway_greenhouse', 5780, 1):.2f}–{hz_distance_au('maximum_greenhouse', 5780, 1):.2f} AU", "Kopparapu et al. 2014, Table 1 [calc]"),
+                    ("pi Men's conservative habitable zone", f"{hz_pm[0]:.2f}–{hz_pm[1]:.2f} AU", f"L = {L_pm:.2f} L☉ from exoplanet.eu R★ and Teff [calc]"),
+                    ("Starlight on pi Men c", f"{s_pm:.0f} × Earth's", f"a = {pm.get('semi_major_axis')} AU: far inside, a hot planet [calc]"),
+                    ("Catalogue planets in the conservative zone", f"{hzd['n_conservative']:,}", f"of {hzd['sample']:,} with the needed stored values (exoplanet.eu) [calc]"),
+                    ("…in the optimistic zone", f"{hzd['n_optimistic']:,}", "[calc]"),
+                    ("Earth-size planets in the zone per Sun-like star (η⊕)", "0.37–0.60", "conservative zone, 0.5–1.5 R⊕, with wide errors (Bryson et al. 2021)")])}
+      </div>"""
+    else:
+        pop_html = '<p class="note">The population figures (docs/results/population_stats.json) are not in this build.</p>'
+    ch["population"] = f"""
+      <p class="mxlede">With thousands of planets, patterns appear. Two of them: a valley in the sizes of small planets, and the zone around each star where liquid water could last.</p>{pop_html}"""
+
+    # ----- equations of life -----
+    mc = drake_mc()
+    ch["equations"] = f"""
+      <p class="mxlede">The Drake and Seager equations are ways to organise what we do not know. They are speculative frameworks, not predictions: no number on this page is an estimate of real civilisations or of life.</p>
+      <div class="mxeq" role="group" aria-label="Drake equation calculator">
+        <p class="mono mxeqf">N = R★ · f_p · n_e · f_l · f_i · f_c · L</p>
+        <div class="mxterms" id="mxdrake"></div>
+        <div class="mxpresets" role="group" aria-label="Presets"><button class="btn" type="button" data-preset="drake_lo">Drake 1961 (low end)</button><button class="btn" type="button" data-preset="drake_hi">Drake 1961 (high end)</button><button class="btn" type="button" data-preset="alt">A commonly quoted set</button><button class="btn" type="button" data-preset="data">Data where we have it</button></div>
+        <p class="mxresult" aria-live="polite" id="mxdrakeN"></p>
+        <p class="note">Presets: the 1961 Green Bank values and the "commonly quoted set" are repeated in secondary sources; the meeting's own record was not checked. "Data where we have it" uses the measured terms below and leaves the unknown ones where you set them. R★ is stars per year; the measured Milky Way rate of 1.65 ± 0.19 M☉ per year (Licquia & Newman 2015) is a mass, not a count.</p>
+      </div>
+      <table class="mxnums mxknown"><thead><tr><th scope="col">Term</th><th scope="col">How well we know it</th><th scope="col">Value and source</th></tr></thead><tbody>
+        <tr><th scope="row">R★</th><td><span class="kn measured">Measured</span></td><td>1.65 ± 0.19 M☉/yr star formation (Licquia & Newman 2015); stars per year needs an initial mass function</td></tr>
+        <tr><th scope="row">f_p</th><td><span class="kn measured">Measured</span></td><td>≈ 1: 0.77 small planets per GK star at 50–300 d (Burke et al. 2015); ≈ 2.5 per M dwarf at P &lt; 200 d (Dressing & Charbonneau 2015)</td></tr>
+        <tr><th scope="row">n_e</th><td><span class="kn constrained">Constrained</span></td><td>η⊕ = 0.37–0.60 for 0.5–1.5 R⊕ in the conservative zone around 4800–6300 K stars (Bryson et al. 2021); 11 ± 4% for 1–2 R⊕ at 1–4 × Earth's flux (Petigura et al. 2013)</td></tr>
+        <tr><th scope="row">f_l, f_i, f_c, L</th><td><span class="kn unknown">Unknown</span></td><td>No data. Any value is an opinion.</td></tr>
+      </tbody></table>
+      {_stage("drake", LABEL_SPEC, f"A histogram of log10 N from {20000:,} Monte Carlo draws of the Drake terms over log-uniform ranges, with the median and the 90% interval marked, and a bar for each term's share of the spread.", '<label class="mxlab"><span>Range of f_l (orders of magnitude)</span><input type="range" data-ctl="fl" min="1" max="40" value="10" aria-label="Orders of magnitude spanned by f_l"></label>', static=True)}
+      <div class="mxtext">
+        <p>One number hides the uncertainty. Following Sandberg, Drexler & Ord (2018), each term is drawn from a range instead: R★ 1–100, f_p 0.1–1, n_e 0.1–1, f_i 0.001–1, f_c 0.01–1, L 100–10¹⁰ years, all log-uniform. Their f_l comes from a log-normal model of the rate at which life starts; here f_l is a log-uniform stand-in from 10⁻ᵏ to 1, with k on the slider. Draws are seeded, so the result repeats.</p>
+        {_num_rows([("This page, k = 10: median N", f"{10 ** mc['median_log10']:.2g}", f"90% of draws between 10^{mc['p05_log10']:.1f} and 10^{mc['p95_log10']:.1f} [calc]"),
+                    ("This page, k = 10: P(N < 1)", f"{mc['p_lt_1'] * 100:.0f}%", "[calc]"),
+                    ("Sandberg et al. 2018: median N", "0.32", "with their f_l model; the mean is about 27 million, which is why a single average misleads"),
+                    ("Sandberg et al. 2018: P(N < 1)", "≈ 52%", "their priors")])}
+        <h3>The Seager equation</h3>
+        <p class="mono mxeqf">N = N★ · F_Q · F_HZ · F_O · F_L · F_S</p>
+        <p>It counts planets where a biosignature gas could be detected, not civilisations (Seager 2018): stars observed, the fraction quiet, with rocky planets in the habitable zone, observable, with life, and whose life makes a detectable gas.</p>
+        <div class="mxterms" id="mxseager"></div>
+        <p class="mxresult" aria-live="polite" id="mxseagerN"></p>
+        <p class="note">Starting values: N★ = 30,000 M dwarfs bright enough for JWST, F_Q · F_HZ = 0.15, F_O = 0.001, F_L = 1, F_S = 0.5, giving N ≈ 2. They come from secondary summaries of Seager's talk and paper, not checked against the paper here; F_L = 1 is an assumption, not a measurement. The habitable-zone fraction links to the Population chapter's figures.</p>
+      </div>"""
+
     sources = {
+        "timing": ["holman", "agol", "greene", "deming05", "knutson", "gaudiwinn", "albrecht", "winn"],
+        "falsepos": ["fressin", "guerrero", "twicken", "winn"],
+        "population": ["fulton", "vaneylen", "owen", "gupta", "kopparapu", "bryson"],
+        "equations": ["sandberg", "seager18", "licquia", "burke15", "dressing15", "bryson", "petigura"],
         "survey": ["winn", "ricker", "borucki", "mamajek", "wyman"], "transit": ["winn", "mandel", "claret", "huang", "mamajek", "wyman", "prsa"],
         "doppler": ["fischer", "mayor"], "rv": ["gaudiwinn", "mayor", "pepe", "fischer", "prsa"], "astrometry": ["perryman", "stefansson", "curiel"],
         "microlensing": ["gaudi12", "gaudi10", "bond", "beaulieu"],
@@ -773,7 +979,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                         f'<h2 id="h-mx-{cid}">{e(title)}</h2></header>{ch[cid]}{cnt}{srcs}{nav}</article>')
     return f"""<header class="headrow">
         <div>{eyebrow}<h1 class="lead-h" id="h-methods" tabindex="-1">How planets are found.<br><span class="grey">And how exoplan finds them.</span></h1>
-        <p>Ten chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something exoplan itself does.</p></div>
+        <p>{len(CHAPTERS)} chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something exoplan itself does.</p></div>
       </header>
       <nav class="mxtoc" aria-label="Methods chapters"><ol>{toc}</ol></nav>
       {''.join(sections)}"""
@@ -1421,6 +1627,182 @@ MXV.atmlab = {key: 0, period: 1, init(st){
   if (narrow) mxText(c, cap, A.gx + 8, A.gy + 32, {size: 11}); else mxText(c, cap, A.gx + A.gw, A.gy - 6, {size: 11, align: 'right'});
 }};
 
+
+// ---------- timing and phase ----------
+MXV.timing = {key: 0.35, period: 14, init(st){ st.opt.mode = 'ttv'; st.opt.lam = 0; },
+  control(st, el){ if (el.tagName === 'SELECT') st.opt.mode = el.value; if (el.type === 'range') st.opt.lam = Number(el.value); },
+  draw(c, w, h, t, st){
+    const m = st.opt.mode, sceneH = h * 0.5, cx = w * 0.3, cy = sceneH / 2 + 10;
+    const gx = 56, gy = sceneH + 30, gw = w - gx - 18, gh = h - gy - 36;
+    mxGlassPanel(c, 10, sceneH + 8, w - 20, h - sceneH - 14);
+    if (m === 'ttv'){
+      // Two planets near 2:1: the inner one's transits drift early and late (amplitude illustrative).
+      const P1 = 1, P2 = 2.1, T = t * 24, r1 = sceneH * 0.22, r2 = sceneH * 0.35;
+      mxStar(c, cx, cy, 14, 5774, t, {flat: true});
+      for (const [r, P] of [[r1, P1], [r2, P2]]){ c.strokeStyle = 'rgba(255,255,255,.2)'; c.setLineDash([3, 5]); c.beginPath(); c.ellipse(cx, cy, r, r * 0.35, 0, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+        const a = 2 * Math.PI * T / P; mxPlanet(c, cx + r * Math.sin(a), cy + r * 0.35 * Math.cos(a), 4, 4, true); }
+      c.strokeStyle = 'rgba(100,210,255,.5)'; c.beginPath(); c.moveTo(cx, cy + 20); c.lineTo(cx, sceneH); c.stroke(); mxText(c, 'to observer', cx + 6, sceneH - 4, {size: 11});
+      const sup = 1 / Math.abs(2 / P2 - 1 / P1), n = Math.floor(T / P1);
+      mxAxes(c, gx, gy, gw, gh, {y: 'O − C (illustrative)', x: 'TRANSIT NUMBER'});
+      c.fillStyle = '#FFB340';
+      for (let k = 0; k <= Math.min(n, 23); k++){ const v = Math.sin(2 * Math.PI * k * P1 / sup); c.beginPath(); c.arc(gx + (k + 0.5) / 24 * gw, gy + gh / 2 - v * gh * 0.38, 3.5, 0, 2 * Math.PI); c.fill(); }
+      c.strokeStyle = 'rgba(255,255,255,.12)'; c.beginPath(); c.moveTo(gx, gy + gh / 2); c.lineTo(gx + gw, gy + gh / 2); c.stroke();
+      mxText(c, 'early / late against a strict period; Kepler-9: minutes per orbit (Holman et al. 2010)', gx + 6, gy + 14, {size: 11});
+      st.exag = 'O−C amplitude illustrative; orbits not to scale';
+    } else if (m === 'eclipse' || m === 'phase'){
+      // One orbit: transit at phase 0, secondary eclipse at 0.5; the planet's own light rises toward occultation.
+      const ph = t, a = 2 * Math.PI * ph, R = sceneH * 0.36, px = cx + R * Math.sin(a), py = cy + R * 0.3 * Math.cos(a), front = Math.cos(a) > 0;
+      if (!front) mxPlanet(c, px, py, 7, 4, true);
+      mxStar(c, cx, cy, 22, 4900, t, {flat: true});
+      if (front) mxPlanet(c, px, py, 7, 4, Math.abs(px - cx) > 29);
+      // Day side facing the star: show it as the lit hemisphere seen from the observer.
+      const off = m === 'phase' ? 16 * Math.PI / 180 : 0;
+      const F = f => { const A = 2 * Math.PI * f; let v = 0.5 * (1 - Math.cos(A - off)) * 0.25;            // planet light (fraction of day side)
+        const z = Math.abs(Math.sin(A)) * 8;
+        if (Math.cos(A) > 0 && z < 1.15) v -= 1;                     // transit (drawn to the panel scale)
+        if (Math.cos(A) < 0 && z < 1.15) v -= 0.5 * (1 - Math.cos(A - off)) * 0.25;   // occultation hides the planet's light
+        return v; };
+      mxAxes(c, gx, gy, gw, gh, {y: m === 'phase' ? 'BRIGHTNESS (planet light ×10)' : 'BRIGHTNESS (secondary ×10)', x: 'ORBITAL PHASE'});
+      const Y = v => gy + gh * 0.25 - v * gh * 0.6;
+      c.strokeStyle = '#FFB340'; c.lineWidth = 1.6; c.beginPath();
+      for (let i = 0; i <= 400; i++){ const f = i / 400 - 0.25; const x = gx + i / 400 * gw; i ? c.lineTo(x, Y(F(f))) : c.moveTo(x, Y(F(f))); } c.stroke();
+      c.fillStyle = '#FFB340'; const fx = ((ph + 0.25) % 1); c.beginPath(); c.arc(gx + fx * gw, Y(F(ph)), 3.5, 0, 2 * Math.PI); c.fill();
+      mxText(c, 'transit', gx + 0.25 * gw, gy + gh - 6, {size: 11, align: 'center'}); mxText(c, 'occultation', gx + 0.75 * gw, gy + gh - 6, {size: 11, align: 'center'});
+      if (m === 'phase') mxText(c, 'peak shifted by winds (HD 189733 b: 16° before occultation)', gx + 6, gy + 14, {size: 11});
+      st.exag = m === 'phase' ? 'planet light drawn ×10 against the transit; offset 16° as measured' : 'secondary eclipse drawn ×10 deeper than true; transit depth not to scale';
+    } else {
+      // Rossiter–McLaughlin: the star's disc coloured by its rotation (a velocity map), the planet crossing at λ.
+      const R = sceneH * 0.38, lam = st.opt.lam * Math.PI / 180;
+      for (let x = -R; x <= R; x += 2){ const v = x / R, hc = Math.sqrt(Math.max(0, R * R - x * x)); c.fillStyle = v < 0 ? `rgba(10,132,255,${0.25 + 0.6 * -v})` : `rgba(255,105,97,${0.25 + 0.6 * v})`; c.fillRect(cx + x, cy - hc, 2, 2 * hc); }
+      mxText(c, 'approaching', cx - R, cy + R + 14, {size: 11, color: '#64D2FF'}); mxText(c, 'receding', cx + R, cy + R + 14, {size: 11, color: '#FF6961', align: 'right'});
+      const b = 0.3, path = f => { const u = -1.3 + 2.6 * f; return [u * Math.cos(lam) - b * Math.sin(lam), u * Math.sin(lam) + b * Math.cos(lam)]; };
+      const [ux, uy] = path(t); c.fillStyle = '#111'; c.beginPath(); c.arc(cx + ux * R, cy + uy * R, R * 0.13, 0, 2 * Math.PI); c.fill();
+      c.setLineDash([3, 4]); c.strokeStyle = 'rgba(255,255,255,.4)'; c.beginPath(); const p0 = path(0), p1 = path(1); c.moveTo(cx + p0[0] * R, cy + p0[1] * R); c.lineTo(cx + p1[0] * R, cy + p1[1] * R); c.stroke(); c.setLineDash([]);
+      mxText(c, `λ = ${st.opt.lam}°`, 14, 22, {size: 13, w: 600, color: '#F5F5F7'});
+      // Anomaly: minus the blocked light's velocity (velocity ∝ x on the disc), only while on the disc.
+      const anom = f => { const [x, y] = path(f); return x * x + y * y < 1 ? -x : 0; };
+      mxAxes(c, gx, gy, gw, gh, {y: 'RV ANOMALY (shape)', x: 'TIME THROUGH TRANSIT'});
+      c.strokeStyle = 'rgba(255,255,255,.12)'; c.beginPath(); c.moveTo(gx, gy + gh / 2); c.lineTo(gx + gw, gy + gh / 2); c.stroke();
+      c.strokeStyle = '#FFB340'; c.lineWidth = 1.6; c.beginPath();
+      for (let i = 0; i <= 300; i++){ const f = i / 300, y = gy + gh / 2 - anom(f) * gh * 0.4; i ? c.lineTo(gx + f * gw, y) : c.moveTo(gx + f * gw, y); } c.stroke();
+      c.fillStyle = '#FFB340'; c.beginPath(); c.arc(gx + t * gw, gy + gh / 2 - anom(t) * gh * 0.4, 3.5, 0, 2 * Math.PI); c.fill();
+      mxText(c, 'amplitude ≈ V sin I · k²: tens of m/s for hot Jupiters', gx + 6, gy + 14, {size: 11});
+      st.exag = 'colour = velocity map, not a colour change; planet drawn larger';
+    }
+  }};
+
+// ---------- false positives ----------
+MXV.falsepos = {key: 0.5, period: 10, init(st){ st.opt.mode = 'eb'; }, control(st, el){ if (el.tagName === 'SELECT') st.opt.mode = el.value; },
+  draw(c, w, h, t, st){
+    const m = st.opt.mode, narrow = w < 600, px = narrow ? Math.min(w - 40, 200) : Math.min(w * 0.36, h - 120);
+    const ox = narrow ? (w - px) / 2 : 24, oy = narrow ? 34 : 50, cell = px / 5;
+    // A 5×5 patch of TESS pixels (21″ each), drawn to scale with the stars on it.
+    c.strokeStyle = 'rgba(255,255,255,.18)';
+    for (let i = 0; i <= 5; i++){ c.beginPath(); c.moveTo(ox + i * cell, oy); c.lineTo(ox + i * cell, oy + px); c.stroke(); c.beginPath(); c.moveTo(ox, oy + i * cell); c.lineTo(ox + px, oy + i * cell); c.stroke(); }
+    c.strokeStyle = '#FFB340'; c.strokeRect(ox + cell, oy + cell, 3 * cell, 3 * cell);
+    mxText(c, 'TESS pixels, 21″ each · aperture in amber', ox, oy - 8, {size: 11});
+    const tx = ox + px / 2, ty = oy + px / 2;
+    mxStar(c, tx, ty, 9, 5800, t, {flat: true, glow: 1.6}); mxText(c, 'target', tx + 12, ty - 10, {size: 11, color: '#F5F5F7'});
+    const nb = m === 'beb' ? [tx + cell * 1.1, ty - cell * 0.8] : m === 'heb' ? [tx + cell * 0.12, ty + cell * 0.08] : null;
+    if (nb){ mxStar(c, nb[0], nb[1], m === 'heb' ? 4 : 3.5, 3800, t, {flat: true, glow: 1.8}); mxText(c, m === 'heb' ? 'bound eclipsing pair, unresolved' : 'faint background binary', nb[0] + 8, nb[1] - 6, {size: 11}); }
+    // The light curve each scenario makes.
+    const gx = narrow ? 50 : ox + px + 60, gy = narrow ? oy + px + 40 : 50, gw = w - gx - 18, gh = narrow ? h - gy - 40 : h - 110;
+    const shape = (f, kind) => {
+      const x = f - 0.5;
+      if (kind === 'eb') return Math.abs(x) < 0.06 ? 1 - 0.8 * (1 - Math.abs(x) / 0.06) : (Math.abs(Math.abs(x) - 0.5) < 0.06 ? 1 - 0.3 * (1 - Math.abs(Math.abs(x) - 0.5) / 0.06) : 1);
+      if (kind === 'beb' || kind === 'heb') return Math.abs(x) < 0.05 ? 1 - 0.5 * 0.002 * (1 - Math.abs(x) / 0.05) * 6 : 1;
+      if (kind === 'oddeven') { const k = Math.round(f * 4); const d = k % 2 ? 0.6 : 0.4; return Math.abs(f * 4 - k) < 0.08 ? 1 - d * (1 - Math.abs(f * 4 - k) / 0.08) * 0.5 : 1; }
+      return f > 0.45 && f < 0.47 ? 0.6 : (f >= 0.47 ? 1 - 0.15 * Math.exp(-(f - 0.47) * 25) : 1);
+    };
+    mxAxes(c, gx, gy, gw, gh, {y: 'BRIGHTNESS (shape, illustrative)', x: m === 'oddeven' ? 'TIME (four events)' : 'ORBITAL PHASE'});
+    c.strokeStyle = '#FFB340'; c.lineWidth = 1.6; c.beginPath();
+    for (let i = 0; i <= 400; i++){ const f = i / 400; if (f > t + 0.0001) break; const y = gy + 10 + (1 - shape(f, m)) * (gh - 20); i ? c.lineTo(gx + f * gw, y) : c.moveTo(gx + f * gw, y); } c.stroke();
+    const note = {eb: 'V-shaped and with a deep secondary: a grazing binary, not a planet',
+      beb: 'a 50% eclipse diluted ×1,000 looks like a 500 ppm "planet"',
+      heb: 'the pair and the target share a pixel: depth diluted, shape can look planetary',
+      oddeven: 'alternate depths differ: two stars, period really twice as long (exoplan flags odd_even_mismatch)',
+      sys: 'a jump and recovery from the spacecraft, not an orbit'}[m];
+    mxText(c, note, gx + 6, gy + 14, {size: 11, color: '#C7C7CC'});
+    st.exag = 'curves are shapes, not to a common depth scale; pixel grid to scale';
+  }};
+
+// ---------- population: real catalogue data ----------
+MXV.valley = {key: 0, period: 1, draw(c, w, h, t, st){
+  const V = MX.population && MX.population.valley; if (!V) return;
+  const gx = 56, gy = 30, gw = w - gx - 16, gh = h - gy - 48, n = V.counts.length, mx = Math.max(...V.counts);
+  const lx = r => gx + (Math.log10(r) - Math.log10(V.edges_re[0])) / (Math.log10(V.edges_re[n]) - Math.log10(V.edges_re[0])) * gw;
+  c.fillStyle = 'rgba(255,214,10,.12)'; c.fillRect(lx(1.5), gy, lx(2.0) - lx(1.5), gh);
+  mxText(c, 'valley 1.5–2.0 R⊕ (Fulton et al. 2017)', lx(1.5) + 4, gy + 14, {size: 11, color: '#FFD60A'});
+  mxAxes(c, gx, gy, gw, gh, {y: 'PLANETS PER BIN (catalogue counts)', x: 'RADIUS (R⊕)'});
+  for (let i = 0; i < n; i++){ const x0 = lx(V.edges_re[i]), x1 = lx(V.edges_re[i + 1]), hh = V.counts[i] / mx * (gh - 20); c.fillStyle = '#64D2FF'; c.fillRect(x0 + 0.5, gy + gh - hh, x1 - x0 - 1, hh); }
+  for (const r of [0.5, 1, 2, 4, 10, 20]) mxText(c, String(r), lx(r), gy + gh + 14, {size: 11, mono: true, align: 'center'});
+  for (const v of [0, Math.round(mx / 2), mx]) mxText(c, String(v), gx - 6, gy + gh - v / mx * (gh - 20) + 4, {size: 11, mono: true, align: 'right'});
+  const pm = MX.examples['pi Men c']; if (pm && pm.radius){ const x = lx(pm.radius * 11.209); c.strokeStyle = '#FFB340'; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(x, gy + 20); c.lineTo(x, gy + gh); c.stroke(); c.setLineDash([]); mxText(c, 'pi Men c', x + 4, gy + 30, {size: 11, color: '#FFB340'}); }
+}};
+function mxSeff(limit, teff){ const [s0, a, b, cc, d] = MX.kopparapu[limit], t = teff - 5780; return s0 + a * t + b * t * t + cc * t ** 3 + d * t ** 4; }
+MXV.hz = {key: 0, period: 1, draw(c, w, h, t, st){
+  const P = MX.population; if (!P) return;
+  const gx = 60, gy = 30, gw = w - gx - 16, gh = h - gy - 48;
+  // x: insolation (log, falling to the right like distance from the star); y: stellar temperature.
+  const S0 = 3, S1 = 0.1, X = s => gx + (Math.log10(S0) - Math.log10(s)) / (Math.log10(S0) - Math.log10(S1)) * gw, Y = T => gy + gh - (T - 2600) / 4600 * gh;
+  mxAxes(c, gx, gy, gw, gh, {y: 'STAR TEMPERATURE (K)', x: 'STARLIGHT RECEIVED (× EARTH)'});
+  const band = (a, b, col) => { c.fillStyle = col; c.beginPath(); for (let T = 2600; T <= 7200; T += 50) c.lineTo(X(mxSeff(a, T)), Y(T)); for (let T = 7200; T >= 2600; T -= 50) c.lineTo(X(mxSeff(b, T)), Y(T)); c.closePath(); c.fill(); };
+  band('recent_venus', 'early_mars', 'rgba(48,209,88,.10)'); band('runaway_greenhouse', 'maximum_greenhouse', 'rgba(48,209,88,.22)');
+  for (const p of P.hz){ c.fillStyle = p[2] ? '#30D158' : 'rgba(48,209,88,.55)'; c.beginPath(); c.arc(X(p[1]), Y(p[0]), 2.6, 0, 2 * Math.PI); c.fill(); }
+  c.fillStyle = '#64D2FF'; c.beginPath(); c.arc(X(1), Y(5772), 4.5, 0, 2 * Math.PI); c.fill(); mxText(c, 'Earth', X(1) + 7, Y(5772) - 6, {size: 11, color: '#64D2FF'});
+  for (const s of [3, 1, 0.3, 0.1]) mxText(c, String(s), X(s), gy + gh + 14, {size: 11, mono: true, align: 'center'});
+  for (const T of [3000, 4000, 5000, 6000, 7000]) mxText(c, T.toLocaleString('en-GB'), gx - 6, Y(T) + 4, {size: 11, mono: true, align: 'right'});
+  mxText(c, `dark band: conservative · light: optimistic (Kopparapu et al. 2014) · ${P.hz.length} catalogue planets`, gx + gw, gy - 6, {size: 11, align: 'right'});
+}};
+
+// ---------- equations of life ----------
+function mxDrakeMC(n, seed, flOrders){
+  const rnd = mxRand(seed), ranges = MX.drake_terms.map(([k, , lo, hi]) => k === 'fl' ? [k, -flOrders, 0] : [k, lo, hi]), logs = new Float64Array(n);
+  for (let i = 0; i < n; i++){ let s = 0; for (const [, lo, hi] of ranges) s += lo + rnd() * (hi - lo); logs[i] = s; }
+  logs.sort();
+  const q = f => logs[Math.min(n - 1, Math.floor(f * n))], vars = ranges.map(([k, lo, hi]) => [k, (hi - lo) ** 2 / 12]), tot = vars.reduce((a, v) => a + v[1], 0);
+  let below = 0; for (const v of logs) if (v < 0) below++;
+  return {logs, median: q(0.5), p05: q(0.05), p95: q(0.95), pLt1: below / n, share: Object.fromEntries(vars.map(([k, v]) => [k, v / tot]))};
+}
+MXV.drake = {key: 0, period: 1, init(st){ st.opt.fl = 10; st.opt.mc = mxDrakeMC(20000, 42, 10); },
+  control(st, el){ if (el.dataset.ctl === 'fl'){ st.opt.fl = Number(el.value); st.opt.mc = mxDrakeMC(20000, 42, st.opt.fl); } },
+  draw(c, w, h, t, st){
+    const R = st.opt.mc, narrow = w < 600, gx = 50, gy = 30, gw = (narrow ? w : w * 0.62) - gx - 16, gh = narrow ? h * 0.5 - 40 : h - gy - 46;
+    const lo = Math.floor(R.logs[0]), hi = Math.ceil(R.logs[R.logs.length - 1]), nb = 60, bins = new Array(nb).fill(0);
+    for (const v of R.logs) bins[Math.min(nb - 1, Math.floor((v - lo) / (hi - lo) * nb))]++;
+    const mx = Math.max(...bins), X = v => gx + (v - lo) / (hi - lo) * gw;
+    mxAxes(c, gx, gy, gw, gh, {y: 'DRAWS', x: 'log10 N'});
+    c.fillStyle = 'rgba(48,209,88,.10)'; c.fillRect(X(R.p05), gy, X(R.p95) - X(R.p05), gh);
+    for (let i = 0; i < nb; i++){ const hh = bins[i] / mx * (gh - 20); c.fillStyle = (lo + (i + 0.5) * (hi - lo) / nb) < 0 ? '#8E8E93' : '#64D2FF'; c.fillRect(gx + i * gw / nb + 0.5, gy + gh - hh, gw / nb - 1, hh); }
+    c.strokeStyle = '#FFB340'; c.beginPath(); c.moveTo(X(R.median), gy); c.lineTo(X(R.median), gy + gh); c.stroke();
+    for (const v of [lo, 0, hi]) if (v >= lo && v <= hi) mxText(c, String(v), X(v), gy + gh + 14, {size: 11, mono: true, align: 'center'});
+    mxText(c, `median 10^${R.median.toFixed(1)} · 90% in 10^${R.p05.toFixed(1)}–10^${R.p95.toFixed(1)} · P(N < 1) = ${(R.pLt1 * 100).toFixed(0)}%`, gx + 6, gy + 14, {size: 11, mono: true, color: '#F5F5F7'});
+    // Each term's share of the spread in log10 N (exact for independent log-uniform terms).
+    const tx = narrow ? gx : w * 0.62 + 20, ty = narrow ? gy + gh + 40 : gy, tw = narrow ? w - tx - 20 : w - tx - 20, rows = MX.drake_terms;
+    mxText(c, 'SHARE OF THE SPREAD', tx, ty, {size: 11, w: 600, mono: true, color: '#C7C7CC'});
+    rows.forEach(([k, label], i) => { const y = ty + 14 + i * 22, f = R.share[k]; c.fillStyle = k === 'fl' || k === 'L' ? '#FF9F0A' : '#64D2FF'; c.fillRect(tx + 70, y, Math.max(1, f * (tw - 120)), 12);
+      mxText(c, label.split(' ')[0], tx, y + 10, {size: 11, mono: true}); mxText(c, (f * 100).toFixed(0) + '%', tx + 76 + f * (tw - 120), y + 10, {size: 11, mono: true}); });
+  }};
+const MX_DRAKE_PRESETS = {
+  drake_lo: {R: 1, fp: 0.2, ne: 1, fl: 1, fi: 1, fc: 0.1, L: 1000}, drake_hi: {R: 1, fp: 0.5, ne: 5, fl: 1, fi: 1, fc: 0.2, L: 1e8},
+  alt: {R: 10, fp: 0.5, ne: 2, fl: 1, fi: 0.01, fc: 0.01, L: 1e4}, data: {R: 7, fp: 1, ne: 0.37}};
+const MX_SEAGER = [['Ns', 'N★ (stars observed)', 1, 6, 30000], ['FQHZ', 'F_Q · F_HZ', -3, 0, 0.15], ['FO', 'F_O (observable)', -5, 0, 0.001], ['FL', 'F_L (life; assumed)', -6, 0, 1], ['FS', 'F_S (detectable gas)', -3, 0, 0.5]];
+function mxTermSliders(box, terms, vals, onchange){
+  box.innerHTML = terms.map(([k, label, lo, hi]) => `<label class="mxterm"><span>${esc(label)}</span><input type="range" data-k="${k}" min="${lo * 20}" max="${hi * 20}" value="${Math.round(Math.log10(vals[k]) * 20)}" aria-label="${esc(label)}, log scale"><output class="mono" data-o="${k}"></output></label>`).join('');
+  const upd = () => { for (const [k] of terms){ const v = Math.pow(10, Number(box.querySelector(`[data-k="${k}"]`).value) / 20); vals[k] = v; box.querySelector(`[data-o="${k}"]`).textContent = v >= 1000 ? Math.round(v).toLocaleString('en-GB') : Number(v.toPrecision(2)).toString(); } onchange(); };
+  box.addEventListener('input', upd); upd();
+  return v => { for (const k in v){ const el = box.querySelector(`[data-k="${k}"]`); if (el){ el.value = Math.round(Math.log10(v[k]) * 20); } } upd(); };
+}
+function mxEquationsInit(){
+  const box = $('#mxdrake'); if (!box || box.dataset.ready) return; box.dataset.ready = '1';
+  const terms = [['R', 'R★ (stars/yr)', 0, 2], ['fp', 'f_p', -1, 0], ['ne', 'n_e', -2, 1], ['fl', 'f_l', -10, 0], ['fi', 'f_i', -6, 0], ['fc', 'f_c', -6, 0], ['L', 'L (years)', 1, 10]];
+  const vals = {R: 1, fp: 0.5, ne: 1, fl: 1, fi: 0.01, fc: 0.1, L: 1e4};
+  const set = mxTermSliders(box, terms, vals, () => { const N = Object.values(vals).reduce((a, v) => a * v, 1); $('#mxdrakeN').textContent = `N = ${N >= 1 ? Math.round(N).toLocaleString('en-GB') : N.toExponential(1)} (one set of guesses, not a prediction)`; });
+  $$('.mxpresets [data-preset]').forEach(b => b.addEventListener('click', () => set(MX_DRAKE_PRESETS[b.dataset.preset])));
+  const sv = Object.fromEntries(MX_SEAGER.map(t => [t[0], t[4]]));
+  mxTermSliders($('#mxseager'), MX_SEAGER, sv, () => { const N = Object.values(sv).reduce((a, v) => a * v, 1); $('#mxseagerN').textContent = `N = ${N < 10 ? N.toFixed(2) : Math.round(N).toLocaleString('en-GB')} planets with a detectable biosignature gas (on these assumptions)`; });
+}
+
 // ---------- molecules: ball-and-stick at measured geometry ----------
 const MX_CPK = {H: '#F5F5F7', C: '#8E8E93', N: '#0A84FF', O: '#FF453A', P: '#FF9F0A', S: '#FFD60A', Na: '#BF5AF2', K: '#AF52DE'};
 function mxAtoms(g){
@@ -1461,6 +1843,7 @@ function mxShowChapter(ch){
   $$('#route-methods .mxch').forEach(a => { const on = a.dataset.ch === ch; if (a.hidden === on){ a.hidden = !on; } mxActivate(a, on && current === 'methods'); });
   $$('#route-methods .mxtoc a').forEach(a => { if (a.dataset.ch === ch) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current'); });
   mxCurrent = ch;
+  if (ch === 'equations') mxEquationsInit();
 }
 let mxCurrent = null;
 function mxShown(on){ if (!MX) return; $$('#route-methods .mxch').forEach(a => mxActivate(a, on && !a.hidden)); }
@@ -1520,6 +1903,7 @@ METHODS_CSS = r"""
 .mxlabel.ill{color:var(--ink-2);border-color:var(--line-3)}
 .mxlabel.model{color:var(--amber);border-color:var(--amber)}
 .mxlabel.data{color:var(--green);border-color:var(--green)}
+.mxlabel.spec{color:var(--magenta);border-color:var(--magenta)}
 .mxexag{min-width:0;padding:4px 10px;border-radius:10px;font:500 11px/1.4 var(--mono);color:var(--ink);background:var(--panel-2);border:1px solid var(--line-2)}
 .mxexag[hidden],.mxexag:empty{display:none}
 .mxctl{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
@@ -1528,6 +1912,19 @@ METHODS_CSS = r"""
 .mxctl select{min-height:44px;padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
 .mxctl input[type=range]{min-height:44px;accent-color:#0A84FF}
 .mxscrub{flex:1 1 200px;min-width:0}
+.mxeq{display:grid;gap:10px;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.mxeqf{margin:0;font-size:16px}
+.mxterms{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px 18px}
+.mxterm{display:grid;grid-template-columns:110px 1fr 64px;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
+.mxterm input{min-height:44px;accent-color:#0A84FF;min-width:0}
+.mxpresets{display:flex;flex-wrap:wrap;gap:8px}
+.mxpresets .btn{min-height:44px}
+.mxresult{margin:0;font:600 18px var(--sans)}
+.mxknown .kn{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid}
+.kn.measured{color:var(--green);border-color:var(--green)}
+.kn.constrained{color:var(--amber);border-color:var(--amber)}
+.kn.unknown{color:var(--ink-3);border-color:var(--line-3)}
+.mxlam input{width:140px}
 .mxtogs{display:inline-flex;flex-wrap:wrap;gap:6px}
 .mxtog{min-width:44px;justify-content:center}
 .mxtog[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
@@ -1612,6 +2009,13 @@ METHODS_CSS = r"""
   .mxtoc ol::-webkit-scrollbar{display:none}
   .mxtoc a{white-space:nowrap}
   .mxpaper{grid-template-columns:1fr}
+  /* Numbers tables become cards on a phone: one block per row, the value left-aligned under its name. */
+  .mxnums thead{display:none}
+  .mxnums,.mxnums tbody,.mxnums tr,.mxnums th,.mxnums td{display:block;width:auto}
+  .mxnums tr{padding:10px 0;border-bottom:1px solid var(--line)}
+  .mxnums th,.mxnums td{border:0;padding:2px 0;text-align:left}
+  .mxnums .num{text-align:left;white-space:normal;font-size:15px;color:var(--ink)}
+  .mxnums td:last-child{font-size:12px}
   .mxcontrast{height:520px;padding-left:52px}
   .mxcontrast li{left:52px}
   .mxsrc a{min-height:44px}
