@@ -44,8 +44,9 @@ from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
 from exoplan.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, TEASER_JS, galaxy_data,
                             galaxy_meta, galaxy_section, map_csv, teaser_html, teaser_points)
 from exoplan.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFAULT_CATALOGUE, SEARCH_BUTTON, SEARCH_DIALOG,
-                               catalogue_meta, catalogue_section, load_catalogue, planet_page, star_page)
-from exoplan.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section
+                               catalogue_meta, catalogue_section, load_catalogue, mentions, planet_page, star_page, tic_names)
+from exoplan.objects import obj_link
+from exoplan.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section, system_stage, CHAPTERS, CHAPTER_PLANETS
 from exoplan.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
 from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
 from exoplan.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
@@ -640,8 +641,10 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "examples": load_examples(examples_path),
         "galaxy_meta": galaxy_meta(galaxy),
         "catalogue": (cat := load_catalogue(catalogue_path)),
+        "tic_names": tic_names(cat, [r["tic"] for r in feed], story["star"]),
         "catalogue_meta": catalogue_meta(cat, galaxy["methods"] if galaxy else None, galaxy["method_label"] if galaxy else None,
-                                         {e["name"]: [e["ref"], e["ref_label"]] for e in (galaxy or {}).get("notable", [])}),
+                                         {e["name"]: [e["ref"], e["ref_label"]] for e in (galaxy or {}).get("notable", [])},
+                                         mentions((galaxy or {}).get("notable"), CHAPTERS, CHAPTER_PLANETS, story)),
         "galaxy_teaser": teaser_points(galaxy),
         "sky_geo": sky_geometry(story["star"]["ra_deg"], story["star"]["dec_deg"]),
         "deco": decoration(),
@@ -1193,6 +1196,15 @@ const D = JSON.parse(document.getElementById('data').textContent);
 const $ = (s, e=document) => e.querySelector(s);
 const $$ = (s, e=document) => Array.from(e.querySelectorAll(s));
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// ---------- one object model: every planet and star has one canonical page ----------
+// The slug rule is catalogue.slugify's (the tests check every catalogue name gives its stored slug).
+const objSlug = n => String(n).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'x';
+const planetHref = n => '#/planet/' + objSlug(n);
+const starHref = n => '#/star/' + objSlug(n);
+// The one renderer for a link to a planet or star; data-star / data-planet let any view select it.
+const objLink = (kind, n, label) => `<a class="objlink" data-${kind}="${esc(n)}" href="${kind === 'star' ? starHref(n) : planetHref(n)}">${esc(label ?? n)}</a>`;
+// A TIC with a catalogue name (the run's target, or a TIC in a star's stored alternate names) links to its star page.
+const ticLink = tic => (D.tic_names || {})[tic] ? `TIC ${esc(tic)} · ${objLink('star', D.tic_names[tic])}` : `TIC ${esc(tic)}`;
 const fmt = (x, d=2) => (x === null || x === undefined || Number.isNaN(Number(x))) ? '–' : Number(x).toFixed(d);
 const NS = 'http://www.w3.org/2000/svg';
 function el(tag, a={}, p){ const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
@@ -1561,7 +1573,7 @@ function syncFeedURL(push){
 }
 applyFeedView(ownFeedView);
 const COLS = [
-  ['tic', 'TIC', x => x.tic, x => esc(x.tic)],
+  ['tic', 'TIC', x => x.tic, x => (D.tic_names || {})[x.tic] ? `${esc(x.tic)} · ${objLink('star', D.tic_names[x.tic])}` : esc(x.tic)],
   ['candidate_id', 'dip', x => x.candidate_id, x => dipLink(x.candidate_id)],
   ['t_center', 'mid-time', x => x.t_center, x => `${fmt(x.t_center,3)}<small>${esc(x.time_unit)}</small>`],
   ['period_days', 'period (d)', x => x.period_days, x => fmt(x.period_days,4)],
@@ -1602,7 +1614,7 @@ function feedSortBar(){
 // One card per entry, three lines: the dip and its status; TIC · P · depth · SNR on one mono line; the hedge.
 function feedCards(rows){
   if (!rows.length) return '<p class="empty feedcards">No feed entries with this status.</p>';
-  return `<ol class="feedcards">${rows.map(x => `<li><div class="fc1">${dipLink(x.candidate_id)}<span class="fcst">${esc(D.status_label[x.status] || x.status)}</span></div><div class="fc2 mono">TIC ${esc(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}</div><div class="fc3">${esc(D.unconfirmed)} · mid-time ${fmt(x.t_center,2)} ${esc(x.time_unit)}</div></li>`).join('')}</ol>`;
+  return `<ol class="feedcards">${rows.map(x => `<li><div class="fc1">${dipLink(x.candidate_id)}<span class="fcst">${esc(D.status_label[x.status] || x.status)}</span></div><div class="fc2 mono">${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}</div><div class="fc3">${esc(D.unconfirmed)} · mid-time ${fmt(x.t_center,2)} ${esc(x.time_unit)}</div></li>`).join('')}</ol>`;
 }
 function renderDiscHead(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length, ft = D.catalog.found_times;
@@ -1726,9 +1738,9 @@ function renderPlanets(){
     let arch = '';
     if (ar.status === 'not_run') arch = `<p style="margin:0">The archive cross-match did not run. Stored error, verbatim: <code>${esc(ar.error || 'none stored')}</code>. ${esc(D.no_detection)}</p>`;
     else if (ar.status !== 'not_stored' && !ar.planets.length) arch = `<p style="margin:0">No published planet matched in the archive. ${esc(D.no_detection)}</p>`;
-    else if (ar.status !== 'not_stored') arch = `<p style="margin:0"><b>Published planets.</b> ${esc(D.no_detection)}</p><ul>${ar.planets.map(p => `<li><b>${esc(p.pl_name)}</b> · host ${esc(p.hostname)} · P ${p.pl_orbper !== null && p.pl_orbper !== undefined ? esc(p.pl_orbper) + ' d' : 'not listed'} · ${p.tran_flag ? 'transiting' : 'not known to transit'}${p.rv_flag ? ' · radial-velocity detection' : ''}</li>`).join('')}</ul><p class="muted" style="margin:4px 0 0;font-size:12px">${esc(ar.source)}, ${ar.fallback_from ? `recorded ${when(ar.fetched_at)}${ar.recorded_commit ? ` (commit ${esc(ar.recorded_commit)})` : ''} in ${esc(ar.fallback_from)}; this run's own cross-match ${ar.run_status === 'not_run' ? 'did not run' : 'is not stored'}${ar.run_error ? ` (stored error, verbatim: <code>${esc(ar.run_error)}</code>)` : ''}` : `fetched ${when(ar.fetched_at)}`}.</p>`;
+    else if (ar.status !== 'not_stored') arch = `<p style="margin:0"><b>Published planets.</b> ${esc(D.no_detection)}</p><ul>${ar.planets.map(p => `<li><b>${objLink('planet', p.pl_name)}</b> · host ${objLink('star', p.hostname)} · P ${p.pl_orbper !== null && p.pl_orbper !== undefined ? esc(p.pl_orbper) + ' d' : 'not listed'} · ${p.tran_flag ? 'transiting' : 'not known to transit'}${p.rv_flag ? ' · radial-velocity detection' : ''}</li>`).join('')}</ul><p class="muted" style="margin:4px 0 0;font-size:12px">${esc(ar.source)}, ${ar.fallback_from ? `recorded ${when(ar.fetched_at)}${ar.recorded_commit ? ` (commit ${esc(ar.recorded_commit)})` : ''} in ${esc(ar.fallback_from)}; this run's own cross-match ${ar.run_status === 'not_run' ? 'did not run' : 'is not stored'}${ar.run_error ? ` (stored error, verbatim: <code>${esc(ar.run_error)}</code>)` : ''}` : `fetched ${when(ar.fetched_at)}`}.</p>`;
     const hid = 'pl-' + String(s.star).replace(/\W/g,'_');
-    return `<article class="card" aria-labelledby="${hid}"><h2 id="${hid}">${esc(s.star)} <span class="muted" style="font:500 11px var(--mono)">${esc(s.sources.join(' · '))} · ${s.entries.length} entr${s.entries.length===1?'y':'ies'}</span></h2>${rows}${arch ? `<div class="archive">${arch}</div>` : ''}</article>`;
+    return `<article class="card" aria-labelledby="${hid}"><h2 id="${hid}">${esc(s.star)}${(D.tic_names || {})[String(s.star).replace(/^TIC /, '')] ? ' · ' + objLink('star', D.tic_names[String(s.star).replace(/^TIC /, '')]) : ''} <span class="muted" style="font:500 11px var(--mono)">${esc(s.sources.join(' · '))} · ${s.entries.length} entr${s.entries.length===1?'y':'ies'}</span></h2>${rows}${arch ? `<div class="archive">${arch}</div>` : ''}</article>`;
   }).join('') : '<p class="empty">No stars in the run or the feed.</p>';
 }
 
@@ -1990,11 +2002,10 @@ function txTheatre(d){
       ? `${S.planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}): the line is a limb-darkened model from those values, not a fit to this dip; ${bNote}. The match says the planet is already known; it does not confirm the dip.`
       : `If it were a planet: Rp/R★ = √depth = ${fmt(k, 4)}, from the stored depth ${fmt(d.depth_ppm, 0)} ppm; the star is the target as the catalogue stores it; orbit and period illustrative; ${bNote}.`)
     + ` Dots: the ${d.pts.length} stored flux values within ${fmt(d.half * 24, 1)} hours of mid-time (${esc(d.time_unit)} ${fmt(d.t, 3)}). Dashed: a box at the stored depth and duration, not a fit. The star's surface texture is decorative.`;
-  const fig = $('#txsysfig'), st = mxSetup(fig);
-  st.opt.sys = mxSystemParams(p, {pts: d.pts, box});
-  if (!(known && star)) st.opt.sys.bSrc = 'not fitted';
-  st.on = current === 'transit'; mxDraw(st);
-  if (st.on && !mxRM.matches && !st.started){ st.started = true; mxPlay(st, true); } else mxKick(st);
+  const {st} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, box}, on: current === 'transit', caption: false});
+  if (!(known && star)){ st.opt.sys.bSrc = 'not fitted'; mxKick(st); }
+  // The canonical pages for the planet (when the dip matches one) and the star.
+  $('#txlinks').innerHTML = (known && S.planet ? objLink('planet', S.planet, S.planet + ' ›') : '') + (S.star.name ? objLink('star', S.star.name, S.star.name + ' ›') : '');
 }
 function lanesHTML(d){
   const pct = v => Math.max(0, Math.min(100, (v + d.half) / (2 * d.half) * 100));
@@ -2121,7 +2132,7 @@ function renderExplorer(){
 function renderExSel(){
   const f = EXF.find(x => x.i === ex.sel); if (!f){ $('#exsel').innerHTML = '<p class="empty">Pick a signal.</p>'; return; }
   const k = f.depth_ppm > 0 ? Math.sqrt(f.depth_ppm * 1e-6) : 0, isNew = f.status === 'new_candidate', c = isNew ? 'var(--yellow)' : 'var(--blue)';
-  $('#exsel').innerHTML = `<p class="st" style="--c:${c}">${isNew ? 'New candidate · unconfirmed' : 'At a known TOI period · ' + esc(D.unconfirmed)}</p><h2>TIC ${esc(f.tic)}</h2>
+  $('#exsel').innerHTML = `<p class="st" style="--c:${c}">${isNew ? 'New candidate · unconfirmed' : 'At a known TOI period · ' + esc(D.unconfirmed)}</p><h2>${ticLink(f.tic)}</h2>
     <svg viewBox="-110 -110 220 220" role="img" aria-label="Sketch: a star and a planet disc to scale from the stored depth (Rp/R* ${fmt(k, 4)}); the orbit is not to scale."><defs><radialGradient id="exs" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#FFF4DA"/><stop offset=".7" stop-color="#FFC46B"/><stop offset="1" stop-color="#C2620F"/></radialGradient></defs>
       <circle r="100" fill="none" stroke="var(--line-2)" stroke-width=".8"/><circle r="46" fill="url(#exs)"/>
       <g class="orbit" style="transform-origin:0 0"><circle cx="100" cy="0" r="${Math.max(1.2, 46 * k).toFixed(2)}" fill="var(--ink)"/><circle cx="100" cy="0" r="10" fill="none" stroke="var(--line-3)" stroke-width=".8"/></g></svg>
@@ -2391,6 +2402,9 @@ def _sky(data: dict) -> str:
     else:
         marker, where = "", "The target's sky position is not stored, so it is not plotted."
     placed = f'{e(star["name"])} placed from SIMBAD (ICRS J2000) · ' if geo.get("x") is not None else "target not plotted (no position stored) · "
+    # The canonical pages for the run's star and its known planet.
+    links = "".join(obj_link(k, n, f"{n} ›") for k, n in (("star", star.get("name")), ("planet", st.get("planet"))) if n)
+    links = f'<div class="pllinks skylinks">{links}</div>' if links else ""
     t1, t2 = st["sky_title"]
     return f"""<header class="headrow">
         <div>{_eyebrow("Sky")}<h1 class="lead-h" id="h-sky" tabindex="-1">{e(t1)}<br><span class="grey">{e(t2)}</span></h1></div>
@@ -2411,6 +2425,7 @@ def _sky(data: dict) -> str:
           </svg>
           {pin}
           <p class="skynote">Field stars decorative · feed stars not plotted (positions not stored) · {placed}dashed: the ecliptic</p>
+          {links}
         </section>
         <aside class="glass dipsbox" aria-labelledby="h-skydips">
           <div class="dhead"><b id="h-skydips">Dips</b><span class="muted" id="skycount"></span></div>
@@ -2446,12 +2461,9 @@ def _transit(data: dict) -> str:
       <div class="row2">
         <section class="space theatre" id="txtheatre" aria-label="Transit theatre">
           <div class="cap"><span>The transit, played back</span><span id="txcap"></span></div>
-          <figure class="mxstage tall" data-vis="system" id="txsysfig">
-            <div class="mxcanvas"><canvas role="img" id="txcanvas" aria-label="The star in its blackbody colour with the planet crossing it, and a limb-darkened model light curve with this dip's stored points overlaid."></canvas></div>
-            <div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
-            <div class="mxctl" role="group" aria-label="Animation controls"><button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time"><button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button></div>
-          </figure>
+          {system_stage("txsysfig", "The star in its blackbody colour with the planet crossing it, and a limb-darkened model light curve with this dip's stored points overlaid.")}
           <p class="foot" id="txfoot"></p>
+          <div class="pllinks" id="txlinks"></div>
         </section>
         <aside class="tx-side">
           <section class="glass scorecard" id="txscore" aria-label="Panel score and verdict"></section>
@@ -2650,6 +2662,7 @@ def app_page(data: dict) -> str:
 </main>
 <div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
 {SEARCH_DIALOG}
+<template id="mxsystpl">{system_stage()}</template>
 <script id="data" type="application/json">{payload}</script>
 {_galaxy_scripts(data, galaxy_payload)}
 <script>{APP_JS}</script>

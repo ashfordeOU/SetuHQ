@@ -18,6 +18,8 @@ import json
 import math
 from pathlib import Path
 
+from exoplan.objects import obj_link
+
 DEFAULT_MAP = "docs/results/exoplanet_map.json"
 DEFAULT_NOTABLE = "docs/results/notable_planets.json"
 LY_PER_PC = 3.261563777
@@ -254,9 +256,10 @@ def nearest_table(g: dict, n: int = 50) -> str:
     rows = []
     for h in order:
         ps = sorted(by_host[h], key=lambda i: (P["y"][i] or 0, P["n"][i]))
-        names = ", ".join(e(P["n"][i]) for i in ps)
+        names = ", ".join(obj_link("planet", P["n"][i]) for i in ps)
+        starless = len(ps) == 1 and P["n"][ps[0]] == H["n"][h]  # a free-floating planet is its own "host"
         meths = ", ".join(dict.fromkeys(g["method_label"][g["methods"][P["m"][i]]] for i in ps))
-        rows.append(f"<tr><th scope='row'>{e(H['n'][h])}</th><td class='num'>{fmt_ly(H['d'][h])}</td>"
+        rows.append(f"<tr><th scope='row'>{e(H['n'][h]) if starless else obj_link('star', H['n'][h])}</th><td class='num'>{fmt_ly(H['d'][h])}</td>"
                     f"<td class='num'>{H['d'][h]:g}</td><td>{names}</td><td class='num'>{P['y'][ps[0]] or '—'}</td><td>{e(meths)}</td></tr>")
     return ("<table class='gxtable'><caption class='sr'>The 50 nearest planetary systems in the dataset</caption>"
             "<thead><tr><th scope='col'>System</th><th scope='col' class='num'>Distance (ly)</th><th scope='col' class='num'>Distance (pc)</th>"
@@ -306,7 +309,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
     notable = "".join(
         f'<li style="border-left:3px solid {g["method_colour"][nt["method"]]}"><button class="gxnot" type="button" data-gxstop="{k + 1}"><b>{e(nt["name"])}</b>'
         f'<span>{e(nt["tagline"])}</span><span class="mono">{e(g["method_label"][nt["method"]])}{" · method showcase" if nt["showcase"] else ""}</span></button>'
-        f'<a class="gxref" href="{e(nt["ref"])}" rel="noopener">{e(nt["ref_label"])}</a></li>'
+        f'<a class="gxref" href="{e(nt["ref"])}" rel="noopener">{e(nt["ref_label"])}</a>{obj_link("planet", nt["name"], "Planet page ›", "gxref")}</li>'
         for k, nt in enumerate(g["notable"]))
     note = f" {e(g['note'])}." if g.get("note") else ""
     feed = ", ".join(f"TIC {t}" for t in g["feed_tics"])
@@ -1182,9 +1185,14 @@ function gxSelect(h, planet){
   card.innerHTML = `<button class="btn x" type="button" aria-label="Close">×</button><h3>${esc(H.n[h])}</h3>
     <p class="mono">${gxLy(H.d[h])} ly · ${gxFmt(H.d[h], 3)} pc · RA ${gxFmt(H.ra[h], 3)}° Dec ${gxFmt(H.dec[h], 3)}° · V ${H.v[h] == null ? '—' : gxSig(H.v[h])}</p>
     <p>${G.host_n[h]} planet${G.host_n[h] === 1 ? '' : 's'} in ${esc(G.source_short)}${G.host_n[h] > gx.per[h] ? `, ${gx.per[h]} shown by the filters` : ''}.</p>
-    <ul>${ps.map(i => `<li><button type="button" data-gxp="${i}" aria-pressed="${i === gx.selPlanet}">${esc(P.n[i])}<span>${P.y[i] || '—'} · ${esc(gxMethod(i))} · ${esc(gxClass(i))}</span></button>${typeof MX !== 'undefined' && MX && MX.examples[P.n[i]] ? `<button class="btn gxsys" type="button" data-gxsys="${esc(P.n[i])}">Open the system view ›</button>` : ''}</li>`).join('')}</ul>${exo}${lensNote}`;
+    ${gxLinks(h)}<ul>${ps.map(i => `<li><button type="button" data-gxp="${i}" aria-pressed="${i === gx.selPlanet}">${esc(P.n[i])}<span>${P.y[i] || '—'} · ${esc(gxMethod(i))} · ${esc(gxClass(i))}</span></button>${typeof MX !== 'undefined' && MX && MX.examples[P.n[i]] ? `<button class="btn gxsys" type="button" data-gxsys="${esc(P.n[i])}">Open the system view ›</button>` : ''}</li>`).join('')}</ul>${exo}${lensNote}`;
   card.hidden = false;
   gxKick();
+}
+// The canonical pages for the selected star and planet (a free-floating planet is its own host: no star page).
+function gxLinks(h){
+  const G = gx.G, H = G.hosts, P = G.planets, ps = gxHostPlanets(h), starless = ps.length === 1 && P.n[ps[0]] === H.n[h];
+  return `<div class="pllinks gxlinks">${starless ? '' : objLink('star', H.n[h], 'Star page ›')}${gx.selPlanet >= 0 ? objLink('planet', P.n[gx.selPlanet], P.n[gx.selPlanet] + ' ›') : ''}</div>`;
 }
 function gxTip(h, x, y){
   const tip = $('#gxtip');

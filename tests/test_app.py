@@ -955,7 +955,7 @@ def test_phone_feed_is_three_line_cards_with_a_distinct_sort_group(run_dir, cata
     assert "aria-pressed" in bar
     cards = re.search(r"function feedCards\(rows\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert cards.count('<div class="fc') == 3 and "D.unconfirmed" in cards
-    assert "TIC ${esc(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}" in cards
+    assert "${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}" in cards
     assert "#caltable{display:none}" in phone and ".calcards{display:grid" in phone
     cal = re.search(r"function renderCalibration\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "$('#calcards').innerHTML" in cal and "<dl class=\"kv calcard\">" in cal

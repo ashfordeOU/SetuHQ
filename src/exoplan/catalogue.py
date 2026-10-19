@@ -13,6 +13,9 @@ import json
 import re
 from pathlib import Path
 
+from exoplan.methods import system_stage
+from exoplan.objects import obj_link, planet_href, slugify, star_href  # noqa: F401  (re-exported)
+
 DEFAULT_CATALOGUE = "docs/results/exoplanet_catalogue.json"
 CATALOGUE_JSON = "assets/data/catalogue.json"
 # Range filters: column, label, unit, URL key.
@@ -24,10 +27,20 @@ METHOD_CHAPTER = {"transit": "transit", "rv": "rv", "imaging": "imaging", "micro
                   "astrometry": "astrometry", "timing": "history"}
 
 
-def slugify(name: str) -> str:
-    """The URL slug of a planet or star name (the same rule as scripts/fetch_exoplanet_catalogue.py)."""
-    s = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
-    return s or "x"
+def tic_names(cat: dict | None, tics: list, story_star: dict | None = None) -> dict:
+    """TIC → catalogue star name, for the TICs the page shows: the run's own target (named from SIMBAD in
+    targets.json) and any TIC listed in a star's stored alternate names. Unknown TICs stay bare numbers."""
+    out = {}
+    if story_star and story_star.get("target", "").startswith("TIC ") and story_star.get("name"):
+        out[story_star["target"][4:]] = story_star["name"]
+    if cat:
+        want = {str(t) for t in tics}
+        P = cat["planets"]
+        for s, alt in zip(P["star"], P["salt"]):
+            for t in re.findall(r"TIC[ -]?(\d+)", alt or ""):
+                if t in want and s:
+                    out.setdefault(t, s)
+    return out
 
 
 def load_catalogue(path: str | Path | None = DEFAULT_CATALOGUE) -> dict | None:
@@ -36,8 +49,27 @@ def load_catalogue(path: str | Path | None = DEFAULT_CATALOGUE) -> dict | None:
     return json.loads(Path(path).read_text())
 
 
+def mentions(notable: list | None, chapters: list, chapter_planets: dict, story: dict | None) -> dict:
+    """Where exoplan itself shows each planet or star: name → [[label, href], ...], for the back-links on
+    the canonical pages. Galaxy tour stops, Methods chapters, and the run's own star and planet."""
+    out: dict[str, list] = {}
+    add = lambda n, lab, href: out.setdefault(n, []).append([lab, href]) if n else None
+    if story and story.get("planet"):
+        add(story["planet"], "exoplan's own Transit case", "#/transit")
+    if story and (story.get("star") or {}).get("name"):
+        add(story["star"]["name"], "exoplan's Transit case", "#/transit")
+        add(story["star"]["name"], "The run's sky map", "#/sky")
+    for k, nt in enumerate(notable or []):
+        add(nt["name"], f"Galaxy tour, stop {k + 1}", f"#/galaxy?tour={k + 1}")
+    titles = dict(chapters)
+    for cid, names in chapter_planets.items():
+        for n in names:
+            add(n, f"Methods: {titles[cid]}", f"#/methods?ch={cid}")
+    return out
+
+
 def catalogue_meta(cat: dict | None, methods: list[str] | None = None, method_label: dict | None = None,
-                   refs: dict | None = None) -> dict | None:
+                   refs: dict | None = None, seen: dict | None = None) -> dict | None:
     """The small part the shell needs before the data file arrives: counts, the source line and the filters.
     ``refs`` maps a planet name to [URL, label] of its discovery paper, from exoplan's own checked list
     (docs/results/notable_planets.json): the catalogue dataset itself stores no DOI."""
@@ -51,7 +83,7 @@ def catalogue_meta(cat: dict | None, methods: list[str] | None = None, method_la
             "url": cat["url"], "fetched_at": cat["fetched_at"], "definition": cat["definition"], "note": cat.get("note", ""),
             "methods": m, "method_label": method_label or {k: k for k in m}, "per_method": per,
             "years": [min(years), max(years)], "ranges": [[k, lab, unit, key] for k, lab, unit, key in RANGES],
-            "sorts": SORTS, "method_chapter": METHOD_CHAPTER, "units": cat["units"], "refs": refs or {}}
+            "sorts": SORTS, "method_chapter": METHOD_CHAPTER, "units": cat["units"], "refs": refs or {}, "mentions": seen or {}}
 
 
 def catalogue_filter(cat: dict, v: dict) -> list[int]:
@@ -130,21 +162,11 @@ def catalogue_section(meta: dict | None, eyebrow: str) -> str:
       <p class="small">Mass shows the true mass when stored, otherwise m sin i (marked "sin i"), a minimum. Units as the source stores them: Jupiter masses and radii, days, kelvin, parsecs.</p>"""
 
 
-def _system_stage(fid: str, what: str) -> str:
-    """The shared animated system (methods.py's MXV.system), drawn from one planet's stored values."""
-    return f"""<figure class="mxstage tall" data-vis="system" id="{fid}">
-          <div class="mxcanvas"><canvas role="img" aria-label="{what}, drawn from stored values."></canvas></div>
-          <div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
-          <div class="mxctl" role="group" aria-label="Animation controls"><button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time"><button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button></div>
-          <figcaption class="mxdesc"></figcaption>
-        </figure>"""
-
-
 def planet_page(eyebrow_html: str) -> str:
     return f"""<header>{eyebrow_html}<h1 class="lead-h" id="h-planet" tabindex="-1">Planet</h1><p id="plsub"></p></header>
       <p class="note" id="plnote" role="status" hidden></p>
       <div class="plgrid">
-        {_system_stage("plsys", "The planet's system")}
+        {system_stage("plsys", "The planet's system, drawn from stored values.")}
         <section class="card plparams" aria-labelledby="h-plparams"><h2 id="h-plparams">Stored parameters</h2><div id="plparams"></div></section>
       </div>
       <div class="plmore">
@@ -159,7 +181,7 @@ def star_page(eyebrow_html: str) -> str:
       <p class="note" id="stnote" role="status" hidden></p>
       <div class="plgrid">
         <div class="stsysw"><label class="stpick"><span>System view of</span><select id="stpick"></select></label>
-        {_system_stage("stsys", "The star and one of its planets")}</div>
+        {system_stage("stsys", "The star and one of its planets, drawn from stored values.")}</div>
         <section class="card plparams" aria-labelledby="h-stparams"><h2 id="h-stparams">Stored parameters</h2><div id="stparams"></div></section>
       </div>
       <div class="plmore">
@@ -316,20 +338,20 @@ function ctSort(P, idx, key, dir){
     return s * (x - y) || a - b; });
 }
 
-const ct = {P: null, loading: null, view: null, idx: [], starN: {}, bySlug: {}, starBySlug: {}, starSlug: {}, byStar: {}, rendered: false, rowH: 44};
+const ct = {P: null, loading: null, view: null, idx: [], starN: {}, bySlug: {}, starBySlug: {}, byStar: {}, rendered: false, rowH: 44};
 function ctLoad(){
   if (!ct.loading) ct.loading = fetch('assets/data/catalogue.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(C => {
     ct.C = C; ct.P = C.planets;
     const P = ct.P;
     P.name.forEach((nm, i) => { ct.bySlug[P.slug[i]] = i; const s = P.star[i]; if (s){ ct.starN[s] = (ct.starN[s] || 0) + 1; (ct.byStar[s] = ct.byStar[s] || []).push(i); } });
-    C.stars.names.forEach((s, k) => { ct.starBySlug[C.stars.slugs[k]] = s; ct.starSlug[s] = C.stars.slugs[k]; });
+    C.stars.names.forEach((s, k) => { ct.starBySlug[C.stars.slugs[k]] = s; });
     return C;
   });
   return ct.loading;
 }
 const ctFmt = (x, d) => x === null || x === undefined ? null : (Math.abs(x) >= 1000 ? Math.round(x).toLocaleString('en-GB') : Number(x.toPrecision(d || 4)).toString());
-const ctPlanetHref = i => '#/planet/' + ct.P.slug[i];
-const ctStarHref = s => '#/star/' + ct.starSlug[s];
+const ctPlanetHref = i => planetHref(ct.P.name[i]);
+const ctStarHref = s => starHref(s);
 
 // ---------- the table: only the rows in view are in the page ----------
 function renderCatalogue(){
@@ -458,29 +480,22 @@ function plShow(slug){
     $('#plhost').innerHTML = (star ? `<p><a href="${ctStarHref(star)}">${esc(star)}</a>${P.sptype[i] ? ' · ' + esc(P.sptype[i]) : ''}${P.steff[i] !== null ? ' · ' + ctFmt(P.steff[i]) + ' K' : ''}</p>` : '<p>Host star not stored.</p>')
       + `<ul class="pllist">${sibs.map(j => `<li><a href="${ctPlanetHref(j)}"${j === i ? ' aria-current="page"' : ''}><span>${esc(P.name[j])}</span><span class="mono">${ctFmt(P.period[j], 5) ? ctFmt(P.period[j], 5) + ' d' : 'period —'}</span></a></li>`).join('')}</ul>`;
     $('#plwhere').innerHTML = ctWhere(i, star);
-    const ch = CTM.method_chapter[P.method[i]], pimen = typeof S !== 'undefined' && S.planet && P.name[i] === S.planet;
+    const ch = CTM.method_chapter[P.method[i]];
     const ref = CTM.refs[P.name[i]];
     $('#plref').innerHTML = `<p>${esc(ct.C.source_short)} lists it as "${esc(P.status[i] || 'status not stored')}"${P.method_raw[i] ? `, found by ${esc(P.method_raw[i])}` : ''}${P.year[i] ? ` in ${P.year[i]}` : ''}; record updated ${esc(P.updated[i] || 'not stored')}.${P.alt[i] ? ` Also known as ${esc(P.alt[i])}.` : ''}</p>
       <p>${ref ? `Discovery paper: <a href="${esc(ref[0])}" rel="noopener">${esc(ref[1])}</a> (from exoplan's checked list of notable planets; ${esc(ct.C.source_short)} stores no DOI).` : `${esc(ct.C.source_short)} stores no DOI or reference for the discovery paper, so none is shown.`}</p>
-      <div class="pllinks">${ch ? `<a href="#/methods?ch=${ch}">How ${esc((CTM.method_label[P.method[i]] || '').toLowerCase())} works ›</a>` : ''}${pimen ? `<a href="#/transit">exoplan's own Transit case ›</a>` : ''}</div>`;
+      <div class="pllinks">${ch ? `<a href="#/methods?ch=${ch}">How ${esc((CTM.method_label[P.method[i]] || '').toLowerCase())} works ›</a>` : ''}${ctSeen(P.name[i], ch ? '#/methods?ch=' + ch : '')}</div>`;
     plSystem($('#plsys'), i, current === 'planet');
   }).catch(() => { $('#plnote').textContent = 'The catalogue file could not be loaded here.'; $('#plnote').hidden = false; });
 }
 // The shared animated system, from planet i's stored values only; the caption says what is not stored.
+// Back-links: where exoplan itself shows this planet or star (the Transit case, Galaxy tour stops, Methods chapters).
+function ctSeen(name, skip){ return (CTM.mentions[name] || []).filter(([, href]) => href !== skip).map(([lab, href]) => `<a href="${esc(href)}">${esc(lab)} ›</a>`).join(''); }
 function plSystem(fig, i, on){
   const P = ct.P, pimen = typeof S !== 'undefined' && S.planet && P.name[i] === S.planet;
   const p = {name: P.name[i], star_teff: P.steff[i], star_radius: P.srad[i], radius: P.radius[i], semi_major_axis: P.a[i], orbital_period: P.period[i],
     inclination: P.incl[i], impact_parameter: P.b[i], mass: P.mass[i], mass_sini: P.msini[i], eccentricity: P.e[i]};
-  const missing = [['star temperature', 'steff'], ['star radius', 'srad'], ['planet radius', 'radius'], ['orbital period', 'period'], ['semi-major axis', 'a'], ['inclination', 'incl']].filter(([, k]) => P[k][i] === null).map(([l]) => l);
-  const st = mxSetup(fig);
-  st.opt.sys = mxSystemParams(p, pimen && MX && MX.lead_dip ? {pts: MX.lead_dip.pts} : null);
-  const nonTransit = P.incl[i] !== null && P.a[i] && P.srad[i] && st.opt.sys.ars * Math.cos(P.incl[i] * Math.PI / 180) > 1 + st.opt.sys.k;
-  fig.querySelector('figcaption').textContent = `Drawn from stored values only (${ct.C.source_short}).` + (missing.length ? ` Not stored: ${missing.join(', ')}; those parts are illustrative and say so on the drawing.` : '')
-    + (P.steff[i] === null ? ' Star colour: the Sun’s, as the temperature is not stored.' : '') + (P.period[i] === null ? ' Period not stored: the time axis is illustrative.' : '')
-    + (nonTransit ? ' At the stored inclination this planet does not transit; the view shows a transit to explain the method.' : '');
-  fig.querySelector('canvas').setAttribute('aria-label', `${P.name[i]} crossing its star at b = ${st.opt.sys.b.toFixed(2)} (${st.opt.sys.bSrc}), with a model light curve from the stored values.`);
-  st.on = on; st.t = MXV.system.key; mxDraw(st);
-  if (st.on && !mxRM.matches && !st.started){ st.started = true; mxPlay(st, true); } else mxKick(st);
+  return mxSystemView(fig, p, {dip: pimen && MX && MX.lead_dip ? {pts: MX.lead_dip.pts} : null, on, source: ct.C.source_short});
 }
 function stShow(slug){
   if (!CTM) return;
@@ -497,7 +512,7 @@ function stShow(slug){
     $('#stsub').textContent = `${ps.length} planet${ps.length === 1 ? '' : 's'} in ${ct.C.source_short}` + (P.sptype[i] ? ` · stored type ${P.sptype[i]}` : '') + (cl ? ` · class ${cl} from Teff (nearest ${row})` : '');
     $('#stparams').innerHTML = ctTable(i, CT_STAR_ROWS) + (P.salt[i] ? `<p class="small">Also known as ${esc(P.salt[i])}.</p>` : '');
     $('#stplanets').innerHTML = `<ul class="pllist">${ps.map(j => `<li><a href="${ctPlanetHref(j)}"><span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul>`;
-    $('#stwhere').innerHTML = ctWhere(i, name);
+    $('#stwhere').innerHTML = ctWhere(i, name) + (ctSeen(name, '#/sky') ? `<div class="pllinks">${ctSeen(name, '#/sky')}</div>` : '');
     // The system view with one of its planets (the innermost first); the picker switches planet.
     const pick = $('#stpick');
     pick.innerHTML = ps.map(j => `<option value="${j}">${esc(P.name[j])}</option>`).join('');

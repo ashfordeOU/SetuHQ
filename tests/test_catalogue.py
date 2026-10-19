@@ -144,7 +144,7 @@ def test_method_chapters_exist_and_pi_men_links_its_transit_case(built):
     meta = data["catalogue_meta"]
     assert meta["refs"]["pi Men c"][0] == "https://doi.org/10.3847/2041-8213/aaef91"
     assert data["story"]["planet"] == "pi Men c"
-    assert """<a href="#/transit">exoplan's own Transit case ›</a>""" in APP_JS
+    assert ["exoplan's own Transit case", "#/transit"] in meta["mentions"]["pi Men c"] and "ctSeen(P.name[i]" in APP_JS
     assert "S.planet && P.name[i] === S.planet" in APP_JS
     planet = _route(built.read_text(), "planet")
     assert 'data-vis="system"' in planet and '<span class="mxlabel model">Model from stored values</span>' in planet

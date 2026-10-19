@@ -15,6 +15,8 @@ import json
 import math
 from pathlib import Path
 
+from exoplan.objects import obj_link
+
 # ---------- constants: IAU 2015 Resolution B3 nominal values (Prša et al. 2016) ----------
 GM_SUN = 1.3271244e20
 GM_JUP = 1.2668653e17
@@ -483,13 +485,18 @@ def year_chart(g: dict | None, method: str) -> str:
             f'<figcaption>{html.escape(label)} Source: {html.escape(g["source_short"])}, fetched {html.escape(g["fetched_at"][:10])}.</figcaption></figure>')
 
 
-def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = False, static: bool = False) -> str:
+def honesty_label(label: str) -> str:
+    """The one badge every drawing carries: illustration, model from stored values, real data, or speculative."""
+    lab_cls = {LABEL_ILL: "ill", LABEL_MODEL: "model", LABEL_DATA: "data", LABEL_SPEC: "spec"}[label]
+    return f'<span class="mxlabel {lab_cls}">{html.escape(label)}</span>'
+
+
+def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = False, static: bool = False, fid: str = "") -> str:
     """A visual: a canvas with its honesty label, a text description for screen readers, and controls."""
     e = html.escape
-    lab_cls = {LABEL_ILL: "ill", LABEL_MODEL: "model", LABEL_DATA: "data", LABEL_SPEC: "spec"}[label]
-    return f"""<figure class="mxstage{' tall' if tall else ''}" data-vis="{vis}">
+    return f"""<figure class="mxstage{' tall' if tall else ''}" data-vis="{vis}"{f' id="{fid}"' if fid else ''}>
           <div class="mxcanvas"><canvas role="img" aria-label="{e(desc)}"></canvas></div>
-          <div class="mxbadges"><span class="mxlabel {lab_cls}">{e(label)}</span><span class="mxexag" aria-live="polite"></span></div>
+          <div class="mxbadges">{honesty_label(label)}<span class="mxexag" aria-live="polite"></span></div>
           <div class="mxctl" role="group" aria-label="{'Controls' if static else 'Animation controls'}">
             {'' if static else '<button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time">'}
             {controls}
@@ -498,12 +505,29 @@ def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = Fal
         </figure>"""
 
 
+SIZE_BUTTON = '<button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button>'
+
+
+def system_stage(fid: str = "", desc: str = "A star and its planet, drawn from stored values.", extra: str = "") -> str:
+    """The shared animated system (MXV.system): Methods, the Transit case, the Galaxy's sheet, planet and star pages."""
+    return _stage("system", LABEL_MODEL, desc, SIZE_BUTTON + extra, tall=True, fid=fid)
+
+
 CHAPTERS = [("survey", "How a survey works"), ("transit", "Transit"), ("doppler", "Toward and away"),
             ("rv", "Radial velocity"), ("astrometry", "Astrometry"), ("microlensing", "Microlensing"),
             ("imaging", "Blocking starlight"), ("timing", "Timing and phase"), ("falsepos", "False positives"),
             ("spectroscopy", "Reading atmospheres"), ("molecules", "Molecules and life"), ("population", "Population"),
             ("equations", "Equations of life"), ("history", "History and papers")]
 DEFAULT_POPULATION = "docs/results/population_stats.json"
+# The planets each chapter draws on or names; each links to its canonical page, and each page links back.
+CHAPTER_PLANETS = {
+    "survey": ["pi Men c"], "transit": ["pi Men c", "TRAPPIST-1 b", "WASP-39 b"], "doppler": ["51 Peg b"],
+    "rv": ["51 Peg b", "HD 80606 b", "pi Men c"], "astrometry": ["GJ 896 Ab", "Gaia-4 b"], "microlensing": ["OGLE-2005-BLG-390L b"],
+    "imaging": ["HR 8799 b", "HR 8799 c", "HR 8799 d", "HR 8799 e"], "timing": ["Kepler-9 b", "Kepler-9 c", "HD 189733 Ab", "HD 209458 b"],
+    "falsepos": [], "spectroscopy": ["WASP-39 b", "HD 209458 b", "HD 189733 Ab", "K2-18 b"], "molecules": ["K2-18 b", "WASP-39 b"],
+    "population": ["pi Men c"], "equations": ["TRAPPIST-1 e", "Proxima Centauri b"],
+    "history": ["PSR B1257+12 b", "PSR B1257+12 c", "51 Peg b", "HD 209458 b", "Kepler-9 b"],
+}
 METHOD_OF = {"transit": "transit", "rv": "rv", "doppler": "rv", "astrometry": "astrometry", "microlensing": "microlensing",
              "imaging": "imaging"}
 
@@ -701,8 +725,8 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
       </div>"""
     ch["transit"] = f"""
       <p class="mxlede">When a planet crosses its star, it blocks a little light. The dip's depth gives the planet's size relative to the star; its repetition gives the period. <b>This is what exoplan does</b>: its run found pi Men c's transits in TESS sector 1. <a href="#/transit{('?dip=' + e(lead)) if lead else ''}">Open exoplan's Transit case ›</a></p>
-      {_stage("system", LABEL_MODEL, f"pi Men, a {e(row)}-like star ({pm.get('star_teff', 6037):.0f} K, drawn in its blackbody colour) with pi Men c crossing it at impact parameter {b_pm}. Below, a limb-darkened model light curve drawn from the stored radii, with exoplan's stored points for its lead dip overlaid as dots.",
-               '<button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button><label class="mxb"><span>b</span><input type="range" min="0" max="1000" value="' + str(round(b_pm / (1 + k_ratio) * 1000)) + '" aria-label="Impact parameter"></label>', tall=True)}
+      {system_stage("", f"pi Men, a {e(row)}-like star ({pm.get('star_teff', 6037):.0f} K, drawn in its blackbody colour) with pi Men c crossing it at impact parameter {b_pm}. Below, a limb-darkened model light curve drawn from the stored radii, with exoplan's stored points for its lead dip overlaid as dots.",
+               '<label class="mxb"><span>b</span><input type="range" min="0" max="1000" value="' + str(round(b_pm / (1 + k_ratio) * 1000)) + '" aria-label="Impact parameter"></label>')}
       <div class="mxtext">
         <h3>What shapes the dip</h3>
         <p>The depth is roughly (Rp/R★)². The star is brighter at its centre than its edge (limb darkening), so the bottom of the dip is rounded, not flat, and a central crossing dips deeper than k² (Mandel & Agol 2002; Claret 2017 coefficients for TESS). The four contact points set the total duration T14 and the flat-bottom duration T23 (Winn 2010).</p>
@@ -974,13 +998,15 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         prev = CHAPTERS[i - 1] if i else None
         nxt = CHAPTERS[i + 1] if i + 1 < len(CHAPTERS) else None
         cnt = count_line(METHOD_OF[cid]) if cid in ("transit", "rv") else ""
+        pls = CHAPTER_PLANETS.get(cid) or []
+        planets = (f'<div class="pllinks mxplanets"><span>Planets in this chapter</span>{"".join(obj_link("planet", n, n + " ›") for n in pls)}</div>' if pls else "")
         srcs = f'<details class="mxsources"><summary>Sources</summary><ul class="mxsrc">{_src(sources[cid])}</ul></details>' if sources[cid] else ""
         nav = (f'<nav class="mxnav" aria-label="Chapters">'
                + (f'<a class="btn" href="#/methods?ch={prev[0]}">‹ {e(prev[1])}</a>' if prev else "<span></span>")
                + (f'<a class="btn primary" href="#/methods?ch={nxt[0]}">{e(nxt[1])} ›</a>' if nxt else "") + "</nav>")
         sections.append(f'<article class="mxch" id="mx-{cid}" data-ch="{cid}" aria-labelledby="h-mx-{cid}" hidden>'
                         f'<header><p class="eyebrow">Chapter {i + 1} of {len(CHAPTERS)}{(" · " + e(tags[cid])) if cid in tags else ""}</p>'
-                        f'<h2 id="h-mx-{cid}">{e(title)}</h2></header>{ch[cid]}{cnt}{srcs}{nav}</article>')
+                        f'<h2 id="h-mx-{cid}">{e(title)}</h2></header>{ch[cid]}{cnt}{planets}{srcs}{nav}</article>')
     return f"""<header class="headrow">
         <div>{eyebrow}<h1 class="lead-h" id="h-methods" tabindex="-1">How planets are found.<br><span class="grey">And how exoplan finds them.</span></h1>
         <p>{len(CHAPTERS)} chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something exoplan itself does.</p></div>
@@ -1917,31 +1943,43 @@ function mxShowChapter(ch){
 let mxCurrent = null;
 function mxShown(on){ if (!MX) return; $$('#route-methods .mxch').forEach(a => mxActivate(a, on && !a.hidden)); }
 function renderMethods(){ /* the chapters are static HTML; stages start when their chapter opens */ }
+// Every system view (Methods, the Transit case, the Galaxy's sheet, planet and star pages) goes through here:
+// it draws from the stored values given, and says in the caption which values are not stored.
+const MX_KEYS = [['star temperature', 'star_teff'], ['star radius', 'star_radius'], ['planet radius', 'radius'], ['orbital period', 'orbital_period'], ['semi-major axis', 'semi_major_axis'], ['inclination', 'inclination']];
+function mxSystemView(fig, p, o){
+  o = o || {};
+  const st = mxSetup(fig), S = mxSystemParams(p, o.dip || null);
+  st.opt.sys = S;
+  const missing = MX_KEYS.filter(([, k]) => p[k] == null).map(([l]) => l);
+  const nonTransit = p.inclination != null && p.semi_major_axis && p.star_radius && S.ars * Math.cos(p.inclination * Math.PI / 180) > 1 + S.k;
+  const note = `Drawn from stored values only (${o.source || MX.source}${o.fetched ? ', fetched ' + o.fetched.slice(0, 10) : ''}).` + (missing.length ? ` Not stored: ${missing.join(', ')}; those parts are illustrative and say so on the drawing.` : '')
+    + (p.star_teff == null ? ' Star colour: the Sun’s, as the temperature is not stored.' : '') + (p.orbital_period == null ? ' Period not stored: the time axis is illustrative.' : '')
+    + (nonTransit ? ' At the stored inclination this planet does not transit; the view shows a transit to explain the method.' : '');
+  const desc = `${p.name}: a ${Math.round(S.teff).toLocaleString('en-GB')} K star drawn in its blackbody colour, the planet crossing at b = ${S.b.toFixed(2)} (${S.bSrc}), and a limb-darkened model light curve from the stored values.`;
+  fig.querySelector('canvas').setAttribute('aria-label', o.desc || desc);
+  if (o.caption !== false) fig.querySelector('figcaption').textContent = note;
+  st.on = !!o.on; st.t = MXV.system.key; mxDraw(st);
+  if (st.on && !mxRM.matches && !st.started){ st.started = true; mxPlay(st, true); } else mxKick(st);
+  return {st, S, note, desc};
+}
 // The Galaxy's "system view" sheet: the same animated system for any stored example planet.
 function mxOpenSystem(name, back){
   const p = MX && MX.examples[name]; if (!p) return;
   let dlg = $('#mxsheet');
   if (!dlg){
     dlg = document.createElement('dialog'); dlg.id = 'mxsheet'; dlg.className = 'mxsheet';
-    dlg.innerHTML = `<div class="mxsheethead"><h2 id="mxsheettitle"></h2><button class="btn" type="button" id="mxsheetclose">Close</button></div>
-      <figure class="mxstage tall" data-vis="system"><div class="mxcanvas"><canvas role="img"></canvas></div><div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
-      <div class="mxctl" role="group" aria-label="Animation controls"><button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time"><button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button></div>
-      <figcaption class="mxdesc" id="mxsheetdesc"></figcaption></figure><p class="mxsheetnote" id="mxsheetnote"></p>`;
+    dlg.innerHTML = `<div class="mxsheethead"><h2 id="mxsheettitle"></h2><button class="btn" type="button" id="mxsheetclose">Close</button></div>${$('#mxsystpl').innerHTML}<p class="mxsheetnote" id="mxsheetnote"></p>`;
     document.body.appendChild(dlg);
     $('#mxsheetclose').addEventListener('click', () => dlg.close());
     dlg.addEventListener('close', () => { const st = dlg.querySelector('.mxstage')._mx; if (st){ st.on = false; } if (dlg._back) dlg._back.focus(); });
   }
   dlg._back = back || null;
-  const fig = dlg.querySelector('.mxstage'), S = mxSystemParams(Object.assign({name}, p), name === 'pi Men c' && MX.lead_dip ? {pts: MX.lead_dip.pts} : null);
+  const fig = dlg.querySelector('.mxstage');
   $('#mxsheettitle').textContent = name;
-  const missing = ['star_teff', 'star_radius', 'radius', 'orbital_period', 'semi_major_axis', 'inclination'].filter(k => p[k] == null);
-  const desc = `${name}: a ${Math.round(S.teff)} K star drawn in its blackbody colour, the planet crossing at b = ${S.b.toFixed(2)}, and a limb-darkened model light curve from the stored values.`;
-  $('#mxsheetdesc').textContent = desc; fig.querySelector('canvas').setAttribute('aria-label', desc);
-  $('#mxsheetnote').textContent = `Stored values from ${MX.source}, fetched ${MX.fetched_at.slice(0, 10)}. ` + (missing.length ? `Not stored: ${missing.join(', ').replace(/_/g, ' ')}; those parts are drawn illustratively and say so. ` : '') +
-    (p.inclination != null && S.ars * Math.cos(p.inclination * Math.PI / 180) > 1 + S.k ? 'At the stored inclination this planet does not transit; the view shows a transit to explain the method.' : '');
-  const st = mxSetup(fig); st.opt.sys = S; st.t = MXV.system.key; st.on = true;
   if (!dlg.open) dlg.showModal();
-  mxDraw(st); if (!mxRM.matches) mxPlay(st, true);
+  mxSystemView(fig, Object.assign({name}, p), {dip: name === 'pi Men c' && MX.lead_dip ? {pts: MX.lead_dip.pts} : null, on: true, fetched: MX.fetched_at});
+  // The canonical pages for this planet and its star.
+  $('#mxsheetnote').innerHTML = `${objLink('planet', name, name + ' ›')} ${p.star_name ? objLink('star', p.star_name, p.star_name + ' ›') : ''}`;
   $('#mxsheetclose').focus();
 }
 """

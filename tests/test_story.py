@@ -111,7 +111,7 @@ def test_overview_labels_the_artists_impression_and_the_theatre_says_what_is_not
     assert "impact parameter not fitted" in theatre and "Dashed: a box at the stored depth and duration, not a fit." in theatre
     assert "Rp/R★ = √depth" in theatre and "orbit and period illustrative" in theatre
     assert "it does not confirm the dip" in theatre and "The star's surface texture is decorative." in theatre
-    assert "mxSystemParams(p, {pts: d.pts, box})" in theatre
+    assert "mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, box}" in theatre
     for cls in ("sweep", "reveal", "playhead"):
         assert f".{cls}{{" in APP_CSS and "10s linear infinite" in re.search(rf"\.{cls}\{{[^}}]*\}}", APP_CSS).group(0)
 
