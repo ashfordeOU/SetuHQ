@@ -1,0 +1,20 @@
+{
+ "TIC 261136679": {
+  "tic": 261136679,
+  "source": "TESS Input Catalog v8.2 (MAST)",
+  "teff": 5992.1,
+  "teff_err": 103.582,
+  "logg": 4.3589,
+  "logg_err": 0.0737832,
+  "radius": 1.14889,
+  "radius_err": 0.0450252,
+  "mass": 1.1,
+  "mass_err": 0.140389,
+  "rho_solar": 0.725369,
+  "rho_solar_err": 0.141498,
+  "tmag": 5.1054,
+  "contratio": 0.000374727068,
+  "rho": 1.02260345513,
+  "rho_err": 0.19947963546000003
+ }
+}

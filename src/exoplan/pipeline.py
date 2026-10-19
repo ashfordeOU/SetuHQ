@@ -35,6 +35,8 @@ from exoplan.reviewers.claude import PROMPT_VERSION, ReviewError
 from exoplan.search import PeriodicSignal, bls_search, stitch, with_fap
 from exoplan.store import Store
 from exoplan.subjects import Subject, split_subjects
+from exoplan.stellar import tic_id, tic_params
+from exoplan.transitfit import TransitFit, fit_transit, ld_coeffs
 from exoplan.vet import VettingResult, measure_epochs, vet_event
 
 
@@ -73,6 +75,9 @@ class Candidate:
     mark_audit: tuple = ()
     count_rule: dict = field(default_factory=dict)
     search_scope: str = "subject"
+    # The limb-darkened transit fit of this dip (transitfit.TransitFit.as_dict), or {} when it was not run.
+    fit: dict = field(default_factory=dict)
+    fap_label: str = ""
 
     @property
     def t_center(self) -> float:
@@ -87,6 +92,11 @@ class Candidate:
         row["mark_audit"] = list(self.mark_audit)
         row["t_center"] = self.t_center
         row["duration_hours"] = (self.t_end - self.t_start) * 24.0
+        f = self.fit or {}
+        for key, src in (("fit_t0", "t0"), ("fit_t0_err", "t0_err"), ("fit_depth_ppm", "depth_ppm"), ("fit_depth_err_ppm", "depth_err_ppm"),
+                         ("fit_t14_hours", "t14_hours"), ("fit_t14_err_hours", "t14_err_hours"), ("fit_b", "b"), ("fit_b_err", "b_err"),
+                         ("fit_k", "k"), ("fit_rho_star", "rho_star"), ("fit_rho_star_err", "rho_star_err"), ("star_rho", "rho_catalogue")):
+            row[key] = f.get(src)
         return row
 
 
@@ -136,7 +146,7 @@ def sector_signals(prepared: list[LightCurve], config: RunConfig) -> dict[str, P
     for target, curves in by_target.items():
         stitched = stitch(curves)
         signal = bls_search(stitched, min_period=config.min_period)
-        out[target] = with_fap(stitched, signal, min_period=config.min_period, n_trials=config.fap_trials)
+        out[target] = with_fap(stitched, signal, min_period=config.min_period, n_trials=config.fap_trials, cache_dir=config.fap_cache)
     return out
 
 
@@ -205,6 +215,7 @@ def build_candidates(
     config: RunConfig,
     *,
     target_signals: dict[str, PeriodicSignal | None] | None = None,
+    stars: dict[str, dict] | None = None,
 ) -> list[Candidate]:
     """Aggregate, search and vet. With ``target_signals`` (sector mode), each subject uses its
     target's multi-sector BLS signal instead of a search of the subject alone."""
@@ -226,11 +237,19 @@ def build_candidates(
             else:
                 signal = bls_search(subject, min_period=config.min_period)
                 periodic_cache[event.subject_id] = with_fap(subject, signal, min_period=config.min_period,
-                                                            n_trials=config.fap_trials)
+                                                            n_trials=config.fap_trials, cache_dir=config.fap_cache)
         result = _vet(event, subject, periodic_cache[event.subject_id])
         periodic = periodic_cache[event.subject_id]
         supported = periodic if periodic is not None and periodic.covers(event.center) else None
         candidate = _to_candidate(event, subject, result, supported)
+        if config.fit_transits:
+            fit = fit_candidate(event, subject, supported, (stars or {}).get(candidate.target) or {}, result.metrics.get("depth"))
+            if fit is not None:
+                extra = tuple(f for f, on in (("v_shape", fit.v_shape), ("density_mismatch", fit.rho_flag)) if on)
+                object.__setattr__(candidate, "fit", fit.as_dict())
+                object.__setattr__(candidate, "flags", candidate.flags + extra)
+        if supported is not None:
+            object.__setattr__(candidate, "fap_label", supported.fap_label)
         object.__setattr__(candidate, "search_scope", "sector" if target_signals is not None else "subject")
         object.__setattr__(candidate, "mark_audit", tuple(audit_marks(event, classifications, config.cluster_gap_days)))
         object.__setattr__(candidate, "count_rule", {
@@ -265,10 +284,11 @@ def run_pipeline(
     prepared = prepare_lightcurves(lightcurves, config)
     subjects = prepare_subjects(lightcurves, config, prepared=prepared)
     target_signals = sector_signals(prepared, config) if config.search == "sector" else None
+    stars = star_parameters(lightcurves, config, out)
     store = Store(out / "exoplan.sqlite")
     try:
         classifications = review_subjects(subjects, active, image_dir=out / "subjects", store=store)
-        candidates = build_candidates(subjects, classifications, weights, config, target_signals=target_signals)
+        candidates = build_candidates(subjects, classifications, weights, config, target_signals=target_signals, stars=stars)
         store.export_classifications_csv(out / "classifications.csv")
     finally:
         store.close()
@@ -288,12 +308,49 @@ def run_pipeline(
     )
 
 
+def rebuild_run(config: RunConfig, lightcurves: list[LightCurve], run_dir: str | Path, *, weights: dict[str, float] | None = None) -> list[Candidate]:
+    """Re-vet a stored run with the current search, fit and FAP code, reusing its stored classifications.
+
+    The light curves are prepared exactly as in the run (same config), so the blind subject ids must match the
+    stored ones; the reviewers are not asked again. Candidates are rewritten, and the manifest records the
+    rebuild (when, what changed, what was reused)."""
+    from exoplan.store import read_classifications_csv
+
+    run_dir = Path(run_dir)
+    manifest = json.loads((run_dir / "manifest.json").read_text())
+    classifications = read_classifications_csv(run_dir / "classifications.csv")
+    prepared = prepare_lightcurves(lightcurves, config)
+    subjects = prepare_subjects(lightcurves, config, prepared=prepared)
+    have = {s.subject_id for s in subjects}
+    need = {c.subject_id for c in classifications}
+    if not need <= have:
+        raise ValueError(f"stored subjects not reproduced: {sorted(need - have)}")
+    weights = weights or {k: float(v) for k, v in manifest.get("weights", {}).items()}
+    target_signals = sector_signals(prepared, config) if config.search == "sector" else None
+    stars = star_parameters(lightcurves, config, run_dir)
+    candidates = build_candidates([s for s in subjects if s.subject_id in need], classifications, weights, config,
+                                  target_signals=target_signals, stars=stars)
+    write_candidates(candidates, run_dir)
+    manifest.setdefault("rebuilds", []).append({
+        "at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "exoplan_version": __version__,
+        "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
+        "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g" if config.fit_transits else "off",
+        "fap_trials": config.fap_trials, "stellar": config.stellar, "config_sha256": config.digest(),
+    })
+    manifest["counts"]["consensus_events"] = len(candidates)
+    manifest["counts"]["passed_vetting"] = sum(c.passed for c in candidates)
+    (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, default=str))
+    return candidates
+
+
 def write_candidates(candidates: list[Candidate], out: Path) -> None:
     rows = [c.as_row() for c in candidates]
     fields = [
         "candidate_id", "target", "mission", "subject_id", "t_start", "t_end", "t_center", "time_unit",
         "duration_hours", "score", "n_reviewers", "planet_fraction", "reviewers", "passed", "flags",
-        "depth_ppm", "snr", "period_days", "n_transits", "fap", "bls_t0", "bls_duration_days",
+        "depth_ppm", "snr", "period_days", "n_transits", "fap", "fap_label", "bls_t0", "bls_duration_days",
+        "fit_t0", "fit_t0_err", "fit_depth_ppm", "fit_depth_err_ppm", "fit_t14_hours", "fit_t14_err_hours",
+        "fit_b", "fit_b_err", "fit_k", "fit_rho_star", "fit_rho_star_err", "star_rho",
     ]
     with (out / "candidates.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
@@ -336,6 +393,52 @@ def write_manifest(out, config, lightcurves, active, skipped, weights, subjects,
 
 
 EPHEMERIS_SNR = 10.0  # a periodic signal this strong is trusted to explain the other dips in its subject
+
+
+def fit_candidate(event: Consensus, subject: Subject, supported: PeriodicSignal | None, star: dict,
+                  depth_guess: float | None) -> TransitFit | None:
+    """The limb-darkened fit of one consensus dip. On a periodic signal's ephemeris, every epoch of that signal
+    in the subject is fitted jointly (fixed BLS period, one shape, reference mid-time at this dip's epoch);
+    otherwise the dip alone. LD from the star's TIC Teff and log g (Sun-like when unknown)."""
+    u1, u2 = ld_coeffs(star.get("teff"), star.get("logg"))
+    duration = max(event.t_end - event.t_start, 1 / 24)
+    depth = max(float(depth_guess or 0.0), 2e-5)
+    period = epochs = None
+    t0 = event.center
+    if supported is not None:
+        period = supported.period
+        cover = [e["t_mid"] for e in measure_epochs(subject, supported) if e["n_points"] >= 2]
+        if cover:
+            epochs = cover
+            t0 = min(cover, key=lambda c: abs(c - event.center))
+            duration = max(duration, supported.duration)
+    try:
+        return fit_transit(subject.time, subject.flux, subject.flux_err, t0=t0, duration=duration, depth=depth,
+                           period=period, u1=u1, u2=u2, epochs=epochs, stellar_density=star.get("rho"))
+    except (ValueError, np.linalg.LinAlgError):
+        return None
+
+
+def star_parameters(lightcurves: list[LightCurve], config: RunConfig, out: Path | None = None) -> dict[str, dict]:
+    """Stellar parameters per target for the transit fit, from the TIC when ``config.stellar`` is "tic".
+    A run directory's ``stellar.json`` (written here) is used first, so a re-run needs no network."""
+    stored = {}
+    if out is not None and (out / "stellar.json").exists():
+        stored = json.loads((out / "stellar.json").read_text())
+    stars: dict[str, dict] = {}
+    for lc in lightcurves:
+        target = lc.target
+        if target in stars:
+            continue
+        if target in stored:
+            stars[target] = stored[target]
+        elif config.stellar == "tic" and (tic := tic_id(target)) is not None:
+            p = tic_params(tic)
+            if p:
+                stars[target] = p
+    if out is not None and stars:
+        (out / "stellar.json").write_text(json.dumps(stars, indent=1))
+    return stars
 
 
 def _vet(event: Consensus, subject: Subject, periodic: PeriodicSignal | None) -> VettingResult:

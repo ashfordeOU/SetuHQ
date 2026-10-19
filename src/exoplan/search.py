@@ -11,7 +11,10 @@ Two complementary searches:
 
 from __future__ import annotations
 
+import json
+import os
 from dataclasses import dataclass, replace
+from pathlib import Path
 
 import numpy as np
 from astropy.timeseries import BoxLeastSquares
@@ -38,8 +41,18 @@ class PeriodicSignal:
     secondary_depth: float
     secondary_err: float
     # Empirical false-alarm probability from block-bootstrap trials (false_alarm_probability), or None if not run.
+    # When no trial reached the observed SNR, ``fap`` is the upper bound 1/(N + 1) and ``fap_bound`` is True.
     fap: float | None = None
     fap_trials: int = 0
+    fap_exceed: int = 0
+    fap_bound: bool = False
+    fap_tail: float | None = None   # Gumbel fit to the null maxima, extrapolated (indicative only)
+    fap_method: str = ""
+
+    @property
+    def fap_label(self) -> str:
+        """The FAP as it may be printed: never below what the trials resolve."""
+        return fap_label(self.fap, self.fap_trials, self.fap_bound)
 
     def covers(self, time: float) -> bool:
         """True if ``time`` falls within one duration of a predicted transit."""
@@ -126,6 +139,38 @@ def bls_search(
 
 FAP_TRIALS = 20
 FAP_BLOCK_DAYS = 0.5
+FAP_METHOD = ("block bootstrap: the detected box is removed, the residuals are cut into {block:g}-day blocks and "
+              "shuffled, and BLS reruns on each of {n:,} copies; p = (k + 1)/(N + 1) with k copies reaching the observed "
+              "SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the {n:,} null "
+              "maxima, extrapolated, indicative only")
+
+
+@dataclass(frozen=True)
+class FapResult:
+    fap: float
+    n_trials: int
+    exceed: int
+    bound: bool
+    tail: float | None
+    method: str
+
+
+def fap_label(fap: float | None, n_trials: int, bound: bool) -> str:
+    if fap is None or n_trials <= 0:
+        return "not computed"
+    return (f"< {fap:.1e}" if bound else f"{fap:.2g}") + f" ({n_trials:,} trials)"
+
+
+def _null_maxima(args) -> list[float]:
+    time, residual, flux_err, blocks, seeds, min_period, max_period, durations, sid, mission, unit = args
+    out = []
+    for seed in seeds:
+        rng = np.random.default_rng(int(seed))
+        order = np.concatenate([blocks[i] for i in rng.permutation(len(blocks))])
+        scrambled = Subject(sid, mission, unit, time, residual[order], flux_err[order], {})
+        trial = bls_search(scrambled, min_period=min_period, max_period=max_period, durations=durations)
+        out.append(float(trial.snr) if trial is not None else float("-inf"))
+    return out
 
 
 def false_alarm_probability(
@@ -138,7 +183,9 @@ def false_alarm_probability(
     n_trials: int = FAP_TRIALS,
     block_days: float = FAP_BLOCK_DAYS,
     seed: int = 0,
-) -> float:
+    cache_dir: str | Path | None = None,
+    workers: int | None = None,
+) -> FapResult:
     """Empirical false-alarm probability of a BLS peak, with red noise kept.
 
     The BLS SNR assumes white noise. Here the detected box model is removed
@@ -146,30 +193,69 @@ def false_alarm_probability(
     ``block_days`` and the blocks are shuffled in time (a block bootstrap), so
     correlated noise within a block survives but any periodicity is destroyed.
     BLS runs on each of ``n_trials`` scrambled copies with the same grid
-    limits. The FAP is the fraction of copies whose peak SNR is at least the
-    observed SNR. With 20 trials the resolution is 0.05: 0.0 means no copy
-    reached the observed SNR.
+    limits, and records each copy's peak SNR (the null maxima).
+
+    The FAP is (k + 1)/(N + 1), with k copies at or above the observed SNR. With
+    k = 0 that is an upper bound, and ``bound`` says so: nothing smaller is ever
+    reported from N trials. With N ≥ 100 a Gumbel fit to the null maxima gives
+    an extrapolated tail value, kept separately and labelled indicative.
+
+    The null maxima are cached under ``cache_dir`` (keyed by the data, grid and
+    seed), so a re-run costs nothing; with ``workers`` > 1 the trials run in
+    parallel processes, each with its own fixed seed (the result does not
+    depend on the number of workers).
     """
+    import hashlib
+
     time, flux = subject.time, subject.flux
     phase = (time - signal.t0 + 0.5 * signal.period) % signal.period - 0.5 * signal.period
     residual = flux + signal.depth * (np.abs(phase) <= 0.5 * signal.duration)
     cadence = float(np.median(np.diff(time))) if time.size > 1 else 0.0
     per_block = max(2, int(round(block_days / cadence))) if cadence > 0 else time.size
     blocks = [np.arange(i, min(i + per_block, time.size)) for i in range(0, time.size, per_block)]
-    rng = np.random.default_rng(seed)
-    exceed = 0
-    for _ in range(n_trials):
-        order = np.concatenate([blocks[i] for i in rng.permutation(len(blocks))])
-        scrambled = Subject(subject.subject_id, subject.mission, subject.time_unit, time,
-                            residual[order], subject.flux_err[order], subject.provenance)
-        trial = bls_search(scrambled, min_period=min_period, max_period=max_period, durations=durations)
-        if trial is not None and trial.snr >= signal.snr:
-            exceed += 1
-    return exceed / n_trials if n_trials > 0 else float("nan")
+    seeds = np.random.default_rng(seed).integers(0, 2**63 - 1, size=n_trials)
+    key = hashlib.sha256(b"".join([np.ascontiguousarray(time).tobytes(), np.ascontiguousarray(residual).tobytes(),
+                                   np.ascontiguousarray(subject.flux_err).tobytes(),
+                                   repr((min_period, max_period, tuple(durations), block_days, seed, n_trials)).encode()])).hexdigest()[:32]
+    path = Path(cache_dir) / f"{key}.json" if cache_dir else None
+    null = None
+    if path and path.exists():
+        null = json.loads(path.read_text()).get("null_max")
+    if null is None:
+        common = (time, residual, subject.flux_err, blocks)
+        tail_args = (min_period, max_period, durations, subject.subject_id, subject.mission, subject.time_unit)
+        workers = workers if workers is not None else (min(4, os.cpu_count() or 1) if n_trials >= 200 else 1)
+        if workers > 1:
+            import multiprocessing as mp
+
+            chunks = np.array_split(seeds, workers * 4)
+            with mp.get_context("fork").Pool(workers) as pool:
+                parts = pool.map(_null_maxima, [common + (c,) + tail_args for c in chunks if len(c)])
+            null = [x for part in parts for x in part]
+        else:
+            null = _null_maxima(common + (seeds,) + tail_args)
+        if path:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps({"subject_id": subject.subject_id, "n_trials": n_trials, "seed": seed,
+                                        "block_days": block_days, "null_max": null}))
+    if n_trials <= 0:
+        return FapResult(float("nan"), 0, 0, False, None, "")
+    arr = np.asarray(null, float)
+    exceed = int(np.count_nonzero(arr >= signal.snr))
+    fap = (exceed + 1) / (n_trials + 1)
+    tail = None
+    finite = arr[np.isfinite(arr)]
+    if finite.size >= 100:
+        from scipy.stats import gumbel_r
+
+        loc, scale = gumbel_r.fit(finite)
+        tail = float(gumbel_r.sf(signal.snr, loc, scale))
+    return FapResult(fap=float(fap), n_trials=n_trials, exceed=exceed, bound=exceed == 0, tail=tail,
+                     method=FAP_METHOD.format(block=block_days, n=n_trials))
 
 
 def with_fap(subject: Subject, signal: PeriodicSignal | None, *, min_period: float = 0.5,
-             n_trials: int = FAP_TRIALS, seed: int | None = None) -> PeriodicSignal | None:
+             n_trials: int = FAP_TRIALS, seed: int | None = None, cache_dir: str | Path | None = None) -> PeriodicSignal | None:
     """``signal`` with its false-alarm probability filled in. The seed defaults to one derived from the subject id."""
     if signal is None or n_trials <= 0:
         return signal
@@ -177,8 +263,9 @@ def with_fap(subject: Subject, signal: PeriodicSignal | None, *, min_period: flo
         import hashlib
 
         seed = int(hashlib.sha256(subject.subject_id.encode()).hexdigest()[:8], 16)
-    fap = false_alarm_probability(subject, signal, min_period=min_period, n_trials=n_trials, seed=seed)
-    return replace(signal, fap=fap, fap_trials=n_trials)
+    r = false_alarm_probability(subject, signal, min_period=min_period, n_trials=n_trials, seed=seed, cache_dir=cache_dir)
+    return replace(signal, fap=r.fap, fap_trials=r.n_trials, fap_exceed=r.exceed, fap_bound=r.bound, fap_tail=r.tail,
+                   fap_method=r.method)
 
 
 def stitch(subjects_or_curves, *, subject_id: str | None = None) -> Subject:

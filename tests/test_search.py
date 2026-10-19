@@ -149,9 +149,16 @@ def test_fap_is_low_for_an_injected_3000_ppm_periodic_signal_in_white_and_red_no
 
     for red_ppm in (0.0, 600.0):
         subject = _fap_subject(2, red_ppm=red_ppm, signal=True)
+        # 20 trials cannot resolve 1%: no trial reaches the SNR, so the FAP is the bound 1/21 and says so.
         signal = with_fap(subject, bls_search(subject))
         assert abs(signal.period - 3.1) < 0.05
-        assert signal.fap < 0.01
+        assert signal.fap_exceed == 0 and signal.fap_bound and signal.fap == pytest.approx(1 / 21)
+        assert signal.fap_label == "< 4.8e-02 (20 trials)"
+        # 200 trials resolve it: the bound is 1/201 < 1%.
+        signal = with_fap(subject, bls_search(subject), n_trials=200)
+        assert signal.fap_bound and signal.fap == pytest.approx(1 / 201) and signal.fap < 0.01
+        assert signal.fap_tail is not None and signal.fap_tail < signal.fap  # extrapolated, kept apart from the bound
+        assert "Gumbel" in signal.fap_method and "upper bound" in signal.fap_method
 
 
 def test_red_noise_fools_the_white_noise_snr_but_not_the_fap():
@@ -168,3 +175,21 @@ def test_feed_admission_requires_fap_below_one_percent():
     assert admits_fap(0.0)
     assert not admits_fap(0.05)
     assert not admits_fap(None)
+
+
+
+def test_fap_never_reports_below_its_resolution_and_is_cached(tmp_path):
+    from exoplan.search import false_alarm_probability, fap_label
+
+    subject = _fap_subject(3, red_ppm=0.0, signal=True)
+    sig = bls_search(subject)
+    one = false_alarm_probability(subject, sig, n_trials=40, seed=7, cache_dir=tmp_path, workers=1)
+    assert one.exceed == 0 and one.bound and one.fap == 1 / 41
+    assert len(list(tmp_path.glob("*.json"))) == 1
+    # The cached null maxima give the same answer, and the worker count does not change it.
+    again = false_alarm_probability(subject, sig, n_trials=40, seed=7, cache_dir=tmp_path, workers=1)
+    assert again == one
+    par = false_alarm_probability(subject, sig, n_trials=40, seed=7, workers=2)
+    assert (par.fap, par.exceed) == (one.fap, one.exceed)
+    assert fap_label(1 / 10001, 10000, True) == "< 1.0e-04 (10,000 trials)" and fap_label(0.25, 20, False) == "0.25 (20 trials)"
+    assert fap_label(None, 0, False) == "not computed"

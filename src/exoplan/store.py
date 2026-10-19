@@ -136,3 +136,20 @@ class Store:
                     }
                 )
         return path
+
+
+def read_classifications_csv(path: str | Path) -> list[Classification]:
+    """Classifications back from a Zooniverse-style export (``export_classifications_csv``), for re-vetting a
+    stored run without asking the reviewers again."""
+    from exoplan.reviewers.base import Mark
+
+    out = []
+    with Path(path).open(newline="") as handle:
+        for row in csv.DictReader(handle):
+            tasks = {t["task"]: t["value"] for t in json.loads(row["annotations"])}
+            meta = json.loads(row["metadata"] or "{}")
+            marks = tuple(Mark(float(m["t_start"]), float(m["t_end"]), m.get("kind", "transit")) for m in tasks.get("T0") or [])
+            out.append(Classification(reviewer_id=row["user_name"], subject_id=row["subject_ids"], label=row["label"] or tasks.get("T1"),
+                                      marks=marks, reason=meta.get("reason"), confidence=float(meta.get("confidence") or 0.0),
+                                      rationale=meta.get("rationale") or ""))
+    return out

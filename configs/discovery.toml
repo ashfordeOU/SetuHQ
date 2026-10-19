@@ -12,6 +12,8 @@ detrend_window_days = 1.0
 
 [search]
 min_period = 0.5
+fap_trials = 200      # the feed admits FAP < 1%: 200 trials resolve that (bound 1/201); 20 could not
+stellar = "tic"
 
 [aggregate]
 cluster_gap_days = 0.05

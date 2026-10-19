@@ -71,5 +71,16 @@
     "classifications": 10,
     "consensus_events": 7,
     "passed_vetting": 6
-  }
+  },
+  "rebuilds": [
+    {
+      "at": "2026-10-19T10:46:05+00:00",
+      "exoplan_version": "0.1.0",
+      "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
+      "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g",
+      "fap_trials": 10000,
+      "stellar": "tic",
+      "config_sha256": "5144cd5273f6aa315915ed7d7fee28c9485303d2509ee7e6799c63d3796e35ba"
+    }
+  ]
 }

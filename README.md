@@ -46,9 +46,10 @@ The two Sentinels use two personas: `volunteer` (careful, marks dips) and `skept
 
 ```bash
 pip install -e ".[tess,dev]"         # add ,claude for the API backend
-pytest -q                            # 46 offline tests
+pytest -q                            # offline tests (one network-marked test is deselected)
 
 exoplan run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
+exoplan rebuild runs/tess-pi-men-s1 configs/tess_pi_men_s1.toml   # re-vet from the stored classifications
 exoplan report runs/tess-pi-men-s1 --out site --validation docs/results/pi_men_validation.md
 exoplan calibrate configs/tess_pi_men_s1.toml --out weights.json
 exoplan benchmark configs/benchmark_simulated_panel.toml --weights weights.json --out bench.md
@@ -66,8 +67,18 @@ Sentinels (Skeptic and Volunteer, on Claude via the CLI):
 * 6 consensus dips, 6 passed vetting, one of them flagged `off_ephemeris`.
 * Five of them lie on the published pi Men c ephemeris. All five predicted epochs in the
   25-day window are recovered, with a mean timing offset of -8 minutes against the
-  NASA Exoplanet Archive value. Depth is 0.91 and duration 0.62 of the published values
-  (see [docs/results/pi_men_validation.md](docs/results/pi_men_validation.md)).
+  NASA Exoplanet Archive value.
+* **Transit shape, limb-darkened fit** (re-vetted from the stored classifications; see
+  [docs/results/pi_men_validation.md](docs/results/pi_men_validation.md)). A joint fit of
+  the five epochs gives a depth of 292 ± 8 ppm and T14 = 3.07 ± 0.17 h. Against Huang et al.
+  2018 (300 ppm, 2.953 h) that is **0.97 in depth and 1.04 in duration**. The box measure it
+  replaces gave 0.81 and 0.64 against the same values (0.91 and 0.64 against the archive's
+  current default row). The impact parameter is weakly constrained by five TESS transits
+  (b = 0.86, 1σ 0.00 to 0.87; Huang: 0.59). The transit density, 0.29 g/cm³ with a 1σ range
+  of 0.28 to 2.2, is therefore consistent with the TIC's 1.02 g/cm³ but does not pin it.
+  The fit is U-shaped, not V-shaped.
+* The periodic signal's false-alarm probability is below 10⁻⁴ in both subjects. No one of
+  10,000 block-bootstrap trials reached the observed SNR, so 10⁻⁴ is a bound, not a value.
 * The sixth passed event (BTJD 1348.9, 0.87 h, SNR 9.5) does not fit the ephemeris and
   is a likely false positive. It is kept and flagged, not hidden.
 
@@ -118,7 +129,16 @@ published pipelines.
   measures the pipeline's logic, not real completeness.
 * **The CHEOPS column mapping is unverified.** The loader accepts several candidate
   names and records the ones used. Check them against a real `SCI_COR_Lightcurve` file.
-* **Box fits underestimate depth and duration** compared with published trapezoid fits.
+* **Transit fits are light-curve fits.** Every consensus dip gets a limb-darkened fit (Claret
+  2017 TESS coefficients from the TIC's Teff and log g) with depth, T14, impact parameter and
+  mid-time with errors, a ρ★ consistency check and a V-shape test. With a few TESS transits
+  the impact parameter, and so a/R★ and ρ★, is poorly constrained. The density band (0.3 to 3
+  times the catalogue value, at 3σ) is illustrative, not a published threshold.
+* **False-alarm probabilities are bounded by the trials.** A FAP is (k + 1)/(N + 1) over N
+  block-bootstrap trials, and is never printed below 1/(N + 1). The stored pi Men run uses
+  10⁴ trials, the discovery batches 200 (enough for the feed's 1% rule), and the library
+  default 20. A Gumbel fit to the null maxima is stored beside it as an extrapolation and is
+  labelled indicative.
 * **Vetting uses only light curves.** There is no centroid or pixel-level check, so
   blended eclipsing binaries can pass.
 * **Edge events are the weak spot** for both the statistics and the reviewers.

@@ -67,6 +67,15 @@ def cmd_run(args) -> int:
     return 0
 
 
+def cmd_rebuild(args) -> int:
+    from exoplan.pipeline import rebuild_run
+
+    config = load_config(args.config)
+    candidates = rebuild_run(config, _load_targets(config), args.run_dir)
+    print(f"rebuilt {len(candidates)} consensus events ({sum(c.passed for c in candidates)} pass vetting) in {args.run_dir}")
+    return 0
+
+
 def cmd_calibrate(args) -> int:
     config = load_config(args.config)
     reviewers = [r for r in build_reviewers(config.reviewers, cache_root=args.cache) if r.available()]
@@ -214,6 +223,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--uniform-weights", action="store_true", help="weigh every reviewer 1.0")
     run.add_argument("--cache", default="cache", help="cache root for Claude responses")
     run.set_defaults(func=cmd_run)
+
+    rebuild = sub.add_parser("rebuild", help="re-vet a stored run (fit, FAP, flags) from its stored classifications")
+    rebuild.add_argument("run_dir")
+    rebuild.add_argument("config")
+    rebuild.set_defaults(func=cmd_rebuild)
 
     calibrate = sub.add_parser("calibrate", help="estimate reviewer weights by injection")
     calibrate.add_argument("config")

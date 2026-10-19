@@ -12,6 +12,8 @@ detrend_window_days = 1.0
 
 [search]
 min_period = 0.5
+fap_trials = 10000    # block-bootstrap trials: resolves FAPs down to 1e-4 (cached in cache/fap)
+stellar = "tic"       # TIC Teff/log g for limb darkening, and ρ★ for the density check
 
 [aggregate]
 cluster_gap_days = 0.05

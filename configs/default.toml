@@ -10,7 +10,10 @@ search = "subject"         # BLS scope: "subject" (each subject alone) or "secto
 
 [search]
 min_period = 0.5           # shortest period for the periodic (BLS) channel, days
-fap_trials = 20            # block-bootstrap BLS reruns behind the periodic signal's false-alarm probability
+fap_trials = 20            # block-bootstrap BLS reruns behind the FAP; it is never reported below 1/(N + 1)
+fap_cache = "cache/fap"    # the null maxima are cached here, so re-runs are free
+fit_transits = true        # limb-darkened fit of every consensus dip (depth, T14, b, mid-time, rho_star, V-shape)
+stellar = "none"           # "tic": Teff, log g and density from the TESS Input Catalog (cached in cache/tic)
 
 [aggregate]
 cluster_gap_days = 0.05    # marks closer than this (in days) are one dip

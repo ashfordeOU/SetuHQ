@@ -12,23 +12,23 @@
     "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
     "passed": true,
     "flags": "",
-    "depth_ppm": 240.97638049369596,
-    "snr": 15.99541147816913,
+    "depth_ppm": 240.97639640741076,
+    "snr": 15.995423158058646,
     "period_days": 6.272619606532485,
     "n_transits": 3,
-    "fap": 0.0,
+    "fap": 9.999000099990002e-05,
     "metrics": {
       "n_in_transit": 15.0,
-      "depth": 0.00024097638049369596,
-      "snr": 15.99541147816913,
+      "depth": 0.00024097639640741075,
+      "snr": 15.995423158058646,
       "duration_minutes": 147.3058626637794,
-      "odd_err": 1.164041360504308e-05,
-      "even_err": 8.182075938435321e-06,
-      "secondary_depth": -9.734426270169294e-06,
-      "secondary_err": 8.22304731364208e-06,
+      "odd_err": 1.1640413604879221e-05,
+      "even_err": 8.182075938315263e-06,
+      "secondary_depth": -9.734454035958962e-06,
+      "secondary_err": 8.223047313878375e-06,
       "period": 6.272619606532485,
-      "odd_depth": 0.0002512176920586029,
-      "even_depth": 0.0002470921208550525
+      "odd_depth": 0.00025121770793390397,
+      "even_depth": 0.0002470921374413404
     },
     "candidate_id": "tess-fa3483ce6f83-000",
     "bls_t0": 1325.50043266878,
@@ -38,22 +38,22 @@
         "epoch": 0,
         "t_mid": 1325.50043266878,
         "n_points": 12,
-        "depth_ppm": 243.12064822884506,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": 243.1206511297468,
+        "sigma_ppm": 16.843555747646292
       },
       {
         "epoch": 1,
         "t_mid": 1331.7730522753125,
         "n_points": 12,
-        "depth_ppm": 250.3755487123227,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": 250.37556308860064,
+        "sigma_ppm": 16.843555747646292
       },
       {
         "epoch": 2,
         "t_mid": 1338.0456718818448,
         "n_points": 12,
-        "depth_ppm": 248.20343805787016,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": 248.20346490728173,
+        "sigma_ppm": 16.843555747646292
       }
     ],
     "secondary_epochs": [
@@ -61,15 +61,15 @@
         "epoch": 0,
         "t_mid": 1328.636742472046,
         "n_points": 12,
-        "depth_ppm": -20.113312773739622,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": -20.11334679985488,
+        "sigma_ppm": 16.843555747646292
       },
       {
         "epoch": 1,
         "t_mid": 1334.9093620785786,
         "n_points": 12,
-        "depth_ppm": -2.229316979018847,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": -2.2293410575358052,
+        "sigma_ppm": 16.843555747646292
       }
     ],
     "mark_audit": [
@@ -150,8 +150,67 @@
       "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
     },
     "search_scope": "subject",
+    "fit": {
+      "t0": 1331.7717654511919,
+      "t0_err": 0.001200150150018319,
+      "k": 0.019711347341040707,
+      "k_err": 0.0006255824776140486,
+      "depth_ppm": 296.7784169878307,
+      "depth_err_ppm": 11.167407560376306,
+      "t14_hours": 3.3645152900386046,
+      "t14_err_hours": 0.15378996342842474,
+      "b": 0.9546049465292754,
+      "b_err": 0.013525611548804007,
+      "t23_hours": 2.0909354469245764,
+      "period_days": 6.272619606532485,
+      "a_rs": 5.198909800360103,
+      "rho_star": 0.06755801245414994,
+      "rho_star_err": 0.02754255314478134,
+      "u1": 0.34075253099999997,
+      "u2": 0.22449244636000001,
+      "chi2": 441.8982028344874,
+      "dof": 205,
+      "n_points": 211,
+      "n_epochs": 3,
+      "grazing": false,
+      "v_shape_dchi2": 0.7728914802078791,
+      "v_shape": false,
+      "rho_catalogue": 1.02260345513,
+      "rho_ratio": 0.06606472148635711,
+      "rho_flag": false,
+      "notes": [],
+      "b_range": [
+        0.9417399278314458,
+        0.9546049465292754
+      ],
+      "rho_range": [
+        0.06755801245414994,
+        0.09408793203533607
+      ],
+      "depth_range_ppm": [
+        295.0023035164229,
+        296.7784169878307
+      ],
+      "t14_range_hours": [
+        3.264143482433712,
+        3.3645152900386046
+      ]
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
     "t_center": 1331.7711478689805,
-    "duration_hours": 2.45509771106299
+    "duration_hours": 2.45509771106299,
+    "fit_t0": 1331.7717654511919,
+    "fit_t0_err": 0.001200150150018319,
+    "fit_depth_ppm": 296.7784169878307,
+    "fit_depth_err_ppm": 11.167407560376306,
+    "fit_t14_hours": 3.3645152900386046,
+    "fit_t14_err_hours": 0.15378996342842474,
+    "fit_b": 0.9546049465292754,
+    "fit_b_err": 0.013525611548804007,
+    "fit_k": 0.019711347341040707,
+    "fit_rho_star": 0.06755801245414994,
+    "fit_rho_star_err": 0.02754255314478134,
+    "star_rho": 1.02260345513
   },
   {
     "subject_id": "tess-fa3483ce6f83",
@@ -166,23 +225,23 @@
     "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
     "passed": true,
     "flags": "",
-    "depth_ppm": 241.28575962123477,
-    "snr": 14.910035502314475,
+    "depth_ppm": 241.2857866700424,
+    "snr": 14.910047076480682,
     "period_days": 6.272619606532485,
     "n_transits": 3,
-    "fap": 0.0,
+    "fap": 9.999000099990002e-05,
     "metrics": {
       "n_in_transit": 13.0,
-      "depth": 0.00024128575962123477,
-      "snr": 14.910035502314475,
+      "depth": 0.0002412857866700424,
+      "snr": 14.910047076480682,
       "duration_minutes": 132.05811268915568,
-      "odd_err": 1.164041360504308e-05,
-      "even_err": 8.182075938435321e-06,
-      "secondary_depth": -9.734426270169294e-06,
-      "secondary_err": 8.22304731364208e-06,
+      "odd_err": 1.1640413604879221e-05,
+      "even_err": 8.182075938315263e-06,
+      "secondary_depth": -9.734454035958962e-06,
+      "secondary_err": 8.223047313878375e-06,
       "period": 6.272619606532485,
-      "odd_depth": 0.0002512176920586029,
-      "even_depth": 0.0002470921208550525
+      "odd_depth": 0.00025121770793390397,
+      "even_depth": 0.0002470921374413404
     },
     "candidate_id": "tess-fa3483ce6f83-001",
     "bls_t0": 1325.50043266878,
@@ -192,22 +251,22 @@
         "epoch": 0,
         "t_mid": 1325.50043266878,
         "n_points": 12,
-        "depth_ppm": 243.12064822884506,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": 243.1206511297468,
+        "sigma_ppm": 16.843555747646292
       },
       {
         "epoch": 1,
         "t_mid": 1331.7730522753125,
         "n_points": 12,
-        "depth_ppm": 250.3755487123227,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": 250.37556308860064,
+        "sigma_ppm": 16.843555747646292
       },
       {
         "epoch": 2,
         "t_mid": 1338.0456718818448,
         "n_points": 12,
-        "depth_ppm": 248.20343805787016,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": 248.20346490728173,
+        "sigma_ppm": 16.843555747646292
       }
     ],
     "secondary_epochs": [
@@ -215,15 +274,15 @@
         "epoch": 0,
         "t_mid": 1328.636742472046,
         "n_points": 12,
-        "depth_ppm": -20.113312773739622,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": -20.11334679985488,
+        "sigma_ppm": 16.843555747646292
       },
       {
         "epoch": 1,
         "t_mid": 1334.9093620785786,
         "n_points": 12,
-        "depth_ppm": -2.229316979018847,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": -2.2293410575358052,
+        "sigma_ppm": 16.843555747646292
       }
     ],
     "mark_audit": [
@@ -304,8 +363,67 @@
       "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
     },
     "search_scope": "subject",
+    "fit": {
+      "t0": 1338.0443851756816,
+      "t0_err": 0.0012043072944504653,
+      "k": 0.019734239052790817,
+      "k_err": 0.0006312226703372049,
+      "depth_ppm": 297.4226763404753,
+      "depth_err_ppm": 11.362839029225054,
+      "t14_hours": 3.367462980071484,
+      "t14_err_hours": 0.1546735092786372,
+      "b": 0.9546491817054177,
+      "b_err": 0.01353334246586294,
+      "t23_hours": 2.0903459970327103,
+      "period_days": 6.272619606532485,
+      "a_rs": 5.193790375984439,
+      "rho_star": 0.06735863353216788,
+      "rho_star_err": 0.02751371749187054,
+      "u1": 0.34075253099999997,
+      "u2": 0.22449244636000001,
+      "chi2": 406.81427291743523,
+      "dof": 187,
+      "n_points": 193,
+      "n_epochs": 3,
+      "grazing": false,
+      "v_shape_dchi2": 0.7739569281640318,
+      "v_shape": false,
+      "rho_catalogue": 1.02260345513,
+      "rho_ratio": 0.06586974960260114,
+      "rho_flag": false,
+      "notes": [],
+      "b_range": [
+        0.941758885443708,
+        0.9546491817054177
+      ],
+      "rho_range": [
+        0.06735863353216788,
+        0.09391080121199046
+      ],
+      "depth_range_ppm": [
+        295.6145244193964,
+        297.4226763404753
+      ],
+      "t14_range_hours": [
+        3.266320801700139,
+        3.367462980071484
+      ]
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
     "t_center": 1338.0516953231054,
-    "duration_hours": 2.2009685448192613
+    "duration_hours": 2.2009685448192613,
+    "fit_t0": 1338.0443851756816,
+    "fit_t0_err": 0.0012043072944504653,
+    "fit_depth_ppm": 297.4226763404753,
+    "fit_depth_err_ppm": 11.362839029225054,
+    "fit_t14_hours": 3.367462980071484,
+    "fit_t14_err_hours": 0.1546735092786372,
+    "fit_b": 0.9546491817054177,
+    "fit_b_err": 0.01353334246586294,
+    "fit_k": 0.019734239052790817,
+    "fit_rho_star": 0.06735863353216788,
+    "fit_rho_star_err": 0.02751371749187054,
+    "star_rho": 1.02260345513
   },
   {
     "subject_id": "tess-fa3483ce6f83",
@@ -320,23 +438,23 @@
     "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
     "passed": true,
     "flags": "",
-    "depth_ppm": 241.29419343787984,
-    "snr": 14.910556662393692,
+    "depth_ppm": 241.29419619423055,
+    "snr": 14.91056673577461,
     "period_days": 6.272619606532485,
     "n_transits": 3,
-    "fap": 0.0,
+    "fap": 9.999000099990002e-05,
     "metrics": {
       "n_in_transit": 13.0,
-      "depth": 0.00024129419343787983,
-      "snr": 14.910556662393692,
+      "depth": 0.00024129419619423054,
+      "snr": 14.91056673577461,
       "duration_minutes": 127.19809990314388,
-      "odd_err": 1.164041360504308e-05,
-      "even_err": 8.182075938435321e-06,
-      "secondary_depth": -9.734426270169294e-06,
-      "secondary_err": 8.22304731364208e-06,
+      "odd_err": 1.1640413604879221e-05,
+      "even_err": 8.182075938315263e-06,
+      "secondary_depth": -9.734454035958962e-06,
+      "secondary_err": 8.223047313878375e-06,
       "period": 6.272619606532485,
-      "odd_depth": 0.0002512176920586029,
-      "even_depth": 0.0002470921208550525
+      "odd_depth": 0.00025121770793390397,
+      "even_depth": 0.0002470921374413404
     },
     "candidate_id": "tess-fa3483ce6f83-002",
     "bls_t0": 1325.50043266878,
@@ -346,22 +464,22 @@
         "epoch": 0,
         "t_mid": 1325.50043266878,
         "n_points": 12,
-        "depth_ppm": 243.12064822884506,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": 243.1206511297468,
+        "sigma_ppm": 16.843555747646292
       },
       {
         "epoch": 1,
         "t_mid": 1331.7730522753125,
         "n_points": 12,
-        "depth_ppm": 250.3755487123227,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": 250.37556308860064,
+        "sigma_ppm": 16.843555747646292
       },
       {
         "epoch": 2,
         "t_mid": 1338.0456718818448,
         "n_points": 12,
-        "depth_ppm": 248.20343805787016,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": 248.20346490728173,
+        "sigma_ppm": 16.843555747646292
       }
     ],
     "secondary_epochs": [
@@ -369,15 +487,15 @@
         "epoch": 0,
         "t_mid": 1328.636742472046,
         "n_points": 12,
-        "depth_ppm": -20.113312773739622,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": -20.11334679985488,
+        "sigma_ppm": 16.843555747646292
       },
       {
         "epoch": 1,
         "t_mid": 1334.9093620785786,
         "n_points": 12,
-        "depth_ppm": -2.229316979018847,
-        "sigma_ppm": 16.843566934529253
+        "depth_ppm": -2.2293410575358052,
+        "sigma_ppm": 16.843555747646292
       }
     ],
     "mark_audit": [
@@ -458,8 +576,67 @@
       "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
     },
     "search_scope": "subject",
+    "fit": {
+      "t0": 1325.4991461627337,
+      "t0_err": 0.0012117110742146484,
+      "k": 0.01972665471788702,
+      "k_err": 0.0006361468851587846,
+      "depth_ppm": 297.20729434845606,
+      "depth_err_ppm": 11.484684326612687,
+      "t14_hours": 3.3664969468770636,
+      "t14_err_hours": 0.15562424948637732,
+      "b": 0.9546364178401222,
+      "b_err": 0.013609858438506919,
+      "t23_hours": 2.090502031453775,
+      "period_days": 6.272619606532485,
+      "a_rs": 5.195399567053499,
+      "rho_star": 0.06742126206960096,
+      "rho_star_err": 0.027688125644798688,
+      "u1": 0.34075253099999997,
+      "u2": 0.22449244636000001,
+      "chi2": 398.3253082280046,
+      "dof": 181,
+      "n_points": 187,
+      "n_epochs": 3,
+      "grazing": false,
+      "v_shape_dchi2": 0.7622835906007683,
+      "v_shape": false,
+      "rho_catalogue": 1.02260345513,
+      "rho_ratio": 0.0659309938093549,
+      "rho_flag": false,
+      "notes": [],
+      "b_range": [
+        0.9417520821241355,
+        0.9546364178401222
+      ],
+      "rho_range": [
+        0.06742126206960096,
+        0.09397430037265074
+      ],
+      "depth_range_ppm": [
+        295.394748270561,
+        297.20729434845606
+      ],
+      "t14_range_hours": [
+        3.2655396010431947,
+        3.3664969468770636
+      ]
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
     "t_center": 1325.4965677643372,
-    "duration_hours": 2.1199683317190647
+    "duration_hours": 2.1199683317190647,
+    "fit_t0": 1325.4991461627337,
+    "fit_t0_err": 0.0012117110742146484,
+    "fit_depth_ppm": 297.20729434845606,
+    "fit_depth_err_ppm": 11.484684326612687,
+    "fit_t14_hours": 3.3664969468770636,
+    "fit_t14_err_hours": 0.15562424948637732,
+    "fit_b": 0.9546364178401222,
+    "fit_b_err": 0.013609858438506919,
+    "fit_k": 0.01972665471788702,
+    "fit_rho_star": 0.06742126206960096,
+    "fit_rho_star_err": 0.027688125644798688,
+    "star_rho": 1.02260345513
   },
   {
     "subject_id": "tess-04b815001aa6",
@@ -474,23 +651,23 @@
     "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
     "passed": true,
     "flags": "",
-    "depth_ppm": 242.5792819543693,
-    "snr": 11.935443380219484,
+    "depth_ppm": 242.5792315623454,
+    "snr": 11.935440839746224,
     "period_days": 6.26155662321977,
     "n_transits": 2,
-    "fap": 0.0,
+    "fap": 9.999000099990002e-05,
     "metrics": {
       "n_in_transit": 11.0,
-      "depth": 0.00024257928195436929,
-      "snr": 11.935443380219484,
+      "depth": 0.0002425792315623454,
+      "snr": 11.935440839746224,
       "duration_minutes": 113.3693782001501,
-      "odd_err": 1.1536487359391785e-05,
-      "even_err": 1.1642601180028725e-05,
-      "secondary_depth": 1.8947477053998796e-07,
-      "secondary_err": 8.635968550408798e-06,
+      "odd_err": 1.1536487360056921e-05,
+      "even_err": 1.1642601180412052e-05,
+      "secondary_depth": 1.8950564806274883e-07,
+      "secondary_err": 8.63596855015088e-06,
       "period": 6.26155662321977,
-      "odd_depth": 0.0002454374681063465,
-      "even_depth": 0.0002489032673996805
+      "odd_depth": 0.00024543741013949294,
+      "even_depth": 0.00024890323435877715
     },
     "candidate_id": "tess-04b815001aa6-003",
     "bls_t0": 1344.3217828868562,
@@ -500,15 +677,15 @@
         "epoch": 0,
         "t_mid": 1344.3217828868562,
         "n_points": 12,
-        "depth_ppm": 250.7673227002405,
-        "sigma_ppm": 19.45901571684303
+        "depth_ppm": 250.76728945228055,
+        "sigma_ppm": 19.459015816413665
       },
       {
         "epoch": 1,
         "t_mid": 1350.583339510076,
         "n_points": 12,
-        "depth_ppm": 248.00038778505228,
-        "sigma_ppm": 19.45901571684303
+        "depth_ppm": 248.00032968830266,
+        "sigma_ppm": 19.459015816413665
       }
     ],
     "secondary_epochs": [
@@ -516,15 +693,15 @@
         "epoch": -1,
         "t_mid": 1341.1910045752463,
         "n_points": 12,
-        "depth_ppm": 6.776913144546093,
-        "sigma_ppm": 19.45901571684303
+        "depth_ppm": 6.77692899253568,
+        "sigma_ppm": 19.459015816413665
       },
       {
         "epoch": 0,
         "t_mid": 1347.4525611984661,
         "n_points": 12,
-        "depth_ppm": 1.4245567915294188,
-        "sigma_ppm": 19.45901571684303
+        "depth_ppm": 1.4246061765810225,
+        "sigma_ppm": 19.459015816413665
       }
     ],
     "mark_audit": [
@@ -605,8 +782,67 @@
       "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
     },
     "search_scope": "subject",
+    "fit": {
+      "t0": 1350.5721396355395,
+      "t0_err": 0.001255930468317992,
+      "k": 0.019075504655817012,
+      "k_err": 0.0018324669890038424,
+      "depth_ppm": 308.905073560739,
+      "depth_err_ppm": 14.450387051917863,
+      "t14_hours": 3.1708052369121678,
+      "t14_err_hours": 0.21848356103425914,
+      "b": 0.9117123103229532,
+      "b_err": 0.45928582252462824,
+      "t23_hours": 2.5198941494449403,
+      "period_days": 6.26155662321977,
+      "a_rs": 6.93384704629003,
+      "rho_star": 0.16084074137427526,
+      "rho_star_err": 1.012543049333988,
+      "u1": 0.34075253099999997,
+      "u2": 0.22449244636000001,
+      "chi2": 285.3756625721848,
+      "dof": 114,
+      "n_points": 120,
+      "n_epochs": 2,
+      "grazing": false,
+      "v_shape_dchi2": 0.307242133680753,
+      "v_shape": false,
+      "rho_catalogue": 1.02260345513,
+      "rho_ratio": 0.15728554462377417,
+      "rho_flag": false,
+      "notes": [],
+      "b_range": [
+        0.0,
+        0.9117123103229532
+      ],
+      "rho_range": [
+        0.16084074137427526,
+        2.1663894339801866
+      ],
+      "depth_range_ppm": [
+        308.0793065427523,
+        309.03722015807045
+      ],
+      "t14_range_hours": [
+        2.948257228863236,
+        3.1708052369121678
+      ]
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
     "t_center": 1350.5717262194837,
-    "duration_hours": 1.8894896366691682
+    "duration_hours": 1.8894896366691682,
+    "fit_t0": 1350.5721396355395,
+    "fit_t0_err": 0.001255930468317992,
+    "fit_depth_ppm": 308.905073560739,
+    "fit_depth_err_ppm": 14.450387051917863,
+    "fit_t14_hours": 3.1708052369121678,
+    "fit_t14_err_hours": 0.21848356103425914,
+    "fit_b": 0.9117123103229532,
+    "fit_b_err": 0.45928582252462824,
+    "fit_k": 0.019075504655817012,
+    "fit_rho_star": 0.16084074137427526,
+    "fit_rho_star_err": 1.012543049333988,
+    "star_rho": 1.02260345513
   },
   {
     "subject_id": "tess-04b815001aa6",
@@ -621,23 +857,23 @@
     "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
     "passed": true,
     "flags": "",
-    "depth_ppm": 246.84141710196172,
-    "snr": 8.188258435931115,
+    "depth_ppm": 246.84136737851415,
+    "snr": 8.188256744599045,
     "period_days": 6.26155662321977,
     "n_transits": 2,
-    "fap": 0.0,
+    "fap": 9.999000099990002e-05,
     "metrics": {
       "n_in_transit": 5.0,
-      "depth": 0.0002468414171019617,
-      "snr": 8.188258435931115,
+      "depth": 0.00024684136737851414,
+      "snr": 8.188256744599045,
       "duration_minutes": 50.47297396300564,
-      "odd_err": 1.1536487359391785e-05,
-      "even_err": 1.1642601180028725e-05,
-      "secondary_depth": 1.8947477053998796e-07,
-      "secondary_err": 8.635968550408798e-06,
+      "odd_err": 1.1536487360056921e-05,
+      "even_err": 1.1642601180412052e-05,
+      "secondary_depth": 1.8950564806274883e-07,
+      "secondary_err": 8.63596855015088e-06,
       "period": 6.26155662321977,
-      "odd_depth": 0.0002454374681063465,
-      "even_depth": 0.0002489032673996805
+      "odd_depth": 0.00024543741013949294,
+      "even_depth": 0.00024890323435877715
     },
     "candidate_id": "tess-04b815001aa6-004",
     "bls_t0": 1344.3217828868562,
@@ -647,15 +883,15 @@
         "epoch": 0,
         "t_mid": 1344.3217828868562,
         "n_points": 12,
-        "depth_ppm": 250.7673227002405,
-        "sigma_ppm": 19.45901571684303
+        "depth_ppm": 250.76728945228055,
+        "sigma_ppm": 19.459015816413665
       },
       {
         "epoch": 1,
         "t_mid": 1350.583339510076,
         "n_points": 12,
-        "depth_ppm": 248.00038778505228,
-        "sigma_ppm": 19.45901571684303
+        "depth_ppm": 248.00032968830266,
+        "sigma_ppm": 19.459015816413665
       }
     ],
     "secondary_epochs": [
@@ -663,15 +899,15 @@
         "epoch": -1,
         "t_mid": 1341.1910045752463,
         "n_points": 12,
-        "depth_ppm": 6.776913144546093,
-        "sigma_ppm": 19.45901571684303
+        "depth_ppm": 6.77692899253568,
+        "sigma_ppm": 19.459015816413665
       },
       {
         "epoch": 0,
         "t_mid": 1347.4525611984661,
         "n_points": 12,
-        "depth_ppm": 1.4245567915294188,
-        "sigma_ppm": 19.45901571684303
+        "depth_ppm": 1.4246061765810225,
+        "sigma_ppm": 19.459015816413665
       }
     ],
     "mark_audit": [
@@ -759,8 +995,67 @@
       "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
     },
     "search_scope": "subject",
+    "fit": {
+      "t0": 1344.3105830419704,
+      "t0_err": 0.0012559113940513044,
+      "k": 0.01907530544769076,
+      "k_err": 0.0018324318960842288,
+      "depth_ppm": 308.9029130645127,
+      "depth_err_ppm": 14.45034850558516,
+      "t14_hours": 3.170786505758774,
+      "t14_err_hours": 0.21847971159165952,
+      "b": 0.9117049143943187,
+      "b_err": 0.4592832950488174,
+      "t23_hours": 2.519933288923208,
+      "period_days": 6.26155662321977,
+      "a_rs": 6.934101238252766,
+      "rho_star": 0.16085843108777315,
+      "rho_star_err": 1.0125376383132392,
+      "u1": 0.34075253099999997,
+      "u2": 0.22449244636000001,
+      "chi2": 285.37566194993036,
+      "dof": 114,
+      "n_points": 120,
+      "n_epochs": 2,
+      "grazing": false,
+      "v_shape_dchi2": 0.30724238004605897,
+      "v_shape": false,
+      "rho_catalogue": 1.02260345513,
+      "rho_ratio": 0.15730284332681407,
+      "rho_flag": false,
+      "notes": [],
+      "b_range": [
+        0.0,
+        0.9117049143943187
+      ],
+      "rho_range": [
+        0.16085843108777315,
+        2.1663885818897946
+      ],
+      "depth_range_ppm": [
+        308.0793057492759,
+        309.037219165309
+      ],
+      "t14_range_hours": [
+        2.9482576139742007,
+        3.170786505758774
+      ]
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
     "t_center": 1344.2666586711957,
-    "duration_hours": 0.8412162327167607
+    "duration_hours": 0.8412162327167607,
+    "fit_t0": 1344.3105830419704,
+    "fit_t0_err": 0.0012559113940513044,
+    "fit_depth_ppm": 308.9029130645127,
+    "fit_depth_err_ppm": 14.45034850558516,
+    "fit_t14_hours": 3.170786505758774,
+    "fit_t14_err_hours": 0.21847971159165952,
+    "fit_b": 0.9117049143943187,
+    "fit_b_err": 0.4592832950488174,
+    "fit_k": 0.01907530544769076,
+    "fit_rho_star": 0.16085843108777315,
+    "fit_rho_star_err": 1.0125376383132392,
+    "star_rho": 1.02260345513
   },
   {
     "subject_id": "tess-04b815001aa6",
@@ -775,15 +1070,15 @@
     "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
     "passed": true,
     "flags": "off_ephemeris",
-    "depth_ppm": 261.1116852069273,
-    "snr": 9.488344423148439,
+    "depth_ppm": 261.1117461950307,
+    "snr": 9.488346590798718,
     "period_days": null,
     "n_transits": 0,
     "fap": null,
     "metrics": {
       "n_in_transit": 6.0,
-      "depth": 0.0002611116852069273,
-      "snr": 9.488344423148439,
+      "depth": 0.00026111174619503075,
+      "snr": 9.488346590798718,
       "duration_minutes": 52.483306159847416
     },
     "candidate_id": "tess-04b815001aa6-005",
@@ -853,8 +1148,66 @@
       "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
     },
     "search_scope": "subject",
+    "fit": {
+      "t0": 1348.9156133749518,
+      "t0_err": 0.006662716241643399,
+      "k": 0.01647582495102389,
+      "k_err": 0.18450893478510297,
+      "depth_ppm": 317.093961715198,
+      "depth_err_ppm": 550.0362532136136,
+      "t14_hours": 0.8207226731528624,
+      "t14_err_hours": 1.273356457275785,
+      "b": 0.21672716696277192,
+      "b_err": 264.1207772085027,
+      "t23_hours": 0.792827360779724,
+      "period_days": null,
+      "a_rs": null,
+      "rho_star": null,
+      "rho_star_err": null,
+      "u1": 0.34075253099999997,
+      "u2": 0.22449244636000001,
+      "chi2": 208.32138683000534,
+      "dof": 12,
+      "n_points": 18,
+      "n_epochs": 1,
+      "grazing": false,
+      "v_shape_dchi2": 0.0,
+      "v_shape": false,
+      "rho_catalogue": 1.02260345513,
+      "rho_ratio": null,
+      "rho_flag": false,
+      "notes": [
+        "single transit: no period, so a/R\u2605 and \u03c1\u2605 are not constrained"
+      ],
+      "b_range": [
+        0.0,
+        0.9425244263550899
+      ],
+      "rho_range": null,
+      "depth_range_ppm": [
+        316.4100588022301,
+        321.46664342391773
+      ],
+      "t14_range_hours": [
+        0.8205666651963025,
+        0.8978353931489097
+      ]
+    },
+    "fap_label": "",
     "t_center": 1348.936446522426,
-    "duration_hours": 0.8747217693307903
+    "duration_hours": 0.8747217693307903,
+    "fit_t0": 1348.9156133749518,
+    "fit_t0_err": 0.006662716241643399,
+    "fit_depth_ppm": 317.093961715198,
+    "fit_depth_err_ppm": 550.0362532136136,
+    "fit_t14_hours": 0.8207226731528624,
+    "fit_t14_err_hours": 1.273356457275785,
+    "fit_b": 0.21672716696277192,
+    "fit_b_err": 264.1207772085027,
+    "fit_k": 0.01647582495102389,
+    "fit_rho_star": null,
+    "fit_rho_star_err": null,
+    "star_rho": 1.02260345513
   },
   {
     "subject_id": "tess-04b815001aa6",
@@ -869,15 +1222,15 @@
     "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
     "passed": false,
     "flags": "low_snr;off_ephemeris",
-    "depth_ppm": 70.95849006122367,
-    "snr": 6.740386529267594,
+    "depth_ppm": 70.95853895877636,
+    "snr": 6.740391139583199,
     "period_days": null,
     "n_transits": 0,
     "fap": null,
     "metrics": {
       "n_in_transit": 41.0,
-      "depth": 7.095849006122368e-05,
-      "snr": 6.740386529267594,
+      "depth": 7.095853895877635e-05,
+      "snr": 6.740391139583199,
       "duration_minutes": 592.5031924824725
     },
     "candidate_id": "tess-04b815001aa6-006",
@@ -947,7 +1300,65 @@
       "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
     },
     "search_scope": "subject",
+    "fit": {
+      "t0": 1348.1829507389575,
+      "t0_err": 0.044451537327184334,
+      "k": 0.21510393860188318,
+      "k_err": 8.436620371396125e-05,
+      "depth_ppm": 68.10793639855373,
+      "depth_err_ppm": 44.6875062376878,
+      "t14_hours": 4.549966363518758,
+      "t14_err_hours": 4.082181268193674,
+      "b": 1.2090284189088738,
+      "b_err": 0.002609258585819971,
+      "t23_hours": 0.0,
+      "period_days": null,
+      "a_rs": null,
+      "rho_star": null,
+      "rho_star_err": null,
+      "u1": 0.34075253099999997,
+      "u2": 0.22449244636000001,
+      "chi2": 1353.9206222212229,
+      "dof": 198,
+      "n_points": 204,
+      "n_epochs": 1,
+      "grazing": true,
+      "v_shape_dchi2": 2.134785809137877,
+      "v_shape": false,
+      "rho_catalogue": 1.02260345513,
+      "rho_ratio": null,
+      "rho_flag": false,
+      "notes": [
+        "single transit: no period, so a/R\u2605 and \u03c1\u2605 are not constrained"
+      ],
+      "b_range": [
+        1.2090284189088738,
+        1.2090284189088738
+      ],
+      "rho_range": null,
+      "depth_range_ppm": [
+        68.10793639855373,
+        68.10793639855373
+      ],
+      "t14_range_hours": [
+        4.549966363518758,
+        4.549966363518758
+      ]
+    },
+    "fap_label": "",
     "t_center": 1348.3831550208442,
-    "duration_hours": 9.875053208041209
+    "duration_hours": 9.875053208041209,
+    "fit_t0": 1348.1829507389575,
+    "fit_t0_err": 0.044451537327184334,
+    "fit_depth_ppm": 68.10793639855373,
+    "fit_depth_err_ppm": 44.6875062376878,
+    "fit_t14_hours": 4.549966363518758,
+    "fit_t14_err_hours": 4.082181268193674,
+    "fit_b": 1.2090284189088738,
+    "fit_b_err": 0.002609258585819971,
+    "fit_k": 0.21510393860188318,
+    "fit_rho_star": null,
+    "fit_rho_star_err": null,
+    "star_rho": 1.02260345513
   }
 ]
