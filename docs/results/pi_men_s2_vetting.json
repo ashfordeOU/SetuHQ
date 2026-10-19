@@ -1,0 +1,1263 @@
+{
+ "target": "TIC 261136679 (pi Men)",
+ "sector": 1,
+ "made_at": "2026-10-19T16:36:53+00:00",
+ "inputs": {
+  "lightcurve": {
+   "source": "SPOC file",
+   "author": "SPOC",
+   "sector": 1,
+   "flux_column": "pdcsap_flux",
+   "time_unit": "BTJD",
+   "file": "tess2018206045859-s0001-0000000261136679-0120-s_lc.fits",
+   "file_sha256": "1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609",
+   "crowdsap": 0.99965841,
+   "flfrcsap": 0.9800123
+  },
+  "tpf": {
+   "file": "tess2018206045859-s0001-0000000261136679-0120-s_tp.fits",
+   "file_sha256": "0145804d17a98f4b1ca5bf60028c2fcff49a108a984ae494ba1b9fced3445423"
+  },
+  "dv_report": "tess2018206190142-s0001-s0001-0000000261136679-00366_dvr.xml"
+ },
+ "bls": {
+  "period": 6.269116346236388,
+  "t0": 1325.5087660021131,
+  "duration_days": 0.08333333333333333,
+  "snr": 47.10192279950414
+ },
+ "fit": {
+  "t0": 1338.0394382805193,
+  "t0_err": 0.0007010286729525019,
+  "period_days": 6.267951048297873,
+  "period_err": 0.00049426017413823,
+  "t14_hours": 3.094452994669484,
+  "t14_err_hours": 0.1566817379997474,
+  "depth_ppm": 300.16352686956793,
+  "depth_err_ppm": 8.454522682438068,
+  "k": 0.01819485346666861,
+  "b": 0.8694783168303084,
+  "a_rs": 8.250374109618647,
+  "n_epochs": 5
+ },
+ "lightcurve_flags": [],
+ "lightcurve_tests": {
+  "crowding": {
+   "crowdsap": 0.99965841,
+   "flfrcsap": 0.9800123,
+   "crowding_min": 0.8,
+   "crowded": false
+  },
+  "secondary": {
+   "phase": 0.742084553911073,
+   "depth_ppm": 41.2782835965686,
+   "sigma_ppm": 7.425056257841174,
+   "snr": 5.559322672198879,
+   "n_points": 69,
+   "max_brightening_snr": 8.819039138447089,
+   "n_trials": 187,
+   "duration_days": 0.12893554144456185,
+   "phase_05": {
+    "phase": 0.4988371568217191,
+    "depth_ppm": -5.8767080426402885,
+    "sigma_ppm": 7.169822993230819,
+    "snr": -0.8196447873522975
+   },
+   "albedo": 8.487343701468863,
+   "threshold_sigma": 7.1,
+   "significant": false
+  },
+  "odd_even_depth": {
+   "odd_depth_ppm": 216.16534920188005,
+   "odd_err_ppm": 10.005354842355981,
+   "n_odd": 2,
+   "even_depth_ppm": 205.2738723012724,
+   "even_err_ppm": 8.316545141316292,
+   "n_even": 3,
+   "delta_sigma": 0.8371323973063636,
+   "both_parities_detected": true,
+   "significant": false
+  },
+  "timing": {
+   "n_epochs": 5,
+   "o_minus_c_minutes": [
+    0.3456746635492891,
+    -1.4132103428710252,
+    1.6749430213531014,
+    0.5162358106099418,
+    -0.7665686456675758
+   ],
+   "linear": {
+    "t0": 1338.0393620033688,
+    "period": 6.268052101481457,
+    "period_err": 0.00040204962323464843,
+    "chi2": 1.596675620594742,
+    "dof": 3,
+    "p_value": 0.6601438351846933,
+    "inconsistent": false
+   },
+   "odd_even": {
+    "offset_minutes": -0.8292309411171708,
+    "offset_err_minutes": 1.6627243619486967,
+    "delta_sigma": 0.4987182241952119,
+    "significant": false
+   },
+   "epochs": [
+    {
+     "epoch": -2,
+     "t_mid": 1325.5034978522556,
+     "sigma": 0.0012288054499844426,
+     "depth": 0.00030546431203543696,
+     "at_scan_edge": false
+    },
+    {
+     "epoch": -1,
+     "t_mid": 1331.7703285058158,
+     "sigma": 0.001210908832874406,
+     "depth": 0.0002869766892031475,
+     "at_scan_edge": false
+    },
+    {
+     "epoch": 0,
+     "t_mid": 1338.0405251582447,
+     "sigma": 0.0014318980793943572,
+     "depth": 0.0002992404812775659,
+     "at_scan_edge": false
+    },
+    {
+     "epoch": 1,
+     "t_mid": 1344.307772601941,
+     "sigma": 0.0012288944943243312,
+     "depth": 0.0003095681044626134,
+     "at_scan_edge": false
+    },
+    {
+     "epoch": 2,
+     "t_mid": 1350.5749338669943,
+     "sigma": 0.00134477945040348,
+     "depth": 0.0003136204565078947,
+     "at_scan_edge": false
+    }
+   ]
+  },
+  "period": 6.267951048297873,
+  "t0": 1338.0394382805193,
+  "duration_days": 0.12893554144456185
+ },
+ "pixel_flags": [
+  "saturated",
+  "centroid_unreliable"
+ ],
+ "pixel": {
+  "tpf": {
+   "file": "tess2018206045859-s0001-0000000261136679-0120-s_tp.fits",
+   "file_sha256": "0145804d17a98f4b1ca5bf60028c2fcff49a108a984ae494ba1b9fced3445423"
+  },
+  "header": {
+   "tic": 261136679,
+   "sector": 1,
+   "camera": 4,
+   "ccd": 2,
+   "tessmag": 5.10540009,
+   "teff": 5992.10009766,
+   "ra": 84.2911879979852,
+   "dec": -80.4691197969941,
+   "pmra": 311.187,
+   "pmdec": 1048.84,
+   "ra_epoch": 84.30089899016973,
+   "dec_epoch": -80.4691197969941,
+   "crowdsap": 0.99965841,
+   "flfrcsap": 0.9800123,
+   "col0": 1626,
+   "row0": 251,
+   "tstart": 1325.29487730636,
+   "years_since_2000": 18.563435666821515
+  },
+  "ephemeris": {
+   "period": 6.267951048297873,
+   "t0": 1338.0394382805193,
+   "duration_days": 0.12893554144456185,
+   "depth": 0.00030016352686956793
+  },
+  "centroid": {
+   "flags": [
+    "saturated",
+    "centroid_unreliable"
+   ],
+   "n_transits": 5,
+   "transits": [
+    -2,
+    -1,
+    0,
+    1,
+    2
+   ],
+   "n_in": 344,
+   "n_out": 904,
+   "error_scale": 1.126597995925565,
+   "pixel_scale_arcsec": 19.584199867688294,
+   "saturation": {
+    "saturated": true,
+    "plateau_pixels": 4,
+    "column": 5
+   },
+   "depth_in_aperture": 0.00029135969500586074,
+   "target_pixel": [
+    5.320072962201325,
+    9.063642617087266
+   ],
+   "flux_weighted": {
+    "diff": [
+     4.58504557735062,
+     9.335861445420223
+    ],
+    "oot": [
+     4.649360242709888,
+     9.651413580968773
+    ],
+    "offset_px": [
+     -0.06431466535926855,
+     -0.31555213554855044
+    ],
+    "offset_arcsec": 6.306888574682061,
+    "chi2": 94.54532670292478,
+    "p_value": 2.9494644202532806e-21,
+    "sigma": 9.464507938816897
+   },
+   "psf_control": {
+    "diff": [
+     4.580555915022391,
+     7.155383787982436
+    ],
+    "diff_err": [
+     0.03988888732527877,
+     0.11338605670720796
+    ],
+    "oot": [
+     4.669902781756693,
+     9.396897108134846
+    ],
+    "offset_px": [
+     -0.08934686673430203,
+     -2.24151332015241
+    ],
+    "offset_total_px": 2.2432932993739176,
+    "offset_arcsec": 43.933104336784716,
+    "quality": 0.7777570250540033,
+    "psf_sigma_px": 0.30000000000000004,
+    "chi2_red": 67.1775182746472,
+    "chi2": 218.5103677628066,
+    "p_value": 3.5569398493072295e-48,
+    "sigma": 14.583883421298811
+   },
+   "diff_cov": [
+    [
+     0.5353709426748363,
+     0.0008637053870507635
+    ],
+    [
+     0.0008637053870507636,
+     0.5466362171983977
+    ]
+   ],
+   "psf_target": {
+    "offset_px": [
+     -0.7395170471789347,
+     -1.9082588291048301
+    ],
+    "offset_total_px": 2.0465427486189456,
+    "offset_arcsec": 40.07990222672159,
+    "systematic_floor_px": 0.7306023674631691,
+    "chi2": 7.674760739699735,
+    "p_value": 0.021549980445162018,
+    "sigma": 2.298207528117733
+   },
+   "flag_reference": "catalogue position",
+   "reliable": false,
+   "unreliable_reasons": [
+    "saturated: a 4-pixel plateau in column 5"
+   ]
+  },
+  "motion": {
+   "shift_px": [
+    -6.824969769869682e-05,
+    -0.0006204230023012514
+   ],
+   "shift_err_px": [
+    0.0003430143866993544,
+    0.0026669135909713204
+   ],
+   "chi2": 0.093709219185873,
+   "p_value": 0.9542261228298962,
+   "sigma": 0.05740055258582594,
+   "depth": 0.00028966805223140657,
+   "source_offset_px": [
+    0.2355452298453415,
+    2.1412208933663233
+   ],
+   "source_offset_arcsec": 42.18705979971391
+  },
+  "ghost": {
+   "core": 32.04781743010484,
+   "halo": 3.2374475740178403,
+   "n_halo_pixels": 73,
+   "ghost_suspect": false
+  },
+  "momentum_dumps": {
+   "n_dumps": 70,
+   "epochs_with_dump": []
+  },
+  "neighbours": {
+   "stars": [
+    {
+     "id": "TIC 261136679",
+     "tmag": 5.1054,
+     "x": 4.524883498428038,
+     "y": 9.714306476114071,
+     "aperture_fraction": 0.9974214405173756,
+     "source": "TIC",
+     "flux_share": 0.9996260680219325,
+     "needed_depth": 0.0003001732383832161,
+     "separation_arcsec": 0.0,
+     "delta_mag": 0.0,
+     "ruled_out": false,
+     "ruled_out_by": []
+    },
+    {
+     "id": "TIC 261139070",
+     "tmag": 12.2166,
+     "x": 8.417457328055677,
+     "y": 13.964726237186522,
+     "aperture_fraction": 0.01971589739385081,
+     "source": "TIC",
+     "flux_share": 2.8268022140673034e-05,
+     "needed_depth": 10.614856338982632,
+     "separation_arcsec": 112.87398942009632,
+     "delta_mag": 7.111199999999999,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261139071",
+     "tmag": 13.995,
+     "x": 4.1563261926355395,
+     "y": 8.366393366470668,
+     "aperture_fraction": 0.9681286886075658,
+     "source": "TIC",
+     "flux_share": 0.0002698062235857406,
+     "needed_depth": 1.1121351836239959,
+     "separation_arcsec": 27.366803080264734,
+     "delta_mag": 8.889599999999998,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100% (marginal: within a factor 2, PSF-model dependent)"
+     ]
+    },
+    {
+     "id": "TIC 10001480022",
+     "tmag": 14.738,
+     "x": -1.1564514516818623,
+     "y": 8.016015267251513,
+     "aperture_fraction": 0.03467691138040614,
+     "source": "TIC",
+     "flux_share": 4.874827832723261e-06,
+     "needed_depth": 61.553146963715285,
+     "separation_arcsec": 116.1291198201575,
+     "delta_mag": 9.6326,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261139061",
+     "tmag": 15.1531,
+     "x": 1.9655068554283837,
+     "y": 14.503188825687378,
+     "aperture_fraction": 0.05546144767621888,
+     "source": "TIC",
+     "flux_share": 5.319490957701228e-06,
+     "needed_depth": 56.40783984715961,
+     "separation_arcsec": 106.340226932171,
+     "delta_mag": 10.047699999999999,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261136670",
+     "tmag": 15.6241,
+     "x": 1.2035951301610783,
+     "y": 14.256068322279866,
+     "aperture_fraction": 0.03324203591431619,
+     "source": "TIC",
+     "flux_share": 2.066172076118631e-06,
+     "needed_depth": 145.22555864470812,
+     "separation_arcsec": 110.19233633922651,
+     "delta_mag": 10.518699999999999,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261136680",
+     "tmag": 15.7073,
+     "x": 2.6476014165269035,
+     "y": 5.14538687794267,
+     "aperture_fraction": 0.07778219309003348,
+     "source": "TIC",
+     "flux_share": 4.477948118289101e-06,
+     "needed_depth": 67.0085910073182,
+     "separation_arcsec": 96.73725361186663,
+     "delta_mag": 10.6019,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261136674",
+     "tmag": 16.205,
+     "x": -1.3004260129313323,
+     "y": 8.100069394849854,
+     "aperture_fraction": 0.026339289482731967,
+     "source": "TIC",
+     "flux_share": 9.58788748569493e-07,
+     "needed_depth": 312.95840137685565,
+     "separation_arcsec": 118.38319538083225,
+     "delta_mag": 11.099599999999999,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261139082",
+     "tmag": 16.4525,
+     "x": 10.90006540986051,
+     "y": 9.995708084702676,
+     "aperture_fraction": 0.0003823513216313833,
+     "source": "TIC",
+     "flux_share": 1.1081064152672827e-08,
+     "needed_depth": 27078.71643699922,
+     "separation_arcsec": 124.97440635576226,
+     "delta_mag": 11.347100000000001,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261139074",
+     "tmag": 16.6378,
+     "x": 8.038290572901015,
+     "y": 11.139198791072056,
+     "aperture_fraction": 0.2744356040398884,
+     "source": "TIC",
+     "flux_share": 6.7056260028067835e-06,
+     "needed_depth": 44.74764830081898,
+     "separation_arcsec": 74.2505886016782,
+     "delta_mag": 11.532399999999999,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261139065",
+     "tmag": 16.7699,
+     "x": 5.759999460131504,
+     "y": 15.365784120978859,
+     "aperture_fraction": 0.024284789942064972,
+     "source": "TIC",
+     "flux_share": 5.254038184465326e-07,
+     "needed_depth": 571.105468737586,
+     "separation_arcsec": 113.29203351784595,
+     "delta_mag": 11.6645,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261136676",
+     "tmag": 17.1201,
+     "x": 3.7166147657170265,
+     "y": 11.63591273136975,
+     "aperture_fraction": 0.94103222585,
+     "source": "TIC",
+     "flux_share": 1.4746310345625247e-05,
+     "needed_depth": 20.348208262105572,
+     "separation_arcsec": 40.82668757952726,
+     "delta_mag": 12.014700000000001,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261136683",
+     "tmag": 17.1858,
+     "x": 7.776552215683587,
+     "y": 8.521666313967863,
+     "aperture_fraction": 0.4378557881163289,
+     "source": "TIC",
+     "flux_share": 6.4584747886529325e-06,
+     "needed_depth": 46.46003953404134,
+     "separation_arcsec": 67.82961543845157,
+     "delta_mag": 12.080400000000001,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261139063",
+     "tmag": 17.2161,
+     "x": 4.7862487985381605,
+     "y": 15.187270524971176,
+     "aperture_fraction": 0.043467314219446176,
+     "source": "TIC",
+     "flux_share": 6.235074974705711e-07,
+     "needed_depth": 481.24680974600005,
+     "separation_arcsec": 107.30577411484228,
+     "delta_mag": 12.110700000000001,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261136685",
+     "tmag": 17.2996,
+     "x": 8.985743636714655,
+     "y": 8.950690623301803,
+     "aperture_fraction": 0.08483585438433228,
+     "source": "TIC",
+     "flux_share": 1.126829768112592e-06,
+     "needed_depth": 266.2877770020384,
+     "separation_arcsec": 88.63312608739272,
+     "delta_mag": 12.194200000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137534",
+     "tmag": 17.5666,
+     "x": 10.01053379161249,
+     "y": 4.89530832314293,
+     "aperture_fraction": 0.004547267605741579,
+     "source": "TIC",
+     "flux_share": 4.7231244237769454e-08,
+     "needed_depth": 6353.019041799336,
+     "separation_arcsec": 142.99832693235442,
+     "delta_mag": 12.461200000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137550",
+     "tmag": 17.5934,
+     "x": 1.9719528233618902,
+     "y": 5.77229244823773,
+     "aperture_fraction": 0.16948453207982728,
+     "source": "TIC",
+     "flux_share": 1.7174691395831835e-06,
+     "needed_depth": 174.71114158315942,
+     "separation_arcsec": 91.97681391423505,
+     "delta_mag": 12.488,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137532",
+     "tmag": 17.7657,
+     "x": 9.181956610118206,
+     "y": 4.516342288204364,
+     "aperture_fraction": 0.011494254761523293,
+     "source": "TIC",
+     "flux_share": 9.9384736864034e-08,
+     "needed_depth": 3019.185877816743,
+     "separation_arcsec": 136.67914202597245,
+     "delta_mag": 12.6603,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137558",
+     "tmag": 17.8818,
+     "x": 3.110152673963924,
+     "y": 10.080478649055765,
+     "aperture_fraction": 0.9765590620978856,
+     "source": "TIC",
+     "flux_share": 7.587477005939998e-06,
+     "needed_depth": 39.546873588614,
+     "separation_arcsec": 28.61938081871116,
+     "delta_mag": 12.776399999999999,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137560",
+     "tmag": 17.9024,
+     "x": 4.144621799609235,
+     "y": 12.631519505342766,
+     "aperture_fraction": 0.7841670344339879,
+     "source": "TIC",
+     "flux_share": 5.978158901357796e-06,
+     "needed_depth": 50.19287693110213,
+     "separation_arcsec": 57.614608498906925,
+     "delta_mag": 12.797,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 261136672",
+     "tmag": 17.9585,
+     "x": -2.439906973430885,
+     "y": 8.75053523696793,
+     "aperture_fraction": 0.0014078848974207335,
+     "source": "TIC",
+     "flux_share": 1.0192624470923994e-08,
+     "needed_depth": 29439.031612161714,
+     "separation_arcsec": 137.69957362712776,
+     "delta_mag": 12.853100000000001,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137531",
+     "tmag": 18.1265,
+     "x": 11.608729328720937,
+     "y": 4.6053573944220805,
+     "aperture_fraction": 2.865107685965921e-05,
+     "source": "TIC",
+     "flux_share": 1.7768870539400746e-10,
+     "needed_depth": 1688689.1788933259,
+     "separation_arcsec": 171.04781468544877,
+     "delta_mag": 13.0211,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137789",
+     "tmag": 18.324,
+     "x": 6.266120421255071,
+     "y": 16.009027569113066,
+     "aperture_fraction": 0.0036530194980688626,
+     "source": "TIC",
+     "flux_share": 1.888734284529461e-08,
+     "needed_depth": 15886.882367107479,
+     "separation_arcsec": 127.90659632454027,
+     "delta_mag": 13.218600000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137537",
+     "tmag": 18.3303,
+     "x": 8.988243347619829,
+     "y": 4.444814433083661,
+     "aperture_fraction": 0.013743640224888306,
+     "source": "TIC",
+     "flux_share": 7.064812681765543e-08,
+     "needed_depth": 4247.260437419514,
+     "separation_arcsec": 135.2432259071029,
+     "delta_mag": 13.224900000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137547",
+     "tmag": 18.38,
+     "x": 3.9221071975654365,
+     "y": 3.483973039426779,
+     "aperture_fraction": 0.0013697893099782871,
+     "source": "TIC",
+     "flux_share": 6.726244440223393e-09,
+     "needed_depth": 44610.48013896724,
+     "separation_arcsec": 122.58581879079803,
+     "delta_mag": 13.2746,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137545",
+     "tmag": 18.4222,
+     "x": 2.279204831571712,
+     "y": 2.598690480838977,
+     "aperture_fraction": 3.751950660189839e-05,
+     "source": "TIC",
+     "flux_share": 1.7721316907320007e-10,
+     "needed_depth": 1693220.6312866097,
+     "separation_arcsec": 146.12892650350858,
+     "delta_mag": 13.3168,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137526",
+     "tmag": 18.457,
+     "x": 7.5336274761654884,
+     "y": 15.313063360909759,
+     "aperture_fraction": 0.006083760974485836,
+     "source": "TIC",
+     "flux_share": 2.7828578068856362e-08,
+     "needed_depth": 10782.476678038756,
+     "separation_arcsec": 124.47699407490282,
+     "delta_mag": 13.351600000000001,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137542",
+     "tmag": 18.5143,
+     "x": 5.183493462928913,
+     "y": 5.6855907205443295,
+     "aperture_fraction": 0.23788948075179467,
+     "source": "TIC",
+     "flux_share": 1.0322243786702148e-06,
+     "needed_depth": 290.69357419845534,
+     "separation_arcsec": 79.94652687229502,
+     "delta_mag": 13.4089,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137544",
+     "tmag": 18.6625,
+     "x": 2.5745341625855547,
+     "y": 2.486509991570779,
+     "aperture_fraction": 2.5773944686832675e-05,
+     "source": "TIC",
+     "flux_share": 9.75662842848906e-11,
+     "needed_depth": 3075457.840889538,
+     "separation_arcsec": 146.6134791276136,
+     "delta_mag": 13.557100000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137561",
+     "tmag": 18.7944,
+     "x": 4.1900184985518205,
+     "y": 13.555914844731019,
+     "aperture_fraction": 0.45853210960324253,
+     "source": "TIC",
+     "flux_share": 1.5371938096387244e-06,
+     "needed_depth": 195.2004959484879,
+     "separation_arcsec": 75.52011156241446,
+     "delta_mag": 13.689,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137562",
+     "tmag": 18.8154,
+     "x": 1.228606082857687,
+     "y": 13.490018994809068,
+     "aperture_fraction": 0.09873907633838218,
+     "source": "TIC",
+     "flux_share": 3.246743156111902e-07,
+     "needed_depth": 924.1907338606942,
+     "separation_arcsec": 98.1585609330188,
+     "delta_mag": 13.71,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137527",
+     "tmag": 18.8307,
+     "x": 5.538989542983395,
+     "y": 14.804381917058052,
+     "aperture_fraction": 0.08130647759250864,
+     "source": "TIC",
+     "flux_share": 2.636112983851177e-07,
+     "needed_depth": 1138.2706122559907,
+     "separation_arcsec": 101.64422185804227,
+     "delta_mag": 13.7253,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137567",
+     "tmag": 19.0265,
+     "x": -0.9207994045650647,
+     "y": 7.998714788707346,
+     "aperture_fraction": 0.055124056300926844,
+     "source": "TIC",
+     "flux_share": 1.4923134082818798e-07,
+     "needed_depth": 2010.710299493246,
+     "separation_arcsec": 111.81654973912508,
+     "delta_mag": 13.9211,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137536",
+     "tmag": 19.1586,
+     "x": 7.110259124019818,
+     "y": 3.3418548800888086,
+     "aperture_fraction": 0.006308341118815154,
+     "source": "TIC",
+     "flux_share": 1.5121471070129105e-08,
+     "needed_depth": 19843.37321539859,
+     "separation_arcsec": 134.67937129045592,
+     "delta_mag": 14.0532,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137554",
+     "tmag": 19.2521,
+     "x": 5.92239047552833,
+     "y": 9.977656628605182,
+     "aperture_fraction": 0.9413577369387461,
+     "source": "TIC",
+     "flux_share": 2.070301371677952e-06,
+     "needed_depth": 144.93590069315806,
+     "separation_arcsec": 27.850763921772923,
+     "delta_mag": 14.1467,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137553",
+     "tmag": 19.3635,
+     "x": 6.32832819330241,
+     "y": 11.090178395130264,
+     "aperture_fraction": 0.8501369069533139,
+     "source": "TIC",
+     "flux_share": 1.6873599783313153e-06,
+     "needed_depth": 177.8286778540075,
+     "separation_arcsec": 44.423925888452814,
+     "delta_mag": 14.258099999999999,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137528",
+     "tmag": 19.4035,
+     "x": 5.6896258563321,
+     "y": 15.14952861907669,
+     "aperture_fraction": 0.03984464674979097,
+     "source": "TIC",
+     "flux_share": 7.622349432877863e-08,
+     "needed_depth": 3936.594571696705,
+     "separation_arcsec": 108.86113951237374,
+     "delta_mag": 14.298100000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137535",
+     "tmag": 19.5292,
+     "x": 6.957917470345404,
+     "y": 3.921489702610436,
+     "aperture_fraction": 0.024612424098763505,
+     "source": "TIC",
+     "flux_share": 4.1936604450932144e-08,
+     "needed_depth": 7155.109430986727,
+     "separation_arcsec": 123.04798204131548,
+     "delta_mag": 14.4238,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137555",
+     "tmag": 19.6223,
+     "x": 2.577143620439995,
+     "y": 6.9411711891850505,
+     "aperture_fraction": 0.6112045731647705,
+     "source": "TIC",
+     "flux_share": 9.558405890117373e-07,
+     "needed_depth": 313.92367875972246,
+     "separation_arcsec": 66.3669495490176,
+     "delta_mag": 14.5169,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137523",
+     "tmag": 19.6577,
+     "x": 10.038833467415383,
+     "y": 10.254041374811242,
+     "aperture_fraction": 0.005655760975723669,
+     "source": "TIC",
+     "flux_share": 8.561106909373221e-09,
+     "needed_depth": 35049.322148039,
+     "separation_arcsec": 108.50240249829915,
+     "delta_mag": 14.552299999999999,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137556",
+     "tmag": 19.6703,
+     "x": 2.911250418320086,
+     "y": 7.1846895628692735,
+     "aperture_fraction": 0.7204260751342934,
+     "source": "TIC",
+     "flux_share": 1.0779243851598636e-06,
+     "needed_depth": 278.3692419815917,
+     "separation_arcsec": 58.76165152260103,
+     "delta_mag": 14.564900000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137541",
+     "tmag": 19.7408,
+     "x": 6.916936856999552,
+     "y": 4.627389887160213,
+     "aperture_fraction": 0.08978244636253871,
+     "source": "TIC",
+     "flux_share": 1.2588973177463514e-07,
+     "needed_depth": 2383.5223872554334,
+     "separation_arcsec": 110.0880111558682,
+     "delta_mag": 14.6354,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137521",
+     "tmag": 19.783,
+     "x": 11.035422980306945,
+     "y": 12.895992416724695,
+     "aperture_fraction": 7.153892852174828e-05,
+     "source": "TIC",
+     "flux_share": 9.648533402364714e-11,
+     "needed_depth": 3109912.9939984865,
+     "separation_arcsec": 141.91486053190562,
+     "delta_mag": 14.677600000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137524",
+     "tmag": 19.8776,
+     "x": 7.377436817382673,
+     "y": 11.825060786294081,
+     "aperture_fraction": 0.45023408019980377,
+     "source": "TIC",
+     "flux_share": 5.565667263930826e-07,
+     "needed_depth": 539.1285173567895,
+     "separation_arcsec": 69.49589074259305,
+     "delta_mag": 14.772200000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137563",
+     "tmag": 19.8872,
+     "x": 0.2352313935544501,
+     "y": 11.02760644420545,
+     "aperture_fraction": 0.18386898854727918,
+     "source": "TIC",
+     "flux_share": 2.252928248729182e-07,
+     "needed_depth": 1331.8710623815077,
+     "separation_arcsec": 87.85837889687677,
+     "delta_mag": 14.7818,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137565",
+     "tmag": 20.0846,
+     "x": 0.011036994297075609,
+     "y": 6.520426091697108,
+     "aperture_fraction": 0.07463246603130289,
+     "source": "TIC",
+     "flux_share": 7.624417428795645e-08,
+     "needed_depth": 3935.526836150972,
+     "separation_arcsec": 108.29138554592524,
+     "delta_mag": 14.979199999999999,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137538",
+     "tmag": 20.0857,
+     "x": 8.229958874385694,
+     "y": 6.795772431081936,
+     "aperture_fraction": 0.33843677394249383,
+     "source": "TIC",
+     "flux_share": 3.4539529723002974e-07,
+     "needed_depth": 868.7466112504334,
+     "separation_arcsec": 92.36898718215352,
+     "delta_mag": 14.9803,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137559",
+     "tmag": 20.1084,
+     "x": 2.610775308118339,
+     "y": 10.242609743187137,
+     "aperture_fraction": 0.9318031314147681,
+     "source": "TIC",
+     "flux_share": 9.312859245603137e-07,
+     "needed_depth": 322.20071848728065,
+     "separation_arcsec": 38.88790193688291,
+     "delta_mag": 15.003,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137540",
+     "tmag": 20.121,
+     "x": 4.559978983560464,
+     "y": 4.873619500080332,
+     "aperture_fraction": 0.05711586867801254,
+     "source": "TIC",
+     "flux_share": 5.642553166431233e-08,
+     "needed_depth": 5317.823069803793,
+     "separation_arcsec": 94.80347276274792,
+     "delta_mag": 15.0156,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137539",
+     "tmag": 20.1631,
+     "x": 8.953162672782858,
+     "y": 6.682773120776927,
+     "aperture_fraction": 0.1544244384416002,
+     "source": "TIC",
+     "flux_share": 1.4675567497015107e-07,
+     "needed_depth": 2044.6295795474657,
+     "separation_arcsec": 105.09957325387991,
+     "delta_mag": 15.0577,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137548",
+     "tmag": 20.1814,
+     "x": 3.3717407568563633,
+     "y": 3.578513280743633,
+     "aperture_fraction": 0.0017117798947124982,
+     "source": "TIC",
+     "flux_share": 1.5995830543258497e-09,
+     "needed_depth": 187587.00475036376,
+     "separation_arcsec": 122.26831200367646,
+     "delta_mag": 15.076,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137557",
+     "tmag": 20.476,
+     "x": 4.6481522069003764,
+     "y": 7.749061517782785,
+     "aperture_fraction": 0.8953985155221562,
+     "source": "TIC",
+     "flux_share": 6.378745038147554e-07,
+     "needed_depth": 470.4075679713403,
+     "separation_arcsec": 38.5633877505509,
+     "delta_mag": 15.3706,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137549",
+     "tmag": 20.5105,
+     "x": 2.553387255705728,
+     "y": 4.945771000977845,
+     "aperture_fraction": 0.051970333291219556,
+     "source": "TIC",
+     "flux_share": 3.5865292368515505e-08,
+     "needed_depth": 8366.33341580771,
+     "separation_arcsec": 101.05471424588652,
+     "delta_mag": 15.405100000000001,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137533",
+     "tmag": 20.6535,
+     "x": 9.99126503062887,
+     "y": 4.042999700920013,
+     "aperture_fraction": 0.000860603942673171,
+     "source": "TIC",
+     "flux_share": 5.206216267656465e-10,
+     "needed_depth": 576351.3818558569,
+     "separation_arcsec": 154.26215488704446,
+     "delta_mag": 15.548100000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137566",
+     "tmag": 20.7163,
+     "x": -0.6874500717131706,
+     "y": 6.741886486441465,
+     "aperture_fraction": 0.031670313297631744,
+     "source": "TIC",
+     "flux_share": 1.8082198527265883e-08,
+     "needed_depth": 16594.276053211503,
+     "separation_arcsec": 117.51124051769261,
+     "delta_mag": 15.6109,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    },
+    {
+     "id": "TIC 724137569",
+     "tmag": 20.7401,
+     "x": -2.459117040270189,
+     "y": 8.549510271459653,
+     "aperture_fraction": 0.001282190264151059,
+     "source": "TIC",
+     "flux_share": 7.161951049718935e-10,
+     "needed_depth": 418965.4354342455,
+     "separation_arcsec": 138.66528196996433,
+     "delta_mag": 15.634700000000002,
+     "ruled_out": true,
+     "ruled_out_by": [
+      "needs a depth above 100%"
+     ]
+    }
+   ],
+   "depth_aperture": 0.00030006099401042453,
+   "psf_sigma_px": 1.0,
+   "delta_mag_limit": 8.806976140953338,
+   "n_possible_sources": 1
+  },
+  "flags": [
+   "saturated",
+   "centroid_unreliable"
+  ]
+ },
+ "neighbour_query": {
+  "source": "TIC v8.2 (MAST)",
+  "errors": [],
+  "radius_arcsec": 150.0
+ },
+ "spoc_dv": [
+  {
+   "planet": "1",
+   "toi": "144.01",
+   "sector": "1",
+   "n_transits": "4",
+   "quality": 0.57559127,
+   "ticCentroidOffsets": {
+    "rowOffset": {
+     "value": -2.0745318,
+     "uncertainty": 0.005257394
+    },
+    "columnOffset": {
+     "value": 0.023864495,
+     "uncertainty": 0.010823628
+    },
+    "skyOffset": {
+     "value": 40.459084,
+     "uncertainty": 0.082314506
+    }
+   },
+   "controlCentroidOffsets": {
+    "rowOffset": {
+     "value": -1.9808543,
+     "uncertainty": 0.0052558007
+    },
+    "columnOffset": {
+     "value": 0.09089802,
+     "uncertainty": 0.01082285
+    },
+    "skyOffset": {
+     "value": 38.58103,
+     "uncertainty": 0.37315682
+    }
+   },
+   "odd_even": {
+    "value": 0.2015297,
+    "significance": 0.65348893
+   }
+  }
+ ]
+}

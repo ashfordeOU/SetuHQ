@@ -38,6 +38,7 @@ from exoplan.store import Store
 from exoplan.subjects import Subject, split_subjects
 from exoplan.stellar import tic_id, tic_params
 from exoplan.transitfit import TransitFit, fit_transit, ld_coeffs
+from exoplan.vet import DISQUALIFYING as BASE_DISQUALIFYING
 from exoplan.vet import VettingResult, measure_epochs, vet_event
 
 
@@ -107,6 +108,13 @@ class Candidate:
                          ("fit_t14_hours", "t14_hours"), ("fit_t14_err_hours", "t14_err_hours"), ("fit_b", "b"), ("fit_b_err", "b_err"),
                          ("fit_k", "k"), ("fit_rho_star", "rho_star"), ("fit_rho_star_err", "rho_star_err"), ("star_rho", "rho_catalogue")):
             row[key] = f.get(src)
+        dv = (self.metrics or {}).get("dv") or {}
+        sec = dv.get("secondary") or {}
+        row["crowdsap"] = (dv.get("crowding") or {}).get("crowdsap")
+        row["secondary_phase"], row["secondary_snr"] = sec.get("phase"), sec.get("snr")
+        cen = ((self.metrics or {}).get("pixel") or {}).get("centroid") or {}
+        test = cen.get("psf_target") or cen.get("psf_control") or {}
+        row["centroid_offset_arcsec"], row["centroid_sigma"] = test.get("offset_arcsec"), test.get("sigma")
         return row
 
 
@@ -241,6 +249,7 @@ def build_candidates(
     # One joint fit per (subject, periodic signal): every dip on that signal shares it, with the reference
     # mid-time moved to the dip's own epoch.
     fit_cache: dict[tuple, tuple] = {}
+    ext_cache: dict[tuple, tuple] = {}
     candidates: list[Candidate] = []
     for event in consensus:
         subject = subject_by_id[event.subject_id]
@@ -270,6 +279,8 @@ def build_candidates(
                     d["with_density_prior"] = prior.as_dict()
                 object.__setattr__(candidate, "fit", d)
                 object.__setattr__(candidate, "flags", candidate.flags + extra)
+        if config.vetting_extended or config.vetting_pixel:
+            extended_vetting(candidate, subject, supported, config, subjects, ext_cache)
         if supported is not None:
             object.__setattr__(candidate, "fap_label", supported.fap_label)
             if supported.fap_trials:
@@ -289,6 +300,78 @@ def build_candidates(
     for index, candidate in enumerate(candidates):
         object.__setattr__(candidate, "candidate_id", f"{candidate.subject_id}-{index:03d}")
     return candidates
+
+
+def extended_vetting(candidate: Candidate, subject: Subject, supported: PeriodicSignal | None,
+                     config: RunConfig, subjects: list[Subject], cache: dict) -> None:
+    """The S2 tests for one candidate, stored in ``metrics["dv"]`` and ``metrics["pixel"]`` with their flags added.
+
+    The ephemeris is the transit fit's (period, mid-time, T14) when it has a period, else the BLS signal's; a dip
+    off any periodic signal gets only the crowding test. In sector mode the light-curve tests use every subject of
+    the target stitched; otherwise the subject alone, like :func:`exoplan.vet.measure_epochs`. The pass/fail
+    decision changes only when ``config.vetting_decide`` is set (:func:`exoplan.dvtests.decide`)."""
+    from exoplan import dvtests
+
+    fit = candidate.fit or {}
+    if supported is not None and fit.get("period_days") and fit.get("t14_hours"):
+        period, t0, duration, source = float(fit["period_days"]), float(fit["t0"]), float(fit["t14_hours"]) / 24.0, "transit fit"
+    elif supported is not None:
+        period, t0, duration, source = supported.period, supported.t0, supported.duration, "BLS"
+    else:
+        period = t0 = duration = None
+        source = "none (no periodic signal covers this dip)"
+    flags: list[str] = []
+    if config.vetting_extended:
+        target = str(subject.provenance.get("target", ""))
+        key = ("dv", target if config.search == "sector" else subject.subject_id, period, t0, duration)
+        if key not in cache:
+            data = subject
+            if config.search == "sector" and period is not None:
+                same = [s for s in subjects if str(s.provenance.get("target", "")) == target]
+                data = stitch(same) if len(same) > 1 else subject
+            cache[key] = dvtests.extended_vet(data.time, data.flux, data.flux_err, period=period, t0=t0,
+                                              duration=duration, fit=fit or None, provenance=subject.provenance,
+                                              crowding_min=config.crowding_min, secondary_sigma=config.secondary_sigma)
+        found, metrics = cache[key]
+        candidate.metrics["dv"] = dict(metrics, ephemeris_source=source)
+        flags += found
+    if config.vetting_pixel and period is not None:
+        candidate.metrics["pixel"] = _pixel_report(subject, period, t0, duration, fit, candidate, config, cache)
+        flags += candidate.metrics["pixel"].get("flags", [])
+    new = tuple(f for f in dict.fromkeys(flags) if f not in candidate.flags)
+    object.__setattr__(candidate, "flags", candidate.flags + new)
+    if config.vetting_decide:
+        from exoplan.pixel import DISQUALIFYING as PIXEL_DISQUALIFYING
+
+        object.__setattr__(candidate, "passed", dvtests.decide(
+            candidate.flags, base_disqualifying=BASE_DISQUALIFYING, extra=dvtests.DISQUALIFYING | PIXEL_DISQUALIFYING))
+
+
+def _pixel_report(subject, period, t0, duration, fit, candidate, config, cache) -> dict:
+    """Pixel tests on the SPOC target pixel file of the subject's sector (downloaded once into ``config.tpf_cache``).
+    A failure to get the file is recorded, never raised: the light-curve result stands on its own."""
+    from exoplan import pixel
+
+    tic, sector = tic_id(candidate.target), subject.provenance.get("sector")
+    if tic is None or sector in (None, ""):
+        return {"error": "the pixel tests need a TIC target and a sector", "flags": []}
+    key = ("pixel", tic, sector, period, t0, duration)
+    if key not in cache:
+        depth = (fit.get("depth_ppm") or candidate.depth_ppm) * 1e-6
+        try:
+            tpf = pixel.fetch_tpf(tic, int(sector), cache_dir=config.tpf_cache)
+            h = tpf.header
+            near = pixel.fetch_neighbours(h["ra"], h["dec"], cache_dir=Path(config.tpf_cache).parent / "neighbours",
+                                          epoch_years_since_2000=h.get("years_since_2000"), key=f"tic{tic}")
+            stars = pixel.order_target_first(near.get("stars", []), h.get("ra_epoch") or h["ra"], h.get("dec_epoch") or h["dec"])
+            report = pixel.pixel_vet(tpf, period=period, t0=t0, duration=duration, depth=depth, stars=stars or None,
+                                     sigma_threshold=config.centroid_sigma)
+            report.pop("header", None)
+            report["neighbour_source"] = near.get("source")
+            cache[key] = report
+        except Exception as exc:  # noqa: BLE001 (network, missing product or a malformed file)
+            cache[key] = {"error": f"{type(exc).__name__}: {exc}", "flags": []}
+    return cache[key]
 
 
 def run_pipeline(
@@ -394,6 +477,7 @@ def write_candidates(candidates: list[Candidate], out: Path) -> None:
         "fap_tail_label", "fap_method", "fap_snr", "bls_t0", "bls_duration_days",
         "fit_t0", "fit_t0_err", "fit_depth_ppm", "fit_depth_err_ppm", "fit_t14_hours", "fit_t14_err_hours",
         "fit_b", "fit_b_err", "fit_k", "fit_rho_star", "fit_rho_star_err", "star_rho",
+        "crowdsap", "secondary_phase", "secondary_snr", "centroid_offset_arcsec", "centroid_sigma",
     ]
     with (out / "candidates.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")

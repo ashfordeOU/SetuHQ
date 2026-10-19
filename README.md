@@ -17,6 +17,15 @@ The site: [site/index.html](site/index.html) (the Overview) leads into the app a
 4. **Runs the panel**: every reviewer marks and labels every subject independently. The task is the Planet Hunters task: mark the start and end of each dip, then label `potential_planet` or `noise`.
 5. **Aggregates** marks by single-linkage clustering, scores each dip by the share of skill-weighted reviewers who marked it, and requires the panel to call the subject a potential planet.
 6. **Vets** each consensus event: SNR, duration, edge effects, odd/even depth, secondary eclipse, and fit to the periodic ephemeris.
+   Extended tests after the Kepler/SPOC Data Validation suite add flags beside them (`dvtests.py`, `pixel.py`):
+   SPOC crowding (CROWDSAP below 0.8 is `crowded`), a weak-secondary search at every phase with the fitted
+   duration, odd/even depths with errors, per-epoch transit times (linear-ephemeris and odd/even timing tests), and,
+   from the SPOC target pixel file, a difference-image centroid in pixels and arcseconds with its significance, the
+   centroid motion test, a core/halo ghost check, momentum-dump coincidence, and a table of catalogued neighbours
+   with the eclipse depth each would need. **By default these only add flags**: pass/fail is decided as before, so
+   runs and benchmarks stay comparable with earlier ones. `[vetting] decide = true` makes `secondary_any_phase`,
+   `odd_even_depth`, `odd_even_timing` and `centroid_offset` disqualifying, and lets the all-phase secondary search
+   replace the phase-0.5 check. The pixel tests download TPFs and are off unless `[vetting] pixel = true`.
 7. **Writes** a candidate catalogue (CSV and JSON), a Zooniverse-shaped classification export, a SQLite store, a provenance manifest, and a static report site.
 
 ## Reviewer panel
@@ -88,6 +97,21 @@ Sentinels (Skeptic and Volunteer, on Claude via the CLI):
   as `fap_tail`, puts the tail below 10⁻⁶ (indicative only, see below).
 * The sixth passed event (BTJD 1348.9, 0.87 h, SNR 9.5) does not fit the ephemeris and
   is a likely false positive. It is kept and flagged, not hidden.
+* **Extended and pixel-level vetting** (`scripts/vet_pi_men_s2.py`, real SPOC sector-1 files; see
+  [docs/results/pi_men_s2_vetting.md](docs/results/pi_men_s2_vetting.md)). On the joint fit of all five epochs
+  (P = 6.26795 ± 0.00049 d, T14 = 3.09 ± 0.16 h): CROWDSAP 0.9997, FLFRCSAP 0.980 (not crowded); the strongest
+  dip at any phase away from the transit is 41 ± 7 ppm at phase 0.74 (5.6σ), below the 7.1σ threshold and below
+  the largest brightening (8.8σ), so no secondary; odd/even depths agree to 0.8σ; the five mid-times fit a linear
+  ephemeris (χ² = 0.8 for 3 dof, O−C within 1.6 min) with no odd/even timing offset (0.4σ). No flags.
+* **The difference-image centroid of pi Men is not usable, and exoplan says so.** The PSF fit puts the difference
+  image 2.05 px (40.1″) from the catalogue position, mostly in the row coordinate (row −1.91 px, column −0.74 px),
+  which is the direction charge bleeds along a CCD column. SPOC's own DV report for TOI 144.01 finds the same size and
+  direction: 40.5″, row −2.07 px, column 0.02 px, with a DV quality metric of 0.58, below DV's 0.7 reliability cut. pi Men (Tmag 5.1) is saturated: four pixels of one column sit on a plateau within 3% of the
+  peak, a bleed trail. A transit shortens the trail instead of dimming a PSF, so the "offset" is the trail's end.
+  exoplan flags `saturated` and `centroid_unreliable` and raises no `centroid_offset`. The per-cadence centroid
+  motion test sees no shift (0.1σ). Of 56 TIC stars within 150″, all but the target would need an eclipse deeper
+  than 100%; the nearest, TIC 261139071 (Tmag 14.0, 27″), needs 111%, which is marginal under the Gaussian PSF
+  approximation.
 
 **What the Sentinels did in this run, reported as found:**
 
@@ -123,8 +147,8 @@ published TOI period, and `new_candidate` otherwise.
 **What this can and cannot claim.** Every entry is a candidate. A detection here means the
 pipeline saw a vetted dip that matches no published ephemeris. It does not mean a planet has
 been found. Confirmation needs radial velocities, ground-based photometry, or the
-community's TESS follow-up. The pipeline also has no centroid or pixel check, so blended
-eclipsing binaries can survive vetting. The claim this project can defend is a reproducible,
+community's TESS follow-up. The pixel-level centroid test is new, off by default and unusable on saturated
+stars, so blended eclipsing binaries can still survive vetting. The claim this project can defend is a reproducible,
 calibrated search with open provenance. It is not a claim of new planets or of beating
 published pipelines.
 
@@ -152,8 +176,19 @@ published pipelines.
   maxima is stored with each candidate (`fap_tail`, with `fap_exceed` and `fap_method`). It
   is indicative, extrapolated beyond the trials and conservative (BLS maxima are
   lighter-tailed than Gumbel), and it is never given below 10⁻⁶.
-* **Vetting uses only light curves.** There is no centroid or pixel-level check, so
-  blended eclipsing binaries can pass.
+* **Pixel-level vetting is new and limited.** The difference-image centroid uses a circular Gaussian in place of
+  the SPOC pixel response function, and its flag is tested against the catalogue position with a systematic floor
+  equal to the out-of-transit fit's own offset from that position, which makes it insensitive below a few tenths of a
+  pixel. On synthetic TPFs (whose PSF is the same Gaussian, so this is the ideal case) it localises a neighbour's
+  eclipse 1.5 to 3 px away to within 0.002 px (15 cases), and a planet on the target stays below 0.2σ (10 cases). It has not yet been benchmarked on real false positives (ATLAS S2 asks for Kepler
+  `koi_fpflag_co` KOIs and TESS FP TOIs). Saturated stars, like pi Men, get no usable centroid. The neighbour table's
+  flux shares use the same Gaussian, so a needed depth within a factor of two of 100% is reported as marginal.
+  The light-curve significances use white noise (robust scatter over √n), so they are optimistic under red noise:
+  on pi Men the largest brightening at any phase is 8.8σ.
+* **Deep, short dips can be clipped before review.** `preprocess.clean` removes single points more than 10 times
+  the point-to-point scatter below a 0.5-day running median. A box eclipse 15 times deeper than the per-point noise
+  was removed entirely in a synthetic test, so very deep eclipsing binaries on quiet stars may never reach the
+  panel. This predates the S2 tests and is unchanged here, to keep benchmarks comparable.
 * **Edge events are the weak spot** for both the statistics and the reviewers.
 * **Discovery candidates are unconfirmed.** Nothing on the discovery feed is a confirmed planet.
 
@@ -164,6 +199,7 @@ src/exoplan/
   lightcurve.py   container with provenance      loaders.py   TESS (MAST), CHEOPS FITS, CSV
   preprocess.py   clean, detrend, bin            subjects.py  blind-coded 13-day segments
   search.py       BLS and single-event search    vet.py       automatic vetting
+  dvtests.py      DV-style light-curve tests      pixel.py     TPF difference images, centroids, neighbours
   injection.py    synthetic transits              calibrate.py skill-based reviewer weights
   aggregate.py    clustering and consensus       pipeline.py  end-to-end run
   benchmark.py    injection recovery             report.py    static HTML site
