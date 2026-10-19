@@ -224,3 +224,24 @@ def test_batch_state_is_tied_to_the_config(tmp_path, batch_config):
     run_batch(other, [1], work_dir=work, loader=lambda label: calls.append(label) or [_lc(1, 1)], reviewers=reviewers)
     assert calls == ["TIC 1"]                                   # a new config redoes the target
     assert len(list(work.glob("state.*.json"))) == 1           # and the old state is kept aside
+
+
+def test_export_without_the_toi_table_writes_nothing_and_fails(tmp_path, monkeypatch, capsys):
+    """B4: without --allow-unchecked, an unreachable TOI table means no files and a non-zero exit."""
+    import exoplan.discover as disc
+    from exoplan.cli import main
+
+    run = tmp_path / "run"
+    run.mkdir()
+    (run / "candidates.json").write_text(json.dumps([_cand("a")]))
+    monkeypatch.setattr(disc, "fetch_toi_targets", lambda: (_ for _ in ()).throw(ConnectionError("TAP 504")))
+    out = tmp_path / "export"
+    code = main(["export", str(run), "--out", str(out), "--toi-cache", str(tmp_path / "none.json")])
+    assert code != 0 and not out.exists()
+    assert "refusing" in capsys.readouterr().err
+    with pytest.raises(ValueError):
+        export_run(run, out, tois=None)
+    assert not out.exists()
+    code = main(["export", str(run), "--out", str(out), "--toi-cache", str(tmp_path / "none.json"), "--allow-unchecked"])
+    assert code == 0 and (out / "ctoi.csv").exists()
+    assert json.loads((out / "ctoi.json").read_text())["rows"][0]["toi_check"].startswith("not done")

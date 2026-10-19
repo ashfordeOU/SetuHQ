@@ -180,8 +180,9 @@ def cmd_export(args) -> int:
 
     tois = _toi_targets(args)
     if tois is None and not args.allow_unchecked:
-        print("refusing to export without the TOI duplicate check; pass --allow-unchecked to export anyway",
-              file=sys.stderr)
+        print("exoplan export: refusing to export without the TOI duplicate check (no TOI table); nothing written. "
+              "Pass --allow-unchecked to export rows marked 'TOI check not done'.", file=sys.stderr)
+        return 2
     summary = export_run(args.run_dir, args.out, tois=tois, allow_unchecked=args.allow_unchecked,
                          days=args.days)
     print(f"CTOI-style rows: {len(summary['rows'])}, excluded: {len(summary['excluded'])}, "

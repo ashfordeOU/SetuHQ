@@ -220,7 +220,11 @@ def btjd_now() -> float:
 def export_run(run_dir: str | Path, out_dir: str | Path, *, tois: dict | None = None, allow_unchecked: bool = False,
                start_btjd: float | None = None, days: float = 365.25) -> dict:
     """Write ``ctoi.csv``, ``ctoi.json`` (rows, exclusions, the field-list status) and ``predicted_windows.csv`` for
-    one run directory. Raises ValueError if any row fails :func:`check_row`."""
+    one run directory. Raises ValueError if any row fails :func:`check_row`, and before writing anything when
+    ``tois`` is None (no TOI duplicate check possible) unless ``allow_unchecked``."""
+    if tois is None and not allow_unchecked:
+        raise ValueError("no TOI table: the TOI duplicate check cannot be done; nothing written "
+                         "(pass allow_unchecked to export rows marked as unchecked)")
     run_dir, out_dir = Path(run_dir), Path(out_dir)
     candidates = json.loads((run_dir / "candidates.json").read_text())
     stars = json.loads((run_dir / "stellar.json").read_text()) if (run_dir / "stellar.json").exists() else {}
