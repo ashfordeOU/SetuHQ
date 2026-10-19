@@ -366,8 +366,13 @@ def test_phone_cards_are_cheap_to_lay_out():
     card = re.search(r"\.ctcard\{[^}]*\}", css).group(0)
     assert "display:flex" in card and "contain" not in card and "grid" not in card  # measured: containment doubled style time
     assert "text-overflow" not in re.search(r"\.ctcard>span\{[^}]*\}", css).group(0)
-    assert re.search(r"\.ctcard>span\.na\{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect\(0 0 0 0\)", css)  # still a cell
-    assert "Math.floor(top / h) - 12" in js and "Math.ceil((top + H) / h) + 12" in js
+    # A value not stored stays a cell, in flow, taking no room (and cancelling its gap); no pseudo-element labels.
+    assert ".ctcard>span.na{flex:0 0 0;width:0;height:0;overflow:hidden;margin-left:-12px}" in css
+    assert "::before{content:attr" not in css and "::after{content:attr" not in css
+    assert '<span role="cell" class="${cls} na" aria-label="not stored">—</span>' in js
+    # 12 rows of margin normally, 2 during a fling; a jump swaps the window in with one replaceChildren.
+    assert "Math.abs(top - (ct.prevTop ?? top)) > H ? 2 : 12" in js and "sp.replaceChildren(...els)" in js
+    assert "if (top === ct.lastTop) return;" in js
 
 
 def test_generic_object_links_carry_the_name():
@@ -375,3 +380,34 @@ def test_generic_object_links_carry_the_name():
     assert obj_link("planet", "pi Men c", "Planet page ›") == '<a class="objlink" data-planet="pi Men c" href="#/planet/pi-men-c" aria-label="pi Men c, planet page">Planet page ›</a>'
     assert "aria-label" not in obj_link("star", "pi Men", "pi Men ›")
     assert "` aria-label=\"${esc(n)}, ${kind} page\"`" in APP_JS
+
+
+
+@pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
+def test_a_fling_rebuilds_the_window_once_per_frame_and_keeps_the_cells(built, tmp_path):
+    script = tmp_path / "fling.js"
+    script.write_text("""
+const { chromium } = require(%s);
+(async () => {
+  const b = await chromium.launch({ executablePath: %s, args: ['--allow-file-access-from-files'] });
+  const c = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }); const p = await c.newPage(), errs = [];
+  p.on('pageerror', e => errs.push(e.message));
+  await p.goto(%s + '#/catalogue'); await p.waitForTimeout(1200);
+  const out = await p.evaluate(async () => { const sc = document.querySelector('#ctscroll'), sp = document.querySelector('#ctspacer'); let swaps = 0, removed = 0;
+    const real = sp.replaceChildren.bind(sp); sp.replaceChildren = (...a) => { swaps++; return real(...a); };
+    const mo = new MutationObserver(ms => ms.forEach(m => removed += m.removedNodes.length)); mo.observe(sp, {childList: true});
+    for (let k = 1; k <= 10; k++){ sc.scrollTop += 2500; await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }
+    mo.disconnect();
+    const rows = [...sp.querySelectorAll('[role=row]')], vis = rows.filter(r => { const q = r.getBoundingClientRect(), s = sc.getBoundingClientRect(); return q.bottom > s.top && q.top < s.bottom; });
+    return {swaps, rows: rows.length, visible: vis.length, cells: [...new Set(rows.map(r => r.querySelectorAll(':scope > [role=cell], :scope > [role=rowheader]').length))],
+      na: [...sp.querySelectorAll('.na')].every(e => e.getAttribute('aria-label') === 'not stored'), first: +rows[0].getAttribute('aria-rowindex')}; });
+  console.log(JSON.stringify(Object.assign(out, {errs}))); await b.close();
+})();
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(built.resolve().as_uri())))
+    res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=120)
+    assert res.returncode == 0, res.stderr
+    out = json.loads(res.stdout.strip().splitlines()[-1])
+    assert out["errs"] == [] and out["swaps"] == 10  # one swap per jump, not node-by-node
+    assert out["cells"] == [10] and out["na"] is True
+    assert out["rows"] <= 12 and out["visible"] >= 4  # the rows in view, plus two each side, during a fling
+    assert out["first"] > 150  # 10 × 2,500 px down at 128 px a card

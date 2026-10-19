@@ -20,7 +20,7 @@ dependencies = [
 [project.optional-dependencies]
 tess = ["lightkurve>=2.4"]
 claude = ["anthropic>=0.40"]
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "tess-point>=0.9"]  # tess-point: test_galaxy checks pi Men's TESS sectors against it
 # scripts/survey_coverage.py: TESS sector pointings and the Kepler/K2 footprint model
 survey = ["tess-point>=0.9", "K2fov>=7"]
 

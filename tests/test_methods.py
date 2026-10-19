@@ -515,3 +515,10 @@ def test_radio_chapter_labels_every_claim_and_keeps_seti_apart(page_html):
     assert f'<a href="#/galaxy?tour={notable.index("PSR B1257+12 b") + 1}">Its card on the Galaxy tour ›</a>' in art
     assert "an assumed 1.4 M☉ pulsar (its mass is not stored) [calc]" in art
     assert ("radio", "Radio") in M.CHAPTERS
+
+
+
+def test_radio_slider_announces_its_starting_value(page_html):
+    art = re.search(r'<article class="mxch" id="mx-radio".*?(?=<article class="mxch"|$)', _route(page_html, "methods"), re.S).group(0)
+    assert f'aria-valuetext="7.5 gauss, cyclotron cut-off {M.cyclotron_mhz(7.5):.1f} MHz"' in art
+    assert "init(st){ st.opt.mode = 'aurora'; st.opt.B = 7.5; mxRadioLabel(st); }" in M.METHODS_JS

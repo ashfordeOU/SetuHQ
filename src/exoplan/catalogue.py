@@ -233,12 +233,11 @@ CATALOGUE_CSS = r"""
 .ctrow{position:absolute;left:0;right:0;height:44px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:13px}
 .ctrow:hover,.ctrow:focus-visible{background:var(--panel-2)}
 .ctrow>span{padding:0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ctrow .ctl,.ctrow .ctu{display:none}
+
 .ctrow .num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
 .ctrow .na{color:var(--ink-3)}
 .ctrow b{font-weight:600}
 .ctrow>span>i[style],.ctcard>span>i[style]{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
-.ctl,.ctu{font-style:normal}
 .ctscroll[hidden],.ctempty[hidden]{display:none}
 .ctempty{margin:0;padding:24px;border:1px solid var(--line);border-radius:var(--r);background:var(--glass-2);display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 .ctempty a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);text-decoration:none}
@@ -249,9 +248,9 @@ CATALOGUE_CSS = r"""
 .ctcard>span[role="rowheader"],.ctcard>span:nth-child(2){flex-basis:100%}
 .ctcard>span[role="rowheader"]{font-size:15px;line-height:21px;color:var(--ink)}
 /* A value that is not stored stays in the table for screen readers, but takes no room on the card. */
-.ctcard>span.na{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.ctcard>span.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
-.ctcard .ctl{color:var(--ink-3);font-family:var(--sans)}
+.ctcard>span.na{flex:0 0 0;width:0;height:0;overflow:hidden;margin-left:-12px}
+
+
 .ctcard .na{color:var(--ink-3)}
 .plgrid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px;align-items:start}
 .plmore{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:stretch}
@@ -399,7 +398,7 @@ function ctApply(){
 const CT_COLS = [['star', 'Host', ''], ['year', 'Year', ''], ['method', 'Method', ''], ['mass', 'Mass', 'MJ'], ['radius', 'Radius', 'RJ'],
   ['period', 'Period', 'd'], ['teq', 'Teq', 'K'], ['dist', 'Distance', 'pc'], ['steff', 'Host Teff', 'K']];
 function ctRowHTML(r){
-  const P = ct.P, i = ct.idx[r], h = ct.rowH, col = m => GXM && GXM.method_colour ? GXM.method_colour[m] : '#8E8E93';
+  const P = ct.P, i = ct.idx[r], h = ct.rowH, phone = h > 50, col = m => GXM && GXM.method_colour ? GXM.method_colour[m] : '#8E8E93';
   const cell = (k, lab, unit) => {
     let v, cls = 'num';
     if (k === 'star'){ v = P.star[i] ? esc(P.star[i]) : null; cls = ''; }
@@ -407,7 +406,9 @@ function ctRowHTML(r){
     else if (k === 'year') v = P.year[i] || null;
     else if (k === 'mass') v = P.mass[i] !== null ? ctFmt(P.mass[i], 3) : (P.msini[i] !== null ? ctFmt(P.msini[i], 3) + ' sin i' : null);
     else v = ctFmt(P[k][i], k === 'period' ? 5 : k === 'radius' ? 3 : 4);
-    return `<span role="cell" class="${cls}${v === null ? ' na' : ''}"><i class="ctl">${lab} </i>${v === null ? '—' : v}${v !== null && unit ? `<i class="ctu"> ${unit}</i>` : ''}</span>`;
+    // On a phone card each cell carries its label and unit as plain text (no extra boxes to style or lay out).
+    if (v === null) return `<span role="cell" class="${cls} na" aria-label="not stored">—</span>`;
+    return phone ? `<span role="cell">${k === 'star' || k === 'method' ? '' : lab + ' '}${v}${unit ? ' ' + unit : ''}</span>` : `<span role="cell" class="${cls}">${v}</span>`;
   };
   return `<a class="${h > 50 ? 'ctcard' : 'ctrow'}" role="row" aria-rowindex="${r + 1}" href="${ctPlanetHref(i)}" style="top:${r * h}px"><span role="rowheader"><b>${esc(P.name[i])}</b></span>${CT_COLS.map(c => cell(...c)).join('')}</a>`;
 }
@@ -415,17 +416,26 @@ function ctRowHTML(r){
 // removes only those entering or leaving the window, in order.
 function ctRows(force){
   const sc = $('#ctscroll'), sp = $('#ctspacer'), H = sc.clientHeight, top = sc.scrollTop, h = ct.rowH;
-  const a = Math.max(0, Math.floor(top / h) - 12), b = Math.min(ct.idx.length, Math.ceil((top + H) / h) + 12);
-  if (force || !ct.nodes){ sp.textContent = ''; ct.nodes = new Map(); ct.win = null; }
+  // A 12-row margin while scrolling normally; during a fling (more than a screen per frame) only the rows in
+  // view, plus two, since the margin would be gone before anyone saw it.
+  const m = Math.abs(top - (ct.prevTop ?? top)) > H ? 2 : 12; ct.prevTop = top;
+  const a = Math.max(0, Math.floor(top / h) - m), b = Math.min(ct.idx.length, Math.ceil((top + H) / h) + m);
+  if (force || !ct.nodes){ sp.textContent = ''; ct.nodes = new Map(); ct.win = null; ct.lastTop = top; }
   if (ct.win && ct.win[0] === a && ct.win[1] === b) return;
-  ct.win = [a, b];
-  for (const [r, el] of ct.nodes) if (r < a || r >= b){ el.remove(); ct.nodes.delete(r); }
+  const old = ct.win; ct.win = [a, b];
   const add = []; for (let r = a; r < b; r++) if (!ct.nodes.has(r)) add.push(r);
-  if (!add.length) return;
-  const t = document.createElement('template'); t.innerHTML = add.map(ctRowHTML).join('');
-  const els = [...t.content.children]; els.forEach((el, k) => ct.nodes.set(add[k], el));
+  if (!add.length){ for (const [r, el] of ct.nodes) if (r < a || r >= b){ el.remove(); ct.nodes.delete(r); } return; }
+  // A jump (a fling, or a window that keeps under half its rows): render the whole window and swap it in with
+  // one replaceChildren, instead of removing and inserting node by node.
+  const jump = !old || add.length * 2 > b - a, rows = jump ? Array.from({length: b - a}, (_, k) => a + k) : add;
+  const t = document.createElement('template'); t.innerHTML = rows.map(ctRowHTML).join('');
+  const els = [...t.content.children];
+  if (jump){ ct.nodes = new Map(rows.map((r, k) => [r, els[k]])); sp.replaceChildren(...els); return; }
+  // A small step: drop the rows that left, add the new ones in order.
+  for (const [r, el] of ct.nodes) if (r < a || r >= b){ el.remove(); ct.nodes.delete(r); }
+  els.forEach((el, k) => ct.nodes.set(rows[k], el));
   const first = sp.firstElementChild, firstR = first ? Number(first.getAttribute('aria-rowindex')) - 1 : Infinity;
-  if (add[0] < firstR) sp.prepend(...els); else sp.append(...els);
+  if (rows[0] < firstR) sp.prepend(...els); else sp.append(...els);
 }
 function ctControls(){
   const v = ct.view;
@@ -457,7 +467,9 @@ function ctBind(){
   $('#cthasdist').addEventListener('click', () => { ct.view.hasdist = !ct.view.hasdist; ctApply(); syncCatURL(true); });
   $('#ctreset').addEventListener('click', () => { ct.view = decodeCatView(new URLSearchParams()); ctApply(); syncCatURL(true); });
   $$('#cttable .cth').forEach(h => h.addEventListener('click', () => { const k = h.dataset.sort; ct.view.dir = ct.view.sort === k && ct.view.dir === 'asc' ? 'desc' : 'asc'; ct.view.sort = k; ctApply(); syncCatURL(true); }));
-  $('#ctscroll').addEventListener('scroll', () => { if (!ct.raf) ct.raf = requestAnimationFrame(() => { ct.raf = 0; ctRows(false); }); }, {passive: true});
+  // One update per frame however many scroll events arrive, and none when the top has not moved: a fling's
+  // big jump rebuilds once.
+  $('#ctscroll').addEventListener('scroll', () => { if (!ct.raf) ct.raf = requestAnimationFrame(() => { ct.raf = 0; const top = $('#ctscroll').scrollTop; if (top === ct.lastTop) return; ct.lastTop = top; ctRows(false); }); }, {passive: true});
   // A resize (or the phone breakpoint) changes the window of rows and, at the breakpoint, the row height.
   const relayout = () => { if (current !== 'catalogue' || !ct.P) return; const h = ctPhone() ? CT_CARD_H : 44; if (h !== ct.rowH){ ct.rowH = h; $('#ctspacer').style.height = ct.idx.length * h + 'px'; } ctRows(true); };
   if (window.ResizeObserver) new ResizeObserver(relayout).observe($('#ctscroll'));

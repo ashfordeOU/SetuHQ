@@ -963,7 +963,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
       <p class="mxlede">Magnetised planets shine at radio wavelengths: electrons spiralling down field lines into the auroral zones emit by the cyclotron maser, beamed in a hollow cone, up to the local cyclotron frequency (Zarka 1998; Treumann 2006). A close-in planet can also drive such emission on its star, as Io does on Jupiter (Zarka 2007). <b>No exoplanet's own radio emission has been confirmed.</b> Every claim below is tentative or contested, and says so.</p>
       {_stage("radio", LABEL_ILL, "Two scenes. Planet aurora: a planet's magnetic field lines, with emission beamed in a hollow cone from its pole; when the cone sweeps across the observer, a burst appears in the dynamic spectrum below, reaching up to the cyclotron frequency set by the field. Star–planet interaction: the planet orbits inside its star's magnetic field, a flux tube links it to the star, and the emission comes from the star's footpoint. The field slider sets the cyclotron cut-off, computed as 2.8 MHz per gauss.",
                '<label class="mxmode"><span>Scene</span><select><option value="aurora">Planet aurora</option><option value="spi">Star–planet interaction</option></select></label>'
-               '<label class="mxbfield"><span>Field at the source</span><input type="range" min="0" max="1000" value="' + str(round((math.log10(7.5) + 1) / 4.5 * 1000)) + '" aria-label="Magnetic field at the emitting source, log scale from 0.1 gauss to 3 kilogauss"></label>')}
+               '<label class="mxbfield"><span>Field at the source</span><input type="range" min="0" max="1000" value="' + str(round((math.log10(7.5) + 1) / 4.5 * 1000)) + '" aria-label="Magnetic field at the emitting source, log scale from 0.1 gauss to 3 kilogauss" aria-valuetext="7.5 gauss, cyclotron cut-off ' + f"{cyclotron_mhz(7.5):.1f}" + ' MHz"></label>')}
       <div class="mxtext">
         <h3>The frequency scale</h3>
         <p>The cyclotron maser emits at, and just below, f_ce = eB/(2π m_e) ≈ {cyclotron_mhz(1):.2f} MHz per gauss of field at the source, so the highest frequency seen gives the field there. A weak planetary field emits below tens of MHz, where only low-frequency arrays such as LOFAR (10–240 MHz; van Haarlem et al. 2013) can listen; an M dwarf's kilogauss field reaches GHz.</p>
@@ -1465,12 +1465,14 @@ function mxEye(c, x, y){ c.strokeStyle = '#F5F5F7'; c.lineWidth = 1.5; c.beginPa
 // ---------- radio: cyclotron-maser emission, beamed in a hollow cone, and its frequency cut-off ----------
 function mxFce(B){ return 1.602176634e-19 * B * 1e-4 / (2 * Math.PI * 9.1093837015e-31) / 1e6; }   // MHz for B in gauss (cyclotron_mhz)
 const MX_BLOG = [-1, 3.5];   // the field slider: 0.1 G to ~3 kG, log scale
-MXV.radio = {key: 0.1, period: 10, init(st){ st.opt.mode = 'aurora'; st.opt.B = 7.5; },
+// The field slider announces its value and the cut-off it sets (from the start, not only after a change).
+function mxRadioLabel(st){ const r = st.fig.querySelector('.mxbfield input'); if (r) r.setAttribute('aria-valuetext', `${st.opt.B.toPrecision(2)} gauss, cyclotron cut-off ${mxFce(st.opt.B).toPrecision(3)} MHz`); }
+MXV.radio = {key: 0.1, period: 10, init(st){ st.opt.mode = 'aurora'; st.opt.B = 7.5; mxRadioLabel(st); },
   control(st, el){
     if (el.tagName === 'SELECT'){ st.opt.mode = el.value; const B = el.value === 'spi' ? 1000 : 7.5, r = st.fig.querySelector('.mxbfield input');
       st.opt.B = B; if (r) r.value = String(Math.round((Math.log10(B) - MX_BLOG[0]) / (MX_BLOG[1] - MX_BLOG[0]) * 1000)); }
     else if (el.type === 'range') st.opt.B = Math.pow(10, MX_BLOG[0] + Number(el.value) / 1000 * (MX_BLOG[1] - MX_BLOG[0]));
-    const r = st.fig.querySelector('.mxbfield input'); if (r) r.setAttribute('aria-valuetext', `${st.opt.B.toPrecision(2)} gauss, cyclotron cut-off ${mxFce(st.opt.B).toPrecision(3)} MHz`);
+    mxRadioLabel(st);
   },
   draw(c, w, h, t, st){
     const spi = st.opt.mode === 'spi', B = st.opt.B, fce = mxFce(B);
