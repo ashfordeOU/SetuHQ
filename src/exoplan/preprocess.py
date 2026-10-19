@@ -41,12 +41,34 @@ def running_median(time, values, window: float) -> np.ndarray:
     return np.array([np.median(values[a:b]) for a, b in zip(lo, hi)])
 
 
-def clean(lc: LightCurve, *, high_sigma: float = 5.0, low_sigma: float = 10.0, window_days: float = 0.5) -> LightCurve:
+def low_runs(mask, min_run: int) -> np.ndarray:
+    """True where ``mask`` is part of a run of at least ``min_run`` consecutive True values."""
+    mask = np.asarray(mask, bool)
+    out = np.zeros_like(mask)
+    i = 0
+    while i < mask.size:
+        if mask[i]:
+            j = i
+            while j < mask.size and mask[j]:
+                j += 1
+            if j - i >= min_run:
+                out[i:j] = True
+            i = j
+        else:
+            i += 1
+    return out
+
+
+def clean(lc: LightCurve, *, high_sigma: float = 5.0, low_sigma: float = 10.0, window_days: float = 0.5,
+          min_low_run: int = 3) -> LightCurve:
     """Drop invalid points and isolated spikes.
 
     Upward outliers (cosmic rays, momentum dumps) are removed beyond ``high_sigma``.
-    Downward outliers are removed only beyond ``low_sigma``, so real transit
-    points survive.
+    Downward outliers beyond ``low_sigma`` are removed only when they are isolated: fewer than ``min_low_run``
+    consecutive cadences below the threshold. A run of ``min_low_run`` or more is a real dip (a deep transit or
+    eclipse) and is kept. Before this guard every point of an eclipse deeper than ``low_sigma`` times the
+    point-to-point scatter was removed, so deep eclipsing binaries and hot Jupiters on quiet stars never reached
+    the panel.
     """
     valid = np.isfinite(lc.time) & np.isfinite(lc.flux) & np.isfinite(lc.flux_err) & (lc.flux_err > 0)
     lc = lc.masked(valid, cleaning_window_days=window_days)
@@ -56,8 +78,10 @@ def clean(lc: LightCurve, *, high_sigma: float = 5.0, low_sigma: float = 10.0, w
     scatter = diff_sigma(lc.flux)
     if not np.isfinite(scatter) or scatter <= 0:
         return lc
-    spikes = (residual > high_sigma * scatter) | (residual < -low_sigma * scatter)
-    return lc.masked(~spikes, spike_clip_high_sigma=high_sigma, spike_clip_low_sigma=low_sigma)
+    low = residual < -low_sigma * scatter
+    spikes = (residual > high_sigma * scatter) | (low & ~low_runs(low, min_low_run))
+    return lc.masked(~spikes, spike_clip_high_sigma=high_sigma, spike_clip_low_sigma=low_sigma,
+                     spike_clip_low_min_run=min_low_run)
 
 
 def local_quadratic(time, flux, keep, window: float, min_points: int = 10) -> tuple[np.ndarray, np.ndarray]:

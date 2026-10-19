@@ -1,5 +1,7 @@
 # Leaderboard: panel threshold sweep
 
+> **Pre-fix code.** Produced before the run-length guard in `preprocess.clean` (code up to commit 5a03087), when every point of a dip deeper than 10× the point-to-point scatter was removed before review. Not re-run since; deep injections may be under-recovered here.
+
 Score is mean completeness on the injection grid. A setting with false positives above the budget scores zero. Search and held-out seeds are different, and only a setting that wins on the held-out seed can be promoted.
 
 | stage | snr threshold | miss prob | seed | completeness | FP / empty subject | score |

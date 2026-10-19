@@ -14,8 +14,7 @@ from exoplan.reviewers.simulated import SimulatedVolunteer
 
 
 def _eccentric_binary(seed=3, *, crowdsap=0.7):
-    """26 days, a 3000 ppm primary every 4 days and a 2000 ppm secondary at phase 0.37 (not 0.5). The noise keeps
-    the primary under 10σ per point: preprocess.clean drops deeper single points as downward spikes."""
+    """26 days, a 3000 ppm primary every 4 days and a 2000 ppm secondary at phase 0.37 (not 0.5)."""
     rng = np.random.default_rng(seed)
     time = np.arange(0.0, 26.0, 10 / 1440)
     flux = 1 + rng.normal(0, 4e-4, time.size)

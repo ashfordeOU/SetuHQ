@@ -86,7 +86,8 @@ that changes a result is in the config, and its hash goes into the manifest.
 ## Results so far
 
 Real data, TESS SPOC sector 1 of pi Men (TIC 261136679), the three Probes plus the two
-Sentinels (Skeptic and Volunteer, on Claude via the CLI):
+Sentinels (Skeptic and Volunteer, on Claude via the CLI). The stored run was made with pre-fix code (before the
+deep-dip clipping fix in Honest limits), which does not affect a 300 ppm transit:
 
 * 6 consensus dips, 6 passed vetting, one of them flagged `off_ephemeris`.
 * Five of them lie on the published pi Men c ephemeris. All five predicted epochs in the
@@ -149,7 +150,7 @@ Sentinels (Skeptic and Volunteer, on Claude via the CLI):
   a reviewer that reads edges as systematics. This is exactly why the Sentinels are
   voices in a calibrated panel, not the whole panel.
 
-Injection-recovery benchmark for the Probes:
+Injection-recovery benchmark for the Probes (pre-fix code, see Honest limits):
 [docs/results/injection_recovery_simulated_panel.md](docs/results/injection_recovery_simulated_panel.md).
 The Sentinels are not in the benchmark. Each injected subject would need its own CLI
 call, so the Sentinels are calibrated separately on a small sample (10 injected and 10
@@ -220,10 +221,13 @@ published pipelines.
 * **Batch mode is tested offline only.** Resumability, retries and caching are tested with synthetic light curves;
   no real batch was run because MAST's search API was failing (2026-10-19), so no real throughput is reported.
   The CTOI export has not been compared with ExoFOP's live form.
-* **Deep, short dips can be clipped before review.** `preprocess.clean` removes single points more than 10 times
-  the point-to-point scatter below a 0.5-day running median. A box eclipse 15 times deeper than the per-point noise
-  was removed entirely in a synthetic test, so very deep eclipsing binaries on quiet stars may never reach the
-  panel. This predates the S2 tests and is unchanged here, to keep benchmarks comparable.
+* **Deep dips used to be clipped before review (fixed; this changes default behaviour).** Until commit 5a03087,
+  `preprocess.clean` removed every point more than 10 times the point-to-point scatter below a 0.5-day running
+  median, so an eclipse or transit deeper than that (a 3% binary, a 1% hot Jupiter on a quiet star, 5000 ppm at
+  300 ppm noise) vanished entirely before the panel saw it. A low outlier is now removed only when fewer than
+  3 consecutive cadences are below the threshold; the upward clip is unchanged. Results made before the fix are
+  labelled "pre-fix code": the stored pi Men run, the injection-recovery benchmark, the leaderboard and the
+  calibrated weights. pi Men c (300 ppm, about 1.5 times the 2-minute scatter) was not affected.
 * **Edge events are the weak spot** for both the statistics and the reviewers.
 * **Discovery candidates are unconfirmed.** Nothing on the discovery feed is a confirmed planet.
 
