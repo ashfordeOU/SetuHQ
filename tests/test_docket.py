@@ -116,6 +116,8 @@ def test_docket_embeds_the_fit_from_stored_values(run_dir, tmp_path):
     for c in data["candidates"]:
         assert c["model"] == fit_model(c) and "box" not in c
     assert "box model" not in page and "limb-darkened fit (stored)" in page
+    assert "nothing is fitted" not in page and "stored measurements and the stored fit" in page
+    assert "ppm (window mean)" in page and "' · fit '" in page and "epochs of the signal (V-shape and density flags are signal-level" in page
     assert "candidate, unconfirmed" in page
     assert "not per TESS sector" in page
 

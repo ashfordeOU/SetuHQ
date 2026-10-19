@@ -76,7 +76,9 @@ class Candidate:
     mark_audit: tuple = ()
     count_rule: dict = field(default_factory=dict)
     search_scope: str = "subject"
-    # The limb-darkened transit fit of this dip (transitfit.TransitFit.as_dict), or {} when it was not run.
+    # The limb-darkened transit fit (transitfit.TransitFit.as_dict), or {} when it was not run. On a periodic
+    # signal it is joint over the signal's N epochs in the subject (fit["n_epochs"]) and shared by its dips, so the
+    # v_shape and density_mismatch flags it sets are signal-level; the odd/even test stays the per-dip guard.
     fit: dict = field(default_factory=dict)
     fap_label: str = ""
     # The FAP's working: trials, how many reached the observed SNR, the method, and the Gumbel tail (indicative).

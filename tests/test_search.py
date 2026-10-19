@@ -144,19 +144,27 @@ def test_fap_is_high_on_pure_noise(red_ppm):
     assert signal.fap >= 0.3
 
 
-def test_fap_is_low_for_an_injected_3000_ppm_periodic_signal_in_white_and_red_noise():
+def _low_fap_case(red_ppm):
     from exoplan.search import with_fap
 
-    for red_ppm in (0.0, 600.0):
-        subject = _fap_subject(2, red_ppm=red_ppm, signal=True)
-        # 20 trials cannot resolve 1%: no trial reaches the SNR, so the FAP is the bound 1/21 and says so.
-        signal = with_fap(subject, bls_search(subject))
-        assert abs(signal.period - 3.1) < 0.05
-        assert signal.fap_exceed == 0 and signal.fap_bound and signal.fap == pytest.approx(1 / 21)
-        assert signal.fap_label == "< 4.8e-02 (20 trials)"
-        # 40 trials: the bound tightens to 1/41, still not 1%; under 100 trials no tail is fitted.
-        signal = with_fap(subject, bls_search(subject), n_trials=40)
-        assert signal.fap_bound and signal.fap == pytest.approx(1 / 41) and signal.fap_tail is None
+    subject = _fap_subject(2, red_ppm=red_ppm, signal=True)
+    # 20 trials cannot resolve 1%: no trial reaches the SNR, so the FAP is the bound 1/21 and says so.
+    signal = with_fap(subject, bls_search(subject))
+    assert abs(signal.period - 3.1) < 0.05
+    assert signal.fap_exceed == 0 and signal.fap_bound and signal.fap == pytest.approx(1 / 21)
+    assert signal.fap_label == "< 4.8e-02 (20 trials)"
+    # 40 trials: the bound tightens to 1/41, still not 1%; under 100 trials no tail is fitted.
+    signal = with_fap(subject, bls_search(subject), n_trials=40)
+    assert signal.fap_bound and signal.fap == pytest.approx(1 / 41) and signal.fap_tail is None
+
+
+def test_fap_is_low_for_an_injected_3000_ppm_periodic_signal_in_white_noise():
+    _low_fap_case(0.0)
+
+
+@pytest.mark.slow
+def test_fap_is_low_for_an_injected_3000_ppm_periodic_signal_in_red_noise():
+    _low_fap_case(600.0)
 
 
 @pytest.mark.slow
@@ -195,6 +203,7 @@ def test_the_stored_run_keeps_its_null_maxima_so_the_tail_can_be_rederived():
 
     nulls = [json.loads(p.read_text()) for p in sorted(Path("runs/tess-pi-men-s1/fap_null").glob("*.json"))]
     assert nulls and all(n["n_trials"] == 10000 and n["cache_version"] == FAP_CACHE_VERSION for n in nulls)
+    assert all(n["computed_at"] and len(n["rekeyed_from"]) == 32 for n in nulls)  # provenance of the re-keying
     cands = [c for c in json.loads(Path("runs/tess-pi-men-s1/candidates.json").read_text()) if c.get("fap_trials")]
     assert cands
     for c in cands:

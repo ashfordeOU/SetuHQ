@@ -750,13 +750,14 @@ function renderDossier(){
       <h2>Signal ${esc(sigLabel(s))} <span class="dipid">· dip ${e !== null ? 'E'+e+' · ' : ''}${esc(c.candidate_id)}</span></h2></div>
       <div class="sigout">signal: ${outBadge(s.outcome)}</div>
     </div>
-    ${sec('strip', 'Transit strip', 'stored measurements only · nothing is fitted · <kbd>s</kbd> collapses', `<div class="hero-wrap strip" id="strip" tabindex="0" role="group" aria-label="Transit strip for ${esc(c.candidate_id)}. Use left and right arrow keys to step through the stored bins, Shift for ten, Home and End for the ends."></div>
+    ${sec('strip', 'Transit strip', 'stored measurements and the stored fit · <kbd>s</kbd> collapses', `<div class="hero-wrap strip" id="strip" tabindex="0" role="group" aria-label="Transit strip for ${esc(c.candidate_id)}. Use left and right arrow keys to step through the stored bins, Shift for ten, Home and End for the ends."></div>
       <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>${c.model && c.model.length ? 'limb-darkened fit (stored)' : 'no transit fit stored'}</span><span><i class="k-band"></i>marked window (consensus)</span><span><i class="k-lane"></i>reviewer marks, one lane each · SEN = Sentinel (Claude model, Anthropic; not a person), PRB = Probe (deterministic matched-filter detector; not a person)</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
       <p class="scope">${scopeNote(c)}</p>`)}
     <div class="facts">
       <div><span>mid-time</span>${fmt(c.t_center,3)} ${esc(c.time_unit)}</div>
       <div><span>duration</span>${fmt(c.duration_hours,2)} h</div>
-      <div><span>depth</span>${fmt(c.depth_ppm,0)} ppm</div>
+      <div><span>depth</span>${fmt(c.depth_ppm,0)} ppm (window mean)${c.fit && c.fit.depth_ppm != null ? ' · fit '+fmt(c.fit.depth_ppm,0)+' ppm' : ''}</div>
+      ${c.fit && c.fit.n_epochs ? `<div class="panelfact"><span>fit</span>${c.fit.n_epochs > 1 ? `joint over ${c.fit.n_epochs} epochs of the signal (V-shape and density flags are signal-level; odd/even stays the per-dip guard)` : 'this dip alone'}</div>` : ''}
       <div><span>SNR</span>${fmt(c.snr,1)}</div>
       <div class="panelfact"><span>panel</span>${fmt(c.score,2)} · marked by ${c.n_reviewers} of ${nAll} reviewers: ${esc(reviewerSummary(c.reviewers))} (panel: ${esc(reviewerSummary(Object.keys(D.reviewers)))})${countNote(c)}</div>
       <div><span>BLS period</span>${c.period_days ? fmt(c.period_days,3)+(D.search_scope === 'sector' ? ' d (all sectors)' : ' d (this subject)') : 'none'}</div>

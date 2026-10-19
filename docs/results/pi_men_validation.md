@@ -21,7 +21,7 @@ Like-for-like comparisons lead: k and T14.
 | b | b < 0.87 (1σ) | b = 0.64 ± 0.12 | 0.59 | | 0.65 | |
 | a/R★ | 8.54 at the best-fit b, unconstrained (1σ 8.32–16.64) | 12.85 (1σ 11.54–13.58) | 13.38 | | | |
 | T23/T14 | unconstrained | 0.95 | 0.95 (from Huang's b, k, a/R★) | | | |
-| ρ★ transit (g/cm³) | 1σ range 0.277–2.216 | 1.023 ± 0.388 (prior-dominated; not a test) | 1.159 from M★, R★ | | | |
+| ρ★ transit (g/cm³) | 1σ range 0.277–2.216 | 1.02 (prior-dominated; no error quoted, as it would only restate the prior's) | 1.159 from M★, R★ | | | |
 
 ¹ Depth definitions differ: exoplan's is the limb-darkened model's depth at mid-transit; the archive's `pl_trandep` is the published transit depth as each paper defines it. Compare k and T14 first.
 

@@ -144,7 +144,7 @@ def main(argv=None) -> int:
         f"| b | {b_text(j)} | {b_text(prior) if prior else '—'} | {fmt(huang['pl_imppar'])} | | {fmt(default.get('pl_imppar'))} | |",
         f"| a/R★ | {ars_free} | {pv('a_rs')} | {fmt(huang['pl_ratdor'])} | | | |",
         f"| T23/T14 | {'unconstrained' if j['b_upper_limit'] else fmt(j['t23_over_t14'])} | {fmt(prior['t23_over_t14']) if prior else '—'} | {fmt(t23_huang)} (from Huang's b, k, a/R★) | | | |",
-        f"| ρ★ transit (g/cm³) | 1σ range {fmt(j['rho_range'][0], 3)}–{fmt(j['rho_range'][1], 3)} | {pv('rho_star', 3)} (prior-dominated; not a test) | {fmt(rho_huang, 3)} from M★, R★ | | | |",
+        f"| ρ★ transit (g/cm³) | 1σ range {fmt(j['rho_range'][0], 3)}–{fmt(j['rho_range'][1], 3)} | {fmt(prior['rho_star']) if prior else '—'} (prior-dominated; no error quoted, as it would only restate the prior's) | {fmt(rho_huang, 3)} from M★, R★ | | | |",
         "",
         "¹ Depth definitions differ: exoplan's is the limb-darkened model's depth at mid-transit; the archive's `pl_trandep` "
         "is the published transit depth as each paper defines it. Compare k and T14 first.",
