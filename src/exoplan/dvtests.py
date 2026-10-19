@@ -7,19 +7,24 @@ config's ``[vetting] decide = true`` turns the disqualifying ones into pass/fail
   (the fraction of the target's flux inside the aperture) are recorded either way.
 * ``secondary_any_phase``: the DV weak-secondary test (ATLAS E3). A box with the transit's duration is slid over
   every phase of the folded light curve, away from the primary, and the most significant dip is reported with its
-  phase, depth and significance. The box statistic's nominal σ assumes white noise; on real data it is wider (on
-  pi Men the scan's statistic has a robust spread of about 2), so the threshold is calibrated on the scan itself:
-  the dip is flagged when its statistic exceeds both z × the robust spread (MAD) of the statistic over all box
-  positions and the largest brightening at any phase (in the spirit of the Robovetter's model-shift uniqueness test,
-  Coughlin et al. 2016, doi:10.3847/0067-0049/224/1/12). z = max(3, Φ⁻¹(1 − 0.001/N_eff)) corrects for the number
-  of independent box positions, N_eff = positions/4 (the step is a quarter duration); for 187 positions z = 3.9. A
-  plain z = 3 flagged 41 of 200 clean simulated planets; this rule flagged 3. It must also be periodic: covered by two or more epochs,
-  with no single epoch carrying 70% or more of the statistic, so one lone dip is never a secondary. When the scan
-  has too few positions for a robust spread (under 20), a fixed 7.1σ is used instead, a conventional fallback.
-  This replaces the phase-0.5-only check for eccentric binaries, whose secondary is not at phase 0.5. The phase-0.5
-  value is reported beside it.
-* ``odd_even_depth``: the DV odd/even depth test (ATLAS E2), measured here at every epoch with the fitted duration:
-  the depth of odd and of even epochs, each with its error, and the difference in σ. Both parities must show a
+  phase, depth and significance. The box statistic's nominal σ assumes white noise, and its maximum over the
+  phase is a look-elsewhere statistic, so the threshold is calibrated by simulation: the dip is flagged when its
+  statistic exceeds q × the robust spread (MAD) of the statistic over all box positions, where q is the 99.9%
+  quantile of (largest dip)/(robust spread) on white noise for that number of positions (:data:`SECONDARY_TABLE`,
+  from ``scripts/calibrate_secondary.py``; q = 5.16 for 187 positions), and also exceeds the largest brightening at
+  any phase (in the spirit of the Robovetter's model-shift uniqueness test, Coughlin et al. 2016,
+  doi:10.3847/0067-0049/224/1/12). Measured false-flag rate on clean simulated planets: 2 of 3000 (0.07%, 95% CI
+  0.01–0.24%), against 87 of 3000 for the earlier look-elsewhere rule. It must also be
+  periodic: covered by two or more epochs, with no single epoch carrying 70% or more of the statistic, so one lone
+  dip is never a secondary. When the scan has too few positions for a robust spread (under 20), a fixed 7.1σ is
+  used instead, a conventional fallback. The light curve should be detrended with the transits masked
+  (:func:`exoplan.pipeline.vetting_lightcurve`): an unmasked trend overshoots beside each transit, and those
+  shoulders read as brightenings that veto real secondaries. This replaces the phase-0.5-only check for eccentric
+  binaries, whose secondary is not at phase 0.5. The phase-0.5 value is reported beside it.
+* ``odd_even_depth``: the DV odd/even depth test (ATLAS E2): every epoch is fitted with the transit shape and a
+  local baseline (as DV fits odd and even transits separately), and the depths of odd and of even epochs are
+  compared, each with its error, as a difference in σ. The errors are inflated by the
+  epochs' own scatter about their parity means and carry a 2% systematic floor. Both parities must show a
   significant dip, as in :func:`exoplan.vet.vet_event`.
 * ``odd_even_timing``: the DV odd/even epoch test. Each epoch's mid-time is measured with the fitted transit shape;
   a linear ephemeris with a separate offset for odd epochs is fitted, and the offset is flagged when it is
@@ -66,8 +71,39 @@ from exoplan.preprocess import mad_sigma
 
 CROWDING_MIN = 0.8        # CROWDSAP below this: "reliability drops" (HEASARC Understanding Crowding, ATLAS C9)
 SECONDARY_SIGMA = 7.1     # fallback weak-secondary threshold (a conventional value) when the scan is too small
-SECONDARY_SCAN_SIGMA = 3.0  # minimum number of robust spreads of the scan statistic the dip must exceed
-SECONDARY_FALSE_ALARM = 1e-3  # look-elsewhere: per-signal false-alarm level over the independent box positions
+# White-noise calibration of the all-phase secondary scan (scripts/calibrate_secondary.py, 20,000 scans per row at
+# 2- and 10-minute cadence, the larger kept): (coarse positions, 99.9% quantile of largest dip / robust spread,
+# 99.9% quantile of largest |excursion| / robust spread, effective number of independent positions).
+SECONDARY_TABLE = (
+    (25, 6.73, 6.91, 42),
+    (41, 6.24, 6.34, 73),
+    (73, 5.63, 5.80, 142),
+    (121, 5.53, 5.53, 279),
+    (193, 5.13, 5.32, 486),
+    (313, 5.04, 5.13, 782),
+    (409, 5.06, 5.09, 1048),
+)
+
+
+def white_quantiles(positions: int) -> dict:
+    """The white-noise 99.9% quantiles (``q_dip``, ``q_abs``) and N_eff for a scan with ``positions`` coarse box
+    positions, interpolated in log(positions) in :data:`SECONDARY_TABLE` and extended linearly beyond its ends."""
+    n = np.array([r[0] for r in SECONDARY_TABLE], float)
+    x = math.log(max(positions, 2))
+    out = {}
+    for key, col in (("q_dip", 1), ("q_abs", 2)):
+        y = np.array([r[col] for r in SECONDARY_TABLE], float)
+        if x <= math.log(n[0]):
+            i = 0
+        elif x >= math.log(n[-1]):
+            i = len(n) - 2
+        else:
+            i = int(np.searchsorted(np.log(n), x)) - 1
+        x0, x1 = math.log(n[i]), math.log(n[i + 1])
+        out[key] = float(y[i] + (y[i + 1] - y[i]) * (x - x0) / (x1 - x0))
+    ratio = np.array([r[3] / r[0] for r in SECONDARY_TABLE], float)
+    out["n_eff"] = float(positions * np.interp(x, np.log(n), ratio))
+    return out
 SECONDARY_MAX_EPOCH_SHARE = 0.7  # no single epoch may carry this share of the secondary's statistic
 MIN_SCAN_POSITIONS = 20   # fewer box positions than this: no robust spread, use SECONDARY_SIGMA
 SIGMA_THRESHOLD = 3.0     # odd/even depth and timing; ~3σ is common practice (ATLAS E2 FLAG: no universal value)
@@ -100,81 +136,112 @@ def _phase(time, period: float, t0: float) -> np.ndarray:
     return np.mod((np.asarray(time, float) - t0) / period, 1.0)
 
 
+def _box_sums(phase_sorted, flux_cum, centres, half_phase):
+    """Count and flux sum of the points within ``half_phase`` (circular) of each centre, by prefix sums over the
+    phase-sorted data tripled to [−1, 2) so a box can wrap."""
+    lo = np.searchsorted(phase_sorted, centres - half_phase, side="left")
+    hi = np.searchsorted(phase_sorted, centres + half_phase, side="right")
+    return hi - lo, flux_cum[hi] - flux_cum[lo]
+
+
 def secondary_search(time, flux, *, period: float, t0: float, duration: float, step: float | None = None,
-                     noise: float | None = None, min_points: int = 3) -> dict | None:
+                     noise: float | None = None, min_points: int = 3, exclude: float | None = None) -> dict | None:
     """The most significant box dip of width ``duration`` at any phase away from the primary transit.
 
-    Box centres run over the phase with a step of a quarter duration (``step``, days). A centre is excluded when its
-    box would overlap the primary's box (within one duration of phase 0). The baseline is the median flux outside
-    the primary; the depth at a centre is the baseline minus the mean flux in the box, and its σ is the robust
-    scatter over √n. Returns the peak's phase, depth (ppm), σ (ppm) and significance, the largest brightening's
-    significance (the same statistic with the sign reversed), the value at phase 0.5, and the number of box centres
-    tried. None when the period or the data cannot support the search.
+    Box centres run over the phase with a step of a quarter duration (``step``, days), then the peak is refined in
+    steps of a fortieth of a duration. A centre is excluded when it lies within ``exclude`` days of phase 0 (default:
+    one duration, so the box clears the primary). The baseline is the median flux outside the excluded zone; the
+    depth at a centre is the baseline minus the mean flux in the box, and its σ is the robust scatter over √n.
+    Returns the peak's phase, depth (ppm), σ (ppm) and significance; the largest brightening's significance (the same
+    statistic with the sign reversed); the scan statistic's median, robust spread (MAD) and plain standard
+    deviation over the coarse positions; the value at phase 0.5; and the number of coarse positions.
+    None when the period or the data cannot support the search.
     """
     time = np.asarray(time, float)
     flux = np.asarray(flux, float)
     good = np.isfinite(time) & np.isfinite(flux)
     time, flux = time[good], flux[good]
-    if period is None or period <= 0 or duration <= 0 or duration >= 0.5 * period or time.size < 10:
+    exclude = duration if exclude is None else max(exclude, duration)
+    if period is None or period <= 0 or duration <= 0 or exclude >= 0.5 * period or time.size < 10:
         return None
     phase = _phase(time, period, t0)
     dist0 = np.minimum(phase, 1.0 - phase) * period          # days from the nearest primary mid-time
-    outside = dist0 > duration                               # clear of the primary box and its wings
+    outside = dist0 > exclude
     if outside.sum() < 10:
         return None
     noise = mad_sigma(flux[outside] - 1.0) if noise is None else noise
     if not np.isfinite(noise) or noise <= 0:
         return None
     baseline = float(np.median(flux[outside]))
+    order = np.argsort(phase)
+    ph = phase[order]
+    fl = flux[order]
+    ph3 = np.concatenate([ph - 1.0, ph, ph + 1.0])
+    cum = np.concatenate([[0.0], np.cumsum(np.concatenate([fl, fl, fl]))])
     step = 0.25 * duration if step is None else step
-    half = 0.5 * duration
-    centres = np.arange(duration / period, 1.0 - duration / period + 1e-12, step / period)
-    rows = []
-    for c in centres:
-        d = np.abs(phase - c)
-        inside = np.minimum(d, 1.0 - d) * period <= half
-        n = int(inside.sum())
-        if n < min_points:
-            continue
-        depth = baseline - float(np.mean(flux[inside]))
-        sigma = noise / math.sqrt(n)
-        rows.append((float(c), depth, sigma, n))
-    if not rows:
+    half = 0.5 * duration / period
+    centres = np.arange(exclude / period, 1.0 - exclude / period + 1e-12, step / period)
+    n, s = _box_sums(ph3, cum, centres, half)
+    ok = n >= min_points
+    if not ok.any():
         return None
-    snr = np.array([r[1] / r[2] for r in rows])
+    centres, n, s = centres[ok], n[ok], s[ok]
+    depth = baseline - s / n
+    sigma = noise / np.sqrt(n)
+    snr = depth / sigma
     i = int(np.argmax(snr))
     j = int(np.argmin(snr))
-    c, depth, sigma, n = rows[i]
+    c, d_best, sg_best, n_best = float(centres[i]), float(depth[i]), float(sigma[i]), int(n[i])
     # The grid can miss the true centre by up to half a step, which biases the depth low: refine around the peak
-    # in steps of a fortieth of a duration (the trial count reported stays the coarse grid's).
-    for cc in np.arange(c - step / period, c + step / period + 1e-12, duration / 40.0 / period):
-        d = np.abs(phase - (cc % 1.0))
-        inside = np.minimum(d, 1.0 - d) * period <= half
-        k = int(inside.sum())
-        if k < min_points or min(cc % 1.0, 1.0 - cc % 1.0) * period < duration:
-            continue
-        dd = baseline - float(np.mean(flux[inside]))
-        if dd / (noise / math.sqrt(k)) > depth / sigma:
-            c, depth, sigma, n = float(cc % 1.0), dd, noise / math.sqrt(k), k
-    near_half = min(rows, key=lambda r: abs(r[0] - 0.5))
+    fine = np.arange(c - step / period, c + step / period + 1e-12, duration / 40.0 / period) % 1.0
+    fine = fine[np.minimum(fine, 1.0 - fine) * period >= exclude]
+    if fine.size:
+        fn, fs = _box_sums(ph3, cum, fine, half)
+        keep = fn >= min_points
+        if keep.any():
+            fd = baseline - fs[keep] / fn[keep]
+            fsg = noise / np.sqrt(fn[keep])
+            k = int(np.argmax(fd / fsg))
+            if fd[k] / fsg[k] > d_best / sg_best:
+                c, d_best, sg_best, n_best = float(fine[keep][k]), float(fd[k]), float(fsg[k]), int(fn[keep][k])
+    near = int(np.argmin(np.abs(centres - 0.5)))
     # How the peak's statistic is spread over epochs: each epoch's share of Σ (baseline − flux) in the box
-    d = np.abs(phase - c)
-    inside = np.minimum(d, 1.0 - d) * period <= half
+    dd = np.abs(phase - c)
+    inside = np.minimum(dd, 1.0 - dd) * period <= 0.5 * duration
     cycle = np.round((time[inside] - t0) / period - c).astype(int)
     drop = baseline - flux[inside]
-    shares = {}
     total = float(drop.sum())
-    for k in np.unique(cycle):
-        shares[int(k)] = float(drop[cycle == k].sum() / total) if total > 0 else 0.0
-    scan_sigma = mad_sigma(snr) if snr.size >= MIN_SCAN_POSITIONS else None
+    shares = {int(k): (float(drop[cycle == k].sum() / total) if total > 0 else 0.0) for k in np.unique(cycle)}
+    robust = mad_sigma(snr) if snr.size >= MIN_SCAN_POSITIONS else None
     return {
-        "phase": c, "depth_ppm": depth * 1e6, "sigma_ppm": sigma * 1e6, "snr": depth / sigma, "n_points": n,
-        "max_brightening_snr": float(-snr[j]), "n_trials": len(rows), "duration_days": duration,
-        "scan_median_snr": float(np.median(snr)), "scan_robust_sigma": scan_sigma,
+        "phase": c, "depth_ppm": d_best * 1e6, "sigma_ppm": sg_best * 1e6, "snr": d_best / sg_best, "n_points": n_best,
+        "max_brightening_snr": float(-snr[j]), "n_trials": int(snr.size), "duration_days": duration,
+        "excluded_days": exclude,
+        "scan_median_snr": float(np.median(snr)), "scan_robust_sigma": robust, "scan_std_snr": float(np.std(snr)),
         "n_epochs": len(shares), "max_epoch_share": max(shares.values()) if shares else None,
-        "phase_05": {"phase": near_half[0], "depth_ppm": near_half[1] * 1e6, "sigma_ppm": near_half[2] * 1e6,
-                     "snr": near_half[1] / near_half[2]},
+        "phase_05": {"phase": float(centres[near]), "depth_ppm": float(depth[near]) * 1e6,
+                     "sigma_ppm": float(sigma[near]) * 1e6, "snr": float(snr[near])},
     }
+
+
+def assess_secondary(sec: dict, *, secondary_sigma: float = SECONDARY_SIGMA) -> dict:
+    """Decide whether a :func:`secondary_search` result is a significant secondary (adds ``threshold_sigma``,
+    ``threshold_rule``, ``periodic`` and ``significant`` to it). The threshold is the white-noise 99.9% quantile
+    of (largest dip)/(robust spread) for the scan's number of positions (:func:`white_quantiles`), times its robust
+    spread; the dip must also exceed the largest brightening and be periodic (two or more epochs, none carrying
+    70% or more). ``secondary_sigma`` is the fixed fallback for scans too short for a robust spread."""
+    if sec["scan_robust_sigma"] is not None:
+        z = white_quantiles(sec["n_trials"])["q_dip"]
+        threshold = z * sec["scan_robust_sigma"]
+        sec["threshold_rule"] = (f"{z:.2f} × the scan's robust spread (white-noise 99.9% quantile for "
+                                 f"{sec['n_trials']} positions)")
+    else:
+        threshold = secondary_sigma
+        sec["threshold_rule"] = f"fixed {secondary_sigma:g}σ fallback (fewer than {MIN_SCAN_POSITIONS} positions)"
+    sec["threshold_sigma"] = threshold
+    sec["periodic"] = bool(sec["n_epochs"] >= 2 and (sec["max_epoch_share"] or 1.0) < SECONDARY_MAX_EPOCH_SHARE)
+    sec["significant"] = bool(sec["snr"] > max(threshold, sec["max_brightening_snr"]) and sec["periodic"])
+    return sec
 
 
 def implied_albedo(secondary_depth: float, k: float | None, a_rs: float | None) -> float | None:
@@ -400,19 +467,7 @@ def extended_vet(time, flux, flux_err, *, period: float | None, t0: float | None
         fit = fit or {}
         a_rs = fit.get("a_rs")
         sec["albedo"] = implied_albedo(max(sec["depth_ppm"], 0.0) * 1e-6, fit.get("k"), a_rs)
-        if sec["scan_robust_sigma"] is not None:
-            from scipy.stats import norm
-
-            n_eff = max(sec["n_trials"] * 0.25, 1.0)
-            z = max(SECONDARY_SCAN_SIGMA, float(norm.isf(SECONDARY_FALSE_ALARM / n_eff)))
-            threshold = z * sec["scan_robust_sigma"]
-            sec["threshold_rule"] = f"{z:.2f} × the scan's robust spread (look-elsewhere over {n_eff:.0f} positions)"
-        else:
-            threshold = secondary_sigma
-            sec["threshold_rule"] = f"fixed {secondary_sigma:g}σ fallback (fewer than {MIN_SCAN_POSITIONS} positions)"
-        sec["threshold_sigma"] = threshold
-        sec["periodic"] = bool(sec["n_epochs"] >= 2 and (sec["max_epoch_share"] or 1.0) < SECONDARY_MAX_EPOCH_SHARE)
-        sec["significant"] = bool(sec["snr"] > max(threshold, sec["max_brightening_snr"]) and sec["periodic"])
+        assess_secondary(sec, secondary_sigma=secondary_sigma)
         if sec["significant"]:
             flags.append("secondary_any_phase")
     metrics["secondary"] = sec

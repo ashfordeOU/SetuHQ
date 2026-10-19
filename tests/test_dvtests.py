@@ -76,16 +76,36 @@ def test_a_lone_dip_is_not_a_secondary(rng):
     assert "secondary_any_phase" not in flags
 
 
-def test_secondary_threshold_follows_the_scan_spread(rng):
-    """Red-ish noise widens the scan statistic; the threshold widens with it (3 x its robust spread)."""
-    t, f, e = _curve(rng, events=_transits(1000e-6))
-    f = f + np.interp(t, np.arange(0, 41, 0.15), rng.normal(0, 2e-4, np.arange(0, 41, 0.15).size))
-    flags, m = extended_vet(t, f, e, period=P, t0=T0, duration=DUR)
-    sec = m["secondary"]
-    assert sec["scan_robust_sigma"] > 1.5
-    assert sec["threshold_sigma"] >= 3 * sec["scan_robust_sigma"]
-    assert "secondary_any_phase" not in flags
+def _scan_flag_rate(n, *, period, cadence, red=0.0, seed0=0, days=27.0):
+    t = np.arange(0.0, days, cadence / 1440.0)
+    knots = np.arange(0.0, days + 0.2, 0.15)
+    flagged = 0
+    spreads = []
+    for i in range(n):
+        rng = np.random.default_rng(seed0 + i)
+        f = 1 + rng.normal(0, 1e-3, t.size)
+        if red:
+            f += np.interp(t, knots, rng.normal(0, red, knots.size))
+        sec = dvtests.assess_secondary(dvtests.secondary_search(t, f, period=period, t0=0.3, duration=0.125))
+        flagged += sec["significant"]
+        spreads.append(sec["scan_robust_sigma"])
+    return flagged, float(np.median(spreads))
 
+
+def test_secondary_false_alarm_rate_on_white_noise():
+    """2000 white-noise scans (pi Men's geometry, 193 positions, 10-minute bins): at most 0.3% flagged. The rule is
+    calibrated at 0.1% per scan (scripts/calibrate_secondary.py)."""
+    flagged, spread = _scan_flag_rate(2000, period=6.27, cadence=10.0, seed0=500000)
+    assert flagged <= 6
+    assert spread == pytest.approx(1.0, abs=0.1)
+
+
+def test_secondary_false_alarm_rate_follows_the_scan_spread():
+    """Red-ish noise (a 0.15-day random walk on top of white noise) widens the scan statistic; because the threshold
+    scales with the scan's own robust spread (1.7 here), the false-alarm rate stays below 1% (2 in 1000 measured)."""
+    flagged, spread = _scan_flag_rate(1000, period=6.27, cadence=10.0, red=5e-4, seed0=700000)
+    assert spread > 1.5
+    assert flagged <= 10
 
 def test_secondary_must_beat_the_largest_brightening(rng):
     """A dip that is no deeper than the brightenings seen elsewhere is noise, whatever its nominal sigma."""

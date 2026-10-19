@@ -217,8 +217,15 @@ published pipelines.
   where one geometry is also marked unreliable; the binary is still flagged and the planet is not. It has not yet been benchmarked on real false positives (ATLAS S2 asks for Kepler
   `koi_fpflag_co` KOIs and TESS FP TOIs). Saturated stars, like pi Men, get no usable centroid. The neighbour table's
   flux shares use the same Gaussian; an exclusion within 3σ of the star's Tmag uncertainty is reported as marginal.
-  The light-curve significances use white noise (robust scatter over √n), so they are optimistic under red noise:
-  on pi Men the largest brightening at any phase is 8.8σ.
+* **The secondary search is calibrated on white noise.** Its threshold is the white-noise 99.9% quantile of
+  (largest dip)/(robust spread) for the scan's number of positions, times the scan's own robust spread; on 3000
+  clean simulated planets it flagged 2 (0.07%, 95% CI 0.01–0.24%), against 87 (2.9%) for the rule it replaced and
+  681 (23%) for a plain 3 × robust spread (`scripts/calibrate_secondary.py`, `docs/results/secondary_calibration.json`).
+  On red-ish noise (robust spread 1.7) it flagged 2 in 1000. The price is sensitivity: a 200 ppm secondary beside a
+  1000 ppm primary at 600 ppm per 2-minute point sits at the threshold (10 of 20 flagged); at 300 ppm, 19 of 20. The
+  "8.8σ brightening" once quoted for pi Men was not red noise: the review detrending overshot beside each transit,
+  and those shoulders read as brightenings (5.8σ once the transits are masked). The reduced FPP is refused when the
+  scan is not white.
 * **Validation is not done.** TRICERATOPS 1.1.0 installs with pip (extra `validate`), but its `target()` queries
   MAST, Gaia and TESSCut on construction, so it cannot run offline, and MAST's API was failing when this was built:
   the adapter (`validate.run_triceratops`) is tested against a stub only and has not been run on a real target. The

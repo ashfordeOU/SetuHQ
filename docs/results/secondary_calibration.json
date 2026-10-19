@@ -1,0 +1,107 @@
+{
+ "table": [
+  {
+   "period": 1.0,
+   "cadence_min": 10.0,
+   "positions": 25,
+   "q_dip_999": 6.729875914874631,
+   "q_abs_999": 6.911224828248771,
+   "n_eff": 42.05060375724967,
+   "n_sims": 20000
+  },
+  {
+   "period": 1.5,
+   "cadence_min": 2.0,
+   "positions": 41,
+   "q_dip_999": 6.236589055835097,
+   "q_abs_999": 6.337722390697867,
+   "n_eff": 73.41725911565017,
+   "n_sims": 20000
+  },
+  {
+   "period": 2.5,
+   "cadence_min": 2.0,
+   "positions": 73,
+   "q_dip_999": 5.628141569818439,
+   "q_abs_999": 5.7956833364729485,
+   "n_eff": 142.36815437254396,
+   "n_sims": 20000
+  },
+  {
+   "period": 4.0,
+   "cadence_min": 2.0,
+   "positions": 121,
+   "q_dip_999": 5.529424826167937,
+   "q_abs_999": 5.534172911254251,
+   "n_eff": 279.18503101816646,
+   "n_sims": 20000
+  },
+  {
+   "period": 6.27,
+   "cadence_min": 2.0,
+   "positions": 193,
+   "q_dip_999": 5.1302670977806395,
+   "q_abs_999": 5.315051577412756,
+   "n_eff": 486.4057921944266,
+   "n_sims": 20000
+  },
+  {
+   "period": 10.0,
+   "cadence_min": 2.0,
+   "positions": 313,
+   "q_dip_999": 5.038959164259946,
+   "q_abs_999": 5.1312762115597765,
+   "n_eff": 782.2371157558315,
+   "n_sims": 20000
+  },
+  {
+   "period": 13.0,
+   "cadence_min": 2.0,
+   "positions": 409,
+   "q_dip_999": 5.060818209575359,
+   "q_abs_999": 5.094616624033157,
+   "n_eff": 1047.5566313202057,
+   "n_sims": 20000
+  }
+ ],
+ "note": "99.9% quantiles over 20,000 white-noise scans per row (27 days, T14 = 0.125 d, 2- and 10-minute cadence; the larger q_dip kept, q_abs and n_eff the larger of the two); positions = coarse box positions of secondary_search",
+ "rates": {
+  "secondary_false_flags_plain_3x_robust": {
+   "k": 681,
+   "n": 3000,
+   "rate": 0.227,
+   "ci95": [
+    0.21211567685170282,
+    0.2424185555844441
+   ],
+   "k_first_200_seeds": 43
+  },
+  "secondary_false_flags_lookelsewhere_0990a12": {
+   "k": 87,
+   "n": 3000,
+   "rate": 0.029,
+   "ci95": [
+    0.023291572050009885,
+    0.03564969673166136
+   ],
+   "k_first_200_seeds": 4
+  },
+  "secondary_false_flags_white_table": {
+   "k": 2,
+   "n": 3000,
+   "rate": 0.0006666666666666666,
+   "ci95": [
+    8.074662552361538e-05,
+    0.0024061330938171446
+   ],
+   "k_first_200_seeds": 0
+  },
+  "odd_even_timing": {
+   "offset_15min_detected_linear_inflation": 0,
+   "offset_15min_detected_fit_inflation": 20,
+   "of": 20,
+   "clean_4_epoch_flagged": 1,
+   "clean_n": 200
+  }
+ }
+}
