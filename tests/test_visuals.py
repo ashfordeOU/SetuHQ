@@ -235,7 +235,9 @@ def test_blocking_starlight_has_the_four_families_and_a_plate(page_html):
         assert plate.count(t) == 2
     lyot_open, lyot_closed, airy8, airy5, son5 = M.coronagraph_numbers()
     for x in (lyot_open, lyot_closed, airy8, airy5, son5):
-        assert f"{x:.1e}" in art
+        assert M.sci(x) in art
+    assert M.sci(1.83e-7) == "1.8×10⁻⁷" and M.sci(6.68e-5) == "6.7×10⁻⁵" and M.sci(9.97e-3) == "1.0×10⁻²"
+    assert not re.search(r"\d\.\de[-+]\d", art)   # no e-notation in the chapter's prose
     assert "Marois et al. 2006" in art and "Bailey et al. 2016" in art and "Lyot 1939" in art
     assert "synthetic" in art and "illustrative" in art
     assert not re.search(r"0\.9 λ/D|1\.75 λ/D", art)   # the atlas flags the vortex IWA figures as unchecked
@@ -334,6 +336,16 @@ const { chromium } = require(%s);
     out.gal.zoom = await p.evaluate(() => ({open: document.querySelector('#mxsheet').open, anim: document.querySelector('#mxsheet').getAnimations().length, note: document.querySelector('#mxsheetzoom').textContent}));
     out.galErrs = errs; await c.close();
   }
+  // 2b. Skip intro announces, by mouse and by keyboard.
+  out.skip = {};
+  for (const how of ['click', 'enter']) {
+    const [c, p] = await ctx({viewport: {width: 1360, height: 900}});
+    await p.goto(url + '#/sky'); await p.waitForTimeout(400);
+    if (how === 'click') await p.click('#route-sky .mxskip'); else { await p.focus('#route-sky .mxskip'); await p.keyboard.press('Enter'); }
+    await p.waitForTimeout(300);
+    out.skip[how] = await p.evaluate(() => document.querySelector('#announce').textContent);
+    await c.close();
+  }
   // 3. Reduced motion: no intro at all, and the sheet opens without the lens (the note still says what the zoom is).
   {
     const [c, p, errs] = await ctx({viewport: {width: 1360, height: 900}, reducedMotion: 'reduce'});
@@ -360,6 +372,10 @@ const { chromium } = require(%s);
         const n = (m.modes || []).length; if (ms.options.length !== Math.max(1, n) || ms.disabled !== !n) r.push(['options', m.id, ms.options.length]);
         for (let k = 0; k < Math.max(1, n); k++){ ms.value = String(k); ms.dispatchEvent(new Event('change')); for (const t of [0.15, 0.4]){ st.t = t; mxDraw(st); }
           const md = (m.modes || [])[k]; if (md && md.exag && !st.exag.includes('amplitude ×' + md.exag)) r.push(['exag', m.id, k, st.exag]); } }
+      // The chosen mode index survives a change of molecule where the new one has it (H2O ν₃ → CO2 ν₃), else resets.
+      mm.value = 'H2O'; mm.dispatchEvent(new Event('change')); ms.value = '2'; ms.dispatchEvent(new Event('change'));
+      mm.value = 'CO2'; mm.dispatchEvent(new Event('change')); if (st.opt.mode !== 2 || ms.value !== '2') r.push(['keep', st.opt.mode, ms.value]);
+      mm.value = 'CO'; mm.dispatchEvent(new Event('change')); if (st.opt.mode !== 0 || ms.value !== '0') r.push(['reset', st.opt.mode, ms.value]);
       return r; });
     out.stages.push({w, cg, mol, errs, wide: await p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)});
     await c.close();
@@ -377,12 +393,13 @@ const { chromium } = require(%s);
     assert out["again"] is False
     z = out["zoom"]
     assert z["open"] and z["anim"] >= 1 and z["lens"] and z["title"] == "pi Men c"
-    assert "an illustration of scale, not continuous data" in z["label"] and "zoom ≈ ×10" in z["label"]
-    assert "From the sky map to this orbit is a jump of about 10" in z["note"] and "not continuous data" in z["note"]
+    assert "an illustration of scale, not continuous data" in z["label"] and "zoom ≈ ×4×10⁸ · " in z["label"]   # 3.6×10⁸, one significant figure
+    assert "From the sky map to this orbit is a jump of about 4×10⁸ in scale" in z["note"] and "not continuous data" in z["note"]
     assert z["after"] == {"lens": False, "open": False}
     g = out["gal"]
     assert g["before"] and g["after"] == {"gone": True, "done": True, "wide": False}
-    assert g["zoom"]["open"] and g["zoom"]["anim"] >= 1 and "From the Galaxy map to this orbit" in g["zoom"]["note"]
+    assert g["zoom"]["open"] and g["zoom"]["anim"] >= 1 and "From the Galaxy map to this orbit is a jump of about 6×10⁷ in scale" in g["zoom"]["note"]
+    assert out["skip"] == {"click": "Intro skipped.", "enter": "Intro skipped."}
     rm = out["rm"]
     assert rm["intro"] is False and rm["galIntro"] is False
     assert rm["open"] and rm["anim"] == 0 and rm["lens"] is False and "not continuous data" in rm["note"]

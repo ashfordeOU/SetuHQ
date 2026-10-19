@@ -389,6 +389,15 @@ def lyot_final_intensity(u: float, mask_lod: float, stop: float, n: int = 240) -
     return (2 * v) ** 2
 
 
+def sci(x: float) -> str:
+    """1.8×10⁻⁷: a number as the stages print it (mxSci in the page)."""
+    e = math.floor(math.log10(x))
+    m = round(x / 10 ** e, 1)
+    if m >= 10:
+        m, e = m / 10, e + 1
+    return f"{m:.1f}×10" + str(e).translate(str.maketrans("-0123456789", "⁻⁰¹²³⁴⁵⁶⁷⁸⁹"))
+
+
 MX_LYOT_MASK = 4   # λ/D: the occulting disc drawn in the Lyot scene (MX_CG.lyotMask in the page)
 
 
@@ -1182,8 +1191,8 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                '<label class="mxmode"><span>Family</span><select><option value="lyot">Lyot: mask and stop</option><option value="apod">Apodised pupil</option><option value="vortex">Vortex phase mask</option><option value="adi">Adaptive optics and ADI</option></select></label>', tall=True)}
       <div class="mxtext">
         <ol class="mxsteps">
-          <li><b>Lyot coronagraph.</b> An opaque disc in the focal plane blocks the core of the star's image. What it does not remove is the light its edge diffracts, which the next lens sends to the rim of the re-imaged pupil; a Lyot stop slightly smaller than the pupil catches that rim (Lyot 1939). With a {MX_LYOT_MASK} λ/D disc, closing the stop from 150% to 80% of the pupil cuts the starlight at 8 λ/D from {lyot_open:.1e} to {lyot_closed:.1e} of the star's peak (no coronagraph: {airy8:.1e}) [calc], while a planet well outside the disc keeps 64% of its light, the stop's area.</li>
-          <li><b>Apodised pupil.</b> Instead of a mask, the pupil's transmission tapers to its edge, so the image has no sharp edge to ring from. For A(ρ) = (1 − ρ²)² the brightest ring near 5 λ/D falls from {airy5:.1e} to {son5:.1e} of the clear pupil's peak [calc], but only 1/(2n + 1) = 20% of the light gets through and the core is wider. Real apodisers (shaped pupils, prolate and APLC designs) are optimised numerically; this taper is illustrative.</li>
+          <li><b>Lyot coronagraph.</b> An opaque disc in the focal plane blocks the core of the star's image. What it does not remove is the light its edge diffracts, which the next lens sends to the rim of the re-imaged pupil; a Lyot stop slightly smaller than the pupil catches that rim (Lyot 1939). With a {MX_LYOT_MASK} λ/D disc, closing the stop from 150% to 80% of the pupil cuts the starlight at 8 λ/D from {sci(lyot_open)} to {sci(lyot_closed)} of the star's peak (no coronagraph: {sci(airy8)}) [calc], while a planet well outside the disc keeps 64% of its light, the stop's area.</li>
+          <li><b>Apodised pupil.</b> Instead of a mask, the pupil's transmission tapers to its edge, so the image has no sharp edge to ring from. For A(ρ) = (1 − ρ²)² the brightest ring near 5 λ/D falls from {sci(airy5)} to {sci(son5)} of the clear pupil's peak [calc], but only 1/(2n + 1) = 20% of the light gets through and the core is wider. Real apodisers (shaped pupils, prolate and APLC designs) are optimised numerically; this taper is illustrative.</li>
           <li><b>Vortex phase mask.</b> A transparent mask whose phase winds around its centre (e^(2iθ), charge 2) moves an on-axis star's light outside the re-imaged pupil: for an ideal charge-2 vortex on a clear circular aperture the field there is exactly zero inside the pupil and (1/ρ)² outside it [calc], so a stop just inside the pupil removes the star. Phase masks are the family that works closest to the star (Mawet et al. 2012); real vortices leave residuals from wavefront errors and the star's finite size.</li>
           <li><b>Adaptive optics and ADI.</b> A deformable mirror turns the seeing halo into a sharp core, but quasi-static speckles λ/D wide remain. With the instrument's pupil fixed, the sky and the planet turn through the night while the speckles stay; the median of the sequence models the speckles, and each frame minus it, turned back by its field rotation and stacked, keeps the planet (Marois et al. 2006). The frames on the stage are synthetic. On the sky, GPI reaches about 10⁻⁴ raw contrast at 0.4″ in 60 s and more than ten times deeper after an hour of ADI (Bailey et al. 2016).</li>
         </ol>
@@ -2376,10 +2385,11 @@ function mxCgPlot(c, x, y, w, h, lines, o){
   const top = y - 22;
   mxGlassPanel(c, x - 44, top, w + 56, h + 50);
   const kh = mxCgKey(c, x, top + 16, w, keys) + 4;
-  y += kh; h -= kh;
+  y += kh; h -= kh + 14;   // the last 14 px: a row under the tick labels for the axis title and the mask's label
   const umax = o.umax || 12, dec = 8, X = u => x + u / umax * w, Y = I => y + Math.min(1, -Math.log10(Math.max(I, 1e-12)) / dec) * h;
-  mxAxes(c, x, y, w, h, {y: 'STARLIGHT, LOG (PEAK = 1)', x: 'ANGLE FROM THE STAR (λ/D)'});
-  if (o.mask){ c.fillStyle = 'rgba(255,255,255,.05)'; c.fillRect(x, y, X(o.mask) - x, h); mxText(c, o.maskLabel || 'behind the mask', x + 4, y + 14, {size: 11}); }
+  mxAxes(c, x, y, w, h, {y: 'STARLIGHT, LOG (PEAK = 1)', x: ''});
+  mxText(c, 'ANGLE FROM THE STAR (λ/D)', x + w, y + h + 27, {size: 11, w: 600, color: '#8E8E93', mono: true, align: 'right'});
+  if (o.mask){ c.fillStyle = 'rgba(255,255,255,.05)'; c.fillRect(x, y, X(o.mask) - x, h); mxText(c, `shaded: ${o.maskLabel || 'behind the mask'}`, x, y + h + 27, {size: 11}); }
   for (const e of [0, 2, 4, 6, 8]){ const yy = Y(Math.pow(10, -e)); c.strokeStyle = 'rgba(255,255,255,.07)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x, yy); c.lineTo(x + w, yy); c.stroke(); mxText(c, e ? `10⁻${'⁰¹²³⁴⁵⁶⁷⁸'[e]}` : '1', x - 6, yy + 4, {size: 11, mono: true, align: 'right'}); }
   for (const u of [0, 4, 8, 12]) if (u <= umax) mxText(c, String(u), X(u), y + h + 13, {size: 11, mono: true, align: 'center'});
   c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip();
@@ -2791,15 +2801,14 @@ function mxAtoms(g){
 const MX_MODE_A = 0.2, MX_VIB_CYCLES = 12;
 function mxModeOptions(m){ return (m.modes || []).map((d, i) => `<option value="${i}">${esc(mxModeName(d))}${d.um ? ` · ${d.um.toFixed(2)} µm` : ''}${d.ir ? '' : ' · IR-silent'}</option>`).join(''); }
 const mxModeName = d => (d.nu ? d.nu + ' ' : '') + d.name;
-// A log wavelength axis, 1 to 25 µm: the molecule's modes (filled: infrared-active; hollow: silent) and the window
+// A log wavelength axis, 0.5 to 25 µm: the molecule's modes (filled: infrared-active; hollow: silent) and the window
 // the Reading-atmospheres chapter draws (0.5 to 5.1 µm).
 function mxBandAxis(c, x, y, w, m, cur){
-  const lo = Math.log10(1), hi = Math.log10(25), X = um => x + (Math.log10(um) - lo) / (hi - lo) * w;
-  c.fillStyle = 'rgba(100,210,255,.10)'; c.fillRect(x, y - 10, X(5.1) - x, 20);
+  const lo = Math.log10(0.5), hi = Math.log10(25), X = um => x + (Math.log10(um) - lo) / (hi - lo) * w;
+  c.fillStyle = 'rgba(100,210,255,.10)'; c.fillRect(X(0.5), y - 10, X(5.1) - X(0.5), 20);
   mxText(c, 'drawn in Reading atmospheres', x + 4, y - 14, {size: 11, color: '#64D2FF'});
   c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y); c.stroke();
-  for (const um of [1, 2, 5, 10, 20]){ c.beginPath(); c.moveTo(X(um), y - 3); c.lineTo(X(um), y + 3); c.stroke(); mxText(c, `${um}`, X(um), y + 16, {size: 11, mono: true, align: 'center'}); }
-  mxText(c, 'µm', x + w, y + 16, {size: 11, mono: true, align: 'right'});
+  for (const um of [0.5, 1, 2, 5, 10, 20]){ c.beginPath(); c.moveTo(X(um), y - 3); c.lineTo(X(um), y + 3); c.stroke(); mxText(c, um === 0.5 ? '0.5 µm' : `${um}`, X(um), y + 16, {size: 11, mono: true, align: um === 0.5 ? 'left' : 'center'}); }
   (m.modes || []).forEach((d, i) => { if (!d.um) return; const xx = X(d.um), on = i === cur;
     c.strokeStyle = on ? '#FFB340' : 'rgba(255,255,255,.7)'; c.fillStyle = on ? '#FFB340' : 'rgba(255,255,255,.7)'; c.lineWidth = on ? 2 : 1.2;
     c.beginPath(); c.arc(xx, y, on ? 5.5 : 4, 0, 2 * Math.PI); d.ir ? c.fill() : c.stroke(); });
@@ -2808,10 +2817,11 @@ MXV.molecule = {key: 0.15, period: 14, init(st){ st.opt.mol = MX.molecules[0]; s
   control(st, el){
     if (el.tagName !== 'SELECT') return;
     if (el.dataset.ctl === 'mode'){ st.opt.mode = Number(el.value) || 0; return; }
-    st.opt.mol = MX.molecules.find(m => m.id === el.value) || MX.molecules[0]; st.opt.mode = 0;
+    st.opt.mol = MX.molecules.find(m => m.id === el.value) || MX.molecules[0];
+    if (st.opt.mode >= (st.opt.mol.modes || []).length) st.opt.mode = 0;   // keep the chosen mode where this molecule has it
     document.querySelectorAll('.mxmol').forEach(a => a.classList.toggle('on', a.dataset.mol === st.opt.mol.id));
     const ms = st.fig.querySelector('select[data-ctl="mode"]');
-    if (ms){ const has = (st.opt.mol.modes || []).length; ms.innerHTML = has ? mxModeOptions(st.opt.mol) : '<option value="0">No vibrations drawn</option>'; ms.disabled = !has; ms.value = '0'; }
+    if (ms){ const has = (st.opt.mol.modes || []).length; ms.innerHTML = has ? mxModeOptions(st.opt.mol) : '<option value="0">No vibrations drawn</option>'; ms.disabled = !has; ms.value = String(st.opt.mode); }
   },
   draw(c, w, h, t, st){
     const m = st.opt.mol, atoms = mxAtoms(m.geom), narrow = w < 600, sc = Math.min(w, h) * (narrow ? 0.2 : 0.22), ry = t * 2 * Math.PI, rx = 0.35;
@@ -2901,7 +2911,7 @@ function mxOpenSystem(name, back, from){
   $('#mxsheettitle').textContent = name;
   const z = from ? mxZoomInfo(p, from.kind) : null, zn = $('#mxsheetzoom');
   zn.hidden = !from;
-  if (from) zn.textContent = (z ? `From the ${from.kind === 'sky' ? 'sky map' : 'Galaxy map'} to this orbit is a jump of about 10${mxSup(z.n)} in scale (${z.what}). ` : '')
+  if (from) zn.textContent = (z ? `From the ${from.kind === 'sky' ? 'sky map' : 'Galaxy map'} to this orbit is a jump of about ${z.v} in scale (${z.what}). ` : '')
     + 'The zoom between them is an illustration of scale, not continuous data.';
   if (!dlg.open) dlg.showModal();
   mxSystemView(fig, Object.assign({name}, p), {dip: name === 'pi Men c' && MX.lead_dip ? {pts: MX.lead_dip.pts} : null, on: true, fetched: MX.fetched_at});
@@ -2916,9 +2926,11 @@ const mxSup = n => String(n).split('').map(d => '⁰¹²³⁴⁵⁶⁷⁸⁹'['0
 function mxZoomInfo(p, kind){
   const d = p.star_distance, a = p.semi_major_axis; if (!(d > 0 && a > 0)) return null;
   const dAU = d * 206264.806, ly = d * 3.26156;
-  if (kind === 'sky') return {n: Math.round(Math.log10(2 * Math.PI / (a / dAU))), what: `the whole sky, then an orbit of ${a} AU seen from ${ly.toFixed(1)} light-years, ${(a / dAU * 206264806).toPrecision(2)} milliarcseconds across`};
-  return {n: Math.round(Math.log10(dAU / a)), what: `${ly.toFixed(1)} light-years to the star, ${a} AU from star to planet`};
+  if (kind === 'sky') return {v: mxSig1(2 * Math.PI / (a / dAU)), what: `the whole sky, then an orbit of ${a} AU seen from ${ly.toFixed(1)} light-years, ${(a / dAU * 206264806).toPrecision(2)} milliarcseconds across`};
+  return {v: mxSig1(dAU / a), what: `${ly.toFixed(1)} light-years to the star, ${a} AU from star to planet`};
 }
+// A number to one significant figure, as 4×10⁸.
+function mxSig1(x){ let e = Math.floor(Math.log10(x)), m = Math.round(x / Math.pow(10, e)); if (m === 10){ m = 1; e++; } return `${m}×10${mxSup(e)}`; }
 // The magnifier: the sheet is revealed through a growing circle centred on the point that was chosen, with a lens rim
 // and a label that says what the zoom is. Never under reduced motion (the sheet simply opens).
 function mxZoomLens(dlg, from, z){
@@ -2927,7 +2939,7 @@ function mxZoomLens(dlg, from, z){
   dlg.animate([{clipPath: `circle(28px at ${x}px ${y}px)`}, {clipPath: `circle(28px at ${x}px ${y}px)`, offset: 0.2}, {clipPath: `circle(${R}px at ${x}px ${y}px)`}], {duration: dur, easing: ease});
   const old = dlg.querySelector('.mxlens'); if (old) old.remove();
   const lens = document.createElement('div'); lens.className = 'mxlens'; lens.setAttribute('aria-hidden', 'true');
-  lens.innerHTML = `<i style="left:${x}px;top:${y}px"></i><span>${z ? `zoom ≈ ×10${mxSup(z.n)} · ` : ''}an illustration of scale, not continuous data</span>`;
+  lens.innerHTML = `<i style="left:${x}px;top:${y}px"></i><span>${z ? `zoom ≈ ×${z.v} · ` : ''}an illustration of scale, not continuous data</span>`;
   dlg.appendChild(lens);
   lens.querySelector('i').animate([{width: '56px', height: '56px', opacity: 1}, {width: '56px', height: '56px', opacity: 1, offset: 0.2}, {width: `${2 * R}px`, height: `${2 * R}px`, opacity: 0.15}], {duration: dur, easing: ease, fill: 'forwards'});
   lens.querySelector('span').animate([{opacity: 0}, {opacity: 1, offset: 0.12}, {opacity: 1, offset: 0.75}, {opacity: 0}], {duration: dur + 900, fill: 'forwards'});
@@ -2954,7 +2966,7 @@ function mxIntroStart(key, host){
   MXV.scan.init(I.st); I.st.opt.intro = true;
   mxIntros[key] = I;
   el.querySelector('.mxskip').addEventListener('click', () => mxIntroEnd(I, true));
-  I.touch = () => mxIntroEnd(I, false);
+  I.touch = e => { if (e && e.target && e.target.closest && e.target.closest('.mxskip')) return; mxIntroEnd(I, false); };
   for (const ev of ['pointerdown', 'wheel', 'keydown']) host.addEventListener(ev, I.touch, {passive: true});
   if ('IntersectionObserver' in window){ I.io = new IntersectionObserver(es => { I.visible = es[es.length - 1].isIntersecting; mxIntroKick(I); }); I.io.observe(host); }
   else I.visible = true;
