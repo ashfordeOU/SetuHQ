@@ -91,9 +91,10 @@ def _eclipse_curve(rng, sigmas, *, noise=3e-4):
     return LightCurve(target="T", mission="TESS", time=time, flux=flux, flux_err=np.full(time.size, noise)), centres
 
 
-@pytest.mark.parametrize("sigma", [15, 17, 20, 100])
+@pytest.mark.parametrize("sigma", [10, 11, 12, 15, 17, 20, 100])
 def test_clean_keeps_deep_eclipses(rng, sigma):
-    """Eclipses 15 to 100 times the per-point scatter (a 3% binary at 300 ppm) survive cleaning point for point.
+    """Eclipses 10 to 100 times the per-point scatter (a 3% binary at 300 ppm) survive cleaning point for point,
+    including the 10-12 sigma band where points straddle the clip (the hysteresis keeps them).
     Before the run-length guard every one of their points was removed."""
     lc, (c,) = _eclipse_curve(rng, [sigma])
     inside = np.abs(lc.time - c) < 1 / 24
@@ -106,14 +107,14 @@ def test_clean_keeps_deep_eclipses(rng, sigma):
 def test_clean_still_removes_isolated_low_and_high_spikes(rng):
     lc, _ = _eclipse_curve(rng, [])
     flux = lc.flux.copy()
-    flux[[100, 900, 901, 2000]] -= 0.01          # a lone low point and a two-point low pair: both removed
+    flux[[100, 900, 901, 2000, 2500, 2501, 2502]] -= 0.01   # a lone point, a pair and a triple: all removed
     flux[3000] += 0.01                            # an upward spike: removed as before
     lc = lc.with_data(lc.time, flux, lc.flux_err)
     cleaned = clean(lc)
-    for i in (100, 900, 901, 2000, 3000):
+    for i in (100, 900, 901, 2000, 2500, 2501, 2502, 3000):
         assert lc.time[i] not in cleaned.time
-    assert len(cleaned) == len(lc) - 5
-    assert cleaned.provenance["spike_clip_low_min_run"] == 3
+    assert len(cleaned) == len(lc) - 8
+    assert cleaned.provenance["spike_clip_low_min_run"] == 10      # 20 minutes at 2-minute cadence
 
 
 def test_low_runs():
@@ -132,3 +133,15 @@ def test_deep_eclipse_reaches_the_prepared_light_curve(rng):
     assert inside.sum() >= 8
     assert 1 - np.mean(prep.flux[inside]) == pytest.approx(20 * 3e-4, rel=0.1)
     assert diff_sigma(lc.flux) > 0
+
+
+def test_clean_run_length_follows_the_cadence(rng):
+    """The run that saves a deep dip is 20 minutes long: 10 cadences at 2 minutes, 3 (the minimum) at 30 minutes."""
+    time = np.arange(0.0, 20.0, 30 / 1440)
+    flux = 1 + rng.normal(0, 3e-4, time.size)
+    flux[[300, 301, 302]] -= 0.01               # 90 minutes at 30-minute cadence: a real dip, kept
+    flux[500] -= 0.01                           # one cadence: removed
+    lc = LightCurve(target="T", mission="TESS", time=time, flux=flux, flux_err=np.full(time.size, 3e-4))
+    cleaned = clean(lc)
+    assert cleaned.provenance["spike_clip_low_min_run"] == 3
+    assert np.isin(time[[300, 301, 302]], cleaned.time).all() and time[500] not in cleaned.time

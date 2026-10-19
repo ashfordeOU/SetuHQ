@@ -215,8 +215,10 @@ published pipelines.
   equal to the out-of-transit fit's own offset from that position, which makes it insensitive below a few tenths of a
   pixel. On synthetic TPFs whose PSF is the same Gaussian (the ideal case) it localises a neighbour's eclipse 1.5
   to 3 px away to within 0.002 px (15 cases), and a planet on the target stays below 0.2σ (10 cases). With an
-  elongated PSF the model error dominates: 0.15–0.25 px at 1.6:1, up to 0.7 px at 2:1, and 0.6–0.75 px at 2.5:1,
-  where one geometry is also marked unreliable; the binary is still flagged and the planet is not. It has not yet been benchmarked on real false positives (ATLAS S2 asks for Kepler
+  elongated PSF (8 geometries 1.5–3 px away, 2 seeds each) the model error dominates: the neighbour is placed up to
+  1.10 px off at 1.6:1 (median 0.36), 2.15 px at 2:1 (median 0.72) and 2.30 px at 2.5:1 (median 0.95). The binary is
+  still flagged in every case at 1.6:1 and 2:1; at 2.5:1, 2 of the 8 geometries are marked unreliable instead (both
+  seeds), and the rest flagged. The planet on the target is never flagged (3 seeds per ratio). It has not yet been benchmarked on real false positives (ATLAS S2 asks for Kepler
   `koi_fpflag_co` KOIs and TESS FP TOIs). Saturated stars, like pi Men, get no usable centroid. The neighbour table's
   flux shares use the same Gaussian; an exclusion within 3σ of the star's Tmag uncertainty is reported as marginal.
 * **The secondary search is calibrated on white noise.** Its threshold is the white-noise 99.9% quantile of

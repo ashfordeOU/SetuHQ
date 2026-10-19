@@ -1,6 +1,6 @@
 # pi Men c: the limb-darkened fit against Huang et al. 2018
 
-> **Pre-fix code.** Produced before the run-length guard in `preprocess.clean` (code up to commit 5a03087), when every point of a dip deeper than 10× the point-to-point scatter was removed before review. Not re-run since; deep injections may be under-recovered here.
+Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since. A 300 ppm transit is affected by neither fix.
 
 Run `runs/tess-pi-men-s1` (TESS SPOC sector 1, 10-minute bins), rebuilt from its stored classifications with the limb-darkened
 fit (`src/exoplan/transitfit.py`). 5 of 5 predicted epochs are recovered by the panel. Limb darkening:

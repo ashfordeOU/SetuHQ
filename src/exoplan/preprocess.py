@@ -60,15 +60,16 @@ def low_runs(mask, min_run: int) -> np.ndarray:
 
 
 def clean(lc: LightCurve, *, high_sigma: float = 5.0, low_sigma: float = 10.0, window_days: float = 0.5,
-          min_low_run: int = 3) -> LightCurve:
+          dip_sigma: float = 3.0, min_dip_minutes: float = 20.0) -> LightCurve:
     """Drop invalid points and isolated spikes.
 
     Upward outliers (cosmic rays, momentum dumps) are removed beyond ``high_sigma``.
-    Downward outliers beyond ``low_sigma`` are removed only when they are isolated: fewer than ``min_low_run``
-    consecutive cadences below the threshold. A run of ``min_low_run`` or more is a real dip (a deep transit or
-    eclipse) and is kept. Before this guard every point of an eclipse deeper than ``low_sigma`` times the
-    point-to-point scatter was removed, so deep eclipsing binaries and hot Jupiters on quiet stars never reached
-    the panel.
+    Downward outliers beyond ``low_sigma`` are removed only when they are isolated. With hysteresis: such a point is
+    kept when it lies in a run of at least L consecutive cadences that are all more than ``dip_sigma`` below the
+    running median, with L = max(3, ceil(``min_dip_minutes`` / cadence)): a real transit or eclipse lasts that long,
+    and its ingress and egress points below ``low_sigma`` join the run through the lower threshold. Before this guard
+    every point of an eclipse deeper than ``low_sigma`` times the point-to-point scatter was removed, so deep
+    eclipsing binaries and hot Jupiters on quiet stars never reached the panel.
     """
     valid = np.isfinite(lc.time) & np.isfinite(lc.flux) & np.isfinite(lc.flux_err) & (lc.flux_err > 0)
     lc = lc.masked(valid, cleaning_window_days=window_days)
@@ -78,10 +79,13 @@ def clean(lc: LightCurve, *, high_sigma: float = 5.0, low_sigma: float = 10.0, w
     scatter = diff_sigma(lc.flux)
     if not np.isfinite(scatter) or scatter <= 0:
         return lc
+    cadence_min = float(np.median(np.diff(lc.time))) * 1440.0 if len(lc) > 1 else min_dip_minutes
+    min_run = max(3, int(np.ceil(min_dip_minutes / cadence_min - 1e-6))) if cadence_min > 0 else 3
     low = residual < -low_sigma * scatter
-    spikes = (residual > high_sigma * scatter) | (low & ~low_runs(low, min_low_run))
+    dip = residual < -dip_sigma * scatter
+    spikes = (residual > high_sigma * scatter) | (low & ~low_runs(dip, min_run))
     return lc.masked(~spikes, spike_clip_high_sigma=high_sigma, spike_clip_low_sigma=low_sigma,
-                     spike_clip_low_min_run=min_low_run)
+                     spike_clip_low_min_run=min_run, spike_clip_dip_sigma=dip_sigma)
 
 
 def local_quadratic(time, flux, keep, window: float, min_points: int = 10) -> tuple[np.ndarray, np.ndarray]:

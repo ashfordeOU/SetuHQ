@@ -696,5 +696,7 @@ def build_plate(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"
-    path.write_text(plate_page(data))
+    from exoplan.codenote import code_note, with_code_note
+
+    path.write_text(with_code_note(plate_page(data), code_note(run_dir)))
     return path
