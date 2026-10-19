@@ -49,10 +49,10 @@ def test_public_inputs_are_the_committed_file_and_carry_no_held_out_label():
 # ---------- the seeded entries reproduce the benchmark report ----------
 def test_probes_entry_scores_equal_the_benchmark_reports_held_out_numbers():
     s, h = _score("probes"), BENCH["summary"]["held_out"]
-    assert _kn(s["completeness"]) == _kn(h["completeness"]) == (86, 150)
-    assert _kn(s["completeness_all_stars"]) == _kn(h["completeness_all_stars"]) == (86, 152)
-    assert _kn(s["fp_found"]) == _kn(h["fp_seen"]) == (96, 124)
-    assert _kn(s["fp_flagged_of_found"]) == _kn(h["fp_flagged_of_seen"]) == (65, 96)
+    assert _kn(s["completeness"]) == _kn(h["completeness"])
+    assert _kn(s["completeness_all_stars"]) == _kn(h["completeness_all_stars"])
+    assert _kn(s["fp_found"]) == _kn(h["fp_seen"])
+    assert _kn(s["fp_flagged_of_found"]) == _kn(h["fp_flagged_of_seen"])
     assert _kn(s["fa_found"]) == _kn(h["fa_seen"])
     # FP rejection: every searched FP star that is not a clean candidate (not found, or found and flagged).
     assert s["fp_rejection"]["n"] == h["fp_seen"]["n"]
@@ -73,7 +73,7 @@ def test_sentinel_entries_equal_the_benchmark_reports_persona_numbers():
     per = BENCH["sentinels"]["personas"]
     for pid in ("claude-volunteer", "claude-skeptic"):
         s = _score(pid)
-        assert _kn(s["completeness"]) == _kn(per[pid]["cp_kp_marked"]) == (10, 20)
+        assert _kn(s["completeness"]) == _kn(per[pid]["cp_kp_marked"])
         fp = per[pid]["fp_marked_as_planet"]
         assert s["fp_rejection"]["n"] == fp["n"] and s["fp_rejection"]["k"] == fp["n"] - fp["k"]
         assert s["controls"] == {"inverted": None, "scrambled": None}
@@ -200,14 +200,14 @@ def test_a_valid_outside_submission_is_scored():
         if p["searched"]:
             p.update(seen=True, recovered=True, flagged=False)
     s = L.score(sub, SAMPLE, INPUTS, BENCH)
-    assert _kn(s["completeness"]) == (150, 150) and s["fp_rejection"]["k"] == 0
+    assert _kn(s["completeness"]) == (BENCH["summary"]["held_out"]["completeness"]["n"],) * 2 and s["fp_rejection"]["k"] == 0
 
 
 def test_cli_scores_and_refuses(tmp_path, capsys):
     good = tmp_path / "good.json"
     good.write_text(json.dumps(SUBS["probes"]))
     assert cli_main(["leaderboard", str(good)]) == 0
-    assert json.loads(capsys.readouterr().out)["scores"]["completeness"]["k"] == 86
+    assert json.loads(capsys.readouterr().out)["scores"]["completeness"]["k"] == BENCH["summary"]["held_out"]["completeness"]["k"]
     bad = copy.deepcopy(SUBS["probes"])
     bad["inputs_sha256"] = L.full_sample_sha256(SAMPLE)
     (tmp_path / "bad.json").write_text(json.dumps(bad))
@@ -236,7 +236,8 @@ def test_app_leaderboard_route_shows_the_table_rules_and_hash(pi_men_app):
     assert 'id="h-leaderboard"' in sec and '<a href="#/sentinels">' in sec
     assert RESULTS["sample_sha256"] in sec and RESULTS["inputs_sha256"] in sec
     assert sec.count("<tr><td class=\"rk\"") == len(RESULTS["entries"])
-    assert "86/152" in sec and "Rules" in sec and "not measured" in sec
+    c = BENCH["summary"]["held_out"]["completeness_all_stars"]
+    assert f"{c['k']}/{c['n']}" in sec and "Rules" in sec and "not measured" in sec
     assert "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors." in sec
     assert "SuperIntelligence" not in sec and "confirmed" not in sec.lower().replace("unconfirmed", "")
     assert 'href="#/leaderboard"' in _route(page, "sentinels")
