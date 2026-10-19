@@ -244,6 +244,27 @@ def atm_model(lam_um: float, base_ppm: float, dH_ppm: float, strengths: dict) ->
     return v
 
 
+E_CHARGE = 1.602176634e-19   # C (exact, SI 2019)
+M_ELECTRON = 9.1093837015e-31  # kg (CODATA 2018)
+
+
+def cyclotron_mhz(b_gauss: float) -> float:
+    """Electron-cyclotron frequency f_ce = eB/(2π m_e), in MHz, for a field in gauss: the highest frequency the
+    cyclotron maser emits at a source with that field (Treumann 2006). About 2.8 MHz per gauss."""
+    return E_CHARGE * b_gauss * 1e-4 / (2 * math.pi * M_ELECTRON) / 1e6
+
+
+def field_for_mhz(f_mhz: float) -> float:
+    """The field (gauss) whose cyclotron frequency is f_mhz: the least field at a source emitting up to f_mhz."""
+    return f_mhz / cyclotron_mhz(1.0)
+
+
+def pulsar_timing_ms(mp_mj: float, a_au: float, mpsr_msun: float = 1.4) -> float:
+    """Light-travel-time semi-amplitude of a pulsar tugged by a planet on a circular orbit, in ms:
+    (Mp/M_psr) · a / c (Mp ≪ M_psr; sin i taken as 1, so for m sin i this is the amplitude itself)."""
+    return mp_mj * GM_JUP / (mpsr_msun * GM_SUN) * a_au * AU / C_LIGHT * 1e3
+
+
 def rm_amplitude(vsini_kms: float, k: float) -> float:
     """Rossiter–McLaughlin semi-amplitude, K_R ≈ V sin I · k² (Gaudi & Winn 2007, eq. 6), in m/s."""
     return vsini_kms * 1000 * k * k
@@ -338,6 +359,18 @@ SOURCES = {
     "claret": ("Claret 2017, A&A 600, A30 (TESS limb darkening)", "https://doi.org/10.1051/0004-6361/201629705"),
     "huang": ("Huang et al. 2018, ApJL 868, L39 (pi Men c)", "https://doi.org/10.3847/2041-8213/aaef91"),
     "gaudiwinn": ("Gaudi & Winn 2007, ApJ 655, 550", "https://doi.org/10.1086/509910"),
+    "treumann06": ("Treumann 2006, A&ARv 13, 229 (the electron-cyclotron maser)", "https://doi.org/10.1007/s00159-006-0001-y"),
+    "zarka98": ("Zarka 1998, JGR 103, 20159 (auroral radio emission at the outer planets)", "https://doi.org/10.1029/98JE01323"),
+    "zarka07": ("Zarka 2007, Planet. Space Sci. 55, 598 (star–planet plasma interactions and radio)", "https://doi.org/10.1016/j.pss.2006.05.045"),
+    "vanhaarlem13": ("van Haarlem et al. 2013, A&A 556, A2 (LOFAR)", "https://doi.org/10.1051/0004-6361/201220873"),
+    "turner21": ("Turner et al. 2021, A&A 645, A59 (τ Boötis with LOFAR)", "https://doi.org/10.1051/0004-6361/201937201"),
+    "turner24": ("Turner et al. 2024, A&A 688, A66 (LOFAR follow-up of τ Boötis)", "https://doi.org/10.1051/0004-6361/202450095"),
+    "vedantham20": ("Vedantham et al. 2020, Nature Astronomy 4, 577 (GJ 1151)", "https://doi.org/10.1038/s41550-020-1011-9"),
+    "blancopozo23": ("Blanco-Pozo et al. 2023, A&A 671, A50 (GJ 1151 radial velocities)", "https://doi.org/10.1051/0004-6361/202245053"),
+    "pineda23": ("Pineda & Villadsen 2023, Nature Astronomy 7, 569 (YZ Ceti)", "https://doi.org/10.1038/s41550-023-01914-0"),
+    "wolszczan92": ("Wolszczan & Frail 1992, Nature 355, 145 (PSR B1257+12)", "https://doi.org/10.1038/355145a0"),
+    "isaacson17": ("Isaacson et al. 2017, PASP 129, 054501 (Breakthrough Listen targets)", "https://doi.org/10.1088/1538-3873/aa5800"),
+    "price20": ("Price et al. 2020, AJ 159, 86 (Breakthrough Listen: 1,327 nearby stars)", "https://doi.org/10.3847/1538-3881/ab65f1"),
     "triaud09": ("Triaud et al. 2009, A&A 506, 377 (Rossiter–McLaughlin effect of HD 189733 b)", "https://doi.org/10.1051/0004-6361/200911897"),
     "fischer": ("Fischer et al. 2016, PASP 128, 066001 (precise RV)", "https://doi.org/10.1088/1538-3873/128/964/066001"),
     "pepe": ("Pepe et al. 2021, A&A 645, A96 (ESPRESSO)", "https://doi.org/10.1051/0004-6361/202038306"),
@@ -436,6 +469,15 @@ def _src(keys) -> str:
     return "".join(f'<li><a href="{e(SOURCES[k][1])}" rel="noopener">{e(SOURCES[k][0])}</a></li>' for k in keys)
 
 
+def _catalogue_rows(names: list[str], path: str = "docs/results/exoplanet_catalogue.json") -> dict:
+    """Stored values for a few named planets from the catalogue file (empty when it is not in this build)."""
+    if not Path(path).exists():
+        return {}
+    P = json.loads(Path(path).read_text())["planets"]
+    idx = {n: i for i, n in enumerate(P["name"]) if n in set(names)}
+    return {n: {k: P[k][i] for k in ("mass", "msini", "period", "a", "star")} for n, i in idx.items()}
+
+
 def _num_rows(rows) -> str:
     e = html.escape
     out = []
@@ -515,7 +557,7 @@ def system_stage(fid: str = "", desc: str = "A star and its planet, drawn from s
 
 CHAPTERS = [("survey", "How a survey works"), ("transit", "Transit"), ("doppler", "Toward and away"),
             ("rv", "Radial velocity"), ("astrometry", "Astrometry"), ("microlensing", "Microlensing"),
-            ("imaging", "Blocking starlight"), ("timing", "Timing and phase"), ("falsepos", "False positives"),
+            ("imaging", "Blocking starlight"), ("timing", "Timing and phase"), ("radio", "Radio"), ("falsepos", "False positives"),
             ("spectroscopy", "Reading atmospheres"), ("molecules", "Molecules and life"), ("population", "Population"),
             ("equations", "Equations of life"), ("history", "History and papers")]
 DEFAULT_POPULATION = "docs/results/population_stats.json"
@@ -524,6 +566,7 @@ CHAPTER_PLANETS = {
     "survey": ["pi Men c"], "transit": ["pi Men c", "TRAPPIST-1 b", "WASP-39 b"], "doppler": ["51 Peg b"],
     "rv": ["51 Peg b", "HD 80606 b", "pi Men c"], "astrometry": ["GJ 896 Ab", "Gaia-4 b"], "microlensing": ["OGLE-2005-BLG-390L b"],
     "imaging": ["HR 8799 b", "HR 8799 c", "HR 8799 d", "HR 8799 e"], "timing": ["Kepler-9 b", "Kepler-9 c", "HD 189733 Ab", "HD 209458 b"],
+    "radio": ["tau Boo Ab", "GJ 1151 c", "YZ Cet b", "PSR B1257+12 b", "PSR B1257+12 c", "PSR B1257+12 d"],
     "falsepos": [], "spectroscopy": ["WASP-39 b", "HD 209458 b", "HD 189733 Ab", "K2-18 b"], "molecules": ["K2-18 b", "WASP-39 b"],
     "population": ["pi Men c"], "equations": ["TRAPPIST-1 e", "Proxima Centauri b"],
     "history": ["PSR B1257+12 b", "PSR B1257+12 c", "51 Peg b", "HD 209458 b", "Kepler-9 b"],
@@ -905,6 +948,46 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         <p class="note">exoplan measures each dip's time and checks the odd and even dips against each other; it does not fit timing variations, phase curves or eclipses. The secondary-eclipse depth on the canvas is drawn ten times deeper and says so; the TTV amplitude is illustrative. Spin–orbit angles span aligned, polar and retrograde orbits (Albrecht et al. 2022).</p>
       </div>"""
 
+    # ----- radio -----
+    cat = _catalogue_rows(["tau Boo Ab", "GJ 1151 c", "YZ Cet b", "PSR B1257+12 b", "PSR B1257+12 c", "PSR B1257+12 d"])
+    psr = [(n, cat.get(n) or {}) for n in ("PSR B1257+12 b", "PSR B1257+12 c", "PSR B1257+12 d")]
+    psr_rows = [(f"{n}: timing amplitude", f"{pulsar_timing_ms(r['mass'], r['a']):.3g} ms" if r.get("mass") and r.get("a") else "—",
+                 f"(Mp/M_psr)·a/c with exoplanet.eu's mass {r.get('mass')} MJ, a = {r.get('a')} AU, sin i = 1, and an assumed 1.4 M☉ pulsar (its mass is not stored) [calc]")
+                for n, r in psr]
+    stop = next((k + 1 for k, nt in enumerate((g or {}).get("notable") or []) if nt["name"] == "PSR B1257+12 b"), None)
+    tour = f' <a href="#/galaxy?tour={stop}">Its card on the Galaxy tour ›</a>' if stop else ""
+    tb, yz = cat.get("tau Boo Ab") or {}, cat.get("YZ Cet b") or {}
+    claim = lambda status, cls, who, body, refs: (f'<article class="mxclaim"><p class="mxstatus {cls}">{e(status)}</p><h4>{who}</h4><p>{body}</p>'
+                                                  f'<p class="small">{" · ".join(f"<a href={chr(34)}{e(SOURCES[k][1])}{chr(34)} rel={chr(34)}noopener{chr(34)}>{e(SOURCES[k][0].split(chr(44))[0])}</a>" for k in refs)}</p></article>')
+    ch["radio"] = f"""
+      <p class="mxlede">Magnetised planets shine at radio wavelengths: electrons spiralling down field lines into the auroral zones emit by the cyclotron maser, beamed in a hollow cone, up to the local cyclotron frequency (Zarka 1998; Treumann 2006). A close-in planet can also drive such emission on its star, as Io does on Jupiter (Zarka 2007). <b>No exoplanet's own radio emission has been confirmed.</b> Every claim below is tentative or contested, and says so.</p>
+      {_stage("radio", LABEL_ILL, "Two scenes. Planet aurora: a planet's magnetic field lines, with emission beamed in a hollow cone from its pole; when the cone sweeps across the observer, a burst appears in the dynamic spectrum below, reaching up to the cyclotron frequency set by the field. Star–planet interaction: the planet orbits inside its star's magnetic field, a flux tube links it to the star, and the emission comes from the star's footpoint. The field slider sets the cyclotron cut-off, computed as 2.8 MHz per gauss.",
+               '<label class="mxmode"><span>Scene</span><select><option value="aurora">Planet aurora</option><option value="spi">Star–planet interaction</option></select></label>'
+               '<label class="mxbfield"><span>Field at the source</span><input type="range" min="0" max="1000" value="' + str(round((math.log10(7.5) + 1) / 4.5 * 1000)) + '" aria-label="Magnetic field at the emitting source, log scale from 0.1 gauss to 3 kilogauss"></label>')}
+      <div class="mxtext">
+        <h3>The frequency scale</h3>
+        <p>The cyclotron maser emits at, and just below, f_ce = eB/(2π m_e) ≈ {cyclotron_mhz(1):.2f} MHz per gauss of field at the source, so the highest frequency seen gives the field there. A weak planetary field emits below tens of MHz, where only low-frequency arrays such as LOFAR (10–240 MHz; van Haarlem et al. 2013) can listen; an M dwarf's kilogauss field reaches GHz.</p>
+        {_num_rows([("Cyclotron frequency per gauss", f"{cyclotron_mhz(1):.3f} MHz", "eB/(2π m_e) with SI 2019 e and CODATA 2018 m_e [calc]"),
+                    ("τ Boötis, tentative bursts at 14–21 MHz", f"≥ {field_for_mhz(14):.1f}–{field_for_mhz(21):.1f} G", "least field at the source for that band, if it is cyclotron emission (Turner et al. 2021 band) [calc]"),
+                    ("YZ Ceti bursts at 2–4 GHz", f"≥ {field_for_mhz(2000) / 1000:.2f}–{field_for_mhz(4000) / 1000:.2f} kG", "least field at the source, on the star (Pineda & Villadsen 2023 band) [calc]"),
+                    ("LOFAR band", "10–240 MHz", "van Haarlem et al. 2013"),
+                    ("τ Boo Ab, stored mass and period", f"{tb.get('mass')} MJ · {tb.get('period')} d", "exoplanet.eu"),
+                    ("YZ Cet b, stored m sin i and period", f"{yz.get('msini')} MJ · {yz.get('period')} d", "exoplanet.eu")])}
+        <h3>The claims, and where they stand</h3>
+        <div class="mxclaims">
+          {claim("Tentative, not confirmed", "tent", "τ Boötis b · LOFAR", "Circularly polarised bursty emission at 14–21 MHz, about 3σ, with nothing in the off-beams; a slowly varying 21–30 MHz signal was also reported, with the authors' own doubts (Turner et al. 2021). Follow-up LOFAR observations covering 70% of the orbit, including the earlier orbital phases, showed no bursty or slow emission (Turner et al. 2024).", ["turner21", "turner24"])}
+          {claim("Contested: no planet yet explains it", "cont", "GJ 1151 · LOFAR", "Low-frequency emission from a quiet red dwarf, with the character of a planetary aurora, interpreted as the star interacting with an Earth-size planet on a 1–5 day orbit (Vedantham et al. 2020). Radial velocities then found a planet on a 390-day orbit that is very unlikely to be the source, and no short-period planet (minimum mass below 1.2 Earth masses) (Blanco-Pozo et al. 2023).", ["vedantham20", "blancopozo23"])}
+          {claim("Candidate", "cand", "YZ Ceti · VLA", "Coherent bursts at 2–4 GHz, two of them at similar orbital phases of YZ Ceti b, which could plausibly power them; stellar activity is not ruled out, so YZ Ceti is a candidate star–planet-interaction system (Pineda & Villadsen 2023).", ["pineda23"])}
+        </div>
+        <h3>Radio found the first planets, another way</h3>
+        <p>In 1992, Wolszczan and Frail found planets around the millisecond pulsar PSR B1257+12 from the regular wobble in its pulses' arrival times (Wolszczan & Frail 1992): the planets tug the pulsar, and the light-travel time changes by milliseconds. That is radio timing, not radio from a planet.{tour}</p>
+        {_num_rows(psr_rows)}
+        <section class="mxseti" aria-labelledby="h-mxseti"><p class="mxstatus seti">Not an exoplanet detection method</p>
+          <h4 id="h-mxseti">Technosignature searches (SETI)</h4>
+          <p>These look for engineered signals, not for planets or their aurorae, and are kept separate here. Breakthrough Listen observed 1,327 nearby stars at 1.10–3.45 GHz with Green Bank and Parkes and, after excluding terrestrial interference, found zero candidates; the upper limits on a transmitter's power are 2×10¹² W and 9×10¹² W (Price et al. 2020; targets from Isaacson et al. 2017).</p></section>
+        <p class="note">exoplan does not observe in radio. The scene is an illustration: field lines, cone and orbit are not to scale, and burst times are illustrative; only the cut-off frequency is computed.</p>
+      </div>"""
+
     # ----- false positives -----
     ch["falsepos"] = f"""
       <p class="mxlede">Many transit-like dips are not planets on the target star. A dip is evidence; vetting asks what else could make it. This is where exoplan's own checks live.</p>
@@ -982,6 +1065,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
 
     sources = {
         "timing": ["holman", "agol", "greene", "deming05", "knutson", "gaudiwinn", "triaud09", "albrecht", "winn"],
+        "radio": ["treumann06", "zarka98", "zarka07", "vanhaarlem13", "turner21", "turner24", "vedantham20", "blancopozo23", "pineda23", "wolszczan92", "isaacson17", "price20"],
         "falsepos": ["fressin", "guerrero", "twicken", "winn"],
         "population": ["fulton", "vaneylen", "owen", "gupta", "kopparapu", "bryson"],
         "equations": ["sandberg", "seager18", "licquia", "burke15", "dressing15", "bryson", "petigura"],
@@ -1378,6 +1462,64 @@ function mxSpectrum(c, x, y, w, h, shiftNm, label){
   if (label) mxText(c, label, x + w / 2, y + h + 13, {size: 11, align: 'center', color: '#C7C7CC'});
 }
 function mxEye(c, x, y){ c.strokeStyle = '#F5F5F7'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(x, y, 14, 7, 0, 0, 2 * Math.PI); c.stroke(); c.fillStyle = '#F5F5F7'; c.beginPath(); c.arc(x, y, 3.5, 0, 2 * Math.PI); c.fill(); mxText(c, 'observer', x + 22, y + 4, {size: 11}); }
+// ---------- radio: cyclotron-maser emission, beamed in a hollow cone, and its frequency cut-off ----------
+function mxFce(B){ return 1.602176634e-19 * B * 1e-4 / (2 * Math.PI * 9.1093837015e-31) / 1e6; }   // MHz for B in gauss (cyclotron_mhz)
+const MX_BLOG = [-1, 3.5];   // the field slider: 0.1 G to ~3 kG, log scale
+MXV.radio = {key: 0.1, period: 10, init(st){ st.opt.mode = 'aurora'; st.opt.B = 7.5; },
+  control(st, el){
+    if (el.tagName === 'SELECT'){ st.opt.mode = el.value; const B = el.value === 'spi' ? 1000 : 7.5, r = st.fig.querySelector('.mxbfield input');
+      st.opt.B = B; if (r) r.value = String(Math.round((Math.log10(B) - MX_BLOG[0]) / (MX_BLOG[1] - MX_BLOG[0]) * 1000)); }
+    else if (el.type === 'range') st.opt.B = Math.pow(10, MX_BLOG[0] + Number(el.value) / 1000 * (MX_BLOG[1] - MX_BLOG[0]));
+    const r = st.fig.querySelector('.mxbfield input'); if (r) r.setAttribute('aria-valuetext', `${st.opt.B.toPrecision(2)} gauss, cyclotron cut-off ${mxFce(st.opt.B).toPrecision(3)} MHz`);
+  },
+  draw(c, w, h, t, st){
+    const spi = st.opt.mode === 'spi', B = st.opt.B, fce = mxFce(B);
+    const sceneH = h * 0.56, cy = sceneH * 0.52, ox = w - 40, oy = cy;
+    // The body that emits: the planet's own pole (aurora) or the star's footpoint (interaction).
+    const sx = w * 0.3, sR = Math.min(sceneH * 0.2, w * 0.1), orbR = Math.min(w * 0.22, sceneH * 0.8), ang = 2 * Math.PI * t;
+    const px = sx + orbR * Math.cos(ang), py = cy + orbR * 0.32 * Math.sin(ang);
+    mxStar(c, sx, cy, sR, spi ? 3100 : 5400, t, {flat: true});
+    c.strokeStyle = 'rgba(255,255,255,.18)'; c.setLineDash([3, 5]); c.beginPath(); c.ellipse(sx, cy, orbR, orbR * 0.32, 0, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+    // Dipole field lines: around the star (interaction) or the planet (aurora).
+    const fx = spi ? sx : px, fy = spi ? cy : py, fR = spi ? sR : 9;
+    c.strokeStyle = 'rgba(100,210,255,.35)'; c.lineWidth = 1;
+    for (const L of spi ? [1.8, 2.6, 3.6] : [2.2, 3.4, 4.8]){ for (const sgn of [-1, 1]){ c.beginPath();
+      for (let k = 0; k <= 40; k++){ const th = 0.15 + (Math.PI - 0.3) * k / 40, r = fR * L * Math.sin(th) ** 2, x = fx + sgn * r * Math.sin(th), y = fy - r * Math.cos(th); k ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.stroke(); } }
+    mxPlanet(c, px, py, 7, 4, true);
+    // The flux tube from the planet to the star's footpoint (interaction only).
+    const foot = [sx + sR * 0.35, cy - sR * 0.94];
+    if (spi){ c.strokeStyle = 'rgba(255,179,64,.75)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(px, py); c.quadraticCurveTo((px + foot[0]) / 2, Math.min(py, foot[1]) - 40, foot[0], foot[1]); c.stroke(); }
+    // The hollow emission cone from the source, turning with the orbit; a burst when its wall crosses the observer.
+    const src = spi ? foot : [px, py - 9], axis = -Math.PI / 2 + 0.9 * Math.cos(ang), half = 1.1, toObs = Math.atan2(oy - src[1], ox - src[0]);
+    const off = Math.abs(Math.atan2(Math.sin(toObs - axis), Math.cos(toObs - axis))), hit = Math.abs(off - half) < 0.08;
+    c.fillStyle = hit ? 'rgba(255,214,10,.28)' : 'rgba(255,214,10,.12)';
+    for (const sgn of [-1, 1]){ const a = axis + sgn * half; c.beginPath(); c.moveTo(src[0], src[1]); c.arc(src[0], src[1], w * 0.6, a - 0.05, a + 0.05); c.closePath(); c.fill(); }
+    mxEye(c, ox - 30, oy + 30);
+    mxText(c, spi ? 'star–planet interaction: emission at the star’s footpoint' : 'planet aurora: emission from the planet’s pole', 14, 22, {size: 12, w: 600, color: '#F5F5F7'});
+    const Bs = B >= 10 ? Math.round(B).toLocaleString('en-GB') : B.toPrecision(2);
+    mxText(c, `B = ${Bs} G → f_ce = ${fce >= 1000 ? (fce / 1000).toPrecision(3) + ' GHz' : fce.toPrecision(3) + ' MHz'}`, 14, 40, {size: 11, mono: true});
+    // Dynamic spectrum: time across, frequency up (log, 1 MHz–10 GHz); bursts reach up to f_ce.
+    const gx0 = 64, gy0 = sceneH + 26, gw = w - gx0 - 18, gh = h - gy0 - 36;
+    mxGlassPanel(c, 10, sceneH + 6, w - 20, h - sceneH - 12);
+    mxAxes(c, gx0, gy0, gw, gh, {y: 'FREQUENCY', x: 'TIME (ONE ORBIT)'});
+    const Y = f => gy0 + gh - (Math.log10(f) - 0) / 4 * gh;
+    for (const [f, lab] of [[1, '1 MHz'], [10, '10 MHz'], [100, '100 MHz'], [1000, '1 GHz'], [10000, '10 GHz']]) mxText(c, lab, gx0 - 6, Y(f) + 4, {size: 11, mono: true, align: 'right'});
+    c.fillStyle = 'rgba(100,210,255,.08)'; c.fillRect(gx0, Y(240), gw, Y(10) - Y(240)); mxText(c, 'LOFAR 10–240 MHz', gx0 + gw - 4, Y(240) + 12, {size: 11, align: 'right', color: '#64D2FF'});
+    c.fillStyle = 'rgba(191,90,242,.10)'; c.fillRect(gx0, Y(4000), gw, Y(2000) - Y(4000)); mxText(c, 'VLA 2–4 GHz', gx0 + gw - 4, Y(4000) + 12, {size: 11, align: 'right', color: '#BF5AF2'});
+    const yc = Y(Math.min(9999, Math.max(1, fce)));
+    c.strokeStyle = '#FFD60A'; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(gx0, yc); c.lineTo(gx0 + gw, yc); c.stroke(); c.setLineDash([]);
+    mxText(c, 'f_ce', gx0 + 6, yc - 4, {size: 11, mono: true, color: '#FFD60A'});
+    // Bursts happen where the cone wall met the observer, at the same orbital phases each orbit (computed from the geometry above).
+    c.fillStyle = 'rgba(255,214,10,.85)';
+    for (let k = 0; k <= 200; k++){ const tt = k / 200; if (tt > t) break; const aa = -Math.PI / 2 + 0.9 * Math.cos(2 * Math.PI * tt);
+      const pxx = sx + orbR * Math.cos(2 * Math.PI * tt), pyy = cy + orbR * 0.32 * Math.sin(2 * Math.PI * tt), s2 = spi ? foot : [pxx, pyy - 9];
+      const o2 = Math.atan2(oy - s2[1], ox - s2[0]), d2 = Math.abs(Math.atan2(Math.sin(o2 - aa), Math.cos(o2 - aa)));
+      if (Math.abs(d2 - half) < 0.08){ const x = gx0 + tt * gw; c.fillRect(x - 1, yc, 2.5, Math.max(0, Y(Math.max(1, fce / 8)) - yc)); } }
+    c.fillStyle = '#F5F5F7'; c.fillRect(gx0 + t * gw - 0.5, gy0, 1, gh);
+    st.exag = 'field lines, cone and orbit not to scale; burst times illustrative; cut-off computed';
+  }};
+
 MXV.doppler = {key: 0.25, period: 8, init(st){ st.opt.mode = 'los'; st.opt.K = (MX.examples['51 Peg b'] || {}).k || 55.77; },
   control(st, el){ if (el.tagName === 'SELECT') st.opt.mode = el.value; },
   draw(c, w, h, t, st){
@@ -2093,6 +2235,16 @@ METHODS_CSS = r"""
 .mxcontrast li.target .track i{background:var(--amber)}
 .mxmols{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
 .mxmol{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--glass-2)}
+.mxclaims{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;margin:8px 0 14px}
+.mxclaim,.mxseti{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--glass-2);min-width:0}
+.mxclaim h4,.mxseti h4{margin:4px 0 6px;font-size:16px}
+.mxclaim p,.mxseti p{margin:0 0 6px;font-size:13.5px;line-height:1.5}
+.mxseti{margin:14px 0;border-style:dashed}
+.mxstatus{display:inline-block;margin:0;padding:3px 10px;border-radius:999px;border:1px solid;font:600 11px/1.4 var(--sans);letter-spacing:.02em}
+.mxstatus.tent{color:var(--amber);border-color:var(--amber)}
+.mxstatus.cont{color:var(--coral);border-color:var(--coral)}
+.mxstatus.cand{color:var(--cyan);border-color:var(--cyan)}
+.mxstatus.seti{color:var(--ink-2);border-color:var(--line-3)}
 .mxmol.on{border-color:var(--cyan)}
 .mxmol h4{margin:0 0 6px;font-size:16px}
 .mxmol h4 span{font-weight:500;color:var(--ink-3);font-size:13px;margin-left:6px}

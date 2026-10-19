@@ -479,3 +479,39 @@ def test_the_stored_run_is_committed():
     for f in ("manifest.json", "candidates.json", "candidates.csv", "classifications.csv", "crossmatch.json"):
         assert f"runs/tess-pi-men-s1/{f}" in tracked, f
     assert any(f.startswith("runs/tess-pi-men-s1/subjects/") for f in tracked)
+
+
+# ---------- round 11: the Radio chapter ----------
+def test_radio_physics_and_its_js_twin():
+    assert M.cyclotron_mhz(1) == pytest.approx(2.7992, abs=1e-4)  # eB/(2π m_e), the textbook 2.8 MHz/G
+    assert M.field_for_mhz(M.cyclotron_mhz(123.4)) == pytest.approx(123.4)
+    # PSR B1257+12 c: 0.013 MJ at 0.36 AU around 1.4 M☉ moves the pulsar's light-travel time by ~1.6 ms.
+    assert M.pulsar_timing_ms(0.013, 0.36) == pytest.approx(0.013 * M.GM_JUP / (1.4 * M.GM_SUN) * 0.36 * M.AU / M.C_LIGHT * 1e3)
+    assert 1.4 < M.pulsar_timing_ms(0.013, 0.36) < 1.8
+    if HAVE_NODE:
+        fn = re.search(r"function mxFce\(B\)\{.*?\}", M.METHODS_JS).group(0)
+        out = subprocess.run(["node", "-e", fn + "console.log(JSON.stringify([1, 7.5, 1000].map(mxFce)))"], capture_output=True, text=True).stdout
+        assert json.loads(out) == [pytest.approx(M.cyclotron_mhz(b), rel=1e-12) for b in (1, 7.5, 1000)]
+
+
+def test_radio_chapter_labels_every_claim_and_keeps_seti_apart(page_html):
+    sec = _route(page_html, "methods")
+    art = re.search(r'<article class="mxch" id="mx-radio".*?(?=<article class="mxch"|$)', sec, re.S).group(0)
+    assert "No exoplanet's own radio emission has been confirmed." in art.replace("&#x27;", "'")
+    assert '<span class="mxlabel ill">Illustration</span>' in art and 'data-vis="radio"' in art
+    claims = re.findall(r'<p class="mxstatus (\w+)">(.*?)</p><h4>(.*?)</h4>', art)
+    assert [(c, h) for c, _, h in claims] == [("tent", "τ Boötis b · LOFAR"), ("cont", "GJ 1151 · LOFAR"), ("cand", "YZ Ceti · VLA")]
+    assert "Tentative" in claims[0][1] and "Contested" in claims[1][1] and "Candidate" in claims[2][1]
+    # The τ Boötis follow-up found nothing; GJ 1151's planet cannot be the source.
+    assert "showed no bursty or slow emission (Turner et al. 2024)" in art and "very unlikely to be the source" in art
+    seti = re.search(r'<section class="mxseti".*?</section>', art, re.S).group(0)
+    assert "Not an exoplanet detection method" in seti and "zero candidates" in seti and "1,327 nearby stars" in seti
+    for k in ("turner21", "turner24", "vedantham20", "blancopozo23", "pineda23", "wolszczan92", "price20", "isaacson17", "treumann06", "zarka98", "zarka07", "vanhaarlem13"):
+        assert M.SOURCES[k][1].startswith("https://doi.org/10.") and M.SOURCES[k][1] in art, k
+    # Numbers: the cut-off per gauss and the fields implied by each band, computed.
+    assert f"{M.cyclotron_mhz(1):.3f} MHz" in art and f"≥ {M.field_for_mhz(14):.1f}–{M.field_for_mhz(21):.1f} G" in art
+    # Pulsar timing, linked to the PSR B1257+12 card on the Galaxy tour.
+    notable = [n["name"] for n in json.loads(Path("docs/results/notable_planets.json").read_text())["planets"]]
+    assert f'<a href="#/galaxy?tour={notable.index("PSR B1257+12 b") + 1}">Its card on the Galaxy tour ›</a>' in art
+    assert "an assumed 1.4 M☉ pulsar (its mass is not stored) [calc]" in art
+    assert ("radio", "Radio") in M.CHAPTERS
