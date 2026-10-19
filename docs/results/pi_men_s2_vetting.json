@@ -3,18 +3,42 @@
  "sector": 1,
  "validation": {
   "method": "exoplan reduced FPP",
-  "fpp": 0.17158537883793068,
+  "fpp": 0.008239219572161005,
   "nfpp": 0,
   "probabilities": {
-   "tp": 0.8284146211620693,
-   "eb": 0.1673261997972459,
-   "eb2p": 0.004259179040684712
+   "tp": 0.991760780427839,
+   "eb": 0.0026306669929280872,
+   "eb2p": 0.005608552579232974
   },
   "evidence": {
-   "secondary_noise_widening": 4.353266139270528,
-   "secondary_source": "all-phase search (phase 0.742)",
-   "secondary_bayes_factor_eb_vs_tp": 1.514877292627877,
-   "odd_even_bayes_factor_eb2p_vs_tp": 0.07712042252543949
+   "odd_even_bayes_factor_eb2p_vs_tp": 0.08482719860348001,
+   "scan_whiteness": {
+    "robust_spread": 1.167546754380938,
+    "std_over_robust": 1.292961399913395,
+    "max_excursion_over_robust": 4.943023773887553,
+    "white_q_abs_999": 5.3342046159718,
+    "positions": 187,
+    "n_eff": 468.2052088458141,
+    "white": true,
+    "reasons": []
+   },
+   "secondary_source": "phase 0.5 (the strongest dip, at phase 0.742, is not periodic: 84% from one epoch)",
+   "fpp_sensitivity": {
+    "by_noise_model": {
+     "robust spread": 0.008239219572161005,
+     "std": 0.009383868641914428,
+     "nominal (white, \u03c3/\u221an)": 0.00770427077722724
+    },
+    "range": [
+     0.00770427077722724,
+     0.009383868641914428
+    ]
+   },
+   "fpp_bracket_robust_vs_std": [
+    0.008239219572161005,
+    0.009383868641914428
+   ],
+   "secondary_bayes_factor_eb_vs_tp": 0.019893912762359148
   },
   "priors": {
    "tp": 0.75,
@@ -29,13 +53,14 @@
   ],
   "contrast_curve": null,
   "label": "not validated: no contrast curve",
-  "fpp_class": "likely planet (by number, reduced scheme)",
+  "fpp_class": "meets the validation thresholds (by number, reduced scheme)",
   "notes": [
    "no reliable difference-image centroid: positions carry no information",
    "1 neighbour(s) excluded only marginally (within 3\u03c3 of the Tmag uncertainty of reaching the depth)"
-  ]
+  ],
+  "refused": null
  },
- "made_at": "2026-10-19T18:12:53+00:00",
+ "made_at": "2026-10-19T23:40:54+00:00",
  "inputs": {
   "lightcurve": {
    "source": "SPOC file",
@@ -84,105 +109,113 @@
   },
   "secondary": {
    "phase": 0.742084553911073,
-   "depth_ppm": 41.2782835965686,
-   "sigma_ppm": 7.425056257841174,
-   "snr": 5.559322672198879,
+   "depth_ppm": 40.55903394262206,
+   "sigma_ppm": 7.2645800518197925,
+   "snr": 5.583121619323602,
    "n_points": 69,
-   "max_brightening_snr": 8.819039138447089,
+   "max_brightening_snr": 5.771211364030228,
    "n_trials": 187,
    "duration_days": 0.12893554144456185,
-   "scan_median_snr": 0.06739770285990464,
-   "scan_robust_sigma": 1.2666662395804018,
+   "excluded_days": 0.12893554144456185,
+   "scan_median_snr": -0.02254979346757696,
+   "scan_robust_sigma": 1.167546754380938,
+   "scan_std_snr": 1.5095928860087184,
    "n_epochs": 4,
-   "max_epoch_share": 0.8291473951082924,
+   "max_epoch_share": 0.8405109167885689,
    "phase_05": {
     "phase": 0.4988371568217191,
-    "depth_ppm": -5.8767080426402885,
-    "sigma_ppm": 7.169822993230819,
-    "snr": -0.8196447873522975
+    "depth_ppm": -6.5960319681757085,
+    "sigma_ppm": 7.014863090996615,
+    "snr": -0.9402937566438803
    },
-   "albedo": 8.487343701468863,
-   "threshold_rule": "4.09 \u00d7 the scan's robust spread (look-elsewhere over 47 positions)",
-   "threshold_sigma": 5.183102935927985,
+   "albedo": 8.339456762179694,
+   "threshold_rule": "5.16 \u00d7 the scan's robust spread (white-noise 99.9% quantile for 187 positions)",
+   "threshold_sigma": 6.021104475260122,
    "periodic": false,
    "significant": false
   },
   "odd_even_depth": {
-   "odd_depth_ppm": 216.16534920188005,
-   "odd_err_ppm": 10.005354842355981,
+   "odd_depth_ppm": 309.5075191402185,
+   "odd_err_ppm": 14.513815649370077,
    "n_odd": 2,
-   "even_depth_ppm": 205.2738723012724,
-   "even_err_ppm": 8.316545141316292,
+   "even_depth_ppm": 316.24733209779305,
+   "even_err_ppm": 12.397626756118333,
    "n_even": 3,
-   "delta_sigma": 0.8371323973063636,
+   "error_scale": 1.0,
+   "epoch_chi2": 1.4188914321387358,
+   "epoch_dof": 3,
+   "floor_fraction": 0.02,
+   "delta_sigma": 0.35309150494292507,
    "both_parities_detected": true,
-   "significant": false
+   "significant": false,
+   "source": "per-epoch fits (transit shape plus a local baseline)"
   },
   "timing": {
    "n_epochs": 5,
    "o_minus_c_minutes": [
-    0.3456746635492891,
-    -1.4132103428710252,
-    1.6749430213531014,
-    0.5162358106099418,
-    -0.7665686456675758
+    0.6343224837473826,
+    -1.4648385700274957,
+    1.282474527870363,
+    0.6806186221365351,
+    -0.719945930322865
    ],
    "linear": {
-    "t0": 1338.0393620033688,
-    "period": 6.268052101481457,
-    "period_err": 0.00040204962323464843,
-    "chi2": 1.596675620594742,
+    "t0": 1338.0394628558895,
+    "period": 6.268057792882467,
+    "period_err": 0.00042165466691714156,
+    "chi2": 1.4437322918219047,
     "dof": 3,
-    "p_value": 0.6601438351846933,
+    "p_value": 0.6953164099715639,
     "inconsistent": false
    },
    "odd_even": {
-    "offset_minutes": -0.8292309411171708,
-    "offset_err_minutes": 1.6627243619486967,
-    "delta_sigma": 0.4987182241952119,
+    "offset_minutes": -0.7841580947303808,
+    "offset_err_minutes": 1.7076556023439682,
+    "delta_sigma": 0.4592015472288598,
     "significant": false
    },
    "epochs": [
     {
      "epoch": -2,
-     "t_mid": 1325.5034978522556,
-     "sigma": 0.0012288054499844426,
-     "depth": 0.00030546431203543696,
+     "t_mid": 1325.5037877718494,
+     "sigma": 0.0013343771729843028,
+     "depth": 0.0003270636646979929,
      "at_scan_edge": false
     },
     {
      "epoch": -1,
-     "t_mid": 1331.7703285058158,
-     "sigma": 0.001210908832874406,
-     "depth": 0.0002869766892031475,
+     "t_mid": 1331.770387814,
+     "sigma": 0.001208443401871811,
+     "depth": 0.00030782041554174846,
      "at_scan_edge": false
     },
     {
      "epoch": 0,
-     "t_mid": 1338.0405251582447,
-     "sigma": 0.0014318980793943572,
-     "depth": 0.0002992404812775659,
+     "t_mid": 1338.0403534632005,
+     "sigma": 0.0015007880516069822,
+     "depth": 0.0002973722671409271,
      "at_scan_edge": false
     },
     {
      "epoch": 1,
-     "t_mid": 1344.307772601941,
-     "sigma": 0.0012288944943243312,
-     "depth": 0.0003095681044626134,
+     "t_mid": 1344.307993300593,
+     "sigma": 0.0012360594135299927,
+     "depth": 0.0003120417965845543,
      "at_scan_edge": false
     },
     {
      "epoch": 2,
-     "t_mid": 1350.5749338669943,
-     "sigma": 0.00134477945040348,
-     "depth": 0.0003136204565078947,
+     "t_mid": 1350.5750784792028,
+     "sigma": 0.001398644163896062,
+     "depth": 0.0003198238700446436,
      "at_scan_edge": false
     }
    ]
   },
   "period": 6.267951048297873,
   "t0": 1338.0394382805193,
-  "duration_days": 0.12893554144456185
+  "duration_days": 0.12893554144456185,
+  "transit_masked_detrend": true
  },
  "pixel_flags": [
   "saturated",

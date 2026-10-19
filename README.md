@@ -117,17 +117,20 @@ deep-dip clipping fix in Honest limits), which does not affect a 300 ppm transit
   is a likely false positive. It is kept and flagged, not hidden.
 * **Extended and pixel-level vetting** (`scripts/vet_pi_men_s2.py`, real SPOC sector-1 files; see
   [docs/results/pi_men_s2_vetting.md](docs/results/pi_men_s2_vetting.md)). On the joint fit of all five epochs
-  (P = 6.26795 ± 0.00049 d, T14 = 3.09 ± 0.16 h): CROWDSAP 0.9997, FLFRCSAP 0.980 (not crowded); the strongest
-  dip at any phase away from the transit is 41 ± 7 ppm at phase 0.74 (5.6σ nominal). The scan's statistic has a
-  robust spread of 1.27, so the look-elsewhere threshold is 5.2σ; the dip passes that, but it is below the largest
-  brightening (8.8σ) and 83% of it comes from one epoch, so it is not a secondary. Odd/even depths agree to 0.8σ;
-  the five mid-times fit a linear ephemeris (χ² = 1.6 for 3 dof, p = 0.66, O−C within 1.7 min) with no odd/even
-  timing offset (0.5σ). No flags.
-* **Reduced FPP for pi Men c** (same file): FPP = 0.17 and NFPP = 0 (every TIC neighbour within 150″ would
-  need an eclipse deeper than 100%, one of them only marginally): "likely planet (by number, reduced scheme)". The
-  all-phase secondary is weak evidence either way once its noise is calibrated on the scan (Bayes factor 1.5), so
-  the illustrative prior dominates. The label is "not validated: no contrast curve": the scheme is exoplan's, it
-  leaves out unresolved companions and background stars, and its priors are illustrative. pi Men c is a published planet
+  (P = 6.26795 ± 0.00049 d, T14 = 3.09 ± 0.16 h), on the light curve re-detrended with those transits masked:
+  CROWDSAP 0.9997, FLFRCSAP 0.980 (not crowded); the strongest dip at any phase away from the transit is 41 ± 7 ppm
+  at phase 0.74 (5.6σ nominal), below the calibrated threshold (6.0σ: 5.16 times the scan's robust spread of 1.17),
+  and 84% of it comes from one epoch, so it is not a secondary. Odd/even depths from per-epoch fits agree (310 ± 15
+  against 316 ± 12 ppm, 0.4σ); the five mid-times fit a linear ephemeris (χ² = 1.4 for 3 dof, p = 0.70, O−C within
+  1.5 min) with no odd/even timing offset (0.5σ). No flags.
+* **Reduced FPP for pi Men c** (same file): the secondary scan passes the white-noise gate, narrowly (robust spread
+  1.17, std/robust 1.29 against a 1.3 limit, largest |excursion| 4.94 robust spreads against 5.33), so an FPP is
+  given: 0.0082 with robust-spread noise, 0.0094 with the scan's plain std; NFPP = 0 (every TIC neighbour within
+  150″ would need an eclipse deeper than 100%, one of them only marginally). The strongest dip is not periodic, so
+  the phase-0.5 measurement carries the secondary evidence. By number this meets the TRICERATOPS thresholds; the
+  label is still "not validated: no contrast curve": the scheme is exoplan's, it leaves out unresolved companions and
+  background stars, and its priors are illustrative. Before the gate and the masked detrending, the same star's
+  FPP ranged from 0.007 to 0.77 across noise models. pi Men c is a published planet
   with a measured mass; this number shows the scheme's behaviour on a real planet, nothing more.
 * **Ephemeris cone.** Exporting the stored run (`exoplan export runs/tess-pi-men-s1 --allow-unchecked`; the
   archive's TOI table timed out, HTTP 504) gives one signal, P = 6.2681 ± 0.0012 d from the first subject's joint

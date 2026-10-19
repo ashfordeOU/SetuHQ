@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from exoplan.config import load_config  # noqa: E402
 from exoplan.dvtests import extended_vet  # noqa: E402
 from exoplan.loaders import load_spoc_file  # noqa: E402
-from exoplan.pipeline import prepare_lightcurves  # noqa: E402
+from exoplan.pipeline import prepare_lightcurves, vetting_lightcurve  # noqa: E402
 from exoplan.pixel import (fetch_neighbours, fetch_spoc_product, load_tpf, order_target_first,  # noqa: E402
                            parse_dv_xml, pixel_vet)
 from exoplan.search import bls_search, stitch  # noqa: E402
@@ -85,8 +85,11 @@ def run(cache: Path, run_dir: Path, config_path: Path) -> dict:
                       stellar_density=star.get("rho"))
     f = fit.as_dict()
     duration = f["t14_hours"] / 24.0
-    flags_lc, lc_tests = extended_vet(sector.time, sector.flux, sector.flux_err, period=f["period_days"], t0=f["t0"],
+    # the DV-style tests read the light curve re-detrended with the fitted transits masked, as the pipeline does
+    masked = vetting_lightcurve([lc], config, period=f["period_days"], t0=f["t0"], duration=duration)
+    flags_lc, lc_tests = extended_vet(masked.time, masked.flux, masked.flux_err, period=f["period_days"], t0=f["t0"],
                                       duration=duration, fit=f, provenance=lc.provenance)
+    lc_tests["transit_masked_detrend"] = True
 
     tpf = load_tpf(tpf_path)
     h = tpf.header
@@ -110,6 +113,18 @@ def run(cache: Path, run_dir: Path, config_path: Path) -> dict:
     }
 
 
+def _gate_line(v: dict) -> str:
+    g = (v.get("evidence") or {}).get("scan_whiteness")
+    if not g:
+        return "White-noise gate: not applicable (no all-phase scan)."
+    sens = (v.get("evidence") or {}).get("fpp_sensitivity") or {}
+    return (f"White-noise gate on the secondary scan: robust spread {g['robust_spread']:.2f} (0.7–1.3), std/robust "
+            f"{g['std_over_robust']:.2f} (≤ 1.3), largest |excursion| {g['max_excursion_over_robust']:.2f} robust spreads "
+            f"(white 99.9%: {g['white_q_abs_999']:.2f} for {g['positions']} positions): "
+            f"{'passed' if g['white'] else 'failed'}. FPP over noise models (evidence only): "
+            + ", ".join(f"{k} {_fmt(x, 3)}" for k, x in (sens.get("by_noise_model") or {}).items()) + ".")
+
+
 def _fmt(x, nd=2):
     return "n/a" if x is None or (isinstance(x, float) and not math.isfinite(x)) else f"{x:.{nd}f}"
 
@@ -130,7 +145,7 @@ def markdown(r: dict) -> str:
         f"{_fmt(fit['period_err'], 5)} d, T0 = {fit['t0']:.4f} BTJD, T14 = {fit['t14_hours']:.2f} ± {_fmt(fit['t14_err_hours'])} h, "
         f"depth {fit['depth_ppm']:.0f} ± {_fmt(fit['depth_err_ppm'], 0)} ppm.",
         "",
-        "## Light-curve tests",
+        "## Light-curve tests", "", "On the light curve re-detrended with the fitted transits masked (1.5 T14 each side), as DV does.",
         "",
         "| test | result | flag |",
         "|---|---|---|",
@@ -144,7 +159,7 @@ def markdown(r: dict) -> str:
         f"({'periodic' if sec.get('periodic') else 'not periodic'}); at phase 0.5: "
         f"{_fmt((sec.get('phase_05') or {}).get('depth_ppm'), 1)} ± {_fmt((sec.get('phase_05') or {}).get('sigma_ppm'), 1)} ppm | "
         f"{'secondary_any_phase' if 'secondary_any_phase' in r['lightcurve_flags'] else 'none'} |",
-        f"| odd/even depth (box mean over T14) | odd {_fmt(oe.get('odd_depth_ppm'), 0)} ± {_fmt(oe.get('odd_err_ppm'), 0)} ppm (n = {oe.get('n_odd')}), "
+        f"| odd/even depth ({oe.get("source", "")}) | odd {_fmt(oe.get('odd_depth_ppm'), 0)} ± {_fmt(oe.get('odd_err_ppm'), 0)} ppm (n = {oe.get('n_odd')}), "
         f"even {_fmt(oe.get('even_depth_ppm'), 0)} ± {_fmt(oe.get('even_err_ppm'), 0)} ppm (n = {oe.get('n_even')}): "
         f"{_fmt(oe.get('delta_sigma'), 1)}σ | {'odd_even_depth' if 'odd_even_depth' in r['lightcurve_flags'] else 'none'} |",
     ]
@@ -214,8 +229,11 @@ def markdown(r: dict) -> str:
         lines.append(f"Not available: {'; '.join(q.get('errors') or ['no stars returned'])}.")
     v = r["validation"]
     lines += ["", "## S3: reduced FPP (exoplan's scheme, not TRICERATOPS)", "",
-              f"FPP = {_fmt(v['fpp'], 4)}, NFPP = {_fmt(v['nfpp'], 6)}; class: {v['fpp_class']}. "
-              f"Label: **{v['label']}**.", "",
+              (f"FPP = {_fmt(v['fpp'], 4)} (robust-spread noise; with the scan's plain std instead: "
+               f"{_fmt((v['evidence'].get('fpp_bracket_robust_vs_std') or [None, None])[1], 4)}), NFPP = {_fmt(v['nfpp'], 6)}; "
+               f"class: {v['fpp_class']}." if v.get("fpp") is not None else f"{v['fpp_class']}.")
+              + f" Label: **{v['label']}**.", "",
+              _gate_line(v), "",
               f"Not modelled: {'; '.join(v['not_modelled'])}. Notes: {'; '.join(v['notes']) or 'none'}. "
               f"Priors: {v['priors']['source']}."]
     lines += ["", "## SPOC's own DV centroid result, for comparison", ""]

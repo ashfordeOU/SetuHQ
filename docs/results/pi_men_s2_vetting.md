@@ -1,17 +1,19 @@
 # pi Men (TIC 261136679), TESS sector 1: S2 extended and pixel-level vetting
 
-Made 2026-10-19T18:12:53+00:00 by `scripts/vet_pi_men_s2.py` from the SPOC files `tess2018206045859-s0001-0000000261136679-0120-s_lc.fits` and `tess2018206045859-s0001-0000000261136679-0120-s_tp.fits` (sha256 0145804d17a9…). MAST's search service was failing on 2026-10-19; the files came from the public STScI bucket that MAST's download links redirect to. Every test below only adds flags; none changes a pass/fail decision by default.
+Made 2026-10-19T23:40:54+00:00 by `scripts/vet_pi_men_s2.py` from the SPOC files `tess2018206045859-s0001-0000000261136679-0120-s_lc.fits` and `tess2018206045859-s0001-0000000261136679-0120-s_tp.fits` (sha256 0145804d17a9…). MAST's search service was failing on 2026-10-19; the files came from the public STScI bucket that MAST's download links redirect to. Every test below only adds flags; none changes a pass/fail decision by default.
 
 Ephemeris from a joint limb-darkened fit of all 5 sector-1 epochs: P = 6.26795 ± 0.00049 d, T0 = 1338.0394 BTJD, T14 = 3.09 ± 0.16 h, depth 300 ± 8 ppm.
 
 ## Light-curve tests
 
+On the light curve re-detrended with the fitted transits masked (1.5 T14 each side), as DV does.
+
 | test | result | flag |
 |---|---|---|
 | crowding | CROWDSAP = 0.9997, FLFRCSAP = 0.9800 (flag below 0.8) | none |
-| secondary, all phases | strongest dip at phase 0.742: 41.3 ± 7.4 ppm (5.6σ; largest brightening 8.8σ; 187 coarse positions); threshold 5.2σ (4.09 × the scan's robust spread (look-elsewhere over 47 positions); robust spread 1.27); 4 epochs, the largest carrying 83% (not periodic); at phase 0.5: -5.9 ± 7.2 ppm | none |
-| odd/even depth (box mean over T14) | odd 216 ± 10 ppm (n = 2), even 205 ± 8 ppm (n = 3): 0.8σ | none |
-| timing, linear ephemeris | 5 epochs, χ² = 1.6 for 3 dof, p = 0.660; O−C (min): 0.3, -1.4, 1.7, 0.5, -0.8 | none |
+| secondary, all phases | strongest dip at phase 0.742: 40.6 ± 7.3 ppm (5.6σ; largest brightening 5.8σ; 187 coarse positions); threshold 6.0σ (5.16 × the scan's robust spread (white-noise 99.9% quantile for 187 positions); robust spread 1.17); 4 epochs, the largest carrying 84% (not periodic); at phase 0.5: -6.6 ± 7.0 ppm | none |
+| odd/even depth (per-epoch fits (transit shape plus a local baseline)) | odd 310 ± 15 ppm (n = 2), even 316 ± 12 ppm (n = 3): 0.4σ | none |
+| timing, linear ephemeris | 5 epochs, χ² = 1.4 for 3 dof, p = 0.695; O−C (min): 0.6, -1.5, 1.3, 0.7, -0.7 | none |
 | odd/even timing | odd − even offset -0.8 ± 1.7 min (0.5σ) | none |
 
 ## Pixel-level tests
@@ -56,7 +58,9 @@ Source: TIC v8.2 (MAST), within 150″. Depth in the aperture 300 ppm (PDCSAP de
 
 ## S3: reduced FPP (exoplan's scheme, not TRICERATOPS)
 
-FPP = 0.1716, NFPP = 0.000000; class: likely planet (by number, reduced scheme). Label: **not validated: no contrast curve**.
+FPP = 0.0082 (robust-spread noise; with the scan's plain std instead: 0.0094), NFPP = 0.000000; class: meets the validation thresholds (by number, reduced scheme). Label: **not validated: no contrast curve**.
+
+White-noise gate on the secondary scan: robust spread 1.17 (0.7–1.3), std/robust 1.29 (≤ 1.3), largest |excursion| 4.94 robust spreads (white 99.9%: 5.33 for 187 positions): passed. FPP over noise models (evidence only): robust spread 0.008, std 0.009, nominal (white, σ/√n) 0.008.
 
 Not modelled: unresolved bound companions (HEB, planet on a companion); unresolved background stars (BEB, planet on a background star). Notes: no reliable difference-image centroid: positions carry no information; 1 neighbour(s) excluded only marginally (within 3σ of the Tmag uncertainty of reaching the depth). Priors: illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice.
 
