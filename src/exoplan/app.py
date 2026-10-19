@@ -644,6 +644,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "examples": load_examples(examples_path),
         "galaxy_meta": galaxy_meta(galaxy),
         "learn": learn_steps(),
+        "benchmark": _load_benchmark(),
         "mission": {"panes": MISSION_PANES, "grids": MISSION_GRIDS},
         "catalogue": (cat := load_catalogue(catalogue_path)),
         "tic_names": tic_names(cat, [r["tic"] for r in feed], story["star"]),
@@ -999,6 +1000,11 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 /* tables: Kshana's table treatment, mono uppercase heads over hairlines */
 .tablewrap{overflow-x:auto;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .tablewrap.scrollbox{overflow-x:auto}  /* every row shows; only a table wider than its box scrolls, sideways */
+/* The benchmark card: label and value side by side, both wrapping; stacked on a phone. */
+table.bench{width:100%;border-collapse:collapse}
+table.bench th,table.bench td{white-space:normal;text-align:left;vertical-align:top;padding:8px 12px;border-top:1px solid var(--line);font-size:14px;line-height:1.4;font-family:inherit;text-transform:none;letter-spacing:0;color:var(--ink)}
+table.bench tr:first-child th,table.bench tr:first-child td{border-top:0}
+table.bench th{width:48%;font-weight:600}
 .scrollbox thead th{position:sticky;top:0;background:var(--panel);z-index:2}
 .scrollbox th:first-child,.scrollbox td:first-child{position:sticky;left:0;background:var(--panel);z-index:1;box-shadow:1px 0 0 var(--line)}
 .scrollbox thead th:first-child{z-index:3}
@@ -1093,6 +1099,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .dipsbox,.selpanel{max-width:none}
 }
 @media (max-width:699.98px){
+  table.bench tr{display:block;border-top:1px solid var(--line);padding:6px 0}table.bench tr:first-child{border-top:0}table.bench th,table.bench td{display:block;width:auto;border:0;padding:2px 12px}
   .topbar{padding:6px 12px;gap:4px 8px}
   .topbar .nav{order:3;flex:1 1 100%;min-width:0}
   .nav ul{overflow-x:auto;scrollbar-width:none;justify-content:space-between}
@@ -2391,6 +2398,82 @@ def _overview(data: dict, with_view: bool = True) -> str:
       {_view_head() if with_view else ""}"""
 
 
+BENCHMARK_JSON = "docs/results/benchmark_real_tois.json"
+
+
+def _load_benchmark(path: str | Path = BENCHMARK_JSON) -> dict | None:
+    """The real-TOI benchmark's summary (scripts/benchmark_real_tois.py), without the per-star rows."""
+    if not Path(path).exists():
+        return None
+    d = json.loads(Path(path).read_text())
+    keep = ("generated_at", "sample", "panel", "stars_run", "summary", "sentinels", "feed_implication", "clipping", "code_provenance")
+    out = {k: d[k] for k in keep if k in d}
+    if d.get("summary_unaffected"):
+        out["unaffected_held_out"] = {k: d["summary_unaffected"]["held_out"].get(k) for k in ("completeness", "fp_seen", "fp_flagged_of_seen")}
+    return out
+
+
+def _benchmark_card(b: dict | None) -> str:
+    """The Sentinels page's statement of measured performance: on a stated benchmark, never as discoveries."""
+    e = html.escape
+    if not b:
+        return ('<section class="card bench" aria-labelledby="h-bench"><h2 id="h-bench">Measured on real TOIs</h2>'
+                '<p class="muted">The blind benchmark on real TESS Objects of Interest has not been run for this build '
+                '(scripts/benchmark_real_tois.py).</p></section>')
+    h, s = b["summary"]["held_out"], b["sample"]
+
+    def pct(r):
+        if not r or r.get("rate") is None:
+            return "—"
+        return f"{100 * r['rate']:.0f}% <span class='muted'>({r['k']}/{r['n']}; 95% CI {100 * r['lo']:.0f}–{100 * r['hi']:.0f}%)</span>"
+
+    ns = h.get("not_searchable") or {}
+    rows = [("Headline: planets recovered on searchable stars (CP/KP TOIs, a vetted dip on the published ephemeris)", pct(h["completeness"])),
+            ("Planets recovered over all CP/KP stars (no 2-minute data counts as missed)", pct(h.get("completeness_all_stars"))),
+            ("Planets recovered, stars exposed to the clipping bug excluded", pct((b.get("unaffected_held_out") or {}).get("completeness"))),
+            ("Not searchable (no SPOC 2-minute light curve)", f"{sum(ns.values())} stars <span class='muted'>({ns.get('positive', 0)} CP/KP, {ns.get('fp', 0)} FP, {ns.get('fa', 0)} FA)</span>"
+             + (" <b>skewed toward FP</b>: the FP rows describe FP stars with 2-minute data only" if ns.get("fp", 0) > 2 * max(1, ns.get("positive", 0)) else "")),
+            ("False-positive TOIs found by the panel", pct(h["fp_seen"])),
+            ("… of those, rejected or flagged binary-like", pct(h["fp_flagged_of_seen"]))]
+    feed = h.get("feed")
+    for v in ("inverted", "scrambled"):
+        c = h["controls"][v]
+        if feed and feed[v]["new_signals_per_1000"] is not None:
+            rows.append((f"False alarms on {v} light curves at the feed's level (its full rule, FAP < 0.01)",
+                         f"{feed[v]['new_signals_per_1000']:.0f} per 1,000 star-sectors <span class='muted'>({feed[v]['new_signals']} over {feed[v]['star_sectors']}; "
+                         f"{c['vetted_false_alarms']} vetted dips before the feed's rule)</span>"))
+        elif c["per_1000_star_sectors"] is not None:
+            rows.append((f"False alarms on {v} light curves (vetted dips)", f"{c['per_1000_star_sectors']:.0f} per 1,000 star-sectors <span class='muted'>({c['vetted_false_alarms']} over {c['star_sectors']})</span>"))
+    se = b.get("sentinels")
+    if se:
+        for rid, v in se["personas"].items():
+            rows.append((f"{rid}: CP/KP dips marked (subsample of {se['n_stars']} stars)", pct(v["cp_kp_marked"])))
+    body = "".join(f"<tr><th scope='row'>{e(k)}</th><td>{v}</td></tr>" for k, v in rows)
+    imp = b.get("feed_implication")
+    clip = (b.get("clipping") or {}).get("held_out")
+    clipnote = ""
+    if clip:
+        a = clip["affected"]
+        clipnote = (f'<p class="note" style="margin:0"><b>Known bug in the code that measured this.</b> The cleaning step deletes points '
+                    f'more than 10× the scatter below the running median, so very deep transits and eclipses lose their in-transit points. '
+                    f'{a["positive"]} CP/KP, {a["fp"]} FP and {a["fa"]} FA held-out stars are exposed (depth over {b["clipping"]["ratio"]:g}× the scatter); '
+                    f'{clip["cp_kp_misses_explained"]} of their CP/KP misses are explained by it. A fix is coming; only those stars will be re-run.</p>')
+    verdict = ""
+    if imp:
+        verdict = (f'<p class="note" style="margin:0"><b>{"The live feed&#x27;s new signals are consistent with noise." if imp["bad"] else "What this means for the feed."}</b> '
+                   f'Noise alone should give about {imp["expected_false_per_100_targets"]:.1f} false new_candidate signals per 100 targets reviewed'
+                   + (f', against {imp["live_new_signals_per_100_targets"]:.1f} per 100 on the live feed' if imp.get("live_new_signals_per_100_targets") is not None else "")
+                   + ('. A new_candidate on the feed is more likely noise than a signal. Proposed fix, not yet applied: require the signal '
+                      'in each of the two sectors reviewed and a stricter FAP, chosen on the tuning half and checked once on the held-out half.'
+                      if imp["bad"] else '. False alarms alone account for less than half of that rate.') + '</p>')
+    return (f'<section class="card bench" aria-labelledby="h-bench" style="display:grid;gap:8px"><h2 id="h-bench">Measured on real TOIs</h2>{verdict}'
+            f'<p class="note" style="margin:0"><b>Measured on a stated benchmark, not discoveries.</b> {s["counts"]["positive"]} confirmed or known planets '
+            f'(CP/KP), {s["counts"]["fp"]} false positives and {s["counts"]["fa"]} false alarms from the TOI table (fetched {e(s["fetched_at"][:10])}, seed {s["seed"]}), '
+            f'one TOI per star; held-out half shown. Panel: {e(b["panel"])}.</p>'
+            f'<div class="tablewrap" role="region" aria-label="Benchmark results"><table class="bench"><tbody>{body}</tbody></table></div>{clipnote}'
+            f'<p class="muted" style="margin:0;font-size:12px">Full results: docs/results/benchmark_real_tois.md. TFOPWG dispositions are the reference, not ground truth for every TOI.</p></section>')
+
+
 def _view_head() -> str:
     return """<div class="secthead"><h2 id="h-view">Your view</h2><p>Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></div>"""
 
@@ -2618,6 +2701,7 @@ def app_page(data: dict) -> str:
     </section>
     <section class="route" id="route-sentinels" data-route="sentinels" aria-labelledby="h-sentinels" hidden>
       {_sentinels(data)}
+      {_benchmark_card(data.get("benchmark"))}
       <p class="note rule"><b>Weights.</b> A reviewer's weight is its calibration skill from injection tests: the true-positive rate on injected transits minus the false-positive rate on empty light curves, floored (calibrate.py). The calibrated weights are stored in {html.escape(data["weights_path"] or "no weights file")}. The weight in this run is the one manifest.json records; when it differs from the calibrated weight, the run did not use the calibrated weights.</p>
       <section class="card" aria-labelledby="h-cal" style="display:grid;gap:8px">
         <h2 id="h-cal">Calibration plane</h2>

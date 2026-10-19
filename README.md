@@ -100,6 +100,27 @@ Sentinels (Skeptic and Volunteer, on Claude via the CLI):
   a reviewer that reads edges as systematics. This is exactly why the Sentinels are
   voices in a calibrated panel, not the whole panel.
 
+**Blind benchmark on real TOIs** (measured on a stated benchmark, not discoveries; see
+[docs/results/benchmark_real_tois.md](docs/results/benchmark_real_tois.md)). 662 TOIs from the NASA
+Exoplanet Archive TOI table (fetched 2026-10-19, seed 20261019): 300 CP/KP, 300 FP and 62 FA, one per
+star, split into halves by star. Each star's first SPOC 2-minute sector goes through the Probes panel,
+along with a flux-inverted and a block-scrambled copy as false-alarm controls. Held-out half, with Wilson
+95% intervals:
+
+* **Completeness: 57% (86 of 150 CP/KP on searchable stars; 49 to 65%).** It is 80% above 8 R⊕,
+  23% at 2 to 4 R⊕ and 10% below 2 R⊕. The references are Kepler's Robovetter (above 85%) and
+  Planet Hunters TESS (85% above 4 R⊕, 51% at 3 to 4 R⊕).
+* FP TOIs: the panel found the dip of 77% and rejected or flagged 68% of those as binary-like.
+  This applies to FP stars with 2-minute data only (124 of 158). FP TOIs are far more often
+  FFI-only, so this is not reliability on the whole FP list.
+* **The live feed's "new" signals are consistent with noise.** On the controls, the feed's own
+  admission rule passes 55 (inverted) and 65 (scrambled) false signals per 1,000 star-sectors.
+  That is about 13 per 100 targets reviewed, against 15.8 per 100 on the live feed (3 over 19
+  targets). A fix is proposed in the report and has not been applied.
+* The Sentinels on a stated subsample of 40 held-out stars: each persona marked 50% of the CP/KP
+  dips and 20% of the FP dips as potential planets. They agree on 38 of 40 stars (φ = 0.89):
+  one model, so one correlated voter.
+
 Injection-recovery benchmark for the Probes:
 [docs/results/injection_recovery_simulated_panel.md](docs/results/injection_recovery_simulated_panel.md).
 The Sentinels are not in the benchmark. Each injected subject would need its own CLI
@@ -119,6 +140,13 @@ published TOI period, and `new_candidate` otherwise.
 - [`scripts/improve.py`](scripts/improve.py) sweeps panel thresholds on injection benchmarks.
   It promotes a setting only if it wins on a held-out seed. Every trial is in
   [docs/leaderboard.md](docs/leaderboard.md), including losers.
+
+**Measured false-alarm rate.** On real light curves with every signal destroyed, the feed's
+own rule admits about 13 noise signals per 100 targets reviewed. The live feed shows 15.8
+`new_candidate` signals per 100 targets, so its "new" signals are consistent with noise (see
+[the benchmark](docs/results/benchmark_real_tois.md)). The proposed fix is to require the signal
+independently in both sectors reviewed and to use a stricter FAP. It is not applied: it must be
+chosen on the tuning half and validated on the held-out half first.
 
 **What this can and cannot claim.** Every entry is a candidate. A detection here means the
 pipeline saw a vetted dip that matches no published ephemeris. It does not mean a planet has
@@ -155,7 +183,19 @@ published pipelines.
 * **Vetting uses only light curves.** There is no centroid or pixel-level check, so
   blended eclipsing binaries can pass.
 * **Edge events are the weak spot** for both the statistics and the reviewers.
-* **Discovery candidates are unconfirmed.** Nothing on the discovery feed is a confirmed planet.
+* **Discovery candidates are unconfirmed, and the feed's false-alarm rate is measured to be high.**
+  Nothing on the discovery feed is a confirmed planet. Noise alone gives about 13 `new_candidate`
+  signals per 100 targets, close to the feed's observed rate (real-TOI benchmark).
+* **Real-TOI completeness is 57% on searchable stars** (held-out; 49 to 65%), well below published
+  vetters, and only 10% for planets below 2 R⊕. The FP measures cover only FP stars with 2-minute
+  data, a population skewed away from the full FP list.
+* **Known bug in the code that produced the benchmark: preprocess clipping.** `preprocess.clean`
+  removes every point more than 10× the point-to-point scatter below the running median, with no
+  run-length test. Transits deeper than about 10× the per-cadence scatter therefore lose their
+  in-transit points. In the held-out half, 27 CP/KP and 11 FP stars are exposed (depth more than 8×
+  the scatter), and 3 CP/KP misses are explained by it. Completeness is 53% (65/123) with those
+  stars excluded. A fix is on a separate branch; after it merges, only the affected stars will be
+  re-run and reported as an update.
 
 ## Repository layout
 

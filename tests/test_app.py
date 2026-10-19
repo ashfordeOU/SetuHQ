@@ -1076,3 +1076,37 @@ def test_signals_button_targets_the_current_signal_in_the_list():
     assert "document.body.insertBefore(b, document.body.firstChild)" in docket_mod.DOCKET_JS
     # On a phone the list is an accordion, so the list and the current dip's buttons fit one screen.
     assert "#rows .sig:not(.cur) .row{display:none}" in docket_mod.DOCKET_CSS
+
+
+def test_the_sentinels_page_states_the_benchmark_as_measured_not_discovered(tmp_path):
+    from exoplan.app import _benchmark_card, _load_benchmark
+
+    assert "has not been run" in _benchmark_card(None)
+    assert _load_benchmark(tmp_path / "missing.json") is None
+    rate = {"k": 3, "n": 4, "rate": 0.75, "lo": 0.3, "hi": 0.95}
+    ctl = {"vetted_false_alarms": 2, "star_sectors": 40, "per_1000_star_sectors": 50.0}
+    b = {"sample": {"counts": {"positive": 300, "fp": 300, "fa": 62}, "fetched_at": "2026-10-19T11:00:16Z", "seed": 20261019},
+         "panel": "the Probes <test>", "summary": {"held_out": {"completeness": rate, "fp_seen": rate, "fp_flagged_of_seen": rate,
+                                                                "controls": {"inverted": ctl, "scrambled": ctl}}},
+         "sentinels": {"n_stars": 40, "personas": {"Sentinel": {"cp_kp_marked": rate}}}}
+    path = tmp_path / "b.json"
+    path.write_text(json.dumps(dict(b, per_star=[{"toi": "1"}])))
+    loaded = _load_benchmark(path)
+    assert "per_star" not in loaded
+    card = _benchmark_card(loaded)
+    assert "Measured on a stated benchmark, not discoveries." in card and "discovered" not in card.lower()
+    assert "75% <span class='muted'>(3/4; 95% CI 30–95%)" in card and "50 per 1,000 star-sectors" in card
+    assert "&lt;test&gt;" in card and "subsample of 40 stars" in card and "fetched 2026-10-19" in card
+    assert "Headline: planets recovered on searchable stars" in card and "consistent with noise" not in card
+    held = b["summary"]["held_out"]
+    held.update(completeness_all_stars=rate, not_searchable={"positive": 2, "fp": 1, "fa": 0},
+                feed={v: {"new_signals_per_1000": 25.0, "new_signals": 1, "star_sectors": 40} for v in ("real", "inverted", "scrambled")})
+    bad = _benchmark_card(dict(b, feed_implication={"bad": True, "expected_false_per_100_targets": 5.0, "live_new_signals_per_100_targets": 15.8}))
+    assert "3 stars <span class='muted'>(2 CP/KP, 1 FP, 0 FA)" in bad and "skewed toward FP" not in bad and "at the feed&#x27;s level" in bad
+    assert "The live feed&#x27;s new signals are consistent with noise." in bad
+    assert bad.index("consistent with noise") < bad.index("Measured on a stated benchmark") < bad.index("<table class=\"bench\">") and "more likely noise than a signal" in bad and "15.8 per 100" in bad
+    clipped = _benchmark_card(dict(b, unaffected_held_out={"completeness": rate},
+                                   clipping={"ratio": 8.0, "held_out": {"affected": {"positive": 27, "fp": 11, "fa": 0}, "cp_kp_misses_explained": 3}}))
+    assert "Known bug in the code that measured this." in clipped and "27 CP/KP, 11 FP and 0 FA held-out stars are exposed" in clipped
+    assert "stars exposed to the clipping bug excluded" in clipped
+    assert "table.bench th,table.bench td{white-space:normal" in APP_CSS  # labels wrap; nothing hides off to the side
