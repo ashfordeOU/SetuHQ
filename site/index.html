@@ -945,6 +945,43 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .searchbtn{min-width:44px;justify-content:center;padding:0 12px}
 }
 
+/* ---------- the Learn path ---------- */
+.learncard{display:grid;gap:12px}
+.learnhead{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;justify-content:space-between}
+.learnhead h2{margin:0 0 4px}
+.learnhead p{margin:0;max-width:62ch;color:var(--ink-2)}
+.learnbtns{display:flex;flex-wrap:wrap;gap:8px}
+.learnbtns .btn{min-height:44px}
+.learnmeter{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.learnmeter i{display:block;height:100%;width:0;background:var(--blue);border-radius:999px;transition:width .4s}
+.learncount{margin:0;font-size:12px;color:var(--ink-3)}
+.learnlist summary{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;font-weight:600;list-style:none}
+.learnlist summary::-webkit-details-marker{display:none}
+.learnlist summary::before{content:"›";display:inline-block;transition:transform .2s;color:var(--ink-3)}
+.learnlist[open] summary::before{transform:rotate(90deg)}
+.learnlist ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:4px}
+.learnlist a{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;min-height:48px;padding:4px 10px;border-radius:12px;color:var(--ink);text-decoration:none}
+.learnlist a:hover{background:var(--panel-2)}
+.lnum{font-size:12px;color:var(--ink-3)}
+.ltxt{display:grid;font-size:14px}
+.lkind{font-size:11px;color:var(--ink-3)}
+.ltick{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line-3)}
+li[data-seen="1"] .ltick{background:var(--green);border-color:var(--green);box-shadow:inset 0 0 0 3px var(--bg-2)}
+li[data-next="1"] a{background:var(--panel-2)}
+.learnbar{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:40;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;
+  width:max-content;max-width:calc(100vw - 24px);padding:8px;border-radius:22px;background:var(--bg-2);background:color-mix(in srgb,var(--bg-2) 90%,transparent);border:1px solid var(--line-2);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.learnbar[hidden]{display:none}
+.learnbar .btn{min-height:44px}
+.learnbar .lpos{font-size:12px;color:var(--ink-2);padding:0 6px;max-width:42ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.learning main{padding-bottom:96px}
+@media (max-width:699.98px){
+  .learnbar{left:12px;right:12px;transform:none;width:auto;flex-wrap:wrap;gap:6px}
+  .learnbar .lpos{flex-basis:100%;text-align:center}
+  .learnbar .lnt{display:none}
+  body.learning main{padding-bottom:120px}
+}
+@media (prefers-reduced-motion: reduce){.learnmeter i,.learnlist summary::before{transition:none}}
+
 .sitelinks{display:flex;flex-wrap:wrap;gap:8px 18px;border-top:1px solid var(--line);padding-top:22px;font-size:14px}
 .sitelinks a{display:inline-flex;align-items:center;min-height:44px}
 .landing .route{display:grid}</style></head>
@@ -1004,6 +1041,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
           <li><b>No image of the planet.</b> The planet on the Overview is an artist's impression; the field stars on the sky map are decorative.</li>
         </ul>
       </section>
+      
       
     <nav class="sitelinks" aria-label="More"><a href="app/#/sky">Sky</a><a href="app/#/galaxy">Galaxy</a><a href="app/#/transit">Transit</a><a href="app/#/explorer">Explorer</a><a href="app/#/sentinels">Sentinels</a><a href="docket/">The Docket</a><a href="plate/">Plates</a><a href="report/">Full run report (archived)</a></nav>
     <p class="small">Built from runs/tess-pi-men-s1 and docs/discoveries/catalog.json. Stored values only.</p>

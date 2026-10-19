@@ -46,6 +46,7 @@ from exoplan.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOT
 from exoplan.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFAULT_CATALOGUE, SEARCH_BUTTON, SEARCH_DIALOG,
                                catalogue_meta, catalogue_section, load_catalogue, mentions, planet_page, star_page, tic_names)
 from exoplan.objects import obj_link
+from exoplan.learn import LEARN_BAR, LEARN_CSS, LEARN_JS, learn_card, learn_steps
 from exoplan.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section, system_stage, CHAPTERS, CHAPTER_PLANETS
 from exoplan.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
 from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
@@ -640,6 +641,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "coverage": load_coverage(coverage_path),
         "examples": load_examples(examples_path),
         "galaxy_meta": galaxy_meta(galaxy),
+        "learn": learn_steps(),
         "catalogue": (cat := load_catalogue(catalogue_path)),
         "tic_names": tic_names(cat, [r["tic"] for r in feed], story["star"]),
         "catalogue_meta": catalogue_meta(cat, galaxy["methods"] if galaxy else None, galaxy["method_label"] if galaxy else None,
@@ -1180,7 +1182,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .btn,.nav a,.pill{transition:none}
 }
 """
-APP_CSS += GALAXY_CSS + METHODS_CSS + CATALOGUE_CSS
+APP_CSS += GALAXY_CSS + METHODS_CSS + CATALOGUE_CSS + LEARN_CSS
 
 ICONS = {
     "overview": '<rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/>',
@@ -2255,6 +2257,7 @@ function go(p, moveFocus){
   if (p.route === 'catalogue' && CTM) syncCatURL(false);
   if (p.route === 'planet') plShow(p.params.get('id') || '');
   if (p.route === 'star') stShow(p.params.get('id') || '');
+  learnVisit(p);
   if (p.route === 'transit') openTransit(p.params.get('dip'));
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));
 }
@@ -2288,7 +2291,7 @@ $('#dippick').addEventListener('change', e => { location.hash = dipHref(e.target
 go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()}, false);
 """
 # The Galaxy section's code sits ahead of the router, which calls it.
-APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + "// ---------- router ----------\n", 1)
+APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + LEARN_JS + "// ---------- router ----------\n", 1)
 
 
 # Before first paint: apply the stored theme choice (system, light or dark), so the page never flashes.
@@ -2376,6 +2379,7 @@ def _overview(data: dict, with_view: bool = True) -> str:
       <div class="proof" role="list" aria-label="What this run shows">{proof.replace('<div>', '<div role="listitem">')}</div>
       {teaser_html(data.get("galaxy"), data.get("galaxy_teaser"))}
       {_honest(data)}
+      {learn_card() if with_view else ""}
       {_view_head() if with_view else ""}"""
 
 
@@ -2663,6 +2667,7 @@ def app_page(data: dict) -> str:
 </main>
 <div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
 {SEARCH_DIALOG}
+{LEARN_BAR}
 <template id="mxsystpl">{system_stage()}</template>
 <script id="data" type="application/json">{payload}</script>
 {_galaxy_scripts(data, galaxy_payload)}

@@ -530,8 +530,9 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     assert "layout = ownLayout.map(x => ({...x}))" in go
     # Storage is written only by saveLayout, and saveLayout runs only after a layout control is used.
     # (The only other write is the Feed's own default, in saveFeedView.)
-    # (and the theme choice, in applyTheme).
-    assert APP_JS.count("setItem(") == 3 and APP_JS.count("setItem(LAYOUT_KEY") == 1
+    # (and the theme choice, in applyTheme, and the Learn path's progress, in learnSave).
+    assert APP_JS.count("setItem(") == 4 and APP_JS.count("setItem(LAYOUT_KEY") == 1
+    assert "s.setItem(LEARN_KEY" in re.search(r"function learnSave\(\)\{.*?\}\s*\}", APP_JS, re.S).group(0)
     assert "s.setItem('exoplan-theme', t)" in re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LAYOUT_KEY" in re.search(r"function saveLayout\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(FEED_KEY" in re.search(r"function saveFeedView\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
