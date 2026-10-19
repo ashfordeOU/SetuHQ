@@ -302,3 +302,12 @@ const { chromium } = require(%s);
     out = json.loads(res.stdout.strip().splitlines()[-1])
     assert out["errs"] == [] and len(out["loaded"]) == 7
     assert out["sheet"] == {"open": True, "title": out["name"], "closed": True}
+
+
+def test_transit_theatre_draws_the_system_only_for_known_planet_dips(page_html):
+    fn = re.search(r"function txSystem\(dip\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "d.status !== 'known'" in fn and "mxSystemParams(Object.assign({name: S.planet}, ex), {pts: d.pts})" in fn
+    assert "it does not confirm the dip" in fn
+    tx = _route(page_html, "transit")
+    assert 'id="txsysfig"' in tx and '<span class="mxlabel model">Model from stored values</span>' in tx
+    assert "not observed data" in tx and "this dip's stored points" in tx

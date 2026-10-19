@@ -828,6 +828,11 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .skycov{display:grid;gap:8px;padding:14px 16px;border-radius:var(--r)}
 .skycov p{margin:0;font-size:13px;color:var(--ink-2)}
 .skycov a{display:inline-flex;align-items:center;min-height:44px}
+.txsys{display:grid;gap:10px}
+.txsys h2{margin:0}
+.txsys .muted{margin:0}
+.txsys figure[hidden]{display:none}
+.txsys .mxdesc a{display:inline-flex;align-items:center;min-height:44px}
 .skypin{position:absolute;min-height:44px;padding:10px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(28,28,30,.72);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:#F5F5F7;text-decoration:none;line-height:1.35;font-size:12px}
 .skypin b{font-size:15px;font-weight:600;display:block}
 .skypin span{display:block;color:#A1A1A6}
@@ -2057,7 +2062,26 @@ function openTransit(dip){
   txs.dip = dip || txs.dip || S.lead_dip;
   if (!dip) setHash(transitHref(txs.dip), false);
   renderTransit();
+  txSystem(txs.dip);
 }
+// The animated system for a dip that matches a known planet: the catalogue's star (Teff, radius) and
+// planet, with this dip's stored points over the model curve. Other dips have no planet to draw.
+function txSystem(dip){
+  const fig = $('#txsysfig'), note = $('#txsysnote'), d = (S.dips || []).find(x => x.id === dip);
+  const ex = typeof MX !== 'undefined' && MX && S.planet ? MX.examples[S.planet] : null;
+  if (!ex || !d || d.status !== 'known'){
+    fig.hidden = true;
+    note.textContent = d && d.status !== 'known' ? `This dip does not match a known planet, so there is no stored planet to draw. It stays a ${D.unconfirmed}.` : 'No stored planet parameters in this build.';
+    if (fig._mx) fig._mx.on = false;
+    return;
+  }
+  fig.hidden = false;
+  note.textContent = `${S.planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}), with dip ${dip}'s stored points. The match says the planet is already known; it does not confirm the dip.`;
+  const st = mxSetup(fig); st.opt.sys = mxSystemParams(Object.assign({name: S.planet}, ex), {pts: d.pts});
+  st.on = current === 'transit'; mxDraw(st);
+  if (st.on && !mxRM.matches && !st.started){ st.started = true; mxPlay(st, true); } else mxKick(st);
+}
+function txSysShown(on){ const fig = $('#txsysfig'); if (fig && fig._mx){ fig._mx.on = on && !fig.hidden; if (on) mxKick(fig._mx); } }
 $('#route-transit').addEventListener('click', e => {
   if (e.target.closest('#cmptoggle')){ const k = txs.cmp.indexOf(txs.dip); if (k >= 0) txs.cmp.splice(k, 1); else txs.cmp.push(txs.dip); renderTransit(); $('#cmptoggle').focus(); say(k >= 0 ? 'Removed from compare.' : 'Added to compare.'); }
   if (e.target.closest('#cmpclear')){ txs.cmp = []; renderTransit(); $('#cmptoggle').focus(); say('Compare cleared.'); }
@@ -2194,6 +2218,7 @@ function show(r, moveFocus){
   if (r === 'candidates') fitFrame();
   gxShown(r === 'galaxy');
   mxShown(r === 'methods');
+  txSysShown(r === 'transit');
 }
 function go(p, moveFocus){
   // An old address: rewrite it to the section that replaced it, keeping its query (a replace, not a new entry).
@@ -2437,6 +2462,16 @@ def _transit(data: dict) -> str:
         </aside>
       </div>
       <section class="row2" id="txorbit" aria-label="Orbit and compare"></section>
+      <section class="txsys" aria-labelledby="h-txsys">
+        <h2 id="h-txsys">The system, drawn from stored values</h2>
+        <p class="muted" id="txsysnote"></p>
+        <figure class="mxstage tall" data-vis="system" id="txsysfig">
+          <div class="mxcanvas"><canvas role="img" aria-label="The known planet's star drawn in its blackbody colour with the planet crossing it, and a limb-darkened model light curve from stored catalogue values, with this dip's stored points overlaid."></canvas></div>
+          <div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
+          <div class="mxctl" role="group" aria-label="Animation controls"><button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time"><button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button></div>
+          <figcaption class="mxdesc">The line is a model from the catalogue's stored radii and orbit (quadratic limb darkening, Claret 2017), not observed data. The dots are this dip's stored points from exoplan's run. <a href="#/methods?ch=transit">How a transit works ›</a></figcaption>
+        </figure>
+      </section>
       <p class="casefile" id="txcase"></p>
       <p class="small" id="txarchive"></p>
       <p class="small">Every dip here is a {UNCONFIRMED}. Stored values only: the points, marks, scores, flags and words are as the run stored them.</p>"""
