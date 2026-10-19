@@ -139,7 +139,19 @@ published TOI period, and `new_candidate` otherwise.
   runs when the `ANTHROPIC_API_KEY` secret is set.
 - [`scripts/improve.py`](scripts/improve.py) sweeps panel thresholds on injection benchmarks.
   It promotes a setting only if it wins on a held-out seed. Every trial is in
-  [docs/leaderboard.md](docs/leaderboard.md), including losers.
+  [docs/threshold_sweep.md](docs/threshold_sweep.md), including losers. This synthetic sweep is not the
+  real-TOI leaderboard below.
+
+## Leaderboard and methods paper
+
+* **The real-TOI leaderboard** ([docs/leaderboard/](docs/leaderboard/README.md), and `#/leaderboard` in the app)
+  scores any method's per-star outcomes on the held-out half of the frozen 662-TOI benchmark: completeness, FP
+  rejection, control false alarms and reliability, with Wilson intervals. `exoplan leaderboard my.json` scores a
+  submission and refuses one that states anything but the hash of the tuning-half-only inputs. It is seeded with
+  exoplan's own configurations, scored from the stored per-star results (`scripts/leaderboard_seed.py`).
+* **The methods paper draft** ([docs/paper/paper.md](docs/paper/paper.md), AAS/AJ style, Markdown) reports the
+  benchmark with its negative results. Every number in it comes from the committed JSON through
+  `scripts/paper_numbers.py`; results that later work will change are marked pending.
 
 **Measured false-alarm rate.** On real light curves with every signal destroyed, the feed's
 own rule admits about 13 noise signals per 100 targets reviewed. The live feed shows 15.8

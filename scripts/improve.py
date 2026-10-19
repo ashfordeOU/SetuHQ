@@ -8,7 +8,8 @@ Protocol, so the loop cannot quietly overfit:
 2. Hold out: the best setting is rerun on ``--holdout-seed``, which was never used
    for the search. It is promoted only if its held-out score beats the current
    default's held-out score.
-3. Record every trial, including losers, in ``docs/leaderboard.md`` and ``docs/leaderboard.json``.
+3. Record every trial, including losers, in ``docs/threshold_sweep.md`` and ``docs/threshold_sweep.json`` (not the real-TOI
+   leaderboard in ``docs/leaderboard/``, which scores methods on the frozen benchmark).
 
 Run with: python scripts/improve.py --out docs
 """
@@ -107,9 +108,12 @@ def main() -> int:
     }
 
     args.out.mkdir(parents=True, exist_ok=True)
-    (args.out / "leaderboard.json").write_text(json.dumps({"decision": decision, "trials": trials}, indent=2))
+    (args.out / "threshold_sweep.json").write_text(json.dumps({"decision": decision, "trials": trials}, indent=2))
     lines = [
-        "# Leaderboard: panel threshold sweep",
+        "# Threshold sweep: Probe settings on synthetic injections",
+        "",
+        "Not the real-TOI leaderboard: that one scores whole methods on the frozen benchmark, in "
+        "[docs/leaderboard/leaderboard.md](leaderboard/leaderboard.md). This sweep tunes Probe thresholds on synthetic light curves.",
         "",
         "Score is mean completeness on the injection grid. A setting with false positives above the budget scores zero. "
         "Search and held-out seeds are different, and only a setting that wins on the held-out seed can be promoted.",
@@ -123,7 +127,7 @@ def main() -> int:
             f"{t['completeness']:.3f} | {t['false_positives_per_subject']:.3f} | {t['score']:.3f} |"
         )
     lines += ["", f"Decision: **{'promote' if promote else 'keep default'}** → `{decision['chosen']}`", ""]
-    (args.out / "leaderboard.md").write_text("\n".join(lines))
+    (args.out / "threshold_sweep.md").write_text("\n".join(lines))
     print("\n".join(lines))
     return 0
 

@@ -1,0 +1,4058 @@
+{
+ "format": "exoplan-leaderboard/1",
+ "id": "probes",
+ "name": "Probes only",
+ "kind": "probes",
+ "submitter": "exoplan (seeded entry)",
+ "sample_sha256": "6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac",
+ "inputs_sha256": "d0e4f2d9c5538800e9a34d018757f99e1d1672060e71ae56bbaf87fcaf0c15b4",
+ "tuned_on": "none",
+ "scope": "held_out",
+ "provenance": {
+  "method": "The three Probes (Sensitive, Typical, Cautious) with their calibrated weights, sector-wide BLS, light-curve vetting and the limb-darkened fit, on each star's first SPOC 2-minute sector, as in the benchmark report. No FAP rule. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
+  "code_version": "benchmark report from commit 76de67d; pipeline code fingerprints 14f6f4830a525d78 = commit 76de67d, e4fe4c99663ccba8 = commit 40cceca",
+  "generated_from": [
+   {
+    "file": "docs/results/benchmark_real_tois.json",
+    "sha256": "2337b5c06246a1ecf4af7564990a0da8a13f6b37953fba8be74841a266659439",
+    "rows": "per_star"
+   }
+  ],
+  "tuning": "none: no threshold changed after the sample was frozen (threshold audit in docs/results/benchmark_real_tois.json: 113 values, frozen after fbc1ed9, clean = True)",
+  "seeded_by": "scripts/leaderboard_seed.py"
+ },
+ "predictions": [
+  {
+   "toi": "3435.01",
+   "tic": 238162973,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2571.01",
+   "tic": 239638934,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 5,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "439.01",
+   "tic": 13021029,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1989.01",
+   "tic": 324395151,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 11,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "1676.01",
+   "tic": 8400842,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7149.01",
+   "tic": 459323923,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "540.01",
+   "tic": 200322593,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4396.01",
+   "tic": 379723086,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1145.01",
+   "tic": 350995812,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 9
+   }
+  },
+  {
+   "toi": "5801.01",
+   "tic": 243921117,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4383.01",
+   "tic": 384744828,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3343.01",
+   "tic": 58046864,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 5
+   }
+  },
+  {
+   "toi": "6090.01",
+   "tic": 268159158,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1648.01",
+   "tic": 376353509,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "152.01",
+   "tic": 403287048,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1071.01",
+   "tic": 120247528,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6920.01",
+   "tic": 84126162,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3643.01",
+   "tic": 453230066,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4036.01",
+   "tic": 367913453,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "231.01",
+   "tic": 204376737,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6116.01",
+   "tic": 364408162,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1200.01",
+   "tic": 288185138,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2145.01",
+   "tic": 88992642,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 6,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "508.01",
+   "tic": 425206121,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2006.01",
+   "tic": 41173048,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3630.01",
+   "tic": 189380158,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2517.01",
+   "tic": 48178229,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1634.01",
+   "tic": 201186294,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1633.01",
+   "tic": 165551882,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "453.01",
+   "tic": 452808876,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "6049.01",
+   "tic": 353459965,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 4,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1407.01",
+   "tic": 69747919,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "973.01",
+   "tic": 409459226,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4604.01",
+   "tic": 27039476,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "423.01",
+   "tic": 43647325,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "530.01",
+   "tic": 387690507,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "313.01",
+   "tic": 9102327,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3846.01",
+   "tic": 149918151,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3085.01",
+   "tic": 376740324,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "2967.01",
+   "tic": 103245940,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1416.01",
+   "tic": 158025009,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4946.01",
+   "tic": 319783554,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3964.01",
+   "tic": 270435047,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1901.01",
+   "tic": 19684256,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "737.01",
+   "tic": 219189765,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4061.01",
+   "tic": 224601047,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "150.01",
+   "tic": 271893367,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 8,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2284.01",
+   "tic": 115446313,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1917.01",
+   "tic": 339522221,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 13
+   }
+  },
+  {
+   "toi": "4518.01",
+   "tic": 398572544,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7193.01",
+   "tic": 325086150,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1952.01",
+   "tic": 394509844,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 6,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "2732.01",
+   "tic": 34466256,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "7478.01",
+   "tic": 11270200,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "246.01",
+   "tic": 158623531,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3979.01",
+   "tic": 444523623,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "7173.01",
+   "tic": 268727719,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4603.01",
+   "tic": 437856897,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1915.01",
+   "tic": 98283926,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2411.01",
+   "tic": 10837041,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1666.01",
+   "tic": 368536386,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4306.01",
+   "tic": 44898913,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5769.01",
+   "tic": 462715015,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 5
+   }
+  },
+  {
+   "toi": "1658.01",
+   "tic": 286561122,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "595.01",
+   "tic": 287329267,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "4621.01",
+   "tic": 293457754,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3578.01",
+   "tic": 358186451,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4666.01",
+   "tic": 165202476,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 14
+   }
+  },
+  {
+   "toi": "1374.01",
+   "tic": 190430205,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3568.01",
+   "tic": 160390955,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "2058.01",
+   "tic": 326732851,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1354.01",
+   "tic": 365683032,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5174.01",
+   "tic": 49428710,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6952.01",
+   "tic": 400466395,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "2134.01",
+   "tic": 75878355,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "770.01",
+   "tic": 248111245,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "441.01",
+   "tic": 316916655,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "969.01",
+   "tic": 280437559,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "574.01",
+   "tic": 315002523,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1299.01",
+   "tic": 258777134,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "7533.01",
+   "tic": 63303430,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "521.01",
+   "tic": 27649847,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6729.02",
+   "tic": 426032475,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2120.01",
+   "tic": 389900760,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "604.01",
+   "tic": 145027461,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "600.01",
+   "tic": 134396419,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1438.02",
+   "tic": 229650439,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1478.01",
+   "tic": 409794137,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "961.01",
+   "tic": 265077027,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6130.01",
+   "tic": 210083929,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5503.01",
+   "tic": 350044062,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1290.01",
+   "tic": 417676622,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3364.01",
+   "tic": 280655495,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 6,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "242.01",
+   "tic": 120585579,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 3,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "716.01",
+   "tic": 119081096,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7475.01",
+   "tic": 376866659,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 3,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "408.01",
+   "tic": 176778112,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7302.01",
+   "tic": 399613138,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1372.01",
+   "tic": 164150539,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2625.01",
+   "tic": 308396509,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5450.01",
+   "tic": 6653897,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2130.01",
+   "tic": 320798691,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 6,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "420.01",
+   "tic": 408159788,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "592.01",
+   "tic": 196286587,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1539.01",
+   "tic": 252636888,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "840.01",
+   "tic": 287563610,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1651.01",
+   "tic": 138168780,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1724.01",
+   "tic": 81212286,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "387.01",
+   "tic": 92359850,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 6
+   }
+  },
+  {
+   "toi": "1129.01",
+   "tic": 91576611,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "7902.01",
+   "tic": 169556484,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4445.01",
+   "tic": 158388163,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4138.01",
+   "tic": 257060897,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 5,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2511.01",
+   "tic": 124702477,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3585.01",
+   "tic": 287591638,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3579.01",
+   "tic": 316606244,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1343.01",
+   "tic": 358631536,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "750.01",
+   "tic": 14614418,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1030.01",
+   "tic": 464296022,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "1313.01",
+   "tic": 11111899,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1177.01",
+   "tic": 169177766,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1619.01",
+   "tic": 377144784,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5071.01",
+   "tic": 307733361,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "3467.01",
+   "tic": 453289469,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "5075.01",
+   "tic": 23113034,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1023.01",
+   "tic": 238374636,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 4
+   }
+  },
+  {
+   "toi": "7903.01",
+   "tic": 169176556,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4123.01",
+   "tic": 153896150,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7061.01",
+   "tic": 244089109,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2380.01",
+   "tic": 176220787,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 3,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1782.02",
+   "tic": 160045097,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "4426.01",
+   "tic": 271354351,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "946.01",
+   "tic": 219205407,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7165.01",
+   "tic": 239277658,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "425.01",
+   "tic": 169532369,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "209.01",
+   "tic": 52204645,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "773.01",
+   "tic": 286865921,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 6,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6072.01",
+   "tic": 147797743,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1360.01",
+   "tic": 330468175,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1902.01",
+   "tic": 272212970,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "728.01",
+   "tic": 96097215,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "679.01",
+   "tic": 308050066,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 3,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7255.01",
+   "tic": 166099360,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "6143.01",
+   "tic": 423903685,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 9,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "3216.01",
+   "tic": 306547699,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4261.01",
+   "tic": 74197917,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2221.01",
+   "tic": 441420236,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 10,
+    "scrambled": 6
+   }
+  },
+  {
+   "toi": "3385.01",
+   "tic": 175079720,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "560.01",
+   "tic": 101011575,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 4
+   }
+  },
+  {
+   "toi": "685.01",
+   "tic": 281731203,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7104.01",
+   "tic": 371579161,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3688.01",
+   "tic": 245509452,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3608.01",
+   "tic": 267867517,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1401.01",
+   "tic": 259126549,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "385.01",
+   "tic": 300810086,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5144.01",
+   "tic": 380619414,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "413.01",
+   "tic": 170634116,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "1465.01",
+   "tic": 236887394,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "837.01",
+   "tic": 460205581,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 6
+   }
+  },
+  {
+   "toi": "1298.01",
+   "tic": 237104103,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1948.01",
+   "tic": 31268146,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5806.01",
+   "tic": 283621618,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "2407.01",
+   "tic": 153078576,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "817.01",
+   "tic": 30312676,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 5
+   }
+  },
+  {
+   "toi": "353.01",
+   "tic": 100099031,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5908.01",
+   "tic": 452483795,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2480.01",
+   "tic": 1449756,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "2175.01",
+   "tic": 405717754,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1384.01",
+   "tic": 328167090,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "6894.01",
+   "tic": 67512645,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "5134.01",
+   "tic": 95010343,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "1846.01",
+   "tic": 198385543,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4207.01",
+   "tic": 37242226,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1339.01",
+   "tic": 269701147,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "255.01",
+   "tic": 204317710,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1561.01",
+   "tic": 245462406,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4217.01",
+   "tic": 108939482,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "2172.01",
+   "tic": 76197937,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2011.01",
+   "tic": 136916387,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "303.01",
+   "tic": 145750719,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1047.01",
+   "tic": 370745311,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 4
+   }
+  },
+  {
+   "toi": "1525.01",
+   "tic": 276380902,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2856.01",
+   "tic": 172630205,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1806.03",
+   "tic": 166648874,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3636.01",
+   "tic": 61205803,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1143.01",
+   "tic": 160268701,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1578.01",
+   "tic": 348135793,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1138.01",
+   "tic": 110428269,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6030.01",
+   "tic": 245392284,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2543.01",
+   "tic": 270604417,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3011.01",
+   "tic": 356461227,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1905.01",
+   "tic": 429302040,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "3388.01",
+   "tic": 173860688,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "430.01",
+   "tic": 459942762,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1092.01",
+   "tic": 387079085,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 12
+   }
+  },
+  {
+   "toi": "5418.01",
+   "tic": 115564354,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "455.01",
+   "tic": 98796344,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 6,
+    "scrambled": 6
+   }
+  },
+  {
+   "toi": "133.01",
+   "tic": 219338557,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1133.01",
+   "tic": 69997672,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1671.01",
+   "tic": 459903429,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4525.01",
+   "tic": 36592530,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3389.01",
+   "tic": 419419534,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1432.01",
+   "tic": 256783784,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "786.01",
+   "tic": 375059587,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1088.01",
+   "tic": 343648136,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2122.01",
+   "tic": 311408969,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1665.01",
+   "tic": 354006740,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3745.01",
+   "tic": 666567477,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6821.01",
+   "tic": 197643976,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "922.01",
+   "tic": 278199349,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "2492.01",
+   "tic": 282498590,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 6,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1070.01",
+   "tic": 31858844,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4485.01",
+   "tic": 137903329,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5398.01",
+   "tic": 8260536,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 4
+   }
+  },
+  {
+   "toi": "1935.01",
+   "tic": 176685457,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "424.01",
+   "tic": 117979694,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "3917.01",
+   "tic": 68035558,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 5
+   }
+  },
+  {
+   "toi": "784.01",
+   "tic": 460984940,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1273.01",
+   "tic": 445859771,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5559.01",
+   "tic": 456945304,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 6
+   }
+  },
+  {
+   "toi": "7163.01",
+   "tic": 343774169,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "114.01",
+   "tic": 25155310,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1682.01",
+   "tic": 367366318,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5972.01",
+   "tic": 420814525,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "767.01",
+   "tic": 229047362,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "914.01",
+   "tic": 153027658,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1626.01",
+   "tic": 157586003,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "615.01",
+   "tic": 190496853,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2842.01",
+   "tic": 178162579,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4375.01",
+   "tic": 343708863,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "6383.01",
+   "tic": 328513434,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5041.01",
+   "tic": 324609476,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1003.01",
+   "tic": 106997505,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "467.01",
+   "tic": 20178111,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 8
+   }
+  },
+  {
+   "toi": "2844.01",
+   "tic": 387342052,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1340.01",
+   "tic": 233681149,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "181.01",
+   "tic": 76923707,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7505.01",
+   "tic": 55871761,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4495.01",
+   "tic": 120826158,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5688.01",
+   "tic": 193634953,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "909.01",
+   "tic": 364107753,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1929.01",
+   "tic": 157266693,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1568.01",
+   "tic": 284050395,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "1828.01",
+   "tic": 232982938,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4265.01",
+   "tic": 118308828,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "3306.01",
+   "tic": 369861731,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2004.01",
+   "tic": 439610306,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1965.01",
+   "tic": 295354126,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4587.01",
+   "tic": 137683938,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "528.01",
+   "tic": 403693875,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1276.01",
+   "tic": 43064903,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4517.01",
+   "tic": 301289516,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4479.01",
+   "tic": 126606859,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2345.01",
+   "tic": 91555165,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1087.01",
+   "tic": 426077080,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "2060.01",
+   "tic": 285542903,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "861.01",
+   "tic": 372913430,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3658.01",
+   "tic": 71854732,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "526.01",
+   "tic": 200593988,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "3217.01",
+   "tic": 309436531,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "360.01",
+   "tic": 13023738,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4379.01",
+   "tic": 97766057,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4474.01",
+   "tic": 264508014,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7477.01",
+   "tic": 126325985,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "567.01",
+   "tic": 13349647,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5954.01",
+   "tic": 297153209,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3693.01",
+   "tic": 240823272,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "1953.01",
+   "tic": 242536549,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2208.01",
+   "tic": 38680052,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1640.01",
+   "tic": 396562848,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "2046.01",
+   "tic": 468574941,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "132.01",
+   "tic": 89020549,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6994.01",
+   "tic": 55390413,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "461.01",
+   "tic": 4646810,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "1694.01",
+   "tic": 396740648,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1097.01",
+   "tic": 360630575,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 8
+   }
+  },
+  {
+   "toi": "1201.01",
+   "tic": 29960110,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2059.01",
+   "tic": 403308915,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "2199.01",
+   "tic": 369455629,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "391.01",
+   "tic": 382391899,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1888.01",
+   "tic": 459997997,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 6,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4420.01",
+   "tic": 362709886,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2667.01",
+   "tic": 348684813,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "756.01",
+   "tic": 73649615,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1463.01",
+   "tic": 190998418,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 6
+   }
+  },
+  {
+   "toi": "2424.01",
+   "tic": 313891529,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6442.01",
+   "tic": 97921547,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "4502.01",
+   "tic": 239372503,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2768.01",
+   "tic": 443556801,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "6017.01",
+   "tic": 291751373,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "206.01",
+   "tic": 55650590,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2547.01",
+   "tic": 444013020,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1494.01",
+   "tic": 411608801,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3753.01",
+   "tic": 467783290,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "416.01",
+   "tic": 49899799,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "763.01",
+   "tic": 178819686,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5997.01",
+   "tic": 39516274,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "399.01",
+   "tic": 219388773,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6979.01",
+   "tic": 26078330,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4139.01",
+   "tic": 408729765,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5866.01",
+   "tic": 341297143,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 4
+   }
+  },
+  {
+   "toi": "1468.02",
+   "tic": 243185500,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4019.01",
+   "tic": 284305328,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4438.01",
+   "tic": 22233480,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5540.01",
+   "tic": 456305193,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 5
+   }
+  },
+  {
+   "toi": "6967.01",
+   "tic": 27635334,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "2136.01",
+   "tic": 336128819,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5695.01",
+   "tic": 103865797,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "2042.01",
+   "tic": 269424395,
+   "searched": false,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "6546.01",
+   "tic": 9385460,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3740.01",
+   "tic": 87597187,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "7719.01",
+   "tic": 1333933,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "4339.01",
+   "tic": 7439481,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 5
+   }
+  },
+  {
+   "toi": "1615.01",
+   "tic": 317507345,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "1942.01",
+   "tic": 308919449,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "1520.01",
+   "tic": 269238073,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 1,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "2438.01",
+   "tic": 686072378,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "974.01",
+   "tic": 333821572,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1292.01",
+   "tic": 199688472,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2078.01",
+   "tic": 159244568,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5266.01",
+   "tic": 312899686,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "4294.01",
+   "tic": 30499203,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 4,
+    "scrambled": 4
+   }
+  },
+  {
+   "toi": "896.01",
+   "tic": 102283403,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "524.01",
+   "tic": 365690646,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "765.01",
+   "tic": 219401954,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "137.01",
+   "tic": 176957796,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "523.01",
+   "tic": 93125144,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 4
+   }
+  },
+  {
+   "toi": "6069.01",
+   "tic": 259099556,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "692.01",
+   "tic": 320417762,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "878.01",
+   "tic": 219380235,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "2611.01",
+   "tic": 234282389,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "796.01",
+   "tic": 277099925,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "1275.01",
+   "tic": 13499636,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  },
+  {
+   "toi": "1790.01",
+   "tic": 310981412,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 2
+   }
+  },
+  {
+   "toi": "1022.01",
+   "tic": 47384844,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": true,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 5
+   }
+  },
+  {
+   "toi": "3794.01",
+   "tic": 416539317,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "718.01",
+   "tic": 150247134,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 2,
+    "scrambled": 6
+   }
+  },
+  {
+   "toi": "2269.01",
+   "tic": 441798995,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1548.01",
+   "tic": 440100539,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "3827.01",
+   "tic": 8677530,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 8
+   }
+  },
+  {
+   "toi": "4020.01",
+   "tic": 10974783,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "1646.01",
+   "tic": 387527558,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "6147.01",
+   "tic": 402740809,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 0
+   }
+  },
+  {
+   "toi": "5702.01",
+   "tic": 141985686,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 3
+   }
+  },
+  {
+   "toi": "950.01",
+   "tic": 245947683,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": {
+    "inverted": 0,
+    "scrambled": 1
+   }
+  }
+ ]
+}

@@ -210,6 +210,33 @@ def cmd_crossmatch(args) -> int:
     return 0
 
 
+def cmd_leaderboard(args) -> int:
+    """Score one submission on the frozen benchmark's held-out half, or rebuild the whole table."""
+    from exoplan import leaderboard as L
+
+    sample = L.load_sample()
+    benchmark = json.loads(L.BENCHMARK.read_text())
+    inputs = json.loads(L.INPUTS.read_text()) if L.INPUTS.exists() else L.public_inputs(sample)
+    if L.inputs_sha256(inputs) != L.inputs_sha256(L.public_inputs(sample)):
+        print(f"{L.INPUTS} does not match the frozen sample; run scripts/leaderboard_seed.py", file=sys.stderr)
+        return 1
+    if args.submission:
+        sub = json.loads(Path(args.submission).read_text())
+        try:
+            scores = L.score(sub, sample, inputs, benchmark)
+        except L.Refused as exc:
+            print(f"refused: {sub.get('name') or args.submission}", file=sys.stderr)
+            for reason in exc.reasons:
+                print(f"  - {reason}", file=sys.stderr)
+            return 2
+        print(json.dumps({"id": sub.get("id"), "name": sub.get("name"), "scope": sub["scope"], "scores": scores}, indent=1))
+        return 0
+    res = L.build(sample, inputs, benchmark, L.load_submissions(args.submissions))
+    L.write_results(res)
+    print(f"{len(res['entries'])} entries scored, {len(res['refused'])} refused: {L.RESULTS_MD}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="exoplan", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -315,6 +342,13 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--validation", help="validation markdown to embed")
     report.add_argument("--benchmark", help="benchmark markdown to embed")
     report.set_defaults(func=cmd_report)
+
+    lb = sub.add_parser("leaderboard", help="score a submission on the frozen real-TOI benchmark's held-out half, "
+                                            "or rebuild docs/leaderboard from every stored submission")
+    lb.add_argument("submission", nargs="?", help="a submission JSON (docs/leaderboard/README.md); omit to rebuild the table")
+    lb.add_argument("--submissions", default=str(Path(__file__).resolve().parents[2] / "docs/leaderboard/submissions"),
+                    help="directory of submissions to score when rebuilding")
+    lb.set_defaults(func=cmd_leaderboard)
     return parser
 
 

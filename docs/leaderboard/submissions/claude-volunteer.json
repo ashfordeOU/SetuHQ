@@ -1,0 +1,391 @@
+{
+ "format": "exoplan-leaderboard/1",
+ "id": "claude-volunteer",
+ "name": "Sentinel · Volunteer alone",
+ "kind": "sentinel",
+ "submitter": "exoplan (seeded entry)",
+ "sample_sha256": "6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac",
+ "inputs_sha256": "d0e4f2d9c5538800e9a34d018757f99e1d1672060e71ae56bbaf87fcaf0c15b4",
+ "tuned_on": "none",
+ "scope": "sentinel_subsample",
+ "provenance": {
+  "method": "One Sentinel persona (volunteer) through the Claude Code CLI on every 13-day subject of the star's real light curve. Recovered: it marked a dip on the TOI's ephemeris as a potential planet; flagged: it marked one there but called the subject noise. Not run on the controls. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
+  "code_version": "benchmark report from commit 76de67d; pipeline code fingerprints 14f6f4830a525d78 = commit 76de67d, e4fe4c99663ccba8 = commit 40cceca",
+  "generated_from": [
+   {
+    "file": "docs/results/benchmark_real_tois.json",
+    "sha256": "2337b5c06246a1ecf4af7564990a0da8a13f6b37953fba8be74841a266659439",
+    "rows": "per_star"
+   },
+   {
+    "file": "cache/bench/sentinels.json (gitignored)",
+    "sha256": "9fad2933fcc5fe001f3b9d22e45f32bfff2fd799e1af332f2c572d1cf3b1db43",
+    "rows": "per star and subject: the persona's label and marks"
+   }
+  ],
+  "tuning": "none: no threshold changed after the sample was frozen (threshold audit in docs/results/benchmark_real_tois.json: 113 values, frozen after fbc1ed9, clean = True)",
+  "seeded_by": "scripts/leaderboard_seed.py"
+ },
+ "predictions": [
+  {
+   "toi": "1201.01",
+   "tic": 29960110,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1432.01",
+   "tic": 256783784,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1468.02",
+   "tic": 243185500,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1634.01",
+   "tic": 201186294,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1846.01",
+   "tic": 198385543,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "246.01",
+   "tic": 158623531,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "2547.01",
+   "tic": 444013020,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4379.01",
+   "tic": 97766057,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "439.01",
+   "tic": 13021029,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4426.01",
+   "tic": 271354351,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4479.01",
+   "tic": 126606859,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4495.01",
+   "tic": 120826158,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": null
+  },
+  {
+   "toi": "4525.01",
+   "tic": 36592530,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4603.01",
+   "tic": 437856897,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "461.01",
+   "tic": 4646810,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4666.01",
+   "tic": 165202476,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "5174.01",
+   "tic": 49428710,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "530.01",
+   "tic": 387690507,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "6017.01",
+   "tic": 291751373,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "750.01",
+   "tic": 14614418,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1030.01",
+   "tic": 464296022,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": null
+  },
+  {
+   "toi": "1070.01",
+   "tic": 31858844,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": null
+  },
+  {
+   "toi": "1087.01",
+   "tic": 426077080,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1360.01",
+   "tic": 330468175,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1539.01",
+   "tic": 252636888,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1568.01",
+   "tic": 284050395,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1619.01",
+   "tic": 377144784,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "1965.01",
+   "tic": 295354126,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "2060.01",
+   "tic": 285542903,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3343.01",
+   "tic": 58046864,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3435.01",
+   "tic": 238162973,
+   "searched": true,
+   "seen": true,
+   "recovered": true,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3578.01",
+   "tic": 358186451,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "3745.01",
+   "tic": 666567477,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4036.01",
+   "tic": 367913453,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "416.01",
+   "tic": 49899799,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4265.01",
+   "tic": 118308828,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "4502.01",
+   "tic": 239372503,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "5540.01",
+   "tic": 456305193,
+   "searched": true,
+   "seen": true,
+   "recovered": false,
+   "flagged": true,
+   "controls": null
+  },
+  {
+   "toi": "6116.01",
+   "tic": 364408162,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  },
+  {
+   "toi": "973.01",
+   "tic": 409459226,
+   "searched": true,
+   "seen": false,
+   "recovered": false,
+   "flagged": false,
+   "controls": null
+  }
+ ]
+}

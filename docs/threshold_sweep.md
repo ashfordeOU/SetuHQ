@@ -1,4 +1,6 @@
-# Leaderboard: panel threshold sweep
+# Threshold sweep: Probe settings on synthetic injections
+
+Not the real-TOI leaderboard: that one scores whole methods on the frozen benchmark, in [docs/leaderboard/leaderboard.md](leaderboard/leaderboard.md). This sweep tunes Probe thresholds on synthetic light curves.
 
 Score is mean completeness on the injection grid. A setting with false positives above the budget scores zero. Search and held-out seeds are different, and only a setting that wins on the held-out seed can be promoted.
 
