@@ -116,13 +116,16 @@ deep-dip clipping fix in Honest limits), which does not affect a 300 ppm transit
 * **Extended and pixel-level vetting** (`scripts/vet_pi_men_s2.py`, real SPOC sector-1 files; see
   [docs/results/pi_men_s2_vetting.md](docs/results/pi_men_s2_vetting.md)). On the joint fit of all five epochs
   (P = 6.26795 ± 0.00049 d, T14 = 3.09 ± 0.16 h): CROWDSAP 0.9997, FLFRCSAP 0.980 (not crowded); the strongest
-  dip at any phase away from the transit is 41 ± 7 ppm at phase 0.74 (5.6σ), below the 7.1σ threshold and below
-  the largest brightening (8.8σ), so no secondary; odd/even depths agree to 0.8σ; the five mid-times fit a linear
-  ephemeris (χ² = 0.8 for 3 dof, O−C within 1.6 min) with no odd/even timing offset (0.4σ). No flags.
-* **Reduced FPP for pi Men c** (same file): FPP = 0.0074 and NFPP = 0 (every TIC neighbour within 150″ would
-  need an eclipse deeper than 100%, one of them only marginally), which by number alone meets the TRICERATOPS
-  thresholds. The label is still "not validated: no contrast curve": the scheme is exoplan's, it leaves out
-  unresolved companions and background stars, and its priors are illustrative. pi Men c is a published planet
+  dip at any phase away from the transit is 41 ± 7 ppm at phase 0.74 (5.6σ nominal). The scan's statistic has a
+  robust spread of 1.27, so the look-elsewhere threshold is 5.2σ; the dip passes that, but it is below the largest
+  brightening (8.8σ) and 83% of it comes from one epoch, so it is not a secondary. Odd/even depths agree to 0.8σ;
+  the five mid-times fit a linear ephemeris (χ² = 1.6 for 3 dof, p = 0.66, O−C within 1.7 min) with no odd/even
+  timing offset (0.5σ). No flags.
+* **Reduced FPP for pi Men c** (same file): FPP = 0.17 and NFPP = 0 (every TIC neighbour within 150″ would
+  need an eclipse deeper than 100%, one of them only marginally): "likely planet (by number, reduced scheme)". The
+  all-phase secondary is weak evidence either way once its noise is calibrated on the scan (Bayes factor 1.5), so
+  the illustrative prior dominates. The label is "not validated: no contrast curve": the scheme is exoplan's, it
+  leaves out unresolved companions and background stars, and its priors are illustrative. pi Men c is a published planet
   with a measured mass; this number shows the scheme's behaviour on a real planet, nothing more.
 * **Ephemeris cone.** Exporting the stored run (`exoplan export runs/tess-pi-men-s1 --allow-unchecked`; the
   archive's TOI table timed out, HTTP 504) gives one signal, P = 6.2681 ± 0.0012 d from the first subject's joint
@@ -132,12 +135,15 @@ deep-dip clipping fix in Honest limits), which does not affect a 300 ppm transit
 * **The difference-image centroid of pi Men is not usable, and exoplan says so.** The PSF fit puts the difference
   image 2.05 px (40.1″) from the catalogue position, mostly in the row coordinate (row −1.91 px, column −0.74 px),
   which is the direction charge bleeds along a CCD column. SPOC's own DV report for TOI 144.01 finds the same size and
-  direction: 40.5″, row −2.07 px, column 0.02 px, with a DV quality metric of 0.58, below DV's 0.7 reliability cut. pi Men (Tmag 5.1) is saturated: four pixels of one column sit on a plateau within 3% of the
+  direction: 40.5″, row −2.07 px, column 0.02 px, with a DV quality metric of 0.58, below DV's 0.7 reliability cut.
+  pi Men (Tmag 5.1) is saturated: five pixels of one column sit on a plateau within 5% of the
   peak, a bleed trail. A transit shortens the trail instead of dimming a PSF, so the "offset" is the trail's end.
-  exoplan flags `saturated` and `centroid_unreliable` and raises no `centroid_offset`. The per-cadence centroid
-  motion test sees no shift (0.1σ). Of 56 TIC stars within 150″, all but the target would need an eclipse deeper
-  than 100%; the nearest, TIC 261139071 (Tmag 14.0, 27″), needs 111%, which is marginal under the Gaussian PSF
-  approximation.
+  The fit says so too: the difference-image PSF collapses to its 0.3 px width bound, 3.4 times narrower than the
+  out-of-transit one. exoplan flags `saturated` and `centroid_unreliable` and raises no `centroid_offset`. The
+  per-cadence centroid motion test sees no shift (0.1σ), but on a saturated star that carries no information
+  either: the flux-weighted centroid of a clipped bleed trail need not move when the star dims. Of 56 TIC stars
+  within 150″, all but the target would need an eclipse deeper than 100%; the nearest, TIC 261139071 (Tmag
+  14.0 ± 0.75, 27″), needs 111%, which is marginal: within 3σ of its Tmag uncertainty.
 
 **What the Sentinels did in this run, reported as found:**
 
@@ -205,10 +211,12 @@ published pipelines.
 * **Pixel-level vetting is new and limited.** The difference-image centroid uses a circular Gaussian in place of
   the SPOC pixel response function, and its flag is tested against the catalogue position with a systematic floor
   equal to the out-of-transit fit's own offset from that position, which makes it insensitive below a few tenths of a
-  pixel. On synthetic TPFs (whose PSF is the same Gaussian, so this is the ideal case) it localises a neighbour's
-  eclipse 1.5 to 3 px away to within 0.002 px (15 cases), and a planet on the target stays below 0.2σ (10 cases). It has not yet been benchmarked on real false positives (ATLAS S2 asks for Kepler
+  pixel. On synthetic TPFs whose PSF is the same Gaussian (the ideal case) it localises a neighbour's eclipse 1.5
+  to 3 px away to within 0.002 px (15 cases), and a planet on the target stays below 0.2σ (10 cases). With an
+  elongated PSF the model error dominates: 0.15–0.25 px at 1.6:1, up to 0.7 px at 2:1, and 0.6–0.75 px at 2.5:1,
+  where one geometry is also marked unreliable; the binary is still flagged and the planet is not. It has not yet been benchmarked on real false positives (ATLAS S2 asks for Kepler
   `koi_fpflag_co` KOIs and TESS FP TOIs). Saturated stars, like pi Men, get no usable centroid. The neighbour table's
-  flux shares use the same Gaussian, so a needed depth within a factor of two of 100% is reported as marginal.
+  flux shares use the same Gaussian; an exclusion within 3σ of the star's Tmag uncertainty is reported as marginal.
   The light-curve significances use white noise (robust scatter over √n), so they are optimistic under red noise:
   on pi Men the largest brightening at any phase is 8.8σ.
 * **Validation is not done.** TRICERATOPS 1.1.0 installs with pip (extra `validate`), but its `target()` queries

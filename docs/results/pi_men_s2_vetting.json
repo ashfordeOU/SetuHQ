@@ -3,15 +3,17 @@
  "sector": 1,
  "validation": {
   "method": "exoplan reduced FPP",
-  "fpp": 0.007389754123375725,
+  "fpp": 0.17158537883793068,
   "nfpp": 0,
   "probabilities": {
-   "tp": 0.9926102458766243,
-   "eb": 0.002286386019036633,
-   "eb2p": 0.005103368104339043
+   "tp": 0.8284146211620693,
+   "eb": 0.1673261997972459,
+   "eb2p": 0.004259179040684712
   },
   "evidence": {
-   "secondary_bayes_factor_eb_vs_tp": 0.017275557263294793,
+   "secondary_noise_widening": 4.353266139270528,
+   "secondary_source": "all-phase search (phase 0.742)",
+   "secondary_bayes_factor_eb_vs_tp": 1.514877292627877,
    "odd_even_bayes_factor_eb2p_vs_tp": 0.07712042252543949
   },
   "priors": {
@@ -27,13 +29,13 @@
   ],
   "contrast_curve": null,
   "label": "not validated: no contrast curve",
-  "fpp_class": "meets the validation thresholds",
+  "fpp_class": "likely planet (by number, reduced scheme)",
   "notes": [
    "no reliable difference-image centroid: positions carry no information",
-   "1 neighbour(s) excluded only marginally (needed depth 100-200%): the NFPP rests on the Gaussian PSF approximation"
+   "1 neighbour(s) excluded only marginally (within 3\u03c3 of the Tmag uncertainty of reaching the depth)"
   ]
  },
- "made_at": "2026-10-19T16:55:19+00:00",
+ "made_at": "2026-10-19T18:12:53+00:00",
  "inputs": {
   "lightcurve": {
    "source": "SPOC file",
@@ -89,6 +91,10 @@
    "max_brightening_snr": 8.819039138447089,
    "n_trials": 187,
    "duration_days": 0.12893554144456185,
+   "scan_median_snr": 0.06739770285990464,
+   "scan_robust_sigma": 1.2666662395804018,
+   "n_epochs": 4,
+   "max_epoch_share": 0.8291473951082924,
    "phase_05": {
     "phase": 0.4988371568217191,
     "depth_ppm": -5.8767080426402885,
@@ -96,7 +102,9 @@
     "snr": -0.8196447873522975
    },
    "albedo": 8.487343701468863,
-   "threshold_sigma": 7.1,
+   "threshold_rule": "4.09 \u00d7 the scan's robust spread (look-elsewhere over 47 positions)",
+   "threshold_sigma": 5.183102935927985,
+   "periodic": false,
    "significant": false
   },
   "odd_even_depth": {
@@ -230,7 +238,7 @@
    "pixel_scale_arcsec": 19.584199867688294,
    "saturation": {
     "saturated": true,
-    "plateau_pixels": 4,
+    "plateau_pixels": 5,
     "column": 5
    },
    "depth_in_aperture": 0.00029135969500586074,
@@ -305,9 +313,12 @@
     "sigma": 2.298207528117733
    },
    "flag_reference": "catalogue position",
+   "psf_sigma_ratio": 3.3704527923505005,
    "reliable": false,
    "unreliable_reasons": [
-    "saturated: a 4-pixel plateau in column 5"
+    "saturated: a 5-pixel plateau in column 5",
+    "difference-image PSF width at its 0.3 px bound",
+    "difference and out-of-transit PSF widths differ by 3.4x (> 2x)"
    ]
   },
   "motion": {
@@ -346,6 +357,8 @@
      "tmag": 5.1054,
      "x": 4.524883498428038,
      "y": 9.714306476114071,
+     "tmag_err": 0.0063,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.9974214405173756,
      "source": "TIC",
      "flux_share": 0.9996260680219325,
@@ -360,12 +373,15 @@
      "tmag": 12.2166,
      "x": 8.417457328055677,
      "y": 13.964726237186522,
+     "tmag_err": 0.006,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.01971589739385081,
      "source": "TIC",
      "flux_share": 2.8268022140673034e-05,
      "needed_depth": 10.614856338982632,
      "separation_arcsec": 112.87398942009632,
      "delta_mag": 7.111199999999999,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -376,15 +392,18 @@
      "tmag": 13.995,
      "x": 4.1563261926355395,
      "y": 8.366393366470668,
+     "tmag_err": 0.75,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.9681286886075658,
      "source": "TIC",
      "flux_share": 0.0002698062235857406,
      "needed_depth": 1.1121351836239959,
      "separation_arcsec": 27.366803080264734,
      "delta_mag": 8.889599999999998,
+     "marginal": true,
      "ruled_out": true,
      "ruled_out_by": [
-      "needs a depth above 100% (marginal: within a factor 2, PSF-model dependent)"
+      "needs a depth above 100% (marginal: within 3\u03c3 of its Tmag uncertainty, \u00b10.75 mag)"
      ]
     },
     {
@@ -392,12 +411,15 @@
      "tmag": 14.738,
      "x": -1.1564514516818623,
      "y": 8.016015267251513,
+     "tmag_err": 0.008,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.03467691138040614,
      "source": "TIC",
      "flux_share": 4.874827832723261e-06,
      "needed_depth": 61.553146963715285,
      "separation_arcsec": 116.1291198201575,
      "delta_mag": 9.6326,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -408,12 +430,15 @@
      "tmag": 15.1531,
      "x": 1.9655068554283837,
      "y": 14.503188825687378,
+     "tmag_err": 0.006,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.05546144767621888,
      "source": "TIC",
      "flux_share": 5.319490957701228e-06,
      "needed_depth": 56.40783984715961,
      "separation_arcsec": 106.340226932171,
      "delta_mag": 10.047699999999999,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -424,12 +449,15 @@
      "tmag": 15.6241,
      "x": 1.2035951301610783,
      "y": 14.256068322279866,
+     "tmag_err": 0.006,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.03324203591431619,
      "source": "TIC",
      "flux_share": 2.066172076118631e-06,
      "needed_depth": 145.22555864470812,
      "separation_arcsec": 110.19233633922651,
      "delta_mag": 10.518699999999999,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -440,12 +468,15 @@
      "tmag": 15.7073,
      "x": 2.6476014165269035,
      "y": 5.14538687794267,
+     "tmag_err": 0.006,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.07778219309003348,
      "source": "TIC",
      "flux_share": 4.477948118289101e-06,
      "needed_depth": 67.0085910073182,
      "separation_arcsec": 96.73725361186663,
      "delta_mag": 10.6019,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -456,12 +487,15 @@
      "tmag": 16.205,
      "x": -1.3004260129313323,
      "y": 8.100069394849854,
+     "tmag_err": 1.3,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.026339289482731967,
      "source": "TIC",
      "flux_share": 9.58788748569493e-07,
      "needed_depth": 312.95840137685565,
      "separation_arcsec": 118.38319538083225,
      "delta_mag": 11.099599999999999,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -472,12 +506,15 @@
      "tmag": 16.4525,
      "x": 10.90006540986051,
      "y": 9.995708084702676,
+     "tmag_err": 0.0061,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.0003823513216313833,
      "source": "TIC",
      "flux_share": 1.1081064152672827e-08,
      "needed_depth": 27078.71643699922,
      "separation_arcsec": 124.97440635576226,
      "delta_mag": 11.347100000000001,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -488,12 +525,15 @@
      "tmag": 16.6378,
      "x": 8.038290572901015,
      "y": 11.139198791072056,
+     "tmag_err": 0.0061,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.2744356040398884,
      "source": "TIC",
      "flux_share": 6.7056260028067835e-06,
      "needed_depth": 44.74764830081898,
      "separation_arcsec": 74.2505886016782,
      "delta_mag": 11.532399999999999,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -504,12 +544,15 @@
      "tmag": 16.7699,
      "x": 5.759999460131504,
      "y": 15.365784120978859,
+     "tmag_err": 0.0100406,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.024284789942064972,
      "source": "TIC",
      "flux_share": 5.254038184465326e-07,
      "needed_depth": 571.105468737586,
      "separation_arcsec": 113.29203351784595,
      "delta_mag": 11.6645,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -520,12 +563,15 @@
      "tmag": 17.1201,
      "x": 3.7166147657170265,
      "y": 11.63591273136975,
+     "tmag_err": 0.0062,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.94103222585,
      "source": "TIC",
      "flux_share": 1.4746310345625247e-05,
      "needed_depth": 20.348208262105572,
      "separation_arcsec": 40.82668757952726,
      "delta_mag": 12.014700000000001,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -536,12 +582,15 @@
      "tmag": 17.1858,
      "x": 7.776552215683587,
      "y": 8.521666313967863,
+     "tmag_err": 0.0063,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.4378557881163289,
      "source": "TIC",
      "flux_share": 6.4584747886529325e-06,
      "needed_depth": 46.46003953404134,
      "separation_arcsec": 67.82961543845157,
      "delta_mag": 12.080400000000001,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -552,12 +601,15 @@
      "tmag": 17.2161,
      "x": 4.7862487985381605,
      "y": 15.187270524971176,
+     "tmag_err": 0.0062,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.043467314219446176,
      "source": "TIC",
      "flux_share": 6.235074974705711e-07,
      "needed_depth": 481.24680974600005,
      "separation_arcsec": 107.30577411484228,
      "delta_mag": 12.110700000000001,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -568,12 +620,15 @@
      "tmag": 17.2996,
      "x": 8.985743636714655,
      "y": 8.950690623301803,
+     "tmag_err": 0.0062,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.08483585438433228,
      "source": "TIC",
      "flux_share": 1.126829768112592e-06,
      "needed_depth": 266.2877770020384,
      "separation_arcsec": 88.63312608739272,
      "delta_mag": 12.194200000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -584,12 +639,15 @@
      "tmag": 17.5666,
      "x": 10.01053379161249,
      "y": 4.89530832314293,
+     "tmag_err": 0.0214,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.004547267605741579,
      "source": "TIC",
      "flux_share": 4.7231244237769454e-08,
      "needed_depth": 6353.019041799336,
      "separation_arcsec": 142.99832693235442,
      "delta_mag": 12.461200000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -600,12 +658,15 @@
      "tmag": 17.5934,
      "x": 1.9719528233618902,
      "y": 5.77229244823773,
+     "tmag_err": 0.0093,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.16948453207982728,
      "source": "TIC",
      "flux_share": 1.7174691395831835e-06,
      "needed_depth": 174.71114158315942,
      "separation_arcsec": 91.97681391423505,
      "delta_mag": 12.488,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -616,12 +677,15 @@
      "tmag": 17.7657,
      "x": 9.181956610118206,
      "y": 4.516342288204364,
+     "tmag_err": 0.0068,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.011494254761523293,
      "source": "TIC",
      "flux_share": 9.9384736864034e-08,
      "needed_depth": 3019.185877816743,
      "separation_arcsec": 136.67914202597245,
      "delta_mag": 12.6603,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -632,12 +696,15 @@
      "tmag": 17.8818,
      "x": 3.110152673963924,
      "y": 10.080478649055765,
+     "tmag_err": 0.0087,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.9765590620978856,
      "source": "TIC",
      "flux_share": 7.587477005939998e-06,
      "needed_depth": 39.546873588614,
      "separation_arcsec": 28.61938081871116,
      "delta_mag": 12.776399999999999,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -648,12 +715,15 @@
      "tmag": 17.9024,
      "x": 4.144621799609235,
      "y": 12.631519505342766,
+     "tmag_err": 0.0063,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.7841670344339879,
      "source": "TIC",
      "flux_share": 5.978158901357796e-06,
      "needed_depth": 50.19287693110213,
      "separation_arcsec": 57.614608498906925,
      "delta_mag": 12.797,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -664,12 +734,15 @@
      "tmag": 17.9585,
      "x": -2.439906973430885,
      "y": 8.75053523696793,
+     "tmag_err": 0.0066,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.0014078848974207335,
      "source": "TIC",
      "flux_share": 1.0192624470923994e-08,
      "needed_depth": 29439.031612161714,
      "separation_arcsec": 137.69957362712776,
      "delta_mag": 12.853100000000001,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -680,12 +753,15 @@
      "tmag": 18.1265,
      "x": 11.608729328720937,
      "y": 4.6053573944220805,
+     "tmag_err": 0.0063,
+     "tmag_err_assumed": false,
      "aperture_fraction": 2.865107685965921e-05,
      "source": "TIC",
      "flux_share": 1.7768870539400746e-10,
      "needed_depth": 1688689.1788933259,
      "separation_arcsec": 171.04781468544877,
      "delta_mag": 13.0211,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -696,12 +772,15 @@
      "tmag": 18.324,
      "x": 6.266120421255071,
      "y": 16.009027569113066,
+     "tmag_err": 0.0104,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.0036530194980688626,
      "source": "TIC",
      "flux_share": 1.888734284529461e-08,
      "needed_depth": 15886.882367107479,
      "separation_arcsec": 127.90659632454027,
      "delta_mag": 13.218600000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -712,12 +791,15 @@
      "tmag": 18.3303,
      "x": 8.988243347619829,
      "y": 4.444814433083661,
+     "tmag_err": 0.0077,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.013743640224888306,
      "source": "TIC",
      "flux_share": 7.064812681765543e-08,
      "needed_depth": 4247.260437419514,
      "separation_arcsec": 135.2432259071029,
      "delta_mag": 13.224900000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -728,12 +810,15 @@
      "tmag": 18.38,
      "x": 3.9221071975654365,
      "y": 3.483973039426779,
+     "tmag_err": 0.0106,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.0013697893099782871,
      "source": "TIC",
      "flux_share": 6.726244440223393e-09,
      "needed_depth": 44610.48013896724,
      "separation_arcsec": 122.58581879079803,
      "delta_mag": 13.2746,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -744,12 +829,15 @@
      "tmag": 18.4222,
      "x": 2.279204831571712,
      "y": 2.598690480838977,
+     "tmag_err": 0.0087,
+     "tmag_err_assumed": false,
      "aperture_fraction": 3.751950660189839e-05,
      "source": "TIC",
      "flux_share": 1.7721316907320007e-10,
      "needed_depth": 1693220.6312866097,
      "separation_arcsec": 146.12892650350858,
      "delta_mag": 13.3168,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -760,12 +848,15 @@
      "tmag": 18.457,
      "x": 7.5336274761654884,
      "y": 15.313063360909759,
+     "tmag_err": 0.0091,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.006083760974485836,
      "source": "TIC",
      "flux_share": 2.7828578068856362e-08,
      "needed_depth": 10782.476678038756,
      "separation_arcsec": 124.47699407490282,
      "delta_mag": 13.351600000000001,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -776,12 +867,15 @@
      "tmag": 18.5143,
      "x": 5.183493462928913,
      "y": 5.6855907205443295,
+     "tmag_err": 0.0077,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.23788948075179467,
      "source": "TIC",
      "flux_share": 1.0322243786702148e-06,
      "needed_depth": 290.69357419845534,
      "separation_arcsec": 79.94652687229502,
      "delta_mag": 13.4089,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -792,12 +886,15 @@
      "tmag": 18.6625,
      "x": 2.5745341625855547,
      "y": 2.486509991570779,
+     "tmag_err": 0.0078,
+     "tmag_err_assumed": false,
      "aperture_fraction": 2.5773944686832675e-05,
      "source": "TIC",
      "flux_share": 9.75662842848906e-11,
      "needed_depth": 3075457.840889538,
      "separation_arcsec": 146.6134791276136,
      "delta_mag": 13.557100000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -808,12 +905,15 @@
      "tmag": 18.7944,
      "x": 4.1900184985518205,
      "y": 13.555914844731019,
+     "tmag_err": 0.0241,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.45853210960324253,
      "source": "TIC",
      "flux_share": 1.5371938096387244e-06,
      "needed_depth": 195.2004959484879,
      "separation_arcsec": 75.52011156241446,
      "delta_mag": 13.689,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -824,12 +924,15 @@
      "tmag": 18.8154,
      "x": 1.228606082857687,
      "y": 13.490018994809068,
+     "tmag_err": 0.0275,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.09873907633838218,
      "source": "TIC",
      "flux_share": 3.246743156111902e-07,
      "needed_depth": 924.1907338606942,
      "separation_arcsec": 98.1585609330188,
      "delta_mag": 13.71,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -840,12 +943,15 @@
      "tmag": 18.8307,
      "x": 5.538989542983395,
      "y": 14.804381917058052,
+     "tmag_err": 0.0076,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.08130647759250864,
      "source": "TIC",
      "flux_share": 2.636112983851177e-07,
      "needed_depth": 1138.2706122559907,
      "separation_arcsec": 101.64422185804227,
      "delta_mag": 13.7253,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -856,12 +962,15 @@
      "tmag": 19.0265,
      "x": -0.9207994045650647,
      "y": 7.998714788707346,
+     "tmag_err": 0.0165,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.055124056300926844,
      "source": "TIC",
      "flux_share": 1.4923134082818798e-07,
      "needed_depth": 2010.710299493246,
      "separation_arcsec": 111.81654973912508,
      "delta_mag": 13.9211,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -872,12 +981,15 @@
      "tmag": 19.1586,
      "x": 7.110259124019818,
      "y": 3.3418548800888086,
+     "tmag_err": 0.0216,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.006308341118815154,
      "source": "TIC",
      "flux_share": 1.5121471070129105e-08,
      "needed_depth": 19843.37321539859,
      "separation_arcsec": 134.67937129045592,
      "delta_mag": 14.0532,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -888,12 +1000,15 @@
      "tmag": 19.2521,
      "x": 5.92239047552833,
      "y": 9.977656628605182,
+     "tmag_err": 0.6,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.9413577369387461,
      "source": "TIC",
      "flux_share": 2.070301371677952e-06,
      "needed_depth": 144.93590069315806,
      "separation_arcsec": 27.850763921772923,
      "delta_mag": 14.1467,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -904,12 +1019,15 @@
      "tmag": 19.3635,
      "x": 6.32832819330241,
      "y": 11.090178395130264,
+     "tmag_err": 0.0402,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.8501369069533139,
      "source": "TIC",
      "flux_share": 1.6873599783313153e-06,
      "needed_depth": 177.8286778540075,
      "separation_arcsec": 44.423925888452814,
      "delta_mag": 14.258099999999999,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -920,12 +1038,15 @@
      "tmag": 19.4035,
      "x": 5.6896258563321,
      "y": 15.14952861907669,
+     "tmag_err": 0.0546,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.03984464674979097,
      "source": "TIC",
      "flux_share": 7.622349432877863e-08,
      "needed_depth": 3936.594571696705,
      "separation_arcsec": 108.86113951237374,
      "delta_mag": 14.298100000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -936,12 +1057,15 @@
      "tmag": 19.5292,
      "x": 6.957917470345404,
      "y": 3.921489702610436,
+     "tmag_err": 0.0361,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.024612424098763505,
      "source": "TIC",
      "flux_share": 4.1936604450932144e-08,
      "needed_depth": 7155.109430986727,
      "separation_arcsec": 123.04798204131548,
      "delta_mag": 14.4238,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -952,12 +1076,15 @@
      "tmag": 19.6223,
      "x": 2.577143620439995,
      "y": 6.9411711891850505,
+     "tmag_err": 0.0506,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.6112045731647705,
      "source": "TIC",
      "flux_share": 9.558405890117373e-07,
      "needed_depth": 313.92367875972246,
      "separation_arcsec": 66.3669495490176,
      "delta_mag": 14.5169,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -968,12 +1095,15 @@
      "tmag": 19.6577,
      "x": 10.038833467415383,
      "y": 10.254041374811242,
+     "tmag_err": 0.0273,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.005655760975723669,
      "source": "TIC",
      "flux_share": 8.561106909373221e-09,
      "needed_depth": 35049.322148039,
      "separation_arcsec": 108.50240249829915,
      "delta_mag": 14.552299999999999,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -984,12 +1114,15 @@
      "tmag": 19.6703,
      "x": 2.911250418320086,
      "y": 7.1846895628692735,
+     "tmag_err": 0.0205,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.7204260751342934,
      "source": "TIC",
      "flux_share": 1.0779243851598636e-06,
      "needed_depth": 278.3692419815917,
      "separation_arcsec": 58.76165152260103,
      "delta_mag": 14.564900000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1000,12 +1133,15 @@
      "tmag": 19.7408,
      "x": 6.916936856999552,
      "y": 4.627389887160213,
+     "tmag_err": 0.0194,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.08978244636253871,
      "source": "TIC",
      "flux_share": 1.2588973177463514e-07,
      "needed_depth": 2383.5223872554334,
      "separation_arcsec": 110.0880111558682,
      "delta_mag": 14.6354,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1016,12 +1152,15 @@
      "tmag": 19.783,
      "x": 11.035422980306945,
      "y": 12.895992416724695,
+     "tmag_err": 0.0085,
+     "tmag_err_assumed": false,
      "aperture_fraction": 7.153892852174828e-05,
      "source": "TIC",
      "flux_share": 9.648533402364714e-11,
      "needed_depth": 3109912.9939984865,
      "separation_arcsec": 141.91486053190562,
      "delta_mag": 14.677600000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1032,12 +1171,15 @@
      "tmag": 19.8776,
      "x": 7.377436817382673,
      "y": 11.825060786294081,
+     "tmag_err": 0.0219,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.45023408019980377,
      "source": "TIC",
      "flux_share": 5.565667263930826e-07,
      "needed_depth": 539.1285173567895,
      "separation_arcsec": 69.49589074259305,
      "delta_mag": 14.772200000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1048,12 +1190,15 @@
      "tmag": 19.8872,
      "x": 0.2352313935544501,
      "y": 11.02760644420545,
+     "tmag_err": 0.1097,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.18386898854727918,
      "source": "TIC",
      "flux_share": 2.252928248729182e-07,
      "needed_depth": 1331.8710623815077,
      "separation_arcsec": 87.85837889687677,
      "delta_mag": 14.7818,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1064,12 +1209,15 @@
      "tmag": 20.0846,
      "x": 0.011036994297075609,
      "y": 6.520426091697108,
+     "tmag_err": 0.0432,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.07463246603130289,
      "source": "TIC",
      "flux_share": 7.624417428795645e-08,
      "needed_depth": 3935.526836150972,
      "separation_arcsec": 108.29138554592524,
      "delta_mag": 14.979199999999999,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1080,12 +1228,15 @@
      "tmag": 20.0857,
      "x": 8.229958874385694,
      "y": 6.795772431081936,
+     "tmag_err": 0.0979,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.33843677394249383,
      "source": "TIC",
      "flux_share": 3.4539529723002974e-07,
      "needed_depth": 868.7466112504334,
      "separation_arcsec": 92.36898718215352,
      "delta_mag": 14.9803,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1096,12 +1247,15 @@
      "tmag": 20.1084,
      "x": 2.610775308118339,
      "y": 10.242609743187137,
+     "tmag_err": 0.0581,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.9318031314147681,
      "source": "TIC",
      "flux_share": 9.312859245603137e-07,
      "needed_depth": 322.20071848728065,
      "separation_arcsec": 38.88790193688291,
      "delta_mag": 15.003,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1112,12 +1266,15 @@
      "tmag": 20.121,
      "x": 4.559978983560464,
      "y": 4.873619500080332,
+     "tmag_err": 0.0253,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.05711586867801254,
      "source": "TIC",
      "flux_share": 5.642553166431233e-08,
      "needed_depth": 5317.823069803793,
      "separation_arcsec": 94.80347276274792,
      "delta_mag": 15.0156,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1128,12 +1285,15 @@
      "tmag": 20.1631,
      "x": 8.953162672782858,
      "y": 6.682773120776927,
+     "tmag_err": 0.0433,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.1544244384416002,
      "source": "TIC",
      "flux_share": 1.4675567497015107e-07,
      "needed_depth": 2044.6295795474657,
      "separation_arcsec": 105.09957325387991,
      "delta_mag": 15.0577,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1144,12 +1304,15 @@
      "tmag": 20.1814,
      "x": 3.3717407568563633,
      "y": 3.578513280743633,
+     "tmag_err": 0.0191,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.0017117798947124982,
      "source": "TIC",
      "flux_share": 1.5995830543258497e-09,
      "needed_depth": 187587.00475036376,
      "separation_arcsec": 122.26831200367646,
      "delta_mag": 15.076,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1160,12 +1323,15 @@
      "tmag": 20.476,
      "x": 4.6481522069003764,
      "y": 7.749061517782785,
+     "tmag_err": 0.0304,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.8953985155221562,
      "source": "TIC",
      "flux_share": 6.378745038147554e-07,
      "needed_depth": 470.4075679713403,
      "separation_arcsec": 38.5633877505509,
      "delta_mag": 15.3706,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1176,12 +1342,15 @@
      "tmag": 20.5105,
      "x": 2.553387255705728,
      "y": 4.945771000977845,
+     "tmag_err": 0.023,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.051970333291219556,
      "source": "TIC",
      "flux_share": 3.5865292368515505e-08,
      "needed_depth": 8366.33341580771,
      "separation_arcsec": 101.05471424588652,
      "delta_mag": 15.405100000000001,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1192,12 +1361,15 @@
      "tmag": 20.6535,
      "x": 9.99126503062887,
      "y": 4.042999700920013,
+     "tmag_err": 0.6,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.000860603942673171,
      "source": "TIC",
      "flux_share": 5.206216267656465e-10,
      "needed_depth": 576351.3818558569,
      "separation_arcsec": 154.26215488704446,
      "delta_mag": 15.548100000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1208,12 +1380,15 @@
      "tmag": 20.7163,
      "x": -0.6874500717131706,
      "y": 6.741886486441465,
+     "tmag_err": 0.6,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.031670313297631744,
      "source": "TIC",
      "flux_share": 1.8082198527265883e-08,
      "needed_depth": 16594.276053211503,
      "separation_arcsec": 117.51124051769261,
      "delta_mag": 15.6109,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"
@@ -1224,12 +1399,15 @@
      "tmag": 20.7401,
      "x": -2.459117040270189,
      "y": 8.549510271459653,
+     "tmag_err": 0.0158,
+     "tmag_err_assumed": false,
      "aperture_fraction": 0.001282190264151059,
      "source": "TIC",
      "flux_share": 7.161951049718935e-10,
      "needed_depth": 418965.4354342455,
      "separation_arcsec": 138.66528196996433,
      "delta_mag": 15.634700000000002,
+     "marginal": false,
      "ruled_out": true,
      "ruled_out_by": [
       "needs a depth above 100%"

@@ -167,7 +167,8 @@ def test_all_phase_secondary_likelihood_closed_form():
     """With the all-phase search, TP's likelihood is the density of the largest of N_eff noise excursions,
     N_eff phi(z) Phi(z)^(N_eff - 1) / sigma, with sigma widened by the scan's robust spread."""
     dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
-    dv["secondary"].update(depth_ppm=30.0, sigma_ppm=10.0, n_trials=200, scan_robust_sigma=1.5, phase=0.3)
+    dv["secondary"].update(depth_ppm=30.0, sigma_ppm=10.0, n_trials=200, scan_robust_sigma=1.5, phase=0.3,
+                           max_brightening_snr=2.0)                   # 2.0 / isf(1/50) = 0.97: the spread decides
     r = reduced_fpp(depth=1e-3, dv=dv)
     ss, n_eff = 15e-6, 50.0
     z = 30e-6 / ss
@@ -176,4 +177,14 @@ def test_all_phase_secondary_likelihood_closed_form():
     assert r.evidence["secondary_bayes_factor_eb_vs_tp"] == pytest.approx(leb / l0, rel=1e-9)
     assert r.evidence["secondary_source"].startswith("all-phase")
     # a 2-sigma "secondary" among 50 independent positions is what noise gives: it barely moves the odds
+    assert r.evidence["secondary_bayes_factor_eb_vs_tp"] < 3
+
+
+def test_a_large_brightening_widens_the_secondary_noise():
+    """When the scan's largest brightening is 8.8 sigma, a 5.6 sigma dip is within the noise's own excursions."""
+    dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
+    dv["secondary"].update(depth_ppm=41.3, sigma_ppm=7.4, n_trials=187, scan_robust_sigma=1.27, phase=0.74,
+                           max_brightening_snr=8.8)
+    r = reduced_fpp(depth=300e-6, dv=dv)
+    assert r.evidence["secondary_noise_widening"] == pytest.approx(8.8 / norm.isf(1 / 46.75), rel=1e-9)
     assert r.evidence["secondary_bayes_factor_eb_vs_tp"] < 3

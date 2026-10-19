@@ -21,8 +21,9 @@ lower bound on the full one, and the label says "not validated" for that reason 
 
 Likelihoods, from the S2 measurements (each closed-form):
 
-* Secondary, from the all-phase search: the strongest dip s ± σ_s at any phase, with σ_s widened by the scan's
-  robust spread (red noise). TP and EBx2P predict no secondary, so s is the largest of N_eff noise excursions
+* Secondary, from the all-phase search: the strongest dip s ± σ_s at any phase, with σ_s widened to the scan's
+  own noise: the larger of its robust spread and its largest brightening divided by Φ⁻¹(1 − 1/N_eff), the typical
+  largest of N_eff excursions (noise excursions taken as symmetric). TP and EBx2P predict no secondary, so s is the largest of N_eff noise excursions
   (N_eff = box positions/4): likelihood N_eff φ(z) Φ(z)^(N_eff−1)/σ_s with z = s/σ_s. EB predicts a secondary
   anywhere between 0 and the primary depth δ: (1/δ) ∫₀^δ N(s; x, σ_s) dx. Without the all-phase search, the
   phase-0.5 value is used with N(s; 0, σ_s). (A planet's own occultation is taken as zero; it is tens of ppm at
@@ -150,9 +151,14 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
     sec = scan.get("phase_05")
     have_secondary = True
     if scan.get("sigma_ppm") and scan.get("n_trials"):
-        widen = max(1.0, scan.get("scan_robust_sigma") or 1.0)
-        s, ss = scan["depth_ppm"] * 1e-6, scan["sigma_ppm"] * 1e-6 * widen
         n_eff = max(scan["n_trials"] * 0.25, 1.0)
+        # the noise scale is calibrated on the scan itself: its robust spread, and its largest brightening read as
+        # a typical maximum of N_eff excursions (noise excursions taken as symmetric)
+        typical_max = float(norm.isf(1.0 / max(n_eff, 2.0)))
+        widen = max(1.0, scan.get("scan_robust_sigma") or 1.0,
+                    (scan.get("max_brightening_snr") or 0.0) / typical_max if typical_max > 0 else 1.0)
+        s, ss = scan["depth_ppm"] * 1e-6, scan["sigma_ppm"] * 1e-6 * widen
+        evidence["secondary_noise_widening"] = widen
         z = s / ss
         l0 = float(n_eff * norm.pdf(z) * norm.cdf(z) ** (n_eff - 1.0) / ss)
         leb = _uniform_marginal(s, ss, 0.0, depth)

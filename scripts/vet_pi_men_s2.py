@@ -138,8 +138,11 @@ def markdown(r: dict) -> str:
         f"{'crowded' if cr['crowded'] else 'none'} |",
         f"| secondary, all phases | strongest dip at phase {_fmt(sec.get('phase'), 3)}: {_fmt(sec.get('depth_ppm'), 1)} ± "
         f"{_fmt(sec.get('sigma_ppm'), 1)} ppm ({_fmt(sec.get('snr'), 1)}σ; largest brightening {_fmt(sec.get('max_brightening_snr'), 1)}σ; "
-        f"{sec.get('n_trials')} coarse positions); at phase 0.5: {_fmt((sec.get('phase_05') or {}).get('depth_ppm'), 1)} ± "
-        f"{_fmt((sec.get('phase_05') or {}).get('sigma_ppm'), 1)} ppm | "
+        f"{sec.get('n_trials')} coarse positions); threshold {_fmt(sec.get('threshold_sigma'), 1)}σ "
+        f"({sec.get('threshold_rule')}; robust spread {_fmt(sec.get('scan_robust_sigma'))}); {sec.get('n_epochs')} epochs, "
+        f"the largest carrying {_fmt((sec.get('max_epoch_share') or 0) * 100, 0)}% "
+        f"({'periodic' if sec.get('periodic') else 'not periodic'}); at phase 0.5: "
+        f"{_fmt((sec.get('phase_05') or {}).get('depth_ppm'), 1)} ± {_fmt((sec.get('phase_05') or {}).get('sigma_ppm'), 1)} ppm | "
         f"{'secondary_any_phase' if 'secondary_any_phase' in r['lightcurve_flags'] else 'none'} |",
         f"| odd/even depth (box mean over T14) | odd {_fmt(oe.get('odd_depth_ppm'), 0)} ± {_fmt(oe.get('odd_err_ppm'), 0)} ppm (n = {oe.get('n_odd')}), "
         f"even {_fmt(oe.get('even_depth_ppm'), 0)} ± {_fmt(oe.get('even_err_ppm'), 0)} ppm (n = {oe.get('n_even')}): "
@@ -178,9 +181,10 @@ def markdown(r: dict) -> str:
         f"{_fmt(fw.get('offset_arcsec'), 1)}″ | {_fmt(fw.get('sigma'), 1)}σ | |",
         f"| centroid motion (per cadence) | shift ({_fmt((mo.get('shift_px') or [None])[0] * 1e3 if mo.get('shift_px') else None, 2)}, "
         f"{_fmt((mo.get('shift_px') or [None, None])[1] * 1e3 if mo.get('shift_px') else None, 2)}) millipixel; source offset "
-        f"{_fmt(mo.get('source_offset_arcsec'), 1)}″ | {_fmt(mo.get('sigma'), 1)}σ (χ²₂ = {_fmt(mo.get('chi2'), 1)}) | |",
+        f"{_fmt(mo.get('source_offset_arcsec'), 1)}″ | {_fmt(mo.get('sigma'), 1)}σ (χ²₂ = {_fmt(mo.get('chi2'), 1)}) | "
+        f"{'uninformative on a saturated star' if sat.get('saturated') else ''} |",
         "",
-        f"Saturation: {'yes' if sat.get('saturated') else 'no'} ({sat.get('plateau_pixels')} contiguous pixels within 3% of the "
+        f"Saturation: {'yes' if sat.get('saturated') else 'no'} ({sat.get('plateau_pixels')} contiguous pixels within 5% of the "
         f"brightest in column {sat.get('column')}; Tmag {_fmt(r['pixel']['header'].get('tessmag'))}). "
         f"Centroid reliable: **{'yes' if c.get('reliable') else 'no'}**"
         + (f" ({'; '.join(c.get('unreliable_reasons', []))})" if c.get("unreliable_reasons") else "") + ".",
