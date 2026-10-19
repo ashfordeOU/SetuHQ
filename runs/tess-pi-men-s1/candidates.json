@@ -1,0 +1,953 @@
+[
+  {
+    "subject_id": "tess-fa3483ce6f83",
+    "target": "TIC 261136679",
+    "mission": "TESS",
+    "t_start": 1331.72,
+    "t_end": 1331.822295737961,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 5,
+    "planet_fraction": 1.0,
+    "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": true,
+    "flags": "",
+    "depth_ppm": 240.97638049369596,
+    "snr": 15.99541147816913,
+    "period_days": 6.272619606532485,
+    "n_transits": 3,
+    "fap": 0.0,
+    "metrics": {
+      "n_in_transit": 15.0,
+      "depth": 0.00024097638049369596,
+      "snr": 15.99541147816913,
+      "duration_minutes": 147.3058626637794,
+      "odd_err": 1.164041360504308e-05,
+      "even_err": 8.182075938435321e-06,
+      "secondary_depth": -9.734426270169294e-06,
+      "secondary_err": 8.22304731364208e-06,
+      "period": 6.272619606532485,
+      "odd_depth": 0.0002512176920586029,
+      "even_depth": 0.0002470921208550525
+    },
+    "candidate_id": "tess-fa3483ce6f83-000",
+    "bls_t0": 1325.50043266878,
+    "bls_duration_days": 0.08333333333333333,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1325.50043266878,
+        "n_points": 12,
+        "depth_ppm": 243.12064822884506,
+        "sigma_ppm": 16.843566934529253
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1331.7730522753125,
+        "n_points": 12,
+        "depth_ppm": 250.3755487123227,
+        "sigma_ppm": 16.843566934529253
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1338.0456718818448,
+        "n_points": 12,
+        "depth_ppm": 248.20343805787016,
+        "sigma_ppm": 16.843566934529253
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1328.636742472046,
+        "n_points": 12,
+        "depth_ppm": -20.113312773739622,
+        "sigma_ppm": 16.843566934529253
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1334.9093620785786,
+        "n_points": 12,
+        "depth_ppm": -2.229316979018847,
+        "sigma_ppm": 16.843566934529253
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "claude-skeptic",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1331.68,
+            "t_end": 1331.84,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.007046289258369143,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "claude-volunteer",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1331.72,
+            "t_end": 1331.9,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.03501658440291067,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.8445554471850383,
+        "marks": [
+          {
+            "t_start": 1331.7238490778989,
+            "t_end": 1331.8102435006176,
+            "overlap_frac": 0.8445554471850383,
+            "centre_gap_days": 0.0030829672987238155,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1331.717962775153,
+            "t_end": 1331.822295737961,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.0030829672987238155,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 0.5664854828667684,
+        "marks": [
+          {
+            "t_start": 1331.74600889034,
+            "t_end": 1331.803957940854,
+            "overlap_frac": 0.5664854828667684,
+            "centre_gap_days": 0.0048541590399509005,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "t_center": 1331.7711478689805,
+    "duration_hours": 2.45509771106299
+  },
+  {
+    "subject_id": "tess-fa3483ce6f83",
+    "target": "TIC 261136679",
+    "mission": "TESS",
+    "t_start": 1338.0058418117549,
+    "t_end": 1338.0975488344557,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 5,
+    "planet_fraction": 1.0,
+    "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": true,
+    "flags": "",
+    "depth_ppm": 241.28575962123477,
+    "snr": 14.910035502314475,
+    "period_days": 6.272619606532485,
+    "n_transits": 3,
+    "fap": 0.0,
+    "metrics": {
+      "n_in_transit": 13.0,
+      "depth": 0.00024128575962123477,
+      "snr": 14.910035502314475,
+      "duration_minutes": 132.05811268915568,
+      "odd_err": 1.164041360504308e-05,
+      "even_err": 8.182075938435321e-06,
+      "secondary_depth": -9.734426270169294e-06,
+      "secondary_err": 8.22304731364208e-06,
+      "period": 6.272619606532485,
+      "odd_depth": 0.0002512176920586029,
+      "even_depth": 0.0002470921208550525
+    },
+    "candidate_id": "tess-fa3483ce6f83-001",
+    "bls_t0": 1325.50043266878,
+    "bls_duration_days": 0.08333333333333333,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1325.50043266878,
+        "n_points": 12,
+        "depth_ppm": 243.12064822884506,
+        "sigma_ppm": 16.843566934529253
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1331.7730522753125,
+        "n_points": 12,
+        "depth_ppm": 250.3755487123227,
+        "sigma_ppm": 16.843566934529253
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1338.0456718818448,
+        "n_points": 12,
+        "depth_ppm": 248.20343805787016,
+        "sigma_ppm": 16.843566934529253
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1328.636742472046,
+        "n_points": 12,
+        "depth_ppm": -20.113312773739622,
+        "sigma_ppm": 16.843566934529253
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1334.9093620785786,
+        "n_points": 12,
+        "depth_ppm": -2.229316979018847,
+        "sigma_ppm": 16.843566934529253
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "claude-skeptic",
+        "counted": true,
+        "overlap_frac": 0.7365721017470274,
+        "marks": [
+          {
+            "t_start": 1338.03,
+            "t_end": 1338.29,
+            "overlap_frac": 0.7365721017470274,
+            "centre_gap_days": 0.09999999999990905,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "claude-volunteer",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1337.97,
+            "t_end": 1338.15,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.009381560826795976,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.9765146899245035,
+        "marks": [
+          {
+            "t_start": 1338.0058418117549,
+            "t_end": 1338.0953950665914,
+            "overlap_frac": 0.9765146899245035,
+            "centre_gap_days": 0.002309256678699967,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 0.6160555630356487,
+        "marks": [
+          {
+            "t_start": 1338.016606330773,
+            "t_end": 1338.0731029522772,
+            "overlap_frac": 0.6160555630356487,
+            "centre_gap_days": 0.0034545409694146656,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1337.9990695305332,
+            "t_end": 1338.0975488344557,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.002309256678699967,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "t_center": 1338.0516953231054,
+    "duration_hours": 2.2009685448192613
+  },
+  {
+    "subject_id": "tess-fa3483ce6f83",
+    "target": "TIC 261136679",
+    "mission": "TESS",
+    "t_start": 1325.4524017574265,
+    "t_end": 1325.5407337712481,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 5,
+    "planet_fraction": 1.0,
+    "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": true,
+    "flags": "",
+    "depth_ppm": 241.29419343787984,
+    "snr": 14.910556662393692,
+    "period_days": 6.272619606532485,
+    "n_transits": 3,
+    "fap": 0.0,
+    "metrics": {
+      "n_in_transit": 13.0,
+      "depth": 0.00024129419343787983,
+      "snr": 14.910556662393692,
+      "duration_minutes": 127.19809990314388,
+      "odd_err": 1.164041360504308e-05,
+      "even_err": 8.182075938435321e-06,
+      "secondary_depth": -9.734426270169294e-06,
+      "secondary_err": 8.22304731364208e-06,
+      "period": 6.272619606532485,
+      "odd_depth": 0.0002512176920586029,
+      "even_depth": 0.0002470921208550525
+    },
+    "candidate_id": "tess-fa3483ce6f83-002",
+    "bls_t0": 1325.50043266878,
+    "bls_duration_days": 0.08333333333333333,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1325.50043266878,
+        "n_points": 12,
+        "depth_ppm": 243.12064822884506,
+        "sigma_ppm": 16.843566934529253
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1331.7730522753125,
+        "n_points": 12,
+        "depth_ppm": 250.3755487123227,
+        "sigma_ppm": 16.843566934529253
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1338.0456718818448,
+        "n_points": 12,
+        "depth_ppm": 248.20343805787016,
+        "sigma_ppm": 16.843566934529253
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1328.636742472046,
+        "n_points": 12,
+        "depth_ppm": -20.113312773739622,
+        "sigma_ppm": 16.843566934529253
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1334.9093620785786,
+        "n_points": 12,
+        "depth_ppm": -2.229316979018847,
+        "sigma_ppm": 16.843566934529253
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "claude-skeptic",
+        "counted": true,
+        "overlap_frac": 0.08601912539733736,
+        "marks": [
+          {
+            "t_start": 1325.3004326687799,
+            "t_end": 1325.46,
+            "overlap_frac": 0.08601912539733736,
+            "centre_gap_days": 0.04500000000007276,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "claude-volunteer",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1325.3004326687799,
+            "t_end": 1325.55,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.04500000000007276,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.7583410028341095,
+        "marks": [
+          {
+            "t_start": 1325.4631826327702,
+            "t_end": 1325.530168420714,
+            "overlap_frac": 0.7583410028341095,
+            "centre_gap_days": 0.00010776240492305078,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1325.4524017574265,
+            "t_end": 1325.5407337712481,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.00010776240492305078,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 0.9370141883036558,
+        "marks": [
+          {
+            "t_start": 1325.4579654210158,
+            "t_end": 1325.5546365124633,
+            "overlap_frac": 0.9370141883036558,
+            "centre_gap_days": 0.009625439997535068,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "t_center": 1325.4965677643372,
+    "duration_hours": 2.1199683317190647
+  },
+  {
+    "subject_id": "tess-04b815001aa6",
+    "target": "TIC 261136679",
+    "mission": "TESS",
+    "t_start": 1350.532361852053,
+    "t_end": 1350.6110905869143,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 5,
+    "planet_fraction": 1.0,
+    "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": true,
+    "flags": "",
+    "depth_ppm": 242.5792819543693,
+    "snr": 11.935443380219484,
+    "period_days": 6.26155662321977,
+    "n_transits": 2,
+    "fap": 0.0,
+    "metrics": {
+      "n_in_transit": 11.0,
+      "depth": 0.00024257928195436929,
+      "snr": 11.935443380219484,
+      "duration_minutes": 113.3693782001501,
+      "odd_err": 1.1536487359391785e-05,
+      "even_err": 1.1642601180028725e-05,
+      "secondary_depth": 1.8947477053998796e-07,
+      "secondary_err": 8.635968550408798e-06,
+      "period": 6.26155662321977,
+      "odd_depth": 0.0002454374681063465,
+      "even_depth": 0.0002489032673996805
+    },
+    "candidate_id": "tess-04b815001aa6-003",
+    "bls_t0": 1344.3217828868562,
+    "bls_duration_days": 0.08333333333333333,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1344.3217828868562,
+        "n_points": 12,
+        "depth_ppm": 250.7673227002405,
+        "sigma_ppm": 19.45901571684303
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1350.583339510076,
+        "n_points": 12,
+        "depth_ppm": 248.00038778505228,
+        "sigma_ppm": 19.45901571684303
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": -1,
+        "t_mid": 1341.1910045752463,
+        "n_points": 12,
+        "depth_ppm": 6.776913144546093,
+        "sigma_ppm": 19.45901571684303
+      },
+      {
+        "epoch": 0,
+        "t_mid": 1347.4525611984661,
+        "n_points": 12,
+        "depth_ppm": 1.4245567915294188,
+        "sigma_ppm": 19.45901571684303
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "claude-skeptic",
+        "counted": true,
+        "overlap_frac": 0.0,
+        "marks": [
+          {
+            "t_start": 1350.38,
+            "t_end": 1350.51,
+            "overlap_frac": 0.0,
+            "centre_gap_days": 0.0649999999998272,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "claude-volunteer",
+        "counted": true,
+        "overlap_frac": 0.4780738317869036,
+        "marks": [
+          {
+            "t_start": 1350.45,
+            "t_end": 1350.57,
+            "overlap_frac": 0.4780738317869036,
+            "centre_gap_days": 0.061726219483716704,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.7683612613974529,
+        "marks": [
+          {
+            "t_start": 1350.5505984768881,
+            "t_end": 1350.619229858928,
+            "overlap_frac": 0.7683612613974529,
+            "centre_gap_days": 0.005657819371663209,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1350.532361852053,
+            "t_end": 1350.6110905869143,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.013187948424501883,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 0.6917697579718262,
+        "marks": [
+          {
+            "t_start": 1350.556628429054,
+            "t_end": 1350.6245155455056,
+            "overlap_frac": 0.6917697579718262,
+            "centre_gap_days": 0.005657819371663209,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "t_center": 1350.5717262194837,
+    "duration_hours": 1.8894896366691682
+  },
+  {
+    "subject_id": "tess-04b815001aa6",
+    "target": "TIC 261136679",
+    "mission": "TESS",
+    "t_start": 1344.249133333014,
+    "t_end": 1344.2841840093772,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 5,
+    "planet_fraction": 1.0,
+    "reviewers": "claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": true,
+    "flags": "",
+    "depth_ppm": 246.84141710196172,
+    "snr": 8.188258435931115,
+    "period_days": 6.26155662321977,
+    "n_transits": 2,
+    "fap": 0.0,
+    "metrics": {
+      "n_in_transit": 5.0,
+      "depth": 0.0002468414171019617,
+      "snr": 8.188258435931115,
+      "duration_minutes": 50.47297396300564,
+      "odd_err": 1.1536487359391785e-05,
+      "even_err": 1.1642601180028725e-05,
+      "secondary_depth": 1.8947477053998796e-07,
+      "secondary_err": 8.635968550408798e-06,
+      "period": 6.26155662321977,
+      "odd_depth": 0.0002454374681063465,
+      "even_depth": 0.0002489032673996805
+    },
+    "candidate_id": "tess-04b815001aa6-004",
+    "bls_t0": 1344.3217828868562,
+    "bls_duration_days": 0.08333333333333333,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1344.3217828868562,
+        "n_points": 12,
+        "depth_ppm": 250.7673227002405,
+        "sigma_ppm": 19.45901571684303
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1350.583339510076,
+        "n_points": 12,
+        "depth_ppm": 248.00038778505228,
+        "sigma_ppm": 19.45901571684303
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": -1,
+        "t_mid": 1341.1910045752463,
+        "n_points": 12,
+        "depth_ppm": 6.776913144546093,
+        "sigma_ppm": 19.45901571684303
+      },
+      {
+        "epoch": 0,
+        "t_mid": 1347.4525611984661,
+        "n_points": 12,
+        "depth_ppm": 1.4245567915294188,
+        "sigma_ppm": 19.45901571684303
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "claude-skeptic",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1344.2,
+            "t_end": 1344.34,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.002940391192169045,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "claude-volunteer",
+        "counted": true,
+        "overlap_frac": 0.0,
+        "marks": [
+          {
+            "t_start": 1344.32,
+            "t_end": 1344.47,
+            "overlap_frac": 0.0,
+            "centre_gap_days": 0.125,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.858615497935588,
+        "marks": [
+          {
+            "t_start": 1344.249133333014,
+            "t_end": 1344.2792283869526,
+            "overlap_frac": 0.858615497935588,
+            "centre_gap_days": 0.0023180565103757544,
+            "counted": true
+          },
+          {
+            "t_start": 1344.2825404505068,
+            "t_end": 1344.3659861758938,
+            "overlap_frac": 0.04689093167346041,
+            "centre_gap_days": 0.05426331320040845,
+            "counted": false
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 0.977122403691714,
+        "marks": [
+          {
+            "t_start": 1344.2499352082382,
+            "t_end": 1344.2841840093772,
+            "overlap_frac": 0.977122403691714,
+            "centre_gap_days": 0.0028787488245143322,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 0.8412267430503813,
+        "marks": [
+          {
+            "t_start": 1344.2451067076133,
+            "t_end": 1344.2786188993327,
+            "overlap_frac": 0.8412267430503813,
+            "centre_gap_days": 0.0023180565103757544,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "t_center": 1344.2666586711957,
+    "duration_hours": 0.8412162327167607
+  },
+  {
+    "subject_id": "tess-04b815001aa6",
+    "target": "TIC 261136679",
+    "mission": "TESS",
+    "t_start": 1348.9182231522316,
+    "t_end": 1348.9546698926204,
+    "time_unit": "BTJD",
+    "score": 0.6153846153846154,
+    "n_reviewers": 3,
+    "planet_fraction": 1.0,
+    "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": true,
+    "flags": "off_ephemeris",
+    "depth_ppm": 261.1116852069273,
+    "snr": 9.488344423148439,
+    "period_days": null,
+    "n_transits": 0,
+    "fap": null,
+    "metrics": {
+      "n_in_transit": 6.0,
+      "depth": 0.0002611116852069273,
+      "snr": 9.488344423148439,
+      "duration_minutes": 52.483306159847416
+    },
+    "candidate_id": "tess-04b815001aa6-005",
+    "bls_t0": null,
+    "bls_duration_days": null,
+    "epochs": [],
+    "secondary_epochs": [],
+    "mark_audit": [
+      {
+        "reviewer_id": "claude-skeptic",
+        "counted": false,
+        "overlap_frac": 0.0,
+        "marks": []
+      },
+      {
+        "reviewer_id": "claude-volunteer",
+        "counted": false,
+        "overlap_frac": 0.0,
+        "marks": []
+      },
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1348.9168519267214,
+            "t_end": 1348.9546698926204,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.0032754568328527967,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 0.8712159400503289,
+        "marks": [
+          {
+            "t_start": 1348.9229169114308,
+            "t_end": 1348.9553370933872,
+            "overlap_frac": 0.8712159400503289,
+            "centre_gap_days": 0.0033660927379060013,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 0.7826379234149555,
+        "marks": [
+          {
+            "t_start": 1348.9182231522316,
+            "t_end": 1348.9467477534447,
+            "overlap_frac": 0.7826379234149555,
+            "centre_gap_days": 0.0032754568328527967,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "t_center": 1348.936446522426,
+    "duration_hours": 0.8747217693307903
+  },
+  {
+    "subject_id": "tess-04b815001aa6",
+    "target": "TIC 261136679",
+    "mission": "TESS",
+    "t_start": 1348.1774247456767,
+    "t_end": 1348.5888852960118,
+    "time_unit": "BTJD",
+    "score": 0.6153846153846154,
+    "n_reviewers": 3,
+    "planet_fraction": 1.0,
+    "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": false,
+    "flags": "low_snr;off_ephemeris",
+    "depth_ppm": 70.95849006122367,
+    "snr": 6.740386529267594,
+    "period_days": null,
+    "n_transits": 0,
+    "fap": null,
+    "metrics": {
+      "n_in_transit": 41.0,
+      "depth": 7.095849006122368e-05,
+      "snr": 6.740386529267594,
+      "duration_minutes": 592.5031924824725
+    },
+    "candidate_id": "tess-04b815001aa6-006",
+    "bls_t0": null,
+    "bls_duration_days": null,
+    "epochs": [],
+    "secondary_epochs": [],
+    "mark_audit": [
+      {
+        "reviewer_id": "claude-skeptic",
+        "counted": false,
+        "overlap_frac": 0.0,
+        "marks": []
+      },
+      {
+        "reviewer_id": "claude-volunteer",
+        "counted": false,
+        "overlap_frac": 0.0,
+        "marks": []
+      },
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.9481729554853416,
+        "marks": [
+          {
+            "t_start": 1348.1072902532858,
+            "t_end": 1348.5675605117535,
+            "overlap_frac": 0.9481729554853416,
+            "centre_gap_days": 0.06589488531380994,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 0.8841582127840016,
+        "marks": [
+          {
+            "t_start": 1348.2250890711964,
+            "t_end": 1348.5888852960118,
+            "overlap_frac": 0.8841582127840016,
+            "centre_gap_days": 0.003666915770736523,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1348.1774247456767,
+            "t_end": 1348.6292157899902,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.003666915770736523,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "t_center": 1348.3831550208442,
+    "duration_hours": 9.875053208041209
+  }
+]

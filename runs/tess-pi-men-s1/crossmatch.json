@@ -1,0 +1,11 @@
+{
+  "source": "NASA Exoplanet Archive, table ps (default_flag = 1)",
+  "targets": [
+    "TIC 261136679"
+  ],
+  "star": null,
+  "fetched_at": "2026-10-18T17:43:32+00:00",
+  "planets": [],
+  "status": "not_run",
+  "error": "ModuleNotFoundError: No module named 'astroquery'"
+}

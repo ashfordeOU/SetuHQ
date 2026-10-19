@@ -4,7 +4,9 @@ __pycache__/
 .pytest_cache/
 build/
 dist/
-runs/
+# Runs stay local, except the stored pi Men run the site and the tests are built from.
+runs/*
+!runs/tess-pi-men-s1/
 cache/
 data/raw/
 *.sqlite

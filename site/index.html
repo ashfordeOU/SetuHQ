@@ -747,12 +747,20 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .mxladder div{position:relative;left:0;height:auto;padding-left:calc(var(--x) * 0.6 + 12px)}
   .mxladder div i{top:3px;left:calc(var(--x) * 0.6);height:12px}
   .mxladder div span,.mxladder div:nth-child(odd) span,.mxladder div:nth-child(even) span,.mxladder div.l span,.mxladder div.r span{position:static;transform:none;white-space:normal}
-  .mxladder .mxaxis{display:none}
 }
 .mxladder div span{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-size:12px;color:var(--ink-2)}
 .mxladder div.l span{transform:none}
 .mxladder div.r span{transform:translateX(-100%)}
 .mxladder .mxaxis{position:absolute;left:0;right:0;bottom:0;margin:0;display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--ink-3)}
+@media (max-width:499.98px){
+  /* Phone: the axis sits below the last rung, with room, at the rungs' 0.6 scale (after the rule above, so it wins). */
+  .mxladder .mxaxis{position:relative;width:60%;height:24px;margin-top:14px;border-top:1px solid var(--line)}
+  .mxladder .mxaxis span{position:absolute;top:6px;white-space:nowrap}
+  .mxladder .mxaxis span:nth-child(2),.mxladder .mxaxis span:nth-child(4){display:none}
+  .mxladder .mxaxis span:nth-child(1){left:0}
+  .mxladder .mxaxis span:nth-child(3){left:50%;transform:translateX(-50%)}
+  .mxladder .mxaxis span:nth-child(5){right:0}
+}
 .mxsteps{margin:0;padding-left:20px;display:grid;gap:10px;line-height:1.55}
 .mxcontrast{display:grid;gap:4px;margin:6px 0}
 .mxcontrast ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}

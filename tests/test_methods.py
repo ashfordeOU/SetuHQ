@@ -441,3 +441,41 @@ def test_rv_jitter_view_uses_sourced_numbers(page_html):
     js = re.search(r"MXV\.jitter = .*?\n  \}\};", M.METHODS_JS, re.S).group(0)
     assert "mxK(365.25, 3.986004e14 / 1.2668653e17, 1, 0, 1)" in js  # the Earth twin's K from the formula
     assert "noise points illustrative" in js
+
+
+# ---------- review of 5433c97: N1–N4 ----------
+def test_rm_rows_name_their_sources(page_html):
+    sec = _route(page_html, "methods")
+    assert "both from Gaudi &amp; Winn 2007 Table 1, which lists 88 m/s" in sec
+    # Triaud et al. 2009 Table 2: V sin I = 3.316 +0.017/−0.067 km/s, Rp/R★ = 0.15812, so K_R ≈ 83 m/s.
+    assert M.rm_amplitude(3.316, 0.15812) == pytest.approx(82.9, abs=0.1)
+    assert "V sin I = 3.316 +0.017/−0.067 km/s and k = 0.15812, measured by Triaud et al. 2009" in sec
+    assert M.SOURCES["triaud09"][1] == "https://doi.org/10.1051/0004-6361/200911897" and M.SOURCES["triaud09"][1] in sec
+
+
+def test_zenodo_anchor_is_short_and_both_fetch_dates_print(page_html):
+    sec = _route(page_html, "methods")
+    J, pop = M.load_jwst(), M.load_population()
+    assert '<a href="https://doi.org/10.5281/zenodo.10161743" rel="noopener">Zenodo record 10161743</a>' in sec
+    assert "Products and Models for &quot;A benchmark JWST near-infrared spectrum" in sec  # the full title stays in the sentence
+    dates = re.search(r'<p class="note mxdates">.*?</p>', sec, re.S).group(0)
+    assert f"fetched {pop['fetched_at'][:10]}" in dates and "population statistics" in dates
+    assert f"Zenodo record 10161743, fetched {J['fetched_at'][:10]}" in dates
+
+
+def test_phone_rv_ladder_axis_sits_below_the_rungs():
+    css = M.METHODS_CSS
+    base = css.index(".mxladder .mxaxis{position:absolute")
+    phone = css.index(".mxladder .mxaxis{position:relative;width:60%;height:24px;margin-top:14px")
+    assert phone > base  # later in the sheet, so it wins under 500 px
+    assert "@media (max-width:499.98px)" in css[base:phone]
+
+
+def test_the_stored_run_is_committed():
+    # The site build (scripts/ci_local.sh) and the Sky test read this run, so a clean checkout must have it.
+    if shutil.which("git") is None or not Path(".git").exists():
+        pytest.skip("not a git checkout")
+    tracked = subprocess.run(["git", "ls-files", "runs/tess-pi-men-s1"], capture_output=True, text=True, check=True).stdout.split()
+    for f in ("manifest.json", "candidates.json", "candidates.csv", "classifications.csv", "crossmatch.json"):
+        assert f"runs/tess-pi-men-s1/{f}" in tracked, f
+    assert any(f.startswith("runs/tess-pi-men-s1/subjects/") for f in tracked)

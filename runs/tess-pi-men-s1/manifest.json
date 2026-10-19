@@ -1,0 +1,75 @@
+{
+  "exoplan_version": "0.1.0",
+  "created_at": "2026-10-17T23:30:07+00:00",
+  "python": "3.13.16",
+  "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "packages": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "astropy": "8.0.2",
+    "matplotlib": "3.11.2",
+    "lightkurve": "2.6.0",
+    "anthropic": "1.15.0"
+  },
+  "config_name": "tess-pi-men-s1",
+  "config_sha256": "fd677ce6cc4ece7896618730d84ab4208d18dc87fd388108bed6072d7aeb72ad",
+  "subject_days": 13.0,
+  "search_scope": "subject",
+  "claude_prompt_version": "2026-10-16.1",
+  "inputs": [
+    {
+      "source": "MAST",
+      "author": "SPOC",
+      "sector": 1,
+      "exptime_s": 120,
+      "flux_column": "pdcsap_flux",
+      "time_unit": "BTJD",
+      "lightkurve_version": "2.6.0",
+      "target": "TIC 261136679",
+      "mission": "TESS"
+    }
+  ],
+  "reviewers": [
+    {
+      "id": "volunteer-sensitive",
+      "kind": "simulated",
+      "weight": 0.6
+    },
+    {
+      "id": "volunteer-typical",
+      "kind": "simulated",
+      "weight": 0.6
+    },
+    {
+      "id": "volunteer-cautious",
+      "kind": "simulated",
+      "weight": 0.4
+    },
+    {
+      "id": "claude-volunteer",
+      "kind": "claude_code",
+      "weight": 0.5
+    },
+    {
+      "id": "claude-skeptic",
+      "kind": "claude_code",
+      "weight": 0.5
+    }
+  ],
+  "skipped_reviewers": [],
+  "weights": {
+    "claude-skeptic": 0.5,
+    "claude-volunteer": 0.5,
+    "volunteer-cautious": 0.4,
+    "volunteer-sensitive": 0.6,
+    "volunteer-typical": 0.6
+  },
+  "weights_source": "docs/results/reviewer_weights_full_panel.json",
+  "counts": {
+    "light_curves": 1,
+    "subjects": 2,
+    "classifications": 10,
+    "consensus_events": 7,
+    "passed_vetting": 6
+  }
+}

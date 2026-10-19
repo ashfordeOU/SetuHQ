@@ -336,6 +336,7 @@ SOURCES = {
     "claret": ("Claret 2017, A&A 600, A30 (TESS limb darkening)", "https://doi.org/10.1051/0004-6361/201629705"),
     "huang": ("Huang et al. 2018, ApJL 868, L39 (pi Men c)", "https://doi.org/10.3847/2041-8213/aaef91"),
     "gaudiwinn": ("Gaudi & Winn 2007, ApJ 655, 550", "https://doi.org/10.1086/509910"),
+    "triaud09": ("Triaud et al. 2009, A&A 506, 377 (Rossiter–McLaughlin effect of HD 189733 b)", "https://doi.org/10.1051/0004-6361/200911897"),
     "fischer": ("Fischer et al. 2016, PASP 128, 066001 (precise RV)", "https://doi.org/10.1088/1538-3873/128/964/066001"),
     "pepe": ("Pepe et al. 2021, A&A 645, A96 (ESPRESSO)", "https://doi.org/10.1051/0004-6361/202038306"),
     "mayor": ("Mayor & Queloz 1995, Nature 378, 355", "https://doi.org/10.1038/378355a0"),
@@ -794,7 +795,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
     if jw:
         peak = max(jw["points"], key=lambda p: p[3])
         jwst_stage = _stage("jwst", LABEL_DATA, f"JWST NIRSpec PRISM transmission spectrum of WASP-39 b: {len(jw['points'])} binned points with error bars and the paper's best-fit model; the deepest point is at {peak[0]:.2f} micrometres, the carbon dioxide band.", static=True)
-        jwst_note = (f'<p class="note"><b>Real data, cited.</b> {e(jw["citation"])}; data: <a href="{e(jw["doi"])}" rel="noopener">{e(jw["source"])}</a>, '
+        jwst_note = (f'<p class="note"><b>Real data, cited.</b> {e(jw["citation"])}; data: {e(jw["source"])}, <a href="{e(jw["doi"])}" rel="noopener">Zenodo record {e(jw["doi"].rsplit(".", 1)[-1])}</a>, '
                      f'licence {e(jw["licence"])}. File {e(jw["files"]["spectrum"])}, fetched {e(jw["fetched_at"][:10])}; {e(jw["note"])} The line is the paper\'s best-fit model, not exoplan\'s.</p>')
     else:
         jwst_stage = ""
@@ -874,7 +875,8 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                     ("TRAPPIST-1 b eclipse at 15 µm, measured", "861 ± 99 ppm", "JWST MIRI (Greene et al. 2023); dayside 503 K, as expected for bare rock"),
                     ("Same, blackbody star and planet", f"{occ_bb:.0f} ppm", f"δ ≈ k² B(503 K)/B({t1b.get('star_teff', 2566):.0f} K) at 15 µm, k from exoplanet.eu radii [calc]; real analyses use a stellar model spectrum, not a blackbody"),
                     ("HD 189733 b hot-spot offset", "16 ± 6° before opposition", "Spitzer 8 µm phase curve (Knutson et al. 2007)"),
-                    ("Rossiter–McLaughlin, HD 189733 b", f"{rm_amplitude(3.5, 0.157):.0f} m/s", "K_R ≈ V sin I · k² with V sin I = 3.5 km/s, k = 0.157 (Gaudi & Winn 2007, which lists 88 m/s) [calc]"),
+                    ("Rossiter–McLaughlin, HD 189733 b", f"{rm_amplitude(3.5, 0.157):.0f} m/s", "K_R ≈ V sin I · k² with V sin I = 3.5 km/s and k = 0.157, both from Gaudi & Winn 2007 Table 1, which lists 88 m/s [calc]"),
+                    ("Rossiter–McLaughlin, HD 189733 b (measured V sin I)", f"{rm_amplitude(3.316, 0.15812):.0f} m/s", "V sin I = 3.316 +0.017/−0.067 km/s and k = 0.15812, measured by Triaud et al. 2009 (Table 2) [calc]"),
                     ("Rossiter–McLaughlin, HD 209458 b", f"{rm_amplitude(4.7, 0.121):.0f} m/s", "V sin I = 4.7 km/s, k = 0.121 (Gaudi & Winn 2007 list 70 m/s) [calc]")])}
         <p class="note">exoplan measures each dip's time and checks the odd and even dips against each other; it does not fit timing variations, phase curves or eclipses. The secondary-eclipse depth on the canvas is drawn ten times deeper and says so; the TTV amplitude is illustrative. Spin–orbit angles span aligned, polar and retrograde orbits (Albrecht et al. 2022).</p>
       </div>"""
@@ -955,7 +957,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
       </div>"""
 
     sources = {
-        "timing": ["holman", "agol", "greene", "deming05", "knutson", "gaudiwinn", "albrecht", "winn"],
+        "timing": ["holman", "agol", "greene", "deming05", "knutson", "gaudiwinn", "triaud09", "albrecht", "winn"],
         "falsepos": ["fressin", "guerrero", "twicken", "winn"],
         "population": ["fulton", "vaneylen", "owen", "gupta", "kopparapu", "bryson"],
         "equations": ["sandberg", "seager18", "licquia", "burke15", "dressing15", "bryson", "petigura"],
@@ -983,8 +985,26 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         <div>{eyebrow}<h1 class="lead-h" id="h-methods" tabindex="-1">How planets are found.<br><span class="grey">And how exoplan finds them.</span></h1>
         <p>{len(CHAPTERS)} chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something exoplan itself does.</p></div>
       </header>
+      {_data_dates(ex, g)}
       <nav class="mxtoc" aria-label="Methods chapters"><ol>{toc}</ol></nav>
       {''.join(sections)}"""
+
+
+def _data_dates(ex: dict, g: dict | None) -> str:
+    """One line with every dataset the chapters draw from and the date each was fetched."""
+    e = html.escape
+    parts = []
+    if ex.get("fetched_at"):
+        parts.append(f"planet examples from {e(ex.get('source', 'exoplanet.eu'))}, fetched {e(ex['fetched_at'][:10])}")
+    if g:
+        parts.append(f"survey counts from {e(g['source_short'])}, fetched {e(g['fetched_at'][:10])}")
+    pop = load_population()
+    if pop:
+        parts.append(f"population statistics (docs/results/population_stats.json) from {e(pop['source'])}, fetched {e(pop['fetched_at'][:10])}")
+    jw = load_jwst()
+    if jw:
+        parts.append(f"the WASP-39 b JWST extract from Zenodo record {e(jw['doi'].rsplit('.', 1)[-1])}, fetched {e(jw['fetched_at'][:10])}")
+    return f'<p class="note mxdates"><b>Data and fetch dates:</b> {"; ".join(parts)}.</p>' if parts else ""
 
 
 def _molecule_card(m: dict) -> str:
@@ -2001,12 +2021,20 @@ METHODS_CSS = r"""
   .mxladder div{position:relative;left:0;height:auto;padding-left:calc(var(--x) * 0.6 + 12px)}
   .mxladder div i{top:3px;left:calc(var(--x) * 0.6);height:12px}
   .mxladder div span,.mxladder div:nth-child(odd) span,.mxladder div:nth-child(even) span,.mxladder div.l span,.mxladder div.r span{position:static;transform:none;white-space:normal}
-  .mxladder .mxaxis{display:none}
 }
 .mxladder div span{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-size:12px;color:var(--ink-2)}
 .mxladder div.l span{transform:none}
 .mxladder div.r span{transform:translateX(-100%)}
 .mxladder .mxaxis{position:absolute;left:0;right:0;bottom:0;margin:0;display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--ink-3)}
+@media (max-width:499.98px){
+  /* Phone: the axis sits below the last rung, with room, at the rungs' 0.6 scale (after the rule above, so it wins). */
+  .mxladder .mxaxis{position:relative;width:60%;height:24px;margin-top:14px;border-top:1px solid var(--line)}
+  .mxladder .mxaxis span{position:absolute;top:6px;white-space:nowrap}
+  .mxladder .mxaxis span:nth-child(2),.mxladder .mxaxis span:nth-child(4){display:none}
+  .mxladder .mxaxis span:nth-child(1){left:0}
+  .mxladder .mxaxis span:nth-child(3){left:50%;transform:translateX(-50%)}
+  .mxladder .mxaxis span:nth-child(5){right:0}
+}
 .mxsteps{margin:0;padding-left:20px;display:grid;gap:10px;line-height:1.55}
 .mxcontrast{display:grid;gap:4px;margin:6px 0}
 .mxcontrast ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
