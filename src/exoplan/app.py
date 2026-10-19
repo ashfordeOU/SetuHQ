@@ -47,6 +47,7 @@ from exoplan.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFA
                                catalogue_meta, catalogue_section, load_catalogue, mentions, planet_page, star_page, tic_names)
 from exoplan.objects import obj_link
 from exoplan.learn import LEARN_BAR, LEARN_CSS, LEARN_JS, learn_card, learn_steps
+from exoplan.mission import GRIDS as MISSION_GRIDS, MISSION_CSS, MISSION_JS, PANES as MISSION_PANES, mission_section
 from exoplan.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section, system_stage, CHAPTERS, CHAPTER_PLANETS
 from exoplan.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
 from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
@@ -62,6 +63,7 @@ SECTIONS = [
     ("explorer", "Explorer"),
     ("sentinels", "Sentinels"),
     ("methods", "Methods"),
+    ("mission", "Mission Control"),
 ]
 SUBPAGES = [("candidates", "Case file", "transit"), ("planets", "Planets", "explorer"), ("runs", "Runs", "sentinels"),
             ("planet", "Planet", "catalogue"), ("star", "Star", "catalogue")]
@@ -642,6 +644,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "examples": load_examples(examples_path),
         "galaxy_meta": galaxy_meta(galaxy),
         "learn": learn_steps(),
+        "mission": {"panes": MISSION_PANES, "grids": MISSION_GRIDS},
         "catalogue": (cat := load_catalogue(catalogue_path)),
         "tic_names": tic_names(cat, [r["tic"] for r in feed], story["star"]),
         "catalogue_meta": catalogue_meta(cat, galaxy["methods"] if galaxy else None, galaxy["method_label"] if galaxy else None,
@@ -1182,7 +1185,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .btn,.nav a,.pill{transition:none}
 }
 """
-APP_CSS += GALAXY_CSS + METHODS_CSS + CATALOGUE_CSS + LEARN_CSS
+APP_CSS += GALAXY_CSS + METHODS_CSS + CATALOGUE_CSS + LEARN_CSS + MISSION_CSS
 
 ICONS = {
     "overview": '<rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/>',
@@ -1963,15 +1966,15 @@ function renderSky(){
     : '<p class="empty" style="margin:12px">No dips match.</p>';
   skyTimeline();
 }
-function skyTimeline(){
-  const box = $('#skytimeline'); if (!box) return;
+function skyTimeline(box = $('#skytimeline'), capEl = $('#skytlcap')){
+  if (!box) return;
   const subs = D.hero.subjects; if (!subs.length){ box.innerHTML = '<p class="empty">No light curve is stored.</p>'; return; }
   const a = subs[0].start, b = subs[subs.length - 1].end, W = 1000, H = 84;
   const [lo, hi] = [-700, 400], X = t => (t - a) / (b - a) * W, Y = v => 6 + (hi - Math.max(lo, Math.min(hi, v))) / (hi - lo) * 56;
   const pts = subs.map(s => s.t.map((t, i) => `M${X(t).toFixed(1)} ${Y(s.ppm[i]).toFixed(1)}h0`).join('')).join('');
   let ticks = '';
   for (const d of DIPS){ const on = skyShown(d), x = X(d.t).toFixed(1); ticks += `<path d="M${x} 66 V82" stroke="${on ? STC[d.status] : 'var(--line-2)'}" stroke-width="${on ? 2.5 : 1.5}" stroke-linecap="round"><title>${esc(d.time_unit)} ${tval(d.t)} · ${esc(d.status_label)}</title></path>`; }
-  $('#skytlcap').innerHTML = `<span>${esc(D.hero.time_unit)} ${fmt(a, 1)}</span><span>Stored brightness over the run, ${D.hero.n_points.toLocaleString('en-GB')} points; ticks: the dips shown above</span><span>${fmt(b, 1)}</span>`;
+  capEl.innerHTML = `<span>${esc(D.hero.time_unit)} ${fmt(a, 1)}</span><span>Stored brightness over the run, ${D.hero.n_points.toLocaleString('en-GB')} points; ticks: the dips shown above</span><span>${fmt(b, 1)}</span>`;
   box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Light curve of run ${esc(D.run.name)}: ${D.hero.n_points} stored points from ${esc(D.hero.time_unit)} ${fmt(a, 1)} to ${fmt(b, 1)}, with ${DIPS.filter(skyShown).length} of ${DIPS.length} dips ticked."><path d="${pts}" stroke="var(--ink)" stroke-width="1.1" stroke-linecap="round" opacity=".45"/>${ticks}</svg>`;
 }
 $('#route-sky').addEventListener('click', e => {
@@ -2180,7 +2183,7 @@ $('#route-sentinels').addEventListener('click', e => {
 });
 
 // ---------- router ----------
-const RENDER = {overview: renderOverview, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, catalogue: renderCatalogue, planet: () => {}, star: () => {}, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
+const RENDER = {overview: renderOverview, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
   sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns};
 const rendered = new Set();
 const ROUTES = D.sections.map(s => s.id);
@@ -2215,7 +2218,8 @@ function show(r, moveFocus){
   else if (r === 'explorer') renderDiscCharts(false);
   if (moveFocus){ const h = $('#route-' + r + ' h1'); if (h) h.focus({preventScroll: true}); window.scrollTo(0, 0); }
   if (r === 'candidates') fitFrame();
-  gxShown(r === 'galaxy');
+  missionShown(r === 'mission');
+  gxShown(r === 'galaxy' || (r === 'mission' && mc.layout && !mc.layout.hidden.includes('galaxy')));
   mxShown(r === 'methods');
   txSysShown(r === 'transit');
   plShown(r);
@@ -2257,6 +2261,7 @@ function go(p, moveFocus){
   if (p.route === 'catalogue' && CTM) syncCatURL(false);
   if (p.route === 'planet') plShow(p.params.get('id') || '');
   if (p.route === 'star') stShow(p.params.get('id') || '');
+  if (p.route === 'mission'){ applyMission(decodeMission(p.params)); gxShown(!mc.layout.hidden.includes('galaxy')); syncMissionURL(false); }
   learnVisit(p);
   if (p.route === 'transit') openTransit(p.params.get('dip'));
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));
@@ -2291,7 +2296,7 @@ $('#dippick').addEventListener('change', e => { location.hash = dipHref(e.target
 go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()}, false);
 """
 # The Galaxy section's code sits ahead of the router, which calls it.
-APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + LEARN_JS + "// ---------- router ----------\n", 1)
+APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + LEARN_JS + MISSION_JS + "// ---------- router ----------\n", 1)
 
 
 # Before first paint: apply the stored theme choice (system, light or dark), so the page never flashes.
@@ -2631,6 +2636,9 @@ def app_page(data: dict) -> str:
     </section>
     <section class="route" id="route-methods" data-route="methods" aria-labelledby="h-methods" hidden>
       {methods_section(data["examples"], data.get("galaxy"), {**data["story"], "run_created": run.get("created_at", "")}, data.get("coverage"), _eyebrow("Methods"))}
+    </section>
+    <section class="route" id="route-mission" data-route="mission" aria-labelledby="h-mission" hidden>
+      {mission_section(_eyebrow("Mission Control"))}
     </section>
     <section class="route" id="route-catalogue" data-route="catalogue" aria-labelledby="h-catalogue" hidden>
       {catalogue_section(data.get("catalogue_meta"), _eyebrow("Catalogue"))}

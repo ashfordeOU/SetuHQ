@@ -1192,6 +1192,8 @@ function gxSelect(h, planet){
     ${gxLinks(h)}<ul>${ps.map(i => `<li><button type="button" data-gxp="${i}" aria-pressed="${i === gx.selPlanet}">${esc(P.n[i])}<span>${P.y[i] || '—'} · ${esc(gxMethod(i))} · ${esc(gxClass(i))}</span></button>${typeof MX !== 'undefined' && MX && MX.examples[P.n[i]] ? `<button class="btn gxsys" type="button" data-gxsys="${esc(P.n[i])}">Open the system view ›</button>` : ''}</li>`).join('')}</ul>${exo}${lensNote}`;
   card.hidden = false;
   gxKick();
+  // Mission Control's linked selection: the star picked here is selected in every pane and window.
+  if (typeof mcBrush === 'function') mcBrush(H.n[h], 'galaxy');
 }
 // The canonical pages for the selected star and planet (a free-floating planet is its own host: no star page).
 function gxLinks(h){

@@ -290,7 +290,7 @@ const { chromium } = require(%s);
   const b = await chromium.launch({ executablePath: %s, args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
   const p = await b.newPage(), errs = [], loaded = {};
   p.on('pageerror', e => errs.push(e.message));
-  for (const r of ['overview', 'sky', 'galaxy', 'transit', 'explorer', 'sentinels', 'methods']) {
+  for (const r of ['overview', 'sky', 'galaxy', 'transit', 'explorer', 'sentinels', 'methods', 'mission']) {
     const t0 = Date.now(); await p.goto(%s + '#/' + r, {timeout: 15000}); loaded[r] = Date.now() - t0;
   }
   await p.goto(%s + '#/galaxy'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000});
@@ -305,7 +305,7 @@ const { chromium } = require(%s);
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=240)
     assert res.returncode == 0, res.stderr
     out = json.loads(res.stdout.strip().splitlines()[-1])
-    assert out["errs"] == [] and len(out["loaded"]) == 7
+    assert out["errs"] == [] and len(out["loaded"]) == 8
     assert out["sheet"] == {"open": True, "title": out["name"], "closed": True}
 
 

@@ -126,11 +126,11 @@ def test_app_builds_without_catalogue(run_dir, tmp_path):
     assert data["catalog"]["candidates"] == [] and data["catalog"]["runs"] == []
 
 
-def test_eight_sections_and_five_pages_exist(run_dir, catalog, tmp_path):
+def test_nine_sections_and_five_pages_exist(run_dir, catalog, tmp_path):
     from exoplan.app import ROUTE_ALIASES, SUBPAGES
 
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
-    assert [s for s, _ in SECTIONS] == ["overview", "sky", "galaxy", "catalogue", "transit", "explorer", "sentinels", "methods"]
+    assert [s for s, _ in SECTIONS] == ["overview", "sky", "galaxy", "catalogue", "transit", "explorer", "sentinels", "methods", "mission"]
     assert [s for s, _, _ in SUBPAGES] == ["candidates", "planets", "runs", "planet", "star"]
     nav = re.search(r'<nav class="nav" aria-label="Sections">.*?</nav>', page, re.S).group(0)
     for sid, label in SECTIONS:
@@ -531,7 +531,8 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     # Storage is written only by saveLayout, and saveLayout runs only after a layout control is used.
     # (The only other write is the Feed's own default, in saveFeedView.)
     # (and the theme choice, in applyTheme, and the Learn path's progress, in learnSave).
-    assert APP_JS.count("setItem(") == 4 and APP_JS.count("setItem(LAYOUT_KEY") == 1
+    # (and Mission Control's saved default, in its "Save as my default" handler).
+    assert APP_JS.count("setItem(") == 5 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
     assert "s.setItem(LEARN_KEY" in re.search(r"function learnSave\(\)\{.*?\}\s*\}", APP_JS, re.S).group(0)
     assert "s.setItem('exoplan-theme', t)" in re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LAYOUT_KEY" in re.search(r"function saveLayout\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
