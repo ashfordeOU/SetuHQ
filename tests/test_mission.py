@@ -45,7 +45,9 @@ def test_six_panes_each_with_its_tools_and_no_insignia(built):
     # The system pane is the shared component; telemetry is computed, and there is no agency insignia.
     assert 'id="mcsys"' in sec and '<span class="mxlabel model">Model from stored values</span>' in sec
     assert "nothing is simulated" in sec and "<img" not in sec and "NASA" not in sec and "insignia" not in sec.lower()
-    assert 'role="status"' in sec and "F6 moves between panes; Alt+1 to Alt+6 (or Ctrl+Alt+1 to 6" in sec and "arrow buttons (Alt+← and Alt+→" in sec
+    keys = re.search(r'<details class="small mckeys"><summary>Keyboard</summary>.*?</details>', sec, re.S).group(0)
+    assert 'role="status"' in sec and "F6 and Shift+F6 move between panes" in keys and "Ctrl+Alt+1 to 6" in keys
+    assert "With a pane focused, Alt+← and Alt+→ move it" in keys and "arrow buttons" in keys
     # A phone stacks the panes in one column and offers no pop-out windows.
     phone = MC.MISSION_CSS[MC.MISSION_CSS.index("@media (max-width:699.98px)"):]
     assert "grid-template-columns:minmax(0,1fr)" in phone and ".mcpopbtn" in phone

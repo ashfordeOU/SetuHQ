@@ -36,8 +36,8 @@ def mission_section(eyebrow: str) -> str:
         for pid, label in PANES)
     grids = "".join(f'<button class="btn" type="button" data-mcgrid="{k}" aria-pressed="false">{e(v)}</button>' for k, v in GRIDS)
     return f"""<header class="headrow mchero">
-        <div>{eyebrow}<h1 class="lead-h" id="h-mission" tabindex="-1">Mission Control.</h1>
-        <p>exoplan's views side by side, linked: pick a star in any pane and every pane follows. Drag a pane's title bar onto another to swap them, or use its arrow buttons (Alt+← and Alt+→ move the focused pane); pop a pane out into its own window and it stays in step. F6 moves between panes; Alt+1 to Alt+6 (or Ctrl+Alt+1 to 6, where Alt+number switches browser tabs) jumps to one.</p></div>
+        <div>{eyebrow}<h1 id="h-mission" tabindex="-1">Mission Control</h1>
+        <p>Pick a star in any pane; every pane and every popped-out window follows.</p></div>
       </header>
       <div class="mctele mono" id="mctele"></div>
       <div class="mctoolbar" role="toolbar" aria-label="Layout">
@@ -46,6 +46,8 @@ def mission_section(eyebrow: str) -> str:
         <button class="btn" type="button" id="mcsave">Save as my default</button>
         <button class="btn" type="button" id="mccopy">Copy link to this layout</button>
         <button class="btn" type="button" id="mcreset">Reset</button>
+        <details class="small mckeys"><summary>Keyboard</summary>
+        <p>F6 and Shift+F6 move between panes. Alt+1 to Alt+6 (or Ctrl+Alt+1 to 6, where Alt+number switches browser tabs) jump to one. With a pane focused, Alt+← and Alt+→ move it earlier or later. Drag a pane's title bar onto another to swap them, or use its arrow buttons.</p></details>
       </div>
       <div class="mcgrid" id="mcgrid" data-grid="focus">{panes}</div>
       <p class="small">Every figure here is computed from the data on this page (the catalogue, the map, the run and the feed); nothing is simulated. exoplan has reviewed one star's light curve, so the light-curve pane is empty for other stars and says so.</p>"""
@@ -78,7 +80,18 @@ MISSION_CSS = r"""
 .mctoolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .mctoolbar .btn{min-height:44px}
 .mchidden{display:flex;flex-wrap:wrap;gap:6px}
-.mcgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:400px;gap:12px}
+.mcgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:clamp(260px,calc((100vh - 372px) / 2),400px);gap:12px}
+/* A workspace: compact chrome, so both rows of panes fit a 900 px window. */
+#route-mission{gap:10px}
+#route-mission .mchero h1{font-size:clamp(26px,2.4vw,34px);margin:0}
+#route-mission .mchero p{margin:2px 0 0}
+#route-mission .mchero .eyebrow{display:none}
+body[data-route="mission"] main{padding-top:14px}
+.mctele{padding:6px 12px}
+.mckeys{position:relative}
+.mckeys summary{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;cursor:pointer;font-weight:600;border-radius:999px;border:1px solid var(--line-2)}
+.mckeys p{position:absolute;z-index:20;right:0;top:50px;width:min(420px,80vw);margin:0;padding:12px 14px;border-radius:14px;border:1px solid var(--line-2);background:var(--bg-2);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+@media (max-width:699.98px){.mckeys p{position:static;width:auto;margin-top:6px}}
 .mcgrid[data-grid="focus"] .mcpane:first-child{grid-column:span 2;grid-row:span 2}
 .mcpane{display:flex;flex-direction:column;min-width:0;min-height:0;border:1px solid var(--line-2);border-radius:18px;background:var(--glass-2);overflow:hidden}
 .mcpane[hidden]{display:none}
@@ -113,7 +126,7 @@ MISSION_CSS = r"""
 .mcpane .feedcards{margin:0;display:grid;gap:8px}
 .mcsel{color:var(--ink);font-weight:600}
 /* A popped-out window: only its pane, full size. */
-body.mcpop .topbar,body.mcpop .skip,body.mcpop .mchero,body.mcpop .mctoolbar,body.mcpop .mctele,body.mcpop #route-mission>.small,body.mcpop .learnbar{display:none}
+body.mcpop .topbar,body.mcpop .skip,body.mcpop .mchero,body.mcpop .mckeys,body.mcpop .mctoolbar,body.mcpop .mctele,body.mcpop #route-mission>.small,body.mcpop .learnbar{display:none}
 body.mcpop main{padding:8px}
 body.mcpop .mcgrid,body.mcpop .mcgrid[data-grid="focus"]{grid-template-columns:minmax(0,1fr);grid-auto-rows:calc(100vh - 16px)}
 body.mcpop .mcpane,body.mcpop .mcgrid[data-grid="focus"] .mcpane:first-child{grid-column:auto;grid-row:auto}
