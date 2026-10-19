@@ -337,6 +337,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
         <div class="gxtip glass" id="gxtip" hidden></div>
         <section class="gxcard glass" id="gxcard" aria-label="Selected system" hidden></section>
         <p class="gxmw" id="gxmw" hidden>Milky Way: artist's impression; Sun's position approximate (~{SUN_TO_GC_LY:,} ly from the centre)</p>
+        <p class="gxfocusnote" id="gxfocusnote" role="status" hidden></p>
         <p class="gxnogl" id="gxload" role="status" hidden>Loading the map of {c['kept']:,} planets…</p>
         <p class="gxnogl" id="gxnogl" hidden>This browser did not start WebGL, so the 3D map cannot be drawn. The table below lists the nearest systems, and the CSV holds every plotted planet.</p>
         <div class="gxtourbar glass" id="gxtourbar" role="group" aria-label="Tour" hidden>
@@ -476,6 +477,9 @@ GALAXY_CSS = r"""
 .gxcard p{margin:8px 0 0;font-size:12px;color:#C7C7CC}
 .gxmw{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);margin:0;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);font:500 12px/1.3 var(--sans);color:#C7C7CC;text-align:center;max-width:calc(100% - 300px)}
 .gxnogl{position:absolute;inset:auto 20px 50% 20px;margin:0;text-align:center;color:#C7C7CC}
+.gxfocusnote{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;width:max-content;max-width:calc(100% - 28px);margin:0;padding:6px 6px 6px 14px;border-radius:16px;background:rgba(18,18,20,.9);border:1px solid rgba(255,255,255,.14);color:#F5F5F7;font-size:13px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.gxfocusnote a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;color:#64D2FF}
+.gxfocusnote[hidden]{display:none}
 .gxtourbar{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:rgba(18,18,20,.82);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#F5F5F7}
 .gxtourbar[hidden],.gxcard[hidden],.gxtip[hidden],.gxaim[hidden],.gxmw[hidden],.gxnogl[hidden]{display:none}
 .gxtourbar .btn{min-height:44px;min-width:44px;justify-content:center}
@@ -1174,7 +1178,7 @@ function gxTelemetry(){
 function gxHostCam(h){ const H = gx.G.hosts; return {tx: H.x[h], ty: H.y[h], tz: H.z[h], yaw: gx.cam.yaw, pitch: gx.cam.pitch, dist: Math.max(60, Math.min(gx.cam.dist, 400))}; }
 function gxSelect(h, planet){
   const card = $('#gxcard'), G = gx.G, H = G.hosts, P = G.planets;
-  if (gx.view && gx.view.focus && (h < 0 || H.n[h] !== gx.view.focus)){ gx.view.focus = ''; syncGalaxyURL(false); }
+  if (gx.view && gx.view.focus && (h < 0 || H.n[h] !== gx.view.focus)){ gx.view.focus = ''; syncGalaxyURL(false); $('#gxfocusnote').hidden = true; }
   gx.sel = h; gx.selPlanet = h >= 0 ? (planet != null ? planet : gxHostPlanets(h)[0]) : -1;
   $('#gxstage').classList.toggle('sel', h >= 0);
   gx.hud = null; gx.cards = null;
@@ -1275,11 +1279,13 @@ function applyGalaxy(v){
   else if (gx.tour) { gx.tour = null; $('#gxtourbar').hidden = true; }
   if (!v.tour && (!prev || prev.view !== v.view)) gxFly(gxPresetCam(v.view), 2400);
   if (v.focus && (!prev || prev.focus !== v.focus)) gxFocus(v.focus);
+  if (!v.focus) $('#gxfocusnote').hidden = true;
 }
 // A deep link from a planet or star page (#/galaxy?focus=<host name>): select that star and fly to it.
 function gxFocus(name){
-  const h = gx.G.hosts.n.indexOf(name);
-  if (h < 0){ say(`${name} has no stored distance, so the map cannot place it.`); return; }
+  const h = gx.G.hosts.n.indexOf(name), note = $('#gxfocusnote');
+  note.hidden = h >= 0;
+  if (h < 0){ note.innerHTML = `No star “${esc(name)}” on the map (no stored distance or not in the catalogue). <a href="#/catalogue?q=${encodeURIComponent(name)}">Search the Catalogue ›</a>`; return; }
   gxSelect(h); gxFly(Object.assign(gxHostCam(h), {dist: 140}), 2400);
 }
 function syncGalaxyURL(push){ if (current !== 'galaxy' || !gx.view) return; const q = encodeGalaxyView(gx.view); setHash('#/galaxy' + (q ? '?' + q : ''), !!push); }

@@ -229,9 +229,11 @@ const { chromium } = require(%s);
     const look = async route => { await p.goto(%s + route); await p.waitForTimeout(1200); return p.evaluate(() => {
       const vw = document.documentElement.clientWidth, sec = document.querySelector('.route:not([hidden])');
       const small = [...sec.querySelectorAll('a,button,select,input,summary')].filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.width < 44 || r.height < 44) && !e.closest('p,td,dd,figcaption'); }).map(e => e.className || e.tagName);
-      const wide = [...sec.querySelectorAll('*')].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.right > vw + 1 && !e.closest('.ctscroll'); }).map(e => e.tagName + '.' + e.className);
+      const wide = [...sec.querySelectorAll('*')].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.right > vw + 1 && !e.closest('.ctscroll') && !e.closest('.cthead'); }).map(e => e.tagName + '.' + e.className);
+      const cells = [...document.querySelectorAll('#ctspacer [role=row]')].map(row => row.querySelectorAll(':scope > [role=cell], :scope > [role=rowheader]').length);
+      const heads = document.querySelectorAll('#cttable [role=columnheader]').length, colcount = (document.querySelector('#cttable') || {getAttribute: () => null}).getAttribute('aria-colcount');
       const rows = [...document.querySelectorAll('#ctspacer > a')].map(a => Math.round(a.getBoundingClientRect().height));
-      return {id: sec.id, h1: sec.querySelector('h1').textContent, small, wide, rows, count: (document.querySelector('#ctcount') || {}).textContent,
+      return {cells, heads, colcount, id: sec.id, h1: sec.querySelector('h1').textContent, small, wide, rows, count: (document.querySelector('#ctcount') || {}).textContent,
         params: (document.querySelector('#plparams') || {}).textContent, links: [...sec.querySelectorAll('.pllinks a')].map(a => a.getAttribute('href'))}; }); };
     const r = {w, theme, errs};
     r.cat = await look('#/catalogue');
@@ -241,11 +243,27 @@ const { chromium } = require(%s);
     r.missing = await look('#/planet/no-such-planet');
     await p.click('#gsearchbtn'); await p.keyboard.type('wasp-39'); await p.waitForTimeout(300); await p.keyboard.press('Enter'); await p.waitForTimeout(800);
     r.search = await p.evaluate(() => [location.hash, document.querySelector('#h-planet').textContent, document.querySelector('#gsearch').open]);
+    // Escape closes the search even with text typed.
+    await p.click('#gsearchbtn'); await p.keyboard.type('kepler'); await p.waitForTimeout(150); await p.keyboard.press('Escape'); await p.waitForTimeout(150);
+    r.escOpen = await p.evaluate(() => document.querySelector('#gsearch').open);
+    // Ranges apply as typed; no match shows a message with a way out; scrolling adds rows one by one.
+    await p.goto(%s + '#/catalogue'); await p.waitForTimeout(800);
+    await p.evaluate(() => { document.querySelector('#route-catalogue .ctmore').open = true; });
+    await p.fill('[data-rk="radius"][data-end="hi"]', '0.05'); await p.waitForTimeout(400);
+    r.range = await p.evaluate(() => [location.hash, document.querySelector('#ctcount').textContent]);
+    await p.fill('[data-rk="radius"][data-end="hi"]', '-1'); await p.waitForTimeout(400);
+    r.empty = await p.evaluate(() => [document.querySelector('#ctempty').hidden, document.querySelector('#ctscroll').hidden]);
+    await p.click('#ctempty a'); await p.waitForTimeout(500);
+    r.cleared = await p.evaluate(() => [location.hash, document.querySelector('#ctempty').hidden]);
+    r.scroll = await p.evaluate(async () => { const sc = document.querySelector('#ctscroll'), sp = document.querySelector('#ctspacer'); let adds = 0;
+      const mo = new MutationObserver(ms => ms.forEach(m => adds += m.addedNodes.length)); mo.observe(sp, {childList: true});
+      for (let k = 1; k <= 20; k++){ sc.scrollTop = k * ct.rowH; sc.dispatchEvent(new Event('scroll')); await new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res))); }
+      mo.disconnect(); return {adds, ordered: [...sp.children].every((e, i, a) => !i || +a[i - 1].getAttribute('aria-rowindex') < +e.getAttribute('aria-rowindex'))}; });
     out.push(r); await c.close();
   }
   console.log(JSON.stringify({out, ext})); await b.close();
 })();
-""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(url)))
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(url), json.dumps(url)))
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=300)
     assert res.returncode == 0, res.stderr
     data = json.loads(res.stdout.strip().splitlines()[-1])
@@ -260,7 +278,13 @@ const { chromium } = require(%s);
         assert r["cat"]["count"] == "Showing 8,376 of 8,376 planets"
         assert r["filtered"]["count"] == f"Showing {n_small:,} of 8,376 planets"
         assert 0 < len(r["cat"]["rows"]) < 60  # only the rows in view are in the page
-        assert set(r["cat"]["rows"]) == ({96} if r["w"] == 390 else {44})
+        assert set(r["cat"]["rows"]) == ({128} if r["w"] == 390 else {44})
+        # Table semantics at both widths: one cell (or the row header) per column header, and aria-colcount.
+        assert r["cat"]["heads"] == 10 and r["cat"]["colcount"] == "10" and set(r["cat"]["cells"]) == {10}, r["cat"]
+        assert r["escOpen"] is False
+        assert r["range"] == ["#/catalogue?radius=~0.05", f"Showing {len(C.catalogue_filter(CAT, {'radius': (None, 0.05)})):,} of 8,376 planets"]
+        assert r["empty"] == [False, True] and r["cleared"] == ["#/catalogue", True]
+        assert r["scroll"]["adds"] == 20 and r["scroll"]["ordered"]  # one new row per row scrolled, none re-rendered
         assert r["planet"]["h1"] == "pi Men c" and "not stored" in r["planet"]["params"]
         assert "#/transit" in r["planet"]["links"] and "#/methods?ch=transit" in r["planet"]["links"]
         assert "#/galaxy?focus=pi%20Men" in r["planet"]["links"] and "#/sky" in r["planet"]["links"]
@@ -281,3 +305,27 @@ console.log(JSON.stringify([v.focus, encodeGalaxyView(v), encodeGalaxyView(decod
     # Every catalogue host with a distance is a Galaxy host, so the deep link always finds its star.
     hosts = set(galaxy_data()["hosts"]["n"])
     assert all((P["star"][i] or P["name"][i]) in hosts for i in range(N) if P["dist"][i] is not None)
+
+
+@pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
+def test_galaxy_focus_on_an_unknown_star_says_so(built, tmp_path):
+    script = tmp_path / "gx.js"
+    script.write_text("""
+const { chromium } = require(%s);
+(async () => {
+  const b = await chromium.launch({ executablePath: %s, args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
+  const p = await b.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message));
+  await p.goto(%s + '#/galaxy?focus=Nowhere%%20Star'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000}); await p.waitForTimeout(300);
+  const bad = await p.evaluate(() => { const n = document.querySelector('#gxfocusnote'); return [n.hidden, n.getAttribute('role'), n.textContent, n.querySelector('a').getAttribute('href')]; });
+  await p.goto(%s + '#/galaxy?focus=pi%%20Men'); await p.waitForTimeout(500);
+  const good = await p.evaluate(() => [document.querySelector('#gxfocusnote').hidden, gx.G.hosts.n[gx.sel]]);
+  console.log(JSON.stringify({bad, good, errs})); await b.close();
+})();
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(built.resolve().as_uri()), json.dumps(built.resolve().as_uri())))
+    res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=120)
+    assert res.returncode == 0, res.stderr
+    out = json.loads(res.stdout.strip().splitlines()[-1])
+    assert out["errs"] == []
+    assert out["bad"] == [False, "status", "No star “Nowhere Star” on the map (no stored distance or not in the catalogue). Search the Catalogue ›",
+                          "#/catalogue?q=Nowhere%20Star"]
+    assert out["good"] == [True, "pi Men"]

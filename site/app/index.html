@@ -595,6 +595,9 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .gxcard p{margin:8px 0 0;font-size:12px;color:#C7C7CC}
 .gxmw{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);margin:0;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);font:500 12px/1.3 var(--sans);color:#C7C7CC;text-align:center;max-width:calc(100% - 300px)}
 .gxnogl{position:absolute;inset:auto 20px 50% 20px;margin:0;text-align:center;color:#C7C7CC}
+.gxfocusnote{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;width:max-content;max-width:calc(100% - 28px);margin:0;padding:6px 6px 6px 14px;border-radius:16px;background:rgba(18,18,20,.9);border:1px solid rgba(255,255,255,.14);color:#F5F5F7;font-size:13px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.gxfocusnote a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;color:#64D2FF}
+.gxfocusnote[hidden]{display:none}
 .gxtourbar{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:rgba(18,18,20,.82);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#F5F5F7}
 .gxtourbar[hidden],.gxcard[hidden],.gxtip[hidden],.gxaim[hidden],.gxmw[hidden],.gxnogl[hidden]{display:none}
 .gxtourbar .btn{min-height:44px;min-width:44px;justify-content:center}
@@ -867,15 +870,23 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .ctspacer{position:relative;width:100%}
 .ctrow{position:absolute;left:0;right:0;height:44px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:13px}
 .ctrow:hover,.ctrow:focus-visible{background:var(--panel-2)}
-.ctrow span{padding:0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctrow>span{padding:0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctrow .ctl,.ctrow .ctu{display:none}
 .ctrow .num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
 .ctrow .na{color:var(--ink-3)}
 .ctrow b{font-weight:600}
-.ctrow i{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
-.ctcard{position:absolute;left:0;right:0;height:96px;padding:10px 14px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;display:grid;gap:2px;align-content:center}
-.ctcard b{font-size:15px}
-.ctcard span{font-size:12px;color:var(--ink-3)}
-.ctcard .mono{font-size:12px;color:var(--ink-2)}
+.ctrow>span>i[style],.ctcard>span>i[style]{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.ctl,.ctu{font-style:normal}
+.ctscroll[hidden],.ctempty[hidden]{display:none}
+.ctempty{margin:0;padding:24px;border:1px solid var(--line);border-radius:var(--r);background:var(--glass-2);display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.ctempty a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);text-decoration:none}
+.ctcard{position:absolute;left:0;right:0;height:128px;padding:8px 14px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:1px;align-content:center}
+.ctcard>span{font-size:12px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.ctcard>span[role="rowheader"],.ctcard>span:nth-child(2){grid-column:1/-1}
+.ctcard>span[role="rowheader"]{font-size:15px;color:var(--ink)}
+.ctcard>span.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.ctcard .ctl{color:var(--ink-3);font-family:var(--sans)}
+.ctcard .na{color:var(--ink-3)}
 .plgrid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px;align-items:start}
 .plmore{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:stretch}
 .plmore>.card{min-width:0}
@@ -911,7 +922,9 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .gshint{margin:8px 4px 0;font-size:12px;color:var(--ink-3)}
 @media (prefers-reduced-motion: reduce){.ctmore summary::before{transition:none}}
 @media (max-width:699.98px){
-  .cthead{display:none}
+  /* Phone: the column headers stay (one per cell) as a row of sort buttons that scrolls sideways. */
+  .cthead{display:flex;gap:6px;padding:6px;overflow-x:auto;overscroll-behavior-x:contain}
+  .cth{flex:none;padding:0 12px;border:1px solid var(--line-2);border-radius:999px}
   .ctscroll{height:70vh}
   .plgrid,.plmore{grid-template-columns:minmax(0,1fr)}
   .searchlbl{display:none}
@@ -1046,6 +1059,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
         <div class="gxtip glass" id="gxtip" hidden></div>
         <section class="gxcard glass" id="gxcard" aria-label="Selected system" hidden></section>
         <p class="gxmw" id="gxmw" hidden>Milky Way: artist's impression; Sun's position approximate (~26,000 ly from the centre)</p>
+        <p class="gxfocusnote" id="gxfocusnote" role="status" hidden></p>
         <p class="gxnogl" id="gxload" role="status" hidden>Loading the map of 8,049 planets…</p>
         <p class="gxnogl" id="gxnogl" hidden>This browser did not start WebGL, so the 3D map cannot be drawn. The table below lists the nearest systems, and the CSV holds every plotted planet.</p>
         <div class="gxtourbar glass" id="gxtourbar" role="group" aria-label="Tour" hidden>
@@ -1512,10 +1526,11 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
           <button class="btn" type="button" id="ctreset">Clear filters</button>
           <button class="btn" type="button" id="ctcsv">Download CSV of this view</button></div>
       </section>
-      <div class="cttable" id="cttable" role="table" aria-label="Catalogue of planets" aria-rowcount="0">
+      <div class="cttable" id="cttable" role="table" aria-label="Catalogue of planets" aria-rowcount="0" aria-colcount="10">
         <div class="cthead" role="row"><button class="cth" type="button" role="columnheader" data-sort="name" aria-sort="none">Planet</button><button class="cth" type="button" role="columnheader" data-sort="star" aria-sort="none">Host</button><button class="cth num" type="button" role="columnheader" data-sort="year" aria-sort="none">Year</button><button class="cth" type="button" role="columnheader" data-sort="method" aria-sort="none">Method</button><button class="cth num" type="button" role="columnheader" data-sort="mass" aria-sort="none">Mass (MJ)</button><button class="cth num" type="button" role="columnheader" data-sort="radius" aria-sort="none">Radius (RJ)</button><button class="cth num" type="button" role="columnheader" data-sort="period" aria-sort="none">Period (d)</button><button class="cth num" type="button" role="columnheader" data-sort="teq" aria-sort="none">Teq (K)</button><button class="cth num" type="button" role="columnheader" data-sort="dist" aria-sort="none">Distance (pc)</button><button class="cth num" type="button" role="columnheader" data-sort="steff" aria-sort="none">Host Teff (K)</button></div>
         <div class="ctscroll" id="ctscroll" tabindex="0" role="rowgroup" aria-label="Rows; scroll to see more"><div class="ctspacer" id="ctspacer"></div></div>
       </div>
+      <p class="ctempty" id="ctempty" role="status" hidden>No planets match these filters. <a href="#/catalogue">Clear filters</a></p>
       <p class="small">Mass shows the true mass when stored, otherwise m sin i (marked "sin i"), a minimum. Units as the source stores them: Jupiter masses and radii, days, kelvin, parsecs.</p>
     </section>
     <section class="route" id="route-planet" data-route="planet" aria-labelledby="h-planet" hidden>
@@ -3202,7 +3217,7 @@ function gxTelemetry(){
 function gxHostCam(h){ const H = gx.G.hosts; return {tx: H.x[h], ty: H.y[h], tz: H.z[h], yaw: gx.cam.yaw, pitch: gx.cam.pitch, dist: Math.max(60, Math.min(gx.cam.dist, 400))}; }
 function gxSelect(h, planet){
   const card = $('#gxcard'), G = gx.G, H = G.hosts, P = G.planets;
-  if (gx.view && gx.view.focus && (h < 0 || H.n[h] !== gx.view.focus)){ gx.view.focus = ''; syncGalaxyURL(false); }
+  if (gx.view && gx.view.focus && (h < 0 || H.n[h] !== gx.view.focus)){ gx.view.focus = ''; syncGalaxyURL(false); $('#gxfocusnote').hidden = true; }
   gx.sel = h; gx.selPlanet = h >= 0 ? (planet != null ? planet : gxHostPlanets(h)[0]) : -1;
   $('#gxstage').classList.toggle('sel', h >= 0);
   gx.hud = null; gx.cards = null;
@@ -3303,11 +3318,13 @@ function applyGalaxy(v){
   else if (gx.tour) { gx.tour = null; $('#gxtourbar').hidden = true; }
   if (!v.tour && (!prev || prev.view !== v.view)) gxFly(gxPresetCam(v.view), 2400);
   if (v.focus && (!prev || prev.focus !== v.focus)) gxFocus(v.focus);
+  if (!v.focus) $('#gxfocusnote').hidden = true;
 }
 // A deep link from a planet or star page (#/galaxy?focus=<host name>): select that star and fly to it.
 function gxFocus(name){
-  const h = gx.G.hosts.n.indexOf(name);
-  if (h < 0){ say(`${name} has no stored distance, so the map cannot place it.`); return; }
+  const h = gx.G.hosts.n.indexOf(name), note = $('#gxfocusnote');
+  note.hidden = h >= 0;
+  if (h < 0){ note.innerHTML = `No star “${esc(name)}” on the map (no stored distance or not in the catalogue). <a href="#/catalogue?q=${encodeURIComponent(name)}">Search the Catalogue ›</a>`; return; }
   gxSelect(h); gxFly(Object.assign(gxHostCam(h), {dist: 140}), 2400);
 }
 function syncGalaxyURL(push){ if (current !== 'galaxy' || !gx.view) return; const q = encodeGalaxyView(gx.view); setHash('#/galaxy' + (q ? '?' + q : ''), !!push); }
@@ -4412,6 +4429,7 @@ function renderCatalogue(){
   if (!CTM) return;
   ctLoad().then(() => { ct.rendered = true; ctBind(); ctApply(); }).catch(() => { $('#ctcount').textContent = 'The catalogue file (assets/data/catalogue.json) could not be loaded here.'; });
 }
+const CT_CARD_H = 128;
 function ctPhone(){ return window.matchMedia('(max-width: 699.98px)').matches; }
 function ctApply(){
   if (!ct.P || !ct.view) return;
@@ -4424,24 +4442,45 @@ function ctApply(){
   $('#ctcount').textContent = `Showing ${ct.idx.length.toLocaleString('en-GB')} of ${ct.P.name.length.toLocaleString('en-GB')} planets`;
   $('#cttable').setAttribute('aria-rowcount', String(ct.idx.length));
   ctControls();
-  ct.rowH = ctPhone() ? 96 : 44;
+  ct.rowH = ctPhone() ? CT_CARD_H : 44;
   $('#ctspacer').style.height = ct.idx.length * ct.rowH + 'px';
   $('#ctscroll').scrollTop = 0;
+  // No match: say so, with a way out, instead of an empty box.
+  $('#ctempty').hidden = ct.idx.length > 0; $('#ctscroll').hidden = !ct.idx.length;
   ctRows(true);
 }
+// One row: the planet's name is the row header, then one cell per column header (10 in all, at every width).
+// On a phone the same cells wrap into a card, each with its label shown.
+const CT_COLS = [['star', 'Host', ''], ['year', 'Year', ''], ['method', 'Method', ''], ['mass', 'Mass', 'MJ'], ['radius', 'Radius', 'RJ'],
+  ['period', 'Period', 'd'], ['teq', 'Teq', 'K'], ['dist', 'Distance', 'pc'], ['steff', 'Host Teff', 'K']];
+function ctRowHTML(r){
+  const P = ct.P, i = ct.idx[r], h = ct.rowH, col = m => GXM && GXM.method_colour ? GXM.method_colour[m] : '#8E8E93';
+  const cell = (k, lab, unit) => {
+    let v, cls = 'num';
+    if (k === 'star'){ v = P.star[i] ? esc(P.star[i]) : null; cls = ''; }
+    else if (k === 'method'){ v = `<i style="background:${col(P.method[i])}"></i>${esc(CTM.method_label[P.method[i]] || P.method[i])}`; cls = ''; }
+    else if (k === 'year') v = P.year[i] || null;
+    else if (k === 'mass') v = P.mass[i] !== null ? ctFmt(P.mass[i], 3) : (P.msini[i] !== null ? ctFmt(P.msini[i], 3) + ' sin i' : null);
+    else v = ctFmt(P[k][i], k === 'period' ? 5 : k === 'radius' ? 3 : 4);
+    return `<span role="cell" class="${cls}${v === null ? ' na' : ''}"><i class="ctl">${lab} </i>${v === null ? '—' : v}${v !== null && unit ? `<i class="ctu"> ${unit}</i>` : ''}</span>`;
+  };
+  return `<a class="${h > 50 ? 'ctcard' : 'ctrow'}" role="row" aria-rowindex="${r + 1}" href="${ctPlanetHref(i)}" style="top:${r * h}px"><span role="rowheader"><b>${esc(P.name[i])}</b></span>${CT_COLS.map(c => cell(...c)).join('')}</a>`;
+}
+// Only the rows in view (plus a margin) are in the page. Scrolling keeps the rows already there and adds or
+// removes only those entering or leaving the window, in order.
 function ctRows(force){
-  const sc = $('#ctscroll'), H = sc.clientHeight, top = sc.scrollTop, h = ct.rowH;
+  const sc = $('#ctscroll'), sp = $('#ctspacer'), H = sc.clientHeight, top = sc.scrollTop, h = ct.rowH;
   const a = Math.max(0, Math.floor(top / h) - 6), b = Math.min(ct.idx.length, Math.ceil((top + H) / h) + 6);
-  if (!force && ct.win && ct.win[0] === a && ct.win[1] === b) return;
+  if (force || !ct.nodes){ sp.textContent = ''; ct.nodes = new Map(); ct.win = null; }
+  if (ct.win && ct.win[0] === a && ct.win[1] === b) return;
   ct.win = [a, b];
-  const P = ct.P, col = m => GXM && GXM.method_colour ? GXM.method_colour[m] : '#8E8E93', lab = m => CTM.method_label[m] || m, html = [];
-  const num = (x, d) => { const s = ctFmt(x, d); return s === null ? '<span class="num na">—</span>' : `<span class="num">${s}</span>`; };
-  for (let r = a; r < b; r++){
-    const i = ct.idx[r], mass = P.mass[i] !== null ? ctFmt(P.mass[i], 3) : (P.msini[i] !== null ? ctFmt(P.msini[i], 3) + ' sin i' : null);
-    if (h > 50) html.push(`<a class="ctcard" role="row" aria-rowindex="${r + 1}" href="${ctPlanetHref(i)}" style="top:${r * h}px"><b>${esc(P.name[i])}</b><span>${esc(P.star[i] || 'host not stored')} · <i style="background:${col(P.method[i])};display:inline-block;width:8px;height:8px;border-radius:50%"></i> ${esc(lab(P.method[i]))} · ${P.year[i] || '—'}</span><span class="mono">${mass ? mass + ' MJ' : 'mass —'} · ${ctFmt(P.radius[i], 3) ? ctFmt(P.radius[i], 3) + ' RJ' : 'radius —'} · ${ctFmt(P.period[i], 4) ? ctFmt(P.period[i], 4) + ' d' : 'period —'} · ${ctFmt(P.dist[i], 4) ? ctFmt(P.dist[i], 4) + ' pc' : 'distance —'}</span></a>`);
-    else html.push(`<a class="ctrow" role="row" aria-rowindex="${r + 1}" href="${ctPlanetHref(i)}" style="top:${r * h}px"><span role="cell"><b>${esc(P.name[i])}</b></span><span role="cell">${esc(P.star[i] || '—')}</span><span role="cell" class="num">${P.year[i] || '—'}</span><span role="cell"><i style="background:${col(P.method[i])}"></i>${esc(lab(P.method[i]))}</span><span role="cell" class="num${mass ? '' : ' na'}">${mass || '—'}</span>${num(P.radius[i], 3)}${num(P.period[i], 5)}${num(P.teq[i], 4)}${num(P.dist[i], 4)}${num(P.steff[i], 4)}</a>`);
-  }
-  const sp = $('#ctspacer'); sp.innerHTML = html.join('');
+  for (const [r, el] of ct.nodes) if (r < a || r >= b){ el.remove(); ct.nodes.delete(r); }
+  const add = []; for (let r = a; r < b; r++) if (!ct.nodes.has(r)) add.push(r);
+  if (!add.length) return;
+  const t = document.createElement('template'); t.innerHTML = add.map(ctRowHTML).join('');
+  const els = [...t.content.children]; els.forEach((el, k) => ct.nodes.set(add[k], el));
+  const first = sp.firstElementChild, firstR = first ? Number(first.getAttribute('aria-rowindex')) - 1 : Infinity;
+  if (add[0] < firstR) sp.prepend(...els); else sp.append(...els);
 }
 function ctControls(){
   const v = ct.view;
@@ -4459,15 +4498,17 @@ function ctBind(){
   $('#ctq').addEventListener('input', e => { clearTimeout(qt); qt = setTimeout(() => { ct.view.q = e.target.value.slice(0, 120); ctApply(); syncCatURL(false); }, 120); });
   $('#ctmethods').addEventListener('click', e => { const b = e.target.closest('[data-cm]'); if (!b) return; const m = b.dataset.cm, on = ct.view.methods.includes(m);
     ct.view.methods = CTM.methods.filter(x => x === m ? !on : ct.view.methods.includes(x)); ctApply(); syncCatURL(true); });
-  $$('#route-catalogue [data-rk]').forEach(inp => inp.addEventListener('change', () => { const k = inp.dataset.rk, r = (ct.view[k] || [null, null]).slice(), x = inp.value === '' ? null : Number(inp.value);
-    r[inp.dataset.end === 'lo' ? 0 : 1] = Number.isFinite(x) ? x : null; ct.view[k] = r; ctApply(); syncCatURL(true); }));
+  // Ranges apply as you type, with the same debounce as the text search (the address is replaced, not pushed).
+  $$('#route-catalogue [data-rk]').forEach(inp => inp.addEventListener('input', () => { clearTimeout(qt); qt = setTimeout(() => {
+    const k = inp.dataset.rk, r = (ct.view[k] || [null, null]).slice(), x = inp.value === '' ? null : Number(inp.value);
+    r[inp.dataset.end === 'lo' ? 0 : 1] = Number.isFinite(x) ? x : null; ct.view[k] = r; ctApply(); syncCatURL(false); }, 120); }));
   $('#ctmulti').addEventListener('click', () => { ct.view.multi = !ct.view.multi; ctApply(); syncCatURL(true); });
   $('#cthasdist').addEventListener('click', () => { ct.view.hasdist = !ct.view.hasdist; ctApply(); syncCatURL(true); });
   $('#ctreset').addEventListener('click', () => { ct.view = decodeCatView(new URLSearchParams()); ctApply(); syncCatURL(true); });
   $$('#cttable .cth').forEach(h => h.addEventListener('click', () => { const k = h.dataset.sort; ct.view.dir = ct.view.sort === k && ct.view.dir === 'asc' ? 'desc' : 'asc'; ct.view.sort = k; ctApply(); syncCatURL(true); }));
   $('#ctscroll').addEventListener('scroll', () => { if (!ct.raf) ct.raf = requestAnimationFrame(() => { ct.raf = 0; ctRows(false); }); }, {passive: true});
   // A resize (or the phone breakpoint) changes the window of rows and, at the breakpoint, the row height.
-  const relayout = () => { if (current !== 'catalogue' || !ct.P) return; const h = ctPhone() ? 96 : 44; if (h !== ct.rowH){ ct.rowH = h; $('#ctspacer').style.height = ct.idx.length * h + 'px'; } ctRows(true); };
+  const relayout = () => { if (current !== 'catalogue' || !ct.P) return; const h = ctPhone() ? CT_CARD_H : 44; if (h !== ct.rowH){ ct.rowH = h; $('#ctspacer').style.height = ct.idx.length * h + 'px'; } ctRows(true); };
   if (window.ResizeObserver) new ResizeObserver(relayout).observe($('#ctscroll'));
   $('#ctcsv').addEventListener('click', ctCsv);
 }
@@ -4611,6 +4652,8 @@ if ($('#gsearch')){
   $('#gsearchbtn').addEventListener('click', gsOpen);
   $('#gsq').addEventListener('input', () => { gs.sel = 0; gsRender(); });
   $('#gsq').addEventListener('keydown', e => {
+    // Escape closes the dialog whatever is typed (a search field would otherwise only clear itself).
+    if (e.key === 'Escape'){ e.preventDefault(); $('#gsearch').close(); return; }
     if (e.key === 'ArrowDown'){ gs.sel = Math.min(gs.items.length - 1, gs.sel + 1); gsRender(); e.preventDefault(); }
     else if (e.key === 'ArrowUp'){ gs.sel = Math.max(0, gs.sel - 1); gsRender(); e.preventDefault(); }
     else if (e.key === 'Enter' && gs.items[gs.sel]){ location.hash = gs.items[gs.sel].href; $('#gsearch').close(); e.preventDefault(); }
