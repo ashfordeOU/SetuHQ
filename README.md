@@ -26,7 +26,12 @@ The site: [site/index.html](site/index.html) (the Overview) leads into the app a
    runs and benchmarks stay comparable with earlier ones. `[vetting] decide = true` makes `secondary_any_phase`,
    `odd_even_depth`, `odd_even_timing` and `centroid_offset` disqualifying, and lets the all-phase secondary search
    replace the phase-0.5 check. The pixel tests download TPFs and are off unless `[vetting] pixel = true`.
-7. **Writes** a candidate catalogue (CSV and JSON), a Zooniverse-shaped classification export, a SQLite store, a provenance manifest, and a static report site.
+7. **Weighs false-positive scenarios** for every periodic candidate (`validate.py`): exoplan's own reduced FPP
+   (planet, eclipsing binary at P or 2P, eclipse on a resolved neighbour), built from the S2 measurements with stated
+   priors. It is not TRICERATOPS and never says "validated". "Validated (statistically)" is reserved for TRICERATOPS
+   with FPP < 0.015 and NFPP < 10⁻³ *and* a high-resolution imaging contrast curve; without a curve every candidate
+   is "not validated: no contrast curve". exoplan never calls its results confirmed.
+8. **Writes** a candidate catalogue (CSV and JSON), a Zooniverse-shaped classification export, a SQLite store, a provenance manifest, and a static report site.
 
 ## Reviewer panel
 
@@ -103,6 +108,11 @@ Sentinels (Skeptic and Volunteer, on Claude via the CLI):
   dip at any phase away from the transit is 41 ± 7 ppm at phase 0.74 (5.6σ), below the 7.1σ threshold and below
   the largest brightening (8.8σ), so no secondary; odd/even depths agree to 0.8σ; the five mid-times fit a linear
   ephemeris (χ² = 0.8 for 3 dof, O−C within 1.6 min) with no odd/even timing offset (0.4σ). No flags.
+* **Reduced FPP for pi Men c** (same file): FPP = 0.0074 and NFPP = 0 (every TIC neighbour within 150″ would
+  need an eclipse deeper than 100%, one of them only marginally), which by number alone meets the TRICERATOPS
+  thresholds. The label is still "not validated: no contrast curve": the scheme is exoplan's, it leaves out
+  unresolved companions and background stars, and its priors are illustrative. pi Men c is a published planet
+  with a measured mass; this number shows the scheme's behaviour on a real planet, nothing more.
 * **The difference-image centroid of pi Men is not usable, and exoplan says so.** The PSF fit puts the difference
   image 2.05 px (40.1″) from the catalogue position, mostly in the row coordinate (row −1.91 px, column −0.74 px),
   which is the direction charge bleeds along a CCD column. SPOC's own DV report for TOI 144.01 finds the same size and
@@ -185,6 +195,13 @@ published pipelines.
   flux shares use the same Gaussian, so a needed depth within a factor of two of 100% is reported as marginal.
   The light-curve significances use white noise (robust scatter over √n), so they are optimistic under red noise:
   on pi Men the largest brightening at any phase is 8.8σ.
+* **Validation is not done.** TRICERATOPS 1.1.0 installs with pip (extra `validate`), but its `target()` queries
+  MAST, Gaia and TESSCut on construction, so it cannot run offline, and MAST's API was failing when this was built:
+  the adapter (`validate.run_triceratops`) is tested against a stub only and has not been run on a real target. The
+  reduced FPP that runs instead is a documented approximation: its scenario priors are a choice (a 25%
+  false-positive total after Guerrero et al. 2021), it ignores unresolved companions and background stars, and
+  without a reliable centroid it cannot tell a target from a neighbour that could host the depth. No contrast curves
+  are ingested yet.
 * **Deep, short dips can be clipped before review.** `preprocess.clean` removes single points more than 10 times
   the point-to-point scatter below a 0.5-day running median. A box eclipse 15 times deeper than the per-point noise
   was removed entirely in a synthetic test, so very deep eclipsing binaries on quiet stars may never reach the
@@ -200,6 +217,7 @@ src/exoplan/
   preprocess.py   clean, detrend, bin            subjects.py  blind-coded 13-day segments
   search.py       BLS and single-event search    vet.py       automatic vetting
   dvtests.py      DV-style light-curve tests      pixel.py     TPF difference images, centroids, neighbours
+  validate.py     reduced FPP, TRICERATOPS adapter, validation labels
   injection.py    synthetic transits              calibrate.py skill-based reviewer weights
   aggregate.py    clustering and consensus       pipeline.py  end-to-end run
   benchmark.py    injection recovery             report.py    static HTML site

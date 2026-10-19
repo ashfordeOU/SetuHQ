@@ -47,6 +47,9 @@ class RunConfig:
     secondary_sigma: float = 7.1
     centroid_sigma: float = 3.0
     tpf_cache: str = "cache/tpf"
+    # S3: high-resolution imaging contrast curves by target ("TIC 123" = "path/to/curve.txt"). Without one, the
+    # validation label is always "not validated: no contrast curve".
+    contrast_curves: dict = field(default_factory=dict)
     cluster_gap_days: float = 0.05
     min_score: float = 0.5
     min_planet_fraction: float = 0.5
@@ -97,6 +100,7 @@ def load_config(path: str | Path) -> RunConfig:
         secondary_sigma=float(vetting.get("secondary_sigma", 7.1)),
         centroid_sigma=float(vetting.get("centroid_sigma", 3.0)),
         tpf_cache=str(vetting.get("tpf_cache", "cache/tpf")),
+        contrast_curves=dict(raw.get("validation", {}).get("contrast_curves", {})),
         cluster_gap_days=float(aggregate.get("cluster_gap_days", 0.05)),
         min_score=float(aggregate.get("min_score", 0.5)),
         min_planet_fraction=float(aggregate.get("min_planet_fraction", 0.5)),

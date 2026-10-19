@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""pi Men (TIC 261136679), TESS sector 1: the S2 extended and pixel-level vetting on real SPOC data.
+"""pi Men (TIC 261136679), TESS sector 1: the S2 extended and pixel-level vetting and the S3 reduced FPP, on real SPOC data.
 
 Inputs (downloaded into the gitignored ``cache/tpf`` by :func:`exoplan.pixel.fetch_spoc_product`, through MAST or,
 when MAST's search service fails, the public STScI bucket that MAST's download links redirect to):
@@ -38,6 +38,7 @@ from exoplan.pixel import (fetch_neighbours, fetch_spoc_product, load_tpf, order
                            parse_dv_xml, pixel_vet)
 from exoplan.search import bls_search, stitch  # noqa: E402
 from exoplan.transitfit import fit_transit, ld_coeffs  # noqa: E402
+from exoplan.validate import reduced_fpp  # noqa: E402
 
 TIC, SECTOR = 261136679, 1
 
@@ -94,8 +95,9 @@ def run(cache: Path, run_dir: Path, config_path: Path) -> dict:
     stars = order_target_first(neighbours.get("stars", []), h["ra_epoch"] or h["ra"], h["dec_epoch"] or h["dec"])
     pixel = pixel_vet(tpf, period=f["period_days"], t0=f["t0"], duration=duration, depth=f["depth_ppm"] * 1e-6,
                       stars=stars or None)
+    validation = reduced_fpp(depth=f["depth_ppm"] * 1e-6, dv=lc_tests, fit=f, pixel=pixel).as_dict()
     return {
-        "target": f"TIC {TIC} (pi Men)", "sector": SECTOR,
+        "target": f"TIC {TIC} (pi Men)", "sector": SECTOR, "validation": validation,
         "made_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "inputs": {"lightcurve": lc.provenance, "tpf": tpf.provenance,
                    "dv_report": dv_path.name if dv_path else None},
@@ -206,6 +208,12 @@ def markdown(r: dict) -> str:
             lines.append(f"| … {len(nb['stars']) - 15} more | | | | | |")
     else:
         lines.append(f"Not available: {'; '.join(q.get('errors') or ['no stars returned'])}.")
+    v = r["validation"]
+    lines += ["", "## S3: reduced FPP (exoplan's scheme, not TRICERATOPS)", "",
+              f"FPP = {_fmt(v['fpp'], 4)}, NFPP = {_fmt(v['nfpp'], 6)}; class: {v['fpp_class']}. "
+              f"Label: **{v['label']}**.", "",
+              f"Not modelled: {'; '.join(v['not_modelled'])}. Notes: {'; '.join(v['notes']) or 'none'}. "
+              f"Priors: {v['priors']['source']}."]
     lines += ["", "## SPOC's own DV centroid result, for comparison", ""]
     if isinstance(r["spoc_dv"], list):
         for row in r["spoc_dv"]:

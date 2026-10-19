@@ -27,6 +27,12 @@ secondary_sigma = 7.1      # weak-secondary threshold (the DV/TPS detection thre
 centroid_sigma = 3.0       # difference-image offset significance that raises centroid_offset
 tpf_cache = "cache/tpf"    # gitignored
 
+[validation]
+# S3. Every periodic candidate gets exoplan's reduced FPP (validate.py), which can never say "validated".
+# "validated (statistically)" needs TRICERATOPS with FPP < 0.015, NFPP < 1e-3 and a high-resolution imaging
+# contrast curve; without a curve the label is "not validated: no contrast curve".
+contrast_curves = {}       # e.g. { "TIC 261136679" = "data/contrast/pi_men_speckle.txt" }
+
 [aggregate]
 cluster_gap_days = 0.05    # marks closer than this (in days) are one dip
 min_score = 0.5            # share of the skill-weighted panel that must mark a dip

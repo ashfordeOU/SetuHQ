@@ -1,6 +1,6 @@
 # pi Men (TIC 261136679), TESS sector 1: S2 extended and pixel-level vetting
 
-Made 2026-10-19T16:36:53+00:00 by `scripts/vet_pi_men_s2.py` from the SPOC files `tess2018206045859-s0001-0000000261136679-0120-s_lc.fits` and `tess2018206045859-s0001-0000000261136679-0120-s_tp.fits` (sha256 0145804d17a9…). MAST's search service was failing on 2026-10-19; the files came from the public STScI bucket that MAST's download links redirect to. Every test below only adds flags; none changes a pass/fail decision by default.
+Made 2026-10-19T16:55:19+00:00 by `scripts/vet_pi_men_s2.py` from the SPOC files `tess2018206045859-s0001-0000000261136679-0120-s_lc.fits` and `tess2018206045859-s0001-0000000261136679-0120-s_tp.fits` (sha256 0145804d17a9…). MAST's search service was failing on 2026-10-19; the files came from the public STScI bucket that MAST's download links redirect to. Every test below only adds flags; none changes a pass/fail decision by default.
 
 Ephemeris from a joint limb-darkened fit of all 5 sector-1 epochs: P = 6.26795 ± 0.00049 d, T0 = 1338.0394 BTJD, T14 = 3.09 ± 0.16 h, depth 300 ± 8 ppm.
 
@@ -53,6 +53,12 @@ Source: TIC v8.2 (MAST), within 150″. Depth in the aperture 300 ppm (PDCSAP de
 | TIC 261139063 | 17.22 | 107.3″ | 6.24e-07 | 4.81e+02 | needs a depth above 100% |
 | TIC 261136685 | 17.30 | 88.6″ | 1.13e-06 | 2.66e+02 | needs a depth above 100% |
 | … 41 more | | | | | |
+
+## S3: reduced FPP (exoplan's scheme, not TRICERATOPS)
+
+FPP = 0.0074, NFPP = 0.000000; class: meets the validation thresholds. Label: **not validated: no contrast curve**.
+
+Not modelled: unresolved bound companions (HEB, planet on a companion); unresolved background stars (BEB, planet on a background star). Notes: no reliable difference-image centroid: positions carry no information; 1 neighbour(s) excluded only marginally (needed depth 100-200%): the NFPP rests on the Gaussian PSF approximation. Priors: illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice.
 
 ## SPOC's own DV centroid result, for comparison
 

@@ -115,6 +115,9 @@ class Candidate:
         cen = ((self.metrics or {}).get("pixel") or {}).get("centroid") or {}
         test = cen.get("psf_target") or cen.get("psf_control") or {}
         row["centroid_offset_arcsec"], row["centroid_sigma"] = test.get("offset_arcsec"), test.get("sigma")
+        val = (self.metrics or {}).get("validation") or {}
+        row["fpp"], row["nfpp"], row["fpp_method"] = val.get("fpp"), val.get("nfpp"), val.get("method")
+        row["validation_label"] = val.get("label", "")
         return row
 
 
@@ -340,6 +343,13 @@ def extended_vetting(candidate: Candidate, subject: Subject, supported: Periodic
         flags += candidate.metrics["pixel"].get("flags", [])
     new = tuple(f for f in dict.fromkeys(flags) if f not in candidate.flags)
     object.__setattr__(candidate, "flags", candidate.flags + new)
+    if period is not None:
+        from exoplan.validate import reduced_fpp
+
+        depth = (fit.get("depth_ppm") or candidate.depth_ppm) * 1e-6
+        candidate.metrics["validation"] = reduced_fpp(
+            depth=depth, dv=candidate.metrics.get("dv"), fit=fit, pixel=candidate.metrics.get("pixel"),
+            contrast_curve=config.contrast_curves.get(candidate.target)).as_dict()
     if config.vetting_decide:
         from exoplan.pixel import DISQUALIFYING as PIXEL_DISQUALIFYING
 
@@ -478,6 +488,7 @@ def write_candidates(candidates: list[Candidate], out: Path) -> None:
         "fit_t0", "fit_t0_err", "fit_depth_ppm", "fit_depth_err_ppm", "fit_t14_hours", "fit_t14_err_hours",
         "fit_b", "fit_b_err", "fit_k", "fit_rho_star", "fit_rho_star_err", "star_rho",
         "crowdsap", "secondary_phase", "secondary_snr", "centroid_offset_arcsec", "centroid_sigma",
+        "fpp", "nfpp", "fpp_method", "validation_label",
     ]
     with (out / "candidates.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")

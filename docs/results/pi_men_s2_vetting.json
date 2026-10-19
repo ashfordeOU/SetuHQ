@@ -1,7 +1,39 @@
 {
  "target": "TIC 261136679 (pi Men)",
  "sector": 1,
- "made_at": "2026-10-19T16:36:53+00:00",
+ "validation": {
+  "method": "exoplan reduced FPP",
+  "fpp": 0.007389754123375725,
+  "nfpp": 0,
+  "probabilities": {
+   "tp": 0.9926102458766243,
+   "eb": 0.002286386019036633,
+   "eb2p": 0.005103368104339043
+  },
+  "evidence": {
+   "secondary_bayes_factor_eb_vs_tp": 0.017275557263294793,
+   "odd_even_bayes_factor_eb2p_vs_tp": 0.07712042252543949
+  },
+  "priors": {
+   "tp": 0.75,
+   "eb": 0.1,
+   "eb2p": 0.05,
+   "nfp": 0.1,
+   "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+  },
+  "not_modelled": [
+   "unresolved bound companions (HEB, planet on a companion)",
+   "unresolved background stars (BEB, planet on a background star)"
+  ],
+  "contrast_curve": null,
+  "label": "not validated: no contrast curve",
+  "fpp_class": "meets the validation thresholds",
+  "notes": [
+   "no reliable difference-image centroid: positions carry no information",
+   "1 neighbour(s) excluded only marginally (needed depth 100-200%): the NFPP rests on the Gaussian PSF approximation"
+  ]
+ },
+ "made_at": "2026-10-19T16:55:19+00:00",
  "inputs": {
   "lightcurve": {
    "source": "SPOC file",
