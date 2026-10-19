@@ -119,17 +119,24 @@ def local_quadratic(time, flux, keep, window: float, min_points: int = 10) -> tu
     return fit, ok
 
 
-def detrend(lc: LightCurve, *, window_days: float = 1.0, mask_sigma: float = 3.0) -> LightCurve:
+def detrend(lc: LightCurve, *, window_days: float = 1.0, mask_sigma: float = 3.0, exclude=None) -> LightCurve:
     """Divide out a smooth trend estimated without the dips.
 
     A running median finds the first trend and identifies points more than
     ``mask_sigma`` below it. A local quadratic fit to the remaining points then
     gives the final trend, so a transit is not absorbed into the baseline.
+
+    ``exclude`` (a boolean array) leaves further points out of the quadratic fit: the extended vetting passes the
+    fitted ephemeris's transits, as DV does. Without it, the shallow ingress and egress points that are not
+    ``mask_sigma`` below the trend pull the fit down near each transit and leave positive shoulders beside it
+    (+30 to +60 ppm on pi Men c).
     """
     trend = running_median(lc.time, lc.flux, window_days)
     relative = lc.flux / trend - 1.0
     scatter = diff_sigma(lc.flux / trend)
     keep = relative > -mask_sigma * scatter if np.isfinite(scatter) and scatter > 0 else np.ones(len(lc), bool)
+    if exclude is not None:
+        keep = keep & ~np.asarray(exclude, bool)
     if keep.sum() >= 10:
         fit, ok = local_quadratic(lc.time, lc.flux, keep, window_days)
         trend = np.where(ok, fit, trend)

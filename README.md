@@ -19,7 +19,9 @@ The site: [site/index.html](site/index.html) (the Overview) leads into the app a
 6. **Vets** each consensus event: SNR, duration, edge effects, odd/even depth, secondary eclipse, and fit to the periodic ephemeris.
    Extended tests after the Kepler/SPOC Data Validation suite add flags beside them (`dvtests.py`, `pixel.py`):
    SPOC crowding (CROWDSAP below 0.8 is `crowded`), a weak-secondary search at every phase with the fitted
-   duration, odd/even depths with errors, per-epoch transit times (linear-ephemeris and odd/even timing tests), and,
+   duration (threshold from a white-noise simulation, `scripts/calibrate_secondary.py`), odd/even depths from
+   per-epoch fits, per-epoch transit times (linear-ephemeris and odd/even timing tests), all on the light curve
+   re-detrended with the fitted transits masked as DV does, and,
    from the SPOC target pixel file, a difference-image centroid in pixels and arcseconds with its significance, the
    centroid motion test, a core/halo ghost check, momentum-dump coincidence, and a table of catalogued neighbours
    with the eclipse depth each would need. **By default these only add flags**: pass/fail is decided as before, so

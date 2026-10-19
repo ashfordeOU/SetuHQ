@@ -146,6 +146,33 @@ def prepare_lightcurves(lightcurves: list[LightCurve], config: RunConfig) -> lis
     return out
 
 
+TRANSIT_MASK_T14 = 1.5  # the extended vetting re-detrends with points within this many T14 of each mid-transit masked
+
+
+def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float, duration: float,
+                       start: float | None = None, end: float | None = None) -> Subject | None:
+    """The light curve the extended (DV-style) tests read: prepared as for review (clean, normalise, detrend, bin),
+    except that the detrending leaves out every point within ``TRANSIT_MASK_T14`` × T14 of a mid-transit of the
+    fitted ephemeris, as DV does. Without the mask the trend overshoots beside each transit, and those shoulders
+    looked like brightenings to the secondary search. Cut to [start, end) when given; None when nothing is left."""
+    out = []
+    for lc in lightcurves:
+        cleaned = clean(lc)
+        level = float(np.median(cleaned.flux)) if len(cleaned) else 1.0
+        if np.isfinite(level) and level > 0:
+            cleaned = cleaned.with_data(cleaned.time, cleaned.flux / level, cleaned.flux_err / level)
+        dt = np.abs((cleaned.time - t0 + 0.5 * period) % period - 0.5 * period)
+        detrended = detrend(cleaned, window_days=config.detrend_window_days,
+                            exclude=dt <= TRANSIT_MASK_T14 * duration)
+        binned = bin_lightcurve(detrended, config.bin_minutes)
+        if start is not None:
+            keep = (binned.time >= start) & (binned.time < (end if end is not None else np.inf))
+            binned = binned.masked(keep)
+        if len(binned):
+            out.append(binned)
+    return stitch(out) if out else None
+
+
 def prepare_subjects(lightcurves: list[LightCurve], config: RunConfig, *, prepared: list[LightCurve] | None = None) -> list[Subject]:
     subjects: list[Subject] = []
     for binned in prepared if prepared is not None else prepare_lightcurves(lightcurves, config):
@@ -237,9 +264,11 @@ def build_candidates(
     *,
     target_signals: dict[str, PeriodicSignal | None] | None = None,
     stars: dict[str, dict] | None = None,
+    lightcurves: list[LightCurve] | None = None,
 ) -> list[Candidate]:
     """Aggregate, search and vet. With ``target_signals`` (sector mode), each subject uses its
-    target's multi-sector BLS signal instead of a search of the subject alone."""
+    target's multi-sector BLS signal instead of a search of the subject alone. With the raw ``lightcurves``, the
+    extended tests read them re-detrended with the fitted transits masked (:func:`vetting_lightcurve`)."""
     subject_by_id = {s.subject_id: s for s in subjects}
     consensus = aggregate(
         classifications,
@@ -283,7 +312,7 @@ def build_candidates(
                 object.__setattr__(candidate, "fit", d)
                 object.__setattr__(candidate, "flags", candidate.flags + extra)
         if config.vetting_extended or config.vetting_pixel:
-            extended_vetting(candidate, subject, supported, config, subjects, ext_cache)
+            extended_vetting(candidate, subject, supported, config, subjects, ext_cache, lightcurves)
         if supported is not None:
             object.__setattr__(candidate, "fap_label", supported.fap_label)
             if supported.fap_trials:
@@ -306,12 +335,15 @@ def build_candidates(
 
 
 def extended_vetting(candidate: Candidate, subject: Subject, supported: PeriodicSignal | None,
-                     config: RunConfig, subjects: list[Subject], cache: dict) -> None:
+                     config: RunConfig, subjects: list[Subject], cache: dict,
+                     lightcurves: list[LightCurve] | None = None) -> None:
     """The S2 tests for one candidate, stored in ``metrics["dv"]`` and ``metrics["pixel"]`` with their flags added.
 
     The ephemeris is the transit fit's (period, mid-time, T14) when it has a period, else the BLS signal's; a dip
     off any periodic signal gets only the crowding test. In sector mode the light-curve tests use every subject of
-    the target stitched; otherwise the subject alone, like :func:`exoplan.vet.measure_epochs`. The pass/fail
+    the target stitched; otherwise the subject alone, like :func:`exoplan.vet.measure_epochs`. When the raw light
+    curves are given they are re-detrended with the fitted transits masked (:func:`vetting_lightcurve`); otherwise
+    the review data are used and ``metrics["dv"]["transit_masked_detrend"]`` is False. The pass/fail
     decision changes only when ``config.vetting_decide`` is set (:func:`exoplan.dvtests.decide`)."""
     from exoplan import dvtests
 
@@ -328,13 +360,23 @@ def extended_vetting(candidate: Candidate, subject: Subject, supported: Periodic
         target = str(subject.provenance.get("target", ""))
         key = ("dv", target if config.search == "sector" else subject.subject_id, period, t0, duration)
         if key not in cache:
-            data = subject
+            data, masked = subject, False
             if config.search == "sector" and period is not None:
                 same = [s for s in subjects if str(s.provenance.get("target", "")) == target]
                 data = stitch(same) if len(same) > 1 else subject
-            cache[key] = dvtests.extended_vet(data.time, data.flux, data.flux_err, period=period, t0=t0,
-                                              duration=duration, fit=fit or None, provenance=subject.provenance,
-                                              crowding_min=config.crowding_min, secondary_sigma=config.secondary_sigma)
+            if lightcurves and period is not None:
+                mine = [lc for lc in lightcurves if lc.target == target and
+                        (config.search == "sector" or lc.provenance.get("sector") == subject.provenance.get("sector"))]
+                window = {} if config.search == "sector" else {"start": subject.provenance.get("segment_start"),
+                                                               "end": subject.provenance.get("segment_end")}
+                redone = vetting_lightcurve(mine, config, period=period, t0=t0, duration=duration, **window) if mine else None
+                if redone is not None and len(redone) >= 10:
+                    data, masked = redone, True
+            found, metrics = dvtests.extended_vet(data.time, data.flux, data.flux_err, period=period, t0=t0,
+                                                  duration=duration, fit=fit or None, provenance=subject.provenance,
+                                                  crowding_min=config.crowding_min,
+                                                  secondary_sigma=config.secondary_sigma)
+            cache[key] = (found, dict(metrics, transit_masked_detrend=masked))
         found, metrics = cache[key]
         candidate.metrics["dv"] = dict(metrics, ephemeris_source=source)
         flags += found
@@ -408,7 +450,8 @@ def run_pipeline(
     store = Store(out / "exoplan.sqlite")
     try:
         classifications = review_subjects(subjects, active, image_dir=out / "subjects", store=store)
-        candidates = build_candidates(subjects, classifications, weights, config, target_signals=target_signals, stars=stars)
+        candidates = build_candidates(subjects, classifications, weights, config, target_signals=target_signals, stars=stars,
+                                      lightcurves=lightcurves)
         store.export_classifications_csv(out / "classifications.csv")
     finally:
         store.close()
@@ -449,7 +492,7 @@ def rebuild_run(config: RunConfig, lightcurves: list[LightCurve], run_dir: str |
     target_signals = sector_signals(prepared, config) if config.search == "sector" else None
     stars = star_parameters(lightcurves, config, run_dir)
     candidates = build_candidates([s for s in subjects if s.subject_id in need], classifications, weights, config,
-                                  target_signals=target_signals, stars=stars)
+                                  target_signals=target_signals, stars=stars, lightcurves=lightcurves)
     write_candidates(candidates, run_dir)
     manifest.setdefault("rebuilds", []).append({
         "at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "exoplan_version": __version__,

@@ -162,3 +162,48 @@ def test_spoc_crowding_from_lightkurve_meta():
         meta = {}
 
     assert spoc_crowding(Empty()) == {}
+
+
+def _shallow_eb(seed, secondary):
+    """1000 ppm primaries every 4 days, a shallow secondary at phase 0.5, 600 ppm per 2-minute point, 27 days."""
+    from dvtests_helpers import trapezoid_lc
+
+    return trapezoid_lc(seed=seed, period=4.0, t0=1.0, duration=0.15, depth=1000e-6, noise=600e-6,
+                        secondary=secondary, gap=None)
+
+
+def test_transit_masked_detrending_removes_the_shoulders():
+    """The review detrending overshoots beside each transit; read as brightenings, those shoulders vetoed real
+    secondaries (a 200 ppm secondary: 0 of 20 flagged). Re-detrended with the transits masked, as DV does, the
+    largest brightening falls to the noise level (median 9.2 sigma -> 2.6 sigma over 20 seeds)."""
+    from exoplan.dvtests import extended_vet
+    from exoplan.pipeline import prepare_lightcurves, vetting_lightcurve
+
+    cfg = RunConfig(name="x")
+    plain, masked = [], []
+    for seed in range(5):
+        lc = _shallow_eb(seed, 200e-6)
+        for out, l in ((plain, prepare_lightcurves([lc], cfg)[0]),
+                       (masked, vetting_lightcurve([lc], cfg, period=4.0, t0=1.0, duration=0.15))):
+            out.append(extended_vet(l.time, l.flux, l.flux_err, period=4.0, t0=1.0, duration=0.15)[1]["secondary"])
+    assert np.median([s["max_brightening_snr"] for s in plain]) > 7
+    assert np.median([s["max_brightening_snr"] for s in masked]) < 4
+
+
+def test_shallow_secondary_is_flagged_through_the_full_preparation():
+    """A 1000/300 ppm binary at 600 ppm noise, through clean, the transit-masked detrend and 10-minute bins, is
+    flagged secondary_any_phase (19 of 20 seeds when measured; 1 of 20 with the unmasked detrend)."""
+    from exoplan.dvtests import extended_vet
+    from exoplan.pipeline import vetting_lightcurve
+
+    cfg = RunConfig(name="x")
+    flagged = 0
+    for seed in range(5):
+        l = vetting_lightcurve([_shallow_eb(seed, 300e-6)], cfg, period=4.0, t0=1.0, duration=0.15)
+        flagged += "secondary_any_phase" in extended_vet(l.time, l.flux, l.flux_err, period=4.0, t0=1.0, duration=0.15)[0]
+    assert flagged >= 4
+
+
+def test_pipeline_uses_the_transit_masked_light_curve(runs):
+    for c in _on_primary(runs["flag"]):
+        assert c.metrics["dv"]["transit_masked_detrend"] is True
