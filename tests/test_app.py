@@ -126,12 +126,12 @@ def test_app_builds_without_catalogue(run_dir, tmp_path):
     assert data["catalog"]["candidates"] == [] and data["catalog"]["runs"] == []
 
 
-def test_seven_sections_and_three_pages_exist(run_dir, catalog, tmp_path):
+def test_eight_sections_and_five_pages_exist(run_dir, catalog, tmp_path):
     from exoplan.app import ROUTE_ALIASES, SUBPAGES
 
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
-    assert [s for s, _ in SECTIONS] == ["overview", "sky", "galaxy", "transit", "explorer", "sentinels", "methods"]
-    assert [s for s, _, _ in SUBPAGES] == ["candidates", "planets", "runs"]
+    assert [s for s, _ in SECTIONS] == ["overview", "sky", "galaxy", "catalogue", "transit", "explorer", "sentinels", "methods"]
+    assert [s for s, _, _ in SUBPAGES] == ["candidates", "planets", "runs", "planet", "star"]
     nav = re.search(r'<nav class="nav" aria-label="Sections">.*?</nav>', page, re.S).group(0)
     for sid, label in SECTIONS:
         assert f'href="#/{sid}" data-route="{sid}">{label}</a>' in nav
@@ -157,7 +157,8 @@ def test_planet_cards_never_state_an_earth_or_jupiter_radius(run_dir, catalog, t
     # The Galaxy shows catalogue radii as the catalogue stores them; the run's own dips never get one.
     from exoplan.galaxy import GALAXY_JS
     from exoplan.methods import METHODS_JS
-    assert not no_radius.search(APP_JS.replace(GALAXY_JS, "").replace(METHODS_JS, ""))
+    from exoplan.catalogue import CATALOGUE_JS
+    assert not no_radius.search(APP_JS.replace(GALAXY_JS, "").replace(METHODS_JS, "").replace(CATALOGUE_JS, ""))
     assert not no_radius.search(json.dumps(data["planets"], ensure_ascii=False))
     assert "No stellar radius is stored" in planets
     for card in data["planets"]:
@@ -493,7 +494,8 @@ def test_blocked_frame_shows_a_message_and_a_link(run_dir, tmp_path):
     assert "setTimeout(() => frameLoadFailed(gen), url ? 3000 : 1500)" in APP_JS
     from exoplan.galaxy import GALAXY_JS
     from exoplan.methods import METHODS_JS
-    assert "6000" not in APP_JS.replace(GALAXY_JS, "").replace(METHODS_JS, "")
+    from exoplan.catalogue import CATALOGUE_JS
+    assert "6000" not in APP_JS.replace(GALAXY_JS, "").replace(METHODS_JS, "").replace(CATALOGUE_JS, "")
     assert ".frame[hidden]{display:none}" in APP_CSS
 
 

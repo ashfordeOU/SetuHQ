@@ -1293,7 +1293,9 @@ function mxDrawSystem(c, w, h, t, st){
   c.stroke();
   if (t < 0.5){ const v = mxFlux(zOf(phi), S.k, u1, u2); c.fillStyle = '#FFB340'; c.beginPath(); c.arc(X(phi), Y(v), 3.5, 0, 2 * Math.PI); c.fill(); }
   const cap = S.dip ? 'line: model from stored values · dots: exoplan’s stored points' + (S.dip.box ? ' · dashed: stored box' : '') : 'line: model from stored values, not observed data';
-  if (w < 600) mxText(c, cap, gx0 + 6, gy0 + 14, {size: 11}); else mxText(c, cap, gx0 + gw, gy0 - 6, {size: 11, align: 'right'});
+  // On a narrow stage the key goes on its own lines in the free band under the dip, clear of the curve and the axis title.
+  if (w < 600) cap.split(' · ').forEach((t, i, all) => mxText(c, t, gx0 + 6, gy0 + gh * 0.74 + i * 14 - (all.length - 2) * 7, {size: 11}));
+  else mxText(c, cap, gx0 + gw, gy0 - 6, {size: 11, align: 'right'});
 }
 MXV.system = {key: 0.25, period: 12, init(st){
   const ex = MX.examples['pi Men c'] || {};

@@ -613,7 +613,7 @@ function decodeGalaxyView(params){
   if (!(tour >= 1 && tour <= GXM.tour.length)) tour = 0;
   const ls = (params.get('layers') || '').split(',');
   return {year, methods, dist, multi: params.get('multi') === '1', view, tour, showcase: params.get('cards') === 'methods',
-    layers: (GXM.layers || []).filter(k => ls.includes(k))};
+    layers: (GXM.layers || []).filter(k => ls.includes(k)), focus: (params.get('focus') || '').slice(0, 120)};
 }
 function encodeGalaxyView(v){
   const out = [];
@@ -625,6 +625,7 @@ function encodeGalaxyView(v){
   if (v.layers && v.layers.length) out.push('layers=' + GXM.layers.filter(k => v.layers.includes(k)).join(','));
   if (v.view !== GXM.presets[0]) out.push('view=' + v.view);
   if (v.tour) out.push('tour=' + v.tour);
+  if (v.focus) out.push('focus=' + encodeURIComponent(v.focus));
   return out.join('&');
 }
 // Which planets the filters keep: discovered by the year, by a chosen method, within the distance,
@@ -1170,6 +1171,7 @@ function gxTelemetry(){
 function gxHostCam(h){ const H = gx.G.hosts; return {tx: H.x[h], ty: H.y[h], tz: H.z[h], yaw: gx.cam.yaw, pitch: gx.cam.pitch, dist: Math.max(60, Math.min(gx.cam.dist, 400))}; }
 function gxSelect(h, planet){
   const card = $('#gxcard'), G = gx.G, H = G.hosts, P = G.planets;
+  if (gx.view && gx.view.focus && (h < 0 || H.n[h] !== gx.view.focus)){ gx.view.focus = ''; syncGalaxyURL(false); }
   gx.sel = h; gx.selPlanet = h >= 0 ? (planet != null ? planet : gxHostPlanets(h)[0]) : -1;
   $('#gxstage').classList.toggle('sel', h >= 0);
   gx.hud = null; gx.cards = null;
@@ -1264,6 +1266,13 @@ function applyGalaxy(v){
   if (v.tour){ if (!prev || prev.tour !== v.tour) gxTourGo(v.tour - 1, false); }
   else if (gx.tour) { gx.tour = null; $('#gxtourbar').hidden = true; }
   if (!v.tour && (!prev || prev.view !== v.view)) gxFly(gxPresetCam(v.view), 2400);
+  if (v.focus && (!prev || prev.focus !== v.focus)) gxFocus(v.focus);
+}
+// A deep link from a planet or star page (#/galaxy?focus=<host name>): select that star and fly to it.
+function gxFocus(name){
+  const h = gx.G.hosts.n.indexOf(name);
+  if (h < 0){ say(`${name} has no stored distance, so the map cannot place it.`); return; }
+  gxSelect(h); gxFly(Object.assign(gxHostCam(h), {dist: 140}), 2400);
 }
 function syncGalaxyURL(push){ if (current !== 'galaxy' || !gx.view) return; const q = encodeGalaxyView(gx.view); setHash('#/galaxy' + (q ? '?' + q : ''), !!push); }
 
@@ -1286,6 +1295,7 @@ function gxStart(){
   gx.ready = true;
   gxRefilter(); gxControls();
   if (gx.view.tour) gxTourGo(gx.view.tour - 1, false); else gxFly(target, 2600);
+  if (gx.view.focus) gxFocus(gx.view.focus);
   if (gxPhone.matches) $('#gxsheet').open = false;
   // Pointer: drag to orbit, two fingers to pinch-zoom, click to select, double-click to centre.
   cv.addEventListener('pointerdown', e => {

@@ -43,22 +43,26 @@ from pathlib import Path
 from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
 from exoplan.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, TEASER_JS, galaxy_data,
                             galaxy_meta, galaxy_section, map_csv, teaser_html, teaser_points)
+from exoplan.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFAULT_CATALOGUE, SEARCH_BUTTON, SEARCH_DIALOG,
+                               catalogue_meta, catalogue_section, load_catalogue, planet_page, star_page)
 from exoplan.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section
 from exoplan.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
 from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
 from exoplan.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
 
-# The seven sections of the top bar, and three pages each reached from one of them.
+# The eight sections of the top bar, and five pages each reached from one of them.
 SECTIONS = [
     ("overview", "Overview"),
     ("sky", "Sky"),
     ("galaxy", "Galaxy"),
+    ("catalogue", "Catalogue"),
     ("transit", "Transit"),
     ("explorer", "Explorer"),
     ("sentinels", "Sentinels"),
     ("methods", "Methods"),
 ]
-SUBPAGES = [("candidates", "Case file", "transit"), ("planets", "Planets", "explorer"), ("runs", "Runs", "sentinels")]
+SUBPAGES = [("candidates", "Case file", "transit"), ("planets", "Planets", "explorer"), ("runs", "Runs", "sentinels"),
+            ("planet", "Planet", "catalogue"), ("star", "Star", "catalogue")]
 # Old addresses keep working: each is rewritten to the section that took its place (query kept).
 ROUTE_ALIASES = {"discoveries": "explorer", "feed": "explorer", "panel": "sentinels", "home": "sky",
                  "cockpit": "transit", "about": "overview"}
@@ -536,7 +540,8 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
              weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None,
              require_crossmatch: bool = False, targets_path: str | Path | None = DEFAULT_TARGETS,
              map_path: str | Path | None = DEFAULT_MAP, notable_path: str | Path | None = DEFAULT_NOTABLE,
-             coverage_path: str | Path | None = DEFAULT_COVERAGE, examples_path: str | Path | None = DEFAULT_EXAMPLES) -> dict:
+             coverage_path: str | Path | None = DEFAULT_COVERAGE, examples_path: str | Path | None = DEFAULT_EXAMPLES,
+             catalogue_path: str | Path | None = DEFAULT_CATALOGUE) -> dict:
     """Everything the shell shows, read from stored files only.
 
     With ``require_crossmatch`` the build fails (``CrossmatchUnavailable``) when no stored archive
@@ -634,6 +639,9 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "coverage": load_coverage(coverage_path),
         "examples": load_examples(examples_path),
         "galaxy_meta": galaxy_meta(galaxy),
+        "catalogue": (cat := load_catalogue(catalogue_path)),
+        "catalogue_meta": catalogue_meta(cat, galaxy["methods"] if galaxy else None, galaxy["method_label"] if galaxy else None,
+                                         {e["name"]: [e["ref"], e["ref_label"]] for e in (galaxy or {}).get("notable", [])}),
         "galaxy_teaser": teaser_points(galaxy),
         "sky_geo": sky_geometry(story["star"]["ra_deg"], story["star"]["dec_deg"]),
         "deco": decoration(),
@@ -1169,7 +1177,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .btn,.nav a,.pill{transition:none}
 }
 """
-APP_CSS += GALAXY_CSS + METHODS_CSS
+APP_CSS += GALAXY_CSS + METHODS_CSS + CATALOGUE_CSS
 
 ICONS = {
     "overview": '<rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/>',
@@ -2158,7 +2166,7 @@ $('#route-sentinels').addEventListener('click', e => {
 });
 
 // ---------- router ----------
-const RENDER = {overview: renderOverview, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
+const RENDER = {overview: renderOverview, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, catalogue: renderCatalogue, planet: () => {}, star: () => {}, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
   sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns};
 const rendered = new Set();
 const ROUTES = D.sections.map(s => s.id);
@@ -2172,6 +2180,9 @@ function parseHash(h){
   let route = q < 0 ? body : body.slice(0, q);
   try { route = decodeURIComponent(route); } catch (e) { /* keep as typed */ }
   const query = q < 0 ? '' : body.slice(q + 1), alias = D.aliases[route];
+  // A planet or star page: #/planet/<slug>, #/star/<slug>.
+  const pm = /^(planet|star)\/([a-z0-9-]{1,120})$/.exec(route);
+  if (pm){ const params = new URLSearchParams(query); params.set('id', pm[2]); return {route: pm[1], params}; }
   if (alias) return {route: alias, alias: route, query, params: new URLSearchParams(query)};
   return {route: ROUTES.includes(route) ? route : 'overview', unknown: ROUTES.includes(route) ? null : route,
           params: new URLSearchParams(query)};
@@ -2193,6 +2204,7 @@ function show(r, moveFocus){
   gxShown(r === 'galaxy');
   mxShown(r === 'methods');
   txSysShown(r === 'transit');
+  plShown(r);
 }
 function go(p, moveFocus){
   // An old address: rewrite it to the section that replaced it, keeping its query (a replace, not a new entry).
@@ -2212,6 +2224,7 @@ function go(p, moveFocus){
     if (rendered.has('sky')) renderSky();
   }
   if (p.route === 'galaxy' && GXM) applyGalaxy(decodeGalaxyView(p.params));
+  if (p.route === 'catalogue' && CTM) applyCatalogue(decodeCatView(p.params));
   if (p.route === 'explorer'){
     const beforeEx = encodeExView(currentEx());
     applyEx(decodeExView(p.params));
@@ -2227,12 +2240,15 @@ function go(p, moveFocus){
   if (p.route === 'sky') syncSkyURL(false);
   if (p.route === 'galaxy' && GXM) syncGalaxyURL(false);
   if (p.route === 'methods') mxShowChapter(p.params.get('ch'));
+  if (p.route === 'catalogue' && CTM) syncCatURL(false);
+  if (p.route === 'planet') plShow(p.params.get('id') || '');
+  if (p.route === 'star') stShow(p.params.get('id') || '');
   if (p.route === 'transit') openTransit(p.params.get('dip'));
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));
 }
 // Back and Forward: hashchange for typed or linked hashes, popstate for entries made by pushState.
 // Either way the shell re-reads the hash and pushes the dip (or the Feed view) into the view.
-function onNavigate(){ const p = parseHash(location.hash); if (!p) return; go(p, true); }
+function onNavigate(){ const p = parseHash(location.hash); if (!p) return; const gsd = $('#gsearch'); if (gsd && gsd.open) gsd.close(); go(p, true); }
 window.addEventListener('hashchange', onNavigate);
 window.addEventListener('popstate', onNavigate);
 $('.skip').addEventListener('click', e => { e.preventDefault(); const c = $('#content'); c.focus({preventScroll: true}); c.scrollIntoView(); });
@@ -2260,7 +2276,7 @@ $('#dippick').addEventListener('change', e => { location.hash = dipHref(e.target
 go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()}, false);
 """
 # The Galaxy section's code sits ahead of the router, which calls it.
-APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + "// ---------- router ----------\n", 1)
+APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + "// ---------- router ----------\n", 1)
 
 
 # Before first paint: apply the stored theme choice (system, light or dark), so the page never flashes.
@@ -2500,7 +2516,7 @@ def app_page(data: dict) -> str:
     run = data["run"]
     rule = data["feed_rule"]
     data = {**data, "methods": methods_meta(data["examples"], data.get("galaxy"), data["story"], data.get("coverage"))}
-    payload = json.dumps({k: v for k, v in data.items() if k not in ("galaxy", "coverage", "examples")}).replace("</", "<\\/")
+    payload = json.dumps({k: v for k, v in data.items() if k not in ("galaxy", "coverage", "examples", "catalogue")}).replace("</", "<\\/")
     galaxy_payload = ""  # the map's arrays are a separate file (galaxy_json), fetched when the Galaxy opens
     unc = html.escape(UNCONFIRMED)
     nodet = html.escape(NO_DETECTION)
@@ -2529,7 +2545,7 @@ def app_page(data: dict) -> str:
 <header class="topbar">
   <a class="brand" href="#/overview" aria-label="{title}, Overview">{BRAND_SVG}<span>{title}</span></a>
   {_nav(data["sections"])}
-  <div class="topmeta"><span class="cur" id="curlabel"></span><span class="mono">{html.escape(data["story"]["star"]["name"] or run["name"])} · {html.escape(_input_label(data))}</span>{THEME_BUTTON}</div>
+  <div class="topmeta"><span class="cur" id="curlabel"></span><span class="mono">{html.escape(data["story"]["star"]["name"] or run["name"])} · {html.escape(_input_label(data))}</span>{SEARCH_BUTTON}{THEME_BUTTON}</div>
 </header>
 <main id="main">
  <div id="content" tabindex="-1">
@@ -2599,6 +2615,15 @@ def app_page(data: dict) -> str:
     <section class="route" id="route-methods" data-route="methods" aria-labelledby="h-methods" hidden>
       {methods_section(data["examples"], data.get("galaxy"), {**data["story"], "run_created": run.get("created_at", "")}, data.get("coverage"), _eyebrow("Methods"))}
     </section>
+    <section class="route" id="route-catalogue" data-route="catalogue" aria-labelledby="h-catalogue" hidden>
+      {catalogue_section(data.get("catalogue_meta"), _eyebrow("Catalogue"))}
+    </section>
+    <section class="route" id="route-planet" data-route="planet" aria-labelledby="h-planet" hidden>
+      {planet_page(_eyebrow("Planet", ("catalogue", "Catalogue")))}
+    </section>
+    <section class="route" id="route-star" data-route="star" aria-labelledby="h-star" hidden>
+      {star_page(_eyebrow("Star", ("catalogue", "Catalogue")))}
+    </section>
     <section class="route" id="route-candidates" data-route="candidates" aria-labelledby="h-candidates" hidden>
       <header>{_eyebrow("Case file", ("transit", "Transit"))}<h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The Docket for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
       <div class="frametools"><a id="fullpage" href="../docket/">Open full page</a><span class="muted">The Docket on its own page, at the same dip.</span></div>
@@ -2624,6 +2649,7 @@ def app_page(data: dict) -> str:
  </div>
 </main>
 <div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
+{SEARCH_DIALOG}
 <script id="data" type="application/json">{payload}</script>
 {_galaxy_scripts(data, galaxy_payload)}
 <script>{APP_JS}</script>
@@ -2750,4 +2776,8 @@ def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_p
         (out / "assets" / "data").mkdir(parents=True, exist_ok=True)
         (out / "assets" / "data" / CSV_NAME).write_text(map_csv(data["galaxy"]))
         (out / GALAXY_JSON).write_text(galaxy_json(data))
+    # Every catalogue record, fetched (same origin) by the Catalogue, the planet and star pages, and search.
+    if data.get("catalogue"):
+        (out / "assets" / "data").mkdir(parents=True, exist_ok=True)
+        (out / CATALOGUE_JSON).write_text(json.dumps(data["catalogue"], separators=(",", ":"), ensure_ascii=False, allow_nan=False))
     return path

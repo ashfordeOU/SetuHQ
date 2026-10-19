@@ -836,6 +836,87 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .mxsrc a{min-height:44px}
 }
 
+/* ---------- catalogue ---------- */
+#route-catalogue,#route-planet,#route-star{grid-template-columns:minmax(0,1fr)}
+#route-catalogue>*,#route-planet>*,#route-star>*{min-width:0}
+.ctfilters{display:grid;gap:12px}
+.ctsearch input{width:100%;min-height:48px;padding:0 16px;border-radius:14px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 16px var(--sans)}
+.ctmore summary{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;font-weight:600;list-style:none}
+.ctmore summary::-webkit-details-marker{display:none}
+.ctmore summary::before{content:"›";display:inline-block;transition:transform .2s;color:var(--ink-3)}
+.ctmore[open] summary::before{transform:rotate(90deg)}
+.ctranges{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:6px}
+.ctrange{border:1px solid var(--line);border-radius:12px;padding:6px 10px 10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0;min-width:0}
+.ctrange legend{font-size:12px;color:var(--ink-3);padding:0 4px}
+.ctrange input{min-width:0;min-height:44px;padding:0 10px;border-radius:10px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--mono)}
+.ctchecks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ctbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.ctbar p{margin:0 auto 0 0;font-size:13px}
+.ctbar .btn,.ctfilters .chip{min-height:44px}
+.ctfilters .chip .mono{color:var(--ink-3);margin-left:6px;font-size:12px}
+.cttable{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--glass-2)}
+.cthead,.ctrow{display:grid;grid-template-columns:minmax(150px,1.6fr) minmax(120px,1.3fr) 64px minmax(110px,1fr) repeat(6,minmax(84px,.8fr));align-items:center}
+.cthead{border-bottom:1px solid var(--line-2);background:var(--panel)}
+.cth{all:unset;box-sizing:border-box;min-height:44px;padding:0 10px;font:600 12px var(--sans);color:var(--ink-2);cursor:pointer;display:flex;align-items:center}
+.cth.num{justify-content:flex-end}
+.cth:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.cth[aria-sort="ascending"]::after{content:" ▲";font-size:11px}
+.cth[aria-sort="descending"]::after{content:" ▼";font-size:11px}
+.ctscroll{position:relative;height:min(64vh,640px);overflow:auto;contain:strict}
+.ctspacer{position:relative;width:100%}
+.ctrow{position:absolute;left:0;right:0;height:44px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:13px}
+.ctrow:hover,.ctrow:focus-visible{background:var(--panel-2)}
+.ctrow span{padding:0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctrow .num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.ctrow .na{color:var(--ink-3)}
+.ctrow b{font-weight:600}
+.ctrow i{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.ctcard{position:absolute;left:0;right:0;height:96px;padding:10px 14px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;display:grid;gap:2px;align-content:center}
+.ctcard b{font-size:15px}
+.ctcard span{font-size:12px;color:var(--ink-3)}
+.ctcard .mono{font-size:12px;color:var(--ink-2)}
+.plgrid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px;align-items:start}
+.plmore{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;align-items:stretch}
+.plmore>.card{min-width:0}
+.plgrid[hidden],.plmore[hidden],#route-planet .card[hidden]{display:none}
+.plparams{display:grid;gap:8px}
+.plparams h2,.plmore h2,#route-planet .card>h2{margin:0 0 6px;font-size:17px}
+.pltable{width:100%;border-collapse:collapse;font-size:13px}
+.pltable th,.pltable td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.pltable td.v{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pltable .na{color:var(--ink-3)}
+.pllist{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.pllist a{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:0 10px;border-radius:10px;text-decoration:none;color:var(--ink)}
+.pllist a:hover{background:var(--panel-2)}
+.pllist a[aria-current="page"]{background:var(--panel-2);font-weight:600}
+.pllist .mono{font-size:12px;color:var(--ink-3)}
+.pllinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pllinks a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);text-decoration:none}
+.plsky{width:100%;max-width:420px;height:auto;display:block}
+.plsky text{fill:var(--ink-3);font:500 11px var(--mono)}
+.stsysw{display:grid;gap:10px;min-width:0}
+.stpick{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
+.stpick select{min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans);max-width:100%}
+.searchbtn{min-height:44px;gap:8px}
+.searchbtn svg{width:16px;height:16px}
+.gsearch{width:min(640px,calc(100vw - 24px));margin-top:10vh;padding:12px;border-radius:20px;border:1px solid var(--line-2);background:var(--bg-2);color:var(--ink)}
+.gsearch::backdrop{background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.gsfield input{width:100%;min-height:52px;padding:0 16px;border-radius:14px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 17px var(--sans)}
+.gsresults{list-style:none;margin:10px 0 0;padding:0;max-height:min(60vh,520px);overflow:auto;display:grid;gap:2px}
+.gsresults a{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:0 12px;border-radius:12px;text-decoration:none;color:var(--ink)}
+.gsresults [aria-selected="true"] a{background:var(--seg-bg);color:var(--seg-ink)}
+.gsresults .kind{font:500 11px var(--mono);color:var(--ink-3);text-transform:uppercase}
+.gsresults [aria-selected="true"] .kind{color:inherit;opacity:.7}
+.gshint{margin:8px 4px 0;font-size:12px;color:var(--ink-3)}
+@media (prefers-reduced-motion: reduce){.ctmore summary::before{transition:none}}
+@media (max-width:699.98px){
+  .cthead{display:none}
+  .ctscroll{height:70vh}
+  .plgrid,.plmore{grid-template-columns:minmax(0,1fr)}
+  .searchlbl{display:none}
+  .searchbtn{min-width:44px;justify-content:center;padding:0 12px}
+}
+
 .sitelinks{display:flex;flex-wrap:wrap;gap:8px 18px;border-top:1px solid var(--line);padding-top:22px;font-size:14px}
 .sitelinks a{display:inline-flex;align-items:center;min-height:44px}
 .landing .route{display:grid}</style></head>
@@ -844,7 +925,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 <a class="skip" href="#content">Skip to the content</a>
 <header class="topbar">
   <a class="brand" href="./" aria-label="exoplan, home"><svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="10" fill="none" stroke="currentColor" stroke-opacity=".5"/><circle cx="11" cy="11" r="3.5" fill="#FFB340"/><circle cx="19" cy="7.5" r="1.8" fill="currentColor"/></svg><span>exoplan</span></a>
-  <nav class="nav" aria-label="Sections"><ul><li><a href="app/#/overview" data-route="overview" aria-current="page">Overview</a></li><li><a href="app/#/sky" data-route="sky">Sky</a></li><li><a href="app/#/galaxy" data-route="galaxy">Galaxy</a></li><li><a href="app/#/transit" data-route="transit">Transit</a></li><li><a href="app/#/explorer" data-route="explorer">Explorer</a></li><li><a href="app/#/sentinels" data-route="sentinels">Sentinels</a></li><li><a href="app/#/methods" data-route="methods">Methods</a></li></ul></nav>
+  <nav class="nav" aria-label="Sections"><ul><li><a href="app/#/overview" data-route="overview" aria-current="page">Overview</a></li><li><a href="app/#/sky" data-route="sky">Sky</a></li><li><a href="app/#/galaxy" data-route="galaxy">Galaxy</a></li><li><a href="app/#/catalogue" data-route="catalogue">Catalogue</a></li><li><a href="app/#/transit" data-route="transit">Transit</a></li><li><a href="app/#/explorer" data-route="explorer">Explorer</a></li><li><a href="app/#/sentinels" data-route="sentinels">Sentinels</a></li><li><a href="app/#/methods" data-route="methods">Methods</a></li></ul></nav>
   <div class="topmeta"><span class="mono">pi Men · TESS Sector 1</span><button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark (default). Change theme"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg><span class="themelbl">Dark (default)</span></button></div>
 </header>
 <main id="main"><div id="content" tabindex="-1">
