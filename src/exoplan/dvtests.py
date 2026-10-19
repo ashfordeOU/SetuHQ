@@ -274,27 +274,59 @@ def epoch_depths(time, flux, *, period: float, t0: float, duration: float, noise
     return out
 
 
+ODD_EVEN_FLOOR = 0.02      # systematic floor on each parity's depth error, as a fraction of its depth
+
+
+def parity_scatter_scale(depths, sigmas, parities) -> tuple[float, float, int]:
+    """√χ²ᵣ (at least 1) of per-epoch depths about their own parity's weighted mean, with χ² and its degrees of
+    freedom. Box depths over a fixed window scatter more than their white-noise errors (where the bins fall on
+    ingress and egress changes from epoch to epoch, and a small period error shifts the window), so the parity
+    errors are inflated by it."""
+    d = np.asarray(depths, float)
+    s = np.asarray(sigmas, float)
+    par = np.asarray(parities)
+    chi, used = 0.0, 0
+    for p in np.unique(par):
+        m = par == p
+        w = 1.0 / s[m] ** 2
+        mean = np.sum(w * d[m]) / np.sum(w)
+        chi += float(np.sum(w * (d[m] - mean) ** 2))
+        used += 1
+    dof = int(d.size - used)
+    return (math.sqrt(max(1.0, chi / dof)) if dof > 0 else 1.0), chi, dof
+
+
 def odd_even_depth_test(epochs: list[dict], *, sigma_threshold: float = SIGMA_THRESHOLD,
-                        min_parity_snr: float = MIN_PARITY_SNR) -> dict | None:
+                        min_parity_snr: float = MIN_PARITY_SNR, floor: float = ODD_EVEN_FLOOR) -> dict | None:
     """Inverse-variance mean depth of odd and of even epochs with errors, and their difference in σ.
 
+    Each parity's error is inflated by √χ²ᵣ of the per-epoch depths about their parity means
+    (:func:`parity_scatter_scale`) and given a systematic floor of ``floor`` × its depth (2%): on a clean 1% hot
+    Jupiter the white-noise errors alone made the box depths of odd and even epochs differ by many σ.
     ``significant`` needs both parities to show a dip of at least ``min_parity_snr`` (one lone transit cannot fake
     a mismatch) and |δ_odd − δ_even| > ``sigma_threshold`` × √(σ_odd² + σ_even²). None without both parities.
     """
+    rows = [e for e in epochs if e["sigma"] > 0]
     groups = {}
     for parity in ("odd", "even"):
-        rows = [e for e in epochs if e["parity"] == parity and e["sigma"] > 0]
-        if not rows:
+        mine = [e for e in rows if e["parity"] == parity]
+        if not mine:
             return None
-        w = np.array([1.0 / e["sigma"] ** 2 for e in rows])
-        d = np.array([e["depth"] for e in rows])
-        groups[parity] = (float(np.sum(w * d) / np.sum(w)), float(1.0 / math.sqrt(np.sum(w))), len(rows))
+        w = np.array([1.0 / e["sigma"] ** 2 for e in mine])
+        d = np.array([e["depth"] for e in mine])
+        groups[parity] = (float(np.sum(w * d) / np.sum(w)), float(1.0 / math.sqrt(np.sum(w))), len(mine))
+    scale, chi, dof = parity_scatter_scale([e["depth"] for e in rows], [e["sigma"] for e in rows],
+                                           [e["parity"] for e in rows])
     (do, so, no), (de, se, ne) = groups["odd"], groups["even"]
+    snr_odd, snr_even = do / so, de / se                       # detection of each parity, before inflation
+    so = math.hypot(so * scale, floor * abs(do))
+    se = math.hypot(se * scale, floor * abs(de))
     combined = math.hypot(so, se)
     delta_sigma = abs(do - de) / combined if combined > 0 else 0.0
-    both = min(do / so, de / se) >= min_parity_snr
+    both = min(snr_odd, snr_even) >= min_parity_snr
     return {"odd_depth_ppm": do * 1e6, "odd_err_ppm": so * 1e6, "n_odd": no,
             "even_depth_ppm": de * 1e6, "even_err_ppm": se * 1e6, "n_even": ne,
+            "error_scale": scale, "epoch_chi2": chi, "epoch_dof": dof, "floor_fraction": floor,
             "delta_sigma": delta_sigma, "both_parities_detected": bool(both),
             "significant": bool(both and delta_sigma > sigma_threshold)}
 
@@ -392,9 +424,15 @@ def epoch_times(time, flux, flux_err, *, period: float, t0: float, duration: flo
         sig = max(sig, 0.5 * step)
         dof = max(t.size - 3, 1)
         scale = math.sqrt(max(1.0, chi[i] / dof))
+        # the amplitude's error at the best shift, from the 2 x 2 normal equations of (baseline, amplitude)
+        m = template(t - mid - shifts[i])
+        sw, sm, smm = w.sum(), (w * m).sum(), (w * m * m).sum()
+        det = sw * smm - sm * sm
+        amp_err = math.sqrt(sw / det) * scale if det > 0 else float("nan")
         out.append({"epoch": n, "parity": "odd" if n % 2 else "even", "t_predicted": float(mid),
                     "t_mid": float(mid + best), "sigma": float(sig * scale), "depth": float(amp[i]),
-                    "chi2_red": float(chi[i] / dof), "n_points": int(t.size), "at_scan_edge": bool(edge)})
+                    "depth_err": float(amp_err), "chi2_red": float(chi[i] / dof), "n_points": int(t.size),
+                    "at_scan_edge": bool(edge)})
     return out
 
 
@@ -471,13 +509,24 @@ def extended_vet(time, flux, flux_err, *, period: float | None, t0: float | None
         if sec["significant"]:
             flags.append("secondary_any_phase")
     metrics["secondary"] = sec
-    depths = epoch_depths(time, flux, period=period, t0=t0, duration=duration, noise=noise)
-    oe = odd_even_depth_test(depths, sigma_threshold=sigma_threshold)
+    times = epoch_times(time, flux, flux_err, period=period, t0=t0, duration=duration,
+                        template=shape_template(fit, duration))
+    # Odd/even depths from each epoch's own fit (the transit shape plus a local baseline), as DV fits odd and even
+    # transits separately; box depths over a fixed window against a global baseline of 1 pick up detrending offsets
+    # near gaps and sector edges. Box depths are the fallback when fewer than one fitted epoch per parity exists.
+    fitted = [{"epoch": e["epoch"], "parity": e["parity"], "depth": e["depth"], "sigma": e["depth_err"]}
+              for e in times if math.isfinite(e.get("depth_err", float("nan"))) and e["depth_err"] > 0]
+    oe = odd_even_depth_test(fitted, sigma_threshold=sigma_threshold)
+    if oe is not None:
+        oe["source"] = "per-epoch fits (transit shape plus a local baseline)"
+    else:
+        oe = odd_even_depth_test(epoch_depths(time, flux, period=period, t0=t0, duration=duration, noise=noise),
+                                 sigma_threshold=sigma_threshold)
+        if oe is not None:
+            oe["source"] = "box depths over T14 (fallback)"
     metrics["odd_even_depth"] = oe
     if oe and oe["significant"]:
         flags.append("odd_even_depth")
-    times = epoch_times(time, flux, flux_err, period=period, t0=t0, duration=duration,
-                        template=shape_template(fit, duration))
     timing = timing_test(times, sigma_threshold=sigma_threshold, timing_p=timing_p)
     timing["epochs"] = [{k: e[k] for k in ("epoch", "t_mid", "sigma", "depth", "at_scan_edge")} for e in times]
     metrics["timing"] = timing

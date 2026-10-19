@@ -126,10 +126,20 @@ def test_odd_even_depth_closed_form():
     epochs = [{"parity": "odd", "depth": 3e-3, "sigma": 1e-4}, {"parity": "odd", "depth": 3e-3, "sigma": 1e-4},
               {"parity": "even", "depth": 2e-3, "sigma": 1e-4}]
     r = odd_even_depth_test(epochs)
-    assert r["odd_err_ppm"] == pytest.approx(1e-4 / math.sqrt(2) * 1e6)
-    expected = 1e-3 / math.hypot(1e-4 / math.sqrt(2), 1e-4)
-    assert r["delta_sigma"] == pytest.approx(expected)
+    # no scatter about the parity means (scale 1), plus the 2% floor on each parity
+    so = math.hypot(1e-4 / math.sqrt(2), 0.02 * 3e-3)
+    se = math.hypot(1e-4, 0.02 * 2e-3)
+    assert r["error_scale"] == 1.0
+    assert r["odd_err_ppm"] == pytest.approx(so * 1e6)
+    assert r["delta_sigma"] == pytest.approx(1e-3 / math.hypot(so, se))
     assert r["significant"]
+    # scatter about the parity means inflates the errors by sqrt(chi2_red)
+    eps = [{"parity": "odd", "depth": 3e-3 + d, "sigma": 1e-4} for d in (3e-4, -3e-4)] + \
+          [{"parity": "even", "depth": 3e-3 + d, "sigma": 1e-4} for d in (3e-4, -3e-4)]
+    r = odd_even_depth_test(eps, floor=0.0)
+    assert r["epoch_dof"] == 2 and r["epoch_chi2"] == pytest.approx(4 * 9.0)
+    assert r["error_scale"] == pytest.approx(math.sqrt(18.0))
+    assert r["odd_err_ppm"] == pytest.approx(1e-4 / math.sqrt(2) * math.sqrt(18.0) * 1e6)
     assert odd_even_depth_test([{"parity": "odd", "depth": 3e-3, "sigma": 1e-4}]) is None
 
 

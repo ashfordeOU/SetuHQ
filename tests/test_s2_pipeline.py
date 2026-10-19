@@ -164,6 +164,24 @@ def test_spoc_crowding_from_lightkurve_meta():
     assert spoc_crowding(Empty()) == {}
 
 
+def test_clean_hot_jupiter_passes_the_pipeline(tmp_path):
+    """A clean 1% hot Jupiter (P = 2.8 d, 2.6 h, 400 ppm per 2-minute point, 27 days with a mid-sector gap) passes:
+    no odd_even_mismatch from vet.py and no odd_even_depth flag. Before the error inflation and the 2% floor, 6 of
+    10 such planets failed on odd_even_mismatch (box depths of a deep transit scatter far beyond white noise)."""
+    from dvtests_helpers import trapezoid_lc
+
+    lc = trapezoid_lc(seed=4, period=2.8, t0=1.3, duration=0.11, depth=0.01, noise=4e-4)
+    reviewers = [SimulatedVolunteer("vol-a", snr_threshold=4.5, miss_probability=0.0, seed=1),
+                 SimulatedVolunteer("vol-b", snr_threshold=5.0, miss_probability=0.0, seed=2)]
+    cands = run_pipeline(RunConfig(name="hj", subject_days=13.0, min_points=100, bin_minutes=10.0, fap_trials=0),
+                         [lc], reviewers, tmp_path / "hj").candidates
+    on = [c for c in cands if abs(((c.t_center - 1.3 + 1.4) % 2.8) - 1.4) < 0.06]
+    assert len(on) >= 6
+    for c in on:
+        assert c.passed, c.flags
+        assert "odd_even_mismatch" not in c.flags and "odd_even_depth" not in c.flags
+
+
 def _shallow_eb(seed, secondary):
     """1000 ppm primaries every 4 days, a shallow secondary at phase 0.5, 600 ppm per 2-minute point, 27 days."""
     from dvtests_helpers import trapezoid_lc

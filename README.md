@@ -238,13 +238,19 @@ published pipelines.
 * **Batch mode is tested offline only.** Resumability, retries and caching are tested with synthetic light curves;
   no real batch was run because MAST's search API was failing (2026-10-19), so no real throughput is reported.
   The CTOI export has not been compared with ExoFOP's live form.
-* **Deep dips used to be clipped before review (fixed; this changes default behaviour).** Until commit 5a03087,
-  `preprocess.clean` removed every point more than 10 times the point-to-point scatter below a 0.5-day running
-  median, so an eclipse or transit deeper than that (a 3% binary, a 1% hot Jupiter on a quiet star, 5000 ppm at
-  300 ppm noise) vanished entirely before the panel saw it. A low outlier is now removed only when fewer than
-  3 consecutive cadences are below the threshold; the upward clip is unchanged. Results made before the fix are
-  labelled "pre-fix code": the stored pi Men run, the injection-recovery benchmark, the leaderboard and the
-  calibrated weights. pi Men c (300 ppm, about 1.5 times the 2-minute scatter) was not affected.
+* **Two fixes change default results (pass/fail included).** (1) Until commit 5a03087, `preprocess.clean` removed
+  every point more than 10 times the point-to-point scatter below a 0.5-day running median, so an eclipse or transit
+  deeper than that (a 3% binary, a 1% hot Jupiter on a quiet star, 5000 ppm at 300 ppm noise) vanished before the
+  panel saw it. A low outlier is now removed only when it is not part of a dip: a run of at least
+  max(3, 20 minutes / cadence) cadences more than 3σ below the median (hysteresis, so a 10–12σ eclipse whose points
+  straddle the clip keeps them all). The upward clip is unchanged. (2) With deep dips now reaching vetting, `vet.py`'s
+  `odd_even_mismatch` failed 6 of 10 clean 1% hot Jupiters: box depths of a deep transit scatter far beyond white
+  noise. Its errors are now inflated by the per-epoch depths' scatter about their parity means and carry a 2%
+  systematic floor. Results made before these fixes are labelled "pre-fix code": the stored pi Men run and every
+  page built from it, the discovery catalogue, the injection-recovery benchmark, the leaderboard and the
+  calibration record (`reviewer_weights_full_panel.calibration.json`; the weights files themselves are plain
+  reviewer-to-weight maps and cannot carry a note). pi Men c (300 ppm, about 1.5 times the 2-minute scatter, and
+  no odd/even failure) is affected by neither.
 * **Edge events are the weak spot** for both the statistics and the reviewers.
 * **Discovery candidates are unconfirmed.** Nothing on the discovery feed is a confirmed planet.
 

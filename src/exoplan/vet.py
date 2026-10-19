@@ -8,12 +8,15 @@ only the light curve (no centroid or pixel data is available here):
 * ``too_short``: the dip is shorter than any plausible transit.
 * ``edge_event``: the dip sits at the edge of a segment, so it is only partly observed.
 * ``odd_even_mismatch``: alternate transits differ in depth. This suggests a
-  binary at twice the period.
+  binary at twice the period. The BLS errors are inflated by the per-epoch depths'
+  scatter about their parity means and get a 2% systematic floor (since the review fixes
+  after 5a03087; before, a clean 1% hot Jupiter failed this test).
 * ``secondary_eclipse``: a significant dip at phase 0.5. This suggests an eclipsing binary.
 """
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -22,6 +25,7 @@ from exoplan.preprocess import mad_sigma
 from exoplan.search import PeriodicSignal
 from exoplan.subjects import Subject
 
+ODD_EVEN_FLOOR = 0.02  # systematic floor on each parity's depth error, as a fraction of its depth
 DISQUALIFYING = frozenset({"insufficient_points", "low_snr", "too_short", "odd_even_mismatch", "secondary_eclipse"})
 
 
@@ -66,7 +70,14 @@ def vet_event(
 
     if periodic is not None:
         metrics.update(odd_err=periodic.odd_err, even_err=periodic.even_err, secondary_depth=periodic.secondary_depth, secondary_err=periodic.secondary_err)
-        odd_even_sigma = np.hypot(periodic.odd_err, periodic.even_err)
+        # BLS's odd/even errors are white-noise errors. Box depths scatter more than that from epoch to epoch (where
+        # the bins fall on ingress and egress, a small period error), so they are inflated by the per-epoch depths'
+        # scatter about their parity means and given a 2% systematic floor each (dvtests.odd_even_depth_test).
+        scale = _parity_scale(subject, periodic)
+        odd_err = math.hypot(periodic.odd_err * scale, ODD_EVEN_FLOOR * abs(periodic.odd_depth))
+        even_err = math.hypot(periodic.even_err * scale, ODD_EVEN_FLOOR * abs(periodic.even_depth))
+        metrics.update(odd_even_error_scale=scale)
+        odd_even_sigma = np.hypot(odd_err, even_err)
         # Both parities must show a real dip, else one lone transit fakes a mismatch.
         both_present = min(
             periodic.odd_depth / periodic.odd_err if periodic.odd_err > 0 else 0.0,
@@ -84,6 +95,18 @@ def vet_event(
 
     passed = not (set(flags) & DISQUALIFYING)
     return VettingResult(passed, tuple(flags), metrics)
+
+
+def _parity_scale(subject: Subject, periodic: PeriodicSignal) -> float:
+    """√χ²ᵣ (at least 1) of the per-epoch box depths about their parity means, at the BLS ephemeris."""
+    from exoplan.dvtests import parity_scatter_scale
+
+    eps = [e for e in measure_epochs(subject, periodic) if e["depth_ppm"] is not None and e["sigma_ppm"]]
+    if len(eps) < 3:
+        return 1.0
+    scale, _, _ = parity_scatter_scale([e["depth_ppm"] for e in eps], [e["sigma_ppm"] for e in eps],
+                                       [e["epoch"] % 2 for e in eps])
+    return scale
 
 
 def measure_epochs(subject: Subject, periodic: PeriodicSignal, *, phase: float = 0.0) -> list[dict]:
