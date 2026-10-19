@@ -104,12 +104,12 @@ def test_app_builds_without_catalogue(run_dir, tmp_path):
     assert data["catalog"]["candidates"] == [] and data["catalog"]["runs"] == []
 
 
-def test_nine_sections_and_five_pages_exist(run_dir, catalog, tmp_path):
+def test_nine_sections_and_six_pages_exist(run_dir, catalog, tmp_path):
     from exoplan.app import ROUTE_ALIASES, SUBPAGES
 
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
     assert [s for s, _ in SECTIONS] == ["overview", "sky", "galaxy", "catalogue", "transit", "explorer", "sentinels", "methods", "mission"]
-    assert [s for s, _, _ in SUBPAGES] == ["candidates", "planets", "runs", "planet", "star"]
+    assert [s for s, _, _ in SUBPAGES] == ["candidates", "planets", "runs", "planet", "star", "variables"]
     nav = re.search(r'<nav class="nav" aria-label="Sections">.*?</nav>', page, re.S).group(0)
     for sid, label in SECTIONS:
         assert f'href="#/{sid}" data-route="{sid}">{label}</a>' in nav

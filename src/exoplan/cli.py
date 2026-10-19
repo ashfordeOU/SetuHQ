@@ -157,6 +157,41 @@ def cmd_discover(args) -> int:
     return 0
 
 
+def cmd_sweep(args) -> int:
+    from exoplan.sweep import run_sweep
+
+    res = run_sweep(args.config, args.sector, limit=args.limit, out_dir=args.out, cache_root=args.cache, workers=args.workers,
+                    min_interval=args.min_interval, time_budget_s=args.time_budget_min * 60.0 if args.time_budget_min else None,
+                    control=not args.no_control, contributor=args.contributor, weights_path=args.weights)
+    print(f"sector {res.sector}: {res.done} of the slice done ({res.ran} this run, {res.skipped} done before)"
+          + (f"; stopped: {res.stopped}, run the same command again to resume" if res.stopped else ""))
+    for err in res.errors:
+        print(f"error: {err}")
+    print(f"record {res.record_path}; catalogue {Path(args.out) / 'catalogue.json'}")
+    return 0
+
+
+def cmd_bundle(args) -> int:
+    from exoplan.contrib import make_bundle
+
+    path = make_bundle(args.record, args.out, contributor=args.contributor)
+    print(f"bundle written to {path}. Check it, then share the directory (or a zip of it). It holds no keys or credentials.")
+    return 0
+
+
+def cmd_ingest(args) -> int:
+    from exoplan.contrib import BundleRefused, ingest_bundle
+
+    try:
+        result = ingest_bundle(args.bundle, sweep_dir=args.sweep_dir, verify_lightcurves=args.verify_lightcurves)
+    except BundleRefused as exc:
+        print(f"exoplan ingest: refused: {exc}", file=sys.stderr)
+        return 1
+    print(f"ingested {result['bundle_id']} from {result['contributor']}: {result['star_sectors']} star-sectors, "
+          f"{result['entries']} entries; catalogue rebuilt at {result['catalogue']}")
+    return 0
+
+
 def cmd_dashboard(args) -> int:
     from exoplan.dashboard import build_dashboard
 
@@ -178,13 +213,14 @@ def cmd_app(args) -> int:
     from exoplan.app import build_app
 
     path = build_app(args.run_dir, args.out, title=args.title, catalog_path=args.catalog,
-                     weights_path=args.weights, star=args.star, require_crossmatch=not args.allow_missing_crossmatch)
+                     weights_path=args.weights, star=args.star, require_crossmatch=not args.allow_missing_crossmatch,
+                     sweep_path=args.sweep)
     print(f"app written to {path}")
     if args.landing:
         from exoplan.app import build_landing
 
         landing = build_landing(args.run_dir, args.landing, title=args.title, catalog_path=args.catalog,
-                                weights_path=args.weights, app_href=args.landing_app_href)
+                                weights_path=args.weights, app_href=args.landing_app_href, sweep_path=args.sweep)
         print(f"landing page written to {landing}")
     return 0
 
@@ -262,7 +298,35 @@ def build_parser() -> argparse.ArgumentParser:
     discover.add_argument("--cache", default="cache")
     discover.set_defaults(func=cmd_discover)
 
-    dash = sub.add_parser("dashboard", help="build the interactive dashboard from a run and optional discovery catalogue")
+    sweep = sub.add_parser("sweep", help="search a TESS sector's SPOC 2-minute targets (resumable) into the variability catalogue")
+    sweep.add_argument("config", help="sweep config, e.g. configs/sweep.toml (Probes) or configs/sweep_sentinels.toml")
+    sweep.add_argument("--sector", type=int, required=True)
+    sweep.add_argument("--limit", type=int, required=True, help="how many targets of the sector, in sweep order")
+    sweep.add_argument("--out", default="docs/sweep", help="where the sector record and catalogue.json go")
+    sweep.add_argument("--cache", default="cache", help="cache root: target lists, light-curve files, per-star records")
+    sweep.add_argument("--workers", type=int, default=1, help="processes searching stars at once (downloads stay one at a time)")
+    sweep.add_argument("--min-interval", type=float, default=1.0, help="seconds between MAST requests (at least)")
+    sweep.add_argument("--time-budget-min", type=float, default=None, help="stop starting new stars after this many minutes")
+    sweep.add_argument("--no-control", action="store_true", help="skip the flux-inverted control run of each star")
+    sweep.add_argument("--contributor", default="exoplan", help="the name credited for this sweep")
+    sweep.add_argument("--weights", default="docs/results/reviewer_weights_full_panel.json",
+                       help="calibrated weights; a reviewer not in the file weighs 1.0")
+    sweep.set_defaults(func=cmd_sweep)
+
+    bundle = sub.add_parser("bundle", help="export a sweep's sector record as a signed-off contribution bundle")
+    bundle.add_argument("record", help="the sector record, e.g. my-sweep/sector_0005.json")
+    bundle.add_argument("--contributor", required=True, help="the name to credit (yours to choose; shown on the site)")
+    bundle.add_argument("--out", required=True, help="bundle directory to write")
+    bundle.set_defaults(func=cmd_bundle)
+
+    ingest = sub.add_parser("ingest", help="validate a contribution bundle and merge it into the catalogue, with credit")
+    ingest.add_argument("bundle", help="bundle directory or .zip")
+    ingest.add_argument("--sweep-dir", default="docs/sweep")
+    ingest.add_argument("--verify-lightcurves", type=int, default=0,
+                        help="re-download this many of the bundle's light curves from MAST and check their sha256")
+    ingest.set_defaults(func=cmd_ingest)
+
+    dash = sub.add_parser("dashboard",help="build the interactive dashboard from a run and optional discovery catalogue")
     dash.add_argument("run_dir")
     dash.add_argument("--out", required=True)
     dash.add_argument("--title", default="exoplan dashboard")
@@ -287,6 +351,8 @@ def build_parser() -> argparse.ArgumentParser:
     app.add_argument("--weights", default="docs/results/reviewer_weights_full_panel.json",
                      help="calibrated reviewer weights JSON shown in the Panel section")
     app.add_argument("--star", help="star name for the Docket's archive cross-match, as in 'exoplan docket'")
+    app.add_argument("--sweep", default="docs/sweep/catalogue.json",
+                     help="the sweep catalogue (exoplan sweep) for Everything that dims, the Overview counter and the Sky layer")
     app.add_argument("--landing", help="also write the site's entry page (the Overview, linking into the app) to this path")
     app.add_argument("--landing-app-href", default="app/", help="the app's address relative to the landing page")
     app.add_argument("--allow-missing-crossmatch", action="store_true",

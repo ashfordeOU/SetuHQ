@@ -46,6 +46,8 @@ from exoplan.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOT
 from exoplan.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFAULT_CATALOGUE, SEARCH_BUTTON, SEARCH_DIALOG,
                                catalogue_meta, catalogue_section, load_catalogue, mentions, planet_page, star_page, tic_names)
 from exoplan.objects import obj_link
+from exoplan.everything import (DEFAULT_SWEEP, VARIABLES_CSS, VARIABLES_JS, VARIABLES_JSON, load_sweep, overview_counter, sky_chip,
+                               sky_layer_svg, sweep_meta, tabs as catalogue_tabs, variables_section)
 from exoplan.learn import LEARN_BAR, LEARN_CSS, LEARN_JS, learn_card, learn_steps
 from exoplan.mission import GRIDS as MISSION_GRIDS, MISSION_CSS, MISSION_JS, PANES as MISSION_PANES, mission_section
 from exoplan.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section, system_stage, CHAPTERS, CHAPTER_PLANETS
@@ -66,7 +68,7 @@ SECTIONS = [
     ("mission", "Mission Control"),
 ]
 SUBPAGES = [("candidates", "Case file", "transit"), ("planets", "Planets", "explorer"), ("runs", "Runs", "sentinels"),
-            ("planet", "Planet", "catalogue"), ("star", "Star", "catalogue")]
+            ("planet", "Planet", "catalogue"), ("star", "Star", "catalogue"), ("variables", "Everything that dims", "catalogue")]
 # Old addresses keep working: each is rewritten to the section that took its place (query kept).
 ROUTE_ALIASES = {"discoveries": "explorer", "feed": "explorer", "panel": "sentinels", "home": "sky",
                  "cockpit": "transit", "about": "overview"}
@@ -545,7 +547,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
              require_crossmatch: bool = False, targets_path: str | Path | None = DEFAULT_TARGETS,
              map_path: str | Path | None = DEFAULT_MAP, notable_path: str | Path | None = DEFAULT_NOTABLE,
              coverage_path: str | Path | None = DEFAULT_COVERAGE, examples_path: str | Path | None = DEFAULT_EXAMPLES,
-             catalogue_path: str | Path | None = DEFAULT_CATALOGUE) -> dict:
+             catalogue_path: str | Path | None = DEFAULT_CATALOGUE, sweep_path: str | Path | None = DEFAULT_SWEEP) -> dict:
     """Everything the shell shows, read from stored files only.
 
     With ``require_crossmatch`` the build fails (``CrossmatchUnavailable``) when no stored archive
@@ -648,6 +650,9 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "mission": {"panes": MISSION_PANES, "grids": MISSION_GRIDS},
         "catalogue": (cat := load_catalogue(catalogue_path)),
         "tic_names": tic_names(cat, [r["tic"] for r in feed], story["star"]),
+        # The sweep's catalogue: the counts and rules in the page, every entry in assets/data/variables.json.
+        "sweep_full": (sw := load_sweep(sweep_path)),
+        "sweep": sweep_meta(sw, cat, str(sweep_path or "")),
         "catalogue_meta": catalogue_meta(cat, galaxy["methods"] if galaxy else None, galaxy["method_label"] if galaxy else None,
                                          {e["name"]: [e["ref"], e["ref_label"]] for e in (galaxy or {}).get("notable", [])},
                                          mentions((galaxy or {}).get("notable"), CHAPTERS, CHAPTER_PLANETS, story)),
@@ -1194,7 +1199,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .btn,.nav a,.pill{transition:none}
 }
 """
-APP_CSS += GALAXY_CSS + METHODS_CSS + CATALOGUE_CSS + LEARN_CSS + MISSION_CSS
+APP_CSS += GALAXY_CSS + METHODS_CSS + CATALOGUE_CSS + LEARN_CSS + MISSION_CSS + VARIABLES_CSS
 
 ICONS = {
     "overview": '<rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/>',
@@ -1950,7 +1955,7 @@ const encodeSkyView = v => `status=${v.status.length ? SKY_STATUS.filter(k => v.
 const currentSky = () => ({status: SKY_STATUS.filter(k => sky[k]), who: sky.rev});
 function applySky(v){ for (const k of SKY_STATUS) sky[k] = v.status.includes(k); sky.rev = v.who; }
 // Survey-coverage layers on the sky map, kept in the URL as layers=... beside the filters.
-const COVL = (D.galaxy_meta && D.galaxy_meta.layers) || [];
+const COVL = ((D.galaxy_meta && D.galaxy_meta.layers) || []).concat(D.sweep && D.sweep.sky.length ? ['sweep'] : []);
 let skyLayers = [];
 const decodeLayers = p => { const ls = (p.get('layers') || '').split(','); return COVL.filter(k => ls.includes(k)); };
 function applySkyLayers(ls){
@@ -2193,7 +2198,7 @@ $('#route-sentinels').addEventListener('click', e => {
 });
 
 // ---------- router ----------
-const RENDER = {overview: renderOverview, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
+const RENDER = {overview: renderOverview, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, variables: renderVariables, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
   sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns};
 const rendered = new Set();
 const ROUTES = D.sections.map(s => s.id);
@@ -2253,6 +2258,7 @@ function go(p, moveFocus){
   }
   if (p.route === 'galaxy' && GXM) applyGalaxy(decodeGalaxyView(p.params));
   if (p.route === 'catalogue' && CTM) applyCatalogue(decodeCatView(p.params));
+  if (p.route === 'variables' && VA) applyVariables(decodeVarView(p.params));
   if (p.route === 'explorer'){
     const beforeEx = encodeExView(currentEx());
     applyEx(decodeExView(p.params));
@@ -2269,6 +2275,7 @@ function go(p, moveFocus){
   if (p.route === 'galaxy' && GXM) syncGalaxyURL(false);
   if (p.route === 'methods') mxShowChapter(p.params.get('ch'));
   if (p.route === 'catalogue' && CTM) syncCatURL(false);
+  if (p.route === 'variables' && VA) syncVarURL(false);
   if (p.route === 'planet') plShow(p.params.get('id') || '');
   if (p.route === 'star') stShow(p.params.get('id') || '');
   if (p.route === 'mission'){ applyMission(decodeMission(p.params)); gxShown(gxWanted()); syncMissionURL(false); }
@@ -2306,7 +2313,7 @@ $('#dippick').addEventListener('change', e => { location.hash = dipHref(e.target
 go(parseHash(location.hash) || {route: 'overview', params: new URLSearchParams()}, false);
 """
 # The Galaxy section's code sits ahead of the router, which calls it.
-APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + LEARN_JS + MISSION_JS + "// ---------- router ----------\n", 1)
+APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + VARIABLES_JS + LEARN_JS + MISSION_JS + "// ---------- router ----------\n", 1)
 
 
 # Before first paint: apply the stored theme choice (system, light or dark), so the page never flashes.
@@ -2392,6 +2399,7 @@ def _overview(data: dict, with_view: bool = True) -> str:
       </header>
       {_planet_figure(data["deco"])}
       <div class="proof" role="list" aria-label="What this run shows">{proof.replace('<div>', '<div role="listitem">')}</div>
+      {overview_counter(data.get("sweep"))}
       {teaser_html(data.get("galaxy"), data.get("galaxy_teaser"))}
       {_honest(data)}
       {learn_card() if with_view else ""}
@@ -2516,6 +2524,7 @@ def _sky(data: dict) -> str:
             <path d="{geo['grat']}" stroke="rgba(255,255,255,.06)" stroke-width=".8" fill="none"/>
             <path class="twinkle" d="{geo['stars']}" stroke="#E8EEFF" stroke-width="1.1" stroke-linecap="round"/>
             {sky_layers_svg(data.get("coverage"))}
+            {sky_layer_svg(data.get("sweep"))}
             <path d="{geo['ecl']}" stroke="#FFB340" stroke-width=".9" fill="none" stroke-dasharray="2 6" opacity=".7"/>
             {marker}
           </svg>
@@ -2537,14 +2546,25 @@ def _sky(data: dict) -> str:
       </section>"""
 
 
+def _with_sweep_chip(chips: str, meta: dict | None) -> str:
+    """The survey-coverage chips with the sweep's own layer added at the end of the group."""
+    extra = sky_chip(meta)
+    if not extra or not chips.endswith("</div>"):
+        return chips
+    return chips[:-len("</div>")] + extra + "</div>"
+
+
 def _sky_coverage(data: dict) -> str:
     cov = data.get("coverage")
     if not cov:
         return ""
     f = cov["fractions"]
-    return (f'<section class="glass skycov" aria-label="Survey coverage">{coverage_chips(cov, "sky")}<p>Survey coverage: TESS has observed {f["tess"] * 100:.1f}% of the sky '
+    return (f'<section class="glass skycov" aria-label="Survey coverage">{_with_sweep_chip(coverage_chips(cov, "sky"), data.get("sweep"))}<p>Survey coverage: TESS has observed {f["tess"] * 100:.1f}% of the sky '
             f'(sectors 1–{cov["tess_last_sector"]}); {f["unmapped"] * 100:.1f}% has never been in a TESS, Kepler or K2 footprint. '
-            f'Shading shows where surveys looked, not where planets are. <a href="#/galaxy">Figures and sources in the Galaxy ›</a></p></section>')
+            f'Shading shows where surveys looked, not where planets are. <a href="#/galaxy">Figures and sources in the Galaxy ›</a></p>'
+            + (f'<p>The exoplan sweep layer: one green dot per star-sector the sweep searched ({len(data["sweep"]["sky"]):,} so far, positions from MAST), '
+               f'amber where it found a planet candidate, binary, flare or variable entry. <a href="#/variables">Everything that dims ›</a></p>'
+               if data.get("sweep") and data["sweep"].get("sky") else "") + '</section>')
 
 
 def _transit(data: dict) -> str:
@@ -2624,7 +2644,7 @@ def app_page(data: dict) -> str:
     run = data["run"]
     rule = data["feed_rule"]
     data = {**data, "methods": methods_meta(data["examples"], data.get("galaxy"), data["story"], data.get("coverage"))}
-    payload = json.dumps({k: v for k, v in data.items() if k not in ("galaxy", "coverage", "examples", "catalogue")}).replace("</", "<\\/")
+    payload = json.dumps({k: v for k, v in data.items() if k not in ("galaxy", "coverage", "examples", "catalogue", "sweep_full")}).replace("</", "<\\/")
     galaxy_payload = ""  # the map's arrays are a separate file (galaxy_json), fetched when the Galaxy opens
     unc = html.escape(UNCONFIRMED)
     nodet = html.escape(NO_DETECTION)
@@ -2728,13 +2748,17 @@ def app_page(data: dict) -> str:
       {mission_section(_eyebrow("Mission Control"))}
     </section>
     <section class="route" id="route-catalogue" data-route="catalogue" aria-labelledby="h-catalogue" hidden>
-      {catalogue_section(data.get("catalogue_meta"), _eyebrow("Catalogue"))}
+      {catalogue_section(data.get("catalogue_meta"), _eyebrow("Catalogue")).replace("</header>", "</header>" + (catalogue_tabs("catalogue") if data.get("sweep") else ""), 1)}
     </section>
     <section class="route" id="route-planet" data-route="planet" aria-labelledby="h-planet" hidden>
       {planet_page(_eyebrow("Planet", ("catalogue", "Catalogue")))}
     </section>
     <section class="route" id="route-star" data-route="star" aria-labelledby="h-star" hidden>
       {star_page(_eyebrow("Star", ("catalogue", "Catalogue")))}
+      <section class="card stsweep" id="stsweep" aria-labelledby="h-stsweep" hidden><h2 id="h-stsweep">In exoplan's sweep</h2><div id="stsweepbody"></div></section>
+    </section>
+    <section class="route" id="route-variables" data-route="variables" aria-labelledby="h-variables" hidden>
+      {variables_section(data.get("sweep"), _eyebrow("Everything that dims", ("catalogue", "Catalogue")))}
     </section>
     <section class="route" id="route-candidates" data-route="candidates" aria-labelledby="h-candidates" hidden>
       <header>{_eyebrow("Case file", ("transit", "Transit"))}<h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The Docket for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
@@ -2863,8 +2887,9 @@ def landing_page(data: dict, app_href: str = "app/") -> str:
 
 
 def build_landing(run_dir: str | Path, out_path: str | Path, *, title: str, catalog_path: str | Path | None = None,
-                  weights_path: str | Path | None = DEFAULT_WEIGHTS, app_href: str = "app/") -> Path:
-    data = app_data(run_dir, title=title, catalog_path=catalog_path, weights_path=weights_path)
+                  weights_path: str | Path | None = DEFAULT_WEIGHTS, app_href: str = "app/",
+                  sweep_path: str | Path | None = DEFAULT_SWEEP) -> Path:
+    data = app_data(run_dir, title=title, catalog_path=catalog_path, weights_path=weights_path, sweep_path=sweep_path)
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(landing_page(data, app_href=app_href))
@@ -2873,9 +2898,9 @@ def build_landing(run_dir: str | Path, out_path: str | Path, *, title: str, cata
 
 def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
               weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None,
-              require_crossmatch: bool = False) -> Path:
+              require_crossmatch: bool = False, sweep_path: str | Path | None = DEFAULT_SWEEP) -> Path:
     data = app_data(run_dir, title=title, catalog_path=catalog_path, weights_path=weights_path, star=star,
-                    require_crossmatch=require_crossmatch)
+                    require_crossmatch=require_crossmatch, sweep_path=sweep_path)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"
@@ -2894,4 +2919,8 @@ def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_p
     if data.get("catalogue"):
         (out / "assets" / "data").mkdir(parents=True, exist_ok=True)
         (out / CATALOGUE_JSON).write_text(json.dumps(data["catalogue"], separators=(",", ":"), ensure_ascii=False, allow_nan=False))
+    # Every sweep entry, coverage row and credit, fetched by Everything that dims, star pages and search.
+    if data.get("sweep_full"):
+        (out / "assets" / "data").mkdir(parents=True, exist_ok=True)
+        (out / VARIABLES_JSON).write_text(json.dumps(data["sweep_full"], separators=(",", ":"), ensure_ascii=False, allow_nan=False))
     return path
