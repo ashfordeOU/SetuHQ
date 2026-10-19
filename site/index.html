@@ -186,6 +186,8 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .skypin span{display:block;color:#A1A1A6}
 .skypin em{font-style:normal;color:#64D2FF}
 .skynote{position:absolute;right:20px;bottom:14px;font-size:11px;color:#8E8E93;text-align:right;max-width:60%}
+.skymark.on{cursor:zoom-in}
+.skylinks .skyzoom{min-height:44px;color:#F5F5F7;border-color:rgba(255,255,255,.18)}
 .dipsbox{flex:1 1 300px;max-width:380px;padding:10px;display:flex;flex-direction:column;gap:2px;border-radius:28px}
 .dipsbox .dhead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 6px}
 .dipsbox .dhead b{font-size:15px;font-weight:600}
@@ -838,9 +840,52 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .mxsheethead .btn{min-height:44px}
 .mxsheetnote{margin:8px 0 0;font-size:12.5px;color:var(--ink-3)}
 .gxsys{margin-top:4px}
+.mxsheetzoom{margin:8px 0 0;font-size:12.5px;color:var(--ink-2)}
+/* the zoom lens: a rim that opens from the chosen point, and its label (the sheet's clip-path does the reveal) */
+.mxlens{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;z-index:3}
+.mxlens i{position:absolute;display:block;transform:translate(-50%,-50%);border-radius:50%;border:2px solid rgba(255,255,255,.75);box-shadow:0 0 0 1px rgba(0,0,0,.45),inset 0 0 24px rgba(100,210,255,.35)}
+.mxlens span{position:absolute;left:50%;top:64px;transform:translateX(-50%);max-width:calc(100% - 24px);padding:6px 12px;border-radius:999px;background:rgba(28,28,30,.86);border:1px solid rgba(255,255,255,.16);color:#F5F5F7;font:500 12px/1.4 var(--sans);text-align:center}
+/* the survey-scan intro over the Sky and Galaxy maps: no pointer capture except its Skip button */
+.mxintro{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity .4s var(--ease)}
+.mxintro.out{opacity:0}
+.mxintro canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mxintrobar{position:absolute;right:12px;top:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;max-width:calc(100% - 24px);color:#F5F5F7}
+.mxintrobar .mxlabel.ill{color:#C7C7CC;border-color:rgba(255,255,255,.3);background:rgba(0,0,0,.5)}
+.mxintrocap{font-size:12px;color:#C7C7CC;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.5)}
+.mxintro .mxskip{pointer-events:auto;min-height:44px;color:#F5F5F7;background:rgba(28,28,30,.86);border-color:rgba(255,255,255,.22)}
+@media (max-width:599.98px){.mxintrocap{display:none}}
+@media (prefers-reduced-motion: reduce){.mxintro{display:none}.mxintro,.mxlens i,.mxlens span{transition:none;animation:none}}
+/* the stylised Lyot plate: drawn in the page's ink, so it follows the theme */
+.mxplate{margin:4px 0 0;display:grid;gap:8px;max-width:900px}
+.mxplate svg{width:100%;height:auto;display:block;color:var(--ink-2);font:500 11px var(--sans)}
+.mxplate svg.v{display:none;max-width:420px}
+@media (max-width:599.98px){.mxplate svg.h{display:none}.mxplate svg.v{display:block}}
+.mxplate svg text{fill:var(--ink-2);font-family:var(--sans);font-size:11px;letter-spacing:0}
+.mxplate svg text.sm{fill:var(--ink-3)}
+.mxplate .pf{fill:var(--panel-2);stroke:var(--line-3)}
+.mxplate .pf2{fill:none;stroke:var(--line-2)}
+.mxplate .axis{stroke:var(--line-3);stroke-dasharray:2 5;fill:none}
+.mxplate .st{stroke:var(--amber);stroke-width:1.3;fill:none}
+.mxplate .df{stroke:var(--amber);stroke-width:1;stroke-dasharray:3 3;fill:none;opacity:.8}
+.mxplate .cp{stroke:var(--cyan);stroke-width:1.2;fill:none}
+.mxplate .ln{fill:var(--cyan-soft);stroke:var(--ink-2);stroke-width:1.1}
+.mxplate .disc{fill:var(--ink)}
+.mxplate .rod{stroke:var(--ink-3);stroke-width:1}
+.mxplate .stop{stroke:var(--ink);stroke-width:5;stroke-linecap:round}
+.mxplate .det{stroke:var(--ink-2);stroke-width:3}
+.mxplate .im{fill:#000}
+.mxplate .fr{fill:none;stroke:var(--line-3)}
+.mxplate .g0{fill:#FFF8E7}.mxplate .g1{fill:rgba(255,190,90,.75)}.mxplate .g2{fill:rgba(94,42,140,.7)}.mxplate .g3{fill:none;stroke:rgba(255,190,90,.25);stroke-width:5}
+.mxplate .blk{fill:#000}
+.mxplate .rim{fill:rgba(255,190,90,.9)}
+.mxplate .stp{fill:none;stroke:#64D2FF;stroke-dasharray:2 2}
+.mxplate .pl{fill:#64D2FF}
+.mxmodes{margin:0;padding-left:16px;display:grid;gap:4px}
+.mxmodes a{display:inline-flex;align-items:center}
 @media (max-width:699.98px){
   .mxcanvas{height:min(62vh,440px)}
   .mxstage.tall .mxcanvas{height:min(76vh,560px)}
+  .mxstage[data-vis="cgfam"] .mxcanvas{height:min(84vh,660px)}
   .mxtoc ol{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
   .mxtoc ol::-webkit-scrollbar{display:none}
   .mxtoc a{white-space:nowrap}
@@ -854,7 +899,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .mxnums td:last-child{font-size:12px}
   .mxcontrast li,.mxcontrast .ax{grid-template-columns:1fr}
   .mxcontrast .ax .lab{display:none}
-  .mxsrc a{min-height:44px}
+  .mxsrc a,.mxmodes a{min-height:44px}
 }
 
 /* ---------- catalogue ---------- */

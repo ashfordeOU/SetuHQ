@@ -103,7 +103,7 @@ def test_the_strip_draws_the_stored_limb_darkened_fit_not_a_box():
     row = {"t_start": 10.0, "t_end": 10.25, "depth_ppm": 250.0, "fit": fit}
     model = fit_model(row)
     ts, ps = [p[0] for p in model], [p[1] for p in model]
-    assert len(model) >= 200 and ts == sorted(ts) and ts[0] < 10.0 and ts[-1] > 10.25
+    assert len(model) >= 100 and ts == sorted(ts) and ts[0] < 10.0 and ts[-1] > 10.25
     assert min(ps) == pytest.approx(-model_depth(0.017, 0.5, 0.35, 0.2) * 1e6, rel=0.02)
     assert ps[0] == 0 and ps[-1] == 0
     assert len({round(p, 1) for p in ps if p < 0}) > 20  # a curved, limb-darkened profile, not a flat box bottom

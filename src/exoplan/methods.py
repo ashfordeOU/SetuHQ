@@ -10,6 +10,7 @@ they are exaggerated. Only the transit chapter is something exoplan itself does.
 
 from __future__ import annotations
 
+import functools
 import html
 import json
 import math
@@ -285,6 +286,327 @@ def diluted_depth(depth: float, f_target: float) -> float:
     return depth * f_target
 
 
+# ---------- blocking starlight: Fraunhofer optics of a circular pupil (the coronagraph-family stage) ----------
+# Units: the pupil radius is 1; a focal-plane angle u is in λ/D, so the transform variable is k = π u.
+# Every field is radially symmetric, so a 2-D Fourier transform is a Hankel transform (J0 kernel).
+def _j0(x: float) -> float:
+    """Bessel J0 (rational approximations of Numerical Recipes, |error| < 1e-8); mxJ0 is its twin."""
+    ax = abs(x)
+    if ax < 8.0:
+        y = x * x
+        a = 57568490574.0 + y * (-13362590354.0 + y * (651619640.7 + y * (-11214424.18 + y * (77392.33017 + y * -184.9052456))))
+        b = 57568490411.0 + y * (1029532985.0 + y * (9494680.718 + y * (59272.64853 + y * (267.8532712 + y))))
+        return a / b
+    z = 8.0 / ax
+    y, xx = z * z, ax - 0.785398164
+    a = 1.0 + y * (-0.1098628627e-2 + y * (0.2734510407e-4 + y * (-0.2073370639e-5 + y * 0.2093887211e-6)))
+    b = -0.1562499995e-1 + y * (0.1430488765e-3 + y * (-0.6911147651e-5 + y * (0.7621095161e-6 - y * 0.934935152e-7)))
+    return math.sqrt(0.636619772 / ax) * (math.cos(xx) * a - z * math.sin(xx) * b)
+
+
+def _j1(x: float) -> float:
+    ax = abs(x)
+    if ax < 8.0:
+        y = x * x
+        a = x * (72362614232.0 + y * (-7895059235.0 + y * (242396853.1 + y * (-2972611.439 + y * (15704.48260 + y * -30.16036606)))))
+        b = 144725228442.0 + y * (2300535178.0 + y * (18583304.74 + y * (99447.43394 + y * (376.9991397 + y))))
+        return a / b
+    z = 8.0 / ax
+    y, xx = z * z, ax - 2.356194491
+    a = 1.0 + y * (0.183105e-2 + y * (-0.3516396496e-4 + y * (0.2457520174e-5 + y * -0.240337019e-6)))
+    b = 0.04687499995 + y * (-0.2002690873e-3 + y * (0.8449199096e-5 + y * (-0.88228987e-6 + y * 0.105787412e-6)))
+    v = math.sqrt(0.636619772 / ax) * (math.cos(xx) * a - z * math.sin(xx) * b)
+    return -v if x < 0 else v
+
+
+def bessel_j(n: int, x: float) -> float:
+    """J_n(x) for n ≥ 0: J0 and J1 above; higher orders by the power series below x = n + 1 and by upward
+    recurrence (stable there) above it."""
+    if n == 0:
+        return _j0(x)
+    if n == 1:
+        return _j1(x)
+    if abs(x) < n + 1:
+        h, s, term = x / 2, 0.0, (x / 2) ** n / math.factorial(n)
+        for m in range(30):
+            s += term
+            term *= -h * h / ((m + 1) * (m + 1 + n))
+        return s
+    jm, j = _j0(x), _j1(x)
+    for k in range(1, n):
+        jm, j = j, 2 * k / x * j - jm
+    return j
+
+
+def airy_intensity(u: float) -> float:
+    """The clear circular pupil's image, I(u)/I(0) = [2 J1(πu)/(πu)]², u in λ/D (first dark ring at 1.22 λ/D)."""
+    k = math.pi * u
+    return 1.0 if abs(k) < 1e-9 else (2 * _j1(k) / k) ** 2
+
+
+def sonine_field(u: float, n: int) -> float:
+    """Field of a pupil apodised as A(ρ) = (1 − ρ²)ⁿ, normalised to 1 on axis: 2ⁿ⁺¹ (n+1)! J_{n+1}(πu)/(πu)ⁿ⁺¹
+    (the Hankel transform of (1 − ρ²)ⁿ). n = 0 is the clear pupil (the Airy pattern)."""
+    k = math.pi * u
+    if abs(k) < 1e-6:
+        return 1.0
+    return 2 ** (n + 1) * math.factorial(n + 1) * bessel_j(n + 1, k) / k ** (n + 1)
+
+
+def sonine_intensity(u: float, n: int) -> float:
+    """The apodised image relative to the clear pupil's peak: its on-axis field is ∫A ρ dρ / ∫ρ dρ = 1/(n+1)."""
+    return (sonine_field(u, n) / (n + 1)) ** 2
+
+
+def sonine_throughput(n: int) -> float:
+    """Fraction of the light an apodiser (1 − ρ²)ⁿ transmits: ∫A² ρ dρ / ∫ρ dρ = 1/(2n + 1)."""
+    return 1 / (2 * n + 1)
+
+
+def _simpson(f, a: float, b: float, n: int = 400) -> float:
+    n += n % 2
+    h = (b - a) / n
+    return h / 3 * (f(a) + f(b) + sum((4 if i % 2 else 2) * f(a + i * h) for i in range(1, n)))
+
+
+def lyot_pupil_field(rho: float, mask_lod: float) -> float:
+    """Field in the re-imaged pupil (the Lyot plane) of an ideal Lyot coronagraph with an opaque focal mask of radius
+    mask_lod (λ/D), for a unit on-axis beam: the pupil minus the light the mask removed,
+    E(ρ) = P(ρ) − ∫₀^{πm} J1(k) J0(kρ) dk. The removed part is smooth, so what remains is bright near the rim."""
+    p = 1.0 if rho < 1 else 0.0
+    return p - _simpson(lambda k: _j1(k) * _j0(k * rho), 0.0, math.pi * mask_lod, 400)
+
+
+def lyot_final_intensity(u: float, mask_lod: float, stop: float, n: int = 240) -> float:
+    """The final image of the on-axis star, relative to the unblocked star's peak, behind a Lyot stop of radius
+    `stop` (in pupil radii): I = [2 ∫₀^s E(ρ) J0(πuρ) ρ dρ]² (the unblocked peak's field is 1/2). The integral is
+    split at the rim, where E jumps."""
+    k = math.pi * u
+    f = lambda r: lyot_pupil_field(r, mask_lod) * _j0(k * r) * r  # noqa: E731
+    v = _simpson(f, 0.0, min(stop, 1.0) - 1e-9, n)
+    if stop > 1:
+        v += _simpson(f, 1.0 + 1e-9, stop, n)
+    return (2 * v) ** 2
+
+
+def sci(x: float) -> str:
+    """1.8×10⁻⁷: a number as the stages print it (mxSci in the page)."""
+    e = math.floor(math.log10(x))
+    m = round(x / 10 ** e, 1)
+    if m >= 10:
+        m, e = m / 10, e + 1
+    return f"{m:.1f}×10" + str(e).translate(str.maketrans("-0123456789", "⁻⁰¹²³⁴⁵⁶⁷⁸⁹"))
+
+
+MX_LYOT_MASK = 4   # λ/D: the occulting disc drawn in the Lyot scene (MX_CG.lyotMask in the page)
+
+
+@functools.lru_cache(maxsize=1)
+def coronagraph_numbers() -> tuple[float, float, float, float, float]:
+    """The figures the Blocking-starlight text quotes: Lyot starlight at 8 λ/D with the stop open (150%) and closed
+    (80%), the clear pupil's there, and the brightest ring between 4.5 and 5.5 λ/D for the clear pupil and for the
+    (1 − ρ²)² apodiser."""
+    ring = lambda f: max(f(4.5 + i / 100) for i in range(101))  # noqa: E731
+    return (lyot_final_intensity(8, MX_LYOT_MASK, 1.5), lyot_final_intensity(8, MX_LYOT_MASK, 0.8), airy_intensity(8),
+            ring(airy_intensity), ring(lambda u: sonine_intensity(u, 2)))
+
+
+def vortex_pupil_field(rho: float, charge: int = 2) -> float:
+    """Amplitude in the Lyot plane behind an ideal charge-2 vortex phase mask, for a unit on-axis beam on a clear
+    circular pupil: 0 inside the pupil and (1/ρ)² outside it (the integral ∫₀^∞ J1(k) J2(kρ) dk), so a Lyot stop
+    slightly smaller than the pupil removes all of the star's light. Only charge 2 is drawn."""
+    if charge != 2:
+        raise ValueError("only the charge-2 vortex is modelled")
+    return 0.0 if rho < 1 else 1 / (rho * rho)
+
+
+# ---------- molecules: normal modes at measured geometry ----------
+HBAR = 1.054571817e-34
+AMU = 1.66053906660e-27
+ATOM_MASS = {"H": 1.008, "C": 12.011, "N": 14.007, "O": 15.999, "P": 30.974, "S": 32.06}
+MODE_DRAW_A = 0.2   # Å: the peak displacement drawn for the atom that moves most, in every mode
+# Fundamentals as the atlas M1 table gives them (NIST CCCBDB experimental cm⁻¹ → λ = 10⁴/ν̃ µm). Each mode:
+# (label, what moves, µm or None when the atlas lists no position, infrared-active, degeneracy, pattern).
+# Degeneracies add up to 3N − 5 (linear) or 3N − 6, which a test checks.
+MODES = {
+    "H2O": [("ν₁", "symmetric stretch", 2.73, True, 1, "sym"), ("ν₂", "bend", 6.27, True, 1, "bend"),
+            ("ν₃", "asymmetric stretch", 2.66, True, 1, "asym")],
+    "CO2": [("ν₁", "symmetric stretch", 7.50, False, 1, "sym"), ("ν₂", "bend (two, at right angles)", 15.0, True, 2, "bend"),
+            ("ν₃", "asymmetric stretch", 4.26, True, 1, "asym")],
+    "CO": [("ν", "stretch", 4.67, True, 1, "stretch")],
+    "O2": [("ν", "stretch", 6.43, False, 1, "stretch")],
+    "O3": [("ν₁", "symmetric stretch", 9.01, True, 1, "sym"), ("ν₂", "bend", 14.2, True, 1, "bend"),
+           ("ν₃", "asymmetric stretch", 9.60, True, 1, "asym")],
+    "SO2": [("ν₁", "symmetric stretch", 8.69, True, 1, "sym"), ("ν₂", "bend", 19.3, True, 1, "bend"),
+            ("ν₃", "asymmetric stretch", 7.34, True, 1, "asym")],
+    "N2O": [("", "N–N stretch, mostly", 4.50, True, 1, "nn"), ("", "N–O stretch, mostly", 7.78, True, 1, "no"),
+            ("", "bend (two, at right angles)", 17.0, True, 2, "bend")],
+    "NH3": [("ν₁", "symmetric stretch", 3.00, True, 1, "sym"), ("ν₂", "umbrella", 10.5, True, 1, "umbrella"),
+            ("ν₃", "asymmetric stretch (two)", 2.90, True, 2, "asym"), ("ν₄", "asymmetric bend (two)", 6.15, True, 2, "abend")],
+    "PH3": [("ν₁", "symmetric stretch", 4.30, True, 1, "sym"), ("ν₂", "umbrella", 10.1, True, 1, "umbrella"),
+            ("ν₃", "asymmetric stretch (two)", 4.30, True, 2, "asym"), ("ν₄", "asymmetric bend (two)", 8.94, True, 2, "abend")],
+    "CH4": [("ν₁", "symmetric stretch", None, False, 1, "sym"), ("ν₂", "bend (two)", None, False, 2, "ebend"),
+            ("ν₃", "asymmetric stretch (three)", 3.31, True, 3, "asym"), ("ν₄", "asymmetric bend (three)", 7.66, True, 3, "tbend")],
+}
+
+
+def atom_positions(geom: dict) -> list[tuple[str, float, float, float]]:
+    """The ball-and-stick coordinates in Å (mxAtoms in the page is the twin): the first atom is the centre."""
+    r, A = geom.get("r", 1.0), math.radians(geom.get("angle", 180))
+    a, sh = geom["atoms"], geom["shape"]
+    if sh == "atom":
+        return [(a[0], 0.0, 0.0, 0.0)]
+    if sh == "diatomic":
+        return [(a[0], -r / 2, 0.0, 0.0), (a[1], r / 2, 0.0, 0.0)]
+    if sh == "linear":
+        if geom.get("r2"):
+            return [(a[0], -r, 0.0, 0.0), (a[1], 0.0, 0.0, 0.0), (a[2], geom["r2"], 0.0, 0.0)]
+        return [(a[0], 0.0, 0.0, 0.0), (a[1], -r, 0.0, 0.0), (a[2], r, 0.0, 0.0)]
+    if sh in ("bent", "dms"):
+        s, c = r * math.sin(A / 2), r * math.cos(A / 2)
+        return [(a[0], 0.0, 0.0, 0.0), (a[1], s, -c, 0.0), (a[2], -s, -c, 0.0)]
+    if sh == "pyramidal":
+        cb = math.sqrt((math.cos(A) + 0.5) / 1.5)
+        sb = math.sqrt(1 - cb * cb)
+        return [(a[0], 0.0, 0.0, 0.0)] + [(a[i + 1], r * sb * math.cos(i * 2 * math.pi / 3), -r * cb, r * sb * math.sin(i * 2 * math.pi / 3)) for i in range(3)]
+    if sh == "tetrahedral":
+        s = r / math.sqrt(3)
+        return [(a[0], 0.0, 0.0, 0.0)] + [(a[i + 1], v[0] * s, v[1] * s, v[2] * s) for i, v in enumerate([(1, 1, 1), (1, -1, -1), (-1, 1, -1), (-1, -1, 1)])]
+    return []
+
+
+def _v(a, b, f=1.0):
+    return [a[0] + f * b[0], a[1] + f * b[1], a[2] + f * b[2]]
+
+
+def _dot(a, b):
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+
+def _unit(a):
+    n = math.sqrt(_dot(a, a)) or 1.0
+    return [a[0] / n, a[1] / n, a[2] / n]
+
+
+def _perp(v, b):
+    """The part of v at right angles to the unit vector b."""
+    return _v(v, b, -_dot(v, b))
+
+
+def mode_displacements(geom: dict, pattern: str) -> list[list[float]]:
+    """A normal-mode displacement pattern: the symmetry-correct sketch named by `pattern`, with every rigid-body
+    translation and rotation projected out (mass-weighted, so the centre of mass stays put and there is no net
+    spin), scaled so that the atom that moves most moves 1. A sketch, not a force-field calculation."""
+    P = atom_positions(geom)
+    xyz = [list(p[1:]) for p in P]
+    m = [ATOM_MASS[p[0]] for p in P]
+    n = len(P)
+    b = [_unit(_v(xyz[i], xyz[0], -1)) if i else [0.0, 0.0, 0.0] for i in range(n)]
+    z3 = [0.0, 0.0, 0.0]
+    d = [z3[:] for _ in range(n)]
+    if pattern == "stretch":
+        u = _unit(_v(xyz[1], xyz[0], -1))
+        d = [[-x for x in u], u]
+    elif pattern == "sym":
+        d = [z3[:]] + [b[i] for i in range(1, n)]
+    elif pattern == "asym":
+        coef = {3: [1, -1], 4: [1, -0.5, -0.5], 5: [1, 1, -1, -1]}[n]
+        d = [z3[:]] + [[c * x for x in b[i + 1]] for i, c in enumerate(coef)]
+    elif pattern == "bend":
+        if geom["shape"] == "linear":
+            d = [[0.0, 1.0, 0.0] if i != (1 if geom.get("r2") else 0) else z3[:] for i in range(n)]
+        else:   # XY2 bent: each outer atom swings towards the other, at right angles to its bond
+            d = [z3[:], _unit(_perp(_v(xyz[2], xyz[1], -1), b[1])), _unit(_perp(_v(xyz[1], xyz[2], -1), b[2]))]
+    elif pattern == "nn":
+        d = [[-1.0, 0, 0], [1.0, 0, 0], z3[:]]
+    elif pattern == "no":
+        d = [z3[:], [-1.0, 0, 0], [1.0, 0, 0]]
+    elif pattern == "umbrella":
+        d = [z3[:]] + [[0.0, 1.0, 0.0] for _ in range(n - 1)]
+    elif pattern == "abend":
+        d = [z3[:], _unit(_perp(_v(xyz[2], xyz[1], -1), b[1])), _unit(_perp(_v(xyz[1], xyz[2], -1), b[2])), z3[:]]
+    elif pattern == "ebend":   # one H–C–H angle closes while the opposite one opens
+        toward = lambda i, j: _unit(_perp(_v(xyz[j], xyz[i], -1), b[i]))  # noqa: E731
+        d = [z3[:], toward(1, 2), toward(2, 1), [-x for x in toward(3, 4)], [-x for x in toward(4, 3)]]
+    elif pattern == "tbend":
+        d = [z3[:]] + [_perp([1.0, 0.0, 0.0], b[i]) for i in range(1, n)]
+    else:
+        raise ValueError(pattern)
+    # Project out rigid-body motion in mass-weighted coordinates (Gram–Schmidt over 3 translations, 3 rotations).
+    M = sum(m)
+    com = [sum(m[i] * xyz[i][k] for i in range(n)) / M for k in range(3)]
+    rel = [_v(xyz[i], com, -1) for i in range(n)]
+    sq = [math.sqrt(x) for x in m]
+    flat = lambda vs: [sq[i] * vs[i][k] for i in range(n) for k in range(3)]  # noqa: E731
+    rigid = []
+    for k in range(3):
+        e = [0.0, 0.0, 0.0]
+        e[k] = 1.0
+        rigid.append(flat([e] * n))
+        w = [0.0, 0.0, 0.0]
+        w[k] = 1.0
+        rigid.append(flat([[w[1] * r[2] - w[2] * r[1], w[2] * r[0] - w[0] * r[2], w[0] * r[1] - w[1] * r[0]] for r in rel]))
+    basis = []
+    for v in rigid:
+        for q in basis:
+            c = sum(x * y for x, y in zip(v, q))
+            v = [x - c * y for x, y in zip(v, q)]
+        nv = math.sqrt(sum(x * x for x in v))
+        if nv > 1e-9:
+            basis.append([x / nv for x in v])
+    q = flat(d)
+    for bv in basis:
+        c = sum(x * y for x, y in zip(q, bv))
+        q = [x - c * y for x, y in zip(q, bv)]
+    out = [[q[3 * i + k] / sq[i] for k in range(3)] for i in range(n)]
+    top = max(math.sqrt(_dot(o, o)) for o in out) or 1.0
+    return [[round(x / top, 6) for x in o] for o in out]
+
+
+def zero_point_rms(geom: dict, disp: list[list[float]], lam_um: float) -> tuple[float, int]:
+    """Root-mean-square zero-point displacement (Å) of the atom that moves most in this mode, and its index: for a
+    mass-weighted unit vector L, atom i moves L_i/√m_i · Q with ⟨Q²⟩ = ħ/(2ω) and ω = 2πc/λ."""
+    m = [ATOM_MASS[p[0]] * AMU for p in atom_positions(geom)]
+    norm = math.sqrt(sum(m[i] * _dot(disp[i], disp[i]) for i in range(len(m))))
+    q = math.sqrt(HBAR / (2 * 2 * math.pi * C_LIGHT / (lam_um * 1e-6)))
+    amps = [math.sqrt(_dot(disp[i], disp[i])) / norm * q * 1e10 for i in range(len(m))]
+    i = max(range(len(m)), key=lambda j: amps[j])
+    return amps[i], i
+
+
+def mode_table(mol: dict) -> list[dict]:
+    """The modes the Molecules stage animates, each with its band, its drawn displacement pattern and its stated
+    amplitude exaggeration (the drawn peak MODE_DRAW_A against the zero-point RMS of the atom that moves most)."""
+    out = []
+    for label, name, um, ir, deg, pattern in MODES.get(mol["id"], []):
+        disp = mode_displacements(mol["geom"], pattern)
+        row = {"nu": label, "name": name, "um": um, "ir": ir, "deg": deg, "disp": disp}
+        if um:
+            rms, i = zero_point_rms(mol["geom"], disp, um)
+            row.update(rms=round(rms, 4), atom=mol["geom"]["atoms"][i], exag=max(1, round(MODE_DRAW_A / rms)))
+        out.append(row)
+    return out
+
+
+def mode_options(mol: dict) -> str:
+    """The Mode select's options for one molecule (mxModeOptions in the page builds the same)."""
+    out = []
+    for i, d in enumerate(mode_table(mol)):
+        um = f" · {d['um']:.2f} µm" if d["um"] else ""
+        out.append(f'<option value="{i}">{html.escape((d["nu"] + " " if d["nu"] else "") + d["name"])}{um}{"" if d["ir"] else " · IR-silent"}</option>')
+    return "".join(out)
+
+
+def mode_band_link(mol_id: str, um: float | None) -> tuple[float, str] | None:
+    """The Reading-atmospheres band (BANDS) that a mode's wavelength falls in, if that chapter draws it: same species,
+    centre within 0.06 µm."""
+    if um is None:
+        return None
+    f = next((m["f"] for m in MOLECULES if m["id"] == mol_id), None)
+    hit = [(lam, note) for sp, lam, note in BANDS if sp == f and abs(lam - um) <= 0.06]
+    return hit[0] if hit else None
+
+
 KOPPARAPU = {"recent_venus": (1.776, 2.136e-4, 2.533e-8, -1.332e-11, -3.097e-15),
              "runaway_greenhouse": (1.107, 1.332e-4, 1.58e-8, -8.308e-12, -1.931e-15),
              "maximum_greenhouse": (0.356, 6.171e-5, 1.698e-9, -3.198e-12, -5.575e-16),
@@ -528,7 +850,7 @@ def year_chart(g: dict | None, method: str) -> str:
 
 
 # What the Time scrubber runs through, for its spoken value ("t = 0.42 of the orbit").
-TUNIT = {"system": "orbit", "scan": "survey sweep", "radio": "orbit", "doppler": "orbit", "wobble": "orbit", "jitter": "sequence",
+TUNIT = {"system": "orbit", "scan": "survey sweep", "cgfam": "sequence", "radio": "orbit", "doppler": "orbit", "wobble": "orbit", "jitter": "sequence",
          "astrometry": "orbit", "lens": "event", "coronagraph": "sequence", "transmission": "transit", "timing": "cycle",
          "falsepos": "orbit", "molecule": "vibration cycle"}
 
@@ -603,12 +925,12 @@ MOLECULES = [
      "why": "With O₂ it is the classic disequilibrium pair that a biosphere could sustain.",
      "abiotic": "Serpentinisation of ultramafic rock (the main abiotic source on Earth today) and thermochemistry in cool H₂ atmospheres."},
     {"id": "O2", "name": "Oxygen", "f": "O₂", "geom": {"shape": "diatomic", "r": 1.208, "atoms": ["O", "O"]},
-     "bands": "0.76 (A band), 0.69, 0.63; O₂–O₂ pairs at 1.06 and 1.27; vibrational fundamental IR-silent", "who": "Reflected light (future HWO); ground high-resolution at 0.76 µm",
+     "bands": "0.76 (A band), 0.69, 0.63; O₂–O₂ pairs at 1.06 and 1.27; the 6.43 µm vibrational fundamental is IR-silent", "who": "Reflected light (future HWO); ground high-resolution at 0.76 µm",
      "seen": [],
      "why": "Earth's most prominent biosignature gas, but only meaningful in context.",
      "abiotic": "CO₂ photolysis around some stars, or massive hydrogen escape after water loss."},
     {"id": "O3", "name": "Ozone", "f": "O₃", "geom": {"shape": "bent", "r": 1.278, "angle": 116.8, "atoms": ["O", "O", "O"]},
-     "bands": "0.25 (UV), 0.5–0.7 (Chappuis), 9.65 (strongest mid-IR)", "who": "HWO in UV/visible; mid-IR missions such as LIFE at 9.6 µm",
+     "bands": "0.25 (UV), 0.5–0.7 (Chappuis), 9.65 (strongest mid-IR); fundamentals 9.01, 9.60 and 14.2", "who": "HWO in UV/visible; mid-IR missions such as LIFE at 9.6 µm",
      "seen": [],
      "why": "A sensitive tracer of O₂, visible even when O₂ itself is hard to see.",
      "abiotic": "Photochemistry from abiotic O₂, favoured around some M and F dwarfs."},
@@ -696,9 +1018,9 @@ def methods_meta(ex: dict, g: dict | None, story: dict, coverage: dict | None) -
             "source": ex.get("source", ""), "fetched_at": ex.get("fetched_at", ""),
             "claret": CLARET_TESS, "mamajek": MAMAJEK, "bands": BANDS,
             "lead_dip": {"id": lead, "depth_ppm": dip.get("depth_ppm"), "pts": dip.get("pts"), "half": dip.get("half")} if dip else None,
-            "molecules": [{k: m[k] for k in ("id", "name", "f", "geom")} for m in MOLECULES],
+            "molecules": [dict({k: m[k] for k in ("id", "name", "f", "geom")}, modes=mode_table(m)) for m in MOLECULES],
             "lab_bands": LAB_BANDS, "jwst": load_jwst(),
-            "population": _pop_meta(), "drake_terms": DRAKE_TERMS, "kopparapu": KOPPARAPU, "tunit": TUNIT}
+            "population": _pop_meta(), "drake_terms": DRAKE_TERMS, "ill_badge": honesty_label(LABEL_ILL), "kopparapu": KOPPARAPU, "tunit": TUNIT}
 
 
 def _pop_meta() -> dict | None:
@@ -830,6 +1152,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                '<label class="mxmode"><span>Show</span><select><option value="all">All three motions</option><option value="pm">Proper motion only</option><option value="plx">Parallax only</option><option value="reflex">Planet wobble only</option></select></label>')}
       <div class="mxtext">
         <p>α = (Mp/M★)(a/d): the star's angular orbit, in arcseconds for a in AU and d in parsecs (Perryman et al. 2014). A wobble consistent with an orbiting companion becomes a planet only when its mass is pinned below the planetary limit, usually with RV as well, as for Gaia-4b (Stefánsson et al. 2025). Gaia ended science observations in January 2025; its fourth data release, planned for December 2026, carries the epoch astrometry.</p>
+        <p class="note">The drawing is an illustration: its scales are chosen to show the three motions apart, and the planet's wobble is enlarged and labelled. It quotes no Gaia measurement precision: the project's research atlas holds no sourced per-measurement figure for Gaia DR3, so none is given here.</p>
         {_num_rows([("Jupiter twin at 10 pc", f"{alpha_jup10:.0f} µas", "[calc]"),
                     ("Earth twin at 10 pc", f"{alpha_earth10:.2f} µas", "[calc]"),
                     ("GJ 896 Ab", f"{alpha_gj:.0f} µas" if alpha_gj else "—", f"exoplanet.eu Mp = {gj.get('mass')} MJ, M★ = {gj.get('star_mass')} M☉, a = {gj.get('semi_major_axis')} AU, d = {gj.get('star_distance')} pc [calc]; found by astrometry (Curiel et al. 2022)")])}
@@ -846,6 +1169,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                     ("First microlensing planet", "2004", "Bond et al. 2004")])}
         {count_line("microlensing")}
       </div>"""
+    lyot_open, lyot_closed, airy8, airy5, son5 = coronagraph_numbers()
     ch["imaging"] = f"""
       <p class="mxlede">To photograph a planet, the starlight must be blocked. A Jupiter twin reflects about a billionth of its Sun's visible light; an Earth twin about 10⁻¹⁰ (Lawson et al. 2013). Young giant planets glow in the infrared and are far easier, which is why imaging finds young, wide, massive planets.</p>
       {_stage("coronagraph", LABEL_ILL, "Starlight blocking, in four scenes. A sun-like occulter (an illustration based on SOHO LASCO); a coronagraph mask sliding over a star so the glare collapses into residual speckles and the four HR 8799 planets appear on schematic orbits; a starshade flying far in front of a telescope, not to scale; and a two-telescope nulling interferometer whose dark fringe cancels the star.",
@@ -858,6 +1182,19 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
           <li><b>Adaptive optics and speckles.</b> A deformable mirror flattens the turbulent wavefront hundreds of times a second. What remains are speckles; angular differential imaging lets the sky rotate while speckles stay fixed, so they can be subtracted (Marois et al. 2006).</li>
           <li><b>Starshade.</b> A flower-shaped screen flown far in front of a telescope (Cash 2006). The Roman Starshade Rendezvous concept: 26 m at 26,000 km; HabEx: 52 m at about 76,600 km (HabEx Final Report).</li>
           <li><b>Nulling interferometry.</b> Two telescopes combined half a wave out of phase cancel the star on a dark fringe while an off-axis planet sits on a bright one (Bracewell 1978; the LIFE concept, Quanz et al. 2022).</li>
+        </ol>
+        <h3 id="mx-cgfam">Coronagraph families, plane by plane</h3>
+        <p>Each family below is drawn as four planes of one optical train. The intensities are computed, not painted: Fraunhofer optics of an ideal, monochromatic telescope with a clear circular pupil, shown on a log stretch from the star's peak down to a millionth. The mask and stop sizes, the apodiser and the planets' brightness are illustrative and say so.</p>
+        {lyot_plate()}
+      </div>
+      {_stage("cgfam", LABEL_ILL, "Four coronagraph families as optical trains, each in four planes with a log-intensity profile below. Lyot: an occulting disc blocks the star's image, the light it diffracts lands on the rim of the re-imaged pupil, and a closing Lyot stop removes that rim so the starlight beside the mask falls by a factor of hundreds. Apodised pupil: the pupil's transmission tapers to its edge, the image's rings fade and the core widens. Vortex: a phase ramp that winds twice around the centre throws all of an on-axis star's light outside the pupil, where the stop removes it. Adaptive optics with angular differential imaging: synthetic frames in which speckles stay fixed while the planet turns with the sky; the median of the frames is subtracted, each frame is turned back and the stack reveals the planet.",
+               '<label class="mxmode"><span>Family</span><select><option value="lyot">Lyot: mask and stop</option><option value="apod">Apodised pupil</option><option value="vortex">Vortex phase mask</option><option value="adi">Adaptive optics and ADI</option></select></label>', tall=True)}
+      <div class="mxtext">
+        <ol class="mxsteps">
+          <li><b>Lyot coronagraph.</b> An opaque disc in the focal plane blocks the core of the star's image. What it does not remove is the light its edge diffracts, which the next lens sends to the rim of the re-imaged pupil; a Lyot stop slightly smaller than the pupil catches that rim (Lyot 1939). With a {MX_LYOT_MASK} λ/D disc, closing the stop from 150% to 80% of the pupil cuts the starlight at 8 λ/D from {sci(lyot_open)} to {sci(lyot_closed)} of the star's peak (no coronagraph: {sci(airy8)}) [calc], while a planet well outside the disc keeps 64% of its light, the stop's area.</li>
+          <li><b>Apodised pupil.</b> Instead of a mask, the pupil's transmission tapers to its edge, so the image has no sharp edge to ring from. For A(ρ) = (1 − ρ²)² the brightest ring near 5 λ/D falls from {sci(airy5)} to {sci(son5)} of the clear pupil's peak [calc], but only 1/(2n + 1) = 20% of the light gets through and the core is wider. Real apodisers (shaped pupils, prolate and APLC designs) are optimised numerically; this taper is illustrative.</li>
+          <li><b>Vortex phase mask.</b> A transparent mask whose phase winds around its centre (e^(2iθ), charge 2) moves an on-axis star's light outside the re-imaged pupil: for an ideal charge-2 vortex on a clear circular aperture the field there is exactly zero inside the pupil and (1/ρ)² outside it [calc], so a stop just inside the pupil removes the star. Phase masks are the family that works closest to the star (Mawet et al. 2012); real vortices leave residuals from wavefront errors and the star's finite size.</li>
+          <li><b>Adaptive optics and ADI.</b> A deformable mirror turns the seeing halo into a sharp core, but quasi-static speckles λ/D wide remain. With the instrument's pupil fixed, the sky and the planet turn through the night while the speckles stay; the median of the sequence models the speckles, and each frame minus it, turned back by its field rotation and stacked, keeps the planet (Marois et al. 2006). The frames on the stage are synthetic. On the sky, GPI reaches about 10⁻⁴ raw contrast at 0.4″ in 60 s and more than ten times deeper after an hour of ADI (Bailey et al. 2016).</li>
         </ol>
         <h3>The contrast ladder</h3>
         {contrast_ladder()}
@@ -891,7 +1228,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                     ("pi Men c: per scale height, H₂-rich", f"{pm_dH_h2:.0f} ppm", f"Teq {pm_teq:.0f} K (exoplanet.eu) [calc]"),
                     ("pi Men c: per scale height, steam (μ = 18)", f"{pm_dH_steam:.1f} ppm", "[calc]"),
                     ("pi Men c: exoplan's stored transit depth", f"{dip.get('depth_ppm', 0):.0f} ppm" if dip else "—", "exoplan run (real data)")])}
-        <p class="note">The bars are schematic: band positions are real (NIST CCCBDB fundamentals and Schwieterman et al. 2018), shapes and strengths are not. False colour: infrared is invisible to the eye.</p>
+        <p class="note">The bars are schematic: band positions are real (NIST CCCBDB fundamentals and Schwieterman et al. 2018), shapes and strengths are not. False colour: infrared is invisible to the eye. <a href="#/methods?ch=molecules">Which vibration makes each band ›</a></p>
         <h3>A real spectrum: WASP-39 b with JWST</h3>
       </div>
       {jwst_stage}
@@ -902,10 +1239,17 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
       </div>
       {_stage("atmlab", LABEL_MODEL, "The Atmosphere Lab: a model transmission spectrum from 0.5 to 5.4 micrometres for the molecules switched on, at the chosen temperature, mean molecular weight and band strength, with WASP-39 b's JWST points overlaid when loaded.", lab_controls, static=True)}"""
     cards = "".join(_molecule_card(m) for m in MOLECULES)
+    h2o_nu1 = mode_table(MOLECULES[0])[0]
+    h2o_rms, h2o_exag = h2o_nu1["rms"], h2o_nu1["exag"]
     ch["molecules"] = f"""
       <p class="mxlede">Each gas absorbs at its own wavelengths. A molecule's shape sets how it vibrates, and its vibrations set where it absorbs in the infrared. No single gas proves life; a biosignature needs context.</p>
-      {_stage("molecule", LABEL_ILL, "A rotating ball-and-stick model of the selected molecule at its measured bond lengths and angles (NIST CCCBDB).",
-               '<label class="mxmode"><span>Molecule</span><select>' + "".join(f'<option value="{m["id"]}">{e(m["f"])} · {e(m["name"])}</option>' for m in MOLECULES) + '</select></label>')}
+      {_stage("molecule", LABEL_ILL, "A rotating ball-and-stick model of the selected molecule at its measured bond lengths and angles (NIST CCCBDB), vibrating in the chosen normal mode: arrows show which way each atom moves. A wavelength axis below marks the molecule's fundamental bands, filled when infrared sees them and hollow when the mode is infrared-silent, with the range the Reading atmospheres chapter draws shaded.",
+               '<label class="mxmode"><span>Molecule</span><select>' + "".join(f'<option value="{m["id"]}">{e(m["f"])} · {e(m["name"])}</option>' for m in MOLECULES) + '</select></label>'
+               '<label class="mxmode mxvib"><span>Mode</span><select data-ctl="mode">' + mode_options(MOLECULES[0]) + '</select></label>')}
+      <div class="mxtext">
+        <p>A molecule with N atoms has 3N − 6 ways to vibrate (3N − 5 if it is straight): water has three, carbon dioxide four (its bend comes twice, at right angles), methane nine. A mode absorbs infrared light only if it changes the molecule's dipole. That is why CO₂'s symmetric stretch (7.50 µm), O₂'s stretch and two of methane's four fundamentals are silent in the infrared. The bands the modes make are the ones the Reading atmospheres chapter marks: water's two stretches at 2.66 and 2.73 µm make its 2.7 µm band, methane's ν₃ the 3.3 µm band, CO₂'s asymmetric stretch the 4.26 µm band, and CO's stretch the 4.67 µm band.</p>
+        <p class="note">Band positions: the atlas's NIST CCCBDB fundamentals, λ = 10⁴/ν̃. Displacements are symmetry-correct sketches with the centre of mass fixed and no net spin, not a force-field calculation. In every mode the atom that moves most swings {MODE_DRAW_A} Å, and the stage states how much that exaggerates its zero-point motion, the root-mean-square displacement from ħ/2ω at the mode's frequency: for water's hydrogens in ν₁ that is {h2o_rms:.3f} Å, so they are drawn ×{h2o_exag}. Time is slowed 10¹³ to 10¹⁴ times, and the stage gives the factor for each mode.</p>
+      </div>
       <div class="mxmols">{cards}</div>
       <section class="mxcheck" aria-labelledby="h-biocheck">
         <h3 id="h-biocheck">Biosignature checklist</h3>
@@ -1123,15 +1467,101 @@ def _data_dates(ex: dict, g: dict | None) -> str:
     return f'<p class="note mxdates"><b>Data and fetch dates:</b> {"; ".join(parts)}.</p>' if parts else ""
 
 
+SPEC_WINDOW = (0.5, 5.1)   # µm: the range the Reading-atmospheres chapter draws
+
+
+def _mode_items(m: dict) -> str:
+    """One line per vibration: its band, whether infrared sees it, and where that band is in Reading atmospheres."""
+    e = html.escape
+    rows = []
+    for d in mode_table(m):
+        name = (d["nu"] + " " if d["nu"] else "") + d["name"]
+        ir = "infrared-active" if d["ir"] else "infrared-silent (the dipole does not change)"
+        if d["um"] is None:
+            where, band = "no wavelength in the atlas", ""
+        else:
+            band = f'{d["um"]:.2f} µm · '
+            link = mode_band_link(m["id"], d["um"])
+            if link:
+                where = f'<a href="#/methods?ch=spectroscopy">the {link[0]:g} µm band in Reading atmospheres ›</a>'
+            elif SPEC_WINDOW[0] <= d["um"] <= SPEC_WINDOW[1]:
+                where = "not drawn in Reading atmospheres"
+            else:
+                where = f"beyond the {SPEC_WINDOW[0]}–{SPEC_WINDOW[1]} µm window of Reading atmospheres"
+        exag = f' · drawn ×{d["exag"]}' if d.get("exag") else ""
+        rows.append(f'<li data-um="{d["um"] if d["um"] is not None else ""}"><b>{e(name)}</b> · {band}{e(ir)}{exag} · {where if "<a " in where else e(where)}</li>')
+    return f'<ul class="mxmodes">{"".join(rows)}</ul>' if rows else ""
+
+
 def _molecule_card(m: dict) -> str:
     e = html.escape
     seen = "".join(f'<li>{e(t)} (<a href="{e(SOURCES[k][1])}" rel="noopener">{e(SOURCES[k][0].split(",")[0])}</a>)</li>' for t, k in m["seen"]) or "<li>None in exoplanets so far.</li>"
     g = m["geom"]
     geo = ("an atom" if g["shape"] == "atom" else f"{g['shape']}, bond {g['r']} Å" + (f", angle {g['angle']}°" if g.get("angle") else ""))
+    modes = _mode_items(m)
+    vib = f"<dt>Vibrations</dt><dd>{modes}</dd>" if modes else ""
     return (f'<article class="mxmol" data-mol="{m["id"]}"><h4>{e(m["f"])} <span>{e(m["name"])}</span></h4>'
-            f'<dl><dt>Geometry</dt><dd>{e(geo)} (CCCBDB)</dd><dt>Bands (µm)</dt><dd>{e(m["bands"])}</dd><dt>Seen by</dt><dd>{e(m["who"])}</dd>'
+            f'<dl><dt>Geometry</dt><dd>{e(geo)} (CCCBDB)</dd><dt>Bands (µm)</dt><dd>{e(m["bands"])}</dd>{vib}<dt>Seen by</dt><dd>{e(m["who"])}</dd>'
             f'<dt>Exoplanet detections</dt><dd><ul>{seen}</ul></dd><dt>Why it matters</dt><dd>{e(m["why"])}</dd>'
             f'<dt>Without life?</dt><dd>{e(m["abiotic"])}</dd></dl></article>')
+
+
+PLATE_DESC = ("Stylised plate of Lyot's coronagraph, in order: parallel starlight enters an objective lens and is focused onto a "
+              "small opaque occulting disc, which blocks the star's image; a field lens re-images the telescope's pupil, where the "
+              "light the disc diffracted lands on the pupil's rim; a slightly smaller Lyot stop removes that rim; a camera lens forms "
+              "the final image, in which a faint companion's light, which missed the disc, survives. Insets show the star's image "
+              "with the disc, the pupil with its bright rim inside the stop, and the final image with the companion.")
+
+
+def _plate_svg(vertical: bool) -> str:
+    """One drawing of the plate. Geometry is written along the optical axis (s) and across it (q); the wide plate draws
+    s to the right, the phone's plate draws it downwards, so both say the same thing at a legible size."""
+    ax = 130
+    pt = (lambda s_, q: f"{q:.1f} {s_:.1f}") if vertical else (lambda s_, q: f"{s_:.1f} {q:.1f}")  # noqa: E731
+    path = lambda cls, pts: f'<path class="{cls}" d="M' + "L".join(pt(*xy) for xy in pts) + '"/>'  # noqa: E731
+    star = "".join(path("st", [(20, y), (110, y), (250, ax + (y - ax) * 0.1)]) for y in (82, 106, 154, 178))
+    diff = "".join(path("df", [(250, ax + k * 6), (330, ax + k * 40), (470, ax + k * 38)]) for k in (-1, 1))
+    comp = (path("cp", [(20, 62), (110, 83), (250, 104), (330, 112), (470, 100), (560, 98), (690, 112)])
+            + path("cp", [(20, 156), (110, 177), (250, 104), (330, 128), (470, 160), (560, 162), (690, 112)]))
+
+    def lens(x, h):
+        a_, b_, c_ = pt(x, ax - h), pt(x + 12, ax), pt(x, ax + h)
+        d_ = pt(x - 12, ax)
+        return f'<path class="ln" d="M{a_}Q{b_} {c_}Q{d_} {a_}Z"/>'
+
+    disc = (f'<rect x="{ax - 7}" y="246" width="14" height="8" rx="4" class="disc"/>' if vertical
+            else f'<rect x="246" y="{ax - 7}" width="8" height="14" rx="4" class="disc"/>') + path("rod", [(250, ax - 7), (250, 66)])
+    stop = path("stop", [(470, 40), (470, ax - 32)]) + path("stop", [(470, ax + 32), (470, 220)])
+    det = path("det", [(690, 70), (690, 190)])
+    names = [(110, "A · objective"), (250, "B · occulting disc"), (330, "C · field lens"), (470, "D · Lyot stop"), (560, "E · camera lens"), (690, "F · image")]
+    if vertical:   # labels to the right of the train, insets beside the planes they show
+        labs = "".join(f'<text x="232" y="{s_ + 4}">{t}</text>' for s_, t in names)
+        labs += '<text x="58" y="16" text-anchor="middle">companion</text><text x="182" y="16" text-anchor="middle">starlight</text>'
+        ins = lambda s_, body, t: (f'<g transform="translate(290 {s_ + 30})"><circle r="24" class="im"/>{body}<circle r="24" class="fr"/></g>'  # noqa: E731
+                                   f'<text x="290" y="{s_ + 68}" text-anchor="middle" class="sm">{t.split(": ")[1]}</text>')
+        size, frame = 'viewBox="0 0 360 770"', '<rect x="4" y="4" width="352" height="762" rx="10" class="pf"/>'
+    else:
+        labs = "".join(f'<text x="{s_}" y="{56 if i % 3 == 1 or s_ == 690 else 30}" text-anchor="middle">{t}</text>' for i, (s_, t) in enumerate(names))
+        labs += '<text x="34" y="56" text-anchor="start">companion</text><text x="34" y="196" text-anchor="start">starlight</text>'
+        ins = lambda s_, body, t: (f'<g transform="translate({s_} 258)"><circle r="27" class="im"/>{body}<circle r="27" class="fr"/></g>'  # noqa: E731
+                                   f'<text x="{s_}" y="302" text-anchor="middle" class="sm">{t}</text>')
+        size, frame = 'viewBox="0 0 760 312"', '<rect x="4" y="4" width="752" height="304" rx="10" class="pf"/><rect x="10" y="10" width="740" height="292" rx="6" class="pf2"/>'
+    insets = (ins(250, '<circle r="18" class="g2"/><circle r="11" class="g1"/><circle r="5.5" class="g0"/><circle r="8" class="blk"/>', "B: star image, disc on it")
+              + ins(470, '<circle r="18" class="rim"/><circle r="14.5" class="blk"/><circle r="13.5" class="stp"/>', "D: bright rim; stop inside")
+              + ins(690, '<circle r="12" class="g3"/><circle r="2.6" cx="-9" cy="-8" class="pl"/>', "F: the companion survives"))
+    return (f'<svg class="{"v" if vertical else "h"}" {size} role="img" aria-label="{html.escape(PLATE_DESC)}">{frame}'
+            f'{path("axis", [(20, ax), (720, ax)])}{star}{diff}{comp}{lens(110, 66)}{lens(330, 70)}{lens(560, 52)}{disc}{stop}{det}{labs}{insets}</svg>')
+
+
+def lyot_plate() -> str:
+    """A stylised plate of Lyot's coronagraph: the optical train, with what each plane would show. Plain SVG drawn in
+    the page's ink, so it follows both themes; the inset 'images' are dark, as images of the sky are. A wide drawing for
+    the desktop and a vertical one for a phone, so the labels stay legible."""
+    return f"""<figure class="mxplate">
+          {_plate_svg(False)}{_plate_svg(True)}
+          <div class="mxbadges">{honesty_label(LABEL_ILL)}<span class="mxexag">not to scale; after Lyot 1939</span></div>
+          <figcaption class="mxdesc">Plate: Lyot's coronagraph (1930), stylised. Starlight (amber) is stopped at the disc (B); the light the disc's edge diffracts (dashed) reaches the rim of the pupil image and is caught by the stop (D); a companion's light (blue) misses the disc and passes. Ray paths are schematic.</figcaption>
+        </figure>"""
 
 
 CONTRAST = [  # (label, contrast, conditions, status, source key)
@@ -1222,6 +1652,97 @@ function mxWobbleScale(q, Rpx, aAU, rstar){
   const km = aAU * MX_AU * q / 1000, inR = rstar ? km * 1000 / (rstar * MX_R.sun) : null;
   const label = N > 1 ? `star's motion exaggerated ×${N.toLocaleString('en-GB')}; true a★ = ${km < 10 ? km.toFixed(2) : Math.round(km).toLocaleString('en-GB')} km${inR != null ? ` ≈ ${inR < 0.01 ? inR.toExponential(1) : inR.toFixed(2)} R★` : ''}` : '';
   return {N, label};
+}
+
+// ---------- blocking starlight: Fraunhofer optics of a circular pupil (coronagraph families) ----------
+// The pupil radius is 1 and a focal-plane angle u is in λ/D, so the transform variable is k = πu. Fields are
+// radially symmetric, so each 2-D Fourier transform is a Hankel transform with a J0 kernel.
+function mxJ0(x){
+  const ax = Math.abs(x);
+  if (ax < 8){ const y = x * x;
+    return (57568490574.0 + y * (-13362590354.0 + y * (651619640.7 + y * (-11214424.18 + y * (77392.33017 + y * -184.9052456))))) /
+      (57568490411.0 + y * (1029532985.0 + y * (9494680.718 + y * (59272.64853 + y * (267.8532712 + y))))); }
+  const z = 8 / ax, y = z * z, xx = ax - 0.785398164;
+  const a = 1 + y * (-0.1098628627e-2 + y * (0.2734510407e-4 + y * (-0.2073370639e-5 + y * 0.2093887211e-6)));
+  const b = -0.1562499995e-1 + y * (0.1430488765e-3 + y * (-0.6911147651e-5 + y * (0.7621095161e-6 - y * 0.934935152e-7)));
+  return Math.sqrt(0.636619772 / ax) * (Math.cos(xx) * a - z * Math.sin(xx) * b);
+}
+function mxJ1(x){
+  const ax = Math.abs(x);
+  if (ax < 8){ const y = x * x;
+    return x * (72362614232.0 + y * (-7895059235.0 + y * (242396853.1 + y * (-2972611.439 + y * (15704.48260 + y * -30.16036606))))) /
+      (144725228442.0 + y * (2300535178.0 + y * (18583304.74 + y * (99447.43394 + y * (376.9991397 + y))))); }
+  const z = 8 / ax, y = z * z, xx = ax - 2.356194491;
+  const a = 1 + y * (0.183105e-2 + y * (-0.3516396496e-4 + y * (0.2457520174e-5 + y * -0.240337019e-6)));
+  const b = 0.04687499995 + y * (-0.2002690873e-3 + y * (0.8449199096e-5 + y * (-0.88228987e-6 + y * 0.105787412e-6)));
+  const v = Math.sqrt(0.636619772 / ax) * (Math.cos(xx) * a - z * Math.sin(xx) * b);
+  return x < 0 ? -v : v;
+}
+function mxJn(n, x){
+  if (n === 0) return mxJ0(x); if (n === 1) return mxJ1(x);
+  if (Math.abs(x) < n + 1){ const h = x / 2; let f = 1; for (let i = 2; i <= n; i++) f *= i; let term = Math.pow(h, n) / f, s = 0;
+    for (let m = 0; m < 30; m++){ s += term; term *= -h * h / ((m + 1) * (m + 1 + n)); } return s; }
+  let jm = mxJ0(x), j = mxJ1(x); for (let k = 1; k < n; k++){ const t = 2 * k / x * j - jm; jm = j; j = t; } return j;
+}
+const mxAiry = u => { const k = Math.PI * u; return Math.abs(k) < 1e-9 ? 1 : (2 * mxJ1(k) / k) ** 2; };
+function mxSonine(u, n){ const k = Math.PI * u; if (Math.abs(k) < 1e-6) return 1; let f = 1; for (let i = 2; i <= n + 1; i++) f *= i; return Math.pow(2, n + 1) * f * mxJn(n + 1, k) / Math.pow(k, n + 1); }
+const mxSonineI = (u, n) => (mxSonine(u, n) / (n + 1)) ** 2;
+function mxSimpson(f, a, b, n){ n += n % 2; const h = (b - a) / n; let s = f(a) + f(b); for (let i = 1; i < n; i++) s += (i % 2 ? 4 : 2) * f(a + i * h); return s * h / 3; }
+// The Lyot plane: the pupil minus what the occulting mask (radius m λ/D) removed. Bright at the rim.
+function mxLyotPupil(rho, m){ return (rho < 1 ? 1 : 0) - mxSimpson(k => mxJ1(k) * mxJ0(k * rho), 0, Math.PI * m, 400); }
+// Tabulated once per mask (inside and outside the rim, where the field jumps), then the final image for any stop:
+// I(u) = [2 ∫₀^s E(ρ) J0(πuρ) ρ dρ]², relative to the unblocked star's peak.
+function mxLyotTable(m){
+  const A = [], B = [], NA = 300, NB = 100;
+  for (let i = 0; i <= NA; i++){ const r = i / NA * (1 - 1e-9); A.push([r, mxLyotPupil(r, m)]); }
+  for (let i = 0; i <= NB; i++){ const r = 1 + 1e-9 + i / NB * 0.5; B.push([r, mxLyotPupil(r, m)]); }
+  return {m, A, B};
+}
+function mxLyotFinal(T, u, s){
+  const k = Math.PI * u, seg = (P, lim) => { let v = 0; for (let i = 1; i < P.length && P[i - 1][0] < lim; i++){
+    const r0 = P[i - 1][0], r1 = Math.min(lim, P[i][0]), e1 = P[i - 1][1] + (P[i][1] - P[i - 1][1]) * (r1 - r0) / (P[i][0] - r0);
+    v += 0.5 * (r1 - r0) * (P[i - 1][1] * mxJ0(k * r0) * r0 + e1 * mxJ0(k * r1) * r1); } return v; };
+  const v = seg(T.A, Math.min(s, 1)) + (s > 1 ? seg(T.B, s) : 0);
+  return (2 * v) ** 2;
+}
+// The ideal charge-2 vortex: no light inside the re-imaged pupil, (1/ρ)² outside it (methods.py: vortex_pupil_field).
+const mxVortexPupil = rho => rho < 1 ? 0 : 1 / (rho * rho);
+// Synthetic ADI (seeded with mxRand, below): quasi-static speckles fixed to the instrument, a planet turning with the sky. The median of the
+// sequence models the speckles; each frame minus the median, turned back by its field rotation and averaged,
+// keeps the planet (Marois et al. 2006). All synthetic: speckle pattern, noise and planet brightness are illustrative.
+function mxAdi(seed, o){
+  o = Object.assign({G: 64, N: 24, rot: 60, lod: 3, rp: 16, pa: 20, planet: 0.6, noise: 0.04, jitter: 0.12}, o || {});
+  const {G, N} = o, rnd = mxRand(seed), c0 = (G - 1) / 2, sig = o.lod / 2.355, gauss = () => { let s = 0; for (let i = 0; i < 6; i++) s += rnd(); return (s - 3) / Math.SQRT2; };
+  const sp = []; for (let i = 0; i < 110; i++){ const r = 5 + rnd() * 24, a = rnd() * 2 * Math.PI; sp.push([c0 + r * Math.cos(a), c0 + r * Math.sin(a), Math.exp(-r / 10) * (0.3 + rnd())]); }
+  const blob = (F, x, y, A) => { for (let j = Math.max(0, Math.floor(y - 4 * sig)); j <= Math.min(G - 1, Math.ceil(y + 4 * sig)); j++) for (let i = Math.max(0, Math.floor(x - 4 * sig)); i <= Math.min(G - 1, Math.ceil(x + 4 * sig)); i++) F[j * G + i] += A * Math.exp(-((i - x) ** 2 + (j - y) ** 2) / (2 * sig * sig)); };
+  // The planet's brightness is set against the typical speckle at its radius.
+  const ring = sp.filter(s => Math.abs(Math.hypot(s[0] - c0, s[1] - c0) - o.rp) < 3).map(s => s[2]), Ap = o.planet * (ring.length ? ring.reduce((a, b) => a + b, 0) / ring.length : 0.2);
+  const frames = [], ang = [];
+  for (let k = 0; k < N; k++){
+    const F = new Float32Array(G * G), th = o.rot * k / (N - 1); ang.push(th);
+    for (const s of sp) blob(F, s[0], s[1], s[2] * (1 + o.jitter * gauss()));
+    const a = (o.pa + th) * Math.PI / 180; blob(F, c0 + o.rp * Math.cos(a), c0 + o.rp * Math.sin(a), Ap);
+    for (let p = 0; p < G * G; p++) F[p] += o.noise * gauss();
+    frames.push(F);
+  }
+  const med = new Float32Array(G * G), col = new Float32Array(N);
+  for (let p = 0; p < G * G; p++){ for (let k = 0; k < N; k++) col[k] = frames[k][p]; col.sort(); med[p] = N % 2 ? col[(N - 1) / 2] : 0.5 * (col[N / 2 - 1] + col[N / 2]); }
+  // Turn each residual back by its field rotation (bilinear), then average the first n of them.
+  const derot = (R, th) => { const out = new Float32Array(G * G), ca = Math.cos(th * Math.PI / 180), sa = Math.sin(th * Math.PI / 180);
+    for (let j = 0; j < G; j++) for (let i = 0; i < G; i++){ const x = i - c0, y = j - c0, xs = c0 + ca * x - sa * y, ys = c0 + sa * x + ca * y, i0 = Math.floor(xs), j0 = Math.floor(ys);
+      if (i0 < 0 || j0 < 0 || i0 >= G - 1 || j0 >= G - 1) continue; const fx = xs - i0, fy = ys - j0;
+      out[j * G + i] = R[j0 * G + i0] * (1 - fx) * (1 - fy) + R[j0 * G + i0 + 1] * fx * (1 - fy) + R[(j0 + 1) * G + i0] * (1 - fx) * fy + R[(j0 + 1) * G + i0 + 1] * fx * fy; }
+    return out; };
+  const stacks = [], acc = new Float32Array(G * G);
+  for (let k = 0; k < N; k++){ const R = new Float32Array(G * G); for (let p = 0; p < G * G; p++) R[p] = frames[k][p] - med[p];
+    const D = derot(R, ang[k]); for (let p = 0; p < G * G; p++) acc[p] += D[p]; stacks.push(Float32Array.from(acc, v => v / (k + 1))); }
+  // Signal-to-noise at the planet's (de-rotated) place against the rest of its annulus.
+  const a0 = o.pa * Math.PI / 180, px = c0 + o.rp * Math.cos(a0), py = c0 + o.rp * Math.sin(a0);
+  const snr = F => { let s = 0, n = 0, m = 0, q = 0, nn = 0;
+    for (let j = 0; j < G; j++) for (let i = 0; i < G; i++){ const d = Math.hypot(i - px, j - py), r = Math.hypot(i - c0, j - c0);
+      if (d < 1.5){ s += F[j * G + i]; n++; } else if (d > 6 && Math.abs(r - o.rp) < 3){ m += F[j * G + i]; q += F[j * G + i] ** 2; nn++; } }
+    const mu = m / nn, sd = Math.sqrt(Math.max(1e-12, q / nn - mu * mu)); return (s / n - mu) / sd; };
+  return {G, N, frames, med, stacks, ang, snrRaw: snr(frames[0]), snr: stacks.map(snr), c0, sig, Ap, o, px, py};
 }
 
 // ---------- stages: a canvas with play, speed and a time scrubber; still under reduced motion ----------
@@ -1452,7 +1973,7 @@ MXV.scan = {key: 0.62, period: 16, init(st){
   mxGlassPanel(c, 10, h - 52, 290, 42);
   mxText(c, `targets checked ${String(seen).padStart(2, '0')} · aligned ${hits}`, 22, h - 34, {size: 12, mono: true, color: '#F5F5F7'});
   mxText(c, 'expected ≈ R★/a = 7.5% for a pi Men c-like orbit', 22, h - 18, {size: 11});
-  mxText(c, 'star positions illustrative; colours from temperature', w - 12, 18, {size: 11, align: 'right'});
+  if (!S.intro) mxText(c, 'star positions illustrative; colours from temperature', w - 12, 18, {size: 11, align: 'right'});
 }};
 
 // ---------- toward and away: Doppler shift ----------
@@ -1787,6 +2308,218 @@ MXV.coronagraph = {key: 0.7, period: 16, init(st){ st.opt.mode = 'mask'; const r
     st.exag = 'log brightness stretch; orbital time compressed; planets drawn as dots';
   }};
 
+// ---------- coronagraph families: four optical trains drawn from the functions above ----------
+// A log-intensity colour ramp (0 = the stretch's floor, 1 = its top), the same in both themes (the stage is dark).
+const MX_HEAT = [[0, [0, 0, 0]], [0.2, [20, 24, 82]], [0.45, [94, 42, 140]], [0.7, [230, 110, 60]], [0.88, [255, 190, 90]], [1, [255, 250, 235]]];
+function mxHeat(v){ v = Math.max(0, Math.min(1, v)); for (let i = 1; i < MX_HEAT.length; i++) if (v <= MX_HEAT[i][0]){ const [a, ca] = MX_HEAT[i - 1], [b, cb] = MX_HEAT[i], f = (v - a) / (b - a); return ca.map((x, j) => Math.round(x + f * (cb[j] - x))); } return MX_HEAT[MX_HEAT.length - 1][1]; }
+const mxLogV = (I, decades) => 1 + Math.log10(Math.max(I, 1e-30)) / decades;
+// A radially symmetric image on an offscreen canvas, cached by key; fn(r, angle) returns [r, g, b].
+const MX_IMG = new Map();
+function mxRadialImage(key, N, ext, fn){
+  if (MX_IMG.has(key)) return MX_IMG.get(key);
+  const cv = document.createElement('canvas'); cv.width = cv.height = N;
+  const cx = cv.getContext('2d'), im = cx.createImageData(N, N);
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++){
+    const x = (i + 0.5) / N * 2 - 1, y = (j + 0.5) / N * 2 - 1, c = fn(Math.hypot(x, y) * ext, Math.atan2(y, x)), o = 4 * (j * N + i);
+    im.data[o] = c[0]; im.data[o + 1] = c[1]; im.data[o + 2] = c[2]; im.data[o + 3] = 255;
+  }
+  cx.putImageData(im, 0, 0);
+  if (MX_IMG.size > 80) MX_IMG.clear();
+  MX_IMG.set(key, cv); return cv;
+}
+// Same for a square grid of values (the ADI frames), with its own stretch.
+function mxGridImage(vals, G, tone){
+  const cv = document.createElement('canvas'); cv.width = cv.height = G;
+  const cx = cv.getContext('2d'), im = cx.createImageData(G, G);
+  for (let p = 0; p < G * G; p++){ const c = mxHeat(tone(vals[p])); im.data[4 * p] = c[0]; im.data[4 * p + 1] = c[1]; im.data[4 * p + 2] = c[2]; im.data[4 * p + 3] = 255; }
+  cx.putImageData(im, 0, 0); return cv;
+}
+// Text wrapped by words to a width, at most `max` lines (the last one is cut with an ellipsis).
+function mxWrap(c, s, x, y, maxW, max, o){
+  o = o || {}; c.font = `${o.w || 500} ${o.size || 11}px "Geist",system-ui,sans-serif`;
+  const words = String(s).split(' '), lines = []; let cur = '';
+  for (const wd of words){ const tr = cur ? cur + ' ' + wd : wd; if (c.measureText(tr).width > maxW && cur){ lines.push(cur); cur = wd; } else cur = tr; }
+  if (cur) lines.push(cur);
+  if (lines.length > max){ lines.length = max; let l = lines[max - 1]; while (l.length > 1 && c.measureText(l + '…').width > maxW) l = l.slice(0, -1); lines[max - 1] = l + '…'; }
+  lines.forEach((l, i) => mxText(c, l, x, y + i * ((o.size || 11) + 3), o));
+  return lines.length;
+}
+// The stage's headline: one line on a wide stage, up to two on a phone.
+const mxHead = (c, w, s) => mxWrap(c, s, 14, 22, w - 28, 2, {size: w < 600 ? 11 : 12, w: 600, color: '#F5F5F7'});
+// The four scenes: Lyot (mask + stop), an apodised pupil, a vortex phase mask, and AO with ADI.
+const MX_CG = {lyotMask: 4, lyotStops: [1.5, 1.4, 1.3, 1.2, 1.1, 1.0, 0.95, 0.9, 0.85, 0.8], up: 8, cp: 1e-3};
+function mxCgPanels(w, h){
+  const narrow = w < 600, cols = narrow ? 2 : 4, gap = narrow ? 12 : 14, top = narrow ? 62 : 56;
+  const s = Math.max(60, Math.min((w - gap * (cols + 1)) / cols, narrow ? h * 0.22 : h * 0.4));
+  const rowW = cols * s + (cols - 1) * gap, x0 = (w - rowW) / 2, ps = [];
+  for (let i = 0; i < 4; i++){ const r = Math.floor(i / cols), cI = i % cols; ps.push({x: x0 + cI * (s + gap), y: top + r * (s + 52), s}); }
+  const bottom = ps[3].y + s + 36;
+  return {ps, bottom, narrow};
+}
+function mxCgFrame(c, p, title, sub, img, on){
+  c.save(); c.beginPath(); c.roundRect ? c.roundRect(p.x, p.y, p.s, p.s, 12) : c.rect(p.x, p.y, p.s, p.s); c.clip();
+  if (img){ c.imageSmoothingEnabled = true; c.drawImage(img, p.x, p.y, p.s, p.s); }
+  c.restore();
+  c.strokeStyle = on ? 'rgba(100,210,255,.85)' : 'rgba(255,255,255,.16)'; c.lineWidth = on ? 1.5 : 1;
+  c.beginPath(); c.roundRect ? c.roundRect(p.x + .5, p.y + .5, p.s - 1, p.s - 1, 12) : c.rect(p.x + .5, p.y + .5, p.s - 1, p.s - 1); c.stroke();
+  mxText(c, title, p.x + 2, p.y - 8, {size: 11, w: 600, color: on ? '#F5F5F7' : '#C7C7CC'});
+  if (sub) mxWrap(c, sub, p.x + 2, p.y + p.s + 15, p.s, 2, {size: 11});
+}
+function mxCgArrows(c, ps, narrow){ if (narrow) return; c.strokeStyle = 'rgba(255,255,255,.3)'; c.fillStyle = 'rgba(255,255,255,.3)';
+  for (let i = 0; i < 3; i++){ const a = ps[i], b = ps[i + 1], y = a.y + a.s / 2, x0 = a.x + a.s + 2, x1 = b.x - 2; c.beginPath(); c.moveTo(x0, y); c.lineTo(x1 - 4, y); c.stroke(); c.beginPath(); c.moveTo(x1, y); c.lineTo(x1 - 6, y - 4); c.lineTo(x1 - 6, y + 4); c.fill(); } }
+// A log-intensity profile: lines of [u, I] against u (λ/D), from 10⁰ down to 10⁻⁸. The key sits above the plot,
+// in as many rows as the width needs, so it never covers a curve.
+function mxCgKey(c, x, y0, w, keys){
+  c.font = '500 11px "Geist",system-ui,sans-serif';
+  const rows = [[]]; let rw = 0;
+  keys.forEach(k => { const kw = 26 + c.measureText(k.label).width + 14; if (rw + kw > w && rows[rows.length - 1].length){ rows.push([]); rw = 0; } rows[rows.length - 1].push([k, rw]); rw += kw; });
+  rows.forEach((r, i) => r.forEach(([k, dx]) => { const kx = x + dx, ky = y0 + i * 15;
+    if (k.planet){ c.fillStyle = '#64D2FF'; c.beginPath(); c.arc(kx + 9, ky - 4, 3.5, 0, 2 * Math.PI); c.fill(); }
+    else { c.strokeStyle = k.color; c.lineWidth = 2; c.setLineDash(k.dash || []); c.beginPath(); c.moveTo(kx, ky - 4); c.lineTo(kx + 18, ky - 4); c.stroke(); c.setLineDash([]); }
+    mxText(c, k.label, kx + 24, ky, {size: 11}); }));
+  return rows.length * 15;
+}
+function mxCgPlot(c, x, y, w, h, lines, o){
+  o = o || {};
+  const keys = lines.filter(l => l.label).concat(o.planet ? [{planet: true, label: o.planetLabel || 'planet'}] : []);
+  const top = y - 22;
+  mxGlassPanel(c, x - 44, top, w + 56, h + 50);
+  const kh = mxCgKey(c, x, top + 16, w, keys) + 4;
+  y += kh; h -= kh + 14;   // the last 14 px: a row under the tick labels for the axis title and the mask's label
+  const umax = o.umax || 12, dec = 8, X = u => x + u / umax * w, Y = I => y + Math.min(1, -Math.log10(Math.max(I, 1e-12)) / dec) * h;
+  mxAxes(c, x, y, w, h, {y: 'STARLIGHT, LOG (PEAK = 1)', x: ''});
+  mxText(c, 'ANGLE FROM THE STAR (λ/D)', x + w, y + h + 27, {size: 11, w: 600, color: '#8E8E93', mono: true, align: 'right'});
+  if (o.mask){ c.fillStyle = 'rgba(255,255,255,.05)'; c.fillRect(x, y, X(o.mask) - x, h); mxText(c, `shaded: ${o.maskLabel || 'behind the mask'}`, x, y + h + 27, {size: 11}); }
+  for (const e of [0, 2, 4, 6, 8]){ const yy = Y(Math.pow(10, -e)); c.strokeStyle = 'rgba(255,255,255,.07)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x, yy); c.lineTo(x + w, yy); c.stroke(); mxText(c, e ? `10⁻${'⁰¹²³⁴⁵⁶⁷⁸'[e]}` : '1', x - 6, yy + 4, {size: 11, mono: true, align: 'right'}); }
+  for (const u of [0, 4, 8, 12]) if (u <= umax) mxText(c, String(u), X(u), y + h + 13, {size: 11, mono: true, align: 'center'});
+  c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip();
+  for (const L of lines){ c.strokeStyle = L.color; c.lineWidth = L.width || 1.6; c.setLineDash(L.dash || []); c.beginPath(); L.pts.forEach((p, i) => { const xx = X(p[0]), yy = Y(p[1]); i ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }); c.stroke(); c.setLineDash([]); }
+  if (o.planet){ c.fillStyle = '#64D2FF'; c.beginPath(); c.arc(X(o.planet[0]), Y(o.planet[1]), 4, 0, 2 * Math.PI); c.fill(); }
+  c.restore();
+}
+// 1.8×10⁻⁷, for numbers spoken on the stage.
+function mxSci(x){ if (!(x > 0)) return '0'; const e = Math.floor(Math.log10(x)), m = x / Math.pow(10, e); return `${m.toFixed(1)}×10${mxSup(e)}`; }
+const mxPhase = (t, a, b) => Math.max(0, Math.min(1, (t - a) / (b - a)));
+MXV.cgfam = {key: 0.85, period: 14, init(st){ st.opt.mode = 'lyot'; },
+  control(st, el){ if (el.tagName === 'SELECT') st.opt.mode = el.value; },
+  draw(c, w, h, t, st){
+    const m = st.opt.mode, L = mxCgPanels(w, h), ps = L.ps, N = L.narrow ? 72 : 96;
+    const lw = Math.min(w - 90, 760), lx = (w - lw) / 2 + 30, ly = L.bottom + 22, lh = Math.max(60, h - ly - 40);
+    const planetDot = (p, u, pa, I, decades, ext) => { const r = u / ext * p.s / 2, a = pa * Math.PI / 180, v = mxLogV(I, decades); if (v <= 0) return;
+      c.fillStyle = mxRgb(mxHeat(v)); c.beginPath(); c.arc(p.x + p.s / 2 + r * Math.cos(a), p.y + p.s / 2 - r * Math.sin(a), Math.max(2, p.s / 2 / ext * 0.6), 0, 2 * Math.PI); c.fill(); };
+    if (m === 'adi'){ this.adi(c, w, h, t, st, L, lx, ly, lw, lh); return; }
+    const ext = 10, airyImg = mxRadialImage('airy' + N, N, ext, r => mxHeat(mxLogV(mxAiry(r), 6)));
+    const pupil = (key, fn) => mxRadialImage(key + N, N, 1.5, r => fn(r));
+    // A clear pupil is drawn as a vector disc, so its edge stays sharp at any size.
+    const clearPupil = (p, title, sub, on) => { mxCgFrame(c, p, title, sub, null, on); c.fillStyle = 'rgb(235,235,240)'; c.beginPath(); c.arc(p.x + p.s / 2, p.y + p.s / 2, p.s / 3, 0, 2 * Math.PI); c.fill(); };
+    if (m === 'apod'){
+      // The apodiser's strength steps n = 0 (clear), 1, 2: (1 − ρ²)ⁿ.
+      const n = t < 0.3 ? 0 : t < 0.6 ? 1 : 2;
+      clearPupil(ps[0], 'Clear pupil', 'transmission 1', n === 0);
+      mxCgFrame(c, ps[1], 'Its image', 'the Airy pattern: rings', airyImg, n === 0);
+      mxCgFrame(c, ps[2], `Apodised pupil, n = ${n}`, `transmission (1 − ρ²)${n ? '' : '⁰'}${n === 1 ? '¹' : n === 2 ? '²' : ''}`, pupil('apod' + n, r => { const a = r < 1 ? Math.pow(1 - r * r, n) : 0; return [Math.round(235 * a), Math.round(235 * a), Math.round(240 * a)]; }), n > 0);
+      mxCgFrame(c, ps[3], 'Its image', n ? 'rings suppressed; core wider' : 'same as clear', mxRadialImage('son' + n + N, N, ext, r => mxHeat(mxLogV(mxSonineI(r, n), 6))), n > 0);
+      planetDot(ps[3], 5, 35, 1e-4 / (n + 1) ** 2, 6, ext);
+      mxCgArrows(c, ps, L.narrow);
+      const pts = (f) => Array.from({length: 241}, (_, i) => [i / 20, f(i / 20)]);
+      mxCgPlot(c, lx, ly, lw, lh, [{pts: pts(mxAiry), color: 'rgba(255,255,255,.5)', dash: [4, 4], label: 'clear pupil (Airy)'}, {pts: pts(u => mxSonineI(u, n)), color: '#FFB340', label: `apodised, n = ${n}`}], {planet: [5, 1e-4 / (n + 1) ** 2], planetLabel: 'planet: illustrative 10⁻⁴, dimmed with the star'});
+      mxHead(c, w, `throughput 1/(2n + 1) = ${Math.round(100 / (2 * n + 1))}% · peak 1/(n + 1)² = ${Math.round(100 / (n + 1) ** 2)}% of the clear pupil’s`);
+      st.exag = 'log intensity stretch (1 to 10⁻⁶); planet at an illustrative 10⁻⁴; ideal monochromatic optics';
+      return;
+    }
+    if (m === 'vortex'){
+      // Phase ramp e^{2iθ} winds on, then the stop closes from 150% to 95% of the pupil.
+      const wind = mxPhase(t, 0.15, 0.45), s = 1.5 - 0.55 * mxPhase(t, 0.5, 0.7);
+      clearPupil(ps[0], 'Entrance pupil', 'the telescope', t < 0.15);
+      mxCgFrame(c, ps[1], 'Focal plane: vortex', 'phase ramp, charge 2', airyImg, t >= 0.15 && t < 0.5);
+      if (wind > 0){ // the mask's phase, as hue: two full turns around the centre (charge 2)
+        const ramp = mxRadialImage('vortexhue' + N, N, ext, (r, a) => { const hh = ((2 * a / (2 * Math.PI)) % 1 + 1) % 1, k = Math.floor(hh * 6), f = hh * 6 - k, q = 1 - f;
+          const rgb = [[1, f, 0], [q, 1, 0], [0, 1, f], [0, q, 1], [f, 0, 1], [1, 0, q]][k % 6]; return rgb.map(x => Math.round(60 + 160 * x)); });
+        c.save(); c.globalAlpha = 0.45 * wind; c.beginPath(); c.roundRect ? c.roundRect(ps[1].x, ps[1].y, ps[1].s, ps[1].s, 12) : c.rect(ps[1].x, ps[1].y, ps[1].s, ps[1].s); c.clip(); c.drawImage(ramp, ps[1].x, ps[1].y, ps[1].s, ps[1].s); c.restore();
+      }
+      const lyIn = mxRadialImage('vortexlyot' + N, N, 1.5, r => mxHeat(mxLogV(mxVortexPupil(r) ** 2, 4)));
+      const clear = pupil('clearlog', r => mxHeat(r < 1 ? 1 : 0));
+      mxCgFrame(c, ps[2], 'Lyot plane', wind < 1 ? 'starlight moving outward' : 'star: all outside the pupil', wind < 0.5 ? clear : lyIn, t >= 0.45 && t < 0.75);
+      const stopPx = s / 1.5 * ps[2].s / 2; c.save(); c.beginPath(); c.rect(ps[2].x, ps[2].y, ps[2].s, ps[2].s); c.arc(ps[2].x + ps[2].s / 2, ps[2].y + ps[2].s / 2, stopPx, 0, 2 * Math.PI, true); c.fillStyle = 'rgba(40,40,44,.92)'; c.fill('evenodd'); c.restore();
+      c.strokeStyle = '#64D2FF'; c.setLineDash([3, 3]); c.beginPath(); c.arc(ps[2].x + ps[2].s / 2, ps[2].y + ps[2].s / 2, stopPx, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+      const done = wind >= 1 && s < 1, fin = done ? mxRadialImage('black' + N, N, 1, () => [0, 0, 0]) : airyImg;
+      mxCgFrame(c, ps[3], 'Final image', done ? 'star removed (ideal)' : 'star still there', fin, t >= 0.7);
+      planetDot(ps[3], 3, 35, MX_CG.cp * Math.min(1, s) ** 4, 6, ext);
+      mxCgArrows(c, ps, L.narrow);
+      const pts = (f) => Array.from({length: 241}, (_, i) => [i / 20, f(i / 20)]);
+      mxCgPlot(c, lx, ly, lw, lh, [{pts: pts(mxAiry), color: 'rgba(255,255,255,.5)', dash: [4, 4], label: 'no coronagraph (Airy)'}, {pts: pts(u => done ? 1e-12 : mxAiry(u)), color: '#FFB340', label: done ? 'vortex: zero (ideal)' : 'vortex not yet working'}], {planet: [3, MX_CG.cp * Math.min(1, s) ** 4], planetLabel: 'planet: illustrative 10⁻³, through the stop'});
+      mxHead(c, w, `ideal charge-2 vortex: Lyot-plane field 0 inside the pupil, (1/ρ)² outside · stop ${Math.round(s * 100)}% of the pupil`);
+      st.exag = 'log intensity stretch (1 to 10⁻⁶); planet at an illustrative 10⁻³; ideal optics: real vortices leave residuals from aberrations and the star’s size';
+      return;
+    }
+    // Lyot: the occulting mask fades in, then the Lyot stop closes from 150% to 80% of the pupil.
+    const T = st.opt.lyot || (st.opt.lyot = mxLyotTable(MX_CG.lyotMask));
+    if (!st.opt.lyotFinal){ // the final image's profile for each stop, once
+      st.opt.lyotFinal = MX_CG.lyotStops.map(s => ({s, pts: Array.from({length: 121}, (_, i) => [i / 10, mxLyotFinal(T, i / 10, s)])})); }
+    const mask = mxPhase(t, 0.15, 0.35), s = 1.5 - 0.7 * mxPhase(t, 0.42, 0.75);
+    const F = st.opt.lyotFinal, i1 = F.findIndex(f => f.s <= s), j = Math.max(1, i1 < 0 ? F.length - 1 : i1), A = F[j - 1], B = F[j], f = (A.s - s) / ((A.s - B.s) || 1);
+    const now = A.pts.map((p, i) => [p[0], Math.pow(10, (1 - f) * Math.log10(Math.max(p[1], 1e-14)) + f * Math.log10(Math.max(B.pts[i][1], 1e-14)))]);
+    const prof = u => { const x = Math.min(119.999, u * 10), i = Math.floor(x), g = x - i; return now[i][1] * (1 - g) + now[i + 1][1] * g; };
+    clearPupil(ps[0], 'Entrance pupil', 'the telescope', t < 0.15);
+    mxCgFrame(c, ps[1], 'Focal plane + mask', `occulting disc, ${MX_CG.lyotMask} λ/D`, airyImg, t >= 0.15 && t < 0.42);
+    planetDot(ps[1], MX_CG.up, 35, MX_CG.cp, 6, ext);
+    if (mask > 0){ const mr = MX_CG.lyotMask / ext * ps[1].s / 2; c.fillStyle = `rgba(8,8,10,${mask})`; c.beginPath(); c.arc(ps[1].x + ps[1].s / 2, ps[1].y + ps[1].s / 2, mr, 0, 2 * Math.PI); c.fill(); c.strokeStyle = `rgba(255,255,255,${0.5 * mask})`; c.stroke(); }
+    const lyotImg = mxRadialImage('lyotplane' + N, N, 1.5, r => { const i = r < 1 ? Math.min(T.A.length - 1, Math.round(r * 300)) : Math.min(T.B.length - 1, Math.round((r - 1) * 200)); const e = r < 1 ? T.A[i][1] : r <= 1.5 ? T.B[i][1] : 0; return mxHeat(mxLogV(e * e, 4)); });
+    const clearLog = pupil('clearlog', r => mxHeat(r < 1 ? 1 : 0));
+    mxCgFrame(c, ps[2], 'Lyot plane + stop', mask < 1 ? 'the pupil again' : 'bright rim: light the mask diffracted', mask < 0.5 ? clearLog : lyotImg, t >= 0.42 && t < 0.75);
+    const stopPx = s / 1.5 * ps[2].s / 2; c.save(); c.beginPath(); c.rect(ps[2].x, ps[2].y, ps[2].s, ps[2].s); c.arc(ps[2].x + ps[2].s / 2, ps[2].y + ps[2].s / 2, stopPx, 0, 2 * Math.PI, true); c.fillStyle = 'rgba(40,40,44,.92)'; c.fill('evenodd'); c.restore();
+    c.strokeStyle = '#64D2FF'; c.setLineDash([3, 3]); c.beginPath(); c.arc(ps[2].x + ps[2].s / 2, ps[2].y + ps[2].s / 2, stopPx, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+    const sKey = 'lyotfinal' + N + '_' + Math.round(s * 40) + '_' + (mask >= 1 ? 1 : 0);
+    const finImg = mask < 1 ? airyImg : mxRadialImage(sKey, N, ext, r => mxHeat(mxLogV(prof(r), 6)));
+    mxCgFrame(c, ps[3], 'Final image', mask < 1 ? 'no mask yet: the full star' : `stop ${Math.round(s * 100)}% of the pupil`, finImg, t >= 0.75);
+    planetDot(ps[3], MX_CG.up, 35, MX_CG.cp * Math.min(1, s) ** 4, 6, ext);
+    mxCgArrows(c, ps, L.narrow);
+    const lines = [{pts: Array.from({length: 241}, (_, i) => [i / 20, mxAiry(i / 20)]), color: 'rgba(255,255,255,.5)', dash: [4, 4], label: 'no coronagraph (Airy)'}];
+    if (mask >= 1) lines.push({pts: now, color: '#FFB340', label: `Lyot, stop ${Math.round(s * 100)}%`});
+    mxCgPlot(c, lx, ly, lw, lh, lines, {mask: MX_CG.lyotMask, planet: [MX_CG.up, MX_CG.cp * Math.min(1, s) ** 4], planetLabel: 'planet: illustrative 10⁻³, through the stop'});
+    const at8 = prof(MX_CG.up), air8 = mxAiry(MX_CG.up);
+    mxHead(c, w, mask < 1 ? 'the star’s image, rings and all' : `starlight at ${MX_CG.up} λ/D: ${mxSci(at8)} of the star’s peak (no coronagraph: ${mxSci(air8)})`);
+    st.exag = 'log intensity stretch (1 to 10⁻⁶); planet at an illustrative 10⁻³; ideal monochromatic optics; mask and stop sizes illustrative';
+  },
+  adi(c, w, h, t, st, L, lx, ly, lw, lh){
+    const A = st.opt.adi || (st.opt.adi = mxAdi(17)), ps = L.ps, G = A.G;
+    const ao = mxPhase(t, 0.02, 0.18), k = Math.max(0, Math.min(A.N - 1, Math.floor(mxPhase(t, 0.22, 0.97) * A.N)));
+    const smax = Math.max(...A.med);
+    const logTone = v => mxLogV(Math.max(v, 1e-6) / smax, 3);
+    // AO: a seeing halo (no correction) blends into the corrected frame (core under the mask, speckles).
+    const key = 'ao' + Math.round(ao * 10);
+    if (!st.opt.aoImg || st.opt.aoKey !== key){
+      const F0 = A.frames[0], mix = new Float32Array(G * G), sd = 11;
+      for (let j = 0; j < G; j++) for (let i = 0; i < G; i++){ const r2 = (i - A.c0) ** 2 + (j - A.c0) ** 2; mix[j * G + i] = (1 - ao) * 1.6 * smax * Math.exp(-r2 / (2 * sd * sd)) + ao * F0[j * G + i]; }
+      st.opt.aoImg = mxGridImage(mix, G, logTone); st.opt.aoKey = key; }
+    if (st.opt.adiK !== k){ st.opt.adiK = k;
+      st.opt.frameImg = mxGridImage(A.frames[k], G, logTone);
+      const top = Math.max(1e-6, A.Ap * 0.8); st.opt.stackImg = mxGridImage(A.stacks[k], G, v => Math.max(0, v) / top * 0.9); }
+    if (!st.opt.medImg) st.opt.medImg = mxGridImage(A.med, G, logTone);
+    mxCgFrame(c, ps[0], ao < 1 ? 'Adaptive optics: on' : 'AO on', ao < 1 ? 'deformable mirror switching on' : 'core and speckles, λ/D wide', st.opt.aoImg, t < 0.22);
+    mxCgFrame(c, ps[1], `Frame ${k + 1} of ${A.N}`, `field rotation ${A.ang[k].toFixed(0)}°`, st.opt.frameImg, t >= 0.22);
+    mxCgFrame(c, ps[2], 'Median of the frames', 'speckles only: the model', st.opt.medImg, t >= 0.22);
+    mxCgFrame(c, ps[3], `Stack of ${k + 1}`, 'frame − median, turned back', st.opt.stackImg, t >= 0.22);
+    // The planet's track on the raw frame (it turns with the sky) and its place in the stack.
+    const sc = ps[1].s / G, a0 = (A.o.pa + A.ang[k]) * Math.PI / 180;
+    c.strokeStyle = 'rgba(100,210,255,.6)'; c.setLineDash([2, 3]); c.beginPath(); c.arc(ps[1].x + (A.c0 + .5) * sc, ps[1].y + (A.c0 + .5) * sc, A.o.rp * sc, A.o.pa * Math.PI / 180, a0); c.stroke(); c.setLineDash([]);
+    if (t >= 0.22){ const r = A.o.rp * sc; c.strokeStyle = '#64D2FF'; c.beginPath(); c.arc(ps[1].x + (A.c0 + .5) * sc + r * Math.cos(a0), ps[1].y + (A.c0 + .5) * sc + r * Math.sin(a0), 3 * A.sig * sc + 3, 0, 2 * Math.PI); c.stroke(); }
+    if (k >= 4){ c.strokeStyle = '#64D2FF'; c.beginPath(); c.arc(ps[3].x + (A.px + .5) * sc, ps[3].y + (A.py + .5) * sc, 3 * A.sig * sc + 3, 0, 2 * Math.PI); c.stroke(); }
+    mxCgArrows(c, ps, L.narrow);
+    // Signal-to-noise against frames stacked.
+    mxGlassPanel(c, lx - 44, ly - 22, lw + 56, lh + 50);
+    const kh = mxCgKey(c, lx, ly - 6, lw, [{label: 'stack of the first n frames', color: '#FFB340'}, {label: `one raw frame: S/N ${A.snrRaw.toFixed(1)}`, color: 'rgba(255,255,255,.6)', dash: [4, 4]}]);
+    ly += kh + 14; lh -= kh + 14;
+    mxAxes(c, lx, ly, lw, lh, {y: 'PLANET SIGNAL-TO-NOISE', x: 'FRAMES STACKED'});
+    const smaxN = Math.max(...A.snr, A.snrRaw, 5) * 1.1, X = i => lx + (i + 0.5) / A.N * lw, Y = v => ly + lh - Math.max(0, v) / smaxN * lh;
+    for (const v of [0, 5, 10, 15, 20, 25]) if (v < smaxN){ c.strokeStyle = 'rgba(255,255,255,.07)'; c.lineWidth = 1; c.beginPath(); c.moveTo(lx, Y(v)); c.lineTo(lx + lw, Y(v)); c.stroke(); mxText(c, String(v), lx - 6, Y(v) + 4, {size: 11, mono: true, align: 'right'}); }
+    for (const i of [0, 11, 23]) mxText(c, String(i + 1), X(i), ly + lh + 13, {size: 11, mono: true, align: 'center'});
+    for (let i = 0; i <= k; i++){ c.fillStyle = i === k ? '#FFB340' : 'rgba(255,179,64,.45)'; const bw = Math.max(2, lw / A.N - 3); c.fillRect(X(i) - bw / 2, Y(A.snr[i]), bw, ly + lh - Y(A.snr[i])); }
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(lx, Y(A.snrRaw)); c.lineTo(lx + lw, Y(A.snrRaw)); c.stroke(); c.setLineDash([]);
+    mxHead(c, w, `speckles stay, the planet turns · stack of ${k + 1}: S/N ${A.snr[k].toFixed(1)}`);
+    st.exag = 'synthetic frames: speckle pattern, noise and planet brightness illustrative; log stretch on the raw frames';
+  }};
+
 // ---------- reading atmospheres: transmission ----------
 const MX_RAMP = [[0.6, '#3B2A8C'], [1.2, '#2E6BFF'], [2.0, '#22C1E6'], [2.8, '#3EDB62'], [3.6, '#F2E43A'], [4.4, '#FF9F2E'], [5.0, '#E0302F']];
 MXV.transmission = {key: 0.5, period: 12, draw(c, w, h, t, st){
@@ -2063,25 +2796,68 @@ function mxAtoms(g){
   if (g.shape === 'tetrahedral'){ const s = r / Math.sqrt(3); return [[g.atoms[0], 0, 0, 0], ...[[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]].map((v, i) => [g.atoms[i + 1], v[0] * s, v[1] * s, v[2] * s])]; }
   return [];
 }
-MXV.molecule = {key: 0.15, period: 14, init(st){ st.opt.mol = MX.molecules[0]; },
-  control(st, el){ if (el.tagName === 'SELECT'){ st.opt.mol = MX.molecules.find(m => m.id === el.value) || MX.molecules[0]; document.querySelectorAll('.mxmol').forEach(a => a.classList.toggle('on', a.dataset.mol === st.opt.mol.id)); } },
+// Each normal mode (methods.py: mode_table) carries its displacement pattern, its band and its stated
+// exaggeration: the drawn peak displacement (MX_MODE_A) against the zero-point RMS of the atom that moves most.
+const MX_MODE_A = 0.2, MX_VIB_CYCLES = 12;
+function mxModeOptions(m){ return (m.modes || []).map((d, i) => `<option value="${i}">${esc(mxModeName(d))}${d.um ? ` · ${d.um.toFixed(2)} µm` : ''}${d.ir ? '' : ' · IR-silent'}</option>`).join(''); }
+const mxModeName = d => (d.nu ? d.nu + ' ' : '') + d.name;
+// A log wavelength axis, 0.5 to 25 µm: the molecule's modes (filled: infrared-active; hollow: silent) and the window
+// the Reading-atmospheres chapter draws (0.5 to 5.1 µm).
+function mxBandAxis(c, x, y, w, m, cur){
+  const lo = Math.log10(0.5), hi = Math.log10(25), X = um => x + (Math.log10(um) - lo) / (hi - lo) * w;
+  c.fillStyle = 'rgba(100,210,255,.10)'; c.fillRect(X(0.5), y - 10, X(5.1) - X(0.5), 20);
+  mxText(c, 'drawn in Reading atmospheres', x + 4, y - 14, {size: 11, color: '#64D2FF'});
+  c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y); c.stroke();
+  for (const um of [0.5, 1, 2, 5, 10, 20]){ c.beginPath(); c.moveTo(X(um), y - 3); c.lineTo(X(um), y + 3); c.stroke(); mxText(c, um === 0.5 ? '0.5 µm' : `${um}`, X(um), y + 16, {size: 11, mono: true, align: um === 0.5 ? 'left' : 'center'}); }
+  (m.modes || []).forEach((d, i) => { if (!d.um) return; const xx = X(d.um), on = i === cur;
+    c.strokeStyle = on ? '#FFB340' : 'rgba(255,255,255,.7)'; c.fillStyle = on ? '#FFB340' : 'rgba(255,255,255,.7)'; c.lineWidth = on ? 2 : 1.2;
+    c.beginPath(); c.arc(xx, y, on ? 5.5 : 4, 0, 2 * Math.PI); d.ir ? c.fill() : c.stroke(); });
+}
+MXV.molecule = {key: 0.15, period: 14, init(st){ st.opt.mol = MX.molecules[0]; st.opt.mode = 0; },
+  control(st, el){
+    if (el.tagName !== 'SELECT') return;
+    if (el.dataset.ctl === 'mode'){ st.opt.mode = Number(el.value) || 0; return; }
+    st.opt.mol = MX.molecules.find(m => m.id === el.value) || MX.molecules[0];
+    if (st.opt.mode >= (st.opt.mol.modes || []).length) st.opt.mode = 0;   // keep the chosen mode where this molecule has it
+    document.querySelectorAll('.mxmol').forEach(a => a.classList.toggle('on', a.dataset.mol === st.opt.mol.id));
+    const ms = st.fig.querySelector('select[data-ctl="mode"]');
+    if (ms){ const has = (st.opt.mol.modes || []).length; ms.innerHTML = has ? mxModeOptions(st.opt.mol) : '<option value="0">No vibrations drawn</option>'; ms.disabled = !has; ms.value = String(st.opt.mode); }
+  },
   draw(c, w, h, t, st){
-    const m = st.opt.mol, atoms = mxAtoms(m.geom), sc = Math.min(w, h) * 0.22, ry = t * 2 * Math.PI, rx = 0.35;
-    const stretch = 1 + 0.06 * Math.sin(t * 2 * Math.PI * 12);   // ×10 exaggerated symmetric stretch (≈0.6% in reality)
-    const P = atoms.map(([el, x, y, z], i) => { const s = i && atoms.length > 1 ? stretch : 1; x *= s; y *= s; z *= s;
+    const m = st.opt.mol, atoms = mxAtoms(m.geom), narrow = w < 600, sc = Math.min(w, h) * (narrow ? 0.2 : 0.22), ry = t * 2 * Math.PI, rx = 0.35;
+    const mode = (m.modes || [])[st.opt.mode] || null, ph = Math.sin(t * 2 * Math.PI * MX_VIB_CYCLES);
+    const cy = h * (narrow ? 0.46 : 0.48);
+    const P = atoms.map(([el, x, y, z], i) => { const d = mode ? mode.disp[i] : [0, 0, 0]; x += MX_MODE_A * ph * d[0]; y += MX_MODE_A * ph * d[1]; z += MX_MODE_A * ph * d[2];
       const x1 = x * Math.cos(ry) + z * Math.sin(ry), z1 = -x * Math.sin(ry) + z * Math.cos(ry), y1 = y * Math.cos(rx) - z1 * Math.sin(rx), z2 = y * Math.sin(rx) + z1 * Math.cos(rx);
-      return {el, x: w / 2 + x1 * sc, y: h / 2 - y1 * sc + 10, z: z2}; });
+      // The displacement direction, turned the same way, for the arrow.
+      const dx1 = d[0] * Math.cos(ry) + d[2] * Math.sin(ry), dz1 = -d[0] * Math.sin(ry) + d[2] * Math.cos(ry), dy1 = d[1] * Math.cos(rx) - dz1 * Math.sin(rx);
+      return {el, x: w / 2 + x1 * sc, y: cy - y1 * sc, z: z2, ax: dx1, ay: -dy1, mag: Math.hypot(d[0], d[1], d[2])}; });
     if (P.length > 1){ c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 5; for (let i = 1; i < P.length; i++){ const j = m.geom.shape === 'linear' && m.geom.r2 && i === 2 ? 1 : 0; c.beginPath(); c.moveTo(P[j].x, P[j].y); c.lineTo(P[i].x, P[i].y); c.stroke(); } }
     for (const a of P.slice().sort((p, q) => p.z - q.z)){
       const rad = (a.el === 'H' ? 0.22 : a.el.length > 1 || a.el === 'K' ? 0.5 : 0.34) * sc, col = MX_CPK[a.el] || '#C7C7CC';
       const g = c.createRadialGradient(a.x - rad * 0.3, a.y - rad * 0.3, rad * 0.1, a.x, a.y, rad); g.addColorStop(0, '#FFFFFF'); g.addColorStop(0.35, col); g.addColorStop(1, '#111');
       c.fillStyle = g; c.beginPath(); c.arc(a.x, a.y, rad, 0, 2 * Math.PI); c.fill();
       mxText(c, a.el, a.x, a.y + 4, {size: 11, w: 700, align: 'center', color: a.el === 'H' || a.el === 'S' ? '#000' : '#FFF'});
+      if (mode && a.mag > 0.05){ // where this atom moves (both ways), drawn over it
+        const L = sc * 0.55 * a.mag, ux = a.ax / (Math.hypot(a.ax, a.ay) || 1), uy = a.ay / (Math.hypot(a.ax, a.ay) || 1);
+        c.strokeStyle = 'rgba(255,179,64,.85)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(a.x - ux * L, a.y - uy * L); c.lineTo(a.x + ux * L, a.y + uy * L); c.stroke();
+        for (const s of [-1, 1]){ const tx = a.x + s * ux * L, ty = a.y + s * uy * L; c.beginPath(); c.moveTo(tx, ty); c.lineTo(tx - s * (ux * 6 - uy * 4), ty - s * (uy * 6 + ux * 4)); c.moveTo(tx, ty); c.lineTo(tx - s * (ux * 6 + uy * 4), ty - s * (uy * 6 - ux * 4)); c.stroke(); }
+      }
     }
     mxText(c, `${m.f} · ${m.name}`, 14, 22, {size: 14, w: 600, color: '#F5F5F7'});
     const g = m.geom; mxText(c, g.shape === 'atom' ? 'single atom' : `${g.shape === 'dms' ? 'C–S–C core (hydrogens not drawn)' : g.shape}: bond ${g.r} Å${g.angle ? `, angle ${g.angle}°` : ''} (NIST CCCBDB)`, 14, 40, {size: 11});
-    c.strokeStyle = '#C7C7CC'; c.beginPath(); c.moveTo(14, h - 18); c.lineTo(14 + sc, h - 18); c.stroke(); mxText(c, '1 Å', 14 + sc / 2, h - 24, {size: 11, align: 'center'});
-    if (P.length > 1) st.exag = 'bond stretch exaggerated ×10; sizes of atoms illustrative';
+    if (mode){
+      mxText(c, `${mxModeName(mode)}${mode.deg > 1 ? ` (one of ${mode.deg})` : ''}`, 14, 58, {size: 12, w: 600, color: '#FFB340'});
+      mxText(c, mode.um ? `${mode.um.toFixed(2)} µm · ${mode.ir ? 'infrared-active' : 'infrared-silent: the dipole does not change'}` : `${mode.ir ? 'infrared-active' : 'infrared-silent'}; the atlas lists no wavelength`, 14, 74, {size: 11});
+    } else mxText(c, g.shape === 'atom' ? 'a single atom has no vibrations; its lines are electronic' : 'its 21 modes are not drawn: the atlas gives band regions only', 14, 58, {size: 11});
+    c.strokeStyle = '#C7C7CC'; c.lineWidth = 1; c.beginPath(); c.moveTo(14, h - 70); c.lineTo(14 + sc, h - 70); c.stroke(); mxText(c, '1 Å', 14 + sc / 2, h - 76, {size: 11, align: 'center'});
+    if (m.modes && m.modes.length) mxBandAxis(c, 24, h - 26, w - 48, m, st.opt.mode);
+    if (P.length > 1){
+      if (mode && mode.exag){ const slow = (st.vis.period / MX_VIB_CYCLES / (st.speed || 1)) / (mode.um * 1e-6 / MX_C);
+        st.exag = `amplitude ×${mode.exag} (zero-point RMS of ${mode.atom} ≈ ${mode.rms.toFixed(3)} Å); time slowed ≈10${mxSup(Math.round(Math.log10(slow)))}×; sizes of atoms illustrative`; }
+      else if (mode) st.exag = 'amplitude and time illustrative (no frequency in the atlas); sizes of atoms illustrative';
+      else st.exag = 'sizes of atoms illustrative';
+    }
   }};
 
 // ---------- the section ----------
@@ -2115,26 +2891,124 @@ function mxSystemView(fig, p, o){
   if (st.on && !mxRM.matches && !st.started){ st.started = true; mxPlay(st, true); } else mxKick(st);
   return {st, S, note, desc};
 }
-// The Galaxy's "system view" sheet: the same animated system for any stored example planet.
-function mxOpenSystem(name, back){
+// The Galaxy's "system view" sheet: the same animated system for any stored example planet. Opened from a point on
+// a map (from = {x, y, kind}), it arrives through a magnifier: a lens that opens from that point.
+function mxOpenSystem(name, back, from){
   const p = MX && MX.examples[name]; if (!p) return;
   let dlg = $('#mxsheet');
   if (!dlg){
     dlg = document.createElement('dialog'); dlg.id = 'mxsheet'; dlg.className = 'mxsheet';
-    dlg.innerHTML = `<div class="mxsheethead"><h2 id="mxsheettitle"></h2><button class="btn" type="button" id="mxsheetclose">Close</button></div>${$('#mxsystpl').innerHTML}<p class="mxsheetnote" id="mxsheetnote"></p>`;
+    dlg.innerHTML = `<div class="mxsheethead"><h2 id="mxsheettitle"></h2><button class="btn" type="button" id="mxsheetclose">Close</button></div>${$('#mxsystpl').innerHTML}<p class="mxsheetzoom" id="mxsheetzoom" hidden></p><p class="mxsheetnote" id="mxsheetnote"></p>`;
     document.body.appendChild(dlg);
     $('#mxsheetclose').addEventListener('click', () => dlg.close());
-    dlg.addEventListener('close', () => { const st = dlg.querySelector('.mxstage')._mx; if (st){ st.on = false; } if (dlg._back) dlg._back.focus(); });
+    dlg.addEventListener('close', () => { const st = dlg.querySelector('.mxstage')._mx; if (st){ st.on = false; }
+      // A zoom still under way when the sheet closes is cut short: no lens is left behind.
+      dlg.getAnimations().forEach(a => a.cancel()); const ln = dlg.querySelector('.mxlens'); if (ln) ln.remove();
+      if (dlg._back) dlg._back.focus(); });
   }
   dlg._back = back || null;
   const fig = dlg.querySelector('.mxstage');
   $('#mxsheettitle').textContent = name;
+  const z = from ? mxZoomInfo(p, from.kind) : null, zn = $('#mxsheetzoom');
+  zn.hidden = !from;
+  if (from) zn.textContent = (z ? `From the ${from.kind === 'sky' ? 'sky map' : 'Galaxy map'} to this orbit is a jump of about ${z.v} in scale (${z.what}). ` : '')
+    + 'The zoom between them is an illustration of scale, not continuous data.';
   if (!dlg.open) dlg.showModal();
   mxSystemView(fig, Object.assign({name}, p), {dip: name === 'pi Men c' && MX.lead_dip ? {pts: MX.lead_dip.pts} : null, on: true, fetched: MX.fetched_at});
   // The canonical pages for this planet and its star.
   $('#mxsheetnote').innerHTML = `${objLink('planet', name, name + ' ›')} ${p.star_name ? objLink('star', p.star_name, p.star_name + ' ›') : ''}`;
   $('#mxsheetclose').focus();
+  if (from && !mxRM.matches && dlg.animate) mxZoomLens(dlg, from, z);
 }
+const mxSup = n => String(n).split('').map(d => '⁰¹²³⁴⁵⁶⁷⁸⁹'['0123456789'.indexOf(d)] || (d === '-' ? '⁻' : d)).join('');
+// How far the zoom jumps, from stored values: on the Galaxy map, from the star's distance to its orbit (both
+// lengths); on the sky map, from the whole sky (2π radians) to the orbit's angle on the sky, a/d.
+function mxZoomInfo(p, kind){
+  const d = p.star_distance, a = p.semi_major_axis; if (!(d > 0 && a > 0)) return null;
+  const dAU = d * 206264.806, ly = d * 3.26156;
+  if (kind === 'sky') return {v: mxSig1(2 * Math.PI / (a / dAU)), what: `the whole sky, then an orbit of ${a} AU seen from ${ly.toFixed(1)} light-years, ${(a / dAU * 206264806).toPrecision(2)} milliarcseconds across`};
+  return {v: mxSig1(dAU / a), what: `${ly.toFixed(1)} light-years to the star, ${a} AU from star to planet`};
+}
+// A number to one significant figure, as 4×10⁸.
+function mxSig1(x){ let e = Math.floor(Math.log10(x)), m = Math.round(x / Math.pow(10, e)); if (m === 10){ m = 1; e++; } return `${m}×10${mxSup(e)}`; }
+// The magnifier: the sheet is revealed through a growing circle centred on the point that was chosen, with a lens rim
+// and a label that says what the zoom is. Never under reduced motion (the sheet simply opens).
+function mxZoomLens(dlg, from, z){
+  const r = dlg.getBoundingClientRect(), x = from.x - r.left, y = from.y - r.top;
+  const R = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y)) + 4, dur = 950, ease = 'cubic-bezier(.2,.8,.2,1)';
+  dlg.animate([{clipPath: `circle(28px at ${x}px ${y}px)`}, {clipPath: `circle(28px at ${x}px ${y}px)`, offset: 0.2}, {clipPath: `circle(${R}px at ${x}px ${y}px)`}], {duration: dur, easing: ease});
+  const old = dlg.querySelector('.mxlens'); if (old) old.remove();
+  const lens = document.createElement('div'); lens.className = 'mxlens'; lens.setAttribute('aria-hidden', 'true');
+  lens.innerHTML = `<i style="left:${x}px;top:${y}px"></i><span>${z ? `zoom ≈ ×${z.v} · ` : ''}an illustration of scale, not continuous data</span>`;
+  dlg.appendChild(lens);
+  lens.querySelector('i').animate([{width: '56px', height: '56px', opacity: 1}, {width: '56px', height: '56px', opacity: 1, offset: 0.2}, {width: `${2 * R}px`, height: `${2 * R}px`, opacity: 0.15}], {duration: dur, easing: ease, fill: 'forwards'});
+  lens.querySelector('span').animate([{opacity: 0}, {opacity: 1, offset: 0.12}, {opacity: 1, offset: 0.75}, {opacity: 0}], {duration: dur + 900, fill: 'forwards'});
+  setTimeout(() => lens.remove(), dur + 950);
+}
+
+// ---------- the survey-scan intro on the Sky and Galaxy maps ----------
+// The Methods "survey scan", played once over a map the first time its section opens in a session: about five
+// seconds, a Skip button, and no pointer capture, so the map underneath stays live; the first touch, wheel or key
+// on the map ends it. It draws only while its section is shown, on screen and the tab visible, and never under
+// reduced motion.
+const MX_INTRO_MS = 5200, MX_INTRO_T = 0.62;
+const mxIntros = {};
+function mxIntroStart(key, host){
+  if (!MX || !host || mxRM.matches || mxIntros[key]) return;
+  let seen = false; try { seen = sessionStorage.getItem('exoplan-intro-' + key) === 'done'; } catch (e) { /* storage blocked: play it */ }
+  if (seen){ mxIntros[key] = {done: true}; return; }
+  const el = document.createElement('div'); el.className = 'mxintro';
+  el.innerHTML = '<canvas aria-hidden="true"></canvas><div class="mxintrobar" role="group" aria-label="Introduction animation">'
+    + MX.ill_badge + '<span class="mxintrocap">A survey checks stars one at a time · star positions illustrative</span>'
+    + '<button class="btn mxskip" type="button">Skip intro</button></div>';
+  host.appendChild(el);
+  const I = {key, host, el, cv: el.querySelector('canvas'), st: {opt: {intro: true}, vis: MXV.scan, exag: ''}, ms: 0, last: 0, raf: 0, visible: false, done: false, frames: 0};
+  MXV.scan.init(I.st); I.st.opt.intro = true;
+  mxIntros[key] = I;
+  el.querySelector('.mxskip').addEventListener('click', () => mxIntroEnd(I, true));
+  I.touch = e => { if (e && e.target && e.target.closest && e.target.closest('.mxskip')) return; mxIntroEnd(I, false); };
+  for (const ev of ['pointerdown', 'wheel', 'keydown']) host.addEventListener(ev, I.touch, {passive: true});
+  if ('IntersectionObserver' in window){ I.io = new IntersectionObserver(es => { I.visible = es[es.length - 1].isIntersecting; mxIntroKick(I); }); I.io.observe(host); }
+  else I.visible = true;
+  mxIntroDraw(I, 0);
+  mxIntroKick(I);
+}
+const mxIntroLive = I => !I.done && I.visible && !document.hidden && current === I.key;
+function mxIntroKick(I){ if (I && !I.done && !I.raf && mxIntroLive(I)){ I.last = 0; I.raf = requestAnimationFrame(ts => mxIntroFrame(I, ts)); } }
+function mxIntroFrame(I, ts){
+  I.raf = 0;
+  if (!mxIntroLive(I)) return;
+  I.ms += I.last ? Math.min(100, ts - I.last) : 16; I.last = ts; I.frames++;
+  const f = Math.min(1, I.ms / MX_INTRO_MS);
+  mxIntroDraw(I, f);
+  if (f >= 1){ mxIntroEnd(I, false); return; }
+  I.raf = requestAnimationFrame(t2 => mxIntroFrame(I, t2));
+}
+function mxIntroDraw(I, f){
+  const box = I.el.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1), w = Math.round(box.width), h = Math.round(box.height);
+  if (w < 2 || h < 2) return;
+  if (I.cv.width !== Math.round(w * dpr) || I.cv.height !== Math.round(h * dpr)){ I.cv.width = Math.round(w * dpr); I.cv.height = Math.round(h * dpr); }
+  const c = I.cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, h);
+  c.fillStyle = 'rgba(0,0,0,.66)'; c.fillRect(0, 0, w, h);
+  MXV.scan.draw(c, w, h, f * MX_INTRO_T, I.st);
+}
+function mxIntroEnd(I, skipped){
+  if (!I || I.done) return;
+  I.done = true;
+  if (I.raf){ cancelAnimationFrame(I.raf); I.raf = 0; }
+  if (I.io) I.io.disconnect();
+  for (const ev of ['pointerdown', 'wheel', 'keydown']) I.host.removeEventListener(ev, I.touch);
+  try { sessionStorage.setItem('exoplan-intro-' + I.key, 'done'); } catch (e) { /* storage blocked */ }
+  I.el.classList.add('out'); setTimeout(() => I.el.remove(), 420);
+  if (skipped && typeof say === 'function') say('Intro skipped.');
+}
+// The router calls this on every section change: an intro starts on its own section and ends when it is left.
+function mxIntroRoute(r){
+  if (r === 'sky') mxIntroStart('sky', $('#route-sky .skymap'));
+  if (r === 'galaxy') mxIntroStart('galaxy', $('#gxstage'));
+  for (const k in mxIntros){ const I = mxIntros[k]; if (I.done) continue; if (k !== r) mxIntroEnd(I, false); else mxIntroKick(I); }
+}
+document.addEventListener('visibilitychange', () => { for (const k in mxIntros) mxIntroKick(mxIntros[k]); });
 """
 
 
@@ -2294,9 +3168,52 @@ METHODS_CSS = r"""
 .mxsheethead .btn{min-height:44px}
 .mxsheetnote{margin:8px 0 0;font-size:12.5px;color:var(--ink-3)}
 .gxsys{margin-top:4px}
+.mxsheetzoom{margin:8px 0 0;font-size:12.5px;color:var(--ink-2)}
+/* the zoom lens: a rim that opens from the chosen point, and its label (the sheet's clip-path does the reveal) */
+.mxlens{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;z-index:3}
+.mxlens i{position:absolute;display:block;transform:translate(-50%,-50%);border-radius:50%;border:2px solid rgba(255,255,255,.75);box-shadow:0 0 0 1px rgba(0,0,0,.45),inset 0 0 24px rgba(100,210,255,.35)}
+.mxlens span{position:absolute;left:50%;top:64px;transform:translateX(-50%);max-width:calc(100% - 24px);padding:6px 12px;border-radius:999px;background:rgba(28,28,30,.86);border:1px solid rgba(255,255,255,.16);color:#F5F5F7;font:500 12px/1.4 var(--sans);text-align:center}
+/* the survey-scan intro over the Sky and Galaxy maps: no pointer capture except its Skip button */
+.mxintro{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity .4s var(--ease)}
+.mxintro.out{opacity:0}
+.mxintro canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mxintrobar{position:absolute;right:12px;top:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;max-width:calc(100% - 24px);color:#F5F5F7}
+.mxintrobar .mxlabel.ill{color:#C7C7CC;border-color:rgba(255,255,255,.3);background:rgba(0,0,0,.5)}
+.mxintrocap{font-size:12px;color:#C7C7CC;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.5)}
+.mxintro .mxskip{pointer-events:auto;min-height:44px;color:#F5F5F7;background:rgba(28,28,30,.86);border-color:rgba(255,255,255,.22)}
+@media (max-width:599.98px){.mxintrocap{display:none}}
+@media (prefers-reduced-motion: reduce){.mxintro{display:none}.mxintro,.mxlens i,.mxlens span{transition:none;animation:none}}
+/* the stylised Lyot plate: drawn in the page's ink, so it follows the theme */
+.mxplate{margin:4px 0 0;display:grid;gap:8px;max-width:900px}
+.mxplate svg{width:100%;height:auto;display:block;color:var(--ink-2);font:500 11px var(--sans)}
+.mxplate svg.v{display:none;max-width:420px}
+@media (max-width:599.98px){.mxplate svg.h{display:none}.mxplate svg.v{display:block}}
+.mxplate svg text{fill:var(--ink-2);font-family:var(--sans);font-size:11px;letter-spacing:0}
+.mxplate svg text.sm{fill:var(--ink-3)}
+.mxplate .pf{fill:var(--panel-2);stroke:var(--line-3)}
+.mxplate .pf2{fill:none;stroke:var(--line-2)}
+.mxplate .axis{stroke:var(--line-3);stroke-dasharray:2 5;fill:none}
+.mxplate .st{stroke:var(--amber);stroke-width:1.3;fill:none}
+.mxplate .df{stroke:var(--amber);stroke-width:1;stroke-dasharray:3 3;fill:none;opacity:.8}
+.mxplate .cp{stroke:var(--cyan);stroke-width:1.2;fill:none}
+.mxplate .ln{fill:var(--cyan-soft);stroke:var(--ink-2);stroke-width:1.1}
+.mxplate .disc{fill:var(--ink)}
+.mxplate .rod{stroke:var(--ink-3);stroke-width:1}
+.mxplate .stop{stroke:var(--ink);stroke-width:5;stroke-linecap:round}
+.mxplate .det{stroke:var(--ink-2);stroke-width:3}
+.mxplate .im{fill:#000}
+.mxplate .fr{fill:none;stroke:var(--line-3)}
+.mxplate .g0{fill:#FFF8E7}.mxplate .g1{fill:rgba(255,190,90,.75)}.mxplate .g2{fill:rgba(94,42,140,.7)}.mxplate .g3{fill:none;stroke:rgba(255,190,90,.25);stroke-width:5}
+.mxplate .blk{fill:#000}
+.mxplate .rim{fill:rgba(255,190,90,.9)}
+.mxplate .stp{fill:none;stroke:#64D2FF;stroke-dasharray:2 2}
+.mxplate .pl{fill:#64D2FF}
+.mxmodes{margin:0;padding-left:16px;display:grid;gap:4px}
+.mxmodes a{display:inline-flex;align-items:center}
 @media (max-width:699.98px){
   .mxcanvas{height:min(62vh,440px)}
   .mxstage.tall .mxcanvas{height:min(76vh,560px)}
+  .mxstage[data-vis="cgfam"] .mxcanvas{height:min(84vh,660px)}
   .mxtoc ol{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
   .mxtoc ol::-webkit-scrollbar{display:none}
   .mxtoc a{white-space:nowrap}
@@ -2310,6 +3227,6 @@ METHODS_CSS = r"""
   .mxnums td:last-child{font-size:12px}
   .mxcontrast li,.mxcontrast .ax{grid-template-columns:1fr}
   .mxcontrast .ax .lab{display:none}
-  .mxsrc a{min-height:44px}
+  .mxsrc a,.mxmodes a{min-height:44px}
 }
 """

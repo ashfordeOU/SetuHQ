@@ -852,6 +852,8 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .skypin span{display:block;color:#A1A1A6}
 .skypin em{font-style:normal;color:#64D2FF}
 .skynote{position:absolute;right:20px;bottom:14px;font-size:11px;color:#8E8E93;text-align:right;max-width:60%}
+.skymark.on{cursor:zoom-in}
+.skylinks .skyzoom{min-height:44px;color:#F5F5F7;border-color:rgba(255,255,255,.18)}
 .dipsbox{flex:1 1 300px;max-width:380px;padding:10px;display:flex;flex-direction:column;gap:2px;border-radius:28px}
 .dipsbox .dhead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 6px}
 .dipsbox .dhead b{font-size:15px;font-weight:600}
@@ -1966,6 +1968,8 @@ if ($('#skycov')) $('#skycov').addEventListener('click', e => {
 });
 function renderSky(){
   const n = k => S.counts[k];
+  // The zoom into the run star's system needs its stored example; without one the button stays hidden.
+  $$('#route-sky [data-zoom]').forEach(el => { if (!(MX && MX.examples[el.dataset.zoom])) return; el.hidden = false; el.classList.add('on'); });
   $('#skychips').innerHTML = [['known', S.planet ? S.planet : 'Known'], ['open', 'Open'], ['rejected', 'Rejected']].map(([k, l]) =>
     `<button type="button" class="pill" data-st="${k}" aria-pressed="${sky[k]}" style="--c:${STC[k]}"><i></i>${esc(l)} <span class="n">${n(k)}</span></button>`).join('');
   $('#skyrev').innerHTML = REV_FILTERS.map(([k, l]) => `<button type="button" data-rev="${k}" aria-pressed="${sky.rev === k}">${esc(l)}</button>`).join('');
@@ -1986,7 +1990,13 @@ function skyTimeline(box = $('#skytimeline'), capEl = $('#skytlcap')){
   capEl.innerHTML = `<span>${esc(D.hero.time_unit)} ${fmt(a, 1)}</span><span>Stored brightness over the run, ${D.hero.n_points.toLocaleString('en-GB')} points; ticks: the dips shown above</span><span>${fmt(b, 1)}</span>`;
   box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Light curve of run ${esc(D.run.name)}: ${D.hero.n_points} stored points from ${esc(D.hero.time_unit)} ${fmt(a, 1)} to ${fmt(b, 1)}, with ${DIPS.filter(skyShown).length} of ${DIPS.length} dips ticked."><path d="${pts}" stroke="var(--ink)" stroke-width="1.1" stroke-linecap="round" opacity=".45"/>${ticks}</svg>`;
 }
+// Zoom from the run star's marker into its system view (a magnifier; an illustration of scale).
+function skyZoom(name, back){
+  const m = $('#route-sky .skymark .skydot'), r = m ? m.getBoundingClientRect() : back.getBoundingClientRect();
+  mxOpenSystem(name, back, {x: r.left + r.width / 2, y: r.top + r.height / 2, kind: 'sky'});
+}
 $('#route-sky').addEventListener('click', e => {
+  const z = e.target.closest('.on[data-zoom]'); if (z){ skyZoom(z.dataset.zoom, z.tagName === 'BUTTON' ? z : $('#route-sky .skyzoom') || z); return; }
   const s = e.target.closest('button[data-st]'), r = e.target.closest('button[data-rev]');
   if (s){ sky[s.dataset.st] = !sky[s.dataset.st]; syncSkyURL(true); renderSky(); $(`#skychips button[data-st="${s.dataset.st}"]`).focus(); say(`${DIPS.filter(skyShown).length} of ${DIPS.length} dips shown.`); }
   if (r){ sky.rev = r.dataset.rev; syncSkyURL(true); renderSky(); $(`#skyrev button[data-rev="${r.dataset.rev}"]`).focus(); say(`${DIPS.filter(skyShown).length} of ${DIPS.length} dips shown.`); }
@@ -2231,6 +2241,7 @@ function show(r, moveFocus){
   missionShown(r === 'mission');
   gxShown(gxWanted());
   mxShown(r === 'methods');
+  mxIntroRoute(r);
   txSysShown(r === 'transit');
   plShown(r);
 }
@@ -2491,15 +2502,19 @@ def _sky(data: dict) -> str:
         pin = (f'<a class="skypin" href="#/transit?dip={e(lead or "")}" style="left:{bl:.1f}%;top:{bt:.1f}%" '
                f'title="{e(star["name"])} placed from SIMBAD (ICRS J2000): RA {star["ra_deg"]:.2f}°, Dec {star["dec_deg"]:.2f}°">'
                f'<b>{e(star["name"])}</b><span>{known}</span><em>Open ›</em></a>')
-        marker = (f'<circle class="pulse" cx="{geo["x"]}" cy="{geo["y"]}" r="22" fill="url(#pmg)"/>'
+        zoom = f' data-zoom="{e(st["planet"])}"' if st.get("planet") else ""
+        marker = (f'<g class="skymark"{zoom}><circle class="pulse" cx="{geo["x"]}" cy="{geo["y"]}" r="22" fill="url(#pmg)"/>'
                   f'<circle cx="{geo["x"]}" cy="{geo["y"]}" r="10" fill="none" stroke="#64D2FF" stroke-width=".8"/>'
-                  f'<circle cx="{geo["x"]}" cy="{geo["y"]}" r="3.2" fill="#FFFFFF"/>')
+                  f'<circle class="skydot" cx="{geo["x"]}" cy="{geo["y"]}" r="3.2" fill="#FFFFFF"/></g>')
         where = (f"{e(star['name'])} at RA {star['ra_deg']:.2f}°, Dec {star['dec_deg']:.2f}° ({e(star['source'])})")
     else:
         marker, where = "", "The target's sky position is not stored, so it is not plotted."
     placed = f'{e(star["name"])} placed from SIMBAD (ICRS J2000) · ' if geo.get("x") is not None else "target not plotted (no position stored) · "
     # The canonical pages for the run's star and its known planet.
     links = "".join(obj_link(k, n, f"{n} ›") for k, n in (("star", star.get("name")), ("planet", st.get("planet"))) if n)
+    if st.get("planet") and geo.get("x") is not None:
+        links += (f'<button class="btn skyzoom" type="button" data-zoom="{e(st["planet"])}" hidden>'
+                  f'Zoom into the {e(st["planet"])} system ›</button>')
     links = f'<div class="pllinks skylinks">{links}</div>' if links else ""
     t1, t2 = st["sky_title"]
     return f"""<header class="headrow">
@@ -2624,7 +2639,7 @@ def app_page(data: dict) -> str:
     run = data["run"]
     rule = data["feed_rule"]
     data = {**data, "methods": methods_meta(data["examples"], data.get("galaxy"), data["story"], data.get("coverage"))}
-    payload = json.dumps({k: v for k, v in data.items() if k not in ("galaxy", "coverage", "examples", "catalogue")}).replace("</", "<\\/")
+    payload = json.dumps({k: v for k, v in data.items() if k not in ("galaxy", "coverage", "examples", "catalogue", "benchmark")}).replace("</", "<\\/")
     galaxy_payload = ""  # the map's arrays are a separate file (galaxy_json), fetched when the Galaxy opens
     unc = html.escape(UNCONFIRMED)
     nodet = html.escape(NO_DETECTION)

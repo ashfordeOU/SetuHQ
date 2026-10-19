@@ -897,7 +897,7 @@ if (first) select(first, false); else renderDossier();
 """
 
 
-def fit_model(row: dict, n: int = 241) -> list[list[float]]:
+def fit_model(row: dict, n: int = 121) -> list[list[float]]:
     """The stored limb-darkened fit (``row["fit"]``, transitfit.TransitFit) drawn over the strip's window, as
     (time, ppm) points, or [] when the dip has no fit. Nothing is re-fitted: the curve is the model at the stored
     mid-time, k, T14, b, period and limb-darkening coefficients."""

@@ -510,7 +510,9 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     # (The only other write is the Feed's own default, in saveFeedView.)
     # (and the theme choice, in applyTheme, and the Learn path's progress, in learnSave).
     # (and Mission Control's saved default, in its "Save as my default" handler).
-    assert APP_JS.count("setItem(") == 5 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
+    # (and, in sessionStorage only, that the Sky's or Galaxy's survey-scan intro has played, in mxIntroEnd).
+    assert APP_JS.count("setItem(") == 6 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
+    assert "sessionStorage.setItem('exoplan-intro-' + I.key, 'done')" in re.search(r"function mxIntroEnd\(I, skipped\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LEARN_KEY" in re.search(r"function learnSave\(\)\{.*?\}\s*\}", APP_JS, re.S).group(0)
     assert "s.setItem('exoplan-theme', t)" in re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LAYOUT_KEY" in re.search(r"function saveLayout\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)

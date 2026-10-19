@@ -1195,6 +1195,13 @@ function gxSelect(h, planet){
   // Mission Control's linked selection: the star picked here is selected in every pane and window.
   if (typeof mcBrush === 'function') mcBrush(H.n[h], 'galaxy');
 }
+// Where a host is on screen (for the zoom lens into its system view), or null when it is behind the camera.
+function gxScreenPoint(h){
+  if (h < 0 || !gx.mvp) return null;
+  const H = gx.G.hosts, p = gxProject(H.x[h], H.y[h], H.z[h]), r = $('#gxcanvas').getBoundingClientRect();
+  return p ? {x: r.left + p[0], y: r.top + p[1], kind: 'galaxy'} : null;
+}
+const gxElPoint = el => { const r = el.getBoundingClientRect(); return {x: r.left + r.width / 2, y: r.top + r.height / 2, kind: 'galaxy'}; };
 // The canonical pages for the selected star and planet (a free-floating planet is its own host: no star page).
 function gxLinks(h){
   const G = gx.G, H = G.hosts, P = G.planets, ps = gxHostPlanets(h), starless = ps.length === 1 && P.n[ps[0]] === H.n[h];
@@ -1370,7 +1377,7 @@ function gxStart(){
   });
   $('#gxcard').addEventListener('click', e => {
     if (e.target.closest('.x')){ gxSelect(-1); cv.focus({preventScroll: true}); return; }
-    const sys = e.target.closest('button[data-gxsys]'); if (sys){ mxOpenSystem(sys.dataset.gxsys, sys); return; }
+    const sys = e.target.closest('button[data-gxsys]'); if (sys){ mxOpenSystem(sys.dataset.gxsys, sys, gxScreenPoint(gx.sel) || gxElPoint(sys)); return; }
     const b = e.target.closest('button[data-gxp]'); if (!b) return;
     gxSelect(gx.sel, Number(b.dataset.gxp)); const nb = $(`#gxcard button[data-gxp="${b.dataset.gxp}"]`); if (nb) nb.focus();
   });
