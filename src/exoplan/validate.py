@@ -21,13 +21,20 @@ lower bound on the full one, and the label says "not validated" for that reason 
 
 Likelihoods, from the S2 measurements (each closed-form):
 
-* Secondary, from the all-phase search: the strongest dip s ± σ_s at any phase, with σ_s widened to the scan's
-  own noise: the larger of its robust spread and its largest brightening divided by Φ⁻¹(1 − 1/N_eff), the typical
-  largest of N_eff excursions (noise excursions taken as symmetric). TP and EBx2P predict no secondary, so s is the largest of N_eff noise excursions
-  (N_eff = box positions/4): likelihood N_eff φ(z) Φ(z)^(N_eff−1)/σ_s with z = s/σ_s. EB predicts a secondary
+* Secondary, from the all-phase search: the strongest dip s ± σ_s at any phase, with σ_s scaled by the scan's
+  robust spread. TP and EBx2P predict no secondary, so s is the largest of N_eff noise excursions, N_eff simulated
+  for that number of box positions (:data:`exoplan.dvtests.SECONDARY_TABLE`; about 1.5–1.8 times the positions):
+  likelihood N_eff φ(z) Φ(z)^(N_eff−1)/σ_s with z = s/σ_s. EB predicts a secondary
   anywhere between 0 and the primary depth δ: (1/δ) ∫₀^δ N(s; x, σ_s) dx. Without the all-phase search, the
-  phase-0.5 value is used with N(s; 0, σ_s). (A planet's own occultation is taken as zero; it is tens of ppm at
+  phase-0.5 value is used with N(s; 0, σ_s), and so it is when the strongest dip is not periodic (one epoch
+  carries 70% or more of it): a binary's secondary is in every epoch. (A planet's own occultation is taken as zero; it is tens of ppm at
   most for hot Jupiters in TESS.)
+* The secondary likelihood assumes the scan is white noise. When it is not (robust spread outside 0.7–1.3, std
+  over robust spread above 1.3, or a largest |excursion| beyond the white-noise 99.9% quantile for that number of
+  positions), the FPP moved from 0.007 to 0.77 on pi Men c between plausible noise models, so no FPP or NFPP is
+  given: the result reads "FPP not computed: secondary scan non-white (…)" with the numbers, and the spread of
+  FPPs over noise models is kept in the evidence only. When it is white, the FPP is quoted at the robust spread
+  with the robust-versus-std bracket beside it.
 * Odd − even depth d ± σ_d: TP and EB predict 0, N(d; 0, σ_d); EBx2P predicts a difference anywhere in [−δ, δ],
   (1/2δ) ∫ N(d; x, σ_d) dx.
 * Shape: when the transit fit is grazing, the binary scenarios gain exp(min(Δχ²_V, 50)/2), where Δχ²_V is how much
@@ -126,74 +133,100 @@ class FppResult:
     label: str = NO_CONTRAST
     fpp_class: str = "undetermined"
     notes: tuple = ()
+    refused: str | None = None        # why no FPP was computed (the secondary scan is not white), else None
 
     def as_dict(self) -> dict:
         return {"method": self.method, "fpp": self.fpp, "nfpp": self.nfpp, "probabilities": self.probabilities,
                 "evidence": self.evidence, "priors": self.priors, "not_modelled": list(self.not_modelled),
                 "contrast_curve": self.contrast_curve, "label": self.label, "fpp_class": self.fpp_class,
-                "notes": list(self.notes)}
+                "notes": list(self.notes), "refused": self.refused}
+
+
+WHITE_RS = (0.7, 1.3)      # the scan's robust spread must lie here (white noise gives ~1)
+WHITE_STD_RATIO = 1.3      # and its standard deviation over its robust spread at most this (white: ~1.05)
+
+
+def scan_whiteness(scan: dict) -> dict | None:
+    """Whether the all-phase secondary scan looks like white noise, which the reduced FPP's secondary likelihood
+    assumes: robust spread in [0.7, 1.3], std/robust ≤ 1.3, and largest |excursion|/robust no larger than the
+    white-noise 99.9% quantile for that number of positions (:data:`exoplan.dvtests.SECONDARY_TABLE`)."""
+    from exoplan.dvtests import white_quantiles
+
+    rs, sd, n = scan.get("scan_robust_sigma"), scan.get("scan_std_snr"), scan.get("n_trials")
+    if not rs or sd is None or not n:
+        return None
+    q = white_quantiles(n)
+    excursion = max(scan["snr"], scan.get("max_brightening_snr") or 0.0) / rs
+    checks = {"robust_spread": rs, "std_over_robust": sd / rs, "max_excursion_over_robust": excursion,
+              "white_q_abs_999": q["q_abs"], "positions": n, "n_eff": q["n_eff"]}
+    reasons = []
+    if not WHITE_RS[0] <= rs <= WHITE_RS[1]:
+        reasons.append(f"robust spread {rs:.2f} outside {WHITE_RS[0]}-{WHITE_RS[1]}")
+    if sd / rs > WHITE_STD_RATIO:
+        reasons.append(f"std/robust {sd / rs:.2f} > {WHITE_STD_RATIO}")
+    if excursion > q["q_abs"]:
+        reasons.append(f"largest |excursion| {excursion:.2f} robust spreads > white 99.9% {q['q_abs']:.2f}")
+    checks["white"] = not reasons
+    checks["reasons"] = reasons
+    return checks
 
 
 def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel: dict | None = None,
                 priors: Priors = Priors(), contrast_curve: str | None = None) -> FppResult:
     """The reduced FPP of one candidate from its S2 results.
 
-    ``depth`` is the fractional transit depth; ``dv`` is ``candidate.metrics["dv"]`` (secondary at phase 0.5 and the
-    odd/even depths); ``fit`` the transit fit (grazing, v_shape_dchi2); ``pixel`` the pixel report (neighbour table
-    and centroid). Missing evidence contributes a likelihood ratio of 1, and is listed in ``notes``.
+    ``depth`` is the fractional transit depth; ``dv`` is ``candidate.metrics["dv"]`` (the all-phase secondary scan,
+    or the phase-0.5 value, and the odd/even depths); ``fit`` the transit fit (grazing, v_shape_dchi2); ``pixel`` the
+    pixel report (neighbour table and centroid). Missing evidence contributes a likelihood ratio of 1 and is listed
+    in ``notes``. When the all-phase scan is not white (:func:`scan_whiteness`), no FPP or NFPP is given: the
+    result says "FPP not computed" with the numbers, and the range of FPPs under other noise models is kept in
+    ``evidence["fpp_sensitivity"]`` only.
     """
+    from exoplan.dvtests import white_quantiles
+
     notes = []
     dv = dv or {}
     fit = fit or {}
-    like = {"tp": 1.0, "eb": 1.0, "eb2p": 1.0}
+    base = {"tp": 1.0, "eb": 1.0, "eb2p": 1.0}
     evidence: dict = {}
-    scan = dv.get("secondary") or {}
-    sec = scan.get("phase_05")
-    have_secondary = True
-    if scan.get("sigma_ppm") and scan.get("n_trials"):
-        n_eff = max(scan["n_trials"] * 0.25, 1.0)
-        # the noise scale is calibrated on the scan itself: its robust spread, and its largest brightening read as
-        # a typical maximum of N_eff excursions (noise excursions taken as symmetric)
-        typical_max = float(norm.isf(1.0 / max(n_eff, 2.0)))
-        widen = max(1.0, scan.get("scan_robust_sigma") or 1.0,
-                    (scan.get("max_brightening_snr") or 0.0) / typical_max if typical_max > 0 else 1.0)
-        s, ss = scan["depth_ppm"] * 1e-6, scan["sigma_ppm"] * 1e-6 * widen
-        evidence["secondary_noise_widening"] = widen
-        z = s / ss
-        l0 = float(n_eff * norm.pdf(z) * norm.cdf(z) ** (n_eff - 1.0) / ss)
-        leb = _uniform_marginal(s, ss, 0.0, depth)
-        evidence["secondary_source"] = f"all-phase search (phase {scan.get('phase', float('nan')):.3f})"
-    elif sec and sec.get("sigma_ppm"):
-        s, ss = sec["depth_ppm"] * 1e-6, sec["sigma_ppm"] * 1e-6
-        l0, leb = _gauss(s, ss), _uniform_marginal(s, ss, 0.0, depth)
-        evidence["secondary_source"] = "phase 0.5"
-    else:
-        have_secondary = False
-    if have_secondary:
-        like["tp"] *= l0
-        like["eb2p"] *= l0
-        like["eb"] *= leb
-        evidence["secondary_bayes_factor_eb_vs_tp"] = leb / l0 if l0 > 0 else math.inf
-    else:
-        notes.append("no secondary measurement")
     oe = dv.get("odd_even_depth")
     if oe and oe.get("odd_err_ppm") and oe.get("even_err_ppm"):
         d = (oe["odd_depth_ppm"] - oe["even_depth_ppm"]) * 1e-6
         sd = math.hypot(oe["odd_err_ppm"], oe["even_err_ppm"]) * 1e-6
         l0, l2 = _gauss(d, sd), _uniform_marginal(d, sd, -depth, depth)
-        like["tp"] *= l0
-        like["eb"] *= l0
-        like["eb2p"] *= l2
+        base["tp"] *= l0
+        base["eb"] *= l0
+        base["eb2p"] *= l2
         evidence["odd_even_bayes_factor_eb2p_vs_tp"] = l2 / l0 if l0 > 0 else math.inf
     else:
         notes.append("no odd/even depth measurement")
     if fit.get("grazing") and fit.get("v_shape_dchi2") is not None:
         boost = math.exp(min(max(float(fit["v_shape_dchi2"]), 0.0), V_SHAPE_CAP) / 2.0)
-        like["eb"] *= boost
-        like["eb2p"] *= boost
+        base["eb"] *= boost
+        base["eb2p"] *= boost
         evidence["v_shape_boost"] = boost
     elif not fit:
         notes.append("no transit fit (shape not used)")
+
+    scan = dv.get("secondary") or {}
+    sec05 = scan.get("phase_05")
+    all_phase = bool(scan.get("sigma_ppm") and scan.get("n_trials") and scan.get("scan_robust_sigma"))
+    # An eclipsing binary's secondary is in every epoch. When the strongest dip is not (S2's periodicity test: two or
+    # more epochs, none carrying 70% or more), it is not evidence for one, and the phase-0.5 measurement (the
+    # circular-orbit secondary) carries the secondary likelihood instead.
+    use_peak = all_phase and scan.get("periodic", True)
+
+    def secondary_like(widen: float):
+        """(L_TP = L_EBx2P, L_EB) of the secondary measurement with the noise scaled by ``widen``."""
+        if use_peak:
+            n_eff = white_quantiles(scan["n_trials"])["n_eff"]
+            s, ss = scan["depth_ppm"] * 1e-6, scan["sigma_ppm"] * 1e-6 * widen
+            z = s / ss
+            return float(n_eff * norm.pdf(z) * norm.cdf(z) ** (n_eff - 1.0) / ss), _uniform_marginal(s, ss, 0.0, depth)
+        if sec05 and sec05.get("sigma_ppm"):
+            s, ss = sec05["depth_ppm"] * 1e-6, sec05["sigma_ppm"] * 1e-6 * widen
+            return _gauss(s, ss), _uniform_marginal(s, ss, 0.0, depth)
+        return None
 
     # Positions: the target and every catalogued neighbour.
     nb_rows = ((pixel or {}).get("neighbours") or {}).get("stars") or []
@@ -215,30 +248,72 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
     possible = [r for r in nb_rows[1:] if r.get("needed_depth", math.inf) <= 1.0]
     for r in nb_rows[1:]:
         if r.get("needed_depth", math.inf) > 1.0:
-            nfp_like.append((r.get("id"), 0.0))
             continue
         pos = 1.0
         if reliable and r.get("centroid_sigma") is not None:
             pos = math.exp(-0.5 * r["centroid_sigma"] ** 2)
         nfp_like.append((r.get("id"), pos))
-    weights = {"tp": priors.tp * like["tp"] * target_pos, "eb": priors.eb * like["eb"] * target_pos,
-               "eb2p": priors.eb2p * like["eb2p"] * target_pos}
-    per_nfp = priors.nfp / len(possible) if possible else 0.0
-    on_target = priors.tp + priors.eb + priors.eb2p
-    lc_mean = (priors.tp * like["tp"] + priors.eb * like["eb"] + priors.eb2p * like["eb2p"]) / on_target
-    for star, pos in nfp_like:
-        if pos > 0:
-            weights[f"nfp:{star}"] = per_nfp * pos * lc_mean
-    total = sum(weights.values())
-    probs = {k: (v / total if total > 0 else None) for k, v in weights.items()}
-    fpp = 1.0 - probs["tp"] if probs.get("tp") is not None else None
-    nfpp = sum(v for k, v in probs.items() if k.startswith("nfp:") and v is not None) if nb_rows else None
+
+    def posterior(widen: float):
+        like = dict(base)
+        sl = secondary_like(widen)
+        if sl is not None:
+            l0, leb = sl
+            like["tp"] *= l0
+            like["eb2p"] *= l0
+            like["eb"] *= leb
+        weights = {"tp": priors.tp * like["tp"] * target_pos, "eb": priors.eb * like["eb"] * target_pos,
+                   "eb2p": priors.eb2p * like["eb2p"] * target_pos}
+        per_nfp = priors.nfp / len(possible) if possible else 0.0
+        on_target = priors.tp + priors.eb + priors.eb2p
+        lc_mean = (priors.tp * like["tp"] + priors.eb * like["eb"] + priors.eb2p * like["eb2p"]) / on_target
+        for star, pos in nfp_like:
+            if pos > 0:
+                weights[f"nfp:{star}"] = per_nfp * pos * lc_mean
+        total = sum(weights.values())
+        probs = {k: (v / total if total > 0 else None) for k, v in weights.items()}
+        fpp = 1.0 - probs["tp"] if probs.get("tp") is not None else None
+        nfpp = sum(v for k, v in probs.items() if k.startswith("nfp:") and v is not None) if nb_rows else None
+        return fpp, nfpp, probs, sl
+
     method = "exoplan reduced FPP"
+    refused = None
+    if all_phase:
+        gate = scan_whiteness(scan)
+        evidence["scan_whiteness"] = gate
+        evidence["secondary_source"] = (
+            f"all-phase search (phase {scan.get('phase', float('nan')):.3f})" if use_peak else
+            f"phase 0.5 (the strongest dip, at phase {scan.get('phase', float('nan')):.3f}, is not periodic: "
+            f"{(scan.get('max_epoch_share') or 0) * 100:.0f}% from one epoch)")
+        rs, sd_ratio = gate["robust_spread"], gate["std_over_robust"]
+        models = {"robust spread": rs, "std": rs * sd_ratio, "nominal (white, σ/√n)": 1.0}
+        outs = {name: posterior(max(w, 1e-9))[0] for name, w in models.items()}
+        evidence["fpp_sensitivity"] = {"by_noise_model": outs,
+                                       "range": [min(v for v in outs.values() if v is not None),
+                                                 max(v for v in outs.values() if v is not None)]}
+        if not gate["white"]:
+            refused = "FPP not computed: secondary scan non-white (" + "; ".join(gate["reasons"]) + ")"
+            fpp = nfpp = None
+            probs = {}
+        else:
+            fpp, nfpp, probs, sl = posterior(rs)
+            evidence["fpp_bracket_robust_vs_std"] = [outs["robust spread"], outs["std"]]
+            evidence["secondary_bayes_factor_eb_vs_tp"] = sl[1] / sl[0] if sl[0] > 0 else math.inf
+    else:
+        fpp, nfpp, probs, sl = posterior(1.0)
+        if sl is not None:
+            evidence["secondary_source"] = "phase 0.5"
+            evidence["secondary_bayes_factor_eb_vs_tp"] = sl[1] / sl[0] if sl[0] > 0 else math.inf
+        else:
+            notes.append("no secondary measurement")
+    if refused:
+        notes.append(refused)
     result = FppResult(method=method, fpp=fpp, nfpp=nfpp, probabilities=probs, evidence=evidence,
                        priors={"tp": priors.tp, "eb": priors.eb, "eb2p": priors.eb2p, "nfp": priors.nfp,
                                "source": priors.source}, contrast_curve=contrast_curve, notes=tuple(notes))
     result.label = validation_label(fpp, nfpp, contrast_curve=bool(contrast_curve), method=method)
-    result.fpp_class = fpp_class(fpp, nfpp) + REDUCED_CLASS_SUFFIX
+    result.fpp_class = refused if refused else fpp_class(fpp, nfpp) + REDUCED_CLASS_SUFFIX
+    result.refused = refused
     return result
 
 

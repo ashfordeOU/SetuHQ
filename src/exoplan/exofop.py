@@ -11,7 +11,8 @@ Which candidates are exported (one row per periodic signal per star):
 * passed vetting, not ``off_ephemeris``, on a periodic signal with two or more transits;
 * none of the S2 disqualifying flags (``secondary_any_phase``, ``odd_even_depth``, ``odd_even_timing``,
   ``centroid_offset``), whether or not the run's ``[vetting] decide`` was set;
-* the S3 reduced FPP does not call it a likely nearby false positive, and its FPP is below 0.5;
+* the S3 reduced FPP was computed (not refused for a non-white secondary scan), does not call it a likely
+  nearby false positive, and is below 0.5;
 * not a duplicate of a TOI on the same TIC (:func:`exoplan.discover.match_toi`). Without the TOI table the export is
   refused unless explicitly allowed, and every row then says the TOI check was not done.
 
@@ -84,6 +85,8 @@ def exclusion(row: dict) -> str | None:
     if bad:
         return "S2 flags: " + ", ".join(bad)
     val = (row.get("metrics") or {}).get("validation") or {}
+    if val.get("refused"):
+        return f"S3 not evaluated: {val['refused']}"
     if str(val.get("fpp_class", "")).startswith("likely nearby false positive"):
         return "S3: likely nearby false positive"
     if val.get("fpp") is not None and val["fpp"] >= 0.5:

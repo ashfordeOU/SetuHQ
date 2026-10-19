@@ -163,28 +163,67 @@ def test_no_output_calls_a_candidate_confirmed(tmp_path):
     assert not re.search(r"\bconfirmed\b", text, re.I)
 
 
+def _white_scan(**over):
+    scan = dict(depth_ppm=30.0, sigma_ppm=10.0, snr=3.0, n_trials=200, scan_robust_sigma=1.0, scan_std_snr=1.05,
+                max_brightening_snr=2.5, phase=0.3)
+    scan.update(over)
+    return scan
+
+
 def test_all_phase_secondary_likelihood_closed_form():
-    """With the all-phase search, TP's likelihood is the density of the largest of N_eff noise excursions,
-    N_eff phi(z) Phi(z)^(N_eff - 1) / sigma, with sigma widened by the scan's robust spread."""
+    """With a white all-phase scan, TP's likelihood is the density of the largest of N_eff noise excursions,
+    N_eff phi(z) Phi(z)^(N_eff - 1) / sigma, with N_eff simulated for the number of positions and sigma scaled by
+    the robust spread; the FPP is quoted with the robust-vs-std bracket."""
+    from exoplan.dvtests import white_quantiles
+
     dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
-    dv["secondary"].update(depth_ppm=30.0, sigma_ppm=10.0, n_trials=200, scan_robust_sigma=1.5, phase=0.3,
-                           max_brightening_snr=2.0)                   # 2.0 / isf(1/50) = 0.97: the spread decides
+    dv["secondary"].update(_white_scan(scan_robust_sigma=1.2, scan_std_snr=1.3))
     r = reduced_fpp(depth=1e-3, dv=dv)
-    ss, n_eff = 15e-6, 50.0
+    assert r.refused is None and r.fpp is not None
+    n_eff = white_quantiles(200)["n_eff"]
+    assert n_eff > 200                                       # overlapping boxes and refinement: more than positions
+    ss = 10e-6 * 1.2
     z = 30e-6 / ss
     l0 = n_eff * norm.pdf(z) * norm.cdf(z) ** (n_eff - 1) / ss
     leb = validate._uniform_marginal(30e-6, ss, 0.0, 1e-3)
     assert r.evidence["secondary_bayes_factor_eb_vs_tp"] == pytest.approx(leb / l0, rel=1e-9)
+    lo, hi = r.evidence["fpp_bracket_robust_vs_std"]
+    assert lo == pytest.approx(r.fpp) and hi is not None
     assert r.evidence["secondary_source"].startswith("all-phase")
-    # a 2-sigma "secondary" among 50 independent positions is what noise gives: it barely moves the odds
-    assert r.evidence["secondary_bayes_factor_eb_vs_tp"] < 3
 
 
-def test_a_large_brightening_widens_the_secondary_noise():
-    """When the scan's largest brightening is 8.8 sigma, a 5.6 sigma dip is within the noise's own excursions."""
+@pytest.mark.parametrize("over, reason", [
+    (dict(scan_robust_sigma=2.0, scan_std_snr=2.2), "robust spread"),
+    (dict(scan_robust_sigma=1.0, scan_std_snr=1.6), "std/robust"),
+    (dict(scan_robust_sigma=1.0, scan_std_snr=1.05, max_brightening_snr=8.8), "excursion"),
+])
+def test_a_non_white_scan_refuses_the_fpp(over, reason):
+    """No point estimate when the secondary scan is not white: the FPP, NFPP and class say so with the numbers, the
+    range over noise models is kept as evidence only, and the label stays 'not validated: no contrast curve'."""
     dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
-    dv["secondary"].update(depth_ppm=41.3, sigma_ppm=7.4, n_trials=187, scan_robust_sigma=1.27, phase=0.74,
-                           max_brightening_snr=8.8)
-    r = reduced_fpp(depth=300e-6, dv=dv)
-    assert r.evidence["secondary_noise_widening"] == pytest.approx(8.8 / norm.isf(1 / 46.75), rel=1e-9)
-    assert r.evidence["secondary_bayes_factor_eb_vs_tp"] < 3
+    dv["secondary"].update(_white_scan(**over))
+    rows = [{"id": "T", "needed_depth": 1e-3}]
+    r = reduced_fpp(depth=1e-3, dv=dv, pixel={"centroid": {"reliable": False}, "neighbours": {"stars": rows}})
+    assert r.fpp is None and r.nfpp is None
+    assert r.refused.startswith("FPP not computed: secondary scan non-white") and reason in r.refused
+    assert r.fpp_class == r.refused and r.label == NO_CONTRAST
+    lo, hi = r.evidence["fpp_sensitivity"]["range"]
+    assert 0 <= lo <= hi <= 1
+    from exoplan.exofop import exclusion
+
+    row = {"passed": True, "flags": "", "period_days": 5.0, "n_transits": 3, "fit": {"period_days": 5.0},
+           "metrics": {"validation": r.as_dict()}}
+    assert exclusion(row).startswith("S3 not evaluated: FPP not computed")
+
+
+def test_a_non_periodic_peak_is_not_secondary_evidence():
+    """A strongest dip carried by one epoch is not what a binary's secondary looks like (it is in every epoch): the
+    secondary likelihood then uses the phase-0.5 measurement."""
+    dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
+    dv["secondary"].update(_white_scan(depth_ppm=60.0, snr=4.8, periodic=False, max_epoch_share=0.84))
+    r = reduced_fpp(depth=1e-3, dv=dv)
+    assert r.evidence["secondary_source"].startswith("phase 0.5")
+    s, ss = 0.0, 10e-6
+    l0 = norm.pdf(s / ss) / ss
+    leb = validate._uniform_marginal(s, ss, 0.0, 1e-3)
+    assert r.evidence["secondary_bayes_factor_eb_vs_tp"] == pytest.approx(leb / l0, rel=1e-9)
