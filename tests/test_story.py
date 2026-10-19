@@ -106,11 +106,12 @@ def test_sky_position_is_the_stored_coordinates_and_field_stars_are_decorative(r
 def test_overview_labels_the_artists_impression_and_the_theatre_says_what_is_not_fitted(run_dir, tmp_path):
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
     assert "Artist's impression. No image of pi Men c exists." in page
-    theatre = re.search(r"function theatre\(d\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    theatre = re.search(r"function txTheatre\(d\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    # The playback is the shared system view; every stored-values honesty line stays.
     assert "impact parameter not fitted" in theatre and "Dashed: a box at the stored depth and duration, not a fit." in theatre
-    assert "r = Math.max(1.2, R * k)" in theatre  # the shadow to scale from depth
-    # One clock: the shadow is on the disc exactly while the stored window runs.
-    assert "const travel = R * d.half / (dur / 2)" in theatre
+    assert "Rp/R★ = √depth" in theatre and "orbit and period illustrative" in theatre
+    assert "it does not confirm the dip" in theatre and "The star's surface texture is decorative." in theatre
+    assert "mxSystemParams(p, {pts: d.pts, box})" in theatre
     for cls in ("sweep", "reveal", "playhead"):
         assert f".{cls}{{" in APP_CSS and "10s linear infinite" in re.search(rf"\.{cls}\{{[^}}]*\}}", APP_CSS).group(0)
 

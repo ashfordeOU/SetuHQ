@@ -1235,18 +1235,30 @@ function mxDrawSystem(c, w, h, t, st){
   const [cl, row] = mxClass(S.teff);
   mxText(c, `${cl} · ≈${row} · ${Math.round(S.teff).toLocaleString('en-GB')} K`, 14, 22, {size: 12, w: 600, color: '#F5F5F7'});
   mxText(c, S.scale ? `star and planet sizes to scale${big ? '; planet ×5' : ''}` : 'sizes not to scale (radius not stored)', 14, 40, {size: 11});
-  mxText(c, `orbit not to scale (a = ${S.ars.toFixed(1)} R★); crosses at b = ${S.b.toFixed(2)} (${S.bSrc})`, 14, 56, {size: 11});
-  if (t >= 0.5) mxText(c, 'outside the transit: time runs faster', w - 14, 22, {size: 11, align: 'right'});
+  if (w < 600){
+    mxText(c, `orbit not to scale (a = ${S.ars.toFixed(1)} R★)`, 14, 56, {size: 11});
+    mxText(c, `crosses at b = ${S.b.toFixed(2)} (${S.bSrc})`, 14, 72, {size: 11});
+    if (t >= 0.5) mxText(c, 'outside the transit: time runs faster', w - 14, sceneH - 6, {size: 11, align: 'right'});
+  } else {
+    mxText(c, `orbit not to scale (a = ${S.ars.toFixed(1)} R★); crosses at b = ${S.b.toFixed(2)} (${S.bSrc})`, 14, 56, {size: 11});
+    if (t >= 0.5) mxText(c, 'outside the transit: time runs faster', w - 14, 22, {size: 11, align: 'right'});
+  }
   if (big) st.exag = 'planet drawn ×5; depth and times true';
   // Light curve: model from stored values, limb-darkened (small-planet Mandel & Agol 2002).
   const gx0 = 54, gy0 = sceneH + 26, gw = w - gx0 - 18, gh = h - gy0 - 40;
   mxGlassPanel(c, 10, sceneH + 6, w - 20, h - sceneH - 12);
   const zOf = f => S.ars * Math.sqrt(Math.sin(2 * Math.PI * f) ** 2 + (S.b / S.ars) ** 2 * Math.cos(2 * Math.PI * f) ** 2);
-  const depth = 1 - mxFlux(S.b / 1, S.k, u1, u2), floor = Math.min(1 - 1.35 * Math.max(depth, 1e-5), ...(S.dip && S.dip.pts ? S.dip.pts.map(p => 1 + p[1] * 1e-6 - 0.00002) : [1]));
+  const depth = 1 - mxFlux(S.b / 1, S.k, u1, u2), floor = Math.min(1 - 1.35 * Math.max(depth, 1e-5), ...(S.dip && S.dip.pts ? S.dip.pts.map(p => 1 + p[1] * 1e-6 - 0.00002) : [1]), ...(S.dip && S.dip.box ? S.dip.box.map(p => 1 + p[1] * 1e-6 - 0.00002) : [1]));
   const X = f => gx0 + (f + win) / (2 * win) * gw, Y = v => gy0 + (1 - v) / (1 - floor) * gh * 0.86 + 6;
   mxAxes(c, gx0, gy0, gw, gh, {y: 'BRIGHTNESS (%)', x: 'TIME FROM MID-TRANSIT (h)'});
   for (const v of [1, 1 - depth]){ c.strokeStyle = 'rgba(255,255,255,.08)'; c.beginPath(); c.moveTo(gx0, Y(v)); c.lineTo(gx0 + gw, Y(v)); c.stroke(); mxText(c, (v * 100).toFixed(depth < 0.001 ? 3 : 2), gx0 - 6, Y(v) + 4, {size: 11, mono: true, align: 'right'}); }
   for (const hh of [-1, 0, 1]){ const f = hh * win * 0.8, xx = X(f); mxText(c, (f * P * 24).toFixed(1), xx, gy0 + gh + 13, {size: 11, mono: true, align: 'center'}); }
+  if (S.dip && S.dip.box && S.dip.box.length){
+    c.save(); c.beginPath(); c.rect(gx0, gy0, gw, gh); c.clip();
+    c.setLineDash([5, 4]); c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 1.2; c.beginPath();
+    S.dip.box.forEach((p, i) => { const x = X(p[0] / P), y = Y(1 + p[1] * 1e-6); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); c.setLineDash([]);
+    c.restore();
+  }
   if (S.dip && S.dip.pts){
     c.fillStyle = 'rgba(100,210,255,.55)';
     c.save(); c.beginPath(); c.rect(gx0, gy0, gw, gh); c.clip();
@@ -1258,7 +1270,7 @@ function mxDrawSystem(c, w, h, t, st){
   for (let i = 0; i <= 240; i++){ const f = -win + 2 * win * i / 240; if (f > upto) break; const v = mxFlux(zOf(f), S.k, u1, u2); i ? c.lineTo(X(f), Y(v)) : c.moveTo(X(f), Y(v)); }
   c.stroke();
   if (t < 0.5){ const v = mxFlux(zOf(phi), S.k, u1, u2); c.fillStyle = '#FFB340'; c.beginPath(); c.arc(X(phi), Y(v), 3.5, 0, 2 * Math.PI); c.fill(); }
-  const cap = S.dip ? 'line: model from stored values · dots: exoplan’s stored points' : 'line: model from stored values, not observed data';
+  const cap = S.dip ? 'line: model from stored values · dots: exoplan’s stored points' + (S.dip.box ? ' · dashed: stored box' : '') : 'line: model from stored values, not observed data';
   if (w < 600) mxText(c, cap, gx0 + 6, gy0 + 14, {size: 11}); else mxText(c, cap, gx0 + gw, gy0 - 6, {size: 11, align: 'right'});
 }
 MXV.system = {key: 0.25, period: 12, init(st){

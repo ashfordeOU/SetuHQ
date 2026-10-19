@@ -828,11 +828,8 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .skycov{display:grid;gap:8px;padding:14px 16px;border-radius:var(--r)}
 .skycov p{margin:0;font-size:13px;color:var(--ink-2)}
 .skycov a{display:inline-flex;align-items:center;min-height:44px}
-.txsys{display:grid;gap:10px}
-.txsys h2{margin:0}
-.txsys .muted{margin:0}
-.txsys figure[hidden]{display:none}
-.txsys .mxdesc a{display:inline-flex;align-items:center;min-height:44px}
+.theatre .mxstage{padding:0 12px 4px}
+.theatre .mxctl,.theatre .mxbadges{padding:0 2px}
 .skypin{position:absolute;min-height:44px;padding:10px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(28,28,30,.72);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:#F5F5F7;text-decoration:none;line-height:1.35;font-size:12px}
 .skypin b{font-size:15px;font-weight:600;display:block}
 .skypin span{display:block;color:#A1A1A6}
@@ -1962,39 +1959,34 @@ $('#route-sky').addEventListener('click', e => {
 
 // ---------- Transit (the per-dip cockpit) ----------
 const txs = {dip: null, cmp: []};
-function theatre(d){
-  const R = 150, k = d.ratio || 0, r = Math.max(1.2, R * k), dur = Math.max(1e-3, d.t_end - d.t_start);
-  // The shadow is on the disc exactly while the stored window runs: R each side of centre in half a duration.
-  const travel = R * d.half / (dur / 2), known = d.status === 'known';
-  const narrow = window.matchMedia && window.matchMedia('(max-width:699.98px)').matches;
-  const [lo, hi] = dipRange([d]), W = 800, H = narrow ? 360 : 150, Y = v => 10 + (hi - Math.max(lo, Math.min(hi, v))) / (hi - lo) * (H - 30);
-  const X = dt => (dt + d.half) / (2 * d.half) * W;
-  const clipped = d.pts.filter(p => p[1] < lo || p[1] > hi).length;
-  const box = d.box.length ? `M0 ${Y(0).toFixed(1)}` + d.box.map(p => `L${X(p[0]).toFixed(1)} ${Y(p[1]).toFixed(1)}`).join('') + `L${W} ${Y(0).toFixed(1)}` : '';
-  const c = STC_SPACE[d.status];
-  return `<div class="cap"><span>The transit, played back</span><span>${known ? `${esc(d.planet)} to scale` : 'what a planet this deep would cast'}</span></div>
-    <svg viewBox="0 0 800 330" role="img" aria-label="The star, with a shadow to scale crossing it: Rp/R* ${fmt(k, 4)} from the stored depth ${fmt(d.depth_ppm, 0)} ppm. Path through the centre; impact parameter not fitted.">
-      <defs>
-        <radialGradient id="limb" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF8E7"/><stop offset=".55" stop-color="#FFE0A6"/><stop offset=".85" stop-color="#F5A443"/><stop offset="1" stop-color="#A9480E"/></radialGradient>
-        <radialGradient id="corona" cx="50%" cy="50%" r="50%"><stop offset=".62" stop-color="#FFB340" stop-opacity=".35"/><stop offset="1" stop-color="#FFB340" stop-opacity="0"/></radialGradient>
-        <filter id="gran" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".09" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 .85  0 0 0 0 .55  0 0 0 .22 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
-        <clipPath id="disc"><circle cx="400" cy="165" r="${R}"/></clipPath>
-      </defs>
-      <circle class="breathe" cx="400" cy="165" r="200" fill="url(#corona)"/>
-      <circle cx="400" cy="165" r="${R}" fill="url(#limb)"/>
-      <rect x="250" y="15" width="300" height="300" fill="#FFFFFF" filter="url(#gran)" clip-path="url(#disc)"/>
-      <g clip-path="url(#disc)"><g class="sweep" style="--from:${(-travel).toFixed(1)}px;--to:${travel.toFixed(1)}px"><circle cx="400" cy="165" r="${r.toFixed(2)}" fill="#000"/></g></g>
-      <g class="sweep" style="--from:${(-travel).toFixed(1)}px;--to:${travel.toFixed(1)}px"><circle cx="400" cy="165" r="${Math.max(12, r + 6).toFixed(1)}" fill="none" stroke="rgba(0,0,0,.55)"/><line x1="400" y1="${(165 - Math.max(12, r + 6)).toFixed(1)}" x2="400" y2="40" stroke="rgba(255,255,255,.35)" stroke-width=".8"/></g>
-    </svg>
-    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Stored flux around the dip: ${d.pts.length} points within ${fmt(d.half * 24, 1)} hours of mid-time, drawn in as the shadow crosses, with the box at the stored depth and duration.">
-      <defs><clipPath id="rvclip"><rect class="reveal" x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>
-      <line x1="0" x2="${W}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}" stroke="rgba(255,255,255,.1)"/>
-      <path d="${box}" stroke="${c}" stroke-width="${narrow ? 3 : 1.3}" fill="none" stroke-dasharray="${narrow ? '12 9' : '5 4'}" opacity=".85"/>
-      <g clip-path="url(#rvclip)"><path d="${dotPath(d.pts, X, Y)}" stroke="#F5F5F7" stroke-width="${narrow ? 8 : 3.2}" stroke-linecap="round" opacity=".85"/></g>
-      <g class="playhead" style="--w:${W}px"><line x1="0" y1="0" x2="0" y2="${H - 18}" stroke="#FFB340" stroke-width="${narrow ? 2.5 : 1}"/><circle cx="0" cy="${narrow ? 10 : 5}" r="${narrow ? 7 : 3}" fill="#FFB340"/></g>
-    </svg>
-    <div class="axisrow"><span>${fmtSigned(-d.half * 24, 1)} h</span><span>mid-time ${esc(d.time_unit)} ${fmt(d.t, 3)}</span><span>${fmtSigned(d.half * 24, 1)} h</span></div>
-    <p class="foot">The ringed dot crossing the star is ${known ? esc(d.planet) + "'s shadow, to scale" : 'the shadow a planet this deep would cast, to scale'}: Rp/R* = √depth = ${fmt(k, 4)}, from the stored depth. Path through the centre; impact parameter not fitted. Dots: the ${d.pts.length} stored flux values in this window${clipped ? ` (${clipped} outside the drawn range not shown)` : ''}. Dashed: a box at the stored depth and duration, not a fit. The star's surface texture is decorative.</p>`;
+// The transit, played back with the shared system view: the star from the catalogue (blackbody colour from its
+// Teff, limb darkening), the planet crossing it, a limb-darkened model curve, and this dip's stored points and box.
+// A dip matched to a known planet uses that planet's stored radii and orbit; any other dip shows what a planet
+// as deep as the stored depth would cast, with the orbit illustrative and the impact parameter not fitted.
+function txTheatre(d){
+  const known = d.status === 'known', k = d.ratio || 0;
+  const star = typeof MX !== 'undefined' && MX && S.planet ? MX.examples[S.planet] : null;
+  const box = (d.box || []).map(p => [p[0], p[1]]);
+  let p, bNote;
+  if (known && star){ p = Object.assign({name: S.planet}, star); bNote = `impact parameter ${star.impact_parameter != null ? 'as stored' : 'illustrative'}`; }
+  else {
+    // Rp/R★ = √depth; the duration sets a/R★ for an illustrative period (the lead signal's), b = 0 (not fitted).
+    const P = (D.hero.lead && D.hero.lead.period_days) || 6, T14 = Math.max(0.02, (d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * (1 + k);
+    const st = star || {};
+    p = {name: 'a planet this deep', star_teff: st.star_teff || 5772, star_radius: st.star_radius || 1, radius: st.star_radius ? k * st.star_radius * 6.957e8 / 7.1492e7 : null,
+      orbital_period: P, semi_major_axis: ars * (st.star_radius || 1) * 6.957e8 / 1.495978707e11, impact_parameter: 0};
+    bNote = 'impact parameter not fitted';
+  }
+  $('#txcap').textContent = known && star ? `${S.planet}, from stored values` : 'what a planet this deep would cast';
+  $('#txfoot').textContent = (known && star
+      ? `${S.planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}): the line is a limb-darkened model from those values, not a fit to this dip; ${bNote}. The match says the planet is already known; it does not confirm the dip.`
+      : `If it were a planet: Rp/R★ = √depth = ${fmt(k, 4)}, from the stored depth ${fmt(d.depth_ppm, 0)} ppm; the star is the target as the catalogue stores it; orbit and period illustrative; ${bNote}.`)
+    + ` Dots: the ${d.pts.length} stored flux values within ${fmt(d.half * 24, 1)} hours of mid-time (${esc(d.time_unit)} ${fmt(d.t, 3)}). Dashed: a box at the stored depth and duration, not a fit. The star's surface texture is decorative.`;
+  const fig = $('#txsysfig'), st = mxSetup(fig);
+  st.opt.sys = mxSystemParams(p, {pts: d.pts, box});
+  if (!(known && star)) st.opt.sys.bSrc = 'not fitted';
+  st.on = current === 'transit'; mxDraw(st);
+  if (st.on && !mxRM.matches && !st.started){ st.started = true; mxPlay(st, true); } else mxKick(st);
 }
 function lanesHTML(d){
   const pct = v => Math.max(0, Math.min(100, (v + d.half) / (2 * d.half) * 100));
@@ -2044,7 +2036,7 @@ function renderTransit(){
   // Keep the current dip's chip in view in the sideways-scrolling row (without moving the page).
   const row = $('#txchips'), chip = $('#txchips a[aria-current="true"]');
   if (row && chip) row.scrollLeft = chip.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2;
-  $('#txtheatre').innerHTML = theatre(d);
+  txTheatre(d);
   $('#txscore').innerHTML = `<div class="top"><span>Panel score (weighted share that marked it)</span><b>${fmt(d.score, 2)}</b></div><div class="bar" style="--c:${STC[d.status]}"><i style="width:${Math.round((d.score || 0) * 100)}%"></i></div><p>${esc(d.verdict)}</p>`;
   $('#txlanes').innerHTML = lanesHTML(d);
   $('#txquote').innerHTML = quoteHTML(d);
@@ -2062,26 +2054,8 @@ function openTransit(dip){
   txs.dip = dip || txs.dip || S.lead_dip;
   if (!dip) setHash(transitHref(txs.dip), false);
   renderTransit();
-  txSystem(txs.dip);
 }
-// The animated system for a dip that matches a known planet: the catalogue's star (Teff, radius) and
-// planet, with this dip's stored points over the model curve. Other dips have no planet to draw.
-function txSystem(dip){
-  const fig = $('#txsysfig'), note = $('#txsysnote'), d = (S.dips || []).find(x => x.id === dip);
-  const ex = typeof MX !== 'undefined' && MX && S.planet ? MX.examples[S.planet] : null;
-  if (!ex || !d || d.status !== 'known'){
-    fig.hidden = true;
-    note.textContent = d && d.status !== 'known' ? `This dip does not match a known planet, so there is no stored planet to draw. It stays a ${D.unconfirmed}.` : 'No stored planet parameters in this build.';
-    if (fig._mx) fig._mx.on = false;
-    return;
-  }
-  fig.hidden = false;
-  note.textContent = `${S.planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}), with dip ${dip}'s stored points. The match says the planet is already known; it does not confirm the dip.`;
-  const st = mxSetup(fig); st.opt.sys = mxSystemParams(Object.assign({name: S.planet}, ex), {pts: d.pts});
-  st.on = current === 'transit'; mxDraw(st);
-  if (st.on && !mxRM.matches && !st.started){ st.started = true; mxPlay(st, true); } else mxKick(st);
-}
-function txSysShown(on){ const fig = $('#txsysfig'); if (fig && fig._mx){ fig._mx.on = on && !fig.hidden; if (on) mxKick(fig._mx); } }
+function txSysShown(on){ const fig = $('#txsysfig'); if (fig && fig._mx){ fig._mx.on = on; if (on) mxKick(fig._mx); } }
 $('#route-transit').addEventListener('click', e => {
   if (e.target.closest('#cmptoggle')){ const k = txs.cmp.indexOf(txs.dip); if (k >= 0) txs.cmp.splice(k, 1); else txs.cmp.push(txs.dip); renderTransit(); $('#cmptoggle').focus(); say(k >= 0 ? 'Removed from compare.' : 'Added to compare.'); }
   if (e.target.closest('#cmpclear')){ txs.cmp = []; renderTransit(); $('#cmptoggle').focus(); say('Compare cleared.'); }
@@ -2454,7 +2428,15 @@ def _transit(data: dict) -> str:
       <p class="txnotice" id="txnotice" role="status" hidden></p>
       <nav class="dipchips" id="txchips" aria-label="Dips"></nav>
       <div class="row2">
-        <section class="space theatre" id="txtheatre" aria-label="Transit theatre"></section>
+        <section class="space theatre" id="txtheatre" aria-label="Transit theatre">
+          <div class="cap"><span>The transit, played back</span><span id="txcap"></span></div>
+          <figure class="mxstage tall" data-vis="system" id="txsysfig">
+            <div class="mxcanvas"><canvas role="img" id="txcanvas" aria-label="The star in its blackbody colour with the planet crossing it, and a limb-darkened model light curve with this dip's stored points overlaid."></canvas></div>
+            <div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
+            <div class="mxctl" role="group" aria-label="Animation controls"><button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time"><button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button></div>
+          </figure>
+          <p class="foot" id="txfoot"></p>
+        </section>
         <aside class="tx-side">
           <section class="glass scorecard" id="txscore" aria-label="Panel score and verdict"></section>
           <section class="glass lanes" id="txlanes" aria-label="Who marked it"></section>
@@ -2462,16 +2444,6 @@ def _transit(data: dict) -> str:
         </aside>
       </div>
       <section class="row2" id="txorbit" aria-label="Orbit and compare"></section>
-      <section class="txsys" aria-labelledby="h-txsys">
-        <h2 id="h-txsys">The system, drawn from stored values</h2>
-        <p class="muted" id="txsysnote"></p>
-        <figure class="mxstage tall" data-vis="system" id="txsysfig">
-          <div class="mxcanvas"><canvas role="img" aria-label="The known planet's star drawn in its blackbody colour with the planet crossing it, and a limb-darkened model light curve from stored catalogue values, with this dip's stored points overlaid."></canvas></div>
-          <div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
-          <div class="mxctl" role="group" aria-label="Animation controls"><button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time"><button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button></div>
-          <figcaption class="mxdesc">The line is a model from the catalogue's stored radii and orbit (quadratic limb darkening, Claret 2017), not observed data. The dots are this dip's stored points from exoplan's run. <a href="#/methods?ch=transit">How a transit works ›</a></figcaption>
-        </figure>
-      </section>
       <p class="casefile" id="txcase"></p>
       <p class="small" id="txarchive"></p>
       <p class="small">Every dip here is a {UNCONFIRMED}. Stored values only: the points, marks, scores, flags and words are as the run stored them.</p>"""
