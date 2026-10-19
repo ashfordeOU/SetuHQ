@@ -645,7 +645,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .gxtr{right:8px;top:8px;gap:6px}
   .gxradar{width:68px;height:68px}
   .gxtel{display:none}
-  .gxstage.sel .gxtel{display:block;min-width:0;max-width:200px;font-size:11px;padding:6px 8px}
+  .gxstage.sel .gxtr,.gxstage.sel .gxbl{display:none}
   .gxbl{left:10px;bottom:10px}
   .gxorbit{display:none}
   .gxcounter{font-size:17px}
@@ -741,7 +741,9 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   var T = JSON.parse(src.textContent), rm = window.matchMedia('(prefers-reduced-motion: reduce)');
   Array.prototype.forEach.call(document.querySelectorAll('canvas[data-teaser]'), function(cv){
     var ctx = cv.getContext('2d'); if (!ctx) return;
-    var reach = T.reach_ly || 1, a = -0.6, on = false, raf = 0, last = 0;
+    var reach = T.reach_ly || 1, a = -0.6, seen = false, raf = 0, last = 0;
+    // Runs only while the canvas is on screen (seen by the observer and laid out) and the tab is visible.
+    function live(){ return seen && !document.hidden && cv.getClientRects().length > 0; }
     function size(){ var r = cv.getBoundingClientRect(), k = Math.min(2, window.devicePixelRatio || 1); cv.width = Math.max(1, Math.round(r.width * k)); cv.height = Math.max(1, Math.round(r.height * k)); return k; }
     var k = size();
     function draw(){
@@ -758,11 +760,12 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
       }
       ctx.globalAlpha = 1; ctx.fillStyle = '#FFB340'; ctx.beginPath(); ctx.arc(w / 2, h / 2, 3.5 * k, 0, 2 * Math.PI); ctx.fill();
     }
-    function tick(t){ raf = 0; if (!on) return; if (last) a += Math.min(50, t - last) * 0.00006; last = t; draw(); if (!rm.matches) raf = requestAnimationFrame(tick); }
-    function start(){ if (!on || raf) return; last = 0; raf = requestAnimationFrame(tick); }
-    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ on = es[0].isIntersecting && !document.hidden; if (on) start(); }).observe(cv);
-    else { on = true; start(); }
-    document.addEventListener('visibilitychange', function(){ if (document.hidden) on = false; else { on = true; start(); } });
+    function tick(t){ raf = 0; if (!live()){ last = 0; return; } if (last) a += Math.min(50, t - last) * 0.00006; last = t; draw(); if (!rm.matches) raf = requestAnimationFrame(tick); }
+    function start(){ if (!live() || raf) return; last = 0; raf = requestAnimationFrame(tick); }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; start(); }).observe(cv);
+    else { seen = true; start(); }
+    document.addEventListener('visibilitychange', start);
+    window.addEventListener('hashchange', function(){ setTimeout(start, 0); });
     window.addEventListener('resize', function(){ k = size(); draw(); });
     draw();
   });

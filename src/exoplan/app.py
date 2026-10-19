@@ -2411,7 +2411,7 @@ def _sky_coverage(data: dict) -> str:
     if not cov:
         return ""
     f = cov["fractions"]
-    return (f'<section class="glass skycov" aria-label="Survey coverage">{coverage_chips(cov, "sky")}<p>Survey coverage: TESS has observed {f["tess"] * 100:.0f}% of the sky '
+    return (f'<section class="glass skycov" aria-label="Survey coverage">{coverage_chips(cov, "sky")}<p>Survey coverage: TESS has observed {f["tess"] * 100:.1f}% of the sky '
             f'(sectors 1–{cov["tess_last_sector"]}); {f["unmapped"] * 100:.1f}% has never been in a TESS, Kepler or K2 footprint. '
             f'Shading shows where surveys looked, not where planets are. <a href="#/galaxy">Figures and sources in the Galaxy ›</a></p></section>')
 
@@ -2488,10 +2488,7 @@ def app_page(data: dict) -> str:
     run = data["run"]
     rule = data["feed_rule"]
     payload = json.dumps({k: v for k, v in data.items() if k not in ("galaxy", "coverage")}).replace("</", "<\\/")
-    galaxy_payload = ""
-    if data.get("galaxy"):  # galactic l and b go to the CSV only; the page draws from x, y, z
-        g = {**data["galaxy"], "hosts": {k: v for k, v in data["galaxy"]["hosts"].items() if k not in ("l", "b")}}
-        galaxy_payload = json.dumps(g, separators=(",", ":"), ensure_ascii=False).replace("</", "<\\/")
+    galaxy_payload = ""  # the map's arrays are a separate file (galaxy_json), fetched when the Galaxy opens
     unc = html.escape(UNCONFIRMED)
     nodet = html.escape(NO_DETECTION)
     feed = data["catalog"]["candidates"]
@@ -2618,6 +2615,16 @@ def app_page(data: dict) -> str:
 """
 
 
+GALAXY_JSON = "assets/data/galaxy.json"
+
+
+def galaxy_json(data: dict) -> str:
+    """The map's arrays, written beside the page and fetched (same origin) on the first visit to the Galaxy.
+    Galactic l and b go to the CSV only; the page draws from x, y, z."""
+    g = {**data["galaxy"], "hosts": {k: v for k, v in data["galaxy"]["hosts"].items() if k not in ("l", "b")}}
+    return json.dumps(g, separators=(",", ":"), ensure_ascii=False)
+
+
 def _galaxy_scripts(data: dict, galaxy_payload: str = "") -> str:
     """The map's arrays (parsed only when the Galaxy opens) and the Overview teaser's points and code."""
     out = f'<script id="galaxy-data" type="application/json">{galaxy_payload}</script>' if galaxy_payload else ""
@@ -2726,4 +2733,5 @@ def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_p
     if data.get("galaxy"):
         (out / "assets" / "data").mkdir(parents=True, exist_ok=True)
         (out / "assets" / "data" / CSV_NAME).write_text(map_csv(data["galaxy"]))
+        (out / GALAXY_JSON).write_text(galaxy_json(data))
     return path

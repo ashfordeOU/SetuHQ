@@ -302,7 +302,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
     summary = (f"3D map of {c['kept']:,} known exoplanets around {c['hosts']:,} stars, placed around the Sun in galactic "
                f"coordinates from their sky position and distance. Colour shows the detection method; larger points are "
                f"stars with more planets. The densest streak, toward Cygnus and Lyra, is the Kepler field "
-               f"({kep['hosts']:,} stars). The table below lists the 50 nearest systems.")
+               f"({kep['hosts']:,} stars within a 7° disc). The table below lists the 50 nearest systems.")
     notable = "".join(
         f'<li style="border-left:3px solid {g["method_colour"][nt["method"]]}"><button class="gxnot" type="button" data-gxstop="{k + 1}"><b>{e(nt["name"])}</b>'
         f'<span>{e(nt["tagline"])}</span><span class="mono">{e(g["method_label"][nt["method"]])}{" · method showcase" if nt["showcase"] else ""}</span></button>'
@@ -334,6 +334,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
         <div class="gxtip glass" id="gxtip" hidden></div>
         <section class="gxcard glass" id="gxcard" aria-label="Selected system" hidden></section>
         <p class="gxmw" id="gxmw" hidden>Milky Way: artist's impression; Sun's position approximate (~{SUN_TO_GC_LY:,} ly from the centre)</p>
+        <p class="gxnogl" id="gxload" role="status" hidden>Loading the map of {c['kept']:,} planets…</p>
         <p class="gxnogl" id="gxnogl" hidden>This browser did not start WebGL, so the 3D map cannot be drawn. The table below lists the nearest systems, and the CSV holds every plotted planet.</p>
         <div class="gxtourbar glass" id="gxtourbar" role="group" aria-label="Tour" hidden>
           <button class="btn" type="button" id="gxtprev" aria-label="Previous stop">‹</button>
@@ -525,7 +526,7 @@ GALAXY_CSS = r"""
   .gxtr{right:8px;top:8px;gap:6px}
   .gxradar{width:68px;height:68px}
   .gxtel{display:none}
-  .gxstage.sel .gxtel{display:block;min-width:0;max-width:200px;font-size:11px;padding:6px 8px}
+  .gxstage.sel .gxtr,.gxstage.sel .gxbl{display:none}
   .gxbl{left:10px;bottom:10px}
   .gxorbit{display:none}
   .gxcounter{font-size:17px}
@@ -559,7 +560,9 @@ TEASER_JS = r"""
   var T = JSON.parse(src.textContent), rm = window.matchMedia('(prefers-reduced-motion: reduce)');
   Array.prototype.forEach.call(document.querySelectorAll('canvas[data-teaser]'), function(cv){
     var ctx = cv.getContext('2d'); if (!ctx) return;
-    var reach = T.reach_ly || 1, a = -0.6, on = false, raf = 0, last = 0;
+    var reach = T.reach_ly || 1, a = -0.6, seen = false, raf = 0, last = 0;
+    // Runs only while the canvas is on screen (seen by the observer and laid out) and the tab is visible.
+    function live(){ return seen && !document.hidden && cv.getClientRects().length > 0; }
     function size(){ var r = cv.getBoundingClientRect(), k = Math.min(2, window.devicePixelRatio || 1); cv.width = Math.max(1, Math.round(r.width * k)); cv.height = Math.max(1, Math.round(r.height * k)); return k; }
     var k = size();
     function draw(){
@@ -576,11 +579,12 @@ TEASER_JS = r"""
       }
       ctx.globalAlpha = 1; ctx.fillStyle = '#FFB340'; ctx.beginPath(); ctx.arc(w / 2, h / 2, 3.5 * k, 0, 2 * Math.PI); ctx.fill();
     }
-    function tick(t){ raf = 0; if (!on) return; if (last) a += Math.min(50, t - last) * 0.00006; last = t; draw(); if (!rm.matches) raf = requestAnimationFrame(tick); }
-    function start(){ if (!on || raf) return; last = 0; raf = requestAnimationFrame(tick); }
-    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ on = es[0].isIntersecting && !document.hidden; if (on) start(); }).observe(cv);
-    else { on = true; start(); }
-    document.addEventListener('visibilitychange', function(){ if (document.hidden) on = false; else { on = true; start(); } });
+    function tick(t){ raf = 0; if (!live()){ last = 0; return; } if (last) a += Math.min(50, t - last) * 0.00006; last = t; draw(); if (!rm.matches) raf = requestAnimationFrame(tick); }
+    function start(){ if (!live() || raf) return; last = 0; raf = requestAnimationFrame(tick); }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; start(); }).observe(cv);
+    else { seen = true; start(); }
+    document.addEventListener('visibilitychange', start);
+    window.addEventListener('hashchange', function(){ setTimeout(start, 0); });
     window.addEventListener('resize', function(){ k = size(); draw(); });
     draw();
   });
@@ -644,9 +648,10 @@ const gx = {G: null, ready: false, on: false, gl: null, view: null, cam: null, f
   pointers: new Map(), drag: null, visible: false, auto: true, labels: null, cards: null, mw: 0, telAt: 0, byHost: null};
 const gxRM = window.matchMedia('(prefers-reduced-motion: reduce)');
 const gxPhone = window.matchMedia('(max-width: 699.98px)');
-function gxData(){
-  if (!gx.G){ const el = document.getElementById('galaxy-data'); if (el) gx.G = JSON.parse(el.textContent); }
-  return gx.G;
+// The map's arrays live in assets/data/galaxy.json (same origin), fetched on the first visit.
+function gxLoad(){
+  if (!gx.loading) gx.loading = fetch('assets/data/galaxy.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(G => { gx.G = G; return G; });
+  return gx.loading;
 }
 const gxFmt = (x, d) => x == null ? '—' : x.toLocaleString('en-GB', {maximumFractionDigits: d, minimumFractionDigits: 0});
 const gxSig = x => x == null ? '—' : (Math.abs(x) >= 100 ? gxFmt(x, 0) : Number(x.toPrecision(3)).toString());
@@ -673,13 +678,17 @@ function gxProject(x, y, z){
 }
 
 // ---------- shaders ----------
-const GX_PT_VS = 'attribute vec3 a_pos;attribute float a_size;attribute vec3 a_col;uniform mat4 u_mvp;uniform float u_px;uniform float u_scale;uniform float u_alpha;varying vec3 v_col;varying float v_a;' +
-  'void main(){gl_Position=u_mvp*vec4(a_pos*u_scale,1.0);gl_PointSize=a_size*u_px;v_col=a_col;v_a=u_alpha;if(a_size<=0.0){gl_Position=vec4(2.0,2.0,2.0,1.0);gl_PointSize=0.0;}}';
-const GX_PT_FS = 'precision mediump float;varying vec3 v_col;varying float v_a;' +
-  'void main(){vec2 q=gl_PointCoord*2.0-1.0;float r=dot(q,q);if(r>1.0)discard;float core=1.0-smoothstep(0.0,0.42,r);float halo=exp(-r*3.5)*0.55;gl_FragColor=vec4(v_col*(core+halo)*v_a,1.0);}';
+const GX_PT_VS = 'attribute vec3 a_pos;attribute float a_size;attribute vec3 a_col;uniform mat4 u_mvp;uniform float u_px;uniform float u_scale;uniform vec3 u_eye;varying float v_face;uniform float u_alpha;varying vec3 v_col;varying float v_a;' +
+  'void main(){gl_Position=u_mvp*vec4(a_pos*u_scale,1.0);v_face=dot(a_pos,u_eye-a_pos*u_scale);gl_PointSize=a_size*u_px;v_col=a_col;v_a=u_alpha;if(a_size<=0.0){gl_Position=vec4(2.0,2.0,2.0,1.0);gl_PointSize=0.0;}}';
+const GX_PT_FS = 'precision mediump float;varying vec3 v_col;varying float v_a;varying float v_face;uniform float u_flat;' +
+  'void main(){vec2 q=gl_PointCoord*2.0-1.0;float r=dot(q,q);if(r>1.0)discard;if(u_flat>0.5){if(v_face<0.0)discard;gl_FragColor=vec4(v_col,1.0);return;}float core=1.0-smoothstep(0.0,0.42,r);float halo=exp(-r*3.5)*0.55;gl_FragColor=vec4(v_col*(core+halo)*v_a,1.0);}';
 const GX_LN_VS = 'attribute vec3 a_pos;uniform mat4 u_mvp;uniform float u_scale;uniform vec3 u_off;uniform float u_fade;varying float v_f;' +
   'void main(){vec3 p=a_pos*u_scale+u_off;gl_Position=u_mvp*vec4(p,1.0);v_f=u_fade>0.0?1.0-smoothstep(0.5,1.0,length(a_pos.xy)/u_fade):1.0;}';
 const GX_LN_FS = 'precision mediump float;uniform vec4 u_col;varying float v_f;void main(){gl_FragColor=vec4(u_col.rgb*u_col.a*v_f,1.0);}';
+const GX_MESH_VS = 'attribute vec3 a_pos;attribute vec3 a_col;uniform mat4 u_mvp;uniform float u_scale;uniform vec3 u_eye;varying vec3 v_col;varying float v_face;' +
+  'void main(){gl_Position=u_mvp*vec4(a_pos*u_scale,1.0);v_col=a_col;v_face=dot(a_pos,u_eye-a_pos*u_scale);}';
+const GX_MESH_FS = 'precision mediump float;varying vec3 v_col;varying float v_face;uniform float u_inside;' +
+  'void main(){if((u_inside>0.5&&v_face>0.0)||(u_inside<0.5&&v_face<0.0))discard;gl_FragColor=vec4(v_col,1.0);}';
 const GX_MW_VS = 'attribute vec2 a_q;uniform mat4 u_mvp;uniform vec3 u_gc;uniform float u_R;varying vec2 v_p;' +
   'void main(){v_p=a_q*u_R/1000.0;gl_Position=u_mvp*vec4(u_gc+vec3(a_q*u_R,0.0),1.0);}';
 const GX_MW_FS = 'precision mediump float;varying vec2 v_p;uniform float u_alpha;' +
@@ -760,9 +769,10 @@ function gxInitGL(){
   try { gl = cv.getContext('webgl', {antialias: true, alpha: false, depth: false, powerPreference: 'high-performance'}); } catch (e) { gl = null; }
   if (!gl) return false;
   gx.gl = gl;
-  gx.pt = gxProgram(gl, GX_PT_VS, GX_PT_FS, ['a_pos', 'a_size', 'a_col'], ['u_mvp', 'u_px', 'u_alpha', 'u_scale']);
+  gx.pt = gxProgram(gl, GX_PT_VS, GX_PT_FS, ['a_pos', 'a_size', 'a_col'], ['u_mvp', 'u_px', 'u_alpha', 'u_scale', 'u_flat', 'u_eye']);
   gx.ln = gxProgram(gl, GX_LN_VS, GX_LN_FS, ['a_pos'], ['u_mvp', 'u_scale', 'u_off', 'u_fade', 'u_col']);
   gx.mwp = gxProgram(gl, GX_MW_VS, GX_MW_FS, ['a_q'], ['u_mvp', 'u_gc', 'u_R', 'u_alpha']);
+  gx.mesh = gxProgram(gl, GX_MESH_VS, GX_MESH_FS, ['a_pos', 'a_col'], ['u_mvp', 'u_scale', 'u_eye', 'u_inside']);
   const H = gx.G.hosts, n = H.n.length, pos = new Float32Array(n * 3);
   for (let h = 0; h < n; h++){ pos[h * 3] = H.x[h]; pos[h * 3 + 1] = H.y[h]; pos[h * 3 + 2] = H.z[h]; }
   gx.hostPos = pos;
@@ -774,29 +784,35 @@ function gxInitGL(){
   gx.lines = {};
   for (const k of Object.keys(L)) gx.lines[k] = {b: gxBuf(gl, L[k]), n: L[k].length / 3};
   gx.bQuad = gxBuf(gl, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]));
-  // Survey coverage: sky cells on the celestial sphere (TESS sectors, and the sky no transit survey has
-  // covered), and footprint outlines (Kepler with its cone from the Sun, K2, CoRoT, the bulge).
+  // Survey coverage: filled patches on the celestial sphere (TESS sectors, and the sky no transit survey
+  // has covered), and footprint outlines (Kepler with its cone from the Sun, K2, CoRoT, the bulge).
   const C = gx.G.coverage;
   if (C){
-    const kk = new Set(C.kepler_cells.concat(C.k2_cells)), mk = (want) => {
-      const pos = [], size = [], col = [];
-      for (let i = 0; i < C.tess.length; i++){
-        const w = want(i); if (!w) continue;
-        pos.push(C.cells[i * 3], C.cells[i * 3 + 1], C.cells[i * 3 + 2]); size.push(1); col.push(...w);
+    // Filled patches: two triangles per 4° quad, one shade per TESS sector bucket, and the never-observed sky in grey.
+    const blue = gxHex(C.colours.tess), grey = gxHex(C.colours.unmapped), M = C.mesh, st = M.step;
+    const R = [[-0.0548755604162154, -0.8734370902348850, -0.4838350155487132], [0.4941094278755837, -0.4448296299600112, 0.7469822444972189], [-0.8676661490190047, -0.1980763734312015, 0.4559837761750669]];
+    const gal = (ra, dec) => { const a = ra * Math.PI / 180, d = dec * Math.PI / 180, v = [Math.cos(d) * Math.cos(a), Math.cos(d) * Math.sin(a), Math.sin(d)]; return R.map(r => r[0] * v[0] + r[1] * v[1] + r[2] * v[2]); };
+    const tri = (want) => {
+      const pos = [], col = [];
+      for (let j = 0; j < 180 / st; j++) for (let i = 0; i < 360 / st; i++){
+        const c = want(j * (360 / st) + i); if (!c) continue;
+        const ra0 = i * st, ra1 = ra0 + st, d0 = -90 + j * st, d1 = d0 + st, A = gal(ra0, d0), B = gal(ra1, d0), Cc = gal(ra1, d1), Dd = gal(ra0, d1);
+        pos.push(...A, ...B, ...Cc, ...A, ...Cc, ...Dd); for (let k = 0; k < 6; k++) col.push(...c);
       }
-      return {pos: gxBuf(gl, new Float32Array(pos)), size: gxBuf(gl, new Float32Array(size)), col: gxBuf(gl, new Float32Array(col)), n: size.length};
+      return {pos: gxBuf(gl, new Float32Array(pos)), col: gxBuf(gl, new Float32Array(col)), n: pos.length / 3};
     };
-    const blue = gxHex(C.colours.tess), grey = gxHex(C.colours.unmapped);
-    gx.cov = {tess: mk(i => { const n = C.tess[i]; return n ? blue.map(v => v * (n >= 13 ? .3 : n >= 3 ? .15 : .07)) : null; }),
-      unmapped: mk(i => (!C.tess[i] && !kk.has(i)) ? grey.map(v => v * .45) : null), lines: {}};
+    gx.cov = {tess: tri(q => { const n = M.tess[q]; return n ? blue.map(v => v * (n >= 13 ? .34 : n >= 3 ? .2 : .1)) : null; }),
+      unmapped: tri(q => M.unmapped[q] ? grey.map(v => v * .42) : null), lines: {}};
     for (const k of ['kepler', 'k2', 'corot', 'bulge']){ const a = new Float32Array(C.lines[k]); gx.lines['cov_' + k] = {b: gxBuf(gl, a), n: a.length / 3}; }
   }
   gx.mwData = null;
   return true;
 }
-function gxPoints(prog, pos, size, col, n, alpha, scale, px){
+function gxPoints(prog, pos, size, col, n, alpha, scale, px, flat){
   const gl = gx.gl;
   gl.useProgram(prog.p);
+  gl.uniform1f(prog.u.u_flat, flat ? 1 : 0);
+  gl.uniform3fv(prog.u.u_eye, gxEye());
   gl.uniformMatrix4fv(prog.u.u_mvp, false, gx.mvp);
   gl.uniform1f(prog.u.u_px, px || gx.dpr);
   gl.uniform1f(prog.u.u_scale, scale || 1);
@@ -830,6 +846,22 @@ function gxDraw(){
   gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
   const proj = m4persp(GX_FOV, cv.width / cv.height, Math.max(0.05, d * 0.002), d * 40 + 400000);
   gx.mvp = m4mul(proj, m4look(eye, [c.tx, c.ty, c.tz], [0, 0, 1]));
+  // Survey coverage first: the cells are opaque, and everything else is drawn on top of them.
+  if (gx.cov && gx.view.layers.length){
+    const ly = gx.view.layers, R = d * 0.62, inside = Math.hypot(...eye) < R;
+    // One layer of the sphere only (the near half from outside, the far half from inside), drawn opaque
+    // without blending, so the shading is even and nothing doubles up.
+    gl.disable(gl.BLEND);
+    const m = gx.mesh; gl.useProgram(m.p); gl.uniformMatrix4fv(m.u.u_mvp, false, gx.mvp); gl.uniform1f(m.u.u_scale, R); gl.uniform3fv(m.u.u_eye, eye); gl.uniform1f(m.u.u_inside, inside ? 1 : 0);
+    for (const k of ['tess', 'unmapped']) if (ly.includes(k)){
+      const c = gx.cov[k];
+      gl.bindBuffer(gl.ARRAY_BUFFER, c.pos); gl.enableVertexAttribArray(m.a.a_pos); gl.vertexAttribPointer(m.a.a_pos, 3, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, c.col); gl.enableVertexAttribArray(m.a.a_col); gl.vertexAttribPointer(m.a.a_col, 3, gl.FLOAT, false, 0, 0);
+      gl.drawArrays(gl.TRIANGLES, 0, c.n);
+    }
+    gl.enable(gl.BLEND);
+    for (const k of ['kepler', 'k2', 'corot', 'bulge']) if (ly.includes(k)) gxLine('cov_' + k, R, [0, 0, 0], gxHex(gx.G.coverage.colours[k]).concat([0.85]));
+  }
   // The Milky Way fades in as the camera pulls out past ~9,000 ly; drawn only while it shows (culled otherwise).
   gx.mw = gxSmooth(9000, 42000, d);
   if (gx.mw > 0.01){
@@ -856,11 +888,6 @@ function gxDraw(){
     gxLine('ring', R, [0, 0, 0], [0.39, 0.82, 1, 0.42 * sa]);
   }
   gxLine('axes', Math.min(27000, d * 2.6), [0, 0, 0], [0.39, 0.82, 1, 0.55]);
-  if (gx.cov && gx.view.layers.length){
-    const ly = gx.view.layers, cellPx = 0.04 * gx.cssH * gx.dpr;
-    for (const k of ['tess', 'unmapped']) if (ly.includes(k)){ const c = gx.cov[k]; gxPoints(gx.pt, c.pos, c.size, c.col, c.n, 1, R, cellPx); }
-    for (const k of ['kepler', 'k2', 'corot', 'bulge']) if (ly.includes(k)) gxLine('cov_' + k, R, [0, 0, 0], gxHex(gx.G.coverage.colours[k]).concat([0.85]));
-  }
   gxPoints(gx.pt, gx.bHostPos, gx.bHostSize, gx.bHostCol, gx.G.hosts.n.length, 1 - 0.55 * gx.mw);
   gxPoints(gx.pt, gx.bSun[0], gx.bSun[1], gx.bSun[2], 1, 1);
 }
@@ -889,9 +916,8 @@ function gxRefilter(){
     gl.bindBuffer(gl.ARRAY_BUFFER, gx.bHostSize); gl.bufferSubData(gl.ARRAY_BUFFER, 0, size);
     gl.bindBuffer(gl.ARRAY_BUFFER, gx.bHostCol); gl.bufferSubData(gl.ARRAY_BUFFER, 0, col);
   }
-  const digits = String(G.counts.kept).length;
   $('#gxcyear').textContent = v.year;
-  $('#gxccount').textContent = String(r.planets).padStart(digits, '0');
+  $('#gxccount').textContent = r.planets.toLocaleString('en-GB');
   $('#gxyearout').textContent = `${v.year} // ${r.planets.toLocaleString('en-GB')} planets`;
   $('#gxsum').textContent = `${v.year} // ${r.planets.toLocaleString('en-GB')}`;
   if (gx.sel >= 0 && !r.per[gx.sel]) gxSelect(-1);
@@ -936,7 +962,7 @@ function gxFlightStep(t){
 }
 function gxZoom(f){ gx.cam.dist = Math.max(15, Math.min(260000, gx.cam.dist * f)); gx.flight = null; gxTouch(); }
 function gxOrbit(dx, dy){ gx.cam.yaw -= dx; gx.cam.pitch = Math.max(-1.5, Math.min(1.5, gx.cam.pitch + dy)); gx.flight = null; gxTouch(); }
-function gxTouch(){ gx.interacted = performance.now(); gx.cards = null; gxKick(); }
+function gxTouch(){ gx.interacted = performance.now(); gx.driftAcc = 0; gx.cards = null; gxKick(); }
 
 // ---------- picking ----------
 function gxPick(px, py, maxPx){
@@ -965,7 +991,7 @@ function gxHostPlanets(h){
   return gx.byHost.get(h).slice().sort((a, b) => (P.y[a] || 0) - (P.y[b] || 0) || P.n[a].localeCompare(P.n[b]));
 }
 const gxMethod = i => gx.G.method_label[gx.G.methods[gx.G.planets.m[i]]];
-const gxClass = i => gx.G.planets.c[i] == null ? '—' : gx.G.classes[gx.G.planets.c[i]];
+const gxClass = i => { const P = gx.G.planets; if (P.c[i] == null) return '—'; return gx.G.classes[P.c[i]] + (P.r[i] == null ? (P.mk[i] === 1 ? ' (by m sin i; no radius stored)' : ' (by mass; no radius stored)') : ''); };
 
 // ---------- overlay: labels, ticks, callouts, reticle, telemetry ----------
 function gxEl(cls, html){ const e = document.createElement('div'); e.className = cls; if (html != null) e.innerHTML = html; $('#gxlayer').appendChild(e); return e; }
@@ -980,7 +1006,7 @@ function gxBuildLabels(){
   L.sun = gxEl('gxlbl sun', 'Sun');
   L.gc = gxEl('gxlbl axis', 'Galactic centre (approximate)');
   const K = G.kepler;
-  L.kepler = gxEl('gxlbl region', `Kepler field · Cygnus–Lyra<small>${K.hosts.toLocaleString('en-GB')} stars · ${K.planets.toLocaleString('en-GB')} planets within ${K.radius_deg}°</small><small>Kepler's single deep field, not a real structure.</small>`);
+  L.kepler = gxEl('gxlbl region', `Kepler field · Cygnus–Lyra<small>${K.hosts.toLocaleString('en-GB')} stars · ${K.planets.toLocaleString('en-GB')} planets (${K.radius_deg}° disc)</small><small>Kepler's single deep field, not a real structure.</small>`);
   const ML = G.lensing;
   if (ML) L.lensing = gxEl('gxlbl region', `Microlensing planets<small>${ML.planets.toLocaleString('en-GB')} planets · found toward the Galactic bulge,</small><small>where the most background stars are. Distances model-dependent.</small>`);
   gx.labels = L;
@@ -1005,46 +1031,55 @@ function gxPlace(el, x, y, show, alpha){
 function gxOverlay(){
   if (!gx.labels) gxBuildLabels();
   const L = gx.labels, d = gx.cam.dist, W = gx.cssW, Hh = gx.cssH, on = (p) => p && p[0] > -40 && p[0] < W + 40 && p[1] > -20 && p[1] < Hh + 20;
-  // Axis ticks: shown while their spacing suits the zoom, never on top of each other.
-  // Labels are placed in priority order (centre, Sun, axis names, then ticks); one that would overlap is hidden.
-  const placed = [], size = el => { if (!el._w){ const disp = el.style.display; el.style.display = ''; el._w = el.offsetWidth || 80; el._h = el.offsetHeight || 14; el.style.display = disp; } return [el._w, el._h]; };
-  const fit = (el, x, y) => { const [w, h] = size(el), r = [x - 4, y - 4, x + w + 4, y + h + 4]; for (const q of placed) if (r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]) return false; placed.push(r); return true; };
+  // Labels are placed in priority order (centre, Sun, survey regions, axis names, then ticks). Each must
+  // sit wholly inside the stage and clear of the HUD panels, the selected-system card, the tour bar and
+  // every label placed before it: it tries the four sides of its anchor and is hidden if none is free.
+  $('#gxmw').hidden = gx.mw < 0.25;
+  gxRadar();
+  const now = performance.now();
+  if (now - gx.telAt > 150){ gx.telAt = now; gxTelemetry(); }
+  // Notable cards come first (they carry the most); labels then avoid them as well as the HUD.
+  gxCallouts();
+  const placed = gxHudRects().concat((gx.cardRects || []).map(r => r.slice())), mwEl = $('#gxmw');
+  if (!mwEl.hidden){ const st = $('#gxstage').getBoundingClientRect(), b = mwEl.getBoundingClientRect(); if (b.width) placed.push([b.left - st.left, b.top - st.top, b.right - st.left, b.bottom - st.top]); }
+  const size = el => { if (!el._w){ const disp = el.style.display; el.style.display = ''; const sp = el.querySelector('span'); el._w = Math.max(el.offsetWidth, sp ? sp.offsetWidth + 8 : 0) || 80; el._h = Math.max(el.offsetHeight, sp ? sp.offsetHeight + 4 : 0) || 14; el.style.display = disp; } return [el._w, el._h]; };
+  const free = r => { if (r[0] < 2 || r[1] < 2 || r[2] > W - 2 || r[3] > Hh - 2) return false; for (const q of placed) if (r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]) return false; return true; };
+  const SIDES = [[8, 6], [8, -6], [-8, 6], [-8, -6]];
+  const put = (el, p, show, alpha, offs) => {
+    if (!p || !show){ gxPlace(el, 0, 0, false); return false; }
+    const [w, h] = size(el);
+    for (const [dx, dy] of offs || SIDES){
+      const x = p[0] + (dx < 0 ? dx - w : dx), y = p[1] + (dy < 0 ? dy - h : dy), r = [x - 3, y - 3, x + w + 3, y + h + 3];
+      if (free(r)){ placed.push(r); gxPlace(el, x, y, true, alpha); return true; }
+    }
+    gxPlace(el, 0, 0, false); return false;
+  };
   const len = Math.min(27000, d * 2.6);
-  // With the Milky Way drawn, its centre is labelled at the bulge; the axis arrow label would repeat it.
-  const gp = gxProject(gx.G.sun_to_gc_ly, 0, 0), gcOn = on(gp) && gx.mw > 0.3 && fit(L.gc, gp[0] + 8, gp[1] + 8);
-  gxPlace(L.gc, gp ? gp[0] + 8 : 0, gp ? gp[1] + 8 : 0, gcOn, gx.mw);
-  const sp = gxProject(0, 0, 0), sunOn = on(sp) && fit(L.sun, sp[0] + 8, sp[1] + 6);
-  gxPlace(L.sun, sp ? sp[0] + 8 : 0, sp ? sp[1] + 6 : 0, sunOn);
-  for (const a of L.axes){
-    const p = gxProject(a.p[0] * len * .97, a.p[1] * len * .97, a.p[2] * len * .97), ok = on(p) && !(gcOn && a.p[0]) && fit(a.el, p[0] + 6, p[1] - 16);
-    gxPlace(a.el, p ? p[0] + 6 : 0, p ? p[1] - 16 : 0, ok);
+  const gp = gxProject(gx.G.sun_to_gc_ly, 0, 0), gcOn = put(L.gc, gp, gx.mw > 0.3, gx.mw);
+  put(L.sun, gxProject(0, 0, 0), true);
+  const K = gx.G.kepler, ka = gxSmooth(500, 1400, d) * (1 - gxSmooth(30000, 60000, d));
+  put(L.kepler, gxProject(K.x, K.y, K.z), ka > 0.05, ka, [[14, -30], [14, 10], [-14, -30], [-14, 10]]);
+  if (L.lensing){
+    const M = gx.G.lensing, ma = gxSmooth(4000, 12000, d) * (1 - gxSmooth(160000, 250000, d));
+    put(L.lensing, gxProject(M.x, M.y, M.z), ma > 0.05 && gx.view.methods.includes('microlensing'), ma, [[14, 10], [14, -10], [-14, 10], [-14, -10]]);
   }
+  // With the Milky Way drawn, its centre is labelled at the bulge; the axis arrow label would repeat it.
+  for (const a of L.axes) put(a.el, gxProject(a.p[0] * len * .97, a.p[1] * len * .97, a.p[2] * len * .97), !(gcOn && a.p[0]), null, [[6, -6], [6, 6], [-6, -6], [-6, 6]]);
   for (const t of L.ticks){
     const p = gxProject(t.p[0], t.p[1], t.p[2]);
-    const ok = on(p) && t.t >= d * 0.05 && t.t <= len && fit(t.el, p[0] - 3, p[1] - 3);
-    gxPlace(t.el, ok ? p[0] : 0, ok ? p[1] : 0, ok);
+    // A tick label stays on its tick (the dot marks the distance), so it is shown there or not at all.
+    put(t.el, p, t.t >= d * 0.05 && t.t <= len, null, [[0, 0]]);
   }
-  const K = gx.G.kepler, kp = gxProject(K.x, K.y, K.z), ka = gxSmooth(500, 1400, d) * (1 - gxSmooth(30000, 60000, d));
-  gxPlace(L.kepler, kp ? kp[0] + 14 : 0, kp ? kp[1] - 30 : 0, on(kp) && ka > 0.05, ka);
-  if (L.lensing){
-    const M = gx.G.lensing, mp = gxProject(M.x, M.y, M.z), ma = gxSmooth(4000, 12000, d) * (1 - gxSmooth(160000, 250000, d));
-    gxPlace(L.lensing, mp ? mp[0] + 14 : 0, mp ? mp[1] + 10 : 0, on(mp) && ma > 0.05 && gx.view.methods.includes('microlensing'), ma);
-  }
-  $('#gxmw').hidden = gx.mw < 0.25;
-  gxCallouts();
   // The reticle's target: the shown star nearest the centre of the view, within 44 px.
   const aim = gxPick(W / 2, Hh / 2, 44);
   gx.aim = aim;
   const box = $('#gxaim');
   if (aim >= 0){ const H = gx.G.hosts, p = gxProject(H.x[aim], H.y[aim], H.z[aim]); box.hidden = false; box.style.transform = `translate(${p[0]}px,${p[1]}px)`; }
   else box.hidden = true;
-  gxRadar();
-  const now = performance.now();
-  if (now - gx.telAt > 150){ gx.telAt = now; gxTelemetry(); }
 }
 function gxCallouts(){
   const G = gx.G, H = G.hosts, d = gx.cam.dist, eye = gxEye(), W = gx.cssW, Hh = gx.cssH, zoomA = 1 - gxSmooth(2500, 6000, d);
-  const svg = $('#gxleaders');
+  const svg = $('#gxleaders'), hudR = gxHudRects();
   svg.setAttribute('viewBox', `0 0 ${W} ${Hh}`);
   const items = [];
   for (const c of gx.calls){
@@ -1060,7 +1095,8 @@ function gxCallouts(){
   const taken = [];
   for (const it of items){
     const c = it.c;
-    let ok = it.p && it.alpha > 0.06 && it.p[0] > 0 && it.p[0] < W && it.p[1] > 0 && it.p[1] < Hh;
+    // No ghosts: a card fainter than a third is hidden outright, and cards rest while the camera flies.
+    let ok = it.p && it.alpha > 0.34 && !gx.flight && it.p[0] > 0 && it.p[0] < W && it.p[1] > 0 && it.p[1] < Hh;
     let x = 0, y = 0;
     if (ok){
       if (!c.w){ c.el.style.display = ''; c.w = c.el.offsetWidth; c.h = c.el.offsetHeight; }
@@ -1068,10 +1104,10 @@ function gxCallouts(){
       if (x + c.w > W - 8) x = it.p[0] - 26 - c.w;
       if (y < 8) y = it.p[1] + 26;
       const r = [x - 4, y - 4, x + c.w + 4, y + c.h + 4];
-      if (x < 4 || y + c.h > Hh - 4) ok = false;
+      if (x < 4 || y < 4 || x + c.w > W - 4 || y + c.h > Hh - 4) ok = false;
       // Never overlap: a card that would cover a higher-priority card (or the HUD) is hidden.
       for (const q of taken) if (r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]){ ok = false; break; }
-      if (ok) for (const q of gxHudRects()) if (r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]){ ok = false; break; }
+      if (ok) for (const q of hudR) if (r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]){ ok = false; break; }
       if (ok) taken.push(r);
     }
     c.el.classList.toggle('sel', gx.selPlanet === c.nt.planet);
@@ -1086,14 +1122,13 @@ function gxCallouts(){
   gx.cardRects = taken;
 }
 function gxHudRects(){
-  if (gx.hud && gx.hud.w === gx.cssW && gx.hud.h === gx.cssH) return gx.hud.r;
+  // Measured every frame: the telemetry panel grows and shrinks with its text.
   const st = $('#gxstage').getBoundingClientRect(), r = [];
   for (const sel of ['.gxtr', '.gxbl', '#gxtourbar', '#gxcard']){
     const el = $(sel); if (!el || el.hidden) continue;
     const b = el.getBoundingClientRect(); if (!b.width) continue;
-    r.push([b.left - st.left, b.top - st.top, b.right - st.left, b.bottom - st.top]);
+    r.push([b.left - st.left - 2, b.top - st.top - 2, b.right - st.left + 2, b.bottom - st.top + 2]);
   }
-  gx.hud = {w: gx.cssW, h: gx.cssH, r};
   return r;
 }
 function gxRadar(){
@@ -1192,16 +1227,18 @@ function gxTourStep(t){ if (t - gx.tour.t0 > 6000){ gxTourGo(gx.tour.k + 1, fals
 function gxTourEnd(){ gx.tour = null; $('#gxtourbar').hidden = true; gx.hud = null; gx.view.tour = 0; syncGalaxyURL(true); gxKick(); }
 
 // ---------- the loop: runs only while the section is on screen and the tab is visible ----------
-function gxKick(){ gx.dirty = true; if (gx.on && gx.visible && !document.hidden && !gx.raf) gx.raf = requestAnimationFrame(gxFrame); }
+function gxLive(){ const st = $('#gxstage'); return gx.on && gx.visible && !document.hidden && !!st && st.getClientRects().length > 0; }
+function gxKick(){ gx.dirty = true; if (gxLive() && !gx.raf) gx.raf = requestAnimationFrame(gxFrame); }
 function gxFrame(t){
   gx.raf = 0;
-  if (!gx.on || !gx.visible || document.hidden) return;
+  if (!gxLive()){ gx.last = 0; return; }
   const dt = gx.last ? Math.min(100, t - gx.last) : 16; gx.last = t;
   let anim = false;
   if (gx.flight) anim = gxFlightStep(t) || anim;
   // A slow drift when nobody is steering (never under reduced motion, never during the tour).
-  const drift = !gxRM.matches && gx.auto && !gx.tour && !gx.drag;
-  if (drift){ anim = true; if (!gx.flight && t - gx.interacted > 6000){ gx.cam.yaw += dt * 0.00005; gx.dirty = true; } }
+  // The drift rests after one full turn, or 30 s after the last touch, whichever comes first.
+  const idle = t - gx.interacted, drift = !gxRM.matches && gx.auto && !gx.tour && !gx.drag && (gx.driftAcc || 0) < 2 * Math.PI && idle < 36000;
+  if (drift){ anim = true; if (!gx.flight && idle > 6000){ const dy = dt * 0.00005; gx.cam.yaw += dy; gx.driftAcc = (gx.driftAcc || 0) + dy; gx.dirty = true; } }
   if (gx.play) anim = gxPlayStep(t) || anim;
   if (gx.tour && !gx.tour.paused) anim = gxTourStep(t) || anim;
   if (gx.dirty){ gx.dirty = false; gxDraw(); gxOverlay(); gx.frames++; }
@@ -1225,7 +1262,13 @@ function applyGalaxy(v){
 function syncGalaxyURL(push){ if (current !== 'galaxy' || !gx.view) return; const q = encodeGalaxyView(gx.view); setHash('#/galaxy' + (q ? '?' + q : ''), !!push); }
 
 function renderGalaxy(){
-  if (!GXM || !gxData()){ return; }
+  if (!GXM) return;
+  const note = $('#gxload'); note.hidden = false;
+  gxLoad().then(() => { note.hidden = true; gxStart(); gxShown(current === 'galaxy'); }).catch(() => {
+    note.textContent = 'The map data (assets/data/galaxy.json) could not be loaded here. The table below lists the nearest systems, and the CSV holds every plotted planet.';
+  });
+}
+function gxStart(){
   const cv = $('#gxcanvas');
   let ok = false;
   try { ok = gxInitGL(); } catch (e) { ok = false; }
@@ -1437,9 +1480,19 @@ def coverage_gl(cov: dict | None) -> dict | None:
     cone = []
     for q in picks:
         cone += [0, 0, 0] + _gal_unit(*q)
+    # A 4° × 4° RA/Dec mesh for the 3D sphere: each quad takes the TESS sector count of the nearest
+    # drawn cell (0 = never observed), so the layer is drawn as filled patches, not dots.
+    import numpy as np
+
+    cu = np.array([_unit(a, d) for a, d in zip(dr["ra"], dr["dec"])])
+    centres = [(4 * i + 2, -88 + 4 * j) for j in range(45) for i in range(90)]
+    qu = np.array([_unit(a, d) for a, d in centres])
+    near = np.argmax(qu @ cu.T, axis=1)
+    mesh_tess = [int(dr["tess"][k]) for k in near]
+    mesh_unm = [int(dr["tess"][k] == 0 and k not in kep and k not in k2) for k in near]
     return {
-        "cells": [v for c in cells for v in c], "tess": dr["tess"],
-        "kepler_cells": sorted(kep), "k2_cells": sorted(k2),
+        "mesh": {"step": 4, "tess": mesh_tess, "unmapped": mesh_unm},
+        "tess_n": len(dr["tess"]),
         "lines": {"kepler": segs(modules(kc)) + cone, "k2": segs([p for c in cov["k2"] for p in modules(c["channels"])]),
                   "corot": [v for e in cov["corot"]["eyes"] for v in strip(_ring(e["ra"], e["dec"], cov["corot"]["radius_deg"]))],
                   "bulge": strip(_bulge_outline(cov["bulge"]))},
@@ -1481,7 +1534,7 @@ def sky_layers_svg(cov: dict | None) -> str:
         elif i not in kep and i not in k2:
             unm.append((x, y))
     dots = lambda pts: "".join(f"M{x:.1f} {y:.1f}h0" for x, y in pts)  # noqa: E731
-    tess = "".join(f'<path d="{dots(buckets[k])}" stroke="#0A84FF" stroke-opacity="{o}" stroke-width="13" stroke-linecap="round"/>'
+    tess = "".join(f'<path d="{dots(buckets[k])}" stroke="#0A84FF" stroke-opacity="{o}" stroke-width="17" stroke-linecap="round"/>'
                    for k, o in ((1, .14), (3, .28), (13, .55)))
     polys = lambda ps, c: "".join(f'<path d="{_moll_path(p, True)}" fill="{c}" fill-opacity=".35" stroke="{c}" stroke-width=".5"/>' for p in ps)  # noqa: E731
     corot = "".join(f'<path d="{_moll_path(_ring(e["ra"], e["dec"], cov["corot"]["radius_deg"]))}" fill="none" stroke="{COV_COLOUR["corot"]}" stroke-width="1.2"/>'
@@ -1492,7 +1545,7 @@ def sky_layers_svg(cov: dict | None) -> str:
             f'<g class="covl" data-layer="k2" style="display:none">{polys([p for c in cov["k2"] for p in modules(c["channels"])], COV_COLOUR["k2"])}</g>'
             f'<g class="covl" data-layer="corot" style="display:none">{corot}</g>'
             f'<g class="covl" data-layer="bulge" style="display:none">{bulge}</g>'
-            f'<g class="covl" data-layer="unmapped" style="display:none"><path d="{dots(unm)}" stroke="{COV_COLOUR["unmapped"]}" stroke-opacity=".55" stroke-width="13" stroke-linecap="round"/></g>')
+            f'<g class="covl" data-layer="unmapped" style="display:none"><path d="{dots(unm)}" stroke="{COV_COLOUR["unmapped"]}" stroke-opacity=".55" stroke-width="17" stroke-linecap="round"/></g>')
 
 
 def coverage_chips(cov: dict | None, scope: str) -> str:
@@ -1511,7 +1564,7 @@ def coverage_panel(cov: dict | None, g: dict | None) -> str:
     f, h, s = cov["fractions"], cov["hosts_in"], cov["sources"]
     rows = [("TESS (1 sector or more)", f["tess"], h["tess"], s["tess"]),
             ("TESS, 13 sectors or more (near the ecliptic poles)", f["tess_cvz_13plus"], None, s["tess"]),
-            ("Kepler prime field", f["kepler"], h["kepler"], s["kepler"]), ("K2 campaigns C0–C19", f["k2"], h["k2"], s["k2"]),
+            ("Kepler prime field (CCD footprint)", f["kepler"], h["kepler"], s["kepler"]), ("K2 campaigns C0–C19", f["k2"], h["k2"], s["k2"]),
             ("CoRoT observing zones", f["corot"], h["corot"], s["corot"]),
             ("Bulge microlensing region (approximate)", f["bulge"], h["bulge"], s["bulge"]),
             ("Never in a TESS, Kepler or K2 footprint", f["unmapped"], h["none"], None)]

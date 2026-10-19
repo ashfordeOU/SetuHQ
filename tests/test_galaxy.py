@@ -181,7 +181,9 @@ def test_page_states_source_definition_and_what_is_not_plotted(run_dir, tmp_path
 
 def test_no_external_requests_and_reduced_motion():
     for js in (GALAXY_JS, TEASER_JS):
-        assert "fetch(" not in js and "XMLHttpRequest" not in js and "import(" not in js and "new Image" not in js
+        assert "XMLHttpRequest" not in js and "import(" not in js and "new Image" not in js
+        # The one fetch is the map's own data file, a relative path on the same origin.
+        assert re.findall(r"fetch\(([^)]*)\)", js) in ([], ["'assets/data/galaxy.json'"])
         assert not re.search(r"https?://(?!www\.w3\.org/2000/svg)", js)
     # Under reduced motion: no drift, no animated intro (a cut), the timeline only on a click; the teaser holds still.
     frame = re.search(r"function gxFrame\(t\)\{.*?\n\}\n", GALAXY_JS, re.S).group(0)
@@ -199,14 +201,14 @@ def test_galaxy_renders_without_errors_requests_or_card_overlap(run_dir, tmp_pat
     script.write_text("""
 const { chromium } = require(%s);
 (async () => {
-  const b = await chromium.launch({ executablePath: %s, args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'] });
+  const b = await chromium.launch({ executablePath: %s, args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
   const out = [];
   for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) {
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
     const p = await c.newPage(); const errs = [], reqs = [];
     p.on('pageerror', e => errs.push(e.message));
     p.on('request', r => { if (!/^(file|data|blob):/.test(r.url())) reqs.push(r.url()); });
-    await p.goto(%s + '#/galaxy'); await p.waitForTimeout(1500);
+    await p.goto(%s + '#/galaxy'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000}); await p.waitForTimeout(800);
     const r = { errs, reqs, gl: await p.evaluate(() => !!gx.gl), overlap: [] };
     for (const v of ['near', 'kepler', 'pimen']) {
       await p.evaluate(v => { gx.auto = false; gxFly(gxPresetCam(v), 0); }, v); await p.waitForTimeout(300);
@@ -249,7 +251,13 @@ def test_coverage_footprint_maths():
     h = cov["hosts_in"]
     assert h["all"] == json.loads(Path(DEFAULT_MAP).read_text())["counts"]["hosts"] and h["none"] < h["all"]
     gl = coverage_gl(cov)
-    assert len(gl["cells"]) == 3 * cov["draw"]["n"] and all(len(v) % 6 == 0 for v in gl["lines"].values())
+    assert gl["tess_n"] == cov["draw"]["n"] and all(len(v) % 6 == 0 for v in gl["lines"].values())
+    m = gl["mesh"]
+    assert len(m["tess"]) == len(m["unmapped"]) == (360 // m["step"]) * (180 // m["step"])
+    # The mesh's never-observed share is close to the cell-based fraction (it samples the same cells).
+    w = [math.cos(math.radians(-88 + 4 * (q // 90))) for q in range(len(m["tess"]))]
+    unm = sum(wi for wi, u in zip(w, m["unmapped"]) if u) / sum(w)
+    assert unm == pytest.approx(cov["fractions"]["unmapped"], abs=0.01)
 
 
 def test_pi_men_tess_sectors_match_tess_point():
@@ -281,3 +289,90 @@ def test_coverage_layers_round_trip_through_the_galaxy_url():
     cases = ["layers=unmapped,tess,zzz", "layers=", "view=kepler&layers=kepler,k2"]
     out = _node(f"const GXM = {json.dumps(meta)};\n{fns}\nconsole.log(JSON.stringify({json.dumps(cases)}.map(c => encodeGalaxyView(decodeGalaxyView(new URLSearchParams(c))))));")
     assert out == ["layers=tess,unmapped", "", "layers=kepler,k2&view=kepler"]
+
+
+_BROWSER_HEAD = """
+const { chromium } = require(%s);
+const launch = () => chromium.launch({ executablePath: %s, args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
+"""
+
+
+def _run_node(tmp_path, body: str, page_path) -> list:
+    script = tmp_path / "probe.js"
+    script.write_text((_BROWSER_HEAD % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM))) + body.replace("__URL__", json.dumps(Path(page_path).resolve().as_uri())))
+    res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=240)
+    assert res.returncode == 0, res.stderr
+    return json.loads(res.stdout.strip().splitlines()[-1])
+
+
+@pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
+def test_galaxy_labels_never_cover_the_hud_card_or_each_other(run_dir, tmp_path):  # noqa: F811
+    page = build_app(run_dir, tmp_path / "app", title="t")
+    out = _run_node(tmp_path, """
+(async () => {
+  const b = await launch(), res = [];
+  for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) {
+    const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
+    const p = await c.newPage();
+    await p.goto(__URL__ + '#/galaxy'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000});
+    for (const v of ['near', 'kepler', 'galaxy', 'pimen']) {
+      await p.evaluate(v => { gx.auto = false; gx.view.view = v; gxFly(gxPresetCam(v), 0); }, v); await p.waitForTimeout(400);
+      res.push(Object.assign({w, v}, await p.evaluate(() => {
+        const st = document.querySelector('#gxstage').getBoundingClientRect(), vis = e => e && !e.hidden && getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().width > 0;
+        const lab = [...document.querySelectorAll('.gxlbl, .gxcall')].filter(e => e.style.display !== 'none' && Number(e.style.opacity || 1) > 0)
+          .map(e => { const sp = e.classList.contains('tick') ? e.querySelector('span') : e; return [e.className + ' ' + e.textContent.slice(0, 18), sp.getBoundingClientRect()]; });
+        const hud = ['.gxtr', '.gxbl', '#gxcard', '#gxtourbar'].map(s => document.querySelector(s)).filter(vis).map(e => [e.className || e.id, e.getBoundingClientRect()]);
+        const hit = (a, q) => a.left < q.right - 0.5 && a.right > q.left + 0.5 && a.top < q.bottom - 0.5 && a.bottom > q.top + 0.5;
+        const bad = [];
+        for (const [n, r] of lab){
+          if (r.left < st.left - 0.5 || r.top < st.top - 0.5 || r.right > st.right + 0.5 || r.bottom > st.bottom + 0.5) bad.push('clipped ' + n);
+          for (const [m, q] of hud) if (hit(r, q)) bad.push(n + ' over ' + m);
+        }
+        for (let i = 0; i < lab.length; i++) for (let j = i + 1; j < lab.length; j++) if (hit(lab[i][1], lab[j][1])) bad.push(lab[i][0] + ' over ' + lab[j][0]);
+        return {bad, n: lab.length};
+      })));
+    }
+    if (mob) {  // On a phone the selected-system card hides the HUD panels instead of covering them.
+      await p.evaluate(() => gxSelect(gx.G.notable[0].host)); await p.waitForTimeout(200);
+      res.push({w, v: 'card', bad: await p.evaluate(() => ['.gxtr', '.gxbl'].filter(s => getComputedStyle(document.querySelector(s)).display !== 'none')), n: 1});
+    }
+    await c.close();
+  }
+  console.log(JSON.stringify(res)); await b.close();
+})();
+""", page)
+    for r in out:
+        assert r["bad"] == [], r
+    assert sum(r["n"] for r in out) > 8  # labels were actually on screen
+
+
+@pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
+def test_no_animation_loop_runs_off_screen_after_hide_show_and_route_change(run_dir, tmp_path):  # noqa: F811
+    page = build_app(run_dir, tmp_path / "app", title="t")
+    out = _run_node(tmp_path, """
+(async () => {
+  const b = await launch(), c = await b.newContext({ viewport: { width: 1360, height: 900 } }), p = await c.newPage();
+  await p.addInitScript(() => {
+    window.__raf = {}; const raf = window.requestAnimationFrame.bind(window);
+    window.requestAnimationFrame = fn => { const n = fn.name || 'anon'; return raf(t => { window.__raf[n] = (window.__raf[n] || 0) + 1; fn(t); }); };
+  });
+  await p.goto(__URL__ + '#/overview'); await p.waitForTimeout(800);
+  await p.evaluate(() => { location.hash = '#/galaxy'; }); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000}); await p.waitForTimeout(600);
+  const hidden = v => p.evaluate(v => { Object.defineProperty(document, 'hidden', {configurable: true, get: () => v}); document.dispatchEvent(new Event('visibilitychange')); }, v);
+  await hidden(true); await p.waitForTimeout(300); await hidden(false); await p.waitForTimeout(500);
+  const before = await p.evaluate(() => Object.assign({}, window.__raf));
+  const res = {};
+  for (const r of ['#/sky', '#/overview']) {
+    await p.evaluate(r => { location.hash = r; }, r); await p.waitForTimeout(500);
+    const a = await p.evaluate(() => Object.assign({}, window.__raf)); await p.waitForTimeout(1000);
+    const z = await p.evaluate(() => Object.assign({}, window.__raf));
+    res[r] = {gxFrame: (z.gxFrame || 0) - (a.gxFrame || 0), tick: (z.tick || 0) - (a.tick || 0)};
+  }
+  res.ranOnGalaxy = (before.gxFrame || 0) > 0;
+  console.log(JSON.stringify(res)); await b.close();
+})();
+""", page)
+    assert out["ranOnGalaxy"]
+    assert out["#/sky"] == {"gxFrame": 0, "tick": 0}  # nothing draws off screen
+    # On the Overview the teaser is on screen and may turn, but the map's loop stays stopped.
+    assert out["#/overview"]["gxFrame"] == 0
