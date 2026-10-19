@@ -60,8 +60,31 @@ def test_planet_has_no_significant_secondary(rng):
     t, f, e = _curve(rng, events=_transits(1000e-6))
     flags, metrics = extended_vet(t, f, e, period=P, t0=T0, duration=DUR)
     assert "secondary_any_phase" not in flags
-    assert metrics["secondary"]["snr"] < dvtests.SECONDARY_SIGMA
-    assert metrics["secondary"]["n_trials"] > 50
+    sec = metrics["secondary"]
+    assert sec["snr"] < max(sec["threshold_sigma"], sec["max_brightening_snr"])
+    assert sec["n_trials"] > 50
+    assert sec["scan_robust_sigma"] == pytest.approx(1.0, abs=0.25)      # white noise: the scan spread is ~1
+
+
+def test_a_lone_dip_is_not_a_secondary(rng):
+    """One isolated dip away from the transits gives a large box statistic, but it is in one epoch only."""
+    t, f, e = _curve(rng, events=_transits(1000e-6) + [(T0 + 5 * P + 0.4 * P, 2500e-6, DUR)])
+    flags, m = extended_vet(t, f, e, period=P, t0=T0, duration=DUR)
+    sec = m["secondary"]
+    assert abs(sec["phase"] - 0.4) < 0.03 and sec["snr"] > 5
+    assert sec["max_epoch_share"] > 0.7 and not sec["periodic"]
+    assert "secondary_any_phase" not in flags
+
+
+def test_secondary_threshold_follows_the_scan_spread(rng):
+    """Red-ish noise widens the scan statistic; the threshold widens with it (3 x its robust spread)."""
+    t, f, e = _curve(rng, events=_transits(1000e-6))
+    f = f + np.interp(t, np.arange(0, 41, 0.15), rng.normal(0, 2e-4, np.arange(0, 41, 0.15).size))
+    flags, m = extended_vet(t, f, e, period=P, t0=T0, duration=DUR)
+    sec = m["secondary"]
+    assert sec["scan_robust_sigma"] > 1.5
+    assert sec["threshold_sigma"] >= 3 * sec["scan_robust_sigma"]
+    assert "secondary_any_phase" not in flags
 
 
 def test_secondary_must_beat_the_largest_brightening(rng):
@@ -125,13 +148,38 @@ def test_epoch_times_recover_injected_shifts_with_calibrated_errors():
 
 def test_timing_test_closed_form():
     # three epochs exactly on a line: chi2 = 0, p = 1; odd offset estimated with its propagated error
-    eps = [{"epoch": n, "t_mid": 1.0 + 4.0 * n, "sigma": 1e-3} for n in (0, 1, 2)]
+    eps = [{"epoch": n, "t_mid": 1.0 + 4.0 * n, "sigma": 1e-3} for n in (0, 1, 2, 3)]
     r = timing_test(eps)
     assert r["linear"]["chi2"] == pytest.approx(0.0, abs=1e-12)
     assert r["linear"]["p_value"] == pytest.approx(1.0)
     assert r["odd_even"]["offset_minutes"] == pytest.approx(0.0, abs=1e-6)
     assert not r["odd_even"]["significant"]
+    assert timing_test(eps[:3])["odd_even"] is None         # three epochs: no spare degree of freedom
     assert timing_test(eps[:1])["linear"] is None
+
+
+def test_odd_even_offset_error_is_inflated_by_its_fit():
+    """Scatter the odd/even model cannot absorb widens the error by sqrt(chi2_red) of that fit, closed form."""
+    sig = 1e-3
+    jitter = [0.0, 3e-3, 3e-3, -3e-3, -3e-3, 0.0]
+    eps = [{"epoch": n, "t_mid": 1.0 + 4.0 * n + j, "sigma": sig} for n, j in enumerate(jitter)]
+    r = timing_test(eps)
+    n = np.arange(6.0)
+    a = np.column_stack([np.ones(6), n, n % 2])
+    y = np.array([e["t_mid"] for e in eps])
+    beta = np.linalg.lstsq(a, y, rcond=None)[0]
+    chi_red = float(np.sum((y - a @ beta) ** 2) / sig ** 2 / 3)
+    raw = math.sqrt(np.linalg.inv(a.T @ a / sig ** 2)[2, 2])
+    assert chi_red > 1
+    assert r["odd_even"]["offset_err_minutes"] == pytest.approx(raw * math.sqrt(chi_red) * 1440, rel=1e-9)
+
+
+def test_clean_three_epoch_planet_gets_no_odd_even_timing_flag(rng):
+    t, f, e = _curve(rng, days=11.0, events=_transits(3000e-6, days=11.0), cadence_min=2.0, noise=3e-4,
+                     shape="trapezoid")
+    flags, m = extended_vet(t, f, e, period=P, t0=T0, duration=DUR)
+    assert m["timing"]["n_epochs"] == 3 and m["timing"]["odd_even"] is None
+    assert "odd_even_timing" not in flags
 
 
 def test_odd_even_timing_flags_an_offset_between_parities(rng):

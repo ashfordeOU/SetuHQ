@@ -23,7 +23,8 @@ pixel = false              # pixel tests from the SPOC target pixel file (downlo
 decide = false             # true: secondary_any_phase, odd_even_depth, odd_even_timing and centroid_offset
                            # disqualify, and the all-phase secondary replaces the phase-0.5 check
 crowding_min = 0.8         # CROWDSAP below this is flagged "crowded" (HEASARC: reliability drops below ~0.8)
-secondary_sigma = 7.1      # weak-secondary threshold (the DV/TPS detection threshold)
+secondary_sigma = 7.1      # fallback weak-secondary threshold, used only when the phase scan is too short for a
+                           # robust spread (otherwise: 3 x the scan's robust spread and above the largest brightening)
 centroid_sigma = 3.0       # difference-image offset significance that raises centroid_offset
 tpf_cache = "cache/tpf"    # gitignored
 

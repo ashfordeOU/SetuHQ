@@ -7,17 +7,27 @@ config's ``[vetting] decide = true`` turns the disqualifying ones into pass/fail
   (the fraction of the target's flux inside the aperture) are recorded either way.
 * ``secondary_any_phase``: the DV weak-secondary test (ATLAS E3). A box with the transit's duration is slid over
   every phase of the folded light curve, away from the primary, and the most significant dip is reported with its
-  phase, depth and significance. It is flagged when its significance reaches 7.1σ (the DV/TPS detection threshold)
-  and is larger than the largest brightening found at any phase. That second condition is in the spirit of the
-  Robovetter's model-shift uniqueness test (Coughlin et al. 2016, doi:10.3847/0067-0049/224/1/12): a dip no deeper
-  than the noise's own excursions is not a secondary eclipse. This replaces the phase-0.5-only check for eccentric
-  binaries, whose secondary is not at phase 0.5. The phase-0.5 value is reported beside it.
+  phase, depth and significance. The box statistic's nominal σ assumes white noise; on real data it is wider (on
+  pi Men the scan's statistic has a robust spread of about 2), so the threshold is calibrated on the scan itself:
+  the dip is flagged when its statistic exceeds both z × the robust spread (MAD) of the statistic over all box
+  positions and the largest brightening at any phase (in the spirit of the Robovetter's model-shift uniqueness test,
+  Coughlin et al. 2016, doi:10.3847/0067-0049/224/1/12). z = max(3, Φ⁻¹(1 − 0.001/N_eff)) corrects for the number
+  of independent box positions, N_eff = positions/4 (the step is a quarter duration); for 187 positions z = 3.9. A
+  plain z = 3 flagged 41 of 200 clean simulated planets; this rule flagged 3. It must also be periodic: covered by two or more epochs,
+  with no single epoch carrying 70% or more of the statistic, so one lone dip is never a secondary. When the scan
+  has too few positions for a robust spread (under 20), a fixed 7.1σ is used instead, a conventional fallback.
+  This replaces the phase-0.5-only check for eccentric binaries, whose secondary is not at phase 0.5. The phase-0.5
+  value is reported beside it.
 * ``odd_even_depth``: the DV odd/even depth test (ATLAS E2), measured here at every epoch with the fitted duration:
   the depth of odd and of even epochs, each with its error, and the difference in σ. Both parities must show a
   significant dip, as in :func:`exoplan.vet.vet_event`.
 * ``odd_even_timing``: the DV odd/even epoch test. Each epoch's mid-time is measured with the fitted transit shape;
   a linear ephemeris with a separate offset for odd epochs is fitted, and the offset is flagged when it is
-  significant. A slightly eccentric binary at twice the period shows it.
+  significant. A slightly eccentric binary at twice the period shows it. It needs four or more epochs (one spare
+  degree of freedom), and its error is inflated by √χ²ᵣ of that fit when it exceeds 1. (Inflating by the plain
+  linear fit's χ²ᵣ instead would absorb the very offset being tested: a 15-minute odd/even offset over ten epochs
+  was then detected in 0 of 20 simulations, against 20 of 20 with this rule, which flagged 1 of 200 clean
+  four-epoch planets.)
 * ``timing_inconsistent``: the epochs' mid-times are inconsistent with a linear ephemeris (χ² p-value < 10⁻³).
   Real TTVs do this too, so it is evidence to look at, never a disqualifier.
 
@@ -55,7 +65,11 @@ from scipy.stats import chi2 as chi2_dist
 from exoplan.preprocess import mad_sigma
 
 CROWDING_MIN = 0.8        # CROWDSAP below this: "reliability drops" (HEASARC Understanding Crowding, ATLAS C9)
-SECONDARY_SIGMA = 7.1     # DV/TPS detection threshold, used for the weak-secondary test (Twicken et al. 2018)
+SECONDARY_SIGMA = 7.1     # fallback weak-secondary threshold (a conventional value) when the scan is too small
+SECONDARY_SCAN_SIGMA = 3.0  # minimum number of robust spreads of the scan statistic the dip must exceed
+SECONDARY_FALSE_ALARM = 1e-3  # look-elsewhere: per-signal false-alarm level over the independent box positions
+SECONDARY_MAX_EPOCH_SHARE = 0.7  # no single epoch may carry this share of the secondary's statistic
+MIN_SCAN_POSITIONS = 20   # fewer box positions than this: no robust spread, use SECONDARY_SIGMA
 SIGMA_THRESHOLD = 3.0     # odd/even depth and timing; ~3σ is common practice (ATLAS E2 FLAG: no universal value)
 TIMING_P = 1e-3           # p-value below which the epochs are called inconsistent with a linear ephemeris
 MIN_PARITY_SNR = 5.0      # each parity must show a dip this significant, as in vet.vet_event
@@ -143,9 +157,21 @@ def secondary_search(time, flux, *, period: float, t0: float, duration: float, s
         if dd / (noise / math.sqrt(k)) > depth / sigma:
             c, depth, sigma, n = float(cc % 1.0), dd, noise / math.sqrt(k), k
     near_half = min(rows, key=lambda r: abs(r[0] - 0.5))
+    # How the peak's statistic is spread over epochs: each epoch's share of Σ (baseline − flux) in the box
+    d = np.abs(phase - c)
+    inside = np.minimum(d, 1.0 - d) * period <= half
+    cycle = np.round((time[inside] - t0) / period - c).astype(int)
+    drop = baseline - flux[inside]
+    shares = {}
+    total = float(drop.sum())
+    for k in np.unique(cycle):
+        shares[int(k)] = float(drop[cycle == k].sum() / total) if total > 0 else 0.0
+    scan_sigma = mad_sigma(snr) if snr.size >= MIN_SCAN_POSITIONS else None
     return {
         "phase": c, "depth_ppm": depth * 1e6, "sigma_ppm": sigma * 1e6, "snr": depth / sigma, "n_points": n,
         "max_brightening_snr": float(-snr[j]), "n_trials": len(rows), "duration_days": duration,
+        "scan_median_snr": float(np.median(snr)), "scan_robust_sigma": scan_sigma,
+        "n_epochs": len(shares), "max_epoch_share": max(shares.values()) if shares else None,
         "phase_05": {"phase": near_half[0], "depth_ppm": near_half[1] * 1e6, "sigma_ppm": near_half[2] * 1e6,
                      "snr": near_half[1] / near_half[2]},
     }
@@ -319,9 +345,9 @@ def timing_test(epochs: list[dict], *, sigma_threshold: float = SIGMA_THRESHOLD,
 
     * Linear: T_n = T0 + n P by weighted least squares, χ² with N − 2 degrees of freedom and its p-value
       (needs 3 or more epochs). ``inconsistent`` when p < ``timing_p``.
-    * Odd/even: T_n = T0 + n P + Δ·[n odd]; Δ and σ_Δ from the fit's covariance, scaled by √χ²ᵣ when the fit has
-      spare degrees of freedom and χ²ᵣ > 1 (needs 3 or more epochs with both parities). ``significant`` when
-      |Δ|/σ_Δ > ``sigma_threshold``.
+    * Odd/even: T_n = T0 + n P + Δ·[n odd]; Δ and σ_Δ from the fit's covariance, inflated by √χ²ᵣ of that fit
+      when it exceeds 1 (needs 4 or more epochs with both parities, so the fit has a spare degree of freedom).
+      ``significant`` when |Δ|/σ_Δ > ``sigma_threshold``.
     """
     rows = [e for e in epochs if e["sigma"] > 0 and not e.get("at_scan_edge")]
     out: dict = {"n_epochs": len(rows), "o_minus_c_minutes": None, "linear": None, "odd_even": None}
@@ -338,10 +364,10 @@ def timing_test(epochs: list[dict], *, sigma_threshold: float = SIGMA_THRESHOLD,
         out["linear"] = {"t0": float(beta[0]), "period": float(beta[1]), "period_err": float(math.sqrt(cov[1, 1])),
                          "chi2": chi, "dof": dof, "p_value": p, "inconsistent": bool(p < timing_p)}
         odd = (n % 2 == 1).astype(float)
-        if 0 < odd.sum() < len(rows):
+        # Δ needs a spare degree of freedom beyond (T0, P, Δ): four or more epochs, with both parities
+        if len(rows) >= 4 and 0 < odd.sum() < len(rows):
             beta, cov, chi = _wls(np.column_stack([np.ones_like(n), n, odd]), t, s)
-            dof = len(rows) - 3
-            scale = math.sqrt(max(1.0, chi / dof)) if dof > 0 else 1.0
+            scale = math.sqrt(max(1.0, chi / (len(rows) - 3)))
             delta, err = float(beta[2]), float(math.sqrt(cov[2, 2]) * scale)
             out["odd_even"] = {"offset_minutes": delta * 1440.0, "offset_err_minutes": err * 1440.0,
                                "delta_sigma": abs(delta) / err if err > 0 else 0.0,
@@ -374,8 +400,19 @@ def extended_vet(time, flux, flux_err, *, period: float | None, t0: float | None
         fit = fit or {}
         a_rs = fit.get("a_rs")
         sec["albedo"] = implied_albedo(max(sec["depth_ppm"], 0.0) * 1e-6, fit.get("k"), a_rs)
-        sec["threshold_sigma"] = secondary_sigma
-        sec["significant"] = bool(sec["snr"] >= secondary_sigma and sec["snr"] > sec["max_brightening_snr"])
+        if sec["scan_robust_sigma"] is not None:
+            from scipy.stats import norm
+
+            n_eff = max(sec["n_trials"] * 0.25, 1.0)
+            z = max(SECONDARY_SCAN_SIGMA, float(norm.isf(SECONDARY_FALSE_ALARM / n_eff)))
+            threshold = z * sec["scan_robust_sigma"]
+            sec["threshold_rule"] = f"{z:.2f} × the scan's robust spread (look-elsewhere over {n_eff:.0f} positions)"
+        else:
+            threshold = secondary_sigma
+            sec["threshold_rule"] = f"fixed {secondary_sigma:g}σ fallback (fewer than {MIN_SCAN_POSITIONS} positions)"
+        sec["threshold_sigma"] = threshold
+        sec["periodic"] = bool(sec["n_epochs"] >= 2 and (sec["max_epoch_share"] or 1.0) < SECONDARY_MAX_EPOCH_SHARE)
+        sec["significant"] = bool(sec["snr"] > max(threshold, sec["max_brightening_snr"]) and sec["periodic"])
         if sec["significant"]:
             flags.append("secondary_any_phase")
     metrics["secondary"] = sec
