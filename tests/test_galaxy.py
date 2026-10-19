@@ -329,6 +329,11 @@ def test_galaxy_labels_never_cover_the_hud_card_or_each_other(run_dir, tmp_path)
           for (const [m, q] of hud) if (hit(r, q)) bad.push(n + ' over ' + m);
         }
         for (let i = 0; i < lab.length; i++) for (let j = i + 1; j < lab.length; j++) if (hit(lab[i][1], lab[j][1])) bad.push(lab[i][0] + ' over ' + lab[j][0]);
+        // A card never covers another card's ring, and every ring sits inside the stage.
+        const shown = e => e.style.display !== 'none' && Number(e.style.opacity || 1) > 0;
+        const cards = [...document.querySelectorAll('.gxcall')].filter(shown), rings = [...document.querySelectorAll('.gxring')].filter(shown);
+        for (const r of rings){ const q = r.getBoundingClientRect(); if (q.left < st.left - 0.5 || q.top < st.top - 0.5 || q.right > st.right + 0.5 || q.bottom > st.bottom + 0.5) bad.push('ring outside the stage ' + r.dataset.stop);
+          for (const cd of cards) if (cd.dataset.stop !== r.dataset.stop && hit(cd.getBoundingClientRect(), q)) bad.push('card ' + cd.dataset.stop + ' over ring ' + r.dataset.stop); }
         return {bad, n: lab.length};
       })));
     }

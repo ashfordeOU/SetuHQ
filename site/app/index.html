@@ -746,19 +746,33 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .mxladder div:nth-child(odd) span{top:28px}
 .mxladder div:nth-child(even) span{top:76px}
 .mxladder .mxaxis span{position:static;transform:none}
+@media (max-width:499.98px){
+  .mxladder{height:auto;border-top:0;display:grid;gap:6px}
+  .mxladder div{position:relative;left:0;height:auto;padding-left:calc(var(--x) * 0.6 + 12px)}
+  .mxladder div i{top:3px;left:calc(var(--x) * 0.6);height:12px}
+  .mxladder div span,.mxladder div:nth-child(odd) span,.mxladder div:nth-child(even) span,.mxladder div.l span,.mxladder div.r span{position:static;transform:none;white-space:normal}
+  .mxladder .mxaxis{display:none}
+}
 .mxladder div span{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-size:12px;color:var(--ink-2)}
 .mxladder div.l span{transform:none}
 .mxladder div.r span{transform:translateX(-100%)}
 .mxladder .mxaxis{position:absolute;left:0;right:0;bottom:0;margin:0;display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--ink-3)}
 .mxsteps{margin:0;padding-left:20px;display:grid;gap:10px;line-height:1.55}
-.mxcontrast{position:relative;height:440px;margin:6px 0;padding-left:64px;border-left:1px solid var(--line)}
-.mxcontrast .ax span{position:absolute;left:0;top:var(--y);transform:translateY(-50%);font:500 11px var(--mono);color:var(--ink-3)}
-.mxcontrast ol{list-style:none;margin:0;padding:0}
-.mxcontrast li{position:absolute;left:64px;right:0;top:var(--y);transform:translateY(-50%);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:12px;color:var(--ink-3);padding-left:14px;border-left:3px solid var(--cyan)}
-.mxcontrast li b{color:var(--ink);font-size:13px}
-.mxcontrast li .mono{color:var(--ink-2)}
-.mxcontrast li.goal,.mxcontrast li.requirement{border-left-style:dashed}
-.mxcontrast li.target{border-left-color:var(--amber)}
+.mxcontrast{display:grid;gap:4px;margin:6px 0}
+.mxcontrast ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.mxcontrast li,.mxcontrast .ax{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.mxcontrast .ax{border:0;padding:0}
+.mxcontrast .lab{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;font-size:12px;color:var(--ink-3);min-width:0}
+.mxcontrast .lab b{color:var(--ink);font-size:13px}
+.mxcontrast .lab .mono{color:var(--ink-2)}
+.mxcontrast .cond{flex-basis:100%}
+.mxcontrast .track{position:relative;height:20px;border-left:1px solid var(--line-2);border-right:1px solid var(--line-2);background:linear-gradient(var(--line-2),var(--line-2)) center/100% 1px no-repeat}
+.mxcontrast .ax .track{background:none;border:0;height:16px}
+.mxcontrast .ax .track span{position:absolute;top:0;transform:translateX(-50%);font:500 11px var(--mono);color:var(--ink-3);white-space:nowrap}
+.mxcontrast .ax .track span:nth-child(even){display:none}
+.mxcontrast .track i{position:absolute;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:var(--cyan)}
+.mxcontrast li.goal .track i,.mxcontrast li.requirement .track i{background:transparent;border:2px solid var(--cyan)}
+.mxcontrast li.target .track i{background:var(--amber)}
 .mxmols{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
 .mxmol{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--glass-2)}
 .mxmol.on{border-color:var(--cyan)}
@@ -813,8 +827,8 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .mxnums th,.mxnums td{border:0;padding:2px 0;text-align:left}
   .mxnums .num{text-align:left;white-space:normal;font-size:15px;color:var(--ink)}
   .mxnums td:last-child{font-size:12px}
-  .mxcontrast{height:520px;padding-left:52px}
-  .mxcontrast li{left:52px}
+  .mxcontrast li,.mxcontrast .ax{grid-template-columns:1fr}
+  .mxcontrast .ax .lab{display:none}
   .mxsrc a{min-height:44px}
 }
 </style></head>
@@ -1220,7 +1234,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
           <li><b>Nulling interferometry.</b> Two telescopes combined half a wave out of phase cancel the star on a dark fringe while an off-axis planet sits on a bright one (Bracewell 1978; the LIFE concept, Quanz et al. 2022).</li>
         </ol>
         <h3>The contrast ladder</h3>
-        <div class="mxcontrast" role="img" aria-label="Contrast ladder on a log scale from 1e-2 to 1e-11: Ground AO (GPI), raw 1e-04 (achieved); JWST NIRCam coronagraph 1e-05 (achieved); JWST MIRI coronagraph 2e-04 (achieved); Roman Coronagraph 1e-07 (requirement); HWO 1e-10 (goal); Earth twin, reflected light 1e-10 (target)"><div class="ax"><span style="--y:0.0%">10⁻2</span><span style="--y:11.1%">10⁻3</span><span style="--y:22.2%">10⁻4</span><span style="--y:33.3%">10⁻5</span><span style="--y:44.4%">10⁻6</span><span style="--y:55.6%">10⁻7</span><span style="--y:66.7%">10⁻8</span><span style="--y:77.8%">10⁻9</span><span style="--y:88.9%">10⁻10</span><span style="--y:100.0%">10⁻11</span></div><ol><li style="--y:22.2%" class="achieved"><b>Ground AO (GPI), raw</b><span class="mono">1e-04</span><span>5σ at 0.4″, H band, 60 s · achieved · <a href="https://arxiv.org/abs/1609.08689" rel="noopener">Bailey et al. 2016</a></span></li><li style="--y:33.3%" class="achieved"><b>JWST NIRCam coronagraph</b><span class="mono">1e-05</span><span>5σ at 1″, 4.4 µm (HIP 65426) · achieved · <a href="https://doi.org/10.3847/2041-8213/acd93e" rel="noopener">Carter et al. 2023, ApJL 951, L20</a></span></li><li style="--y:18.9%" class="achieved"><b>JWST MIRI coronagraph</b><span class="mono">2e-04</span><span>at 1″, 11.3 µm (HIP 65426) · achieved · <a href="https://doi.org/10.3847/2041-8213/acd93e" rel="noopener">Carter et al. 2023, ApJL 951, L20</a></span></li><li style="--y:55.6%" class="requirement"><b>Roman Coronagraph</b><span class="mono">1e-07</span><span>requirement at 6–9 λ/D; goal 10⁻⁹ · requirement · <a href="https://arxiv.org/abs/2207.03607" rel="noopener">Roman Coronagraph requirement</a></span></li><li style="--y:88.9%" class="goal"><b>HWO</b><span class="mono">1e-10</span><span>Earth twins around Sun-like stars · goal · <a href="https://doi.org/10.1117/12.2021302" rel="noopener">Lawson et al. 2013, SPIE 8864</a></span></li><li style="--y:88.0%" class="target"><b>Earth twin, reflected light</b><span class="mono">1e-10</span><span>Sun-like star, visible light · target · <a href="https://doi.org/10.1117/12.2021302" rel="noopener">Lawson et al. 2013, SPIE 8864</a></span></li></ol></div>
+        <div class="mxcontrast" role="img" aria-label="Contrast ladder on a log scale from 1e-2 to 1e-11: Ground AO (GPI), raw 1e-04 (achieved); JWST NIRCam coronagraph 1e-05 (achieved); JWST MIRI coronagraph 2e-04 (achieved); Roman Coronagraph 1e-07 (requirement); HWO 1e-10 (goal); Earth twin, reflected light 1e-10 (target)"><div class="ax" aria-hidden="true"><div class="lab"></div><div class="track"><span style="left:0.0%">10⁻2</span><span style="left:11.1%">10⁻3</span><span style="left:22.2%">10⁻4</span><span style="left:33.3%">10⁻5</span><span style="left:44.4%">10⁻6</span><span style="left:55.6%">10⁻7</span><span style="left:66.7%">10⁻8</span><span style="left:77.8%">10⁻9</span><span style="left:88.9%">10⁻10</span><span style="left:100.0%">10⁻11</span></div></div><ol><li class="achieved"><div class="lab"><b>JWST MIRI coronagraph</b> <span class="mono">2e-04</span><span class="cond">at 1″, 11.3 µm (HIP 65426) · achieved · <a href="https://doi.org/10.3847/2041-8213/acd93e" rel="noopener">Carter et al. 2023, ApJL 951, L20</a></span></div><div class="track" aria-hidden="true"><i style="left:18.9%"></i></div></li><li class="achieved"><div class="lab"><b>Ground AO (GPI), raw</b> <span class="mono">1e-04</span><span class="cond">5σ at 0.4″, H band, 60 s · achieved · <a href="https://arxiv.org/abs/1609.08689" rel="noopener">Bailey et al. 2016</a></span></div><div class="track" aria-hidden="true"><i style="left:22.2%"></i></div></li><li class="achieved"><div class="lab"><b>JWST NIRCam coronagraph</b> <span class="mono">1e-05</span><span class="cond">5σ at 1″, 4.4 µm (HIP 65426) · achieved · <a href="https://doi.org/10.3847/2041-8213/acd93e" rel="noopener">Carter et al. 2023, ApJL 951, L20</a></span></div><div class="track" aria-hidden="true"><i style="left:33.3%"></i></div></li><li class="requirement"><div class="lab"><b>Roman Coronagraph</b> <span class="mono">1e-07</span><span class="cond">requirement at 6–9 λ/D; goal 10⁻⁹ · requirement · <a href="https://arxiv.org/abs/2207.03607" rel="noopener">Roman Coronagraph requirement</a></span></div><div class="track" aria-hidden="true"><i style="left:55.6%"></i></div></li><li class="target"><div class="lab"><b>Earth twin, reflected light</b> <span class="mono">1e-10</span><span class="cond">Sun-like star, visible light · target · <a href="https://doi.org/10.1117/12.2021302" rel="noopener">Lawson et al. 2013, SPIE 8864</a></span></div><div class="track" aria-hidden="true"><i style="left:88.0%"></i></div></li><li class="goal"><div class="lab"><b>HWO</b> <span class="mono">1e-10</span><span class="cond">Earth twins around Sun-like stars · goal · <a href="https://doi.org/10.1117/12.2021302" rel="noopener">Lawson et al. 2013, SPIE 8864</a></span></div><div class="track" aria-hidden="true"><i style="left:88.9%"></i></div></li></ol></div>
         <p class="note">HR 8799's planets on the canvas use exoplanet.eu's semi-major axes and eccentricities; their orientation on the sky is illustrative, and time is compressed. Contrasts from different instruments are measured at different separations, wavelengths and significances, so the rungs are not directly comparable.</p>
         <p class="mxcount"><b>1,216</b> of the 8,049 planets with a stored distance in exoplanet.eu were found by imaging (the first method listed). <a href="#/galaxy?method=imaging">Show them on the Galaxy map ›</a></p><figure class="mxyears"><p class="mxyrs"><span>peak 118 (2024)</span></p><svg viewBox="0 0 300 62" preserveAspectRatio="none" role="img" aria-label="Planets found by imaging per year, 1988–2026: 1,216 in all; the most in one year was 118 in 2024."><g fill="#30D158"><rect x="0.00" y="58.58" width="6.69" height="1.42"/><rect x="7.69" y="59.53" width="6.69" height="0.47"/><rect x="15.38" y="58.58" width="6.69" height="1.42"/><rect x="23.08" y="58.10" width="6.69" height="1.90"/><rect x="30.77" y="58.10" width="6.69" height="1.90"/><rect x="38.46" y="58.10" width="6.69" height="1.90"/><rect x="46.15" y="59.05" width="6.69" height="0.95"/><rect x="53.85" y="58.58" width="6.69" height="1.42"/><rect x="61.54" y="58.58" width="6.69" height="1.42"/><rect x="69.23" y="50.98" width="6.69" height="9.02"/><rect x="76.92" y="51.93" width="6.69" height="8.07"/><rect x="84.62" y="41.97" width="6.69" height="18.03"/><rect x="92.31" y="37.22" width="6.69" height="22.78"/><rect x="100.00" y="51.93" width="6.69" height="8.07"/><rect x="107.69" y="39.12" width="6.69" height="20.88"/><rect x="115.38" y="38.64" width="6.69" height="21.36"/><rect x="123.08" y="39.12" width="6.69" height="20.88"/><rect x="130.77" y="45.76" width="6.69" height="14.24"/><rect x="138.46" y="26.31" width="6.69" height="33.69"/><rect x="146.15" y="42.92" width="6.69" height="17.08"/><rect x="153.85" y="36.27" width="6.69" height="23.73"/><rect x="161.54" y="41.97" width="6.69" height="18.03"/><rect x="169.23" y="39.12" width="6.69" height="20.88"/><rect x="176.92" y="32.47" width="6.69" height="27.53"/><rect x="184.62" y="34.85" width="6.69" height="25.15"/><rect x="192.31" y="44.81" width="6.69" height="15.19"/><rect x="200.00" y="39.12" width="6.69" height="20.88"/><rect x="207.69" y="39.12" width="6.69" height="20.88"/><rect x="215.38" y="52.41" width="6.69" height="7.59"/><rect x="223.08" y="42.92" width="6.69" height="17.08"/><rect x="230.77" y="53.36" width="6.69" height="6.64"/><rect x="238.46" y="46.24" width="6.69" height="13.76"/><rect x="246.15" y="30.10" width="6.69" height="29.90"/><rect x="253.85" y="53.36" width="6.69" height="6.64"/><rect x="261.54" y="30.10" width="6.69" height="29.90"/><rect x="269.23" y="53.83" width="6.69" height="6.17"/><rect x="276.92" y="4.00" width="6.69" height="56.00"/><rect x="284.62" y="41.49" width="6.69" height="18.51"/><rect x="292.31" y="54.31" width="6.69" height="5.69"/></g></svg><p class="mxyrs"><span>1988</span><span>2026</span></p><figcaption>Planets found by imaging per year, 1988–2026: 1,216 in all; the most in one year was 118 in 2024. Source: exoplanet.eu, fetched 2026-10-18.</figcaption></figure>
       </div><details class="mxsources"><summary>Sources</summary><ul class="mxsrc"><li><a href="https://doi.org/10.1117/12.2021302" rel="noopener">Lawson et al. 2013, SPIE 8864 (Earth-twin contrast)</a></li><li><a href="https://doi.org/10.1093/mnras/99.8.580" rel="noopener">Lyot 1939, MNRAS 99, 580</a></li><li><a href="https://doi.org/10.1007/BF00733434" rel="noopener">Brueckner et al. 1995, Solar Physics 162, 357 (LASCO)</a></li><li><a href="https://doi.org/10.1117/12.927245" rel="noopener">Mawet et al. 2012, SPIE 8442 (coronagraph review)</a></li><li><a href="https://doi.org/10.1086/500401" rel="noopener">Marois et al. 2006, ApJ 641, 556 (ADI)</a></li><li><a href="https://doi.org/10.1126/science.1166585" rel="noopener">Marois et al. 2008, Science 322, 1348 (HR 8799)</a></li><li><a href="https://doi.org/10.1038/nature04930" rel="noopener">Cash 2006, Nature 442, 51 (starshade)</a></li><li><a href="https://arxiv.org/abs/2001.06683" rel="noopener">HabEx Final Report (arXiv:2001.06683)</a></li><li><a href="https://doi.org/10.1038/274780a0" rel="noopener">Bracewell 1978, Nature 274, 780</a></li><li><a href="https://doi.org/10.1051/0004-6361/202140366" rel="noopener">Quanz et al. 2022, A&amp;A 664, A21 (LIFE)</a></li><li><a href="https://arxiv.org/abs/1609.08689" rel="noopener">Bailey et al. 2016 (GPI on-sky contrast)</a></li><li><a href="https://doi.org/10.3847/2041-8213/acd93e" rel="noopener">Carter et al. 2023, ApJL 951, L20 (JWST coronagraphy)</a></li><li><a href="https://arxiv.org/abs/2207.03607" rel="noopener">Roman Coronagraph requirement (arXiv:2207.03607)</a></li></ul></details><nav class="mxnav" aria-label="Chapters"><a class="btn" href="#/methods?ch=microlensing">‹ Microlensing</a><a class="btn primary" href="#/methods?ch=timing">Timing and phase ›</a></nav></article><article class="mxch" id="mx-timing" data-ch="timing" aria-labelledby="h-mx-timing" hidden><header><p class="eyebrow">Chapter 8 of 14</p><h2 id="h-mx-timing">Timing and phase</h2></header>
@@ -2871,6 +2885,7 @@ function gxBuildLabels(){
     el.addEventListener('click', () => { gxSelect(h, i); gxFly(gxHostCam(h), 1800); });
     el.title = 'Select; the host card opens its system view';
     const ring = gxEl('gxring' + (nt.exoplan ? ' ex' : ''));
+    ring.dataset.stop = k + 1;
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line'); $('#gxleaders').appendChild(line);
     return {nt, k, el, ring, line, w: 0, h: 0};
   });
@@ -2945,11 +2960,13 @@ function gxCallouts(){
     items.push({c, p, alpha, pri});
   }
   items.sort((a, b) => a.pri - b.pri);
+  // Every candidate's ring is an obstacle for the other cards, and a ring must sit wholly inside the stage.
+  const rings = items.filter(it => it.p && it.alpha > 0.34).map(it => [it.p[0] - 14, it.p[1] - 14, it.p[0] + 14, it.p[1] + 14, it]);
   const taken = [];
   for (const it of items){
     const c = it.c;
     // No ghosts: a card fainter than a third is hidden outright, and cards rest while the camera flies.
-    let ok = it.p && it.alpha > 0.34 && !gx.flight && it.p[0] > 0 && it.p[0] < W && it.p[1] > 0 && it.p[1] < Hh;
+    let ok = it.p && it.alpha > 0.34 && !gx.flight && it.p[0] > 14 && it.p[0] < W - 14 && it.p[1] > 14 && it.p[1] < Hh - 14;
     let x = 0, y = 0;
     if (ok){
       if (!c.w){ c.el.style.display = ''; c.w = c.el.offsetWidth; c.h = c.el.offsetHeight; }
@@ -2960,6 +2977,7 @@ function gxCallouts(){
       if (x < 4 || y < 4 || x + c.w > W - 4 || y + c.h > Hh - 4) ok = false;
       // Never overlap: a card that would cover a higher-priority card (or the HUD) is hidden.
       for (const q of taken) if (r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]){ ok = false; break; }
+      if (ok) for (const q of rings) if (q[4] !== it && r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]){ ok = false; break; }
       if (ok) for (const q of hudR) if (r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]){ ok = false; break; }
       if (ok) taken.push(r);
     }

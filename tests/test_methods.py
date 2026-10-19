@@ -257,7 +257,11 @@ const { chromium } = require(%s);
         const small = [...art.querySelectorAll('a,button,select,input,summary')].filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.width < 44 || r.height < 44) && !e.closest('p,li,dd'); }).map(e => e.className || e.tagName);
         const wide = [...art.querySelectorAll('*')].filter(e => !e.closest('.tablewrap') && e.getBoundingClientRect().right > vw + 1).map(e => e.tagName + '.' + e.className);
         const shown = [...document.querySelectorAll('.mxch')].filter(a => getComputedStyle(a).display !== 'none').length;
-        return {hidden: art.hidden, lit, small, wide: wide.slice(0, 4), shown};
+        // Every numbers-table value is on screen, and no two contrast-ladder labels overlap.
+        const cut = [...art.querySelectorAll('.mxnums td.num')].filter(td => { const r = td.getBoundingClientRect(); return r.width && (r.right > vw + 1 || r.left < -1); }).map(td => td.textContent.slice(0, 20));
+        const labs = [...art.querySelectorAll('.mxcontrast li .lab')].map(l => l.getBoundingClientRect()), clash = [];
+        for (let i = 0; i < labs.length; i++) for (let j = i + 1; j < labs.length; j++){ const a = labs[i], b = labs[j]; if (a.left < b.right && a.right > b.left && a.top < b.bottom - 0.5 && a.bottom > b.top + 0.5) clash.push([i, j]); }
+        return {hidden: art.hidden, lit, small, wide: wide.slice(0, 4), shown, cut, clash};
       }, ch)));
     }
     await c.close();
@@ -269,6 +273,7 @@ const { chromium } = require(%s);
     assert res.returncode == 0, res.stderr
     for r in json.loads(res.stdout.strip().splitlines()[-1]):
         assert r["errs"] == [] and r["hidden"] is False and r["shown"] == 1, r  # one chapter at a time
+        assert r["cut"] == [] and r["clash"] == [], r
         assert all(n > 5 for n in r["lit"]), r  # every canvas drew something
         assert r["wide"] == [], r
         if r["w"] == 390:

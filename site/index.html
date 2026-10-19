@@ -745,19 +745,33 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .mxladder div:nth-child(odd) span{top:28px}
 .mxladder div:nth-child(even) span{top:76px}
 .mxladder .mxaxis span{position:static;transform:none}
+@media (max-width:499.98px){
+  .mxladder{height:auto;border-top:0;display:grid;gap:6px}
+  .mxladder div{position:relative;left:0;height:auto;padding-left:calc(var(--x) * 0.6 + 12px)}
+  .mxladder div i{top:3px;left:calc(var(--x) * 0.6);height:12px}
+  .mxladder div span,.mxladder div:nth-child(odd) span,.mxladder div:nth-child(even) span,.mxladder div.l span,.mxladder div.r span{position:static;transform:none;white-space:normal}
+  .mxladder .mxaxis{display:none}
+}
 .mxladder div span{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-size:12px;color:var(--ink-2)}
 .mxladder div.l span{transform:none}
 .mxladder div.r span{transform:translateX(-100%)}
 .mxladder .mxaxis{position:absolute;left:0;right:0;bottom:0;margin:0;display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--ink-3)}
 .mxsteps{margin:0;padding-left:20px;display:grid;gap:10px;line-height:1.55}
-.mxcontrast{position:relative;height:440px;margin:6px 0;padding-left:64px;border-left:1px solid var(--line)}
-.mxcontrast .ax span{position:absolute;left:0;top:var(--y);transform:translateY(-50%);font:500 11px var(--mono);color:var(--ink-3)}
-.mxcontrast ol{list-style:none;margin:0;padding:0}
-.mxcontrast li{position:absolute;left:64px;right:0;top:var(--y);transform:translateY(-50%);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:12px;color:var(--ink-3);padding-left:14px;border-left:3px solid var(--cyan)}
-.mxcontrast li b{color:var(--ink);font-size:13px}
-.mxcontrast li .mono{color:var(--ink-2)}
-.mxcontrast li.goal,.mxcontrast li.requirement{border-left-style:dashed}
-.mxcontrast li.target{border-left-color:var(--amber)}
+.mxcontrast{display:grid;gap:4px;margin:6px 0}
+.mxcontrast ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.mxcontrast li,.mxcontrast .ax{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.mxcontrast .ax{border:0;padding:0}
+.mxcontrast .lab{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;font-size:12px;color:var(--ink-3);min-width:0}
+.mxcontrast .lab b{color:var(--ink);font-size:13px}
+.mxcontrast .lab .mono{color:var(--ink-2)}
+.mxcontrast .cond{flex-basis:100%}
+.mxcontrast .track{position:relative;height:20px;border-left:1px solid var(--line-2);border-right:1px solid var(--line-2);background:linear-gradient(var(--line-2),var(--line-2)) center/100% 1px no-repeat}
+.mxcontrast .ax .track{background:none;border:0;height:16px}
+.mxcontrast .ax .track span{position:absolute;top:0;transform:translateX(-50%);font:500 11px var(--mono);color:var(--ink-3);white-space:nowrap}
+.mxcontrast .ax .track span:nth-child(even){display:none}
+.mxcontrast .track i{position:absolute;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:var(--cyan)}
+.mxcontrast li.goal .track i,.mxcontrast li.requirement .track i{background:transparent;border:2px solid var(--cyan)}
+.mxcontrast li.target .track i{background:var(--amber)}
 .mxmols{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
 .mxmol{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--glass-2)}
 .mxmol.on{border-color:var(--cyan)}
@@ -812,8 +826,8 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .mxnums th,.mxnums td{border:0;padding:2px 0;text-align:left}
   .mxnums .num{text-align:left;white-space:normal;font-size:15px;color:var(--ink)}
   .mxnums td:last-child{font-size:12px}
-  .mxcontrast{height:520px;padding-left:52px}
-  .mxcontrast li{left:52px}
+  .mxcontrast li,.mxcontrast .ax{grid-template-columns:1fr}
+  .mxcontrast .ax .lab{display:none}
   .mxsrc a{min-height:44px}
 }
 

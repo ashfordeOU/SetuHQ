@@ -1019,6 +1019,7 @@ function gxBuildLabels(){
     el.addEventListener('click', () => { gxSelect(h, i); gxFly(gxHostCam(h), 1800); });
     el.title = 'Select; the host card opens its system view';
     const ring = gxEl('gxring' + (nt.exoplan ? ' ex' : ''));
+    ring.dataset.stop = k + 1;
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line'); $('#gxleaders').appendChild(line);
     return {nt, k, el, ring, line, w: 0, h: 0};
   });
@@ -1093,11 +1094,13 @@ function gxCallouts(){
     items.push({c, p, alpha, pri});
   }
   items.sort((a, b) => a.pri - b.pri);
+  // Every candidate's ring is an obstacle for the other cards, and a ring must sit wholly inside the stage.
+  const rings = items.filter(it => it.p && it.alpha > 0.34).map(it => [it.p[0] - 14, it.p[1] - 14, it.p[0] + 14, it.p[1] + 14, it]);
   const taken = [];
   for (const it of items){
     const c = it.c;
     // No ghosts: a card fainter than a third is hidden outright, and cards rest while the camera flies.
-    let ok = it.p && it.alpha > 0.34 && !gx.flight && it.p[0] > 0 && it.p[0] < W && it.p[1] > 0 && it.p[1] < Hh;
+    let ok = it.p && it.alpha > 0.34 && !gx.flight && it.p[0] > 14 && it.p[0] < W - 14 && it.p[1] > 14 && it.p[1] < Hh - 14;
     let x = 0, y = 0;
     if (ok){
       if (!c.w){ c.el.style.display = ''; c.w = c.el.offsetWidth; c.h = c.el.offsetHeight; }
@@ -1108,6 +1111,7 @@ function gxCallouts(){
       if (x < 4 || y < 4 || x + c.w > W - 4 || y + c.h > Hh - 4) ok = false;
       // Never overlap: a card that would cover a higher-priority card (or the HUD) is hidden.
       for (const q of taken) if (r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]){ ok = false; break; }
+      if (ok) for (const q of rings) if (q[4] !== it && r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]){ ok = false; break; }
       if (ok) for (const q of hudR) if (r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]){ ok = false; break; }
       if (ok) taken.push(r);
     }
