@@ -527,6 +527,12 @@ def year_chart(g: dict | None, method: str) -> str:
             f'<figcaption>{html.escape(label)} Source: {html.escape(g["source_short"])}, fetched {html.escape(g["fetched_at"][:10])}.</figcaption></figure>')
 
 
+# What the Time scrubber runs through, for its spoken value ("t = 0.42 of the orbit").
+TUNIT = {"system": "orbit", "scan": "survey sweep", "radio": "orbit", "doppler": "orbit", "wobble": "orbit", "jitter": "sequence",
+         "astrometry": "orbit", "lens": "event", "coronagraph": "sequence", "transmission": "transit", "timing": "cycle",
+         "falsepos": "orbit", "molecule": "vibration cycle"}
+
+
 def honesty_label(label: str) -> str:
     """The one badge every drawing carries: illustration, model from stored values, real data, or speculative."""
     lab_cls = {LABEL_ILL: "ill", LABEL_MODEL: "model", LABEL_DATA: "data", LABEL_SPEC: "spec"}[label]
@@ -540,7 +546,7 @@ def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = Fal
           <div class="mxcanvas"><canvas role="img" aria-label="{e(desc)}"></canvas></div>
           <div class="mxbadges">{honesty_label(label)}<span class="mxexag" aria-live="polite"></span></div>
           <div class="mxctl" role="group" aria-label="{'Controls' if static else 'Animation controls'}">
-            {'' if static else '<button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time">'}
+            {'' if static else '<button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the ' + TUNIT.get(vis, "cycle") + '">'}
             {controls}
           </div>
           <figcaption class="mxdesc">{e(desc)}</figcaption>
@@ -692,7 +698,7 @@ def methods_meta(ex: dict, g: dict | None, story: dict, coverage: dict | None) -
             "lead_dip": {"id": lead, "depth_ppm": dip.get("depth_ppm"), "pts": dip.get("pts"), "half": dip.get("half")} if dip else None,
             "molecules": [{k: m[k] for k in ("id", "name", "f", "geom")} for m in MOLECULES],
             "lab_bands": LAB_BANDS, "jwst": load_jwst(),
-            "population": _pop_meta(), "drake_terms": DRAKE_TERMS, "kopparapu": KOPPARAPU}
+            "population": _pop_meta(), "drake_terms": DRAKE_TERMS, "kopparapu": KOPPARAPU, "tunit": TUNIT}
 
 
 def _pop_meta() -> dict | None:
@@ -1270,7 +1276,10 @@ function mxDraw(st){
   st.vis.draw(c, w, h, st.t, st);
   const ex = st.fig.querySelector('.mxexag'); if (ex.textContent !== st.exag) ex.textContent = st.exag;
   ex.hidden = !st.exag;
-  const sc = st.fig.querySelector('.mxscrub'); if (sc && document.activeElement !== sc) sc.value = Math.round(st.t * 1000);
+  const sc = st.fig.querySelector('.mxscrub');
+  if (sc){ if (document.activeElement !== sc) sc.value = Math.round(st.t * 1000);
+    // The scrubber's spoken value, in the visual's own cycle (written only when it changes).
+    const vt = `t = ${st.t.toFixed(2)} of the ${(MX && MX.tunit && MX.tunit[st.fig.dataset.vis]) || 'cycle'}`; if (sc.getAttribute('aria-valuetext') !== vt) sc.setAttribute('aria-valuetext', vt); }
 }
 // Shown or hidden with its chapter: only the open chapter's stages run. Under reduced motion nothing
 // plays by itself; each stage shows its key frame and plays only when asked.

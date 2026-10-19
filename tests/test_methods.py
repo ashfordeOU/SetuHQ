@@ -522,3 +522,14 @@ def test_radio_slider_announces_its_starting_value(page_html):
     art = re.search(r'<article class="mxch" id="mx-radio".*?(?=<article class="mxch"|$)', _route(page_html, "methods"), re.S).group(0)
     assert f'aria-valuetext="7.5 gauss, cyclotron cut-off {M.cyclotron_mhz(7.5):.1f} MHz"' in art
     assert "init(st){ st.opt.mode = 'aurora'; st.opt.B = 7.5; mxRadioLabel(st); }" in M.METHODS_JS
+
+
+def test_every_time_scrubber_speaks_in_its_visuals_unit(page_html):
+    sec = _route(page_html, "methods")
+    figs = re.findall(r'<figure class="mxstage[^"]*" data-vis="(\w+)".*?</figure>', sec, re.S)
+    bodies = re.findall(r'<figure class="mxstage[^"]*" data-vis="\w+".*?</figure>', sec, re.S)
+    scrubs = [(v, re.search(r'class="mxscrub"[^>]*aria-valuetext="([^"]+)"', f).group(1)) for v, f in zip(figs, bodies) if 'class="mxscrub"' in f]
+    assert len(scrubs) > 10 and all(t == f"t = 0.00 of the {M.TUNIT.get(v, 'cycle')}" for v, t in scrubs), scrubs
+    animated = set(re.findall(r'data-vis="(\w+)"', sec)) - {"jwst", "atmlab", "valley", "hz", "drake"}
+    assert animated <= set(M.TUNIT), animated - set(M.TUNIT)
+    assert "sc.setAttribute('aria-valuetext', vt)" in M.METHODS_JS

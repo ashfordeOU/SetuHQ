@@ -81,11 +81,14 @@ li[data-next="1"] a{background:var(--panel-2)}
 .learnbar .btn{min-height:44px}
 .learnbar .lpos{font-size:12px;color:var(--ink-2);padding:0 6px;max-width:42ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 body.learning main{padding-bottom:96px}
+body.learning .ctscroll{height:min(calc(64vh - 76px),640px)}
 @media (max-width:699.98px){
   .learnbar{left:12px;right:12px;transform:none;width:auto;flex-wrap:wrap;gap:6px}
   .learnbar .lpos{flex-basis:100%;text-align:center}
-  .learnbar .lnt{display:none}
+  .learnbar .lnt,.learnbar .lpre{display:none}
   body.learning main{padding-bottom:120px}
+  body.learning .ctscroll{height:calc(70vh - 100px)}
+  body.learning .gxsheet{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
 }
 @media (prefers-reduced-motion: reduce){.learnmeter i,.learnlist summary::before{transition:none}}
 """
@@ -128,8 +131,10 @@ function learnBar(step){
   const bar = $('#learnbar'), i = LEARN.findIndex(x => x.id === step), on = learn.active && i >= 0;
   bar.hidden = !on; document.body.classList.toggle('learning', on);
   if (!on) return;
-  $('#learnpos').textContent = `Learn path · ${i + 1} of ${LEARN.length} · ${LEARN[i].label}`;
+  $('#learnpos').innerHTML = `<span class="lpre">Learn path · </span>${i + 1} of ${LEARN.length} · ${esc(LEARN[i].label)}`;
   const prev = LEARN[i - 1], next = LEARN[i + 1];
+  // Never hide the button that has focus: on step 1, Back hands focus to Next first.
+  if (!prev && document.activeElement === $('#learnprev')) $('#learnnext').focus();
   $('#learnprev').hidden = !prev; if (prev) $('#learnprev').setAttribute('href', prev.href);
   $('#learnnext').innerHTML = next ? `Next<span class="lnt">: ${esc(next.label)}</span> ›` : 'Finish ›';
   $('#learnnext').setAttribute('aria-label', next ? `Next: ${next.label}` : 'Finish the path'); $('#learnnext').setAttribute('href', next ? next.href : '#/overview');
@@ -146,7 +151,10 @@ if ($('#learncard')){
   $('#learnreset').addEventListener('click', () => { learn.seen = []; learn.active = false; learnSave(); learnRender(); say('Learn path progress cleared.'); });
 }
 if ($('#learnbar')){
-  $('#learnleave').addEventListener('click', () => { learn.active = false; learnSave(); learnBar(null); say('Left the Learn path. Your progress is kept.'); });
+  // Leaving hides the bar, so focus moves to the page's heading (or main), not to <body>.
+  $('#learnleave').addEventListener('click', () => { learn.active = false; learnSave(); learnBar(null);
+    const h = $(`#route-${current} h1`) || $('#main'); if (h){ if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1'); h.focus({preventScroll: true}); }
+    say('Left the Learn path. Your progress is kept.'); });
   $('#learnnext').addEventListener('click', () => { if ($('#learnnext').getAttribute('href') === '#/overview'){ learn.active = false; learnSave(); } });
 }
 """

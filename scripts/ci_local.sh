@@ -29,6 +29,9 @@ ok
 
 step "tests (python -m pytest -q, same as ci.yml)"
 "$VENV/bin/python" -m pytest -q -W ignore 2>&1 | tee -a "$LOG"
+# Name what pyproject's addopts (-m 'not network') leaves out, and why.
+echo "   deselected (marker 'network': needs internet access to MAST or the ESA CHEOPS archive):" | tee -a "$LOG"
+"$VENV/bin/python" -m pytest -q --collect-only -m network -o addopts="" 2>/dev/null | grep '::' | sed 's/^/     /' | tee -a "$LOG"
 ok
 
 if [[ "$QUICK" -eq 1 ]]; then

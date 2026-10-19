@@ -115,3 +115,50 @@ const U = %s;
         assert r["card1"] == ["Continue: Toward and away", f"4 of {n} visited", "4"]
         assert r["reset"] == f"0 of {n} visited"
     assert data["blocked"] == {"state": ["#/methods?ch=survey", False], "errs": []}
+
+
+@pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
+def test_keyboard_focus_never_drops_to_body(built, tmp_path):
+    script = tmp_path / "focus.js"
+    script.write_text("""
+const { chromium } = require(%s);
+const U = %s;
+(async () => {
+  const b = await chromium.launch({ executablePath: %s, args: ['--allow-file-access-from-files'] });
+  const out = [];
+  for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) {
+    const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob }); const p = await c.newPage(), errs = [];
+    p.on('pageerror', e => errs.push(e.message));
+    const r = {w, errs};
+    await p.goto(U + '#/overview'); await p.waitForTimeout(600);
+    await p.focus('#learngo'); await p.keyboard.press('Enter'); await p.waitForTimeout(500);
+    r.step1Prev = await p.evaluate(() => document.querySelector('#learnprev').hidden);
+    await p.focus('#learnnext'); await p.keyboard.press('Enter'); await p.waitForTimeout(500);
+    r.step2Prev = await p.evaluate(() => [document.querySelector('#learnprev').hidden, location.hash]);
+    // Back from step 2 to step 1 with the keyboard: Back disappears, focus goes to Next.
+    await p.focus('#learnprev'); await p.keyboard.press('Enter'); await p.waitForTimeout(500);
+    r.back = await p.evaluate(() => [location.hash, document.activeElement.id, document.activeElement === document.body, document.querySelector('#learnprev').hidden]);
+    // Leave with the keyboard: the bar goes, focus goes to the page's heading.
+    await p.focus('#learnleave'); await p.keyboard.press('Enter'); await p.waitForTimeout(300);
+    r.leave = await p.evaluate(() => [document.querySelector('#learnbar').hidden, document.activeElement === document.body, document.activeElement.tagName, document.activeElement.id]);
+    out.push(r); await c.close();
+  }
+  console.log(JSON.stringify(out)); await b.close();
+})();
+""" % (json.dumps(PLAYWRIGHT), json.dumps(built.resolve().as_uri()), json.dumps(CHROMIUM)))
+    res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=200)
+    assert res.returncode == 0, res.stderr
+    for r in json.loads(res.stdout.strip().splitlines()[-1]):
+        assert r["errs"] == []
+        assert r["step1Prev"] is True and r["step2Prev"] == [False, "#/methods?ch=transit"]
+        assert r["back"] == ["#/methods?ch=survey", "learnnext", False, True]
+        assert r["leave"][0] is True and r["leave"][1] is False and r["leave"][2] == "H1" and r["leave"][3] == "h-methods"
+
+
+def test_the_bar_never_covers_the_catalogue_or_the_galaxy_sheet():
+    css = L.LEARN_CSS
+    assert "body.learning .ctscroll{height:min(calc(64vh - 76px),640px)}" in css
+    phone = css[css.index("@media (max-width:699.98px)"):]
+    assert "body.learning .ctscroll{height:calc(70vh - 100px)}" in phone
+    assert "body.learning .gxsheet{bottom:calc(98px + env(safe-area-inset-bottom,0px))}" in phone
+    assert ".learnbar .lnt,.learnbar .lpre{display:none}" in phone and '<span class="lpre">Learn path · </span>' in L.LEARN_JS
