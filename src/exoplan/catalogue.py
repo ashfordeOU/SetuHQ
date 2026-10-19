@@ -242,10 +242,14 @@ CATALOGUE_CSS = r"""
 .ctscroll[hidden],.ctempty[hidden]{display:none}
 .ctempty{margin:0;padding:24px;border:1px solid var(--line);border-radius:var(--r);background:var(--glass-2);display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 .ctempty a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);text-decoration:none}
-.ctcard{position:absolute;left:0;right:0;height:128px;padding:8px 14px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:1px;align-content:center}
-.ctcard>span{font-size:12px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.ctcard>span[role="rowheader"],.ctcard>span:nth-child(2){grid-column:1/-1}
-.ctcard>span[role="rowheader"]{font-size:15px;color:var(--ink)}
+/* A phone card: the same ten cells, in flex rows (cheaper to lay out than a grid). Containment on each card
+   was measured too: at 4× CPU throttle it doubled style time, so only the scroller is contained. */
+.ctcard{position:absolute;left:0;right:0;height:128px;padding:8px 14px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;display:flex;flex-wrap:wrap;align-content:center;column-gap:12px;row-gap:1px;overflow:hidden}
+.ctcard>span{flex:0 0 calc(50% - 6px);font-size:12px;line-height:17px;color:var(--ink-2);white-space:nowrap;overflow:hidden}
+.ctcard>span[role="rowheader"],.ctcard>span:nth-child(2){flex-basis:100%}
+.ctcard>span[role="rowheader"]{font-size:15px;line-height:21px;color:var(--ink)}
+/* A value that is not stored stays in the table for screen readers, but takes no room on the card. */
+.ctcard>span.na{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ctcard>span.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .ctcard .ctl{color:var(--ink-3);font-family:var(--sans)}
 .ctcard .na{color:var(--ink-3)}
@@ -265,6 +269,7 @@ CATALOGUE_CSS = r"""
 .pllist a[aria-current="page"]{background:var(--panel-2);font-weight:600}
 .pllist .mono{font-size:12px;color:var(--ink-3)}
 .pllinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pllab{flex-basis:100%;font-size:12px;color:var(--ink-3)}
 .pllinks a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);text-decoration:none}
 .plsky{width:100%;max-width:420px;height:auto;display:block}
 .plsky text{fill:var(--ink-3);font:500 11px var(--mono)}
@@ -349,7 +354,7 @@ function ctSort(P, idx, key, dir){
     return s * (x - y) || a - b; });
 }
 
-const ct = {P: null, loading: null, view: null, idx: [], starN: {}, bySlug: {}, starBySlug: {}, byStar: {}, rendered: false, rowH: 44};
+const ct = {rangeT: {}, P: null, loading: null, view: null, idx: [], starN: {}, bySlug: {}, starBySlug: {}, byStar: {}, rendered: false, rowH: 44};
 function ctLoad(){
   if (!ct.loading) ct.loading = fetch('assets/data/catalogue.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(C => {
     ct.C = C; ct.P = C.planets;
@@ -410,7 +415,7 @@ function ctRowHTML(r){
 // removes only those entering or leaving the window, in order.
 function ctRows(force){
   const sc = $('#ctscroll'), sp = $('#ctspacer'), H = sc.clientHeight, top = sc.scrollTop, h = ct.rowH;
-  const a = Math.max(0, Math.floor(top / h) - 6), b = Math.min(ct.idx.length, Math.ceil((top + H) / h) + 6);
+  const a = Math.max(0, Math.floor(top / h) - 12), b = Math.min(ct.idx.length, Math.ceil((top + H) / h) + 12);
   if (force || !ct.nodes){ sp.textContent = ''; ct.nodes = new Map(); ct.win = null; }
   if (ct.win && ct.win[0] === a && ct.win[1] === b) return;
   ct.win = [a, b];
@@ -426,7 +431,8 @@ function ctControls(){
   const v = ct.view;
   $('#ctq').value !== v.q && document.activeElement !== $('#ctq') && ($('#ctq').value = v.q);
   $$('#ctmethods [data-cm]').forEach(b => b.setAttribute('aria-pressed', String(v.methods.includes(b.dataset.cm))));
-  $$('#route-catalogue [data-rk]').forEach(inp => { if (document.activeElement === inp) return; const r = v[inp.dataset.rk] || [null, null], x = r[inp.dataset.end === 'lo' ? 0 : 1]; inp.value = x === null ? '' : x; });
+  // Never overwrite a box being typed in, or one whose range is still waiting to apply.
+  $$('#route-catalogue [data-rk]').forEach(inp => { if (document.activeElement === inp || ct.rangeT[inp.dataset.rk]) return; const r = v[inp.dataset.rk] || [null, null], x = r[inp.dataset.end === 'lo' ? 0 : 1]; inp.value = x === null ? '' : x; });
   $('#ctmulti').setAttribute('aria-pressed', String(v.multi)); $('#cthasdist').setAttribute('aria-pressed', String(v.hasdist));
   $$('#cttable .cth').forEach(h => h.setAttribute('aria-sort', h.dataset.sort === v.sort ? (v.dir === 'desc' ? 'descending' : 'ascending') : 'none'));
   if (Object.keys(v).some(k => Array.isArray(v[k]) && v[k].length === 2 && (v[k][0] !== null || v[k][1] !== null) && k !== 'methods')) $('#route-catalogue .ctmore').open = true;
@@ -439,9 +445,14 @@ function ctBind(){
   $('#ctmethods').addEventListener('click', e => { const b = e.target.closest('[data-cm]'); if (!b) return; const m = b.dataset.cm, on = ct.view.methods.includes(m);
     ct.view.methods = CTM.methods.filter(x => x === m ? !on : ct.view.methods.includes(x)); ctApply(); syncCatURL(true); });
   // Ranges apply as you type, with the same debounce as the text search (the address is replaced, not pushed).
-  $$('#route-catalogue [data-rk]').forEach(inp => inp.addEventListener('input', () => { clearTimeout(qt); qt = setTimeout(() => {
-    const k = inp.dataset.rk, r = (ct.view[k] || [null, null]).slice(), x = inp.value === '' ? null : Number(inp.value);
-    r[inp.dataset.end === 'lo' ? 0 : 1] = Number.isFinite(x) ? x : null; ct.view[k] = r; ctApply(); syncCatURL(false); }, 120); }));
+  // Each range has its own timer, and when it fires it reads both of its boxes, so typing "from", Tab, "to"
+  // quickly keeps both ends.
+  $$('#route-catalogue [data-rk]').forEach(inp => inp.addEventListener('input', () => {
+    const k = inp.dataset.rk; clearTimeout(ct.rangeT[k]);
+    ct.rangeT[k] = setTimeout(() => { delete ct.rangeT[k];
+      const val = end => { const el = $(`#route-catalogue [data-rk="${k}"][data-end="${end}"]`), x = el.value === '' ? null : Number(el.value); return Number.isFinite(x) ? x : null; };
+      ct.view[k] = [val('lo'), val('hi')]; ctApply(); syncCatURL(false); }, 120);
+  }));
   $('#ctmulti').addEventListener('click', () => { ct.view.multi = !ct.view.multi; ctApply(); syncCatURL(true); });
   $('#cthasdist').addEventListener('click', () => { ct.view.hasdist = !ct.view.hasdist; ctApply(); syncCatURL(true); });
   $('#ctreset').addEventListener('click', () => { ct.view = decodeCatView(new URLSearchParams()); ctApply(); syncCatURL(true); });
@@ -519,13 +530,14 @@ function plShow(slug){
     const ref = CTM.refs[P.name[i]];
     $('#plref').innerHTML = `<p>${esc(ct.C.source_short)} lists it as "${esc(P.status[i] || 'status not stored')}"${P.method_raw[i] ? `, found by ${esc(P.method_raw[i])}` : ''}${P.year[i] ? ` in ${P.year[i]}` : ''}; record updated ${esc(P.updated[i] || 'not stored')}.${P.alt[i] ? ` Also known as ${esc(P.alt[i])}.` : ''}</p>
       <p>${ref ? `Discovery paper: <a href="${esc(ref[0])}" rel="noopener">${esc(ref[1])}</a> (from exoplan's checked list of notable planets; ${esc(ct.C.source_short)} stores no DOI).` : `${esc(ct.C.source_short)} stores no DOI or reference for the discovery paper, so none is shown.`}</p>
-      <div class="pllinks">${ch ? `<a href="#/methods?ch=${ch}">How ${esc((CTM.method_label[P.method[i]] || '').toLowerCase())} works ›</a>` : ''}${ctSeen(P.name[i], ch ? '#/methods?ch=' + ch : '')}</div>`;
+      <div class="pllinks">${ch ? `<a href="#/methods?ch=${ch}">How ${esc((CTM.method_label[P.method[i]] || '').toLowerCase())} works ›</a>` : ''}</div>${ctSeen(P.name[i], ch ? '#/methods?ch=' + ch : '')}`;
     plSystem($('#plsys'), i, current === 'planet');
   }).catch(() => { $('#plnote').textContent = 'The catalogue file could not be loaded here.'; $('#plnote').hidden = false; });
 }
 // The shared animated system, from planet i's stored values only; the caption says what is not stored.
 // Back-links: where exoplan itself shows this planet or star (the Transit case, Galaxy tour stops, Methods chapters).
-function ctSeen(name, skip){ return (CTM.mentions[name] || []).filter(([, href]) => href !== skip).map(([lab, href]) => `<a href="${esc(href)}">${esc(lab)} ›</a>`).join(''); }
+function ctSeen(name, skip){ const ls = (CTM.mentions[name] || []).filter(([, href]) => href !== skip).map(([lab, href]) => `<a href="${esc(href)}">${esc(lab)} ›</a>`).join('');
+  return ls ? `<div class="pllinks plseen"><span class="pllab">Where exoplan shows it:</span>${ls}</div>` : ''; }
 function plSystem(fig, i, on){
   const P = ct.P, pimen = typeof S !== 'undefined' && S.planet && P.name[i] === S.planet;
   const p = {name: P.name[i], star_teff: P.steff[i], star_radius: P.srad[i], radius: P.radius[i], semi_major_axis: P.a[i], orbital_period: P.period[i],
@@ -547,7 +559,7 @@ function stShow(slug){
     $('#stsub').textContent = `${ps.length} planet${ps.length === 1 ? '' : 's'} in ${ct.C.source_short}` + (P.sptype[i] ? ` · stored type ${P.sptype[i]}` : '') + (cl ? ` · class ${cl} from Teff (nearest ${row})` : '');
     $('#stparams').innerHTML = ctTable(i, CT_STAR_ROWS) + (P.salt[i] ? `<p class="small">Also known as ${esc(P.salt[i])}.</p>` : '');
     $('#stplanets').innerHTML = `<ul class="pllist">${ps.map(j => `<li><a href="${ctPlanetHref(j)}"><span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul>`;
-    $('#stwhere').innerHTML = ctWhere(i, name) + (ctSeen(name, '#/sky') ? `<div class="pllinks">${ctSeen(name, '#/sky')}</div>` : '');
+    $('#stwhere').innerHTML = ctWhere(i, name) + ctSeen(name, '#/sky');
     // The system view with one of its planets (the innermost first); the picker switches planet.
     const pick = $('#stpick');
     pick.innerHTML = ps.map(j => `<option value="${j}">${esc(P.name[j])}</option>`).join('');

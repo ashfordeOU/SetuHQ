@@ -472,13 +472,13 @@ def test_phone_rv_ladder_axis_sits_below_the_rungs():
 
 
 def test_the_stored_run_is_committed():
-    # The site build (scripts/ci_local.sh) and the Sky test read this run, so a clean checkout must have it.
-    if shutil.which("git") is None or not Path(".git").exists():
-        pytest.skip("not a git checkout")
-    tracked = subprocess.run(["git", "ls-files", "runs/tess-pi-men-s1"], capture_output=True, text=True, check=True).stdout.split()
+    # The site build (scripts/ci_local.sh) and the Sky test read this run, so a clean checkout must have it:
+    # it is on disk and .gitignore re-includes it (no git needed, so this never skips).
+    rules = Path(".gitignore").read_text().splitlines()
+    assert "runs/*" in rules and "!runs/tess-pi-men-s1/" in rules and "runs/" not in rules
     for f in ("manifest.json", "candidates.json", "candidates.csv", "classifications.csv", "crossmatch.json"):
-        assert f"runs/tess-pi-men-s1/{f}" in tracked, f
-    assert any(f.startswith("runs/tess-pi-men-s1/subjects/") for f in tracked)
+        assert Path("runs/tess-pi-men-s1", f).is_file(), f
+    assert list(Path("runs/tess-pi-men-s1/subjects").glob("*.json"))
 
 
 # ---------- round 11: the Radio chapter ----------

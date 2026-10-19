@@ -28,4 +28,7 @@ def obj_link(kind: str, name: str, label: str | None = None, cls: str = "") -> s
     """The one renderer (Python side) for a link to a planet or star page; objLink is the page's twin."""
     e = html.escape
     href = star_href(name) if kind == "star" else planet_href(name)
-    return f'<a class="objlink{" " + cls if cls else ""}" data-{kind}="{e(name)}" href="{href}">{e(label if label is not None else name)}</a>'
+    label = label if label is not None else name
+    # A generic label ("Planet page ›") gets the object's name in its accessible name.
+    aria = f' aria-label="{e(name)}, {kind} page"' if name not in label else ""
+    return f'<a class="objlink{" " + cls if cls else ""}" data-{kind}="{e(name)}" href="{href}"{aria}>{e(label)}</a>'

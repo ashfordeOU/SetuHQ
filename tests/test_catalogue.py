@@ -329,3 +329,49 @@ const { chromium } = require(%s);
     assert out["bad"] == [False, "status", "No star “Nowhere Star” on the map (no stored distance or not in the catalogue). Search the Catalogue ›",
                           "#/catalogue?q=Nowhere%20Star"]
     assert out["good"] == [True, "pi Men"]
+
+
+@pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
+def test_typing_both_ends_of_a_range_without_pausing_keeps_both(built, tmp_path):
+    script = tmp_path / "range.js"
+    script.write_text("""
+const { chromium } = require(%s);
+(async () => {
+  const b = await chromium.launch({ executablePath: %s, args: ['--allow-file-access-from-files'] });
+  const p = await b.newPage({ viewport: { width: 1360, height: 900 } }), errs = []; p.on('pageerror', e => errs.push(e.message));
+  await p.goto(%s + '#/catalogue'); await p.waitForTimeout(1200);
+  await p.evaluate(() => { document.querySelector('#route-catalogue .ctmore').open = true; });
+  // No pause between the boxes: each range has its own timer and reads both of its boxes.
+  await p.click('[data-rk="mass"][data-end="lo"]'); await p.keyboard.type('1'); await p.keyboard.press('Tab'); await p.keyboard.type('2');
+  await p.click('[data-rk="year"][data-end="lo"]', {delay: 0}); await p.keyboard.type('2000'); await p.keyboard.press('Tab'); await p.keyboard.type('2005');
+  await p.waitForTimeout(600);
+  const out = await p.evaluate(() => ({hash: location.hash, boxes: [...document.querySelectorAll('[data-rk="mass"],[data-rk="year"]')].map(i => i.value),
+    seen: null}));
+  await p.goto(%s + '#/planet/pi-men-c'); await p.waitForTimeout(800);
+  out.seen = await p.evaluate(() => [document.querySelector('#plref .plseen .pllab').textContent, [...document.querySelectorAll('#plref .plseen a')].map(a => a.getAttribute('href'))]);
+  out.errs = errs; console.log(JSON.stringify(out)); await b.close();
+})();
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(built.resolve().as_uri()), json.dumps(built.resolve().as_uri())))
+    res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=120)
+    assert res.returncode == 0, res.stderr
+    out = json.loads(res.stdout.strip().splitlines()[-1])
+    assert out["errs"] == []
+    assert "year=2000~2005" in out["hash"] and "mass=1~2" in out["hash"], out["hash"]
+    assert out["boxes"] == ["2000", "2005", "1", "2"]  # year first: it comes first in the page
+    assert out["seen"][0] == "Where exoplan shows it:" and "#/transit" in out["seen"][1]
+
+
+def test_phone_cards_are_cheap_to_lay_out():
+    css, js = C.CATALOGUE_CSS, C.CATALOGUE_JS
+    card = re.search(r"\.ctcard\{[^}]*\}", css).group(0)
+    assert "display:flex" in card and "contain" not in card and "grid" not in card  # measured: containment doubled style time
+    assert "text-overflow" not in re.search(r"\.ctcard>span\{[^}]*\}", css).group(0)
+    assert re.search(r"\.ctcard>span\.na\{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect\(0 0 0 0\)", css)  # still a cell
+    assert "Math.floor(top / h) - 12" in js and "Math.ceil((top + H) / h) + 12" in js
+
+
+def test_generic_object_links_carry_the_name():
+    from exoplan.objects import obj_link
+    assert obj_link("planet", "pi Men c", "Planet page ›") == '<a class="objlink" data-planet="pi Men c" href="#/planet/pi-men-c" aria-label="pi Men c, planet page">Planet page ›</a>'
+    assert "aria-label" not in obj_link("star", "pi Men", "pi Men ›")
+    assert "` aria-label=\"${esc(n)}, ${kind} page\"`" in APP_JS

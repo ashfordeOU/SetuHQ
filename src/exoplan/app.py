@@ -1202,7 +1202,8 @@ const objSlug = n => String(n).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace
 const planetHref = n => '#/planet/' + objSlug(n);
 const starHref = n => '#/star/' + objSlug(n);
 // The one renderer for a link to a planet or star; data-star / data-planet let any view select it.
-const objLink = (kind, n, label) => `<a class="objlink" data-${kind}="${esc(n)}" href="${kind === 'star' ? starHref(n) : planetHref(n)}">${esc(label ?? n)}</a>`;
+// A generic label ("Star page ›") gets the object's name in its accessible name.
+const objLink = (kind, n, label) => { label = label ?? n; return `<a class="objlink" data-${kind}="${esc(n)}" href="${kind === 'star' ? starHref(n) : planetHref(n)}"${String(label).includes(n) ? '' : ` aria-label="${esc(n)}, ${kind} page"`}>${esc(label)}</a>`; };
 // A TIC with a catalogue name (the run's target, or a TIC in a star's stored alternate names) links to its star page.
 const ticLink = tic => (D.tic_names || {})[tic] ? `TIC ${esc(tic)} · ${objLink('star', D.tic_names[tic])}` : `TIC ${esc(tic)}`;
 const fmt = (x, d=2) => (x === null || x === undefined || Number.isNaN(Number(x))) ? '–' : Number(x).toFixed(d);

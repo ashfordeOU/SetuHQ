@@ -889,10 +889,14 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .ctscroll[hidden],.ctempty[hidden]{display:none}
 .ctempty{margin:0;padding:24px;border:1px solid var(--line);border-radius:var(--r);background:var(--glass-2);display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 .ctempty a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);text-decoration:none}
-.ctcard{position:absolute;left:0;right:0;height:128px;padding:8px 14px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:1px;align-content:center}
-.ctcard>span{font-size:12px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.ctcard>span[role="rowheader"],.ctcard>span:nth-child(2){grid-column:1/-1}
-.ctcard>span[role="rowheader"]{font-size:15px;color:var(--ink)}
+/* A phone card: the same ten cells, in flex rows (cheaper to lay out than a grid). Containment on each card
+   was measured too: at 4× CPU throttle it doubled style time, so only the scroller is contained. */
+.ctcard{position:absolute;left:0;right:0;height:128px;padding:8px 14px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;display:flex;flex-wrap:wrap;align-content:center;column-gap:12px;row-gap:1px;overflow:hidden}
+.ctcard>span{flex:0 0 calc(50% - 6px);font-size:12px;line-height:17px;color:var(--ink-2);white-space:nowrap;overflow:hidden}
+.ctcard>span[role="rowheader"],.ctcard>span:nth-child(2){flex-basis:100%}
+.ctcard>span[role="rowheader"]{font-size:15px;line-height:21px;color:var(--ink)}
+/* A value that is not stored stays in the table for screen readers, but takes no room on the card. */
+.ctcard>span.na{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ctcard>span.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .ctcard .ctl{color:var(--ink-3);font-family:var(--sans)}
 .ctcard .na{color:var(--ink-3)}
@@ -912,6 +916,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .pllist a[aria-current="page"]{background:var(--panel-2);font-weight:600}
 .pllist .mono{font-size:12px;color:var(--ink-3)}
 .pllinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pllab{flex-basis:100%;font-size:12px;color:var(--ink-3)}
 .pllinks a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);text-decoration:none}
 .plsky{width:100%;max-width:420px;height:auto;display:block}
 .plsky text{fill:var(--ink-3);font:500 11px var(--mono)}
