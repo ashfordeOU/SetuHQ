@@ -37,6 +37,7 @@ from pathlib import Path
 import numpy as np
 
 from exoplan.config import RunConfig, build_reviewers, load_config
+from exoplan.ephemeris import propagate
 from exoplan.loaders import load_tess
 from exoplan.pipeline import run_pipeline
 
@@ -169,8 +170,9 @@ def match_toi(candidate: dict, target: Target) -> dict | None:
                 best = {"toi": toi.name, "offset_hours": None, "rule": "period only (no published midtime)"}
             continue
         n = round((t_bjd - toi.tranmid) / toi.period)
-        offset_h = (t_bjd - (toi.tranmid + n * toi.period)) * 24.0
-        sigma_h = 24.0 * math.hypot(toi.tranmid_err or 0.0, n * (toi.period_err or 0.0))
+        predicted, sigma = propagate(toi.tranmid, toi.tranmid_err, toi.period, toi.period_err, n)
+        offset_h = (t_bjd - predicted) * 24.0
+        sigma_h = 24.0 * sigma
         toi_dur = toi.duration_hours or 0.0
         in_transit = max(MIN_EPOCH_TOLERANCE_HOURS, 0.5 * dur_h, 0.5 * toi_dur) + 3.0 * sigma_h
         with_period = max(MIN_EPOCH_TOLERANCE_HOURS, dur_h, toi_dur) + 3.0 * sigma_h
@@ -217,6 +219,41 @@ def reclassify_catalog(catalog: dict, targets: dict[int, Target]) -> int:
 def admits_fap(fap: float | None) -> bool:
     """Feed admission on the periodic signal's false-alarm probability. A signal without one is not admitted."""
     return fap is not None and fap < MAX_FEED_FAP
+
+
+def feed_entry(candidate, target: Target, curves, run_time: datetime, run_log: dict) -> dict | None:
+    """The feed entry for one candidate of a reviewed target, or None when the feed rules (module docstring) leave
+    it out; the reason is counted in ``run_log``. Shared by ``exoplan discover`` and ``exoplan batch``."""
+    if not candidate.passed or "off_ephemeris" in candidate.flags:
+        return None
+    if candidate.depth_ppm > MAX_FEED_DEPTH_PPM:
+        run_log["filtered_deep"] = run_log.get("filtered_deep", 0) + 1
+        return None
+    if candidate.period_days is None or candidate.n_transits < MIN_FEED_TRANSITS:
+        run_log["filtered_single"] = run_log.get("filtered_single", 0) + 1
+        return None
+    if not admits_fap(candidate.fap):
+        run_log["filtered_fap"] = run_log.get("filtered_fap", 0) + 1
+        return None
+    entry = {
+        "tic": target.tic,
+        "sector_span": sorted({c.provenance.get("sector") for c in curves}),
+        "t_center": candidate.t_center,
+        "time_unit": candidate.time_unit,
+        "duration_hours": (candidate.t_end - candidate.t_start) * 24.0,
+        "depth_ppm": candidate.depth_ppm,
+        "snr": candidate.snr,
+        "score": candidate.score,
+        "n_reviewers": candidate.n_reviewers,
+        "period_days": candidate.period_days,
+        "n_transits": candidate.n_transits,
+        "fap": candidate.fap,
+        "candidate_id": candidate.candidate_id,
+        "found": run_time.isoformat(timespec="seconds"),
+        "status_note": "candidate only, not confirmed",
+    }
+    entry.update(toi_fields(entry, target))
+    return entry
 
 
 def load_catalog(path: Path) -> dict:
@@ -272,35 +309,9 @@ def run_discovery(
                                    weights_source=str(weights_file) if weights else None)
             run_log["targets"].append(target.tic)
             for candidate in summary.candidates:
-                if not candidate.passed or "off_ephemeris" in candidate.flags:
+                entry = feed_entry(candidate, target, curves, run_time, run_log)
+                if entry is None:
                     continue
-                if candidate.depth_ppm > MAX_FEED_DEPTH_PPM:
-                    run_log["filtered_deep"] = run_log.get("filtered_deep", 0) + 1
-                    continue
-                if candidate.period_days is None or candidate.n_transits < MIN_FEED_TRANSITS:
-                    run_log["filtered_single"] = run_log.get("filtered_single", 0) + 1
-                    continue
-                if not admits_fap(candidate.fap):
-                    run_log["filtered_fap"] = run_log.get("filtered_fap", 0) + 1
-                    continue
-                entry = {
-                    "tic": target.tic,
-                    "sector_span": sorted({c.provenance.get("sector") for c in curves}),
-                    "t_center": candidate.t_center,
-                    "time_unit": candidate.time_unit,
-                    "duration_hours": (candidate.t_end - candidate.t_start) * 24.0,
-                    "depth_ppm": candidate.depth_ppm,
-                    "snr": candidate.snr,
-                    "score": candidate.score,
-                    "n_reviewers": candidate.n_reviewers,
-                    "period_days": candidate.period_days,
-                    "n_transits": candidate.n_transits,
-                    "fap": candidate.fap,
-                    "candidate_id": candidate.candidate_id,
-                    "found": run_time.isoformat(timespec="seconds"),
-                    "status_note": "candidate only, not confirmed",
-                }
-                entry.update(toi_fields(entry, target))
                 if is_duplicate(entry, catalog["candidates"]):
                     continue
                 catalog["candidates"].append(entry)

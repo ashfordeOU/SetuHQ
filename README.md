@@ -32,6 +32,16 @@ The site: [site/index.html](site/index.html) (the Overview) leads into the app a
    with FPP < 0.015 and NFPP < 10⁻³ *and* a high-resolution imaging contrast curve; without a curve every candidate
    is "not validated: no contrast curve". exoplan never calls its results confirmed.
 8. **Writes** a candidate catalogue (CSV and JSON), a Zooniverse-shaped classification export, a SQLite store, a provenance manifest, and a static report site.
+9. **Exports for follow-up** (`exoplan export RUN --out DIR`, `exofop.py`): an ExoFOP CTOI-style table (CSV and
+   JSON) of vetted candidates that pass the S2 and S3 gates and duplicate no TOI on the same TIC, plus predicted
+   transit windows for the next 12 months with the ephemeris uncertainty cone, σ(Tₙ)² = σ_T0² + n²σ_P² (+ 2n cov),
+   the same propagation `match_toi` uses (`ephemeris.py`). **The CTOI field list is unverified against ExoFOP's
+   current form** (ExoFOP was unreachable); it lives in one place, `exofop.CTOI_FIELDS`. A person submits CTOIs
+   under their own ExoFOP account; exoplan does not. Without the archive's TOI table the export refuses unless
+   `--allow-unchecked`, and then every row says the check was not done.
+10. **Scales** with `exoplan batch CONFIG --targets FILE` (`batch.py`): the `discover` flow over any target list,
+   with light curves cached in `cache/lightkurve` and a state file that makes a killed or time-limited session
+   resumable (done targets are skipped, failures retried, a changed config starts afresh).
 
 ## Reviewer panel
 
@@ -113,6 +123,11 @@ Sentinels (Skeptic and Volunteer, on Claude via the CLI):
   thresholds. The label is still "not validated: no contrast curve": the scheme is exoplan's, it leaves out
   unresolved companions and background stars, and its priors are illustrative. pi Men c is a published planet
   with a measured mass; this number shows the scheme's behaviour on a real planet, nothing more.
+* **Ephemeris cone.** Exporting the stored run (`exoplan export runs/tess-pi-men-s1 --allow-unchecked`; the
+  archive's TOI table timed out, HTTP 504) gives one signal, P = 6.2681 ± 0.0012 d from the first subject's joint
+  fit, and its predicted transit in October 2026 (epoch 479) carries σ = 13.8 h, a 3σ window of 86 h. A one-subject
+  ephemeris is stale within a few years, as ATLAS G5 warns. With the TOI table, this signal is TOI 144.01 and is
+  excluded as a duplicate (tested with the published ephemeris).
 * **The difference-image centroid of pi Men is not usable, and exoplan says so.** The PSF fit puts the difference
   image 2.05 px (40.1″) from the catalogue position, mostly in the row coordinate (row −1.91 px, column −0.74 px),
   which is the direction charge bleeds along a CCD column. SPOC's own DV report for TOI 144.01 finds the same size and
@@ -202,6 +217,9 @@ published pipelines.
   false-positive total after Guerrero et al. 2021), it ignores unresolved companions and background stars, and
   without a reliable centroid it cannot tell a target from a neighbour that could host the depth. No contrast curves
   are ingested yet.
+* **Batch mode is tested offline only.** Resumability, retries and caching are tested with synthetic light curves;
+  no real batch was run because MAST's search API was failing (2026-10-19), so no real throughput is reported.
+  The CTOI export has not been compared with ExoFOP's live form.
 * **Deep, short dips can be clipped before review.** `preprocess.clean` removes single points more than 10 times
   the point-to-point scatter below a 0.5-day running median. A box eclipse 15 times deeper than the per-point noise
   was removed entirely in a synthetic test, so very deep eclipsing binaries on quiet stars may never reach the
@@ -218,6 +236,8 @@ src/exoplan/
   search.py       BLS and single-event search    vet.py       automatic vetting
   dvtests.py      DV-style light-curve tests      pixel.py     TPF difference images, centroids, neighbours
   validate.py     reduced FPP, TRICERATOPS adapter, validation labels
+  ephemeris.py    propagation, uncertainty cone   exofop.py    CTOI-style export, predicted windows
+  batch.py        resumable multi-target runs
   injection.py    synthetic transits              calibrate.py skill-based reviewer weights
   aggregate.py    clustering and consensus       pipeline.py  end-to-end run
   benchmark.py    injection recovery             report.py    static HTML site
