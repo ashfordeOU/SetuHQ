@@ -45,7 +45,7 @@ def test_six_panes_each_with_its_tools_and_no_insignia(built):
     # The system pane is the shared component; telemetry is computed, and there is no agency insignia.
     assert 'id="mcsys"' in sec and '<span class="mxlabel model">Model from stored values</span>' in sec
     assert "nothing is simulated" in sec and "<img" not in sec and "NASA" not in sec and "insignia" not in sec.lower()
-    assert 'role="status"' in sec and "F6 moves between panes; Alt+1 to Alt+6 jumps to one." in sec
+    assert 'role="status"' in sec and "F6 moves between panes; Alt+1 to Alt+6 (or Ctrl+Alt+1 to 6" in sec and "arrow buttons (Alt+← and Alt+→" in sec
     # A phone stacks the panes in one column and offers no pop-out windows.
     phone = MC.MISSION_CSS[MC.MISSION_CSS.index("@media (max-width:699.98px)"):]
     assert "grid-template-columns:minmax(0,1fr)" in phone and ".mcpopbtn" in phone
@@ -145,3 +145,75 @@ const U = %s;
             assert r["pop"] == ["sys", "HR 8799", ["mcp-sys"]]
             assert r["popFollows"] == ["TRAPPIST-1", "TRAPPIST-1 b"]  # BroadcastChannel keeps the windows on one star
             assert r["back"] is True and r["home"] is True and r["fast"] is True
+
+
+@pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
+def test_review_fixes_galaxy_alive_feed_shown_popups_keyboard_storage(built, tmp_path):
+    script = tmp_path / "fix.js"
+    script.write_text("""
+const { chromium } = require(%s);
+const U = %s;
+(async () => {
+  const b = await chromium.launch({ executablePath: %s, args: ['--allow-file-access-from-files', '--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'] });
+  const c = await b.newContext({ viewport: { width: 1360, height: 900 } }); const p = await c.newPage(), errs = [], r = {};
+  p.on('pageerror', e => errs.push(e.message));
+  // B1: a fresh tab on #/mission: the map is on and a drag turns the camera.
+  await p.goto(U + '#/mission'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 30000}); await p.waitForTimeout(2600);
+  await p.$eval('#gxcanvas', e => e.scrollIntoView({block: 'center'})); await p.waitForTimeout(200);
+  const bx = await (await p.$('#mcb-galaxy #gxcanvas')).boundingBox(), x = bx.x + bx.width * 0.75, y = bx.y + bx.height * 0.5;
+  const yaw0 = await p.evaluate(() => gx.cam.yaw);
+  await p.mouse.move(x, y); await p.mouse.down(); await p.mouse.move(x - 200, y - 40, {steps: 8}); await p.mouse.up(); await p.waitForTimeout(200);
+  r.b1 = await p.evaluate(y0 => [gx.on, Math.abs(gx.cam.yaw - y0) > 0.1], yaw0);
+  // B2: the feed's cards are shown at desktop width.
+  r.b2 = await p.evaluate(() => { const l = document.querySelector('#mcfeed .feedcards'); return [getComputedStyle(l).display !== 'none', l.getBoundingClientRect().height > 0, document.querySelector('#mcfeednote').textContent]; });
+  // B4: a star with no catalogue planets.
+  await p.evaluate(() => mcBrush('Nowhere star', 'test')); await p.waitForTimeout(300);
+  r.b4 = await p.evaluate(() => [document.querySelector('#mcsysnote').textContent, document.querySelector('#mcsys').hidden, document.querySelector('.mcpick').hidden]);
+  await p.evaluate(() => mcBrush('pi Men', 'test')); await p.waitForTimeout(300);
+  r.b4back = await p.evaluate(() => [document.querySelector('#mcsysnote').hidden, document.querySelector('#mcsys').hidden]);
+  // B6: Enter on Hide moves focus to its Show button; numbers count shown panes; Ctrl+Alt+N and Alt+← work.
+  await p.focus('#mcp-sky [data-mc="hide"]'); await p.keyboard.press('Enter'); await p.waitForTimeout(200);
+  r.b6a = await p.evaluate(() => [document.activeElement.dataset.mcshow, document.activeElement === document.body]);
+  r.b6b = await p.evaluate(() => [...document.querySelectorAll('.mcpane')].map(x => x.querySelector('.mcnum').textContent));
+  await p.keyboard.press('Control+Alt+Digit2'); r.ctrlalt = await p.evaluate(() => document.activeElement.id);
+  await p.keyboard.press('Alt+ArrowLeft'); r.altLeft = await p.evaluate(() => location.hash);
+  for (const id of ['galaxy', 'lc', 'cat', 'sys', 'feed']) { const bt = await p.$(`#mcp-${id} [data-mc="hide"]`); if (await bt.isEnabled()) await bt.click(); }
+  r.oneLeft = await p.evaluate(() => document.querySelectorAll('.mcpane:not([hidden])').length);
+  await p.click('#mcreset'); await p.waitForTimeout(400); r.resetOn = await p.evaluate(() => gx.on);
+  // Drag a title bar onto another pane with real mouse events: they swap.
+  await p.$eval('#mcp-sky', e => e.scrollIntoView({block: 'center'}));
+  const a = await (await p.$('#mcp-sky .mchead h2')).boundingBox(), t = await (await p.$('#mcp-lc .mcbody')).boundingBox();
+  await p.mouse.move(a.x + 20, a.y + a.height / 2); await p.mouse.down(); await p.mouse.move(a.x + 40, a.y + 30, {steps: 5}); await p.mouse.move(t.x + 50, t.y + 50, {steps: 10}); await p.mouse.up(); await p.waitForTimeout(300);
+  r.dnd = await p.evaluate(() => location.hash); await p.click('#mcreset'); await p.waitForTimeout(300);
+  // B3 and B5: a popped Sky window fits its window, sleeps the map, and the main pane catches up when it closes.
+  const [pop] = await Promise.all([c.waitForEvent('page'), p.click('#mcp-sky [data-mc="pop"]')]); await pop.waitForTimeout(2500);
+  r.b5 = await pop.evaluate(() => [document.documentElement.scrollHeight === window.innerHeight, gx.on]);
+  await p.fill('#mcq', 'HD 209458'); await p.waitForTimeout(250); await p.click('[data-mcstar="HD 209458"]'); await p.waitForTimeout(600);
+  await pop.close(); await p.waitForTimeout(1200);
+  r.b3 = await p.evaluate(() => [document.querySelector('#mcsky svg').getAttribute('aria-label').startsWith('HD 209458'), document.querySelector('#mcp-sky .mcpopped').hidden]);
+  // A popped Galaxy window runs the map; the main window's copy sleeps.
+  const [g] = await Promise.all([c.waitForEvent('page'), p.click('#mcp-galaxy [data-mc="pop"]')]); await g.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 30000}); await g.waitForTimeout(600);
+  r.gpop = await g.evaluate(() => [gx.on, document.documentElement.scrollHeight === window.innerHeight]); r.mainOff = await p.evaluate(() => gx.on === false);
+  await g.close();
+  r.tele = await p.evaluate(() => document.querySelector('#mctele').hasAttribute('aria-live') || document.querySelector('#mctele').hasAttribute('role'));
+  // B7: storage blocked: Save says so.
+  const c2 = await b.newContext({ viewport: { width: 1360, height: 900 } }); await c2.addInitScript(() => { Object.defineProperty(window, 'localStorage', {get(){ throw new Error('blocked'); }}); });
+  const q = await c2.newPage(); await q.goto(U + '#/mission'); await q.waitForTimeout(1500); await q.click('#mcsave'); await q.waitForTimeout(200);
+  r.b7 = await q.evaluate(() => document.querySelector('#announce').textContent);
+  r.errs = errs; console.log(JSON.stringify(r)); await b.close();
+})();
+""" % (json.dumps(PLAYWRIGHT), json.dumps(built.resolve().as_uri()), json.dumps(CHROMIUM)))
+    res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=300)
+    assert res.returncode == 0, res.stderr
+    r = json.loads(res.stdout.strip().splitlines()[-1])
+    assert r["errs"] == []
+    assert r["b1"] == [True, True]
+    assert r["b2"][:2] == [True, True] and r["b2"][2].startswith("The feed is the catalogue run's 28 candidates; none is pi Men.")
+    assert r["b4"] == ["Nowhere star is not in the catalogue; there is no system to draw.", True, True] and r["b4back"] == [True, False]
+    assert r["b6a"] == ["sky", False] and r["b6b"] == ["1", "", "2", "3", "4", "5"]
+    assert r["ctrlalt"] == "mcp-lc" and r["altLeft"].startswith("#/mission?panes=galaxy,lc,sky")
+    assert r["oneLeft"] == 1 and r["resetOn"] is True
+    assert r["dnd"].startswith("#/mission?panes=galaxy,lc,sky")
+    assert r["b5"] == [True, False] and r["b3"] == [True, True]
+    assert r["gpop"] == [True, True] and r["mainOff"] is True and r["tele"] is False
+    assert r["b7"] == "This browser does not allow storage; the layout lasts for this visit."

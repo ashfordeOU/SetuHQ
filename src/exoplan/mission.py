@@ -37,9 +37,9 @@ def mission_section(eyebrow: str) -> str:
     grids = "".join(f'<button class="btn" type="button" data-mcgrid="{k}" aria-pressed="false">{e(v)}</button>' for k, v in GRIDS)
     return f"""<header class="headrow mchero">
         <div>{eyebrow}<h1 class="lead-h" id="h-mission" tabindex="-1">Mission Control.</h1>
-        <p>exoplan's views side by side, linked: pick a star in any pane and every pane follows. Drag a pane's title bar onto another to swap them, or use its arrows; pop a pane out into its own window and it stays in step. F6 moves between panes; Alt+1 to Alt+6 jumps to one.</p></div>
+        <p>exoplan's views side by side, linked: pick a star in any pane and every pane follows. Drag a pane's title bar onto another to swap them, or use its arrow buttons (Alt+← and Alt+→ move the focused pane); pop a pane out into its own window and it stays in step. F6 moves between panes; Alt+1 to Alt+6 (or Ctrl+Alt+1 to 6, where Alt+number switches browser tabs) jumps to one.</p></div>
       </header>
-      <div class="mctele mono" id="mctele" role="status" aria-live="polite"></div>
+      <div class="mctele mono" id="mctele"></div>
       <div class="mctoolbar" role="toolbar" aria-label="Layout">
         <div class="segctl" role="group" aria-label="Arrangement">{grids}</div>
         <div class="mchidden" id="mchidden"></div>
@@ -62,7 +62,7 @@ def _pane_body(pid: str) -> str:
         return ('<label class="mcfind"><span class="sr">Find a star</span><input type="search" id="mcq" placeholder="Find a star" autocomplete="off"></label>'
                 '<ul class="mcfound" id="mcfound"></ul><div id="mccat"></div>')
     if pid == "sys":
-        return ('<label class="mcpick"><span>Planet</span><select id="mcsyspick"></select></label>'
+        return ('<p class="mcnote" id="mcsysnote" hidden></p><label class="mcpick"><span>Planet</span><select id="mcsyspick"></select></label>'
                 + system_stage("mcsys", "The selected planet and its star, drawn from stored values."))
     if pid == "feed":
         return '<p class="mcnote" id="mcfeednote"></p><div id="mcfeed"></div>'
@@ -93,7 +93,7 @@ MISSION_CSS = r"""
 .mcbody[hidden]{display:none}
 .mcpane[data-pane="galaxy"] .mcbody{padding:0;overflow:hidden;position:relative}
 .mcpane .gxstage{height:100%;min-height:0;border-radius:0;flex:1}
-.mcpane[data-pane="galaxy"] .mcnote{position:absolute;left:10px;bottom:10px;z-index:7;margin:0;max-width:calc(100% - 20px);padding:6px 10px;border-radius:12px;background:rgba(18,18,20,.85);color:#F5F5F7;font-size:12px}
+.mcpane[data-pane="galaxy"] .mcnote{position:absolute;right:10px;bottom:10px;z-index:7;margin:0;max-width:calc(100% - 20px);padding:6px 10px;border-radius:12px;background:rgba(18,18,20,.85);color:#F5F5F7;font-size:12px}
 .mcpane[data-pane="galaxy"] .mcnote:empty{display:none}
 .mcpane .mxstage{margin:0}
 .mcpane .mxstage .mxcanvas{min-height:220px}
@@ -102,6 +102,7 @@ MISSION_CSS = r"""
 .mccap:empty{display:none}
 .mcpopped{margin:auto;padding:16px;text-align:center;color:var(--ink-2);font-size:13px}
 .mcpopped[hidden]{display:none}
+.mcpick[hidden],.mcpane .mxstage[hidden],.mcnote[hidden]{display:none}
 .mcpopped .btn{min-height:44px;margin-top:8px}
 .mcfind input{width:100%;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
 .mcfound{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
@@ -109,11 +110,13 @@ MISSION_CSS = r"""
 .mccat{display:grid;gap:4px}
 .mcpick{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
 .mcpick select{min-height:44px;padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);max-width:100%}
-.mcpane .feedcards{margin:0}
+.mcpane .feedcards{margin:0;display:grid;gap:8px}
 .mcsel{color:var(--ink);font-weight:600}
 /* A popped-out window: only its pane, full size. */
-body.mcpop .topbar,body.mcpop .skip,body.mcpop .mchero,body.mcpop .mctoolbar,body.mcpop #route-mission>.small,body.mcpop .learnbar{display:none}
-body.mcpop .mcgrid{grid-template-columns:1fr;grid-auto-rows:calc(100vh - 120px)}
+body.mcpop .topbar,body.mcpop .skip,body.mcpop .mchero,body.mcpop .mctoolbar,body.mcpop .mctele,body.mcpop #route-mission>.small,body.mcpop .learnbar{display:none}
+body.mcpop main{padding:8px}
+body.mcpop .mcgrid,body.mcpop .mcgrid[data-grid="focus"]{grid-template-columns:minmax(0,1fr);grid-auto-rows:calc(100vh - 16px)}
+body.mcpop .mcpane,body.mcpop .mcgrid[data-grid="focus"] .mcpane:first-child{grid-column:auto;grid-row:auto}
 body.mcpop .mctools .btn:not([data-mc="close"]){display:none}
 @media (max-width:999.98px){.mcgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* Phone: a stacked list, one pane after another; no pop-out windows. */
@@ -177,7 +180,9 @@ if (mcBC) mcBC.onmessage = e => {
   if (m.t === 'select') mcBrush(m.star, 'remote', true);
   if (m.t === 'hello' && !mc.pop && mcBC) mcBC.postMessage({t: 'select', star: mc.star, from: mc.win});
   if (m.t === 'close' && mc.pop === m.pane) window.close();
-  if (m.t === 'popped' && !mc.pop){ if (m.open) mc.popped.add(m.pane); else mc.popped.delete(m.pane); if (current === 'mission') mcLayout(); }
+  if (m.t === 'popped' && !mc.pop){ if (m.open) mc.popped.add(m.pane); else mc.popped.delete(m.pane);
+    // A pane coming back from its window is redrawn for the star selected now, not the one it left with.
+    if (current === 'mission'){ mcLayout(); if (!m.open && MC_RENDER[m.pane]) (CTM ? ctLoad() : Promise.resolve()).then(() => MC_RENDER[m.pane]()); } }
 };
 
 // ---------- the panes ----------
@@ -215,8 +220,10 @@ const MC_RENDER = {
       : `<p class="mcnote">${esc(mc.star)} is not in the catalogue.</p>`;
   },
   sys(){
-    const ps = mcStarPlanets(mc.star), pick = $('#mcsyspick');
-    if (!ps.length){ pick.innerHTML = ''; return; }
+    const ps = mcStarPlanets(mc.star), pick = $('#mcsyspick'), fig = $('#mcsys'), none = !ps.length;
+    // No planets in the catalogue: say so instead of a blank stage, and stop its loop.
+    $('#mcsysnote').hidden = !none; pick.closest('.mcpick').hidden = none; fig.hidden = none;
+    if (none){ $('#mcsysnote').textContent = `${mc.star} is not in the catalogue; there is no system to draw.`; pick.innerHTML = ''; if (fig._mx) fig._mx.on = false; return; }
     if (mc.sys === null || !ps.includes(mc.sys)) mc.sys = ps[0];
     pick.innerHTML = ps.map(j => `<option value="${j}"${j === mc.sys ? ' selected' : ''}>${esc(ct.P.name[j])}</option>`).join('');
     plSystem($('#mcsys'), mc.sys, current === 'mission' && !mc.popped.has('sys'));
@@ -224,7 +231,9 @@ const MC_RENDER = {
   feed(){
     const tics = Object.entries(D.tic_names || {}).filter(([, n]) => n === mc.star).map(([t]) => t);
     const rows = D.catalog.candidates.filter(x => tics.includes(String(x.tic)));
-    $('#mcfeednote').textContent = rows.length ? `${rows.length} feed entr${rows.length === 1 ? 'y' : 'ies'} for ${mc.star}.` : `No feed entry is for ${mc.star}; the feed's ${D.catalog.candidates.length} entries are below. A TIC with a known name selects its star.`;
+    const named = D.catalog.candidates.some(x => (D.tic_names || {})[String(x.tic)]);
+    $('#mcfeednote').textContent = rows.length ? `${rows.length} feed entr${rows.length === 1 ? 'y' : 'ies'} for ${mc.star}.`
+      : `The feed is the catalogue run's ${D.catalog.candidates.length} candidates; none is ${mc.star}.` + (named ? ' A TIC with a known name selects its star.' : '');
     const all = rows.length ? rows : D.catalog.candidates, shown = all.slice(0, 12);
     $('#mcfeed').innerHTML = feedCards(shown) + (all.length > shown.length ? `<p class="mcnote">${all.length - shown.length} more in <a href="#/explorer">the Explorer ›</a></p>` : '');
   },
@@ -239,11 +248,16 @@ function mcLayout(){
   const v = mc.layout, grid = $('#mcgrid');
   grid.dataset.grid = v.grid;
   for (const p of v.panes) grid.appendChild($('#mcp-' + p));
-  v.panes.forEach((p, k) => { const el = $('#mcp-' + p), hid = v.hidden.includes(p) || (mc.pop && mc.pop !== p), out = mc.popped.has(p) && !mc.pop;
-    el.hidden = hid; el.querySelector('.mcbody').hidden = out; el.querySelector('.mcpopped').hidden = !out; el.querySelector('.mcnum').textContent = String(k + 1); });
+  // Only shown panes are numbered, so the numbers match Alt+N and F6.
+  let n = 0;
+  v.panes.forEach(p => { const el = $('#mcp-' + p), hid = v.hidden.includes(p) || (mc.pop && mc.pop !== p), out = mc.popped.has(p) && !mc.pop;
+    el.hidden = hid; el.querySelector('.mcbody').hidden = out; el.querySelector('.mcpopped').hidden = !out; el.querySelector('.mcnum').textContent = hid ? '' : String(++n); });
+  const last = v.panes.filter(p => !v.hidden.includes(p)).length <= 1;
+  $$('#mcgrid [data-mc="hide"]').forEach(b => { b.disabled = last; b.title = last ? 'One pane always stays shown' : ''; });
   $$('[data-mcgrid]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mcgrid === v.grid)));
   $('#mchidden').innerHTML = v.hidden.map(p => `<button class="btn" type="button" data-mcshow="${p}">Show ${esc(MC_LABEL[p])}</button>`).join('');
   document.body.classList.toggle('mcpop', !!mc.pop);
+  if (typeof gxShown === 'function' && GXM) gxShown(gxWanted());
 }
 function mcMove(p, d){ const a = mc.layout.panes, i = a.indexOf(p), j = i + d; if (j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; mcLayout(); syncMissionURL(true); }
 function mcSwap(p, q){ const a = mc.layout.panes, i = a.indexOf(p), j = a.indexOf(q); if (i < 0 || j < 0 || i === j) return; [a[i], a[j]] = [a[j], a[i]]; mcLayout(); syncMissionURL(true); }
@@ -254,7 +268,11 @@ function renderMission(){
     const b = e.target.closest('[data-mc]'); if (!b) return; const p = b.closest('.mcpane').dataset.pane, act = b.dataset.mc;
     if (act === 'prev') mcMove(p, -1); else if (act === 'next') mcMove(p, 1);
     else if (act === 'focus'){ const a = mc.layout.panes; a.splice(a.indexOf(p), 1); a.unshift(p); mc.layout.grid = 'focus'; mcLayout(); syncMissionURL(true); }
-    else if (act === 'hide'){ mc.layout.hidden.push(p); mcLayout(); syncMissionURL(true); say(`${MC_LABEL[p]} hidden.`); }
+    else if (act === 'hide'){
+      if (mc.layout.panes.filter(x => !mc.layout.hidden.includes(x)).length <= 1){ say('One pane always stays shown.'); return; }
+      mc.layout.hidden.push(p); mcLayout(); syncMissionURL(true); say(`${MC_LABEL[p]} hidden.`);
+      // The hidden pane's Show button takes the focus, so it never falls to the page.
+      const sb = $(`#mchidden [data-mcshow="${p}"]`); if (sb) sb.focus(); }
     else if (act === 'pop') mcPopOut(p);
     else if (act === 'back'){ mc.popped.delete(p); if (mcBC) mcBC.postMessage({t: 'close', pane: p, from: mc.win}); mcLayout(); MC_RENDER[p](); }
   });
@@ -264,8 +282,8 @@ function renderMission(){
   grid.addEventListener('dragleave', e => { const t = e.target.closest('.mcpane'); if (t && !t.contains(e.relatedTarget)) t.classList.remove('drop'); });
   grid.addEventListener('drop', e => { const t = e.target.closest('.mcpane'); if (!t) return; e.preventDefault(); t.classList.remove('drop'); mcSwap(e.dataTransfer.getData('text/plain'), t.dataset.pane); });
   $$('[data-mcgrid]').forEach(b => b.addEventListener('click', () => { mc.layout.grid = b.dataset.mcgrid; mcLayout(); syncMissionURL(true); }));
-  $('#mchidden').addEventListener('click', e => { const b = e.target.closest('[data-mcshow]'); if (!b) return; const p = b.dataset.mcshow; mc.layout.hidden = mc.layout.hidden.filter(x => x !== p); mcLayout(); MC_RENDER[p](); syncMissionURL(true); });
-  $('#mcsave').addEventListener('click', () => { try { const s = getStorage(); if (s) s.setItem(MC_KEY, JSON.stringify({panes: mc.layout.panes, hidden: mc.layout.hidden, grid: mc.layout.grid})); say('Saved as your default layout in this browser.'); } catch (e) { say('This browser does not allow storage; the layout lasts for this visit.'); } });
+  $('#mchidden').addEventListener('click', e => { const b = e.target.closest('[data-mcshow]'); if (!b) return; const p = b.dataset.mcshow; mc.layout.hidden = mc.layout.hidden.filter(x => x !== p); mcLayout(); MC_RENDER[p](); syncMissionURL(true); $('#mcp-' + p).focus(); });
+  $('#mcsave').addEventListener('click', () => { try { const s = getStorage(); if (!s) throw new Error('storage blocked'); s.setItem(MC_KEY, JSON.stringify({panes: mc.layout.panes, hidden: mc.layout.hidden, grid: mc.layout.grid})); say('Saved as your default layout in this browser.'); } catch (e) { say('This browser does not allow storage; the layout lasts for this visit.'); } });
   $('#mccopy').addEventListener('click', () => { const url = location.href.split('#')[0] + '#/mission' + (encodeMission(mc.layout) ? '?' + encodeMission(mc.layout) : ''); try { navigator.clipboard.writeText(url).then(() => say('Link copied.'), () => say(url)); } catch (e) { say(url); } });
   $('#mcreset').addEventListener('click', () => { mc.layout = mcDefault(); mcLayout(); mcRenderPanes(); syncMissionURL(true); });
   // Selecting a star: the catalogue pane's finder, the feed (a TIC with a name), the system view's planet.
@@ -282,7 +300,11 @@ function renderMission(){
     const shown = mc.layout.panes.filter(p => !$('#mcp-' + p).hidden);
     let k = -1;
     if (e.key === 'F6'){ const at = shown.indexOf((document.activeElement.closest('.mcpane') || {}).dataset?.pane); k = (at + (e.shiftKey ? -1 : 1) + shown.length) % shown.length; if (at < 0 && e.shiftKey) k = shown.length - 1; }
-    else if (e.altKey && /^Digit[1-9]$/.test(e.code)) k = Number(e.code.slice(5)) - 1;
+    else if (e.altKey && /^Digit[1-9]$/.test(e.code)) k = Number(e.code.slice(5)) - 1;   // Alt+N, or Ctrl+Alt+N
+    else if (e.altKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')){
+      const pane = document.activeElement.closest('.mcpane'); if (!pane) return;
+      e.preventDefault(); mcMove(pane.dataset.pane, e.key === 'ArrowLeft' ? -1 : 1); pane.focus(); say(`${MC_LABEL[pane.dataset.pane]} moved ${e.key === 'ArrowLeft' ? 'earlier' : 'later'}.`); return;
+    }
     if (k < 0 || k >= shown.length) return;
     e.preventDefault(); const el = $('#mcp-' + shown[k]); el.focus(); el.scrollIntoView({block: 'nearest'}); say(`${MC_LABEL[shown[k]]} pane.`);
   });

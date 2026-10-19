@@ -432,6 +432,8 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .topbar .nav{order:3;flex:1 1 100%;min-width:0}
   .nav ul{overflow-x:auto;scrollbar-width:none;justify-content:space-between}
   .nav ul::-webkit-scrollbar{display:none}
+  /* The strip scrolls sideways: its right edge fades so it reads as scrollable. */
+  .nav ul{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 36px),transparent)}
   .nav a{min-height:44px;padding:0 12px;font-size:13px}
   .topmeta .cur{display:none}
   .themebtn .themelbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -1007,7 +1009,7 @@ body.learning .ctscroll{height:min(calc(64vh - 76px),640px)}
 .mcbody[hidden]{display:none}
 .mcpane[data-pane="galaxy"] .mcbody{padding:0;overflow:hidden;position:relative}
 .mcpane .gxstage{height:100%;min-height:0;border-radius:0;flex:1}
-.mcpane[data-pane="galaxy"] .mcnote{position:absolute;left:10px;bottom:10px;z-index:7;margin:0;max-width:calc(100% - 20px);padding:6px 10px;border-radius:12px;background:rgba(18,18,20,.85);color:#F5F5F7;font-size:12px}
+.mcpane[data-pane="galaxy"] .mcnote{position:absolute;right:10px;bottom:10px;z-index:7;margin:0;max-width:calc(100% - 20px);padding:6px 10px;border-radius:12px;background:rgba(18,18,20,.85);color:#F5F5F7;font-size:12px}
 .mcpane[data-pane="galaxy"] .mcnote:empty{display:none}
 .mcpane .mxstage{margin:0}
 .mcpane .mxstage .mxcanvas{min-height:220px}
@@ -1016,6 +1018,7 @@ body.learning .ctscroll{height:min(calc(64vh - 76px),640px)}
 .mccap:empty{display:none}
 .mcpopped{margin:auto;padding:16px;text-align:center;color:var(--ink-2);font-size:13px}
 .mcpopped[hidden]{display:none}
+.mcpick[hidden],.mcpane .mxstage[hidden],.mcnote[hidden]{display:none}
 .mcpopped .btn{min-height:44px;margin-top:8px}
 .mcfind input{width:100%;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
 .mcfound{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
@@ -1023,11 +1026,13 @@ body.learning .ctscroll{height:min(calc(64vh - 76px),640px)}
 .mccat{display:grid;gap:4px}
 .mcpick{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
 .mcpick select{min-height:44px;padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);max-width:100%}
-.mcpane .feedcards{margin:0}
+.mcpane .feedcards{margin:0;display:grid;gap:8px}
 .mcsel{color:var(--ink);font-weight:600}
 /* A popped-out window: only its pane, full size. */
-body.mcpop .topbar,body.mcpop .skip,body.mcpop .mchero,body.mcpop .mctoolbar,body.mcpop #route-mission>.small,body.mcpop .learnbar{display:none}
-body.mcpop .mcgrid{grid-template-columns:1fr;grid-auto-rows:calc(100vh - 120px)}
+body.mcpop .topbar,body.mcpop .skip,body.mcpop .mchero,body.mcpop .mctoolbar,body.mcpop .mctele,body.mcpop #route-mission>.small,body.mcpop .learnbar{display:none}
+body.mcpop main{padding:8px}
+body.mcpop .mcgrid,body.mcpop .mcgrid[data-grid="focus"]{grid-template-columns:minmax(0,1fr);grid-auto-rows:calc(100vh - 16px)}
+body.mcpop .mcpane,body.mcpop .mcgrid[data-grid="focus"] .mcpane:first-child{grid-column:auto;grid-row:auto}
 body.mcpop .mctools .btn:not([data-mc="close"]){display:none}
 @media (max-width:999.98px){.mcgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* Phone: a stacked list, one pane after another; no pop-out windows. */

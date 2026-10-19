@@ -1097,6 +1097,8 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .topbar .nav{order:3;flex:1 1 100%;min-width:0}
   .nav ul{overflow-x:auto;scrollbar-width:none;justify-content:space-between}
   .nav ul::-webkit-scrollbar{display:none}
+  /* The strip scrolls sideways: its right edge fades so it reads as scrollable. */
+  .nav ul{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 36px),transparent)}
   .nav a{min-height:44px;padding:0 12px;font-size:13px}
   .topmeta .cur{display:none}
   .themebtn .themelbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -2219,7 +2221,7 @@ function show(r, moveFocus){
   if (moveFocus){ const h = $('#route-' + r + ' h1'); if (h) h.focus({preventScroll: true}); window.scrollTo(0, 0); }
   if (r === 'candidates') fitFrame();
   missionShown(r === 'mission');
-  gxShown(r === 'galaxy' || (r === 'mission' && mc.layout && !mc.layout.hidden.includes('galaxy')));
+  gxShown(gxWanted());
   mxShown(r === 'methods');
   txSysShown(r === 'transit');
   plShown(r);
@@ -2261,7 +2263,7 @@ function go(p, moveFocus){
   if (p.route === 'catalogue' && CTM) syncCatURL(false);
   if (p.route === 'planet') plShow(p.params.get('id') || '');
   if (p.route === 'star') stShow(p.params.get('id') || '');
-  if (p.route === 'mission'){ applyMission(decodeMission(p.params)); gxShown(!mc.layout.hidden.includes('galaxy')); syncMissionURL(false); }
+  if (p.route === 'mission'){ applyMission(decodeMission(p.params)); gxShown(gxWanted()); syncMissionURL(false); }
   learnVisit(p);
   if (p.route === 'transit') openTransit(p.params.get('dip'));
   if (p.route === 'candidates') openDip(p.params.get('dip'), p.params.get('section'));

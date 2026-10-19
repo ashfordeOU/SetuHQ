@@ -1267,6 +1267,13 @@ function gxFrame(t){
   if (anim || gx.dirty) gx.raf = requestAnimationFrame(gxFrame);
   else gx.last = 0;
 }
+// The map runs on its own page, and in Mission Control while its pane is shown (in this window, or as this
+// popped-out window); anywhere else it sleeps.
+function gxWanted(){
+  if (current === 'galaxy') return true;
+  if (current !== 'mission' || typeof mc === 'undefined' || !mc.layout || mc.layout.hidden.includes('galaxy')) return false;
+  return mc.pop ? mc.pop === 'galaxy' : !mc.popped.has('galaxy');
+}
 function gxShown(on){
   gx.on = on;
   if (on && gx.ready){ gxResize(); gxKick(); }
@@ -1295,7 +1302,7 @@ function syncGalaxyURL(push){ if (current !== 'galaxy' || !gx.view) return; cons
 function renderGalaxy(){
   if (!GXM) return;
   const note = $('#gxload'); note.hidden = false;
-  gxLoad().then(() => { note.hidden = true; gxStart(); gxShown(current === 'galaxy'); }).catch(() => {
+  gxLoad().then(() => { note.hidden = true; gxStart(); gxShown(gxWanted()); }).catch(() => {
     note.textContent = 'The map data (assets/data/galaxy.json) could not be loaded here. The table below lists the nearest systems, and the CSV holds every plotted planet.';
   });
 }
