@@ -366,7 +366,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
       <div class="gxnotes">
         <p class="note"><b>{e(source_line(g))}</b> <a href="{e(g['url'])}" rel="noopener">{e(g['url'])}</a>.{note} {e(g['definition'])} The list includes {g['exocomets']} entries exoplanet.eu names as exocomets. {c['dropped_no_distance']:,} of its {c['rows']:,} planets have no stored distance and are not plotted.</p>
         <p class="note"><b>Not plotted.</b> The feed's stars ({e(feed)}) have no stored positions, so they are not on this map. {e(star['name'])} is placed from the dataset, like every other star; {e(star['planet'] or star['name'])} is the planet exoplan's run {('recovered') if star['planet'] else 'reviewed'}.</p>
-        <p class="note"><b>How to read it.</b> Positions: heliocentric galactic coordinates from RA, Dec (J2000) and distance; x points to the Galactic centre and the grid is the Galactic plane. Axis ticks are in light-years (1 pc = {LY_PER_PC:.3f} ly). Colour: the detection method of the earliest planet shown for each star ({e(g['method_rule'])}). Size: planets per star. Microlensing distances come from models of each event and are uncertain. The bias in the cloud is where surveys looked and what each method can see, not where planets are. The Milky Way is an artist's impression drawn by the page, not data; the Sun's position in it is approximate.</p>
+        <p class="note"><b>How to read it.</b> Positions: heliocentric galactic coordinates from RA, Dec (J2000) and distance; x points to the Galactic centre and the grid is the Galactic plane. Axis ticks are in light-years (1 pc = {LY_PER_PC:.3f} ly). Colour: the detection method of the earliest planet shown for each star ({e(g['method_rule'])}). Size: planets per star. Microlensing distances come from models of each event and are uncertain (<a href="#/methods?ch=microlensing">how microlensing works</a>). The bias in the cloud is where surveys looked and what each method can see, not where planets are. The Milky Way is an artist's impression drawn by the page, not data; the Sun's position in it is approximate.</p>
         <p class="note">{e(CLASS_RULE)}</p>
       </div>
       {coverage_panel(cov, g)}
@@ -1017,6 +1017,7 @@ function gxBuildLabels(){
     el.dataset.stop = k + 1;
     el.style.borderLeft = `3px solid ${G.method_colour[nt.method]}`;
     el.addEventListener('click', () => { gxSelect(h, i); gxFly(gxHostCam(h), 1800); });
+    el.title = 'Select; the host card opens its system view';
     const ring = gxEl('gxring' + (nt.exoplan ? ' ex' : ''));
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line'); $('#gxleaders').appendChild(line);
     return {nt, k, el, ring, line, w: 0, h: 0};
@@ -1170,11 +1171,12 @@ function gxSelect(h, planet){
   gx.hud = null; gx.cards = null;
   if (h < 0){ card.hidden = true; gxKick(); return; }
   const ps = gxHostPlanets(h), star = G.star;
+  const lensNote = ps.some(i => G.methods[P.m[i]] === 'microlensing') ? '<p>Found by microlensing; the distance comes from a model of the event. <a href="#/methods?ch=microlensing">How microlensing works ›</a></p>' : '';
   const exo = star.host === h ? `<p>exoplan's run reviewed this star's TESS light curve: ${esc(star.planet || '')} is the planet it recovered. <a href="#/transit${star.lead_dip ? '?dip=' + encodeURIComponent(star.lead_dip) : ''}">Open the Transit case ›</a></p>` : '';
   card.innerHTML = `<button class="btn x" type="button" aria-label="Close">×</button><h3>${esc(H.n[h])}</h3>
     <p class="mono">${gxLy(H.d[h])} ly · ${gxFmt(H.d[h], 3)} pc · RA ${gxFmt(H.ra[h], 3)}° Dec ${gxFmt(H.dec[h], 3)}° · V ${H.v[h] == null ? '—' : gxSig(H.v[h])}</p>
     <p>${G.host_n[h]} planet${G.host_n[h] === 1 ? '' : 's'} in ${esc(G.source_short)}${G.host_n[h] > gx.per[h] ? `, ${gx.per[h]} shown by the filters` : ''}.</p>
-    <ul>${ps.map(i => `<li><button type="button" data-gxp="${i}" aria-pressed="${i === gx.selPlanet}">${esc(P.n[i])}<span>${P.y[i] || '—'} · ${esc(gxMethod(i))} · ${esc(gxClass(i))}</span></button></li>`).join('')}</ul>${exo}`;
+    <ul>${ps.map(i => `<li><button type="button" data-gxp="${i}" aria-pressed="${i === gx.selPlanet}">${esc(P.n[i])}<span>${P.y[i] || '—'} · ${esc(gxMethod(i))} · ${esc(gxClass(i))}</span></button>${typeof MX !== 'undefined' && MX && MX.examples[P.n[i]] ? `<button class="btn gxsys" type="button" data-gxsys="${esc(P.n[i])}">Open the system view ›</button>` : ''}</li>`).join('')}</ul>${exo}${lensNote}`;
   card.hidden = false;
   gxKick();
 }
@@ -1331,6 +1333,7 @@ function gxStart(){
   });
   $('#gxcard').addEventListener('click', e => {
     if (e.target.closest('.x')){ gxSelect(-1); cv.focus({preventScroll: true}); return; }
+    const sys = e.target.closest('button[data-gxsys]'); if (sys){ mxOpenSystem(sys.dataset.gxsys, sys); return; }
     const b = e.target.closest('button[data-gxp]'); if (!b) return;
     gxSelect(gx.sel, Number(b.dataset.gxp)); const nb = $(`#gxcard button[data-gxp="${b.dataset.gxp}"]`); if (nb) nb.focus();
   });

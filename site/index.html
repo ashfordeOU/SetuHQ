@@ -670,6 +670,122 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .gxcall{transition:none}
 }
 
+/* ---------- methods ---------- */
+#route-methods{grid-template-columns:minmax(0,1fr)}
+#route-methods>*{min-width:0}
+.mxtoc ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.mxtoc a{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink-2);text-decoration:none;font-size:13px;font-weight:500}
+.mxtoc a .mono{font-size:11px;color:var(--ink-3)}
+.mxtoc a[aria-current="step"]{background:var(--seg-bg);color:var(--seg-ink);border-color:transparent}
+.mxtoc a[aria-current="step"] .mono{color:inherit;opacity:.7}
+.mxch{display:grid;gap:16px}
+.mxch[hidden]{display:none}
+.mxch>header h2{margin:0;font:600 clamp(26px,3.4vw,40px)/1.08 var(--sans);letter-spacing:-.02em}
+.mxch>header .eyebrow{margin:0 0 6px}
+.mxlede{margin:0;max-width:78ch;font-size:17px;line-height:1.55;color:var(--ink)}
+.mxstage{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px;min-width:0}
+.mxch{grid-template-columns:minmax(0,1fr)}
+.mxch>*{min-width:0}
+.mxcanvas{position:relative;height:clamp(300px,52vh,520px);border-radius:24px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.08)}
+.mxstage.tall .mxcanvas{height:clamp(420px,66vh,640px)}
+.mxcanvas canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mxbadges{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0}
+.mxlabel{padding:4px 10px;border-radius:999px;font:600 11px/1.4 var(--sans);letter-spacing:.02em;border:1px solid}
+.mxlabel.ill{color:var(--ink-2);border-color:var(--line-3)}
+.mxlabel.model{color:var(--amber);border-color:var(--amber)}
+.mxlabel.data{color:var(--green);border-color:var(--green)}
+.mxexag{min-width:0;padding:4px 10px;border-radius:10px;font:500 11px/1.4 var(--mono);color:var(--ink);background:var(--panel-2);border:1px solid var(--line-2)}
+.mxexag[hidden],.mxexag:empty{display:none}
+.mxctl{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.mxctl .btn{min-height:44px}
+.mxctl label{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
+.mxctl select{min-height:44px;padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
+.mxctl input[type=range]{min-height:44px;accent-color:#0A84FF}
+.mxscrub{flex:1 1 200px;min-width:0}
+.mxdesc{font-size:13px;color:var(--ink-3);max-width:90ch}
+.mxtext{display:grid;gap:12px;max-width:100ch}
+.mxtext h3,.mxcheck h3{margin:6px 0 0;font-size:18px}
+.mxtext p{margin:0;line-height:1.6}
+.mxnums{width:100%;border-collapse:collapse;font-size:13px}
+.mxnums th,.mxnums td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.mxnums .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mxnums td:last-child{color:var(--ink-3)}
+.mxcount{margin:0}
+.mxyears{margin:0;max-width:520px}
+.mxyears svg{width:100%;height:90px;display:block}
+.mxyrs{margin:0;display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--ink-3)}
+.mxyears figcaption{font-size:12px;color:var(--ink-3)}
+.mxladder{position:relative;height:150px;margin:8px 0 0;border-top:1px solid var(--line)}
+.mxladder div{position:absolute;left:var(--x);top:0;height:100%}
+.mxladder div i{position:absolute;left:-1px;top:0;width:2px;height:24px;background:var(--cyan)}
+.mxladder div:nth-child(odd) span{top:28px}
+.mxladder div:nth-child(even) span{top:76px}
+.mxladder .mxaxis span{position:static;transform:none}
+.mxladder div span{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-size:12px;color:var(--ink-2)}
+.mxladder div.l span{transform:none}
+.mxladder div.r span{transform:translateX(-100%)}
+.mxladder .mxaxis{position:absolute;left:0;right:0;bottom:0;margin:0;display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--ink-3)}
+.mxsteps{margin:0;padding-left:20px;display:grid;gap:10px;line-height:1.55}
+.mxcontrast{position:relative;height:440px;margin:6px 0;padding-left:64px;border-left:1px solid var(--line)}
+.mxcontrast .ax span{position:absolute;left:0;top:var(--y);transform:translateY(-50%);font:500 11px var(--mono);color:var(--ink-3)}
+.mxcontrast ol{list-style:none;margin:0;padding:0}
+.mxcontrast li{position:absolute;left:64px;right:0;top:var(--y);transform:translateY(-50%);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:12px;color:var(--ink-3);padding-left:14px;border-left:3px solid var(--cyan)}
+.mxcontrast li b{color:var(--ink);font-size:13px}
+.mxcontrast li .mono{color:var(--ink-2)}
+.mxcontrast li.goal,.mxcontrast li.requirement{border-left-style:dashed}
+.mxcontrast li.target{border-left-color:var(--amber)}
+.mxmols{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.mxmol{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--glass-2)}
+.mxmol.on{border-color:var(--cyan)}
+.mxmol h4{margin:0 0 6px;font-size:16px}
+.mxmol h4 span{font-weight:500;color:var(--ink-3);font-size:13px;margin-left:6px}
+.mxmol dl{margin:0;display:grid;gap:4px;font-size:12.5px}
+.mxmol dt{color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.mxmol dd{margin:0 0 4px}
+.mxmol ul{margin:0;padding-left:16px}
+.mxcheck{display:grid;gap:10px;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.mxcheck ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.mxcheck p{margin:0}
+.mxcases{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.mxcases article{border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.mxcases h4{margin:0 0 6px}
+.mxcases p{font-size:13px;line-height:1.55}
+.mxsrc{margin:0;padding-left:18px;display:grid;gap:2px;font-size:12.5px}
+.mxsrc a{display:inline-flex;align-items:center;min-height:32px}
+.mxsources summary{display:flex;align-items:center;min-height:44px;cursor:pointer;font-weight:600}
+.mxnav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px}
+.mxnav .btn{min-height:44px}
+.mxtimeline{list-style:none;margin:0;padding:0 0 0 18px;border-left:1px solid var(--line-2);display:grid;gap:14px}
+.mxpaper{position:relative;display:grid;grid-template-columns:64px 1fr;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:var(--glass-2)}
+.mxpaper::before{content:"";position:absolute;left:-24px;top:22px;width:11px;height:11px;border-radius:50%;background:var(--cyan)}
+.mxpaper.own{border-color:var(--amber)}
+.mxpaper.own::before{background:var(--amber)}
+.mxpaper .yr{font-size:18px;font-weight:600;color:var(--ink)}
+.mxpaper h4{margin:2px 0 4px;font:600 15px/1.35 var(--sans)}
+.mxpaper p{margin:0;font-size:13px;line-height:1.5}
+.mxpaper .au{color:var(--ink-3);font-size:12px}
+.mxpaper .why{color:var(--ink-2)}
+.mxpaper .links{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px}
+.mxpaper .links a{display:inline-flex;align-items:center;min-height:44px}
+.mxsheet{width:min(920px,calc(100vw - 24px));max-height:calc(100vh - 24px);padding:16px;border-radius:24px;border:1px solid var(--line-2);background:var(--bg-2);color:var(--ink)}
+.mxsheet::backdrop{background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.mxsheethead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.mxsheethead h2{margin:0;font-size:20px}
+.mxsheethead .btn{min-height:44px}
+.mxsheetnote{margin:8px 0 0;font-size:12.5px;color:var(--ink-3)}
+.gxsys{margin-top:4px}
+@media (max-width:699.98px){
+  .mxcanvas{height:min(62vh,440px)}
+  .mxstage.tall .mxcanvas{height:min(76vh,560px)}
+  .mxtoc ol{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .mxtoc ol::-webkit-scrollbar{display:none}
+  .mxtoc a{white-space:nowrap}
+  .mxpaper{grid-template-columns:1fr}
+  .mxcontrast{height:520px;padding-left:52px}
+  .mxcontrast li{left:52px}
+  .mxsrc a{min-height:44px}
+}
+
 .sitelinks{display:flex;flex-wrap:wrap;gap:8px 18px;border-top:1px solid var(--line);padding-top:22px;font-size:14px}
 .sitelinks a{display:inline-flex;align-items:center;min-height:44px}
 .landing .route{display:grid}</style></head>
@@ -678,7 +794,7 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 <a class="skip" href="#content">Skip to the content</a>
 <header class="topbar">
   <a class="brand" href="./" aria-label="exoplan, home"><svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="10" fill="none" stroke="currentColor" stroke-opacity=".5"/><circle cx="11" cy="11" r="3.5" fill="#FFB340"/><circle cx="19" cy="7.5" r="1.8" fill="currentColor"/></svg><span>exoplan</span></a>
-  <nav class="nav" aria-label="Sections"><ul><li><a href="app/#/overview" data-route="overview" aria-current="page">Overview</a></li><li><a href="app/#/sky" data-route="sky">Sky</a></li><li><a href="app/#/galaxy" data-route="galaxy">Galaxy</a></li><li><a href="app/#/transit" data-route="transit">Transit</a></li><li><a href="app/#/explorer" data-route="explorer">Explorer</a></li><li><a href="app/#/sentinels" data-route="sentinels">Sentinels</a></li></ul></nav>
+  <nav class="nav" aria-label="Sections"><ul><li><a href="app/#/overview" data-route="overview" aria-current="page">Overview</a></li><li><a href="app/#/sky" data-route="sky">Sky</a></li><li><a href="app/#/galaxy" data-route="galaxy">Galaxy</a></li><li><a href="app/#/transit" data-route="transit">Transit</a></li><li><a href="app/#/explorer" data-route="explorer">Explorer</a></li><li><a href="app/#/sentinels" data-route="sentinels">Sentinels</a></li><li><a href="app/#/methods" data-route="methods">Methods</a></li></ul></nav>
   <div class="topmeta"><span class="mono">pi Men · TESS Sector 1</span><button class="btn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark (default). Change theme"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg><span class="themelbl">Dark (default)</span></button></div>
 </header>
 <main id="main"><div id="content" tabindex="-1">

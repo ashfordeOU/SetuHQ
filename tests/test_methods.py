@@ -1,0 +1,304 @@
+import json
+import math
+import random
+import re
+import shutil
+import subprocess
+from pathlib import Path
+
+import pytest
+
+from exoplan import docket as docket_mod
+from exoplan import methods as M
+from exoplan.app import APP_JS, build_app
+from exoplan.galaxy import DEFAULT_COVERAGE, galaxy_data, load_coverage
+
+from test_story import run_dir  # noqa: F401  (fixture)
+
+PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
+CHROMIUM = "/opt/pw-browsers/chromium"
+HAVE_NODE = shutil.which("node") is not None
+HAVE_BROWSER = HAVE_NODE and Path(PLAYWRIGHT).exists() and Path(CHROMIUM).exists()
+EX = M.load_examples()
+
+
+@pytest.fixture(autouse=True)
+def archive_unreachable(monkeypatch):
+    def unreachable(*args, **kwargs):
+        raise ConnectionError("archive unreachable (test)")
+
+    monkeypatch.setattr(docket_mod, "query_archive", unreachable)
+
+
+# ---------- physics against closed forms and published values ----------
+def test_rv_semi_amplitude_matches_published_values():
+    peg = EX["planets"]["51 Peg b"]
+    k = M.rv_semi_amplitude(peg["orbital_period"], peg["mass_sini"], peg["star_mass"], peg["eccentricity"])
+    assert k == pytest.approx(peg["k"], rel=0.05) and k == pytest.approx(56, rel=0.05)  # published ≈ 56 m/s
+    assert M.rv_semi_amplitude(11.862 * 365.25, 1.0, 1.0, 0.049) == pytest.approx(12.5, rel=0.05)  # Jupiter–Sun
+    assert M.rv_semi_amplitude(365.25, M.GM_EARTH / M.GM_JUP, 1.0) == pytest.approx(0.089, rel=0.05)  # Earth–Sun
+    # K scales as sin i and as 1/√(1 − e²).
+    assert M.rv_semi_amplitude(10, 1, 1, 0, 0.5) == pytest.approx(0.5 * M.rv_semi_amplitude(10, 1, 1))
+    assert M.rv_semi_amplitude(10, 1, 1, 0.6) == pytest.approx(M.rv_semi_amplitude(10, 1, 1) / 0.8)
+
+
+def test_barycentre_and_kepler_equation():
+    a_star, a_pl = M.barycentre_offsets(1.0, 1.0, 1.0)
+    q = M.GM_JUP / (M.GM_SUN + M.GM_JUP)
+    assert a_star == pytest.approx(q) and a_pl == pytest.approx(1 - q) and a_star + a_pl == pytest.approx(1)
+    assert M.barycentre_offsets(5.204 * M.AU, 1.0, 1.0)[0] / M.R_SUN == pytest.approx(1.07, abs=0.01)  # just outside the Sun
+    assert M.barycentre_offsets(M.AU, M.GM_EARTH / M.GM_JUP, 1.0)[0] < M.R_SUN  # Earth's lies inside
+    rng = random.Random(1)
+    for _ in range(500):
+        e, Mean = rng.uniform(0, 0.97), rng.uniform(0, 2 * math.pi)
+        E = M.kepler_E(Mean, e)
+        assert E - e * math.sin(E) == pytest.approx(Mean, abs=1e-10)
+    # Star, barycentre and planet stay on one line, on opposite sides, at every time.
+    for _ in range(200):
+        t, e, mp = rng.random(), rng.uniform(0, 0.9), rng.uniform(0.001, 20)
+        (px, py), (sx, sy) = M.orbit_positions(t, 1.0, 1.0, e, mp, 1.0)
+        assert px * sy - py * sx == pytest.approx(0, abs=1e-12) and px * sx + py * sy <= 0
+        qq = mp * M.GM_JUP / (M.GM_SUN + mp * M.GM_JUP)
+        assert math.hypot(sx, sy) / (math.hypot(sx, sy) + math.hypot(px, py)) == pytest.approx(qq)
+    # Fastest at periastron: equal time steps cover more angle there.
+    d_peri = M.true_anomaly(0.01, 0.6) - M.true_anomaly(0, 0.6)
+    d_apo = M.true_anomaly(math.pi + 0.01, 0.6) - M.true_anomaly(math.pi, 0.6)
+    assert d_peri > 5 * d_apo
+
+
+def test_transit_model_and_durations():
+    pm = EX["planets"]["pi Men c"]
+    u1, u2 = M.ld_coeffs(pm["star_teff"])
+    assert (u1, u2) == (pytest.approx(0.333, abs=0.003), pytest.approx(0.228, abs=0.003))  # Claret 2017 near 6037 K
+    k = 0.01703
+    # Without limb darkening the depth is exactly k²; with it, a central crossing gives k² I(0)/<I>.
+    assert 1 - M.transit_flux(0, k, 0, 0) == pytest.approx(k * k, rel=1e-9)
+    assert 1 - M.transit_flux(0, k, u1, u2) == pytest.approx(k * k / (1 - u1 / 3 - u2 / 6), rel=1e-9)
+    assert (1 - M.transit_flux(0.59, k, 0.33, 0.23)) * 1e6 == pytest.approx(315, abs=3)  # atlas C3
+    assert M.transit_flux(1 + k + 1e-6, k, u1, u2) == 1.0
+    # Depth = (Rp/R★)² from the stored radii (no limb darkening).
+    kr = pm["radius"] * M.R_JUP / (pm["star_radius"] * M.R_SUN)
+    assert 1 - M.transit_flux(0.3, kr, 0, 0) == pytest.approx(kr ** 2, rel=1e-9)
+    t14, t23 = M.transit_durations(6.2679, 13.38, 0.01703, 0.59, 87.456)
+    assert t14 * 24 == pytest.approx(2.953, rel=0.01) and t23 * 24 == pytest.approx(2.82, abs=0.01)
+    assert M.overlap_area(0.5, 0.1) == pytest.approx(math.pi * 0.01) and M.overlap_area(2, 0.1) == 0
+
+
+def test_microlensing_astrometry_atmospheres_and_doppler():
+    assert M.paczynski(1.0) == pytest.approx(1.342, abs=5e-4)
+    assert M.paczynski(0.1) == pytest.approx(10.04, abs=0.01)
+    assert M.einstein_angle_mas(0.3, 0.125) == pytest.approx(0.55, abs=0.01)
+    assert M.astrometric_signature_uas(1, 1, 5.204, 10) == pytest.approx(497, abs=2)
+    assert M.astrometric_signature_uas(M.GM_EARTH / M.GM_JUP, 1, 1, 10) == pytest.approx(0.30, abs=0.01)
+    w = EX["planets"]["WASP-39 b"]
+    assert M.scale_height_m(1116, 2.3, w["mass"], w["radius"]) / 1e3 == pytest.approx(930, rel=0.03)
+    assert M.depth_per_scale_height(1116, 2.3, w["mass"], w["radius"], w["star_radius"]) * 1e6 == pytest.approx(440, rel=0.03)
+    assert M.doppler_ratio(55.77) == pytest.approx(1.86e-7, rel=0.01)
+    assert M.transit_probability(1.0, 1.0) == pytest.approx(0.00465, rel=0.01)
+
+
+def test_band_positions_match_the_cited_table():
+    bands = {(m, l) for m, l, _ in M.BANDS}
+    for expected in (("Na", 0.589), ("K", 0.767), ("H₂O", 1.4), ("H₂O", 1.9), ("H₂O", 2.7), ("CO₂", 4.26), ("CO", 4.67)):
+        assert expected in bands
+    assert "false colour: infrared is invisible to the eye" in M.METHODS_JS
+
+
+def test_teff_colour_and_spectral_class():
+    hot, sun, cool = M.teff_rgb(20000), M.teff_rgb(5772), M.teff_rgb(3000)
+    assert hot[2] == 255 and hot[0] < hot[2]  # blue-white
+    assert cool[0] == 255 and cool[2] < 140  # orange-red
+    assert sun[0] == 255 and min(sun) > 225  # near white, slightly warm
+    assert min(M.teff_rgb(6500)) > 245  # D65 white point
+    assert [M.spectral_class(t)[0] for t in (30000, 15000, 9000, 7000, 6037, 5300, 3900, 2600)] == list("BBAFGKMM")
+    assert M.spectral_class(6037) == ("G", "G0V")
+
+
+# ---------- the JavaScript twins give the same numbers ----------
+def _js_prelude(ex):
+    js = M.METHODS_JS[:M.METHODS_JS.index("// ---------- stages")]
+    meta = {"claret": M.CLARET_TESS, "mamajek": M.MAMAJEK, "examples": ex}
+    return f"const D = {{methods: {json.dumps(meta)}}};\n{js}\n"
+
+
+@pytest.mark.skipif(not HAVE_NODE, reason="node is not installed")
+def test_js_physics_twins_match_python(tmp_path):
+    peg = EX["planets"]["51 Peg b"]
+    script = _js_prelude(EX["planets"]) + """
+const out = {};
+out.K = [mxK(4.2307966, 0.46, 1.03, 0.0069, 1), mxK(11.862 * 365.25, 1, 1, 0.049, 1), mxK(365.25, 3.986004e14 / 1.2668653e17, 1, 0, 1)];
+out.E = [mxKeplerE(1.234, 0.3), mxKeplerE(5.5, 0.9)];
+out.A = mxPacz(1); out.ld = mxLd(6037); out.flux = [mxFlux(0, 0.01703, 0.33, 0.23), mxFlux(0.59, 0.01703, 0.33, 0.23), mxFlux(1.0, 0.1, 0.33, 0.23)];
+out.rgb = [mxTeffRGB(3000), mxTeffRGB(5772), mxTeffRGB(20000)]; out.cls = [mxClass(6037), mxClass(3000)];
+out.col = []; for (let i = 0; i < 100; i++){ const t = i / 100, B = mxBodies(t, 0.6, 0.001, 0.7); out.col.push([B.star[0] * B.planet[1] - B.star[1] * B.planet[0], B.star[0] * B.planet[0] + B.star[1] * B.planet[1], Math.hypot(...B.star) / (Math.hypot(...B.star) + Math.hypot(...B.planet))]); }
+out.scale = [mxWobbleScale(0.000954, 150, 5.204, 1), mxWobbleScale(3e-6, 150, 1, 1), mxWobbleScale(0.3, 150, 1, 1), mxWobbleScale(0.001, 0, 1, 1)];
+console.log(JSON.stringify(out));"""
+    f = tmp_path / "t.js"
+    f.write_text(script)
+    out = json.loads(subprocess.run(["node", str(f)], capture_output=True, text=True, check=True).stdout)
+    assert out["K"][0] == pytest.approx(M.rv_semi_amplitude(peg["orbital_period"], peg["mass_sini"], peg["star_mass"], peg["eccentricity"]), rel=1e-9)
+    assert out["K"][1] == pytest.approx(M.rv_semi_amplitude(11.862 * 365.25, 1, 1, 0.049), rel=1e-9)
+    assert out["K"][2] == pytest.approx(0.0895, abs=0.001)
+    assert out["E"] == [pytest.approx(M.kepler_E(1.234, 0.3)), pytest.approx(M.kepler_E(5.5, 0.9))]
+    assert out["A"] == pytest.approx(M.paczynski(1))
+    assert out["ld"] == [pytest.approx(v) for v in M.ld_coeffs(6037)]
+    assert out["flux"] == [pytest.approx(M.transit_flux(z, k, 0.33, 0.23), abs=1e-12) for z, k in ((0, 0.01703), (0.59, 0.01703), (1.0, 0.1))]
+    assert [tuple(c) for c in out["rgb"]] == [M.teff_rgb(3000), M.teff_rgb(5772), M.teff_rgb(20000)]
+    assert out["cls"] == [["G", "G0V"], ["M", "M5V"]]
+    for cross, dot, ratio in out["col"]:  # collinear, opposite sides, a★/(a★ + a_p) = q
+        assert abs(cross) < 1e-12 and dot <= 0 and ratio == pytest.approx(0.001)
+    jup, earth, big, hidden = out["scale"]
+    assert hidden == {"N": 1, "label": ""}  # a hidden (zero-size) stage never loops
+    # The exaggeration label is there whenever the factor is above 1, and says what is true.
+    assert jup["N"] > 1 and "exaggerated ×" in jup["label"] and "true a★" in jup["label"] and "R★" in jup["label"]
+    assert earth["N"] > jup["N"] and "exaggerated ×" in earth["label"]
+    assert big["N"] == 1 and big["label"] == ""
+
+
+# ---------- the page ----------
+@pytest.fixture(scope="module")
+def page_html(tmp_path_factory, run_dir):  # noqa: F811
+    return build_app(run_dir, tmp_path_factory.mktemp("app") / "app", title="t").read_text()
+
+
+def _route(page, rid):
+    return re.search(rf'<section class="route" id="route-{rid}".*?(?=<section class="route" id="route-)', page, re.S).group(0)
+
+
+def test_every_chapter_has_a_labelled_visual_and_sources(page_html):
+    sec = _route(page_html, "methods")
+    for cid, title in M.CHAPTERS:
+        art = sec.split(f'<article class="mxch" id="mx-{cid}"', 1)[1].split('<article class="mxch"', 1)[0]
+        assert f'href="#/methods?ch={cid}"' in sec
+        for fig in re.findall(r'<figure class="mxstage.*?</figure>', art, re.S):
+            label = re.search(r'<span class="mxlabel (\w+)">([^<]+)</span>', fig)
+            assert label and label.group(2) in (M.LABEL_ILL, M.LABEL_MODEL, M.LABEL_DATA)
+            assert re.search(r'<canvas role="img" aria-label="[^"]{40,}"', fig)  # a text description
+            assert 'class="mxdesc"' in fig
+        if cid != "history":
+            assert "<details class=\"mxsources\">" in art
+    assert "exoplan does not do spectroscopy" in sec and "This is what exoplan does" in sec
+    for href in re.findall(r'href="(https?://[^"]+)"', sec):
+        assert href.startswith("https://")
+
+
+def test_method_counts_equal_the_dataset(page_html):
+    g = galaxy_data()
+    sec = _route(page_html, "methods")
+    for method in ("transit", "rv", "astrometry", "microlensing", "imaging"):
+        n = g["per_method"][method]
+        assert f"<b>{n:,}</b> of the {g['counts']['kept']:,} planets" in sec, method
+    assert sum(sum(v.values()) for v in M.per_year(g).values()) == g["counts"]["kept"]
+
+
+def test_biosignature_honesty_and_history(page_html):
+    sec = _route(page_html, "methods")
+    assert "Life has not been detected anywhere beyond Earth." in sec
+    assert not re.search(r"(?i)(life (has been|was) detected|evidence of life|alien)", sec.replace("Life has not been detected", ""))
+    for k in ("greaves", "snellen20", "villanueva", "madhu23", "madhu25", "schmidt", "luque"):
+        assert M.SOURCES[k][1] in sec
+    assert "contested" in sec and "Not established" in sec
+    years = [y for y, *_ in M.HISTORY]
+    assert years == sorted(years)
+    for y, au, title, key, summary, why, link in M.HISTORY:
+        url = M.SOURCES[key][1]
+        assert url.startswith("https://doi.org/") or "kva.se" in url
+        assert len(summary.split()) <= 50 and len(why.split()) <= 50
+    assert "this is a recovery, not a discovery" in sec
+
+
+def test_molecule_cards_have_geometry_bands_and_sources():
+    for m in M.MOLECULES:
+        assert m["bands"] and m["who"] and m["why"] and m["abiotic"]
+        for _, key in m["seen"]:
+            assert M.SOURCES[key][1].startswith("https://")
+        g = m["geom"]
+        assert g["shape"] == "atom" or g["r"] > 0.9
+    water = next(m for m in M.MOLECULES if m["id"] == "H2O")["geom"]
+    assert (water["r"], water["angle"]) == (0.958, 104.48)
+
+
+def test_reduced_motion_and_no_external_requests():
+    js = M.METHODS_JS
+    act = re.search(r"function mxActivate\(article, on\)\{.*?\n\}\n", js, re.S).group(0)
+    assert "if (!mxRM.matches && !st.started)" in act and "mxDraw(st)" in act  # a still key frame; play only on request
+    for name in re.findall(r"^MXV\.(\w+) = \{key: ([\d.]+)", js, re.M):
+        assert 0 <= float(name[1]) < 1
+    assert set(re.findall(r"^MXV\.(\w+) = ", js, re.M)) >= {"system", "scan", "doppler", "wobble", "astrometry", "lens", "coronagraph", "transmission", "molecule"}
+    assert "fetch(" not in js and "XMLHttpRequest" not in js and not re.search(r"https?://", js)
+    assert "mxShown(r === 'methods')" in APP_JS and "mxShowChapter(p.params.get('ch'))" in APP_JS
+
+
+def test_methods_examples_are_stored_values():
+    peg = EX["planets"]["51 Peg b"]
+    assert EX["source"] == "The Extrasolar Planets Encyclopaedia (exoplanet.eu)" and EX["fetched_at"].startswith("2026-10-18")
+    assert (peg["orbital_period"], peg["mass_sini"], peg["star_mass"], peg["k"]) == (4.2307966, 0.46, 1.03, 55.77)
+    notable = json.loads(Path("docs/results/notable_planets.json").read_text())["planets"]
+    assert all(n["name"] in EX["planets"] for n in notable) and EX["missing"] == []
+
+
+@pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
+def test_methods_chapters_draw_without_errors_and_fit_a_phone(run_dir, tmp_path):  # noqa: F811
+    page = build_app(run_dir, tmp_path / "app", title="t")
+    script = tmp_path / "probe.js"
+    script.write_text("""
+const { chromium } = require(%s);
+(async () => {
+  const b = await chromium.launch({ executablePath: %s, args: ['--allow-file-access-from-files'] });
+  const out = [];
+  for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) {
+    const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob }); const p = await c.newPage();
+    const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
+    for (const ch of %s) {
+      await p.goto(%s + '#/methods?ch=' + ch); await p.waitForTimeout(500);
+      out.push(Object.assign({w, ch, errs: errs.slice()}, await p.evaluate(ch => {
+        const art = document.querySelector('#mx-' + ch), vw = document.documentElement.clientWidth;
+        const lit = [...art.querySelectorAll('canvas')].map(cv => { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let n = 0; for (let i = 0; i < d.length; i += 4 * 97) if (d[i] + d[i + 1] + d[i + 2] > 60) n++; return n; });
+        const small = [...art.querySelectorAll('a,button,select,input,summary')].filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.width < 44 || r.height < 44) && !e.closest('p,li,dd'); }).map(e => e.className || e.tagName);
+        const wide = [...art.querySelectorAll('*')].filter(e => !e.closest('.tablewrap') && e.getBoundingClientRect().right > vw + 1).map(e => e.tagName + '.' + e.className);
+        const shown = [...document.querySelectorAll('.mxch')].filter(a => getComputedStyle(a).display !== 'none').length;
+        return {hidden: art.hidden, lit, small, wide: wide.slice(0, 4), shown};
+      }, ch)));
+    }
+    await c.close();
+  }
+  console.log(JSON.stringify(out)); await b.close();
+})();
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps([c for c, _ in M.CHAPTERS]), json.dumps(Path(page).resolve().as_uri())))
+    res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=240)
+    assert res.returncode == 0, res.stderr
+    for r in json.loads(res.stdout.strip().splitlines()[-1]):
+        assert r["errs"] == [] and r["hidden"] is False and r["shown"] == 1, r  # one chapter at a time
+        assert all(n > 5 for n in r["lit"]), r  # every canvas drew something
+        assert r["wide"] == [], r
+        if r["w"] == 390:
+            assert r["small"] == [], r
+
+
+@pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
+def test_every_route_loads_and_the_galaxy_opens_a_system_view(run_dir, tmp_path):  # noqa: F811
+    page = build_app(run_dir, tmp_path / "app", title="t")
+    script = tmp_path / "probe.js"
+    script.write_text("""
+const { chromium } = require(%s);
+(async () => {
+  const b = await chromium.launch({ executablePath: %s, args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
+  const p = await b.newPage(), errs = [], loaded = {};
+  p.on('pageerror', e => errs.push(e.message));
+  for (const r of ['overview', 'sky', 'galaxy', 'transit', 'explorer', 'sentinels', 'methods']) {
+    const t0 = Date.now(); await p.goto(%s + '#/' + r, {timeout: 15000}); loaded[r] = Date.now() - t0;
+  }
+  await p.goto(%s + '#/galaxy'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000});
+  const name = await p.evaluate(() => { const nt = gx.G.notable.find(n => MX.examples[n.name]); gxSelect(nt.host, nt.planet); return nt.name; });
+  await p.click(`#gxcard button[data-gxsys="${name}"]`); await p.waitForTimeout(500);
+  const sheet = await p.evaluate(() => ({open: document.querySelector('#mxsheet').open, title: document.querySelector('#mxsheettitle').textContent}));
+  await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+  sheet.closed = await p.evaluate(() => !document.querySelector('#mxsheet').open);
+  console.log(JSON.stringify({errs, loaded, sheet, name})); await b.close();
+})();
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(Path(page).resolve().as_uri()), json.dumps(Path(page).resolve().as_uri())))
+    res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=240)
+    assert res.returncode == 0, res.stderr
+    out = json.loads(res.stdout.strip().splitlines()[-1])
+    assert out["errs"] == [] and len(out["loaded"]) == 7
+    assert out["sheet"] == {"open": True, "title": out["name"], "closed": True}
