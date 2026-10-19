@@ -743,6 +743,8 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                     ("Best spectrograph stability", "< 25 cm/s in a night", "ESPRESSO (Pepe et al. 2021)")])}
         <h3>Why Earth twins are hard</h3>
         <p>An Earth twin moves its Sun-like star by about {k_earth * 100:.0f} cm/s. ESPRESSO holds better than 25 cm/s within a night and about 50 cm/s over months (Pepe et al. 2021). The star's own surface (granulation, oscillations, spots) adds RV noise of order m/s (Fischer et al. 2016), larger than the signal itself.</p>
+        {_stage("jitter", LABEL_ILL, "A close-up of a Sun-like star's surface: granulation cells rise (blueshifted) and sink (redshifted), with tracked markers. Beside it, an Earth twin's radial-velocity signal of about 9 centimetres per second over two years, with each point scattered by the chosen noise level, showing the signal buried in the star's own motion.",
+               '<label class="mxmode"><span>Noise per point</span><select><option value="1">stellar surface, order of 1 m/s</option><option value="0.25">a night at ESPRESSO, 25 cm/s</option><option value="0.1">ESPRESSO instrument floor, 10 cm/s</option></select></label>')}
         <div class="mxladder" role="img" aria-label="Radial-velocity scale: Earth twin about 9 centimetres per second; ESPRESSO within a night under 25 centimetres per second; stellar surface noise of order 1 metre per second; pi Men c about 1.6 metres per second; Jupiter twin 12.5 metres per second; 51 Peg b 56 metres per second.">
           {''.join(f'<div style="--x:{(math.log10(v) + 2) / 4 * 100:.1f}%" class="{"l" if (math.log10(v) + 2) / 4 < 0.15 else "r" if (math.log10(v) + 2) / 4 > 0.8 else ""}"><i></i><span>{e(t)}</span></div>' for v, t in ((k_earth, f"Earth twin {k_earth * 100:.0f} cm/s"), (0.25, "ESPRESSO night < 25 cm/s"), (1.0, "stellar noise ~1 m/s"), (k_pm or 1.5, f"pi Men c {k_pm or 0:.1f} m/s"), (k_jup, f"Jupiter twin {k_jup:.1f} m/s"), (k_peg or 56, f"51 Peg b {k_peg or 0:.0f} m/s")))}
           <p class="mxaxis"><span>1 cm/s</span><span>10 cm/s</span><span>1 m/s</span><span>10 m/s</span><span>100 m/s</span></p>
@@ -1425,6 +1427,36 @@ function mxPrepRv(st){
   const amp = (Math.max(...vy) - Math.min(...vy)) / 2, mid = (Math.max(...vy) + Math.min(...vy)) / 2;
   st.opt.vscale = st.opt.K / amp; st.opt.curve = vy.map(v => (v - mid) * st.opt.vscale); st.opt.vmax = amp;
 }
+
+
+// ---------- RV precision: granulation close-up and an Earth twin's signal in the noise ----------
+MXV.jitter = {key: 0.4, period: 12, init(st){ st.opt.sig = 1; const rnd = mxRand(9); st.opt.cells = Array.from({length: 70}, () => ({x: rnd(), y: rnd(), r: 0.035 + rnd() * 0.04, ph: rnd() * 6.28}));
+  const g = mxRand(21), n = 80; st.opt.noise = Array.from({length: n}, () => { let u = 0, v = 0; while (!u) u = g(); v = g(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }); },
+  control(st, el){ if (el.tagName === 'SELECT') st.opt.sig = Number(el.value); },
+  draw(c, w, h, t, st){
+    const narrow = w < 600, sw = narrow ? w : w * 0.42, sh = narrow ? h * 0.42 : h;
+    // Granulation: bright rising cells, dark sinking lanes; markers move with the flow (texture, not to scale).
+    c.save(); c.beginPath(); c.rect(0, 0, sw, sh); c.clip();
+    c.fillStyle = '#5a3a14'; c.fillRect(0, 0, sw, sh);
+    for (const cl of st.opt.cells){ const x = cl.x * sw, y = cl.y * sh, r = cl.r * Math.max(sw, sh) * (1 + 0.12 * Math.sin(t * 12 + cl.ph));
+      const g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, '#FFE6B0'); g.addColorStop(0.7, '#E8A050'); g.addColorStop(1, 'rgba(90,58,20,0)'); c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill();
+      const up = Math.sin(t * 12 + cl.ph) > 0; c.strokeStyle = up ? '#0A84FF' : '#FF453A'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(x - 4, y); c.lineTo(x + 4, y); c.moveTo(x, y - 4); c.lineTo(x, y + 4); c.stroke(); }
+    c.restore();
+    mxText(c, 'granulation close-up · blue: rising (toward us) · red: sinking', 10, sh - 10, {size: 11, color: '#F5F5F7'});
+    // An Earth twin's signal with the chosen per-point noise.
+    const K = mxK(365.25, 3.986004e14 / 1.2668653e17, 1, 0, 1), sig = st.opt.sig, n = st.opt.noise.length;
+    const gx = narrow ? 50 : sw + 60, gy = narrow ? sh + 40 : 40, gw = w - gx - 16, gh = narrow ? h - gy - 40 : h - 90, lim = Math.max(0.15, 3 * sig);
+    const X = f => gx + f * gw, Y = v => gy + gh / 2 - v / lim * gh / 2;
+    mxAxes(c, gx, gy, gw, gh, {y: 'RADIAL VELOCITY (m/s)', x: 'TWO YEARS'});
+    c.strokeStyle = 'rgba(255,255,255,.12)'; c.beginPath(); c.moveTo(gx, Y(0)); c.lineTo(gx + gw, Y(0)); c.stroke();
+    const shown = Math.floor(t * n) + 1;
+    c.fillStyle = 'rgba(100,210,255,.85)';
+    for (let i = 0; i < shown && i < n; i++){ const f = i / (n - 1), v = K * Math.sin(2 * Math.PI * 2 * f) + sig * st.opt.noise[i]; c.beginPath(); c.arc(X(f), Y(v), 2.6, 0, 2 * Math.PI); c.fill(); }
+    c.strokeStyle = '#FFB340'; c.lineWidth = 1.8; c.beginPath(); for (let i = 0; i <= 200; i++){ const f = i / 200; i ? c.lineTo(X(f), Y(K * Math.sin(4 * Math.PI * f))) : c.moveTo(X(f), Y(K * Math.sin(4 * Math.PI * f))); } c.stroke();
+    for (const v of [lim, 0, -lim]) mxText(c, (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(2), gx - 6, Y(v) + 4, {size: 11, mono: true, align: 'right'});
+    mxText(c, `RADIAL VELOCITY: K = ${K.toFixed(3)} ± ${sig.toFixed(2)} m/s per point`, gx + 8, gy + 16, {size: 12, mono: true, color: '#F5F5F7'});
+    st.exag = 'noise points illustrative (a seeded random draw); granulation texture not to scale';
+  }};
 
 // ---------- astrometry ----------
 MXV.astrometry = {key: 0.55, period: 14, init(st){ st.opt.mode = 'all'; },

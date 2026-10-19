@@ -431,3 +431,13 @@ def test_new_chapters_state_their_limits(page_html):
     src = Path(vet.__file__).read_text()
     for flag in ("odd_even_mismatch", "secondary_eclipse", "low_snr", "too_short", "edge_event", "insufficient_points"):
         assert f'"{flag}"' in src  # the page names flags vet.py really raises
+
+
+def test_rv_jitter_view_uses_sourced_numbers(page_html):
+    sec = _route(page_html, "methods")
+    rv = sec.split('<article class="mxch" id="mx-rv"', 1)[1].split('<article class="mxch"', 1)[0]
+    assert 'data-vis="jitter"' in rv and "ESPRESSO instrument floor, 10 cm/s" in rv and "a night at ESPRESSO, 25 cm/s" in rv
+    assert "Pepe et al. 2021" in rv and "Fischer et al. 2016" in rv
+    js = re.search(r"MXV\.jitter = .*?\n  \}\};", M.METHODS_JS, re.S).group(0)
+    assert "mxK(365.25, 3.986004e14 / 1.2668653e17, 1, 0, 1)" in js  # the Earth twin's K from the formula
+    assert "noise points illustrative" in js
