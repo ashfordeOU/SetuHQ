@@ -1,0 +1,36 @@
+{
+ "n": 20,
+ "seed": 20261020,
+ "white_ppm": 200.0,
+ "red_ppm": 600.0,
+ "red_tau_days": 1.0,
+ "sinusoid_ppm": 300.0,
+ "periods_days": [
+  0.5,
+  1.0,
+  1.5,
+  2.0,
+  2.5,
+  3.0
+ ],
+ "baseline_days": 27.4,
+ "gap_days": [
+  13,
+  14
+ ],
+ "script": "scripts/variability_rule_check.py",
+ "cases": {
+  "sinusoid_in_white_noise": {
+   "variable": 20,
+   "null_variable": 0
+  },
+  "red_noise_alone": {
+   "variable": 0,
+   "null_variable": 1
+  },
+  "sinusoid_in_strong_red_noise": {
+   "variable": 3,
+   "null_variable": 1
+  }
+ }
+}

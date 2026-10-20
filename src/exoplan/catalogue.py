@@ -572,6 +572,7 @@ function stShow(slug){
     $('#stparams').innerHTML = ctTable(i, CT_STAR_ROWS) + (P.salt[i] ? `<p class="small">Also known as ${esc(P.salt[i])}.</p>` : '');
     $('#stplanets').innerHTML = `<ul class="pllist">${ps.map(j => `<li><a href="${ctPlanetHref(j)}"><span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul>`;
     $('#stwhere').innerHTML = ctWhere(i, name) + ctSeen(name, '#/sky');
+    if (typeof vaForStar === 'function') vaForStar(P.salt[i]);
     // The system view with one of its planets (the innermost first); the picker switches planet.
     const pick = $('#stpick');
     pick.innerHTML = ps.map(j => `<option value="${j}">${esc(P.name[j])}</option>`).join('');
@@ -597,6 +598,7 @@ function gsSearch(q){
     for (const i of starts.concat(has).slice(0, 12)) res.push({kind: 'planet', label: P.name[i], sub: P.star[i] || '', href: ctPlanetHref(i)});
     let n = 0; for (const s of ct.C.stars.names){ if (s.toLowerCase().includes(q)){ res.push({kind: 'star', label: s, sub: `${ct.byStar[s].length} planet${ct.byStar[s].length === 1 ? '' : 's'}`, href: ctStarHref(s)}); if (++n >= 6) break; } }
   }
+  if (q && typeof vaSearch === 'function') res.push(...vaSearch(q));
   return st.slice(0, q ? 6 : 20).concat(res);
 }
 function gsRender(){
@@ -611,6 +613,7 @@ function gsOpen(){
   if (!dlg.open) dlg.showModal();
   $('#gsq').value = ''; gs.sel = 0; gsRender(); $('#gsq').focus();
   if (CTM) ctLoad().then(gsRender).catch(() => {});
+  if (typeof VA !== 'undefined' && VA) vaLoad().then(gsRender).catch(() => {});
 }
 if ($('#gsearch')){
   $('#gsearchbtn').addEventListener('click', gsOpen);

@@ -205,6 +205,9 @@ function mcTele(){
   if (CTM) bits.push(`<span>Catalogue <b>${CTM.counts.rows.toLocaleString('en-GB')}</b> planets · <b>${CTM.counts.stars.toLocaleString('en-GB')}</b> stars (${esc(CTM.source_short)}, ${esc(CTM.fetched_at.slice(0, 10))})</span>`);
   if (GXM) bits.push(`<span>Map <b>${GXM.n_planets.toLocaleString('en-GB')}</b> planets placed</span>`);
   bits.push(`<span>Run ${esc(D.run.name)} · <b>${D.story.dips.length}</b> dips</span>`, `<span>Feed <b>${D.catalog.candidates.length}</b> entries</span>`);
+  // The sweep's counter, from the committed sweep catalogue (the same figures as the Overview's).
+  if (D.sweep){ const c = D.sweep.counts, n = k => c.by_class[k].toLocaleString('en-GB');
+    bits.push(`<span>Sweep <b>${c.stars_searched.toLocaleString('en-GB')}</b> stars · <b>${c.star_sectors_searched.toLocaleString('en-GB')}</b> star-sectors · <b>${c.dips_reviewed.toLocaleString('en-GB')}</b> dips reviewed · <b>${c.entries.toLocaleString('en-GB')}</b> entries: ${D.sweep.classes.map(k => `${esc(k.label.toLowerCase())} ${n(k.id)}`).join(', ')}</span>`); }
   if (s) bits.push(`<span>Selected <b class="mcsel">${esc(s)}</b>${P && i !== undefined ? ` · ${ps.length} planet${ps.length === 1 ? '' : 's'}${P.dist[i] !== null ? ` · ${ctFmt(P.dist[i], 4)} pc` : ' · distance not stored'}${P.steff[i] !== null ? ` · ${Math.round(P.steff[i]).toLocaleString('en-GB')} K` : ''}` : ''}</span>`);
   $('#mctele').innerHTML = bits.join('');
 }

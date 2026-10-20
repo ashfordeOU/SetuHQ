@@ -49,6 +49,13 @@ RUN="runs/tess-pi-men-s1"
 CAT="docs/discoveries/catalog.json"
 EX="$VENV/bin/exoplan"
 
+step "sweep catalogue: only ingested, intact contributions, and catalogue.json rebuilds from them"
+# The ingest ledger may only grow against its merge-base with the base branch (EXOPLAN_BASE, else the
+# remote's default branch). A missing base is a note locally and a failure when CI is set.
+"$EX" check-sweep --sweep-dir docs/sweep --ledger-base auto >> "$LOG" 2>&1
+grep "check-sweep: note:" "$LOG" | tail -n 1 || true
+ok
+
 step "app shell builds from the stored run"
 "$EX" app "$RUN" --catalog "$CAT" --out site/app --title "exoplan" --landing site/index.html >> "$LOG" 2>&1
 ok

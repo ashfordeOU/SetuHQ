@@ -1,0 +1,56 @@
+# The all-sky sweep with your own Sentinels (see CONTRIBUTING.md).
+# Same as sweep.toml, plus two Sentinels through the Claude Code CLI, signed in with your own Claude
+# subscription (run `claude` once and `/login`). For the Anthropic API instead, change each `type` to
+# "claude" and set ANTHROPIC_API_KEY in your environment. Never put a key in this file or in a bundle.
+# Each subject is one CLI or API call per Sentinel: a sector slice of 50 stars is about 100 to 200 calls.
+
+[run]
+name = "sweep-sentinels"
+subject_days = 13.0
+min_points = 300
+bin_minutes = 10.0
+detrend_window_days = 1.0
+search = "sector"
+
+[search]
+min_period = 0.5
+fap_trials = 0
+fap_cache = ""
+fit_transits = true
+stellar = "none"
+
+[aggregate]
+cluster_gap_days = 0.05
+min_score = 0.5
+min_planet_fraction = 0.0
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-sensitive"
+snr_threshold = 4.5
+miss_probability = 0.05
+seed = 11
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-typical"
+snr_threshold = 5.0
+miss_probability = 0.10
+seed = 12
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-cautious"
+snr_threshold = 5.5
+miss_probability = 0.15
+seed = 13
+
+[[reviewers]]
+type = "claude_code"
+id = "claude-volunteer"
+persona = "volunteer"
+
+[[reviewers]]
+type = "claude_code"
+id = "claude-skeptic"
+persona = "skeptic"
