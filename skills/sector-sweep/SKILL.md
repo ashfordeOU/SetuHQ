@@ -10,7 +10,7 @@ Use the `exoplan` MCP server's `run_pipeline_tess`, `run_pipeline_csv`, `sentine
 
 Rules that apply every time:
 
-- State the plan (targets, sectors, output directory, panel) and get a yes before the first run: each run
+- State the plan (targets, sectors, a new run name under `runs/mcp/`, panel) and get a yes before the first run: each run
   writes a directory and downloads data from MAST.
 - Probes only by default. Sentinels only when the user asks; they then may call a paid AI API, and only
   where its key is in the environment. Never ask the user to paste a key into the chat or a file.

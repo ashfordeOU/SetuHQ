@@ -43,6 +43,9 @@ FORMULA = "A textbook formula evaluated as stated; it describes an idealised cas
 UNREVIEWED = "No reviewer panel looked at this: it is a detector and vetting output only."
 
 DEFAULT_RUN = "runs/tess-pi-men-s1"
+# Where the tools write: one new directory per run, never an existing one, so a stored, reviewed run
+# (runs/tess-pi-men-s1) or anything else in the data root can never be overwritten.
+TOOL_RUNS = "runs/mcp"
 DEFAULT_CATALOGUE = "docs/results/exoplanet_catalogue.json"
 MAX_FAP_TRIALS = 2000  # the tool's bound on bootstrap trials, so one call stays minutes, not hours
 MAX_ROWS = 200
@@ -77,9 +80,9 @@ def _path(rel: str | os.PathLike, *, must_exist: bool = True) -> Path:
     base = root()
     p = (base / Path(rel)).resolve()
     if p != base and base not in p.parents:
-        raise ToolError(f"{rel}: outside the data root ({base}); set EXOPLAN_ROOT to work elsewhere")
+        raise ToolError(f"{rel}: outside the data root; set EXOPLAN_ROOT to work elsewhere")
     if must_exist and not p.exists():
-        raise ToolError(f"{rel}: no such file under {base}")
+        raise ToolError(f"{rel}: no such file in the data root")
     return p
 
 
@@ -110,7 +113,7 @@ def envelope(tool: str, result, *, sources: list[dict] = (), honesty: list[str] 
     return {
         "tool": tool,
         "result": _plain(result),
-        "provenance": {"exoplan_version": __version__, "code": _code(), "data_root": str(root()),
+        "provenance": {"exoplan_version": __version__, "code": _code(),
                        "computed_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sources": list(sources)},
         "honesty": list(honesty),
     }
@@ -430,6 +433,21 @@ def _panel(config_path: str, sentinels: bool):
     return config, build_reviewers(specs, cache_root=root() / "cache")
 
 
+def _new_run_dir(run_name: str) -> Path:
+    """A fresh directory runs/mcp/<run_name> under the data root. Refused if the name is not a plain name or
+    the directory already exists: a tool run adds, it never replaces."""
+    import re
+
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", run_name or "") or ".." in run_name:
+        raise ToolError("run_name must be a plain name (letters, digits, '.', '_', '-'), not a path")
+    out = _path(f"{TOOL_RUNS}/{run_name}", must_exist=False)
+    try:
+        out.mkdir(parents=True, exist_ok=False)  # atomic: two calls cannot both claim one directory
+    except FileExistsError:
+        raise ToolError(f"{TOOL_RUNS}/{run_name} already exists; a tool run never overwrites, pick a new run_name") from None
+    return out
+
+
 def _run_summary(summary, out: Path, config_path: str) -> dict:
     manifest = json.loads((out / "manifest.json").read_text())
     return {
@@ -441,16 +459,17 @@ def _run_summary(summary, out: Path, config_path: str) -> dict:
     }
 
 
-def run_pipeline_csv(csv_path: str, out_dir: str, target: str = "custom", config_path: str = "configs/default.toml",
+def run_pipeline_csv(csv_path: str, run_name: str, target: str = "custom", config_path: str = "configs/default.toml",
                      sentinels: bool = False) -> dict:
-    """Run the full pipeline (``pipeline.run_pipeline``) on a CSV light curve (time, flux[, flux_err]) and write a
-    run directory under the data root. Probes only unless sentinels=True; Sentinels then run only where their key,
-    SDK or CLI is present (the manifest lists the skipped ones and why)."""
+    """Run the full pipeline (``pipeline.run_pipeline``) on a CSV light curve (time, flux[, flux_err]) and write
+    a new run directory, runs/mcp/<run_name> (refused if it exists: nothing is ever overwritten). Probes only
+    unless sentinels=True; Sentinels then run only where their key, SDK or CLI is present (the manifest lists
+    the skipped ones and why)."""
     from exoplan.loaders import load_csv
     from exoplan.pipeline import run_pipeline
 
     p = _path(csv_path)
-    out = _path(out_dir, must_exist=False)
+    out = _new_run_dir(run_name)
     config, reviewers = _panel(config_path, sentinels)
     summary = run_pipeline(config, [load_csv(p, target=target)], reviewers, out, weights_source="uniform 1.0 (tool run)")
     return envelope("run_pipeline_csv", _run_summary(summary, out, config_path),
@@ -458,15 +477,16 @@ def run_pipeline_csv(csv_path: str, out_dir: str, target: str = "custom", config
                     honesty=[COMPUTED, CANDIDATE, PANEL, "Uniform weights: no calibrated weights were applied to this run."])
 
 
-def run_pipeline_tess(tic: str, out_dir: str, sectors: list[int] | None = None, config_path: str = "configs/default.toml",
+def run_pipeline_tess(tic: str, run_name: str, sectors: list[int] | None = None, config_path: str = "configs/default.toml",
                       sentinels: bool = False) -> dict:
     """Download a TESS SPOC light curve from MAST (``loaders.load_tess``; needs network and ``pip install -e '.[tess]'``)
-    for a TIC id and sectors, and run the pipeline on it. Probes only unless sentinels=True."""
+    for a TIC id and sectors, and run the pipeline on it into a new runs/mcp/<run_name> (never an existing
+    directory). Probes only unless sentinels=True."""
     from exoplan.loaders import load_tess
     from exoplan.pipeline import run_pipeline
 
     tic_id = tic if str(tic).upper().startswith("TIC") else f"TIC {tic}"
-    out = _path(out_dir, must_exist=False)
+    out = _new_run_dir(run_name)
     config, reviewers = _panel(config_path, sentinels)
     try:
         lightcurves = load_tess(tic_id, tuple(sectors) if sectors else None)

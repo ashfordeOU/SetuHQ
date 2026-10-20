@@ -36,8 +36,8 @@ def test_plugin_and_marketplace_manifests_are_valid():
     entry = next(p for p in market["plugins"] if p["name"] == plugin["name"])
     assert entry["source"] == "./" and entry["version"] == plugin["version"]
     assert re.fullmatch(r"[a-z0-9-]+", market["name"]) and market["owner"]["name"]
-    project = json.loads((ROOT / ".mcp.json").read_text())
-    assert project["mcpServers"]["exoplan"]["command"] == "exoplan-mcp"
+    # The server is declared once, by the plugin: no project .mcp.json to clash with it on install.
+    assert not (ROOT / ".mcp.json").exists()
     # The entry point the manifests start is the one pyproject installs.
     assert 'exoplan-mcp = "exoplan.mcp_server:main"' in (ROOT / "pyproject.toml").read_text()
 

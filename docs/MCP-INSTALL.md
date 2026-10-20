@@ -33,7 +33,7 @@ It defaults to the checkout the package was installed from, so you can leave it 
 | VS Code | `.vscode/mcp.json`, below | the install above |
 | Codex CLI | `codex mcp add exoplan -- /path/to/SetuHQ/.venv/bin/exoplan-mcp` | the install above |
 | Gemini CLI | `gemini mcp add exoplan /path/to/SetuHQ/.venv/bin/exoplan-mcp` | the install above |
-| Remote (streamable HTTP) | `exoplan-mcp --http 127.0.0.1:8080`, then `http://127.0.0.1:8080/mcp` | your own host |
+| Remote (streamable HTTP) | `exoplan-mcp --http 8080`, then `http://127.0.0.1:8080/mcp` (read-only tools unless `--allow-writes`) | your own host |
 
 ## Each client's configuration
 
@@ -45,8 +45,8 @@ Where: run in a terminal (add `--scope user` for every project).
 claude mcp add exoplan --env EXOPLAN_ROOT=/path/to/SetuHQ -- /path/to/SetuHQ/.venv/bin/exoplan-mcp
 ```
 
-Inside this repository nothing is needed: its `.mcp.json` declares the server, and Claude Code offers to
-enable it. As a plugin, with the slash commands and skills below:
+Or as a plugin, with the slash commands and skills. The plugin declares the server once, in
+`.claude-plugin/plugin.json` (the repository has no separate `.mcp.json`, so the two cannot clash):
 
 ```
 /plugin install exoplan --marketplace ashfordeOU/SetuHQ
@@ -151,7 +151,7 @@ gemini mcp add -e EXOPLAN_ROOT=/path/to/SetuHQ exoplan /path/to/SetuHQ/.venv/bin
 | `vet_lightcurve` | BLS search and vetting of a dip (SNR, duration, edges, odd/even, secondary eclipse) | `search.bls_search`, `vet.vet_event` |
 | `fit_transit` | The limb-darkened transit fit: depth, T14, b, mid-time, Rp/R★, ρ★, with errors | `transitfit.fit_transit` |
 | `compute_fap` | The bounded block-bootstrap false-alarm probability (at most 2,000 trials a call) | `search.false_alarm_probability` |
-| `run_pipeline_csv` | The full pipeline on a CSV light curve; writes a run directory (Probes only by default) | `pipeline.run_pipeline` |
+| `run_pipeline_csv` | The full pipeline on a CSV light curve, into a new `runs/mcp/<run_name>` (Probes only by default) | `pipeline.run_pipeline` |
 | `run_pipeline_tess` | The full pipeline on a TIC and sectors from MAST; needs network and `.[tess]` | `loaders.load_tess`, `pipeline.run_pipeline` |
 | `rv_semi_amplitude` | Radial-velocity K | `methods.rv_semi_amplitude` |
 | `transit_depth` | Central-transit depth, geometric and limb-darkened | `methods.transit_flux` |
@@ -160,12 +160,28 @@ gemini mcp add -e EXOPLAN_ROOT=/path/to/SetuHQ exoplan /path/to/SetuHQ/.venv/bin
 | `benchmark_results` | The stored benchmarks: real TOIs, injection-recovery, pi Men, calibration, threshold sweep | `docs/results/` |
 | `sentinel_providers` | Which Sentinel providers can run here (never shows a key) | `reviewers` |
 
-Every tool returns `{"tool", "result", "provenance", "honesty"}`. Only the two `run_pipeline_*` tools write
-(a run directory under the data root), and only `run_pipeline_tess` reaches the network. Not on this branch,
-so not exposed: an export to ExoFOP, and scoring of a leaderboard submission.
+Every tool returns `{"tool", "result", "provenance", "honesty"}`. Error messages give paths relative to the
+data root, never the server's absolute paths.
+
+Only the two `run_pipeline_*` tools write, and only into a **new** directory `runs/mcp/<run_name>`: a name
+that is not a plain name, or a directory that already exists, is refused, so a tool can never overwrite a
+stored, reviewed run (such as `runs/tess-pi-men-s1`) or anything else in the data root. They reach outside
+this computer: `run_pipeline_tess` downloads from MAST, and with `sentinels: true` a run may call a provider's
+paid API with the server's keys. Not on this branch, so not exposed: an export to ExoFOP, and scoring of a
+leaderboard submission.
 
 ## Remote use
 
-`exoplan-mcp --http 127.0.0.1:8080` serves the same tools over streamable HTTP at `/mcp`, for a client that
-cannot start a local process. It is for self-hosting: it has no authentication of its own, so keep it on
-localhost or behind your own authenticating proxy. Ashforde OÜ does not run a public endpoint.
+`exoplan-mcp --http 8080` serves streamable HTTP at `http://127.0.0.1:8080/mcp`, for a client that cannot
+start a local process. It is for self-hosting, and it has **no authentication** of its own, so it is locked
+down by default:
+
+| Flag | Effect |
+|---|---|
+| `--http PORT` or `--http HOST:PORT` | binds to `127.0.0.1` unless you name another host; keep it there, or behind your own authenticating proxy |
+| (default) | read-only tools only: the catalogue, stored runs, vetting, the fit, the FAP, the physics, the benchmarks |
+| `--allow-writes` | adds `run_pipeline_csv` and `run_pipeline_tess` (each creates a new `runs/mcp/<run_name>`), Probes only |
+| `--allow-sentinels` | with `--allow-writes`: lets a run use Sentinels, which may spend the server's AI-provider keys |
+
+Over stdio the server is your own process and every tool is there (a pipeline run still uses Probes unless
+the call asks for Sentinels). Ashforde OÜ does not run a public endpoint.

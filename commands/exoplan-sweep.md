@@ -12,11 +12,10 @@ Request: **$ARGUMENTS**
 
 Do this:
 
-1. Confirm the plan before running, in one line: the targets, the sector(s), the output directory under
-   `runs/`, and the panel. The tools run **Probes only** by default. Run Sentinels (`sentinels: true`) only
+1. Confirm the plan before running, in one line: the targets, the sector(s), the run name (`runs/mcp/<run_name>`), and the panel. The tools run **Probes only** by default. Run Sentinels (`sentinels: true`) only
    if the user asks: they then run only where a provider's key, SDK or CLI is present, and a paid API may be
    called. **`sentinel_providers`** says which can run here, without showing any key.
-2. For each target call **`run_pipeline_tess`** (`tic`, `sectors`, `out_dir`), or **`run_pipeline_csv`** for
+2. For each target call **`run_pipeline_tess`** (`tic`, `sectors`, a new `run_name`; the run goes to `runs/mcp/<run_name>`, never over an existing directory), or **`run_pipeline_csv`** for
    a CSV. A TESS download needs network access and lightkurve; if the tool says it is missing, say so.
 3. Summarise each run: subjects, classifications, consensus dips and how many passed vetting, and the
    skipped reviewers with their reasons. List the passing candidates (id, time, depth, period, flags, FAP

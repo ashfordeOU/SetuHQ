@@ -229,11 +229,11 @@ def test_run_pipeline_csv_probes_only(tmp_path, monkeypatch, arrays):
         raise AssertionError("a Sentinel was called without sentinels=True")
 
     monkeypatch.setattr("exoplan.reviewers.http.post_json", no_network)
-    env = tools.run_pipeline_csv("lc.csv", "runs/out", target="pi Men", config_path="panel.toml")
+    env = tools.run_pipeline_csv("lc.csv", "out", target="pi Men", config_path="panel.toml")
     got = _check(env, "run_pipeline_csv")
     assert [r["id"] for r in got["reviewers"]] == ["volunteer-typical"]
-    assert got["counts"]["subjects"] >= 1 and (tmp_path / "runs/out/manifest.json").exists()
-    assert SECRET not in (tmp_path / "runs/out/manifest.json").read_text()
+    assert got["counts"]["subjects"] >= 1 and (tmp_path / "runs/mcp/out/manifest.json").exists()
+    assert SECRET not in (tmp_path / "runs/mcp/out/manifest.json").read_text()
     with pytest.raises(ToolError):
         tools.run_pipeline_csv("lc.csv", "../escape", config_path="panel.toml")
 
@@ -257,3 +257,71 @@ def test_mcp_main_serves_stdio_by_default_and_http_on_request(monkeypatch):
         assert calls[1][1] == {"host": "127.0.0.1", "port": 8765}
     with pytest.raises(SystemExit):
         M.main(["--http", "nonsense"])
+
+
+def test_tool_runs_never_overwrite_stored_results(tmp_path, monkeypatch, arrays):
+    """A tool run goes to a new runs/mcp/<name>; the stored pi Men run, the data root and an existing run are refused."""
+    import shutil
+
+    monkeypatch.setenv("EXOPLAN_ROOT", str(tmp_path))
+    stored = tmp_path / "runs/tess-pi-men-s1"
+    shutil.copytree(ROOT / RUN, stored, ignore=shutil.ignore_patterns("subjects", "fap_null"))
+    before = {p.name: p.read_bytes() for p in stored.iterdir() if p.is_file()}
+    rows = ["time,flux"] + [f"{t},{f}" for t, f in zip(arrays["time"], arrays["flux"])]
+    (tmp_path / "lc.csv").write_text("\n".join(rows))
+    (tmp_path / "panel.toml").write_text('[run]\nname = "t"\nmin_points = 100\n[search]\nfap_trials = 0\nfit_transits = false\n'
+                                         '[[reviewers]]\ntype = "simulated"\nid = "volunteer-typical"\n')
+    for bad in ("runs/tess-pi-men-s1", "../tess-pi-men-s1", ".", "", str(tmp_path / "abs"), "a/b"):
+        with pytest.raises(ToolError, match="plain name"):
+            tools.run_pipeline_csv("lc.csv", bad, config_path="panel.toml")
+    tools.run_pipeline_csv("lc.csv", "first", config_path="panel.toml")
+    with pytest.raises(ToolError, match="already exists"):
+        tools.run_pipeline_csv("lc.csv", "first", config_path="panel.toml")
+    assert {p.name: p.read_bytes() for p in stored.iterdir() if p.is_file()} == before  # untouched
+    assert not (tmp_path / "manifest.json").exists() and not (tmp_path / "candidates.json").exists()
+    with pytest.raises(ToolError):
+        tools.run_pipeline_tess("261136679", "runs/tess-pi-men-s1")
+
+
+def test_write_tool_hints_are_truthful(server):
+    listed = {t.name: t.annotations for t in _run(server.list_tools)}
+    for name in ("run_pipeline_csv", "run_pipeline_tess"):
+        a = listed[name].model_dump(by_alias=True)
+        assert a["readOnlyHint"] is False and a["idempotentHint"] is False and a["openWorldHint"] is True
+        assert a["destructiveHint"] is False  # it only ever creates a new directory, refused if it exists
+    assert listed["get_candidate"].model_dump(by_alias=True)["readOnlyHint"] is True
+
+
+def test_http_mode_is_read_only_unless_allowed(monkeypatch):
+    pytest.importorskip("mcp")
+    import exoplan.mcp_server as M
+
+    built = []
+    real = M.build_server
+
+    def capture(*a, **k):
+        server = real(*a, **k)
+        built.append((a, k, [t.name for t in _run(server.list_tools)]))
+        server.run = lambda *x, **y: None
+        return server
+
+    monkeypatch.setattr(M, "build_server", capture)
+    M.main(["--http", "8080"])
+    args, kw, names = built[-1]
+    assert args[0] == "127.0.0.1" and "run_pipeline_csv" not in names and "run_pipeline_tess" not in names
+    assert "get_candidate" in names
+    M.main(["--http", "8080", "--allow-writes"])
+    assert "run_pipeline_csv" in built[-1][2] and built[-1][1]["allow_sentinels"] is False
+    with pytest.raises(SystemExit):
+        M.main(["--http", "8080", "--allow-sentinels"])  # Sentinels only inside a run: needs --allow-writes
+    server = real(allow_writes=True, allow_sentinels=False)
+    with pytest.raises(Exception, match="Sentinels are disabled"):
+        _run(server.call_tool, "run_pipeline_csv", {"csv_path": "x.csv", "run_name": "x", "sentinels": True})
+
+
+def test_tool_errors_do_not_reveal_the_data_root(server):
+    with pytest.raises(Exception) as err:
+        _run(server.call_tool, "list_candidates", {"run_dir": "runs/no-such-run"})
+    assert str(ROOT) not in str(err.value) and "runs/no-such-run" in str(err.value)
+    env = tools.search_catalogue("pi Men", limit=1)
+    assert str(ROOT) not in json.dumps(env["provenance"])

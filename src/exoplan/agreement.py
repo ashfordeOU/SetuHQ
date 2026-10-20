@@ -53,15 +53,29 @@ def pairwise(hits: dict[str, dict[str, bool]], reviewers: list[str] | None = Non
     return out
 
 
-def effective_voters(table: list[dict], reviewers: list[str]) -> float | None:
+def constant_reviewers(hits: dict[str, dict[str, bool]], reviewers: list[str]) -> list[str]:
+    """Reviewers that gave the same answer on every star they answered (or answered none). φ with them is
+    undefined, so they carry no information about independence and are left out of the voter count."""
+    out = []
+    for rid in reviewers:
+        answers = {per[rid] for per in hits.values() if rid in per}
+        if len(answers) < 2:
+            out.append(rid)
+    return out
+
+
+def effective_voters(table: list[dict], reviewers: list[str], exclude: list[str] = ()) -> float | None:
     """A rough count of independent voters: k / (1 + (k − 1)·mean φ), with φ < 0 treated as 0.
 
-    k reviewers whose outcomes all correlate at φ act like this many independent ones
-    (the design-effect formula). None when no pair has a φ.
+    k reviewers whose outcomes all correlate at φ act like this many independent ones (the design-effect
+    formula). ``exclude`` (:func:`constant_reviewers`) is left out of k and of the pairs, so k counts only
+    reviewers whose every pair has a φ. None when fewer than two remain, or a remaining pair has no φ
+    (no stars in common).
     """
-    vals = [max(0.0, p["phi"]) for p in table if p["phi"] is not None]
-    k = len(reviewers)
-    if not vals or k < 2:
+    keep = [r for r in reviewers if r not in set(exclude)]
+    pairs = [p for p in table if p["a"] in keep and p["b"] in keep]
+    k = len(keep)
+    if k < 2 or not pairs or any(p["phi"] is None for p in pairs):
         return None
-    mean = sum(vals) / len(vals)
+    mean = sum(max(0.0, p["phi"]) for p in pairs) / len(pairs)
     return k / (1 + (k - 1) * mean)

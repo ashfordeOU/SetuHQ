@@ -77,3 +77,26 @@ def test_sentinel_section_reads_as_before_with_only_claude():
     md = "\n".join(B._sentinel_lines(stored))
     assert "Both Sentinels (one Claude model, two personas, through the Claude Code CLI)" in md
     assert "φ = 0.89" in md and "Agreement for every pair" not in md
+
+
+def test_effective_voters_leave_out_a_constant_reviewer_and_say_so():
+    from exoplan.agreement import constant_reviewers
+
+    hits = {"a": {"x": True, "y": True, "z": False}, "b": {"x": False, "y": False, "z": False},
+            "c": {"x": True, "y": False, "z": False}}
+    ids = ["x", "y", "z"]
+    table = pairwise(hits, ids)
+    assert constant_reviewers(hits, ids) == ["z"]  # z said no every time: its φ is undefined
+    xy = next(p for p in table if (p["a"], p["b"]) == ("x", "y"))["phi"]
+    # k counts only x and y, not z: 2 / (1 + φ_xy), not 3 / (1 + 2 φ_xy).
+    assert effective_voters(table, ids, ["z"]) == pytest.approx(2 / (1 + max(0.0, xy)))
+    assert effective_voters(table, ids, ["y", "z"]) is None  # fewer than two left
+    sample = _sample()
+    on, off = {"label": "potential_planet", "marks": [[1.0, 1.1]]}, {"label": "noise", "marks": []}
+    results = {"1.01": {"claude-volunteer": {"s": on}, "claude-skeptic": {"s": on}, "gemini-volunteer": {"s": off}},
+               "2.01": {"claude-volunteer": {"s": off}, "claude-skeptic": {"s": on}, "gemini-volunteer": {"s": off}},
+               "3.01": {"claude-volunteer": {"s": off}, "claude-skeptic": {"s": off}, "gemini-volunteer": {"s": off}}}
+    se = B.sentinel_summary({"subsample": list(results), "results": results}, sample, lambda c, t: c["t_center"] < 2)
+    assert se["constant_reviewers"] == ["gemini-volunteer"] and se["effective_voters_k"] == 2
+    md = "\n".join(B._sentinel_lines(se))
+    assert "of k = 2" in md and "Left out of k: gemini-volunteer" in md

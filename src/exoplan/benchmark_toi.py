@@ -215,7 +215,7 @@ def sentinel_summary(data: dict, sample: dict, match) -> dict:
     did it pass the TOI's dip as a potential planet. Per pair: agreement and φ over the stars both answered
     (:mod:`exoplan.agreement`), labelled same model or different provider/model.
     """
-    from exoplan.agreement import effective_voters, pairwise
+    from exoplan.agreement import constant_reviewers, effective_voters, pairwise
 
     toi = {t["toi"]: t for t in sample["tois"]}
     rows: dict[str, dict] = {}
@@ -238,7 +238,10 @@ def sentinel_summary(data: dict, sample: dict, match) -> dict:
     hits = {n: {rid: v["hit"] for rid, v in r.items()} for n, r in rows.items()}
     table = pairwise(hits, ids, identities)
     out["pairwise"] = table
-    out["effective_voters"] = effective_voters(table, ids)
+    constant = constant_reviewers(hits, ids)
+    out["effective_voters"] = effective_voters(table, ids, constant)
+    out["effective_voters_k"] = len(ids) - len(constant)
+    out["constant_reviewers"] = constant
     # The benchmarked pair, under its first name, so earlier reports read the same.
     pair = next((p for p in table if (p["a"], p["b"]) == CLAUDE_PAIR), None)
     if pair is not None:
@@ -540,9 +543,14 @@ def _sentinel_lines(se: dict) -> list[str]:
             same = {True: "yes", False: "no", None: "not recorded"}[p["same_model"]]
             phi = "–" if p["phi"] is None else f"{p['phi']:.2f}"
             lines.append(f"| {p['a']} · {p['b']} | {same} | {p['n']} | {p['agree']} | {phi} |")
-        ev = se.get("effective_voters")
+        ev, const = se.get("effective_voters"), se.get("constant_reviewers") or []
+        k = se.get("effective_voters_k", len(ids) - len(const))
+        left_out = (f" Left out of k: {', '.join(const)}, which gave the same answer on every star, so its φ is "
+                    "undefined." if const else "")
         if ev is not None:
-            lines += ["", f"Effective number of independent Sentinels, k / (1 + (k − 1)·mean φ): {ev:.1f} of {len(ids)}.", ""]
+            lines += ["", f"Effective number of independent Sentinels, k / (1 + (k − 1)·mean φ): {ev:.1f} of k = {k}.{left_out}", ""]
+        elif const:
+            lines += ["", f"No effective number of independent Sentinels: fewer than two reviewers with a defined φ.{left_out}", ""]
         lines += ["Only Claude has been benchmarked on the full subsample before; a provider's rates here are its first measurement.", ""]
     return lines
 

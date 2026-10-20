@@ -439,6 +439,10 @@ Sentinel · Volunteer on Claude, Sentinel · Skeptic on OpenAI, a third on Gemin
 `manifest.json`.
 
 * **Missing key, SDK or CLI:** that Sentinel is skipped, and the manifest lists it with the reason.
+* **Keys stay out of every record:** a `base_url` with `user:password@` or a credential in `query` is refused;
+  a rejected key (401, 403, other 4xx but 429) fails at once instead of being retried; error bodies are redacted.
+* **Cache:** the Anthropic API cache key now includes the provider, so answers cached by the `claude` backend
+  before this change are asked once more; the Claude Code cache key is unchanged.
 * **Weights are per provider and model.** A Sentinel not calibrated on its provider and model votes at the
   floor weight (0.05) and is labelled *uncalibrated* until `exoplan calibrate` measures it.
 * **Why it matters:** the two Claude personas agree with φ = 0.89, so they are close to one voter.
@@ -462,7 +466,7 @@ honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for 
 | Claude Code | `claude mcp add exoplan -- /path/to/SetuHQ/.venv/bin/exoplan-mcp` | the install |
 | Claude Code plugin | `/plugin install exoplan --marketplace ashfordeOU/SetuHQ` | `exoplan-mcp` on PATH |
 | Claude Desktop, Cursor, VS Code, Codex CLI, Gemini CLI | snippets in [`docs/MCP-INSTALL.md`](docs/MCP-INSTALL.md) | the install |
-| Remote (streamable HTTP) | `exoplan-mcp --http 127.0.0.1:8080` | your own host |
+| Remote (streamable HTTP) | `exoplan-mcp --http 8080` (localhost, read-only tools unless `--allow-writes`; no auth) | your own host |
 
 | Tools | What they do |
 |---|---|
