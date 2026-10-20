@@ -70,6 +70,9 @@ def clean(lc: LightCurve, *, high_sigma: float = 5.0, low_sigma: float = 10.0, w
     and its ingress and egress points below ``low_sigma`` join the run through the lower threshold. Before this guard
     every point of an eclipse deeper than ``low_sigma`` times the point-to-point scatter was removed, so deep
     eclipsing binaries and hot Jupiters on quiet stars never reached the panel.
+
+    The trade-off: a real event deeper than ``low_sigma`` that lasts less than ``min_dip_minutes`` (for example an
+    18-minute eclipse at 2-minute cadence, 9 cadences against the 10 required) is still removed as a spike.
     """
     valid = np.isfinite(lc.time) & np.isfinite(lc.flux) & np.isfinite(lc.flux_err) & (lc.flux_err > 0)
     lc = lc.masked(valid, cleaning_window_days=window_days)
