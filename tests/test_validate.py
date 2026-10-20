@@ -171,25 +171,53 @@ def _white_scan(**over):
 
 
 def test_all_phase_secondary_likelihood_closed_form():
-    """With a white all-phase scan, TP's likelihood is the density of the largest of N_eff noise excursions,
-    N_eff phi(z) Phi(z)^(N_eff - 1) / sigma, with N_eff simulated for the number of positions and sigma scaled by
-    the robust spread; the FPP is quoted with the robust-vs-std bracket."""
-    from exoplan.dvtests import white_quantiles
+    """With a white all-phase scan the no-secondary likelihood is the simulated null density f0 of the largest dip
+    (in units of the noise scale), and the binary's is (1/Z)[F0(z)(Phi(z) - Phi(z-Z)) + f0(z)(G(z) - G(z-Z))]."""
+    from exoplan.dvtests import null_cdf, null_pdf
 
     dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
     dv["secondary"].update(_white_scan(scan_robust_sigma=1.2, scan_std_snr=1.3))
     r = reduced_fpp(depth=1e-3, dv=dv)
     assert r.refused is None and r.fpp is not None
-    n_eff = white_quantiles(200)["n_eff"]
-    assert n_eff > 200                                       # overlapping boxes and refinement: more than positions
     ss = 10e-6 * 1.2
-    z = 30e-6 / ss
-    l0 = n_eff * norm.pdf(z) * norm.cdf(z) ** (n_eff - 1) / ss
-    leb = validate._uniform_marginal(30e-6, ss, 0.0, 1e-3)
-    assert r.evidence["secondary_bayes_factor_eb_vs_tp"] == pytest.approx(leb / l0, rel=1e-9)
+    z, big = 30e-6 / ss, 1e-3 / ss
+    f0, c0 = null_pdf(z, 200), null_cdf(z, 200)
+    g = lambda u: u * norm.cdf(u) + norm.pdf(u)  # noqa: E731
+    f1 = (c0 * (norm.cdf(z) - norm.cdf(z - big)) + f0 * (g(z) - g(z - big))) / big
+    assert r.evidence["secondary_bayes_factor_eb_vs_tp"] == pytest.approx(f1 / f0, rel=1e-9)
     lo, hi = r.evidence["fpp_bracket_robust_vs_std"]
     assert lo == pytest.approx(r.fpp) and hi is not None
     assert r.evidence["secondary_source"].startswith("all-phase")
+
+
+def test_null_distribution_is_a_cdf():
+    from exoplan.dvtests import null_cdf, null_pdf, white_quantiles
+
+    assert null_cdf(0.0, 187) == 0.0 and null_cdf(12.0, 187) == 1.0
+    assert null_cdf(white_quantiles(187)["q_dip"], 187) == pytest.approx(0.999, abs=0.001)
+    assert null_cdf(3.0, 400) < null_cdf(3.0, 25)          # more positions: a larger largest dip
+    assert null_pdf(3.0, 187) > null_pdf(1.0, 187) > 0
+
+
+def test_clean_planets_with_low_peaks_get_a_low_fpp():
+    """A clean 1000 ppm planet whose strongest dip elsewhere is unusually small (below 2.5 noise units) was charged for
+    it by the old max-of-N_eff null (FPP up to 0.97, Bayes factor 263); with the simulated null it is not."""
+    from exoplan.dvtests import extended_vet
+
+    import sys
+    sys.path.insert(0, "tests")
+    from test_dvtests import DUR, P, T0, _curve, _transits
+
+    low = []
+    for seed in range(60):
+        t, f, e = _curve(np.random.default_rng(7000 + seed), events=_transits(1000e-6))
+        _, m = extended_vet(t, f, e, period=P, t0=T0, duration=DUR)
+        s = m["secondary"]
+        r = reduced_fpp(depth=1e-3, dv=m)
+        if r.fpp is not None and s["snr"] / s["scan_robust_sigma"] < 2.5:
+            low.append(r.fpp)
+    assert len(low) >= 10
+    assert max(low) < 0.05
 
 
 @pytest.mark.parametrize("over, reason", [

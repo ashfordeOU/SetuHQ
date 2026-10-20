@@ -62,7 +62,10 @@ FAP (search.py)            statistical bootstrap                          implem
 
 from __future__ import annotations
 
+import json
 import math
+from functools import lru_cache
+from pathlib import Path
 
 import numpy as np
 from scipy.stats import chi2 as chi2_dist
@@ -83,6 +86,31 @@ SECONDARY_TABLE = (
     (313, 5.04, 5.13, 782),
     (409, 5.06, 5.09, 1048),
 )
+
+
+CALIBRATION_FILE = Path(__file__).resolve().parents[2] / "docs" / "results" / "secondary_calibration.json"
+
+
+@lru_cache(maxsize=1)
+def _null_tables():
+    data = json.loads(CALIBRATION_FILE.read_text())
+    z = np.array(data["z_grid"], float)
+    rows = sorted((r["positions"], np.array(r["null_cdf"], float)) for r in data["table"])
+    return z, np.array([r[0] for r in rows], float), np.array([r[1] for r in rows])
+
+
+def null_cdf(z: float, positions: int) -> float:
+    """The simulated white-noise CDF of (largest dip)/(robust spread) for a scan with ``positions`` coarse positions
+    (``null_cdf`` in docs/results/secondary_calibration.json, 40,000 scans per row), interpolated in z and in
+    log(positions), and clamped at the table's ends."""
+    grid, pos, cdfs = _null_tables()
+    at = np.array([np.interp(z, grid, c, left=0.0, right=1.0) for c in cdfs])
+    return float(np.clip(np.interp(math.log(max(positions, 2)), np.log(pos), at), 0.0, 1.0))
+
+
+def null_pdf(z: float, positions: int, h: float = 0.1) -> float:
+    """The matching density (a centred difference of :func:`null_cdf` over ±``h``), floored at 1e-12."""
+    return max((null_cdf(z + h, positions) - null_cdf(z - h, positions)) / (2 * h), 1e-12)
 
 
 def white_quantiles(positions: int) -> dict:

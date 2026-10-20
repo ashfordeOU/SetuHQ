@@ -21,11 +21,13 @@ lower bound on the full one, and the label says "not validated" for that reason 
 
 Likelihoods, from the S2 measurements (each closed-form):
 
-* Secondary, from the all-phase search: the strongest dip s ± σ_s at any phase, with σ_s scaled by the scan's
-  robust spread. TP and EBx2P predict no secondary, so s is the largest of N_eff noise excursions, N_eff simulated
-  for that number of box positions (:data:`exoplan.dvtests.SECONDARY_TABLE`; about 1.5–1.8 times the positions):
-  likelihood N_eff φ(z) Φ(z)^(N_eff−1)/σ_s with z = s/σ_s. EB predicts a secondary
-  anywhere between 0 and the primary depth δ: (1/δ) ∫₀^δ N(s; x, σ_s) dx. Without the all-phase search, the
+* Secondary, from the all-phase search: the strongest dip s ± σ_s at any phase, in units of z = s/σ_s with σ_s
+  scaled by the scan's noise. TP and EBx2P predict no secondary, so z is the largest dip of a white-noise scan:
+  likelihood f₀(z), the simulated null density for that number of box positions (``null_cdf`` in
+  docs/results/secondary_calibration.json; modelling it as the largest of N_eff independent draws broke in the low
+  tail and charged a planet for an unusually small dip). EB predicts a true secondary μ uniform in [0, Z], Z = δ/σ_s,
+  so the largest dip is the larger of N(μ, 1) and the noise maximum: likelihood
+  (1/Z) [F₀(z)(Φ(z) − Φ(z−Z)) + f₀(z)(G(z) − G(z−Z))] with G(u) = uΦ(u) + φ(u). Without the all-phase search, the
   phase-0.5 value is used with N(s; 0, σ_s), and so it is when the strongest dip is not periodic (one epoch
   carries 70% or more of it): a binary's secondary is in every epoch. (A planet's own occultation is taken as zero; it is tens of ppm at
   most for hot Jupiters in TESS.)
@@ -182,8 +184,6 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
     result says "FPP not computed" with the numbers, and the range of FPPs under other noise models is kept in
     ``evidence["fpp_sensitivity"]`` only.
     """
-    from exoplan.dvtests import white_quantiles
-
     notes = []
     dv = dv or {}
     fit = fit or {}
@@ -219,10 +219,20 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
     def secondary_like(widen: float):
         """(L_TP = L_EBx2P, L_EB) of the secondary measurement with the noise scaled by ``widen``."""
         if use_peak:
-            n_eff = white_quantiles(scan["n_trials"])["n_eff"]
-            s, ss = scan["depth_ppm"] * 1e-6, scan["sigma_ppm"] * 1e-6 * widen
-            z = s / ss
-            return float(n_eff * norm.pdf(z) * norm.cdf(z) ** (n_eff - 1.0) / ss), _uniform_marginal(s, ss, 0.0, depth)
+            # In units of z = largest dip / noise scale: the null density f0 is simulated (null_pdf); a binary's
+            # secondary is a true dip mu ~ U[0, Z] (Z the primary depth in the same units) seen with unit noise,
+            # and the largest dip is then the larger of that and the noise maximum, whose density is
+            # phi(z - mu) F0(z) + Phi(z - mu) f0(z); averaged over mu in closed form, with G(u) = u Phi(u) + phi(u).
+            from exoplan.dvtests import null_cdf, null_pdf
+
+            n = scan["n_trials"]
+            ss = scan["sigma_ppm"] * 1e-6 * widen
+            z = scan["depth_ppm"] * 1e-6 / ss
+            big_z = max(depth / ss, 1e-9)
+            f0, cdf0 = null_pdf(z, n), null_cdf(z, n)
+            g = lambda u: u * norm.cdf(u) + norm.pdf(u)  # noqa: E731
+            f1 = (cdf0 * (norm.cdf(z) - norm.cdf(z - big_z)) + f0 * (g(z) - g(z - big_z))) / big_z
+            return f0, max(f1, 1e-300)
         if sec05 and sec05.get("sigma_ppm"):
             s, ss = sec05["depth_ppm"] * 1e-6, sec05["sigma_ppm"] * 1e-6 * widen
             return _gauss(s, ss), _uniform_marginal(s, ss, 0.0, depth)

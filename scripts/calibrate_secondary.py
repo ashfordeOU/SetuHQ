@@ -13,9 +13,10 @@ normalise it is itself estimated from the same few dozen to few hundred position
 * q_abs = (largest |excursion|, dip or brightening) / (robust spread): the white-noise gate of the reduced FPP.
 
 The larger of the two cadences is kept at each position count. It also measures the effective number of
-independent positions N_eff, from P(max > z) = 1 − Φ(z)^N_eff at the true σ, which the reduced FPP's null
-likelihood uses. Output: ``docs/results/secondary_calibration.json``, whose table is copied into
-``exoplan.dvtests.SECONDARY_TABLE``.
+independent positions N_eff, from P(max > z) = 1 − Φ(z)^N_eff at the true σ (for reference), and stores the
+empirical CDF of q_dip (both cadences pooled, 40,000 scans) on a grid of z, which the reduced FPP uses as its
+no-secondary likelihood (``exoplan.dvtests.null_cdf``). Output: ``docs/results/secondary_calibration.json``, whose
+quantiles are copied into ``exoplan.dvtests.SECONDARY_TABLE``.
 
     python scripts/calibrate_secondary.py               # the table (about 10 minutes) and the rates
     python scripts/calibrate_secondary.py --rates-only  # only the reproduced rates
@@ -64,12 +65,17 @@ def white_scans(period: float, cadence_min: float, n: int, seed0: int):
     return positions, np.array(q_dip), np.array(q_abs), np.array(raw)
 
 
+Z_GRID = [round(0.05 * i, 2) for i in range(0, 241)]   # 0 to 12 robust spreads
+
+
 def table(n_sims: int) -> list[dict]:
     rows = []
     for period in PERIODS:
         best = None
+        pooled = []
         for cadence in (2.0, 10.0):
             positions, q_dip, q_abs, raw = white_scans(period, cadence, n_sims, 10_000 * int(period * 100) + int(cadence))
+            pooled.append(q_dip)
             z = float(np.quantile(q_dip, 0.999))
             # N_eff at the true σ: P(raw max > zz) = 1 − Φ(zz)^N_eff, at zz = the 99% quantile of the raw maximum
             zz = float(np.quantile(raw, 0.99))
@@ -83,6 +89,11 @@ def table(n_sims: int) -> list[dict]:
             else:
                 best["q_abs_999"] = max(best["q_abs_999"], row["q_abs_999"])
                 best["n_eff"] = max(best["n_eff"], row["n_eff"])
+        # the null distribution of (largest dip)/(robust spread), both cadences pooled: its CDF on Z_GRID, which the
+        # reduced FPP uses as the no-secondary likelihood (validate.reduced_fpp)
+        q = np.sort(np.concatenate(pooled))
+        best["null_cdf"] = [round(float(np.searchsorted(q, z, side="right") / q.size), 6) for z in Z_GRID]
+        best["null_n"] = int(q.size)
         rows.append(best)
     return rows
 
@@ -151,7 +162,9 @@ def main(argv=None) -> int:
     if not args.rates_only:
         data["table"] = table(args.sims)
         data["note"] = ("99.9% quantiles over white-noise scans (27 days, T14 = 0.125 d, 2- and 10-minute cadence, the "
-                        "larger kept); positions = coarse box positions of secondary_search")
+                        "larger kept); positions = coarse box positions of secondary_search; null_cdf: the CDF of "
+                        "(largest dip)/(robust spread) on z_grid, both cadences pooled")
+        data["z_grid"] = Z_GRID
     data["rates"] = rates()
     out.write_text(json.dumps(data, indent=1, default=int) + "\n")
     return 0
