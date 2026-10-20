@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 name: ci
 
 on:
@@ -9,11 +10,14 @@ permissions:
 
 jobs:
   test:
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # the ingest ledger is checked against its merge-base with the base branch, and the README figures name each source's commit
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"  # the README figures were made with 3.13 and the pinned readme extra
       - name: Install into a venv
         run: |
           python3 -m venv .venv

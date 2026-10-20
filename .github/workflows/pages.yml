@@ -1,6 +1,9 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 name: pages
 
-# Publishes the static site (report and discovery feed) on every push to main and to claude/dreamy-pasteur-pyawgi.
+# Publishes the committed site/ to GitHub Pages, served at https://setuhq.com (site/CNAME), on every push to
+# main and to claude/dreamy-pasteur-pyawgi, or by hand. site/ is built and committed with scripts/ci_local.sh
+# (the app, the docket, the plates and the report from the stored run); this workflow deploys it as it is.
 
 on:
   push:
@@ -18,7 +21,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -1,11 +1,18 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 name: discover
 
-# Runs one discovery batch every six hours, updates the catalogue and republishes the site.
-# Claude's API reviewer runs when the ANTHROPIC_API_KEY repository secret is set.
+# Runs one discovery batch on request, commits the feed's catalogue and republishes the site.
+#
+# * Manual only (workflow_dispatch). The six-hourly schedule was removed for the public release; turning a
+#   schedule back on is the repository owner's decision.
+# * Reviewers: the Probes always run. The Claude API Sentinel runs only when the ANTHROPIC_API_KEY repository
+#   secret is set; without it the Sentinel is skipped and listed as skipped in the run's manifest, so the batch
+#   runs on the Probes only.
+# * Every commit it makes is authored and committed as ashfordeOU.
+# * The feed's admissions are leads for review, not planets: under the pre-registered two-sector rule the
+#   feed is still dominated by false alarms (README, Evidence).
 
 on:
-  schedule:
-    - cron: "17 */6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -19,10 +26,16 @@ concurrency:
 
 jobs:
   discover:
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     timeout-minutes: 330
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
       - name: Install into a venv
         run: |
           python3 -m venv .venv
@@ -32,10 +45,13 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: .venv/bin/setuhq discover configs/discovery.toml --batch-size 20 --time-budget-min 300
-      - name: Commit catalogue
+      - name: Commit catalogue (as ashfordeOU)
+        env:
+          GIT_AUTHOR_NAME: ashfordeOU
+          GIT_AUTHOR_EMAIL: 236818772+ashfordeOU@users.noreply.github.com
+          GIT_COMMITTER_NAME: ashfordeOU
+          GIT_COMMITTER_EMAIL: 236818772+ashfordeOU@users.noreply.github.com
         run: |
-          git config user.name "ashfordeOU"
-          git config user.email "236818772+ashfordeOU@users.noreply.github.com"
           git add docs/discoveries site/discoveries
           git diff --cached --quiet || git commit -m "Discovery batch $(date -u +%Y-%m-%dT%H:%MZ)"
           git push
