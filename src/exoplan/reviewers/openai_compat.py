@@ -16,7 +16,7 @@ import base64
 import os
 from pathlib import Path
 
-from exoplan.reviewers.http import Transport, post_json
+from exoplan.reviewers.http import Transport, check_endpoint, post_json, redact
 from exoplan.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer
 from exoplan.reviewers.task import ReviewError
 
@@ -35,6 +35,7 @@ class ChatCompletionsBackend:
             raise ValueError(f"a {provider} Sentinel needs a 'base_url'")
         if auth not in ("bearer", "api-key", "none"):
             raise ValueError(f"auth must be 'bearer', 'api-key' or 'none', not {auth!r}")
+        check_endpoint(base_url, query)  # no key in the URL or the query: environment only
         self.provider = provider
         self.model = model
         self.base_url = base_url.rstrip("/")
@@ -100,7 +101,7 @@ def parse_chat_completion(data: dict, provider: str) -> Reply:
         raise ReviewError(f"{provider}: the answer is not a JSON object")
     if data.get("error"):
         err = data["error"]
-        raise ReviewError(f"{provider}: {err.get('message', err) if isinstance(err, dict) else err}"[:300])
+        raise ReviewError(redact(f"{provider}: {err.get('message', err) if isinstance(err, dict) else err}")[:300])
     choices = data.get("choices")
     if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
         raise ReviewError(f"{provider}: no choices in the answer")

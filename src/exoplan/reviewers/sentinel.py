@@ -31,7 +31,8 @@ from pathlib import Path
 from typing import Protocol
 
 from exoplan.reviewers.base import Classification
-from exoplan.reviewers.task import PROMPT_VERSION, ReviewError, build_prompt, parse_response
+from exoplan.reviewers.http import safe_url
+from exoplan.reviewers.task import PROMPT_VERSION, NotRetried, ReviewError, build_prompt, parse_response
 from exoplan.subjects import Subject
 
 # The environment variable each provider's key is read from. An OpenAI-compatible endpoint
@@ -52,7 +53,7 @@ PROVIDER_LABELS = {
 }
 
 
-class RefusalError(ReviewError):
+class RefusalError(NotRetried):
     """The provider declined to answer (a refusal or a safety block). Not retried."""
 
 
@@ -131,7 +132,7 @@ class SentinelReviewer:
                "model": self.model or "default", "persona": self.persona, "prompt_version": PROMPT_VERSION}
         endpoint = getattr(self.backend, "base_url", None)
         if endpoint and self.provider == "openai-compatible":
-            out["endpoint"] = endpoint
+            out["endpoint"] = safe_url(endpoint)
         return out
 
     # -- the review ------------------------------------------------------------------
@@ -172,7 +173,7 @@ class SentinelReviewer:
             "cached": hit,
         }
         if self.provider == "openai-compatible":
-            meta["endpoint"] = getattr(self.backend, "base_url", None)
+            meta["endpoint"] = safe_url(getattr(self.backend, "base_url", None))
         return Classification(result.reviewer_id, result.subject_id, result.label, result.marks, result.reason,
                               result.confidence, result.rationale, meta)
 
@@ -183,9 +184,9 @@ class SentinelReviewer:
                 reply = self.backend.call(system, user, image)
                 check_shape(reply.text, self.reviewer_id)
                 return reply
-            except RefusalError:
+            except NotRetried:  # a refusal, a rejected key, a bad request: asking again will not help
                 raise
-            except Exception as exc:  # malformed answers, wrong schema, timeouts and HTTP errors are retried
+            except Exception as exc:  # malformed answers, wrong schema, timeouts, 429 and 5xx are retried
                 last_error = exc
             if attempt + 1 < self.retries:
                 time.sleep(2**attempt)

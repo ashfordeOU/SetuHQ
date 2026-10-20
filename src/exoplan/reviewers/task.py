@@ -50,6 +50,15 @@ class ReviewError(RuntimeError):
     """Raised when the model's answer cannot be used after all retries."""
 
 
+class NotRetried(ReviewError):
+    """A failure that asking again will not fix (a refusal, a rejected key, a bad request): reported at once."""
+
+
+def fatal_status(code) -> bool:
+    """True for an HTTP status that retrying cannot fix: 4xx except 408 (timeout) and 429 (rate limit)."""
+    return isinstance(code, int) and 400 <= code < 500 and code not in (408, 429)
+
+
 def build_prompt(subject: Subject, persona: str) -> tuple[str, str]:
     """Return (system prompt, user text). The user text carries the axis range but never the target identity."""
     if persona not in PERSONAS:

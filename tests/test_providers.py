@@ -4,6 +4,7 @@ provider's HTTP answer is mocked, including malformed JSON, refusals, timeouts a
 import json
 import socket
 import urllib.error
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -372,7 +373,7 @@ def test_weights_apply_only_to_the_provider_and_model_they_were_measured_on(keys
     assert w["gpt-skeptic"] == WEIGHT_FLOOR and basis["gpt-skeptic"]["status"] == "uncalibrated"
     assert "gpt-old" in basis["gpt-skeptic"]["note"]
     assert w["claude-skeptic"] == 0.5 and basis["claude-skeptic"]["status"] == "calibrated"
-    assert "does not store" in basis["claude-skeptic"]["note"]
+    assert "claude-code / default only" in basis["claude-skeptic"]["note"]
     assert w["vol-a"] == 1.0 and basis["vol-a"]["status"] == "uncalibrated"
     w, basis = apply_calibration([a, probe], None)
     assert w == {"gpt-skeptic": 1.0, "vol-a": 1.0} and {b["status"] for b in basis.values()} == {"uniform"}
@@ -436,3 +437,142 @@ def test_example_mixed_panel_config_builds_three_providers(tmp_path):
         ("gemini-volunteer", "gemini", "volunteer")]
     assert [display_name(r.reviewer_id, r.kind) for r in panel] == ["Sentinel · Volunteer", "Sentinel · Skeptic",
                                                                      "Sentinel · Volunteer"]
+
+
+# ---------------------------------------------------------------- review fixes: calibration, keys, retries
+
+
+COMMITTED_WEIGHTS = Path(__file__).resolve().parents[1] / "docs/results/reviewer_weights_full_panel.json"
+
+
+def _committed():
+    from exoplan.calibrate import calibration_path
+
+    return json.loads(COMMITTED_WEIGHTS.read_text()), json.loads(calibration_path(COMMITTED_WEIGHTS).read_text())
+
+
+def test_committed_calibration_record_names_provider_and_model():
+    _, record = _committed()
+    for rid in ("claude-volunteer", "claude-skeptic"):
+        assert record["reviewers"][rid]["provider"] == "claude-code" and record["reviewers"][rid]["model"] == "default"
+
+
+@pytest.mark.parametrize("strip", [False, True])
+def test_another_model_under_a_claude_id_does_not_inherit_its_weight(keys, strip):
+    """An OpenAI reviewer reusing a Claude id, or Claude Code with another model, gets the floor, whether or not
+    the record stores a provider (a record without one holds for claude-code / default only)."""
+    weights, record = _committed()
+    if strip:  # an older record, written before providers were stored
+        for entry in record["reviewers"].values():
+            entry.pop("provider", None), entry.pop("model", None)
+    gpt = OpenAIReviewer("claude-skeptic", model="gpt-5")
+    changed = ClaudeCodeReviewer("claude-volunteer", model="claude-other-model", runner=lambda c, w: "")
+    api = ClaudeReviewer("claude-volunteer", model="claude-sonnet-5-5")
+    same = ClaudeCodeReviewer("claude-skeptic", runner=lambda c, w: "")
+    for reviewer in (gpt, changed, api):
+        w, basis = apply_calibration([reviewer], weights, record)
+        assert w[reviewer.reviewer_id] == WEIGHT_FLOOR and basis[reviewer.reviewer_id]["status"] == "uncalibrated"
+    w, basis = apply_calibration([same, SimulatedVolunteer("volunteer-typical")], weights, record)
+    assert w["claude-skeptic"] == 0.5 and basis["claude-skeptic"]["status"] == "calibrated"
+    assert w["volunteer-typical"] == 0.6
+
+
+def test_credentials_in_an_endpoint_are_refused_and_never_echoed(keys):
+    for url in (f"https://user:{SECRET}@host.example/v1", f"https://{SECRET}@host.example/v1"):
+        with pytest.raises(ValueError) as err:
+            OpenAICompatibleReviewer("x", model="m", base_url=url)
+        assert SECRET not in str(err.value)
+    for name in ("key", "API-KEY", "api_key", "Token", "sig", "signature", "code", "secret", "password"):
+        with pytest.raises(ValueError) as err:
+            OpenAICompatibleReviewer("x", model="m", base_url="https://h.example/v1", query={name: SECRET})
+        assert SECRET not in str(err.value)
+    with pytest.raises(ValueError):
+        OpenAICompatibleReviewer("x", model="m", base_url=f"https://h.example/v1?key={SECRET}")
+    with pytest.raises(ValueError):
+        GeminiReviewer("x", model="m", base_url=f"https://u:{SECRET}@g.example/v1beta")
+    with pytest.raises(ValueError):
+        build_reviewers([{"type": "openai_compatible", "id": "x", "model": "m", "base_url": f"https://u:{SECRET}@h/v1"}])
+    # Allowed: a query without a credential (Azure's api-version).
+    OpenAICompatibleReviewer("x", model="m", base_url="https://h.example/openai/v1", query={"api-version": "preview"})
+
+
+def test_recorded_endpoint_never_carries_userinfo():
+    from exoplan.reviewers.http import safe_url
+
+    assert safe_url(f"https://u:{SECRET}@h.example:8443/v1") == "https://h.example:8443/v1"
+    assert safe_url("http://localhost:11434/v1") == "http://localhost:11434/v1"
+
+
+def test_a_key_string_reaches_no_manifest_cache_or_exception(monkeypatch, tmp_path, lightcurve_with_transits):
+    monkeypatch.setenv("OPENROUTER_API_KEY", SECRET)
+    leaky = {"error": {"message": f"Incorrect API key provided: {SECRET}. Bearer {SECRET}"}}
+    good = chat(answer([(2.4, 2.6)]))
+    errors = []
+
+    def transport(url, headers, body, timeout):
+        assert SECRET not in url and SECRET not in json.dumps(body)
+        if len(errors) < 1:
+            errors.append(1)
+            return leaky
+        return good
+
+    r = OpenAICompatibleReviewer("compat-skeptic", model="m", base_url="https://openrouter.ai/api/v1",
+                                 api_key_env="OPENROUTER_API_KEY", transport=transport, cache_dir=tmp_path / "cache",
+                                 retries=1)
+    config = RunConfig(name="leak", subject_days=13.0, min_points=100, fap_trials=0, fit_transits=False)
+    import warnings
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        run_pipeline(config, [lightcurve_with_transits], [r], tmp_path / "run")
+    assert caught and all(SECRET not in str(w.message) for w in caught)  # the first review failed, redacted
+    for path in [*(tmp_path / "run").rglob("*.json"), *(tmp_path / "run").rglob("*.csv"), *(tmp_path / "cache").glob("*.json")]:
+        assert SECRET not in path.read_text(), path
+
+
+@pytest.mark.parametrize("code, retried", [(401, False), (403, False), (400, False), (404, False), (429, True), (500, True)])
+def test_auth_and_bad_request_errors_fail_fast(monkeypatch, image, keys, code, retried):
+    import io
+
+    subject, _, png = image
+    calls = []
+
+    def http_error(*a, **k):
+        calls.append(1)
+        raise urllib.error.HTTPError("https://api.openai.com/v1/chat/completions", code, "no", {},
+                                     io.BytesIO(f'{{"error": "bad key {SECRET}"}}'.encode()))
+
+    monkeypatch.setattr("exoplan.reviewers.http.urllib.request.urlopen", http_error)
+    with pytest.raises(ReviewError) as err:
+        OpenAIReviewer("r", model="m", retries=3).review(subject, png)
+    assert len(calls) == (3 if retried else 1)
+    assert SECRET not in str(err.value) and f"HTTP {code}" in str(err.value)
+
+
+def test_anthropic_auth_error_fails_fast(monkeypatch, image):
+    subject, _, png = image
+    monkeypatch.setenv("ANTHROPIC_API_KEY", SECRET)
+
+    class AuthError(Exception):
+        status_code = 401
+
+    class Messages:
+        calls = 0
+
+        def create(self, **kw):
+            Messages.calls += 1
+            raise AuthError(f"invalid x-api-key {SECRET}")
+
+    with pytest.raises(ReviewError) as err:
+        ClaudeReviewer("c", client=SimpleNamespace(messages=Messages()), retries=3).review(subject, png)
+    assert Messages.calls == 1 and SECRET not in str(err.value)
+
+
+def test_redact_removes_tokens_and_the_configured_key():
+    from exoplan.reviewers.http import redact
+
+    text = f'Bearer abc.def-123 key={SECRET} "api_key": "zzz-999" sk-proj-ABCDEFGH1234 AIza{"x" * 30} plain {SECRET}'
+    out = redact(text, [SECRET])
+    for gone in (SECRET, "abc.def-123", "zzz-999", "sk-proj-ABCDEFGH1234", "AIza" + "x" * 30):
+        assert gone not in out
+    assert "plain" in out

@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "exoplan": {
-      "command": "exoplan-mcp",
-      "args": [],
-      "env": {}
-    }
-  }
-}

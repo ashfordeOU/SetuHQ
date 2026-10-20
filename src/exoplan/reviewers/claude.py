@@ -17,6 +17,7 @@ import os
 import time  # noqa: F401  (tests patch exoplan.reviewers.claude.time.sleep to skip the backoff)
 from pathlib import Path
 
+from exoplan.reviewers.http import ProviderRejected, redact
 from exoplan.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer
 from exoplan.reviewers.task import (  # noqa: F401  (the shared task, re-exported for existing imports)
     OUTPUT_SCHEMA,
@@ -25,6 +26,7 @@ from exoplan.reviewers.task import (  # noqa: F401  (the shared task, re-exporte
     VOLUNTEER_TASK,
     ReviewError,
     build_prompt,
+    fatal_status,
     parse_response,
 )
 
@@ -63,12 +65,18 @@ class AnthropicBackend:
             self.client = anthropic.Anthropic()
         image_block = {"type": "image", "source": {"type": "base64", "media_type": "image/png",
                                                    "data": base64.b64encode(image.read_bytes()).decode("ascii")}}
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=self.max_tokens,
-            system=system,
-            messages=[{"role": "user", "content": [image_block, {"type": "text", "text": user}]}],
-        )
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=self.max_tokens,
+                system=system,
+                messages=[{"role": "user", "content": [image_block, {"type": "text", "text": user}]}],
+            )
+        except Exception as exc:  # the SDK's errors carry status_code: a bad key or model is not retried
+            if fatal_status(getattr(exc, "status_code", None)):
+                raise ProviderRejected(redact(f"anthropic: HTTP {exc.status_code}: {exc}",
+                                              [os.environ.get(KEY_ENV["anthropic"], "")])[:300]) from None
+            raise
         if getattr(response, "stop_reason", None) == "refusal":
             raise RefusalError("anthropic: the model declined to answer (stop_reason 'refusal')")
         text = next((block.text for block in response.content if getattr(block, "type", "") == "text"), None)

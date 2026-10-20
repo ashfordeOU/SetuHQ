@@ -135,6 +135,8 @@ def calibration_record(skills: dict[str, ReviewerSkill], *, weights_file: str, f
 
 # A calibration status per reviewer, as the manifest and the pages show it.
 CALIBRATED, UNCALIBRATED, UNIFORM = "calibrated", "uncalibrated", "uniform"
+# What a calibration record without a stored provider was measured on: the Claude Code CLI at its default model.
+LEGACY_IDENTITY = ("claude-code", "default")
 
 
 def identity(reviewer) -> dict:
@@ -152,8 +154,8 @@ def apply_calibration(reviewers, weights: dict[str, float] | None, record: dict 
 
     * No weights: every reviewer weighs 1.0 (status ``uniform``).
     * A reviewer with a weight, measured on the same provider and model (or on a Probe): that
-      weight (``calibrated``). A record written before provider and model were stored is accepted
-      and says so in the note.
+      weight (``calibrated``). A record that stores no provider counts as measured on
+      ``claude-code`` / ``default`` (:data:`LEGACY_IDENTITY`) and holds for that only.
     * A Sentinel with no weight, or one measured on another provider or model: the floor weight
       (``uncalibrated``). It still votes, as the weakest reviewer does, until it is calibrated.
     * A Probe with no weight keeps 1.0, as before (``uncalibrated``).
@@ -171,14 +173,17 @@ def apply_calibration(reviewers, weights: dict[str, float] | None, record: dict 
             continue
         stored = rec.get(rid) or {}
         if rid in weights:
-            if ident and stored.get("provider") and (stored.get("provider"), stored.get("model")) != (ident["provider"], ident["model"]):
+            # A record that stores no provider predates other providers: its Sentinels were Claude through the
+            # Claude Code CLI at its default model, and the weight is valid for exactly that and nothing else.
+            measured = ((stored["provider"], stored.get("model")) if stored.get("provider") else LEGACY_IDENTITY)
+            if ident and measured != (ident["provider"], ident["model"]):
                 out_w[rid] = floor
-                out_b[rid] = {"status": UNCALIBRATED, "note": f"its weight was measured on {stored.get('provider')} / "
-                              f"{stored.get('model')}, not {ident['provider']} / {ident['model']}: floor weight {floor}"}
+                out_b[rid] = {"status": UNCALIBRATED, "note": f"its weight was measured on {measured[0]} / "
+                              f"{measured[1]}, not {ident['provider']} / {ident['model']}: floor weight {floor}"}
             else:
                 out_w[rid] = float(weights[rid])
                 note = "measured by injection" if not ident or stored.get("provider") else \
-                    "measured by injection; the calibration record does not store its provider and model"
+                    "measured by injection; the record stores no provider, so it holds for claude-code / default only"
                 out_b[rid] = {"status": CALIBRATED, "note": note}
         elif ident:
             out_w[rid] = floor

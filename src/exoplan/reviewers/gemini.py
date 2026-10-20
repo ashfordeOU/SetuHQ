@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 from urllib.parse import quote
 
-from exoplan.reviewers.http import Transport, post_json
+from exoplan.reviewers.http import Transport, check_endpoint, post_json, redact
 from exoplan.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer
 from exoplan.reviewers.task import ReviewError
 
@@ -28,6 +28,7 @@ class GeminiBackend:
                  timeout: float = 120.0, transport: Transport | None = None):
         if not model:
             raise ValueError("a gemini Sentinel needs a 'model' (a vision model id)")
+        check_endpoint(base_url)
         self.model = model
         self.base_url = base_url.rstrip("/")
         self.max_tokens = max_tokens
@@ -68,7 +69,7 @@ def parse_generate_content(data: dict) -> Reply:
         raise ReviewError("gemini: the answer is not a JSON object")
     if data.get("error"):
         err = data["error"]
-        raise ReviewError(f"gemini: {err.get('message', err) if isinstance(err, dict) else err}"[:300])
+        raise ReviewError(redact(f"gemini: {err.get('message', err) if isinstance(err, dict) else err}")[:300])
     feedback = data.get("promptFeedback") or {}
     if isinstance(feedback, dict) and feedback.get("blockReason"):
         raise RefusalError(f"gemini: the prompt was blocked ({feedback['blockReason']})")

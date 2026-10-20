@@ -4,8 +4,8 @@
   "rule": "weight = max(TPR - FPR, floor)",
   "source": "Per-reviewer rates printed by 'exoplan calibrate' when it wrote reviewer_weights_full_panel.json on 2026-10-16. Sample size from the commit that added the weights: n = 10 injected and 10 empty subjects per reviewer.",
   "reviewers": {
-    "claude-skeptic": {"tpr": 0.5, "fpr": 0.0, "weight": 0.5, "n_injected": 10, "n_empty": 10},
-    "claude-volunteer": {"tpr": 0.5, "fpr": 0.0, "weight": 0.5, "n_injected": 10, "n_empty": 10},
+    "claude-skeptic": {"tpr": 0.5, "fpr": 0.0, "weight": 0.5, "n_injected": 10, "n_empty": 10, "provider": "claude-code", "model": "default"},
+    "claude-volunteer": {"tpr": 0.5, "fpr": 0.0, "weight": 0.5, "n_injected": 10, "n_empty": 10, "provider": "claude-code", "model": "default"},
     "volunteer-cautious": {"tpr": 0.4, "fpr": 0.0, "weight": 0.4, "n_injected": 10, "n_empty": 10},
     "volunteer-sensitive": {"tpr": 0.6, "fpr": 0.0, "weight": 0.6, "n_injected": 10, "n_empty": 10},
     "volunteer-typical": {"tpr": 0.6, "fpr": 0.0, "weight": 0.6, "n_injected": 10, "n_empty": 10}
