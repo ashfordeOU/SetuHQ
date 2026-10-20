@@ -24,6 +24,7 @@ import hashlib
 import json
 import math
 import os
+import stat
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -440,6 +441,22 @@ def _new_run_dir(run_name: str) -> Path:
 
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", run_name or "") or ".." in run_name:
         raise ToolError("run_name must be a plain name (letters, digits, '.', '_', '-'), not a path")
+    base = root()
+    # Never follow a link: a symlinked runs/ or runs/mcp/, or anything already at the name (a dangling
+    # symlink included), could redirect the run outside runs/mcp.
+    for rel in ("runs", TOOL_RUNS):
+        try:
+            st = os.lstat(base / rel)
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(st.st_mode) or not stat.S_ISDIR(st.st_mode):
+            raise ToolError(f"{rel} is a link or not a directory; tool runs are refused until it is a plain directory")
+    try:
+        os.lstat(base / TOOL_RUNS / run_name)
+    except FileNotFoundError:
+        pass
+    else:
+        raise ToolError(f"{TOOL_RUNS}/{run_name} already exists; a tool run never overwrites, pick a new run_name")
     out = _path(f"{TOOL_RUNS}/{run_name}", must_exist=False)
     try:
         out.mkdir(parents=True, exist_ok=False)  # atomic: two calls cannot both claim one directory

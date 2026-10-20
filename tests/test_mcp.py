@@ -325,3 +325,30 @@ def test_tool_errors_do_not_reveal_the_data_root(server):
     assert str(ROOT) not in str(err.value) and "runs/no-such-run" in str(err.value)
     env = tools.search_catalogue("pi Men", limit=1)
     assert str(ROOT) not in json.dumps(env["provenance"])
+
+
+def test_tool_runs_never_follow_a_link(tmp_path, monkeypatch):
+    """A dangling symlink at the name, or a symlinked runs/mcp, cannot redirect a run outside runs/mcp."""
+    import os
+
+    data = tmp_path / "root"
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (data / "runs/mcp").mkdir(parents=True)
+    monkeypatch.setenv("EXOPLAN_ROOT", str(data))
+    os.symlink(outside / "gone", data / "runs/mcp/dangling")  # dangling: its target does not exist
+    with pytest.raises(ToolError, match="already exists"):
+        tools._new_run_dir("dangling")
+    assert not (outside / "gone").exists()
+    (data / "runs/mcp/dangling").unlink()
+    (data / "runs/mcp").rmdir()
+    os.symlink(outside, data / "runs/mcp")
+    with pytest.raises(ToolError, match="is a link"):
+        tools._new_run_dir("fresh")
+    assert list(outside.iterdir()) == []
+    (data / "runs/mcp").unlink()
+    (data / "runs").rmdir()
+    os.symlink(outside, data / "runs")
+    with pytest.raises(ToolError, match="is a link"):
+        tools._new_run_dir("fresh")
+    assert list(outside.iterdir()) == []

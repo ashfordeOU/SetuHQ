@@ -439,8 +439,10 @@ Sentinel · Volunteer on Claude, Sentinel · Skeptic on OpenAI, a third on Gemin
 `manifest.json`.
 
 * **Missing key, SDK or CLI:** that Sentinel is skipped, and the manifest lists it with the reason.
-* **Keys stay out of every record:** a `base_url` with `user:password@` or a credential in `query` is refused;
-  a rejected key (401, 403, other 4xx but 429) fails at once instead of being retried; error bodies are redacted.
+* **Keys stay out of every record:** a `base_url` with `user:password@`, a fragment, a `;param`, a token-like
+  path segment, a credential-named query parameter or a provider key's value is refused; an endpoint is
+  recorded as scheme, host and port plus a hash of its path; a rejected key (401, 403, other 4xx but 429)
+  fails at once instead of being retried; error bodies are redacted, base64 forms of the key included.
 * **Cache:** the Anthropic API cache key now includes the provider, so answers cached by the `claude` backend
   before this change are asked once more; the Claude Code cache key is unchanged.
 * **Weights are per provider and model.** A Sentinel not calibrated on its provider and model votes at the

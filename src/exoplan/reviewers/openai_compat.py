@@ -35,7 +35,7 @@ class ChatCompletionsBackend:
             raise ValueError(f"a {provider} Sentinel needs a 'base_url'")
         if auth not in ("bearer", "api-key", "none"):
             raise ValueError(f"auth must be 'bearer', 'api-key' or 'none', not {auth!r}")
-        check_endpoint(base_url, query)  # no key in the URL or the query: environment only
+        check_endpoint(base_url, query, api_key_env)  # no key in the URL or the query: environment only
         self.provider = provider
         self.model = model
         self.base_url = base_url.rstrip("/")

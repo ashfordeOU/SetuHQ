@@ -129,7 +129,11 @@ def test_openai_compatible_endpoints(keys, image, cfg, url, headers):
     assert fake.calls[0]["url"] == url and fake.calls[0]["headers"] == headers
     assert "max_tokens" in fake.calls[0]["body"] and "response_format" not in fake.calls[0]["body"]
     assert c.metadata["provider"] == "openai-compatible" and c.metadata["model"] == "llava:13b"
-    assert c.metadata["endpoint"] == cfg["base_url"].rstrip("/")
+    from urllib.parse import urlsplit
+
+    recorded = c.metadata["endpoint"]  # scheme, host and port, plus a hash of the path: no path or query recorded
+    origin = "{0.scheme}://{0.netloc}".format(urlsplit(cfg["base_url"]))
+    assert recorded.startswith(origin + " [path sha256:") and urlsplit(cfg["base_url"]).path not in recorded
 
 
 def test_anthropic_records_reported_model_and_refusal(image, tmp_path):
@@ -499,8 +503,46 @@ def test_credentials_in_an_endpoint_are_refused_and_never_echoed(keys):
 def test_recorded_endpoint_never_carries_userinfo():
     from exoplan.reviewers.http import safe_url
 
-    assert safe_url(f"https://u:{SECRET}@h.example:8443/v1") == "https://h.example:8443/v1"
-    assert safe_url("http://localhost:11434/v1") == "http://localhost:11434/v1"
+    assert safe_url(f"https://u:{SECRET}@h.example:8443") == "https://h.example:8443"
+    one, two = safe_url("http://localhost:11434/v1"), safe_url("http://localhost:11434/v2?x=1")
+    assert one.startswith("http://localhost:11434 [path sha256:") and one != two and "v1" not in one
+    assert SECRET not in safe_url(f"https://u:{SECRET}@h.example/{SECRET}?q={SECRET}")
+
+
+def test_endpoint_screen_hardening(monkeypatch):
+    """More credential names, a provider key's value anywhere, fragments, ;params and token-like path segments."""
+    monkeypatch.setenv("GEMINI_API_KEY", SECRET)
+    monkeypatch.setenv("MY_ENDPOINT_KEY", "local-key-value-1234")
+    base = "https://h.example/v1"
+    for name in ("x-api-key", "Subscription-Key", "authorization", "client_secret", "access-key", "access_key"):
+        with pytest.raises(ValueError, match="look like a credential"):
+            OpenAICompatibleReviewer("x", model="m", base_url=base, query={name: "v"})
+    for query in ({"note": SECRET}, {"tenant": "local-key-value-1234"}):
+        with pytest.raises(ValueError) as err:
+            OpenAICompatibleReviewer("x", model="m", base_url=base, query=query, api_key_env="MY_ENDPOINT_KEY")
+        assert SECRET not in str(err.value) and "local-key-value-1234" not in str(err.value)
+    bad_urls = [f"{base}#frag", "https://h.example/v1;jsessionid=abc", f"https://h.example/{'A1b2C3d4' * 3}/v1",
+                f"https://h.example/v1?note={SECRET}"]
+    for url in bad_urls:
+        with pytest.raises(ValueError) as err:
+            OpenAICompatibleReviewer("x", model="m", base_url=url)
+        assert SECRET not in str(err.value)
+    # Ordinary endpoints still pass.
+    for url in ("http://localhost:11434/v1", "https://openrouter.ai/api/v1", "https://res.openai.azure.com/openai/v1"):
+        OpenAICompatibleReviewer("x", model="m", base_url=url, query={"api-version": "2025-01-01-preview"})
+
+
+def test_redaction_covers_wider_keys_and_base64():
+    import base64
+
+    from exoplan.reviewers.http import _secrets, redact
+
+    key = "abc+def/ghi=jkl-mno_pqr"
+    headers = {"Authorization": f"Bearer {key}"}
+    b64 = base64.b64encode(key.encode()).decode()
+    text = f"echo {key} | b64 {b64} | url {base64.urlsafe_b64encode(key.encode()).decode().rstrip('=')} | sk-ab+cd/ef=gh12"
+    out = redact(text, _secrets(headers))
+    assert key not in out and b64 not in out and b64.rstrip("=") not in out and "sk-ab+cd/ef=gh12" not in out
 
 
 def test_a_key_string_reaches_no_manifest_cache_or_exception(monkeypatch, tmp_path, lightcurve_with_transits):
