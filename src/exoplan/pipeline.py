@@ -299,14 +299,27 @@ def run_pipeline(
     *,
     weights: dict[str, float] | None = None,
     weights_source: str | None = None,
+    calibration: dict | None = None,
 ) -> RunSummary:
+    """Run the panel and write the run directory.
+
+    ``calibration`` is the record stored next to a weights file (``calibrate.calibration_record``):
+    with it, a Sentinel's weight is used only on the provider and model it was measured on, and a
+    Sentinel without one gets the floor weight and is labelled uncalibrated (``calibrate.apply_calibration``).
+    """
+    from exoplan.calibrate import apply_calibration
+
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     active = [r for r in reviewers if r.available()]
     skipped = [r.reviewer_id for r in reviewers if not r.available()]
+    skipped_detail = [_skip_entry(r) for r in reviewers if not r.available()]
     if weights_source is None:
         weights_source = "supplied by caller" if weights else "uniform 1.0"
-    weights = {r.reviewer_id: 1.0 for r in active} | (weights or {})
+    supplied = dict(weights or {})
+    weights, basis = apply_calibration(active, supplied or None, calibration)
+    # Weights the caller gave for reviewers that are not active stay on record, as before.
+    weights = {k: float(v) for k, v in supplied.items()} | weights
 
     prepared = prepare_lightcurves(lightcurves, config)
     subjects = prepare_subjects(lightcurves, config, prepared=prepared)
@@ -322,7 +335,7 @@ def run_pipeline(
 
     write_candidates(candidates, out)
     write_manifest(out, config, lightcurves, active, skipped, weights, subjects, classifications, candidates,
-                   weights_source=weights_source)
+                   weights_source=weights_source, weight_basis=basis, skipped_detail=skipped_detail)
     return RunSummary(
         run_dir=out,
         n_light_curves=len(lightcurves),
@@ -402,8 +415,40 @@ def write_candidates(candidates: list[Candidate], out: Path) -> None:
     (out / "candidates.json").write_text(json.dumps(rows, indent=2, default=str))
 
 
+def _skip_entry(reviewer) -> dict:
+    """A skipped reviewer, with why: no key, no SDK, no CLI. Never holds a key."""
+    reason = getattr(reviewer, "unavailable_reason", None)
+    describe = getattr(reviewer, "describe", None)
+    entry = {"id": reviewer.reviewer_id, "kind": reviewer.kind}
+    if describe is not None:
+        d = describe()
+        entry |= {"provider": d["provider"], "model": d["model"]}
+    entry["reason"] = (reason() if reason else None) or "unavailable"
+    return entry
+
+
+def _reviewer_entry(r, weights: dict, basis: dict, classifications: list[Classification]) -> dict:
+    """One active reviewer in the manifest: weight and calibration status, and for a Sentinel its provider,
+    configured model, persona, prompt version, the model ids the provider reported and when it was called."""
+    entry = {"id": r.reviewer_id, "kind": r.kind, "weight": weights.get(r.reviewer_id, 1.0)}
+    b = basis.get(r.reviewer_id) or {}
+    if b:
+        entry |= {"calibration": b["status"], "calibration_note": b["note"]}
+    describe = getattr(r, "describe", None)
+    if describe is not None:
+        entry |= describe()
+        mine = [c.metadata for c in classifications if c.reviewer_id == r.reviewer_id]
+        entry["models_reported"] = sorted({m["model"] for m in mine if m.get("model_reported")})
+        called = sorted(m["called_at"] for m in mine if m.get("called_at"))
+        entry["called_at"] = {"first": called[0], "last": called[-1]} if called else None
+        entry["cached_answers"] = sum(1 for m in mine if m.get("cached"))
+    return entry
+
+
 def write_manifest(out, config, lightcurves, active, skipped, weights, subjects, classifications, candidates,
-                   *, weights_source: str = "uniform 1.0") -> None:
+                   *, weights_source: str = "uniform 1.0", weight_basis: dict | None = None,
+                   skipped_detail: list[dict] | None = None) -> None:
+    basis = weight_basis or {}
     manifest = {
         "exoplan_version": __version__,
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -415,12 +460,14 @@ def write_manifest(out, config, lightcurves, active, skipped, weights, subjects,
         "subject_days": config.subject_days,
         # Where the periodic (BLS) search ran: each subject alone, or all sectors of a target stitched.
         "search_scope": config.search,
+        # The Sentinel task's prompt version, the same for every provider (kept under its first name too).
         "claude_prompt_version": PROMPT_VERSION,
+        "sentinel_prompt_version": PROMPT_VERSION,
         "inputs": [lc.provenance | {"target": lc.target, "mission": lc.mission} for lc in lightcurves],
-        "reviewers": [
-            {"id": r.reviewer_id, "kind": r.kind, "weight": weights.get(r.reviewer_id, 1.0)} for r in active
-        ],
+        "reviewers": [_reviewer_entry(r, weights, basis, classifications) for r in active],
         "skipped_reviewers": skipped,
+        # Why each one was skipped (no key, no SDK, no CLI), with its provider and model.
+        "skipped_reviewers_detail": skipped_detail or [{"id": rid, "reason": "unavailable"} for rid in skipped],
         # The weights used for consensus, for every reviewer the run knew about, and their source.
         "weights": {k: float(v) for k, v in sorted(weights.items())},
         "weights_source": weights_source,

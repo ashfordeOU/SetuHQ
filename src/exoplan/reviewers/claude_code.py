@@ -2,9 +2,13 @@
 
 Claude Code signs in with a Claude team or individual subscription. This
 reviewer runs ``claude -p`` in print mode, points it at the rendered PNG and
-asks for the same JSON answer as :class:`exoplan.reviewers.claude.ClaudeReviewer`.
-Parsing, validation, caching and the task wording are shared with that
-reviewer, so the two backends answer the same question.
+asks for the same JSON answer as every other Sentinel. Parsing, validation,
+caching, provenance and the task wording are shared
+(:class:`exoplan.reviewers.sentinel.SentinelReviewer`), so every backend answers the same question.
+
+The model id is read from the CLI's JSON envelope (``modelUsage``: the model that
+wrote the most output tokens) and recorded with the review; ``model`` here is
+only what is asked for (``--model``), None for the CLI's default.
 
 Requirements: the ``claude`` command is on PATH and is signed in
 (``claude`` then ``/login``). The reviewer is unavailable otherwise, and the
@@ -13,93 +17,89 @@ pipeline records it as skipped.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import shutil
 import subprocess
-import time
-from dataclasses import dataclass
+import time  # noqa: F401  (tests patch exoplan.reviewers.claude_code.time.sleep to skip the backoff)
 from pathlib import Path
 from typing import Callable
 
-from exoplan.reviewers.base import Classification
-from exoplan.reviewers.claude import PROMPT_VERSION, ReviewError, build_prompt, parse_response
-from exoplan.subjects import Subject
+from exoplan.reviewers.sentinel import RefusalError, Reply, SentinelReviewer
+from exoplan.reviewers.task import ReviewError
 
 Runner = Callable[[list[str], str], str]
 
 
 def _subprocess_runner(cmd: list[str], cwd: str) -> str:
-    completed = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=600, check=False)
+    try:
+        completed = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=600, check=False)
+    except subprocess.TimeoutExpired as exc:
+        raise ReviewError("claude timed out after 600 s") from exc
     if completed.returncode != 0:
         raise ReviewError(f"claude exited with {completed.returncode}: {completed.stderr.strip()[:300]}")
     return completed.stdout
 
 
-@dataclass
-class ClaudeCodeReviewer:
-    reviewer_id: str
-    persona: str = "volunteer"
-    model: str | None = None
-    binary: str = "claude"
-    cache_dir: str | Path | None = None
-    retries: int = 3
-    runner: Runner | None = None
-    kind: str = "claude_code"
+def reported_model(envelope: dict) -> str | None:
+    """The model id from the CLI envelope's ``modelUsage``: the one that wrote the most output tokens."""
+    usage = envelope.get("modelUsage") if isinstance(envelope, dict) else None
+    if not isinstance(usage, dict) or not usage:
+        return None
 
-    def available(self) -> bool:
-        return self.runner is not None or shutil.which(self.binary) is not None
+    def out_tokens(item):
+        stats = item[1] if isinstance(item[1], dict) else {}
+        return stats.get("outputTokens") or 0
 
-    def review(self, subject: Subject, image_path: str | Path | None = None) -> Classification:
-        if image_path is None:
-            raise ValueError("ClaudeCodeReviewer needs the rendered subject image")
-        image = Path(image_path).resolve()
-        system, user = build_prompt(subject, self.persona)
-        request = (
-            f"{system}\n\n{user}\n\n"
-            f"The plot is the PNG at this absolute path: {image}. "
-            "Open it with the Read tool, look at it, then reply with only the JSON object."
-        )
+    return max(usage.items(), key=out_tokens)[0]
 
-        image_bytes = image.read_bytes()
-        key = hashlib.sha256(
-            "\x1f".join([PROMPT_VERSION, "claude-code", self.model or "default", self.persona, request]).encode()
-            + hashlib.sha256(image_bytes).digest()
-        ).hexdigest()
-        cached = None if self.cache_dir is None else Path(self.cache_dir) / f"{key}.json"
-        if cached is not None and cached.exists():
-            text = json.loads(cached.read_text())["text"]
-        else:
-            text = self._call(request, image.parent, subject)
-            if cached is not None:
-                cached.parent.mkdir(parents=True, exist_ok=True)
-                cached.write_text(json.dumps({"backend": "claude-code", "text": text}))
-        return parse_response(text, subject, self.reviewer_id)
 
-    def _command(self, request: str) -> list[str]:
+class ClaudeCodeBackend:
+    provider = "claude-code"
+
+    def __init__(self, model: str | None = None, *, binary: str = "claude", runner: Runner | None = None):
+        self.model = model
+        self.binary = binary
+        self.runner = runner
+
+    def missing(self) -> str | None:
+        if self.runner is not None or shutil.which(self.binary) is not None:
+            return None
+        return f"the '{self.binary}' command is not on PATH (install Claude Code and sign in)"
+
+    def cache_tag(self) -> str:
+        return self.provider
+
+    def request(self, system: str, user: str, image: Path) -> str:
+        return (f"{system}\n\n{user}\n\n"
+                f"The plot is the PNG at this absolute path: {image}. "
+                "Open it with the Read tool, look at it, then reply with only the JSON object.")
+
+    def prompt_parts(self, system: str, user: str, image: Path) -> list[str]:
+        return [self.request(system, user, image)]
+
+    def command(self, request: str) -> list[str]:
         cmd = [self.binary, "-p", request, "--output-format", "json", "--allowedTools", "Read"]
         if self.model:
             cmd += ["--model", self.model]
         return cmd
 
-    def _call(self, request: str, cwd: Path, subject: Subject) -> str:
+    def call(self, system: str, user: str, image: Path) -> Reply:
         run = self.runner or _subprocess_runner
-        last_error: Exception | None = None
-        for attempt in range(self.retries):
-            try:
-                stdout = run(self._command(request), str(cwd))
-                envelope = json.loads(stdout)
-                text = envelope.get("result", "") if isinstance(envelope, dict) else str(envelope)
-                parse_response(text, _ShapeCheck(), self.reviewer_id)
-                return text
-            except Exception as exc:  # malformed output and CLI errors are retried, then reported
-                last_error = exc
-            if attempt + 1 < self.retries:
-                time.sleep(2**attempt)
-        raise ReviewError(f"{self.reviewer_id}: no usable answer after {self.retries} attempts: {last_error}")
+        stdout = run(self.command(self.request(system, user, image)), str(image.parent))
+        envelope = json.loads(stdout)
+        if isinstance(envelope, dict) and envelope.get("is_error"):
+            raise ReviewError(f"claude reported an error: {str(envelope.get('result', ''))[:300]}")
+        if isinstance(envelope, dict) and envelope.get("stop_reason") == "refusal":
+            raise RefusalError("claude-code: the model declined to answer (stop_reason 'refusal')")
+        text = envelope.get("result", "") if isinstance(envelope, dict) else str(envelope)
+        return Reply(text, reported_model(envelope) if isinstance(envelope, dict) else None)
 
 
-class _ShapeCheck:
-    start = float("-inf")
-    end = float("inf")
-    subject_id = "shape-check"
+class ClaudeCodeReviewer(SentinelReviewer):
+    """A Sentinel through the Claude Code CLI. Config type ``claude_code``."""
+
+    def __init__(self, reviewer_id: str, persona: str = "volunteer", model: str | None = None, binary: str = "claude",
+                 cache_dir: str | Path | None = None, retries: int = 3, runner: Runner | None = None,
+                 kind: str = "claude_code"):
+        super().__init__(reviewer_id, ClaudeCodeBackend(model, binary=binary, runner=runner),
+                         persona=persona, cache_dir=cache_dir, retries=retries, kind=kind)

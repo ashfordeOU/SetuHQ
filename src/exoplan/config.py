@@ -8,7 +8,24 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from exoplan.reviewers import ClaudeCodeReviewer, ClaudeReviewer, SimulatedVolunteer
+from exoplan.reviewers import (
+    ClaudeCodeReviewer,
+    ClaudeReviewer,
+    GeminiReviewer,
+    OpenAICompatibleReviewer,
+    OpenAIReviewer,
+    SimulatedVolunteer,
+)
+
+# Sentinel config types: the reviewer class and its cache folder under the cache root. Each provider keeps
+# its own folder, and every cache key also holds the provider and the model.
+SENTINEL_TYPES = {
+    "claude": (ClaudeReviewer, "claude"),
+    "claude_code": (ClaudeCodeReviewer, "claude-code"),
+    "openai": (OpenAIReviewer, "openai"),
+    "gemini": (GeminiReviewer, "gemini"),
+    "openai_compatible": (OpenAICompatibleReviewer, "openai-compatible"),
+}
 
 
 @dataclass(frozen=True)
@@ -88,20 +105,26 @@ def load_config(path: str | Path) -> RunConfig:
 
 
 def build_reviewers(specs, *, cache_root: str | Path = "cache") -> list:
-    """Create reviewer objects from ``[[reviewers]]`` entries."""
+    """Create reviewer objects from ``[[reviewers]]`` entries.
+
+    ``type`` is ``simulated`` (a Probe) or a Sentinel provider: ``claude`` (Anthropic API),
+    ``claude_code`` (Claude Code CLI), ``openai``, ``gemini`` or ``openai_compatible``. One panel
+    can mix them. Keys are never read from the config, only from the environment.
+    """
     reviewers = []
     for spec in specs:
         spec = dict(spec)
         kind = spec.pop("type")
         reviewer_id = spec.pop("id")
+        if any(k in spec for k in ("api_key", "key", "token")):
+            raise ValueError(f"reviewer {reviewer_id!r}: keys are read from the environment only, never from a "
+                             "config file; for an OpenAI-compatible endpoint name the variable with api_key_env")
         if kind == "simulated":
             reviewers.append(SimulatedVolunteer(reviewer_id=reviewer_id, **spec))
-        elif kind == "claude":
-            spec.setdefault("cache_dir", str(Path(cache_root) / "claude"))
-            reviewers.append(ClaudeReviewer(reviewer_id=reviewer_id, **spec))
-        elif kind == "claude_code":
-            spec.setdefault("cache_dir", str(Path(cache_root) / "claude-code"))
-            reviewers.append(ClaudeCodeReviewer(reviewer_id=reviewer_id, **spec))
+        elif kind in SENTINEL_TYPES:
+            cls, folder = SENTINEL_TYPES[kind]
+            spec.setdefault("cache_dir", str(Path(cache_root) / folder))
+            reviewers.append(cls(reviewer_id=reviewer_id, **spec))
         else:
-            raise ValueError(f"unknown reviewer type {kind!r}")
+            raise ValueError(f"unknown reviewer type {kind!r}; choose 'simulated' or one of {sorted(SENTINEL_TYPES)}")
     return reviewers

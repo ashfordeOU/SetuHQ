@@ -794,11 +794,12 @@ def test_narrow_calibration_plane_keeps_weight_labels_level_and_inside():
     fmt = re.search(r"const fmt = .*\n", APP_JS).group(0)
     fmt_n = re.search(r"const fmtN = .*\n", APP_JS).group(0)
     esc = re.search(r"const esc = .*\n", APP_JS).group(0)
-    claude = re.search(r"const isClaude = .*\n", APP_JS).group(0)
-    claude += "const D0 = {};\n" + re.search(r"const plural = .*\n", APP_JS).group(0) + "const NAME = id => id;\n"
+    sentinel = "".join(re.search(rf"const {name} = .*\n", APP_JS).group(0) for name in ("SENTINEL_KINDS", "isSentinel", "PROVIDER_OF"))
+    claude = "const D0 = {};\n" + re.search(r"const plural = .*\n", APP_JS).group(0) + "const NAME = id => id;\n"
     points = [{"id": "a", "kind": "simulated", "weight": 0.6, "tpr": 0.7, "fpr": 0.1, "n_injected": 10, "n_empty": 10},
               {"id": "c", "kind": "claude_code", "weight": 0.5, "tpr": 0.6, "fpr": 0.1, "n_injected": 10, "n_empty": 10}]
     script = (esc + fmt + claude + "const D = " + json.dumps({"calibration": {"points": points, "iso": list(ISO_WEIGHTS), "floor": 0.05}}) + ";\n"
+              + sentinel +
               """
 function mk(tag){ const n = {tag, a: {}, kids: [], text: '', style: {}, setAttribute(k, v){ this.a[k] = String(v); }, appendChild(c){ this.kids.push(c); return c; }};
   Object.defineProperty(n, 'textContent', {get(){ return this.text; }, set(v){ this.text = v; }}); return n; }
@@ -1040,12 +1041,19 @@ def test_reviewer_display_names_are_sentinels_and_probes():
     assert all(names[r]["id"] == r for r in kinds)  # ids unchanged
     assert panel_phrase(2, 3) == "2 Sentinels and 3 Probes" and panel_phrase(0, 1) == "1 Probe"
     assert display_name("someone", "human") == short_name("someone", "human") == "someone"
+    # Another provider keeps the persona name; the provider goes beside it, not into it.
+    mixed = reviewer_names({"gpt-skeptic": "openai", "gemini-volunteer": "gemini", "claude-skeptic": "claude"})
+    assert mixed["gpt-skeptic"]["name"] == "Sentinel · Skeptic" and mixed["gpt-skeptic"]["provider"] == "OpenAI"
+    assert mixed["gemini-volunteer"]["name"] == "Sentinel · Volunteer" and mixed["gemini-volunteer"]["provider"] == "Google Gemini"
+    assert mixed["claude-skeptic"]["provider"] == "Claude (Anthropic API)"
+    assert names["volunteer-typical"]["provider"] is None
 
 
 def test_panel_page_attribution_and_ids_unchanged_in_data(run_dir, tmp_path):
     from exoplan.names import ATTRIBUTION
 
-    assert ATTRIBUTION == "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors."
+    assert ATTRIBUTION == ("Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
+                           "Probes are deterministic matched-filter detectors.")
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
     assert ATTRIBUTION in _route(page, "sentinels")
     assert "superintelligence" not in page.lower()

@@ -539,5 +539,5 @@ def test_stored_crossmatch_source_cites_the_validation_offset():
 def test_lane_labels_are_short_display_names():
     js = DOCKET_JS
     assert "fitLabel(t, sn.slice(0, sp), sn.slice(sp + 1), pl - 8)" in js
-    assert "SEN = Sentinel (Claude model, Anthropic; not a person), PRB = Probe (deterministic matched-filter detector; not a person)" in js
+    assert "SEN = Sentinel (AI model, Claude by default; provider beside each name; not a person), PRB = Probe (deterministic matched-filter detector; not a person)" in js
     assert "reviewers: ${reviewerSummary(" in js and "Sentinel${cl === 1 ? '' : 's'}" in js

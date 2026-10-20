@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-from exoplan.calibrate import calibrate_weights, calibration_path, calibration_record, weights_from_skills
+from exoplan.calibrate import calibrate_weights, calibration_path, calibration_record, identity, weights_from_skills
 from exoplan.config import build_reviewers, load_config
 from exoplan.loaders import load_cheops, load_tess
 from exoplan.pipeline import run_pipeline
@@ -36,18 +36,35 @@ def resolve_weights(config, explicit: str | None, default: str | None = DEFAULT_
     """The reviewer weights a run uses, and where they came from.
 
     An explicit ``--weights`` file always wins. Otherwise the calibrated
-    weights in ``default`` are used when the file exists and its reviewer ids
-    are exactly the config's reviewer ids. If not, every reviewer weighs 1.0.
+    weights in ``default`` are used when the file exists and covers every
+    Probe in the config; a Sentinel it does not cover (a new provider or
+    model) then gets the floor weight and is labelled uncalibrated
+    (``calibrate.apply_calibration``). If not, every reviewer weighs 1.0.
     """
+    from exoplan.config import SENTINEL_TYPES
+
     if explicit:
         return json.loads(Path(explicit).read_text()), str(explicit)
     if default and Path(default).exists():
         calibrated = json.loads(Path(default).read_text())
         ids = {str(spec.get("id")) for spec in config.reviewers}
+        sentinels = {str(spec.get("id")) for spec in config.reviewers if spec.get("type") in SENTINEL_TYPES}
         if ids and set(calibrated) == ids:
             return {k: float(v) for k, v in calibrated.items()}, str(default)
+        if ids & set(calibrated) and (ids - set(calibrated)) <= sentinels:
+            new = ", ".join(sorted(ids - set(calibrated)))
+            return ({k: float(v) for k, v in calibrated.items() if k in ids},
+                    f"{default}; uncalibrated Sentinels at the floor weight: {new}")
         return None, f"uniform 1.0 ({default} reviewer ids do not match the config)"
     return None, "uniform 1.0 (no calibrated weights file)"
+
+
+def load_calibration_record(weights_file: str | None) -> dict | None:
+    """The calibration record stored next to a weights file, or None."""
+    if not weights_file:
+        return None
+    path = calibration_path(weights_file)
+    return json.loads(path.read_text()) if path.exists() else None
 
 
 def cmd_run(args) -> int:
@@ -56,13 +73,16 @@ def cmd_run(args) -> int:
     default = None if args.uniform_weights else args.calibrated_weights
     weights, source = resolve_weights(config, args.weights, default)
     print(f"reviewer weights: {source}")
-    summary = run_pipeline(config, _load_targets(config), reviewers, args.out, weights=weights, weights_source=source)
+    record = load_calibration_record(args.weights or (default if weights is not None else None))
+    summary = run_pipeline(config, _load_targets(config), reviewers, args.out, weights=weights, weights_source=source,
+                           calibration=record)
     print(f"light curves: {summary.n_light_curves}")
     print(f"subjects:     {summary.n_subjects}")
     print(f"classifications: {summary.n_classifications}")
     print(f"consensus events: {summary.n_consensus} ({summary.n_passed} pass vetting)")
     if summary.skipped_reviewers:
-        print(f"skipped (unavailable) reviewers: {', '.join(summary.skipped_reviewers)}")
+        reasons = {r.reviewer_id: (getattr(r, "unavailable_reason", lambda: None)() or "unavailable") for r in reviewers}
+        print("skipped (unavailable) reviewers: " + ", ".join(f"{rid} ({reasons.get(rid)})" for rid in summary.skipped_reviewers))
     print(f"outputs in {summary.run_dir}")
     return 0
 
@@ -91,7 +111,8 @@ def cmd_calibrate(args) -> int:
     Path(args.out).write_text(json.dumps(weights, indent=2, sort_keys=True))
     # The rates and sample sizes behind the weights, next to them, for the Panel's calibration plane.
     record = calibration_record(skills, weights_file=Path(args.out).name,
-                                source=f"exoplan calibrate {args.config} (seed {args.seed})")
+                                source=f"exoplan calibrate {args.config} (seed {args.seed})",
+                                identities={r.reviewer_id: identity(r) for r in reviewers if identity(r)})
     calibration_path(args.out).write_text(json.dumps(record, indent=2))
     for skill in skills.values():
         print(f"{skill.reviewer_id:24s} TPR={skill.tpr:.3f} FPR={skill.fpr:.3f} weight={skill.weight:.3f}")

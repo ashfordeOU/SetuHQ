@@ -45,7 +45,7 @@ from pathlib import Path
 
 from exoplan.dashboard import _load_run
 from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
-from exoplan.names import ATTRIBUTION, reviewer_names
+from exoplan.names import ATTRIBUTION, PROVIDER_BY_KIND, SENTINEL_KINDS, reviewer_names, reviewer_provenance
 from exoplan.vet import DISQUALIFYING
 
 DOCKET_CSS = """
@@ -214,14 +214,17 @@ function el(tag, a={}, p){ const e = document.createElementNS(NS, tag); for (con
 function tx(svg, x, y, s, anchor='start', cls=''){ const t = el('text', {x, y, 'text-anchor': anchor, class: cls}, svg); t.textContent = s; return t; }
 const REV_COLOUR = {'volunteer-sensitive':'var(--l-det)','volunteer-typical':'var(--l-det2)','volunteer-cautious':'var(--l-det2)','claude-volunteer':'var(--l-cl1)','claude-skeptic':'var(--l-cl2)'};
 const colourOf = name => REV_COLOUR[name] || 'var(--muted)';
-// Reviewer kind, always shown beside the name: a simulated detector is not a person.
-const isClaude = k => k === 'claude' || k === 'claude_code';
-// The panel's display names: Sentinels (Claude reviewers) and Probes (deterministic detectors). Ids are
+// Reviewer kind, always shown beside the name: a simulated detector is not a person. A Sentinel is an AI
+// reviewer on any provider (Claude by default); its provider and model come from the manifest (PROV).
+const SENTINEL_KINDS = D.sentinel_kinds || ['claude', 'claude_code'];
+const isSentinel = k => SENTINEL_KINDS.includes(k);
+const PROV = n => { const p = (D.reviewer_provenance || {})[n]; return p ? `${p.provider_label} · ${p.model}${p.calibration === 'uncalibrated' ? ' · uncalibrated' : ''}` : ''; };
+// The panel's display names: Sentinels (AI reviewers) and Probes (deterministic detectors). Ids are
 // unchanged in the data; NAME(id) is what the page shows, with the id beside it where it helps tracing.
 const NAME = n => ((D.reviewer_names || {})[n] || {}).name || n;
 const SHORT_NAME = n => ((D.reviewer_names || {})[n] || {}).short || n;
-const KIND_TAG = k => k === 'simulated' ? 'PRB' : isClaude(k) ? 'SEN' : String(k || '?').toUpperCase();
-const KIND_LONG = k => k === 'simulated' ? 'Probe: a deterministic matched-filter detector, not a person' : isClaude(k) ? 'Sentinel: a Claude model reviewer (Anthropic), not a person' : String(k || 'unknown kind');
+const KIND_TAG = k => k === 'simulated' ? 'PRB' : isSentinel(k) ? 'SEN' : String(k || '?').toUpperCase();
+const KIND_LONG = k => k === 'simulated' ? 'Probe: a deterministic matched-filter detector, not a person' : isSentinel(k) ? `Sentinel: an AI model reviewer (${(D.provider_by_kind || {})[k] || k}), not a person` : String(k || 'unknown kind');
 // Outcome of a dip or signal: three states, decided in Python (docket.outcome).
 const OUT_LABEL = D.outcome_label;
 const OUT_GLYPH = {passed:'✓', flagged:'!', rejected:'✕'};
@@ -264,7 +267,7 @@ function visibleSignals(){ return D.signals.filter(s => state.filter === 'all' |
 function visibleDips(){ return visibleSignals().flatMap(s => s.dips); }
 function reviewerSummary(names){
   const kinds = names.map(n => D.reviewers[n]);
-  const sim = kinds.filter(k => k === 'simulated').length, cl = kinds.filter(isClaude).length, other = kinds.length - sim - cl;
+  const sim = kinds.filter(k => k === 'simulated').length, cl = kinds.filter(isSentinel).length, other = kinds.length - sim - cl;
   const parts = [cl ? `${cl} Sentinel${cl === 1 ? '' : 's'}` : '', sim ? `${sim} Probe${sim === 1 ? '' : 's'}` : '', other ? `${other} other` : ''].filter(Boolean);
   return parts.length ? (parts.length === 1 ? parts[0] : parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1]) : 'none';
 }
@@ -388,7 +391,7 @@ const LANE_GUTTER = {desktop: 120, phone: 96};
 // A lane label that fits its gutter: the kind's short tag and the id, shortened from the front with an
 // ellipsis until the measured text fits (ids share prefixes such as "volunteer-", so the end tells them
 // apart). The full kind and id stay in the label's title.
-const KIND_SHORT = k => k === 'simulated' ? 'PRB' : isClaude(k) ? 'SEN' : String(k || '?').toUpperCase().slice(0, 3);
+const KIND_SHORT = k => k === 'simulated' ? 'PRB' : isSentinel(k) ? 'SEN' : String(k || '?').toUpperCase().slice(0, 3);
 function fitLabel(t, kind, id, room){
   let s = id;
   t.textContent = `${kind} ${s}`;
@@ -638,11 +641,11 @@ function rationales(c){
   return Object.keys(D.reviewers).map(n => {
     const d = dec[n] || {}, k = (marks[n] || []).length;
     const kind = D.reviewers[n];
-    const body = isClaude(kind)
+    const body = isSentinel(kind)
       ? esc(d.rationale || 'no rationale recorded')
       : `A Probe, a deterministic matched-filter detector, not a person: ${k} mark${k===1?'':'s'} in this subject from an SNR threshold and a miss rate set in its config.`;
     const label = (d.label || '').replace(/_/g,' ');
-    return `<div tabindex="0"><b style="color:${colourOf(n)}">${esc(NAME(n))}</b> <span class="mono hint" title="reviewer id">${esc(n)}</span> <span class="kind kind-${kind === 'simulated' ? 'sim' : 'cl'}">${esc(KIND_LONG(kind))}</span> <span class="hint">${esc(label)} · ${k} mark${k===1?'':'s'}</span><p>${body}</p></div>`;
+    return `<div tabindex="0"><b style="color:${colourOf(n)}">${esc(NAME(n))}</b> <span class="mono hint" title="reviewer id">${esc(n)}</span> <span class="kind kind-${kind === 'simulated' ? 'sim' : 'cl'}">${esc(KIND_LONG(kind))}</span>${PROV(n) ? ` <span class="mono hint" title="provider · model as reported · calibration">${esc(PROV(n))}</span>` : ''}${PROV(n) ? ` <span class="mono hint" title="provider · model as reported · calibration">${esc(PROV(n))}</span>` : ''} <span class="hint">${esc(label)} · ${k} mark${k===1?'':'s'}</span><p>${body}</p></div>`;
   }).join('');
 }
 
@@ -751,7 +754,7 @@ function renderDossier(){
       <div class="sigout">signal: ${outBadge(s.outcome)}</div>
     </div>
     ${sec('strip', 'Transit strip', 'stored measurements and the stored fit · <kbd>s</kbd> collapses', `<div class="hero-wrap strip" id="strip" tabindex="0" role="group" aria-label="Transit strip for ${esc(c.candidate_id)}. Use left and right arrow keys to step through the stored bins, Shift for ten, Home and End for the ends."></div>
-      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>${c.model && c.model.length ? 'limb-darkened fit (stored)' : 'no transit fit stored'}</span><span><i class="k-band"></i>marked window (consensus)</span><span><i class="k-lane"></i>reviewer marks, one lane each · SEN = Sentinel (Claude model, Anthropic; not a person), PRB = Probe (deterministic matched-filter detector; not a person)</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
+      <div class="legend"><span><i class="k-pt"></i>binned flux ±1σ (stored)</span><span><i class="k-box"></i>${c.model && c.model.length ? 'limb-darkened fit (stored)' : 'no transit fit stored'}</span><span><i class="k-band"></i>marked window (consensus)</span><span><i class="k-lane"></i>reviewer marks, one lane each · SEN = Sentinel (AI model, Claude by default; provider beside each name; not a person), PRB = Probe (deterministic matched-filter detector; not a person)</span><span><i class="k-hatch"></i>${esc(notCountedLegend(c))}</span></div>
       <p class="scope">${scopeNote(c)}</p>`)}
     <div class="facts">
       <div><span>mid-time</span>${fmt(c.t_center,3)} ${esc(c.time_unit)}</div>
@@ -770,7 +773,7 @@ function renderDossier(){
     ${sec('cmp', 'Comparisons', 'phase fold · stored per-epoch depths · secondary window', '<div class="compare" id="cmp"></div>')}
     ${sec('ledger', 'Verdict ledger', 'every check, measured value, rule', `<div class="scroll"><table class="ledger" role="table" aria-label="Verdict ledger for ${esc(c.candidate_id)}"><thead role="rowgroup"><tr role="row" class="lhead"><th role="columnheader" scope="col">Check</th><th role="columnheader" scope="col">Value</th><th role="columnheader" scope="col">Rule</th><th role="columnheader" scope="col">Why</th></tr></thead><tbody role="rowgroup">${ledger(c)}</tbody></table></div><p class="scope">Rows marked signal-level are measured once per BLS ephemeris over all its epochs in the subject, not per dip, so every dip from that subject shows the same value (a merged signal shows each subject's own value). σ values are the stored errors; Δ uses √(σ_odd² + σ_even²), as the vetting code does.${(s.bls||[]).length > 1 ? ' <b>' + esc(D.cross_subject_note) + '</b>' : ''}</p>`)}
     ${sec('rev', 'Reviewers', `${nAll} reviewers: ${esc(reviewerSummary(Object.keys(D.reviewers)))}`, `<p class="hint attribution">${esc(D.attribution)}</p><div class="rat">${rationales(c)}</div>`)}
-    <div class="prov">${esc(D.attribution)}<br>run ${esc(D.provenance.run_time)} · config ${esc(D.provenance.config_sha256.slice(0,16))} · pipeline ${esc(D.provenance.exoplan_version)} · ${esc(D.provenance.claude_prompt_version || '')}<br>candidate ${esc(c.candidate_id)} · signal ${esc(s.signal_id)} · subject ${esc(c.subject_id)}<br>cross-match: ${esc((D.crossmatch||{}).source || '')} · status ${esc((D.crossmatch||{}).status || 'not_run')}</div>`;
+    <div class="prov">${esc(D.attribution)}<br>run ${esc(D.provenance.run_time)} · config ${esc(D.provenance.config_sha256.slice(0,16))} · pipeline ${esc(D.provenance.exoplan_version)} · Sentinel prompt ${esc(D.provenance.claude_prompt_version || '')}${D.provenance.sentinels ? ` · Sentinels: ${esc(D.provenance.sentinels)}` : ''}<br>candidate ${esc(c.candidate_id)} · signal ${esc(s.signal_id)} · subject ${esc(c.subject_id)}<br>cross-match: ${esc((D.crossmatch||{}).source || '')} · status ${esc((D.crossmatch||{}).status || 'not_run')}</div>`;
   document.querySelectorAll('.sectoggle').forEach(b => b.addEventListener('click', () => toggleSection(b.dataset.sec)));
   rest.querySelectorAll('.dipbtn').forEach(b => b.addEventListener('click', () => select(b.dataset.dip)));
   if (subj){
@@ -1521,7 +1524,7 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
         annotate_signal_epochs(s, cands)
     kinds = list(run["reviewers"].values())
     n_sim = sum(1 for k in kinds if k == "simulated")
-    n_claude = sum(1 for k in kinds if k in ("claude", "claude_code"))
+    n_claude = sum(1 for k in kinds if k in SENTINEL_KINDS)  # every Sentinel, on any provider
     targets = sorted({c["target"] for c in run["candidates"] if c["target"]})
     if refresh_crossmatch:
         run_crossmatch(run_dir, star)
@@ -1541,6 +1544,9 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
         "decisions": run["reviewerDecisions"],
         "reviewers": run["reviewers"],
         "reviewer_names": reviewer_names(run["reviewers"]),
+        "reviewer_provenance": reviewer_provenance(run["manifest"]),
+        "sentinel_kinds": list(SENTINEL_KINDS),
+        "provider_by_kind": PROVIDER_BY_KIND,
         "attribution": ATTRIBUTION,
         "subject_days": run["manifest"].get("subject_days"),
         "search_scope": run["manifest"].get("search_scope", "subject"),
@@ -1558,6 +1564,7 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
             "config_sha256": run["manifest"]["config_sha256"],
             "exoplan_version": run["manifest"]["exoplan_version"],
             "claude_prompt_version": run["manifest"].get("claude_prompt_version", ""),
+            "sentinels": "; ".join(f"{p['provider_label']} {p['model']}" for p in reviewer_provenance(run["manifest"]).values()),
         },
     }
     return data
