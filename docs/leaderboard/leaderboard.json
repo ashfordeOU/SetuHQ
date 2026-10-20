@@ -77,7 +77,7 @@
   "agree": 38,
   "phi": 0.8901098901098901
  },
- "benchmark_code_commit": "76de67d17eeef8a5fc62b26695574d0d63322b72",
+ "benchmark_code_commit": "8909cdae23aa1e478ff6b0dc35d393e504af2a2d",
  "rules": [
   "Scored on the held-out half of the frozen sample only (TOIs by sha256(seed:TIC) parity); the tuning half is never scored.",
   "A submission lists, for every star of its scope, the events its method detected on the real light curve and on the flux-inverted and block-scrambled controls (time, duration, period, its own pass verdict and flags). The leaderboard decides which events lie on the TOI's ephemeris (the benchmark's score_star and match_toi) and counts control false alarms itself. Self-reported outcomes are not accepted.",

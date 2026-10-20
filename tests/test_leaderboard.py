@@ -170,7 +170,8 @@ def test_every_seeded_entry_carries_provenance_and_the_attribution():
     for s in (v for k, v in SUBS.items() if k != L.FLOOR_ID):
         assert s["tuned_on"] == "none" and s["inputs_sha256"] == L.inputs_sha256(INPUTS)
         assert "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors." in s["provenance"]["method"]
-        assert BENCH["code_commit"][:7] in s["provenance"]["code_version"]
+        # The code that searched the stars (the report itself was regenerated later, at the feed-rule commit).
+        assert any(c[:7] in s["provenance"]["code_version"] for c in BENCH["code_provenance"]["commit"].values())
 
 
 # ---------- gaming ----------

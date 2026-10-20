@@ -59,7 +59,7 @@ PENDING = {
                          "clipfix_feed_scrambled": ("summary.held_out.feed.scrambled.new_signals_per_1000", "int"),
                          "clipfix_code": ("code_commit", "commit")}},
     "feedrule": {"label": "stricter feed rule", "file": "docs/results/feed_rule_validation.json",
-                 "keys": {"feedrule_rule": ("rule", "text"),
+                 "keys": {"feedrule_rule": ("rule", "rule"),
                           "feedrule_inverted": ("held_out.inverted.new_signals_per_1000", "int"),
                           "feedrule_scrambled": ("held_out.scrambled.new_signals_per_1000", "int"),
                           "feedrule_completeness": ("held_out.completeness", "pct"),
@@ -123,6 +123,10 @@ def fmt(v, kind: str) -> str:
         return f"{v:.1f}"
     if kind == "commit":
         return str(v)[:7]
+    if kind == "rule" and isinstance(v, dict):  # a feed rule as stored in docs/results/feed_rule_validation.json
+        two = (f"the signal in both reviewed sectors, periods within {100 * v['period_tol']:g}%; "
+               if v.get("name") == "two_sector" else "")
+        return f"{two}FAP < {v['fap_cut']:g} over {v['fap_trials']:,} trials"
     return str(v)
 
 
@@ -276,7 +280,31 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
              feed_live_updated=imp["live"]["updated"][:10], feed_sectors_per_target=FEED_SECTORS_PER_TARGET,
              feed_worst_per1000=f"{max(imp['control_new_signals_per_1000'].values()):.0f}",
              feed_bad="consistent with noise" if imp["bad"] else "not explained by noise alone",
-             feed_fap_trials=disc["search"]["fap_trials"])
+             feed_fap_trials=f"{disc['search']['fap_trials']:,}")
+    # The rule the benchmark's feed-level table applied: the earlier one, as the feed-rule evaluation records it once the
+    # feed has moved on to the pre-registered rule; until then, the discovery config's own.
+    fr_path = root / "docs/results/feed_rule_validation.json"
+    old = json.loads(fr_path.read_text())["held_out_old_rule"]["rule"] if fr_path.exists() else None
+    if fr_path.exists():
+        v = json.loads(fr_path.read_text())
+        ho, oo = v["held_out"], v["held_out_old_rule"]
+        n["feedrule_intro"] = (f"It was chosen on the tuning half only, pre-registered at commit `{v['preregistration_commit'][:7]}`, and "
+                               "measured once on the held-out half with the discovery config itself "
+                               "(docs/results/feed_rule_validation.json):")
+        claim(ho["expected_false_per_100_targets"] > ho["real_new_per_100_targets"],
+              "the feed-rule sentence says noise still outnumbers the real new signals")
+        n["feedrule_after"] = (
+            f"On the same evaluation the earlier rule gives {oo['expected_false_per_100_targets']:.1f} false signals per 100 targets: "
+            f"the new rule lowers the noise {oo['expected_false_per_100_targets'] / ho['expected_false_per_100_targets']:.1f}-fold"
+            + (" (the 95% intervals do not overlap)" if v.get("fix_clearly_lowers_noise") else " (the 95% intervals overlap)")
+            + f", but noise still outnumbers the {ho['real_new_per_100_targets']:.1f} real new signals per 100 targets, and "
+            f"feed-level completeness falls from {100 * oo['completeness']['rate']:.0f}% to {100 * ho['completeness']['rate']:.0f}%. "
+            "A feed admission is a lead for review, not a candidate of any confirmed status.")
+    else:
+        n["feedrule_intro"] = "It is to be chosen on the tuning half and measured once on the held-out half:"
+        n["feedrule_after"] = ""
+    n.update(bench_feed_fap_trials=f"{(old or {}).get('fap_trials', disc['search']['fap_trials']):,}",
+             bench_feed_fap=f"{(old or {}).get('fap_cut', discover.MAX_FEED_FAP):g}")
     ratio = imp["expected_false_per_100_targets"] / imp["live_new_signals_per_100_targets"]
     claim(imp["bad"] == (ratio >= 0.5), "the report's 'bad' verdict is expected ≥ half the live rate")
     n["feed_ratio"] = f"{ratio:.2f}"
@@ -379,7 +407,9 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
              m_rho_lo=f"{transitfit.RHO_BOUNDS[0]:g}", m_rho_hi=f"{transitfit.RHO_BOUNDS[1]:g}",
              m_fap_block=f"{search.FAP_BLOCK_DAYS:g}", m_fap_default=search.FAP_TRIALS, m_tail_floor="10⁻⁶" if search.FAP_TAIL_FLOOR == 1e-6 else f"{search.FAP_TAIL_FLOOR:g}",
              m_weight_floor=f"{calibrate.WEIGHT_FLOOR:g}", m_feed_depth=f"{discover.MAX_FEED_DEPTH_PPM:,.0f}",
-             m_feed_transits=discover.MIN_FEED_TRANSITS, m_feed_fap=f"{discover.MAX_FEED_FAP:g}")
+             m_feed_transits=discover.MIN_FEED_TRANSITS, m_feed_fap=f"{discover.MAX_FEED_FAP:g}",
+             m_feed_two_sector=(f", and the same signal (periods within {100 * discover.TWO_SECTOR_PERIOD_TOL:g}%) reaches these parts "
+                                "of the rule in both reviewed sectors" if hasattr(discover, "TWO_SECTOR_PERIOD_TOL") else ""))
 
     # How the benchmark configured the panel (scripts/benchmark_real_tois.py).
     sys.path.insert(0, str(ROOT / "scripts"))

@@ -1261,10 +1261,34 @@ def feed_rows(d: dict) -> list[dict]:
         rows.append({"key": key, "label": label, "sub": sub, "rate": p * k, "lo": lo * k, "hi": hi * k,
                      "k": r["new_signals"], "n": r["star_sectors"], "unit": "star-sectors"})
     live = imp["live"]
-    rows.insert(0, {"key": "live", "label": "Live feed, “new” signals", "sub": f"{live['source']}, {live['updated'][:10]}",
+    old_rule = " under the old rule" if d["b"].get("feed_rule") else ""
+    rows.insert(0, {"key": "live", "label": f"Live feed{old_rule}, “new” signals", "sub": f"{Path(live['source']).name}, {live['updated'][:10]}",
                     "rate": imp["live_new_signals_per_100_targets"], "lo": imp["live_ci_per_100_targets"][0],
                     "hi": imp["live_ci_per_100_targets"][1], "k": live["new_signals"], "n": live["targets_reviewed"], "unit": "targets"})
+    rows += feed_rule_rows(d["b"].get("feed_rule"))
     return rows
+
+
+def feed_rule_rows(fr: dict | None) -> list[dict]:
+    """The pre-registered two-sector rule's one held-out evaluation (old and new rule, discovery config, worse control)
+    and the live feed re-run under it, when the benchmark JSON carries them."""
+    if not fr or not fr.get("validation"):
+        return []
+    v = fr["validation"]
+    out = []
+    for key, part, label in (("rule-old", "held_out_old_rule", "Feed-rule test, old rule: worse control"),
+                             ("rule-new", "held_out", "Feed-rule test, two-sector rule: worse control")):
+        x = v[part]
+        k = max(x["inverted"]["new_signals"], x["scrambled"]["new_signals"])
+        lo, hi = x["expected_false_ci_per_100_targets"]
+        out.append({"key": key, "label": label, "sub": "held-out, discovery config", "rate": x["expected_false_per_100_targets"],
+                    "lo": lo, "hi": hi, "k": k, "n": x["targets"], "unit": "targets"})
+    live = fr.get("live")
+    if live:
+        p, lo, hi = BT.wilson(live["new_signals"], live["targets"])
+        out.append({"key": "rerun", "label": "Live feed re-run, two-sector rule", "sub": f"new signals, {live['when'][:10]}",
+                    "rate": 100 * p, "lo": 100 * lo, "hi": 100 * hi, "k": live["new_signals"], "n": live["targets"], "unit": "targets"})
+    return out
 
 
 def feed_desc(d: dict) -> str:
@@ -1274,27 +1298,40 @@ def feed_desc(d: dict) -> str:
     return ("False new signals per 100 targets: what the feed's own admission rule passes on light curves with every signal destroyed, "
             f"against the live feed. Wilson 95% intervals; a target is {BT.FEED_SECTORS_PER_TARGET} sectors. {parts}. "
             f"Expected from noise alone (the worse control): {imp['expected_false_per_100_targets']:.1f} per 100 targets, so the live feed's "
-            "“new” signals are consistent with noise. A fix is proposed in the benchmark report and not applied. "
-            f"Source: {BENCH_SRC} (held-out half, feed-level table), commit {d['commit']}.")
+            "“new” signals were consistent with noise under the old rule. " + feed_rule_sentence(d) +
+            f"Source: {BENCH_SRC} (held-out half, feed-level table{', feed_rule' if d['b'].get('feed_rule') else ''}), commit {d['commit']}.")
+
+
+def feed_rule_sentence(d: dict) -> str:
+    fr = d["b"].get("feed_rule")
+    if not fr or not fr.get("validation"):
+        return "A fix is proposed in the benchmark report and not applied. "
+    n = fr["validation"]["held_out"]
+    return ("The pre-registered two-sector rule (FAP < 0.001 over 2,000 trials, the signal in both sectors), tested once on the "
+            "held-out half with the discovery config, lowers the worse control about fourfold, but noise still outnumbers the "
+            f"{n['real_new_per_100_targets']:.1f} real new signals per 100 targets, so admissions are leads for review. ")
 
 
 def feed_noise(t: dict, d: dict) -> Svg:
     rows = feed_rows(d)
     imp = d["b"]["feed_implication"]
     s = Svg(W, H, "The live feed's new signals against the controls", feed_desc(d))
-    frame(s, t, "Evidence · feed-level false alarms · held-out half", "The live feed's “new” signals are consistent with noise",
+    title = ("Noise falls about fourfold under the new rule, and still outnumbers real signals" if d["b"].get("feed_rule")
+             else "The live feed's “new” signals are consistent with noise")
+    frame(s, t, "Evidence · feed-level false alarms · held-out half", title,
           f"Source: {BENCH_SRC} (feed-level table and feed_implication) · commit {d['commit']}", t["open"])
     panel(s, t, MX0, PLOT_TOP, MX1 - MX0, PLOT_BOTTOM - PLOT_TOP)
     label_tag(s, t, MX0 + 18, PLOT_TOP + 24, "Measured · Wilson 95% intervals", t["known"])
     BX0, BX1 = 470, 1120
     vmax = max(40.0, math.ceil(max(r["hi"] for r in rows) / 10) * 10)
     bx = lambda v: BX0 + v / vmax * (BX1 - BX0)  # noqa: E731
-    top, rh = 168, 74
+    top, rh = 168, min(74, 296 // len(rows))
     for v in nice_ticks(0, vmax, 4):
         s.line(bx(v), top - 14, bx(v), top + rh * len(rows) - 10, line(t, 0 if v else 1, t["panel"]))
         s.text(f"{v:g}", bx(v), top + rh * len(rows) + 6, 10, t["ink3"], "mono", 400, anchor="middle")
     s.text("“New” signals per 100 targets reviewed", BX1, top + rh * len(rows) + 28, 10.5, t["ink3"], "mono", 500, anchor="end")
-    col = {"live": t["open"], "scrambled": t["ink2"], "inverted": t["ink2"], "real": t["known"]}
+    col = {"live": t["open"], "scrambled": t["ink2"], "inverted": t["ink2"], "real": t["known"],
+           "rule-old": t["ink2"], "rule-new": t["ink2"], "rerun": t["open"]}
     for i, r in enumerate(rows):
         yy = top + i * rh + 18
         s.text(r["label"], MX0 + 22, yy - 2, 14, t["ink"], "sans", 600 if r["key"] == "live" else 500)
@@ -1310,7 +1347,8 @@ def feed_noise(t: dict, d: dict) -> Svg:
            MX0 + 22, top + rh * len(rows) + 28, 10.5, t["ink3"], "mono", 400)
     ex = imp["expected_false_per_100_targets"]
     s.line(bx(ex), top - 24, bx(ex), top + rh * len(rows) - 10, t["rejected"], 1.6, dash="6 5")
-    s.text(f"expected from noise alone: {ex:.1f}", bx(ex) + 8, top - 18, 10.5, t["rejected"], "mono", 500)
+    s.text(f"{'old rule, ' if d['b'].get('feed_rule') else ''}expected from noise alone: {ex:.1f}", bx(ex) + 8, top - 18, 10.5,
+           t["rejected"], "mono", 500)
     return s
 
 

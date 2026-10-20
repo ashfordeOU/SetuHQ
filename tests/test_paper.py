@@ -215,6 +215,7 @@ def _tmp_root(tmp_path):
                 "docs/results/injection_recovery_simulated_panel.md", "docs/results/reviewer_weights_full_panel.calibration.json",
                 "docs/results/benchmark_toi_sample.json", "docs/leaderboard/leaderboard.json", "docs/paper/references.json",
                 "docs/paper/paper.template.md", "configs/default.toml", "configs/discovery.toml",
+                "docs/results/feed_rule_validation.json",
                 "runs/tess-pi-men-s1/candidates.json"):
         dst = tmp_path / rel
         dst.parent.mkdir(parents=True, exist_ok=True)

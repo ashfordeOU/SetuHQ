@@ -13,8 +13,8 @@
 *Draft methods paper in the style of the AAS journals (AJ). Markdown only: the aastex631 class is not
 available offline in the environment that produced this draft, so no LaTeX version is provided yet.*
 
-*Generated from the committed results by `scripts/paper_numbers.py` (benchmark report of 2026-10-19,
-code commit `76de67d`). Results that later work will change are marked pending; see the section
+*Generated from the committed results by `scripts/paper_numbers.py` (benchmark report of 2026-10-20,
+code commit `8909cda`). Results that later work will change are marked pending; see the section
 "Pending results".*
 
 Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.
@@ -164,14 +164,16 @@ A periodic signal's FAP is (k + 1)/(N + 1) over N block-bootstrap trials: the de
 residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each copy; k copies reach the
 observed SNR. The FAP is never given below 1/(N + 1), so with k = 0 it is an upper bound. A Gumbel fit to the
 null maxima is stored as an indicative tail, never below 10⁻⁶. The library default is 20
-trials and the discovery feed uses 200.
+trials and the discovery feed uses 2,000.
 
 ### 3.7 The discovery feed
 
 A scheduled job reviews the two latest sectors of TOI host stars and keeps every vetted dip in a catalogue,
 marked `known_toi` when it matches a published TOI ephemeris and `new_candidate` otherwise. A dip is admitted
 when it passed vetting, lies on its star's periodic signal, is at most 5,000 ppm deep, has at least
-2 transits and a FAP below 0.01. Section 5.2 measures what this rule admits from noise.
+2 transits and a FAP below 0.001, and the same signal (periods within 0.5%) reaches these parts of the rule in both reviewed sectors. Section 5.2 measures what the earlier
+rule (FAP below 0.01 over 200 trials, one sector) admitted from noise; the current rule
+is the one proposed in Section 5.2.
 
 ## 4 Benchmark design
 
@@ -179,7 +181,7 @@ when it passed vetting, lies on its star's periodic signal, is at most 5,000 ppm
 
 **The panel measured.** The three Probes with their calibrated weights, sector-wide BLS, vetting and the
 limb-darkened fit, without the FAP rule (it is not part of vetting). The feed-level table adds the feed's FAP
-(200 trials) and its admission rule. The benchmark runs did not query the TIC: each star's parameters came from the TOI table's own columns (Teff, log g, R★). Limb darkening used Teff and log g (the Sun's values where missing; Teff was published for 306 of 309 searched held-out stars), and ρ★ was computed from log g and R★, so the density test could act only on the 268 stars with both. The Sentinels are measured separately on a stated subsample
+(200 trials) and its admission rule at the time. The benchmark runs did not query the TIC: each star's parameters came from the TOI table's own columns (Teff, log g, R★). Limb darkening used Teff and log g (the Sun's values where missing; Teff was published for 306 of 309 searched held-out stars), and ρ★ was computed from log g and R★, so the density test could act only on the 268 stars with both. The Sentinels are measured separately on a stated subsample
 (Section 5.4), because every subject needs a CLI call.
 
 **Scoring.** A TOI is *recovered* when a dip that passed vetting lies on its published ephemeris (within the
@@ -200,7 +202,7 @@ come from synthetic injection tests, and the vetting, V-shape, density and FAP r
 light curve was downloaded.
 
 **Code version.** Each per-star result records a fingerprint of the pipeline code that produced it:
-`14f6f4830a525d78` = commit 76de67d (HEAD differs only in comments and docstrings); `e4fe4c99663ccba8` = commit 40cceca (HEAD differs only in comments and docstrings). The report was generated at commit `76de67d17eeef8a5fc62b26695574d0d63322b72`. Results from the earlier
+`14f6f4830a525d78` = commit 76de67d; `e4fe4c99663ccba8` = commit 40cceca. The report was generated at commit `8909cdae23aa1e478ff6b0dc35d393e504af2a2d`. Results from the earlier
 fingerprint were re-vetted from their stored classifications with the later code, controls included.
 
 ## 5 Results
@@ -259,16 +261,17 @@ single-sector control rate over the sectors the feed reviews, as if each sector 
 ignores that the feed reviews a star's two latest sectors, not its first, and that noise in the two sectors may be
 correlated. The live catalogue (updated 2026-10-17) holds 3 distinct new signals over
 19 targets: 15.8 per 100 (95% CI 6–38). Noise alone would account for 0.82 of that rate, at least half, so a `new_candidate` on the feed is more likely noise than a signal. The proposed fix (requiring the signal in each
-of the two sectors independently, and a stricter FAP) has not been applied in the code measured here. It is
-to be chosen on the tuning half and measured once on the held-out half:
+of the two sectors independently, and a stricter FAP) has not been applied in the code measured here. It was chosen on the tuning half only, pre-registered at commit `8909cda`, and measured once on the held-out half with the discovery config itself (docs/results/feed_rule_validation.json):
 
 | stricter feed rule | held-out result |
 |---|---|
-| rule | *pending: stricter feed rule* |
-| false signals per 1,000 star-sectors, inverted | *pending: stricter feed rule* |
-| false signals per 1,000 star-sectors, scrambled | *pending: stricter feed rule* |
-| CP/KP completeness | *pending: stricter feed rule* |
-| false `new_candidate` signals expected per 100 targets | *pending: stricter feed rule* |
+| rule | the signal in both reviewed sectors, periods within 0.5%; FAP < 0.001 over 2,000 trials |
+| false signals per 1,000 star-sectors, inverted | 34 |
+| false signals per 1,000 star-sectors, scrambled | 0 |
+| CP/KP completeness | 17% (26/150; 95% CI 12–24%) |
+| false `new_candidate` signals expected per 100 targets | 6.1 |
+
+On the same evaluation the earlier rule gives 23.0 false signals per 100 targets: the new rule lowers the noise 3.7-fold (the 95% intervals do not overlap), but noise still outnumbers the 0.3 real new signals per 100 targets, and feed-level completeness falls from 39% to 17%. A feed admission is a lead for review, not a candidate of any confirmed status.
 
 ### 5.3 False-positive TOIs
 
@@ -445,7 +448,7 @@ independent evidence such as radial velocities, and no exoplan output is called 
 
 ## 8 Reproducibility
 
-* **Code.** The benchmark report was generated at commit `76de67d17eeef8a5fc62b26695574d0d63322b72` (Section 4 lists the pipeline
+* **Code.** The benchmark report was generated at commit `8909cdae23aa1e478ff6b0dc35d393e504af2a2d` (Section 4 lists the pipeline
   fingerprints). The frozen sample is `docs/results/benchmark_toi_sample.json` (sha256 `6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac`); the report
   is `docs/results/benchmark_real_tois.md` and `.json`; the commands are in `scripts/benchmark_real_tois.py`
   (`freeze`, `run`, `sentinels`, `clipping`, `feed`, `report`). Downloads and per-subject outputs live in the
@@ -474,7 +477,7 @@ These numbers will change. Their placeholders print *pending* until the stated f
 script then fills them, and never guesses.
 
 * **clipping-fixed re-run**: pending; will be read from `docs/results/benchmark_real_tois_clipfix.json`.
-* **stricter feed rule**: pending; will be read from `docs/results/feed_rule_validation.json`.
+* **stricter feed rule**: filled from `docs/results/feed_rule_validation.json`.
 * **S2 pixel vetting**: pending; will be read from `docs/results/pixel_vetting.json`.
 * **S3 FPP**: pending; will be read from `docs/results/fpp_validation.json`.
 

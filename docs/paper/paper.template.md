@@ -171,7 +171,9 @@ trials and the discovery feed uses {{feed_fap_trials}}.
 A scheduled job reviews the two latest sectors of TOI host stars and keeps every vetted dip in a catalogue,
 marked `known_toi` when it matches a published TOI ephemeris and `new_candidate` otherwise. A dip is admitted
 when it passed vetting, lies on its star's periodic signal, is at most {{m_feed_depth}} ppm deep, has at least
-{{m_feed_transits}} transits and a FAP below {{m_feed_fap}}. Section 5.2 measures what this rule admits from noise.
+{{m_feed_transits}} transits and a FAP below {{m_feed_fap}}{{m_feed_two_sector}}. Section 5.2 measures what the earlier
+rule (FAP below {{bench_feed_fap}} over {{bench_feed_fap_trials}} trials, one sector) admitted from noise; the current rule
+is the one proposed in Section 5.2.
 
 ## 4 Benchmark design
 
@@ -179,7 +181,7 @@ when it passed vetting, lies on its star's periodic signal, is at most {{m_feed_
 
 **The panel measured.** The three Probes with their calibrated weights, sector-wide BLS, vetting and the
 limb-darkened fit, without the FAP rule (it is not part of vetting). The feed-level table adds the feed's FAP
-({{feed_fap_trials}} trials) and its admission rule. {{bench_stellar_sentence}} The Sentinels are measured separately on a stated subsample
+({{bench_feed_fap_trials}} trials) and its admission rule at the time. {{bench_stellar_sentence}} The Sentinels are measured separately on a stated subsample
 (Section 5.4), because every subject needs a CLI call.
 
 **Scoring.** A TOI is *recovered* when a dip that passed vetting lies on its published ephemeris (within the
@@ -259,8 +261,7 @@ single-sector control rate over the sectors the feed reviews, as if each sector 
 ignores that the feed reviews a star's two latest sectors, not its first, and that noise in the two sectors may be
 correlated. The live catalogue (updated {{feed_live_updated}}) holds {{feed_live_new}} distinct new signals over
 {{feed_live_targets}} targets: {{feed_live_per100}} per 100 (95% CI {{feed_live_ci}}). {{feed_half_sentence}} The proposed fix (requiring the signal in each
-of the two sectors independently, and a stricter FAP) has not been applied in the code measured here. It is
-to be chosen on the tuning half and measured once on the held-out half:
+of the two sectors independently, and a stricter FAP) has not been applied in the code measured here. {{feedrule_intro}}
 
 | stricter feed rule | held-out result |
 |---|---|
@@ -269,6 +270,8 @@ to be chosen on the tuning half and measured once on the held-out half:
 | false signals per 1,000 star-sectors, scrambled | {{feedrule_scrambled}} |
 | CP/KP completeness | {{feedrule_completeness}} |
 | false `new_candidate` signals expected per 100 targets | {{feedrule_per100}} |
+
+{{feedrule_after}}
 
 ### 5.3 False-positive TOIs
 
