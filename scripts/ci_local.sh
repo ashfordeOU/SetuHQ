@@ -24,7 +24,7 @@ ok()   { echo "   ok" | tee -a "$LOG"; }
 step "install into a venv (same as ci.yml)"
 if [[ ! -x "$VENV/bin/python" ]]; then "$PY" -m venv "$VENV"; fi
 "$VENV/bin/python" -m pip install --quiet --upgrade pip
-"$VENV/bin/python" -m pip install --quiet -e ".[dev]"
+"$VENV/bin/python" -m pip install --quiet -e ".[dev,readme]"
 ok
 
 step "tests (python -m pytest -q, same as ci.yml)"
@@ -38,6 +38,10 @@ ok
 
 step "methods paper numbers match the committed JSON (scripts/paper_numbers.py --check)"
 "$VENV/bin/python" scripts/paper_numbers.py --check 2>&1 | tee -a "$LOG"
+ok
+
+step "README figures, brand files and screenshots are current (tools/gen_readme_assets.py --check)"
+"$VENV/bin/python" tools/gen_readme_assets.py --check 2>&1 | tee -a "$LOG"
 ok
 
 if [[ "$QUICK" -eq 1 ]]; then

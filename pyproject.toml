@@ -31,6 +31,8 @@ survey = ["tess-point>=0.9", "K2fov>=7"]
 # validate.run_triceratops: statistical validation with TRICERATOPS (Giacalone et al. 2021). Heavy (pytransit, numba,
 # celerite) and online-only (it queries the TIC, Gaia and TESSCut itself); the default reduced FPP needs none of it.
 validate = ["triceratops>=1.1"]
+# tools/gen_readme_assets.py: the versions the README figures were made with (outlines and numbers depend on them)
+readme = ["fonttools==4.67.0", "numpy==2.5.4", "pillow==13.0.0"]
 
 [project.scripts]
 exoplan = "exoplan.cli:main"
