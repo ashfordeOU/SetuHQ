@@ -66,8 +66,8 @@ The bundle directory holds three files:
 
 | File | What it is |
 |---|---|
-| `results.json` | the sector record, unchanged |
-| `config.toml` | the sweep config that ran; its hash is the run's config hash |
+| `results.json` | the sector record, with its config text written without comments |
+| `config.toml` | the sweep config that ran, written without comments (where a pasted key would hide); loading it gives the same config hash |
 | `manifest.json` | your chosen name and statement, and the provenance: the search and classification code fingerprints (sha256 of the result-making source files, `exoplan.starsearch.SEARCH_FILES` and `CLASSIFY_FILES`), the config hash, the sha256 of every light curve read, the reviewers, the sha256 of the two files above, and `content_sha256` over the manifest itself |
 
 **Sealed, not signed.** The content hashes make any later change to a file or to the manifest visible; they
@@ -80,7 +80,7 @@ maintainers attest at ingest.
 ## 3. Ingest (maintainers)
 
 ```bash
-exoplan ingest your-name-s5 --attested-by <pull-request-author>   # fetches and searches 3 star-sectors again
+exoplan ingest your-name-s5 --attested-by <pull-request-author>
 ```
 
 `ingest` refuses the bundle, and says why, when:
@@ -88,24 +88,31 @@ exoplan ingest your-name-s5 --attested-by <pull-request-author>   # fetches and 
 * a file or the manifest does not match its hash, or the bundle (or zip) holds anything else;
 * its search or classification code fingerprint is not this checkout's: check out the commit the
   contributor ran, then ingest;
-* its config hash does not match `config.toml`, the manifest or the results;
+* its config hash does not match `config.toml`, the manifest or the results, or the config has comments;
 * a light-curve sha256 is missing, malformed or not in the manifest;
 * an entry's class or confidence is not what the rules give for its stored inputs (the rules are
   re-applied to every dip, brightening and variability entry);
-* `--verify-lightcurves N` (3 by default) light curves, chosen by a seed derived from the bundle's hashes,
-  fetched again from MAST, hash differently from the bundle's, or **searched again** with the bundle's
-  config and this code, do not reproduce every entry, count and null exactly. The Probes are deterministic,
-  so this catches results that were edited and resealed; it samples, so a forged star-sector is caught with
-  probability N / (star-sectors in the bundle), and a larger N checks more;
+* a star-sector it fetches again from MAST hashes differently, or a fresh search of it with the bundle's
+  config and this code does not reproduce every entry, count and null exactly. It fetches and searches
+  **every star-sector that carries a planet candidate or an entry in a class that exceeds its null** (what
+  the site would show as a finding), plus `max(3, 5%)` of the rest at random (`--verify-lightcurves N` sets
+  that number). The random draw is seeded with a nonce the maintainer's machine makes at ingest
+  (os.urandom), so renaming or resealing a bundle cannot steer it. The Probes are deterministic, so this
+  catches results that were edited and resealed: a forged finding always, a forged non-finding with the
+  sampled probability;
 * it has Sentinels, whose answers a fresh search cannot reproduce, unless the maintainer passes
   `--accept-sentinels` (the catalogue then records that its dips were not searched again);
 * every star-sector in it is already in the catalogue as an identical search (same light curve, search code
   and config): a re-submission, under any name, adds nothing;
-* anything in it looks like a credential (API keys of any form, cloud and GitHub tokens, private keys, or a
-  `key`, `token`, `secret` or `password` with a value in the config);
+* anything in it looks like a credential: API keys of any form (sk-, AIza, hf_), cloud and GitHub tokens,
+  bearer and x-api-key headers, JWTs, private keys, a bare AWS secret, a `key`, `token`, `secret` or
+  `password` with a value, or a long random-looking value in the config;
 * it was ingested before.
 
-A valid bundle is copied to `docs/sweep/contributions/<bundle_id>/` with `ingest.json` (who attested it, when,
-what was fetched and searched again), and `docs/sweep/catalogue.json` is rebuilt. Each search counts once, in
-every counter and null, and is credited to whoever brought it first; a partial overlap credits only the new
-star-sectors. Then rebuild the site (`scripts/ci_local.sh`) and commit.
+A valid bundle is copied to `docs/sweep/contributions/<bundle_id>/` with `ingest.json`: who attested it, when,
+the nonce, what was fetched and searched again, and the manifest's hash. `docs/sweep/catalogue.json` is then
+rebuilt. **The catalogue reads only folders that ingest wrote and whose hashes still verify**; a folder
+placed or edited by hand is left out, and `exoplan check-sweep` (a step of `scripts/ci_local.sh`) fails on
+it. One search counts for each star-sector, the latest: it alone gives the entries, counters, nulls and
+credit, and earlier searches of the same star-sector stay as provenance on its coverage row. An identical
+copy of a search earns nothing. Then rebuild the site (`scripts/ci_local.sh`) and commit.

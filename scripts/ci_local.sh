@@ -45,6 +45,10 @@ RUN="runs/tess-pi-men-s1"
 CAT="docs/discoveries/catalog.json"
 EX="$VENV/bin/exoplan"
 
+step "sweep catalogue: only ingested, intact contributions, and catalogue.json rebuilds from them"
+"$EX" check-sweep --sweep-dir docs/sweep >> "$LOG" 2>&1
+ok
+
 step "app shell builds from the stored run"
 "$EX" app "$RUN" --catalog "$CAT" --out site/app --title "exoplan" --landing site/index.html >> "$LOG" 2>&1
 ok

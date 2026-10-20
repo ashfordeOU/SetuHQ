@@ -202,6 +202,19 @@ def cmd_ingest(args) -> int:
     return 0
 
 
+def cmd_check_sweep(args) -> int:
+    from exoplan.sweep import build_catalogue, check_catalogue
+
+    if args.fix:
+        build_catalogue(args.sweep_dir)
+    problems = check_catalogue(args.sweep_dir)
+    for p in problems:
+        print(f"exoplan check-sweep: {p}", file=sys.stderr)
+    if not problems:
+        print(f"{args.sweep_dir}: every contribution ingested and intact; catalogue.json matches its verified sources")
+    return 1 if problems else 0
+
+
 def cmd_dashboard(args) -> int:
     from exoplan.dashboard import build_dashboard
 
@@ -337,14 +350,20 @@ def build_parser() -> argparse.ArgumentParser:
     ingest = sub.add_parser("ingest", help="validate a contribution bundle and merge it into the catalogue, with credit")
     ingest.add_argument("bundle", help="bundle directory or .zip")
     ingest.add_argument("--sweep-dir", default="docs/sweep")
-    ingest.add_argument("--verify-lightcurves", type=int, default=3,
-                        help="fetch this many of the bundle's light curves from MAST again, check their sha256 and search them "
-                             "again; every entry must agree (default 3)")
+    ingest.add_argument("--verify-lightcurves", type=int, default=None,
+                        help="how many star-sectors to fetch and search again at random, beyond every one with a planet candidate "
+                             "or an entry in a class that exceeds its null (default: max(3, 5%%)); every entry must agree")
     ingest.add_argument("--attested-by", help="the GitHub login of the person who sent the bundle (the pull request's author)")
     ingest.add_argument("--accept-sentinels", action="store_true",
                         help="accept a bundle with Sentinels, whose dips cannot be searched again here (the catalogue says so)")
     ingest.add_argument("--cache", default="cache")
     ingest.set_defaults(func=cmd_ingest)
+
+    check = sub.add_parser("check-sweep", help="check that every contribution was ingested and is intact, and that the "
+                                               "catalogue is what its verified sources rebuild to")
+    check.add_argument("--sweep-dir", default="docs/sweep")
+    check.add_argument("--fix", action="store_true", help="rebuild catalogue.json from the verified sources")
+    check.set_defaults(func=cmd_check_sweep)
 
     dash = sub.add_parser("dashboard",help="build the interactive dashboard from a run and optional discovery catalogue")
     dash.add_argument("run_dir")

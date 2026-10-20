@@ -17,8 +17,9 @@ writes a bundle directory:
 original hashes. They do not prove who made it: anyone can edit a bundle and recompute every hash. So ingest
 trusts nothing in a bundle that it can check another way:
 
-* the light curves are fetched again from MAST and must hash to the same bytes (``--verify-lightcurves``,
-  3 by default);
+* every star-sector carrying a planet candidate or an entry in a class that exceeds its null, plus
+  ``max(3, 5%)`` of the rest at random (seeded by a nonce the maintainer draws at ingest from os.urandom, so
+  the contributor cannot steer which), is fetched again from MAST and must hash to the same bytes;
 * those star-sectors are **searched again** with the bundle's config and this checkout's code, and every
   entry, count and null must agree exactly. The Probes are deterministic, so a Probes-only bundle is checked
   in full on its sample; a bundle with Sentinels cannot be re-run without their answers and is refused unless
@@ -30,7 +31,9 @@ trusts nothing in a bundle that it can check another way:
   example the pull request's author), stored beside the bundle; the name in the manifest is the credit the
   contributor chose, not proof of identity.
 
-A bundle never holds a key, a token or an environment variable, and ingest refuses one that looks like it does.
+A bundle never holds a key, a token or an environment variable, and ingest refuses one that looks like it does;
+its config is written without comments, where a pasted key would hide. The catalogue reads only contribution
+folders that ingest wrote (with ingest.json) and whose hashes still verify (``sweep.verify_contribution``).
 """
 
 from __future__ import annotations
@@ -52,17 +55,24 @@ FORMAT = "exoplan-contribution/2"
 FILES = ("results.json", "config.toml")
 NAME_RE = re.compile(r"^[\w .,'()\-]{1,60}$", re.UNICODE)
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
-DEFAULT_VERIFY = 3
-# Things that must never be in a bundle, anywhere: API keys (sk-ant-, sk-proj-, other sk- keys), GitHub, Slack and
-# AWS credentials, private keys, and a key variable given a value in any form.
+MIN_RANDOM = 3            # at least this many star-sectors searched again at random, or 5% of the bundle if more
+RANDOM_FRACTION = 0.05
+# Things that must never be in a bundle, anywhere: API keys (sk-ant-, sk-proj-, other sk- keys, Google AIza, Hugging
+# Face hf_), GitHub, Slack and AWS credentials, bearer and x-api-key headers, JWTs, private keys, and a key variable
+# given a value in any form.
 SECRET_RE = re.compile(
     r"sk-[A-Za-z0-9][A-Za-z0-9_\-]{19,}"
     r"|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}"
     r"|\b(?:AKIA|ASIA)[0-9A-Z]{16}\b|aws_secret_access_key"
+    r"|\bAIza[0-9A-Za-z_\-]{30,}|\bhf_[A-Za-z0-9]{30,}"
+    r"|\beyJ[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,}"
+    r"|(?i:authorization)\s*[:=]?\s*(?i:bearer|basic|token)\s+\S{8,}|(?i:x-api-key)[\s:=\"']+\S{8,}"
     r"|-----BEGIN [A-Z ]*PRIVATE KEY-----"
     r"|ANTHROPIC_API_KEY\s*[:=]")
-# In the config (and the manifest), any key or comment naming a credential with a value after it.
+# In the config (and the manifest), any key naming a credential with a value after it.
 ASSIGN_RE = re.compile(r"(?i)\b[\w.-]*(api[_-]?key|token|secret|password|passwd)[\w.-]*[\"']?\s*[:=]\s*\S+")
+# A bare AWS secret key (40 base64 characters) in the config.
+AWS_SECRET_RE = re.compile(r"(?<![A-Za-z0-9/+=])(?=[A-Za-z0-9/+]*[A-Z])(?=[A-Za-z0-9/+]*[a-z])(?=[A-Za-z0-9/+]*[0-9])[A-Za-z0-9/+]{40}(?![A-Za-z0-9/+=])")
 STATEMENT = ("I ran this sweep with the exoplan code and config named in this manifest, on the light curves whose sha256 "
              "are listed, and I have not edited the results. Every entry is a light-curve classification, not a confirmed "
              "planet or star. These hashes seal the bundle against later change; they are not a signature and do not "
@@ -90,10 +100,94 @@ def check_name(name: str) -> str:
 
 def screen(label: str, text: str, *, assignments: bool) -> None:
     """Refuse text that looks like it holds a credential."""
-    m = SECRET_RE.search(text) or (ASSIGN_RE.search(text) if assignments else None)
+    m = SECRET_RE.search(text) or (ASSIGN_RE.search(text) if assignments else None) or (AWS_SECRET_RE.search(text) if assignments else None)
     if m:
         raise BundleRefused(f"{label} looks like it contains a credential ({m.group(0)[:12]}…); a bundle must never hold keys, "
                             "tokens or passwords: keep them in your environment")
+
+
+def _entropy(s: str) -> float:
+    import math
+    from collections import Counter
+
+    n = len(s)
+    return -sum(c / n * math.log2(c / n) for c in Counter(s).values()) if n else 0.0
+
+
+def has_comment(text: str) -> bool:
+    """True when TOML text has a comment (a '#' outside a quoted string) or a multi-line string, which a bundled
+    config may not: a comment is where a pasted key hides."""
+    if '"""' in text or "'''" in text:
+        return True
+    for line in text.splitlines():
+        quote = None
+        i = 0
+        while i < len(line):
+            ch = line[i]
+            if quote:
+                if ch == "\\" and quote == '"':
+                    i += 2
+                    continue
+                if ch == quote:
+                    quote = None
+            elif ch in "\"'":
+                quote = ch
+            elif ch == "#":
+                return True
+            i += 1
+    return False
+
+
+def dump_toml(d: dict) -> str:
+    """A config as TOML without comments: scalars, then tables, then arrays of tables (the sweep configs' shape).
+    Loading it back gives the same dictionary, so the config hash (over the parsed config) is unchanged."""
+    def val(v):
+        if isinstance(v, bool):
+            return "true" if v else "false"
+        if isinstance(v, (int, float)):
+            return repr(v)
+        if isinstance(v, str):
+            return json.dumps(v, ensure_ascii=False)
+        if isinstance(v, list) and all(not isinstance(x, (dict, list)) for x in v):
+            return "[" + ", ".join(val(x) for x in v) + "]"
+        raise BundleRefused(f"the config holds a value this bundle format does not carry: {v!r}")
+
+    def table(prefix, t, out):
+        out += [f"{k} = {val(v)}" for k, v in t.items() if not isinstance(v, dict) and not (isinstance(v, list) and v and isinstance(v[0], dict))]
+        for k, v in t.items():
+            if isinstance(v, dict):
+                out += ["", f"[{prefix}{k}]"]
+                table(f"{prefix}{k}.", v, out)
+        for k, v in t.items():
+            if isinstance(v, list) and v and isinstance(v[0], dict):
+                for item in v:
+                    out += ["", f"[[{prefix}{k}]]"]
+                    table(f"{prefix}{k}.", item, out)
+        return out
+
+    return "\n".join(table("", d, [])).lstrip("\n") + "\n"
+
+
+def screen_config(text: str) -> None:
+    """A bundled config: no comments, no credential pattern, no long high-entropy string value."""
+    import tomllib
+
+    if has_comment(text):
+        raise BundleRefused("config.toml has comments; a bundled config is written without them (exoplan bundle does this), "
+                            "since a comment is where a pasted key hides")
+    screen("config.toml", text, assignments=True)
+
+    def walk(v):
+        if isinstance(v, dict):
+            for x in v.values():
+                walk(x)
+        elif isinstance(v, list):
+            for x in v:
+                walk(x)
+        elif isinstance(v, str) and len(v) >= 32 and " " not in v and _entropy(v) >= 3.5:
+            raise BundleRefused(f"config.toml holds a long random-looking value ({v[:8]}…); a bundle must never hold keys or tokens")
+
+    walk(tomllib.loads(text))
 
 
 def make_bundle(record_path: str | Path, out_dir: str | Path, *, contributor: str, now: str | None = None) -> Path:
@@ -107,8 +201,27 @@ def make_bundle(record_path: str | Path, out_dir: str | Path, *, contributor: st
     config_text = rec.get("config_text") or ""
     if not config_text:
         raise BundleRefused(f"{record_path}: the record holds no config text")
+    import tomllib
+
+    from exoplan.config import load_config
+
+    # The config is bundled without its comments (where a pasted key would hide); its hash, over the parsed
+    # config, does not change, and the bundle's results carry the same comment-free text.
+    try:
+        parsed = tomllib.loads(config_text)
+    except tomllib.TOMLDecodeError as exc:
+        raise BundleRefused(f"the record's config does not parse: {exc}") from None
+    screen("the config", config_text, assignments=True)   # comments included: a key there means the source holds one
+    clean = dump_toml(parsed)
+    tmp = Path(tempfile.mkdtemp(prefix="exoplan-bundle-")) / "config.toml"
+    tmp.write_text(clean)
+    if load_config(tmp).digest() != rec.get("config_sha256"):
+        raise BundleRefused("the record's config text does not hash to its config_sha256")
+    screen_config(clean)
+    rec["config_text"] = clean
+    raw = json.dumps(rec, separators=(",", ":"), ensure_ascii=False).encode()
     screen("the results", raw.decode(), assignments=False)
-    screen("the config", config_text, assignments=True)
+    config_text = clean
     searched = [s for s in rec.get("stars", []) if s.get("status") == "searched"]
     codes = {record_codes(s) for s in searched}
     if len(codes) != 1:
@@ -180,8 +293,13 @@ def validate_bundle(bundle: str | Path, *, codes: tuple | None = None) -> dict:
         if names != sorted(FILES + ("manifest.json",)):
             raise BundleRefused(f"a bundle holds exactly manifest.json, results.json and config.toml; found {names}")
         screen("results.json", (path / "results.json").read_text(errors="replace"), assignments=False)
-        for f in ("manifest.json", "config.toml"):
-            screen(f, (path / f).read_text(errors="replace"), assignments=True)
+        screen("manifest.json", (path / "manifest.json").read_text(errors="replace"), assignments=True)
+        try:
+            screen_config((path / "config.toml").read_text(errors="replace"))
+        except BundleRefused:
+            raise
+        except Exception as exc:  # noqa: BLE001 (a config that does not parse)
+            raise BundleRefused(f"config.toml does not load: {exc}") from None
         try:
             man = json.loads((path / "manifest.json").read_text())
         except json.JSONDecodeError as exc:
@@ -211,6 +329,8 @@ def validate_bundle(bundle: str | Path, *, codes: tuple | None = None) -> dict:
         rec = json.loads((path / "results.json").read_text())
         if not (digest == man.get("config_sha256") == rec.get("config_sha256")):
             raise BundleRefused("config hash mismatch between config.toml, the manifest and the results")
+        if rec.get("config_text") != (path / "config.toml").read_text():
+            raise BundleRefused("the results' config text differs from config.toml")
         _check_results(rec, man, digest)
         return {"manifest": man, "results": rec, "path": path, "_tmp": tmp}
     except BundleRefused:
@@ -279,26 +399,39 @@ def _check_entries(s: dict) -> None:
 
 # ---------- checks against the world: MAST, and a fresh search ----------
 def sample(rec: dict, n: int, seed: str) -> list[dict]:
-    """``n`` searched star-sectors of the record, chosen by a seed the contributor does not control (the bundle id
-    is a hash of the files, so changing the files to steer the choice changes the choice)."""
+    """``n`` searched star-sectors of the record at random, chosen with ``seed``."""
     searched = [s for s in rec.get("stars") or [] if s.get("status") == "searched"]
     return random.Random(seed).sample(searched, min(max(n, 0), len(searched)))
 
 
-def check_at_mast(rec: dict, n: int, *, fetch=None, cache_root: str | Path = "cache", seed: str = "") -> list[dict]:
-    """Fetch ``n`` of the bundle's light curves again and compare their sha256; returns the star-sectors checked.
-    Fetches go to a fresh directory, so a file already cached cannot stand in for MAST's."""
+def select_for_search(rec: dict, *, exceeding: set, nonce: str, min_random: int | None = None) -> tuple[list[dict], list[dict]]:
+    """The star-sectors ingest fetches and searches again: every one that carries a planet candidate or an entry
+    in a class that exceeds its null in the catalogue (they are what the site shows as findings, so they are
+    always checked), plus ``max(3, 5%)`` of the rest at random. The random part is seeded with a nonce the
+    maintainer draws at ingest (os.urandom), so the contributor cannot steer it by renaming or resealing."""
+    import math
+
+    searched = [s for s in rec.get("stars") or [] if s.get("status") == "searched"]
+    flagged = {"planet_candidate"} | set(exceeding)
+    forced = [s for s in searched if any(e.get("class") in flagged for e in s.get("entries") or [])]
+    rest = [s for s in searched if not any(s is f for f in forced)]
+    k = max(MIN_RANDOM, math.ceil(RANDOM_FRACTION * len(searched))) if min_random is None else max(0, min_random)
+    return forced, random.Random(nonce).sample(rest, min(k, len(rest)))
+
+
+def fetch_and_hash(rec: dict, picked: list[dict], *, fetch=None, cache_root: str | Path = "cache") -> list[dict]:
+    """Fetch the picked light curves again from MAST and compare their sha256. Fetches go to a fresh directory,
+    so a file already cached cannot stand in for MAST's."""
     from exoplan.starsearch import sha256_file
     from exoplan.sweep import Throttle, fetch_file, sector_targets
 
-    pick = sample(rec, n, seed)
-    if not pick:
+    if not picked:
         return []
     targets, _ = sector_targets(rec["sector"], cache_root)
     by_tic = {t["tic"]: t for t in targets}
     fresh = Path(tempfile.mkdtemp(prefix="exoplan-verify-"))
     throttle = Throttle(1.0)
-    for s in pick:
+    for s in picked:
         t = by_tic.get(s["tic"])
         if t is None:
             raise BundleRefused(f"TIC {s['tic']} is not a SPOC 2-minute target of sector {rec['sector']}")
@@ -307,7 +440,12 @@ def check_at_mast(rec: dict, n: int, *, fetch=None, cache_root: str | Path = "ca
         if got != s["file_sha256"]:
             raise BundleRefused(f"TIC {s['tic']}: the light curve at MAST hashes to {got[:16]}…, the bundle says {s['file_sha256'][:16]}…")
         s["_path"] = str(p)
-    return pick
+    return picked
+
+
+def check_at_mast(rec: dict, n: int, *, fetch=None, cache_root: str | Path = "cache", seed: str = "") -> list[dict]:
+    """Fetch ``n`` random light curves of the record again and compare their sha256."""
+    return fetch_and_hash(rec, sample(rec, n, seed), fetch=fetch, cache_root=cache_root)
 
 
 def _norm(x):
@@ -353,12 +491,15 @@ def rerun_check(rec: dict, config_path: str | Path, picked: list[dict], *, cache
     return done
 
 
-def ingest_bundle(bundle: str | Path, *, sweep_dir: str | Path = "docs/sweep", verify_lightcurves: int = DEFAULT_VERIFY,
+def ingest_bundle(bundle: str | Path, *, sweep_dir: str | Path = "docs/sweep", verify_lightcurves: int | None = None,
                   attested_by: str | None = None, accept_sentinels: bool = False, codes: tuple | None = None,
-                  fetch=None, cache_root: str | Path = "cache") -> dict:
-    """Validate, fetch and re-search a sample, refuse a re-submission, then copy into
-    ``<sweep_dir>/contributions/<bundle_id>/`` with ``ingest.json`` (who attested it, what was verified) and
-    rebuild the catalogue."""
+                  fetch=None, cache_root: str | Path = "cache", nonce: str | None = None) -> dict:
+    """Validate; refuse a re-submission; fetch and search again every star-sector with a planet candidate or an
+    entry in a class that exceeds its null, plus ``max(3, 5%)`` (or ``verify_lightcurves``) at random chosen by a
+    fresh maintainer nonce; then copy into ``<sweep_dir>/contributions/<bundle_id>/`` with ``ingest.json`` (who
+    attested it, the nonce, what was searched again, the manifest's hash) and rebuild the catalogue."""
+    import os
+
     from exoplan.sweep import build_catalogue, load_sources, search_identity
 
     if attested_by is not None and not re.match(r"^[A-Za-z0-9-]{1,39}$", attested_by):
@@ -379,15 +520,26 @@ def ingest_bundle(bundle: str | Path, *, sweep_dir: str | Path = "docs/sweep", v
         if sentinels and not accept_sentinels:
             raise BundleRefused("the bundle has Sentinels, so a fresh search cannot reproduce it here; a maintainer may accept it "
                                 "with --accept-sentinels, and the catalogue will then say its dips were not re-run")
-        picked = check_at_mast(rec, verify_lightcurves, fetch=fetch, cache_root=cache_root, seed=man["bundle_id"])
+        cat_path = Path(sweep_dir) / "catalogue.json"
+        exceeding: set = set()
+        if cat_path.exists():
+            comps = ((json.loads(cat_path.read_text())["counts"].get("null") or {}).get("comparisons")) or []
+            exceeding = {c["class"] for c in comps if c.get("significant")}
+        nonce = nonce or os.urandom(16).hex()
+        forced, rand = select_for_search(rec, exceeding=exceeding, nonce=nonce, min_random=verify_lightcurves)
+        picked = fetch_and_hash(rec, forced + rand, fetch=fetch, cache_root=cache_root)
         rerun = [] if sentinels else rerun_check(rec, v["path"] / "config.toml", picked, cache_root=cache_root)
         dest.mkdir(parents=True)
         for f in ("manifest.json",) + FILES:
             shutil.copyfile(v["path"] / f, dest / f)
         record = {"bundle_id": man["bundle_id"], "ingested_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                   "attested_by": attested_by, "contributor_name": man["contributor"]["name"],
+                  "manifest_sha256": sha256_bytes((dest / "manifest.json").read_bytes()),
+                  "nonce": nonce,
                   "verified": {"lightcurves_refetched": [s["tic"] for s in picked], "searched_again": rerun,
-                               "rules_reapplied": "every entry", "dips_searched_again": not sentinels},
+                               "always_searched": [s["tic"] for s in forced], "random": [s["tic"] for s in rand],
+                               "exceeding_classes": sorted(exceeding), "rules_reapplied": "every entry",
+                               "dips_searched_again": not sentinels},
                   "new_star_sectors": len(new), "already_in_catalogue": len(mine) - len(new)}
         (dest / "ingest.json").write_text(json.dumps(record, indent=1) + "\n")
         cat = build_catalogue(sweep_dir)
