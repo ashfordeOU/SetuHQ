@@ -133,11 +133,14 @@ deep-dip clipping fix in Honest limits), which does not affect a 300 ppm transit
   and the 1.55 d window a dip at phase 0.74 reaches 1.05 times the threshold, 90% of it from one epoch). The
   previous code, which masked the strongest first-pass dip whether or not it was significant, raised the default
   setting's dip from 5.6σ to 7.0σ and flagged 8 of 15 settings, including every 6- and 15-minute bin with a window
-  up to 1.5 d (the reviewer's measurement).
+  up to 1.5 d (the reviewer's measurement). These are not independent trials: every run window up to 12 T14
+  collapses to the same 1.55 d vetting window, so the 12 settings are 2 distinct vetting windows (1.55 and 2 d) × 6
+  bin sizes, all on the same data (the reviewer's 15-setting grid, windows 0.75–2 d × 3 bin sizes, is 6 distinct
+  settings for the same reason).
 * **No reduced FPP for pi Men c: it is not stable.** Across the pipeline's five detrending settings (the default,
   and windows ×0.75 and ×1.5 with masks of 1.0 and 2.0 T14) under two noise models, the FPP ranges from 0.0079 to
-  0.093 (median 0.0086 at the robust spread; it was 0.008–0.62 before the null's tail was smoothed), a factor of 11
-  in odds where 10 is allowed, so none is given; the label is "not validated: no contrast curve". One setting
+  0.093 (median 0.0086 at the robust spread; it was 0.008–0.62 before the null's tail was smoothed): refused
+  (odds spread 12.9×; 10× allowed), a narrow margin; the label is "not validated: no contrast curve". One setting
   (window ×0.75, mask 2 T14) carries the high end. On a wider grid (absolute windows 0.75–2 d × masks 1.0, 1.5 and
   2.0 T14) the secondary scan passes the white-noise gate on 6 of 15 settings and fails it on 9 (FPP 0.007–0.16
   where it passes), and the largest brightening ranges from 2.6 to 6.2σ with the setting: the 5.8σ brightening once
@@ -252,7 +255,8 @@ published pipelines.
   binary at 600 ppm per 2-minute point was flagged 10 times in 20; with phase 0.5 masked, 161 ppm is kept and 19 of
   20 are flagged (1500/300 ppm at 1000 ppm noise: 5 → 18 of 20). An eccentric secondary below the threshold in the
   first pass is not protected: at phase 0.62, 1000/200 ppm is flagged 13 times in 20 (12 with one pass; 18 when every
-  first-pass dip was masked). Long transits used to break the masked detrending (a 1-day quadratic across a 3 T14
+  first-pass dip was masked). Not built, future work: recovering those with a lower first-pass threshold for the
+  mask together with a second-pass threshold calibrated by simulating that exact two-pass procedure. Long transits used to break the masked detrending (a 1-day quadratic across a 3 T14
   mask extrapolated by 10⁴–10⁶ ppm at 7–10 hours); the trend is now interpolated across the mask and the vetting
   window is at least 12 T14, so in vetting `detrend_window_days` has no effect below that (1.55 d for pi Men c).
 * **The reduced FPP is checked for stability.** It is computed on the default detrending and four variants (window
@@ -262,10 +266,10 @@ published pipelines.
   a factor of 10 or no FPP is given, and a range across 0.015 or 0.5 is "undetermined". Its no-secondary likelihood
   is the simulated null distribution (the earlier max-of-N model charged a clean planet for an unusually small
   strongest dip: FPP up to 0.97), with an exponential tail fitted above its 99th percentile (fewer than 40 of 40,000
-  simulated scans lie beyond z = 5.1). Measured through the vetting path: clean planets 0 of 150 refused (10-minute
-  cadence; most are "undetermined", their range straddling 0.015) and 0 of 36 with 6–12 hour transits (the 10-hour
-  dozen re-run on the final code), against 7%
-  and about 1 in 6 in the review; simulated binaries "likely false positive" 19 of 20 (1000/200 ppm), 17 of 20
+  simulated scans lie beyond z = 5.1). Measured through the vetting path: clean planets with white noise 0 of 150
+  refused (10-minute cadence; most are "undetermined", their range straddling 0.015), and 0 of 36 with 6–12 hour
+  transits (the 10-hour dozen re-run on the final code), against 7% and about 1 in 6 in the review; with red noise
+  refusals remain, about 3% (the reviewer measured 5 of 150 on 2d268cb); simulated binaries "likely false positive" 19 of 20 (1000/200 ppm), 17 of 20
   (1500/300 ppm) and 13 of 20 (1000/200 ppm at phase 0.62), where 15–16 of 20 used to be refused as unstable.
 * **Validation is not done.** TRICERATOPS 1.1.0 installs with pip (extra `validate`), but its `target()` queries
   MAST, Gaia and TESSCut on construction, so it cannot run offline, and MAST's API was failing when this was built:

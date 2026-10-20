@@ -1,6 +1,6 @@
 # pi Men (TIC 261136679), TESS sector 1: S2 extended and pixel-level vetting
 
-Made 2026-10-20T12:08:15+00:00 by `scripts/vet_pi_men_s2.py` from the SPOC files `tess2018206045859-s0001-0000000261136679-0120-s_lc.fits` and `tess2018206045859-s0001-0000000261136679-0120-s_tp.fits` (sha256 0145804d17a9…). MAST's search service was failing on 2026-10-19; the files came from the public STScI bucket that MAST's download links redirect to. Every test below only adds flags; none changes a pass/fail decision by default.
+Made 2026-10-20T13:03:21+00:00 by `scripts/vet_pi_men_s2.py` from the SPOC files `tess2018206045859-s0001-0000000261136679-0120-s_lc.fits` and `tess2018206045859-s0001-0000000261136679-0120-s_tp.fits` (sha256 0145804d17a9…). MAST's search service was failing on 2026-10-19; the files came from the public STScI bucket that MAST's download links redirect to. Every test below only adds flags; none changes a pass/fail decision by default.
 
 Ephemeris from a joint limb-darkened fit of all 5 sector-1 epochs: P = 6.26795 ± 0.00049 d, T0 = 1338.0394 BTJD, T14 = 3.09 ± 0.16 h, depth 300 ± 8 ppm.
 
@@ -18,7 +18,7 @@ On the light curve re-detrended with the fitted transits masked (1.5 T14 each si
 
 ### The secondary flag across run settings
 
-The same two-pass preparation and secondary test on nearby run settings (the run's detrend window × bin size; the vetting window is never below 12 T14 = 1.55 d, so every window up to that gives the same light curve). 3 of 12 settings flag the dip: **secondary at threshold; flag setting-dependent (3 of 12 settings flag it)**.
+The same two-pass preparation and secondary test on nearby run settings (the run's detrend window × bin size; the vetting window is never below 12 T14 = 1.55 d, so every window up to that gives the same light curve). 3 of 12 settings flag the dip: **secondary at threshold; flag setting-dependent (3 of 12 settings flag it)**. 12 settings = 2 distinct vetting windows (1.547, 2 d; every run window up to 12 T14 collapses to the first) x 6 bin sizes. They share the same data, so they are 12 correlated settings, not 12 independent trials.
 
 | window (d) | vetting window (d) | bin (min) | first pass | masked phases | strongest dip | threshold | dip / threshold | epochs: largest share | flag |
 |---|---|---|---|---|---|---|---|---|---|
@@ -77,7 +77,7 @@ Source: TIC v8.2 (MAST), within 150″. Depth in the aperture 300 ppm (PDCSAP de
 
 ## S3: reduced FPP (exoplan's scheme, not TRICERATOPS)
 
-FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788–0.0931, more than a factor of 10 in odds). Label: **not validated: no contrast curve**.
+FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788–0.0931): refused (odds spread 12.9×; 10× allowed). Label: **not validated: no contrast curve**.
 
 Stability: the FPP was computed on 5 detrending settings (the default and windows ×0.75 and ×1.5 with masks of 1.0 and 2.0 T14) under two noise models: range 0.0079–0.0931, median 0.0086 at the robust spread; 2 of 5 settings pass the white-noise gate.
 
@@ -101,7 +101,7 @@ Wider grid (absolute windows 0.75–2 d × masks 1.0/1.5/2.0 T14): the white-noi
 | 2.0 | 1.5 | not white | 4.4σ | 6.6σ | n/a |
 | 2.0 | 2.0 | not white | 3.2σ | 6.6σ | n/a |
 
-Not modelled: unresolved bound companions (HEB, planet on a companion); unresolved background stars (BEB, planet on a background star). Notes: no reliable difference-image centroid: positions carry no information; 1 neighbour(s) excluded only marginally (within 3σ of the Tmag uncertainty of reaching the depth); FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788–0.0931, more than a factor of 10 in odds). Priors: illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice.
+Not modelled: unresolved bound companions (HEB, planet on a companion); unresolved background stars (BEB, planet on a background star). Notes: no reliable difference-image centroid: positions carry no information; 1 neighbour(s) excluded only marginally (within 3σ of the Tmag uncertainty of reaching the depth); FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788–0.0931): refused (odds spread 12.9×; 10× allowed). Priors: illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice.
 
 ## SPOC's own DV centroid result, for comparison
 

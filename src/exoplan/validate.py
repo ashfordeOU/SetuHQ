@@ -348,7 +348,8 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
                             f"detrending settings × 2 noise models (range {lo:.3g}–{hi:.3g})")
         elif lo is None or spread > MAX_LOG10_ODDS_SPREAD:
             refused = (f"FPP not computed: unstable across {len(settings)} detrending settings and two noise models "
-                       f"(range {lo:.3g}–{hi:.3g}, more than a factor of 10 in odds)" if lo is not None else
+                       f"(range {lo:.3g}–{hi:.3g}): refused (odds spread {10 ** spread:.3g}×; "
+                       f"{10 ** MAX_LOG10_ODDS_SPREAD:g}× allowed)" if lo is not None else
                        "FPP not computed: no setting gave one")
             fpp = nfpp = None
             probs = {}

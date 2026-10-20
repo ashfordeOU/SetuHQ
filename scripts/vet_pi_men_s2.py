@@ -132,8 +132,13 @@ def run(cache: Path, run_dir: Path, config_path: Path) -> dict:
                               "flagged": "secondary_any_phase" in g_flags})
     k, n = sum(g["flagged"] for g in flag_grid), len(flag_grid)
     lc_tests["secondary_flag_grid"] = flag_grid
+    windows = sorted({round(g["effective_window_days"], 3) for g in flag_grid})
     lc_tests["secondary_flag_stability"] = {
-        "flagged": k, "n_settings": n,
+        "flagged": k, "n_settings": n, "distinct_vetting_windows_days": windows,
+        "note": (f"{n} settings = {len(windows)} distinct vetting windows ({', '.join(f'{w:g}' for w in windows)} d; "
+                 "every run window up to 12 T14 collapses to the first) x "
+                 f"{len({g['bin_minutes'] for g in flag_grid})} bin sizes. They share the same data, so they are "
+                 f"{n} correlated settings, not {n} independent trials."),
         "verdict": ("no secondary flag on any setting" if k == 0 else "flagged on every setting" if k == n else
                     f"secondary at threshold; flag setting-dependent ({k} of {n} settings flag it)")}
 
@@ -255,7 +260,7 @@ def markdown(r: dict) -> str:
                   f"The same two-pass preparation and secondary test on nearby run settings (the run's detrend window "
                   f"× bin size; the vetting window is never below 12 T14 = {_fmt(fg[0]['effective_window_days'])} d, so "
                   f"every window up to that gives the same light curve). {st['flagged']} of {st['n_settings']} settings "
-                  f"flag the dip: **{st['verdict']}**.", "",
+                  f"flag the dip: **{st['verdict']}**. {st['note']}", "",
                   "| window (d) | vetting window (d) | bin (min) | first pass | masked phases | strongest dip | "
                   "threshold | dip / threshold | epochs: largest share | flag |", "|---|---|---|---|---|---|---|---|---|---|"]
         for g in fg:

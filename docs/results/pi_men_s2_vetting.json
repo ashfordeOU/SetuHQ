@@ -106,15 +106,15 @@
   ],
   "contrast_curve": null,
   "label": "not validated: no contrast curve",
-  "fpp_class": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788\u20130.0931, more than a factor of 10 in odds)",
+  "fpp_class": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788\u20130.0931): refused (odds spread 12.9\u00d7; 10\u00d7 allowed)",
   "notes": [
    "no reliable difference-image centroid: positions carry no information",
    "1 neighbour(s) excluded only marginally (within 3\u03c3 of the Tmag uncertainty of reaching the depth)",
-   "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788\u20130.0931, more than a factor of 10 in odds)"
+   "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788\u20130.0931): refused (odds spread 12.9\u00d7; 10\u00d7 allowed)"
   ],
-  "refused": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788\u20130.0931, more than a factor of 10 in odds)"
+  "refused": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788\u20130.0931): refused (odds spread 12.9\u00d7; 10\u00d7 allowed)"
  },
- "made_at": "2026-10-20T12:08:15+00:00",
+ "made_at": "2026-10-20T13:03:21+00:00",
  "inputs": {
   "lightcurve": {
    "source": "SPOC file",
@@ -683,6 +683,11 @@
   "secondary_flag_stability": {
    "flagged": 3,
    "n_settings": 12,
+   "distinct_vetting_windows_days": [
+    1.547,
+    2.0
+   ],
+   "note": "12 settings = 2 distinct vetting windows (1.547, 2 d; every run window up to 12 T14 collapses to the first) x 6 bin sizes. They share the same data, so they are 12 correlated settings, not 12 independent trials.",
    "verdict": "secondary at threshold; flag setting-dependent (3 of 12 settings flag it)"
   }
  },
