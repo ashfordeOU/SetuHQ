@@ -257,6 +257,31 @@ def test_pipeline_uses_the_transit_masked_light_curve(runs):
 
 
 @pytest.mark.parametrize("hours", [6.0, 10.0])
+def test_long_transits_through_the_two_pass_detrend_and_the_variants(hours):
+    """The path the pipeline takes (extended_vetting): two-pass masked detrend, the extended tests, the detrending
+    variants and the reduced FPP, for a 1000 ppm planet with a 6 or 10 hour transit. No flag, no excursion beyond the
+    transit, every variant anchored, and the FPP not refused."""
+    from dvtests_helpers import trapezoid_lc
+    from exoplan.dvtests import extended_vet
+    from exoplan.pipeline import MIN_ANCHOR_SUPPORT, secondary_variants, vetting_lightcurve_two_pass
+    from exoplan.validate import reduced_fpp
+
+    dur, cfg = hours / 24.0, RunConfig(name="x")
+    eph = dict(period=9.0, t0=2.0, duration=dur)
+    for seed in range(2):
+        lc = trapezoid_lc(seed=seed, depth=1000e-6, noise=3e-4, gap=(13.2, 14.2), **eph)
+        lc = lc.with_data(lc.time, lc.flux + 2e-4 * np.sin(lc.time / 3.0), lc.flux_err)
+        m, phases = vetting_lightcurve_two_pass([lc], cfg, **eph)
+        assert phases == (0.5,) and np.max(np.abs(m.flux - 1)) < 2500e-6
+        flags, dv = extended_vet(m.time, m.flux, m.flux_err, **eph)
+        assert not flags, (seed, flags)
+        var = secondary_variants([lc], cfg, **eph, extra_phases=phases)
+        assert len(var) == 4 and all(v["anchor_support"] >= MIN_ANCHOR_SUPPORT for v in var)
+        v = reduced_fpp(depth=1e-3, dv=dv, variants=var)
+        assert v.refused is None, (seed, v.refused)
+
+
+@pytest.mark.parametrize("hours", [6.0, 10.0])
 def test_long_transits_survive_the_masked_detrend(hours):
     """A 1000 ppm planet with a 6 or 10 hour transit (P = 9 d, 300 ppm noise, slow stellar variability): masking 3 T14
     of a 1-day window left the quadratic extrapolating (excursions of 10^4 to 10^6 ppm, false secondary_any_phase and

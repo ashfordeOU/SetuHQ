@@ -152,7 +152,10 @@ TRANSIT_MASK_T14 = 1.5  # the extended vetting re-detrends with points within th
 def vetting_window(config: RunConfig, duration: float) -> float:
     """The detrending window of the extended vetting: the run's window, or four times the masked span around each
     transit (2 × TRANSIT_MASK_T14 × T14) when that is longer, so a long transit's mask leaves the trend support on
-    both sides and the box statistic keeps its white-noise scale."""
+    both sides and the box statistic keeps its white-noise scale.
+
+    Below 12 T14 the run's ``detrend_window_days`` therefore has no effect on the vetting light curve: for pi Men c
+    (T14 = 3.09 h) any window up to 1.55 d gives the same 1.55 d. It still sets the review light curve."""
     return max(config.detrend_window_days, 4.0 * 2.0 * TRANSIT_MASK_T14 * duration)
 
 
