@@ -174,6 +174,22 @@ def _fap_cache_key(time, residual, flux_err, params: tuple, version: int | None 
                                     np.ascontiguousarray(flux_err).tobytes(), repr(tail).encode()])).hexdigest()[:32]
 
 
+def fap_inputs(subject: Subject, signal: PeriodicSignal, block_days: float = FAP_BLOCK_DAYS) -> tuple[np.ndarray, list]:
+    """The block bootstrap's inputs: the flux with the detected box removed, and the index blocks to shuffle."""
+    time, flux = subject.time, subject.flux
+    phase = (time - signal.t0 + 0.5 * signal.period) % signal.period - 0.5 * signal.period
+    residual = flux + signal.depth * (np.abs(phase) <= 0.5 * signal.duration)
+    cadence = float(np.median(np.diff(time))) if time.size > 1 else 0.0
+    per_block = max(2, int(round(block_days / cadence))) if cadence > 0 else time.size
+    blocks = [np.arange(i, min(i + per_block, time.size)) for i in range(0, time.size, per_block)]
+    return residual, blocks
+
+
+def fap_seeds(seed: int, n_trials: int) -> np.ndarray:
+    """The trials' seeds. The first n of a longer run are the seeds of an n-trial run, so trials can be extended."""
+    return np.random.default_rng(seed).integers(0, 2**63 - 1, size=n_trials)
+
+
 def fap_tail_label(tail: float | None) -> str:
     """The Gumbel tail as it may be printed: indicative, and never below FAP_TAIL_FLOOR."""
     if tail is None:
@@ -206,6 +222,7 @@ def false_alarm_probability(
     seed: int = 0,
     cache_dir: str | Path | None = None,
     workers: int | None = None,
+    stop_after: int | None = None,
 ) -> FapResult:
     """Empirical false-alarm probability of a BLS peak, with red noise kept.
 
@@ -225,24 +242,47 @@ def false_alarm_probability(
     seed and FAP_CACHE_VERSION), so a re-run costs nothing; with ``workers`` > 1 the trials run in
     parallel processes, each with its own fixed seed (the result does not
     depend on the number of workers).
+
+    With ``stop_after`` = m, the trials run in order in chunks and stop as soon as more than m of them reach the
+    observed SNR: the signal then cannot pass a cut at (m + 1)/(N + 1), and the FAP returned, (k + 1)/(n + 1) over
+    the n trials run, is above it. A run that completes is the same as without ``stop_after`` (same seeds, same order).
     """
-    time, flux = subject.time, subject.flux
-    phase = (time - signal.t0 + 0.5 * signal.period) % signal.period - 0.5 * signal.period
-    residual = flux + signal.depth * (np.abs(phase) <= 0.5 * signal.duration)
-    cadence = float(np.median(np.diff(time))) if time.size > 1 else 0.0
-    per_block = max(2, int(round(block_days / cadence))) if cadence > 0 else time.size
-    blocks = [np.arange(i, min(i + per_block, time.size)) for i in range(0, time.size, per_block)]
-    seeds = np.random.default_rng(seed).integers(0, 2**63 - 1, size=n_trials)
+    time = subject.time
+    residual, blocks = fap_inputs(subject, signal, block_days)
+    seeds = fap_seeds(seed, n_trials)
     key = _fap_cache_key(time, residual, subject.flux_err, (min_period, max_period, tuple(durations), block_days, seed, n_trials))
     path = Path(cache_dir) / f"{key}.json" if cache_dir else None
     null = None
     if path and path.exists():
         null = json.loads(path.read_text()).get("null_max")
+    stopped = False
     if null is None:
         common = (time, residual, subject.flux_err, blocks)
         tail_args = (min_period, max_period, durations, subject.subject_id, subject.mission, subject.time_unit)
         workers = workers if workers is not None else (min(4, os.cpu_count() or 1) if n_trials >= 200 else 1)
-        if workers > 1:
+        if stop_after is not None:
+            null = []
+            pool = None
+            if workers > 1:
+                import multiprocessing as mp
+
+                pool = mp.get_context("fork").Pool(workers)
+            try:
+                for start in range(0, n_trials, 50):
+                    chunk = seeds[start:start + 50]
+                    if pool is not None:
+                        parts = pool.map(_null_maxima, [common + (c,) + tail_args for c in np.array_split(chunk, workers) if len(c)])
+                        null += [x for part in parts for x in part]
+                    else:
+                        null += _null_maxima(common + (chunk,) + tail_args)
+                    if sum(1 for x in null if x >= signal.snr) > stop_after:
+                        stopped = len(null) < n_trials
+                        break
+            finally:
+                if pool is not None:
+                    pool.close()
+                    pool.join()
+        elif workers > 1:
             import multiprocessing as mp
 
             chunks = np.array_split(seeds, workers * 4)
@@ -251,7 +291,7 @@ def false_alarm_probability(
             null = [x for part in parts for x in part]
         else:
             null = _null_maxima(common + (seeds,) + tail_args)
-        if path:
+        if path and not stopped:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps({"subject_id": subject.subject_id, "n_trials": n_trials, "seed": seed,
                                         "block_days": block_days, "cache_version": FAP_CACHE_VERSION, "null_max": null}))
@@ -259,6 +299,12 @@ def false_alarm_probability(
         return FapResult(float("nan"), 0, 0, False, None, "")
     arr = np.asarray(null, float)
     exceed = int(np.count_nonzero(arr >= signal.snr))
+    if stopped:
+        n_run = arr.size
+        return FapResult(fap=(exceed + 1) / (n_run + 1), n_trials=n_run, exceed=exceed, bound=False, tail=None,
+                         method=FAP_METHOD.format(block=block_days, n=n_trials)
+                         + f"; stopped after {n_run:,} of {n_trials:,} trials once {exceed} reached the observed SNR, so the "
+                           f"FAP is above {(stop_after + 1) / (n_trials + 1):.1e}")
     fap = (exceed + 1) / (n_trials + 1)
     tail = None
     finite = arr[np.isfinite(arr)]
@@ -272,7 +318,8 @@ def false_alarm_probability(
 
 
 def with_fap(subject: Subject, signal: PeriodicSignal | None, *, min_period: float = 0.5,
-             n_trials: int = FAP_TRIALS, seed: int | None = None, cache_dir: str | Path | None = None) -> PeriodicSignal | None:
+             n_trials: int = FAP_TRIALS, seed: int | None = None, cache_dir: str | Path | None = None,
+             stop_after: int | None = None) -> PeriodicSignal | None:
     """``signal`` with its false-alarm probability filled in. The seed defaults to one derived from the subject id."""
     if signal is None or n_trials <= 0:
         return signal
@@ -280,7 +327,8 @@ def with_fap(subject: Subject, signal: PeriodicSignal | None, *, min_period: flo
         import hashlib
 
         seed = int(hashlib.sha256(subject.subject_id.encode()).hexdigest()[:8], 16)
-    r = false_alarm_probability(subject, signal, min_period=min_period, n_trials=n_trials, seed=seed, cache_dir=cache_dir)
+    r = false_alarm_probability(subject, signal, min_period=min_period, n_trials=n_trials, seed=seed, cache_dir=cache_dir,
+                                stop_after=stop_after)
     return replace(signal, fap=r.fap, fap_trials=r.n_trials, fap_exceed=r.exceed, fap_bound=r.bound, fap_tail=r.tail,
                    fap_method=r.method)
 

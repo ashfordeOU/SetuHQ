@@ -251,3 +251,32 @@ def test_fap_never_reports_below_its_resolution_and_is_cached(tmp_path):
     assert (par.fap, par.exceed) == (one.fap, one.exceed)
     assert fap_label(1 / 10001, 10000, True) == "< 1.0e-04 (10,000 trials)" and fap_label(0.25, 20, False) == "0.25 (20 trials)"
     assert fap_label(None, 0, False) == "not computed"
+
+
+def test_a_longer_run_extends_a_shorter_one(tmp_path):
+    import json as _json
+
+    from exoplan.search import false_alarm_probability, fap_seeds
+
+    assert (fap_seeds(9, 40)[:20] == fap_seeds(9, 20)).all()  # a longer run starts with the shorter run's trials
+    subject = _fap_subject(4, red_ppm=0.0, signal=False)
+    sig = bls_search(subject)
+    a, b = tmp_path / "a", tmp_path / "b"
+    false_alarm_probability(subject, sig, n_trials=20, seed=9, cache_dir=a, workers=1)
+    false_alarm_probability(subject, sig, n_trials=40, seed=9, cache_dir=b, workers=1)
+    short = _json.loads(next(a.glob("*.json")).read_text())["null_max"]
+    long = _json.loads(next(b.glob("*.json")).read_text())["null_max"]
+    assert long[:20] == short
+
+
+@pytest.mark.slow
+def test_early_stopping_does_not_change_the_decision():
+    from exoplan.search import false_alarm_probability
+
+    subject = _fap_subject(4, red_ppm=0.0, signal=False)
+    sig = bls_search(subject)
+    # Early stopping: a noise signal stops once 2 trials reach its SNR, and cannot pass a 1/(N+1)-level cut.
+    stopped = false_alarm_probability(subject, sig, n_trials=120, seed=9, stop_after=1, workers=1)
+    assert stopped.exceed >= 2 and stopped.n_trials < 120 and stopped.fap > 2 / 121 and "stopped after" in stopped.method
+    full = false_alarm_probability(subject, sig, n_trials=120, seed=9, workers=1)
+    assert (full.exceed >= 2) == (stopped.exceed >= 2)

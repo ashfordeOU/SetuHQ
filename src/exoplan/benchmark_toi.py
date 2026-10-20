@@ -536,6 +536,10 @@ def to_markdown(data: dict) -> str:
                   "| persona | CP/KP dips marked | FP dips marked as a potential planet | failed calls |", "|---|---|---|---:|"]
         for rid, v in se["personas"].items():
             lines.append(f"| {rid} | {_pct(v['cp_kp_marked'])} | {_pct(v['fp_marked_as_planet'])} | {v['errors']} |")
+        if se.get("models"):
+            lines += ["", "Model, as the Claude Code CLI reported it: " + "; ".join(f"{k}: {v} reviews" for k, v in se["models"].items())
+                      + ". Reviews answered before exoplan stored the model id say \"not recorded\": the CLI ran its default "
+                      "model then, and the cache key holds only \"default\"."]
         lines += ["", f"The two personas agree on {ag['agree']} of {ag['n']} stars (φ = {ag['phi']:.2f}). They share one model, so their "
                   "errors are correlated and they count as one correlated voter, not two independent ones (ATLAS K4)." if ag.get("phi") is not None else "", ""]
     if data.get("loss"):
@@ -553,7 +557,8 @@ def to_markdown(data: dict) -> str:
         commits = "; ".join(au.get("commits_since") or []) or "none"
         lines += ["## Was the held-out half used to choose a threshold?", "",
                   (f"No. All {au['values_checked']} threshold values in {', '.join(au['paths'])} (module constants, config keys, "
-                   f"reviewer weights) are the same as at {au['frozen_after']}, the last commit before the sample was frozen. "
+                   f"reviewer weights) are the same at {au.get('compared_with') or 'HEAD'}, the code that produced these numbers, as at "
+                   f"{au['frozen_after']}, the last commit before the sample was frozen. "
                    "The Probe thresholds and weights come from synthetic injection tests; the vetting, V-shape, density and "
                    "FAP rules were set before any TOI light curve was downloaded. "
                    f"Commits since the freeze, none of which changed a threshold: {commits}."

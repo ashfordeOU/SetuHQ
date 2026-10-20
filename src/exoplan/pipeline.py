@@ -88,6 +88,7 @@ class Candidate:
     fap_tail_label: str = ""
     fap_method: str = ""
     fap_snr: float | None = None  # the periodic signal's BLS SNR that the trials are compared with
+    sector: int | None = None     # the TESS sector (or other segment label) of this dip's subject
 
     @property
     def t_center(self) -> float:
@@ -156,7 +157,8 @@ def sector_signals(prepared: list[LightCurve], config: RunConfig) -> dict[str, P
     for target, curves in by_target.items():
         stitched = stitch(curves)
         signal = bls_search(stitched, min_period=config.min_period)
-        out[target] = with_fap(stitched, signal, min_period=config.min_period, n_trials=config.fap_trials, cache_dir=config.fap_cache)
+        out[target] = with_fap(stitched, signal, min_period=config.min_period, n_trials=config.fap_trials, cache_dir=config.fap_cache,
+                               stop_after=config.fap_stop_after)
     return out
 
 
@@ -250,7 +252,8 @@ def build_candidates(
             else:
                 signal = bls_search(subject, min_period=config.min_period)
                 periodic_cache[event.subject_id] = with_fap(subject, signal, min_period=config.min_period,
-                                                            n_trials=config.fap_trials, cache_dir=config.fap_cache)
+                                                            n_trials=config.fap_trials, cache_dir=config.fap_cache,
+                                                            stop_after=config.fap_stop_after)
         result = _vet(event, subject, periodic_cache[event.subject_id])
         periodic = periodic_cache[event.subject_id]
         supported = periodic if periodic is not None and periodic.covers(event.center) else None
@@ -278,6 +281,8 @@ def build_candidates(
                                    ("fap_method", supported.fap_method), ("fap_snr", float(supported.snr))):
                     object.__setattr__(candidate, key, value)
         object.__setattr__(candidate, "search_scope", "sector" if target_signals is not None else "subject")
+        sec = subject.provenance.get("sector")
+        object.__setattr__(candidate, "sector", int(sec) if isinstance(sec, (int, float)) or str(sec).isdigit() else None)
         object.__setattr__(candidate, "mark_audit", tuple(audit_marks(event, classifications, config.cluster_gap_days)))
         object.__setattr__(candidate, "count_rule", {
             "gap_days": config.cluster_gap_days,
@@ -391,7 +396,7 @@ def write_candidates(candidates: list[Candidate], out: Path) -> None:
         "candidate_id", "target", "mission", "subject_id", "t_start", "t_end", "t_center", "time_unit",
         "duration_hours", "score", "n_reviewers", "planet_fraction", "reviewers", "passed", "flags",
         "depth_ppm", "snr", "period_days", "n_transits", "fap", "fap_label", "fap_trials", "fap_exceed", "fap_tail",
-        "fap_tail_label", "fap_method", "fap_snr", "bls_t0", "bls_duration_days",
+        "fap_tail_label", "fap_method", "fap_snr", "sector", "bls_t0", "bls_duration_days",
         "fit_t0", "fit_t0_err", "fit_depth_ppm", "fit_depth_err_ppm", "fit_t14_hours", "fit_t14_err_hours",
         "fit_b", "fit_b_err", "fit_k", "fit_rho_star", "fit_rho_star_err", "star_rho",
     ]

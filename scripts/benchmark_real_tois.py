@@ -199,7 +199,7 @@ def load_cached(tic: int, sector: int):
     from exoplan.lightcurve import LightCurve
     from exoplan.loaders import _file_provenance, _plain
 
-    files = sorted((ROOT / "cache/mast/mastDownload/TESS").glob(f"tess*-s{sector:04d}-{tic:016d}-*-s/*_lc.fits"))
+    files = [f for f in sorted((ROOT / "cache/mast/mastDownload/TESS").glob(f"tess*-s{sector:04d}-{tic:016d}-*-s/*_lc.fits")) if f.stat().st_size]  # an interrupted download is empty
     if not files:  # downloaded before the cache directory was set: fetch it into cache/mast
         from exoplan.loaders import load_tess
 
@@ -485,10 +485,12 @@ def cmd_sentinels(args) -> int:
     print(f"{len(sub)} stars, {len(jobs)} Sentinel reviews", flush=True)
 
     def one(job):
-        t, subj, png, r = job
+        t, subj, png, shared = job
+        r = ClaudeCodeReviewer(reviewer_id=shared.reviewer_id, persona=shared.persona, cache_dir=shared.cache_dir)  # one per thread
         try:
             c = r.review(subj, png)
-            return t["toi"], r.reviewer_id, subj.subject_id, {"label": c.label, "reason": c.reason, "marks": [[m.t_start, m.t_end] for m in c.marks]}
+            return t["toi"], r.reviewer_id, subj.subject_id, {"label": c.label, "reason": c.reason, "marks": [[m.t_start, m.t_end] for m in c.marks],
+                                                              "model": r.last_model, "called_at": r.last_called_at}
         except Exception as exc:  # noqa: BLE001
             return t["toi"], r.reviewer_id, subj.subject_id, {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}
 
@@ -523,7 +525,12 @@ def sentinel_scores(sample: dict) -> dict | None:
             hit = any(match_toi({"t_center": 0.5 * (a + b), "duration_hours": (b - a) * 24, "period_days": None, "time_unit": "BTJD"}, target)
                       for s in ok if s["label"] == "potential_planet" for a, b in s["marks"])
             rows.setdefault(name, {})[rid] = {"hit": hit, "errors": len(subs) - len(ok)}
-    out = {"subsample": data["subsample"], "n_stars": len(rows), "personas": {}}
+    from collections import Counter
+
+    models = Counter(s.get("model") or "not recorded" for per in data["results"].values() for subs in per.values() for s in subs.values())
+    out = {"subsample": data["subsample"], "n_stars": len(rows), "personas": {}, "models": dict(models),
+           "model_note": ("the model id the Claude Code CLI reported for each review (its modelUsage), with the call date; "
+                          "\"not recorded\" for reviews answered before exoplan stored it (the cache key holds only \"default\")")}
     for rid in ("claude-volunteer", "claude-skeptic"):
         pos = [{"x": r[rid]["hit"]} for n, r in rows.items() if rid in r and toi[n]["class"] == "positive"]
         fp = [{"x": r[rid]["hit"]} for n, r in rows.items() if rid in r and toi[n]["class"] == "fp"]
@@ -588,17 +595,26 @@ def _threshold_values(rev: str | None) -> dict[str, str]:
 NOT_THRESHOLDS = ("fap_cache", "FAP_CACHE_VERSION", "FAP_TAIL_FLOOR")
 
 
-def threshold_audit() -> dict:
+def threshold_audit(rev: str | None = None) -> dict:
     """Did any threshold value change after the sample was frozen? (Then the held-out half could have chosen it.)
     Compares the values themselves, so a comment, a refactor or a bug fix that keeps every threshold is not counted;
     the commits since the freeze are listed so a reader can check them."""
-    before, now = _threshold_values(FROZEN_AFTER), _threshold_values(None)
+    # Compared with the code that produced the results (``rev``), not with whatever the tree holds now: a threshold
+    # changed later (the pre-registered feed rule) did not shape these numbers.
+    before, now = _threshold_values(FROZEN_AFTER), _threshold_values(rev)
     diff = {k: [before.get(k), now.get(k)] for k in sorted(set(before) | set(now)) if before.get(k) != now.get(k)}
     changed = {k: v for k, v in diff.items() if not any(x in k for x in NOT_THRESHOLDS)}
     ignored = {k: v for k, v in diff.items() if k not in changed}
-    commits = _git("log", "--format=%h %s", f"{FROZEN_AFTER}..HEAD").splitlines()
-    return {"frozen_after": FROZEN_AFTER, "paths": THRESHOLD_PATHS, "values_checked": len(now), "changed": changed,
+    commits = _git("log", "--format=%h %s", f"{FROZEN_AFTER}..{rev or 'HEAD'}").splitlines()
+    return {"frozen_after": FROZEN_AFTER, "compared_with": rev or "the working tree", "paths": THRESHOLD_PATHS, "values_checked": len(now), "changed": changed,
             "ignored_not_thresholds": ignored, "commits_since": commits, "clean": not changed}
+
+
+def _newest(commits: list[str | None]) -> str | None:
+    """The latest of these commits in the history (the code the newest results came from)."""
+    order = _git("log", "--format=%h", "-n", "200").splitlines()
+    known = [c for c in commits if c]
+    return min(known, key=lambda c: next((i for i, h in enumerate(order) if h.startswith(c) or c.startswith(h)), 10**6)) if known else None
 
 
 def live_feed(path: Path = ROOT / "docs/discoveries/catalog.json") -> dict | None:
@@ -652,8 +668,8 @@ def cmd_report(args) -> int:
             "stars_run": len(results), "summary": summary, "loss": B.loss_table(results, sample),
             "clipping": B.clipping_summary(results, sample, CLIP_RATIO), "summary_unaffected": summary_unaffected, "sentinels": sentinel_scores(sample),
             "feed_implication": B.feed_implication(summary["held_out"], live_feed()),
-            "code_commit": _git("rev-parse", "HEAD"), "code_provenance": code_provenance(results),
-            "threshold_audit": threshold_audit(),
+            "code_commit": _git("rev-parse", "HEAD"), "code_provenance": (cp := code_provenance(results)),
+            "threshold_audit": threshold_audit(_newest(list(cp["commit"].values()))),
             "per_star": [{k: r.get(k) for k in ("toi", "tic", "sector", "no_data", "real", "inverted", "scrambled")} for r in results]}
     OUT_MD.with_suffix(".json").write_text(json.dumps(data, indent=1, default=float) + "\n")
     OUT_MD.write_text(B.to_markdown(data))

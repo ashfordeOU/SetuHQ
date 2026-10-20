@@ -19,6 +19,7 @@ import shutil
 import subprocess
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
@@ -46,6 +47,10 @@ class ClaudeCodeReviewer:
     retries: int = 3
     runner: Runner | None = None
     kind: str = "claude_code"
+    # The model the CLI reports for the last review (its modelUsage keys) and when it answered; "not recorded" for
+    # an answer cached before these were stored.
+    last_model: str | None = None
+    last_called_at: str | None = None
 
     def available(self) -> bool:
         return self.runner is not None or shutil.which(self.binary) is not None
@@ -68,12 +73,18 @@ class ClaudeCodeReviewer:
         ).hexdigest()
         cached = None if self.cache_dir is None else Path(self.cache_dir) / f"{key}.json"
         if cached is not None and cached.exists():
-            text = json.loads(cached.read_text())["text"]
+            stored = json.loads(cached.read_text())
+            text = stored["text"]
+            self.last_model = stored.get("model") or "not recorded"
+            self.last_called_at = stored.get("called_at") or "not recorded"
         else:
-            text = self._call(request, image.parent, subject)
+            text, model = self._call(request, image.parent, subject)
+            self.last_model = model or "not reported by the CLI"
+            self.last_called_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
             if cached is not None:
                 cached.parent.mkdir(parents=True, exist_ok=True)
-                cached.write_text(json.dumps({"backend": "claude-code", "text": text}))
+                cached.write_text(json.dumps({"backend": "claude-code", "text": text, "model": self.last_model,
+                                              "called_at": self.last_called_at}))
         return parse_response(text, subject, self.reviewer_id)
 
     def _command(self, request: str) -> list[str]:
@@ -82,7 +93,7 @@ class ClaudeCodeReviewer:
             cmd += ["--model", self.model]
         return cmd
 
-    def _call(self, request: str, cwd: Path, subject: Subject) -> str:
+    def _call(self, request: str, cwd: Path, subject: Subject) -> tuple[str, str | None]:
         run = self.runner or _subprocess_runner
         last_error: Exception | None = None
         for attempt in range(self.retries):
@@ -91,7 +102,9 @@ class ClaudeCodeReviewer:
                 envelope = json.loads(stdout)
                 text = envelope.get("result", "") if isinstance(envelope, dict) else str(envelope)
                 parse_response(text, _ShapeCheck(), self.reviewer_id)
-                return text
+                usage = envelope.get("modelUsage") if isinstance(envelope, dict) else None
+                model = ",".join(sorted(usage)) if isinstance(usage, dict) and usage else (envelope.get("model") if isinstance(envelope, dict) else None)
+                return text, model
             except Exception as exc:  # malformed output and CLI errors are retried, then reported
                 last_error = exc
             if attempt + 1 < self.retries:

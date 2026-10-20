@@ -1,0 +1,584 @@
+{
+ "written_at": "2026-10-20T13:04:48+00:00",
+ "code_commit": "7dab923d9ebcdd75d191c680076376e03b643ed5",
+ "objective": "Among the grid's rules whose worse control gives at most 1 false signals per 100 targets on the tuning half, the one with the highest tuning completeness (ties: the tighter period tolerance, then the depth check, then no aliases); if none meets it, the lowest noise.",
+ "grid": {
+  "period_tol": [
+   0.005,
+   0.01,
+   0.02
+  ],
+  "depth_factor": [
+   null,
+   2.0
+  ],
+  "aliases": [
+   false,
+   true
+  ]
+ },
+ "fap": {
+  "trials": 2000,
+  "cut": 0.001
+ },
+ "old_rule": {
+  "fap": {
+   "trials": 200,
+   "cut": 0.01
+  },
+  "tuning": {
+   "targets": 279,
+   "two_sector_targets": 249,
+   "completeness": {
+    "k": 49,
+    "n": 148,
+    "rate": 0.3310810810810811,
+    "lo": 0.2603801022473965,
+    "hi": 0.4103290679069278
+   },
+   "fp_rejected": {
+    "k": 83,
+    "n": 106,
+    "rate": 0.7830188679245284,
+    "lo": 0.6954044298895506,
+    "hi": 0.8508374045788089
+   },
+   "real_new_per_100": 2.150537634408602,
+   "noise_counts": {
+    "inverted": 60,
+    "scrambled": 36
+   },
+   "noise_per_100": {
+    "inverted": 21.50537634408602,
+    "scrambled": 12.903225806451612
+   },
+   "noise_worse_per_100": 21.50537634408602,
+   "noise_worse_ci_per_100": [
+    17.088591227776817,
+    26.696170515115426
+   ]
+  }
+ },
+ "trials": [
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.005,
+    "depth_factor": null,
+    "aliases": false
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 19,
+     "n": 148,
+     "rate": 0.12837837837837837,
+     "lo": 0.0837495423332331,
+     "hi": 0.1918106320062804
+    },
+    "fp_rejected": {
+     "k": 99,
+     "n": 106,
+     "rate": 0.9339622641509434,
+     "lo": 0.8699249597867629,
+     "hi": 0.9676458530647216
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 14,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.017921146953405,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.017921146953405,
+    "noise_worse_ci_per_100": [
+     3.0122841688368442,
+     8.24542147560312
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.005,
+    "depth_factor": null,
+    "aliases": true
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 21,
+     "n": 148,
+     "rate": 0.14189189189189189,
+     "lo": 0.09471589217234146,
+     "hi": 0.20718754855482613
+    },
+    "fp_rejected": {
+     "k": 98,
+     "n": 106,
+     "rate": 0.9245283018867925,
+     "lo": 0.8580995894235048,
+     "hi": 0.9612631622790344
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 15,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.376344086021505,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.376344086021505,
+    "noise_worse_ci_per_100": [
+     3.2848707061159845,
+     8.679944853507724
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.005,
+    "depth_factor": 2.0,
+    "aliases": false
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 19,
+     "n": 148,
+     "rate": 0.12837837837837837,
+     "lo": 0.0837495423332331,
+     "hi": 0.1918106320062804
+    },
+    "fp_rejected": {
+     "k": 99,
+     "n": 106,
+     "rate": 0.9339622641509434,
+     "lo": 0.8699249597867629,
+     "hi": 0.9676458530647216
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 14,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.017921146953405,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.017921146953405,
+    "noise_worse_ci_per_100": [
+     3.0122841688368442,
+     8.24542147560312
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.005,
+    "depth_factor": 2.0,
+    "aliases": true
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 21,
+     "n": 148,
+     "rate": 0.14189189189189189,
+     "lo": 0.09471589217234146,
+     "hi": 0.20718754855482613
+    },
+    "fp_rejected": {
+     "k": 98,
+     "n": 106,
+     "rate": 0.9245283018867925,
+     "lo": 0.8580995894235048,
+     "hi": 0.9612631622790344
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 15,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.376344086021505,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.376344086021505,
+    "noise_worse_ci_per_100": [
+     3.2848707061159845,
+     8.679944853507724
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.01,
+    "depth_factor": null,
+    "aliases": false
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 20,
+     "n": 148,
+     "rate": 0.13513513513513514,
+     "lo": 0.08921148549954469,
+     "hi": 0.19952032203379585
+    },
+    "fp_rejected": {
+     "k": 99,
+     "n": 106,
+     "rate": 0.9339622641509434,
+     "lo": 0.8699249597867629,
+     "hi": 0.9676458530647216
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 15,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.376344086021505,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.376344086021505,
+    "noise_worse_ci_per_100": [
+     3.2848707061159845,
+     8.679944853507724
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.01,
+    "depth_factor": null,
+    "aliases": true
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 22,
+     "n": 148,
+     "rate": 0.14864864864864866,
+     "lo": 0.10026035713081935,
+     "hi": 0.21481471679017525
+    },
+    "fp_rejected": {
+     "k": 98,
+     "n": 106,
+     "rate": 0.9245283018867925,
+     "lo": 0.8580995894235048,
+     "hi": 0.9612631622790344
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 16,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.734767025089606,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.734767025089606,
+    "noise_worse_ci_per_100": [
+     3.560437775870985,
+     9.11148769893647
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.01,
+    "depth_factor": 2.0,
+    "aliases": false
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 20,
+     "n": 148,
+     "rate": 0.13513513513513514,
+     "lo": 0.08921148549954469,
+     "hi": 0.19952032203379585
+    },
+    "fp_rejected": {
+     "k": 99,
+     "n": 106,
+     "rate": 0.9339622641509434,
+     "lo": 0.8699249597867629,
+     "hi": 0.9676458530647216
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 15,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.376344086021505,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.376344086021505,
+    "noise_worse_ci_per_100": [
+     3.2848707061159845,
+     8.679944853507724
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.01,
+    "depth_factor": 2.0,
+    "aliases": true
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 22,
+     "n": 148,
+     "rate": 0.14864864864864866,
+     "lo": 0.10026035713081935,
+     "hi": 0.21481471679017525
+    },
+    "fp_rejected": {
+     "k": 98,
+     "n": 106,
+     "rate": 0.9245283018867925,
+     "lo": 0.8580995894235048,
+     "hi": 0.9612631622790344
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 16,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.734767025089606,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.734767025089606,
+    "noise_worse_ci_per_100": [
+     3.560437775870985,
+     9.11148769893647
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.02,
+    "depth_factor": null,
+    "aliases": false
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 23,
+     "n": 148,
+     "rate": 0.1554054054054054,
+     "lo": 0.10584273306445399,
+     "hi": 0.22240397405036763
+    },
+    "fp_rejected": {
+     "k": 99,
+     "n": 106,
+     "rate": 0.9339622641509434,
+     "lo": 0.8699249597867629,
+     "hi": 0.9676458530647216
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 15,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.376344086021505,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.376344086021505,
+    "noise_worse_ci_per_100": [
+     3.2848707061159845,
+     8.679944853507724
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.02,
+    "depth_factor": null,
+    "aliases": true
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 25,
+     "n": 148,
+     "rate": 0.16891891891891891,
+     "lo": 0.11711370366921145,
+     "hi": 0.23747626983326423
+    },
+    "fp_rejected": {
+     "k": 98,
+     "n": 106,
+     "rate": 0.9245283018867925,
+     "lo": 0.8580995894235048,
+     "hi": 0.9612631622790344
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 16,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.734767025089606,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.734767025089606,
+    "noise_worse_ci_per_100": [
+     3.560437775870985,
+     9.11148769893647
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.02,
+    "depth_factor": 2.0,
+    "aliases": false
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 23,
+     "n": 148,
+     "rate": 0.1554054054054054,
+     "lo": 0.10584273306445399,
+     "hi": 0.22240397405036763
+    },
+    "fp_rejected": {
+     "k": 99,
+     "n": 106,
+     "rate": 0.9339622641509434,
+     "lo": 0.8699249597867629,
+     "hi": 0.9676458530647216
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 15,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.376344086021505,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.376344086021505,
+    "noise_worse_ci_per_100": [
+     3.2848707061159845,
+     8.679944853507724
+    ]
+   }
+  },
+  {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.02,
+    "depth_factor": 2.0,
+    "aliases": true
+   },
+   "tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 25,
+     "n": 148,
+     "rate": 0.16891891891891891,
+     "lo": 0.11711370366921145,
+     "hi": 0.23747626983326423
+    },
+    "fp_rejected": {
+     "k": 98,
+     "n": 106,
+     "rate": 0.9245283018867925,
+     "lo": 0.8580995894235048,
+     "hi": 0.9612631622790344
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 16,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.734767025089606,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.734767025089606,
+    "noise_worse_ci_per_100": [
+     3.560437775870985,
+     9.11148769893647
+    ]
+   }
+  }
+ ],
+ "chosen": {
+  "name": "two_sector",
+  "period_tol": 0.005,
+  "depth_factor": null,
+  "aliases": false
+ },
+ "chosen_tuning": {
+  "targets": 279,
+  "two_sector_targets": 249,
+  "completeness": {
+   "k": 19,
+   "n": 148,
+   "rate": 0.12837837837837837,
+   "lo": 0.0837495423332331,
+   "hi": 0.1918106320062804
+  },
+  "fp_rejected": {
+   "k": 99,
+   "n": 106,
+   "rate": 0.9339622641509434,
+   "lo": 0.8699249597867629,
+   "hi": 0.9676458530647216
+  },
+  "real_new_per_100": 0.35842293906810035,
+  "noise_counts": {
+   "inverted": 14,
+   "scrambled": 0
+  },
+  "noise_per_100": {
+   "inverted": 5.017921146953405,
+   "scrambled": 0.0
+  },
+  "noise_worse_per_100": 5.017921146953405,
+  "noise_worse_ci_per_100": [
+   3.0122841688368442,
+   8.24542147560312
+  ]
+ },
+ "met_noise_target": false,
+ "held_out_plan": "Evaluated once on the held-out half: completeness, FP rejection and false signals per 100 targets on both controls, old rule against the chosen rule. The fix is claimed only if the worse control's held-out noise rate under the chosen rule is below the old rule's with non-overlapping Wilson 95% intervals; otherwise the report says it is not shown to work."
+}

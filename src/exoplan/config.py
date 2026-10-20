@@ -32,6 +32,9 @@ class RunConfig:
     min_period: float = 0.5
     fap_trials: int = 20       # block-bootstrap trials for the periodic signal's false-alarm probability
     fap_cache: str | None = None  # null maxima cached here (None: no cache); config files set cache/fap
+    # Stop the trials once more than this many reach the observed SNR (the signal cannot pass a cut at
+    # (m + 1)/(N + 1) any more); None runs every trial.
+    fap_stop_after: int | None = None
     # The limb-darkened transit fit of every consensus dip (transitfit.py), and where stellar parameters
     # come from: "tic" (TESS Input Catalog via MAST, cached in cache/tic) or "none" (Sun-like LD, no ρ★ check).
     fit_transits: bool = True
@@ -76,6 +79,7 @@ def load_config(path: str | Path) -> RunConfig:
         min_period=float(search.get("min_period", 0.5)),
         fap_trials=int(search.get("fap_trials", 20)),
         fap_cache=search.get("fap_cache", "cache/fap") or None,
+        fap_stop_after=int(search["fap_stop_after"]) if search.get("fap_stop_after") is not None else None,
         fit_transits=bool(search.get("fit_transits", True)),
         stellar=str(search.get("stellar", "none")).lower(),
         cluster_gap_days=float(aggregate.get("cluster_gap_days", 0.05)),
