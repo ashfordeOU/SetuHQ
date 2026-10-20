@@ -4,11 +4,11 @@ exoplan's sweep (`exoplan sweep`) searches TESS sectors star by star and keeps e
 every consensus dip, every brightening and every star's variability, each classified by stated rules
 (src/exoplan/variables.py). Anyone can search a sector with their own reviewers and send the result back as
 a contribution bundle. A bundle that passes `exoplan ingest` is merged into the catalogue, and the name you
-choose is credited on every entry you found, on the object pages and in the CSV and JSON exports.
+choose is credited on every new search you made, on the object pages and in the CSV and JSON exports.
 
 Nothing in a contribution becomes a planet. A planet candidate in this catalogue is a light-curve
-classification, unconfirmed, and the site shows beside it what the same rules found on flux-inverted copies
-of the same stars.
+classification, unconfirmed, and the site sets every class beside its own null (what its rule finds where its
+signal cannot be) and says when a class is not distinguishable from noise.
 
 ## Keys stay in your environment
 
@@ -46,8 +46,10 @@ For the API instead of the CLI, copy `configs/sweep_sentinels.toml` and change e
   back-off on errors. Light-curve files are cached in `cache/mast/sweep/` and never fetched twice.
 * **A fair slice.** Targets are taken in a fixed pseudo-random order (sha256 of `"<sector>:<tic>"`), so
   the first N of a sector are a fair sample and a larger `--limit` grows the same slice.
-* Each star is also searched with its flux inverted (a control: nothing real can dim there). `--no-control`
-  halves the time but the site then cannot show your false-alarm counts.
+* Each star's classes are also measured against their nulls: the dip classes on the flux-inverted copy (a
+  real dip becomes a bump; a real flare or pulsation maximum becomes a dip, so this null is not empty of
+  real signals), flares as downward events with the real dips masked, and variability on a copy shuffled in
+  0.5-day blocks. `--no-control` halves the time, but the site then cannot set your searches against their nulls.
 
 The record is `my-sweep/sector_0005.json`: every star-sector of the slice with what was searched (the
 light-curve file and its sha256, points, subjects, reviewers and weights), what was found (entries by class,
@@ -66,31 +68,44 @@ The bundle directory holds three files:
 |---|---|
 | `results.json` | the sector record, unchanged |
 | `config.toml` | the sweep config that ran; its hash is the run's config hash |
-| `manifest.json` | the sign-off and the provenance: your chosen name, the code fingerprint (sha256 of the result-making source files, `exoplan.starsearch.CODE_FILES`), the config hash, the sha256 of every light curve read, the reviewers, the sha256 of the two files above, and `content_sha256` over the manifest itself |
+| `manifest.json` | your chosen name and statement, and the provenance: the search and classification code fingerprints (sha256 of the result-making source files, `exoplan.starsearch.SEARCH_FILES` and `CLASSIFY_FILES`), the config hash, the sha256 of every light curve read, the reviewers, the sha256 of the two files above, and `content_sha256` over the manifest itself |
 
-Signing off means content hashes, not keys: any later change to a file or to the manifest breaks a hash.
+**Sealed, not signed.** The content hashes make any later change to a file or to the manifest visible; they
+are not a signature and do not prove who made the bundle (anyone can edit a bundle and recompute every hash).
+That is why ingest checks the results against the world (below) and records who sent the bundle.
 The name is yours to choose (1 to 60 letters, digits, spaces and `. , ' ( ) - _`; no links or e-mail).
-Share the directory, or a zip of it, in a pull request or an issue.
+Share the directory, or a zip of it, in a pull request: the pull request's author is the identity the
+maintainers attest at ingest.
 
 ## 3. Ingest (maintainers)
 
 ```bash
-exoplan ingest your-name-s5 [--verify-lightcurves 5]
+exoplan ingest your-name-s5 --attested-by <pull-request-author>   # fetches and searches 3 star-sectors again
 ```
 
 `ingest` refuses the bundle, and says why, when:
 
-* a file or the manifest does not match its hash, or the bundle holds other files;
-* its code fingerprint is not this checkout's: check out the commit the contributor ran, then ingest;
+* a file or the manifest does not match its hash, or the bundle (or zip) holds anything else;
+* its search or classification code fingerprint is not this checkout's: check out the commit the
+  contributor ran, then ingest;
 * its config hash does not match `config.toml`, the manifest or the results;
 * a light-curve sha256 is missing, malformed or not in the manifest;
 * an entry's class or confidence is not what the rules give for its stored inputs (the rules are
   re-applied to every dip, brightening and variability entry);
-* anything in it looks like a credential;
+* `--verify-lightcurves N` (3 by default) light curves, chosen by a seed derived from the bundle's hashes,
+  fetched again from MAST, hash differently from the bundle's, or **searched again** with the bundle's
+  config and this code, do not reproduce every entry, count and null exactly. The Probes are deterministic,
+  so this catches results that were edited and resealed; it samples, so a forged star-sector is caught with
+  probability N / (star-sectors in the bundle), and a larger N checks more;
+* it has Sentinels, whose answers a fresh search cannot reproduce, unless the maintainer passes
+  `--accept-sentinels` (the catalogue then records that its dips were not searched again);
+* every star-sector in it is already in the catalogue as an identical search (same light curve, search code
+  and config): a re-submission, under any name, adds nothing;
+* anything in it looks like a credential (API keys of any form, cloud and GitHub tokens, private keys, or a
+  `key`, `token`, `secret` or `password` with a value in the config);
 * it was ingested before.
 
-`--verify-lightcurves N` re-downloads N of the light curves from MAST and checks their sha256.
-
-A valid bundle is copied to `docs/sweep/contributions/<bundle_id>/` and `docs/sweep/catalogue.json` is
-rebuilt: an entry found by two searches with the same class and panel is one entry with both credited; a
-disagreement keeps both. Then rebuild the site (`scripts/ci_local.sh`) and commit.
+A valid bundle is copied to `docs/sweep/contributions/<bundle_id>/` with `ingest.json` (who attested it, when,
+what was fetched and searched again), and `docs/sweep/catalogue.json` is rebuilt. Each search counts once, in
+every counter and null, and is credited to whoever brought it first; a partial overlap credits only the new
+star-sectors. Then rebuild the site (`scripts/ci_local.sh`) and commit.

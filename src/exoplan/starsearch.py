@@ -12,8 +12,8 @@ Per star-sector:
 2. Run the pipeline with the sweep config, which sets ``aggregate.min_planet_fraction = 0`` so every
    consensus dip is kept, whatever the panel's label (the classifier applies the potential-planet share).
 3. Classify every dip, brightening and the out-of-transit variability (:mod:`exoplan.variables`).
-4. Run the same on the flux-inverted copy (a dip becomes a bump): the classes found there are a
-   false-alarm control for this exact rule set, on this exact star.
+4. Measure each class's null on this exact star (:func:`null_counts`): the dip classes on the flux-inverted
+   copy, flares as downward events with the real dips masked, variability on a block-shuffled copy.
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ import numpy as np
 
 from exoplan import __version__
 from exoplan.lightcurve import LightCurve
-from exoplan.variables import class_counts, quality_events, star_entries
+from exoplan.variables import quality_events, star_entries
 
 ROOT = Path(__file__).resolve().parents[2]
 # The code a sweep result depends on: the pipeline (as the benchmark's fingerprint), the reviewers and the
@@ -40,13 +40,38 @@ CODE_FILES = ["discover.py", "aggregate.py", "config.py", "lightcurve.py", "load
 DEFAULT_WEIGHTS = "docs/results/reviewer_weights_full_panel.json"
 
 
-def code_fingerprint(src: str | Path | None = None) -> str:
-    """sha256 over :data:`CODE_FILES` (path and bytes of each), as in this checkout."""
+# Two parts, so a change to the rules alone can be re-applied to stored runs with honest provenance: the search
+# (everything up to the panel's consensus dips and their vetting) and the classification (the rules).
+CLASSIFY_FILES = ["variables.py"]
+SEARCH_FILES = [f for f in CODE_FILES if f not in CLASSIFY_FILES]
+
+
+def _fingerprint(files, src=None, read=None) -> str:
     src = Path(src) if src else Path(__file__).resolve().parent
     h = hashlib.sha256()
-    for f in CODE_FILES:
-        h.update(f.encode() + b"\0" + (src / f).read_bytes() + b"\0")
+    for f in files:
+        h.update(f.encode() + b"\0" + (read(f) if read else (src / f).read_bytes()) + b"\0")
     return h.hexdigest()
+
+
+def code_fingerprint(src: str | Path | None = None, read=None) -> str:
+    """sha256 over :data:`CODE_FILES` (path and bytes of each), as in this checkout (or as ``read(f)`` returns them)."""
+    return _fingerprint(CODE_FILES, src, read)
+
+
+def search_fingerprint(src: str | Path | None = None, read=None) -> str:
+    """sha256 over :data:`SEARCH_FILES`: the code that made the dips, marks and vetting."""
+    return _fingerprint(SEARCH_FILES, src, read)
+
+
+def classify_fingerprint(src: str | Path | None = None, read=None) -> str:
+    """sha256 over :data:`CLASSIFY_FILES`: the classification rules."""
+    return _fingerprint(CLASSIFY_FILES, src, read)
+
+
+def record_codes(rec: dict) -> tuple[str | None, str | None]:
+    """A record's (search code, classification code); a record from before the split names one code for both."""
+    return rec.get("search_code") or rec.get("code"), rec.get("classify_code") or rec.get("code")
 
 
 def sha256_file(path: str | Path) -> str:
@@ -114,7 +139,7 @@ def panel_weights(config, path: str | Path | None = DEFAULT_WEIGHTS) -> tuple[di
 
 
 def search_star(path: str | Path, *, tic: int, sector: int, config, reviewers, weights: dict, weights_source: str,
-                run_root: str | Path, toi_target=None, control: bool = True, code: str | None = None) -> dict:
+                run_root: str | Path, toi_target=None, control: bool = True, codes: tuple | None = None) -> dict:
     """Run one star-sector and return its sweep record (coverage, entries, rejections, control)."""
     from exoplan.aggregate import aggregate
     from exoplan.benchmark_toi import inverted
@@ -148,16 +173,40 @@ def search_star(path: str | Path, *, tic: int, sector: int, config, reviewers, w
         "reviewers": [{"id": r.reviewer_id, "kind": r.kind, "weight": weights.get(r.reviewer_id, 1.0),
                        **({"model": getattr(r, "model", None)} if getattr(r, "model", None) else {})} for r in reviewers if r.available()],
         "skipped_reviewers": summary.skipped_reviewers, "weights_source": weights_source,
-        "config_sha256": config.digest(), "code": code or code_fingerprint(), "exoplan_version": __version__,
+        "config_sha256": config.digest(), "exoplan_version": __version__,
+        "search_code": (codes or (search_fingerprint(),))[0], "classify_code": (codes or (None, classify_fingerprint()))[1],
     }
     if control:
-        inv = inverted(lc)
-        run_pipeline(config, [inv], reviewers, run_dir / "inverted", weights=weights, weights_source=weights_source)
-        cres = star_entries(run_dir / "inverted", tic=tic, sector=sector, time=inv.time, flux=inv.flux, events=events)
-        record["control"] = {"inverted": {"n_dips": cres["n_dips"], "counts": class_counts(cres["entries"])}}
+        run_pipeline(config, [inverted(lc)], reviewers, run_dir / "inverted", weights=weights, weights_source=weights_source)
+        record.update(null_counts(lc, events, entries, run_dir, record))
     record["elapsed_s"] = round(time.monotonic() - started, 1)
     record["searched_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     return record
+
+
+def null_counts(lc, events: dict, entries: list[dict], run_dir: Path, rec: dict) -> dict:
+    """Each class's null for one star-sector (variables.py says why each is the right one):
+
+    * dip classes: the panel and the rules on the flux-inverted copy (its stored pipeline run), dips only;
+    * flares: the flare rule on the upside-down flux with the real consensus dips masked, and the rise/decay
+      shape of the real flares (a time-reversal test: noise rises as often as it decays);
+    * variability: the variability rule on a block-shuffled copy (0.5-day blocks, seeded by the TIC).
+    """
+    from exoplan.benchmark_toi import inverted
+    from exoplan.variables import CLASS_IDS, dip_windows, flare_null, flare_shape, variability_null
+
+    out: dict = {"null": {}}
+    if (Path(run_dir) / "inverted" / "candidates.json").exists():
+        inv = inverted(lc)
+        cres = star_entries(Path(run_dir) / "inverted", tic=rec["tic"], sector=rec["sector"], time=inv.time, flux=inv.flux, events=events)
+        out["null"]["dip_inverted"] = {"n_dips": cres["n_dips"],
+                                       "counts": {c: sum(1 for e in cres["entries"] if e["kind"] == "dip" and e["class"] == c) for c in CLASS_IDS}}
+    dips = [e for e in entries if e["kind"] == "dip"]
+    out["null"]["flare_downward"] = flare_null(lc.time, lc.flux, dip_windows(dips), events)
+    out["null"]["flare_shape"] = flare_shape(entries)
+    half = [(e["t_start"] - 0.5 * (e["t_end"] - e["t_start"]), e["t_end"] + 0.5 * (e["t_end"] - e["t_start"])) for e in dips]
+    out["null"]["variability_shuffled"] = variability_null(lc.time, lc.flux, half, seed=int(rec["tic"]) % (2 ** 32))
+    return out
 
 
 def _match_tois(entries: list[dict], toi_target) -> None:
@@ -174,11 +223,12 @@ def _match_tois(entries: list[dict], toi_target) -> None:
                 e["toi_disposition"] = m.get("disposition")
 
 
-def reclassify_record(rec: dict, path: str | Path, *, run_root: str | Path, toi_target=None, code: str | None = None) -> dict:
+def reclassify_record(rec: dict, path: str | Path, *, run_root: str | Path, toi_target=None, classify_code: str | None = None,
+                      rule_changes: list[str] | None = None) -> dict:
     """A stored record with its entries classified again by the current rules, from the same file and the stored
     pipeline runs (classifications, candidates and their vetting are reused, not recomputed). Refuses a file
-    whose sha256 differs from the record's. The record's code becomes this checkout's, and ``reclassified_at``
-    says when."""
+    whose sha256 differs from the record's. The search code stays the code that made the dips; the
+    classification code becomes this checkout's, and ``reclassifications`` records the change and why."""
     lc, events, _ = read_spoc(path, rec["tic"], rec["sector"])
     if lc.provenance["file_sha256"] != rec["file_sha256"]:
         raise ValueError(f"TIC {rec['tic']}: the light-curve file is not the one the record was made from")
@@ -186,14 +236,15 @@ def reclassify_record(rec: dict, path: str | Path, *, run_root: str | Path, toi_
     res = star_entries(run_dir / "real", tic=rec["tic"], sector=rec["sector"], time=lc.time, flux=lc.flux, events=events)
     entries = res["entries"]
     _match_tois(entries, toi_target)
-    out = {**rec, "entries": entries, "counts": res["counts"], "variability": res["variability"], "events": events,
-           "code": code or code_fingerprint(), "reclassified_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+    search_code, old = record_codes(rec)
+    new = classify_code or classify_fingerprint()
+    out = {k: v for k, v in rec.items() if k not in ("code", "control")}
+    out.update({"entries": entries, "counts": res["counts"], "variability": res["variability"], "events": events,
+                "search_code": search_code, "classify_code": new})
+    out["reclassifications"] = list(rec.get("reclassifications") or []) + [{
+        "at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "reclassified_from": old, "classify_code": new,
+        "rule_changes": list(rule_changes or [])}]
+    out.update(null_counts(lc, events, res["entries"], run_dir, rec))
     out["rejected"] = {**rec.get("rejected", {}), "failed_vetting": sum(1 for e in entries if e["kind"] == "dip" and not e["passed"]),
                        "dips_not_planet_candidate": sum(1 for e in entries if e["kind"] == "dip" and e["class"] != "planet_candidate")}
-    if (run_dir / "inverted" / "candidates.json").exists() and rec.get("control"):
-        from exoplan.benchmark_toi import inverted
-
-        inv = inverted(lc)
-        cres = star_entries(run_dir / "inverted", tic=rec["tic"], sector=rec["sector"], time=inv.time, flux=inv.flux, events=events)
-        out["control"] = {"inverted": {"n_dips": cres["n_dips"], "counts": class_counts(cres["entries"])}}
     return out

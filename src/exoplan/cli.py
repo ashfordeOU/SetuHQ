@@ -162,7 +162,8 @@ def cmd_sweep(args) -> int:
 
     if args.reclassify:
         reclassify_sweep(args.config, args.sector, limit=args.limit, out_dir=args.out, cache_root=args.cache,
-                         contributor=args.contributor, min_interval=args.min_interval)
+                         contributor=args.contributor, min_interval=args.min_interval, rule_changes=args.rule_change or [],
+                         search_commit=args.search_commit, classified_commit=args.classified_commit)
         return 0
 
     res = run_sweep(args.config, args.sector, limit=args.limit, out_dir=args.out, cache_root=args.cache, workers=args.workers,
@@ -180,7 +181,8 @@ def cmd_bundle(args) -> int:
     from exoplan.contrib import make_bundle
 
     path = make_bundle(args.record, args.out, contributor=args.contributor)
-    print(f"bundle written to {path}. Check it, then share the directory (or a zip of it). It holds no keys or credentials.")
+    print(f"bundle written to {path}, sealed with sha256 content hashes (not a signature). Check it, then share the directory "
+          "(or a zip of it) in a pull request. It holds no keys or credentials.")
     return 0
 
 
@@ -188,12 +190,15 @@ def cmd_ingest(args) -> int:
     from exoplan.contrib import BundleRefused, ingest_bundle
 
     try:
-        result = ingest_bundle(args.bundle, sweep_dir=args.sweep_dir, verify_lightcurves=args.verify_lightcurves)
+        result = ingest_bundle(args.bundle, sweep_dir=args.sweep_dir, verify_lightcurves=args.verify_lightcurves,
+                               attested_by=args.attested_by, accept_sentinels=args.accept_sentinels, cache_root=args.cache)
     except BundleRefused as exc:
         print(f"exoplan ingest: refused: {exc}", file=sys.stderr)
         return 1
-    print(f"ingested {result['bundle_id']} from {result['contributor']}: {result['star_sectors']} star-sectors, "
-          f"{result['entries']} entries; catalogue rebuilt at {result['catalogue']}")
+    v = result["verified"]
+    print(f"ingested {result['bundle_id']} from {result['contributor']}: {result['star_sectors']} star-sectors "
+          f"({result['new_star_sectors']} new, credited), {result['entries']} entries; light curves fetched again: "
+          f"{len(v['lightcurves_refetched'])}, searched again: {len(v['searched_again'])}; catalogue rebuilt at {result['catalogue']}")
     return 0
 
 
@@ -316,11 +321,14 @@ def build_parser() -> argparse.ArgumentParser:
     sweep.add_argument("--contributor", default="exoplan", help="the name credited for this sweep")
     sweep.add_argument("--reclassify", action="store_true",
                        help="re-apply the classification rules to the stored star-sectors (after a change to variables.py only)")
+    sweep.add_argument("--rule-change", action="append", help="with --reclassify: what changed in the rules (repeat for each)")
+    sweep.add_argument("--search-commit", help="with --reclassify: the git revision that searched records naming one code only")
+    sweep.add_argument("--classified-commit", help="with --reclassify: the git revision that last classified such records")
     sweep.add_argument("--weights", default="docs/results/reviewer_weights_full_panel.json",
                        help="calibrated weights; a reviewer not in the file weighs 1.0")
     sweep.set_defaults(func=cmd_sweep)
 
-    bundle = sub.add_parser("bundle", help="export a sweep's sector record as a signed-off contribution bundle")
+    bundle = sub.add_parser("bundle", help="export a sweep's sector record as a contribution bundle, sealed with content hashes")
     bundle.add_argument("record", help="the sector record, e.g. my-sweep/sector_0005.json")
     bundle.add_argument("--contributor", required=True, help="the name to credit (yours to choose; shown on the site)")
     bundle.add_argument("--out", required=True, help="bundle directory to write")
@@ -329,8 +337,13 @@ def build_parser() -> argparse.ArgumentParser:
     ingest = sub.add_parser("ingest", help="validate a contribution bundle and merge it into the catalogue, with credit")
     ingest.add_argument("bundle", help="bundle directory or .zip")
     ingest.add_argument("--sweep-dir", default="docs/sweep")
-    ingest.add_argument("--verify-lightcurves", type=int, default=0,
-                        help="re-download this many of the bundle's light curves from MAST and check their sha256")
+    ingest.add_argument("--verify-lightcurves", type=int, default=3,
+                        help="fetch this many of the bundle's light curves from MAST again, check their sha256 and search them "
+                             "again; every entry must agree (default 3)")
+    ingest.add_argument("--attested-by", help="the GitHub login of the person who sent the bundle (the pull request's author)")
+    ingest.add_argument("--accept-sentinels", action="store_true",
+                        help="accept a bundle with Sentinels, whose dips cannot be searched again here (the catalogue says so)")
+    ingest.add_argument("--cache", default="cache")
     ingest.set_defaults(func=cmd_ingest)
 
     dash = sub.add_parser("dashboard",help="build the interactive dashboard from a run and optional discovery catalogue")
