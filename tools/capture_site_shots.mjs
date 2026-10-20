@@ -13,6 +13,10 @@
 // Nothing is drawn or edited. tools/gen_readme_assets.py --import-shots <out> then scales every PNG
 // to 1600 px wide, encodes it as WebP and writes docs/assets/readme/app/SHOTS.json.
 //
+// It also rasterises the social card (docs/assets/brand/setuhq-social-card.svg, every word already outlined)
+// at 1200 x 630 px for link previews, which do not accept SVG; --import-shots copies it to
+// docs/assets/brand/setuhq-social-card.png and records the SVG's sha256, so --check notices a stale PNG.
+//
 // Usage (from the repository root):
 //   node tools/capture_site_shots.mjs --out <dir>      # serves site/ itself on a free port
 //   python3 tools/gen_readme_assets.py --import-shots <dir>
@@ -145,10 +149,24 @@ for (const theme of ["light", "dark"]) {
   }
   await ctx.close();
 }
+// The social card: the committed SVG, drawn by Chromium at its own size, nothing added.
+const CARD = join(ROOT, "docs", "assets", "brand", "setuhq-social-card.svg");
+const cardSvg = readFileSync(CARD);
+{
+  const ctx = await browser.newContext({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
+  const page = await ctx.newPage();
+  await page.setContent(`<!doctype html><html><body style="margin:0;background:#0A1226"><img src="data:image/svg+xml;base64,${cardSvg.toString("base64")}" width="1200" height="630" style="display:block"></body></html>`);
+  await page.waitForFunction(() => document.images[0] && document.images[0].complete);
+  await page.screenshot({ path: join(out, "social-card.png"), clip: { x: 0, y: 0, width: 1200, height: 630 } });
+  await ctx.close();
+  console.log("social-card.png 1200x630");
+}
 await browser.close();
 server.close();
 writeFileSync(join(out, "shots.json"), JSON.stringify({
   note: "Real screenshots of the SetuHQ app as built in site/app/index.html. Nothing is drawn or edited.",
+  social_card: { file: "social-card.png", source: "docs/assets/brand/setuhq-social-card.svg",
+    source_sha256: createHash("sha256").update(cardSvg).digest("hex"), width: 1200, height: 630 },
   rule: `window ${VIEWPORT.width}x${VIEWPORT.height} CSS px at device scale ${SCALE}, reduced motion; frame ${FRAME.width}x${FRAME.height} CSS px of the content column (x ${FRAME.x}), starting ${FRAME.above} px above the anchor element (a Methods stage, or the heading before it), never above the end of the block before; top bar hidden`,
   commit, app_sha256: appSha, captured: new Date().toISOString().slice(0, 10), shots,
 }, null, 2) + "\n");

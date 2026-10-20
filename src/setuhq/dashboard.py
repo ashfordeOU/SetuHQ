@@ -20,6 +20,7 @@ import csv
 import json
 from pathlib import Path
 
+from setuhq import brand
 from setuhq.report import STYLE
 
 DASHBOARD_CSS = """
@@ -228,7 +229,7 @@ function discovery(){
   const F = D.discovery; if (!F){ $('#disc').style.display='none'; return; }
   const box=$('#c-timeline'); box.innerHTML='';
   const W=560,H=260,pad={l:46,r:14,t:12,b:34};
-  const rows=F.candidates; if(!rows.length){ box.innerHTML='<div class="empty">No discovery candidates yet.</div>'; }
+  const rows=F.candidates; if(!rows.length){ box.innerHTML='<div class="empty">No feed entries yet.</div>'; }
   else {
     const tmin=Math.min(...rows.map(r=>r.t_center)), tmax=Math.max(...rows.map(r=>r.t_center));
     const tics=[...new Set(rows.map(r=>r.tic))].sort((a,b)=>a-b), ti=new Map(tics.map((t,i)=>[t,i]));
@@ -335,13 +336,14 @@ def build_dashboard(run_dir: str | Path, out_dir: str | Path, *, title: str, cat
     ]
     if discovery:
         kpis.append([str(sum(1 for r in discovery["candidates"] if r["status"] == "new_candidate")),
-                     "new discovery candidates", "var(--accent-2)"])
+                     "new candidates (no TOI match)", "var(--accent-2)"])
     data = {**run, "kpis": kpis, "discovery": discovery}
     data.pop("manifest")
     payload = json.dumps(data).replace("</", "<\\/")
 
     body = f"""
 <header class='hero'><div class='wrap'>
+  <a href="../" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
   <h1>{title}</h1>
   <p class='lead'>Blind-coded light curves, an AI-and-simulated review panel, skill-weighted consensus, and vetting. Click any candidate to see its light curve and each reviewer's marks.</p>
 </div></header>
@@ -396,7 +398,8 @@ def build_dashboard(run_dir: str | Path, out_dir: str | Path, *, title: str, cat
 <html lang='en'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
 <title>{title}</title>
-<style>{STYLE}{DASHBOARD_CSS}</style></head>
+{brand.head(title, "SetuHQ's dashboard of the stored run: light curves, every reviewer's marks and the panel's agreement. Candidates, never confirmations.", brand.page_path(out_dir))}
+<style>{STYLE}{DASHBOARD_CSS}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
 <body>{body}</body></html>
 """
     out = Path(out_dir)
@@ -408,4 +411,5 @@ def build_dashboard(run_dir: str | Path, out_dir: str | Path, *, title: str, cat
         note = json.loads(Path(catalog_path).read_text()).get("code_note")
     path = out / "index.html"
     path.write_text(with_code_note(html_text, note))
+    brand.copy_assets(out)
     return path

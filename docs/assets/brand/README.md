@@ -1,8 +1,14 @@
 # SetuHQ brand kit
 
-Source-of-truth logo files for SetuHQ. Every file in this folder except this README is
-written by `tools/gen_readme_assets.py` and checked by its `--check` step, so do not edit them
-by hand: change the generator and regenerate.
+Source-of-truth logo files for SetuHQ. Every SVG in this folder is written by
+`tools/gen_readme_assets.py` and checked by its `--check` step, so do not edit them by hand:
+change the generator and regenerate. The social card's PNG, for link previews that do not take
+SVG, is drawn from the SVG by Chromium in `tools/capture_site_shots.mjs`, imported with
+`tools/gen_readme_assets.py --import-shots`, and recorded in `docs/assets/readme/app/SHOTS.json`
+with the SVG's sha256, so `--check` fails when the SVG changes and the PNG does not.
+
+The site's pages copy the logo, the favicon and (the app) the social card into their own
+`assets/brand/` folder when they are built (`src/setuhq/brand.py`).
 
 ```bash
 python3 tools/gen_readme_assets.py          # rewrite docs/assets/brand/ and docs/assets/readme/
@@ -20,7 +26,8 @@ docs/assets/brand/
 ├── setuhq-icon-black.svg       # app icon: the transit Q on #000, rounded square, 512 x 512
 ├── setuhq-icon-navy.svg        # app icon: the transit Q on #0A1226
 ├── setuhq-favicon.svg          # the transit Q, follows prefers-color-scheme
-└── setuhq-social-card.svg      # 1200 x 630 Open Graph / social card
+├── setuhq-social-card.svg      # 1200 x 630 Open Graph / social card
+└── setuhq-social-card.png      # the card rasterised for link previews (see below)
 ```
 
 ## Design
@@ -54,7 +61,7 @@ docs/assets/brand/
 | Small spaces, inline in text | `setuhq-wordmark-*.svg` |
 | Browser tab | `setuhq-favicon.svg` |
 | App launcher, avatar, social profile | `setuhq-icon-black.svg` or `setuhq-icon-navy.svg` |
-| Link previews (Open Graph, X, LinkedIn) | `setuhq-social-card.svg`, rasterised to PNG where SVG is not accepted |
+| Link previews (Open Graph, X, LinkedIn) | `setuhq-social-card.png` (from `setuhq-social-card.svg`) |
 
 - Keep clear space around the lockup of at least the height of the "H" on every side.
 - Do not recolour, stretch, rotate or outline the logo, re-set the wordmark in another
@@ -66,4 +73,4 @@ docs/assets/brand/
 ## Trade marks
 
 "SetuHQ", "Setu" and the Setu mark are trade marks of Ashforde® OÜ. Forks must use another
-name and another mark.
+name and another mark. See [TRADEMARKS.md](../../../TRADEMARKS.md).

@@ -32,6 +32,7 @@ import math
 import re
 from pathlib import Path
 
+from setuhq import brand
 from setuhq.names import ATTRIBUTION, SENTINEL_KINDS
 from setuhq.docket import OUTCOME_LABEL, docket_data
 
@@ -46,6 +47,11 @@ STATUS_WORD = {"passed": "passed vetting", "flagged": "flagged for review", "rej
 RIVER_GAP_DAYS = 30.0  # stretches of time with no candidate longer than this are cut from the river
 FLAG_WORDS = {"off_ephemeris": "off its star's ephemeris", "edge_event": "at a data edge"}
 
+# The logo on the plates' paper: the light-ground variant, and the dark-ground one where the page turns dark.
+PLATE_LOGO_CSS = (".kicker a{display:inline-block;vertical-align:middle;margin-right:10px}.brandlogo{display:block;height:20px;width:auto}"
+                  ".brandlogo.dk{display:none}@media screen and (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) "
+                  ".brandlogo.dk{display:block}:root:not([data-theme=\"light\"]) .brandlogo.lt{display:none}}"
+                  "@media screen{:root[data-theme=\"dark\"] .brandlogo.dk{display:block}:root[data-theme=\"dark\"] .brandlogo.lt{display:none}}")
 PLATE_CSS = """
 :root{--paper:#fbfaf7;--ink:#141414;--rule:#c9c6bd;--hair:#dcd9d0;--muted:#5d5f66;--pt:#8d8f96;--win:#e9e3cf;
 --pass:#2e7d4f;--flag:#8a6400;--rej:#b23a3a;--new:#1f5fbf;--known:#7a7c84;--fit:#1f5fbf}
@@ -658,13 +664,13 @@ def plate_page(data: dict) -> str:
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
-<link rel="icon" href="data:,">
-<style>{PLATE_CSS}</style></head>
+{brand.head(data["title"], "SetuHQ's plates: one print-ready plate per star, from the stored run and the search feed. Every number is a stored value; every candidate is unconfirmed.", "/plate/")}
+<style>{PLATE_CSS}{PLATE_LOGO_CSS}</style></head>
 <body>
 <a class="skip" href="#plates">Skip to the plates</a>
 <main class="sheet">
 <header class="mast">
-  <p class="kicker">SetuHQ · plates</p>
+  <p class="kicker"><a href="../" aria-label="SetuHQ, home">{brand.logo()}</a><span>plates</span></p>
   <h1>{title}</h1>
   <p><span class="hedge">Candidate, unconfirmed.</span> {n} candidates on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the discovery catalogue" if cat["path"] else ""}. Every number is a stored value.</p>
   <ul class="notes">
@@ -701,4 +707,5 @@ def build_plate(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog
     from setuhq.codenote import code_note, with_code_note
 
     path.write_text(with_code_note(plate_page(data), code_note(run_dir)))
+    brand.copy_assets(out)
     return path

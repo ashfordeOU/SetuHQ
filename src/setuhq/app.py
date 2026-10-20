@@ -44,6 +44,7 @@ import json
 import math
 from pathlib import Path
 
+from setuhq import brand
 from setuhq.benchmark_toi import wilson
 from setuhq.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
 from setuhq.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, TEASER_JS, galaxy_data,
@@ -755,7 +756,6 @@ a:hover{color:var(--ink)}
 .topbar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 18px;padding:8px clamp(16px,3vw,32px);background:color-mix(in oklab,var(--bg) 62%,transparent);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:9px;min-height:44px;padding:0 4px;color:var(--ink);text-decoration:none;font-weight:600;font-size:17px;letter-spacing:-.02em}
 .brand:hover{color:var(--ink)}
-.brand svg{width:22px;height:22px;flex:none}
 .nav ul{list-style:none;margin:0;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
 .nav a{display:flex;align-items:center;min-height:36px;padding:0 16px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:13px;font-weight:500;white-space:nowrap;transition:background-color .25s var(--ease),color .25s var(--ease)}
 .nav a:hover{color:var(--ink)}
@@ -2398,10 +2398,6 @@ def _nav(sections: list[dict]) -> str:
     return f'<nav class="nav" aria-label="Sections"><ul>{items}</ul></nav>'
 
 
-BRAND_SVG = ('<svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="10" fill="none" stroke="currentColor" '
-             'stroke-opacity=".5"/><circle cx="11" cy="11" r="3.5" fill="#FFB340"/><circle cx="19" cy="7.5" r="1.8" fill="currentColor"/></svg>')
-
-
 def _eyebrow(label: str, parent: tuple[str, str] | None = None) -> str:
     up = f'<span class="parent"><a href="#/{parent[0]}">{html.escape(parent[1])}</a> ›</span>' if parent else ""
     return f'<p class="eyebrow">{up}{html.escape(label)}</p>'
@@ -2860,19 +2856,18 @@ def app_page(data: dict) -> str:
 <html lang="en" data-theme="dark"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
-<meta name="description" content="{html.escape(description)}">
+{brand.head(data["title"], description, "/app/")}
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
-<link rel="icon" href="data:,">
 <script>{THEME_HEAD_JS}</script>
 <link rel="stylesheet" href="{FONTS_CSS}">
-<style>{APP_CSS}</style></head>
+<style>{APP_CSS}{brand.LOGO_CSS}</style></head>
 <body>
 <svg class="starfield" aria-hidden="true" viewBox="0 0 1440 1100" preserveAspectRatio="xMidYMid slice"><path class="twinkle" d="{deco['dust']}" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" opacity=".5"/><path class="twinkle2" d="{deco['bright']}" stroke="#E8EEFF" stroke-width="1.8" stroke-linecap="round"/></svg>
 <a class="skip" href="#content">Skip to the section</a>
 <header class="topbar">
-  <a class="brand" href="#/overview" aria-label="{title}, Overview">{BRAND_SVG}<span>{title}</span></a>
+  <a class="brand" href="#/overview" aria-label="{title}, Overview">{brand.logo()}</a>
   {_nav(data["sections"])}
   <div class="topmeta"><span class="cur" id="curlabel"></span><span class="mono">{html.escape(data["story"]["star"]["name"] or run["name"])} · {html.escape(_input_label(data))}</span>{SEARCH_BUTTON}{THEME_BUTTON}</div>
 </header>
@@ -3050,7 +3045,7 @@ def landing_page(data: dict, app_href: str = "app/") -> str:
     deco = data["deco"]
     body = _overview(data, with_view=False).replace('href="#/', f'href="{app_href}#/')
     nav = _nav(data["sections"]).replace('href="#/', f'href="{app_href}#/').replace('data-route="overview">', 'data-route="overview" aria-current="page">')
-    description = (f"SetuHQ: a calibrated panel of Sentinels and Probes reads TESS light curves. Run {run['name']}: "
+    description = (f"{brand.TAGLINE} A calibrated panel of Sentinels and Probes reads TESS light curves. Run {run['name']}: "
                    f"{data['hero']['headline']} Every dip is a {UNCONFIRMED}.")
     fonts = app_href + FONTS_CSS
     links = (f'<a href="{app_href}#/sky">Sky</a><a href="{app_href}#/galaxy">Galaxy</a><a href="{app_href}#/transit">Transit</a><a href="{app_href}#/explorer">Explorer</a>'
@@ -3060,13 +3055,12 @@ def landing_page(data: dict, app_href: str = "app/") -> str:
 <html lang="en" data-theme="dark"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}: the sky, reviewed</title>
-<meta name="description" content="{html.escape(description)}">
+{brand.head(data["title"] + ": the sky, reviewed", description, "/", prefix=app_href)}
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="data:,">
 <script>{THEME_HEAD_JS}</script>
 <link rel="stylesheet" href="{html.escape(fonts)}">
-<style>{APP_CSS}
+<style>{APP_CSS}{brand.LOGO_CSS}
 .sitelinks{{display:flex;flex-wrap:wrap;gap:8px 18px;border-top:1px solid var(--line);padding-top:22px;font-size:14px}}
 .sitelinks a{{display:inline-flex;align-items:center;min-height:44px}}
 .landing .route{{display:grid}}</style></head>
@@ -3074,7 +3068,7 @@ def landing_page(data: dict, app_href: str = "app/") -> str:
 <svg class="starfield" aria-hidden="true" viewBox="0 0 1440 1100" preserveAspectRatio="xMidYMid slice"><path class="twinkle" d="{deco['dust']}" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" opacity=".5"/><path class="twinkle2" d="{deco['bright']}" stroke="#E8EEFF" stroke-width="1.8" stroke-linecap="round"/></svg>
 <a class="skip" href="#content">Skip to the content</a>
 <header class="topbar">
-  <a class="brand" href="./" aria-label="{title}, home">{BRAND_SVG}<span>{title}</span></a>
+  <a class="brand" href="./" aria-label="{title}, home">{brand.logo(app_href)}</a>
   {nav}
   <div class="topmeta"><span class="mono">{html.escape(data["story"]["star"]["name"] or run["name"])} · {html.escape(_input_label(data))}</span>{THEME_BUTTON}</div>
 </header>
@@ -3114,6 +3108,7 @@ def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_p
     from setuhq.codenote import code_note, with_code_note
 
     path.write_text(with_code_note(app_page(data), code_note(run_dir)))
+    brand.copy_assets(out, social_card=True)   # the logo, favicon and social card the page and the landing page use
     # The fonts the page links to, self-hosted beside it (as Kshana serves them).
     import shutil
 

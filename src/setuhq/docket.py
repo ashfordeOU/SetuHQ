@@ -45,6 +45,7 @@ import math
 from datetime import datetime, timezone
 from pathlib import Path
 
+from setuhq import brand
 from setuhq.dashboard import _load_run
 from setuhq.discover import MAX_FEED_DEPTH_PPM, MAX_FEED_FAP, MIN_FEED_TRANSITS, TWO_SECTOR_PERIOD_TOL, two_sector_partner
 from setuhq.names import ATTRIBUTION, PROVIDER_BY_KIND, SENTINEL_KINDS, reviewer_names, reviewer_provenance
@@ -1594,9 +1595,9 @@ def docket_page(data: dict) -> str:
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<link rel="icon" href="data:,">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>{html.escape(title)}</title>
+{brand.head(title, "The Docket: a case file for each dip of SetuHQ's stored run, with its vetting, its fit and every reviewer's marks. Candidates, never confirmations.", "/docket/")}
 <link rel="stylesheet" href="{DOCKET_FONTS_CSS}">
 <style>{DOCKET_CSS}</style></head>
 <body>
@@ -1632,4 +1633,5 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
     import shutil
 
     shutil.copytree(FONTS_DIR, out / "assets" / "fonts", dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))
+    brand.copy_assets(out)
     return path

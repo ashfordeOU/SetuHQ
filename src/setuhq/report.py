@@ -15,6 +15,8 @@ import json
 import shutil
 from pathlib import Path
 
+from setuhq import brand
+
 STYLE = """
 :root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#16a34a;--bad:#dc2626;--warn:#d97706;--radius:14px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}}
@@ -173,7 +175,7 @@ def build_report(
     run_dir: str | Path,
     out_dir: str | Path,
     *,
-    title: str = "setuhq run",
+    title: str = "SetuHQ run",
     validation_md: str | Path | None = None,
     benchmark_md: str | Path | None = None,
 ) -> Path:
@@ -217,11 +219,12 @@ def build_report(
     page = f"""<!doctype html>
 <html lang='en'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
-<link rel='icon' href='data:,'>
 <title>{html.escape(title)}</title>
-<style>{STYLE}</style></head>
+{brand.head(title, "The archived report of SetuHQ's stored run on pi Men (TESS sector 1): every candidate, its vetting and provenance. Candidates, never confirmations.", brand.page_path(out_dir))}
+<style>{STYLE}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
 <body>
 <header class='hero' id='overview'><div class='wrap'>
+  <a href="../" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
   <h1>{html.escape(title)}</h1>
   <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p>
 </div></header>
@@ -283,6 +286,7 @@ def build_report(
 
     out_path = out_dir / "index.html"
     out_path.write_text(with_code_note(page, code_note(run_dir)))
+    brand.copy_assets(out_dir)
     return out_path
 
 
@@ -322,12 +326,13 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
     page = f"""<!doctype html>
 <html lang='en'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
-<link rel='icon' href='data:,'>
-<title>SetuHQ discoveries</title>
-<style>{STYLE}</style></head>
+<title>SetuHQ search feed</title>
+{brand.head("SetuHQ search feed", "Dips from SetuHQ's search batches that passed vetting and match no known ephemeris: leads for review, not planets.", brand.page_path(out_dir))}
+<style>{STYLE}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
 <body>
 <header class='hero'><div class='wrap'>
-  <h1>Discovery feed</h1>
+  <a href="../" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
+  <h1>Search feed</h1>
   <p class='lead'>An AI review panel searches TESS light curves on a schedule. Each entry is a dip that passed the pipeline's vetting and matches no known ephemeris. These are candidates. None is a confirmed planet until independent follow-up confirms it.</p>
 </div></header>
 <main class='wrap'>
@@ -347,4 +352,5 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
 
     out = out_dir / "index.html"
     out.write_text(with_code_note(page, catalog.get("code_note")))
+    brand.copy_assets(out_dir)
     return out

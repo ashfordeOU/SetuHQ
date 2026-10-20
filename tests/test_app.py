@@ -911,7 +911,7 @@ def test_viewer_changes_are_history_entries_and_back_is_followed():
 def test_theme_control_meta_and_first_paint(run_dir, tmp_path):
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
     head = page[:page.index("</head>")]
-    assert '<meta name="description" content="setuhq run ' in head and "candidate, unconfirmed" in head
+    assert '<meta name="description" content="SetuHQ run ' in head and "candidate, unconfirmed" in head
     assert '<meta name="color-scheme" content="dark light">' in head
     assert head.count('<meta name="theme-color"') == 2
     # The stored choice is applied by an inline script before the stylesheet: no flash of the wrong theme.

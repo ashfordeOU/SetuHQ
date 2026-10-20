@@ -96,7 +96,7 @@ def test_sky_layer_and_mission_telemetry(pi_men_app):
     page = _page(pi_men_app)
     sky = _route(page, "sky")
     n = sum(1 for r in CAT["coverage"] if r["status"] == "searched" and r["ra"] is not None)
-    assert 'data-layer="sweep"' in sky and f"setuhq sweep ({n:,} star-sectors)" in sky
+    assert 'data-layer="sweep"' in sky and f"SetuHQ sweep ({n:,} star-sectors)" in sky
     assert sky.count('data-layer="sweep"') == 1
     assert "D.sweep" in page and "Sweep <b>" in page
 
