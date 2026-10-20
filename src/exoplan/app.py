@@ -2532,6 +2532,12 @@ def _lb_cell(r: dict | None, label: str, missing: str = "n/a") -> str:
             f'<span class="ci">{r["k"]}/{r["n"]} · {100 * r["lo"]:.0f}–{100 * r["hi"]:.0f}%</span></td>')
 
 
+def _lb_j(j: dict, label: str) -> str:
+    if j["j"] is None:
+        return f'<td data-l="{label}"><span class="na">n/a</span></td>'
+    return f'<td data-l="{label}"><span class="v">{j["j"]:+.2f}</span><span class="ci">{j["lo"]:+.2f} to {j["hi"]:+.2f}</span></td>'
+
+
 def _leaderboard(lb: dict | None) -> str:
     """The Leaderboard page: the scored table per scope, the rules, and the frozen sample's hash. Static HTML."""
     e = html.escape
@@ -2543,9 +2549,10 @@ def _leaderboard(lb: dict | None) -> str:
     if not lb:
         return head + ('<section class="card"><h2>Not built</h2><p class="muted" style="margin:0">The leaderboard has not been '
                        'scored for this build (exoplan leaderboard).</p></section>')
-    cols = [("completeness_all_stars", "Completeness, all CP/KP stars"), ("small", "Completeness below 4 R⊕"),
-            ("fp_rejection_all_stars", "FP rejection, all FP stars"), ("inverted", "Inverted control: stars with any"),
-            ("scrambled", "Scrambled control: stars with any"), ("reliability", "Reliability")]
+    cols = [("completeness_clean_searchable", "Clean completeness, searchable CP/KP"),
+            ("fp_rejection_searchable", "FP rejection, searchable FP"), ("small", "Recovered below 4 R⊕"),
+            ("inverted", "Inverted control: stars with any"), ("scrambled", "Scrambled control: stars with any"),
+            ("reliability", "Reliability")]
     out = [head]
     for scope, (title, sub) in LEADERBOARD_SCOPES.items():
         es = [x for x in lb["entries"] if x["scope"] == scope]
@@ -2562,9 +2569,7 @@ def _leaderboard(lb: dict | None) -> str:
                      **{v: (s["controls"][v] or {}).get("stars_with_any") for v in ("inverted", "scrambled")}}
             tds = "".join(_lb_cell(cells[c] if c in cells else s[c], label,
                                    "not measured" if c in ("inverted", "scrambled") else "n/a") for c, label in cols)
-            j = s["youden_j"]
-            jcell = ('<td data-l="Youden J"><span class="na">n/a</span></td>' if j["j"] is None else
-                     f'<td data-l="Youden J"><span class="v">{j["j"]:+.2f}</span><span class="ci">{j["lo"]:+.2f} to {j["hi"]:+.2f}</span></td>')
+            jcell = _lb_j(s["youden_j"], "Youden J") + _lb_j(s["youden_j_all_stars"], "Youden J, all stars")
             rk = ""
             if ranked_scope:
                 rk = (f'<td class="rk" data-l="Rank">{x["rank"]}</td>' if x["ranked"] else
@@ -2573,14 +2578,16 @@ def _leaderboard(lb: dict | None) -> str:
                         f'<span class="kd">{e(x["id"])} · tuned on {e(x["tuned_on"])}</span></th>{jcell}{tds}</tr>')
         hid = f"h-lb-{scope.replace('_', '-')}"
         ths = "".join(f'<th scope="col">{e(label)}</th>' for _, label in cols)
-        note = ("Ranked by Youden's J (completeness over every CP/KP star + FP rejection over every FP star − 1), so calling "
-                "every TOI a planet scores zero; only entries measured on both controls are ranked. Where intervals overlap "
-                "the order is not a measured difference." if ranked_scope else "")
+        note = ("Ranked by Youden's J on the searchable set the benchmark fixed, with one predicate on both sides (a clean "
+                "candidate: on the ephemeris, passed, no eclipsing-binary flag), so calling every TOI a planet, flagged or "
+                "not, scores zero. The controls gate ranking and do not enter J, and the control lists are the method's own "
+                "report. Where intervals overlap the order is not a measured difference." if ranked_scope else "")
         rank_th = '<th scope="col">Rank</th>' if ranked_scope else ""
-        lead = "" if ranked_scope else f'<p class="note" style="margin:0"><b>{e(lb.get("subsample_note", ""))}</b></p>'
+        lead_text = (lb.get("floor_note") or "") if ranked_scope else lb.get("subsample_note", "")
+        lead = f'<p class="note" style="margin:0"><b>{e(lead_text)}</b></p>' if lead_text else ""
         out.append(f'<section class="card lb" aria-labelledby="{hid}"><h2 id="{hid}">{e(title)} <span class="sub">{e(sub)}</span></h2>{lead}'
                    f'<div class="tablewrap" role="region" aria-labelledby="{hid}"><table class="lbtable"><thead><tr>'
-                   f'{rank_th}<th scope="col">Entry</th><th scope="col">Youden J</th>{ths}</tr></thead>'
+                   f'{rank_th}<th scope="col">Entry</th><th scope="col">Youden J</th><th scope="col">Youden J, all stars</th>{ths}</tr></thead>'
                    f'<tbody>{"".join(rows)}</tbody></table></div>'
                    f'<p class="small">Each cell: the rate, then k/n and the Wilson 95% interval. {e(note)}</p></section>')
     if any(x["scope"] == "sentinel_subsample" for x in lb["entries"]):

@@ -340,7 +340,7 @@ measured on both controls are ranked. Seeded from the benchmark's stored events 
 
 | entry | scope | rank | Youden J | completeness, all CP/KP stars | below 4 R⊕ | FP rejection, all FP stars | inverted control: stars with any | reliability |
 |---|---|---|---|---|---|---|---|---|
-| Probes only | held-out half | 1 | +0.37 (+0.26 to +0.46) | 57% (86/152; 95% CI 49–64%) | 17% (8/46; 95% CI 9–31%) | 80% (127/158; 95% CI 73–86%) | 21% (65/309; 95% CI 17–26%) | 70% (83/118; 95% CI 62–78%) |
+| Probes only | held-out half | 2 | +0.30 (+0.19 to +0.41) | 57% (86/152; 95% CI 49–64%) | 17% (8/46; 95% CI 9–31%) | 80% (127/158; 95% CI 73–86%) | 21% (65/309; 95% CI 17–26%) | 70% (83/118; 95% CI 62–78%) |
 | Probes only | Sentinel subsample | not ranked | +0.15 (-0.14 to +0.41) | 45% (9/20; 95% CI 26–66%) | 0% (0/8; 95% CI 0–32%) | 70% (14/20; 95% CI 48–85%) | 8% (3/40; 95% CI 3–20%) | 60% (9/15; 95% CI 36–80%) |
 | Sentinel · Volunteer alone | Sentinel subsample | not ranked | +0.30 (+0.01 to +0.53) | 50% (10/20; 95% CI 30–70%) | 0% (0/8; 95% CI 0–32%) | 80% (16/20; 95% CI 58–92%) | not measured | 71% (10/14; 95% CI 45–88%) |
 | Sentinel · Skeptic alone | Sentinel subsample | not ranked | +0.30 (+0.01 to +0.53) | 50% (10/20; 95% CI 30–70%) | 0% (0/8; 95% CI 0–32%) | 80% (16/20; 95% CI 58–92%) | not measured | 71% (10/14; 95% CI 45–88%) |
@@ -435,7 +435,7 @@ independent evidence such as radial velocities, and no exoplan output is called 
   checks the paper's numbers against the JSON.
 * **The leaderboard.** `docs/leaderboard/` holds the submission format, the rules, the public inputs (the
   tuning half with labels, the held-out half without; sha256 `d0e4f2d9c5538800e9a34d018757f99e1d1672060e71ae56bbaf87fcaf0c15b4`) and the scored table
-  (6 entries, 0 refused). A submission lists each star's detected events on the real and
+  (7 entries, 0 refused). A submission lists each star's detected events on the real and
   control light curves; the leaderboard matches them to the ephemeris and counts control false alarms itself.
   `exoplan leaderboard <file>` scores a submission and refuses one that states anything but that hash, says it was
   tuned on the held-out half, carries a field outside the whitelist, or does not cover its scope.

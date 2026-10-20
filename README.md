@@ -147,8 +147,11 @@ published TOI period, and `new_candidate` otherwise.
 * **The real-TOI leaderboard** ([docs/leaderboard/](docs/leaderboard/README.md), and `#/leaderboard` in the app)
   takes a method's detected events per star of the held-out half of the frozen 662-TOI benchmark, and scores them
   itself: completeness, FP rejection, control false alarms and reliability, with Wilson intervals. It ranks by
-  Youden's J, so calling every TOI a planet scores zero, and ranks only entries measured on both controls; the
-  40-star Sentinel subsample is listed, never ranked. `exoplan leaderboard my.json` scores a submission and refuses
+  Youden's J on the benchmark's searchable set with one predicate (a clean candidate) on both sides, so calling every
+  TOI a planet scores zero, flagged or not, and ranks only entries measured on both controls; the 40-star Sentinel
+  subsample is listed, never ranked. **A metadata-only floor that never reads a light curve is ranked too, and the
+  Probes do not beat it**: on this benchmark J mostly measures how separable false positives are from catalogue
+  metadata. `exoplan leaderboard my.json` scores a submission and refuses
   one that states anything but the hash of the tuning-half-only inputs or carries a field outside the whitelist.
   It is seeded with exoplan's own configurations, built from the benchmark's stored outputs
   (`scripts/leaderboard_seed.py`).

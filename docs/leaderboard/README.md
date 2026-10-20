@@ -73,21 +73,39 @@ exoplan leaderboard                       # rebuild leaderboard.json and leaderb
 
 | measure | definition |
 |---|---|
-| **Youden's J (rank key)** | completeness over every CP/KP star + FP rejection over every FP star − 1 (Youden 1950), with Newcombe's (1998) square-and-add Wilson interval. Calling every TOI a planet scores 0 |
-| completeness, all CP/KP stars | CP/KP stars recovered, over every CP/KP star in the scope; a star not searched counts as missed |
-| completeness, searchable | the same over searched stars (the benchmark report's headline) |
-| completeness below 4 R⊕ | on CP/KP TOIs with a published radius below 4 R⊕ |
-| FP rejection, all FP stars | FP stars the method did not offer as a clean candidate (recovered and not flagged); a star not searched was not offered |
+| **Youden's J (rank key)** | on the **searchable set the benchmark fixed** (held-out stars with a SPOC 2-minute light curve), with **one predicate on both sides**, a *clean candidate* (an on-ephemeris event that passed, with no eclipsing-binary flag): J = the share of CP/KP stars offered as clean candidates + the share of FP stars not offered − 1 (Youden 1950), with Newcombe's (1998) square-and-add Wilson interval. Calling every TOI a planet scores 0, with or without a flag on every event; a searchable star the submission calls "not searched" counts as not offered |
+| Youden J, all stars | the same over every star of the scope, shown beside the rank key |
+| clean completeness, searchable CP/KP | the first term of J |
+| FP rejection, searchable FP | the second term of J |
+| recovered below 4 R⊕ | CP/KP TOIs with a published radius below 4 R⊕ whose dip passed (flags allowed), over the searched ones |
 | control false alarms | searched stars with any passed event on the inverted (scrambled) light curve, and events per 1,000 star-sectors |
 | reliability | clean candidates on TOI dips that are CP/KP, over all clean candidates on TOI dips. It depends on this sample's class mix (about half CP/KP among searched held-out stars), not the TOI catalogue's |
 
-The benchmark report's "FP TOIs rejected or flagged" is over the FP dips the Probes found; the leaderboard's FP
-rejection is over every held-out FP star, so the two rates differ. Both are printed with their definitions.
+Why one predicate: an earlier version counted a flagged dip as found on the CP/KP side and as rejected on the FP
+side, so a copy of the public ephemerides with `flags: ["v_shape"]` on every star scored J = +1. Now any flag
+removes the dip from both sides, and that copy scores 0.
 
-Only held-out entries with both control lists on every searched star are ranked; the rest are listed as
-unranked. **The 40-star Sentinel subsample is never ranked: 40 stars cannot order these configurations.** Equal J
+The benchmark report's headline completeness counts a recovered dip even when flagged, and its "FP TOIs rejected or
+flagged" is over the FP dips the Probes found. Both are in docs/results/benchmark_real_tois.md and differ from the
+leaderboard's terms by definition.
+
+**The controls gate ranking; they do not enter J.** Only held-out entries with both control lists on every searched
+star are ranked; the rest are listed as unranked. The control false-alarm rates are printed beside J for the reader
+to weigh. **The 40-star Sentinel subsample is never ranked: 40 stars cannot order these configurations.** Equal J
 shares a rank; where intervals overlap, the order is not a measured difference. Every rate has a Wilson 95%
 interval.
+
+## The floor: metadata only, no light curve
+
+`scripts/leaderboard_metadata_baseline.py` builds a ranked entry that never reads a light curve: a logistic
+regression on the public TOI number, period, duration, ephemeris errors and epoch, fitted on the tuning half
+(numpy, deterministic; its threshold maximises cross-validated J on the tuning half). It puts one passed event on
+the published ephemeris of every held-out star it predicts to be a planet, and none on the others; because it ignores
+the light curve, it reports the same events on the controls, so its control false-alarm rate is high and honest.
+
+**The Probes do not beat it** (the table states the two J values and whether their intervals overlap). On this
+benchmark J therefore mostly measures how separable false positives are from catalogue metadata, not how well a
+method reads light curves. A method should be judged against this floor, not against zero.
 
 ## When a submission is refused
 
@@ -110,17 +128,23 @@ The leaderboard refuses a submission, and lists every reason, when:
 
 * **Labels.** The held-out labels are public in the repository, so no check can show that a method never read
   them. The hash is an attestation, and each entry's provenance says what it was built from.
-* **Verdicts and controls.** `passed`, `flags` and the control lists are the method's own report. A method could
-  under-report its control false alarms.
-* **Future work, not built:** maintainer-held decoy light curves under opaque ids (injected and empty curves whose
-  truth only the maintainers hold), and prospective scoring on TOIs that are still undispositioned, scored when
-  TFOPWG dispositions them. Either would make these gaps checkable.
+* **Verdicts and controls.** `passed`, `flags` and the control lists are the method's own report. The leaderboard
+  cannot recompute control events without the light curves and the method, so a method could under-report them;
+  that is why controls only gate ranking.
+* **Detection versus vetting.** Every submitter is given the published ephemeris, so J mixes finding a dip with
+  judging it, and an ephemeris copy needs no detection at all. A separate detection ranking with the ephemeris
+  withheld, and a vetting ranking on given dips, would measure the two apart.
+* **Future work, not built:** that split; maintainer-held decoy light curves under opaque ids (injected and empty
+  curves whose truth only the maintainers hold); and prospective scoring on TOIs that are still undispositioned,
+  scored when TFOPWG dispositions them. Each would make one of these gaps checkable.
 
 ## The seeded entries
 
 exoplan's own configurations, built from the benchmark's stored outputs without re-running anything
-(`scripts/leaderboard_seed.py --cache <cache/bench>`):
+(`scripts/leaderboard_seed.py --cache <cache/bench>`), and the metadata floor
+(`scripts/leaderboard_metadata_baseline.py`, from the public inputs only):
 
+* **Metadata only, no light curve (a floor)**, on the held-out half, `tuned_on: tuning`.
 * **Probes only**, on the whole held-out half: every consensus event of the real and control runs. The scorer's
   outcomes equal the committed per-star rows of `benchmark_real_tois.json` star by star (a test checks this).
 * On the Sentinels' 40-star subsample: **Probes only** (the same events, restricted), **Sentinel · Volunteer alone**
@@ -130,5 +154,5 @@ exoplan's own configurations, built from the benchmark's stored outputs without 
   star-level rules, fixed before scoring (commit 9e42c0b), not panel consensus, and their names say so. The
   Sentinels were never run on the controls, so those cells read "not measured".
 
-The seeded entries state `tuned_on: none`: no threshold changed after the sample was frozen (the benchmark's
+exoplan's own entries state `tuned_on: none`: no threshold changed after the sample was frozen (the benchmark's
 threshold audit).

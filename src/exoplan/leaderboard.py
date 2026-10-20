@@ -23,12 +23,13 @@ Times are BTJD. ``passed`` is the method's own vetting verdict and ``flags`` its
 vocabulary (``FLAGS``); every other field is whitelisted, so a label or a label proxy (radius, depth,
 disposition) cannot ride along.
 
-**Ranking.** A method that calls every TOI a planet recovers every CP/KP TOI and rejects no false positive, so
-completeness alone cannot rank. Held-out entries are ranked by Youden's J (Youden 1950): completeness over every
-CP/KP star plus FP rejection over every FP star, minus one, with a square-and-add Wilson interval (Newcombe 1998).
-Calling everything a planet scores J = 0. An entry without control light curves for every searched star is
-listed but not ranked. The Sentinels' 40-star subsample is never ranked: its intervals are too wide to order
-anything.
+**Ranking.** Held-out entries are ranked by Youden's J (Youden 1950) with a square-and-add Wilson interval
+(Newcombe 1998), on the searchable set the benchmark fixed (stars with a SPOC 2-minute light curve), with one
+predicate on both sides: a *clean candidate* (an on-ephemeris event that passed, with no eclipsing-binary flag).
+J = clean CP/KP share + not-clean FP share − 1, so calling every TOI a planet, flagged or not, scores J = 0, and
+calling a star "not searched" counts it as not offered. J over every star of the scope is reported beside it. An
+entry without control lists for every searched star is listed but not ranked; the controls gate ranking and do not
+enter J. The Sentinels' 40-star subsample is never ranked: its intervals are too wide to order anything.
 
 **Labels.** The public inputs (``docs/leaderboard/tuning_inputs.json``) hold the tuning half with its
 dispositions and, for the held-out half, only TIC, TOI name and ephemeris. A submission states the hash of the
@@ -265,14 +266,25 @@ def _candidate(e: dict) -> dict:
             "passed": e["passed"], "flags": list(e.get("flags") or []), "snr": e.get("snr"), "time_unit": "BTJD"}
 
 
-def outcomes(sub: dict, sample: dict) -> list[dict]:
+def benchmark_searchable(benchmark: dict | None) -> set[str] | None:
+    """The searchable set the benchmark fixed: TOIs whose star has a SPOC 2-minute light curve (a per-star row with
+    real-data results). It does not depend on what a submitter says it searched."""
+    if not benchmark or not benchmark.get("per_star"):
+        return None
+    return {r["toi"] for r in benchmark["per_star"] if r.get("real")}
+
+
+def outcomes(sub: dict, sample: dict, benchmark: dict | None = None) -> list[dict]:
     """Per star, what the scorer finds in the submitted events: seen, recovered, flagged (score_star, the benchmark's
-    own scoring), and the control false alarms (passed events on each control curve, None when not run)."""
+    own scoring), and the control false alarms (passed events on each control curve, None when not run). Each row
+    also says whether the benchmark counts the star as searchable."""
     toi = {t["toi"]: t for t in sample["tois"]}
+    searchable = benchmark_searchable(benchmark)
     rows = []
     for p in sub["predictions"]:
         t = toi[p["toi"]]
         row = {"toi": p["toi"], "cls": t["class"], "radius": t.get("radius_re"), "searched": p["searched"],
+               "searchable": searchable is None or p["toi"] in searchable,
                "seen": False, "recovered": False, "flagged": False, "controls": None}
         if p["searched"]:
             s = score_star(t, [_candidate(e) for e in p.get("events") or []])
@@ -305,7 +317,16 @@ def score_rows(rows: list[dict]) -> dict:
         "fp_rejection_all_stars": _rate(sum(not (r["searched"] and clean(r)) for r in fp_all), len(fp_all)),
         "fa_found": _rate(sum(r["seen"] for r in fa), len(fa)),
     }
-    out["youden_j"] = youden(out["completeness_all_stars"], out["fp_rejection_all_stars"])
+    # The rank key. One predicate on both sides: a clean candidate (recovered and not flagged), so an eclipsing-
+    # binary flag cannot count as a rejection on one side and as a recovery on the other. Over the searchable set the
+    # benchmark fixed, so a submitter cannot move stars out of it by calling them not searched.
+    bpos = [r for r in rows if r["searchable"] and r["cls"] == "positive"]
+    bfp = [r for r in rows if r["searchable"] and r["cls"] == "fp"]
+    out["completeness_clean_searchable"] = _rate(sum(r["searched"] and clean(r) for r in bpos), len(bpos))
+    out["fp_rejection_searchable"] = _rate(sum(not (r["searched"] and clean(r)) for r in bfp), len(bfp))
+    out["youden_j"] = youden(out["completeness_clean_searchable"], out["fp_rejection_searchable"])
+    out["completeness_clean_all_stars"] = _rate(sum(r["searched"] and clean(r) for r in pos_all), len(pos_all))
+    out["youden_j_all_stars"] = youden(out["completeness_clean_all_stars"], out["fp_rejection_all_stars"])
     cands = [r for r in searched if clean(r)]
     out["reliability"] = _rate(sum(r["cls"] == "positive" for r in cands), len(cands))
     out["reliability_mix"] = {c: len([r for r in searched if r["cls"] == c]) for c in ("positive", "fp", "fa")}
@@ -331,7 +352,7 @@ def score(sub, sample: dict, inputs: dict | None = None, benchmark: dict | None 
     why = validate(sub, sample, inputs, benchmark)
     if why:
         raise Refused(why)
-    return score_rows(outcomes(sub, sample))
+    return score_rows(outcomes(sub, sample, benchmark))
 
 
 # Entries the leaderboard derives itself from seeded entries: the Probes+Sentinels combinations, stated as
@@ -364,6 +385,30 @@ def load_submissions(directory: str | Path = SUBMISSIONS) -> list:
     return [json.loads(p.read_text()) for p in sorted(Path(directory).glob("*.json"))]
 
 
+FLOOR_ID = "metadata-baseline"
+
+
+def floor_comparison(entries: list[dict]) -> dict | None:
+    """The Probes against the metadata-only floor, on the ranked J: do their intervals overlap?"""
+    by = {e["id"]: e for e in entries}
+    if "probes" not in by or FLOOR_ID not in by:
+        return None
+    p, f = by["probes"]["scores"]["youden_j"], by[FLOOR_ID]["scores"]["youden_j"]
+    return {"probes": p, "floor": f, "overlap": p["lo"] <= f["hi"] and f["lo"] <= p["hi"],
+            "probes_above": p["lo"] > f["hi"], "floor_above": f["lo"] > p["hi"], "probes_higher": p["j"] > f["j"]}
+
+
+def floor_note(floor: dict | None) -> str:
+    if not floor:
+        return ""
+    head = ("The Probes do not beat the metadata-only floor" if not floor["probes_above"]
+            else "The Probes beat the metadata-only floor")
+    return (f"{head}: J {jtext(floor['probes'])} against {jtext(floor['floor'])} for a model that never sees a light curve"
+            + ("; the intervals overlap." if floor["overlap"] else ".")
+            + (" On this benchmark J mostly measures how separable false positives are from catalogue metadata."
+               if not floor["probes_above"] else ""))
+
+
 SUBSAMPLE_NOTE = ("40 stars cannot order these configurations: the subsample is listed, never ranked, and every "
                   "interval is wide.")
 
@@ -377,7 +422,7 @@ def build(sample: dict, inputs: dict, benchmark: dict, submissions: list) -> dic
             refused.append({"id": sub.get("id") if isinstance(sub, dict) else None,
                             "name": sub.get("name") if isinstance(sub, dict) else None, "reasons": why})
             continue
-        rows = outcomes(sub, sample)
+        rows = outcomes(sub, sample, benchmark)
         rows_of[sub["id"]] = (sub, rows)
         entries.append({"id": sub["id"], "name": sub["name"], "scope": sub["scope"], "kind": sub.get("kind", ""),
                         "tuned_on": sub["tuned_on"], "provenance": sub["provenance"], "scores": score_rows(rows)})
@@ -404,10 +449,11 @@ def build(sample: dict, inputs: dict, benchmark: dict, submissions: list) -> dic
         e["rank"] = (1 + sum(1 for o in ranked if jv(o) > jv(e))) if e["ranked"] else None
     # Ranked entries by J; the rest (the subsample included) in a fixed order that implies nothing: Probes,
     # Sentinels, then the derived combinations.
-    kinds = ["probes", "sentinel", "derived"]
+    kinds = ["probes", "baseline", "sentinel", "derived"]
     entries.sort(key=lambda e: (SCOPES.index(e["scope"]), not e["ranked"], -jv(e) if e["ranked"] else 0,
                                 kinds.index(e["kind"]) if e["kind"] in kinds else len(kinds), e["id"]))
-    return {"format": "exoplan-leaderboard-results/2", "sample_sha256": sample["sha256"],
+    floor = floor_comparison(entries)
+    return {"format": "exoplan-leaderboard-results/3", "floor": floor, "floor_note": floor_note(floor), "sample_sha256": sample["sha256"],
             "inputs_sha256": inputs_sha256(inputs), "full_sample_sha256": full_sample_sha256(sample),
             "sentinel_subsample": sentinel_subsample(benchmark),
             "sentinel_subsample_sha256": canonical_sha256(sentinel_subsample(benchmark)),
@@ -423,11 +469,18 @@ RULES = [
     "the flux-inverted and block-scrambled controls (time, duration, period, its own pass verdict and flags). The "
     "leaderboard decides which events lie on the TOI's ephemeris (the benchmark's score_star and match_toi) and "
     "counts control false alarms itself. Self-reported outcomes are not accepted.",
-    "Rank: Youden's J = completeness over every CP/KP star + FP rejection over every FP star − 1, with a "
-    "square-and-add Wilson interval. Calling every TOI a planet scores J = 0. A star not searched counts as missed "
-    "and, if FP, as not offered. Where two intervals overlap, the order is not a measured difference.",
-    "Only held-out entries with both control light curves on every searched star are ranked; others are listed "
-    "unranked. The 40-star Sentinel subsample is never ranked.",
+    "Rank: Youden's J on the searchable set the benchmark fixed (stars with a SPOC 2-minute light curve), with one "
+    "predicate on both sides, a clean candidate (on the ephemeris, passed, no eclipsing-binary flag): J = the share of "
+    "CP/KP stars offered as clean candidates + the share of FP stars not offered − 1, with a square-and-add Wilson "
+    "interval. Calling every TOI a planet, with or without a flag, scores J = 0; a searchable star called not searched "
+    "counts as not offered. J over every star of the scope is shown beside it. Where intervals overlap, the order is "
+    "not a measured difference.",
+    "The controls gate ranking and do not enter J: only held-out entries with both control lists on every searched "
+    "star are ranked, others are listed unranked. The control lists are the method's own report; the leaderboard "
+    "cannot recompute them without the light curves. The 40-star Sentinel subsample is never ranked.",
+    "A floor: the metadata-only baseline uses no light curve at all, only the public TOI number, period, duration, "
+    "ephemeris errors and epoch, with a logistic regression fitted on the tuning half. A method that does not beat "
+    "it is not shown to read the light curves better than the catalogue's own metadata predicts dispositions.",
     "A submission states the sha256 of the public inputs it was built from (tuning half with labels, held-out half "
     "without). Any other hash, tuned_on other than none or tuning, a field outside the whitelist, a missing or extra "
     "star, or missing provenance: refused, with the reasons listed.",
@@ -482,23 +535,27 @@ def to_markdown(res: dict) -> str:
         lines += ["", f"## {SCOPE_LABEL[scope]}", ""]
         if scope == "sentinel_subsample":
             lines += [f"**{res['subsample_note']}**", ""]
-        lines += [head + " completeness, all CP/KP stars | below 4 R⊕ | FP rejection, all FP stars | "
-                  "inverted control: stars with any | scrambled control: stars with any | reliability |",
-                  "|" + "---|" * (9 if scope == "held_out" else 8)]
+        elif res.get("floor_note"):
+            lines += [f"**{res['floor_note']}**", ""]
+        lines += [head + " Youden J, all stars | clean completeness, searchable CP/KP | FP rejection, searchable FP | "
+                  "recovered below 4 R⊕ | inverted control: stars with any | scrambled control: stars with any | reliability |",
+                  "|" + "---|" * (10 if scope == "held_out" else 9)]
         for e in es:
             s = e["scores"]
             ctl = lambda v: _pct(s["controls"][v]["stars_with_any"]) if s["controls"][v] else "not measured"  # noqa: E731
             rank = (f"| {e['rank']} " if e["ranked"] else f"| unranked ({e['unranked_reason']}) ") if scope == "held_out" else ""
-            lines.append(f"{rank}| {e['name']} | {jtext(s['youden_j'])} | {_pct(s['completeness_all_stars'])} | "
-                         f"{_pct(small_rate(s))} | {_pct(s['fp_rejection_all_stars'])} | {ctl('inverted')} | "
-                         f"{ctl('scrambled')} | {_pct(s['reliability'])} |")
+            lines.append(f"{rank}| {e['name']} | {jtext(s['youden_j'])} | {jtext(s['youden_j_all_stars'])} | "
+                         f"{_pct(s['completeness_clean_searchable'])} | {_pct(s['fp_rejection_searchable'])} | "
+                         f"{_pct(small_rate(s))} | {ctl('inverted')} | {ctl('scrambled')} | {_pct(s['reliability'])} |")
         lines += ["", "Entries:", ""] + [f"* **{e['name']}** (`{e['id']}`, tuned on: {e['tuned_on']}). {e['provenance']['method']}"
                                           for e in es]
     if res["refused"]:
         lines += ["", "## Refused", ""] + [f"* {r['name'] or r['id']}: {'; '.join(r['reasons'])}" for r in res["refused"]]
-    lines += ["", "FP rejection here counts every FP star of the scope (a star not searched was not offered as a "
-              "candidate); the benchmark report's \"rejected or flagged\" rate is over the FP dips the panel found. "
-              "Reliability depends on the sample's class mix; it is not the reliability on the TOI catalogue.", ""]
+    lines += ["", "Clean completeness and FP rejection use the same predicate (a clean candidate: on the ephemeris, "
+              "passed, no eclipsing-binary flag) over the searchable set the benchmark fixed. The benchmark report's "
+              "headline completeness counts a recovered dip even when flagged, and its \"rejected or flagged\" rate is "
+              "over the FP dips the panel found; both are in docs/results/benchmark_real_tois.md. Reliability depends on "
+              "the sample's class mix; it is not the reliability on the TOI catalogue.", ""]
     return "\n".join(lines)
 
 

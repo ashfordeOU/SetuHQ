@@ -91,16 +91,34 @@ def test_probes_entry_scores_equal_the_benchmark_reports_held_out_numbers():
     for v in ("inverted", "scrambled"):
         c, hc = s["controls"][v], H["controls"][v]
         assert c["vetted_false_alarms"] == hc["vetted_false_alarms"] and _kn(c["stars_with_any"]) == _kn(hc["stars_with_any"])
-    assert s["controls_complete"] and ENTRY["probes"]["ranked"] and ENTRY["probes"]["rank"] == 1
+    assert s["controls_complete"] and ENTRY["probes"]["ranked"]
 
 
-def test_youden_j_and_its_interval():
+def test_youden_j_uses_one_predicate_on_the_benchmark_searchable_set():
     s = _score("probes")
+    a, b = s["completeness_clean_searchable"], s["fp_rejection_searchable"]
+    # The searchable set is the benchmark's, not the submitter's.
+    assert a["n"] == H["completeness"]["n"] and b["n"] == H["fp_seen"]["n"]
+    # Clean on both sides: a recovered but flagged CP/KP dip is not counted as found.
+    rows = [r for r in L.outcomes(SUBS["probes"], SAMPLE, BENCH) if r["searchable"]]
+    assert a["k"] == sum(r["recovered"] and not r["flagged"] for r in rows if r["cls"] == "positive")
+    assert b["k"] == sum(not (r["recovered"] and not r["flagged"]) for r in rows if r["cls"] == "fp")
     j = s["youden_j"]
-    assert j["j"] == pytest.approx(s["completeness_all_stars"]["rate"] + s["fp_rejection_all_stars"]["rate"] - 1)
-    assert j["lo"] < j["j"] < j["hi"]
-    a, b = s["completeness_all_stars"], s["fp_rejection_all_stars"]
+    assert j["j"] == pytest.approx(a["rate"] + b["rate"] - 1) and j["lo"] < j["j"] < j["hi"]
     assert j["lo"] == pytest.approx(j["j"] - ((a["rate"] - a["lo"]) ** 2 + (b["rate"] - b["lo"]) ** 2) ** 0.5)
+    ja = s["youden_j_all_stars"]
+    assert ja["j"] == pytest.approx(s["completeness_clean_all_stars"]["rate"] + s["fp_rejection_all_stars"]["rate"] - 1)
+
+
+def test_calling_searchable_stars_not_searched_cannot_help():
+    sub = copy.deepcopy(SUBS["probes"])
+    base = _score("probes")
+    for p in sub["predictions"]:
+        if p["searched"] and not any(e["passed"] for e in p["events"]):
+            p.update(searched=False, events=[], controls=None)  # hide every star it would not offer anyway
+    s = L.score(sub, SAMPLE, INPUTS, BENCH)
+    assert s["youden_j"]["j"] == pytest.approx(base["youden_j"]["j"])
+    assert s["completeness_clean_searchable"]["n"] == base["completeness_clean_searchable"]["n"]
 
 
 def test_sentinel_entries_equal_the_benchmark_reports_persona_numbers():
@@ -149,27 +167,60 @@ def test_the_subsample_is_never_ranked_and_says_why():
 
 
 def test_every_seeded_entry_carries_provenance_and_the_attribution():
-    for s in SUBS.values():
+    for s in (v for k, v in SUBS.items() if k != L.FLOOR_ID):
         assert s["tuned_on"] == "none" and s["inputs_sha256"] == L.inputs_sha256(INPUTS)
         assert "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors." in s["provenance"]["method"]
         assert BENCH["code_commit"][:7] in s["provenance"]["code_version"]
 
 
 # ---------- gaming ----------
-def test_everything_is_a_planet_cannot_win():
-    """The reviewer's crafted entry: every held-out star searched, its TOI dip passed and clean, controls null."""
-    res = L.build(SAMPLE, INPUTS, BENCH, list(SUBS.values()) + [everything_is_a_planet(None)])
+@pytest.mark.parametrize("flag", [None, "odd_even_mismatch", "secondary_eclipse", "v_shape", "density_mismatch"])
+def test_everything_is_a_planet_cannot_win(flag):
+    """The reviewers' crafted entries: every held-out star searched, an event on its published ephemeris that passed,
+    unflagged or carrying one eclipsing-binary flag on every star."""
+    probes_j = ENTRY["probes"]["scores"]["youden_j"]["j"]
+
+    def crafted(controls):
+        sub = everything_is_a_planet(controls)
+        for p in sub["predictions"]:
+            p["events"][0]["flags"] = [flag] if flag else []
+        return sub
+
+    res = L.build(SAMPLE, INPUTS, BENCH, list(SUBS.values()) + [crafted(None)])
     e = next(x for x in res["entries"] if x["id"] == "everything")
-    s = e["scores"]
-    assert s["completeness_all_stars"]["k"] == s["completeness_all_stars"]["n"]
-    assert s["fp_rejection_all_stars"]["k"] == 0
-    assert s["youden_j"]["j"] == pytest.approx(0.0)
+    assert e["scores"]["youden_j"]["j"] == pytest.approx(0.0)
+    assert e["scores"]["youden_j_all_stars"]["j"] == pytest.approx(0.0)
     assert not e["ranked"] and e["rank"] is None and "controls" in e["unranked_reason"]
-    assert next(x for x in res["entries"] if x["id"] == "probes")["rank"] == 1
-    # With control lists claiming no false alarm at all, it is ranked, and still last: J = 0.
-    res = L.build(SAMPLE, INPUTS, BENCH, list(SUBS.values()) + [everything_is_a_planet({"inverted": [], "scrambled": []})])
-    e = next(x for x in res["entries"] if x["id"] == "everything")
-    assert e["ranked"] and e["rank"] == 2 and e["scores"]["youden_j"]["j"] == pytest.approx(0.0)
+    # With control lists claiming no false alarm at all it is ranked, and still below the Probes: J = 0.
+    res = L.build(SAMPLE, INPUTS, BENCH, list(SUBS.values()) + [crafted({"inverted": [], "scrambled": []})])
+    by = {x["id"]: x for x in res["entries"]}
+    e = by["everything"]
+    assert e["ranked"] and e["scores"]["youden_j"]["j"] == pytest.approx(0.0)
+    assert e["rank"] > by["probes"]["rank"] and probes_j > 0
+
+
+# ---------- the metadata-only floor ----------
+def test_the_metadata_floor_is_built_reproducibly_from_public_inputs():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("mb", ROOT / "scripts/leaderboard_metadata_baseline.py")
+    mb = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mb)
+    assert mb.build_submission() == SUBS[L.FLOOR_ID]
+    f = ENTRY[L.FLOOR_ID]
+    assert f["ranked"] and f["tuned_on"] == "tuning" and f["kind"] == "baseline"
+    # It ignores the light curve, so it reports the same events on the controls.
+    for p in SUBS[L.FLOOR_ID]["predictions"]:
+        assert p["controls"]["inverted"] == p["events"] == p["controls"]["scrambled"]
+
+
+def test_the_page_and_table_say_whether_the_probes_beat_the_floor():
+    fl = RESULTS["floor"]
+    pj, fj = ENTRY["probes"]["scores"]["youden_j"], ENTRY[L.FLOOR_ID]["scores"]["youden_j"]
+    assert fl["overlap"] == (pj["lo"] <= fj["hi"] and fj["lo"] <= pj["hi"])
+    note = RESULTS["floor_note"]
+    assert note.startswith("The Probes do not beat" if not fl["probes_above"] else "The Probes beat")
+    assert note in L.RESULTS_MD.read_text()
 
 
 def test_self_reported_outcomes_are_not_accepted():
@@ -282,7 +333,9 @@ def test_app_leaderboard_route_shows_the_table_rules_and_hash(pi_men_app):
     assert RESULTS["sample_sha256"] in sec and RESULTS["inputs_sha256"] in sec
     assert sec.count("<tr>") - sec.count("<thead><tr>") == len(RESULTS["entries"])
     c = H["completeness_all_stars"]
+    c = ENTRY["probes"]["scores"]["completeness_clean_searchable"]
     assert f"{c['k']}/{c['n']}" in sec and "Youden J" in sec and "not measured" in sec
+    assert RESULTS["floor_note"] in sec
     assert "40 stars cannot order these configurations" in sec
     assert sec.count('data-l="Rank"') == sum(1 for e in RESULTS["entries"] if e["scope"] == "held_out")
     assert "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors." in sec
@@ -335,3 +388,10 @@ const { chromium } = require(%s);
             assert r["label"].strip('"') == "Youden J"  # each phone cell names its column
         bgs[(r["w"], r["theme"])] = r["bg"]
     assert bgs[(390, "dark")] != bgs[(390, "light")]
+
+
+def test_the_docs_claim_about_the_floor_matches_the_table():
+    beaten = RESULTS["floor"]["probes_above"]
+    for doc in (ROOT / "README.md", L.LB_DIR / "README.md"):
+        text = " ".join(doc.read_text().split())
+        assert ("Probes do not beat it" in text) == (not beaten), doc
