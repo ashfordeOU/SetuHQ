@@ -342,7 +342,7 @@ def build_parser() -> argparse.ArgumentParser:
     sweep.set_defaults(func=cmd_sweep)
 
     bundle = sub.add_parser("bundle", help="export a sweep's sector record as a contribution bundle, sealed with content hashes")
-    bundle.add_argument("record", help="the sector record, e.g. my-sweep/sector_0005.json")
+    bundle.add_argument("record", help="the sector record, e.g. my-sweep/sector_0005.json.gz")
     bundle.add_argument("--contributor", required=True, help="the name to credit (yours to choose; shown on the site)")
     bundle.add_argument("--out", required=True, help="bundle directory to write")
     bundle.set_defaults(func=cmd_bundle)

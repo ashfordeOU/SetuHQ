@@ -121,12 +121,12 @@ def test_equal_rise_and_decay_is_not_a_fast_rise_despite_float_noise():
 
 def test_reclassify_reuses_the_stored_runs_and_keeps_the_search_code(swept):
     kw = swept["kw"]
-    before = json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())
+    before = SW.read_record(kw["out_dir"] / f"sector_{SECTOR:04d}.json.gz")
     searched_by = {s["tic"]: s["search_code"] for s in before["stars"]}
     n = SW.reclassify_sweep("configs/sweep.toml", SECTOR, limit=3, out_dir=kw["out_dir"], cache_root=kw["cache_root"],
                             rule_changes=["test change"], log=lambda *a: None)
     assert n == 3
-    rec = json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())
+    rec = SW.read_record(kw["out_dir"] / f"sector_{SECTOR:04d}.json.gz")
     for s in rec["stars"]:
         assert s["search_code"] == searched_by[s["tic"]] == search_fingerprint()   # the code that made the dips stays named
         assert s["classify_code"] == classify_fingerprint() and "code" not in s
@@ -137,7 +137,7 @@ def test_reclassify_reuses_the_stored_runs_and_keeps_the_search_code(swept):
 
 def test_a_record_from_one_code_gets_both_codes_from_named_commits(swept, monkeypatch):
     kw = swept["kw"]
-    p = SW.record_path(kw["cache_root"], SECTOR, json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())["stars"][0]["tic"])
+    p = SW.record_path(kw["cache_root"], SECTOR, SW.read_record(kw["out_dir"] / f"sector_{SECTOR:04d}.json.gz")["stars"][0]["tic"])
     old = json.loads(p.read_text())
     old["code"] = "f" * 64
     old.pop("search_code"), old.pop("classify_code")
@@ -152,7 +152,7 @@ def test_a_record_from_one_code_gets_both_codes_from_named_commits(swept, monkey
 
 def test_resume_searches_again_a_record_made_with_other_code_or_config(swept):
     kw = swept["kw"]
-    p = SW.record_path(kw["cache_root"], SECTOR, json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())["stars"][0]["tic"])
+    p = SW.record_path(kw["cache_root"], SECTOR, SW.read_record(kw["out_dir"] / f"sector_{SECTOR:04d}.json.gz")["stars"][0]["tic"])
     rec = json.loads(p.read_text())
     rec["config_sha256"] = "0" * 64
     p.write_text(json.dumps(rec))
@@ -292,7 +292,7 @@ def swept(_swept_once, tmp_path):
 def test_sweep_records_every_star_and_builds_the_catalogue(swept):
     res, tmp = swept["res"], swept["tmp"]
     assert (res.done, res.ran, res.skipped) == (3, 3, 0)
-    rec = json.loads((tmp / "sweep" / f"sector_{SECTOR:04d}.json").read_text())
+    rec = SW.read_record(tmp / "sweep" / f"sector_{SECTOR:04d}.json.gz")
     assert rec["format"] == SW.FORMAT and rec["slice"] == 3 and rec["targets_in_sector"] == 4
     assert rec["status_counts"]["searched"] == 3
     assert rec["search_code"] == search_fingerprint() and rec["classify_code"] == classify_fingerprint()
@@ -305,7 +305,7 @@ def test_sweep_records_every_star_and_builds_the_catalogue(swept):
     assert cat["counts"]["star_sectors_searched"] == 3 and cat["counts"]["entries"] == len(cat["entries"])
     assert cat["counts"]["dips_reviewed"] == sum(s["n_dips"] for s in rec["stars"])
     assert sum(cat["counts"]["by_class"].values()) == cat["counts"]["entries"]
-    assert all(e["credit"] == [{"name": "exoplan", "source": f"sector_{SECTOR:04d}.json"}] for e in cat["entries"])
+    assert all(e["credit"] == [{"name": "exoplan", "source": f"sector_{SECTOR:04d}.json.gz"}] for e in cat["entries"])
     assert {c["id"] for c in cat["classes"]} == set(V.CLASS_IDS)
     nul = cat["counts"]["null"]
     assert nul["searches"] == 3 and set(nul["by_class"]) == set(V.CLASS_IDS) - {"unclassified"}
@@ -343,7 +343,7 @@ def test_a_failed_download_is_recorded_then_retried(tmp_path, monkeypatch):
     limit = first.index(1002) + 1
     res = SW.run_sweep("configs/sweep.toml", SECTOR, limit=limit, **kw)
     assert any("1002" in e and "download failed" in e for e in res.errors)
-    rec = json.loads((tmp_path / "sweep" / f"sector_{SECTOR:04d}.json").read_text())
+    rec = SW.read_record(tmp_path / "sweep" / f"sector_{SECTOR:04d}.json.gz")
     assert [s["status"] for s in rec["stars"] if s["tic"] == 1002] == ["error"]
     mast.fail.clear()
     res = SW.run_sweep("configs/sweep.toml", SECTOR, limit=limit, **kw)
@@ -358,7 +358,7 @@ def test_time_budget_stops_cleanly_and_leaves_pending(tmp_path, monkeypatch):
     res = SW.run_sweep("configs/sweep.toml", SECTOR, limit=4, out_dir=tmp_path / "sweep", cache_root=tmp_path / "cache", min_interval=0.0,
                        control=False, query=mast.query, fetch=mast.fetch, toi_path=None, time_budget_s=0.0, log=lambda *a: None)
     assert res.stopped == "time budget reached" and res.ran == 0
-    rec = json.loads((tmp_path / "sweep" / f"sector_{SECTOR:04d}.json").read_text())
+    rec = SW.read_record(tmp_path / "sweep" / f"sector_{SECTOR:04d}.json.gz")
     assert rec["status_counts"]["pending"] == 4
 
 
@@ -399,7 +399,7 @@ def test_code_fingerprint_covers_the_result_making_code():
 @pytest.fixture
 def bundle(swept):
     tmp = swept["tmp"]
-    return C.make_bundle(tmp / "sweep" / f"sector_{SECTOR:04d}.json", tmp / "bundle", contributor="Ada L.", now="2026-10-20T00:00:00+00:00")
+    return C.make_bundle(tmp / "sweep" / f"sector_{SECTOR:04d}.json.gz", tmp / "bundle", contributor="Ada L.", now="2026-10-20T00:00:00+00:00")
 
 
 def _ingest(b, swept, sweep_dir, **kw):
@@ -448,7 +448,7 @@ def test_resubmission_under_other_names_is_refused_and_counts_do_not_move(swept)
     nulls and credit stay as they were."""
     sweep_dir = swept["kw"]["out_dir"]
     before = json.loads((sweep_dir / "catalogue.json").read_text())["counts"]
-    rec = sweep_dir / f"sector_{SECTOR:04d}.json"
+    rec = sweep_dir / f"sector_{SECTOR:04d}.json.gz"
     for name in ("Eve", "Frank", "Grace"):
         b = C.make_bundle(rec, swept["tmp"] / f"b-{name}", contributor=name)
         with pytest.raises(C.BundleRefused, match="re-submission"):
@@ -463,7 +463,7 @@ def test_a_hand_placed_or_changed_contribution_is_left_out_and_ci_says_so(bundle
     sweep_dir = swept["kw"]["out_dir"]
     before = json.loads((sweep_dir / "catalogue.json").read_text())["counts"]
     assert SW.check_catalogue(sweep_dir) == []
-    b = C.make_bundle(sweep_dir / f"sector_{SECTOR:04d}.json", tmp_path / "handy", contributor="Handy")
+    b = C.make_bundle(sweep_dir / f"sector_{SECTOR:04d}.json.gz", tmp_path / "handy", contributor="Handy")
     man = json.loads((b / "manifest.json").read_text())
     shutil.copytree(b, sweep_dir / "contributions" / man["bundle_id"])
     SW.build_catalogue(sweep_dir)
@@ -494,7 +494,7 @@ def test_one_search_counts_per_star_sector_the_latest(swept):
     """The reviewer's case: the same stars searched again with newer code. The later search counts; the earlier
     stays as provenance only, and nothing is counted twice."""
     sweep_dir = swept["kw"]["out_dir"]
-    rec = json.loads((sweep_dir / f"sector_{SECTOR:04d}.json").read_text())
+    rec = SW.read_record(sweep_dir / f"sector_{SECTOR:04d}.json.gz")
     later = json.loads(json.dumps(rec))
     for s in later["stars"]:
         s["search_code"] = "1" * 64
@@ -570,15 +570,15 @@ def test_a_bundle_with_one_new_star_credits_only_that_star(swept):
     kw = swept["kw"]
     mine = swept["tmp"] / "mine"
     SW.run_sweep("configs/sweep.toml", SECTOR, limit=4, **{**kw, "out_dir": mine, "contributor": "Ada L."})
-    b = C.make_bundle(mine / f"sector_{SECTOR:04d}.json", swept["tmp"] / "b4", contributor="Ada L.")
+    b = C.make_bundle(mine / f"sector_{SECTOR:04d}.json.gz", swept["tmp"] / "b4", contributor="Ada L.")
     out = _ingest(b, swept, kw["out_dir"], verify_lightcurves=4)
     assert out["new_star_sectors"] == 1
     cat = json.loads((kw["out_dir"] / "catalogue.json").read_text())
     assert cat["counts"]["searches"] == 4 and cat["counts"]["duplicate_searches"] == 3
     ada = next(x for x in cat["contributors"] if x["name"] == "Ada L.")
     assert ada["star_sectors"] == 1 and ada["duplicates_not_credited"] == 3
-    new_tic = next(s["tic"] for s in json.loads((mine / f"sector_{SECTOR:04d}.json").read_text())["stars"]
-                   if s["tic"] not in {r["tic"] for r in json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())["stars"]})
+    new_tic = next(s["tic"] for s in SW.read_record(mine / f"sector_{SECTOR:04d}.json.gz")["stars"]
+                   if s["tic"] not in {r["tic"] for r in SW.read_record(kw["out_dir"] / f"sector_{SECTOR:04d}.json.gz")["stars"]})
     assert {c["name"] for e in cat["entries"] if e["tic"] == new_tic for c in e["credit"]} <= {"Ada L."}
     assert {c["name"] for e in cat["entries"] if e["tic"] != new_tic for c in e["credit"]} == {"exoplan"}
 
@@ -699,14 +699,14 @@ def test_a_config_that_does_not_match_its_hash_is_refused(bundle):
     "# wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
 ])
 def test_every_kind_of_key_in_the_config_is_refused(swept, line):
-    rec = json.loads((swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())
+    rec = SW.read_record(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json.gz")
     rec["config_text"] += "\n" + line + "\n"
     src = swept["tmp"] / "rec.json"
     src.write_text(json.dumps(rec))
     with pytest.raises(C.BundleRefused, match="credential"):
         C.make_bundle(src, swept["tmp"] / "kb", contributor="Key Tester")
     # And at ingest, when someone builds the bundle by hand.
-    b = C.make_bundle(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json", swept["tmp"] / "kb2", contributor="Key Tester")
+    b = C.make_bundle(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json.gz", swept["tmp"] / "kb2", contributor="Key Tester")
     (b / "config.toml").write_text((b / "config.toml").read_text() + "\n" + line + "\n")
     _reseal(b)
     with pytest.raises(C.BundleRefused, match="credential|comments"):
@@ -714,7 +714,7 @@ def test_every_kind_of_key_in_the_config_is_refused(swept, line):
 
 
 def test_a_bundled_config_has_no_comments_and_no_random_looking_values(swept):
-    b = C.make_bundle(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json", swept["tmp"] / "nc", contributor="Ada L.")
+    b = C.make_bundle(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json.gz", swept["tmp"] / "nc", contributor="Ada L.")
     text = (b / "config.toml").read_text()
     assert not C.has_comment(text) and "#" not in text
     from exoplan.config import load_config
@@ -734,7 +734,7 @@ def test_a_bundled_config_has_no_comments_and_no_random_looking_values(swept):
 
 def test_nothing_from_the_environment_goes_in_and_bad_names_are_refused(swept, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-THISISNOTAREALKEY0123456789")
-    rec = swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json"
+    rec = swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json.gz"
     b2 = C.make_bundle(rec, swept["tmp"] / "b2", contributor="Grace H.")
     assert "sk-ant" not in "".join(p.read_text() for p in b2.iterdir())
     for bad in ("", "x" * 61, "<script>", "see https://x.y", "me@example.org"):
@@ -767,3 +767,14 @@ def test_contributing_doc_says_keys_stay_in_the_environment_and_bundles_are_seal
         assert must in text, must
     assert "Never paste" in text or "never paste" in text
     assert "signed" not in text.replace("not signed", "")
+
+
+def test_sector_records_are_gzip_one_per_sector_and_byte_stable(swept, tmp_path):
+    out = swept["kw"]["out_dir"]
+    assert (out / f"sector_{SECTOR:04d}.json.gz").exists() and not (out / f"sector_{SECTOR:04d}.json").exists()
+    rec = SW.read_record(out / f"sector_{SECTOR:04d}.json.gz")
+    a, b = tmp_path / "a.json.gz", tmp_path / "b.json.gz"
+    SW.write_record(a, rec)
+    SW.write_record(b, rec)
+    assert a.read_bytes() == b.read_bytes() and SW.read_record(a) == rec
+    assert a.stat().st_size * 3 < len(json.dumps(rec))

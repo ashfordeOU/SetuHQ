@@ -51,7 +51,7 @@ For the API instead of the CLI, copy `configs/sweep_sentinels.toml` and change e
   real signals), flares as downward events with the real dips masked, and variability on a copy shuffled in
   0.5-day blocks. `--no-control` halves the time, but the site then cannot set your searches against their nulls.
 
-The record is `my-sweep/sector_0005.json`: every star-sector of the slice with what was searched (the
+The record is `my-sweep/sector_0005.json.gz`: every star-sector of the slice with what was searched (the
 light-curve file and its sha256, points, subjects, reviewers and weights), what was found (entries by class,
 with every mark, weight and the Sentinels' own words) and what was rejected (mark clusters below consensus,
 dips that failed vetting).
@@ -59,7 +59,7 @@ dips that failed vetting).
 ## 2. Make a bundle
 
 ```bash
-exoplan bundle my-sweep/sector_0005.json --contributor "Your Name" --out your-name-s5
+exoplan bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out your-name-s5
 ```
 
 The bundle directory holds three files:

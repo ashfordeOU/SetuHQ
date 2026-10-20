@@ -195,8 +195,9 @@ def make_bundle(record_path: str | Path, out_dir: str | Path, *, contributor: st
     from exoplan.starsearch import record_codes
 
     record_path = Path(record_path)
-    raw = record_path.read_bytes()
-    rec = json.loads(raw)
+    from exoplan.sweep import read_record
+
+    rec = read_record(record_path)
     name = check_name(contributor)
     config_text = rec.get("config_text") or ""
     if not config_text:

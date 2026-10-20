@@ -413,10 +413,41 @@ def write_sector_record(config_path, sector: int, chosen: list[dict], targets: l
         "status_counts": {s: sum(1 for x in stars if x.get("status") == s) for s in ("searched", "no_data", "error", "pending")},
         "stars": stars,
     }
-    path = Path(out_dir) / f"sector_{int(sector):04d}.json"
+    path = record_file(out_dir, sector)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(finite(record), separators=(",", ":"), default=_json_default, allow_nan=False) + "\n")
+    write_record(path, record)
+    plain = path.with_suffix("")  # an older, uncompressed record of the same sector
+    if plain.exists():
+        plain.unlink()
     return path
+
+
+RECORD_GLOB = "sector_*.json*"
+
+
+def record_file(out_dir, sector: int) -> Path:
+    """A sector's record: one file per sector, gzip-compressed (about a fifth of the size)."""
+    return Path(out_dir) / f"sector_{int(sector):04d}.json.gz"
+
+
+def write_record(path: Path, record: dict) -> None:
+    """Strict JSON, gzip with no timestamp in the header, so the same record gives the same bytes."""
+    import gzip
+
+    data = (json.dumps(finite(record), separators=(",", ":"), default=_json_default, allow_nan=False) + "\n").encode()
+    with open(path, "wb") as fh, gzip.GzipFile(fileobj=fh, mode="wb", mtime=0, filename="") as gz:
+        gz.write(data)
+
+
+def read_record(path: str | Path) -> dict:
+    """A sector record, compressed (.json.gz) or not (.json)."""
+    import gzip
+
+    path = Path(path)
+    if path.suffix == ".gz":
+        with gzip.open(path, "rt") as fh:
+            return json.load(fh)
+    return json.loads(path.read_text())
 
 
 # ---------- the catalogue: every sector record and every contribution ----------
@@ -454,8 +485,8 @@ def load_sources(sweep_dir: str | Path = SWEEP_DIR, rejected: list | None = None
     ``rejected`` when a list is given)."""
     sweep_dir = Path(sweep_dir)
     out = []
-    for p in sorted(sweep_dir.glob("sector_*.json")):
-        rec = json.loads(p.read_text())
+    for p in sorted(sweep_dir.glob(RECORD_GLOB)):
+        rec = read_record(p)
         out.append({"name": rec.get("contributor") or "exoplan", "source": str(p.name), "bundle": None, "record": rec,
                     "attested_by": None, "at": ""})
     contribs = []
@@ -704,7 +735,7 @@ def check_catalogue(sweep_dir: str | Path = SWEEP_DIR) -> list[str]:
     if (sweep_dir / "catalogue.json").exists():
         with tempfile.TemporaryDirectory() as tmp:
             t = Path(tmp)
-            for p in sweep_dir.glob("sector_*.json"):
+            for p in sweep_dir.glob(RECORD_GLOB):
                 shutil.copy(p, t / p.name)
             if (sweep_dir / "contributions").exists():
                 shutil.copytree(sweep_dir / "contributions", t / "contributions")
