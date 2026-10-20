@@ -29,6 +29,7 @@ import inspect
 import json
 import math
 import re
+import urllib.parse
 import sys
 import tomllib
 from pathlib import Path
@@ -41,6 +42,7 @@ TEMPLATE = PAPER / "paper.template.md"
 OUT_MD = PAPER / "paper.md"
 OUT_JSON = PAPER / "numbers.json"
 BENCHMARK = Path("docs/results/benchmark_real_tois.json")
+SAMPLE = Path("docs/results/benchmark_toi_sample.json")
 PI_MEN = Path("docs/results/pi_men_validation.json")
 INJECTION = Path("docs/results/injection_recovery_simulated_panel.md")
 CALIBRATION = Path("docs/results/reviewer_weights_full_panel.calibration.json")
@@ -77,6 +79,27 @@ def pct(r: dict | None, ci: bool = True) -> str:
         return "n/a"
     s = f"{100 * r['rate']:.0f}% ({r['k']}/{r['n']}"
     return s + (f"; 95% CI {100 * r['lo']:.0f}–{100 * r['hi']:.0f}%)" if ci else ")")
+
+
+class ClaimFailed(AssertionError):
+    """The data no longer supports a sentence of the paper: change the text, do not print it."""
+
+
+def claim(condition: bool, what: str) -> None:
+    if not condition:
+        raise ClaimFailed(f"the committed data no longer supports this claim in the paper: {what}")
+
+
+def rate(k: int, n: int) -> dict:
+    from exoplan.benchmark_toi import wilson
+
+    p, lo, hi = wilson(k, n)
+    return {"k": k, "n": n, "rate": p, "lo": lo, "hi": hi}
+
+
+def small_rate_of(summary: dict) -> dict:
+    sel = [b for b in summary["completeness_by_radius"] if b["bin"][1] <= 4]
+    return rate(sum(b["k"] for b in sel), sum(b["n"] for b in sel))
 
 
 def p0(x: float) -> str:
@@ -138,6 +161,7 @@ def injection_table(text: str) -> dict:
 # ---------- the table ----------
 def numbers(root: Path = ROOT) -> tuple[dict, dict]:
     from exoplan import aggregate, calibrate, discover, search, transitfit, vet
+    from exoplan import leaderboard as L
     from exoplan.benchmark_toi import FEED_SECTORS_PER_TARGET, wilson
     from exoplan.reviewers.claude import PROMPT_VERSION
 
@@ -163,9 +187,9 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
     loss = B["loss"]
     for half in ("held_out", "tuning"):
         for c in ("positive", "fp", "fa"):
-            L = loss[half][c]
-            n[f"{half}_{c}_n"], n[f"{half}_{c}_data"], n[f"{half}_{c}_ns"] = L["n"], L["data"], L["not_searchable"]
-            n[f"{half}_{c}_ns_pct"] = p0(L["not_searchable"] / L["n"]) if L["n"] else "n/a"
+            lc = loss[half][c]
+            n[f"{half}_{c}_n"], n[f"{half}_{c}_data"], n[f"{half}_{c}_ns"] = lc["n"], lc["data"], lc["not_searchable"]
+            n[f"{half}_{c}_ns_pct"] = p0(lc["not_searchable"] / lc["n"]) if lc["n"] else "n/a"
     n["held_out_total"] = sum(loss["held_out"][c]["n"] for c in ("positive", "fp", "fa"))
     n["held_out_searched"] = sum(loss["held_out"][c]["data"] for c in ("positive", "fp", "fa"))
     n["held_out_not_searchable"] = h["no_data"]
@@ -176,9 +200,29 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
              ho_completeness_rate=p0(h["completeness"]["rate"]), ho_fp_seen=pct(h["fp_seen"]),
              ho_fp_flagged=pct(h["fp_flagged_of_seen"]), ho_pos_flagged=pct(h["pos_flagged"]), ho_fa_seen=pct(h["fa_seen"]),
              ho_fp_passed=pct(h["fp_passed_unflagged"]),
-             ho_depth_ratio=f"{h['depth_ratio_median']:.2f}", ho_duration_ratio=f"{h['duration_ratio_median']:.2f}",
-             ho_alias_p=h["period_aliases"]["P"], ho_alias_none=h["period_aliases"]["null"],
-             ho_alias_other=sum(v for k, v in h["period_aliases"].items() if k not in ("P", "null")))
+             ho_depth_ratio=f"{h['depth_ratio_median']:.2f}", ho_duration_ratio=f"{h['duration_ratio_median']:.2f}")
+
+    # From the per-star rows: how the recovered CP/KP signals were found, and completeness in the radius bins
+    # Planet Hunters TESS used (3–4 R⊕ and above 4 R⊕).
+    tois = {t["toi"]: t for t in json.loads((root / SAMPLE).read_text())["tois"]}
+    pos = [r for r in B["per_star"] if r.get("real") and tois[r["toi"]]["half"] == "held_out" and tois[r["toi"]]["class"] == "positive"]
+    rec = [r for r in pos if r["real"]["recovered"]]
+    n.update(ho_rec_at_p=sum(r["real"]["period_alias"] == "P" for r in rec),
+             ho_rec_alias=sum(r["real"]["period_alias"] not in ("P", None) for r in rec),
+             ho_rec_noperiod=sum(r["real"]["period_alias"] is None for r in rec),
+             ho_rec_total=len(rec), ho_not_rec=len(pos) - len(rec), ho_pos_searched=len(pos))
+    claim(len(pos) == h["completeness"]["n"] and len(rec) == h["completeness"]["k"], "per-star rows disagree with the summary")
+
+    def radius_rate(lo_r, hi_r):
+        sel = [r for r in pos if tois[r["toi"]].get("radius_re") is not None and lo_r <= tois[r["toi"]]["radius_re"] < hi_r]
+        return rate(sum(r["real"]["recovered"] for r in sel), len(sel))
+
+    pht_mid, pht_large = radius_rate(3, 4), radius_rate(4, math.inf)
+    n.update(ho_rad_3to4=pct(pht_mid), ho_rad_above4=pct(pht_large))
+    claim(pht_mid["rate"] < 0.51 and pht_large["rate"] < 0.85, "the text says exoplan is below Planet Hunters TESS (51% and 85%) in both bins")
+    # The qualitative claims the text makes about these numbers: the script fails rather than print them untrue.
+    claim(small_rate_of(h)["rate"] < h["completeness"]["rate"] - 0.2, "the text says completeness is low for small planets")
+    claim(h["completeness"]["hi"] < 0.85, "the text says completeness is well below the Robovetter's and PHT's")
     names = {(0, 2): "r0", (2, 4): "r1", (4, 8): "r2", (8, 30): "r3"}
     for b in h["completeness_by_radius"]:
         n[f"ho_rad_{names[tuple(b['bin'])]}"] = pct(b)
@@ -214,6 +258,17 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
              feed_worst_per1000=f"{max(imp['control_new_signals_per_1000'].values()):.0f}",
              feed_bad="consistent with noise" if imp["bad"] else "not explained by noise alone",
              feed_fap_trials=disc["search"]["fap_trials"])
+    ratio = imp["expected_false_per_100_targets"] / imp["live_new_signals_per_100_targets"]
+    claim(imp["bad"] == (ratio >= 0.5), "the report's 'bad' verdict is expected ≥ half the live rate")
+    n["feed_ratio"] = f"{ratio:.2f}"
+    n["feed_half_sentence"] = (
+        f"Noise alone would account for {ratio:.2f} of that rate, at least half, so a `new_candidate` on the feed is more "
+        "likely noise than a signal." if ratio >= 0.5 else
+        f"Noise alone would account for {ratio:.2f} of that rate, less than half.")
+    ns = B["loss"]["held_out"]
+    skew = ns["fp"]["not_searchable"] / ns["fp"]["n"] - ns["positive"]["not_searchable"] / ns["positive"]["n"]
+    claim(skew >= 0.10, "the text says the unsearchable stars are skewed toward FP")
+    n["skew_points"] = f"{100 * skew:.0f}"
 
     # Tuning half and whole sample (reported, never used to choose a threshold).
     n.update(tu_completeness=pct(t["completeness"]), all_completeness=pct(a["completeness"]),
@@ -241,6 +296,7 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
                   f"sen_{key}_errors": v["errors"]})
     n.update(sen_n=se["n_stars"], sen_agree=se["agreement"]["agree"], sen_agree_n=se["agreement"]["n"],
              sen_phi=f"{se['agreement']['phi']:.2f}", sen_per_class=se["n_stars"] // 2, sen_prompt=PROMPT_VERSION)
+    claim(se["agreement"]["phi"] >= 0.7, "the text says the two personas count as one correlated voter (φ ≥ 0.7)")
 
     # Code version and the threshold audit.
     ta, cp = B["threshold_audit"], B["code_provenance"]
@@ -276,10 +332,16 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
 
     # Injection recovery and calibration.
     g = inj["grid"]
-    n.update(inj_300=f"{sum(g[(300, d)][0] for d in (1.0, 2.0, 4.0))}/{sum(g[(300, d)][1] for d in (1.0, 2.0, 4.0))}",
-             inj_1000_2h=f"{g[(1000, 2.0)][0]}/{g[(1000, 2.0)][1]}", inj_1000_4h=f"{g[(1000, 4.0)][0]}/{g[(1000, 4.0)][1]}",
-             inj_3000=f"{sum(g[(3000, d)][0] for d in (1.0, 2.0, 4.0))}/{sum(g[(3000, d)][1] for d in (1.0, 2.0, 4.0))}",
-             inj_fp=f"{inj['fp_per_empty']:.3f}", inj_empty=inj["n_empty"])
+    durs = sorted({d for _, d in g})
+    n["inj_grid"] = "; ".join(f"{dep:,} ppm: " + ", ".join(f"{g[(dep, d)][0]}/{g[(dep, d)][1]}" for d in durs)
+                              for dep in sorted({dep for dep, _ in g}))
+    n["inj_durations"] = ", ".join(f"{d:g}" for d in durs[:-1]) + f" and {durs[-1]:g} h"
+    n.update(inj_fp=f"{inj['fp_per_empty']:.3f}", inj_empty=inj["n_empty"])
+    claim(1000 * inj["fp_per_empty"] < h["controls"]["inverted"]["per_1000_star_sectors"],
+          "the text says the synthetic empty-subject rate is below the real-data controls'")
+    claim(min(h["controls"][v]["per_1000_star_sectors"] for v in ("inverted", "scrambled")) > 1
+          and min(h["feed"][v]["new_signals_per_1000"] for v in ("inverted", "scrambled")) > 1,
+          "the text says the control false-alarm rates are far above one per 1,000")
     cr = C["reviewers"]
     n.update(cal_n_inj=cr["claude-skeptic"]["n_injected"], cal_n_empty=cr["claude-skeptic"]["n_empty"],
              cal_sen_w=f"{cr['claude-skeptic']['weight']:.1f}",
@@ -305,12 +367,19 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
     import benchmark_real_tois as BR
 
     bc = BR._config()
+    claim(bc.stellar == "none", "the text says the benchmark took stellar parameters from the TOI table, not a TIC query")
+    # run_star writes stellar.json from the TOI table's own columns: Teff, log g, R★, and ρ★ when log g and R★ exist.
+    searched = [tois[r["toi"]] for r in B["per_star"] if r.get("real") and tois[r["toi"]]["half"] == "held_out"]
+    with_rho = sum(1 for t in searched if t.get("logg") and t.get("star_radius"))
+    with_teff = sum(1 for t in searched if t.get("teff"))
+    n.update(bench_with_rho=with_rho, bench_with_teff=with_teff, bench_searched=len(searched))
     n["bench_stellar_sentence"] = (
-        "The benchmark runs did not query the TIC (stellar = `none`), so their fits use the Sun's limb-darkening "
-        "coefficients and the stellar-density test cannot flag anything; the V-shape, odd/even and secondary tests do apply."
-        if bc.stellar == "none" else f"The benchmark runs read stellar parameters from the TIC (stellar = `{bc.stellar}`).")
-    n["bench_density_limit"] = ("**The density test was off in the benchmark** (no TIC query), so binaries it would catch "
-                                "were not flagged by it." if bc.stellar == "none" else "")
+        "The benchmark runs did not query the TIC: each star's parameters came from the TOI table's own columns "
+        f"(Teff, log g, R★). Limb darkening used Teff and log g (the Sun's values where missing; Teff was published for "
+        f"{with_teff} of {len(searched)} searched held-out stars), and ρ★ was computed from log g and R★, so the density "
+        f"test could act only on the {with_rho} stars with both.")
+    n["bench_density_limit"] = (f"**The density test could act only on {with_rho} of {len(searched)} searched held-out stars,** those "
+                                "whose TOI-table entry gives both log g and R★.")
 
     # The leaderboard's seeded scores.
     for e in LB["entries"]:
@@ -321,8 +390,12 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
         prs, los, his = wilson(ks, ns)
         ctl = lambda v: pct(sc["controls"][v]["stars_with_any"]) if sc["controls"][v] else "not measured"  # noqa: E731
         n.update({f"{key}_compl": pct(sc["completeness_all_stars"]), f"{key}_small": pct({"k": ks, "n": ns, "rate": prs, "lo": los, "hi": his}) if ns else "n/a",
-                  f"{key}_fprej": pct(sc["fp_rejection"]), f"{key}_rel": pct(sc["reliability"]),
-                  f"{key}_inv": ctl("inverted"), f"{key}_scr": ctl("scrambled"), f"{key}_rank": e["rank"]})
+                  f"{key}_fprej": pct(sc["fp_rejection"]), f"{key}_fprej_all": pct(sc["fp_rejection_all_stars"]),
+                  f"{key}_rel": pct(sc["reliability"]), f"{key}_j": L.jtext(sc["youden_j"]),
+                  f"{key}_inv": ctl("inverted"), f"{key}_scr": ctl("scrambled"),
+                  f"{key}_rank": e["rank"] if e["ranked"] else f"unranked ({e['unranked_reason']})"})
+    claim(all(e["rank"] is None for e in LB["entries"] if e["scope"] == "sentinel_subsample"),
+          "the text says the subsample is never ranked")
     n.update(lb_inputs_sha=LB["inputs_sha256"], lb_entries=len(LB["entries"]), lb_refused=len(LB["refused"]),
              lb_mix_pos=next(e for e in LB["entries"] if e["id"] == "probes")["scores"]["reliability_mix"]["positive"],
              lb_mix_fp=next(e for e in LB["entries"] if e["id"] == "probes")["scores"]["reliability_mix"]["fp"],
@@ -330,8 +403,8 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
     # Do the subsample entries' completeness intervals all overlap? (Then the subsample cannot order them.)
     sub = [e["scores"]["completeness_all_stars"] for e in LB["entries"] if e["scope"] == "sentinel_subsample"]
     overlap = all(a["lo"] <= b["hi"] and b["lo"] <= a["hi"] for a in sub for b in sub)
-    n["lb_subsample_overlap"] = ("every pair of completeness intervals overlaps, so the subsample cannot order these "
-                                 "configurations" if overlap else "not every pair of completeness intervals overlaps")
+    n["lb_subsample_overlap"] = ("every pair of their completeness intervals overlaps"
+                                 if overlap else "not every pair of their completeness intervals overlaps")
 
     # Published reference values, with their citations.
     for k, v in R["values"].items():
@@ -351,7 +424,7 @@ def bibliography(R: dict) -> str:
     rows = []
     for k, v in sorted(R["refs"].items(), key=lambda kv: (kv[1]["authors"], kv[1]["year"])):
         where = ", ".join(x for x in (v["journal"], v["volume"], v["page"]) if x)
-        doi = f" doi:[{v['doi']}](https://doi.org/{v['doi']})" if v["doi"] else ""
+        doi = (f" doi:[{v['doi']}](https://doi.org/{urllib.parse.quote(v['doi'], safe='/:;().-_')})" if v["doi"] else "")
         rows.append(f"* {v['authors']} {v['year']}, {v['title']}. {where}.{doi}")
     return "\n".join(rows)
 

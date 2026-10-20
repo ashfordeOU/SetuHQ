@@ -32,14 +32,17 @@ measure the deterministic panel on a frozen, blind sample of {{sample_total}} TE
 split by star into a tuning and a held-out half, with flux-inverted and block-scrambled copies of every light
 curve as false-alarm controls. On the held-out half the panel recovers {{ho_completeness}} of the CP/KP TOIs
 on stars with SPOC 2-minute data, but only {{ho_rad_r0}} {{ho_rad_r0_bin}} and {{ho_rad_r1}} at {{ho_rad_r1_bin}}. It finds the
-dip of {{ho_fp_seen}} of the false-positive TOIs and rejects or flags {{ho_fp_flagged}} of those. The controls
+dip of {{ho_fp_seen}} of the false-positive TOIs with 2-minute data and rejects or flags {{ho_fp_flagged}} of the
+dips it found; counted over every held-out FP star, {{lb_probes_fprej_all}} are not offered as clean candidates.
+The controls
 show that the live discovery feed's "new" signals are {{feed_bad}}: the feed's own admission rule passes
 {{feed_inverted_per1000}} and {{feed_scrambled_per1000}} false signals per 1,000 star-sectors on the inverted and
 scrambled curves, about {{feed_expected_per100}} per 100 targets, against {{feed_live_per100}} per 100 on the live
 feed. The two Sentinel personas, tested on a stated subsample of {{sen_n}} held-out stars, each mark
 {{sen_vol_cpkp}} of the CP/KP dips and agree on {{sen_agree}} of {{sen_agree_n}} stars (φ = {{sen_phi}}): they are one
 correlated voter, not two. We report a known bug in the code that produced these numbers, the class skew
-of the stars that could not be searched, and a public leaderboard on the frozen sample. Nothing here is a
+of the stars that could not be searched, and a public leaderboard on the frozen sample that scores submitted
+events itself and ranks by Youden's J, so that calling every TOI a planet scores zero. Nothing here is a
 discovery, and no exoplan output is called a confirmed or validated planet.
 
 ## 1 Introduction
@@ -56,6 +59,8 @@ Automated vetting has a longer quantitative record. Kepler's Robovetter, a deter
 measured for completeness with injected transits and for reliability with inverted and scrambled light
 curves ({{cite_coughlin2016}}; {{cite_thompson2018}}); for periods below 100 days its DR25 catalogue reached a
 completeness {{ref_robovetter_completeness}} and a reliability {{ref_robovetter_reliability}} ({{cite_thompson2018}}).
+That completeness is the vetter's alone: it is measured on injected transits that the pipeline had already detected
+as threshold-crossing events, whereas exoplan's completeness below is end to end, from light curve to vetted dip.
 Machine-learned vetters rank threshold-crossing events by learning from labelled examples: AstroNet ranked a
 plausible planet above a false positive in {{ref_astronet_ranking}} of test pairs ({{cite_shallue2018}}), a variant
 triages and vets TESS candidates ({{cite_yu2019}}), and ExoMiner reports {{ref_exominer_recall}}
@@ -63,7 +68,7 @@ triages and vets TESS candidates ({{cite_yu2019}}), and ExoMiner reports {{ref_e
 not probabilities unless calibrated.
 
 Large language models that read images and explain their reasoning are a newer kind of reviewer. They have
-been used to classify astronomical images with human-readable explanations ({{cite_natastron2025}}). In the
+classified images of astronomical transients and explained the classifications in text ({{cite_stoppa2025}}). In the
 literature collected for this work we found no published benchmark of such reviewers on TESS transit vetting
 with controls and a held-out split, so we make no comparison with one. exoplan treats a language-model reviewer as one calibrated voice in a panel, beside
 deterministic detectors whose behaviour can be measured exactly, and asks what such a panel can claim on a
@@ -218,15 +223,15 @@ All rates are for the held-out half unless stated, with Wilson 95% intervals.
 | both halves | {{all_completeness}} |
 
 **Completeness is low for small planets.** {{ho_rad_small_bin_cap}} the panel recovers {{ho_rad_small}}; at {{ho_rad_r3_bin}} it recovers
-{{ho_rad_r3}}. The headline is therefore carried by giant planets, which dominate the CP/KP sample. Of the recovered
-signals, {{ho_alias_p}} were found at the TOI's period, {{ho_alias_other}} at an alias and {{ho_alias_none}} as single
-transits or without a period. On recovered CP/KP TOIs the fit's median depth and duration ratios to the TOI
-values are {{ho_depth_ratio}} and {{ho_duration_ratio}}.
+{{ho_rad_r3}}. The headline is therefore carried by giant planets, which dominate the CP/KP sample. Of the
+{{ho_pos_searched}} searchable CP/KP TOIs, {{ho_rec_total}} were recovered ({{ho_rec_at_p}} on a periodic signal at the TOI's
+period, {{ho_rec_alias}} at an alias of it, {{ho_rec_noperiod}} without a period) and {{ho_not_rec}} were not. On recovered CP/KP
+TOIs the fit's median depth and duration ratios to the TOI values are {{ho_depth_ratio}} and {{ho_duration_ratio}}.
 
-The injection-recovery benchmark of the Probes on synthetic light curves agrees in shape: they recovered
-{{inj_300}} transits of 300 ppm, {{inj_1000_2h}} and {{inj_1000_4h}} of 1,000 ppm at 2 and 4 h, and {{inj_3000}} of
-3,000 ppm, with {{inj_fp}} vetted candidates per empty subject over {{inj_empty}} empty subjects. Synthetic noise is
-not sky noise: the empty-subject rate there is far below what the real-data controls show next.
+The injection-recovery benchmark of the Probes on synthetic light curves agrees in shape. Recovered, by injected
+depth, at durations of {{inj_durations}}: {{inj_grid}}; with {{inj_fp}} vetted candidates per empty subject over
+{{inj_empty}} empty subjects. Synthetic noise is not sky noise: the empty-subject rate there is far below what the
+real-data controls show next.
 
 ### 5.2 False alarms: the controls, and the live feed
 
@@ -247,10 +252,11 @@ of them:
 
 **The feed's "new" signals are {{feed_bad}}.** The worse control gives {{feed_worst_per1000}} false new signals per
 1,000 star-sectors. The feed reviews {{feed_sectors_per_target}} sectors per target, so noise alone should give about
-{{feed_expected_per100}} false `new_candidate` signals per 100 targets. The live catalogue (updated
-{{feed_live_updated}}) holds {{feed_live_new}} distinct new signals over {{feed_live_targets}} targets: {{feed_live_per100}}
-per 100 (95% CI {{feed_live_ci}}). False alarms alone could account for at least half of that rate, so a
-`new_candidate` on the feed is more likely noise than a signal. The proposed fix (requiring the signal in each
+{{feed_expected_per100}} false `new_candidate` signals per 100 targets. This estimate is an approximation: it adds the
+single-sector control rate over the sectors the feed reviews, as if each sector were an independent draw, and it
+ignores that the feed reviews a star's two latest sectors, not its first, and that noise in the two sectors may be
+correlated. The live catalogue (updated {{feed_live_updated}}) holds {{feed_live_new}} distinct new signals over
+{{feed_live_targets}} targets: {{feed_live_per100}} per 100 (95% CI {{feed_live_ci}}). {{feed_half_sentence}} The proposed fix (requiring the signal in each
 of the two sectors independently, and a stricter FAP) has not been applied in the code measured here. It is
 to be chosen on the tuning half and measured once on the held-out half:
 
@@ -294,7 +300,8 @@ Sentinels were never run on the control light curves, so their false-alarm rate 
 ### 5.5 The class skew in the stars that could not be searched
 
 In the held-out half {{held_out_positive_ns_pct}} of CP/KP stars but {{held_out_fp_ns_pct}} of FP stars have no SPOC
-2-minute light curve. FP TOIs are more often found in full-frame images only. The FP measures above therefore
+2-minute light curve, a skew of {{skew_points}} percentage points. FP TOIs are more often found in full-frame images
+only. The FP measures above therefore
 describe {{held_out_fp_data}} of {{held_out_fp_n}} held-out FP TOIs, a population different from the full TOI FP list, and
 are not the panel's reliability on all FP TOIs. The loss is a property of the stars and is reported, not
 repaired.
@@ -325,25 +332,32 @@ last column is filled from that re-run.
 
 ### 5.7 The leaderboard's seeded entries
 
-The public leaderboard (Section 8) scores per-star outcomes on the held-out half. Seeded from the stored
-per-star results without re-running anything:
+The public leaderboard (Section 8) takes each method's detected events per held-out star and scores them itself
+with the benchmark's own matching. Its rank key is Youden's J ({{cite_youden1950}}), completeness over every CP/KP
+star plus FP rejection over every FP star minus one, with a square-and-add interval from the two Wilson
+intervals ({{cite_newcombe1998}}): a method that calls every TOI a planet scores J = 0. Only held-out entries
+measured on both controls are ranked. Seeded from the benchmark's stored events without re-running anything:
 
-| entry | scope | completeness, all CP/KP stars | {{ho_rad_small_bin}} | FP rejection | inverted control: stars with any | reliability |
-|---|---|---|---|---|---|---|
-| Probes only | held-out half | {{lb_probes_compl}} | {{lb_probes_small}} | {{lb_probes_fprej}} | {{lb_probes_inv}} | {{lb_probes_rel}} |
-| Probes only | Sentinel subsample | {{lb_probes_subsample_compl}} | {{lb_probes_subsample_small}} | {{lb_probes_subsample_fprej}} | {{lb_probes_subsample_inv}} | {{lb_probes_subsample_rel}} |
-| Sentinel · Volunteer alone | Sentinel subsample | {{lb_claude_volunteer_compl}} | {{lb_claude_volunteer_small}} | {{lb_claude_volunteer_fprej}} | {{lb_claude_volunteer_inv}} | {{lb_claude_volunteer_rel}} |
-| Sentinel · Skeptic alone | Sentinel subsample | {{lb_claude_skeptic_compl}} | {{lb_claude_skeptic_small}} | {{lb_claude_skeptic_fprej}} | {{lb_claude_skeptic_inv}} | {{lb_claude_skeptic_rel}} |
-| Probes + Sentinels (either) | Sentinel subsample | {{lb_probes_or_sentinel_compl}} | {{lb_probes_or_sentinel_small}} | {{lb_probes_or_sentinel_fprej}} | {{lb_probes_or_sentinel_inv}} | {{lb_probes_or_sentinel_rel}} |
-| Probes + Sentinels (both) | Sentinel subsample | {{lb_probes_and_sentinel_compl}} | {{lb_probes_and_sentinel_small}} | {{lb_probes_and_sentinel_fprej}} | {{lb_probes_and_sentinel_inv}} | {{lb_probes_and_sentinel_rel}} |
+| entry | scope | rank | Youden J | completeness, all CP/KP stars | {{ho_rad_small_bin}} | FP rejection, all FP stars | inverted control: stars with any | reliability |
+|---|---|---|---|---|---|---|---|---|
+| Probes only | held-out half | {{lb_probes_rank}} | {{lb_probes_j}} | {{lb_probes_compl}} | {{lb_probes_small}} | {{lb_probes_fprej_all}} | {{lb_probes_inv}} | {{lb_probes_rel}} |
+| Probes only | Sentinel subsample | not ranked | {{lb_probes_subsample_j}} | {{lb_probes_subsample_compl}} | {{lb_probes_subsample_small}} | {{lb_probes_subsample_fprej_all}} | {{lb_probes_subsample_inv}} | {{lb_probes_subsample_rel}} |
+| Sentinel · Volunteer alone | Sentinel subsample | not ranked | {{lb_claude_volunteer_j}} | {{lb_claude_volunteer_compl}} | {{lb_claude_volunteer_small}} | {{lb_claude_volunteer_fprej_all}} | {{lb_claude_volunteer_inv}} | {{lb_claude_volunteer_rel}} |
+| Sentinel · Skeptic alone | Sentinel subsample | not ranked | {{lb_claude_skeptic_j}} | {{lb_claude_skeptic_compl}} | {{lb_claude_skeptic_small}} | {{lb_claude_skeptic_fprej_all}} | {{lb_claude_skeptic_inv}} | {{lb_claude_skeptic_rel}} |
+| Probes + Sentinels, either (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | {{lb_probes_or_sentinel_j}} | {{lb_probes_or_sentinel_compl}} | {{lb_probes_or_sentinel_small}} | {{lb_probes_or_sentinel_fprej_all}} | {{lb_probes_or_sentinel_inv}} | {{lb_probes_or_sentinel_rel}} |
+| Probes + Sentinels, both (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | {{lb_probes_and_sentinel_j}} | {{lb_probes_and_sentinel_compl}} | {{lb_probes_and_sentinel_small}} | {{lb_probes_and_sentinel_fprej_all}} | {{lb_probes_and_sentinel_inv}} | {{lb_probes_and_sentinel_rel}} |
 
-FP rejection counts every searched FP star whose TOI dip was not offered as a clean candidate (recovered and
-not flagged). Reliability is the share of clean candidates on TOI dips that are CP/KP, on this sample's class
-mix ({{lb_mix_pos}} CP/KP, {{lb_mix_fp}} FP and {{lb_mix_fa}} FA searched held-out stars), which is not the TOI
-catalogue's. The two Probes + Sentinels rules were stated before scoring as star-level combinations of the
-stored outcomes: *either* gives a clean candidate when the Probes give one or either Sentinel marks the dip as a
+Two FP measures appear in this paper and they differ by definition. Section 5.3's "rejected or flagged" is over
+the FP dips the panel found ({{ho_fp_flagged}}); the leaderboard's FP rejection is over every FP star of the
+scope, counting a star whose TOI dip was not found, not searched, or found and flagged as not offered as a clean
+candidate ({{lb_probes_fprej_all}} for the Probes; {{lb_probes_fprej}} over the searched FP stars only).
+Reliability is the share of clean candidates on TOI dips that are CP/KP, on this sample's class mix
+({{lb_mix_pos}} CP/KP, {{lb_mix_fp}} FP and {{lb_mix_fa}} FA searched held-out stars), which is not the TOI catalogue's. The
+two Probes + Sentinels rules were stated before any of them was scored, as star-level combinations of the stored
+outcomes: *either* gives a clean candidate when the Probes give one or either Sentinel marks the dip as a
 potential planet; *both* only when the Probes give one and a Sentinel marks it too. They are not a run of the
-panel's mark-level consensus. On {{sen_n}} stars {{lb_subsample_overlap}}.
+panel's mark-level consensus. **{{sen_n}} stars cannot order these configurations:** the subsample is never ranked,
+and {{lb_subsample_overlap}}.
 
 ### 5.8 Single-star validation: pi Men c
 
@@ -365,19 +379,23 @@ These references measure different populations, data and tasks; they are context
 
 | quantity | exoplan (held-out) | published reference |
 |---|---|---|
-| completeness | {{ho_completeness}} on searchable stars | Robovetter DR25: {{ref_robovetter_completeness}} for P < 100 d ({{cite_thompson2018}}) |
-| completeness, small planets | {{ho_rad_r1}} at {{ho_rad_r1_bin}} | Planet Hunters TESS: {{ref_pht_mid}} at 3 to 4 R⊕, {{ref_pht_large}} above 4 R⊕ ({{cite_eisner2021}}) |
-| completeness, giants | {{ho_rad_r3}} at {{ho_rad_r3_bin}} | Planet Hunters TESS: {{ref_pht_large}} above 4 R⊕ ({{cite_eisner2021}}) |
+| completeness | {{ho_completeness}} on searchable stars, end to end (search, review, vetting) | Robovetter DR25: {{ref_robovetter_completeness}} for P < 100 d, vetting alone, on injected transits already detected as TCEs ({{cite_thompson2018}}) |
+| completeness, 3 to 4 R⊕ | {{ho_rad_3to4}} | Planet Hunters TESS: {{ref_pht_mid}} ({{cite_eisner2021}}) |
+| completeness, above 4 R⊕ | {{ho_rad_above4}} | Planet Hunters TESS: {{ref_pht_large}} ({{cite_eisner2021}}) |
 | reliability against inverted and scrambled data | vetted false dips on {{ho_inverted_any}} and {{ho_scrambled_any}} of star-sectors | Robovetter DR25: reliability {{ref_robovetter_reliability}} for P < 100 d ({{cite_thompson2018}}) |
 | how many TOIs are false positives | the sample is stratified, not representative | prime mission: {{ref_toi_fp_fraction}} found false positive by follow-up ({{cite_guerrero2021}}); Kepler KOIs overall {{ref_kepler_fp_rate}} ({{cite_fressin2013}}) |
 | statistical validation | none in the code measured; S3, FP TOIs labelled validated: {{fpp_fp_validated}} | TRICERATOPS "validated": {{ref_triceratops_thresholds}} ({{cite_giacalone2021}}); vespa on all KOIs ({{cite_morton2016}}) |
 
-exoplan is well below the Robovetter and Planet Hunters TESS on completeness, and far from Robovetter-level
-reliability: its vetted false-alarm rate on the controls is {{ho_inverted_per1000}} and {{ho_scrambled_per1000}} per
-1,000 star-sectors before the feed's rule, and {{feed_inverted_per1000}} and {{feed_scrambled_per1000}} after it, against
-the atlas's proposed target of at most one per 1,000. The comparison is not like for like (Kepler's four-year
-baseline against one TESS sector; the Robovetter's reliability is a property of its candidate catalogue, ours a
-rate per star-sector), and we make no claim of matching either.
+The radius rows use the bins Planet Hunters TESS reported, computed from the per-star rows and the TOI table's
+radii. exoplan is below the Robovetter and Planet Hunters TESS on completeness in every comparable row, and far
+from Robovetter-level reliability: its vetted false-alarm rate on the controls is {{ho_inverted_per1000}} and
+{{ho_scrambled_per1000}} per 1,000 star-sectors before the feed's rule, and {{feed_inverted_per1000}} and
+{{feed_scrambled_per1000}} after it, against the project's own proposed target of at most one per 1,000. The
+comparison is not like for like. The Robovetter's completeness measures the vetting step on events the Kepler
+pipeline had already detected, while exoplan's includes its own search; Kepler had a four-year baseline against
+one TESS sector here; Planet Hunters TESS searched sectors 1 to 26 with human volunteers and science-team vetting;
+and the Robovetter's reliability is a property of its candidate catalogue, ours a rate per star-sector. We make no
+claim of matching either.
 
 ## 7 Limitations
 
@@ -395,7 +413,8 @@ rate per star-sector), and we make no claim of matching either.
   that loss is skewed toward FP TOIs (Section 5.5). Single transits and long periods are outside the sample's
   {{period_lo}} to {{period_hi}} d range.
 * **Dispositions are the reference, not the truth.** Some CP/KP and FP labels may be wrong.
-* **The feed admits noise** at a rate comparable to its observed `new_candidate` rate (Section 5.2).
+* **The feed's `new_candidate` signals are {{feed_bad}}:** noise alone would account for {{feed_ratio}} of their
+  rate (Section 5.2).
 * **FAPs are bounded by the trials;** the Gumbel tail is extrapolated and indicative only.
 * **Synthetic injections are not sky noise** (Section 5.1).
 
@@ -416,10 +435,15 @@ independent evidence such as radial velocities, and no exoplan output is called 
   checks the paper's numbers against the JSON.
 * **The leaderboard.** `docs/leaderboard/` holds the submission format, the rules, the public inputs (the
   tuning half with labels, the held-out half without; sha256 `{{lb_inputs_sha}}`) and the scored table
-  ({{lb_entries}} entries, {{lb_refused}} refused). `exoplan leaderboard <file>` scores a submission and refuses one that
-  states anything but that hash, says it was tuned on the held-out half, carries a label field, or does not
-  cover its scope. The hash is an attestation: the held-out labels are public, so no check can prove they were
-  not read.
+  ({{lb_entries}} entries, {{lb_refused}} refused). A submission lists each star's detected events on the real and
+  control light curves; the leaderboard matches them to the ephemeris and counts control false alarms itself.
+  `exoplan leaderboard <file>` scores a submission and refuses one that states anything but that hash, says it was
+  tuned on the held-out half, carries a field outside the whitelist, or does not cover its scope.
+* **What the leaderboard cannot check, and future work.** The hash is an attestation: the held-out labels are
+  public, so no check can prove they were not read, and a method's own pass verdicts and control lists are its own
+  report. Two designs would close these gaps and are not built: maintainer-held decoy light curves under opaque
+  ids, whose truth only the maintainers hold, and prospective scoring on TOIs still undispositioned, scored once
+  TFOPWG dispositions them.
 
 ## Pending results
 

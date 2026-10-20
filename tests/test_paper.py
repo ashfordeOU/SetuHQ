@@ -134,7 +134,7 @@ def test_every_doi_is_from_the_atlas_or_checked_on_crossref():
     known = {v["doi"] for v in REFS["refs"].values() if v["doi"]}
     assert dois == known
     assert {v["source"] for v in REFS["refs"].values()} <= {"ATLAS", "crossref"}
-    assert sorted(k for k, v in REFS["refs"].items() if v["source"] == "crossref") == ["natastron2025", "wilson1927", "yu2019"]
+    assert sorted(k for k, v in REFS["refs"].items() if v["source"] == "crossref") == ["newcombe1998", "stoppa2025", "wilson1927", "youden1950", "yu2019"]
     # Every published value cites a reference in the list.
     assert all(v["ref"] in REFS["refs"] for v in REFS["values"].values())
     # Every reference is cited in the text, except through the bibliography alone.
@@ -149,3 +149,70 @@ def test_wording_rules():
     for bad in ("we discovered", "exoplan discovered", "we confirm", "new planet", "newly discovered"):
         assert bad not in FLAT.lower(), bad
     assert "aastex631" in FLAT and "Markdown only" in FLAT
+
+
+SAMPLE = {t["toi"]: t for t in json.loads((ROOT / "docs/results/benchmark_toi_sample.json").read_text())["tois"]}
+HELD_POS = [r for r in B["per_star"] if r.get("real") and SAMPLE[r["toi"]]["half"] == "held_out"
+            and SAMPLE[r["toi"]]["class"] == "positive"]
+
+
+def test_recovered_signals_are_counted_from_the_per_star_rows():
+    rec = [r for r in HELD_POS if r["real"]["recovered"]]
+    at_p = sum(r["real"]["period_alias"] == "P" for r in rec)
+    none = sum(r["real"]["period_alias"] is None for r in rec)
+    assert len(rec) == H["completeness"]["k"] and len(HELD_POS) == H["completeness"]["n"]
+    assert (f"Of the {len(HELD_POS)} searchable CP/KP TOIs, {len(rec)} were recovered ({at_p} on a periodic signal at "
+            "the TOI's period") in FLAT
+    assert f"{none} without a period) and {len(HELD_POS) - len(rec)} were not" in FLAT
+
+
+def test_planet_hunters_comparison_uses_its_own_radius_bins():
+    def bin_rate(lo, hi):
+        sel = [r for r in HELD_POS if SAMPLE[r["toi"]].get("radius_re") is not None and lo <= SAMPLE[r["toi"]]["radius_re"] < hi]
+        k, n = sum(r["real"]["recovered"] for r in sel), len(sel)
+        p, low, up = wilson(k, n)
+        return pct({"k": k, "n": n, "rate": p, "lo": low, "hi": up})
+
+    assert f"| completeness, 3 to 4 R⊕ | {bin_rate(3, 4)} | Planet Hunters TESS: 51%" in FLAT
+    assert f"| completeness, above 4 R⊕ | {bin_rate(4, float('inf'))} | Planet Hunters TESS: 85%" in FLAT
+    assert "vetting alone, on injected transits already detected as TCEs" in FLAT
+    assert "atlas" not in re.sub(r"<!--.*?-->", "", PAPER, flags=re.S).split("## References")[0].lower()
+
+
+def test_the_feed_estimate_is_called_an_approximation():
+    assert "This estimate is an approximation" in FLAT
+
+
+def _tmp_root(tmp_path):
+    for rel in ("docs/results/benchmark_real_tois.json", "docs/results/pi_men_validation.json",
+                "docs/results/injection_recovery_simulated_panel.md", "docs/results/reviewer_weights_full_panel.calibration.json",
+                "docs/results/benchmark_toi_sample.json", "docs/leaderboard/leaderboard.json", "docs/paper/references.json",
+                "docs/paper/paper.template.md", "configs/default.toml", "configs/discovery.toml",
+                "runs/tess-pi-men-s1/candidates.json"):
+        dst = tmp_path / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_bytes((ROOT / rel).read_bytes())
+    return tmp_path
+
+
+@pytest.mark.parametrize("what", ["correlated voter", "noise", "'bad' verdict", "skewed toward FP"])
+def test_qualitative_claims_fail_or_change_when_the_data_stops_supporting_them(tmp_path, what):
+    root = _tmp_root(tmp_path)
+    assert PN.build(root)[0] == PAPER  # an exact copy renders the committed paper
+    path = root / "docs/results/benchmark_real_tois.json"
+    data = json.loads(path.read_text())
+    if what == "correlated voter":
+        data["sentinels"]["agreement"]["phi"] = 0.4
+    elif what == "noise":
+        data["feed_implication"].update(expected_false_per_100_targets=2.0, bad=False)
+    elif what == "'bad' verdict":
+        data["feed_implication"]["bad"] = False
+    else:
+        data["loss"]["held_out"]["fp"]["not_searchable"] = 2
+    path.write_text(json.dumps(data))
+    if what == "noise":  # below one half the sentence changes instead of failing
+        paper = " ".join(PN.build(root)[0].split())
+        assert "less than half" in paper and "more likely noise than a signal" not in paper
+        return
+    with pytest.raises(PN.ClaimFailed, match=what):
+        PN.build(root)
