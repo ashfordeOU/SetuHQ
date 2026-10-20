@@ -27,10 +27,10 @@
         "pi-men-dark.svg"
       ],
       "sources": {
-        "runs/tess-pi-men-s1": "770fdf41bb743cc9ef423fb474e47ce22b16628957ce77460521adcfc04c74ec",
+        "runs/tess-pi-men-s1": "1c7f5983ee2ef55744e50e44c6de1ad23cbb7a859e10d370172c7745f922a08c",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "76de67d"
+      "commit": "c25d1cd"
     },
     "benchmark": {
       "files": [
@@ -39,10 +39,10 @@
       ],
       "sources": {
         "docs/results/benchmark_real_tois.json": "b5bccb3918b249177b41ce49cf63d895c69903a6923673666ec5763497c765a9",
-        "docs/results/benchmark_real_tois.md": "def4eeff5ee71a93b36e639976501db335fd1e2d1d41af2241e02690d2c4b10e",
+        "docs/paper/references.json": "0b1742b0fd5e4b5e4bb401f4acb7ea6b8b9534b334dc69781ec22de89928d113",
         "docs/results/benchmark_toi_sample.json": "b0ac192b2363be04579c856e82f275ec4a451f0566e83f4ef87c4287c4fe39f7"
       },
-      "commit": "1180dfe"
+      "commit": "d6f8ae8"
     },
     "feed-noise": {
       "files": [
@@ -52,7 +52,7 @@
       "sources": {
         "docs/results/benchmark_real_tois.json": "b5bccb3918b249177b41ce49cf63d895c69903a6923673666ec5763497c765a9"
       },
-      "commit": "1180dfe"
+      "commit": "d6f8ae8"
     },
     "sky-coverage": {
       "files": [
@@ -70,11 +70,11 @@
         "flow-pipeline-dark.svg"
       ],
       "sources": {
-        "runs/tess-pi-men-s1": "770fdf41bb743cc9ef423fb474e47ce22b16628957ce77460521adcfc04c74ec",
+        "runs/tess-pi-men-s1": "1c7f5983ee2ef55744e50e44c6de1ad23cbb7a859e10d370172c7745f922a08c",
         "configs/tess_pi_men_s1.toml": "ecc1bf3a744ca6aea3199135cbb9f907b5203d13a047bb608305dc530a0c968b",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "76de67d"
+      "commit": "c25d1cd"
     },
     "architecture": {
       "files": [
@@ -82,11 +82,11 @@
         "architecture-dark.svg"
       ],
       "sources": {
-        "docs/leaderboard.json": "354de06d54cda342905eea826e5cba92aed3ca33faa95cad96a04d455069d745",
+        "docs/threshold_sweep.json": "56b5661ec49a113ed59d5663fb3fb07c03e013a20667a12abd712fd07db0134e",
         "docs/results/exoplanet_map.json": "949a62e97e0ba84eb55c1a7675b8e6b065e519de43e2dcdc79a49761707dd56e",
         "docs/results/benchmark_real_tois.json": "b5bccb3918b249177b41ce49cf63d895c69903a6923673666ec5763497c765a9"
       },
-      "commit": "1180dfe"
+      "commit": "9e42c0b"
     },
     "methods-strip": {
       "files": [
@@ -122,10 +122,10 @@
     }
   },
   "repo_counts": {
-    "modules": 32,
-    "tests": 355,
+    "modules": 48,
+    "tests": 724,
     "network": 2,
-    "slow": 3,
+    "slow": 4,
     "chapters": 15,
     "leaderboard_trials": 7,
     "catalogue": 8376,
@@ -135,12 +135,19 @@
       "calibrate",
       "benchmark",
       "discover",
+      "export",
+      "batch",
+      "sweep",
+      "bundle",
+      "ingest",
+      "check-sweep",
       "dashboard",
       "docket",
       "app",
       "crossmatch",
       "plate",
-      "report"
+      "report",
+      "leaderboard"
     ]
   },
   "app_screenshots": {
