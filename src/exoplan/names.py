@@ -1,6 +1,7 @@
 """Display names for the reviewer panel: the Sentinels and the Probes.
 
-The Claude reviewers are shown as Sentinels ("Sentinel · Volunteer", "Sentinel · Skeptic") and the
+The AI reviewers are shown as Sentinels ("Sentinel · Volunteer", "Sentinel · Skeptic") whatever their
+provider (the provider and model are shown beside the name, never in it), and the
 deterministic simulated reviewers as Probes ("Probe · Sensitive", "Probe · Typical", "Probe · Cautious").
 Only what the pages show changes: reviewer ids stay as they are in every data file, CSV, JSON and URL,
 and the pages keep each id beside its name (a tooltip or small mono text) so it can be traced.
@@ -8,17 +9,35 @@ and the pages keep each id beside its name (a tooltip or small mono text) so it 
 
 from __future__ import annotations
 
-SENTINEL_KINDS = ("claude", "claude_code")
+# Every Sentinel config type. Claude (Anthropic) is the default; the others are supported and labelled.
+SENTINEL_KINDS = ("claude", "claude_code", "openai", "gemini", "openai_compatible")
 PROBE_KINDS = ("simulated",)
 
 # The attribution, word for word, on the Panel page and in the Docket's provenance.
-ATTRIBUTION = "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors."
+ATTRIBUTION = ("Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
+               "Probes are deterministic matched-filter detectors.")
 
-_PREFIXES = {"sentinel": ("claude-",), "probe": ("volunteer-", "sim-", "probe-")}
+# Who runs each Sentinel kind: the provider tag shown beside a Sentinel's name.
+PROVIDER_BY_KIND = {
+    "claude": "Claude (Anthropic API)",
+    "claude_code": "Claude (Claude Code CLI)",
+    "openai": "OpenAI",
+    "gemini": "Google Gemini",
+    "openai_compatible": "OpenAI-compatible endpoint",
+}
+
+# Id prefixes dropped from a display name: claude-skeptic, gpt-skeptic and gemini-skeptic are all "Sentinel · Skeptic".
+_PREFIXES = {"sentinel": ("claude-", "sentinel-", "gpt-", "openai-", "gemini-", "compat-", "local-", "ollama-"),
+             "probe": ("volunteer-", "sim-", "probe-")}
+
+
+def provider_label(kind: str | None) -> str | None:
+    """'OpenAI' for an openai Sentinel, 'Claude (Claude Code CLI)' for claude_code; None for a Probe."""
+    return PROVIDER_BY_KIND.get(kind or "")
 
 
 def role(kind: str | None) -> str | None:
-    """'sentinel' for a Claude reviewer, 'probe' for a simulated one, None otherwise."""
+    """'sentinel' for a Sentinel (an AI reviewer on any provider), 'probe' for a simulated one, None otherwise."""
     if kind in SENTINEL_KINDS:
         return "sentinel"
     if kind in PROBE_KINDS:
@@ -64,7 +83,29 @@ def panel_phrase(n_sentinels: int, n_probes: int, n_other: int = 0) -> str:
     return parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + " and " + parts[-1]
 
 
+def reviewer_provenance(manifest: dict) -> dict[str, dict]:
+    """Each Sentinel's provider, model and calibration status, from a run manifest, for the pages.
+
+    The model is the one the provider reported when the manifest has it (``models_reported``), else
+    the configured one. A run written before providers were recorded gives each Claude Sentinel its
+    kind's provider and the model as "not recorded".
+    """
+    out = {}
+    for r in manifest.get("reviewers") or []:
+        if r.get("kind") not in SENTINEL_KINDS:
+            continue
+        reported = r.get("models_reported") or []
+        out[r["id"]] = {
+            "provider_label": r.get("provider_label") or PROVIDER_BY_KIND.get(r["kind"], r["kind"]),
+            "model": ", ".join(reported) if reported else (r.get("model") or "model not recorded"),
+            "model_reported": bool(reported),
+            "calibration": r.get("calibration"),
+        }
+    return out
+
+
 def reviewer_names(kinds: dict[str, str]) -> dict[str, dict]:
     """For the pages: each reviewer id with its display name, lane label and role."""
-    return {rid: {"id": rid, "name": display_name(rid, k), "short": short_name(rid, k), "role": role(k) or "other"}
+    return {rid: {"id": rid, "name": display_name(rid, k), "short": short_name(rid, k), "role": role(k) or "other",
+                  "provider": provider_label(k)}
             for rid, k in kinds.items()}

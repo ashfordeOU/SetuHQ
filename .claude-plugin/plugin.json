@@ -1,0 +1,31 @@
+{
+  "name": "exoplan",
+  "displayName": "SetuHQ transit search",
+  "version": "0.1.0",
+  "description": "Search, vet and explain transit candidates in public NASA TESS data from an AI assistant, over the exoplan-mcp stdio server: the exoplanet catalogue, stored runs with full provenance, BLS search and vetting, the limb-darkened transit fit, a bounded false-alarm probability, the Methods physics and the benchmarks. Every answer carries provenance and honesty labels; a candidate is never called a discovery. Requires exoplan-mcp on PATH (pip install -e '.[mcp]' in a SetuHQ checkout).",
+  "author": {
+    "name": "Ashforde OÜ",
+    "email": "contact@ashforde.org",
+    "url": "https://ashforde.org"
+  },
+  "repository": "https://github.com/ashfordeOU/SetuHQ",
+  "license": "MIT",
+  "keywords": [
+    "exoplanets",
+    "tess",
+    "transit",
+    "astronomy",
+    "citizen-science",
+    "planet-hunters",
+    "mcp"
+  ],
+  "mcpServers": {
+    "exoplan": {
+      "command": "exoplan-mcp",
+      "args": [],
+      "env": {
+        "EXOPLAN_ROOT": "${CLAUDE_PLUGIN_ROOT}"
+      }
+    }
+  }
+}

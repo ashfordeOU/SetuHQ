@@ -30,7 +30,7 @@ import math
 import re
 from pathlib import Path
 
-from exoplan.names import ATTRIBUTION
+from exoplan.names import ATTRIBUTION, SENTINEL_KINDS
 from exoplan.docket import OUTCOME_LABEL, docket_data
 
 UNCONFIRMED = "Candidate, unconfirmed."
@@ -198,9 +198,9 @@ def run_caption(c: dict, n_panel: int, kinds: dict[str, str], comparison: dict |
     unit = c.get("time_unit") or ""
     who = [r for r in kinds if r in (c.get("reviewers") or [])]
     n_sim = sum(1 for r in who if kinds[r] == "simulated")
-    n_cl = sum(1 for r in who if kinds[r] in ("claude", "claude_code"))
+    n_cl = sum(1 for r in who if kinds[r] in SENTINEL_KINDS)
     of_sim = sum(1 for k in kinds.values() if k == "simulated")
-    of_cl = sum(1 for k in kinds.values() if k in ("claude", "claude_code"))
+    of_cl = sum(1 for k in kinds.values() if k in SENTINEL_KINDS)
     parts = [
         f"Dip at {unit} {_f(c['t_center'], 3)}, {_f(c['depth_ppm'], 0)} ppm, {_f(c.get('duration_hours'), 2)} h, "
         f"SNR {_f(c['snr'], 1)}.",

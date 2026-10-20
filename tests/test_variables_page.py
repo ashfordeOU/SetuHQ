@@ -66,7 +66,9 @@ def test_every_figure_comes_from_the_committed_catalogue(pi_men_app):
 def test_the_page_states_the_slice_the_rules_the_control_and_the_attribution(pi_men_app):
     page = _page(pi_men_app)
     v = _route(page, "variables")
-    assert 'id="h-variables"' in v and "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors." in v
+    from exoplan.names import ATTRIBUTION
+
+    assert 'id="h-variables"' in v and ATTRIBUTION in v
     assert "Nothing here is a new or confirmed planet." in v and "separate from the discovery feed" in v
     for k in CAT["classes"]:
         assert k["rule"].replace("'", "&#x27;") in v

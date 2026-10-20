@@ -459,20 +459,39 @@ def sentinel_subsample(sample: dict, done: dict) -> list[dict]:
     return out
 
 
+def sentinel_panel(config: str | None) -> list:
+    """The Sentinels to run: the two Claude personas through the Claude Code CLI (the benchmarked default), or
+    the Sentinels of a run config's [[reviewers]] (any provider; Probes in it are ignored)."""
+    from exoplan.config import SENTINEL_TYPES, build_reviewers, load_config
+    from exoplan.reviewers.claude_code import ClaudeCodeReviewer
+
+    if config is None:
+        return [ClaudeCodeReviewer(reviewer_id=f"claude-{p}", persona=p, cache_dir=str(ROOT / "cache/claude-code"))
+                for p in ("volunteer", "skeptic")]
+    specs = [s for s in load_config(config).reviewers if s.get("type") in SENTINEL_TYPES]
+    return build_reviewers(specs, cache_root=ROOT / "cache")
+
+
 def cmd_sentinels(args) -> int:
-    """Both Sentinels (one Claude model, two personas) on the stated subsample's real light curves, subject by
-    subject, through the Claude Code CLI; responses cached in cache/claude-code."""
+    """The Sentinels on the stated subsample's real light curves, subject by subject. By default both Claude
+    personas through the Claude Code CLI (cached in cache/claude-code); with ``--panel CONFIG`` the Sentinels of
+    that config, on any provider. Each one runs only when its key, SDK or CLI is present here (a paid API is never
+    called without its key in the environment). Results are merged into cache/bench/sentinels.json by reviewer
+    id, so a provider added later is compared with every Sentinel already there (``report`` writes the φ table)."""
     import numpy as np
 
-    from exoplan.reviewers.claude_code import ClaudeCodeReviewer
     from exoplan.subjects import Subject
 
     sample = json.loads(SAMPLE.read_text())
     done = {t["tic"]: json.loads((CACHE / f"{t['tic']}.json").read_text()) for t in sample["tois"] if (CACHE / f"{t['tic']}.json").exists()}
     sub = sentinel_subsample(sample, done)
-    reviewers = [ClaudeCodeReviewer(reviewer_id=f"claude-{p}", persona=p, cache_dir=str(ROOT / "cache/claude-code")) for p in ("volunteer", "skeptic")]
-    if not all(r.available() for r in reviewers):
-        print("The Claude Code CLI is not available here; the Sentinels were not run.")
+    panel = sentinel_panel(args.panel)
+    for r in panel:
+        if not r.available():
+            print(f"{r.reviewer_id}: not run ({r.unavailable_reason()})")
+    reviewers = [r for r in panel if r.available()]
+    if not reviewers:
+        print("No Sentinel of this panel can run here; nothing was run.")
         return 1
     jobs = []
     for t in sub:
@@ -485,24 +504,30 @@ def cmd_sentinels(args) -> int:
     print(f"{len(sub)} stars, {len(jobs)} Sentinel reviews", flush=True)
 
     def one(job):
-        t, subj, png, shared = job
-        r = ClaudeCodeReviewer(reviewer_id=shared.reviewer_id, persona=shared.persona, cache_dir=shared.cache_dir)  # one per thread
+        t, subj, png, r = job
         try:
             c = r.review(subj, png)
             return t["toi"], r.reviewer_id, subj.subject_id, {"label": c.label, "reason": c.reason, "marks": [[m.t_start, m.t_end] for m in c.marks],
-                                                              "model": r.last_model, "called_at": r.last_called_at}
+                                                              "model": c.metadata.get("model"), "model_reported": c.metadata.get("model_reported"),
+                                                              "called_at": c.metadata.get("called_at")}
         except Exception as exc:  # noqa: BLE001
             return t["toi"], r.reviewer_id, subj.subject_id, {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}
 
     from concurrent.futures import ThreadPoolExecutor
 
-    results = {}
+    path = CACHE / "sentinels.json"
+    stored = json.loads(path.read_text()) if path.exists() else {}
+    results = stored.get("results") or {}
+    for r in reviewers:  # this run's answers replace any earlier ones of the same reviewer
+        for per in results.values():
+            per.pop(r.reviewer_id, None)
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         for i, (toi, rid, sid, res) in enumerate(pool.map(one, jobs), 1):
             results.setdefault(toi, {}).setdefault(rid, {})[sid] = res
             if i % 10 == 0:
                 print(f"{i}/{len(jobs)}", flush=True)
-    (CACHE / "sentinels.json").write_text(json.dumps({"subsample": [t["toi"] for t in sub], "results": results}, indent=1))
+    identities = (stored.get("reviewers") or {}) | {r.reviewer_id: r.describe() for r in reviewers}
+    path.write_text(json.dumps({"subsample": [t["toi"] for t in sub], "results": results, "reviewers": identities}, indent=1))
     return 0
 
 
@@ -514,35 +539,7 @@ def sentinel_scores(sample: dict) -> dict | None:
         return None
     from exoplan.discover import match_toi
 
-    data = json.loads(path.read_text())
-    toi = {t["toi"]: t for t in sample["tois"]}
-    rows = {}
-    for name, per in data["results"].items():
-        t = toi[name]
-        target = B.target_for(t)
-        for rid, subs in per.items():
-            ok = [s for s in subs.values() if "error" not in s]
-            hit = any(match_toi({"t_center": 0.5 * (a + b), "duration_hours": (b - a) * 24, "period_days": None, "time_unit": "BTJD"}, target)
-                      for s in ok if s["label"] == "potential_planet" for a, b in s["marks"])
-            rows.setdefault(name, {})[rid] = {"hit": hit, "errors": len(subs) - len(ok)}
-    from collections import Counter
-
-    models = Counter(s.get("model") or "not recorded" for per in data["results"].values() for subs in per.values() for s in subs.values())
-    out = {"subsample": data["subsample"], "n_stars": len(rows), "personas": {}, "models": dict(models),
-           "model_note": ("the model id the Claude Code CLI reported for each review (its modelUsage), with the call date; "
-                          "\"not recorded\" for reviews answered before exoplan stored it (the cache key holds only \"default\")")}
-    for rid in ("claude-volunteer", "claude-skeptic"):
-        pos = [{"x": r[rid]["hit"]} for n, r in rows.items() if rid in r and toi[n]["class"] == "positive"]
-        fp = [{"x": r[rid]["hit"]} for n, r in rows.items() if rid in r and toi[n]["class"] == "fp"]
-        out["personas"][rid] = {"cp_kp_marked": B.rates(pos, "x"), "fp_marked_as_planet": B.rates(fp, "x"),
-                                "errors": sum(r[rid]["errors"] for r in rows.values() if rid in r)}
-    both = [(r["claude-volunteer"]["hit"], r["claude-skeptic"]["hit"]) for r in rows.values() if len(r) == 2]
-    agree = sum(1 for a, b in both if a == b)
-    n11 = sum(1 for a, b in both if a and b); n00 = sum(1 for a, b in both if not a and not b)
-    n10 = sum(1 for a, b in both if a and not b); n01 = sum(1 for a, b in both if not a and b)
-    den = ((n11 + n10) * (n01 + n00) * (n11 + n01) * (n10 + n00)) ** 0.5
-    out["agreement"] = {"n": len(both), "agree": agree, "phi": (n11 * n00 - n10 * n01) / den if den else None}
-    return out
+    return B.sentinel_summary(json.loads(path.read_text()), sample, match_toi)
 
 
 def _git(*args) -> str:
@@ -592,17 +589,38 @@ def _threshold_values(rev: str | None) -> dict[str, str]:
 
 # Values that decide nothing: where caches go, the cache key's version, and the floor below which the indicative
 # Gumbel tail is not printed (no rule reads the tail).
-NOT_THRESHOLDS = ("fap_cache", "FAP_CACHE_VERSION", "FAP_TAIL_FLOOR")
+NOT_THRESHOLDS = ("fap_cache", "FAP_CACHE_VERSION", "FAP_TAIL_FLOOR",
+                  # Which AI provider a Sentinel runs on, its endpoint, key variable and labels: no rule reads them.
+                  "KEY_ENV", "PROVIDER_LABELS", "_BASE_URL", "reviewers/gemini.py:BLOCKED", "reviewers/claude.py:DEFAULT_MODEL",
+                  "config.py:SENTINEL_TYPES")
+
+
+def _moved(before: dict, now: dict) -> set[str]:
+    """Keys of constants that moved to another file with the same value (a refactor, not a change)."""
+    def name(k):
+        return k.rsplit(":", 1)[-1]
+
+    gone = {k for k in before if k not in now}
+    new = {k for k in now if k not in before}
+    out = set()
+    for k in gone:
+        twin = [n for n in new if name(n) == name(k) and now[n] == before[k] and n.endswith(".py:" + name(k))]
+        if len(twin) == 1:
+            out |= {k, twin[0]}
+    return out
 
 
 def threshold_audit(rev: str | None = None) -> dict:
     """Did any threshold value change after the sample was frozen? (Then the held-out half could have chosen it.)
-    Compares the values themselves, so a comment, a refactor or a bug fix that keeps every threshold is not counted;
-    the commits since the freeze are listed so a reader can check them."""
+    Compares the values themselves, so a comment, a refactor or a bug fix that keeps every threshold is not counted
+    (a constant moved to another module with the same value counts as unchanged); the commits since the freeze
+    are listed so a reader can check them."""
     # Compared with the code that produced the results (``rev``), not with whatever the tree holds now: a threshold
     # changed later (the pre-registered feed rule) did not shape these numbers.
     before, now = _threshold_values(FROZEN_AFTER), _threshold_values(rev)
-    diff = {k: [before.get(k), now.get(k)] for k in sorted(set(before) | set(now)) if before.get(k) != now.get(k)}
+    moved = _moved(before, now)
+    diff = {k: [before.get(k), now.get(k)] for k in sorted(set(before) | set(now))
+            if before.get(k) != now.get(k) and k not in moved}
     changed = {k: v for k, v in diff.items() if not any(x in k for x in NOT_THRESHOLDS)}
     ignored = {k: v for k, v in diff.items() if k not in changed}
     commits = _git("log", "--format=%h %s", f"{FROZEN_AFTER}..{rev or 'HEAD'}").splitlines()
@@ -691,8 +709,10 @@ def main(argv=None) -> int:
     r.add_argument("--limit", type=int, default=0)
     r.add_argument("--retry-failed", action="store_true", help="run again the stars whose download or worker failed")
     r.set_defaults(func=cmd_run)
-    se = sub.add_parser("sentinels")
+    se = sub.add_parser("sentinels", help="the Sentinels on the stated 40-star subsample (cross-provider φ in 'report')")
     se.add_argument("--workers", type=int, default=2)
+    se.add_argument("--panel", help="a run config whose [[reviewers]] Sentinels to run (any provider); default: the two "
+                                    "Claude personas through the Claude Code CLI")
     se.set_defaults(func=cmd_sentinels)
     rs = sub.add_parser("rescore")
     rs.add_argument("--workers", type=int, default=4)

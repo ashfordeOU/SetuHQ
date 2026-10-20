@@ -1,0 +1,111 @@
+# A mixed panel: the pi Men sector-1 run with Sentinels on three providers.
+#
+#   exoplan run examples/panels/mixed_providers.toml --out runs/pi-men-mixed
+#   python scripts/benchmark_real_tois.py sentinels --panel examples/panels/mixed_providers.toml   # cross-provider φ
+#
+# Only Claude has been benchmarked so far. A Sentinel on another provider is labelled with its provider and
+# model, and it votes at the floor weight (0.05, "uncalibrated") until 'exoplan calibrate' has measured it.
+#
+# Keys come from the environment only, one variable per provider, never from this file:
+#   claude          ANTHROPIC_API_KEY   (pip install -e '.[claude]')
+#   claude_code     none: the 'claude' CLI, signed in with a Claude subscription
+#   openai          OPENAI_API_KEY      (plain HTTPS, no SDK)
+#   gemini          GEMINI_API_KEY      (plain HTTPS, no SDK)
+#   openai_compatible   the variable named by api_key_env, or none for a local server
+# A Sentinel whose key, SDK or CLI is missing is skipped, and manifest.json says why.
+#
+# `model` is any vision model your account offers. The exact model id the provider reports is recorded
+# with every review, with the provider, the call time and the prompt version.
+
+[run]
+name = "tess-pi-men-s1-mixed"
+subject_days = 13.0
+min_points = 300
+bin_minutes = 10.0
+detrend_window_days = 1.0
+
+[search]
+min_period = 0.5
+fap_trials = 200
+stellar = "tic"
+
+[aggregate]
+cluster_gap_days = 0.05
+min_score = 0.5
+min_planet_fraction = 0.5
+
+[[targets]]
+mission = "TESS"
+id = "TIC 261136679"
+sectors = [1]
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-sensitive"
+snr_threshold = 4.5
+miss_probability = 0.05
+seed = 11
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-typical"
+snr_threshold = 5.0
+miss_probability = 0.10
+seed = 12
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-cautious"
+snr_threshold = 5.5
+miss_probability = 0.15
+seed = 13
+
+# Sentinel · Volunteer on Claude (the benchmarked default), through the Claude Code CLI.
+[[reviewers]]
+type = "claude_code"
+id = "claude-volunteer"
+persona = "volunteer"
+
+# Sentinel · Skeptic on OpenAI.
+[[reviewers]]
+type = "openai"
+id = "gpt-skeptic"
+persona = "skeptic"
+model = "gpt-5"
+
+# Sentinel · Volunteer on Google Gemini.
+[[reviewers]]
+type = "gemini"
+id = "gemini-volunteer"
+persona = "volunteer"
+model = "gemini-2.5-flash"
+
+# Any OpenAI-compatible endpoint, by base_url. Uncomment one.
+#
+# Ollama, on this computer (no key):
+# [[reviewers]]
+# type = "openai_compatible"
+# id = "local-skeptic"
+# persona = "skeptic"
+# base_url = "http://localhost:11434/v1"
+# model = "qwen2.5vl:7b"
+#
+# vLLM or LM Studio (no key, or name one): base_url = "http://localhost:8000/v1" or "http://localhost:1234/v1"
+#
+# OpenRouter:
+# [[reviewers]]
+# type = "openai_compatible"
+# id = "compat-skeptic"
+# persona = "skeptic"
+# base_url = "https://openrouter.ai/api/v1"
+# api_key_env = "OPENROUTER_API_KEY"
+# model = "qwen/qwen2.5-vl-72b-instruct"
+#
+# Azure OpenAI (v1 API; the deployment name is the model):
+# [[reviewers]]
+# type = "openai_compatible"
+# id = "compat-volunteer"
+# base_url = "https://<resource>.openai.azure.com/openai/v1"
+# api_key_env = "AZURE_OPENAI_API_KEY"
+# auth = "api-key"
+# model = "<deployment>"

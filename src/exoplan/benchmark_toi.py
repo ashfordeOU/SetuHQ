@@ -27,6 +27,7 @@ import json
 import math
 import urllib.parse
 import urllib.request
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -201,6 +202,68 @@ def rates(rows: list[dict], key: str, where=lambda r: True) -> dict:
     k = sum(1 for r in sel if r[key])
     p, lo, hi = wilson(k, len(sel))
     return {"k": k, "n": len(sel), "rate": p, "lo": lo, "hi": hi}
+
+
+CLAUDE_PAIR = ("claude-volunteer", "claude-skeptic")  # the benchmarked default: one Claude model, two personas
+
+
+def sentinel_summary(data: dict, sample: dict, match) -> dict:
+    """The Sentinels on the stated subsample, per reviewer and per pair.
+
+    ``data`` is ``cache/bench/sentinels.json``: per TOI, per reviewer, per subject the label and marks.
+    ``match(candidate, target)`` decides whether a mark lies on the TOI's ephemeris (``discover.match_toi``).
+    Per reviewer: on CP/KP stars, did it mark a dip on the TOI's ephemeris as a potential planet; on FP stars,
+    did it pass the TOI's dip as a potential planet. Per pair: agreement and φ over the stars both answered
+    (:mod:`exoplan.agreement`), labelled same model or different provider/model.
+    """
+    from exoplan.agreement import constant_reviewers, effective_voters, pairwise
+
+    toi = {t["toi"]: t for t in sample["tois"]}
+    rows: dict[str, dict] = {}
+    for name, per in data["results"].items():
+        target = target_for(toi[name])
+        for rid, subs in per.items():
+            ok = [s for s in subs.values() if "error" not in s]
+            hit = any(match({"t_center": 0.5 * (a + b), "duration_hours": (b - a) * 24, "period_days": None, "time_unit": "BTJD"}, target)
+                      for s in ok if s["label"] == "potential_planet" for a, b in s["marks"])
+            rows.setdefault(name, {})[rid] = {"hit": hit, "errors": len(subs) - len(ok)}
+    seen = sorted({rid for r in rows.values() for rid in r})
+    ids = [r for r in CLAUDE_PAIR if r in seen] + [r for r in seen if r not in CLAUDE_PAIR]
+    identities = data.get("reviewers") or {}
+    out = {"subsample": data["subsample"], "n_stars": len(rows), "personas": {}, "reviewers": identities}
+    models = Counter(_model_label(s) for per in data["results"].values() for subs in per.values() for s in subs.values()
+                     if "error" not in s)
+    out["models"] = dict(models)
+    out["model_note"] = ("the model id each provider reported for each review (the Claude Code CLI's modelUsage), with the call "
+                         "date; \"not recorded\" for reviews answered before exoplan stored it (the cache key then held only "
+                         "\"default\"); a configured id the provider did not report is marked so")
+    for rid in ids:
+        pos = [{"x": r[rid]["hit"]} for n, r in rows.items() if rid in r and toi[n]["class"] == "positive"]
+        fp = [{"x": r[rid]["hit"]} for n, r in rows.items() if rid in r and toi[n]["class"] == "fp"]
+        out["personas"][rid] = {"cp_kp_marked": rates(pos, "x"), "fp_marked_as_planet": rates(fp, "x"),
+                                "errors": sum(r[rid]["errors"] for r in rows.values() if rid in r)}
+    hits = {n: {rid: v["hit"] for rid, v in r.items()} for n, r in rows.items()}
+    table = pairwise(hits, ids, identities)
+    out["pairwise"] = table
+    constant = constant_reviewers(hits, ids)
+    out["effective_voters"] = effective_voters(table, ids, constant)
+    out["effective_voters_k"] = len(ids) - len(constant)
+    out["constant_reviewers"] = constant
+    # The benchmarked pair, under its first name, so earlier reports read the same.
+    pair = next((p for p in table if (p["a"], p["b"]) == CLAUDE_PAIR), None)
+    if pair is not None:
+        out["agreement"] = {k: pair[k] for k in ("n", "agree", "phi")}
+    return out
+
+
+def _model_label(review: dict) -> str:
+    """The model a stored Sentinel review names: the reported id, a configured id marked as such, or "not recorded"."""
+    model = review.get("model")
+    if not model:
+        return "not recorded"
+    if review.get("model_reported") is False:
+        return f"{model} (configured; not reported by the provider)"
+    return model
 
 
 def summarise(results: list[dict], sample: dict) -> dict:
@@ -474,6 +537,50 @@ def _headline(data: dict) -> list[str]:
             + " A fix is proposed below, not applied.", ""]
 
 
+def _sentinel_lines(se: dict) -> list[str]:
+    """The Sentinels' section: per reviewer, then agreement. With only the Claude pair it reads as before."""
+    ids = list(se["personas"])
+    multi = any(r not in CLAUDE_PAIR for r in ids)
+    who = (f"{len(ids)} Sentinels ({', '.join(_who(rid, se) for rid in ids)})" if multi else
+           "Both Sentinels (one Claude model, two personas, through the Claude Code CLI)")
+    lines = ["## The Sentinels on a stated subsample", "",
+             f"{who} reviewed every subject of {se['n_stars']} "
+             "held-out stars drawn with a fixed seed (half CP/KP, half FP), on the real light curves only. Scored per star: did the "
+             "persona mark a dip on the TOI's ephemeris as a potential planet.", "",
+             "| persona | CP/KP dips marked | FP dips marked as a potential planet | failed calls |", "|---|---|---|---:|"]
+    for rid, v in se["personas"].items():
+        lines.append(f"| {rid} | {_pct(v['cp_kp_marked'])} | {_pct(v['fp_marked_as_planet'])} | {v['errors']} |")
+    if se.get("models"):
+        lines += ["", "Model, as the provider reported it: " + "; ".join(f"{k}: {v} reviews" for k, v in se["models"].items())
+                  + ". Reviews answered before exoplan stored the model id say \"not recorded\": the CLI ran its default "
+                  "model then, and the cache key holds only \"default\"."]
+    ag = se.get("agreement") or {}
+    lines += ["", f"The two personas agree on {ag['agree']} of {ag['n']} stars (φ = {ag['phi']:.2f}). They share one model, so their "
+              "errors are correlated and they count as one correlated voter, not two independent ones (ATLAS K4)." if ag.get("phi") is not None else "", ""]
+    if multi:
+        lines += ["Agreement for every pair, over the stars both answered (φ near 1: one voter twice; near 0: independent):", "",
+                  "| pair | same model? | stars | agree | φ |", "|---|---|---:|---:|---:|"]
+        for p in se.get("pairwise") or []:
+            same = {True: "yes", False: "no", None: "not recorded"}[p["same_model"]]
+            phi = "–" if p["phi"] is None else f"{p['phi']:.2f}"
+            lines.append(f"| {p['a']} · {p['b']} | {same} | {p['n']} | {p['agree']} | {phi} |")
+        ev, const = se.get("effective_voters"), se.get("constant_reviewers") or []
+        k = se.get("effective_voters_k", len(ids) - len(const))
+        left_out = (f" Left out of k: {', '.join(const)}, which gave the same answer on every star, so its φ is "
+                    "undefined." if const else "")
+        if ev is not None:
+            lines += ["", f"Effective number of independent Sentinels, k / (1 + (k − 1)·mean φ): {ev:.1f} of k = {k}.{left_out}", ""]
+        elif const:
+            lines += ["", f"No effective number of independent Sentinels: fewer than two reviewers with a defined φ.{left_out}", ""]
+        lines += ["Only Claude has been benchmarked on the full subsample before; a provider's rates here are its first measurement.", ""]
+    return lines
+
+
+def _who(rid: str, se: dict) -> str:
+    ident = (se.get("reviewers") or {}).get(rid) or {}
+    return f"{rid} on {ident['provider']} / {ident['model']}" if ident.get("provider") else rid
+
+
 def to_markdown(data: dict) -> str:
     s = data["sample"]
     h = data["summary"]["held_out"]
@@ -528,20 +635,7 @@ def to_markdown(data: dict) -> str:
               ""]
     se = data.get("sentinels")
     if se:
-        ag = se["agreement"]
-        lines += ["## The Sentinels on a stated subsample", "",
-                  f"Both Sentinels (one Claude model, two personas, through the Claude Code CLI) reviewed every subject of {se['n_stars']} "
-                  "held-out stars drawn with a fixed seed (half CP/KP, half FP), on the real light curves only. Scored per star: did the "
-                  "persona mark a dip on the TOI's ephemeris as a potential planet.", "",
-                  "| persona | CP/KP dips marked | FP dips marked as a potential planet | failed calls |", "|---|---|---|---:|"]
-        for rid, v in se["personas"].items():
-            lines.append(f"| {rid} | {_pct(v['cp_kp_marked'])} | {_pct(v['fp_marked_as_planet'])} | {v['errors']} |")
-        if se.get("models"):
-            lines += ["", "Model, as the Claude Code CLI reported it: " + "; ".join(f"{k}: {v} reviews" for k, v in se["models"].items())
-                      + ". Reviews answered before exoplan stored the model id say \"not recorded\": the CLI ran its default "
-                      "model then, and the cache key holds only \"default\"."]
-        lines += ["", f"The two personas agree on {ag['agree']} of {ag['n']} stars (φ = {ag['phi']:.2f}). They share one model, so their "
-                  "errors are correlated and they count as one correlated voter, not two independent ones (ATLAS K4)." if ag.get("phi") is not None else "", ""]
+        lines += _sentinel_lines(se)
     if data.get("loss"):
         lines += _loss_lines(data["loss"])
     cp = data.get("code_provenance")

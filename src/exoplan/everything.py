@@ -18,6 +18,7 @@ import html
 import json
 from pathlib import Path
 
+from exoplan.names import ATTRIBUTION
 from exoplan.variables import LS_EDGE_FRACTION
 
 DEFAULT_SWEEP = "docs/sweep/catalogue.json"
@@ -256,7 +257,7 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
                     f'times ({chk["script"]}), and cannot test periods longer than about {coh["testable_max_days"]:g} d in one sector.')
     return f"""<header class="headrow">
         <div>{eyebrow}<h1 class="lead-h" id="h-variables" tabindex="-1">Everything that dims.<br><span class="grey">{c['entries']:,} entries, none thrown away.</span></h1>
-        <p>Every consensus dip of the panel, every brightening and every star's variability from the sweep, each classified by a stated rule, with its confidence, its cues and its provenance: the marks, the weights and the Sentinels' own words. {e("Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.")}</p></div>
+        <p>Every consensus dip of the panel, every brightening and every star's variability from the sweep, each classified by a stated rule, with its confidence, its cues and its provenance: the marks, the weights and the Sentinels' own words. {e(ATTRIBUTION)}</p></div>
       </header>
       {tabs("variables")}
       <p class="note"><b>A first slice, stated plainly.</b> {"; ".join(e(s) for s in meta["slices"])}. {c['stars_searched']:,} stars searched, {c['star_sectors_searched']:,} star-sectors, {c['dips_reviewed']:,} consensus dips reviewed{f", {sum(ns.values()):,} star-sectors recorded but not searched ({ns.get('no_data', 0)} no data, {ns.get('error', 0)} errors, {ns.get('pending', 0)} pending)" if sum(ns.values()) else ""}. This catalogue is separate from the discovery feed. <b>Nothing here is a new or confirmed planet.</b> A class is what the light curve's cues suggest; there is no pixel or centroid check, so a blended binary can look like anything.{e(verdict)}</p>
@@ -446,7 +447,7 @@ function vaDetail(e){
   const marksHTML = e.kind === 'dip' ? `<h3>Marks and weights</h3><div class="tablewrap" tabindex="0" role="region" aria-label="Marks by reviewer"><table class="vatable"><thead><tr><th scope="col">Reviewer</th><th scope="col" class="num">Weight</th><th scope="col">Marks (✓ counted)</th></tr></thead><tbody>${mrows}</tbody></table></div>`
     + (e.shares && Object.keys(e.shares).length ? `<p>Panel's weighted labels: ${Object.entries(e.shares).map(([k, v]) => `${esc(k.replace(/_/g, ' '))} ${Math.round(v * 100)}%`).join(' · ')}</p>` : '')
     : `<p>${esc(e.note || '')}</p>`;
-  const sentinels = ids.filter(id => isClaude(kind[id]));
+  const sentinels = ids.filter(id => isSentinel(kind[id]));
   const words = (e.words || []).length ? `<h3>The Sentinels' own words</h3>` + e.words.map(x => `<blockquote class="vawords">${esc(x.rationale)}<cite>${esc(NAME(x.reviewer))} · ${esc(x.label.replace('_', ' '))}${x.reason ? ' · ' + esc(x.reason.replace(/_/g, ' ')) : ''}</cite></blockquote>`).join('')
     : (e.kind === 'dip' ? `<p class="muted">${sentinels.length ? 'The Sentinels left no words on this subject.' : 'No Sentinel reviewed this star: this sweep ran the Probes only, which give no reasons.'}</p>` : '');
   const flags = (e.flags || []).length ? `<p>Vetting flags: <span class="mono">${e.flags.map(esc).join(', ')}</span> · ${e.passed ? 'passed vetting' : 'failed vetting'}</p>` : (e.kind === 'dip' ? `<p>No vetting flags · ${e.passed ? 'passed vetting' : 'failed vetting'}</p>` : '');

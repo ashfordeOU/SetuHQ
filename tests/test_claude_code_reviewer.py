@@ -66,16 +66,26 @@ def test_the_model_the_cli_reports_is_recorded_with_the_date(tmp_path, transit_s
     subject, injection = transit_subject
     image = render_subject(subject, tmp_path / "s.png")
     answer = json.loads(_envelope([(injection.t_start, injection.t_end)]))
-    answer["modelUsage"] = {"claude-sonnet-5-5": {"inputTokens": 1}}
+    answer["modelUsage"] = {"claude-test-model": {"inputTokens": 1, "outputTokens": 9}}
     cache = tmp_path / "cache"
     r = ClaudeCodeReviewer("cc", runner=lambda cmd, cwd: json.dumps(answer), cache_dir=cache)
-    r.review(subject, image)
-    assert r.last_model == "claude-sonnet-5-5" and r.last_called_at.startswith("20")
+    c = r.review(subject, image)
+    assert c.metadata["model"] == "claude-test-model" and c.metadata["model_reported"] is True
+    assert c.metadata["called_at"].startswith("20")
     stored = json.loads(next(cache.glob("*.json")).read_text())
-    assert stored["model"] == "claude-sonnet-5-5" and stored["called_at"] == r.last_called_at
-    # An answer cached before the model was stored says so.
-    stored.pop("model"), stored.pop("called_at")
+    assert stored["model_reported"] == "claude-test-model" and stored["called_at"] == c.metadata["called_at"]
+    # An answer cached before the model was stored says so: no reported model, no call date.
+    stored.pop("model_reported"), stored.pop("called_at")
     next(cache.glob("*.json")).write_text(json.dumps(stored))
-    again = ClaudeCodeReviewer("cc", runner=lambda cmd, cwd: 1 / 0, cache_dir=cache)
-    again.review(subject, image)
-    assert again.last_model == "not recorded" and again.last_called_at == "not recorded"
+    again = ClaudeCodeReviewer("cc", runner=lambda cmd, cwd: 1 / 0, cache_dir=cache).review(subject, image)
+    assert again.metadata["model_reported"] is False and again.metadata["called_at"] is None
+    assert again.metadata["cached"] is True
+
+
+def test_the_benchmark_counts_reviews_by_the_model_they_name():
+    from exoplan.benchmark_toi import _model_label
+
+    assert _model_label({"model": "claude-test-model", "model_reported": True}) == "claude-test-model"
+    assert _model_label({"model": "claude-test-model"}) == "claude-test-model"  # stored before model_reported existed
+    assert _model_label({"model": "default", "model_reported": False}) == "default (configured; not reported by the provider)"
+    assert _model_label({"label": "noise"}) == _model_label({"model": None}) == "not recorded"

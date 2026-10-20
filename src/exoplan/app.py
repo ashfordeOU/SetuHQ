@@ -55,7 +55,7 @@ from exoplan.learn import LEARN_BAR, LEARN_CSS, LEARN_JS, learn_card, learn_step
 from exoplan.mission import GRIDS as MISSION_GRIDS, MISSION_CSS, MISSION_JS, PANES as MISSION_PANES, mission_section
 from exoplan.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section, system_stage, CHAPTERS, CHAPTER_PLANETS
 from exoplan.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
-from exoplan.names import ATTRIBUTION, panel_phrase, reviewer_names
+from exoplan.names import ATTRIBUTION, PROVIDER_BY_KIND, SENTINEL_KINDS, panel_phrase, reviewer_names, reviewer_provenance
 from exoplan.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
 
 # The eight sections of the top bar, and five pages each reached from one of them.
@@ -315,6 +315,12 @@ def calibration_plane(weights: dict | None, record: dict | None, kinds: dict[str
             # The stored weight should be max(TPR - FPR, floor); say so when it is not.
             "consistent": None if None in (tpr, fpr, weight) else abs(max(tpr - fpr, floor) - weight) < 1e-9,
         })
+    # A Sentinel of this run that the weights file does not cover (a new provider or model) is listed as
+    # uncalibrated, with no rates and no point on the plane: it votes at the floor weight until it is calibrated.
+    for rid, kind in kinds.items():
+        if rid not in (weights or {}) and kind in SENTINEL_KINDS:
+            points.append({"id": rid, "kind": kind, "weight": None, "tpr": None, "fpr": None, "n_injected": None,
+                           "n_empty": None, "consistent": None, "uncalibrated": True})
     points.sort(key=lambda p: (p["kind"] != "simulated", p["id"]))
     return {"points": points, "iso": list(ISO_WEIGHTS), "floor": (record or {}).get("floor", WEIGHT_FLOOR),
             "source": (record or {}).get("source", ""), "rule": (record or {}).get("rule", "weight = max(TPR - FPR, floor)")}
@@ -323,7 +329,7 @@ def calibration_plane(weights: dict | None, record: dict | None, kinds: dict[str
 def dip_agreement(dips: list[dict], kinds: dict[str, str]) -> list[dict]:
     """Per dip: which reviewers marked it, with simulated and Claude counts out of the panel."""
     sim_all = [r for r, k in kinds.items() if k == "simulated"]
-    cl_all = [r for r, k in kinds.items() if k in ("claude", "claude_code")]
+    cl_all = [r for r, k in kinds.items() if k in SENTINEL_KINDS]  # every Sentinel, on any provider
     out = []
     for d in dips:
         who = [r for r in kinds if r in (d.get("reviewers") or [])]
@@ -632,6 +638,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
             "claude_prompt_version": manifest.get("claude_prompt_version", ""),
             "subject_days": manifest.get("subject_days"), "inputs": manifest.get("inputs", []),
             "skipped_reviewers": manifest.get("skipped_reviewers", []),
+            "skipped_reviewers_detail": manifest.get("skipped_reviewers_detail", []),
         },
         "catalog": {
             "path": catalog_name, "updated": catalog.get("updated", ""), "config": catalog.get("config", ""),
@@ -677,6 +684,9 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "calibration": calib,
         "agreement": dip_agreement(cands, dock["reviewers"]),
         "reviewer_names": reviewer_names(dock["reviewers"]),
+        "reviewer_provenance": reviewer_provenance(manifest),
+        "sentinel_kinds": list(SENTINEL_KINDS),
+        "provider_by_kind": PROVIDER_BY_KIND,
         "attribution": ATTRIBUTION,
         "weights_path": weights_name,
         "docket_html": with_frame_bridge(docket_page(dock)),
@@ -1271,13 +1281,17 @@ function el(tag, a={}, p){ const e = document.createElementNS(NS, tag); for (con
 function tx(svg, x, y, s, anchor='start', cls=''){ const t = el('text', {x, y, 'text-anchor': anchor, class: cls}, svg); t.textContent = s; return t; }
 const UNC = `<span class="tag unc">${esc(D.unconfirmed)}</span>`;
 const say = msg => { const a = $('#announce'); a.textContent = ''; setTimeout(() => { a.textContent = msg; }, 30); };
-const isClaude = k => k === 'claude' || k === 'claude_code';
+// A Sentinel is an AI reviewer on any provider (Claude by default); PROV(id) is its provider, model and calibration.
+const SENTINEL_KINDS = D.sentinel_kinds || ['claude', 'claude_code'];
+const isSentinel = k => SENTINEL_KINDS.includes(k);
+const PROVIDER_OF = k => (D.provider_by_kind || {})[k] || k;
+const PROV = id => { const p = (D.reviewer_provenance || {})[id]; return p ? `${p.provider_label} · ${p.model}${p.calibration === 'uncalibrated' ? ' · uncalibrated' : ''}` : ''; };
 const OUTCOME_SHORT = {passed: 'passed', flagged: 'flagged', rejected: 'rejected'};
 // The panel's display names (the Sentinels and the Probes); ids stay in the data and show beside the names.
 const NAME = id => ((D.reviewer_names || {})[id] || {}).name || id;
 const nameWithId = id => `${esc(NAME(id))} <span class="mono idtag" title="reviewer id">${esc(id)}</span>`;
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
-const kindTag = k => k === 'simulated' ? '<span class="tag sim">Probe · not a person</span>' : isClaude(k) ? `<span class="tag cl">Sentinel · Claude</span>` : `<span class="tag">${esc(k || 'unknown')}</span>`;
+const kindTag = k => k === 'simulated' ? '<span class="tag sim">Probe · not a person</span>' : isSentinel(k) ? `<span class="tag cl">Sentinel · ${esc(PROVIDER_OF(k))}</span>` : `<span class="tag">${esc(k || 'unknown')}</span>`;
 function niceTicks(lo, hi, n){
   if (!(hi > lo)) return [lo];
   const raw = (hi-lo)/Math.max(1,n), mag = Math.pow(10, Math.floor(Math.log10(raw))), r = raw/mag;
@@ -1373,7 +1387,7 @@ function widgetBody(id){
   }
   const r = D.run, c = r.counts || {}, dc = r.docket_counts || {};
   if (id === 'kpis'){
-    const kinds = Object.values(r.reviewer_kinds), sim = kinds.filter(k => k === 'simulated').length, cl = kinds.filter(isClaude).length;
+    const kinds = Object.values(r.reviewer_kinds), sim = kinds.filter(k => k === 'simulated').length, cl = kinds.filter(isSentinel).length;
     const tiles = [[c.subjects, 'subjects'], [c.classifications, 'reviews'], [dc.signals, 'signals'], [dc.dips, 'dips'], [dc.passed, 'signals passed vetting'], [dc.flagged, 'signals flagged for review']];
     return `<div class="kpis">${tiles.map(([v,l]) => `<div class="kpi"><b>${esc(v ?? '–')}</b><span>${esc(l)}</span></div>`).join('')}</div>
       <p class="muted" style="margin:0;font-size:12px">Run ${esc(r.name)}, ${when(r.created_at)}. ${esc(dc.rejected ?? 0)} signal${dc.rejected===1?'':'s'} rejected by vetting. The light curves are measured (${esc((D.config.inputs[0]||{}).source || 'stored input')}); the reviews come from ${plural(cl, 'Sentinel')} and ${plural(sim, 'Probe')}, no people.</p>`;
@@ -1814,7 +1828,7 @@ function renderPanel(){
       <a href="${dipHref(a.id, 'ledger')}">Verdict ledger</a></li>`).join('')}</ul>` : '<p class="empty">The run stored no dips.</p>';
   $('#panelcards').innerHTML = D.panel.length ? D.panel.map(r => `<article class="card"><h2>${esc(NAME(r.id))} <span class="sub mono" title="reviewer id">${esc(r.id)}</span></h2>
     <p style="margin:6px 0 0">${kindTag(r.kind)}</p>
-    <p class="muted" style="margin:6px 0 0;font-size:13px">${r.kind === 'simulated' ? 'A Probe: a deterministic matched-filter detector that marks dips above an SNR threshold in the light curve. It is not a person.' : isClaude(r.kind) ? 'A Sentinel: a Claude model (Anthropic) that reads the plotted light curve and marks dips. It is not a person.' : ''}</p>
+    <p class="muted" style="margin:6px 0 0;font-size:13px">${r.kind === 'simulated' ? 'A Probe: a deterministic matched-filter detector that marks dips above an SNR threshold in the light curve. It is not a person.' : isSentinel(r.kind) ? `A Sentinel: an AI model (${esc(PROV(r.id) || PROVIDER_OF(r.kind))}) that reads the plotted light curve and marks dips. It is not a person.${(D.reviewer_provenance[r.id] || {}).calibration === 'uncalibrated' ? ' <b>Uncalibrated:</b> it votes at the floor weight until it is calibrated on this provider and model.' : ''}` : ''}</p>
     <dl class="kv">
       <dt>weight in this run</dt><dd>${r.run_weight === null || r.run_weight === undefined ? 'not stored' : esc(r.run_weight)} <span class="muted">(manifest.json)</span></dd>
       <dt>calibrated weight</dt><dd>${r.calibrated_weight === null || r.calibrated_weight === undefined ? 'not in the weights file' : fmt(r.calibrated_weight,3)}${D.weights_path ? `<small class="muted" style="display:block;font-size:11px">${esc(D.weights_path)}</small>` : ''}</dd>
@@ -1829,7 +1843,7 @@ function renderPanel(){
 // calibrated weight, with the lines of constant weight = TPR − FPR (floored). Stored values only.
 const fmtN = p => (p.n_injected !== null && p.n_injected !== undefined) ? `${p.n_injected} injected, ${p.n_empty} empty` : 'sample size not stored';
 function calSample(){
-  const pts = D.calibration.points, cl = pts.filter(p => isClaude(p.kind)), sim = pts.filter(p => p.kind === 'simulated');
+  const pts = D.calibration.points, cl = pts.filter(p => isSentinel(p.kind) && !p.uncalibrated), sim = pts.filter(p => p.kind === 'simulated');
   const sizes = list => [...new Set(list.map(fmtN))];
   const parts = [];
   // The scores themselves, in one line: the Sentinels' weights and the Probes' range.
@@ -1852,7 +1866,7 @@ function calPlane(box){
   const pad = 14, side = W - pl - pr - pad, H = pt + side + pb;
   const X = v => pl + pad + v * side, Y = v => pt + (1 - v) * side, R = w => 3 + 10 * Math.max(0, Number(w) || 0);
   const groups = [];
-  for (const p of pts){ let g = groups.find(g => g.fpr === p.fpr && g.tpr === p.tpr && g.kind === (isClaude(p.kind) ? 'claude' : p.kind)); if (!g){ g = {fpr: p.fpr, tpr: p.tpr, kind: isClaude(p.kind) ? 'claude' : p.kind, items: []}; groups.push(g); } g.items.push(p); }
+  for (const p of pts){ let g = groups.find(g => g.fpr === p.fpr && g.tpr === p.tpr && g.kind === (isSentinel(p.kind) ? 'claude' : p.kind)); if (!g){ g = {fpr: p.fpr, tpr: p.tpr, kind: isSentinel(p.kind) ? 'claude' : p.kind, items: []}; groups.push(g); } g.items.push(p); }
   const label = `Calibration plane: ${pts.length} reviewers by false-alarm rate and recall. ` + groups.map(g => `${g.items.map(p => NAME(p.id)).join(' and ')}: recall ${fmt(g.tpr,2)}, false-alarm rate ${fmt(g.fpr,2)}, weight ${fmt(g.items[0].weight,2)}`).join('; ') + '. ' + calSample().replace(/<[^>]+>/g, '');
   const svg = el('svg', {viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': label, class: 'calplane'}, box);
   svg.style.maxWidth = W + 'px';
@@ -1884,13 +1898,13 @@ function calPlane(box){
   }
   if (!narrow) tx(svg, X(0.97), Y(0.30), `below the floor line: weight ${f}`, 'end');
   // The sample size, on the plane.
-  const cl = pts.filter(p => isClaude(p.kind));
+  const cl = pts.filter(p => isSentinel(p.kind));
   if (cl.length) tx(svg, X(0.97), Y(0.08), `Sentinels: ${fmtN(cl[0])} only`, 'end', 'samplelbl');
   if (pts.some(p => p.kind === 'simulated')) tx(svg, X(0.97), Y(0.08) + 14, `Probes: ${fmtN(pts.find(p => p.kind === 'simulated'))}`, 'end');
   for (const g of groups){
     const r = R(g.items[0].weight), cx = X(g.fpr), cy = Y(g.tpr);
     const c = el('circle', {cx, cy, r, class: g.kind === 'claude' ? 'pt cl' : 'pt sim'}, svg);
-    el('title', {}, c).textContent = g.items.map(p => `${NAME(p.id)} (id ${p.id}; ${p.kind === 'simulated' ? 'Probe, not a person' : isClaude(p.kind) ? 'Sentinel, Claude' : p.kind}): TPR ${fmt(p.tpr,2)}, FPR ${fmt(p.fpr,2)}, weight ${fmt(p.weight,2)}, ${fmtN(p)}`).join('\n');
+    el('title', {}, c).textContent = g.items.map(p => `${NAME(p.id)} (id ${p.id}; ${p.kind === 'simulated' ? 'Probe, not a person' : isSentinel(p.kind) ? `Sentinel, ${PROVIDER_OF(p.kind)}` : p.kind}): TPR ${fmt(p.tpr,2)}, FPR ${fmt(p.fpr,2)}, weight ${fmt(p.weight,2)}, ${fmtN(p)}`).join('\n');
     const word = g.kind === 'claude' ? 'Sentinel' : g.kind === 'simulated' ? 'Probe' : g.kind;
     tx(svg, cx + r + 6, cy + 4, `${plural(g.items.length, word)} · w ${fmt(g.items[0].weight,2)}`, 'start', 'lbl');
   }
@@ -1899,10 +1913,10 @@ function renderCalibration(){
   const C = D.calibration;
   $('#calsample').innerHTML = C.points.some(p => p.n_injected) ? calSample() : 'The sample size is not stored with these weights.';
   calPlane($('#calplane'));
-  const kindWord = k => k === 'simulated' ? 'Probe · not a person' : isClaude(k) ? 'Sentinel · Claude' : esc(k);
-  $('#caltable').innerHTML = C.points.length ? `<table><caption class="sr">Calibration rates and weights per reviewer, as stored</caption><thead><tr><th scope="col">reviewer</th><th scope="col">kind</th><th scope="col" class="num">recall (TPR)</th><th scope="col" class="num">false alarms (FPR)</th><th scope="col" class="num">weight</th><th scope="col">sample</th></tr></thead><tbody>${C.points.map(p => `<tr><th scope="row">${nameWithId(p.id)}</th><td>${kindWord(p.kind)}</td><td class="num">${fmt(p.tpr,2)}</td><td class="num">${fmt(p.fpr,2)}</td><td class="num">${fmt(p.weight,2)}${p.consistent === false ? '<small>not max(TPR − FPR, floor)</small>' : ''}</td><td>${esc(fmtN(p))}</td></tr>`).join('')}</tbody></table>` : '';
+  const kindWord = k => k === 'simulated' ? 'Probe · not a person' : isSentinel(k) ? `Sentinel · ${esc(PROVIDER_OF(k))}` : esc(k);
+  $('#caltable').innerHTML = C.points.length ? `<table><caption class="sr">Calibration rates and weights per reviewer, as stored</caption><thead><tr><th scope="col">reviewer</th><th scope="col">kind</th><th scope="col" class="num">recall (TPR)</th><th scope="col" class="num">false alarms (FPR)</th><th scope="col" class="num">weight</th><th scope="col">sample</th></tr></thead><tbody>${C.points.map(p => `<tr><th scope="row">${nameWithId(p.id)}</th><td>${kindWord(p.kind)}</td><td class="num">${fmt(p.tpr,2)}</td><td class="num">${fmt(p.fpr,2)}</td><td class="num">${p.uncalibrated ? `<b>uncalibrated</b><small>floor weight ${fmt(C.floor,2)} in a run</small>` : fmt(p.weight,2)}${p.consistent === false ? '<small>not max(TPR − FPR, floor)</small>' : ''}</td><td>${esc(fmtN(p))}</td></tr>`).join('')}</tbody></table>` : '';
   // On a phone the same rows read as one card per reviewer (the table is hidden there, the cards elsewhere).
-  $('#calcards').innerHTML = C.points.map(p => `<dl class="kv calcard"><dt>reviewer</dt><dd><b>${nameWithId(p.id)}</b></dd><dt>kind</dt><dd>${kindWord(p.kind)}</dd><dt>recall (TPR)</dt><dd>${fmt(p.tpr,2)}</dd><dt>false alarms (FPR)</dt><dd>${fmt(p.fpr,2)}</dd><dt>weight</dt><dd>${fmt(p.weight,2)}${p.consistent === false ? ' (not max(TPR − FPR, floor))' : ''}</dd><dt>sample</dt><dd>${esc(fmtN(p))}</dd></dl>`).join('');
+  $('#calcards').innerHTML = C.points.map(p => `<dl class="kv calcard"><dt>reviewer</dt><dd><b>${nameWithId(p.id)}</b></dd><dt>kind</dt><dd>${kindWord(p.kind)}</dd><dt>recall (TPR)</dt><dd>${fmt(p.tpr,2)}</dd><dt>false alarms (FPR)</dt><dd>${fmt(p.fpr,2)}</dd><dt>weight</dt><dd>${p.uncalibrated ? `uncalibrated (floor weight ${fmt(C.floor,2)} in a run)` : fmt(p.weight,2)}${p.consistent === false ? ' (not max(TPR − FPR, floor))' : ''}</dd><dt>sample</dt><dd>${esc(fmtN(p))}</dd></dl>`).join('');
   $('#calsource').textContent = C.source ? `Rates: ${C.record_path || 'the weights file'}. ${C.source}` : (C.record_path ? `Rates: ${C.record_path}.` : '');
 }
 let calWidth = -1;
@@ -1926,9 +1940,10 @@ function renderRuns(){
     <dt>exoplan</dt><dd>${esc(c.exoplan_version)}</dd>
     <dt>python</dt><dd>${esc(c.python)}</dd>
     <dt>platform</dt><dd>${esc(c.platform)}</dd>
-    <dt>Claude prompt version</dt><dd>${esc(c.claude_prompt_version || 'not stored')}</dd>
+    <dt>Sentinel prompt version</dt><dd>${esc(c.claude_prompt_version || 'not stored')}</dd>
+    <dt>Sentinel providers</dt><dd>${Object.entries(D.reviewer_provenance || {}).map(([id, p]) => `${esc(NAME(id))}: ${esc(p.provider_label)} · ${esc(p.model)} · ${esc(p.calibration || 'calibration not stored')}`).join('<br>') || 'none in this run'}</dd>
     <dt>subject length</dt><dd>${esc(c.subject_days)} d</dd>
-    <dt>skipped reviewers</dt><dd>${(c.skipped_reviewers||[]).length ? esc(c.skipped_reviewers.join(', ')) : 'none'}</dd>
+    <dt>skipped reviewers</dt><dd>${(c.skipped_reviewers_detail||[]).length ? c.skipped_reviewers_detail.map(s => `${esc(s.id)} (${esc(s.reason || 'unavailable')})`).join(', ') : (c.skipped_reviewers||[]).length ? esc(c.skipped_reviewers.join(', ')) : 'none'}</dd>
     <dt>archive cross-match</dt><dd>${xmConfig(D.crossmatch_info)}</dd>
     ${pk.map(([k,v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}
   </dl>
@@ -2089,7 +2104,7 @@ function quoteHTML(d){
   const q = d.quotes[0];
   if (!q) return `<div class="quote"><p style="font-size:14px">No Sentinel rationale is stored for this subject.</p></div>`;
   return `<div class="quote"><div class="who"><b title="reviewer id ${esc(q.id)}">${esc(q.name)}</b><span>${q.confidence === null || q.confidence === undefined ? 'confidence not stored' : 'confidence ' + fmt(q.confidence, 1)}</span></div>
-    <p>“${esc(q.text)}”</p><small>Its stored rationale for subject ${esc(d.subject_label || d.subject)} (${esc(d.time_unit)} ${fmt(d.subject_start, 1)} to ${fmt(d.subject_end, 1)}), one per subject, not per dip. It ${q.marked ? 'marked' : 'did not mark'} this dip. A Sentinel is a Claude model, not a person.</small></div>`;
+    <p>“${esc(q.text)}”</p><small>Its stored rationale for subject ${esc(d.subject_label || d.subject)} (${esc(d.time_unit)} ${fmt(d.subject_start, 1)} to ${fmt(d.subject_end, 1)}), one per subject, not per dip. It ${q.marked ? 'marked' : 'did not mark'} this dip. A Sentinel is an AI model${PROV(q.id || '') ? ` (${esc(PROV(q.id))})` : ''}, not a person.</small></div>`;
 }
 function orbitHTML(d){
   const L = D.hero.lead; if (!L || d.phase === null || d.phase === undefined) return '';

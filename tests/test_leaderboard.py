@@ -399,7 +399,9 @@ def test_app_leaderboard_route_shows_the_table_rules_and_hash(pi_men_app):
     assert RESULTS["floor_note"] in sec
     assert "40 stars cannot order these configurations" in sec
     assert sec.count('data-l="Rank"') == sum(1 for e in RESULTS["entries"] if e["scope"] == "held_out")
-    assert "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors." in sec
+    from exoplan.names import ATTRIBUTION
+
+    assert ATTRIBUTION in sec  # the app's attribution, provider-aware since the multi-provider Sentinels
     assert "SuperIntelligence" not in sec and "confirmed" not in sec.lower().replace("unconfirmed", "")
     assert 'href="#/leaderboard"' in _route(page, "sentinels")
 
