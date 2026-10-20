@@ -1,6 +1,6 @@
 {
   "tool": "tools/capture_site_shots.mjs, imported by tools/gen_readme_assets.py --import-shots",
-  "note": "Real screenshots of the SetuHQ app (still named exoplan in this build) as built in site/app/index.html. Nothing is drawn or edited.",
+  "note": "Real screenshots of the SetuHQ app as built in site/app/index.html. Nothing is drawn or edited.",
   "rule": "window 1440x900 CSS px at device scale 2, reduced motion; frame 1360x850 CSS px of the content column (x 40), starting 32 px above the anchor element (a Methods stage, or the heading before it), never above the end of the block before; top bar hidden",
   "shots": [
     {
@@ -17,18 +17,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 43,
+        "y": 148,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Mission Control: the catalogue line (8,376 planets and 5,684 stars from exoplanet.eu, fetched 2026-10-18; 8,049 planets placed; the run tess-pi-men-s1 with 7 dips; the feed's 28 entries) and six linked panes: the Galaxy with pi Men selected and its three planets, the sky position, the stored light curve with its dips, a catalogue slice, the system view and the Sentinel feed. Selecting a star in one pane selects it in every pane.",
-      "sha256": "9cca8eb0db4984605f65b586263a0f00847ef5604e12b4ec9299dbd20d19aa11"
+      "sha256": "c6e8f457c1fbd2cc8fc1c4d3ba8fe28bbd7adaa64b41e49319b8d1caf8d9cc80"
     },
     {
       "file": "overview-light.webp",
@@ -44,18 +44,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 65,
+        "y": 118,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Overview: the landing page, The sky, reviewed. A calibrated panel of Sentinels (Claude) and Probes (deterministic detectors) reads every light curve; every verdict explained; nothing called a planet until it is one. Below, an artist's impression of pi Men, labelled as one.",
-      "sha256": "3b7cab296951199f1cd7820e4bcf7fb7b080dbbfa7976c4d856610e7a0cb1a9b"
+      "sha256": "d7afd2d2442102aa97098ff2759323884f259d2415088e9924d5bb1ad6f02d62"
     },
     {
       "file": "galaxy-light.webp",
@@ -71,18 +71,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 65,
+        "y": 118,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Galaxy: every known exoplanet, around the Sun. 8,049 planets around 5,433 stars placed where exoplanet.eu lists them, in 3D galactic coordinates, with distance rings in light-years, a radar and a heads-up readout of the planets near the aim. The app states that it maps these planets and did not find them.",
-      "sha256": "e4eefefa2a50322554c062d4ef63b4ad4083355bdda56345cecc62f0385660eb"
+      "sha256": "efe021a1cd2d30b938b1719a187a6f000b13f4e0734d4c8c8dbfceb2b9e65b55"
     },
     {
       "file": "catalogue-light.webp",
@@ -98,18 +98,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 65,
+        "y": 118,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Catalogue: all 8,376 exoplanet.eu records in a sortable, filterable table with text search and CSV export, each row linking to the planet's own page.",
-      "sha256": "b077551a86d88f43bb9fa71b8b084ede2259b0f608f1db129e0a2c7c9bb60408"
+      "sha256": "8e40f31971f5dddb7bd15ca40c6184ff982e33e76b721c032fa4a1dd1fb4b6c7"
     },
     {
       "file": "planet-light.webp",
@@ -125,18 +125,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 117,
+        "y": 170,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "A planet page, pi Men c (transit, discovered 2018, super-Earth): the star and planet drawn to scale from stored values (orbit not to scale), the transit light curve from stored values with SetuHQ's own stored points, and the stored parameters from exoplanet.eu with their bounds.",
-      "sha256": "d9ba5f788f3b1c85d68d945437377406288ed82244c579f102b094b4f2701cdf"
+      "sha256": "a910407f3adbf667f583bdafb4d5d5d239d1cffd60817dae2d45e26837f205b6"
     },
     {
       "file": "transit-light.webp",
@@ -152,18 +152,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 65,
+        "y": 118,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Transit case for the dip at BTJD 1331.77 on pi Men c: 241 ppm, 2.46 hours, SNR 16.0, a candidate, unconfirmed. The seven dips of the run as tabs, the transit played back from stored values, the panel score of 1.00 with the reason (its period matches pi Men c: a known planet recovered, not a discovery) and each reviewer's stored marks, Probes and Sentinels.",
-      "sha256": "78bd6ecf3e9d904ad7976123ccc33d3372441e6db442bb7d6bf1f022c62d4b7b"
+      "sha256": "eeb4d58cc3aa88174e50a98c79ae97ab1bff7bbe9fa521a716ab87183fcdc154"
     },
     {
       "file": "methods-rv-light.webp",
@@ -179,18 +179,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 589,
+        "y": 642,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Methods, chapter 4 of 15, Radial velocity: 51 Peg b and its star orbiting their shared centre of mass, with the radial-velocity curve (K = 56.7 m/s from m sin i; stored 55.77 m/s) and the star's spectral lines shifting; labelled a model from stored values, the star's motion exaggerated 1,000 times.",
-      "sha256": "b00a244d86709f9c9ff8a28bdbfe82fed263d9040a91de39267cbd658dcb51cd"
+      "sha256": "0945306e0fc5cf9b53ea92c94ea805c4f65f3b93d21447b8c1e9a14c986b611e"
     },
     {
       "file": "methods-atmospheres-light.webp",
@@ -206,18 +206,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 1900,
+        "y": 1953,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Methods, chapter 11 of 15, Reading atmospheres: A real spectrum, WASP-39 b with JWST. The NIRSpec PRISM transmission spectrum (Carter et al. 2024, CC BY 4.0), 36 binned points with error bars and the paper's best-fit model, transit depth from 20,607 to 23,063 ppm over 0.5 to 5.5 µm, with Na, K, H₂O, CH₄, CO₂ and CO bands marked; the deepest point is at 4.37 µm, the carbon dioxide band. Labelled real data, cited.",
-      "sha256": "393055c9764de46416a3fef3c0e4eeca1b007713a90af4447b780c167c9112da"
+      "sha256": "c3bdc254be8d9a1de0881042fcceffe0f868372d58d108f3a7eb91fd576f8d7b"
     },
     {
       "file": "methods-starlight-light.webp",
@@ -233,18 +233,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 2463,
+        "y": 2516,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Methods, chapter 7 of 15, Blocking starlight: a Lyot coronagraph computed with Fraunhofer optics in four planes (the entrance pupil, the focal plane with a 4 λ/D occulting disc, the Lyot plane with the stop at 80% of the pupil, the final image) and the starlight's log-intensity profile out to 12 λ/D: at 8 λ/D it is 1.8×10⁻⁷ of the star's peak, against 7.8×10⁻⁵ with no coronagraph. Labelled an illustration: ideal monochromatic optics, a log stretch, the planet at an illustrative 10⁻³.",
-      "sha256": "4506d97aea610920cdf7bc4d6594b8eaa13e67fae38004fd3a873427b53a9486"
+      "sha256": "acac0bb4784c8cc5d6b9bcdd5fcc272b06fc28d48194ce719f809d1a0857953d"
     },
     {
       "file": "mission-dark.webp",
@@ -260,18 +260,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 95,
+        "y": 148,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Mission Control: the catalogue line (8,376 planets and 5,684 stars from exoplanet.eu, fetched 2026-10-18; 8,049 planets placed; the run tess-pi-men-s1 with 7 dips; the feed's 28 entries) and six linked panes: the Galaxy with pi Men selected and its three planets, the sky position, the stored light curve with its dips, a catalogue slice, the system view and the Sentinel feed. Selecting a star in one pane selects it in every pane.",
-      "sha256": "9e4125661fbfa1fc72c8b156fb1a8ae5d70d5e60feb3cc935ae979e135c1b4a0"
+      "sha256": "38107b16ef87cbf9abd1f718b5df2a25884ec639065b2ecba5ab1e5a7da110b2"
     },
     {
       "file": "overview-dark.webp",
@@ -287,18 +287,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 117,
+        "y": 170,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Overview: the landing page, The sky, reviewed. A calibrated panel of Sentinels (Claude) and Probes (deterministic detectors) reads every light curve; every verdict explained; nothing called a planet until it is one. Below, an artist's impression of pi Men, labelled as one.",
-      "sha256": "60e8180a63a806abe73caf0f5fefbd1dbe4ebf4337ea4a0ef89413973a06f65a"
+      "sha256": "439df40a894cf2175d220e837519de2c07e83e4adc3e47a6cce8c2e4b3b9b785"
     },
     {
       "file": "galaxy-dark.webp",
@@ -314,18 +314,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 65,
+        "y": 170,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Galaxy: every known exoplanet, around the Sun. 8,049 planets around 5,433 stars placed where exoplanet.eu lists them, in 3D galactic coordinates, with distance rings in light-years, a radar and a heads-up readout of the planets near the aim. The app states that it maps these planets and did not find them.",
-      "sha256": "cda2a9a5e84ad55389d5ffe18947c357bcc357b30ccab692434412ac56cb256e"
+      "sha256": "c9c93aeaa1e1520d16f361ef8cde7663d6e29e3201d5d39afaee72ba0168aee6"
     },
     {
       "file": "catalogue-dark.webp",
@@ -341,18 +341,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 117,
+        "y": 170,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Catalogue: all 8,376 exoplanet.eu records in a sortable, filterable table with text search and CSV export, each row linking to the planet's own page.",
-      "sha256": "efee6f7d44a45a10ba60809c0e13e89ebcd9ab0a7e75ab362dc51c2d4fbe1418"
+      "sha256": "4d9ed9a7b899ab62ee5bae7565f3f24f8250bcf18dd5bcb9e711a303015eeacb"
     },
     {
       "file": "planet-dark.webp",
@@ -368,18 +368,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 117,
+        "y": 170,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "A planet page, pi Men c (transit, discovered 2018, super-Earth): the star and planet drawn to scale from stored values (orbit not to scale), the transit light curve from stored values with SetuHQ's own stored points, and the stored parameters from exoplanet.eu with their bounds.",
-      "sha256": "f2a3f00c4835a3265e5284448b9debc728dfacadb296661cdcdeac2fa6fd149f"
+      "sha256": "3c3baa4309aa1239c7e153f6df01f9b5d87f839fc5c322d9219eb8682e585c9b"
     },
     {
       "file": "transit-dark.webp",
@@ -395,18 +395,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 65,
+        "y": 170,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Transit case for the dip at BTJD 1331.77 on pi Men c: 241 ppm, 2.46 hours, SNR 16.0, a candidate, unconfirmed. The seven dips of the run as tabs, the transit played back from stored values, the panel score of 1.00 with the reason (its period matches pi Men c: a known planet recovered, not a discovery) and each reviewer's stored marks, Probes and Sentinels.",
-      "sha256": "48e39af8ddf6a4e8eba78775ca10a2b573928fdd08d9f1360b07874f10fed644"
+      "sha256": "864767147684a0b4a90d1ec4f77830c5747825973a4ed524c6a5b8dee92d3031"
     },
     {
       "file": "methods-rv-dark.webp",
@@ -422,18 +422,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 641,
+        "y": 694,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Methods, chapter 4 of 15, Radial velocity: 51 Peg b and its star orbiting their shared centre of mass, with the radial-velocity curve (K = 56.7 m/s from m sin i; stored 55.77 m/s) and the star's spectral lines shifting; labelled a model from stored values, the star's motion exaggerated 1,000 times.",
-      "sha256": "2bce851781bbd83db6f028de36b29c2dcb449c8697cac6545ba63759efcc67ba"
+      "sha256": "3d2e8a0d570fdf6922056d71b43922c6fc377bc7cde9f8fb98c64fb113ceff50"
     },
     {
       "file": "methods-atmospheres-dark.webp",
@@ -449,18 +449,18 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 1952,
+        "y": 2005,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Methods, chapter 11 of 15, Reading atmospheres: A real spectrum, WASP-39 b with JWST. The NIRSpec PRISM transmission spectrum (Carter et al. 2024, CC BY 4.0), 36 binned points with error bars and the paper's best-fit model, transit depth from 20,607 to 23,063 ppm over 0.5 to 5.5 µm, with Na, K, H₂O, CH₄, CO₂ and CO bands marked; the deepest point is at 4.37 µm, the carbon dioxide band. Labelled real data, cited.",
-      "sha256": "5d132f783039b9e034d21574fe9aa18f8b637bcfdce76f5d66f81eb0acb262a6"
+      "sha256": "293c41790de83bc5ebd969454e0178cf7d0303a031b4f051144215dc35884e8a"
     },
     {
       "file": "methods-starlight-dark.webp",
@@ -476,18 +476,29 @@
       "reduced_motion": true,
       "crop_css_px": {
         "x": 40,
-        "y": 2515,
+        "y": 2568,
         "width": 1360,
         "height": 850
       },
       "width": 1600,
       "height": 1000,
       "format": "WebP, quality 80",
-      "commit": "5885994",
-      "app_sha256": "1655eb0e0eb644981ae1a59c04f69f31bdbc0431c7d7ea336ffd236bf958f0ed",
+      "commit": "28f76fd",
+      "app_sha256": "a662f7e5778085ee168797408710187e64c80b8f0e174f7173af920070f3dd1a",
       "captured": "2026-10-20",
       "alt": "Methods, chapter 7 of 15, Blocking starlight: a Lyot coronagraph computed with Fraunhofer optics in four planes (the entrance pupil, the focal plane with a 4 λ/D occulting disc, the Lyot plane with the stop at 80% of the pupil, the final image) and the starlight's log-intensity profile out to 12 λ/D: at 8 λ/D it is 1.8×10⁻⁷ of the star's peak, against 7.8×10⁻⁵ with no coronagraph. Labelled an illustration: ideal monochromatic optics, a log stretch, the planet at an illustrative 10⁻³.",
-      "sha256": "1e676e1fdf2fddaa18cca575a3903ccabf33f9105070a90c42c286894278180f"
+      "sha256": "ffefdf2c73dfdd682865696f4dba82fbcbd74a7903f0b6215a7bc003a76c16ad"
     }
-  ]
+  ],
+  "social_card": {
+    "file": "docs/assets/brand/setuhq-social-card.png",
+    "source": "docs/assets/brand/setuhq-social-card.svg",
+    "source_sha256": "ec0e5bac6730268ac45272a0e6784c44bb35d853cc755c6e9e444640b0086205",
+    "width": 1200,
+    "height": 630,
+    "commit": "28f76fd",
+    "captured": "2026-10-20",
+    "sha256": "89b092b9378e03ec3f98fbececb477cc8bca4d4a28091dd0acdfbab432e68715",
+    "rasterised_by": "Chromium (tools/capture_site_shots.mjs), the SVG at its own size"
+  }
 }

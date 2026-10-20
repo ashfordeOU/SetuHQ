@@ -1,8 +1,12 @@
 <!doctype html>
 <html lang='en'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
-<link rel='icon' href='data:,'>
-<title>exoplan: pi Men (TESS sector 1)</title>
+<title>SetuHQ: pi Men (TESS sector 1)</title>
+<link rel="icon" type="image/svg+xml" href="assets/brand/setuhq-favicon.svg">
+<meta name="description" content="The archived report of SetuHQ&#x27;s stored run on pi Men (TESS sector 1): every candidate, its vetting and provenance. Candidates, never confirmations.">
+<link rel="canonical" href="https://setuhq.com/report/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="SetuHQ: pi Men (TESS sector 1)"><meta property="og:description" content="The archived report of SetuHQ&#x27;s stored run on pi Men (TESS sector 1): every candidate, its vetting and provenance. Candidates, never confirmations."><meta property="og:url" content="https://setuhq.com/report/"><meta property="og:image" content="https://setuhq.com/app/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="SetuHQ: pi Men (TESS sector 1)"><meta name="twitter:description" content="The archived report of SetuHQ&#x27;s stored run on pi Men (TESS sector 1): every candidate, its vetting and provenance. Candidates, never confirmations."><meta name="twitter:image" content="https://setuhq.com/app/assets/brand/setuhq-social-card.png">
 <style>
 :root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#16a34a;--bad:#dc2626;--warn:#d97706;--radius:14px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}}
@@ -51,9 +55,9 @@ code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
 pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto}
 footer{margin:48px 0 24px;color:var(--muted);font-size:13px}
 @media (max-width:600px){.cands{grid-template-columns:1fr}.step{flex-basis:100%}.arrow{display:none}}
-</style></head>
+.hero .brandlogo{height:28px;width:auto;margin-bottom:18px}</style></head>
 <body>
-<div class="codenote" id="codenote" role="note" data-key="93e741f3032f" data-fixed="position:fixed;left:0;right:0;bottom:0;border-top:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000;padding-right:116px;min-height:52px;display:flex;align-items:center" data-clamp="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1" style="position:relative;border-bottom:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000"><span class="cn-text">Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since.</span><button type="button" class="cn-more" style="position:absolute;right:56px;top:50%;transform:translateY(-50%);min-width:52px;height:44px;background:none;border:0;color:#ffd866;text-decoration:underline;font:13px/1 system-ui,sans-serif;cursor:pointer;display:none" aria-expanded="false">more</button><button type="button" class="cn-close" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;background:none;border:1px solid #a57c00;color:#fff3cc;border-radius:6px;font:20px/1 system-ui,sans-serif;cursor:pointer" aria-label="Dismiss this note">×</button></div><script>(function(){var b=document.getElementById('codenote');if(!b)return;var k='exoplan-codenote:'+b.dataset.key;
+<div class="codenote" id="codenote" role="note" data-key="93e741f3032f" data-fixed="position:fixed;left:0;right:0;bottom:0;border-top:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000;padding-right:116px;min-height:52px;display:flex;align-items:center" data-clamp="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1" style="position:relative;border-bottom:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000"><span class="cn-text">Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since.</span><button type="button" class="cn-more" style="position:absolute;right:56px;top:50%;transform:translateY(-50%);min-width:52px;height:44px;background:none;border:0;color:#ffd866;text-decoration:underline;font:13px/1 system-ui,sans-serif;cursor:pointer;display:none" aria-expanded="false">more</button><button type="button" class="cn-close" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;background:none;border:1px solid #a57c00;color:#fff3cc;border-radius:6px;font:20px/1 system-ui,sans-serif;cursor:pointer" aria-label="Dismiss this note">×</button></div><script>(function(){var b=document.getElementById('codenote');if(!b)return;var k='setuhq-codenote:'+b.dataset.key;
 try{if(window.localStorage.getItem(k)){b.remove();return;}}catch(e){}
 var FLOW=b.getAttribute('style'),FIXED=b.dataset.fixed,CLAMP=b.dataset.clamp,open=false;
 var t=b.querySelector('.cn-text'),m=b.querySelector('.cn-more');
@@ -69,7 +73,8 @@ if(window.ResizeObserver){new ResizeObserver(function(){place();}).observe(docum
 b.querySelector('.cn-close').addEventListener('click',function(){try{window.localStorage.setItem(k,'1');}catch(e){}
 b.remove();});})();</script>
 <header class='hero' id='overview'><div class='wrap'>
-  <h1>exoplan: pi Men (TESS sector 1)</h1>
+  <a href="../" aria-label="SetuHQ, home"><img class="brandlogo dk" src="assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"></a>
+  <h1>SetuHQ: pi Men (TESS sector 1)</h1>
   <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p>
 </div></header>
 <nav class='report-nav' aria-label='Sections'><div class='wrap'><a href='#overview'>Overview</a><a href='#pipeline'>Pipeline</a><a href='#candidates'>Candidates</a><a href='#panel'>Panel</a><a href='#validation'>Validation</a><a href='#benchmark'>Benchmark</a><a href='#provenance'>Provenance</a></div></nav>
@@ -244,7 +249,7 @@ b.remove();});})();</script>
    <div>Config</div><div>tess-pi-men-s1</div>
    <div>Config SHA-256</div><div><code>fd677ce6cc4ece78…</code></div>
    <div>Created</div><div>2026-10-17T23:30:07+00:00</div>
-   <div>exoplan</div><div>0.1.0</div>
+   <div>SetuHQ</div><div>0.1.0</div>
    <div>Packages</div><div class='note'>numpy 2.5.4 · scipy 1.18.1 · astropy 8.0.2 · matplotlib 3.11.2 · lightkurve 2.6.0 · anthropic 1.15.0</div>
  </div></div>
 </div>
@@ -382,5 +387,5 @@ b.remove();});})();</script>
 }</pre></details>
 </section>
 
-<footer>Generated by exoplan. MIT licensed. Results on synthetic data are not claims about real sky data.</footer>
+<footer>Generated by SetuHQ. Code: AGPL-3.0-only or a commercial licence from Ashforde OÜ; results: CC BY 4.0. Results on synthetic data are not claims about real sky data.</footer>
 </main></body></html>

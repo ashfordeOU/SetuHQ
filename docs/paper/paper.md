@@ -6,9 +6,9 @@
   clipping factor of the bug as the benchmark report states it.
 -->
 
-# exoplan: a blind benchmark of a calibrated panel of language-model and matched-filter reviewers for TESS transit search
+# SetuHQ: a blind benchmark of a calibrated panel of language-model and matched-filter reviewers for TESS transit search
 
-**The exoplan contributors** (repository: ashfordeOU/EXOPLAN)
+**The SetuHQ contributors** (repository: ashfordeOU/SetuHQ)
 
 *Draft methods paper in the style of the AAS journals (AJ). Markdown only: the aastex631 class is not
 available offline in the environment that produced this draft, so no LaTeX version is provided yet.*
@@ -21,7 +21,7 @@ Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter det
 
 ## Abstract
 
-We describe exoplan, an open-source transit search that copies the Planet Hunters task (mark the start and
+We describe SetuHQ, an open-source transit search that copies the Planet Hunters task (mark the start and
 end of each dip in a blind-coded light curve, then label it a potential planet or noise) but replaces the
 volunteers with a panel of reviewers: *Sentinels*, which are personas of one large language model (Claude)
 that read the rendered plot and give their reasons in words, and *Probes*, deterministic matched-filter
@@ -45,7 +45,7 @@ of the stars that could not be searched, and a public leaderboard on the frozen 
 events itself and ranks by Youden's J. On that leaderboard a baseline that never reads a light curve, a logistic
 regression on catalogue metadata fitted on the tuning half, scores J = +0.39 (+0.27 to +0.49) against
 +0.30 (+0.19 to +0.41) for the Probes. The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11). Nothing here is a
-discovery, and no exoplan output is called a confirmed or validated planet.
+discovery, and no SetuHQ output is called a confirmed or validated planet.
 
 ## 1 Introduction
 
@@ -54,7 +54,7 @@ in the first month of Planet Hunters on Kepler data (Fischer et al. 2012), and T
 Hunters TESS planet (Eisner et al. 2020). In Planet Hunters TESS, more than 22,000 volunteers marked transit-like events in
 sectors 1 to 26; a clustering step ranked them, the science team vetted the top events, and the project
 recovered 85% of TOIs larger than 4 R⊕ and 51% of those at 3 to 4 R⊕ (Eisner et al. 2021).
-The Planet Hunters CHEOPS project on Zooniverse (see References) uses the same task on CHEOPS light curves; exoplan copies
+The Planet Hunters CHEOPS project on Zooniverse (see References) uses the same task on CHEOPS light curves; SetuHQ copies
 that task exactly.
 
 Automated vetting has a longer quantitative record. Kepler's Robovetter, a deterministic decision tree, was
@@ -62,7 +62,7 @@ measured for completeness with injected transits and for reliability with invert
 curves (Coughlin et al. 2016; Thompson et al. 2018); for periods below 100 days its DR25 catalogue reached a
 completeness above 85% and a reliability above 98% (Thompson et al. 2018).
 That completeness is the vetter's alone: it is measured on injected transits that the pipeline had already detected
-as threshold-crossing events, whereas exoplan's completeness below is end to end, from light curve to vetted dip.
+as threshold-crossing events, whereas SetuHQ's completeness below is end to end, from light curve to vetted dip.
 Machine-learned vetters rank threshold-crossing events by learning from labelled examples: AstroNet ranked a
 plausible planet above a false positive in 98.8% of test pairs (Shallue & Vanderburg 2018), a variant
 triages and vets TESS candidates (Yu et al. 2019), and ExoMiner reports 93.6% recall at 99% precision
@@ -72,7 +72,7 @@ not probabilities unless calibrated.
 Large language models that read images and explain their reasoning are a newer kind of reviewer. They have
 classified images of astronomical transients and explained the classifications in text (Stoppa et al. 2025). In the
 literature collected for this work we found no published benchmark of such reviewers on TESS transit vetting
-with controls and a held-out split, so we make no comparison with one. exoplan treats a language-model reviewer as one calibrated voice in a panel, beside
+with controls and a held-out split, so we make no comparison with one. SetuHQ treats a language-model reviewer as one calibrated voice in a panel, beside
 deterministic detectors whose behaviour can be measured exactly, and asks what such a panel can claim on a
 stated benchmark.
 
@@ -396,9 +396,9 @@ so the value is a bound set by the number of trials. One star is a check of the 
 
 ## 6 Comparison with published reference numbers
 
-These references measure different populations, data and tasks; they are context, not exoplan requirements.
+These references measure different populations, data and tasks; they are context, not SetuHQ requirements.
 
-| quantity | exoplan (held-out) | published reference |
+| quantity | SetuHQ (held-out) | published reference |
 |---|---|---|
 | completeness | 57% (86/150; 95% CI 49–65%) on searchable stars, end to end (search, review, vetting) | Robovetter DR25: above 85% for P < 100 d, vetting alone, on injected transits already detected as TCEs (Thompson et al. 2018) |
 | completeness, 3 to 4 R⊕ | 44% (4/9; 95% CI 19–73%) | Planet Hunters TESS: 51% (Eisner et al. 2021) |
@@ -408,12 +408,12 @@ These references measure different populations, data and tasks; they are context
 | statistical validation | none in the code measured; S3, FP TOIs labelled validated: *pending: S3 FPP* | TRICERATOPS "validated": FPP < 0.015 and NFPP < 10⁻³ (Giacalone et al. 2021); vespa on all KOIs (Morton et al. 2016) |
 
 The radius rows use the bins Planet Hunters TESS reported, computed from the per-star rows and the TOI table's
-radii. Against Planet Hunters TESS, exoplan's completeness is, at 3 to 4 R⊕, consistent with Planet Hunters TESS's rate; above 4 R⊕, significantly below Planet Hunters TESS's rate. With 9 stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart. Its headline completeness is significantly below the Robovetter's, and it is
+radii. Against Planet Hunters TESS, SetuHQ's completeness is, at 3 to 4 R⊕, consistent with Planet Hunters TESS's rate; above 4 R⊕, significantly below Planet Hunters TESS's rate. With 9 stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart. Its headline completeness is significantly below the Robovetter's, and it is
 far from Robovetter-level reliability: its vetted false-alarm rate on the controls is 573 and
 848 per 1,000 star-sectors before the feed's rule, and 55 and
 65 after it, against the project's own proposed target of at most one per 1,000. The
 comparison is not like for like. The Robovetter's completeness measures the vetting step on events the Kepler
-pipeline had already detected, while exoplan's includes its own search; Kepler had a four-year baseline against
+pipeline had already detected, while SetuHQ's includes its own search; Kepler had a four-year baseline against
 one TESS sector here; Planet Hunters TESS searched sectors 1 to 26 with human volunteers and science-team vetting;
 and the Robovetter's reliability is a property of its candidate catalogue, ours a rate per star-sector. We make no
 claim of matching either.
@@ -443,8 +443,8 @@ claim of matching either.
 * **FAPs are bounded by the trials;** the Gumbel tail is extrapolated and indicative only.
 * **Synthetic injections are not sky noise** (Section 5.1).
 
-Every exoplan entry is a candidate. A detection means the pipeline saw a vetted dip; confirmation needs
-independent evidence such as radial velocities, and no exoplan output is called confirmed or validated.
+Every SetuHQ entry is a candidate. A detection means the pipeline saw a vetted dip; confirmation needs
+independent evidence such as radial velocities, and no SetuHQ output is called confirmed or validated.
 
 ## 8 Reproducibility
 
@@ -463,7 +463,7 @@ independent evidence such as radial velocities, and no exoplan output is called 
   (7 entries, 0 refused). A submission lists each star's detected events on the real and
   control light curves; the leaderboard matches them to the ephemeris and counts control false alarms itself. The
   metadata-only floor is rebuilt from the public inputs by `scripts/leaderboard_metadata_baseline.py`.
-  `exoplan leaderboard <file>` scores a submission and refuses one that states anything but that hash, says it was
+  `setuhq leaderboard <file>` scores a submission and refuses one that states anything but that hash, says it was
   tuned on the held-out half, carries a field outside the whitelist, or does not cover its scope.
 * **What the leaderboard cannot check, and future work.** The hash is an attestation: the held-out labels are
   public, so no check can prove they were not read, and a method's own pass verdicts and control lists are its own

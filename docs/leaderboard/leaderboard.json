@@ -1,5 +1,6 @@
 {
  "format": "exoplan-leaderboard-results/4",
+ "license": "CC-BY-4.0",
  "floor": {
   "probes": {
    "j": 0.30333333333333323,
@@ -1176,7 +1177,7 @@
    "tuned_on": "none",
    "provenance": {
     "method": "A clean candidate only when the Probes give one and either Sentinel also marks the TOI's dip as a potential planet. Applied by the leaderboard to the component entries' scored outcomes.",
-    "code_version": "src/exoplan/leaderboard.py (DERIVED)",
+    "code_version": "src/setuhq/leaderboard.py (DERIVED)",
     "generated_from": [
      "docs/leaderboard/submissions/probes-subsample.json",
      "docs/leaderboard/submissions/claude-volunteer.json",
@@ -1365,7 +1366,7 @@
    "tuned_on": "none",
    "provenance": {
     "method": "A clean candidate when the Probes give one or either Sentinel marks the TOI's dip as a potential planet. Applied by the leaderboard to the component entries' scored outcomes.",
-    "code_version": "src/exoplan/leaderboard.py (DERIVED)",
+    "code_version": "src/setuhq/leaderboard.py (DERIVED)",
     "generated_from": [
      "docs/leaderboard/submissions/probes-subsample.json",
      "docs/leaderboard/submissions/claude-volunteer.json",
