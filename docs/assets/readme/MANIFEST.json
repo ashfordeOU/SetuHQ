@@ -1,0 +1,169 @@
+{
+  "generator": "tools/gen_readme_assets.py",
+  "grid": {
+    "width": 1200,
+    "height": 600,
+    "margin": 40
+  },
+  "fonts": [
+    "Geist-latin-wght.ttf",
+    "GeistMono-latin-wght.ttf",
+    "Unbounded-latin-wght.ttf"
+  ],
+  "assets": {
+    "hero": {
+      "files": [
+        "hero-light.svg",
+        "hero-dark.svg"
+      ],
+      "sources": {
+        "docs/results/exoplanet_map.json": "949a62e97e0ba84eb55c1a7675b8e6b065e519de43e2dcdc79a49761707dd56e"
+      },
+      "commit": "befef30"
+    },
+    "pi-men": {
+      "files": [
+        "pi-men-light.svg",
+        "pi-men-dark.svg"
+      ],
+      "sources": {
+        "runs/tess-pi-men-s1": "770fdf41bb743cc9ef423fb474e47ce22b16628957ce77460521adcfc04c74ec",
+        "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
+      },
+      "commit": "76de67d"
+    },
+    "benchmark": {
+      "files": [
+        "benchmark-light.svg",
+        "benchmark-dark.svg"
+      ],
+      "sources": {
+        "docs/results/benchmark_real_tois.json": "b5bccb3918b249177b41ce49cf63d895c69903a6923673666ec5763497c765a9",
+        "docs/results/benchmark_real_tois.md": "def4eeff5ee71a93b36e639976501db335fd1e2d1d41af2241e02690d2c4b10e"
+      },
+      "commit": "1180dfe"
+    },
+    "feed-noise": {
+      "files": [
+        "feed-noise-light.svg",
+        "feed-noise-dark.svg"
+      ],
+      "sources": {
+        "docs/results/benchmark_real_tois.json": "b5bccb3918b249177b41ce49cf63d895c69903a6923673666ec5763497c765a9"
+      },
+      "commit": "1180dfe"
+    },
+    "sky-coverage": {
+      "files": [
+        "sky-coverage-light.svg",
+        "sky-coverage-dark.svg"
+      ],
+      "sources": {
+        "docs/results/survey_coverage.json": "e4473b19a45e5037f7790eb18bd7c3f00d8f9a85194505d769d78522cbd6eed4"
+      },
+      "commit": "54b255e"
+    },
+    "flow-pipeline": {
+      "files": [
+        "flow-pipeline-light.svg",
+        "flow-pipeline-dark.svg"
+      ],
+      "sources": {
+        "runs/tess-pi-men-s1": "770fdf41bb743cc9ef423fb474e47ce22b16628957ce77460521adcfc04c74ec",
+        "configs/tess_pi_men_s1.toml": "ecc1bf3a744ca6aea3199135cbb9f907b5203d13a047bb608305dc530a0c968b",
+        "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
+      },
+      "commit": "76de67d"
+    },
+    "architecture": {
+      "files": [
+        "architecture-light.svg",
+        "architecture-dark.svg"
+      ],
+      "sources": {
+        "docs/leaderboard.json": "354de06d54cda342905eea826e5cba92aed3ca33faa95cad96a04d455069d745",
+        "docs/results/exoplanet_map.json": "949a62e97e0ba84eb55c1a7675b8e6b065e519de43e2dcdc79a49761707dd56e",
+        "docs/results/benchmark_real_tois.json": "b5bccb3918b249177b41ce49cf63d895c69903a6923673666ec5763497c765a9"
+      },
+      "commit": "1180dfe"
+    },
+    "methods-strip": {
+      "files": [
+        "methods-strip-light.svg",
+        "methods-strip-dark.svg"
+      ],
+      "sources": {
+        "src/exoplan/methods.py": "1bfa14d16c36bf9572cb692e1ac1cdd36ae4ba32bce615d5c584761e79d6834a",
+        "docs/results/methods_examples.json": "5190fc392d23af5ca9446ed4b06bdd24948a23534f2eefe763a47d31adec4974"
+      },
+      "commit": "903cf24"
+    }
+  },
+  "brand": {
+    "files": [
+      "setuhq-favicon.svg",
+      "setuhq-icon-black.svg",
+      "setuhq-icon-navy.svg",
+      "setuhq-logo-dark.svg",
+      "setuhq-logo-light.svg",
+      "setuhq-social-card.svg",
+      "setuhq-wordmark-dark.svg",
+      "setuhq-wordmark-light.svg"
+    ],
+    "sources": {
+      "docs/assets/readme/brand/setu-mark.svg": "ee07445902581e275a056dac5ae734cc078df0d4e6bfa55bc735c69c6e411119",
+      "tools/readme-fonts/Unbounded-latin-wght.ttf": "9379be23b1fd71ddfd473b0b7c4792d8ef3004622e6f7a5f81210bb626fccf0c"
+    },
+    "q": {
+      "r": 342.75,
+      "stroke": 90.5,
+      "advance": 904.91
+    }
+  },
+  "repo_counts": {
+    "modules": 32,
+    "tests": 349,
+    "network": 2,
+    "slow": 3,
+    "chapters": 15,
+    "leaderboard_trials": 7,
+    "catalogue": 8376,
+    "cli_commands": [
+      "run",
+      "rebuild",
+      "calibrate",
+      "benchmark",
+      "discover",
+      "dashboard",
+      "docket",
+      "app",
+      "crossmatch",
+      "plate",
+      "report"
+    ]
+  },
+  "app_screenshots": {
+    "captured_by": "tools/capture_site_shots.mjs",
+    "record": "app/SHOTS.json",
+    "files": {
+      "catalogue-dark.webp": "efee6f7d44a45a10ba60809c0e13e89ebcd9ab0a7e75ab362dc51c2d4fbe1418",
+      "catalogue-light.webp": "b077551a86d88f43bb9fa71b8b084ede2259b0f608f1db129e0a2c7c9bb60408",
+      "galaxy-dark.webp": "cda2a9a5e84ad55389d5ffe18947c357bcc357b30ccab692434412ac56cb256e",
+      "galaxy-light.webp": "e4eefefa2a50322554c062d4ef63b4ad4083355bdda56345cecc62f0385660eb",
+      "methods-atmospheres-dark.webp": "f1f14cdde1c46fb5b0e05d58e1e9c7c18a51278acf72825e44efabc8daff1689",
+      "methods-atmospheres-light.webp": "54fe4f5c05f0d9341698fd96d92e682b644637433f34b409afafed93bcc69385",
+      "methods-rv-dark.webp": "10353bd86aa5c9cba419c090746b8a1d5192741284cd443ed41033e6b1a0802c",
+      "methods-rv-light.webp": "a6473c1971b2581d5403dd0ca4eb758bfc911eaa89de0c4a410ec36c34644519",
+      "methods-starlight-dark.webp": "82b2f33329da529f2fb653d3090ab6d95cefb5db642702869bbe53c734b73aca",
+      "methods-starlight-light.webp": "02b9c00c28cf73840e8b3b185ad6f6144b2b7bf5be860fa68d054e98eedc94b8",
+      "mission-dark.webp": "9e4125661fbfa1fc72c8b156fb1a8ae5d70d5e60feb3cc935ae979e135c1b4a0",
+      "mission-light.webp": "9cca8eb0db4984605f65b586263a0f00847ef5604e12b4ec9299dbd20d19aa11",
+      "overview-dark.webp": "60e8180a63a806abe73caf0f5fefbd1dbe4ebf4337ea4a0ef89413973a06f65a",
+      "overview-light.webp": "3b7cab296951199f1cd7820e4bcf7fb7b080dbbfa7976c4d856610e7a0cb1a9b",
+      "planet-dark.webp": "f2a3f00c4835a3265e5284448b9debc728dfacadb296661cdcdeac2fa6fd149f",
+      "planet-light.webp": "bde36b28584885a7222aa8f2a3d3aab32aac443a117a240ddaa5bd8ae68bb7ce",
+      "transit-dark.webp": "0d75e75b6c3769d77b04d5c81c19d30ee8b97212c8ef5a85d462dd03dbf88f3b",
+      "transit-light.webp": "78bd6ecf3e9d904ad7976123ccc33d3372441e6db442bb7d6bf1f022c62d4b7b"
+    }
+  }
+}
