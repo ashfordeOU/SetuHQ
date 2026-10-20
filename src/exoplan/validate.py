@@ -87,6 +87,17 @@ class Priors:
                    "EB, EBx2P and nearby stars by choice")
 
 
+LIKELY_FP = "likely false positive"   # the reduced FPP above 0.5 on every detrending setting (not a TRICERATOPS class)
+MAX_LOG10_ODDS_SPREAD = 1.0           # an FPP whose odds vary by more than a factor of 10 across settings is refused
+
+
+def log_odds_spread(values) -> float:
+    """max − min of log10(FPP / (1 − FPP)) over ``values`` (each clipped to [1e-12, 1 − 1e-12]): the stability test
+    of the reduced FPP, on odds so that it treats 0.001 against 0.01 and 0.99 against 0.999 alike."""
+    odds = [math.log10(p / (1.0 - p)) for p in (min(max(float(v), 1e-12), 1.0 - 1e-12) for v in values)]
+    return max(odds) - min(odds)
+
+
 def fpp_class(fpp: float | None, nfpp: float | None) -> str:
     """The TRICERATOPS classes (Giacalone et al. 2021) by number alone, without the contrast-curve rule."""
     if fpp is None or nfpp is None:
@@ -186,9 +197,10 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
 
     With ``variants`` (the same all-phase scan on other detrending settings, :func:`exoplan.pipeline.secondary_variants`)
     the FPP is computed on every setting under two noise models (the scan's robust spread and its plain std). The FPP
-    given is the median over settings at the robust spread, with the full range beside it; none is given when the range
-    is unstable (wider than a factor of 10, or than 0.5), and the class is stated only when both ends of the range
-    fall in the same class. Without ``variants``, a single scan must pass the white-noise gate (:func:`scan_whiteness`)
+    given is the median over settings at the robust spread, with the full range beside it. When every setting gives
+    more than 0.5 the class is "likely false positive" whatever the spread; otherwise none is given when the odds
+    FPP/(1 − FPP) vary by more than a factor of 10 across the range (:func:`log_odds_spread`), and the class is stated
+    only when both ends of the range fall in the same class ("undetermined" when it straddles 0.015 or 0.5). Without ``variants``, a single scan must pass the white-noise gate (:func:`scan_whiteness`)
     or no FPP is given; the FPPs under other noise models are kept in ``evidence["fpp_sensitivity"]`` only.
     """
     notes = []
@@ -326,9 +338,18 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
                                      "median_robust": fpp, "rows": rows}
         if sl is not None:
             evidence["secondary_bayes_factor_eb_vs_tp"] = sl[1] / sl[0] if sl[0] > 0 else math.inf
-        if lo is None or hi - lo > 0.5 or (lo > 0 and hi / lo > 10):
+        spread = log_odds_spread(values) if values else None
+        evidence["fpp_stability"]["log10_odds_spread"] = spread
+        if lo is not None and lo > FPP_LIKELY_PLANET:
+            # Every setting puts the FPP above 0.5: the class is the same whatever the setting, however far apart
+            # the numbers are (an obvious binary's FPP runs from 0.98 to 1 - 1e-10, a factor of 10^8 in odds).
+            stable_class = (f"{LIKELY_FP if not (nfpp is not None and nfpp > NFPP_LIKELY_NFP) else fpp_class(fpp, nfpp)}"
+                            f"{REDUCED_CLASS_SUFFIX}: FPP above {FPP_LIKELY_PLANET:g} on every one of {len(settings)} "
+                            f"detrending settings × 2 noise models (range {lo:.3g}–{hi:.3g})")
+        elif lo is None or spread > MAX_LOG10_ODDS_SPREAD:
             refused = (f"FPP not computed: unstable across {len(settings)} detrending settings and two noise models "
-                       f"(range {lo:.3g}–{hi:.3g})" if lo is not None else "FPP not computed: no setting gave one")
+                       f"(range {lo:.3g}–{hi:.3g}, more than a factor of 10 in odds)" if lo is not None else
+                       "FPP not computed: no setting gave one")
             fpp = nfpp = None
             probs = {}
         else:

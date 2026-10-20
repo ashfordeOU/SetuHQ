@@ -320,3 +320,25 @@ def test_a_sub_white_spread_never_raises_the_secondary_significance():
     rows = a.evidence["fpp_stability"]["rows"]
     floored = [r["fpp"] for r in rows if r["window_scale"] != 1.0]   # every variant row sits at the nominal σ
     assert max(floored) == pytest.approx(min(floored), rel=1e-9)
+
+
+def test_log_odds_spread():
+    assert validate.log_odds_spread([0.001, 0.01]) == pytest.approx(math.log10(0.01 / 0.99 * 0.999 / 0.001))
+    assert validate.log_odds_spread([0.99, 0.999]) == pytest.approx(validate.log_odds_spread([0.001, 0.01]))
+    assert validate.log_odds_spread([1.0, 0.5]) == pytest.approx(12.0, abs=1e-3)   # clipped at 1 - 1e-12
+
+
+def test_an_obvious_binary_is_a_likely_false_positive_not_unstable():
+    """A 400 ppm secondary beside a 1000 ppm primary: the FPP is above 0.5 on every setting, though its odds differ by
+    many factors of 10 between settings, so the class is 'likely false positive' with the range, not a refusal."""
+    dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
+    dv["secondary"].update(_white_scan(depth_ppm=400.0, snr=40.0, max_brightening_snr=3.0))
+    r = reduced_fpp(depth=1e-3, dv=dv, variants=_variants([330.0, 420.0, 380.0, 450.0]))
+    st = r.evidence["fpp_stability"]
+    assert r.refused is None and r.fpp is not None and st["range"][0] > 0.5
+    assert r.fpp_class.startswith(validate.LIKELY_FP) and "on every one of 5" in r.fpp_class
+    assert r.label == NO_CONTRAST
+    # the same spread of odds below 0.5 is refused
+    dv["secondary"] = _white_scan(depth_ppm=25.0, snr=2.5)
+    wild = reduced_fpp(depth=1e-3, dv=dv, variants=_variants([25.0, 90.0, 25.0, 25.0]))
+    assert wild.refused and wild.evidence["fpp_stability"]["log10_odds_spread"] > 1.0

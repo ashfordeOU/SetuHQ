@@ -269,11 +269,18 @@ def secondary_search(time, flux, *, period: float, t0: float, duration: float, s
     total = float(drop.sum())
     shares = {int(k): (float(drop[cycle == k].sum() / total) if total > 0 else 0.0) for k in np.unique(cycle)}
     robust = mad_sigma(snr) if snr.size >= MIN_SCAN_POSITIONS else None
+    # The plain std of the scan (a noise model of the reduced FPP, and the white-noise gate's std/robust) leaves out
+    # the positions within one duration of the strongest dip: a real secondary inflated it (std/robust 1.3-1.7 on
+    # simulated binaries), so the "std" noise model diluted the very dip it was judging and refused the FPP of
+    # obvious binaries as unstable. On white noise this changes the std by about 1%.
+    gap = np.abs(centres - c)
+    away = np.minimum(gap, 1.0 - gap) * period > duration
+    std_snr = float(np.std(snr[away])) if away.sum() >= MIN_SCAN_POSITIONS else float(np.std(snr))
     return {
         "phase": c, "depth_ppm": d_best * 1e6, "sigma_ppm": sg_best * 1e6, "snr": d_best / sg_best, "n_points": n_best,
         "max_brightening_snr": float(-snr[j]), "n_trials": int(snr.size), "duration_days": duration,
         "excluded_days": exclude,
-        "scan_median_snr": float(np.median(snr)), "scan_robust_sigma": robust, "scan_std_snr": float(np.std(snr)),
+        "scan_median_snr": float(np.median(snr)), "scan_robust_sigma": robust, "scan_std_snr": std_snr,
         "n_epochs": len(shares), "max_epoch_share": max(shares.values()) if shares else None,
         "phase_05": {"phase": float(centres[near]), "depth_ppm": float(depth[near]) * 1e6,
                      "sigma_ppm": float(sigma[near]) * 1e6, "snr": float(snr[near])},

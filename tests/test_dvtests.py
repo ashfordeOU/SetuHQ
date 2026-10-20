@@ -257,6 +257,20 @@ def test_decide_switch_replaces_phase_half_secondary():
     assert dvtests.decide(("crowded", "timing_inconsistent"), base_disqualifying=DISQUALIFYING)  # informational
 
 
+def test_the_scan_std_leaves_out_the_strongest_dip():
+    """A real secondary inflated the scan's plain std (the reduced FPP's second noise model and the white-noise
+    gate's std/robust), so the dip diluted its own significance; the std now leaves out the positions within one
+    duration of the strongest dip."""
+    from dvtests_helpers import trapezoid_lc
+
+    for seed in range(3):
+        lc = trapezoid_lc(seed=seed, period=4.0, t0=1.0, duration=0.15, depth=1000e-6, noise=600e-6,
+                          secondary=300e-6, gap=None)
+        s = dvtests.secondary_search(lc.time, lc.flux, period=4.0, t0=1.0, duration=0.15)
+        assert s["snr"] > 8 and abs(s["phase"] - 0.5) < 0.01
+        assert s["scan_std_snr"] / s["scan_robust_sigma"] < 1.3, (seed, s["scan_std_snr"], s["scan_robust_sigma"])
+
+
 def test_epochs_without_a_dip_stay_out_of_the_timing_tests():
     """An epoch whose fitted depth is not significant has no mid-time: on a P/2 alias every other epoch is empty, and
     its mid-time (the deepest noise dip in the window, 67 minutes off) flagged a clean planet timing_inconsistent."""
