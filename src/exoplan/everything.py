@@ -19,10 +19,13 @@ from pathlib import Path
 
 DEFAULT_SWEEP = "docs/sweep/catalogue.json"
 VARIABLES_JSON = "assets/data/variables.json"
-# Class colours from the system tokens: yellow for an open candidate (as on the Sky), coral for a binary
-# (rejected as a planet), amber for a star's own flare, green for a variable star, greys for the rest.
-CLASS_COLOUR = {"planet_candidate": "var(--yellow)", "eclipsing_binary": "var(--coral)", "flare": "var(--amber)",
+# Class colours from the system tokens, distinct in both themes and at least 3:1 on the page in each: yellow for
+# a candidate, purple for a binary, coral for a flare, green for a variable star. A class that does not exceed
+# its null in the catalogue is drawn grey instead (NOISE_COLOUR), whatever its name.
+CLASS_COLOUR = {"planet_candidate": "var(--yellow)", "eclipsing_binary": "var(--magenta)", "flare": "var(--coral)",
                 "variable": "var(--green)", "systematic": "var(--ink-3)", "unclassified": "var(--line-3)"}
+NOISE_COLOUR = "var(--ink-3)"
+NOISE_LIKE = "not distinguishable from noise in this slice"
 SKY_SWEEP_COLOUR = "#30D158"
 SKY_FOUND_COLOUR = "#FFB340"
 SORTS = [("class", "Class"), ("tic", "TIC"), ("time", "Time"), ("depth", "Depth or amplitude"), ("confidence", "Confidence")]
@@ -43,22 +46,38 @@ def _slice_line(src: dict) -> str:
             f"searched ({who}; by {src['name']})")
 
 
+def class_view(cat: dict) -> dict:
+    """Per class: real, null, excess and its interval, whether it is noise-like, its colour and its place in the
+    order (classes that exceed their null first, then the noise-like ones, then unclassified)."""
+    vs = ((cat["counts"].get("null") or {}).get("by_class")) or {}
+    noise = set((cat["counts"].get("null") or {}).get("noise_like") or [])
+    ids = [k["id"] for k in cat["classes"]]
+    order = [c for c in ids if c not in noise and c != "unclassified"] + [c for c in ids if c in noise] + ["unclassified"]
+    colours = {c: (NOISE_COLOUR if c in noise else CLASS_COLOUR[c]) for c in ids}
+    return {"vs": vs, "noise_like": sorted(noise), "order": order, "colours": colours}
+
+
 def sweep_meta(cat: dict | None, catalogue: dict | None = None, path: str = DEFAULT_SWEEP) -> dict | None:
-    """The small part of the sweep catalogue the page carries: counts, classes with rules, sources, contributors,
-    the slice in words, star names for TICs the planet catalogue knows, and the Sky layer's points."""
+    """The small part of the sweep catalogue the page carries: counts with each class against its null, classes
+    with rules, sources, contributors, the slice in words, star names for TICs the planet catalogue knows, and
+    the Sky layer's points."""
     if cat is None:
         return None
     from exoplan.catalogue import tic_names
 
+    view = class_view(cat)
     cov = cat.get("coverage") or []
     tics = sorted({r["tic"] for r in cov})
     names = tic_names(catalogue, tics) if catalogue else {}
-    found = {(e["tic"], e["sector"]) for e in cat.get("entries") or [] if e["class"] not in ("systematic", "unclassified")}
+    real = {c for c in view["order"] if c not in view["noise_like"] and c not in ("systematic", "unclassified")}
+    found = {(e["tic"], e["sector"]) for e in cat.get("entries") or [] if e["class"] in real}
     sky = [[r["ra"], r["dec"], 1 if (r["tic"], r["sector"]) in found else 0] for r in cov
            if r.get("status") == "searched" and r.get("ra") is not None and r.get("dec") is not None]
     return {"path": path, "generated_at": cat.get("generated_at", ""), "counts": cat["counts"], "classes": cat["classes"],
-            "colours": CLASS_COLOUR, "sources": cat.get("sources") or [], "contributors": cat.get("contributors") or [],
-            "slices": [_slice_line(s) for s in cat.get("sources") or []], "tic_names": names, "sky": sky,
+            "colours": view["colours"], "order": view["order"], "noise_like": view["noise_like"], "vs": view["vs"],
+            "noise_text": NOISE_LIKE, "sky_found_classes": sorted(real),
+            "sources": cat.get("sources") or [], "contributors": cat.get("contributors") or [],
+            "slices": [_slice_line(s) for s in cat.get("sources") or []], "tic_names": names, "sky": sky, "n_sky": len(sky),
             "sorts": [k for k, _ in SORTS], "sort_labels": dict(SORTS), "json": VARIABLES_JSON}
 
 
@@ -81,36 +100,48 @@ def variables_filter(cat: dict, v: dict) -> list[str]:
     return out
 
 
+def excess_text(v: dict) -> str:
+    """'+41 (95%: +12 to +70)' or '+2 (95%: −3 to +7)'."""
+    sign = lambda x: f"+{x:,.0f}" if x > 0 else f"−{-x:,.0f}" if x < 0 else "0"  # noqa: E731
+    return f"{sign(v['excess'])} (95%: {sign(v['lo'])} to {sign(v['hi'])})"
+
+
 def overview_counter(meta: dict | None, app_href: str = "") -> str:
-    """The Overview's live, honest counter: every figure from the committed sweep catalogue."""
+    """The Overview's live, honest counter: every figure from the committed sweep catalogue, each class beside
+    its own null."""
     e = html.escape
     if not meta:
         return ""
     c = meta["counts"]
-    ctl = c.get("control_inverted") or {}
     labels = {k["id"]: k["label"] for k in meta["classes"]}
     big = [(c["stars_searched"], "stars searched"), (c["star_sectors_searched"], "star-sectors"), (c["dips_reviewed"], "dips reviewed"),
            (c["entries"], "catalogue entries")]
     tiles = "".join(f'<div role="listitem"><b class="mono">{n:,}</b><span>{e(t)}</span></div>' for n, t in big)
-    n_ctl = ctl.get("star_sectors", 0)
-    rows = "".join(
-        f'<li><a href="{app_href}#/variables?class={k}" style="--c:{CLASS_COLOUR[k]}"><i aria-hidden="true"></i><span>{e(labels[k])}</span>'
-        f'<b class="mono">{c["by_class"][k]:,}</b>'
-        + (f'<em class="mono" title="The same rules on flux-inverted copies of the same stars">{(ctl.get("by_class") or {}).get(k, 0):,} on inverted</em>' if n_ctl else "")
-        + "</a></li>" for k in labels)
+    vs = meta.get("vs") or {}
+    rows = ""
+    for k in meta["order"]:
+        v = vs.get(k)
+        note = ""
+        if v and k != "unclassified":
+            note = (f'<em class="mono">null {v["null"]:,} · excess {e(excess_text(v))}</em>'
+                    + (f'<em class="vanoise">{e(NOISE_LIKE)}</em>' if k in meta["noise_like"] else ""))
+        rows += (f'<li><a href="{app_href}#/variables?class={k}" style="--c:{meta["colours"][k]}"><i aria-hidden="true"></i><span>{e(labels[k])}</span>'
+                 f'<b class="mono">{c["by_class"][k]:,}</b>{note}</a></li>')
     slices = "; ".join(e(s) for s in meta["slices"])
+    n_null = (c.get("null") or {}).get("searches", 0)
+    real = [labels[k] for k in meta["order"] if k not in meta["noise_like"] and k != "unclassified"]
     return f"""<section class="sweepctr card" aria-labelledby="h-sweepctr">
         <div class="sweephead"><h2 id="h-sweepctr">The sweep so far</h2><a class="btn" href="{app_href}#/variables">Everything that dims ›</a></div>
         <p class="muted">Every star searched, every dip kept and classified, nothing thrown away. So far: {slices}. A first slice, not the sky.</p>
         <div class="sweeptiles" role="list" aria-label="Sweep figures">{tiles}</div>
-        <ul class="sweepcls" aria-label="Catalogue entries by class">{rows}</ul>
-        <p class="small">Read from {e(meta['path'])} (built {e(meta['generated_at'][:16].replace('T', ' '))} UTC); nothing is extrapolated. {"Beside each class: what the same rules found on flux-inverted copies of the same " + format(n_ctl, ",") + " star-sectors, where nothing real can dim. " if n_ctl else ""}No entry is a new planet: a planet candidate is a light-curve classification, unconfirmed.</p>
+        <ul class="sweepcls" aria-label="Catalogue entries by class, each against its null">{rows}</ul>
+        <p class="small">Read from {e(meta['path'])} (built {e(meta['generated_at'][:16].replace('T', ' '))} UTC); nothing is extrapolated. {f"Each class is set against its own null on the same {n_null:,} star-sectors (what its rule finds where its signal cannot be; the rules table says which). In this slice only {e(', '.join(real) or 'no class')} {'exceeds' if len(real) == 1 else 'exceed'} its null; the rest are {e(NOISE_LIKE)}. " if n_null else ""}No entry is a new planet.</p>
       </section>"""
 
 
 def sky_layer_svg(meta: dict | None) -> str:
-    """The sweep's coverage on the Sky map: one dot per searched star-sector, amber where it has an entry
-    other than systematic or unclassified."""
+    """The sweep's coverage on the Sky map: one dot per searched star-sector, amber where it has an entry in a
+    class that exceeds its null."""
     if not meta or not meta.get("sky"):
         return ""
     from exoplan.story import mollweide
@@ -145,39 +176,51 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
         return (f'<header>{eyebrow}<h1 class="lead-h" id="h-variables" tabindex="-1">Everything that dims.</h1>'
                 f'<p>The sweep catalogue ({DEFAULT_SWEEP}) is not in this build. Run <code>exoplan sweep</code>.</p></header>{tabs("variables")}')
     c = meta["counts"]
-    ctl = c.get("control_inverted") or {}
-    n_ctl = ctl.get("star_sectors", 0)
-    labels = {k["id"]: k["label"] for k in meta["classes"]}
-    chips = "".join(f'<button class="chip vachip" type="button" data-vc="{k}" aria-pressed="false" style="--c:{CLASS_COLOUR[k]}"><i aria-hidden="true"></i>'
-                    f'{e(labels[k])} <span class="mono">{c["by_class"][k]:,}</span></button>' for k in labels)
+    vs = meta.get("vs") or {}
+    labels = {k["id"]: k for k in meta["classes"]}
+    noise = set(meta["noise_like"])
+    chips = "".join(f'<button class="chip vachip" type="button" data-vc="{k}" aria-pressed="false" style="--c:{meta["colours"][k]}"><i aria-hidden="true"></i>'
+                    f'{e(labels[k]["label"])} <span class="mono">{c["by_class"][k]:,}'
+                    + (f' · null {vs[k]["null"]:,}' if k in vs and k != "unclassified" else "") + "</span></button>" for k in meta["order"])
     confs = "".join(f'<button class="chip" type="button" data-vf="{k}" aria-pressed="false">{e(k)}</button>' for k in CONF_ORDER)
     sorts = "".join(f'<option value="{k}">{e(v)}</option>' for k, v in SORTS)
-    rules = "".join(f'<tr><th scope="row"><span class="vacls" style="--c:{CLASS_COLOUR[k["id"]]}"><i aria-hidden="true"></i>{e(k["label"])}</span></th>'
-                    f'<td>{e(k["rule"])}</td><td>{e(k["confidence"])}</td><td class="num mono">{c["by_class"][k["id"]]:,}</td>'
-                    + (f'<td class="num mono">{(ctl.get("by_class") or {}).get(k["id"], 0):,}</td>' if n_ctl else "") + "</tr>"
-                    for k in meta["classes"])
-    ctl_head = f'<th scope="col" class="num">On inverted copies</th>' if n_ctl else ""
-    contributors = "".join(f'<li><b>{e(x["name"])}</b> <span class="muted">{x["star_sectors"]:,} star-sectors · {e(", ".join(x["sources"]))}</span></li>'
-                           for x in meta["contributors"])
+
+    def rule_row(k):
+        cl, v = labels[k], vs.get(k)
+        nul = (f'<td class="num mono">{v["null"]:,}</td><td>{e(cl.get("null", ""))}</td><td class="num mono">{e(excess_text(v))}'
+               + (f'<br><span class="vanoise">{e(NOISE_LIKE)}</span>' if k in noise else "") + "</td>") if v and k != "unclassified" else '<td class="num">—</td><td>—</td><td class="num">—</td>'
+        return (f'<tr><th scope="row"><span class="vacls" style="--c:{meta["colours"][k]}"><i aria-hidden="true"></i>{e(cl["label"])}</span></th>'
+                f'<td>{e(cl["rule"])}</td><td>{e(cl["confidence"])}</td><td class="num mono">{v["real"] if v else c["by_class"][k]:,}</td>{nul}</tr>')
+
+    rules = "".join(rule_row(k) for k in meta["order"])
+    contributors = "".join(f'<li><b>{e(x["name"])}</b> <span class="muted">{x["star_sectors"]:,} star-sectors'
+                           + (f' · attested by {e(", ".join(x["attested_by"]))}' if x.get("attested_by") else "")
+                           + (f' · {x["duplicates_not_credited"]:,} identical re-submissions not credited' if x.get("duplicates_not_credited") else "")
+                           + f' · {e(", ".join(x["sources"]))}</span></li>' for x in meta["contributors"])
     ns = c.get("not_searched") or {}
-    pc = c["by_class"]["planet_candidate"]
-    pc_ctl = (ctl.get("by_class") or {}).get("planet_candidate", 0)
+    n_null = (c.get("null") or {}).get("searches", 0)
+    pc = vs.get("planet_candidate")
     verdict = ""
-    if n_ctl:
-        verdict = (f' On flux-inverted copies of the same {n_ctl:,} star-sectors, where no real dip exists, the same rules gave {pc_ctl:,} '
-                   f'planet candidate{"s" if pc_ctl != 1 else ""} against {pc:,} on the real light curves'
-                   + (": as many planet candidates as this are expected from noise alone." if pc and pc_ctl * 2 >= pc else
-                      ": the excess over that is what a follow-up would look at first." if pc else ".")
-                   + (f' {c.get("planet_candidates_matching_toi", 0):,} of the {pc:,} match a known TOI.' if pc else ""))
+    if pc:
+        verdict = (f' The planet-candidate rule found {pc["real"]:,} on the real light curves and {pc["null"]:,} on flux-inverted copies of the '
+                   f'same stars (dips turned into bumps, so real dips cannot pass): an excess of {excess_text(pc)}. '
+                   + ("They are not distinguishable from noise in this slice, so they are not presented as candidates."
+                      if "planet_candidate" in noise else "The excess is what a follow-up would look at first.")
+                   + f' {c.get("planet_candidates_matching_toi", 0):,} match a known TOI.')
+    shape = (c.get("null") or {}).get("flare_shape") or {}
+    shape_txt = (f' Of the {sum(shape.values()):,} flare-class brightenings, {shape.get("fast_rise", 0):,} rise faster than they decay and '
+                 f'{shape.get("slow_rise", 0):,} the other way ({shape.get("equal", 0):,} equal); real flares rise fast, noise has no preferred '
+                 'direction.') if shape and sum(shape.values()) else ""
     return f"""<header class="headrow">
         <div>{eyebrow}<h1 class="lead-h" id="h-variables" tabindex="-1">Everything that dims.<br><span class="grey">{c['entries']:,} entries, none thrown away.</span></h1>
         <p>Every consensus dip of the panel, every brightening and every star's variability from the sweep, each classified by a stated rule, with its confidence, its cues and its provenance: the marks, the weights and the Sentinels' own words. {e("Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.")}</p></div>
       </header>
       {tabs("variables")}
       <p class="note"><b>A first slice, stated plainly.</b> {"; ".join(e(s) for s in meta["slices"])}. {c['stars_searched']:,} stars searched, {c['star_sectors_searched']:,} star-sectors, {c['dips_reviewed']:,} consensus dips reviewed{f", {sum(ns.values()):,} star-sectors recorded but not searched ({ns.get('no_data', 0)} no data, {ns.get('error', 0)} errors, {ns.get('pending', 0)} pending)" if sum(ns.values()) else ""}. This catalogue is separate from the discovery feed. <b>Nothing here is a new or confirmed planet.</b> A class is what the light curve's cues suggest; there is no pixel or centroid check, so a blended binary can look like anything.{e(verdict)}</p>
+      <p class="note"><b>Each class against its own null</b>, measured on the same {n_null:,} star-sectors: what its rule finds where its signal cannot be. Dips: the flux turned upside down (a real dip becomes a bump; a real flare or pulsation maximum becomes a dip, so this null is not empty of real signals). Flares: downward events with the real dips masked. Variability: the flux shuffled in 0.5-day blocks. A class whose excess interval reaches zero is {e(NOISE_LIKE)}: {e(", ".join(labels[k]["label"] for k in meta["order"] if k in noise) or "none")}.{e(shape_txt)}</p>
       <section class="card vafilters" aria-label="Filters">
         <label class="vasearch"><span class="sr">Find a TIC, a TOI or a contributor</span><input type="search" id="vaq" placeholder="Find a TIC, a TOI or a contributor" autocomplete="off" inputmode="search"></label>
-        <div class="chips" id="vaclasses" role="group" aria-label="Class">{chips}</div>
+        <div class="chips" id="vaclasses" role="group" aria-label="Class (entries · null)">{chips}</div>
         <div class="varow"><div class="chips" id="vaconf" role="group" aria-label="Confidence"><span class="valab">Confidence</span>{confs}</div>
           <button class="chip" type="button" id="vatoi" aria-pressed="false">Matches a known TOI</button>
           <label class="vasort"><span>Sort</span><select id="vasort">{sorts}</select></label></div>
@@ -191,14 +234,14 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
       <p class="ctempty" id="vaempty" role="status" hidden>No entries match these filters. <a href="#/variables">Clear filters</a></p>
       <div class="vamore"><button class="btn" type="button" id="vamore" hidden>Show more</button></div>
       <section class="card" aria-labelledby="h-varules" style="display:grid;gap:8px">
-        <h2 id="h-varules">The rules</h2>
-        <p class="muted" style="margin:0;font-size:13px">First match wins, in this order: systematic, eclipsing binary, variable, then planet candidate; a brightening is a flare unless it is systematic. The rules are in src/exoplan/variables.py and are re-applied to every contributed entry on ingest.</p>
-        <div class="tablewrap" tabindex="0" role="region" aria-label="Classification rules"><table class="vatable"><thead><tr><th scope="col">Class</th><th scope="col">Rule</th><th scope="col">Confidence</th><th scope="col" class="num">Entries</th>{ctl_head}</tr></thead><tbody>{rules}</tbody></table></div>
+        <h2 id="h-varules">The rules, and each class against its null</h2>
+        <p class="muted" style="margin:0;font-size:13px">First match wins, in this order: systematic, eclipsing binary, variable, then planet candidate; a brightening is a flare unless it is systematic. The rules are in src/exoplan/variables.py and are re-applied to every contributed entry on ingest. Excess: real minus null, with a 95% interval for the difference of two Poisson counts.</p>
+        <div class="tablewrap" tabindex="0" role="region" aria-label="Classification rules and nulls"><table class="vatable"><thead><tr><th scope="col">Class</th><th scope="col">Rule</th><th scope="col">Confidence</th><th scope="col" class="num">Real</th><th scope="col" class="num">Null</th><th scope="col">Null measured on</th><th scope="col" class="num">Excess</th></tr></thead><tbody>{rules}</tbody></table></div>
       </section>
       <section class="card" aria-labelledby="h-vacred" style="display:grid;gap:8px">
         <h2 id="h-vacred">Who searched</h2>
         <ul class="vacred">{contributors}</ul>
-        <p class="small">Anyone can add a sector with their own reviewers and be credited by a name they choose: see CONTRIBUTING.md (keys stay in your environment, never in a bundle).</p>
+        <p class="small">Anyone can add a sector with their own reviewers and be credited by a name they choose: see CONTRIBUTING.md (keys stay in your environment, never in a bundle). A bundle is sealed with content hashes, not signed; ingest searches a sample again and credits only searches that are new.</p>
       </section>"""
 
 
@@ -270,6 +313,9 @@ VARIABLES_CSS = r"""
 .sweepcls i{margin:0}
 .sweepcls b{font-size:17px;font-weight:600;text-align:right}
 .sweepcls em{grid-column:2 / 4;font-style:normal;font-size:11.5px;color:var(--ink-3)}
+.vanoise{font-style:normal;font-size:11.5px;color:var(--ink-2)}
+.tag.vanoisetag{color:var(--ink-2);border-style:dashed}
+.route>header .eyebrow .parent a{display:inline-flex;align-items:center;min-height:44px}
 .stsweep[hidden]{display:none}
 @media (prefers-reduced-motion: reduce){.vaent details summary::before{transition:none}}
 @media (max-width:699.98px){
@@ -283,8 +329,12 @@ VARIABLES_CSS = r"""
 VARIABLES_JS = r"""
 // ---------- everything that dims: the sweep catalogue (#/variables) ----------
 const VA = D.sweep || null;
-const VA_LABEL = VA ? Object.fromEntries(VA.classes.map(c => [c.id, c.label])) : {};
-const VA_CLASSES = VA ? VA.classes.map(c => c.id) : [];
+const VA_NOISE = new Set(VA ? VA.noise_like : []);
+// A class that does not exceed its null keeps its rule's name but is not presented as a finding: the planet
+// candidates become "planet-candidate rule" until they exceed their control.
+const VA_LABEL = VA ? Object.fromEntries(VA.classes.map(c => [c.id, c.id === 'planet_candidate' && VA_NOISE.has(c.id) ? 'Planet-candidate rule' : c.label])) : {};
+// Classes that exceed their null first, then the noise-like ones, then unclassified (sweep_meta's order).
+const VA_CLASSES = VA ? VA.order : [];
 const VA_CONF = ['high', 'medium', 'low', 'n/a'];
 const va = {E: null, C: null, loading: null, view: null, shown: 60, byId: {}, byTic: {}, cov: {}, bound: false, rendered: false};
 function vaLoad(){
@@ -360,7 +410,7 @@ function vaDetail(e){
 function vaCard(e, sel){
   const toi = e.toi_match ? ` · matches TOI ${esc(e.toi_match)}${e.toi_disposition ? ' (' + esc(e.toi_disposition) + ')' : ''}` : '';
   const why = e.class === 'unclassified' ? esc(e.why || '') : (e.cues || []).map(c => esc(c.text)).join('; ');
-  const unc = e.class === 'planet_candidate' ? ' ' + UNC : '';
+  const unc = VA_NOISE.has(e.class) ? ` <span class="tag vanoisetag">${esc(VA.noise_text)}</span>` : e.class === 'planet_candidate' ? ' ' + UNC : '';
   return `<article class="vaent${sel ? ' sel' : ''}" id="va-${esc(e.id)}" style="--c:${VA.colours[e.class]}" aria-label="${esc(VA_LABEL[e.class])}, TIC ${e.tic}">
     <header><span class="vacls"><i aria-hidden="true"></i>${esc(VA_LABEL[e.class])}</span><span class="tag">confidence: ${esc(e.confidence)}</span>${unc}
       <a href="${vaTicHref(e.tic, e.id)}">TIC ${e.tic}</a><span class="muted">sector ${e.sector} · ${esc(e.kind)}${toi}</span></header>

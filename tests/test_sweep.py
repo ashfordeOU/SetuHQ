@@ -11,7 +11,7 @@ import pytest
 from exoplan import contrib as C
 from exoplan import sweep as SW
 from exoplan import variables as V
-from exoplan.starsearch import CODE_FILES, code_fingerprint, read_spoc
+from exoplan.starsearch import CLASSIFY_FILES, CODE_FILES, SEARCH_FILES, classify_fingerprint, code_fingerprint, read_spoc, search_fingerprint
 
 SECTOR = 99
 
@@ -119,13 +119,78 @@ def test_equal_rise_and_decay_is_not_a_fast_rise_despite_float_noise():
     assert V.classify_flare({**f, "rise_days": round(f["rise_days"] * 1440, 1) / 1440, "decay_days": round(f["decay_days"] * 1440, 1) / 1440})["confidence"] == "low"
 
 
-def test_reclassify_reuses_the_stored_runs(swept):
+def test_reclassify_reuses_the_stored_runs_and_keeps_the_search_code(swept):
     kw = swept["kw"]
-    n = SW.reclassify_sweep("configs/sweep.toml", SECTOR, limit=3, out_dir=kw["out_dir"], cache_root=kw["cache_root"], log=lambda *a: None)
+    before = json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())
+    searched_by = {s["tic"]: s["search_code"] for s in before["stars"]}
+    n = SW.reclassify_sweep("configs/sweep.toml", SECTOR, limit=3, out_dir=kw["out_dir"], cache_root=kw["cache_root"],
+                            rule_changes=["test change"], log=lambda *a: None)
     assert n == 3
     rec = json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())
-    assert all(s.get("reclassified_at") and s["code"] == code_fingerprint() for s in rec["stars"])
+    for s in rec["stars"]:
+        assert s["search_code"] == searched_by[s["tic"]] == search_fingerprint()   # the code that made the dips stays named
+        assert s["classify_code"] == classify_fingerprint() and "code" not in s
+        last = s["reclassifications"][-1]
+        assert last["rule_changes"] == ["test change"] and last["reclassified_from"] == before["stars"][0]["classify_code"]
     assert swept["mast"].fetched == [] and swept["mast"].queries == 0   # nothing downloaded, no reviewer asked
+
+
+def test_a_record_from_one_code_gets_both_codes_from_named_commits(swept, monkeypatch):
+    kw = swept["kw"]
+    p = SW.record_path(kw["cache_root"], SECTOR, json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())["stars"][0]["tic"])
+    old = json.loads(p.read_text())
+    old["code"] = "f" * 64
+    old.pop("search_code"), old.pop("classify_code")
+    p.write_text(json.dumps(old))
+    monkeypatch.setattr(SW, "fingerprints_at", lambda rev: (f"search@{rev}", f"classify@{rev}"))
+    SW.reclassify_sweep("configs/sweep.toml", SECTOR, limit=3, out_dir=kw["out_dir"], cache_root=kw["cache_root"],
+                        search_commit="aaa", classified_commit="bbb", log=lambda *a: None)
+    s = json.loads(p.read_text())
+    assert s["search_code"] == "search@aaa" and s["search_commit"] == "aaa" and s["search_time_classify_code"] == "classify@aaa"
+    assert s["reclassifications"][-1]["reclassified_from"] == "classify@bbb" and s["classify_code"] == classify_fingerprint()
+
+
+def test_resume_searches_again_a_record_made_with_other_code_or_config(swept):
+    kw = swept["kw"]
+    p = SW.record_path(kw["cache_root"], SECTOR, json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())["stars"][0]["tic"])
+    rec = json.loads(p.read_text())
+    rec["config_sha256"] = "0" * 64
+    p.write_text(json.dumps(rec))
+    res = SW.run_sweep("configs/sweep.toml", SECTOR, limit=3, **kw)
+    assert (res.skipped, res.stale, res.ran) == (2, 1, 1)
+
+
+def test_density_mismatch_at_a_short_period_is_a_binary():
+    v = V.classify_dip(_dip(flags=["density_mismatch"], period_days=0.819))
+    assert (v["class"], v["confidence"]) == ("eclipsing_binary", "medium") and v["cues"][0]["rule"] == "density_short_period"
+    assert V.classify_dip(_dip(flags=["density_mismatch"], period_days=3.2))["class"] == "planet_candidate"
+
+
+def test_each_class_has_its_own_null():
+    t, f = _flare_lc()
+    # A real flare turned upside down is a dip, so on the flipped flux with the real dips masked the flare rule finds nothing.
+    assert V.flare_null(t, f, [])["counts"] == {}
+    rng = np.random.default_rng(5)
+    g = 1 + rng.normal(0, 5e-4, t.size)
+    g[(t > 5) & (t < 5.01)] -= 6e-3   # a sharp drop: a flare-shaped event downward
+    g[(t >= 5.01) & (t < 5.03)] -= 3e-3
+    null = V.flare_null(t, g, [])
+    assert null["events"] >= 1
+    assert V.flare_null(t, g, [(4.9, 5.1)])["events"] == 0          # the real dips are masked
+    # Block shuffling destroys a 2.3-day period; the periodogram of a flipped copy would not have.
+    var = 1 + rng.normal(0, 5e-4, t.size) + 1e-3 * np.sin(2 * np.pi * t / 2.3)
+    assert V.classify_variability(V.variability(t, var))["class"] == "variable"
+    assert V.variability_null(t, var, [], seed=1)["variable"] == 0
+    assert V.variability(t, 2 - var)["period_days"] == V.variability(t, var)["period_days"]
+    shuffled = V.block_shuffled(t, var, seed=1)
+    assert sorted(shuffled) == sorted(var) and not np.array_equal(shuffled, var)
+
+
+def test_versus_null_and_noise_like():
+    assert SW.versus_null(5, 3)["significant"] is False
+    v = SW.versus_null(108, 67)
+    assert v["excess"] == 41 and v["significant"] is True and v["lo"] > 0
+    assert SW.versus_null(0, 0)["significant"] is False
 
 
 def test_variability_finds_the_period_and_the_rule_needs_amplitude():
@@ -207,7 +272,7 @@ def _swept_once(tmp_path_factory):
     """Three targets of a synthetic sector swept once with the Probes; the fourth left for a resume."""
     base = tmp_path_factory.mktemp("swept")
     mast = FakeMast()
-    kw = dict(out_dir=base / "sweep", cache_root=base / "cache", min_interval=0.0, control=False, query=mast.query,
+    kw = dict(out_dir=base / "sweep", cache_root=base / "cache", min_interval=0.0, control=True, query=mast.query,
               fetch=mast.fetch, toi_path=None, log=lambda *a: None)
     res = SW.run_sweep("configs/sweep.toml", SECTOR, limit=3, **kw)
     return base, res, mast
@@ -220,7 +285,7 @@ def swept(_swept_once, tmp_path):
     for d in ("sweep", "cache"):
         shutil.copytree(base / d, tmp_path / d)
     mast = FakeMast()
-    kw = dict(out_dir=tmp_path / "sweep", cache_root=tmp_path / "cache", min_interval=0.0, control=False, query=mast.query,
+    kw = dict(out_dir=tmp_path / "sweep", cache_root=tmp_path / "cache", min_interval=0.0, control=True, query=mast.query,
               fetch=mast.fetch, toi_path=None, log=lambda *a: None)
     return {"res": res, "mast": mast, "first": first, "kw": kw, "tmp": tmp_path}
 
@@ -230,7 +295,8 @@ def test_sweep_records_every_star_and_builds_the_catalogue(swept):
     assert (res.done, res.ran, res.skipped) == (3, 3, 0)
     rec = json.loads((tmp / "sweep" / f"sector_{SECTOR:04d}.json").read_text())
     assert rec["format"] == SW.FORMAT and rec["slice"] == 3 and rec["targets_in_sector"] == 4
-    assert rec["status_counts"]["searched"] == 3 and rec["code"] == code_fingerprint()
+    assert rec["status_counts"]["searched"] == 3
+    assert rec["search_code"] == search_fingerprint() and rec["classify_code"] == classify_fingerprint()
     order = [s["tic"] for s in rec["stars"]]
     assert order == sorted([t["tic"] for t in TARGETS], key=lambda x: SW.sweep_key(SECTOR, x))[:3]   # the fixed sweep order
     for s in rec["stars"]:
@@ -242,6 +308,11 @@ def test_sweep_records_every_star_and_builds_the_catalogue(swept):
     assert sum(cat["counts"]["by_class"].values()) == cat["counts"]["entries"]
     assert all(e["credit"] == [{"name": "exoplan", "source": f"sector_{SECTOR:04d}.json"}] for e in cat["entries"])
     assert {c["id"] for c in cat["classes"]} == set(V.CLASS_IDS)
+    nul = cat["counts"]["null"]
+    assert nul["searches"] == 3 and set(nul["by_class"]) == set(V.CLASS_IDS)
+    for s in rec["stars"]:
+        assert set(s["null"]) == {"dip_inverted", "flare_downward", "flare_shape", "variability_shuffled"}
+        assert "control" not in s
     planets = [e for e in cat["entries"] if e["tic"] in (1000, 1003) and e["kind"] == "dip"]
     flares = [e for e in cat["entries"] if e["tic"] == 1001 and e["class"] == "flare"]
     if 1001 in order:
@@ -321,7 +392,8 @@ def test_read_spoc_matches_the_loader_rule(tmp_path):
 def test_code_fingerprint_covers_the_result_making_code():
     assert {"variables.py", "starsearch.py", "pipeline.py", "vet.py", "reviewers/claude.py"} <= set(CODE_FILES)
     assert "sweep.py" not in CODE_FILES and "contrib.py" not in CODE_FILES   # orchestration does not change results
-    assert len(code_fingerprint()) == 64 and code_fingerprint() == code_fingerprint()
+    assert CLASSIFY_FILES == ["variables.py"] and set(SEARCH_FILES) | set(CLASSIFY_FILES) == set(CODE_FILES)
+    assert len(code_fingerprint()) == 64 and search_fingerprint() != classify_fingerprint()
 
 
 # ---------- contribution bundles ----------
@@ -331,8 +403,13 @@ def bundle(swept):
     return C.make_bundle(tmp / "sweep" / f"sector_{SECTOR:04d}.json", tmp / "bundle", contributor="Ada L.", now="2026-10-20T00:00:00+00:00")
 
 
-def _resign(bdir: Path, mutate_results=None, mutate_manifest=None):
-    """Change a bundle and re-sign it properly, so only the deeper checks can catch it."""
+def _ingest(b, swept, sweep_dir, **kw):
+    """Ingest with the fake archive standing in for MAST (light curves fetched again and searched again)."""
+    return C.ingest_bundle(b, sweep_dir=sweep_dir, fetch=swept["mast"].fetch, cache_root=swept["kw"]["cache_root"], **kw)
+
+
+def _reseal(bdir: Path, mutate_results=None, mutate_manifest=None):
+    """Change a bundle and seal it again properly (anyone can), so only the checks against the world can catch it."""
     if mutate_results:
         r = json.loads((bdir / "results.json").read_text())
         mutate_results(r)
@@ -347,37 +424,123 @@ def _resign(bdir: Path, mutate_results=None, mutate_manifest=None):
     (bdir / "manifest.json").write_text(json.dumps(man))
 
 
-def test_a_valid_bundle_is_ingested_with_credit(bundle, tmp_path):
+def test_a_valid_bundle_is_fetched_searched_again_and_credited(bundle, swept, tmp_path):
     man = json.loads((bundle / "manifest.json").read_text())
     assert sorted(p.name for p in bundle.iterdir()) == ["config.toml", "manifest.json", "results.json"]
-    assert man["code_fingerprint"] == code_fingerprint() and len(man["lightcurves"]) == 3
-    assert all(len(x["sha256"]) == 64 for x in man["lightcurves"]) and man["signed_off"]["by"] == "Ada L."
-    sweep_dir = tmp_path / "merged"
-    shutil.copytree(tmp_path / "sweep", sweep_dir)
-    out = C.ingest_bundle(bundle, sweep_dir=sweep_dir)
-    assert out["contributor"] == "Ada L." and (sweep_dir / "contributions" / man["bundle_id"] / "manifest.json").exists()
-    cat = json.loads((sweep_dir / "catalogue.json").read_text())
-    names = {c["name"] for e in cat["entries"] for c in e["credit"]}
-    assert names == {"exoplan", "Ada L."}
-    # The same star-sectors searched twice with the same panel: one entry each, both credited; coverage counts the star-sector once.
-    assert all({c["name"] for c in e["credit"]} == {"exoplan", "Ada L."} for e in cat["entries"])
-    assert cat["counts"]["star_sectors_searched"] == 3 and cat["counts"]["searches"] == 6
-    assert [c["name"] for c in cat["contributors"]] == ["exoplan", "Ada L."] or {c["name"] for c in cat["contributors"]} == {"exoplan", "Ada L."}
+    assert (man["search_code"], man["classify_code"]) == (search_fingerprint(), classify_fingerprint())
+    assert all(len(x["sha256"]) == 64 for x in man["lightcurves"]) and man["statement"]["by"] == "Ada L."
+    assert "not a signature" in man["seal"] and "signed" not in json.dumps(man)
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    out = _ingest(bundle, swept, empty, attested_by="ada-l")
+    assert out["verified"]["searched_again"] and len(out["verified"]["lightcurves_refetched"]) == 3
+    assert set(out["verified"]["searched_again"]) == {s["tic"] for s in json.loads((bundle / "results.json").read_text())["stars"]}
+    ing = json.loads((empty / "contributions" / man["bundle_id"] / "ingest.json").read_text())
+    assert ing["attested_by"] == "ada-l" and ing["new_star_sectors"] == 3
+    cat = json.loads((empty / "catalogue.json").read_text())
+    assert {c["name"] for e in cat["entries"] for c in e["credit"]} == {"Ada L."}
+    assert all(c.get("attested_by") == "ada-l" for e in cat["entries"] for c in e["credit"])
     with pytest.raises(C.BundleRefused, match="already ingested"):
-        C.ingest_bundle(bundle, sweep_dir=sweep_dir)
+        _ingest(bundle, swept, empty)
 
 
-def test_a_zipped_bundle_is_accepted(bundle, tmp_path):
+def test_resubmission_under_other_names_is_refused_and_counts_do_not_move(swept):
+    """The reviewer's attack: the same sector record re-bundled under three names. Each is refused; counters,
+    nulls and credit stay as they were."""
+    sweep_dir = swept["kw"]["out_dir"]
+    before = json.loads((sweep_dir / "catalogue.json").read_text())["counts"]
+    rec = sweep_dir / f"sector_{SECTOR:04d}.json"
+    for name in ("Eve", "Frank", "Grace"):
+        b = C.make_bundle(rec, swept["tmp"] / f"b-{name}", contributor=name)
+        with pytest.raises(C.BundleRefused, match="re-submission"):
+            _ingest(b, swept, sweep_dir)
+    after = json.loads((sweep_dir / "catalogue.json").read_text())["counts"]
+    assert after == before
+
+
+def test_the_catalogue_counts_each_search_once_even_if_copies_get_in(swept):
+    """Defence in depth: copies already on disk (say, merged by hand) add nothing to any counter or null and earn no credit."""
+    sweep_dir = swept["kw"]["out_dir"]
+    before = json.loads((sweep_dir / "catalogue.json").read_text())["counts"]
+    b = C.make_bundle(sweep_dir / f"sector_{SECTOR:04d}.json", swept["tmp"] / "copy", contributor="Mallory")
+    man = json.loads((b / "manifest.json").read_text())
+    dest = sweep_dir / "contributions" / man["bundle_id"]
+    shutil.copytree(b, dest)
+    SW.build_catalogue(sweep_dir)
+    cat = json.loads((sweep_dir / "catalogue.json").read_text())
+    c = cat["counts"]
+    assert c["searches"] == before["searches"] == 3 and c["duplicate_searches"] == 3
+    assert c["dips_reviewed"] == before["dips_reviewed"] and c["null"] == before["null"] and c["by_class"] == before["by_class"]
+    assert {x["name"] for e in cat["entries"] for x in e["credit"]} == {"exoplan"}
+    mal = next(x for x in cat["contributors"] if x["name"] == "Mallory")
+    assert mal["star_sectors"] == 0 and mal["duplicates_not_credited"] == 3
+
+
+def test_a_bundle_with_one_new_star_credits_only_that_star(swept):
+    kw = swept["kw"]
+    mine = swept["tmp"] / "mine"
+    SW.run_sweep("configs/sweep.toml", SECTOR, limit=4, **{**kw, "out_dir": mine, "contributor": "Ada L."})
+    b = C.make_bundle(mine / f"sector_{SECTOR:04d}.json", swept["tmp"] / "b4", contributor="Ada L.")
+    out = _ingest(b, swept, kw["out_dir"], verify_lightcurves=4)
+    assert out["new_star_sectors"] == 1
+    cat = json.loads((kw["out_dir"] / "catalogue.json").read_text())
+    assert cat["counts"]["searches"] == 4 and cat["counts"]["duplicate_searches"] == 3
+    ada = next(x for x in cat["contributors"] if x["name"] == "Ada L.")
+    assert ada["star_sectors"] == 1 and ada["duplicates_not_credited"] == 3
+    new_tic = next(s["tic"] for s in json.loads((mine / f"sector_{SECTOR:04d}.json").read_text())["stars"]
+                   if s["tic"] not in {r["tic"] for r in json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())["stars"]})
+    assert {c["name"] for e in cat["entries"] if e["tic"] == new_tic for c in e["credit"]} <= {"Ada L."}
+    assert {c["name"] for e in cat["entries"] if e["tic"] != new_tic for c in e["credit"]} == {"exoplan"}
+
+
+def test_a_forged_planet_candidate_with_consistent_inputs_is_caught_by_the_fresh_search(bundle, swept, tmp_path):
+    """The reviewer's forgery: an entry's stored inputs edited so the rules give a planet candidate, then
+    resealed. The rules re-check passes; searching the star again does not."""
+    def forge(r):
+        for s in r["stars"]:
+            for e in s.get("entries") or []:
+                if e["kind"] == "dip" and e["class"] != "planet_candidate":
+                    e.update(passed=True, planet_fraction=1.0, flags=[], shares={"potential_planet": 1.0}, n_transits=3, period_days=3.21,
+                             depth_ppm=900.0, t_start=1327.9, t_end=1328.05, cues=[], why=None, **{"class": "planet_candidate", "confidence": "medium"})
+                    s["counts"]["planet_candidate"] = s["counts"].get("planet_candidate", 0) + 1
+                    return
+        raise AssertionError("no dip to forge")
+    _reseal(bundle, forge)
+    C.validate_bundle(bundle)          # sealed consistently and the rules agree with the forged inputs ...
+    empty = tmp_path / "e"
+    empty.mkdir()
+    with pytest.raises(C.BundleRefused, match="a fresh search does not reproduce"):
+        _ingest(bundle, swept, empty)  # ... but the star searched again does not give it
+    assert not (empty / "contributions").exists()
+
+
+def test_a_bundle_with_sentinels_needs_explicit_acceptance(bundle, swept, tmp_path):
+    def add_sentinel(r):
+        for s in r["stars"]:
+            s["reviewers"] = s["reviewers"] + [{"id": "claude-volunteer", "kind": "claude_code", "weight": 0.5}]
+    _reseal(bundle, add_sentinel, lambda m: m.update(reviewers=m["reviewers"] + [{"id": "claude-volunteer", "kind": "claude_code"}]))
+    empty = tmp_path / "e"
+    empty.mkdir()
+    with pytest.raises(C.BundleRefused, match="accept-sentinels"):
+        _ingest(bundle, swept, empty)
+    out = _ingest(bundle, swept, empty, accept_sentinels=True)
+    assert out["verified"]["dips_searched_again"] is False and out["verified"]["searched_again"] == []
+
+
+def test_a_zipped_bundle_is_accepted_and_odd_zips_are_refused(bundle, tmp_path):
     z = tmp_path / "b.zip"
     with zipfile.ZipFile(z, "w") as zf:
         for f in ("manifest.json", "results.json", "config.toml"):
             zf.write(bundle / f, f"bundle/{f}")
     assert C.validate_bundle(z)["manifest"]["contributor"]["name"] == "Ada L."
-    bad = tmp_path / "bad.zip"
-    with zipfile.ZipFile(bad, "w") as zf:
-        zf.writestr("../evil.py", "x")
-    with pytest.raises(C.BundleRefused, match="unexpected file"):
-        C.validate_bundle(bad)
+    for members in ([("../evil.py", "x")], [("..\\..\\results.json", "x")], [("/tmp/results.json", "x")],
+                    [("a/results.json", "x"), ("b/results.json", "y")], [("a/b/results.json", "x")]):
+        bad = tmp_path / "bad.zip"
+        with zipfile.ZipFile(bad, "w") as zf:
+            for name, text in members:
+                zf.writestr(name, text)
+        with pytest.raises(C.BundleRefused, match="unexpected file"):
+            C.validate_bundle(bad)
 
 
 @pytest.mark.parametrize("damage, match", [
@@ -395,10 +558,12 @@ def test_tampering_is_refused(bundle, damage, match):
 
 def test_a_different_code_fingerprint_is_refused(bundle):
     with pytest.raises(C.BundleRefused, match="code fingerprint mismatch"):
-        C.validate_bundle(bundle, code="0" * 64)
+        C.validate_bundle(bundle, codes=("0" * 64, classify_fingerprint()))
+    with pytest.raises(C.BundleRefused, match="code fingerprint mismatch"):
+        C.validate_bundle(bundle, codes=(search_fingerprint(), "0" * 64))
 
 
-def test_an_edited_class_is_refused_even_when_re_signed(bundle):
+def test_an_edited_class_is_refused_even_when_resealed(bundle):
     def promote(r):
         for s in r["stars"]:
             for e in s.get("entries") or []:
@@ -406,68 +571,84 @@ def test_an_edited_class_is_refused_even_when_re_signed(bundle):
                     e["class"], e["confidence"] = "planet_candidate", "medium"
                     return
         raise AssertionError("no entry to edit")
-    _resign(bundle, promote)
+    _reseal(bundle, promote)
     with pytest.raises(C.BundleRefused, match="the rules give|variability rule"):
         C.validate_bundle(bundle)
 
 
-def test_a_bad_lightcurve_hash_is_refused_even_when_re_signed(bundle):
+def test_a_bad_lightcurve_hash_is_refused_even_when_resealed(bundle):
     def drop(r):
         r["stars"][0]["file_sha256"] = "not-a-hash"
-    _resign(bundle, drop)
+    _reseal(bundle, drop)
     with pytest.raises(C.BundleRefused, match="light-curve sha256"):
         C.validate_bundle(bundle)
 
 
 def test_a_config_that_does_not_match_its_hash_is_refused(bundle):
     (bundle / "config.toml").write_text((bundle / "config.toml").read_text().replace("min_score = 0.5", "min_score = 0.4"))
-    _resign(bundle)
+    _reseal(bundle)
     with pytest.raises(C.BundleRefused, match="config hash mismatch"):
         C.validate_bundle(bundle)
 
 
-def test_credentials_and_bad_names_are_refused(bundle, swept, monkeypatch):
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-THISISNOTAREALKEY0123456789")
-    rec = swept["tmp"] / "sweep" / f"sector_{SECTOR:04d}.json"
-    b2 = C.make_bundle(rec, swept["tmp"] / "b2", contributor="Grace H.")
-    assert "sk-ant" not in "".join(p.read_text() for p in b2.iterdir())   # nothing from the environment goes in
-    (b2 / "config.toml").write_text((b2 / "config.toml").read_text() + '\n# key = "sk-ant-api03-THISISNOTAREALKEY0123456789"\n')
-    _resign(b2)
+@pytest.mark.parametrize("line", [
+    '# api_key = "sk-ant-api03-AAAAAAAAAAAAAAAAAAAAAAAA"',
+    '# key = "sk-proj-AbCdEfGhIjKlMnOpQrStUvWx-1234567890"',
+    "# ANTHROPIC_API_KEY: sk_live_abcdefghijklmnopqrstuvwxyz0123",
+    '# aws = "AKIAIOSFODNN7EXAMPLE"',
+    '# secret = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"',
+    'api_key = "anthropic-key-abcdefghijklmnopqrstuvwxyz0123456789"',
+    "# token: abc123",
+    "password = hunter2",
+    "# github_token=ghp_abcdefghijklmnopqrstuvwxyz0123456789",
+])
+def test_every_kind_of_key_in_the_config_is_refused(swept, line):
+    rec = json.loads((swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())
+    rec["config_text"] += "\n" + line + "\n"
+    src = swept["tmp"] / "rec.json"
+    src.write_text(json.dumps(rec))
     with pytest.raises(C.BundleRefused, match="credential"):
-        C.validate_bundle(b2)
+        C.make_bundle(src, swept["tmp"] / "kb", contributor="Key Tester")
+    # And at ingest, when someone builds the bundle by hand.
+    b = C.make_bundle(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json", swept["tmp"] / "kb2", contributor="Key Tester")
+    (b / "config.toml").write_text((b / "config.toml").read_text() + "\n" + line + "\n")
+    _reseal(b)
+    with pytest.raises(C.BundleRefused, match="credential"):
+        C.validate_bundle(b)
+
+
+def test_nothing_from_the_environment_goes_in_and_bad_names_are_refused(swept, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-THISISNOTAREALKEY0123456789")
+    rec = swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json"
+    b2 = C.make_bundle(rec, swept["tmp"] / "b2", contributor="Grace H.")
+    assert "sk-ant" not in "".join(p.read_text() for p in b2.iterdir())
     for bad in ("", "x" * 61, "<script>", "see https://x.y", "me@example.org"):
         with pytest.raises(C.BundleRefused, match="contributor name"):
             C.make_bundle(rec, swept["tmp"] / "b3", contributor=bad)
+    with pytest.raises(C.BundleRefused, match="attested-by"):
+        C.ingest_bundle(b2, sweep_dir=swept["tmp"] / "x", attested_by="not a login!")
 
 
-def test_ingest_can_check_lightcurves_at_mast(bundle, swept, tmp_path):
-    mast = swept["mast"]
-    sweep_dir = tmp_path / "m2"
-    sweep_dir.mkdir()
-    # The bundle's light curves re-fetched (from the fake archive) hash to the same bytes.
-    cache = tmp_path / "fresh"
-    shutil.copytree(swept["tmp"] / "cache" / "sweep" / "targets", cache / "sweep" / "targets")
-    out = C.ingest_bundle(bundle, sweep_dir=sweep_dir, verify_lightcurves=2, fetch=mast.fetch, cache_root=cache)
-    assert out["star_sectors"] == 3
-
+def test_a_lightcurve_that_hashes_differently_at_mast_is_refused(bundle, swept, tmp_path):
     def other(uri, local):
         _write_spoc(Path(local), 0, 42, "quiet")
-    cache2 = tmp_path / "fresh2"
-    shutil.copytree(swept["tmp"] / "cache" / "sweep" / "targets", cache2 / "sweep" / "targets")
     with pytest.raises(C.BundleRefused, match="hashes to"):
-        C.check_at_mast(json.loads((bundle / "results.json").read_text()), 1, fetch=other, cache_root=cache2)
+        C.check_at_mast(json.loads((bundle / "results.json").read_text()), 1, fetch=other, cache_root=swept["kw"]["cache_root"], seed="s")
 
 
-def test_cli_ingest_refuses_with_a_message(bundle, capsys, tmp_path):
-    from exoplan.cli import main
+def test_cli_ingest_refuses_with_a_message_and_verifies_by_default(bundle, capsys, tmp_path):
+    from exoplan.cli import build_parser, main
 
+    assert build_parser().parse_args(["ingest", "x"]).verify_lightcurves == 3
     (bundle / "results.json").write_text("{}")
     assert main(["ingest", str(bundle), "--sweep-dir", str(tmp_path / "x")]) == 1
     assert "refused: hash mismatch on results.json" in capsys.readouterr().err
 
 
-def test_contributing_doc_says_keys_stay_in_the_environment():
+def test_contributing_doc_says_keys_stay_in_the_environment_and_bundles_are_sealed_not_signed():
     text = Path("CONTRIBUTING.md").read_text()
-    for must in ("exoplan sweep", "exoplan bundle", "exoplan ingest", "ANTHROPIC_API_KEY", "environment", "configs/sweep_sentinels.toml"):
-        assert must in text
+    for must in ("exoplan sweep", "exoplan bundle", "exoplan ingest", "ANTHROPIC_API_KEY", "environment", "configs/sweep_sentinels.toml",
+                 "sealed", "not a signature", "--attested-by", "searched again"):
+        assert must in text, must
     assert "Never paste" in text or "never paste" in text
+    assert "signed" not in text.replace("not signed", "")

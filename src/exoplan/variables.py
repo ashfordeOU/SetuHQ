@@ -22,8 +22,9 @@ systematic            the event sits on an instrumental cue: a subject edge (vet
                       than 0.5 d within 0.1 d, or half the panel's weight called the subject noise for an
                       instrumental reason
 eclipsing_binary      an odd/even depth mismatch or a secondary eclipse (vet.py), a depth of 30,000 ppm or
-                      more, a V shape (transitfit.py) on a dip of 5,000 ppm or more, or half the panel's
-                      weight said eclipsing binary; for variability, a period within 2% of an eclipsing-binary
+                      more, a V shape (transitfit.py) on a dip of 5,000 ppm or more, a stellar-density
+                      mismatch at a period under 1 d, or half the panel's weight said eclipsing binary;
+                      for variability, a period within 2% of an eclipsing-binary
                       dip's period or half of it
 flare                 a brightening: 3 or more consecutive points 3σ or more above a 0.5-day running median,
                       peaking 5σ or more (σ the robust scatter about that median, globally and within 0.25 d)
@@ -74,6 +75,7 @@ POINTING_BITS = 1 | 4 | 16 | 128  # "AttitudeTweak", "CoarsePoint", "Argabrighte
 # Eclipsing-binary cues
 DEEP_EB_PPM = 30_000.0      # deeper than a Jupiter-size planet across a Sun-like star gives (Rp/R* ≈ 0.17)
 V_SHAPE_EB_PPM = 5_000.0    # a V shape on a dip this deep or more (the feed's own depth cut)
+SHORT_PERIOD_DAYS = 1.0     # a density mismatch on a period this short is far more often a contact or close binary
 EB_PERIOD_TOLERANCE = 0.02
 # Panel cues
 REASON_SHARE = 0.5          # share of the panel's weight giving one noise reason
@@ -98,8 +100,9 @@ RULES = {
                    f"manual-exclude flag within {CUE_PAD_DAYS:g} d; a data gap over {GAP_DAYS:g} d within {CUE_PAD_DAYS:g} d; or half "
                    "the panel's weight calling it instrumental."),
     "eclipsing_binary": ("Odd/even depth mismatch or secondary eclipse; or a depth of "
-                         f"{DEEP_EB_PPM:,.0f} ppm or more; or V-shaped and {V_SHAPE_EB_PPM:,.0f} ppm or more; or half the panel's "
-                         "weight saying eclipsing binary. Variability at an eclipsing binary's period, or half of it."),
+                         f"{DEEP_EB_PPM:,.0f} ppm or more; or V-shaped and {V_SHAPE_EB_PPM:,.0f} ppm or more; or a stellar-density "
+                         f"mismatch at a period under {SHORT_PERIOD_DAYS:g} d; or half the panel's weight saying eclipsing binary. "
+                         "Variability at an eclipsing binary's period, or half of it."),
     "flare": (f"A brightening: {FLARE_MIN_POINTS} or more consecutive points at least {FLARE_SIGMA:g}σ above a "
               f"{FLARE_WINDOW_DAYS:g}-day running median, peaking at {FLARE_PEAK_SIGMA:g}σ or more, against both the star's "
               f"scatter and the scatter within {FLARE_LOCAL_DAYS:g} d; not on an instrumental cue."),
@@ -112,7 +115,7 @@ RULES = {
 }
 CONFIDENCE = {
     "systematic": "high: two or more instrumental cues; medium: one; low: the panel's reason alone.",
-    "eclipsing_binary": "high: odd/even mismatch or secondary eclipse; medium: depth or V shape, or the eclipse period; low: the panel's reason alone.",
+    "eclipsing_binary": "high: odd/even mismatch or secondary eclipse; medium: depth, V shape, a short-period density mismatch, or the eclipse period; low: the panel's reason alone.",
     "flare": f"high: {FLARE_MIN_POINTS + 2} or more points, a peak of 10σ or more and a faster rise than decay; medium: two of those; low: otherwise.",
     "variable": "high: FAP below 1e-10 and a semi-amplitude 5× the binned scatter or more; medium: semi-amplitude 3× or more; low: otherwise (or a dip by the panel's reason alone).",
     "planet_candidate": "medium: on a periodic signal with two or more transits, neither V-shaped nor density-mismatched; low: otherwise. Never high.",
@@ -228,6 +231,9 @@ def classify_dip(dip: dict, events: dict | None = None, star_var: dict | None = 
         eb.append({"rule": "deep", "text": f"{depth:,.0f} ppm deep: {DEEP_EB_PPM:,.0f} ppm or more"})
     if "v_shape" in flags and depth >= V_SHAPE_EB_PPM:
         eb.append({"rule": "v_shape_deep", "text": f"V-shaped (transitfit.py) and {depth:,.0f} ppm deep"})
+    if "density_mismatch" in flags and dip.get("period_days") and dip["period_days"] < SHORT_PERIOD_DAYS:
+        eb.append({"rule": "density_short_period", "text": f"stellar density inconsistent with the star (transitfit.py) "
+                                                           f"at P = {dip['period_days']:.3f} d, under {SHORT_PERIOD_DAYS:g} d"})
     shape = bool(eb)
     if shares.get("eclipsing_binary", 0.0) >= REASON_SHARE:
         eb.append({"rule": "panel_eb", "text": f"{shares['eclipsing_binary']:.0%} of the panel's weight said eclipsing binary"})
@@ -356,10 +362,12 @@ def find_flares(time, flux) -> list[dict]:
 
 
 def variability(time, flux, mask_windows=()) -> dict | None:
-    """The out-of-transit Lomb-Scargle periodogram of a light curve (astropy), on 30-minute bins.
+    """The out-of-transit Lomb-Scargle periodogram of a light curve (astropy), on 10-minute bins
+    (``LS_BIN_MINUTES``).
 
-    Points inside ``mask_windows`` ([start, end] pairs, the consensus dips) are left out. Periods from one
-    hour to a third of the baseline. Returns the best period, its power, the Baluev (2008) false-alarm
+    Points inside ``mask_windows`` ([start, end] pairs, the consensus dips) are left out. Periods from
+    30 minutes (``LS_MIN_PERIOD_DAYS``, above the 20-minute Nyquist period of the bins) to a third of the
+    baseline. Returns the best period, its power, the Baluev (2008) false-alarm
     probability (astropy; it assumes white noise, so it is optimistic on real light curves), the
     semi-amplitude of the best sinusoid and its ratio to the point-to-point scatter of the bins."""
     from astropy.timeseries import LombScargle
@@ -400,6 +408,61 @@ def variability(time, flux, mask_windows=()) -> dict | None:
             "amplitude_ratio": round(amp / scatter, 2) if scatter > 0 else 0.0,
             "n_bins": int(tb.size), "baseline_days": round(baseline, 3),
             "period_range_days": [round(LS_MIN_PERIOD_DAYS, 5), round(max_p, 3)]}
+
+
+# ---------- the nulls: what each rule finds where its signal cannot be ----------
+# Each class has its own null, because flipping the flux is not a null for everything: it turns a real flare or
+# a pulsation maximum into a dip, and it leaves a periodogram unchanged.
+NULL_FLARE_PAD_DAYS = 0.1
+NULL_BLOCK_DAYS = 0.5
+
+
+def dip_windows(entries, pad: float = NULL_FLARE_PAD_DAYS) -> list[tuple[float, float]]:
+    return [(e["t_start"] - pad, e["t_end"] + pad) for e in entries if e.get("kind") == "dip"]
+
+
+def flare_null(time, flux, dips, events=None) -> dict:
+    """The flare rule on the flux turned upside down with the real consensus dips masked: downward events the
+    same size and shape as a flare, which no star makes, so their count is the rule's noise level. Also the
+    shape of each set: a real flare rises faster than it decays; noise has no preferred direction."""
+    time = np.asarray(time, dtype=float)
+    flux = np.asarray(flux, dtype=float)
+    keep = np.ones(time.size, bool)
+    for a, b in dips:
+        keep &= ~((time >= a) & (time <= b))
+    found = [classify_flare(f, events)["class"] for f in find_flares(time[keep], 2.0 - flux[keep])]
+    return {"counts": {c: found.count(c) for c in sorted(set(found))}, "events": len(found)}
+
+
+def flare_shape(entries) -> dict:
+    """Of the brightenings classed flare: how many rise faster than they decay, and how many the other way."""
+    fl = [e for e in entries if e.get("kind") == "brightening" and e.get("class") == "flare"]
+    return {"fast_rise": sum(1 for e in fl if e["decay_minutes"] > e["rise_minutes"]),
+            "slow_rise": sum(1 for e in fl if e["decay_minutes"] < e["rise_minutes"]),
+            "equal": sum(1 for e in fl if e["decay_minutes"] == e["rise_minutes"])}
+
+
+def block_shuffled(time, flux, *, block_days: float = NULL_BLOCK_DAYS, seed: int = 0):
+    """The flux in 0.5-day blocks put back in a random order (times kept): a period longer than a block cannot
+    survive, the noise on hour timescales does."""
+    time = np.asarray(time, dtype=float)
+    flux = np.asarray(flux, dtype=float)
+    idx = np.floor((time - time.min()) / block_days).astype(int)
+    blocks = [np.flatnonzero(idx == k) for k in np.unique(idx)]
+    order = np.random.default_rng(seed).permutation(len(blocks))
+    out = np.concatenate([flux[blocks[k]] for k in order])[: time.size]
+    if out.size < time.size:
+        out = np.concatenate([out, flux[out.size:]])
+    return out
+
+
+def variability_null(time, flux, dips, *, seed: int = 0) -> dict:
+    """The variability rule on a block-shuffled copy of the same flux (the same dips masked): 1 when it still
+    passes. Periods below about a block length partly survive shuffling, so this null is conservative for
+    short-period pulsators: it can only make their excess look smaller."""
+    var = variability(time, block_shuffled(time, flux, seed=seed), dips)
+    v = classify_variability(var)
+    return {"variable": int(bool(v and v["class"] == "variable"))}
 
 
 # ---------- one star-sector's entries, from a stored run ----------

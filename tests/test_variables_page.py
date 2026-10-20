@@ -50,6 +50,11 @@ def test_every_figure_comes_from_the_committed_catalogue(pi_men_app):
         assert f'<b class="mono">{n:,}</b><span>{label}</span>' in over
     for k, n in c["by_class"].items():
         assert f'#/variables?class={k}"' in over and f"<b class=\"mono\">{n:,}</b>" in over
+        if k != "unclassified":
+            assert f'null {c["null"]["by_class"][k]["null"]:,} · excess' in over
+    for k in c["null"]["noise_like"]:
+        seg = over.split(f'#/variables?class={k}"')[1].split("</li>")[0]
+        assert "not distinguishable from noise in this slice" in seg and "var(--ink-3)" in over.split(f'#/variables?class={k}"')[1][:40]
     assert "nothing is extrapolated" in over and "No entry is a new planet" in over
     src = CAT["sources"][0]
     assert f"{src['searched']:,} of the {src['targets_in_sector']:,} SPOC 2-minute targets" in over
@@ -62,9 +67,18 @@ def test_the_page_states_the_slice_the_rules_the_control_and_the_attribution(pi_
     assert "Nothing here is a new or confirmed planet." in v and "separate from the discovery feed" in v
     for k in CAT["classes"]:
         assert k["rule"].replace("'", "&#x27;") in v
-    ctl = CAT["counts"]["control_inverted"]
-    if ctl["star_sectors"]:
-        assert f"flux-inverted copies of the same {ctl['star_sectors']:,} star-sectors" in v
+    nul = CAT["counts"]["null"]
+    assert f"measured on the same {nul['searches']:,} star-sectors" in v
+    # No claim that the inverted copy is empty of real signals; each class names its own null.
+    assert "where no real dip exists" not in page and "nothing real can dim" not in page
+    assert "a real flare or pulsation maximum becomes a dip" in v
+    for k, c in nul["by_class"].items():
+        if k != "unclassified":
+            assert f'<td class="num mono">{c["null"]:,}</td><td>{c["null_kind"]}</td>' in v, k
+    # A class whose excess interval reaches zero says so, on the page and on every one of its cards.
+    for k in nul["noise_like"]:
+        assert next(x["label"] for x in CAT["classes"] if x["id"] == k) in v.split("not distinguishable from noise in this slice:")[1].split("</p>")[0]
+    assert "VA_NOISE.has(e.class)" in page and "Planet-candidate rule" in page
     assert '<a href="#/catalogue">Known planets</a>' in v and 'aria-current=page>Everything that dims' in v
     assert 'href="#/variables">Everything that dims</a>' in _route(page, "catalogue")
     assert "superintelligence" not in page.lower()
