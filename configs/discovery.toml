@@ -12,7 +12,8 @@ detrend_window_days = 1.0
 
 [search]
 min_period = 0.5
-fap_trials = 200      # the feed admits FAP < 1%: with 200 trials that passes at k ≤ 1 (a ~1% cut with Poisson slack); 20 could not
+fap_trials = 2000     # the feed admits FAP < 0.001: with 2,000 trials that passes at k ≤ 1
+fap_stop_after = 1    # stop once 2 trials reach the signal's SNR: it can no longer pass
 stellar = "tic"
 
 [aggregate]

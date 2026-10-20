@@ -617,8 +617,23 @@ def _newest(commits: list[str | None]) -> str | None:
     return min(known, key=lambda c: next((i for i, h in enumerate(order) if h.startswith(c) or c.startswith(h)), 10**6)) if known else None
 
 
-def live_feed(path: Path = ROOT / "docs/discoveries/catalog.json") -> dict | None:
-    """The live discovery catalogue's new_candidate count: entries and distinct (TIC, period) signals."""
+def feed_rule() -> dict | None:
+    """The pre-registered two-sector rule's held-out evaluation and the live feed re-run, when they exist."""
+    v = ROOT / "docs/results/feed_rule_validation.json"
+    if not v.exists():
+        return None
+    pre = ROOT / "docs/results/feed_rule_preregistration.json"
+    live = ROOT / "docs/results/feed_rule_live_rerun.json"
+    return {"validation": json.loads(v.read_text()), "preregistration": json.loads(pre.read_text()) if pre.exists() else None,
+            "live": json.loads(live.read_text()) if live.exists() else None}
+
+
+def live_feed(path: Path | None = None) -> dict | None:
+    """The live discovery catalogue's new_candidate count: entries and distinct (TIC, period) signals. The S1c numbers
+    describe the catalogue built under the old rule, kept as catalog_v1_fap200.json once the feed moved on."""
+    if path is None:
+        old = ROOT / "docs/discoveries/catalog_v1_fap200.json"
+        path = old if old.exists() else ROOT / "docs/discoveries/catalog.json"
     if not path.exists():
         return None
     cat = json.loads(path.read_text())
@@ -668,6 +683,7 @@ def cmd_report(args) -> int:
             "stars_run": len(results), "summary": summary, "loss": B.loss_table(results, sample),
             "clipping": B.clipping_summary(results, sample, CLIP_RATIO), "summary_unaffected": summary_unaffected, "sentinels": sentinel_scores(sample),
             "feed_implication": B.feed_implication(summary["held_out"], live_feed()),
+            "feed_rule": feed_rule(),
             "code_commit": _git("rev-parse", "HEAD"), "code_provenance": (cp := code_provenance(results)),
             "threshold_audit": threshold_audit(_newest(list(cp["commit"].values()))),
             "per_star": [{k: r.get(k) for k in ("toi", "tic", "sector", "no_data", "real", "inverted", "scrambled")} for r in results]}

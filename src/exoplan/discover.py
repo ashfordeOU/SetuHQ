@@ -11,11 +11,14 @@ NASA Exoplanet Archive TOI table:
   confirmed planet. Confirmation needs radial velocities or independent photometry.
 
 A dip enters the feed only when it passed vetting, is on its own target's
-periodic signal, is shallower than 5000 ppm, and that periodic signal has at
-least two transits and an empirical false-alarm probability below 0.01. With the
-discovery config's 200 block-bootstrap trials, FAP = (k + 1)/201, so the rule passes at
-k ≤ 1 of 200 trials: a cut at about 1% with Poisson slack. A 1% cut per target admits
-about N/100 noise signals by construction across N targets.
+periodic signal, is shallower than 5000 ppm, that periodic signal has at
+least two transits and an empirical false-alarm probability below 0.001, and the
+same signal (period within 0.5%) also reaches these parts of the rule in the other
+reviewed sector. With the discovery config's 2,000 block-bootstrap trials,
+FAP = (k + 1)/2001, so the rule passes at k ≤ 1 of 2,000 trials; the trials stop once
+2 reach the signal's SNR. The two-sector part was added after the real-TOI benchmark
+showed noise passing the earlier rule (FAP < 0.01 over 200 trials, one sector) about as
+often as the feed reported new signals.
 
 Candidates flagged ``off_ephemeris`` are excluded, since they are not explained by
 the strong periodic signal of their own target.
@@ -48,7 +51,11 @@ BTJD_OFFSET = 2457000.0
 MID_TIME_DEDUPE_DAYS = 0.05
 MAX_FEED_DEPTH_PPM = 5000.0  # deeper dips are almost always binaries, so they stay out of the feed
 MIN_FEED_TRANSITS = 2        # a candidate needs a periodic signal with at least two transits
-MAX_FEED_FAP = 0.01          # and that signal's empirical FAP must be below this (k ≤ 1 of 200 trials)
+MAX_FEED_FAP = 0.001         # and that signal's empirical FAP must be below this (k ≤ 1 of 2,000 trials)
+# The signal must also reach the rule's other parts in both reviewed sectors, with periods within this fraction.
+# Chosen on the real-TOI benchmark's tuning half only and pre-registered (docs/results/feed_rule_preregistration.json,
+# commit 8909cda) before its one held-out evaluation (docs/results/feed_rule_validation.json).
+TWO_SECTOR_PERIOD_TOL = 0.005
 
 
 @dataclass
@@ -219,6 +226,27 @@ def admits_fap(fap: float | None) -> bool:
     return fap is not None and fap < MAX_FEED_FAP
 
 
+def feed_eligible(c) -> bool:
+    """The feed rule before its FAP and two-sector parts: passed vetting, on its own periodic signal, at most
+    MAX_FEED_DEPTH_PPM deep, at least MIN_FEED_TRANSITS transits. ``c`` is a Candidate or its row dict."""
+    get = (lambda k: c.get(k)) if isinstance(c, dict) else (lambda k: getattr(c, k))
+    flags = get("flags") or ()
+    flags = flags.split(";") if isinstance(flags, str) else flags
+    return (bool(get("passed")) and "off_ephemeris" not in flags and (get("depth_ppm") or 0) <= MAX_FEED_DEPTH_PPM
+            and get("period_days") is not None and (get("n_transits") or 0) >= MIN_FEED_TRANSITS)
+
+
+def two_sector_partner(c, candidates, tol: float = TWO_SECTOR_PERIOD_TOL):
+    """A feed-eligible dip in another reviewed sector whose signal has the same period within ``tol``, or None."""
+    get = lambda x, k: x.get(k) if isinstance(x, dict) else getattr(x, k)
+    for r in candidates:
+        if r is c or get(r, "sector") == get(c, "sector") or not feed_eligible(r):
+            continue
+        if abs(get(r, "period_days") - get(c, "period_days")) <= tol * get(c, "period_days"):
+            return r
+    return None
+
+
 def load_catalog(path: Path) -> dict:
     if path.exists():
         return json.loads(path.read_text())
@@ -242,6 +270,7 @@ def run_discovery(
     run_time: datetime | None = None,
     work_dir: str | Path = "runs/discovery",
     cache_root: str | Path = "cache",
+    tics: list[int] | None = None,
 ) -> dict:
     run_time = run_time or datetime.now(timezone.utc)
     started = time.monotonic()
@@ -253,7 +282,8 @@ def run_discovery(
     catalog_path = Path(catalog_path)
     catalog = load_catalog(catalog_path)
     targets = fetch_toi_targets()
-    batch = batch_for(targets, run_time, batch_size)
+    # A named list of TIC ids (a re-run of earlier targets) instead of the day's rotation.
+    batch = [targets[t] for t in tics if t in targets] if tics else batch_for(targets, run_time, batch_size)
 
     run_log = {"time": run_time.isoformat(timespec="seconds"), "targets": [], "errors": [], "new": 0, "known": 0}
     for target in batch:
@@ -282,6 +312,9 @@ def run_discovery(
                     continue
                 if not admits_fap(candidate.fap):
                     run_log["filtered_fap"] = run_log.get("filtered_fap", 0) + 1
+                    continue
+                if two_sector_partner(candidate, summary.candidates) is None:
+                    run_log["filtered_one_sector"] = run_log.get("filtered_one_sector", 0) + 1
                     continue
                 entry = {
                     "tic": target.tic,

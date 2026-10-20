@@ -1111,4 +1111,14 @@ def test_the_sentinels_page_states_the_benchmark_as_measured_not_discovered(tmp_
                                    clipping={"ratio": 8.0, "held_out": {"affected": {"positive": 27, "fp": 11, "fa": 0}, "cp_kp_misses_explained": 3}}))
     assert "Known bug in the code that measured this." in clipped and "27 CP/KP, 11 FP and 0 FA held-out stars are exposed" in clipped
     assert "stars exposed to the clipping bug excluded" in clipped
+    rule = {"validation": {"evaluated_at": "2026-10-20T00:00:00Z", "rule": {"fap_cut": 0.001, "fap_trials": 2000},
+                           "held_out": {"expected_false_per_100_targets": 6.1, "expected_false_ci_per_100_targets": [4.0, 9.4],
+                                        "real_new_per_100_targets": 0.3, "completeness": {"rate": 0.17}},
+                           "held_out_old_rule": {"expected_false_per_100_targets": 23.0, "expected_false_ci_per_100_targets": [18.6, 28.0],
+                                                 "completeness": {"rate": 0.39}}},
+            "live": {"new_signals": 0, "old_new_signals": 3}}
+    upd = _benchmark_card(dict(b, feed_rule=rule))
+    assert "pre-registered and tested once" in upd and "still dominated by false alarms" in upd and "6.1 false signals per 100 targets" in upd
+    assert "a lead for human or follow-up review, not a candidate of any confirmed status" in upd and "0 of the live feed&#x27;s 3" in upd
+    assert "reliable" not in upd.lower() and " clean" not in upd.lower()
     assert "table.bench th,table.bench td{white-space:normal" in APP_CSS  # labels wrap; nothing hides off to the side

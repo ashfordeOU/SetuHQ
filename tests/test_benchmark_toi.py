@@ -178,7 +178,7 @@ def test_the_threshold_audit_reads_the_values_themselves():
     spec.loader.exec_module(S)
     now = S._threshold_values(None)
     assert now["src/exoplan/transitfit.py:V_SHAPE_DCHI2"] == "9.0"
-    assert now["configs/discovery.toml:[search]fap_trials"] == "200"
+    assert now["configs/discovery.toml:[search]fap_trials"] == "2000"
     assert now["src/exoplan/discover.py:MAX_FEED_DEPTH_PPM"] == "5000.0"
     assert "docs/results/reviewer_weights.json:volunteer-typical" in now
     assert all(x in S.NOT_THRESHOLDS for x in ("fap_cache", "FAP_TAIL_FLOOR"))

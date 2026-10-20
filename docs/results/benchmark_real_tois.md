@@ -4,7 +4,7 @@ Measured on a stated benchmark; not discoveries. Sample: NASA Exoplanet Archive,
 
 Panel: the three Probes (deterministic detectors) with their calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed's FAP (200 trials). Each star's first SPOC 2-minute sector; the same light curve flux-inverted and block-scrambled as false-alarm controls. Nothing was tuned on this sample, so both halves are reported; the held-out half (by a hash of the TIC) is the headline. The headline completeness is over searchable stars (those with a SPOC 2-minute light curve), because that is what the pipeline can search and what the references measure; completeness over all stars is given beside it.
 
-**Headline: the live discovery feed's "new" signals are consistent with noise.** On light curves with every real signal destroyed (flux-inverted and scrambled), the feed's own rule admits about 13 false new signals per 100 targets reviewed; the live feed shows 15.8 new signals per 100 targets (3 over 19 targets; 95% CI 6–38). On the real light curves of TOI hosts the same rule found 16 new signals per 1,000 star-sectors. A fix is proposed below, not applied.
+**Headline: the live discovery feed's "new" signals are consistent with noise.** On light curves with every real signal destroyed (flux-inverted and scrambled), the feed's own rule admits about 13 false new signals per 100 targets reviewed; the live feed shows 15.8 new signals per 100 targets (3 over 19 targets; 95% CI 6–38). On the real light curves of TOI hosts the same rule found 16 new signals per 1,000 star-sectors. A fix is proposed below; it was later pre-registered and tested, see the update at the end.
 
 ## Held-out half
 
@@ -47,7 +47,7 @@ The live feed admits a dip only when it passed vetting, is on its own star's per
 
 On the controls every admitted dip is a false alarm. On the real curves a `new_candidate` is a dip on no published TOI of that star: it may be another planet, but most are expected to be false alarms.
 
-**What this implies for the live feed.** The worse control gives 65 false new signals per 1,000 star-sectors. The feed reviews 2 sectors per target, so it should expect about 12.9 false `new_candidate` signals per 100 targets from noise alone. The live catalogue (docs/discoveries/catalog.json) holds 3 distinct new signals over 19 targets, 15.8 per 100 targets. **This is bad: false alarms alone could account for at least half of the feed's `new_candidate` rate, so a `new_candidate` on the feed is more likely noise than a signal.**
+**What this implies for the live feed.** The worse control gives 65 false new signals per 1,000 star-sectors. The feed reviews 2 sectors per target, so it should expect about 12.9 false `new_candidate` signals per 100 targets from noise alone. The live catalogue (docs/discoveries/catalog_v1_fap200.json) holds 3 distinct new signals over 19 targets, 15.8 per 100 targets. **This is bad: false alarms alone could account for at least half of the feed's `new_candidate` rate, so a `new_candidate` on the feed is more likely noise than a signal.**
 
 **Proposed next step (not applied here).** Require the signal to be found independently in each of the two sectors the feed reviews, and raise the FAP evidence to 2,000 trials with a 0.001 cut. Choose the rule on the tuning half only, then measure it once on the held-out half (both controls and CP/KP completeness) before changing configs/discovery.toml. No threshold was changed on this sample.
 
@@ -79,6 +79,8 @@ Both Sentinels (one Claude model, two personas, through the Claude Code CLI) rev
 | claude-volunteer | 50% (10/20; 95% CI 30–70%) | 20% (4/20; 95% CI 8–42%) | 0 |
 | claude-skeptic | 50% (10/20; 95% CI 30–70%) | 20% (4/20; 95% CI 8–42%) | 0 |
 
+Model, as the Claude Code CLI reported it: not recorded: 172 reviews. Reviews answered before exoplan stored the model id say "not recorded": the CLI ran its default model then, and the cache key holds only "default".
+
 The two personas agree on 38 of 40 stars (φ = 0.89). They share one model, so their errors are correlated and they count as one correlated voter, not two independent ones (ATLAS K4).
 
 ## What could not be measured, by class and half
@@ -103,10 +105,30 @@ Not searchable is a property of the star (the TOI came from full-frame images) a
 
 ## Code version
 
-Every per-star result records a fingerprint of the pipeline code that produced it (search, vetting, fit, reviewers): `14f6f4830a525d78` = the pipeline code of commit 76de67d (the current code differs from it only in comments and docstrings); `e4fe4c99663ccba8` = the pipeline code of commit 40cceca (the current code differs from it only in comments and docstrings). Results from earlier code were re-vetted with it from their stored classifications (`rescore`), controls included.
+Every per-star result records a fingerprint of the pipeline code that produced it (search, vetting, fit, reviewers): `14f6f4830a525d78` = the pipeline code of commit 76de67d; `e4fe4c99663ccba8` = the pipeline code of commit 40cceca. Results from earlier code were re-vetted with it from their stored classifications (`rescore`), controls included.
 
 ## Was the held-out half used to choose a threshold?
 
-No. All 113 threshold values in configs, docs/results/reviewer_weights.json, docs/results/reviewer_weights_full_panel.json, src/exoplan/aggregate.py, src/exoplan/config.py, src/exoplan/discover.py, src/exoplan/pipeline.py, src/exoplan/preprocess.py, src/exoplan/search.py, src/exoplan/subjects.py, src/exoplan/transitfit.py, src/exoplan/vet.py, src/exoplan/reviewers (module constants, config keys, reviewer weights) are the same as at fbc1ed9, the last commit before the sample was frozen. The Probe thresholds and weights come from synthetic injection tests; the vetting, V-shape, density and FAP rules were set before any TOI light curve was downloaded. Commits since the freeze, none of which changed a threshold: 76de67d Review nits: docket says what is fitted, prior rho without a restated error, rekey record; 40cceca Science review fixes: free period in joint fits, honest b/rho, no box, stored FAP tail; c78b981 Mission Control: compact chrome, both rows of panes fit a 900 px window. Changed values that decide nothing: configs/tess_pi_men_s1.toml:[search]fap_cache (None → "runs/tess-pi-men-s1/fap_null"); src/exoplan/search.py:FAP_CACHE_VERSION (None → 2); src/exoplan/search.py:FAP_TAIL_FLOOR (None → 1e-6).
+No. All 113 threshold values in configs, docs/results/reviewer_weights.json, docs/results/reviewer_weights_full_panel.json, src/exoplan/aggregate.py, src/exoplan/config.py, src/exoplan/discover.py, src/exoplan/pipeline.py, src/exoplan/preprocess.py, src/exoplan/search.py, src/exoplan/subjects.py, src/exoplan/transitfit.py, src/exoplan/vet.py, src/exoplan/reviewers (module constants, config keys, reviewer weights) are the same at 76de67d, the code that produced these numbers, as at fbc1ed9, the last commit before the sample was frozen. The Probe thresholds and weights come from synthetic injection tests; the vetting, V-shape, density and FAP rules were set before any TOI light curve was downloaded. Commits since the freeze, none of which changed a threshold: 76de67d Review nits: docket says what is fitted, prior rho without a restated error, rekey record; 40cceca Science review fixes: free period in joint fits, honest b/rho, no box, stored FAP tail; c78b981 Mission Control: compact chrome, both rows of panes fit a 900 px window. Changed values that decide nothing: configs/tess_pi_men_s1.toml:[search]fap_cache (None → "runs/tess-pi-men-s1/fap_null"); src/exoplan/search.py:FAP_CACHE_VERSION (None → 2); src/exoplan/search.py:FAP_TAIL_FLOOR (None → 1e-6).
+
+
+## Update 2026-10-20: the two-sector feed rule, pre-registered and tested once
+
+The fix proposed above was chosen on the tuning half only and pre-registered at commit `8909cda` (docs/results/feed_rule_preregistration.json) before its one held-out evaluation (docs/results/feed_rule_validation.json). Rule: the signal must reach the feed rule in both reviewed sectors with periods within 0.5%, and its FAP must be below 0.001 over 2,000 trials. No rule in the grid met the stated noise target (at most 1 false signal per 100 targets on the tuning half), so the pre-stated fallback chose the lowest noise.
+
+Measured with the discovery config itself (subject-mode BLS, the Probes, the feed's weights file) on each held-out star's first two SPOC 2-minute sectors and the same two controls per sector: 309 targets, 562 star-sectors.
+
+| held-out | old rule (FAP < 0.01, 200 trials, one sector) | new rule |
+|---|---|---|
+| False signals per 100 targets, worse control (95% CI) | 23.0 (18.6–28.0) | 6.1 (4.0–9.4) |
+| Inverted control: false signals | 71 (126 per 1,000 star-sectors) | 19 (34 per 1,000) |
+| Scrambled control: false signals | 43 (77 per 1,000) | 0 (0 per 1,000) |
+| CP/KP admitted on their ephemeris (feed-level completeness) | 39% (58/150; 95% CI 31–47%) | 17% (26/150; 95% CI 12–24%) |
+| FP TOIs kept out | 73% (91/124; 95% CI 65–80%) | 94% (116/124; 95% CI 88–97%) |
+| New (no-TOI) signals on the real curves, per 100 targets | 2.9 | 0.3 |
+
+The rule lowers the noise clearly (the 95% intervals do not overlap): about fourfold. **It does not make the feed reliable.** Noise alone still gives about 6 false signals per 100 targets, far above the 0.3 new signals per 100 targets the real light curves of TOI hosts produce, so what the feed admits is still dominated by false alarms. Completeness at the feed's level fell from 39% to 17%. A feed admission is a lead for human or follow-up review, not a candidate of any confirmed status.
+
+**The live feed re-run under the new rule** (19 targets of the live catalogue, their latest two sectors, 2026-10-20; TOI table from cache/toi/toi.csv fetched 2026-10-19T11:00:16Z (the NASA Exoplanet Archive TAP returned HTTP 526 on 2026-10-20)): 0 of the 3 earlier new signals survive, and 2 known-TOI signals are admitted. The earlier catalogue is kept as docs/discoveries/catalog_v1_fap200.json.
 
 Recovered means the panel's consensus dip passed vetting and lies on the TOI's published ephemeris (`match_toi`). Flagged means vetting rejected the on-ephemeris dip, or marked it odd/even, secondary eclipse, V shape or density mismatch. Wilson 95% intervals. TFOPWG dispositions are the reference; they are not ground truth for every TOI.

@@ -1,0 +1,88 @@
+{
+ "rule": {
+  "name": "two_sector",
+  "period_tol": 0.005,
+  "depth_factor": null,
+  "aliases": false,
+  "fap_trials": 2000,
+  "fap_cut": 0.001
+ },
+ "evaluated_at": "2026-10-20T18:57:06+00:00",
+ "preregistration_commit": "8909cdae23aa1e478ff6b0dc35d393e504af2a2d",
+ "code_commit": "8909cdae23aa1e478ff6b0dc35d393e504af2a2d",
+ "held_out": {
+  "targets": 309,
+  "star_sectors": 562,
+  "inverted": {
+   "new_signals": 19,
+   "new_signals_per_1000": 33.80782918149466
+  },
+  "scrambled": {
+   "new_signals": 0,
+   "new_signals_per_1000": 0.0
+  },
+  "completeness": {
+   "k": 26,
+   "n": 150,
+   "rate": 0.17333333333333334,
+   "lo": 0.1211206319165675,
+   "hi": 0.24185992798817993
+  },
+  "fp_rejected": {
+   "k": 116,
+   "n": 124,
+   "rate": 0.9354838709677419,
+   "lo": 0.8778472764919885,
+   "hi": 0.9669490903914706
+  },
+  "expected_false_per_100_targets": 6.148867313915858,
+  "expected_false_ci_per_100_targets": [
+   3.9714423848772107,
+   9.403210396412959
+  ],
+  "real_new_per_100_targets": 0.32362459546925565
+ },
+ "held_out_old_rule": {
+  "targets": 309,
+  "star_sectors": 562,
+  "inverted": {
+   "new_signals": 71,
+   "new_signals_per_1000": 126.33451957295374
+  },
+  "scrambled": {
+   "new_signals": 43,
+   "new_signals_per_1000": 76.51245551601423
+  },
+  "completeness": {
+   "k": 58,
+   "n": 150,
+   "rate": 0.38666666666666666,
+   "lo": 0.3124911672424145,
+   "hi": 0.46650208823474265
+  },
+  "fp_rejected": {
+   "k": 91,
+   "n": 124,
+   "rate": 0.7338709677419355,
+   "lo": 0.6499148543657576,
+   "hi": 0.8037720834049891
+  },
+  "expected_false_per_100_targets": 22.977346278317153,
+  "expected_false_ci_per_100_targets": [
+   18.635661303751913,
+   27.982667162947195
+  ],
+  "real_new_per_100_targets": 2.912621359223301,
+  "rule": {
+   "name": "old",
+   "fap_trials": 200,
+   "fap_cut": 0.01
+  }
+ },
+ "fix_clearly_lowers_noise": true,
+ "notes": [
+  "Each star's first two SPOC 2-minute sectors (the live feed reviews the latest two); a star with one sector cannot pass the two-sector rule and counts as one target.",
+  "Discovery config: subject-mode BLS, the three Probes with the feed's weights file. Fit and TIC stellar parameters off, because admission never reads them; docs/results/feed_rule_stellar_check.json shows identical admission inputs with them on, on a seeded 20-star subsample.",
+  "A worker restart stopped the first held-out run at 120 of 345 stars before it wrote anything; the script then gained a per-star store so the run resumes (the rule and the scoring are unchanged), and the run was restarted. The trials already computed were reused from their cache."
+ ]
+}

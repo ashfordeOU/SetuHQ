@@ -2417,7 +2417,7 @@ def _load_benchmark(path: str | Path = BENCHMARK_JSON) -> dict | None:
     if not Path(path).exists():
         return None
     d = json.loads(Path(path).read_text())
-    keep = ("generated_at", "sample", "panel", "stars_run", "summary", "sentinels", "feed_implication", "clipping", "code_provenance")
+    keep = ("generated_at", "sample", "panel", "stars_run", "summary", "sentinels", "feed_implication", "clipping", "code_provenance", "feed_rule")
     out = {k: d[k] for k in keep if k in d}
     if d.get("summary_unaffected"):
         out["unaffected_held_out"] = {k: d["summary_unaffected"]["held_out"].get(k) for k in ("completeness", "fp_seen", "fp_flagged_of_seen")}
@@ -2461,6 +2461,23 @@ def _benchmark_card(b: dict | None) -> str:
             rows.append((f"{rid}: CP/KP dips marked (subsample of {se['n_stars']} stars)", pct(v["cp_kp_marked"])))
     body = "".join(f"<tr><th scope='row'>{e(k)}</th><td>{v}</td></tr>" for k, v in rows)
     imp = b.get("feed_implication")
+    fr = (b.get("feed_rule") or {})
+    frv = fr.get("validation")
+    if frv:
+        n, o, live = frv["held_out"], frv["held_out_old_rule"], fr.get("live")
+        verdict_rule = (
+            f'<p class="note" style="margin:0"><b>Update {e(frv["evaluated_at"][:10])}: a stricter feed rule, pre-registered and tested once.</b> '
+            f'The signal must now pass in both reviewed sectors with a FAP below {frv["rule"]["fap_cut"]:g} over {frv["rule"]["fap_trials"]:,} trials. '
+            f'On the held-out half, noise alone gives {n["expected_false_per_100_targets"]:.1f} false signals per 100 targets '
+            f'(95% CI {n["expected_false_ci_per_100_targets"][0]:.1f}–{n["expected_false_ci_per_100_targets"][1]:.1f}), down from '
+            f'{o["expected_false_per_100_targets"]:.1f} ({o["expected_false_ci_per_100_targets"][0]:.1f}–{o["expected_false_ci_per_100_targets"][1]:.1f}). '
+            f'That is still far above the {n["real_new_per_100_targets"]:.1f} new signals per 100 targets the real light curves give, so the feed '
+            f'is still dominated by false alarms, and feed-level completeness fell from {100 * o["completeness"]["rate"]:.0f}% to '
+            f'{100 * n["completeness"]["rate"]:.0f}%. A feed admission is a lead for human or follow-up review, not a candidate of any confirmed status.'
+            + (f' Re-run under the new rule, {live["new_signals"]} of the live feed&#x27;s {live["old_new_signals"]} earlier new signals survive.' if live else "")
+            + '</p>')
+    else:
+        verdict_rule = ""
     clip = (b.get("clipping") or {}).get("held_out")
     clipnote = ""
     if clip:
@@ -2474,10 +2491,11 @@ def _benchmark_card(b: dict | None) -> str:
         verdict = (f'<p class="note" style="margin:0"><b>{"The live feed&#x27;s new signals are consistent with noise." if imp["bad"] else "What this means for the feed."}</b> '
                    f'Noise alone should give about {imp["expected_false_per_100_targets"]:.1f} false new_candidate signals per 100 targets reviewed'
                    + (f', against {imp["live_new_signals_per_100_targets"]:.1f} per 100 on the live feed' if imp.get("live_new_signals_per_100_targets") is not None else "")
-                   + ('. A new_candidate on the feed is more likely noise than a signal. Proposed fix, not yet applied: require the signal '
-                      'in each of the two sectors reviewed and a stricter FAP, chosen on the tuning half and checked once on the held-out half.'
+                   + (('. Under that earlier rule a new_candidate on the feed was more likely noise than a signal.' if (b.get("feed_rule") or {}).get("validation")
+                       else '. A new_candidate on the feed is more likely noise than a signal. Proposed fix, not yet applied: require the signal '
+                            'in each of the two sectors reviewed and a stricter FAP, chosen on the tuning half and checked once on the held-out half.')
                       if imp["bad"] else '. False alarms alone account for less than half of that rate.') + '</p>')
-    return (f'<section class="card bench" aria-labelledby="h-bench" style="display:grid;gap:8px"><h2 id="h-bench">Measured on real TOIs</h2>{verdict}'
+    return (f'<section class="card bench" aria-labelledby="h-bench" style="display:grid;gap:8px"><h2 id="h-bench">Measured on real TOIs</h2>{verdict}{verdict_rule}'
             f'<p class="note" style="margin:0"><b>Measured on a stated benchmark, not discoveries.</b> {s["counts"]["positive"]} confirmed or known planets '
             f'(CP/KP), {s["counts"]["fp"]} false positives and {s["counts"]["fa"]} false alarms from the TOI table (fetched {e(s["fetched_at"][:10])}, seed {s["seed"]}), '
             f'one TOI per star; held-out half shown. Panel: {e(b["panel"])}.</p>'
