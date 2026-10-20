@@ -193,10 +193,29 @@ def test_all_phase_secondary_likelihood_closed_form():
 def test_null_distribution_is_a_cdf():
     from exoplan.dvtests import null_cdf, null_pdf, white_quantiles
 
-    assert null_cdf(0.0, 187) == 0.0 and null_cdf(12.0, 187) == 1.0
+    assert null_cdf(0.0, 187) == 0.0 and null_cdf(12.0, 187) == pytest.approx(1.0, abs=1e-6)
     assert null_cdf(white_quantiles(187)["q_dip"], 187) == pytest.approx(0.999, abs=0.001)
     assert null_cdf(3.0, 400) < null_cdf(3.0, 25)          # more positions: a larger largest dip
     assert null_pdf(3.0, 187) > null_pdf(1.0, 187) > 0
+
+
+@pytest.mark.parametrize("positions", [25, 73, 193, 409])
+def test_null_tail_is_smooth_and_monotone(positions):
+    """Above its 99th percentile the null is a fitted generalized Pareto tail: the CDF rises monotonically to 1, the
+    density falls monotonically (the empirical one, from fewer than 40 scans beyond z = 5.1, did not), and the two
+    pieces meet at the threshold without a jump."""
+    from exoplan.dvtests import _null_tables, null_cdf, null_pdf
+
+    z = np.arange(0.0, 12.0, 0.01)
+    cdf = np.array([null_cdf(x, positions) for x in z])
+    assert np.all(np.diff(cdf) >= -1e-12) and cdf[-1] > 0.99999
+    _, pos, _, tails = _null_tables()
+    u = float(np.interp(np.log(positions), np.log(pos), [t["u"] for t in tails]))
+    above = np.arange(max(t["u"] for t in tails) + 0.01, 12.0, 0.05)
+    pdf = np.array([null_pdf(x, positions) for x in above])
+    assert np.all(np.diff(pdf) < 0)
+    assert null_cdf(u + 1e-6, positions) - null_cdf(u - 1e-6, positions) < 1e-3
+    assert 0.5 < null_pdf(u + 0.01, positions) / null_pdf(u - 0.11, positions) < 2.0
 
 
 def test_clean_planets_with_low_peaks_get_a_low_fpp():

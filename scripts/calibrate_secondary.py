@@ -15,7 +15,8 @@ normalise it is itself estimated from the same few dozen to few hundred position
 The larger of the two cadences is kept at each position count. It also measures the effective number of
 independent positions N_eff, from P(max > z) = 1 − Φ(z)^N_eff at the true σ (for reference), and stores the
 empirical CDF of q_dip (both cadences pooled, 40,000 scans) on a grid of z, which the reduced FPP uses as its
-no-secondary likelihood (``exoplan.dvtests.null_cdf``). Output: ``docs/results/secondary_calibration.json``, whose
+no-secondary likelihood (``exoplan.dvtests.null_cdf``), with a generalized Pareto (ξ = 0) fit to its tail above
+the 99th percentile (``null_tail``). Output: ``docs/results/secondary_calibration.json``, whose
 quantiles are copied into ``exoplan.dvtests.SECONDARY_TABLE``.
 
     python scripts/calibrate_secondary.py               # the table (about 10 minutes) and the rates
@@ -32,7 +33,7 @@ from pathlib import Path
 
 import numpy as np
 from scipy.optimize import brentq
-from scipy.stats import beta, norm
+from scipy.stats import beta, genpareto, norm
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests"))
@@ -68,6 +69,24 @@ def white_scans(period: float, cadence_min: float, n: int, seed0: int):
 Z_GRID = [round(0.05 * i, 2) for i in range(0, 241)]   # 0 to 12 robust spreads
 
 
+TAIL_P = 0.01   # the null's tail above its 99th percentile is a fitted generalized Pareto distribution
+
+
+def tail_fit(q: np.ndarray) -> dict:
+    """The tail of the pooled null sample above its 99th percentile u, as a peaks-over-threshold model: the
+    exceedances follow a generalized Pareto distribution, and with the shape fixed at ξ = 0 (the Gumbel domain of
+    the maximum of near-Gaussian box statistics) that is an exponential whose scale σ is the mean exceedance (the
+    maximum-likelihood estimate). Above u the null CDF is 1 − p_u exp(−(z − u)/σ): smooth, with a monotone density
+    and no end point (the empirical tail, from ~400 exceedances of 40,000 scans and fewer than 40 beyond z = 5.1, is
+    neither smooth nor monotone). The free-shape fit is kept for reference (``xi_free``): it scatters by ±0.08 about
+    0 between rows, and a negative ξ would put a hard end on the null at z ≈ 9."""
+    u = float(np.quantile(q, 1.0 - TAIL_P))
+    exceed = q[q > u] - u
+    xi_free, _, _ = genpareto.fit(exceed, floc=0.0)
+    return {"u": round(u, 6), "p_u": round(float(exceed.size / q.size), 8), "xi": 0.0,
+            "sigma": round(float(exceed.mean()), 6), "xi_free": round(float(xi_free), 6), "n_exceed": int(exceed.size)}
+
+
 def table(n_sims: int) -> list[dict]:
     rows = []
     for period in PERIODS:
@@ -94,6 +113,7 @@ def table(n_sims: int) -> list[dict]:
         q = np.sort(np.concatenate(pooled))
         best["null_cdf"] = [round(float(np.searchsorted(q, z, side="right") / q.size), 6) for z in Z_GRID]
         best["null_n"] = int(q.size)
+        best["null_tail"] = tail_fit(q)
         rows.append(best)
     return rows
 
@@ -163,7 +183,8 @@ def main(argv=None) -> int:
         data["table"] = table(args.sims)
         data["note"] = ("99.9% quantiles over white-noise scans (27 days, T14 = 0.125 d, 2- and 10-minute cadence, the "
                         "larger kept); positions = coarse box positions of secondary_search; null_cdf: the CDF of "
-                        "(largest dip)/(robust spread) on z_grid, both cadences pooled")
+                        "(largest dip)/(robust spread) on z_grid, both cadences pooled; null_tail: a generalized "
+                        "Pareto fit to that sample above its 99th percentile u, used beyond u")
         data["z_grid"] = Z_GRID
     data["rates"] = rates()
     out.write_text(json.dumps(data, indent=1, default=int) + "\n")

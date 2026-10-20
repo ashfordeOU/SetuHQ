@@ -251,7 +251,15 @@
     1.0,
     1.0
    ],
-   "null_n": 40000
+   "null_n": 40000,
+   "null_tail": {
+    "u": 4.897491,
+    "p_u": 0.01,
+    "xi": 0.0,
+    "sigma": 0.781192,
+    "xi_free": 0.068805,
+    "n_exceed": 400
+   }
   },
   {
    "period": 1.5,
@@ -504,7 +512,15 @@
     1.0,
     1.0
    ],
-   "null_n": 40000
+   "null_n": 40000,
+   "null_tail": {
+    "u": 4.539138,
+    "p_u": 0.01,
+    "xi": 0.0,
+    "sigma": 0.619324,
+    "xi_free": 0.006243,
+    "n_exceed": 400
+   }
   },
   {
    "period": 2.5,
@@ -757,7 +773,15 @@
     1.0,
     1.0
    ],
-   "null_n": 40000
+   "null_n": 40000,
+   "null_tail": {
+    "u": 4.43906,
+    "p_u": 0.01,
+    "xi": 0.0,
+    "sigma": 0.473159,
+    "xi_free": -0.07639,
+    "n_exceed": 400
+   }
   },
   {
    "period": 4.0,
@@ -1010,7 +1034,15 @@
     1.0,
     1.0
    ],
-   "null_n": 40000
+   "null_n": 40000,
+   "null_tail": {
+    "u": 4.387617,
+    "p_u": 0.01,
+    "xi": 0.0,
+    "sigma": 0.39093,
+    "xi_free": 0.048792,
+    "n_exceed": 400
+   }
   },
   {
    "period": 6.27,
@@ -1263,7 +1295,15 @@
     1.0,
     1.0
    ],
-   "null_n": 40000
+   "null_n": 40000,
+   "null_tail": {
+    "u": 4.417206,
+    "p_u": 0.01,
+    "xi": 0.0,
+    "sigma": 0.319005,
+    "xi_free": -0.082891,
+    "n_exceed": 400
+   }
   },
   {
    "period": 10.0,
@@ -1516,7 +1556,15 @@
     1.0,
     1.0
    ],
-   "null_n": 40000
+   "null_n": 40000,
+   "null_tail": {
+    "u": 4.387926,
+    "p_u": 0.01,
+    "xi": 0.0,
+    "sigma": 0.28712,
+    "xi_free": -0.057425,
+    "n_exceed": 400
+   }
   },
   {
    "period": 13.0,
@@ -1769,10 +1817,18 @@
     1.0,
     1.0
    ],
-   "null_n": 40000
+   "null_n": 40000,
+   "null_tail": {
+    "u": 4.439191,
+    "p_u": 0.01,
+    "xi": 0.0,
+    "sigma": 0.26501,
+    "xi_free": -0.048712,
+    "n_exceed": 400
+   }
   }
  ],
- "note": "99.9% quantiles over white-noise scans (27 days, T14 = 0.125 d, 2- and 10-minute cadence, the larger kept); positions = coarse box positions of secondary_search; null_cdf: the CDF of (largest dip)/(robust spread) on z_grid, both cadences pooled",
+ "note": "99.9% quantiles over white-noise scans (27 days, T14 = 0.125 d, 2- and 10-minute cadence, the larger kept); positions = coarse box positions of secondary_search; null_cdf: the CDF of (largest dip)/(robust spread) on z_grid, both cadences pooled; null_tail: a generalized Pareto fit to that sample above its 99th percentile u, used beyond u",
  "rates": {
   "secondary_false_flags_plain_3x_robust": {
    "k": 681,
@@ -1795,12 +1851,12 @@
    "k_first_200_seeds": 4
   },
   "secondary_false_flags_white_table": {
-   "k": 2,
+   "k": 0,
    "n": 3000,
-   "rate": 0.0006666666666666666,
+   "rate": 0.0,
    "ci95": [
-    8.074662552361538e-05,
-    0.0024061330938171446
+    0.0,
+    0.0012288708038255115
    ],
    "k_first_200_seeds": 0
   },

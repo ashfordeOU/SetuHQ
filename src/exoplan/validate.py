@@ -24,7 +24,8 @@ Likelihoods, from the S2 measurements (each closed-form):
 * Secondary, from the all-phase search: the strongest dip s ± σ_s at any phase, in units of z = s/σ_s with σ_s
   scaled by the scan's noise (never below the nominal σ/√n, as in the secondary threshold). TP and EBx2P predict no secondary, so z is the largest dip of a white-noise scan:
   likelihood f₀(z), the simulated null density for that number of box positions (``null_cdf`` in
-  docs/results/secondary_calibration.json; modelling it as the largest of N_eff independent draws broke in the low
+  docs/results/secondary_calibration.json, with an exponential (generalized Pareto, ξ = 0) tail fitted above its 99th percentile, so f₀
+  is smooth and decreasing where only a few dozen simulated scans lie; modelling it as the largest of N_eff independent draws broke in the low
   tail and charged a planet for an unusually small dip). EB predicts a true secondary μ uniform in [0, Z], Z = δ/σ_s,
   so the largest dip is the larger of N(μ, 1) and the noise maximum: likelihood
   (1/Z) [F₀(z)(Φ(z) − Φ(z−Z)) + f₀(z)(G(z) − G(z−Z))] with G(u) = uΦ(u) + φ(u). Without the all-phase search, the
