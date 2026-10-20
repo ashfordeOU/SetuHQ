@@ -218,6 +218,9 @@ def _check_entries(s: dict) -> None:
     var = s.get("variability")
     star_var = var if var and var.get("fap") is not None and var["fap"] < LS_FAP_MAX and var.get("amplitude_ratio", 0) >= LS_AMPLITUDE_RATIO else None
     eb_periods = []
+    ids = [e.get("id") for e in s.get("entries") or []]
+    if len(set(ids)) != len(ids):
+        raise BundleRefused(f"TIC {s['tic']}: two entries share an id")
     for e in s.get("entries") or []:
         if e.get("tic") != s["tic"] or e.get("sector") != s["sector"]:
             raise BundleRefused(f"entry {e.get('id')}: star or sector differs from its record")

@@ -134,16 +134,7 @@ def search_star(path: str | Path, *, tic: int, sector: int, config, reviewers, w
     clusters = aggregate(clfs, weights, gap_days=config.cluster_gap_days, min_score=0.0, min_planet_fraction=0.0)
     below = sum(1 for c in clusters if c.score < config.min_score)
     entries = res["entries"]
-    if toi_target is not None:
-        from exoplan.discover import match_toi
-
-        for e in entries:
-            if e["kind"] == "dip":
-                m = match_toi({"t_center": e["t_center"], "time_unit": "BTJD", "duration_hours": e.get("duration_hours"),
-                               "period_days": e.get("period_days")}, toi_target)
-                if m:
-                    e["toi_match"] = m["toi"]
-                    e["toi_disposition"] = m.get("disposition")
+    _match_tois(entries, toi_target)
     record = {
         "tic": int(tic), "sector": int(sector), "status": "searched",
         "ra": star.get("ra"), "dec": star.get("dec"), "tmag": star.get("tmag"), "teff": star.get("teff"), "radius": star.get("radius"),
@@ -167,3 +158,42 @@ def search_star(path: str | Path, *, tic: int, sector: int, config, reviewers, w
     record["elapsed_s"] = round(time.monotonic() - started, 1)
     record["searched_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     return record
+
+
+def _match_tois(entries: list[dict], toi_target) -> None:
+    if toi_target is None:
+        return
+    from exoplan.discover import match_toi
+
+    for e in entries:
+        if e["kind"] == "dip":
+            m = match_toi({"t_center": e["t_center"], "time_unit": "BTJD", "duration_hours": e.get("duration_hours"),
+                           "period_days": e.get("period_days")}, toi_target)
+            if m:
+                e["toi_match"] = m["toi"]
+                e["toi_disposition"] = m.get("disposition")
+
+
+def reclassify_record(rec: dict, path: str | Path, *, run_root: str | Path, toi_target=None, code: str | None = None) -> dict:
+    """A stored record with its entries classified again by the current rules, from the same file and the stored
+    pipeline runs (classifications, candidates and their vetting are reused, not recomputed). Refuses a file
+    whose sha256 differs from the record's. The record's code becomes this checkout's, and ``reclassified_at``
+    says when."""
+    lc, events, _ = read_spoc(path, rec["tic"], rec["sector"])
+    if lc.provenance["file_sha256"] != rec["file_sha256"]:
+        raise ValueError(f"TIC {rec['tic']}: the light-curve file is not the one the record was made from")
+    run_dir = Path(run_root) / f"tic{int(rec['tic'])}-s{int(rec['sector'])}"
+    res = star_entries(run_dir / "real", tic=rec["tic"], sector=rec["sector"], time=lc.time, flux=lc.flux, events=events)
+    entries = res["entries"]
+    _match_tois(entries, toi_target)
+    out = {**rec, "entries": entries, "counts": res["counts"], "variability": res["variability"], "events": events,
+           "code": code or code_fingerprint(), "reclassified_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+    out["rejected"] = {**rec.get("rejected", {}), "failed_vetting": sum(1 for e in entries if e["kind"] == "dip" and not e["passed"]),
+                       "dips_not_planet_candidate": sum(1 for e in entries if e["kind"] == "dip" and e["class"] != "planet_candidate")}
+    if (run_dir / "inverted" / "candidates.json").exists() and rec.get("control"):
+        from exoplan.benchmark_toi import inverted
+
+        inv = inverted(lc)
+        cres = star_entries(run_dir / "inverted", tic=rec["tic"], sector=rec["sector"], time=inv.time, flux=inv.flux, events=events)
+        out["control"] = {"inverted": {"n_dips": cres["n_dips"], "counts": class_counts(cres["entries"])}}
+    return out

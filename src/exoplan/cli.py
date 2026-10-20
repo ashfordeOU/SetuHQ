@@ -158,7 +158,12 @@ def cmd_discover(args) -> int:
 
 
 def cmd_sweep(args) -> int:
-    from exoplan.sweep import run_sweep
+    from exoplan.sweep import reclassify_sweep, run_sweep
+
+    if args.reclassify:
+        reclassify_sweep(args.config, args.sector, limit=args.limit, out_dir=args.out, cache_root=args.cache,
+                         contributor=args.contributor, min_interval=args.min_interval)
+        return 0
 
     res = run_sweep(args.config, args.sector, limit=args.limit, out_dir=args.out, cache_root=args.cache, workers=args.workers,
                     min_interval=args.min_interval, time_budget_s=args.time_budget_min * 60.0 if args.time_budget_min else None,
@@ -309,6 +314,8 @@ def build_parser() -> argparse.ArgumentParser:
     sweep.add_argument("--time-budget-min", type=float, default=None, help="stop starting new stars after this many minutes")
     sweep.add_argument("--no-control", action="store_true", help="skip the flux-inverted control run of each star")
     sweep.add_argument("--contributor", default="exoplan", help="the name credited for this sweep")
+    sweep.add_argument("--reclassify", action="store_true",
+                       help="re-apply the classification rules to the stored star-sectors (after a change to variables.py only)")
     sweep.add_argument("--weights", default="docs/results/reviewer_weights_full_panel.json",
                        help="calibrated weights; a reviewer not in the file weighs 1.0")
     sweep.set_defaults(func=cmd_sweep)

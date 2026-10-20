@@ -273,7 +273,8 @@ def classify_flare(flare: dict, events: dict | None = None) -> dict:
         return _verdict("systematic", "high" if len(inst) >= 2 else "medium", inst)
     many = flare["n_points"] >= FLARE_MIN_POINTS + 2
     bright = flare["peak_sigma"] >= 10.0
-    shaped = flare["rise_days"] < flare["decay_days"]
+    # Faster rise than decay by more than a second: equal times (whole cadences) differ only by float noise.
+    shaped = flare["decay_days"] - flare["rise_days"] > 1.0 / 86400
     cues = [{"rule": "brightening", "text": f"{flare['n_points']} consecutive points over {FLARE_SIGMA:g}σ, peak {flare['peak_sigma']:.1f}σ "
                                             f"({flare['amplitude_ppm']:,.0f} ppm)"}]
     if shaped:
@@ -480,6 +481,12 @@ def star_entries(run_dir: str | Path, *, tic: int, sector: int, time=None, flux=
                             "ls_fap": var["fap"], "ls_fap_method": var["fap_method"], "amplitude_ratio": var["amplitude_ratio"],
                             "binned_scatter_ppm": var["binned_scatter_ppm"], "marks": [], "words": [],
                             "note": "from the out-of-transit periodogram (variables.variability); no reviewer marks"})
+    # Two events within 0.01 d of each other share a time in their id: the later ones get -2, -3 ... (so ids stay unique).
+    seen: dict[str, int] = {}
+    for e in entries:
+        n = seen[e["id"]] = seen.get(e["id"], 0) + 1
+        if n > 1:
+            e["id"] = f"{e['id']}-{n}"
     for e in entries:
         e.update({k: v for k, v in base.items() if k not in e})
     counts = {c: sum(1 for e in entries if e["class"] == c) for c in CLASS_IDS}

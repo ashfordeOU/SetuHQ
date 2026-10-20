@@ -109,6 +109,25 @@ def test_a_flare_is_found_and_classified_and_noise_gives_none():
     assert V.classify_flare(fl[0], {"momentum_dumps": [10.02]})["class"] == "systematic"
 
 
+def test_equal_rise_and_decay_is_not_a_fast_rise_despite_float_noise():
+    # Found by ingest's rule re-check on the real sweep: 10 min each way, but rise < decay in floating point.
+    f = {"t_start": 1336.86, "t_end": 1336.874, "n_points": 11, "peak_sigma": 6.01, "amplitude_ppm": 62563.0,
+         "rise_days": 1336.867 - 1336.86, "decay_days": 1336.874 - 1336.867}
+    assert abs(f["rise_days"] - f["decay_days"]) < 1e-6
+    v = V.classify_flare(f)
+    assert v["confidence"] == "low" and [c["rule"] for c in v["cues"]] == ["brightening"]
+    assert V.classify_flare({**f, "rise_days": round(f["rise_days"] * 1440, 1) / 1440, "decay_days": round(f["decay_days"] * 1440, 1) / 1440})["confidence"] == "low"
+
+
+def test_reclassify_reuses_the_stored_runs(swept):
+    kw = swept["kw"]
+    n = SW.reclassify_sweep("configs/sweep.toml", SECTOR, limit=3, out_dir=kw["out_dir"], cache_root=kw["cache_root"], log=lambda *a: None)
+    assert n == 3
+    rec = json.loads((kw["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())
+    assert all(s.get("reclassified_at") and s["code"] == code_fingerprint() for s in rec["stars"])
+    assert swept["mast"].fetched == [] and swept["mast"].queries == 0   # nothing downloaded, no reviewer asked
+
+
 def test_variability_finds_the_period_and_the_rule_needs_amplitude():
     rng = np.random.default_rng(3)
     t = np.arange(0, 27, 2 / 1440)

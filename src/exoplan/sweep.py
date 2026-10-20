@@ -304,6 +304,36 @@ def run_sweep(config_path: str | Path, sector: int, *, limit: int, out_dir: str 
     return res
 
 
+def reclassify_sweep(config_path: str | Path, sector: int, *, limit: int, out_dir: str | Path = SWEEP_DIR, cache_root: str | Path = "cache",
+                     contributor: str = "exoplan", toi_path: str | None = None, min_interval: float = 1.0, log=print) -> int:
+    """Apply the current classification rules to every stored star-sector of the slice, from its cached file and
+    stored pipeline runs (the reviewers and the pipeline are not run again), then rewrite the record and catalogue.
+    For a change to variables.py only; a change to the pipeline needs a fresh sweep."""
+    from exoplan.starsearch import code_fingerprint, reclassify_record
+
+    cache_root = Path(cache_root)
+    targets, fetched_at = sector_targets(sector, cache_root)
+    chosen = targets[:limit]
+    tois = _toi_index(toi_path or str(cache_root / "toi" / "toi.csv"))
+    code, n = code_fingerprint(), 0
+    for t in chosen:
+        p = record_path(cache_root, sector, t["tic"])
+        if not p.exists():
+            continue
+        rec = json.loads(p.read_text())
+        if rec.get("status") != "searched":
+            continue
+        local = Path(cache_root) / "mast" / "sweep" / f"s{int(sector):04d}" / t["uri"].rsplit("/", 1)[-1]
+        rec = reclassify_record(rec, local, run_root=cache_root / "sweep" / "runs", toi_target=tois.get(t["tic"]), code=code)
+        _write_atomic(p, json.dumps(finite(rec), default=_json_default))
+        n += 1
+    log(f"sector {sector}: {n} star-sectors reclassified with code {code[:16]}")
+    write_sector_record(config_path, sector, chosen, targets, fetched_at, out_dir=out_dir, cache_root=cache_root,
+                        contributor=contributor, limit=limit, min_interval=min_interval)
+    build_catalogue(out_dir)
+    return n
+
+
 def write_sector_record(config_path, sector: int, chosen: list[dict], targets: list[dict], fetched_at: str, *, out_dir, cache_root,
                         contributor: str, limit: int, min_interval: float) -> Path:
     """The sector's record: every star-sector of the slice with its stored result (or "pending")."""

@@ -42,7 +42,7 @@ def test_every_figure_comes_from_the_committed_catalogue(pi_men_app):
     assert d["counts"] == CAT["counts"] and d["classes"] == CAT["classes"]
     # The full catalogue is a separate file, fetched when needed; the page carries only the counts.
     assert json.loads((pi_men_app.parent / "assets/data/variables.json").read_text()) == CAT
-    assert '"entries"' not in json.dumps(d)
+    assert "entries" not in d and "coverage" not in d
     over = _route(page, "overview")
     c = CAT["counts"]
     for n, label in ((c["stars_searched"], "stars searched"), (c["star_sectors_searched"], "star-sectors"),
@@ -81,15 +81,16 @@ def test_sky_layer_and_mission_telemetry(pi_men_app):
 
 
 @pytest.mark.skipif(not HAVE_NODE, reason="node is not installed")
-def test_the_page_filter_matches_python():
+def test_the_page_filter_matches_python(tmp_path):
     meta = sweep_meta(CAT)
     js = VARIABLES_JS[VARIABLES_JS.index("function decodeVarView"):VARIABLES_JS.index("function vaSort")]
     views = [{}, {"class": "variable"}, {"class": "flare,systematic", "conf": "high"}, {"q": "tic 1"}, {"toi": "1"}, {"q": "exoplan"}]
     script = (f"const VA = {json.dumps(meta)}; const VA_CLASSES = VA.classes.map(c => c.id); const VA_CONF = ['high','medium','low','n/a'];\n"
               f"const E = {json.dumps(CAT['entries'])};\n" + js +
               f"\nconsole.log(JSON.stringify({json.dumps(views)}.map(q => {{ const v = decodeVarView(new URLSearchParams(q)); "
-              "return [vaFilter(E, v).map(e => e.id), encodeVarView(v)]; }})));")
-    out = subprocess.run(["node", "-e", script], capture_output=True, text=True, timeout=120)
+              "return [vaFilter(E, v).map(e => e.id), encodeVarView(v)]; })));")
+    (tmp_path / "filter.js").write_text(script)
+    out = subprocess.run(["node", str(tmp_path / "filter.js")], capture_output=True, text=True, timeout=120)
     assert out.returncode == 0, out.stderr
     got = json.loads(out.stdout.strip().splitlines()[-1])
     for q, (ids, enc) in zip(views, got):
