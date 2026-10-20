@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """SQLite store for subjects and classifications, with a Zooniverse-style CSV export.
 
 The export mirrors the column layout of a Zooniverse classification export

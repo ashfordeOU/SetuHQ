@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Ashforde OÜ
 // Capture the README's app screenshots from the built app (site/app/index.html), light and dark.
 //
 // One rule for every shot, so the README's tiles line up:

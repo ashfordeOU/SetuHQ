@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Fetch JWST's public WASP-39 b transmission spectrum (Carter et al. 2024) and store a trimmed copy.
 
 Source: "Products and Models for 'A benchmark JWST near-infrared spectrum for the exoplanet WASP-39 b'",

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """S2 pixel-level vetting (pixel.py) on synthetic target pixel files, plus the offline readers of SPOC files."""
 
 import math

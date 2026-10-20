@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Claude as a reviewer through the Claude Code CLI, with no API key.
 
 Claude Code signs in with a Claude team or individual subscription. This

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Reviewer calibration by injection.
 
 Each reviewer is run on synthetic subjects, half with one injected transit and

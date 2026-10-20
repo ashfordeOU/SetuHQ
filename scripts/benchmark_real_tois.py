@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """S1c: run the blind benchmark on real TOIs (src/setuhq/benchmark_toi.py explains the design).
 
     python scripts/benchmark_real_tois.py freeze            # TOI table → docs/results/benchmark_toi_sample.json

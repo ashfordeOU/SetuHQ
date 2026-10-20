@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Command-line interface: ``setuhq run``, ``setuhq benchmark``, ``setuhq calibrate``, ``setuhq app``, ``setuhq plate`` and more."""
 
 from __future__ import annotations

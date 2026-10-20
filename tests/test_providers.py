@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Sentinels on every provider: one task, one schema, validated and clipped the same way. No network: each
 provider's HTTP answer is mocked, including malformed JSON, refusals, timeouts and answers in the wrong schema."""
 

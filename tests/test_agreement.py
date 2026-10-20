@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Cross-provider agreement (φ) on the Sentinels' stated subsample, from stored outcomes only (no API calls)."""
 
 import json

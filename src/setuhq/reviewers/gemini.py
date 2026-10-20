@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """A Sentinel on Google Gemini (the Gemini API's ``generateContent``, with the PNG inline).
 
 Key from ``GEMINI_API_KEY``, sent in the ``x-goog-api-key`` header (never in the URL). Plain

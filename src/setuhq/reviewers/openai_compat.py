@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Sentinels on OpenAI and on any OpenAI-compatible endpoint (Chat Completions with image input).
 
 * ``openai``: the OpenAI API, ``https://api.openai.com/v1``, key from ``OPENAI_API_KEY``.

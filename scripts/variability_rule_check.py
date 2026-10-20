@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Measure the coherent-variable rule and its red-noise null on synthetic TESS-like light curves.
 
 Writes docs/sweep/variability_rule_check.json, which the #/variables page quotes in its limits. Each case is

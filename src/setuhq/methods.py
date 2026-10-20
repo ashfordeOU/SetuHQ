@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The Methods section: how planets are found, as animated explainers built on stated physics.
 
 Every equation here has a JavaScript twin in :data:`METHODS_JS` (the page draws with it) and a Python

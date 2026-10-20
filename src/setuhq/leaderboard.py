@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The public leaderboard on the frozen real-TOI benchmark (S5; the benchmark itself is S1c, benchmark_toi.py).
 
 A **submission** is one JSON file: a method's detected events, per held-out star of the frozen sample
@@ -506,7 +508,7 @@ def build(sample: dict, inputs: dict, benchmark: dict, submissions: list) -> dic
     entries.sort(key=lambda e: (SCOPES.index(e["scope"]), not e["ranked"], -jv(e) if e["ranked"] else 0,
                                 kinds.index(e["kind"]) if e["kind"] in kinds else len(kinds), e["id"]))
     floor = floor_comparison(entries, {k: v[1] for k, v in rows_of.items()})
-    return {"format": "exoplan-leaderboard-results/4", "floor": floor, "floor_note": floor_note(floor), "sample_sha256": sample["sha256"],
+    return {"format": "exoplan-leaderboard-results/4", "license": "CC-BY-4.0", "floor": floor, "floor_note": floor_note(floor), "sample_sha256": sample["sha256"],
             "inputs_sha256": inputs_sha256(inputs), "full_sample_sha256": full_sample_sha256(sample),
             "sentinel_subsample": sentinel_subsample(benchmark),
             "sentinel_subsample_sha256": canonical_sha256(sentinel_subsample(benchmark)),

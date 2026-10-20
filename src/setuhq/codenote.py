@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """A run's code note: when a stored run was made with older code whose results a later fix would change, its
 manifest carries ``code_note``, and every page built from the run (or from a catalogue that carries one) shows it
 in a banner: at the top of a page that scrolls, fixed to the bottom of one that fits the window."""

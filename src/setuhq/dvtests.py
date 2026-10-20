@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Extended light-curve vetting after the Kepler and TESS SPOC Data Validation (DV) tests (Twicken et al. 2018,
 doi:10.1088/1538-3873/aab694; Jenkins et al. 2016 for SPOC). These tests only add flags by default; the run
 config's ``[vetting] decide = true`` turns the disqualifying ones into pass/fail (see :data:`DISQUALIFYING`).

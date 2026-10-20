@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Automated improvement loop: sweep panel settings, keep a change only if it holds on fresh data.
 
 Protocol, so the loop cannot quietly overfit:

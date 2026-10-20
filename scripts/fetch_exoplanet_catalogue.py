@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Every known exoplanet record, for the app's Catalogue, planet and star pages.
 
 Source order, as for the Galaxy map: the NASA Exoplanet Archive (pscomppars) when it answers, otherwise

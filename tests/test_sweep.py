@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Everything that dims: the classification rules, the sweep (resumable, cached, polite) and contribution bundles."""
 
 import json

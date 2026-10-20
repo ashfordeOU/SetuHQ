@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Data for the app's five sections (Overview, Sky, Transit, Explorer, Sentinels).
 
 Everything here is read from stored files: the run's subjects, marks, decisions and

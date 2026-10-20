@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """EXAMPLE: an agent that vets one SetuHQ candidate end to end, through the SetuHQ MCP server.
 
 This is an example of wiring, not part of SetuHQ's pipeline, and its output is not a result. It uses the

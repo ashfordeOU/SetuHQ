@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Automatic signal search. This is the machine's own view, used for vetting and calibration.
 
 Two complementary searches:

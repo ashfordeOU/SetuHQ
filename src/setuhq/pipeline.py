@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """End-to-end run: light curves in, vetted candidate catalogue and provenance manifest out.
 
 Stages, in order:

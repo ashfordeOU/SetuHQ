@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Plates: a publication-style, print-ready page with one plate per star.
 
 At the top, a "river of time": the whole feed (and the run's star), one row per

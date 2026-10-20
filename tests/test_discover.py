@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 import pytest
 
 from setuhq.discover import Target, Toi, match_toi, reclassify_catalog, toi_fields

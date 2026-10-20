@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,8 +7,17 @@ name = "setuhq"
 version = "0.1.0"
 description = "SetuHQ, the open exoplanet observatory: a transit search of public TESS data with a calibrated panel of AI Sentinels and deterministic Probes"
 readme = "README.md"
-license = { text = "MIT" }
+license = "AGPL-3.0-only"  # or a commercial licence from Ashforde OÜ: see LICENSING.md
+license-files = ["LICENSE", "NOTICE", "LICENSING.md"]
+authors = [{ name = "Ashforde OÜ", email = "contact@ashforde.org" }]
 requires-python = ">=3.10"
+keywords = ["exoplanets", "transit search", "TESS", "benchmark", "citizen science"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
 dependencies = [
     "numpy>=1.24",
     "scipy>=1.10",
@@ -16,6 +25,12 @@ dependencies = [
     "matplotlib>=3.7",
     "astroquery>=0.4.7",  # the archive cross-match ('setuhq crossmatch'); the page builds need its result
 ]
+
+[project.urls]
+Homepage = "https://setuhq.com"
+Source = "https://github.com/ashfordeOU/SetuHQ"
+Issues = "https://github.com/ashfordeOU/SetuHQ/issues"
+Changelog = "https://github.com/ashfordeOU/SetuHQ/blob/HEAD/CHANGELOG.md"
 
 [project.optional-dependencies]
 tess = ["lightkurve>=2.4"]

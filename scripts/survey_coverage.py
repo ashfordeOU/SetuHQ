@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Where the transit surveys have looked: sky coverage for the Galaxy and Sky maps.
 
 Writes ``docs/results/survey_coverage.json``:

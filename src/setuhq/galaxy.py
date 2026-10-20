@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The Galaxy section: every known exoplanet with a stored distance, in 3D around the Sun.
 
 The data is ``docs/results/exoplanet_map.json``, written by ``scripts/fetch_exoplanet_map.py`` from

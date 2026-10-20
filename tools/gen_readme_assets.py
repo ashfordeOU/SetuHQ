@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Generate the README's figures from committed data, in a light and a dark variant.
 
 Every picture under docs/assets/readme/ (except the app screenshots in app/) and every file in

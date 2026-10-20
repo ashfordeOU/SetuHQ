@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Pixel-level vetting from TESS SPOC target pixel files (TPFs), after the Kepler/SPOC Data Validation (DV)
 centroid tests (Twicken et al. 2018, doi:10.1088/1538-3873/aab694; ATLAS E5, E6, C9).
 

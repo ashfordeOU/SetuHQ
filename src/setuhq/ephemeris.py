@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Ephemeris propagation with its uncertainty cone, and predicted transit windows (ATLAS G5).
 
 A transit n orbits after the reference epoch is at T_n = T0 + n P, with

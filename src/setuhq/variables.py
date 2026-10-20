@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Everything that dims: keep every consensus dip, find brightenings and periodic variability, and classify each.
 
 The planet search throws away every dip that is not a planet candidate. This module keeps them. For one

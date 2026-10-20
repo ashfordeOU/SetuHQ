@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Deterministic simulated volunteers.
 
 These are classical detectors with human-like imperfections, not people and

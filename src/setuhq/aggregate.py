@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Consensus: turn many independent classifications into ranked events.
 
 This follows the Planet Hunters idea. Marks from different reviewers that land

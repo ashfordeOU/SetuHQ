@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Round 11, chunk 1: one object model. Every planet and star mention links to its canonical page, the
 pages link back, and the system view and honesty label have one renderer each."""
 

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """S1c: a blind benchmark on real TESS Objects of Interest (ATLAS R, S1; E7 for the reliability idea).
 
 1. **A frozen sample.** From the archive's ``toi`` table: TOIs dispositioned CP or KP (positives), FP (false

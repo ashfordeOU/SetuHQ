@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The Sentinel task, shared by every provider: the prompt, the strict JSON schema, validation and clipping.
 
 Each review sends the blind-coded PNG plot and the volunteer instructions, and asks for strict

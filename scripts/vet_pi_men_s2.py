@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """pi Men (TIC 261136679), TESS sector 1: the S2 extended and pixel-level vetting and the S3 reduced FPP, on real SPOC data.
 
 Inputs (downloaded into the gitignored ``cache/tpf`` by :func:`setuhq.pixel.fetch_spoc_product`, through MAST or,

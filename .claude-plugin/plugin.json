@@ -9,7 +9,7 @@
     "url": "https://ashforde.org"
   },
   "repository": "https://github.com/ashfordeOU/SetuHQ",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "keywords": [
     "exoplanets",
     "tess",

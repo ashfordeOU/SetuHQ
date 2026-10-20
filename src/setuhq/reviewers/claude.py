@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Claude as a reviewer through the Anthropic API (vision), the default Sentinel provider.
 
 The task, the prompt, the strict JSON schema, validation and clipping are shared by every

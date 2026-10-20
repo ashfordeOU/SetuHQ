@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The README's generated figures, brand files and app screenshots: present in both themes, self-contained,
 described exactly (the README's alt text is each figure's own <desc>), recorded (SHOTS.json covers every
 screenshot) and current (tools/gen_readme_assets.py --check, the slow test)."""

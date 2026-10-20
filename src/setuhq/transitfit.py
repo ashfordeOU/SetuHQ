@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """A limb-darkened transit model and fit, replacing the box: depth, duration, impact parameter and mid-time
 with uncertainties, plus the stellar-density and V-shape tests.
 

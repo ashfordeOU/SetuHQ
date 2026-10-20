@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Plain HTTPS JSON POST for the Sentinel providers that need no SDK (OpenAI, Gemini, OpenAI-compatible).
 
 The standard library only, so no extra package is needed. A backend takes a ``transport``

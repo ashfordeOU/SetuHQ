@@ -1,4 +1,44 @@
-# Contributing a sweep: bring your own reviewer
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+# Contributing to SetuHQ
+
+Thanks for your interest. SetuHQ aims to be an **open, reproducible, honestly measured** transit search
+and benchmark. Contributions are held to that bar: provenance for every number, tests for every
+behaviour, and no claim beyond the evidence. Nothing SetuHQ produces is called a confirmed or
+discovered planet; a contribution may not change that.
+
+How the project is governed (who decides, the technical bar, the open/closed boundary) is in
+[`GOVERNANCE.md`](GOVERNANCE.md). Security issues go through [`SECURITY.md`](SECURITY.md), not a
+public issue. Conduct is governed by [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+
+**Before your first pull request can be merged, you agree to the
+[Contributor Licence Agreement](CLA.md)** (see [Licence and the CLA](#licence-and-the-cla) below).
+
+## Development
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -e ".[dev,readme]"   # add ,mcp,agents for the MCP server and the agent example
+.venv/bin/python -m pytest -q                         # offline tests; network- and slow-marked tests are deselected
+scripts/ci_local.sh --quick                           # what CI runs: tests, paper numbers, README --check
+scripts/ci_local.sh                                   # plus the slow tests, the sweep check and every site build
+```
+
+- **Reproducibility is a hard invariant.** A run is fixed by its config hash, its input files' sha256
+  and the code fingerprint. Randomness flows through stated seeds. A change that makes a stored result
+  irreproducible is a bug.
+- **Derived files are generated, never edited by hand:** `site/` (`setuhq app`, `docket`, `plate`,
+  `report`), the README's figures, badges and generated blocks (`tools/gen_readme_assets.py`, then
+  `--write-readme`), the paper's numbers (`scripts/paper_numbers.py`) and the leaderboard
+  (`setuhq leaderboard`). CI checks each with `--check`.
+- **Results keep their history.** Committed result files are not renamed or rewritten; a new
+  measurement is a new file or a stated regeneration, with the reason in [`CHANGELOG.md`](CHANGELOG.md).
+- **Honest labels.** Every number says whether it is real data, a model or an illustration, and
+  every candidate stays a candidate.
+- **Hygiene.** Commits and content carry no automated-tool attribution trailers or footers.
+- **Changelog.** Every user-visible change adds an entry under `[Unreleased]` in
+  [`CHANGELOG.md`](CHANGELOG.md) (Keep a Changelog groups: Added, Changed, Fixed, Removed, Documented).
+
+## Contributing a sweep: bring your own reviewer
 
 SetuHQ's sweep (`setuhq sweep`) searches TESS sectors star by star and keeps everything that dims:
 every consensus dip, every brightening and every star's variability, each classified by stated rules
@@ -10,7 +50,7 @@ Nothing in a contribution becomes a planet. A planet candidate in this catalogue
 classification, unconfirmed, and the site sets every class beside its own null (what its rule finds where its
 signal cannot be) and says when a class is not distinguishable from noise.
 
-## Keys stay in your environment
+### Keys stay in your environment
 
 **Never paste a key anywhere**: not in a config, not in a bundle, not in an issue, a pull request or a chat.
 
@@ -24,7 +64,7 @@ signal cannot be) and says when a class is not distinguishable from noise.
 A bundle holds results, the config and hashes only. `setuhq bundle` and `setuhq ingest` both refuse a
 bundle in which anything looks like a key or token.
 
-## 1. Run the sweep
+### 1. Run the sweep
 
 ```bash
 pip install -e ".[dev]"                 # add ,claude for the API reviewer
@@ -56,7 +96,7 @@ light-curve file and its sha256, points, subjects, reviewers and weights), what 
 with every mark, weight and the Sentinels' own words) and what was rejected (mark clusters below consensus,
 dips that failed vetting).
 
-## 2. Make a bundle
+### 2. Make a bundle
 
 ```bash
 setuhq bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out your-name-s5
@@ -77,7 +117,7 @@ The name is yours to choose (1 to 60 letters, digits, spaces and `. , ' ( ) - _`
 Share the directory, or a zip of it, in a pull request: the pull request's author is the identity the
 maintainers attest at ingest.
 
-## 3. Ingest (maintainers)
+### 3. Ingest (maintainers)
 
 ```bash
 setuhq ingest your-name-s5 --attested-by <pull-request-author>
@@ -130,3 +170,25 @@ could ingest, then edit a folder, its ingest.json and its ledger line before com
 request that adds a contribution is what guards against that (`.github/CODEOWNERS` requires a maintainer's
 review for every change under `docs/sweep/`, new ledger lines included): a reviewer runs `setuhq ingest` again on the
 bundle (or compares the folder with the bundle in the pull request) before merging.
+
+## Licence and the CLA
+
+SetuHQ is dual-licensed: AGPL-3.0-only **or** a commercial licence from Ashforde OÜ, with its data,
+benchmark, leaderboard data and paper under CC BY 4.0 (see [`LICENSING.md`](LICENSING.md)). For that
+to keep working, every contribution must be usable under all of them, so **every contributor agrees to
+the [SetuHQ Contributor Licence Agreement](CLA.md)** before a pull request is merged:
+
+1. your contribution is licensed under the AGPL-3.0-only (code) and CC BY 4.0 (data, benchmark,
+   leaderboard material and the paper); and
+2. you **also grant Ashforde OÜ** a perpetual, worldwide, royalty-free, irrevocable licence to use,
+   modify and **relicense your contribution as part of SetuHQ's commercially licensed editions**.
+   You keep the copyright in your contribution: it is a licence, not an assignment.
+
+To agree, put the line given in [`CLA.md`](CLA.md#6-how-you-agree) in your first pull request's
+description, and sign off each commit with `git commit -s` (the
+[Developer Certificate of Origin](https://developercertificate.org/)). If you cannot grant (2), for
+example for employer-owned code, say so in the pull request before you contribute. Sweep bundles and
+leaderboard submissions are contributions too.
+
+"SetuHQ" and the Setu mark are trademarks of Ashforde OÜ ([`TRADEMARKS.md`](TRADEMARKS.md)); a
+contribution grants no rights in them, and a fork must use another name.

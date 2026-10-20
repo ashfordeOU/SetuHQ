@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """A floor for the real-TOI leaderboard: a method that never looks at a light curve.
 
     python scripts/leaderboard_metadata_baseline.py     # writes docs/leaderboard/submissions/metadata-baseline.json

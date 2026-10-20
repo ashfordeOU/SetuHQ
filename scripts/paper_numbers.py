@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Every number in the methods paper, generated from the committed results; then the paper itself.
 
     python scripts/paper_numbers.py           # writes docs/paper/numbers.json and docs/paper/paper.md

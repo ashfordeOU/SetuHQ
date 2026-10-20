@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """S2 wiring: the extended tests add flags without changing pass/fail by default; ``[vetting] decide`` turns them into
 pass/fail; the pixel tests run from the pipeline; CROWDSAP and FLFRCSAP are read from SPOC headers."""
 

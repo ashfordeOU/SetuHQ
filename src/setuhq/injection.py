@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Synthetic light curves with known transits.
 
 Injection is how a volunteer panel, or Claude's panel, is calibrated. Each

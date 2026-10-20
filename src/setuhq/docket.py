@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The Docket: a case file for each signal and its dips.
 
 The unit of analysis is the signal: one per (subject, BLS period), with the

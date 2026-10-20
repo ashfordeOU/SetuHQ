@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Vetting: the checks that separate planet-like dips from eclipsing binaries and artefacts.
 
 Planet Hunters candidates are vetted by the science team after volunteer

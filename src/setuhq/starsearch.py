@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """One star-sector of the all-sky sweep: read the SPOC file, run the panel, classify everything that dims.
 
 This is the part of the sweep whose code changes results, so it is in the code fingerprint

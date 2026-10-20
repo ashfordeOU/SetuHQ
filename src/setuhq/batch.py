@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Batch mode: the ``setuhq discover`` flow over many targets, cached and resumable (S4).
 
 ``setuhq discover`` reviews one rotating batch a day. ``setuhq batch`` takes any list of TIC targets and works

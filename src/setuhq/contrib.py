@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Bring your own reviewer: contribution bundles of sweep results, sealed with content hashes, and ingest.
 
 A contributor runs ``setuhq sweep`` on a sector with their own reviewers (the Probes, plus Sentinels through

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The all-sky sweep: work through a TESS sector's SPOC 2-minute targets, resumably, and keep what was searched.
 
     setuhq sweep configs/sweep.toml --sector 1 --limit 200 --workers 3

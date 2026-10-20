@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Round 11: Mission Control. Panes of SetuHQ's own views, linked by one selected star."""
 
 import json

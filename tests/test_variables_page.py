@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Everything that dims on the site: the counter, the page, the Sky layer, search and Mission Control, from the committed sweep."""
 
 import json

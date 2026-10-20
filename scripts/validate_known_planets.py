@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Compare a run's vetted candidates with the NASA Exoplanet Archive ephemeris of a known host.
 
 Usage:

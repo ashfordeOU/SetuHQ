@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """S2 light-curve tests (dvtests.py): crowding, all-phase secondary, odd/even depth and timing, and the decide switch."""
 
 import math

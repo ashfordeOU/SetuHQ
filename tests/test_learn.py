@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Round 11: the Learn path. Optional, any visit counts, progress kept in this browser."""
 
 import json

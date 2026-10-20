@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Run configuration, read from TOML. Every value that changes a result lives here, so a run is reproducible from its config file."""
 
 from __future__ import annotations

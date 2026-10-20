@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Reviewer panel: Probes (deterministic detectors) and Sentinels (AI reviewers on any provider), behind one interface."""
 
 from setuhq.reviewers.base import (

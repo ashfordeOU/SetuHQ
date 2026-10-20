@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Calibrate the all-phase weak-secondary search (dvtests.secondary_search) on white noise, and reproduce the
 false-alarm and detection rates quoted in the code and the README.
 

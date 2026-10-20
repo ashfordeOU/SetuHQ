@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """``setuhq-mcp``: SetuHQ as a Model Context Protocol server.
 
 Every tool is a function in :mod:`setuhq.tools`, registered as it is: the server adds no science of its own,

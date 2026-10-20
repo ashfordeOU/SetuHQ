@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Seed the real-TOI leaderboard with SetuHQ's own configurations, from stored results only.
 
     python scripts/leaderboard_seed.py --cache /path/to/cache/bench

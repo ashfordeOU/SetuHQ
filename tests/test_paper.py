@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The methods paper: every number comes from the committed JSON, and the pending results stay pending."""
 
 import json

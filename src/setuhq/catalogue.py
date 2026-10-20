@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The Catalogue: every record in the exoplanet dataset, with planet and star pages and a global search.
 
 The data is ``docs/results/exoplanet_catalogue.json`` (scripts/fetch_exoplanet_catalogue.py), copied beside

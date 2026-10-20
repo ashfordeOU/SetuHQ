@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """A Sentinel: one AI reviewer, on any provider, answering the same task in the same strict JSON.
 
 The task, the persona prompts, the JSON schema, the validation and the clipping live in

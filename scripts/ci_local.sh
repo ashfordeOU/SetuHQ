@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 # Local CI: runs what .github/workflows/ci.yml runs, then rebuilds the public
 # pages from the stored run and checks they build. Use it when hosted Actions
 # minutes are unavailable (private repository). Exits non-zero on the first failure.

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """S4: ephemeris propagation and transit windows, the ExoFOP CTOI-style export, and resumable batch mode."""
 
 import csv

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Subjects: the fixed-length, blind-coded units that reviewers look at.
 
 Planet Hunters shows volunteers one light-curve segment at a time. This module

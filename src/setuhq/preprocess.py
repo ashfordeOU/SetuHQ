@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Cleaning, detrending and binning.
 
 Detrending uses a running median and masks dips before recomputing the trend,

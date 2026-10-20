@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """SetuHQ as tools for an AI assistant: the functions the MCP server (``setuhq-mcp``) and the agent example expose.
 
 Each tool is a thin wrapper over a public function of this package (named in its docstring) and returns

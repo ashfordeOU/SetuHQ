@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The Learn path: an optional guided sequence through the Methods chapters, SetuHQ's own Transit case,
 the Galaxy and the Catalogue, started from the Overview.
 

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The MCP server and the tools it exposes, on committed data (the pi Men run, the catalogue). No network."""
 
 import json

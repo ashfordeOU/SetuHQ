@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Display names for the reviewer panel: the Sentinels and the Probes.
 
 The AI reviewers are shown as Sentinels ("Sentinel · Volunteer", "Sentinel · Skeptic") whatever their

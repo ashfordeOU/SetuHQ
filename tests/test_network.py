@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Live-archive tests. These are skipped by default and run with: pytest -m network"""
 
 import pytest

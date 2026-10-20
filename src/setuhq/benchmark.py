@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Injection-recovery benchmark for a reviewer panel.
 
 For each depth and duration, the benchmark injects one transit into a set of

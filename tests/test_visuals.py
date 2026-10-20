@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The deferred visuals: coronagraph families, per-mode molecular vibrations, the survey-scan intro on Sky and
 Galaxy, the zoom lens into a system view, and astrometry's stated limits. Physics against closed forms first, then
 the JavaScript twins, then the page and the browser."""

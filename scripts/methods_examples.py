@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Stored catalogue values for the Methods worked examples and the Galaxy's system views.
 
 Reads an exoplanet.eu catalogue CSV and writes ``docs/results/methods_examples.json``: for each named

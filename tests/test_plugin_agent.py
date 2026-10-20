@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The Claude Code plugin (manifests, slash commands, skills) and the example agent, offline."""
 
 import importlib.util
@@ -30,7 +32,7 @@ def test_plugin_and_marketplace_manifests_are_valid():
     plugin = json.loads((ROOT / ".claude-plugin/plugin.json").read_text())
     market = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
     assert plugin["name"] == "setuhq" and re.fullmatch(r"\d+\.\d+\.\d+", plugin["version"])
-    assert plugin["description"] and plugin["license"] == "MIT"
+    assert plugin["description"] and plugin["license"] == "AGPL-3.0-only"
     server = plugin["mcpServers"]["setuhq"]
     assert server["command"] == "setuhq-mcp" and server["env"]["SETUHQ_ROOT"] == "${CLAUDE_PLUGIN_ROOT}"
     entry = next(p for p in market["plugins"] if p["name"] == plugin["name"])

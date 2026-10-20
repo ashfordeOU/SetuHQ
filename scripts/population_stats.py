@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Population figures for the Methods chapter "Population", computed from the exoplanet.eu CSV.
 
 * Radius valley: a histogram of planet radii (in Earth radii, log bins) for planets with a stored radius

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The reviewer interface: one independent classification of one subject.
 
 The task mirrors the Planet Hunters CHEOPS classify workflow:

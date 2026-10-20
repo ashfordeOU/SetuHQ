@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Claret (2017) quadratic limb-darkening coefficients for TESS, for every log g and Teff in the table.
 
 Source: VizieR J/A+A/600/A30/tableab (doi:10.26093/cds/vizier.36000030), the PHOENIX-COND ("PC") models,

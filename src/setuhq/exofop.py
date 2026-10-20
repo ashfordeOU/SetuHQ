@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Export vetted candidates for follow-up in the style of an ExoFOP Community TOI (CTOI) submission (ATLAS F7, S4).
 
 A person submits a CTOI under their own ExoFOP account; SetuHQ only prepares the table. **The field list below is

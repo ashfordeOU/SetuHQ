@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Everything that dims (#/variables): the sweep's variability and event catalogue on the site.
 
 The data is ``docs/sweep/catalogue.json`` (:func:`setuhq.sweep.build_catalogue`), copied beside the app as

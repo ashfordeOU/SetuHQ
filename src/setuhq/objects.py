@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """One object model: every planet and star has one canonical page, #/planet/<slug> or #/star/<slug>.
 
 The page's objSlug (app.py) applies the same rule, and the tests check that every name in the catalogue

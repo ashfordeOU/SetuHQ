@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The discovery feed's admission rule, old and new, measured on the real-TOI benchmark sample.
 
 The S1c benchmark (scripts/benchmark_real_tois.py) found that noise alone passes the feed's rule about as often as

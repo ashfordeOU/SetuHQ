@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """pi Men c: the limb-darkened fit of the stored run against Huang et al. 2018 (and the archive's default row).
 
 Reads ``runs/tess-pi-men-s1`` (candidates.json, after ``setuhq rebuild``; subjects/*.json; stellar.json) and

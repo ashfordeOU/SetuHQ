@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The setuhq app shell: one self-contained page with a sidebar and six sections.
 
 Each section is a route in the URL hash (``#/overview``, ``#/candidates``,

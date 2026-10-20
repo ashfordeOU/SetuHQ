@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Stellar parameters for the transit fit: Teff and log g (limb darkening) and the density (ρ★ check).
 
 From the TESS Input Catalog (TIC v8.2, via MAST), cached per star under ``cache/tic/`` so a re-run needs no

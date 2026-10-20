@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """S1a: the limb-darkened transit model and fit, the density and V-shape tests, and LD injections."""
 
 import math

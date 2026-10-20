@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """S1c: the real-TOI benchmark's sample, controls and scoring (offline, with fixtures)."""
 
 import json

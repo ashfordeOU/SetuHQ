@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Continuous discovery: run the pipeline over rotating batches of TESS targets and keep a catalogue of candidates.
 
 Every run takes the next batch of TESS hosts in a fixed rotation, so coverage

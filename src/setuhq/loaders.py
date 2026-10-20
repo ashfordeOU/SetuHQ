@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Loaders that turn archive files into :class:`~setuhq.lightcurve.LightCurve` objects.
 
 Supported sources:

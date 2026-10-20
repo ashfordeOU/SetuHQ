@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """How independent are the Sentinels? Pairwise agreement (φ) on the same stars.
 
 Two reviewers that share a model make correlated errors and count as one voter, not two:

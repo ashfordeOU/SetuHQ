@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """The real-TOI leaderboard: it scores events itself, reproduces the benchmark report, cannot be won by calling
 everything a planet, and refuses what it should."""
 

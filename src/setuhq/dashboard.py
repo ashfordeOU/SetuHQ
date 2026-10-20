@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Interactive dashboard: one self-contained HTML file with charts drawn as inline SVG.
 
 The data is embedded as JSON, so the page works offline and needs no build step

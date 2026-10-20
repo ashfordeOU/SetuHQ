@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """SetuHQ: an open-source transit search in the style of Planet Hunters CHEOPS.
 
 Volunteers are replaced by a reviewer panel. The panel can include simulated

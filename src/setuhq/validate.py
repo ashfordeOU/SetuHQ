@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Statistical validation (S3): false-positive probabilities and the label SetuHQ may print.
 
 **The rule.** A candidate is "validated (statistically)" only when TRICERATOPS (Giacalone et al. 2021,

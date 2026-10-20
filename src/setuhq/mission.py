@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Mission Control (#/mission): a tiling workspace of SetuHQ's own views, linked by one selected star.
 
 Panes: the Galaxy (the live map itself, moved into its pane while Mission Control is open), the star's

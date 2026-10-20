@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Render a subject as a plain PNG, the way a reviewer sees it.
 
 The image has no markers, no pipeline output and no target name. The only

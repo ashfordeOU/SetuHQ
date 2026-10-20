@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Ashforde OÜ
 # Run this repository's GitHub Actions jobs from a short-lived cloud session.
 #
 # Needs EXOPLAN_RUNNER_PAT in the environment: a fine-grained token limited to
