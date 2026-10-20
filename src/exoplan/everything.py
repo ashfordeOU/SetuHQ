@@ -193,9 +193,17 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
                 f'<td>{e(cl["rule"])}</td><td>{e(cl["confidence"])}</td><td class="num mono">{v["real"] if v else c["by_class"][k]:,}</td>{nul}</tr>')
 
     rules = "".join(rule_row(k) for k in meta["order"])
+    comps = "".join(f'<tr><th scope="row">{e(x["label"])}</th><td class="num mono">{x["real"]:,}</td><td class="num mono">{x["null"]:,}</td>'
+                    f'<td class="num mono">{e(excess_text(x))}</td><td class="num mono">{x["stars_real"]:,} / {x["stars_null"]:,}</td>'
+                    f'<td class="num mono">{x["mcnemar_p"]:.3g}</td><td>{"exceeds its null" if x["significant"] else e(NOISE_LIKE)}</td></tr>'
+                    for x in (c.get("null") or {}).get("comparisons") or [])
+    unc = (c.get("null") or {}).get("uncompared") or {}
+    uncompared = ("Not compared, for want of a null of the same kind: "
+                  + ", ".join(f"{n:,} {labels[k]['label'].lower()} entries of another kind" for k, n in unc.items()) + ".") if unc else ""
     contributors = "".join(f'<li><b>{e(x["name"])}</b> <span class="muted">{x["star_sectors"]:,} star-sectors'
                            + (f' · attested by {e(", ".join(x["attested_by"]))}' if x.get("attested_by") else "")
                            + (f' · {x["duplicates_not_credited"]:,} identical re-submissions not credited' if x.get("duplicates_not_credited") else "")
+                           + (f' · {x["superseded"]:,} earlier searches since replaced by a later one (kept as provenance)' if x.get("superseded") else "")
                            + f' · {e(", ".join(x["sources"]))}</span></li>' for x in meta["contributors"])
     ns = c.get("not_searched") or {}
     n_null = (c.get("null") or {}).get("searches", 0)
@@ -217,7 +225,7 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
       </header>
       {tabs("variables")}
       <p class="note"><b>A first slice, stated plainly.</b> {"; ".join(e(s) for s in meta["slices"])}. {c['stars_searched']:,} stars searched, {c['star_sectors_searched']:,} star-sectors, {c['dips_reviewed']:,} consensus dips reviewed{f", {sum(ns.values()):,} star-sectors recorded but not searched ({ns.get('no_data', 0)} no data, {ns.get('error', 0)} errors, {ns.get('pending', 0)} pending)" if sum(ns.values()) else ""}. This catalogue is separate from the discovery feed. <b>Nothing here is a new or confirmed planet.</b> A class is what the light curve's cues suggest; there is no pixel or centroid check, so a blended binary can look like anything.{e(verdict)}</p>
-      <p class="note"><b>Each class against its own null</b>, measured on the same {n_null:,} star-sectors: what its rule finds where its signal cannot be. Dips: the flux turned upside down (a real dip becomes a bump; a real flare or pulsation maximum becomes a dip, so this null is not empty of real signals). Flares: downward events with the real dips masked. Variability: the flux shuffled in 0.5-day blocks. A class whose excess interval reaches zero is {e(NOISE_LIKE)}: {e(", ".join(labels[k]["label"] for k in meta["order"] if k in noise) or "none")}.{e(shape_txt)}</p>
+      <p class="note"><b>Each class against its own null</b>, measured on the same {n_null:,} star-sectors: what its rule finds where its signal cannot be. Dips: the flux turned upside down (a real dip becomes a bump; a real flare or pulsation maximum becomes a dip, so this null is not empty of real signals). Flares: downward events with the real dips masked. Variability: the flux shuffled in 0.5-day blocks, each block's median removed first so the shuffle makes no level steps. Each kind is compared with the same kind (a dip with a dip), and the star-sector is the unit: dips cluster on a few stars, so the excess's 95% interval comes from a paired bootstrap over star-sectors, beside McNemar's test on the star-sectors with events on one side only. A class that does not pass both is {e(NOISE_LIKE)}: {e(", ".join(labels[k]["label"] for k in meta["order"] if k in noise) or "none")}.{e(shape_txt)}</p>
       <section class="card vafilters" aria-label="Filters">
         <label class="vasearch"><span class="sr">Find a TIC, a TOI or a contributor</span><input type="search" id="vaq" placeholder="Find a TIC, a TOI or a contributor" autocomplete="off" inputmode="search"></label>
         <div class="chips" id="vaclasses" role="group" aria-label="Class (entries · null)">{chips}</div>
@@ -235,8 +243,10 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
       <div class="vamore"><button class="btn" type="button" id="vamore" hidden>Show more</button></div>
       <section class="card" aria-labelledby="h-varules" style="display:grid;gap:8px">
         <h2 id="h-varules">The rules, and each class against its null</h2>
-        <p class="muted" style="margin:0;font-size:13px">First match wins, in this order: systematic, eclipsing binary, variable, then planet candidate; a brightening is a flare unless it is systematic. The rules are in src/exoplan/variables.py and are re-applied to every contributed entry on ingest. Excess: real minus null, with a 95% interval for the difference of two Poisson counts.</p>
+        <p class="muted" style="margin:0;font-size:13px">First match wins, in this order: systematic, eclipsing binary, variable, then planet candidate; a brightening is a flare unless it is systematic. The rules are in src/exoplan/variables.py and are re-applied to every contributed entry on ingest. Excess: real minus null over the same star-sectors, with a 95% interval from a paired bootstrap over star-sectors (10,000 resamples). The second table has every comparison, kind by kind.</p>
         <div class="tablewrap" tabindex="0" role="region" aria-label="Classification rules and nulls"><table class="vatable"><thead><tr><th scope="col">Class</th><th scope="col">Rule</th><th scope="col">Confidence</th><th scope="col" class="num">Real</th><th scope="col" class="num">Null</th><th scope="col">Null measured on</th><th scope="col" class="num">Excess</th></tr></thead><tbody>{rules}</tbody></table></div>
+        <div class="tablewrap" tabindex="0" role="region" aria-label="Every comparison with its null"><table class="vatable"><thead><tr><th scope="col">Comparison</th><th scope="col" class="num">Real</th><th scope="col" class="num">Null</th><th scope="col" class="num">Excess (95%)</th><th scope="col" class="num">Star-sectors with any: real / null</th><th scope="col" class="num">McNemar p</th><th scope="col">In this slice</th></tr></thead><tbody>{comps}</tbody></table></div>
+        <p class="small">{e(uncompared)}</p>
       </section>
       <section class="card" aria-labelledby="h-vacred" style="display:grid;gap:8px">
         <h2 id="h-vacred">Who searched</h2>
@@ -291,6 +301,7 @@ VARIABLES_CSS = r"""
 .vaobj[hidden]{display:none}
 .vaobj>*{min-width:0}
 .vaobj p{overflow-wrap:anywhere}
+.vaall{display:inline-flex;align-items:center;min-height:44px}
 .vaobj h2{margin:0;font-size:22px}
 .vaobj h2:focus{outline:none}
 .vaobjgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px 18px;margin:0}
@@ -421,7 +432,7 @@ function vaObject(tic, id){
   box.hidden = false;
   const name = (VA.tic_names || {})[tic];
   $('#h-vaobj').textContent = `TIC ${tic}` + (name ? ` · ${name}` : '');
-  if (!cov.length){ $('#vaobjbody').innerHTML = `<p>TIC ${tic} is not in the sweep yet. <a href="#/variables">All entries ›</a></p>`; return; }
+  if (!cov.length){ $('#vaobjbody').innerHTML = `<p>TIC ${tic} is not in the sweep yet.</p><div class="pllinks"><a class="vaall" href="#/variables">All entries ›</a></div>`; return; }
   const r = cov[0], rej = r.rejected || {};
   const dl = [['Position (RA, Dec)', r.ra !== null && r.ra !== undefined ? `${vaNum(r.ra, 3)}°, ${vaNum(r.dec, 3)}°` : 'not stored'], ['TESS magnitude', vaNum(r.tmag, 2)],
     ['Sectors searched', cov.filter(x => x.status === 'searched').map(x => x.sector).join(', ') || 'none'], ['Searched by', cov.flatMap(x => x.searched_by).join(', ') || '—'],
@@ -430,7 +441,7 @@ function vaObject(tic, id){
     ['Known TOIs on this TIC', (r.tois || []).map(t => `${t.toi}${t.disposition ? ' (' + t.disposition + ')' : ''}`).join(', ') || 'none in the cached TOI table']];
   $('#vaobjbody').innerHTML = `<dl class="vaobjgrid">${dl.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`
     + (name ? `<div class="pllinks">${objLink('star', name, name + ' in the planet catalogue ›')}</div>` : '')
-    + `<p class="small">${es.length} entr${es.length === 1 ? 'y' : 'ies'} below, every one shown. Light curve sha256 <span class="mono">${esc(r.file_sha256 || 'not stored')}</span>. <a href="#/variables">All entries ›</a></p>`;
+    + `<p class="small">${es.length} entr${es.length === 1 ? 'y' : 'ies'} below, every one shown. Light curve sha256 <span class="mono">${esc(r.file_sha256 || 'not stored')}</span>.</p><div class="pllinks"><a class="vaall" href="#/variables">All entries ›</a></div>`;
 }
 function vaApply(){
   if (!va.E || !va.view) return;

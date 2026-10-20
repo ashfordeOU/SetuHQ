@@ -192,13 +192,6 @@ def test_each_class_has_its_own_null():
     assert V.variability_null(t, slow, [], seed=2)["variable"] == 0
 
 
-def test_versus_null_and_noise_like():
-    assert SW.versus_null(5, 3)["significant"] is False
-    v = SW.versus_null(108, 67)
-    assert v["excess"] == 41 and v["significant"] is True and v["lo"] > 0
-    assert SW.versus_null(0, 0)["significant"] is False
-
-
 def test_variability_finds_the_period_and_the_rule_needs_amplitude():
     rng = np.random.default_rng(3)
     t = np.arange(0, 27, 2 / 1440)
@@ -315,7 +308,7 @@ def test_sweep_records_every_star_and_builds_the_catalogue(swept):
     assert all(e["credit"] == [{"name": "exoplan", "source": f"sector_{SECTOR:04d}.json"}] for e in cat["entries"])
     assert {c["id"] for c in cat["classes"]} == set(V.CLASS_IDS)
     nul = cat["counts"]["null"]
-    assert nul["searches"] == 3 and set(nul["by_class"]) == set(V.CLASS_IDS)
+    assert nul["searches"] == 3 and set(nul["by_class"]) == set(V.CLASS_IDS) - {"unclassified"}
     for s in rec["stars"]:
         assert set(s["null"]) == {"dip_inverted", "flare_downward", "flare_shape", "variability_shuffled"}
         assert "control" not in s
@@ -464,22 +457,113 @@ def test_resubmission_under_other_names_is_refused_and_counts_do_not_move(swept)
     assert after == before
 
 
-def test_the_catalogue_counts_each_search_once_even_if_copies_get_in(swept):
-    """Defence in depth: copies already on disk (say, merged by hand) add nothing to any counter or null and earn no credit."""
+def test_a_hand_placed_or_changed_contribution_is_left_out_and_ci_says_so(bundle, swept, tmp_path):
+    """The reviewer's attack: a forged bundle copied into contributions/ by hand, without ingest. It is not read;
+    nor is an ingested folder changed afterwards; check-sweep (a CI step) reports both."""
     sweep_dir = swept["kw"]["out_dir"]
     before = json.loads((sweep_dir / "catalogue.json").read_text())["counts"]
-    b = C.make_bundle(sweep_dir / f"sector_{SECTOR:04d}.json", swept["tmp"] / "copy", contributor="Mallory")
+    assert SW.check_catalogue(sweep_dir) == []
+    b = C.make_bundle(sweep_dir / f"sector_{SECTOR:04d}.json", tmp_path / "handy", contributor="Handy")
     man = json.loads((b / "manifest.json").read_text())
-    dest = sweep_dir / "contributions" / man["bundle_id"]
-    shutil.copytree(b, dest)
+    shutil.copytree(b, sweep_dir / "contributions" / man["bundle_id"])
+    SW.build_catalogue(sweep_dir)
+    cat = json.loads((sweep_dir / "catalogue.json").read_text())
+    assert cat["counts"] == before and "Handy" not in {x["name"] for x in cat["contributors"]}
+    assert cat["rejected_contributions"][0]["why"].startswith("holds")
+    problems = SW.check_catalogue(sweep_dir)
+    assert any("ingest" in p or "holds" in p for p in problems)
+    from exoplan.cli import main
+
+    assert main(["check-sweep", "--sweep-dir", str(sweep_dir)]) == 1
+    # An ingested folder edited afterwards (ingest.json and all) is left out too.
+    shutil.rmtree(sweep_dir / "contributions")
+    empty = tmp_path / "e"
+    empty.mkdir()
+    _ingest(bundle, swept, empty)
+    folder = empty / "contributions" / json.loads((bundle / "manifest.json").read_text())["bundle_id"]
+    assert SW.check_catalogue(empty) == []
+    r = json.loads((folder / "results.json").read_text())
+    r["stars"][0]["n_dips"] += 1
+    (folder / "results.json").write_text(json.dumps(r))
+    SW.build_catalogue(empty)
+    assert json.loads((empty / "catalogue.json").read_text())["counts"]["searches"] == 0
+    assert any("differs from the manifest" in p for p in SW.check_catalogue(empty))
+
+
+def test_one_search_counts_per_star_sector_the_latest(swept):
+    """The reviewer's case: the same stars searched again with newer code. The later search counts; the earlier
+    stays as provenance only, and nothing is counted twice."""
+    sweep_dir = swept["kw"]["out_dir"]
+    rec = json.loads((sweep_dir / f"sector_{SECTOR:04d}.json").read_text())
+    later = json.loads(json.dumps(rec))
+    for s in later["stars"]:
+        s["search_code"] = "1" * 64
+        s["searched_at"] = "2099-01-01T00:00:00+00:00"
+    later["contributor"] = "Later"
+    (sweep_dir / f"sector_{SECTOR + 1:04d}.json").write_text(json.dumps(later))  # a second source of the same star-sectors
     SW.build_catalogue(sweep_dir)
     cat = json.loads((sweep_dir / "catalogue.json").read_text())
     c = cat["counts"]
-    assert c["searches"] == before["searches"] == 3 and c["duplicate_searches"] == 3
-    assert c["dips_reviewed"] == before["dips_reviewed"] and c["null"] == before["null"] and c["by_class"] == before["by_class"]
-    assert {x["name"] for e in cat["entries"] for x in e["credit"]} == {"exoplan"}
-    mal = next(x for x in cat["contributors"] if x["name"] == "Mallory")
-    assert mal["star_sectors"] == 0 and mal["duplicates_not_credited"] == 3
+    assert c["searches"] == c["star_sectors_searched"] == 3 and c["superseded_searches"] == 3
+    assert {x["name"] for e in cat["entries"] for x in e["credit"]} == {"Later"}
+    assert len({e["id"] for e in cat["entries"]}) == len(cat["entries"]) and not any(e["id"].endswith("+") for e in cat["entries"])
+    assert all(r["earlier_searches"][0]["name"] == "exoplan" for r in cat["coverage"] if r["status"] == "searched")
+    assert next(x for x in cat["contributors"] if x["name"] == "exoplan")["superseded"] == 3
+
+
+def test_paired_statistics_do_not_let_two_clustered_stars_carry_a_class():
+    # 50 star-sectors; two stars give 12 dips each, the null gives a few scattered ones: as Poisson events that
+    # would look like an excess of +20; star by star it is not distinguishable from noise.
+    real = [12, 12] + [0] * 48
+    null = [0, 0, 1, 1, 1, 1] + [0] * 44
+    v = SW.paired_versus_null(real, null)
+    assert v["excess"] == 20 and v["lo"] <= 0 and v["significant"] is False
+    assert (v["stars_real"], v["stars_null"]) == (2, 4) and v["mcnemar_p"] > 0.05
+    # Many stars each a little above their null: a real excess.
+    v = SW.paired_versus_null([1] * 30 + [0] * 20, [0] * 45 + [1] * 5)
+    assert v["significant"] is True and v["lo"] > 0 and v["mcnemar_p"] < 0.05
+
+
+def test_each_kind_is_compared_with_the_same_kind(swept):
+    cat = json.loads((swept["kw"]["out_dir"] / "catalogue.json").read_text())
+    comps = cat["counts"]["null"]["comparisons"]
+    assert {(x["class"], x["kind"]) for x in comps} == {(c, k) for c, k, _, _ in SW.COMPARISONS}
+    eb = next(x for x in comps if x["class"] == "eclipsing_binary")
+    assert eb["kind"] == "dip" and eb["real"] == sum(1 for e in cat["entries"] if e["class"] == "eclipsing_binary" and e["kind"] == "dip")
+    assert eb["star_sectors"] == cat["counts"]["null"]["searches"] == 3
+
+
+def test_ingest_always_searches_planet_candidate_stars_and_draws_the_rest_from_its_own_nonce():
+    stars = [{"tic": i, "sector": 1, "status": "searched", "entries": [{"class": "planet_candidate"}] if i == 7 else
+              [{"class": "eclipsing_binary"}] if i == 9 else []} for i in range(100)]
+    rec = {"stars": stars}
+    forced, rand = C.select_for_search(rec, exceeding=set(), nonce="a")
+    assert [s["tic"] for s in forced] == [7] and len(rand) == 5 and 7 not in {s["tic"] for s in rand}   # max(3, 5% of 100)
+    forced, _ = C.select_for_search(rec, exceeding={"eclipsing_binary"}, nonce="a")
+    assert {s["tic"] for s in forced} == {7, 9}
+    picks = {tuple(s["tic"] for s in C.select_for_search(rec, exceeding=set(), nonce=n)[1]) for n in ("a", "b", "c")}
+    assert len(picks) == 3                                                    # the nonce, not the bundle, decides
+    assert len(C.select_for_search({"stars": stars[:10]}, exceeding=set(), nonce="a")[1]) == 3
+
+
+def test_renaming_a_forged_bundle_does_not_dodge_the_check(bundle, swept, tmp_path):
+    """The reviewer's attack: reseal a forged bundle under new names until the forged star is not sampled. A star
+    with a planet candidate is always searched again, whatever the name."""
+    def forge(r):
+        for s in r["stars"]:
+            for e in s.get("entries") or []:
+                if e["kind"] == "dip" and e["class"] != "planet_candidate":
+                    e.update(passed=True, planet_fraction=1.0, flags=[], shares={"potential_planet": 1.0}, n_transits=3, period_days=3.21,
+                             depth_ppm=900.0, t_start=1327.9, t_end=1328.05, cues=[], why=None, **{"class": "planet_candidate", "confidence": "medium"})
+                    return
+        raise AssertionError("no dip to forge")
+    _reseal(bundle, forge)
+    for name in ("Mallory", "Mallory 2", "Mallory 3"):
+        _reseal(bundle, mutate_manifest=lambda m, n=name: m.update(contributor={"name": n}, statement={**m["statement"], "by": n}))
+        empty = tmp_path / name.replace(" ", "")
+        empty.mkdir()
+        with pytest.raises(C.BundleRefused, match="a fresh search does not reproduce"):
+            _ingest(bundle, swept, empty, verify_lightcurves=0)   # no random sample at all: the candidate's star is still searched
 
 
 def test_a_bundle_with_one_new_star_credits_only_that_star(swept):
@@ -551,7 +635,7 @@ def test_a_zipped_bundle_is_accepted_and_odd_zips_are_refused(bundle, tmp_path):
 
 @pytest.mark.parametrize("damage, match", [
     (lambda b: (b / "results.json").write_text((b / "results.json").read_text().replace('"searched"', '"searched" ', 1)), "hash mismatch on results.json"),
-    (lambda b: (b / "config.toml").write_text((b / "config.toml").read_text() + "\n# edited\n"), "hash mismatch on config.toml"),
+    (lambda b: (b / "config.toml").write_text((b / "config.toml").read_text() + "\nextra = 1\n"), "hash mismatch on config.toml"),
     (lambda b: (b / "manifest.json").write_text((b / "manifest.json").read_text().replace("Ada L.", "Bob")), "manifest hash mismatch"),
     (lambda b: (b / "extra.txt").write_text("x"), "exactly manifest.json"),
     (lambda b: (b / "config.toml").unlink(), "exactly manifest.json"),
@@ -605,8 +689,14 @@ def test_a_config_that_does_not_match_its_hash_is_refused(bundle):
     '# secret = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"',
     'api_key = "anthropic-key-abcdefghijklmnopqrstuvwxyz0123456789"',
     "# token: abc123",
-    "password = hunter2",
+    'password = "hunter2"',
     "# github_token=ghp_abcdefghijklmnopqrstuvwxyz0123456789",
+    "# Authorization: Bearer abcdefghijklmnop0123",
+    "# x-api-key abcdefghijklmnopqrstu",
+    '# google = "AIzaSyA1234567890abcdefghijklmnopqrstuv"',
+    '# hf = "hf_abcdefghijklmnopqrstuvwxyz0123456789"',
+    "# eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U",
+    "# wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
 ])
 def test_every_kind_of_key_in_the_config_is_refused(swept, line):
     rec = json.loads((swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json").read_text())
@@ -619,8 +709,27 @@ def test_every_kind_of_key_in_the_config_is_refused(swept, line):
     b = C.make_bundle(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json", swept["tmp"] / "kb2", contributor="Key Tester")
     (b / "config.toml").write_text((b / "config.toml").read_text() + "\n" + line + "\n")
     _reseal(b)
-    with pytest.raises(C.BundleRefused, match="credential"):
+    with pytest.raises(C.BundleRefused, match="credential|comments"):
         C.validate_bundle(b)
+
+
+def test_a_bundled_config_has_no_comments_and_no_random_looking_values(swept):
+    b = C.make_bundle(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json", swept["tmp"] / "nc", contributor="Ada L.")
+    text = (b / "config.toml").read_text()
+    assert not C.has_comment(text) and "#" not in text
+    from exoplan.config import load_config
+
+    assert load_config(b / "config.toml").digest() == json.loads((b / "manifest.json").read_text())["config_sha256"]
+    assert json.loads((b / "results.json").read_text())["config_text"] == text
+    (b / "config.toml").write_text(text + "\n# just a note\n")
+    _reseal(b)
+    with pytest.raises(C.BundleRefused, match="comments"):
+        C.validate_bundle(b)
+    (b / "config.toml").write_text(text.replace('name = "sweep"', 'name = "Zq8vR2kLmN4pX7tB9wYc3HfJ6sDg1aEu"'))
+    _reseal(b)
+    with pytest.raises(C.BundleRefused, match="random-looking"):
+        C.validate_bundle(b)
+    assert C.has_comment('a = "x # y"') is False and C.has_comment("a = 1 # y") is True
 
 
 def test_nothing_from_the_environment_goes_in_and_bad_names_are_refused(swept, monkeypatch):
@@ -645,7 +754,7 @@ def test_a_lightcurve_that_hashes_differently_at_mast_is_refused(bundle, swept, 
 def test_cli_ingest_refuses_with_a_message_and_verifies_by_default(bundle, capsys, tmp_path):
     from exoplan.cli import build_parser, main
 
-    assert build_parser().parse_args(["ingest", "x"]).verify_lightcurves == 3
+    assert build_parser().parse_args(["ingest", "x"]).verify_lightcurves is None   # max(3, 5%) at random, plus every flagged star
     (bundle / "results.json").write_text("{}")
     assert main(["ingest", str(bundle), "--sweep-dir", str(tmp_path / "x")]) == 1
     assert "refused: hash mismatch on results.json" in capsys.readouterr().err
