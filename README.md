@@ -166,7 +166,7 @@ classifies each by first-match rules in [src/exoplan/variables.py](src/exoplan/v
 | Class | Rule (summary) |
 |---|---|
 | Systematic | a subject edge, a momentum dump, a scattered-light or pointing flag, or a data gap within 0.1 d; or the panel says instrumental |
-| Eclipsing binary | odd/even mismatch or secondary eclipse; 30,000 ppm or deeper; V-shaped and 5,000 ppm or deeper; or the panel says binary |
+| Eclipsing binary | odd/even mismatch or secondary eclipse; 30,000 ppm or deeper; V-shaped and 5,000 ppm or deeper; a stellar-density mismatch at P < 1 d; or the panel says binary |
 | Pulsator or rotational variable | a Lomb-Scargle peak (Baluev FAP < 10⁻³ and a semi-amplitude ≥ 2× the binned scatter); a dip lasting ≥ ¼ of that period |
 | Flare | ≥ 3 consecutive points ≥ 3σ above a running median, peaking ≥ 5σ (globally and locally), not on an instrumental cue |
 | Planet candidate | passed vetting, potential planet by half the panel's weight, not off its star's own signal, and no rule above |
@@ -174,13 +174,17 @@ classifies each by first-match rules in [src/exoplan/variables.py](src/exoplan/v
 
 Every entry keeps its confidence and the cues that decided it, its marks, its weights and the Sentinels'
 own words, the light curve's sha256, the code fingerprint and config hash, and the name of whoever searched
-it. Nothing is ever called confirmed. Each star is also run with its flux inverted, where nothing real can
-dim, and the site shows that control's count beside every class.
+it. Nothing is ever called confirmed. Every class is set against its own null on the same stars: the dip
+classes against the flux-inverted copy (a real dip becomes a bump, though a real flare or pulsation maximum
+becomes a dip, so this null is not empty of real signals), flares against downward events with the real dips
+masked, and variability against a copy shuffled in 0.5-day blocks (a periodogram is unchanged by flipping the
+flux, so the inverted copy is no null for it). The site shows real, null and the excess with a 95% interval,
+and calls a class whose interval reaches zero "not distinguishable from noise in this slice".
 
 ```bash
 exoplan sweep configs/sweep.toml --sector 1 --limit 200 --workers 3   # resumable; cached; polite to MAST
 exoplan bundle my-sweep/sector_0005.json --contributor "Your Name" --out bundle/
-exoplan ingest bundle/                                                 # refuses on any hash, code or rule mismatch
+exoplan ingest bundle/ --attested-by <pr-author>   # sealed, not signed: re-fetches and re-searches 3 star-sectors
 ```
 
 The site reads `docs/sweep/catalogue.json`: the Overview's counter, #/variables (Catalogue › Everything that
@@ -190,18 +194,45 @@ their environment, never in a file) and be credited: see [CONTRIBUTING.md](CONTR
 
 **First real slice (measured, Probes only).** TESS sector 1: the first 200 of its 15,898 SPOC 2-minute
 targets in sweep order, all 200 searched (no download failures). The panel reviewed 936 consensus dips
-(2,696 marks; 60 mark clusters fell below consensus). The 1,011 entries are 742 systematic, 108 eclipsing
-binary, 98 unclassified, 47 pulsator or rotational variable, 11 flare and 5 planet candidate. On the
-flux-inverted copies of the same 200 star-sectors, where nothing real can dim, the same rules gave 783
-systematic, 67 eclipsing binary, 124 unclassified, 60 variable, 32 flare and 3 planet candidates. So the 5
-planet candidates (none matching a known TOI) are about what noise alone gives: none is a planet. Of the classes, only the
-eclipsing-binary count (108 against 67) clearly exceeds its control. The rules did their job of keeping and
-sorting everything; finding planets needs far more than 200 stars and Sentinels on the survivors. Records:
-[docs/sweep/sector_0001.json](docs/sweep/sector_0001.json) and [docs/sweep/catalogue.json](docs/sweep/catalogue.json).
-FAP trials are off in the sweep (50 trials cost about two minutes a star), and the stellar parameters come
-from each file's header. After a fix to the flare rule, found by `ingest`'s re-check on this slice, the
-entries were reclassified from the stored runs (`exoplan sweep --reclassify`); the reviewers and the
-pipeline were not run again.
+(2,696 marks; 60 mark clusters fell below consensus) and the catalogue holds 1,011 entries. Each class against
+its null on the same 200 star-sectors:
+
+| Class | Real | Null | Excess (95%) | In this slice |
+|---|---|---|---|---|
+| Eclipsing binary | 116 | 77 | +39 (+12 to +66) | exceeds its null |
+| Planet-candidate rule | 3 | 2 | +1 (−3 to +5) | not distinguishable from noise |
+| Flare | 11 | 5 | +6 (−2 to +14) | not distinguishable from noise |
+| Pulsator or rotational variable | 46 | 48 | −2 (−21 to +17) | not distinguishable from noise |
+| Systematic | 742 | 753 | −11 (−87 to +65) | not distinguishable from noise |
+| Unclassified | 93 | 113 | | |
+
+Only the eclipsing-binary class exceeds its null. The 3 entries that pass the planet-candidate rule (none
+matching a known TOI) are about what noise alone gives, so the site does not present them as candidates. Of
+the 11 flares, 8 rise faster than they decay and 2 the other way (1 equal). The slice shows that the machinery
+keeps and sorts everything honestly. It finds no planet, and most classes need many more stars before an
+excess could show. FAP trials are off in the sweep (50 trials cost about two minutes a star), and the stellar
+parameters come from each file's header. Records: [docs/sweep/sector_0001.json](docs/sweep/sector_0001.json)
+and [docs/sweep/catalogue.json](docs/sweep/catalogue.json).
+
+*Provenance of this slice.* The code of commit `b8647ad` searched the stars (each record's `search_code` and
+`search_commit`). The classification was then re-applied twice from the cached files and the stored pipeline
+runs, without asking the reviewers or running the pipeline again (`exoplan sweep --reclassify`). Each record
+lists both steps in `reclassifications`, with their rule changes:
+
+1. At `3c5862e`, two bugs that `ingest`'s rule re-check found on this slice. A flare whose rise and decay were
+   equal read as a fast rise through float noise, and two brightenings within 0.01 d shared an id.
+2. In this commit, a stellar-density mismatch at a period under 1 d became an eclipsing-binary cue (it moved
+   TIC 150249384's two P = 0.819 d "candidates"), and each class got its own null.
+
+The search code has changed since (`starsearch.py` gained the nulls), so a fresh `exoplan sweep` would search
+these stars again rather than reuse them. A resume reuses a stored record only when its config hash, search
+code and classification code all match.
+
+*Data size.* The two files are about 4 MB for 200 stars, so a full sector would be about 80 times that. The
+plan is one record file per sector (already so), written gzip-compressed (`sector_NNNN.json.gz`). Past a few
+sectors, the records would live outside the repository as release assets, with a committed manifest of their
+sha256 that the site build checks. The catalogue the site fetches would then hold only the entries and
+coverage, not the per-star events and nulls. None of this is built yet.
 
 ## Honest limits
 
