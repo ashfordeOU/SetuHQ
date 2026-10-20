@@ -57,12 +57,14 @@ import ast
 import csv
 import datetime as _dt
 import hashlib
+import html
 import io
 import json
 import math
 import re
 import subprocess
 import sys
+import tomllib
 from collections import Counter
 from functools import lru_cache
 from pathlib import Path
@@ -325,6 +327,8 @@ class Svg:
         self.defs: list[str] = []
         self.glyph_ids: dict[tuple[str, str], str] = {}
         self._n = 0
+        self.runs: list[tuple[float, float, float, float, str]] = []   # x0, x1, baseline, size, text: every text run drawn
+        self.panels: list[tuple[float, float, float, float]] = []      # x, y, w, h: every card text may sit in
 
     def uid(self, p: str) -> str:
         self._n += 1
@@ -372,6 +376,7 @@ class Svg:
         face = Face.get(family, weight)
         glyphs, width = face.layout(s, size, ls)
         x -= width / 2 if anchor == "middle" else width if anchor == "end" else 0
+        self.runs.append((x, x + width, y, size, s))
         k = size / face.upm
         uses = []
         for g, gx, sc, rise in glyphs:
@@ -415,6 +420,7 @@ def frame(s: Svg, t: dict, eyebrow: str, title: str, footer: str, color: str | N
 
 
 def panel(s: Svg, t: dict, x, y, w, h, r=14) -> None:
+    s.panels.append((x, y, w, h))
     s.rect(x, y, w, h, fill=t["panel"], stroke=line(t, 0, t["panel"]), sw=1, r=r)
 
 
@@ -871,6 +877,7 @@ REVIEWER_ORDER = [("volunteer-sensitive", "Probe · Sensitive", "prb"), ("volunt
                   ("claude-skeptic", "Sentinel · Skeptic", "sen")]
 
 
+@lru_cache(maxsize=1)
 def pimen_data() -> dict:
     v = load_json("docs/results/pi_men_validation.json")
     cands = load_json("runs/tess-pi-men-s1/candidates.json")
@@ -881,20 +888,26 @@ def pimen_data() -> dict:
     t = np.concatenate([np.array(s_["time"]) for s_ in subs])
     fl = np.concatenate([np.array(s_["flux"]) for s_ in subs])
     marks: dict[str, list] = {}
+    sentinel_rows: dict[tuple[str, str], dict] = {}
     with open(RUN / "classifications.csv", newline="", encoding="utf-8") as fh:
         for row in csv.DictReader(fh):
             ann = json.loads(row["annotations"])
-            spans = [a for task in ann if task["task"] == "T0" for a in task["value"]]
-            marks.setdefault(row["user_name"], []).extend((a["t_start"], a["t_end"]) for a in spans)
+            spans = [(a["t_start"], a["t_end"]) for task in ann if task["task"] == "T0" for a in task["value"]]
+            marks.setdefault(row["user_name"], []).extend(spans)
+            meta = json.loads(row["metadata"])
+            sentinel_rows[(row["user_name"], row["subject_ids"])] = {"label": row["label"], "confidence": meta.get("confidence"),
+                                                                      "spans": spans}
     events = []
     for c in sorted(cands, key=lambda c_: c_["t_center"]):
         flags = [x for x in c["flags"].split(";") if x]
         status = "rejected" if not c["passed"] else "open" if "off_ephemeris" in flags else "known"
-        events.append({"t": c["t_center"], "status": status, "depth": c["depth_ppm"], "snr": c["snr"], "flags": flags})
+        events.append({"t": c["t_center"], "status": status, "depth": c["depth_ppm"], "snr": c["snr"], "flags": flags,
+                       "dur": c["duration_hours"]})
     jf = v["joint_fit"]
     cad = float(np.median(np.diff(t)))
-    return {"v": v, "t": t, "f": fl, "subs": subs, "marks": marks, "events": events, "jf": jf, "cad": cad,
-            "commit": commit_of(*PIMEN_SRC)}
+    weights = load_json("runs/tess-pi-men-s1/manifest.json")["weights"]
+    return {"v": v, "t": t, "f": fl, "subs": subs, "marks": marks, "events": events, "jf": jf, "cad": cad, "cands": cands,
+            "sentinel_rows": sentinel_rows, "weights": weights, "commit": commit_of(*PIMEN_SRC)}
 
 
 def pimen_desc(d: dict) -> str:
@@ -1024,6 +1037,7 @@ def pimen(t: dict, d: dict) -> Svg:
 
 BENCH_SRC = "docs/results/benchmark_real_tois.json"
 BENCH_MD = "docs/results/benchmark_real_tois.md"
+BENCH_SAMPLE = "docs/results/benchmark_toi_sample.json"
 
 
 def bench_refs() -> dict:
@@ -1038,34 +1052,66 @@ def bench_refs() -> dict:
             "pht_mid_r": (int(ph.group(4)), int(ph.group(5))), "pht_ref": ph.group(6)}
 
 
+def _rate(k: int, n: int) -> dict:
+    p, lo, hi = BT.wilson(k, n)
+    return {"k": k, "n": n, "rate": p, "lo": lo, "hi": hi}
+
+
+def _verdict(ours: dict, ref: float) -> str:
+    """Below or above only when the Wilson interval excludes the reference."""
+    return "below" if ours["hi"] < ref else "above" if ours["lo"] > ref else "consistent"
+
+
 def bench_data() -> dict:
     b = load_json(BENCH_SRC)
-    return {"b": b, "h": b["summary"]["held_out"], "u": b["summary_unaffected"]["held_out"], "refs": bench_refs(),
-            "commit": commit_of(BENCH_SRC, BENCH_MD)}
+    h = b["summary"]["held_out"]
+    tois = {x["toi"]: x for x in load_json(BENCH_SAMPLE)["tois"]}
+    # The held-out CP/KP stars with data, from the per-star rows (as the paper's numbers script bins them).
+    pos = [r for r in b["per_star"] if r.get("real") and tois[r["toi"]]["half"] == "held_out" and tois[r["toi"]]["class"] == "positive"]
+    if len(pos) != h["completeness"]["n"] or sum(r["real"]["recovered"] for r in pos) != h["completeness"]["k"]:
+        sys.exit("gen_readme_assets: the per-star rows disagree with the held-out completeness")
+
+    def radius_rate(lo_r: float, hi_r: float) -> dict:
+        sel = [r for r in pos if tois[r["toi"]].get("radius_re") is not None and lo_r <= tois[r["toi"]]["radius_re"] < hi_r]
+        return _rate(sum(r["real"]["recovered"] for r in sel), len(sel))
+
+    rf = bench_refs()
+    lo_m, hi_m = rf["pht_mid_r"]
+    cmp_ = [
+        {"key": "robovetter", "bin": "All radii", "ours": h["completeness"], "ref": rf["robovetter"] / 100, "bound": True,
+         "who": "Kepler Robovetter DR25", "ref_text": f"> {rf['robovetter']}%",
+         "name": "the Kepler Robovetter's completeness", "note": f"vetting only, on detected TCEs, P < {rf['robovetter_p']} d"},
+        {"key": "pht_mid", "bin": f"{lo_m}–{hi_m} R⊕", "ours": radius_rate(lo_m, hi_m), "ref": rf["pht_mid"] / 100, "bound": False,
+         "who": "Planet Hunters TESS", "ref_text": f"{rf['pht_mid']}%",
+         "name": f"Planet Hunters TESS's rate at {lo_m} to {hi_m} R⊕", "note": "a citizen-science search"},
+        {"key": "pht_hi", "bin": f"> {rf['pht_hi_r']} R⊕", "ours": radius_rate(rf["pht_hi_r"], math.inf), "ref": rf["pht_hi"] / 100,
+         "bound": False, "who": "Planet Hunters TESS", "ref_text": f"{rf['pht_hi']}%",
+         "name": f"Planet Hunters TESS's rate above {rf['pht_hi_r']} R⊕", "note": "a citizen-science search"},
+    ]
+    for c in cmp_:
+        c["verdict"] = _verdict(c["ours"], c["ref"])
+    return {"b": b, "h": h, "u": b["summary_unaffected"]["held_out"], "refs": rf, "cmp": cmp_,
+            "commit": commit_of(BENCH_SRC, BENCH_MD, BENCH_SAMPLE)}
 
 
-def _bin_label(lo, hi, unit, last=False) -> str:
-    lo_s = f"{lo:g}"
-    return f"> {lo_s} {unit}" if last else f"< {hi:g} {unit}" if lo == 0 else f"{lo_s}–{hi:g} {unit}"
+def _and(items: list[str]) -> str:
+    return items[0] if len(items) == 1 else ", ".join(items[:-1]) + " and " + items[-1]
 
 
-def bench_desc(d: dict) -> str:
-    h, u, rf, b = d["h"], d["u"], d["refs"], d["b"]
-    c = h["completeness"]
-    rad = "; ".join(f"{_bin_label(*x['bin'], 'R⊕', i == len(h['completeness_by_radius']) - 1)}: {pct(x['rate'])} ({x['k']}/{x['n']}, "
-                    f"{pct(x['lo'])}–{pct(x['hi'])})" for i, x in enumerate(h["completeness_by_radius"]))
-    per = "; ".join(f"{x['bin'][0]:g}–{x['bin'][1]:g} d: {pct(x['rate'])} ({x['k']}/{x['n']}, {pct(x['lo'])}–{pct(x['hi'])})"
-                    for x in h["completeness_by_period"])
-    uc = u["completeness"]
-    return (f"Blind benchmark on {b['stars_run']} real TESS Objects of Interest (NASA Exoplanet Archive TOI table, fetched "
-            f"{b['sample']['fetched_at'][:10]}, seed {b['sample']['seed']}), held-out half, the three Probes. Completeness, the share of "
-            f"confirmed or known planets (CP/KP) on searchable stars recovered as a vetted dip on the ephemeris, with Wilson 95% intervals: "
-            f"overall {pct(c['rate'])} ({c['k']}/{c['n']}, {pct(c['lo'])}–{pct(c['hi'])}). By planet radius: {rad}. By period: {per}. "
-            f"Excluding the stars exposed to the known clipping bug: {pct(uc['rate'])} ({uc['k']}/{uc['n']}). Published references, as stated "
-            f"in the report: Kepler Robovetter DR25 above {rf['robovetter']}% for P < {rf['robovetter_p']} d ({rf['robovetter_ref']}); "
-            f"Planet Hunters TESS {rf['pht_hi']}% above {rf['pht_hi_r']} R⊕ and {rf['pht_mid']}% at {rf['pht_mid_r'][0]}–{rf['pht_mid_r'][1]} R⊕ "
-            f"({rf['pht_ref']}). SetuHQ is below both. Measured on a stated benchmark, not discoveries. "
-            f"Sources: {BENCH_SRC} and {BENCH_MD}, commit {d['commit']}.")
+def bench_verdict(d: dict) -> str:
+    """The comparison sentence, from the intervals: below or above only when the interval excludes the reference."""
+    parts = []
+    for word in ("below", "above"):
+        sel = [c for c in d["cmp"] if c["verdict"] == word]
+        if sel:
+            parts.append(f"SetuHQ is {word} {_and([c['name'] for c in sel])} ("
+                         + ("the interval excludes it" if len(sel) == 1 else "each interval excludes the reference") + ")")
+    cons = [c for c in d["cmp"] if c["verdict"] == "consistent"]
+    if cons:
+        parts.append(f"consistent with {_and([c['name'] for c in cons])} ("
+                     + _and([f"{c['ours']['n']} stars" for c in cons]) + ": the interval includes it)")
+    s = "; ".join(parts) + "."
+    return s[0].upper() + s[1:]
 
 
 def _ci_bar(s: Svg, t: dict, x, w, y_of, row: dict, color: str, on: str) -> None:
@@ -1077,72 +1123,108 @@ def _ci_bar(s: Svg, t: dict, x, w, y_of, row: dict, color: str, on: str) -> None
     s.line(cxx - 7, y_of(row["hi"]), cxx + 7, y_of(row["hi"]), t["ink"], 1.4)
 
 
-def benchmark(t: dict, d: dict) -> Svg:
+def _bin_label(lo, hi, unit, last=False) -> str:
+    lo_s = f"{lo:g}"
+    return f"> {lo_s} {unit}" if last else f"< {hi:g} {unit}" if lo == 0 else f"{lo_s}–{hi:g} {unit}"
+
+
+def _pct_ci(r: dict) -> str:
+    return f"{pct(r['rate'])} ({r['k']}/{r['n']}, {pct(r['lo'])}–{pct(r['hi'])})"
+
+
+def bench_desc(d: dict) -> str:
     h, u, rf, b = d["h"], d["u"], d["refs"], d["b"]
-    s = Svg(W, H, "Completeness on real TOIs by planet radius, with published references", bench_desc(d))
+    rad = "; ".join(f"{_bin_label(*x['bin'], 'R⊕', i == len(h['completeness_by_radius']) - 1)}: {_pct_ci(x)}"
+                    for i, x in enumerate(h["completeness_by_radius"]))
+    per = "; ".join(f"{x['bin'][0]:g}–{x['bin'][1]:g} d: {_pct_ci(x)}" for x in h["completeness_by_period"])
+    cmps = "; ".join(f"{c['bin']}: SetuHQ {_pct_ci(c['ours'])} against {c['who']} {c['ref_text']} ({c['note']})" for c in d["cmp"])
+    uc = u["completeness"]
+    return (f"Blind benchmark on {b['stars_run']} real TESS Objects of Interest (NASA Exoplanet Archive TOI table, fetched "
+            f"{b['sample']['fetched_at'][:10]}, seed {b['sample']['seed']}), held-out half, the three Probes. Completeness is the share of "
+            f"confirmed or known planets (CP/KP) on searchable stars recovered as a vetted dip on the ephemeris, with Wilson 95% intervals. "
+            f"Left, in the bins the published references use: {cmps}. {bench_verdict(d)} "
+            f"Right: overall {_pct_ci(h['completeness'])}; without the stars exposed to the known clipping bug {pct(uc['rate'])} "
+            f"({uc['k']}/{uc['n']}). By planet radius: {rad}. By period: {per}. References as stated in the report: "
+            f"{rf['robovetter_ref']}; {rf['pht_ref']}. Measured on a stated benchmark, not discoveries. "
+            f"Sources: {BENCH_SRC}, {BENCH_SAMPLE} (radii) and {BENCH_MD} (references), commit {d['commit']}.")
+
+
+def benchmark(t: dict, d: dict) -> Svg:
+    h, u, b = d["h"], d["u"], d["b"]
+    s = Svg(W, H, "Completeness on real TOIs, against the published references in matched bins", bench_desc(d))
     frame(s, t, f"Evidence · blind benchmark · {b['stars_run']} real TOIs · held-out half",
-          "Completeness on real TOIs, measured and stated",
-          f"Source: {BENCH_SRC} · {BENCH_MD} (references) · commit {d['commit']}", t["known"])
-    # ---- left: by radius
+          "Completeness on real TOIs, in the references' own bins",
+          f"Source: {BENCH_SRC} · {BENCH_SAMPLE} · {BENCH_MD} (references) · commit {d['commit']}", t["known"])
+    # ---- left: the three matched comparisons
     LX0, LX1 = MX0, 760
     panel(s, t, LX0, PLOT_TOP, LX1 - LX0, PLOT_BOTTOM - PLOT_TOP)
     label_tag(s, t, LX0 + 18, PLOT_TOP + 24, "Measured · Wilson 95% intervals", t["known"])
-    PX0, PX1, PY0, PY1 = LX0 + 58, LX1 - 24, 152, 448
+    PX0, PX1, PY0, PY1 = LX0 + 58, LX1 - 20, 150, 372
     y_of = lambda p: PY1 - p * (PY1 - PY0)  # noqa: E731
     for p in (0, 0.25, 0.5, 0.75, 1.0):
         s.line(PX0, y_of(p), PX1, y_of(p), line(t, 0 if p else 1, t["panel"]))
         s.text(pct(p), PX0 - 10, y_of(p) + 3.5, 10, t["ink3"], "mono", 400, anchor="end")
-    bins = h["completeness_by_radius"]
-    n = len(bins)
+    n = len(d["cmp"])
     cw = (PX1 - PX0) / n
-    for i, row in enumerate(bins):
-        x = PX0 + i * cw + cw * 0.22
-        _ci_bar(s, t, x, cw * 0.56, y_of, row, t["known"], t["panel"])
-        s.text(pct(row["rate"]), x + 8, y_of(0) - 9, 13, t["ink"], "sans", 600)
-        s.text(_bin_label(*row["bin"], "R⊕", i == n - 1), x + cw * 0.28, PY1 + 20, 11.5, t["ink"], "sans", 500, anchor="middle")
-        s.text(f"{row['k']}/{row['n']}", x + cw * 0.28, PY1 + 37, 10.5, t["ink3"], "mono", 400, anchor="middle")
-    s.text("Planet radius (Earth radii) · recovered / CP/KP TOIs on searchable stars", PX0, PY1 + 62, 10.5, t["ink3"], "mono", 500)
-    # references
-    yr = y_of(rf["robovetter"] / 100)
-    s.line(PX0, yr, PX1, yr, t["green"], 1.4, dash="6 5")
-    s.text(f"Kepler Robovetter DR25 > {rf['robovetter']}% (P < {rf['robovetter_p']} d)", PX0 + 6, yr - 6, 10.5, t["green"], "mono", 500)
-    hi_bins = [i for i, row in enumerate(bins) if row["bin"][0] >= rf["pht_hi_r"]]
-    if hi_bins:
-        xa, xb = PX0 + min(hi_bins) * cw + 8, PX0 + (max(hi_bins) + 1) * cw - 8
-        yp = y_of(rf["pht_hi"] / 100)
-        s.line(xa, yp, xb, yp, t["amber"], 2, dash="2 4", extra='stroke-linecap="round"')
-        s.text(f"Planet Hunters TESS {rf['pht_hi']}% > {rf['pht_hi_r']} R⊕", xb, yp - 7, 10.5, t["amber"], "mono", 500, anchor="end")
-    mid = [i for i, row in enumerate(bins) if row["bin"][0] <= rf["pht_mid_r"][0] and row["bin"][1] >= rf["pht_mid_r"][1]]
-    if mid:
-        xm = PX0 + mid[0] * cw + cw * 0.86
-        ym = y_of(rf["pht_mid"] / 100)
-        s.rect(xm - 5, ym - 5, 10, 10, fill=t["amber"], r=2, extra=f'transform="rotate(45 {f(xm)} {f(ym)})"')
-        s.text(f"Planet Hunters TESS {rf['pht_mid']}% at {rf['pht_mid_r'][0]}–{rf['pht_mid_r'][1]} R⊕", xm - 10, ym - 10, 10.5, t["amber"], "mono", 500, anchor="end")
-    # ---- right: the headline and by period
+    ref_col = {"robovetter": t["green"], "pht_mid": t["amber"], "pht_hi": t["amber"]}
+    for i, c in enumerate(d["cmp"]):
+        gx = PX0 + i * cw
+        bw = cw * 0.3
+        xo, xr = gx + cw * 0.14, gx + cw * 0.56
+        o = c["ours"]
+        _ci_bar(s, t, xo, bw, y_of, o, t["known"], t["panel"])
+        s.text(pct(o["rate"]), xo + 6, y_of(0) - 9, 13, t["ink"], "sans", 600)
+        rc = ref_col[c["key"]]
+        s.rect(xr, y_of(c["ref"]), bw, y_of(0) - y_of(c["ref"]), fill=soft(t, rc, 0.16, t["panel"]), r=4)
+        s.line(xr, y_of(c["ref"]), xr + bw, y_of(c["ref"]), rc, 2.4, dash="5 3" if c["bound"] else None)
+        s.text(("> " if c["bound"] else "") + pct(c["ref"]), xr + 6, y_of(0) - 9, 13, rc, "sans", 600)
+        cx_ = gx + cw / 2
+        s.text(c["bin"], cx_, PY1 + 20, 12.5, t["ink"], "sans", 600, anchor="middle")
+        yy = PY1 + 36
+        for ln in wrap(f"SetuHQ {o['k']}/{o['n']} against {c['who']}", cw - 16, 10, "mono") + wrap(c["note"], cw - 16, 10, "mono"):
+            s.text(ln, cx_, yy, 10, t["ink3"], "mono", 400, anchor="middle")
+            yy += 14
+        word = {"below": "below: interval excludes it", "above": "above: interval excludes it",
+                "consistent": "consistent: interval includes it"}[c["verdict"]]
+        s.text(word, cx_, yy + 8, 11, t["rejected"] if c["verdict"] == "below" else t["ink2"], "sans", 600, anchor="middle")
+    lx = LX0 + 18
+    for col, lab in ((t["known"], "SetuHQ, held-out"), (t["green"], "Kepler Robovetter"), (t["amber"], "Planet Hunters TESS")):
+        s.rect(lx, PLOT_BOTTOM - 24, 10, 10, fill=col, r=2)
+        lx += 16 + s.text(lab, lx + 16, PLOT_BOTTOM - 15, 11, t["ink2"], "sans", 500) + 18
+    s.text("dashed: a lower bound", LX1 - 18, PLOT_BOTTOM - 15, 10, t["ink3"], "mono", 400, anchor="end")
+    # ---- right: the headline, by radius and by period
     RX0, RX1 = 790, MX1
     panel(s, t, RX0, PLOT_TOP, RX1 - RX0, PLOT_BOTTOM - PLOT_TOP)
-    c = h["completeness"]
-    s.text("Held-out completeness", RX0 + 20, PLOT_TOP + 30, 11, t["ink3"], "mono", 500, ls=0.08, upper=True)
-    s.text(pct(c["rate"]), RX0 + 20, PLOT_TOP + 88, 56, t["ink"], "sans", 600, ls=-0.03)
-    s.text(f"{c['k']} of {c['n']} · interval {pct(c['lo'])}–{pct(c['hi'])}", RX0 + 20, PLOT_TOP + 112, 12, t["ink2"], "mono", 400)
+    c0 = h["completeness"]
+    s.text("Held-out completeness", RX0 + 20, PLOT_TOP + 28, 11, t["ink3"], "mono", 500, ls=0.08, upper=True)
+    s.text(pct(c0["rate"]), RX0 + 20, PLOT_TOP + 80, 50, t["ink"], "sans", 600, ls=-0.03)
+    s.text(f"{c0['k']} of {c0['n']} · interval {pct(c0['lo'])}–{pct(c0['hi'])}", RX0 + 20, PLOT_TOP + 102, 11.5, t["ink2"], "mono", 400)
     uc = u["completeness"]
-    s.text(f"{pct(uc['rate'])} ({uc['k']}/{uc['n']}) without the clipping-bug stars", RX0 + 20, PLOT_TOP + 132, 12, t["ink3"], "mono", 400)
-    s.text("By orbital period", RX0 + 20, 282, 11, t["ink3"], "mono", 500, ls=0.08, upper=True)
-    QX0, QX1 = RX0 + 92, RX1 - 52
+    s.text(f"{pct(uc['rate'])} ({uc['k']}/{uc['n']}) without the clipping-bug stars", RX0 + 20, PLOT_TOP + 120, 11.5, t["ink3"], "mono", 400)
+    QX0, QX1 = RX0 + 84, RX1 - 92
     qx = lambda p: QX0 + p * (QX1 - QX0)  # noqa: E731
-    for i, row in enumerate(h["completeness_by_period"]):
-        yy = 312 + i * 46
-        s.text(f"{row['bin'][0]:g}–{row['bin'][1]:g} d", RX0 + 20, yy + 4, 11.5, t["ink"], "sans", 500)
-        s.line(QX0, yy, QX1, yy, line(t, 1, t["panel"]), 8, extra='stroke-linecap="round"')
-        s.line(qx(row["lo"]), yy, qx(row["hi"]), yy, soft(t, t["known"], 0.45, t["panel"]), 8, extra='stroke-linecap="round"')
-        s.circle(qx(row["rate"]), yy, 5, fill=t["known"], stroke=t["panel"], sw=1.5)
-        s.text(pct(row["rate"]), QX1 + 10, yy + 4, 11.5, t["ink"], "mono", 500)
-        s.text(f"{row['k']}/{row['n']}", RX0 + 20, yy + 20, 10, t["ink3"], "mono", 400)
+
+    def rows(title, items, y):
+        s.text(title, RX0 + 20, y, 10.5, t["ink3"], "mono", 500, ls=0.08, upper=True)
+        for lab, row in items:
+            y += 23
+            s.text(lab, RX0 + 20, y + 4, 11.5, t["ink"], "sans", 500)
+            s.line(QX0, y, QX1, y, line(t, 1, t["panel"]), 7, extra='stroke-linecap="round"')
+            s.line(qx(row["lo"]), y, qx(row["hi"]), y, soft(t, t["known"], 0.45, t["panel"]), 7, extra='stroke-linecap="round"')
+            s.circle(qx(row["rate"]), y, 4.5, fill=t["known"], stroke=t["panel"], sw=1.5)
+            s.text(pct(row["rate"]), QX1 + 12, y + 4, 11.5, t["ink"], "mono", 500)
+            s.text(f"{row['k']}/{row['n']}", RX1 - 18, y + 4, 10, t["ink3"], "mono", 400, anchor="end")
+        return y
+
+    nr = len(h["completeness_by_radius"])
+    y = rows("By planet radius", [(_bin_label(*x["bin"], "R⊕", i == nr - 1), x) for i, x in enumerate(h["completeness_by_radius"])],
+             PLOT_TOP + 154)
+    y = rows("By orbital period", [(f"{x['bin'][0]:g}–{x['bin'][1]:g} d", x) for x in h["completeness_by_period"]], y + 34)
     for p in (0, 0.5, 1):
-        s.text(pct(p), qx(p), 456, 10, t["ink3"], "mono", 400, anchor="middle")
-    paragraph(s, "Measured on a stated benchmark, not discoveries. SetuHQ is below both published vetters.",
-              RX0 + 20, 486, RX1 - RX0 - 40, 11.5, t["ink2"])
+        s.text(pct(p), qx(p), y + 22, 10, t["ink3"], "mono", 400, anchor="middle")
     return s
+
+
 
 
 # --------------------------------------------------------------------------------------
@@ -1269,7 +1351,7 @@ def cov_desc(d: dict) -> str:
             f"declination ±90°), as of {c['as_of']}. TESS sectors 1 to {c['tess_last_sector']} cover {100 * fr['tess']:.1f}% of the sky, "
             f"shaded by the number of sectors (1–2, 3–5, 6–12, 13 or more; 13 or more is {100 * fr['tess_cvz_13plus']:.1f}%). "
             f"Kepler's field covers {100 * fr['kepler']:.1f}% and the K2 campaigns C0–C19 {100 * fr['k2']:.1f}%, drawn from their "
-            f"CCD channel outlines; the sky in no footprint (TESS, Kepler, K2, CoRoT or the bulge) is {100 * fr['unmapped']:.1f}%. "
+            f"CCD channel outlines; the sky in no footprint (TESS, Kepler, K2, CoRoT or the bulge), drawn as grey cells, is {100 * fr['unmapped']:.1f}%. "
             f"Of {fmt_int(hi['all'])} planet hosts, {fmt_int(hi['tess'])} lie in TESS's sky, {fmt_int(hi['kepler'])} in Kepler's field, "
             f"{fmt_int(hi['k2'])} in K2's and {fmt_int(hi['none'])} in none. The dashed line is the Galactic plane. "
             f"Source: {COV_SRC} (tess-point and K2fov footprints), commit {d['commit']}.")
@@ -1305,7 +1387,8 @@ def sky_coverage(t: dict, d: dict) -> Svg:
             unmapped.append(p)
     for j in range(len(TESS_BANDS)):
         s.dots(buckets[j], soft(t, tess_col, shades[j], t["bg"]), cell_r)
-    s.dots(unmapped, t["rejected"], cell_r)
+    unmapped_col = soft(t, t["ink"], 0.62, t["bg"])   # one solid colour, used for the cells and the legend swatch
+    s.dots(unmapped, unmapped_col, cell_r)
 
     def quad(q, color):
         pts = [mollweide(x, y, cx, cy, a) for x, y in q]
@@ -1364,8 +1447,11 @@ def sky_coverage(t: dict, d: dict) -> Svg:
     y += 70
     for color, lab, val in ((t["green"], "Kepler field", f"{100 * fr['kepler']:.1f}%"),
                             (t["amber"], "K2 campaigns C0–C19", f"{100 * fr['k2']:.1f}%"),
-                            (t["rejected"], "In no footprint", f"{100 * fr['unmapped']:.1f}%")):
-        s.rect(LX + 8, y - 10, 12, 12, fill=color, r=3)
+                            (unmapped_col, "In no footprint", f"{100 * fr['unmapped']:.1f}%")):
+        if color == unmapped_col:   # drawn as the map draws it: a sky cell
+            s.circle(LX + 14, y - 4, cell_r, fill=color)
+        else:
+            s.rect(LX + 8, y - 10, 12, 12, fill=color, r=3)
         s.text(lab, LX + 28, y, 13, t["ink"], "sans", 500)
         s.text(val, MX1 - 20, y, 12.5, t["ink"], "mono", 500, anchor="end")
         y += 28
@@ -1426,31 +1512,36 @@ def flow_data() -> dict:
     kinds = Counter(r["kind"] for r in man["reviewers"])
     fap = [c for c in passed if c.get("fap") is not None]
     trials = max(c["fap_trials"] for c in fap)
-    return {"man": man, "points": n_points, "passed": len(passed), "flagged": sum(1 for c in passed if c["flags"]),
+    cfg = tomllib.loads((ROOT / "configs" / "tess_pi_men_s1.toml").read_text(encoding="utf-8"))
+    return {"man": man, "points": n_points, "bin_minutes": cfg["run"]["bin_minutes"], "passed": len(passed), "flagged": sum(1 for c in passed if c["flags"]),
             "rejected": len(cands) - len(passed), "epochs": v["epochs_recovered"], "predicted": v["epochs_predicted"],
             "sentinels": sum(n for k_, n in kinds.items() if k_ != "simulated"), "probes": kinds.get("simulated", 0),
             "trials": trials, "k": v["joint_fit"]["k"], "subject_days": man["subject_days"],
             "commit": commit_of(*FLOW_SRC, "docs/results/pi_men_validation.json")}
 
 
-def flow_nodes(d: dict) -> list[tuple[str, str, list[str], str]]:
+def flow_nodes(d: dict) -> list[tuple[str, str, str, str]]:
+    """Each step: name, what it does, what it produced in the stored run (one sentence, wrapped when drawn), colour."""
     c = d["man"]["counts"]
     return [
-        ("Ingest", "TESS · CHEOPS · CSV", [f"{c['light_curves']} light curve", f"{fmt_int(d['points'])} points"], "known"),
-        ("Clean", "clip · detrend · bin", ["masked local-quadratic", "baseline, 10-min bins"], "known"),
-        ("Blind-code", f"{d['subject_days']:g}-day subjects", [f"{c['subjects']} subjects,", "no target names"], "known"),
-        ("Review", "the panel marks dips", [f"{d['sentinels']} Sentinels + {d['probes']} Probes", f"{c['classifications']} classifications"], "sen"),
-        ("Aggregate", "skill-weighted consensus", [f"{c['consensus_events']} consensus dips"], "prb"),
-        ("Vet", "SNR · odd/even · secondary", [f"{d['passed']} passed, {d['rejected']} rejected", f"{d['flagged']} flagged off-ephemeris"], "open"),
-        ("Fit", "limb-darkened transit", [f"{d['epochs']} of {d['predicted']} epochs on the", f"ephemeris; Rp/R★ {d['k']:.4f}"], "known"),
-        ("FAP", "block bootstrap", [f"< 10⁻⁴ ({fmt_int(d['trials'])} trials),", "a bound, not a value"], "known"),
-        ("Write", "candidates + provenance", ["CSV · JSON · SQLite", "manifest · site"], "green"),
+        ("Ingest", "TESS · CHEOPS · CSV", f"{c['light_curves']} light curve of {fmt_int(d['points'])} points", "known"),
+        ("Clean", "clip · detrend · bin", f"masked local-quadratic baseline, {d['bin_minutes']:g}-minute bins", "known"),
+        ("Blind-code", f"{d['subject_days']:g}-day subjects", f"{c['subjects']} subjects, no target names", "known"),
+        ("Review", "the panel marks dips", f"{d['sentinels']} Sentinels + {d['probes']} Probes; {c['classifications']} classifications", "sen"),
+        ("Aggregate", "skill-weighted consensus", f"{c['consensus_events']} consensus dips", "prb"),
+        ("Vet", "SNR · odd/even · secondary", f"{d['passed']} passed ({d['flagged']} flagged off-ephemeris), {d['rejected']} rejected", "open"),
+        ("Fit", "limb-darkened transit", f"{d['epochs']} of {d['predicted']} epochs on the ephemeris; Rp/R★ {d['k']:.4f}", "known"),
+        ("FAP", "block bootstrap", f"< 10⁻⁴ over {fmt_int(d['trials'])} trials: a bound, not a value", "known"),
+        ("Write", "candidates + provenance", "CSV, JSON, SQLite, a manifest and the site", "green"),
     ]
 
 
+FLOW_NODE = (200, 150, 30)   # node width, height, gap
+
+
 def flow_desc(d: dict) -> str:
-    steps = "; ".join(f"{i + 1}. {k}, {sub}: {', '.join(lines).replace(', ,', ',')}" for i, (k, sub, lines, _) in enumerate(flow_nodes(d)))
-    return ("How a run works, with the counts of SetuHQ's stored run on pi Men (TESS sector 1): " + steps.replace(",,", ",")
+    steps = "; ".join(f"{i + 1}. {k} ({sub.replace(' · ', ', ')}): {detail}" for i, (k, sub, detail, _) in enumerate(flow_nodes(d)))
+    return ("How a run works, with the counts of SetuHQ's stored run on pi Men (TESS sector 1): " + steps
             + ". Every step's output is kept, so a run can be re-vetted from its stored classifications without asking the reviewers again. "
             f"Sources: runs/tess-pi-men-s1 (manifest.json, candidates.json, subjects), configs/tess_pi_men_s1.toml and "
             f"docs/results/pi_men_validation.json, commit {d['commit']}.")
@@ -1462,7 +1553,7 @@ def flow_pipeline(t: dict, d: dict) -> Svg:
           f"Source: runs/tess-pi-men-s1 (manifest.json, candidates.json) · configs/tess_pi_men_s1.toml · commit {d['commit']}",
           t["known"])
     nodes = flow_nodes(d)
-    nw, nh, gap = 200, 150, 30
+    nw, nh, gap = FLOW_NODE
     rows = [(nodes[:5], 132), (nodes[5:], 352)]
     pos = []
     for row, y in rows:
@@ -1470,7 +1561,7 @@ def flow_pipeline(t: dict, d: dict) -> Svg:
         x0 = MX0 + (MX1 - MX0 - (n_ * nw + (n_ - 1) * gap)) / 2
         for i, nd in enumerate(row):
             pos.append((x0 + i * (nw + gap), y, nd))
-    for i, (x, y, (kicker, sub, lines, ck)) in enumerate(pos):
+    for i, (x, y, (kicker, sub, detail, ck)) in enumerate(pos):
         color = t[ck]
         panel(s, t, x, y, nw, nh)
         s.rect(x, y + 16, 3, 22, fill=color, r=1.5)
@@ -1478,8 +1569,11 @@ def flow_pipeline(t: dict, d: dict) -> Svg:
         s.text(kicker, x + 42, y + 32, 16, t["ink"], "sans", 600)
         s.text(sub, x + 16, y + 58, 11.5, t["ink2"], "sans", 500)
         s.line(x + 16, y + 74, x + nw - 16, y + 74, line(t, 0, t["panel"]))
+        lines = wrap(detail, nw - 32, 11.5, "mono")
+        if len(lines) > 3:
+            sys.exit(f"gen_readme_assets: the {kicker} node's text needs {len(lines)} lines; shorten it")
         for j, ln in enumerate(lines):
-            s.text(ln, x + 16, y + 98 + j * 19, 11.5, t["ink"], "mono", 400)
+            s.text(ln, x + 16, y + 98 + j * 18, 11.5, t["ink"], "mono", 400)
     for i in range(len(pos) - 1):
         x, y, _ = pos[i]
         x2, y2, _ = pos[i + 1]
@@ -1498,7 +1592,8 @@ def flow_pipeline(t: dict, d: dict) -> Svg:
 # The data the architecture figure quotes. Its counts of modules, CLI commands, Methods chapters and tests are read
 # from the tree at generation time (and recorded in MANIFEST.json); they are not tied to a commit, so a code change
 # alone does not stale the figure, while a new module, command, chapter or test does.
-ARCH_SRC = ("docs/leaderboard.json", "docs/results/exoplanet_map.json", "docs/results/benchmark_real_tois.json")
+THRESHOLD_SWEEP = "docs/leaderboard.json"   # the injection threshold sweep (scripts/improve.py), not the real-TOI leaderboard
+ARCH_SRC = (THRESHOLD_SWEEP, "docs/results/exoplanet_map.json", "docs/results/benchmark_real_tois.json")
 
 
 def arch_data() -> dict:
@@ -1509,67 +1604,69 @@ def arch_data() -> dict:
 
 
 def arch_columns(d: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
+    """Columns of (heading, text) items; the text is one phrase, wrapped to the card when drawn."""
     rc, b, m = d["rc"], d["b"], d["m"]
     return [
-        ("Public data", "known", [("exoplanet.eu", f"{fmt_int(m['counts']['rows'])} planets, {m['fetched_at'][:10]}"),
+        ("Public data", "known", [("exoplanet.eu", f"{fmt_int(m['counts']['rows'])} planets, fetched {m['fetched_at'][:10]}"),
                                   ("MAST", "TESS SPOC light curves"),
-                                  ("TOI table", f"{b['stars_run']} TOIs sampled, seed {b['sample']['seed']}"),
+                                  ("TOI table", f"{b['stars_run']} TOIs sampled with seed {b['sample']['seed']}"),
                                   ("Claret 2017", "TESS limb darkening"),
-                                  ("JWST", "WASP-39 b spectrum (Zenodo)")]),
-        ("Engine · src/exoplan", "known", [(f"{rc['modules']} modules", "one Python package"),
-                                           ("preprocess · subjects", "search · vet · transitfit"),
-                                           ("aggregate · calibrate", "benchmark · benchmark_toi"),
-                                           ("store · report · app", "galaxy · methods · mission")]),
-        ("Reviewer panel", "sen", [("Sentinels", "Claude, via the Claude Code CLI"), ("", "or the Anthropic API"),
-                                   ("Probes", "deterministic matched-filter"), ("", "detectors, seeded"),
+                                  ("JWST", "WASP-39 b spectrum, from Zenodo")]),
+        ("Engine", "known", [(f"{rc['modules']} modules", "one Python package, src/exoplan"),
+                             ("Pipeline", "preprocess, subjects, search, vet, transitfit"),
+                             ("Scoring", "aggregate, calibrate, benchmark_toi"),
+                             ("Pages", "report, app, galaxy, methods, mission")]),
+        ("Reviewer panel", "sen", [("Sentinels", "Claude, via the Claude Code CLI or the Anthropic API"),
+                                   ("Probes", "deterministic matched-filter detectors, seeded"),
                                    ("Consensus", "skill-weighted, calibrated")]),
-        ("Surfaces", "prb", [(f"CLI · {len(rc['cli'])} commands", " ".join(rc["cli"][:3]))]
-         + [("", " ".join(rc["cli"][i:i + 3])) for i in range(3, len(rc["cli"]), 3)]
-         + [("App", f"{rc['chapters']} Methods chapters"), ("", "Galaxy · Catalogue"), ("", "Mission Control")]),
-        ("Evidence", "green", [(f"{fmt_int(rc['tests'])} tests", f"{rc['network']} need the network, {rc['slow']} slow"),
+        ("Surfaces", "prb", [(f"CLI, {len(rc['cli'])} commands", ", ".join(rc["cli"])),
+                             ("App", f"{rc['chapters']} Methods chapters; Galaxy, Catalogue, Mission Control")]),
+        ("Evidence", "green", [(f"{fmt_int(rc['tests'])} tests", f"{rc['network']} need the network, {rc['slow']} are slow"),
                                ("pi Men c", "checked against Huang 2018"),
-                               ("Real-TOI benchmark", f"{b['stars_run']} TOIs, controls"),
-                               ("Leaderboard", f"{rc['leaderboard_trials']} trials, losers kept"),
-                               ("Provenance", "data · config · code hashes")]),
+                               ("Real-TOI benchmark", f"{b['stars_run']} TOIs, with controls"),
+                               ("Threshold sweep", f"{rc['leaderboard_trials']} trials, losers kept"),
+                               ("Provenance", "data, config and code hashes")]),
     ]
 
 
 ARCH_PROVENANCE = ("Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; "
                    "a run can be re-vetted without asking the reviewers again.")
+ARCH_CARD = (22, 112, 330)   # gap, top, height
 
 
 def arch_desc(d: dict) -> str:
-    parts = []
-    for title, _, items in arch_columns(d):
-        txt = "; ".join(f"{a} {b_}".strip() if a else b_ for a, b_ in items)
-        parts.append(f"{title}: {txt}")
-    return ("SetuHQ's architecture, with counts read from the repository: " + ". ".join(parts)
-            + ". " + ARCH_PROVENANCE + f" Counts read from src/exoplan, the CLI and pytest --collect-only; data from {', '.join(ARCH_SRC)}, commit {d['commit']}.")
+    parts = [f"{title}: " + "; ".join(f"{a} ({b_})" for a, b_ in items) for title, _, items in arch_columns(d)]
+    return ("SetuHQ's architecture, with counts read from the repository. " + ". ".join(parts)
+            + ". " + ARCH_PROVENANCE + f" Counts read from src/exoplan, the CLI and pytest --collect-only; data from "
+            f"{', '.join(ARCH_SRC)} ({THRESHOLD_SWEEP} is the threshold sweep), commit {d['commit']}.")
 
 
 def architecture(t: dict, d: dict) -> Svg:
     s = Svg(W, H, "SetuHQ's architecture", arch_desc(d))
     frame(s, t, "Architecture · counts read from the repository", "One engine, one panel, every surface checked",
-          f"Counts: src/exoplan, pytest --collect-only · data: docs/leaderboard.json, docs/results · commit {d['commit']}",
+          f"Counts: src/exoplan, pytest --collect-only · data: {THRESHOLD_SWEEP} (threshold sweep), docs/results · commit {d['commit']}",
           t["known"])
     cols = arch_columns(d)
     n = len(cols)
-    gap = 22
+    gap, top, ch_ = ARCH_CARD
     cw = (MX1 - MX0 - (n - 1) * gap) / n
-    top, ch_ = 112, 330
+    inner = cw - 32
     for i, (title, ck, items) in enumerate(cols):
         x = MX0 + i * (cw + gap)
         panel(s, t, x, top, cw, ch_)
         s.rect(x + 16, top + 18, 8, 8, fill=t[ck], r=2)
         s.text(title, x + 32, top + 26, 10.5, t["ink3"], "mono", 500, ls=0.1, upper=True)
-        y = top + 60
+        y = top + 52
         for a, b_ in items:
-            if a:
-                y += 8
-                s.text(a, x + 16, y, 14, t["ink"], "sans", 600)
-                y += 19
-            s.text(b_, x + 16, y, 11, t["ink2"], "mono", 400)
-            y += 20
+            y += 8
+            s.text(a, x + 16, y, 14, t["ink"], "sans", 600)
+            y += 18
+            for ln in wrap(b_, inner, 11, "mono"):
+                s.text(ln, x + 16, y, 11, t["ink2"], "mono", 400)
+                y += 16
+            y += 2
+        if y > top + ch_ - 8:
+            sys.exit(f"gen_readme_assets: the {title} card overflows ({y - top:.0f} of {ch_} px); shorten its items")
         if i < n - 1:
             arrow(s, t, [(x + cw + 3, top + ch_ / 2), (x + cw + gap - 3, top + ch_ / 2)], t["ink3"])
     by = top + ch_ + 18
@@ -1578,6 +1675,8 @@ def architecture(t: dict, d: dict) -> Svg:
     s.text("Provenance on every output", MX0 + 32, by + 27, 10.5, t["ink3"], "mono", 500, ls=0.1, upper=True)
     s.text(ARCH_PROVENANCE, MX0 + 16, by + 54, 13.5, t["ink"], "sans", 500)
     return s
+
+
 
 
 # --------------------------------------------------------------------------------------
@@ -1650,7 +1749,7 @@ def methods_desc(d: dict) -> str:
             f"3. Microlensing (paczynski): point-lens magnification A(u), on a log scale, against time in Einstein-crossing times for {peaks}. "
             f"4. Blocking starlight (airy_intensity, lyot_final_intensity): the star's image against separation 0 to 12 λ/D on a log scale, "
             f"for a clear pupil and a Lyot coronagraph with a {d['mask']} λ/D mask; at 8 λ/D the clear pupil leaves {sci(nums[2])} of the peak, "
-            f"the Lyot stop at 150% {sci(nums[0])} and at 80% {sci(nums[1])}. Models from stored values, not observations. "
+            f"the Lyot stop at 150% {sci(nums[0])} and at 80% {sci(nums[1])}. Axes: relative flux against position across the star in stellar radii; radial velocity in m/s, with zero marked, against orbital phase; magnification on a log scale against time in Einstein-crossing times; intensity relative to the unblocked peak on a log scale against separation in λ/D. Models from stored values, not observations. "
             f"Sources: src/exoplan/methods.py and docs/results/methods_examples.json (exoplanet.eu, fetched {d['ex']['fetched_at'][:10]}), "
             f"commit {d['commit']}.")
 
@@ -1665,12 +1764,13 @@ def methods_strip(t: dict, d: dict) -> Svg:
     pw = (MX1 - MX0 - (n - 1) * gap) / n
     top, ph_ = PLOT_TOP, PLOT_BOTTOM - PLOT_TOP
 
-    def axes(i, title, fn, tag="Model"):
+    def axes(i, title, fn, unit):
         x = MX0 + i * (pw + gap)
         panel(s, t, x, top, pw, ph_)
         s.text(f"{i + 1:02d}", x + 16, top + 30, 11, t["prb"], "mono", 600)
         s.text(title, x + 42, top + 30, 15, t["ink"], "sans", 600)
-        s.text(fn, x + 16, top + 50, 10.5, t["ink3"], "mono", 400)
+        s.text(fn, x + 16, top + 48, 10.5, t["ink3"], "mono", 400)
+        s.text("y: " + unit, x + 22, top + 67, 9.5, t["ink2"], "mono", 500)
         return x, (x + 22, x + pw - 16, top + 74, top + 270)
 
     def plot_line(box, xs, ys, xr, yr, color, sw=2.0, dash=None, logy=False):
@@ -1697,36 +1797,36 @@ def methods_strip(t: dict, d: dict) -> Svg:
             y += 22
 
     # 1 transit
-    x, box = axes(0, "Transit", "transit_flux · limb darkening")
+    x, box = axes(0, "Transit", "transit_flux · limb darkening", "relative flux")
     frame_box(box)
     lo = 1 - 1.25 * d["depth_ld"]
     plot_line(box, d["xs"], d["flat"], (-1.35, 1.35), (lo, 1 + 0.15 * d["depth_ld"]), t["ink3"], 1.4, dash="4 4")
     plot_line(box, d["xs"], d["ld"], (-1.35, 1.35), (lo, 1 + 0.15 * d["depth_ld"]), t["known"], 2.2)
-    s.text("position across the star (R★)", box[0], box[3] + 15, 9.5, t["ink3"], "mono", 400)
+    s.text("x: position across the star, R★", box[0], box[3] + 15, 9.5, t["ink3"], "mono", 400)
     captions(x, [("pi Men c, Rp/R★", f"{d['k']:.4f}"), ("impact parameter b", f"{d['b']}"),
                  ("u1, u2 (Claret 2017)", f"{d['u1']:.3f}, {d['u2']:.3f}"), ("depth, limb-darkened", f"{1e6 * d['depth_ld']:.0f} ppm"),
                  ("depth, uniform disc", f"{1e6 * d['depth_flat']:.0f} ppm")])
     # 2 RV
-    x, box = axes(1, "Radial velocity", "rv_curve · Kepler's equation")
+    x, box = axes(1, "Radial velocity", "rv_curve · Kepler's equation", "velocity, m/s (0 marked)")
     frame_box(box)
     kmax = hd["k"] * 1.25
     X0, X1, Y0, Y1 = box
     s.line(X0, (Y0 + Y1) / 2, X1, (Y0 + Y1) / 2, line(t, 1, t["bg"]))
     plot_line(box, d["ph"], d["rv"], (0, 1), (-kmax * 1.35, kmax * 0.6), t["coral"] if t["name"] == "dark" else t["rejected"], 2.2)
-    s.text("one orbit (phase)", box[0], box[3] + 15, 9.5, t["ink3"], "mono", 400)
+    s.text("x: one orbit, phase", box[0], box[3] + 15, 9.5, t["ink3"], "mono", 400)
     captions(x, [("HD 80606 b, period", f"{hd['orbital_period']:.2f} d"), ("eccentricity e", f"{hd['eccentricity']}"),
                  ("periastron argument", f"{hd['omega']}°"), ("semi-amplitude K", f"{hd['k']} m/s"), ("source", "exoplanet.eu")])
     # 3 microlensing
-    x, box = axes(2, "Microlensing", "paczynski · A(u)")
+    x, box = axes(2, "Microlensing", "paczynski · A(u)", "magnification A, log")
     frame_box(box)
     shades = [t["prb"], soft(t, t["prb"], 0.7, t["bg"]), soft(t, t["prb"], 0.45, t["bg"])]
     for j, u0 in enumerate(d["u0s"]):
         plot_line(box, d["tt"], [math.log10(a_) for a_ in d["ml"][u0]], (-2.5, 2.5), (-0.05, 1.15), shades[j], 2.0)
-    s.text("time (Einstein crossings), log A", box[0], box[3] + 15, 9.5, t["ink3"], "mono", 400)
+    s.text("x: time, Einstein crossings", box[0], box[3] + 15, 9.5, t["ink3"], "mono", 400)
     captions(x, [(f"peak A, u0 = {u0:g}", f"{MX.paczynski(u0):.2f}", shades[j]) for j, u0 in enumerate(d["u0s"])]
              + [("lens", "a point mass"), ("source", "closed form")])
     # 4 coronagraph
-    x, box = axes(3, "Blocking starlight", "airy · lyot_final_intensity")
+    x, box = axes(3, "Blocking starlight", "airy · lyot_final_intensity", "intensity / peak, log")
     frame_box(box)
     yr = (-9.0, 0.0)
     plot_line(box, d["us"], d["clear"], (0, 12), yr, t["ink3"], 1.4, logy=True)
@@ -1735,7 +1835,7 @@ def methods_strip(t: dict, d: dict) -> Svg:
     X0, X1, Y0, Y1 = box
     x8 = X0 + 8 / 12 * (X1 - X0)
     s.line(x8, Y0 + 4, x8, Y1 - 4, line(t, 2, t["bg"]), 1, dash="3 3")
-    s.text("separation (λ/D), log intensity", box[0], box[3] + 15, 9.5, t["ink3"], "mono", 400)
+    s.text("x: separation, λ/D", box[0], box[3] + 15, 9.5, t["ink3"], "mono", 400)
     captions(x, [("8 λ/D, clear pupil", sci(nums[2]), t["ink3"]), ("Lyot stop 150%", sci(nums[0]), t["amber"]),
                  ("Lyot stop 80%", sci(nums[1]), t["green"]),
                  ("focal mask", f"{d['mask']} λ/D"), ("optics", "Fraunhofer")])
@@ -1752,7 +1852,7 @@ def methods_strip(t: dict, d: dict) -> Svg:
 FIGURES = {
     "hero": (hero, hero_data, [HERO_SRC]),
     "pi-men": (pimen, pimen_data, list(PIMEN_SRC)),
-    "benchmark": (benchmark, bench_data, [BENCH_SRC, BENCH_MD]),
+    "benchmark": (benchmark, bench_data, [BENCH_SRC, BENCH_MD, BENCH_SAMPLE]),
     "feed-noise": (feed_noise, bench_data, [BENCH_SRC]),
     "sky-coverage": (sky_coverage, cov_data, [COV_SRC]),
     "flow-pipeline": (flow_pipeline, flow_data, list(FLOW_SRC) + ["docs/results/pi_men_validation.json"]),
@@ -1801,8 +1901,248 @@ def build() -> dict[str, bytes]:
     if shots.exists():
         manifest["app_screenshots"] = {"captured_by": "tools/capture_site_shots.mjs", "record": "app/SHOTS.json",
                                        "files": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(APP_DIR.glob("*.webp"))}}
+    manifest["made_with"] = made_with()   # recorded, not compared: --check names them when a file differs
     out[f"{REL_OUT}/MANIFEST.json"] = (json.dumps(manifest, indent=2, ensure_ascii=False) + "\n").encode()
     return out
+
+
+# --------------------------------------------------------------------------------------
+# The README's generated parts: alt text, badges and the blocks of numbers
+# --------------------------------------------------------------------------------------
+
+GEN_BLOCK = re.compile(r"(<!-- generated:([a-z-]+) [^\n]*?-->\n)(.*?)(\n<!-- /generated:\2 -->)", re.S)
+README_BLOCKS = ("badges", "pimen-results", "sentinel-results", "benchmark-results", "limits-completeness", "methods-chapters")
+
+
+def _shield_part(s_: str) -> str:
+    from urllib.parse import quote
+    return quote(s_.replace("-", "--").replace("_", "__"), safe="")
+
+
+def shield(href: str, label: str, message: str, color: str, alt: str) -> str:
+    url = f"https://img.shields.io/badge/{_shield_part(label)}-{_shield_part(message)}-{color}?style=flat-square&labelColor=0A1226"
+    return f'  <a href="{href}"><img src="{url}" height="18" alt="{esc(alt)}"></a>'
+
+
+def badges_block() -> str:
+    rc = repo_counts()
+    b = load_json(BENCH_SRC)
+    c = b["summary"]["held_out"]["completeness"]
+    m = load_json(HERO_SRC)
+    offline = rc["tests"] - rc["network"] - rc["slow"]
+    rows = [
+        shield("scripts/ci_local.sh", "tests", f"{rc['tests']} collected", "377D0C",
+               f"{rc['tests']} tests collected by pytest: {offline} run offline in CI, {rc['slow']} slow ones and "
+               f"{rc['network']} network ones by scripts/ci_local.sh"),
+        shield("#evidence", "held-out completeness", f"{pct(c['rate'])} ({c['k']}/{c['n']})", "066A86",
+               f"Held-out completeness on {b['stars_run']} real TOIs: {c['k']} of {c['n']} confirmed or known planets on "
+               f"searchable stars, Wilson 95% interval {100 * c['lo']:.0f} to {100 * c['hi']:.0f}%"),
+        shield("#the-app", "catalogue", f"{fmt_int(m['counts']['rows'])} planets", "066A86",
+               f"The catalogue holds all {fmt_int(m['counts']['rows'])} {m['source_short']} records, fetched {m['fetched_at'][:10]}"),
+        shield("#the-app", "Methods", f"{len(MX.CHAPTERS)} chapters", "066A86",
+               f"{len(MX.CHAPTERS)} animated Methods chapters with tested physics"),
+        shield("#licence", "licence", "AGPL-3.0 (at release)", "3F4B67",
+               "Licence: AGPL-3.0-only from the public release, with a commercial licence from Ashforde OÜ"),
+        shield("#editions", "commercial", "available", "B8288F",
+               "A commercial licence and SetuHQ Pro are available on request from Ashforde OÜ"),
+    ]
+    return '<p align="center">\n' + "\n".join(rows) + "\n</p>"
+
+
+def _ordinal(i: int) -> str:
+    return ["first", "second", "third", "fourth", "fifth"][i] if i < 5 else f"{i + 1}th"
+
+
+def _sci_label(label: str) -> str:
+    """'< 1.0e-04 (...)' -> '10⁻⁴' (the bound's exponent, as the README prints it)."""
+    m = re.search(r"e(-?\d+)", label)
+    if not m:
+        sys.exit(f"gen_readme_assets: cannot read a bound from {label!r}")
+    return "10" + sup_exp(int(m.group(1)))
+
+
+def pimen_results_block() -> str:
+    d = pimen_data()
+    v, jf, jp = d["v"], d["jf"], d["v"]["joint_fit_density_prior"]
+    h = v["huang_2018"]
+    r = v["ratios_vs_huang_2018"]
+    ev = d["events"]
+    passed = [e for e in ev if e["status"] != "rejected"]
+    flagged = [e for e in passed if e["flags"]]
+    rejected = [e for e in ev if e["status"] == "rejected"]
+    known = [e for e in ev if e["status"] == "known"]
+    xm = load_json("docs/results/pi_men_crossmatch.json")["validation"]
+    span = d["t"][-1] - d["t"][0]
+    star = v["star"]
+    huang_t23 = TF.t23(h["pl_trandur"] / 24, h["pl_imppar"], h["pl_ratror"], h["pl_orbper"]) / (h["pl_trandur"] / 24)
+    rho_in = jf["rho_range"][0] <= star["rho"] <= jf["rho_range"][1]
+    fap = [c for c in d["cands"] if c["passed"] and c.get("fap") is not None]
+    trials = {c["fap_trials"] for c in fap}
+    if len(trials) != 1 or any(abs(c["fap"] - 1 / (c["fap_trials"] + 1)) > 1e-12 for c in fap):
+        sys.exit("gen_readme_assets: the pi Men FAPs are no longer all at the trial bound; reword pimen_results_block()")
+    n_trials = trials.pop()
+    fap_subjects = sorted({c["subject_id"] for c in fap})
+    bound, tail = _sci_label(fap[0]["fap_label"]), _sci_label(fap[0]["fap_tail_label"])
+    lines = [
+        f"Real data, TESS SPOC sector 1 of pi Men (TIC {star['tic']}), the three Probes plus the two Sentinels "
+        "(Skeptic and Volunteer, on Claude via the CLI), as stored in `runs/tess-pi-men-s1`:",
+        "",
+        f"* {len(ev)} consensus dips: {len(passed)} passed vetting, {len(flagged)} of them flagged `off_ephemeris`, and "
+        f"{len(rejected)} failed it (" + "; ".join(", ".join(f"`{x}`" for x in e["flags"]) for e in rejected) + ").",
+        f"* {len(known)} of them lie on the published pi Men c ephemeris. {v['epochs_recovered']} of the {v['epochs_predicted']} "
+        f"predicted epochs in the {span:.0f}-day window are recovered, with a mean timing offset of "
+        + f"{xm['mean_timing_offset_min']:+.0f}".replace("-", "−")
+        + " minutes against the NASA Exoplanet Archive value (docs/results/pi_men_crossmatch.json).",
+        "* **Transit shape, limb-darkened fit** (re-vetted from the stored classifications; see",
+        "  [docs/results/pi_men_validation.md](docs/results/pi_men_validation.md)). A joint fit of",
+        f"  the {jf['n_epochs']} epochs, with the period free near the BLS period ({jf['period_days']:.4f} ± {jf['period_err']:.4f} d; "
+        f"Huang: {h['pl_orbper']:.5f} d), gives the like-for-like quantities first: **Rp/R★ = {jf['k']:.4f} ± {jf['k_err']:.4f} "
+        f"({r['k']:.2f} against Huang et al. 2018) and T14 = {jf['t14_hours']:.2f} ± {jf['t14_err_hours']:.2f} h ({r['duration']:.2f})**. "
+        f"The mid-transit depth of the limb-darkened model is {jf['depth_ppm']:.0f} ± {jf['depth_err_ppm']:.0f} ppm ({r['depth']:.2f} "
+        f"against Huang's published {h['pl_trandep'] * 1e4:.0f} ppm, which is defined by that paper, not by this model). The box "
+        f"measure it replaces gave {r['box_depth']:.2f} in depth and {r['box_duration']:.2f} in duration. Errors are conservative: "
+        "the covariance plus the spread along the impact-parameter profile.",
+        f"* **The impact parameter needs the star.** Free, {jf['n_epochs']} TESS transits give only b < {jf['b_range'][1]:.2f} (1σ), "
+        f"so a/R★ and ρ★ are ranges (ρ★ {jf['rho_range'][0]:.2f} to {jf['rho_range'][1]:.1f} g/cm³ at 1σ, "
+        f"{'consistent with' if rho_in else 'against'} the TIC's {star['rho']:.2f}). With the TIC density as a Gaussian prior "
+        f"({star['rho']:.2f} ± {star['rho_err']:.2f} g/cm³), the fit gives b = {jp['b']:.2f} ± {jp['b_err']:.2f}, "
+        f"a/R★ = {jp['a_rs']:.2f} (1σ {jp['a_rs_range'][0]:.1f} to {jp['a_rs_range'][1]:.1f}) and T23/T14 = {jp['t23_over_t14']:.2f}, "
+        f"against Huang's {h['pl_imppar']}, {h['pl_ratdor']} and {huang_t23:.2f}. The fit is "
+        + ("V-shaped." if jf["v_shape"] else "U-shaped, not V-shaped."),
+        f"* The periodic signal's false-alarm probability is below {bound} in "
+        + ("both subjects" if len(fap_subjects) == 2 else f"{len(fap_subjects)} subjects")
+        + f". No one of {fmt_int(n_trials)} block-bootstrap trials reached the observed SNR, so {bound} is a bound, not a value. The "
+        f"null maxima are committed in `runs/tess-pi-men-s1/fap_null/`; a Gumbel fit to them, stored as `fap_tail`, puts the tail "
+        f"below {tail} (indicative only, see below).",
+    ]
+    for e in flagged:
+        lines.append(f"* The passed dip at BTJD {e['t']:.1f} ({e['dur']:.2f} h, SNR {e['snr']:.1f}) does not fit the ephemeris and is "
+                     "a likely false positive. It is kept and flagged, not hidden.")
+    for e in rejected:
+        lines.append(f"* The dip at BTJD {e['t']:.1f} (SNR {e['snr']:.1f}) failed vetting and stays in the stored candidates with "
+                     "its flags.")
+    return "\n".join(lines)
+
+
+def sentinel_results_block() -> str:
+    d = pimen_data()
+    names = {rid: lab for rid, lab, kind in REVIEWER_ORDER if kind == "sen"}
+    status = {"known": "on the ephemeris", "open": "passed but off the ephemeris", "rejected": "rejected by vetting"}
+    lines = ["**What the Sentinels did in this run, read from the stored classifications:**", ""]
+    for i, sub in enumerate(d["subs"]):
+        evs = [e for e in d["events"] if sub["start"] <= e["t"] <= sub["end"]]
+        said, marked_by_any = [], set()
+        for rid in names:
+            row = d["sentinel_rows"].get((rid, sub["subject_id"]))
+            if row is None:
+                said.append(f"{names[rid]} did not review it")
+                continue
+            hits = [e for e in evs if any(a - 0.1 <= e["t"] <= b + 0.1 for a, b in row["spans"])]
+            marked_by_any |= {e["t"] for e in hits}
+            what = ("marked the dips at " + _and([f"{e['t']:.2f}" for e in hits])) if hits else "marked none of the consensus dips"
+            said.append(f"{names[rid]} {what} and labelled the subject `{row['label']}` (confidence {row['confidence']:g})")
+        missed = [e for e in evs if e["t"] not in marked_by_any]
+        tail = ""
+        if missed:
+            tail = (". Neither marked " + _and([f"the dip at {e['t']:.2f} ({status[e['status']]})" for e in missed]).replace(" and the dip", " or the dip"))
+        lines.append(f"* On the {_ordinal(i)} subject (BTJD {sub['start']:.1f} to {sub['end']:.1f}), " + "; ".join(said) + tail + ".")
+    w = d["weights"]
+    sen_w = sorted({w[r] for r in names})
+    prb_w = sorted(w[r] for r, _, k in REVIEWER_ORDER if k == "prb")
+    lines.append(f"* In the consensus each Sentinel carries weight {', '.join(f'{x:g}' for x in sen_w)}, against "
+                 f"{prb_w[0]:g} to {prb_w[-1]:g} for the Probes: the Sentinels are voices in a calibrated panel, not the whole panel.")
+    return "\n".join(lines)
+
+
+def benchmark_results_block() -> str:
+    d = bench_data()
+    h = d["h"]
+    c = h["completeness"]
+    bins = h["completeness_by_radius"]
+    words = []
+    for i, x in reversed(list(enumerate(bins))):
+        lo, hi = x["bin"]
+        where = f"above {lo:g} R⊕" if i == len(bins) - 1 else f"below {hi:g} R⊕" if lo == 0 else f"at {lo:g} to {hi:g} R⊕"
+        words.append(f"{pct(x['rate'])} {where}")
+    cmps = []
+    for x in d["cmp"]:
+        o = x["ours"]
+        cmps.append(f"{x['bin'].replace('–', ' to ').replace('> ', 'above ').replace('All radii', 'all radii')}: {pct(o['rate'])} ({o['k']}/{o['n']}; {100 * o['lo']:.0f} to {100 * o['hi']:.0f}%) "
+                    f"against {x['who']}'s {x['ref_text']} ({x['note']})")
+    return (f"* **Completeness: {pct(c['rate'])} ({c['k']} of {c['n']} CP/KP on searchable stars; {100 * c['lo']:.0f} to "
+            f"{100 * c['hi']:.0f}%).** It is {_and(words)}. In the bins the published references use: " + "; ".join(cmps)
+            + f". {bench_verdict(d)}")
+
+
+def limits_completeness_block() -> str:
+    d = bench_data()
+    h = d["h"]
+    c = h["completeness"]
+    small = h["completeness_by_radius"][0]
+    below = [x for x in d["cmp"] if x["verdict"] == "below"]
+    return (f"* **Real-TOI completeness is {pct(c['rate'])} on searchable stars** (held-out; {100 * c['lo']:.0f} to "
+            f"{100 * c['hi']:.0f}%), below " + _and([x["name"] for x in below])
+            + f", and only {pct(small['rate'])} for planets below {small['bin'][1]:g} R⊕. The FP measures cover only FP stars with "
+            "2-minute data, a population skewed away from the full FP list.")
+
+
+def methods_chapters_block() -> str:
+    return (f"**Methods: {len(MX.CHAPTERS)} chapters.** " + ", ".join(title for _, title in MX.CHAPTERS)
+            + ". Physics checked by tests against closed forms and published values.")
+
+
+def readme_blocks() -> dict[str, str]:
+    return {"badges": badges_block(), "pimen-results": pimen_results_block(), "sentinel-results": sentinel_results_block(),
+            "benchmark-results": benchmark_results_block(), "limits-completeness": limits_completeness_block(),
+            "methods-chapters": methods_chapters_block()}
+
+
+def alt_for(path: str, assets: dict[str, bytes] | None) -> str | None:
+    if path.startswith(REL_OUT + "/app/"):
+        rec = json.loads((APP_DIR / "SHOTS.json").read_text(encoding="utf-8"))
+        return {s_["file"]: s_["alt"] for s_ in rec["shots"]}.get(Path(path).name)
+    src = assets.get(path) if assets is not None else None
+    if src is None and (ROOT / path).exists():
+        src = (ROOT / path).read_bytes()
+    if src is None:
+        return None
+    return html.unescape(svg_desc(src))
+
+
+def render_readme(text: str, assets: dict[str, bytes] | None = None) -> str:
+    """The README as --write-readme writes it: every generated block filled, every picture's alt set from its source."""
+    blocks = readme_blocks()
+    seen = set()
+
+    def fill(m):
+        name = m.group(2)
+        if name not in blocks:
+            sys.exit(f"gen_readme_assets: README has an unknown generated block {name!r}")
+        seen.add(name)
+        return m.group(1) + blocks[name] + m.group(4)
+
+    text = GEN_BLOCK.sub(fill, text)
+    missing = set(README_BLOCKS) - seen
+    if missing:
+        sys.exit(f"gen_readme_assets: README lacks the generated blocks {sorted(missing)}")
+
+    def pic(m):
+        blk = m.group(0)
+        src = re.search(r'<img src="([^"]+)"', blk)
+        alt = alt_for(src.group(1), assets) if src else None
+        if alt is None:
+            return blk
+        return re.sub(r'(<img src="[^"]+" alt=")[^"]*(")', lambda mm: mm.group(1) + esc(alt) + mm.group(2), blk)
+
+    return re.sub(r"<picture>.*?</picture>", pic, text, flags=re.S)
+
+
+def made_with() -> dict:
+    import PIL
+    import fontTools
+
+    return {"python": ".".join(map(str, sys.version_info[:2])), "fonttools": fontTools.version, "numpy": np.__version__,
+            "pillow": PIL.__version__}
 
 
 def svg_desc(svg: bytes | str) -> str:
@@ -1933,6 +2273,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--check", action="store_true", help="regenerate in memory and fail if any committed file differs")
     ap.add_argument("--import-shots", metavar="DIR", help="import a capture_site_shots.mjs run into docs/assets/readme/app/")
+    ap.add_argument("--write-readme", action="store_true",
+                    help="rewrite README.md's generated blocks (badges, numbers) and every picture's alt text from its source")
     args = ap.parse_args()
     if _git("rev-parse", "--is-shallow-repository") == "true":
         sys.exit("gen_readme_assets: this is a shallow clone; each figure names its source's commit, so fetch the full history")
@@ -1940,22 +2282,48 @@ def main() -> int:
         import_shots(Path(args.import_shots))
         return 0
     assets = build()
+    if args.write_readme:
+        text = README.read_text(encoding="utf-8")
+        new = render_readme(text, assets)
+        README.write_text(new, encoding="utf-8")
+        print("README.md " + ("rewritten" if new != text else "already current"))
+        return 0
     if args.check:
-        stale = [n for n, b in assets.items() if not (ROOT / n).exists() or (ROOT / n).read_bytes() != b]
+        man_key = f"{REL_OUT}/MANIFEST.json"
+
+        def same(n: str, b: bytes) -> bool:
+            if not (ROOT / n).exists():
+                return False
+            if n != man_key:
+                return (ROOT / n).read_bytes() == b
+            a_, b_ = json.loads((ROOT / n).read_text(encoding="utf-8")), json.loads(b)
+            a_.pop("made_with", None)
+            b_.pop("made_with", None)
+            return a_ == b_
+
+        stale = [n for n, b in assets.items() if not same(n, b)]
         extra = sorted(p.relative_to(ROOT).as_posix() for d in (OUT, BRAND_DIR) for p in d.glob("*")
                        if p.is_file() and p.name != "README.md" and p.relative_to(ROOT).as_posix() not in assets)
         for n in stale:
-            print(f"stale: {n} (regenerate with python3 tools/gen_readme_assets.py)")
+            print(f"stale: {n} (regenerate with python3 tools/gen_readme_assets.py, then --write-readme)")
+        if stale and (ROOT / man_key).exists():
+            was = json.loads((ROOT / man_key).read_text(encoding="utf-8")).get("made_with", {})
+            now = made_with()
+            print("  the committed files were made with " + ", ".join(f"{k} {v}" for k, v in was.items())
+                  + "; this environment has " + ", ".join(f"{k} {v}" for k, v in now.items())
+                  + (" (different versions can change the outlines: pip install -e '.[readme]')" if was != now else ""))
         for n in extra:
             print(f"not generated by this script: {n}")
         problems = check_readme(assets) + check_shots()
-        badge = re.search(r"badge/tests-(\d+)%20", README.read_text(encoding="utf-8"))
-        if not badge or int(badge.group(1)) != repo_counts()["tests"]:
-            problems.append(f"README: the tests badge says {badge and badge.group(1)}, pytest collects {repo_counts()['tests']}")
+        text = README.read_text(encoding="utf-8")
+        if render_readme(text, assets) != text:
+            problems.append("README: its badges, generated numbers or alt text differ from the data; "
+                            "run python3 tools/gen_readme_assets.py --write-readme")
         for p in problems:
             print(p)
         if not (stale or extra or problems):
-            print(f"gen_readme_assets --check: {len(assets)} files current; README and screenshots consistent")
+            print(f"gen_readme_assets --check: {len(assets)} files current; README and screenshots consistent "
+                  f"({', '.join(f'{k} {v}' for k, v in made_with().items())})")
         return 1 if stale or extra or problems else 0
     total = 0
     for n, b in sorted(assets.items()):

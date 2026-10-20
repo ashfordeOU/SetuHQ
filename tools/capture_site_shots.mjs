@@ -5,7 +5,8 @@
 //     its intro animations off and every drawing at rest), the colour theme set before first paint;
 //   * one frame: 1360 x 850 CSS px (16:10), the app's content column (x 40 to 1400, the 1280 px
 //     column plus its 40 px gutters), starting 32 px above the shot's anchor element: the route's
-//     section for a page, the chapter's article for a Methods chapter. The top bar is hidden, so no
+//     section for a page, a Methods chapter's named stage (figure.mxstage) or the heading that introduces it, and never
+//     above the end of the block before it (so no frame opens on a sliver of earlier text). The top bar is hidden, so no
 //     frame carries navigation chrome, and nothing is cut by anything but the frame's bottom edge.
 // Nothing is drawn or edited. tools/gen_readme_assets.py --import-shots <out> then scales every PNG
 // to 1600 px wide, encodes it as WebP and writes docs/assets/readme/app/SHOTS.json.
@@ -65,12 +66,12 @@ const SHOTS = [
     alt: "A planet page, pi Men c (transit, discovered 2018, super-Earth): the star and planet drawn to scale from stored values (orbit not to scale), the transit light curve from stored values with SetuHQ's own stored points, and the stored parameters from exoplanet.eu with their bounds." },
   { view: "transit", route: "#/transit", anchor: "#route-transit",
     alt: "Transit case for the dip at BTJD 1331.77 on pi Men c: 241 ppm, 2.46 hours, SNR 16.0, a candidate, unconfirmed. The seven dips of the run as tabs, the transit played back from stored values, the panel score of 1.00 with the reason (its period matches pi Men c: a known planet recovered, not a discovery) and each reviewer's stored marks, Probes and Sentinels." },
-  { view: "methods-rv", route: "#/methods?ch=rv", anchor: "#mx-rv",
+  { view: "methods-rv", route: "#/methods?ch=rv", anchor: '#mx-rv figure[data-vis="wobble"]', heading: true,
     alt: "Methods, chapter 4 of 15, Radial velocity: 51 Peg b and its star orbiting their shared centre of mass, with the radial-velocity curve (K = 56.7 m/s from m sin i; stored 55.77 m/s) and the star's spectral lines shifting; labelled a model from stored values, the star's motion exaggerated 1,000 times." },
-  { view: "methods-atmospheres", route: "#/methods?ch=spectroscopy", anchor: "#mx-spectroscopy",
-    alt: "Methods, chapter 11 of 15, Reading atmospheres, an explainer (exoplan does not do spectroscopy): starlight passing through a transiting planet's atmosphere at its edge, and the spectrum of starlight alone and during the transit, with the bands of Na, K, H₂O, CH₄, CO₂ and CO from 0.5 to 5 µm; labelled an illustration, the atmosphere drawn 10 times thicker." },
-  { view: "methods-starlight", route: "#/methods?ch=imaging", anchor: "#mx-imaging",
-    alt: "Methods, chapter 7 of 15, Blocking starlight: a Jupiter twin reflects about a billionth of its Sun's light, so the starlight must be blocked; HR 8799's planets around a masked star, with the inner working angle marked; labelled an illustration, with a logarithmic brightness stretch." },
+  { view: "methods-atmospheres", route: "#/methods?ch=spectroscopy", anchor: '#mx-spectroscopy figure[data-vis="jwst"]', heading: true,
+    alt: "Methods, chapter 11 of 15, Reading atmospheres: A real spectrum, WASP-39 b with JWST. The NIRSpec PRISM transmission spectrum (Carter et al. 2024, CC BY 4.0), 36 binned points with error bars and the paper's best-fit model, transit depth from 20,607 to 23,063 ppm over 0.5 to 5.5 µm, with Na, K, H₂O, CH₄, CO₂ and CO bands marked; the deepest point is at 4.37 µm, the carbon dioxide band. Labelled real data, cited." },
+  { view: "methods-starlight", route: "#/methods?ch=imaging", anchor: '#mx-imaging figure[data-vis="cgfam"]',
+    alt: "Methods, chapter 7 of 15, Blocking starlight: a Lyot coronagraph computed with Fraunhofer optics in four planes (the entrance pupil, the focal plane with a 4 λ/D occulting disc, the Lyot plane with the stop at 80% of the pupil, the final image) and the starlight's log-intensity profile out to 12 λ/D: at 8 λ/D it is 1.8×10⁻⁷ of the star's peak, against 7.8×10⁻⁵ with no coronagraph. Labelled an illustration: ideal monochromatic optics, a log stretch, the planet at an illustrative 10⁻³." },
 ];
 
 // a static server for site/
@@ -109,8 +110,26 @@ for (const theme of ["light", "dark"]) {
       scrollTo(0, 0);
     });
     await page.addStyleTag({ content: ".topbar{visibility:hidden !important}" });
-    const top = await page.evaluate((sel) => document.querySelector(sel).getBoundingClientRect().top + scrollY, s.anchor);
-    const y0 = Math.max(0, Math.round(top - FRAME.above));
+    // The frame starts above the anchor, or, for a Methods stage, above the heading that introduces it (the nearest
+    // h2, h3 or h4 before it in the chapter), so no frame begins mid-heading.
+    const top = await page.evaluate(([sel, heading, above]) => {
+      const el = document.querySelector(sel);
+      let start = el;
+      if (heading) {
+        const heads = [...el.closest("article").querySelectorAll("h2, h3, h4")]
+          .filter((h) => h.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING);
+        if (heads.length) start = heads[heads.length - 1];
+      }
+      const t = start.getBoundingClientRect().top;
+      // Never begin inside the content above: start below the last block that ends above the frame's start.
+      let prev = -Infinity;
+      for (const b of (el.closest("article, section") || document.body).querySelectorAll("p, h1, h2, h3, h4, figure, ul, ol, table, .mxbtns, .chips")) {
+        const r = b.getBoundingClientRect();
+        if (r.height && r.bottom <= t + 0.5 && !b.contains(start)) prev = Math.max(prev, r.bottom);
+      }
+      return Math.max(t - above, prev + 6) + scrollY;
+    }, [s.anchor, !!s.heading, FRAME.above]);
+    const y0 = Math.max(0, Math.round(top));
     const vy = (VIEWPORT.height - FRAME.height) / 2;   // the frame sits in the middle of the window
     await page.evaluate((y) => scrollTo(0, y), y0 - vy);
     await page.waitForTimeout(2500);  // let canvases redraw at rest after the scroll
@@ -128,6 +147,6 @@ await browser.close();
 server.close();
 writeFileSync(join(out, "shots.json"), JSON.stringify({
   note: "Real screenshots of the SetuHQ app (still named exoplan in this build) as built in site/app/index.html. Nothing is drawn or edited.",
-  rule: `window ${VIEWPORT.width}x${VIEWPORT.height} CSS px at device scale ${SCALE}, reduced motion; frame ${FRAME.width}x${FRAME.height} CSS px of the content column (x ${FRAME.x}), starting ${FRAME.above} px above the anchor element; top bar hidden`,
+  rule: `window ${VIEWPORT.width}x${VIEWPORT.height} CSS px at device scale ${SCALE}, reduced motion; frame ${FRAME.width}x${FRAME.height} CSS px of the content column (x ${FRAME.x}), starting ${FRAME.above} px above the anchor element (a Methods stage, or the heading before it), never above the end of the block before; top bar hidden`,
   commit, app_sha256: appSha, captured: new Date().toISOString().slice(0, 10), shots,
 }, null, 2) + "\n");

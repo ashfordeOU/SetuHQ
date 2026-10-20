@@ -24,7 +24,7 @@ ok()   { echo "   ok" | tee -a "$LOG"; }
 step "install into a venv (same as ci.yml)"
 if [[ ! -x "$VENV/bin/python" ]]; then "$PY" -m venv "$VENV"; fi
 "$VENV/bin/python" -m pip install --quiet --upgrade pip
-"$VENV/bin/python" -m pip install --quiet -e ".[dev]"
+"$VENV/bin/python" -m pip install --quiet -e ".[dev,readme]"
 ok
 
 step "tests (python -m pytest -q, same as ci.yml)"

@@ -12,10 +12,16 @@ jobs:
     runs-on: [self-hosted, linux]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the README figures name each source's commit
       - name: Install into a venv
         run: |
           python3 -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install -e ".[dev]"
+          .venv/bin/python -m pip install -e ".[dev,readme]"
       - name: Run tests
         run: .venv/bin/python -m pytest -q
+        env:
+          CI_REQUIRE_README_CHECK: "1"
+      - name: README figures, brand files and screenshots are current
+        run: .venv/bin/python tools/gen_readme_assets.py --check
