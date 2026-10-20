@@ -533,17 +533,137 @@ def test_each_kind_is_compared_with_the_same_kind(swept):
     assert eb["star_sectors"] == cat["counts"]["null"]["searches"] == 3
 
 
-def test_ingest_always_searches_planet_candidate_stars_and_draws_the_rest_from_its_own_nonce():
-    stars = [{"tic": i, "sector": 1, "status": "searched", "entries": [{"class": "planet_candidate"}] if i == 7 else
-              [{"class": "eclipsing_binary"}] if i == 9 else []} for i in range(100)]
+def test_ingest_always_searches_every_astrophysical_star_and_draws_the_rest_from_its_own_nonce():
+    cls = {7: "planet_candidate", 9: "eclipsing_binary", 11: "flare", 13: "variable", 15: "systematic"}
+    stars = [{"tic": i, "sector": 1, "status": "searched", "entries": [{"class": cls[i]}] if i in cls else []} for i in range(100)]
     rec = {"stars": stars}
     forced, rand = C.select_for_search(rec, exceeding=set(), nonce="a")
-    assert [s["tic"] for s in forced] == [7] and len(rand) == 5 and 7 not in {s["tic"] for s in rand}   # max(3, 5% of 100)
-    forced, _ = C.select_for_search(rec, exceeding={"eclipsing_binary"}, nonce="a")
-    assert {s["tic"] for s in forced} == {7, 9}
+    assert [s["tic"] for s in forced] == [7, 9, 11, 13] and len(rand) == 5   # max(3, 5% of 100) more, at random
+    assert not {7, 9, 11, 13} & {s["tic"] for s in rand}
+    forced, _ = C.select_for_search(rec, exceeding={"systematic"}, nonce="a")   # a class over its null after the merge
+    assert {s["tic"] for s in forced} == {7, 9, 11, 13, 15}
     picks = {tuple(s["tic"] for s in C.select_for_search(rec, exceeding=set(), nonce=n)[1]) for n in ("a", "b", "c")}
     assert len(picks) == 3                                                    # the nonce, not the bundle, decides
     assert len(C.select_for_search({"stars": stars[:10]}, exceeding=set(), nonce="a")[1]) == 3
+
+
+def test_a_forged_eclipsing_binary_is_always_caught(bundle, swept, tmp_path):
+    """The reviewer's attack: an unclassified or systematic dip set to 45,000 ppm (an eclipsing binary by the
+    rules), resealed. A forged entry in any astrophysical class is searched again, sample or not."""
+    def forge(r):
+        for s in r["stars"]:
+            for e in s.get("entries") or []:
+                if e["kind"] == "dip" and e["class"] in ("unclassified", "systematic"):
+                    e.update(depth_ppm=45_000.0, flags=[], t_start=1327.9, t_end=1328.05, cues=[], why=None,
+                             **{"class": "eclipsing_binary", "confidence": "medium"})
+                    return
+        raise AssertionError("no dip to forge")
+    _reseal(bundle, forge)
+    C.validate_bundle(bundle)                     # the rules agree with the forged inputs
+    for k in range(3):
+        empty = tmp_path / f"e{k}"
+        empty.mkdir()
+        with pytest.raises(C.BundleRefused, match="a fresh search does not reproduce"):
+            _ingest(bundle, swept, empty, verify_lightcurves=0)
+
+
+def test_classes_over_their_null_are_judged_after_the_merge(bundle, swept):
+    assert C.exceeding_after_merge(swept["kw"]["out_dir"], bundle, json.loads((bundle / "manifest.json").read_text())) <= set(V.CLASS_IDS)
+
+
+def test_the_ingest_ledger_is_append_only_and_matches_every_folder(bundle, swept, tmp_path):
+    import subprocess
+
+    empty = tmp_path / "repo" / "sweep"
+    empty.mkdir(parents=True)
+    _ingest(bundle, swept, empty, attested_by="ada-l")
+    ledger = SW.read_ledger(empty)
+    assert len(ledger) == 1 and ledger[0]["attested_by"] == "ada-l" and SW.check_catalogue(empty) == []
+    # Resealed after ingest: the hashes verify, but the folder no longer matches its ledger line.
+    folder = next((empty / "contributions").iterdir())
+    r = json.loads((folder / "results.json").read_text())
+    r["stars"][0]["n_dips"] += 1
+    (folder / "results.json").write_text(json.dumps(r))
+    _reseal(folder)
+    ing = json.loads((folder / "ingest.json").read_text())
+    ing["manifest_sha256"] = C.sha256_bytes((folder / "manifest.json").read_bytes())
+    ing["bundle_id"] = json.loads((folder / "manifest.json").read_text())["bundle_id"]
+    (folder / "ingest.json").write_text(json.dumps(ing))
+    folder.rename(folder.parent / ing["bundle_id"])
+    assert any("ledger" in p for p in SW.check_catalogue(empty))
+    # Append-only against a base: a committed ledger may grow, never change.
+    git = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-C", str(tmp_path / "repo")]
+    subprocess.run(["git", "init", "-q", str(tmp_path / "repo")], check=True)
+    subprocess.run(git + ["add", "-A"], check=True)
+    subprocess.run(git + ["commit", "-qm", "base"], check=True)
+    assert SW.check_ledger_append_only(empty, "HEAD") == []
+    with open(empty / "ingest_ledger.jsonl", "a") as fh:
+        fh.write('{"bundle_id": "c-later"}\n')
+    assert SW.check_ledger_append_only(empty, "HEAD") == []
+    (empty / "ingest_ledger.jsonl").write_text('{"bundle_id": "c-other"}\n')
+    assert SW.check_ledger_append_only(empty, "HEAD") != []
+
+
+def test_a_key_shaped_contributor_name_is_refused_before_anything_is_written(swept, tmp_path):
+    with pytest.raises(C.BundleRefused):
+        C.make_bundle(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json.gz", tmp_path / "nb", contributor="sk-abcdefghijklmnopqrstuvwxyz0123")
+    assert not (tmp_path / "nb").exists()
+
+
+def test_variability_must_be_coherent_and_not_at_the_edge():
+    rng = np.random.default_rng(11)
+    t = np.arange(0, 27.4, 2 / 1440)
+    t = t[(t < 13) | (t > 14)]
+    sin = 1 + rng.normal(0, 2e-4, t.size) + 3e-4 * np.sin(2 * np.pi * t / 1.3)
+    v = V.variability(t, sin)
+    assert all(abs(h - 1.3) < 0.13 for h in v["halves_period_days"]) and V.classify_variability(v)["class"] == "variable"
+    assert "coherent" in {c["rule"] for c in V.classify_variability(v)["cues"]}
+    # Red noise: peaks that pass the amplitude rule but wander between halves.
+    x = np.zeros(t.size)
+    a = np.exp(-np.diff(t, prepend=t[0]) / 1.0)
+    e = rng.normal(0, 1, t.size)
+    for i in range(1, t.size):
+        x[i] = a[i] * x[i - 1] + np.sqrt(1 - a[i] ** 2) * e[i]
+    passes = 0
+    for k in range(5):
+        red = 1 + rng.normal(0, 2e-4, t.size) + 6e-4 * np.roll(x, 997 * k)
+        c = V.classify_variability(V.variability(t, red))
+        passes += bool(c and c["class"] == "variable")
+    assert passes <= 1
+    base = {"fap": 1e-20, "amplitude_ratio": 10.0, "amplitude_ppm": 900.0, "period_range_days": [0.02, 9.0],
+            "half_period_max_days": 4.4}
+    edge = V.classify_variability({**base, "period_days": 8.5, "halves_period_days": [4.0, 4.1]})
+    assert edge["class"] == "unclassified" and "longest period searched" in edge["why"]
+    long = V.classify_variability({**base, "period_days": 5.6, "halves_period_days": [4.3, 4.2]})
+    assert long["class"] == "unclassified" and "coherence not tested" in long["why"]
+    wander = V.classify_variability({**base, "period_days": 2.0, "halves_period_days": [2.0, 3.1]})
+    assert wander["class"] == "unclassified" and "not the same period" in wander["why"]
+
+
+def test_the_variability_null_keeps_red_noise_but_not_periodicity():
+    rng = np.random.default_rng(12)
+    t = np.arange(0, 27.4, 2 / 1440)
+    sin = 1 + rng.normal(0, 2e-4, t.size) + 3e-4 * np.sin(2 * np.pi * t / 1.3)
+    assert sum(V.variability_null(t, sin, [], seed=k)["variable"] for k in range(5)) == 0
+    tb, fb = V._binned(t, sin)
+    y, fit = V.red_noise_copy(tb, fb, seed=1)
+    assert y.size == tb.size and 0 <= fit["rho_10min"] < 1 and abs(np.std(y) * 1e6 - fit["sigma_ppm"]) < 0.2 * fit["sigma_ppm"]
+
+
+def test_a_period_shared_by_three_stars_is_systematic(swept):
+    sweep_dir = swept["kw"]["out_dir"]
+    rec = SW.read_record(sweep_dir / f"sector_{SECTOR:04d}.json.gz")
+    for i, s in enumerate(rec["stars"]):
+        s["entries"] = [e for e in s["entries"] if e["kind"] != "variability"] + [{
+            "id": f"tic{s['tic']}-s{SECTOR}-var-5.57", "kind": "variability", "class": "variable", "confidence": "medium",
+            "period_days": 5.57 * (1 + 0.005 * i), "cues": [], "tic": s["tic"], "sector": SECTOR}]
+    SW.write_record(sweep_dir / f"sector_{SECTOR:04d}.json.gz", rec)
+    SW.build_catalogue(sweep_dir)
+    cat = json.loads((sweep_dir / "catalogue.json").read_text())
+    shared = [e for e in cat["entries"] if e["kind"] == "variability"]
+    assert len(shared) == 3 and all(e["class"] == "systematic" and e["star_class"] == "variable" for e in shared)
+    assert all(e["cues"][-1]["rule"] == "shared_period" for e in shared)
+    assert cat["counts"]["by_class"]["variable"] == 0
 
 
 def test_renaming_a_forged_bundle_does_not_dodge_the_check(bundle, swept, tmp_path):
@@ -776,5 +896,8 @@ def test_sector_records_are_gzip_one_per_sector_and_byte_stable(swept, tmp_path)
     a, b = tmp_path / "a.json.gz", tmp_path / "b.json.gz"
     SW.write_record(a, rec)
     SW.write_record(b, rec)
-    assert a.read_bytes() == b.read_bytes() and SW.read_record(a) == rec
+    # Compared decompressed, so the check does not depend on the zlib version's compressed bytes.
+    import gzip
+
+    assert gzip.decompress(a.read_bytes()) == gzip.decompress(b.read_bytes()) and SW.read_record(a) == rec
     assert a.stat().st_size * 3 < len(json.dumps(rec))

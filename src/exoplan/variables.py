@@ -29,7 +29,10 @@ eclipsing_binary      an odd/even depth mismatch or a secondary eclipse (vet.py)
 flare                 a brightening: 3 or more consecutive points 3σ or more above a 0.5-day running median,
                       peaking 5σ or more (σ the robust scatter about that median, globally and within 0.25 d)
 variable              variability: a periodogram peak with a Baluev false-alarm probability below 10⁻³ and a
-                      semi-amplitude at least twice the scatter of the 10-minute bins; a dip lasting a quarter
+                      semi-amplitude at least twice the scatter of the 10-minute bins, that is the best peak
+                      of each half of the light curve too (within 10%) and is not within 10% of the longest
+                      period searched (a peak shared by 3 or more stars of a sector is made systematic in the
+                      catalogue, sweep.py); a dip lasting a quarter
                       of that period or more is a trough of it, and so is a dip half the panel's weight
                       called stellar variability
 planet_candidate      a dip that passed vetting, that half the panel's weight labelled a potential planet,
@@ -87,6 +90,8 @@ LS_MAX_PERIOD_FRACTION = 1.0 / 3.0  # of the baseline: longer periods are not se
 LS_FAP_MAX = 1e-3
 LS_AMPLITUDE_RATIO = 2.0
 TROUGH_FRACTION = 0.25
+LS_EDGE_FRACTION = 0.9      # a peak within 10% of the longest period searched is a trend
+COHERENCE_TOLERANCE = 0.10  # the same period, within 10%, as the best peak of each half
 # Flares
 FLARE_SIGMA = 3.0
 FLARE_MIN_POINTS = 3
@@ -107,8 +112,10 @@ RULES = {
               f"{FLARE_WINDOW_DAYS:g}-day running median, peaking at {FLARE_PEAK_SIGMA:g}σ or more, against both the star's "
               f"scatter and the scatter within {FLARE_LOCAL_DAYS:g} d; not on an instrumental cue."),
     "variable": (f"A periodogram peak with Baluev FAP below {LS_FAP_MAX:g} and a semi-amplitude at least "
-                 f"{LS_AMPLITUDE_RATIO:g}× the scatter of {LS_BIN_MINUTES:g}-minute bins. A dip lasting {TROUGH_FRACTION:g} of that "
-                 "period or more is a trough of it; so is a dip half the panel's weight called stellar variability."),
+                 f"{LS_AMPLITUDE_RATIO:g}× the scatter of {LS_BIN_MINUTES:g}-minute bins, coherent: the same period (within "
+                 f"{COHERENCE_TOLERANCE:.0%}) is the best peak of each half of the light curve, and not within 10% of the longest period "
+                 "searched; a period shared by 3 or more stars of a sector is systematic. A dip lasting "
+                 f"{TROUGH_FRACTION:g} of that period or more is a trough of it; so is a dip half the panel's weight called stellar variability."),
     "planet_candidate": ("Passed vetting, labelled a potential planet by half the panel's weight, not off its star's own "
                          "periodic signal, and taken by no rule above. A candidate, unconfirmed."),
     "unclassified": "Everything else, with the reason no class applied.",
@@ -289,23 +296,6 @@ def classify_flare(flare: dict, events: dict | None = None) -> dict:
     return _verdict("flare", "high" if n == 3 else "medium" if n == 2 else "low", cues)
 
 
-def classify_variability(var: dict, eb_periods=()) -> dict | None:
-    """The star's variability entry's class, or None when the periodogram shows nothing that qualifies."""
-    if not var or var.get("fap") is None:
-        return None
-    if not (var["fap"] < LS_FAP_MAX and var["amplitude_ratio"] >= LS_AMPLITUDE_RATIO):
-        return None
-    p = var["period_days"]
-    for q in eb_periods:
-        for k, lab in ((1.0, "the period"), (0.5, "half the period")):
-            if q and abs(p - k * q) <= EB_PERIOD_TOLERANCE * k * q:
-                return _verdict("eclipsing_binary", "medium", [{"rule": "eb_period", "text": f"variability at {lab} of an eclipsing-binary dip ({q:.4f} d)"}])
-    cues = [{"rule": "periodogram", "text": f"Lomb-Scargle peak at {p:.4f} d, semi-amplitude {var['amplitude_ppm']:,.0f} ppm "
-                                            f"({var['amplitude_ratio']:.1f}× the binned scatter), Baluev FAP {_fap_text(var['fap'])}"}]
-    conf = "high" if var["fap"] < 1e-10 and var["amplitude_ratio"] >= 5 else "medium" if var["amplitude_ratio"] >= 3 else "low"
-    return _verdict("variable", conf, cues)
-
-
 def _verdict(cls: str, confidence: str, cues: list[dict]) -> dict:
     return {"class": cls, "confidence": confidence, "cues": cues}
 
@@ -361,17 +351,8 @@ def find_flares(time, flux) -> list[dict]:
     return out
 
 
-def variability(time, flux, mask_windows=()) -> dict | None:
-    """The out-of-transit Lomb-Scargle periodogram of a light curve (astropy), on 10-minute bins
-    (``LS_BIN_MINUTES``).
-
-    Points inside ``mask_windows`` ([start, end] pairs, the consensus dips) are left out. Periods from
-    30 minutes (``LS_MIN_PERIOD_DAYS``, above the 20-minute Nyquist period of the bins) to a third of the
-    baseline. Returns the best period, its power, the Baluev (2008) false-alarm
-    probability (astropy; it assumes white noise, so it is optimistic on real light curves), the
-    semi-amplitude of the best sinusoid and its ratio to the point-to-point scatter of the bins."""
-    from astropy.timeseries import LombScargle
-
+def _binned(time, flux, mask_windows=()):
+    """10-minute bins of the out-of-dip light curve (bins with at least 3 points), or None when too few."""
     time = np.asarray(time, dtype=float)
     flux = np.asarray(flux, dtype=float)
     keep = np.isfinite(time) & np.isfinite(flux)
@@ -386,6 +367,12 @@ def variability(time, flux, mask_windows=()) -> dict | None:
     use = counts >= 3
     tb = (np.bincount(idx, weights=time) / np.maximum(counts, 1))[use]
     fb = (np.bincount(idx, weights=flux) / np.maximum(counts, 1))[use]
+    return (tb, fb) if tb.size >= 30 else None
+
+
+def _periodogram(tb, fb) -> dict | None:
+    from astropy.timeseries import LombScargle
+
     if tb.size < 30:
         return None
     baseline = float(tb.max() - tb.min())
@@ -408,6 +395,74 @@ def variability(time, flux, mask_windows=()) -> dict | None:
             "amplitude_ratio": round(amp / scatter, 2) if scatter > 0 else 0.0,
             "n_bins": int(tb.size), "baseline_days": round(baseline, 3),
             "period_range_days": [round(LS_MIN_PERIOD_DAYS, 5), round(max_p, 3)]}
+
+
+def _with_halves(tb, fb) -> dict | None:
+    out = _periodogram(tb, fb)
+    if out is None:
+        return None
+    mid = float(np.median(tb))
+    halves = [_periodogram(tb[m], fb[m]) for m in (tb < mid, tb >= mid)]
+    out["halves_period_days"] = [h["period_days"] if h else None for h in halves]
+    out["half_period_max_days"] = round(min((h["period_range_days"][1] for h in halves if h), default=0.0), 3)
+    return out
+
+
+def variability(time, flux, mask_windows=()) -> dict | None:
+    """The out-of-transit Lomb-Scargle periodogram of a light curve (astropy), on 10-minute bins
+    (``LS_BIN_MINUTES``), and the same periodogram of each half of the light curve.
+
+    Points inside ``mask_windows`` ([start, end] pairs, the consensus dips) are left out. Periods from
+    30 minutes (``LS_MIN_PERIOD_DAYS``, above the 20-minute Nyquist period of the bins) to a third of the
+    baseline (each half: a third of its own). Returns the best period, its power, the Baluev (2008)
+    false-alarm probability (astropy; it assumes white noise, so it is optimistic on real light curves), the
+    semi-amplitude of the best sinusoid and its ratio to the point-to-point scatter of the bins, the best
+    period of each half, and the longest period a half can test."""
+    b = _binned(time, flux, mask_windows)
+    return _with_halves(*b) if b else None
+
+
+def classify_variability(var: dict, eb_periods=()) -> dict | None:
+    """The star's variability entry's class, or None when the periodogram shows nothing that qualifies.
+
+    A peak that passes the FAP and amplitude rule is a pulsator or rotational variable only when the same period
+    (within 10%) is the best peak of each half of the light curve: a coherent period. Red noise makes peaks that
+    pass the amplitude rule but wander between halves. A peak within 10% of the longest period searched is a
+    trend, a peak longer than a half can test is untested, and a peak in neither half's place is incoherent:
+    each of those is unclassified, with the reason. Variability at an eclipsing binary's period is the binary's."""
+    if not var or var.get("fap") is None:
+        return None
+    if not (var["fap"] < LS_FAP_MAX and var["amplitude_ratio"] >= LS_AMPLITUDE_RATIO):
+        return None
+    p = var["period_days"]
+    top = (var.get("period_range_days") or [0, 0])[1]
+    peak = (f"Lomb-Scargle peak at {p:.4f} d, semi-amplitude {var['amplitude_ppm']:,.0f} ppm "
+            f"({var['amplitude_ratio']:.1f}× the binned scatter), Baluev FAP {_fap_text(var['fap'])}")
+    if top and p >= LS_EDGE_FRACTION * top:
+        return {**_verdict("unclassified", "n/a", []), "why": f"{peak}; within 10% of the longest period searched ({top:.2f} d): a trend, not a period"}
+    for q in eb_periods:
+        for k, lab in ((1.0, "the period"), (0.5, "half the period")):
+            if q and abs(p - k * q) <= EB_PERIOD_TOLERANCE * k * q:
+                return _verdict("eclipsing_binary", "medium", [{"rule": "eb_period", "text": f"variability at {lab} of an eclipsing-binary dip ({q:.4f} d)"}])
+    half_top = var.get("half_period_max_days") or 0.0
+    halves = var.get("halves_period_days") or [None, None]
+    if not half_top or p >= LS_EDGE_FRACTION * half_top:
+        return {**_verdict("unclassified", "n/a", []),
+                "why": f"{peak}; longer than a half of the light curve can test ({half_top:.2f} d): coherence not tested"}
+    if not all(h and abs(h - p) <= COHERENCE_TOLERANCE * p for h in halves):
+        return {**_verdict("unclassified", "n/a", []),
+                "why": f"{peak}; not the same period in both halves ({', '.join(f'{h:.3f} d' if h else 'none' for h in halves)}): "
+                       "red noise, not a coherent period"}
+    cues = [{"rule": "periodogram", "text": peak},
+            {"rule": "coherent", "text": f"the same period in both halves of the light curve ({halves[0]:.3f} and {halves[1]:.3f} d)"}]
+    conf = "high" if var["fap"] < 1e-10 and var["amplitude_ratio"] >= 5 else "medium" if var["amplitude_ratio"] >= 3 else "low"
+    return _verdict("variable", conf, cues)
+
+
+def qualifies_variable(var: dict | None) -> dict | None:
+    """The star's variability when it is a coherent pulsator or rotational variable (for the trough rule), else None."""
+    v = classify_variability(var) if var else None
+    return var if v and v["class"] == "variable" else None
 
 
 # ---------- the nulls: what each rule finds where its signal cannot be ----------
@@ -465,13 +520,35 @@ def block_shuffled(time, flux, *, block_days: float = NULL_BLOCK_DAYS, seed: int
     return out
 
 
+def red_noise_copy(tb, fb, *, seed: int = 0):
+    """A red-noise copy of a binned light curve: an AR(1) process with the bins' own variance and lag-one
+    correlation (a gap of n bins correlates as rho^n), on the same times. It keeps the star's red noise, the
+    noise that makes periodogram peaks, and none of its periodicity."""
+    x = np.asarray(fb, dtype=float) - float(np.mean(fb))
+    sigma = float(np.std(x))
+    rho = float(np.clip(np.corrcoef(x[:-1], x[1:])[0, 1], 0.0, 0.9999)) if x.size > 2 and sigma > 0 else 0.0
+    width = LS_BIN_MINUTES / 1440.0
+    steps = np.maximum(1.0, np.round(np.diff(tb) / width))
+    rng = np.random.default_rng(seed)
+    e = rng.normal(0.0, 1.0, x.size)
+    y = np.empty(x.size)
+    y[0] = sigma * e[0]
+    for i in range(1, x.size):
+        a = rho ** steps[i - 1]
+        y[i] = a * y[i - 1] + math.sqrt(max(0.0, 1.0 - a * a)) * sigma * e[i]
+    return 1.0 + y, {"rho_10min": round(rho, 4), "sigma_ppm": round(sigma * 1e6, 1)}
+
+
 def variability_null(time, flux, dips, *, seed: int = 0) -> dict:
-    """The variability rule on a block-demeaned, block-shuffled copy of the same flux (the same dips masked): 1
-    when it still passes. Periods below about a block length partly survive shuffling, so this null is
-    conservative for short-period pulsators: it can only make their excess look smaller."""
-    var = variability(time, block_shuffled(time, flux, seed=seed), dips)
-    v = classify_variability(var)
-    return {"variable": int(bool(v and v["class"] == "variable"))}
+    """The variability rule, coherence test included, on a red-noise copy of the same star (``red_noise_copy``,
+    fitted to its own out-of-dip bins): 1 when the copy passes. Unlike shuffling, it keeps the red noise that
+    makes false periodogram peaks, so it is the right null for "is this a coherent period"."""
+    b = _binned(time, flux, dips)
+    if not b:
+        return {"variable": 0, "method": "fitted AR(1) red noise"}
+    y, fit = red_noise_copy(*b, seed=seed)
+    v = classify_variability(_with_halves(b[0], y))
+    return {"variable": int(bool(v and v["class"] == "variable")), "method": "fitted AR(1) red noise", **fit}
 
 
 # ---------- one star-sector's entries, from a stored run ----------
@@ -519,7 +596,7 @@ def star_entries(run_dir: str | Path, *, tic: int, sector: int, time=None, flux=
         dips.append({**c, "flags": flags, "shares": panel_shares(panel, weights), "_panel": panel})
     var = variability(time, flux, [(d["t_start"] - 0.5 * (d["t_end"] - d["t_start"]), d["t_end"] + 0.5 * (d["t_end"] - d["t_start"])) for d in dips]) \
         if time is not None and flux is not None else None
-    star_var = var if var and var["fap"] < LS_FAP_MAX and var["amplitude_ratio"] >= LS_AMPLITUDE_RATIO else None
+    star_var = qualifies_variable(var)
 
     entries = []
     for d in dips:
@@ -551,6 +628,8 @@ def star_entries(run_dir: str | Path, *, tic: int, sector: int, time=None, flux=
             entries.append({"id": entry_id(tic, sector, "var", var["period_days"]), "kind": "variability", **v,
                             "period_days": var["period_days"], "amplitude_ppm": var["amplitude_ppm"], "ls_power": var["power"],
                             "ls_fap": var["fap"], "ls_fap_method": var["fap_method"], "amplitude_ratio": var["amplitude_ratio"],
+                            "period_range_days": var["period_range_days"], "halves_period_days": var["halves_period_days"],
+                            "half_period_max_days": var["half_period_max_days"],
                             "binned_scatter_ppm": var["binned_scatter_ppm"], "marks": [], "words": [],
                             "note": "from the out-of-transit periodogram (variables.variability); no reviewer marks"})
     # Two events within 0.01 d of each other share a time in their id: the later ones get -2, -3 ... (so ids stay unique).
