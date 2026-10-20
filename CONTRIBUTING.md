@@ -1,9 +1,9 @@
 # Contributing a sweep: bring your own reviewer
 
-exoplan's sweep (`exoplan sweep`) searches TESS sectors star by star and keeps everything that dims:
+SetuHQ's sweep (`setuhq sweep`) searches TESS sectors star by star and keeps everything that dims:
 every consensus dip, every brightening and every star's variability, each classified by stated rules
-(src/exoplan/variables.py). Anyone can search a sector with their own reviewers and send the result back as
-a contribution bundle. A bundle that passes `exoplan ingest` is merged into the catalogue, and the name you
+(src/setuhq/variables.py). Anyone can search a sector with their own reviewers and send the result back as
+a contribution bundle. A bundle that passes `setuhq ingest` is merged into the catalogue, and the name you
 choose is credited on every new search you made, on the object pages and in the CSV and JSON exports.
 
 Nothing in a contribution becomes a planet. A planet candidate in this catalogue is a light-curve
@@ -15,13 +15,13 @@ signal cannot be) and says when a class is not distinguishable from noise.
 **Never paste a key anywhere**: not in a config, not in a bundle, not in an issue, a pull request or a chat.
 
 * **Your Claude subscription (the `claude_code` reviewer).** Install the Claude Code CLI, run `claude` once
-  and sign in with `/login`. The reviewer runs `claude -p` under your own login; exoplan never sees a token.
+  and sign in with `/login`. The reviewer runs `claude -p` under your own login; SetuHQ never sees a token.
 * **The Anthropic API (the `claude` reviewer).** Set `ANTHROPIC_API_KEY` in your shell's environment
-  (`export ANTHROPIC_API_KEY=...` in your own terminal, or your secret manager). exoplan reads it from the
+  (`export ANTHROPIC_API_KEY=...` in your own terminal, or your secret manager). SetuHQ reads it from the
   environment only and never writes it to a file.
 * **The Probes** need nothing.
 
-A bundle holds results, the config and hashes only. `exoplan bundle` and `exoplan ingest` both refuse a
+A bundle holds results, the config and hashes only. `setuhq bundle` and `setuhq ingest` both refuse a
 bundle in which anything looks like a key or token.
 
 ## 1. Run the sweep
@@ -31,10 +31,10 @@ pip install -e ".[dev]"                 # add ,claude for the API reviewer
 git rev-parse HEAD                       # note the commit: the maintainers ingest with the same code
 
 # Probes only (no account needed):
-exoplan sweep configs/sweep.toml --sector 5 --limit 100 --out my-sweep --contributor "Your Name"
+setuhq sweep configs/sweep.toml --sector 5 --limit 100 --out my-sweep --contributor "Your Name"
 
 # With two Sentinels on your Claude subscription (each subject is one CLI call per Sentinel):
-exoplan sweep configs/sweep_sentinels.toml --sector 5 --limit 50 --out my-sweep --contributor "Your Name"
+setuhq sweep configs/sweep_sentinels.toml --sector 5 --limit 50 --out my-sweep --contributor "Your Name"
 ```
 
 For the API instead of the CLI, copy `configs/sweep_sentinels.toml` and change each Sentinel's `type` from
@@ -59,7 +59,7 @@ dips that failed vetting).
 ## 2. Make a bundle
 
 ```bash
-exoplan bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out your-name-s5
+setuhq bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out your-name-s5
 ```
 
 The bundle directory holds three files:
@@ -68,7 +68,7 @@ The bundle directory holds three files:
 |---|---|
 | `results.json` | the sector record, with its config text written without comments |
 | `config.toml` | the sweep config that ran, written without comments (where a pasted key would hide); loading it gives the same config hash |
-| `manifest.json` | your chosen name and statement, and the provenance: the search and classification code fingerprints (sha256 of the result-making source files, `exoplan.starsearch.SEARCH_FILES` and `CLASSIFY_FILES`), the config hash, the sha256 of every light curve read, the reviewers, the sha256 of the two files above, and `content_sha256` over the manifest itself |
+| `manifest.json` | your chosen name and statement, and the provenance: the search and classification code fingerprints (sha256 of the result-making source files, `setuhq.starsearch.SEARCH_FILES` and `CLASSIFY_FILES`), the config hash, the sha256 of every light curve read, the reviewers, the sha256 of the two files above, and `content_sha256` over the manifest itself |
 
 **Sealed, not signed.** The content hashes make any later change to a file or to the manifest visible; they
 are not a signature and do not prove who made the bundle (anyone can edit a bundle and recompute every hash).
@@ -80,7 +80,7 @@ maintainers attest at ingest.
 ## 3. Ingest (maintainers)
 
 ```bash
-exoplan ingest your-name-s5 --attested-by <pull-request-author>
+setuhq ingest your-name-s5 --attested-by <pull-request-author>
 ```
 
 `ingest` refuses the bundle, and says why, when:
@@ -114,19 +114,19 @@ exoplan ingest your-name-s5 --attested-by <pull-request-author>
 A valid bundle is copied to `docs/sweep/contributions/<bundle_id>/` with `ingest.json`: who attested it, when,
 the nonce, what was fetched and searched again, and the manifest's hash. `docs/sweep/catalogue.json` is then
 rebuilt. **The catalogue reads only folders that ingest wrote and whose hashes still verify**; a folder
-placed or edited by hand is left out, and `exoplan check-sweep` (a step of `scripts/ci_local.sh`) fails on
+placed or edited by hand is left out, and `setuhq check-sweep` (a step of `scripts/ci_local.sh`) fails on
 it. One search counts for each star-sector, the latest: it alone gives the entries, counters, nulls and
 credit, and earlier searches of the same star-sector stay as provenance on its coverage row. An identical
 copy of a search earns nothing. Then rebuild the site (`scripts/ci_local.sh`) and commit.
 
 Every ingest also appends a line to `docs/sweep/ingest_ledger.jsonl` (the bundle id, the manifest's and
-files' hashes, who attested it, the nonce). `exoplan check-sweep` requires every contribution folder to match
+files' hashes, who attested it, the nonce). `setuhq check-sweep` requires every contribution folder to match
 its ledger line, and CI requires the ledger to be an append-only extension of the one at its merge-base with
-the base branch (`--ledger-base auto`: `EXOPLAN_BASE`, the pull request's base, or the remote's default
+the base branch (`--ledger-base auto`: `SETUHQ_BASE`, the pull request's base, or the remote's default
 branch). The check fails closed: in hosted CI (`CI` set) a base that cannot be found fails it, and only a local
 run skips it, with a note. So a contribution resealed after it was merged fails CI. **What these checks cannot do is
 tell an honest new ledger line from a dishonest one in the same pull request:** someone with write access
 could ingest, then edit a folder, its ingest.json and its ledger line before committing. Review of the pull
 request that adds a contribution is what guards against that (`.github/CODEOWNERS` requires a maintainer's
-review for every change under `docs/sweep/`, new ledger lines included): a reviewer runs `exoplan ingest` again on the
+review for every change under `docs/sweep/`, new ledger lines included): a reviewer runs `setuhq ingest` again on the
 bundle (or compares the folder with the bundle in the pull request) before merging.

@@ -8,10 +8,10 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from exoplan import contrib as C
-from exoplan import sweep as SW
-from exoplan import variables as V
-from exoplan.starsearch import CLASSIFY_FILES, CODE_FILES, SEARCH_FILES, classify_fingerprint, code_fingerprint, read_spoc, search_fingerprint
+from setuhq import contrib as C
+from setuhq import sweep as SW
+from setuhq import variables as V
+from setuhq.starsearch import CLASSIFY_FILES, CODE_FILES, SEARCH_FILES, classify_fingerprint, code_fingerprint, read_spoc, search_fingerprint
 
 SECTOR = 99
 
@@ -305,7 +305,7 @@ def test_sweep_records_every_star_and_builds_the_catalogue(swept):
     assert cat["counts"]["star_sectors_searched"] == 3 and cat["counts"]["entries"] == len(cat["entries"])
     assert cat["counts"]["dips_reviewed"] == sum(s["n_dips"] for s in rec["stars"])
     assert sum(cat["counts"]["by_class"].values()) == cat["counts"]["entries"]
-    assert all(e["credit"] == [{"name": "exoplan", "source": f"sector_{SECTOR:04d}.json.gz"}] for e in cat["entries"])
+    assert all(e["credit"] == [{"name": "setuhq", "source": f"sector_{SECTOR:04d}.json.gz"}] for e in cat["entries"])
     assert {c["id"] for c in cat["classes"]} == set(V.CLASS_IDS)
     nul = cat["counts"]["null"]
     assert nul["searches"] == 3 and set(nul["by_class"]) == set(V.CLASS_IDS) - {"unclassified"}
@@ -399,6 +399,34 @@ def test_code_fingerprint_covers_the_result_making_code():
     assert len(code_fingerprint()) == 64 and search_fingerprint() != classify_fingerprint()
 
 
+def test_fingerprints_survive_the_rename_and_the_licence_headers():
+    from setuhq.starsearch import canonical_source
+
+    old = b'"""Doc."""\nfrom exoplan import vet\nX = "EXOPLAN_ROOT"\n'
+    new = (b"# SPDX-License-Identifier: AGPL-3.0-only\n# SPDX-FileCopyrightText: 2026 Ashforde O\xc3\x9c\n"
+           b'"""Doc."""\nfrom setuhq import vet\nX = "SETUHQ_ROOT"\n')
+    assert canonical_source(old) == old and canonical_source(new) == old
+    assert canonical_source(new + b"y = 1\n") != old   # any other change still changes the fingerprint
+    assert canonical_source(b"x = 1  # SPDX-License-Identifier: later lines are code\n").startswith(b"x = 1")
+
+
+def _have_commit(rev):
+    import subprocess
+
+    return subprocess.run(["git", "cat-file", "-e", f"{rev}^{{commit}}"], capture_output=True).returncode == 0
+
+
+@pytest.mark.skipif(not _have_commit("0e87409"), reason="needs the full history (fetch-depth 0)")
+def test_the_committed_sweep_record_still_verifies_against_its_commit():
+    """The sector-1 slice names the search code of 0e87409 (src/exoplan then) and the classification code of the
+    current rules; both must still be what the fingerprint gives, after the rename to src/setuhq."""
+    import gzip
+
+    rec = json.loads(gzip.open(Path(__file__).resolve().parents[1] / "docs/sweep/sector_0001.json.gz").read())
+    assert SW.fingerprints_at("0e87409")[0] == rec["search_code"]
+    assert classify_fingerprint() == rec["classify_code"]
+
+
 # ---------- contribution bundles ----------
 @pytest.fixture
 def bundle(swept):
@@ -476,7 +504,7 @@ def test_a_hand_placed_or_changed_contribution_is_left_out_and_ci_says_so(bundle
     assert cat["rejected_contributions"][0]["why"].startswith("holds")
     problems = SW.check_catalogue(sweep_dir)
     assert any("ingest" in p or "holds" in p for p in problems)
-    from exoplan.cli import main
+    from setuhq.cli import main
 
     assert main(["check-sweep", "--sweep-dir", str(sweep_dir)]) == 1
     # An ingested folder edited afterwards (ingest.json and all) is left out too.
@@ -511,8 +539,8 @@ def test_one_search_counts_per_star_sector_the_latest(swept):
     assert c["searches"] == c["star_sectors_searched"] == 3 and c["superseded_searches"] == 3
     assert {x["name"] for e in cat["entries"] for x in e["credit"]} == {"Later"}
     assert len({e["id"] for e in cat["entries"]}) == len(cat["entries"]) and not any(e["id"].endswith("+") for e in cat["entries"])
-    assert all(r["earlier_searches"][0]["name"] == "exoplan" for r in cat["coverage"] if r["status"] == "searched")
-    assert next(x for x in cat["contributors"] if x["name"] == "exoplan")["superseded"] == 3
+    assert all(r["earlier_searches"][0]["name"] == "setuhq" for r in cat["coverage"] if r["status"] == "searched")
+    assert next(x for x in cat["contributors"] if x["name"] == "setuhq")["superseded"] == 3
 
 
 def test_paired_statistics_do_not_let_two_clustered_stars_carry_a_class():
@@ -615,13 +643,13 @@ def test_the_ingest_ledger_is_append_only_and_matches_every_folder(bundle, swept
 def test_check_sweep_missing_base_fails_under_ci_and_is_a_note_locally(tmp_path, monkeypatch, capsys):
     import subprocess
 
-    from exoplan.cli import main
+    from setuhq.cli import main
 
     sweep_dir = tmp_path / "repo" / "sweep"
     sweep_dir.mkdir(parents=True)
     subprocess.run(["git", "init", "-q", str(tmp_path / "repo")], check=True)
     SW.build_catalogue(sweep_dir)
-    for var in ("EXOPLAN_BASE", "GITHUB_BASE_REF"):
+    for var in ("SETUHQ_BASE", "EXOPLAN_BASE", "GITHUB_BASE_REF"):
         monkeypatch.delenv(var, raising=False)
     monkeypatch.chdir(tmp_path / "repo")
     assert SW.default_ledger_base(sweep_dir) is None  # no remote, no base
@@ -729,7 +757,7 @@ def test_a_bundle_with_one_new_star_credits_only_that_star(swept):
     new_tic = next(s["tic"] for s in SW.read_record(mine / f"sector_{SECTOR:04d}.json.gz")["stars"]
                    if s["tic"] not in {r["tic"] for r in SW.read_record(kw["out_dir"] / f"sector_{SECTOR:04d}.json.gz")["stars"]})
     assert {c["name"] for e in cat["entries"] if e["tic"] == new_tic for c in e["credit"]} <= {"Ada L."}
-    assert {c["name"] for e in cat["entries"] if e["tic"] != new_tic for c in e["credit"]} == {"exoplan"}
+    assert {c["name"] for e in cat["entries"] if e["tic"] != new_tic for c in e["credit"]} == {"setuhq"}
 
 
 def test_a_forged_planet_candidate_with_consistent_inputs_is_caught_by_the_fresh_search(bundle, swept, tmp_path):
@@ -866,7 +894,7 @@ def test_a_bundled_config_has_no_comments_and_no_random_looking_values(swept):
     b = C.make_bundle(swept["kw"]["out_dir"] / f"sector_{SECTOR:04d}.json.gz", swept["tmp"] / "nc", contributor="Ada L.")
     text = (b / "config.toml").read_text()
     assert not C.has_comment(text) and "#" not in text
-    from exoplan.config import load_config
+    from setuhq.config import load_config
 
     assert load_config(b / "config.toml").digest() == json.loads((b / "manifest.json").read_text())["config_sha256"]
     assert json.loads((b / "results.json").read_text())["config_text"] == text
@@ -901,7 +929,7 @@ def test_a_lightcurve_that_hashes_differently_at_mast_is_refused(bundle, swept, 
 
 
 def test_cli_ingest_refuses_with_a_message_and_verifies_by_default(bundle, capsys, tmp_path):
-    from exoplan.cli import build_parser, main
+    from setuhq.cli import build_parser, main
 
     assert build_parser().parse_args(["ingest", "x"]).verify_lightcurves is None   # max(3, 5%) at random, plus every flagged star
     (bundle / "results.json").write_text("{}")
@@ -911,7 +939,7 @@ def test_cli_ingest_refuses_with_a_message_and_verifies_by_default(bundle, capsy
 
 def test_contributing_doc_says_keys_stay_in_the_environment_and_bundles_are_sealed_not_signed():
     text = Path("CONTRIBUTING.md").read_text()
-    for must in ("exoplan sweep", "exoplan bundle", "exoplan ingest", "ANTHROPIC_API_KEY", "environment", "configs/sweep_sentinels.toml",
+    for must in ("setuhq sweep", "setuhq bundle", "setuhq ingest", "ANTHROPIC_API_KEY", "environment", "configs/sweep_sentinels.toml",
                  "sealed", "not a signature", "--attested-by", "searched again"):
         assert must in text, must
     assert "Never paste" in text or "never paste" in text

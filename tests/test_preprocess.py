@@ -1,7 +1,7 @@
 import numpy as np
 
-from exoplan.lightcurve import LightCurve
-from exoplan.preprocess import bin_lightcurve, clean, detrend, mad_sigma, running_median
+from setuhq.lightcurve import LightCurve
+from setuhq.preprocess import bin_lightcurve, clean, detrend, mad_sigma, running_median
 
 
 def trapezoid(time: np.ndarray, t_start: float, t_end: float, depth: float) -> np.ndarray:
@@ -76,7 +76,7 @@ def test_detrend_mask_does_not_depend_on_flux_units(rng):
 
 import pytest  # noqa: E402
 
-from exoplan.preprocess import diff_sigma, low_runs  # noqa: E402
+from setuhq.preprocess import diff_sigma, low_runs  # noqa: E402
 
 
 def _eclipse_curve(rng, sigmas, *, noise=3e-4):
@@ -124,8 +124,8 @@ def test_low_runs():
 
 def test_deep_eclipse_reaches_the_prepared_light_curve(rng):
     """Through the whole preparation (clean, normalise, detrend, 10-minute bins) a 20-sigma eclipse keeps its depth."""
-    from exoplan.config import RunConfig
-    from exoplan.pipeline import prepare_lightcurves
+    from setuhq.config import RunConfig
+    from setuhq.pipeline import prepare_lightcurves
 
     lc, (c,) = _eclipse_curve(rng, [20])
     (prep,) = prepare_lightcurves([lc], RunConfig(name="x"))

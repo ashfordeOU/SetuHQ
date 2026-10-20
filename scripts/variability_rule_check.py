@@ -24,7 +24,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from exoplan.variables import classify_variability, variability, variability_null  # noqa: E402
+from setuhq.variables import classify_variability, variability, variability_null  # noqa: E402
 
 OUT = ROOT / "docs" / "sweep" / "variability_rule_check.json"
 N = 20

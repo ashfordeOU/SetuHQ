@@ -29,7 +29,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from exoplan import leaderboard as L  # noqa: E402
+from setuhq import leaderboard as L  # noqa: E402
 
 FEATURES = ("TOI number", "log10 period", "duration (h)", "log10 period error", "log10 mid-time error", "mid-time (BTJD)")
 RIDGE = 1e-3

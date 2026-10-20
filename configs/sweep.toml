@@ -1,4 +1,4 @@
-# The all-sky sweep (exoplan sweep): every SPOC 2-minute target of a sector, Probes only.
+# The all-sky sweep (setuhq sweep): every SPOC 2-minute target of a sector, Probes only.
 # Every consensus dip is kept (min_planet_fraction = 0) and classified by variables.py, which applies the
 # potential-planet share itself (half the panel's weight). See CONTRIBUTING.md to run it with Sentinels.
 

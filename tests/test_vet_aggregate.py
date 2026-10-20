@@ -1,10 +1,10 @@
 import numpy as np
 
-from exoplan.aggregate import aggregate, cluster_marks
-from exoplan.injection import Injection, synthetic_subject
-from exoplan.reviewers.base import NOISE, POTENTIAL_PLANET, Classification, Mark
-from exoplan.search import PeriodicSignal
-from exoplan.vet import vet_event
+from setuhq.aggregate import aggregate, cluster_marks
+from setuhq.injection import Injection, synthetic_subject
+from setuhq.reviewers.base import NOISE, POTENTIAL_PLANET, Classification, Mark
+from setuhq.search import PeriodicSignal
+from setuhq.vet import vet_event
 
 
 def _cls(reviewer, marks, label=POTENTIAL_PLANET, subject="s1"):
@@ -114,9 +114,9 @@ def test_aggregate_merges_split_duplicates_of_one_dip():
 
 
 def test_off_ephemeris_flag_does_not_change_pass_result(transit_subject):
-    from exoplan.pipeline import _vet
-    from exoplan.search import PeriodicSignal
-    from exoplan.aggregate import Consensus
+    from setuhq.pipeline import _vet
+    from setuhq.search import PeriodicSignal
+    from setuhq.aggregate import Consensus
 
     subject, injection = transit_subject
     periodic = PeriodicSignal(
@@ -157,6 +157,6 @@ def test_full_overlap_mark_off_centre_by_0_07_days_counts():
     (event,) = aggregate(panel, {}, gap_days=0.05, min_score=0.5, min_planet_fraction=0.5)
     assert event.reviewers == ("r1", "r2", "r3")
     assert abs(event.score - 1.0) < 1e-9
-    from exoplan.aggregate import audit_marks
+    from setuhq.aggregate import audit_marks
     audit = {a["reviewer_id"]: a for a in audit_marks(event, panel, 0.05)}
     assert audit["r3"]["counted"] and abs(audit["r3"]["overlap_frac"] - 1.0) < 1e-9

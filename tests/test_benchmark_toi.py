@@ -6,8 +6,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from exoplan import benchmark_toi as B
-from exoplan.lightcurve import LightCurve
+from setuhq import benchmark_toi as B
+from setuhq.lightcurve import LightCurve
 
 
 def _row(tic, toi, disp, p=3.0, t0=2459000.5, dur=2.0, **kw):
@@ -177,9 +177,9 @@ def test_the_threshold_audit_reads_the_values_themselves():
     sys.modules["bench_script2"] = S
     spec.loader.exec_module(S)
     now = S._threshold_values(None)
-    assert now["src/exoplan/transitfit.py:V_SHAPE_DCHI2"] == "9.0"
+    assert now["src/setuhq/transitfit.py:V_SHAPE_DCHI2"] == "9.0"
     assert now["configs/discovery.toml:[search]fap_trials"] == "2000"
-    assert now["src/exoplan/discover.py:MAX_FEED_DEPTH_PPM"] == "5000.0"
+    assert now["src/setuhq/discover.py:MAX_FEED_DEPTH_PPM"] == "5000.0"
     assert "docs/results/reviewer_weights.json:volunteer-typical" in now
     assert all(x in S.NOT_THRESHOLDS for x in ("fap_cache", "FAP_TAIL_FLOOR"))
 
@@ -208,3 +208,22 @@ def test_clipping_exposure_is_counted_by_class_and_misses_are_checked():
     c = B.clipping_summary(results, {"tois": tois}, 8.0)["held_out"]
     assert c["affected"] == {"positive": 3, "fp": 1, "fa": 0} and c["cp_kp_affected_missed"] == 2
     assert c["cp_kp_misses_explained"] == 1 and c["explained_tois"] == ["0"] and c["cp_kp_affected_recovered"] == 1
+
+
+def test_the_committed_benchmark_fingerprints_still_verify_after_the_rename():
+    """docs/results/benchmark_real_tois.json maps each per-star code fingerprint to the commit whose pipeline made it
+    (src/exoplan then). The script must still compute those values from those commits, and give HEAD's code the same
+    value whether its files sit under src/setuhq with licence headers or under src/exoplan without."""
+    import subprocess
+    import sys
+
+    root = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(root / "scripts"))
+    import benchmark_real_tois as BR
+
+    cp = json.loads((root / "docs/results/benchmark_real_tois.json").read_text())["code_provenance"]
+    for fp, commit in cp["commit"].items():
+        if subprocess.run(["git", "cat-file", "-e", f"{commit}^{{commit}}"], cwd=root, capture_output=True).returncode:
+            pytest.skip("needs the full history (fetch-depth 0)")
+        assert BR.code_fingerprint(commit) == fp
+    assert all(f.startswith("src/setuhq/") for f in BR.CODE_FILES) and BR._label(BR.CODE_FILES[0]) == "src/exoplan/discover.py"

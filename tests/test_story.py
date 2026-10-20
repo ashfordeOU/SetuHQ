@@ -6,9 +6,9 @@ import subprocess
 
 import pytest
 
-from exoplan import docket as docket_mod
-from exoplan.app import APP_CSS, APP_JS, app_data, build_app
-from exoplan.story import decoration, mollweide, number_words, sky_geometry
+from setuhq import docket as docket_mod
+from setuhq.app import APP_CSS, APP_JS, app_data, build_app
+from setuhq.story import decoration, mollweide, number_words, sky_geometry
 
 
 @pytest.fixture(autouse=True)
@@ -147,10 +147,10 @@ def test_explorer_and_sentinels_read_the_stored_feed_and_calibration(run_dir, tm
 
 
 def test_landing_page_is_the_overview_linking_into_the_app(run_dir, tmp_path):
-    from exoplan.app import FONTS_CSS, build_landing
-    from exoplan.cli import main
+    from setuhq.app import FONTS_CSS, build_landing
+    from setuhq.cli import main
 
-    path = build_landing(run_dir, tmp_path / "site" / "index.html", title="exoplan")
+    path = build_landing(run_dir, tmp_path / "site" / "index.html", title="setuhq")
     page = path.read_text()
     assert "The sky, reviewed." in page and "What this page does not claim" in page
     assert 'href="app/#/sky"' in page and 'href="app/#/overview" data-route="overview" aria-current="page"' in page

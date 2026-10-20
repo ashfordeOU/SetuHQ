@@ -1,6 +1,6 @@
 # The real-TOI leaderboard
 
-A public leaderboard on exoplan's frozen benchmark of 662 real TESS Objects of Interest
+A public leaderboard on SetuHQ's frozen benchmark of 662 real TESS Objects of Interest
 ([docs/results/benchmark_real_tois.md](../results/benchmark_real_tois.md)). It scores a method's detected events
 on the **held-out half** only. The table is [leaderboard.md](leaderboard.md) (data: [leaderboard.json](leaderboard.json));
 the app shows it at `#/leaderboard`.
@@ -17,7 +17,7 @@ deterministic matched-filter detectors.
 |---|---|
 | `docs/results/benchmark_toi_sample.json` | the frozen sample (sha256 `6f0e111e…`, stated in full in leaderboard.md). It holds every label, both halves. |
 | `docs/leaderboard/tuning_inputs.json` | the **public inputs**: the tuning half with its dispositions, and the held-out half with only TIC, TOI name and ephemeris (no disposition, class, depth or radius). Its canonical sha256 is stated in leaderboard.md. |
-| `src/exoplan/benchmark_toi.py` | `inverted` and `scrambled`: the two control light curves for each star (the scrambled one masks every known TOI on the star first). |
+| `src/setuhq/benchmark_toi.py` | `inverted` and `scrambled`: the two control light curves for each star (the scrambled one masks every known TOI on the star first). |
 
 Build the method on the tuning half (or on nothing), then run it blind on each held-out star's light curve and on
 its two controls.
@@ -67,8 +67,8 @@ stars the Sentinels reviewed, listed in the benchmark report).
 ## Scoring and rank
 
 ```bash
-exoplan leaderboard my-method.json        # score one submission (exit 2 and the reasons when refused)
-exoplan leaderboard                       # rebuild leaderboard.json and leaderboard.md from submissions/
+setuhq leaderboard my-method.json        # score one submission (exit 2 and the reasons when refused)
+setuhq leaderboard                       # rebuild leaderboard.json and leaderboard.md from submissions/
 ```
 
 | measure | definition |
@@ -147,7 +147,7 @@ The leaderboard refuses a submission, and lists every reason, when:
 
 ## The seeded entries
 
-exoplan's own configurations, built from the benchmark's stored outputs without re-running anything
+SetuHQ's own configurations, built from the benchmark's stored outputs without re-running anything
 (`scripts/leaderboard_seed.py --cache <cache/bench>`), and the metadata floor
 (`scripts/leaderboard_metadata_baseline.py`, from the public inputs only):
 
@@ -161,5 +161,5 @@ exoplan's own configurations, built from the benchmark's stored outputs without 
   star-level rules, fixed before scoring (commit 9e42c0b), not panel consensus, and their names say so. The
   Sentinels were never run on the controls, so those cells read "not measured".
 
-exoplan's own entries state `tuned_on: none`: no threshold changed after the sample was frozen (the benchmark's
+SetuHQ's own entries state `tuned_on: none`: no threshold changed after the sample was frozen (the benchmark's
 threshold audit).

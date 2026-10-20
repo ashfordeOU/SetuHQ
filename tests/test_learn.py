@@ -8,9 +8,9 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import learn as L
-from exoplan.app import APP_JS
-from exoplan.methods import CHAPTERS
+from setuhq import learn as L
+from setuhq.app import APP_JS
+from setuhq.methods import CHAPTERS
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -26,7 +26,7 @@ def test_the_path_covers_every_chapter_in_order_then_the_galaxy_and_catalogue():
     steps = L.learn_steps()
     ids = [s["id"] for s in steps]
     assert [i for i in ids if i.startswith("ch:")] == ["ch:" + c for c, _ in CHAPTERS]
-    assert ids.index("transit") == ids.index("ch:transit") + 1  # exoplan's own case right after the chapter
+    assert ids.index("transit") == ids.index("ch:transit") + 1  # SetuHQ's own case right after the chapter
     assert ids[-2:] == ["galaxy", "catalogue"] and len(ids) == len(set(ids)) == len(CHAPTERS) + 3
     assert all(s["href"].startswith("#/") for s in steps)
 
@@ -45,7 +45,7 @@ def test_the_card_and_bar_are_in_the_shell_and_progress_is_guarded(built):
         assert "try {" in body and "catch (e)" in body, fn
     assert "on = learn.active && i >= 0" in js and "learnVisit(p);" in APP_JS
     # Only the app has it: the static landing page has no script to keep progress.
-    assert "learn_card() if with_view" in Path("src/exoplan/app.py").read_text()
+    assert "learn_card() if with_view" in Path("src/setuhq/app.py").read_text()
 
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
@@ -60,7 +60,7 @@ const U = %s;
   const out = [];
   for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) for (const theme of ['dark', 'light']) {
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
-    await c.addInitScript(t => { try { localStorage.setItem('exoplan-theme', t); } catch (e) {} }, theme);
+    await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
     const r = {w, theme, errs};
     await p.goto(U + '#/overview'); await p.waitForTimeout(700);
@@ -75,7 +75,7 @@ const U = %s;
     r.small = await p.evaluate(() => [...document.querySelectorAll('#learnbar a, #learnbar button')].filter(e => { const q = e.getBoundingClientRect(); return q.width && (q.height < 44 || q.width < 44); }).length);
     r.docW = await p.evaluate(() => document.documentElement.scrollWidth);
     await p.reload(); await p.waitForTimeout(700);
-    r.reload = await p.evaluate(() => [document.querySelector('#learnbar').hidden, JSON.parse(localStorage.getItem('exoplan-learn')).seen]);
+    r.reload = await p.evaluate(() => [document.querySelector('#learnbar').hidden, JSON.parse(localStorage.getItem('setuhq-learn')).seen]);
     await p.click('#learnleave'); await p.waitForTimeout(200); r.left = await p.evaluate(() => document.querySelector('#learnbar').hidden);
     await p.goto(U + '#/overview'); await p.waitForTimeout(400);
     r.card1 = await p.evaluate(() => [document.querySelector('#learngo').textContent, document.querySelector('#learncount').textContent, document.querySelector('.learnmeter').getAttribute('aria-valuenow')]);
@@ -100,7 +100,7 @@ const U = %s;
         assert r["card0"] == ["Start the path", f"0 of {n} visited", True]
         assert r["noBar"] is True
         assert r["step1"] == ["#/methods?ch=survey", False, f"Learn path · 1 of {n} · How a survey works"]
-        assert r["step3"] == ["#/transit", f"Learn path · 3 of {n} · exoplan's own transit: the case file"]
+        assert r["step3"] == ["#/transit", f"Learn path · 3 of {n} · SetuHQ's own transit: the case file"]
         assert r["small"] == 0 and r["docW"] == r["w"]
         assert r["reload"][0] is False and set(r["reload"][1]) == {"galaxy", "ch:survey", "ch:transit", "transit"}
         assert r["left"] is True

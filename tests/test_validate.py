@@ -1,5 +1,5 @@
 """S3: validation labels, the reduced FPP scheme (closed forms), the TRICERATOPS adapter (stubbed), and the rule that
-exoplan never calls its results "confirmed"."""
+SetuHQ never calls its results "confirmed"."""
 
 import math
 import re
@@ -9,15 +9,15 @@ import numpy as np
 import pytest
 from scipy.stats import norm
 
-from exoplan import validate
-from exoplan.validate import (NO_CONTRAST, NOT_VALIDATED, REDUCED_ONLY, VALIDATED, Priors, fpp_class, reduced_fpp,
+from setuhq import validate
+from setuhq.validate import (NO_CONTRAST, NOT_VALIDATED, REDUCED_ONLY, VALIDATED, Priors, fpp_class, reduced_fpp,
                               run_triceratops, validation_label)
 
 
 def test_label_needs_triceratops_thresholds_and_a_contrast_curve():
     assert validation_label(0.001, 1e-5, contrast_curve=True, method="triceratops") == VALIDATED
     assert validation_label(0.001, 1e-5, contrast_curve=False, method="triceratops") == NO_CONTRAST
-    assert validation_label(0.001, 1e-5, contrast_curve=True, method="exoplan reduced FPP") == REDUCED_ONLY
+    assert validation_label(0.001, 1e-5, contrast_curve=True, method="SetuHQ reduced FPP") == REDUCED_ONLY
     assert validation_label(0.015, 1e-5, contrast_curve=True, method="triceratops") == NOT_VALIDATED   # strict <
     assert validation_label(0.001, 1e-3, contrast_curve=True, method="triceratops") == NOT_VALIDATED
     assert validation_label(None, None, contrast_curve=True, method="triceratops") == NOT_VALIDATED
@@ -144,10 +144,10 @@ def test_no_output_calls_a_candidate_confirmed(tmp_path):
     """Language guard (ATLAS S3, K4): no validation label, and no candidate row of a run, uses "confirmed"."""
     for label in validate.LABELS:
         assert "confirm" not in label.lower()
-    from exoplan.config import RunConfig
-    from exoplan.lightcurve import LightCurve
-    from exoplan.pipeline import run_pipeline
-    from exoplan.reviewers.simulated import SimulatedVolunteer
+    from setuhq.config import RunConfig
+    from setuhq.lightcurve import LightCurve
+    from setuhq.pipeline import run_pipeline
+    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     rng = np.random.default_rng(2)
     time = np.arange(0.0, 13.0, 10 / 1440)
@@ -173,7 +173,7 @@ def _white_scan(**over):
 def test_all_phase_secondary_likelihood_closed_form():
     """With a white all-phase scan the no-secondary likelihood is the simulated null density f0 of the largest dip
     (in units of the noise scale), and the binary's is (1/Z)[F0(z)(Phi(z) - Phi(z-Z)) + f0(z)(G(z) - G(z-Z))]."""
-    from exoplan.dvtests import null_cdf, null_pdf
+    from setuhq.dvtests import null_cdf, null_pdf
 
     dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
     dv["secondary"].update(_white_scan(scan_robust_sigma=1.2, scan_std_snr=1.3))
@@ -191,7 +191,7 @@ def test_all_phase_secondary_likelihood_closed_form():
 
 
 def test_null_distribution_is_a_cdf():
-    from exoplan.dvtests import null_cdf, null_pdf, white_quantiles
+    from setuhq.dvtests import null_cdf, null_pdf, white_quantiles
 
     assert null_cdf(0.0, 187) == 0.0 and null_cdf(12.0, 187) == pytest.approx(1.0, abs=1e-6)
     assert null_cdf(white_quantiles(187)["q_dip"], 187) == pytest.approx(0.999, abs=0.001)
@@ -204,7 +204,7 @@ def test_null_tail_is_smooth_and_monotone(positions):
     """Above its 99th percentile the null is a fitted generalized Pareto tail: the CDF rises monotonically to 1, the
     density falls monotonically (the empirical one, from fewer than 40 scans beyond z = 5.1, did not), and the two
     pieces meet at the threshold without a jump."""
-    from exoplan.dvtests import _null_tables, null_cdf, null_pdf
+    from setuhq.dvtests import _null_tables, null_cdf, null_pdf
 
     z = np.arange(0.0, 12.0, 0.01)
     cdf = np.array([null_cdf(x, positions) for x in z])
@@ -221,7 +221,7 @@ def test_null_tail_is_smooth_and_monotone(positions):
 def test_clean_planets_with_low_peaks_get_a_low_fpp():
     """A clean 1000 ppm planet whose strongest dip elsewhere is unusually small (below 2.5 noise units) was charged for
     it by the old max-of-N_eff null (FPP up to 0.97, Bayes factor 263); with the simulated null it is not."""
-    from exoplan.dvtests import extended_vet
+    from setuhq.dvtests import extended_vet
 
     import sys
     sys.path.insert(0, "tests")
@@ -256,7 +256,7 @@ def test_a_non_white_scan_refuses_the_fpp(over, reason):
     assert r.fpp_class == r.refused and r.label == NO_CONTRAST
     lo, hi = r.evidence["fpp_sensitivity"]["range"]
     assert 0 <= lo <= hi <= 1
-    from exoplan.exofop import exclusion
+    from setuhq.exofop import exclusion
 
     row = {"passed": True, "flags": "", "period_days": 5.0, "n_transits": 3, "fit": {"period_days": 5.0},
            "metrics": {"validation": r.as_dict()}}

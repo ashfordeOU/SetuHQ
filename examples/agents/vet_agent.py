@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""EXAMPLE: an agent that vets one SetuHQ candidate end to end, through the exoplan MCP server.
+"""EXAMPLE: an agent that vets one SetuHQ candidate end to end, through the SetuHQ MCP server.
 
 This is an example of wiring, not part of SetuHQ's pipeline, and its output is not a result. It uses the
 Claude Agent SDK (``pip install -e '.[agents]'``; it drives the Claude Code CLI, so ``claude`` must be on
@@ -11,7 +11,7 @@ PATH and signed in). Any other tool-calling model can do the same through the MC
 
 What it does:
 
-1. Starts ``exoplan-mcp`` (stdio) and gives the agent SetuHQ's tools, and no others: no shell, no file
+1. Starts ``setuhq-mcp`` (stdio) and gives the agent SetuHQ's tools, and no others: no shell, no file
    writes, no web. Its conclusions come from SetuHQ's own code and stored results.
 2. Logs every tool call and every result, as JSON lines, to a provenance log (``--log``), with the time.
 3. Keeps a human in the loop. Read-only tools run freely. A tool that writes (a pipeline run) asks you
@@ -33,13 +33,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
-SERVER = "exoplan"
+SERVER = "setuhq"
 BANNER = ("EXAMPLE AGENT OUTPUT. A candidate, not a discovery: this is an AI agent's reading of SetuHQ's tools, "
           "unreviewed. Confirming a planet needs follow-up observations by people.")
 
-# What the agent may do without asking: the read-only exoplan tools. Writing tools need a yes from a person.
+# What the agent may do without asking: the read-only SetuHQ tools. Writing tools need a yes from a person.
 def _tool_sets():
-    from exoplan.tools import TOOLS
+    from setuhq.tools import TOOLS
 
     read_only = {f"mcp__{SERVER}__{fn.__name__}" for fn, ro in TOOLS if ro}
     writes = {f"mcp__{SERVER}__{fn.__name__}" for fn, ro in TOOLS if not ro}
@@ -52,9 +52,9 @@ OUTWARD = ("submit", "post", "send", "publish", "upload", "email", "exofop", "we
 def gate(tool: str, tool_input: dict, ask) -> tuple[bool, str]:
     """The human-in-the-loop rule for one tool call: (allowed, why).
 
-    * a read-only exoplan tool: allowed;
-    * an exoplan tool that writes (a pipeline run): allowed only if ``ask`` (a person) says yes;
-    * anything outward-facing or outside the exoplan server: refused, whatever ``ask`` would say.
+    * a read-only SetuHQ tool: allowed;
+    * an SetuHQ tool that writes (a pipeline run): allowed only if ``ask`` (a person) says yes;
+    * anything outward-facing or outside the SetuHQ server: refused, whatever ``ask`` would say.
     """
     read_only, writes = _tool_sets()
     low = tool.lower()
@@ -128,8 +128,8 @@ async def run_agent(args) -> str:
         return {}
 
     options = ClaudeAgentOptions(
-        mcp_servers={SERVER: {"type": "stdio", "command": sys.executable, "args": ["-m", "exoplan.mcp_server"],
-                              "env": {"EXOPLAN_ROOT": str(ROOT), "PYTHONPATH": str(ROOT / "src")}}},
+        mcp_servers={SERVER: {"type": "stdio", "command": sys.executable, "args": ["-m", "setuhq.mcp_server"],
+                              "env": {"SETUHQ_ROOT": str(ROOT), "PYTHONPATH": str(ROOT / "src")}}},
         tools=[],                              # no built-in tools: no shell, no file edits, no web
         allowed_tools=sorted(read_only),       # these run without asking; the rest go through can_use_tool
         can_use_tool=can_use_tool,

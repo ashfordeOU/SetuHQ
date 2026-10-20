@@ -7,10 +7,10 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import docket as docket_mod
-from exoplan.app import APP_JS, FRAME_BRIDGE_JS, FRAME_PHONE_CSS
-from exoplan.plate import build_plate
-from exoplan.report import build_report
+from setuhq import docket as docket_mod
+from setuhq.app import APP_JS, FRAME_BRIDGE_JS, FRAME_PHONE_CSS
+from setuhq.plate import build_plate
+from setuhq.report import build_report
 
 from test_story import run_dir  # noqa: F401  (fixture)
 

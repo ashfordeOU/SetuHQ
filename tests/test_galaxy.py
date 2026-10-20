@@ -1,5 +1,6 @@
 import json
 import math
+import os
 import random
 import re
 import shutil
@@ -8,14 +9,15 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import docket as docket_mod
-from exoplan.app import APP_JS, build_app, build_landing
-from exoplan.galaxy import (CLASSES, DEFAULT_MAP, DEFAULT_NOTABLE, GALAXY_JS, LY_PER_PC, TEASER_JS, galactic_lb,
+from setuhq import docket as docket_mod
+from setuhq.app import APP_JS, build_app, build_landing
+from setuhq.galaxy import (CLASSES, DEFAULT_MAP, DEFAULT_NOTABLE, GALAXY_JS, LY_PER_PC, TEASER_JS, galactic_lb,
                             galactic_xyz, galaxy_data, galaxy_meta, planet_class)
 
 from test_story import run_dir  # noqa: F401  (fixture)
 
-CSV = Path("/tmp/claude-0/-workspace-EXOPLAN/de5be2d1-4ad3-581c-88d5-10c9b521436f/scratchpad/data/exoplanet_eu_2026-10-18.csv")
+# The exoplanet.eu CSV the map JSON was built from (scripts/fetch_exoplanet_map.py), when a local copy is named here.
+CSV = Path(os.environ.get("SETUHQ_EU_CSV", "cache/exoplanet_eu_2026-10-18.csv"))
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
 HAVE_BROWSER = shutil.which("node") is not None and Path(PLAYWRIGHT).exists() and Path(CHROMIUM).exists()
@@ -156,7 +158,7 @@ def test_notable_cards_come_from_the_dataset(G):
     # The cards read distance, year and method from those arrays, not from the notable file.
     call = re.search(r"gx\.calls = G\.notable\.map\(.*?\n  \}\);", GALAXY_JS, re.S).group(0)
     assert "gxLy(H.d[h])" in call and "P.y[i]" in call and "gxMethod(i)" in call and "gxClass(i)" in call
-    pi = next(nt for nt in G["notable"] if nt["exoplan"])
+    pi = next(nt for nt in G["notable"] if nt["setuhq"])
     assert pi["name"] == "pi Men c" and G["star"]["host"] == pi["host"]
 
 
@@ -164,7 +166,7 @@ def test_page_states_source_definition_and_what_is_not_plotted(run_dir, tmp_path
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
     sec = re.search(r'<section class="route" id="route-galaxy".*?(?=<section class="route" id="route-transit")', page, re.S).group(0)
     assert "Data: The Extrasolar Planets Encyclopaedia (exoplanet.eu), fetched 18 Oct 2026; 8,049 planets with a stored distance" in sec
-    assert "broader than the NASA Exoplanet Archive" in sec and "exoplan did not find these planets" in sec
+    assert "broader than the NASA Exoplanet Archive" in sec and "SetuHQ did not find these planets" in sec
     assert "TIC 348835438, TIC 349088467, TIC 348770361" in sec and "not on this map" in sec
     assert "Milky Way: artist's impression; Sun's position approximate (~26,000 ly from the centre)" in sec.replace("&#x27;", "'")
     assert 'role="img"' in sec and "View as table: the 50 nearest systems" in sec and "How we classify" in sec
@@ -231,7 +233,7 @@ const { chromium } = require(%s);
 
 
 # ---------- survey coverage ----------
-from exoplan.galaxy import DEFAULT_COVERAGE, KEPLER_FIELD, coverage_gl, load_coverage  # noqa: E402
+from setuhq.galaxy import DEFAULT_COVERAGE, KEPLER_FIELD, coverage_gl, load_coverage  # noqa: E402
 
 
 def test_coverage_footprint_maths():
@@ -265,7 +267,7 @@ def test_pi_men_tess_sectors_match_tess_point():
     tp = pytest.importorskip("tess_stars2px")
     out = tp.tess_stars2px_function_entry([1], [84.2912083366], [-80.4691111224])
     sectors = {int(s) for s in out[3] if 1 <= s <= cov["tess_last_sector"]}
-    assert cov["pi_men_tess_sectors"] == len(sectors) and 1 in sectors  # exoplan's run is sector 1
+    assert cov["pi_men_tess_sectors"] == len(sectors) and 1 in sectors  # SetuHQ's run is sector 1
     assert cov["tess_last_sector"] == 110 and cov["as_of"] == "2026-10-18"
 
 

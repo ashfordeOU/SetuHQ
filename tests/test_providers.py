@@ -9,11 +9,11 @@ from types import SimpleNamespace
 
 import pytest
 
-from exoplan.calibrate import WEIGHT_FLOOR, apply_calibration, calibration_record, identity
-from exoplan.config import RunConfig, build_reviewers
-from exoplan.pipeline import run_pipeline
-from exoplan.render import render_subject
-from exoplan.reviewers import (
+from setuhq.calibrate import WEIGHT_FLOOR, apply_calibration, calibration_record, identity
+from setuhq.config import RunConfig, build_reviewers
+from setuhq.pipeline import run_pipeline
+from setuhq.render import render_subject
+from setuhq.reviewers import (
     ClaudeCodeReviewer,
     ClaudeReviewer,
     GeminiReviewer,
@@ -21,16 +21,16 @@ from exoplan.reviewers import (
     OpenAIReviewer,
     SimulatedVolunteer,
 )
-from exoplan.reviewers.http import ProviderTimeout, post_json
-from exoplan.reviewers.sentinel import RefusalError
-from exoplan.reviewers.task import PROMPT_VERSION, ReviewError
+from setuhq.reviewers.http import ProviderTimeout, post_json
+from setuhq.reviewers.sentinel import RefusalError
+from setuhq.reviewers.task import PROMPT_VERSION, ReviewError
 
 SECRET = "sk-test-NEVER-WRITE-THIS"
 
 
 @pytest.fixture(autouse=True)
 def no_sleep(monkeypatch):
-    monkeypatch.setattr("exoplan.reviewers.sentinel.time.sleep", lambda s: None)
+    monkeypatch.setattr("setuhq.reviewers.sentinel.time.sleep", lambda s: None)
 
 
 @pytest.fixture
@@ -290,7 +290,7 @@ def test_claude_code_cache_key_is_unchanged(image, tmp_path):
 
     subject, inj, png = image
     reviewer = ClaudeCodeReviewer("cc", runner=lambda cmd, cwd: json.dumps({"result": answer([(1, 2)])}), cache_dir=tmp_path)
-    from exoplan.reviewers.task import build_prompt
+    from setuhq.reviewers.task import build_prompt
 
     system, user = build_prompt(subject, "volunteer")
     request = reviewer.backend.request(system, user, png.resolve())
@@ -317,7 +317,7 @@ def test_missing_keys_make_providers_unavailable_with_a_reason(monkeypatch):
 
 def test_anthropic_without_sdk_is_unavailable(monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", SECRET)
-    monkeypatch.setattr("exoplan.reviewers.claude.importlib.util.find_spec", lambda name: None)
+    monkeypatch.setattr("setuhq.reviewers.claude.importlib.util.find_spec", lambda name: None)
     assert "anthropic package is not installed" in ClaudeReviewer("c").unavailable_reason()
 
 
@@ -385,7 +385,7 @@ def test_weights_apply_only_to_the_provider_and_model_they_were_measured_on(keys
 
 
 def test_resolve_weights_keeps_calibrated_probes_and_floors_a_new_sentinel(tmp_path):
-    from exoplan.cli import resolve_weights
+    from setuhq.cli import resolve_weights
 
     default = tmp_path / "w.json"
     default.write_text(json.dumps({"vol-a": 0.6, "claude-skeptic": 0.5}))
@@ -406,14 +406,14 @@ def test_post_json_maps_timeouts_and_http_errors_without_leaking_headers(monkeyp
     def timeout(*a, **k):
         raise socket.timeout("slow")
 
-    monkeypatch.setattr("exoplan.reviewers.http.urllib.request.urlopen", timeout)
+    monkeypatch.setattr("setuhq.reviewers.http.urllib.request.urlopen", timeout)
     with pytest.raises(ProviderTimeout):
         post_json("https://api.example.test/v1/x", {"Authorization": f"Bearer {SECRET}"}, {}, 1.0)
 
     def http_error(*a, **k):
         raise urllib.error.HTTPError("https://api.example.test/v1/x", 401, "no", {}, io.BytesIO(b'{"error": "bad key"}'))
 
-    monkeypatch.setattr("exoplan.reviewers.http.urllib.request.urlopen", http_error)
+    monkeypatch.setattr("setuhq.reviewers.http.urllib.request.urlopen", http_error)
     with pytest.raises(ReviewError) as err:
         post_json("https://api.example.test/v1/x?key=abc", {"Authorization": f"Bearer {SECRET}"}, {}, 1.0)
     assert "HTTP 401" in str(err.value) and SECRET not in str(err.value) and "key=abc" not in str(err.value)
@@ -425,14 +425,14 @@ def test_post_json_maps_timeouts_and_http_errors_without_leaking_headers(monkeyp
         def __exit__(self, *a):
             return False
 
-    monkeypatch.setattr("exoplan.reviewers.http.urllib.request.urlopen", lambda *a, **k: Resp(b"<html>oops"))
+    monkeypatch.setattr("setuhq.reviewers.http.urllib.request.urlopen", lambda *a, **k: Resp(b"<html>oops"))
     with pytest.raises(ReviewError, match="did not answer with JSON"):
         post_json("https://api.example.test/v1/x", {}, {}, 1.0)
 
 
 def test_example_mixed_panel_config_builds_three_providers(tmp_path):
-    from exoplan.config import load_config
-    from exoplan.names import display_name
+    from setuhq.config import load_config
+    from setuhq.names import display_name
 
     config = load_config("examples/panels/mixed_providers.toml")
     panel = [r for r in build_reviewers(config.reviewers, cache_root=tmp_path) if hasattr(r, "provider")]
@@ -450,7 +450,7 @@ COMMITTED_WEIGHTS = Path(__file__).resolve().parents[1] / "docs/results/reviewer
 
 
 def _committed():
-    from exoplan.calibrate import calibration_path
+    from setuhq.calibrate import calibration_path
 
     return json.loads(COMMITTED_WEIGHTS.read_text()), json.loads(calibration_path(COMMITTED_WEIGHTS).read_text())
 
@@ -501,7 +501,7 @@ def test_credentials_in_an_endpoint_are_refused_and_never_echoed(keys):
 
 
 def test_recorded_endpoint_never_carries_userinfo():
-    from exoplan.reviewers.http import safe_url
+    from setuhq.reviewers.http import safe_url
 
     assert safe_url(f"https://u:{SECRET}@h.example:8443") == "https://h.example:8443"
     one, two = safe_url("http://localhost:11434/v1"), safe_url("http://localhost:11434/v2?x=1")
@@ -535,7 +535,7 @@ def test_endpoint_screen_hardening(monkeypatch):
 def test_redaction_covers_wider_keys_and_base64():
     import base64
 
-    from exoplan.reviewers.http import _secrets, redact
+    from setuhq.reviewers.http import _secrets, redact
 
     key = "abc+def/ghi=jkl-mno_pqr"
     headers = {"Authorization": f"Bearer {key}"}
@@ -584,7 +584,7 @@ def test_auth_and_bad_request_errors_fail_fast(monkeypatch, image, keys, code, r
         raise urllib.error.HTTPError("https://api.openai.com/v1/chat/completions", code, "no", {},
                                      io.BytesIO(f'{{"error": "bad key {SECRET}"}}'.encode()))
 
-    monkeypatch.setattr("exoplan.reviewers.http.urllib.request.urlopen", http_error)
+    monkeypatch.setattr("setuhq.reviewers.http.urllib.request.urlopen", http_error)
     with pytest.raises(ReviewError) as err:
         OpenAIReviewer("r", model="m", retries=3).review(subject, png)
     assert len(calls) == (3 if retried else 1)
@@ -611,7 +611,7 @@ def test_anthropic_auth_error_fails_fast(monkeypatch, image):
 
 
 def test_redact_removes_tokens_and_the_configured_key():
-    from exoplan.reviewers.http import redact
+    from setuhq.reviewers.http import redact
 
     text = f'Bearer abc.def-123 key={SECRET} "api_key": "zzz-999" sk-proj-ABCDEFGH1234 AIza{"x" * 30} plain {SECRET}'
     out = redact(text, [SECRET])

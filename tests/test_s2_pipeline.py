@@ -6,11 +6,11 @@ from dataclasses import replace
 import numpy as np
 import pytest
 
-from exoplan.config import RunConfig, load_config
-from exoplan.lightcurve import LightCurve
-from exoplan.loaders import load_spoc_file, spoc_crowding
-from exoplan.pipeline import run_pipeline
-from exoplan.reviewers.simulated import SimulatedVolunteer
+from setuhq.config import RunConfig, load_config
+from setuhq.lightcurve import LightCurve
+from setuhq.loaders import load_spoc_file, spoc_crowding
+from setuhq.pipeline import run_pipeline
+from setuhq.reviewers.simulated import SimulatedVolunteer
 
 
 def _eccentric_binary(seed=3, *, crowdsap=0.7):
@@ -67,7 +67,7 @@ def test_decide_switch_turns_flags_into_failures(runs):
 
 
 def test_candidates_csv_carries_the_s2_columns(runs, tmp_path):
-    from exoplan.pipeline import write_candidates
+    from setuhq.pipeline import write_candidates
     import csv
 
     write_candidates(runs["flag"], tmp_path)
@@ -79,7 +79,7 @@ def test_candidates_csv_carries_the_s2_columns(runs, tmp_path):
 def test_pixel_tests_run_from_the_pipeline(tmp_path, monkeypatch):
     """With [vetting] pixel = true the pipeline fetches the TPF (stubbed here: a synthetic one with the eclipse on a
     neighbour) and stores the pixel report and its flags. Pass/fail is unchanged without decide."""
-    from exoplan import pixel
+    from setuhq import pixel
 
     def fake_tpf(tic, sector, cache_dir):
         assert (tic, sector) == (123, 1)
@@ -107,7 +107,7 @@ def test_pixel_tests_run_from_the_pipeline(tmp_path, monkeypatch):
 
 
 def test_pixel_failure_is_recorded_not_raised(tmp_path, monkeypatch):
-    from exoplan import pixel
+    from setuhq import pixel
 
     monkeypatch.setattr(pixel, "fetch_tpf", lambda *a, **k: (_ for _ in ()).throw(LookupError("MAST down")))
     lc = _eccentric_binary()
@@ -194,8 +194,8 @@ def test_transit_masked_detrending_removes_the_shoulders():
     """The review detrending overshoots beside each transit; read as brightenings, those shoulders vetoed real
     secondaries (a 200 ppm secondary: 0 of 20 flagged). Re-detrended with the transits masked, as DV does, the
     largest brightening falls to the noise level (median 9.2 sigma -> 2.6 sigma over 20 seeds)."""
-    from exoplan.dvtests import extended_vet
-    from exoplan.pipeline import prepare_lightcurves, vetting_lightcurve
+    from setuhq.dvtests import extended_vet
+    from setuhq.pipeline import prepare_lightcurves, vetting_lightcurve
 
     cfg = RunConfig(name="x")
     plain, masked = [], []
@@ -212,8 +212,8 @@ def test_shallow_secondary_is_flagged_through_the_full_preparation():
     """A 1000/200 ppm binary at 600 ppm noise, through clean, the two-pass masked detrend and 10-minute bins: the
     secondary keeps most of its depth (the trend no longer absorbs it) and is flagged (19 of 20 seeds when measured,
     10 of 20 with one pass)."""
-    from exoplan.dvtests import extended_vet
-    from exoplan.pipeline import vetting_lightcurve, vetting_lightcurve_two_pass
+    from setuhq.dvtests import extended_vet
+    from setuhq.pipeline import vetting_lightcurve, vetting_lightcurve_two_pass
 
     cfg = RunConfig(name="x")
     flagged, kept_one, kept_two = 0, [], []
@@ -237,7 +237,7 @@ def test_second_pass_masks_the_first_pass_dip_only_when_it_is_significant():
     biases the second pass upward (red-noise false alarms 1/600 -> 8/600 when the reviewer measured it). The dip is
     masked only when the first pass already finds it significant; phase 0.5 is always masked."""
     from dvtests_helpers import trapezoid_lc
-    from exoplan.pipeline import vetting_lightcurve_two_pass
+    from setuhq.pipeline import vetting_lightcurve_two_pass
 
     cfg = RunConfig(name="x")
     for seed in range(3):
@@ -262,9 +262,9 @@ def test_long_transits_through_the_two_pass_detrend_and_the_variants(hours):
     variants and the reduced FPP, for a 1000 ppm planet with a 6 or 10 hour transit. No flag, no excursion beyond the
     transit, every variant anchored, and the FPP not refused."""
     from dvtests_helpers import trapezoid_lc
-    from exoplan.dvtests import extended_vet
-    from exoplan.pipeline import MIN_ANCHOR_SUPPORT, secondary_variants, vetting_lightcurve_two_pass
-    from exoplan.validate import reduced_fpp
+    from setuhq.dvtests import extended_vet
+    from setuhq.pipeline import MIN_ANCHOR_SUPPORT, secondary_variants, vetting_lightcurve_two_pass
+    from setuhq.validate import reduced_fpp
 
     dur, cfg = hours / 24.0, RunConfig(name="x")
     eph = dict(period=9.0, t0=2.0, duration=dur)
@@ -288,8 +288,8 @@ def test_long_transits_survive_the_masked_detrend(hours):
     timing_inconsistent). With the trend interpolated across the masked span and the window widened to 12 T14, the
     light curve stays within the transit plus noise and no flag is raised."""
     from dvtests_helpers import trapezoid_lc
-    from exoplan.dvtests import extended_vet
-    from exoplan.pipeline import vetting_lightcurve
+    from setuhq.dvtests import extended_vet
+    from setuhq.pipeline import vetting_lightcurve
 
     dur = hours / 24.0
     for seed in range(4):
@@ -302,7 +302,7 @@ def test_long_transits_survive_the_masked_detrend(hours):
 
 
 def test_mask_anchor_support():
-    from exoplan.pipeline import mask_anchor_support
+    from setuhq.pipeline import mask_anchor_support
 
     t = np.arange(0.0, 10.0, 0.01)
     lone = (t >= 2.0) & (t < 2.6)
@@ -317,7 +317,7 @@ def test_poorly_anchored_variants_are_left_out():
     little to anchor the trend (spurious dips inside the spans refused the FPP), so those variants are dropped; the
     1 T14 variants are kept."""
     from dvtests_helpers import trapezoid_lc
-    from exoplan.pipeline import MIN_ANCHOR_SUPPORT, secondary_variants
+    from setuhq.pipeline import MIN_ANCHOR_SUPPORT, secondary_variants
 
     lc = trapezoid_lc(seed=1, period=1.5, t0=0.4, duration=0.15, depth=1000e-6, noise=600e-6, gap=None)
     var = secondary_variants([lc], RunConfig(name="x"), period=1.5, t0=0.4, duration=0.15, extra_phases=(0.5,))

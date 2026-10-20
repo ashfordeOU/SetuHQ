@@ -1,12 +1,12 @@
-# Install the SetuHQ MCP server (exoplan-mcp)
+# Install the SetuHQ MCP server (setuhq-mcp)
 
 > Candidates, not discoveries: every tool answer carries its provenance and honesty labels; keep them.
 > The server runs on your computer. Nothing is sent to Ashforde OÜ, and no tool calls a paid AI API
 > unless you ask it to run Sentinels and that provider's key is in your environment.
 
-`exoplan-mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server. Your assistant runs
+`setuhq-mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server. Your assistant runs
 SetuHQ's own code and reads its stored, reviewed results instead of guessing them. Each of its 16 tools is
-a thin wrapper over a public function in [`src/exoplan/tools.py`](../src/exoplan/tools.py); the server holds
+a thin wrapper over a public function in [`src/setuhq/tools.py`](../src/setuhq/tools.py); the server holds
 no logic of its own. The command is renamed `setuhq-mcp` at release.
 
 ## Install
@@ -16,24 +16,24 @@ From a checkout of this repository (Python 3.10 or later):
 ```sh
 python -m venv .venv
 .venv/bin/pip install -e '.[mcp]'        # adds the official MCP SDK; '.[mcp,tess]' also lets it download TESS data
-.venv/bin/exoplan-mcp --list-tools       # check: prints the 16 tool names
+.venv/bin/setuhq-mcp --list-tools       # check: prints the 16 tool names
 ```
 
 Clients start the server themselves, usually without your virtual environment, so the snippets below use the
-**absolute path** of `exoplan-mcp`. Replace `/path/to/SetuHQ` with your checkout. `EXOPLAN_ROOT` is the data
+**absolute path** of `setuhq-mcp`. Replace `/path/to/SetuHQ` with your checkout. `SETUHQ_ROOT` is the data
 root (the stored runs, the catalogue, the benchmarks); every path a tool reads or writes must be inside it.
 It defaults to the checkout the package was installed from, so you can leave it out for an editable install.
 
 | Channel | Command | Requires |
 |---|---|---|
-| Claude Code | `claude mcp add exoplan -- /path/to/SetuHQ/.venv/bin/exoplan-mcp` | the install above |
-| Claude Code plugin | `/plugin install exoplan --marketplace ashfordeOU/SetuHQ` (or `/plugin marketplace add ashfordeOU/SetuHQ`, then `/plugin install exoplan@setuhq`) | `exoplan-mcp` on PATH |
+| Claude Code | `claude mcp add setuhq -- /path/to/SetuHQ/.venv/bin/setuhq-mcp` | the install above |
+| Claude Code plugin | `/plugin install setuhq --marketplace ashfordeOU/SetuHQ` (or `/plugin marketplace add ashfordeOU/SetuHQ`, then `/plugin install setuhq@setuhq`) | `setuhq-mcp` on PATH |
 | Claude Desktop | `claude_desktop_config.json`, below | the install above |
 | Cursor | `~/.cursor/mcp.json`, below | the install above |
 | VS Code | `.vscode/mcp.json`, below | the install above |
-| Codex CLI | `codex mcp add exoplan -- /path/to/SetuHQ/.venv/bin/exoplan-mcp` | the install above |
-| Gemini CLI | `gemini mcp add exoplan /path/to/SetuHQ/.venv/bin/exoplan-mcp` | the install above |
-| Remote (streamable HTTP) | `exoplan-mcp --http 8080`, then `http://127.0.0.1:8080/mcp` (read-only tools unless `--allow-writes`) | your own host |
+| Codex CLI | `codex mcp add setuhq -- /path/to/SetuHQ/.venv/bin/setuhq-mcp` | the install above |
+| Gemini CLI | `gemini mcp add setuhq /path/to/SetuHQ/.venv/bin/setuhq-mcp` | the install above |
+| Remote (streamable HTTP) | `setuhq-mcp --http 8080`, then `http://127.0.0.1:8080/mcp` (read-only tools unless `--allow-writes`) | your own host |
 
 ## Each client's configuration
 
@@ -42,18 +42,18 @@ It defaults to the checkout the package was installed from, so you can leave it 
 Where: run in a terminal (add `--scope user` for every project).
 
 ```sh
-claude mcp add exoplan --env EXOPLAN_ROOT=/path/to/SetuHQ -- /path/to/SetuHQ/.venv/bin/exoplan-mcp
+claude mcp add setuhq --env SETUHQ_ROOT=/path/to/SetuHQ -- /path/to/SetuHQ/.venv/bin/setuhq-mcp
 ```
 
 Or as a plugin, with the slash commands and skills. The plugin declares the server once, in
 `.claude-plugin/plugin.json` (the repository has no separate `.mcp.json`, so the two cannot clash):
 
 ```
-/plugin install exoplan --marketplace ashfordeOU/SetuHQ
+/plugin install setuhq --marketplace ashfordeOU/SetuHQ
 ```
 
-On an older Claude Code: `/plugin marketplace add ashfordeOU/SetuHQ`, then `/plugin install exoplan@setuhq`.
-The plugin starts `exoplan-mcp` from your PATH, with the plugin's own copy of the repository as its data root.
+On an older Claude Code: `/plugin marketplace add ashfordeOU/SetuHQ`, then `/plugin install setuhq@setuhq`.
+The plugin starts `setuhq-mcp` from your PATH, with the plugin's own copy of the repository as its data root.
 
 ### Claude Desktop
 
@@ -62,10 +62,10 @@ Where: `claude_desktop_config.json` (Settings, Developer, Edit Config).
 ```json
 {
   "mcpServers": {
-    "exoplan": {
-      "command": "/path/to/SetuHQ/.venv/bin/exoplan-mcp",
+    "setuhq": {
+      "command": "/path/to/SetuHQ/.venv/bin/setuhq-mcp",
       "args": [],
-      "env": { "EXOPLAN_ROOT": "/path/to/SetuHQ" }
+      "env": { "SETUHQ_ROOT": "/path/to/SetuHQ" }
     }
   }
 }
@@ -78,10 +78,10 @@ Where: `~/.cursor/mcp.json` (or `.cursor/mcp.json` in a project).
 ```json
 {
   "mcpServers": {
-    "exoplan": {
-      "command": "/path/to/SetuHQ/.venv/bin/exoplan-mcp",
+    "setuhq": {
+      "command": "/path/to/SetuHQ/.venv/bin/setuhq-mcp",
       "args": [],
-      "env": { "EXOPLAN_ROOT": "/path/to/SetuHQ" }
+      "env": { "SETUHQ_ROOT": "/path/to/SetuHQ" }
     }
   }
 }
@@ -94,11 +94,11 @@ Where: `.vscode/mcp.json`. Or `code --add-mcp` with the same object plus a `name
 ```json
 {
   "servers": {
-    "exoplan": {
+    "setuhq": {
       "type": "stdio",
-      "command": "/path/to/SetuHQ/.venv/bin/exoplan-mcp",
+      "command": "/path/to/SetuHQ/.venv/bin/setuhq-mcp",
       "args": [],
-      "env": { "EXOPLAN_ROOT": "/path/to/SetuHQ" }
+      "env": { "SETUHQ_ROOT": "/path/to/SetuHQ" }
     }
   }
 }
@@ -109,14 +109,14 @@ Where: `.vscode/mcp.json`. Or `code --add-mcp` with the same object plus a `name
 Where: run in a terminal, or `~/.codex/config.toml`.
 
 ```sh
-codex mcp add exoplan --env EXOPLAN_ROOT=/path/to/SetuHQ -- /path/to/SetuHQ/.venv/bin/exoplan-mcp
+codex mcp add setuhq --env SETUHQ_ROOT=/path/to/SetuHQ -- /path/to/SetuHQ/.venv/bin/setuhq-mcp
 ```
 
 ```toml
-[mcp_servers.exoplan]
-command = "/path/to/SetuHQ/.venv/bin/exoplan-mcp"
+[mcp_servers.setuhq]
+command = "/path/to/SetuHQ/.venv/bin/setuhq-mcp"
 args = []
-env = { EXOPLAN_ROOT = "/path/to/SetuHQ" }
+env = { SETUHQ_ROOT = "/path/to/SetuHQ" }
 ```
 
 ### Gemini CLI
@@ -126,17 +126,17 @@ Where: `~/.gemini/settings.json`, or `gemini mcp add`.
 ```json
 {
   "mcpServers": {
-    "exoplan": {
-      "command": "/path/to/SetuHQ/.venv/bin/exoplan-mcp",
+    "setuhq": {
+      "command": "/path/to/SetuHQ/.venv/bin/setuhq-mcp",
       "args": [],
-      "env": { "EXOPLAN_ROOT": "/path/to/SetuHQ" }
+      "env": { "SETUHQ_ROOT": "/path/to/SetuHQ" }
     }
   }
 }
 ```
 
 ```sh
-gemini mcp add -e EXOPLAN_ROOT=/path/to/SetuHQ exoplan /path/to/SetuHQ/.venv/bin/exoplan-mcp
+gemini mcp add -e SETUHQ_ROOT=/path/to/SetuHQ setuhq /path/to/SetuHQ/.venv/bin/setuhq-mcp
 ```
 
 ## The tools
@@ -168,11 +168,11 @@ that is not a plain name, or a directory that already exists, is refused, so a t
 stored, reviewed run (such as `runs/tess-pi-men-s1`) or anything else in the data root. They reach outside
 this computer: `run_pipeline_tess` downloads from MAST, and with `sentinels: true` a run may call a provider's
 paid API with the server's keys. Not exposed as tools (use the command line, where a person runs them): the
-ExoFOP-style export (`exoplan export`), and scoring a leaderboard submission (`exoplan leaderboard`).
+ExoFOP-style export (`setuhq export`), and scoring a leaderboard submission (`setuhq leaderboard`).
 
 ## Remote use
 
-`exoplan-mcp --http 8080` serves streamable HTTP at `http://127.0.0.1:8080/mcp`, for a client that cannot
+`setuhq-mcp --http 8080` serves streamable HTTP at `http://127.0.0.1:8080/mcp`, for a client that cannot
 start a local process. It is for self-hosting, and it has **no authentication** of its own, so it is locked
 down by default:
 

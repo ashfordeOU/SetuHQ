@@ -48,8 +48,8 @@
 </picture>
 
 > **Preview.** This README is the draft for the public release. The product is being renamed
-> from *exoplan* to **SetuHQ**: the Python package, the command and the app's own title are still
-> `exoplan` until the release lands. Nothing on this page is a discovery claim: SetuHQ finds and
+> from *exoplan* to **SetuHQ**: the Python package and the command are now `setuhq`; the site is
+> rebuilt in the release. Nothing on this page is a discovery claim: SetuHQ finds and
 > vets *candidates*.
 
 ## Every dip in the sky, reviewed and explained
@@ -260,7 +260,7 @@ check.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/methods-strip-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/methods-strip-light.svg">
-  <img src="docs/assets/readme/methods-strip-light.svg" alt="Four methods, computed with exoplan.methods (the functions the app's Methods chapters draw with and the tests check). 1. Transit with limb darkening (transit_flux): pi Men c, k = Rp/R★ = 0.0156 from exoplanet.eu's 0.16719 RJ and 1.1 R☉ star, b = 0.5738, quadratic limb darkening u1 = 0.333, u2 = 0.228 (Claret 2017, Teff 6037 K): depth 267 ppm, against 244 ppm for a uniform disc, plotted against the planet's position across the star in stellar radii. 2. Radial velocity (rv_curve): HD 80606 b, P = 111.44 d, e = 0.93183, ω = 301.213°, K = 469.22 m/s, over one orbit. 3. Microlensing (paczynski): point-lens magnification A(u), on a log scale, against time in Einstein-crossing times for u0 = 0.1: peak A = 10.04, u0 = 0.3: peak A = 3.44, u0 = 1: peak A = 1.34. 4. Blocking starlight (airy_intensity, lyot_final_intensity): the star's image against separation 0 to 12 λ/D on a log scale, for a clear pupil and a Lyot coronagraph with a 4 λ/D mask; at 8 λ/D the clear pupil leaves 7.8×10⁻⁵ of the peak, the Lyot stop at 150% 6.7×10⁻⁵ and at 80% 1.8×10⁻⁷. Axes: relative flux against position across the star in stellar radii; radial velocity in m/s, with zero marked, against orbital phase; magnification on a log scale against time in Einstein-crossing times; intensity relative to the unblocked peak on a log scale against separation in λ/D. Models from stored values, not observations. Sources: src/exoplan/methods.py and docs/results/methods_examples.json (exoplanet.eu, fetched 2026-10-18), commit 903cf24." width="100%">
+  <img src="docs/assets/readme/methods-strip-light.svg" alt="Four methods, computed with setuhq.methods (the functions the app's Methods chapters draw with and the tests check). 1. Transit with limb darkening (transit_flux): pi Men c, k = Rp/R★ = 0.0156 from exoplanet.eu's 0.16719 RJ and 1.1 R☉ star, b = 0.5738, quadratic limb darkening u1 = 0.333, u2 = 0.228 (Claret 2017, Teff 6037 K): depth 267 ppm, against 244 ppm for a uniform disc, plotted against the planet's position across the star in stellar radii. 2. Radial velocity (rv_curve): HD 80606 b, P = 111.44 d, e = 0.93183, ω = 301.213°, K = 469.22 m/s, over one orbit. 3. Microlensing (paczynski): point-lens magnification A(u), on a log scale, against time in Einstein-crossing times for u0 = 0.1: peak A = 10.04, u0 = 0.3: peak A = 3.44, u0 = 1: peak A = 1.34. 4. Blocking starlight (airy_intensity, lyot_final_intensity): the star's image against separation 0 to 12 λ/D on a log scale, for a clear pupil and a Lyot coronagraph with a 4 λ/D mask; at 8 λ/D the clear pupil leaves 7.8×10⁻⁵ of the peak, the Lyot stop at 150% 6.7×10⁻⁵ and at 80% 1.8×10⁻⁷. Axes: relative flux against position across the star in stellar radii; radial velocity in m/s, with zero marked, against orbital phase; magnification on a log scale against time in Einstein-crossing times; intensity relative to the unblocked peak on a log scale against separation in λ/D. Models from stored values, not observations. Sources: src/setuhq/methods.py and docs/results/methods_examples.json (exoplanet.eu, fetched 2026-10-18), commit 903cf24." width="100%">
 </picture>
 
 ## How a run works
@@ -294,20 +294,20 @@ check.
    runs and benchmarks stay comparable with earlier ones. `[vetting] decide = true` makes `secondary_any_phase`,
    `odd_even_depth`, `odd_even_timing` and `centroid_offset` disqualifying, and lets the all-phase secondary search
    replace the phase-0.5 check. The pixel tests download TPFs and are off unless `[vetting] pixel = true`.
-7. **Weighs false-positive scenarios** for every periodic candidate (`validate.py`): exoplan's own reduced FPP
+7. **Weighs false-positive scenarios** for every periodic candidate (`validate.py`): SetuHQ's own reduced FPP
    (planet, eclipsing binary at P or 2P, eclipse on a resolved neighbour), built from the S2 measurements with stated
    priors. It is not TRICERATOPS and never says "validated". "Validated (statistically)" is reserved for TRICERATOPS
    with FPP < 0.015 and NFPP < 10⁻³ *and* a high-resolution imaging contrast curve; without a curve every candidate
-   is "not validated: no contrast curve". exoplan never calls its results confirmed.
+   is "not validated: no contrast curve". SetuHQ never calls its results confirmed.
 8. **Writes** a candidate catalogue (CSV and JSON), a Zooniverse-shaped classification export, a SQLite store, a provenance manifest, and a static report site.
-9. **Exports for follow-up** (`exoplan export RUN --out DIR`, `exofop.py`): an ExoFOP CTOI-style table (CSV and
+9. **Exports for follow-up** (`setuhq export RUN --out DIR`, `exofop.py`): an ExoFOP CTOI-style table (CSV and
    JSON) of vetted candidates that pass the S2 and S3 gates and duplicate no TOI on the same TIC, plus predicted
    transit windows for the next 12 months with the ephemeris uncertainty cone, σ(Tₙ)² = σ_T0² + n²σ_P² (+ 2n cov),
    the same propagation `match_toi` uses (`ephemeris.py`). **The CTOI field list is unverified against ExoFOP's
    current form** (ExoFOP was unreachable); it lives in one place, `exofop.CTOI_FIELDS`. A person submits CTOIs
-   under their own ExoFOP account; exoplan does not. Without the archive's TOI table the export refuses unless
+   under their own ExoFOP account; SetuHQ does not. Without the archive's TOI table the export refuses unless
    `--allow-unchecked`, and then every row says the check was not done.
-10. **Scales** with `exoplan batch CONFIG --targets FILE` (`batch.py`): the `discover` flow over any target list,
+10. **Scales** with `setuhq batch CONFIG --targets FILE` (`batch.py`): the `discover` flow over any target list,
    with light curves cached in `cache/lightkurve` and a state file that makes a killed or time-limited session
    resumable (done targets are skipped, failures retried, a changed config starts afresh).
 
@@ -421,19 +421,19 @@ affect a 300 ppm transit. Extended vetting, the reduced FPP and the export on th
   and 0.0074 before) each came from one setting.
   NFPP would be 0 (every TIC neighbour within 150″ would need an eclipse deeper than 100%, one of them only
   marginally). pi Men c is a published planet with a measured mass; this shows the scheme's limits on real data.
-* **Ephemeris cone.** Exporting the stored run (`exoplan export runs/tess-pi-men-s1 --allow-unchecked`; the
+* **Ephemeris cone.** Exporting the stored run (`setuhq export runs/tess-pi-men-s1 --allow-unchecked`; the
   archive's TOI table timed out, HTTP 504) gives one signal, P = 6.2681 ± 0.0012 d from the first subject's joint
   fit, and its predicted transit in October 2026 (epoch 479) carries σ = 13.8 h, a 3σ window of 86 h. A one-subject
   ephemeris is stale within a few years, as ATLAS G5 warns. With the TOI table, this signal is TOI 144.01 and is
   excluded as a duplicate (tested with the published ephemeris).
-* **The difference-image centroid of pi Men is not usable, and exoplan says so.** The PSF fit puts the difference
+* **The difference-image centroid of pi Men is not usable, and SetuHQ says so.** The PSF fit puts the difference
   image 2.05 px (40.1″) from the catalogue position, mostly in the row coordinate (row −1.91 px, column −0.74 px),
   which is the direction charge bleeds along a CCD column. SPOC's own DV report for TOI 144.01 finds the same size and
   direction: 40.5″, row −2.07 px, column 0.02 px, with a DV quality metric of 0.58, below DV's 0.7 reliability cut.
   pi Men (Tmag 5.1) is saturated: five pixels of one column sit on a plateau within 5% of the
   peak, a bleed trail. A transit shortens the trail instead of dimming a PSF, so the "offset" is the trail's end.
   The fit says so too: the difference-image PSF collapses to its 0.3 px width bound, 3.4 times narrower than the
-  out-of-transit one. exoplan flags `saturated` and `centroid_unreliable` and raises no `centroid_offset`. The
+  out-of-transit one. SetuHQ flags `saturated` and `centroid_unreliable` and raises no `centroid_offset`. The
   per-cadence centroid motion test sees no shift (0.1σ), but on a saturated star that carries no information
   either: the flux-weighted centroid of a clipped bleed trail need not move when the star dims. Of 56 TIC stars
   within 150″, all but the target would need an eclipse deeper than 100%; the nearest, TIC 261139071 (Tmag
@@ -493,7 +493,7 @@ empty subjects: weight 0.5 each, against 0.4 to 0.6 for the Probes).
 
 <br>
 
-The search, `exoplan discover` (the command keeps its name), runs one batch of TESS targets. It rotates through the TOI host list
+The search, `setuhq discover` (the command keeps its name), runs one batch of TESS targets. It rotates through the TOI host list
 so coverage advances each day, reviews the two latest sectors of each target, and keeps
 every new dip in a deduplicated catalogue. A dip is `known_toi` when it matches a
 published TOI period, and `new_candidate` otherwise.
@@ -544,9 +544,9 @@ published pipelines.
   TOI a planet scores zero, flagged or not, and ranks only entries measured on both controls; the 40-star Sentinel
   subsample is listed, never ranked. **A metadata-only floor that never reads a light curve is ranked too, and the
   benchmark cannot show that the Probes beat it**: a paired comparison over the same stars puts the floor ahead by a
-  ΔJ whose interval includes zero (docs/leaderboard/leaderboard.md). `exoplan leaderboard my.json` scores a submission and refuses
+  ΔJ whose interval includes zero (docs/leaderboard/leaderboard.md). `setuhq leaderboard my.json` scores a submission and refuses
   one that states anything but the hash of the tuning-half-only inputs or carries a field outside the whitelist.
-  It is seeded with exoplan's own configurations, built from the benchmark's stored outputs
+  It is seeded with SetuHQ's own configurations, built from the benchmark's stored outputs
   (`scripts/leaderboard_seed.py`).
 * **The methods paper draft** ([docs/paper/paper.md](docs/paper/paper.md), AAS/AJ style, Markdown) reports the
   benchmark with its negative results. Every number in it comes from the committed JSON through
@@ -560,9 +560,9 @@ published pipelines.
 <br>
 
 The planet search used to throw away every dip that was not a planet candidate. The sweep keeps them.
-`exoplan sweep` works through a TESS sector's SPOC 2-minute targets and, for each star-sector, keeps every
+`setuhq sweep` works through a TESS sector's SPOC 2-minute targets and, for each star-sector, keeps every
 consensus dip of the panel (whatever the panel's label), every brightening and the star's variability, and
-classifies each by first-match rules in [src/exoplan/variables.py](src/exoplan/variables.py):
+classifies each by first-match rules in [src/setuhq/variables.py](src/setuhq/variables.py):
 
 | Class | Rule (summary) |
 |---|---|
@@ -587,9 +587,9 @@ star-sectors, beside McNemar's exact test on the star-sectors with events on one
 its null only when both agree; otherwise the site calls it "not distinguishable from noise in this slice".
 
 ```bash
-exoplan sweep configs/sweep.toml --sector 1 --limit 200 --workers 3   # resumable; cached; polite to MAST
-exoplan bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out bundle/
-exoplan ingest bundle/ --attested-by <pr-author>   # sealed, not signed: re-searches every finding + max(3, 5%) by a nonce
+setuhq sweep configs/sweep.toml --sector 1 --limit 200 --workers 3   # resumable; cached; polite to MAST
+setuhq bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out bundle/
+setuhq ingest bundle/ --attested-by <pr-author>   # sealed, not signed: re-searches every finding + max(3, 5%) by a nonce
 ```
 
 The site reads `docs/sweep/catalogue.json`: the Overview's counter, #/variables (Catalogue › Everything that
@@ -792,21 +792,19 @@ events and nulls. That second step is not built yet.
 
 ## Quick start
 
-> The package and command are still named `exoplan`; they become `setuhq` in the release.
-
 ```bash
 pip install -e ".[tess,dev]"         # add ,claude for the API backend
 pytest -q                            # offline tests (network- and slow-marked tests are deselected)
 
-exoplan run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
-exoplan rebuild runs/tess-pi-men-s1 configs/tess_pi_men_s1.toml   # re-vet from the stored classifications
-exoplan report runs/tess-pi-men-s1 --out site --validation docs/results/pi_men_validation.md
-exoplan calibrate configs/tess_pi_men_s1.toml --out weights.json
-exoplan benchmark configs/benchmark_simulated_panel.toml --weights weights.json --out bench.md
-exoplan export runs/tess-pi-men-s1 --out export   # CTOI-style table and predicted windows (refuses without the TOI check)
-exoplan leaderboard my-method.json   # score a submission to the real-TOI leaderboard
-exoplan sweep configs/sweep.toml --sector 1 --limit 20   # the everything-that-dims sweep (resumable)
-exoplan-mcp --list-tools             # the MCP server (pip install -e ".[mcp]")
+setuhq run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
+setuhq rebuild runs/tess-pi-men-s1 configs/tess_pi_men_s1.toml   # re-vet from the stored classifications
+setuhq report runs/tess-pi-men-s1 --out site --validation docs/results/pi_men_validation.md
+setuhq calibrate configs/tess_pi_men_s1.toml --out weights.json
+setuhq benchmark configs/benchmark_simulated_panel.toml --weights weights.json --out bench.md
+setuhq export runs/tess-pi-men-s1 --out export   # CTOI-style table and predicted windows (refuses without the TOI check)
+setuhq leaderboard my-method.json   # score a submission to the real-TOI leaderboard
+setuhq sweep configs/sweep.toml --sector 1 --limit 20   # the everything-that-dims sweep (resumable)
+setuhq-mcp --list-tools             # the MCP server (pip install -e ".[mcp]")
 pytest -q -m network                 # live MAST download test
 scripts/ci_local.sh                  # everything CI runs, plus the slow tests and the README check
 ```
@@ -819,7 +817,7 @@ that changes a result is in the config, and its hash goes into the manifest.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/architecture-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/architecture-light.svg">
-  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 48 modules (one Python package, src/exoplan); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, app, crossmatch, plate, report, leaderboard); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 724 tests (2 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/exoplan, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 8dde211." width="100%">
+  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 48 modules (one Python package, src/setuhq); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, app, crossmatch, plate, report, leaderboard); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 724 tests (2 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/setuhq, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 8dde211." width="100%">
 </picture>
 
 <details>
@@ -828,7 +826,7 @@ that changes a result is in the config, and its hash goes into the manifest.
 <br>
 
 ```
-src/exoplan/
+src/setuhq/
   lightcurve.py   container with provenance      loaders.py   TESS (MAST), CHEOPS FITS, CSV
   preprocess.py   clean, detrend, bin            subjects.py  blind-coded 13-day segments
   search.py       BLS and single-event search    vet.py       automatic vetting
@@ -843,7 +841,7 @@ src/exoplan/
   variables.py    everything-that-dims rules     starsearch.py one star-sector of the sweep
   sweep.py        resumable sector sweep         contrib.py   contribution bundles and ingest
   everything.py   #/variables, counter, Sky layer
-  tools.py        the MCP tools' functions       mcp_server.py exoplan-mcp
+  tools.py        the MCP tools' functions       mcp_server.py setuhq-mcp
   agreement.py    Sentinel agreement, effective number of voters
   reviewers/      simulated; Sentinels: sentinel.py (shared), claude (API), claude_code (CLI),
                   openai_compat (OpenAI and compatible endpoints), gemini
@@ -859,8 +857,8 @@ skills/, commands/, .claude-plugin/   the Claude Code plugin    examples/  mixed
 ## Contribute a sweep
 
 Run SetuHQ on a TESS sector with your own Claude subscription or API key, send a sealed bundle in a pull
-request, and get credit on every entry you bring: `exoplan sweep`, then `exoplan bundle`; a maintainer runs
-`exoplan ingest`, which searches every finding again before it counts. The guide is
+request, and get credit on every entry you bring: `setuhq sweep`, then `setuhq bundle`; a maintainer runs
+`setuhq ingest`, which searches every finding again before it counts. The guide is
 [CONTRIBUTING.md](CONTRIBUTING.md), and the sweep itself is under [Evidence](#evidence). Keys never go in a file or
 a message: environment variables only.
 
@@ -895,7 +893,7 @@ Sentinel · Volunteer on Claude, Sentinel · Skeptic on OpenAI, a third on Gemin
 * **Cache:** the Anthropic API cache key now includes the provider, so answers cached by the `claude` backend
   before this change are asked once more; the Claude Code cache key is unchanged.
 * **Weights are per provider and model.** A Sentinel not calibrated on its provider and model votes at the
-  floor weight (0.05) and is labelled *uncalibrated* until `exoplan calibrate` measures it.
+  floor weight (0.05) and is labelled *uncalibrated* until `setuhq calibrate` measures it.
 * **Why it matters:** the two Claude personas agree with φ = 0.89, so they are close to one voter.
   `scripts/benchmark_real_tois.py sentinels --panel <config>` runs any panel's Sentinels on the same
   40-star subsample (only where their keys are set) and the report adds the φ of every pair, to measure
@@ -903,9 +901,9 @@ Sentinel · Volunteer on Claude, Sentinel · Skeptic on OpenAI, a third on Gemin
 
 ## AI assistant (MCP, agents)
 
-[`exoplan-mcp`](src/exoplan/mcp_server.py) is an MCP server: your assistant runs SetuHQ's own code and
+[`setuhq-mcp`](src/setuhq/mcp_server.py) is an MCP server: your assistant runs SetuHQ's own code and
 reads its stored results, instead of guessing them. Each of its 16 tools is a thin wrapper over a public
-function ([`src/exoplan/tools.py`](src/exoplan/tools.py)), and every answer carries its provenance and
+function ([`src/setuhq/tools.py`](src/setuhq/tools.py)), and every answer carries its provenance and
 honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for self-hosting.
 
 > The server runs on your computer; nothing is sent to Ashforde OÜ. What an assistant finds with it is a
@@ -913,11 +911,11 @@ honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for 
 
 | Channel | Command | Requires |
 |---|---|---|
-| Install | `pip install -e '.[mcp]'` in a checkout, then `exoplan-mcp --list-tools` | Python 3.10+ |
-| Claude Code | `claude mcp add exoplan -- /path/to/SetuHQ/.venv/bin/exoplan-mcp` | the install |
-| Claude Code plugin | `/plugin install exoplan --marketplace ashfordeOU/SetuHQ` | `exoplan-mcp` on PATH |
+| Install | `pip install -e '.[mcp]'` in a checkout, then `setuhq-mcp --list-tools` | Python 3.10+ |
+| Claude Code | `claude mcp add setuhq -- /path/to/SetuHQ/.venv/bin/setuhq-mcp` | the install |
+| Claude Code plugin | `/plugin install setuhq --marketplace ashfordeOU/SetuHQ` | `setuhq-mcp` on PATH |
 | Claude Desktop, Cursor, VS Code, Codex CLI, Gemini CLI | snippets in [`docs/MCP-INSTALL.md`](docs/MCP-INSTALL.md) | the install |
-| Remote (streamable HTTP) | `exoplan-mcp --http 8080` (localhost, read-only tools unless `--allow-writes`; no auth) | your own host |
+| Remote (streamable HTTP) | `setuhq-mcp --http 8080` (localhost, read-only tools unless `--allow-writes`; no auth) | your own host |
 
 | Tools | What they do |
 |---|---|
@@ -928,8 +926,8 @@ honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for 
 | `rv_semi_amplitude`, `transit_depth`, `microlensing_magnification`, `habitable_zone` | the Methods physics |
 | `benchmark_results`, `sentinel_providers` | the stored benchmarks; which providers can run here |
 
-The plugin adds slash commands over the tools (`/exoplan-vet`, `/exoplan-explain`, `/exoplan-sweep`,
-`/exoplan-catalogue`, `/exoplan-physics`, `/exoplan-benchmarks`) and four skills in [`skills/`](skills/):
+The plugin adds slash commands over the tools (`/setuhq-vet`, `/setuhq-explain`, `/setuhq-sweep`,
+`/setuhq-catalogue`, `/setuhq-physics`, `/setuhq-benchmarks`) and four skills in [`skills/`](skills/):
 vet a TESS target, explain a candidate, run a sector sweep, submit to the leaderboard.
 [`examples/agents/vet_agent.py`](examples/agents/vet_agent.py) is an **example** agent (Claude Agent SDK,
 `.[agents]`) that vets one candidate end to end through the server: it logs every tool call and result to a

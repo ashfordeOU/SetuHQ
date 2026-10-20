@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import docket as docket_mod
-from exoplan.everything import DEFAULT_SWEEP, VARIABLES_JS, load_sweep, sweep_meta, variables_filter
+from setuhq import docket as docket_mod
+from setuhq.everything import DEFAULT_SWEEP, VARIABLES_JS, load_sweep, sweep_meta, variables_filter
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -66,7 +66,7 @@ def test_every_figure_comes_from_the_committed_catalogue(pi_men_app):
 def test_the_page_states_the_slice_the_rules_the_control_and_the_attribution(pi_men_app):
     page = _page(pi_men_app)
     v = _route(page, "variables")
-    from exoplan.names import ATTRIBUTION
+    from setuhq.names import ATTRIBUTION
 
     assert 'id="h-variables"' in v and ATTRIBUTION in v
     assert "Nothing here is a new or confirmed planet." in v and "separate from the discovery feed" in v
@@ -94,7 +94,7 @@ def test_sky_layer_and_mission_telemetry(pi_men_app):
     page = _page(pi_men_app)
     sky = _route(page, "sky")
     n = sum(1 for r in CAT["coverage"] if r["status"] == "searched" and r["ra"] is not None)
-    assert 'data-layer="sweep"' in sky and f"exoplan sweep ({n:,} star-sectors)" in sky
+    assert 'data-layer="sweep"' in sky and f"setuhq sweep ({n:,} star-sectors)" in sky
     assert sky.count('data-layer="sweep"') == 1
     assert "D.sweep" in page and "Sweep <b>" in page
 
@@ -117,7 +117,7 @@ def test_the_coherence_counts_and_limits_come_from_the_data(pi_men_app):
 def test_the_page_filter_matches_python(tmp_path):
     meta = sweep_meta(CAT)
     js = VARIABLES_JS[VARIABLES_JS.index("function decodeVarView"):VARIABLES_JS.index("function vaSort")]
-    views = [{}, {"class": "variable"}, {"class": "flare,systematic", "conf": "high"}, {"q": "tic 1"}, {"toi": "1"}, {"q": "exoplan"}]
+    views = [{}, {"class": "variable"}, {"class": "flare,systematic", "conf": "high"}, {"q": "tic 1"}, {"toi": "1"}, {"q": "setuhq"}]
     script = (f"const VA = {json.dumps(meta)}; const VA_CLASSES = VA.classes.map(c => c.id); const VA_CONF = ['high','medium','low','n/a'];\n"
               f"const E = {json.dumps(CAT['entries'])};\n" + js +
               f"\nconsole.log(JSON.stringify({json.dumps(views)}.map(q => {{ const v = decodeVarView(new URLSearchParams(q)); "
@@ -148,7 +148,7 @@ const { chromium } = require(%s);
   const out = [], ext = [];
   for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) for (const theme of ['dark', 'light']) {
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob, reducedMotion: 'reduce' });
-    await c.addInitScript(t => { try { localStorage.setItem('exoplan-theme', t); } catch (e) {} }, theme);
+    await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = [];
     p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
     p.on('request', r => { if (!/^(file|data|blob):/.test(r.url())) ext.push(r.url()); });

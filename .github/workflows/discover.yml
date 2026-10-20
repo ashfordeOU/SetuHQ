@@ -31,7 +31,7 @@ jobs:
       - name: Run one discovery batch
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: .venv/bin/exoplan discover configs/discovery.toml --batch-size 20 --time-budget-min 300
+        run: .venv/bin/setuhq discover configs/discovery.toml --batch-size 20 --time-budget-min 300
       - name: Commit catalogue
         run: |
           git config user.name "ashfordeOU"

@@ -15,9 +15,9 @@ normalise it is itself estimated from the same few dozen to few hundred position
 The larger of the two cadences is kept at each position count. It also measures the effective number of
 independent positions N_eff, from P(max > z) = 1 − Φ(z)^N_eff at the true σ (for reference), and stores the
 empirical CDF of q_dip (both cadences pooled, 40,000 scans) on a grid of z, which the reduced FPP uses as its
-no-secondary likelihood (``exoplan.dvtests.null_cdf``), with a generalized Pareto (ξ = 0) fit to its tail above
+no-secondary likelihood (``setuhq.dvtests.null_cdf``), with a generalized Pareto (ξ = 0) fit to its tail above
 the 99th percentile (``null_tail``). Output: ``docs/results/secondary_calibration.json``, whose
-quantiles are copied into ``exoplan.dvtests.SECONDARY_TABLE``.
+quantiles are copied into ``setuhq.dvtests.SECONDARY_TABLE``.
 
     python scripts/calibrate_secondary.py               # the table (about 10 minutes) and the rates
     python scripts/calibrate_secondary.py --rates-only  # only the reproduced rates
@@ -37,7 +37,7 @@ from scipy.stats import beta, genpareto, norm
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests"))
-from exoplan import dvtests  # noqa: E402
+from setuhq import dvtests  # noqa: E402
 
 DUR = 0.125
 DAYS = 27.0

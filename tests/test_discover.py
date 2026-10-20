@@ -1,6 +1,6 @@
 import pytest
 
-from exoplan.discover import Target, Toi, match_toi, reclassify_catalog, toi_fields
+from setuhq.discover import Target, Toi, match_toi, reclassify_catalog, toi_fields
 
 # TOI-2669.01 on TIC 348835438 (CP), as published in the NASA Exoplanet Archive TOI table.
 TOI_2669 = Toi(name="2669.01", period=6.2034960, tranmid=2459985.6041570, period_err=0.0000390,

@@ -17,16 +17,16 @@ package's own functions, at generation time):
   the Setu mark (docs/assets/readme/brand/setu-mark.svg, the Setu brand kit's file) cropped to its own
   box, "Setu" in Unbounded 600 and "HQ" with the transit Q (see docs/assets/brand/README.md);
 * hero: every planet in docs/results/exoplanet_map.json (exoplanet.eu), placed by galactic longitude
-  (exoplan.galaxy.galactic_lb) and its listed distance;
+  (setuhq.galaxy.galactic_lb) and its listed distance;
 * pi-men: the stored light curve (runs/tess-pi-men-s1/subjects/), the reviewers' marks
   (classifications.csv), the consensus dips (candidates.json) and the limb-darkened joint fit
-  (docs/results/pi_men_validation.json, drawn with exoplan.transitfit.transit_model);
+  (docs/results/pi_men_validation.json, drawn with setuhq.transitfit.transit_model);
 * benchmark, feed-noise: docs/results/benchmark_real_tois.json, with the published reference points
   from docs/paper/references.json (each value checked in its source paper; the paper's claims read them too);
 * sky-coverage: docs/results/survey_coverage.json, on a Mollweide projection;
 * flow-pipeline, architecture: the stored run's counts and the repository's own counts (modules,
   CLI commands, Methods chapters, tests collected by pytest, leaderboard trials);
-* methods-strip: exoplan.methods functions (transit_flux, rv_curve, paczynski, airy_intensity,
+* methods-strip: setuhq.methods functions (transit_flux, rv_curve, paczynski, airy_intensity,
   lyot_pupil_field) on docs/results/methods_examples.json planets.
 
 Each SVG carries a <desc> that states every number on it, its source file and that file's commit.
@@ -77,10 +77,10 @@ from fontTools.varLib import instancer
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from exoplan import benchmark_toi as BT  # noqa: E402
-from exoplan import galaxy as GX  # noqa: E402
-from exoplan import methods as MX  # noqa: E402
-from exoplan import transitfit as TF  # noqa: E402
+from setuhq import benchmark_toi as BT  # noqa: E402
+from setuhq import galaxy as GX  # noqa: E402
+from setuhq import methods as MX  # noqa: E402
+from setuhq import transitfit as TF  # noqa: E402
 
 FONT_DIR = ROOT / "tools" / "readme-fonts"
 OUT = ROOT / "docs" / "assets" / "readme"
@@ -99,7 +99,7 @@ SHOT_WIDTH = 1600         # every app screenshot, in pixels
 SHOT_QUALITY = 80         # WebP quality
 
 # --------------------------------------------------------------------------------------
-# Theme: the app's tokens (src/exoplan/app.py :root and :root[data-theme="light"])
+# Theme: the app's tokens (src/setuhq/app.py :root and :root[data-theme="light"])
 # --------------------------------------------------------------------------------------
 
 DARK = {
@@ -1534,7 +1534,7 @@ def sky_coverage(t: dict, d: dict) -> Svg:
 
 @lru_cache(maxsize=1)
 def repo_counts() -> dict:
-    src = ROOT / "src" / "exoplan"
+    src = ROOT / "src" / "setuhq"
     mods = sorted(p for p in src.glob("*.py") if p.name != "__init__.py")
     cli = re.findall(r'add_parser\("([a-z-]+)"', (src / "cli.py").read_text(encoding="utf-8"))
     out = subprocess.run([sys.executable, "-m", "pytest", "--collect-only", "-q", "-o", "addopts="],
@@ -1674,7 +1674,7 @@ def arch_columns(d: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
                                   ("TOI table", f"{b['stars_run']} TOIs sampled with seed {b['sample']['seed']}"),
                                   ("Claret 2017", "TESS limb darkening"),
                                   ("JWST", "WASP-39 b spectrum, from Zenodo")]),
-        ("Engine", "known", [(f"{rc['modules']} modules", "one Python package, src/exoplan"),
+        ("Engine", "known", [(f"{rc['modules']} modules", "one Python package, src/setuhq"),
                              ("Pipeline", "preprocess, subjects, search, vet, transitfit"),
                              ("Scoring", "aggregate, calibrate, benchmark_toi"),
                              ("Pages", "report, app, galaxy, methods, mission")]),
@@ -1699,14 +1699,14 @@ ARCH_CARD = (22, 112, 330)   # gap, top, height
 def arch_desc(d: dict) -> str:
     parts = [f"{title}: " + "; ".join(f"{a} ({b_})" for a, b_ in items) for title, _, items in arch_columns(d)]
     return ("SetuHQ's architecture, with counts read from the repository. " + ". ".join(parts)
-            + ". " + ARCH_PROVENANCE + f" Counts read from src/exoplan, the CLI and pytest --collect-only; data from "
+            + ". " + ARCH_PROVENANCE + f" Counts read from src/setuhq, the CLI and pytest --collect-only; data from "
             f"{', '.join(ARCH_SRC)} ({THRESHOLD_SWEEP} is the threshold sweep), commit {d['commit']}.")
 
 
 def architecture(t: dict, d: dict) -> Svg:
     s = Svg(W, H, "SetuHQ's architecture", arch_desc(d))
     frame(s, t, "Architecture · counts read from the repository", "One engine, one panel, every surface checked",
-          f"Counts: src/exoplan, pytest --collect-only · data: {THRESHOLD_SWEEP} (threshold sweep), docs/results · commit {d['commit']}",
+          f"Counts: src/setuhq, pytest --collect-only · data: {THRESHOLD_SWEEP} (threshold sweep), docs/results · commit {d['commit']}",
           t["known"])
     cols = arch_columns(d)
     n = len(cols)
@@ -1742,10 +1742,10 @@ def architecture(t: dict, d: dict) -> Svg:
 
 
 # --------------------------------------------------------------------------------------
-# Methods strip: four small multiples computed with exoplan.methods
+# Methods strip: four small multiples computed with setuhq.methods
 # --------------------------------------------------------------------------------------
 
-METHODS_SRC = ("src/exoplan/methods.py", "docs/results/methods_examples.json")
+METHODS_SRC = ("src/setuhq/methods.py", "docs/results/methods_examples.json")
 
 
 @lru_cache(maxsize=None)
@@ -1801,7 +1801,7 @@ def sci(x: float) -> str:
 def methods_desc(d: dict) -> str:
     pm, hd, nums = d["pm"], d["hd"], d["nums"]
     peaks = ", ".join(f"u0 = {u0:g}: peak A = {MX.paczynski(u0):.2f}" for u0 in d["u0s"])
-    return ("Four methods, computed with exoplan.methods (the functions the app's Methods chapters draw with and the tests check). "
+    return ("Four methods, computed with setuhq.methods (the functions the app's Methods chapters draw with and the tests check). "
             f"1. Transit with limb darkening (transit_flux): pi Men c, k = Rp/R★ = {d['k']:.4f} from exoplanet.eu's {pm['radius']} RJ and "
             f"{pm['star_radius']} R☉ star, b = {d['b']}, quadratic limb darkening u1 = {d['u1']:.3f}, u2 = {d['u2']:.3f} (Claret 2017, "
             f"Teff {pm['star_teff']:.0f} K): depth {1e6 * d['depth_ld']:.0f} ppm, against {1e6 * d['depth_flat']:.0f} ppm for a uniform disc, "
@@ -1812,15 +1812,15 @@ def methods_desc(d: dict) -> str:
             f"4. Blocking starlight (airy_intensity, lyot_final_intensity): the star's image against separation 0 to 12 λ/D on a log scale, "
             f"for a clear pupil and a Lyot coronagraph with a {d['mask']} λ/D mask; at 8 λ/D the clear pupil leaves {sci(nums[2])} of the peak, "
             f"the Lyot stop at 150% {sci(nums[0])} and at 80% {sci(nums[1])}. Axes: relative flux against position across the star in stellar radii; radial velocity in m/s, with zero marked, against orbital phase; magnification on a log scale against time in Einstein-crossing times; intensity relative to the unblocked peak on a log scale against separation in λ/D. Models from stored values, not observations. "
-            f"Sources: src/exoplan/methods.py and docs/results/methods_examples.json (exoplanet.eu, fetched {d['ex']['fetched_at'][:10]}), "
+            f"Sources: src/setuhq/methods.py and docs/results/methods_examples.json (exoplanet.eu, fetched {d['ex']['fetched_at'][:10]}), "
             f"commit {d['commit']}.")
 
 
 def methods_strip(t: dict, d: dict) -> Svg:
     pm, hd, nums = d["pm"], d["hd"], d["nums"]
     s = Svg(W, H, "Four methods, computed", methods_desc(d))
-    frame(s, t, f"Methods · {repo_counts()['chapters']} chapters · computed with exoplan.methods", "How planets are found, computed rather than drawn",
-          f"Source: src/exoplan/methods.py · docs/results/methods_examples.json (exoplanet.eu, {d['ex']['fetched_at'][:10]}) · commit {d['commit']}",
+    frame(s, t, f"Methods · {repo_counts()['chapters']} chapters · computed with setuhq.methods", "How planets are found, computed rather than drawn",
+          f"Source: src/setuhq/methods.py · docs/results/methods_examples.json (exoplanet.eu, {d['ex']['fetched_at'][:10]}) · commit {d['commit']}",
           t["prb"])
     n, gap = 4, 20
     pw = (MX1 - MX0 - (n - 1) * gap) / n

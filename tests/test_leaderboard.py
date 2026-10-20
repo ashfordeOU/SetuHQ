@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import leaderboard as L
-from exoplan.cli import main as cli_main
+from setuhq import leaderboard as L
+from setuhq.cli import main as cli_main
 
 ROOT = Path(__file__).resolve().parents[1]
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
@@ -400,7 +400,7 @@ def test_app_leaderboard_route_shows_the_table_rules_and_hash(pi_men_app):
     assert RESULTS["floor_note"] in sec
     assert "40 stars cannot order these configurations" in sec
     assert sec.count('data-l="Rank"') == sum(1 for e in RESULTS["entries"] if e["scope"] == "held_out")
-    from exoplan.names import ATTRIBUTION
+    from setuhq.names import ATTRIBUTION
 
     assert ATTRIBUTION in sec  # the app's attribution, provider-aware since the multi-provider Sentinels
     assert "SuperIntelligence" not in sec and "confirmed" not in sec.lower().replace("unconfirmed", "")
@@ -418,7 +418,7 @@ const { chromium } = require(%s);
   const out = [], ext = [];
   for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) for (const theme of ['dark', 'light']) {
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
-    await c.addInitScript(t => { try { localStorage.setItem('exoplan-theme', t); } catch (e) {} }, theme);
+    await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = [];
     p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
     p.on('request', r => { if (!/^(file|data|blob):/.test(r.url())) ext.push(r.url()); });

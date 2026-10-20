@@ -5,8 +5,8 @@ description: Run SetuHQ's full transit pipeline on TESS targets in a sector (or 
 
 # Run a sector sweep
 
-Use the `exoplan` MCP server's `run_pipeline_tess`, `run_pipeline_csv`, `sentinel_providers`,
-`list_candidates` and `get_candidate`. See `/exoplan-sweep` for the step list.
+Use the `setuhq` MCP server's `run_pipeline_tess`, `run_pipeline_csv`, `sentinel_providers`,
+`list_candidates` and `get_candidate`. See `/setuhq-sweep` for the step list.
 
 Rules that apply every time:
 

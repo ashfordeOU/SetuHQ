@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import benchmark_toi as B
-from exoplan.agreement import effective_voters, pairwise, phi
+from setuhq import benchmark_toi as B
+from setuhq.agreement import effective_voters, pairwise, phi
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -80,7 +80,7 @@ def test_sentinel_section_reads_as_before_with_only_claude():
 
 
 def test_effective_voters_leave_out_a_constant_reviewer_and_say_so():
-    from exoplan.agreement import constant_reviewers
+    from setuhq.agreement import constant_reviewers
 
     hits = {"a": {"x": True, "y": True, "z": False}, "b": {"x": False, "y": False, "z": False},
             "c": {"x": True, "y": False, "z": False}}

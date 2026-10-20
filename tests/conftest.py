@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from exoplan.injection import fixed_injection, synthetic_subject
-from exoplan.lightcurve import LightCurve
+from setuhq.injection import fixed_injection, synthetic_subject
+from setuhq.lightcurve import LightCurve
 
 
 @pytest.fixture
@@ -53,8 +53,8 @@ def pi_men_app(tmp_path_factory):
     query refused (no network). Shared by every module that reads the built site; tests must not write into it."""
     from pathlib import Path
 
-    import exoplan.docket as dm
-    from exoplan.app import build_app
+    import setuhq.docket as dm
+    from setuhq.app import build_app
 
     keep = dm.query_archive
     dm.query_archive = lambda *a, **k: (_ for _ in ()).throw(ConnectionError("test"))
@@ -67,9 +67,9 @@ def pi_men_app(tmp_path_factory):
 
 def _synthetic_run(out, *, seed, target, name):
     """A 26-day synthetic TESS run (six 2500 ppm transits every 4 days) through the pipeline with two Probes."""
-    from exoplan.config import RunConfig
-    from exoplan.pipeline import run_pipeline
-    from exoplan.reviewers.simulated import SimulatedVolunteer
+    from setuhq.config import RunConfig
+    from setuhq.pipeline import run_pipeline
+    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     rng = np.random.default_rng(seed)
     time = np.arange(0.0, 26.0, 10 / 1440)

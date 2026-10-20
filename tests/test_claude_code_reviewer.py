@@ -2,9 +2,9 @@ import json
 
 import pytest
 
-from exoplan.reviewers import ClaudeCodeReviewer
-from exoplan.reviewers.claude import ReviewError
-from exoplan.render import render_subject
+from setuhq.reviewers import ClaudeCodeReviewer
+from setuhq.reviewers.claude import ReviewError
+from setuhq.render import render_subject
 
 
 def _envelope(marks, label="potential_planet"):
@@ -49,7 +49,7 @@ def test_claude_code_reviewer_caches(tmp_path, transit_subject):
 
 def test_claude_code_reviewer_retries_bad_output(tmp_path, transit_subject, monkeypatch):
     subject, _ = transit_subject
-    monkeypatch.setattr("exoplan.reviewers.claude_code.time.sleep", lambda s: None)
+    monkeypatch.setattr("setuhq.reviewers.claude_code.time.sleep", lambda s: None)
     image = render_subject(subject, tmp_path / "s.png")
     outputs = iter(["not json", json.dumps({"result": "no json here"}), "still not json"])
     reviewer = ClaudeCodeReviewer("cc", runner=lambda cmd, cwd: next(outputs), retries=3)
@@ -58,7 +58,7 @@ def test_claude_code_reviewer_retries_bad_output(tmp_path, transit_subject, monk
 
 
 def test_claude_code_unavailable_without_cli(monkeypatch):
-    monkeypatch.setattr("exoplan.reviewers.claude_code.shutil.which", lambda name: None)
+    monkeypatch.setattr("setuhq.reviewers.claude_code.shutil.which", lambda name: None)
     assert not ClaudeCodeReviewer("cc", binary="no-such-claude").available()
 
 
@@ -83,7 +83,7 @@ def test_the_model_the_cli_reports_is_recorded_with_the_date(tmp_path, transit_s
 
 
 def test_the_benchmark_counts_reviews_by_the_model_they_name():
-    from exoplan.benchmark_toi import _model_label
+    from setuhq.benchmark_toi import _model_label
 
     assert _model_label({"model": "claude-test-model", "model_reported": True}) == "claude-test-model"
     assert _model_label({"model": "claude-test-model"}) == "claude-test-model"  # stored before model_reported existed

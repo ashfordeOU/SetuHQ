@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "exoplan"
+name = "setuhq"
 version = "0.1.0"
-description = "Open-source transit search in the style of Planet Hunters CHEOPS, with Claude as a reviewer panel"
+description = "SetuHQ, the open exoplanet observatory: a transit search of public TESS data with a calibrated panel of AI Sentinels and deterministic Probes"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
@@ -14,7 +14,7 @@ dependencies = [
     "scipy>=1.10",
     "astropy>=6.0",
     "matplotlib>=3.7",
-    "astroquery>=0.4.7",  # the archive cross-match ('exoplan crossmatch'); the page builds need its result
+    "astroquery>=0.4.7",  # the archive cross-match ('setuhq crossmatch'); the page builds need its result
 ]
 
 [project.optional-dependencies]
@@ -22,7 +22,7 @@ tess = ["lightkurve>=2.4"]
 # Sentinel providers. Claude through the Anthropic API needs its SDK; OpenAI, Gemini and any OpenAI-compatible
 # endpoint use plain HTTPS from the standard library, and the Claude Code CLI needs no package: no extra for them.
 claude = ["anthropic>=0.40"]
-# The MCP server (exoplan-mcp) and the agent example (examples/agents/).
+# The MCP server (setuhq-mcp) and the agent example (examples/agents/).
 mcp = ["mcp>=1.10"]
 agents = ["mcp>=1.10", "claude-agent-sdk>=0.1"]
 dev = ["pytest>=8", "tess-point>=0.9", "mcp>=1.10"]  # tess-point: test_galaxy checks pi Men's TESS sectors; mcp: the server's tests
@@ -35,14 +35,17 @@ validate = ["triceratops>=1.1"]
 readme = ["fonttools==4.67.0", "numpy==2.5.4", "pillow==13.0.0"]
 
 [project.scripts]
-exoplan = "exoplan.cli:main"
-exoplan-mcp = "exoplan.mcp_server:main"
+setuhq = "setuhq.cli:main"
+setuhq-mcp = "setuhq.mcp_server:main"
+# Deprecated aliases from before the rename: each prints a one-line notice on stderr, then runs as above.
+exoplan = "setuhq.cli:legacy_main"
+exoplan-mcp = "setuhq.mcp_server:legacy_main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-exoplan = ["fonts/*.css", "fonts/*.txt", "fonts/files/*.woff2"]
+setuhq = ["fonts/*.css", "fonts/*.txt", "fonts/files/*.woff2"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

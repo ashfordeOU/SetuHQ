@@ -19,13 +19,13 @@ There is no automatic submission service; a submission is a pull request that a 
 
 Do this:
 
-1. Read the current board with the `exoplan` MCP server's **`benchmark_results`** (`leaderboard`) and say
+1. Read the current board with the `setuhq` MCP server's **`benchmark_results`** (`leaderboard`) and say
    where the floor and the Probes stand, with their intervals.
 2. Build the method on the tuning half (`docs/leaderboard/tuning_inputs.json`) or on nothing. Never read the
    held-out labels, and never tune on the held-out half.
 3. Write the submission in the `exoplan-leaderboard/2` format of `docs/leaderboard/README.md`: one prediction
    per held-out star, the two control lists for every searched star, the hashes and the provenance.
-4. Score it locally with `exoplan leaderboard <submission.json>` and report J, its interval and the paired
+4. Score it locally with `setuhq leaderboard <submission.json>` and report J, its interval and the paired
    comparison with the floor exactly as the command writes them. A refused submission lists its reasons; fix
    them, do not work around the whitelist.
 5. **Stop and ask.** Opening a pull request, pushing a branch or posting a result is outward-facing: show the

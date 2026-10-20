@@ -35,8 +35,8 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import benchmark_real_tois as BR  # noqa: E402
-from exoplan import benchmark_toi as B  # noqa: E402
-from exoplan import discover as Dv  # noqa: E402
+from setuhq import benchmark_toi as B  # noqa: E402
+from setuhq import discover as Dv  # noqa: E402
 
 CACHE = ROOT / "cache/feedrule"
 PREREG = ROOT / "docs/results/feed_rule_preregistration.json"
@@ -57,14 +57,14 @@ def _git(*args) -> str:
 def discovery_config():
     from dataclasses import replace
 
-    from exoplan.config import load_config
+    from setuhq.config import load_config
 
     cfg = load_config(ROOT / "configs/discovery.toml")
     return replace(cfg, fap_trials=0, fap_cache=None, fit_transits=False, stellar="none")
 
 
 def probes(cfg):
-    from exoplan.reviewers.simulated import SimulatedVolunteer
+    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     return [SimulatedVolunteer(r["id"], snr_threshold=r.get("snr_threshold", 5.0), miss_probability=r.get("miss_probability", 0.1),
                                seed=r.get("seed", 0)) for r in cfg.reviewers if r.get("type") == "simulated"]
@@ -81,7 +81,7 @@ def run_star(toi: dict) -> dict:
     """First two SPOC 2-minute sectors of one star; the discovery pipeline (no FAP yet) on each of the 3 curves."""
     import lightkurve as lk
 
-    from exoplan.pipeline import run_pipeline
+    from setuhq.pipeline import run_pipeline
 
     tic = toi["tic"]
     out = {"tic": tic, "toi": toi["toi"]}
@@ -174,7 +174,7 @@ class Trials:
 
     def _subject(self, variant: str, sid: str):
         if self._subjects is None:
-            from exoplan.pipeline import prepare_subjects
+            from setuhq.pipeline import prepare_subjects
 
             curves = curves_for(self.tic, self.sectors)
             self._subjects = {v: {s.subject_id: s for s in prepare_subjects(curves[v], self.cfg)} for v in VARIANTS}
@@ -183,7 +183,7 @@ class Trials:
     def passes(self, variant: str, sid: str, n: int, cut: float) -> bool:
         import hashlib
 
-        from exoplan.search import _null_maxima, bls_search, fap_inputs, fap_seeds
+        from setuhq.search import _null_maxima, bls_search, fap_inputs, fap_seeds
 
         path = self.dir / f"{variant}_{sid}.json"
         st = json.loads(path.read_text()) if path.exists() else None
@@ -197,9 +197,9 @@ class Trials:
             subj = self._subject(variant, sid)
             sig = bls_search(subj, min_period=self.cfg.min_period)
             residual, blocks = fap_inputs(subj, sig)
-            seed = int(hashlib.sha256(subj.subject_id.encode()).hexdigest()[:8], 16)  # as exoplan.search.with_fap
+            seed = int(hashlib.sha256(subj.subject_id.encode()).hexdigest()[:8], 16)  # as setuhq.search.with_fap
             seeds = fap_seeds(seed, n)[len(st["null"]):len(st["null"]) + 100]
-            from exoplan.search import DEFAULT_DURATIONS_DAYS
+            from setuhq.search import DEFAULT_DURATIONS_DAYS
 
             st["null"] += _null_maxima((subj.time, residual, subj.flux_err, blocks, seeds, self.cfg.min_period, None,
                                         DEFAULT_DURATIONS_DAYS, subj.subject_id, subj.mission, subj.time_unit))
@@ -382,8 +382,8 @@ STELLAR_CHECK = ROOT / "docs/results/feed_rule_stellar_check.json"
 def check_star(t: dict) -> dict:
     """One star's real curves through the exact discovery config (limb-darkened fit on, TIC stellar parameters) and
     through the evaluation's config (fit off): are the feed-admission inputs of every dip the same?"""
-    from exoplan.config import load_config
-    from exoplan.pipeline import run_pipeline
+    from setuhq.config import load_config
+    from setuhq.pipeline import run_pipeline
 
     res = json.loads((CACHE / f"{t['tic']}.json").read_text())
     curves = curves_for(t["tic"], res["sectors"])["real"]

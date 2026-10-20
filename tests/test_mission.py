@@ -1,4 +1,4 @@
-"""Round 11: Mission Control. Panes of exoplan's own views, linked by one selected star."""
+"""Round 11: Mission Control. Panes of SetuHQ's own views, linked by one selected star."""
 
 import json
 import re
@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import mission as MC
-from exoplan.app import APP_JS
+from setuhq import mission as MC
+from setuhq.app import APP_JS
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -64,11 +64,11 @@ def test_layout_url_round_trips_and_cleans_bad_input():
 
 
 def test_galaxy_selection_feeds_the_linked_selection():
-    from exoplan.galaxy import GALAXY_JS
+    from setuhq.galaxy import GALAXY_JS
     sel = GALAXY_JS[GALAXY_JS.index("function gxSelect(h, planet){"):GALAXY_JS.index("function gxTip(")]
     assert "if (typeof mcBrush === 'function') mcBrush(H.n[h], 'galaxy');" in sel
     assert "missionShown(r === 'mission');" in APP_JS and "applyMission(decodeMission(p.params))" in APP_JS
-    assert "new BroadcastChannel('exoplan-mission')" in MC.MISSION_JS and "try { if ('BroadcastChannel' in window) mcBC = new BroadcastChannel" in MC.MISSION_JS
+    assert "new BroadcastChannel('setuhq-mission')" in MC.MISSION_JS and "try { if ('BroadcastChannel' in window) mcBC = new BroadcastChannel" in MC.MISSION_JS
 
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
@@ -83,7 +83,7 @@ const U = %s;
   const out = [];
   for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) for (const theme of ['dark', 'light']) {
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
-    await c.addInitScript(t => { try { localStorage.setItem('exoplan-theme', t); } catch (e) {} }, theme);
+    await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = [], ext = [];
     p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
     p.on('request', r => { if (!/^(file|data|blob):/.test(r.url())) ext.push(r.url()); });
@@ -101,7 +101,7 @@ const U = %s;
       await p.click('#mcp-sky [data-mc="prev"]'); await p.click('#mcp-feed [data-mc="hide"]'); await p.click('[data-mcgrid="tile"]'); await p.waitForTimeout(200);
       r.url = await p.evaluate(() => location.hash);
       await p.keyboard.press('F6'); const f1 = await p.evaluate(() => document.activeElement.id); await p.keyboard.press('Alt+3'); r.keys = [f1, await p.evaluate(() => document.activeElement.id)];
-      await p.click('#mcsave'); r.saved = await p.evaluate(() => JSON.parse(localStorage.getItem('exoplan-mission')));
+      await p.click('#mcsave'); r.saved = await p.evaluate(() => JSON.parse(localStorage.getItem('setuhq-mission')));
       const [pop] = await Promise.all([c.waitForEvent('page'), p.click('#mcp-sys [data-mc="pop"]')]); await pop.waitForTimeout(2500);
       r.pop = await pop.evaluate(() => [mc.pop, mc.star, [...document.querySelectorAll('.mcpane')].filter(x => !x.hidden).map(x => x.id)]);
       await p.fill('#mcq', 'TRAPPIST'); await p.waitForTimeout(250); await p.click('[data-mcstar="TRAPPIST-1"]'); await p.waitForTimeout(1200);

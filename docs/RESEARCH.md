@@ -1,4 +1,4 @@
-# Research notes: Planet Hunters CHEOPS and how exoplan maps onto it
+# Research notes: Planet Hunters CHEOPS and how SetuHQ maps onto it
 
 This file is the deep dive behind the project. It separates what is confirmed on the
 project page or in papers from what is inferred, so each design choice can be checked.
@@ -85,7 +85,7 @@ not download a CHEOPS file to check.
 
 ## 4. What the workflow is, in engineering terms
 
-| Stage | Planet Hunters | exoplan |
+| Stage | Planet Hunters | SetuHQ |
 |---|---|---|
 | Input | Light curves prepared by the team | TESS SPOC via MAST, CHEOPS FITS, CSV |
 | Preparation | Not public | Spike clip, masked local-quadratic detrend, 10-min bins |

@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 
-from exoplan.injection import synthetic_subject
-from exoplan.search import bls_search, single_event_search
+from setuhq.injection import synthetic_subject
+from setuhq.search import bls_search, single_event_search
 
 
 def test_single_event_search_finds_injected_transit(transit_subject):
@@ -22,14 +22,14 @@ def test_single_event_search_rejects_windows_bridging_a_gap(rng):
     time = np.arange(0, 13, 10 / 1440)
     keep = ~((time > 4.0) & (time < 6.0))  # two-day hole
     flux = np.ones(keep.sum()) + rng.normal(0, 2e-4, keep.sum())
-    from exoplan.subjects import Subject
+    from setuhq.subjects import Subject
 
     subject = Subject("gap", "TESS", "BTJD", time[keep], flux, np.full(keep.sum(), 2e-4))
     assert single_event_search(subject, snr_threshold=5.0) == []
 
 
 def test_bls_recovers_period_of_periodic_transits(rng):
-    from exoplan.injection import Injection
+    from setuhq.injection import Injection
 
     injections = tuple(
         Injection(t_start=1.0 + 3.1 * k, t_end=1.0 + 3.1 * k + 0.1, depth=0.002) for k in range(4)
@@ -47,7 +47,7 @@ def test_bls_returns_none_for_too_short_subject(rng):
 
 
 def test_single_event_window_cannot_bridge_gap(rng):
-    from exoplan.subjects import Subject
+    from setuhq.subjects import Subject
 
     time = np.arange(0, 13, 10 / 1440)
     keep = ~((time > 5.00) & (time < 5.03))  # a 40-minute hole inside a 1-hour box
@@ -61,7 +61,7 @@ def test_single_event_window_cannot_bridge_gap(rng):
 
 def _two_sectors_with_9_day_planet(seed=3):
     """Two 13.5-day synthetic sectors with a 1-day gap; a 3000 ppm, 4-hour transit every 9 days from t=3."""
-    from exoplan.lightcurve import LightCurve
+    from setuhq.lightcurve import LightCurve
 
     rng = np.random.default_rng(seed)
     curves = []
@@ -78,8 +78,8 @@ def _two_sectors_with_9_day_planet(seed=3):
 
 
 def test_sector_search_recovers_a_9_day_period_that_subject_search_cannot():
-    from exoplan.config import RunConfig
-    from exoplan.pipeline import prepare_lightcurves, prepare_subjects, sector_signals
+    from setuhq.config import RunConfig
+    from setuhq.pipeline import prepare_lightcurves, prepare_subjects, sector_signals
 
     config = RunConfig(name="t", subject_days=13.0, min_points=100, bin_minutes=10.0, search="sector", fap_trials=0)
     prepared = prepare_lightcurves(_two_sectors_with_9_day_planet(), config)
@@ -96,9 +96,9 @@ def test_sector_search_recovers_a_9_day_period_that_subject_search_cannot():
 def test_pipeline_sector_mode_reports_the_9_day_period(tmp_path):
     import json
 
-    from exoplan.config import RunConfig
-    from exoplan.pipeline import run_pipeline
-    from exoplan.reviewers import SimulatedVolunteer
+    from setuhq.config import RunConfig
+    from setuhq.pipeline import run_pipeline
+    from setuhq.reviewers import SimulatedVolunteer
 
     reviewers = [SimulatedVolunteer(f"vol-{i}", snr_threshold=4.5, miss_probability=0.0, seed=i) for i in range(3)]
     periods = {}
@@ -113,7 +113,7 @@ def test_pipeline_sector_mode_reports_the_9_day_period(tmp_path):
 
 
 def test_config_reads_search_scope(tmp_path):
-    from exoplan.config import load_config
+    from setuhq.config import load_config
 
     path = tmp_path / "c.toml"
     path.write_text('[run]\nname = "x"\nsearch = "sector"\n')
@@ -126,7 +126,7 @@ def test_config_reads_search_scope(tmp_path):
 
 
 def _fap_subject(seed, *, red_ppm, signal):
-    from exoplan.injection import Injection
+    from setuhq.injection import Injection
 
     rng = np.random.default_rng(seed)
     injections = tuple(Injection(1.0 + 3.1 * k, 1.125 + 3.1 * k, 0.003) for k in range(4)) if signal else ()
@@ -136,7 +136,7 @@ def _fap_subject(seed, *, red_ppm, signal):
 
 @pytest.mark.parametrize("red_ppm", [0.0, 600.0])
 def test_fap_is_high_on_pure_noise(red_ppm):
-    from exoplan.search import with_fap
+    from setuhq.search import with_fap
 
     subject = _fap_subject(1, red_ppm=red_ppm, signal=False)
     signal = with_fap(subject, bls_search(subject))
@@ -145,7 +145,7 @@ def test_fap_is_high_on_pure_noise(red_ppm):
 
 
 def _low_fap_case(red_ppm):
-    from exoplan.search import with_fap
+    from setuhq.search import with_fap
 
     subject = _fap_subject(2, red_ppm=red_ppm, signal=True)
     # 20 trials cannot resolve 1%: no trial reaches the SNR, so the FAP is the bound 1/21 and says so.
@@ -169,7 +169,7 @@ def test_fap_is_low_for_an_injected_3000_ppm_periodic_signal_in_red_noise():
 
 @pytest.mark.slow
 def test_200_trials_resolve_one_percent_and_store_an_indicative_tail():
-    from exoplan.search import FAP_TAIL_FLOOR, with_fap
+    from setuhq.search import FAP_TAIL_FLOOR, with_fap
 
     for red_ppm in (0.0, 600.0):
         subject = _fap_subject(2, red_ppm=red_ppm, signal=True)
@@ -181,8 +181,8 @@ def test_200_trials_resolve_one_percent_and_store_an_indicative_tail():
 
 
 def test_the_fap_cache_key_carries_its_version_and_tests_do_not_cache_by_default():
-    from exoplan.config import RunConfig
-    from exoplan.search import FAP_CACHE_VERSION, _fap_cache_key, fap_tail_label
+    from setuhq.config import RunConfig
+    from setuhq.search import FAP_CACHE_VERSION, _fap_cache_key, fap_tail_label
 
     t = np.arange(10.0)
     params = (0.5, None, (0.1,), 0.5, 1, 20)
@@ -199,7 +199,7 @@ def test_the_stored_run_keeps_its_null_maxima_so_the_tail_can_be_rederived():
 
     from scipy.stats import gumbel_r
 
-    from exoplan.search import FAP_CACHE_VERSION, FAP_TAIL_FLOOR
+    from setuhq.search import FAP_CACHE_VERSION, FAP_TAIL_FLOOR
 
     nulls = [json.loads(p.read_text()) for p in sorted(Path("runs/tess-pi-men-s1/fap_null").glob("*.json"))]
     assert nulls and all(n["n_trials"] == 10000 and n["cache_version"] == FAP_CACHE_VERSION for n in nulls)
@@ -220,7 +220,7 @@ def test_the_stored_run_keeps_its_null_maxima_so_the_tail_can_be_rederived():
 
 
 def test_red_noise_fools_the_white_noise_snr_but_not_the_fap():
-    from exoplan.search import with_fap
+    from setuhq.search import with_fap
 
     subject = _fap_subject(1, red_ppm=600.0, signal=False)
     signal = with_fap(subject, bls_search(subject))
@@ -228,7 +228,7 @@ def test_red_noise_fools_the_white_noise_snr_but_not_the_fap():
 
 
 def test_feed_admission_requires_fap_below_one_percent():
-    from exoplan.discover import admits_fap
+    from setuhq.discover import admits_fap
 
     assert admits_fap(0.0)
     assert not admits_fap(0.05)
@@ -237,7 +237,7 @@ def test_feed_admission_requires_fap_below_one_percent():
 
 
 def test_fap_never_reports_below_its_resolution_and_is_cached(tmp_path):
-    from exoplan.search import false_alarm_probability, fap_label
+    from setuhq.search import false_alarm_probability, fap_label
 
     subject = _fap_subject(3, red_ppm=0.0, signal=True)
     sig = bls_search(subject)
@@ -256,7 +256,7 @@ def test_fap_never_reports_below_its_resolution_and_is_cached(tmp_path):
 def test_a_longer_run_extends_a_shorter_one(tmp_path):
     import json as _json
 
-    from exoplan.search import false_alarm_probability, fap_seeds
+    from setuhq.search import false_alarm_probability, fap_seeds
 
     assert (fap_seeds(9, 40)[:20] == fap_seeds(9, 20)).all()  # a longer run starts with the shorter run's trials
     subject = _fap_subject(4, red_ppm=0.0, signal=False)
@@ -271,7 +271,7 @@ def test_a_longer_run_extends_a_shorter_one(tmp_path):
 
 @pytest.mark.slow
 def test_early_stopping_does_not_change_the_decision():
-    from exoplan.search import false_alarm_probability
+    from setuhq.search import false_alarm_probability
 
     subject = _fap_subject(4, red_ppm=0.0, signal=False)
     sig = bls_search(subject)

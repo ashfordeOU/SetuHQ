@@ -91,7 +91,7 @@ def claim(condition: bool, what: str) -> None:
 
 
 def rate(k: int, n: int) -> dict:
-    from exoplan.benchmark_toi import wilson
+    from setuhq.benchmark_toi import wilson
 
     p, lo, hi = wilson(k, n)
     return {"k": k, "n": n, "rate": p, "lo": lo, "hi": hi}
@@ -164,10 +164,10 @@ def injection_table(text: str) -> dict:
 
 # ---------- the table ----------
 def numbers(root: Path = ROOT) -> tuple[dict, dict]:
-    from exoplan import aggregate, calibrate, discover, search, transitfit, vet
-    from exoplan import leaderboard as L
-    from exoplan.benchmark_toi import FEED_SECTORS_PER_TARGET, wilson
-    from exoplan.reviewers.claude import PROMPT_VERSION
+    from setuhq import aggregate, calibrate, discover, search, transitfit, vet
+    from setuhq import leaderboard as L
+    from setuhq.benchmark_toi import FEED_SECTORS_PER_TARGET, wilson
+    from setuhq.reviewers.claude import PROMPT_VERSION
 
     B = json.loads((root / BENCHMARK).read_text())
     P = json.loads((root / PI_MEN).read_text())
@@ -226,7 +226,7 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
     vals = R["values"]
 
     def against(ours: dict, ref_key: str) -> str:
-        """How an exoplan rate stands against a published one: below or above only when its interval excludes it."""
+        """How an SetuHQ rate stands against a published one: below or above only when its interval excludes it."""
         ref = vals[ref_key]["value"]
         claim(ours["rate"] is not None, f"no stars in the bin compared with {ref_key}")
         if ours["hi"] < ref:

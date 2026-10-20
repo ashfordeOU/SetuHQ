@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Seed the real-TOI leaderboard with exoplan's own configurations, from stored results only.
+"""Seed the real-TOI leaderboard with SetuHQ's own configurations, from stored results only.
 
     python scripts/leaderboard_seed.py --cache /path/to/cache/bench
     # writes docs/leaderboard/{tuning_inputs.json, submissions/*.json}
@@ -29,8 +29,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from exoplan import leaderboard as L  # noqa: E402
-from exoplan.benchmark_toi import rates  # noqa: E402
+from setuhq import leaderboard as L  # noqa: E402
+from setuhq.benchmark_toi import rates  # noqa: E402
 
 PERSONAS = ("claude-volunteer", "claude-skeptic")
 ATTRIBUTION = "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors."

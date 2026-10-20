@@ -9,10 +9,10 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import catalogue as C
-from exoplan import methods as M
-from exoplan import objects as O
-from exoplan.app import APP_JS
+from setuhq import catalogue as C
+from setuhq import methods as M
+from setuhq import objects as O
+from setuhq.app import APP_JS
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -47,7 +47,7 @@ def test_the_page_slug_rule_gives_every_stored_slug():
     assert [O.slugify(n) for n in CAT["planets"]["name"]] == CAT["planets"]["slug"]  # no collisions, so no suffixes
 
 
-def test_every_name_exoplan_links_is_in_the_catalogue():
+def test_every_name_setuhq_links_is_in_the_catalogue():
     for cid, names in M.CHAPTER_PLANETS.items():
         assert cid in dict(M.CHAPTERS)
         assert set(names) <= NAMES, cid
@@ -59,7 +59,7 @@ def test_every_name_exoplan_links_is_in_the_catalogue():
 
 
 def test_one_renderer_for_the_system_view_and_the_honesty_label():
-    src = {p: Path(p).read_text() for p in ("src/exoplan/app.py", "src/exoplan/catalogue.py", "src/exoplan/methods.py", "src/exoplan/galaxy.py")}
+    src = {p: Path(p).read_text() for p in ("src/setuhq/app.py", "src/setuhq/catalogue.py", "src/setuhq/methods.py", "src/setuhq/galaxy.py")}
     # The stage markup and the label badge are written once, in methods._stage and methods.honesty_label.
     assert sum(t.count('class="btn mxplay"') for t in src.values()) == 1
     assert sum(len(re.findall(r'<span class="mxlabel [a-z]+">', t)) for t in src.values()) == 0
@@ -75,7 +75,7 @@ def test_one_renderer_for_the_system_view_and_the_honesty_label():
 def test_mentions_link_back_from_the_canonical_pages(built):
     data = _page_data(built.read_text())
     seen = data["catalogue_meta"]["mentions"]
-    assert ["exoplan's own Transit case", "#/transit"] in seen["pi Men c"]
+    assert ["SetuHQ's own Transit case", "#/transit"] in seen["pi Men c"]
     assert ["The run's sky map", "#/sky"] in seen["pi Men"]
     notable = json.loads(Path("docs/results/notable_planets.json").read_text())["planets"]
     for k, n in enumerate(notable):

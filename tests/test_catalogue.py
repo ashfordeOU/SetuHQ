@@ -9,10 +9,10 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import catalogue as C
-from exoplan import docket as docket_mod
-from exoplan.app import APP_JS, SECTIONS, SUBPAGES
-from exoplan.methods import CHAPTERS
+from setuhq import catalogue as C
+from setuhq import docket as docket_mod
+from setuhq.app import APP_JS, SECTIONS, SUBPAGES
+from setuhq.methods import CHAPTERS
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -134,7 +134,7 @@ def test_method_chapters_exist_and_pi_men_links_its_transit_case(built):
     meta = data["catalogue_meta"]
     assert meta["refs"]["pi Men c"][0] == "https://doi.org/10.3847/2041-8213/aaef91"
     assert data["story"]["planet"] == "pi Men c"
-    assert ["exoplan's own Transit case", "#/transit"] in meta["mentions"]["pi Men c"] and "ctSeen(P.name[i]" in APP_JS
+    assert ["SetuHQ's own Transit case", "#/transit"] in meta["mentions"]["pi Men c"] and "ctSeen(P.name[i]" in APP_JS
     assert "S.planet && P.name[i] === S.planet" in APP_JS
     planet = _route(built.read_text(), "planet")
     assert 'data-vis="system"' in planet and '<span class="mxlabel model">Model from stored values</span>' in planet
@@ -212,7 +212,7 @@ const { chromium } = require(%s);
   const out = [], ext = [];
   for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) for (const theme of ['dark', 'light']) {
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
-    await c.addInitScript(t => { try { localStorage.setItem('exoplan-theme', t); } catch (e) {} }, theme);
+    await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = [];
     p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
     p.on('request', r => { if (!/^(file|data|blob):/.test(r.url())) ext.push(r.url()); });
@@ -284,7 +284,7 @@ const { chromium } = require(%s);
 
 @pytest.mark.skipif(not HAVE_NODE, reason="node is not installed")
 def test_galaxy_focus_deep_link_round_trips():
-    from exoplan.galaxy import GALAXY_JS, galaxy_data, galaxy_meta
+    from setuhq.galaxy import GALAXY_JS, galaxy_data, galaxy_meta
 
     js = GALAXY_JS[GALAXY_JS.index("function decodeGalaxyView"):GALAXY_JS.index("// Which planets the filters keep")]
     script = ("const GXM = %s;\n" % json.dumps(galaxy_meta(galaxy_data()))) + js + """
@@ -348,7 +348,7 @@ const { chromium } = require(%s);
     assert out["errs"] == []
     assert "year=2000~2005" in out["hash"] and "mass=1~2" in out["hash"], out["hash"]
     assert out["boxes"] == ["2000", "2005", "1", "2"]  # year first: it comes first in the page
-    assert out["seen"][0] == "Where exoplan shows it:" and "#/transit" in out["seen"][1]
+    assert out["seen"][0] == "Where SetuHQ shows it:" and "#/transit" in out["seen"][1]
 
 
 def test_phone_cards_are_cheap_to_lay_out():
@@ -366,7 +366,7 @@ def test_phone_cards_are_cheap_to_lay_out():
 
 
 def test_generic_object_links_carry_the_name():
-    from exoplan.objects import obj_link
+    from setuhq.objects import obj_link
     assert obj_link("planet", "pi Men c", "Planet page ›") == '<a class="objlink" data-planet="pi Men c" href="#/planet/pi-men-c" aria-label="pi Men c, planet page">Planet page ›</a>'
     assert "aria-label" not in obj_link("star", "pi Men", "pi Men ›")
     assert "` aria-label=\"${esc(n)}, ${kind} page\"`" in APP_JS

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""S1c: run the blind benchmark on real TOIs (src/exoplan/benchmark_toi.py explains the design).
+"""S1c: run the blind benchmark on real TOIs (src/setuhq/benchmark_toi.py explains the design).
 
     python scripts/benchmark_real_tois.py freeze            # TOI table → docs/results/benchmark_toi_sample.json
     python scripts/benchmark_real_tois.py run --workers 4   # SPOC light curves (cache/mast) → cache/bench/<tic>.json
@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from exoplan import benchmark_toi as B  # noqa: E402
+from setuhq import benchmark_toi as B  # noqa: E402
 
 SAMPLE = ROOT / "docs/results/benchmark_toi_sample.json"
 OUT_MD = ROOT / "docs/results/benchmark_real_tois.md"
@@ -42,22 +42,41 @@ def cmd_freeze(args) -> int:
 # The pipeline code a result depends on (search, vetting, fit, reviewers). Each per-star result records the
 # fingerprint of these files, so the report can say which code produced it and check it against the committed
 # code. The benchmark's own scoring and reporting (benchmark_toi.py, this script) are re-applied at report time.
-CODE_FILES = ["src/exoplan/discover.py"] + [
-    f"src/exoplan/{m}.py" for m in ("aggregate", "config", "lightcurve", "loaders", "pipeline", "preprocess", "search",
+CODE_FILES = ["src/setuhq/discover.py"] + [
+    f"src/setuhq/{m}.py" for m in ("aggregate", "config", "lightcurve", "loaders", "pipeline", "preprocess", "search",
                                      "subjects", "transitfit", "vet", "reviewers/base", "reviewers/simulated")]
+# Each file enters the hash under the path it had when the committed fingerprints were taken (src/exoplan/...,
+# before the rename to SetuHQ), with its canonical text (setuhq.starsearch.canonical_source: no SPDX header, the
+# package name as exoplan), so docs/results/benchmark_real_tois.json still verifies after the rename.
+LEGACY_PREFIX = ("src/setuhq/", "src/exoplan/")
+
+
+def _label(f: str) -> str:
+    return f.replace(*LEGACY_PREFIX, 1)
 
 
 def _code_bytes(f: str, rev: str | None) -> bytes:
-    return (ROOT / f).read_bytes() if rev is None else _git("show", f"{rev}:{f}").encode() + b"\n"
+    from setuhq.starsearch import canonical_source
+
+    if rev is None:
+        return canonical_source((ROOT / f).read_bytes())
+    import subprocess
+
+    for path in (f, _label(f)):
+        out = subprocess.run(["git", "show", f"{rev}:{path}"], cwd=ROOT, capture_output=True, text=True)
+        if out.returncode == 0:
+            return canonical_source(out.stdout.strip().encode() + b"\n")
+    raise FileNotFoundError(f"{f} is not in commit {rev}, under either name")
 
 
 def code_fingerprint(rev: str | None = None) -> str:
-    """sha256 of CODE_FILES, as in the working tree (None) or at a commit."""
+    """sha256 of CODE_FILES (each under its historical path, see LEGACY_PREFIX), in the working tree (None) or at a
+    commit."""
     import hashlib
 
     h = hashlib.sha256()
     for f in CODE_FILES:
-        h.update(f.encode() + b"\0" + _code_bytes(f, rev) + b"\0")
+        h.update(_label(f).encode() + b"\0" + _code_bytes(f, rev) + b"\0")
     return h.hexdigest()[:16]
 
 
@@ -88,7 +107,7 @@ def code_provenance(results: list[dict]) -> dict:
 
 
 def _config():
-    from exoplan.config import RunConfig
+    from setuhq.config import RunConfig
 
     return RunConfig(name="benchmark-real-tois", subject_days=13.0, min_points=300, bin_minutes=10.0, detrend_window_days=1.0,
                      search="sector", min_period=0.5, fap_trials=0, fap_cache=None, fit_transits=True, stellar="none")
@@ -108,9 +127,9 @@ def _ephemerides(tic: int) -> list[tuple[float, float, float]]:
 
 def run_star(toi: dict, code: str = "") -> dict:
     """Download one star's first SPOC 2-minute sector, run the panel on it and on its two controls, score it."""
-    from exoplan.loaders import load_tess
-    from exoplan.pipeline import run_pipeline
-    from exoplan.reviewers.simulated import SimulatedVolunteer
+    from setuhq.loaders import load_tess
+    from setuhq.pipeline import run_pipeline
+    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     tic = toi["tic"]
     out = {"toi": toi["toi"], "tic": tic, "code": code, "started": datetime.now(timezone.utc).isoformat(timespec="seconds")}
@@ -192,16 +211,16 @@ def cmd_run(args) -> int:
 
 def load_cached(tic: int, sector: int):
     """The star's SPOC 2-minute light curve from the download cache (cache/mast), with no network call: the same
-    steps as exoplan.loaders.load_tess after its download (quality == 0 and finite points, median-normalised)."""
+    steps as setuhq.loaders.load_tess after its download (quality == 0 and finite points, median-normalised)."""
     import lightkurve as lk
     import numpy as np
 
-    from exoplan.lightcurve import LightCurve
-    from exoplan.loaders import _file_provenance, _plain
+    from setuhq.lightcurve import LightCurve
+    from setuhq.loaders import _file_provenance, _plain
 
     files = [f for f in sorted((ROOT / "cache/mast/mastDownload/TESS").glob(f"tess*-s{sector:04d}-{tic:016d}-*-s/*_lc.fits")) if f.stat().st_size]  # an interrupted download is empty
     if not files:  # downloaded before the cache directory was set: fetch it into cache/mast
-        from exoplan.loaders import load_tess
+        from setuhq.loaders import load_tess
 
         return load_tess(f"TIC {tic}", [sector], download_dir=str(ROOT / "cache/mast"))[0]
     lc = lk.read(str(files[0]), flux_column="pdcsap_flux")
@@ -217,10 +236,10 @@ def load_cached(tic: int, sector: int):
 
 def rescore_star(res: dict, toi: dict, code: str) -> dict:
     """Re-vet one star's stored runs (real and both controls) with the current code, from the stored
-    classifications (exoplan.pipeline.rebuild_run: the reviewers are not asked again), and score them again."""
+    classifications (setuhq.pipeline.rebuild_run: the reviewers are not asked again), and score them again."""
     from dataclasses import replace
 
-    from exoplan.pipeline import rebuild_run
+    from setuhq.pipeline import rebuild_run
 
     tic = res["tic"]
     lc = load_cached(tic, res["sector"])
@@ -251,8 +270,8 @@ def rescore_star(res: dict, toi: dict, code: str) -> dict:
 def _fresh_variant(cfg, curve, run_dir: Path) -> list[dict]:
     import shutil
 
-    from exoplan.pipeline import run_pipeline
-    from exoplan.reviewers.simulated import SimulatedVolunteer
+    from setuhq.pipeline import run_pipeline
+    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     stellar = (run_dir / "stellar.json").read_text() if (run_dir / "stellar.json").exists() else None
     shutil.rmtree(run_dir)
@@ -309,7 +328,7 @@ def clip_star(res: dict, toi: dict) -> dict:
     curve the run used: the depth/scatter ratio, and the in-transit points before and after clean()."""
     import numpy as np
 
-    from exoplan.preprocess import clean, diff_sigma
+    from setuhq.preprocess import clean, diff_sigma
 
     lc = load_cached(res["tic"], res["sector"])
     sigma = float(diff_sigma(lc.flux))
@@ -348,7 +367,7 @@ FEED_FAP_TRIALS = 200  # as configs/discovery.toml
 def feed_eligible(c: dict) -> bool:
     """The discovery feed's admission rule before its FAP test (discover.run_discovery): passed vetting, not
     off_ephemeris, at most MAX_FEED_DEPTH_PPM deep, on a periodic signal with at least MIN_FEED_TRANSITS transits."""
-    from exoplan import discover as Dv
+    from setuhq import discover as Dv
 
     return (bool(c["passed"]) and "off_ephemeris" not in (c.get("flags") or "") and (c.get("depth_ppm") or 0) <= Dv.MAX_FEED_DEPTH_PPM
             and c.get("period_days") is not None and (c.get("n_transits") or 0) >= Dv.MIN_FEED_TRANSITS)
@@ -356,7 +375,7 @@ def feed_eligible(c: dict) -> bool:
 
 def _target(tic: int):
     """The star's TOIs from the cached TOI table, as discover.Target, so a real dip is classed known_toi or new_candidate."""
-    from exoplan import discover as Dv
+    from setuhq import discover as Dv
 
     rows, _ = B.fetch_toi_table(ROOT / "cache/toi/toi.csv")
     target = Dv.Target(tic)
@@ -379,9 +398,9 @@ def feed_star(res: dict) -> dict:
     are re-run with the feed's FAP (200 block-bootstrap trials) and the feed's own weights file."""
     from dataclasses import replace
 
-    from exoplan import discover as Dv
-    from exoplan.pipeline import run_pipeline
-    from exoplan.reviewers.simulated import SimulatedVolunteer
+    from setuhq import discover as Dv
+    from setuhq.pipeline import run_pipeline
+    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     tic = res["tic"]
     out = {"tic": tic, "toi": res["toi"], "sector": res.get("sector")}
@@ -462,8 +481,8 @@ def sentinel_subsample(sample: dict, done: dict) -> list[dict]:
 def sentinel_panel(config: str | None) -> list:
     """The Sentinels to run: the two Claude personas through the Claude Code CLI (the benchmarked default), or
     the Sentinels of a run config's [[reviewers]] (any provider; Probes in it are ignored)."""
-    from exoplan.config import SENTINEL_TYPES, build_reviewers, load_config
-    from exoplan.reviewers.claude_code import ClaudeCodeReviewer
+    from setuhq.config import SENTINEL_TYPES, build_reviewers, load_config
+    from setuhq.reviewers.claude_code import ClaudeCodeReviewer
 
     if config is None:
         return [ClaudeCodeReviewer(reviewer_id=f"claude-{p}", persona=p, cache_dir=str(ROOT / "cache/claude-code"))
@@ -480,7 +499,7 @@ def cmd_sentinels(args) -> int:
     id, so a provider added later is compared with every Sentinel already there (``report`` writes the φ table)."""
     import numpy as np
 
-    from exoplan.subjects import Subject
+    from setuhq.subjects import Subject
 
     sample = json.loads(SAMPLE.read_text())
     done = {t["tic"]: json.loads((CACHE / f"{t['tic']}.json").read_text()) for t in sample["tois"] if (CACHE / f"{t['tic']}.json").exists()}
@@ -537,7 +556,7 @@ def sentinel_scores(sample: dict) -> dict | None:
     path = CACHE / "sentinels.json"
     if not path.exists():
         return None
-    from exoplan.discover import match_toi
+    from setuhq.discover import match_toi
 
     return B.sentinel_summary(json.loads(path.read_text()), sample, match_toi)
 
@@ -550,8 +569,8 @@ def _git(*args) -> str:
 
 FROZEN_AFTER = "fbc1ed9"  # the last commit before the sample was frozen (2026-10-19T11:00:16Z); its thresholds were set without TOI data
 THRESHOLD_PATHS = ["configs", "docs/results/reviewer_weights.json", "docs/results/reviewer_weights_full_panel.json"] + [
-    f"src/exoplan/{m}.py" for m in ("aggregate", "config", "discover", "pipeline", "preprocess", "search", "subjects", "transitfit", "vet")
-] + ["src/exoplan/reviewers"]
+    f"src/setuhq/{m}.py" for m in ("aggregate", "config", "discover", "pipeline", "preprocess", "search", "subjects", "transitfit", "vet")
+] + ["src/setuhq/reviewers"]
 
 
 def _threshold_values(rev: str | None) -> dict[str, str]:
@@ -560,15 +579,18 @@ def _threshold_values(rev: str | None) -> dict[str, str]:
     import re
 
     files = []
-    for path in THRESHOLD_PATHS:
-        listed = _git("ls-tree", "-r", "--name-only", rev or "HEAD", "--", path).splitlines()
+    # A revision from before the rename keeps the package under src/exoplan; its values are keyed by today's path.
+    paths = THRESHOLD_PATHS + [_label(p) for p in THRESHOLD_PATHS if p.startswith(LEGACY_PREFIX[0])]
+    for path in paths:
+        listed = (_git("ls-tree", "-r", "--name-only", rev, "--", path) if rev else _git("ls-files", "--", path)).splitlines()
         files += [f for f in listed if f.endswith((".py", ".toml", ".json"))]
     out = {}
     for f in sorted(set(files)):
         text = _git("show", f"{rev}:{f}") if rev else ((ROOT / f).read_text() if (ROOT / f).exists() else "")
+        key = f.replace(LEGACY_PREFIX[1], LEGACY_PREFIX[0], 1)
         if f.endswith(".py"):
             for m in re.finditer(r"^([A-Z][A-Z0-9_]+)\s*=\s*(.+?)\s*(?:#.*)?$", text, re.M):
-                out[f"{f}:{m.group(1)}"] = m.group(2)
+                out[f"{key}:{m.group(1)}"] = m.group(2)
         elif f.endswith(".toml"):
             section = ""
             for line in text.splitlines():
@@ -577,11 +599,11 @@ def _threshold_values(rev: str | None) -> dict[str, str]:
                     section = line
                 elif "=" in line:
                     k, v = (x.strip() for x in line.split("=", 1))
-                    out[f"{f}:{section}{k}"] = v
+                    out[f"{key}:{section}{k}"] = v
         else:
             try:
                 for k, v in json.loads(text).items():
-                    out[f"{f}:{k}"] = json.dumps(v)
+                    out[f"{key}:{k}"] = json.dumps(v)
             except (ValueError, AttributeError):
                 pass
     return out

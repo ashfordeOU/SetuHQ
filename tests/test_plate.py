@@ -3,9 +3,9 @@ import re
 
 import pytest
 
-from exoplan import docket as docket_mod
-from exoplan.cli import main
-from exoplan.plate import NO_DETECTION, PLATE_CSS, build_plate, feed_caption, plate_data
+from setuhq import docket as docket_mod
+from setuhq.cli import main
+from setuhq.plate import NO_DETECTION, PLATE_CSS, build_plate, feed_caption, plate_data
 
 
 @pytest.fixture(autouse=True)
@@ -40,7 +40,7 @@ def _captions(page: str) -> list[str]:
 
 def test_one_caption_per_candidate_each_unconfirmed(run_dir, catalog, tmp_path):
     assert main(["plate", str(run_dir), "--catalog", str(catalog), "--out", str(tmp_path / "plate"),
-                 "--title", "exoplan plates", "--allow-missing-crossmatch"]) == 0
+                 "--title", "setuhq plates", "--allow-missing-crossmatch"]) == 0
     page = (tmp_path / "plate" / "index.html").read_text()
     data = plate_data(run_dir, title="t", catalog_path=catalog)
     ids = [c["candidate_id"] for s in data["stars"] for c in s["candidates"]]
@@ -113,7 +113,7 @@ def _print_css() -> str:
 
 
 def test_plate_labels_are_unique(run_dir, catalog, tmp_path):
-    from exoplan.plate import plate_labels
+    from setuhq.plate import plate_labels
 
     page = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog).read_text()
     labels = plate_labels(page)
@@ -148,7 +148,7 @@ def test_print_svg_text_is_at_least_8pt_on_paper():
 
 
 def test_river_segments_are_labelled_at_start_and_end_with_their_span(run_dir, catalog, tmp_path):
-    from exoplan.plate import river_segments, river_svg
+    from setuhq.plate import river_segments, river_svg
 
     data = plate_data(run_dir, title="t", catalog_path=catalog)
     segs = river_segments(data["stars"])
@@ -166,7 +166,7 @@ def test_river_segments_are_labelled_at_start_and_end_with_their_span(run_dir, c
 
 
 def test_plate_says_a_fallback_cross_match_was_recorded_not_fetched():
-    from exoplan.plate import _xm_dated
+    from setuhq.plate import _xm_dated
 
     fb = {"fallback_from": "docs/results/pi_men_crossmatch.json", "fetched_at": "2026-10-16T22:59:37+00:00",
           "recorded_commit": "0f6dbdc", "run_status": "not_run", "run_error": "ModuleNotFoundError: x"}

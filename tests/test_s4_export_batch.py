@@ -7,9 +7,9 @@ import math
 import numpy as np
 import pytest
 
-from exoplan.discover import Target, Toi, match_toi
-from exoplan.ephemeris import BTJD_OFFSET, cone, propagate, transit_windows
-from exoplan.exofop import CTOI_FIELDS, CTOI_FIELDS_STATUS, check_row, ctoi_rows, exclusion, export_run
+from setuhq.discover import Target, Toi, match_toi
+from setuhq.ephemeris import BTJD_OFFSET, cone, propagate, transit_windows
+from setuhq.exofop import CTOI_FIELDS, CTOI_FIELDS_STATUS, check_row, ctoi_rows, exclusion, export_run
 
 
 # ---------------------------------------------------------------- ephemeris
@@ -64,7 +64,7 @@ def _cand(cid, *, target="TIC 777", passed=True, flags="", period=5.0, n=3, fit=
            "n_transits": n, "time_unit": "BTJD", "snr": 20.0, "fap_snr": 25.0, "fap_label": "< 0.005",
            "fap_method": "block bootstrap", "metrics": {"validation": {"fpp": fpp, "nfpp": None, "fpp_class": fpp_class,
                                                                        "label": "not validated: no contrast curve",
-                                                                       "method": "exoplan reduced FPP"},
+                                                                       "method": "SetuHQ reduced FPP"},
                                                         "dv": {"crowding": {"crowdsap": 0.99}}}}
     if fit:
         row["fit"] = {"t0": 1500.0, "t0_err": 0.002, "period_days": period, "period_err": 0.0005, "depth_ppm": 800.0,
@@ -147,7 +147,7 @@ def test_export_of_the_stored_pi_men_run_excludes_the_known_toi(tmp_path):
 
 # ---------------------------------------------------------------- batch
 def _lc(tic, seed, sector=1):
-    from exoplan.lightcurve import LightCurve
+    from setuhq.lightcurve import LightCurve
 
     rng = np.random.default_rng(seed)
     time = np.arange(0.0, 13.0, 10 / 1440)
@@ -166,8 +166,8 @@ def batch_config(tmp_path):
 
 
 def test_batch_is_resumable_and_retries_failures(tmp_path, batch_config):
-    from exoplan.batch import read_targets, run_batch
-    from exoplan.reviewers.simulated import SimulatedVolunteer
+    from setuhq.batch import read_targets, run_batch
+    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     calls = []
     flaky = {"n": 0}
@@ -212,8 +212,8 @@ def test_batch_is_resumable_and_retries_failures(tmp_path, batch_config):
 
 
 def test_batch_state_is_tied_to_the_config(tmp_path, batch_config):
-    from exoplan.batch import run_batch
-    from exoplan.reviewers.simulated import SimulatedVolunteer
+    from setuhq.batch import run_batch
+    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     reviewers = [SimulatedVolunteer("vol-a", snr_threshold=4.5, miss_probability=0.0, seed=1)]
     work = tmp_path / "work"
@@ -228,8 +228,8 @@ def test_batch_state_is_tied_to_the_config(tmp_path, batch_config):
 
 def test_export_without_the_toi_table_writes_nothing_and_fails(tmp_path, monkeypatch, capsys):
     """B4: without --allow-unchecked, an unreachable TOI table means no files and a non-zero exit."""
-    import exoplan.discover as disc
-    from exoplan.cli import main
+    import setuhq.discover as disc
+    from setuhq.cli import main
 
     run = tmp_path / "run"
     run.mkdir()

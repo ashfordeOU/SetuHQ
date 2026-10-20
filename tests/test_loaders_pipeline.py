@@ -5,13 +5,13 @@ import numpy as np
 import pytest
 from astropy.io import fits
 
-from exoplan.calibrate import calibrate_weights
-from exoplan.config import RunConfig, build_reviewers, load_config
-from exoplan.injection import fixed_injection
-from exoplan.lightcurve import LightCurve
-from exoplan.loaders import load_cheops, load_csv
-from exoplan.pipeline import run_pipeline
-from exoplan.reviewers import SimulatedVolunteer
+from setuhq.calibrate import calibrate_weights
+from setuhq.config import RunConfig, build_reviewers, load_config
+from setuhq.injection import fixed_injection
+from setuhq.lightcurve import LightCurve
+from setuhq.loaders import load_cheops, load_csv
+from setuhq.pipeline import run_pipeline
+from setuhq.reviewers import SimulatedVolunteer
 
 
 def _write_cheops_fits(path, *, flag_bad=True):
@@ -109,7 +109,7 @@ def test_end_to_end_pipeline_recovers_injected_transits(tmp_path, lightcurve_wit
 
 def test_pipeline_skips_unavailable_reviewers(tmp_path, lightcurve_with_transits, monkeypatch):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    from exoplan.reviewers import ClaudeReviewer
+    from setuhq.reviewers import ClaudeReviewer
 
     reviewers = [SimulatedVolunteer("vol-a", seed=1), ClaudeReviewer("claude-x")]
     # Only the reviewer bookkeeping is under test: no FAP trials, no transit fits.
@@ -126,7 +126,7 @@ def test_calibration_gives_real_volunteer_higher_weight_than_blind_one(tmp_path)
     assert skills["blind"].weight == pytest.approx(0.05)
     assert skills["good"].weight > skills["blind"].weight
     # The rates and sample sizes behind the weights are kept next to the weights file.
-    from exoplan.calibrate import calibration_path, calibration_record
+    from setuhq.calibrate import calibration_path, calibration_record
 
     assert calibration_path("docs/w.json").as_posix() == "docs/w.calibration.json"
     record = calibration_record(skills, weights_file="w.json")
@@ -162,7 +162,7 @@ seed = 2
 
 
 def test_run_uses_calibrated_weights_when_reviewer_ids_match(tmp_path, lightcurve_with_transits, monkeypatch):
-    from exoplan import cli
+    from setuhq import cli
 
     config_path = tmp_path / "c.toml"
     config_path.write_text(_TWO_VOLUNTEERS)
@@ -187,7 +187,7 @@ def test_run_uses_calibrated_weights_when_reviewer_ids_match(tmp_path, lightcurv
 def test_pi_men_config_matches_the_stored_full_panel_weights():
     from pathlib import Path
 
-    from exoplan.cli import resolve_weights
+    from setuhq.cli import resolve_weights
 
     root = Path(__file__).resolve().parents[1]
     config = load_config(root / "configs" / "tess_pi_men_s1.toml")

@@ -11,10 +11,10 @@
   },
   "plugins": [
     {
-      "name": "exoplan",
+      "name": "setuhq",
       "source": "./",
       "displayName": "SetuHQ transit search",
-      "description": "Search, vet and explain transit candidates in public NASA TESS data from an AI agent, over the exoplan-mcp stdio server. Candidates, never discoveries; every answer carries its provenance.",
+      "description": "Search, vet and explain transit candidates in public NASA TESS data from an AI agent, over the setuhq-mcp stdio server. Candidates, never discoveries; every answer carries its provenance.",
       "version": "0.1.0",
       "author": {
         "name": "Ashforde OÜ",

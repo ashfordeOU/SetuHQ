@@ -30,7 +30,7 @@ centroid_sigma = 3.0       # difference-image offset significance that raises ce
 tpf_cache = "cache/tpf"    # gitignored
 
 [validation]
-# S3. Every periodic candidate gets exoplan's reduced FPP (validate.py), which can never say "validated".
+# S3. Every periodic candidate gets SetuHQ's reduced FPP (validate.py), which can never say "validated".
 # "validated (statistically)" needs TRICERATOPS with FPP < 0.015, NFPP < 1e-3 and a high-resolution imaging
 # contrast curve; without a curve the label is "not validated: no contrast curve".
 contrast_curves = {}       # e.g. { "TIC 261136679" = "data/contrast/pi_men_speckle.txt" }

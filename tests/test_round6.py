@@ -6,10 +6,10 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import docket as docket_mod
-from exoplan.app import APP_CSS, APP_JS, FRAME_BRIDGE_JS, THEME_BUTTON, LANDING_JS, build_app, build_landing
-from exoplan.plate import build_plate
-from exoplan.report import build_report
+from setuhq import docket as docket_mod
+from setuhq.app import APP_CSS, APP_JS, FRAME_BRIDGE_JS, THEME_BUTTON, LANDING_JS, build_app, build_landing
+from setuhq.plate import build_plate
+from setuhq.report import build_report
 
 from test_story import run_dir, targets  # noqa: F401  (fixtures)
 

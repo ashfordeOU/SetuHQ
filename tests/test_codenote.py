@@ -2,7 +2,7 @@
 
 import json
 
-from exoplan.codenote import PRE_FIX_NOTE, code_note, with_code_note
+from setuhq.codenote import PRE_FIX_NOTE, code_note, with_code_note
 
 
 def test_banner_goes_right_after_body(tmp_path):

@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from exoplan.tools import TOOLS
+from setuhq.tools import TOOLS
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOL_NAMES = {fn.__name__ for fn, _ in TOOLS}
@@ -29,23 +29,23 @@ def _frontmatter(path: Path) -> tuple[dict, str]:
 def test_plugin_and_marketplace_manifests_are_valid():
     plugin = json.loads((ROOT / ".claude-plugin/plugin.json").read_text())
     market = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
-    assert plugin["name"] == "exoplan" and re.fullmatch(r"\d+\.\d+\.\d+", plugin["version"])
+    assert plugin["name"] == "setuhq" and re.fullmatch(r"\d+\.\d+\.\d+", plugin["version"])
     assert plugin["description"] and plugin["license"] == "MIT"
-    server = plugin["mcpServers"]["exoplan"]
-    assert server["command"] == "exoplan-mcp" and server["env"]["EXOPLAN_ROOT"] == "${CLAUDE_PLUGIN_ROOT}"
+    server = plugin["mcpServers"]["setuhq"]
+    assert server["command"] == "setuhq-mcp" and server["env"]["SETUHQ_ROOT"] == "${CLAUDE_PLUGIN_ROOT}"
     entry = next(p for p in market["plugins"] if p["name"] == plugin["name"])
     assert entry["source"] == "./" and entry["version"] == plugin["version"]
     assert re.fullmatch(r"[a-z0-9-]+", market["name"]) and market["owner"]["name"]
     # The server is declared once, by the plugin: no project .mcp.json to clash with it on install.
     assert not (ROOT / ".mcp.json").exists()
     # The entry point the manifests start is the one pyproject installs.
-    assert 'exoplan-mcp = "exoplan.mcp_server:main"' in (ROOT / "pyproject.toml").read_text()
+    assert 'setuhq-mcp = "setuhq.mcp_server:main"' in (ROOT / "pyproject.toml").read_text()
 
 
 def test_slash_commands_use_only_real_tools():
     commands = sorted((ROOT / "commands").glob("*.md"))
-    assert {c.stem for c in commands} == {"exoplan-vet", "exoplan-explain", "exoplan-sweep", "exoplan-catalogue",
-                                         "exoplan-physics", "exoplan-benchmarks"}
+    assert {c.stem for c in commands} == {"setuhq-vet", "setuhq-explain", "setuhq-sweep", "setuhq-catalogue",
+                                         "setuhq-physics", "setuhq-benchmarks"}
     used = set()
     for path in commands:
         meta, body = _frontmatter(path)
@@ -53,7 +53,7 @@ def test_slash_commands_use_only_real_tools():
         named = set(re.findall(r"\*\*`([a-z_]+)`\*\*", body))
         assert named and named <= TOOL_NAMES, f"{path.name} names a tool the server does not have: {named - TOOL_NAMES}"
         used |= named
-        if path.stem in ("exoplan-vet", "exoplan-explain", "exoplan-sweep"):
+        if path.stem in ("setuhq-vet", "setuhq-explain", "setuhq-sweep"):
             assert "candidate" in body.lower() and "discovery" in body.lower()
     assert used == TOOL_NAMES  # every tool is reachable from a command
 
@@ -99,12 +99,12 @@ def test_agent_gate_keeps_a_human_in_the_loop():
     never = lambda q: pytest.fail("a read-only tool must not ask")  # noqa: E731
     for fn, read_only in TOOLS:
         if read_only:
-            assert agent.gate(f"mcp__exoplan__{fn.__name__}", {}, never)[0]
+            assert agent.gate(f"mcp__setuhq__{fn.__name__}", {}, never)[0]
     asked = []
-    ok, why = agent.gate("mcp__exoplan__run_pipeline_csv", {"csv_path": "x.csv"}, lambda q: asked.append(q) or False)
+    ok, why = agent.gate("mcp__setuhq__run_pipeline_csv", {"csv_path": "x.csv"}, lambda q: asked.append(q) or False)
     assert not ok and asked and why == "declined by a person"
-    assert agent.gate("mcp__exoplan__run_pipeline_csv", {}, lambda q: True) == (True, "approved by a person")
-    for outward in ("Bash", "WebFetch", "mcp__exofop__submit", "mcp__slack__post_message", "mcp__exoplan__submit_to_exofop"):
+    assert agent.gate("mcp__setuhq__run_pipeline_csv", {}, lambda q: True) == (True, "approved by a person")
+    for outward in ("Bash", "WebFetch", "mcp__exofop__submit", "mcp__slack__post_message", "mcp__setuhq__submit_to_exofop"):
         ok, why = agent.gate(outward, {}, lambda q: True)  # even a yes does not let the agent act outward
         assert not ok and "person must do this" in why
 
@@ -143,9 +143,9 @@ def test_agent_runs_end_to_end_with_a_fake_sdk(tmp_path, monkeypatch):
         async for _ in prompt:
             pass
         # The model calls a read-only tool (hooks fire), then asks for an outward action (refused).
-        await options.hooks["PreToolUse"][0].hooks[0]({"tool_name": "mcp__exoplan__get_candidate",
+        await options.hooks["PreToolUse"][0].hooks[0]({"tool_name": "mcp__setuhq__get_candidate",
                                                         "tool_input": {"candidate_id": "c"}}, "t1", None)
-        await options.hooks["PostToolUse"][0].hooks[0]({"tool_name": "mcp__exoplan__get_candidate",
+        await options.hooks["PostToolUse"][0].hooks[0]({"tool_name": "mcp__setuhq__get_candidate",
                                                          "tool_response": {"result": {"passed": True}}}, "t1", None)
         seen["outward"] = await options.can_use_tool("WebFetch", {"url": "https://exofop.example"}, None)
         yield AssistantMessage([TextBlock("A candidate on a 6.27 d period.")])
@@ -164,9 +164,9 @@ def test_agent_runs_end_to_end_with_a_fake_sdk(tmp_path, monkeypatch):
     report = anyio.run(agent.run_agent, args)
     assert report.startswith(agent.BANNER) and "candidate, not a discovery" in report
     opts = seen["options"]
-    assert opts.tools == [] and all(t.startswith("mcp__exoplan__") for t in opts.allowed_tools)
-    assert "mcp__exoplan__run_pipeline_csv" not in opts.allowed_tools  # writing tools ask first
-    assert opts.mcp_servers["exoplan"]["args"] == ["-m", "exoplan.mcp_server"]
+    assert opts.tools == [] and all(t.startswith("mcp__setuhq__") for t in opts.allowed_tools)
+    assert "mcp__setuhq__run_pipeline_csv" not in opts.allowed_tools  # writing tools ask first
+    assert opts.mcp_servers["setuhq"]["args"] == ["-m", "setuhq.mcp_server"]
     assert isinstance(seen["outward"], Deny)
     events = [json.loads(line) for line in log.read_text().splitlines()]
     assert [e["event"] for e in events] == ["task", "tool_call", "tool_result", "permission", "result", "report"]

@@ -5,7 +5,7 @@ import math
 import numpy as np
 import pytest
 
-from exoplan.pixel import (aperture_fraction, centroid_motion_test, detect_saturation, flux_weighted_centroid,
+from setuhq.pixel import (aperture_fraction, centroid_motion_test, detect_saturation, flux_weighted_centroid,
                            gaussian_psf, load_tpf, momentum_dumps, neighbour_table, offset_significance, parse_dv_xml,
                            pixel_vet, propagate_position, s3_prefix, synthetic_tpf, write_tpf_fits)
 
@@ -206,7 +206,7 @@ def test_a_collapsed_difference_psf_is_unreliable():
     """A dip confined to one pixel (a detector or systematics artefact, not a star) makes the difference-image fit
     collapse to its 0.3 px width bound and differ from the star's width: the centroid is not trusted."""
     tpf = synthetic_tpf(stars=[TARGET], seed=2, **EPH)
-    from exoplan.pixel import transit_windows
+    from setuhq.pixel import transit_windows
 
     _, inside, _ = transit_windows(tpf.time, **EPH, in_fraction=1.2)
     tpf.flux[inside, 5, 7] -= 300.0

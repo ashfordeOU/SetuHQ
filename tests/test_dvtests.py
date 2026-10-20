@@ -5,10 +5,10 @@ import math
 import numpy as np
 import pytest
 
-from exoplan import dvtests
-from exoplan.dvtests import (crowding, epoch_depths, epoch_times, extended_vet, implied_albedo, odd_even_depth_test,
+from setuhq import dvtests
+from setuhq.dvtests import (crowding, epoch_depths, epoch_times, extended_vet, implied_albedo, odd_even_depth_test,
                              secondary_search, timing_test, trapezoid)
-from exoplan.vet import DISQUALIFYING
+from setuhq.vet import DISQUALIFYING
 
 P, T0, DUR = 4.0, 1.0, 0.15
 

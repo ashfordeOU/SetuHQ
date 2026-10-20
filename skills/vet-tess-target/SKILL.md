@@ -5,8 +5,8 @@ description: Vet a TESS target or light curve for a transit with SetuHQ's own BL
 
 # Vet a TESS target
 
-Use the `exoplan` MCP server's `vet_lightcurve`, `fit_transit`, `compute_fap`, `run_pipeline_tess`,
-`list_candidates`, `get_candidate` and `get_star`. See `/exoplan-vet` for the step list.
+Use the `setuhq` MCP server's `vet_lightcurve`, `fit_transit`, `compute_fap`, `run_pipeline_tess`,
+`list_candidates`, `get_candidate` and `get_star`. See `/setuhq-vet` for the step list.
 
 Rules that apply every time:
 

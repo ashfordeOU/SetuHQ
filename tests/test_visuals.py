@@ -11,9 +11,9 @@ import pytest
 from scipy.integrate import quad
 from scipy.special import j1 as sp_j1, jv
 
-from exoplan import docket as docket_mod
-from exoplan import methods as M
-from exoplan.app import APP_JS
+from setuhq import docket as docket_mod
+from setuhq import methods as M
+from setuhq.app import APP_JS
 
 from test_methods import CHROMIUM, HAVE_BROWSER, HAVE_NODE, PLAYWRIGHT, _route
 

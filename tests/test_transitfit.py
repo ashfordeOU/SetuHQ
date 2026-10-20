@@ -5,9 +5,9 @@ import math
 import numpy as np
 import pytest
 
-from exoplan import methods as M
-from exoplan import transitfit as T
-from exoplan.injection import Injection, synthetic_subject
+from setuhq import methods as M
+from setuhq import transitfit as T
+from setuhq.injection import Injection, synthetic_subject
 
 
 @pytest.mark.parametrize("z,k", [(0.0, 0.1), (0.5, 0.1), (0.95, 0.1), (1.05, 0.1), (0.3, 0.5), (1.2, 0.5), (0.0, 1.2)])
@@ -126,7 +126,7 @@ def test_stored_pi_men_run_carries_the_fit_and_bounded_fap():
     import json
     from pathlib import Path
 
-    from exoplan.store import read_classifications_csv
+    from setuhq.store import read_classifications_csv
 
     run = Path("runs/tess-pi-men-s1")
     cls = read_classifications_csv(run / "classifications.csv")
@@ -144,10 +144,10 @@ def test_stored_pi_men_run_carries_the_fit_and_bounded_fap():
 
 
 def test_the_pipeline_fits_every_consensus_dip(tmp_path):
-    from exoplan.config import RunConfig
-    from exoplan.lightcurve import LightCurve
-    from exoplan.pipeline import run_pipeline
-    from exoplan.reviewers.simulated import SimulatedVolunteer
+    from setuhq.config import RunConfig
+    from setuhq.lightcurve import LightCurve
+    from setuhq.pipeline import run_pipeline
+    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     rng = np.random.default_rng(5)
     time = np.arange(0.0, 13.0, 10 / 1440)

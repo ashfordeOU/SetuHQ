@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import tools
-from exoplan.tools import ToolError
+from setuhq import tools
+from setuhq.tools import ToolError
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN = "runs/tess-pi-men-s1"
@@ -20,7 +20,7 @@ EXPECTED = ["search_catalogue", "get_planet", "get_star", "list_candidates", "ge
 
 @pytest.fixture(autouse=True)
 def data_root(monkeypatch):
-    monkeypatch.setenv("EXOPLAN_ROOT", str(ROOT))
+    monkeypatch.setenv("SETUHQ_ROOT", str(ROOT))
 
 
 @pytest.fixture(scope="module")
@@ -33,7 +33,7 @@ def _check(env, tool):
     """Every tool answers in one shape: result, provenance (code, sources, time) and honesty labels."""
     assert env["tool"] == tool
     assert set(env) == {"tool", "result", "provenance", "honesty"}
-    assert env["provenance"]["exoplan_version"] and env["provenance"]["computed_at"]
+    assert env["provenance"]["setuhq_version"] and env["provenance"]["computed_at"]
     assert env["honesty"] and all(isinstance(h, str) and h for h in env["honesty"])
     json.dumps(env, allow_nan=False)  # strict JSON: no NaN or infinity
     assert "superintelligence" not in json.dumps(env).lower()
@@ -46,7 +46,7 @@ def _check(env, tool):
 @pytest.fixture(scope="module")
 def server():
     pytest.importorskip("mcp")
-    from exoplan.mcp_server import build_server
+    from setuhq.mcp_server import build_server
 
     return build_server()
 
@@ -81,14 +81,14 @@ def test_server_calls_a_tool_and_reports_a_refusal(server):
 
 
 def test_server_over_stdio(tmp_path):
-    """The real transport: start exoplan-mcp as a subprocess, list the tools, call one."""
+    """The real transport: start setuhq-mcp as a subprocess, list the tools, call one."""
     pytest.importorskip("mcp")
     import anyio
     from mcp import ClientSession, StdioServerParameters
     from mcp.client.stdio import stdio_client
 
-    params = StdioServerParameters(command=sys.executable, args=["-m", "exoplan.mcp_server"],
-                                   env={"EXOPLAN_ROOT": str(ROOT), "PATH": "", "PYTHONPATH": str(ROOT / "src")})
+    params = StdioServerParameters(command=sys.executable, args=["-m", "setuhq.mcp_server"],
+                                   env={"SETUHQ_ROOT": str(ROOT), "PATH": "", "PYTHONPATH": str(ROOT / "src")})
 
     async def go():
         async with stdio_client(params) as (read, write):
@@ -105,7 +105,7 @@ def test_server_over_stdio(tmp_path):
 
 def test_mcp_main_lists_tools(capsys):
     pytest.importorskip("mcp")
-    from exoplan.mcp_server import main
+    from setuhq.mcp_server import main
 
     assert main(["--list-tools"]) == 0
     assert capsys.readouterr().out.split()[0] == "search_catalogue"
@@ -216,7 +216,7 @@ def test_paths_outside_the_root_are_refused(tmp_path):
 
 def test_run_pipeline_csv_probes_only(tmp_path, monkeypatch, arrays):
     """A full run on a CSV inside the root: Probes only by default, so no AI provider is called."""
-    monkeypatch.setenv("EXOPLAN_ROOT", str(tmp_path))
+    monkeypatch.setenv("SETUHQ_ROOT", str(tmp_path))
     rows = ["time,flux,flux_err"] + [f"{t},{f},{e}" for t, f, e in zip(arrays["time"], arrays["flux"], arrays["flux_err"])]
     (tmp_path / "lc.csv").write_text("\n".join(rows))
     (tmp_path / "panel.toml").write_text(
@@ -228,7 +228,7 @@ def test_run_pipeline_csv_probes_only(tmp_path, monkeypatch, arrays):
     def no_network(*a, **k):
         raise AssertionError("a Sentinel was called without sentinels=True")
 
-    monkeypatch.setattr("exoplan.reviewers.http.post_json", no_network)
+    monkeypatch.setattr("setuhq.reviewers.http.post_json", no_network)
     env = tools.run_pipeline_csv("lc.csv", "out", target="pi Men", config_path="panel.toml")
     got = _check(env, "run_pipeline_csv")
     assert [r["id"] for r in got["reviewers"]] == ["volunteer-typical"]
@@ -240,7 +240,7 @@ def test_run_pipeline_csv_probes_only(tmp_path, monkeypatch, arrays):
 
 def test_mcp_main_serves_stdio_by_default_and_http_on_request(monkeypatch):
     pytest.importorskip("mcp")
-    import exoplan.mcp_server as M
+    import setuhq.mcp_server as M
 
     calls = []
 
@@ -263,7 +263,7 @@ def test_tool_runs_never_overwrite_stored_results(tmp_path, monkeypatch, arrays)
     """A tool run goes to a new runs/mcp/<name>; the stored pi Men run, the data root and an existing run are refused."""
     import shutil
 
-    monkeypatch.setenv("EXOPLAN_ROOT", str(tmp_path))
+    monkeypatch.setenv("SETUHQ_ROOT", str(tmp_path))
     stored = tmp_path / "runs/tess-pi-men-s1"
     shutil.copytree(ROOT / RUN, stored, ignore=shutil.ignore_patterns("subjects", "fap_null"))
     before = {p.name: p.read_bytes() for p in stored.iterdir() if p.is_file()}
@@ -294,7 +294,7 @@ def test_write_tool_hints_are_truthful(server):
 
 def test_http_mode_is_read_only_unless_allowed(monkeypatch):
     pytest.importorskip("mcp")
-    import exoplan.mcp_server as M
+    import setuhq.mcp_server as M
 
     built = []
     real = M.build_server
@@ -335,7 +335,7 @@ def test_tool_runs_never_follow_a_link(tmp_path, monkeypatch):
     outside = tmp_path / "outside"
     outside.mkdir()
     (data / "runs/mcp").mkdir(parents=True)
-    monkeypatch.setenv("EXOPLAN_ROOT", str(data))
+    monkeypatch.setenv("SETUHQ_ROOT", str(data))
     os.symlink(outside / "gone", data / "runs/mcp/dangling")  # dangling: its target does not exist
     with pytest.raises(ToolError, match="already exists"):
         tools._new_run_dir("dangling")

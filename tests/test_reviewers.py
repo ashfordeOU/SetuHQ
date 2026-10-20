@@ -3,10 +3,10 @@ from types import SimpleNamespace
 
 import pytest
 
-from exoplan.reviewers import ClaudeReviewer, SimulatedVolunteer
-from exoplan.reviewers.base import NOISE, POTENTIAL_PLANET, Classification, Mark
-from exoplan.reviewers.claude import ReviewError, build_prompt, parse_response
-from exoplan.render import render_subject
+from setuhq.reviewers import ClaudeReviewer, SimulatedVolunteer
+from setuhq.reviewers.base import NOISE, POTENTIAL_PLANET, Classification, Mark
+from setuhq.reviewers.claude import ReviewError, build_prompt, parse_response
+from setuhq.render import render_subject
 
 
 class FakeMessages:
@@ -97,7 +97,7 @@ def test_claude_reviewer_cache_avoids_second_call(tmp_path, transit_subject):
 
 def test_claude_reviewer_retries_then_fails(tmp_path, transit_subject, monkeypatch):
     subject, _ = transit_subject
-    monkeypatch.setattr("exoplan.reviewers.claude.time.sleep", lambda s: None)
+    monkeypatch.setattr("setuhq.reviewers.claude.time.sleep", lambda s: None)
     image = render_subject(subject, tmp_path / "s.png")
     client = FakeClient([RuntimeError("boom")])
     reviewer = ClaudeReviewer("claude-test", client=client, retries=2)

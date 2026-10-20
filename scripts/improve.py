@@ -21,9 +21,9 @@ import json
 import tempfile
 from pathlib import Path
 
-from exoplan.benchmark import injection_recovery
-from exoplan.config import RunConfig, load_config
-from exoplan.reviewers import SimulatedVolunteer
+from setuhq.benchmark import injection_recovery
+from setuhq.config import RunConfig, load_config
+from setuhq.reviewers import SimulatedVolunteer
 
 DEFAULT = {"snr_threshold": 5.0, "miss_probability": 0.10}
 GRID = [

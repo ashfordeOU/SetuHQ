@@ -5,8 +5,8 @@ import subprocess
 
 import pytest
 
-from exoplan import docket as docket_mod
-from exoplan.app import (
+from setuhq import docket as docket_mod
+from setuhq.app import (
     APP_CSS,
     APP_JS,
     FRAME_BRIDGE_JS,
@@ -35,8 +35,8 @@ from exoplan.app import (
     radius_ratio,
     widget_layout,
 )
-from exoplan.cli import main
-from exoplan.docket import NO_STORED_CROSSMATCH
+from setuhq.cli import main
+from setuhq.docket import NO_STORED_CROSSMATCH
 
 WIDGET_IDS = [w for w, _ in WIDGETS]
 
@@ -82,11 +82,11 @@ def _route(page: str, sid: str) -> str:
 
 
 def test_app_builds_from_run_dir_and_catalogue(run_dir, catalog, tmp_path):
-    assert main(["app", str(run_dir), "--catalog", str(catalog), "--out", str(tmp_path / "app"), "--title", "exoplan",
+    assert main(["app", str(run_dir), "--catalog", str(catalog), "--out", str(tmp_path / "app"), "--title", "setuhq",
                  "--allow-missing-crossmatch"]) == 0
     page = (tmp_path / "app" / "index.html").read_text()
     data = _page_data(page)
-    assert data["title"] == "exoplan"
+    assert data["title"] == "setuhq"
     assert [c["candidate_id"] for c in data["catalog"]["candidates"]] == ["tess-x-001", "tess-y-002"]
     assert data["catalog"]["runs"][0]["errors"] == ["TIC 9: LookupError: no SPOC 120s light curves found for 'TIC 9'"]
     assert data["config"]["config_name"] == "app"
@@ -105,7 +105,7 @@ def test_app_builds_without_catalogue(run_dir, tmp_path):
 
 
 def test_nine_sections_and_seven_pages_exist(run_dir, catalog, tmp_path):
-    from exoplan.app import ROUTE_ALIASES, SUBPAGES
+    from setuhq.app import ROUTE_ALIASES, SUBPAGES
 
     page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
     assert [s for s, _ in SECTIONS] == ["overview", "sky", "galaxy", "catalogue", "transit", "explorer", "sentinels", "methods", "mission"]
@@ -133,9 +133,9 @@ def test_planet_cards_never_state_an_earth_or_jupiter_radius(run_dir, catalog, t
     no_radius = re.compile(r"\d\s*(R⊕|R_⊕|R♃|R_?J\b|R_?E\b|R_?earth|R_?jup|Earth radi|Jupiter radi|M⊕)", re.I)
     assert not no_radius.search(planets)
     # The Galaxy shows catalogue radii as the catalogue stores them; the run's own dips never get one.
-    from exoplan.galaxy import GALAXY_JS
-    from exoplan.methods import METHODS_JS
-    from exoplan.catalogue import CATALOGUE_JS
+    from setuhq.galaxy import GALAXY_JS
+    from setuhq.methods import METHODS_JS
+    from setuhq.catalogue import CATALOGUE_JS
     assert not no_radius.search(APP_JS.replace(GALAXY_JS, "").replace(METHODS_JS, "").replace(CATALOGUE_JS, ""))
     assert not no_radius.search(json.dumps(data["planets"], ensure_ascii=False))
     assert "No stellar radius is stored" in planets
@@ -300,7 +300,7 @@ def test_tokens_follow_the_approved_design():
 
 
 def test_feed_no_detection_wording_matches_the_plate():
-    from exoplan import plate
+    from setuhq import plate
 
     assert NO_DETECTION == plate.NO_DETECTION == "Archive values only. This page claims no detection."
 
@@ -450,7 +450,7 @@ def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path
     assert "P.postMessage(m, '*')" in FRAME_BRIDGE_JS
     # The shell takes messages only from its own frame and writes them to its URL and full-page links.
     listener = re.search(r"window.addEventListener\('message', e => \{.*?\n\}\);\n", APP_JS, re.S).group(0)
-    assert "e.source !== f.contentWindow" in listener and "m.source !== 'exoplan-docket'" in listener
+    assert "e.source !== f.contentWindow" in listener and "m.source !== 'setuhq-docket'" in listener
     sync = re.search(r"function syncShellURL\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "setHash(h, push)" in sync and "setFullHrefs(frame.dip)" in sync
     assert "'#fullpage, #topfull, #blockedlink'" in APP_JS
@@ -470,9 +470,9 @@ def test_blocked_frame_shows_a_message_and_a_link(run_dir, tmp_path):
     assert "f.hidden = true" in blocked and "$('#frameblocked').hidden = false" in blocked
     # About three seconds for the blob frame, then a shorter wait for the srcdoc copy, which needs no fetch.
     assert "setTimeout(() => frameLoadFailed(gen), url ? 3000 : 1500)" in APP_JS
-    from exoplan.galaxy import GALAXY_JS
-    from exoplan.methods import METHODS_JS
-    from exoplan.catalogue import CATALOGUE_JS
+    from setuhq.galaxy import GALAXY_JS
+    from setuhq.methods import METHODS_JS
+    from setuhq.catalogue import CATALOGUE_JS
     assert "6000" not in APP_JS.replace(GALAXY_JS, "").replace(METHODS_JS, "").replace(CATALOGUE_JS, "")
     assert ".frame[hidden]{display:none}" in APP_CSS
 
@@ -512,9 +512,9 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     # (and Mission Control's saved default, in its "Save as my default" handler).
     # (and, in sessionStorage only, that the Sky's or Galaxy's survey-scan intro has played, in mxIntroEnd).
     assert APP_JS.count("setItem(") == 6 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
-    assert "sessionStorage.setItem('exoplan-intro-' + I.key, 'done')" in re.search(r"function mxIntroEnd\(I, skipped\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "sessionStorage.setItem('setuhq-intro-' + I.key, 'done')" in re.search(r"function mxIntroEnd\(I, skipped\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LEARN_KEY" in re.search(r"function learnSave\(\)\{.*?\}\s*\}", APP_JS, re.S).group(0)
-    assert "s.setItem('exoplan-theme', t)" in re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "s.setItem('setuhq-theme', t)" in re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LAYOUT_KEY" in re.search(r"function saveLayout\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(FEED_KEY" in re.search(r"function saveFeedView\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     callers = [m.start() for m in re.finditer(r"saveLayout\(\);", APP_JS)]
@@ -751,7 +751,7 @@ def test_calibration_plane_never_invents_rates(run_dir, tmp_path):
 
 
 def test_repository_calibration_record_matches_the_weights_file():
-    from exoplan.calibrate import calibration_path
+    from setuhq.calibrate import calibration_path
 
     weights_path = "docs/results/reviewer_weights_full_panel.json"
     weights = json.loads(open(weights_path).read())
@@ -847,7 +847,7 @@ def test_overview_names_the_archive_match_from_the_stored_fallback(run_dir, tmp_
     try:
         dock = docket_mod.docket_data(run_dir, title="t", crossmatch_fallback=path)
         assert dock["crossmatch"]["fallback_from"] == str(path) and dock["crossmatch"]["run_error"] == stored["error"]
-        from exoplan import app as app_mod
+        from setuhq import app as app_mod
 
         hero = app_mod.overview_hero(dock, [{"signal_id": dock["candidates"][0]["signal_id"], "consistent_with": "Test c"}])
         assert hero["headline"].endswith(", consistent with Test c.") and hero["accent"] == "A known planet, not a discovery."
@@ -860,13 +860,13 @@ def test_overview_names_the_archive_match_from_the_stored_fallback(run_dir, tmp_
 def test_repository_pi_men_crossmatch_states_its_source():
     from pathlib import Path
 
-    from exoplan.docket import DEFAULT_CROSSMATCH
+    from setuhq.docket import DEFAULT_CROSSMATCH
 
     stored = json.loads(Path(DEFAULT_CROSSMATCH).read_text())
     assert stored["status"] == "matched" and stored["targets"] == ["TIC 261136679"]
     assert [p["pl_name"] for p in stored["planets"]] == ["pi Men c"]
     assert stored["planets"][0]["pl_orbper"] == 6.26784  # as docs/results/pi_men_validation.md records it
-    assert "pi_men_validation.md" in stored["source"] and "exoplan crossmatch" in stored["source"]
+    assert "pi_men_validation.md" in stored["source"] and "crossmatch runs/tess-pi-men-s1" in stored["source"]  # written as exoplan, before the rename
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
@@ -909,17 +909,17 @@ def test_viewer_changes_are_history_entries_and_back_is_followed():
 def test_theme_control_meta_and_first_paint(run_dir, tmp_path):
     page = build_app(run_dir, tmp_path / "app", title="t").read_text()
     head = page[:page.index("</head>")]
-    assert '<meta name="description" content="exoplan run ' in head and "candidate, unconfirmed" in head
+    assert '<meta name="description" content="setuhq run ' in head and "candidate, unconfirmed" in head
     assert '<meta name="color-scheme" content="dark light">' in head
     assert head.count('<meta name="theme-color"') == 2
     # The stored choice is applied by an inline script before the stylesheet: no flash of the wrong theme.
-    assert head.index("localStorage.getItem('exoplan-theme')") < head.index('<style>')
+    assert head.index("localStorage.getItem('setuhq-theme')") < head.index('<style>')
     assert "try{" in head and "catch(e){}" in head
     # One control, in the top bar, a 44 px target.
     assert page.count("<button class=\"btn themebtn\" type=\"button\" data-theme-toggle") == 1
     assert ".themebtn{min-height:44px" in APP_CSS and "min-width:44px" in _phone_css()
     apply = re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "setAttribute('data-theme', t)" in apply and "try {" in apply and "postMessage({source: 'exoplan-shell', theme: t}" in apply
+    assert "setAttribute('data-theme', t)" in apply and "try {" in apply and "postMessage({source: 'setuhq-shell', theme: t}" in apply
     assert "THEMES = ['dark', 'light', 'system']" in APP_JS and "var t='dark'" in head
     # The framed Docket follows the theme.
     assert "document.documentElement.setAttribute('data-theme', m.theme)" in FRAME_BRIDGE_JS
@@ -949,7 +949,7 @@ def test_phone_feed_is_three_line_cards_with_a_distinct_sort_group(run_dir, cata
 
 
 def test_hero_qualifies_an_archive_match_in_the_lede_and_the_box(run_dir, tmp_path):
-    from exoplan import app as app_mod
+    from setuhq import app as app_mod
 
     dock = docket_mod.docket_data(run_dir, title="t")
     sig = dock["candidates"][0]["signal_id"]
@@ -1030,7 +1030,7 @@ def test_no_ui_text_below_11px():
 
 
 def test_reviewer_display_names_are_sentinels_and_probes():
-    from exoplan.names import display_name, panel_phrase, reviewer_names, short_name
+    from setuhq.names import display_name, panel_phrase, reviewer_names, short_name
 
     kinds = {"claude-volunteer": "claude_code", "claude-skeptic": "claude_code", "volunteer-sensitive": "simulated",
              "volunteer-typical": "simulated", "volunteer-cautious": "simulated"}
@@ -1050,7 +1050,7 @@ def test_reviewer_display_names_are_sentinels_and_probes():
 
 
 def test_panel_page_attribution_and_ids_unchanged_in_data(run_dir, tmp_path):
-    from exoplan.names import ATTRIBUTION
+    from setuhq.names import ATTRIBUTION
 
     assert ATTRIBUTION == ("Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
                            "Probes are deterministic matched-filter detectors.")
@@ -1089,7 +1089,7 @@ def test_signals_button_targets_the_current_signal_in_the_list():
 
 
 def test_the_sentinels_page_states_the_benchmark_as_measured_not_discovered(tmp_path):
-    from exoplan.app import _benchmark_card, _load_benchmark
+    from setuhq.app import _benchmark_card, _load_benchmark
 
     assert "has not been run" in _benchmark_card(None)
     assert _load_benchmark(tmp_path / "missing.json") is None

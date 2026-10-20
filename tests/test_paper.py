@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import paper_numbers as PN  # noqa: E402
-from exoplan.benchmark_toi import wilson  # noqa: E402
+from setuhq.benchmark_toi import wilson  # noqa: E402
 
 PAPER = (ROOT / "docs/paper/paper.md").read_text()
 FLAT = " ".join(PAPER.split())  # line breaks in the prose do not matter
@@ -95,7 +95,7 @@ def test_pi_men_numbers_match_the_validation_json():
 
 def test_leaderboard_numbers_match_the_leaderboard_json():
     lb = json.loads((ROOT / "docs/leaderboard/leaderboard.json").read_text())
-    from exoplan.leaderboard import jtext
+    from setuhq.leaderboard import jtext
 
     for e in lb["entries"]:
         s = e["scores"]
@@ -107,7 +107,7 @@ def test_leaderboard_numbers_match_the_leaderboard_json():
 
 
 def test_the_paper_floor_sentence_changes_with_the_paired_interval(tmp_path):
-    from exoplan import leaderboard as LBm
+    from setuhq import leaderboard as LBm
 
     root = _tmp_root(tmp_path)
     path = root / "docs/leaderboard/leaderboard.json"
@@ -173,7 +173,7 @@ def test_every_doi_was_resolved_and_every_value_checked_in_its_paper():
 def test_wording_rules():
     assert "SuperIntelligence" not in FLAT and "Superintelligence" not in FLAT
     assert "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors." in FLAT
-    for bad in ("we discovered", "exoplan discovered", "we confirm", "new planet", "newly discovered"):
+    for bad in ("we discovered", "setuhq discovered", "we confirm", "new planet", "newly discovered"):
         assert bad not in FLAT.lower(), bad
     assert "aastex631" in FLAT and "Markdown only" in FLAT
 

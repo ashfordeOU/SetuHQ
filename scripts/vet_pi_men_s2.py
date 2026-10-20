@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """pi Men (TIC 261136679), TESS sector 1: the S2 extended and pixel-level vetting and the S3 reduced FPP, on real SPOC data.
 
-Inputs (downloaded into the gitignored ``cache/tpf`` by :func:`exoplan.pixel.fetch_spoc_product`, through MAST or,
+Inputs (downloaded into the gitignored ``cache/tpf`` by :func:`setuhq.pixel.fetch_spoc_product`, through MAST or,
 when MAST's search service fails, the public STScI bucket that MAST's download links redirect to):
 
 * the SPOC 2-minute light curve ``*_lc.fits`` (PDCSAP flux, CROWDSAP and FLFRCSAP);
@@ -11,7 +11,7 @@ when MAST's search service fails, the public STScI bucket that MAST's download l
 Steps: the light curve is prepared as in the stored run's config (clean, detrend, 10-minute bins), the sector is
 searched with BLS, and every epoch is fitted jointly with the limb-darkened model (period free near the BLS period,
 TIC limb darkening from ``runs/tess-pi-men-s1/stellar.json``). The fitted ephemeris, T14 and depth drive the DV-style
-light-curve tests (:func:`exoplan.dvtests.extended_vet`) and the pixel tests (:func:`exoplan.pixel.pixel_vet`).
+light-curve tests (:func:`setuhq.dvtests.extended_vet`) and the pixel tests (:func:`setuhq.pixel.pixel_vet`).
 Nearby stars come from the TIC, or Gaia DR3 when MAST fails, cached in ``cache/neighbours``.
 
 Writes ``docs/results/pi_men_s2_vetting.json`` and ``.md``.
@@ -31,18 +31,18 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from exoplan.config import load_config  # noqa: E402
-from exoplan.dvtests import extended_vet  # noqa: E402
-from exoplan.loaders import load_spoc_file  # noqa: E402
-from exoplan.dvtests import assess_secondary, secondary_search  # noqa: E402
-from exoplan.pipeline import (prepare_lightcurves, secondary_variants, vetting_lightcurve,  # noqa: E402
+from setuhq.config import load_config  # noqa: E402
+from setuhq.dvtests import extended_vet  # noqa: E402
+from setuhq.loaders import load_spoc_file  # noqa: E402
+from setuhq.dvtests import assess_secondary, secondary_search  # noqa: E402
+from setuhq.pipeline import (prepare_lightcurves, secondary_variants, vetting_lightcurve,  # noqa: E402
                               vetting_lightcurve_two_pass, vetting_window)
-from exoplan.validate import scan_whiteness  # noqa: E402
-from exoplan.pixel import (fetch_neighbours, fetch_spoc_product, load_tpf, order_target_first,  # noqa: E402
+from setuhq.validate import scan_whiteness  # noqa: E402
+from setuhq.pixel import (fetch_neighbours, fetch_spoc_product, load_tpf, order_target_first,  # noqa: E402
                            parse_dv_xml, pixel_vet)
-from exoplan.search import bls_search, stitch  # noqa: E402
-from exoplan.transitfit import fit_transit, ld_coeffs  # noqa: E402
-from exoplan.validate import reduced_fpp  # noqa: E402
+from setuhq.search import bls_search, stitch  # noqa: E402
+from setuhq.transitfit import fit_transit, ld_coeffs  # noqa: E402
+from setuhq.validate import reduced_fpp  # noqa: E402
 
 TIC, SECTOR = 261136679, 1
 
@@ -330,7 +330,7 @@ def markdown(r: dict) -> str:
     else:
         lines.append(f"Not available: {'; '.join(q.get('errors') or ['no stars returned'])}.")
     v = r["validation"]
-    lines += ["", "## S3: reduced FPP (exoplan's scheme, not TRICERATOPS)", "",
+    lines += ["", "## S3: reduced FPP (SetuHQ's scheme, not TRICERATOPS)", "",
               (f"FPP = {_fmt(v['fpp'], 4)} (robust-spread noise; with the scan's plain std instead: "
                f"{_fmt((v['evidence'].get('fpp_bracket_robust_vs_std') or [None, None])[1], 4)}), NFPP = {_fmt(v['nfpp'], 6)}; "
                f"class: {v['fpp_class']}." if v.get("fpp") is not None else f"{v['fpp_class']}.")

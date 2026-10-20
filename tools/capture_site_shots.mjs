@@ -96,7 +96,7 @@ const browser = await chromium.launch();
 const shots = [];
 for (const theme of ["light", "dark"]) {
   const ctx = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: SCALE, colorScheme: theme, reducedMotion: "reduce" });
-  await ctx.addInitScript((t) => { try { localStorage.setItem("exoplan-theme", t); } catch (e) { /* private mode */ } }, theme);
+  await ctx.addInitScript((t) => { try { localStorage.setItem("setuhq-theme", t); } catch (e) { /* private mode */ } }, theme);
   const page = await ctx.newPage();
   page.on("pageerror", (e) => console.error(`pageerror (${theme}):`, e.message));
   for (const s of SHOTS) {
@@ -146,7 +146,7 @@ for (const theme of ["light", "dark"]) {
 await browser.close();
 server.close();
 writeFileSync(join(out, "shots.json"), JSON.stringify({
-  note: "Real screenshots of the SetuHQ app (still named exoplan in this build) as built in site/app/index.html. Nothing is drawn or edited.",
+  note: "Real screenshots of the SetuHQ app as built in site/app/index.html. Nothing is drawn or edited.",
   rule: `window ${VIEWPORT.width}x${VIEWPORT.height} CSS px at device scale ${SCALE}, reduced motion; frame ${FRAME.width}x${FRAME.height} CSS px of the content column (x ${FRAME.x}), starting ${FRAME.above} px above the anchor element (a Methods stage, or the heading before it), never above the end of the block before; top bar hidden`,
   commit, app_sha256: appSha, captured: new Date().toISOString().slice(0, 10), shots,
 }, null, 2) + "\n");

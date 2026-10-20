@@ -51,29 +51,29 @@ fi
 
 RUN="runs/tess-pi-men-s1"
 CAT="docs/discoveries/catalog.json"
-EX="$VENV/bin/exoplan"
+EX="$VENV/bin/setuhq"
 
 step "sweep catalogue: only ingested, intact contributions, and catalogue.json rebuilds from them"
-# The ingest ledger may only grow against its merge-base with the base branch (EXOPLAN_BASE, else the
+# The ingest ledger may only grow against its merge-base with the base branch (SETUHQ_BASE, else the
 # remote's default branch). A missing base is a note locally and a failure when CI is set.
 "$EX" check-sweep --sweep-dir docs/sweep --ledger-base auto >> "$LOG" 2>&1
 grep "check-sweep: note:" "$LOG" | tail -n 1 || true
 ok
 
 step "app shell builds from the stored run"
-"$EX" app "$RUN" --catalog "$CAT" --out site/app --title "exoplan" --landing site/index.html >> "$LOG" 2>&1
+"$EX" app "$RUN" --catalog "$CAT" --out site/app --title "SetuHQ" --landing site/index.html >> "$LOG" 2>&1
 ok
 
 step "docket builds from the stored run"
-"$EX" docket "$RUN" --out site/docket --title "exoplan docket: pi Men (TESS sector 1)" >> "$LOG" 2>&1
+"$EX" docket "$RUN" --out site/docket --title "SetuHQ docket: pi Men (TESS sector 1)" >> "$LOG" 2>&1
 ok
 
 step "plate builds from the stored run"
-"$EX" plate "$RUN" --catalog "$CAT" --out site/plate --title "exoplan plates" >> "$LOG" 2>&1
+"$EX" plate "$RUN" --catalog "$CAT" --out site/plate --title "SetuHQ plates" >> "$LOG" 2>&1
 ok
 
 step "archived run report builds from the stored run"
-"$EX" report "$RUN" --out site/report --title "exoplan: pi Men (TESS sector 1)" \
+"$EX" report "$RUN" --out site/report --title "SetuHQ: pi Men (TESS sector 1)" \
   --validation docs/results/pi_men_validation.md --benchmark docs/results/injection_recovery_simulated_panel.md >> "$LOG" 2>&1
 ok
 

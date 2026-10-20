@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from exoplan.dvtests import trapezoid
-from exoplan.lightcurve import LightCurve
+from setuhq.dvtests import trapezoid
+from setuhq.lightcurve import LightCurve
 
 
 def trapezoid_lc(*, seed, period, t0, duration, depth, noise, days=27.0, cadence_min=2.0, secondary=0.0,

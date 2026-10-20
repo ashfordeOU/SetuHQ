@@ -4,10 +4,10 @@ import re
 import numpy as np
 import pytest
 
-from exoplan.config import RunConfig
-from exoplan import docket as docket_mod
-from exoplan.cli import main
-from exoplan.docket import (
+from setuhq.config import RunConfig
+from setuhq import docket as docket_mod
+from setuhq.cli import main
+from setuhq.docket import (
     DOCKET_JS,
     NO_STORED_CROSSMATCH,
     CrossmatchUnavailable,
@@ -19,10 +19,10 @@ from exoplan.docket import (
     outcome,
     vetting_checks,
 )
-from exoplan.pipeline import plot_arrays, run_pipeline
-from exoplan.reviewers import SimulatedVolunteer
-from exoplan.search import bls_search
-from exoplan.vet import measure_epochs
+from setuhq.pipeline import plot_arrays, run_pipeline
+from setuhq.reviewers import SimulatedVolunteer
+from setuhq.search import bls_search
+from setuhq.vet import measure_epochs
 
 
 @pytest.fixture(autouse=True)
@@ -43,7 +43,7 @@ def run_dir(tmp_path_factory):
     for k in range(6):
         centre = 2.5 + 4.0 * k
         flux -= 2500e-6 * ((time > centre - 0.125) & (time < centre + 0.125))
-    from exoplan.lightcurve import LightCurve
+    from setuhq.lightcurve import LightCurve
 
     lc = LightCurve(
         target="TIC TEST-2", mission="TESS", time=time, flux=flux,
@@ -97,7 +97,7 @@ def test_candidates_json_has_bls_t0_and_duration(run_dir):
 
 
 def test_the_strip_draws_the_stored_limb_darkened_fit_not_a_box():
-    from exoplan.transitfit import model_depth
+    from setuhq.transitfit import model_depth
 
     fit = {"t0": 10.125, "k": 0.017, "t14_hours": 3.0, "b": 0.5, "u1": 0.35, "u2": 0.2, "period_days": 6.27, "depth_ppm": 300.0}
     row = {"t_start": 10.0, "t_end": 10.25, "depth_ppm": 250.0, "fit": fit}
@@ -342,7 +342,7 @@ def test_one_ephemeris_in_two_subjects_is_one_signal():
     assert s["subject_ids"] == ["s1", "s2"]
     # Each subject's BLS result is kept as provenance, unchanged.
     assert [(b_["subject_id"], b_["period_days"], b_["bls_t0"]) for b_ in s["bls"]] == [("s1", 6.272620, 1325.5004), ("s2", 6.261557, 1344.3218)]
-    from exoplan.docket import signal_epoch
+    from setuhq.docket import signal_epoch
     assert [signal_epoch(d, s) for d in a + b] == [0, 1, 2, 3, 4]
 
 
@@ -415,7 +415,7 @@ def test_rv_planet_gets_no_transit_epoch_offset():
 
 
 def test_merged_signal_epochs_carry_signal_number_and_subject_parity():
-    from exoplan.docket import CROSS_SUBJECT_NOTE, annotate_signal_epochs, signal_epoch
+    from setuhq.docket import CROSS_SUBJECT_NOTE, annotate_signal_epochs, signal_epoch
 
     def ep(k, t0, period=6.27262):
         return {"epoch": k, "t_mid": t0 + k * period, "n_points": 12, "depth_ppm": 240.0, "sigma_ppm": 10.0}
@@ -441,8 +441,8 @@ def test_merged_signal_epochs_carry_signal_number_and_subject_parity():
 
 
 def test_mark_audit_reports_overlap_and_the_interval_rule():
-    from exoplan.aggregate import aggregate, audit_marks
-    from exoplan.reviewers.base import Classification, Mark, POTENTIAL_PLANET
+    from setuhq.aggregate import aggregate, audit_marks
+    from setuhq.reviewers.base import Classification, Mark, POTENTIAL_PLANET
 
     def cls(r, a, b):
         return Classification(subject_id="s", reviewer_id=r, label=POTENTIAL_PLANET, marks=(Mark(a, b),))

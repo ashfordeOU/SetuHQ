@@ -131,7 +131,7 @@ def corners(fov) -> list[list[list[float]]]:
 
 
 def galactic_lb(ra, dec):
-    from exoplan.galaxy import galactic_lb as lb
+    from setuhq.galaxy import galactic_lb as lb
 
     return np.array([lb(a, d) for a, d in zip(ra, dec)])
 

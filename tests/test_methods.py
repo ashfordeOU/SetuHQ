@@ -8,10 +8,10 @@ from pathlib import Path
 
 import pytest
 
-from exoplan import docket as docket_mod
-from exoplan import methods as M
-from exoplan.app import APP_JS, build_app
-from exoplan.galaxy import DEFAULT_COVERAGE, galaxy_data, load_coverage
+from setuhq import docket as docket_mod
+from setuhq import methods as M
+from setuhq.app import APP_JS, build_app
+from setuhq.galaxy import DEFAULT_COVERAGE, galaxy_data, load_coverage
 
 from test_story import run_dir  # noqa: F401  (fixture)
 
@@ -177,7 +177,7 @@ def test_every_chapter_has_a_labelled_visual_and_sources(page_html):
             assert 'class="mxdesc"' in fig
         if cid != "history":
             assert "<details class=\"mxsources\">" in art
-    assert "exoplan does not do spectroscopy" in sec and "This is what exoplan does" in sec
+    assert "SetuHQ does not do spectroscopy" in sec and "This is what SetuHQ does" in sec
     for href in re.findall(r'href="(https?://[^"]+)"', sec):
         assert href.startswith("https://")
 
@@ -427,7 +427,7 @@ def test_new_chapters_state_their_limits(page_html):
     assert "necessary, not sufficient" in sec and "drawn ten times deeper" in sec
     for flag in ("odd_even_mismatch", "secondary_eclipse", "low_snr", "too_short", "edge_event", "insufficient_points"):
         assert f"<code>{flag}</code>" in sec
-    import exoplan.vet as vet
+    import setuhq.vet as vet
     src = Path(vet.__file__).read_text()
     for flag in ("odd_even_mismatch", "secondary_eclipse", "low_snr", "too_short", "edge_event", "insufficient_points"):
         assert f'"{flag}"' in src  # the page names flags vet.py really raises

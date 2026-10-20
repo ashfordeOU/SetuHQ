@@ -26,4 +26,4 @@ jobs:
       - name: README figures, brand files and screenshots are current
         run: .venv/bin/python tools/gen_readme_assets.py --check
       - name: Sweep catalogue and append-only ingest ledger (a missing base fails here, CI is set)
-        run: .venv/bin/exoplan check-sweep --sweep-dir docs/sweep --ledger-base auto
+        run: .venv/bin/setuhq check-sweep --sweep-dir docs/sweep --ledger-base auto

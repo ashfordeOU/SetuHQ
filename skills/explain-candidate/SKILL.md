@@ -5,8 +5,8 @@ description: Explain one SetuHQ transit candidate in plain words from its stored
 
 # Explain a candidate
 
-Use the `exoplan` MCP server's `list_candidates`, `get_candidate`, `get_star` and `benchmark_results`.
-See `/exoplan-explain` for the step list.
+Use the `setuhq` MCP server's `list_candidates`, `get_candidate`, `get_star` and `benchmark_results`.
+See `/setuhq-explain` for the step list.
 
 Rules that apply every time:
 

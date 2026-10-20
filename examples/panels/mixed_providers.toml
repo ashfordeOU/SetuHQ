@@ -1,10 +1,10 @@
 # A mixed panel: the pi Men sector-1 run with Sentinels on three providers.
 #
-#   exoplan run examples/panels/mixed_providers.toml --out runs/pi-men-mixed
+#   setuhq run examples/panels/mixed_providers.toml --out runs/pi-men-mixed
 #   python scripts/benchmark_real_tois.py sentinels --panel examples/panels/mixed_providers.toml   # cross-provider φ
 #
 # Only Claude has been benchmarked so far. A Sentinel on another provider is labelled with its provider and
-# model, and it votes at the floor weight (0.05, "uncalibrated") until 'exoplan calibrate' has measured it.
+# model, and it votes at the floor weight (0.05, "uncalibrated") until 'setuhq calibrate' has measured it.
 #
 # Keys come from the environment only, one variable per provider, never from this file:
 #   claude          ANTHROPIC_API_KEY   (pip install -e '.[claude]')

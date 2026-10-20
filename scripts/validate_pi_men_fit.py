@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """pi Men c: the limb-darkened fit of the stored run against Huang et al. 2018 (and the archive's default row).
 
-Reads ``runs/tess-pi-men-s1`` (candidates.json, after ``exoplan rebuild``; subjects/*.json; stellar.json) and
+Reads ``runs/tess-pi-men-s1`` (candidates.json, after ``setuhq rebuild``; subjects/*.json; stellar.json) and
 the reference rows in ``docs/results/pi_men_reference.json`` (NASA Exoplanet Archive ``ps`` table; refreshed
 with ``--refresh`` when the archive answers). Writes ``docs/results/pi_men_validation.md`` and the JSON beside it.
 
@@ -28,7 +28,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from exoplan.transitfit import b_text, fit_transit, ld_coeffs, rho_catalogue, t23  # noqa: E402
+from setuhq.transitfit import b_text, fit_transit, ld_coeffs, rho_catalogue, t23  # noqa: E402
 
 REF = Path("docs/results/pi_men_reference.json")
 TAP = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
@@ -124,7 +124,7 @@ def main(argv=None) -> int:
         "# pi Men c: the limb-darkened fit against Huang et al. 2018",
         "",
         f"Run `{run}` (TESS SPOC sector 1, 10-minute bins), rebuilt from its stored classifications with the limb-darkened",
-        f"fit (`src/exoplan/transitfit.py`). {len(on)} of {len(pred)} predicted epochs are recovered by the panel. Limb darkening:",
+        f"fit (`src/setuhq/transitfit.py`). {len(on)} of {len(pred)} predicted epochs are recovered by the panel. Limb darkening:",
         f"Claret 2017 TESS quadratic u₁ = {u1:.3f}, u₂ = {u2:.3f} for the TIC's Teff {fmt(star.get('teff'), 0)} K and log g {fmt(star.get('logg'))}.",
         f"Reference: {ref['source']}, fetched {ref['fetched_at'][:10]} (`{REF}`).",
         "",
@@ -146,7 +146,7 @@ def main(argv=None) -> int:
         f"| T23/T14 | {'unconstrained' if j['b_upper_limit'] else fmt(j['t23_over_t14'])} | {fmt(prior['t23_over_t14']) if prior else '—'} | {fmt(t23_huang)} (from Huang's b, k, a/R★) | | | |",
         f"| ρ★ transit (g/cm³) | 1σ range {fmt(j['rho_range'][0], 3)}–{fmt(j['rho_range'][1], 3)} | {fmt(prior['rho_star']) if prior else '—'} (prior-dominated; no error quoted, as it would only restate the prior's) | {fmt(rho_huang, 3)} from M★, R★ | | | |",
         "",
-        "¹ Depth definitions differ: exoplan's is the limb-darkened model's depth at mid-transit; the archive's `pl_trandep` "
+        "¹ Depth definitions differ: SetuHQ's is the limb-darkened model's depth at mid-transit; the archive's `pl_trandep` "
         "is the published transit depth as each paper defines it. Compare k and T14 first.",
         "",
         "Errors are conservative: the covariance at the best fit (scaled by √χ²ᵣ when above 1) added in quadrature to the "

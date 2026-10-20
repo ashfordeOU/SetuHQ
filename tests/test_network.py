@@ -2,7 +2,7 @@
 
 import pytest
 
-from exoplan.loaders import load_tess
+from setuhq.loaders import load_tess
 
 
 @pytest.mark.network
