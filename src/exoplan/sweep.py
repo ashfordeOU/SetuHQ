@@ -189,7 +189,12 @@ def _toi_index(path: str | None) -> dict:
 def _search(job: dict) -> dict:
     from exoplan.starsearch import search_star
 
+    import shutil
+
     w = _WORKER
+    # A fresh run directory each time: the pipeline's SQLite store appends, so a directory left by an earlier
+    # search would add that search's classifications to this one's (it inflated n_marks once; nothing else).
+    shutil.rmtree(Path(job["run_root"]) / f"tic{int(job['tic'])}-s{int(job['sector'])}", ignore_errors=True)
     try:
         return search_star(job["path"], tic=job["tic"], sector=job["sector"], config=w["config"], reviewers=w["reviewers"],
                            weights=w["weights"], weights_source=w["source"], run_root=job["run_root"],
