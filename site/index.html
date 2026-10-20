@@ -1063,6 +1063,81 @@ body.mcpop .mctools .btn:not([data-mc="close"]){display:none}
   .mcpopbtn,[data-mc="focus"]{display:none}
 }
 
+/* ---------- everything that dims (#/variables) and the sweep counter ---------- */
+#route-variables{grid-template-columns:minmax(0,1fr)}
+#route-variables>*{min-width:0}
+.cattabs{display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);justify-self:start;max-width:100%}
+.cattabs a{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:14px}
+.cattabs a[aria-current="page"]{background:var(--seg-bg);color:var(--seg-ink)}
+.vafilters{display:grid;gap:12px}
+.vasearch input{width:100%;min-height:48px;padding:0 16px;border-radius:14px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 16px var(--sans)}
+.vafilters .chip,.vafilters .btn,.vasort select{min-height:44px}
+.vachip i,.vacls i,.sweepcls i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:6px;flex:none}
+.vafilters .chip .mono{color:var(--ink-3);margin-left:4px;font-size:12px}
+.vafilters .chip[aria-pressed="true"] .mono{color:inherit;opacity:.7}
+.varow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.valab{align-self:center;font-size:12px;color:var(--ink-3);margin-right:2px}
+.vasort{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3)}
+.vasort select{padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
+.valist{display:grid;gap:10px}
+.vaent{display:grid;gap:6px;padding:14px 16px;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:16px;background:var(--glass-2);min-width:0}
+.vaent:target,.vaent.sel{outline:2px solid var(--blue);outline-offset:2px}
+.vaent header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.vacls{display:inline-flex;align-items:center;font-weight:600}
+.vaent header a{display:inline-flex;align-items:center;min-height:44px}
+.vaent p{margin:0;font-size:13.5px;color:var(--ink-2);overflow-wrap:anywhere}
+.vanum{font-size:12.5px!important;color:var(--ink)!important}
+.vaent details summary{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;font-size:13px;font-weight:600;list-style:none;color:var(--cyan)}
+.vaent details summary::-webkit-details-marker{display:none}
+.vaent details summary::before{content:"›";display:inline-block;transition:transform .2s;color:var(--ink-3)}
+.vaent details[open] summary::before{transform:rotate(90deg)}
+.vaent details>div{display:grid;gap:10px;padding-top:4px}
+.vaent h3{margin:0;font-size:12px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em}
+.vatable{width:100%;border-collapse:collapse;font-size:13px}
+.vatable th,.vatable td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.vatable td.num,.vatable th.num{text-align:right;font-variant-numeric:tabular-nums}
+.vatable thead th{font-size:12px;color:var(--ink-3);font-weight:500}
+.vawords{margin:0;padding:10px 12px;border-radius:12px;background:var(--cyan-soft);font-size:13.5px;color:var(--ink)}
+.vawords cite{display:block;font-style:normal;font-size:12px;color:var(--ink-3);margin-top:4px}
+.vaprov{font:12px/1.5 var(--mono);color:var(--ink-3);overflow-wrap:anywhere}
+.vacredit{font-size:12.5px;color:var(--ink-3)}
+.vacredit b{color:var(--ink);font-weight:600}
+.vamore{display:flex;justify-content:center}
+.vamore .btn{min-height:44px}
+.vaobj{display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+.vaobj[hidden]{display:none}
+.vaobj>*{min-width:0}
+.vaobj p{overflow-wrap:anywhere}
+.vaobj h2{margin:0;font-size:22px}
+.vaobj h2:focus{outline:none}
+.vaobjgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px 18px;margin:0}
+.vaobjgrid div{display:grid;gap:2px;align-content:start}
+.vaobjgrid dt{font-size:12px;color:var(--ink-3)}
+.vaobjgrid dd{margin:0;font:500 14px var(--mono);overflow-wrap:anywhere}
+.vacred{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px}
+.sweepctr{display:grid;gap:12px}
+.sweephead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.sweephead h2{margin:0;font-size:20px}
+.sweephead .btn{min-height:44px}
+.sweepctr>p{margin:0}
+.sweeptiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:1px;background:var(--line);border-radius:16px;overflow:hidden}
+.sweeptiles>div{background:var(--panel);padding:14px 16px}
+.sweeptiles b{display:block;font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.sweeptiles span{font-size:13px;color:var(--ink-2)}
+.sweepcls{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:6px}
+.sweepcls a{display:grid;grid-template-columns:8px minmax(0,1fr) auto;align-items:center;column-gap:10px;row-gap:0;min-height:52px;padding:6px 14px;border:1px solid var(--line);border-radius:12px;color:var(--ink);text-decoration:none;font-size:14px}
+.sweepcls a:hover{border-color:var(--line-3)}
+.sweepcls i{margin:0}
+.sweepcls b{font-size:17px;font-weight:600;text-align:right}
+.sweepcls em{grid-column:2 / 4;font-style:normal;font-size:11.5px;color:var(--ink-3)}
+.stsweep[hidden]{display:none}
+@media (prefers-reduced-motion: reduce){.vaent details summary::before{transition:none}}
+@media (max-width:699.98px){
+  .cattabs a{padding:0 14px}
+  .vaent{padding:12px}
+  .vatable{font-size:12px}
+}
+
 .sitelinks{display:flex;flex-wrap:wrap;gap:8px 18px;border-top:1px solid var(--line);padding-top:22px;font-size:14px}
 .sitelinks a{display:inline-flex;align-items:center;min-height:44px}
 .landing .route{display:grid}</style></head>
@@ -1102,6 +1177,13 @@ body.mcpop .mctools .btn:not([data-mc="close"]){display:none}
         <figcaption>Artist's impression. No image of pi Men c exists.</figcaption>
       </figure>
       <div class="proof" role="list" aria-label="What this run shows"><div role="listitem"><b style="color:#64D2FF">5 of 5</b><span>transits of pi Men c found in blind-coded subjects, 8 minutes from the archive on average (validation note). A known planet, recovered.</span></div><div role="listitem"><b style="color:#F5F5F7">2 + 3</b><span>Sentinels and Probes, each weighted by how it scored on planted transits.</span></div><div role="listitem"><b style="color:#FFD60A">28</b><span>signals on 3 stars in the open feed. 3 new, every one a candidate, unconfirmed.</span></div><div role="listitem"><b style="color:#F5F5F7">1</b><span>dip still open. The Probes saw it (3 of 3). Both Sentinels passed it by.</span></div></div>
+      <section class="sweepctr card" aria-labelledby="h-sweepctr">
+        <div class="sweephead"><h2 id="h-sweepctr">The sweep so far</h2><a class="btn" href="app/#/variables">Everything that dims ›</a></div>
+        <p class="muted">Every star searched, every dip kept and classified, nothing thrown away. So far: Sector 1: 200 of the 15,898 SPOC 2-minute targets searched (Probes only; by exoplan). A first slice, not the sky.</p>
+        <div class="sweeptiles" role="list" aria-label="Sweep figures"><div role="listitem"><b class="mono">200</b><span>stars searched</span></div><div role="listitem"><b class="mono">200</b><span>star-sectors</span></div><div role="listitem"><b class="mono">936</b><span>dips reviewed</span></div><div role="listitem"><b class="mono">1,011</b><span>catalogue entries</span></div></div>
+        <ul class="sweepcls" aria-label="Catalogue entries by class"><li><a href="app/#/variables?class=planet_candidate" style="--c:var(--yellow)"><i aria-hidden="true"></i><span>Planet candidate</span><b class="mono">5</b><em class="mono" title="The same rules on flux-inverted copies of the same stars">3 on inverted</em></a></li><li><a href="app/#/variables?class=eclipsing_binary" style="--c:var(--coral)"><i aria-hidden="true"></i><span>Eclipsing binary</span><b class="mono">108</b><em class="mono" title="The same rules on flux-inverted copies of the same stars">67 on inverted</em></a></li><li><a href="app/#/variables?class=flare" style="--c:var(--amber)"><i aria-hidden="true"></i><span>Flare</span><b class="mono">11</b><em class="mono" title="The same rules on flux-inverted copies of the same stars">32 on inverted</em></a></li><li><a href="app/#/variables?class=variable" style="--c:var(--green)"><i aria-hidden="true"></i><span>Pulsator or rotational variable</span><b class="mono">47</b><em class="mono" title="The same rules on flux-inverted copies of the same stars">60 on inverted</em></a></li><li><a href="app/#/variables?class=systematic" style="--c:var(--ink-3)"><i aria-hidden="true"></i><span>Systematic</span><b class="mono">742</b><em class="mono" title="The same rules on flux-inverted copies of the same stars">783 on inverted</em></a></li><li><a href="app/#/variables?class=unclassified" style="--c:var(--line-3)"><i aria-hidden="true"></i><span>Unclassified</span><b class="mono">98</b><em class="mono" title="The same rules on flux-inverted copies of the same stars">124 on inverted</em></a></li></ul>
+        <p class="small">Read from docs/sweep/catalogue.json (built 2026-10-20 08:36 UTC); nothing is extrapolated. Beside each class: what the same rules found on flux-inverted copies of the same 200 star-sectors, where nothing real can dim. No entry is a new planet: a planet candidate is a light-curve classification, unconfirmed.</p>
+      </section>
       <section class="gxteaser space" aria-labelledby="h-gxteaser">
         <canvas class="gxtcanvas" data-teaser role="img" aria-label="A slowly turning 3D view of the 1,400 nearest planet-hosting stars around the Sun, coloured by detection method."></canvas>
         <div class="gxtcopy">

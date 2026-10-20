@@ -156,6 +156,53 @@ eclipsing binaries can survive vetting. The claim this project can defend is a r
 calibrated search with open provenance. It is not a claim of new planets or of beating
 published pipelines.
 
+## Everything that dims: the sweep and its catalogue
+
+The planet search used to throw away every dip that was not a planet candidate. The sweep keeps them.
+`exoplan sweep` works through a TESS sector's SPOC 2-minute targets and, for each star-sector, keeps every
+consensus dip of the panel (whatever the panel's label), every brightening and the star's variability, and
+classifies each by first-match rules in [src/exoplan/variables.py](src/exoplan/variables.py):
+
+| Class | Rule (summary) |
+|---|---|
+| Systematic | a subject edge, a momentum dump, a scattered-light or pointing flag, or a data gap within 0.1 d; or the panel says instrumental |
+| Eclipsing binary | odd/even mismatch or secondary eclipse; 30,000 ppm or deeper; V-shaped and 5,000 ppm or deeper; or the panel says binary |
+| Pulsator or rotational variable | a Lomb-Scargle peak (Baluev FAP < 10⁻³ and a semi-amplitude ≥ 2× the binned scatter); a dip lasting ≥ ¼ of that period |
+| Flare | ≥ 3 consecutive points ≥ 3σ above a running median, peaking ≥ 5σ (globally and locally), not on an instrumental cue |
+| Planet candidate | passed vetting, potential planet by half the panel's weight, not off its star's own signal, and no rule above |
+| Unclassified | everything else, with the reason |
+
+Every entry keeps its confidence and the cues that decided it, its marks, its weights and the Sentinels'
+own words, the light curve's sha256, the code fingerprint and config hash, and the name of whoever searched
+it. Nothing is ever called confirmed. Each star is also run with its flux inverted, where nothing real can
+dim, and the site shows that control's count beside every class.
+
+```bash
+exoplan sweep configs/sweep.toml --sector 1 --limit 200 --workers 3   # resumable; cached; polite to MAST
+exoplan bundle my-sweep/sector_0005.json --contributor "Your Name" --out bundle/
+exoplan ingest bundle/                                                 # refuses on any hash, code or rule mismatch
+```
+
+The site reads `docs/sweep/catalogue.json`: the Overview's counter, #/variables (Catalogue › Everything that
+dims, with filters, per-TIC pages and CSV/JSON export), the sweep layer on the Sky map, Mission Control's
+telemetry and the search. Anyone can add a sector with their own Claude subscription or API key (kept in
+their environment, never in a file) and be credited: see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+**First real slice (measured, Probes only).** TESS sector 1: the first 200 of its 15,898 SPOC 2-minute
+targets in sweep order, all 200 searched (no download failures). The panel reviewed 936 consensus dips
+(2,696 marks; 60 mark clusters fell below consensus). The 1,011 entries are 742 systematic, 108 eclipsing
+binary, 98 unclassified, 47 pulsator or rotational variable, 11 flare and 5 planet candidate. On the
+flux-inverted copies of the same 200 star-sectors, where nothing real can dim, the same rules gave 783
+systematic, 67 eclipsing binary, 124 unclassified, 60 variable, 32 flare and 3 planet candidates. So the 5
+planet candidates (none matching a known TOI) are about what noise alone gives: none is a planet. Of the classes, only the
+eclipsing-binary count (108 against 67) clearly exceeds its control. The rules did their job of keeping and
+sorting everything; finding planets needs far more than 200 stars and Sentinels on the survivors. Records:
+[docs/sweep/sector_0001.json](docs/sweep/sector_0001.json) and [docs/sweep/catalogue.json](docs/sweep/catalogue.json).
+FAP trials are off in the sweep (50 trials cost about two minutes a star), and the stellar parameters come
+from each file's header. After a fix to the flare rule, found by `ingest`'s re-check on this slice, the
+entries were reclassified from the stored runs (`exoplan sweep --reclassify`); the reviewers and the
+pipeline were not run again.
+
 ## Honest limits
 
 * **The Sentinels are calibrated on a small sample only.** The full benchmark needs many
@@ -208,6 +255,9 @@ src/exoplan/
   aggregate.py    clustering and consensus       pipeline.py  end-to-end run
   benchmark.py    injection recovery             report.py    static HTML site
   store.py        SQLite and CSV export          config.py    TOML configs
+  variables.py    everything-that-dims rules     starsearch.py one star-sector of the sweep
+  sweep.py        resumable sector sweep         contrib.py   contribution bundles and ingest
+  everything.py   #/variables, counter, Sky layer
   reviewers/      simulated, claude (API), claude_code (CLI)
 configs/          run configs                    scripts/     known-planet validation
 docs/             research notes and results     site/        generated report
