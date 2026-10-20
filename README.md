@@ -1,11 +1,11 @@
-<!-- PREVIEW of the README for the public release of SetuHQ (formerly exoplan).
-     Every figure under docs/assets/readme/ and every logo file under docs/assets/brand/ is
+<!-- Every figure under docs/assets/readme/ and every logo file under docs/assets/brand/ is
      generated from committed data by tools/gen_readme_assets.py, in light and dark variants,
      with every word outlined; each figure's alt text below is its own <desc>, word for word.
-     Regenerate with `python3 tools/gen_readme_assets.py`; check with `--check` (run by
-     scripts/ci_local.sh). The app screenshots under docs/assets/readme/app/ are taken from the
-     built app by tools/capture_site_shots.mjs, imported with --import-shots and recorded in
-     app/SHOTS.json (route, window, theme, frame, commit). -->
+     Regenerate with `python3 tools/gen_readme_assets.py`, then `--write-readme`; check with
+     `--check` (run by CI and scripts/ci_local.sh). The app screenshots under
+     docs/assets/readme/app/ are taken from the built app by tools/capture_site_shots.mjs,
+     imported with --import-shots and recorded in app/SHOTS.json (route, window, theme, frame,
+     commit). -->
 
 <p align="center">
   <picture>
@@ -38,7 +38,8 @@
   <a href="#evidence">Evidence</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#editions">Editions</a> ·
-  <a href="#cite">Cite</a>
+  <a href="#cite">Cite</a> ·
+  <a href="#licence">Licence</a>
 </p>
 
 <picture>
@@ -46,11 +47,6 @@
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/hero-light.svg">
   <img src="docs/assets/readme/hero-light.svg" alt="Every known exoplanet with a distance, around the Sun: 8,049 of the 8,376 planets in exoplanet.eu (fetched 2026-10-18), around 5,433 host stars, seen from above the Galactic plane with the Sun at the centre and the Galactic centre (longitude 0°) at the top. Angle is galactic longitude; distance from the centre is the listed distance on a logarithmic scale, with rings at 10, 100, 1,000 and 10,000 light-years; galactic latitude is dropped. Colour is the first detection method listed: Transit 4,790; Radial velocity 1,329; Imaging 1,216; Microlensing 356; Timing 181; Astrometry 89; Other (TTV, kinematic, other) 88. The 327 planets without a distance are not drawn. pi Men, host of pi Men c and the star of SetuHQ's stored run, is marked at 59.9 light-years. No Milky Way is drawn: every point is a catalogue position, not an illustration. Source: docs/results/exoplanet_map.json, commit befef30." width="100%">
 </picture>
-
-> **Preview.** This README is the draft for the public release. The product is being renamed
-> from *exoplan* to **SetuHQ**: the Python package and the command are now `setuhq`; the site is
-> rebuilt in the release. Nothing on this page is a discovery claim: SetuHQ finds and
-> vets *candidates*.
 
 ## Every dip in the sky, reviewed and explained
 
@@ -72,21 +68,26 @@ probabilities, odd/even and secondary checks, and an honest label on everything.
 - **An observatory you can explore.** Every known exoplanet in 3D, a full catalogue, and
   fifteen animated chapters on how planets are found, all in one app.
 
-## What's new in this preview
+## What's new in 0.1.0
 
-- **The name.** exoplan becomes SetuHQ, *setu* being Sanskrit for bridge: from public sky data
-  to reviewed candidates. The logo's Q is a star with a planet crossing its face
-  ([brand kit](docs/assets/brand/README.md)).
+The first public release ([CHANGELOG](CHANGELOG.md)). Nothing on this page is a discovery claim:
+SetuHQ finds and vets *candidates*.
+
+- **The name.** The project developed as *exoplan* is now SetuHQ, *setu* being Sanskrit for
+  bridge: from public sky data to reviewed candidates. The package and the command are `setuhq`,
+  the MCP server `setuhq-mcp`; the old `exoplan` commands still run, with a deprecation notice.
+  The logo's Q is a star with a planet crossing its face ([brand kit](docs/assets/brand/README.md)).
+- **Open licence.** AGPL-3.0-only, or a commercial licence from Ashforde OÜ; data, benchmark,
+  leaderboard data and paper under CC BY 4.0 ([Licence](#licence)).
 - **The feed's pre-registered rule.** The search feed now needs a signal in both reviewed sectors
   and a FAP below 0.001. On held-out data it cuts noise about fourfold but still admits about 6
   false signals per 100 targets, so its admissions are leads for review (see Evidence).
-- **Merged for this release** (each branch scored by an independent reviewer before it was merged):
-  pixel-level and Data-Validation-style vetting, a reduced false-positive probability with a
-  stability gate, ExoFOP-style export and the deep-dip clipping fix (accepted, 9.0/10); a methods
-  paper and the real-TOI leaderboard with a catalogue-metadata floor that SetuHQ does not yet beat
-  (accepted, 9.0/10); the “everything that dims” catalogue, an all-sky sweep and contributor
-  bundles (accepted, 9.1/10); Sentinels on any provider, an MCP server and a Claude Code plugin
-  (accepted, 9.1/10); this README, its generated figures and the brand kit (accepted, 9.2/10).
+- **In this release:** pixel-level and Data-Validation-style vetting, a reduced false-positive
+  probability with a stability gate, ExoFOP-style export and the deep-dip clipping fix; a methods
+  paper and the real-TOI leaderboard with a catalogue-metadata floor that SetuHQ does not yet beat;
+  the “everything that dims” catalogue, an all-sky sweep and contributor bundles; Sentinels on any
+  provider, an MCP server and a Claude Code plugin; this README, its generated figures and the
+  brand kit. Each part was reviewed independently before it was merged.
 
 ## The app
 
@@ -493,14 +494,15 @@ empty subjects: weight 0.5 each, against 0.4 to 0.6 for the Probes).
 
 <br>
 
-The search, `setuhq discover` (the command keeps its name), runs one batch of TESS targets. It rotates through the TOI host list
+The search, `setuhq discover`, runs one batch of TESS targets. It rotates through the TOI host list
 so coverage advances each day, reviews the two latest sectors of each target, and keeps
 every new dip in a deduplicated catalogue. A dip is `known_toi` when it matches a
 published TOI period, and `new_candidate` otherwise.
 
-- [`.github/workflows/discover.yml`](.github/workflows/discover.yml) runs a batch every six hours
-  on the self-hosted runner, commits the catalogue, and deploys the site. Claude's API reviewer
-  runs when the `ANTHROPIC_API_KEY` secret is set.
+- [`.github/workflows/discover.yml`](.github/workflows/discover.yml) runs one batch when started by
+  hand (its schedule is off), commits the catalogue as ashfordeOU, and deploys the site. Claude's
+  API reviewer runs when the `ANTHROPIC_API_KEY` secret is set; without it the batch runs on the
+  Probes only.
 - [`scripts/improve.py`](scripts/improve.py) sweeps panel thresholds on injection benchmarks.
   It promotes a setting only if it wins on a held-out seed. Every trial is in the threshold sweep,
   [docs/threshold_sweep.md](docs/threshold_sweep.md), including losers. This synthetic sweep is not the
@@ -790,15 +792,31 @@ events and nulls. That second step is not built yet.
 | an explorer of every known exoplanet, with sourced numbers | a replacement for follow-up observations |
 | explainable: every verdict keeps its marks and reasons | a black box |
 
+## Install
+
+SetuHQ needs Python 3.10 or later. It is not on PyPI; install it from this repository:
+
+```bash
+pip install "git+https://github.com/ashfordeOU/SetuHQ"            # the setuhq and setuhq-mcp commands
+pip install "setuhq[tess,mcp] @ git+https://github.com/ashfordeOU/SetuHQ"   # with TESS downloads and the MCP server
+```
+
+To work on it, or to rebuild the stored run, the benchmark and the site, use a checkout:
+
+```bash
+git clone https://github.com/ashfordeOU/SetuHQ && cd SetuHQ
+python3 -m venv .venv && . .venv/bin/activate
+pip install -e ".[tess,dev]"         # add ,claude for the Anthropic API backend, ,mcp for the MCP server
+```
+
 ## Quick start
 
 ```bash
-pip install -e ".[tess,dev]"         # add ,claude for the API backend
 pytest -q                            # offline tests (network- and slow-marked tests are deselected)
 
 setuhq run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
 setuhq rebuild runs/tess-pi-men-s1 configs/tess_pi_men_s1.toml   # re-vet from the stored classifications
-setuhq report runs/tess-pi-men-s1 --out site --validation docs/results/pi_men_validation.md
+setuhq report runs/tess-pi-men-s1 --out site/report --validation docs/results/pi_men_validation.md
 setuhq calibrate configs/tess_pi_men_s1.toml --out weights.json
 setuhq benchmark configs/benchmark_simulated_panel.toml --weights weights.json --out bench.md
 setuhq export runs/tess-pi-men-s1 --out export   # CTOI-style table and predicted windows (refuses without the TOI check)
@@ -806,7 +824,7 @@ setuhq leaderboard my-method.json   # score a submission to the real-TOI leaderb
 setuhq sweep configs/sweep.toml --sector 1 --limit 20   # the everything-that-dims sweep (resumable)
 setuhq-mcp --list-tools             # the MCP server (pip install -e ".[mcp]")
 pytest -q -m network                 # live MAST download test
-scripts/ci_local.sh                  # everything CI runs, plus the slow tests and the README check
+scripts/ci_local.sh                  # everything CI runs, plus the slow tests, the site builds and the README check
 ```
 
 Configs are documented in [configs/default.toml](configs/default.toml). Every value
@@ -936,20 +954,32 @@ outward-facing. Its conclusions are candidates for a person to review, not disco
 
 ## Editions
 
-The whole of SetuHQ is open. Paid routes start with a message; there are no prices here.
+The whole engine is free. SetuHQ Pro and custom studies are for institutions that need more, and
+every paid route starts with a message: there are no prices here.
 
 | | Free | SetuHQ Pro | Custom study |
 |---|---|---|---|
-| What it is | all of open SetuHQ, no feature gate | a proprietary overlay on the same open engine, under contract | a study done for you, under contract |
+| What it is | the whole open SetuHQ: search, Sentinels and Probes, vetting, the benchmark and leaderboard, the sweep, the MCP server and the app, with no feature gate | a proprietary overlay on the same open engine, under contract | a study done for you on the open engine, under contract: a sector sweep, a candidate dossier or a yield study |
 | Licence | AGPL-3.0-only, or a commercial licence | proprietary | contract |
-| Status | available | **planned, available on request** | on request |
-| How to start | [quick start](#quick-start) or [setuhq.com](https://setuhq.com) | [request an evaluation](mailto:contact@ashforde.org?subject=SetuHQ%20Pro%20evaluation) | [request a study](mailto:contact@ashforde.org?subject=SetuHQ%20custom%20study) |
+| Status | available | **planned; available on request** (not built yet) | on request |
+| How to start | [install](#install) or open [setuhq.com](https://setuhq.com) | [request a Pro evaluation](mailto:contact@ashforde.org?subject=SetuHQ%20Pro%20evaluation) | [request a study](mailto:contact@ashforde.org?subject=SetuHQ%20custom%20study) |
 
-SetuHQ Pro will be a strict superset that depends on open SetuHQ and never forks it. It adds no
-new science: every Pro number comes from the open pipeline, and nothing Pro produces confirms or
-validates a planet. Directions under consideration, none of them built: hosted sweeps at scale,
-private target lists and embargoed candidates, team workspaces, supported on-premises
-deployment, and priority follow-up export.
+What Pro would be, in the words of [`docs/PRO.md`](docs/PRO.md):
+
+> **A strict superset of open SetuHQ.** Pro depends on the open engine and never forks it. Every
+> open feature stays open, and no free feature moves behind a licence.
+>
+> **No new science.** Pro adds no detection, vetting or fitting method and changes none. Every Pro
+> number comes from open-engine runs that anyone can repeat with the free code.
+
+Pro is planned around what a public repository cannot give an institution: a calibration
+certificate for any AI reviewer on the frozen benchmark (Pro Calibrate, the lead product);
+private target lists, embargoed candidates and team workspaces (Pro Workspace); hosted sweeps
+at scale (Pro Sweeps); follow-up packets with observability from the customer's telescopes (Pro
+Follow-up); classroom and planetarium editions (Education & Dome); and the commercial licence with
+an SDK. None of it is built yet; [`docs/PRO.md`](docs/PRO.md) says what each would build on and
+what it still needs. Nothing Pro produces is a confirmation or validation of a planet, and neither
+is a custom study.
 
 ## Research
 
@@ -960,15 +990,24 @@ The methods paper draft is [docs/paper/paper.md](docs/paper/paper.md) and the re
 
 ## Cite
 
-A methods paper and a `CITATION.cff` come with the release. Until then, cite the repository and
-the commit you used.
+Cite the software with [`CITATION.cff`](CITATION.cff) (GitHub's *Cite this repository* button
+reads it) and name the commit you used. The methods paper is a draft
+([docs/paper/paper.md](docs/paper/paper.md)); there is no DOI yet.
 
 ## Licence
 
-Code: **AGPL-3.0-only** from the public release, or a commercial licence from Ashforde OÜ
-(dual licensing, explained in `LICENSING.md` at release; the current `LICENSE` file is still MIT
-and switches with it). Data, benchmark and paper: **CC BY 4.0**. “SetuHQ” and the Setu mark are
-trademarks of Ashforde® OÜ; forks must use another name. The README's fonts (Geist, Geist Mono,
+SetuHQ is **dual-licensed**. The code is under the **GNU AGPL-3.0-only** ([`LICENSE`](LICENSE)),
+or under a **commercial licence** from Ashforde OÜ for use the AGPL does not suit, such as a
+closed product or a hosted service without the source offer
+([contact@ashforde.org](mailto:contact@ashforde.org)). SetuHQ's own data, benchmark, leaderboard
+data and paper are under **CC BY 4.0**; third-party data keeps its own terms. The plain-language
+guide is [`LICENSING.md`](LICENSING.md), the third-party components and data are in
+[`NOTICE`](NOTICE), and contributions are accepted under the [CLA](CLA.md)
+([CONTRIBUTING](CONTRIBUTING.md)). “SetuHQ” and the Setu mark are trademarks of Ashforde® OÜ;
+forks must use another name ([`TRADEMARKS.md`](TRADEMARKS.md)). The fonts (Geist, Geist Mono,
 Unbounded) are under the SIL Open Font License.
+
+Also: [GOVERNANCE](GOVERNANCE.md) · [SECURITY](SECURITY.md) · [CODE OF CONDUCT](CODE_OF_CONDUCT.md)
+· [ROADMAP](ROADMAP.md) · [CHANGELOG](CHANGELOG.md).
 
 <p align="center"><sub>SetuHQ · सेतु · the bridge — built by Ashforde OÜ. Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</sub></p>

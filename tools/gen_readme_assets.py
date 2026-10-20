@@ -2005,8 +2005,8 @@ def badges_block() -> str:
                f"The catalogue holds all {fmt_int(m['counts']['rows'])} {m['source_short']} records, fetched {m['fetched_at'][:10]}"),
         shield("#the-app", "Methods", f"{len(MX.CHAPTERS)} chapters", "066A86",
                f"{len(MX.CHAPTERS)} animated Methods chapters with tested physics"),
-        shield("#licence", "licence", "AGPL-3.0 (at release)", "3F4B67",
-               "Licence: AGPL-3.0-only from the public release, with a commercial licence from Ashforde OÜ"),
+        shield("#licence", "licence", "AGPL-3.0", "3F4B67",
+               "Licence: AGPL-3.0-only, or a commercial licence from Ashforde OÜ; data, benchmark and paper under CC BY 4.0"),
         shield("#editions", "commercial", "available", "B8288F",
                "A commercial licence and SetuHQ Pro are available on request from Ashforde OÜ"),
     ]
