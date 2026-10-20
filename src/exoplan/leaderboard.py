@@ -1,51 +1,53 @@
 """The public leaderboard on the frozen real-TOI benchmark (S5; the benchmark itself is S1c, benchmark_toi.py).
 
-A **submission** is one JSON file: a method's per-star outcomes on the held-out half of the frozen sample
-(``docs/results/benchmark_toi_sample.json``, sha256 ``6f0e111e…``), with provenance. The leaderboard scores it on
-the held-out half only, with Wilson 95% intervals, and refuses it when it could have used held-out labels.
+A **submission** is one JSON file: a method's detected events, per held-out star of the frozen sample
+(``docs/results/benchmark_toi_sample.json``), on the real light curve and on its two controls, with provenance.
+The leaderboard does the scoring itself: it decides whether an event lies on the TOI's ephemeris with the
+benchmark's own ``score_star`` (``discover.match_toi``), and counts the control false alarms from the event lists.
+A submitter states only what its method saw and what its own vetting passed.
 
-The format (``exoplan-leaderboard/1``)::
+The format (``exoplan-leaderboard/2``)::
 
-    {"format": "exoplan-leaderboard/1", "id": "probes", "name": "Probes only",
+    {"format": "exoplan-leaderboard/2", "id": "probes", "name": "Probes only",
      "sample_sha256": "<the frozen sample's hash>",
-     "inputs_sha256": "<the hash of docs/leaderboard/tuning_inputs.json>",
+     "inputs_sha256": "<the canonical hash of docs/leaderboard/tuning_inputs.json>",
      "tuned_on": "none" | "tuning",
      "scope": "held_out" | "sentinel_subsample",
      "provenance": {"method": "...", "code_version": "...", "generated_from": [...]},
-     "predictions": [{"toi": "1201.01", "tic": 12345, "searched": true, "seen": true, "recovered": true,
-                      "flagged": false, "controls": {"inverted": 0, "scrambled": 1}}, ...]}
+     "predictions": [{"toi": "1201.01", "tic": 12345, "searched": true,
+                      "events": [{"t_center": 1325.50, "duration_hours": 3.0, "period_days": 6.27,
+                                  "passed": true, "flags": []}],
+                      "controls": {"inverted": [<events>], "scrambled": [<events>]}}, ...]}
 
-Per held-out star (every star in the scope, no other):
+Times are BTJD. ``passed`` is the method's own vetting verdict and ``flags`` its own reasons, from a fixed
+vocabulary (``FLAGS``); every other field is whitelisted, so a label or a label proxy (radius, depth,
+disposition) cannot ride along.
 
-* ``searched``: the method had a light curve for the star and ran on it.
-* ``seen``: one of its detected events lies on the TOI's published ephemeris (``discover.match_toi``; the
-  ephemeris is in the public inputs).
-* ``recovered``: that event passed the method's own vetting, so the method offers it as a candidate.
-* ``flagged``: the method rejected the on-ephemeris event or marked it binary-like. A *clean candidate* is
-  recovered and not flagged.
-* ``controls``: events that passed vetting on the star's flux-inverted and block-scrambled light curves
-  (``benchmark_toi.inverted`` and ``benchmark_toi.scrambled``), or ``null`` when the method was not run on them.
+**Ranking.** A method that calls every TOI a planet recovers every CP/KP TOI and rejects no false positive, so
+completeness alone cannot rank. Held-out entries are ranked by Youden's J (Youden 1950): completeness over every
+CP/KP star plus FP rejection over every FP star, minus one, with a square-and-add Wilson interval (Newcombe 1998).
+Calling everything a planet scores J = 0. An entry without control light curves for every searched star is
+listed but not ranked. The Sentinels' 40-star subsample is never ranked: its intervals are too wide to order
+anything.
 
-The rule on labels. The **public inputs** file (``docs/leaderboard/tuning_inputs.json``) holds the tuning half
-with its dispositions and, for the held-out half, only what a blind search needs (TIC, TOI name, ephemeris): no
-disposition, class, depth or radius. A submission states the sha256 of the inputs it was built from. It is refused
-when that hash is not the public inputs' hash (and the message says so when it is the hash of the full sample,
-which holds the held-out labels), when it says it was tuned on the held-out half, when a prediction carries a
-label field, or when it does not cover exactly the stars of its scope. The hash is an attestation, not a proof:
-the held-out labels are public in the repository, so the leaderboard cannot tell whether someone read them. It
-can refuse every submission that declares or shows that it did.
+**Labels.** The public inputs (``docs/leaderboard/tuning_inputs.json``) hold the tuning half with its
+dispositions and, for the held-out half, only TIC, TOI name and ephemeris. A submission states the hash of the
+inputs it was built from and is refused for any other hash, for ``tuned_on`` other than none or tuning, for a field
+outside the whitelist, or for not covering exactly the stars of its scope. The hash is an attestation, not a proof:
+the held-out labels are public in the repository.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import math
 from pathlib import Path
 
-from exoplan.benchmark_toi import RADIUS_BINS, wilson
+from exoplan.benchmark_toi import RADIUS_BINS, score_star, wilson
 
 ROOT = Path(__file__).resolve().parents[2]
-FORMAT = "exoplan-leaderboard/1"
+FORMAT = "exoplan-leaderboard/2"
 INPUTS_FORMAT = "exoplan-leaderboard-inputs/1"
 SAMPLE = ROOT / "docs/results/benchmark_toi_sample.json"
 BENCHMARK = ROOT / "docs/results/benchmark_real_tois.json"
@@ -57,11 +59,19 @@ RESULTS_MD = LB_DIR / "leaderboard.md"
 
 # What a blind search of a held-out star may know: where to look and when the published transits are.
 HELD_OUT_PUBLIC = ("tic", "toi", "half", "period", "period_err", "tranmid_bjd", "tranmid_err", "duration_hours")
-# Keys that would carry a label (or a label proxy) if they appeared in a prediction.
-LABEL_KEYS = frozenset({"class", "disposition", "tfopwg_disp", "label", "labels", "truth", "is_planet", "fp", "cp_kp"})
+# Whitelists: nothing else may appear in a submission, a prediction or an event.
+SUBMISSION_KEYS = frozenset({"format", "id", "name", "kind", "submitter", "sample_sha256", "inputs_sha256", "tuned_on",
+                             "scope", "provenance", "predictions"})
+PREDICTION_KEYS = frozenset({"toi", "tic", "searched", "events", "controls"})
+EVENT_KEYS = frozenset({"t_center", "duration_hours", "period_days", "passed", "flags", "snr"})
+PROVENANCE_KEYS = ("method", "code_version", "generated_from")
+# The vetting vocabulary (vet.py, pipeline.py, transitfit.py): an event's flags must come from it.
+FLAGS = frozenset({"low_snr", "too_short", "edge_event", "insufficient_points", "odd_even_mismatch", "secondary_eclipse",
+                   "off_ephemeris", "v_shape", "density_mismatch"})
+MAX_EVENTS = 500  # per light curve
 SCOPES = ("held_out", "sentinel_subsample")
 TUNED_ON = ("none", "tuning")
-PROVENANCE_KEYS = ("method", "code_version", "generated_from")
+LABELISH = ("class", "disposition", "tfop", "label", "truth", "radius", "depth", "cp_kp", "is_planet")
 
 
 def canonical_sha256(obj) -> str:
@@ -105,38 +115,71 @@ def scope_tois(sample: dict, scope: str, benchmark: dict | None = None) -> list[
     raise ValueError(scope)
 
 
-def _label_keys(obj, path="") -> list[str]:
-    found = []
-    if isinstance(obj, dict):
-        for k, v in obj.items():
-            if str(k).lower() in LABEL_KEYS:
-                found.append(f"{path}{k}")
-            found += _label_keys(v, f"{path}{k}.")
-    elif isinstance(obj, list):
-        for i, v in enumerate(obj):
-            found += _label_keys(v, f"{path}{i}.")
-    return found
+def _finite(x) -> bool:
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
 
 
-def validate(sub: dict, sample: dict, inputs: dict, benchmark: dict | None = None) -> list[str]:
-    """Every reason to refuse this submission (an empty list: accepted)."""
+def _event_errors(events, where: str) -> list[str]:
+    if not isinstance(events, list):
+        return [f"{where}: events must be a list"]
+    if len(events) > MAX_EVENTS:
+        return [f"{where}: more than {MAX_EVENTS} events"]
     why = []
+    for i, e in enumerate(events):
+        w = f"{where} event {i}"
+        if not isinstance(e, dict):
+            why.append(f"{w}: must be an object")
+            continue
+        extra = sorted(set(e) - EVENT_KEYS)
+        if extra:
+            why.append(f"{w}: fields outside the whitelist ({', '.join(map(str, extra))})")
+        if not _finite(e.get("t_center")):
+            why.append(f"{w}: t_center (BTJD) must be a number")
+        if not _finite(e.get("duration_hours")) or e["duration_hours"] <= 0:
+            why.append(f"{w}: duration_hours must be a positive number")
+        p = e.get("period_days")
+        if p is not None and (not _finite(p) or p <= 0):
+            why.append(f"{w}: period_days must be a positive number or null")
+        if not isinstance(e.get("passed"), bool):
+            why.append(f"{w}: passed must be true or false")
+        fl = e.get("flags", [])
+        if not isinstance(fl, list) or any(f not in FLAGS for f in fl):
+            why.append(f"{w}: flags must be a list from {sorted(FLAGS)}")
+        if "snr" in e and e["snr"] is not None and not _finite(e["snr"]):
+            why.append(f"{w}: snr must be a number")
+    return why
+
+
+def validate(sub, sample: dict, inputs: dict, benchmark: dict | None = None) -> list[str]:
+    """Every reason to refuse this submission (an empty list: accepted)."""
+    if not isinstance(sub, dict):
+        return ["a submission must be a JSON object"]
+    why = []
+    extra = sorted(set(sub) - SUBMISSION_KEYS)
+    if extra:
+        why.append(f"fields outside the whitelist ({', '.join(map(str, extra))})")
     if sub.get("format") != FORMAT:
-        why.append(f"format must be {FORMAT!r}")
+        why.append(f"format must be {FORMAT!r}" + (": version 1 trusted self-reported outcomes and is retired"
+                                                     if sub.get("format") == "exoplan-leaderboard/1" else ""))
     if sub.get("sample_sha256") != sample["sha256"]:
         why.append(f"sample_sha256 must be the frozen sample's hash {sample['sha256']}")
     stated = sub.get("inputs_sha256")
-    if stated == full_sample_sha256(sample) or stated == sample["sha256"]:
-        why.append("inputs_sha256 is the hash of the full sample, which holds the held-out labels: built with held-out labels")
+    raw = hashlib.sha256(SAMPLE.read_bytes()).hexdigest() if SAMPLE.exists() else None
+    if stated in (full_sample_sha256(sample), sample["sha256"], raw):
+        why.append("inputs_sha256 is a hash of the full sample, which holds the held-out labels: built with held-out labels")
     elif stated != inputs_sha256(inputs):
         why.append(f"inputs_sha256 must be the hash of the public tuning-half-only inputs ({inputs_sha256(inputs)})")
     if sub.get("tuned_on") not in TUNED_ON:
         why.append(f"tuned_on must be one of {TUNED_ON} (tuned on {sub.get('tuned_on')!r} touches held-out labels)"
                    if sub.get("tuned_on") in ("held_out", "all", "both") else f"tuned_on must be one of {TUNED_ON}")
-    prov = sub.get("provenance") or {}
-    missing = [k for k in PROVENANCE_KEYS if not prov.get(k)]
-    if missing:
-        why.append(f"provenance must state {', '.join(missing)}")
+    prov = sub.get("provenance")
+    if not isinstance(prov, dict) or any(not prov.get(k) for k in PROVENANCE_KEYS):
+        why.append(f"provenance must state {', '.join(PROVENANCE_KEYS)}")
+    elif any(k.lower() in LABELISH for k in prov):
+        why.append("provenance carries a label field")
+    for k in ("id", "name"):
+        if not isinstance(sub.get(k), str) or not sub.get(k):
+            why.append(f"{k} must be a non-empty string")
     scope = sub.get("scope")
     if scope not in SCOPES:
         why.append(f"scope must be one of {SCOPES}")
@@ -151,48 +194,46 @@ def validate(sub: dict, sample: dict, inputs: dict, benchmark: dict | None = Non
     if not isinstance(preds, list):
         why.append("predictions must be a list")
         return why
-    labels = _label_keys(preds)
-    if labels:
-        why.append(f"predictions carry label fields ({', '.join(sorted(set(labels))[:5])})")
-    names = [p.get("toi") for p in preds if isinstance(p, dict)]
-    dup = sorted({n for n in names if names.count(n) > 1})
+    if not all(isinstance(p, dict) for p in preds):
+        why.append("every prediction must be an object")
+        return why
+    names = [p.get("toi") for p in preds]
+    dup = sorted({str(n) for n in names if names.count(n) > 1})
     if dup:
         why.append(f"duplicate predictions for TOI {', '.join(dup[:5])}")
-    tuning = sorted(n for n in set(names) if half_of.get(n) == "tuning")
+    tuning = sorted(str(n) for n in set(names) if half_of.get(n) == "tuning")
     if tuning:
-        why.append(f"predictions include {len(tuning)} tuning-half stars; submit the held-out scope only")
-    extra = sorted(set(names) - set(want) - set(tuning))
-    if extra:
-        why.append(f"predictions for {len(extra)} TOIs outside the scope ({', '.join(map(str, extra[:5]))})")
+        why.append(f"predictions include {len(tuning)} tuning-half stars; submit the stars of the scope only")
+    outside = sorted(str(n) for n in set(names) - set(want) - set(tuning))
+    if outside:
+        why.append(f"predictions for {len(outside)} TOIs outside the scope ({', '.join(outside[:5])})")
     absent = sorted(set(want) - set(names))
     if absent:
         why.append(f"no prediction for {len(absent)} stars of the scope ({', '.join(absent[:5])}); a star not searched is "
                    "submitted with searched: false, never left out")
     for p in preds:
-        if not isinstance(p, dict):
-            why.append("every prediction must be an object")
-            break
         n = p.get("toi")
+        extra = sorted(set(p) - PREDICTION_KEYS)
+        if extra:
+            why.append(f"TOI {n}: fields outside the whitelist ({', '.join(map(str, extra))})")
         if n in tic_of and p.get("tic") != tic_of[n]:
             why.append(f"TOI {n}: tic {p.get('tic')} is not the sample's {tic_of[n]}")
         if not isinstance(p.get("searched"), bool):
             why.append(f"TOI {n}: searched must be true or false")
             continue
-        flags = {k: p.get(k) for k in ("seen", "recovered", "flagged")}
-        if p["searched"]:
-            if not all(isinstance(v, bool) for v in flags.values()):
-                why.append(f"TOI {n}: seen, recovered and flagged must be true or false on a searched star")
-                continue
-            if (flags["recovered"] or flags["flagged"]) and not flags["seen"]:
-                why.append(f"TOI {n}: recovered or flagged needs seen")
-        elif any(flags.values()):
-            why.append(f"TOI {n}: a star not searched cannot be seen, recovered or flagged")
         ctl = p.get("controls")
+        if not p["searched"]:
+            if p.get("events") or ctl:
+                why.append(f"TOI {n}: a star not searched has no events and no controls")
+            continue
+        why += _event_errors(p.get("events"), f"TOI {n}")
         if ctl is not None:
-            if not isinstance(ctl, dict) or set(ctl) - {"inverted", "scrambled"}:
-                why.append(f"TOI {n}: controls must be {{inverted, scrambled}}")
-            elif any(v is not None and (not isinstance(v, int) or isinstance(v, bool) or v < 0) for v in ctl.values()):
-                why.append(f"TOI {n}: control counts must be non-negative integers or null")
+            if not isinstance(ctl, dict) or set(ctl) != {"inverted", "scrambled"}:
+                why.append(f"TOI {n}: controls must be {{inverted, scrambled}}, each a list of events or null")
+            else:
+                for v, evs in ctl.items():
+                    if evs is not None:
+                        why += _event_errors(evs, f"TOI {n} {v} control")
     return why
 
 
@@ -209,17 +250,46 @@ def _rate(k: int, n: int) -> dict:
     return {"k": k, "n": n, "rate": p, "lo": lo, "hi": hi}
 
 
-def score(sub: dict, sample: dict, inputs: dict | None = None, benchmark: dict | None = None) -> dict:
-    """The submission's scores on its scope, with Wilson 95% intervals; raises :class:`Refused`."""
-    inputs = inputs if inputs is not None else public_inputs(sample)
-    why = validate(sub, sample, inputs, benchmark)
-    if why:
-        raise Refused(why)
+def youden(sens: dict, spec: dict) -> dict:
+    """J = sensitivity + specificity − 1, with Newcombe's square-and-add interval from the two Wilson intervals."""
+    if sens["rate"] is None or spec["rate"] is None:
+        return {"j": None, "lo": None, "hi": None}
+    j = sens["rate"] + spec["rate"] - 1
+    lo = j - math.hypot(sens["rate"] - sens["lo"], spec["rate"] - spec["lo"])
+    hi = j + math.hypot(sens["hi"] - sens["rate"], spec["hi"] - spec["rate"])
+    return {"j": j, "lo": max(-1.0, lo), "hi": min(1.0, hi)}
+
+
+def _candidate(e: dict) -> dict:
+    return {"t_center": e["t_center"], "duration_hours": e["duration_hours"], "period_days": e.get("period_days"),
+            "passed": e["passed"], "flags": list(e.get("flags") or []), "snr": e.get("snr"), "time_unit": "BTJD"}
+
+
+def outcomes(sub: dict, sample: dict) -> list[dict]:
+    """Per star, what the scorer finds in the submitted events: seen, recovered, flagged (score_star, the benchmark's
+    own scoring), and the control false alarms (passed events on each control curve, None when not run)."""
     toi = {t["toi"]: t for t in sample["tois"]}
-    rows = [dict(p, cls=toi[p["toi"]]["class"], radius=toi[p["toi"]].get("radius_re")) for p in sub["predictions"]]
+    rows = []
+    for p in sub["predictions"]:
+        t = toi[p["toi"]]
+        row = {"toi": p["toi"], "cls": t["class"], "radius": t.get("radius_re"), "searched": p["searched"],
+               "seen": False, "recovered": False, "flagged": False, "controls": None}
+        if p["searched"]:
+            s = score_star(t, [_candidate(e) for e in p.get("events") or []])
+            row.update(seen=s["seen"], recovered=s["recovered"], flagged=s["flagged"])
+            ctl = p.get("controls")
+            if ctl is not None:
+                row["controls"] = {v: (None if ctl[v] is None else sum(1 for e in ctl[v] if e["passed"])) for v in ctl}
+        rows.append(row)
+    return rows
+
+
+def score_rows(rows: list[dict]) -> dict:
+    """The leaderboard's measures from per-star outcomes, with Wilson 95% intervals."""
     searched = [r for r in rows if r["searched"]]
     clean = lambda r: r["recovered"] and not r["flagged"]  # noqa: E731
     pos_all = [r for r in rows if r["cls"] == "positive"]
+    fp_all = [r for r in rows if r["cls"] == "fp"]
     pos, fp, fa = ([r for r in searched if r["cls"] == c] for c in ("positive", "fp", "fa"))
     out = {
         "completeness": _rate(sum(r["recovered"] for r in pos), len(pos)),
@@ -231,70 +301,143 @@ def score(sub: dict, sample: dict, inputs: dict | None = None, benchmark: dict |
         "fp_found": _rate(sum(r["seen"] for r in fp), len(fp)),
         "fp_flagged_of_found": _rate(sum(r["flagged"] for r in fp if r["seen"]), sum(r["seen"] for r in fp)),
         "fp_rejection": _rate(sum(not clean(r) for r in fp), len(fp)),
+        # Every FP star of the scope: one the method did not search was not offered as a candidate either.
+        "fp_rejection_all_stars": _rate(sum(not (r["searched"] and clean(r)) for r in fp_all), len(fp_all)),
         "fa_found": _rate(sum(r["seen"] for r in fa), len(fa)),
     }
+    out["youden_j"] = youden(out["completeness_all_stars"], out["fp_rejection_all_stars"])
     cands = [r for r in searched if clean(r)]
     out["reliability"] = _rate(sum(r["cls"] == "positive" for r in cands), len(cands))
     out["reliability_mix"] = {c: len([r for r in searched if r["cls"] == c]) for c in ("positive", "fp", "fa")}
     controls = {}
     for v in ("inverted", "scrambled"):
-        counts = [r["controls"][v] for r in searched if r.get("controls") and r["controls"].get(v) is not None]
+        counts = [r["controls"][v] for r in searched if r["controls"] and r["controls"].get(v) is not None]
         controls[v] = None if not counts else {
             "star_sectors": len(counts), "vetted_false_alarms": sum(counts),
             "per_1000_star_sectors": 1000 * sum(counts) / len(counts),
             "stars_with_any": _rate(sum(c > 0 for c in counts), len(counts))}
     out["controls"] = controls
+    out["controls_complete"] = bool(searched) and all(
+        r["controls"] and all(r["controls"].get(v) is not None for v in ("inverted", "scrambled")) for r in searched)
     out["coverage"] = {"stars": len(rows), "searched": len(searched),
                        "by_class": {c: [sum(1 for r in searched if r["cls"] == c), sum(1 for r in rows if r["cls"] == c)]
                                     for c in ("positive", "fp", "fa")}}
     return out
 
 
-def load_submissions(directory: str | Path = SUBMISSIONS) -> list[dict]:
+def score(sub, sample: dict, inputs: dict | None = None, benchmark: dict | None = None) -> dict:
+    """The submission's scores on its scope; raises :class:`Refused`."""
+    inputs = inputs if inputs is not None else public_inputs(sample)
+    why = validate(sub, sample, inputs, benchmark)
+    if why:
+        raise Refused(why)
+    return score_rows(outcomes(sub, sample))
+
+
+# Entries the leaderboard derives itself from seeded entries: the Probes+Sentinels combinations, stated as
+# star-level rules before any of them was scored (commit 9e42c0b), applied to the scorer's own outcomes.
+DERIVED = [
+    {"id": "probes-or-sentinel", "rule": "either", "probes": "probes-subsample", "sentinels": ["claude-volunteer", "claude-skeptic"],
+     "name": "Probes + Sentinels, either (star-level rule, fixed before scoring, not panel consensus)",
+     "method": ("A clean candidate when the Probes give one or either Sentinel marks the TOI's dip as a potential "
+                "planet. Applied by the leaderboard to the component entries' scored outcomes.")},
+    {"id": "probes-and-sentinel", "rule": "both", "probes": "probes-subsample", "sentinels": ["claude-volunteer", "claude-skeptic"],
+     "name": "Probes + Sentinels, both (star-level rule, fixed before scoring, not panel consensus)",
+     "method": ("A clean candidate only when the Probes give one and either Sentinel also marks the TOI's dip as a "
+                "potential planet. Applied by the leaderboard to the component entries' scored outcomes.")},
+]
+
+
+def combine(probes: list[dict], sentinels: list[list[dict]], rule: str) -> list[dict]:
+    out = []
+    for i, pr in enumerate(probes):
+        se = [s[i] for s in sentinels]
+        hit = any(s["recovered"] for s in se)
+        p_clean = pr["recovered"] and not pr["flagged"]
+        seen = pr["seen"] or any(s["seen"] for s in se)
+        recovered, clean = (pr["recovered"] or hit, p_clean or hit) if rule == "either" else (pr["recovered"] and hit, p_clean and hit)
+        out.append(dict(pr, seen=seen, recovered=recovered, flagged=seen and not clean, controls=None))
+    return out
+
+
+def load_submissions(directory: str | Path = SUBMISSIONS) -> list:
     return [json.loads(p.read_text()) for p in sorted(Path(directory).glob("*.json"))]
 
 
-def build(sample: dict, inputs: dict, benchmark: dict, submissions: list[dict]) -> dict:
+SUBSAMPLE_NOTE = ("40 stars cannot order these configurations: the subsample is listed, never ranked, and every "
+                  "interval is wide.")
+
+
+def build(sample: dict, inputs: dict, benchmark: dict, submissions: list) -> dict:
     """Score every submission; refused ones are listed with their reasons, never scored."""
-    entries, refused = [], []
+    entries, refused, rows_of = [], [], {}
     for sub in submissions:
-        try:
-            s = score(sub, sample, inputs, benchmark)
-        except Refused as exc:
-            refused.append({"id": sub.get("id"), "name": sub.get("name"), "reasons": exc.reasons})
+        why = validate(sub, sample, inputs, benchmark)
+        if why:
+            refused.append({"id": sub.get("id") if isinstance(sub, dict) else None,
+                            "name": sub.get("name") if isinstance(sub, dict) else None, "reasons": why})
             continue
+        rows = outcomes(sub, sample)
+        rows_of[sub["id"]] = (sub, rows)
         entries.append({"id": sub["id"], "name": sub["name"], "scope": sub["scope"], "kind": sub.get("kind", ""),
-                        "tuned_on": sub["tuned_on"], "provenance": sub["provenance"], "scores": s})
-    # Rank within each scope by completeness over every CP/KP star in it (a star not searched counts as missed,
-    # so leaving hard stars out cannot raise the rank).
-    key = lambda e: e["scores"]["completeness_all_stars"]["rate"] or 0  # noqa: E731
-    entries.sort(key=lambda e: (SCOPES.index(e["scope"]), -key(e), e["id"]))
-    for e in entries:  # equal completeness, equal rank
-        e["rank"] = 1 + sum(1 for o in entries if o["scope"] == e["scope"] and key(o) > key(e))
-    return {"format": "exoplan-leaderboard-results/1", "sample_sha256": sample["sha256"],
+                        "tuned_on": sub["tuned_on"], "provenance": sub["provenance"], "scores": score_rows(rows)})
+    for d in DERIVED:
+        parts = [d["probes"], *d["sentinels"]]
+        if not all(p in rows_of and rows_of[p][0]["scope"] == "sentinel_subsample" for p in parts):
+            continue
+        order = [p["toi"] for p in rows_of[d["probes"]][0]["predictions"]]
+        by = {p: {r["toi"]: r for r in rows_of[p][1]} for p in parts}
+        rows = combine([by[d["probes"]][n] for n in order], [[by[s][n] for n in order] for s in d["sentinels"]], d["rule"])
+        entries.append({"id": d["id"], "name": d["name"], "scope": "sentinel_subsample", "kind": "derived", "tuned_on": "none",
+                        "provenance": {"method": d["method"], "code_version": "src/exoplan/leaderboard.py (DERIVED)",
+                                       "generated_from": [f"docs/leaderboard/submissions/{p}.json" for p in parts]},
+                        "scores": score_rows(rows)})
+    # Ranking: held-out entries with every control measured, by Youden's J. Equal J shares a rank. Nothing else
+    # is ranked: an entry without controls hides its false alarms, and 40 stars cannot order anything.
+    jv = lambda e: e["scores"]["youden_j"]["j"]  # noqa: E731
+    for e in entries:
+        e["ranked"] = e["scope"] == "held_out" and e["scores"]["controls_complete"] and jv(e) is not None
+        e["unranked_reason"] = ("" if e["ranked"] else "subsample: 40 stars cannot order configurations"
+                                if e["scope"] == "sentinel_subsample" else "controls not measured for every searched star")
+    ranked = [e for e in entries if e["ranked"]]
+    for e in entries:
+        e["rank"] = (1 + sum(1 for o in ranked if jv(o) > jv(e))) if e["ranked"] else None
+    # Ranked entries by J; the rest (the subsample included) in a fixed order that implies nothing: Probes,
+    # Sentinels, then the derived combinations.
+    kinds = ["probes", "sentinel", "derived"]
+    entries.sort(key=lambda e: (SCOPES.index(e["scope"]), not e["ranked"], -jv(e) if e["ranked"] else 0,
+                                kinds.index(e["kind"]) if e["kind"] in kinds else len(kinds), e["id"]))
+    return {"format": "exoplan-leaderboard-results/2", "sample_sha256": sample["sha256"],
             "inputs_sha256": inputs_sha256(inputs), "full_sample_sha256": full_sample_sha256(sample),
             "sentinel_subsample": sentinel_subsample(benchmark),
             "sentinel_subsample_sha256": canonical_sha256(sentinel_subsample(benchmark)),
             "sentinel_agreement": (benchmark.get("sentinels") or {}).get("agreement"),
-            "benchmark_code_commit": benchmark.get("code_commit"), "rules": RULES, "entries": entries, "refused": refused}
+            "benchmark_code_commit": benchmark.get("code_commit"), "rules": RULES, "subsample_note": SUBSAMPLE_NOTE,
+            "entries": entries, "refused": refused}
 
 
 RULES = [
     "Scored on the held-out half of the frozen sample only (TOIs by sha256(seed:TIC) parity); the tuning half is "
     "never scored.",
-    "A submission covers every star of its scope: the whole held-out half, or the Sentinels' stated 40-star "
-    "subsample. A star without a light curve is submitted with searched: false and counts as missed in the "
-    "all-stars completeness, which is the rank key.",
-    "It states the sha256 of the public inputs it was built from (tuning half with labels, held-out half without). "
-    "Any other hash, tuned_on other than none or tuning, a label field in a prediction, a missing or extra star, or "
-    "missing provenance: refused, with the reasons listed.",
+    "A submission lists, for every star of its scope, the events its method detected on the real light curve and on "
+    "the flux-inverted and block-scrambled controls (time, duration, period, its own pass verdict and flags). The "
+    "leaderboard decides which events lie on the TOI's ephemeris (the benchmark's score_star and match_toi) and "
+    "counts control false alarms itself. Self-reported outcomes are not accepted.",
+    "Rank: Youden's J = completeness over every CP/KP star + FP rejection over every FP star − 1, with a "
+    "square-and-add Wilson interval. Calling every TOI a planet scores J = 0. A star not searched counts as missed "
+    "and, if FP, as not offered. Where two intervals overlap, the order is not a measured difference.",
+    "Only held-out entries with both control light curves on every searched star are ranked; others are listed "
+    "unranked. The 40-star Sentinel subsample is never ranked.",
+    "A submission states the sha256 of the public inputs it was built from (tuning half with labels, held-out half "
+    "without). Any other hash, tuned_on other than none or tuning, a field outside the whitelist, a missing or extra "
+    "star, or missing provenance: refused, with the reasons listed.",
     "The hash is an attestation: the held-out labels are public in the repository, so the leaderboard cannot prove "
-    "they were not read. It refuses every submission that declares or shows that they were.",
-    "Completeness: CP/KP stars whose TOI dip the method recovered (passed its vetting). FP rejection: searched FP "
-    "stars whose TOI dip the method did not offer as a clean candidate (recovered and not flagged). Controls: stars "
-    "with any vetted event on the flux-inverted and block-scrambled light curves. Reliability: the share of clean "
-    "candidates on TOI dips that are CP/KP, on this sample's class mix, which is not the TOI catalogue's.",
-    "All rates carry Wilson 95% intervals. TFOPWG dispositions are the reference, not ground truth for every TOI.",
+    "they were not read, and a method's pass verdicts and control events are its own report. Maintainer-held decoy "
+    "light curves and prospective scoring on TOIs still undispositioned would close these gaps; neither exists yet.",
+    "FP rejection: FP stars whose TOI dip the method did not offer as a clean candidate (recovered and not flagged). "
+    "Reliability: the share of clean candidates on TOI dips that are CP/KP, on this sample's class mix, which is not "
+    "the TOI catalogue's. All rates carry Wilson 95% intervals. TFOPWG dispositions are the reference, not ground "
+    "truth for every TOI.",
     "Measured on a stated benchmark; nothing on this leaderboard is a discovery.",
 ]
 
@@ -305,8 +448,19 @@ def _pct(r: dict | None) -> str:
     return f"{100 * r['rate']:.0f}% ({r['k']}/{r['n']}; {100 * r['lo']:.0f}–{100 * r['hi']:.0f}%)"
 
 
+def jtext(j: dict) -> str:
+    return "n/a" if j["j"] is None else f"{j['j']:+.2f} ({j['lo']:+.2f} to {j['hi']:+.2f})"
+
+
+def small_rate(s: dict) -> dict | None:
+    """Completeness on CP/KP TOIs below 4 R⊕ (the radius bins that end at or below 4)."""
+    sel = [b for b in s["completeness_by_radius"] if b["bin"][1] <= 4]
+    k, n = sum(b["k"] for b in sel), sum(b["n"] for b in sel)
+    return _rate(k, n) if n else None
+
+
 SCOPE_LABEL = {"held_out": "Held-out half (every held-out star)",
-               "sentinel_subsample": "The Sentinels' stated subsample (40 held-out stars: 20 CP/KP, 20 FP)"}
+               "sentinel_subsample": "The Sentinels' stated subsample (40 held-out stars: 20 CP/KP, 20 FP), not ranked"}
 
 
 def to_markdown(res: dict) -> str:
@@ -324,26 +478,27 @@ def to_markdown(res: dict) -> str:
         es = [e for e in res["entries"] if e["scope"] == scope]
         if not es:
             continue
-        lines += ["", f"## {SCOPE_LABEL[scope]}", "",
-                  "| rank | entry | completeness, all CP/KP stars | completeness, searchable | below 4 R⊕ | FP rejection | "
+        head = "| rank | entry | Youden J |" if scope == "held_out" else "| entry | Youden J |"
+        lines += ["", f"## {SCOPE_LABEL[scope]}", ""]
+        if scope == "sentinel_subsample":
+            lines += [f"**{res['subsample_note']}**", ""]
+        lines += [head + " completeness, all CP/KP stars | below 4 R⊕ | FP rejection, all FP stars | "
                   "inverted control: stars with any | scrambled control: stars with any | reliability |",
-                  "|---:|---|---|---|---|---|---|---|---|"]
+                  "|" + "---|" * (9 if scope == "held_out" else 8)]
         for e in es:
             s = e["scores"]
-            small = [b for b in s["completeness_by_radius"] if b["bin"][1] <= 4]
-            k, n = sum(b["k"] for b in small), sum(b["n"] for b in small)
             ctl = lambda v: _pct(s["controls"][v]["stars_with_any"]) if s["controls"][v] else "not measured"  # noqa: E731
-            lines.append(f"| {e['rank']} | {e['name']} | {_pct(s['completeness_all_stars'])} | {_pct(s['completeness'])} | "
-                         f"{_pct(_rate(k, n)) if n else 'n/a'} | {_pct(s['fp_rejection'])} | {ctl('inverted')} | "
+            rank = (f"| {e['rank']} " if e["ranked"] else f"| unranked ({e['unranked_reason']}) ") if scope == "held_out" else ""
+            lines.append(f"{rank}| {e['name']} | {jtext(s['youden_j'])} | {_pct(s['completeness_all_stars'])} | "
+                         f"{_pct(small_rate(s))} | {_pct(s['fp_rejection_all_stars'])} | {ctl('inverted')} | "
                          f"{ctl('scrambled')} | {_pct(s['reliability'])} |")
         lines += ["", "Entries:", ""] + [f"* **{e['name']}** (`{e['id']}`, tuned on: {e['tuned_on']}). {e['provenance']['method']}"
                                           for e in es]
     if res["refused"]:
         lines += ["", "## Refused", ""] + [f"* {r['name'] or r['id']}: {'; '.join(r['reasons'])}" for r in res["refused"]]
-    lines += ["", "Rank is by completeness over every CP/KP star in the scope; equal completeness shares a rank. Where "
-              "two entries' intervals overlap, their order is not a measured difference. Reliability depends on the sample's class mix (the held-out searched stars are about half "
-              "CP/KP); it is not the reliability on the TOI catalogue. The Sentinel entries cover 40 stars, so their "
-              "intervals are wide, and they were never run on the control light curves.", ""]
+    lines += ["", "FP rejection here counts every FP star of the scope (a star not searched was not offered as a "
+              "candidate); the benchmark report's \"rejected or flagged\" rate is over the FP dips the panel found. "
+              "Reliability depends on the sample's class mix; it is not the reliability on the TOI catalogue.", ""]
     return "\n".join(lines)
 
 

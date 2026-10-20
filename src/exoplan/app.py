@@ -752,7 +752,7 @@ main:focus{outline:none}
 .route>header .eyebrow{margin:0;font-size:15px;font-weight:500;color:var(--star);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .route>header .eyebrow .idx{display:none}
 .route>header .eyebrow .parent{color:var(--ink-3);font-weight:400}
-.route>header .eyebrow .parent a{color:var(--ink-3)}
+.route>header .eyebrow .parent a{color:var(--ink-3);display:inline-block;padding:12px 0;margin:-12px 0;line-height:20px}
 .route h1:focus{outline:none}
 .route>header p{margin:0;color:var(--ink-2);max-width:72ch;font-size:clamp(15px,1.2vw,17px);line-height:1.5}
 .route>header .lead-h,.headline{margin:0;font-weight:700;font-size:clamp(34px,4.4vw,60px);line-height:1.02;letter-spacing:-.045em;color:var(--ink);max-width:22ch;text-wrap:balance}
@@ -2514,7 +2514,7 @@ def _benchmark_card(b: dict | None) -> str:
 
 LEADERBOARD_JSON = "docs/leaderboard/leaderboard.json"
 LEADERBOARD_SCOPES = {"held_out": ("Held-out half", "every held-out star"),
-                      "sentinel_subsample": ("The Sentinels' subsample", "40 held-out stars: 20 CP/KP, 20 FP")}
+                      "sentinel_subsample": ("The Sentinels' subsample", "40 held-out stars: 20 CP/KP, 20 FP · not ranked")}
 
 
 def _load_leaderboard(path: str | Path = LEADERBOARD_JSON) -> dict | None:
@@ -2537,20 +2537,21 @@ def _leaderboard(lb: dict | None) -> str:
     e = html.escape
     head = (f'<header>{_eyebrow("Leaderboard", ("sentinels", "Sentinels"))}<h1 class="lead-h" id="h-leaderboard" tabindex="-1">'
             'Methods, scored blind on real TOIs.</h1><p>The public leaderboard on the frozen real-TOI benchmark: each entry\'s '
-            'per-star outcomes, scored on the held-out half only, with Wilson 95% intervals. Not the injection threshold sweep '
+            'detected events, scored by the leaderboard itself on the held-out half only, with Wilson 95% intervals. Not the injection threshold sweep '
             '(docs/threshold_sweep.md), which tunes Probe thresholds on synthetic light curves.</p></header>'
             f'<p class="note"><b>Measured on a stated benchmark; nothing here is a discovery.</b> {e(ATTRIBUTION)}</p>')
     if not lb:
         return head + ('<section class="card"><h2>Not built</h2><p class="muted" style="margin:0">The leaderboard has not been '
                        'scored for this build (exoplan leaderboard).</p></section>')
-    cols = [("completeness_all_stars", "Completeness, all CP/KP stars"), ("completeness", "Completeness, searchable stars"),
-            ("small", "Completeness below 4 R⊕"), ("fp_rejection", "FP rejection"), ("inverted", "Inverted control: stars with any"),
+    cols = [("completeness_all_stars", "Completeness, all CP/KP stars"), ("small", "Completeness below 4 R⊕"),
+            ("fp_rejection_all_stars", "FP rejection, all FP stars"), ("inverted", "Inverted control: stars with any"),
             ("scrambled", "Scrambled control: stars with any"), ("reliability", "Reliability")]
     out = [head]
     for scope, (title, sub) in LEADERBOARD_SCOPES.items():
         es = [x for x in lb["entries"] if x["scope"] == scope]
         if not es:
             continue
+        ranked_scope = scope == "held_out"
         rows = []
         for x in es:
             s = x["scores"]
@@ -2561,16 +2562,27 @@ def _leaderboard(lb: dict | None) -> str:
                      **{v: (s["controls"][v] or {}).get("stars_with_any") for v in ("inverted", "scrambled")}}
             tds = "".join(_lb_cell(cells[c] if c in cells else s[c], label,
                                    "not measured" if c in ("inverted", "scrambled") else "n/a") for c, label in cols)
-            rows.append(f'<tr><td class="rk" data-l="Rank">{x["rank"]}</td><th scope="row">{e(x["name"])}'
-                        f'<span class="kd">{e(x["id"])} · tuned on {e(x["tuned_on"])}</span></th>{tds}</tr>')
+            j = s["youden_j"]
+            jcell = ('<td data-l="Youden J"><span class="na">n/a</span></td>' if j["j"] is None else
+                     f'<td data-l="Youden J"><span class="v">{j["j"]:+.2f}</span><span class="ci">{j["lo"]:+.2f} to {j["hi"]:+.2f}</span></td>')
+            rk = ""
+            if ranked_scope:
+                rk = (f'<td class="rk" data-l="Rank">{x["rank"]}</td>' if x["ranked"] else
+                      f'<td class="rk" data-l="Rank"><span class="na">unranked</span><span class="kd">{e(x["unranked_reason"])}</span></td>')
+            rows.append(f'<tr>{rk}<th scope="row">{e(x["name"])}'
+                        f'<span class="kd">{e(x["id"])} · tuned on {e(x["tuned_on"])}</span></th>{jcell}{tds}</tr>')
         hid = f"h-lb-{scope.replace('_', '-')}"
         ths = "".join(f'<th scope="col">{e(label)}</th>' for _, label in cols)
-        out.append(f'<section class="card lb" aria-labelledby="{hid}"><h2 id="{hid}">{e(title)} <span class="sub">{e(sub)}</span></h2>'
-                   f'<div class="tablewrap" role="region" aria-labelledby="{hid}"><table class="lbtable"><thead><tr><th scope="col">Rank</th>'
-                   f'<th scope="col">Entry</th>{ths}</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
-                   '<p class="small">Each cell: the rate, then k/n and the Wilson 95% interval. Rank is by completeness over every '
-                   'CP/KP star in the scope; equal completeness shares a rank, and where intervals overlap the order is not a '
-                   'measured difference.</p></section>')
+        note = ("Ranked by Youden's J (completeness over every CP/KP star + FP rejection over every FP star − 1), so calling "
+                "every TOI a planet scores zero; only entries measured on both controls are ranked. Where intervals overlap "
+                "the order is not a measured difference." if ranked_scope else "")
+        rank_th = '<th scope="col">Rank</th>' if ranked_scope else ""
+        lead = "" if ranked_scope else f'<p class="note" style="margin:0"><b>{e(lb.get("subsample_note", ""))}</b></p>'
+        out.append(f'<section class="card lb" aria-labelledby="{hid}"><h2 id="{hid}">{e(title)} <span class="sub">{e(sub)}</span></h2>{lead}'
+                   f'<div class="tablewrap" role="region" aria-labelledby="{hid}"><table class="lbtable"><thead><tr>'
+                   f'{rank_th}<th scope="col">Entry</th><th scope="col">Youden J</th>{ths}</tr></thead>'
+                   f'<tbody>{"".join(rows)}</tbody></table></div>'
+                   f'<p class="small">Each cell: the rate, then k/n and the Wilson 95% interval. {e(note)}</p></section>')
     if any(x["scope"] == "sentinel_subsample" for x in lb["entries"]):
         ag = lb.get("sentinel_agreement") or {}
         agree = (f" (they agree on {ag['agree']} of {ag['n']} stars, φ = {ag['phi']:.2f})"

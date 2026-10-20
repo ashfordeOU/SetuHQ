@@ -221,15 +221,16 @@ def cmd_leaderboard(args) -> int:
         print(f"{L.INPUTS} does not match the frozen sample; run scripts/leaderboard_seed.py", file=sys.stderr)
         return 1
     if args.submission:
-        sub = json.loads(Path(args.submission).read_text())
         try:
+            sub = json.loads(Path(args.submission).read_text())
             scores = L.score(sub, sample, inputs, benchmark)
-        except L.Refused as exc:
-            print(f"refused: {sub.get('name') or args.submission}", file=sys.stderr)
-            for reason in exc.reasons:
+        except (ValueError, OSError) as exc:  # L.Refused is a ValueError, as is a JSON syntax error
+            reasons = exc.reasons if isinstance(exc, L.Refused) else [f"not a readable JSON file: {exc}"]
+            print(f"refused: {args.submission}", file=sys.stderr)
+            for reason in reasons:
                 print(f"  - {reason}", file=sys.stderr)
             return 2
-        print(json.dumps({"id": sub.get("id"), "name": sub.get("name"), "scope": sub["scope"], "scores": scores}, indent=1))
+        print(json.dumps({"id": sub["id"], "name": sub["name"], "scope": sub["scope"], "scores": scores}, indent=1))
         return 0
     res = L.build(sample, inputs, benchmark, L.load_submissions(args.submissions))
     L.write_results(res)

@@ -145,10 +145,13 @@ published TOI period, and `new_candidate` otherwise.
 ## Leaderboard and methods paper
 
 * **The real-TOI leaderboard** ([docs/leaderboard/](docs/leaderboard/README.md), and `#/leaderboard` in the app)
-  scores any method's per-star outcomes on the held-out half of the frozen 662-TOI benchmark: completeness, FP
-  rejection, control false alarms and reliability, with Wilson intervals. `exoplan leaderboard my.json` scores a
-  submission and refuses one that states anything but the hash of the tuning-half-only inputs. It is seeded with
-  exoplan's own configurations, scored from the stored per-star results (`scripts/leaderboard_seed.py`).
+  takes a method's detected events per star of the held-out half of the frozen 662-TOI benchmark, and scores them
+  itself: completeness, FP rejection, control false alarms and reliability, with Wilson intervals. It ranks by
+  Youden's J, so calling every TOI a planet scores zero, and ranks only entries measured on both controls; the
+  40-star Sentinel subsample is listed, never ranked. `exoplan leaderboard my.json` scores a submission and refuses
+  one that states anything but the hash of the tuning-half-only inputs or carries a field outside the whitelist.
+  It is seeded with exoplan's own configurations, built from the benchmark's stored outputs
+  (`scripts/leaderboard_seed.py`).
 * **The methods paper draft** ([docs/paper/paper.md](docs/paper/paper.md), AAS/AJ style, Markdown) reports the
   benchmark with its negative results. Every number in it comes from the committed JSON through
   `scripts/paper_numbers.py`; results that later work will change are marked pending.
