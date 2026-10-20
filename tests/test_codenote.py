@@ -15,6 +15,8 @@ def test_banner_goes_right_after_body(tmp_path):
     # a 44 x 44 px dismiss button; the banner takes taps (no pointer-events:none); the dismissal is remembered
     assert "width:44px;height:44px" in out and "pointer-events:none" not in out
     assert "localStorage.setItem" in out and "catch(e)" in out and "data-fixed=" in out and "position:relative" in out
+    # in the fixed bar the note is one line with a "more" button that opens it
+    assert "text-overflow:ellipsis" in out and 'class="cn-more"' in out and "aria-expanded" in out
 
 
 def test_the_stored_run_carries_the_pre_fix_note(tmp_path):
