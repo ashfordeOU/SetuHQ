@@ -2646,8 +2646,9 @@ def app_page(data: dict) -> str:
     run = data["run"]
     rule = data["feed_rule"]
     data = {**data, "methods": methods_meta(data["examples"], data.get("galaxy"), data["story"], data.get("coverage"))}
-    # The sweep's Sky points are drawn into the map's SVG at build time, so the payload carries only their count.
-    slim = {**data, "sweep": {k: v for k, v in data["sweep"].items() if k != "sky"}} if data.get("sweep") else data
+    # The sweep's Sky points are drawn into the map's SVG at build time, so the payload carries only their count;
+    # "vs" repeats counts.null.by_class and is read only at build time.
+    slim = {**data, "sweep": {k: v for k, v in data["sweep"].items() if k not in ("sky", "vs")}} if data.get("sweep") else data
     payload = json.dumps({k: v for k, v in slim.items() if k not in ("galaxy", "coverage", "examples", "catalogue", "sweep_full")}).replace("</", "<\\/")
     galaxy_payload = ""  # the map's arrays are a separate file (galaxy_json), fetched when the Galaxy opens
     unc = html.escape(UNCONFIRMED)
