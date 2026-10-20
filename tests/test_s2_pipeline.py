@@ -225,3 +225,23 @@ def test_shallow_secondary_is_flagged_through_the_full_preparation():
 def test_pipeline_uses_the_transit_masked_light_curve(runs):
     for c in _on_primary(runs["flag"]):
         assert c.metrics["dv"]["transit_masked_detrend"] is True
+
+
+@pytest.mark.parametrize("hours", [6.0, 10.0])
+def test_long_transits_survive_the_masked_detrend(hours):
+    """A 1000 ppm planet with a 6 or 10 hour transit (P = 9 d, 300 ppm noise, slow stellar variability): masking 3 T14
+    of a 1-day window left the quadratic extrapolating (excursions of 10^4 to 10^6 ppm, false secondary_any_phase and
+    timing_inconsistent). With the trend interpolated across the masked span and the window widened to 12 T14, the
+    light curve stays within the transit plus noise and no flag is raised."""
+    from dvtests_helpers import trapezoid_lc
+    from exoplan.dvtests import extended_vet
+    from exoplan.pipeline import vetting_lightcurve
+
+    dur = hours / 24.0
+    for seed in range(4):
+        lc = trapezoid_lc(seed=seed, period=9.0, t0=2.0, duration=dur, depth=1000e-6, noise=3e-4, gap=None)
+        lc = lc.with_data(lc.time, lc.flux + 2e-4 * np.sin(lc.time / 3.0), lc.flux_err)
+        m = vetting_lightcurve([lc], RunConfig(name="x"), period=9.0, t0=2.0, duration=dur)
+        assert np.max(np.abs(m.flux - 1)) < 2500e-6
+        flags, _ = extended_vet(m.time, m.flux, m.flux_err, period=9.0, t0=2.0, duration=dur)
+        assert "secondary_any_phase" not in flags and "timing_inconsistent" not in flags, (seed, flags)

@@ -130,8 +130,9 @@ def detrend(lc: LightCurve, *, window_days: float = 1.0, mask_sigma: float = 3.0
     ``mask_sigma`` below it. A local quadratic fit to the remaining points then
     gives the final trend, so a transit is not absorbed into the baseline.
 
-    ``exclude`` (a boolean array) leaves further points out of the quadratic fit: the extended vetting passes the
-    fitted ephemeris's transits, as DV does. Without it, the shallow ingress and egress points that are not
+    ``exclude`` (a boolean array) leaves further points out of the quadratic fit, and the trend across those points is
+    interpolated from the fit on either side: the extended vetting passes the fitted ephemeris's transits, as DV
+    does. Without it, the shallow ingress and egress points that are not
     ``mask_sigma`` below the trend pull the fit down near each transit and leave positive shoulders beside it
     (+30 to +60 ppm on pi Men c).
     """
@@ -144,6 +145,15 @@ def detrend(lc: LightCurve, *, window_days: float = 1.0, mask_sigma: float = 3.0
     if keep.sum() >= 10:
         fit, ok = local_quadratic(lc.time, lc.flux, keep, window_days)
         trend = np.where(ok, fit, trend)
+    if exclude is not None:
+        # Inside an excluded span the quadratic has no support of its own: with a long transit masked (3 T14 of a
+        # 1-day window) it extrapolates wildly. The trend there is interpolated linearly between the fitted trend
+        # at the nearest kept points on each side (held flat beyond the data's ends).
+        ex = np.asarray(exclude, bool)
+        support = ~ex & np.isfinite(trend)
+        if ex.any() and support.sum() >= 2:
+            trend = trend.copy()
+            trend[ex] = np.interp(lc.time[ex], lc.time[support], trend[support])
     return lc.with_data(
         lc.time,
         lc.flux / trend,

@@ -232,8 +232,10 @@ def assess_secondary(sec: dict, *, secondary_sigma: float = SECONDARY_SIGMA) -> 
     70% or more). ``secondary_sigma`` is the fixed fallback for scans too short for a robust spread."""
     if sec["scan_robust_sigma"] is not None:
         z = white_quantiles(sec["n_trials"])["q_dip"]
-        threshold = z * sec["scan_robust_sigma"]
-        sec["threshold_rule"] = (f"{z:.2f} × the scan's robust spread (white-noise 99.9% quantile for "
+        # The spread can only raise the threshold: a spread below white noise (detrending suppresses noise on the
+        # box's time-scale) never lowers it under the white-noise calibration.
+        threshold = z * max(sec["scan_robust_sigma"], 1.0)
+        sec["threshold_rule"] = (f"{z:.2f} × max(1, the scan's robust spread) (white-noise 99.9% quantile for "
                                  f"{sec['n_trials']} positions)")
     else:
         threshold = secondary_sigma

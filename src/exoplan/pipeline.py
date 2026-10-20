@@ -149,12 +149,21 @@ def prepare_lightcurves(lightcurves: list[LightCurve], config: RunConfig) -> lis
 TRANSIT_MASK_T14 = 1.5  # the extended vetting re-detrends with points within this many T14 of each mid-transit masked
 
 
+def vetting_window(config: RunConfig, duration: float) -> float:
+    """The detrending window of the extended vetting: the run's window, or four times the masked span around each
+    transit (2 × TRANSIT_MASK_T14 × T14) when that is longer, so a long transit's mask leaves the trend support on
+    both sides and the box statistic keeps its white-noise scale."""
+    return max(config.detrend_window_days, 4.0 * 2.0 * TRANSIT_MASK_T14 * duration)
+
+
 def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float, duration: float,
                        start: float | None = None, end: float | None = None) -> Subject | None:
     """The light curve the extended (DV-style) tests read: prepared as for review (clean, normalise, detrend, bin),
     except that the detrending leaves out every point within ``TRANSIT_MASK_T14`` × T14 of a mid-transit of the
-    fitted ephemeris, as DV does. Without the mask the trend overshoots beside each transit, and those shoulders
-    looked like brightenings to the secondary search. Cut to [start, end) when given; None when nothing is left."""
+    fitted ephemeris, as DV does, with the window widened for long transits (:func:`vetting_window`) and the trend
+    interpolated across each masked span (:func:`exoplan.preprocess.detrend`). Without the mask the trend overshoots
+    beside each transit, and those shoulders looked like brightenings to the secondary search; without the wider
+    window and the interpolation, a 7-10 hour transit's mask left the quadratic extrapolating by 10⁴-10⁶ ppm. Cut to [start, end) when given; None when nothing is left."""
     out = []
     for lc in lightcurves:
         cleaned = clean(lc)
@@ -162,7 +171,7 @@ def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, peri
         if np.isfinite(level) and level > 0:
             cleaned = cleaned.with_data(cleaned.time, cleaned.flux / level, cleaned.flux_err / level)
         dt = np.abs((cleaned.time - t0 + 0.5 * period) % period - 0.5 * period)
-        detrended = detrend(cleaned, window_days=config.detrend_window_days,
+        detrended = detrend(cleaned, window_days=vetting_window(config, duration),
                             exclude=dt <= TRANSIT_MASK_T14 * duration)
         binned = bin_lightcurve(detrended, config.bin_minutes)
         if start is not None:
