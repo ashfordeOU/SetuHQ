@@ -148,12 +148,12 @@ def test_no_built_page_loads_google_fonts(run_dir, tmp_path):  # noqa: F811
     for p in pages:
         text = Path(p).read_text()
         assert "googleapis" not in text and "gstatic" not in text, p
-        assert not re.search(r"""<(?:script|link)[^>]+(?:src|href)=["']https?://""", text), p
+        assert not re.search(r"""<(?:script|link)(?![^>]*rel="canonical")[^>]+(?:src|href)=["']https?://""", text), p  # a canonical link is not a load
 
 
 def test_archived_report_has_icon_44px_nav_and_wrapped_tables(run_dir, tmp_path):  # noqa: F811
     page = Path(build_report(run_dir, tmp_path / "report", title="t")).read_text()
-    assert "<link rel='icon' href='data:,'>" in page
+    assert '<link rel="icon" type="image/svg+xml" href="assets/brand/setuhq-favicon.svg">' in page  # no request to a missing favicon
     assert re.search(r"nav a\{[^}]*min-height:44px", page)
     for m in re.finditer(r"<table", page):
         assert "class='scroll'" in page[max(0, m.start() - 120):m.start()], page[m.start() - 120:m.start()]
