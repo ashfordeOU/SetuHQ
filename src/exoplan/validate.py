@@ -174,15 +174,21 @@ def scan_whiteness(scan: dict) -> dict | None:
 
 
 def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel: dict | None = None,
-                priors: Priors = Priors(), contrast_curve: str | None = None) -> FppResult:
+                priors: Priors = Priors(), contrast_curve: str | None = None,
+                variants: list[dict] | None = None) -> FppResult:
     """The reduced FPP of one candidate from its S2 results.
 
     ``depth`` is the fractional transit depth; ``dv`` is ``candidate.metrics["dv"]`` (the all-phase secondary scan,
     or the phase-0.5 value, and the odd/even depths); ``fit`` the transit fit (grazing, v_shape_dchi2); ``pixel`` the
     pixel report (neighbour table and centroid). Missing evidence contributes a likelihood ratio of 1 and is listed
-    in ``notes``. When the all-phase scan is not white (:func:`scan_whiteness`), no FPP or NFPP is given: the
-    result says "FPP not computed" with the numbers, and the range of FPPs under other noise models is kept in
-    ``evidence["fpp_sensitivity"]`` only.
+    in ``notes``.
+
+    With ``variants`` (the same all-phase scan on other detrending settings, :func:`exoplan.pipeline.secondary_variants`)
+    the FPP is computed on every setting under two noise models (the scan's robust spread and its plain std). The FPP
+    given is the median over settings at the robust spread, with the full range beside it; none is given when the range
+    is unstable (wider than a factor of 10, or than 0.5), and the class is stated only when both ends of the range
+    fall in the same class. Without ``variants``, a single scan must pass the white-noise gate (:func:`scan_whiteness`)
+    or no FPP is given; the FPPs under other noise models are kept in ``evidence["fpp_sensitivity"]`` only.
     """
     notes = []
     dv = dv or {}
@@ -216,25 +222,29 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
     # circular-orbit secondary) carries the secondary likelihood instead.
     use_peak = all_phase and scan.get("periodic", True)
 
-    def secondary_like(widen: float):
-        """(L_TP = L_EBx2P, L_EB) of the secondary measurement with the noise scaled by ``widen``."""
-        if use_peak:
+    def secondary_like(widen: float, sc: dict | None = None):
+        """(L_TP = L_EBx2P, L_EB) of the secondary measurement of scan ``sc`` (default: the main scan) with the noise
+        scaled by ``widen``."""
+        sc = scan if sc is None else sc
+        peak = bool(sc.get("sigma_ppm") and sc.get("n_trials")) and sc.get("periodic", True)
+        p05 = sc.get("phase_05")
+        if peak:
             # In units of z = largest dip / noise scale: the null density f0 is simulated (null_pdf); a binary's
             # secondary is a true dip mu ~ U[0, Z] (Z the primary depth in the same units) seen with unit noise,
             # and the largest dip is then the larger of that and the noise maximum, whose density is
             # phi(z - mu) F0(z) + Phi(z - mu) f0(z); averaged over mu in closed form, with G(u) = u Phi(u) + phi(u).
             from exoplan.dvtests import null_cdf, null_pdf
 
-            n = scan["n_trials"]
-            ss = scan["sigma_ppm"] * 1e-6 * widen
-            z = scan["depth_ppm"] * 1e-6 / ss
+            n = sc["n_trials"]
+            ss = sc["sigma_ppm"] * 1e-6 * widen
+            z = sc["depth_ppm"] * 1e-6 / ss
             big_z = max(depth / ss, 1e-9)
             f0, cdf0 = null_pdf(z, n), null_cdf(z, n)
             g = lambda u: u * norm.cdf(u) + norm.pdf(u)  # noqa: E731
             f1 = (cdf0 * (norm.cdf(z) - norm.cdf(z - big_z)) + f0 * (g(z) - g(z - big_z))) / big_z
             return f0, max(f1, 1e-300)
-        if sec05 and sec05.get("sigma_ppm"):
-            s, ss = sec05["depth_ppm"] * 1e-6, sec05["sigma_ppm"] * 1e-6 * widen
+        if p05 and p05.get("sigma_ppm"):
+            s, ss = p05["depth_ppm"] * 1e-6, p05["sigma_ppm"] * 1e-6 * widen
             return _gauss(s, ss), _uniform_marginal(s, ss, 0.0, depth)
         return None
 
@@ -264,9 +274,9 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
             pos = math.exp(-0.5 * r["centroid_sigma"] ** 2)
         nfp_like.append((r.get("id"), pos))
 
-    def posterior(widen: float):
+    def posterior(widen: float, sc: dict | None = None):
         like = dict(base)
-        sl = secondary_like(widen)
+        sl = secondary_like(widen, sc)
         if sl is not None:
             l0, leb = sl
             like["tp"] *= l0
@@ -288,7 +298,42 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
 
     method = "exoplan reduced FPP"
     refused = None
-    if all_phase:
+    stable_class = None
+    if all_phase and variants:
+        settings = [dict(scan, window_scale=1.0, mask_t14="default")] + [v for v in variants if v.get("scan_robust_sigma")]
+        rows, white = [], 0
+        for sc in settings:
+            g = scan_whiteness(sc)
+            white += bool(g and g["white"])
+            rs = sc["scan_robust_sigma"]
+            for model, w in (("robust spread", rs), ("std", sc.get("scan_std_snr") or rs)):
+                rows.append({"window_scale": sc.get("window_scale"), "mask_t14": sc.get("mask_t14"), "noise": model,
+                             "fpp": posterior(max(w, 1e-9), sc)[0], "white": bool(g and g["white"])})
+        values = [r["fpp"] for r in rows if r["fpp"] is not None]
+        central = sorted(r["fpp"] for r in rows if r["noise"] == "robust spread" and r["fpp"] is not None)
+        evidence["secondary_source"] = (
+            f"all-phase search (phase {scan.get('phase', float('nan')):.3f})" if use_peak else
+            f"phase 0.5 (the strongest dip, at phase {scan.get('phase', float('nan')):.3f}, is not periodic: "
+            f"{(scan.get('max_epoch_share') or 0) * 100:.0f}% from one epoch)")
+        _, nfpp, probs, sl = posterior(scan["scan_robust_sigma"])
+        lo, hi = (min(values), max(values)) if values else (None, None)
+        fpp = central[len(central) // 2] if central else None
+        evidence["fpp_stability"] = {"n_settings": len(settings), "white_settings": white, "range": [lo, hi],
+                                     "median_robust": fpp, "rows": rows}
+        if sl is not None:
+            evidence["secondary_bayes_factor_eb_vs_tp"] = sl[1] / sl[0] if sl[0] > 0 else math.inf
+        if lo is None or hi - lo > 0.5 or (lo > 0 and hi / lo > 10):
+            refused = (f"FPP not computed: unstable across {len(settings)} detrending settings and two noise models "
+                       f"(range {lo:.3g}–{hi:.3g})" if lo is not None else "FPP not computed: no setting gave one")
+            fpp = nfpp = None
+            probs = {}
+        else:
+            span = f"FPP ≈ {fpp:.2g}, range {lo:.3g}–{hi:.3g} over {len(settings)} detrending settings × 2 noise models"
+            crossed = [t for t in (FPP_VALIDATED, FPP_LIKELY_PLANET) if lo < t <= hi]
+            stable_class = (f"undetermined{REDUCED_CLASS_SUFFIX}: {span} straddles the FPP threshold "
+                            f"{', '.join(f'{t:g}' for t in crossed)}" if crossed else
+                            f"{fpp_class(fpp, nfpp)}{REDUCED_CLASS_SUFFIX}: {span}")
+    elif all_phase:
         gate = scan_whiteness(scan)
         evidence["scan_whiteness"] = gate
         evidence["secondary_source"] = (
@@ -322,7 +367,7 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
                        priors={"tp": priors.tp, "eb": priors.eb, "eb2p": priors.eb2p, "nfp": priors.nfp,
                                "source": priors.source}, contrast_curve=contrast_curve, notes=tuple(notes))
     result.label = validation_label(fpp, nfpp, contrast_curve=bool(contrast_curve), method=method)
-    result.fpp_class = refused if refused else fpp_class(fpp, nfpp) + REDUCED_CLASS_SUFFIX
+    result.fpp_class = refused if refused else (stable_class or fpp_class(fpp, nfpp) + REDUCED_CLASS_SUFFIX)
     result.refused = refused
     return result
 

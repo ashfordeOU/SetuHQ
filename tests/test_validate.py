@@ -255,3 +255,35 @@ def test_a_non_periodic_peak_is_not_secondary_evidence():
     l0 = norm.pdf(s / ss) / ss
     leb = validate._uniform_marginal(s, ss, 0.0, 1e-3)
     assert r.evidence["secondary_bayes_factor_eb_vs_tp"] == pytest.approx(leb / l0, rel=1e-9)
+
+
+def _variants(depths):
+    return [dict(_white_scan(depth_ppm=d, snr=d / 10.0), window_scale=w, mask_t14=m)
+            for d, (w, m) in zip(depths, ((0.75, 1.0), (0.75, 2.0), (1.5, 1.0), (1.5, 2.0)))]
+
+
+def test_fpp_across_detrending_settings():
+    """With variant scans the FPP is the median over settings, with its range over settings and two noise models; the
+    class is stated only when both ends of the range fall in the same class."""
+    dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
+    dv["secondary"].update(_white_scan(depth_ppm=25.0, snr=2.5))
+    stable = reduced_fpp(depth=1e-3, dv=dv, variants=_variants([24.0, 26.0, 25.0, 27.0]))
+    st = stable.evidence["fpp_stability"]
+    assert st["n_settings"] == 5 and len(st["rows"]) == 10
+    lo, hi = st["range"]
+    assert lo <= stable.fpp <= hi and hi / lo < 10
+    assert "FPP ≈" in stable.fpp_class and "straddles" not in stable.fpp_class
+    assert stable.label == NO_CONTRAST
+
+
+def test_an_unstable_fpp_is_refused_and_a_straddling_one_has_no_class():
+    dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
+    dv["secondary"].update(_white_scan(depth_ppm=25.0, snr=2.5))
+    wild = reduced_fpp(depth=1e-3, dv=dv, variants=_variants([25.0, 90.0, 25.0, 25.0]))
+    assert wild.fpp is None and wild.refused.startswith("FPP not computed: unstable across 5 detrending settings")
+    # secondary dips of 35 and 40 ppm give FPPs of about 0.009 and 0.020: stable, but straddling 0.015
+    dv["secondary"] = _white_scan(depth_ppm=35.0, snr=3.5)
+    straddle = reduced_fpp(depth=1e-3, dv=dv, variants=_variants([40.0, 35.0, 40.0, 35.0]))
+    lo, hi = straddle.evidence["fpp_stability"]["range"]
+    assert lo < 0.015 < hi and straddle.fpp is not None
+    assert straddle.fpp_class.startswith("undetermined") and "straddles the FPP threshold 0.015" in straddle.fpp_class
