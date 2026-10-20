@@ -177,9 +177,10 @@ own words, the light curve's sha256, the code fingerprint and config hash, and t
 it. Nothing is ever called confirmed. Every class is set against its own null on the same stars: the dip
 classes against the flux-inverted copy (a real dip becomes a bump, though a real flare or pulsation maximum
 becomes a dip, so this null is not empty of real signals), flares against downward events with the real dips
-masked, and variability against a copy shuffled in 0.5-day blocks with each block's median removed first (a
-periodogram is unchanged by flipping the flux, so the inverted copy is no null for it, and raw blocks would make
-level steps that pass for variability). Each kind is compared with the same kind, and the star-sector is the
+masked, and variability against a red-noise copy of the same star, an AR(1) process fitted to its own bins (a
+periodogram is unchanged by flipping the flux, so the inverted copy is no null for it, and shuffling removes the
+red noise that makes false peaks). The variability rule itself asks for a coherent period: the same best peak,
+within 10%, in each half of the light curve. Each kind is compared with the same kind, and the star-sector is the
 unit: dips cluster on a few stars, so the excess's 95% interval comes from a paired bootstrap over
 star-sectors, beside McNemar's exact test on the star-sectors with events on one side only. A class exceeds
 its null only when both agree; otherwise the site calls it "not distinguishable from noise in this slice".
@@ -196,46 +197,54 @@ telemetry and the search. Anyone can add a sector with their own Claude subscrip
 their environment, never in a file) and be credited: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **First real slice (measured, Probes only).** TESS sector 1: the first 200 of its 15,898 SPOC 2-minute
-targets in sweep order, all 200 searched (no download failures) by the code at `0e87409` (each record's
-`search_code` and `classify_code` are that commit's, which the later commits leave unchanged). The panel
-reviewed 936 consensus dips (2,662 marks; 60 mark clusters fell below consensus), and the catalogue holds
-1,011 entries. Each comparison against its null on the same 200 star-sectors, kind for kind; the interval is
-the paired bootstrap over star-sectors, and "real / null" star-sectors count those with at least one event:
+targets in sweep order, all 200 searched (no download failures) by the search code of `0e87409` and classified
+by the rules of this commit (each record's `search_code` and `classify_code`). The panel reviewed 936 consensus
+dips (2,662 marks; 60 mark clusters fell below consensus), and the catalogue holds 1,011 entries. Each
+comparison against its null on the same 200 star-sectors, kind for kind; the interval is the paired bootstrap
+over star-sectors, and "real / null" star-sectors count those with at least one event:
 
 | Comparison | Real | Null | Excess (95%) | Star-sectors real / null | McNemar p | In this slice |
 |---|---|---|---|---|---|---|
-| Pulsator or rotational variable (periodogram) | 36 | 9 | +27 (+17 to +38) | 36 / 9 | < 0.001 | **exceeds its null** |
+| Pulsator or rotational variable (coherent periodogram peak) | 8 | 2 | +6 (0 to +12) | 8 / 2 | 0.11 | not distinguishable from noise |
 | Eclipsing binary (dips) | 110 | 77 | +33 (−11 to +89) | 26 / 20 | 0.24 | not distinguishable from noise |
 | Planet-candidate rule (dips) | 3 | 2 | +1 (−3 to +5) | 3 / 2 | 1.0 | not distinguishable from noise |
 | Flare (brightenings) | 11 | 5 | +6 (−6 to +19) | 5 / 3 | 0.73 | not distinguishable from noise |
-| Variable-star troughs (dips) | 10 | 20 | −10 (−23 to 0) | 3 / 5 | 0.5 | not distinguishable from noise |
+| Variable-star troughs (dips) | 10 | 17 | −7 (−18 to +1) | 3 / 4 | 1.0 | not distinguishable from noise |
 | Systematic (dips) | 720 | 728 | −8 (−103 to +88) | 97 / 99 | 0.87 | not distinguishable from noise |
 | Systematic (brightenings) | 22 | 25 | −3 (−42 to +27) | 11 / 6 | 0.23 | not distinguishable from noise |
 
-Six eclipsing-binary entries of the variability kind (variability at an eclipsing binary's period) have no
-null of their kind and are not compared. Only the periodogram's variable stars exceed their null in this
-slice. The eclipsing-binary dips do not: two stars supply about a third of them, and star by star the excess
-is not distinguishable from zero. An earlier version of this table counted dips as independent events, which
-made that excess look real; it was not. The 3 entries that pass the planet-candidate rule (none matching a
-known TOI) are about what noise alone gives, so the site does not present them as candidates. Of the 11
-flares, 8 rise faster than they decay and 2 the other way (1 equal). The slice finds no planet. Most classes
-need many more stars before an excess could show. FAP trials are off in the sweep (50 trials cost about two
-minutes a star), and the stellar parameters come from each file's header. Records:
-[docs/sweep/sector_0001.json.gz](docs/sweep/sector_0001.json.gz) and
+**No class exceeds its null in this slice.** Two earlier versions of this table claimed one did, and both
+claims were wrong:
+- The eclipsing-binary claim counted dips as independent events. Two stars supply about a third of them, and
+  star by star the excess is not distinguishable from zero.
+- The variable-star claim used a periodogram rule that red noise also passes, against a shuffled null that had
+  lost the red noise. Of the 36 peaks that pass the FAP and amplitude rule, 8 have a coherent period, the same
+  best peak in each half of the light curve (1.0 to 2.7 d). 20 are longer than a half can test, 5 sit at the
+  edge of the period grid, and 3 wander between halves; those 28 are now unclassified, with the reason. The
+  null is now a red-noise copy of each star, through the same rule.
+
+Six eclipsing-binary entries of the variability kind have no null of their kind and are not compared. The 3
+entries that pass the planet-candidate rule (none matching a known TOI) are about what noise alone gives, so
+the site does not present them as candidates. Of the 11 flares, 8 rise faster than they decay and 2 the other
+way (1 equal). The slice finds no planet, and every class needs many more stars before an excess could show.
+FAP trials are off in the sweep (50 trials cost about two minutes a star), and the stellar parameters come from
+each file's header. Records: [docs/sweep/sector_0001.json.gz](docs/sweep/sector_0001.json.gz) and
 [docs/sweep/catalogue.json](docs/sweep/catalogue.json).
 
-*Provenance of this slice.* The records were searched again at `0e87409`, so search and classification are
-by the same code and no record carries a reclassification. The earlier records (searched at `b8647ad`,
-reclassified at `3c5862e` for two bugs, a flare whose equal rise and decay read as a fast rise and two
-brightenings within 0.01 d that shared an id, and at `1eb9a6f` for the short-period density rule and the
-per-class nulls) are in the history of `docs/sweep/`. One fix after this search: the stored run directories
-still held the earlier search's classifications, and the first count of marks included them (5,358). The
-consensus, entries and nulls used only this search's. `n_marks` was recounted from this search's own
-classifications (each record that changed says so in `n_marks_note`), and eight star-sectors searched again
-in clean directories, including every one with a planet candidate, reproduce their records exactly. The sweep
-now clears a star's run directory before searching it. A resume reuses a stored record only when its config
-hash, search code and classification code all match. The catalogue counts one search per star-sector, the
-latest, and keeps earlier searches as provenance only.
+*Provenance of this slice.* The records were searched again at `0e87409`, then reclassified once on this
+commit, from the cached files and stored runs, for the coherence rule and the red-noise null. Each record's
+`reclassifications` lists that step and its rule changes. The earlier records are in the history of
+`docs/sweep/`: searched at `b8647ad`, reclassified at `3c5862e` for two bugs (a flare whose equal rise and decay
+read as a fast rise, and two brightenings within 0.01 d that shared an id), and at `1eb9a6f` for the
+short-period density rule and the per-class nulls.
+
+One fix after the re-search: the stored run directories still held the earlier search's classifications, and
+the first count of marks included them (5,358). The consensus, entries and nulls used only this search's.
+`n_marks` was recounted from this search's own classifications (each record that changed says so in
+`n_marks_note`). Eight star-sectors searched again in clean directories, including every one with a planet
+candidate, reproduce their records exactly. The sweep now clears a star's run directory before searching it.
+A resume reuses a stored record only when its config hash, search code and classification code all match. The
+catalogue counts one search per star-sector, the latest, and keeps earlier searches as provenance only.
 
 *Data size.* Records are one gzip file per sector (`sector_NNNN.json.gz`, 0.47 MB for these 200 stars; the
 catalogue the site fetches is 1.7 MB), so a full sector would be about 37 MB of records. Past a few sectors,
