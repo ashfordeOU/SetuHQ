@@ -23,6 +23,8 @@ def test_licence_files_and_metadata_agree():
     assert tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["license"] == "AGPL-3.0-only"
     for p in (".claude-plugin/plugin.json",):
         assert json.loads((ROOT / p).read_text())["license"] == "AGPL-3.0-only"
+    assert "license: AGPL-3.0-only" in (ROOT / "CITATION.cff").read_text()
+    assert json.loads((ROOT / "codemeta.json").read_text())["license"].endswith("AGPL-3.0-only")
     for d in ("results", "leaderboard", "sweep", "discoveries", "paper"):
         assert "CC-BY-4.0" in (ROOT / "docs" / d / "LICENSE.md").read_text(), d
 

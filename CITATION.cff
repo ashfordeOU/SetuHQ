@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+title: "SetuHQ — the open exoplanet observatory"
+message: "If you use SetuHQ, its benchmark or its leaderboard in your work, please cite it using this metadata, with the commit you used."
+type: software
+authors:
+  - family-names: Baweja
+    given-names: Chakshu
+    email: contact@ashforde.org
+    affiliation: "Ashforde OÜ"
+repository-code: "https://github.com/ashfordeOU/SetuHQ"
+url: "https://setuhq.com"
+abstract: >-
+  Open, reproducible transit search of public NASA TESS light curves. A calibrated
+  reviewer panel of AI Sentinels (Claude by default; other providers supported and
+  labelled) and deterministic matched-filter Probes marks every dip in blind-coded
+  light curves, in the style of Planet Hunters; the pipeline then vets each dip, fits
+  a limb-darkened transit model and bounds its false-alarm probability. It includes a
+  frozen, blind benchmark of 662 real TESS Objects of Interest with controls, a public
+  leaderboard with a catalogue-metadata floor, an all-sky sweep that classifies
+  everything that dims, an MCP server and an app that maps every known exoplanet.
+  Every output is a candidate, never a confirmation.
+keywords:
+  - exoplanets
+  - transit search
+  - TESS
+  - benchmark
+  - citizen science
+  - large language models
+license: AGPL-3.0-only
+version: 0.1.0
+date-released: "2026-10-20"

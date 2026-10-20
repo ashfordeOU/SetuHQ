@@ -11,3 +11,18 @@ cache/
 data/raw/
 *.sqlite
 .ci-local.log
+# Local secrets and machine state: keys stay in the environment, never in a file here.
+.env
+.env.*
+*.pem
+.gate-receipt.json
+# Editor, OS and tool junk
+.DS_Store
+.idea/
+.vscode/
+node_modules/
+app-shots/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
