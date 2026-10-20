@@ -415,6 +415,72 @@ Soon: run SetuHQ on a TESS sector with your own Claude subscription, send a seal
 get credit on every entry you bring. The design is in review; the guide will be in
 `CONTRIBUTING.md`. Keys never go in a file or a message: environment variables only.
 
+## AI providers
+
+*Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are
+deterministic matched-filter detectors.*
+
+**Only Claude has been benchmarked so far.** Every provider gets the same task, prompt, strict JSON schema,
+validation and clipping, so a malformed or out-of-range answer cannot make a candidate on any of them. Each
+review records the provider, the exact model id the API reported, the call time and the prompt version;
+the cache key holds the provider, the model, the prompt and the image hash.
+
+| `type` in `[[reviewers]]` | Provider | Key (environment only) | Install | Benchmarked |
+|---|---|---|---|---|
+| `claude_code` | Claude through the Claude Code CLI (subscription) | none: `claude` signed in | Claude Code | yes: 40-star subsample |
+| `claude` | Claude through the Anthropic API | `ANTHROPIC_API_KEY` | `.[claude]` | not separately (same models as the CLI) |
+| `openai` | OpenAI (Chat Completions, image input) | `OPENAI_API_KEY` | nothing (plain HTTPS) | no |
+| `gemini` | Google Gemini (`generateContent`) | `GEMINI_API_KEY` | nothing (plain HTTPS) | no |
+| `openai_compatible` | any endpoint by `base_url`: Ollama, vLLM, LM Studio, OpenRouter, Azure OpenAI | the variable named by `api_key_env`, or none | nothing (plain HTTPS) | no |
+
+One panel can mix providers ([`examples/panels/mixed_providers.toml`](examples/panels/mixed_providers.toml):
+Sentinel · Volunteer on Claude, Sentinel · Skeptic on OpenAI, a third on Gemini). Names stay
+"Sentinel · *persona*"; the provider and model are shown beside them on the pages and stored in
+`manifest.json`.
+
+* **Missing key, SDK or CLI:** that Sentinel is skipped, and the manifest lists it with the reason.
+* **Weights are per provider and model.** A Sentinel not calibrated on its provider and model votes at the
+  floor weight (0.05) and is labelled *uncalibrated* until `exoplan calibrate` measures it.
+* **Why it matters:** the two Claude personas agree with φ = 0.89, so they are close to one voter.
+  `scripts/benchmark_real_tois.py sentinels --panel <config>` runs any panel's Sentinels on the same
+  40-star subsample (only where their keys are set) and the report adds the φ of every pair, to measure
+  whether another model makes the panel more independent.
+
+## AI assistant (MCP, agents)
+
+[`exoplan-mcp`](src/exoplan/mcp_server.py) is an MCP server: your assistant runs SetuHQ's own code and
+reads its stored results, instead of guessing them. Each of its 16 tools is a thin wrapper over a public
+function ([`src/exoplan/tools.py`](src/exoplan/tools.py)), and every answer carries its provenance and
+honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for self-hosting.
+
+> The server runs on your computer; nothing is sent to Ashforde OÜ. What an assistant finds with it is a
+> candidate, not a discovery.
+
+| Channel | Command | Requires |
+|---|---|---|
+| Install | `pip install -e '.[mcp]'` in a checkout, then `exoplan-mcp --list-tools` | Python 3.10+ |
+| Claude Code | `claude mcp add exoplan -- /path/to/SetuHQ/.venv/bin/exoplan-mcp` | the install |
+| Claude Code plugin | `/plugin install exoplan --marketplace ashfordeOU/SetuHQ` | `exoplan-mcp` on PATH |
+| Claude Desktop, Cursor, VS Code, Codex CLI, Gemini CLI | snippets in [`docs/MCP-INSTALL.md`](docs/MCP-INSTALL.md) | the install |
+| Remote (streamable HTTP) | `exoplan-mcp --http 127.0.0.1:8080` | your own host |
+
+| Tools | What they do |
+|---|---|
+| `search_catalogue`, `get_planet`, `get_star` | the exoplanet catalogue, as stored, with its source |
+| `list_candidates`, `get_candidate` | a stored run's dips with full provenance and every reviewer's verdict |
+| `vet_lightcurve`, `fit_transit`, `compute_fap` | BLS and vetting, the limb-darkened fit, the bounded FAP |
+| `run_pipeline_csv`, `run_pipeline_tess` | the whole pipeline on a CSV or a TIC (Probes only unless asked) |
+| `rv_semi_amplitude`, `transit_depth`, `microlensing_magnification`, `habitable_zone` | the Methods physics |
+| `benchmark_results`, `sentinel_providers` | the stored benchmarks; which providers can run here |
+
+The plugin adds slash commands over the tools (`/exoplan-vet`, `/exoplan-explain`, `/exoplan-sweep`,
+`/exoplan-catalogue`, `/exoplan-physics`, `/exoplan-benchmarks`) and four skills in [`skills/`](skills/):
+vet a TESS target, explain a candidate, run a sector sweep, submit to the leaderboard.
+[`examples/agents/vet_agent.py`](examples/agents/vet_agent.py) is an **example** agent (Claude Agent SDK,
+`.[agents]`) that vets one candidate end to end through the server: it logs every tool call and result to a
+provenance file, runs read-only tools freely, asks before a pipeline run, and refuses anything
+outward-facing. Its conclusions are candidates for a person to review, not discoveries.
+
 ## Editions
 
 The whole of SetuHQ is open. Paid routes start with a message; there are no prices here.
