@@ -255,3 +255,26 @@ def test_decide_switch_replaces_phase_half_secondary():
     assert not dvtests.decide(("secondary_any_phase",), base_disqualifying=DISQUALIFYING)
     assert not dvtests.decide(("low_snr",), base_disqualifying=DISQUALIFYING)             # base flags still count
     assert dvtests.decide(("crowded", "timing_inconsistent"), base_disqualifying=DISQUALIFYING)  # informational
+
+
+def test_epochs_without_a_dip_stay_out_of_the_timing_tests():
+    """An epoch whose fitted depth is not significant has no mid-time: on a P/2 alias every other epoch is empty, and
+    its mid-time (the deepest noise dip in the window, 67 minutes off) flagged a clean planet timing_inconsistent."""
+    eps = [{"epoch": n, "parity": "odd" if n % 2 else "even", "t_mid": 1.0 + 4.0 * n + (67 / 1440 if n % 2 else 0.0),
+            "sigma": 1e-3, "depth": 600e-6 if n % 2 == 0 else 50e-6, "depth_err": 60e-6} for n in range(6)]
+    r = timing_test(eps)
+    assert r["n_epochs"] == 3 and [s["epoch"] for s in r["skipped_epochs"]] == [1, 3, 5]
+    assert r["linear"]["chi2"] == pytest.approx(0.0, abs=1e-9) and not r["linear"]["inconsistent"]
+    assert "half the true one" in r["period_alias_note"]
+    # without depth errors (older callers) every epoch is kept
+    assert timing_test([{k: v for k, v in e.items() if k != "depth_err"} for e in eps])["n_epochs"] == 6
+
+
+def test_a_planet_vetted_at_half_its_period_gets_an_alias_note_not_a_timing_flag():
+    from dvtests_helpers import trapezoid_lc
+
+    for seed in range(3):
+        lc = trapezoid_lc(seed=seed, period=8.0, t0=1.0, duration=0.15, depth=600e-6, noise=300e-6, gap=None)
+        flags, m = extended_vet(lc.time, lc.flux, lc.flux_err, period=4.0, t0=1.0, duration=0.15)
+        assert "timing_inconsistent" not in flags and "odd_even_timing" not in flags, (seed, flags)
+        assert "half the true one" in m["timing"].get("period_alias_note", ""), m["timing"]

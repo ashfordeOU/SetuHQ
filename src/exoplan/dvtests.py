@@ -475,6 +475,16 @@ def _wls(design: np.ndarray, y: np.ndarray, sigma: np.ndarray):
     return beta, cov, chi
 
 
+MIN_EPOCH_SNR = 3.0   # an epoch's fitted depth must reach this many σ for its mid-time to enter the timing tests
+
+
+def _epoch_snr(e: dict) -> float | None:
+    err = e.get("depth_err")
+    if err is None or not math.isfinite(err) or err <= 0:
+        return None
+    return float(e["depth"] / err)
+
+
 def timing_test(epochs: list[dict], *, sigma_threshold: float = SIGMA_THRESHOLD, timing_p: float = TIMING_P) -> dict:
     """Linear-ephemeris consistency and the odd/even epoch offset from per-epoch mid-times (:func:`epoch_times`).
 
@@ -483,9 +493,23 @@ def timing_test(epochs: list[dict], *, sigma_threshold: float = SIGMA_THRESHOLD,
     * Odd/even: T_n = T0 + n P + Δ·[n odd]; Δ and σ_Δ from the fit's covariance, inflated by √χ²ᵣ of that fit
       when it exceeds 1 (needs 4 or more epochs with both parities, so the fit has a spare degree of freedom).
       ``significant`` when |Δ|/σ_Δ > ``sigma_threshold``.
+
+    Epochs whose fitted depth is below :data:`MIN_EPOCH_SNR` σ are left out (``skipped_epochs``); when they are all
+    of one parity and every kept epoch is of the other, ``period_alias_note`` says the period may be half the true one.
     """
-    rows = [e for e in epochs if e["sigma"] > 0 and not e.get("at_scan_edge")]
-    out: dict = {"n_epochs": len(rows), "o_minus_c_minutes": None, "linear": None, "odd_even": None}
+    usable = [e for e in epochs if e["sigma"] > 0 and not e.get("at_scan_edge")]
+    # An epoch without a significant dip has no mid-time to measure: the fit wanders to the deepest noise dip in the
+    # window (on a P/2 alias, every other epoch is empty; O−C of 67 minutes on a 50 ppm "dip" flagged a clean
+    # 600 ppm planet timing_inconsistent). Such epochs are left out, and when they are all of one parity while the
+    # other parity has dips, that is reported as a possible period alias instead.
+    rows = [e for e in usable if _epoch_snr(e) is None or _epoch_snr(e) >= MIN_EPOCH_SNR]
+    skipped = [e for e in epochs if _epoch_snr(e) is not None and _epoch_snr(e) < MIN_EPOCH_SNR]
+    out: dict = {"n_epochs": len(rows), "o_minus_c_minutes": None, "linear": None, "odd_even": None,
+                 "skipped_epochs": [{"epoch": e["epoch"], "depth_snr": _epoch_snr(e)} for e in skipped]}
+    if skipped and rows and len({e["parity"] for e in skipped}) == 1 and \
+            all(e["parity"] != skipped[0]["parity"] for e in rows):
+        out["period_alias_note"] = (f"every {skipped[0]['parity']} epoch ({len(skipped)}) shows no dip of "
+                                    f"{MIN_EPOCH_SNR:g}σ or more: the period may be half the true one")
     if len(rows) < 2:
         return out
     n = np.array([e["epoch"] for e in rows], float)
