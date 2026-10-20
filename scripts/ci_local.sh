@@ -36,6 +36,10 @@ echo "   deselected (marker 'network': needs internet access to MAST or the ESA 
 "$VENV/bin/python" -m pytest -q --collect-only -m network -o addopts="" 2>/dev/null | grep '::' | sed 's/^/     /' | tee -a "$LOG"
 ok
 
+step "methods paper numbers match the committed JSON (scripts/paper_numbers.py --check)"
+"$VENV/bin/python" scripts/paper_numbers.py --check 2>&1 | tee -a "$LOG"
+ok
+
 if [[ "$QUICK" -eq 1 ]]; then
   echo "quick check passed" | tee -a "$LOG"
   exit 0

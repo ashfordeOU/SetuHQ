@@ -1,4 +1,6 @@
-# Leaderboard: panel threshold sweep
+# Threshold sweep: Probe settings on synthetic injections
+
+Not the real-TOI leaderboard: that one scores whole methods on the frozen benchmark, in [docs/leaderboard/leaderboard.md](leaderboard/leaderboard.md). This sweep tunes Probe thresholds on synthetic light curves.
 
 Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since. Deep injections may be under-recovered here.
 

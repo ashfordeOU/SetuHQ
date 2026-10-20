@@ -27,6 +27,8 @@ not start with ``#/`` (the skip link's ``#content``) are not routes.
   sized by calibrated weight, with lines of constant weight and the sample size
   stated), which reviewers marked each dip, and one card per reviewer.
 * Runs: one line per discovery run with its errors, and the configuration.
+* Leaderboard (``#/leaderboard``): the real-TOI benchmark's public leaderboard
+  (docs/leaderboard/leaderboard.json), its rules and the frozen sample's hash.
 
 Every number on the page is read from the run directory, the catalogue or the
 reviewer-weights file. Nothing is fitted or looked up at build time, apart from
@@ -40,6 +42,7 @@ import json
 import math
 from pathlib import Path
 
+from exoplan.benchmark_toi import wilson
 from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
 from exoplan.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, TEASER_JS, galaxy_data,
                             galaxy_meta, galaxy_section, map_csv, teaser_html, teaser_points)
@@ -66,7 +69,7 @@ SECTIONS = [
     ("mission", "Mission Control"),
 ]
 SUBPAGES = [("candidates", "Case file", "transit"), ("planets", "Planets", "explorer"), ("runs", "Runs", "sentinels"),
-            ("planet", "Planet", "catalogue"), ("star", "Star", "catalogue")]
+            ("planet", "Planet", "catalogue"), ("star", "Star", "catalogue"), ("leaderboard", "Leaderboard", "sentinels")]
 # Old addresses keep working: each is rewritten to the section that took its place (query kept).
 ROUTE_ALIASES = {"discoveries": "explorer", "feed": "explorer", "panel": "sentinels", "home": "sky",
                  "cockpit": "transit", "about": "overview"}
@@ -645,6 +648,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "galaxy_meta": galaxy_meta(galaxy),
         "learn": learn_steps(),
         "benchmark": _load_benchmark(),
+        "leaderboard": _load_leaderboard(),
         "mission": {"panes": MISSION_PANES, "grids": MISSION_GRIDS},
         "catalogue": (cat := load_catalogue(catalogue_path)),
         "tic_names": tic_names(cat, [r["tic"] for r in feed], story["star"]),
@@ -748,7 +752,7 @@ main:focus{outline:none}
 .route>header .eyebrow{margin:0;font-size:15px;font-weight:500;color:var(--star);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .route>header .eyebrow .idx{display:none}
 .route>header .eyebrow .parent{color:var(--ink-3);font-weight:400}
-.route>header .eyebrow .parent a{color:var(--ink-3)}
+.route>header .eyebrow .parent a{color:var(--ink-3);display:inline-block;padding:12px 0;margin:-12px 0;line-height:20px}
 .route h1:focus{outline:none}
 .route>header p{margin:0;color:var(--ink-2);max-width:72ch;font-size:clamp(15px,1.2vw,17px);line-height:1.5}
 .route>header .lead-h,.headline{margin:0;font-weight:700;font-size:clamp(34px,4.4vw,60px);line-height:1.02;letter-spacing:-.045em;color:var(--ink);max-width:22ch;text-wrap:balance}
@@ -1197,6 +1201,39 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 }
 """
 APP_CSS += GALAXY_CSS + METHODS_CSS + CATALOGUE_CSS + LEARN_CSS + MISSION_CSS
+
+# The Leaderboard: one table per scope. On a phone each row becomes a card, every cell labelled, so nothing
+# scrolls sideways at 390 px.
+LEADERBOARD_CSS = """
+#route-leaderboard>header .lead-h{font-size:clamp(28px,3vw,42px)}
+.lb{display:grid;gap:10px}
+.lb h2 .sub{font:500 12px/1.4 var(--mono);color:var(--ink-3)}
+table.lbtable{font:14px var(--sans)}
+table.lbtable th,table.lbtable td{white-space:normal;vertical-align:top;padding:10px 12px}
+table.lbtable thead th{font:600 11px/1.35 var(--mono);color:var(--ink-3);text-transform:none;letter-spacing:.02em;white-space:normal}
+table.lbtable tbody th{font:600 14px/1.35 var(--sans);color:var(--ink);text-transform:none;letter-spacing:0;white-space:normal;min-width:12ch}
+table.lbtable .rk{font:600 15px var(--mono);color:var(--ink-2);width:11ch}
+table.lbtable .v{display:block;font:600 15px/1.3 var(--mono);color:var(--ink)}
+table.lbtable .ci,table.lbtable .kd{display:block;font:12px/1.35 var(--mono);color:var(--ink-3)}
+table.lbtable .na{color:var(--ink-3);font-style:italic}
+table.lbtable .ci{white-space:nowrap}
+.lbrules{margin:0;padding-left:22px;display:grid;gap:8px;color:var(--ink-2);font-size:14px;line-height:1.5;max-width:96ch}
+.lbhash dd{font-size:12px}
+@media (max-width:699.98px){
+  table.lbtable thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  table.lbtable,table.lbtable tbody{display:block}
+  table.lbtable tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;padding:12px;border-top:1px solid var(--line)}
+  table.lbtable tbody tr:first-child{border-top:0}
+  table.lbtable th,table.lbtable td{display:block;padding:0;border:0;min-width:0}
+  table.lbtable tbody th{grid-column:1/-1;order:-1}
+  table.lbtable .rk{grid-column:1/-1;order:-2;width:auto}
+  table.lbtable td::before{content:attr(data-l);display:block;font:500 11px/1.35 var(--mono);color:var(--ink-3);margin-bottom:2px}
+  table.lbtable .rk::before{display:inline;margin:0 6px 0 0}
+  .kv.lbhash{grid-template-columns:minmax(0,1fr);gap:2px 0}
+  .kv.lbhash dd{margin-bottom:8px}
+}
+"""
+APP_CSS += LEADERBOARD_CSS
 
 ICONS = {
     "overview": '<rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/>',
@@ -2204,7 +2241,8 @@ $('#route-sentinels').addEventListener('click', e => {
 
 // ---------- router ----------
 const RENDER = {overview: renderOverview, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, transit: renderTransit, explorer: () => { renderExplorer(); renderDiscoveries(); },
-  sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns};
+  sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns,
+  leaderboard: () => {}};
 const rendered = new Set();
 const ROUTES = D.sections.map(s => s.id);
 const SECTION = Object.fromEntries(D.sections.map(s => [s.id, s]));
@@ -2485,6 +2523,111 @@ def _benchmark_card(b: dict | None) -> str:
             f'<p class="muted" style="margin:0;font-size:12px">Full results: docs/results/benchmark_real_tois.md. TFOPWG dispositions are the reference, not ground truth for every TOI.</p></section>')
 
 
+LEADERBOARD_JSON = "docs/leaderboard/leaderboard.json"
+LEADERBOARD_SCOPES = {"held_out": ("Held-out half", "every held-out star"),
+                      "sentinel_subsample": ("The Sentinels' subsample", "40 held-out stars: 20 CP/KP, 20 FP · not ranked")}
+
+
+def _load_leaderboard(path: str | Path = LEADERBOARD_JSON) -> dict | None:
+    """The scored real-TOI leaderboard (exoplan leaderboard), without the submissions' per-star rows."""
+    if not Path(path).exists():
+        return None
+    return json.loads(Path(path).read_text())
+
+
+def _lb_cell(r: dict | None, label: str, missing: str = "n/a") -> str:
+    e = html.escape
+    if not r or r.get("rate") is None:
+        return f'<td data-l="{e(label)}"><span class="na">{e(missing)}</span></td>'
+    return (f'<td data-l="{e(label)}"><span class="v">{100 * r["rate"]:.0f}%</span>'
+            f'<span class="ci">{r["k"]}/{r["n"]} · {100 * r["lo"]:.0f}–{100 * r["hi"]:.0f}%</span></td>')
+
+
+def _lb_j(j: dict, label: str) -> str:
+    if j["j"] is None:
+        return f'<td data-l="{label}"><span class="na">n/a</span></td>'
+    return f'<td data-l="{label}"><span class="v">{j["j"]:+.2f}</span><span class="ci">{j["lo"]:+.2f} to {j["hi"]:+.2f}</span></td>'
+
+
+def _leaderboard(lb: dict | None) -> str:
+    """The Leaderboard page: the scored table per scope, the rules, and the frozen sample's hash. Static HTML."""
+    e = html.escape
+    head = (f'<header>{_eyebrow("Leaderboard", ("sentinels", "Sentinels"))}<h1 class="lead-h" id="h-leaderboard" tabindex="-1">'
+            'Methods, scored blind on real TOIs.</h1><p>The public leaderboard on the frozen real-TOI benchmark: each entry\'s '
+            'detected events, scored by the leaderboard itself on the held-out half only, with Wilson 95% intervals. Not the injection threshold sweep '
+            '(docs/threshold_sweep.md), which tunes Probe thresholds on synthetic light curves.</p></header>'
+            f'<p class="note"><b>Measured on a stated benchmark; nothing here is a discovery.</b> {e(ATTRIBUTION)}</p>')
+    if not lb:
+        return head + ('<section class="card"><h2>Not built</h2><p class="muted" style="margin:0">The leaderboard has not been '
+                       'scored for this build (exoplan leaderboard).</p></section>')
+    cols = [("completeness_clean_searchable", "Clean completeness, searchable CP/KP"),
+            ("fp_rejection_searchable", "FP rejection, searchable FP"), ("small", "Recovered below 4 R⊕"),
+            ("inverted", "Inverted control: stars with any"), ("scrambled", "Scrambled control: stars with any"),
+            ("reliability", "Reliability")]
+    out = [head]
+    for scope, (title, sub) in LEADERBOARD_SCOPES.items():
+        es = [x for x in lb["entries"] if x["scope"] == scope]
+        if not es:
+            continue
+        ranked_scope = scope == "held_out"
+        rows = []
+        for x in es:
+            s = x["scores"]
+            small = [b for b in s["completeness_by_radius"] if b["bin"][1] <= 4]
+            k, n = sum(b["k"] for b in small), sum(b["n"] for b in small)
+            p, lo, hi = wilson(k, n)
+            cells = {"small": {"k": k, "n": n, "rate": p, "lo": lo, "hi": hi} if n else None,
+                     **{v: (s["controls"][v] or {}).get("stars_with_any") for v in ("inverted", "scrambled")}}
+            tds = "".join(_lb_cell(cells[c] if c in cells else s[c], label,
+                                   "not measured" if c in ("inverted", "scrambled") else "n/a") for c, label in cols)
+            jcell = _lb_j(s["youden_j"], "Youden J") + _lb_j(s["youden_j_all_stars"], "Youden J, all stars")
+            rk = ""
+            if ranked_scope:
+                ov = x.get("overlaps_ranks") or []
+                tie = f'<span class="kd">interval overlaps #{", #".join(map(str, ov))}</span>' if ov else ""
+                rk = (f'<td class="rk" data-l="Rank">{x["rank"]}{tie}</td>' if x["ranked"] else
+                      f'<td class="rk" data-l="Rank"><span class="na">unranked</span><span class="kd">{e(x["unranked_reason"])}</span></td>')
+            rows.append(f'<tr>{rk}<th scope="row">{e(x["name"])}'
+                        f'<span class="kd">{e(x["id"])} · tuned on {e(x["tuned_on"])}</span></th>{jcell}{tds}</tr>')
+        hid = f"h-lb-{scope.replace('_', '-')}"
+        ths = "".join(f'<th scope="col">{e(label)}</th>' for _, label in cols)
+        note = ("Ranked by Youden's J on the searchable set the benchmark fixed, with one predicate on both sides (a clean "
+                "candidate: on the ephemeris, passed, no eclipsing-binary flag), so calling every TOI a planet, flagged or "
+                "not, scores zero. The controls gate ranking and do not enter J, and the control lists are the method's own "
+                "report. Where intervals overlap the order is not a measured difference." if ranked_scope else "")
+        rank_th = '<th scope="col">Rank</th>' if ranked_scope else ""
+        lead_text = (lb.get("floor_note") or "") if ranked_scope else lb.get("subsample_note", "")
+        lead = f'<p class="note" style="margin:0"><b>{e(lead_text)}</b></p>' if lead_text else ""
+        out.append(f'<section class="card lb" aria-labelledby="{hid}"><h2 id="{hid}">{e(title)} <span class="sub">{e(sub)}</span></h2>{lead}'
+                   f'<div class="tablewrap" role="region" aria-labelledby="{hid}"><table class="lbtable"><thead><tr>'
+                   f'{rank_th}<th scope="col">Entry</th><th scope="col">Youden J</th><th scope="col">Youden J, all stars</th>{ths}</tr></thead>'
+                   f'<tbody>{"".join(rows)}</tbody></table></div>'
+                   f'<p class="small">Each cell: the rate, then k/n and the Wilson 95% interval. {e(note)}</p></section>')
+    if any(x["scope"] == "sentinel_subsample" for x in lb["entries"]):
+        ag = lb.get("sentinel_agreement") or {}
+        agree = (f" (they agree on {ag['agree']} of {ag['n']} stars, φ = {ag['phi']:.2f})"
+                 if ag.get("n") and ag.get("phi") is not None else "")
+        out.append(f'<p class="note"><b>The Sentinel rows cover {len(lb.get("sentinel_subsample") or [])} stars.</b> Their '
+                   f'intervals are wide, the two personas share one model{agree}, so they count as one correlated voter, not '
+                   'two, and they were never run on the control light curves. The Probes + Sentinels rows are star-level combinations of stored outcomes, stated '
+                   'before scoring, not a run of the panel\'s consensus.</p>')
+    for x in lb.get("refused") or []:
+        out.append(f'<p class="note"><b>Refused: {e(x.get("name") or x.get("id") or "a submission")}.</b> {e("; ".join(x["reasons"]))}</p>')
+    rules = "".join(f"<li>{e(r)}</li>" for r in lb["rules"])
+    out.append(f'<section class="card" aria-labelledby="h-lb-rules" style="display:grid;gap:10px"><h2 id="h-lb-rules">Rules</h2>'
+               f'<ol class="lbrules">{rules}</ol><p class="small">Submission format and refusal rules: docs/leaderboard/README.md. '
+               'Score a submission with exoplan leaderboard &lt;file&gt;.</p></section>')
+    out.append(f'<section class="card" aria-labelledby="h-lb-hash"><h2 id="h-lb-hash">The frozen sample</h2><dl class="kv lbhash">'
+               f'<dt>frozen sample sha256</dt><dd>{e(lb["sample_sha256"])}</dd>'
+               f'<dt>public inputs sha256</dt><dd>{e(lb["inputs_sha256"])}</dd>'
+               f'<dt>full sample (with held-out labels), canonical sha256: refused if stated</dt><dd>{e(lb["full_sample_sha256"])}</dd>'
+               f'<dt>Sentinel subsample sha256</dt><dd>{e(lb["sentinel_subsample_sha256"])}</dd>'
+               f'<dt>benchmark code commit</dt><dd>{e(lb.get("benchmark_code_commit") or "not stored")}</dd></dl>'
+               '<p class="small" style="margin-top:10px">Sample: docs/results/benchmark_toi_sample.json. Public inputs: '
+               'docs/leaderboard/tuning_inputs.json. TFOPWG dispositions are the reference, not ground truth for every TOI.</p></section>')
+    return "".join(out)
+
+
 def _view_head() -> str:
     return """<div class="secthead"><h2 id="h-view">Your view</h2><p>Each widget's header can hide it, move it or set its size. Your changes are kept in this browser as your default when storage is allowed. Copy link to this layout shares it; a shared layout shows for that view only and never replaces the recipient's default.</p></div>"""
 
@@ -2734,6 +2877,7 @@ def app_page(data: dict) -> str:
         <div id="agreement"></div>
       </section>
       <div class="cards" id="panelcards"></div>
+      <p class="casefile"><a href="#/leaderboard">The real-TOI leaderboard ›</a><span>exoplan's configurations, and any method submitted, scored blind on the held-out half.</span></p>
       <p class="casefile"><a href="#/runs">Runs and configuration ›</a><span>Every discovery run, its errors as stored, and the configuration behind this page.</span></p>
     </section>
     <section class="route" id="route-methods" data-route="methods" aria-labelledby="h-methods" hidden>
@@ -2764,6 +2908,9 @@ def app_page(data: dict) -> str:
       <p class="note"><b>Radius ratio only.</b> Rp/R* = √depth, with depth as a fraction (ppm × 10⁻⁶). This assumes a full, undiluted transit and ignores limb darkening. {html.escape(NO_STELLAR_RADIUS)} Each bar is a ratio scale from 0 to {data["ratio_scale_max"]:.2f}, the same on every card.</p>
       <p class="note">Published planets come from the stored archive cross-match ({html.escape(data.get("crossmatch_file") or "crossmatch.json")}), which covers {xm_targets}. The other stars have no stored cross-match, so their cards have no archive box. {nodet}</p>
       <div class="cards" id="planetcards"></div>
+    </section>
+    <section class="route" id="route-leaderboard" data-route="leaderboard" aria-labelledby="h-leaderboard" hidden>
+      {_leaderboard(data.get("leaderboard"))}
     </section>
     <section class="route" id="route-runs" data-route="runs" aria-labelledby="h-runs" hidden>
       <header>{_eyebrow("Runs", ("sentinels", "Sentinels"))}<h1 class="lead-h" id="h-runs" tabindex="-1">Every discovery run, its errors as stored, and the configuration behind this page.</h1><p>The discovery run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>

@@ -386,7 +386,8 @@ published TOI period, and `new_candidate` otherwise.
   runs when the `ANTHROPIC_API_KEY` secret is set.
 - [`scripts/improve.py`](scripts/improve.py) sweeps panel thresholds on injection benchmarks.
   It promotes a setting only if it wins on a held-out seed. Every trial is in
-  [docs/leaderboard.md](docs/leaderboard.md), including losers.
+  [docs/threshold_sweep.md](docs/threshold_sweep.md), including losers. This synthetic sweep is not the
+  real-TOI leaderboard (see Leaderboard and methods paper).
 
 **Measured false-alarm rate.** On real light curves with every signal destroyed, the feed's
 own rule admits about 13 noise signals per 100 targets reviewed. The live feed shows 15.8
@@ -402,6 +403,28 @@ community's TESS follow-up. The pixel-level centroid test is new, off by default
 stars, so blended eclipsing binaries can still survive vetting. The claim this project can defend is a reproducible,
 calibrated search with open provenance. It is not a claim of new planets or of beating
 published pipelines.
+
+</details>
+
+<details>
+<summary><b>Leaderboard and methods paper</b></summary>
+
+<br>
+
+* **The real-TOI leaderboard** ([docs/leaderboard/](docs/leaderboard/README.md), and `#/leaderboard` in the app)
+  takes a method's detected events per star of the held-out half of the frozen 662-TOI benchmark, and scores them
+  itself: completeness, FP rejection, control false alarms and reliability, with Wilson intervals. It ranks by
+  Youden's J on the benchmark's searchable set with one predicate (a clean candidate) on both sides, so calling every
+  TOI a planet scores zero, flagged or not, and ranks only entries measured on both controls; the 40-star Sentinel
+  subsample is listed, never ranked. **A metadata-only floor that never reads a light curve is ranked too, and the
+  benchmark cannot show that the Probes beat it**: a paired comparison over the same stars puts the floor ahead by a
+  ΔJ whose interval includes zero (docs/leaderboard/leaderboard.md). `exoplan leaderboard my.json` scores a submission and refuses
+  one that states anything but the hash of the tuning-half-only inputs or carries a field outside the whitelist.
+  It is seeded with exoplan's own configurations, built from the benchmark's stored outputs
+  (`scripts/leaderboard_seed.py`).
+* **The methods paper draft** ([docs/paper/paper.md](docs/paper/paper.md), AAS/AJ style, Markdown) reports the
+  benchmark with its negative results. Every number in it comes from the committed JSON through
+  `scripts/paper_numbers.py`; results that later work will change are marked pending.
 
 </details>
 
@@ -493,7 +516,8 @@ published pipelines.
   `odd_even_mismatch` failed 6 of 10 clean 1% hot Jupiters: box depths of a deep transit scatter far beyond white
   noise. Its errors are now inflated by the per-epoch depths' scatter about their parity means and carry a 2%
   systematic floor. Results made before these fixes are labelled "pre-fix code": the stored pi Men run and every
-  page built from it, the discovery catalogue, the injection-recovery benchmark, the real-TOI benchmark, the leaderboard and the
+  page built from it, the discovery catalogue, the injection-recovery benchmark, the real-TOI benchmark (and so the real-TOI leaderboard and the methods
+  paper's numbers, which read it), the threshold sweep and the
   calibration record (`reviewer_weights_full_panel.calibration.json`; the weights files themselves are plain
   reviewer-to-weight maps and cannot carry a note). pi Men c (300 ppm, about 1.5 times the 2-minute scatter, and
   no odd/even failure) is affected by neither. A consequence of (2): a simulated eccentric binary (0.8% primary,
