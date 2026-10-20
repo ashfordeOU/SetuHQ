@@ -3,42 +3,94 @@
  "sector": 1,
  "validation": {
   "method": "exoplan reduced FPP",
-  "fpp": 0.008239219572161005,
-  "nfpp": 0,
-  "probabilities": {
-   "tp": 0.991760780427839,
-   "eb": 0.0026306669929280872,
-   "eb2p": 0.005608552579232974
-  },
+  "fpp": null,
+  "nfpp": null,
+  "probabilities": {},
   "evidence": {
-   "odd_even_bayes_factor_eb2p_vs_tp": 0.08482719860348001,
-   "scan_whiteness": {
-    "robust_spread": 1.167546754380938,
-    "std_over_robust": 1.292961399913395,
-    "max_excursion_over_robust": 4.943023773887553,
-    "white_q_abs_999": 5.3342046159718,
-    "positions": 187,
-    "n_eff": 468.2052088458141,
-    "white": true,
-    "reasons": []
-   },
-   "secondary_source": "phase 0.5 (the strongest dip, at phase 0.742, is not periodic: 84% from one epoch)",
-   "fpp_sensitivity": {
-    "by_noise_model": {
-     "robust spread": 0.008239219572161005,
-     "std": 0.009383868641914428,
-     "nominal (white, \u03c3/\u221an)": 0.00770427077722724
-    },
+   "odd_even_bayes_factor_eb2p_vs_tp": 0.08949010937310847,
+   "secondary_source": "all-phase search (phase 0.645)",
+   "fpp_stability": {
+    "n_settings": 5,
+    "white_settings": 0,
     "range": [
-     0.00770427077722724,
-     0.009383868641914428
+     0.007869132862997619,
+     0.6161748396013915
+    ],
+    "median_robust": 0.008780142620255504,
+    "rows": [
+     {
+      "window_scale": 1.0,
+      "mask_t14": "default",
+      "noise": "robust spread",
+      "fpp": 0.6161748396013915,
+      "white": false
+     },
+     {
+      "window_scale": 1.0,
+      "mask_t14": "default",
+      "noise": "std",
+      "fpp": 0.06549846096739886,
+      "white": false
+     },
+     {
+      "window_scale": 0.75,
+      "mask_t14": 1.0,
+      "noise": "robust spread",
+      "fpp": 0.426818151857679,
+      "white": false
+     },
+     {
+      "window_scale": 0.75,
+      "mask_t14": 1.0,
+      "noise": "std",
+      "fpp": 0.05278860897411308,
+      "white": false
+     },
+     {
+      "window_scale": 0.75,
+      "mask_t14": 2.0,
+      "noise": "robust spread",
+      "fpp": 0.007869132862997619,
+      "white": false
+     },
+     {
+      "window_scale": 0.75,
+      "mask_t14": 2.0,
+      "noise": "std",
+      "fpp": 0.010044312505197328,
+      "white": false
+     },
+     {
+      "window_scale": 1.5,
+      "mask_t14": 1.0,
+      "noise": "robust spread",
+      "fpp": 0.008780142620255504,
+      "white": false
+     },
+     {
+      "window_scale": 1.5,
+      "mask_t14": 1.0,
+      "noise": "std",
+      "fpp": 0.009348766313762136,
+      "white": false
+     },
+     {
+      "window_scale": 1.5,
+      "mask_t14": 2.0,
+      "noise": "robust spread",
+      "fpp": 0.008591094260293253,
+      "white": false
+     },
+     {
+      "window_scale": 1.5,
+      "mask_t14": 2.0,
+      "noise": "std",
+      "fpp": 0.009613920438547585,
+      "white": false
+     }
     ]
    },
-   "fpp_bracket_robust_vs_std": [
-    0.008239219572161005,
-    0.009383868641914428
-   ],
-   "secondary_bayes_factor_eb_vs_tp": 0.019893912762359148
+   "secondary_bayes_factor_eb_vs_tp": 11.995401798143865
   },
   "priors": {
    "tp": 0.75,
@@ -53,14 +105,15 @@
   ],
   "contrast_curve": null,
   "label": "not validated: no contrast curve",
-  "fpp_class": "meets the validation thresholds (by number, reduced scheme)",
+  "fpp_class": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00787\u20130.616)",
   "notes": [
    "no reliable difference-image centroid: positions carry no information",
-   "1 neighbour(s) excluded only marginally (within 3\u03c3 of the Tmag uncertainty of reaching the depth)"
+   "1 neighbour(s) excluded only marginally (within 3\u03c3 of the Tmag uncertainty of reaching the depth)",
+   "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00787\u20130.616)"
   ],
-  "refused": null
+  "refused": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00787\u20130.616)"
  },
- "made_at": "2026-10-19T23:40:54+00:00",
+ "made_at": "2026-10-20T09:45:14+00:00",
  "inputs": {
   "lightcurve": {
    "source": "SPOC file",
@@ -108,44 +161,44 @@
    "crowded": false
   },
   "secondary": {
-   "phase": 0.742084553911073,
-   "depth_ppm": 40.55903394262206,
-   "sigma_ppm": 7.2645800518197925,
-   "snr": 5.583121619323602,
-   "n_points": 69,
-   "max_brightening_snr": 5.771211364030228,
+   "phase": 0.6454027132074822,
+   "depth_ppm": 51.66993012328813,
+   "sigma_ppm": 7.384708137402517,
+   "snr": 6.99688182144764,
+   "n_points": 70,
+   "max_brightening_snr": 4.884651616223116,
    "n_trials": 187,
    "duration_days": 0.12893554144456185,
    "excluded_days": 0.12893554144456185,
-   "scan_median_snr": -0.02254979346757696,
-   "scan_robust_sigma": 1.167546754380938,
-   "scan_std_snr": 1.5095928860087184,
+   "scan_median_snr": -0.05082891807589036,
+   "scan_robust_sigma": 1.360285370775697,
+   "scan_std_snr": 1.821674078561224,
    "n_epochs": 4,
-   "max_epoch_share": 0.8405109167885689,
+   "max_epoch_share": 0.3954402317416571,
    "phase_05": {
     "phase": 0.4988371568217191,
-    "depth_ppm": -6.5960319681757085,
-    "sigma_ppm": 7.014863090996615,
-    "snr": -0.9402937566438803
+    "depth_ppm": -13.963227418534174,
+    "sigma_ppm": 7.182348858461245,
+    "snr": -1.9441032026848208
    },
-   "albedo": 8.339456762179694,
-   "threshold_rule": "5.16 \u00d7 the scan's robust spread (white-noise 99.9% quantile for 187 positions)",
-   "threshold_sigma": 6.021104475260122,
-   "periodic": false,
+   "albedo": 10.623999298839086,
+   "threshold_rule": "5.16 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 187 positions)",
+   "threshold_sigma": 7.015068392658233,
+   "periodic": true,
    "significant": false
   },
   "odd_even_depth": {
-   "odd_depth_ppm": 309.5075191402185,
-   "odd_err_ppm": 14.513815649370077,
+   "odd_depth_ppm": 301.1179352775158,
+   "odd_err_ppm": 14.140953647161373,
    "n_odd": 2,
-   "even_depth_ppm": 316.24733209779305,
-   "even_err_ppm": 12.397626756118333,
+   "even_depth_ppm": 310.9473214449171,
+   "even_err_ppm": 12.166517466950223,
    "n_even": 3,
    "error_scale": 1.0,
-   "epoch_chi2": 1.4188914321387358,
+   "epoch_chi2": 1.6911894758080448,
    "epoch_dof": 3,
    "floor_fraction": 0.02,
-   "delta_sigma": 0.35309150494292507,
+   "delta_sigma": 0.5269174336295787,
    "both_parities_detected": true,
    "significant": false,
    "source": "per-epoch fits (transit shape plus a local baseline)"
@@ -153,61 +206,61 @@
   "timing": {
    "n_epochs": 5,
    "o_minus_c_minutes": [
-    0.6343224837473826,
-    -1.4648385700274957,
-    1.282474527870363,
-    0.6806186221365351,
-    -0.719945930322865
+    0.2550916370091727,
+    -1.489331691082043,
+    1.8469560505764093,
+    0.475905373605201,
+    -0.8009615061746445
    ],
    "linear": {
-    "t0": 1338.0394628558895,
-    "period": 6.268057792882467,
-    "period_err": 0.00042165466691714156,
-    "chi2": 1.4437322918219047,
+    "t0": 1338.0393918438401,
+    "period": 6.268021329407313,
+    "period_err": 0.00039248356878017173,
+    "chi2": 1.9004495670661896,
     "dof": 3,
-    "p_value": 0.6953164099715639,
+    "p_value": 0.5933235738316369,
     "inconsistent": false
    },
    "odd_even": {
-    "offset_minutes": -0.7841580947303808,
-    "offset_err_minutes": 1.7076556023439682,
-    "delta_sigma": 0.4592015472288598,
+    "offset_minutes": -0.865060250585997,
+    "offset_err_minutes": 1.6306055333624079,
+    "delta_sigma": 0.5305147277417794,
     "significant": false
    },
    "epochs": [
     {
      "epoch": -2,
-     "t_mid": 1325.5037877718494,
-     "sigma": 0.0013343771729843028,
-     "depth": 0.0003270636646979929,
+     "t_mid": 1325.5035263319955,
+     "sigma": 0.0012282091568496473,
+     "depth": 0.00031173441691648466,
      "at_scan_edge": false
     },
     {
      "epoch": -1,
-     "t_mid": 1331.770387814,
-     "sigma": 0.001208443401871811,
-     "depth": 0.00030782041554174846,
+     "t_mid": 1331.770336256314,
+     "sigma": 0.001218691204495272,
+     "depth": 0.00028846741652287016,
      "at_scan_edge": false
     },
     {
      "epoch": 0,
-     "t_mid": 1338.0403534632005,
-     "sigma": 0.0015007880516069822,
-     "depth": 0.0002973722671409271,
+     "t_mid": 1338.0406744522086,
+     "sigma": 0.0013577442969517216,
+     "depth": 0.0003048257112641398,
      "at_scan_edge": false
     },
     {
      "epoch": 1,
-     "t_mid": 1344.307993300593,
-     "sigma": 0.0012360594135299927,
-     "depth": 0.0003120417965845543,
+     "t_mid": 1344.3077436630902,
+     "sigma": 0.0012042997915343153,
+     "depth": 0.00032096895353422107,
      "at_scan_edge": false
     },
     {
      "epoch": 2,
-     "t_mid": 1350.5750784792028,
-     "sigma": 0.001398644163896062,
-     "depth": 0.0003198238700446436,
+     "t_mid": 1350.5748782793867,
+     "sigma": 0.0012703133933487265,
+     "depth": 0.00031546106418178235,
      "at_scan_edge": false
     }
    ]
@@ -215,7 +268,209 @@
   "period": 6.267951048297873,
   "t0": 1338.0394382805193,
   "duration_days": 0.12893554144456185,
-  "transit_masked_detrend": true
+  "transit_masked_detrend": true,
+  "masked_phases": [
+   0.5,
+   0.6217465181417101
+  ],
+  "detrend_window_days": 1.547226497334742,
+  "detrending_grid": [
+   {
+    "window_days": 0.75,
+    "mask_t14": 1.0,
+    "white": true,
+    "max_brightening_snr": 2.6779663916220326,
+    "snr": 5.9212933829727925,
+    "robust_spread": 1.2383618902553055,
+    "fpp": 0.009033839616220618,
+    "fpp_range_noise_models": [
+     0.008247231723816806,
+     0.010112189677089156
+    ]
+   },
+   {
+    "window_days": 0.75,
+    "mask_t14": 1.5,
+    "white": false,
+    "max_brightening_snr": 2.607144253382662,
+    "snr": 6.188205111203427,
+    "robust_spread": 1.1636594847052864,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.006939364004250881,
+     0.008284224379562777
+    ]
+   },
+   {
+    "window_days": 0.75,
+    "mask_t14": 2.0,
+    "white": false,
+    "max_brightening_snr": 3.2786739030683956,
+    "snr": 7.792391379313453,
+    "robust_spread": 1.3338175626002113,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.07017639805845344,
+     0.9999999996778056
+    ]
+   },
+   {
+    "window_days": 1.0,
+    "mask_t14": 1.0,
+    "white": false,
+    "max_brightening_snr": 3.3336268785388183,
+    "snr": 5.910083306025047,
+    "robust_spread": 1.1975718323363018,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.008096646461308699,
+     0.010029891917696543
+    ]
+   },
+   {
+    "window_days": 1.0,
+    "mask_t14": 1.5,
+    "white": false,
+    "max_brightening_snr": 6.312448511511017,
+    "snr": 7.2231368308735675,
+    "robust_spread": 1.1322165818283252,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.0071874682227983655,
+     0.009500008785427672
+    ]
+   },
+   {
+    "window_days": 1.0,
+    "mask_t14": 2.0,
+    "white": false,
+    "max_brightening_snr": 3.206485602445186,
+    "snr": 6.633735323094842,
+    "robust_spread": 1.185967229072818,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.006892753658054307,
+     0.008734776438788505
+    ]
+   },
+   {
+    "window_days": 1.25,
+    "mask_t14": 1.0,
+    "white": false,
+    "max_brightening_snr": 3.373942947830995,
+    "snr": 6.384940768157398,
+    "robust_spread": 1.268139869055328,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.00780250243168501,
+     0.010045331840451088
+    ]
+   },
+   {
+    "window_days": 1.25,
+    "mask_t14": 1.5,
+    "white": false,
+    "max_brightening_snr": 5.890471890095401,
+    "snr": 7.476244686906647,
+    "robust_spread": 1.2758771960054809,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.007239564444379898,
+     0.009783804148768005
+    ]
+   },
+   {
+    "window_days": 1.25,
+    "mask_t14": 2.0,
+    "white": false,
+    "max_brightening_snr": 2.8696768313222365,
+    "snr": 8.309125087954733,
+    "robust_spread": 1.2589502222210716,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.007299698326780568,
+     0.01010026894922611
+    ]
+   },
+   {
+    "window_days": 1.5,
+    "mask_t14": 1.0,
+    "white": false,
+    "max_brightening_snr": 3.3225099132362494,
+    "snr": 6.423981098587378,
+    "robust_spread": 1.5289963291591213,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.007600850312509788,
+     0.009937208215836768
+    ]
+   },
+   {
+    "window_days": 1.5,
+    "mask_t14": 1.5,
+    "white": false,
+    "max_brightening_snr": 5.4984773860488225,
+    "snr": 7.209973727199311,
+    "robust_spread": 1.4473003874087593,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.05939989108896193,
+     0.9999999996812556
+    ]
+   },
+   {
+    "window_days": 1.5,
+    "mask_t14": 2.0,
+    "white": false,
+    "max_brightening_snr": 3.2733834554050976,
+    "snr": 7.6662193816341695,
+    "robust_spread": 1.481679829061389,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.007049419084320108,
+     0.009362180689222677
+    ]
+   },
+   {
+    "window_days": 2.0,
+    "mask_t14": 1.0,
+    "white": false,
+    "max_brightening_snr": 2.9755049322094393,
+    "snr": 7.229958253100793,
+    "robust_spread": 1.6020322936660665,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.07237585770226063,
+     0.9999999996858379
+    ]
+   },
+   {
+    "window_days": 2.0,
+    "mask_t14": 1.5,
+    "white": false,
+    "max_brightening_snr": 4.4589372062111075,
+    "snr": 7.968313399866005,
+    "robust_spread": 1.6506522935545778,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.08433546257893332,
+     0.9999999996861993
+    ]
+   },
+   {
+    "window_days": 2.0,
+    "mask_t14": 2.0,
+    "white": false,
+    "max_brightening_snr": 3.0234061093522864,
+    "snr": 7.975929258598748,
+    "robust_spread": 1.5978494592915096,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.09738082460959918,
+     0.9999999996862906
+    ]
+   }
+  ]
  },
  "pixel_flags": [
   "saturated",

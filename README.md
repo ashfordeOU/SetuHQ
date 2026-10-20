@@ -21,7 +21,8 @@ The site: [site/index.html](site/index.html) (the Overview) leads into the app a
    SPOC crowding (CROWDSAP below 0.8 is `crowded`), a weak-secondary search at every phase with the fitted
    duration (threshold from a white-noise simulation, `scripts/calibrate_secondary.py`), odd/even depths from
    per-epoch fits, per-epoch transit times (linear-ephemeris and odd/even timing tests), all on the light curve
-   re-detrended with the fitted transits masked as DV does, and,
+   re-detrended in two passes with the fitted transits (and then phase 0.5 and the strongest other dip) masked, as
+   DV masks transits, and,
    from the SPOC target pixel file, a difference-image centroid in pixels and arcseconds with its significance, the
    centroid motion test, a core/halo ghost check, momentum-dump coincidence, and a table of catalogued neighbours
    with the eclipse depth each would need. **By default these only add flags**: pass/fail is decided as before, so
@@ -117,21 +118,25 @@ deep-dip clipping fix in Honest limits), which does not affect a 300 ppm transit
   is a likely false positive. It is kept and flagged, not hidden.
 * **Extended and pixel-level vetting** (`scripts/vet_pi_men_s2.py`, real SPOC sector-1 files; see
   [docs/results/pi_men_s2_vetting.md](docs/results/pi_men_s2_vetting.md)). On the joint fit of all five epochs
-  (P = 6.26795 ± 0.00049 d, T14 = 3.09 ± 0.16 h), on the light curve re-detrended with those transits masked:
-  CROWDSAP 0.9997, FLFRCSAP 0.980 (not crowded); the strongest dip at any phase away from the transit is 41 ± 7 ppm
-  at phase 0.74 (5.6σ nominal), below the calibrated threshold (6.0σ: 5.16 times the scan's robust spread of 1.17),
-  and 84% of it comes from one epoch, so it is not a secondary. Odd/even depths from per-epoch fits agree (310 ± 15
-  against 316 ± 12 ppm, 0.4σ); the five mid-times fit a linear ephemeris (χ² = 1.4 for 3 dof, p = 0.70, O−C within
-  1.5 min) with no odd/even timing offset (0.5σ). No flags.
-* **Reduced FPP for pi Men c** (same file): the secondary scan passes the white-noise gate, narrowly (robust spread
-  1.17, std/robust 1.29 against a 1.3 limit, largest |excursion| 4.94 robust spreads against 5.33), so an FPP is
-  given: 0.0082 with robust-spread noise, 0.0094 with the scan's plain std; NFPP = 0 (every TIC neighbour within
-  150″ would need an eclipse deeper than 100%, one of them only marginally). The strongest dip is not periodic, so
-  the phase-0.5 measurement carries the secondary evidence. By number this meets the TRICERATOPS thresholds; the
-  label is still "not validated: no contrast curve": the scheme is exoplan's, it leaves out unresolved companions and
-  background stars, and its priors are illustrative. Before the gate and the masked detrending, the same star's
-  FPP ranged from 0.007 to 0.77 across noise models. pi Men c is a published planet
-  with a measured mass; this number shows the scheme's behaviour on a real planet, nothing more.
+  (P = 6.26795 ± 0.00049 d, T14 = 3.09 ± 0.16 h), on the light curve re-detrended in two passes with the transits,
+  phase 0.5 and the first pass's strongest dip masked (window 1.55 d, 12 T14): CROWDSAP 0.9997, FLFRCSAP 0.980 (not
+  crowded); the strongest dip at any phase away from the transit is 52 ± 7 ppm at phase 0.645 (7.0σ nominal),
+  spread over four epochs, and it sits exactly at the calibrated threshold (7.0σ: 5.16 times the scan's robust
+  spread of 1.36) without crossing it, so no flag; at phase 0.5, −14 ± 7 ppm. The scan is not white (robust spread
+  1.36), which is why the threshold is that high; masking the strongest first-pass dip in the second pass protects it
+  from the trend, so this is the setting where it looks largest. Odd/even depths from per-epoch fits agree (301 ± 14
+  against 311 ± 12 ppm, 0.5σ); the five mid-times fit a linear ephemeris (χ² = 1.9 for 3 dof, p = 0.59, O−C within
+  1.8 min) with no odd/even timing offset (0.5σ). No flags.
+* **No reduced FPP for pi Men c: it is not stable.** Across the pipeline's five detrending settings (the default,
+  and windows ×0.75 and ×1.5 with masks of 1.0 and 2.0 T14) under two noise models, the FPP ranges from 0.008 to
+  0.62 (median 0.009 at the robust spread), wider than the factor of 10 allowed, so none is given; the label is
+  "not validated: no contrast curve". On a wider grid (absolute windows 0.75–2 d × masks 1.0, 1.5 and 2.0 T14) the
+  secondary scan passes the white-noise gate on 1 of 15 settings and fails it on 14 (FPP 0.009 where it passes; on
+  the previous code the reviewer measured 6 passing and 9 failing), and the largest brightening
+  ranges from 2.6 to 6.3σ with the setting: the 5.8σ brightening once quoted for the default setting is not robust,
+  and neither is a single FPP. The earlier quotes (0.0082 here, 0.17 and 0.0074 before) each came from one setting.
+  NFPP would be 0 (every TIC neighbour within 150″ would need an eclipse deeper than 100%, one of them only
+  marginally). pi Men c is a published planet with a measured mass; this shows the scheme's limits on real data.
 * **Ephemeris cone.** Exporting the stored run (`exoplan export runs/tess-pi-men-s1 --allow-unchecked`; the
   archive's TOI table timed out, HTTP 504) gives one signal, P = 6.2681 ± 0.0012 d from the first subject's joint
   fit, and its predicted transit in October 2026 (epoch 479) carries σ = 13.8 h, a 3σ window of 86 h. A one-subject
@@ -225,14 +230,20 @@ published pipelines.
   `koi_fpflag_co` KOIs and TESS FP TOIs). Saturated stars, like pi Men, get no usable centroid. The neighbour table's
   flux shares use the same Gaussian; an exclusion within 3σ of the star's Tmag uncertainty is reported as marginal.
 * **The secondary search is calibrated on white noise.** Its threshold is the white-noise 99.9% quantile of
-  (largest dip)/(robust spread) for the scan's number of positions, times the scan's own robust spread; on 3000
+  (largest dip)/(robust spread) for the scan's number of positions, times max(1, the scan's robust spread); on 3000
   clean simulated planets it flagged 2 (0.07%, 95% CI 0.01–0.24%), against 87 (2.9%) for the rule it replaced and
   681 (23%) for a plain 3 × robust spread (`scripts/calibrate_secondary.py`, `docs/results/secondary_calibration.json`).
-  On red-ish noise (robust spread 1.7) it flagged 2 in 1000. The price is sensitivity: a 200 ppm secondary beside a
-  1000 ppm primary at 600 ppm per 2-minute point sits at the threshold (10 of 20 flagged); at 300 ppm, 19 of 20. The
-  "8.8σ brightening" once quoted for pi Men was not red noise: the review detrending overshot beside each transit,
-  and those shoulders read as brightenings (5.8σ once the transits are masked). The reduced FPP is refused when the
-  scan is not white.
+  On red-ish noise (robust spread 1.7) it flagged 2 in 1000 with seeds 700000–700999 (the reviewer's run: 0 in 1000).
+  Through the full two-pass preparation, 0 of 500 clean planets with slow variability were flagged, and 1 of 300
+  with red noise (masking the strongest first-pass dip protects a noise dip too: the median normalised dip rose from
+  2.53 to 3.00 there). The detrending used to cost sensitivity, not the threshold: with only the transits masked,
+  the trend absorbed about half of a secondary (134 of ~180 ppm kept), and a 1000/200 ppm binary at 600 ppm per
+  2-minute point was flagged 10 times in 20; with the two passes, 161 ppm is kept and 19 of 20 are flagged
+  (1500/300 ppm at 1000 ppm noise: 5 → 18 of 20). Long transits used to break the masked detrending (a 1-day
+  quadratic across a 3 T14 mask extrapolated by 10⁴–10⁶ ppm at 7–10 hours); the trend is now interpolated across
+  the mask and the window widened to 12 T14. The reduced FPP is given only when it is stable across detrending
+  settings and noise models; its no-secondary likelihood is the simulated null distribution (the earlier
+  max-of-N model charged a clean planet for an unusually small strongest dip: FPP up to 0.97).
 * **Validation is not done.** TRICERATOPS 1.1.0 installs with pip (extra `validate`), but its `target()` queries
   MAST, Gaia and TESSCut on construction, so it cannot run offline, and MAST's API was failing when this was built:
   the adapter (`validate.run_triceratops`) is tested against a stub only and has not been run on a real target. The
@@ -255,7 +266,11 @@ published pipelines.
   page built from it, the discovery catalogue, the injection-recovery benchmark, the leaderboard and the
   calibration record (`reviewer_weights_full_panel.calibration.json`; the weights files themselves are plain
   reviewer-to-weight maps and cannot carry a note). pi Men c (300 ppm, about 1.5 times the 2-minute scatter, and
-  no odd/even failure) is affected by neither.
+  no odd/even failure) is affected by neither. A consequence of (2): a simulated eccentric binary (0.8% primary,
+  0.4% secondary at phase 0.37) now passes default vetting, because its earlier `odd_even_mismatch` failures were
+  spurious; it is caught by `secondary_any_phase` (a flag, or a failure with `[vetting] decide = true`) and an FPP
+  of about 1. The trade-off of (1): a real event deeper than 10σ that lasts under 20 minutes (an 18-minute eclipse
+  at 2-minute cadence) is still removed as a spike.
 * **Edge events are the weak spot** for both the statistics and the reviewers.
 * **Discovery candidates are unconfirmed.** Nothing on the discovery feed is a confirmed planet.
 

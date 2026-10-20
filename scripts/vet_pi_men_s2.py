@@ -33,7 +33,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from exoplan.config import load_config  # noqa: E402
 from exoplan.dvtests import extended_vet  # noqa: E402
 from exoplan.loaders import load_spoc_file  # noqa: E402
-from exoplan.pipeline import prepare_lightcurves, vetting_lightcurve  # noqa: E402
+from exoplan.dvtests import assess_secondary, secondary_search  # noqa: E402
+from exoplan.pipeline import (prepare_lightcurves, secondary_variants, vetting_lightcurve,  # noqa: E402
+                              vetting_lightcurve_two_pass, vetting_window)
+from exoplan.validate import scan_whiteness  # noqa: E402
 from exoplan.pixel import (fetch_neighbours, fetch_spoc_product, load_tpf, order_target_first,  # noqa: E402
                            parse_dv_xml, pixel_vet)
 from exoplan.search import bls_search, stitch  # noqa: E402
@@ -86,10 +89,28 @@ def run(cache: Path, run_dir: Path, config_path: Path) -> dict:
     f = fit.as_dict()
     duration = f["t14_hours"] / 24.0
     # the DV-style tests read the light curve re-detrended with the fitted transits masked, as the pipeline does
-    masked = vetting_lightcurve([lc], config, period=f["period_days"], t0=f["t0"], duration=duration)
-    flags_lc, lc_tests = extended_vet(masked.time, masked.flux, masked.flux_err, period=f["period_days"], t0=f["t0"],
-                                      duration=duration, fit=f, provenance=lc.provenance)
-    lc_tests["transit_masked_detrend"] = True
+    eph = dict(period=f["period_days"], t0=f["t0"], duration=duration)
+    masked, phases = vetting_lightcurve_two_pass([lc], config, **eph)
+    flags_lc, lc_tests = extended_vet(masked.time, masked.flux, masked.flux_err, **eph, fit=f,
+                                      provenance=lc.provenance)
+    lc_tests.update(transit_masked_detrend=True, masked_phases=list(phases),
+                    detrend_window_days=vetting_window(config, duration))
+    variants = secondary_variants([lc], config, **eph, extra_phases=phases)
+    # the reviewer's wider grid: absolute windows 0.75-2 d x masks 1.0/1.5/2.0 T14 (for the README's stability statement)
+    grid = []
+    base_window = vetting_window(config, duration)
+    for win in (0.75, 1.0, 1.25, 1.5, 2.0):
+        for mask in (1.0, 1.5, 2.0):
+            g_lc = vetting_lightcurve([lc], config, **eph, extra_phases=phases, window_scale=win / base_window,
+                                      mask_t14=mask)
+            sec = assess_secondary(secondary_search(g_lc.time, g_lc.flux, **eph))
+            gate = scan_whiteness(sec)
+            one = reduced_fpp(depth=f["depth_ppm"] * 1e-6, dv=dict(lc_tests, secondary=sec), fit=f).as_dict()
+            grid.append({"window_days": win, "mask_t14": mask, "white": bool(gate["white"]),
+                         "max_brightening_snr": sec["max_brightening_snr"], "snr": sec["snr"],
+                         "robust_spread": sec["scan_robust_sigma"], "fpp": one["fpp"],
+                         "fpp_range_noise_models": (one["evidence"].get("fpp_sensitivity") or {}).get("range")})
+    lc_tests["detrending_grid"] = grid
 
     tpf = load_tpf(tpf_path)
     h = tpf.header
@@ -98,7 +119,7 @@ def run(cache: Path, run_dir: Path, config_path: Path) -> dict:
     stars = order_target_first(neighbours.get("stars", []), h["ra_epoch"] or h["ra"], h["dec_epoch"] or h["dec"])
     pixel = pixel_vet(tpf, period=f["period_days"], t0=f["t0"], duration=duration, depth=f["depth_ppm"] * 1e-6,
                       stars=stars or None)
-    validation = reduced_fpp(depth=f["depth_ppm"] * 1e-6, dv=lc_tests, fit=f, pixel=pixel).as_dict()
+    validation = reduced_fpp(depth=f["depth_ppm"] * 1e-6, dv=lc_tests, fit=f, pixel=pixel, variants=variants).as_dict()
     return {
         "target": f"TIC {TIC} (pi Men)", "sector": SECTOR, "validation": validation,
         "made_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -114,6 +135,13 @@ def run(cache: Path, run_dir: Path, config_path: Path) -> dict:
 
 
 def _gate_line(v: dict) -> str:
+    st = (v.get("evidence") or {}).get("fpp_stability")
+    if st:
+        lo, hi = st["range"]
+        return (f"Stability: the FPP was computed on {st['n_settings']} detrending settings (the default and windows "
+                f"×0.75 and ×1.5 with masks of 1.0 and 2.0 T14) under two noise models: range {_fmt(lo, 4)}–{_fmt(hi, 4)}, "
+                f"median {_fmt(st['median_robust'], 4)} at the robust spread; {st['white_settings']} of {st['n_settings']} "
+                f"settings pass the white-noise gate.")
     g = (v.get("evidence") or {}).get("scan_whiteness")
     if not g:
         return "White-noise gate: not applicable (no all-phase scan)."
@@ -123,6 +151,26 @@ def _gate_line(v: dict) -> str:
             f"(white 99.9%: {g['white_q_abs_999']:.2f} for {g['positions']} positions): "
             f"{'passed' if g['white'] else 'failed'}. FPP over noise models (evidence only): "
             + ", ".join(f"{k} {_fmt(x, 3)}" for k, x in (sens.get("by_noise_model") or {}).items()) + ".")
+
+
+def _grid_lines(r: dict) -> str:
+    grid = r["lightcurve_tests"].get("detrending_grid") or []
+    if not grid:
+        return ""
+    white = sum(g["white"] for g in grid)
+    fpps = [g["fpp"] for g in grid if g["fpp"] is not None]
+    ranges = [x for g in grid for x in (g.get("fpp_range_noise_models") or []) if x is not None]
+    rows = ["Wider grid (absolute windows 0.75–2 d × masks 1.0/1.5/2.0 T14): the white-noise gate passes on "
+            f"{white} of {len(grid)} settings; where it passes, FPP {_fmt(min(fpps), 3) if fpps else 'n/a'}–"
+            f"{_fmt(max(fpps), 3) if fpps else 'n/a'} (with both noise models on every setting, "
+            f"{_fmt(min(ranges), 3) if ranges else 'n/a'}–{_fmt(max(ranges), 3) if ranges else 'n/a'}); the largest "
+            f"brightening is {_fmt(min(g['max_brightening_snr'] for g in grid), 1)}–"
+            f"{_fmt(max(g['max_brightening_snr'] for g in grid), 1)}σ.", "",
+            "| window (d) | mask (T14) | gate | largest brightening | strongest dip | FPP (robust spread) |", "|---|---|---|---|---|---|"]
+    for g in grid:
+        rows.append(f"| {g['window_days']} | {g['mask_t14']} | {'white' if g['white'] else 'not white'} | "
+                    f"{g['max_brightening_snr']:.1f}σ | {g['snr']:.1f}σ | {_fmt(g['fpp'], 4)} |")
+    return "\n".join(rows)
 
 
 def _fmt(x, nd=2):
@@ -233,7 +281,7 @@ def markdown(r: dict) -> str:
                f"{_fmt((v['evidence'].get('fpp_bracket_robust_vs_std') or [None, None])[1], 4)}), NFPP = {_fmt(v['nfpp'], 6)}; "
                f"class: {v['fpp_class']}." if v.get("fpp") is not None else f"{v['fpp_class']}.")
               + f" Label: **{v['label']}**.", "",
-              _gate_line(v), "",
+              _gate_line(v), "", _grid_lines(r), "",
               f"Not modelled: {'; '.join(v['not_modelled'])}. Notes: {'; '.join(v['notes']) or 'none'}. "
               f"Priors: {v['priors']['source']}."]
     lines += ["", "## SPOC's own DV centroid result, for comparison", ""]
