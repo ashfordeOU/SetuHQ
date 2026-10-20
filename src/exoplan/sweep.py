@@ -546,7 +546,8 @@ def star_null(s: dict, cls: str, kind: str) -> int | None:
     if kind == "brightening":
         return int(((n.get("flare_downward") or {}).get("counts") or {}).get(cls, 0))
     if kind == "variability" and cls == "variable":
-        return int((n.get("variability_shuffled") or {}).get("variable", 0))
+        # Records written before the rename keep the old key (its "method" says which null made it).
+        return int((n.get("variability_red_noise") or n.get("variability_shuffled") or {}).get("variable", 0))
     return None
 
 
@@ -770,17 +771,55 @@ def read_ledger(sweep_dir: str | Path) -> list[dict]:
     return [json.loads(x) for x in p.read_text().splitlines() if x.strip()] if p.exists() else []
 
 
-def check_ledger_append_only(sweep_dir: str | Path, base_ref: str) -> list[str]:
-    """The ingest ledger may only grow: the base branch's ledger must be a prefix of this one. A contribution
-    resealed after it was merged would have to change its line, and this catches that; review of the pull
-    request is what guards a new line."""
+MISSING_BASE = "no base to check the ingest ledger against"
+
+
+def _git(cwd: Path, *args: str):
     import subprocess
 
+    return subprocess.run(["git", *args], capture_output=True, text=True, cwd=cwd)
+
+
+def default_ledger_base(cwd: str | Path = ".") -> str | None:
+    """The commit the ledger must extend: the merge-base of HEAD with the base branch. The branch is
+    EXOPLAN_BASE if set, else the pull request's base (GITHUB_BASE_REF), else the remote's default branch
+    (origin/HEAD, or what `git ls-remote --symref origin HEAD` names). None when none of them resolves here."""
+    import os
+
+    cwd = Path(cwd).resolve()
+    names = []
+    if os.environ.get("EXOPLAN_BASE"):
+        names.append(os.environ["EXOPLAN_BASE"])
+    if os.environ.get("GITHUB_BASE_REF"):
+        names.append(f"origin/{os.environ['GITHUB_BASE_REF']}")
+    head = _git(cwd, "symbolic-ref", "--quiet", "--short", "refs/remotes/origin/HEAD")
+    if head.returncode == 0 and head.stdout.strip():
+        names.append(head.stdout.strip())
+    else:
+        remote = _git(cwd, "ls-remote", "--symref", "origin", "HEAD")
+        for line in remote.stdout.splitlines() if remote.returncode == 0 else []:
+            if line.startswith("ref: refs/heads/"):
+                names.append("origin/" + line.split("refs/heads/", 1)[1].split("\t")[0])
+    for name in names:
+        mb = _git(cwd, "merge-base", "HEAD", name)
+        if mb.returncode == 0 and mb.stdout.strip():
+            return mb.stdout.strip()
+        if name == os.environ.get("EXOPLAN_BASE"):
+            return name  # an explicit base that does not resolve is reported, not replaced
+    return None
+
+
+def check_ledger_append_only(sweep_dir: str | Path, base_ref: str | None) -> list[str]:
+    """The ingest ledger may only grow: the base's ledger must be a prefix of this one. A contribution
+    resealed after it was merged would have to change its line, and this catches that; review of the pull
+    request is what guards a new line. A base that does not resolve is reported (MISSING_BASE), never passed."""
+    cwd = Path(sweep_dir).resolve()
+    if not base_ref or _git(cwd, "rev-parse", "--verify", "--quiet", f"{base_ref}^{{commit}}").returncode != 0:
+        return [f"{MISSING_BASE}: {base_ref or 'no base branch found'} does not resolve in this checkout"]
     path = Path(sweep_dir) / "ingest_ledger.jsonl"
-    rel = path.resolve().relative_to(Path(subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True,
-                                                         cwd=Path(sweep_dir).resolve()).stdout.strip()))
-    got = subprocess.run(["git", "show", f"{base_ref}:{rel}"], capture_output=True, text=True, cwd=Path(sweep_dir).resolve())
-    base = got.stdout if got.returncode == 0 else ""
+    rel = path.resolve().relative_to(Path(_git(cwd, "rev-parse", "--show-toplevel").stdout.strip()))
+    got = _git(cwd, "show", f"{base_ref}:{rel}")
+    base = got.stdout if got.returncode == 0 else ""  # the base predates the ledger: anything extends it
     here = path.read_text() if path.exists() else ""
     return [] if here.startswith(base) else [f"ingest_ledger.jsonl is not an append-only extension of {base_ref}'s"]
 

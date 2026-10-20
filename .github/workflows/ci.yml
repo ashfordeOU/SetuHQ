@@ -12,6 +12,8 @@ jobs:
     runs-on: [self-hosted, linux]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the ingest ledger is checked against its merge-base with the base branch
       - name: Install into a venv
         run: |
           python3 -m venv .venv
@@ -19,3 +21,5 @@ jobs:
           .venv/bin/python -m pip install -e ".[dev]"
       - name: Run tests
         run: .venv/bin/python -m pytest -q
+      - name: Sweep catalogue and append-only ingest ledger (a missing base fails here, CI is set)
+        run: .venv/bin/exoplan check-sweep --sweep-dir docs/sweep --ledger-base auto

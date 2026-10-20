@@ -48,8 +48,8 @@ For the API instead of the CLI, copy `configs/sweep_sentinels.toml` and change e
   the first N of a sector are a fair sample and a larger `--limit` grows the same slice.
 * Each star's classes are also measured against their nulls: the dip classes on the flux-inverted copy (a
   real dip becomes a bump; a real flare or pulsation maximum becomes a dip, so this null is not empty of
-  real signals), flares as downward events with the real dips masked, and variability on a copy shuffled in
-  0.5-day blocks. `--no-control` halves the time, but the site then cannot set your searches against their nulls.
+  real signals), flares as downward events with the real dips masked, and variability on a red-noise copy
+  of the star (an AR(1) process fitted to its own bins). `--no-control` halves the time, but the site then cannot set your searches against their nulls.
 
 The record is `my-sweep/sector_0005.json.gz`: every star-sector of the slice with what was searched (the
 light-curve file and its sha256, points, subjects, reviewers and weights), what was found (entries by class,
@@ -121,9 +121,12 @@ copy of a search earns nothing. Then rebuild the site (`scripts/ci_local.sh`) an
 
 Every ingest also appends a line to `docs/sweep/ingest_ledger.jsonl` (the bundle id, the manifest's and
 files' hashes, who attested it, the nonce). `exoplan check-sweep` requires every contribution folder to match
-its ledger line, and CI requires the ledger to be an append-only extension of the base branch's
-(`--ledger-base`). So a contribution resealed after it was merged fails CI. **What these checks cannot do is
+its ledger line, and CI requires the ledger to be an append-only extension of the one at its merge-base with
+the base branch (`--ledger-base auto`: `EXOPLAN_BASE`, the pull request's base, or the remote's default
+branch). The check fails closed: in hosted CI (`CI` set) a base that cannot be found fails it, and only a local
+run skips it, with a note. So a contribution resealed after it was merged fails CI. **What these checks cannot do is
 tell an honest new ledger line from a dishonest one in the same pull request:** someone with write access
 could ingest, then edit a folder, its ingest.json and its ledger line before committing. Review of the pull
-request that adds a contribution is what guards against that: a reviewer runs `exoplan ingest` again on the
+request that adds a contribution is what guards against that (`.github/CODEOWNERS` requires a maintainer's
+review for every change under `docs/sweep/`, new ledger lines included): a reviewer runs `exoplan ingest` again on the
 bundle (or compares the folder with the bundle in the pull request) before merging.

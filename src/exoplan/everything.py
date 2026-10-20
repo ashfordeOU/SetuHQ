@@ -2,8 +2,9 @@
 
 The data is ``docs/sweep/catalogue.json`` (:func:`exoplan.sweep.build_catalogue`), copied beside the app as
 ``assets/data/variables.json`` and fetched the first time the page, a star page, Mission Control or the search
-needs it. The page payload carries only :func:`sweep_meta`: the counts, the classes and their rules, the
-sources and the contributors, so the Overview's counter and the Sky's coverage layer need no fetch.
+needs it. The page is built from :func:`sweep_meta`, and its script's payload carries only
+:func:`sweep_payload`: the counts, the class labels, the sources and the contributors, so the Overview's counter
+needs no fetch. The rule text and the nulls are in the built HTML and in the fetched file, not in the payload.
 
 Every number here is read from that file. Nothing is extrapolated: the counter says how many stars were
 searched, not how many could be. A class is a light-curve classification by a stated rule, never a
@@ -17,7 +18,10 @@ import html
 import json
 from pathlib import Path
 
+from exoplan.variables import LS_EDGE_FRACTION
+
 DEFAULT_SWEEP = "docs/sweep/catalogue.json"
+RULE_CHECK_JSON = "variability_rule_check.json"  # scripts/variability_rule_check.py, beside the catalogue
 VARIABLES_JSON = "assets/data/variables.json"
 # Class colours from the system tokens, distinct in both themes and at least 3:1 on the page in each: yellow for
 # a candidate, purple for a binary, coral for a flare, green for a variable star. A class that does not exceed
@@ -73,12 +77,33 @@ def sweep_meta(cat: dict | None, catalogue: dict | None = None, path: str = DEFA
     found = {(e["tic"], e["sector"]) for e in cat.get("entries") or [] if e["class"] in real}
     sky = [[r["ra"], r["dec"], 1 if (r["tic"], r["sector"]) in found else 0] for r in cov
            if r.get("status") == "searched" and r.get("ra") is not None and r.get("dec") is not None]
+    # The coherent-variable rule's reach, from the catalogue and from the synthetic check beside it.
+    var = [e for e in cat.get("entries") or [] if e.get("kind") == "variability"]
+    why = [e.get("why") or "" for e in var if e["class"] == "unclassified"]
+    tops = sorted(LS_EDGE_FRACTION * e["half_period_max_days"] for e in var if e.get("half_period_max_days"))
+    check_path = Path(path).parent / RULE_CHECK_JSON if path else None
+    coherence = {"coherent": sum(1 for e in var if e["class"] == "variable"),
+                 "not_tested": sum("coherence not tested" in w for w in why),
+                 "grid_edge": sum("longest period searched" in w for w in why),
+                 "incoherent": sum("not a coherent period" in w for w in why),
+                 "testable_max_days": round(tops[len(tops) // 2], 1) if tops else None,
+                 "check": json.loads(check_path.read_text()) if check_path and check_path.exists() else None}
     return {"path": path, "generated_at": cat.get("generated_at", ""), "counts": cat["counts"], "classes": cat["classes"],
             "colours": view["colours"], "order": view["order"], "noise_like": view["noise_like"], "vs": view["vs"],
             "noise_text": NOISE_LIKE, "sky_found_classes": sorted(real),
             "sources": cat.get("sources") or [], "contributors": cat.get("contributors") or [],
             "slices": [_slice_line(s) for s in cat.get("sources") or []], "tic_names": names, "sky": sky, "n_sky": len(sky),
-            "sorts": [k for k, _ in SORTS], "sort_labels": dict(SORTS), "json": VARIABLES_JSON}
+            "sorts": [k for k, _ in SORTS], "sort_labels": dict(SORTS), "json": VARIABLES_JSON, "coherence": coherence}
+
+
+def sweep_payload(meta: dict) -> dict:
+    """What the page's script needs of :func:`sweep_meta`, embedded in every page. The rest is read at build
+    time or comes with the lazily fetched catalogue (variables.json): the Sky points (drawn into the SVG), the
+    per-class nulls and comparisons, and each class's rule, confidence and null text."""
+    drop = ("sky", "vs", "coherence")
+    return {**{k: v for k, v in meta.items() if k not in drop},
+            "counts": {k: v for k, v in meta["counts"].items() if k != "null"},
+            "classes": [{"id": c["id"], "label": c["label"]} for c in meta["classes"]]}
 
 
 def variables_filter(cat: dict, v: dict) -> list[str]:
@@ -220,13 +245,22 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
     shape_txt = (f' Of the {sum(shape.values()):,} flare-class brightenings, {shape.get("fast_rise", 0):,} rise faster than they decay and '
                  f'{shape.get("slow_rise", 0):,} the other way ({shape.get("equal", 0):,} equal); real flares rise fast, noise has no preferred '
                  'direction.') if shape and sum(shape.values()) else ""
+    coh = meta.get("coherence") or {}
+    coh_txt = (f' Of its periodogram peaks not at a binary\'s period, {coh.get("coherent", 0):,} are coherent; unclassified are '
+               f'{coh.get("not_tested", 0):,} longer than a half can test (coherence not tested), {coh.get("grid_edge", 0):,} at the '
+               f'edge of the period grid and {coh.get("incoherent", 0):,} that wander between halves.') if any(coh.get(k) for k in ("coherent", "not_tested", "grid_edge", "incoherent")) else ""
+    case = ((coh.get("check") or {}).get("cases") or {}).get("sinusoid_in_strong_red_noise")
+    if case and coh.get("testable_max_days"):
+        chk = coh["check"]
+        coh_txt += (f' Limits: it finds a {chk["sinusoid_ppm"]:,.0f} ppm sinusoid in strong red noise only {case["variable"]}/{chk["n"]} '
+                    f'times ({chk["script"]}), and cannot test periods longer than about {coh["testable_max_days"]:g} d in one sector.')
     return f"""<header class="headrow">
         <div>{eyebrow}<h1 class="lead-h" id="h-variables" tabindex="-1">Everything that dims.<br><span class="grey">{c['entries']:,} entries, none thrown away.</span></h1>
         <p>Every consensus dip of the panel, every brightening and every star's variability from the sweep, each classified by a stated rule, with its confidence, its cues and its provenance: the marks, the weights and the Sentinels' own words. {e("Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.")}</p></div>
       </header>
       {tabs("variables")}
       <p class="note"><b>A first slice, stated plainly.</b> {"; ".join(e(s) for s in meta["slices"])}. {c['stars_searched']:,} stars searched, {c['star_sectors_searched']:,} star-sectors, {c['dips_reviewed']:,} consensus dips reviewed{f", {sum(ns.values()):,} star-sectors recorded but not searched ({ns.get('no_data', 0)} no data, {ns.get('error', 0)} errors, {ns.get('pending', 0)} pending)" if sum(ns.values()) else ""}. This catalogue is separate from the discovery feed. <b>Nothing here is a new or confirmed planet.</b> A class is what the light curve's cues suggest; there is no pixel or centroid check, so a blended binary can look like anything.{e(verdict)}</p>
-      <p class="note"><b>Each class against its own null</b>, measured on the same {n_null:,} star-sectors: what its rule finds where its signal cannot be. Dips: the flux turned upside down (a real dip becomes a bump; a real flare or pulsation maximum becomes a dip, so this null is not empty of real signals). Flares: downward events with the real dips masked. Variability: a red-noise copy of the star (AR(1) fitted to its bins) through the same rule, which needs the same best period (within 10%) in both halves of the light curve. Kind is compared with kind, star-sector is the unit: the 95% interval is a paired bootstrap over star-sectors, beside McNemar's test. A class that does not pass both is {e(NOISE_LIKE)}: {e(", ".join(labels[k]["label"] for k in meta["order"] if k in noise) or "none")}.{e(shape_txt)}</p>
+      <p class="note"><b>Each class against its own null</b>, measured on the same {n_null:,} star-sectors: what its rule finds where its signal cannot be. Dips: the flux turned upside down (a real dip becomes a bump; a real flare or pulsation maximum becomes a dip, so this null is not empty of real signals). Flares: downward events with the real dips masked. Variability: a red-noise copy of the star (AR(1) fitted to its bins) through the same rule, which needs the same best period (within 10%) in both halves of the light curve.{e(coh_txt)} Kind is compared with kind, star-sector is the unit: the 95% interval is a paired bootstrap over star-sectors, beside McNemar's test. A class that does not pass both is {e(NOISE_LIKE)}: {e(", ".join(labels[k]["label"] for k in meta["order"] if k in noise) or "none")}.{e(shape_txt)}</p>
       <section class="card vafilters" aria-label="Filters">
         <label class="vasearch"><span class="sr">Find a TIC, a TOI or a contributor</span><input type="search" id="vaq" placeholder="Find a TIC, a TOI or a contributor" autocomplete="off" inputmode="search"></label>
         <div class="chips" id="vaclasses" role="group" aria-label="Class (entries · null)">{chips}</div>

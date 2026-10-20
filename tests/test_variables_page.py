@@ -39,8 +39,11 @@ def _route(page, rid):
 def test_every_figure_comes_from_the_committed_catalogue(pi_men_app):
     page = _page(pi_men_app)
     d = _data(page)["sweep"]
-    assert d["counts"] == CAT["counts"] and d["classes"] == CAT["classes"]
-    # The full catalogue is a separate file, fetched when needed; the page carries only the counts.
+    assert d["counts"] == {k: v for k, v in CAT["counts"].items() if k != "null"}
+    assert d["classes"] == [{"id": c["id"], "label": c["label"]} for c in CAT["classes"]]
+    # The full catalogue (with the nulls and each class's rule text) is a separate file, fetched when needed;
+    # the page's script carries only the counts and labels.
+    assert "null" not in d["counts"] and "vs" not in d and "sky" not in d
     assert json.loads((pi_men_app.parent / "assets/data/variables.json").read_text()) == CAT
     assert "entries" not in d and "coverage" not in d
     over = _route(page, "overview")
@@ -92,6 +95,20 @@ def test_sky_layer_and_mission_telemetry(pi_men_app):
     assert 'data-layer="sweep"' in sky and f"exoplan sweep ({n:,} star-sectors)" in sky
     assert sky.count('data-layer="sweep"') == 1
     assert "D.sweep" in page and "Sweep <b>" in page
+
+
+def test_the_coherence_counts_and_limits_come_from_the_data(pi_men_app):
+    var = [e for e in CAT["entries"] if e["kind"] == "variability"]
+    why = [e.get("why") or "" for e in var if e["class"] == "unclassified"]
+    untested = sum("coherence not tested" in w for w in why)
+    check = json.loads((Path(DEFAULT_SWEEP).parent / "variability_rule_check.json").read_text())
+    case = check["cases"]["sinusoid_in_strong_red_noise"]
+    meta = sweep_meta(CAT, None, DEFAULT_SWEEP)
+    assert meta["coherence"]["not_tested"] == untested and meta["coherence"]["coherent"] == sum(e["class"] == "variable" for e in var)
+    sec = _route(_page(pi_men_app), "variables").replace("&#x27;", "'")
+    assert f"{untested:,} longer than a half can test (coherence not tested)" in sec
+    assert f"in strong red noise only {case['variable']}/{check['n']} times" in sec
+    assert f"longer than about {meta['coherence']['testable_max_days']:g} d in one sector" in sec
 
 
 @pytest.mark.skipif(not HAVE_NODE, reason="node is not installed")

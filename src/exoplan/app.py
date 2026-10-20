@@ -46,7 +46,7 @@ from exoplan.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOT
 from exoplan.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFAULT_CATALOGUE, SEARCH_BUTTON, SEARCH_DIALOG,
                                catalogue_meta, catalogue_section, load_catalogue, mentions, planet_page, star_page, tic_names)
 from exoplan.objects import obj_link
-from exoplan.everything import (DEFAULT_SWEEP, VARIABLES_CSS, VARIABLES_JS, VARIABLES_JSON, load_sweep, overview_counter, sky_chip,
+from exoplan.everything import (DEFAULT_SWEEP, VARIABLES_CSS, VARIABLES_JS, VARIABLES_JSON, load_sweep, overview_counter, sky_chip, sweep_payload,
                                sky_layer_svg, sweep_meta, tabs as catalogue_tabs, variables_section)
 from exoplan.learn import LEARN_BAR, LEARN_CSS, LEARN_JS, learn_card, learn_steps
 from exoplan.mission import GRIDS as MISSION_GRIDS, MISSION_CSS, MISSION_JS, PANES as MISSION_PANES, mission_section
@@ -2646,9 +2646,7 @@ def app_page(data: dict) -> str:
     run = data["run"]
     rule = data["feed_rule"]
     data = {**data, "methods": methods_meta(data["examples"], data.get("galaxy"), data["story"], data.get("coverage"))}
-    # The sweep's Sky points are drawn into the map's SVG at build time, so the payload carries only their count;
-    # "vs" repeats counts.null.by_class and is read only at build time.
-    slim = {**data, "sweep": {k: v for k, v in data["sweep"].items() if k not in ("sky", "vs")}} if data.get("sweep") else data
+    slim = {**data, "sweep": sweep_payload(data["sweep"])} if data.get("sweep") else data
     payload = json.dumps({k: v for k, v in slim.items() if k not in ("galaxy", "coverage", "examples", "catalogue", "sweep_full")}).replace("</", "<\\/")
     galaxy_payload = ""  # the map's arrays are a separate file (galaxy_json), fetched when the Galaxy opens
     unc = html.escape(UNCONFIRMED)

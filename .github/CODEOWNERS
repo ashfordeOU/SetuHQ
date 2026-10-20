@@ -1,0 +1,3 @@
+# The sweep catalogue, its contributions and the append-only ingest ledger: every change, including a new
+# ledger line, needs a maintainer's review (see CONTRIBUTING.md).
+/docs/sweep/** @ashfordeOU

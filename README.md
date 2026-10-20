@@ -279,6 +279,11 @@ events and nulls. That second step is not built yet.
 * **Vetting uses only light curves.** There is no centroid or pixel-level check, so
   blended eclipsing binaries can pass.
 * **Edge events are the weak spot** for both the statistics and the reviewers.
+* **The coherent-variable rule is weak in red noise and blind to long periods.** It finds a 300 ppm
+  sinusoid in strong red noise (AR(1), 600 ppm, 1-day correlation) only 3 times in 20 (and 20 in 20 in
+  white noise; `scripts/variability_rule_check.py`, `docs/sweep/variability_rule_check.json`), and it
+  cannot test periods longer than about 3.8 d in one sector, since each half of the light curve must show it
+  (20 of the sector-1 slice's peaks are "coherence not tested" and stay unclassified).
 * **Discovery candidates are unconfirmed, and the feed's false-alarm rate is measured to be high.**
   Nothing on the discovery feed is a confirmed planet. Noise alone gives about 13 `new_candidate`
   signals per 100 targets, close to the feed's observed rate (real-TOI benchmark).

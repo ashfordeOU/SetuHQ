@@ -203,13 +203,21 @@ def cmd_ingest(args) -> int:
 
 
 def cmd_check_sweep(args) -> int:
-    from exoplan.sweep import build_catalogue, check_catalogue, check_ledger_append_only
+    import os
+
+    from exoplan.sweep import MISSING_BASE, build_catalogue, check_catalogue, check_ledger_append_only, default_ledger_base
 
     if args.fix:
         build_catalogue(args.sweep_dir)
     problems = check_catalogue(args.sweep_dir)
     if args.ledger_base:
-        problems += check_ledger_append_only(args.sweep_dir, args.ledger_base)
+        base = default_ledger_base(args.sweep_dir) if args.ledger_base == "auto" else args.ledger_base
+        ledger = check_ledger_append_only(args.sweep_dir, base)
+        if ledger and ledger[0].startswith(MISSING_BASE) and not os.environ.get("CI"):
+            # Local runs only: hosted CI (CI set) fails on a missing base.
+            print(f"exoplan check-sweep: note: {ledger[0]}; the ledger's append-only check is skipped (it fails when CI is set)")
+            ledger = []
+        problems += ledger
     for p in problems:
         print(f"exoplan check-sweep: {p}", file=sys.stderr)
     if not problems:
@@ -365,7 +373,8 @@ def build_parser() -> argparse.ArgumentParser:
                                                "catalogue is what its verified sources rebuild to")
     check.add_argument("--sweep-dir", default="docs/sweep")
     check.add_argument("--fix", action="store_true", help="rebuild catalogue.json from the verified sources")
-    check.add_argument("--ledger-base", help="a git ref (the base branch) whose ingest ledger this one must only extend")
+    check.add_argument("--ledger-base", help="a git ref whose ingest ledger this one must only extend; 'auto' is the merge-base with the base "
+                       "branch (EXOPLAN_BASE, GITHUB_BASE_REF or the remote's default). A missing base fails when CI is set")
     check.set_defaults(func=cmd_check_sweep)
 
     dash = sub.add_parser("dashboard",help="build the interactive dashboard from a run and optional discovery catalogue")

@@ -310,8 +310,12 @@ def test_sweep_records_every_star_and_builds_the_catalogue(swept):
     nul = cat["counts"]["null"]
     assert nul["searches"] == 3 and set(nul["by_class"]) == set(V.CLASS_IDS) - {"unclassified"}
     for s in rec["stars"]:
-        assert set(s["null"]) == {"dip_inverted", "flare_downward", "flare_shape", "variability_shuffled"}
+        assert set(s["null"]) == {"dip_inverted", "flare_downward", "flare_shape", "variability_red_noise"}
         assert "control" not in s
+        # Records written before the rename are still read.
+        old = {**s, "null": {**{k: v for k, v in s["null"].items() if k != "variability_red_noise"},
+                             "variability_shuffled": s["null"]["variability_red_noise"]}}
+        assert SW.star_null(old, "variable", "variability") == SW.star_null(s, "variable", "variability")
     planets = [e for e in cat["entries"] if e["tic"] in (1000, 1003) and e["kind"] == "dip"]
     flares = [e for e in cat["entries"] if e["tic"] == 1001 and e["class"] == "flare"]
     if 1001 in order:
@@ -602,6 +606,31 @@ def test_the_ingest_ledger_is_append_only_and_matches_every_folder(bundle, swept
     assert SW.check_ledger_append_only(empty, "HEAD") == []
     (empty / "ingest_ledger.jsonl").write_text('{"bundle_id": "c-other"}\n')
     assert SW.check_ledger_append_only(empty, "HEAD") != []
+    # Fail closed: a base that does not resolve is reported, never passed.
+    for missing in ("no-such-branch", None):
+        got = SW.check_ledger_append_only(empty, missing)
+        assert len(got) == 1 and got[0].startswith(SW.MISSING_BASE)
+
+
+def test_check_sweep_missing_base_fails_under_ci_and_is_a_note_locally(tmp_path, monkeypatch, capsys):
+    import subprocess
+
+    from exoplan.cli import main
+
+    sweep_dir = tmp_path / "repo" / "sweep"
+    sweep_dir.mkdir(parents=True)
+    subprocess.run(["git", "init", "-q", str(tmp_path / "repo")], check=True)
+    SW.build_catalogue(sweep_dir)
+    for var in ("EXOPLAN_BASE", "GITHUB_BASE_REF"):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.chdir(tmp_path / "repo")
+    assert SW.default_ledger_base(sweep_dir) is None  # no remote, no base
+    monkeypatch.setenv("CI", "true")
+    assert main(["check-sweep", "--sweep-dir", str(sweep_dir), "--ledger-base", "auto"]) == 1
+    assert SW.MISSING_BASE in capsys.readouterr().err
+    monkeypatch.delenv("CI")
+    assert main(["check-sweep", "--sweep-dir", str(sweep_dir), "--ledger-base", "auto"]) == 0
+    assert "skipped" in capsys.readouterr().out
 
 
 def test_a_key_shaped_contributor_name_is_refused_before_anything_is_written(swept, tmp_path):

@@ -13,7 +13,7 @@ Per star-sector:
    consensus dip is kept, whatever the panel's label (the classifier applies the potential-planet share).
 3. Classify every dip, brightening and the out-of-transit variability (:mod:`exoplan.variables`).
 4. Measure each class's null on this exact star (:func:`null_counts`): the dip classes on the flux-inverted
-   copy, flares as downward events with the real dips masked, variability on a block-shuffled copy.
+   copy, flares as downward events with the real dips masked, variability on a red-noise (AR(1)) copy.
 """
 
 from __future__ import annotations
@@ -190,7 +190,9 @@ def null_counts(lc, events: dict, entries: list[dict], run_dir: Path, rec: dict)
     * dip classes: the panel and the rules on the flux-inverted copy (its stored pipeline run), dips only;
     * flares: the flare rule on the upside-down flux with the real consensus dips masked, and the rise/decay
       shape of the real flares (a time-reversal test: noise rises as often as it decays);
-    * variability: the variability rule on a block-shuffled copy (0.5-day blocks, seeded by the TIC).
+    * variability: the variability rule on a red-noise copy (an AR(1) process fitted to the star's own bins,
+      seeded by the TIC), stored as ``variability_red_noise`` (records before the rename call it
+      ``variability_shuffled``; its ``method`` says which null made it).
     """
     from exoplan.benchmark_toi import inverted
     from exoplan.variables import CLASS_IDS, dip_windows, flare_null, flare_shape, variability_null
@@ -205,7 +207,7 @@ def null_counts(lc, events: dict, entries: list[dict], run_dir: Path, rec: dict)
     out["null"]["flare_downward"] = flare_null(lc.time, lc.flux, dip_windows(dips), events)
     out["null"]["flare_shape"] = flare_shape(entries)
     half = [(e["t_start"] - 0.5 * (e["t_end"] - e["t_start"]), e["t_end"] + 0.5 * (e["t_end"] - e["t_start"])) for e in dips]
-    out["null"]["variability_shuffled"] = variability_null(lc.time, lc.flux, half, seed=int(rec["tic"]) % (2 ** 32))
+    out["null"]["variability_red_noise"] = variability_null(lc.time, lc.flux, half, seed=int(rec["tic"]) % (2 ** 32))
     return out
 
 
