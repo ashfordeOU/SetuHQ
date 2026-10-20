@@ -202,7 +202,8 @@ const U = %s;
     r = json.loads(res.stdout.strip().splitlines()[-1])
     assert r["errs"] == []
     assert r["b1"] == [True, True]
-    assert r["b2"][:2] == [True, True] and r["b2"][2].startswith("The feed is the catalogue run's 28 candidates; none is pi Men.")
+    n_feed = len(json.loads(Path("docs/discoveries/catalog.json").read_text())["candidates"])
+    assert r["b2"][:2] == [True, True] and r["b2"][2].startswith(f"The feed is the catalogue run's {n_feed} candidates; none is pi Men.")
     assert r["b4"] == ["Nowhere star is not in the catalogue; there is no system to draw.", True, True] and r["b4back"] == [True, False]
     assert r["b6a"] == ["sky", False] and r["b6b"] == ["1", "", "2", "3", "4", "5"]
     assert r["ctrlalt"] == "mcp-lc" and r["altLeft"].startswith("#/mission?panes=galaxy,lc,sky")

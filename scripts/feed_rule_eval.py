@@ -252,21 +252,37 @@ def score_star(t: dict, rules: list[dict]) -> dict | None:
 
 
 def score_half(half: str, rules: list[dict], workers: int) -> list[dict]:
+    """Every star of a half scored under ``rules``. Each star's result is stored as it finishes (keyed by the rules),
+    so a restart resumes where it stopped; the scoring itself is unchanged."""
+    import hashlib
+
     tois = half_tois(half)
+    rkey = hashlib.sha256(json.dumps(rules, sort_keys=True).encode()).hexdigest()[:12]
+    store = CACHE / "scored" / rkey
+    store.mkdir(parents=True, exist_ok=True)
     out = []
+    for t in tois:
+        f = store / f"{t['tic']}.json"
+        if f.exists():
+            r = json.loads(f.read_text())
+            if r:
+                out.append(r)
+    todo = [t for t in tois if not (store / f"{t['tic']}.json").exists()]
+    print(f"{len(tois) - len(todo)} stars already scored, {len(todo)} to go", flush=True)
     t0 = time.time()
     with ProcessPoolExecutor(max_workers=workers) as pool:
-        futures = {pool.submit(score_star, t, rules): t for t in tois}
+        futures = {pool.submit(score_star, t, rules): t for t in todo}
         for i, fut in enumerate(as_completed(futures), 1):
             try:
                 r = fut.result()
             except Exception as exc:  # noqa: BLE001
                 print(f"TIC {futures[fut]['tic']}: {type(exc).__name__}: {exc}", flush=True)
                 continue
+            (store / f"{futures[fut]['tic']}.json").write_text(json.dumps(r))
             if r:
                 out.append(r)
             if i % 20 == 0:
-                print(f"{i}/{len(tois)} in {time.time() - t0:.0f} s", flush=True)
+                print(f"{i}/{len(todo)} in {time.time() - t0:.0f} s", flush=True)
     return out
 
 
@@ -351,7 +367,10 @@ def cmd_evaluate(args) -> int:
                      "cannot pass the two-sector rule and counts as one target.",
                      "Discovery config: subject-mode BLS, the three Probes with the feed's weights file. Fit and TIC stellar "
                      "parameters off, because admission never reads them; docs/results/feed_rule_stellar_check.json shows "
-                     "identical admission inputs with them on, on a seeded 20-star subsample."]}
+                     "identical admission inputs with them on, on a seeded 20-star subsample.",
+                     "A worker restart stopped the first held-out run at 120 of 345 stars before it wrote anything; the "
+                     "script then gained a per-star store so the run resumes (the rule and the scoring are unchanged), "
+                     "and the run was restarted. The trials already computed were reused from their cache."]}
     RESULTS.write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps(out, indent=1))
     return 0

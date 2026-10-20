@@ -44,7 +44,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from exoplan.dashboard import _load_run
-from exoplan.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
+from exoplan.discover import MAX_FEED_DEPTH_PPM, MAX_FEED_FAP, MIN_FEED_TRANSITS, TWO_SECTOR_PERIOD_TOL, two_sector_partner
 from exoplan.names import ATTRIBUTION, PROVIDER_BY_KIND, SENTINEL_KINDS, reviewer_names, reviewer_provenance
 from exoplan.vet import DISQUALIFYING
 
@@ -1045,8 +1045,9 @@ def outcome(checks: list[dict], flags=(), passed: bool = True) -> str:
     return PASSED
 
 
-def feed_rules(c: dict) -> dict:
-    """The feed admission rules of discover.py, kept apart from vetting."""
+def feed_rules(c: dict, rows: list[dict] | None = None, sectors: list | None = None) -> dict:
+    """The feed admission rules of discover.py, kept apart from vetting. ``rows`` are the run's stored candidates and
+    ``sectors`` the sectors it reviewed, for the FAP and two-sector parts (not measured when missing)."""
     flags = set(c.get("flags") or [])
     depth = _num(c.get("depth_ppm"))
     period = _num(c.get("period_days"))
@@ -1062,6 +1063,20 @@ def feed_rules(c: dict) -> dict:
                f"≥ {MIN_FEED_TRANSITS} transits", PASS if period is not None and n_tr >= MIN_FEED_TRANSITS else FAIL,
                "A repeated dip is needed for the feed."),
     ]
+    row = next((r for r in rows or [] if r.get("candidate_id") == c.get("candidate_id")), None)
+    fap = _num(row.get("fap")) if row else None
+    rules.append(_check("fap", "false-alarm probability", None if fap is None else (row.get("fap_label") or f"{fap:.2g}"),
+                        f"< {MAX_FEED_FAP:g}", NOT_MEASURED if fap is None else (PASS if fap < MAX_FEED_FAP else FAIL),
+                        "Block-bootstrap trials of the dip's periodic signal; with 2,000 trials it passes at k ≤ 1."))
+    if sectors is not None and len(set(sectors)) < 2:
+        two = ("one sector reviewed", FAIL)
+    elif row is None or row.get("sector") is None or row.get("period_days") is None:
+        two = (None, NOT_MEASURED)
+    else:
+        partner = two_sector_partner(row, rows)
+        two = (f"sector {partner['sector']}" if partner else "no match in the other sector", PASS if partner else FAIL)
+    rules.append(_check("two_sector", "seen in both sectors", two[0], f"same period within {100 * TWO_SECTOR_PERIOD_TOL:g}% in the other sector",
+                        two[1], "The signal must reach the rule in both reviewed sectors (pre-registered, docs/results/feed_rule_preregistration.json)."))
     states = {r["state"] for r in rules}
     admitted = "admitted" if states == {PASS} else ("not decided" if NOT_MEASURED in states and FAIL not in states else "not admitted")
     return {"rules": rules, "result": admitted}
@@ -1514,7 +1529,7 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
         c["count_rule"] = row.get("count_rule") or {}
         c["checks"] = vetting_checks(c)
         c["outcome"] = outcome(c["checks"], c["flags"], c["passed"])
-        c["feed"] = feed_rules(c)
+        c["feed"] = feed_rules(c, rows, [i.get("sector") for i in (run.get("manifest") or {}).get("inputs", [])] or None)
     signals = group_signals(run["candidates"])
     cands = {c["candidate_id"]: c for c in run["candidates"]}
     for s in signals:

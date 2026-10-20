@@ -534,7 +534,50 @@ def _headline(data: dict) -> list[str]:
                f"{imp['live_ci_per_100_targets'][1]:.0f})" if imp.get("live_ci_per_100_targets") else "")
             + (f". On the real light curves of TOI hosts the same rule found {imp['real_new_signals_per_1000']:.0f} new signals per 1,000 star-sectors."
                if imp.get("real_new_signals_per_1000") is not None else ".")
-            + " A fix is proposed below, not applied.", ""]
+            + " A fix is proposed below" + ("; it was later pre-registered and tested, see the update at the end." if data.get("feed_rule") else ", not applied."), ""]
+
+
+def _ci(r: dict | None) -> str:
+    return _pct(r) if r else "—"
+
+
+def feed_rule_lines(fr: dict | None) -> list[str]:
+    """The pre-registered two-sector feed rule, its one held-out evaluation, and the live feed re-run under it."""
+    if not fr or not fr.get("validation"):
+        return []
+    v, pre, live = fr["validation"], fr.get("preregistration") or {}, fr.get("live")
+    n, o = v["held_out"], v["held_out_old_rule"]
+    r = v["rule"]
+    f = lambda x: f"{x['expected_false_per_100_targets']:.1f} ({x['expected_false_ci_per_100_targets'][0]:.1f}–{x['expected_false_ci_per_100_targets'][1]:.1f})"
+    lines = ["", f"## Update {v['evaluated_at'][:10]}: the two-sector feed rule, pre-registered and tested once", "",
+             f"The fix proposed above was chosen on the tuning half only and pre-registered at commit `{v['preregistration_commit'][:7]}` "
+             "(docs/results/feed_rule_preregistration.json) before its one held-out evaluation (docs/results/feed_rule_validation.json). "
+             f"Rule: the signal must reach the feed rule in both reviewed sectors with periods within {100 * r['period_tol']:g}%, and its "
+             f"FAP must be below {r['fap_cut']:g} over {r['fap_trials']:,} trials. No rule in the grid met the stated noise target "
+             f"(at most 1 false signal per 100 targets on the tuning half), so the pre-stated fallback chose the lowest noise."
+             if not pre.get("met_noise_target", True) else "", "",
+             "Measured with the discovery config itself (subject-mode BLS, the Probes, the feed's weights file) on each held-out "
+             f"star's first two SPOC 2-minute sectors and the same two controls per sector: {n['targets']} targets, {n['star_sectors']} star-sectors.", "",
+             "| held-out | old rule (FAP < 0.01, 200 trials, one sector) | new rule |", "|---|---|---|",
+             f"| False signals per 100 targets, worse control (95% CI) | {f(o)} | {f(n)} |",
+             f"| Inverted control: false signals | {o['inverted']['new_signals']} ({o['inverted']['new_signals_per_1000']:.0f} per 1,000 star-sectors) | {n['inverted']['new_signals']} ({n['inverted']['new_signals_per_1000']:.0f} per 1,000) |",
+             f"| Scrambled control: false signals | {o['scrambled']['new_signals']} ({o['scrambled']['new_signals_per_1000']:.0f} per 1,000) | {n['scrambled']['new_signals']} ({n['scrambled']['new_signals_per_1000']:.0f} per 1,000) |",
+             f"| CP/KP admitted on their ephemeris (feed-level completeness) | {_ci(o['completeness'])} | {_ci(n['completeness'])} |",
+             f"| FP TOIs kept out | {_ci(o['fp_rejected'])} | {_ci(n['fp_rejected'])} |",
+             f"| New (no-TOI) signals on the real curves, per 100 targets | {o['real_new_per_100_targets']:.1f} | {n['real_new_per_100_targets']:.1f} |", ""]
+    verdict = ("The rule lowers the noise clearly (the 95% intervals do not overlap): about fourfold. "
+               if v["fix_clearly_lowers_noise"] else "**The rule is not shown to lower the noise: the 95% intervals overlap.** ")
+    lines += [verdict + f"**It does not make the feed reliable.** Noise alone still gives about {n['expected_false_per_100_targets']:.0f} false "
+              f"signals per 100 targets, far above the {n['real_new_per_100_targets']:.1f} new signals per 100 targets the real light "
+              "curves of TOI hosts produce, so what the feed admits is still dominated by false alarms. Completeness at the feed's "
+              f"level fell from {100 * o['completeness']['rate']:.0f}% to {100 * n['completeness']['rate']:.0f}%. A feed admission is a lead "
+              "for human or follow-up review, not a candidate of any confirmed status.", ""]
+    if live:
+        lines += [f"**The live feed re-run under the new rule** ({live['targets']} targets of the live catalogue, their latest two sectors, "
+                  f"{live['when'][:10]}; TOI table from {live['toi_table']}): {live['new_signals']} of the {live['old_new_signals']} earlier new "
+                  f"signals survive, and {live['known_signals']} known-TOI signals are admitted. The earlier catalogue is kept as "
+                  f"{live['old_catalogue']}.", ""]
+    return lines
 
 
 def _sentinel_lines(se: dict) -> list[str]:
@@ -551,7 +594,7 @@ def _sentinel_lines(se: dict) -> list[str]:
     for rid, v in se["personas"].items():
         lines.append(f"| {rid} | {_pct(v['cp_kp_marked'])} | {_pct(v['fp_marked_as_planet'])} | {v['errors']} |")
     if se.get("models"):
-        lines += ["", "Model, as the provider reported it: " + "; ".join(f"{k}: {v} reviews" for k, v in se["models"].items())
+        lines += ["", ("Model, as each provider reported it: " if multi else "Model, as the Claude Code CLI reported it: ") + "; ".join(f"{k}: {v} reviews" for k, v in se["models"].items())
                   + ". Reviews answered before exoplan stored the model id say \"not recorded\": the CLI ran its default "
                   "model then, and the cache key holds only \"default\"."]
     ag = se.get("agreement") or {}
@@ -660,6 +703,7 @@ def to_markdown(data: dict) -> str:
                       if au.get("ignored_not_thresholds") else "")
                    if au["clean"] else "**Yes, possibly: these threshold values changed after the sample was frozen: "
                    + "; ".join(f"{k}: {v[0]} → {v[1]}" for k, v in au["changed"].items()) + ".**"), ""]
+    lines += feed_rule_lines(data.get("feed_rule"))
     lines += ["Recovered means the panel's consensus dip passed vetting and lies on the TOI's published ephemeris (`match_toi`). "
               "Flagged means vetting rejected the on-ephemeris dip, or marked it odd/even, secondary eclipse, V shape or density "
               "mismatch. Wilson 95% intervals. TFOPWG dispositions are the reference; they are not ground truth for every TOI.", ""]

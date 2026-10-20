@@ -77,6 +77,9 @@ probabilities, odd/even and secondary checks, and an honest label on everything.
 - **The name.** exoplan becomes SetuHQ, *setu* being Sanskrit for bridge: from public sky data
   to reviewed candidates. The logo's Q is a star with a planet crossing its face
   ([brand kit](docs/assets/brand/README.md)).
+- **The feed's pre-registered rule.** The search feed now needs a signal in both reviewed sectors
+  and a FAP below 0.001. On held-out data it cuts noise about fourfold but still admits about 6
+  false signals per 100 targets, so its admissions are leads for review (see Evidence).
 - **Merged for this release** (each branch scored by an independent reviewer before it was merged):
   pixel-level and Data-Validation-style vetting, a reduced false-positive probability with a
   stability gate, ExoFOP-style export and the deep-dip clipping fix (accepted, 9.0/10); a methods
@@ -349,7 +352,7 @@ SetuHQ reports what it measured, including where it falls short.
 | pi Men c, transit duration T14 | **1.04** (3.07 ± 0.17 h) | [validation](docs/results/pi_men_validation.md) |
 | Real-TOI benchmark, held-out completeness | **57%** (86/150; 49–65%) | [benchmark](docs/results/benchmark_real_tois.md) |
 | … planets below 2 R⊕ | 10% | [benchmark](docs/results/benchmark_real_tois.md) |
-| Live feed’s “new” signals | **consistent with noise** (≈13 per 100 targets from controls vs 15.8 observed) | [benchmark](docs/results/benchmark_real_tois.md) |
+| Live feed’s “new” signals | **consistent with noise** under the old rule (≈13 per 100 targets from controls vs 15.8 observed). The pre-registered two-sector rule cuts held-out noise about fourfold, from 23.0 (18.6–28.0) to 6.1 (4.0–9.4) per 100 targets, still far above the 0.3 real new signals per 100, and roughly halves completeness; re-run under it, 0 of the 3 earlier new signals survive | [validation](docs/results/feed_rule_validation.json) |
 | Real-TOI leaderboard: the Probes against a floor that reads no light curve | **not shown to beat it** (paired ΔJ interval includes zero) | [leaderboard](docs/leaderboard/leaderboard.md) |
 
 <picture>
@@ -460,7 +463,19 @@ along with a flux-inverted and a block-scrambled copy as false-alarm controls. H
 * **The live feed's "new" signals are consistent with noise.** On the controls, the feed's own
   admission rule passes 55 (inverted) and 65 (scrambled) false signals per 1,000 star-sectors.
   That is about 13 per 100 targets reviewed, against 15.8 per 100 on the live feed (3 over 19
-  targets). A fix is proposed in the report and has not been applied.
+  targets).
+* **The fix, pre-registered and tested once.** The feed now requires the signal in both reviewed
+  sectors (periods within 0.5%) and a FAP below 0.001 over 2,000 trials. The rule was chosen on the
+  tuning half and committed (8909cda) before one held-out evaluation (pre-fix code, like the benchmark).
+  Held-out results, measured with the discovery config, old rule to new rule:
+  * noise from the controls: 23.0 (95% CI 18.6–28.0) to 6.1 (4.0–9.4) false signals per 100 targets;
+  * feed-level completeness: 39% to 17%;
+  * FP TOIs kept out: 73% to 94%.
+
+  Noise drops about fourfold, but 6 per 100 targets is still far above the 0.3 new signals per 100
+  that real light curves give. The feed is still dominated by false alarms, and an admission is a
+  lead for human or follow-up review, not a candidate of any confirmed status. Re-run under the new
+  rule, the live feed's 19 targets keep 0 of the 3 earlier new signals and admit 2 known TOIs.
 * The Sentinels on a stated subsample of 40 held-out stars: each persona marked 50% of the CP/KP
   dips and 20% of the FP dips as potential planets. They agree on 38 of 40 stars (φ = 0.89):
   one model, so one correlated voter.
@@ -491,12 +506,21 @@ published TOI period, and `new_candidate` otherwise.
   [docs/threshold_sweep.md](docs/threshold_sweep.md), including losers. This synthetic sweep is not the
   real-TOI leaderboard (see [Leaderboard and methods paper](#evidence)).
 
-**Measured false-alarm rate.** On real light curves with every signal destroyed, the feed's
-own rule admits about 13 noise signals per 100 targets reviewed. The live feed shows 15.8
-`new_candidate` signals per 100 targets, so its "new" signals are consistent with noise (see
-[the benchmark](docs/results/benchmark_real_tois.md)). The proposed fix is to require the signal
-independently in both sectors reviewed and to use a stricter FAP. It is not applied: it must be
-chosen on the tuning half and validated on the held-out half first.
+**Measured false-alarm rate.** Under the earlier rule (FAP < 0.01 over 200 trials, one sector),
+light curves with every signal destroyed passed about 13 noise signals per 100 targets. The live
+feed showed 15.8 `new_candidate` signals per 100 targets, so its "new" signals were consistent
+with noise (see [the benchmark](docs/results/benchmark_real_tois.md)).
+
+The feed now requires the signal in both reviewed sectors and a FAP below 0.001 over 2,000 trials.
+That rule was chosen on the tuning half, pre-registered, and evaluated once on the held-out half
+([validation](docs/results/feed_rule_validation.json)). It lowers noise about fourfold, from 23.0
+(95% CI 18.6–28.0) to 6.1 (4.0–9.4) per 100 targets, and roughly halves completeness (feed level,
+39% to 17%). Noise still outweighs the real new signals by far (about 6 per 100 targets against
+0.3), so the feed's admissions are leads for human or follow-up review.
+
+Re-run under the new rule (the TOI table was the copy cached on 2026-10-19, because the Archive
+returned HTTP 526), the 19 live targets keep 0 of the 3 earlier new signals. The earlier catalogue
+is kept in [docs/discoveries/catalog_v1_fap200.json](docs/discoveries/catalog_v1_fap200.json).
 
 **What this can and cannot claim.** Every entry is a candidate. A detection here means the
 pipeline saw a vetted dip that matches no published ephemeris. It does not mean a planet has
@@ -652,9 +676,10 @@ events and nulls. That second step is not built yet.
   times the catalogue value, at 3σ) is illustrative, not a published threshold.
 * **False-alarm probabilities are bounded by the trials.** A FAP is (k + 1)/(N + 1) over N
   block-bootstrap trials, and is never printed below 1/(N + 1). The stored pi Men run uses
-  10⁴ trials, the search batches 200, and the library default 20. The feed's FAP < 0.01
-  rule with 200 trials passes at k ≤ 1 of 200: a cut at about 1% with Poisson slack, which
-  across N targets admits about N/100 noise signals by construction. A Gumbel fit to the null
+  10⁴ trials, the search batches 2,000 (stopped once 2 trials reach the signal's SNR), and the
+  library default 20. The feed's FAP < 0.001 rule passes at k ≤ 1 of 2,000, which by itself still
+  admits about N/1,000 noise signals across N targets. The two-sector part of the rule is what
+  removes most of the rest. A Gumbel fit to the null
   maxima is stored with each candidate (`fap_tail`, with `fap_exceed` and `fap_method`). It
   is indicative, extrapolated beyond the trials and conservative (BLS maxima are
   lighter-tailed than Gumbel), and it is never given below 10⁻⁶.
@@ -737,9 +762,11 @@ events and nulls. That second step is not built yet.
   white noise; `scripts/variability_rule_check.py`, `docs/sweep/variability_rule_check.json`), and it
   cannot test periods longer than about 3.8 d in one sector, since each half of the light curve must show it
   (20 of the sector-1 slice's peaks are "coherence not tested" and stay unclassified).
-* **Search candidates are unconfirmed, and the feed's false-alarm rate is measured to be high.**
-  Nothing on the search feed is a confirmed planet. Noise alone gives about 13 `new_candidate`
-  signals per 100 targets, close to the feed's observed rate (real-TOI benchmark).
+* **Feed admissions are leads, not candidates of any confirmed status, and the feed is still
+  dominated by false alarms.** Nothing on the search feed is a confirmed planet. Under the
+  pre-registered two-sector rule, noise alone still gives about 6 false signals per 100 targets
+  (held-out, 95% CI 4.0–9.4), far above the 0.3 per 100 that real light curves give. The rule
+  also costs completeness (feed level, held-out: 39% to 17%).
 <!-- generated:limits-completeness by tools/gen_readme_assets.py --write-readme; edit the generator, not this block -->
 * **Real-TOI completeness is 57% on searchable stars** (held-out; 49 to 65%), below the Kepler Robovetter's completeness and Planet Hunters TESS's rate above 4 R⊕, and only 10% for planets below 2 R⊕. The FP measures cover only FP stars with 2-minute data, a population skewed away from the full FP list.
 <!-- /generated:limits-completeness -->

@@ -120,7 +120,7 @@ def run_batch(config_path: str | Path, targets: list[int], *, work_dir: str | Pa
                 summary = run_pipeline(config, curves, reviewers, out, weights=weights)
                 target = (toi_targets or {}).get(tic) or Target(tic)
                 run_log: dict = {}
-                feed = [e for c in summary.candidates if (e := feed_entry(c, target, curves, started, run_log))]
+                feed = [e for c in summary.candidates if (e := feed_entry(c, target, curves, started, run_log, summary.candidates))]
                 (out / "feed.json").write_text(json.dumps(feed, indent=1, default=float))
                 record.update(status="done", run_dir=str(out), sectors=[c.provenance.get("sector") for c in curves],
                               n_candidates=len(summary.candidates), n_passed=summary.n_passed, n_feed=len(feed),

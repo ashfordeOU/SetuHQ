@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-19T22:06:27+00:00",
+ "generated_at": "2026-10-20T20:26:14+00:00",
  "sample": {
   "source": "NASA Exoplanet Archive, table toi",
   "fetched_at": "2026-10-19T11:00:16Z",
@@ -1598,6 +1598,10 @@
     "errors": 0
    }
   },
+  "models": {
+   "not recorded": 172
+  },
+  "model_note": "the model id the Claude Code CLI reported for each review (its modelUsage), with the call date; \"not recorded\" for reviews answered before exoplan stored it (the cache key holds only \"default\")",
   "agreement": {
    "n": 40,
    "agree": 38,
@@ -1617,7 +1621,7 @@
    37.56547546451403
   ],
   "live": {
-   "source": "docs/discoveries/catalog.json",
+   "source": "docs/discoveries/catalog_v1_fap200.json",
    "updated": "2026-10-17T17:24:19+00:00",
    "targets_reviewed": 19,
    "new_candidate_entries": 3,
@@ -1625,7 +1629,715 @@
   },
   "bad": true
  },
- "code_commit": "76de67d17eeef8a5fc62b26695574d0d63322b72",
+ "feed_rule": {
+  "validation": {
+   "rule": {
+    "name": "two_sector",
+    "period_tol": 0.005,
+    "depth_factor": null,
+    "aliases": false,
+    "fap_trials": 2000,
+    "fap_cut": 0.001
+   },
+   "evaluated_at": "2026-10-20T18:57:06+00:00",
+   "preregistration_commit": "8909cdae23aa1e478ff6b0dc35d393e504af2a2d",
+   "code_commit": "8909cdae23aa1e478ff6b0dc35d393e504af2a2d",
+   "held_out": {
+    "targets": 309,
+    "star_sectors": 562,
+    "inverted": {
+     "new_signals": 19,
+     "new_signals_per_1000": 33.80782918149466
+    },
+    "scrambled": {
+     "new_signals": 0,
+     "new_signals_per_1000": 0.0
+    },
+    "completeness": {
+     "k": 26,
+     "n": 150,
+     "rate": 0.17333333333333334,
+     "lo": 0.1211206319165675,
+     "hi": 0.24185992798817993
+    },
+    "fp_rejected": {
+     "k": 116,
+     "n": 124,
+     "rate": 0.9354838709677419,
+     "lo": 0.8778472764919885,
+     "hi": 0.9669490903914706
+    },
+    "expected_false_per_100_targets": 6.148867313915858,
+    "expected_false_ci_per_100_targets": [
+     3.9714423848772107,
+     9.403210396412959
+    ],
+    "real_new_per_100_targets": 0.32362459546925565
+   },
+   "held_out_old_rule": {
+    "targets": 309,
+    "star_sectors": 562,
+    "inverted": {
+     "new_signals": 71,
+     "new_signals_per_1000": 126.33451957295374
+    },
+    "scrambled": {
+     "new_signals": 43,
+     "new_signals_per_1000": 76.51245551601423
+    },
+    "completeness": {
+     "k": 58,
+     "n": 150,
+     "rate": 0.38666666666666666,
+     "lo": 0.3124911672424145,
+     "hi": 0.46650208823474265
+    },
+    "fp_rejected": {
+     "k": 91,
+     "n": 124,
+     "rate": 0.7338709677419355,
+     "lo": 0.6499148543657576,
+     "hi": 0.8037720834049891
+    },
+    "expected_false_per_100_targets": 22.977346278317153,
+    "expected_false_ci_per_100_targets": [
+     18.635661303751913,
+     27.982667162947195
+    ],
+    "real_new_per_100_targets": 2.912621359223301,
+    "rule": {
+     "name": "old",
+     "fap_trials": 200,
+     "fap_cut": 0.01
+    }
+   },
+   "fix_clearly_lowers_noise": true,
+   "notes": [
+    "Each star's first two SPOC 2-minute sectors (the live feed reviews the latest two); a star with one sector cannot pass the two-sector rule and counts as one target.",
+    "Discovery config: subject-mode BLS, the three Probes with the feed's weights file. Fit and TIC stellar parameters off, because admission never reads them; docs/results/feed_rule_stellar_check.json shows identical admission inputs with them on, on a seeded 20-star subsample.",
+    "A worker restart stopped the first held-out run at 120 of 345 stars before it wrote anything; the script then gained a per-star store so the run resumes (the rule and the scoring are unchanged), and the run was restarted. The trials already computed were reused from their cache."
+   ]
+  },
+  "preregistration": {
+   "written_at": "2026-10-20T13:04:48+00:00",
+   "code_commit": "7dab923d9ebcdd75d191c680076376e03b643ed5",
+   "objective": "Among the grid's rules whose worse control gives at most 1 false signals per 100 targets on the tuning half, the one with the highest tuning completeness (ties: the tighter period tolerance, then the depth check, then no aliases); if none meets it, the lowest noise.",
+   "grid": {
+    "period_tol": [
+     0.005,
+     0.01,
+     0.02
+    ],
+    "depth_factor": [
+     null,
+     2.0
+    ],
+    "aliases": [
+     false,
+     true
+    ]
+   },
+   "fap": {
+    "trials": 2000,
+    "cut": 0.001
+   },
+   "old_rule": {
+    "fap": {
+     "trials": 200,
+     "cut": 0.01
+    },
+    "tuning": {
+     "targets": 279,
+     "two_sector_targets": 249,
+     "completeness": {
+      "k": 49,
+      "n": 148,
+      "rate": 0.3310810810810811,
+      "lo": 0.2603801022473965,
+      "hi": 0.4103290679069278
+     },
+     "fp_rejected": {
+      "k": 83,
+      "n": 106,
+      "rate": 0.7830188679245284,
+      "lo": 0.6954044298895506,
+      "hi": 0.8508374045788089
+     },
+     "real_new_per_100": 2.150537634408602,
+     "noise_counts": {
+      "inverted": 60,
+      "scrambled": 36
+     },
+     "noise_per_100": {
+      "inverted": 21.50537634408602,
+      "scrambled": 12.903225806451612
+     },
+     "noise_worse_per_100": 21.50537634408602,
+     "noise_worse_ci_per_100": [
+      17.088591227776817,
+      26.696170515115426
+     ]
+    }
+   },
+   "trials": [
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.005,
+      "depth_factor": null,
+      "aliases": false
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 19,
+       "n": 148,
+       "rate": 0.12837837837837837,
+       "lo": 0.0837495423332331,
+       "hi": 0.1918106320062804
+      },
+      "fp_rejected": {
+       "k": 99,
+       "n": 106,
+       "rate": 0.9339622641509434,
+       "lo": 0.8699249597867629,
+       "hi": 0.9676458530647216
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 14,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.017921146953405,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.017921146953405,
+      "noise_worse_ci_per_100": [
+       3.0122841688368442,
+       8.24542147560312
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.005,
+      "depth_factor": null,
+      "aliases": true
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 21,
+       "n": 148,
+       "rate": 0.14189189189189189,
+       "lo": 0.09471589217234146,
+       "hi": 0.20718754855482613
+      },
+      "fp_rejected": {
+       "k": 98,
+       "n": 106,
+       "rate": 0.9245283018867925,
+       "lo": 0.8580995894235048,
+       "hi": 0.9612631622790344
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 15,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.376344086021505,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.376344086021505,
+      "noise_worse_ci_per_100": [
+       3.2848707061159845,
+       8.679944853507724
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.005,
+      "depth_factor": 2.0,
+      "aliases": false
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 19,
+       "n": 148,
+       "rate": 0.12837837837837837,
+       "lo": 0.0837495423332331,
+       "hi": 0.1918106320062804
+      },
+      "fp_rejected": {
+       "k": 99,
+       "n": 106,
+       "rate": 0.9339622641509434,
+       "lo": 0.8699249597867629,
+       "hi": 0.9676458530647216
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 14,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.017921146953405,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.017921146953405,
+      "noise_worse_ci_per_100": [
+       3.0122841688368442,
+       8.24542147560312
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.005,
+      "depth_factor": 2.0,
+      "aliases": true
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 21,
+       "n": 148,
+       "rate": 0.14189189189189189,
+       "lo": 0.09471589217234146,
+       "hi": 0.20718754855482613
+      },
+      "fp_rejected": {
+       "k": 98,
+       "n": 106,
+       "rate": 0.9245283018867925,
+       "lo": 0.8580995894235048,
+       "hi": 0.9612631622790344
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 15,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.376344086021505,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.376344086021505,
+      "noise_worse_ci_per_100": [
+       3.2848707061159845,
+       8.679944853507724
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.01,
+      "depth_factor": null,
+      "aliases": false
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 20,
+       "n": 148,
+       "rate": 0.13513513513513514,
+       "lo": 0.08921148549954469,
+       "hi": 0.19952032203379585
+      },
+      "fp_rejected": {
+       "k": 99,
+       "n": 106,
+       "rate": 0.9339622641509434,
+       "lo": 0.8699249597867629,
+       "hi": 0.9676458530647216
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 15,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.376344086021505,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.376344086021505,
+      "noise_worse_ci_per_100": [
+       3.2848707061159845,
+       8.679944853507724
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.01,
+      "depth_factor": null,
+      "aliases": true
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 22,
+       "n": 148,
+       "rate": 0.14864864864864866,
+       "lo": 0.10026035713081935,
+       "hi": 0.21481471679017525
+      },
+      "fp_rejected": {
+       "k": 98,
+       "n": 106,
+       "rate": 0.9245283018867925,
+       "lo": 0.8580995894235048,
+       "hi": 0.9612631622790344
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 16,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.734767025089606,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.734767025089606,
+      "noise_worse_ci_per_100": [
+       3.560437775870985,
+       9.11148769893647
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.01,
+      "depth_factor": 2.0,
+      "aliases": false
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 20,
+       "n": 148,
+       "rate": 0.13513513513513514,
+       "lo": 0.08921148549954469,
+       "hi": 0.19952032203379585
+      },
+      "fp_rejected": {
+       "k": 99,
+       "n": 106,
+       "rate": 0.9339622641509434,
+       "lo": 0.8699249597867629,
+       "hi": 0.9676458530647216
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 15,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.376344086021505,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.376344086021505,
+      "noise_worse_ci_per_100": [
+       3.2848707061159845,
+       8.679944853507724
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.01,
+      "depth_factor": 2.0,
+      "aliases": true
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 22,
+       "n": 148,
+       "rate": 0.14864864864864866,
+       "lo": 0.10026035713081935,
+       "hi": 0.21481471679017525
+      },
+      "fp_rejected": {
+       "k": 98,
+       "n": 106,
+       "rate": 0.9245283018867925,
+       "lo": 0.8580995894235048,
+       "hi": 0.9612631622790344
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 16,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.734767025089606,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.734767025089606,
+      "noise_worse_ci_per_100": [
+       3.560437775870985,
+       9.11148769893647
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.02,
+      "depth_factor": null,
+      "aliases": false
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 23,
+       "n": 148,
+       "rate": 0.1554054054054054,
+       "lo": 0.10584273306445399,
+       "hi": 0.22240397405036763
+      },
+      "fp_rejected": {
+       "k": 99,
+       "n": 106,
+       "rate": 0.9339622641509434,
+       "lo": 0.8699249597867629,
+       "hi": 0.9676458530647216
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 15,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.376344086021505,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.376344086021505,
+      "noise_worse_ci_per_100": [
+       3.2848707061159845,
+       8.679944853507724
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.02,
+      "depth_factor": null,
+      "aliases": true
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 25,
+       "n": 148,
+       "rate": 0.16891891891891891,
+       "lo": 0.11711370366921145,
+       "hi": 0.23747626983326423
+      },
+      "fp_rejected": {
+       "k": 98,
+       "n": 106,
+       "rate": 0.9245283018867925,
+       "lo": 0.8580995894235048,
+       "hi": 0.9612631622790344
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 16,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.734767025089606,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.734767025089606,
+      "noise_worse_ci_per_100": [
+       3.560437775870985,
+       9.11148769893647
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.02,
+      "depth_factor": 2.0,
+      "aliases": false
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 23,
+       "n": 148,
+       "rate": 0.1554054054054054,
+       "lo": 0.10584273306445399,
+       "hi": 0.22240397405036763
+      },
+      "fp_rejected": {
+       "k": 99,
+       "n": 106,
+       "rate": 0.9339622641509434,
+       "lo": 0.8699249597867629,
+       "hi": 0.9676458530647216
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 15,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.376344086021505,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.376344086021505,
+      "noise_worse_ci_per_100": [
+       3.2848707061159845,
+       8.679944853507724
+      ]
+     }
+    },
+    {
+     "rule": {
+      "name": "two_sector",
+      "period_tol": 0.02,
+      "depth_factor": 2.0,
+      "aliases": true
+     },
+     "tuning": {
+      "targets": 279,
+      "two_sector_targets": 249,
+      "completeness": {
+       "k": 25,
+       "n": 148,
+       "rate": 0.16891891891891891,
+       "lo": 0.11711370366921145,
+       "hi": 0.23747626983326423
+      },
+      "fp_rejected": {
+       "k": 98,
+       "n": 106,
+       "rate": 0.9245283018867925,
+       "lo": 0.8580995894235048,
+       "hi": 0.9612631622790344
+      },
+      "real_new_per_100": 0.35842293906810035,
+      "noise_counts": {
+       "inverted": 16,
+       "scrambled": 0
+      },
+      "noise_per_100": {
+       "inverted": 5.734767025089606,
+       "scrambled": 0.0
+      },
+      "noise_worse_per_100": 5.734767025089606,
+      "noise_worse_ci_per_100": [
+       3.560437775870985,
+       9.11148769893647
+      ]
+     }
+    }
+   ],
+   "chosen": {
+    "name": "two_sector",
+    "period_tol": 0.005,
+    "depth_factor": null,
+    "aliases": false
+   },
+   "chosen_tuning": {
+    "targets": 279,
+    "two_sector_targets": 249,
+    "completeness": {
+     "k": 19,
+     "n": 148,
+     "rate": 0.12837837837837837,
+     "lo": 0.0837495423332331,
+     "hi": 0.1918106320062804
+    },
+    "fp_rejected": {
+     "k": 99,
+     "n": 106,
+     "rate": 0.9339622641509434,
+     "lo": 0.8699249597867629,
+     "hi": 0.9676458530647216
+    },
+    "real_new_per_100": 0.35842293906810035,
+    "noise_counts": {
+     "inverted": 14,
+     "scrambled": 0
+    },
+    "noise_per_100": {
+     "inverted": 5.017921146953405,
+     "scrambled": 0.0
+    },
+    "noise_worse_per_100": 5.017921146953405,
+    "noise_worse_ci_per_100": [
+     3.0122841688368442,
+     8.24542147560312
+    ]
+   },
+   "met_noise_target": false,
+   "held_out_plan": "Evaluated once on the held-out half: completeness, FP rejection and false signals per 100 targets on both controls, old rule against the chosen rule. The fix is claimed only if the worse control's held-out noise rate under the chosen rule is below the old rule's with non-overlapping Wilson 95% intervals; otherwise the report says it is not shown to work."
+  },
+  "live": {
+   "when": "2026-10-20T18:58:30+00:00",
+   "targets": 19,
+   "rule": "two-sector rule, FAP < 0.001 over 2,000 trials (pre-registered 8909cda; held-out validation docs/results/feed_rule_validation.json)",
+   "toi_table": "cache/toi/toi.csv fetched 2026-10-19T11:00:16Z (the NASA Exoplanet Archive TAP returned HTTP 526 on 2026-10-20)",
+   "reviewers": "the three Probes with the feed's weights file (no API key set, so no Claude API reviewer)",
+   "sectors": "each target's latest two SPOC 2-minute sectors (the same sectors as the earlier run for TIC 348835438: 88 and 99)",
+   "new_signals": 0,
+   "new_entries": 0,
+   "old_new_signals": 3,
+   "old_new_signals_tic": 348835438,
+   "old_new_periods_days": [
+    2.074,
+    5.07,
+    1.405
+   ],
+   "why_old_ones_fail": {
+    "2.074": "FAP 0.69 over 50 trials (stopped early)",
+    "5.07": "FAP 0.25 over 50 trials (stopped early)",
+    "1.405": "FAP 0.0010 over 2,000 trials but no matching signal in sector 88"
+   },
+   "known_signals": 2,
+   "known_entries": 24,
+   "run_log": {
+    "errors": [],
+    "new": 0,
+    "known": 24,
+    "filtered_deep": 64,
+    "filtered_fap": 2,
+    "filtered_one_sector": 2,
+    "filtered_single": 1
+   },
+   "old_catalogue": "docs/discoveries/catalog_v1_fap200.json"
+  }
+ },
+ "code_commit": "8909cdae23aa1e478ff6b0dc35d393e504af2a2d",
  "code_provenance": {
   "fingerprints": [
    "14f6f4830a525d78",
@@ -1636,12 +2348,13 @@
    "e4fe4c99663ccba8": "40cceca"
   },
   "head_same_behaviour": {
-   "14f6f4830a525d78": true,
-   "e4fe4c99663ccba8": true
+   "14f6f4830a525d78": false,
+   "e4fe4c99663ccba8": false
   }
  },
  "threshold_audit": {
   "frozen_after": "fbc1ed9",
+  "compared_with": "76de67d",
   "paths": [
    "configs",
    "docs/results/reviewer_weights.json",
