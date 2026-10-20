@@ -88,7 +88,7 @@ def sentinel_predictions(cache: dict, sample: dict, tois: list[str]) -> dict[str
 def check(subs: dict, sample: dict, benchmark: dict) -> None:
     """The leaderboard's own outcomes must reproduce the committed benchmark numbers, or nothing is written."""
     per = {r["toi"]: r for r in benchmark["per_star"]}
-    rows = L.outcomes(subs["probes"], sample)
+    rows = L.outcomes(subs["probes"], sample, benchmark)
     for row in rows:
         r = per[row["toi"]]
         if not r.get("real"):
@@ -103,7 +103,7 @@ def check(subs: dict, sample: dict, benchmark: dict) -> None:
     for p in PERSONAS:
         if p not in subs:
             return
-        srows[p] = L.outcomes(subs[p], sample)
+        srows[p] = L.outcomes(subs[p], sample, benchmark)
         pos = rates([{"x": r["recovered"]} for r in srows[p] if cls[r["toi"]] == "positive"], "x")
         fp = rates([{"x": r["recovered"]} for r in srows[p] if cls[r["toi"]] == "fp"], "x")
         if (pos["k"], pos["n"], fp["k"], fp["n"]) != (committed[p]["cp_kp_marked"]["k"], committed[p]["cp_kp_marked"]["n"],

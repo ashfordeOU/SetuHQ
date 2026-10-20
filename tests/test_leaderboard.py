@@ -67,7 +67,7 @@ def test_public_inputs_are_the_committed_file_and_carry_no_held_out_label():
 # ---------- the scorer reproduces the benchmark report ----------
 def test_probe_events_scored_by_the_leaderboard_reproduce_every_per_star_row():
     per = {r["toi"]: r for r in BENCH["per_star"]}
-    for row in L.outcomes(SUBS["probes"], SAMPLE):
+    for row in L.outcomes(SUBS["probes"], SAMPLE, BENCH):
         r = per[row["toi"]]
         if not r.get("real"):
             assert not row["searched"]
@@ -131,14 +131,14 @@ def test_sentinel_entries_equal_the_benchmark_reports_persona_numbers():
         assert _kn(s["fp_rejection"]) == (fp["n"] - fp["k"], fp["n"])
         assert s["controls"] == {"inverted": None, "scrambled": None}
         assert [p["toi"] for p in SUBS[pid]["predictions"]] == BENCH["sentinels"]["subsample"]
-        rows[pid] = L.outcomes(SUBS[pid], SAMPLE)
+        rows[pid] = L.outcomes(SUBS[pid], SAMPLE, BENCH)
     agree = sum(x["recovered"] == y["recovered"] for x, y in zip(rows["claude-volunteer"], rows["claude-skeptic"]))
     assert (agree, len(rows["claude-volunteer"])) == (BENCH["sentinels"]["agreement"]["agree"], BENCH["sentinels"]["agreement"]["n"])
 
 
 def test_derived_combinations_follow_their_stated_star_level_rules():
-    pr = {r["toi"]: r for r in L.outcomes(SUBS["probes-subsample"], SAMPLE)}
-    se = [{r["toi"]: r for r in L.outcomes(SUBS[s], SAMPLE)} for s in ("claude-volunteer", "claude-skeptic")]
+    pr = {r["toi"]: r for r in L.outcomes(SUBS["probes-subsample"], SAMPLE, BENCH)}
+    se = [{r["toi"]: r for r in L.outcomes(SUBS[s], SAMPLE, BENCH)} for s in ("claude-volunteer", "claude-skeptic")]
     clean = lambda r: r["recovered"] and not r["flagged"]  # noqa: E731
     order = BENCH["sentinels"]["subsample"]
     for d in L.DERIVED:
@@ -211,16 +211,77 @@ def test_the_metadata_floor_is_built_reproducibly_from_public_inputs():
     assert f["ranked"] and f["tuned_on"] == "tuning" and f["kind"] == "baseline"
     # It ignores the light curve, so it reports the same events on the controls.
     for p in SUBS[L.FLOOR_ID]["predictions"]:
-        assert p["controls"]["inverted"] == p["events"] == p["controls"]["scrambled"]
+        if p["searched"]:
+            assert p["controls"]["inverted"] == p["events"] == p["controls"]["scrambled"]
 
 
-def test_the_page_and_table_say_whether_the_probes_beat_the_floor():
+def test_the_floor_verdict_comes_from_a_paired_delta_j():
     fl = RESULTS["floor"]
-    pj, fj = ENTRY["probes"]["scores"]["youden_j"], ENTRY[L.FLOOR_ID]["scores"]["youden_j"]
-    assert fl["overlap"] == (pj["lo"] <= fj["hi"] and fj["lo"] <= pj["hi"])
-    note = RESULTS["floor_note"]
-    assert note.startswith("The Probes do not beat" if not fl["probes_above"] else "The Probes beat")
-    assert note in L.RESULTS_MD.read_text()
+    dj = fl["paired"]
+    rows_f = L.outcomes(SUBS[L.FLOOR_ID], SAMPLE, BENCH)
+    rows_p = L.outcomes(SUBS["probes"], SAMPLE, BENCH)
+    again = L.paired_delta_j(rows_f, rows_p)
+    assert again == dj  # deterministic (seeded)
+    # ΔJ is the difference of the two ranked J values, on the same stars.
+    assert dj["delta_j"] == pytest.approx(ENTRY[L.FLOOR_ID]["scores"]["youden_j"]["j"] - ENTRY["probes"]["scores"]["youden_j"]["j"])
+    assert dj["stars"] == {"positive": H["completeness"]["n"], "fp": H["fp_seen"]["n"]}
+    assert dj["lo"] < dj["delta_j"] < dj["hi"] and 0 <= dj["p_le_0"] <= 1
+    assert fl["verdict"] == ("floor_ahead" if dj["lo"] > 0 else "probes_ahead" if dj["hi"] < 0 else "not_shown")
+    assert RESULTS["floor_note"] == L.floor_note(fl) and RESULTS["floor_note"] in L.RESULTS_MD.read_text()
+
+
+@pytest.mark.parametrize("delta,lo,hi,starts", [
+    (+0.086, -0.05, +0.22, "The benchmark cannot show"),   # the committed case: floor higher, interval spans 0
+    (-0.05, -0.19, +0.09, "The benchmark cannot show"),    # Probes higher, intervals overlapping: still not shown
+    (+0.20, +0.06, +0.34, "The metadata-only floor is significantly ahead"),
+    (-0.20, -0.34, -0.06, "The Probes are significantly ahead"),
+])
+def test_the_floor_sentence_follows_the_paired_interval_only(delta, lo, hi, starts):
+    dj = {"delta_j": delta, "lo": lo, "hi": hi, "p_le_0": 0.5}
+    verdict = "floor_ahead" if lo > 0 else "probes_ahead" if hi < 0 else "not_shown"
+    note = L.floor_note({"paired": dj, "verdict": verdict})
+    assert note.startswith(starts)
+    assert ("mostly measures how separable" in note) == (verdict == "floor_ahead")
+    assert "do not beat" not in note
+
+
+def test_a_perturbed_ranking_changes_the_floor_verdict():
+    """Make the floor call every searchable star a planet: its J drops to 0 and the Probes pull significantly ahead."""
+    sub = copy.deepcopy(SUBS[L.FLOOR_ID])
+    for p in sub["predictions"]:
+        if p["searched"]:
+            ev = [_on_ephemeris(p["toi"])]
+            p.update(events=ev, controls={"inverted": [], "scrambled": []})
+    subs = [s for k, s in SUBS.items() if k != L.FLOOR_ID] + [sub]
+    res = L.build(SAMPLE, INPUTS, BENCH, subs)
+    assert res["floor"]["verdict"] == "probes_ahead" and res["floor_note"].startswith("The Probes are significantly ahead")
+
+
+def test_the_floor_counts_the_same_stars_as_the_probes():
+    searchable = L.benchmark_searchable(BENCH)
+    for p in SUBS[L.FLOOR_ID]["predictions"]:
+        assert p["searched"] == (p["toi"] in searchable)
+    f, pr = ENTRY[L.FLOOR_ID]["scores"], ENTRY["probes"]["scores"]
+    for v in ("inverted", "scrambled"):
+        assert f["controls"][v]["star_sectors"] == pr["controls"][v]["star_sectors"]
+    assert f["reliability_mix"] == pr["reliability_mix"]
+    assert L.small_rate(f)["n"] == L.small_rate(pr)["n"]
+
+
+def test_ranked_entries_name_the_ranks_their_interval_overlaps():
+    ranked = [e for e in RESULTS["entries"] if e["ranked"]]
+    for e in ranked:
+        j = e["scores"]["youden_j"]
+        want = sorted({o["rank"] for o in ranked if o is not e and o["scores"]["youden_j"]["lo"] <= j["hi"]
+                       and j["lo"] <= o["scores"]["youden_j"]["hi"]})
+        assert e["overlaps_ranks"] == want
+        if want:
+            assert f"| {L.rank_text(e)} |" in L.RESULTS_MD.read_text()
+
+
+def test_outcomes_needs_the_benchmark():
+    with pytest.raises(TypeError):
+        L.outcomes(SUBS["probes"], SAMPLE)  # noqa
 
 
 def test_self_reported_outcomes_are_not_accepted():
@@ -391,7 +452,11 @@ const { chromium } = require(%s);
 
 
 def test_the_docs_claim_about_the_floor_matches_the_table():
-    beaten = RESULTS["floor"]["probes_above"]
+    fl = RESULTS["floor"]
     for doc in (ROOT / "README.md", L.LB_DIR / "README.md"):
         text = " ".join(doc.read_text().split())
-        assert ("Probes do not beat it" in text) == (not beaten), doc
+        assert ("cannot show that the Probes beat it" in text) == (fl["verdict"] == "not_shown"), doc
+        assert "Probes do not beat it" not in text
+    top = " ".join((ROOT / "README.md").read_text().split())
+    assert ("puts the floor ahead by a ΔJ whose interval includes zero" in top) == (
+        fl["verdict"] == "not_shown" and fl["paired"]["delta_j"] > 0)

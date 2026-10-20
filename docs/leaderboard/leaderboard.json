@@ -1,5 +1,5 @@
 {
- "format": "exoplan-leaderboard-results/3",
+ "format": "exoplan-leaderboard-results/4",
  "floor": {
   "probes": {
    "j": 0.30333333333333323,
@@ -11,12 +11,21 @@
    "lo": 0.2740923874271185,
    "hi": 0.4897816054458294
   },
-  "overlap": true,
-  "probes_above": false,
-  "floor_above": false,
-  "probes_higher": false
+  "paired": {
+   "delta_j": 0.08569892473118301,
+   "lo": -0.05247311827957013,
+   "hi": 0.22322580645161283,
+   "p_le_0": 0.11175,
+   "draws": 20000,
+   "seed": 20261019,
+   "stars": {
+    "positive": 150,
+    "fp": 124
+   }
+  },
+  "verdict": "not_shown"
  },
- "floor_note": "The Probes do not beat the metadata-only floor: J +0.30 (+0.19 to +0.41) against +0.39 (+0.27 to +0.49) for a model that never sees a light curve; the intervals overlap. On this benchmark J mostly measures how separable false positives are from catalogue metadata.",
+ "floor_note": "The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11).",
  "sample_sha256": "6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac",
  "inputs_sha256": "d0e4f2d9c5538800e9a34d018757f99e1d1672060e71ae56bbaf87fcaf0c15b4",
  "full_sample_sha256": "3d420ac0bc628e2fe02b0c3b4c73b287f75a6ee2be351bf42011497d7e45c3cf",
@@ -89,12 +98,16 @@
    "kind": "baseline",
    "tuned_on": "tuning",
    "provenance": {
-    "method": "Never reads a light curve. A logistic regression on the public TOI number, period, duration, ephemeris errors and epoch, fitted on the tuning half's CP/KP against FP TOIs; held-out stars above the threshold (0.464, chosen by 5-fold cross-validated J = 0.41 on the tuning half) get one event on the published ephemeris. The same events stand on the controls, because the method ignores the light curve. A floor, not a vetter.",
+    "method": "Never reads a light curve. A logistic regression on the public TOI number, period, duration, ephemeris errors and epoch, fitted on the tuning half's CP/KP against FP TOIs; held-out stars above the threshold (0.464, chosen by 5-fold cross-validated J = 0.41 on the tuning half) get one event on the published ephemeris. Stars the benchmark could not search (no SPOC 2-minute light curve) are submitted as not searched. The same events stand on the controls, because the method ignores the light curve. A floor, not a vetter.",
     "code_version": "scripts/leaderboard_metadata_baseline.py",
     "generated_from": [
      {
       "file": "docs/leaderboard/tuning_inputs.json",
       "sha256": "57d8f4ea25e107e8ad68cf43f53f0f40aa5469b36e948c2dc411c464c624498b"
+     },
+     {
+      "file": "docs/results/benchmark_real_tois.json",
+      "rows": "per_star no_data only (searchability)"
      }
     ],
     "features": [
@@ -119,25 +132,25 @@
    },
    "scores": {
     "completeness": {
-     "k": 115,
-     "n": 152,
-     "rate": 0.756578947368421,
-     "lo": 0.6825809664393252,
-     "hi": 0.8179276951191654
+     "k": 114,
+     "n": 150,
+     "rate": 0.76,
+     "lo": 0.6857086056184724,
+     "hi": 0.8213068671104021
     },
     "completeness_all_stars": {
-     "k": 115,
+     "k": 114,
      "n": 152,
-     "rate": 0.756578947368421,
-     "lo": 0.6825809664393252,
-     "hi": 0.8179276951191654
+     "rate": 0.75,
+     "lo": 0.6755747450966949,
+     "hi": 0.812100361037219
     },
     "completeness_clean": {
-     "k": 115,
-     "n": 152,
-     "rate": 0.756578947368421,
-     "lo": 0.6825809664393252,
-     "hi": 0.8179276951191654
+     "k": 114,
+     "n": 150,
+     "rate": 0.76,
+     "lo": 0.6857086056184724,
+     "hi": 0.8213068671104021
     },
     "completeness_by_radius": [
      {
@@ -153,10 +166,10 @@
      },
      {
       "k": 22,
-      "n": 27,
-      "rate": 0.8148148148148148,
-      "lo": 0.6330131622138684,
-      "hi": 0.9181929290877906,
+      "n": 26,
+      "rate": 0.8461538461538461,
+      "lo": 0.6646880050648342,
+      "hi": 0.9384996631922972,
       "bin": [
        2,
        4
@@ -174,11 +187,11 @@
       ]
      },
      {
-      "k": 72,
-      "n": 92,
-      "rate": 0.782608695652174,
-      "lo": 0.6879299882179883,
-      "hi": 0.8546327044514166,
+      "k": 71,
+      "n": 91,
+      "rate": 0.7802197802197802,
+      "lo": 0.6847607613593407,
+      "hi": 0.8529787525786705,
       "bin": [
        8,
        30
@@ -186,32 +199,32 @@
      }
     ],
     "fp_found": {
-     "k": 52,
-     "n": 158,
-     "rate": 0.3291139240506329,
-     "lo": 0.26066283282371805,
-     "hi": 0.40567729798536734
+     "k": 46,
+     "n": 124,
+     "rate": 0.3709677419354839,
+     "lo": 0.2910183889495591,
+     "hi": 0.4586715764183048
     },
     "fp_flagged_of_found": {
      "k": 0,
-     "n": 52,
+     "n": 46,
      "rate": 0.0,
      "lo": 0.0,
-     "hi": 0.06879223713445441
+     "hi": 0.07707356420776004
     },
     "fp_rejection": {
-     "k": 106,
-     "n": 158,
-     "rate": 0.6708860759493671,
-     "lo": 0.5943227020146327,
-     "hi": 0.7393371671762818
+     "k": 78,
+     "n": 124,
+     "rate": 0.6290322580645161,
+     "lo": 0.5413284235816952,
+     "hi": 0.7089816110504409
     },
     "fp_rejection_all_stars": {
-     "k": 106,
+     "k": 112,
      "n": 158,
-     "rate": 0.6708860759493671,
-     "lo": 0.5943227020146327,
-     "hi": 0.7393371671762818
+     "rate": 0.7088607594936709,
+     "lo": 0.6337382125909388,
+     "hi": 0.7740682941979569
     },
     "fa_found": {
      "k": 6,
@@ -240,66 +253,66 @@
      "hi": 0.4897816054458294
     },
     "completeness_clean_all_stars": {
-     "k": 115,
+     "k": 114,
      "n": 152,
-     "rate": 0.756578947368421,
-     "lo": 0.6825809664393252,
-     "hi": 0.8179276951191654
+     "rate": 0.75,
+     "lo": 0.6755747450966949,
+     "hi": 0.812100361037219
     },
     "youden_j_all_stars": {
-     "j": 0.42746502331778813,
-     "lo": 0.32098661513165494,
-     "hi": 0.5193846661627202
+     "j": 0.4588607594936709,
+     "lo": 0.3531133452436046,
+     "hi": 0.5489078439726456
     },
     "reliability": {
-     "k": 115,
-     "n": 173,
-     "rate": 0.6647398843930635,
-     "lo": 0.5914911885235147,
-     "hi": 0.7308314181807253
+     "k": 114,
+     "n": 166,
+     "rate": 0.6867469879518072,
+     "lo": 0.6126408932946146,
+     "hi": 0.7524054293664058
     },
     "reliability_mix": {
-     "positive": 152,
-     "fp": 158,
+     "positive": 150,
+     "fp": 124,
      "fa": 35
     },
     "controls": {
      "inverted": {
-      "star_sectors": 345,
-      "vetted_false_alarms": 173,
-      "per_1000_star_sectors": 501.4492753623188,
+      "star_sectors": 309,
+      "vetted_false_alarms": 166,
+      "per_1000_star_sectors": 537.2168284789644,
       "stars_with_any": {
-       "k": 173,
-       "n": 345,
-       "rate": 0.5014492753623189,
-       "lo": 0.4489643810723201,
-       "hi": 0.5539022506726764
+       "k": 166,
+       "n": 309,
+       "rate": 0.5372168284789643,
+       "lo": 0.4815057499944797,
+       "hi": 0.5920139173867129
       }
      },
      "scrambled": {
-      "star_sectors": 345,
-      "vetted_false_alarms": 173,
-      "per_1000_star_sectors": 501.4492753623188,
+      "star_sectors": 309,
+      "vetted_false_alarms": 166,
+      "per_1000_star_sectors": 537.2168284789644,
       "stars_with_any": {
-       "k": 173,
-       "n": 345,
-       "rate": 0.5014492753623189,
-       "lo": 0.4489643810723201,
-       "hi": 0.5539022506726764
+       "k": 166,
+       "n": 309,
+       "rate": 0.5372168284789643,
+       "lo": 0.4815057499944797,
+       "hi": 0.5920139173867129
       }
      }
     },
     "controls_complete": true,
     "coverage": {
      "stars": 345,
-     "searched": 345,
+     "searched": 309,
      "by_class": {
       "positive": [
-       152,
+       150,
        152
       ],
       "fp": [
-       158,
+       124,
        158
       ],
       "fa": [
@@ -311,7 +324,10 @@
    },
    "ranked": true,
    "unranked_reason": "",
-   "rank": 1
+   "rank": 1,
+   "overlaps_ranks": [
+    2
+   ]
   },
   {
    "id": "probes",
@@ -531,7 +547,10 @@
    },
    "ranked": true,
    "unranked_reason": "",
-   "rank": 2
+   "rank": 2,
+   "overlaps_ranks": [
+    1
+   ]
   },
   {
    "id": "probes-subsample",

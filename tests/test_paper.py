@@ -102,9 +102,27 @@ def test_leaderboard_numbers_match_the_leaderboard_json():
         for k in ("completeness_clean_searchable", "fp_rejection_searchable", "reliability"):
             assert pct(s[k]) in FLAT, (e["id"], k)
         assert jtext(s["youden_j"]) in FLAT and jtext(s["youden_j_all_stars"]) in FLAT
-    fl = lb["floor"]
-    verdict = "do not beat" if not fl["probes_above"] else "beat"
-    assert f"The Probes {verdict} it" in FLAT and f"The Probes {verdict} a metadata-only floor" in FLAT
+    assert lb["floor_note"] in FLAT
+    assert "do not beat" not in FLAT
+
+
+def test_the_paper_floor_sentence_changes_with_the_paired_interval(tmp_path):
+    from exoplan import leaderboard as LBm
+
+    root = _tmp_root(tmp_path)
+    path = root / "docs/leaderboard/leaderboard.json"
+    data = json.loads(path.read_text())
+    data["floor"]["paired"].update(delta_j=-0.2, lo=-0.33, hi=-0.07)
+    data["floor"]["verdict"] = "probes_ahead"
+    data["floor_note"] = LBm.floor_note(data["floor"])
+    path.write_text(json.dumps(data))
+    paper = " ".join(PN.build(root)[0].split())
+    assert "The Probes are significantly ahead of the metadata-only floor" in paper
+    assert "cannot show" not in paper and "mostly measures how separable" not in paper
+    data["floor"]["verdict"] = "floor_ahead"  # inconsistent with the interval: the script refuses
+    path.write_text(json.dumps(data))
+    with pytest.raises(PN.ClaimFailed, match="paired"):
+        PN.build(root)
 
 
 def test_pending_results_print_pending_never_a_guess():

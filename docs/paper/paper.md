@@ -44,7 +44,7 @@ correlated voter, not two. We report a known bug in the code that produced these
 of the stars that could not be searched, and a public leaderboard on the frozen sample that scores submitted
 events itself and ranks by Youden's J. On that leaderboard a baseline that never reads a light curve, a logistic
 regression on catalogue metadata fitted on the tuning half, scores J = +0.39 (+0.27 to +0.49) against
-+0.30 (+0.19 to +0.41) for the Probes: the Probes do not beat it, and the intervals overlap. Nothing here is a
++0.30 (+0.19 to +0.41) for the Probes. The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11). Nothing here is a
 discovery, and no exoplan output is called a confirmed or validated planet.
 
 ## 1 Introduction
@@ -348,7 +348,7 @@ and are the method's own report.
 
 | entry | scope | rank | Youden J | Youden J, all stars | clean completeness, searchable CP/KP | FP rejection, searchable FP | inverted control: stars with any | reliability |
 |---|---|---|---|---|---|---|---|---|
-| Metadata only, no light curve (a floor) | held-out half | 1 | +0.39 (+0.27 to +0.49) | +0.43 (+0.32 to +0.52) | 76% (114/150; 95% CI 69–82%) | 63% (78/124; 95% CI 54–71%) | 50% (173/345; 95% CI 45–55%) | 66% (115/173; 95% CI 59–73%) |
+| Metadata only, no light curve (a floor) | held-out half | 1 | +0.39 (+0.27 to +0.49) | +0.46 (+0.35 to +0.55) | 76% (114/150; 95% CI 69–82%) | 63% (78/124; 95% CI 54–71%) | 54% (166/309; 95% CI 48–59%) | 69% (114/166; 95% CI 61–75%) |
 | Probes only | held-out half | 2 | +0.30 (+0.19 to +0.41) | +0.35 (+0.24 to +0.44) | 55% (83/150; 95% CI 47–63%) | 75% (93/124; 95% CI 67–82%) | 21% (65/309; 95% CI 17–26%) | 70% (83/118; 95% CI 62–78%) |
 | Probes only | Sentinel subsample | not ranked | +0.15 (-0.14 to +0.41) | +0.15 (-0.14 to +0.41) | 45% (9/20; 95% CI 26–66%) | 70% (14/20; 95% CI 48–85%) | 8% (3/40; 95% CI 3–20%) | 60% (9/15; 95% CI 36–80%) |
 | Sentinel · Volunteer alone | Sentinel subsample | not ranked | +0.30 (+0.01 to +0.53) | +0.30 (+0.01 to +0.53) | 50% (10/20; 95% CI 30–70%) | 80% (16/20; 95% CI 58–92%) | not measured | 71% (10/14; 95% CI 45–88%) |
@@ -358,10 +358,12 @@ and are the method's own report.
 
 **A baseline that never reads a light curve.** The first row is a floor: a logistic regression on the public TOI
 number, period, duration, ephemeris errors and epoch, fitted on the tuning half, that places one passed event on the
-published ephemeris of each held-out star it predicts to be a planet. It reports the same events on the controls,
-because it ignores the light curve, so its control false-alarm rate is high. **The Probes do not beat it:** J
-+0.30 (+0.19 to +0.41) against +0.39 (+0.27 to +0.49), and the intervals overlap. On this benchmark J therefore mostly measures how separable false positives are from catalogue metadata, not how well a method reads light curves. A light-curve method
-should be judged against this floor, not against zero.
+published ephemeris of each held-out star with a SPOC 2-minute light curve that it predicts to be a planet, and
+submits the others as not searched, so its columns count the same stars as the Probes'. It reports the same events
+on the controls, because it ignores the light curve, so its control false-alarm rate is high. The two entries are
+compared by a paired ΔJ over the same stars (20,000 stratified bootstrap resamples of the searchable CP/KP and FP
+stars, both entries scored on each), not by whether their marginal intervals overlap. **The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11).** A
+light-curve method should be judged against this floor, not against zero.
 
 The FP measures in this paper differ by definition. Section 5.3's "rejected or flagged" is over the FP dips the
 panel found (68% (65/96; 95% CI 58–76%)); the leaderboard's FP rejection counts every star of the searchable set whose TOI dip
@@ -415,8 +417,8 @@ claim of matching either.
 
 ## 7 Limitations
 
-* **The Probes do not beat a metadata-only floor** (Section 5.7): J +0.30 (+0.19 to +0.41) against
-  +0.39 (+0.27 to +0.49) for a model that never reads a light curve, and the intervals overlap. On this benchmark J therefore mostly measures how separable false positives are from catalogue metadata, not how well a method reads light curves. The
+* **Against a metadata-only floor, the benchmark cannot show that the Probes beat it** (Section 5.7): J +0.30 (+0.19 to +0.41) against
+  +0.39 (+0.27 to +0.49) for a model that never reads a light curve; paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11. The
   ephemeris is given to every method, so J mixes detection with vetting; separate detection (ephemeris withheld)
   and vetting rankings are future work.
 * **No pixel-level vetting.** There is no centroid or difference-image test, so blended and background eclipsing

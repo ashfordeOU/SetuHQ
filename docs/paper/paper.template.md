@@ -44,7 +44,7 @@ correlated voter, not two. We report a known bug in the code that produced these
 of the stars that could not be searched, and a public leaderboard on the frozen sample that scores submitted
 events itself and ranks by Youden's J. On that leaderboard a baseline that never reads a light curve, a logistic
 regression on catalogue metadata fitted on the tuning half, scores J = {{lb_metadata_baseline_j}} against
-{{lb_probes_j}} for the Probes: the Probes {{floor_verdict}} it, and {{floor_overlap}}. Nothing here is a
+{{lb_probes_j}} for the Probes. {{floor_sentence}} Nothing here is a
 discovery, and no exoplan output is called a confirmed or validated planet.
 
 ## 1 Introduction
@@ -358,10 +358,12 @@ and are the method's own report.
 
 **A baseline that never reads a light curve.** The first row is a floor: a logistic regression on the public TOI
 number, period, duration, ephemeris errors and epoch, fitted on the tuning half, that places one passed event on the
-published ephemeris of each held-out star it predicts to be a planet. It reports the same events on the controls,
-because it ignores the light curve, so its control false-alarm rate is high. **The Probes {{floor_verdict}} it:** J
-{{lb_probes_j}} against {{lb_metadata_baseline_j}}, and {{floor_overlap}}. {{floor_meaning}} A light-curve method
-should be judged against this floor, not against zero.
+published ephemeris of each held-out star with a SPOC 2-minute light curve that it predicts to be a planet, and
+submits the others as not searched, so its columns count the same stars as the Probes'. It reports the same events
+on the controls, because it ignores the light curve, so its control false-alarm rate is high. The two entries are
+compared by a paired ΔJ over the same stars ({{floor_draws}} stratified bootstrap resamples of the searchable CP/KP and FP
+stars, both entries scored on each), not by whether their marginal intervals overlap. **{{floor_sentence}}** A
+light-curve method should be judged against this floor, not against zero.
 
 The FP measures in this paper differ by definition. Section 5.3's "rejected or flagged" is over the FP dips the
 panel found ({{ho_fp_flagged}}); the leaderboard's FP rejection counts every star of the searchable set whose TOI dip
@@ -415,8 +417,8 @@ claim of matching either.
 
 ## 7 Limitations
 
-* **The Probes {{floor_verdict}} a metadata-only floor** (Section 5.7): J {{lb_probes_j}} against
-  {{lb_metadata_baseline_j}} for a model that never reads a light curve, and {{floor_overlap}}. {{floor_meaning}} The
+* **Against a metadata-only floor, {{floor_short}}** (Section 5.7): J {{lb_probes_j}} against
+  {{lb_metadata_baseline_j}} for a model that never reads a light curve; {{floor_dj}}. The
   ephemeris is given to every method, so J mixes detection with vetting; separate detection (ephemeris withheld)
   and vetting rankings are future work.
 * **No pixel-level vetting.** There is no centroid or difference-image test, so blended and background eclipsing

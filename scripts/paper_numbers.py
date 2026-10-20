@@ -419,15 +419,17 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
           "the text says the subsample is never ranked")
     fl = LB.get("floor")
     claim(fl is not None, "the text compares the Probes with the metadata-only floor")
-    beaten = fl["probes_above"]
-    n["floor_verdict"] = "beat" if beaten else "do not beat"
-    n["floor_overlap"] = "the intervals overlap" if fl["overlap"] else "the intervals do not overlap"
-    n["floor_meaning"] = (
-        "On this benchmark J therefore mostly measures how separable false positives are from catalogue metadata, "
-        "not how well a method reads light curves." if not beaten else
-        "The light curves add measurable information beyond the catalogue metadata.")
-    claim(LB["floor_note"].startswith("The Probes do not beat" if not beaten else "The Probes beat"),
-          "the leaderboard's floor note and the paper agree")
+    # The interpretation rests on the paired ΔJ (floor − Probes) over the same stars, not on whether the two marginal
+    # intervals overlap; the sentence is the leaderboard's own, so the paper and the page cannot disagree.
+    claim(fl["verdict"] == ("floor_ahead" if fl["paired"]["lo"] > 0 else "probes_ahead" if fl["paired"]["hi"] < 0 else "not_shown"),
+          "the floor verdict follows the paired ΔJ interval")
+    claim(LB["floor_note"] == L.floor_note(fl), "the leaderboard's floor note is the one the paper prints")
+    n["floor_sentence"] = LB["floor_note"]
+    n["floor_dj"] = L.dj_text(fl["paired"])
+    n["floor_short"] = {"floor_ahead": "the floor is significantly ahead of the Probes",
+                        "probes_ahead": "the Probes are significantly ahead of the floor",
+                        "not_shown": "the benchmark cannot show that the Probes beat it"}[fl["verdict"]]
+    n["floor_draws"] = f"{fl['paired']['draws']:,}"
     n.update(lb_inputs_sha=LB["inputs_sha256"], lb_entries=len(LB["entries"]), lb_refused=len(LB["refused"]),
              lb_mix_pos=next(e for e in LB["entries"] if e["id"] == "probes")["scores"]["reliability_mix"]["positive"],
              lb_mix_fp=next(e for e in LB["entries"] if e["id"] == "probes")["scores"]["reliability_mix"]["fp"],

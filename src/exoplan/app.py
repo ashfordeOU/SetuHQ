@@ -1210,7 +1210,7 @@ table.lbtable{font:14px var(--sans)}
 table.lbtable th,table.lbtable td{white-space:normal;vertical-align:top;padding:10px 12px}
 table.lbtable thead th{font:600 11px/1.35 var(--mono);color:var(--ink-3);text-transform:none;letter-spacing:.02em;white-space:normal}
 table.lbtable tbody th{font:600 14px/1.35 var(--sans);color:var(--ink);text-transform:none;letter-spacing:0;white-space:normal;min-width:12ch}
-table.lbtable .rk{font:600 15px var(--mono);color:var(--ink-2);width:3ch}
+table.lbtable .rk{font:600 15px var(--mono);color:var(--ink-2);width:11ch}
 table.lbtable .v{display:block;font:600 15px/1.3 var(--mono);color:var(--ink)}
 table.lbtable .ci,table.lbtable .kd{display:block;font:12px/1.35 var(--mono);color:var(--ink-3)}
 table.lbtable .na{color:var(--ink-3);font-style:italic}
@@ -2572,7 +2572,9 @@ def _leaderboard(lb: dict | None) -> str:
             jcell = _lb_j(s["youden_j"], "Youden J") + _lb_j(s["youden_j_all_stars"], "Youden J, all stars")
             rk = ""
             if ranked_scope:
-                rk = (f'<td class="rk" data-l="Rank">{x["rank"]}</td>' if x["ranked"] else
+                ov = x.get("overlaps_ranks") or []
+                tie = f'<span class="kd">interval overlaps #{", #".join(map(str, ov))}</span>' if ov else ""
+                rk = (f'<td class="rk" data-l="Rank">{x["rank"]}{tie}</td>' if x["ranked"] else
                       f'<td class="rk" data-l="Rank"><span class="na">unranked</span><span class="kd">{e(x["unranked_reason"])}</span></td>')
             rows.append(f'<tr>{rk}<th scope="row">{e(x["name"])}'
                         f'<span class="kd">{e(x["id"])} · tuned on {e(x["tuned_on"])}</span></th>{jcell}{tds}</tr>')

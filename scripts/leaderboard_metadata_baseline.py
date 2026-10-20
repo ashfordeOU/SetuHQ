@@ -101,8 +101,15 @@ def build_submission() -> dict:
     model = Logistic().fit(X, y)
     held = inputs["held_out"]
     score = model.predict(np.array([features(t) for t in held], float))
+    # Searched only where the benchmark had a light curve to search (a SPOC 2-minute sector): the per-star rows' no_data
+    # field, a property of the star in MAST, not a label. So the floor's control, small-planet and reliability columns
+    # count the same stars as the Probes'. J does not depend on it (it is over the searchable set).
+    searchable = L.benchmark_searchable(json.loads(L.BENCHMARK.read_text()))
     preds = []
     for t, s in zip(held, score):
+        if t["toi"] not in searchable:
+            preds.append({"toi": t["toi"], "tic": t["tic"], "searched": False, "events": [], "controls": None})
+            continue
         ev = [{"t_center": round(t["tranmid_bjd"] - 2457000.0, 6), "duration_hours": t["duration_hours"],
                "period_days": t["period"], "passed": True, "flags": []}] if s >= th else []
         preds.append({"toi": t["toi"], "tic": t["tic"], "searched": True, "events": ev,
@@ -114,11 +121,13 @@ def build_submission() -> dict:
                "method": ("Never reads a light curve. A logistic regression on the public TOI number, period, duration, "
                           "ephemeris errors and epoch, fitted on the tuning half's CP/KP against FP TOIs; held-out stars "
                           f"above the threshold ({th:.3f}, chosen by 5-fold cross-validated J = {j_cv:.2f} on the tuning "
-                          "half) get one event on the published ephemeris. The same events stand on the controls, because "
+                          "half) get one event on the published ephemeris. Stars the benchmark could not search (no SPOC "
+                          "2-minute light curve) are submitted as not searched. The same events stand on the controls, because "
                           "the method ignores the light curve. A floor, not a vetter."),
                "code_version": "scripts/leaderboard_metadata_baseline.py",
                "generated_from": [{"file": "docs/leaderboard/tuning_inputs.json",
-                                   "sha256": hashlib.sha256(L.INPUTS.read_bytes()).hexdigest()}],
+                                   "sha256": hashlib.sha256(L.INPUTS.read_bytes()).hexdigest()},
+                                  {"file": "docs/results/benchmark_real_tois.json", "rows": "per_star no_data only (searchability)"}],
                "features": list(FEATURES), "threshold": round(th, 6), "tuning_cv_j": round(j_cv, 4),
                "coefficients": [round(float(c), 6) for c in model.w]},
            "predictions": preds}

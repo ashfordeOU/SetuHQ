@@ -103,9 +103,16 @@ regression on the public TOI number, period, duration, ephemeris errors and epoc
 the published ephemeris of every held-out star it predicts to be a planet, and none on the others; because it ignores
 the light curve, it reports the same events on the controls, so its control false-alarm rate is high and honest.
 
-**The Probes do not beat it** (the table states the two J values and whether their intervals overlap). On this
-benchmark J therefore mostly measures how separable false positives are from catalogue metadata, not how well a
-method reads light curves. A method should be judged against this floor, not against zero.
+Stars the benchmark could not search (no SPOC 2-minute light curve; the per-star `no_data` field, a property of
+the star, not a label) are submitted as not searched, so the floor's control, small-planet and reliability columns
+count the same stars as the Probes'.
+
+The leaderboard compares the floor with the Probes by a **paired ΔJ** (floor − Probes) over the same searchable stars:
+20,000 stratified bootstrap resamples of the CP/KP and FP stars, both entries scored on each. The sentence above the
+table follows from that interval alone: "significantly ahead" only when it excludes zero, and otherwise "the
+benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions". At the
+committed results **the benchmark cannot show that the Probes beat it.** A method should be judged against this
+floor, not against zero.
 
 ## When a submission is refused
 

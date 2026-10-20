@@ -274,10 +274,11 @@ def benchmark_searchable(benchmark: dict | None) -> set[str] | None:
     return {r["toi"] for r in benchmark["per_star"] if r.get("real")}
 
 
-def outcomes(sub: dict, sample: dict, benchmark: dict | None = None) -> list[dict]:
+def outcomes(sub: dict, sample: dict, benchmark: dict | None) -> list[dict]:
     """Per star, what the scorer finds in the submitted events: seen, recovered, flagged (score_star, the benchmark's
     own scoring), and the control false alarms (passed events on each control curve, None when not run). Each row
-    also says whether the benchmark counts the star as searchable."""
+    also says whether the benchmark counts the star as searchable. ``benchmark`` is required; pass ``None`` only to
+    treat every star as searchable (the fallback, used by nothing that ranks)."""
     toi = {t["toi"]: t for t in sample["tois"]}
     searchable = benchmark_searchable(benchmark)
     rows = []
@@ -388,25 +389,71 @@ def load_submissions(directory: str | Path = SUBMISSIONS) -> list:
 FLOOR_ID = "metadata-baseline"
 
 
-def floor_comparison(entries: list[dict]) -> dict | None:
-    """The Probes against the metadata-only floor, on the ranked J: do their intervals overlap?"""
+BOOTSTRAP_DRAWS = 20000
+BOOTSTRAP_SEED = 20261019
+
+
+def _clean_on_searchable(rows: list[dict]) -> dict[str, tuple[bool, bool]]:
+    """TOI → (is CP/KP, offered as a clean candidate), on the benchmark's searchable CP/KP and FP stars."""
+    return {r["toi"]: (r["cls"] == "positive", bool(r["searched"] and r["recovered"] and not r["flagged"]))
+            for r in rows if r["searchable"] and r["cls"] in ("positive", "fp")}
+
+
+def paired_delta_j(rows_a: list[dict], rows_b: list[dict], draws: int = BOOTSTRAP_DRAWS, seed: int = BOOTSTRAP_SEED) -> dict:
+    """ΔJ = J(a) − J(b) on the same stars, with a paired bootstrap: CP/KP and FP stars are resampled separately (the
+    class sizes are fixed by the sample), and both entries are scored on each resample. Returns ΔJ, its 95% percentile
+    interval and P(ΔJ ≤ 0)."""
+    import numpy as np
+
+    a, b = _clean_on_searchable(rows_a), _clean_on_searchable(rows_b)
+    tois = sorted(set(a) & set(b))
+    pos = np.array([a[t][0] for t in tois])
+    oa, ob = np.array([a[t][1] for t in tois]), np.array([b[t][1] for t in tois])
+
+    def j(o, idx_p, idx_f):
+        return o[idx_p].mean(axis=-1) + (~o[idx_f]).mean(axis=-1) - 1
+
+    ip, iF = np.where(pos)[0], np.where(~pos)[0]
+    d = float(j(oa, ip, iF) - j(ob, ip, iF))
+    rng = np.random.default_rng(seed)
+    bp = rng.choice(ip, size=(draws, len(ip)))
+    bf = rng.choice(iF, size=(draws, len(iF)))
+    ds = j(oa, bp, bf) - j(ob, bp, bf)
+    lo, hi = np.percentile(ds, [2.5, 97.5])
+    return {"delta_j": d, "lo": float(lo), "hi": float(hi), "p_le_0": float(np.mean(ds <= 0)), "draws": draws, "seed": seed,
+            "stars": {"positive": int(len(ip)), "fp": int(len(iF))}}
+
+
+def floor_comparison(entries: list[dict], rows_of: dict[str, list[dict]]) -> dict | None:
+    """The metadata-only floor against the Probes on the ranked J, by a paired ΔJ (floor − Probes) over the same
+    stars. The verdict: the floor significantly ahead, the Probes significantly ahead, or neither shown."""
     by = {e["id"]: e for e in entries}
     if "probes" not in by or FLOOR_ID not in by:
         return None
-    p, f = by["probes"]["scores"]["youden_j"], by[FLOOR_ID]["scores"]["youden_j"]
-    return {"probes": p, "floor": f, "overlap": p["lo"] <= f["hi"] and f["lo"] <= p["hi"],
-            "probes_above": p["lo"] > f["hi"], "floor_above": f["lo"] > p["hi"], "probes_higher": p["j"] > f["j"]}
+    dj = paired_delta_j(rows_of[FLOOR_ID], rows_of["probes"])
+    verdict = "floor_ahead" if dj["lo"] > 0 else "probes_ahead" if dj["hi"] < 0 else "not_shown"
+    return {"probes": by["probes"]["scores"]["youden_j"], "floor": by[FLOOR_ID]["scores"]["youden_j"], "paired": dj,
+            "verdict": verdict}
+
+
+def dj_text(dj: dict) -> str:
+    return (f"paired ΔJ (floor − Probes) = {dj['delta_j']:+.3f}, 95% CI {dj['lo']:+.3f} to {dj['hi']:+.3f}, "
+            f"P(ΔJ ≤ 0) = {dj['p_le_0']:.2f}")
 
 
 def floor_note(floor: dict | None) -> str:
+    """The interpretation sentence, from the paired ΔJ only."""
     if not floor:
         return ""
-    head = ("The Probes do not beat the metadata-only floor" if not floor["probes_above"]
-            else "The Probes beat the metadata-only floor")
-    return (f"{head}: J {jtext(floor['probes'])} against {jtext(floor['floor'])} for a model that never sees a light curve"
-            + ("; the intervals overlap." if floor["overlap"] else ".")
-            + (" On this benchmark J mostly measures how separable false positives are from catalogue metadata."
-               if not floor["probes_above"] else ""))
+    dj, v = floor["paired"], floor["verdict"]
+    if v == "floor_ahead":
+        return (f"The metadata-only floor is significantly ahead of the Probes ({dj_text(dj)}): on this benchmark J mostly "
+                "measures how separable false positives are from catalogue metadata.")
+    if v == "probes_ahead":
+        return (f"The Probes are significantly ahead of the metadata-only floor ({dj_text(dj)}): the light curves add "
+                "information beyond what catalogue metadata predicts.")
+    return (f"The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts "
+            f"dispositions ({dj_text(dj)}).")
 
 
 SUBSAMPLE_NOTE = ("40 stars cannot order these configurations: the subsample is listed, never ranked, and every "
@@ -447,13 +494,17 @@ def build(sample: dict, inputs: dict, benchmark: dict, submissions: list) -> dic
     ranked = [e for e in entries if e["ranked"]]
     for e in entries:
         e["rank"] = (1 + sum(1 for o in ranked if jv(o) > jv(e))) if e["ranked"] else None
+    for e in ranked:
+        je = e["scores"]["youden_j"]
+        e["overlaps_ranks"] = sorted({o["rank"] for o in ranked if o is not e and o["scores"]["youden_j"]["lo"] <= je["hi"]
+                                      and je["lo"] <= o["scores"]["youden_j"]["hi"]})
     # Ranked entries by J; the rest (the subsample included) in a fixed order that implies nothing: Probes,
     # Sentinels, then the derived combinations.
     kinds = ["probes", "baseline", "sentinel", "derived"]
     entries.sort(key=lambda e: (SCOPES.index(e["scope"]), not e["ranked"], -jv(e) if e["ranked"] else 0,
                                 kinds.index(e["kind"]) if e["kind"] in kinds else len(kinds), e["id"]))
-    floor = floor_comparison(entries)
-    return {"format": "exoplan-leaderboard-results/3", "floor": floor, "floor_note": floor_note(floor), "sample_sha256": sample["sha256"],
+    floor = floor_comparison(entries, {k: v[1] for k, v in rows_of.items()})
+    return {"format": "exoplan-leaderboard-results/4", "floor": floor, "floor_note": floor_note(floor), "sample_sha256": sample["sha256"],
             "inputs_sha256": inputs_sha256(inputs), "full_sample_sha256": full_sample_sha256(sample),
             "sentinel_subsample": sentinel_subsample(benchmark),
             "sentinel_subsample_sha256": canonical_sha256(sentinel_subsample(benchmark)),
@@ -501,6 +552,12 @@ def _pct(r: dict | None) -> str:
     return f"{100 * r['rate']:.0f}% ({r['k']}/{r['n']}; {100 * r['lo']:.0f}–{100 * r['hi']:.0f}%)"
 
 
+def rank_text(e: dict) -> str:
+    """A rank, with the ranks whose J interval overlaps it (a tied group: the order is not a measured difference)."""
+    ov = e.get("overlaps_ranks") or []
+    return f"{e['rank']}" + (f" (interval overlaps #{', #'.join(map(str, ov))})" if ov else "")
+
+
 def jtext(j: dict) -> str:
     return "n/a" if j["j"] is None else f"{j['j']:+.2f} ({j['lo']:+.2f} to {j['hi']:+.2f})"
 
@@ -543,7 +600,7 @@ def to_markdown(res: dict) -> str:
         for e in es:
             s = e["scores"]
             ctl = lambda v: _pct(s["controls"][v]["stars_with_any"]) if s["controls"][v] else "not measured"  # noqa: E731
-            rank = (f"| {e['rank']} " if e["ranked"] else f"| unranked ({e['unranked_reason']}) ") if scope == "held_out" else ""
+            rank = (f"| {rank_text(e)} " if e["ranked"] else f"| unranked ({e['unranked_reason']}) ") if scope == "held_out" else ""
             lines.append(f"{rank}| {e['name']} | {jtext(s['youden_j'])} | {jtext(s['youden_j_all_stars'])} | "
                          f"{_pct(s['completeness_clean_searchable'])} | {_pct(s['fp_rejection_searchable'])} | "
                          f"{_pct(small_rate(s))} | {ctl('inverted')} | {ctl('scrambled')} | {_pct(s['reliability'])} |")

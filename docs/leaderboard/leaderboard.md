@@ -20,16 +20,16 @@ Frozen sample sha256 `6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf
 
 ## Held-out half (every held-out star)
 
-**The Probes do not beat the metadata-only floor: J +0.30 (+0.19 to +0.41) against +0.39 (+0.27 to +0.49) for a model that never sees a light curve; the intervals overlap. On this benchmark J mostly measures how separable false positives are from catalogue metadata.**
+**The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11).**
 
 | rank | entry | Youden J | Youden J, all stars | clean completeness, searchable CP/KP | FP rejection, searchable FP | recovered below 4 R⊕ | inverted control: stars with any | scrambled control: stars with any | reliability |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | Metadata only, no light curve (a floor) | +0.39 (+0.27 to +0.49) | +0.43 (+0.32 to +0.52) | 76% (114/150; 69–82%) | 63% (78/124; 54–71%) | 68% (32/47; 54–80%) | 50% (173/345; 45–55%) | 50% (173/345; 45–55%) | 66% (115/173; 59–73%) |
-| 2 | Probes only | +0.30 (+0.19 to +0.41) | +0.35 (+0.24 to +0.44) | 55% (83/150; 47–63%) | 75% (93/124; 67–82%) | 17% (8/46; 9–31%) | 21% (65/309; 17–26%) | 25% (78/309; 21–30%) | 70% (83/118; 62–78%) |
+| 1 (interval overlaps #2) | Metadata only, no light curve (a floor) | +0.39 (+0.27 to +0.49) | +0.46 (+0.35 to +0.55) | 76% (114/150; 69–82%) | 63% (78/124; 54–71%) | 70% (32/46; 55–81%) | 54% (166/309; 48–59%) | 54% (166/309; 48–59%) | 69% (114/166; 61–75%) |
+| 2 (interval overlaps #1) | Probes only | +0.30 (+0.19 to +0.41) | +0.35 (+0.24 to +0.44) | 55% (83/150; 47–63%) | 75% (93/124; 67–82%) | 17% (8/46; 9–31%) | 21% (65/309; 17–26%) | 25% (78/309; 21–30%) | 70% (83/118; 62–78%) |
 
 Entries:
 
-* **Metadata only, no light curve (a floor)** (`metadata-baseline`, tuned on: tuning). Never reads a light curve. A logistic regression on the public TOI number, period, duration, ephemeris errors and epoch, fitted on the tuning half's CP/KP against FP TOIs; held-out stars above the threshold (0.464, chosen by 5-fold cross-validated J = 0.41 on the tuning half) get one event on the published ephemeris. The same events stand on the controls, because the method ignores the light curve. A floor, not a vetter.
+* **Metadata only, no light curve (a floor)** (`metadata-baseline`, tuned on: tuning). Never reads a light curve. A logistic regression on the public TOI number, period, duration, ephemeris errors and epoch, fitted on the tuning half's CP/KP against FP TOIs; held-out stars above the threshold (0.464, chosen by 5-fold cross-validated J = 0.41 on the tuning half) get one event on the published ephemeris. Stars the benchmark could not search (no SPOC 2-minute light curve) are submitted as not searched. The same events stand on the controls, because the method ignores the light curve. A floor, not a vetter.
 * **Probes only** (`probes`, tuned on: none). The three Probes (Sensitive, Typical, Cautious) with their calibrated weights, sector-wide BLS, light-curve vetting and the limb-darkened fit, on each star's first SPOC 2-minute sector, as in the benchmark report; every consensus event on the real and control curves. No FAP rule. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.
 
 ## The Sentinels' stated subsample (40 held-out stars: 20 CP/KP, 20 FP), not ranked
