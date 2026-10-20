@@ -1,20 +1,39 @@
 # pi Men (TIC 261136679), TESS sector 1: S2 extended and pixel-level vetting
 
-Made 2026-10-20T09:45:14+00:00 by `scripts/vet_pi_men_s2.py` from the SPOC files `tess2018206045859-s0001-0000000261136679-0120-s_lc.fits` and `tess2018206045859-s0001-0000000261136679-0120-s_tp.fits` (sha256 0145804d17a9…). MAST's search service was failing on 2026-10-19; the files came from the public STScI bucket that MAST's download links redirect to. Every test below only adds flags; none changes a pass/fail decision by default.
+Made 2026-10-20T12:08:15+00:00 by `scripts/vet_pi_men_s2.py` from the SPOC files `tess2018206045859-s0001-0000000261136679-0120-s_lc.fits` and `tess2018206045859-s0001-0000000261136679-0120-s_tp.fits` (sha256 0145804d17a9…). MAST's search service was failing on 2026-10-19; the files came from the public STScI bucket that MAST's download links redirect to. Every test below only adds flags; none changes a pass/fail decision by default.
 
 Ephemeris from a joint limb-darkened fit of all 5 sector-1 epochs: P = 6.26795 ± 0.00049 d, T0 = 1338.0394 BTJD, T14 = 3.09 ± 0.16 h, depth 300 ± 8 ppm.
 
 ## Light-curve tests
 
-On the light curve re-detrended with the fitted transits masked (1.5 T14 each side), as DV does.
+On the light curve re-detrended with the fitted transits masked (1.5 T14 each side), as DV does, and phase 0.5 masked too (masked phases: 0.500; the first pass's strongest dip is masked only when that pass already finds it significant).
 
 | test | result | flag |
 |---|---|---|
 | crowding | CROWDSAP = 0.9997, FLFRCSAP = 0.9800 (flag below 0.8) | none |
-| secondary, all phases | strongest dip at phase 0.645: 51.7 ± 7.4 ppm (7.0σ; largest brightening 4.9σ; 187 coarse positions); threshold 7.0σ (5.16 × max(1, the scan's robust spread) (white-noise 99.9% quantile for 187 positions); robust spread 1.36); 4 epochs, the largest carrying 40% (periodic); at phase 0.5: -14.0 ± 7.2 ppm | none |
+| secondary, all phases | strongest dip at phase 0.622: 41.6 ± 7.4 ppm (5.6σ; largest brightening 4.8σ; 187 coarse positions); threshold 6.9σ (5.16 × max(1, the scan's robust spread) (white-noise 99.9% quantile for 187 positions); robust spread 1.33); 4 epochs, the largest carrying 86% (not periodic); at phase 0.5: -12.1 ± 7.2 ppm | none at the default setting; **secondary at threshold; flag setting-dependent (3 of 12 settings flag it)** |
 | odd/even depth (per-epoch fits (transit shape plus a local baseline)) | odd 301 ± 14 ppm (n = 2), even 311 ± 12 ppm (n = 3): 0.5σ | none |
 | timing, linear ephemeris | 5 epochs, χ² = 1.9 for 3 dof, p = 0.593; O−C (min): 0.3, -1.5, 1.8, 0.5, -0.8 | none |
 | odd/even timing | odd − even offset -0.9 ± 1.6 min (0.5σ) | none |
+
+### The secondary flag across run settings
+
+The same two-pass preparation and secondary test on nearby run settings (the run's detrend window × bin size; the vetting window is never below 12 T14 = 1.55 d, so every window up to that gives the same light curve). 3 of 12 settings flag the dip: **secondary at threshold; flag setting-dependent (3 of 12 settings flag it)**.
+
+| window (d) | vetting window (d) | bin (min) | first pass | masked phases | strongest dip | threshold | dip / threshold | epochs: largest share | flag |
+|---|---|---|---|---|---|---|---|---|---|
+| 1.0 | 1.55 | 2 | 5.46σ | 0.500 | 5.34σ at 0.645 | 7.83σ | 0.682 | 46% | none |
+| 1.0 | 1.55 | 6 | 6.01σ | 0.500 | 5.93σ at 0.645 | 7.37σ | 0.804 | 40% | none |
+| 1.0 | 1.55 | 10 | 5.79σ | 0.500 | 5.64σ at 0.622 | 6.87σ | 0.821 | 86% (not periodic) | none |
+| 1.0 | 1.55 | 15 | 6.81σ (significant) | 0.500, 0.637 | 7.81σ at 0.637 | 7.24σ | 1.079 | 43% | secondary_any_phase |
+| 1.0 | 1.55 | 20 | 6.58σ | 0.500 | 6.39σ at 0.741 | 6.09σ | 1.050 | 90% (not periodic) | none |
+| 1.0 | 1.55 | 30 | 7.61σ (significant) | 0.500, 0.635 | 8.60σ at 0.635 | 7.20σ | 1.195 | 53% | secondary_any_phase |
+| 2.0 | 2.00 | 2 | 5.82σ | 0.500 | 6.17σ at 0.645 | 8.25σ | 0.747 | 48% | none |
+| 2.0 | 2.00 | 6 | 6.22σ | 0.500 | 6.66σ at 0.645 | 7.52σ | 0.885 | 43% | none |
+| 2.0 | 2.00 | 10 | 5.77σ | 0.500 | 6.36σ at 0.643 | 7.95σ | 0.800 | 42% | none |
+| 2.0 | 2.00 | 15 | 6.88σ | 0.500 | 7.05σ at 0.637 | 7.61σ | 0.927 | 46% | none |
+| 2.0 | 2.00 | 20 | 5.69σ | 0.500 | 5.80σ at 0.622 | 7.07σ | 0.820 | 82% (not periodic) | none |
+| 2.0 | 2.00 | 30 | 7.38σ | 0.500 | 7.89σ at 0.635 | 7.48σ | 1.054 | 59% | secondary_any_phase |
 
 ## Pixel-level tests
 
@@ -58,31 +77,31 @@ Source: TIC v8.2 (MAST), within 150″. Depth in the aperture 300 ppm (PDCSAP de
 
 ## S3: reduced FPP (exoplan's scheme, not TRICERATOPS)
 
-FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00787–0.616). Label: **not validated: no contrast curve**.
+FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788–0.0931, more than a factor of 10 in odds). Label: **not validated: no contrast curve**.
 
-Stability: the FPP was computed on 5 detrending settings (the default and windows ×0.75 and ×1.5 with masks of 1.0 and 2.0 T14) under two noise models: range 0.0079–0.6162, median 0.0088 at the robust spread; 0 of 5 settings pass the white-noise gate.
+Stability: the FPP was computed on 5 detrending settings (the default and windows ×0.75 and ×1.5 with masks of 1.0 and 2.0 T14) under two noise models: range 0.0079–0.0931, median 0.0086 at the robust spread; 2 of 5 settings pass the white-noise gate.
 
-Wider grid (absolute windows 0.75–2 d × masks 1.0/1.5/2.0 T14): the white-noise gate passes on 1 of 15 settings; where it passes, FPP 0.009–0.009 (with both noise models on every setting, 0.007–1.000); the largest brightening is 2.6–6.3σ.
+Wider grid (absolute windows 0.75–2 d × masks 1.0/1.5/2.0 T14): the white-noise gate passes on 6 of 15 settings; where it passes, FPP 0.007–0.164 (with both noise models on every setting, 0.007–0.989); the largest brightening is 2.6–6.2σ.
 
 | window (d) | mask (T14) | gate | largest brightening | strongest dip | FPP (robust spread) |
 |---|---|---|---|---|---|
-| 0.75 | 1.0 | white | 2.7σ | 5.9σ | 0.0090 |
-| 0.75 | 1.5 | not white | 2.6σ | 6.2σ | n/a |
-| 0.75 | 2.0 | not white | 3.3σ | 7.8σ | n/a |
-| 1.0 | 1.0 | not white | 3.3σ | 5.9σ | n/a |
-| 1.0 | 1.5 | not white | 6.3σ | 7.2σ | n/a |
-| 1.0 | 2.0 | not white | 3.2σ | 6.6σ | n/a |
-| 1.25 | 1.0 | not white | 3.4σ | 6.4σ | n/a |
-| 1.25 | 1.5 | not white | 5.9σ | 7.5σ | n/a |
-| 1.25 | 2.0 | not white | 2.9σ | 8.3σ | n/a |
-| 1.5 | 1.0 | not white | 3.3σ | 6.4σ | n/a |
-| 1.5 | 1.5 | not white | 5.5σ | 7.2σ | n/a |
-| 1.5 | 2.0 | not white | 3.3σ | 7.7σ | n/a |
-| 2.0 | 1.0 | not white | 3.0σ | 7.2σ | n/a |
-| 2.0 | 1.5 | not white | 4.5σ | 8.0σ | n/a |
-| 2.0 | 2.0 | not white | 3.0σ | 8.0σ | n/a |
+| 0.75 | 1.0 | not white | 2.6σ | 6.3σ | n/a |
+| 0.75 | 1.5 | white | 2.6σ | 6.4σ | 0.0073 |
+| 0.75 | 2.0 | not white | 3.1σ | 6.3σ | n/a |
+| 1.0 | 1.0 | white | 3.3σ | 5.7σ | 0.0087 |
+| 1.0 | 1.5 | white | 6.2σ | 5.8σ | 0.0079 |
+| 1.0 | 2.0 | white | 2.9σ | 5.8σ | 0.0077 |
+| 1.25 | 1.0 | white | 3.3σ | 5.5σ | 0.1019 |
+| 1.25 | 1.5 | white | 5.8σ | 5.6σ | 0.1642 |
+| 1.25 | 2.0 | not white | 2.6σ | 5.5σ | n/a |
+| 1.5 | 1.0 | not white | 3.2σ | 5.5σ | n/a |
+| 1.5 | 1.5 | not white | 5.3σ | 5.7σ | n/a |
+| 1.5 | 2.0 | not white | 3.0σ | 5.5σ | n/a |
+| 2.0 | 1.0 | not white | 3.3σ | 6.3σ | n/a |
+| 2.0 | 1.5 | not white | 4.4σ | 6.6σ | n/a |
+| 2.0 | 2.0 | not white | 3.2σ | 6.6σ | n/a |
 
-Not modelled: unresolved bound companions (HEB, planet on a companion); unresolved background stars (BEB, planet on a background star). Notes: no reliable difference-image centroid: positions carry no information; 1 neighbour(s) excluded only marginally (within 3σ of the Tmag uncertainty of reaching the depth); FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00787–0.616). Priors: illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice.
+Not modelled: unresolved bound companions (HEB, planet on a companion); unresolved background stars (BEB, planet on a background star). Notes: no reliable difference-image centroid: positions carry no information; 1 neighbour(s) excluded only marginally (within 3σ of the Tmag uncertainty of reaching the depth); FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788–0.0931, more than a factor of 10 in odds). Priors: illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice.
 
 ## SPOC's own DV centroid result, for comparison
 

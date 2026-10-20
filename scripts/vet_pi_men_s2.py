@@ -24,6 +24,7 @@ import json
 import math
 import sys
 import warnings
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -111,6 +112,30 @@ def run(cache: Path, run_dir: Path, config_path: Path) -> dict:
                          "robust_spread": sec["scan_robust_sigma"], "fpp": one["fpp"],
                          "fpp_range_noise_models": (one["evidence"].get("fpp_sensitivity") or {}).get("range")})
     lc_tests["detrending_grid"] = grid
+    # the secondary flag itself across nearby run settings (detrend window x bin size), each through the full path
+    # (two-pass detrend, the scan, assess_secondary), reported like the FPP: as a count, not one setting's verdict
+    flag_grid = []
+    for win in (1.0, 2.0):
+        for binm in (2.0, 6.0, 10.0, 15.0, 20.0, 30.0):
+            cfg = replace(config, detrend_window_days=win, bin_minutes=binm)
+            first = vetting_lightcurve([lc], cfg, **eph)
+            s1 = assess_secondary(secondary_search(first.time, first.flux, **eph), secondary_sigma=cfg.secondary_sigma)
+            g_lc, g_phases = vetting_lightcurve_two_pass([lc], cfg, **eph)
+            g_flags, g_tests = extended_vet(g_lc.time, g_lc.flux, g_lc.flux_err, **eph, fit=f)
+            s = g_tests["secondary"]
+            flag_grid.append({"window_days": win, "effective_window_days": vetting_window(cfg, duration),
+                              "bin_minutes": binm, "first_pass_snr": s1["snr"],
+                              "first_pass_significant": s1["significant"], "masked_phases": list(g_phases),
+                              "snr": s["snr"], "threshold_sigma": s["threshold_sigma"],
+                              "max_brightening_snr": s["max_brightening_snr"], "periodic": s["periodic"],
+                              "max_epoch_share": s["max_epoch_share"], "phase": s["phase"],
+                              "flagged": "secondary_any_phase" in g_flags})
+    k, n = sum(g["flagged"] for g in flag_grid), len(flag_grid)
+    lc_tests["secondary_flag_grid"] = flag_grid
+    lc_tests["secondary_flag_stability"] = {
+        "flagged": k, "n_settings": n,
+        "verdict": ("no secondary flag on any setting" if k == 0 else "flagged on every setting" if k == n else
+                    f"secondary at threshold; flag setting-dependent ({k} of {n} settings flag it)")}
 
     tpf = load_tpf(tpf_path)
     h = tpf.header
@@ -193,7 +218,9 @@ def markdown(r: dict) -> str:
         f"{_fmt(fit['period_err'], 5)} d, T0 = {fit['t0']:.4f} BTJD, T14 = {fit['t14_hours']:.2f} ± {_fmt(fit['t14_err_hours'])} h, "
         f"depth {fit['depth_ppm']:.0f} ± {_fmt(fit['depth_err_ppm'], 0)} ppm.",
         "",
-        "## Light-curve tests", "", "On the light curve re-detrended with the fitted transits masked (1.5 T14 each side), as DV does.",
+        "## Light-curve tests", "", ("On the light curve re-detrended with the fitted transits masked (1.5 T14 each side), as DV does, and phase 0.5 "
+         f"masked too (masked phases: {', '.join(_fmt(p, 3) for p in lt.get('masked_phases') or [])}; the first pass's "
+         "strongest dip is masked only when that pass already finds it significant)."),
         "",
         "| test | result | flag |",
         "|---|---|---|",
@@ -206,7 +233,8 @@ def markdown(r: dict) -> str:
         f"the largest carrying {_fmt((sec.get('max_epoch_share') or 0) * 100, 0)}% "
         f"({'periodic' if sec.get('periodic') else 'not periodic'}); at phase 0.5: "
         f"{_fmt((sec.get('phase_05') or {}).get('depth_ppm'), 1)} ± {_fmt((sec.get('phase_05') or {}).get('sigma_ppm'), 1)} ppm | "
-        f"{'secondary_any_phase' if 'secondary_any_phase' in r['lightcurve_flags'] else 'none'} |",
+        f"{'secondary_any_phase' if 'secondary_any_phase' in r['lightcurve_flags'] else 'none'} at the default setting"
+        f"{'; **' + lt['secondary_flag_stability']['verdict'] + '**' if lt.get('secondary_flag_stability') else ''} |",
         f"| odd/even depth ({oe.get("source", "")}) | odd {_fmt(oe.get('odd_depth_ppm'), 0)} ± {_fmt(oe.get('odd_err_ppm'), 0)} ppm (n = {oe.get('n_odd')}), "
         f"even {_fmt(oe.get('even_depth_ppm'), 0)} ± {_fmt(oe.get('even_err_ppm'), 0)} ppm (n = {oe.get('n_even')}): "
         f"{_fmt(oe.get('delta_sigma'), 1)}σ | {'odd_even_depth' if 'odd_even_depth' in r['lightcurve_flags'] else 'none'} |",
@@ -219,6 +247,27 @@ def markdown(r: dict) -> str:
         f"| odd/even timing | odd − even offset {_fmt(ot.get('offset_minutes'), 1)} ± {_fmt(ot.get('offset_err_minutes'), 1)} min "
         f"({_fmt(ot.get('delta_sigma'), 1)}σ) | {'odd_even_timing' if 'odd_even_timing' in r['lightcurve_flags'] else 'none'} |",
         "",
+    ]
+    fg = lt.get("secondary_flag_grid") or []
+    if fg:
+        st = lt["secondary_flag_stability"]
+        lines += ["### The secondary flag across run settings", "",
+                  f"The same two-pass preparation and secondary test on nearby run settings (the run's detrend window "
+                  f"× bin size; the vetting window is never below 12 T14 = {_fmt(fg[0]['effective_window_days'])} d, so "
+                  f"every window up to that gives the same light curve). {st['flagged']} of {st['n_settings']} settings "
+                  f"flag the dip: **{st['verdict']}**.", "",
+                  "| window (d) | vetting window (d) | bin (min) | first pass | masked phases | strongest dip | "
+                  "threshold | dip / threshold | epochs: largest share | flag |", "|---|---|---|---|---|---|---|---|---|---|"]
+        for g in fg:
+            lines.append(f"| {g['window_days']} | {_fmt(g['effective_window_days'])} | {g['bin_minutes']:g} | "
+                         f"{_fmt(g['first_pass_snr'], 2)}σ{' (significant)' if g['first_pass_significant'] else ''} | "
+                         f"{', '.join(_fmt(p, 3) for p in g['masked_phases'])} | {_fmt(g['snr'], 2)}σ at "
+                         f"{_fmt(g['phase'], 3)} | {_fmt(g['threshold_sigma'], 2)}σ | "
+                         f"{_fmt(g['snr'] / g['threshold_sigma'], 3)} | {_fmt((g['max_epoch_share'] or 0) * 100, 0)}%"
+                         f"{'' if g['periodic'] else ' (not periodic)'} | "
+                         f"{'secondary_any_phase' if g['flagged'] else 'none'} |")
+        lines.append("")
+    lines += [
         "## Pixel-level tests",
         "",
     ]

@@ -7,90 +7,91 @@
   "nfpp": null,
   "probabilities": {},
   "evidence": {
-   "odd_even_bayes_factor_eb2p_vs_tp": 0.08949010937310847,
-   "secondary_source": "all-phase search (phase 0.645)",
+   "odd_even_bayes_factor_eb2p_vs_tp": 0.08949003393897197,
+   "secondary_source": "phase 0.5 (the strongest dip, at phase 0.622, is not periodic: 86% from one epoch)",
    "fpp_stability": {
     "n_settings": 5,
-    "white_settings": 0,
+    "white_settings": 2,
     "range": [
-     0.007869132862997619,
-     0.6161748396013915
+     0.007875865673929172,
+     0.09312134314546683
     ],
-    "median_robust": 0.008780142620255504,
+    "median_robust": 0.008560877262260291,
     "rows": [
      {
       "window_scale": 1.0,
       "mask_t14": "default",
       "noise": "robust spread",
-      "fpp": 0.6161748396013915,
+      "fpp": 0.008330406739832097,
       "white": false
      },
      {
       "window_scale": 1.0,
       "mask_t14": "default",
       "noise": "std",
-      "fpp": 0.06549846096739886,
+      "fpp": 0.008820572087710588,
       "white": false
      },
      {
       "window_scale": 0.75,
       "mask_t14": 1.0,
       "noise": "robust spread",
-      "fpp": 0.426818151857679,
-      "white": false
+      "fpp": 0.008560877262260291,
+      "white": true
      },
      {
       "window_scale": 0.75,
       "mask_t14": 1.0,
       "noise": "std",
-      "fpp": 0.05278860897411308,
-      "white": false
+      "fpp": 0.00920148092485773,
+      "white": true
      },
      {
       "window_scale": 0.75,
       "mask_t14": 2.0,
       "noise": "robust spread",
-      "fpp": 0.007869132862997619,
-      "white": false
+      "fpp": 0.09312134314546683,
+      "white": true
      },
      {
       "window_scale": 0.75,
       "mask_t14": 2.0,
       "noise": "std",
-      "fpp": 0.010044312505197328,
-      "white": false
+      "fpp": 0.05355959921132791,
+      "white": true
      },
      {
       "window_scale": 1.5,
       "mask_t14": 1.0,
       "noise": "robust spread",
-      "fpp": 0.008780142620255504,
+      "fpp": 0.008651209137735316,
       "white": false
      },
      {
       "window_scale": 1.5,
       "mask_t14": 1.0,
       "noise": "std",
-      "fpp": 0.009348766313762136,
+      "fpp": 0.00840987015049044,
       "white": false
      },
      {
       "window_scale": 1.5,
       "mask_t14": 2.0,
       "noise": "robust spread",
-      "fpp": 0.008591094260293253,
+      "fpp": 0.007875865673929172,
       "white": false
      },
      {
       "window_scale": 1.5,
       "mask_t14": 2.0,
       "noise": "std",
-      "fpp": 0.009613920438547585,
+      "fpp": 0.008132468979643814,
       "white": false
      }
-    ]
+    ],
+    "log10_odds_spread": 1.1117677643397408
    },
-   "secondary_bayes_factor_eb_vs_tp": 11.995401798143865
+   "secondary_bayes_factor_eb_vs_tp": 0.018257873280824777
   },
   "priors": {
    "tp": 0.75,
@@ -105,15 +106,15 @@
   ],
   "contrast_curve": null,
   "label": "not validated: no contrast curve",
-  "fpp_class": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00787\u20130.616)",
+  "fpp_class": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788\u20130.0931, more than a factor of 10 in odds)",
   "notes": [
    "no reliable difference-image centroid: positions carry no information",
    "1 neighbour(s) excluded only marginally (within 3\u03c3 of the Tmag uncertainty of reaching the depth)",
-   "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00787\u20130.616)"
+   "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788\u20130.0931, more than a factor of 10 in odds)"
   ],
-  "refused": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00787\u20130.616)"
+  "refused": "FPP not computed: unstable across 5 detrending settings and two noise models (range 0.00788\u20130.0931, more than a factor of 10 in odds)"
  },
- "made_at": "2026-10-20T09:45:14+00:00",
+ "made_at": "2026-10-20T12:08:15+00:00",
  "inputs": {
   "lightcurve": {
    "source": "SPOC file",
@@ -161,44 +162,44 @@
    "crowded": false
   },
   "secondary": {
-   "phase": 0.6454027132074822,
-   "depth_ppm": 51.66993012328813,
-   "sigma_ppm": 7.384708137402517,
-   "snr": 6.99688182144764,
+   "phase": 0.6217465181417101,
+   "depth_ppm": 41.63840505644334,
+   "sigma_ppm": 7.379534152900546,
+   "snr": 5.642416471516328,
    "n_points": 70,
-   "max_brightening_snr": 4.884651616223116,
+   "max_brightening_snr": 4.779342116236241,
    "n_trials": 187,
    "duration_days": 0.12893554144456185,
    "excluded_days": 0.12893554144456185,
-   "scan_median_snr": -0.05082891807589036,
-   "scan_robust_sigma": 1.360285370775697,
-   "scan_std_snr": 1.821674078561224,
+   "scan_median_snr": -0.12972893763368412,
+   "scan_robust_sigma": 1.3326143246456983,
+   "scan_std_snr": 1.4989532415507065,
    "n_epochs": 4,
-   "max_epoch_share": 0.3954402317416571,
+   "max_epoch_share": 0.8587422953499197,
    "phase_05": {
     "phase": 0.4988371568217191,
-    "depth_ppm": -13.963227418534174,
-    "sigma_ppm": 7.182348858461245,
-    "snr": -1.9441032026848208
+    "depth_ppm": -12.145437342958587,
+    "sigma_ppm": 7.177316653939416,
+    "snr": -1.6921975061936716
    },
-   "albedo": 10.623999298839086,
+   "albedo": 8.56138928519768,
    "threshold_rule": "5.16 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 187 positions)",
-   "threshold_sigma": 7.015068392658233,
-   "periodic": true,
+   "threshold_sigma": 6.872367246804075,
+   "periodic": false,
    "significant": false
   },
   "odd_even_depth": {
-   "odd_depth_ppm": 301.1179352775158,
-   "odd_err_ppm": 14.140953647161373,
+   "odd_depth_ppm": 301.1176801389222,
+   "odd_err_ppm": 14.140941594295754,
    "n_odd": 2,
-   "even_depth_ppm": 310.9473214449171,
-   "even_err_ppm": 12.166517466950223,
+   "even_depth_ppm": 310.9470581639611,
+   "even_err_ppm": 12.166507205870985,
    "n_even": 3,
    "error_scale": 1.0,
-   "epoch_chi2": 1.6911894758080448,
+   "epoch_chi2": 1.6911894875285909,
    "epoch_dof": 3,
    "floor_fraction": 0.02,
-   "delta_sigma": 0.5269174336295787,
+   "delta_sigma": 0.526917444252654,
    "both_parities_detected": true,
    "significant": false,
    "source": "per-epoch fits (transit shape plus a local baseline)"
@@ -206,61 +207,62 @@
   "timing": {
    "n_epochs": 5,
    "o_minus_c_minutes": [
-    0.2550916370091727,
-    -1.489331691082043,
-    1.8469560505764093,
-    0.475905373605201,
-    -0.8009615061746445
+    0.25509169299766654,
+    -1.489331715310982,
+    1.8469561311212601,
+    0.47590535526978783,
+    -0.8009615163246053
    ],
    "linear": {
-    "t0": 1338.0393918438401,
-    "period": 6.268021329407313,
-    "period_err": 0.00039248356878017173,
-    "chi2": 1.9004495670661896,
+    "t0": 1338.0393918438356,
+    "period": 6.268021329424558,
+    "period_err": 0.00039248357007222364,
+    "chi2": 1.900449701947431,
     "dof": 3,
-    "p_value": 0.5933235738316369,
+    "p_value": 0.5933235451494401,
     "inconsistent": false
    },
    "odd_even": {
-    "offset_minutes": -0.865060250585997,
-    "offset_err_minutes": 1.6306055333624079,
-    "delta_sigma": 0.5305147277417794,
+    "offset_minutes": -0.8650603474717061,
+    "offset_err_minutes": 1.6306055254468392,
+    "delta_sigma": 0.5305147897341089,
     "significant": false
    },
+   "skipped_epochs": [],
    "epochs": [
     {
      "epoch": -2,
      "t_mid": 1325.5035263319955,
-     "sigma": 0.0012282091568496473,
-     "depth": 0.00031173441691648466,
+     "sigma": 0.0012282091568484726,
+     "depth": 0.0003117341529648897,
      "at_scan_edge": false
     },
     {
      "epoch": -1,
-     "t_mid": 1331.770336256314,
-     "sigma": 0.001218691204495272,
-     "depth": 0.00028846741652287016,
+     "t_mid": 1331.7703362562754,
+     "sigma": 0.0012186911720435184,
+     "depth": 0.00028846717226221604,
      "at_scan_edge": false
     },
     {
      "epoch": 0,
-     "t_mid": 1338.0406744522086,
-     "sigma": 0.0013577442969517216,
-     "depth": 0.0003048257112641398,
+     "t_mid": 1338.04067445226,
+     "sigma": 0.0013577443023537674,
+     "depth": 0.00030482545314771195,
      "at_scan_edge": false
     },
     {
      "epoch": 1,
      "t_mid": 1344.3077436630902,
-     "sigma": 0.0012042997915343153,
-     "depth": 0.00032096895353422107,
+     "sigma": 0.0012042997915351688,
+     "depth": 0.00032096868176381335,
      "at_scan_edge": false
     },
     {
      "epoch": 2,
-     "t_mid": 1350.5748782793867,
-     "sigma": 0.0012703133933487265,
-     "depth": 0.00031546106418178235,
+     "t_mid": 1350.5748782794094,
+     "sigma": 0.0012703134126609153,
+     "depth": 0.00031546079706018217,
      "at_scan_edge": false
     }
    ]
@@ -270,207 +272,419 @@
   "duration_days": 0.12893554144456185,
   "transit_masked_detrend": true,
   "masked_phases": [
-   0.5,
-   0.6217465181417101
+   0.5
   ],
   "detrend_window_days": 1.547226497334742,
   "detrending_grid": [
    {
     "window_days": 0.75,
     "mask_t14": 1.0,
+    "white": false,
+    "max_brightening_snr": 2.6287088151833147,
+    "snr": 6.290972320521952,
+    "robust_spread": 1.303909996663085,
+    "fpp": null,
+    "fpp_range_noise_models": [
+     0.008319144620831498,
+     0.009335604972005362
+    ]
+   },
+   {
+    "window_days": 0.75,
+    "mask_t14": 1.5,
     "white": true,
-    "max_brightening_snr": 2.6779663916220326,
-    "snr": 5.9212933829727925,
-    "robust_spread": 1.2383618902553055,
-    "fpp": 0.009033839616220618,
+    "max_brightening_snr": 2.596855381003569,
+    "snr": 6.402288638322551,
+    "robust_spread": 1.2027647218352338,
+    "fpp": 0.007325269454615424,
     "fpp_range_noise_models": [
-     0.008247231723816806,
-     0.010112189677089156
-    ]
-   },
-   {
-    "window_days": 0.75,
-    "mask_t14": 1.5,
-    "white": false,
-    "max_brightening_snr": 2.607144253382662,
-    "snr": 6.188205111203427,
-    "robust_spread": 1.1636594847052864,
-    "fpp": null,
-    "fpp_range_noise_models": [
-     0.006939364004250881,
-     0.008284224379562777
+     0.006932686262536847,
+     0.007498433226143186
     ]
    },
    {
     "window_days": 0.75,
     "mask_t14": 2.0,
     "white": false,
-    "max_brightening_snr": 3.2786739030683956,
-    "snr": 7.792391379313453,
-    "robust_spread": 1.3338175626002113,
+    "max_brightening_snr": 3.122723020414235,
+    "snr": 6.293333734175655,
+    "robust_spread": 1.3133828613602478,
     "fpp": null,
     "fpp_range_noise_models": [
-     0.07017639805845344,
-     0.9999999996778056
+     0.006988731455046304,
+     0.00805588209624264
     ]
    },
    {
     "window_days": 1.0,
     "mask_t14": 1.0,
-    "white": false,
-    "max_brightening_snr": 3.3336268785388183,
-    "snr": 5.910083306025047,
-    "robust_spread": 1.1975718323363018,
-    "fpp": null,
+    "white": true,
+    "max_brightening_snr": 3.3061986489221713,
+    "snr": 5.725547243251957,
+    "robust_spread": 1.1765830898035914,
+    "fpp": 0.008701421511899343,
     "fpp_range_noise_models": [
-     0.008096646461308699,
-     0.010029891917696543
+     0.008132090210317022,
+     0.00938801808194345
     ]
    },
    {
     "window_days": 1.0,
     "mask_t14": 1.5,
-    "white": false,
-    "max_brightening_snr": 6.312448511511017,
-    "snr": 7.2231368308735675,
-    "robust_spread": 1.1322165818283252,
-    "fpp": null,
+    "white": true,
+    "max_brightening_snr": 6.209931005282795,
+    "snr": 5.829542650460762,
+    "robust_spread": 1.2124683069182518,
+    "fpp": 0.007901035255016065,
     "fpp_range_noise_models": [
-     0.0071874682227983655,
-     0.009500008785427672
+     0.007363167770419232,
+     0.008684957731298626
     ]
    },
    {
     "window_days": 1.0,
     "mask_t14": 2.0,
-    "white": false,
-    "max_brightening_snr": 3.206485602445186,
-    "snr": 6.633735323094842,
-    "robust_spread": 1.185967229072818,
-    "fpp": null,
+    "white": true,
+    "max_brightening_snr": 2.906881332204355,
+    "snr": 5.76632562692104,
+    "robust_spread": 1.2402253022671,
+    "fpp": 0.007671572797084969,
     "fpp_range_noise_models": [
-     0.006892753658054307,
-     0.008734776438788505
+     0.0071300779286314064,
+     0.00825782548828402
     ]
    },
    {
     "window_days": 1.25,
     "mask_t14": 1.0,
-    "white": false,
-    "max_brightening_snr": 3.373942947830995,
-    "snr": 6.384940768157398,
-    "robust_spread": 1.268139869055328,
-    "fpp": null,
+    "white": true,
+    "max_brightening_snr": 3.31792426382223,
+    "snr": 5.5150650508549015,
+    "robust_spread": 1.2913487345833174,
+    "fpp": 0.10192805479469846,
     "fpp_range_noise_models": [
-     0.00780250243168501,
-     0.010045331840451088
+     0.05446129357456875,
+     0.756253707559684
     ]
    },
    {
     "window_days": 1.25,
     "mask_t14": 1.5,
-    "white": false,
-    "max_brightening_snr": 5.890471890095401,
-    "snr": 7.476244686906647,
-    "robust_spread": 1.2758771960054809,
-    "fpp": null,
+    "white": true,
+    "max_brightening_snr": 5.811926024946403,
+    "snr": 5.617055129014392,
+    "robust_spread": 1.2442571548420547,
+    "fpp": 0.16421997558200108,
     "fpp_range_noise_models": [
-     0.007239564444379898,
-     0.009783804148768005
+     0.04617688468809944,
+     0.8094681971078662
     ]
    },
    {
     "window_days": 1.25,
     "mask_t14": 2.0,
     "white": false,
-    "max_brightening_snr": 2.8696768313222365,
-    "snr": 8.309125087954733,
-    "robust_spread": 1.2589502222210716,
+    "max_brightening_snr": 2.56257178430834,
+    "snr": 5.506919302526381,
+    "robust_spread": 1.311761962630036,
     "fpp": null,
     "fpp_range_noise_models": [
-     0.007299698326780568,
-     0.01010026894922611
+     0.057084673586500156,
+     0.7533847229135665
     ]
    },
    {
     "window_days": 1.5,
     "mask_t14": 1.0,
     "white": false,
-    "max_brightening_snr": 3.3225099132362494,
-    "snr": 6.423981098587378,
-    "robust_spread": 1.5289963291591213,
+    "max_brightening_snr": 3.23195145934746,
+    "snr": 5.535766729582562,
+    "robust_spread": 1.4099941361443509,
     "fpp": null,
     "fpp_range_noise_models": [
-     0.007600850312509788,
-     0.009937208215836768
+     0.007792442497902008,
+     0.009386936574957372
     ]
    },
    {
     "window_days": 1.5,
     "mask_t14": 1.5,
     "white": false,
-    "max_brightening_snr": 5.4984773860488225,
-    "snr": 7.209973727199311,
-    "robust_spread": 1.4473003874087593,
+    "max_brightening_snr": 5.334088037053324,
+    "snr": 5.727595894753858,
+    "robust_spread": 1.3851114575635153,
     "fpp": null,
     "fpp_range_noise_models": [
-     0.05939989108896193,
-     0.9999999996812556
+     0.0073362872640426735,
+     0.008916863307582124
     ]
    },
    {
     "window_days": 1.5,
     "mask_t14": 2.0,
     "white": false,
-    "max_brightening_snr": 3.2733834554050976,
-    "snr": 7.6662193816341695,
-    "robust_spread": 1.481679829061389,
+    "max_brightening_snr": 3.039899742862868,
+    "snr": 5.4971180227375696,
+    "robust_spread": 1.3929938058797293,
     "fpp": null,
     "fpp_range_noise_models": [
-     0.007049419084320108,
-     0.009362180689222677
+     0.007216004775645102,
+     0.008446023820723014
     ]
    },
    {
     "window_days": 2.0,
     "mask_t14": 1.0,
     "white": false,
-    "max_brightening_snr": 2.9755049322094393,
-    "snr": 7.229958253100793,
-    "robust_spread": 1.6020322936660665,
+    "max_brightening_snr": 3.31363575947863,
+    "snr": 6.3467172570710195,
+    "robust_spread": 1.5593903880454782,
     "fpp": null,
     "fpp_range_noise_models": [
-     0.07237585770226063,
-     0.9999999996858379
+     0.08396506035696971,
+     0.9755754726649133
     ]
    },
    {
     "window_days": 2.0,
     "mask_t14": 1.5,
     "white": false,
-    "max_brightening_snr": 4.4589372062111075,
-    "snr": 7.968313399866005,
-    "robust_spread": 1.6506522935545778,
+    "max_brightening_snr": 4.3799520397239435,
+    "snr": 6.605073920952926,
+    "robust_spread": 1.601572381767392,
     "fpp": null,
     "fpp_range_noise_models": [
-     0.08433546257893332,
-     0.9999999996861993
+     0.09545520489137627,
+     0.9887374906481052
     ]
    },
    {
     "window_days": 2.0,
     "mask_t14": 2.0,
     "white": false,
-    "max_brightening_snr": 3.0234061093522864,
-    "snr": 7.975929258598748,
-    "robust_spread": 1.5978494592915096,
+    "max_brightening_snr": 3.2233829350977565,
+    "snr": 6.605293420728785,
+    "robust_spread": 1.5375870166724637,
     "fpp": null,
     "fpp_range_noise_models": [
-     0.09738082460959918,
-     0.9999999996862906
+     0.12415317916955526,
+     0.988740674974849
     ]
    }
-  ]
+  ],
+  "secondary_flag_grid": [
+   {
+    "window_days": 1.0,
+    "effective_window_days": 1.547226497334742,
+    "bin_minutes": 2.0,
+    "first_pass_snr": 5.459872785070943,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 5.344560060368969,
+    "threshold_sigma": 7.832470756891844,
+    "max_brightening_snr": 5.211943193474145,
+    "periodic": true,
+    "max_epoch_share": 0.462642457287252,
+    "phase": 0.6448884480973571,
+    "flagged": false
+   },
+   {
+    "window_days": 1.0,
+    "effective_window_days": 1.547226497334742,
+    "bin_minutes": 6.0,
+    "first_pass_snr": 6.0129147737962825,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 5.9296447049624454,
+    "threshold_sigma": 7.371959384657866,
+    "max_brightening_snr": 4.664451023611324,
+    "periodic": true,
+    "max_epoch_share": 0.40490030186900877,
+    "phase": 0.6448884480973571,
+    "flagged": false
+   },
+   {
+    "window_days": 1.0,
+    "effective_window_days": 1.547226497334742,
+    "bin_minutes": 10.0,
+    "first_pass_snr": 5.786350787198832,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 5.642416471516328,
+    "threshold_sigma": 6.872367246804075,
+    "max_brightening_snr": 4.779342116236241,
+    "periodic": false,
+    "max_epoch_share": 0.8587422953499197,
+    "phase": 0.6217465181417101,
+    "flagged": false
+   },
+   {
+    "window_days": 1.0,
+    "effective_window_days": 1.547226497334742,
+    "bin_minutes": 15.0,
+    "first_pass_snr": 6.809797719869338,
+    "first_pass_significant": true,
+    "masked_phases": [
+     0.5,
+     0.6371744714454746
+    ],
+    "snr": 7.80653240501214,
+    "threshold_sigma": 7.2352434331521565,
+    "max_brightening_snr": 5.138512917485803,
+    "periodic": true,
+    "max_epoch_share": 0.43325153023278296,
+    "phase": 0.6371744714454746,
+    "flagged": true
+   },
+   {
+    "window_days": 1.0,
+    "effective_window_days": 1.547226497334742,
+    "bin_minutes": 20.0,
+    "first_pass_snr": 6.582846875585726,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 6.3904635423208065,
+    "threshold_sigma": 6.086883485222107,
+    "max_brightening_snr": 4.506022857678307,
+    "periodic": false,
+    "max_epoch_share": 0.9010543758875295,
+    "phase": 0.7410560236908224,
+    "flagged": false
+   },
+   {
+    "window_days": 1.0,
+    "effective_window_days": 1.547226497334742,
+    "bin_minutes": 30.0,
+    "first_pass_snr": 7.608201738390431,
+    "first_pass_significant": true,
+    "masked_phases": [
+     0.5,
+     0.6351174110049724
+    ],
+    "snr": 8.602563494150703,
+    "threshold_sigma": 7.201180943811565,
+    "max_brightening_snr": 4.485098927249363,
+    "periodic": true,
+    "max_epoch_share": 0.5335536086882705,
+    "phase": 0.6351174110049724,
+    "flagged": true
+   },
+   {
+    "window_days": 2.0,
+    "effective_window_days": 2.0,
+    "bin_minutes": 2.0,
+    "first_pass_snr": 5.818835418790059,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 6.169230977906916,
+    "threshold_sigma": 8.254012749187563,
+    "max_brightening_snr": 4.487810426576606,
+    "periodic": true,
+    "max_epoch_share": 0.4798047381671339,
+    "phase": 0.6448884480973571,
+    "flagged": false
+   },
+   {
+    "window_days": 2.0,
+    "effective_window_days": 2.0,
+    "bin_minutes": 6.0,
+    "first_pass_snr": 6.2182801958095215,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 6.6589658545019415,
+    "threshold_sigma": 7.524365994301288,
+    "max_brightening_snr": 4.152847241829548,
+    "periodic": true,
+    "max_epoch_share": 0.4273284286683185,
+    "phase": 0.6448884480973571,
+    "flagged": false
+   },
+   {
+    "window_days": 2.0,
+    "effective_window_days": 2.0,
+    "bin_minutes": 10.0,
+    "first_pass_snr": 5.769014808556282,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 6.36045781101212,
+    "threshold_sigma": 7.953515777976446,
+    "max_brightening_snr": 4.217742374471629,
+    "periodic": true,
+    "max_epoch_share": 0.4233468551096145,
+    "phase": 0.6433456527669801,
+    "flagged": false
+   },
+   {
+    "window_days": 2.0,
+    "effective_window_days": 2.0,
+    "bin_minutes": 15.0,
+    "first_pass_snr": 6.879625000930706,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 7.054931684109243,
+    "threshold_sigma": 7.609129034963651,
+    "max_brightening_snr": 4.543938538627861,
+    "periodic": true,
+    "max_epoch_share": 0.4648642407542778,
+    "phase": 0.6371744714454746,
+    "flagged": false
+   },
+   {
+    "window_days": 2.0,
+    "effective_window_days": 2.0,
+    "bin_minutes": 20.0,
+    "first_pass_snr": 5.686776625049702,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 5.796077968465894,
+    "threshold_sigma": 7.068508112246602,
+    "max_brightening_snr": 3.9745321514190106,
+    "periodic": false,
+    "max_epoch_share": 0.8167566629179248,
+    "phase": 0.6222607832518352,
+    "flagged": false
+   },
+   {
+    "window_days": 2.0,
+    "effective_window_days": 2.0,
+    "bin_minutes": 30.0,
+    "first_pass_snr": 7.383681783615653,
+    "first_pass_significant": false,
+    "masked_phases": [
+     0.5
+    ],
+    "snr": 7.887362945353826,
+    "threshold_sigma": 7.482373155474237,
+    "max_brightening_snr": 4.125248111336361,
+    "periodic": true,
+    "max_epoch_share": 0.5892986933533434,
+    "phase": 0.6351174110049724,
+    "flagged": true
+   }
+  ],
+  "secondary_flag_stability": {
+   "flagged": 3,
+   "n_settings": 12,
+   "verdict": "secondary at threshold; flag setting-dependent (3 of 12 settings flag it)"
+  }
  },
  "pixel_flags": [
   "saturated",
