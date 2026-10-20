@@ -232,6 +232,24 @@ def test_shallow_secondary_is_flagged_through_the_full_preparation():
     assert np.median(kept_two) > 150 and np.median(kept_two) > np.median(kept_one) + 15
 
 
+def test_second_pass_masks_the_first_pass_dip_only_when_it_is_significant():
+    """Masking the strongest first-pass dip of every light curve protects the largest noise dip from the trend and
+    biases the second pass upward (red-noise false alarms 1/600 -> 8/600 when the reviewer measured it). The dip is
+    masked only when the first pass already finds it significant; phase 0.5 is always masked."""
+    from dvtests_helpers import trapezoid_lc
+    from exoplan.pipeline import vetting_lightcurve_two_pass
+
+    cfg = RunConfig(name="x")
+    for seed in range(3):
+        lc = trapezoid_lc(seed=seed, period=4.0, t0=1.0, duration=0.15, depth=1000e-6, noise=600e-6, gap=None)
+        _, phases = vetting_lightcurve_two_pass([lc], cfg, period=4.0, t0=1.0, duration=0.15)
+        assert phases == (0.5,), (seed, phases)
+    lc = trapezoid_lc(seed=7, period=4.0, t0=1.0, duration=0.15, depth=4000e-6, noise=600e-6, secondary=1000e-6,
+                      secondary_phase=0.37, gap=None)
+    _, phases = vetting_lightcurve_two_pass([lc], cfg, period=4.0, t0=1.0, duration=0.15)
+    assert len(phases) == 2 and phases[0] == 0.5 and abs(phases[1] - 0.37) < 0.01, phases
+
+
 def test_pipeline_uses_the_transit_masked_light_curve(runs):
     for c in _on_primary(runs["flag"]):
         assert c.metrics["dv"]["transit_masked_detrend"] is True

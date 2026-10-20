@@ -191,17 +191,25 @@ def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, peri
 def vetting_lightcurve_two_pass(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float,
                                 duration: float, start: float | None = None, end: float | None = None):
     """:func:`vetting_lightcurve` in two passes. A secondary eclipse that is not masked is partly absorbed by the trend
-    (about half of a 200 ppm secondary was lost), so the first pass's all-phase scan finds the strongest dip, and the
-    second pass re-detrends with the primaries, phase 0.5 and that dip's phase all masked. Returns (light curve,
-    masked phases); (None, ()) when nothing is left."""
-    from exoplan.dvtests import secondary_search
+    (about half of a 200 ppm secondary was lost), so the second pass re-detrends with the primaries and phase 0.5 (a
+    circular orbit's secondary) always masked, and with the first pass's strongest dip masked too, but only when the
+    first pass already finds it significant (:func:`exoplan.dvtests.assess_secondary`, the same calibrated test).
+
+    The condition keeps the secondary search calibrated. Masking the strongest dip of every first pass also protects
+    the largest noise dip from the trend, which biases the second pass's maximum upward (pi Men: 5.6σ to 7.0σ), and
+    the white-noise tables describe a single scan, not that selection. Masking a fixed phase (0.5) selects nothing;
+    masking a dip that is already significant can move a flag only where the first pass would have raised it. The
+    price: an eccentric secondary below the threshold in the first pass is not protected from the trend. Returns
+    (light curve, masked phases); (None, ()) when nothing is left."""
+    from exoplan.dvtests import assess_secondary, secondary_search
 
     first = vetting_lightcurve(lightcurves, config, period=period, t0=t0, duration=duration, start=start, end=end)
     if first is None or len(first) < 10:
         return first, ()
     phases = [0.5]
     sec = secondary_search(first.time, first.flux, period=period, t0=t0, duration=duration)
-    if sec is not None and abs(sec["phase"] - 0.5) * period > duration:
+    if sec is not None and abs(sec["phase"] - 0.5) * period > duration and \
+            assess_secondary(sec, secondary_sigma=config.secondary_sigma)["significant"]:
         phases.append(float(sec["phase"]))
     second = vetting_lightcurve(lightcurves, config, period=period, t0=t0, duration=duration, start=start, end=end,
                                 extra_phases=phases)
