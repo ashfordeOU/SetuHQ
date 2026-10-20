@@ -14,7 +14,7 @@ def test_banner_goes_right_after_body(tmp_path):
     assert with_code_note(page, None) == page
     # a 44 x 44 px dismiss button; the banner takes taps (no pointer-events:none); the dismissal is remembered
     assert "width:44px;height:44px" in out and "pointer-events:none" not in out
-    assert "localStorage.setItem" in out and "catch(e)" in out and "paddingBottom" in out
+    assert "localStorage.setItem" in out and "catch(e)" in out and "data-fixed=" in out and "position:relative" in out
 
 
 def test_the_stored_run_carries_the_pre_fix_note(tmp_path):

@@ -78,13 +78,16 @@ tr.row.sel td{background:color-mix(in srgb,var(--accent) 16%,transparent)}
 .empty{color:var(--muted);padding:24px;text-align:center}
 </style></head>
 <body>
-<div class="codenote" id="codenote" role="note" data-key="93e741f3032f" style="position:fixed;left:0;right:0;bottom:0;z-index:2147483000;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:rgba(74,56,0,.96);color:#fff3cc;border-top:1px solid #a57c00;box-sizing:border-box">Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since.<button type="button" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;background:none;border:1px solid #a57c00;color:#fff3cc;border-radius:6px;font:20px/1 system-ui,sans-serif;cursor:pointer" aria-label="Dismiss this note">×</button></div><script>(function(){var b=document.getElementById('codenote');if(!b)return;var k='exoplan-codenote:'+b.dataset.key;
+<div class="codenote" id="codenote" role="note" data-key="93e741f3032f" data-fixed="position:fixed;left:0;right:0;bottom:0;border-top:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000" style="position:relative;border-bottom:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000">Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since.<button type="button" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;background:none;border:1px solid #a57c00;color:#fff3cc;border-radius:6px;font:20px/1 system-ui,sans-serif;cursor:pointer" aria-label="Dismiss this note">×</button></div><script>(function(){var b=document.getElementById('codenote');if(!b)return;var k='exoplan-codenote:'+b.dataset.key;
 try{if(window.localStorage.getItem(k)){b.remove();return;}}catch(e){}
-function pad(){var r=document.documentElement;document.body.style.paddingBottom='';
-if(r.scrollHeight>window.innerHeight+1){document.body.style.paddingBottom=b.offsetHeight+'px';}}
-window.addEventListener('load',pad);window.addEventListener('resize',pad);
+var FLOW=b.getAttribute('style'),FIXED=b.dataset.fixed;
+function place(){if(!b.isConnected)return;b.setAttribute('style',FIXED);
+var fits=document.documentElement.scrollHeight<=window.innerHeight+1;if(!fits){b.setAttribute('style',FLOW);}}
+place();window.addEventListener('load',place);window.addEventListener('resize',place);
+window.addEventListener('hashchange',function(){setTimeout(place,60);});
+if(window.ResizeObserver){new ResizeObserver(function(){place();}).observe(document.body);}
 b.querySelector('button').addEventListener('click',function(){try{window.localStorage.setItem(k,'1');}catch(e){}
-document.body.style.paddingBottom='';b.remove();});})();</script>
+b.remove();});})();</script>
 <header class='hero'><div class='wrap'>
   <h1>exoplan: pi Men (TESS sector 1)</h1>
   <p class='lead'>Blind-coded light curves, an AI-and-simulated review panel, skill-weighted consensus, and vetting. Click any candidate to see its light curve and each reviewer's marks.</p>
