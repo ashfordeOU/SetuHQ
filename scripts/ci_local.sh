@@ -36,6 +36,10 @@ echo "   deselected (marker 'network': needs internet access to MAST or the ESA 
 "$VENV/bin/python" -m pytest -q --collect-only -m network -o addopts="" 2>/dev/null | grep '::' | sed 's/^/     /' | tee -a "$LOG"
 ok
 
+step "README figures, brand files and screenshots are current (tools/gen_readme_assets.py --check)"
+"$VENV/bin/python" tools/gen_readme_assets.py --check 2>&1 | tee -a "$LOG"
+ok
+
 if [[ "$QUICK" -eq 1 ]]; then
   echo "quick check passed" | tee -a "$LOG"
   exit 0
