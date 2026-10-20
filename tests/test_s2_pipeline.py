@@ -274,3 +274,27 @@ def test_long_transits_survive_the_masked_detrend(hours):
         assert np.max(np.abs(m.flux - 1)) < 2500e-6
         flags, _ = extended_vet(m.time, m.flux, m.flux_err, period=9.0, t0=2.0, duration=dur)
         assert "secondary_any_phase" not in flags and "timing_inconsistent" not in flags, (seed, flags)
+
+
+def test_mask_anchor_support():
+    from exoplan.pipeline import mask_anchor_support
+
+    t = np.arange(0.0, 10.0, 0.01)
+    lone = (t >= 2.0) & (t < 2.6)
+    assert mask_anchor_support(t, lone, 1.0) == 1.0
+    pair = lone | ((t >= 2.8) & (t < 3.4))   # 0.2 d kept between the spans, inside half a window (0.5 d)
+    assert 0.35 < mask_anchor_support(t, pair, 1.0) < 0.45
+    assert mask_anchor_support(t, np.zeros(t.size, bool), 1.0) == 1.0
+
+
+def test_poorly_anchored_variants_are_left_out():
+    """P = 1.5 d with T14 = 0.15 d and phase 0.5 masked: a 2 T14 mask leaves 0.15 d between spans 0.75 d apart, too
+    little to anchor the trend (spurious dips inside the spans refused the FPP), so those variants are dropped; the
+    1 T14 variants are kept."""
+    from dvtests_helpers import trapezoid_lc
+    from exoplan.pipeline import MIN_ANCHOR_SUPPORT, secondary_variants
+
+    lc = trapezoid_lc(seed=1, period=1.5, t0=0.4, duration=0.15, depth=1000e-6, noise=600e-6, gap=None)
+    var = secondary_variants([lc], RunConfig(name="x"), period=1.5, t0=0.4, duration=0.15, extra_phases=(0.5,))
+    assert sorted({v["mask_t14"] for v in var}) == [1.0]
+    assert all(v["anchor_support"] >= MIN_ANCHOR_SUPPORT for v in var)

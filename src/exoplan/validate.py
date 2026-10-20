@@ -22,7 +22,7 @@ lower bound on the full one, and the label says "not validated" for that reason 
 Likelihoods, from the S2 measurements (each closed-form):
 
 * Secondary, from the all-phase search: the strongest dip s ± σ_s at any phase, in units of z = s/σ_s with σ_s
-  scaled by the scan's noise. TP and EBx2P predict no secondary, so z is the largest dip of a white-noise scan:
+  scaled by the scan's noise (never below the nominal σ/√n, as in the secondary threshold). TP and EBx2P predict no secondary, so z is the largest dip of a white-noise scan:
   likelihood f₀(z), the simulated null density for that number of box positions (``null_cdf`` in
   docs/results/secondary_calibration.json; modelling it as the largest of N_eff independent draws broke in the low
   tail and charged a planet for an unusually small dip). EB predicts a true secondary μ uniform in [0, Z], Z = δ/σ_s,
@@ -276,7 +276,10 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
 
     def posterior(widen: float, sc: dict | None = None):
         like = dict(base)
-        sl = secondary_like(widen, sc)
+        # The noise scale never drops below the nominal σ/√n, as in the secondary threshold (assess_secondary): a
+        # scan spread below white noise (detrending suppresses noise on the box's time-scale; 0.56 on some clean
+        # planets) made a 2.7σ dip read as 4.8 and refused the FPP of clean planets as unstable.
+        sl = secondary_like(max(widen, 1.0), sc)
         if sl is not None:
             l0, leb = sl
             like["tp"] *= l0

@@ -287,3 +287,17 @@ def test_an_unstable_fpp_is_refused_and_a_straddling_one_has_no_class():
     lo, hi = straddle.evidence["fpp_stability"]["range"]
     assert lo < 0.015 < hi and straddle.fpp is not None
     assert straddle.fpp_class.startswith("undetermined") and "straddles the FPP threshold 0.015" in straddle.fpp_class
+
+
+def test_a_sub_white_spread_never_raises_the_secondary_significance():
+    """The FPP's noise scale is floored at the nominal σ/√n, as the secondary threshold is: a variant whose scan spread
+    is 0.56 gives the same FPP as one at 1.0, so it cannot make the stability range look unstable."""
+    dv = _dv(0.0, 10.0, 1000.0, 1000.0, 10.0)
+    dv["secondary"].update(_white_scan(depth_ppm=27.0, snr=2.7))
+    narrow = [dict(v, scan_robust_sigma=0.56, scan_std_snr=0.6) for v in _variants([27.0, 27.0, 27.0, 27.0])]
+    a = reduced_fpp(depth=1e-3, dv=dv, variants=narrow)
+    b = reduced_fpp(depth=1e-3, dv=dv, variants=_variants([27.0, 27.0, 27.0, 27.0]))
+    assert a.fpp == pytest.approx(b.fpp, rel=1e-9) and a.refused is None
+    rows = a.evidence["fpp_stability"]["rows"]
+    floored = [r["fpp"] for r in rows if r["window_scale"] != 1.0]   # every variant row sits at the nominal σ
+    assert max(floored) == pytest.approx(min(floored), rel=1e-9)

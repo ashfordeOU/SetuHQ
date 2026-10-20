@@ -156,6 +156,41 @@ def vetting_window(config: RunConfig, duration: float) -> float:
     return max(config.detrend_window_days, 4.0 * 2.0 * TRANSIT_MASK_T14 * duration)
 
 
+def vetting_mask(time, *, period: float, t0: float, duration: float, extra_phases=(), mask_t14: float | None = None):
+    """The points the vetting detrend leaves out: within ``mask_t14`` (default :data:`TRANSIT_MASK_T14`) × T14 of
+    each mid-transit and of each of ``extra_phases`` (a secondary, see :func:`vetting_lightcurve_two_pass`)."""
+    time = np.asarray(time, float)
+    half = (TRANSIT_MASK_T14 if mask_t14 is None else mask_t14) * duration
+    exclude = np.zeros(time.size, bool)
+    for phase in (0.0, *extra_phases):
+        centre = t0 + phase * period
+        exclude |= np.abs((time - centre + 0.5 * period) % period - 0.5 * period) <= half
+    return exclude
+
+
+MIN_ANCHOR_SUPPORT = 0.5   # a variant is used only if each masked span keeps this share of the points beside it
+
+
+def mask_anchor_support(time, exclude, window: float) -> float:
+    """How well the masked spans are anchored: over every masked span and each of its two sides, the smallest share
+    of the points within ``window``/2 of the span's edge that the mask leaves in (1.0 when nothing is masked). A side
+    with fewer than 5 points at all (the data's ends or a gap) is not counted: there the trend is held flat anyway."""
+    time = np.asarray(time, float)
+    ex = np.asarray(exclude, bool)
+    worst = 1.0
+    if not ex.any():
+        return worst
+    change = np.flatnonzero(np.diff(ex.astype(np.int8)))
+    for i in change:
+        if ex[i + 1]:      # a span starts at i + 1: its left side
+            side = (time >= time[i + 1] - window / 2) & (time < time[i + 1])
+        else:              # a span ends at i: its right side
+            side = (time > time[i]) & (time <= time[i] + window / 2)
+        if side.sum() >= 5:
+            worst = min(worst, float((~ex[side]).sum() / side.sum()))
+    return worst
+
+
 def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float, duration: float,
                        start: float | None = None, end: float | None = None, extra_phases=(), window_scale: float = 1.0,
                        mask_t14: float | None = None) -> Subject | None:
@@ -173,11 +208,8 @@ def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, peri
         level = float(np.median(cleaned.flux)) if len(cleaned) else 1.0
         if np.isfinite(level) and level > 0:
             cleaned = cleaned.with_data(cleaned.time, cleaned.flux / level, cleaned.flux_err / level)
-        half = (TRANSIT_MASK_T14 if mask_t14 is None else mask_t14) * duration
-        exclude = np.abs((cleaned.time - t0 + 0.5 * period) % period - 0.5 * period) <= half
-        for phase in extra_phases:   # also keep these phases out of the trend (a secondary, see the two-pass version)
-            centre = t0 + phase * period
-            exclude |= np.abs((cleaned.time - centre + 0.5 * period) % period - 0.5 * period) <= half
+        exclude = vetting_mask(cleaned.time, period=period, t0=t0, duration=duration, extra_phases=extra_phases,
+                               mask_t14=mask_t14)
         detrended = detrend(cleaned, window_days=vetting_window(config, duration) * window_scale, exclude=exclude)
         binned = bin_lightcurve(detrended, config.bin_minutes)
         if start is not None:
@@ -226,11 +258,23 @@ SCAN_KEYS = ("phase", "depth_ppm", "sigma_ppm", "snr", "n_trials", "scan_robust_
 def secondary_variants(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float, duration: float,
                        extra_phases=(), start: float | None = None, end: float | None = None) -> list[dict]:
     """The all-phase secondary scan repeated on each of :data:`DETREND_VARIANTS` (same masked phases), for the
-    reduced FPP's stability check. Each entry is the scan's summary with its ``window_scale`` and ``mask_t14``."""
+    reduced FPP's stability check. Each entry is the scan's summary with its ``window_scale``, ``mask_t14`` and
+    ``anchor_support`` (:func:`mask_anchor_support`).
+
+    A variant whose masks leave a span poorly anchored (less than :data:`MIN_ANCHOR_SUPPORT` of the points within
+    half a window of either edge kept) is left out: with a short window and wide masks around several phases, the
+    one-sided quadratic at the span's edges, interpolated across it, made spurious dips (111 ppm, 5.1σ, inside a
+    masked span when the reviewer measured it), and the FPP was refused on them."""
     from exoplan.dvtests import assess_secondary, secondary_search
 
     out = []
     for scale, mask in DETREND_VARIANTS:
+        window = vetting_window(config, duration) * scale
+        support = min((mask_anchor_support(lc.time, vetting_mask(lc.time, period=period, t0=t0, duration=duration,
+                                                                 extra_phases=extra_phases, mask_t14=mask), window)
+                       for lc in lightcurves), default=1.0)
+        if support < MIN_ANCHOR_SUPPORT:
+            continue
         lc = vetting_lightcurve(lightcurves, config, period=period, t0=t0, duration=duration, start=start, end=end,
                                 extra_phases=extra_phases, window_scale=scale, mask_t14=mask)
         if lc is None or len(lc) < 10:
@@ -239,7 +283,8 @@ def secondary_variants(lightcurves: list[LightCurve], config: RunConfig, *, peri
         if sec is None or sec.get("scan_robust_sigma") is None:
             continue
         sec = assess_secondary(sec)
-        out.append({**{k: sec.get(k) for k in SCAN_KEYS}, "window_scale": scale, "mask_t14": mask})
+        out.append({**{k: sec.get(k) for k in SCAN_KEYS}, "window_scale": scale, "mask_t14": mask,
+                    "anchor_support": support})
     return out
 
 
