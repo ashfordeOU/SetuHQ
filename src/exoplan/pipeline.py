@@ -157,7 +157,7 @@ def vetting_window(config: RunConfig, duration: float) -> float:
 
 
 def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float, duration: float,
-                       start: float | None = None, end: float | None = None) -> Subject | None:
+                       start: float | None = None, end: float | None = None, extra_phases=()) -> Subject | None:
     """The light curve the extended (DV-style) tests read: prepared as for review (clean, normalise, detrend, bin),
     except that the detrending leaves out every point within ``TRANSIT_MASK_T14`` × T14 of a mid-transit of the
     fitted ephemeris, as DV does, with the window widened for long transits (:func:`vetting_window`) and the trend
@@ -170,9 +170,12 @@ def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, peri
         level = float(np.median(cleaned.flux)) if len(cleaned) else 1.0
         if np.isfinite(level) and level > 0:
             cleaned = cleaned.with_data(cleaned.time, cleaned.flux / level, cleaned.flux_err / level)
-        dt = np.abs((cleaned.time - t0 + 0.5 * period) % period - 0.5 * period)
-        detrended = detrend(cleaned, window_days=vetting_window(config, duration),
-                            exclude=dt <= TRANSIT_MASK_T14 * duration)
+        half = TRANSIT_MASK_T14 * duration
+        exclude = np.abs((cleaned.time - t0 + 0.5 * period) % period - 0.5 * period) <= half
+        for phase in extra_phases:   # also keep these phases out of the trend (a secondary, see the two-pass version)
+            centre = t0 + phase * period
+            exclude |= np.abs((cleaned.time - centre + 0.5 * period) % period - 0.5 * period) <= half
+        detrended = detrend(cleaned, window_days=vetting_window(config, duration), exclude=exclude)
         binned = bin_lightcurve(detrended, config.bin_minutes)
         if start is not None:
             keep = (binned.time >= start) & (binned.time < (end if end is not None else np.inf))
@@ -180,6 +183,26 @@ def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, peri
         if len(binned):
             out.append(binned)
     return stitch(out) if out else None
+
+
+def vetting_lightcurve_two_pass(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float,
+                                duration: float, start: float | None = None, end: float | None = None):
+    """:func:`vetting_lightcurve` in two passes. A secondary eclipse that is not masked is partly absorbed by the trend
+    (about half of a 200 ppm secondary was lost), so the first pass's all-phase scan finds the strongest dip, and the
+    second pass re-detrends with the primaries, phase 0.5 and that dip's phase all masked. Returns (light curve,
+    masked phases); (None, ()) when nothing is left."""
+    from exoplan.dvtests import secondary_search
+
+    first = vetting_lightcurve(lightcurves, config, period=period, t0=t0, duration=duration, start=start, end=end)
+    if first is None or len(first) < 10:
+        return first, ()
+    phases = [0.5]
+    sec = secondary_search(first.time, first.flux, period=period, t0=t0, duration=duration)
+    if sec is not None and abs(sec["phase"] - 0.5) * period > duration:
+        phases.append(float(sec["phase"]))
+    second = vetting_lightcurve(lightcurves, config, period=period, t0=t0, duration=duration, start=start, end=end,
+                                extra_phases=phases)
+    return second, tuple(phases)
 
 
 def prepare_subjects(lightcurves: list[LightCurve], config: RunConfig, *, prepared: list[LightCurve] | None = None) -> list[Subject]:
@@ -378,14 +401,16 @@ def extended_vetting(candidate: Candidate, subject: Subject, supported: Periodic
                         (config.search == "sector" or lc.provenance.get("sector") == subject.provenance.get("sector"))]
                 window = {} if config.search == "sector" else {"start": subject.provenance.get("segment_start"),
                                                                "end": subject.provenance.get("segment_end")}
-                redone = vetting_lightcurve(mine, config, period=period, t0=t0, duration=duration, **window) if mine else None
+                redone, phases = (vetting_lightcurve_two_pass(mine, config, period=period, t0=t0, duration=duration,
+                                                              **window) if mine else (None, ()))
                 if redone is not None and len(redone) >= 10:
-                    data, masked = redone, True
+                    data, masked = redone, list(phases)
             found, metrics = dvtests.extended_vet(data.time, data.flux, data.flux_err, period=period, t0=t0,
                                                   duration=duration, fit=fit or None, provenance=subject.provenance,
                                                   crowding_min=config.crowding_min,
                                                   secondary_sigma=config.secondary_sigma)
-            cache[key] = (found, dict(metrics, transit_masked_detrend=masked))
+            cache[key] = (found, dict(metrics, transit_masked_detrend=bool(masked),
+                                      masked_phases=masked if masked else []))
         found, metrics = cache[key]
         candidate.metrics["dv"] = dict(metrics, ephemeris_source=source)
         flags += found

@@ -209,22 +209,33 @@ def test_transit_masked_detrending_removes_the_shoulders():
 
 
 def test_shallow_secondary_is_flagged_through_the_full_preparation():
-    """A 1000/300 ppm binary at 600 ppm noise, through clean, the transit-masked detrend and 10-minute bins, is
-    flagged secondary_any_phase (19 of 20 seeds when measured; 1 of 20 with the unmasked detrend)."""
+    """A 1000/200 ppm binary at 600 ppm noise, through clean, the two-pass masked detrend and 10-minute bins: the
+    secondary keeps most of its depth (the trend no longer absorbs it) and is flagged (19 of 20 seeds when measured,
+    10 of 20 with one pass)."""
     from exoplan.dvtests import extended_vet
-    from exoplan.pipeline import vetting_lightcurve
+    from exoplan.pipeline import vetting_lightcurve, vetting_lightcurve_two_pass
 
     cfg = RunConfig(name="x")
-    flagged = 0
+    flagged, kept_one, kept_two = 0, [], []
     for seed in range(5):
-        l = vetting_lightcurve([_shallow_eb(seed, 300e-6)], cfg, period=4.0, t0=1.0, duration=0.15)
-        flagged += "secondary_any_phase" in extended_vet(l.time, l.flux, l.flux_err, period=4.0, t0=1.0, duration=0.15)[0]
+        lc = _shallow_eb(seed, 200e-6)
+        two, phases = vetting_lightcurve_two_pass([lc], cfg, period=4.0, t0=1.0, duration=0.15)
+        assert 0.5 in phases
+        f2, m2 = extended_vet(two.time, two.flux, two.flux_err, period=4.0, t0=1.0, duration=0.15)
+        one = vetting_lightcurve([lc], cfg, period=4.0, t0=1.0, duration=0.15)
+        m1 = extended_vet(one.time, one.flux, one.flux_err, period=4.0, t0=1.0, duration=0.15)[1]
+        flagged += "secondary_any_phase" in f2
+        kept_two.append(m2["secondary"]["phase_05"]["depth_ppm"])
+        kept_one.append(m1["secondary"]["phase_05"]["depth_ppm"])
     assert flagged >= 4
+    # the box mean of the injected 200 ppm trapezoid is ~180 ppm
+    assert np.median(kept_two) > 150 and np.median(kept_two) > np.median(kept_one) + 15
 
 
 def test_pipeline_uses_the_transit_masked_light_curve(runs):
     for c in _on_primary(runs["flag"]):
         assert c.metrics["dv"]["transit_masked_detrend"] is True
+        assert 0.5 in c.metrics["dv"]["masked_phases"]
 
 
 @pytest.mark.parametrize("hours", [6.0, 10.0])
