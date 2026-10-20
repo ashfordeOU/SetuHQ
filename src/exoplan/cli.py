@@ -203,11 +203,13 @@ def cmd_ingest(args) -> int:
 
 
 def cmd_check_sweep(args) -> int:
-    from exoplan.sweep import build_catalogue, check_catalogue
+    from exoplan.sweep import build_catalogue, check_catalogue, check_ledger_append_only
 
     if args.fix:
         build_catalogue(args.sweep_dir)
     problems = check_catalogue(args.sweep_dir)
+    if args.ledger_base:
+        problems += check_ledger_append_only(args.sweep_dir, args.ledger_base)
     for p in problems:
         print(f"exoplan check-sweep: {p}", file=sys.stderr)
     if not problems:
@@ -363,6 +365,7 @@ def build_parser() -> argparse.ArgumentParser:
                                                "catalogue is what its verified sources rebuild to")
     check.add_argument("--sweep-dir", default="docs/sweep")
     check.add_argument("--fix", action="store_true", help="rebuild catalogue.json from the verified sources")
+    check.add_argument("--ledger-base", help="a git ref (the base branch) whose ingest ledger this one must only extend")
     check.set_defaults(func=cmd_check_sweep)
 
     dash = sub.add_parser("dashboard",help="build the interactive dashboard from a run and optional discovery catalogue")

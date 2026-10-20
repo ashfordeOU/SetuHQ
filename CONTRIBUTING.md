@@ -94,12 +94,14 @@ exoplan ingest your-name-s5 --attested-by <pull-request-author>
   re-applied to every dip, brightening and variability entry);
 * a star-sector it fetches again from MAST hashes differently, or a fresh search of it with the bundle's
   config and this code does not reproduce every entry, count and null exactly. It fetches and searches
-  **every star-sector that carries a planet candidate or an entry in a class that exceeds its null** (what
-  the site would show as a finding), plus `max(3, 5%)` of the rest at random (`--verify-lightcurves N` sets
-  that number). The random draw is seeded with a nonce the maintainer's machine makes at ingest
-  (os.urandom), so renaming or resealing a bundle cannot steer it. The Probes are deterministic, so this
-  catches results that were edited and resealed: a forged finding always, a forged non-finding with the
-  sampled probability;
+  **every star-sector that carries an entry in an astrophysical class** (planet candidate, eclipsing
+  binary, flare, variable), and every one with an entry in a class that would exceed its null once the
+  bundle is merged (judged on a provisional merge, so forged entries cannot push a class over its null
+  unchecked), plus `max(3, 5%)` of the rest, which carry only systematic and unclassified entries, at random
+  (`--verify-lightcurves N` sets that number). The random draw is seeded with a nonce the maintainer's
+  machine makes at ingest (os.urandom), so renaming or resealing a bundle cannot steer it. The Probes are
+  deterministic, so this catches results that were edited and resealed: a forged astrophysical entry
+  always, a forged systematic or unclassified entry with the sampled probability;
 * it has Sentinels, whose answers a fresh search cannot reproduce, unless the maintainer passes
   `--accept-sentinels` (the catalogue then records that its dips were not searched again);
 * every star-sector in it is already in the catalogue as an identical search (same light curve, search code
@@ -116,3 +118,12 @@ placed or edited by hand is left out, and `exoplan check-sweep` (a step of `scri
 it. One search counts for each star-sector, the latest: it alone gives the entries, counters, nulls and
 credit, and earlier searches of the same star-sector stay as provenance on its coverage row. An identical
 copy of a search earns nothing. Then rebuild the site (`scripts/ci_local.sh`) and commit.
+
+Every ingest also appends a line to `docs/sweep/ingest_ledger.jsonl` (the bundle id, the manifest's and
+files' hashes, who attested it, the nonce). `exoplan check-sweep` requires every contribution folder to match
+its ledger line, and CI requires the ledger to be an append-only extension of the base branch's
+(`--ledger-base`). So a contribution resealed after it was merged fails CI. **What these checks cannot do is
+tell an honest new ledger line from a dishonest one in the same pull request:** someone with write access
+could ingest, then edit a folder, its ingest.json and its ledger line before committing. Review of the pull
+request that adds a contribution is what guards against that: a reviewer runs `exoplan ingest` again on the
+bundle (or compares the folder with the bundle in the pull request) before merging.

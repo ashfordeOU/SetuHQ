@@ -49,7 +49,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from exoplan import __version__
-from exoplan.variables import CLASS_IDS, CONFIDENCES, KINDS, LS_AMPLITUDE_RATIO, LS_FAP_MAX, classify_dip, classify_flare, classify_variability
+from exoplan.variables import CLASS_IDS, CONFIDENCES, KINDS, classify_dip, classify_flare, classify_variability, qualifies_variable
 
 FORMAT = "exoplan-contribution/2"
 FILES = ("results.json", "config.toml")
@@ -199,6 +199,7 @@ def make_bundle(record_path: str | Path, out_dir: str | Path, *, contributor: st
 
     rec = read_record(record_path)
     name = check_name(contributor)
+    screen("the contributor name", name, assignments=True)   # before anything is written
     config_text = rec.get("config_text") or ""
     if not config_text:
         raise BundleRefused(f"{record_path}: the record holds no config text")
@@ -369,7 +370,7 @@ def _check_entries(s: dict) -> None:
     """Every entry's class and confidence must be what the rules give for its stored inputs."""
     events = s.get("events") or {}
     var = s.get("variability")
-    star_var = var if var and var.get("fap") is not None and var["fap"] < LS_FAP_MAX and var.get("amplitude_ratio", 0) >= LS_AMPLITUDE_RATIO else None
+    star_var = qualifies_variable(var)
     eb_periods = []
     ids = [e.get("id") for e in s.get("entries") or []]
     if len(set(ids)) != len(ids):
@@ -393,7 +394,9 @@ def _check_entries(s: dict) -> None:
     for e in s.get("entries") or []:
         if e["kind"] == "variability":
             got = classify_variability({"period_days": e["period_days"], "fap": e["ls_fap"], "amplitude_ratio": e["amplitude_ratio"],
-                                        "amplitude_ppm": e["amplitude_ppm"]}, eb_periods)
+                                        "amplitude_ppm": e["amplitude_ppm"], "period_range_days": e.get("period_range_days"),
+                                        "halves_period_days": e.get("halves_period_days"),
+                                        "half_period_max_days": e.get("half_period_max_days")}, eb_periods)
             if not got or (got["class"], got["confidence"]) != (e["class"], e["confidence"]):
                 raise BundleRefused(f"entry {e['id']}: the variability rule does not give {e['class']} ({e['confidence']})")
 
@@ -405,15 +408,52 @@ def sample(rec: dict, n: int, seed: str) -> list[dict]:
     return random.Random(seed).sample(searched, min(max(n, 0), len(searched)))
 
 
+ASTROPHYSICAL = ("planet_candidate", "eclipsing_binary", "flare", "variable")
+LEDGER = "ingest_ledger.jsonl"
+
+
+def exceeding_after_merge(sweep_dir: str | Path, bundle_path: Path, man: dict) -> set:
+    """The classes that would exceed their null in the catalogue once this bundle is merged: computed on a
+    provisional copy, so a contributor cannot push a class over its null with forged entries that are then not
+    searched again."""
+    from exoplan.sweep import RECORD_GLOB, build_catalogue
+
+    with tempfile.TemporaryDirectory() as tmp:
+        t = Path(tmp)
+        for p in Path(sweep_dir).glob(RECORD_GLOB):
+            shutil.copy(p, t / p.name)
+        if (Path(sweep_dir) / "contributions").exists():
+            shutil.copytree(Path(sweep_dir) / "contributions", t / "contributions")
+        d = t / "contributions" / man["bundle_id"]
+        d.mkdir(parents=True, exist_ok=True)
+        for f in ("manifest.json",) + FILES:
+            shutil.copyfile(bundle_path / f, d / f)
+        (d / "ingest.json").write_text(json.dumps({"bundle_id": man["bundle_id"], "ingested_at": "provisional",
+                                                   "manifest_sha256": sha256_bytes((d / "manifest.json").read_bytes())}))
+        build_catalogue(t)
+        comps = ((json.loads((t / "catalogue.json").read_text())["counts"].get("null") or {}).get("comparisons")) or []
+    return {c["class"] for c in comps if c.get("significant")}
+
+
+def append_ledger(sweep_dir: str | Path, record: dict, man: dict) -> None:
+    """One line per ingest in ``<sweep_dir>/ingest_ledger.jsonl``, append-only: CI checks that the ledger only
+    grows against the base branch, and that every contribution folder has its line (``sweep.check_catalogue``)."""
+    line = {"bundle_id": record["bundle_id"], "ingested_at": record["ingested_at"], "manifest_sha256": record["manifest_sha256"],
+            "files": man["files"], "attested_by": record.get("attested_by"), "nonce": record["nonce"]}
+    with open(Path(sweep_dir) / LEDGER, "a") as fh:
+        fh.write(json.dumps(line, sort_keys=True) + "\n")
+
+
 def select_for_search(rec: dict, *, exceeding: set, nonce: str, min_random: int | None = None) -> tuple[list[dict], list[dict]]:
-    """The star-sectors ingest fetches and searches again: every one that carries a planet candidate or an entry
-    in a class that exceeds its null in the catalogue (they are what the site shows as findings, so they are
-    always checked), plus ``max(3, 5%)`` of the rest at random. The random part is seeded with a nonce the
-    maintainer draws at ingest (os.urandom), so the contributor cannot steer it by renaming or resealing."""
+    """The star-sectors ingest fetches and searches again: every one that carries an entry in an astrophysical
+    class (planet candidate, eclipsing binary, flare, variable), or in a class that would exceed its null once
+    the bundle is merged, always; plus ``max(3, 5%)`` of the rest (systematic and unclassified only) at random.
+    The random part is seeded with a nonce the maintainer draws at ingest (os.urandom), so the contributor cannot
+    steer it by renaming or resealing; and a forged astrophysical entry, in any class, is always searched again."""
     import math
 
     searched = [s for s in rec.get("stars") or [] if s.get("status") == "searched"]
-    flagged = {"planet_candidate"} | set(exceeding)
+    flagged = set(ASTROPHYSICAL) | set(exceeding)
     forced = [s for s in searched if any(e.get("class") in flagged for e in s.get("entries") or [])]
     rest = [s for s in searched if not any(s is f for f in forced)]
     k = max(MIN_RANDOM, math.ceil(RANDOM_FRACTION * len(searched))) if min_random is None else max(0, min_random)
@@ -521,11 +561,7 @@ def ingest_bundle(bundle: str | Path, *, sweep_dir: str | Path = "docs/sweep", v
         if sentinels and not accept_sentinels:
             raise BundleRefused("the bundle has Sentinels, so a fresh search cannot reproduce it here; a maintainer may accept it "
                                 "with --accept-sentinels, and the catalogue will then say its dips were not re-run")
-        cat_path = Path(sweep_dir) / "catalogue.json"
-        exceeding: set = set()
-        if cat_path.exists():
-            comps = ((json.loads(cat_path.read_text())["counts"].get("null") or {}).get("comparisons")) or []
-            exceeding = {c["class"] for c in comps if c.get("significant")}
+        exceeding = exceeding_after_merge(sweep_dir, v["path"], man)
         nonce = nonce or os.urandom(16).hex()
         forced, rand = select_for_search(rec, exceeding=exceeding, nonce=nonce, min_random=verify_lightcurves)
         picked = fetch_and_hash(rec, forced + rand, fetch=fetch, cache_root=cache_root)
@@ -543,6 +579,7 @@ def ingest_bundle(bundle: str | Path, *, sweep_dir: str | Path = "docs/sweep", v
                                "dips_searched_again": not sentinels},
                   "new_star_sectors": len(new), "already_in_catalogue": len(mine) - len(new)}
         (dest / "ingest.json").write_text(json.dumps(record, indent=1) + "\n")
+        append_ledger(sweep_dir, record, man)
         cat = build_catalogue(sweep_dir)
     finally:
         if v.get("_tmp"):

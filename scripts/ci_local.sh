@@ -46,7 +46,14 @@ CAT="docs/discoveries/catalog.json"
 EX="$VENV/bin/exoplan"
 
 step "sweep catalogue: only ingested, intact contributions, and catalogue.json rebuilds from them"
-"$EX" check-sweep --sweep-dir docs/sweep >> "$LOG" 2>&1
+# The ingest ledger may only grow against the base branch (set EXOPLAN_BASE to override).
+BASE="${EXOPLAN_BASE:-claude/dreamy-pasteur-pyawgi}"
+if git rev-parse --verify --quiet "$BASE" > /dev/null; then
+  "$EX" check-sweep --sweep-dir docs/sweep --ledger-base "$BASE" >> "$LOG" 2>&1
+else
+  echo "   base $BASE not present: the ledger's append-only check is skipped" | tee -a "$LOG"
+  "$EX" check-sweep --sweep-dir docs/sweep >> "$LOG" 2>&1
+fi
 ok
 
 step "app shell builds from the stored run"

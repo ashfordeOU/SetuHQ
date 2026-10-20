@@ -522,7 +522,8 @@ def search_identity(s: dict) -> tuple:
 COMPARISONS = [
     ("planet_candidate", "dip", "Planet-candidate rule (dips)", "the flux-inverted copy: its dips of this class"),
     ("eclipsing_binary", "dip", "Eclipsing binary (dips)", "the flux-inverted copy: its dips of this class"),
-    ("variable", "variability", "Pulsator or rotational variable (periodogram)", "a block-demeaned, block-shuffled copy"),
+    ("variable", "variability", "Pulsator or rotational variable (coherent periodogram peak)",
+     "a red-noise copy of the same star (AR(1) fitted to its bins), through the same rule and coherence test"),
     ("variable", "dip", "Variable-star troughs (dips)", "the flux-inverted copy: its dips of this class"),
     ("flare", "brightening", "Flare (brightenings)", "downward events with the real dips masked"),
     ("systematic", "dip", "Systematic (dips)", "the flux-inverted copy: its dips of this class"),
@@ -578,6 +579,43 @@ def paired_versus_null(real: list[int], null: list[int]) -> dict:
     p = 1.0 if b + c == 0 else min(1.0, 2 * sum(math.comb(b + c, i) for i in range(k + 1)) / 2 ** (b + c))
     out.update(only_real=b, only_null=c, mcnemar_p=round(p, 4))
     out["significant"] = bool(out["lo"] > 0 and p < 0.05)
+    return out
+
+
+SHARED_PERIOD_STARS = 3
+SHARED_PERIOD_TOLERANCE = 0.02
+
+
+def shared_periods(current: dict) -> dict:
+    """Variable-star entries whose period (within 2%) is shared by 3 or more stars of one sector: unrelated stars
+    do not share a period, an instrument does (a scattered-light or pointing cycle). Returns
+    {((tic, sector), entry id): the entry made systematic}, the star's own class kept as ``star_class``."""
+    by_sector: dict[int, list] = {}
+    for key, (_, s) in current.items():
+        for e in s.get("entries", []):
+            if e.get("kind") == "variability" and e.get("class") == "variable" and e.get("period_days"):
+                by_sector.setdefault(key[1], []).append((float(e["period_days"]), key, e))
+    out = {}
+    for sector, items in by_sector.items():
+        items.sort(key=lambda x: x[0])
+        groups, cur = [], []
+        for item in items:
+            if cur and item[0] > cur[0][0] * (1 + SHARED_PERIOD_TOLERANCE):
+                groups.append(cur)
+                cur = []
+            cur.append(item)
+        if cur:
+            groups.append(cur)
+        for g in groups:
+            tics = {k[0] for _, k, _ in g}
+            if len(tics) < SHARED_PERIOD_STARS:
+                continue
+            lo, hi = g[0][0], g[-1][0]
+            for p, key, e in g:
+                out[(key, e["id"])] = {**e, "class": "systematic", "confidence": "medium", "star_class": e["class"],
+                                       "cues": list(e.get("cues") or []) + [{"rule": "shared_period", "text":
+                                                f"the same period ({lo:.3f} to {hi:.3f} d) on {len(tics)} stars of sector {sector}: "
+                                                "unrelated stars do not share a period, an instrument does"}]}
     return out
 
 
@@ -641,6 +679,7 @@ def build_catalogue(sweep_dir: str | Path = SWEEP_DIR) -> Path | None:
                 coverage[key] = {"tic": key[0], "sector": key[1], "ra": s.get("ra"), "dec": s.get("dec"), "tmag": s.get("tmag"),
                                  "status": s.get("status"), "searched_by": [], "counts": {c: 0 for c in CLASS_IDS}, "n_dips": 0,
                                  **({"error": s["error"]} if s.get("error") else {})}
+    shared = shared_periods(current)
     entries: list[dict] = []
     dips = marks = below = 0
     per_star: dict[tuple, list] = {(c, k): [] for c, k, _, _ in COMPARISONS}
@@ -663,7 +702,8 @@ def build_catalogue(sweep_dir: str | Path = SWEEP_DIR) -> Path | None:
                "search_code": search_code, "searched_at": s.get("searched_at"), **({"earlier_searches": old} if old else {})}
         coverage[key] = row
         reviewers = s.get("reviewers") or []
-        for e in s.get("entries", []):
+        ents = [shared.get((key, e["id"]), e) for e in s.get("entries", [])]
+        for e in ents:
             row["counts"][e["class"]] += 1
             entries.append({**e, "panel": [{"id": r["id"], "kind": r["kind"]} for r in reviewers], "file_sha256": s.get("file_sha256"),
                             "search_code": search_code, "classify_code": classify_code, "config_sha256": s.get("config_sha256"),
@@ -671,7 +711,7 @@ def build_catalogue(sweep_dir: str | Path = SWEEP_DIR) -> Path | None:
         if star_null(s, "eclipsing_binary", "dip") is not None:
             n_null += 1
             for c, k, _, _ in COMPARISONS:
-                real = sum(1 for e in s.get("entries", []) if e["class"] == c and e["kind"] == k)
+                real = sum(1 for e in ents if e["class"] == c and e["kind"] == k)
                 per_star[(c, k)].append((real, star_null(s, c, k)))
             for k2 in shape:
                 shape[k2] += ((s.get("null") or {}).get("flare_shape") or {}).get(k2, 0)
@@ -725,6 +765,26 @@ def build_catalogue(sweep_dir: str | Path = SWEEP_DIR) -> Path | None:
     return path
 
 
+def read_ledger(sweep_dir: str | Path) -> list[dict]:
+    p = Path(sweep_dir) / "ingest_ledger.jsonl"
+    return [json.loads(x) for x in p.read_text().splitlines() if x.strip()] if p.exists() else []
+
+
+def check_ledger_append_only(sweep_dir: str | Path, base_ref: str) -> list[str]:
+    """The ingest ledger may only grow: the base branch's ledger must be a prefix of this one. A contribution
+    resealed after it was merged would have to change its line, and this catches that; review of the pull
+    request is what guards a new line."""
+    import subprocess
+
+    path = Path(sweep_dir) / "ingest_ledger.jsonl"
+    rel = path.resolve().relative_to(Path(subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True,
+                                                         cwd=Path(sweep_dir).resolve()).stdout.strip()))
+    got = subprocess.run(["git", "show", f"{base_ref}:{rel}"], capture_output=True, text=True, cwd=Path(sweep_dir).resolve())
+    base = got.stdout if got.returncode == 0 else ""
+    here = path.read_text() if path.exists() else ""
+    return [] if here.startswith(base) else [f"ingest_ledger.jsonl is not an append-only extension of {base_ref}'s"]
+
+
 def check_catalogue(sweep_dir: str | Path = SWEEP_DIR) -> list[str]:
     """Problems with a committed sweep directory: contribution folders that ingest did not write or that changed
     since, and a catalogue.json that is not what the verified sources rebuild to. [] when all is well."""
@@ -733,10 +793,27 @@ def check_catalogue(sweep_dir: str | Path = SWEEP_DIR) -> list[str]:
 
     sweep_dir = Path(sweep_dir)
     problems = []
-    for folder in sorted(p for p in (sweep_dir / "contributions").glob("*") if p.is_dir()):
+    ledger = read_ledger(sweep_dir)
+    by_id = {}
+    for line in ledger:
+        if line.get("bundle_id") in by_id:
+            problems.append(f"ingest_ledger.jsonl: {line.get('bundle_id')} appears twice")
+        by_id[line.get("bundle_id")] = line
+    folders = sorted(p for p in (sweep_dir / "contributions").glob("*") if p.is_dir())
+    for folder in folders:
         why = verify_contribution(folder)
         if why:
             problems.append(f"contributions/{folder.name}: {why}")
+            continue
+        ing = json.loads((folder / "ingest.json").read_text())
+        line = by_id.get(folder.name)
+        if not line:
+            problems.append(f"contributions/{folder.name}: no line in ingest_ledger.jsonl (not ingested here)")
+        elif line.get("manifest_sha256") != ing.get("manifest_sha256"):
+            problems.append(f"contributions/{folder.name}: manifest differs from the one its ledger line records (resealed after ingest)")
+    for bid in by_id:
+        if not (sweep_dir / "contributions" / str(bid)).is_dir():
+            problems.append(f"ingest_ledger.jsonl: {bid} has no contributions folder")
     if (sweep_dir / "catalogue.json").exists():
         with tempfile.TemporaryDirectory() as tmp:
             t = Path(tmp)
