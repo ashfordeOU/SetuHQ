@@ -288,9 +288,9 @@ def reduced_fpp(*, depth: float, dv: dict | None, fit: dict | None = None, pixel
         rs, sd_ratio = gate["robust_spread"], gate["std_over_robust"]
         models = {"robust spread": rs, "std": rs * sd_ratio, "nominal (white, σ/√n)": 1.0}
         outs = {name: posterior(max(w, 1e-9))[0] for name, w in models.items()}
+        values = [v for v in outs.values() if v is not None]
         evidence["fpp_sensitivity"] = {"by_noise_model": outs,
-                                       "range": [min(v for v in outs.values() if v is not None),
-                                                 max(v for v in outs.values() if v is not None)]}
+                                       "range": [min(values), max(values)] if values else None}
         if not gate["white"]:
             refused = "FPP not computed: secondary scan non-white (" + "; ".join(gate["reasons"]) + ")"
             fpp = nfpp = None
