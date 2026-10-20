@@ -111,7 +111,8 @@ def test_readme_images_weigh_under_six_megabytes(gen):
 def test_readme_never_overclaims():
     text = README.read_text(encoding="utf-8")
     assert "SuperIntelligence" not in text
-    assert "Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors." in text
+    assert ("Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
+            "Probes are deterministic matched-filter detectors.") in text.replace("Probes are\n", "Probes are ")
     for bad in ("SetuHQ discovered", "SetuHQ confirmed", "we discovered", "newly discovered planet", "Continuous discovery",
                 "Discovery candidates", "published vetters"):
         assert bad.lower() not in text.lower(), bad
