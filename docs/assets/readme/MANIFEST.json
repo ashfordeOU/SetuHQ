@@ -39,7 +39,8 @@
       ],
       "sources": {
         "docs/results/benchmark_real_tois.json": "b5bccb3918b249177b41ce49cf63d895c69903a6923673666ec5763497c765a9",
-        "docs/results/benchmark_real_tois.md": "def4eeff5ee71a93b36e639976501db335fd1e2d1d41af2241e02690d2c4b10e"
+        "docs/results/benchmark_real_tois.md": "def4eeff5ee71a93b36e639976501db335fd1e2d1d41af2241e02690d2c4b10e",
+        "docs/results/benchmark_toi_sample.json": "b0ac192b2363be04579c856e82f275ec4a451f0566e83f4ef87c4287c4fe39f7"
       },
       "commit": "1180dfe"
     },
@@ -122,7 +123,7 @@
   },
   "repo_counts": {
     "modules": 32,
-    "tests": 349,
+    "tests": 355,
     "network": 2,
     "slow": 3,
     "chapters": 15,
@@ -150,20 +151,26 @@
       "catalogue-light.webp": "b077551a86d88f43bb9fa71b8b084ede2259b0f608f1db129e0a2c7c9bb60408",
       "galaxy-dark.webp": "cda2a9a5e84ad55389d5ffe18947c357bcc357b30ccab692434412ac56cb256e",
       "galaxy-light.webp": "e4eefefa2a50322554c062d4ef63b4ad4083355bdda56345cecc62f0385660eb",
-      "methods-atmospheres-dark.webp": "f1f14cdde1c46fb5b0e05d58e1e9c7c18a51278acf72825e44efabc8daff1689",
-      "methods-atmospheres-light.webp": "54fe4f5c05f0d9341698fd96d92e682b644637433f34b409afafed93bcc69385",
-      "methods-rv-dark.webp": "10353bd86aa5c9cba419c090746b8a1d5192741284cd443ed41033e6b1a0802c",
-      "methods-rv-light.webp": "a6473c1971b2581d5403dd0ca4eb758bfc911eaa89de0c4a410ec36c34644519",
-      "methods-starlight-dark.webp": "82b2f33329da529f2fb653d3090ab6d95cefb5db642702869bbe53c734b73aca",
-      "methods-starlight-light.webp": "02b9c00c28cf73840e8b3b185ad6f6144b2b7bf5be860fa68d054e98eedc94b8",
+      "methods-atmospheres-dark.webp": "5d132f783039b9e034d21574fe9aa18f8b637bcfdce76f5d66f81eb0acb262a6",
+      "methods-atmospheres-light.webp": "393055c9764de46416a3fef3c0e4eeca1b007713a90af4447b780c167c9112da",
+      "methods-rv-dark.webp": "2bce851781bbd83db6f028de36b29c2dcb449c8697cac6545ba63759efcc67ba",
+      "methods-rv-light.webp": "b00a244d86709f9c9ff8a28bdbfe82fed263d9040a91de39267cbd658dcb51cd",
+      "methods-starlight-dark.webp": "1e676e1fdf2fddaa18cca575a3903ccabf33f9105070a90c42c286894278180f",
+      "methods-starlight-light.webp": "4506d97aea610920cdf7bc4d6594b8eaa13e67fae38004fd3a873427b53a9486",
       "mission-dark.webp": "9e4125661fbfa1fc72c8b156fb1a8ae5d70d5e60feb3cc935ae979e135c1b4a0",
       "mission-light.webp": "9cca8eb0db4984605f65b586263a0f00847ef5604e12b4ec9299dbd20d19aa11",
       "overview-dark.webp": "60e8180a63a806abe73caf0f5fefbd1dbe4ebf4337ea4a0ef89413973a06f65a",
       "overview-light.webp": "3b7cab296951199f1cd7820e4bcf7fb7b080dbbfa7976c4d856610e7a0cb1a9b",
       "planet-dark.webp": "f2a3f00c4835a3265e5284448b9debc728dfacadb296661cdcdeac2fa6fd149f",
-      "planet-light.webp": "bde36b28584885a7222aa8f2a3d3aab32aac443a117a240ddaa5bd8ae68bb7ce",
-      "transit-dark.webp": "0d75e75b6c3769d77b04d5c81c19d30ee8b97212c8ef5a85d462dd03dbf88f3b",
+      "planet-light.webp": "d9ba5f788f3b1c85d68d945437377406288ed82244c579f102b094b4f2701cdf",
+      "transit-dark.webp": "48e39af8ddf6a4e8eba78775ca10a2b573928fdd08d9f1360b07874f10fed644",
       "transit-light.webp": "78bd6ecf3e9d904ad7976123ccc33d3372441e6db442bb7d6bf1f022c62d4b7b"
     }
+  },
+  "made_with": {
+    "python": "3.13",
+    "fonttools": "4.67.0",
+    "numpy": "2.5.4",
+    "pillow": "13.0.0"
   }
 }
