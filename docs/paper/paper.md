@@ -42,7 +42,9 @@ feed. The two Sentinel personas, tested on a stated subsample of 40 held-out sta
 50% (10/20; 95% CI 30–70%) of the CP/KP dips and agree on 38 of 40 stars (φ = 0.89): they are one
 correlated voter, not two. We report a known bug in the code that produced these numbers, the class skew
 of the stars that could not be searched, and a public leaderboard on the frozen sample that scores submitted
-events itself and ranks by Youden's J, so that calling every TOI a planet scores zero. Nothing here is a
+events itself and ranks by Youden's J. On that leaderboard a baseline that never reads a light curve, a logistic
+regression on catalogue metadata fitted on the tuning half, scores J = +0.39 (+0.27 to +0.49) against
++0.30 (+0.19 to +0.41) for the Probes: the Probes do not beat it, and the intervals overlap. Nothing here is a
 discovery, and no exoplan output is called a confirmed or validated planet.
 
 ## 1 Introduction
@@ -333,31 +335,45 @@ last column is filled from that re-run.
 ### 5.7 The leaderboard's seeded entries
 
 The public leaderboard (Section 8) takes each method's detected events per held-out star and scores them itself
-with the benchmark's own matching. Its rank key is Youden's J (Youden 1950), completeness over every CP/KP
-star plus FP rejection over every FP star minus one, with a square-and-add interval from the two Wilson
-intervals (Newcombe 1998): a method that calls every TOI a planet scores J = 0. Only held-out entries
-measured on both controls are ranked. Seeded from the benchmark's stored events without re-running anything:
+with the benchmark's own matching. Its rank key is Youden's J (Youden 1950) with a square-and-add interval
+from the two Wilson intervals (Newcombe 1998), computed on the searchable set the benchmark fixed (stars with
+a SPOC 2-minute light curve) with one predicate on both sides, a *clean candidate*: an event on the TOI's ephemeris
+that passed vetting with no eclipsing-binary flag. J is the share of CP/KP stars offered as clean candidates plus
+the share of FP stars not offered, minus one. Calling every TOI a planet scores J = 0 whether or not every event
+carries a flag, and calling a searchable star "not searched" counts it as not offered. An earlier version counted a
+flagged dip as found for CP/KP and as rejected for FP, which a copy of the public ephemerides with a V-shape flag on
+every star exploited to score J = +1; a test now covers each flag. J over every star of the scope is reported beside
+the rank key. Only held-out entries with both control lists are ranked; the controls gate ranking, do not enter J,
+and are the method's own report.
 
-| entry | scope | rank | Youden J | completeness, all CP/KP stars | below 4 R⊕ | FP rejection, all FP stars | inverted control: stars with any | reliability |
+| entry | scope | rank | Youden J | Youden J, all stars | clean completeness, searchable CP/KP | FP rejection, searchable FP | inverted control: stars with any | reliability |
 |---|---|---|---|---|---|---|---|---|
-| Probes only | held-out half | 2 | +0.30 (+0.19 to +0.41) | 57% (86/152; 95% CI 49–64%) | 17% (8/46; 95% CI 9–31%) | 80% (127/158; 95% CI 73–86%) | 21% (65/309; 95% CI 17–26%) | 70% (83/118; 95% CI 62–78%) |
-| Probes only | Sentinel subsample | not ranked | +0.15 (-0.14 to +0.41) | 45% (9/20; 95% CI 26–66%) | 0% (0/8; 95% CI 0–32%) | 70% (14/20; 95% CI 48–85%) | 8% (3/40; 95% CI 3–20%) | 60% (9/15; 95% CI 36–80%) |
-| Sentinel · Volunteer alone | Sentinel subsample | not ranked | +0.30 (+0.01 to +0.53) | 50% (10/20; 95% CI 30–70%) | 0% (0/8; 95% CI 0–32%) | 80% (16/20; 95% CI 58–92%) | not measured | 71% (10/14; 95% CI 45–88%) |
-| Sentinel · Skeptic alone | Sentinel subsample | not ranked | +0.30 (+0.01 to +0.53) | 50% (10/20; 95% CI 30–70%) | 0% (0/8; 95% CI 0–32%) | 80% (16/20; 95% CI 58–92%) | not measured | 71% (10/14; 95% CI 45–88%) |
-| Probes + Sentinels, either (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | +0.10 (-0.19 to +0.37) | 50% (10/20; 95% CI 30–70%) | 0% (0/8; 95% CI 0–32%) | 60% (12/20; 95% CI 39–78%) | not measured | 56% (10/18; 95% CI 34–75%) |
-| Probes + Sentinels, both (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | +0.30 (+0.02 to +0.53) | 45% (9/20; 95% CI 26–66%) | 0% (0/8; 95% CI 0–32%) | 85% (17/20; 95% CI 64–95%) | not measured | 75% (9/12; 95% CI 47–91%) |
+| Metadata only, no light curve (a floor) | held-out half | 1 | +0.39 (+0.27 to +0.49) | +0.43 (+0.32 to +0.52) | 76% (114/150; 95% CI 69–82%) | 63% (78/124; 95% CI 54–71%) | 50% (173/345; 95% CI 45–55%) | 66% (115/173; 95% CI 59–73%) |
+| Probes only | held-out half | 2 | +0.30 (+0.19 to +0.41) | +0.35 (+0.24 to +0.44) | 55% (83/150; 95% CI 47–63%) | 75% (93/124; 95% CI 67–82%) | 21% (65/309; 95% CI 17–26%) | 70% (83/118; 95% CI 62–78%) |
+| Probes only | Sentinel subsample | not ranked | +0.15 (-0.14 to +0.41) | +0.15 (-0.14 to +0.41) | 45% (9/20; 95% CI 26–66%) | 70% (14/20; 95% CI 48–85%) | 8% (3/40; 95% CI 3–20%) | 60% (9/15; 95% CI 36–80%) |
+| Sentinel · Volunteer alone | Sentinel subsample | not ranked | +0.30 (+0.01 to +0.53) | +0.30 (+0.01 to +0.53) | 50% (10/20; 95% CI 30–70%) | 80% (16/20; 95% CI 58–92%) | not measured | 71% (10/14; 95% CI 45–88%) |
+| Sentinel · Skeptic alone | Sentinel subsample | not ranked | +0.30 (+0.01 to +0.53) | +0.30 (+0.01 to +0.53) | 50% (10/20; 95% CI 30–70%) | 80% (16/20; 95% CI 58–92%) | not measured | 71% (10/14; 95% CI 45–88%) |
+| Probes + Sentinels, either (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | +0.10 (-0.19 to +0.37) | +0.10 (-0.19 to +0.37) | 50% (10/20; 95% CI 30–70%) | 60% (12/20; 95% CI 39–78%) | not measured | 56% (10/18; 95% CI 34–75%) |
+| Probes + Sentinels, both (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | +0.30 (+0.02 to +0.53) | +0.30 (+0.02 to +0.53) | 45% (9/20; 95% CI 26–66%) | 85% (17/20; 95% CI 64–95%) | not measured | 75% (9/12; 95% CI 47–91%) |
 
-Two FP measures appear in this paper and they differ by definition. Section 5.3's "rejected or flagged" is over
-the FP dips the panel found (68% (65/96; 95% CI 58–76%)); the leaderboard's FP rejection is over every FP star of the
-scope, counting a star whose TOI dip was not found, not searched, or found and flagged as not offered as a clean
-candidate (80% (127/158; 95% CI 73–86%) for the Probes; 75% (93/124; 95% CI 67–82%) over the searched FP stars only).
-Reliability is the share of clean candidates on TOI dips that are CP/KP, on this sample's class mix
-(150 CP/KP, 124 FP and 35 FA searched held-out stars), which is not the TOI catalogue's. The
-two Probes + Sentinels rules were stated before any of them was scored, as star-level combinations of the stored
-outcomes: *either* gives a clean candidate when the Probes give one or either Sentinel marks the dip as a
-potential planet; *both* only when the Probes give one and a Sentinel marks it too. They are not a run of the
-panel's mark-level consensus. **40 stars cannot order these configurations:** the subsample is never ranked,
-and every pair of their completeness intervals overlaps.
+**A baseline that never reads a light curve.** The first row is a floor: a logistic regression on the public TOI
+number, period, duration, ephemeris errors and epoch, fitted on the tuning half, that places one passed event on the
+published ephemeris of each held-out star it predicts to be a planet. It reports the same events on the controls,
+because it ignores the light curve, so its control false-alarm rate is high. **The Probes do not beat it:** J
++0.30 (+0.19 to +0.41) against +0.39 (+0.27 to +0.49), and the intervals overlap. On this benchmark J therefore mostly measures how separable false positives are from catalogue metadata, not how well a method reads light curves. A light-curve method
+should be judged against this floor, not against zero.
+
+The FP measures in this paper differ by definition. Section 5.3's "rejected or flagged" is over the FP dips the
+panel found (68% (65/96; 95% CI 58–76%)); the leaderboard's FP rejection counts every star of the searchable set whose TOI dip
+was not offered as a clean candidate (75% (93/124; 95% CI 67–82%) for the Probes; over every held-out FP star, counting stars
+without 2-minute data as not offered, 80% (127/158; 95% CI 73–86%)). Likewise the headline completeness counts a recovered
+dip even when flagged, while J's completeness term does not. Reliability is the share of clean candidates on TOI dips
+that are CP/KP, on this sample's class mix (150 CP/KP, 124 FP and 35 FA searched held-out stars),
+which is not the TOI catalogue's. The two Probes + Sentinels rules were stated before any of them was scored, as
+star-level combinations of the stored outcomes: *either* gives a clean candidate when the Probes give one or either
+Sentinel marks the dip as a potential planet; *both* only when the Probes give one and a Sentinel marks it too. They
+are not a run of the panel's mark-level consensus. **40 stars cannot order these configurations:** the subsample
+is never ranked, and every pair of their completeness intervals overlaps.
 
 ### 5.8 Single-star validation: pi Men c
 
@@ -387,8 +403,8 @@ These references measure different populations, data and tasks; they are context
 | statistical validation | none in the code measured; S3, FP TOIs labelled validated: *pending: S3 FPP* | TRICERATOPS "validated": FPP < 0.015 and NFPP < 10⁻³ (Giacalone et al. 2021); vespa on all KOIs (Morton et al. 2016) |
 
 The radius rows use the bins Planet Hunters TESS reported, computed from the per-star rows and the TOI table's
-radii. exoplan is below the Robovetter and Planet Hunters TESS on completeness in every comparable row, and far
-from Robovetter-level reliability: its vetted false-alarm rate on the controls is 573 and
+radii. Against Planet Hunters TESS, exoplan's completeness is, at 3 to 4 R⊕, consistent with Planet Hunters TESS's rate; above 4 R⊕, significantly below Planet Hunters TESS's rate. With 9 stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart. Its headline completeness is significantly below the Robovetter's, and it is
+far from Robovetter-level reliability: its vetted false-alarm rate on the controls is 573 and
 848 per 1,000 star-sectors before the feed's rule, and 55 and
 65 after it, against the project's own proposed target of at most one per 1,000. The
 comparison is not like for like. The Robovetter's completeness measures the vetting step on events the Kepler
@@ -399,6 +415,10 @@ claim of matching either.
 
 ## 7 Limitations
 
+* **The Probes do not beat a metadata-only floor** (Section 5.7): J +0.30 (+0.19 to +0.41) against
+  +0.39 (+0.27 to +0.49) for a model that never reads a light curve, and the intervals overlap. On this benchmark J therefore mostly measures how separable false positives are from catalogue metadata, not how well a method reads light curves. The
+  ephemeris is given to every method, so J mixes detection with vetting; separate detection (ephemeris withheld)
+  and vetting rankings are future work.
 * **No pixel-level vetting.** There is no centroid or difference-image test, so blended and background eclipsing
   binaries can pass. Pixel-level results are pending: FP stars flagged *pending: S2 pixel vetting*, CP/KP stars flagged
   *pending: S2 pixel vetting*.
@@ -436,7 +456,8 @@ independent evidence such as radial velocities, and no exoplan output is called 
 * **The leaderboard.** `docs/leaderboard/` holds the submission format, the rules, the public inputs (the
   tuning half with labels, the held-out half without; sha256 `d0e4f2d9c5538800e9a34d018757f99e1d1672060e71ae56bbaf87fcaf0c15b4`) and the scored table
   (7 entries, 0 refused). A submission lists each star's detected events on the real and
-  control light curves; the leaderboard matches them to the ephemeris and counts control false alarms itself.
+  control light curves; the leaderboard matches them to the ephemeris and counts control false alarms itself. The
+  metadata-only floor is rebuilt from the public inputs by `scripts/leaderboard_metadata_baseline.py`.
   `exoplan leaderboard <file>` scores a submission and refuses one that states anything but that hash, says it was
   tuned on the held-out half, carries a field outside the whitelist, or does not cover its scope.
 * **What the leaderboard cannot check, and future work.** The hash is an attestation: the held-out labels are

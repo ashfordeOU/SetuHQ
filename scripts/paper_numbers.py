@@ -103,7 +103,7 @@ def small_rate_of(summary: dict) -> dict:
 
 
 def p0(x: float) -> str:
-    return f"{100 * x:.0f}%"
+    return "n/a" if x is None else f"{100 * x:.0f}%"
 
 
 def get(d, path: str):
@@ -219,10 +219,29 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
 
     pht_mid, pht_large = radius_rate(3, 4), radius_rate(4, math.inf)
     n.update(ho_rad_3to4=pct(pht_mid), ho_rad_above4=pct(pht_large))
-    claim(pht_mid["rate"] < 0.51 and pht_large["rate"] < 0.85, "the text says exoplan is below Planet Hunters TESS (51% and 85%) in both bins")
+    vals = R["values"]
+
+    def against(ours: dict, ref_key: str) -> str:
+        """How an exoplan rate stands against a published one: below or above only when its interval excludes it."""
+        ref = vals[ref_key]["value"]
+        claim(ours["rate"] is not None, f"no stars in the bin compared with {ref_key}")
+        if ours["hi"] < ref:
+            return "significantly below"
+        if ours["lo"] > ref:
+            return "significantly above"
+        return "consistent with"
+
+    n.update(cmp_pht_mid=against(pht_mid, "pht_mid"), cmp_pht_large=against(pht_large, "pht_large"),
+             cmp_robo=against(h["completeness"], "robovetter_completeness"))
+    rows = {"3 to 4 R⊕": n["cmp_pht_mid"], "above 4 R⊕": n["cmp_pht_large"]}
+    n["cmp_pht_sentence"] = "; ".join(f"{k}, {v} Planet Hunters TESS's rate" for k, v in rows.items())
+    n["cmp_pht_note"] = (f" With {pht_mid['n']} stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart."
+                         if n["cmp_pht_mid"] == "consistent with" else "")
     # The qualitative claims the text makes about these numbers: the script fails rather than print them untrue.
-    claim(small_rate_of(h)["rate"] < h["completeness"]["rate"] - 0.2, "the text says completeness is low for small planets")
-    claim(h["completeness"]["hi"] < 0.85, "the text says completeness is well below the Robovetter's and PHT's")
+    small = small_rate_of(h)
+    claim(small["rate"] is not None and small["rate"] < h["completeness"]["rate"] - 0.2,
+          "the text says completeness is low for small planets")
+    claim(n["cmp_robo"] == "significantly below", "the text says completeness is below the Robovetter's")
     names = {(0, 2): "r0", (2, 4): "r1", (4, 8): "r2", (8, 30): "r3"}
     for b in h["completeness_by_radius"]:
         n[f"ho_rad_{names[tuple(b['bin'])]}"] = pct(b)
@@ -392,10 +411,23 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
         n.update({f"{key}_compl": pct(sc["completeness_all_stars"]), f"{key}_small": pct({"k": ks, "n": ns, "rate": prs, "lo": los, "hi": his}) if ns else "n/a",
                   f"{key}_fprej": pct(sc["fp_rejection"]), f"{key}_fprej_all": pct(sc["fp_rejection_all_stars"]),
                   f"{key}_rel": pct(sc["reliability"]), f"{key}_j": L.jtext(sc["youden_j"]),
+                  f"{key}_j_all": L.jtext(sc["youden_j_all_stars"]), f"{key}_ccs": pct(sc["completeness_clean_searchable"]),
+                  f"{key}_fprs": pct(sc["fp_rejection_searchable"]),
                   f"{key}_inv": ctl("inverted"), f"{key}_scr": ctl("scrambled"),
                   f"{key}_rank": e["rank"] if e["ranked"] else f"unranked ({e['unranked_reason']})"})
     claim(all(e["rank"] is None for e in LB["entries"] if e["scope"] == "sentinel_subsample"),
           "the text says the subsample is never ranked")
+    fl = LB.get("floor")
+    claim(fl is not None, "the text compares the Probes with the metadata-only floor")
+    beaten = fl["probes_above"]
+    n["floor_verdict"] = "beat" if beaten else "do not beat"
+    n["floor_overlap"] = "the intervals overlap" if fl["overlap"] else "the intervals do not overlap"
+    n["floor_meaning"] = (
+        "On this benchmark J therefore mostly measures how separable false positives are from catalogue metadata, "
+        "not how well a method reads light curves." if not beaten else
+        "The light curves add measurable information beyond the catalogue metadata.")
+    claim(LB["floor_note"].startswith("The Probes do not beat" if not beaten else "The Probes beat"),
+          "the leaderboard's floor note and the paper agree")
     n.update(lb_inputs_sha=LB["inputs_sha256"], lb_entries=len(LB["entries"]), lb_refused=len(LB["refused"]),
              lb_mix_pos=next(e for e in LB["entries"] if e["id"] == "probes")["scores"]["reliability_mix"]["positive"],
              lb_mix_fp=next(e for e in LB["entries"] if e["id"] == "probes")["scores"]["reliability_mix"]["fp"],

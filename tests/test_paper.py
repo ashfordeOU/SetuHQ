@@ -95,9 +95,16 @@ def test_pi_men_numbers_match_the_validation_json():
 
 def test_leaderboard_numbers_match_the_leaderboard_json():
     lb = json.loads((ROOT / "docs/leaderboard/leaderboard.json").read_text())
+    from exoplan.leaderboard import jtext
+
     for e in lb["entries"]:
-        assert pct(e["scores"]["completeness_all_stars"]) in FLAT
-        assert pct(e["scores"]["fp_rejection"]) in FLAT and pct(e["scores"]["reliability"]) in FLAT
+        s = e["scores"]
+        for k in ("completeness_clean_searchable", "fp_rejection_searchable", "reliability"):
+            assert pct(s[k]) in FLAT, (e["id"], k)
+        assert jtext(s["youden_j"]) in FLAT and jtext(s["youden_j_all_stars"]) in FLAT
+    fl = lb["floor"]
+    verdict = "do not beat" if not fl["probes_above"] else "beat"
+    assert f"The Probes {verdict} it" in FLAT and f"The Probes {verdict} a metadata-only floor" in FLAT
 
 
 def test_pending_results_print_pending_never_a_guess():
@@ -129,14 +136,16 @@ def test_pending_results_fill_from_their_file_when_it_exists(tmp_path):
     assert "47% (70/150; 95% CI 39–55%)" in paper and "*pending: clipping-fixed re-run*" not in paper
 
 
-def test_every_doi_is_from_the_atlas_or_checked_on_crossref():
+def test_every_doi_was_resolved_and_every_value_checked_in_its_paper():
     dois = set(re.findall(r"doi:\[([^\]]+)\]", PAPER))
     known = {v["doi"] for v in REFS["refs"].values() if v["doi"]}
     assert dois == known
-    assert {v["source"] for v in REFS["refs"].values()} <= {"ATLAS", "crossref"}
-    assert sorted(k for k, v in REFS["refs"].items() if v["source"] == "crossref") == ["newcombe1998", "stoppa2025", "wilson1927", "youden1950", "yu2019"]
-    # Every published value cites a reference in the list.
-    assert all(v["ref"] in REFS["refs"] for v in REFS["values"].values())
+    assert all(v["source"] == ("web" if not v["doi"] else "crossref") for v in REFS["refs"].values())
+    assert "atlas" not in json.dumps(REFS).lower()
+    # Every published value cites a reference in the list, records where it was checked, and has a number to compare.
+    for k, v in REFS["values"].items():
+        assert v["ref"] in REFS["refs"] and v["verified"] and isinstance(v["value"], (int, float)), k
+    assert REFS["values"]["pht_mid"]["value"] == 0.51 and REFS["values"]["pht_large"]["value"] == 0.85
     # Every reference is cited in the text, except through the bibliography alone.
     for k, v in REFS["refs"].items():
         if k != "phcheops":
@@ -215,4 +224,29 @@ def test_qualitative_claims_fail_or_change_when_the_data_stops_supporting_them(t
         assert "less than half" in paper and "more likely noise than a signal" not in paper
         return
     with pytest.raises(PN.ClaimFailed, match=what):
+        PN.build(root)
+
+
+def test_the_planet_hunters_comparison_is_stated_by_significance():
+    def bin_rate(lo, hi):
+        sel = [r for r in HELD_POS if SAMPLE[r["toi"]].get("radius_re") is not None and lo <= SAMPLE[r["toi"]]["radius_re"] < hi]
+        k, n = sum(r["real"]["recovered"] for r in sel), len(sel)
+        return wilson(k, n)
+
+    for (lo, hi), ref, label in (((3, 4), 0.51, "3 to 4 R⊕"), ((4, float("inf")), 0.85, "above 4 R⊕")):
+        _, low, up = bin_rate(lo, hi)
+        word = "significantly below" if up < ref else "significantly above" if low > ref else "consistent with"
+        assert f"{label}, {word} Planet Hunters TESS's rate" in FLAT
+    assert "in every comparable row" not in FLAT
+
+
+def test_an_empty_comparison_bin_fails_loudly_not_with_a_type_error(tmp_path):
+    root = _tmp_root(tmp_path)
+    path = root / "docs/results/benchmark_toi_sample.json"
+    data = json.loads(path.read_text())
+    for t in data["tois"]:
+        if t.get("radius_re") is not None and 3 <= t["radius_re"] < 4:
+            t["radius_re"] = None
+    path.write_text(json.dumps(data))
+    with pytest.raises(PN.ClaimFailed, match="no stars in the bin"):
         PN.build(root)
