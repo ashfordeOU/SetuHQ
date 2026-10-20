@@ -1602,7 +1602,9 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"
-    path.write_text(docket_page(data))
+    from exoplan.codenote import code_note, with_code_note
+
+    path.write_text(with_code_note(docket_page(data), code_note(run_dir)))
     import shutil
 
     shutil.copytree(FONTS_DIR, out / "assets" / "fonts", dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))

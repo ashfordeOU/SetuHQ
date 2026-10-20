@@ -38,6 +38,7 @@ from exoplan.store import Store
 from exoplan.subjects import Subject, split_subjects
 from exoplan.stellar import tic_id, tic_params
 from exoplan.transitfit import TransitFit, fit_transit, ld_coeffs
+from exoplan.vet import DISQUALIFYING as BASE_DISQUALIFYING
 from exoplan.vet import VettingResult, measure_epochs, vet_event
 
 
@@ -108,6 +109,16 @@ class Candidate:
                          ("fit_t14_hours", "t14_hours"), ("fit_t14_err_hours", "t14_err_hours"), ("fit_b", "b"), ("fit_b_err", "b_err"),
                          ("fit_k", "k"), ("fit_rho_star", "rho_star"), ("fit_rho_star_err", "rho_star_err"), ("star_rho", "rho_catalogue")):
             row[key] = f.get(src)
+        dv = (self.metrics or {}).get("dv") or {}
+        sec = dv.get("secondary") or {}
+        row["crowdsap"] = (dv.get("crowding") or {}).get("crowdsap")
+        row["secondary_phase"], row["secondary_snr"] = sec.get("phase"), sec.get("snr")
+        cen = ((self.metrics or {}).get("pixel") or {}).get("centroid") or {}
+        test = cen.get("psf_target") or cen.get("psf_control") or {}
+        row["centroid_offset_arcsec"], row["centroid_sigma"] = test.get("offset_arcsec"), test.get("sigma")
+        val = (self.metrics or {}).get("validation") or {}
+        row["fpp"], row["nfpp"], row["fpp_method"] = val.get("fpp"), val.get("nfpp"), val.get("method")
+        row["validation_label"] = val.get("label", "")
         return row
 
 
@@ -133,6 +144,151 @@ def prepare_lightcurves(lightcurves: list[LightCurve], config: RunConfig) -> lis
             cleaned = cleaned.with_data(cleaned.time, cleaned.flux / level, cleaned.flux_err / level)
         detrended = detrend(cleaned, window_days=config.detrend_window_days)
         out.append(bin_lightcurve(detrended, config.bin_minutes))
+    return out
+
+
+TRANSIT_MASK_T14 = 1.5  # the extended vetting re-detrends with points within this many T14 of each mid-transit masked
+
+
+def vetting_window(config: RunConfig, duration: float) -> float:
+    """The detrending window of the extended vetting: the run's window, or four times the masked span around each
+    transit (2 × TRANSIT_MASK_T14 × T14) when that is longer, so a long transit's mask leaves the trend support on
+    both sides and the box statistic keeps its white-noise scale.
+
+    Below 12 T14 the run's ``detrend_window_days`` therefore has no effect on the vetting light curve: for pi Men c
+    (T14 = 3.09 h) any window up to 1.55 d gives the same 1.55 d. It still sets the review light curve."""
+    return max(config.detrend_window_days, 4.0 * 2.0 * TRANSIT_MASK_T14 * duration)
+
+
+def vetting_mask(time, *, period: float, t0: float, duration: float, extra_phases=(), mask_t14: float | None = None):
+    """The points the vetting detrend leaves out: within ``mask_t14`` (default :data:`TRANSIT_MASK_T14`) × T14 of
+    each mid-transit and of each of ``extra_phases`` (a secondary, see :func:`vetting_lightcurve_two_pass`)."""
+    time = np.asarray(time, float)
+    half = (TRANSIT_MASK_T14 if mask_t14 is None else mask_t14) * duration
+    exclude = np.zeros(time.size, bool)
+    for phase in (0.0, *extra_phases):
+        centre = t0 + phase * period
+        exclude |= np.abs((time - centre + 0.5 * period) % period - 0.5 * period) <= half
+    return exclude
+
+
+MIN_ANCHOR_SUPPORT = 0.5   # a variant is used only if each masked span keeps this share of the points beside it
+
+
+def mask_anchor_support(time, exclude, window: float) -> float:
+    """How well the masked spans are anchored: over every masked span and each of its two sides, the smallest share
+    of the points within ``window``/2 of the span's edge that the mask leaves in (1.0 when nothing is masked). A side
+    with fewer than 5 points at all (the data's ends or a gap) is not counted: there the trend is held flat anyway."""
+    time = np.asarray(time, float)
+    ex = np.asarray(exclude, bool)
+    worst = 1.0
+    if not ex.any():
+        return worst
+    change = np.flatnonzero(np.diff(ex.astype(np.int8)))
+    for i in change:
+        if ex[i + 1]:      # a span starts at i + 1: its left side
+            side = (time >= time[i + 1] - window / 2) & (time < time[i + 1])
+        else:              # a span ends at i: its right side
+            side = (time > time[i]) & (time <= time[i] + window / 2)
+        if side.sum() >= 5:
+            worst = min(worst, float((~ex[side]).sum() / side.sum()))
+    return worst
+
+
+def vetting_lightcurve(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float, duration: float,
+                       start: float | None = None, end: float | None = None, extra_phases=(), window_scale: float = 1.0,
+                       mask_t14: float | None = None) -> Subject | None:
+    """The light curve the extended (DV-style) tests read: prepared as for review (clean, normalise, detrend, bin),
+    except that the detrending leaves out every point within ``TRANSIT_MASK_T14`` × T14 of a mid-transit of the
+    fitted ephemeris, as DV does, with the window widened for long transits (:func:`vetting_window`) and the trend
+    interpolated across each masked span (:func:`exoplan.preprocess.detrend`). Without the mask the trend overshoots
+    beside each transit, and those shoulders looked like brightenings to the secondary search; without the wider
+    window and the interpolation, a 7-10 hour transit's mask left the quadratic extrapolating by 10⁴-10⁶ ppm. Cut to
+    [start, end) when given; None when nothing is left. ``window_scale`` and ``mask_t14`` vary the window and the
+    mask for :func:`secondary_variants`."""
+    out = []
+    for lc in lightcurves:
+        cleaned = clean(lc)
+        level = float(np.median(cleaned.flux)) if len(cleaned) else 1.0
+        if np.isfinite(level) and level > 0:
+            cleaned = cleaned.with_data(cleaned.time, cleaned.flux / level, cleaned.flux_err / level)
+        exclude = vetting_mask(cleaned.time, period=period, t0=t0, duration=duration, extra_phases=extra_phases,
+                               mask_t14=mask_t14)
+        detrended = detrend(cleaned, window_days=vetting_window(config, duration) * window_scale, exclude=exclude)
+        binned = bin_lightcurve(detrended, config.bin_minutes)
+        if start is not None:
+            keep = (binned.time >= start) & (binned.time < (end if end is not None else np.inf))
+            binned = binned.masked(keep)
+        if len(binned):
+            out.append(binned)
+    return stitch(out) if out else None
+
+
+def vetting_lightcurve_two_pass(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float,
+                                duration: float, start: float | None = None, end: float | None = None):
+    """:func:`vetting_lightcurve` in two passes. A secondary eclipse that is not masked is partly absorbed by the trend
+    (about half of a 200 ppm secondary was lost), so the second pass re-detrends with the primaries and phase 0.5 (a
+    circular orbit's secondary) always masked, and with the first pass's strongest dip masked too, but only when the
+    first pass already finds it significant (:func:`exoplan.dvtests.assess_secondary`, the same calibrated test).
+
+    The condition keeps the secondary search calibrated. Masking the strongest dip of every first pass also protects
+    the largest noise dip from the trend, which biases the second pass's maximum upward (pi Men: 5.6σ to 7.0σ), and
+    the white-noise tables describe a single scan, not that selection. Masking a fixed phase (0.5) selects nothing;
+    masking a dip that is already significant can move a flag only where the first pass would have raised it. The
+    price: an eccentric secondary below the threshold in the first pass is not protected from the trend. Returns
+    (light curve, masked phases); (None, ()) when nothing is left."""
+    from exoplan.dvtests import assess_secondary, secondary_search
+
+    first = vetting_lightcurve(lightcurves, config, period=period, t0=t0, duration=duration, start=start, end=end)
+    if first is None or len(first) < 10:
+        return first, ()
+    phases = [0.5]
+    sec = secondary_search(first.time, first.flux, period=period, t0=t0, duration=duration)
+    if sec is not None and abs(sec["phase"] - 0.5) * period > duration and \
+            assess_secondary(sec, secondary_sigma=config.secondary_sigma)["significant"]:
+        phases.append(float(sec["phase"]))
+    second = vetting_lightcurve(lightcurves, config, period=period, t0=t0, duration=duration, start=start, end=end,
+                                extra_phases=phases)
+    return second, tuple(phases)
+
+
+# The small fixed set of detrending variants the reduced FPP is checked across (window factor, mask in T14); the
+# default setting (1.0, TRANSIT_MASK_T14) is the light curve the extended tests read.
+DETREND_VARIANTS = ((0.75, 1.0), (0.75, 2.0), (1.5, 1.0), (1.5, 2.0))
+SCAN_KEYS = ("phase", "depth_ppm", "sigma_ppm", "snr", "n_trials", "scan_robust_sigma", "scan_std_snr",
+             "max_brightening_snr", "periodic", "max_epoch_share", "n_epochs", "phase_05")
+
+
+def secondary_variants(lightcurves: list[LightCurve], config: RunConfig, *, period: float, t0: float, duration: float,
+                       extra_phases=(), start: float | None = None, end: float | None = None) -> list[dict]:
+    """The all-phase secondary scan repeated on each of :data:`DETREND_VARIANTS` (same masked phases), for the
+    reduced FPP's stability check. Each entry is the scan's summary with its ``window_scale``, ``mask_t14`` and
+    ``anchor_support`` (:func:`mask_anchor_support`).
+
+    A variant whose masks leave a span poorly anchored (less than :data:`MIN_ANCHOR_SUPPORT` of the points within
+    half a window of either edge kept) is left out: with a short window and wide masks around several phases, the
+    one-sided quadratic at the span's edges, interpolated across it, made spurious dips (111 ppm, 5.1σ, inside a
+    masked span when the reviewer measured it), and the FPP was refused on them."""
+    from exoplan.dvtests import assess_secondary, secondary_search
+
+    out = []
+    for scale, mask in DETREND_VARIANTS:
+        window = vetting_window(config, duration) * scale
+        support = min((mask_anchor_support(lc.time, vetting_mask(lc.time, period=period, t0=t0, duration=duration,
+                                                                 extra_phases=extra_phases, mask_t14=mask), window)
+                       for lc in lightcurves), default=1.0)
+        if support < MIN_ANCHOR_SUPPORT:
+            continue
+        lc = vetting_lightcurve(lightcurves, config, period=period, t0=t0, duration=duration, start=start, end=end,
+                                extra_phases=extra_phases, window_scale=scale, mask_t14=mask)
+        if lc is None or len(lc) < 10:
+            continue
+        sec = secondary_search(lc.time, lc.flux, period=period, t0=t0, duration=duration)
+        if sec is None or sec.get("scan_robust_sigma") is None:
+            continue
+        sec = assess_secondary(sec)
+        out.append({**{k: sec.get(k) for k in SCAN_KEYS}, "window_scale": scale, "mask_t14": mask,
+                    "anchor_support": support})
     return out
 
 
@@ -228,9 +384,11 @@ def build_candidates(
     *,
     target_signals: dict[str, PeriodicSignal | None] | None = None,
     stars: dict[str, dict] | None = None,
+    lightcurves: list[LightCurve] | None = None,
 ) -> list[Candidate]:
     """Aggregate, search and vet. With ``target_signals`` (sector mode), each subject uses its
-    target's multi-sector BLS signal instead of a search of the subject alone."""
+    target's multi-sector BLS signal instead of a search of the subject alone. With the raw ``lightcurves``, the
+    extended tests read them re-detrended with the fitted transits masked (:func:`vetting_lightcurve`)."""
     subject_by_id = {s.subject_id: s for s in subjects}
     consensus = aggregate(
         classifications,
@@ -243,6 +401,7 @@ def build_candidates(
     # One joint fit per (subject, periodic signal): every dip on that signal shares it, with the reference
     # mid-time moved to the dip's own epoch.
     fit_cache: dict[tuple, tuple] = {}
+    ext_cache: dict[tuple, tuple] = {}
     candidates: list[Candidate] = []
     for event in consensus:
         subject = subject_by_id[event.subject_id]
@@ -273,6 +432,8 @@ def build_candidates(
                     d["with_density_prior"] = prior.as_dict()
                 object.__setattr__(candidate, "fit", d)
                 object.__setattr__(candidate, "flags", candidate.flags + extra)
+        if config.vetting_extended or config.vetting_pixel:
+            extended_vetting(candidate, subject, supported, config, subjects, ext_cache, lightcurves)
         if supported is not None:
             object.__setattr__(candidate, "fap_label", supported.fap_label)
             if supported.fap_trials:
@@ -294,6 +455,104 @@ def build_candidates(
     for index, candidate in enumerate(candidates):
         object.__setattr__(candidate, "candidate_id", f"{candidate.subject_id}-{index:03d}")
     return candidates
+
+
+def extended_vetting(candidate: Candidate, subject: Subject, supported: PeriodicSignal | None,
+                     config: RunConfig, subjects: list[Subject], cache: dict,
+                     lightcurves: list[LightCurve] | None = None) -> None:
+    """The S2 tests for one candidate, stored in ``metrics["dv"]`` and ``metrics["pixel"]`` with their flags added.
+
+    The ephemeris is the transit fit's (period, mid-time, T14) when it has a period, else the BLS signal's; a dip
+    off any periodic signal gets only the crowding test. In sector mode the light-curve tests use every subject of
+    the target stitched; otherwise the subject alone, like :func:`exoplan.vet.measure_epochs`. When the raw light
+    curves are given they are re-detrended with the fitted transits masked (:func:`vetting_lightcurve`); otherwise
+    the review data are used and ``metrics["dv"]["transit_masked_detrend"]`` is False. The pass/fail
+    decision changes only when ``config.vetting_decide`` is set (:func:`exoplan.dvtests.decide`)."""
+    from exoplan import dvtests
+
+    fit = candidate.fit or {}
+    if supported is not None and fit.get("period_days") and fit.get("t14_hours"):
+        period, t0, duration, source = float(fit["period_days"]), float(fit["t0"]), float(fit["t14_hours"]) / 24.0, "transit fit"
+    elif supported is not None:
+        period, t0, duration, source = supported.period, supported.t0, supported.duration, "BLS"
+    else:
+        period = t0 = duration = None
+        source = "none (no periodic signal covers this dip)"
+    flags: list[str] = []
+    if config.vetting_extended:
+        target = str(subject.provenance.get("target", ""))
+        key = ("dv", target if config.search == "sector" else subject.subject_id, period, t0, duration)
+        if key not in cache:
+            data, masked, variants = subject, False, []
+            if config.search == "sector" and period is not None:
+                same = [s for s in subjects if str(s.provenance.get("target", "")) == target]
+                data = stitch(same) if len(same) > 1 else subject
+            if lightcurves and period is not None:
+                mine = [lc for lc in lightcurves if lc.target == target and
+                        (config.search == "sector" or lc.provenance.get("sector") == subject.provenance.get("sector"))]
+                window = {} if config.search == "sector" else {"start": subject.provenance.get("segment_start"),
+                                                               "end": subject.provenance.get("segment_end")}
+                redone, phases = (vetting_lightcurve_two_pass(mine, config, period=period, t0=t0, duration=duration,
+                                                              **window) if mine else (None, ()))
+                if redone is not None and len(redone) >= 10:
+                    data, masked = redone, list(phases)
+                    variants = secondary_variants(mine, config, period=period, t0=t0, duration=duration,
+                                                  extra_phases=phases, **window)
+            found, metrics = dvtests.extended_vet(data.time, data.flux, data.flux_err, period=period, t0=t0,
+                                                  duration=duration, fit=fit or None, provenance=subject.provenance,
+                                                  crowding_min=config.crowding_min,
+                                                  secondary_sigma=config.secondary_sigma)
+            cache[key] = (found, dict(metrics, transit_masked_detrend=bool(masked),
+                                      masked_phases=masked if masked else [], secondary_variants=variants))
+        found, metrics = cache[key]
+        candidate.metrics["dv"] = dict(metrics, ephemeris_source=source)
+        flags += found
+    if config.vetting_pixel and period is not None:
+        candidate.metrics["pixel"] = _pixel_report(subject, period, t0, duration, fit, candidate, config, cache)
+        flags += candidate.metrics["pixel"].get("flags", [])
+    new = tuple(f for f in dict.fromkeys(flags) if f not in candidate.flags)
+    object.__setattr__(candidate, "flags", candidate.flags + new)
+    if period is not None:
+        from exoplan.validate import reduced_fpp
+
+        depth = (fit.get("depth_ppm") or candidate.depth_ppm) * 1e-6
+        dv = candidate.metrics.get("dv") or {}
+        candidate.metrics["validation"] = reduced_fpp(
+            depth=depth, dv=dv, fit=fit, pixel=candidate.metrics.get("pixel"),
+            contrast_curve=config.contrast_curves.get(candidate.target),
+            variants=dv.get("secondary_variants") or None).as_dict()
+    if config.vetting_decide:
+        from exoplan.pixel import DISQUALIFYING as PIXEL_DISQUALIFYING
+
+        object.__setattr__(candidate, "passed", dvtests.decide(
+            candidate.flags, base_disqualifying=BASE_DISQUALIFYING, extra=dvtests.DISQUALIFYING | PIXEL_DISQUALIFYING))
+
+
+def _pixel_report(subject, period, t0, duration, fit, candidate, config, cache) -> dict:
+    """Pixel tests on the SPOC target pixel file of the subject's sector (downloaded once into ``config.tpf_cache``).
+    A failure to get the file is recorded, never raised: the light-curve result stands on its own."""
+    from exoplan import pixel
+
+    tic, sector = tic_id(candidate.target), subject.provenance.get("sector")
+    if tic is None or sector in (None, ""):
+        return {"error": "the pixel tests need a TIC target and a sector", "flags": []}
+    key = ("pixel", tic, sector, period, t0, duration)
+    if key not in cache:
+        depth = (fit.get("depth_ppm") or candidate.depth_ppm) * 1e-6
+        try:
+            tpf = pixel.fetch_tpf(tic, int(sector), cache_dir=config.tpf_cache)
+            h = tpf.header
+            near = pixel.fetch_neighbours(h["ra"], h["dec"], cache_dir=Path(config.tpf_cache).parent / "neighbours",
+                                          epoch_years_since_2000=h.get("years_since_2000"), key=f"tic{tic}")
+            stars = pixel.order_target_first(near.get("stars", []), h.get("ra_epoch") or h["ra"], h.get("dec_epoch") or h["dec"])
+            report = pixel.pixel_vet(tpf, period=period, t0=t0, duration=duration, depth=depth, stars=stars or None,
+                                     sigma_threshold=config.centroid_sigma)
+            report.pop("header", None)
+            report["neighbour_source"] = near.get("source")
+            cache[key] = report
+        except Exception as exc:  # noqa: BLE001 (network, missing product or a malformed file)
+            cache[key] = {"error": f"{type(exc).__name__}: {exc}", "flags": []}
+    return cache[key]
 
 
 def run_pipeline(
@@ -320,7 +579,8 @@ def run_pipeline(
     store = Store(out / "exoplan.sqlite")
     try:
         classifications = review_subjects(subjects, active, image_dir=out / "subjects", store=store)
-        candidates = build_candidates(subjects, classifications, weights, config, target_signals=target_signals, stars=stars)
+        candidates = build_candidates(subjects, classifications, weights, config, target_signals=target_signals, stars=stars,
+                                      lightcurves=lightcurves)
         store.export_classifications_csv(out / "classifications.csv")
     finally:
         store.close()
@@ -361,7 +621,7 @@ def rebuild_run(config: RunConfig, lightcurves: list[LightCurve], run_dir: str |
     target_signals = sector_signals(prepared, config) if config.search == "sector" else None
     stars = star_parameters(lightcurves, config, run_dir)
     candidates = build_candidates([s for s in subjects if s.subject_id in need], classifications, weights, config,
-                                  target_signals=target_signals, stars=stars)
+                                  target_signals=target_signals, stars=stars, lightcurves=lightcurves)
     write_candidates(candidates, run_dir)
     manifest.setdefault("rebuilds", []).append({
         "at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "exoplan_version": __version__,
@@ -399,6 +659,8 @@ def write_candidates(candidates: list[Candidate], out: Path) -> None:
         "fap_tail_label", "fap_method", "fap_snr", "sector", "bls_t0", "bls_duration_days",
         "fit_t0", "fit_t0_err", "fit_depth_ppm", "fit_depth_err_ppm", "fit_t14_hours", "fit_t14_err_hours",
         "fit_b", "fit_b_err", "fit_k", "fit_rho_star", "fit_rho_star_err", "star_rho",
+        "crowdsap", "secondary_phase", "secondary_snr", "centroid_offset_arcsec", "centroid_sigma",
+        "fpp", "nfpp", "fpp_method", "validation_label",
     ]
     with (out / "candidates.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")

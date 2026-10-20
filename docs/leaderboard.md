@@ -1,5 +1,7 @@
 # Leaderboard: panel threshold sweep
 
+Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since. Deep injections may be under-recovered here.
+
 Score is mean completeness on the injection grid. A setting with false positives above the budget scores zero. Search and held-out seeds are different, and only a setting that wins on the held-out seed can be promoted.
 
 | stage | snr threshold | miss prob | seed | completeness | FP / empty subject | score |

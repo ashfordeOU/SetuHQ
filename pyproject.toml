@@ -23,6 +23,9 @@ claude = ["anthropic>=0.40"]
 dev = ["pytest>=8", "tess-point>=0.9"]  # tess-point: test_galaxy checks pi Men's TESS sectors against it
 # scripts/survey_coverage.py: TESS sector pointings and the Kepler/K2 footprint model
 survey = ["tess-point>=0.9", "K2fov>=7"]
+# validate.run_triceratops: statistical validation with TRICERATOPS (Giacalone et al. 2021). Heavy (pytransit, numba,
+# celerite) and online-only (it queries the TIC, Gaia and TESSCut itself); the default reduced FPP needs none of it.
+validate = ["triceratops>=1.1"]
 
 [project.scripts]
 exoplan = "exoplan.cli:main"

@@ -39,6 +39,20 @@ class RunConfig:
     # come from: "tic" (TESS Input Catalog via MAST, cached in cache/tic) or "none" (Sun-like LD, no ρ★ check).
     fit_transits: bool = True
     stellar: str = "none"
+    # Extended vetting (S2). The DV-style light-curve tests (dvtests.py) run by default and only add flags; the
+    # pixel tests (pixel.py) download the SPOC target pixel file and are off by default. ``vetting_decide`` turns
+    # the disqualifying flags of both into pass/fail and lets the all-phase secondary search replace the phase-0.5
+    # check; it is off by default, so the vetting decisions stay those of the plain light-curve vetting.
+    vetting_extended: bool = True
+    vetting_pixel: bool = False
+    vetting_decide: bool = False
+    crowding_min: float = 0.8
+    secondary_sigma: float = 7.1
+    centroid_sigma: float = 3.0
+    tpf_cache: str = "cache/tpf"
+    # S3: high-resolution imaging contrast curves by target ("TIC 123" = "path/to/curve.txt"). Without one, the
+    # validation label is always "not validated: no contrast curve".
+    contrast_curves: dict = field(default_factory=dict)
     cluster_gap_days: float = 0.05
     min_score: float = 0.5
     min_planet_fraction: float = 0.5
@@ -57,6 +71,7 @@ def load_config(path: str | Path) -> RunConfig:
     run = raw.get("run", {})
     search = raw.get("search", {})
     aggregate = raw.get("aggregate", {})
+    vetting = raw.get("vetting", {})
     search_scope = str(run.get("search", "subject")).lower()
     if search_scope not in ("subject", "sector"):
         raise ValueError(f"run.search must be 'subject' or 'sector', not {search_scope!r}")
@@ -82,6 +97,14 @@ def load_config(path: str | Path) -> RunConfig:
         fap_stop_after=int(search["fap_stop_after"]) if search.get("fap_stop_after") is not None else None,
         fit_transits=bool(search.get("fit_transits", True)),
         stellar=str(search.get("stellar", "none")).lower(),
+        vetting_extended=bool(vetting.get("extended", True)),
+        vetting_pixel=bool(vetting.get("pixel", False)),
+        vetting_decide=bool(vetting.get("decide", False)),
+        crowding_min=float(vetting.get("crowding_min", 0.8)),
+        secondary_sigma=float(vetting.get("secondary_sigma", 7.1)),
+        centroid_sigma=float(vetting.get("centroid_sigma", 3.0)),
+        tpf_cache=str(vetting.get("tpf_cache", "cache/tpf")),
+        contrast_curves=dict(raw.get("validation", {}).get("contrast_curves", {})),
         cluster_gap_days=float(aggregate.get("cluster_gap_days", 0.05)),
         min_score=float(aggregate.get("min_score", 0.5)),
         min_planet_fraction=float(aggregate.get("min_planet_fraction", 0.5)),

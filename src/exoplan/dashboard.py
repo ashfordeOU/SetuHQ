@@ -399,6 +399,11 @@ def build_dashboard(run_dir: str | Path, out_dir: str | Path, *, title: str, cat
 """
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
+    from exoplan.codenote import code_note, with_code_note
+
+    note = code_note(run_dir)
+    if not note and catalog_path and Path(catalog_path).exists():
+        note = json.loads(Path(catalog_path).read_text()).get("code_note")
     path = out / "index.html"
-    path.write_text(html_text)
+    path.write_text(with_code_note(html_text, note))
     return path

@@ -14,7 +14,8 @@ from pathlib import Path
 
 RHO_SUN = 1.40977  # g/cm³: the IAU nominal solar mass in a sphere of the nominal solar radius
 FIELDS = {"Teff": "teff", "e_Teff": "teff_err", "logg": "logg", "e_logg": "logg_err", "rad": "radius", "e_rad": "radius_err",
-          "mass": "mass", "e_mass": "mass_err", "rho": "rho_solar", "e_rho": "rho_solar_err", "Tmag": "tmag", "contratio": "contratio"}
+          "mass": "mass", "e_mass": "mass_err", "rho": "rho_solar", "e_rho": "rho_solar_err", "Tmag": "tmag", "contratio": "contratio",
+          "ra": "ra", "dec": "dec"}  # J2000 position (the export gives exact UTC transit windows with it)
 
 
 def tic_id(target: str) -> int | None:

@@ -15,6 +15,26 @@ fap_cache = "cache/fap"    # the null maxima are cached here, so re-runs are fre
 fit_transits = true        # limb-darkened fit of every consensus dip (depth, T14, b, mid-time, rho_star, V-shape)
 stellar = "none"           # "tic": Teff, log g and density from the TESS Input Catalog (cached in cache/tic)
 
+[vetting]
+# Extended vetting (S2). By default the new tests only add flags; the pass/fail decision is the plain
+# light-curve vetting's (SNR, duration, odd/even from BLS, phase-0.5 secondary), so results stay comparable.
+extended = true            # DV-style light-curve tests: crowding, all-phase secondary, odd/even depth and timing
+pixel = false              # pixel tests from the SPOC target pixel file (downloads it into tpf_cache)
+decide = false             # true: secondary_any_phase, odd_even_depth, odd_even_timing and centroid_offset
+                           # disqualify, and the all-phase secondary replaces the phase-0.5 check
+crowding_min = 0.8         # CROWDSAP below this is flagged "crowded" (HEASARC: reliability drops below ~0.8)
+secondary_sigma = 7.1      # fallback weak-secondary threshold, used only when the phase scan is too short for a
+                           # robust spread; otherwise the white-noise 99.9% quantile for the scan's number of
+                           # positions (dvtests.SECONDARY_TABLE) times its robust spread, and above the largest brightening
+centroid_sigma = 3.0       # difference-image offset significance that raises centroid_offset
+tpf_cache = "cache/tpf"    # gitignored
+
+[validation]
+# S3. Every periodic candidate gets exoplan's reduced FPP (validate.py), which can never say "validated".
+# "validated (statistically)" needs TRICERATOPS with FPP < 0.015, NFPP < 1e-3 and a high-resolution imaging
+# contrast curve; without a curve the label is "not validated: no contrast curve".
+contrast_curves = {}       # e.g. { "TIC 261136679" = "data/contrast/pi_men_speckle.txt" }
+
 [aggregate]
 cluster_gap_days = 0.05    # marks closer than this (in days) are one dip
 min_score = 0.5            # share of the skill-weighted panel that must mark a dip

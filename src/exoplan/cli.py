@@ -157,6 +157,63 @@ def cmd_discover(args) -> int:
     return 0
 
 
+def _toi_targets(args):
+    """The archive TOI table (TIC → Target) from a cached JSON file, or fetched (and cached) when allowed."""
+    from exoplan.discover import Target, Toi, fetch_toi_targets
+
+    path = Path(args.toi_cache)
+    if path.exists():
+        raw = json.loads(path.read_text())
+        return {int(k): Target(int(k), tois=[Toi(**t) for t in v]) for k, v in raw.items()}
+    try:
+        targets = fetch_toi_targets()
+    except Exception as exc:  # noqa: BLE001
+        print(f"TOI table unavailable: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return None
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({str(k): [vars(t) for t in v.tois] for k, v in targets.items()}))
+    return targets
+
+
+def cmd_export(args) -> int:
+    from exoplan.exofop import CTOI_FIELDS_STATUS, export_run
+
+    tois = _toi_targets(args)
+    if tois is None and not args.allow_unchecked:
+        print("exoplan export: refusing to export without the TOI duplicate check (no TOI table); nothing written. "
+              "Pass --allow-unchecked to export rows marked 'TOI check not done'.", file=sys.stderr)
+        return 2
+    summary = export_run(args.run_dir, args.out, tois=tois, allow_unchecked=args.allow_unchecked,
+                         days=args.days)
+    print(f"CTOI-style rows: {len(summary['rows'])}, excluded: {len(summary['excluded'])}, "
+          f"predicted windows: {summary['windows']['count']}")
+    for row in summary["excluded"]:
+        print(f"  excluded {row['candidate_id']}: {row['reason']}")
+    print(f"field list: {CTOI_FIELDS_STATUS}")
+    print(f"outputs in {args.out}")
+    return 0
+
+
+def cmd_batch(args) -> int:
+    from exoplan.batch import read_targets, run_batch
+
+    targets = read_targets(args.targets) if args.targets else []
+    targets += [int(t) for t in args.tic or []]
+    if not targets:
+        raise SystemExit("give --targets FILE or --tic N [N ...]")
+    weights, source = resolve_weights(load_config(args.config), args.weights)
+    print(f"reviewer weights: {source}")
+    tois = _toi_targets(args) if args.toi_cache else None
+    log = run_batch(args.config, targets, work_dir=args.work_dir, cache_root=args.cache,
+                    sectors_per_target=args.sectors, retries=args.retries,
+                    time_budget_s=args.time_budget_min * 60.0 if args.time_budget_min else None,
+                    max_targets=args.max_targets, weights=weights, toi_targets=tois)
+    print(f"done {log['done']}, no data {log['no_data']}, failed {log['failed']}, skipped (already done) "
+          f"{log['skipped']}, remaining {log['remaining']}; {log['star_sectors_per_hour']:.1f} star-sectors per hour"
+          + (f"; stopped: {log['stopped']}" if log["stopped"] else ""))
+    return 0
+
+
 def cmd_dashboard(args) -> int:
     from exoplan.dashboard import build_dashboard
 
@@ -261,6 +318,30 @@ def build_parser() -> argparse.ArgumentParser:
     discover.add_argument("--work-dir", default="runs/discovery")
     discover.add_argument("--cache", default="cache")
     discover.set_defaults(func=cmd_discover)
+
+    export = sub.add_parser("export", help="write an ExoFOP CTOI-style table and predicted transit windows for a run")
+    export.add_argument("run_dir")
+    export.add_argument("--out", required=True)
+    export.add_argument("--toi-cache", default="cache/toi_table.json",
+                        help="cached archive TOI table (fetched and written here when missing)")
+    export.add_argument("--allow-unchecked", action="store_true",
+                        help="export even when the TOI duplicate check cannot be done (rows say so)")
+    export.add_argument("--days", type=float, default=365.25, help="how far ahead to predict transit windows")
+    export.set_defaults(func=cmd_export)
+
+    batch = sub.add_parser("batch", help="run the discover flow over a target list, cached and resumable")
+    batch.add_argument("config")
+    batch.add_argument("--targets", help="text file of TIC ids, one per line")
+    batch.add_argument("--tic", nargs="+", help="TIC ids")
+    batch.add_argument("--work-dir", default="runs/batch")
+    batch.add_argument("--cache", default="cache")
+    batch.add_argument("--sectors", type=int, default=2, help="latest sectors per target")
+    batch.add_argument("--retries", type=int, default=1, help="retries of a failed target in later sessions")
+    batch.add_argument("--time-budget-min", type=float, default=None)
+    batch.add_argument("--max-targets", type=int, default=None, help="stop after this many targets this session")
+    batch.add_argument("--weights", help="reviewer weights JSON")
+    batch.add_argument("--toi-cache", help="cached archive TOI table, to tag feed entries known_toi or new_candidate")
+    batch.set_defaults(func=cmd_batch)
 
     dash = sub.add_parser("dashboard", help="build the interactive dashboard from a run and optional discovery catalogue")
     dash.add_argument("run_dir")

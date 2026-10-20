@@ -1,5 +1,7 @@
 # Injection recovery: deterministic panel (no Claude)
 
+Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since. Deep injections may be under-recovered here.
+
 Panel: volunteer-sensitive, volunteer-typical, volunteer-cautious
 
 Weights: volunteer-cautious=0.633, volunteer-sensitive=0.667, volunteer-typical=0.667

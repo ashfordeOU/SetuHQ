@@ -113,6 +113,21 @@ footer.colophon p{margin:3px 0}
 }
 </style></head>
 <body>
+<div class="codenote" id="codenote" role="note" data-key="93e741f3032f" data-fixed="position:fixed;left:0;right:0;bottom:0;border-top:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000;padding-right:116px;min-height:52px;display:flex;align-items:center" data-clamp="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1" style="position:relative;border-bottom:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000"><span class="cn-text">Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since.</span><button type="button" class="cn-more" style="position:absolute;right:56px;top:50%;transform:translateY(-50%);min-width:52px;height:44px;background:none;border:0;color:#ffd866;text-decoration:underline;font:13px/1 system-ui,sans-serif;cursor:pointer;display:none" aria-expanded="false">more</button><button type="button" class="cn-close" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;background:none;border:1px solid #a57c00;color:#fff3cc;border-radius:6px;font:20px/1 system-ui,sans-serif;cursor:pointer" aria-label="Dismiss this note">×</button></div><script>(function(){var b=document.getElementById('codenote');if(!b)return;var k='exoplan-codenote:'+b.dataset.key;
+try{if(window.localStorage.getItem(k)){b.remove();return;}}catch(e){}
+var FLOW=b.getAttribute('style'),FIXED=b.dataset.fixed,CLAMP=b.dataset.clamp,open=false;
+var t=b.querySelector('.cn-text'),m=b.querySelector('.cn-more');
+function place(){if(!b.isConnected)return;b.setAttribute('style',FIXED);
+var fits=document.documentElement.scrollHeight<=window.innerHeight+1;
+if(fits){t.setAttribute('style',open?'':CLAMP);m.style.display='';m.textContent=open?'less':'more';
+m.setAttribute('aria-expanded',open?'true':'false');}
+else{b.setAttribute('style',FLOW);t.setAttribute('style','');m.style.display='none';}}
+m.addEventListener('click',function(){open=!open;place();});
+place();window.addEventListener('load',place);window.addEventListener('resize',place);
+window.addEventListener('hashchange',function(){setTimeout(place,60);});
+if(window.ResizeObserver){new ResizeObserver(function(){place();}).observe(document.body);}
+b.querySelector('.cn-close').addEventListener('click',function(){try{window.localStorage.setItem(k,'1');}catch(e){}
+b.remove();});})();</script>
 <a class="skip" href="#plates">Skip to the plates</a>
 <main class="sheet">
 <header class="mast">

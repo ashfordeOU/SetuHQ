@@ -2,7 +2,8 @@
 
 Supported sources:
 
-* TESS SPOC light curves, fetched from MAST through ``lightkurve`` (optional extra).
+* TESS SPOC light curves, fetched from MAST through ``lightkurve`` (optional extra), or read from a SPOC
+  ``*_lc.fits`` file on disk (:func:`load_spoc_file`). Both record the SPOC crowding keywords CROWDSAP and FLFRCSAP.
 * CHEOPS light-curve FITS files (``SCI_COR_Lightcurve`` style products from the
   CHEOPS archive, or any FITS table with time, flux and flux error columns).
 * Plain CSV files with ``time``, ``flux`` and optionally ``flux_err`` columns.
@@ -97,6 +98,7 @@ def load_tess(
                     "time_unit": "BTJD",
                     "lightkurve_version": lk.__version__,
                     **_file_provenance(lc),
+                    **spoc_crowding(lc),
                 },
             )
         )
@@ -110,6 +112,65 @@ def _file_provenance(lc) -> dict:
         return {}
     digest = hashlib.sha256(Path(path).read_bytes()).hexdigest()
     return {"file": Path(path).name, "file_sha256": digest}
+
+
+CROWDING_KEYS = {"CROWDSAP": "crowdsap", "FLFRCSAP": "flfrcsap"}
+
+
+def spoc_crowding(lc) -> dict:
+    """CROWDSAP (the fraction of the aperture's flux that comes from the target) and FLFRCSAP (the fraction of the
+    target's flux inside the aperture) from a SPOC light curve's header. lightkurve copies the header keywords into
+    ``lc.meta``; when they are missing there, the downloaded file's LIGHTCURVE extension is read. Missing values are
+    left out, never guessed."""
+    meta = getattr(lc, "meta", None) or {}
+    out = {}
+    for key, name in CROWDING_KEYS.items():
+        value = meta.get(key)
+        if value is not None:
+            out[name] = float(value)
+    if len(out) < len(CROWDING_KEYS) and meta.get("FILENAME") and Path(meta["FILENAME"]).exists():
+        from astropy.io import fits
+
+        with fits.open(meta["FILENAME"]) as hdul:
+            header = hdul[1].header
+            for key, name in CROWDING_KEYS.items():
+                if key in header and name not in out:
+                    out[name] = float(header[key])
+    return out
+
+
+def load_spoc_file(path: str | Path, *, target: str | None = None, flux_column: str = "PDCSAP_FLUX") -> LightCurve:
+    """Load a SPOC light-curve FITS file already on disk (``*_lc.fits``), offline and without lightkurve.
+
+    The same choices as :func:`load_tess`: points with a non-zero quality flag or non-finite values are dropped, the
+    flux is normalised to its median, the time axis is BTJD, and CROWDSAP and FLFRCSAP are recorded.
+    """
+    from astropy.io import fits
+
+    path = Path(path)
+    with fits.open(path) as hdul:
+        primary, header, data = hdul[0].header, hdul[1].header, hdul[1].data
+        time = np.asarray(data["TIME"], float)
+        flux = np.asarray(data[flux_column], float)
+        flux_err = np.asarray(data[flux_column + "_ERR"], float)
+        quality = np.asarray(data["QUALITY"], int)
+        crowd = {name: float(header[key]) for key, name in CROWDING_KEYS.items() if key in header}
+        sector = primary.get("SECTOR")
+        tic = primary.get("TICID")
+    good = (quality == 0) & np.isfinite(time) & np.isfinite(flux) & np.isfinite(flux_err)
+    if not good.any():
+        raise ValueError(f"{path.name}: no usable points after quality masking")
+    median = np.median(flux[good])
+    return LightCurve(
+        target=target or (f"TIC {tic}" if tic is not None else path.stem),
+        mission="TESS",
+        time=time[good],
+        flux=flux[good] / median,
+        flux_err=flux_err[good] / median,
+        provenance={"source": "SPOC file", "author": "SPOC", "sector": int(sector) if sector is not None else None,
+                    "flux_column": flux_column.lower(), "time_unit": "BTJD", "file": path.name,
+                    "file_sha256": sha256_file(path), **crowd},
+    )
 
 
 def _first_present(names: dict[str, str], candidates) -> str | None:

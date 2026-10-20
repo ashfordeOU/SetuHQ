@@ -2882,7 +2882,9 @@ def build_landing(run_dir: str | Path, out_path: str | Path, *, title: str, cata
     data = app_data(run_dir, title=title, catalog_path=catalog_path, weights_path=weights_path)
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(landing_page(data, app_href=app_href))
+    from exoplan.codenote import code_note, with_code_note
+
+    out.write_text(with_code_note(landing_page(data, app_href=app_href), code_note(run_dir)))
     return out
 
 
@@ -2894,7 +2896,9 @@ def build_app(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_p
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"
-    path.write_text(app_page(data))
+    from exoplan.codenote import code_note, with_code_note
+
+    path.write_text(with_code_note(app_page(data), code_note(run_dir)))
     # The fonts the page links to, self-hosted beside it (as Kshana serves them).
     import shutil
 
