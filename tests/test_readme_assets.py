@@ -123,13 +123,22 @@ def _fit_problems(svg, name: str, margin: float = 8) -> list[str]:
     card, inside the figure (8 px clear; a logo, cropped to its box, 0). Widths are the outlined glyphs' advances, as drawn."""
     bad = []
     for x0, x1, y, size, txt in svg.runs:
-        cards = [(px, py, pw, ph) for px, py, pw, ph in svg.panels if px <= x0 + 0.5 and x0 <= px + pw and py <= y <= py + ph]
+        # every card the run touches (any part of it, not just its start)
+        cards = [(px, py, pw, ph) for px, py, pw, ph in svg.panels if x0 < px + pw and x1 > px and py <= y <= py + ph]
         if cards:
             px, py, pw, ph = min(cards, key=lambda c: c[2] * c[3])
             if x0 < px + 4 - 1e-6 or x1 > px + pw - 4 + 1e-6:
                 bad.append(f"{name}: {txt!r} spans x {x0:.0f}–{x1:.0f}, its card x {px:.0f}–{px + pw:.0f}")
         elif x0 < margin or x1 > svg.w - margin or y > svg.h:
             bad.append(f"{name}: {txt!r} spans x {x0:.0f}–{x1:.0f}, outside the {svg.w:.0f} px figure")
+    # a run that touches a plot ellipse (the sky map) lies wholly inside it
+    for cx, cy, rx, ry in svg.ellipses:
+        for x0, x1, y, size, txt in svg.runs:
+            top = y - 0.75 * size
+            if x1 < cx - rx or x0 > cx + rx or y < cy - ry or top > cy + ry:
+                continue
+            if any(((px - cx) / rx) ** 2 + ((py - cy) / ry) ** 2 > 1 for px in (x0, x1) for py in (top, y)):
+                bad.append(f"{name}: {txt!r} crosses the plot's rim")
     # and no two runs collide: overlapping in x on (nearly) the same line
     runs = sorted(svg.runs, key=lambda r: (r[2], r[0]))
     for i, (a0, a1, ay, asz, at) in enumerate(runs):
@@ -168,6 +177,12 @@ def test_fit_check_catches_an_overflowing_run(gen):
     svg2.text("left run", 20, 60, 14, "#fff")
     svg2.text("collides", 60, 61, 14, "#fff")
     assert any("overlap" in p for p in _fit_problems(svg2, "probe"))
+    svg3 = gen.Svg(400, 200, "t", "d")
+    svg3.ellipses.append((200, 100, 150, 75))
+    svg3.text("12h", 50, 96, 10, "#fff", anchor="middle")   # centred on the rim: half outside
+    assert any("rim" in p for p in _fit_problems(svg3, "probe"))
+    words = gen.wrap("vetting only, on detected TCEs, P < 100 d", 160, 10, "mono")
+    assert any("P < 100 d" in ln for ln in words), words
 
 
 # ---------- the README's generated parts ----------

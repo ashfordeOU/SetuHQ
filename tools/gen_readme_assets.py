@@ -329,6 +329,7 @@ class Svg:
         self._n = 0
         self.runs: list[tuple[float, float, float, float, str]] = []   # x0, x1, baseline, size, text: every text run drawn
         self.panels: list[tuple[float, float, float, float]] = []      # x, y, w, h: every card text may sit in
+        self.ellipses: list[tuple[float, float, float, float]] = []    # cx, cy, rx, ry: plot frames text must stay inside
 
     def uid(self, p: str) -> str:
         self._n += 1
@@ -454,10 +455,15 @@ def pct(x: float) -> str:
     return f"{100 * x:.0f}%"
 
 
+UNBREAKABLE = re.compile(r"\S+ [<>≤≥=] \S+(?: (?:d|h|ppm|R⊕|%))?(?=[\s,;.)]|$)")
+
+
 def wrap(text: str, width: float, size: float, family="sans", weight=400) -> list[str]:
+    """Greedy word wrap; a comparison such as "P < 100 d" stays on one line."""
     face = Face.get(family, weight)
+    text = UNBREAKABLE.sub(lambda m: m.group(0).replace(" ", "\x00"), text)
     lines, cur = [], ""
-    for word in text.split():
+    for word in (w.replace("\x00", " ") for w in text.split(" ") if w):
         trial = f"{cur} {word}".strip()
         if cur and face.width(trial, size) > width:
             lines.append(cur)
@@ -1347,8 +1353,8 @@ TESS_BANDS = [(1, 2), (3, 5), (6, 12), (13, 10_000)]
 def cov_desc(d: dict) -> str:
     c = d["c"]
     fr, hi = c["fractions"], c["hosts_in"]
-    return (f"Sky coverage on an equal-area Mollweide map in equatorial coordinates (right ascension increasing to the left, "
-            f"declination ±90°), as of {c['as_of']}. TESS sectors 1 to {c['tess_last_sector']} cover {100 * fr['tess']:.1f}% of the sky, "
+    return (f"Sky coverage on an equal-area Mollweide map in equatorial coordinates (right ascension increasing to the left: 12h at both rims, 6h, 0h at the centre, 18h; "
+            f"declination ±90°, with the ±60° lines labelled), as of {c['as_of']}. TESS sectors 1 to {c['tess_last_sector']} cover {100 * fr['tess']:.1f}% of the sky, "
             f"shaded by the number of sectors (1–2, 3–5, 6–12, 13 or more; 13 or more is {100 * fr['tess_cvz_13plus']:.1f}%). "
             f"Kepler's field covers {100 * fr['kepler']:.1f}% and the K2 campaigns C0–C19 {100 * fr['k2']:.1f}%, drawn from their "
             f"CCD channel outlines; the sky in no footprint (TESS, Kepler, K2, CoRoT or the bulge), drawn as grey cells, is {100 * fr['unmapped']:.1f}%. "
@@ -1368,6 +1374,7 @@ def sky_coverage(t: dict, d: dict) -> Svg:
     clip = s.uid("sky")
     s.defs.append(f'<clipPath id="{clip}"><ellipse cx="{f(cx)}" cy="{f(cy)}" rx="{f(a)}" ry="{f(a / 2)}"/></clipPath>')
     s.add(f'<ellipse cx="{f(cx)}" cy="{f(cy)}" rx="{f(a)}" ry="{f(a / 2)}" fill="{t["bg"]}"/>')
+    s.ellipses.append((cx, cy, a, a / 2))
     s.add(f'<g clip-path="url(#{clip})">')
     dr = c["draw"]
     kep, k2 = set(dr["kepler"]), set(dr["k2"])
@@ -1422,15 +1429,22 @@ def sky_coverage(t: dict, d: dict) -> Svg:
     s.poly(seg, stroke=t["ink2"], sw=1.1, dash="5 5")
     s.add("</g>")
     s.add(f'<ellipse cx="{f(cx)}" cy="{f(cy)}" rx="{f(a)}" ry="{f(a / 2)}" fill="none" stroke="{line(t, 2, t["bg"])}" stroke-width="1"/>')
-    for ra, lab in ((180 - 1e-3, "12h"), (90, "6h"), (0, "0h"), (-90, "18h")):
-        x, _ = mollweide(ra, 0, cx, cy, a)
-        if ra == 0:
-            continue
-        s.text(lab, x, cy - 6, 9.5, t["ink3"], "mono", 500, anchor="middle")
-    s.text("0h", cx + 4, cy - 6, 9.5, t["ink3"], "mono", 500)
-    s.text("+60°", cx, mollweide(0, 60, cx, cy, a)[1] - 4, 9.5, t["ink3"], "mono", 500, anchor="middle")
-    s.text("−60°", cx, mollweide(0, -60, cx, cy, a)[1] + 12, 9.5, t["ink3"], "mono", 500, anchor="middle")
-    s.text("Galactic plane", *mollweide(-140, -32, cx, cy, a), 10, t["ink2"], "mono", 500)
+    def plate(lab, x, y, anchor="middle", size=9.5, col=None):
+        """A graticule label on a small plate of the map's ground, so it reads over any shading."""
+        w_ = tw(lab, size, "mono", 500)
+        x0 = x - w_ / 2 if anchor == "middle" else x - w_ if anchor == "end" else x
+        s.rect(x0 - 4, y - size * 0.95, w_ + 8, size * 1.35, fill=t["bg"], r=3, extra='fill-opacity="0.82"')
+        s.text(lab, x, y, size, col or t["ink2"], "mono", 500, anchor=anchor)
+
+    for ra, lab in ((90, "6h"), (-90, "18h")):
+        plate(lab, mollweide(ra, 0, cx, cy, a)[0], cy - 6)
+    plate("12h", cx - a + 10, cy - 6, anchor="start")      # the rim at RA 12h, inside the map
+    plate("12h", cx + a - 10, cy - 6, anchor="end")
+    plate("0h", cx + 6, cy - 6, anchor="start")
+    plate("+60°", cx, mollweide(0, 60, cx, cy, a)[1] - 5)
+    plate("−60°", cx, mollweide(0, -60, cx, cy, a)[1] + 13)
+    gx, gy = mollweide(-140, -32, cx, cy, a)
+    plate("Galactic plane", gx - 6, gy, anchor="end", size=10)
     s.text("RA increases to the left · equal-area", MX0 + 20, PLOT_BOTTOM - 14, 10.5, t["ink3"], "mono", 500)
     # legend
     LX = 812
