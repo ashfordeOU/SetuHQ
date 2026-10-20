@@ -182,8 +182,14 @@ def test_each_class_has_its_own_null():
     assert V.classify_variability(V.variability(t, var))["class"] == "variable"
     assert V.variability_null(t, var, [], seed=1)["variable"] == 0
     assert V.variability(t, 2 - var)["period_days"] == V.variability(t, var)["period_days"]
-    shuffled = V.block_shuffled(t, var, seed=1)
-    assert sorted(shuffled) == sorted(var) and not np.array_equal(shuffled, var)
+    plain = V.block_shuffled(t, var, seed=1, demean=False)
+    assert sorted(plain) == sorted(var) and not np.array_equal(plain, var)
+    # Demeaned blocks: no level steps at the joins, so a slow variable's null does not regrow a square wave.
+    slow = 1 + 3e-3 * np.sin(2 * np.pi * t / 6.0) + rng.normal(0, 3e-4, t.size)
+    idx = np.floor((t - t.min()) / 0.5).astype(int)
+    d = V.block_shuffled(t, slow, seed=2)
+    assert max(abs(np.median(d[idx == k]) - np.median(slow)) for k in np.unique(idx)) < 2e-4
+    assert V.variability_null(t, slow, [], seed=2)["variable"] == 0
 
 
 def test_versus_null_and_noise_like():

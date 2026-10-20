@@ -442,13 +442,22 @@ def flare_shape(entries) -> dict:
             "equal": sum(1 for e in fl if e["decay_minutes"] == e["rise_minutes"])}
 
 
-def block_shuffled(time, flux, *, block_days: float = NULL_BLOCK_DAYS, seed: int = 0):
+def block_shuffled(time, flux, *, block_days: float = NULL_BLOCK_DAYS, seed: int = 0, demean: bool = True):
     """The flux in 0.5-day blocks put back in a random order (times kept): a period longer than a block cannot
-    survive, the noise on hour timescales does."""
+    survive, the noise on hour timescales does.
+
+    With ``demean`` (the default) each block's median is removed first (and the flux's median put back), so the
+    shuffle does not make level steps at the joins: a star's slow variability would otherwise reappear in the
+    null as a square wave with a period of a few blocks, and the null would pass for the very signal it tests."""
     time = np.asarray(time, dtype=float)
     flux = np.asarray(flux, dtype=float)
     idx = np.floor((time - time.min()) / block_days).astype(int)
     blocks = [np.flatnonzero(idx == k) for k in np.unique(idx)]
+    if demean and flux.size:
+        level = float(np.median(flux))
+        flux = flux.copy()
+        for b in blocks:
+            flux[b] = flux[b] - np.median(flux[b]) + level
     order = np.random.default_rng(seed).permutation(len(blocks))
     out = np.concatenate([flux[blocks[k]] for k in order])[: time.size]
     if out.size < time.size:
@@ -457,9 +466,9 @@ def block_shuffled(time, flux, *, block_days: float = NULL_BLOCK_DAYS, seed: int
 
 
 def variability_null(time, flux, dips, *, seed: int = 0) -> dict:
-    """The variability rule on a block-shuffled copy of the same flux (the same dips masked): 1 when it still
-    passes. Periods below about a block length partly survive shuffling, so this null is conservative for
-    short-period pulsators: it can only make their excess look smaller."""
+    """The variability rule on a block-demeaned, block-shuffled copy of the same flux (the same dips masked): 1
+    when it still passes. Periods below about a block length partly survive shuffling, so this null is
+    conservative for short-period pulsators: it can only make their excess look smaller."""
     var = variability(time, block_shuffled(time, flux, seed=seed), dips)
     v = classify_variability(var)
     return {"variable": int(bool(v and v["class"] == "variable"))}
