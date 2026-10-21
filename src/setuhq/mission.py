@@ -128,7 +128,7 @@ body[data-route="mission"] main{padding-top:14px}
 .mcpane .feedcards{margin:0;display:grid;gap:8px}
 .mcsel{color:var(--ink);font-weight:600}
 /* A popped-out window: only its pane, full size. */
-body.mcpop .topbar,body.mcpop .skip,body.mcpop .mchero,body.mcpop .mckeys,body.mcpop .mctoolbar,body.mcpop .mctele,body.mcpop #route-mission>.small,body.mcpop .learnbar{display:none}
+body.mcpop .topbar,body.mcpop .pagebar,body.mcpop .sitefoot,body.mcpop .starfield,body.mcpop .skip,body.mcpop .mchero,body.mcpop .mckeys,body.mcpop .mctoolbar,body.mcpop .mctele,body.mcpop #route-mission>.small,body.mcpop .learnbar{display:none}
 body.mcpop main{padding:8px}
 body.mcpop .mcgrid,body.mcpop .mcgrid[data-grid="focus"]{grid-template-columns:minmax(0,1fr);grid-auto-rows:calc(100vh - 16px)}
 body.mcpop .mcpane,body.mcpop .mcgrid[data-grid="focus"] .mcpane:first-child{grid-column:auto;grid-row:auto}
@@ -178,7 +178,7 @@ function encodeMission(v){
   if (v.pop) out.push('pop=' + v.pop);
   return out.join('&');
 }
-function syncMissionURL(push){ if (current === 'mission' && mc.layout) setHash('#/mission' + (encodeMission(mc.layout) ? '?' + encodeMission(mc.layout) : ''), !!push); }
+function syncMissionURL(push){ if (current === 'mission' && mc.layout && !mc.pop) setHash('#/mission' + (encodeMission(mc.layout) ? '?' + encodeMission(mc.layout) : ''), !!push); }
 
 // ---------- linked selection: one star, every pane, every window ----------
 let mcBC = null;
@@ -253,7 +253,7 @@ const MC_RENDER = {
     $('#mcfeednote').textContent = rows.length ? `${rows.length} feed entr${rows.length === 1 ? 'y' : 'ies'} for ${mc.star}.`
       : `The feed is the catalogue run's ${D.catalog.candidates.length} candidates; none is ${mc.star}.` + (named ? ' A TIC with a known name selects its star.' : '');
     const all = rows.length ? rows : D.catalog.candidates, shown = all.slice(0, 12);
-    $('#mcfeed').innerHTML = feedCards(shown) + (all.length > shown.length ? `<p class="mcnote">${all.length - shown.length} more in <a href="#/explorer">the Explorer ›</a></p>` : '');
+    $('#mcfeed').innerHTML = feedCards(shown) + (all.length > shown.length ? `<p class="mcnote">${all.length - shown.length} more in <a href="${R(`#/explorer`)}">the Explorer ›</a></p>` : '');
   },
 };
 function mcRenderPanes(src){
@@ -302,7 +302,7 @@ function renderMission(){
   $$('[data-mcgrid]').forEach(b => b.addEventListener('click', () => { mc.layout.grid = b.dataset.mcgrid; mcLayout(); syncMissionURL(true); }));
   $('#mchidden').addEventListener('click', e => { const b = e.target.closest('[data-mcshow]'); if (!b) return; const p = b.dataset.mcshow; mc.layout.hidden = mc.layout.hidden.filter(x => x !== p); mcLayout(); MC_RENDER[p](); syncMissionURL(true); $('#mcp-' + p).focus(); });
   $('#mcsave').addEventListener('click', () => { try { const s = getStorage(); if (!s) throw new Error('storage blocked'); s.setItem(MC_KEY, JSON.stringify({panes: mc.layout.panes, hidden: mc.layout.hidden, grid: mc.layout.grid})); say('Saved as your default layout in this browser.'); } catch (e) { say('This browser does not allow storage; the layout lasts for this visit.'); } });
-  $('#mccopy').addEventListener('click', () => { const url = location.href.split('#')[0] + '#/mission' + (encodeMission(mc.layout) ? '?' + encodeMission(mc.layout) : ''); try { navigator.clipboard.writeText(url).then(() => say('Link copied.'), () => say(url)); } catch (e) { say(url); } });
+  $('#mccopy').addEventListener('click', () => { const url = location.origin + rtUrl('mission') + (encodeMission(mc.layout) ? '?' + encodeMission(mc.layout) : ''); try { navigator.clipboard.writeText(url).then(() => say('Link copied.'), () => say(url)); } catch (e) { say(url); } });
   $('#mcreset').addEventListener('click', () => { mc.layout = mcDefault(); mcLayout(); mcRenderPanes(); syncMissionURL(true); });
   // Selecting a star: the catalogue pane's finder, the feed (a TIC with a name), the system view's planet.
   $('#mcq').addEventListener('input', () => { const q = $('#mcq').value.trim().toLowerCase(); if (!q || !ct.C){ $('#mcfound').innerHTML = ''; return; }
@@ -329,7 +329,7 @@ function renderMission(){
 }
 // Pop a pane out into its own window; both windows stay on the same star over BroadcastChannel.
 function mcPopOut(p){
-  const url = location.href.split('#')[0] + '#/mission?pop=' + p + (mc.star ? '&star=' + encodeURIComponent(mc.star) : '');
+  const url = location.origin + rtUrl('mission') + '?pop=' + p + (mc.star ? '&star=' + encodeURIComponent(mc.star) : '');
   const w = window.open(url, 'SetuHQ-' + p, 'popup,width=960,height=680');
   if (!w){ say('The browser blocked the new window.'); return; }
   mc.popped.add(p); mcLayout();

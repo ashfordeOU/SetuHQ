@@ -664,13 +664,13 @@ def plate_page(data: dict) -> str:
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
-{brand.head(data["title"], "SetuHQ's plates: one print-ready plate per star, from the stored run and the search feed. Every number is a stored value; every candidate is unconfirmed.", "/plate/")}
+{brand.head(data["title"], "SetuHQ's plates: one print-ready plate per star, from the stored run and the search feed. Every number is a stored value; every candidate is unconfirmed.", "/evidence/plates/")}
 <style>{PLATE_CSS}{PLATE_LOGO_CSS}</style></head>
 <body>
 <a class="skip" href="#plates">Skip to the plates</a>
 <main class="sheet">
 <header class="mast">
-  <p class="kicker"><a href="../" aria-label="SetuHQ, home">{brand.logo()}</a><span>plates</span></p>
+  <p class="kicker"><a href="/" aria-label="SetuHQ, home">{brand.logo()}</a><span>plates</span></p>
   <h1>{title}</h1>
   <p><span class="hedge">Candidate, unconfirmed.</span> {n} candidates on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the discovery catalogue" if cat["path"] else ""}. Every number is a stored value.</p>
   <ul class="notes">

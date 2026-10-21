@@ -224,7 +224,7 @@ def build_report(
 <style>{STYLE}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
 <body>
 <header class='hero' id='overview'><div class='wrap'>
-  <a href="../" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
+  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
   <h1>{html.escape(title)}</h1>
   <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p>
 </div></header>
@@ -331,7 +331,7 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
 <style>{STYLE}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
 <body>
 <header class='hero'><div class='wrap'>
-  <a href="../" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
+  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
   <h1>Search feed</h1>
   <p class='lead'>An AI review panel searches TESS light curves on a schedule. Each entry is a dip that passed the pipeline's vetting and matches no known ephemeris. These are candidates. None is a confirmed planet until independent follow-up confirms it.</p>
 </div></header>

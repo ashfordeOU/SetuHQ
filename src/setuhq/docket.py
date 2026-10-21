@@ -1596,7 +1596,7 @@ def docket_page(data: dict) -> str:
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{html.escape(title)}</title>
-{brand.head(title, "The Docket: a case file for each dip of SetuHQ's stored run, with its vetting, its fit and every reviewer's marks. Candidates, never confirmations.", "/docket/")}
+{brand.head(title, "The Docket: a case file for each dip of SetuHQ's stored run, with its vetting, its fit and every reviewer's marks. Candidates, never confirmations.", "/candidates/case-file/")}
 <link rel="stylesheet" href="{DOCKET_FONTS_CSS}">
 <style>{DOCKET_CSS}</style></head>
 <body>

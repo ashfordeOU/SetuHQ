@@ -96,7 +96,7 @@ def sweep_meta(cat: dict | None, catalogue: dict | None = None, path: str = DEFA
             "noise_text": NOISE_LIKE, "sky_found_classes": sorted(real),
             "sources": cat.get("sources") or [], "contributors": cat.get("contributors") or [],
             "slices": [_slice_line(s) for s in cat.get("sources") or []], "tic_names": names, "sky": sky, "n_sky": len(sky),
-            "sorts": [k for k, _ in SORTS], "sort_labels": dict(SORTS), "json": VARIABLES_JSON, "coherence": coherence}
+            "sorts": [k for k, _ in SORTS], "sort_labels": dict(SORTS), "json": "/" + VARIABLES_JSON, "coherence": coherence}
 
 
 def sweep_payload(meta: dict) -> dict:
@@ -163,7 +163,7 @@ def overview_counter(meta: dict | None, app_href: str = "") -> str:
         <p class="muted">Every star searched, every dip kept and classified, nothing thrown away. So far: {slices}. A first slice, not the sky.</p>
         <div class="sweeptiles" role="list" aria-label="Sweep figures">{tiles}</div>
         <ul class="sweepcls" aria-label="Catalogue entries by class, each against its null">{rows}</ul>
-        <p class="small">Read from {e(meta['path'])} (built {e(meta['generated_at'][:16].replace('T', ' '))} UTC); nothing is extrapolated. {f"Each class is set against its own null on the same {n_null:,} star-sectors (what its rule finds where its signal cannot be; the rules table says which). " + (f"In this slice only {e(', '.join(real))} {'exceeds its null' if len(real) == 1 else 'exceed their nulls'}; the rest are {e(NOISE_LIKE)}. "
+        <p class="small">Read from the sweep's committed catalogue (built {e(meta['generated_at'][:16].replace('T', ' '))} UTC); nothing is extrapolated. {f"Each class is set against its own null on the same {n_null:,} star-sectors (what its rule finds where its signal cannot be; the rules table says which). " + (f"In this slice only {e(', '.join(real))} {'exceeds its null' if len(real) == 1 else 'exceed their nulls'}; the rest are {e(NOISE_LIKE)}. "
        if real else f"In this slice no class exceeds its null: every one is {e(NOISE_LIKE)}. ") if n_null else ""}No entry is a new planet.</p>
       </section>"""
 
@@ -273,7 +273,7 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
         <div class="ctbar"><p class="mono" id="vacount" role="status" aria-live="polite">Loading the sweep catalogue…</p>
           <button class="btn" type="button" id="vareset">Clear filters</button>
           <button class="btn" type="button" id="vacsv">Download CSV of this view</button>
-          <a class="btn" href="{VARIABLES_JSON}" download="setuhq-everything-that-dims.json">Download the catalogue (JSON)</a></div>
+          <a class="btn" href="/{VARIABLES_JSON}" download="setuhq-everything-that-dims.json">Download the catalogue (JSON)</a></div>
       </section>
       <section class="card vaobj" id="vaobj" aria-labelledby="h-vaobj" hidden><h2 id="h-vaobj" tabindex="-1">TIC</h2><div id="vaobjbody"></div></section>
       <div class="valist" id="valist" aria-label="Entries"></div>
@@ -427,7 +427,7 @@ function vaSort(rows, key){
   return rows.slice().sort((a, b) => { const x = by(a), y = by(b); for (let i = 0; i < x.length; i++){ if (x[i] < y[i]) return -1; if (x[i] > y[i]) return 1; } return 0; });
 }
 const vaNum = (x, d) => x === null || x === undefined ? '—' : Number(x).toLocaleString('en-GB', {maximumFractionDigits: d, minimumFractionDigits: d});
-const vaTicHref = (tic, id) => `#/variables?tic=${tic}` + (id ? '&id=' + encodeURIComponent(id) : '');
+const vaTicHref = (tic, id) => R(`#/variables?tic=${tic}` + (id ? '&id=' + encodeURIComponent(id) : ''));
 function vaFigures(e){
   const bits = e.kind === 'variability' ? ['whole sector'] : [`${esc(e.time_unit || 'BTJD')} ${vaNum(e.t_center, 3)}`];
   if (e.kind === 'variability') bits.push(`period ${vaNum(e.period_days, 4)} d`, `semi-amplitude ${vaNum(e.amplitude_ppm, 0)} ppm`);
@@ -470,7 +470,7 @@ function vaObject(tic, id){
   box.hidden = false;
   const name = (VA.tic_names || {})[tic];
   $('#h-vaobj').textContent = `TIC ${tic}` + (name ? ` · ${name}` : '');
-  if (!cov.length){ $('#vaobjbody').innerHTML = `<p>TIC ${tic} is not in the sweep yet.</p><div class="pllinks"><a class="vaall" href="#/variables">All entries ›</a></div>`; return; }
+  if (!cov.length){ $('#vaobjbody').innerHTML = `<p>TIC ${tic} is not in the sweep yet.</p><div class="pllinks"><a class="vaall" href="${R(`#/variables`)}">All entries ›</a></div>`; return; }
   const r = cov[0], rej = r.rejected || {};
   const dl = [['Position (RA, Dec)', r.ra !== null && r.ra !== undefined ? `${vaNum(r.ra, 3)}°, ${vaNum(r.dec, 3)}°` : 'not stored'], ['TESS magnitude', vaNum(r.tmag, 2)],
     ['Sectors searched', cov.filter(x => x.status === 'searched').map(x => x.sector).join(', ') || 'none'], ['Searched by', cov.flatMap(x => x.searched_by).join(', ') || '—'],
@@ -479,7 +479,7 @@ function vaObject(tic, id){
     ['Known TOIs on this TIC', (r.tois || []).map(t => `${t.toi}${t.disposition ? ' (' + t.disposition + ')' : ''}`).join(', ') || 'none in the cached TOI table']];
   $('#vaobjbody').innerHTML = `<dl class="vaobjgrid">${dl.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`
     + (name ? `<div class="pllinks">${objLink('star', name, name + ' in the planet catalogue ›')}</div>` : '')
-    + `<p class="small">${es.length} entr${es.length === 1 ? 'y' : 'ies'} below, every one shown. Light curve sha256 <span class="mono">${esc(r.file_sha256 || 'not stored')}</span>.</p><div class="pllinks"><a class="vaall" href="#/variables">All entries ›</a></div>`;
+    + `<p class="small">${es.length} entr${es.length === 1 ? 'y' : 'ies'} below, every one shown. Light curve sha256 <span class="mono">${esc(r.file_sha256 || 'not stored')}</span>.</p><div class="pllinks"><a class="vaall" href="${R(`#/variables`)}">All entries ›</a></div>`;
 }
 function vaApply(){
   if (!va.E || !va.view) return;
@@ -539,7 +539,7 @@ function applyVariables(v){ va.view = v; if (va.rendered) vaApply(); }
 function vaSearch(q){
   if (!VA) return [];
   const out = [];
-  for (const c of VA.classes) if (c.label.toLowerCase().includes(q)) out.push({kind: 'class', label: c.label, sub: `${VA.counts.by_class[c.id].toLocaleString('en-GB')} in the sweep`, href: '#/variables?class=' + c.id});
+  for (const c of VA.classes) if (c.label.toLowerCase().includes(q)) out.push({kind: 'class', label: c.label, sub: `${VA.counts.by_class[c.id].toLocaleString('en-GB')} in the sweep`, href: R('#/variables?class=' + c.id)});
   const d = q.replace(/^tic\s*/, '');
   if (va.C && /^\d{2,}$/.test(d)){
     let n = 0;

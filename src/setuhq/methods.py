@@ -1093,7 +1093,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         <p>A planet transits only if its orbit is aligned closely enough with our line of sight. For random orientations the chance is about R★/a, the star's radius over the orbit's size (Winn 2010). Close-in planets around large stars transit more often.</p>
         {_num_rows([("Chance pi Men c's orbit transits", f"{p_tr * 100:.1f}%", f"R★/a from exoplanet.eu R★ = {pm.get('star_radius')} R☉, a = {pm.get('semi_major_axis')} AU [calc]"),
                     ("Chance an Earth–Sun orbit transits", f"{p_earth * 100:.2f}%", "R☉/1 AU, IAU nominal values [calc]"),
-                    ("Sky TESS had observed by 18 Oct 2026", f"{tess_frac * 100:.1f}%" if tess_frac else "—", "survey_coverage.json from tess-point (Galaxy coverage panel)")])}
+                    ("Sky TESS had observed by 18 Oct 2026", f"{tess_frac * 100:.1f}%" if tess_frac else "—", "computed with tess-point (the Galaxy's coverage panel)")])}
         <p>SetuHQ reads TESS light curves: one star at a time, about 27 days per sector. <a href="#/galaxy?layers=tess">See TESS's sky coverage ›</a></p>
       </div>"""
     ch["transit"] = f"""
@@ -1351,7 +1351,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                     ("TESS prime-mission TOIs found false by follow-up", "565 of 2,241 (≈25%)", "Guerrero et al. 2021"),
                     ("A 50% binary eclipse diluted 1,000 times", f"{diluted_depth(0.5, 1e-3) * 1e6:.0f} ppm", "δ_obs = δ_true · F_target/F_total [calc]: the depth of a small planet"),
                     ("pi Men c's shape, T23/T14", f"{(t23 or 0) / t14:.2f}", "flat-bottomed (U), not V [calc from the transit chapter]")])}
-        <p>SetuHQ's vetting (vet.py) flags, from the light curve alone: <code>odd_even_mismatch</code> (odd and even depths differ), <code>secondary_eclipse</code> (a dip at phase 0.5), <code>low_snr</code>, <code>too_short</code>, <code>edge_event</code> and <code>insufficient_points</code>. It has no pixel-level centroid or difference-image check and no statistical validation, so a blended background binary can pass. <a href="#/sentinels">See the reviewers ›</a> · <a href="#/transit">See a vetted case ›</a></p>
+        <p>SetuHQ's vetting flags, from the light curve alone: <code>odd_even_mismatch</code> (odd and even depths differ), <code>secondary_eclipse</code> (a dip at phase 0.5), <code>low_snr</code>, <code>too_short</code>, <code>edge_event</code> and <code>insufficient_points</code>. It has no pixel-level centroid or difference-image check and no statistical validation, so a blended background binary can pass. <a href="#/sentinels">See the reviewers ›</a> · <a href="#/transit">See a vetted case ›</a></p>
       </div>"""
 
     # ----- population -----
@@ -1447,9 +1447,9 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         <div>{eyebrow}<h1 class="lead-h" id="h-methods" tabindex="-1">How planets are found.<br><span class="grey">And how SetuHQ finds them.</span></h1>
         <p>{len(CHAPTERS)} chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something SetuHQ itself does.</p></div>
       </header>
-      {_data_dates(ex, g)}
       <nav class="mxtoc" aria-label="Methods chapters"><ol>{toc}</ol></nav>
-      {''.join(sections)}"""
+      {''.join(sections)}
+      {_data_dates(ex, g)}"""
 
 
 def _data_dates(ex: dict, g: dict | None) -> str:
@@ -1462,7 +1462,7 @@ def _data_dates(ex: dict, g: dict | None) -> str:
         parts.append(f"survey counts from {e(g['source_short'])}, fetched {e(g['fetched_at'][:10])}")
     pop = load_population()
     if pop:
-        parts.append(f"population statistics (docs/results/population_stats.json) from {e(pop['source'])}, fetched {e(pop['fetched_at'][:10])}")
+        parts.append(f"population statistics from {e(pop['source'])}, fetched {e(pop['fetched_at'][:10])}")
     jw = load_jwst()
     if jw:
         parts.append(f"the WASP-39 b JWST extract from Zenodo record {e(jw['doi'].rsplit('.', 1)[-1])}, fetched {e(jw['fetched_at'][:10])}")

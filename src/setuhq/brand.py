@@ -18,6 +18,7 @@ import shutil
 from pathlib import Path
 
 SITE_URL = "https://setuhq.com"
+REPO_URL = "https://github.com/ashfordeOU/SetuHQ"
 NAME = "SetuHQ"
 TAGLINE = "The open exoplanet observatory: from public sky data to reviewed, explained candidates."
 BRAND_SRC = Path(__file__).resolve().parents[2] / "docs" / "assets" / "brand"
@@ -28,8 +29,8 @@ FAVICON = "setuhq-favicon.svg"
 SOCIAL_CARD = "setuhq-social-card.png"
 # The lockup's own size (docs/assets/brand/setuhq-logo-*.svg), so the image reserves its box before it loads.
 LOGO_W, LOGO_H = 579, 132
-# Where the deployed site serves the social card: the app's copy (site/app/assets/brand/).
-SOCIAL_CARD_URL = f"{SITE_URL}/app/{ASSETS}{SOCIAL_CARD}"
+# Where the deployed site serves the social card: site/assets/brand/.
+SOCIAL_CARD_URL = f"{SITE_URL}/{ASSETS}{SOCIAL_CARD}"
 SOCIAL_CARD_ALT = ("The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to "
                    "reviewed, explained candidates, and setuhq.com.")
 
@@ -91,6 +92,10 @@ def head(title: str, description: str, path: str, *, prefix: str = "") -> str:
 
 
 def page_path(out_dir: str | Path) -> str:
-    """The address a page built into ``out_dir`` has on the site, by the layout scripts/ci_local.sh builds:
-    site/<name>/index.html is served at /<name>/."""
-    return f"/{Path(out_dir).resolve().name}/"
+    """The address a page built into ``out_dir`` has on the site: site/<a>/<b>/index.html is served at /<a>/<b>/
+    (a folder outside any site/ folder counts as one level below the root)."""
+    parts = Path(out_dir).resolve().parts
+    if "site" in parts:
+        rest = parts[len(parts) - parts[::-1].index("site"):]
+        return "/" + "".join(p + "/" for p in rest)
+    return f"/{parts[-1]}/"

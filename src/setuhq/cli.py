@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
-"""Command-line interface: ``setuhq run``, ``setuhq benchmark``, ``setuhq calibrate``, ``setuhq app``, ``setuhq plate`` and more."""
+"""Command-line interface: ``setuhq run``, ``setuhq benchmark``, ``setuhq calibrate``, ``setuhq site``, ``setuhq plate`` and more."""
 
 from __future__ import annotations
 
@@ -322,20 +322,18 @@ def cmd_docket(args) -> int:
     return 0
 
 
-def cmd_app(args) -> int:
-    from setuhq.app import build_app
+def cmd_site(args) -> int:
+    from setuhq.site import build_site, check_budget
 
-    path = build_app(args.run_dir, args.out, title=args.title, catalog_path=args.catalog,
-                     weights_path=args.weights, star=args.star, require_crossmatch=not args.allow_missing_crossmatch,
-                     sweep_path=args.sweep)
-    print(f"app written to {path}")
-    if args.landing:
-        from setuhq.app import build_landing
-
-        landing = build_landing(args.run_dir, args.landing, title=args.title, catalog_path=args.catalog,
-                                weights_path=args.weights, app_href=args.landing_app_href, sweep_path=args.sweep)
-        print(f"landing page written to {landing}")
-    return 0
+    path = build_site(args.run_dir, args.out, title=args.title, catalog_path=args.catalog,
+                      weights_path=args.weights, star=args.star, require_crossmatch=not args.allow_missing_crossmatch,
+                      sweep_path=args.sweep, validation_md=args.validation, benchmark_md=args.benchmark,
+                      extras=not args.no_extras)
+    print(f"site written to {path.parent}")
+    over = check_budget(path.parent)
+    for line in over:
+        print(f"over the per-page budget: {line}", file=sys.stderr)
+    return 1 if over else 0
 
 
 def cmd_plate(args) -> int:
@@ -526,21 +524,25 @@ def build_parser() -> argparse.ArgumentParser:
                      help="build even when no stored archive cross-match is usable; the page then prints the stored error")
     docket.set_defaults(func=cmd_docket)
 
-    app = sub.add_parser("app", help="build the sidebar app shell (overview, candidates, discoveries, planets, panel, runs)")
-    app.add_argument("run_dir")
-    app.add_argument("--out", required=True)
-    app.add_argument("--title", default="SetuHQ")
-    app.add_argument("--catalog", help="discovery catalogue JSON for the Discoveries, Planets and Runs sections")
-    app.add_argument("--weights", default="docs/results/reviewer_weights_full_panel.json",
-                     help="calibrated reviewer weights JSON shown in the Panel section")
-    app.add_argument("--star", help="star name for the Docket's archive cross-match, as in 'setuhq docket'")
-    app.add_argument("--sweep", default="docs/sweep/catalogue.json",
-                     help="the sweep catalogue (setuhq sweep) for Everything that dims, the Overview counter and the Sky layer")
-    app.add_argument("--landing", help="also write the site's entry page (the Overview, linking into the app) to this path")
-    app.add_argument("--landing-app-href", default="app/", help="the app's address relative to the landing page")
-    app.add_argument("--allow-missing-crossmatch", action="store_true",
-                     help="build even when no stored archive cross-match is usable; the page then prints the stored error")
-    app.set_defaults(func=cmd_app)
+    for name, helptext in (("site", "build the website (every page, the shared files, the report, plates and case file) from a run"),
+                           ("app", "the same as 'setuhq site' (the old name, when the site was one app page)")):
+        site = sub.add_parser(name, help=helptext)
+        site.add_argument("run_dir")
+        site.add_argument("--out", required=True, help="the site's root folder (site/ for setuhq.com)")
+        site.add_argument("--title", default="SetuHQ")
+        site.add_argument("--catalog", help="discovery catalogue JSON for the Candidates and Runs pages")
+        site.add_argument("--weights", default="docs/results/reviewer_weights_full_panel.json",
+                          help="calibrated reviewer weights JSON shown on the Evidence page")
+        site.add_argument("--star", help="star name for the case file's archive cross-match, as in 'setuhq docket'")
+        site.add_argument("--sweep", default="docs/sweep/catalogue.json",
+                          help="the sweep catalogue (setuhq sweep) for Everything that dims, the home counter and the sky layer")
+        site.add_argument("--validation", default="docs/results/pi_men_validation.md", help="validation notes for the run report")
+        site.add_argument("--benchmark", default="docs/results/injection_recovery_simulated_panel.md",
+                          help="benchmark notes for the run report")
+        site.add_argument("--no-extras", action="store_true", help="leave out the run report, the plates and the stand-alone case file")
+        site.add_argument("--allow-missing-crossmatch", action="store_true",
+                          help="build even when no stored archive cross-match is usable; the page then prints the stored error")
+        site.set_defaults(func=cmd_site)
 
     xmatch = sub.add_parser("crossmatch", help="query the NASA Exoplanet Archive for the run's targets and store crossmatch.json")
     xmatch.add_argument("run_dir")

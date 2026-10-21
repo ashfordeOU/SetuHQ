@@ -123,7 +123,7 @@ function learnRender(){
     $('#learncount').textContent = `${k} of ${n} visited` + (k === n ? ' · path complete' : '');
     const go = $('#learngo');
     go.textContent = !k ? 'Start the path' : nx ? `Continue: ${nx.label}` : 'Start again from step 1';
-    go.setAttribute('href', (nx || LEARN[0]).href);
+    go.setAttribute('href', R((nx || LEARN[0]).href));
     $$('#learnsteps li').forEach(li => { const seen = learn.seen.includes(li.dataset.step); li.dataset.seen = seen ? '1' : '0'; li.dataset.next = nx && nx.id === li.dataset.step ? '1' : '0';
       li.querySelector('.lseen').textContent = seen ? ', visited' : ', not visited yet'; });
   }
@@ -137,9 +137,9 @@ function learnBar(step){
   const prev = LEARN[i - 1], next = LEARN[i + 1];
   // Never hide the button that has focus: on step 1, Back hands focus to Next first.
   if (!prev && document.activeElement === $('#learnprev')) $('#learnnext').focus();
-  $('#learnprev').hidden = !prev; if (prev) $('#learnprev').setAttribute('href', prev.href);
+  $('#learnprev').hidden = !prev; if (prev) $('#learnprev').setAttribute('href', R(prev.href));
   $('#learnnext').innerHTML = next ? `Next<span class="lnt">: ${esc(next.label)}</span> ›` : 'Finish ›';
-  $('#learnnext').setAttribute('aria-label', next ? `Next: ${next.label}` : 'Finish the path'); $('#learnnext').setAttribute('href', next ? next.href : '#/overview');
+  $('#learnnext').setAttribute('aria-label', next ? `Next: ${next.label}` : 'Finish the path'); $('#learnnext').setAttribute('href', next ? R(next.href) : '/');
 }
 function learnVisit(p){
   const step = learnStepOf(p);
@@ -157,6 +157,6 @@ if ($('#learnbar')){
   $('#learnleave').addEventListener('click', () => { learn.active = false; learnSave(); learnBar(null);
     const h = $(`#route-${current} h1`) || $('#main'); if (h){ if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1'); h.focus({preventScroll: true}); }
     say('Left the Learn path. Your progress is kept.'); });
-  $('#learnnext').addEventListener('click', () => { if ($('#learnnext').getAttribute('href') === '#/overview'){ learn.active = false; learnSave(); } });
+  $('#learnnext').addEventListener('click', () => { if ($('#learnnext').getAttribute('href') === '/'){ learn.active = false; learnSave(); } });
 }
 """

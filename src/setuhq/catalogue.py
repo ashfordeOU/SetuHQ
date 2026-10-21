@@ -193,11 +193,14 @@ def star_page(eyebrow_html: str) -> str:
       </div>"""
 
 
-SEARCH_BUTTON = ('<button class="btn searchbtn" type="button" id="gsearchbtn" aria-label="Search planets, stars and chapters (Ctrl K)" aria-haspopup="dialog">'
-                 '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5"/></svg><span class="searchlbl">Search</span></button>')
+# The top bar's search: an icon button that opens the search overlay (also on / and Ctrl or Cmd K).
+SEARCH_BUTTON = ('<button class="iconbtn searchbtn" type="button" id="gsearchbtn" aria-label="Search planets, stars and pages (press /)" '
+                 'aria-haspopup="dialog" title="Search (/)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" '
+                 'fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.7" '
+                 'stroke-linecap="round"/></svg></button>')
 SEARCH_DIALOG = """<dialog class="gsearch" id="gsearch" aria-labelledby="gsearchlbl">
-  <label class="gsfield"><span class="sr" id="gsearchlbl">Search planets, stars and chapters</span>
-    <input type="search" id="gsq" role="combobox" aria-expanded="true" aria-controls="gsresults" aria-autocomplete="list" placeholder="Search planets, stars, chapters" autocomplete="off"></label>
+  <label class="gsfield"><span class="sr" id="gsearchlbl">Search planets, stars and pages</span>
+    <input type="search" id="gsq" role="combobox" aria-expanded="true" aria-controls="gsresults" aria-autocomplete="list" placeholder="Search planets, stars, pages" autocomplete="off"></label>
   <ul class="gsresults" id="gsresults" role="listbox" aria-label="Results"></ul>
   <p class="gshint">↑ ↓ to move · Enter to open · Esc to close</p>
 </dialog>"""
@@ -277,8 +280,6 @@ CATALOGUE_CSS = r"""
 .stsysw{display:grid;gap:10px;min-width:0}
 .stpick{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
 .stpick select{min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans);max-width:100%}
-.searchbtn{min-height:44px;gap:8px}
-.searchbtn svg{width:16px;height:16px}
 .gsearch{width:min(640px,calc(100vw - 24px));margin-top:10vh;padding:12px;border-radius:20px;border:1px solid var(--line-2);background:var(--bg-2);color:var(--ink)}
 .gsearch::backdrop{background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .gsfield input{width:100%;min-height:52px;padding:0 16px;border-radius:14px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 17px var(--sans)}
@@ -295,8 +296,6 @@ CATALOGUE_CSS = r"""
   .cth{flex:none;padding:0 12px;border:1px solid var(--line-2);border-radius:999px}
   .ctscroll{height:70vh}
   .plgrid,.plmore{grid-template-columns:minmax(0,1fr)}
-  .searchlbl{display:none}
-  .searchbtn{min-width:44px;justify-content:center;padding:0 12px}
 }
 """
 
@@ -357,7 +356,7 @@ function ctSort(P, idx, key, dir){
 
 const ct = {rangeT: {}, P: null, loading: null, view: null, idx: [], starN: {}, bySlug: {}, starBySlug: {}, byStar: {}, rendered: false, rowH: 44};
 function ctLoad(){
-  if (!ct.loading) ct.loading = fetch('assets/data/catalogue.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(C => {
+  if (!ct.loading) ct.loading = fetch('/assets/data/catalogue.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(C => {
     ct.C = C; ct.P = C.planets;
     const P = ct.P;
     P.name.forEach((nm, i) => { ct.bySlug[P.slug[i]] = i; const s = P.star[i]; if (s){ ct.starN[s] = (ct.starN[s] || 0) + 1; (ct.byStar[s] = ct.byStar[s] || []).push(i); } });
@@ -518,8 +517,8 @@ function ctSky(i, label){
 }
 function ctWhere(i, star){
   const P = ct.P, links = [];
-  if (P.dist[i] !== null) links.push(`<a href="#/galaxy?focus=${encodeURIComponent(star || P.name[i])}">Show on the Galaxy map ›</a>`);
-  links.push(`<a href="#/sky">The run's sky map ›</a>`);
+  if (P.dist[i] !== null) links.push(`<a href="${R(`#/galaxy?focus=${encodeURIComponent(star || P.name[i])}`)}">Show on the Galaxy map ›</a>`);
+  links.push(`<a href="${R(`#/sky`)}">The run's sky map ›</a>`);
   const dist = P.dist[i] === null ? 'Distance not stored, so the Galaxy map cannot place it.' : `${ctFmt(P.dist[i], 5)} pc · ${ctFmt(P.dist[i] * 3.261563777, 5)} ly`;
   return ctSky(i, star || P.name[i]) + `<p>${dist}</p><div class="pllinks">${links.join('')}</div>`;
 }
@@ -528,12 +527,12 @@ function plShow(slug){
   ctLoad().then(() => {
     const i = ct.bySlug[slug], note = $('#plnote');
     const body = $$('#route-planet .plgrid, #route-planet .plmore, #route-planet #plref').map(x => x.closest('.plgrid, .plmore, section.card'));
-    if (i === undefined){ note.innerHTML = `No planet "${esc(slug)}" in the catalogue. <a href="#/catalogue?q=${encodeURIComponent(slug.replace(/-/g, ' '))}">Search the Catalogue ›</a>`; note.hidden = false;
+    if (i === undefined){ note.innerHTML = `No planet "${esc(slug)}" in the catalogue. <a href="${R(`#/catalogue?q=${encodeURIComponent(slug.replace(/-/g, ' '))}`)}">Search the Catalogue ›</a>`; note.hidden = false;
       $('#h-planet').textContent = 'Planet not found'; $('#plsub').textContent = ''; body.forEach(x => { x.hidden = true; }); plShown(false); return; }
     note.hidden = true; body.forEach(x => { x.hidden = false; });
     const P = ct.P, star = P.star[i], cls = mxClassOf(P.radius[i], P.mass[i] !== null ? P.mass[i] : P.msini[i]);
     const clsName = cls === null ? 'class not determinable (no radius or mass stored)' : ['Earth-size', 'Super-Earth', 'Sub-Neptune', 'Neptune-like', 'Gas giant'][cls] + (P.radius[i] === null ? ' (by mass)' : '');
-    $('#h-planet').textContent = P.name[i]; document.title = `${P.name[i]} · ${D.title}`; $('#curlabel').textContent = `Catalogue · ${P.name[i]}`;
+    $('#h-planet').textContent = P.name[i]; if (current === 'planet') pageChrome('planet', new URLSearchParams({id: slug}));
     $('#plsub').innerHTML = `${star ? `<a href="${ctStarHref(star)}">${esc(star)}</a>` : 'host not stored'} · ${esc(CTM.method_label[P.method[i]] || P.method[i])} · discovered ${P.year[i] || 'year not stored'} · ${esc(clsName)}`;
     $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds.</p>`;
     const sibs = star ? ct.byStar[star].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)) : [i];
@@ -544,13 +543,13 @@ function plShow(slug){
     const ref = CTM.refs[P.name[i]];
     $('#plref').innerHTML = `<p>${esc(ct.C.source_short)} lists it as "${esc(P.status[i] || 'status not stored')}"${P.method_raw[i] ? `, found by ${esc(P.method_raw[i])}` : ''}${P.year[i] ? ` in ${P.year[i]}` : ''}; record updated ${esc(P.updated[i] || 'not stored')}.${P.alt[i] ? ` Also known as ${esc(P.alt[i])}.` : ''}</p>
       <p>${ref ? `Discovery paper: <a href="${esc(ref[0])}" rel="noopener">${esc(ref[1])}</a> (from SetuHQ's checked list of notable planets; ${esc(ct.C.source_short)} stores no DOI).` : `${esc(ct.C.source_short)} stores no DOI or reference for the discovery paper, so none is shown.`}</p>
-      <div class="pllinks">${ch ? `<a href="#/methods?ch=${ch}">How ${esc((CTM.method_label[P.method[i]] || '').toLowerCase())} works ›</a>` : ''}</div>${ctSeen(P.name[i], ch ? '#/methods?ch=' + ch : '')}`;
+      <div class="pllinks">${ch ? `<a href="${R(`#/methods?ch=${ch}`)}">How ${esc((CTM.method_label[P.method[i]] || '').toLowerCase())} works ›</a>` : ''}</div>${ctSeen(P.name[i], ch ? R('#/methods?ch=' + ch) : '')}`;
     plSystem($('#plsys'), i, current === 'planet');
   }).catch(() => { $('#plnote').textContent = 'The catalogue file could not be loaded here.'; $('#plnote').hidden = false; });
 }
 // The shared animated system, from planet i's stored values only; the caption says what is not stored.
 // Back-links: where SetuHQ itself shows this planet or star (the Transit case, Galaxy tour stops, Methods chapters).
-function ctSeen(name, skip){ const ls = (CTM.mentions[name] || []).filter(([, href]) => href !== skip).map(([lab, href]) => `<a href="${esc(href)}">${esc(lab)} ›</a>`).join('');
+function ctSeen(name, skip){ const ls = (CTM.mentions[name] || []).filter(([, href]) => R(href) !== skip).map(([lab, href]) => `<a href="${esc(R(href))}">${esc(lab)} ›</a>`).join('');
   return ls ? `<div class="pllinks plseen"><span class="pllab">Where SetuHQ shows it:</span>${ls}</div>` : ''; }
 function plSystem(fig, i, on){
   const P = ct.P, pimen = typeof S !== 'undefined' && S.planet && P.name[i] === S.planet;
@@ -563,17 +562,17 @@ function stShow(slug){
   ctLoad().then(() => {
     const name = ct.starBySlug[slug], note = $('#stnote');
     const body = $$('#route-star .plgrid, #route-star .plmore');
-    if (!name){ note.innerHTML = `No star "${esc(slug)}" in the catalogue. <a href="#/catalogue?q=${encodeURIComponent(slug.replace(/-/g, ' '))}">Search the Catalogue ›</a>`; note.hidden = false;
+    if (!name){ note.innerHTML = `No star "${esc(slug)}" in the catalogue. <a href="${R(`#/catalogue?q=${encodeURIComponent(slug.replace(/-/g, ' '))}`)}">Search the Catalogue ›</a>`; note.hidden = false;
       $('#h-star').textContent = 'Star not found'; $('#stsub').textContent = ''; body.forEach(x => { x.hidden = true; }); return; }
     note.hidden = true; body.forEach(x => { x.hidden = false; });
     const P = ct.P, ps = ct.byStar[name].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)), i = ps[0];
-    $('#h-star').textContent = name; document.title = `${name} · ${D.title}`; $('#curlabel').textContent = `Catalogue · ${name}`;
+    $('#h-star').textContent = name; if (current === 'star') pageChrome('star', new URLSearchParams({id: slug}));
     const teff = P.steff[i];
     const [cl, row] = teff !== null ? mxClass(teff) : [null, null];
     $('#stsub').textContent = `${ps.length} planet${ps.length === 1 ? '' : 's'} in ${ct.C.source_short}` + (P.sptype[i] ? ` · stored type ${P.sptype[i]}` : '') + (cl ? ` · class ${cl} from Teff (nearest ${row})` : '');
     $('#stparams').innerHTML = ctTable(i, CT_STAR_ROWS) + (P.salt[i] ? `<p class="small">Also known as ${esc(P.salt[i])}.</p>` : '');
     $('#stplanets').innerHTML = `<ul class="pllist">${ps.map(j => `<li><a href="${ctPlanetHref(j)}"><span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul>`;
-    $('#stwhere').innerHTML = ctWhere(i, name) + ctSeen(name, '#/sky');
+    $('#stwhere').innerHTML = ctWhere(i, name) + ctSeen(name, R('#/sky'));
     if (typeof vaForStar === 'function') vaForStar(P.salt[i]);
     // The system view with one of its planets (the innermost first); the picker switches planet.
     const pick = $('#stpick');
@@ -587,8 +586,9 @@ function plShown(r){ for (const [id, route] of [['#plsys', 'planet'], ['#stsys',
 // ---------- global search: planets, stars, chapters and sections ----------
 const gs = {sel: 0, items: []};
 function gsIndexStatic(){
-  const out = D.sections.filter(s => !s.parent).map(s => ({kind: 'section', label: s.label, href: '#/' + s.id}));
-  if (MX) for (const id of MX.chapters) out.push({kind: 'chapter', label: MX.labels[id], href: '#/methods?ch=' + id});
+  const out = [];
+  for (const n of D.nav){ out.push({kind: 'section', label: n.label, href: n.href}); for (const [label, h] of (D.subnav[n.id] || [])) if (label !== n.label) out.push({kind: n.label, label, href: R(h)}); }
+  if (MX) for (const id of MX.chapters) out.push({kind: 'chapter', label: MX.labels[id], href: R('#/methods?ch=' + id)});
   return out;
 }
 function gsSearch(q){
@@ -625,7 +625,7 @@ if ($('#gsearch')){
     if (e.key === 'Escape'){ e.preventDefault(); $('#gsearch').close(); return; }
     if (e.key === 'ArrowDown'){ gs.sel = Math.min(gs.items.length - 1, gs.sel + 1); gsRender(); e.preventDefault(); }
     else if (e.key === 'ArrowUp'){ gs.sel = Math.max(0, gs.sel - 1); gsRender(); e.preventDefault(); }
-    else if (e.key === 'Enter' && gs.items[gs.sel]){ location.hash = gs.items[gs.sel].href; $('#gsearch').close(); e.preventDefault(); }
+    else if (e.key === 'Enter' && gs.items[gs.sel]){ e.preventDefault(); $('#gsearch').close(); navTo(gs.items[gs.sel].href); }
   });
   $('#gsresults').addEventListener('click', e => { if (e.target.closest('a')) $('#gsearch').close(); });
   $('#gsearch').addEventListener('click', e => { if (e.target === $('#gsearch')) $('#gsearch').close(); });
