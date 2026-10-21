@@ -37,7 +37,7 @@ body:
     id: question
     attributes:
       label: Your question
-      description: What looks wrong or unclear: a check, a fit value, the false-alarm probability, a reviewer's mark or reason, a benchmark number.
+      description: "What looks wrong or unclear: a check, a fit value, the false-alarm probability, a reviewer's mark or reason, a benchmark number."
     validations:
       required: true
   - type: textarea

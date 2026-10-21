@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Weekly, grouped updates: one pull request for the Python dependencies and one for the GitHub Actions.
 # Every action is pinned by full commit SHA with its tag in a comment; Dependabot rewrites both together.
-# Major versions are taken by hand, deliberately. The `readme` extra pins exact versions on purpose (the
+# Major versions are taken by hand, deliberately. requirements-readme.txt pins exact versions on purpose (the
 # README figures depend on them), so it is left alone: bump it with a figure regeneration.
 version: 2
 updates:
@@ -15,7 +15,7 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
-      # The readme extra's exact pins (the README figures were made with them).
+      # The exact pins of requirements-readme.txt (the README figures were made with them).
       - dependency-name: "fonttools"
       - dependency-name: "numpy"
       - dependency-name: "pillow"

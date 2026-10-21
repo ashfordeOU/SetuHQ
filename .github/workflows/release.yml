@@ -1,28 +1,35 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # The release pipeline. One tag push, one workflow run, one order:
 #
-#   tag -> verify -> build -> release      then publish.yml -> PyPI
+#   tag -> verify -> build -> release -> pypi
 #
-#   verify   the tag equals the version in src/setuhq/__init__.py (and every surface
-#            scripts/check_version_sync.py checks agrees), CHANGELOG.md has its section, and the
-#            CI workflow (ci.yml) finished green on exactly this commit. Nothing below runs unless
-#            this is green. It does not rerun the test suite: ci.yml already ran it on this commit,
-#            and a tag on a commit CI has not passed is refused instead.
+#   verify   the tag equals the version in src/setuhq/__init__.py, every surface
+#            scripts/check_version_sync.py checks agrees, CHANGELOG.md's [Unreleased] is empty and the
+#            release's date equals CITATION.cff's, and CI (ci.yml) finished green on exactly this commit
+#            in a push to main, with the commit an ancestor of origin/main. It does not rerun the test
+#            suite: ci.yml already ran it on this commit, and a tag on any other commit is refused.
 #   build    the sdist and the wheel with `python -m build`, `twine check --strict`,
 #            scripts/check_dist.py (what each carries, and no data), then a clean install of the
-#            wheel that runs `setuhq --help` and the setuhq-mcp stdio smoke test.
-#   release  attests build provenance for both files, then creates the GitHub Release for the tag
-#            with the CHANGELOG section as its notes (scripts/changelog_extract.py) and attaches them.
-#   PyPI     publish.yml starts when this run completes green for a pushed tag, and uploads the
-#            dists this run attested, through trusted publishing. It is a workflow of its own because
-#            PyPI matches a trusted publisher on the top-level workflow file. No token anywhere.
+#            wheel: `setuhq --help`, the MCP stdio smoke test of `setuhq-mcp` and `setuhq mcp`, and a
+#            read of the reference tables it ships. The files become this run's `dist` artifact, and
+#            every later job uses exactly those bytes.
+#   release  attests build provenance for both files and creates the GitHub Release for the tag, with
+#            the CHANGELOG section as notes (scripts/changelog_extract.py). On a re-run it never
+#            replaces a file the release already carries: a file with different bytes fails the job, a
+#            missing one is added, and the notes are refreshed.
+#   pypi     uploads the same `dist` artifact to PyPI by trusted publishing: environment `pypi`, the
+#            job's OIDC identity and nothing else. The trusted publisher on PyPI names THIS file,
+#            release.yml (a job in it is the top-level workflow PyPI matches; nothing else in the
+#            repository can publish to `pypi`).
 #
-# DRY RUN: dispatch this workflow by hand (dry_run is on by default). It runs verify (reporting,
-# not failing, on a missing tag or CI run) and build, keeps the dists as a workflow artifact, and
-# attests, releases and publishes nothing. A dispatch with dry_run off and a `tag` rebuilds the
-# GitHub Release for an existing tag (for example after a runner outage); it still publishes
-# nothing, because publish.yml only follows a tag PUSH: retry PyPI by dispatching publish.yml on
-# the tag (docs/RELEASING.md).
+# RETRY: "Re-run failed jobs" on the tag's Release run. A re-run reuses the run's own `dist` artifact
+# (kept for 90 days), so PyPI and the GitHub Release always receive the bytes that were attested; nothing
+# is ever rebuilt for them.
+#
+# DRY RUN: a manual dispatch, on any branch. It runs verify (reporting a missing CI run as a warning) and
+# build, and keeps the dists as a workflow artifact. It attests, releases and publishes nothing, except
+# that with `testpypi` set it uploads that dry-run build to TestPyPI (environment `testpypi`), which needs
+# its own pending publisher there. A dispatch never reaches PyPI.
 name: Release
 
 on:
@@ -30,21 +37,17 @@ on:
     tags: ["v*"]
   workflow_dispatch:
     inputs:
-      tag:
-        description: "Tag to (re)build the release for, e.g. v0.1.0 (empty: a dry run of the selected branch)"
-        required: false
-        type: string
-      dry_run:
-        description: "Dry run: verify and build only; attest, release and publish nothing"
+      testpypi:
+        description: "Also upload this dry-run build to TestPyPI (needs the TestPyPI publisher; see docs/RELEASING.md)"
         required: false
         type: boolean
-        default: true
+        default: false
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ inputs.tag || github.ref }}${{ inputs.dry_run && '-dry' || '' }}
+  group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -56,55 +59,48 @@ jobs:
       actions: read  # read ci.yml's runs for this commit
     outputs:
       version: ${{ steps.v.outputs.version }}
-      tag: ${{ steps.v.outputs.tag }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0  # the ancestry check below needs main's history
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.13"
-      - name: A real release run needs a tag
-        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dry_run && inputs.tag == '' }}
-        run: |
-          echo "::error::a dispatch without a tag is only valid as a dry run"
-          exit 1
-      - name: Version, tag and changelog agree
+      - name: Version, tag, changelog and dates agree
         id: v
-        env:
-          TAG: ${{ inputs.tag || (github.ref_type == 'tag' && github.ref_name || '') }}
-          DRY: ${{ inputs.dry_run }}
         run: |
           set -euo pipefail
           version="$(python3 scripts/check_version_sync.py --print-version)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "tag=${TAG:-v$version}" >> "$GITHUB_OUTPUT"
-          if [ -n "$TAG" ]; then
-            python3 scripts/check_version_sync.py --tag "$TAG"
-          elif [ "$DRY" = "true" ]; then
-            echo "::notice::dry run of a branch: checking the surfaces without a tag"
-            python3 scripts/check_version_sync.py
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            python3 scripts/check_version_sync.py --tag "$GITHUB_REF_NAME"
           else
-            echo "::error::no tag to release"; exit 1
+            echo "::notice::dry run of $GITHUB_REF: checking the surfaces without a tag"
+            python3 scripts/check_version_sync.py
           fi
           python3 scripts/changelog_extract.py "$version" > /dev/null
-      - name: CI is green on this exact commit
-        # Fails closed on a real release: no successful ci.yml run for this SHA means no release. A dry
-        # run reports the same answer as a warning.
+      - name: CI is green on this exact commit, pushed to main
+        # Fails closed on a tag push: the commit must be on main, and ci.yml must have finished green on it in a
+        # push to main. A dry run reports the same answer as a warning.
         env:
           GH_TOKEN: ${{ github.token }}
-          DRY: ${{ inputs.dry_run }}
         run: |
           set -euo pipefail
           sha="$(git rev-parse HEAD)"
-          n="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/runs?head_sha=${sha}&status=success" --jq '.total_count')"
-          if [ "${n:-0}" -gt 0 ]; then
-            echo "CI is green on $sha ($n run(s))"
-          elif [ "$DRY" = "true" ]; then
-            echo "::warning::no green ci.yml run on $sha; a real release of this commit would stop here"
+          problem=""
+          git fetch --quiet origin main
+          if ! git merge-base --is-ancestor "$sha" origin/main; then
+            problem="$sha is not on main (not an ancestor of origin/main)"
           else
-            echo "::error::no green ci.yml run on $sha: merge to main, wait for CI, then tag that commit"
-            exit 1
+            n="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/runs?head_sha=${sha}&status=success&event=push&branch=main" --jq '.total_count')"
+            [ "${n:-0}" -gt 0 ] || problem="no successful ci.yml run for $sha in a push to main"
+          fi
+          if [ -z "$problem" ]; then
+            echo "CI is green on $sha in a push to main, and main contains it"
+          elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            echo "::error::$problem: merge to main, wait for CI, then tag that commit"; exit 1
+          else
+            echo "::warning::$problem; a release of this commit would stop here"
           fi
 
   build:
@@ -115,8 +111,6 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
-        with:
-          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: "3.13"
@@ -128,7 +122,7 @@ jobs:
           ls -l dist
       - name: twine check
         run: python3 -m twine check --strict dist/*
-      - name: What the dists carry (package, type marker, fonts, licences; no runs, site, docs or caches)
+      - name: What the dists carry (package, type marker, tables, fonts, licences; no runs, site, docs or caches)
         run: python3 scripts/check_dist.py dist
       - name: The version inside the dists is the tag's
         env:
@@ -155,10 +149,11 @@ jobs:
           name: dist
           path: dist/
           if-no-files-found: error
+          retention-days: 90
 
   release:
     needs: [verify, build]
-    if: ${{ !inputs.dry_run }}
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -167,8 +162,6 @@ jobs:
       attestations: write  # store it
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
-        with:
-          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
         with:
           name: dist
@@ -183,15 +176,75 @@ jobs:
         env:
           VERSION: ${{ needs.verify.outputs.version }}
         run: python3 scripts/changelog_extract.py "$VERSION" > RELEASE_NOTES.md
-      - name: Create the GitHub Release (or refresh it for a re-run) and attach the dists
+      - name: Create the GitHub Release, or complete it on a re-run without replacing any file
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ needs.verify.outputs.tag }}
+          TAG: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          if gh release view "$TAG" > /dev/null 2>&1; then
-            gh release edit "$TAG" --notes-file RELEASE_NOTES.md
-            gh release upload "$TAG" dist/* --clobber
-          else
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
             gh release create "$TAG" dist/* --verify-tag --title "SetuHQ $TAG" --notes-file RELEASE_NOTES.md
+            exit 0
           fi
+          mkdir -p published
+          gh release download "$TAG" --dir published --pattern '*.whl' --pattern '*.tar.gz' || true
+          for f in dist/*; do
+            name="$(basename "$f")"
+            if [ -f "published/$name" ]; then
+              if ! cmp -s "$f" "published/$name"; then
+                echo "::error::the release already carries $name with different bytes; it is never replaced"; exit 1
+              fi
+              echo "$name: already on the release, same bytes"
+            else
+              gh release upload "$TAG" "$f"
+              echo "$name: added"
+            fi
+          done
+          gh release edit "$TAG" --notes-file RELEASE_NOTES.md
+
+  pypi:
+    needs: [verify, build, release]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: pypi
+      url: https://pypi.org/project/setuhq/
+    permissions:
+      id-token: write  # trusted publishing: the only credential this job has
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+        with:
+          name: dist
+          path: dist
+      - run: ls -l dist
+      - name: Publish to PyPI (trusted publishing; PEP 740 attestations)
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+        with:
+          packages-dir: dist
+          skip-existing: true
+          verbose: true
+
+  # The dry run's upload rehearsal: the build above, never a tag's, to TestPyPI only.
+  testpypi:
+    needs: build
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.testpypi }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/setuhq/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+        with:
+          name: dist
+          path: dist
+      - name: Publish to TestPyPI (trusted publishing)
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: dist
+          skip-existing: true
+          verbose: true

@@ -5,8 +5,9 @@ contact_links:
     url: https://github.com/ashfordeOU/SetuHQ/security/advisories/new
     about: Report it privately through GitHub's private vulnerability reporting, as SECURITY.md explains. Never in a public issue.
   - name: Commercial licence, SetuHQ Pro or a custom study
-    url: mailto:contact@ashforde.org?subject=SetuHQ%20commercial%20enquiry
-    about: Write to contact@ashforde.org (Ashforde OÜ). See LICENSING.md and docs/PRO.md.
+    # An https link: GitHub's issue chooser documents contact links as web URLs, so no e-mail link is relied on.
+    url: https://github.com/ashfordeOU/SetuHQ/blob/main/LICENSING.md
+    about: "Write to contact@ashforde.org (Ashforde OÜ). LICENSING.md explains the commercial licence; docs/PRO.md describes SetuHQ Pro."
   - name: Contributing a sweep or a leaderboard entry
     url: https://github.com/ashfordeOU/SetuHQ/blob/main/CONTRIBUTING.md
     about: The guide for sweep bundles, leaderboard submissions and code, and the CLA.

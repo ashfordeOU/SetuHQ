@@ -54,6 +54,9 @@ def check_wheel(path: Path) -> list[str]:
         problems.append(f"{path.name}: METADATA lacks License-Expression: AGPL-3.0-only")
     if "Description-Content-Type: text/markdown" not in meta or "mcp-name: io.github.ashfordeOU/setuhq" not in meta:
         problems.append(f"{path.name}: METADATA lacks the markdown README.pypi.md with its mcp-name marker")
+    exact = [line for line in meta.splitlines() if line.startswith("Requires-Dist:") and "==" in line]
+    if exact:
+        problems.append(f"{path.name}: the published metadata pins exact versions: {exact}")
     for script in ("setuhq = setuhq.cli:main", "setuhq-mcp = setuhq.mcp_server:main"):
         if script not in scripts:
             problems.append(f"{path.name}: entry point missing: {script}")

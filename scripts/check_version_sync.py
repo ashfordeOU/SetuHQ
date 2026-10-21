@@ -11,11 +11,12 @@ checked against it here:
 - server.json ``version`` and the version of each of its packages (the MCP registry entry);
 - .claude-plugin/plugin.json ``version`` and .claude-plugin/marketplace.json ``plugins[].version``;
 - smithery.yaml (the pinned ``setuhq[mcp]==X`` in its start command);
-- CHANGELOG.md has a ``## [X]`` section (the release notes are that section);
+- CHANGELOG.md has a ``## [X] - YYYY-MM-DD`` section (the release notes are that section) whose date equals
+  CITATION.cff ``date-released``;
 - README.pypi.md names the same MCP server as server.json (the registry's ownership marker).
 
 With a release tag (``--tag vX.Y.Z``, or ``GITHUB_REF_TYPE=tag`` and ``GITHUB_REF_NAME`` as GitHub Actions sets
-them), the tag must be ``v`` plus that version. Exit status 1 on any mismatch, with one line per problem.
+them), the tag must be ``v`` plus that version and CHANGELOG.md's ``[Unreleased]`` must be empty. Exit status 1 on any mismatch, with one line per problem.
 
     python3 scripts/check_version_sync.py
     python3 scripts/check_version_sync.py --tag v0.1.0
@@ -92,8 +93,18 @@ def check(root: Path = ROOT, tag: str | None = None) -> tuple[str, list[str]]:
         same("smithery.yaml setuhq[mcp] pin", pin)
 
     changelog = (root / "CHANGELOG.md").read_text(encoding="utf-8")
-    if not re.search(rf"(?m)^## \[{re.escape(ver)}\]", changelog):
+    heading = re.search(rf"(?m)^## \[{re.escape(ver)}\](?: - (\S+))?\s*$", changelog)
+    if not heading:
         problems.append(f"CHANGELOG.md has no '## [{ver}]' section (the release notes are taken from it)")
+    else:
+        date = heading.group(1)
+        cff_date = re.search(r'(?m)^date-released:\s*"?([0-9-]+)"?\s*$', (root / "CITATION.cff").read_text(encoding="utf-8"))
+        cff_date = cff_date.group(1) if cff_date else None
+        if not date or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+            problems.append(f"CHANGELOG.md '## [{ver}]' has no YYYY-MM-DD date (scripts/set_release_date.py sets it)")
+        elif date != cff_date:
+            problems.append(f"CHANGELOG.md dates {ver} {date}, CITATION.cff date-released is {cff_date}: run "
+                            f"scripts/set_release_date.py {ver} <release day>")
 
     marker = re.search(r"mcp-name:\s*(\S+)", (root / "README.pypi.md").read_text(encoding="utf-8"))
     if not marker or marker.group(1) != server.get("name"):
@@ -102,6 +113,11 @@ def check(root: Path = ROOT, tag: str | None = None) -> tuple[str, list[str]]:
 
     if tag is not None and tag != f"v{ver}":
         problems.append(f"release tag {tag!r} does not match the version: expected 'v{ver}'")
+    if tag is not None:
+        unreleased = re.search(r"(?ms)^## \[Unreleased\][^\n]*\n(.*?)(?=^## \[|\Z)", changelog)
+        if unreleased and unreleased.group(1).strip():
+            problems.append(f"CHANGELOG.md [Unreleased] still has entries: move them into [{ver}] before tagging "
+                            f"{tag}, or they are missing from its release notes")
     return ver, problems
 
 

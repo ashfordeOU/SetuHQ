@@ -17,7 +17,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
-RELEASE_WORKFLOWS = ("release.yml", "publish.yml", "auto-tag.yml", "release-notes.yml", "mcp-publish.yml",
+RELEASE_WORKFLOWS = ("release.yml", "auto-tag.yml", "release-notes.yml", "mcp-publish.yml",
                      "joss-draft.yml")
 
 
@@ -38,7 +38,6 @@ def test_every_version_surface_agrees():
     assert problems == []
     import setuhq
     assert ver == setuhq.__version__
-    assert sync.check(ROOT, tag=f"v{ver}")[1] == []
 
 
 def _copy_surfaces(tmp: Path) -> Path:
@@ -81,8 +80,32 @@ def test_a_wrong_tag_and_a_missing_changelog_section_fail(tmp_path):
     assert any("CHANGELOG" in p for p in sync.check(root)[1])
 
 
+def test_a_tag_needs_an_empty_unreleased_section_and_matching_dates(tmp_path):
+    sync = _script("check_version_sync")
+    setter = _script("set_release_date")
+    ver = sync.source_version(ROOT)
+    root = _copy_surfaces(tmp_path)
+    cl = root / "CHANGELOG.md"
+    setter.set_date(ver, "2031-02-03", root)
+    assert f"## [{ver}] - 2031-02-03" in cl.read_text(encoding="utf-8")
+    assert 'date-released: "2031-02-03"' in (root / "CITATION.cff").read_text(encoding="utf-8")
+    text = cl.read_text(encoding="utf-8")
+    empty = text.replace("## [Unreleased]\n", "## [Unreleased]\n\n", 1)
+    cl.write_text(empty, encoding="utf-8")
+    assert sync.check(root, tag=f"v{ver}")[1] == []
+    cl.write_text(text.replace("## [Unreleased]\n", "## [Unreleased]\n\n- a change not in the release\n", 1),
+                  encoding="utf-8")
+    assert sync.check(root)[1] == []  # between releases [Unreleased] may hold entries
+    assert any("[Unreleased]" in p for p in sync.check(root, tag=f"v{ver}")[1])
+    cl.write_text(empty.replace(f"## [{ver}] - 2031-02-03", f"## [{ver}] - 2031-02-04"), encoding="utf-8")
+    assert any("date-released" in p for p in sync.check(root)[1])
+    cl.write_text(empty.replace(f"## [{ver}] - 2031-02-03", f"## [{ver}]"), encoding="utf-8")
+    assert any("no YYYY-MM-DD date" in p for p in sync.check(root)[1])
+
+
 def test_release_notes_are_the_changelog_section():
     extract = _script("changelog_extract")
+    assert _script("check_version_sync").check(ROOT, tag=None)[1] == []
     ver = _script("check_version_sync").source_version(ROOT)
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     notes = extract.notes(ver, changelog)
@@ -100,6 +123,9 @@ def test_pyproject_packaging():
     py = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert 'readme = { file = "README.pypi.md", content-type = "text/markdown" }' in py
     assert '"py.typed"' in py and (ROOT / "src/setuhq/py.typed").is_file()
+    # The README figures' exact pins live in requirements-readme.txt, not in the published metadata.
+    assert "readme = [" not in py and "==" not in py.split("[project.scripts]")[0]
+    assert "fonttools==" in (ROOT / "requirements-readme.txt").read_text(encoding="utf-8")
     # setuhq.config reads TOML with tomllib, in the standard library from Python 3.11.
     assert 'requires-python = ">=3.11"' in py and "Python :: 3.10" not in py and "Python :: 3.11" in py
     assert json.loads((ROOT / "codemeta.json").read_text(encoding="utf-8"))["runtimePlatform"] == "Python 3.11+"
@@ -179,10 +205,12 @@ def test_dist_check_passes_a_clean_pair_and_catches_data(tmp_path):
     assert check_dist.check(good) == []
     bad = tmp_path / "bad"
     bad.mkdir()
-    _wheel(bad, {"runs/tess-pi-men-s1/candidates.json": b"[]"})
+    _wheel(bad, {"runs/tess-pi-men-s1/candidates.json": b"[]",
+                 "setuhq-0.1.0.dist-info/METADATA": b"Requires-Dist: numpy==2.5.4\n"})
     _sdist(bad, ("site/index.html", "docs/assets/readme/app/shot.png", "cache/x.json"))
     problems = check_dist.check(bad)
     assert any("runs/tess-pi-men-s1" in p for p in problems)
+    assert any("pins exact versions" in p for p in problems)
     for leaked in ("site/index.html", "docs/assets", "cache/x.json"):
         assert any(leaked in p for p in problems), leaked
 
@@ -218,7 +246,8 @@ def test_directory_listings():
     assert "build:" not in smithery and "dockerfile" not in smithery.lower()
     zen = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
     assert zen["creators"] == [{"name": "Baweja, Chakshu", "affiliation": "Ashforde OÜ"}]
-    assert zen["license"] == "AGPL-3.0-only" and zen["upload_type"] == "software"
+    assert zen["license"] == "agpl-3.0-only"  # the id in Zenodo's licence vocabulary (lower case)
+    assert zen["upload_type"] == "software"
     related = {r["identifier"] for r in zen["related_identifiers"]}
     assert {"https://github.com/ashfordeOU/SetuHQ", "https://setuhq.com"} <= related
     assert "candidate, never a confirmation" in zen["description"]
@@ -244,20 +273,58 @@ def test_workflow_actions_are_pinned_by_commit_sha(name):
 
 
 def test_no_tokens_in_the_publishing_path():
-    for name in ("release.yml", "publish.yml", "mcp-publish.yml"):
+    for name in ("release.yml", "mcp-publish.yml"):
         text = (WORKFLOWS / name).read_text(encoding="utf-8")
         assert "secrets." not in text, name
         assert "password:" not in text and "PYPI_API_TOKEN" not in text, name
-    publish = (WORKFLOWS / "publish.yml").read_text(encoding="utf-8")
-    assert "name: pypi" in publish and "id-token: write" in publish and "pypa/gh-action-pypi-publish@" in publish
-    assert "workflows: [Release]" in publish
+    assert not (WORKFLOWS / "publish.yml").exists()
     release = (WORKFLOWS / "release.yml").read_text(encoding="utf-8")
     assert 'tags: ["v*"]' in release and "attest-build-provenance@" in release and "twine check" in release
-    assert "workflow_dispatch:" in release and "dry_run" in release
-    mcp = (WORKFLOWS / "mcp-publish.yml").read_text(encoding="utf-8")
-    assert "login github-oidc" in mcp and "push:" not in mcp and "workflow_run" not in mcp
-    auto = (WORKFLOWS / "auto-tag.yml").read_text(encoding="utf-8")
-    assert "vars.AUTO_TAG == 'true'" in auto
+    assert "workflow_dispatch:" in release and "testpypi" in release
+
+
+def _jobs(name: str) -> dict:
+    yaml = pytest.importorskip("yaml")
+    return yaml.safe_load((WORKFLOWS / name).read_text(encoding="utf-8"))["jobs"]
+
+
+def test_only_release_yml_publishes_to_pypi_on_a_tag_with_the_attested_files():
+    """PyPI matches the trusted publisher on the top-level workflow file and the `pypi` environment only allows
+    v* tags, so the publishing job runs inside release.yml on the tag push, after the release job, and uploads the
+    run's own `dist` artifact: nothing is rebuilt for PyPI."""
+    jobs = _jobs("release.yml")
+    pypi = jobs["pypi"]
+    assert pypi["environment"]["name"] == "pypi" and pypi["permissions"] == {"id-token": "write"}
+    assert pypi["if"] == "${{ github.event_name == 'push' }}" and "release" in pypi["needs"]
+    steps = pypi["steps"]
+    assert not any("checkout" in st.get("uses", "") or "build" in str(st.get("run", "")) for st in steps)
+    assert any(st.get("uses", "").startswith("actions/download-artifact@") and st["with"]["name"] == "dist"
+               for st in steps)
+    assert jobs["testpypi"]["environment"]["name"] == "testpypi"
+    assert "workflow_dispatch" in jobs["testpypi"]["if"] and "repository-url" in str(jobs["testpypi"]["steps"])
+    for name in sorted(p.name for p in WORKFLOWS.glob("*.yml")):
+        text = (WORKFLOWS / name).read_text(encoding="utf-8")
+        if name != "release.yml":
+            assert "gh-action-pypi-publish" not in text and "name: pypi" not in text, name
+
+
+def test_a_release_rerun_never_replaces_a_file_and_ci_must_be_green_on_main():
+    release = (WORKFLOWS / "release.yml").read_text(encoding="utf-8")
+    assert "--clobber" not in release and "cmp -s" in release and "never replaced" in release
+    assert "event=push&branch=main" in release and "merge-base --is-ancestor" in release
+    assert jobs_have_no_rebuild_on_dispatch(_jobs("release.yml"))
+
+
+def jobs_have_no_rebuild_on_dispatch(jobs: dict) -> bool:
+    return all(jobs[j]["if"] == "${{ github.event_name == 'push' }}" for j in ("release", "pypi"))
+
+
+def test_every_github_yaml_file_parses():
+    yaml = pytest.importorskip("yaml")
+    files = [*sorted((ROOT / ".github" / "ISSUE_TEMPLATE").glob("*.yml")), ROOT / ".github" / "dependabot.yml",
+             *sorted(WORKFLOWS.glob("*.yml")), ROOT / "smithery.yaml"]
+    for f in files:
+        assert isinstance(yaml.safe_load(f.read_text(encoding="utf-8")), dict), f
 
 
 # ---------------------------------------------------------------- community files and the paper
@@ -272,7 +339,7 @@ def test_issue_and_pull_request_templates():
     for name in ("bug_report.yml", "feature_request.yml"):
         assert (tpl / name).is_file()
     config = (tpl / "config.yml").read_text(encoding="utf-8")
-    assert "security/advisories/new" in config and "contact@ashforde.org" in config
+    assert "security/advisories/new" in config and "contact@ashforde.org" in config and "mailto:" not in config
     pr = (ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md").read_text(encoding="utf-8")
     assert "CLA.md" in pr and "pytest" in pr and "gen_readme_assets.py --check" in pr
     dependabot = (ROOT / ".github" / "dependabot.yml").read_text(encoding="utf-8")
@@ -288,10 +355,17 @@ def test_joss_paper_cites_only_what_its_bibliography_holds():
     front, body = paper.split("---", 2)[1:]
     for key in ("title:", "authors:", "affiliations:", "date:", "bibliography: paper.bib", "orcid:"):
         assert key in front, key
-    for heading in ("# Summary", "# Statement of need", "# State of the field", "# Acknowledgements", "# References"):
-        assert heading in body, heading
+    # JOSS's required sections (joss.readthedocs.io, "What should my paper contain?").
+    for heading in ("# Summary", "# Statement of need", "# State of the field", "# Software design",
+                    "# Research impact statement", "# AI usage disclosure", "# Acknowledgements", "# References"):
+        assert f"\n{heading}\n" in body, heading
+    words = len(re.sub(r"<!--.*?-->", "", body, flags=re.S).split())
+    assert 750 <= words <= 1750, words
     bib = (ROOT / "paper" / "paper.bib").read_text(encoding="utf-8")
     keys = set(re.findall(r"^@\w+\{([^,]+),", bib, flags=re.M))
+    # JOSS asks for full venue names, not abbreviations.
+    for abbrev in ("{AJ}", "{ApJ}", "{ApJL}", "{ApJS}", "{MNRAS}", "{PASP}", "{A\\&A}"):
+        assert f"journal = {abbrev}" not in bib, abbrev
     cited = set(re.findall(r"@([a-z][a-z0-9]+)", re.sub(r"<!--.*?-->", "", body, flags=re.S)))
     assert cited and cited <= keys, cited - keys
     low = body.lower()

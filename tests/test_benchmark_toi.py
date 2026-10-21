@@ -229,3 +229,47 @@ def test_the_committed_benchmark_fingerprints_still_verify_after_the_rename():
             pytest.skip("needs the full history (fetch-depth 0)")
         assert BR.code_fingerprint(commit) == fp
     assert all(f.startswith("src/setuhq/") for f in BR.CODE_FILES) and BR._label(BR.CODE_FILES[0]) == "src/exoplan/discover.py"
+
+
+def _bench_script():
+    import importlib.util
+    import sys
+
+    spec = importlib.util.spec_from_file_location("bench_script3", Path(__file__).resolve().parents[1] / "scripts/benchmark_real_tois.py")
+    S = importlib.util.module_from_spec(spec)
+    sys.modules["bench_script3"] = S
+    spec.loader.exec_module(S)
+    return S
+
+
+def test_the_audit_exempts_only_the_exact_table_move_and_tracks_the_tables_bytes(monkeypatch):
+    """Moving the limb-darkening table into the package (same bytes) is not a threshold change; pointing LD_TABLE
+    anywhere else, or changing a reference table's bytes, is."""
+    S = _bench_script()
+    key = "src/setuhq/transitfit.py:LD_TABLE"
+    then, now = S.EXACT_EXEMPTIONS[key]
+    table = "table:claret2017_tess_quadratic.json:sha256"
+    frozen = {key: then, table: "a" * 64}
+
+    def audit(current):
+        monkeypatch.setattr(S, "_threshold_values", lambda rev: frozen if rev == S.FROZEN_AFTER else current)
+        monkeypatch.setattr(S, "_git", lambda *a: "")
+        return S.threshold_audit("HEAD")
+
+    assert audit({key: now, table: "a" * 64})["clean"]
+    assert key in audit({key: 'files("setuhq") / "data" / "other_table.json"', table: "a" * 64})["changed"]
+    assert table in audit({key: now, table: "b" * 64})["changed"]
+
+
+def test_the_committed_threshold_audit_stays_clean_at_the_results_commit():
+    import subprocess
+
+    S = _bench_script()
+    root = Path(__file__).resolve().parents[1]
+    committed = json.loads((root / "docs/results/benchmark_real_tois.json").read_text())["threshold_audit"]
+    for rev in (S.FROZEN_AFTER, "40cceca"):
+        if subprocess.run(["git", "cat-file", "-e", f"{rev}^{{commit}}"], cwd=root, capture_output=True).returncode:
+            pytest.skip("needs the full history (fetch-depth 0)")
+    now = S.threshold_audit("40cceca")
+    assert now["clean"] and committed["clean"] and now["changed"] == committed["changed"] == {}
+    assert "table:claret2017_tess_quadratic.json:sha256" in S._threshold_values("40cceca")

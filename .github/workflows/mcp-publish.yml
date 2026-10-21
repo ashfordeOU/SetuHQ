@@ -65,7 +65,7 @@ jobs:
           ver="$(python3 scripts/check_version_sync.py --print-version)"
           name="$(python3 -c 'import json; print(json.load(open("server.json"))["name"])')"
           curl -fsS "https://pypi.org/pypi/setuhq/${ver}/json" -o pypi.json \
-            || { echo "::error::setuhq ${ver} is not on PyPI yet; publish it first (release.yml, publish.yml)"; exit 1; }
+            || { echo "::error::setuhq ${ver} is not on PyPI yet; publish it first (release.yml)"; exit 1; }
           python3 - "$name" <<'PY'
           import json, sys
           desc = json.load(open("pypi.json"))["info"]["description"] or ""

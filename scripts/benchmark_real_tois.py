@@ -577,8 +577,11 @@ THRESHOLD_PATHS = ["configs", "docs/results/reviewer_weights.json", "docs/result
 
 def _threshold_values(rev: str | None) -> dict[str, str]:
     """Every threshold-like value in THRESHOLD_PATHS at a revision (None: the working tree): module-level
-    UPPER_CASE constants in the Python files, and every key = value line in the config files and weights files."""
+    UPPER_CASE constants in the Python files, every key = value line in the config files and weights files, and
+    the sha256 of each reference table (REFERENCE_TABLES)."""
+    import hashlib
     import re
+    import subprocess
 
     files = []
     # A revision from before the rename keeps the package under src/exoplan; its values are keyed by today's path.
@@ -608,14 +611,41 @@ def _threshold_values(rev: str | None) -> dict[str, str]:
                     out[f"{key}:{k}"] = json.dumps(v)
             except (ValueError, AttributeError):
                 pass
+    # The reference tables the vetting reads are thresholds too: track the bytes of the table the code reads (the
+    # package copy where the revision has one, else the docs/results original), so editing a table or pointing the
+    # code at another one is caught, while moving the same bytes into the package is not.
+    for name, places in REFERENCE_TABLES.items():
+        for f in places:
+            if rev:
+                listed = _git("ls-tree", "--name-only", rev, "--", f).strip()
+                data = subprocess.run(["git", "show", f"{rev}:{f}"], cwd=ROOT, capture_output=True).stdout if listed else None
+            else:
+                data = (ROOT / f).read_bytes() if (ROOT / f).exists() else None
+            if data is not None:
+                out[f"table:{name}:sha256"] = hashlib.sha256(data).hexdigest()
+                break
     return out
+
+
+# The tables behind the fit and the vetting, each with the places the code has read it from, newest first.
+REFERENCE_TABLES = {
+    "claret2017_tess_quadratic.json": ("src/setuhq/data/claret2017_tess_quadratic.json",
+                                       "docs/results/claret2017_tess_quadratic.json"),
+    "secondary_calibration.json": ("src/setuhq/data/secondary_calibration.json", "docs/results/secondary_calibration.json"),
+}
+
+# Changes the audit accepts only in exactly this form, (value then, value now): the limb-darkening table's
+# location moved from docs/results into the package, with the same bytes (its sha256 is tracked above).
+EXACT_EXEMPTIONS = {
+    "src/setuhq/transitfit.py:LD_TABLE": (
+        'Path(__file__).resolve().parents[2] / "docs" / "results" / "claret2017_tess_quadratic.json"',
+        'files("setuhq") / "data" / "claret2017_tess_quadratic.json"'),
+}
 
 
 # Values that decide nothing: where caches go, the cache key's version, and the floor below which the indicative
 # Gumbel tail is not printed (no rule reads the tail).
 NOT_THRESHOLDS = ("fap_cache", "FAP_CACHE_VERSION", "FAP_TAIL_FLOOR",
-                  # Where the limb-darkening table is read from (now the package copy, byte-identical to docs/results).
-                  "transitfit.py:LD_TABLE",
                   # Which AI provider a Sentinel runs on, its endpoint, key variable and labels: no rule reads them.
                   "KEY_ENV", "PROVIDER_LABELS", "_BASE_URL", "reviewers/gemini.py:BLOCKED", "reviewers/claude.py:DEFAULT_MODEL",
                   "config.py:SENTINEL_TYPES")
@@ -647,7 +677,8 @@ def threshold_audit(rev: str | None = None) -> dict:
     moved = _moved(before, now)
     diff = {k: [before.get(k), now.get(k)] for k in sorted(set(before) | set(now))
             if before.get(k) != now.get(k) and k not in moved}
-    changed = {k: v for k, v in diff.items() if not any(x in k for x in NOT_THRESHOLDS)}
+    changed = {k: v for k, v in diff.items()
+               if not any(x in k for x in NOT_THRESHOLDS) and tuple(v) != EXACT_EXEMPTIONS.get(k)}
     ignored = {k: v for k, v in diff.items() if k not in changed}
     commits = _git("log", "--format=%h %s", f"{FROZEN_AFTER}..{rev or 'HEAD'}").splitlines()
     return {"frozen_after": FROZEN_AFTER, "compared_with": rev or "the working tree", "paths": THRESHOLD_PATHS, "values_checked": len(now), "changed": changed,

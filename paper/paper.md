@@ -79,47 +79,63 @@ TRICERATOPS [@giacalone2021] estimate false-positive probabilities. Planet Hunte
 volunteers recover by eye [@eisner2020; @eisner2021]. General-purpose libraries make the data accessible
 [@lightkurve2018; @astroquery2019; @astropy2022].
 
-SetuHQ does not replace any of these. It differs in three ways: it treats a language model as one
-calibrated, correlated voice among measured deterministic ones rather than as a classifier to trust; it
-measures the whole path from light curve to vetted dip on real TOIs with controls, not the vetting step
-alone; and it exposes every step to people and to AI assistants with its provenance attached.
+*Build or contribute.* SetuHQ builds on these rather than replacing them: it reads light curves through
+lightkurve and astroquery, and wraps TRICERATOPS as an optional validation step. What it adds does not fit
+inside any of them, because it is a different kind of object: a reviewer *panel* with measured weights, a
+benchmark with controls that scores whole pipelines (including the panel's own Sentinels) from light curve
+to vetted dip, and a provenance record for every verdict. A vetter library has no place for blind review
+by several kinds of reviewer, and a benchmark kept inside one method's code could not stay neutral.
 
-# Key features and design
+# Software design
 
-- **Blind subjects.** Light curves are cleaned, detrended and cut into fixed segments with opaque ids, so
-  no reviewer sees the target, its TOI status or its ephemeris; these are used only when scoring.
-- **One reviewer interface.** Probes and Sentinels return the same `Classification`; a panel can mix
-  providers, and each review records the provider, the model the API reported, the prompt version and the
-  call time. Responses are cached by a hash of all of them, so a re-run reproduces them at no cost. Keys
-  are read from the environment only and are refused anywhere they could be recorded.
-- **Calibrated consensus.** Weights are skill on injected transits (true-positive minus false-positive
-  rate, floored); a provider and model that have not been calibrated vote at the floor and are labelled so.
-- **Vetting, fitting and a bounded false-alarm probability** as above, with every check's state shown as
-  pass, fail, flag or *not measured*; a check that did not run is never shown as a pass.
-- **The frozen real-TOI benchmark and leaderboard.** A stratified sample of confirmed and known planets,
-  false positives and false alarms, frozen with a hash before any light curve was downloaded and split by
-  star into tuning and held-out halves. Flux-inverted and block-scrambled copies of every light curve
-  measure false alarms. The leaderboard (`setuhq leaderboard`) matches submitted events to the ephemerides
-  and counts control false alarms itself, ranks by Youden's J [@youden1950] with Wilson intervals
-  [@wilson1927], and refuses submissions that break its rules.
-- **The everything-that-dims sweep.** A resumable, sector-wide search that classifies every star's
-  variability, with sealed contribution bundles that are searched again on ingest before they count.
-- **Pages.** Static, self-contained HTML: the Docket (a case file per candidate), print-ready plates, an
-  app with every known exoplanet and animated Methods chapters with tested physics. No page loads a script
-  or font from another site.
-- **An MCP server.** `setuhq-mcp` exposes sixteen tools (catalogue lookups, stored candidates with
-  provenance, BLS vetting, the transit fit, the false-alarm probability, the Methods physics and the stored
-  benchmarks) over the Model Context Protocol, so an AI assistant runs SetuHQ's code instead of guessing.
-  Every answer carries its provenance and honesty labels; over HTTP the tools that write are off unless
-  allowed.
-- **Reproducibility.** A worked example, TESS sector 1 of pi Mensae checked against @huang2018, is stored
-  in the repository with its classifications and null distributions; the site, the README figures and the
-  methods paper's numbers are rebuilt from committed results, and the checks fail when they drift.
+Three trade-offs shape the code.
 
-SetuHQ is written in Python on NumPy [@harris2020], SciPy [@virtanen2020], Astropy [@astropy2022] and
-Matplotlib [@hunter2007], and is tested offline by a pytest suite that runs in continuous integration. It is
-distributed on PyPI as `setuhq`, under the AGPL-3.0-only or a commercial licence from Ashforde OÜ, and each
-release is archived [@setuhq]; SetuHQ's own data, benchmark and papers are under CC BY 4.0.
+*Honesty over coverage.* Every output is labelled a candidate. A vetting check that did not run is shown as
+*not measured*, never as a pass; a false-alarm probability is never quoted below the resolution of its
+trials; a Sentinel whose provider and model have not been calibrated votes at the floor weight and is
+labelled so. This costs completeness on paper and buys results a reader can take at their word.
+
+*One interface for unlike reviewers.* Probes and Sentinels return the same `Classification`, so a panel can
+mix deterministic detectors with any AI provider, and the aggregation and calibration code never knows
+which is which. The price is that a Sentinel's answer must be forced into strict JSON, validated and
+clipped; the gain is that adding a provider is a small adapter, and its effect on the benchmark is measured
+the same way as any other change.
+
+*Provenance as data.* A run stores the SHA-256 of every light curve, the configuration hash, a fingerprint
+of the result-making code and every reviewer's marks, labels and reasons, and Sentinel answers are cached
+by a hash of the request. A stored run can therefore be re-vetted with new code without asking the
+reviewers again, and the benchmark records which commit produced each number. Fingerprints hash canonical
+source text, so they survive renames and licence headers but not a change to the code.
+
+The same functions serve four surfaces: the `setuhq` command line, static self-contained HTML pages (the
+Docket, print-ready plates and an app of every known exoplanet with tested Methods chapters), the frozen
+real-TOI benchmark and its leaderboard (`setuhq leaderboard`, ranked by Youden's J [@youden1950] with
+Wilson intervals [@wilson1927]), and an MCP server (`setuhq mcp`) whose tools are those public functions, so
+an AI assistant runs SetuHQ's code instead of guessing and every answer carries its provenance. SetuHQ is
+written in Python on NumPy [@harris2020], SciPy [@virtanen2020], Astropy [@astropy2022] and Matplotlib
+[@hunter2007]; it is distributed on PyPI as `setuhq` under the AGPL-3.0-only or a commercial licence from
+Ashforde OÜ, and each release is archived [@setuhq]. SetuHQ's own data, benchmark and papers are under
+CC BY 4.0.
+
+# Research impact statement
+
+SetuHQ is new, and we claim no realized impact yet: no external publication uses it so far. Its near-term
+significance rests on materials that exist and can be checked today. The frozen benchmark of real TOIs, with
+its tuning and held-out split, controls and committed per-star outcomes, lets any vetting method be scored
+on the same terms; the leaderboard already holds seeded entries, including a catalogue-metadata baseline
+that never reads a light curve. A stored worked example (TESS sector 1 of pi Mensae, checked against
+@huang2018) reproduces offline, and the methods paper in the repository (`docs/paper/paper.md`) reports
+every benchmark result, including the negative ones, with its interval. The public site, the MCP server and
+a contribution path for community sector sweeps are the means by which others can use and extend it.
+
+# AI usage disclosure
+
+Generative AI is part of the software by design: the Sentinels are vision-capable language models, and the
+benchmark measures them as such. Development of the code, the documentation and the drafting of this paper
+were also assisted by AI coding tools. Correctness is checked independently of those tools: by the offline
+test suite run in continuous integration, by checks that rebuild every published number, figure and page
+from the committed results and fail on any difference, and by the frozen benchmark. All results are
+reproducible from the committed code and data.
 
 # Acknowledgements
 
