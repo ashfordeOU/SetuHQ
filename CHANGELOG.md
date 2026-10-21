@@ -23,9 +23,28 @@ breaking changes are called out explicitly.
   package (pyproject reads it); `scripts/check_version_sync.py` and `tests/test_release.py` fail when
   CITATION.cff, codemeta.json, .zenodo.json, server.json, smithery.yaml or the plugin manifests disagree.
 - The package ships `py.typed`, and its PyPI page is `README.pypi.md` (absolute links only).
+- **The package runs without a checkout.** The two reference tables the pipeline reads, the Claret 2017
+  limb-darkening coefficients and the secondary-eclipse calibration, ship in the package as
+  `src/setuhq/data/claret2017_tess_quadratic.json` and `src/setuhq/data/secondary_calibration.json`, and
+  `transitfit` and `dvtests` read them with `importlib.resources`. They are byte-identical copies of the
+  canonical files in `docs/results/`; `tests/test_release.py` fails until a rewritten original is copied over.
+  `setuhq run` from a plain `pip install "setuhq[tess]"` now searches, vets and fits outside a checkout.
 - `examples/quickstart.ipynb`: the stored pi Men run offline, from candidates to an MCP tool call; a test
   runs it. `paper/` holds the JOSS paper; issue forms, a pull request template, Dependabot and
   `.editorconfig` are under `.github/` and at the root.
+
+### Changed
+
+- **Fingerprints.** `transitfit.py` now reads its table from the package, so the fingerprints of the current
+  code that include it move; nothing a result was made with changes. The current search fingerprint
+  (`setuhq.starsearch.search_fingerprint`) goes from `c68d13c1…` to `f7317ec9…`, the sweep's all-code
+  fingerprint from `c6b878b0…` to `c4370fe5…`, and the real-TOI benchmark's fingerprint of the current code
+  (`scripts/benchmark_real_tois.py`) from `0b8e86a1fb71e777` to `b1bf1166c71abdff`. The classification
+  fingerprint (`78b84333…`) is unchanged, and every committed fingerprint still verifies against its commit:
+  the sector-1 sweep record's search code (`20a2c1b2…`, commit 0e87409) and the benchmark's per-star codes
+  (`14f6f4830a525d78` = 76de67d, `e4fe4c99663ccba8` = 40cceca). The benchmark's threshold audit, taken at
+  the results' own commit, is unchanged (113 values, clean); the table's location `transitfit.py:LD_TABLE`
+  is listed among the values that decide nothing, beside the cache paths.
 
 ## [0.1.0] - 2026-10-20
 

@@ -614,6 +614,8 @@ def _threshold_values(rev: str | None) -> dict[str, str]:
 # Values that decide nothing: where caches go, the cache key's version, and the floor below which the indicative
 # Gumbel tail is not printed (no rule reads the tail).
 NOT_THRESHOLDS = ("fap_cache", "FAP_CACHE_VERSION", "FAP_TAIL_FLOOR",
+                  # Where the limb-darkening table is read from (now the package copy, byte-identical to docs/results).
+                  "transitfit.py:LD_TABLE",
                   # Which AI provider a Sentinel runs on, its endpoint, key variable and labels: no rule reads them.
                   "KEY_ENV", "PROVIDER_LABELS", "_BASE_URL", "reviewers/gemini.py:BLOCKED", "reviewers/claude.py:DEFAULT_MODEL",
                   "config.py:SENTINEL_TYPES")

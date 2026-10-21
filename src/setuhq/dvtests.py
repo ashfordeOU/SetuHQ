@@ -67,7 +67,7 @@ from __future__ import annotations
 import json
 import math
 from functools import lru_cache
-from pathlib import Path
+from importlib.resources import files
 
 import numpy as np
 from scipy.stats import chi2 as chi2_dist
@@ -90,7 +90,9 @@ SECONDARY_TABLE = (
 )
 
 
-CALIBRATION_FILE = Path(__file__).resolve().parents[2] / "docs" / "results" / "secondary_calibration.json"
+# The package copy, so an installed wheel runs the test without a checkout; tests/test_release.py keeps it
+# byte-identical to docs/results/secondary_calibration.json.
+CALIBRATION_FILE = files("setuhq") / "data" / "secondary_calibration.json"
 
 
 @lru_cache(maxsize=1)

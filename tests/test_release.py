@@ -105,6 +105,28 @@ def test_pyproject_packaging():
         assert f"prune {d}\n" in manifest, d
 
 
+PACKAGE_DATA = ("claret2017_tess_quadratic.json", "secondary_calibration.json")
+
+
+@pytest.mark.parametrize("name", PACKAGE_DATA)
+def test_package_data_is_byte_identical_to_docs_results(name):
+    """docs/results holds the canonical tables; the package ships copies so a wheel runs without a checkout. A
+    re-run that rewrites a table in docs/results fails here until the copy in src/setuhq/data is synced:
+    cp docs/results/<name> src/setuhq/data/<name>."""
+    canonical = (ROOT / "docs" / "results" / name).read_bytes()
+    shipped = (ROOT / "src" / "setuhq" / "data" / name).read_bytes()
+    assert shipped == canonical, f"src/setuhq/data/{name} differs from docs/results/{name}: copy it over"
+
+
+def test_the_fit_and_the_vetting_read_the_package_copies():
+    from setuhq import dvtests, transitfit
+
+    assert transitfit.LD_TABLE.read_bytes() == (ROOT / "docs/results/claret2017_tess_quadratic.json").read_bytes()
+    assert dvtests.CALIBRATION_FILE.read_bytes() == (ROOT / "docs/results/secondary_calibration.json").read_bytes()
+    assert "src/setuhq/data" in str(transitfit.LD_TABLE).replace("\\", "/")
+    assert sorted(p.name for p in (ROOT / "src/setuhq/data").iterdir()) == sorted(PACKAGE_DATA)
+
+
 def test_pypi_readme_has_only_absolute_links_and_honest_wording():
     text = (ROOT / "README.pypi.md").read_text(encoding="utf-8")
     links = re.findall(r"\]\(([^)]+)\)", text) + re.findall(r'(?:src|href|srcset)="([^"]+)"', text)
