@@ -805,8 +805,8 @@ def inject_recover(time, flux, flux_err=None, *, config: FlareConfig | None = No
                    real_flares: list[dict] | None = None) -> dict:
     """Completeness of the whole detection on this star's own light curve.
 
-    Each trial injects ``per_trial`` Mendoza flares (log-uniform amplitude and FWHM) at random times at least
-    three FWHM plus 0.1 d apart and away from the detected real flares, multiplying the flux, and runs
+    Each trial injects ``per_trial`` Mendoza flares (log-uniform amplitude and FWHM) at random observed times, with
+    no two flares' spans (two FWHM before to eight after, plus margins) overlapping and away from the detected real flares, multiplying the flux, and runs
     :func:`detect_flares` again. A flare is recovered when a detected flare's window contains its peak (within one
     cadence). Returns every injection (amplitude, FWHM, true ED, energy if the star has Teff and radius, recovered,
     recovered ED) and completeness curves against amplitude, ED and energy."""
@@ -825,7 +825,7 @@ def inject_recover(time, flux, flux_err=None, *, config: FlareConfig | None = No
         tries = 0
         while len(placed) < per_trial and tries < 50 * per_trial:
             tries += 1
-            tp = float(rng.uniform(t[0], t[-1]))
+            tp = float(t[rng.integers(t.size)] + rng.uniform(-0.5, 0.5) * cad)  # on the data, not in a gap
             amp = float(10 ** rng.uniform(*np.log10(amp_range)))
             fw = float(10 ** rng.uniform(*np.log10(fwhm_minutes))) / 1440.0
             span = (tp - 2 * fw - 0.02, tp + 8 * fw + 0.05)
