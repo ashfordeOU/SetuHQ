@@ -1,91 +1,66 @@
 <!doctype html>
-<html lang='en'><head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>SetuHQ search feed</title>
-<link rel="icon" type="image/svg+xml" href="assets/brand/setuhq-favicon.svg">
-<meta name="description" content="Dips from SetuHQ&#x27;s search batches that passed vetting and match no known ephemeris: leads for review, not planets.">
-<link rel="canonical" href="https://setuhq.com/discoveries/">
-<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="SetuHQ search feed"><meta property="og:description" content="Dips from SetuHQ&#x27;s search batches that passed vetting and match no known ephemeris: leads for review, not planets."><meta property="og:url" content="https://setuhq.com/discoveries/"><meta property="og:image" content="https://setuhq.com/app/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="SetuHQ search feed"><meta name="twitter:description" content="Dips from SetuHQ&#x27;s search batches that passed vetting and match no known ephemeris: leads for review, not planets."><meta name="twitter:image" content="https://setuhq.com/app/assets/brand/setuhq-social-card.png">
-<style>
-:root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#16a34a;--bad:#dc2626;--warn:#d97706;--radius:14px}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}}
-:root[data-theme="dark"]{--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header.hero{padding:56px 16px 36px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}
-.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
-h1{font-size:clamp(28px,5vw,42px);margin:0 0 8px;letter-spacing:-.02em}
-h2{font-size:24px;margin:40px 0 12px;letter-spacing:-.01em}
-h3{font-size:17px;margin:0 0 6px}
-p.lead{font-size:18px;max-width:760px;margin:0;opacity:.95}
-nav{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;flex-wrap:wrap;gap:4px 14px;padding-top:6px;padding-bottom:6px}
-summary{display:flex;align-items:center;min-height:44px;cursor:pointer}
-nav a{color:var(--muted);text-decoration:none;white-space:nowrap;font-size:14px;display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
-nav a:hover{color:var(--accent)}
-.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
-.stat{font-size:30px;font-weight:700;letter-spacing:-.02em}
-.stat small{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px}
-.pipeline{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
-.step{flex:1 1 150px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
-.step b{display:block;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.06em}
-.step span{font-size:14px;color:var(--muted)}
-.arrow{align-self:center;color:var(--muted)}
-.cands{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
-.cand img{width:100%;border-radius:10px;border:1px solid var(--line);background:#fff}
-.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;margin:2px 4px 2px 0;border:1px solid var(--line);color:var(--muted)}
-.tag.pass{color:var(--good);border-color:var(--good)}
-.tag.fail{color:var(--bad);border-color:var(--bad)}
-.tag.flag{color:var(--warn);border-color:var(--warn)}
-.bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin:8px 0}
-.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
-.kv>div{min-width:0;overflow-wrap:anywhere}
-.grid>*,.cands>*{min-width:0}
-code{overflow-wrap:anywhere}
-.kv div:nth-child(odd){color:var(--muted)}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
-.scroll{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:4px 14px}
-.note{font-size:14px;color:var(--muted)}
-code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
-pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto}
-footer{margin:48px 0 24px;color:var(--muted);font-size:13px}
-@media (max-width:600px){.cands{grid-template-columns:1fr}.step{flex-basis:100%}.arrow{display:none}}
-.hero .brandlogo{height:28px;width:auto;margin-bottom:18px}</style></head>
-<body>
-<div class="codenote" id="codenote" role="note" data-key="441407ab66bd" data-fixed="position:fixed;left:0;right:0;bottom:0;border-top:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000;padding-right:116px;min-height:52px;display:flex;align-items:center" data-clamp="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1" style="position:relative;border-bottom:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000"><span class="cn-text">Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since.</span><button type="button" class="cn-more" style="position:absolute;right:56px;top:50%;transform:translateY(-50%);min-width:52px;height:44px;background:none;border:0;color:#ffd866;text-decoration:underline;font:13px/1 system-ui,sans-serif;cursor:pointer;display:none" aria-expanded="false">more</button><button type="button" class="cn-close" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;background:none;border:1px solid #a57c00;color:#fff3cc;border-radius:6px;font:20px/1 system-ui,sans-serif;cursor:pointer" aria-label="Dismiss this note">×</button></div><script>(function(){var b=document.getElementById('codenote');if(!b)return;var k='setuhq-codenote:'+b.dataset.key;
-try{if(window.localStorage.getItem(k)){b.remove();return;}}catch(e){}
-var FLOW=b.getAttribute('style'),FIXED=b.dataset.fixed,CLAMP=b.dataset.clamp,open=false;
-var t=b.querySelector('.cn-text'),m=b.querySelector('.cn-more');
-function place(){if(!b.isConnected)return;b.setAttribute('style',FIXED);
-var fits=document.documentElement.scrollHeight<=window.innerHeight+1;
-if(fits){t.setAttribute('style',open?'':CLAMP);m.style.display='';m.textContent=open?'less':'more';
-m.setAttribute('aria-expanded',open?'true':'false');}
-else{b.setAttribute('style',FLOW);t.setAttribute('style','');m.style.display='none';}}
-m.addEventListener('click',function(){open=!open;place();});
-place();window.addEventListener('load',place);window.addEventListener('resize',place);
-window.addEventListener('hashchange',function(){setTimeout(place,60);});
-if(window.ResizeObserver){new ResizeObserver(function(){place();}).observe(document.body);}
-b.querySelector('.cn-close').addEventListener('click',function(){try{window.localStorage.setItem(k,'1');}catch(e){}
-b.remove();});})();</script>
-<header class='hero'><div class='wrap'>
-  <a href="../" aria-label="SetuHQ, home"><img class="brandlogo dk" src="assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"></a>
-  <h1>Search feed</h1>
-  <p class='lead'>An AI review panel searches TESS light curves on a schedule. Each entry is a dip that passed the pipeline's vetting and matches no known ephemeris. These are candidates. None is a confirmed planet until independent follow-up confirms it.</p>
-</div></header>
-<main class='wrap'>
-<section class='grid' style='margin-top:28px'>
-  <div class='card stat'>0<small>new candidates</small></div>
-  <div class='card stat'>24<small>matches to known TOIs</small></div>
-  <div class='card stat'>19<small>targets reviewed</small></div>
-  <div class='card stat' style='font-size:16px'>2026-10-20T18:58:30+00:00<small>last update (UTC)</small></div>
-</section>
-<section><h2>New candidates</h2><p class='note'>None yet.</p></section>
-<section><h2>Matches to known TOIs</h2><p class='note'>Recovery of published signals. This is how the pipeline is checked on real data.</p><div class='scroll'><table><thead><tr><th>TIC</th><th>mid-time (BTJD)</th><th>period (d)</th><th>duration (h)</th><th>depth (ppm)</th><th>SNR</th><th>panel score</th><th>found (UTC)</th></tr></thead><tbody><tr><td>349088467</td><td>3752.001</td><td>2.587</td><td>0.94</td><td>2374</td><td>13.0</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3757.177</td><td>2.587</td><td>0.75</td><td>2244</td><td>11.2</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3759.761</td><td>2.587</td><td>0.88</td><td>2148</td><td>10.7</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3867.120</td><td>2.765</td><td>3.66</td><td>2373</td><td>10.3</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3754.581</td><td>2.587</td><td>0.91</td><td>1976</td><td>9.8</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3772.697</td><td>2.586</td><td>0.91</td><td>1927</td><td>9.3</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3767.523</td><td>2.586</td><td>1.06</td><td>1870</td><td>9.1</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3875.430</td><td>2.765</td><td>4.11</td><td>1968</td><td>9.0</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3864.353</td><td>2.765</td><td>3.56</td><td>1998</td><td>8.9</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3889.266</td><td>2.764</td><td>4.60</td><td>1850</td><td>8.8</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3900.355</td><td>2.767</td><td>3.75</td><td>2156</td><td>8.8</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3905.882</td><td>2.767</td><td>4.32</td><td>1957</td><td>8.6</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3861.590</td><td>2.765</td><td>4.68</td><td>1714</td><td>8.6</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3762.350</td><td>2.586</td><td>0.78</td><td>2155</td><td>8.5</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3858.830</td><td>2.765</td><td>3.22</td><td>1987</td><td>8.2</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3764.941</td><td>2.586</td><td>0.90</td><td>1665</td><td>8.1</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3872.650</td><td>2.765</td><td>3.85</td><td>1784</td><td>8.0</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3886.500</td><td>2.764</td><td>3.97</td><td>1779</td><td>7.8</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3770.107</td><td>2.586</td><td>0.80</td><td>1851</td><td>7.3</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3790.797</td><td>2.583</td><td>0.95</td><td>1826</td><td>7.2</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3795.964</td><td>2.583</td><td>0.96</td><td>1800</td><td>7.1</td><td>1.00</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>349088467</td><td>3749.411</td><td>2.587</td><td>1.07</td><td>1812</td><td>9.9</td><td>0.68</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3897.581</td><td>2.767</td><td>4.46</td><td>1861</td><td>8.4</td><td>0.68</td><td>2026-10-20T18:58:30+00:00</td></tr><tr><td>348770361</td><td>3903.110</td><td>2.767</td><td>3.75</td><td>1921</td><td>8.0</td><td>0.66</td><td>2026-10-20T18:58:30+00:00</td></tr></tbody></table></div></section>
-<section><h2>Recent runs</h2><div class='scroll'><table><thead><tr><th>run (UTC)</th><th>targets</th><th>new</th><th>known</th><th>errors</th></tr></thead><tbody><tr><td>2026-10-20T18:58:30+00:00</td><td>19</td><td>0</td><td>24</td><td>0</td></tr></tbody></table></div></section>
-<footer>Generated by SetuHQ from <code>discovery</code>. Config SHA-256 <code>74e9c44e0319c6fd</code>. Results on synthetic data are not claims about real sky data.</footer>
-</main></body></html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The search feed has moved · SetuHQ</title><meta name="robots" content="noindex">
+<link rel="canonical" href="https://setuhq.com/candidates/">
+<script>(function(){var RT={"paths":{"overview":"/","sky":"/explore/","galaxy":"/explore/galaxy/","mission":"/explore/mission-control/","catalogue":"/catalogue/","variables":"/catalogue/everything-that-dims/","explorer":"/candidates/","planets":"/candidates/radius-ratios/","methods":"/how-it-works/","sentinels":"/evidence/","leaderboard":"/evidence/leaderboard/","runs":"/evidence/runs/","docs":"/docs/"},"identity":{"transit":"dip","candidates":"dip","planet":"id","star":"id","methods":"ch"},"chapters":{"survey":"","transit":"transits","doppler":"doppler-shift","rv":"radial-velocity","astrometry":"astrometry","microlensing":"microlensing","imaging":"direct-imaging","timing":"timing","radio":"radio","falsepos":"false-positives","spectroscopy":"atmospheres","molecules":"molecules-and-life","population":"population","equations":"equations-of-life","history":"history"},"aliases":{"discoveries":"explorer","feed":"explorer","panel":"sentinels","home":"sky","cockpit":"transit","about":"overview"},"legacy":{"/app/":"/","/docket/":"/candidates/case-file/","/plate/":"/evidence/plates/","/report/":"/evidence/report/","/dashboard/":"/candidates/","/discoveries/":"/candidates/"},"lead":"tess-fa3483ce6f83-000"};
+function rtUrl(route, params, keepQuery){
+  params = Object.assign({}, params || {}); for (const k of Object.keys(params)) if (params[k] === null || params[k] === undefined || params[k] === '') delete params[k];
+  route = RT.aliases[route] || route;
+  const key = RT.identity[route]; let ident = null, section = null, path;
+  if (key){ ident = params[key] || null; delete params[key]; }
+  if (route === 'candidates'){ section = params.section || null; delete params.section; }
+  if (route === 'transit' || route === 'candidates'){
+    path = ident ? '/candidates/' + encodeURIComponent(ident) + '/' + (route === 'candidates' ? 'case-file/' : '') : (route === 'candidates' ? '/candidates/case-file/' : '/candidates/');
+  } else if (route === 'planet' || route === 'star'){
+    path = (route === 'planet' ? '/planets/' : '/stars/') + (ident ? ident + '/' : '');
+  } else if (route === 'methods'){
+    const slug = RT.chapters[ident || 'survey'] || '';
+    path = '/how-it-works/' + (slug ? slug + '/' : '');
+  } else path = RT.paths[route] || '/';
+  const q = keepQuery === false ? '' : new URLSearchParams(params).toString();
+  return path + (q ? '?' + q : '') + (section ? '#' + section : '');
+}
+function rtFromHash(h, keepQuery){
+  const body = String(h || '').replace(/^#/, '').replace(/^\//, ''), i = body.indexOf('?');
+  let route = i < 0 ? body : body.slice(0, i);
+  try { route = decodeURIComponent(route); } catch (e) { /* keep as typed */ }
+  const params = Object.fromEntries(new URLSearchParams(i < 0 ? '' : body.slice(i + 1)));
+  const m = /^(planet|star)\/([a-z0-9-]{1,120})$/.exec(route);
+  if (m){ route = m[1]; params.id = m[2]; }
+  if (!(route in RT.paths) && !(route in RT.identity) && !(route in RT.aliases)) return '/';
+  if (route === 'overview') return '/';
+  if (['transit', 'candidates'].includes(RT.aliases[route] || route) && !params.dip && RT.lead) params.dip = RT.lead;
+  return rtUrl(route, params, keepQuery);
+}
+function rtParse(pathname, search){
+  const parts = String(pathname || '/').split('/').filter(Boolean), params = Object.fromEntries(new URLSearchParams(search || ''));
+  const norm = '/' + parts.join('/') + (parts.length ? '/' : '');
+  for (const r in RT.paths) if (RT.paths[r] === norm && norm !== '/how-it-works/') return {route: r, params};
+  if (parts[0] === 'how-it-works' && parts.length <= 2){
+    const slug = parts[1] || ''; const ch = Object.keys(RT.chapters).find(c => RT.chapters[c] === slug);
+    return ch ? {route: 'methods', params: Object.assign(params, {ch})} : null;
+  }
+  if (parts.length === 2 && (parts[0] === 'planets' || parts[0] === 'stars') && /^[a-z0-9][a-z0-9-]{0,119}$/.test(parts[1]))
+    return {route: parts[0] === 'planets' ? 'planet' : 'star', params: Object.assign(params, {id: parts[1]})};
+  if (parts[0] === 'candidates' && (parts.length === 2 || parts.length === 3) && parts[1] !== 'case-file' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/.test(decodeURIComponent(parts[1]))){
+    const dip = decodeURIComponent(parts[1]);
+    if (parts.length === 2) return {route: 'transit', params: Object.assign(params, {dip})};
+    if (parts[2] === 'case-file') return {route: 'candidates', params: Object.assign(params, {dip})};
+  }
+  return null;
+}
+function rtLegacy(pathname, hash){
+  let p = String(pathname || '/'); if (!p.endsWith('/')) p += '/';
+  hash = hash || '';
+  if (p === '/app/' || p === '/'){
+    if (hash.startsWith('#/') || hash === '#') return rtFromHash(hash);
+    return p === '/app/' ? '/' : null;
+  }
+  if (p === '/docket/' && hash.length > 1 && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/.test(hash.slice(1))) return rtUrl('candidates', {dip: hash.slice(1)});
+  if (p in RT.legacy) return RT.legacy[p] + (hash && hash !== '#' ? hash : '');
+  return null;
+}
+var t=rtLegacy(location.pathname,location.hash);if(t&&t!==location.pathname+location.search+location.hash){location.replace(t);}})();</script>
+<noscript><meta http-equiv="refresh" content="0; url=/candidates/"></noscript>
+<style>html{background:#000;color:#F5F5F7;font:16px/1.5 system-ui,sans-serif}body{margin:0;padding:48px 16px;max-width:640px;margin:0 auto}a{color:#64D2FF}</style>
+</head><body><main><h1 style="font-size:24px">This page has moved.</h1><p>The search feed is now at <a href="/candidates/">https://setuhq.com/candidates/</a>.</p></main></body></html>

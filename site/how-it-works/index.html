@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>How a survey works · How it works · SetuHQ</title>
+<link rel="icon" type="image/svg+xml" href="/assets/brand/setuhq-favicon.svg">
+<meta name="description" content="Chapter 1 of 15 of How it works: How a survey works. An animated explainer with its physics and sources.">
+<link rel="canonical" href="https://setuhq.com/how-it-works/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="How a survey works · How it works · SetuHQ"><meta property="og:description" content="Chapter 1 of 15 of How it works: How a survey works. An animated explainer with its physics and sources."><meta property="og:url" content="https://setuhq.com/how-it-works/"><meta property="og:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="How a survey works · How it works · SetuHQ"><meta name="twitter:description" content="Chapter 1 of 15 of How it works: How a survey works. An animated explainer with its physics and sources."><meta name="twitter:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png">
+
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#000000">
+<script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/assets/site-830623b45e.css">
+<link rel="preload" href="/assets/data/app-24ac6aa531.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/app-826c56aeed.js" as="script">
+<script src="/assets/site-518cc8a20a.js" defer></script>
+</head>
+<body class="page-methods" data-page="methods" data-route="methods" data-data="/assets/data/app-24ac6aa531.json" data-routes="/assets/views-c3371ac697.html" data-app="/assets/app-826c56aeed.js">
+<img class="starfield" src="/assets/starfield-7d78158d28.svg" alt="" aria-hidden="true">
+<a class="skip" href="#content">Skip to content</a>
+<header class="topbar">
+  <div class="tbin">
+    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="579" height="132"></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/explore/" data-nav="explore">Explore</a></li><li><a href="/candidates/" data-nav="candidates">Candidates</a></li><li><a href="/how-it-works/" data-nav="how">How it works</a></li><li><a href="/evidence/" data-nav="evidence">Evidence</a></li><li><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav>
+    <div class="tools">
+      <button class="iconbtn searchbtn" type="button" id="gsearchbtn" aria-label="Search planets, stars and pages (press /)" aria-haspopup="dialog" title="Search (/)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      <button class="iconbtn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Switch to light" title="Theme: dark"><svg class="ti ti-dark" viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 12.6A6.5 6.5 0 0 1 7.4 4.5a6.5 6.5 0 1 0 8.1 8.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><svg class="ti ti-light" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="ti ti-system" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3.4a6.6 6.6 0 0 1 0 13.2z" fill="currentColor"/></svg></button>
+      <button class="iconbtn menubtn" type="button" id="menubtn" aria-expanded="false" aria-controls="menu" aria-label="Open the menu"><svg class="mi-open" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><svg class="mi-close" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+  <div class="menu" id="menu" hidden><nav aria-label="Main"><ul><li class="msec"><a href="/explore/" data-nav="explore">Explore</a><ul class="msub"><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></li><li class="msec"><a href="/candidates/" data-nav="candidates">Candidates</a><ul class="msub"><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/tess-fa3483ce6f83-000/">Dips</a></li><li><a href="/candidates/tess-fa3483ce6f83-000/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></li><li class="msec"><a href="/how-it-works/" data-nav="how">How it works</a></li><li class="msec"><a href="/evidence/" data-nav="evidence">Evidence</a><ul class="msub"><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></li><li class="msec"><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav></div>
+</header>
+<div class="pagebar"><div class="pbin"><nav class="crumbs" id="crumbs" aria-label="Breadcrumb" hidden></nav><nav class="subnav" id="subnav" aria-label="In this section" hidden></nav><div class="pagetools"><button class="btn" type="button" id="copyview" hidden>Copy link to this view</button><span class="muted" id="copyviewstate" role="status"></span><input class="copyfallback" id="copyviewbox" type="text" readonly aria-label="Link to this view" hidden></div></div></div>
+<main id="main">
+ <div id="content" tabindex="-1">
+<section class="route" id="route-methods" data-route="methods" aria-labelledby="h-methods" data-partial>
+<header class="headrow">
+        <div><h1 class="lead-h" id="h-methods" tabindex="-1">How planets are found.<br><span class="grey">And how SetuHQ finds them.</span></h1>
+        <p>15 chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something SetuHQ itself does.</p></div>
+      </header>
+      <nav class="mxtoc" aria-label="Methods chapters"><ol><li><a href="/how-it-works/" data-ch="survey" aria-current="step"><span class="mono">01</span>How a survey works</a></li><li><a href="/how-it-works/transits/" data-ch="transit"><span class="mono">02</span>Transit</a></li><li><a href="/how-it-works/doppler-shift/" data-ch="doppler"><span class="mono">03</span>Toward and away</a></li><li><a href="/how-it-works/radial-velocity/" data-ch="rv"><span class="mono">04</span>Radial velocity</a></li><li><a href="/how-it-works/astrometry/" data-ch="astrometry"><span class="mono">05</span>Astrometry</a></li><li><a href="/how-it-works/microlensing/" data-ch="microlensing"><span class="mono">06</span>Microlensing</a></li><li><a href="/how-it-works/direct-imaging/" data-ch="imaging"><span class="mono">07</span>Blocking starlight</a></li><li><a href="/how-it-works/timing/" data-ch="timing"><span class="mono">08</span>Timing and phase</a></li><li><a href="/how-it-works/radio/" data-ch="radio"><span class="mono">09</span>Radio</a></li><li><a href="/how-it-works/false-positives/" data-ch="falsepos"><span class="mono">10</span>False positives</a></li><li><a href="/how-it-works/atmospheres/" data-ch="spectroscopy"><span class="mono">11</span>Reading atmospheres</a></li><li><a href="/how-it-works/molecules-and-life/" data-ch="molecules"><span class="mono">12</span>Molecules and life</a></li><li><a href="/how-it-works/population/" data-ch="population"><span class="mono">13</span>Population</a></li><li><a href="/how-it-works/equations-of-life/" data-ch="equations"><span class="mono">14</span>Equations of life</a></li><li><a href="/how-it-works/history/" data-ch="history"><span class="mono">15</span>History and papers</a></li></ol></nav>
+      <article class="mxch" id="mx-survey" data-ch="survey" aria-labelledby="h-mx-survey"><header><p class="eyebrow">Chapter 1 of 15</p><h2 id="h-mx-survey">How a survey works</h2></header>
+      <p class="mxlede">A survey points a camera at many stars at once and measures each one's brightness again and again. Most stars never show a planet. Only planets whose orbits happen to line up with us can cross their star's face.</p>
+      <figure class="mxstage" data-vis="scan">
+          <div class="mxcanvas"><canvas role="img" aria-label="A star field. Reticle rings lock onto stars one at a time, as a survey checks each target. Each locked star shows whether its imagined planet&#x27;s orbit lines up with us; about one in thirteen do for a pi Men c-like orbit. Star colours follow each star&#x27;s temperature."></canvas></div>
+          <div class="mxbadges"><span class="mxlabel ill">Illustration</span><span class="mxexag" aria-live="polite"></span></div>
+          <div class="mxctl" role="group" aria-label="Animation controls">
+            <button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the survey sweep">
+            
+          </div>
+          <figcaption class="mxdesc">A star field. Reticle rings lock onto stars one at a time, as a survey checks each target. Each locked star shows whether its imagined planet&#x27;s orbit lines up with us; about one in thirteen do for a pi Men c-like orbit. Star colours follow each star&#x27;s temperature.</figcaption>
+        </figure>
+      <div class="mxtext">
+        <h3>Why only a few transit</h3>
+        <p>A planet transits only if its orbit is aligned closely enough with our line of sight. For random orientations the chance is about R★/a, the star's radius over the orbit's size (Winn 2010). Close-in planets around large stars transit more often.</p>
+        <div class='tablewrap' tabindex='0' role='region' aria-label='Numbers in this chapter'><table class='mxnums'><thead><tr><th scope='col'>Quantity</th><th scope='col' class='num'>Value</th><th scope='col'>From</th></tr></thead><tbody><tr><th scope='row'>Chance pi Men c&#x27;s orbit transits</th><td class='num'>7.6%</td><td>R★/a from exoplanet.eu R★ = 1.1 R☉, a = 0.06702 AU [calc]</td></tr><tr><th scope='row'>Chance an Earth–Sun orbit transits</th><td class='num'>0.47%</td><td>R☉/1 AU, IAU nominal values [calc]</td></tr><tr><th scope='row'>Sky TESS had observed by 18 Oct 2026</th><td class='num'>97.8%</td><td>computed with tess-point (the Galaxy&#x27;s coverage panel)</td></tr></tbody></table></div>
+        <p>SetuHQ reads TESS light curves: one star at a time, about 27 days per sector. <a href="/explore/galaxy/?layers=tess">See TESS's sky coverage ›</a></p>
+      </div><div class="pllinks mxplanets"><span>Planets in this chapter</span><a class="objlink" data-planet="pi Men c" href="/planets/pi-men-c/">pi Men c ›</a></div><details class="mxsources"><summary>Sources</summary><ul class="mxsrc"><li><a href="https://arxiv.org/abs/1001.2010" rel="noopener">Winn 2010, Transits and occultations</a></li><li><a href="https://doi.org/10.1117/1.JATIS.1.1.014003" rel="noopener">Ricker et al. 2015, JATIS 1, 014003 (TESS)</a></li><li><a href="https://doi.org/10.1126/science.1185402" rel="noopener">Borucki et al. 2010, Science 327, 977 (Kepler)</a></li><li><a href="https://doi.org/10.1088/0067-0049/208/1/9" rel="noopener">Pecaut &amp; Mamajek 2013, ApJS 208, 9 (dwarf sequence, v2022.04.16)</a></li><li><a href="https://jcgt.org/published/0002/02/01/" rel="noopener">Wyman, Sloan &amp; Shirley 2013, JCGT 2(2) (CIE fit)</a></li></ul></details><nav class="mxnav" aria-label="Chapters"><span></span><a class="btn primary" href="/how-it-works/transits/">Transit ›</a></nav></article>
+</section>
+ </div>
+ <p class="note" id="bootnote" hidden>The interactive parts of this page could not load. Its text above is complete; reload to try again.</p>
+</main>
+<footer class="sitefoot"><div class="fin">
+  <nav class="footnav" aria-label="Site"><div><h2>Explore</h2><ul><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></div><div><h2>Candidates</h2><ul><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/tess-fa3483ce6f83-000/">Dips</a></li><li><a href="/candidates/tess-fa3483ce6f83-000/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></div><div><h2>How it works</h2><ul><li><a href="/how-it-works/">Overview</a></li><li><a href="/how-it-works/transits/">Transit</a></li><li><a href="/how-it-works/doppler-shift/">Toward and away</a></li><li><a href="/how-it-works/radial-velocity/">Radial velocity</a></li><li><a href="/how-it-works/astrometry/">Astrometry</a></li><li><a href="/how-it-works/">All 15 chapters</a></li></ul></div><div><h2>Evidence</h2><ul><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></div><div><h2>Docs</h2><ul><li><a href="/docs/">Get started</a></li><li><a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ">Source code</a></li><li><a href="/docs/#contribute">Contributing a sweep</a></li><li><a href="/docs/#data">Data downloads</a></li></ul></div></nav>
+  <p class="attribution">Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+  <p>Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ's data under CC BY 4.0. "SetuHQ" and the Setu mark are trademarks of Ashforde OÜ.</p>
+</div></footer>
+<div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
+<dialog class="gsearch" id="gsearch" aria-labelledby="gsearchlbl">
+  <label class="gsfield"><span class="sr" id="gsearchlbl">Search planets, stars and pages</span>
+    <input type="search" id="gsq" role="combobox" aria-expanded="true" aria-controls="gsresults" aria-autocomplete="list" placeholder="Search planets, stars, pages" autocomplete="off"></label>
+  <ul class="gsresults" id="gsresults" role="listbox" aria-label="Results"></ul>
+  <p class="gshint">↑ ↓ to move · Enter to open · Esc to close</p>
+</dialog>
+<nav class="learnbar" id="learnbar" aria-label="Learn path" hidden>
+  <span class="lpos mono" id="learnpos"></span><a class="btn" id="learnprev" href="/">‹ Back</a><a class="btn primary" id="learnnext" href="/">Next ›</a>
+  <button class="btn" type="button" id="learnleave" aria-label="Leave the path">Leave</button>
+</nav>
+<template id="mxsystpl"><figure class="mxstage tall" data-vis="system">
+          <div class="mxcanvas"><canvas role="img" aria-label="A star and its planet, drawn from stored values."></canvas></div>
+          <div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
+          <div class="mxctl" role="group" aria-label="Animation controls">
+            <button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the orbit">
+            <button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button>
+          </div>
+          <figcaption class="mxdesc">A star and its planet, drawn from stored values.</figcaption>
+        </figure></template>
+
+</body></html>

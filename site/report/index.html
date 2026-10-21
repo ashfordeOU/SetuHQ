@@ -1,391 +1,66 @@
 <!doctype html>
-<html lang='en'><head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>SetuHQ: pi Men (TESS sector 1)</title>
-<link rel="icon" type="image/svg+xml" href="assets/brand/setuhq-favicon.svg">
-<meta name="description" content="The archived report of SetuHQ&#x27;s stored run on pi Men (TESS sector 1): every candidate, its vetting and provenance. Candidates, never confirmations.">
-<link rel="canonical" href="https://setuhq.com/report/">
-<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="SetuHQ: pi Men (TESS sector 1)"><meta property="og:description" content="The archived report of SetuHQ&#x27;s stored run on pi Men (TESS sector 1): every candidate, its vetting and provenance. Candidates, never confirmations."><meta property="og:url" content="https://setuhq.com/report/"><meta property="og:image" content="https://setuhq.com/app/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="SetuHQ: pi Men (TESS sector 1)"><meta name="twitter:description" content="The archived report of SetuHQ&#x27;s stored run on pi Men (TESS sector 1): every candidate, its vetting and provenance. Candidates, never confirmations."><meta name="twitter:image" content="https://setuhq.com/app/assets/brand/setuhq-social-card.png">
-<style>
-:root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#16a34a;--bad:#dc2626;--warn:#d97706;--radius:14px}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}}
-:root[data-theme="dark"]{--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header.hero{padding:56px 16px 36px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}
-.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
-h1{font-size:clamp(28px,5vw,42px);margin:0 0 8px;letter-spacing:-.02em}
-h2{font-size:24px;margin:40px 0 12px;letter-spacing:-.01em}
-h3{font-size:17px;margin:0 0 6px}
-p.lead{font-size:18px;max-width:760px;margin:0;opacity:.95}
-nav{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;flex-wrap:wrap;gap:4px 14px;padding-top:6px;padding-bottom:6px}
-summary{display:flex;align-items:center;min-height:44px;cursor:pointer}
-nav a{color:var(--muted);text-decoration:none;white-space:nowrap;font-size:14px;display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
-nav a:hover{color:var(--accent)}
-.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
-.stat{font-size:30px;font-weight:700;letter-spacing:-.02em}
-.stat small{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px}
-.pipeline{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
-.step{flex:1 1 150px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
-.step b{display:block;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.06em}
-.step span{font-size:14px;color:var(--muted)}
-.arrow{align-self:center;color:var(--muted)}
-.cands{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
-.cand img{width:100%;border-radius:10px;border:1px solid var(--line);background:#fff}
-.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;margin:2px 4px 2px 0;border:1px solid var(--line);color:var(--muted)}
-.tag.pass{color:var(--good);border-color:var(--good)}
-.tag.fail{color:var(--bad);border-color:var(--bad)}
-.tag.flag{color:var(--warn);border-color:var(--warn)}
-.bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin:8px 0}
-.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
-.kv>div{min-width:0;overflow-wrap:anywhere}
-.grid>*,.cands>*{min-width:0}
-code{overflow-wrap:anywhere}
-.kv div:nth-child(odd){color:var(--muted)}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
-.scroll{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:4px 14px}
-.note{font-size:14px;color:var(--muted)}
-code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
-pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto}
-footer{margin:48px 0 24px;color:var(--muted);font-size:13px}
-@media (max-width:600px){.cands{grid-template-columns:1fr}.step{flex-basis:100%}.arrow{display:none}}
-.hero .brandlogo{height:28px;width:auto;margin-bottom:18px}</style></head>
-<body>
-<div class="codenote" id="codenote" role="note" data-key="441407ab66bd" data-fixed="position:fixed;left:0;right:0;bottom:0;border-top:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000;padding-right:116px;min-height:52px;display:flex;align-items:center" data-clamp="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1" style="position:relative;border-bottom:1px solid #a57c00;margin:0;padding:8px 60px 8px 16px;font:13px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;background:#4a3800;color:#fff3cc;box-sizing:border-box;z-index:2147483000"><span class="cn-text">Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since.</span><button type="button" class="cn-more" style="position:absolute;right:56px;top:50%;transform:translateY(-50%);min-width:52px;height:44px;background:none;border:0;color:#ffd866;text-decoration:underline;font:13px/1 system-ui,sans-serif;cursor:pointer;display:none" aria-expanded="false">more</button><button type="button" class="cn-close" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;background:none;border:1px solid #a57c00;color:#fff3cc;border-radius:6px;font:20px/1 system-ui,sans-serif;cursor:pointer" aria-label="Dismiss this note">×</button></div><script>(function(){var b=document.getElementById('codenote');if(!b)return;var k='setuhq-codenote:'+b.dataset.key;
-try{if(window.localStorage.getItem(k)){b.remove();return;}}catch(e){}
-var FLOW=b.getAttribute('style'),FIXED=b.dataset.fixed,CLAMP=b.dataset.clamp,open=false;
-var t=b.querySelector('.cn-text'),m=b.querySelector('.cn-more');
-function place(){if(!b.isConnected)return;b.setAttribute('style',FIXED);
-var fits=document.documentElement.scrollHeight<=window.innerHeight+1;
-if(fits){t.setAttribute('style',open?'':CLAMP);m.style.display='';m.textContent=open?'less':'more';
-m.setAttribute('aria-expanded',open?'true':'false');}
-else{b.setAttribute('style',FLOW);t.setAttribute('style','');m.style.display='none';}}
-m.addEventListener('click',function(){open=!open;place();});
-place();window.addEventListener('load',place);window.addEventListener('resize',place);
-window.addEventListener('hashchange',function(){setTimeout(place,60);});
-if(window.ResizeObserver){new ResizeObserver(function(){place();}).observe(document.body);}
-b.querySelector('.cn-close').addEventListener('click',function(){try{window.localStorage.setItem(k,'1');}catch(e){}
-b.remove();});})();</script>
-<header class='hero' id='overview'><div class='wrap'>
-  <a href="../" aria-label="SetuHQ, home"><img class="brandlogo dk" src="assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"></a>
-  <h1>SetuHQ: pi Men (TESS sector 1)</h1>
-  <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p>
-</div></header>
-<nav class='report-nav' aria-label='Sections'><div class='wrap'><a href='#overview'>Overview</a><a href='#pipeline'>Pipeline</a><a href='#candidates'>Candidates</a><a href='#panel'>Panel</a><a href='#validation'>Validation</a><a href='#benchmark'>Benchmark</a><a href='#provenance'>Provenance</a></div></nav>
-<main class='wrap'>
-
-<section class='grid' style='margin-top:28px'>
-  <div class='card stat'>1<small>light curves</small></div>
-  <div class='card stat'>2<small>blind-coded subjects</small></div>
-  <div class='card stat'>10<small>independent reviews</small></div>
-  <div class='card stat'>7<small>consensus dips</small></div>
-  <div class='card stat' style='color:var(--good)'>6<small>passed vetting</small></div>
-</section>
-
-<section id='pipeline'><h2>How a run works</h2>
-<div class='pipeline'>
-  <div class='step'><b>1 · Ingest</b><span>TESS SPOC from MAST or CHEOPS FITS, time system kept as delivered</span></div><div class='arrow'>→</div>
-  <div class='step'><b>2 · Clean &amp; detrend</b><span>Spike clip, masked local-quadratic baseline, 10-min bins</span></div><div class='arrow'>→</div>
-  <div class='step'><b>3 · Blind subjects</b><span>13-day segments with opaque IDs. The target name never reaches a reviewer</span></div><div class='arrow'>→</div>
-  <div class='step'><b>4 · Review panel</b><span>Each subject marked and labelled by every reviewer, independently</span></div><div class='arrow'>→</div>
-  <div class='step'><b>5 · Consensus</b><span>Clustered marks, skill-weighted score, panel must say "potential planet"</span></div><div class='arrow'>→</div>
-  <div class='step'><b>6 · Vet</b><span>SNR, duration, edges, odd/even depth, secondary eclipse, ephemeris fit</span></div>
-</div>
-<p class='note'>Thresholds, weights and every input are written to <code>manifest.json</code>, so a result can be rerun exactly.</p>
-</section>
-
-<section id='candidates'><h2>Candidates</h2>
-<p class='note'>Passed candidates are the catalogue. Rejected and flagged events are kept on purpose, so a reader can see what the vetting decided and why.</p>
-<div class='cands'>
-<article class='card cand'>
-  <h3>tess-fa3483ce6f83-000</h3>
-  <span class='tag pass'>passed vetting</span>
-  <img src='assets/tess-fa3483ce6f83.png' alt='Blind-coded subject plot for tess-fa3483ce6f83-000' loading='lazy'>
-  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
-  <div class='kv'>
-    <div>Mid-time</div><div>1331.771 BTJD</div>
-    <div>Duration</div><div>2.46 h</div>
-    <div>Depth</div><div>241 ppm</div>
-    <div>SNR</div><div>16.0</div>
-    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 5 marked it</div>
-    <div>Says planet</div><div>100% of panel</div>
-    <div>Reviewers</div><div>claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
-    <div>Periodic hint</div><div>6.273 d</div>
-  </div>
-</article>
-<article class='card cand'>
-  <h3>tess-fa3483ce6f83-001</h3>
-  <span class='tag pass'>passed vetting</span>
-  <img src='assets/tess-fa3483ce6f83.png' alt='Blind-coded subject plot for tess-fa3483ce6f83-001' loading='lazy'>
-  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
-  <div class='kv'>
-    <div>Mid-time</div><div>1338.052 BTJD</div>
-    <div>Duration</div><div>2.20 h</div>
-    <div>Depth</div><div>241 ppm</div>
-    <div>SNR</div><div>14.9</div>
-    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 5 marked it</div>
-    <div>Says planet</div><div>100% of panel</div>
-    <div>Reviewers</div><div>claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
-    <div>Periodic hint</div><div>6.273 d</div>
-  </div>
-</article>
-<article class='card cand'>
-  <h3>tess-fa3483ce6f83-002</h3>
-  <span class='tag pass'>passed vetting</span>
-  <img src='assets/tess-fa3483ce6f83.png' alt='Blind-coded subject plot for tess-fa3483ce6f83-002' loading='lazy'>
-  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
-  <div class='kv'>
-    <div>Mid-time</div><div>1325.497 BTJD</div>
-    <div>Duration</div><div>2.12 h</div>
-    <div>Depth</div><div>241 ppm</div>
-    <div>SNR</div><div>14.9</div>
-    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 5 marked it</div>
-    <div>Says planet</div><div>100% of panel</div>
-    <div>Reviewers</div><div>claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
-    <div>Periodic hint</div><div>6.273 d</div>
-  </div>
-</article>
-<article class='card cand'>
-  <h3>tess-04b815001aa6-003</h3>
-  <span class='tag pass'>passed vetting</span>
-  <img src='assets/tess-04b815001aa6.png' alt='Blind-coded subject plot for tess-04b815001aa6-003' loading='lazy'>
-  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
-  <div class='kv'>
-    <div>Mid-time</div><div>1350.572 BTJD</div>
-    <div>Duration</div><div>1.89 h</div>
-    <div>Depth</div><div>243 ppm</div>
-    <div>SNR</div><div>11.9</div>
-    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 5 marked it</div>
-    <div>Says planet</div><div>100% of panel</div>
-    <div>Reviewers</div><div>claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
-    <div>Periodic hint</div><div>6.262 d</div>
-  </div>
-</article>
-<article class='card cand'>
-  <h3>tess-04b815001aa6-004</h3>
-  <span class='tag pass'>passed vetting</span>
-  <img src='assets/tess-04b815001aa6.png' alt='Blind-coded subject plot for tess-04b815001aa6-004' loading='lazy'>
-  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
-  <div class='kv'>
-    <div>Mid-time</div><div>1344.267 BTJD</div>
-    <div>Duration</div><div>0.84 h</div>
-    <div>Depth</div><div>247 ppm</div>
-    <div>SNR</div><div>8.2</div>
-    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 5 marked it</div>
-    <div>Says planet</div><div>100% of panel</div>
-    <div>Reviewers</div><div>claude-skeptic;claude-volunteer;volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
-    <div>Periodic hint</div><div>6.262 d</div>
-  </div>
-</article>
-<article class='card cand'>
-  <h3>tess-04b815001aa6-005</h3>
-  <span class='tag pass'>passed vetting</span><span class='tag flag'>off_ephemeris</span>
-  <img src='assets/tess-04b815001aa6.png' alt='Blind-coded subject plot for tess-04b815001aa6-005' loading='lazy'>
-  <div class='bar' title='consensus score 0.62'><i style='width:62%'></i></div>
-  <div class='kv'>
-    <div>Mid-time</div><div>1348.936 BTJD</div>
-    <div>Duration</div><div>0.87 h</div>
-    <div>Depth</div><div>261 ppm</div>
-    <div>SNR</div><div>9.5</div>
-    <div>Panel agreement</div><div>62% of skill-weighted reviewers, 3 marked it</div>
-    <div>Says planet</div><div>100% of panel</div>
-    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
-    <div>Periodic hint</div><div>n/a</div>
-  </div>
-</article>
-<article class='card cand'>
-  <h3>tess-04b815001aa6-006</h3>
-  <span class='tag fail'>rejected</span><span class='tag flag'>low_snr</span><span class='tag flag'>off_ephemeris</span>
-  <img src='assets/tess-04b815001aa6.png' alt='Blind-coded subject plot for tess-04b815001aa6-006' loading='lazy'>
-  <div class='bar' title='consensus score 0.62'><i style='width:62%'></i></div>
-  <div class='kv'>
-    <div>Mid-time</div><div>1348.383 BTJD</div>
-    <div>Duration</div><div>9.88 h</div>
-    <div>Depth</div><div>71 ppm</div>
-    <div>SNR</div><div>6.7</div>
-    <div>Panel agreement</div><div>62% of skill-weighted reviewers, 3 marked it</div>
-    <div>Says planet</div><div>100% of panel</div>
-    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
-    <div>Periodic hint</div><div>n/a</div>
-  </div>
-</article></div>
-</section>
-
-<section id='panel'><h2>Panel decisions</h2>
-<p class='note'>Every reviewer's answer for every blind-coded subject. Disagreement is kept visible, because it is where the consensus is earned.</p>
-<div class='card' style='margin-bottom:14px'><h3>tess-04b815001aa6</h3><div class='scroll'><table><thead><tr><th>reviewer</th><th>label</th><th>marks (BTJD)</th><th>rationale</th></tr></thead><tbody><tr><td>volunteer-sensitive</td><td>potential planet</td><td>1344.250–1344.284, 1348.225–1348.589, 1348.923–1348.955, 1350.532–1350.611</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-typical</td><td>potential planet</td><td>1344.245–1344.279, 1348.177–1348.629, 1348.918–1348.947, 1349.061–1349.096, 1350.557–1350.625</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-cautious</td><td>potential planet</td><td>1344.249–1344.279, 1344.283–1344.366, 1348.107–1348.568, 1348.917–1348.955, 1350.551–1350.619</td><td class='note'>simulated detector</td></tr><tr><td>claude-volunteer</td><td>potential planet</td><td>1344.320–1344.470, 1350.450–1350.570</td><td class='note'>Two short, sharp drops of about 300 ppm are visible near 1344.4 and 1350.5, each lasting about 3 hours and each made up of several consecutive points. They could be transits, but the scatter is high and increases in the later part of the light curve, so they c</td></tr><tr><td>claude-skeptic</td><td>potential planet</td><td>1344.200–1344.340, 1350.380–1350.510</td><td class='note'>Two short, flat-bottomed dips of about 300 ppm at ~1344.27 and ~1350.45 (spacing ~6.2 d) have matching depth and duration, as expected for a periodic transit. Neither shows a V shape, a secondary eclipse, a ramp or a step, but the data around the second dip is</td></tr></tbody></table></div></div><div class='card' style='margin-bottom:14px'><h3>tess-fa3483ce6f83</h3><div class='scroll'><table><thead><tr><th>reviewer</th><th>label</th><th>marks (BTJD)</th><th>rationale</th></tr></thead><tbody><tr><td>volunteer-sensitive</td><td>potential planet</td><td>1325.452–1325.541, 1331.718–1331.822, 1332.197–1332.260, 1338.017–1338.073</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-typical</td><td>potential planet</td><td>1325.458–1325.555, 1331.746–1331.804, 1337.999–1338.098</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-cautious</td><td>potential planet</td><td>1325.463–1325.530, 1331.724–1331.810, 1338.006–1338.095</td><td class='note'>simulated detector</td></tr><tr><td>claude-volunteer</td><td>potential planet</td><td>1325.300–1325.550, 1331.720–1331.900, 1337.970–1338.150</td><td class='note'>Three similar dips of about 0.0003 depth, each lasting a few hours, recur at roughly 6.3-day spacing (near 1325.4, 1331.8 and 1338.05). The first falls at the start of the data and the last at the end, so the shapes are only partly covered, but the repeat and </td></tr><tr><td>claude-skeptic</td><td>potential planet</td><td>1325.300–1325.460, 1331.680–1331.840, 1338.030–1338.290</td><td class='note'>Three similar flat-bottomed dips about 250-300 ppm deep recur every ~6.3 days, and there is no alternating depth or secondary eclipse. The first and last dips sit at the edges of the data, so they are only partly covered, but the periodic repeat favours a tran</td></tr></tbody></table></div></div>
-</section>
-
-<section id='validation'><h2>Validation against known planets</h2><p class='note'>Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since. A 300 ppm transit is affected by neither fix.</p>
-<p class='note'>Run runs/tess-pi-men-s1 (TESS SPOC sector 1, 10-minute bins), rebuilt from its stored classifications with the limb-darkened fit (src/exoplan/transitfit.py). 5 of 5 predicted epochs are recovered by the panel. Limb darkening: Claret 2017 TESS quadratic u₁ = 0.341, u₂ = 0.224 for the TIC&#x27;s Teff 5992 K and log g 4.36. Reference: NASA Exoplanet Archive, table ps, pl_name = &#x27;pi Men c&#x27;, fetched 2026-10-19 (docs/results/pi_men_reference.json).</p>
-<p class='note'>Two lines. **Free**: depth, T14 and k are robust; b, a/R★ and ρ★ are degenerate with five TESS transits, so b is an upper limit when its 1σ set reaches 0 and ρ★ is a range. **With the TIC density prior** (a Gaussian on ρ★, 1.023 ± 0.199 g/cm³): b, a/R★ and T23/T14, to compare with Huang&#x27;s b = 0.59. Like-for-like comparisons lead: k and T14.</p>
-<div class='scroll'><table><thead><tr><th>quantity</th><th>free</th><th>with the TIC density prior</th><th>Huang et al. 2018</th><th>ratio (free / Huang)</th><th>archive default (Kunovac Hodzic Et Al 2021)</th><th>ratio</th></tr></thead><tbody><tr><td>Rp/R★ (k)</td><td>0.0179 ± 0.0017</td><td>0.0165 ± 0.0005</td><td>0.01703</td><td>**1.05**</td><td>0.01584</td><td>1.13</td></tr><tr><td>T14 (h)</td><td>3.07 ± 0.17</td><td>2.96 ± 0.04</td><td>2.953</td><td>**1.04**</td><td>2.952</td><td>1.04</td></tr><tr><td>depth (ppm)¹</td><td>292 ± 8</td><td>293 ± 8</td><td>300</td><td>0.97</td><td>268</td><td>1.09</td></tr><tr><td>P (d), fitted near the BLS period</td><td>6.2680 ± 0.0005</td><td>6.2680</td><td>6.26790</td><td></td><td></td><td></td></tr><tr><td>b</td><td>b &lt; 0.87 (1σ)</td><td>b = 0.64 ± 0.12</td><td>0.59</td><td></td><td>0.65</td><td></td></tr><tr><td>a/R★</td><td>8.54 at the best-fit b, unconstrained (1σ 8.32–16.64)</td><td>12.85 (1σ 11.54–13.58)</td><td>13.38</td><td></td><td></td><td></td></tr><tr><td>T23/T14</td><td>unconstrained</td><td>0.95</td><td>0.95 (from Huang&#x27;s b, k, a/R★)</td><td></td><td></td><td></td></tr><tr><td>ρ★ transit (g/cm³)</td><td>1σ range 0.277–2.216</td><td>1.02 (prior-dominated; no error quoted, as it would only restate the prior&#x27;s)</td><td>1.159 from M★, R★</td><td></td><td></td><td></td></tr></tbody></table></div>
-<p class='note'>¹ Depth definitions differ: exoplan&#x27;s is the limb-darkened model&#x27;s depth at mid-transit; the archive&#x27;s pl_trandep is the published transit depth as each paper defines it. Compare k and T14 first.</p>
-<p class='note'>Errors are conservative: the covariance at the best fit (scaled by √χ²ᵣ when above 1) added in quadrature to the spread along the impact-parameter profile (Δχ² ≤ 1), which overlap.</p>
-<p class='note'>The box measure used before (the mean flux over the panel&#x27;s marked window): depth 243 ppm, duration 1.90 h, ratios **0.81** and **0.64** against Huang 2018 (0.91 and 0.64 against the archive default row the README used to cite).</p>
-<p class='note'>ρ★ check (free fit): the transit density against the TIC&#x27;s 1.023 g/cm³ (consistent within the illustrative 0.3–3 band at 3σ). V-shape test: U-shaped (not grazing).</p>
-<div class='scroll'><table><thead><tr><th>subject</th><th>epochs</th><th>P (d)</th><th>depth (ppm)</th><th>T14 (h)</th><th>b</th><th>ρ★ (g/cm³), 1σ range</th></tr></thead><tbody><tr><td>tess-fa3483ce6f83</td><td>3</td><td>6.2681</td><td>294 ± 10</td><td>3.17 ± 0.25</td><td>b &lt; 0.94 (1σ)</td><td>0.091–2.249</td></tr><tr><td>tess-04b815001aa6</td><td>2</td><td>6.2674</td><td>310 ± 14</td><td>2.97 ± 0.09</td><td>b &lt; 0.87 (1σ)</td><td>0.270–2.124</td></tr></tbody></table></div>
-<p class='note'>Depth is the model&#x27;s mid-transit depth; errors are conservative, as above. Each subject&#x27;s fit frees the period near that subject&#x27;s BLS period.</p>
-<p class='note'>Recorded by scripts/validate_known_planets.py at commit 0f6dbdc from a live query of the archive&#x27;s default row then. Its timing columns stand; its depth and duration ratios came from the box measure and are superseded by the fit above.</p>
-<div class='scroll'><table><thead><tr><th>planet</th><th>P (d)</th><th>predicted epochs in span</th><th>recovered</th><th>mean timing offset (min)</th><th>depth ratio (box)</th><th>duration ratio (box)</th></tr></thead><tbody><tr><td>pi Men c</td><td>6.26784</td><td>5</td><td>5</td><td>-8.0</td><td>0.91</td><td>0.62</td></tr></tbody></table></div></section>
-<section id='benchmark'><h2>Injection recovery</h2><p class='note'>Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since. Deep injections may be under-recovered here.</p>
-<p class='note'>Panel: volunteer-sensitive, volunteer-typical, volunteer-cautious</p>
-<p class='note'>Weights: volunteer-cautious=0.633, volunteer-sensitive=0.667, volunteer-typical=0.667</p>
-<p class='note'>Completeness is the fraction of injected transits recovered as a vetted candidate, with the consensus centred within half a transit duration of the injection.</p>
-<div class='scroll'><table><thead><tr><th>depth (ppm)</th><th>duration (h)</th><th>subjects</th><th>recovered</th><th>completeness</th></tr></thead><tbody><tr><td>300</td><td>1.0</td><td>20</td><td>0</td><td>0.00</td></tr><tr><td>300</td><td>2.0</td><td>20</td><td>0</td><td>0.00</td></tr><tr><td>300</td><td>4.0</td><td>20</td><td>0</td><td>0.00</td></tr><tr><td>1000</td><td>1.0</td><td>20</td><td>1</td><td>0.05</td></tr><tr><td>1000</td><td>2.0</td><td>20</td><td>12</td><td>0.60</td></tr><tr><td>1000</td><td>4.0</td><td>20</td><td>18</td><td>0.90</td></tr><tr><td>3000</td><td>1.0</td><td>20</td><td>20</td><td>1.00</td></tr><tr><td>3000</td><td>2.0</td><td>20</td><td>19</td><td>0.95</td></tr><tr><td>3000</td><td>4.0</td><td>20</td><td>20</td><td>1.00</td></tr></tbody></table></div>
-<p class='note'>False positives: 0.000 vetted candidates per empty subject (40 empty subjects).</p></section>
-
-<section id='provenance'><h2>Provenance</h2>
-<div class='grid'>
- <div class='card'><h3>Reviewer panel</h3><div class='scroll' tabindex='0' role='region' aria-label='Reviewer panel table'><table><thead><tr><th>id</th><th>kind</th><th>weight</th></tr></thead><tbody><tr><td>volunteer-sensitive</td><td>simulated</td><td>0.600</td></tr><tr><td>volunteer-typical</td><td>simulated</td><td>0.600</td></tr><tr><td>volunteer-cautious</td><td>simulated</td><td>0.400</td></tr><tr><td>claude-volunteer</td><td>claude_code</td><td>0.500</td></tr><tr><td>claude-skeptic</td><td>claude_code</td><td>0.500</td></tr></tbody></table></div>
- <p class='note'>Skipped (unavailable here): none</p></div>
- <div class='card'><h3>Run</h3><div class='kv'>
-   <div>Config</div><div>tess-pi-men-s1</div>
-   <div>Config SHA-256</div><div><code>fd677ce6cc4ece78…</code></div>
-   <div>Created</div><div>2026-10-17T23:30:07+00:00</div>
-   <div>SetuHQ</div><div>0.1.0</div>
-   <div>Packages</div><div class='note'>numpy 2.5.4 · scipy 1.18.1 · astropy 8.0.2 · matplotlib 3.11.2 · lightkurve 2.6.0 · anthropic 1.15.0</div>
- </div></div>
-</div>
-<details style='margin-top:14px'><summary>Raw manifest</summary><pre>{
-  &quot;exoplan_version&quot;: &quot;0.1.0&quot;,
-  &quot;created_at&quot;: &quot;2026-10-17T23:30:07+00:00&quot;,
-  &quot;python&quot;: &quot;3.13.16&quot;,
-  &quot;platform&quot;: &quot;Linux-6.18.44-fc-v139-x86_64-with-glibc2.39&quot;,
-  &quot;packages&quot;: {
-    &quot;numpy&quot;: &quot;2.5.4&quot;,
-    &quot;scipy&quot;: &quot;1.18.1&quot;,
-    &quot;astropy&quot;: &quot;8.0.2&quot;,
-    &quot;matplotlib&quot;: &quot;3.11.2&quot;,
-    &quot;lightkurve&quot;: &quot;2.6.0&quot;,
-    &quot;anthropic&quot;: &quot;1.15.0&quot;
-  },
-  &quot;config_name&quot;: &quot;tess-pi-men-s1&quot;,
-  &quot;config_sha256&quot;: &quot;fd677ce6cc4ece7896618730d84ab4208d18dc87fd388108bed6072d7aeb72ad&quot;,
-  &quot;subject_days&quot;: 13.0,
-  &quot;search_scope&quot;: &quot;subject&quot;,
-  &quot;claude_prompt_version&quot;: &quot;2026-10-16.1&quot;,
-  &quot;inputs&quot;: [
-    {
-      &quot;source&quot;: &quot;MAST&quot;,
-      &quot;author&quot;: &quot;SPOC&quot;,
-      &quot;sector&quot;: 1,
-      &quot;exptime_s&quot;: 120,
-      &quot;flux_column&quot;: &quot;pdcsap_flux&quot;,
-      &quot;time_unit&quot;: &quot;BTJD&quot;,
-      &quot;lightkurve_version&quot;: &quot;2.6.0&quot;,
-      &quot;target&quot;: &quot;TIC 261136679&quot;,
-      &quot;mission&quot;: &quot;TESS&quot;
-    }
-  ],
-  &quot;reviewers&quot;: [
-    {
-      &quot;id&quot;: &quot;volunteer-sensitive&quot;,
-      &quot;kind&quot;: &quot;simulated&quot;,
-      &quot;weight&quot;: 0.6
-    },
-    {
-      &quot;id&quot;: &quot;volunteer-typical&quot;,
-      &quot;kind&quot;: &quot;simulated&quot;,
-      &quot;weight&quot;: 0.6
-    },
-    {
-      &quot;id&quot;: &quot;volunteer-cautious&quot;,
-      &quot;kind&quot;: &quot;simulated&quot;,
-      &quot;weight&quot;: 0.4
-    },
-    {
-      &quot;id&quot;: &quot;claude-volunteer&quot;,
-      &quot;kind&quot;: &quot;claude_code&quot;,
-      &quot;weight&quot;: 0.5
-    },
-    {
-      &quot;id&quot;: &quot;claude-skeptic&quot;,
-      &quot;kind&quot;: &quot;claude_code&quot;,
-      &quot;weight&quot;: 0.5
-    }
-  ],
-  &quot;skipped_reviewers&quot;: [],
-  &quot;weights&quot;: {
-    &quot;claude-skeptic&quot;: 0.5,
-    &quot;claude-volunteer&quot;: 0.5,
-    &quot;volunteer-cautious&quot;: 0.4,
-    &quot;volunteer-sensitive&quot;: 0.6,
-    &quot;volunteer-typical&quot;: 0.6
-  },
-  &quot;weights_source&quot;: &quot;docs/results/reviewer_weights_full_panel.json&quot;,
-  &quot;counts&quot;: {
-    &quot;light_curves&quot;: 1,
-    &quot;subjects&quot;: 2,
-    &quot;classifications&quot;: 10,
-    &quot;consensus_events&quot;: 7,
-    &quot;passed_vetting&quot;: 6
-  },
-  &quot;rebuilds&quot;: [
-    {
-      &quot;at&quot;: &quot;2026-10-19T10:46:05+00:00&quot;,
-      &quot;exoplan_version&quot;: &quot;0.1.0&quot;,
-      &quot;reused&quot;: &quot;stored classifications (classifications.csv); the reviewers were not asked again&quot;,
-      &quot;transit_fit&quot;: &quot;limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g&quot;,
-      &quot;fap_trials&quot;: 10000,
-      &quot;stellar&quot;: &quot;tic&quot;,
-      &quot;config_sha256&quot;: &quot;5144cd5273f6aa315915ed7d7fee28c9485303d2509ee7e6799c63d3796e35ba&quot;
-    },
-    {
-      &quot;at&quot;: &quot;2026-10-19T12:09:47+00:00&quot;,
-      &quot;exoplan_version&quot;: &quot;0.1.0&quot;,
-      &quot;reused&quot;: &quot;stored classifications (classifications.csv); the reviewers were not asked again&quot;,
-      &quot;transit_fit&quot;: &quot;limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g&quot;,
-      &quot;fap_trials&quot;: 10000,
-      &quot;stellar&quot;: &quot;tic&quot;,
-      &quot;config_sha256&quot;: &quot;585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6&quot;
-    },
-    {
-      &quot;at&quot;: &quot;2026-10-19T12:13:07+00:00&quot;,
-      &quot;exoplan_version&quot;: &quot;0.1.0&quot;,
-      &quot;reused&quot;: &quot;stored classifications (classifications.csv); the reviewers were not asked again&quot;,
-      &quot;transit_fit&quot;: &quot;limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g&quot;,
-      &quot;fap_trials&quot;: 10000,
-      &quot;stellar&quot;: &quot;tic&quot;,
-      &quot;config_sha256&quot;: &quot;585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6&quot;,
-      &quot;code&quot;: &quot;c78b981-dirty&quot;,
-      &quot;inputs&quot;: [
-        {
-          &quot;target&quot;: &quot;TIC 261136679&quot;,
-          &quot;sector&quot;: 1,
-          &quot;file&quot;: &quot;tess2018206045859-s0001-0000000261136679-0120-s_lc.fits&quot;,
-          &quot;file_sha256&quot;: &quot;1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609&quot;
-        }
-      ]
-    },
-    {
-      &quot;at&quot;: &quot;2026-10-19T12:33:09+00:00&quot;,
-      &quot;exoplan_version&quot;: &quot;0.1.0&quot;,
-      &quot;reused&quot;: &quot;stored classifications (classifications.csv); the reviewers were not asked again&quot;,
-      &quot;transit_fit&quot;: &quot;limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g&quot;,
-      &quot;fap_trials&quot;: 10000,
-      &quot;stellar&quot;: &quot;tic&quot;,
-      &quot;config_sha256&quot;: &quot;585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6&quot;,
-      &quot;code&quot;: &quot;c78b981-dirty&quot;,
-      &quot;inputs&quot;: [
-        {
-          &quot;target&quot;: &quot;TIC 261136679&quot;,
-          &quot;sector&quot;: 1,
-          &quot;file&quot;: &quot;tess2018206045859-s0001-0000000261136679-0120-s_lc.fits&quot;,
-          &quot;file_sha256&quot;: &quot;1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609&quot;
-        }
-      ]
-    }
-  ],
-  &quot;code_note&quot;: &quot;Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since.&quot;
-}</pre></details>
-</section>
-
-<footer>Generated by SetuHQ. Code: AGPL-3.0-only or a commercial licence from Ashforde OÜ; results: CC BY 4.0. Results on synthetic data are not claims about real sky data.</footer>
-</main></body></html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The run report has moved · SetuHQ</title><meta name="robots" content="noindex">
+<link rel="canonical" href="https://setuhq.com/evidence/report/">
+<script>(function(){var RT={"paths":{"overview":"/","sky":"/explore/","galaxy":"/explore/galaxy/","mission":"/explore/mission-control/","catalogue":"/catalogue/","variables":"/catalogue/everything-that-dims/","explorer":"/candidates/","planets":"/candidates/radius-ratios/","methods":"/how-it-works/","sentinels":"/evidence/","leaderboard":"/evidence/leaderboard/","runs":"/evidence/runs/","docs":"/docs/"},"identity":{"transit":"dip","candidates":"dip","planet":"id","star":"id","methods":"ch"},"chapters":{"survey":"","transit":"transits","doppler":"doppler-shift","rv":"radial-velocity","astrometry":"astrometry","microlensing":"microlensing","imaging":"direct-imaging","timing":"timing","radio":"radio","falsepos":"false-positives","spectroscopy":"atmospheres","molecules":"molecules-and-life","population":"population","equations":"equations-of-life","history":"history"},"aliases":{"discoveries":"explorer","feed":"explorer","panel":"sentinels","home":"sky","cockpit":"transit","about":"overview"},"legacy":{"/app/":"/","/docket/":"/candidates/case-file/","/plate/":"/evidence/plates/","/report/":"/evidence/report/","/dashboard/":"/candidates/","/discoveries/":"/candidates/"},"lead":"tess-fa3483ce6f83-000"};
+function rtUrl(route, params, keepQuery){
+  params = Object.assign({}, params || {}); for (const k of Object.keys(params)) if (params[k] === null || params[k] === undefined || params[k] === '') delete params[k];
+  route = RT.aliases[route] || route;
+  const key = RT.identity[route]; let ident = null, section = null, path;
+  if (key){ ident = params[key] || null; delete params[key]; }
+  if (route === 'candidates'){ section = params.section || null; delete params.section; }
+  if (route === 'transit' || route === 'candidates'){
+    path = ident ? '/candidates/' + encodeURIComponent(ident) + '/' + (route === 'candidates' ? 'case-file/' : '') : (route === 'candidates' ? '/candidates/case-file/' : '/candidates/');
+  } else if (route === 'planet' || route === 'star'){
+    path = (route === 'planet' ? '/planets/' : '/stars/') + (ident ? ident + '/' : '');
+  } else if (route === 'methods'){
+    const slug = RT.chapters[ident || 'survey'] || '';
+    path = '/how-it-works/' + (slug ? slug + '/' : '');
+  } else path = RT.paths[route] || '/';
+  const q = keepQuery === false ? '' : new URLSearchParams(params).toString();
+  return path + (q ? '?' + q : '') + (section ? '#' + section : '');
+}
+function rtFromHash(h, keepQuery){
+  const body = String(h || '').replace(/^#/, '').replace(/^\//, ''), i = body.indexOf('?');
+  let route = i < 0 ? body : body.slice(0, i);
+  try { route = decodeURIComponent(route); } catch (e) { /* keep as typed */ }
+  const params = Object.fromEntries(new URLSearchParams(i < 0 ? '' : body.slice(i + 1)));
+  const m = /^(planet|star)\/([a-z0-9-]{1,120})$/.exec(route);
+  if (m){ route = m[1]; params.id = m[2]; }
+  if (!(route in RT.paths) && !(route in RT.identity) && !(route in RT.aliases)) return '/';
+  if (route === 'overview') return '/';
+  if (['transit', 'candidates'].includes(RT.aliases[route] || route) && !params.dip && RT.lead) params.dip = RT.lead;
+  return rtUrl(route, params, keepQuery);
+}
+function rtParse(pathname, search){
+  const parts = String(pathname || '/').split('/').filter(Boolean), params = Object.fromEntries(new URLSearchParams(search || ''));
+  const norm = '/' + parts.join('/') + (parts.length ? '/' : '');
+  for (const r in RT.paths) if (RT.paths[r] === norm && norm !== '/how-it-works/') return {route: r, params};
+  if (parts[0] === 'how-it-works' && parts.length <= 2){
+    const slug = parts[1] || ''; const ch = Object.keys(RT.chapters).find(c => RT.chapters[c] === slug);
+    return ch ? {route: 'methods', params: Object.assign(params, {ch})} : null;
+  }
+  if (parts.length === 2 && (parts[0] === 'planets' || parts[0] === 'stars') && /^[a-z0-9][a-z0-9-]{0,119}$/.test(parts[1]))
+    return {route: parts[0] === 'planets' ? 'planet' : 'star', params: Object.assign(params, {id: parts[1]})};
+  if (parts[0] === 'candidates' && (parts.length === 2 || parts.length === 3) && parts[1] !== 'case-file' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/.test(decodeURIComponent(parts[1]))){
+    const dip = decodeURIComponent(parts[1]);
+    if (parts.length === 2) return {route: 'transit', params: Object.assign(params, {dip})};
+    if (parts[2] === 'case-file') return {route: 'candidates', params: Object.assign(params, {dip})};
+  }
+  return null;
+}
+function rtLegacy(pathname, hash){
+  let p = String(pathname || '/'); if (!p.endsWith('/')) p += '/';
+  hash = hash || '';
+  if (p === '/app/' || p === '/'){
+    if (hash.startsWith('#/') || hash === '#') return rtFromHash(hash);
+    return p === '/app/' ? '/' : null;
+  }
+  if (p === '/docket/' && hash.length > 1 && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/.test(hash.slice(1))) return rtUrl('candidates', {dip: hash.slice(1)});
+  if (p in RT.legacy) return RT.legacy[p] + (hash && hash !== '#' ? hash : '');
+  return null;
+}
+var t=rtLegacy(location.pathname,location.hash);if(t&&t!==location.pathname+location.search+location.hash){location.replace(t);}})();</script>
+<noscript><meta http-equiv="refresh" content="0; url=/evidence/report/"></noscript>
+<style>html{background:#000;color:#F5F5F7;font:16px/1.5 system-ui,sans-serif}body{margin:0;padding:48px 16px;max-width:640px;margin:0 auto}a{color:#64D2FF}</style>
+</head><body><main><h1 style="font-size:24px">This page has moved.</h1><p>The run report is now at <a href="/evidence/report/">https://setuhq.com/evidence/report/</a>.</p></main></body></html>

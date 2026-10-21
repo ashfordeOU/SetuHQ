@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Toward and away · How it works · SetuHQ</title>
+<link rel="icon" type="image/svg+xml" href="/assets/brand/setuhq-favicon.svg">
+<meta name="description" content="Chapter 3 of 15 of How it works: Toward and away. An animated explainer with its physics and sources.">
+<link rel="canonical" href="https://setuhq.com/how-it-works/doppler-shift/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="Toward and away · How it works · SetuHQ"><meta property="og:description" content="Chapter 3 of 15 of How it works: Toward and away. An animated explainer with its physics and sources."><meta property="og:url" content="https://setuhq.com/how-it-works/doppler-shift/"><meta property="og:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Toward and away · How it works · SetuHQ"><meta name="twitter:description" content="Chapter 3 of 15 of How it works: Toward and away. An animated explainer with its physics and sources."><meta name="twitter:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png">
+
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#000000">
+<script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/assets/site-830623b45e.css">
+<link rel="preload" href="/assets/data/app-24ac6aa531.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/app-826c56aeed.js" as="script">
+<script src="/assets/site-518cc8a20a.js" defer></script>
+</head>
+<body class="page-methods" data-page="methods" data-route="methods" data-data="/assets/data/app-24ac6aa531.json" data-routes="/assets/views-c3371ac697.html" data-app="/assets/app-826c56aeed.js">
+<img class="starfield" src="/assets/starfield-7d78158d28.svg" alt="" aria-hidden="true">
+<a class="skip" href="#content">Skip to content</a>
+<header class="topbar">
+  <div class="tbin">
+    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="579" height="132"></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/explore/" data-nav="explore">Explore</a></li><li><a href="/candidates/" data-nav="candidates">Candidates</a></li><li><a href="/how-it-works/" data-nav="how">How it works</a></li><li><a href="/evidence/" data-nav="evidence">Evidence</a></li><li><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav>
+    <div class="tools">
+      <button class="iconbtn searchbtn" type="button" id="gsearchbtn" aria-label="Search planets, stars and pages (press /)" aria-haspopup="dialog" title="Search (/)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      <button class="iconbtn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Switch to light" title="Theme: dark"><svg class="ti ti-dark" viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 12.6A6.5 6.5 0 0 1 7.4 4.5a6.5 6.5 0 1 0 8.1 8.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><svg class="ti ti-light" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="ti ti-system" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3.4a6.6 6.6 0 0 1 0 13.2z" fill="currentColor"/></svg></button>
+      <button class="iconbtn menubtn" type="button" id="menubtn" aria-expanded="false" aria-controls="menu" aria-label="Open the menu"><svg class="mi-open" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><svg class="mi-close" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+  <div class="menu" id="menu" hidden><nav aria-label="Main"><ul><li class="msec"><a href="/explore/" data-nav="explore">Explore</a><ul class="msub"><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></li><li class="msec"><a href="/candidates/" data-nav="candidates">Candidates</a><ul class="msub"><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/tess-fa3483ce6f83-000/">Dips</a></li><li><a href="/candidates/tess-fa3483ce6f83-000/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></li><li class="msec"><a href="/how-it-works/" data-nav="how">How it works</a></li><li class="msec"><a href="/evidence/" data-nav="evidence">Evidence</a><ul class="msub"><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></li><li class="msec"><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav></div>
+</header>
+<div class="pagebar"><div class="pbin"><nav class="crumbs" id="crumbs" aria-label="Breadcrumb"><ol><li><a href="/how-it-works/">How it works</a></li><li aria-current="page">Toward and away</li></ol></nav><nav class="subnav" id="subnav" aria-label="In this section" hidden></nav><div class="pagetools"><button class="btn" type="button" id="copyview" hidden>Copy link to this view</button><span class="muted" id="copyviewstate" role="status"></span><input class="copyfallback" id="copyviewbox" type="text" readonly aria-label="Link to this view" hidden></div></div></div>
+<main id="main">
+ <div id="content" tabindex="-1">
+<section class="route" id="route-methods" data-route="methods" aria-labelledby="h-methods" data-partial>
+<header class="headrow">
+        <div><h1 class="lead-h" id="h-methods" tabindex="-1">How planets are found.<br><span class="grey">And how SetuHQ finds them.</span></h1>
+        <p>15 chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something SetuHQ itself does.</p></div>
+      </header>
+      <nav class="mxtoc" aria-label="Methods chapters"><ol><li><a href="/how-it-works/" data-ch="survey"><span class="mono">01</span>How a survey works</a></li><li><a href="/how-it-works/transits/" data-ch="transit"><span class="mono">02</span>Transit</a></li><li><a href="/how-it-works/doppler-shift/" data-ch="doppler" aria-current="step"><span class="mono">03</span>Toward and away</a></li><li><a href="/how-it-works/radial-velocity/" data-ch="rv"><span class="mono">04</span>Radial velocity</a></li><li><a href="/how-it-works/astrometry/" data-ch="astrometry"><span class="mono">05</span>Astrometry</a></li><li><a href="/how-it-works/microlensing/" data-ch="microlensing"><span class="mono">06</span>Microlensing</a></li><li><a href="/how-it-works/direct-imaging/" data-ch="imaging"><span class="mono">07</span>Blocking starlight</a></li><li><a href="/how-it-works/timing/" data-ch="timing"><span class="mono">08</span>Timing and phase</a></li><li><a href="/how-it-works/radio/" data-ch="radio"><span class="mono">09</span>Radio</a></li><li><a href="/how-it-works/false-positives/" data-ch="falsepos"><span class="mono">10</span>False positives</a></li><li><a href="/how-it-works/atmospheres/" data-ch="spectroscopy"><span class="mono">11</span>Reading atmospheres</a></li><li><a href="/how-it-works/molecules-and-life/" data-ch="molecules"><span class="mono">12</span>Molecules and life</a></li><li><a href="/how-it-works/population/" data-ch="population"><span class="mono">13</span>Population</a></li><li><a href="/how-it-works/equations-of-life/" data-ch="equations"><span class="mono">14</span>Equations of life</a></li><li><a href="/how-it-works/history/" data-ch="history"><span class="mono">15</span>History and papers</a></li></ol></nav>
+      <article class="mxch" id="mx-doppler" data-ch="doppler" aria-labelledby="h-mx-doppler"><header><p class="eyebrow">Chapter 3 of 15</p><h2 id="h-mx-doppler">Toward and away</h2></header>
+      <p class="mxlede">Light from a star moving toward us arrives slightly bluer; moving away, slightly redder. Only the motion along our line of sight shifts the light. Motion across the sky (proper motion) shifts nothing.</p>
+      <figure class="mxstage" data-vis="doppler">
+          <div class="mxcanvas"><canvas role="img" aria-label="An observer at the bottom. A star moves toward and away from the observer along the line of sight, then across it. Below, a strip of five absorption lines slides blueward when the star approaches and redward when it recedes, and stays put when it moves across. The shift is exaggerated a million-fold and labelled."></canvas></div>
+          <div class="mxbadges"><span class="mxlabel ill">Illustration</span><span class="mxexag" aria-live="polite"></span></div>
+          <div class="mxctl" role="group" aria-label="Animation controls">
+            <button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the orbit">
+            <label class="mxmode"><span>Motion</span><select><option value="los">Along the line of sight</option><option value="across">Across the sky</option></select></label>
+          </div>
+          <figcaption class="mxdesc">An observer at the bottom. A star moves toward and away from the observer along the line of sight, then across it. Below, a strip of five absorption lines slides blueward when the star approaches and redward when it recedes, and stays put when it moves across. The shift is exaggerated a million-fold and labelled.</figcaption>
+        </figure>
+      <div class="mxtext">
+        <h3>How small the shift is</h3>
+        <p>Δλ/λ = v_r/c, with v_r positive for motion away (redshift). For a wobble of tens of m/s the shift is a ten-millionth of the wavelength, so spectrographs measure it by cross-correlating thousands of lines (Fischer et al. 2016). The star's colour does not visibly change.</p>
+        <div class='tablewrap' tabindex='0' role='region' aria-label='Numbers in this chapter'><table class='mxnums'><thead><tr><th scope='col'>Quantity</th><th scope='col' class='num'>Value</th><th scope='col'>From</th></tr></thead><tbody><tr><th scope='row'>51 Peg b&#x27;s K</th><td class='num'>55.77 m/s</td><td>exoplanet.eu (The Extrasolar Planets Encyclopaedia (exoplanet.eu), fetched 2026-10-18)</td></tr><tr><th scope='row'>Δλ/λ for that K</th><td class='num'>1.9e-07</td><td>v/c [calc]</td></tr><tr><th scope='row'>Shift at 500 nm</th><td class='num'>95 fm</td><td>[calc]</td></tr></tbody></table></div>
+      </div><div class="pllinks mxplanets"><span>Planets in this chapter</span><a class="objlink" data-planet="51 Peg b" href="/planets/51-peg-b/">51 Peg b ›</a></div><details class="mxsources"><summary>Sources</summary><ul class="mxsrc"><li><a href="https://doi.org/10.1088/1538-3873/128/964/066001" rel="noopener">Fischer et al. 2016, PASP 128, 066001 (precise RV)</a></li><li><a href="https://doi.org/10.1038/378355a0" rel="noopener">Mayor &amp; Queloz 1995, Nature 378, 355</a></li></ul></details><nav class="mxnav" aria-label="Chapters"><a class="btn" href="/how-it-works/transits/">‹ Transit</a><a class="btn primary" href="/how-it-works/radial-velocity/">Radial velocity ›</a></nav></article>
+</section>
+ </div>
+ <p class="note" id="bootnote" hidden>The interactive parts of this page could not load. Its text above is complete; reload to try again.</p>
+</main>
+<footer class="sitefoot"><div class="fin">
+  <nav class="footnav" aria-label="Site"><div><h2>Explore</h2><ul><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></div><div><h2>Candidates</h2><ul><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/tess-fa3483ce6f83-000/">Dips</a></li><li><a href="/candidates/tess-fa3483ce6f83-000/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></div><div><h2>How it works</h2><ul><li><a href="/how-it-works/">Overview</a></li><li><a href="/how-it-works/transits/">Transit</a></li><li><a href="/how-it-works/doppler-shift/">Toward and away</a></li><li><a href="/how-it-works/radial-velocity/">Radial velocity</a></li><li><a href="/how-it-works/astrometry/">Astrometry</a></li><li><a href="/how-it-works/">All 15 chapters</a></li></ul></div><div><h2>Evidence</h2><ul><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></div><div><h2>Docs</h2><ul><li><a href="/docs/">Get started</a></li><li><a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ">Source code</a></li><li><a href="/docs/#contribute">Contributing a sweep</a></li><li><a href="/docs/#data">Data downloads</a></li></ul></div></nav>
+  <p class="attribution">Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+  <p>Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ's data under CC BY 4.0. "SetuHQ" and the Setu mark are trademarks of Ashforde OÜ.</p>
+</div></footer>
+<div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
+<dialog class="gsearch" id="gsearch" aria-labelledby="gsearchlbl">
+  <label class="gsfield"><span class="sr" id="gsearchlbl">Search planets, stars and pages</span>
+    <input type="search" id="gsq" role="combobox" aria-expanded="true" aria-controls="gsresults" aria-autocomplete="list" placeholder="Search planets, stars, pages" autocomplete="off"></label>
+  <ul class="gsresults" id="gsresults" role="listbox" aria-label="Results"></ul>
+  <p class="gshint">↑ ↓ to move · Enter to open · Esc to close</p>
+</dialog>
+<nav class="learnbar" id="learnbar" aria-label="Learn path" hidden>
+  <span class="lpos mono" id="learnpos"></span><a class="btn" id="learnprev" href="/">‹ Back</a><a class="btn primary" id="learnnext" href="/">Next ›</a>
+  <button class="btn" type="button" id="learnleave" aria-label="Leave the path">Leave</button>
+</nav>
+<template id="mxsystpl"><figure class="mxstage tall" data-vis="system">
+          <div class="mxcanvas"><canvas role="img" aria-label="A star and its planet, drawn from stored values."></canvas></div>
+          <div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
+          <div class="mxctl" role="group" aria-label="Animation controls">
+            <button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the orbit">
+            <button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button>
+          </div>
+          <figcaption class="mxdesc">A star and its planet, drawn from stored values.</figcaption>
+        </figure></template>
+
+</body></html>
