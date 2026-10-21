@@ -26,9 +26,316 @@
       "even_err": 8.182075938315263e-06,
       "secondary_depth": -9.734454035958962e-06,
       "secondary_err": 8.223047313878375e-06,
+      "odd_even_error_scale": 1.0,
       "period": 6.272619606532485,
       "odd_depth": 0.00025121770793390397,
-      "even_depth": 0.0002470921374413404
+      "even_depth": 0.0002470921374413404,
+      "dv": {
+        "crowding": {
+          "crowdsap": null,
+          "flfrcsap": null,
+          "crowding_min": 0.8,
+          "crowded": null
+        },
+        "secondary": {
+          "phase": 0.07754523728671342,
+          "depth_ppm": 25.60788511218881,
+          "sigma_ppm": 9.330935994618219,
+          "snr": 2.7444068984031835,
+          "n_points": 38,
+          "max_brightening_snr": 5.913027606227784,
+          "n_trials": 182,
+          "duration_days": 0.13226244450163335,
+          "excluded_days": 0.13226244450163335,
+          "scan_median_snr": -0.2042037651198203,
+          "scan_robust_sigma": 1.125494634754147,
+          "scan_std_snr": 1.1690363614540846,
+          "n_epochs": 2,
+          "max_epoch_share": 0.6221451655436241,
+          "phase_05": {
+            "phase": 0.501142689948148,
+            "depth_ppm": -14.084749783815909,
+            "sigma_ppm": 9.330935994618219,
+            "snr": -1.5094680525018642
+          },
+          "albedo": 3.4431166922419347,
+          "threshold_rule": "5.18 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 182 positions)",
+          "threshold_sigma": 5.830371770068164,
+          "periodic": true,
+          "significant": false
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 308.1426881573934,
+          "odd_err_ppm": 14.286330594139868,
+          "n_odd": 2,
+          "even_depth_ppm": 290.1504653784584,
+          "even_err_ppm": 17.24413339817035,
+          "n_even": 1,
+          "error_scale": 1.0,
+          "epoch_chi2": 0.050221171336793324,
+          "epoch_dof": 1,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.8034649588724136,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 3,
+          "o_minus_c_minutes": [
+            0.3839329392212676,
+            -1.0971794615397812,
+            2.0752446904953104
+          ],
+          "linear": {
+            "t0": 1331.7715716413215,
+            "period": 6.267951799894506,
+            "period_err": 0.0013701463185290673,
+            "chi2": 0.5512356799202719,
+            "dof": 1,
+            "p_value": 0.4578132351365123,
+            "inconsistent": false
+          },
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": -1,
+              "t_mid": 1325.5038864615237,
+              "sigma": 0.0012502247715320749,
+              "depth": 0.00031066516122649554,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 0,
+              "t_mid": 1331.77080971114,
+              "sigma": 0.0014944598409974397,
+              "depth": 0.0002901504653784584,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 1,
+              "t_mid": 1338.0409645833622,
+              "sigma": 0.0029066655822504064,
+              "depth": 0.0003048353527830729,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 6.268141030329721,
+        "t0": 1331.7714748777253,
+        "duration_days": 0.13226244450163335,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.5607522941209283,
+            "depth_ppm": 20.824132068497647,
+            "sigma_ppm": 9.004859944944966,
+            "snr": 2.312543692607638,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.1845161901369854,
+            "scan_std_snr": 1.0555191239373303,
+            "max_brightening_snr": 2.7211117524006525,
+            "periodic": true,
+            "max_epoch_share": 0.5648812222023866,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -13.673704185146462,
+              "sigma_ppm": 8.885585010564418,
+              "snr": -1.538863695399826
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.0722700510767329,
+            "depth_ppm": 23.14233310285463,
+            "sigma_ppm": 9.032148787221358,
+            "snr": 2.5622178783852956,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.1571402128156856,
+            "scan_std_snr": 0.975555569946295,
+            "max_brightening_snr": 2.6982571025234248,
+            "periodic": false,
+            "max_epoch_share": 0.8549461021805442,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -10.779949801031918,
+              "sigma_ppm": 9.032148787221358,
+              "snr": -1.1935088819931023
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.8493049798068615,
+            "depth_ppm": 20.608275673184018,
+            "sigma_ppm": 8.992099179915277,
+            "snr": 2.291820325916177,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.0694488273035185,
+            "scan_std_snr": 1.0734790312608578,
+            "max_brightening_snr": 2.6078948023200703,
+            "periodic": true,
+            "max_epoch_share": 0.644695952616074,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -13.35863166596063,
+              "sigma_ppm": 8.992099179915277,
+              "snr": -1.4855965663499826
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.8493049798068615,
+            "depth_ppm": 20.223625591841987,
+            "sigma_ppm": 9.028316960630768,
+            "snr": 2.2400216651708087,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.0490677034492188,
+            "scan_std_snr": 1.0287873774890375,
+            "max_brightening_snr": 2.6755812701764796,
+            "periodic": true,
+            "max_epoch_share": 0.6348907019108774,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -13.66905920097139,
+              "sigma_ppm": 9.028316960630768,
+              "snr": -1.5140207483385024
+            },
+            "window_scale": 1.5,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": 0.018607979410126374,
+        "nfpp": null,
+        "probabilities": {
+          "tp": 0.9784407907094549,
+          "eb": 0.012955875769965743,
+          "eb2p": 0.008603333520579425
+        },
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.13189352287236397,
+          "secondary_source": "all-phase search (phase 0.078)",
+          "fpp_stability": {
+            "n_settings": 5,
+            "white_settings": 5,
+            "range": [
+              0.01110441299596232,
+              0.02155920929054511
+            ],
+            "median_robust": 0.018607979410126374,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.02155920929054511,
+                "white": true
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.0213805447281622,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.018607979410126374,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.018812710180388437,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.011712854901349545,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.01110441299596232,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.018662333610966697,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.018655385923354584,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.018471967319544924,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.018512729168475905,
+                "white": true
+              }
+            ],
+            "log10_odds_spread": 0.29275311173614993
+          },
+          "secondary_bayes_factor_eb_vs_tp": 0.09931011584695587
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "undetermined (by number, reduced scheme): FPP \u2248 0.019, range 0.0111\u20130.0216 over 5 detrending settings \u00d7 2 noise models straddles the FPP threshold 0.015",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)"
+        ],
+        "refused": null
+      }
     },
     "candidate_id": "tess-fa3483ce6f83-000",
     "bls_t0": 1325.50043266878,
@@ -276,6 +583,7 @@
     "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
     "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
     "fap_snr": 36.95665161594774,
+    "sector": 1,
     "t_center": 1331.7711478689805,
     "duration_hours": 2.45509771106299,
     "fit_t0": 1331.7714748777253,
@@ -289,7 +597,16 @@
     "fit_k": 0.018651797228796306,
     "fit_rho_star": 0.15402439091151857,
     "fit_rho_star_err": 1.0841131070418228,
-    "star_rho": 1.02260345513
+    "star_rho": 1.02260345513,
+    "crowdsap": null,
+    "secondary_phase": 0.07754523728671342,
+    "secondary_snr": 2.7444068984031835,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": 0.018607979410126374,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
   },
   {
     "subject_id": "tess-fa3483ce6f83",
@@ -318,9 +635,316 @@
       "even_err": 8.182075938315263e-06,
       "secondary_depth": -9.734454035958962e-06,
       "secondary_err": 8.223047313878375e-06,
+      "odd_even_error_scale": 1.0,
       "period": 6.272619606532485,
       "odd_depth": 0.00025121770793390397,
-      "even_depth": 0.0002470921374413404
+      "even_depth": 0.0002470921374413404,
+      "dv": {
+        "crowding": {
+          "crowdsap": null,
+          "flfrcsap": null,
+          "crowding_min": 0.8,
+          "crowded": null
+        },
+        "secondary": {
+          "phase": 0.07754523728671342,
+          "depth_ppm": 25.60788511218881,
+          "sigma_ppm": 9.330935994618219,
+          "snr": 2.7444068984031835,
+          "n_points": 38,
+          "max_brightening_snr": 5.913027606227784,
+          "n_trials": 182,
+          "duration_days": 0.13226244450163335,
+          "excluded_days": 0.13226244450163335,
+          "scan_median_snr": -0.2042037651198203,
+          "scan_robust_sigma": 1.125494634754147,
+          "scan_std_snr": 1.1690363614540846,
+          "n_epochs": 2,
+          "max_epoch_share": 0.6221451655436241,
+          "phase_05": {
+            "phase": 0.501142689948148,
+            "depth_ppm": -14.084749783815909,
+            "sigma_ppm": 9.330935994618219,
+            "snr": -1.5094680525018642
+          },
+          "albedo": 3.4431166922419347,
+          "threshold_rule": "5.18 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 182 positions)",
+          "threshold_sigma": 5.830371770068164,
+          "periodic": true,
+          "significant": false
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 290.1504653784584,
+          "odd_err_ppm": 17.24413339817035,
+          "n_odd": 1,
+          "even_depth_ppm": 308.1426881576108,
+          "even_err_ppm": 14.286330594140969,
+          "n_even": 2,
+          "error_scale": 1.0,
+          "epoch_chi2": 0.0502211713433896,
+          "epoch_dof": 1,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.8034649588820936,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 3,
+          "o_minus_c_minutes": [
+            0.3839329398761038,
+            -1.0971794618671993,
+            2.075244689185638
+          ],
+          "linear": {
+            "t0": 1338.039523441217,
+            "period": 6.2679517998951395,
+            "period_err": 0.0013701463185026436,
+            "chi2": 0.5512356799248052,
+            "dof": 1,
+            "p_value": 0.4578132351346632,
+            "inconsistent": false
+          },
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": -2,
+              "t_mid": 1325.5038864615237,
+              "sigma": 0.0012502247714697647,
+              "depth": 0.0003106651612268781,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": -1,
+              "t_mid": 1331.77080971114,
+              "sigma": 0.0014944598409974397,
+              "depth": 0.0002901504653784584,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 0,
+              "t_mid": 1338.0409645833622,
+              "sigma": 0.0029066655822504064,
+              "depth": 0.0003048353527830729,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 6.268141030329721,
+        "t0": 1338.0396159080549,
+        "duration_days": 0.13226244450163335,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.5607522941209283,
+            "depth_ppm": 20.824132068497647,
+            "sigma_ppm": 9.004859944944966,
+            "snr": 2.312543692607638,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.1845161901369854,
+            "scan_std_snr": 1.0555191239373303,
+            "max_brightening_snr": 2.7211117524006525,
+            "periodic": true,
+            "max_epoch_share": 0.5648812222023866,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -13.673704185146462,
+              "sigma_ppm": 8.885585010564418,
+              "snr": -1.538863695399826
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.0722700510767329,
+            "depth_ppm": 23.14233310285463,
+            "sigma_ppm": 9.032148787221358,
+            "snr": 2.5622178783852956,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.1571402128156856,
+            "scan_std_snr": 0.975555569946295,
+            "max_brightening_snr": 2.6982571025234248,
+            "periodic": false,
+            "max_epoch_share": 0.8549461021805442,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -10.779949801031918,
+              "sigma_ppm": 9.032148787221358,
+              "snr": -1.1935088819931023
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.8493049798068615,
+            "depth_ppm": 20.608275673184018,
+            "sigma_ppm": 8.992099179915277,
+            "snr": 2.291820325916177,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.0694488273035185,
+            "scan_std_snr": 1.0734790312608578,
+            "max_brightening_snr": 2.6078948023200703,
+            "periodic": true,
+            "max_epoch_share": 0.644695952616074,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -13.35863166596063,
+              "sigma_ppm": 8.992099179915277,
+              "snr": -1.4855965663499826
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.8493049798068615,
+            "depth_ppm": 20.223625591841987,
+            "sigma_ppm": 9.028316960630768,
+            "snr": 2.2400216651708087,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.0490677034492188,
+            "scan_std_snr": 1.0287873774890375,
+            "max_brightening_snr": 2.6755812701764796,
+            "periodic": true,
+            "max_epoch_share": 0.6348907019108774,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -13.66905920097139,
+              "sigma_ppm": 9.028316960630768,
+              "snr": -1.5140207483385024
+            },
+            "window_scale": 1.5,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": 0.018607979410192432,
+        "nfpp": null,
+        "probabilities": {
+          "tp": 0.9784407907093892,
+          "eb": 0.012955875769964872,
+          "eb2p": 0.008603333520646043
+        },
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.13189352287339412,
+          "secondary_source": "all-phase search (phase 0.078)",
+          "fpp_stability": {
+            "n_settings": 5,
+            "white_settings": 5,
+            "range": [
+              0.011104412996029489,
+              0.021559209290610837
+            ],
+            "median_robust": 0.018607979410192432,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.021559209290610837,
+                "white": true
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.021380544728227924,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.018607979410192432,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.018812710180454606,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.011712854901416603,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.011104412996029489,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.018662333611032755,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.018655385923420753,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.018471967319611093,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.018512729168541964,
+                "white": true
+              }
+            ],
+            "log10_odds_spread": 0.2927531117348465
+          },
+          "secondary_bayes_factor_eb_vs_tp": 0.09931011584695587
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "undetermined (by number, reduced scheme): FPP \u2248 0.019, range 0.0111\u20130.0216 over 5 detrending settings \u00d7 2 noise models straddles the FPP threshold 0.015",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)"
+        ],
+        "refused": null
+      }
     },
     "candidate_id": "tess-fa3483ce6f83-001",
     "bls_t0": 1325.50043266878,
@@ -568,6 +1192,7 @@
     "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
     "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
     "fap_snr": 36.95665161594774,
+    "sector": 1,
     "t_center": 1338.0516953231054,
     "duration_hours": 2.2009685448192613,
     "fit_t0": 1338.0396159080549,
@@ -581,7 +1206,16 @@
     "fit_k": 0.018651797228796306,
     "fit_rho_star": 0.15402439091151857,
     "fit_rho_star_err": 1.0841131070418228,
-    "star_rho": 1.02260345513
+    "star_rho": 1.02260345513,
+    "crowdsap": null,
+    "secondary_phase": 0.07754523728671342,
+    "secondary_snr": 2.7444068984031835,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": 0.018607979410192432,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
   },
   {
     "subject_id": "tess-fa3483ce6f83",
@@ -610,9 +1244,316 @@
       "even_err": 8.182075938315263e-06,
       "secondary_depth": -9.734454035958962e-06,
       "secondary_err": 8.223047313878375e-06,
+      "odd_even_error_scale": 1.0,
       "period": 6.272619606532485,
       "odd_depth": 0.00025121770793390397,
-      "even_depth": 0.0002470921374413404
+      "even_depth": 0.0002470921374413404,
+      "dv": {
+        "crowding": {
+          "crowdsap": null,
+          "flfrcsap": null,
+          "crowding_min": 0.8,
+          "crowded": null
+        },
+        "secondary": {
+          "phase": 0.07754523728671342,
+          "depth_ppm": 25.60788511218881,
+          "sigma_ppm": 9.330935994618219,
+          "snr": 2.7444068984031835,
+          "n_points": 38,
+          "max_brightening_snr": 5.913027606227784,
+          "n_trials": 182,
+          "duration_days": 0.13226244450163335,
+          "excluded_days": 0.13226244450163335,
+          "scan_median_snr": -0.2042037651198203,
+          "scan_robust_sigma": 1.125494634754147,
+          "scan_std_snr": 1.1690363614540846,
+          "n_epochs": 2,
+          "max_epoch_share": 0.6221451655436241,
+          "phase_05": {
+            "phase": 0.501142689948148,
+            "depth_ppm": -14.084749783815909,
+            "sigma_ppm": 9.330935994618219,
+            "snr": -1.5094680525018642
+          },
+          "albedo": 3.4431166922419347,
+          "threshold_rule": "5.18 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 182 positions)",
+          "threshold_sigma": 5.830371770068164,
+          "periodic": true,
+          "significant": false
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 290.1504653784584,
+          "odd_err_ppm": 17.24413339817035,
+          "n_odd": 1,
+          "even_depth_ppm": 308.1426881576843,
+          "even_err_ppm": 14.286330594142196,
+          "n_even": 2,
+          "error_scale": 1.0,
+          "epoch_chi2": 0.05022117132520826,
+          "epoch_dof": 1,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.8034649588853481,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 3,
+          "o_minus_c_minutes": [
+            0.3839329395486857,
+            -1.097179460557527,
+            2.0752446918049827
+          ],
+          "linear": {
+            "t0": 1325.5036198414268,
+            "period": 6.267951799894035,
+            "period_err": 0.001370146318524243,
+            "chi2": 0.5512356798465003,
+            "dof": 1,
+            "p_value": 0.4578132351666029,
+            "inconsistent": false
+          },
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": 0,
+              "t_mid": 1325.5038864615237,
+              "sigma": 0.0012502247715320749,
+              "depth": 0.00031066516122649554,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 1,
+              "t_mid": 1331.77080971114,
+              "sigma": 0.0014944598409974397,
+              "depth": 0.0002901504653784584,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 2,
+              "t_mid": 1338.040964583362,
+              "sigma": 0.002906665582227957,
+              "depth": 0.0003048353527837454,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 6.268141030329721,
+        "t0": 1325.5033338473957,
+        "duration_days": 0.13226244450163335,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.5607522941209283,
+            "depth_ppm": 20.824132068497647,
+            "sigma_ppm": 9.004859944944966,
+            "snr": 2.312543692607638,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.1845161901369854,
+            "scan_std_snr": 1.0555191239373303,
+            "max_brightening_snr": 2.7211117524006525,
+            "periodic": true,
+            "max_epoch_share": 0.5648812222023866,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -13.673704185146462,
+              "sigma_ppm": 8.885585010564418,
+              "snr": -1.538863695399826
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.0722700510767329,
+            "depth_ppm": 23.14233310285463,
+            "sigma_ppm": 9.032148787221358,
+            "snr": 2.5622178783852956,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.1571402128156856,
+            "scan_std_snr": 0.975555569946295,
+            "max_brightening_snr": 2.6982571025234248,
+            "periodic": false,
+            "max_epoch_share": 0.8549461021805442,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -10.779949801031918,
+              "sigma_ppm": 9.032148787221358,
+              "snr": -1.1935088819931023
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.8493049798068615,
+            "depth_ppm": 20.608275673184018,
+            "sigma_ppm": 8.992099179915277,
+            "snr": 2.291820325916177,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.0694488273035185,
+            "scan_std_snr": 1.0734790312608578,
+            "max_brightening_snr": 2.6078948023200703,
+            "periodic": true,
+            "max_epoch_share": 0.644695952616074,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -13.35863166596063,
+              "sigma_ppm": 8.992099179915277,
+              "snr": -1.4855965663499826
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.8493049798068615,
+            "depth_ppm": 20.223625591841987,
+            "sigma_ppm": 9.028316960630768,
+            "snr": 2.2400216651708087,
+            "n_trials": 182,
+            "scan_robust_sigma": 1.0490677034492188,
+            "scan_std_snr": 1.0287873774890375,
+            "max_brightening_snr": 2.6755812701764796,
+            "periodic": true,
+            "max_epoch_share": 0.6348907019108774,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.501142689948148,
+              "depth_ppm": -13.66905920097139,
+              "sigma_ppm": 9.028316960630768,
+              "snr": -1.5140207483385024
+            },
+            "window_scale": 1.5,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": 0.01860797941021497,
+        "nfpp": null,
+        "probabilities": {
+          "tp": 0.978440790709367,
+          "eb": 0.012955875769964577,
+          "eb2p": 0.00860333352066864
+        },
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.13189352287374356,
+          "secondary_source": "all-phase search (phase 0.078)",
+          "fpp_stability": {
+            "n_settings": 5,
+            "white_settings": 5,
+            "range": [
+              0.011104412996052138,
+              0.02155920929063304
+            ],
+            "median_robust": 0.01860797941021497,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.02155920929063304,
+                "white": true
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.021380544728250128,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.01860797941021497,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.01881271018047692,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.011712854901439362,
+                "white": true
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.011104412996052138,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.018662333611055182,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.01865538592344318,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.01847196731963352,
+                "white": true
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.01851272916856439,
+                "white": true
+              }
+            ],
+            "log10_odds_spread": 0.292753111734408
+          },
+          "secondary_bayes_factor_eb_vs_tp": 0.09931011584695587
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "undetermined (by number, reduced scheme): FPP \u2248 0.019, range 0.0111\u20130.0216 over 5 detrending settings \u00d7 2 noise models straddles the FPP threshold 0.015",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)"
+        ],
+        "refused": null
+      }
     },
     "candidate_id": "tess-fa3483ce6f83-002",
     "bls_t0": 1325.50043266878,
@@ -860,6 +1801,7 @@
     "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
     "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
     "fap_snr": 36.95665161594774,
+    "sector": 1,
     "t_center": 1325.4965677643372,
     "duration_hours": 2.1199683317190647,
     "fit_t0": 1325.5033338473957,
@@ -873,7 +1815,16 @@
     "fit_k": 0.018651797228796306,
     "fit_rho_star": 0.15402439091151857,
     "fit_rho_star_err": 1.0841131070418228,
-    "star_rho": 1.02260345513
+    "star_rho": 1.02260345513,
+    "crowdsap": null,
+    "secondary_phase": 0.07754523728671342,
+    "secondary_snr": 2.7444068984031835,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": 0.01860797941021497,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
   },
   {
     "subject_id": "tess-04b815001aa6",
@@ -902,9 +1853,297 @@
       "even_err": 1.1642601180412052e-05,
       "secondary_depth": 1.8950564806274883e-07,
       "secondary_err": 8.63596855015088e-06,
+      "odd_even_error_scale": 1.0,
       "period": 6.26155662321977,
       "odd_depth": 0.00024543741013949294,
-      "even_depth": 0.00024890323435877715
+      "even_depth": 0.00024890323435877715,
+      "dv": {
+        "crowding": {
+          "crowdsap": null,
+          "flfrcsap": null,
+          "crowding_min": 0.8,
+          "crowded": null
+        },
+        "secondary": {
+          "phase": 0.6222037952147239,
+          "depth_ppm": 86.90480537154599,
+          "sigma_ppm": 12.23405830891371,
+          "snr": 7.103514073349424,
+          "n_points": 31,
+          "max_brightening_snr": 3.6542886983545992,
+          "n_trials": 195,
+          "duration_days": 0.12369914118940188,
+          "excluded_days": 0.12369914118940188,
+          "scan_median_snr": 0.04906147280299623,
+          "scan_robust_sigma": 1.337948191708908,
+          "scan_std_snr": 1.5312148948532018,
+          "n_epochs": 2,
+          "max_epoch_share": 0.8585051959711896,
+          "phase_05": {
+            "phase": 0.4983551412901434,
+            "depth_ppm": -3.685521730245611,
+            "sigma_ppm": 11.352725644192379,
+            "snr": -0.3246376108922339
+          },
+          "albedo": 88.81614095965585,
+          "threshold_rule": "5.13 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 195 positions)",
+          "threshold_sigma": 6.861106751195741,
+          "periodic": false,
+          "significant": false
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 318.6279044048882,
+          "odd_err_ppm": 22.03189036529156,
+          "n_odd": 1,
+          "even_depth_ppm": 313.703353933469,
+          "even_err_ppm": 20.534741456918375,
+          "n_even": 1,
+          "error_scale": 1.0,
+          "epoch_chi2": 0.0,
+          "epoch_dof": 0,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.16350982175447343,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 2,
+          "o_minus_c_minutes": null,
+          "linear": null,
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": -1,
+              "t_mid": 1344.306254775885,
+              "sigma": 0.00049882287945711,
+              "depth": 0.0003186279044048882,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 0,
+              "t_mid": 1350.5738687894004,
+              "sigma": 0.0006431650677135141,
+              "depth": 0.000313703353933469,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 6.267424686231831,
+        "t0": 1350.5749892889617,
+        "duration_days": 0.12369914118940188,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.621216953350783,
+            "depth_ppm": 75.43517382724296,
+            "sigma_ppm": 11.503722716744964,
+            "snr": 6.55745758870201,
+            "n_trials": 195,
+            "scan_robust_sigma": 1.1607023544720656,
+            "scan_std_snr": 1.533975959884408,
+            "max_brightening_snr": 2.9190669423004914,
+            "periodic": false,
+            "max_epoch_share": 0.9308487824045633,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.4983551412901434,
+              "depth_ppm": 4.238304619152977,
+              "sigma_ppm": 10.84581378920013,
+              "snr": 0.3907779260762644
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.621216953350783,
+            "depth_ppm": 74.36635006929926,
+            "sigma_ppm": 11.592431140301048,
+            "snr": 6.415078008163869,
+            "n_trials": 195,
+            "scan_robust_sigma": 1.0989058943754793,
+            "scan_std_snr": 1.5824146057303412,
+            "max_brightening_snr": 3.423928704510438,
+            "periodic": false,
+            "max_epoch_share": 0.9241863016251614,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.4983551412901434,
+              "depth_ppm": 1.5546968892277135,
+              "sigma_ppm": 10.929448892993298,
+              "snr": 0.14224842482445807
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.621216953350783,
+            "depth_ppm": 93.02267328381575,
+            "sigma_ppm": 11.994514391864264,
+            "snr": 7.755434713297932,
+            "n_trials": 195,
+            "scan_robust_sigma": 1.3947421299190321,
+            "scan_std_snr": 1.5597987676110994,
+            "max_brightening_snr": 4.2483964208423055,
+            "periodic": false,
+            "max_epoch_share": 0.8522181780384012,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.4983551412901434,
+              "depth_ppm": -10.614136481734704,
+              "sigma_ppm": 11.308536618035813,
+              "snr": -0.9385950490540376
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.621216953350783,
+            "depth_ppm": 94.95627228783832,
+            "sigma_ppm": 12.159523978764055,
+            "snr": 7.809209674134799,
+            "n_trials": 195,
+            "scan_robust_sigma": 1.3268309390920925,
+            "scan_std_snr": 1.622109035963726,
+            "max_brightening_snr": 4.09235872539595,
+            "periodic": false,
+            "max_epoch_share": 0.8301606911188127,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.4983551412901434,
+              "depth_ppm": -15.864123172004696,
+              "sigma_ppm": 11.464109148512659,
+              "snr": -1.3838077574534338
+            },
+            "window_scale": 1.5,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": 0.014821501845838303,
+        "nfpp": null,
+        "probabilities": {
+          "tp": 0.9851784981541617,
+          "eb": 0.006715656447899851,
+          "eb2p": 0.008105845397938415
+        },
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.12341690485215,
+          "secondary_source": "phase 0.5 (the strongest dip, at phase 0.622, is not periodic: 86% from one epoch)",
+          "fpp_stability": {
+            "n_settings": 5,
+            "white_settings": 0,
+            "range": [
+              0.01227060928103052,
+              0.018988598708811755
+            ],
+            "median_robust": 0.014821501845838303,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.014821501845838303,
+                "white": false
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.01594489780131847,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.017009656248106464,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.018988598708811755,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.01519537772395152,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.017932684444366687,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.013388577165854065,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.014259579888890928,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.01227060928103052,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.013715160527433934,
+                "white": false
+              }
+            ],
+            "log10_odds_spread": 0.1925907109313132
+          },
+          "secondary_bayes_factor_eb_vs_tp": 0.05112517523841384
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "undetermined (by number, reduced scheme): FPP \u2248 0.015, range 0.0123\u20130.019 over 5 detrending settings \u00d7 2 noise models straddles the FPP threshold 0.015",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)"
+        ],
+        "refused": null
+      }
     },
     "candidate_id": "tess-04b815001aa6-003",
     "bls_t0": 1344.3217828868562,
@@ -1145,6 +2384,7 @@
     "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
     "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
     "fap_snr": 30.042881342031052,
+    "sector": 1,
     "t_center": 1350.5717262194837,
     "duration_hours": 1.8894896366691682,
     "fit_t0": 1350.5749892889617,
@@ -1158,7 +2398,16 @@
     "fit_k": 0.01622241860348128,
     "fit_rho_star": 2.1241180247113367,
     "fit_rho_star_err": 0.933988204518686,
-    "star_rho": 1.02260345513
+    "star_rho": 1.02260345513,
+    "crowdsap": null,
+    "secondary_phase": 0.6222037952147239,
+    "secondary_snr": 7.103514073349424,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": 0.014821501845838303,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
   },
   {
     "subject_id": "tess-04b815001aa6",
@@ -1187,9 +2436,297 @@
       "even_err": 1.1642601180412052e-05,
       "secondary_depth": 1.8950564806274883e-07,
       "secondary_err": 8.63596855015088e-06,
+      "odd_even_error_scale": 1.0,
       "period": 6.26155662321977,
       "odd_depth": 0.00024543741013949294,
-      "even_depth": 0.00024890323435877715
+      "even_depth": 0.00024890323435877715,
+      "dv": {
+        "crowding": {
+          "crowdsap": null,
+          "flfrcsap": null,
+          "crowding_min": 0.8,
+          "crowded": null
+        },
+        "secondary": {
+          "phase": 0.6222037952147239,
+          "depth_ppm": 86.90480537154599,
+          "sigma_ppm": 12.23405830891371,
+          "snr": 7.103514073349424,
+          "n_points": 31,
+          "max_brightening_snr": 3.6542886983545992,
+          "n_trials": 195,
+          "duration_days": 0.12369914118940188,
+          "excluded_days": 0.12369914118940188,
+          "scan_median_snr": 0.04906147280299623,
+          "scan_robust_sigma": 1.337948191708908,
+          "scan_std_snr": 1.5312148948532018,
+          "n_epochs": 2,
+          "max_epoch_share": 0.8585051959711896,
+          "phase_05": {
+            "phase": 0.4983551412901434,
+            "depth_ppm": -3.685521730245611,
+            "sigma_ppm": 11.352725644192379,
+            "snr": -0.3246376108922339
+          },
+          "albedo": 88.81614095965585,
+          "threshold_rule": "5.13 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 195 positions)",
+          "threshold_sigma": 6.861106751195741,
+          "periodic": false,
+          "significant": false
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 313.703353933469,
+          "odd_err_ppm": 20.534741456918375,
+          "n_odd": 1,
+          "even_depth_ppm": 318.6279044048882,
+          "even_err_ppm": 22.03189036529156,
+          "n_even": 1,
+          "error_scale": 1.0,
+          "epoch_chi2": 0.0,
+          "epoch_dof": 0,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.16350982175447343,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 2,
+          "o_minus_c_minutes": null,
+          "linear": null,
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": 0,
+              "t_mid": 1344.306254775885,
+              "sigma": 0.00049882287945711,
+              "depth": 0.0003186279044048882,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 1,
+              "t_mid": 1350.5738687894004,
+              "sigma": 0.0006431650677135141,
+              "depth": 0.000313703353933469,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 6.267424686231831,
+        "t0": 1344.3075646027298,
+        "duration_days": 0.12369914118940188,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.621216953350783,
+            "depth_ppm": 75.43517382724296,
+            "sigma_ppm": 11.503722716744964,
+            "snr": 6.55745758870201,
+            "n_trials": 195,
+            "scan_robust_sigma": 1.1607023544720656,
+            "scan_std_snr": 1.533975959884408,
+            "max_brightening_snr": 2.9190669423004914,
+            "periodic": false,
+            "max_epoch_share": 0.9308487824045633,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.4983551412901434,
+              "depth_ppm": 4.238304619152977,
+              "sigma_ppm": 10.84581378920013,
+              "snr": 0.3907779260762644
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.621216953350783,
+            "depth_ppm": 74.36635006929926,
+            "sigma_ppm": 11.592431140301048,
+            "snr": 6.415078008163869,
+            "n_trials": 195,
+            "scan_robust_sigma": 1.0989058943754793,
+            "scan_std_snr": 1.5824146057303412,
+            "max_brightening_snr": 3.423928704510438,
+            "periodic": false,
+            "max_epoch_share": 0.9241863016251614,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.4983551412901434,
+              "depth_ppm": 1.5546968892277135,
+              "sigma_ppm": 10.929448892993298,
+              "snr": 0.14224842482445807
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.621216953350783,
+            "depth_ppm": 93.02267328381575,
+            "sigma_ppm": 11.994514391864264,
+            "snr": 7.755434713297932,
+            "n_trials": 195,
+            "scan_robust_sigma": 1.3947421299190321,
+            "scan_std_snr": 1.5597987676110994,
+            "max_brightening_snr": 4.2483964208423055,
+            "periodic": false,
+            "max_epoch_share": 0.8522181780384012,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.4983551412901434,
+              "depth_ppm": -10.614136481734704,
+              "sigma_ppm": 11.308536618035813,
+              "snr": -0.9385950490540376
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.621216953350783,
+            "depth_ppm": 94.95627228783832,
+            "sigma_ppm": 12.159523978764055,
+            "snr": 7.809209674134799,
+            "n_trials": 195,
+            "scan_robust_sigma": 1.3268309390920925,
+            "scan_std_snr": 1.622109035963726,
+            "max_brightening_snr": 4.09235872539595,
+            "periodic": false,
+            "max_epoch_share": 0.8301606911188127,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.4983551412901434,
+              "depth_ppm": -15.864123172004696,
+              "sigma_ppm": 11.464109148512659,
+              "snr": -1.3838077574534338
+            },
+            "window_scale": 1.5,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": 0.014821501845838303,
+        "nfpp": null,
+        "probabilities": {
+          "tp": 0.9851784981541617,
+          "eb": 0.006715656447899851,
+          "eb2p": 0.008105845397938415
+        },
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.12341690485215,
+          "secondary_source": "phase 0.5 (the strongest dip, at phase 0.622, is not periodic: 86% from one epoch)",
+          "fpp_stability": {
+            "n_settings": 5,
+            "white_settings": 0,
+            "range": [
+              0.01227060928103052,
+              0.018988598708811755
+            ],
+            "median_robust": 0.014821501845838303,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.014821501845838303,
+                "white": false
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.01594489780131847,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.017009656248106464,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.018988598708811755,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.01519537772395152,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.017932684444366687,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.013388577165854065,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.014259579888890928,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.01227060928103052,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.013715160527433934,
+                "white": false
+              }
+            ],
+            "log10_odds_spread": 0.1925907109313132
+          },
+          "secondary_bayes_factor_eb_vs_tp": 0.05112517523841384
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "undetermined (by number, reduced scheme): FPP \u2248 0.015, range 0.0123\u20130.019 over 5 detrending settings \u00d7 2 noise models straddles the FPP threshold 0.015",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)"
+        ],
+        "refused": null
+      }
     },
     "candidate_id": "tess-04b815001aa6-004",
     "bls_t0": 1344.3217828868562,
@@ -1437,6 +2974,7 @@
     "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
     "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
     "fap_snr": 30.042881342031052,
+    "sector": 1,
     "t_center": 1344.2666586711957,
     "duration_hours": 0.8412162327167607,
     "fit_t0": 1344.3075646027298,
@@ -1450,7 +2988,16 @@
     "fit_k": 0.01622241860348128,
     "fit_rho_star": 2.1241180247113367,
     "fit_rho_star_err": 0.933988204518686,
-    "star_rho": 1.02260345513
+    "star_rho": 1.02260345513,
+    "crowdsap": null,
+    "secondary_phase": 0.6222037952147239,
+    "secondary_snr": 7.103514073349424,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": 0.014821501845838303,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
   },
   {
     "subject_id": "tess-04b815001aa6",
@@ -1474,7 +3021,19 @@
       "n_in_transit": 6.0,
       "depth": 0.00026111174619503075,
       "snr": 9.488346590798718,
-      "duration_minutes": 52.483306159847416
+      "duration_minutes": 52.483306159847416,
+      "dv": {
+        "crowding": {
+          "crowdsap": null,
+          "flfrcsap": null,
+          "crowding_min": 0.8,
+          "crowded": null
+        },
+        "transit_masked_detrend": false,
+        "masked_phases": [],
+        "secondary_variants": [],
+        "ephemeris_source": "none (no periodic signal covers this dip)"
+      }
     },
     "candidate_id": "tess-04b815001aa6-005",
     "bls_t0": null,
@@ -1603,6 +3162,7 @@
     "fap_tail_label": "",
     "fap_method": "",
     "fap_snr": null,
+    "sector": 1,
     "t_center": 1348.936446522426,
     "duration_hours": 0.8747217693307903,
     "fit_t0": 1348.9156133237186,
@@ -1616,7 +3176,16 @@
     "fit_k": 0.01881683194336775,
     "fit_rho_star": null,
     "fit_rho_star_err": null,
-    "star_rho": 1.02260345513
+    "star_rho": 1.02260345513,
+    "crowdsap": null,
+    "secondary_phase": null,
+    "secondary_snr": null,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": null,
+    "nfpp": null,
+    "fpp_method": null,
+    "validation_label": ""
   },
   {
     "subject_id": "tess-04b815001aa6",
@@ -1640,7 +3209,19 @@
       "n_in_transit": 41.0,
       "depth": 7.095853895877635e-05,
       "snr": 6.740391139583199,
-      "duration_minutes": 592.5031924824725
+      "duration_minutes": 592.5031924824725,
+      "dv": {
+        "crowding": {
+          "crowdsap": null,
+          "flfrcsap": null,
+          "crowding_min": 0.8,
+          "crowded": null
+        },
+        "transit_masked_detrend": false,
+        "masked_phases": [],
+        "secondary_variants": [],
+        "ephemeris_source": "none (no periodic signal covers this dip)"
+      }
     },
     "candidate_id": "tess-04b815001aa6-006",
     "bls_t0": null,
@@ -1768,6 +3349,7 @@
     "fap_tail_label": "",
     "fap_method": "",
     "fap_snr": null,
+    "sector": 1,
     "t_center": 1348.3831550208442,
     "duration_hours": 9.875053208041209,
     "fit_t0": 1348.236972802661,
@@ -1781,6 +3363,15 @@
     "fit_k": 0.1968461722285156,
     "fit_rho_star": null,
     "fit_rho_star_err": null,
-    "star_rho": 1.02260345513
+    "star_rho": 1.02260345513,
+    "crowdsap": null,
+    "secondary_phase": null,
+    "secondary_snr": null,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": null,
+    "nfpp": null,
+    "fpp_method": null,
+    "validation_label": ""
   }
 ]

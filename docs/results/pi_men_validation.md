@@ -1,9 +1,7 @@
 # pi Men c: the limb-darkened fit against Huang et al. 2018
 
-Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since. A 300 ppm transit is affected by neither fix.
-
-Run `runs/tess-pi-men-s1` (TESS SPOC sector 1, 10-minute bins), rebuilt from its stored classifications with the limb-darkened
-fit (`src/exoplan/transitfit.py`). 5 of 5 predicted epochs are recovered by the panel. Limb darkening:
+Run `runs/tess-pi-men-s1` (TESS SPOC sector 1, 10-minute bins), run on the current code (scripts/rerun_pi_men.py), with the limb-darkened
+fit (`src/setuhq/transitfit.py`). 5 of 5 predicted epochs are recovered by the panel. Limb darkening:
 Claret 2017 TESS quadratic u₁ = 0.341, u₂ = 0.224 for the TIC's Teff 5992 K and log g 4.36.
 Reference: NASA Exoplanet Archive, table ps, pl_name = 'pi Men c', fetched 2026-10-19 (`docs/results/pi_men_reference.json`).
 
@@ -25,7 +23,7 @@ Like-for-like comparisons lead: k and T14.
 | T23/T14 | unconstrained | 0.95 | 0.95 (from Huang's b, k, a/R★) | | | |
 | ρ★ transit (g/cm³) | 1σ range 0.277–2.216 | 1.02 (prior-dominated; no error quoted, as it would only restate the prior's) | 1.159 from M★, R★ | | | |
 
-¹ Depth definitions differ: exoplan's is the limb-darkened model's depth at mid-transit; the archive's `pl_trandep` is the published transit depth as each paper defines it. Compare k and T14 first.
+¹ Depth definitions differ: SetuHQ's is the limb-darkened model's depth at mid-transit; the archive's `pl_trandep` is the published transit depth as each paper defines it. Compare k and T14 first.
 
 Errors are conservative: the covariance at the best fit (scaled by √χ²ᵣ when above 1) added in quadrature to the spread along the impact-parameter profile (Δχ² ≤ 1), which overlap.
 
