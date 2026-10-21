@@ -1,5 +1,5 @@
 {
-  "source": "NASA Exoplanet Archive, table ps (default_flag = 1), as recorded in docs/results/pi_men_validation.md by scripts/validate_known_planets.py (live archive query, commit 0f6dbdc). Only pi Men c is recorded there, so only pi Men c is listed; its transit mid-time was not recorded, so no per-epoch offset is computed here; the validation note's mean timing offset (−8.0 min over 5 of 5 epochs) is cited instead. Replace it with the output of 'exoplan crossmatch runs/tess-pi-men-s1' when the archive answers.",
+  "source": "NASA Exoplanet Archive, table ps (default_flag = 1), as recorded in docs/results/pi_men_validation.md by scripts/validate_known_planets.py (live archive query, commit 0f6dbdc). Only pi Men c is recorded there, so only pi Men c is listed; its transit mid-time was not recorded, so no per-epoch offset is computed here; the validation note's mean timing offset (−8.0 min over 5 of 5 epochs) is cited instead. Replace it with the output of 'setuhq crossmatch runs/tess-pi-men-s1' when the archive answers.",
   "targets": [
     "TIC 261136679"
   ],

@@ -12,8 +12,8 @@ import json
 import re
 from pathlib import Path
 
-PRE_FIX_NOTE = ("Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: "
-                "preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's "
+PRE_FIX_NOTE = ("Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change "
+                "default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's "
                 "odd/even test no longer fails clean deep planets. Not re-run since.")
 
 # Where the note sits: on a page that scrolls, it is an ordinary block at the top of the body, so it never covers

@@ -868,7 +868,7 @@ def test_repository_pi_men_crossmatch_states_its_source():
     assert stored["status"] == "matched" and stored["targets"] == ["TIC 261136679"]
     assert [p["pl_name"] for p in stored["planets"]] == ["pi Men c"]
     assert stored["planets"][0]["pl_orbper"] == 6.26784  # as docs/results/pi_men_validation.md records it
-    assert "pi_men_validation.md" in stored["source"] and "crossmatch runs/tess-pi-men-s1" in stored["source"]  # written as exoplan, before the rename
+    assert "pi_men_validation.md" in stored["source"] and "setuhq crossmatch runs/tess-pi-men-s1" in stored["source"]
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")

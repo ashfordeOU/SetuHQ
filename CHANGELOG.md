@@ -36,10 +36,13 @@ project's, and it is kept as it was.
     and the committed records, submissions and catalogues carry them;
   - a stored run's manifest from before the rename names its version `exoplan_version`; the pages
     and the MCP tools read it as `setuhq_version`;
-  - committed results, the stored run and the archived catalogues are not renamed or rewritten:
-    they keep the name `exoplan` where they were written with it, including the "Pre-fix code:
-    made with exoplan up to commit 5a03087" note, the leaderboard's seeded submitters and the
-    sweep's default contributor credit.
+  - committed results, the stored run and the archived catalogues are not renamed, and their
+    numbers are not touched. Two pieces of display text in them were updated: the pre-fix note now
+    reads "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087" in the code and
+    in every stored copy (no fingerprint or ledger covers those files' bytes; the README manifest that
+    hashes the stored run was regenerated), and the stored pi Men cross-match names
+    `setuhq crossmatch`. The leaderboard's seeded submitters and the sweep's
+    contributor credit keep the name `exoplan` they were written with.
 - **Code fingerprints survive the rename.** A fingerprint hashes each file's path relative to the
   package and its canonical text: the leading SPDX header lines removed and the package name
   written as it was when the committed results were made (`setuhq`/`SetuHQ` as `exoplan`,
@@ -62,10 +65,14 @@ project's, and it is kept as it was.
   data, benchmark, leaderboard data and paper under CC BY 4.0. See [`LICENSING.md`](LICENSING.md),
   [`NOTICE`](NOTICE), [`TRADEMARKS.md`](TRADEMARKS.md) and [`CLA.md`](CLA.md). Every source file
   carries an SPDX header. Every commit before this release was made by Ashforde OÜ's own account.
-- **Workflows run on GitHub-hosted runners** (`ubuntu-latest`), not the self-hosted runner.
+- **Workflows run on GitHub-hosted runners** (`ubuntu-latest`), not the self-hosted runner, with
+  every action pinned to a full commit SHA (its tag in a comment). `pages.yml` deploys on pushes to
+  `main` and on request.
 - **The discovery batch runs only on request** (`workflow_dispatch`): its six-hourly schedule is
   removed, and any commit it makes is authored as ashfordeOU. Without an `ANTHROPIC_API_KEY`
-  secret it runs the Probes only.
+  secret it runs the Probes only. Before it commits it rebuilds every page that embeds the feed's
+  catalogue (the app and landing page, the plates, the dashboard; `setuhq discover` writes the
+  feed page) and runs the fast tests, because its push does not start `ci.yml`.
 - **The site serves from the domain root,** https://setuhq.com (`site/CNAME`), with the SetuHQ
   logo, favicon and social card, and title, description, canonical, Open Graph and Twitter card
   tags on every page. `pages.yml` deploys the committed `site/`.

@@ -601,5 +601,5 @@
   "updated": "2026-10-17T17:24:19+00:00",
   "config": "discovery",
   "config_sha256": "f3652b6685506d4252cbfbdd7899f0728430786c5c1ca261328ef92b9fa09ee0",
-  "code_note": "Pre-fix code: made with exoplan up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since."
+  "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since."
 }
