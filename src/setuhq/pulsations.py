@@ -12,8 +12,9 @@ Methods reimplemented from their published descriptions:
   while significant peaks remain elsewhere), fit it, refit every amplitude and phase, and every ten peaks and at
   the end refit every sinusoid together by non-linear least squares (frequency, amplitude, phase); subtract,
   repeat. Extraction stops when no peak has S/N ≥ 4 (Breger et al. 1993), the noise being the mean amplitude of
-  the residual spectrum in a box around the peak (2 d⁻¹ wide by default). Every frequency's final S/N is measured on the final residual. Uncertainties follow Montgomery & O'Donoghue (1999). Peaks closer than
-  1.5/T to a stronger one are flagged unresolved (Loumos & Deeming 1978).
+  the residual spectrum in a box around the peak (2 d⁻¹ wide by default, and at least 25/T). Every frequency's
+  final S/N is measured on the final residual. Uncertainties follow Montgomery & O'Donoghue (1999). Peaks closer
+  than 1.5/T to a stronger one are flagged unresolved (Loumos & Deeming 1978).
 * **Combination frequencies**: a frequency within the Rayleigh resolution of n·f_i + m·f_j (|n|, |m| ≤ 2) or a
   harmonic (up to 4·f_i) of stronger ones is flagged as a likely combination.
 * **Variability type** (heuristic, never certain): δ Scuti, γ Doradus, hybrid, solar-like or rotation, from where
@@ -170,6 +171,9 @@ def prewhiten(time, flux, *, fmin: float | None = None, fmax: float | None = Non
     tt = t - t0
     T = float(tt[-1])
     freq = frequency_grid(tt, fmin, fmax, oversample)
+    # The noise box spans at least 25 resolution elements, so a short light curve's own window function (a peak's
+    # sidelobes and aliases) does not pass for noise around that peak.
+    noise_box = max(noise_box, 25.0 / T)
     resid = y.copy()
     params: list[float] = []
     reason = f"reached {max_frequencies} frequencies"
