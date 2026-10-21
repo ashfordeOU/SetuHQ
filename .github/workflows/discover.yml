@@ -54,7 +54,7 @@ jobs:
           .venv/bin/setuhq plate runs/tess-pi-men-s1 --catalog docs/discoveries/catalog.json --out site/plate --title "SetuHQ plates"
           .venv/bin/setuhq dashboard runs/tess-pi-men-s1 --catalog docs/discoveries/catalog.json --out site/dashboard --title "SetuHQ: pi Men (TESS sector 1)"
       - name: Fast tests before the push
-        run: .venv/bin/python -m pytest -q tests/test_discover.py tests/test_codenote.py tests/test_brand.py tests/test_licensing.py
+        run: .venv/bin/python -m pytest -q tests/test_discover.py tests/test_codenote.py tests/test_brand.py tests/test_licensing.py tests/test_catalogue.py
       - name: Commit catalogue and pages (as ashfordeOU)
         env:
           GIT_AUTHOR_NAME: ashfordeOU

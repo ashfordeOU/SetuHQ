@@ -50,5 +50,6 @@ def test_no_page_or_template_carries_an_assistant_meta_tag_or_a_session_url():
     pat = re.compile(r'<meta[^>]+name=["\']claude:|claude\.ai', re.I)
     files = [p for p in (ROOT / "site").rglob("*") if p.suffix in (".html", ".js", ".css", ".json")]
     files += sorted((ROOT / "src" / "setuhq").rglob("*.py"))
+    files += sorted(f for f in (ROOT / "tools").rglob("*") if f.suffix in (".py", ".mjs", ".js"))
     bad = [str(p.relative_to(ROOT)) for p in files if pat.search(p.read_text(encoding="utf-8", errors="replace"))]
     assert not bad, bad
