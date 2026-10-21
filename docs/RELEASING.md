@@ -78,11 +78,14 @@ Optional: **auto-tag** (below) needs a repository variable `AUTO_TAG=true` and a
    It must say OK. (`tests/test_release.py` runs the same checks without the tag.)
 4. **Merge to `main`** through a pull request and wait for CI (`ci.yml`) to pass on the merge commit, in the
    push to `main`. Run `scripts/ci_local.sh` too for anything that touches results or pages.
-5. **Optional dry run.** Actions, **Release**, Run workflow on `main`: it checks the version surfaces and
-   CI, builds the sdist and the wheel, runs `twine check`, the contents check and a clean install, and keeps
-   the files as a workflow artifact. It creates and publishes nothing. Tick `testpypi` to also upload that
-   build to TestPyPI as a rehearsal (needs the TestPyPI publisher).
-6. **Tag the green commit on `main`** and push the tag:
+5. **Dry run (required).** Actions, **Release**, Run workflow on `main`, and confirm the run is **green**
+   before tagging. It checks the version surfaces and CI, builds the sdist and the wheel, runs `twine check`,
+   `scripts/check_dist.py` and a clean install with the MCP smoke test, and keeps the files as a workflow
+   artifact; it creates and publishes nothing. These are the same build steps a tag runs, and some of them
+   (the build, `twine check`, the contents check) run nowhere else, so a tag pushed without a green dry run
+   can fail half-way. Tick `testpypi` to also upload that build to TestPyPI as a rehearsal (needs the
+   TestPyPI publisher).
+6. **Tag the green commit on `main`** (the commit the dry run built) and push the tag:
 
    ```bash
    git tag -a vX.Y.Z <commit> -m "SetuHQ vX.Y.Z"
@@ -143,7 +146,9 @@ or replaces a tag. It needs both:
   would not start release.yml.)
 
 Without the variable it does nothing. With the variable and without the secret it fails loudly. With it on,
-date the release (step 3) in the same pull request as the bump, since the tag follows that merge.
+date the release (step 3) in the same pull request as the bump, since the tag follows that merge, and run the
+required dry run (step 5) on the release pull request's branch before merging it, since no step comes between
+the merge and the tag.
 
 ## Workflows at a glance
 

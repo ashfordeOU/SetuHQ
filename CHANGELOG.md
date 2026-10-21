@@ -64,7 +64,8 @@ project's, and it is kept as it was.
   value: the committed sweep record names the search code of 0e87409, and the benchmark names the
   per-star codes above, which all still verify. The benchmark's threshold audit at the results' own
   commit is unchanged and clean; it now also tracks the sha256 of the reference tables, and accepts the
-  table's move into the package only as that exact change of `LD_TABLE`. The practical effect is that a sweep cache or a contribution bundle made with the
+  table's move into the package only as that exact change of `LD_TABLE`. It therefore records 114 values
+  (the 113 before, plus the limb-darkening table's hash). The practical effect is that a sweep cache or a contribution bundle made with the
   pre-release code is treated as made by different search code (a fresh search, or a refused
   bundle), as for any other code change.
 - **Licence: AGPL-3.0-only or a commercial licence from Ashforde OÜ** (was MIT), with SetuHQ's own

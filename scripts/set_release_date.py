@@ -13,17 +13,19 @@ from __future__ import annotations
 
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import date as _date, datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def set_date(version: str, date: str, root: Path = ROOT) -> None:
+    # A real calendar day in YYYY-MM-DD form (fromisoformat alone also accepts 20261021 on 3.11+).
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
         raise ValueError(f"{date!r} is not YYYY-MM-DD")
+    _date.fromisoformat(date)  # ValueError for a day that does not exist, e.g. 2026-02-30
     cl = root / "CHANGELOG.md"
-    text, n = re.subn(rf"(?m)^## \[{re.escape(version)}\](?: - \S+)?\s*$", f"## [{version}] - {date}",
+    text, n = re.subn(rf"(?m)^## \[{re.escape(version)}\](?: - \S+)?[ \t]*$", f"## [{version}] - {date}",
                       cl.read_text(encoding="utf-8"), count=1)
     if not n:
         raise LookupError(f"CHANGELOG.md has no '## [{version}]' heading")

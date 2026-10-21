@@ -103,6 +103,30 @@ def test_a_tag_needs_an_empty_unreleased_section_and_matching_dates(tmp_path):
     assert any("no YYYY-MM-DD date" in p for p in sync.check(root)[1])
 
 
+def test_set_release_date_rejects_impossible_days_and_keeps_the_blank_line(tmp_path):
+    setter = _script("set_release_date")
+    ver = _script("check_version_sync").source_version(ROOT)
+    root = _copy_surfaces(tmp_path)
+    for bad in ("2026-02-30", "2026-13-01", "20261021", "2026-1-2"):
+        with pytest.raises(ValueError):
+            setter.set_date(ver, bad, root)
+    before = (root / "CHANGELOG.md").read_text(encoding="utf-8")
+    setter.set_date(ver, "2031-02-03", root)
+    after = (root / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert f"## [{ver}] - 2031-02-03\n\n" in after
+    assert after.count("\n") == before.count("\n")  # the heading line only, no blank line swallowed
+
+
+def test_the_drift_hint_appears_only_on_version_drift(monkeypatch, capsys):
+    sync = _script("check_version_sync")
+    monkeypatch.setattr(sync, "check", lambda root, tag: ("0.1.0", ["CHANGELOG.md '## [0.1.0]' has no YYYY-MM-DD date"]))
+    assert sync.main([]) == 1
+    assert "version drift" not in capsys.readouterr().err
+    monkeypatch.setattr(sync, "check", lambda root, tag: ("0.1.0", [f"codemeta.json version is '0.0.9', {sync.DRIFT} '0.1.0'"]))
+    assert sync.main([]) == 1
+    assert "version drift" in capsys.readouterr().err
+
+
 def test_release_notes_are_the_changelog_section():
     extract = _script("changelog_extract")
     assert _script("check_version_sync").check(ROOT, tag=None)[1] == []
@@ -194,6 +218,39 @@ def _sdist(tmp: Path, extra: tuple[str, ...] = ()) -> Path:
             info = tarfile.TarInfo(f"setuhq-0.1.0/{name}")
             t.addfile(info, io.BytesIO(b""))
     return path
+
+
+def test_exact_pins_reads_specifiers_not_markers():
+    exact_pins = _script("check_dist").exact_pins
+    meta = ("Metadata-Version: 2.4\nName: setuhq\nRequires-Dist: numpy>=1.24\n"
+            'Requires-Dist: lightkurve>=2.4; extra == "tess"\n'
+            'Requires-Dist: mcp>=1.10; extra == "mcp" and python_version >= "3.11"\n'
+            "Provides-Extra: tess\n\nbody text with Requires-Dist: x==1 is not a header\n")
+    assert exact_pins(meta) == []
+    pinned = meta.replace("numpy>=1.24", "numpy==2.5.4").replace('lightkurve>=2.4; extra', 'lightkurve===2.4; extra')
+    assert exact_pins(pinned) == ["numpy==2.5.4", 'lightkurve===2.4; extra == "tess"']
+
+
+def test_the_real_package_metadata_passes_the_dist_check(tmp_path, monkeypatch):
+    """Generate METADATA from the real pyproject.toml with the build backend and check it as the release job does:
+    every extra's marker (extra == "...") must not read as an exact pin."""
+    build_meta = pytest.importorskip("setuptools.build_meta")
+    src = tmp_path / "src"
+    for rel in ("pyproject.toml", "README.pypi.md", "LICENSE", "NOTICE", "LICENSING.md", "src/setuhq/__init__.py"):
+        (src / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / rel, src / rel)
+    out = tmp_path / "meta"
+    out.mkdir()
+    monkeypatch.chdir(src)
+    info = build_meta.prepare_metadata_for_build_wheel(str(out))
+    meta = (out / info / "METADATA").read_text(encoding="utf-8")
+    assert 'extra == "tess"' in meta and "Requires-Dist: numpy" in meta  # the markers really are there
+    check_dist = _script("check_dist")
+    assert check_dist.exact_pins(meta) == []
+    good = tmp_path / "dist"
+    good.mkdir()
+    _wheel(good, {"setuhq-0.1.0.dist-info/METADATA": meta.encode()})
+    assert check_dist.check_wheel(good / "setuhq-0.1.0-py3-none-any.whl") == []
 
 
 def test_dist_check_passes_a_clean_pair_and_catches_data(tmp_path):

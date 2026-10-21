@@ -44,6 +44,10 @@ def source_version(root: Path = ROOT) -> str:
     raise SystemExit("src/setuhq/__init__.py has no __version__")
 
 
+# The wording of a version mismatch; main() prints the drift hint only when a problem carries it.
+DRIFT = "src/setuhq/__init__.py says"
+
+
 def _json(root: Path, rel: str):
     return json.loads((root / rel).read_text(encoding="utf-8"))
 
@@ -55,7 +59,7 @@ def check(root: Path = ROOT, tag: str | None = None) -> tuple[str, list[str]]:
 
     def same(label: str, got) -> None:
         if got != ver:
-            problems.append(f"{label} is {got!r}, src/setuhq/__init__.py says {ver!r}")
+            problems.append(f"{label} is {got!r}, {DRIFT} {ver!r}")
 
     if not re.fullmatch(r"\d+\.\d+\.\d+(?:(?:a|b|rc)\d+)?", ver):
         problems.append(f"__version__ {ver!r} is not X.Y.Z (optionally aN, bN or rcN)")
@@ -140,8 +144,9 @@ def main(argv=None) -> int:
     ver, problems = check(ROOT, tag)
     for p in problems:
         print(f"FAIL: {p}", file=sys.stderr)
-    if problems:
+    if any(DRIFT in p for p in problems):
         print(f"version drift: bring every surface to the version in src/setuhq/__init__.py ({ver})", file=sys.stderr)
+    if problems:
         return 1
     print(f"OK: every surface states {ver}" + (f"; tag {tag} matches" if tag else ""))
     return 0

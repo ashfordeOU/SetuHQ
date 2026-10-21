@@ -31,6 +31,23 @@ SDIST_REQUIRED = ("pyproject.toml", "README.pypi.md", "PKG-INFO", "LICENSE", "sr
                   "src/setuhq/py.typed", "src/setuhq/data/claret2017_tess_quadratic.json")
 
 
+def exact_pins(metadata: str) -> list[str]:
+    """The Requires-Dist lines of a METADATA or PKG-INFO text whose version specifier is exact (== or ===).
+
+    Each line is parsed as a PEP 508 requirement, so the ``extra == "tess"`` of an environment marker is not taken
+    for a pin; only the requirement's own specifier counts."""
+    from packaging.requirements import Requirement  # installed with build and twine, which the release job runs
+
+    headers = metadata.split("\n\n", 1)[0]
+    out = []
+    for line in headers.splitlines():
+        if line.startswith("Requires-Dist:"):
+            req = Requirement(line.split(":", 1)[1].strip())
+            if any(spec.operator in ("==", "===") for spec in req.specifier):
+                out.append(str(req))
+    return out
+
+
 def check_wheel(path: Path) -> list[str]:
     problems = []
     if path.stat().st_size > MAX_WHEEL_BYTES:
@@ -54,7 +71,7 @@ def check_wheel(path: Path) -> list[str]:
         problems.append(f"{path.name}: METADATA lacks License-Expression: AGPL-3.0-only")
     if "Description-Content-Type: text/markdown" not in meta or "mcp-name: io.github.ashfordeOU/setuhq" not in meta:
         problems.append(f"{path.name}: METADATA lacks the markdown README.pypi.md with its mcp-name marker")
-    exact = [line for line in meta.splitlines() if line.startswith("Requires-Dist:") and "==" in line]
+    exact = exact_pins(meta)
     if exact:
         problems.append(f"{path.name}: the published metadata pins exact versions: {exact}")
     for script in ("setuhq = setuhq.cli:main", "setuhq-mcp = setuhq.mcp_server:main"):
@@ -68,7 +85,13 @@ def check_sdist(path: Path) -> list[str]:
     if path.stat().st_size > MAX_SDIST_BYTES:
         problems.append(f"{path.name}: {path.stat().st_size} bytes, over {MAX_SDIST_BYTES}")
     with tarfile.open(path) as t:
-        names = [m.name.split("/", 1)[1] for m in t.getmembers() if "/" in m.name]
+        members = [m for m in t.getmembers() if "/" in m.name]
+        names = [m.name.split("/", 1)[1] for m in members]
+        pkg_info = next((m for m in members if m.name.split("/", 1)[1] == "PKG-INFO"), None)
+        meta = t.extractfile(pkg_info).read().decode() if pkg_info and pkg_info.isfile() else ""
+    exact = exact_pins(meta)
+    if exact:
+        problems.append(f"{path.name}: PKG-INFO pins exact versions: {exact}")
     for req in SDIST_REQUIRED:
         if req not in names:
             problems.append(f"{path.name}: missing {req}")

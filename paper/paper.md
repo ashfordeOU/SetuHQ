@@ -132,7 +132,8 @@ a contribution path for community sector sweeps are the means by which others ca
 
 Generative AI is part of the software by design: the Sentinels are vision-capable language models, and the
 benchmark measures them as such. Development of the code, the documentation and the drafting of this paper
-were also assisted by AI coding tools. Correctness is checked independently of those tools: by the offline
+were also assisted by AI coding tools. The author reviewed all AI-assisted code, documentation and text, and
+takes full responsibility for its accuracy and for the work as a whole. Correctness is checked independently of those tools: by the offline
 test suite run in continuous integration, by checks that rebuild every published number, figure and page
 from the committed results and fail on any difference, and by the frozen benchmark. All results are
 reproducible from the committed code and data.
