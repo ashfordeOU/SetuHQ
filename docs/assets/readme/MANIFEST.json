@@ -123,7 +123,7 @@
   },
   "repo_counts": {
     "modules": 49,
-    "tests": 760,
+    "tests": 765,
     "network": 2,
     "slow": 4,
     "chapters": 15,
@@ -147,7 +147,8 @@
       "crossmatch",
       "plate",
       "report",
-      "leaderboard"
+      "leaderboard",
+      "mcp"
     ]
   },
   "app_screenshots": {
