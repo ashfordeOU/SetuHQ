@@ -7,7 +7,9 @@ Procedures document, CHEOPS-EST-SCI-TN-018 v1.0 (8 July 2026), both read on 21 O
 documents govern; these functions only restate them so a proposer can plan, and every rule names where it
 comes from (:data:`RULE_SOURCES`).
 
-* The observation window of the Running Call (EM2 for GO time) is 1 October 2026 to 31 December 2029.
+* The Running Call's observing period is 1 October 2026 to 31 December 2029. It spans the last quarter of the
+  first extended mission (EM1, which ends 31 December 2026) and the whole second extended mission (EM2,
+  1 January 2027 to 31 December 2029; P&P section 2).
 * Proposals are grouped into monthly cycles; a cycle's deadline is 23:59 CET/CEST on its last calendar day.
 * The TAC evaluates in the first weeks of the following month; outcomes in the last week of month M+1;
   Phase 2 in M+2; earliest start of observations in M+3, nominal start in M+4 (P&P Table 1). The call page
@@ -26,8 +28,9 @@ import calendar
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 
-EM2_START = date(2026, 10, 1)
-EM2_END = date(2029, 12, 31)
+CALL_START = date(2026, 10, 1)   # the Running Call's observing period (P&P section 1)
+CALL_END = date(2029, 12, 31)
+EM2_FROM = date(2027, 1, 1)      # EM1 runs to 31 December 2026; EM2 from 1 January 2027 (P&P section 2)
 FIRST_CYCLE = (2026, 7)          # the Running Call opened on 8 July 2026
 RESTRICTED_UNTIL = (2026, 9)     # cycles up to September 2026: observations only before 31 December 2026
 FINAL_ORDINARY_CYCLE = (2029, 9)  # P&P Table 1, note 3
@@ -177,7 +180,7 @@ def next_cycle(now: datetime, prog: Programme | str = "regular") -> tuple[int, i
     within the Running Call (up to December 2029), or None."""
     prog = programme(prog) if isinstance(prog, str) else prog
     y, m = max(current_cycle(now), FIRST_CYCLE)
-    while (y, m) <= (EM2_END.year, EM2_END.month):
+    while (y, m) <= (CALL_END.year, CALL_END.month):
         if _allowed(prog, y, m) and deadline(y, m) > now:
             return y, m
         y, m = add_months(y, m, 1)
@@ -191,7 +194,7 @@ def cycle_info(year: int, month: int, prog: Programme | str, now: datetime) -> d
     errors, warnings = [], []
     if (year, month) < FIRST_CYCLE:
         errors.append(f"{year}-{month:02d} is before the Running Call opened (July 2026).")
-    if (year, month) > (EM2_END.year, EM2_END.month):
+    if (year, month) > (CALL_END.year, CALL_END.month):
         errors.append(f"{year}-{month:02d} is after the Running Call observing period ends (31 December 2029).")
     if dl <= now:
         errors.append(f"The {year}-{month:02d} deadline ({dl.isoformat()}) has passed.")
@@ -283,9 +286,9 @@ def check_window(start: date, end: date, earliest: date | None = None) -> dict:
     errors, warnings = [], []
     if end < start:
         errors.append("The window ends before it starts.")
-    if start < EM2_START or end > EM2_END:
+    if start < CALL_START or end > CALL_END:
         errors.append(f"The window {start}..{end} leaves the Running Call observing period "
-                      f"({EM2_START}..{EM2_END}).")
+                      f"({CALL_START}..{CALL_END}).")
     if earliest and start < earliest:
         warnings.append(f"Observations cannot start before about {earliest} for this cycle (month M+3); "
                         "the usable window starts then.")

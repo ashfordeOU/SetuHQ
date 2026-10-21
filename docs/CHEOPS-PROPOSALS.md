@@ -47,7 +47,8 @@ The pack restates the rules from the
 (last updated 15 October 2026) and its Policies and Procedures, CHEOPS-EST-SCI-TN-018 v1.0 (8 July 2026).
 Both were read on 21 October 2026. If they disagree with the pack, they win.
 
-- **Observing period:** 1 October 2026 to 31 December 2029.
+- **Observing period:** 1 October 2026 to 31 December 2029. That covers the end of the first extended mission
+  (EM1, to 31 December 2026) and the second (EM2, from 1 January 2027).
 - **Monthly cycles:** the deadline is 23:59 CET/CEST on the last calendar day of the month, computed in
   Europe/Paris time. Daylight saving is handled, so the October deadline is CET and the March and April
   deadlines are CEST. A submission in the deadline minute is treated as late.
@@ -71,14 +72,17 @@ Both were read on 21 October 2026. If they disagree with the pack, they win.
   motion is flagged.
 - **Reserved Target List.** The RTL CSV files linked from the call page are downloaded at run time and cached
   under `cache/cheops-propose/` with the fetch date. The cache is ignored by git, and the RTL is not committed
-  to this repository. The target is matched three ways:
+  to this repository. A pack keeps a copy in `sources/` for your own record; don't redistribute it. The target is matched three ways:
   - by name, tolerant of spaces, dashes and spelling variants;
   - by every SIMBAD alias;
   - by position within 20″. Entries within 2′ are listed for a manual line-of-sight check.
 - **Prior observations** come from the public metadata in [DACE](https://dace.unige.ch/), the public query
-  interface of the CHEOPS Mission Archive, by position (30″) and by name. Visits with public data are listed
-  with their ids, file keys and programme IDs. Visits not yet public are only counted. No proprietary data
-  and no PI details are read or stored.
+  interface of the CHEOPS Mission Archive, by position (30″) and by name. Each answer is filtered in memory
+  before anything is stored: the pack and the cache keep only public visits' public fields (ids, file keys,
+  programme IDs, dates) and a bare count of visits not yet public. No proprietary data, and no PI name or id,
+  is ever written to disk. DACE answers an empty search with HTTP 404, so the pack reports "no match found
+  (DACE does not distinguish an empty result from a missing endpoint)". For every other source, a 404 means
+  "not checked".
 - **Sun constraint.** One geometric screen is applied. ESA's Sky Visibility page gives a 117° Sun-exclusion
   hard constraint, so a target more than 63° from the ecliptic can never meet it, and the pack says so.
   Passing this screen is **not** a visibility result.
@@ -109,7 +113,9 @@ Scheduling Feasibility Checker (both on [ESA Datalabs](https://www.cosmos.esa.in
 - **Precision per orbit** is a function of Gaia G. It interpolates published in-flight performance from
   Fortier et al. 2024, A&A 687, A302 ([arXiv:2406.01716](https://arxiv.org/abs/2406.01716)):
   - 12.8 ppm in 6 h at G = 8.97;
-  - at G = 12, either 120 ppm in 3 h (conservative) or 85 ppm in 3 h (optimistic).
+  - at G = 12, either 128 ppm in 3 h (conservative: the paper's section 4.4 figure including hot pixels; the
+    measured DRP light curves of a G = 11.98 star reached 116.5 and 102.8 ppm in 3 h in 2021 and 2023) or
+    85 ppm in 3 h (optimistic: Science Requirement 1.2, met in other years and by PIPE light curves).
 
   The noise is assumed white. A CHEOPS orbit is 98.7 minutes. The observing efficiency is a placeholder
   (`--efficiency`, default 0.7); take yours from the Visibility Tool. Outside 8.5 ≤ G ≤ 12.5 the pack warns
@@ -125,27 +131,41 @@ Scheduling Feasibility Checker (both on [ESA Datalabs](https://www.cosmos.esa.in
 
 ## The anonymity lint
 
-The P&P requires double-anonymous proposals, including file names. The lint warns about:
+**The lint is an aid. It cannot guarantee anonymity:** a clean result does not prove a text is anonymous, so
+read every document and file name yourself before submitting. The P&P requires double-anonymous proposals,
+including file names. The lint warns about:
 
-- e-mail addresses and ORCID iDs;
-- names you give with `--author-name`;
-- institution words, and titles before names;
-- self-reference ("our previous work", "we have previously shown", "my group", "our own pipeline");
-- funding acknowledgements;
-- links to personal pages;
-- the same problems in file names.
+- e-mail addresses, including obfuscated ones ("jane.doe [at] unige.ch"), and ORCID iDs;
+- names you give with `--author-name`, in their usual variants: "Jane Doe", "J. Doe", "Doe, J.", "Jane Doe's",
+  and the surname alone in a citation ("Doe et al.", "Doe (2023)"). A third-person self-citation is what the
+  P&P recommends, so treat that warning as a prompt to check the sentence around it, not as an error;
+- institutions, case-insensitively: generic words ("university of ...", "institute", "observatory"), a short
+  built-in list of major institutions ("ETH Zurich", "Harvard", "UniGE" and others), and any you give with
+  `--institution`. Links to the public tools a proposal must cite, such as the Target Checker at
+  cheops.unige.ch, are not counted;
+- self-reference: "my previous paper", "our earlier CHEOPS programme", "our 2023 study", "our work (Doe et al.
+  2023)", "our team", "we have previously shown", "we are the team that discovered";
+- titles before names, funding acknowledgements and links to personal pages;
+- file names that contain an e-mail address, an ORCID iD, an institution, a given name (`Doe_SJ.md`,
+  `jdoe.md`) or initials.
 
-It also notes where a draft names public software such as SetuHQ. Citing it is fine, but if you develop it,
-cite it neutrally. The lint only warns; it never edits. Run `setuhq propose lint` on your final text. The P&P
-(section 4.13) also asks you to acknowledge any AI software used, with its version and purpose, in the
-Technical Justification. SetuHQ's Sentinels are AI models.
+Text is scanned paragraph by paragraph, so a phrase wrapped over two lines is still caught. A PDF is read with
+[pypdf](https://pypi.org/project/pypdf/) when it is installed (`pip install pypdf`, or the `propose` extra).
+Without pypdf, or when a PDF has no extractable text, `setuhq propose lint` refuses it with exit code 2 rather
+than reporting it clean, and the same goes for any other non-text file. Exit code 1 means warnings were found.
+
+The lint also notes where a draft names public software such as SetuHQ. Citing it is fine, but if you develop
+it, cite it neutrally. The lint only warns; it never edits. The P&P (section 4.13) also asks you to acknowledge
+any AI software used, with its version and purpose, in the Technical Justification. SetuHQ's Sentinels are AI
+models.
 
 ## Being a good citizen of ESA's services
 
 - **Reads only:** each pack reads public pages and services only, never in bulk. That means the call page, the
   RTL CSV files it links, one SIMBAD query (MAST only as a fallback), at most two archive metadata queries and
   one TOI table query.
-- **Rate limits:** requests to one host are at least a second apart and retried at most twice.
+- **Rate limits:** requests to one host are at least a second apart and retried at most twice; a 429 answer's
+  Retry-After is honoured (up to two minutes).
 - **Identified:** requests carry a `SetuHQ-proposal-prep` User-Agent.
 - **Cached:** the command line reuses answers for the same day. `--offline` makes no request at all; the
   checks then say "not checked".

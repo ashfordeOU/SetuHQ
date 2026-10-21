@@ -48,14 +48,18 @@ def add_parser(sub) -> None:
     c.add_argument("--window-end", type=_date, help="last date to observe (default 2029-12-31)")
     c.add_argument("--author-name", action="append", default=[],
                    help="a name the anonymity lint must flag (repeatable; never written into the pack)")
+    c.add_argument("--institution", action="append", default=[],
+                   help="an institution the anonymity lint must flag (repeatable; never written into the pack)")
     c.add_argument("--offline", action="store_true", help="make no network request (cache only; checks then say 'not checked')")
     c.add_argument("--no-cache", action="store_true", help="do not read or write cache/cheops-propose/")
     c.add_argument("--today", type=_date, help=argparse_suppress())
     c.set_defaults(func=cmd_cheops)
 
-    lint = psub.add_parser("lint", help="scan proposal text files for anything that breaks anonymity")
+    lint = psub.add_parser("lint", help="scan proposal text (or PDF, with pypdf) for anything that breaks anonymity; "
+                                        "an aid, not a guarantee")
     lint.add_argument("files", nargs="+")
-    lint.add_argument("--author-name", action="append", default=[], help="a name to flag (repeatable)")
+    lint.add_argument("--author-name", action="append", default=[], help="a name to flag, in its usual variants (repeatable)")
+    lint.add_argument("--institution", action="append", default=[], help="an institution to flag (repeatable)")
     lint.set_defaults(func=cmd_lint)
 
 
@@ -99,7 +103,7 @@ def cmd_cheops(args) -> int:
             event=args.event, depth_ppm=args.depth_ppm, duration_hours=args.duration_hours, target_snr=args.snr,
             efficiency=args.efficiency, t0=args.t0, t0_err=args.t0_err, period=args.period, period_err=args.period_err,
             window_start=args.window_start, window_end=args.window_end, flare_rate=args.flare_rate,
-            author_names=args.author_name, use_toi_table=not args.offline)
+            author_names=args.author_name, institutions=args.institution, use_toi_table=not args.offline)
     except ValueError as exc:
         print(f"setuhq propose cheops: {exc}", file=sys.stderr)
         return 2
@@ -110,22 +114,34 @@ def cmd_cheops(args) -> int:
     print("RTL: " + ("not checked" if not rtl.get("checked") else "RESERVED" if rtl["reserved"] else "not on the public list"))
     arch = st["archive"]
     print("archive: " + ("not checked" if not arch.get("checked") else
-                         f"already observed ({arch['n_public']} public visits)" if arch["already_observed"] else "no visits found"))
+                         f"already observed ({arch['n_public']} public visits)" if arch["already_observed"] else
+                         arch.get("no_match_note") or "no visits in public metadata"))
     problems = c["errors"] + p["programme"]["check"]["errors"] + p["window"]["errors"]
+    if rtl.get("reserved"):
+        problems.append("the target is on the GTO Reserved Target List: a GO proposal for it is not possible while "
+                        "it is reserved (check the Target Checker)")
     for msg in problems:
         print(f"ERROR: {msg}")
     for msg in c["warnings"] + p["programme"]["check"]["warnings"] + p["target"]["coord_warnings"]:
         print(f"WARNING: {msg}")
     n_warn = sum(f["level"] == "warn" for f in p["anonymity_lint"])
-    print(f"anonymity lint: {n_warn} warning(s) (see anonymity-lint.txt)")
+    print(f"anonymity lint: {n_warn} warning(s) (see anonymity-lint.txt; an aid, not a guarantee of anonymity)")
     print("Estimates only. Confirm with ESA's Exposure Time Calculator, Visibility Tool and Scheduling Feasibility "
           "Checker; nothing was submitted.")
     return 1 if problems else 0
 
 
 def cmd_lint(args) -> int:
-    from setuhq.propose.draft import format_findings, lint_files
+    from setuhq.propose.lint import LintInputError, format_findings, lint_files
 
-    findings = lint_files([Path(f) for f in args.files], author_names=args.author_name)
+    try:
+        findings = lint_files([Path(f) for f in args.files], author_names=args.author_name,
+                              institutions=args.institution)
+    except LintInputError as exc:
+        print(f"setuhq propose lint: {exc}", file=sys.stderr)
+        return 2
+    except OSError as exc:
+        print(f"setuhq propose lint: {exc}", file=sys.stderr)
+        return 2
     print(format_findings(findings))
     return 1 if any(f["level"] == "warn" for f in findings) else 0

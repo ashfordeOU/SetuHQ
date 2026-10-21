@@ -9,7 +9,10 @@ first 3.5 years of operations", A&A 687, A302 (arXiv:2406.01716):
 * bright anchor: HD 88111 (G = 8.97), 12.8 ppm in a 6-hour bin in 2023 (section 5.2, Fig. 18), which is
   31.4 ppm in one hour if the noise is white. The paper's ETC example for G = 9 (13 ppm in 6 h, 237.2 ppm in
   1 minute) gives 31.8 and 30.6 ppm in one hour: the white-noise scaling holds there.
-* faint anchor, conservative: G = 12, 120 ppm in 3 h (section 4.4, read from Fig. 17), 208 ppm in one hour.
+* faint anchor, conservative: G = 12, 128 ppm in 3 h (section 4.4: 120 ppm in 3 h of photometric noise plus up to
+  45 ppm in 3 h from hot pixels, in quadrature), 222 ppm in one hour. The measured DRP light curves of
+  TYC 5502-1037-1 (G = 11.98) reached 116.5 ppm (2021) and 102.8 ppm (2023) in 3 h (section 5.2), so the
+  conservative case stays at the edge of what was measured, as intended.
 * faint anchor, optimistic: G = 12, 85 ppm in 3 h (Science Requirement 1.2, met by the measured light curves of
   TYC 5502-1037-1, G = 11.98, in some years: 68-117 ppm in 3 h, section 5.2), 147 ppm in one hour.
 
@@ -41,7 +44,7 @@ REFERENCE = ("Fortier, A., et al. 2024, A&A 687, A302, 'CHEOPS in-flight perform
              "first 3.5 years of operations' (arXiv:2406.01716)")
 G_BRIGHT, SIGMA1H_BRIGHT = 8.97, 12.8 * math.sqrt(6.0)
 G_FAINT = 12.0
-SIGMA1H_FAINT = {"conservative": 120.0 * math.sqrt(3.0), "optimistic": 85.0 * math.sqrt(3.0)}
+SIGMA1H_FAINT = {"conservative": 128.0 * math.sqrt(3.0), "optimistic": 85.0 * math.sqrt(3.0)}
 CALIBRATED_RANGE = (8.5, 12.5)
 SUN_EXCLUSION_DEG = 117.0
 SKY_PAGE = "https://www.cosmos.esa.int/web/cheops/the-cheops-sky"

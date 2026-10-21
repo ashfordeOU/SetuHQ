@@ -22,7 +22,7 @@ from __future__ import annotations
 import json
 import re
 import warnings
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from setuhq import __version__
@@ -76,7 +76,7 @@ def build_pack(target: str, out_dir: Path, *, root: Path, programme: str = "regu
                t0: float | None = None, t0_err: float | None = None, period: float | None = None,
                period_err: float | None = None, window_start: date | None = None, window_end: date | None = None,
                flare_rate: float | None = None, n_sigma: float = 3.0, rtl_radius_arcsec: float = 20.0,
-               author_names=(), use_toi_table: bool = True, claimed: bool = False) -> dict:
+               author_names=(), institutions=(), use_toi_table: bool = True, claimed: bool = False) -> dict:
     """Build the pack into ``out_dir`` and return its ``pack.json`` content. ``out_dir`` is created and must not
     exist, unless ``claimed``: then it is a directory the caller has just created, and it must be empty."""
     now = now or datetime.now(timezone.utc)
@@ -95,8 +95,8 @@ def build_pack(target: str, out_dir: Path, *, root: Path, programme: str = "regu
             raise ValueError(f"no {prog.label} cycle left in the Running Call after {now:%Y-%m-%d}")
     cinfo = rules.cycle_info(*cy, prog, now)
     orbit_check = rules.check_orbits(orbits, prog)
-    w_start = window_start or max(date.fromisoformat(cinfo["earliest_start"]), rules.EM2_START)
-    w_end = window_end or rules.EM2_END
+    w_start = window_start or max(date.fromisoformat(cinfo["earliest_start"]), rules.CALL_START)
+    w_end = window_end or rules.CALL_END
     window = rules.check_window(w_start, w_end, date.fromisoformat(cinfo["earliest_start"]))
     if claimed:
         if not out_dir.is_dir() or any(out_dir.iterdir()):
@@ -160,34 +160,40 @@ def build_pack(target: str, out_dir: Path, *, root: Path, programme: str = "regu
 
     archive = {"checked": False}
     try:
-        visits, seen = [], set()
+        answers = []
         if use_ra is not None:
-            vs, got = sources.dace_cone(fetcher, use_ra, use_dec, ARCHIVE_RADIUS_ARCSEC / 3600.0)
-            provenance.append(_save(out_dir, "archive-cone.json", got) | {"what": "DACE CHEOPS visits, cone search"})
-            visits += vs
-        vs, got = sources.dace_name(fetcher, (resolved.main_id if resolved else None) or target)
-        provenance.append(_save(out_dir, "archive-name.json", got) | {"what": "DACE CHEOPS visits, name search"})
-        visits += vs
-        uniq = []
-        for v in visits:
-            if v.get("visit_id") not in seen:
-                seen.add(v.get("visit_id"))
-                uniq.append(v)
-        public = [v for v in uniq if v.get("status_published")]
+            answers.append(("cone", sources.dace_cone(fetcher, use_ra, use_dec, ARCHIVE_RADIUS_ARCSEC / 3600.0)))
+        answers.append(("name", sources.dace_name(fetcher, (resolved.main_id if resolved else None) or target)))
+        public, seen, no_match = [], set(), []
+        for kind, a in answers:
+            if a["fetched"] is not None:  # only the filtered copy exists: public visits and a count
+                provenance.append(_save(out_dir, f"archive-{kind}.json", a["fetched"])
+                                  | {"what": f"DACE CHEOPS visits, {kind} search (filtered: public fields only)"})
+            if a["no_match"]:
+                no_match.append(kind)
+            for v in a["public_visits"]:
+                if v.get("visit_id") not in seen:
+                    seen.add(v.get("visit_id"))
+                    public.append(v)
+        # Visits not yet public are only counted per query, so the two counts cannot be merged exactly.
+        hidden = max((a["n_not_public"] for _, a in answers), default=0)
         public_rows = [{"visit_id": v.get("visit_id"), "file_key": v.get("file_key"), "object": v.get("obj_id_catname"),
                         "programme_id": v.get("full_program_name"), "start_utc": _mjd_iso(v.get("date_mjd_start")),
                         "end_utc": _mjd_iso(v.get("date_mjd_end")), "light_curve_available": v.get("db_lc_available")}
                        for v in public]
         archive = {"checked": True, "source": f"DACE public CHEOPS metadata ({sources.DACE_CHEOPS}), the query interface "
                                               "of the CHEOPS Mission Archive",
-                   "cone_radius_arcsec": ARCHIVE_RADIUS_ARCSEC, "already_observed": bool(uniq),
-                   "n_public": len(public), "n_not_public": len(uniq) - len(public), "public_visits": public_rows,
+                   "cone_radius_arcsec": ARCHIVE_RADIUS_ARCSEC, "already_observed": bool(public or hidden),
+                   "n_public": len(public), "n_not_public": hidden, "public_visits": public_rows,
+                   "no_match_queries": no_match,
+                   "no_match_note": sources.DACE_NO_MATCH if no_match else None,
                    "programme_ids": sorted({r["programme_id"] for r in public_rows if r["programme_id"]}),
-                   "note": ("Public metadata only; no proprietary data or PI details are read or stored. Visits not yet "
-                            "public are counted, not listed. The Mission Archive is definitive: search it by name "
-                            "and by coordinates and screenshot the result (proposal file #4).")}
+                   "note": ("Public metadata only: answers are filtered before anything is stored, keeping public "
+                            "visits' public fields and a bare count of visits not yet public (at least that many); "
+                            "no proprietary data or PI details are stored. The Mission Archive is definitive: search "
+                            "it by name and by coordinates and screenshot the result (proposal file #4).")}
     except sources.SourceError as exc:
-        errors_net.append(f"archive (DACE): {exc}")
+        errors_net.append(f"archive (DACE): not checked ({exc})")
 
     # ---- SetuHQ's own evidence
     ev = evidence.stored_evidence(root, tic=tic, names=[target] + ([resolved.main_id] if resolved else []))
@@ -276,8 +282,9 @@ def build_pack(target: str, out_dir: Path, *, root: Path, programme: str = "regu
     for name, text in files.items():
         (out_dir / name).write_text(text, encoding="utf-8")
     drafts = [out_dir / "scientific-justification.md", out_dir / "technical-justification.md"]
-    lint = draft.lint_files(drafts, author_names=author_names)
-    lint += draft.lint_filenames([out_dir] + sorted(out_dir.rglob("*")), author_names=author_names)
+    lint = draft.lint_files(drafts, author_names=author_names, institutions=institutions)
+    lint += draft.lint_filenames([out_dir] + sorted(out_dir.rglob("*")), author_names=author_names,
+                                 institutions=institutions)
     (out_dir / "anonymity-lint.txt").write_text(draft.format_findings(lint) + "\n", encoding="utf-8")
 
     pack = {
@@ -333,7 +340,7 @@ def readme(p: dict) -> str:
         f"{c['about_three_months_after_close']}; nominal start month {c['nominal_start_month']}.",
         f"- {c['observable_by_note']}",
         f"- Window {p['window']['start']} to {p['window']['end']} (Running Call observing period "
-        f"{rules.EM2_START} to {rules.EM2_END}).",
+        f"{rules.CALL_START} to {rules.CALL_END}: the end of EM1 to {rules.EM2_FROM - timedelta(days=1)}, then EM2).",
     ]
     for kind in ("errors", "warnings"):
         for msg in c[kind] + p["programme"]["check"][kind] + p["window"][kind]:
@@ -361,10 +368,11 @@ def readme(p: dict) -> str:
         ids = ", ".join(str(v["visit_id"]) for v in arch["public_visits"][:20])
         lines.append(f"- Archive: **already observed**: {arch['n_public']} public visit(s)"
                      + (f" (visit ids {ids}{', ...' if arch['n_public'] > 20 else ''})" if ids else "")
-                     + (f" and {arch['n_not_public']} not yet public" if arch["n_not_public"] else "")
+                     + (f" and at least {arch['n_not_public']} not yet public" if arch["n_not_public"] else "")
                      + ". Contact CHEOPS support and justify new data (P&P section 4.10).")
     else:
-        lines.append("- Archive: no visits in public metadata (DACE) by position or name. Still check the Mission Archive.")
+        lines.append(f"- Archive: {arch.get('no_match_note') or 'no visits in public metadata'}; DACE was searched by "
+                     "position and by name. Still check the Mission Archive.")
     ss = pl.get("sun_screen") or {}
     if ss.get("checked"):
         lines.append(f"- Sky: ecliptic latitude {_f(ss['ecliptic_latitude_deg'])} deg. {ss['statement']}")
@@ -409,7 +417,10 @@ def readme(p: dict) -> str:
     lines += ["", "## Drafts and checklist", "",
               "- `scientific-justification.md` and `technical-justification.md`: anonymised drafts with generic "
               "headings. Move them into ESA's templates (linked in the checklist); do not submit these files.",
-              f"- `anonymity-lint.txt`: {n_warn} warning(s). Run `setuhq propose lint FILE...` again on your edited text.",
+              f"- `anonymity-lint.txt`: {n_warn} warning(s). The lint is an aid and cannot guarantee anonymity; run "
+              "`setuhq propose lint FILE...` on your edited text and read everything yourself.",
+              "- `sources/` holds copies of the public files read, for your own record. Do not redistribute "
+              "`sources/RTL_*.csv`: it is ESA's file; link to the call page instead.",
               "- `checklist.md`: ESA's seven steps in order, with links.",
               "- The Team Expertise & Management Plan (the one non-anonymous file) is not drafted here.",
               "", "## If you publish CHEOPS data", "",

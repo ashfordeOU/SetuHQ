@@ -52,12 +52,19 @@ class SourceError(RuntimeError):
     """A source could not be read (network, service, or an unexpected answer)."""
 
 
+class NotFound(SourceError):
+    """HTTP 404. Only the DACE search reads this as "no match" (it answers 404 for an empty result); for every
+    other source a 404 means the source could not be checked."""
+
+
 @dataclass
 class Fetched:
     url: str
     body: bytes
     fetched_at: str
     cached: bool = False
+    raw_sha256: str | None = None   # set when ``body`` is a filtered copy: the hash of what the service sent
+    filtered: str | None = None     # what the filter kept, when ``body`` is a filtered copy
 
     @property
     def sha256(self) -> str:
@@ -66,6 +73,8 @@ class Fetched:
     def record(self, saved_as: str | None = None) -> dict:
         out = {"url": self.url, "fetched_at": self.fetched_at, "sha256": self.sha256, "bytes": len(self.body),
                "from_cache": self.cached}
+        if self.filtered:
+            out |= {"filtered": self.filtered, "raw_sha256": self.raw_sha256}
         if saved_as:
             out["saved_as"] = saved_as
         return out
@@ -89,7 +98,9 @@ class Fetcher:
         return Path(self.cache_dir) / f"{day}-{digest}{suffix}"
 
     def get(self, url: str, params: dict | None = None, *, data: dict | None = None, suffix: str = ".bin",
-            cache_name: str | None = None) -> Fetched:
+            cache_name: str | None = None, transform=None) -> Fetched:
+        """One read. ``transform`` (``(bytes) -> (bytes, description)``) filters the body before anything else sees
+        it: only the filtered copy is returned, cached or saved, so a raw body is never written to disk."""
         full = url + ("?" + urllib.parse.urlencode(params) if params else "")
         key = full + ("\n" + json.dumps(data, sort_keys=True) if data else "")
         cpath = None
@@ -101,17 +112,22 @@ class Fetcher:
                 cpath = self._cache_path(key, suffix)
         if cpath and cpath.exists() and cpath.with_suffix(cpath.suffix + ".json").exists():
             meta = json.loads(cpath.with_suffix(cpath.suffix + ".json").read_text())
-            got = Fetched(meta["url"], cpath.read_bytes(), meta["fetched_at"], cached=True)
+            got = Fetched(meta["url"], cpath.read_bytes(), meta["fetched_at"], cached=True,
+                          raw_sha256=meta.get("raw_sha256"), filtered=meta.get("filtered"))
             self.log.append(got)
             return got
         if self.offline:
             raise SourceError(f"offline and not cached: {full}")
         got = self._request(full, data)
+        if transform is not None:
+            body, what = transform(got.body)
+            got = Fetched(got.url, body, got.fetched_at, raw_sha256=hashlib.sha256(got.body).hexdigest(), filtered=what)
         if cpath:
             cpath.parent.mkdir(parents=True, exist_ok=True)
             cpath.write_bytes(got.body)
             cpath.with_suffix(cpath.suffix + ".json").write_text(json.dumps(
-                {"url": got.url, "fetched_at": got.fetched_at, "sha256": got.sha256}, indent=1))
+                {"url": got.url, "fetched_at": got.fetched_at, "sha256": got.sha256, "raw_sha256": got.raw_sha256,
+                 "filtered": got.filtered}, indent=1))
         self.log.append(got)
         return got
 
@@ -130,15 +146,34 @@ class Fetcher:
                 with urllib.request.urlopen(req, timeout=TIMEOUT_S) as resp:  # noqa: S310 (fixed https hosts)
                     return Fetched(full, resp.read(), datetime.now(timezone.utc).isoformat(timespec="seconds"))
             except urllib.error.HTTPError as exc:
-                if exc.code == 404:  # DACE answers 404 "Resource not found" for an empty result
-                    return Fetched(full, b"", datetime.now(timezone.utc).isoformat(timespec="seconds"))
+                if exc.code == 404:
+                    raise NotFound(f"{full}: HTTP 404") from None
                 error = exc
-                if exc.code < 500 and exc.code != 429:
+                if exc.code == 429:
+                    time.sleep(retry_after(exc.headers.get("Retry-After") if exc.headers else None))
+                    continue
+                if exc.code < 500:
                     break
             except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as exc:
                 error = exc
             time.sleep(2.0 * (attempt + 1))
         raise SourceError(f"{full}: {error}")
+
+
+def retry_after(value: str | None, default: float = 5.0, cap: float = 120.0) -> float:
+    """Seconds to wait from a Retry-After header (seconds or an HTTP date), within [0, cap]."""
+    if not value:
+        return default
+    try:
+        return max(0.0, min(cap, float(value)))
+    except ValueError:
+        pass
+    try:
+        from email.utils import parsedate_to_datetime
+
+        return max(0.0, min(cap, (parsedate_to_datetime(value) - datetime.now(timezone.utc)).total_seconds()))
+    except (TypeError, ValueError):
+        return default
 
 
 # ---------------------------------------------------------------- the Reserved Target List
@@ -306,23 +341,49 @@ KEEP_VISIT_FIELDS = ("visit_id", "file_key", "obj_id_catname", "full_program_nam
                      "status_published", "db_lc_available", "ra_deg", "dec_deg", "obj_mag_v")
 
 
+DACE_FILTER_NOTE = ("filtered by SetuHQ before storage: public visits' public fields only "
+                    f"({', '.join(KEEP_VISIT_FIELDS)}); visits not yet public are only counted; PI fields dropped")
+DACE_NO_MATCH = "no match found (DACE does not distinguish an empty result from a missing endpoint)"
+
+
 def parse_dace_visits(raw: bytes) -> list[dict]:
-    """Visits from a DACE CHEOPS search answer, keeping public metadata fields only (never the PI's name)."""
+    """Visits from a raw DACE CHEOPS search answer, keeping public metadata fields only (never the PI's name or
+    id). Used in memory by :func:`filter_dace`; raw answers are never stored."""
     cols = _dace_columns(raw)
     n = len(cols.get("visit_id", []))
     return [{k: cols[k][i] for k in KEEP_VISIT_FIELDS if k in cols and i < len(cols[k])} for i in range(n)]
 
 
-def dace_cone(fetcher: Fetcher, ra: float, dec: float, radius_deg: float) -> tuple[list[dict], Fetched]:
-    flt = json.dumps({"pos": {"ra": ra, "dec": dec, "radius": radius_deg}})
-    got = fetcher.get(DACE_CHEOPS, {"limit": "2000", "filters": flt, "sort": "{}"}, suffix=".json")
-    return parse_dace_visits(got.body), got
+def filter_dace(raw: bytes) -> tuple[bytes, str]:
+    """The only form of a DACE answer that is kept: public visits (public fields) and a bare count of the rest."""
+    visits = parse_dace_visits(raw)
+    public = [v for v in visits if v.get("status_published") is True]
+    doc = {"filtered": DACE_FILTER_NOTE, "public_visits": public, "n_not_public": len(visits) - len(public)}
+    return json.dumps(doc, indent=1).encode(), DACE_FILTER_NOTE
 
 
-def dace_name(fetcher: Fetcher, name: str) -> tuple[list[dict], Fetched]:
-    flt = json.dumps({"obj_id_catname": {"contains": [name]}})
-    got = fetcher.get(DACE_CHEOPS, {"limit": "2000", "filters": flt, "sort": "{}"}, suffix=".json")
-    return parse_dace_visits(got.body), got
+def read_filtered_dace(body: bytes) -> tuple[list[dict], int]:
+    doc = json.loads(body) if body else {}
+    return doc.get("public_visits", []), int(doc.get("n_not_public", 0))
+
+
+def _dace(fetcher: Fetcher, flt: dict) -> dict:
+    """One DACE search: {"public_visits", "n_not_public", "fetched" (or None), "no_match"}."""
+    params = {"limit": "2000", "filters": json.dumps(flt), "sort": "{}"}
+    try:
+        got = fetcher.get(DACE_CHEOPS, params, suffix=".json", transform=filter_dace)
+    except NotFound:
+        return {"public_visits": [], "n_not_public": 0, "fetched": None, "no_match": True}
+    public, hidden = read_filtered_dace(got.body)
+    return {"public_visits": public, "n_not_public": hidden, "fetched": got, "no_match": False}
+
+
+def dace_cone(fetcher: Fetcher, ra: float, dec: float, radius_deg: float) -> dict:
+    return _dace(fetcher, {"pos": {"ra": ra, "dec": dec, "radius": radius_deg}})
+
+
+def dace_name(fetcher: Fetcher, name: str) -> dict:
+    return _dace(fetcher, {"obj_id_catname": {"contains": [name]}})
 
 
 # ---------------------------------------------------------------- published TOI ephemeris

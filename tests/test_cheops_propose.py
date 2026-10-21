@@ -3,10 +3,17 @@
 """The CHEOPS proposal preparation pack: calendar and deadline arithmetic, orbit limits, RTL matching, the
 anonymity lint, the planning estimates, the pack itself and the MCP tool's write safety. Offline.
 
-Fixtures (tests/fixtures/cheops_propose/): ``rtl_synthetic.csv`` and ``call_page.html`` are synthetic, written in
-the format of ESA's RTL CSV and call page (ESA's own RTL file is not redistributed: the code downloads it at run
-time). ``simbad_*.json``, ``mast_TOI_1987.json`` and ``dace_wasp18_cone.json`` are public query answers recorded on
-21 October 2026 and trimmed (identifier lists shortened; PI fields removed from the DACE answer).
+Fixtures (tests/fixtures/cheops_propose/):
+
+* ``rtl_synthetic.csv`` is mixed: public target names with synthetic rows (coordinates, notes, title) in the format
+  of ESA's RTL CSV. ESA's own RTL file is not redistributed; the code downloads it at run time.
+* ``call_page.html`` is synthetic, in the format of the Running Call page's RTL links.
+* ``simbad_*.json`` and ``mast_TOI_1987.json`` are public answers recorded on 21 October 2026 (identifier lists
+  shortened).
+* ``dace_wasp18_cone.json`` is a DACE answer recorded on 21 October 2026 with its real column set, including the PI
+  columns, whose values were replaced by fakes (``FAKEPI-*``, 9000xx); one visit was set to not public. The code must
+  never store those columns: the tests check every file it writes.
+* ``lint/`` holds an independent review's bypass cases for the anonymity lint.
 """
 
 import json
@@ -43,7 +50,9 @@ def fixture_answer(url: str, data: dict | None) -> bytes:
             return (FIX / "mast_TOI_1987.json").read_bytes()
         return b'{"resolvedCoordinate": []}'
     if "cheops-webapp" in url:
-        return (FIX / "dace_wasp18_cone.json").read_bytes() if "24.354" in url else b""
+        if "24.354" in url:
+            return (FIX / "dace_wasp18_cone.json").read_bytes()
+        raise sources.NotFound(f"{url}: HTTP 404")  # DACE's answer to an empty search
     if "exoplanetarchive" in url:
         return b"[]"
     raise AssertionError(f"unexpected request {url}")
@@ -252,7 +261,7 @@ def test_lint_flags_identifying_text(text, rule):
 
 def test_lint_flags_given_author_names_and_passes_neutral_text():
     text = "Doe et al. (2026) have previously shown a 3-sigma secondary eclipse."
-    assert any(f["rule"] == "author-name" for f in draft.lint_text(text, author_names=["Doe"]))
+    assert any(f["rule"].startswith("author-name") for f in draft.lint_text(text, author_names=["Doe"]))
     assert [f for f in draft.lint_text(text) if f["level"] == "warn"] == []
     neutral = ("The transit was detected in TESS data (Ricker et al. 2015) and observed by CHEOPS "
                "(Benz et al. 2021). Previous work by others reported a period of 2.586 d.")
@@ -263,8 +272,116 @@ def test_lint_checks_file_names(tmp_path):
     f = tmp_path / "proposal_JDoe_jane.doe@example.org.md"
     f.write_text("clean text")
     found = draft.lint_files([f], author_names=["J Doe"])
-    assert {x["rule"] for x in found} == {"file-name"}
+    assert {x["rule"].split(" ")[0] for x in found} == {"file-name"}
     assert draft.lint_filenames([tmp_path / "scientific-justification.md"], author_names=["Doe"]) == []
+    assert draft.lint_filenames([tmp_path / "0000-0002-1825-0097.md"])
+    assert draft.lint_filenames([tmp_path / "TOI-1987-technical.md"]) == []
+
+
+# The bypass cases an independent review found (tests/fixtures/cheops_propose/lint/).
+LINT = FIX / "lint"
+
+
+def _warn_lines(findings):
+    return {f["line"] for f in findings if f["level"] == "warn"}
+
+
+def test_lint_catches_every_review_case():
+    text = (LINT / "cases.txt").read_text()
+    found = draft.lint_text(text, author_names=["Jane Doe"])
+    lines = _warn_lines(found)
+    n = len(text.splitlines())
+    assert {1, 2} & lines  # "In our previous / work": a phrase wrapped over two lines
+    assert set(range(3, n + 1)) <= lines, sorted(set(range(3, n + 1)) - lines)
+    # and without any name given, every case except the bare name forms is still caught
+    no_names = _warn_lines(draft.lint_text(text))
+    assert set(range(3, n + 1)) - {11} <= no_names, sorted(set(range(3, n + 1)) - {11} - no_names)
+
+
+@pytest.mark.parametrize("text,rule", [
+    ("My previous paper measured the radius.", "self-reference"),
+    ("Our earlier CHEOPS programme observed it.", "self-reference"),
+    ("Our 2023 study found a second planet.", "self-reference"),
+    ("This builds on our work (Doe et al. 2023).", "self-reference"),
+    ("We are the team that discovered TOI-1987 b.", "self-reference"),
+    ("Contact: jane.doe [at] unige.ch", "email-obfuscated"),
+    ("Contact: jane.doe at unige.ch", "email-obfuscated"),
+    ("Data reduced at the university of geneva.", "institution"),
+    ("The ETH Zurich and Harvard teams lead this.", "institution"),
+])
+def test_lint_review_phrasings(text, rule):
+    assert any(f["rule"] == rule and f["level"] == "warn" for f in draft.lint_text(text)), draft.lint_text(text)
+
+
+def test_lint_author_name_variants():
+    for text in ("J. Doe measured it.", "DOE, J. et al. 2023", "as in Doe et al. (2023)", "Doe (2023) found",
+                 "Jane Doe's group", "see (Doe 2023)"):
+        assert any(f["rule"].startswith("author-name") for f in draft.lint_text(text, author_names=["Jane Doe"])), text
+    assert not any(f["rule"].startswith("author-name")
+                   for f in draft.lint_text("The doe-eyed star.", author_names=["Jane Doe"]))
+
+
+def test_lint_lets_official_tool_urls_through_but_not_the_institution():
+    assert not draft.lint_text("Checked with https://cheops.unige.ch/pht2/search-reserved-targets/ today.")
+    assert any(f["rule"] == "institution" for f in draft.lint_text("Our colleagues at UniGE helped."))
+    assert any(f["rule"] == "institution" for f in draft.lint_text("See https://www.unige.ch/~someone/ for code."))
+
+
+def test_lint_user_institutions_are_case_insensitive():
+    found = draft.lint_text("Observed from the STARLAB facility.", institutions=["Starlab"])
+    assert any(f["rule"] == "institution" for f in found)
+
+
+def test_lint_wrapped_lines_are_joined():
+    found = draft.lint_text((LINT / "wrap.txt").read_text())
+    assert {1, 3} <= _warn_lines(found)
+
+
+def test_lint_review_file_names():
+    names = [LINT / "Doe_SJ.md", LINT / "jdoe.md", LINT / "UniGE-technical.md"]
+    found = draft.lint_filenames(names, author_names=["Jane Doe"])
+    assert {f["file"] for f in found} == {p.name for p in names}
+    assert {f["file"] for f in draft.lint_filenames(names)} >= {"Doe_SJ.md", "UniGE-technical.md"}
+
+
+def test_lint_never_reports_a_pdf_or_binary_as_clean(tmp_path, monkeypatch):
+    pdf = LINT / "sj.pdf"
+    try:
+        found = draft.lint_files([pdf], author_names=["Jane Doe"])
+    except draft.LintInputError:
+        pass
+    else:
+        assert {"self-reference", "email", "institution"} <= {f["rule"] for f in found if f["level"] == "warn"}
+    import builtins
+
+    real_import = builtins.__import__
+
+    def no_pypdf(name, *a, **k):
+        if name == "pypdf":
+            raise ImportError("no pypdf")
+        return real_import(name, *a, **k)
+
+    monkeypatch.setattr(builtins, "__import__", no_pypdf)
+    with pytest.raises(draft.LintInputError, match="pypdf"):
+        draft.lint_files([pdf])
+    blob = tmp_path / "x.docx"
+    blob.write_bytes(b"PK\x03\x04\x00\x00binary")
+    with pytest.raises(draft.LintInputError):
+        draft.lint_files([blob])
+
+
+def test_lint_cli_exit_codes_and_wording(tmp_path, capsys):
+    from setuhq.cli import main
+
+    assert main(["propose", "lint", str(LINT / "sj.pdf"), "--author-name", "Jane Doe"]) in (1, 2)
+    blob = tmp_path / "x.bin"
+    blob.write_bytes(b"\x00\x01\x02")
+    assert main(["propose", "lint", str(blob)]) == 2
+    assert "not a text file" in capsys.readouterr().err
+    clean = tmp_path / "clean.md"
+    clean.write_text("A neutral sentence about a transiting planet.")
+    assert main(["propose", "lint", str(clean)]) == 0
+    assert "cannot guarantee anonymity" in capsys.readouterr().out
 
 
 # ---------------------------------------------------------------- planning estimates
@@ -272,7 +389,7 @@ def test_lint_checks_file_names(tmp_path):
 
 def test_precision_model_reproduces_its_anchors():
     assert planning.sigma_1h(8.97) / 6 ** 0.5 == pytest.approx(12.8)
-    assert planning.sigma_1h(12.0) / 3 ** 0.5 == pytest.approx(120.0)
+    assert planning.sigma_1h(12.0) / 3 ** 0.5 == pytest.approx(128.0)
     assert planning.sigma_1h(12.0, "optimistic") / 3 ** 0.5 == pytest.approx(85.0)
     # the paper's ETC example (G = 9: 13 ppm in 6 h) lies within 5 percent
     assert planning.sigma_1h(9.0) / 6 ** 0.5 == pytest.approx(13.0, rel=0.05)
@@ -371,11 +488,36 @@ def test_fetcher_caches_per_day_and_never_reaches_out_offline(tmp_path):
     assert any(p.name.startswith("RTL_20270101_v2__fetched-") for p in tmp_path.iterdir()) and rtl.body
 
 
-def test_dace_parsing_keeps_public_metadata_only():
-    visits = sources.parse_dace_visits((FIX / "dace_wasp18_cone.json").read_bytes())
-    assert visits and all("visit_id" in v and "file_key" in v for v in visits)
-    assert not any("pi_name" in v or "pi_uid" in v for v in visits)
+FAKE_PI = ("pi_name", "pi_uid", "FAKEPI", "Fakefirst", "900001", "900002")
+
+
+def test_the_dace_fixture_has_the_real_columns():
+    raw = (FIX / "dace_wasp18_cone.json").read_text()
+    assert '"pi_name"' in raw and '"pi_uid"' in raw and "FAKEPI-ALPHA" in raw  # the fixture must not hide reality
+
+
+def test_dace_answers_are_filtered_before_anything_sees_them():
+    body, what = sources.filter_dace((FIX / "dace_wasp18_cone.json").read_bytes())
+    text = body.decode()
+    assert not any(x in text for x in FAKE_PI) and "PI fields dropped" in what
+    public, hidden = sources.read_filtered_dace(body)
+    assert len(public) == 2 and hidden == 1 and all(v["status_published"] is True for v in public)
     assert sources.parse_dace_visits(b"") == []
+
+
+def test_no_pi_data_reaches_the_pack_or_the_cache(tmp_path):
+    cache = tmp_path / "cache"
+    pack.build_pack("Synthetic star", tmp_path / "pack", root=ROOT, now=datetime(2026, 10, 21, 12, tzinfo=UTC),
+                    fetcher=FixtureFetcher(cache_dir=cache), ra=24.354305, dec=-45.67788, coord_source="simbad")
+    # a second build reads the cache
+    q = pack.build_pack("Synthetic star", tmp_path / "pack2", root=ROOT, now=datetime(2026, 10, 21, 12, tzinfo=UTC),
+                        fetcher=FixtureFetcher(cache_dir=cache), ra=24.354305, dec=-45.67788, coord_source="simbad")
+    assert q["status"]["archive"]["n_public"] == 2 and q["status"]["archive"]["n_not_public"] == 1
+    files = [f for d in (tmp_path / "pack", tmp_path / "pack2", cache) for f in d.rglob("*") if f.is_file()]
+    assert any(f.parent == cache for f in files) and any("archive-" in f.name for f in files)
+    for f in files:
+        text = f.read_bytes().decode("utf-8", errors="replace")
+        assert not any(x in text for x in FAKE_PI), f
 
 
 # ---------------------------------------------------------------- the pack
@@ -437,6 +579,59 @@ def test_pack_replaces_exofop_coordinates_and_says_so(tmp_path):
     assert any("J2015.5" in w for w in p["target"]["coord_warnings"])
 
 
+def test_a_404_is_no_match_only_for_dace(tmp_path, monkeypatch):
+    p = build(tmp_path)  # the DACE name and cone searches answer 404
+    arch = p["status"]["archive"]
+    assert arch["checked"] and not arch["already_observed"] and "does not distinguish" in arch["no_match_note"]
+    assert "does not distinguish" in (tmp_path / "pack" / "README.md").read_text()
+
+    def not_found_elsewhere(self, full, data):
+        if "sim-tap" in full or "RTL_" in full:
+            raise sources.NotFound(f"{full}: HTTP 404")
+        return sources.Fetched(full, fixture_answer(full, data), "2026-10-21T12:00:00+00:00")
+
+    monkeypatch.setattr(sources.Fetcher, "_request", not_found_elsewhere)
+    q = pack.build_pack("TOI-1987", tmp_path / "p2", root=ROOT, now=datetime(2026, 10, 21, 12, tzinfo=UTC),
+                        fetcher=sources.Fetcher(cache_dir=None))
+    assert not q["status"]["rtl"]["checked"]  # an RTL 404 is "not checked", never "not reserved"
+    assert q["target"]["coord_source"].startswith("MAST")  # SIMBAD's 404 falls back to MAST
+    assert any(e.startswith("SIMBAD") for e in q["network_errors"]) and any(e.startswith("RTL") for e in q["network_errors"])
+
+
+def test_retry_after_is_honoured(monkeypatch):
+    import email.message
+    import urllib.error
+    import urllib.request
+
+    assert sources.retry_after("7") == 7 and sources.retry_after(None) == 5 and sources.retry_after("9999") == 120
+    assert 0 <= sources.retry_after("Wed, 21 Oct 2026 07:28:00 GMT") <= 120
+    calls, slept = [], []
+
+    class Resp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return b"ok"
+
+    def fake_urlopen(req, timeout):
+        calls.append(req.full_url)
+        if len(calls) == 1:
+            headers = email.message.Message()
+            headers["Retry-After"] = "3"
+            raise urllib.error.HTTPError(req.full_url, 429, "Too Many Requests", headers, None)
+        return Resp()
+
+    monkeypatch.undo()  # the real _request, with a fake network
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(sources.time, "sleep", lambda s: slept.append(s))
+    got = sources.Fetcher()._request("https://example.invalid/x", None)
+    assert got.body == b"ok" and len(calls) == 2 and 3 in slept
+
+
 def test_pack_offline_says_not_checked(tmp_path):
     p = pack.build_pack("TOI-1987", tmp_path / "pack", root=ROOT, now=datetime(2026, 10, 21, 12, tzinfo=UTC),
                         fetcher=sources.Fetcher(cache_dir=None, offline=True), gmag=10.07, use_toi_table=False)
@@ -472,6 +667,8 @@ def test_cli_writes_a_pack_and_lints(tmp_path, capsys, monkeypatch):
     assert code == 0 and (out / "pack.json").exists()
     assert "not affiliated with" in captured.err and "nothing was submitted" in captured.out
     assert main(["propose", "cheops", "TOI-1987", "--out", str(out), "--no-cache"]) == 2  # never overwrites
+    reserved = main(["propose", "cheops", "HD 197481", "--today", "2026-10-21", "--out", str(tmp_path / "r"), "--no-cache"])
+    assert reserved == 1 and "Reserved Target List" in capsys.readouterr().out
     bad = tmp_path / "draft.md"
     bad.write_text("As shown in our previous work (jane@example.org).")
     assert main(["propose", "lint", str(bad)]) == 1

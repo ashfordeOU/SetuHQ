@@ -7,15 +7,12 @@ asks for (sections 5.2.2 and 5.2.3.1). It does not reproduce ESA's Word template
 downloads those from ESA (linked) and moves the content across. Nothing in the draft names a person, an
 institution or a team, and the file names are generic.
 
-The lint scans text for what breaks double-anonymous review: e-mail addresses, ORCID iDs, names the user gives
-(``--author-name``), institution words, titles before names, self-references ("our previous work", "we have
-previously shown", "my group"), funding acknowledgements, and links to personal pages. It warns; it never edits.
+The anonymity lint lives in :mod:`setuhq.propose.lint` (re-exported here). It warns and never edits, and it is an
+aid: it cannot guarantee anonymity.
 """
 
 from __future__ import annotations
 
-import re
-from pathlib import Path
 
 DISCLAIMER = ("SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the "
               "CHEOPS mission or the CHEOPS Consortium. It does not replace ESA's Target Checker, Visibility Tool, "
@@ -61,87 +58,12 @@ LINKS = {
     "support": "mailto:cheops-support@cosmos.esa.int",
 }
 
-TODO = "[TO COMPLETE]"
+from setuhq.propose.lint import TODO  # noqa: E402
 
-# ---------------------------------------------------------------- the anonymity lint
+# ---------------------------------------------------------------- the anonymity lint (setuhq.propose.lint)
 
-SELF_REFERENCE = [
-    r"\bour\s+(?:own\s+)?(?:previous|earlier|prior|recent|past|published)\s+(?:work|paper|papers|study|studies|results?|"
-    r"analysis|observations?|programmes?|programs?|proposals?|campaigns?|detection|discovery)",
-    r"\b(?:we|I)\s+(?:have\s+)?(?:previously|already|recently|earlier)\s+(?:shown|showed|demonstrated|published|"
-    r"reported|found|observed|detected|discovered|developed|led)",
-    r"\b(?:we|I)\s+(?:have\s+)?(?:shown|showed|demonstrated|published|reported)\s+(?:in|that)\b",
-    r"\bin\s+our\s+(?:paper|papers|group|team|lab|laboratory|previous|earlier|recent|study|survey|programme|program)",
-    r"\b(?:my|our)\s+(?:group|team|lab|laboratory|institute|institution|university|department|collaboration|"
-    r"consortium|students?|postdocs?|PhD|thesis)",
-    r"\bour\s+(?:own\s+)?(?:pipeline|code|software|tool|survey|instrument|telescope|network|facility)",
-    r"\b(?:I|we)\s+(?:am|are)\s+(?:the\s+)?(?:PIs?|Co-?Is?|developers?|authors?|members?|leads?)\b",
-    r"\b(?:as\s+)?(?:we|I)\s+(?:showed|reported|argued)\b",
-]
-INSTITUTION = (r"\b(?:University|Universit(?:y|ät|é|à|at)|Universidad|Universidade|Institute|Institut|Instituto|"
-               r"Istituto|Observatory|Observatoire|Observatorio|Osservatorio|Sternwarte|College|Laboratory|"
-               r"Department\s+of|Dept\.|Max[- ]Planck|CNRS|INAF|NASA\s+Goddard|JPL|Caltech|MIT)\b")
-TITLES = r"\b(?:Dr|Prof|Professor|Mr|Ms|Mrs)\.?\s+[A-Z][a-z]+"
-FUNDING = r"\b(?:funded\s+by|grant\s+(?:no\.?|number|agreement)|acknowledge[sd]?\s+(?:support|funding)|ERC|NSF\s+grant)\b"
-EMAIL = r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
-ORCID = r"\b\d{4}-\d{4}-\d{4}-\d{3}[\dX]\b"
-PERSONAL_URL = r"https?://(?:www\.)?(?:github\.com|gitlab\.com|orcid\.org|linkedin\.com|twitter\.com|x\.com|scholar\.google\.[a-z.]+|researchgate\.net)/[^\s)>\]]+"
-SOFTWARE_NAMES = (r"\bSetuHQ\b", r"\bAshforde\b")
-
-
-def lint_text(text: str, *, author_names=(), file: str = "") -> list[dict]:
-    """Anonymity findings in one text: level (warn or info), rule, line number, the matched excerpt."""
-    rules = [("email", EMAIL, "warn"), ("orcid", ORCID, "warn"), ("self-reference", "|".join(SELF_REFERENCE), "warn"),
-             ("institution", INSTITUTION, "warn"), ("title-and-name", TITLES, "warn"), ("funding", FUNDING, "warn"),
-             ("personal-url", PERSONAL_URL, "warn")]
-    for name in author_names:
-        if name and name.strip():
-            rules.append(("author-name", r"\b" + re.escape(name.strip()) + r"\b", "warn"))
-    findings = []
-    for i, line in enumerate(text.splitlines(), 1):
-        for rule, pattern, level in rules:
-            flags = re.I if rule not in ("title-and-name", "institution") else 0
-            for m in re.finditer(pattern, line, flags):
-                findings.append({"level": level, "rule": rule, "file": file, "line": i, "match": m.group(0)})
-        for pattern in SOFTWARE_NAMES:
-            for m in re.finditer(pattern, line):
-                findings.append({"level": "info", "rule": "names-software", "file": file, "line": i,
-                                 "match": m.group(0),
-                                 "note": "Citing public software is fine; if you develop it, cite it neutrally."})
-        if TODO in line:
-            findings.append({"level": "info", "rule": "unfinished", "file": file, "line": i, "match": TODO})
-    return findings
-
-
-def lint_filenames(paths, *, author_names=()) -> list[dict]:
-    """File names must be anonymous too: no e-mail addresses or given names in them."""
-    out = []
-    for p in paths:
-        name = Path(p).name
-        hits = [m.group(0) for m in re.finditer(EMAIL, name)]
-        hits += [n for n in author_names if n and re.search(re.escape(n.strip().replace(" ", "")),
-                                                             name.replace(" ", "").replace("_", "").replace("-", ""), re.I)]
-        out += [{"level": "warn", "rule": "file-name", "file": name, "line": 0, "match": h} for h in hits]
-    return out
-
-
-def lint_files(paths, *, author_names=()) -> list[dict]:
-    findings = lint_filenames(paths, author_names=author_names)
-    for p in paths:
-        findings += lint_text(Path(p).read_text(encoding="utf-8", errors="replace"), author_names=author_names,
-                              file=Path(p).name)
-    return findings
-
-
-def format_findings(findings: list[dict]) -> str:
-    if not findings:
-        return "anonymity lint: no findings"
-    lines = []
-    for f in findings:
-        lines.append(f"{f['level'].upper():4s} {f['file']}:{f['line']} {f['rule']}: {f['match']!r}"
-                     + (f" ({f['note']})" if f.get("note") else ""))
-    n = sum(f["level"] == "warn" for f in findings)
-    return "\n".join(lines + [f"anonymity lint: {n} warning(s), {len(findings) - n} note(s)"])
+from setuhq.propose.lint import (  # noqa: E402,F401 (re-exported: the pack, the CLI and the tests use them here)
+    NOT_A_GUARANTEE, LintInputError, format_findings, lint_filenames, lint_files, lint_text)
 
 
 # ---------------------------------------------------------------- the drafts
@@ -268,12 +190,14 @@ def checklist(ctx: dict) -> str:
                 "Not on the public RTL CSV(s) read for this pack. Confirm with the Target Checker by coordinates.")
     arch_line = ("NOT CHECKED: search the Mission Archive by name and by coordinates." if not arch.get("checked") else
                  f"ALREADY OBSERVED: {arch['n_public']} public visit(s) found"
-                 + (f", plus {arch['n_not_public']} not yet public" if arch.get("n_not_public") else "")
+                 + (f", plus at least {arch['n_not_public']} not yet public" if arch.get("n_not_public") else "")
                  + "; justify new observations and contact CHEOPS support (P&P section 4.10)."
-                 if arch.get("already_observed") else "No visits found in public archive metadata (DACE).")
+                 if arch.get("already_observed") else
+                 f"{arch.get('no_match_note') or 'No visits in public archive metadata'} (DACE).")
     steps = [
         ("Registration (Cosmos account and ESA Datalabs)", [LINKS["registration"], LINKS["datalabs_registration"]],
-         "Register at least a week before the deadline; registrations are reviewed manually."),
+         "Register well before the deadline: registration and ESA Datalabs access may take several days (the "
+         "call page warns that waiting until the deadline may prevent submission)."),
         ("Coordinates (ICRS, epoch J2000)", [LINKS["coordinates"], LINKS["target_checker"], LINKS["simbad"], LINKS["mast"]],
          f"Pack position: RA {_fmt(t.get('ra'), 6)}, Dec {_fmt(t.get('dec'), 5)} from {t.get('coord_source')}. "
          "Never paste ExoFOP or Gaia positions (epoch J2015.5)." + "".join(f" WARNING: {w}" for w in t.get("coord_warnings", []))),
