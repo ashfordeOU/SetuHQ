@@ -410,6 +410,7 @@ def test_fingerprints_survive_the_rename_and_the_licence_headers():
     assert canonical_source(old) == old and canonical_source(new) == old
     assert canonical_source(new + b"y = 1\n") != old   # any other change still changes the fingerprint
     assert canonical_source(b"x = 1  # SPDX-License-Identifier: later lines are code\n").startswith(b"x = 1")
+    assert canonical_source(b"# -*- coding: utf-8 -*- SPDX-License-Identifier: X\nx = 1\n").startswith(b"# -*- coding")
 
 
 def _have_commit(rev):

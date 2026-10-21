@@ -56,8 +56,12 @@ SEARCH_FILES = [f for f in CODE_FILES if f not in CLASSIFY_FILES]
 # was then (setuhq and SetuHQ as exoplan, SETUHQ as EXOPLAN). A file from before the rename has neither, so its
 # canonical form is its own bytes and every earlier fingerprint is unchanged; a renamed file whose code is
 # otherwise the same hashes to the same value as before. Any other change to a file changes its fingerprint.
+# The mapping is deliberately many-to-one: "setuhq", "SetuHQ" and "exoplan" all read as exoplan, so an edit that only
+# swaps one of those names for another, even inside a string literal, is invisible to the fingerprint. Such an edit
+# changes no result. Only comment lines that carry "SPDX-" at the very top are dropped, and never a line with a
+# Python encoding declaration (coding: or coding=), which is part of how the file is read.
 LEGACY_NAME = "exoplan"
-_SPDX_HEADER = re.compile(rb"\A(?:#[^\n]*SPDX-[^\n]*\n)+")
+_SPDX_HEADER = re.compile(rb"\A(?:#(?![^\n]*coding[:=])[^\n]*SPDX-[^\n]*\n)+")
 
 
 def canonical_source(text: bytes) -> bytes:
