@@ -10,6 +10,23 @@ breaking changes are called out explicitly.
 
 ## [Unreleased]
 
+### Added
+
+- **Release machinery.** A `v*` tag runs `.github/workflows/release.yml`: it checks the tag against the
+  version, the changelog and CI on that commit, builds the sdist and the wheel, runs `twine check`, checks
+  what they carry and installs the wheel cleanly, attests build provenance and creates the GitHub Release
+  with this changelog's section as notes. `publish.yml` then uploads the same files to PyPI as `setuhq` by
+  trusted publishing (no token). `mcp-publish.yml` lists the server in the official MCP registry as
+  `io.github.ashfordeOU/setuhq` by GitHub OIDC; `auto-tag.yml` is optional and off by default. The steps
+  are in [docs/RELEASING.md](docs/RELEASING.md).
+- **One version.** `__version__` in `src/setuhq/__init__.py` is the only place it is written for the
+  package (pyproject reads it); `scripts/check_version_sync.py` and `tests/test_release.py` fail when
+  CITATION.cff, codemeta.json, .zenodo.json, server.json, smithery.yaml or the plugin manifests disagree.
+- The package ships `py.typed`, and its PyPI page is `README.pypi.md` (absolute links only).
+- `examples/quickstart.ipynb`: the stored pi Men run offline, from candidates to an MCP tool call; a test
+  runs it. `paper/` holds the JOSS paper; issue forms, a pull request template, Dependabot and
+  `.editorconfig` are under `.github/` and at the root.
+
 ## [0.1.0] - 2026-10-20
 
 The first public release, under the name **SetuHQ** (*setu*, Sanskrit for bridge). Until this

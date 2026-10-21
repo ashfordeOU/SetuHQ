@@ -794,7 +794,9 @@ events and nulls. That second step is not built yet.
 
 ## Install
 
-SetuHQ needs Python 3.10 or later. It is not on PyPI; install it from this repository:
+SetuHQ needs Python 3.10 or later. Tagged releases are set up to publish to PyPI as `setuhq`
+([docs/RELEASING.md](docs/RELEASING.md)); once v0.1.0 is there, `pip install "setuhq[mcp]"` installs the
+package and the MCP server. Until then, install it from this repository:
 
 ```bash
 pip install "git+https://github.com/ashfordeOU/SetuHQ"            # the setuhq and setuhq-mcp commands
