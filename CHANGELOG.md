@@ -10,6 +10,23 @@ breaking changes are called out explicitly.
 
 ## [Unreleased]
 
+### Added
+
+- **Beyond planets: stellar flares, pulsations and CHEOPS** ([docs/STELLAR.md](docs/STELLAR.md)).
+  `setuhq flares`, `setuhq pulsations` and `setuhq cheops`, and the MCP tools `find_flares`,
+  `pulsation_spectrum` and `get_cheops_lightcurve` (slash command `/setuhq-stellar`). Flares: a
+  flare-preserving detrend, Chang et al. (2015) candidate criteria, optional stationary-wavelet
+  denoising (Poyatos et al. 2025; extra `[wavelets]`), Mendoza et al. (2022) template fits with
+  multi-component models chosen by BIC, energies for a 9000 K blackbody, the flare frequency
+  distribution (maximum-likelihood power law and a log-normal comparison), injection-recovery
+  completeness and flux-inverted and quiet-star nulls. Pulsations: pre-whitening to S/N 4 with a
+  multi-sine refit, combination flags, Harvey backgrounds, numax and Δν with a bootstrap, a heuristic
+  type, and red-noise surrogates. CHEOPS: public DRP light curves only, through DACE (extra
+  `[cheops]`), roll-angle decorrelation, one timeline with TESS, and ESA's acknowledgement, the
+  programme and visit ids, the credit line and SetuHQ's independence disclaimer on every output.
+  Validated under a frozen protocol against published results in
+  `docs/results/stellar_validation.md`, with what is not validated listed there.
+
 ## [0.1.0] - 2026-10-20
 
 The first public release, under the name **SetuHQ** (*setu*, Sanskrit for bridge). Until this

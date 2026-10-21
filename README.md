@@ -943,9 +943,10 @@ honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for 
 | `run_pipeline_csv`, `run_pipeline_tess` | the whole pipeline on a CSV or a TIC (Probes only unless asked) |
 | `rv_semi_amplitude`, `transit_depth`, `microlensing_magnification`, `habitable_zone` | the Methods physics |
 | `benchmark_results`, `sentinel_providers` | the stored benchmarks; which providers can run here |
+| `find_flares`, `pulsation_spectrum`, `get_cheops_lightcurve` | stellar flares, pulsations and public CHEOPS light curves ([docs/STELLAR.md](docs/STELLAR.md)) |
 
 The plugin adds slash commands over the tools (`/setuhq-vet`, `/setuhq-explain`, `/setuhq-sweep`,
-`/setuhq-catalogue`, `/setuhq-physics`, `/setuhq-benchmarks`) and four skills in [`skills/`](skills/):
+`/setuhq-catalogue`, `/setuhq-physics`, `/setuhq-benchmarks`, `/setuhq-stellar`) and four skills in [`skills/`](skills/):
 vet a TESS target, explain a candidate, run a sector sweep, submit to the leaderboard.
 [`examples/agents/vet_agent.py`](examples/agents/vet_agent.py) is an **example** agent (Claude Agent SDK,
 `.[agents]`) that vets one candidate end to end through the server: it logs every tool call and result to a
