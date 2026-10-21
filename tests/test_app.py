@@ -872,7 +872,7 @@ def test_overview_names_the_archive_match_from_the_stored_fallback(run_dir, tmp_
         hero = app_mod.overview_hero(dock, [{"signal_id": dock["candidates"][0]["signal_id"], "consistent_with": "Test c"}])
         assert hero["headline"].endswith(", consistent with Test c.") and hero["accent"] == "A known planet, not a discovery."
         assert "consistent with Test c, a published planet: a known planet, not a discovery." in hero["archive"]
-        assert str(path) in hero["archive"] and NO_DETECTION in hero["archive"]
+        assert "(the repository's stored copy)" in hero["archive"] and str(path) not in hero["archive"] and NO_DETECTION in hero["archive"]
     finally:
         (run_dir / "crossmatch.json").unlink()
 

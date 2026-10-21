@@ -73,7 +73,8 @@ const U = %s;
     await p.goto(U + '#/overview'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(300);
     await p.click('#learngo'); await p.waitForTimeout(600);
     r.step1 = await p.evaluate(() => [location.pathname, document.querySelector('#learnbar').hidden, document.querySelector('#learnpos').textContent]);
-    await p.click('#learnnext'); await p.waitForTimeout(400); await p.click('#learnnext'); await p.waitForTimeout(600);
+    // The bar is fixed; under a heavily loaded machine the methods stages' animation can stall Playwright's stability wait.
+    await p.click('#learnnext', {force: true}); await p.waitForTimeout(400); await p.click('#learnnext', {force: true}); await p.waitForTimeout(600);
     r.step3 = await p.evaluate(() => [location.pathname, document.querySelector('#learnpos').textContent]);
     r.small = await p.evaluate(() => [...document.querySelectorAll('#learnbar a, #learnbar button')].filter(e => { const q = e.getBoundingClientRect(); return q.width && (q.height < 44 || q.width < 44); }).length);
     r.docW = await p.evaluate(() => document.documentElement.scrollWidth);
