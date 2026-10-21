@@ -1,6 +1,7 @@
-# Configuration for the scheduled discovery run.
-# The simulated volunteers always run. The Claude API reviewer runs only when the
-# ANTHROPIC_API_KEY secret is set in the environment. Claude Code CLI reviewers are
+# Configuration for a discovery batch (setuhq discover), run by hand or by the manual
+# .github/workflows/discover.yml. The three Probes (deterministic detectors) always run.
+# The Sentinel (Claude through the Anthropic API) runs only when ANTHROPIC_API_KEY is set in
+# the environment; without it the batch runs on the Probes only. Claude Code CLI Sentinels are
 # for a local machine with a subscription, not for CI runners.
 
 [run]

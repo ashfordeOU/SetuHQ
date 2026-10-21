@@ -32,8 +32,12 @@ Fonts (SIL Open Font License 1.1; not covered by the AGPL or CC BY):
   WOFF2 subsets (Latin and Latin Extended) in src/setuhq/fonts/files/, copied
   into the built site under site/app/assets/fonts/ and site/docket/assets/fonts/;
   variable TTF files in tools/readme-fonts/, used to outline the README figures
-  and the logo. The licence text ships beside every copy: OFL-geist.txt,
-  OFL-geist-mono.txt and OFL-unbounded.txt in each of those folders.
+  and the logo. The licence texts (OFL-geist.txt, OFL-geist-mono.txt and
+  OFL-unbounded.txt) ship beside every copy, in:
+    src/setuhq/fonts/
+    site/app/assets/fonts/
+    site/docket/assets/fonts/
+    tools/readme-fonts/
 
 The Setu mark:
   docs/assets/readme/brand/setu-mark.svg (and its -on-light and -on-dark

@@ -49,6 +49,11 @@ Work is ordered by where the evidence is weakest and matters most, not by the si
   records move out of the repository into release assets, with a committed manifest of their sha256
   that the site build checks.
 
+- **Room for the app to grow.** The app is one self-contained page with a 1.4-million-character
+  budget, and the release leaves about 6,700 characters of it. Next: split the largest sections
+  (the Methods chapters and the Galaxy) into files the page fetches when a route opens, as the
+  catalogue already is, with the budget kept as a test.
+
 ## Later
 
 - **New missions, as their public data flows:** Roman's microlensing survey in the open engine, and

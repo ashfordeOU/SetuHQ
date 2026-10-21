@@ -26,6 +26,10 @@ keywords:
   - benchmark
   - citizen science
   - large language models
-license: AGPL-3.0-only
+# The code is AGPL-3.0-only (or a commercial licence from Ashforde OÜ); SetuHQ's own data, benchmark,
+# leaderboard data and paper are CC-BY-4.0. See LICENSING.md.
+license:
+  - AGPL-3.0-only
+  - CC-BY-4.0
 version: 0.1.0
 date-released: "2026-10-20"
