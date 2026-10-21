@@ -43,3 +43,12 @@ def test_the_committed_site_serves_from_the_domain_root():
         for ref in set(re.findall(r'(?:src|href)="([^"]*assets/brand/[^"]+)"', text)):
             assert (site / page).parent.joinpath(ref).resolve().exists(), (page, ref)
     assert (site / "app/assets/brand/setuhq-social-card.png").exists()
+
+
+def test_no_page_or_template_carries_an_assistant_meta_tag_or_a_session_url():
+    """The built site and the page generators name no AI tool in their markup: no claude:* meta tag, no claude.ai URL."""
+    pat = re.compile(r'<meta[^>]+name=["\']claude:|claude\.ai', re.I)
+    files = [p for p in (ROOT / "site").rglob("*") if p.suffix in (".html", ".js", ".css", ".json")]
+    files += sorted((ROOT / "src" / "setuhq").rglob("*.py"))
+    bad = [str(p.relative_to(ROOT)) for p in files if pat.search(p.read_text(encoding="utf-8", errors="replace"))]
+    assert not bad, bad
