@@ -30,14 +30,21 @@ Fonts (SIL Open Font License 1.1; not covered by the AGPL or CC BY):
   Unbounded, Copyright 2022 The Unbounded Project Authors
   (https://github.com/googlefonts/unbounded).
   WOFF2 subsets (Latin and Latin Extended) in src/setuhq/fonts/files/, copied
-  into the built site under site/app/assets/fonts/ and site/docket/assets/fonts/;
+  into the built site under site/assets/fonts/ and site/candidates/case-file/assets/fonts/;
   variable TTF files in tools/readme-fonts/, used to outline the README figures
   and the logo. The licence texts (OFL-geist.txt, OFL-geist-mono.txt and
   OFL-unbounded.txt) ship beside every copy, in:
     src/setuhq/fonts/
-    site/app/assets/fonts/
-    site/docket/assets/fonts/
+    site/assets/fonts/
+    site/candidates/case-file/assets/fonts/
     tools/readme-fonts/
+
+axe-core (Mozilla Public License 2.0; not covered by the AGPL or CC BY):
+  Copyright (c) 2015 - 2025 Deque Systems, Inc. (https://github.com/dequelabs/axe-core).
+  tests/e2e/vendor/axe.min.js, version 4.10.3, unmodified, used only by the
+  end-to-end accessibility test (tests/e2e/); its licence header is kept in the
+  file and the full text is in tests/e2e/vendor/LICENSE-axe-core.txt. It is not
+  part of the built site.
 
 The Setu mark:
   docs/assets/readme/brand/setu-mark.svg (and its -on-light and -on-dark
@@ -56,8 +63,8 @@ contribution to a file that holds or derives from these data.
 The Extrasolar Planets Encyclopaedia (exoplanet.eu):
   The planet catalogue in docs/results/exoplanet_catalogue.json,
   docs/results/exoplanet_map.json, docs/results/methods_examples.json and
-  docs/results/population_stats.json, and in the built app's
-  site/app/assets/data/ (catalogue.json, exoplanet_map.csv, galaxy.json),
+  docs/results/population_stats.json, and in the built site's
+  site/assets/data/ (catalogue.json, exoplanet_map.csv, galaxy.json),
   fetched from https://exoplanet.eu/catalog/ on 2026-10-18. Please acknowledge
   exoplanet.eu (Schneider et al. 2011, A&A 532, A79) when you reuse them.
 
@@ -66,7 +73,7 @@ NASA TESS data from MAST:
   for Space Telescopes (MAST) at the Space Telescope Science Institute. The stored
   run (runs/tess-pi-men-s1/: subject plots, classifications, candidates), the
   sweep records (docs/sweep/), the vetting results (docs/results/pi_men_*) and
-  the report's plots (site/report/assets/) are derived from them, with each
+  the report's plots (site/evidence/report/assets/) are derived from them, with each
   file's sha256 recorded. The neighbour tables in docs/results/pi_men_s2_vetting.*
   hold values from the TESS Input Catalog (TIC), read from MAST.
   Acknowledgement: This work includes data collected by the TESS mission,

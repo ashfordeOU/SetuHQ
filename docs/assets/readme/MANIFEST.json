@@ -94,10 +94,10 @@
         "methods-strip-dark.svg"
       ],
       "sources": {
-        "src/setuhq/methods.py": "8c48f85242f1fce6d9f437400325d232c926236d932f89e2f082bf708098b6e1",
+        "src/setuhq/methods.py": "1693ade9ea9d09da68a5157a711a39563fb750d1d2608978204f804f98c80d72",
         "docs/results/methods_examples.json": "5190fc392d23af5ca9446ed4b06bdd24948a23534f2eefe763a47d31adec4974"
       },
-      "commit": "b00ba2f"
+      "commit": "3e5ed6c"
     }
   },
   "brand": {
@@ -122,8 +122,8 @@
     }
   },
   "repo_counts": {
-    "modules": 49,
-    "tests": 733,
+    "modules": 51,
+    "tests": 743,
     "network": 2,
     "slow": 4,
     "chapters": 15,
@@ -143,7 +143,6 @@
       "check-sweep",
       "dashboard",
       "docket",
-      "app",
       "crossmatch",
       "plate",
       "report",
@@ -154,24 +153,24 @@
     "captured_by": "tools/capture_site_shots.mjs",
     "record": "app/SHOTS.json",
     "files": {
-      "catalogue-dark.webp": "4d9ed9a7b899ab62ee5bae7565f3f24f8250bcf18dd5bcb9e711a303015eeacb",
-      "catalogue-light.webp": "8e40f31971f5dddb7bd15ca40c6184ff982e33e76b721c032fa4a1dd1fb4b6c7",
-      "galaxy-dark.webp": "c9c93aeaa1e1520d16f361ef8cde7663d6e29e3201d5d39afaee72ba0168aee6",
-      "galaxy-light.webp": "efe021a1cd2d30b938b1719a187a6f000b13f4e0734d4c8c8dbfceb2b9e65b55",
-      "methods-atmospheres-dark.webp": "293c41790de83bc5ebd969454e0178cf7d0303a031b4f051144215dc35884e8a",
-      "methods-atmospheres-light.webp": "c3bdc254be8d9a1de0881042fcceffe0f868372d58d108f3a7eb91fd576f8d7b",
-      "methods-rv-dark.webp": "3d2e8a0d570fdf6922056d71b43922c6fc377bc7cde9f8fb98c64fb113ceff50",
-      "methods-rv-light.webp": "0945306e0fc5cf9b53ea92c94ea805c4f65f3b93d21447b8c1e9a14c986b611e",
-      "methods-starlight-dark.webp": "ffefdf2c73dfdd682865696f4dba82fbcbd74a7903f0b6215a7bc003a76c16ad",
-      "methods-starlight-light.webp": "acac0bb4784c8cc5d6b9bcdd5fcc272b06fc28d48194ce719f809d1a0857953d",
-      "mission-dark.webp": "38107b16ef87cbf9abd1f718b5df2a25884ec639065b2ecba5ab1e5a7da110b2",
-      "mission-light.webp": "c6e8f457c1fbd2cc8fc1c4d3ba8fe28bbd7adaa64b41e49319b8d1caf8d9cc80",
-      "overview-dark.webp": "439df40a894cf2175d220e837519de2c07e83e4adc3e47a6cce8c2e4b3b9b785",
-      "overview-light.webp": "d7afd2d2442102aa97098ff2759323884f259d2415088e9924d5bb1ad6f02d62",
-      "planet-dark.webp": "3c3baa4309aa1239c7e153f6df01f9b5d87f839fc5c322d9219eb8682e585c9b",
-      "planet-light.webp": "a910407f3adbf667f583bdafb4d5d5d239d1cffd60817dae2d45e26837f205b6",
-      "transit-dark.webp": "864767147684a0b4a90d1ec4f77830c5747825973a4ed524c6a5b8dee92d3031",
-      "transit-light.webp": "eeb4d58cc3aa88174e50a98c79ae97ab1bff7bbe9fa521a716ab87183fcdc154"
+      "catalogue-dark.webp": "a909a79e57f7cdd96f23c7e3522a2cac7db2738e1475e8e85f33ce5d532f96da",
+      "catalogue-light.webp": "1ea070250e9f17eb0552181f41e9a61df8a5629cc8fe5867aaef62a4d8617f27",
+      "galaxy-dark.webp": "b5f8f8774ae975f289c21ea53bb9fee16401a2bfbb316e38a9a88fafeb406365",
+      "galaxy-light.webp": "eca0937ec3ae4ccad92264f269d0c19e3182928f5ee650f73e1f85a94beac841",
+      "methods-atmospheres-dark.webp": "aae523fadcb4930191cd0edf37e5259821b4540420eef319ead6c5c41576f1f7",
+      "methods-atmospheres-light.webp": "afdbe73bbe42b0d538e74725bbafac2fd866d20ca752f038c92c57ed996487ce",
+      "methods-rv-dark.webp": "32be814ab9c99d03fc06293eabbff0a16ee0a63d8d48bc2072734460308db66b",
+      "methods-rv-light.webp": "70169176ad1021084cdf0d394beb3a41a4422e7aa864c6c274826843d6331793",
+      "methods-starlight-dark.webp": "6435ead806e60d98b76aba8ce6045f763eb284d13d7d34342f1e949199c91266",
+      "methods-starlight-light.webp": "1dc1be3a861148a37ac8b5fada54072a898f630da4e57b4ae79a84718b1bcb94",
+      "mission-dark.webp": "da0233c07ec899ca06d289362832a69c3008d0f88acfef1c62a97f65f39f4dda",
+      "mission-light.webp": "38b529b78a3b46931db260f4e22aa3ab9478b7a3ae6d7855b9c01b3b31a88486",
+      "overview-dark.webp": "90717bed94cf8eaaa79c17cc0826bfc88b2f31ed19a377fe1b256620d8b66c4b",
+      "overview-light.webp": "94bf75daa31ec70a6a8b7e429445a40d3bebe9f18bbb9c777ff338d65822614b",
+      "planet-dark.webp": "a506cbc34946907ada8c568abc5a982e7b6046d6f730a7810adbaf6708853482",
+      "planet-light.webp": "5cb00987e392f621d94e5fa9511b367cae418877639dfcc8696b5a7306383386",
+      "transit-dark.webp": "9258caac93ca7698fdbe868c3de92d00b87b8f49b77b05ad3b56577a1449fdf5",
+      "transit-light.webp": "3b896f3d7b54bdb60651428d191ce2757eed06124d038c82c98096a79da46e89"
     }
   },
   "made_with": {
