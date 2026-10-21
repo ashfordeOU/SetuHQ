@@ -90,7 +90,7 @@ const server = createServer((req, res) => {
   if (!p.startsWith(SITE) || !existsSync(file)) { res.writeHead(404); res.end(); return; }
   try {
     const body = readFileSync(file);
-    res.writeHead(200, { "content-type": TYPES[extname(p)] || "application/octet-stream" });
+    res.writeHead(200, { "content-type": TYPES[extname(file)] || "application/octet-stream" });
     res.end(body);
   } catch (e) { res.writeHead(404); res.end(); }
 });

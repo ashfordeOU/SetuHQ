@@ -832,7 +832,7 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .pill[aria-pressed="true"] i{background:var(--c)}
 .pill .n{color:var(--ink-3)}
 /* space panels: dark in both themes */
-.space{border-radius:28px;border:1px solid rgba(255,255,255,.08);color:#F5F5F7;overflow:hidden;position:relative;min-width:0;--ink:#F5F5F7;--ink-2:#A1A1A6;--ink-3:#8E8E93;--line:rgba(255,255,255,.08);--cyan:#64D2FF}
+.space{border-radius:28px;border:1px solid rgba(255,255,255,.08);color:#F5F5F7;overflow:hidden;position:relative;min-width:0;--ink:#F5F5F7;--ink-2:#A1A1A6;--ink-3:#8E8E93;--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);--panel:#1C1C1E;--panel-2:rgba(255,255,255,.06);--cyan:#64D2FF}
 .space svg text{fill:#A1A1A6}
 .glass{background:var(--glass);border:1px solid var(--line);border-radius:24px;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);min-width:0}
 .row2{display:flex;flex-wrap:wrap;gap:18px;align-items:stretch}
@@ -2599,7 +2599,7 @@ def _benchmark_card(b: dict | None) -> str:
             f'<p class="note" style="margin:0"><b>Measured on a stated benchmark, not discoveries.</b> {s["counts"]["positive"]} confirmed or known planets '
             f'(CP/KP), {s["counts"]["fp"]} false positives and {s["counts"]["fa"]} false alarms from the TOI table (fetched {e(s["fetched_at"][:10])}, seed {s["seed"]}), '
             f'one TOI per star; held-out half shown. Panel: {e(b["panel"])}.</p>'
-            f'<div class="tablewrap" role="region" aria-label="Benchmark results"><table class="bench"><tbody>{body}</tbody></table></div>{clipnote}'
+            f'<div class="tablewrap" role="region" tabindex="0" aria-label="Benchmark results"><table class="bench"><tbody>{body}</tbody></table></div>{clipnote}'
             f'<p class="muted" style="margin:0;font-size:12px"><a rel="noopener" href="{brand.REPO_URL}/blob/main/docs/results/benchmark_real_tois.md">Full results</a>. TFOPWG dispositions are the reference, not ground truth for every TOI.</p></section>')
 
 
@@ -2679,7 +2679,7 @@ def _leaderboard(lb: dict | None) -> str:
         lead_text = (lb.get("floor_note") or "") if ranked_scope else lb.get("subsample_note", "")
         lead = f'<p class="note" style="margin:0"><b>{e(lead_text)}</b></p>' if lead_text else ""
         out.append(f'<section class="card lb" aria-labelledby="{hid}"><h2 id="{hid}">{e(title)} <span class="sub">{e(sub)}</span></h2>{lead}'
-                   f'<div class="tablewrap" role="region" aria-labelledby="{hid}"><table class="lbtable"><thead><tr>'
+                   f'<div class="tablewrap" role="region" tabindex="0" aria-labelledby="{hid}"><table class="lbtable"><thead><tr>'
                    f'{rank_th}<th scope="col">Entry</th><th scope="col">Youden J</th><th scope="col">Youden J, all stars</th>{ths}</tr></thead>'
                    f'<tbody>{"".join(rows)}</tbody></table></div>'
                    f'<p class="small">Each cell: the rate, then k/n and the Wilson 95% interval. {e(note)}</p></section>')

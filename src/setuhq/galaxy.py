@@ -501,6 +501,7 @@ GALAXY_CSS = r"""
 .covpanel p{margin:0}
 .gxmethods .chip i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
 .gxmethods .chip .mono{color:var(--ink-3);margin-left:6px;font-size:12px}
+.gxmethods .chip[aria-pressed="true"] .mono{color:inherit}
 .gxmethods .chip[aria-pressed="false"]{color:var(--ink-3)}
 .gxmethods .chip[aria-pressed="false"] i{background:transparent!important;box-shadow:inset 0 0 0 1px var(--ink-3)}
 .gxrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}

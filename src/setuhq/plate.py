@@ -54,7 +54,7 @@ PLATE_LOGO_CSS = (".kicker a{display:inline-block;vertical-align:middle;margin-r
                   "@media screen{:root[data-theme=\"dark\"] .brandlogo.dk{display:block}:root[data-theme=\"dark\"] .brandlogo.lt{display:none}}")
 PLATE_CSS = """
 :root{--paper:#fbfaf7;--ink:#141414;--rule:#c9c6bd;--hair:#dcd9d0;--muted:#5d5f66;--pt:#8d8f96;--win:#e9e3cf;
---pass:#2e7d4f;--flag:#8a6400;--rej:#b23a3a;--new:#1f5fbf;--known:#7a7c84;--fit:#1f5fbf}
+--pass:#2e7d4f;--flag:#8a6400;--rej:#b23a3a;--new:#1f5fbf;--known:#64666e;--fit:#1f5fbf}
 @media screen and (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#131417;--ink:#ecebe6;--rule:#3a3c43;--hair:#2a2c32;--muted:#a3a5ad;--pt:#7b7e87;--win:#3a3526;
 --pass:#5cc08a;--flag:#e0b243;--rej:#ef7070;--new:#6fa0ff;--known:#9a9ca4;--fit:#6fa0ff;color-scheme:dark}}
 @media screen{:root[data-theme="dark"]{--paper:#131417;--ink:#ecebe6;--rule:#3a3c43;--hair:#2a2c32;--muted:#a3a5ad;--pt:#7b7e87;--win:#3a3526;

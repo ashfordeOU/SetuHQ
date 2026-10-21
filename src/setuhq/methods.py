@@ -1587,7 +1587,7 @@ def contrast_ladder() -> str:
                     f'<span class="cond">{e(cond)} · {e(status)} · <a href="{e(SOURCES[k][1])}" rel="noopener">{e(SOURCES[k][0].split(" (")[0])}</a></span></div>'
                     f'<div class="track" aria-hidden="true"><i style="left:{pos(c):.1f}%"></i></div></li>')
     ticks = "".join(f'<span style="left:{(p - 2) / 9 * 100:.1f}%">10⁻{p}</span>' for p in range(2, 12))
-    return (f'<div class="mxcontrast" role="img" aria-label="Contrast ladder on a log scale from 1e-2 to 1e-11: '
+    return (f'<div class="mxcontrast" role="figure" aria-label="Contrast ladder on a log scale from 1e-2 to 1e-11: '
             + "; ".join(f"{lab} {c:.0e} ({st})" for lab, c, _, st, _ in CONTRAST)
             + f'"><div class="ax" aria-hidden="true"><div class="lab"></div><div class="track">{ticks}</div></div><ol>{"".join(rows)}</ol></div>')
 
