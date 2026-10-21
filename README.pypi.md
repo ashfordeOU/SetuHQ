@@ -31,9 +31,12 @@ pip install "setuhq[mcp]"          # plus the setuhq-mcp server for AI assistant
 pip install "setuhq[tess,mcp]"     # plus TESS downloads through lightkurve
 ```
 
-Python 3.10 or later. The stored runs, the frozen real-TOI benchmark, the leaderboard and the site are
-data, not code, so they are not in the package: to reproduce them, or to point the MCP tools at them,
-use a checkout of the repository and set `SETUHQ_ROOT` to it.
+Python 3.10 or later. The stored runs, the frozen real-TOI benchmark, the leaderboard, the site and the
+reference tables the pipeline reads (limb-darkening coefficients, the secondary-eclipse calibration) are
+data, not code, so they are not in the package. The package alone gives the commands, the MCP server and
+the tools that need no stored data (BLS vetting, the false-alarm probability, the Methods physics). To run
+the pipeline or the transit fit, reproduce the results, or point the MCP tools at the stored runs, install
+from a checkout of the repository (`pip install -e ".[mcp]"`) and set `SETUHQ_ROOT` to it.
 
 ```bash
 git clone https://github.com/ashfordeOU/SetuHQ
