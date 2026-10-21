@@ -302,7 +302,7 @@ def test_directory_listings():
     assert 'type: "stdio"' in smithery and '"setuhq", "mcp"' in smithery
     assert "build:" not in smithery and "dockerfile" not in smithery.lower()
     zen = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
-    assert zen["creators"] == [{"name": "Baweja, Chakshu", "affiliation": "Ashforde OÜ"}]
+    assert zen["creators"] == [{"name": "Baweja, Chakshu", "affiliation": "Ashforde OÜ", "orcid": "0009-0008-2098-0751"}]
     assert zen["license"] == "agpl-3.0-only"  # the id in Zenodo's licence vocabulary (lower case)
     assert zen["upload_type"] == "software"
     related = {r["identifier"] for r in zen["related_identifiers"]}
