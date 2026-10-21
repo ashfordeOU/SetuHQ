@@ -8,8 +8,8 @@ Methods reimplemented from their published descriptions:
 * **Amplitude spectrum**: the Lomb-Scargle periodogram (astropy) scaled to semi-amplitude, A = √(4P/N), on a grid
   oversampled ten times the Rayleigh resolution 1/T.
 * **Iterative pre-whitening** (Deeming 1975; as Period04 and FELIX do): take the highest peak of the residual
-  spectrum, refit every extracted sinusoid together by non-linear least squares (frequency, amplitude, phase),
-  subtract, repeat. Extraction stops at the first peak with S/N < 4 (Breger et al. 1993), the noise being the mean
+  spectrum, fit it, refit every amplitude and phase, and every ten peaks and at the end refit every sinusoid
+  together by non-linear least squares (frequency, amplitude, phase); subtract, repeat. Extraction stops at the first peak with S/N < 4 (Breger et al. 1993), the noise being the mean
   amplitude of the residual spectrum in a box around the peak (2 d⁻¹ wide by default). Every frequency's final
   S/N is measured on the final residual. Uncertainties follow Montgomery & O'Donoghue (1999). Peaks closer than
   1.5/T to a stronger one are flagged unresolved (Loumos & Deeming 1978).
@@ -114,13 +114,45 @@ def _local_noise(freq, amp, f0, box) -> float:
     return float(np.mean(amp[m])) if m.any() else float("nan")
 
 
+def _linear_refit(params, tt, y):
+    """Amplitudes and phases of every sinusoid at fixed frequencies, by linear least squares."""
+    n = len(params) // 3
+    f = np.asarray(params[0::3], float)
+    arg = 2 * math.pi * np.outer(tt, f)
+    A = np.hstack([np.sin(arg), np.cos(arg)])
+    coef, *_ = np.linalg.lstsq(A, y, rcond=None)
+    bs, bc = coef[:n], coef[n:]
+    out = []
+    for k in range(n):
+        out += [float(f[k]), float(math.hypot(bs[k], bc[k])), float(math.atan2(bc[k], bs[k]) / (2 * math.pi))]
+    return out
+
+
+def _nonlinear_refit(params, tt, y, T, max_nfev=30):
+    n = len(params) // 3
+    p0 = np.asarray(params, float)
+    df = 1.0 / T
+    lo = np.concatenate([[p0[3 * i] - df, 0.0, -np.inf] for i in range(n)])
+    hi = np.concatenate([[p0[3 * i] + df, np.inf, np.inf] for i in range(n)])
+    sol = optimize.least_squares(lambda p: _sines(p, tt, n) - y, np.clip(p0, lo + 1e-12, hi - 1e-12), bounds=(lo, hi),
+                                 jac=lambda p: _sines_jac(p, tt, n), x_scale="jac", max_nfev=max_nfev,
+                                 tr_solver="lsmr" if n > 3 else "exact")
+    return list(sol.x)
+
+
 def prewhiten(time, flux, *, fmin: float | None = None, fmax: float | None = None, snr_stop: float = SNR_STOP,
-              noise_box: float = NOISE_BOX, max_frequencies: int = 80, oversample: int = OVERSAMPLE) -> dict:
-    """Iterative pre-whitening with a non-linear multi-sine refit at each step (see the module docstring).
+              noise_box: float = NOISE_BOX, max_frequencies: int = 80, oversample: int = OVERSAMPLE,
+              refit_every: int = 10) -> dict:
+    """Iterative pre-whitening with non-linear multi-sine refits (see the module docstring).
+
+    Each new peak is first fitted alone (frequency, amplitude, phase) on the residual, then every amplitude and phase
+    is refitted linearly at fixed frequencies; every ``refit_every`` extractions, and at the end, all frequencies,
+    amplitudes and phases are refitted together by non-linear least squares (a full refit at every step, as FELIX
+    and Period04 allow, gives the same list and is many times slower on long light curves).
 
     Frequencies in d⁻¹ (×11.574 for µHz), amplitudes in the flux unit (relative flux: ×1e6 for ppm), phases in
-    cycles at t = 0 of the input time axis. Returns the frequency list (strongest first in extraction order) with
-    S/N, uncertainties, combination and resolution flags, the residual, and the stopping reason."""
+    cycles at the first time stamp. Returns the frequency list (in extraction order) with S/N, uncertainties,
+    combination and resolution flags, the residual, and the stopping reason."""
     t, y = _prep(time, flux)
     t0 = float(t[0])
     tt = t - t0
@@ -136,19 +168,15 @@ def prewhiten(time, flux, *, fmin: float | None = None, fmax: float | None = Non
         if not noise or amp[k] / noise < snr_stop:
             reason = f"next peak at {fr[k]:.5f} d⁻¹ has S/N {amp[k] / noise:.2f} < {snr_stop:g}"
             break
-        # phase of the new peak from a linear fit at that frequency
-        s, c = np.sin(2 * math.pi * fr[k] * tt), np.cos(2 * math.pi * fr[k] * tt)
-        (bs, bc), *_ = np.linalg.lstsq(np.c_[s, c], resid, rcond=None)
-        a0 = math.hypot(bs, bc)
-        ph0 = math.atan2(bc, bs) / (2 * math.pi)
-        p0 = np.array(params + [fr[k], a0, ph0])
-        df = 1.0 / T
-        lo = np.concatenate([[p0[3 * i] - df, 0.0, -np.inf] for i in range(n)])
-        hi = np.concatenate([[p0[3 * i] + df, np.inf, np.inf] for i in range(n)])
-        sol = optimize.least_squares(lambda p: _sines(p, tt, n) - y, np.clip(p0, lo + 1e-12, hi - 1e-12), bounds=(lo, hi),
-                                     jac=lambda p: _sines_jac(p, tt, n), x_scale="jac", max_nfev=50)
-        params = list(sol.x)
-        resid = y - _sines(sol.x, tt, n)
+        new = _linear_refit([fr[k], 0.0, 0.0], tt, resid)
+        new = _nonlinear_refit(new, tt, resid, T, max_nfev=20)
+        params = _linear_refit(params + new, tt, y)
+        if n % refit_every == 0:
+            params = _nonlinear_refit(params, tt, y, T)
+        resid = y - _sines(np.asarray(params), tt, n)
+    if params:
+        params = _nonlinear_refit(params, tt, y, T, max_nfev=50)
+        resid = y - _sines(np.asarray(params), tt, len(params) // 3)
     nf = len(params) // 3
     fr, amp = amplitude_spectrum(tt, resid, freq)
     sig_res = float(np.std(resid))
