@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Compile the JOSS paper (paper/paper.md and paper/paper.bib) to PDF the way the Journal of Open
+# Source Software's editorial bot does, with the Open Journals draft action, and keep paper.pdf as a
+# workflow artifact. It runs on changes under paper/ and by hand, publishes nothing, and catches a
+# compile, citation or front-matter error before submission.
+name: JOSS draft PDF
+
+on:
+  push:
+    paths:
+      - "paper/**"
+      - ".github/workflows/joss-draft.yml"
+  pull_request:
+    paths:
+      - "paper/**"
+      - ".github/workflows/joss-draft.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - name: Compile paper/paper.md to paper/paper.pdf (JOSS)
+        uses: openjournals/openjournals-draft-action@85a18372e48f551d8af9ddb7a747de685fbbb01c  # v1.0
+        with:
+          journal: joss
+          paper-path: paper/paper.md
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          name: joss-paper-pdf
+          path: paper/paper.pdf
+          if-no-files-found: error
