@@ -7,6 +7,16 @@
     python scripts/benchmark_real_tois.py run --workers 4   # SPOC light curves (cache/mast) → cache/bench/<tic>.json
     python scripts/benchmark_real_tois.py report            # → docs/results/benchmark_real_tois.{md,json}
 
+The clipping-fixed re-run (``--edition clipfix``) repeats the frozen protocol on the current code: the same sample,
+seed, split, controls and metrics, on the same light curve of each star (the sector the first run recorded, read
+from the download cache), into cache/bench_clipfix and docs/results/benchmark_real_tois_clipfix.{md,json}. The
+first run's files stay as the historical pre-fix record:
+
+    python scripts/benchmark_real_tois.py --edition clipfix rerun --workers 4
+    python scripts/benchmark_real_tois.py --edition clipfix clipping
+    python scripts/benchmark_real_tois.py --edition clipfix feed
+    python scripts/benchmark_real_tois.py --edition clipfix report
+
 Downloads and per-star outputs stay in the gitignored ``cache/``; only the frozen sample and the summary are
 committed. A star with no SPOC 2-minute light curve is recorded as "no data", never dropped silently.
 """
@@ -15,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 import traceback
@@ -28,8 +39,21 @@ sys.path.insert(0, str(ROOT / "src"))
 from setuhq import benchmark_toi as B  # noqa: E402
 
 SAMPLE = ROOT / "docs/results/benchmark_toi_sample.json"
-OUT_MD = ROOT / "docs/results/benchmark_real_tois.md"
-CACHE = ROOT / "cache/bench"
+# The first run (pre-fix code): its per-star records give the re-run each star's sector and searchability.
+FIRST_CACHE = ROOT / "cache/bench"
+# Editions of the benchmark: the first run, and the re-run of the same protocol on the clipping-fixed code. Each keeps
+# its own per-star cache and its own report files. Chosen with --edition (SETUHQ_BENCH_EDITION for worker processes).
+EDITIONS = {"first": ("cache/bench", "docs/results/benchmark_real_tois.md"),
+            "clipfix": ("cache/bench_clipfix", "docs/results/benchmark_real_tois_clipfix.md")}
+
+
+def _edition_paths(edition: str):
+    cache, md = EDITIONS[edition]
+    return ROOT / cache, ROOT / md
+
+
+EDITION = os.environ.get("SETUHQ_BENCH_EDITION", "first")
+CACHE, OUT_MD = _edition_paths(EDITION)
 PROBES = [("volunteer-sensitive", 4.5, 0.05, 11, 0.6), ("volunteer-typical", 5.0, 0.10, 12, 0.6), ("volunteer-cautious", 5.5, 0.15, 13, 0.4)]
 
 
@@ -130,8 +154,6 @@ def _ephemerides(tic: int) -> list[tuple[float, float, float]]:
 def run_star(toi: dict, code: str = "") -> dict:
     """Download one star's first SPOC 2-minute sector, run the panel on it and on its two controls, score it."""
     from setuhq.loaders import load_tess
-    from setuhq.pipeline import run_pipeline
-    from setuhq.reviewers.simulated import SimulatedVolunteer
 
     tic = toi["tic"]
     out = {"toi": toi["toi"], "tic": tic, "code": code, "started": datetime.now(timezone.utc).isoformat(timespec="seconds")}
@@ -149,7 +171,17 @@ def run_star(toi: dict, code: str = "") -> dict:
     except Exception as exc:  # noqa: BLE001 (recorded per star, the run goes on)
         out["no_data"] = f"download failed: {type(exc).__name__}: {str(exc)[:200]}"
         return out
-    lc = lcs[0]
+    return run_curves(toi, lcs[0], sector, out)
+
+
+def run_curves(toi: dict, lc, sector: int, out: dict) -> dict:
+    """The panel on one star's light curve and on its two controls, each scored (the part of run_star after the
+    download, shared with the re-run)."""
+    from setuhq.pipeline import run_pipeline
+    from setuhq.reviewers.simulated import SimulatedVolunteer
+
+    tic = toi["tic"]
+    target = f"TIC {tic}"
     out["sector"] = sector
     out["n_points"] = int(lc.time.size)
     # Stellar parameters from the TOI table (Teff, log g, R★; ρ★ from g and R★), so the fit needs no network.
@@ -205,6 +237,60 @@ def cmd_run(args) -> int:
                 res = fut.result()
             except Exception as exc:  # noqa: BLE001
                 res = {"toi": t["toi"], "tic": t["tic"], "no_data": f"worker failed: {exc}"}
+            (CACHE / f"{t['tic']}.json").write_text(json.dumps(res))
+            if i % 10 == 0:
+                print(f"{i}/{len(todo)} in {time.time() - t0:.0f} s", flush=True)
+    return 0
+
+
+def rerun_star(toi: dict, code: str) -> dict:
+    """One star again on the current code, on the light curve the first run used: its recorded sector, read from the
+    download cache (fetched only if the file is missing). A star the first run found no SPOC 2-minute light curve for
+    keeps that answer, so the searchable set is the frozen one."""
+    first = json.loads((FIRST_CACHE / f"{toi['tic']}.json").read_text())
+    out = {"toi": toi["toi"], "tic": toi["tic"], "code": code, "started": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+           "rerun_of": {"sector": first.get("sector"), "code": first.get("code"), "no_data": first.get("no_data")}}
+    if not first.get("sector"):
+        out["no_data"] = first.get("no_data") or "no SPOC 2-minute light curve"
+        return out
+    import shutil
+
+    shutil.rmtree(CACHE / str(toi["tic"]), ignore_errors=True)  # a star restarted after a crash starts clean
+    try:
+        lc = load_cached(toi["tic"], first["sector"])
+    except Exception as exc:  # noqa: BLE001 (recorded per star, the run goes on)
+        out["no_data"] = f"download failed: {type(exc).__name__}: {str(exc)[:200]}"
+        return out
+    return run_curves(toi, lc, first["sector"], out)
+
+
+def cmd_rerun(args) -> int:
+    """The frozen protocol again on the current code, star by star into this edition's cache (resumable)."""
+    if CACHE == FIRST_CACHE:
+        print("rerun writes a new edition: use --edition clipfix")
+        return 1
+    sample = json.loads(SAMPLE.read_text())
+    CACHE.mkdir(parents=True, exist_ok=True)
+
+    def failed(t):
+        path = CACHE / f"{t['tic']}.json"
+        return path.exists() and str(json.loads(path.read_text()).get("no_data", "")).startswith(("download failed", "worker failed"))
+
+    todo = [t for t in sample["tois"] if not (CACHE / f"{t['tic']}.json").exists() or failed(t)]
+    if args.limit:
+        todo = todo[: args.limit]
+    code = code_fingerprint()
+    print(f"{len(todo)} stars to re-run ({len(sample['tois']) - len(todo)} done); code {code}", flush=True)
+    t0 = time.time()
+    with ProcessPoolExecutor(max_workers=args.workers) as pool:
+        futures = {pool.submit(rerun_star, t, code): t for t in todo}
+        for i, fut in enumerate(as_completed(futures), 1):
+            t = futures[fut]
+            try:
+                res = fut.result()
+            except Exception as exc:  # noqa: BLE001
+                res = {"toi": t["toi"], "tic": t["tic"], "no_data": f"worker failed: {exc}"}
+            res["finished"] = res.get("finished") or datetime.now(timezone.utc).isoformat(timespec="seconds")
             (CACHE / f"{t['tic']}.json").write_text(json.dumps(res))
             if i % 10 == 0:
                 print(f"{i}/{len(todo)} in {time.time() - t0:.0f} s", flush=True)
@@ -363,7 +449,15 @@ def cmd_clipping(args) -> int:
 
 
 FEED = CACHE / "feed"
-FEED_FAP_TRIALS = 200  # as configs/discovery.toml
+# The feed rule this table measures, frozen as it stood when the sample was frozen (configs/discovery.toml and
+# discover.MAX_FEED_FAP at fbc1ed9): FAP < 0.01 over 200 trials, one sector. The feed has since moved to the
+# pre-registered two-sector rule (scripts/feed_rule_eval.py measures that one), so the cut is stated here.
+FEED_FAP_TRIALS = 200
+FEED_FAP_CUT = 0.01
+
+
+def admits_old_fap(fap) -> bool:
+    return fap is not None and fap < FEED_FAP_CUT
 
 
 def feed_eligible(c: dict) -> bool:
@@ -428,7 +522,7 @@ def feed_star(res: dict) -> dict:
             cfg = replace(_config(), fit_transits=False, fap_trials=FEED_FAP_TRIALS, fap_cache=None)
             run_pipeline(cfg, [curve], reviewers, run_dir, weights=weights, weights_source=str(weights_file))
             for c in json.loads((run_dir / "candidates.json").read_text()):
-                if feed_eligible(c) and Dv.admits_fap(c.get("fap")):
+                if feed_eligible(c) and admits_old_fap(c.get("fap")):
                     row["admitted"] += 1
                     row["fap"].append(c.get("fap"))
                     cand = {"t_center": c["t_center"], "time_unit": c.get("time_unit", "BTJD"),
@@ -552,6 +646,49 @@ def cmd_sentinels(args) -> int:
     return 0
 
 
+def cmd_sentinels_carry(args) -> int:
+    """The re-run edition's Sentinel answers, with no new call: the first run's stored answers (cache/bench/sentinels.json)
+    are carried over for a star only when every one of its real subjects is byte-identical on this code (the image the
+    Sentinel saw, and the subject's arrays and time range, which make up its prompt). Other stars are left out."""
+    if CACHE == FIRST_CACHE:
+        print("sentinels-carry fills a re-run edition: use --edition clipfix")
+        return 1
+    first = json.loads((FIRST_CACHE / "sentinels.json").read_text())
+    sample = json.loads(SAMPLE.read_text())
+    tic = {t["toi"]: t["tic"] for t in sample["tois"]}
+    carried, not_carried, results = [], {}, {}
+    for name in first["subsample"]:
+        old_dir, new_dir = FIRST_CACHE / str(tic[name]) / "real" / "subjects", CACHE / str(tic[name]) / "real" / "subjects"
+        sids = sorted({sid for per in first["results"].get(name, {}).values() for sid in per})
+        old_set = sorted(p.stem for p in old_dir.glob("*.png"))
+        new_set = sorted(p.stem for p in new_dir.glob("*.png"))
+        why = None
+        if not new_set:
+            why = "not re-run"
+        elif new_set != old_set or set(sids) != set(old_set):
+            why = "different subjects"
+        else:
+            for sid in old_set:
+                if (old_dir / f"{sid}.png").read_bytes() != (new_dir / f"{sid}.png").read_bytes():
+                    why = f"subject {sid}: the image changed"
+                    break
+                if (old_dir / f"{sid}.json").read_bytes() != (new_dir / f"{sid}.json").read_bytes():
+                    why = f"subject {sid}: the data changed"
+                    break
+        if why:
+            not_carried[name] = why
+        else:
+            carried.append(name)
+            results[name] = first["results"][name]
+    out = {"subsample": first["subsample"], "results": results, "reviewers": first.get("reviewers") or {},
+           "carried": {"from": "cache/bench/sentinels.json (the first run's stored answers; no Sentinel was asked again)",
+                       "rule": "every real subject's image and data byte-identical on this code", "stars": carried,
+                       "not_carried": not_carried}}
+    (CACHE / "sentinels.json").write_text(json.dumps(out, indent=1))
+    print(f"carried {len(carried)} of {len(first['subsample'])} stars; not carried: {not_carried}")
+    return 0
+
+
 def sentinel_scores(sample: dict) -> dict | None:
     """Per persona: on CP/KP stars, did it mark a dip on the TOI's ephemeris; on FP stars, did it pass the TOI's
     dip as a potential planet. And how often the two personas agree (they share one model, so they correlate)."""
@@ -560,7 +697,11 @@ def sentinel_scores(sample: dict) -> dict | None:
         return None
     from setuhq.discover import match_toi
 
-    return B.sentinel_summary(json.loads(path.read_text()), sample, match_toi)
+    data = json.loads(path.read_text())
+    out = B.sentinel_summary(data, sample, match_toi)
+    if data.get("carried"):
+        out["carried"] = data["carried"]
+    return out
 
 
 def _git(*args) -> str:
@@ -660,14 +801,21 @@ def _newest(commits: list[str | None]) -> str | None:
 
 
 def feed_rule() -> dict | None:
-    """The pre-registered two-sector rule's held-out evaluation and the live feed re-run, when they exist."""
-    v = ROOT / "docs/results/feed_rule_validation.json"
+    """The pre-registered two-sector rule's held-out evaluation and the live feed re-run, when they exist (for the
+    re-run edition: its own evaluation and live re-run on the fixed code, with the first evaluation beside them)."""
+    first = ROOT / "docs/results/feed_rule_validation.json"
+    v = first if EDITION == "first" else ROOT / f"docs/results/feed_rule_validation_{EDITION}.json"
     if not v.exists():
         return None
     pre = ROOT / "docs/results/feed_rule_preregistration.json"
-    live = ROOT / "docs/results/feed_rule_live_rerun.json"
-    return {"validation": json.loads(v.read_text()), "preregistration": json.loads(pre.read_text()) if pre.exists() else None,
-            "live": json.loads(live.read_text()) if live.exists() else None}
+    live = ROOT / ("docs/results/feed_rule_live_rerun.json" if EDITION == "first" else f"docs/results/feed_rule_live_rerun_{EDITION}.json")
+    out = {"validation": json.loads(v.read_text()), "preregistration": json.loads(pre.read_text()) if pre.exists() else None,
+           "live": json.loads(live.read_text()) if live.exists() else None}
+    if EDITION != "first":
+        first_live = ROOT / "docs/results/feed_rule_live_rerun.json"
+        out |= {"edition": EDITION, "first_validation": json.loads(first.read_text()) if first.exists() else None,
+                "first_live": json.loads(first_live.read_text()) if first_live.exists() else None}
+    return out
 
 
 def live_feed(path: Path | None = None) -> dict | None:
@@ -683,6 +831,112 @@ def live_feed(path: Path | None = None) -> dict | None:
     signals = {(c["tic"], round(c.get("period_days") or 0, 3)) for c in new}
     return {"source": str(path.relative_to(ROOT)), "updated": cat.get("updated"), "targets_reviewed": cat.get("targets_reviewed"),
             "new_candidate_entries": len(new), "new_signals": len(signals)}
+
+
+# Why each threshold value changed after the sample was frozen (the re-run's audit): a pattern on the audit key, and
+# the reason. Checked against the commits that set them; a changed value no pattern covers is reported as not explained.
+AUDIT_REASONS = [
+    (("configs/sweep.toml:", "configs/sweep_sentinels.toml:"),
+     "the all-sky sweep's new configs",
+     "New configs for the all-sky sweep (setuhq sweep), added after the freeze; the benchmark does not read them"),
+    (("configs/discovery.toml:[search]fap_trials", "configs/discovery.toml:[search]fap_stop_after", "src/setuhq/discover.py:MAX_FEED_FAP",
+      "src/setuhq/discover.py:TWO_SECTOR_PERIOD_TOL", "src/setuhq/discover.py:FAP"),
+     "the feed's two-sector rule, pre-registered on the tuning half",
+     "The discovery feed's two-sector rule, chosen on the tuning half only and pre-registered at 8909cda; this report's "
+     "feed-level table keeps the frozen rule (FAP < 0.01 over 200 trials), and the new rule is measured separately below"),
+    (("src/setuhq/vet.py:ODD_EVEN_FLOOR",), "the odd/even fix",
+     "The odd/even fix (106c797): a 2% systematic floor on the odd/even depth errors, motivated by synthetic clean hot Jupiters and checked on pi Men c"),
+    (("configs/default.toml:[vetting]", "src/setuhq/pipeline.py:TRANSIT_MASK_T14", "src/setuhq/pipeline.py:SCAN_KEYS"),
+     "extended vetting, which only adds flags",
+     "Extended (DV-style) and pixel-level vetting (bc43219, bd2dad4), which by default only add flags (decide = false); "
+     "this report's scores read neither those flags nor the pixel tests, which are off"),
+    (("configs/default.toml:[validation]", "src/setuhq/pipeline.py:DETREND_VARIANTS", "src/setuhq/pipeline.py:MIN_ANCHOR_SUPPORT"),
+     "the reduced false-positive probability",
+     "The reduced false-positive probability and its stability gate (0361a27, b0ab1c1), reported per candidate; this report's "
+     "scores do not read it"),
+    (("src/setuhq/reviewers/http.py:CREDENTIAL_PARAMS",), "a redaction list that is not a threshold",
+     "Not a threshold: the list of URL parameters a Sentinel's error message redacts"),
+]
+
+
+def explain_audit(audit: dict) -> dict:
+    groups, left = [], dict(audit["changed"])
+    for prefixes, short, why in AUDIT_REASONS:
+        keys = [k for k in list(left) if k.startswith(prefixes)]
+        if keys:
+            groups.append({"short": short, "why": why, "keys": keys})
+            for k in keys:
+                left.pop(k)
+    return audit | {"explained": groups, "unexplained": left}
+
+
+def against_first_run(results: list[dict], sample: dict, summary: dict) -> dict | None:
+    """The re-run against the first run's committed report, measure by measure, paired on the same stars."""
+    path = ROOT / "docs/results/benchmark_real_tois.json"
+    if EDITION == "first" or not path.exists():
+        return None
+    first = json.loads(path.read_text())
+    old = {r["toi"]: r for r in first["per_star"]}
+    new = {r["toi"]: r for r in results}
+    toi = {t["toi"]: t for t in sample["tois"]}
+    held = [t for t in sample["tois"] if t["half"] == "held_out"]
+    both = [t["toi"] for t in held if (old.get(t["toi"]) or {}).get("real") and (new.get(t["toi"]) or {}).get("real")]
+    fh, nh = first["summary"]["held_out"], summary["held_out"]
+
+    def paired(cls, test, where=lambda t: True):
+        sel = [n for n in both if toi[n]["class"] == cls and where(toi[n])]
+        return B.paired_change([test(old[n]) for n in sel], [test(new[n]) for n in sel])
+
+    rec = lambda r: bool(r["real"]["recovered"])
+    rows = [{"measure": "**Completeness: CP/KP recovered on searchable stars**", "first": fh["completeness"], "this": nh["completeness"],
+             "paired": paired("positive", rec)},
+            {"measure": "Completeness over all CP/KP stars", "first": fh["completeness_all_stars"], "this": nh["completeness_all_stars"]}]
+    for fb, nb in zip(fh["completeness_by_radius"], nh["completeness_by_radius"]):
+        a, b = fb["bin"]
+        rows.append({"measure": f"… {a:g}–{b:g} R⊕", "first": fb, "this": nb,
+                     "paired": paired("positive", rec, lambda t, a=a, b=b: t.get("radius_re") is not None and a <= t["radius_re"] < b)})
+    for fb, nb in zip(fh["completeness_by_period"], nh["completeness_by_period"]):
+        a, b = fb["bin"]
+        rows.append({"measure": f"… {a:g}–{b:g} d", "first": fb, "this": nb,
+                     "paired": paired("positive", rec, lambda t, a=a, b=b: a <= t["period"] < b)})
+    rows += [{"measure": "FP TOIs whose dip the panel found", "first": fh["fp_seen"], "this": nh["fp_seen"],
+              "paired": paired("fp", lambda r: bool(r["real"]["seen"]))},
+             {"measure": "… of those, rejected or flagged binary-like", "first": fh["fp_flagged_of_seen"], "this": nh["fp_flagged_of_seen"]},
+             {"measure": "FP TOIs whose dip passed vetting", "first": fh["fp_passed_unflagged"], "this": nh["fp_passed_unflagged"],
+              "paired": paired("fp", rec)},
+             {"measure": "CP/KP dips flagged binary-like", "first": fh["pos_flagged"], "this": nh["pos_flagged"]},
+             {"measure": "FA TOIs whose dip the panel found", "first": fh["fa_seen"], "this": nh["fa_seen"],
+              "paired": paired("fa", lambda r: bool(r["real"]["seen"]))}]
+    for v in ("inverted", "scrambled"):
+        any_fa = lambda r, v=v: bool((r.get(v) or {}).get("passed"))
+        sel = [n for n in both if old[n].get(v) and new[n].get(v)]
+        rows += [{"measure": f"{v.capitalize()} control: vetted false alarms per 1,000 star-sectors",
+                  "first": fh["controls"][v]["per_1000_star_sectors"], "this": nh["controls"][v]["per_1000_star_sectors"]},
+                 {"measure": f"{v.capitalize()} control: stars with any false alarm", "first": fh["controls"][v]["stars_with_any"],
+                  "this": nh["controls"][v]["stars_with_any"],
+                  "paired": B.paired_change([any_fa(old[n]) for n in sel], [any_fa(new[n]) for n in sel])}]
+    for v in ("real", "inverted", "scrambled"):
+        f1, f2 = (fh.get("feed") or {}).get(v), (nh.get("feed") or {}).get(v)
+        if f1 and f2:
+            rows.append({"measure": f"Feed level (frozen rule), {v} curves: distinct new signals per 1,000 star-sectors",
+                         "first": f1["new_signals_per_1000"], "this": f2["new_signals_per_1000"]})
+    fa_, na_ = first["summary"]["all"], summary["all"]
+    allboth = [t["toi"] for t in sample["tois"] if t["class"] == "positive" and (old.get(t["toi"]) or {}).get("real")
+               and (new.get(t["toi"]) or {}).get("real")]
+    rows.append({"measure": "Whole sample (both halves): completeness", "first": fa_["completeness"], "this": na_["completeness"],
+                 "paired": B.paired_change([rec(old[n]) for n in allboth], [rec(new[n]) for n in allboth])})
+    # The stars the clipping bug exposed: what became of them.
+    fc = first["clipping"]["held_out"]
+    aff = [r for r in results if r.get("clip") and r["clip"]["affected"] and toi[r["toi"]]["half"] == "held_out"
+           and toi[r["toi"]]["class"] == "positive" and (old.get(r["toi"]) or {}).get("real")]
+    explained = fc.get("explained_tois") or []
+    clip = {"n": len(aff), "first_recovered": sum(rec(old[r["toi"]]) for r in aff), "now_recovered": sum(rec(r) for r in aff),
+            "first_median_removed": fc.get("median_removed_fraction_affected"), "first_explained": explained,
+            "explained_now_recovered": [n for n in explained if (new.get(n) or {}).get("real") and rec(new[n])],
+            "explained_still_missed": [n for n in explained if not ((new.get(n) or {}).get("real") and rec(new[n]))]}
+    prov = first["code_provenance"]["commit"]
+    return {"file": "docs/results/benchmark_real_tois.json", "code": ", ".join(f"commit {c}" for c in prov.values()),
+            "stars_paired_held_out": len(both), "rows": rows, "clipping": clip}
 
 
 def cmd_report(args) -> int:
@@ -729,6 +983,9 @@ def cmd_report(args) -> int:
             "code_commit": _git("rev-parse", "HEAD"), "code_provenance": (cp := code_provenance(results)),
             "threshold_audit": threshold_audit(_newest(list(cp["commit"].values()))),
             "per_star": [{k: r.get(k) for k in ("toi", "tic", "sector", "no_data", "real", "inverted", "scrambled")} for r in results]}
+    if EDITION != "first":
+        data = {"edition": EDITION, **data, "threshold_audit": explain_audit(data["threshold_audit"]),
+                "against_first_run": against_first_run(results, sample, summary)}
     OUT_MD.with_suffix(".json").write_text(json.dumps(data, indent=1, default=float) + "\n")
     OUT_MD.write_text(B.to_markdown(data))
     print(OUT_MD.read_text())
@@ -737,6 +994,8 @@ def cmd_report(args) -> int:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--edition", choices=sorted(EDITIONS), default=None,
+                    help="which run: 'first' (pre-fix code, the historical record) or 'clipfix' (the re-run on the fixed code)")
     sub = ap.add_subparsers(dest="cmd", required=True)
     f = sub.add_parser("freeze")
     f.add_argument("--refresh", action="store_true")
@@ -749,6 +1008,12 @@ def main(argv=None) -> int:
     r.add_argument("--limit", type=int, default=0)
     r.add_argument("--retry-failed", action="store_true", help="run again the stars whose download or worker failed")
     r.set_defaults(func=cmd_run)
+    rr = sub.add_parser("rerun", help="the frozen protocol again on the current code, from each star's recorded sector")
+    rr.add_argument("--workers", type=int, default=4)
+    rr.add_argument("--limit", type=int, default=0)
+    rr.set_defaults(func=cmd_rerun)
+    sc = sub.add_parser("sentinels-carry", help="the re-run's Sentinel answers: the first run's, where the subjects are byte-identical")
+    sc.set_defaults(func=cmd_sentinels_carry)
     se = sub.add_parser("sentinels", help="the Sentinels on the stated 40-star subsample (cross-provider φ in 'report')")
     se.add_argument("--workers", type=int, default=2)
     se.add_argument("--panel", help="a run config whose [[reviewers]] Sentinels to run (any provider); default: the two "
@@ -765,7 +1030,18 @@ def main(argv=None) -> int:
     fe.set_defaults(func=cmd_feed)
     sub.add_parser("report").set_defaults(func=cmd_report)
     args = ap.parse_args(argv)
+    if args.edition:
+        set_edition(args.edition)
     return args.func(args)
+
+
+def set_edition(edition: str) -> None:
+    """Point every path at one edition's cache and report (worker processes inherit it through the environment)."""
+    global EDITION, CACHE, OUT_MD, CLIP, FEED
+    os.environ["SETUHQ_BENCH_EDITION"] = edition
+    EDITION = edition
+    CACHE, OUT_MD = _edition_paths(edition)
+    CLIP, FEED = CACHE / "clip", CACHE / "feed"
 
 
 if __name__ == "__main__":

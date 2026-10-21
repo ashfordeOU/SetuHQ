@@ -206,6 +206,37 @@ def rates(rows: list[dict], key: str, where=lambda r: True) -> dict:
     return {"k": k, "n": len(sel), "rate": p, "lo": lo, "hi": hi}
 
 
+def mcnemar_p(lost: int, gained: int) -> float:
+    """Exact two-sided McNemar test on the discordant pairs (a binomial test of gained against lost at p = 1/2)."""
+    from math import comb
+
+    n = lost + gained
+    if n == 0:
+        return 1.0
+    tail = sum(comb(n, i) for i in range(min(lost, gained) + 1)) / 2**n
+    return min(1.0, 2 * tail)
+
+
+PAIRED_DRAWS = 20000
+
+
+def paired_change(before: list[bool], after: list[bool], draws: int = PAIRED_DRAWS, seed: int = SEED) -> dict:
+    """The same stars measured twice (before and after a code change): each rate with its Wilson interval, the change
+    in the rate with a paired bootstrap 95% interval (stars resampled, both measurements kept together), and the exact
+    McNemar test on the stars that changed."""
+    b, a = np.asarray(before, bool), np.asarray(after, bool)
+    n = len(b)
+    out = {"n": n, "before": rates([{"x": x} for x in b], "x"), "after": rates([{"x": x} for x in a], "x"),
+           "gained": int(np.sum(~b & a)), "lost": int(np.sum(b & ~a)), "draws": draws, "seed": seed}
+    if n == 0:
+        return out | {"delta": None, "lo": None, "hi": None, "mcnemar_p": 1.0}
+    idx = np.random.default_rng(seed).integers(0, n, size=(draws, n))
+    ds = a[idx].mean(axis=1) - b[idx].mean(axis=1)
+    lo, hi = np.percentile(ds, [2.5, 97.5])
+    return out | {"delta": float(a.mean() - b.mean()), "lo": float(lo), "hi": float(hi),
+                  "mcnemar_p": mcnemar_p(out["lost"], out["gained"])}
+
+
 CLAUDE_PAIR = ("claude-volunteer", "claude-skeptic")  # the benchmarked default: one Claude model, two personas
 
 
@@ -396,6 +427,8 @@ def _clip_lines(data: dict) -> list[str]:
     c = data.get("clipping")
     if not c:
         return []
+    if data.get("edition") == "clipfix":
+        return _clipfix_lines(data)
     h, hu = data["summary"]["held_out"], (data.get("summary_unaffected") or {}).get("held_out")
     ch = c["held_out"]
     a = ch["affected"]
@@ -421,6 +454,71 @@ def _clip_lines(data: dict) -> list[str]:
             if f and fu and f["new_signals_per_1000"] is not None and fu["new_signals_per_1000"] is not None:
                 lines.append(f"| {v} control, feed-level false signals per 1,000 star-sectors | {f['new_signals_per_1000']:.0f} | {fu['new_signals_per_1000']:.0f} |")
         lines.append("")
+    return lines
+
+
+def _clipfix_lines(data: dict) -> list[str]:
+    """The clipping bug's exposure on the fixed code: the same exposed stars, and what became of them."""
+    c, cmp = data["clipping"], (data.get("against_first_run") or {}).get("clipping") or {}
+    h, hu = data["summary"]["held_out"], (data.get("summary_unaffected") or {}).get("held_out")
+    ch = c["held_out"]
+    a = ch["affected"]
+    med = ch["median_removed_fraction_affected"]
+    lines = ["", "### The clipping bug, fixed: the stars it affected", "",
+             "The first run's `preprocess.clean` deleted every point more than 10× the point-to-point scatter below the 0.5-day "
+             "running median, so a transit deeper than about 10× the per-cadence scatter lost its in-transit points before review "
+             "and BLS. This code removes a low point only when it is not part of a dip (a run of at least max(3, 20 minutes / "
+             f"cadence) cadences more than 3σ below the median). A star is exposed when the TOI depth is more than {c['ratio']:g}× "
+             "the per-cadence scatter of the light curve used (the same light curves as the first run, so the same stars).", "",
+             f"Held-out exposed stars: {a['positive']} CP/KP, {a['fp']} FP, {a['fa']} FA (of {ch['measured']} measured)."
+             + ((f" Share of in-transit points clean() removes on them now: median {100 * med:.0f}%"
+                 + (f" (first run: {100 * cmp['first_median_removed']:.0f}%)." if cmp.get("first_median_removed") is not None else "."))
+                if med is not None else "")
+             + (f" Exposed CP/KP recovered: {cmp['now_recovered']} of {cmp['n']} (first run: {cmp['first_recovered']} of {cmp['n']})."
+                if cmp.get("n") is not None else "")
+             + (f" The {len(cmp['first_explained'])} misses the first run's bug explained (TOI {', '.join(cmp['first_explained'])}): "
+                + (f"recovered now: TOI {', '.join(cmp['explained_now_recovered'])}" if cmp["explained_now_recovered"] else "none recovered now")
+                + (f"; still missed: TOI {', '.join(cmp['explained_still_missed'])}." if cmp["explained_still_missed"] else ".")
+                if cmp.get("first_explained") else ""), ""]
+    if hu:
+        lines += ["| held-out measure, this run | all stars | exposed stars excluded |", "|---|---|---|",
+                  f"| Completeness (headline, searchable stars) | {_pct(h['completeness'])} | {_pct(hu['completeness'])} |",
+                  f"| FP TOIs found | {_pct(h['fp_seen'])} | {_pct(hu['fp_seen'])} |",
+                  f"| … rejected or flagged binary-like | {_pct(h['fp_flagged_of_seen'])} | {_pct(hu['fp_flagged_of_seen'])} |", ""]
+    return lines
+
+
+def _num_text(v) -> str:
+    if isinstance(v, dict):
+        return _pct(v)
+    if isinstance(v, float):
+        return f"{v:.0f}"
+    return "—" if v is None else str(v)
+
+
+def _change_text(pc: dict | None) -> str:
+    if not pc or pc.get("delta") is None:
+        return ""
+    return (f"{100 * pc['delta']:+.0f} points (95% CI {100 * pc['lo']:+.0f} to {100 * pc['hi']:+.0f}); "
+            f"{pc['gained']} gained, {pc['lost']} lost; McNemar p = {pc['mcnemar_p']:.2g}")
+
+
+def _against_first_lines(data: dict) -> list[str]:
+    """This run against the first run (pre-fix code), measure by measure, paired on the same stars where it can be."""
+    af = data.get("against_first_run")
+    if not af:
+        return []
+    lines = ["", "## Against the first run (pre-fix code)", "",
+             f"The first run ({af['file']}, pipeline code {af['code']}) is kept as the historical pre-fix record. Same sample, "
+             "seed, split, light curves, controls and scoring; only the code differs. Where both runs measured the same stars the "
+             f"change is paired: a bootstrap over the stars ({PAIRED_DRAWS:,} draws, seed {SEED}) and the exact McNemar test on "
+             "the stars whose outcome changed.", "",
+             "| held-out measure | first run (pre-fix code) | this run | change, paired on the same stars |", "|---|---|---|---|"]
+    for r in af["rows"]:
+        lines.append(f"| {r['measure']} | {_num_text(r['first'])} | {_num_text(r['this'])} | {_change_text(r.get('paired'))} |")
+    lines.append("")
+    if af.get("note"):
+        lines += [af["note"], ""]
     return lines
 
 
@@ -516,10 +614,15 @@ def _feed_lines(data: dict, h: dict) -> list[str]:
         else:
             txt += " False alarms alone account for less than half of the feed's `new_candidate` rate."
         lines.append(txt)
-        lines += ["", "**Proposed next step (not applied here).** Require the signal to be found independently in each of the "
-                  "two sectors the feed reviews, and raise the FAP evidence to 2,000 trials with a 0.001 cut. Choose the rule on "
-                  "the tuning half only, then measure it once on the held-out half (both controls and CP/KP completeness) before "
-                  "changing configs/discovery.toml. No threshold was changed on this sample."]
+        if data.get("edition") == "clipfix":
+            lines += ["", "This table keeps the rule the protocol was frozen with (FAP < 0.01 over 200 trials, one sector), and the "
+                      "live catalogue it compares with is the one built under that rule, with pre-fix code. The feed has since moved "
+                      "to the pre-registered two-sector rule; it is measured on this code at the end of this report."]
+        else:
+            lines += ["", "**Proposed next step (not applied here).** Require the signal to be found independently in each of the "
+                      "two sectors the feed reviews, and raise the FAP evidence to 2,000 trials with a 0.001 cut. Choose the rule on "
+                      "the tuning half only, then measure it once on the held-out half (both controls and CP/KP completeness) before "
+                      "changing configs/discovery.toml. No threshold was changed on this sample."]
     return lines
 
 
@@ -536,17 +639,77 @@ def _headline(data: dict) -> list[str]:
                f"{imp['live_ci_per_100_targets'][1]:.0f})" if imp.get("live_ci_per_100_targets") else "")
             + (f". On the real light curves of TOI hosts the same rule found {imp['real_new_signals_per_1000']:.0f} new signals per 1,000 star-sectors."
                if imp.get("real_new_signals_per_1000") is not None else ".")
-            + " A fix is proposed below" + ("; it was later pre-registered and tested, see the update at the end." if data.get("feed_rule") else ", not applied."), ""]
+            + (" The feed has since moved to a pre-registered two-sector rule, measured on this code at the end of this report."
+               if data.get("edition") == "clipfix" else
+               " A fix is proposed below" + ("; it was later pre-registered and tested, see the update at the end." if data.get("feed_rule") else ", not applied.")), ""]
 
 
 def _ci(r: dict | None) -> str:
     return _pct(r) if r else "—"
 
 
+def _fold(o: dict, n: dict) -> str:
+    a, b = o["expected_false_per_100_targets"], n["expected_false_per_100_targets"]
+    return f"{a / b:.1f}-fold" if b else "to zero"
+
+
+def clipfix_feed_rule_lines(fr: dict) -> list[str]:
+    """The pre-registered two-sector rule measured again, unchanged, on the fixed code; and the live feed re-run on it."""
+    v, first, live = fr["validation"], fr.get("first_validation"), fr.get("live")
+    n, o = v["held_out"], v["held_out_old_rule"]
+    r = v["rule"]
+    f = lambda x: f"{x['expected_false_per_100_targets']:.1f} ({x['expected_false_ci_per_100_targets'][0]:.1f}–{x['expected_false_ci_per_100_targets'][1]:.1f})"
+    fn = (first or {}).get("held_out")
+    col = " | two-sector rule, first evaluation (pre-fix code)" if fn else ""
+    sep = "|---" if fn else ""
+    x = lambda txt: f" | {txt}" if fn else ""
+    lines = ["", "## The two-sector feed rule on this code", "",
+             f"The feed's rule since 2026-10-20 was chosen on the tuning half only and pre-registered at commit "
+             f"`{v['preregistration_commit'][:7]}` (docs/results/feed_rule_preregistration.json). Its first held-out evaluation "
+             "(docs/results/feed_rule_validation.json) ran on the pre-fix code. Here the same rule, unchanged and not tuned "
+             f"again (signal in both reviewed sectors with periods within {100 * r['period_tol']:g}%, FAP below {r['fap_cut']:g} over "
+             f"{r['fap_trials']:,} trials), is measured on this code (docs/results/feed_rule_validation_clipfix.json): the discovery "
+             "config, each held-out star's same first two SPOC 2-minute sectors, the same two controls per sector, every pipeline run "
+             f"and FAP trial made afresh. {n['targets']} targets, {n['star_sectors']} star-sectors.", "",
+             f"| held-out | old rule (FAP < 0.01, 200 trials, one sector) | two-sector rule{col} |", f"|---|---|---{sep}|",
+             f"| False signals per 100 targets, worse control (95% CI) | {f(o)} | {f(n)}{x(f(fn) if fn else '')} |",
+             f"| Inverted control: false signals | {o['inverted']['new_signals']} ({o['inverted']['new_signals_per_1000']:.0f} per 1,000 star-sectors) | {n['inverted']['new_signals']} ({n['inverted']['new_signals_per_1000']:.0f} per 1,000)"
+             + x(f"{fn['inverted']['new_signals']} ({fn['inverted']['new_signals_per_1000']:.0f} per 1,000)" if fn else "") + " |",
+             f"| Scrambled control: false signals | {o['scrambled']['new_signals']} ({o['scrambled']['new_signals_per_1000']:.0f} per 1,000) | {n['scrambled']['new_signals']} ({n['scrambled']['new_signals_per_1000']:.0f} per 1,000)"
+             + x(f"{fn['scrambled']['new_signals']} ({fn['scrambled']['new_signals_per_1000']:.0f} per 1,000)" if fn else "") + " |",
+             f"| CP/KP admitted on their ephemeris (feed-level completeness) | {_ci(o['completeness'])} | {_ci(n['completeness'])}{x(_ci(fn['completeness']) if fn else '')} |",
+             f"| FP TOIs kept out | {_ci(o['fp_rejected'])} | {_ci(n['fp_rejected'])}{x(_ci(fn['fp_rejected']) if fn else '')} |",
+             f"| New (no-TOI) signals on the real curves, per 100 targets | {o['real_new_per_100_targets']:.1f} | {n['real_new_per_100_targets']:.1f}"
+             + x(f"{fn['real_new_per_100_targets']:.1f}" if fn else "") + " |", ""]
+    verdict = (f"On this code the rule lowers the noise clearly (the 95% intervals do not overlap): {_fold(o, n)}. "
+               if v["fix_clearly_lowers_noise"] else "**On this code the rule is not shown to lower the noise: the 95% intervals overlap.** ")
+    real = n["real_new_per_100_targets"]
+    worse = n["expected_false_per_100_targets"]
+    reliable = ("**It does not make the feed reliable.** Noise alone still gives about "
+                f"{worse:.1f} false signals per 100 targets, against {real:.1f} new signals per 100 targets on the real light curves of "
+                "TOI hosts, so what the feed admits is still dominated by false alarms." if worse >= real else
+                f"Noise alone gives {worse:.1f} false signals per 100 targets, against {real:.1f} new signals per 100 targets on the real "
+                "light curves of TOI hosts; most of those are still expected to be false alarms.")
+    lines += [verdict + reliable + f" Completeness at the feed's level: {100 * o['completeness']['rate']:.0f}% under the old rule, "
+              f"{100 * n['completeness']['rate']:.0f}% under this one. A feed admission is a lead for human or follow-up review, not a "
+              "candidate of any confirmed status.", ""]
+    if live:
+        lines += [f"**The live feed re-run on this code** ({live['targets']} targets of the live catalogue, the same sectors as its "
+                  f"previous run, {live['when'][:10]}; TOI table {live['toi_table']}): {live['new_signals']} new signals "
+                  f"({live['new_entries']} entries) and {live['known_signals']} known-TOI signals ({live['known_entries']} entries) are "
+                  "admitted."
+                  + (f" The previous re-run, on the pre-fix code (docs/results/feed_rule_live_rerun.json), admitted "
+                     f"{fr['first_live']['new_signals']} new and {fr['first_live']['known_signals']} known-TOI signals."
+                     if fr.get("first_live") else ""), ""]
+    return lines
+
+
 def feed_rule_lines(fr: dict | None) -> list[str]:
     """The pre-registered two-sector feed rule, its one held-out evaluation, and the live feed re-run under it."""
     if not fr or not fr.get("validation"):
         return []
+    if fr.get("edition") == "clipfix":
+        return clipfix_feed_rule_lines(fr)
     v, pre, live = fr["validation"], fr.get("preregistration") or {}, fr.get("live")
     n, o = v["held_out"], v["held_out_old_rule"]
     r = v["rule"]
@@ -588,8 +751,15 @@ def _sentinel_lines(se: dict) -> list[str]:
     multi = any(r not in CLAUDE_PAIR for r in ids)
     who = (f"{len(ids)} Sentinels ({', '.join(_who(rid, se) for rid in ids)})" if multi else
            "Both Sentinels (one Claude model, two personas, through the Claude Code CLI)")
-    lines = ["## The Sentinels on a stated subsample", "",
-             f"{who} reviewed every subject of {se['n_stars']} "
+    carry = se.get("carried")
+    lines = ["## The Sentinels on a stated subsample", ""]
+    if carry:
+        lines += [f"The Sentinels were not asked again: no API key or signed-in CLI was available for this run. Their answers from the "
+                  f"first run are carried over only for the stars whose every subject image and prompt are byte-identical on this code "
+                  f"({len(carry['stars'])} of {len(se['subsample'])} stars of the stated subsample); the other "
+                  f"{len(carry['not_carried'])} stars' subjects changed with the fix, so they are left out of this table, not guessed."
+                  + (f" Left out: TOI {', '.join(sorted(carry['not_carried']))}." if carry["not_carried"] else ""), ""]
+    lines += [f"{who} reviewed every subject of {se['n_stars']} "
              "held-out stars drawn with a fixed seed (half CP/KP, half FP), on the real light curves only. Scored per star: did the "
              "persona mark a dip on the TOI's ephemeris as a potential planet.", "",
              "| persona | CP/KP dips marked | FP dips marked as a potential planet | failed calls |", "|---|---|---|---:|"]
@@ -626,13 +796,40 @@ def _who(rid: str, se: dict) -> str:
     return f"{rid} on {ident['provider']} / {ident['model']}" if ident.get("provider") else rid
 
 
+def _clipfix_audit_lines(au: dict) -> list[str]:
+    """The threshold audit of the re-run: every value changed since the freeze, grouped by why it changed."""
+    lines = ["## Was the held-out half used to choose a threshold?", "",
+             f"Of {au['values_checked']} threshold values in {', '.join(au['paths'])}, these differ between {au['frozen_after']} "
+             f"(the last commit before the sample was frozen) and {au.get('compared_with') or 'HEAD'} (the code of this run). Each is "
+             "listed with why it changed; none was chosen on this sample's held-out results.", ""]
+    for g in au.get("explained") or []:
+        files: dict[str, list[str]] = {}
+        for k in g["keys"]:
+            files.setdefault(k.split(":", 1)[0], []).append(k)
+        named = [f"`{f}` ({len(ks)} values)" if len(ks) > 3 else ", ".join(f"`{k}`" for k in ks) for f, ks in files.items()]
+        lines.append(f"* {g['why']} ({'; '.join(named)}).")
+    if au.get("unexplained"):
+        lines.append("* **Not explained: " + "; ".join(f"{k}: {v[0]} → {v[1]}" for k, v in au["unexplained"].items()) + ".**")
+    lines += ["", "`preprocess.clean`'s new run-length rule is a keyword default, not a module constant, so the audit does not "
+              "list it: it was set and tested on synthetic eclipses (commits ab84328 and c25d1cd)."
+              + (" Changed values that decide nothing: " + "; ".join(f"{k} ({v[0]} → {v[1]})" for k, v in au["ignored_not_thresholds"].items()) + "."
+                 if au.get("ignored_not_thresholds") else ""), ""]
+    return lines
+
+
 def to_markdown(data: dict) -> str:
     s = data["sample"]
     h = data["summary"]["held_out"]
     a = data["summary"]["all"]
+    clipfix = data.get("edition") == "clipfix"
     lines = [
-        "# Blind benchmark on real TESS Objects of Interest",
+        "# Blind benchmark on real TESS Objects of Interest" + (": re-run on the fixed code" if clipfix else ""),
         "",
+        *(["This is the pre-registered protocol run again on the current code, after the two fixes that change default results "
+           "(`preprocess.clean` keeps dips deeper than 10× the point-to-point scatter; `vet.py`'s odd/even test no longer fails "
+           "clean deep planets). The sample, seed, split, light curves, controls and scoring are unchanged and nothing was tuned; "
+           "every star was run again from its light curve. The first run, made with the pre-fix code, is kept as the historical "
+           "record in docs/results/benchmark_real_tois.md; the comparison is below.", ""] if clipfix else []),
         f"Measured on a stated benchmark; not discoveries. Sample: {s['source']}, fetched {s['fetched_at'][:10]}, seed {s['seed']}, "
         f"sha256 `{s['sha256'][:16]}…` ({s['counts']['positive']} CP/KP, {s['counts']['fp']} FP, {s['counts']['fa']} FA TOIs). "
         f"Rule: {s['rule']}.",
@@ -665,6 +862,7 @@ def to_markdown(data: dict) -> str:
                      if c["per_1000_star_sectors"] is not None else f"| False alarms on {v} light curves | — | |")
     lines += _clip_lines(data)
     lines += _feed_lines(data, h)
+    lines += _against_first_lines(data)
     lines += ["", "### Completeness by planet radius and period (held-out)", "", "| bin | recovered |", "|---|---|"]
     for r in h["completeness_by_radius"]:
         lines.append(f"| {r['bin'][0]}–{r['bin'][1]} R⊕ | {_pct(r)} |")
@@ -689,10 +887,14 @@ def to_markdown(data: dict) -> str:
                  + (" (the current code differs from it only in comments and docstrings)" if cp["head_same_behaviour"].get(fp) else "")
                  for fp in cp["fingerprints"]]
         lines += ["## Code version", "", "Every per-star result records a fingerprint of the pipeline code that produced it "
-                  "(search, vetting, fit, reviewers): " + "; ".join(parts) + ". Results from earlier code were re-vetted with "
-                  "it from their stored classifications (`rescore`), controls included.", ""]
+                  "(search, vetting, fit, reviewers): " + "; ".join(parts) + "."
+                  + (" Every star, controls included, was run again from its light curve on this code (`rerun`); no stored "
+                     "classification was reused." if clipfix else " Results from earlier code were re-vetted with "
+                     "it from their stored classifications (`rescore`), controls included."), ""]
     au = data.get("threshold_audit")
-    if au:
+    if au and clipfix:
+        lines += _clipfix_audit_lines(au)
+    elif au:
         commits = "; ".join(au.get("commits_since") or []) or "none"
         lines += ["## Was the held-out half used to choose a threshold?", "",
                   (f"No. All {au['values_checked']} threshold values in {', '.join(au['paths'])} (module constants, config keys, "
