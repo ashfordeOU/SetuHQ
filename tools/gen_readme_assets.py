@@ -506,6 +506,19 @@ def _git(*args: str) -> str:
     return subprocess.run(["git", "-C", str(ROOT), *args], capture_output=True, text=True, check=True).stdout.strip()
 
 
+def history_problem() -> str | None:
+    """Why the git history this tool needs is missing (a ZIP download, a copy, a shallow clone), or None."""
+    try:
+        top = _git("rev-parse", "--show-toplevel")
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return "this copy has no git history (for example a ZIP download, or git is not installed)"
+    if Path(top).resolve() != ROOT.resolve():
+        return f"this copy is not its own git repository (the enclosing repository is {top})"
+    if _git("rev-parse", "--is-shallow-repository") == "true":
+        return "this is a shallow clone"
+    return None
+
+
 @lru_cache(maxsize=None)
 def commit_of(*paths: str) -> str:
     """The short hash of the last commit that changed any of `paths` (repository-relative)."""
@@ -2370,11 +2383,15 @@ def main() -> int:
     ap.add_argument("--write-readme", action="store_true",
                     help="rewrite README.md's generated blocks (badges, numbers) and every picture's alt text from its source")
     args = ap.parse_args()
-    if _git("rev-parse", "--is-shallow-repository") == "true":
-        sys.exit("gen_readme_assets: this is a shallow clone; each figure names its source's commit, so fetch the full history")
     if args.import_shots:
         import_shots(Path(args.import_shots))
         return 0
+    why = history_problem()
+    if why:
+        print(f"gen_readme_assets: {why}. Each figure names the commit of its source files, so it cannot be built "
+              "or checked without the repository's git history. Clone https://github.com/ashfordeOU/SetuHQ with its "
+              "full history (git clone, or fetch-depth: 0 in CI) and run this again.", file=sys.stderr)
+        return 2
     assets = build()
     if args.write_readme:
         text = README.read_text(encoding="utf-8")
