@@ -40,20 +40,19 @@ newer schema, replace the copy and the `$schema` line of `server.json` together.
 4. Check the entry: <https://registry.modelcontextprotocol.io/v0/servers?search=io.github.ashfordeOU/setuhq>.
    The GitHub MCP Registry and the VS Code MCP gallery read the official registry; no separate submission.
 
-**Known gap in the launch command.** The registry describes a PyPI package by name, and a client that
-starts it through `uvx` runs the command named like the package, `setuhq`, which is the CLI and not the
-server. `setuhq-mcp` is a second command of the same package, and the server needs the `mcp` extra. Until
-the CLI gains a `setuhq mcp` subcommand (then `server.json` can say `"packageArguments": [{"type":
-"positional", "value": "mcp"}]`), the entry names the right command in its publisher-provided metadata
-(`_meta`: `uvx --from 'setuhq[mcp]' setuhq-mcp`), and every client snippet in
-[docs/MCP-INSTALL.md](../../docs/MCP-INSTALL.md) starts `setuhq-mcp` directly. Decide this before the
-first registry publish.
+**How a client starts it.** The registry describes a PyPI package by name, and a client that runs it through
+`uvx` runs the command named like the package: `setuhq`. So the entry passes the `mcp` subcommand as a package
+argument and the MCP SDK (the package's `mcp` extra) as a runtime argument: the client runs
+`uvx --with=mcp>=1.10 setuhq==<version> mcp`, which starts the stdio server (checked with `uvx`, with and without
+the `==<version>`, by `scripts/smoke_mcp.py`). Without the SDK, `setuhq mcp` stops with a one-line message
+naming the extra. `setuhq-mcp` remains the same server for a `pip install "setuhq[mcp]"`, and the client
+snippets in [docs/MCP-INSTALL.md](../../docs/MCP-INSTALL.md) use it.
 
 ## B. Smithery (smithery.ai)
 
 1. Sign in at <https://smithery.ai> with the GitHub account `ashfordeOU`.
 2. New server, pick the repository `ashfordeOU/SetuHQ`. Smithery reads `smithery.yaml` at the repository
-   root: a **local (stdio) server** started with `uvx --from setuhq[mcp]==<version> setuhq-mcp`, with an
+   root: a **local (stdio) server** started with `uvx --from setuhq[mcp]==<version> setuhq mcp`, with an
    optional `setuhqRoot` setting (the data root, `SETUHQ_ROOT`).
 3. Publish it as a local listing. **Do not choose a hosted or deployed option:** nothing of SetuHQ is
    hosted for it, and the listing must keep saying that the server runs on the user's computer.

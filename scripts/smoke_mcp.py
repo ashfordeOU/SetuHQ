@@ -6,7 +6,8 @@
 Plain JSON-RPC over the server's stdin and stdout, standard library only, so it checks an installed command
 (for example from a freshly installed wheel) without importing anything from the package.
 
-    python3 scripts/smoke_mcp.py .venv/bin/setuhq-mcp --min-tools 16
+    python3 scripts/smoke_mcp.py --min-tools 16 -- .venv/bin/setuhq-mcp
+    python3 scripts/smoke_mcp.py --min-tools 16 -- uvx --from 'setuhq[mcp]' setuhq mcp
 """
 
 from __future__ import annotations

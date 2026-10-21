@@ -31,12 +31,11 @@ pip install "setuhq[mcp]"          # plus the setuhq-mcp server for AI assistant
 pip install "setuhq[tess,mcp]"     # plus TESS downloads through lightkurve
 ```
 
-Python 3.10 or later. The stored runs, the frozen real-TOI benchmark, the leaderboard, the site and the
-reference tables the pipeline reads (limb-darkening coefficients, the secondary-eclipse calibration) are
-data, not code, so they are not in the package. The package alone gives the commands, the MCP server and
-the tools that need no stored data (BLS vetting, the false-alarm probability, the Methods physics). To run
-the pipeline or the transit fit, reproduce the results, or point the MCP tools at the stored runs, install
-from a checkout of the repository (`pip install -e ".[mcp]"`) and set `SETUHQ_ROOT` to it.
+Python 3.10 or later. The package carries the pipeline and the reference tables it reads (the Claret 2017
+limb-darkening coefficients and the secondary-eclipse calibration), so `setuhq run` searches, vets and fits a
+TESS target from a plain install (with the `tess` extra for the download). The stored runs, the frozen
+real-TOI benchmark, the leaderboard and the site are data, not code, and stay in the repository: to reproduce
+them, or to point the MCP tools at them, use a checkout and set `SETUHQ_ROOT` to it.
 
 ```bash
 git clone https://github.com/ashfordeOU/SetuHQ
@@ -47,10 +46,13 @@ SETUHQ_ROOT=$PWD/SetuHQ setuhq-mcp --list-tools
 
 ```bash
 setuhq --help                                   # every command
-setuhq run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
-setuhq docket runs/tess-pi-men-s1 --out site/docket --title "pi Men (TESS sector 1)"
-setuhq-mcp                                      # the MCP server over stdio
+setuhq run my_config.toml --out runs/my-run     # a config names the targets and the panel (configs/ in the repository)
+setuhq crossmatch runs/my-run                   # the NASA Exoplanet Archive cross-match the Docket shows
+setuhq docket runs/my-run --out site/docket --title "My run"
+setuhq mcp                                      # the MCP server over stdio (also installed as setuhq-mcp)
 ```
+
+Without installing anything: `uvx --from "setuhq[mcp]" setuhq mcp`.
 
 The [quick-start notebook](https://github.com/ashfordeOU/SetuHQ/blob/main/examples/quickstart.ipynb)
 walks through the stored pi Men run offline: the candidates, the docket data, a Probe on a stored light

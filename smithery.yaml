@@ -13,4 +13,4 @@ startCommand:
         type: "string"
         description: "Optional data root (a SetuHQ checkout) for the stored runs, the catalogue and the benchmarks."
   commandFunction: |-
-    (config) => ({ "command": "uvx", "args": ["--from", "setuhq[mcp]==0.1.0", "setuhq-mcp"], "env": config.setuhqRoot ? { "SETUHQ_ROOT": config.setuhqRoot } : {} })
+    (config) => ({ "command": "uvx", "args": ["--from", "setuhq[mcp]==0.1.0", "setuhq", "mcp"], "env": config.setuhqRoot ? { "SETUHQ_ROOT": config.setuhqRoot } : {} })

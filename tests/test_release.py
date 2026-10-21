@@ -195,7 +195,14 @@ def test_server_json_is_valid_against_the_registry_schema():
     assert len(server["description"]) <= 100
     (pkg,) = server["packages"]
     assert (pkg["registryType"], pkg["identifier"], pkg["transport"]["type"]) == ("pypi", "setuhq", "stdio")
-    assert server["_meta"]["io.modelcontextprotocol.registry/publisher-provided"]["command"] == "setuhq-mcp"
+    assert server["_meta"]["io.modelcontextprotocol.registry/publisher-provided"]["command"] == "setuhq mcp"
+    # The registry entry launches `uvx --with=<the mcp extra> setuhq==<version> mcp`: the package's own command with
+    # the `mcp` subcommand, and the SDK the extra names.
+    assert pkg["runtimeHint"] == "uvx"
+    assert pkg["packageArguments"] == [{"type": "positional", "value": "mcp", "description": pkg["packageArguments"][0]["description"]}]
+    (with_sdk,) = pkg["runtimeArguments"]
+    extra = re.search(r'^mcp = \[(.*)\]', (ROOT / "pyproject.toml").read_text(encoding="utf-8"), flags=re.M).group(1)
+    assert (with_sdk["type"], with_sdk["name"]) == ("named", "--with") and f'"{with_sdk["value"]}"' == extra.strip()
     jsonschema = pytest.importorskip("jsonschema")
     cls = jsonschema.validators.validator_for(schema)
     cls(schema, format_checker=jsonschema.FormatChecker()).validate(server)
@@ -204,7 +211,7 @@ def test_server_json_is_valid_against_the_registry_schema():
 def test_directory_listings():
     assert json.loads((ROOT / "glama.json").read_text(encoding="utf-8"))["maintainers"] == ["ashfordeOU"]
     smithery = (ROOT / "smithery.yaml").read_text(encoding="utf-8")
-    assert 'type: "stdio"' in smithery and "setuhq-mcp" in smithery
+    assert 'type: "stdio"' in smithery and '"setuhq", "mcp"' in smithery
     assert "build:" not in smithery and "dockerfile" not in smithery.lower()
     zen = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
     assert zen["creators"] == [{"name": "Baweja, Chakshu", "affiliation": "Ashforde OÜ"}]
@@ -286,3 +293,28 @@ def test_joss_paper_cites_only_what_its_bibliography_holds():
     assert cited and cited <= keys, cited - keys
     low = body.lower()
     assert "superintelligence" not in low and "we discovered" not in low
+
+
+# ---------------------------------------------------------------- setuhq mcp
+
+
+def test_setuhq_mcp_hands_its_arguments_to_the_server(capsys):
+    from setuhq import cli
+
+    assert cli.main(["mcp", "--list-tools"]) == 0
+    listed = capsys.readouterr().out.split()
+    assert "search_catalogue" in listed and "sentinel_providers" in listed
+    assert "mcp" in cli.build_parser()._subparsers._group_actions[0].choices
+
+
+def test_setuhq_mcp_without_the_sdk_says_which_extra_to_install(monkeypatch, capsys):
+    import importlib.util
+
+    from setuhq import cli
+
+    real = importlib.util.find_spec
+    monkeypatch.setattr(importlib.util, "find_spec", lambda name, *a: None if name == "mcp" else real(name, *a))
+    assert cli.main(["mcp"]) == 2
+    err = capsys.readouterr().err
+    assert "pip install 'setuhq[mcp]'" in err and "uvx --from 'setuhq[mcp]' setuhq mcp" in err
+    assert cli.main(["mcp", "--list-tools"]) == 0  # listing the tools needs no SDK

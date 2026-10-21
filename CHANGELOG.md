@@ -29,6 +29,9 @@ breaking changes are called out explicitly.
   `transitfit` and `dvtests` read them with `importlib.resources`. They are byte-identical copies of the
   canonical files in `docs/results/`; `tests/test_release.py` fails until a rewritten original is copied over.
   `setuhq run` from a plain `pip install "setuhq[tess]"` now searches, vets and fits outside a checkout.
+- **`setuhq mcp`** starts the MCP server over stdio, as `setuhq-mcp` does, and says which extra to install
+  when the MCP SDK is missing. The MCP registry entry (`server.json`) launches it as
+  `uvx --with=mcp>=1.10 setuhq==<version> mcp`.
 - `examples/quickstart.ipynb`: the stored pi Men run offline, from candidates to an MCP tool call; a test
   runs it. `paper/` holds the JOSS paper; issue forms, a pull request template, Dependabot and
   `.editorconfig` are under `.github/` and at the root.

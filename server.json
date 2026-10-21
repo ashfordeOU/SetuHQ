@@ -16,6 +16,21 @@
       "identifier": "setuhq",
       "version": "0.1.0",
       "runtimeHint": "uvx",
+      "runtimeArguments": [
+        {
+          "type": "named",
+          "name": "--with",
+          "value": "mcp>=1.10",
+          "description": "The MCP SDK, which is the package's 'mcp' extra (pyproject.toml): the server needs it."
+        }
+      ],
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp",
+          "description": "The 'setuhq mcp' subcommand: the MCP server over stdio."
+        }
+      ],
       "transport": {
         "type": "stdio"
       },
@@ -31,10 +46,11 @@
   ],
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
-      "command": "setuhq-mcp",
+      "command": "setuhq mcp",
       "install": "pip install 'setuhq[mcp]'",
-      "uvx": "uvx --from 'setuhq[mcp]' setuhq-mcp",
-      "docs": "https://github.com/ashfordeOU/SetuHQ/blob/main/docs/MCP-INSTALL.md"
+      "uvx": "uvx --with 'mcp>=1.10' setuhq mcp",
+      "docs": "https://github.com/ashfordeOU/SetuHQ/blob/main/docs/MCP-INSTALL.md",
+      "also": "setuhq-mcp (the same server, installed by pip install 'setuhq[mcp]')"
     }
   }
 }
