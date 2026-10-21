@@ -571,6 +571,10 @@ def build_parser() -> argparse.ArgumentParser:
     lb.add_argument("--submissions", default=str(Path(__file__).resolve().parents[2] / "docs/leaderboard/submissions"),
                     help="directory of submissions to score when rebuilding")
     lb.set_defaults(func=cmd_leaderboard)
+
+    from setuhq.propose.cli import add_parser as add_propose  # 'setuhq propose cheops' and 'setuhq propose lint'
+
+    add_propose(sub)
     return parser
 
 

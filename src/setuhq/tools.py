@@ -441,9 +441,9 @@ def _panel(config_path: str, sentinels: bool):
     return config, build_reviewers(specs, cache_root=root() / "cache")
 
 
-def _new_run_dir(run_name: str) -> Path:
-    """A fresh directory runs/mcp/<run_name> under the data root. Refused if the name is not a plain name or
-    the directory already exists: a tool run adds, it never replaces."""
+def _new_run_dir(run_name: str, base_rel: str = TOOL_RUNS) -> Path:
+    """A fresh directory <base_rel>/<run_name> (runs/mcp by default) under the data root. Refused if the name is
+    not a plain name or the directory already exists: a tool run adds, it never replaces."""
     import re
 
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", run_name or "") or ".." in run_name:
@@ -451,7 +451,7 @@ def _new_run_dir(run_name: str) -> Path:
     base = root()
     # Never follow a link: a symlinked runs/ or runs/mcp/, or anything already at the name (a dangling
     # symlink included), could redirect the run outside runs/mcp.
-    for rel in ("runs", TOOL_RUNS):
+    for rel in ("runs", base_rel):
         try:
             st = os.lstat(base / rel)
         except FileNotFoundError:
@@ -459,16 +459,16 @@ def _new_run_dir(run_name: str) -> Path:
         if stat.S_ISLNK(st.st_mode) or not stat.S_ISDIR(st.st_mode):
             raise ToolError(f"{rel} is a link or not a directory; tool runs are refused until it is a plain directory")
     try:
-        os.lstat(base / TOOL_RUNS / run_name)
+        os.lstat(base / base_rel / run_name)
     except FileNotFoundError:
         pass
     else:
-        raise ToolError(f"{TOOL_RUNS}/{run_name} already exists; a tool run never overwrites, pick a new run_name")
-    out = _path(f"{TOOL_RUNS}/{run_name}", must_exist=False)
+        raise ToolError(f"{base_rel}/{run_name} already exists; a tool run never overwrites, pick a new run_name")
+    out = _path(f"{base_rel}/{run_name}", must_exist=False)
     try:
         out.mkdir(parents=True, exist_ok=False)  # atomic: two calls cannot both claim one directory
     except FileExistsError:
-        raise ToolError(f"{TOOL_RUNS}/{run_name} already exists; a tool run never overwrites, pick a new run_name") from None
+        raise ToolError(f"{base_rel}/{run_name} already exists; a tool run never overwrites, pick a new run_name") from None
     return out
 
 
@@ -626,6 +626,48 @@ def sentinel_providers() -> dict:
                     honesty=[PANEL, "An uncalibrated provider votes at the floor weight until 'setuhq calibrate' measures it."])
 
 
+# ---------------------------------------------------------------- proposal preparation
+
+PROPOSE_RUNS = "runs/propose"
+
+
+def cheops_proposal_pack(target: str, run_name: str, programme: str = "regular", orbits: int | None = None,
+                         cycle: str | None = None, gmag: float | None = None, event: str = "transit",
+                         depth_ppm: float | None = None, duration_hours: float | None = None, target_snr: float = 10.0,
+                         efficiency: float = 0.7, offline: bool = False) -> dict:
+    """Write a CHEOPS Guest Observers proposal PREPARATION pack (``propose.pack.build_pack``) into a new
+    runs/propose/<run_name> (refused if it exists; nothing outside it is written, no cache): the Running Call's rules
+    check (orbit limits, April/October rule for Large programmes, the next deadline in Paris time, earliest start),
+    the target's status (public Reserved Target List, public CHEOPS archive metadata, SIMBAD/MAST J2000
+    coordinates), SetuHQ's stored evidence, rough precision and orbit ESTIMATES, anonymised drafts with an anonymity
+    lint, and ESA's step-by-step checklist. Reads public pages only; never logs in or submits. SetuHQ is independent
+    of ESA and the CHEOPS mission: the official call and ESA's tools govern."""
+    from setuhq.propose import draft, pack, rules, sources
+
+    try:
+        rules.programme(programme)
+    except ValueError as exc:
+        raise ToolError(str(exc)) from None
+    if event not in ("transit", "eclipse", "flare"):
+        raise ToolError("event must be transit, eclipse or flare")
+    out = _new_run_dir(run_name, PROPOSE_RUNS)  # claimed atomically; build_pack fills the empty directory
+    try:
+        p = pack.build_pack(target, out, root=root(), claimed=True, programme=programme, orbits=orbits, cycle=cycle,
+                            fetcher=sources.Fetcher(cache_dir=None, offline=offline), gmag=gmag, event=event,
+                            depth_ppm=depth_ppm, duration_hours=duration_hours, target_snr=target_snr,
+                            efficiency=efficiency, use_toi_table=not offline)
+    except ValueError as exc:
+        if out.is_dir() and not any(out.iterdir()):
+            out.rmdir()  # nothing was written: give the name back
+        raise ToolError(str(exc)) from None
+    result = {"pack_dir": _rel(out), "files": sorted(_rel(f) for f in out.rglob("*") if f.is_file()),
+              "cycle": p["cycle"], "programme": p["programme"], "target": p["target"], "status": p["status"],
+              "planning": p["planning"], "anonymity_warnings": sum(f["level"] == "warn" for f in p["anonymity_lint"]),
+              "network_errors": p["network_errors"]}
+    return envelope("cheops_proposal_pack", result, sources=p["sources"],
+                    honesty=[draft.DISCLAIMER, draft.PREP_ONLY, CANDIDATE, *p["honesty"][3:]])
+
+
 # What the MCP server registers, in this order. read_only: the tool writes nothing.
 TOOLS = [
     (search_catalogue, True), (get_planet, True), (get_star, True),
@@ -634,4 +676,5 @@ TOOLS = [
     (run_pipeline_csv, False), (run_pipeline_tess, False),
     (rv_semi_amplitude, True), (transit_depth, True), (microlensing_magnification, True), (habitable_zone, True),
     (benchmark_results, True), (sentinel_providers, True),
+    (cheops_proposal_pack, False),
 ]

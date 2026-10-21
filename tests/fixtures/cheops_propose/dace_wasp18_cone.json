@@ -1,0 +1,244 @@
+{
+ "parameters": [
+  {
+   "variableName": "visit_id",
+   "intValues": [
+    1817,
+    4298,
+    3957
+   ]
+  },
+  {
+   "variableName": "obj_id_catname",
+   "stringValues": [
+    "WASP-18",
+    "WASP-18",
+    "WASP-18"
+   ]
+  },
+  {
+   "variableName": "obj_pos_coordinates_hms_dms",
+   "stringValues": [
+    "24.354305 / -45.67788",
+    "24.354305267334 / -45.6778793334961",
+    "24.354305267334 / -45.6778793334961"
+   ]
+  },
+  {
+   "variableName": "date_mjd_start",
+   "doubleValues": [
+    59098.0622846271,
+    59878.411849562,
+    59444.9806321079
+   ]
+  },
+  {
+   "variableName": "date_mjd_end",
+   "doubleValues": [
+    59098.3095252312,
+    59878.839743888,
+    59445.2230602659
+   ]
+  },
+  {
+   "variableName": "full_program_name",
+   "stringValues": [
+    "PR100016",
+    "PR100016",
+    "PR100012"
+   ]
+  },
+  {
+   "variableName": "file_key",
+   "stringValues": [
+    "CH_PR100016_TG010702_V0300",
+    "CH_PR100016_TG015703_V0200",
+    "CH_PR100012_TG001201_V0200"
+   ]
+  },
+  {
+   "variableName": "data_pipe_version",
+   "stringValues": [
+    "14.1.2",
+    "13.1.0",
+    "13.1.0"
+   ]
+  },
+  {
+   "variableName": "data_arch_rev",
+   "intValues": [
+    3,
+    2,
+    2
+   ]
+  },
+  {
+   "variableName": "file_rootpath",
+   "stringValues": [
+    "PR10/PR100016_TG010702_V0300",
+    "PR10/PR100016_TG015703_V0200",
+    "PR10/PR100012_TG001201_V0200"
+   ]
+  },
+  {
+   "variableName": "prog_id",
+   "stringValues": [
+    "PR10",
+    "PR10",
+    "PR10"
+   ]
+  },
+  {
+   "variableName": "data_proc_num",
+   "intValues": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "variableName": "bjd_start",
+   "doubleValues": [
+    2459098.56585072,
+    2459878.91482995,
+    2459445.48374968
+   ]
+  },
+  {
+   "variableName": "bjd_end",
+   "doubleValues": [
+    2459098.81309496,
+    2459879.34270843,
+    2459445.72618573
+   ]
+  },
+  {
+   "variableName": "obj_mag_cheops",
+   "doubleValues": [
+    9.16104718728283,
+    9.16104718728283,
+    9.16092574934931
+   ]
+  },
+  {
+   "variableName": "obj_mag_cheops_err",
+   "doubleValues": [
+    0.0,
+    0.0,
+    0.01
+   ]
+  },
+  {
+   "variableName": "obj_mag_v",
+   "doubleValues": [
+    9.166,
+    9.166,
+    9.166
+   ]
+  },
+  {
+   "variableName": "obj_mag_v_err",
+   "doubleValues": [
+    0.0,
+    0.0,
+    0.01
+   ]
+  },
+  {
+   "variableName": "teff_k",
+   "doubleValues": [
+    6431.0,
+    6431.0,
+    6340.0
+   ]
+  },
+  {
+   "variableName": "ra_deg",
+   "doubleValues": [
+    24.354305,
+    24.354305267334,
+    24.354305267334
+   ]
+  },
+  {
+   "variableName": "dec_deg",
+   "doubleValues": [
+    -45.67788,
+    -45.6778793334961,
+    -45.6778793334961
+   ]
+  },
+  {
+   "variableName": "obj_sptype",
+   "stringValues": [
+    "F8V",
+    "F8V",
+    "F6V"
+   ]
+  },
+  {
+   "variableName": "obs_exptime",
+   "stringValues": [
+    "50.0",
+    "50.0",
+    "53.0"
+   ]
+  },
+  {
+   "variableName": "obs_id",
+   "intValues": [
+    1226569,
+    1930496,
+    1568173
+   ]
+  },
+  {
+   "variableName": "obs_nexp",
+   "intValues": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "variableName": "obs_total_exptime",
+   "doubleValues": [
+    50.0,
+    50.0,
+    53.0
+   ]
+  },
+  {
+   "variableName": "prog_type",
+   "intValues": [
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "variableName": "req_id",
+   "intValues": [
+    107,
+    157,
+    12
+   ]
+  },
+  {
+   "variableName": "status_published",
+   "boolValues": [
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "variableName": "db_lc_available",
+   "boolValues": [
+    true,
+    true,
+    true
+   ]
+  }
+ ]
+}
