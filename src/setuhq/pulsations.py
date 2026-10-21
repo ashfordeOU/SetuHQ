@@ -7,11 +7,12 @@ Methods reimplemented from their published descriptions:
 
 * **Amplitude spectrum**: the Lomb-Scargle periodogram (astropy) scaled to semi-amplitude, A = √(4P/N), on a grid
   oversampled ten times the Rayleigh resolution 1/T.
-* **Iterative pre-whitening** (Deeming 1975; as Period04 and FELIX do): take the highest peak of the residual
-  spectrum, fit it, refit every amplitude and phase, and every ten peaks and at the end refit every sinusoid
-  together by non-linear least squares (frequency, amplitude, phase); subtract, repeat. Extraction stops at the first peak with S/N < 4 (Breger et al. 1993), the noise being the mean
-  amplitude of the residual spectrum in a box around the peak (2 d⁻¹ wide by default). Every frequency's final
-  S/N is measured on the final residual. Uncertainties follow Montgomery & O'Donoghue (1999). Peaks closer than
+* **Iterative pre-whitening** (Deeming 1975; as Period04 and FELIX do): take the residual spectrum's peak of
+  highest S/N (amplitude over the local noise, so the red-noise rise at low frequency does not end the extraction
+  while significant peaks remain elsewhere), fit it, refit every amplitude and phase, and every ten peaks and at
+  the end refit every sinusoid together by non-linear least squares (frequency, amplitude, phase); subtract,
+  repeat. Extraction stops when no peak has S/N ≥ 4 (Breger et al. 1993), the noise being the mean amplitude of
+  the residual spectrum in a box around the peak (2 d⁻¹ wide by default). Every frequency's final S/N is measured on the final residual. Uncertainties follow Montgomery & O'Donoghue (1999). Peaks closer than
   1.5/T to a stronger one are flagged unresolved (Loumos & Deeming 1978).
 * **Combination frequencies**: a frequency within the Rayleigh resolution of n·f_i + m·f_j (|n|, |m| ≤ 2) or a
   harmonic (up to 4·f_i) of stronger ones is flagged as a likely combination.
@@ -109,6 +110,17 @@ def _sines_jac(params, t, n):
     return J
 
 
+def _noise_curve(freq, amp, box) -> np.ndarray:
+    """The mean amplitude in a box of width ``box`` centred on every frequency of the grid (running mean)."""
+    df = float(freq[1] - freq[0]) if freq.size > 1 else 1.0
+    w = max(1, int(round(box / df)))
+    c = np.concatenate([[0.0], np.cumsum(amp)])
+    i = np.arange(amp.size)
+    lo = np.clip(i - w // 2, 0, amp.size)
+    hi = np.clip(i + w // 2 + 1, 0, amp.size)
+    return (c[hi] - c[lo]) / (hi - lo)
+
+
 def _local_noise(freq, amp, f0, box) -> float:
     m = np.abs(freq - f0) <= box / 2
     return float(np.mean(amp[m])) if m.any() else float("nan")
@@ -163,10 +175,10 @@ def prewhiten(time, flux, *, fmin: float | None = None, fmax: float | None = Non
     reason = f"reached {max_frequencies} frequencies"
     for n in range(1, max_frequencies + 1):
         fr, amp = amplitude_spectrum(tt, resid, freq)
-        k = int(np.argmax(amp))
-        noise = _local_noise(fr, amp, fr[k], noise_box)
-        if not noise or amp[k] / noise < snr_stop:
-            reason = f"next peak at {fr[k]:.5f} d⁻¹ has S/N {amp[k] / noise:.2f} < {snr_stop:g}"
+        snr = amp / _noise_curve(fr, amp, noise_box)
+        k = int(np.nanargmax(snr))
+        if not np.isfinite(snr[k]) or snr[k] < snr_stop:
+            reason = f"highest S/N left is {snr[k]:.2f} < {snr_stop:g} (at {fr[k]:.5f} d⁻¹)"
             break
         new = _linear_refit([fr[k], 0.0, 0.0], tt, resid)
         new = _nonlinear_refit(new, tt, resid, T, max_nfev=20)

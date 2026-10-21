@@ -42,7 +42,7 @@ def test_prewhitening_recovers_frequencies_amplitudes_and_phases():
         assert x["amplitude"] == pytest.approx(a, abs=4 * x["sigma_amplitude"])
         # the phase is referred to the first time stamp, which is t = 0 here
         assert min(abs(x["phase"] - ph), 1 - abs(x["phase"] - ph)) < 0.02
-    assert "S/N" in r["stop"] and r["stop"].endswith(f"< {r['snr_stop']:g}")
+    assert r["stop"].startswith("highest S/N left is") and f"< {r['snr_stop']:g}" in r["stop"]
     assert all(x["snr"] >= 4 for x in sig)
     assert r["rayleigh"] == pytest.approx(1 / r["baseline_days"])
 
