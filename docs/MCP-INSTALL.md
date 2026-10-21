@@ -159,6 +159,9 @@ gemini mcp add -e SETUHQ_ROOT=/path/to/SetuHQ setuhq /path/to/SetuHQ/.venv/bin/s
 | `habitable_zone` | Kopparapu et al. 2014 edges in AU | `methods.hz_distance_au` |
 | `benchmark_results` | The stored benchmarks: real TOIs, the real-TOI leaderboard, injection-recovery, pi Men, calibration, threshold sweep | `docs/results/`, `docs/leaderboard/`, `docs/threshold_sweep.json` |
 | `sentinel_providers` | Which Sentinel providers can run here (never shows a key) | `reviewers` |
+| `find_flares` | Stellar flares in a light curve: detection (optional wavelet denoising), template morphology with multi-component fits chosen by BIC, ED, energies (9000 K blackbody) and the flux-inverted null | `flares.detect_flares` |
+| `pulsation_spectrum` | Frequency analysis: pre-whitening to S/N 4, combination flags, granulation background, numax/Δν, a heuristic type and an optional red-noise null | `pulsations.analyse` |
+| `get_cheops_lightcurve` | Public CHEOPS DRP light curves of a target (DACE public mode), detrended against roll angle, background and centroid, with ESA's acknowledgement and credit; needs network and `.[cheops]` unless cached (writes the cache, so over HTTP only with `--allow-writes`) | `cheops.get_cheops_lightcurve` |
 
 Every tool returns `{"tool", "result", "provenance", "honesty"}`. Error messages give paths relative to the
 data root, never the server's absolute paths.
