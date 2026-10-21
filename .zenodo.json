@@ -1,0 +1,36 @@
+{
+  "title": "SetuHQ — the open exoplanet observatory",
+  "upload_type": "software",
+  "description": "<p>SetuHQ is an open, reproducible transit search of public NASA TESS light curves. A calibrated reviewer panel of AI Sentinels (Claude by default; other providers supported and labelled) and deterministic matched-filter Probes marks every dip in blind-coded light curves, in the style of Planet Hunters; the pipeline then vets each dip, fits a limb-darkened transit model and bounds its false-alarm probability. It includes a frozen, blind benchmark of real TESS Objects of Interest with flux-inverted and block-scrambled controls, a public leaderboard with a catalogue-metadata floor, an all-sky sweep that classifies everything that dims, an MCP server and an app that maps every known exoplanet.</p><p>Every SetuHQ output is a candidate, never a confirmation. The code is AGPL-3.0-only, or a commercial licence from Ashforde OÜ; SetuHQ's own data, benchmark, leaderboard data and paper are CC BY 4.0 (see LICENSING.md).</p>",
+  "creators": [
+    {
+      "name": "Baweja, Chakshu",
+      "affiliation": "Ashforde OÜ"
+    }
+  ],
+  "access_right": "open",
+  "license": "AGPL-3.0-only",
+  "version": "0.1.0",
+  "keywords": [
+    "exoplanets",
+    "transit search",
+    "TESS",
+    "benchmark",
+    "citizen science",
+    "large language models",
+    "Model Context Protocol"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/ashfordeOU/SetuHQ",
+      "relation": "isSupplementTo",
+      "scheme": "url",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "https://setuhq.com",
+      "relation": "isDocumentedBy",
+      "scheme": "url"
+    }
+  ]
+}
