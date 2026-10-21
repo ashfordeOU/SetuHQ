@@ -1,0 +1,194 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# The release pipeline. One tag push, one workflow run, one order:
+#
+#   tag -> verify -> build -> release      then publish.yml -> PyPI
+#
+#   verify   the tag equals the version in src/setuhq/__init__.py (and every surface
+#            scripts/check_version_sync.py checks agrees), CHANGELOG.md has its section, and the
+#            CI workflow (ci.yml) finished green on exactly this commit. Nothing below runs unless
+#            this is green. It does not rerun the test suite: ci.yml already ran it on this commit,
+#            and a tag on a commit CI has not passed is refused instead.
+#   build    the sdist and the wheel with `python -m build`, `twine check --strict`,
+#            scripts/check_dist.py (what each carries, and no data), then a clean install of the
+#            wheel that runs `setuhq --help` and the setuhq-mcp stdio smoke test.
+#   release  attests build provenance for both files, then creates the GitHub Release for the tag
+#            with the CHANGELOG section as its notes (scripts/changelog_extract.py) and attaches them.
+#   PyPI     publish.yml starts when this run completes green for a pushed tag, and uploads the
+#            dists this run attested, through trusted publishing. It is a workflow of its own because
+#            PyPI matches a trusted publisher on the top-level workflow file. No token anywhere.
+#
+# DRY RUN: dispatch this workflow by hand (dry_run is on by default). It runs verify (reporting,
+# not failing, on a missing tag or CI run) and build, keeps the dists as a workflow artifact, and
+# attests, releases and publishes nothing. A dispatch with dry_run off and a `tag` rebuilds the
+# GitHub Release for an existing tag (for example after a runner outage); it still publishes
+# nothing, because publish.yml only follows a tag PUSH: retry PyPI by dispatching publish.yml on
+# the tag (docs/RELEASING.md).
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to (re)build the release for, e.g. v0.1.0 (empty: a dry run of the selected branch)"
+        required: false
+        type: string
+      dry_run:
+        description: "Dry run: verify and build only; attest, release and publish nothing"
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref }}${{ inputs.dry_run && '-dry' || '' }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read  # read ci.yml's runs for this commit
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      tag: ${{ steps.v.outputs.tag }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+        with:
+          python-version: "3.13"
+      - name: A real release run needs a tag
+        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dry_run && inputs.tag == '' }}
+        run: |
+          echo "::error::a dispatch without a tag is only valid as a dry run"
+          exit 1
+      - name: Version, tag and changelog agree
+        id: v
+        env:
+          TAG: ${{ inputs.tag || (github.ref_type == 'tag' && github.ref_name || '') }}
+          DRY: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          version="$(python3 scripts/check_version_sync.py --print-version)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG:-v$version}" >> "$GITHUB_OUTPUT"
+          if [ -n "$TAG" ]; then
+            python3 scripts/check_version_sync.py --tag "$TAG"
+          elif [ "$DRY" = "true" ]; then
+            echo "::notice::dry run of a branch: checking the surfaces without a tag"
+            python3 scripts/check_version_sync.py
+          else
+            echo "::error::no tag to release"; exit 1
+          fi
+          python3 scripts/changelog_extract.py "$version" > /dev/null
+      - name: CI is green on this exact commit
+        # Fails closed on a real release: no successful ci.yml run for this SHA means no release. A dry
+        # run reports the same answer as a warning.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          sha="$(git rev-parse HEAD)"
+          n="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/runs?head_sha=${sha}&status=success" --jq '.total_count')"
+          if [ "${n:-0}" -gt 0 ]; then
+            echo "CI is green on $sha ($n run(s))"
+          elif [ "$DRY" = "true" ]; then
+            echo "::warning::no green ci.yml run on $sha; a real release of this commit would stop here"
+          else
+            echo "::error::no green ci.yml run on $sha: merge to main, wait for CI, then tag that commit"
+            exit 1
+          fi
+
+  build:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+        with:
+          python-version: "3.13"
+      - name: Build the sdist and the wheel
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet "build==1.6.1" "twine==7.0.0"
+          python3 -m build --outdir dist .
+          ls -l dist
+      - name: twine check
+        run: python3 -m twine check --strict dist/*
+      - name: What the dists carry (package, type marker, fonts, licences; no runs, site, docs or caches)
+        run: python3 scripts/check_dist.py dist
+      - name: The version inside the dists is the tag's
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: |
+          set -euo pipefail
+          test -f "dist/setuhq-${VERSION}-py3-none-any.whl"
+          test -f "dist/setuhq-${VERSION}.tar.gz"
+      - name: Clean install of the wheel, then the commands
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/clean
+          /tmp/clean/bin/python -m pip install --quiet "$(ls dist/*.whl)[mcp]"
+          cd "$RUNNER_TEMP"
+          /tmp/clean/bin/setuhq --help
+          /tmp/clean/bin/setuhq-mcp --version
+          /tmp/clean/bin/setuhq-mcp --list-tools
+          python3 "$GITHUB_WORKSPACE/scripts/smoke_mcp.py" /tmp/clean/bin/setuhq-mcp --min-tools 16
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  release:
+    needs: [verify, build]
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write      # create the GitHub Release and upload its files
+      id-token: write      # sign the build-provenance attestation
+      attestations: write  # store it
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+        with:
+          name: dist
+          path: dist
+      - name: Attest build provenance (sdist and wheel)
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be  # v2.4.0
+        with:
+          subject-path: |
+            dist/*.whl
+            dist/*.tar.gz
+      - name: Release notes from CHANGELOG.md
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: python3 scripts/changelog_extract.py "$VERSION" > RELEASE_NOTES.md
+      - name: Create the GitHub Release (or refresh it for a re-run) and attach the dists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.verify.outputs.tag }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release edit "$TAG" --notes-file RELEASE_NOTES.md
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --verify-tag --title "SetuHQ $TAG" --notes-file RELEASE_NOTES.md
+          fi

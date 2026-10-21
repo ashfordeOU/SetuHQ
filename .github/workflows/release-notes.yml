@@ -1,0 +1,45 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Refresh a published release's notes from CHANGELOG.md (scripts/changelog_extract.py), without
+# rebuilding or re-uploading anything. release.yml writes the notes for every new tag; this is the
+# on-demand path for an existing release, so the notes are always made from the changelog and never
+# edited by hand on the release page. Idempotent.
+name: Release notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to refresh, e.g. v0.1.0 (empty: the latest release)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write  # edit the release body
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - name: Resolve the tag
+        id: t
+        env:
+          IN: ${{ inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="$IN"
+          if [ -z "$tag" ]; then tag="$(gh release view --json tagName --jq .tagName)"; fi
+          gh release view "$tag" > /dev/null
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+      - name: Regenerate and apply the notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.t.outputs.tag }}
+        run: |
+          set -euo pipefail
+          python3 scripts/changelog_extract.py "${TAG#v}" > RELEASE_NOTES.md
+          gh release edit "$TAG" --notes-file RELEASE_NOTES.md
