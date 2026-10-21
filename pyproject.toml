@@ -13,7 +13,7 @@ readme = { file = "README.pypi.md", content-type = "text/markdown" }
 license = "AGPL-3.0-only"  # or a commercial licence from Ashforde OÜ: see LICENSING.md
 license-files = ["LICENSE", "NOTICE", "LICENSING.md"]
 authors = [{ name = "Ashforde OÜ", email = "contact@ashforde.org" }]
-requires-python = ">=3.10"
+requires-python = ">=3.11"  # tomllib (config files) is in the standard library from 3.11
 keywords = ["exoplanets", "transit search", "TESS", "benchmark", "citizen science"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -22,7 +22,6 @@ classifiers = [
     "Environment :: Console",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",

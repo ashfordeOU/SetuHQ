@@ -11,7 +11,7 @@ no logic of its own. The command is renamed `setuhq-mcp` at release.
 
 ## Install
 
-From a checkout of this repository (Python 3.10 or later):
+From a checkout of this repository (Python 3.11 or later):
 
 ```sh
 python -m venv .venv

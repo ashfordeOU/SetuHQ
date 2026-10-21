@@ -31,7 +31,7 @@ pip install "setuhq[mcp]"          # plus the setuhq-mcp server for AI assistant
 pip install "setuhq[tess,mcp]"     # plus TESS downloads through lightkurve
 ```
 
-Python 3.10 or later. The package carries the pipeline and the reference tables it reads (the Claret 2017
+Python 3.11 or later. The package carries the pipeline and the reference tables it reads (the Claret 2017
 limb-darkening coefficients and the secondary-eclipse calibration), so `setuhq run` searches, vets and fits a
 TESS target from a plain install (with the `tess` extra for the download). The stored runs, the frozen
 real-TOI benchmark, the leaderboard and the site are data, not code, and stay in the repository: to reproduce

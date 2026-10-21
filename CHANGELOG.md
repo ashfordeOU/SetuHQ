@@ -38,6 +38,8 @@ breaking changes are called out explicitly.
 
 ### Changed
 
+- **Python 3.11 or later.** `requires-python` is now `>=3.11`: `setuhq.config` reads TOML with
+  `tomllib`, which the standard library has from 3.11, so a config could not be loaded on 3.10.
 - **Fingerprints.** `transitfit.py` now reads its table from the package, so the fingerprints of the current
   code that include it move; nothing a result was made with changes. The current search fingerprint
   (`setuhq.starsearch.search_fingerprint`) goes from `c68d13c1…` to `f7317ec9…`, the sweep's all-code

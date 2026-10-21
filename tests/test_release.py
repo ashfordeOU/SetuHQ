@@ -100,6 +100,9 @@ def test_pyproject_packaging():
     py = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert 'readme = { file = "README.pypi.md", content-type = "text/markdown" }' in py
     assert '"py.typed"' in py and (ROOT / "src/setuhq/py.typed").is_file()
+    # setuhq.config reads TOML with tomllib, in the standard library from Python 3.11.
+    assert 'requires-python = ">=3.11"' in py and "Python :: 3.10" not in py and "Python :: 3.11" in py
+    assert json.loads((ROOT / "codemeta.json").read_text(encoding="utf-8"))["runtimePlatform"] == "Python 3.11+"
     manifest = (ROOT / "MANIFEST.in").read_text(encoding="utf-8")
     for d in ("runs", "site", "docs", "cache", "tests", "tools"):
         assert f"prune {d}\n" in manifest, d

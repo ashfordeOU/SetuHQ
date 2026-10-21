@@ -794,7 +794,7 @@ events and nulls. That second step is not built yet.
 
 ## Install
 
-SetuHQ needs Python 3.10 or later. Tagged releases are set up to publish to PyPI as `setuhq`
+SetuHQ needs Python 3.11 or later. Tagged releases are set up to publish to PyPI as `setuhq`
 ([docs/RELEASING.md](docs/RELEASING.md)); once v0.1.0 is there, `pip install "setuhq[mcp]"` installs the
 package and the MCP server. Until then, install it from this repository:
 
@@ -931,7 +931,7 @@ honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for 
 
 | Channel | Command | Requires |
 |---|---|---|
-| Install | `pip install -e '.[mcp]'` in a checkout, then `setuhq-mcp --list-tools` | Python 3.10+ |
+| Install | `pip install -e '.[mcp]'` in a checkout, then `setuhq-mcp --list-tools` | Python 3.11+ |
 | Claude Code | `claude mcp add setuhq -- /path/to/SetuHQ/.venv/bin/setuhq-mcp` | the install |
 | Claude Code plugin | `/plugin install setuhq --marketplace ashfordeOU/SetuHQ` | `setuhq-mcp` on PATH |
 | Claude Desktop, Cursor, VS Code, Codex CLI, Gemini CLI | snippets in [`docs/MCP-INSTALL.md`](docs/MCP-INSTALL.md) | the install |
