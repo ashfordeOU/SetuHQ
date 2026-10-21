@@ -2,12 +2,12 @@
 name: pages
 
 # Publishes the committed site/ to GitHub Pages, served at https://setuhq.com (site/CNAME), on every push to
-# main and to claude/dreamy-pasteur-pyawgi, or by hand. site/ is built and committed with scripts/ci_local.sh
+# main, or by hand. site/ is built and committed with scripts/ci_local.sh
 # (the app, the docket, the plates and the report from the stored run); this workflow deploys it as it is.
 
 on:
   push:
-    branches: [main, claude/dreamy-pasteur-pyawgi]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -26,9 +26,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa  # v3
         with:
           path: site
-      - uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e  # v4
         id: deployment
