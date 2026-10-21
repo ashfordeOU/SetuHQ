@@ -13,6 +13,7 @@ import pytest
 from setuhq import learn as L
 from setuhq.app import APP_JS
 from setuhq.methods import CHAPTERS
+from conftest import served, site_bundle
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -34,7 +35,7 @@ def test_the_path_covers_every_chapter_in_order_then_the_galaxy_and_catalogue():
 
 
 def test_the_card_and_bar_are_in_the_shell_and_progress_is_guarded(built):
-    page = built.read_text()
+    page = site_bundle(built)
     data = json.loads(re.search(r'<script id="data" type="application/json">(.*?)</script>', page, re.S).group(1))
     assert data["learn"] == L.learn_steps()
     ov = re.search(r'<section class="route" id="route-overview".*?(?=<section class="route" id="route-)', page, re.S).group(0)
@@ -52,7 +53,7 @@ def test_the_card_and_bar_are_in_the_shell_and_progress_is_guarded(built):
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
 def test_learn_path_in_the_browser(built, tmp_path):
-    url = built.resolve().as_uri()
+    url = served(built)
     script = tmp_path / "learn.js"
     script.write_text("""
 const { chromium } = require(%s);
@@ -65,21 +66,21 @@ const U = %s;
     await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
     const r = {w, theme, errs};
-    await p.goto(U + '#/overview'); await p.waitForTimeout(700);
+    await p.goto(U + '#/overview'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(700);
     r.card0 = await p.evaluate(() => [document.querySelector('#learngo').textContent, document.querySelector('#learncount').textContent, document.querySelector('#learnbar').hidden]);
     // Visiting a page without starting the path counts, but shows no bar.
-    await p.goto(U + '#/galaxy'); await p.waitForTimeout(300); r.noBar = await p.evaluate(() => document.querySelector('#learnbar').hidden);
-    await p.goto(U + '#/overview'); await p.waitForTimeout(300);
+    await p.goto(U + '#/galaxy'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(300); r.noBar = await p.evaluate(() => document.querySelector('#learnbar').hidden);
+    await p.goto(U + '#/overview'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(300);
     await p.click('#learngo'); await p.waitForTimeout(600);
-    r.step1 = await p.evaluate(() => [location.hash, document.querySelector('#learnbar').hidden, document.querySelector('#learnpos').textContent]);
+    r.step1 = await p.evaluate(() => [location.pathname, document.querySelector('#learnbar').hidden, document.querySelector('#learnpos').textContent]);
     await p.click('#learnnext'); await p.waitForTimeout(400); await p.click('#learnnext'); await p.waitForTimeout(600);
-    r.step3 = await p.evaluate(() => [location.hash.split('?')[0], document.querySelector('#learnpos').textContent]);
+    r.step3 = await p.evaluate(() => [location.pathname, document.querySelector('#learnpos').textContent]);
     r.small = await p.evaluate(() => [...document.querySelectorAll('#learnbar a, #learnbar button')].filter(e => { const q = e.getBoundingClientRect(); return q.width && (q.height < 44 || q.width < 44); }).length);
     r.docW = await p.evaluate(() => document.documentElement.scrollWidth);
     await p.reload(); await p.waitForTimeout(700);
     r.reload = await p.evaluate(() => [document.querySelector('#learnbar').hidden, JSON.parse(localStorage.getItem('setuhq-learn')).seen]);
     await p.click('#learnleave'); await p.waitForTimeout(200); r.left = await p.evaluate(() => document.querySelector('#learnbar').hidden);
-    await p.goto(U + '#/overview'); await p.waitForTimeout(400);
+    await p.goto(U + '#/overview'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(400);
     r.card1 = await p.evaluate(() => [document.querySelector('#learngo').textContent, document.querySelector('#learncount').textContent, document.querySelector('.learnmeter').getAttribute('aria-valuenow')]);
     await p.click('#learnreset'); await p.waitForTimeout(200);
     r.reset = await p.evaluate(() => document.querySelector('#learncount').textContent);
@@ -88,8 +89,8 @@ const U = %s;
   // Storage blocked: the path still works for the visit.
   const c = await b.newContext(); await c.addInitScript(() => { Object.defineProperty(window, 'localStorage', {get(){ throw new Error('blocked'); }}); });
   const p = await c.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message));
-  await p.goto(U + '#/overview'); await p.waitForTimeout(700); await p.click('#learngo'); await p.waitForTimeout(500);
-  const blocked = {state: await p.evaluate(() => [location.hash, document.querySelector('#learnbar').hidden]), errs};
+  await p.goto(U + '#/overview'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(700); await p.click('#learngo'); await p.waitForTimeout(500);
+  const blocked = {state: await p.evaluate(() => [location.pathname, document.querySelector('#learnbar').hidden]), errs};
   console.log(JSON.stringify({out, blocked})); await b.close();
 })();
 """ % (json.dumps(PLAYWRIGHT), json.dumps(url), json.dumps(CHROMIUM)))
@@ -101,14 +102,14 @@ const U = %s;
         assert r["errs"] == [], r
         assert r["card0"] == ["Start the path", f"0 of {n} visited", True]
         assert r["noBar"] is True
-        assert r["step1"] == ["#/methods?ch=survey", False, f"Learn path · 1 of {n} · How a survey works"]
-        assert r["step3"] == ["#/transit", f"Learn path · 3 of {n} · SetuHQ's own transit: the case file"]
+        assert r["step1"] == ["/how-it-works/", False, f"Learn path · 1 of {n} · How a survey works"]
+        assert r["step3"] == ["/candidates/tess-fa3483ce6f83-000/", f"Learn path · 3 of {n} · SetuHQ's own transit: the case file"]
         assert r["small"] == 0 and r["docW"] == r["w"]
         assert r["reload"][0] is False and set(r["reload"][1]) == {"galaxy", "ch:survey", "ch:transit", "transit"}
         assert r["left"] is True
         assert r["card1"] == ["Continue: Toward and away", f"4 of {n} visited", "4"]
         assert r["reset"] == f"0 of {n} visited"
-    assert data["blocked"] == {"state": ["#/methods?ch=survey", False], "errs": []}
+    assert data["blocked"] == {"state": ["/how-it-works/", False], "errs": []}
 
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
@@ -124,14 +125,14 @@ const U = %s;
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob }); const p = await c.newPage(), errs = [];
     p.on('pageerror', e => errs.push(e.message));
     const r = {w, errs};
-    await p.goto(U + '#/overview'); await p.waitForTimeout(600);
+    await p.goto(U + '#/overview'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(600);
     await p.focus('#learngo'); await p.keyboard.press('Enter'); await p.waitForTimeout(500);
     r.step1Prev = await p.evaluate(() => document.querySelector('#learnprev').hidden);
     await p.focus('#learnnext'); await p.keyboard.press('Enter'); await p.waitForTimeout(500);
-    r.step2Prev = await p.evaluate(() => [document.querySelector('#learnprev').hidden, location.hash]);
+    r.step2Prev = await p.evaluate(() => [document.querySelector('#learnprev').hidden, location.pathname]);
     // Back from step 2 to step 1 with the keyboard: Back disappears, focus goes to Next.
     await p.focus('#learnprev'); await p.keyboard.press('Enter'); await p.waitForTimeout(500);
-    r.back = await p.evaluate(() => [location.hash, document.activeElement.id, document.activeElement === document.body, document.querySelector('#learnprev').hidden]);
+    r.back = await p.evaluate(() => [location.pathname, document.activeElement.id, document.activeElement === document.body, document.querySelector('#learnprev').hidden]);
     // Leave with the keyboard: the bar goes, focus goes to the page's heading.
     await p.focus('#learnleave'); await p.keyboard.press('Enter'); await p.waitForTimeout(300);
     r.leave = await p.evaluate(() => [document.querySelector('#learnbar').hidden, document.activeElement === document.body, document.activeElement.tagName, document.activeElement.id]);
@@ -139,13 +140,13 @@ const U = %s;
   }
   console.log(JSON.stringify(out)); await b.close();
 })();
-""" % (json.dumps(PLAYWRIGHT), json.dumps(built.resolve().as_uri()), json.dumps(CHROMIUM)))
+""" % (json.dumps(PLAYWRIGHT), json.dumps(served(built)), json.dumps(CHROMIUM)))
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=200)
     assert res.returncode == 0, res.stderr
     for r in json.loads(res.stdout.strip().splitlines()[-1]):
         assert r["errs"] == []
-        assert r["step1Prev"] is True and r["step2Prev"] == [False, "#/methods?ch=transit"]
-        assert r["back"] == ["#/methods?ch=survey", "learnnext", False, True]
+        assert r["step1Prev"] is True and r["step2Prev"] == [False, "/how-it-works/transits/"]
+        assert r["back"] == ["/how-it-works/", "learnnext", False, True]
         assert r["leave"][0] is True and r["leave"][1] is False and r["leave"][2] == "H1" and r["leave"][3] == "h-methods"
 
 

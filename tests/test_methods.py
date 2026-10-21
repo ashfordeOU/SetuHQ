@@ -16,6 +16,7 @@ from setuhq.app import APP_JS, build_app
 from setuhq.galaxy import DEFAULT_COVERAGE, galaxy_data, load_coverage
 
 from test_story import run_dir  # noqa: F401  (fixture)
+from conftest import served, site_bundle
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -160,7 +161,7 @@ console.log(JSON.stringify(out));"""
 # ---------- the page ----------
 @pytest.fixture(scope="module")
 def page_html(tmp_path_factory, run_dir):  # noqa: F811
-    return build_app(run_dir, tmp_path_factory.mktemp("app") / "app", title="t").read_text()
+    return site_bundle(build_app(run_dir, tmp_path_factory.mktemp("app") / "app", title="t"))
 
 
 def _route(page, rid):
@@ -171,7 +172,9 @@ def test_every_chapter_has_a_labelled_visual_and_sources(page_html):
     sec = _route(page_html, "methods")
     for cid, title in M.CHAPTERS:
         art = sec.split(f'<article class="mxch" id="mx-{cid}"', 1)[1].split('<article class="mxch"', 1)[0]
-        assert f'href="#/methods?ch={cid}"' in sec
+        from setuhq.routes import url_for
+
+        assert f'href="{url_for("methods", {"ch": cid})}"' in sec
         for fig in re.findall(r'<figure class="mxstage.*?</figure>', art, re.S):
             label = re.search(r'<span class="mxlabel (\w+)">([^<]+)</span>', fig)
             assert label and label.group(2) in (M.LABEL_ILL, M.LABEL_MODEL, M.LABEL_DATA, M.LABEL_SPEC)
@@ -252,7 +255,7 @@ const { chromium } = require(%s);
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob }); const p = await c.newPage();
     const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
     for (const ch of %s) {
-      await p.goto(%s + '#/methods?ch=' + ch); await p.waitForTimeout(500);
+      await p.goto(%s + '#/methods?ch=' + ch); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(500);
       out.push(Object.assign({w, ch, errs: errs.slice()}, await p.evaluate(ch => {
         const art = document.querySelector('#mx-' + ch), vw = document.documentElement.clientWidth;
         const lit = [...art.querySelectorAll('canvas')].map(cv => { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let n = 0; for (let i = 0; i < d.length; i += 4 * 97) if (d[i] + d[i + 1] + d[i + 2] > 60) n++; return n; });
@@ -270,7 +273,7 @@ const { chromium } = require(%s);
   }
   console.log(JSON.stringify(out)); await b.close();
 })();
-""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps([c for c, _ in M.CHAPTERS]), json.dumps(Path(page).resolve().as_uri())))
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps([c for c, _ in M.CHAPTERS]), json.dumps(served(page))))
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=240)
     assert res.returncode == 0, res.stderr
     for r in json.loads(res.stdout.strip().splitlines()[-1]):
@@ -293,9 +296,9 @@ const { chromium } = require(%s);
   const p = await b.newPage(), errs = [], loaded = {};
   p.on('pageerror', e => errs.push(e.message));
   for (const r of ['overview', 'sky', 'galaxy', 'transit', 'explorer', 'sentinels', 'methods', 'mission']) {
-    const t0 = Date.now(); await p.goto(%s + '#/' + r, {timeout: 15000}); loaded[r] = Date.now() - t0;
+    const t0 = Date.now(); await p.goto(%s + '#/' + r, {timeout: 15000}); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); loaded[r] = Date.now() - t0;
   }
-  await p.goto(%s + '#/galaxy'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000});
+  await p.goto(%s + '#/galaxy'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000});
   const name = await p.evaluate(() => { const nt = gx.G.notable.find(n => MX.examples[n.name]); gxSelect(nt.host, nt.planet); return nt.name; });
   await p.click(`#gxcard button[data-gxsys="${name}"]`); await p.waitForTimeout(500);
   const sheet = await p.evaluate(() => ({open: document.querySelector('#mxsheet').open, title: document.querySelector('#mxsheettitle').textContent}));
@@ -303,7 +306,7 @@ const { chromium } = require(%s);
   sheet.closed = await p.evaluate(() => !document.querySelector('#mxsheet').open);
   console.log(JSON.stringify({errs, loaded, sheet, name})); await b.close();
 })();
-""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(Path(page).resolve().as_uri()), json.dumps(Path(page).resolve().as_uri())))
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(served(page)), json.dumps(served(page))))
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=240)
     assert res.returncode == 0, res.stderr
     out = json.loads(res.stdout.strip().splitlines()[-1])
@@ -514,7 +517,7 @@ def test_radio_chapter_labels_every_claim_and_keeps_seti_apart(page_html):
     assert f"{M.cyclotron_mhz(1):.3f} MHz" in art and f"≥ {M.field_for_mhz(14):.1f}–{M.field_for_mhz(21):.1f} G" in art
     # Pulsar timing, linked to the PSR B1257+12 card on the Galaxy tour.
     notable = [n["name"] for n in json.loads(Path("docs/results/notable_planets.json").read_text())["planets"]]
-    assert f'<a href="#/galaxy?tour={notable.index("PSR B1257+12 b") + 1}">Its card on the Galaxy tour ›</a>' in art
+    assert f'<a href="/explore/galaxy/?tour={notable.index("PSR B1257+12 b") + 1}">Its card on the Galaxy tour ›</a>' in art
     assert "an assumed 1.4 M☉ pulsar (its mass is not stored) [calc]" in art
     assert ("radio", "Radio") in M.CHAPTERS
 

@@ -12,11 +12,12 @@ from pathlib import Path
 import pytest
 
 from setuhq import docket as docket_mod
-from setuhq.app import APP_JS, build_app, build_landing
+from setuhq.app import APP_JS, SUBNAV, build_app
 from setuhq.galaxy import (CLASSES, DEFAULT_MAP, DEFAULT_NOTABLE, GALAXY_JS, LY_PER_PC, TEASER_JS, galactic_lb,
                             galactic_xyz, galaxy_data, galaxy_meta, planet_class)
 
 from test_story import run_dir  # noqa: F401  (fixture)
+from conftest import served, site_bundle
 
 # The exoplanet.eu CSV the map JSON was built from (scripts/fetch_exoplanet_map.py), when a local copy is named here.
 CSV = Path(os.environ.get("SETUHQ_EU_CSV", "cache/exoplanet_eu_2026-10-18.csv"))
@@ -128,7 +129,7 @@ def test_galaxy_url_state_round_trips(G):
     assert out[6][1] == ""  # defaults written out are left out again
     assert out[7][1] == "multi=1&cards=methods" and out[7][0]["showcase"] is True
     go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "applyGalaxy(decodeGalaxyView(p.params))" in go and "syncGalaxyURL(false)" in go
+    assert "applyGalaxy(decodeGalaxyView(p.params))" in go and "syncGalaxyURL(false)" not in go  # the address is never rewritten on load
 
 
 def test_class_rule():
@@ -165,7 +166,7 @@ def test_notable_cards_come_from_the_dataset(G):
 
 
 def test_page_states_source_definition_and_what_is_not_plotted(run_dir, tmp_path):  # noqa: F811
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     sec = re.search(r'<section class="route" id="route-galaxy".*?(?=<section class="route" id="route-transit")', page, re.S).group(0)
     assert "Data: The Extrasolar Planets Encyclopaedia (exoplanet.eu), fetched 18 Oct 2026; 8,049 planets with a stored distance" in sec
     assert "broader than the NASA Exoplanet Archive" in sec and "SetuHQ did not find these planets" in sec
@@ -176,18 +177,17 @@ def test_page_states_source_definition_and_what_is_not_plotted(run_dir, tmp_path
     assert table.count("<tr>") == 51
     csv_text = (tmp_path / "app" / "assets" / "data" / "exoplanet_map.csv").read_text()
     assert csv_text.count("\n") == 8049 + 1
-    assert 'href="assets/data/exoplanet_map.csv" download' in sec
-    nav = re.search(r'<nav class="nav" aria-label="Sections">.*?</nav>', page, re.S).group(0)
-    assert nav.index("#/sky") < nav.index("#/galaxy") < nav.index("#/transit")
-    landing = build_landing(run_dir, tmp_path / "index.html", title="t").read_text()
-    assert 'href="app/#/galaxy">Explore every known exoplanet ›</a>' in landing and "teaser-data" in landing
+    assert 'href="/assets/data/exoplanet_map.csv" download' in sec
+    assert [label for label, _, _ in SUBNAV["explore"]][:3] == ["Sky map", "Galaxy", "Catalogue"]
+    home = (tmp_path / "app" / "index.html").read_text()
+    assert 'href="/explore/galaxy/">Explore every known exoplanet ›</a>' in home and "teaser-data" in home
 
 
 def test_no_external_requests_and_reduced_motion():
     for js in (GALAXY_JS, TEASER_JS):
         assert "XMLHttpRequest" not in js and "import(" not in js and "new Image" not in js
         # The one fetch is the map's own data file, a relative path on the same origin.
-        assert re.findall(r"fetch\(([^)]*)\)", js) in ([], ["'assets/data/galaxy.json'"])
+        assert re.findall(r"fetch\(([^)]*)\)", js) in ([], ["'/assets/data/galaxy.json'"])
         assert not re.search(r"https?://(?!www\.w3\.org/2000/svg)", js)
     # Under reduced motion: no drift, no animated intro (a cut), the timeline only on a click; the teaser holds still.
     frame = re.search(r"function gxFrame\(t\)\{.*?\n\}\n", GALAXY_JS, re.S).group(0)
@@ -211,8 +211,8 @@ const { chromium } = require(%s);
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
     const p = await c.newPage(); const errs = [], reqs = [];
     p.on('pageerror', e => errs.push(e.message));
-    p.on('request', r => { if (!/^(file|data|blob):/.test(r.url())) reqs.push(r.url()); });
-    await p.goto(%s + '#/galaxy'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000}); await p.waitForTimeout(800);
+    p.on('request', r => { if (!/^(file|data|blob):|^http:..127.0.0.1:/.test(r.url())) reqs.push(r.url()); });
+    await p.goto(%s + '#/galaxy'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000}); await p.waitForTimeout(800);
     const r = { errs, reqs, gl: await p.evaluate(() => !!gx.gl), overlap: [] };
     for (const v of ['near', 'kepler', 'pimen']) {
       await p.evaluate(v => { gx.auto = false; gxFly(gxPresetCam(v), 0); }, v); await p.waitForTimeout(300);
@@ -226,7 +226,7 @@ const { chromium } = require(%s);
   }
   console.log(JSON.stringify(out)); await b.close();
 })();
-""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(Path(page).resolve().as_uri())))
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(served(page))))
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=180)
     assert res.returncode == 0, res.stderr
     for r in json.loads(res.stdout.strip().splitlines()[-1]):
@@ -274,7 +274,7 @@ def test_pi_men_tess_sectors_match_tess_point():
 
 
 def test_coverage_honesty_labels_and_layers(run_dir, tmp_path):  # noqa: F811
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     gal = re.search(r'<section class="route" id="route-galaxy".*?(?=<section class="route" id="route-transit")', page, re.S).group(0)
     sky = re.search(r'<section class="route" id="route-sky".*?(?=<section class="route" id="route-)', page, re.S).group(0)
     assert "not where planets are" in gal and "Gaia observes the whole sky" in gal and "Where we have looked" in gal
@@ -303,7 +303,7 @@ const launch = () => chromium.launch({ executablePath: %s, args: ['--use-gl=swif
 
 def _run_node(tmp_path, body: str, page_path) -> list:
     script = tmp_path / "probe.js"
-    script.write_text((_BROWSER_HEAD % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM))) + body.replace("__URL__", json.dumps(Path(page_path).resolve().as_uri())))
+    script.write_text((_BROWSER_HEAD % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM))) + body.replace("__URL__", json.dumps(served(page_path))))
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=240)
     assert res.returncode == 0, res.stderr
     return json.loads(res.stdout.strip().splitlines()[-1])
@@ -318,7 +318,7 @@ def test_galaxy_labels_never_cover_the_hud_card_or_each_other(run_dir, tmp_path)
   for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) {
     const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
     const p = await c.newPage();
-    await p.goto(__URL__ + '#/galaxy'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000});
+    await p.goto(__URL__ + '#/galaxy'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000});
     for (const v of ['near', 'kepler', 'galaxy', 'pimen']) {
       await p.evaluate(v => { gx.auto = false; gx.view.view = v; gxFly(gxPresetCam(v), 0); }, v); await p.waitForTimeout(400);
       res.push(Object.assign({w, v}, await p.evaluate(() => {
@@ -365,7 +365,7 @@ def test_no_animation_loop_runs_off_screen_after_hide_show_and_route_change(run_
     window.__raf = {}; const raf = window.requestAnimationFrame.bind(window);
     window.requestAnimationFrame = fn => { const n = fn.name || 'anon'; return raf(t => { window.__raf[n] = (window.__raf[n] || 0) + 1; fn(t); }); };
   });
-  await p.goto(__URL__ + '#/overview'); await p.waitForTimeout(800);
+  await p.goto(__URL__ + '#/overview'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(800);
   await p.evaluate(() => { location.hash = '#/galaxy'; }); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000}); await p.waitForTimeout(600);
   const hidden = v => p.evaluate(v => { Object.defineProperty(document, 'hidden', {configurable: true, get: () => v}); document.dispatchEvent(new Event('visibilitychange')); }, v);
   await hidden(true); await p.waitForTimeout(300); await hidden(false); await p.waitForTimeout(500);

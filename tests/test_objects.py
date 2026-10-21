@@ -15,6 +15,7 @@ from setuhq import catalogue as C
 from setuhq import methods as M
 from setuhq import objects as O
 from setuhq.app import APP_JS
+from conftest import served, site_bundle
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -75,7 +76,7 @@ def test_one_renderer_for_the_system_view_and_the_honesty_label():
 
 
 def test_mentions_link_back_from_the_canonical_pages(built):
-    data = _page_data(built.read_text())
+    data = _page_data(site_bundle(built))
     seen = data["catalogue_meta"]["mentions"]
     assert ["SetuHQ's own Transit case", "#/transit"] in seen["pi Men c"]
     assert ["The run's sky map", "#/sky"] in seen["pi Men"]
@@ -83,11 +84,11 @@ def test_mentions_link_back_from_the_canonical_pages(built):
     for k, n in enumerate(notable):
         assert [f"Galaxy tour, stop {k + 1}", f"#/galaxy?tour={k + 1}"] in seen[n["name"]]
     assert ["Methods: Blocking starlight", "#/methods?ch=imaging"] in seen["HR 8799 b"]
-    assert "function ctSeen(name, skip)" in APP_JS and "${ctSeen(P.name[i]" in APP_JS and "ctSeen(name, '#/sky')" in APP_JS
+    assert "function ctSeen(name, skip)" in APP_JS and "${ctSeen(P.name[i]" in APP_JS and "ctSeen(name, R('#/sky'))" in APP_JS
 
 
 def test_static_mentions_are_links(built):
-    page = built.read_text()
+    page = site_bundle(built)
     sky = _route(page, "sky")
     assert O.obj_link("star", "pi Men", "pi Men ›") in sky and O.obj_link("planet", "pi Men c", "pi Men c ›") in sky
     gal = _route(page, "galaxy")
@@ -109,7 +110,7 @@ def test_static_mentions_are_links(built):
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
 def test_every_object_link_opens_its_page(built, tmp_path):
-    url = built.resolve().as_uri()
+    url = served(built)
     script = tmp_path / "links.js"
     script.write_text("""
 const { chromium } = require(%s);
@@ -117,13 +118,13 @@ const { chromium } = require(%s);
   const b = await chromium.launch({ executablePath: %s, args: ['--allow-file-access-from-files'] });
   const p = await b.newPage({ viewport: { width: 1360, height: 900 } }), errs = [], hrefs = new Set();
   p.on('pageerror', e => errs.push(e.message));
-  const grab = async () => (await p.evaluate(() => [...document.querySelectorAll('a[href^="#/planet/"],a[href^="#/star/"]')].map(a => a.getAttribute('href')))).forEach(h => hrefs.add(h));
-  for (const r of ['sky', 'transit', 'explorer', 'planets', 'methods']) { await p.goto(%s + '#/' + r); await p.waitForTimeout(600); await grab(); }
+  const grab = async () => (await p.evaluate(() => [...document.querySelectorAll('a[href^="/planets/"],a[href^="/stars/"]')].map(a => a.getAttribute('href')))).forEach(h => hrefs.add(h));
+  for (const r of ['sky', 'transit', 'explorer', 'planets', 'methods']) { await p.goto(%s + '#/' + r); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(600); await grab(); }
   await p.evaluate(() => mxOpenSystem('51 Peg b')); await p.waitForTimeout(300); await grab();
   const sheet = await p.evaluate(() => [...document.querySelectorAll('#mxsheetnote a')].map(a => a.getAttribute('href')));
   await p.keyboard.press('Escape');
   const bad = [], seen = [];
-  for (const h of hrefs) { await p.goto(%s + h); await p.waitForTimeout(250);
+  for (const h of hrefs) { await p.goto(new URL(h, %s).href); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(250);
     const t = await p.evaluate(() => document.querySelector('.route:not([hidden]) h1').textContent); seen.push(t); if (/not found/.test(t)) bad.push(h); }
   console.log(JSON.stringify({n: hrefs.size, bad, errs, sheet})); await b.close();
 })();
@@ -132,4 +133,4 @@ const { chromium } = require(%s);
     assert res.returncode == 0, res.stderr
     out = json.loads(res.stdout.strip().splitlines()[-1])
     assert out["n"] > 80 and out["bad"] == [] and out["errs"] == []
-    assert out["sheet"] == ["#/planet/51-peg-b", "#/star/51-peg"]
+    assert out["sheet"] == ["/planets/51-peg-b/", "/stars/51-peg/"]

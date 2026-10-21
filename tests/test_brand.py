@@ -12,12 +12,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_head_names_the_canonical_address_and_an_absolute_social_card():
-    head = brand.head("SetuHQ: the sky, reviewed", "A <test> page", "/", prefix="app/")
+    head = brand.head("SetuHQ: the sky, reviewed", "A <test> page", "/", prefix="/")
     assert '<link rel="canonical" href="https://setuhq.com/">' in head
-    assert '<meta property="og:image" content="https://setuhq.com/app/assets/brand/setuhq-social-card.png">' in head
+    assert '<meta property="og:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png">' in head
     assert '<meta name="twitter:card" content="summary_large_image">' in head
-    assert 'href="app/assets/brand/setuhq-favicon.svg"' in head and "A &lt;test&gt; page" in head
+    assert 'href="/assets/brand/setuhq-favicon.svg"' in head and "A &lt;test&gt; page" in head
     assert brand.page_path("/x/site/docket") == "/docket/"
+    assert brand.page_path("/x/site/evidence/plates") == "/evidence/plates/" and brand.page_path("/tmp/plates") == "/plates/"
 
 
 def test_copied_assets_are_the_brand_kit(tmp_path):
@@ -33,16 +34,18 @@ def test_copied_assets_are_the_brand_kit(tmp_path):
 def test_the_committed_site_serves_from_the_domain_root():
     site = ROOT / "site"
     assert (site / "CNAME").read_text().strip() == "setuhq.com"
-    for page, path in (("index.html", "/"), ("app/index.html", "/app/"), ("docket/index.html", "/docket/"),
-                       ("plate/index.html", "/plate/"), ("report/index.html", "/report/")):
+    for page, path in (("index.html", "/"), ("explore/galaxy/index.html", "/explore/galaxy/"), ("candidates/index.html", "/candidates/"),
+                       ("candidates/case-file/index.html", "/candidates/case-file/"), ("evidence/plates/index.html", "/evidence/plates/"),
+                       ("evidence/report/index.html", "/evidence/report/"), ("docs/index.html", "/docs/")):
         text = (site / page).read_text(encoding="utf-8")
         assert f'<link rel="canonical" href="https://setuhq.com{path}">' in text, page
         assert "og:image" in text and "twitter:card" in text, page
         assert "/EXOPLAN/" not in text and "exoplan-theme" not in text, page
         # every brand file a page names is beside it
         for ref in set(re.findall(r'(?:src|href)="([^"]*assets/brand/[^"]+)"', text)):
-            assert (site / page).parent.joinpath(ref).resolve().exists(), (page, ref)
-    assert (site / "app/assets/brand/setuhq-social-card.png").exists()
+            target = site / ref.lstrip("/") if ref.startswith("/") else (site / page).parent.joinpath(ref)
+            assert target.resolve().exists(), (page, ref)
+    assert (site / "assets/brand/setuhq-social-card.png").exists()
 
 
 def test_no_page_or_template_carries_an_assistant_meta_tag_or_a_session_url():

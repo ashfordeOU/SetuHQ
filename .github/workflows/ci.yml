@@ -31,3 +31,18 @@ jobs:
         run: .venv/bin/python tools/gen_readme_assets.py --check
       - name: Sweep catalogue and append-only ingest ledger (a missing base fails here, CI is set)
         run: .venv/bin/setuhq check-sweep --sweep-dir docs/sweep --ledger-base auto
+
+  site-e2e:
+    # The committed site/ (what pages.yml deploys) in Chromium: every page at 1440 x 900 and 390 x 844, dark and
+    # light, the top bar, menu, search, history, old addresses, 404, a link crawl and axe-core (scripts/site_e2e.sh).
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+      - name: Install Playwright and Chromium (the runner's Node.js)
+        run: |
+          node --version
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: End-to-end test of site/
+        run: scripts/site_e2e.sh site

@@ -34,6 +34,11 @@ def test_licence_files_and_metadata_agree():
 def test_every_source_file_carries_an_spdx_header():
     files = subprocess.run(["git", "ls-files", "*.py", "*.mjs", "*.js", "*.sh", "*.css"], cwd=ROOT, capture_output=True,
                            text=True, check=True).stdout.split()
-    missing = [f for f in files if not f.startswith("site/") and (ROOT / f).exists()
+    # Vendored third-party files (tests/e2e/vendor/) keep their own licence header, named in NOTICE.
+    vendored = [f for f in files if "/vendor/" in f]
+    missing = [f for f in files if not f.startswith("site/") and f not in vendored and (ROOT / f).exists()
                and "SPDX-License-Identifier: AGPL-3.0-only" not in (ROOT / f).read_text(encoding="utf-8")[:400]]
     assert not missing, missing
+    notice = (ROOT / "NOTICE").read_text()
+    for f in vendored:
+        assert f in notice and "License" in (ROOT / f).read_text(encoding="utf-8")[:400], f

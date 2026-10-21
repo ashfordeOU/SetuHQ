@@ -15,6 +15,7 @@ from setuhq.plate import build_plate
 from setuhq.report import build_report
 
 from test_story import run_dir  # noqa: F401  (fixture)
+from conftest import served
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -55,7 +56,7 @@ const { chromium } = require(%s);
   const c = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const p = await c.newPage(); const errs = [];
   p.on('pageerror', e => errs.push(e.message));
-  await p.goto(%s, { waitUntil: 'load' }); await p.waitForTimeout(600);
+  await p.goto(%s, { waitUntil: 'load' }); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(600);
   const out = await p.evaluate(() => {
     const small = [];
     for (const e of document.querySelectorAll('a,button,summary,select,input,[tabindex="0"],[role="button"]')) {
@@ -71,7 +72,7 @@ const { chromium } = require(%s);
   });
   out.errs = errs; console.log(JSON.stringify(out)); await b.close();
 })();
-""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(Path(page).resolve().as_uri())))
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(served(page))))
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=120, env={**os.environ})
     assert res.returncode == 0, res.stderr
     out = json.loads(res.stdout.strip().splitlines()[-1])

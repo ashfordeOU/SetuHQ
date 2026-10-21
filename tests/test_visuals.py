@@ -18,6 +18,7 @@ from setuhq import methods as M
 from setuhq.app import APP_JS
 
 from test_methods import CHROMIUM, HAVE_BROWSER, HAVE_NODE, PLAYWRIGHT, _route
+from conftest import served, site_bundle
 
 
 @pytest.fixture(autouse=True)
@@ -31,7 +32,7 @@ def archive_unreachable(monkeypatch):
 @pytest.fixture(scope="module")
 def page_html(pi_men_app):
     """The app built from the committed pi Men run: its star has a sky position and a known planet to zoom into."""
-    return Path(pi_men_app).read_text()
+    return site_bundle(pi_men_app)
 
 
 def _chapter(page, cid):
@@ -254,7 +255,7 @@ def test_molecules_chapter_animates_modes_linked_to_bands(page_html):
     assert sel.count("<option") == 3 and "ν₁ symmetric stretch · 2.73 µm" in sel and "ν₂ bend · 6.27 µm" in sel
     co2 = art.split('data-mol="CO2"', 1)[1].split("</article>", 1)[0]
     assert "ν₁ symmetric stretch</b> · 7.50 µm · infrared-silent" in co2
-    assert '<a href="#/methods?ch=spectroscopy">the 4.26 µm band in Reading atmospheres ›</a>' in co2
+    assert '<a href="/how-it-works/atmospheres/">the 4.26 µm band in Reading atmospheres ›</a>' in co2
     assert "beyond the 0.5–5.1 µm window" in co2
     h2o = art.split('data-mol="H2O"', 1)[1].split("</article>", 1)[0]
     assert h2o.count("the 2.7 µm band in Reading atmospheres") == 2
@@ -262,7 +263,7 @@ def test_molecules_chapter_animates_modes_linked_to_bands(page_html):
     meta = json.loads(re.search(r'<script id="data" type="application/json">(.*?)</script>', page_html, re.S).group(1))
     assert meta["methods"]["molecules"][0]["modes"] == json.loads(json.dumps(M.mode_table(M.MOLECULES[0])))
     spec = _chapter(page_html, "spectroscopy")
-    assert 'href="#/methods?ch=molecules">Which vibration makes each band ›' in spec
+    assert 'href="/how-it-works/molecules-and-life/">Which vibration makes each band ›' in spec
 
 
 def test_astrometry_quotes_no_gaia_precision(page_html):
@@ -307,15 +308,15 @@ const { chromium } = require(%s);
   // 1. The intro on the Sky: shown, skippable, no pointer capture, and it stops when the section is left.
   {
     const [c, p, errs] = await ctx({viewport: {width: 1360, height: 900}});
-    await p.goto(url + '#/sky'); await p.waitForTimeout(700);
+    await p.goto(url + '#/sky'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(700);
     out.sky = await p.evaluate(() => { const el = document.querySelector('#route-sky .mxintro'), I = mxIntros.sky, sk = el.querySelector('.mxskip').getBoundingClientRect();
       const cv = el.querySelector('canvas'), d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let lit = 0; for (let i = 0; i < d.length; i += 4 * 97) if (d[i] + d[i + 1] + d[i + 2] > 60) lit++;
       return {there: !!el, frames: I.frames, pe: getComputedStyle(el).pointerEvents, cvpe: getComputedStyle(cv).pointerEvents, skip: [sk.width, sk.height], lit, label: el.querySelector('.mxlabel').textContent}; });
-    await p.goto(url + '#/overview'); await p.waitForTimeout(300);
+    await p.evaluate(() => { location.hash = '#/overview'; }); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(300);
     out.left = await p.evaluate(() => ({done: mxIntros.sky.done, raf: mxIntros.sky.raf, f: mxIntros.sky.frames}));
     await p.waitForTimeout(400);
     out.left.f2 = await p.evaluate(() => mxIntros.sky.frames);
-    await p.goto(url + '#/sky'); await p.waitForTimeout(300);
+    await p.evaluate(() => { location.hash = '#/sky'; }); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(300);
     out.again = await p.evaluate(() => !!document.querySelector('#route-sky .mxintro'));   // once per session
     // The zoom from the sky marker: a lens animation into the system view, labelled.
     await p.click('#route-sky .skyzoom'); await p.waitForTimeout(120);
@@ -327,7 +328,7 @@ const { chromium } = require(%s);
   // 2. The Galaxy intro is skipped by its button; the Galaxy's zoom starts at the selected star.
   {
     const [c, p, errs] = await ctx({viewport: {width: 390, height: 844}, isMobile: true, hasTouch: true});
-    await p.goto(url + '#/galaxy'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000}); await p.waitForTimeout(300);
+    await p.goto(url + '#/galaxy'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 20000}); await p.waitForTimeout(300);
     const before = await p.evaluate(() => !!document.querySelector('#gxstage .mxintro'));
     await p.click('#gxstage .mxskip'); await p.waitForTimeout(600);
     out.gal = {before, after: await p.evaluate(() => ({gone: !document.querySelector('#gxstage .mxintro'), done: mxIntros.galaxy.done, wide: document.documentElement.scrollWidth > document.documentElement.clientWidth}))};
@@ -342,7 +343,7 @@ const { chromium } = require(%s);
   out.skip = {};
   for (const how of ['click', 'enter']) {
     const [c, p] = await ctx({viewport: {width: 1360, height: 900}});
-    await p.goto(url + '#/sky'); await p.waitForTimeout(400);
+    await p.goto(url + '#/sky'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(400);
     if (how === 'click') await p.click('#route-sky .mxskip'); else { await p.focus('#route-sky .mxskip'); await p.keyboard.press('Enter'); }
     await p.waitForTimeout(300);
     out.skip[how] = await p.evaluate(() => document.querySelector('#announce').textContent);
@@ -351,11 +352,11 @@ const { chromium } = require(%s);
   // 3. Reduced motion: no intro at all, and the sheet opens without the lens (the note still says what the zoom is).
   {
     const [c, p, errs] = await ctx({viewport: {width: 1360, height: 900}, reducedMotion: 'reduce'});
-    await p.goto(url + '#/sky'); await p.waitForTimeout(500);
+    await p.goto(url + '#/sky'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(500);
     out.rm = {intro: await p.evaluate(() => !!document.querySelector('.mxintro'))};
     await p.click('#route-sky .skyzoom'); await p.waitForTimeout(150);
     Object.assign(out.rm, await p.evaluate(() => { const d = document.querySelector('#mxsheet'); return {open: d.open, anim: d.getAnimations().length, lens: !!d.querySelector('.mxlens'), note: document.querySelector('#mxsheetzoom').hidden ? '' : document.querySelector('#mxsheetzoom').textContent}; }));
-    await p.goto(url + '#/galaxy'); await p.waitForTimeout(800);
+    await p.goto(url + '#/galaxy'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(800);
     out.rm.galIntro = await p.evaluate(() => !!document.querySelector('.mxintro'));
     out.rmErrs = errs; await c.close();
   }
@@ -363,12 +364,12 @@ const { chromium } = require(%s);
   out.stages = [];
   for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) {
     const [c, p, errs] = await ctx({viewport: {width: w, height: h}, isMobile: mob, hasTouch: mob});
-    await p.goto(url + '#/methods?ch=imaging'); await p.waitForTimeout(500);
+    await p.goto(url + '#/methods?ch=imaging'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(500);
     const cg = await p.evaluate(() => { const fig = document.querySelector('#mx-imaging figure[data-vis="cgfam"]'), sel = fig.querySelector('.mxctl select:not(.mxspeed select)'), st = fig._mx, r = [];
       for (const f of ['lyot', 'apod', 'vortex', 'adi']) for (const t of [0.05, 0.3, 0.55, 0.85]) { sel.value = f; sel.dispatchEvent(new Event('change')); st.t = t; mxDraw(st);
         const d = st.ctx.getImageData(0, 0, st.cv.width, st.cv.height).data; let lit = 0; for (let i = 0; i < d.length; i += 4 * 97) if (d[i] + d[i + 1] + d[i + 2] > 60) lit++; r.push([f, t, lit, st.exag]); }
       return r; });
-    await p.goto(url + '#/methods?ch=molecules'); await p.waitForTimeout(400);
+    await p.goto(url + '#/methods?ch=molecules'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(400);
     const mol = await p.evaluate(() => { const fig = document.querySelector('#mx-molecules figure[data-vis="molecule"]'), st = fig._mx, ms = fig.querySelector('select[data-ctl="mode"]'), mm = fig.querySelector('.mxctl select:not(.mxspeed select):not([data-ctl])'), r = [];
       for (const m of MX.molecules){ mm.value = m.id; mm.dispatchEvent(new Event('change'));
         const n = (m.modes || []).length; if (ms.options.length !== Math.max(1, n) || ms.disabled !== !n) r.push(['options', m.id, ms.options.length]);
@@ -384,7 +385,7 @@ const { chromium } = require(%s);
   }
   console.log(JSON.stringify(out)); await b.close();
 })();
-""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(Path(page).resolve().as_uri())))
+""" % (json.dumps(PLAYWRIGHT), json.dumps(CHROMIUM), json.dumps(served(page))))
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=300)
     assert res.returncode == 0, res.stderr
     out = json.loads(res.stdout.strip().splitlines()[-1])

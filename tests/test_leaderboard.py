@@ -14,6 +14,7 @@ import pytest
 
 from setuhq import leaderboard as L
 from setuhq.cli import main as cli_main
+from conftest import served, site_bundle
 
 ROOT = Path(__file__).resolve().parents[1]
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
@@ -391,9 +392,11 @@ def _route(page, rid):
 
 
 def test_app_leaderboard_route_shows_the_table_rules_and_hash(pi_men_app):
-    page = pi_men_app.read_text()
+    page = site_bundle(pi_men_app)
     sec = _route(page, "leaderboard")
-    assert 'id="h-leaderboard"' in sec and '<a href="#/sentinels">' in sec
+    from setuhq.app import ROUTE_META
+
+    assert 'id="h-leaderboard"' in sec and ROUTE_META["leaderboard"]["crumbs"] == [("Evidence", "#/sentinels")]
     assert RESULTS["sample_sha256"] in sec and RESULTS["inputs_sha256"] in sec
     assert sec.count("<tr>") - sec.count("<thead><tr>") == len(RESULTS["entries"])
     c = H["completeness_all_stars"]
@@ -406,12 +409,12 @@ def test_app_leaderboard_route_shows_the_table_rules_and_hash(pi_men_app):
 
     assert ATTRIBUTION in sec  # the app's attribution, provider-aware since the multi-provider Sentinels
     assert "SuperIntelligence" not in sec and "confirmed" not in sec.lower().replace("unconfirmed", "")
-    assert 'href="#/leaderboard"' in _route(page, "sentinels")
+    assert 'href="/evidence/leaderboard/"' in _route(page, "sentinels")
 
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
 def test_leaderboard_in_the_browser_both_themes_phone_and_desktop(pi_men_app, tmp_path):
-    url = pi_men_app.resolve().as_uri()
+    url = served(pi_men_app)
     script = tmp_path / "probe.js"
     script.write_text("""
 const { chromium } = require(%s);
@@ -423,14 +426,14 @@ const { chromium } = require(%s);
     await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = [];
     p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
-    p.on('request', r => { if (!/^(file|data|blob):/.test(r.url())) ext.push(r.url()); });
-    await p.goto(%s + '#/leaderboard'); await p.waitForTimeout(900);
+    p.on('request', r => { if (!/^(file|data|blob):|^http:..127.0.0.1:/.test(r.url())) ext.push(r.url()); });
+    await p.goto(%s + '#/leaderboard'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(900);
     const r = await p.evaluate(() => {
       const vw = document.documentElement.clientWidth, sec = document.querySelector('.route:not([hidden])');
       const small = [...sec.querySelectorAll('a,button,select,input,summary')].filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.width < 44 || r.height < 44) && !e.closest('p:not(.eyebrow),td,dd,figcaption'); }).map(e => e.className || e.tagName);
       const wide = [...sec.querySelectorAll('*')].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.right > vw + 1; }).map(e => e.tagName + '.' + e.className);
       const bg = getComputedStyle(sec.querySelector('h1')).color;  // the ink follows the theme
-      const crumb = sec.querySelector('.eyebrow .parent a').getBoundingClientRect();
+      const crumb = document.querySelector('#crumbs a').getBoundingClientRect();
       return { id: sec.id, hs: document.documentElement.scrollWidth > vw, small, wide, bg, crumb: crumb.height,
                rows: sec.querySelectorAll('table.lbtable tbody tr').length,
                label: getComputedStyle(sec.querySelector('table.lbtable td:not(.rk)'), '::before').content };
@@ -448,7 +451,7 @@ const { chromium } = require(%s);
     for r in data["out"]:
         assert r["errs"] == [] and r["id"] == "route-leaderboard", r
         assert not r["hs"] and r["wide"] == [], r
-        assert r["small"] == [] and r["crumb"] >= 44, r
+        assert r["small"] == [] and (r["crumb"] >= 44 or r["w"] > 700), r  # 44 px targets on a phone
         assert r["rows"] == len(RESULTS["entries"])
         if r["w"] == 390:
             assert r["label"].strip('"') == "Youden J"  # each phone cell names its column
