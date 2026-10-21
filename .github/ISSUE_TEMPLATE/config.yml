@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability (private)
+    url: https://github.com/ashfordeOU/SetuHQ/security/advisories/new
+    about: Report it privately through GitHub's private vulnerability reporting, as SECURITY.md explains. Never in a public issue.
+  - name: Commercial licence, SetuHQ Pro or a custom study
+    url: mailto:contact@ashforde.org?subject=SetuHQ%20commercial%20enquiry
+    about: Write to contact@ashforde.org (Ashforde OÜ). See LICENSING.md and docs/PRO.md.
+  - name: Contributing a sweep or a leaderboard entry
+    url: https://github.com/ashfordeOU/SetuHQ/blob/main/CONTRIBUTING.md
+    about: The guide for sweep bundles, leaderboard submissions and code, and the CLA.
