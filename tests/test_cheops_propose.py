@@ -13,7 +13,8 @@ Fixtures (tests/fixtures/cheops_propose/):
 * ``dace_wasp18_cone.json`` is a DACE answer recorded on 21 October 2026 with its real column set, including the PI
   columns, whose values were replaced by fakes (``FAKEPI-*``, 9000xx); one visit was set to not public. The code must
   never store those columns: the tests check every file it writes.
-* ``lint/`` holds an independent review's bypass cases for the anonymity lint.
+* ``lint/`` and ``lint/review15/`` hold two independent reviews' bypass cases for the anonymity lint (text files
+  and PDFs: page text, metadata, an image, outlined text, a caption pypdf's layout extraction drops).
 """
 
 import json
@@ -50,7 +51,9 @@ def fixture_answer(url: str, data: dict | None) -> bytes:
             return (FIX / "mast_TOI_1987.json").read_bytes()
         return b'{"resolvedCoordinate": []}'
     if "cheops-webapp" in url:
-        if "24.354" in url:
+        import urllib.parse
+
+        if "24.354" in url or '"WASP-18"' in urllib.parse.unquote_plus(url):
             return (FIX / "dace_wasp18_cone.json").read_bytes()
         raise sources.NotFound(f"{url}: HTTP 404")  # DACE's answer to an empty search
     if "exoplanetarchive" in url:
@@ -746,3 +749,159 @@ def test_mcp_server_marks_the_tool_as_a_write_and_hides_it_over_plain_http():
     read_only = ann.read_only_hint if hasattr(ann, "read_only_hint") else ann.readOnlyHint
     assert read_only is False
     assert "cheops_proposal_pack" not in names(build_server(allow_writes=False))
+
+
+# ---------------------------------------------------------------- second review: masking, Unicode, PDFs, cache
+
+R15 = LINT / "review15"
+
+
+@pytest.mark.parametrize("text", [
+    "Author page: https://arxiv.org/a/doe_j_1 lists the papers.",
+    "My homepage https://cheops.unige.ch/~jdoe/ has the code.",
+    "See https://dace.unige.ch/profile/jdoe for the details.",
+    "Personal site unige.ch/~doe has it.",
+    "This is built for our tools.",
+])
+def test_masking_never_hides_personal_pages(text):
+    assert [f for f in draft.lint_text(text) if f["level"] == "warn"], text
+
+
+@pytest.mark.parametrize("text", [
+    "Checked with https://cheops.unige.ch/pht2/search-reserved-targets/ today.",
+    "The ETC (https://cheops.unige.ch/pht2/exposure-time-calculator/) gives 60 ppm.",
+    "The archive browser https://cheops.unige.ch/archive_browser/ lists no visit.",
+    "See https://arxiv.org/abs/2406.01716 and https://doi.org/10.1051/0004-6361/202348576.",
+])
+def test_official_tool_pages_and_papers_are_not_flagged(text):
+    assert [f for f in draft.lint_text(text) if f["level"] == "warn"] == [], draft.lint_text(text)
+
+
+@pytest.mark.parametrize("text", [
+    "Our previous wоrk showed this.",          # Cyrillic o
+    "Оur previous work showed this.",           # Cyrillic O
+    "Our previous w​ork showed this.",          # zero-width space
+    "Ｏｕｒ previous work showed this.",  # fullwidth "Our"
+    "Dr Jаne Dоe leads this.",              # Cyrillic a and o
+    "Contact jane.doe＠unige.ch today.",          # fullwidth at
+])
+def test_look_alike_and_invisible_characters_are_caught(text):
+    found = draft.lint_text(text)
+    assert [f for f in found if f["level"] == "warn"], text
+    assert any(f["rule"] == "normalised" for f in found)
+
+
+def test_findings_keep_the_original_line_numbers():
+    text = "Neutral line.\n​​Still neutral.\nOur previous wоrk.\n"
+    found = [f for f in draft.lint_text(text) if f["level"] == "warn"]
+    assert found and {f["line"] for f in found} == {3} and "wоrk" in found[0]["match"]
+
+
+def test_every_line_of_the_second_review_cases_is_caught():
+    for name in ("new.txt", "new2.txt"):
+        text = (R15 / name).read_text()
+        lines = [i for i, line in enumerate(text.splitlines(), 1) if line.strip()]
+        for names in (["Jane Doe"], []):
+            caught = _warn_lines(draft.lint_text(text, author_names=names))
+            assert set(lines) <= caught, (name, names, [text.splitlines()[i - 1] for i in set(lines) - caught])
+
+
+@pytest.mark.parametrize("text", [
+    "Building on the authors' prior work, we refine the ephemeris.",
+    "This extends the proposers' earlier CHEOPS programme.",
+    "The light curve was obtained by this team.",
+    "As shown in Paper I of this series, the planet is inflated.",
+    "Using the code we developed (ref. 12) we fit the data.",
+    "We thank the Swiss National Science Foundation for support.",
+    "Data from the IAA-CSIC and the OCA are used.",
+])
+def test_third_person_self_reference_funding_and_hyphenated_institutions(text):
+    assert [f for f in draft.lint_text(text) if f["level"] == "warn"], text
+
+
+def test_pdf_metadata_images_and_hidden_captions():
+    pytest.importorskip("pypdf")
+    meta = draft.lint_files([R15 / "meta.pdf"], author_names=["Jane Doe"])
+    assert any(f["file"] == "meta.pdf (metadata)" and f["rule"].startswith("author-name") for f in meta)
+    image = draft.lint_files([R15 / "image.pdf"])
+    assert any(f["rule"] == "images" and f["match"] == "1 image not scanned (text in images cannot be checked)"
+               for f in image)
+    caption = draft.lint_files([R15 / "caption.pdf"])
+    assert {"self-reference", "institution"} <= {f["rule"] for f in caption if f["level"] == "warn"}
+    with pytest.raises(draft.LintInputError, match="image not scanned"):
+        draft.lint_files([R15 / "outlined.pdf"])
+
+
+def test_lint_cli_prints_the_images_note(capsys):
+    pytest.importorskip("pypdf")
+    from setuhq.cli import main
+
+    main(["propose", "lint", str(R15 / "image.pdf")])
+    assert "1 image not scanned (text in images cannot be checked)" in capsys.readouterr().out
+
+
+def _raw_cache_entry(fetcher, ra=24.354305, dec=-45.67788):
+    """A cache entry as 32dd20e wrote it: the raw DACE answer, metadata without the 'filtered' marker."""
+    params = {"limit": "2000", "filters": json.dumps({"pos": {"ra": ra, "dec": dec, "radius": 30.0 / 3600.0}}),
+              "sort": "{}"}
+    import urllib.parse
+
+    full = sources.DACE_CHEOPS + "?" + urllib.parse.urlencode(params)
+    path = fetcher._cache_path(full, ".json")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    raw = (FIX / "dace_wasp18_cone.json").read_bytes()
+    path.write_bytes(raw)
+    path.with_suffix(".json.json").write_text(json.dumps({"url": full, "fetched_at": "2026-10-21T10:00:00+00:00",
+                                                           "sha256": "x"}))
+    return path
+
+
+def test_the_startup_sweep_deletes_raw_entries(tmp_path):
+    cache = tmp_path / "cache"
+    old = _raw_cache_entry(sources.Fetcher(cache_dir=cache))
+    swept = sources.Fetcher(cache_dir=cache).swept
+    assert old.name in swept and not old.exists() and not old.with_suffix(".json.json").exists()
+
+
+def test_an_old_raw_cache_entry_is_swept_on_startup(tmp_path):
+    cache = tmp_path / "cache"
+    old = _raw_cache_entry(sources.Fetcher(cache_dir=cache))
+    orphan = cache / "2026-10-20-0123456789abcdef.json"
+    orphan.write_bytes((FIX / "dace_wasp18_cone.json").read_bytes())  # raw data with no metadata at all
+    p = pack.build_pack("Synthetic star", tmp_path / "pack", root=ROOT, now=datetime(2026, 10, 21, 12, tzinfo=UTC),
+                        fetcher=FixtureFetcher(cache_dir=cache), ra=24.354305, dec=-45.67788, coord_source="simbad")
+    assert not orphan.exists()
+    # the raw entry was deleted; the path now holds the filtered copy fetched again
+    assert json.loads(old.with_suffix(".json.json").read_text()).get("filtered")
+    arch = p["status"]["archive"]
+    assert arch["n_public"] == 2 and arch["n_not_public"] == 1
+    for f in [*cache.rglob("*"), *(tmp_path / "pack").rglob("*")]:
+        if f.is_file():
+            assert not any(x in f.read_text(errors="replace") for x in FAKE_PI), f
+
+
+def test_an_unfiltered_cache_hit_is_never_read(tmp_path):
+    cache = tmp_path / "cache"
+    fetcher = FixtureFetcher(cache_dir=cache)  # the startup sweep has run on an empty cache
+    old = _raw_cache_entry(fetcher)
+    got = sources.dace_cone(fetcher, 24.354305, -45.67788, 30.0 / 3600.0)
+    assert len(got["public_visits"]) == 2 and got["n_not_public"] == 1 and got["fetched"].filtered
+    assert old.exists() and not any(x in old.read_text() for x in FAKE_PI)  # replaced by the filtered copy
+
+
+def test_dace_name_search_keeps_only_the_named_object():
+    assert sources.same_object("WASP-18", "WASP-18") and sources.same_object("WASP-18", "WASP-18 b")
+    assert sources.same_object("TOI-1987", "TOI-1987.01")
+    assert not sources.same_object("WASP-18", "WASP-187 b") and not sources.same_object("WASP-18", "WASP-180")
+
+
+def test_dace_is_also_queried_by_the_users_name_and_toi_tic_aliases(tmp_path):
+    f = FixtureFetcher(cache_dir=None)
+    p = pack.build_pack("WASP-18", tmp_path / "pack", root=ROOT, now=datetime(2026, 10, 21, 12, tzinfo=UTC), fetcher=f)
+    # SIMBAD does not know "WASP-18" in the fixtures, so only the user's own name finds the visits
+    assert p["status"]["archive"]["n_public"] == 2
+    queries = [s.get("query") for s in p["sources"] if s.get("query")]
+    assert any(q == "name WASP-18" for q in queries)
+    q = pack.build_pack("TOI-1987", tmp_path / "p2", root=ROOT, now=datetime(2026, 10, 21, 12, tzinfo=UTC),
+                        fetcher=FixtureFetcher(cache_dir=None))
+    assert q["status"]["archive"]["checked"] and set(q["status"]["archive"]["no_match_queries"]) >= {"name", "name2"}

@@ -90,6 +90,9 @@ class Fetcher:
     log: list[Fetched] = field(default_factory=list)
     _last: dict = field(default_factory=dict)
 
+    def __post_init__(self):
+        self.swept = sweep_unfiltered_cache(self.cache_dir) if self.cache_dir is not None else []
+
     def _cache_path(self, key: str, suffix: str) -> Path | None:
         if self.cache_dir is None:
             return None
@@ -110,6 +113,17 @@ class Fetcher:
                 cpath = Path(self.cache_dir) / f"{Path(cache_name).stem}__fetched-{day}{Path(cache_name).suffix}"
             else:
                 cpath = self._cache_path(key, suffix)
+        if cpath and transform is not None and cpath.exists():
+            # an entry for a filtered source that is not marked filtered (an older or a foreign cache) may hold the
+            # raw answer: delete it and fetch again, never read it
+            mpath = cpath.with_suffix(cpath.suffix + ".json")
+            try:
+                marked = bool(json.loads(mpath.read_text()).get("filtered"))
+            except (OSError, ValueError):
+                marked = False
+            if not marked:
+                cpath.unlink(missing_ok=True)
+                mpath.unlink(missing_ok=True)
         if cpath and cpath.exists() and cpath.with_suffix(cpath.suffix + ".json").exists():
             meta = json.loads(cpath.with_suffix(cpath.suffix + ".json").read_text())
             got = Fetched(meta["url"], cpath.read_bytes(), meta["fetched_at"], cached=True,
@@ -158,6 +172,42 @@ class Fetcher:
                 error = exc
             time.sleep(2.0 * (attempt + 1))
         raise SourceError(f"{full}: {error}")
+
+
+RAW_DACE_MARKERS = (b'"pi_name"', b'"pi_uid"')
+
+
+def sweep_unfiltered_cache(cache_dir: Path | None) -> list[str]:
+    """Delete every cache entry that holds, or may hold, a raw DACE answer: a DACE entry whose metadata lacks the
+    ``filtered`` marker, or any cached file containing DACE's PI columns. Returns the names deleted."""
+    if cache_dir is None or not Path(cache_dir).is_dir():
+        return []
+    gone = []
+    for f in sorted(Path(cache_dir).iterdir()):
+        if not f.is_file():
+            continue
+        if f.name.endswith(".json.json") or (f.suffix == ".json" and f.with_suffix("").suffix in (".json", ".html", ".csv", ".bin")):
+            try:
+                meta = json.loads(f.read_text())
+            except (OSError, ValueError):
+                continue
+            if isinstance(meta, dict) and "cheops-webapp" in str(meta.get("url", "")) and not meta.get("filtered"):
+                data = Path(str(f)[: -len(".json")])
+                for x in (data, f):
+                    if x.exists():
+                        x.unlink()
+                        gone.append(x.name)
+            continue
+    for f in sorted(Path(cache_dir).iterdir()):
+        if f.is_file():
+            head = f.read_bytes()
+            if any(m in head for m in RAW_DACE_MARKERS):
+                meta = Path(str(f) + ".json")
+                for x in (f, meta):
+                    if x.exists():
+                        x.unlink()
+                        gone.append(x.name)
+    return gone
 
 
 def retry_after(value: str | None, default: float = 5.0, cap: float = 120.0) -> float:
@@ -354,9 +404,10 @@ def parse_dace_visits(raw: bytes) -> list[dict]:
     return [{k: cols[k][i] for k in KEEP_VISIT_FIELDS if k in cols and i < len(cols[k])} for i in range(n)]
 
 
-def filter_dace(raw: bytes) -> tuple[bytes, str]:
-    """The only form of a DACE answer that is kept: public visits (public fields) and a bare count of the rest."""
-    visits = parse_dace_visits(raw)
+def filter_dace(raw: bytes, keep=None) -> tuple[bytes, str]:
+    """The only form of a DACE answer that is kept: public visits (public fields) and a bare count of the rest.
+    ``keep`` (a visit -> bool) drops visits of other objects first, so the count is for this target only."""
+    visits = [v for v in parse_dace_visits(raw) if keep is None or keep(v)]
     public = [v for v in visits if v.get("status_published") is True]
     doc = {"filtered": DACE_FILTER_NOTE, "public_visits": public, "n_not_public": len(visits) - len(public)}
     return json.dumps(doc, indent=1).encode(), DACE_FILTER_NOTE
@@ -367,23 +418,36 @@ def read_filtered_dace(body: bytes) -> tuple[list[dict], int]:
     return doc.get("public_visits", []), int(doc.get("n_not_public", 0))
 
 
-def _dace(fetcher: Fetcher, flt: dict) -> dict:
+def _dace(fetcher: Fetcher, flt: dict, keep=None, query: str | None = None) -> dict:
     """One DACE search: {"public_visits", "n_not_public", "fetched" (or None), "no_match"}."""
     params = {"limit": "2000", "filters": json.dumps(flt), "sort": "{}"}
     try:
-        got = fetcher.get(DACE_CHEOPS, params, suffix=".json", transform=filter_dace)
+        got = fetcher.get(DACE_CHEOPS, params, suffix=".json", transform=lambda raw: filter_dace(raw, keep))
     except NotFound:
-        return {"public_visits": [], "n_not_public": 0, "fetched": None, "no_match": True}
+        return {"public_visits": [], "n_not_public": 0, "fetched": None, "no_match": True, "query": query}
     public, hidden = read_filtered_dace(got.body)
-    return {"public_visits": public, "n_not_public": hidden, "fetched": got, "no_match": False}
+    return {"public_visits": public, "n_not_public": hidden, "fetched": got, "no_match": False, "query": query}
 
 
 def dace_cone(fetcher: Fetcher, ra: float, dec: float, radius_deg: float) -> dict:
-    return _dace(fetcher, {"pos": {"ra": ra, "dec": dec, "radius": radius_deg}})
+    return _dace(fetcher, {"pos": {"ra": ra, "dec": dec, "radius": radius_deg}},
+                 query=f"cone RA {ra:.5f} Dec {dec:.5f} radius {radius_deg * 3600:.0f} arcsec")
+
+
+def same_object(query: str, catalogue_name: str) -> bool:
+    """Whether DACE's object name is the queried star (or one of its planets): DACE's search is a substring match,
+    so "WASP-18" also returns "WASP-187 b"."""
+    from setuhq.propose.targets import normalise
+
+    q = normalise(query)
+    name = " ".join(str(catalogue_name or "").split())
+    base = re.sub(r"(?:\s+[b-z]|\.\d{1,2})$", "", name)  # a planet letter ("WASP-18 b") or a TOI suffix (".01")
+    return bool(q) and q in (normalise(name), normalise(base))
 
 
 def dace_name(fetcher: Fetcher, name: str) -> dict:
-    return _dace(fetcher, {"obj_id_catname": {"contains": [name]}})
+    return _dace(fetcher, {"obj_id_catname": {"contains": [name]}},
+                 keep=lambda v: same_object(name, v.get("obj_id_catname", "")), query=f"name {name}")
 
 
 # ---------------------------------------------------------------- published TOI ephemeris

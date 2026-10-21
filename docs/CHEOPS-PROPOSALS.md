@@ -77,10 +77,14 @@ Both were read on 21 October 2026. If they disagree with the pack, they win.
   - by every SIMBAD alias;
   - by position within 20″. Entries within 2′ are listed for a manual line-of-sight check.
 - **Prior observations** come from the public metadata in [DACE](https://dace.unige.ch/), the public query
-  interface of the CHEOPS Mission Archive, by position (30″) and by name. Each answer is filtered in memory
+  interface of the CHEOPS Mission Archive, by position (30″) and by name: your own target name, SIMBAD's main
+  identifier, and the TOI and TIC aliases. DACE's name search matches substrings, so the pack keeps only visits
+  of that object or its planets ("WASP-18 b", not "WASP-187 b"). Each answer is filtered in memory
   before anything is stored: the pack and the cache keep only public visits' public fields (ids, file keys,
   programme IDs, dates) and a bare count of visits not yet public. No proprietary data, and no PI name or id,
-  is ever written to disk. DACE answers an empty search with HTTP 404, so the pack reports "no match found
+  is ever written to disk. A cache entry for DACE that lacks the filter marker (from an older version, or
+  written by anything else) is deleted on start-up and never read; so is any cached file holding DACE's PI
+  columns. DACE answers an empty search with HTTP 404, so the pack reports "no match found
   (DACE does not distinguish an empty result from a missing endpoint)". For every other source, a 404 means
   "not checked".
 - **Sun constraint.** One geometric screen is applied. ESA's Sky Visibility page gives a 117° Sun-exclusion
@@ -135,24 +139,37 @@ Scheduling Feasibility Checker (both on [ESA Datalabs](https://www.cosmos.esa.in
 read every document and file name yourself before submitting. The P&P requires double-anonymous proposals,
 including file names. The lint warns about:
 
-- e-mail addresses, including obfuscated ones ("jane.doe [at] unige.ch"), and ORCID iDs;
+- e-mail addresses, including obfuscated ones ("jane.doe [at] unige.ch", "jane.doe@ unige.ch"), and ORCID iDs;
 - names you give with `--author-name`, in their usual variants: "Jane Doe", "J. Doe", "Doe, J.", "Jane Doe's",
   and the surname alone in a citation ("Doe et al.", "Doe (2023)"). A third-person self-citation is what the
   P&P recommends, so treat that warning as a prompt to check the sentence around it, not as an error;
-- institutions, case-insensitively: generic words ("university of ...", "institute", "observatory"), a short
-  built-in list of major institutions ("ETH Zurich", "Harvard", "UniGE" and others), and any you give with
-  `--institution`. Links to the public tools a proposal must cite, such as the Target Checker at
-  cheops.unige.ch, are not counted;
+- institutions, case-insensitively and across hyphen joins ("IAA-CSIC"): generic words ("university of ...",
+  "institute", "observatory"), a short built-in list of major institutions ("ETH Zurich", "Harvard", "UniGE",
+  "OCA" and others), and any you give with `--institution`;
 - self-reference: "my previous paper", "our earlier CHEOPS programme", "our 2023 study", "our work (Doe et al.
-  2023)", "our team", "we have previously shown", "we are the team that discovered";
-- titles before names, funding acknowledgements and links to personal pages;
+  2023)", "our team", "our tools", "we have previously shown", "we are the team that discovered", "the code we
+  developed". In the third person too: "the authors' prior work", "the proposers' earlier programme", "this
+  team", "Paper I of this series";
+- titles before names, and funding acknowledgements ("We thank the ... Foundation for support");
+- personal pages: code hosts, ORCID, arXiv author pages (`arxiv.org/a/...`), and `~user`, `/profile/` or
+  similar paths on any host;
 - file names that contain an e-mail address, an ORCID iD, an institution, a given name (`Doe_SJ.md`,
   `jdoe.md`) or initials.
 
-Text is scanned paragraph by paragraph, so a phrase wrapped over two lines is still caught. A PDF is read with
-[pypdf](https://pypi.org/project/pypdf/) when it is installed (`pip install pypdf`, or the `propose` extra).
-Without pypdf, or when a PDF has no extractable text, `setuhq propose lint` refuses it with exit code 2 rather
-than reporting it clean, and the same goes for any other non-text file. Exit code 1 means warnings were found.
+Before scanning, the lint normalises a copy of the text: compatibility forms such as fullwidth letters are
+folded (NFKC), invisible format characters such as zero-width spaces are removed, and Cyrillic and Greek
+look-alike letters are folded to Latin. Findings still quote your original text and give its original line
+numbers. Text is scanned paragraph by paragraph, so a phrase wrapped over two lines is still caught. Only the
+exact public tool pages a proposal must cite are exempt from the institution and self-reference rules: the
+Target Checker, the ETC and the archive browser at cheops.unige.ch, arXiv abstract pages and DOIs. Any other
+page on those hosts is checked, and e-mail, name and personal-page rules always see the full text.
+
+PDFs are read with [pypdf](https://pypi.org/project/pypdf/) (`pip install pypdf`, or the `propose` extra). The
+lint checks the page text, every string drawn by the PDF's text operators (layout extraction can drop some),
+and the metadata (Author, Title, Subject, Creator, Producer, Keywords). It reports "N images not scanned (text
+in images cannot be checked)". Without pypdf, or when a PDF has no extractable text, `setuhq propose lint`
+refuses it with exit code 2 rather than reporting it clean, and the same goes for any other non-text file.
+Exit code 1 means warnings were found.
 
 The lint also notes where a draft names public software such as SetuHQ. Citing it is fine, but if you develop
 it, cite it neutrally. The lint only warns; it never edits. The P&P (section 4.13) also asks you to acknowledge

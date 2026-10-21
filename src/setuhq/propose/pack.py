@@ -163,12 +163,23 @@ def build_pack(target: str, out_dir: Path, *, root: Path, programme: str = "regu
         answers = []
         if use_ra is not None:
             answers.append(("cone", sources.dace_cone(fetcher, use_ra, use_dec, ARCHIVE_RADIUS_ARCSEC / 3600.0)))
-        answers.append(("name", sources.dace_name(fetcher, (resolved.main_id if resolved else None) or target)))
+        # DACE knows stars by their catalogue names (WASP-18, TOI-1987), not always by SIMBAD's main identifier
+        # (HD 10069): query the user's name, SIMBAD's, and the TOI and TIC aliases, each once.
+        names, keys = [], set()
+        for n in [target, resolved.main_id if resolved else None,
+                  next((a for a in aliases if a.upper().startswith("TOI")), None),
+                  next((a for a in aliases if a.upper().startswith("TIC")), None)]:
+            if n and targets.normalise(n) not in keys:
+                keys.add(targets.normalise(n))
+                names.append(n)
+        for i, n in enumerate(names):
+            answers.append((f"name{i + 1}" if i else "name", sources.dace_name(fetcher, n)))
         public, seen, no_match = [], set(), []
         for kind, a in answers:
             if a["fetched"] is not None:  # only the filtered copy exists: public visits and a count
                 provenance.append(_save(out_dir, f"archive-{kind}.json", a["fetched"])
-                                  | {"what": f"DACE CHEOPS visits, {kind} search (filtered: public fields only)"})
+                                  | {"what": f"DACE CHEOPS visits, {kind} search (filtered: public fields only)",
+                                     "query": a.get("query")})
             if a["no_match"]:
                 no_match.append(kind)
             for v in a["public_visits"]:
