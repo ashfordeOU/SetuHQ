@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Validate SetuHQ's stellar capabilities (flares, pulsations, CHEOPS) against published results, under a frozen
-protocol, and write docs/results/stellar_validation.json and .md.
+protocol, and write docs/results/stellar_validation.json and .md (and the CHEOPS-derived results, under ESA's
+terms, to docs/results/stellar_validation_cheops.json and .md).
 
     python scripts/stellar_validation.py --list
     python scripts/stellar_validation.py --item aumic_gunther      # one item (resumable: done items are skipped)
@@ -45,17 +46,32 @@ ITEMS_DIR = CACHE / "stellar_validation"
 REFS = ROOT / "docs/results/stellar_validation_references.json"
 OUT_JSON = ROOT / "docs/results/stellar_validation.json"
 OUT_MD = ROOT / "docs/results/stellar_validation.md"
+# CHEOPS-derived results go to their own files, under ESA's CC BY-NC 3.0 IGO terms (see LICENSING.md)
+OUT_CHEOPS_JSON = ROOT / "docs/results/stellar_validation_cheops.json"
+OUT_CHEOPS_MD = ROOT / "docs/results/stellar_validation_cheops.md"
 PYCHEOPS_DIR = Path(os.environ.get("SETUHQ_PYCHEOPS_REF", CACHE / "pycheops_ref"))
 
 # ---------------------------------------------------------------- the frozen protocol
 
-PROTOCOL_FILE = ROOT / "docs/results/stellar_validation_protocol_v2.json"
+PROTOCOL_FILE = ROOT / "docs/results/stellar_validation_protocol_v3.json"
 PROTOCOL = json.loads(PROTOCOL_FILE.read_text())
 
 
 def protocol_hash() -> str:
     """sha256 of the committed protocol file, byte for byte."""
     return hashlib.sha256(PROTOCOL_FILE.read_bytes()).hexdigest()
+
+
+def protocol_commit() -> str | None:
+    """The git commit that added the protocol file (None outside a checkout, or before it is committed)."""
+    import subprocess
+
+    try:
+        out = subprocess.run(["git", "log", "--diff-filter=A", "-1", "--format=%H", "--", str(PROTOCOL_FILE.relative_to(ROOT))],
+                             cwd=ROOT, capture_output=True, text=True, timeout=30, check=True).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return out or None
 
 
 def refs() -> dict:
@@ -251,6 +267,12 @@ def item_proxima_medina() -> dict:
     # as Medina et al. measure it: the data's ED (summed over the flare) times the magnitude-route luminosity
     end_pairs = [((ours[h].get("e_band_magnitude_erg") or 0) * ours[h]["ed_data_s"] / ours[h]["ed_s"], float(e))
                  for h, e in zip(hits, m["Energy"]) if h is not None and ours[h]["ed_s"]]
+    # the cross-check: the same data ED times the luminosity from Medina et al.'s TESS magnitude and our distance
+    t1 = _vizier("J/ApJ/905/107/table1")
+    t1 = t1[t1["TIC"] == p["tic"]]
+    med_in = {"tmag": float(t1["Tmag"][0]), "distance_pc": float(t1["Dist"][0])}
+    lm = fl.stellar_band_luminosity({**star, "tmag": med_in["tmag"]})["l_band_magnitude_erg_s"]
+    lm_pairs = [(lm * ours[h]["ed_data_s"], float(e)) for h, e in zip(hits, m["Energy"]) if h is not None and lm]
     # recall as a function of the published ED
     edp = np.array(m["ED"], float)
     rec = np.array([h is not None for h in hits])
@@ -276,7 +298,40 @@ def item_proxima_medina() -> dict:
             "band_energy_data_ed_magnitude_ratio_ours_over_published": _bootstrap_median([a / b for a, b in end_pairs if a and b > 0]),
             "bright_recall": _pooled([b for b in by_ed if b["ed_lo_s"] >= 3]),
             "luminosity": fl.stellar_band_luminosity(star),
+            "luminosity_comparison": _proxima_luminosity(star, m, med_in),
+            "luminosity_matched_cross_check": {
+                "label": "luminosity-matched cross-check (not a protocol check; not counted)",
+                "luminosity_erg_s": lm,
+                "band_energy_ratio_ours_over_published": _bootstrap_median([a / b for a, b in lm_pairs if a and b > 0])},
             "flares": ours}
+
+
+def _proxima_luminosity(star, m, med_in) -> dict:
+    """Medina et al.'s TESS-band luminosity, implied by their table (Energy / ED per flare), next to ours, and which
+    input makes the difference: the TESS magnitude, the distance or the zero point, each swapped in turn. Medina et
+    al.'s TESS magnitude and distance are read from their Table 1 (VizieR J/ApJ/905/107/table1)."""
+    ed, en = np.array(m["ED"], float), np.array(m["Energy"], float)
+    ok = (ed > 0) & np.isfinite(en)
+    implied = en[ok] / ed[ok]
+    ours = fl.stellar_band_luminosity(star)["l_band_magnitude_erg_s"]
+
+    def lum(tmag, d):
+        return fl.stellar_band_luminosity({"tmag": tmag, "distance_pc": d})["l_band_magnitude_erg_s"]
+
+    med = float(np.median(implied))
+    swaps = {"ours (TIC Tmag, TIC distance)": lum(star["tmag"], star["distance_pc"]),
+             "Medina et al.'s Tmag, TIC distance": lum(med_in["tmag"], star["distance_pc"]),
+             "TIC Tmag, Medina et al.'s distance": lum(star["tmag"], med_in["distance_pc"]),
+             "Medina et al.'s Tmag and distance": lum(med_in["tmag"], med_in["distance_pc"])}
+    return {"medina_implied_l_tess_erg_s": {"median": med, "p5": float(np.percentile(implied, 5)),
+                                            "p95": float(np.percentile(implied, 95)), "n": int(ok.sum())},
+            "ours_l_tess_erg_s": ours, "ratio_ours_over_medina": ours / med if ours else None,
+            "inputs": {"tic_tmag": star.get("tmag"), "medina_tmag": med_in["tmag"], "tic_distance_pc": star.get("distance_pc"),
+                       "medina_distance_pc": med_in["distance_pc"], "zero_point_erg_s_cm2": fl.TESS_ZERO_POINT_ERG_S_CM2,
+                       "medina_zero_point": "Sullivan et al. (2015), 4.03e-6 erg s^-1 cm^-2: the same",
+                       "medina_inputs_source": "Medina et al. 2020, Table 1 (VizieR J/ApJ/905/107/table1: Tmag, Dist)"},
+            "swaps_l_tess_erg_s": swaps,
+            "swaps_ratio_to_medina_implied": {k: (v / med if v else None) for k, v in swaps.items()}}
 
 
 def item_gj1243() -> dict:
@@ -371,6 +426,29 @@ def item_false_split() -> dict:
     return out
 
 
+def item_merge_check() -> dict:
+    """Two-component flares (a second Mendoza peak at a fraction of the first, a few FWHM later) injected into the
+    light curves of the stars that did not tune the shape test (Proxima, GJ 1243): how often they come back merged
+    as one single-component flare. A secondary below min_component_fraction (0.1) of the primary cannot be kept as
+    a component by construction; those injections are reported in their own bin."""
+    c = PROTOCOL["flares"]["merge_check"]
+    out = {"min_component_fraction": fl.FlareConfig().min_component_fraction}
+    rows = []
+    for name in c["stars"]:
+        p = PROTOCOL["flares"][name]
+        lc = _tess(p["tic"], p["sectors"][:1])[0]
+        real = fl.detect_flares(lc.time, lc.flux, lc.flux_err)
+        r = fl.inject_recover(lc.time, lc.flux, lc.flux_err, n_trials=c["n_trials"], per_trial=c["per_trial"],
+                              seed=PROTOCOL["seed"] + 11, amp_range=tuple(c["amp_range"]), fwhm_minutes=tuple(c["fwhm_minutes"]),
+                              real_flares=real["flares"], second={"ratio": tuple(c["second_ratio"]),
+                                                                  "separation_fwhm": tuple(c["separation_fwhm"])})
+        rows += r["injections"]
+        out[name] = {"tic": p["tic"], "sector": p["sectors"][0], "injected": r["n"], "placement": r["placement"],
+                     **fl.merge_rate(r["injections"])}
+    out["pooled"] = fl.merge_rate(rows)
+    return out
+
+
 def item_quiet_stars() -> dict:
     q = PROTOCOL["flares"]["quiet"]
     rows = []
@@ -448,6 +526,7 @@ def item_cheops_flares() -> dict:
                                             n_trials=ci["n_trials"], per_trial=ci["per_trial"],
                                             seed=PROTOCOL["seed"] + len(allv), amp_range=tuple(ci["amp_range"]),
                                             fwhm_minutes=tuple(ci["fwhm_minutes"]), real_flares=r["flares"])
+                    rec["unplaced_fwhm_minutes"] = inj["placement"]["unplaced_fwhm_minutes"]
                     rec["injections"] = [{k: x[k] for k in ("amplitude", "fwhm_minutes", "recovered", "snr", "n_components_recovered",
                                                             "ed_s", "ed_recovered_s")} for x in inj["injections"]]
                     rec["injections_cadence_s"] = vis.cadence_s
@@ -483,6 +562,10 @@ def item_cheops_flares() -> dict:
                               "ci95": fl.wilson(k, len(inj)), "all_injected": len(allinj),
                               "all_recovered": sum(x["recovered"] for x in allinj),
                               "selection": f"S/N ≥ {ci['gate_min_snr']:g} and FWHM ≥ {ci['gate_min_fwhm_cadences']:g} cadences"}
+    summ["injection_placement"] = fl.placement_summary(
+        [x["fwhm_minutes"] for x in allinj],
+        [u for t in out["targets"] for v in t.get("visits", []) for u in v.get("unplaced_fwhm_minutes", [])],
+        tuple(ci["fwhm_minutes"]))
     summ["false_split"] = fl.false_split_rate([x for x in allinj])
     summ["null_fraction"] = max((summ[kk]["inverted_null"] / summ[kk]["flares"]) if summ[kk]["flares"] else 1.0
                                 for kk in ("original", "denoised"))
@@ -740,6 +823,7 @@ def item_cheops_pycheops() -> dict:
 
 
 # The code each item depends on (its fingerprint keys the item's cache, so a change elsewhere does not rerun it).
+# This script is part of every item's fingerprint: a change to how an item is measured invalidates its cache.
 _FLARE = ["flares.py", "passbands.py", "stellar_io.py"]
 _PULS = ["pulsations.py", "stellar_io.py"]
 _CHEOPS = ["cheops.py", "stellar_io.py"]
@@ -747,16 +831,24 @@ ITEM_FILES = {"cheops_flares": _FLARE + ["cheops.py"], "denoise_grid": _FLARE + 
               "hr10_cheops": _PULS + ["cheops.py"], "beta_pic": _PULS, "toi197": _PULS, "cheops_pycheops": _CHEOPS}
 
 
+SCRIPT_FILES = ["scripts/stellar_validation.py"]
+
+
+def item_files(name: str) -> list[str]:
+    """Repository paths of the files an item's fingerprint covers: its modules and this script."""
+    return [f"src/setuhq/{f}" for f in ITEM_FILES.get(name, _FLARE)] + SCRIPT_FILES
+
+
 def item_fingerprint(name: str) -> str:
     from setuhq.starsearch import _fingerprint
 
-    return _fingerprint(ITEM_FILES.get(name, _FLARE))
+    return _fingerprint(item_files(name), src=ROOT)
 
 
 ITEMS = {
     "aumic_gunther": item_aumic_gunther, "gunther_energy_star": item_gunther_energy_star,
     "proxima_medina": item_proxima_medina, "gj1243": item_gj1243, "gj65": item_gj65, "completeness": item_completeness,
-    "quiet_stars": item_quiet_stars, "false_split": item_false_split, "cheops_flares": item_cheops_flares, "denoise_grid": item_denoise_grid,
+    "quiet_stars": item_quiet_stars, "false_split": item_false_split, "merge_check": item_merge_check, "cheops_flares": item_cheops_flares, "denoise_grid": item_denoise_grid,
     "hr10_tess": item_hr10_tess, "hr10_cheops": item_hr10_cheops, "beta_pic": item_beta_pic, "toi197": item_toi197,
     "cheops_pycheops": item_cheops_pycheops,
 }
@@ -766,7 +858,7 @@ def run_item(name: str, force: bool = False) -> dict:
     ITEMS_DIR.mkdir(parents=True, exist_ok=True)
     path = ITEMS_DIR / f"{name}.json"
     ident = {"protocol_sha256": protocol_hash(), "code_fingerprint": item_fingerprint(name),
-             "code_files": ITEM_FILES.get(name, _FLARE)}
+             "code_files": item_files(name)}
     if path.exists() and not force:
         old = json.loads(path.read_text())
         if {k: old.get(k) for k in ident} == ident and "result" in old:
@@ -802,4 +894,6 @@ if __name__ == "__main__":
     if a.report:
         from stellar_validation_report import write_report  # noqa: E402
 
-        write_report(ITEMS_DIR, OUT_JSON, OUT_MD, PROTOCOL, protocol_hash(), code_fingerprint(), refs())
+        write_report(ITEMS_DIR, OUT_JSON, OUT_MD, PROTOCOL, protocol_hash(), code_fingerprint(), refs(),
+                     cheops_json=OUT_CHEOPS_JSON, cheops_md=OUT_CHEOPS_MD, protocol_file=PROTOCOL_FILE.relative_to(ROOT),
+                     protocol_commit=protocol_commit())

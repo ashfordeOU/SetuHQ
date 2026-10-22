@@ -856,15 +856,25 @@ def ffd(energies, observing_days: float) -> dict:
 def inject_recover(time, flux, flux_err=None, *, config: FlareConfig | None = None, star: dict | None = None,
                    band: str = "TESS", n_trials: int = 10, per_trial: int = 10, seed: int = 0,
                    amp_range=(1e-4, 1e-1), fwhm_minutes=(1.0, 60.0), mission: str | None = None,
-                   real_flares: list[dict] | None = None) -> dict:
+                   real_flares: list[dict] | None = None, second: dict | None = None) -> dict:
     """Completeness of the whole detection on this star's own light curve.
 
-    Each trial injects ``per_trial`` Mendoza flares (log-uniform amplitude and FWHM) at random observed times, each
-    span (two FWHM before to eight after, plus a few cadences) inside one stretch of data, no two overlapping, away
-    from the detected real flares; it multiplies the flux and runs
-    :func:`detect_flares` again. A flare is recovered when a detected flare's window contains its peak (within one
-    cadence). Returns every injection (amplitude, FWHM, true ED, energy if the star has Teff and radius, recovered,
-    recovered ED) and completeness curves against amplitude, ED and energy."""
+    Each trial injects ``per_trial`` Mendoza flares at random observed times; it multiplies the flux and runs
+    :func:`detect_flares` again. Amplitude and FWHM are drawn once per injection (log-uniform) and only the position
+    is redrawn, so the placed FWHM follows the drawn distribution instead of favouring short flares that fit between
+    gaps. A flare is placed when its start (one FWHM before the peak) and its peak plus three FWHM lie inside one
+    stretch of data (cf. Poyatos et al. 2025, Sect. 2.3: only flares whose start and stop fall within one visit are
+    counted); a wider span (two FWHM before to eight after) must not overlap another injection or a detected real
+    flare. Injections with no valid position after 200 tries are counted as ``unplaced`` with their FWHM.
+
+    ``second`` (e.g. ``{"ratio": (0.05, 0.5), "separation_fwhm": (1, 5)}``) adds a second Mendoza component of the
+    same FWHM after the first, its amplitude a log-uniform fraction of the first and its peak a uniform number of
+    FWHM later; each row then says whether the detected flare holding the first peak also holds the second and came
+    back as one component (``merged``).
+
+    A flare is recovered when a detected flare's window contains its peak (within one cadence). Returns every
+    injection (amplitude, FWHM, true ED, energy if the star has Teff and radius, recovered, recovered ED), the
+    placed and unplaced FWHM, and completeness curves against amplitude, ED and energy."""
     t = np.asarray(time, float)
     f = np.asarray(flux, float)
     rng = np.random.default_rng(seed)
@@ -877,42 +887,104 @@ def inject_recover(time, flux, flux_err=None, *, config: FlareConfig | None = No
     for q, sl in enumerate(stretches):
         seg_id[sl] = q
     rows = []
+    unplaced = []
     area = template_area("mendoza2022")
     for trial in range(n_trials):
         f2 = f / np.median(f)
         placed = []
-        tries = 0
-        while len(placed) < per_trial and tries < 50 * per_trial:
-            tries += 1
-            ix = int(rng.integers(t.size))
-            tp = float(t[ix] + rng.uniform(-0.5, 0.5) * cad)  # on the data, not in a gap
+        for _ in range(per_trial):
             amp = float(10 ** rng.uniform(*np.log10(amp_range)))
             fw = float(10 ** rng.uniform(*np.log10(fwhm_minutes))) / 1440.0
-            span = (tp - 2 * fw - 2 * cad, tp + 8 * fw + 3 * cad)
-            sl = stretches[seg_id[ix]]
-            if span[0] < t[sl.start] or span[1] > t[sl.stop - 1]:
-                continue  # a flare across a gap cannot be detected by design (as in Poyatos et al.): not injected
-            if any(a < span[1] and b > span[0] for a, b in busy + [p[3] for p in placed]):
-                continue
-            placed.append((tp, fw, amp, span))
+            ratio = sep = None
+            if second:
+                ratio = float(10 ** rng.uniform(*np.log10(second.get("ratio", (0.05, 0.5)))))
+                sep = float(rng.uniform(*second.get("separation_fwhm", (1.0, 5.0))))
+            extra = (sep or 0.0) * fw
+            for _try in range(200):
+                ix = int(rng.integers(t.size))
+                tp = float(t[ix] + rng.uniform(-0.5, 0.5) * cad)  # on the data, not in a gap
+                sl = stretches[seg_id[ix]]
+                need = (tp - fw - 2 * cad, tp + extra + 3 * fw + 3 * cad)
+                if need[0] < t[sl.start] or need[1] > t[sl.stop - 1]:
+                    continue  # start or peak + 3 FWHM across a gap: try another position
+                span = (tp - 2 * fw - 2 * cad, tp + extra + 8 * fw + 3 * cad)
+                if any(a < span[1] and b > span[0] for a, b in busy + [p["span"] for p in placed]):
+                    continue
+                placed.append({"tp": tp, "fw": fw, "amp": amp, "span": span, "ratio": ratio, "sep": sep})
+                break
+            else:
+                unplaced.append(fw * 1440.0)
         model = np.zeros_like(f2)
-        for tp, fw, amp, _ in placed:
-            model += integrated_template(t, tp, fw, amp, exposure=cad)
+        for p in placed:
+            model += integrated_template(t, p["tp"], p["fw"], p["amp"], exposure=cad)
+            if second:
+                model += integrated_template(t, p["tp"] + p["sep"] * p["fw"], p["fw"], p["ratio"] * p["amp"], exposure=cad)
         out = detect_flares(t, f2 * (1.0 + model), flux_err, config=config, star=star, band=band)
-        for tp, fw, amp, _ in placed:
-            ed = amp * fw * area * 86400.0
+        for p in placed:
+            tp, fw, amp = p["tp"], p["fw"], p["amp"]
+            ed = amp * fw * area * 86400.0 * (1.0 + (p["ratio"] or 0.0))
             hit = [fl for fl in out["flares"] if fl["t_start"] - cad <= tp <= fl["t_end"] + cad]
             en = flare_energies(ed, star, band, config.flare_temperature_k)["e_bol_erg"]
-            rows.append({"trial": trial, "t_peak": tp, "amplitude": amp, "fwhm_minutes": fw * 1440, "ed_s": ed,
-                         "e_bol_erg": en, "recovered": bool(hit),
-                         "ed_recovered_s": hit[0]["ed_s"] if hit else None,
-                         "amplitude_recovered": hit[0]["amplitude"] if hit else None,
-                         "n_components_recovered": hit[0]["n_components"] if hit else None,
-                         "delta_bic_components": hit[0].get("delta_bic_components") if hit else None,
-                         "snr": amp / float(out["summary"]["median_sigma"]) if out["summary"].get("median_sigma") else None})
+            row = {"trial": trial, "t_peak": tp, "amplitude": amp, "fwhm_minutes": fw * 1440, "ed_s": ed,
+                   "e_bol_erg": en, "recovered": bool(hit),
+                   "ed_recovered_s": hit[0]["ed_s"] if hit else None,
+                   "amplitude_recovered": hit[0]["amplitude"] if hit else None,
+                   "n_components_recovered": hit[0]["n_components"] if hit else None,
+                   "delta_bic_components": hit[0].get("delta_bic_components") if hit else None,
+                   "snr": amp / float(out["summary"]["median_sigma"]) if out["summary"].get("median_sigma") else None}
+            if second:
+                t2 = tp + p["sep"] * fw
+                same = bool(hit) and hit[0]["t_start"] - cad <= t2 <= hit[0]["t_end"] + cad
+                # another injection's peak inside the same detected flare: a blend of two injections
+                shared = bool(hit) and any(q is not p and hit[0]["t_start"] - cad <= q["tp"] <= hit[0]["t_end"] + cad
+                                           for q in placed)
+                row.update({"second_ratio": p["ratio"], "separation_fwhm": p["sep"], "second_in_same_flare": same,
+                            "blend": shared, "merged": bool(same and hit[0]["n_components"] == 1)})
+            rows.append(row)
     return {"injections": rows, "n": len(rows), "seed": seed, "config": config.as_dict(),
+            "placement": placement_summary([r["fwhm_minutes"] for r in rows], unplaced, fwhm_minutes),
             "by_amplitude": completeness_curve(rows, "amplitude"), "by_ed": completeness_curve(rows, "ed_s"),
             "by_energy": completeness_curve(rows, "e_bol_erg") if any(r["e_bol_erg"] for r in rows) else None}
+
+
+def placement_summary(placed_fwhm, unplaced_fwhm, fwhm_minutes, bins_per_decade: int = 4) -> dict:
+    """Placed against expected FWHM: counts in equal logarithmic bins (about ``bins_per_decade`` per decade) next to
+    what a log-uniform draw over ``fwhm_minutes`` gives, plus the injections that found no position."""
+    lo, hi = np.log10(fwhm_minutes[0]), np.log10(fwhm_minutes[1])
+    edges = np.linspace(lo, hi, max(1, round((hi - lo) * bins_per_decade)) + 1)  # equal in log: equal expected shares
+    v = np.log10(np.asarray(placed_fwhm, float)) if len(placed_fwhm) else np.array([])
+    n = int(v.size)
+    hist = []
+    for a, b in zip(edges[:-1], edges[1:]):
+        k = int(((v >= a) & ((v < b) if b < edges[-1] else (v <= b + 1e-12))).sum())
+        hist.append({"lo_min": float(10 ** a), "hi_min": float(10 ** b), "placed": k,
+                     "placed_fraction": k / n if n else None, "expected_fraction": float((b - a) / (hi - lo))})
+    return {"n_placed": n, "n_unplaced": len(unplaced_fwhm), "unplaced_fwhm_minutes": [float(x) for x in unplaced_fwhm],
+            "histogram": hist}
+
+
+def merge_rate(injections: list[dict]) -> dict:
+    """Of the recovered two-component injections, the fraction that came back as one single-component flare holding
+    both peaks (merged), overall and by secondary ratio and separation, with Wilson 95% intervals. Detected flares
+    holding another injection's peak too (blends of two injections) are left out and counted. Secondaries below
+    ``min_component_fraction`` of the primary cannot be kept as components by construction."""
+    allrec = [x for x in injections if x.get("recovered") and "merged" in x]
+    rec = [x for x in allrec if not x.get("blend")]
+
+    def _cell(sub):
+        k = sum(1 for x in sub if x["merged"])
+        return {"n": len(sub), "merged": k, "rate": k / len(sub) if sub else None, "ci95": wilson(k, len(sub))}
+
+    out = _cell(rec)
+    out["blends_excluded"] = len(allrec) - len(rec)
+    out["by_ratio"] = [dict(lo=a, hi=b, **_cell([x for x in rec if a <= x["second_ratio"] < b]))
+                       for a, b in ((0.05, 0.1), (0.1, 0.2), (0.2, 0.5))]
+    out["by_separation_fwhm"] = [dict(lo=a, hi=b, **_cell([x for x in rec if a <= x["separation_fwhm"] < b]))
+                                 for a, b in ((1, 2), (2, 3), (3, 5))]
+    out["by_ratio_ge_0p1_and_sep"] = [dict(lo=a, hi=b, **_cell([x for x in rec if x["second_ratio"] >= 0.1
+                                                                 and a <= x["separation_fwhm"] < b]))
+                                      for a, b in ((1, 2), (2, 3), (3, 5))]
+    return out
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:

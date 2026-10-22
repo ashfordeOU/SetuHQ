@@ -4,7 +4,7 @@
 
 Thin wrappers over :mod:`setuhq.flares`, :mod:`setuhq.pulsations` and :mod:`setuhq.cheops`, answering in the same
 envelope as every tool of :mod:`setuhq.tools` (result, provenance, honesty labels). Each carries the validation
-status of its capability as measured in ``docs/results/stellar_validation.json`` ("unvalidated" when that file
+status of its capability as measured in ``docs/results/stellar_validation.json`` ("not validated" when that file
 does not say otherwise), and every answer built on CHEOPS data carries ESA's acknowledgement, the programme and
 visit ids, the credit line, the citations and SetuHQ's independence disclaimer.
 """
@@ -19,17 +19,20 @@ ENERGY = ("Flare energies assume a 9000 K blackbody flare and use TIC Teff and r
           "reported as unavailable, never guessed.")
 VALIDATION_FILE = "docs/results/stellar_validation.json"
 MAX_POINTS = 200_000
+NO_RECORD = "not validated (no validation record)"
 
 
 def validation_status(capability: str) -> str:
-    """'validated', 'partly validated' or 'unvalidated' for a capability, from the committed validation record."""
+    """The capability's status from the committed validation record, with its count: 'validated (n of n checks
+    pass)', 'partly validated (k of n …)' when more than half pass, otherwise 'not validated (k of n …)'."""
     from setuhq.tools import _path
 
     try:
         data = json.loads(_path(VALIDATION_FILE).read_text())
-    except Exception:  # noqa: BLE001 (no record: unvalidated)
-        return "unvalidated"
-    return (data.get("capabilities") or {}).get(capability, {}).get("status", "unvalidated")
+    except Exception:  # noqa: BLE001 (no record: not validated)
+        return NO_RECORD
+    cap = (data.get("capabilities") or {}).get(capability) or {}
+    return cap.get("label") or cap.get("status") or NO_RECORD
 
 
 def _arrays(csv_path, time, flux, flux_err, target):

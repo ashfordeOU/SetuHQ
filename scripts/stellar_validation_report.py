@@ -1,10 +1,14 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
-"""Build docs/results/stellar_validation.json and .md from the item cache of scripts/stellar_validation.py.
+"""Build docs/results/stellar_validation.json and .md, and the CHEOPS-derived stellar_validation_cheops.json and
+.md, from the item cache of scripts/stellar_validation.py.
 
-The checks that set each capability's status are fixed here, before the numbers are read: a capability is
-"validated" when every one of its checks passes, "partly validated" when some do, "unvalidated" when none do or
-its items could not run. Every number is copied from the item records; nothing is recomputed here.
+The status rule is fixed here, before the numbers are read (protocol v3): a capability is "validated" when every
+one of its counted checks passes, "partly validated" when more than half do, and otherwise "not validated (k of n
+checks pass)". Every number is copied from the item records; nothing is recomputed here.
+
+CHEOPS-derived numbers (CC BY-NC 3.0 IGO, ESA's terms) are written only to the _cheops files; the main files keep
+the CHEOPS capability's status and the pass/fail of its checks, with no CHEOPS-derived value.
 """
 
 from __future__ import annotations
@@ -20,7 +24,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from setuhq import cheops as ch  # noqa: E402
 
 # The metric each protocol check reads from its item's result. The thresholds and the pass rule are in the protocol
-# file (docs/results/stellar_validation_protocol_v2.json); this table only says where each number is.
+# file (docs/results/stellar_validation_protocol_v3.json); this table only says where each number is.
 def _ci_low(r):
     return r["ci95"][0]
 
@@ -34,6 +38,7 @@ METRICS = {
     "energy_ratio_ci": lambda r: r["energy_ratio_ours_over_published"]["ci95"],
     "fp_per_day": lambda r: r["false_positive_rate_per_day_upper"],
     "validation_split_rate": lambda r: r["validation_pooled"]["rate"],
+    "validation_split_ci_high": lambda r: r["validation_pooled"]["ci95"][1],
     "cheops_null_fraction": lambda r: r["summary"]["null_fraction"],
     "cheops_bright_recovery_ci_low": lambda r: _ci_low(r["summary"]["injection_gate"]),
     "complex_ci_contains": lambda r: r["summary"]["denoised"]["complex_ci95"],
@@ -99,11 +104,28 @@ def _frac(r):
     return f"{k}/{r['of']} = {k / max(r['of'], 1):.2f} [{lo:.2f}, {hi:.2f}]"
 
 
-def write_report(items_dir, out_json, out_md, protocol, protocol_sha, fingerprint, refs):
+CHEOPS_ITEMS = ("cheops_flares", "hr10_cheops", "cheops_pycheops")
+CHEOPS_KEYS = {"denoise_grid": ("cheops_ev_lac",)}  # CHEOPS-derived parts of otherwise TESS items
+
+
+def status_of(n_pass: int, n: int) -> dict:
+    """The protocol v3 status rule: every counted check passes, more than half pass, or not."""
+    if n and n_pass == n:
+        status = "validated"
+    elif n and n_pass > n / 2:
+        status = "partly validated"
+    else:
+        status = "not validated"
+    return {"status": status, "label": f"{status} ({n_pass} of {n} checks pass)"}
+
+
+def write_report(items_dir, out_json, out_md, protocol, protocol_sha, fingerprint, refs, *, cheops_json=None,
+                 cheops_md=None, protocol_file="docs/results/stellar_validation_protocol_v3.json", protocol_commit=None):
     items = _items(items_dir)
     checks = []
     for c in protocol["checks"]:
-        row = {"capability": c["capability"], "check": c["id"], "item": c["item"], "text": c["text"],
+        row = {"capability": c["capability"], "check": c["id"], "item": c["item"],
+               "text": c["text"] + (f" ({c['changed']})" if c.get("changed") else ""), "changed": c.get("changed"),
                "tuning": bool(c.get("tuning")), "gate": bool(c.get("gate")), "gated": bool(c.get("gated"))}
         rec = items.get(c["item"])
         if not rec or rec.get("status") != "ok":
@@ -130,8 +152,7 @@ def write_report(items_dir, out_json, out_md, protocol, protocol_sha, fingerprin
     for cap in ("flares", "pulsations", "cheops"):
         cs = [c for c in checks if c["capability"] == cap and c["result"] in ("pass", "fail", "not run")]
         n_pass = sum(c["result"] == "pass" for c in cs)
-        status = "validated" if cs and n_pass == len(cs) else "partly validated" if n_pass else "unvalidated"
-        caps[cap] = {"status": status, "passed": n_pass, "of": len(cs),
+        caps[cap] = {**status_of(n_pass, len(cs)), "passed": n_pass, "of": len(cs),
                      "inconclusive": sum(1 for c in checks if c["capability"] == cap and c["result"] == "inconclusive"),
                      "tuning_set": sum(1 for c in checks if c["capability"] == cap and c["result"] == "tuning set")}
     # what could not be validated at all
@@ -151,21 +172,50 @@ def write_report(items_dir, out_json, out_md, protocol, protocol_sha, fingerprin
         "were found on imagettes and are not reproduced here.",
         "HR 10 CHEOPS frequencies: Salmon et al. (2024) publish no CHEOPS frequency list; only the TESS lists are compared.",
     ]
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    proto = {"file": str(protocol_file), "sha256": protocol_sha, "commit": protocol_commit}
+    labels = ["Flares and frequencies are detected at the stated significance; nothing here is confirmed.",
+              "Types are heuristic (likely or candidate). Energies assume a 9000 K blackbody flare."]
+    results = {k: _summary(k, v) for k, v in items.items()}
+    cheops_results = {k: results.pop(k) for k in CHEOPS_ITEMS if k in results}
+    for k, keys in CHEOPS_KEYS.items():
+        for kk in keys:
+            if kk in (results.get(k) or {}):
+                cheops_results[f"{k}.{kk}"] = results[k].pop(kk)
+    main_checks = [{kk: v for kk, v in c.items() if not (c["capability"] == "cheops" and kk in ("value", "why"))}
+                   | ({"values_in": "stellar_validation_cheops.json"} if c["capability"] == "cheops" else {})
+                   for c in checks]
     record = {
-        "kind": "setuhq-stellar-validation/1", "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "protocol": protocol, "protocol_sha256": protocol_sha, "code_fingerprint": fingerprint,
-        "capabilities": caps, "checks": checks, "unvalidated": unvalidated,
+        "kind": "setuhq-stellar-validation/2", "generated_at": now,
+        "protocol": protocol, "protocol_file": proto["file"], "protocol_sha256": protocol_sha,
+        "protocol_commit": protocol_commit, "code_fingerprint": fingerprint,
+        "capabilities": caps, "checks": main_checks, "unvalidated": unvalidated,
         "items": {k: {kk: v.get(kk) for kk in ("status", "code_fingerprint", "code_files", "protocol_sha256", "finished_at",
                                                 "seconds", "error")} for k, v in items.items()},
-        "results": {k: _summary(k, v) for k, v in items.items()},
+        "results": results,
+        "cheops_results_in": {"file": "docs/results/stellar_validation_cheops.json",
+                              "keys": sorted(cheops_results), "licence": ch.LICENCE},
         "references": {k: v.get("source") for k, v in refs.items() if isinstance(v, dict)},
-        "cheops_credit": ch.credit(_cheops_visits(items)),
-        "labels": ["Flares and frequencies are detected at the stated significance; nothing here is confirmed.",
-                   "Types are heuristic (likely or candidate). Energies assume a 9000 K blackbody flare."],
+        "labels": labels,
     }
     Path(out_json).write_text(json.dumps(record, indent=1, ensure_ascii=False, allow_nan=False) + "\n")
     Path(out_md).write_text(_markdown(record, items))
-    print(f"wrote {out_json} and {out_md}: " + ", ".join(f"{k} {v['status']} ({v['passed']}/{v['of']})" for k, v in caps.items()))
+    if cheops_json:
+        crec = {"kind": "setuhq-stellar-validation-cheops/1", "licence_notice": cheops_licence_notice(),
+                "generated_at": now, "protocol_file": proto["file"], "protocol_sha256": protocol_sha,
+                "protocol_commit": protocol_commit, "code_fingerprint": fingerprint,
+                "capability": caps["cheops"], "checks": [c for c in checks if c["capability"] == "cheops"],
+                "results": cheops_results, "cheops_credit": ch.credit(_cheops_visits(items)), "labels": labels}
+        Path(cheops_json).write_text(json.dumps(crec, indent=1, ensure_ascii=False, allow_nan=False) + "\n")
+        Path(cheops_md).write_text(_markdown_cheops(crec, record, items))
+    print(f"wrote {out_json} and {out_md}" + (f" and {cheops_json} and {cheops_md}" if cheops_json else "") + ": "
+          + ", ".join(f"{k} {v['label']}" for k, v in caps.items()))
+
+
+def cheops_licence_notice() -> str:
+    return ("CHEOPS-derived results. Everything in this file is derived from CHEOPS data (ESA) and is distributed "
+            "under ESA's terms, the CC BY-NC 3.0 IGO licence, not under SetuHQ's CC BY 4.0, its commercial licence "
+            "or SetuHQ Pro; commercial use needs ESA's prior authorisation (data.licences@esa.int). " + ch.DISCLAIMER)
 
 
 def _cheops_visits(items) -> list[dict]:
@@ -209,34 +259,42 @@ def _markdown(rec, items) -> str:
     a("<!-- Generated by scripts/stellar_validation.py --report from the item records; do not edit by hand. -->")
     a("# Stellar validation: flares, pulsations and CHEOPS")
     a("")
-    a(f"Protocol v{rec['protocol']['version']} (`docs/results/stellar_validation_protocol_v2.json`, sha256 "
-      f"`{rec['protocol_sha256']}`), frozen {rec['protocol']['frozen']}, seed {rec['protocol']['seed']}; stellar code "
-      f"fingerprint `{rec['code_fingerprint'][:16]}…` (each item records the fingerprint of the files it depends on). "
-      f"Generated {rec['generated_at']}.")
+    a(_protocol_line(rec))
     a("")
     a("**How far to trust this.** " + rec["protocol"]["history"])
     a("")
-    a("Changes from v1:")
-    a("")
-    for ch_ in rec["protocol"]["changes_from_v1"]:
-        a(f"- {ch_}")
+    for key, title in (("changes_from_v2", "Changes from v2"), ("changes_from_v1", "Changes from v1 (in v2)")):
+        if rec["protocol"].get(key):
+            a(f"{title}:")
+            a("")
+            for ch_ in rec["protocol"][key]:
+                a(f"- {ch_}")
+            a("")
+    a("CHEOPS-derived numbers are not in this file: they are in `stellar_validation_cheops.json` and "
+      "`stellar_validation_cheops.md`, under ESA's CC BY-NC 3.0 IGO terms (see LICENSING.md). This file keeps only "
+      "the CHEOPS capability's status and the pass or fail of its checks.")
     a("")
     a("Every comparison is against **published numbers**; where ours and theirs disagree, both are shown. Flares and "
       "frequencies are *detected* at the significance stated; nothing here is a confirmation, and types are heuristic.")
     a("")
     a("## Status")
     a("")
-    a("| Capability | Status | Checks passed | Inconclusive (gated) | Tuning-set results (not counted) |")
-    a("|---|---|---|---|---|")
+    a("Rule (protocol v3): validated when every counted check passes; partly validated when more than half do; "
+      "otherwise not validated. Gated comparisons whose gates fail are inconclusive and tuning-set results are "
+      "reported; neither is counted.")
+    a("")
+    a("| Capability | Status | Inconclusive (gated) | Tuning-set results (not counted) |")
+    a("|---|---|---|---|")
     for k, v in rec["capabilities"].items():
-        a(f"| {k} | **{v['status']}** | {v['passed']} of {v['of']} | {v['inconclusive']} | {v['tuning_set']} |")
+        a(f"| {k} | **{v['label']}** | {v['inconclusive']} | {v['tuning_set']} |")
     a("")
     a("| Capability | Check | Value | Result |")
     a("|---|---|---|---|")
     for c in rec["checks"]:
         v = c.get("value")
         vt = (f"[{v[0]:.2f}, {v[1]:.2f}]" if isinstance(v, (list, tuple)) and v and v[0] is not None
-              else f"{v:.3g}" if isinstance(v, float) else str(v) if v is not None else "")
+              else f"{v:.3g}" if isinstance(v, float) else str(v) if v is not None
+              else "in the CHEOPS file" if c.get("values_in") else "")
         res = c["result"] + (f" (computed: {c['computed_result']})" if c.get("computed_result") else "")
         a(f"| {c['capability']} | {c['text']} | {vt} | {res}{' — ' + c['why'] if c.get('why') else ''} |")
     a("")
@@ -304,6 +362,31 @@ def _markdown(rec, items) -> str:
           f"L_TESS = {_fmt(lum.get('l_band_magnitude_erg_s'), 3)} erg/s (TIC Tmag {lum.get('tmag')}, {_fmt(lum.get('distance_pc'), 3)} pc). "
           "TIC v8.2 has no Teff for Proxima Cen, so the Teff and radius route is unavailable here.")
         a("")
+        lc = r.get("luminosity_comparison")
+        if lc:
+            im = lc["medina_implied_l_tess_erg_s"]
+            inp = lc["inputs"]
+            a(f"**Why the energies differ: the TESS magnitude.** Medina et al.'s table implies L_TESS = Energy / ED = "
+              f"{_fmt(im['median'], 3)} erg/s (median of {im['n']} flares; 5-95%: {_fmt(im['p5'], 3)}-{_fmt(im['p95'], 3)}); "
+              f"ours is {_fmt(lc['ours_l_tess_erg_s'], 3)} erg/s, a ratio of {lc['ratio_ours_over_medina']:.3f}. Swapping one "
+              f"input at a time (their Table 1: Tmag {inp['medina_tmag']:.2f}, {inp['medina_distance_pc']:.2f} pc; TIC: Tmag "
+              f"{inp['tic_tmag']:.2f}, {inp['tic_distance_pc']:.5f} pc; zero point {inp['medina_zero_point']}):")
+            a("")
+            a("| Inputs | L_TESS (erg/s) | / Medina et al.'s implied L |")
+            a("|---|---|---|")
+            for k, v in lc["swaps_l_tess_erg_s"].items():
+                a(f"| {k} | {_fmt(v, 4)} | {lc['swaps_ratio_to_medina_implied'][k]:.3f} |")
+            a("")
+            a("The TESS magnitude accounts for the difference (TIC v8.2 gives 7.36, Medina et al. 7.49); the distance "
+              "changes L by 0.2% and the zero point is the same. The protocol check above (proxima_band_energy) is "
+              "kept as run, with our TIC inputs, and fails as recorded.")
+            a("")
+        xc = r.get("luminosity_matched_cross_check")
+        if xc:
+            a(f"*{xc['label'].capitalize()}:* the same data ED times L_TESS from Medina et al.'s Tmag "
+              f"({_fmt(xc['luminosity_erg_s'], 3)} erg/s), ours / published: {_ci(xc['band_energy_ratio_ours_over_published'])}. "
+              "What remains is the difference between our data-summed ED and theirs.")
+            a("")
     if R.get("gj1243") or R.get("gj65"):
         a("### GJ 1243 and GJ 65 (no per-flare reference)")
         a("")
@@ -349,10 +432,43 @@ def _markdown(rec, items) -> str:
             a(f"| {k}{' (tuning star)' if v.get('tuning_set') else ''} | {v['injected']} | {v['recovered_clean']} ({v['blends_excluded']} blends) | "
               f"{v['split']} | {_fmt(v['rate'])} [{v['ci95'][0]:.2f}, {v['ci95'][1]:.2f}] | {v['real_flares']} ({v['real_complex']}) |")
         vp = r["validation_pooled"]
-        a(f"| **Proxima + GJ 1243** | | {vp['recovered_clean']} | {vp['split']} | {_fmt(vp['rate'])} [{vp['ci95'][0]:.2f}, {vp['ci95'][1]:.2f}] | |")
+        a(f"| **Proxima + GJ 1243 (pooled)** | | {vp['recovered_clean']} | {vp['split']} | {_fmt(vp['rate'])} [{vp['ci95'][0]:.2f}, {vp['ci95'][1]:.2f}] | |")
         a("")
-        a("Before the review fixes (no effective-N correction, no visibility rule), single flares on AU Mic came back "
-          "split 41% of the time (21 of 51, blends included); the AR(1) effective-N correction alone gave 39%.")
+        px = r.get("proxima")
+        if px:
+            a(f"Proxima on its own: {px['split']}/{px['recovered_clean']} = {_fmt(px['rate'])} "
+              f"[{px['ci95'][0]:.2f}, {px['ci95'][1]:.2f}]. The check (protocol v3) applies the 15% limit to the pooled "
+              "rate's Wilson upper bound, as the other checks use interval bounds; v2 applied it to the point estimate.")
+            a("")
+        au = r.get("aumic")
+        if au:
+            a(f"Like with like, on the tuning star: before the review fixes (no effective-N correction, no visibility rule) "
+              f"single flares on AU Mic came back split 41% of the time (21 of 51, blends included; the AR(1) correction "
+              f"alone gave 39%); after them, {au['split']}/{au['recovered_clean']} = {_fmt(au['rate'])}. Both are AU Mic, "
+              "the star the rule was tuned on, so neither is a validation number.")
+            a("")
+    if R.get("merge_check"):
+        r = R["merge_check"]
+        a("### Merges: two-component flares that come back as one")
+        a("")
+        a(f"A second Mendoza peak at 5-50% of the first (log-uniform), 1-5 FWHM later, injected on stars that did not "
+          f"tune the shape test. An extra component must reach {r['min_component_fraction']:g} of the strongest one "
+          "(and 3σ), so **a secondary below 10% of the primary cannot be kept by construction**; those are the first "
+          "ratio bin. Merged = the detected flare holding the first peak also holds the second and has one component; "
+          "detected flares that also hold another injection's peak are blends and left out. "
+          "Reported; the protocol sets no pass criterion (no published reference rate).")
+        a("")
+        a("| Star | Recovered | Merged | Rate [95% CI] | Ratio 5-10% | 10-20% | 20-50% | Separation 1-2 FWHM | 2-3 | 3-5 | 1-2 FWHM, ratio ≥ 10% | 2-3, ≥ 10% | 3-5, ≥ 10% |")
+        a("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+
+        def cell(b):
+            return f"{b['merged']}/{b['n']} = {_fmt(b['rate'])}" if b["n"] else "n/a"
+        for k in ("proxima", "gj1243", "pooled"):
+            v = r.get(k)
+            if not v:
+                continue
+            a(f"| {k} | {v['n']} ({v.get('blends_excluded', 0)} blends excluded) | {v['merged']} | {_fmt(v['rate'])} [{v['ci95'][0]:.2f}, {v['ci95'][1]:.2f}] | "
+              + " | ".join(cell(b) for b in v["by_ratio"] + v["by_separation_fwhm"] + v["by_ratio_ge_0p1_and_sep"]) + " |")
         a("")
     if R.get("quiet_stars"):
         r = R["quiet_stars"]
@@ -364,6 +480,21 @@ def _markdown(rec, items) -> str:
             a(f"| {s['star']} | {s.get('sectors')} | {_fmt(s.get('observing_days'), 3)} | {s.get('flares_detected')} | {s.get('inverted_null')} |")
         a(f"| **all** | | {r['total_days']:.1f} | {r['total_detections']} ({_fmt(r['false_positive_rate_per_day_upper'], 3)} per day) | |")
         a("")
+    if R.get("denoise_grid"):
+        a("### Denoising parameters by injection, TESS (the CHEOPS grid is in the CHEOPS file)")
+        a("")
+        for key, rows in ((k, v) for k, v in R["denoise_grid"].items() if not k.startswith("cheops")):
+            if not isinstance(rows, list):
+                a(f"- {key}: {rows}")
+                continue
+            a(f"**{key}**")
+            a("")
+            a("| Wavelet | Level | Recovered | Inverted null |")
+            a("|---|---|---|---|")
+            for x in rows:
+                a(f"| {x['wavelet'] or 'none'} | {x['level'] or ''} | {x['recovered']}/{x['injected']} = {x['fraction']:.2f} "
+                  f"[{x['ci95'][0]:.2f}, {x['ci95'][1]:.2f}] | {x['inverted_false_positives']} |")
+            a("")
     a("## Pulsations")
     a("")
     if R.get("beta_pic"):
@@ -407,27 +538,6 @@ def _markdown(rec, items) -> str:
         a(f"- Type: {r['sectors']['29']['type']['label']} ({r['sectors']['29']['type']['confidence']} confidence): "
           + "; ".join(r["sectors"]["29"]["type"]["reasons"]) + ".")
         a("")
-    if R.get("hr10_cheops"):
-        r = R["hr10_cheops"]
-        a("### HR 10, CHEOPS (public DRP visits)")
-        a("")
-        if r.get("error"):
-            a(f"Not run: {r['error']}.")
-        else:
-            c = r["combined"]
-            a(f"Three visits together ({c['baseline_days']:.1f} d, {c['n_points']} points): {c['n_significant']} frequencies at "
-              f"S/N ≥ 4; f1, f2 found: {c['f1_f2_recovered']}; {_fmt(c['ours_matched_fraction'])} of ours match Salmon et al.'s "
-              f"TESS S29 list within 1/T, which recovers {_fmt(c['recall_tess_s29_published'])} of that list "
-              f"({_fmt(c['recall_top10'])} of its 10 strongest). Background b: {', '.join(f'{b:.0f}' for b in c['background_b_uhz'])} µHz.")
-            a("")
-            a("| Visit | Programme | Days | Frequencies (S/N ≥ 4) | f1, f2 found | Decorrelation terms |")
-            a("|---|---|---|---|---|---|")
-            for v in r["visits"]:
-                a(f"| {v['file_key']} | {v['programme']} | {v['baseline_days']:.2f} | {v['n_significant']} | {v['f1_f2_recovered']} | "
-                  f"{', '.join(v['terms']) or 'none'} |")
-            a("")
-            a(f"{r['note']} Their CHEOPS granulation frequency (first visit): {r['published_granulation_b_uhz_cheops_visit1']} µHz.")
-        a("")
     if R.get("toi197"):
         r = R["toi197"]
         o = r["ours"]
@@ -448,6 +558,61 @@ def _markdown(rec, items) -> str:
         a("")
     a("## CHEOPS")
     a("")
+    v = rec["capabilities"]["cheops"]
+    a(f"Status: **{v['label']}**, {v['inconclusive']} inconclusive (gated). The CHEOPS results (flares against "
+      "Poyatos et al. 2025 with their gates and the placed-FWHM histogram, the CHEOPS denoising grid, HR 10 on CHEOPS "
+      "and the pycheops comparison) are in `stellar_validation_cheops.md` and `.json`, under ESA's CC BY-NC 3.0 IGO "
+      "terms, with ESA's acknowledgement, the programme and visit IDs, the credit lines and the citations.")
+    a("")
+    a("## What is not validated")
+    a("")
+    for u in rec["unvalidated"]:
+        a(f"- {u}")
+    a("")
+    a("## References")
+    a("")
+    for k, v in rec["references"].items():
+        if v:
+            a(f"- {v}")
+    a("- Günther, M. N., et al. 2020, AJ, 159, 60 (VizieR J/AJ/159/60)")
+    a("- Medina, A. A., et al. 2020, ApJ, 905, 107 (VizieR J/ApJ/905/107)")
+    a("- Maxted, P. F. L., et al. 2022, MNRAS, 514, 77 (pycheops)")
+    a("")
+    return "\n".join(x for x in L if x is not None) + "\n"
+
+
+def _protocol_line(rec) -> str:
+    commit = f", committed in `{rec['protocol_commit'][:12]}`" if rec.get("protocol_commit") else ""
+    return (f"Protocol v{rec['protocol']['version']} (`{rec['protocol_file']}`, sha256 `{rec['protocol_sha256']}`{commit}), "
+            f"frozen {rec['protocol']['frozen']}, seed {rec['protocol']['seed']}; stellar code fingerprint "
+            f"`{rec['code_fingerprint'][:16]}…` (each item records the fingerprint of the files it depends on, this "
+            f"script included). Generated {rec['generated_at']}.")
+
+
+def _markdown_cheops(crec, rec, items) -> str:
+    R = {k: (v.get("result") or {}) for k, v in items.items()}
+    L = []
+    a = L.append
+    a("<!-- Generated by scripts/stellar_validation.py --report from the item records; do not edit by hand. -->")
+    a("<!-- Licence: CC BY-NC 3.0 IGO (ESA). CHEOPS-derived; not covered by SetuHQ's CC BY 4.0, commercial licence or Pro. -->")
+    a("# Stellar validation: CHEOPS-derived results")
+    a("")
+    a(f"> **Licence.** {crec['licence_notice']}")
+    a("")
+    a(_protocol_line(rec))
+    a("")
+    a(f"Status: **{crec['capability']['label']}**; {crec['capability']['inconclusive']} comparisons inconclusive "
+      "(gated). The TESS results and the other capabilities are in `stellar_validation.md`.")
+    a("")
+    a("| Check | Value | Result |")
+    a("|---|---|---|")
+    for c in crec["checks"]:
+        v = c.get("value")
+        vt = (f"[{v[0]:.2f}, {v[1]:.2f}]" if isinstance(v, (list, tuple)) and v and v[0] is not None
+              else f"{v:.3g}" if isinstance(v, float) else str(v) if v is not None else "")
+        res = c["result"] + (f" (computed: {c['computed_result']})" if c.get("computed_result") else "")
+        a(f"| {c['text']} | {vt} | {res}{' — ' + c['why'] if c.get('why') else ''} |")
+    a("")
     if R.get("cheops_flares"):
         r = R["cheops_flares"]
         s = r["summary"]
@@ -464,6 +629,19 @@ def _markdown(rec, items) -> str:
           f"(largest fraction {_fmt(s['null_fraction'])}). False splits of injected single flares: "
           f"{s['false_split']['split']}/{s['false_split']['recovered_clean']}. The comparisons below count only if both gates pass.")
         a("")
+        pl = s.get("injection_placement")
+        if pl:
+            a(f"**Where the injections landed.** Amplitude and FWHM are drawn once per injection (log-uniform, FWHM "
+              f"0.5-10 min) and only the position is redrawn; a flare is placed when its start (one FWHM before the "
+              f"peak) and its peak plus three FWHM fall inside one stretch of data (cf. Poyatos et al. 2025, Sect. 2.3, "
+              f"who count only flares whose start and stop fall within one visit). Placed: {pl['n_placed']}; no "
+              f"position found: {pl['n_unplaced']}.")
+            a("")
+            a("| FWHM (min) | Placed | Placed fraction | Expected (log-uniform) |")
+            a("|---|---|---|---|")
+            for b in pl["histogram"]:
+                a(f"| {b['lo_min']:.2f}-{b['hi_min']:.2f} | {b['placed']} | {_fmt(b['placed_fraction'])} | {b['expected_fraction']:.2f} |")
+            a("")
         a("| Quantity | SetuHQ original | SetuHQ denoised | Poyatos et al. 2025 (journal) |")
         a("|---|---|---|---|")
         o, d = s["original"], s["denoised"]
@@ -490,7 +668,7 @@ def _markdown(rec, items) -> str:
     if R.get("denoise_grid"):
         a("### Denoising parameters by injection (as Poyatos et al. chose theirs)")
         a("")
-        for key, rows in R["denoise_grid"].items():
+        for key, rows in ((k, v) for k, v in R["denoise_grid"].items() if k.startswith("cheops")):
             if not isinstance(rows, list):
                 a(f"- {key}: {rows}")
                 continue
@@ -525,14 +703,30 @@ def _markdown(rec, items) -> str:
           "contamination estimate, SetuHQ reads DACE's DRP arrays and keeps every unflagged point, so the detrended "
           "curves differ by about the difference of their inputs.")
         a("")
-    a("## What is not validated")
-    a("")
-    for u in rec["unvalidated"]:
-        a(f"- {u}")
-    a("")
+    if R.get("hr10_cheops"):
+        r = R["hr10_cheops"]
+        a("### HR 10, CHEOPS (public DRP visits)")
+        a("")
+        if r.get("error"):
+            a(f"Not run: {r['error']}.")
+        else:
+            c = r["combined"]
+            a(f"Three visits together ({c['baseline_days']:.1f} d, {c['n_points']} points): {c['n_significant']} frequencies at "
+              f"S/N ≥ 4; f1, f2 found: {c['f1_f2_recovered']}; {_fmt(c['ours_matched_fraction'])} of ours match Salmon et al.'s "
+              f"TESS S29 list within 1/T, which recovers {_fmt(c['recall_tess_s29_published'])} of that list "
+              f"({_fmt(c['recall_top10'])} of its 10 strongest). Background b: {', '.join(f'{b:.0f}' for b in c['background_b_uhz'])} µHz.")
+            a("")
+            a("| Visit | Programme | Days | Frequencies (S/N ≥ 4) | f1, f2 found | Decorrelation terms |")
+            a("|---|---|---|---|---|---|")
+            for v in r["visits"]:
+                a(f"| {v['file_key']} | {v['programme']} | {v['baseline_days']:.2f} | {v['n_significant']} | {v['f1_f2_recovered']} | "
+                  f"{', '.join(v['terms']) or 'none'} |")
+            a("")
+            a(f"{r['note']} Their CHEOPS granulation frequency (first visit): {r['published_granulation_b_uhz_cheops_visit1']} µHz.")
+        a("")
     a("## CHEOPS acknowledgement, credit and disclaimer")
     a("")
-    c = rec["cheops_credit"]
+    c = crec["cheops_credit"]
     a(c["acknowledgement"])
     a("")
     for x in c["credits"]:
@@ -543,14 +737,5 @@ def _markdown(rec, items) -> str:
     a(c["dace_acknowledgement"])
     a("")
     a(f"**{c['disclaimer']}** {c['commercial_use']}")
-    a("")
-    a("## References")
-    a("")
-    for k, v in rec["references"].items():
-        if v:
-            a(f"- {v}")
-    a("- Günther, M. N., et al. 2020, AJ, 159, 60 (VizieR J/AJ/159/60)")
-    a("- Medina, A. A., et al. 2020, ApJ, 905, 107 (VizieR J/ApJ/905/107)")
-    a("- Maxted, P. F. L., et al. 2022, MNRAS, 514, 77 (pycheops)")
     a("")
     return "\n".join(x for x in L if x is not None) + "\n"

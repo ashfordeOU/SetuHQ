@@ -5,8 +5,8 @@ timeline with TESS.
 
 **Where the data come from.** ESA names the CHEOPS Mission Archive (cheops.unige.ch/archive_browser) and its mirror
 at the ASI Space Science Data Center (cheops-archive.ssdc.asi.it) as the places CHEOPS data are made public. SetuHQ
-tries them first (:func:`probe_archives`); neither offers a documented programmatic interface it can use (from
-here the Mission Archive answered 403 and the mirror is an interactive page), so visits are listed and fetched
+checks them first (:func:`probe_archives`, which records whether each was reachable from this environment, cached
+per day); SetuHQ found no documented programmatic interface to either, so visits are listed and fetched
 through DACE (dace.unige.ch), the University of Geneva's public API in front of the CHEOPS Mission Archive. ESA does
 not designate DACE; each output records which source served it.
 
@@ -111,19 +111,45 @@ def credit_text(visits: list[dict] | None = None) -> str:
     return "\n".join(lines)
 
 
-def probe_archives(timeout: float = 10.0) -> dict:
-    """Whether ESA's named CHEOPS archives answer, and whether SetuHQ can use them programmatically (it cannot: they
-    offer no documented API). Recorded in each listing's provenance, before falling back to DACE."""
+def probe_archives(timeout: float = 10.0, *, cache_dir: str | Path | None = None, today: str | None = None,
+                   opener=None) -> dict:
+    """Whether ESA's named CHEOPS archives could be reached from this environment, recorded in each listing's
+    provenance before falling back to DACE. This records what happened here (an HTTP status, or the error), nothing
+    about ESA's services: a 403 or a timeout reads "not reachable from this environment". The result is cached per
+    day under ``cache_dir`` (``probe_archives_<date>.json``), so listings do not probe the archives every time."""
     import urllib.request
+    from datetime import date
 
-    out = {}
+    day = today or date.today().isoformat()
+    path = Path(cache_dir) / f"probe_archives_{day}.json" if cache_dir else None
+    if path is not None and path.exists():
+        try:
+            return json.loads(path.read_text())
+        except (OSError, ValueError):
+            pass
+    opener = opener or (lambda req, t: urllib.request.urlopen(req, timeout=t))
+    out = {"checked_on": day, "archives": {}}
     for name, url in ARCHIVES.items():
         try:
-            with urllib.request.urlopen(urllib.request.Request(url, method="HEAD"), timeout=timeout) as r:
-                status = r.status
-        except Exception as exc:  # noqa: BLE001 (any failure is "not reachable", with the reason)
-            status = getattr(exc, "code", None) or type(exc).__name__
-        out[name] = {"url": url, "status": status, "programmatic_api": False}
+            with opener(urllib.request.Request(url, method="HEAD"), timeout) as r:
+                code, reached = int(r.status), 200 <= int(r.status) < 400
+            why = None
+        except Exception as exc:  # noqa: BLE001 (any failure: not reachable from here, with the reason)
+            code = getattr(exc, "code", None)
+            reached, why = False, f"{type(exc).__name__}: {exc}"
+        out["archives"][name] = {"url": url, "http_status": code,
+                                 "result": "reachable from this environment" if reached
+                                 else "not reachable from this environment",
+                                 "error": why}
+    out["note"] = ("A HEAD request from this environment; it says nothing about the archive's availability elsewhere. "
+                   "SetuHQ found no documented programmatic interface for these archives, so it lists and fetches "
+                   "visits through DACE either way.")
+    if path is not None:
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(out, indent=1))
+        except OSError:
+            pass
     return out
 
 
@@ -237,7 +263,7 @@ def list_visits(target: str, *, radius_arcsec: float = 60.0, cache_dir: str | Pa
     visits = [{k: _plain(r.get(k)) for k in LIST_FIELDS} for r in latest_versions(public)]
     out = {"target": target, "ra_deg": float(coord.ra.deg), "dec_deg": float(coord.dec.deg), "radius_arcsec": radius_arcsec,
            "visits": visits, "n_public": len(visits), "n_not_public_dropped": dropped,
-           "archives_tried": probe_archives() if probe else None,
+           "archives_tried": probe_archives(cache_dir=Path(cache_dir)) if probe else None,
            "source": "DACE public mode, CHEOPS DRP light curves", **credit(visits)}
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(out, indent=1))

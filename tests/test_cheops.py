@@ -103,6 +103,27 @@ def test_list_visits_without_network(tmp_path):
     assert again == json.loads(json.dumps(out))
 
 
+def test_archive_probe_records_this_environment_and_is_cached_per_day(tmp_path):
+    import urllib.error
+
+    calls = []
+
+    def refuse(req, timeout):
+        calls.append(req.full_url)
+        raise urllib.error.HTTPError(req.full_url, 403, "Forbidden", {}, None)
+
+    out = ch.probe_archives(cache_dir=tmp_path, today="2026-10-22", opener=refuse)
+    for v in out["archives"].values():
+        assert v["http_status"] == 403 and v["result"] == "not reachable from this environment"
+        assert "programmatic_api" not in v
+    assert "says nothing about the archive's availability elsewhere" in out["note"]
+    n = len(calls)
+    again = ch.probe_archives(cache_dir=tmp_path, today="2026-10-22", opener=refuse)
+    assert again == out and len(calls) == n  # cached for the day: no second probe
+    ch.probe_archives(cache_dir=tmp_path, today="2026-10-23", opener=refuse)
+    assert len(calls) == 2 * n  # a new day probes again
+
+
 def test_a_cached_copy_not_marked_public_is_refused(tmp_path, excerpt):
     meta = {**excerpt["meta"], "status_published": False}
     vdir = tmp_path / "visits"

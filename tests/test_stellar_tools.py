@@ -57,7 +57,7 @@ def test_find_flares_tool(flare_csv):
     r = _check(env, "find_flares")
     assert r["summary"]["n_flares"] == 2 and r["inverted_null"]["false_positives"] == 0
     assert all(f["e_bol_erg"] > 0 for f in r["flares"])
-    assert r["validation_status"] == "unvalidated"   # no validation record under this data root
+    assert r["validation_status"] == st.NO_RECORD   # no validation record under this data root
     assert any("detected at the significance" in h for h in env["honesty"])
     assert any("9000 K" in h for h in env["honesty"])
     assert env["provenance"]["sources"][0]["sha256"]
@@ -150,12 +150,13 @@ def test_cli_cheops_offline_record_is_credited(tmp_path, monkeypatch, capsys):
 def test_docs_carry_the_disclaimer_and_acknowledgement():
     from setuhq.cheops import ACKNOWLEDGEMENT, DISCLAIMER
 
-    for rel in ("docs/STELLAR.md", "docs/results/stellar_validation.md"):
+    for rel in ("docs/STELLAR.md", "docs/results/stellar_validation_cheops.md"):
         text = (ROOT / rel).read_text()
         assert DISCLAIMER in text and ACKNOWLEDGEMENT.split(". ")[0] in text, rel
         for word in ("Benz", "Hoyer", "Fortier", "CH_PR100018"):
             assert word in text, (rel, word)
-        low = text.lower()
+    for rel in ("docs/STELLAR.md", "docs/results/stellar_validation.md", "docs/results/stellar_validation_cheops.md"):
+        low = (ROOT / rel).read_text().lower()
         assert "superintelligence" not in low
         assert "confirmed flare" not in low and "we discovered" not in low
 
@@ -163,10 +164,43 @@ def test_docs_carry_the_disclaimer_and_acknowledgement():
 def test_validation_record_has_protocol_seed_fingerprint_and_labels():
     rec = json.loads((ROOT / "docs/results/stellar_validation.json").read_text())
     assert rec["protocol"]["seed"] and len(rec["protocol_sha256"]) == 64
+    assert rec["protocol"]["version"] == 3 and rec["protocol"]["changes_from_v2"]
+    assert len(rec["protocol_commit"] or "") == 40
     for cap in ("flares", "pulsations", "cheops"):
-        assert rec["capabilities"][cap]["status"] in ("validated", "partly validated", "unvalidated")
+        c = rec["capabilities"][cap]
+        assert c["status"] in ("validated", "partly validated", "not validated")
+        assert c["label"] == f"{c['status']} ({c['passed']} of {c['of']} checks pass)"
     assert all(len(v["code_fingerprint"]) == 64 for v in rec["items"].values() if v.get("code_fingerprint"))
-    assert_credited(rec["cheops_credit"], [])
+    assert all("scripts/stellar_validation.py" in v["code_files"] for v in rec["items"].values() if v.get("code_files"))
+    assert any(c.get("changed") == "relaxed after v1" for c in rec["checks"])
+
+
+def test_status_rule():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("svr", ROOT / "scripts/stellar_validation_report.py")
+    svr = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(svr)
+    assert svr.status_of(5, 5)["status"] == "validated"
+    assert svr.status_of(5, 8)["status"] == "partly validated"
+    assert svr.status_of(2, 4)["label"] == "not validated (2 of 4 checks pass)"
+    assert svr.status_of(2, 5)["label"] == "not validated (2 of 5 checks pass)"
+
+
+def test_cheops_derived_results_are_split_out_under_esas_licence():
+    main = json.loads((ROOT / "docs/results/stellar_validation.json").read_text())
+    cheops = json.loads((ROOT / "docs/results/stellar_validation_cheops.json").read_text())
+    for k in ("cheops_flares", "hr10_cheops", "cheops_pycheops"):
+        assert k not in main["results"] and k in cheops["results"], k
+    assert "cheops_ev_lac" not in main["results"].get("denoise_grid", {})
+    assert "cheops_credit" not in main
+    assert all("value" not in c for c in main["checks"] if c["capability"] == "cheops")
+    assert main["cheops_results_in"]["keys"] == sorted(cheops["results"])
+    assert "CC BY-NC 3.0 IGO" in cheops["licence_notice"] and "not affiliated" in cheops["licence_notice"]
+    assert_credited(cheops["cheops_credit"], [])
+    md = (ROOT / "docs/results/stellar_validation_cheops.md").read_text()
+    assert md.splitlines()[1].startswith("<!-- Licence: CC BY-NC 3.0 IGO")
+    assert "Credit: ESA" in md
 
 
 def test_licensing_carves_out_cheops_data():
@@ -176,6 +210,7 @@ def test_licensing_carves_out_cheops_data():
     lic = " ".join((ROOT / "LICENSING.md").read_text().split())
     assert "neither the commercial licence nor SetuHQ Pro covers them" in lic
     assert "data.licences@esa.int" in lic and "GPL-3.0" in lic
+    assert "stellar_validation_cheops.json" in lic and "seek legal advice" in lic and "take on its GPL" not in lic
     notice = (ROOT / "NOTICE").read_text()
     for word in ("DACE", "SVO Filter Profile Service", "Credit: ESA", "Benz", "not affiliated"):
         assert word in notice, word

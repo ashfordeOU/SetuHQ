@@ -233,6 +233,34 @@ def test_single_flares_are_rarely_split():
     assert fs["recovered_clean"] >= 10 and fs["rate"] <= 0.2
 
 
+def test_injections_keep_the_drawn_fwhm_distribution_in_gappy_data():
+    # CHEOPS-like: 45-min stretches every 99 min; the FWHM is drawn once per injection, only the position is redrawn,
+    # and only the start and the peak plus three FWHM must fit in a stretch, so long flares are not crowded out
+    rng = np.random.default_rng(3)
+    cad = 60 / 86400
+    t = np.arange(0, 1.5, cad)
+    t = t[(t * 1440) % 99 < 45]
+    f = 1 + rng.normal(0, 5e-4, t.size)
+    r = fl.inject_recover(t, f, config=fl.config_for("CHEOPS", 60), band="CHEOPS", n_trials=3, per_trial=8,
+                          amp_range=(3e-3, 3e-2), fwhm_minutes=(0.5, 10.0), seed=1)
+    pl = r["placement"]
+    assert pl["n_placed"] == 24 and pl["n_unplaced"] == 0
+    assert abs(sum(b["expected_fraction"] for b in pl["histogram"]) - 1) < 1e-9
+    assert sum(b["placed"] for b in pl["histogram"]) == 24
+    long_ = np.mean([x["fwhm_minutes"] > math.sqrt(0.5 * 10.0) for x in r["injections"]])
+    assert 0.3 <= long_ <= 0.8   # half expected above the log midpoint
+
+
+def test_two_component_injections_merge_only_when_the_secondary_is_too_faint():
+    t, f = _lc(seed=5, days=6.0)
+    kw = dict(n_trials=1, per_trial=10, amp_range=(1e-2, 5e-2), fwhm_minutes=(5.0, 20.0), seed=4)
+    clear = fl.merge_rate(fl.inject_recover(t, f, second={"ratio": (0.3, 0.5), "separation_fwhm": (3, 5)}, **kw)["injections"])
+    faint = fl.merge_rate(fl.inject_recover(t, f, second={"ratio": (0.02, 0.05), "separation_fwhm": (1, 2)}, **kw)["injections"])
+    assert clear["n"] >= 8 and clear["rate"] <= 0.3
+    # below min_component_fraction (0.1) a secondary cannot be kept as a component: merged by construction
+    assert faint["n"] >= 8 and faint["rate"] >= 0.9
+
+
 def test_inverted_null_masks_real_flares():
     t, f = _lc(seed=8, flares=[(2.0, 30.0, 0.05), (4.5, 20.0, 0.04)])
     nul = fl.inverted_null(t, f)
