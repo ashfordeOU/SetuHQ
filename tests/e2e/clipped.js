@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Ashforde OÜ
 // Run in the page (page.evaluate): every visible element inside <main> whose visible right edge lies past the window.
 // html and body hide sideways overflow, so a page can be wider than the window with no scroll bar: its text is then
 // cut off at the right edge, and document.scrollWidth does not show it. This looks at each element instead.
