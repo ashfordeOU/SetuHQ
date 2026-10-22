@@ -25,8 +25,12 @@ def test_licence_files_and_metadata_agree():
         assert json.loads((ROOT / p).read_text())["license"] == "AGPL-3.0-only"
     cff = (ROOT / "CITATION.cff").read_text()
     assert "license:\n  - AGPL-3.0-only\n  - CC-BY-4.0\n" in cff
-    assert json.loads((ROOT / "codemeta.json").read_text())["license"] == [
-        "https://spdx.org/licenses/AGPL-3.0-only", "https://spdx.org/licenses/CC-BY-4.0"]
+    meta = json.loads((ROOT / "codemeta.json").read_text())
+    assert meta["license"] == ["https://spdx.org/licenses/AGPL-3.0-only", "https://spdx.org/licenses/CC-BY-4.0"]
+    # Ashforde OÜ owns the code and holds its copyright; Chakshu Baweja is the author, affiliated with it.
+    assert meta["copyrightHolder"] == {"@type": "Organization", "name": "Ashforde OÜ"}
+    assert [(a["givenName"], a["familyName"], a["affiliation"]["name"]) for a in meta["author"]] == [("Chakshu", "Baweja", "Ashforde OÜ")]
+    assert "family-names: Baweja\n    given-names: Chakshu\n" in cff and 'affiliation: "Ashforde OÜ"' in cff
     for d in ("results", "leaderboard", "sweep", "discoveries", "paper"):
         assert "CC-BY-4.0" in (ROOT / "docs" / d / "LICENSE.md").read_text(), d
 
