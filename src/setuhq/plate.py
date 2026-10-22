@@ -702,7 +702,7 @@ def plate_page(data: dict) -> str:
   <ul class="notes">
     <li>{_e(scope)}</li>
     <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.{f" {_e(data['panel_note'])}." if data.get("panel_note") else ""}</li>
-    <li>{_e(NO_RADIUS)}</li>
+    <li>{_e(NO_RADIUS)}</li>{f"<li><b>What this run did not recover:</b> {_e(data['caveat'])}</li>" if data.get("caveat") else ""}
     <li>Status is written as a word beside every colour.</li>
   </ul>
 </header>
@@ -726,12 +726,17 @@ def plate_page(data: dict) -> str:
 
 def build_plate(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
                 star: str | None = None, require_crossmatch: bool = False, path: str | None = None,
-                others: list[tuple[str, str]] | None = None) -> Path:
+                others: list[tuple[str, str]] | None = None, caveat: str = "", period_wrong: list[str] | None = None) -> Path:
     """The plates page; ``path`` is its address on the site (default /evidence/plates/), ``others`` the
     (name, address) of the other example runs' plates, linked from this page."""
     data = plate_data(run_dir, title=title, catalog_path=catalog_path, star=star, require_crossmatch=require_crossmatch)
     data["page_path"] = path or "/evidence/plates/"
     data["others"] = others or []
+    data["caveat"] = caveat
+    for s in data["stars"]:  # a BLS period known not to be the dip's planet's is said to be so
+        for c in s["candidates"]:
+            if c.get("candidate_id") in set(period_wrong or ()):
+                c["caption"] = c["caption"].replace("-day BLS period", "-day BLS period, which is not its planet's period", 1)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"

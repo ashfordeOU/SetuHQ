@@ -10,9 +10,9 @@ Published values: NASA Exoplanet Archive, table ps (every row for each planet), 
 
 | star | kind | sectors | dips | against the literature | site |
 |---|---|---|---|---|---|
-| WASP-126 | Hot Jupiter | 1 | 8 dips (8 candidates) | 1 of 1 known planet has dips on its published ephemeris: WASP-126 b, 8 of 8 transits (8 candidates). | [case file](https://setuhq.com/candidates/wasp-126/case-file/) |
-| TOI-270 | Multi-planet system | 5 | 7 dips (5 candidates, 2 flagged) | 2 of 3 known planets have dips on their published ephemeris: TOI-270 c, 5 of 5 transits (5 candidates); TOI-270 d, 2 of 2 transits (2 flagged); no dip on TOI-270 b. | [case file](https://setuhq.com/candidates/toi-270/case-file/) |
-| HD 15337 | Small planets near the limit | 4 | 3 dips (2 candidates, 1 flagged) | 2 of 2 known planets have dips on their published ephemeris: HD 15337 b, 1 of 5 transits (1 candidate), its period missed; HD 15337 c, 2 of 2 transits (1 candidate, 1 flagged), its period missed. | [case file](https://setuhq.com/candidates/hd-15337/case-file/) |
+| WASP-126 | Hot Jupiter | 1 | 8 dips (8 candidates) | WASP-126 b: 8 of 8 transits (8 candidates). | [case file](https://setuhq.com/candidates/wasp-126/case-file/) |
+| TOI-270 | Multi-planet system | 5 | 7 dips (5 candidates, 2 flagged) | TOI-270 b: none of 6 transits; TOI-270 c: 5 of 5 transits (5 candidates); TOI-270 d: 2 of 2 transits (2 flagged; no period). | [case file](https://setuhq.com/candidates/toi-270/case-file/) |
+| HD 15337 | Small planets near the limit | 4 | 3 dips (2 candidates, 1 flagged) | HD 15337 b: 1 of 5 transits (1 candidate; BLS period not the planet's); HD 15337 c: 2 of 2 transits (1 candidate, 1 flagged; BLS period not the planet's). | [case file](https://setuhq.com/candidates/hd-15337/case-file/) |
 | TOI-236 | Known false positive | 2 | 6 dips (6 rejected) | Caught: all 6 dips on the TOI ephemeris were rejected by vetting (secondary_any_phase, secondary_eclipse), so none is a candidate. | [case file](https://setuhq.com/candidates/toi-236/case-file/) |
 | pi Men | Reference check | 1 | 7 dips (5 candidates, 1 flagged, 1 rejected) | Rp/R★ and T14 within 5% of Huang et al. 2018 (docs/results/pi_men_validation.md). | [case file](https://setuhq.com/candidates/case-file/) |
 
@@ -24,7 +24,7 @@ A Jupiter-sized planet on a 3.3-day orbit: deep, easy transits, in the TESS sout
 
 **Run:** `runs/tess-wasp-126-s1`, TESS sector 1; Probes only; Sentinels not run on this example. 8 dips (8 candidates).
 
-**Against the literature** (Maxted et al. 2016): 1 of 1 known planet has dips on its published ephemeris: WASP-126 b, 8 of 8 transits (8 candidates). The full comparison: [docs/results/showcase/tess-wasp-126-s1.md](docs/results/showcase/tess-wasp-126-s1.md).
+**Against the literature** (Maxted et al. 2016): WASP-126 b: 8 of 8 transits (8 candidates). The full comparison: [docs/results/showcase/tess-wasp-126-s1.md](docs/results/showcase/tess-wasp-126-s1.md).
 
 **Reproduce:**
 
@@ -40,7 +40,7 @@ An M dwarf with three known transiting planets at 3.4, 5.7 and 11.4 days: severa
 
 **Run:** `runs/tess-toi-270-s5`, TESS sector 5; Probes only; Sentinels not run on this example. 7 dips (5 candidates, 2 flagged).
 
-**Against the literature** (Günther et al. 2019): 2 of 3 known planets have dips on their published ephemeris: TOI-270 c, 5 of 5 transits (5 candidates); TOI-270 d, 2 of 2 transits (2 flagged); no dip on TOI-270 b. The full comparison: [docs/results/showcase/tess-toi-270-s5.md](docs/results/showcase/tess-toi-270-s5.md).
+**Against the literature** (Günther et al. 2019): TOI-270 b: none of 6 transits; TOI-270 c: 5 of 5 transits (5 candidates); TOI-270 d: 2 of 2 transits (2 flagged; no period). The full comparison: [docs/results/showcase/tess-toi-270-s5.md](docs/results/showcase/tess-toi-270-s5.md).
 
 **Reproduce:**
 
@@ -56,7 +56,7 @@ A bright K dwarf with two small known planets: b (about 1.6 Earth radii, 4.8 day
 
 **Run:** `runs/tess-hd-15337-s4`, TESS sector 4; Probes only; Sentinels not run on this example. 3 dips (2 candidates, 1 flagged).
 
-**Against the literature** (Gandolfi et al. 2019): 2 of 2 known planets have dips on their published ephemeris: HD 15337 b, 1 of 5 transits (1 candidate), its period missed; HD 15337 c, 2 of 2 transits (1 candidate, 1 flagged), its period missed. The full comparison: [docs/results/showcase/tess-hd-15337-s4.md](docs/results/showcase/tess-hd-15337-s4.md).
+**Against the literature** (Gandolfi et al. 2019): HD 15337 b: 1 of 5 transits (1 candidate; BLS period not the planet's); HD 15337 c: 2 of 2 transits (1 candidate, 1 flagged; BLS period not the planet's). The full comparison: [docs/results/showcase/tess-hd-15337-s4.md](docs/results/showcase/tess-hd-15337-s4.md).
 
 **Reproduce:**
 

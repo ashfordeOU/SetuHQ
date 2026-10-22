@@ -55,5 +55,5 @@ Each 13-day subject holds only one of its transits, so the search found no perio
 
 Transits predicted in the stored light curve: 2; with a dip on them: 2 (2 dips; 2 flagged; mean offset -8.8 min).
 
-A known planet found again is a check of the pipeline, not a discovery. 2 of 3 known planets have dips on their published ephemeris: TOI-270 c, 5 of 5 transits (5 candidates); TOI-270 d, 2 of 2 transits (2 flagged); no dip on TOI-270 b.
+A known planet found again is a check of the pipeline, not a discovery. TOI-270 b: none of 6 transits; TOI-270 c: 5 of 5 transits (5 candidates); TOI-270 d: 2 of 2 transits (2 flagged; no period).
 

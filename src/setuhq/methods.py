@@ -1874,7 +1874,8 @@ function mxSystemParams(p, dip){
   let b = p.impact_parameter, bSrc = 'stored';
   if (b == null && p.inclination != null && a && rs){ b = ars * Math.cos(p.inclination * Math.PI / 180); bSrc = 'from a/R★ and i'; }
   if (b == null || b > 1 + k){ b = 0.3; bSrc = 'illustrative'; }
-  return {teff, rs, rp, a, P, k, ars, b, bSrc, scale, cls: mxClassOf(rp, p.mass || p.mass_sini), name: p.name || '', dip: dip || null, inc: p.inclination};
+  return {teff, rs, rp, a, P, k, ars, b, bSrc, scale, cls: mxClassOf(rp, p.mass || p.mass_sini), name: p.name || '', dip: dip || null, inc: p.inclination,
+    ld: p.ld && p.ld[0] != null ? p.ld : null};
 }
 function mxDurations(P, ars, k, b){
   const inc = Math.acos(Math.min(1, b / ars)), si = Math.sin(inc), f = x => P / Math.PI * Math.asin(Math.min(1, x / (ars * si)));
@@ -1882,7 +1883,7 @@ function mxDurations(P, ars, k, b){
 }
 function mxDrawSystem(c, w, h, t, st){
   const S = st.opt.sys; if (!S) return;
-  const P = S.P || 10, [u1, u2] = mxLd(S.teff), [t14] = mxDurations(P, S.ars, S.k, S.b);
+  const P = S.P || 10, [u1, u2] = S.ld || mxLd(S.teff), [t14] = mxDurations(P, S.ars, S.k, S.b);
   const win = Math.min(0.24, 0.9 * t14 / P);   // half-window of the chart, as a fraction of the orbit
   // Time runs slowly through the transit window and faster for the rest of the orbit (stated on screen).
   const phi = t < 0.5 ? -win + t / 0.5 * 2 * win : win + (t - 0.5) / 0.5 * (1 - 2 * win);

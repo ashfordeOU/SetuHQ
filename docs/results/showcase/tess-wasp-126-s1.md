@@ -25,5 +25,5 @@ Ephemeris from Ivshina & Winn 2022; compared with Maxted et al. 2016 (https://ui
 
 Transits predicted in the stored light curve: 8; with a dip on them: 8 (8 dips; 8 passed; mean offset -14.7 min).
 
-A known planet found again is a check of the pipeline, not a discovery. 1 of 1 known planet has dips on its published ephemeris: WASP-126 b, 8 of 8 transits (8 candidates).
+A known planet found again is a check of the pipeline, not a discovery. WASP-126 b: 8 of 8 transits (8 candidates).
 

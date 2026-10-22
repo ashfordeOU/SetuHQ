@@ -684,12 +684,25 @@ def example_paths(x: dict) -> dict:
             "report": f"/evidence/report/{slug}/"}
 
 
+def run_star(run_dir: str | Path, target: str) -> dict:
+    """The run's star as its stellar.json stores it (the TIC's Teff and radius), or {} when it is not stored."""
+    path = Path(run_dir) / "stellar.json"
+    if not path.exists():
+        return {}
+    s = (json.loads(path.read_text()) or {}).get(target) or {}
+    return {"teff": s.get("teff"), "radius": s.get("radius"), "source": s.get("source") or ""} if s else {}
+
+
 def run_context(x: dict) -> dict:
-    """What a dip's page needs from its own run: the star, the planet the archive matches, the lead signal, and
+    """What a dip's page needs from its own run: the star (its TIC Teff and radius), the planet the archive matches,
+    the lead signal, what the run did not recover, which dips carry a BLS period that is not their planet's, and
     where its case file is."""
     st = x["story"]
-    return {"run": x["run"], "star": st["star"], "planet": st.get("planet"), "lead": x["hero"].get("lead"),
+    meta = x.get("meta") or {}
+    return {"run": x["run"], "star": st["star"], "star_params": run_star(x["dir"], st["star"].get("target") or ""),
+            "planet": st.get("planet"), "lead": x["hero"].get("lead"),
             "lead_dip": st.get("lead_dip"), "probes_only": panel_mode(x["manifest"]) == "probes_only",
+            "caveat": meta.get("caveat") or "", "period_wrong": list(meta.get("bls_period_not_planets") or []),
             **example_paths(x)}
 
 
@@ -706,6 +719,7 @@ def example_card(x: dict, meta: dict) -> dict:
     return {
         "run": x["run"], "star": star, "target": st["star"]["target"], "slug": slugify(star),
         "kind": meta.get("kind") or "", "summary": meta.get("summary") or "", "why": meta.get("why") or "",
+        "caveat": meta.get("caveat") or "",
         "outcome_line": meta.get("outcome") or "", "reference": meta.get("reference") or "",
         "planet": st.get("planet"), "sectors": sectors, "mission": "TESS",
         "n_dips": len(dips), "count": dip_count(outcomes),
@@ -789,8 +803,17 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         if d["id"] in dips:
             d["letter"] = str(dips[d["id"]]["n"])
         d["run"] = run_name
+    # A dip whose stored BLS period is known not to be its planet's (docs/results/showcase.json) is named without it.
+    for x in meta.values():
+        for i in x.get("bls_period_not_planets") or []:
+            if i in dips:
+                dips[i]["label"] = f'{dips[i]["star"]}, dip {dips[i]["n"]}'
     lead_example = {"run": run_name, "dir": str(run_dir), "manifest": manifest, "story": story, "hero": hero, "dock": dock,
                     "names": {i: d for i, d in dips.items() if d.get("run") == run_name}, "lead": True}
+    for x in [lead_example] + extras:
+        x["meta"] = meta.get(x["run"]) or {}
+        if x["meta"].get("caveat"):
+            x["dock"]["caveat"] = x["meta"]["caveat"]
     showcase = [example_card(x, meta.get(x["run"]) or {}) for x in [lead_example] + extras]
     # The order docs/results/showcase.json gives (a run it does not list keeps its place after those it does).
     order = list(meta)
@@ -821,6 +844,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "run_ctx": {x["run"]: run_context(x) for x in [lead_example] + extras},
         "docket_frames": {},  # each run's framed case file, by run name, set by the site builder
         "extra_docket_html": {x["run"]: with_frame_bridge(docket_page(x["dock"])) for x in extras},
+        "showcase_meta": {x["run"]: {"caveat": x["meta"].get("caveat") or ""} for x in [lead_example] + extras},
         "extra_runs": [{"run": x["run"], "dir": x["dir"], "slug": x["slug"], "star": x["story"]["star"]["name"] or x["run"]} for x in extras],
         "run": {
             "name": run_name, "dir": str(run_dir), "created_at": manifest.get("created_at", ""),
@@ -2272,25 +2296,35 @@ const txs = {dip: null, cmp: []};
 // as deep as the stored depth would cast, with the orbit and the impact parameter illustrative (b = 0).
 function txTheatre(d){
   const known = d.status === 'known', k = d.ratio || 0, C = CTX(d), planet = C.planet;
+  let starNote = 'the star is the target as the catalogue stores it', k2 = k;
   const star = typeof MX !== 'undefined' && MX && planet ? MX.examples[planet] || null : null;
   const model = (d.model || []).map(p => [p[0], p[1]]);
   let p, bNote;
   if (known && star){ p = Object.assign({name: planet}, star); bNote = `impact parameter ${star.impact_parameter != null ? 'as stored' : 'illustrative'}`; }
   else {
-    // Rp/R★ = √depth; the duration sets a/R★ for an illustrative period (the lead signal's), b = 0 (not fitted).
-    const P = (C.lead && C.lead.period_days) || 6, T14 = Math.max(0.02, (d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * (1 + k);
-    const st = star || {};
-    p = {name: 'a planet this deep', star_teff: st.star_teff || 5772, star_radius: st.star_radius || 1, radius: st.star_radius ? k * st.star_radius * 6.957e8 / 7.1492e7 : null,
-      orbital_period: P, semi_major_axis: ars * (st.star_radius || 1) * 6.957e8 / 1.495978707e11, impact_parameter: 0};
-    bNote = 'impact parameter illustrative (b = 0), not the fit\'s';
+    // This dip's own shape: the stored fit's Rp/R★, b and limb darkening when a fit is stored, else Rp/R★ = √depth and
+    // b = 0. The star is the run's own (its TIC Teff and radius as the run stored them); the period is illustrative.
+    const SP = C.star_params || {}, kk = d.fit_k || k, fitted = !!d.fit_k;
+    const teff = (star && star.star_teff) || SP.teff || null, rs = (star && star.star_radius) || SP.radius || null;
+    const P = (!wrongP(d) && d.period_days) || (C.lead && !wrongP(d) && C.lead.period_days) || 6;
+    const T14 = Math.max(0.02, (d.fit_t14_hours || d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * (1 + kk);
+    p = {name: 'a planet this deep', star_teff: teff, star_radius: rs || 1, radius: kk * (rs || 1) * 6.957e8 / 7.1492e7,
+      orbital_period: P, semi_major_axis: ars * (rs || 1) * 6.957e8 / 1.495978707e11,
+      impact_parameter: fitted && d.fit_b != null ? d.fit_b : 0, ld: fitted ? d.fit_ld : null};
+    bNote = fitted ? 'Rp/R★, b and limb darkening from this dip\'s stored fit' : 'impact parameter illustrative (b = 0), not fitted';
+    starNote = teff ? `the star: ${Math.round(teff).toLocaleString('en-GB')} K${rs ? ', ' + fmt(rs, 2) + ' R☉' : ''} (${SP.source || 'as stored'})` : 'the star\'s temperature is not stored (drawn at the Sun\'s)';
+    k2 = kk;
   }
   $('#txcap').textContent = known && star ? `${planet}, from stored values` : 'what a planet this deep would cast';
   $('#txfoot').textContent = (known && star
       ? `${planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}): the line is a limb-darkened model from those values, not a fit to this dip; ${bNote}. The match says the planet is already known; it does not confirm the dip.`
-      : `If it were a planet: Rp/R★ = √depth = ${fmt(k, 4)}, from the stored depth ${fmt(d.depth_ppm, 0)} ppm; the star is the target as the catalogue stores it; orbit and period illustrative; ${bNote}.`)
+      : `If it were a planet: Rp/R★ = ${d.fit_k ? fmt(k2, 4) + ' from this dip\'s stored fit' : '√depth = ' + fmt(k2, 4) + ', from the stored depth ' + fmt(d.depth_ppm, 0) + ' ppm'}; ${starNote}; orbit and period illustrative; ${bNote}.`)
     + ` Dots: the ${d.pts.length} stored flux values within ${fmt(d.half * 24, 1)} hours of mid-time (${esc(d.time_unit)} ${fmt(d.t, 3)}). ${model.length ? 'Dashed: the limb-darkened fit stored for this dip.' : 'No transit fit is stored for this dip.'} The star's surface texture is decorative.`;
-  const {st} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}, on: current === 'transit', caption: false});
-  if (!(known && star)){ st.opt.sys.bSrc = 'illustrative'; mxKick(st); }
+  const {st, S: SS} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}, on: current === 'transit', caption: false});
+  if (!(known && star)){ st.opt.sys.bSrc = d.fit_k ? 'stored fit' : 'illustrative'; mxKick(st); }
+  // What the drawing shows, for the tests: the star's temperature and the model's depth at mid-transit (ppm).
+  const fig = $('#txsysfig'), [lu1, lu2] = SS.ld || mxLd(SS.teff);
+  fig.dataset.teff = String(Math.round(SS.teff)); fig.dataset.modelDepthPpm = String(Math.round((1 - mxFlux(SS.b, SS.k, lu1, lu2)) * 1e6));
   // The canonical pages for the planet (when the dip matches one) and the star.
   $('#txlinks').innerHTML = (known && planet && C.planet_page !== false ? objLink('planet', planet, planet + ' ›') : '') + (C.star && C.star.name && C.star_page !== false ? objLink('star', C.star.name, C.star.name + ' ›') : '');
 }
@@ -2310,8 +2344,11 @@ function quoteHTML(d){
   return `<div class="quote"><div class="who"><b title="reviewer id ${esc(q.id)}">${esc(q.name)}</b><span>${q.confidence === null || q.confidence === undefined ? 'confidence not stored' : 'confidence ' + fmt(q.confidence, 1)}</span></div>
     <p>“${esc(q.text)}”</p><small>Its stored rationale for subject ${esc(d.subject_label || d.subject)} (${esc(d.time_unit)} ${fmt(d.subject_start, 1)} to ${fmt(d.subject_end, 1)}), one per subject, not per dip. It ${q.marked ? 'marked' : 'did not mark'} this dip. A Sentinel is an AI model${PROV(q.id || '') ? ` (${esc(PROV(q.id))})` : ''}, not a person.</small></div>`;
 }
+// A dip whose stored BLS period is known not to be its planet's (docs/results/showcase.json): no period is drawn for it.
+const wrongP = d => (CTX(d).period_wrong || []).includes(d.id);
 function orbitHTML(d){
   const C = CTX(d), L = C.lead; if (!L || d.phase === null || d.phase === undefined) return '';
+  if (wrongP(d) || (C.period_wrong || []).includes(L.dip)) return '';
   const ang = Math.PI / 2 + d.phase * 2 * Math.PI, px = 100 + 80 * Math.cos(ang), py = 100 + 80 * Math.sin(ang);
   const who = C.planet ? `${esc(C.planet)}'s orbit` : "the lead signal's orbit";
   const near = Math.abs(d.phase) < 0.02;
@@ -2352,6 +2389,7 @@ function renderTransit(){
   $('#txorbit').innerHTML = orbitHTML(d) + trayHTML();
   $('#txcase').innerHTML = `<a class="btn primary" href="${esc(dipHref(d.id))}">Open the full case file ›</a><span>Every check, the stored measurements, the verdict ledger and the archive provenance.</span>`;
   $('#txarchive').textContent = d.archive_line ? `Archive comparison: ${d.archive_line}. ${D.no_detection}` : '';
+  const cv = CTX(d).caveat; $('#txcaveat').hidden = !cv; $('#txcaveat').textContent = cv ? `What this run did not recover: ${cv}` + (wrongP(d) ? ' This dip\'s stored BLS period is not its planet\'s, so no period is given for it.' : '') : '';
 }
 function openTransit(dip){
   const n = $('#txnotice');
@@ -2738,7 +2776,7 @@ def _gallery(data: dict) -> str:
           <p class="exkind">{e(c["kind"] or "Example run")}</p>
           <h3 id="ex-{e(c["slug"])}">{f'<a href="#/transit?dip={e(first)}">{e(c["star"])}</a>' if first else e(c["star"])}</h3>
           <p class="exsum">{e(c["summary"])}</p>
-          <p class="excount">{e(c["count"])}</p>
+          <p class="excount">{e(c["count"])}</p>{f'<p class="excaveat">{e(c["caveat"])}</p>' if c["caveat"] else ""}
           <p class="exmeta">{e(c["mission"])} sector{"s" if len(c["sectors"]) != 1 else ""} {e(sectors)} · {e(c["panel_label"])}</p>
           <p class="exlinks">{links}</p>
         </article></li>""")
@@ -3105,6 +3143,7 @@ def _transit(data: dict) -> str:
         </aside>
       </div>
       <section class="row2" id="txorbit" aria-label="Orbit and compare"></section>
+      <p class="note" id="txcaveat" hidden></p>
       <p class="casefile" id="txcase"></p>
       <p class="small" id="txarchive"></p>
       <p class="small">Only a dip that passed vetting is a candidate, and it stays unconfirmed; a rejected dip is not one. Stored values only: the points, marks, scores, flags and words are as the run stored them.</p>"""
@@ -3128,7 +3167,7 @@ def _explorer(data: dict) -> str:
         hid = f'h-run-{e(c["slug"])}'
         groups.append(f"""<section class="card rundips" aria-labelledby="{hid}">
         <h2 id="{hid}">{e(c["star"])}{f' · {e(c["kind"])}' if c["kind"] else ""}: {e(c["count"])}</h2>
-        <p class="small">Run {e(c["run"])}, TESS sector{"s" if len(c["sectors"]) != 1 else ""} {e(", ".join(str(x) for x in c["sectors"]))}. {e(c["panel_label"])}.{f" {e(c['outcome_line'])}" if c["outcome_line"] else ""}</p>
+        <p class="small">Run {e(c["run"])}, TESS sector{"s" if len(c["sectors"]) != 1 else ""} {e(", ".join(str(x) for x in c["sectors"]))}. {e(c["panel_label"])}.{f" {e(c['outcome_line'])}" if c["outcome_line"] else ""}{f" {e(c['caveat'])}" if c["caveat"] else ""}</p>
         <ul class="rundiplist">{"".join(rows)}</ul>
         <p class="small runlinks"><a href="{e(c["case_file"])}">The run's case file ›</a> <a href="{e(c["plates"])}">Plates ›</a> <a href="{e(c["report"])}">Run report ›</a></p>
       </section>""")

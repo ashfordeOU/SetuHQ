@@ -167,6 +167,9 @@ def story_data(run_dir: str | Path, dock: dict, feed: list[dict], calibration: d
             # The stored limb-darkened fit of this dip, as (time from mid-dip, ppm); [] when no fit is stored.
             "model": [[round(t - c["t_center"], 5), round(p, 1)] for t, p in c.get("model") or []],
             "fit_depth_ppm": (c.get("fit") or {}).get("depth_ppm"), "fit_t14_hours": (c.get("fit") or {}).get("t14_hours"),
+            # The fit's own shape, so a dip page can draw this dip's model: Rp/R★, b and the limb darkening it used.
+            "fit_k": (c.get("fit") or {}).get("k"), "fit_b": (c.get("fit") or {}).get("b"),
+            "fit_ld": [(c.get("fit") or {}).get("u1"), (c.get("fit") or {}).get("u2")] if (c.get("fit") or {}).get("u1") is not None else None,
             "lanes": lanes, "who": who, "quotes": quotes, "phase": phase,
             "on_lead": c.get("signal_id") == lead.get("signal_id"),
             "verdict": verdict_text(c, status, who, cmp), "archive_line": cmp.get("line", ""),

@@ -200,7 +200,10 @@ def compare_planet(name: str, rows: list[dict], paper: str, cands: list[dict], s
     dips = [d["c"] for d in m["dips"]]
     outs = [outcome_of(c) for c in dips]
     passed = [c for c, o in zip(dips, outs) if o != "rejected"] or dips
-    ours = {"period_days": _median([c.get("period_days") for c in passed]),
+    # The BLS period: one value when the dips agree (within 1%); dips with different periods are listed, not averaged.
+    periods = sorted({round(c["period_days"], 5) for c in passed if c.get("period_days")})
+    agree = bool(periods) and periods[-1] <= periods[0] * 1.01
+    ours = {"period_days": _median([c.get("period_days") for c in passed]) if agree else None,
             "rp_rs": _median([c.get("fit_k") for c in passed]),
             "t14_hours": _median([c.get("fit_t14_hours") for c in passed]),
             "depth_ppm": _median([c.get("fit_depth_ppm") for c in passed])}
@@ -214,6 +217,7 @@ def compare_planet(name: str, rows: list[dict], paper: str, cands: list[dict], s
         out["archive_default"] = {"reference": default["pl_refname"], "values": values(default),
                                   "ratio": {k: _ratio(ours[k], v) for k, v in values(default).items() if v}}
     out |= {
+        "dip_ids": [c["candidate_id"] for c in dips], "periods_each": periods if not agree else [],
         "predicted_transits": len(m["predicted"]), "recovered_transits": len(m["recovered"]),
         "dips_on_ephemeris": len(dips),
         "outcomes": {k: outs.count(k) for k in ("passed", "flagged", "rejected") if outs.count(k)},
@@ -297,20 +301,62 @@ def run_entry(spec: dict, reference: dict) -> dict:
     for p in planets:
         r = (p.get("ratio") or {}).get("period_days")
         p["period_recovered"] = bool(r and abs(r - 1) <= 0.02)
+        # Dips whose stored BLS period is known not to be this planet's (a different one, or several disagreeing).
+        p["period_wrong"] = bool(p.get("dip_ids")) and not p["period_recovered"] and bool(
+            p.get("periods_each") or (p.get("setuhq") or {}).get("period_days"))
+    entry["bls_period_not_planets"] = sorted({i for p in planets if p["period_wrong"] for i in p["dip_ids"]})
 
     def said(p):
         o = p.get("outcomes") or {}
         words = {"passed": ("candidate", "candidates"), "flagged": ("flagged", "flagged"), "rejected": ("rejected", "rejected")}
         return ", ".join(f"{v} {words[k][v != 1]}" for k, v in o.items())
 
-    entry["outcome"] = (f"{len(found)} of {len(planets)} known planet{'s' if len(planets) != 1 else ''} "
-                        f"{'have' if len(found) != 1 else 'has'} dips on {'their' if len(planets) != 1 else 'its'} published ephemeris"
-                        + (": " + "; ".join(f"{p['planet']}, {p['recovered_transits']} of {p['predicted_transits']} transits ({said(p)})"
-                                            + ("" if p["period_recovered"] or p["setuhq"].get("period_days") is None else ", its period missed")
-                                            for p in found) if found else "")
-                        + (f"; no dip on {', '.join(p['planet'] for p in planets if p not in found)}" if len(found) < len(planets) else "")
-                        + ".")
+    # Led by the transit counts, planet by planet; then what was not recovered.
+    lines = []
+    for p in planets:
+        if not p.get("predicted_transits") and not p.get("dip_ids"):
+            continue
+        if p.get("recovered_transits"):
+            note = ("no period" if not (p.get("setuhq") or {}).get("period_days") and not p.get("periods_each")
+                    else "BLS period not the planet's" if p["period_wrong"] else "")
+            lines.append(f"{p['planet']}: {p['recovered_transits']} of {p['predicted_transits']} transits ({said(p)}"
+                         + (f"; {note}" if note else "") + ")")
+        else:
+            lines.append(f"{p['planet']}: none of {p['predicted_transits']} transits")
+    entry["outcome"] = "; ".join(lines) + "."
+    entry["caveat"] = caveat(planets)
     return entry
+
+
+def caveat(planets: list[dict]) -> str:
+    """One plain line on what this run did not recover, for every page that shows the run ('' when it recovered
+    every predicted transit of every planet, with its period)."""
+    short = {p["planet"]: p["planet"].split()[-1] for p in planets}
+    parts = []
+    found = [p for p in planets if p.get("recovered_transits")]
+    if found and any(p["recovered_transits"] < p["predicted_transits"] or p["period_wrong"] or
+                     not ((p.get("setuhq") or {}).get("period_days") or p.get("periods_each")) for p in found):
+        bits = []
+        for p in found:
+            n, m, x = p["recovered_transits"], p["predicted_transits"], short[p["planet"]]
+            bits.append(f"{n} of {x}'s {m} transits" if n != m else f"both of {x}'s" if n == 2 else f"all {n} of {x}'s transits")
+        parts.append("found " + " and ".join(bits))
+    missing = [p for p in planets if not p.get("recovered_transits") and p.get("predicted_transits")]
+    if missing:
+        parts.append(", ".join(short[p["planet"]] for p in missing) + " not found")
+    noper = [p for p in found if not ((p.get("setuhq") or {}).get("period_days") or p.get("periods_each"))]
+    for p in noper:
+        parts.append(f"{short[p['planet']]} seen {'twice' if p['recovered_transits'] == 2 else str(p['recovered_transits']) + ' times'}, "
+                     "no period (one transit per 13-day piece of the light curve)")
+    wrong = [p for p in found if p["period_wrong"]]
+    if wrong:
+        parts.append(("neither published period was recovered" if len(wrong) == 2 and len(planets) == 2
+                      else ", ".join(short[p["planet"]] for p in wrong) + ": published period not recovered")
+                     + " (the BLS period on those dips is not the planet's)")
+    if not parts:
+        return ""
+    text = "; ".join(parts)
+    return text[0].upper() + text[1:] + "."
 
 
 def _f(x, d=3):
@@ -361,7 +407,9 @@ def markdown(e: dict, reference: dict) -> str:
         lines += [head, "|---|---:|---:|---:|" + ("---:|---:|" if dflt else "")]
         names = {"period_days": ("P (d)", 5), "rp_rs": ("Rp/R★", 4), "t14_hours": ("T14 (h)", 2), "depth_ppm": ("depth (ppm)", 0)}
         for k, (lab, d) in names.items():
-            row = (f"| {lab} | {_f(p['setuhq'].get(k), d)} | {_f(p['published'].get(k), d) if p['published'].get(k) else ''} | "
+            ours = (", ".join(f"{x:.4f}" for x in p["periods_each"]) + " (one per dip, BLS; not one period)"
+                    if k == "period_days" and p.get("periods_each") else _f(p['setuhq'].get(k), d))
+            row = (f"| {lab} | {ours} | {_f(p['published'].get(k), d) if p['published'].get(k) else ''} | "
                    f"{_f(p['ratio'].get(k), 3) if p['ratio'].get(k) else ''} |")
             if dflt:
                 v = dflt["values"].get(k)
@@ -369,8 +417,9 @@ def markdown(e: dict, reference: dict) -> str:
             lines.append(row)
         if not p["dips_on_ephemeris"]:
             lines += ["", "The panel marked no dip on this planet's transits in this run, so nothing is compared."]
-        elif p["ratio"].get("period_days") and abs(p["ratio"]["period_days"] - 1) > 0.02:
-            lines += ["", f"The BLS period stored on these dips ({_f(p['setuhq']['period_days'], 4)} d) is not this planet's: within a "
+        elif p.get("period_wrong"):
+            got = ", ".join(f"{x:.4f}" for x in p["periods_each"]) if p.get("periods_each") else _f(p["setuhq"]["period_days"], 4)
+            lines += ["", f"The BLS period stored on these dips ({got} d) is not this planet's: within a "
                           "13-day subject the search paired dips that belong to different transits (another planet's, or an alias), "
                           "so the period ratio is a miss, not a recovery, and the fit that used it (Rp/R★, depth) is less reliable "
                           "than its T14. The dips sit on the published ephemeris; the period does not."]

@@ -122,6 +122,7 @@
 .exlinks a,.runlinks a{display:inline-flex;align-items:center;min-height:32px;font-size:13.5px}
 .runlinks{display:flex;flex-wrap:wrap;gap:4px 16px}
 .refcheck{display:grid;gap:14px}
+.excaveat{font-size:13px;line-height:1.45;color:var(--ink-2);border-left:2px solid var(--yellow);padding-left:8px}
 /* Candidates: the dips a visitor can open, the cards behind Customise, the feed's compact table */
 .rundiplist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .rundiplist li{display:flex;align-items:stretch;gap:8px}

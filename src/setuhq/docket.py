@@ -282,7 +282,7 @@ function renderRunHeader(){
   const chips = [['all', `all ${n(c.signals)}`], ['passed', `${n(c.passed)} passed`], ['flagged', `${n(c.flagged)} flagged`], ['rejected', `${n(c.rejected)} rejected`]];
   box.innerHTML = `<h1>${esc(D.title)}</h1>
     <p class="counts"><b>${c.signals} signal${c.signals===1?'':'s'} · ${c.dips} dip${c.dips===1?'':'s'}</b><br>
-    <span class="revcount">${c.reviewers} reviewers: ${reviewerSummary(Object.keys(D.reviewers))}</span><br>${D.panel_note ? `<span class="revcount"><b>${esc(D.panel_note)}.</b></span><br>` : ''}
+    <span class="revcount">${c.reviewers} reviewers: ${reviewerSummary(Object.keys(D.reviewers))}</span><br>${D.panel_note ? `<span class="revcount"><b>${esc(D.panel_note)}.</b></span><br>` : ''}${D.caveat ? `<span class="revcount">What this run did not recover: ${esc(D.caveat)}</span><br>` : ''}
     <span class="revcount">A signal that passes vetting is a candidate, unconfirmed; a rejected one is not a candidate.</span></p>
     <div class="chips" role="group" aria-label="Filter signals by vetting outcome">${chips.map(([k,l]) => `<button class="chip" data-f="${k}" aria-pressed="${state.filter===k}">${l}</button>`).join('')}</div>
     <div class="hint" style="margin-top:8px"><kbd>j</kbd>/<kbd>k</kbd> move · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> filter, <kbd>0</kbd> all · <kbd>s</kbd> strip</div>
@@ -1641,10 +1641,13 @@ def docket_page(data: dict) -> str:
 
 
 def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: str | None = None,
-                 refresh_crossmatch: bool = False, require_crossmatch: bool = False, path: str | None = None) -> Path:
+                 refresh_crossmatch: bool = False, require_crossmatch: bool = False, path: str | None = None,
+                 caveat: str = "") -> Path:
     """The stand-alone case file; ``path`` is its address on the site (default /candidates/case-file/)."""
     data = docket_data(run_dir, title=title, star=star, refresh_crossmatch=refresh_crossmatch,
                        require_crossmatch=require_crossmatch)
+    if caveat:  # what the run did not recover (docs/results/showcase.json), in the header
+        data["caveat"] = caveat
     if path:  # a page of the site: its address, and the site's one copy of the fonts
         data["page_path"] = path
         data["fonts_href"] = "/" + DOCKET_FONTS_CSS

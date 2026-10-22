@@ -430,7 +430,17 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
   const ALL = D.story.dips.concat(D.showcase_dips || []);  // every example run's dips
   for (const d of ALL) {
     await page.goto(BASE + `/candidates/${SLUG(d.id)}/`); await ready(page);
-    const s = await page.evaluate(() => ({ text: document.getElementById("route-transit").innerText, tags: [...document.querySelectorAll("#route-transit .tag")].filter((t) => t.offsetParent).map((t) => t.textContent) }));
+    const s = await page.evaluate(() => ({ h1: document.getElementById("h-transit").textContent, text: document.getElementById("route-transit").innerText, tags: [...document.querySelectorAll("#route-transit .tag")].filter((t) => t.offsetParent).map((t) => t.textContent) }));
+    if (d.run && d.run !== D.run.name) {
+      // Another example run's dip: drawn with its own star (the TIC Teff the run stored) and its own depth.
+      const C = D.run_ctx[d.run], fig = await page.evaluate(() => ({ ...document.getElementById("txsysfig").dataset }));
+      const teff = C.star_params && C.star_params.teff ? Math.round(C.star_params.teff) : 5772;
+      check(Number(fig.teff) === teff, `${SLUG(d.id)}: drawn with its own star's Teff`, `${fig.teff} K, expected ${teff} K`);
+      const want = d.fit_depth_ppm || d.depth_ppm, got = Number(fig.modelDepthPpm);
+      check(got > 0.75 * want && got < 1.25 * want, `${SLUG(d.id)}: the model's depth is this dip's`, `${got} ppm, its ${d.fit_depth_ppm ? "fit" : "stored depth"} ${Math.round(want)} ppm`);
+      if (C.caveat) check(s.text.includes(C.caveat), `${SLUG(d.id)}: says what its run did not recover`);
+      if ((C.period_wrong || []).includes(d.id)) check(!/\(\d+\.\d+ d\)/.test(s.h1), `${SLUG(d.id)}: no wrong period in its name`);
+    }
     if (d.outcome === "rejected") {
       check(!/candidate, unconfirmed/i.test(s.text) && !s.tags.includes("candidate"), `${SLUG(d.id)} (rejected) is never called a candidate`, s.text.match(/.{0,40}candidate.{0,20}/gi));
       check(/The dip, played back/.test(s.text) && !/The transit, played back/.test(s.text), `${SLUG(d.id)} (rejected) is a dip, not a transit`);

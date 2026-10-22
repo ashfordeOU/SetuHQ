@@ -81,9 +81,9 @@ run but pi Men is Probes only; Sentinels not run on this example.
 
 | Star | Kind | TESS sector | Dips | Against the literature |
 |---|---|---|---|---|
-| [WASP-126](https://setuhq.com/candidates/wasp-126/case-file/) | Hot Jupiter | 1 | 8 dips (8 candidates) | 1 of 1 known planet has dips on its published ephemeris: WASP-126 b, 8 of 8 transits (8 candidates). |
-| [TOI-270](https://setuhq.com/candidates/toi-270/case-file/) | Multi-planet system | 5 | 7 dips (5 candidates, 2 flagged) | 2 of 3 known planets have dips on their published ephemeris: TOI-270 c, 5 of 5 transits (5 candidates); TOI-270 d, 2 of 2 transits (2 flagged); no dip on TOI-270 b. |
-| [HD 15337](https://setuhq.com/candidates/hd-15337/case-file/) | Small planets near the limit | 4 | 3 dips (2 candidates, 1 flagged) | 2 of 2 known planets have dips on their published ephemeris: HD 15337 b, 1 of 5 transits (1 candidate), its period missed; HD 15337 c, 2 of 2 transits (1 candidate, 1 flagged), its period missed. |
+| [WASP-126](https://setuhq.com/candidates/wasp-126/case-file/) | Hot Jupiter | 1 | 8 dips (8 candidates) | WASP-126 b: 8 of 8 transits (8 candidates). |
+| [TOI-270](https://setuhq.com/candidates/toi-270/case-file/) | Multi-planet system | 5 | 7 dips (5 candidates, 2 flagged) | TOI-270 b: none of 6 transits; TOI-270 c: 5 of 5 transits (5 candidates); TOI-270 d: 2 of 2 transits (2 flagged; no period). |
+| [HD 15337](https://setuhq.com/candidates/hd-15337/case-file/) | Small planets near the limit | 4 | 3 dips (2 candidates, 1 flagged) | HD 15337 b: 1 of 5 transits (1 candidate; BLS period not the planet's); HD 15337 c: 2 of 2 transits (1 candidate, 1 flagged; BLS period not the planet's). |
 | [TOI-236](https://setuhq.com/candidates/toi-236/case-file/) | Known false positive | 2 | 6 dips (6 rejected) | Caught: all 6 dips on the TOI ephemeris were rejected by vetting (secondary_any_phase, secondary_eclipse), so none is a candidate. |
 | [pi Men](https://setuhq.com/candidates/case-file/) | Reference check | 1 | 7 dips (5 candidates, 1 flagged, 1 rejected) | Rp/R★ and T14 within 5% of Huang et al. 2018 (docs/results/pi_men_validation.md). |
 
@@ -383,7 +383,7 @@ SetuHQ reports what it measured, including where it falls short.
 | pi Men c, Rp/R★ against Huang et al. 2018 | **1.05** (0.0179 ± 0.0017) | [validation](docs/results/pi_men_validation.md) |
 | pi Men c, transit duration T14 | **1.04** (3.07 ± 0.17 h) | [validation](docs/results/pi_men_validation.md) |
 | Worked examples, Probes only: WASP-126 b, Rp/R★ against Pearson 2019 and T14 against Maxted et al. 2016 | **1.00** and **1.02** (8 of 8 transits) | [showcase](docs/SHOWCASE.md) |
-| … TOI-270 c and d (Günther et al. 2019), HD 15337 b and c (Gandolfi et al. 2019) | dips on each published ephemeris but TOI-270 b's; the periods of HD 15337 missed in one sector | [showcase](docs/SHOWCASE.md) |
+| … TOI-270 (Günther et al. 2019) and HD 15337 (Gandolfi et al. 2019) | TOI-270: c 5 of 5 transits, d 2 of 2 (no period), b none of 6; HD 15337: b 1 of 5, c 2 of 2, neither published period recovered | [showcase](docs/SHOWCASE.md) |
 | … TOI-236.01, a false positive in the TOI table | **rejected**: all 6 dips, secondary eclipse | [showcase](docs/SHOWCASE.md) |
 | Real-TOI benchmark, held-out completeness | **60%** (90/150; 52–67%), re-run on the current code; 57% (86/150) in the first run, on the pre-fix code | [benchmark](docs/results/benchmark_real_tois_clipfix.md) |
 | … planets below 2 R⊕ | 10% | [benchmark](docs/results/benchmark_real_tois_clipfix.md) |

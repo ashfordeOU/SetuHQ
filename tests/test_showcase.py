@@ -134,3 +134,20 @@ def test_the_readme_names_every_example():
     readme = (ROOT / "README.md").read_text()
     for e in _examples():
         assert e["star"] in readme and e["count"] in readme, e["star"]
+
+
+def test_a_run_that_missed_something_says_so_and_names_no_wrong_period():
+    for e in _examples():
+        planets = e.get("planets") or []
+        short = any(p.get("recovered_transits", 0) < p.get("predicted_transits", 0) or p.get("period_wrong")
+                    or (p.get("dip_ids") and not ((p.get("setuhq") or {}).get("period_days") or p.get("periods_each")))
+                    for p in planets)
+        assert bool(e.get("caveat")) == short, e["star"]
+        # The outcome leads with the transit counts, planet by planet.
+        for p in planets:
+            assert e["outcome"].count(p["planet"] + ":") == 1, (e["star"], p["planet"])
+        for p in planets:
+            if p.get("periods_each"):
+                assert p["setuhq"]["period_days"] is None  # never a median of disagreeing periods
+            if p.get("period_wrong"):
+                assert set(p["dip_ids"]) <= set(e["bls_period_not_planets"])

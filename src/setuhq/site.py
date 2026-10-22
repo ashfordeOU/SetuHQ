@@ -150,6 +150,7 @@ body[data-route="overview"] main{padding-top:8px}
 .exlinks a,.runlinks a{display:inline-flex;align-items:center;min-height:32px;font-size:13.5px}
 .runlinks{display:flex;flex-wrap:wrap;gap:4px 16px}
 .refcheck{display:grid;gap:14px}
+.excaveat{font-size:13px;line-height:1.45;color:var(--ink-2);border-left:2px solid var(--yellow);padding-left:8px}
 /* Candidates: the dips a visitor can open, the cards behind Customise, the feed's compact table */
 .rundiplist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .rundiplist li{display:flex;align-items:stretch;gap:8px}
@@ -568,13 +569,15 @@ def forward_page(target: str, title: str, lead: str | None = None) -> str:
 # Server-rendered views that the app also draws: a dip, a planet, a star, a chapter
 # ---------------------------------------------------------------------------------------------------------
 
-def _dip_header(section: str, d: dict, label: str) -> tuple[str, str]:
+def _dip_header(section: str, d: dict, label: str, caveat: str = "") -> tuple[str, str]:
     """The Transit view with its header filled in for one dip, as the app draws it (the app redraws it, with the
     playback). Returns the section and the heading's text: the dip's plain name, "pi Men, dip 2 (6.27 d)"."""
     e = html.escape
     out = section.replace('<p class="eyebrow" id="txkicker"></p>', f'<p class="eyebrow" id="txkicker">{e(d["status_label"])}</p>', 1)
     out = out.replace('<h1 class="lead-h" id="h-transit" tabindex="-1"></h1>', f'<h1 class="lead-h" id="h-transit" tabindex="-1">{e(label)}</h1>', 1)
     out = out.replace('<p id="txsub"></p>', f'<p id="txsub">{e(d["time_unit"])} {d["t"]:.2f} · {d["depth_ppm"]:,.0f} ppm · {d["duration_hours"]:.2f} hours · SNR {d["snr"]:.1f} · {e(dip_state(d.get("outcome"))[2])}</p>', 1)
+    if caveat:  # what the dip's run did not recover, stated on each of its dips' pages
+        out = out.replace('<p class="note" id="txcaveat" hidden></p>', f'<p class="note" id="txcaveat">What this run did not recover: {e(caveat)}</p>', 1)
     if d.get("outcome") == "rejected":  # a rejected dip is not called a transit
         out = out.replace('<span id="txcapword">The transit, played back</span>', '<span id="txcapword">The dip, played back</span>', 1)
     out = out.replace('<p class="casefile" id="txcase"></p>', f'<p class="casefile" id="txcase"><a class="btn primary" href="{e(url_for("candidates", {"dip": d["id"]}))}">Open the full case file ›</a></p>', 1)
@@ -771,7 +774,8 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     view("planets", _title("planets"), "What each candidate's depth would imply if it were a planet: the planet-to-star radius ratio, and why no planet size is stated.", "/candidates/radius-ratios/", name="Radius ratios")
     target = hero.get("target") or "the run's star"
     for d in data["story"]["dips"] + data["showcase_dips"]:
-        sec, h1 = _dip_header(sections["transit"], d, data["dips"][d["id"]]["label"])
+        sec, h1 = _dip_header(sections["transit"], d, data["dips"][d["id"]]["label"],
+                              (data["showcase_meta"].get(d.get("run")) or {}).get("caveat", ""))
         what = "dip" if d.get("outcome") == "rejected" else "transit"
         view("transit", _title("transit", h1), f"{h1}. The {what} played back from stored values, who on the panel marked it, and its vetting: {dip_state(d.get('outcome'))[2]}.",
              url_for("transit", {"dip": d["id"]}), body=sec, name=h1, params={"dip": d["id"]})
@@ -839,9 +843,10 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
         for x in data["extra_runs"]:
             card = next(c for c in data["showcase"] if c["run"] == x["run"])
             build_docket(x["dir"], out / card["case_file"].strip("/"), title=f"{title}: case file, {x['star']}",
-                         require_crossmatch=require_crossmatch, path=card["case_file"])
+                         require_crossmatch=require_crossmatch, path=card["case_file"], caveat=card["caveat"])
             build_plate(x["dir"], out / card["plates"].strip("/"), title=f"{title} plates: {x['star']}", catalog_path=None,
-                        require_crossmatch=require_crossmatch, path=card["plates"],
+                        require_crossmatch=require_crossmatch, path=card["plates"], caveat=card["caveat"],
+                        period_wrong=data["run_ctx"][x["run"]]["period_wrong"],
                         others=[x for x in plate_links if x[1] != card["plates"]])
             build_report(x["dir"], out / card["report"].strip("/"), title=f"{title}: {x['star']}",
                          validation_md=_showcase_md(x["run"]), benchmark_md=benchmark_md)

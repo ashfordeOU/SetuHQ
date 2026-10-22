@@ -33,14 +33,14 @@ Ephemeris from Rosário et al. 2024; compared with Gandolfi et al. 2019 (https:/
 
 | quantity | SetuHQ | Gandolfi et al. 2019 | ratio | archive default (Rosário et al. 2024) | ratio |
 |---|---:|---:|---:|---:|---:|
-| P (d) | 5.01081 | 17.17840 | 0.292 | 17.18055 | 0.292 |
+| P (d) | 4.0429, 5.9787 (one per dip, BLS; not one period) | 17.17840 |  | 17.18055 |  |
 | Rp/R★ | 0.0238 | 0.0256 | 0.931 | 0.0271 | 0.880 |
 | T14 (h) | 2.27 | 2.25 | 1.007 |  |  |
 | depth (ppm) | 588 |  |  |  |  |
 
-The BLS period stored on these dips (5.0108 d) is not this planet's: within a 13-day subject the search paired dips that belong to different transits (another planet's, or an alias), so the period ratio is a miss, not a recovery, and the fit that used it (Rp/R★, depth) is less reliable than its T14. The dips sit on the published ephemeris; the period does not.
+The BLS period stored on these dips (4.0429, 5.9787 d) is not this planet's: within a 13-day subject the search paired dips that belong to different transits (another planet's, or an alias), so the period ratio is a miss, not a recovery, and the fit that used it (Rp/R★, depth) is less reliable than its T14. The dips sit on the published ephemeris; the period does not.
 
 Transits predicted in the stored light curve: 2; with a dip on them: 2 (2 dips; 1 passed, 1 flagged; mean offset +0.7 min).
 
-A known planet found again is a check of the pipeline, not a discovery. 2 of 2 known planets have dips on their published ephemeris: HD 15337 b, 1 of 5 transits (1 candidate), its period missed; HD 15337 c, 2 of 2 transits (1 candidate, 1 flagged), its period missed.
+A known planet found again is a check of the pipeline, not a discovery. HD 15337 b: 1 of 5 transits (1 candidate; BLS period not the planet's); HD 15337 c: 2 of 2 transits (1 candidate, 1 flagged; BLS period not the planet's).
 

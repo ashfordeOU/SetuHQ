@@ -878,25 +878,35 @@ const txs = {dip: null, cmp: []};
 // as deep as the stored depth would cast, with the orbit and the impact parameter illustrative (b = 0).
 function txTheatre(d){
   const known = d.status === 'known', k = d.ratio || 0, C = CTX(d), planet = C.planet;
+  let starNote = 'the star is the target as the catalogue stores it', k2 = k;
   const star = typeof MX !== 'undefined' && MX && planet ? MX.examples[planet] || null : null;
   const model = (d.model || []).map(p => [p[0], p[1]]);
   let p, bNote;
   if (known && star){ p = Object.assign({name: planet}, star); bNote = `impact parameter ${star.impact_parameter != null ? 'as stored' : 'illustrative'}`; }
   else {
-    // Rp/R★ = √depth; the duration sets a/R★ for an illustrative period (the lead signal's), b = 0 (not fitted).
-    const P = (C.lead && C.lead.period_days) || 6, T14 = Math.max(0.02, (d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * (1 + k);
-    const st = star || {};
-    p = {name: 'a planet this deep', star_teff: st.star_teff || 5772, star_radius: st.star_radius || 1, radius: st.star_radius ? k * st.star_radius * 6.957e8 / 7.1492e7 : null,
-      orbital_period: P, semi_major_axis: ars * (st.star_radius || 1) * 6.957e8 / 1.495978707e11, impact_parameter: 0};
-    bNote = 'impact parameter illustrative (b = 0), not the fit\'s';
+    // This dip's own shape: the stored fit's Rp/R★, b and limb darkening when a fit is stored, else Rp/R★ = √depth and
+    // b = 0. The star is the run's own (its TIC Teff and radius as the run stored them); the period is illustrative.
+    const SP = C.star_params || {}, kk = d.fit_k || k, fitted = !!d.fit_k;
+    const teff = (star && star.star_teff) || SP.teff || null, rs = (star && star.star_radius) || SP.radius || null;
+    const P = (!wrongP(d) && d.period_days) || (C.lead && !wrongP(d) && C.lead.period_days) || 6;
+    const T14 = Math.max(0.02, (d.fit_t14_hours || d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * (1 + kk);
+    p = {name: 'a planet this deep', star_teff: teff, star_radius: rs || 1, radius: kk * (rs || 1) * 6.957e8 / 7.1492e7,
+      orbital_period: P, semi_major_axis: ars * (rs || 1) * 6.957e8 / 1.495978707e11,
+      impact_parameter: fitted && d.fit_b != null ? d.fit_b : 0, ld: fitted ? d.fit_ld : null};
+    bNote = fitted ? 'Rp/R★, b and limb darkening from this dip\'s stored fit' : 'impact parameter illustrative (b = 0), not fitted';
+    starNote = teff ? `the star: ${Math.round(teff).toLocaleString('en-GB')} K${rs ? ', ' + fmt(rs, 2) + ' R☉' : ''} (${SP.source || 'as stored'})` : 'the star\'s temperature is not stored (drawn at the Sun\'s)';
+    k2 = kk;
   }
   $('#txcap').textContent = known && star ? `${planet}, from stored values` : 'what a planet this deep would cast';
   $('#txfoot').textContent = (known && star
       ? `${planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}): the line is a limb-darkened model from those values, not a fit to this dip; ${bNote}. The match says the planet is already known; it does not confirm the dip.`
-      : `If it were a planet: Rp/R★ = √depth = ${fmt(k, 4)}, from the stored depth ${fmt(d.depth_ppm, 0)} ppm; the star is the target as the catalogue stores it; orbit and period illustrative; ${bNote}.`)
+      : `If it were a planet: Rp/R★ = ${d.fit_k ? fmt(k2, 4) + ' from this dip\'s stored fit' : '√depth = ' + fmt(k2, 4) + ', from the stored depth ' + fmt(d.depth_ppm, 0) + ' ppm'}; ${starNote}; orbit and period illustrative; ${bNote}.`)
     + ` Dots: the ${d.pts.length} stored flux values within ${fmt(d.half * 24, 1)} hours of mid-time (${esc(d.time_unit)} ${fmt(d.t, 3)}). ${model.length ? 'Dashed: the limb-darkened fit stored for this dip.' : 'No transit fit is stored for this dip.'} The star's surface texture is decorative.`;
-  const {st} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}, on: current === 'transit', caption: false});
-  if (!(known && star)){ st.opt.sys.bSrc = 'illustrative'; mxKick(st); }
+  const {st, S: SS} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}, on: current === 'transit', caption: false});
+  if (!(known && star)){ st.opt.sys.bSrc = d.fit_k ? 'stored fit' : 'illustrative'; mxKick(st); }
+  // What the drawing shows, for the tests: the star's temperature and the model's depth at mid-transit (ppm).
+  const fig = $('#txsysfig'), [lu1, lu2] = SS.ld || mxLd(SS.teff);
+  fig.dataset.teff = String(Math.round(SS.teff)); fig.dataset.modelDepthPpm = String(Math.round((1 - mxFlux(SS.b, SS.k, lu1, lu2)) * 1e6));
   // The canonical pages for the planet (when the dip matches one) and the star.
   $('#txlinks').innerHTML = (known && planet && C.planet_page !== false ? objLink('planet', planet, planet + ' ›') : '') + (C.star && C.star.name && C.star_page !== false ? objLink('star', C.star.name, C.star.name + ' ›') : '');
 }
@@ -916,8 +926,11 @@ function quoteHTML(d){
   return `<div class="quote"><div class="who"><b title="reviewer id ${esc(q.id)}">${esc(q.name)}</b><span>${q.confidence === null || q.confidence === undefined ? 'confidence not stored' : 'confidence ' + fmt(q.confidence, 1)}</span></div>
     <p>“${esc(q.text)}”</p><small>Its stored rationale for subject ${esc(d.subject_label || d.subject)} (${esc(d.time_unit)} ${fmt(d.subject_start, 1)} to ${fmt(d.subject_end, 1)}), one per subject, not per dip. It ${q.marked ? 'marked' : 'did not mark'} this dip. A Sentinel is an AI model${PROV(q.id || '') ? ` (${esc(PROV(q.id))})` : ''}, not a person.</small></div>`;
 }
+// A dip whose stored BLS period is known not to be its planet's (docs/results/showcase.json): no period is drawn for it.
+const wrongP = d => (CTX(d).period_wrong || []).includes(d.id);
 function orbitHTML(d){
   const C = CTX(d), L = C.lead; if (!L || d.phase === null || d.phase === undefined) return '';
+  if (wrongP(d) || (C.period_wrong || []).includes(L.dip)) return '';
   const ang = Math.PI / 2 + d.phase * 2 * Math.PI, px = 100 + 80 * Math.cos(ang), py = 100 + 80 * Math.sin(ang);
   const who = C.planet ? `${esc(C.planet)}'s orbit` : "the lead signal's orbit";
   const near = Math.abs(d.phase) < 0.02;
@@ -958,6 +971,7 @@ function renderTransit(){
   $('#txorbit').innerHTML = orbitHTML(d) + trayHTML();
   $('#txcase').innerHTML = `<a class="btn primary" href="${esc(dipHref(d.id))}">Open the full case file ›</a><span>Every check, the stored measurements, the verdict ledger and the archive provenance.</span>`;
   $('#txarchive').textContent = d.archive_line ? `Archive comparison: ${d.archive_line}. ${D.no_detection}` : '';
+  const cv = CTX(d).caveat; $('#txcaveat').hidden = !cv; $('#txcaveat').textContent = cv ? `What this run did not recover: ${cv}` + (wrongP(d) ? ' This dip\'s stored BLS period is not its planet\'s, so no period is given for it.' : '') : '';
 }
 function openTransit(dip){
   const n = $('#txnotice');
@@ -2192,7 +2206,8 @@ function mxSystemParams(p, dip){
   let b = p.impact_parameter, bSrc = 'stored';
   if (b == null && p.inclination != null && a && rs){ b = ars * Math.cos(p.inclination * Math.PI / 180); bSrc = 'from a/R★ and i'; }
   if (b == null || b > 1 + k){ b = 0.3; bSrc = 'illustrative'; }
-  return {teff, rs, rp, a, P, k, ars, b, bSrc, scale, cls: mxClassOf(rp, p.mass || p.mass_sini), name: p.name || '', dip: dip || null, inc: p.inclination};
+  return {teff, rs, rp, a, P, k, ars, b, bSrc, scale, cls: mxClassOf(rp, p.mass || p.mass_sini), name: p.name || '', dip: dip || null, inc: p.inclination,
+    ld: p.ld && p.ld[0] != null ? p.ld : null};
 }
 function mxDurations(P, ars, k, b){
   const inc = Math.acos(Math.min(1, b / ars)), si = Math.sin(inc), f = x => P / Math.PI * Math.asin(Math.min(1, x / (ars * si)));
@@ -2200,7 +2215,7 @@ function mxDurations(P, ars, k, b){
 }
 function mxDrawSystem(c, w, h, t, st){
   const S = st.opt.sys; if (!S) return;
-  const P = S.P || 10, [u1, u2] = mxLd(S.teff), [t14] = mxDurations(P, S.ars, S.k, S.b);
+  const P = S.P || 10, [u1, u2] = S.ld || mxLd(S.teff), [t14] = mxDurations(P, S.ars, S.k, S.b);
   const win = Math.min(0.24, 0.9 * t14 / P);   // half-window of the chart, as a fraction of the orbit
   // Time runs slowly through the transit window and faster for the rest of the orbit (stated on screen).
   const phi = t < 0.5 ? -win + t / 0.5 * 2 * win : win + (t - 0.5) / 0.5 * (1 - 2 * win);

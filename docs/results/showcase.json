@@ -56,6 +56,17 @@
        "rp_rs": 1.0
       }
      },
+     "dip_ids": [
+      "tess-5935bad1a3b4-000",
+      "tess-291acb98cabe-001",
+      "tess-291acb98cabe-002",
+      "tess-5935bad1a3b4-003",
+      "tess-5935bad1a3b4-004",
+      "tess-291acb98cabe-005",
+      "tess-291acb98cabe-006",
+      "tess-5935bad1a3b4-007"
+     ],
+     "periods_each": [],
      "predicted_transits": 8,
      "recovered_transits": 8,
      "dips_on_ephemeris": 8,
@@ -79,12 +90,15 @@
       "period_days": 1.0,
       "t14_hours": 1.021
      },
-     "period_recovered": true
+     "period_recovered": true,
+     "period_wrong": false
     }
    ],
    "reference": "Maxted et al. 2016",
    "reference_url": "https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract",
-   "outcome": "1 of 1 known planet has dips on its published ephemeris: WASP-126 b, 8 of 8 transits (8 candidates)."
+   "bls_period_not_planets": [],
+   "outcome": "WASP-126 b: 8 of 8 transits (8 candidates).",
+   "caveat": ""
   },
   {
    "run": "tess-toi-270-s5",
@@ -141,6 +155,8 @@
        "t14_hours": null
       }
      },
+     "dip_ids": [],
+     "periods_each": [],
      "predicted_transits": 6,
      "recovered_transits": 0,
      "dips_on_ephemeris": 0,
@@ -164,7 +180,8 @@
       "t14_hours": null,
       "depth_ppm": null
      },
-     "period_recovered": false
+     "period_recovered": false,
+     "period_wrong": false
     },
     {
      "planet": "TOI-270 c",
@@ -196,6 +213,14 @@
        "t14_hours": 1.101
       }
      },
+     "dip_ids": [
+      "tess-4b369d3c6f09-000",
+      "tess-f28323a4aef6-001",
+      "tess-f28323a4aef6-002",
+      "tess-4b369d3c6f09-003",
+      "tess-4b369d3c6f09-004"
+     ],
+     "periods_each": [],
      "predicted_transits": 5,
      "recovered_transits": 5,
      "dips_on_ephemeris": 5,
@@ -221,7 +246,8 @@
       "t14_hours": 1.117,
       "depth_ppm": 1.205
      },
-     "period_recovered": true
+     "period_recovered": true,
+     "period_wrong": false
     },
     {
      "planet": "TOI-270 d",
@@ -253,6 +279,11 @@
        "t14_hours": 1.18
       }
      },
+     "dip_ids": [
+      "tess-4b369d3c6f09-005",
+      "tess-f28323a4aef6-006"
+     ],
+     "periods_each": [],
      "predicted_transits": 2,
      "recovered_transits": 2,
      "dips_on_ephemeris": 2,
@@ -278,12 +309,15 @@
       "t14_hours": 1.162,
       "depth_ppm": 1.23
      },
-     "period_recovered": false
+     "period_recovered": false,
+     "period_wrong": false
     }
    ],
    "reference": "Günther et al. 2019",
    "reference_url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract",
-   "outcome": "2 of 3 known planets have dips on their published ephemeris: TOI-270 c, 5 of 5 transits (5 candidates); TOI-270 d, 2 of 2 transits (2 flagged); no dip on TOI-270 b."
+   "bls_period_not_planets": [],
+   "outcome": "TOI-270 b: none of 6 transits; TOI-270 c: 5 of 5 transits (5 candidates); TOI-270 d: 2 of 2 transits (2 flagged; no period).",
+   "caveat": "Found all 5 of c's transits and both of d's; b not found; d seen twice, no period (one transit per 13-day piece of the light curve)."
   },
   {
    "run": "tess-hd-15337-s4",
@@ -339,6 +373,10 @@
        "rp_rs": 1.296
       }
      },
+     "dip_ids": [
+      "tess-08a8c4eac6ff-000"
+     ],
+     "periods_each": [],
      "predicted_transits": 5,
      "recovered_transits": 1,
      "dips_on_ephemeris": 1,
@@ -363,7 +401,8 @@
       "rp_rs": 1.397,
       "t14_hours": 0.949
      },
-     "period_recovered": false
+     "period_recovered": false,
+     "period_wrong": true
     },
     {
      "planet": "HD 15337 c",
@@ -390,10 +429,18 @@
        "depth_ppm": null
       },
       "ratio": {
-       "period_days": 0.292,
+       "period_days": null,
        "rp_rs": 0.88
       }
      },
+     "dip_ids": [
+      "tess-38b5a559eee2-001",
+      "tess-08a8c4eac6ff-002"
+     ],
+     "periods_each": [
+      4.0429,
+      5.97872
+     ],
      "predicted_transits": 2,
      "recovered_transits": 2,
      "dips_on_ephemeris": 2,
@@ -403,7 +450,7 @@
      },
      "mean_offset_min": 0.7,
      "setuhq": {
-      "period_days": 5.01081,
+      "period_days": null,
       "rp_rs": 0.02382,
       "t14_hours": 2.26617,
       "depth_ppm": 588.17044
@@ -415,16 +462,23 @@
       "depth_ppm": null
      },
      "ratio": {
-      "period_days": 0.292,
+      "period_days": null,
       "rp_rs": 0.931,
       "t14_hours": 1.007
      },
-     "period_recovered": false
+     "period_recovered": false,
+     "period_wrong": true
     }
    ],
    "reference": "Gandolfi et al. 2019",
    "reference_url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract",
-   "outcome": "2 of 2 known planets have dips on their published ephemeris: HD 15337 b, 1 of 5 transits (1 candidate), its period missed; HD 15337 c, 2 of 2 transits (1 candidate, 1 flagged), its period missed."
+   "bls_period_not_planets": [
+    "tess-08a8c4eac6ff-000",
+    "tess-08a8c4eac6ff-002",
+    "tess-38b5a559eee2-001"
+   ],
+   "outcome": "HD 15337 b: 1 of 5 transits (1 candidate; BLS period not the planet's); HD 15337 c: 2 of 2 transits (1 candidate, 1 flagged; BLS period not the planet's).",
+   "caveat": "Found 1 of b's 5 transits and both of c's; neither published period was recovered (the BLS period on those dips is not the planet's)."
   },
   {
    "run": "tess-toi-236-s2",
