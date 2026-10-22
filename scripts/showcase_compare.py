@@ -57,11 +57,11 @@ RUNS = [
      "summary": "An M dwarf with three known transiting planets at 3.4, 5.7 and 11.4 days: several periods in one star.",
      "why": ("One light curve, three periods. It shows what the search does when a star has more than one planet, and which "
              "of them a 13-day subject can hold.")},
-    {"run": "tess-lhs-3844-s1", "star": "LHS 3844", "tic": 410153553, "config": "configs/showcase/tess-lhs-3844-s1.toml",
-     "kind": "Small planet, ultra-short period", "planets": ["LHS 3844 b"], "paper": "VANDERSPEK_ET_AL__2019",
-     "summary": "An Earth-sized planet (about 1.3 Earth radii) that orbits its small M dwarf every 11 hours, in half-hour transits.",
-     "why": ("A small planet with very short, frequent transits, near the limit of a 10-minute-binned search: its period is below "
-             "the default 0.5-day floor, so this run searches from 0.35 days.")},
+    {"run": "tess-hd-15337-s4", "star": "HD 15337", "tic": 120896927, "config": "configs/showcase/tess-hd-15337-s4.toml",
+     "kind": "Small planets near the limit", "planets": ["HD 15337 b", "HD 15337 c"], "paper": "GANDOLFI_ET_AL__2019",
+     "summary": "A bright K dwarf with two small known planets: b (about 1.6 Earth radii, 4.8 days, roughly 350 ppm deep) and c (17.2 days).",
+     "why": ("A small planet whose single transits are near the noise of one sector: it shows what the panel and vetting do "
+             "at the edge of what a 10-minute-binned search can see, and the page says what it missed.")},
     {"run": "tess-toi-236-s2", "star": "TOI-236", "tic": 9727392, "config": "configs/showcase/tess-toi-236-s2.toml",
      "kind": "Known false positive", "toi": "236.01",
      "summary": "A TESS Object of Interest the TOI table dispositions as a false positive (FP): a 2.4% dip every 4.5 days.",
@@ -294,9 +294,18 @@ def run_entry(spec: dict, reference: dict) -> dict:
     entry["reference"] = ref["label"] if ref else ""
     entry["reference_url"] = ref["url"] if ref else ""
     found = [p for p in planets if p.get("recovered_transits")]
+
+    def said(p):
+        o = p.get("outcomes") or {}
+        words = {"passed": ("candidate", "candidates"), "flagged": ("flagged", "flagged"), "rejected": ("rejected", "rejected")}
+        return ", ".join(f"{v} {words[k][v != 1]}" for k, v in o.items())
+
     entry["outcome"] = (f"{len(found)} of {len(planets)} known planet{'s' if len(planets) != 1 else ''} found again on "
                         f"{'their' if len(planets) != 1 else 'its'} published ephemeris"
-                        + (f" ({', '.join(p['planet'] for p in found)})" if found and len(planets) > 1 else "") + ".")
+                        + (": " + "; ".join(f"{p['planet']}, {p['recovered_transits']} of {p['predicted_transits']} transits ({said(p)})"
+                                            for p in found) if found else "")
+                        + (f"; no dip on {', '.join(p['planet'] for p in planets if p not in found)}" if len(found) < len(planets) else "")
+                        + ".")
     return entry
 
 
@@ -354,6 +363,11 @@ def markdown(e: dict, reference: dict) -> str:
                 v = dflt["values"].get(k)
                 row += f" {_f(v, d) if v else ''} | {_f(dflt['ratio'].get(k), 3) if dflt['ratio'].get(k) else ''} |"
             lines.append(row)
+        if not p["dips_on_ephemeris"]:
+            lines += ["", "The panel marked no dip on this planet's transits in this run, so nothing is compared."]
+        elif p["setuhq"].get("period_days") is None:
+            lines += ["", "Each 13-day subject holds only one of its transits, so the search found no period for these dips; vetting "
+                          "flags each `off_ephemeris` (open, not a candidate). The period is not compared."]
         lines += ["", f"Transits predicted in the stored light curve: {p['predicted_transits']}; with a dip on them: "
                       f"{p['recovered_transits']} ({p['dips_on_ephemeris']} dip{'s' if p['dips_on_ephemeris'] != 1 else ''}; "
                       + (", ".join(f"{v} {k}" for k, v in p["outcomes"].items()) or "none")

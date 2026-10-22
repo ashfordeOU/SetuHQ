@@ -53,7 +53,7 @@ fi
 
 RUN="runs/tess-pi-men-s1"
 # The worked examples, shown beside the lead run (docs/SHOWCASE.md): each gets its dips' pages, case file, plates and report.
-SHOWCASE_RUNS="runs/tess-wasp-126-s1 runs/tess-toi-270-s5 runs/tess-lhs-3844-s1 runs/tess-toi-236-s2"
+SHOWCASE_RUNS="runs/tess-wasp-126-s1 runs/tess-toi-270-s5 runs/tess-hd-15337-s4 runs/tess-toi-236-s2"
 CAT="docs/discoveries/catalog.json"
 EX="$VENV/bin/setuhq"
 
@@ -83,7 +83,7 @@ step "site files exist, and no site-wide banner"
 for f in site/index.html site/404.html site/sitemap.xml site/robots.txt site/explore/index.html site/candidates/index.html \
          site/how-it-works/index.html site/evidence/index.html site/docs/index.html site/candidates/case-file/index.html \
          site/evidence/plates/index.html site/evidence/report/index.html site/app/index.html \
-         site/candidates/wasp-126/case-file/index.html site/evidence/plates/toi-270/index.html site/evidence/report/lhs-3844/index.html \
+         site/candidates/wasp-126/case-file/index.html site/evidence/plates/toi-270/index.html site/evidence/report/hd-15337/index.html \
          site/candidates/toi-236/dip-1/index.html; do
   test -s "$f" || { echo "missing $f" | tee -a "$LOG"; exit 1; }
 done

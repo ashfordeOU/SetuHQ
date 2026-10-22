@@ -1,21 +1,21 @@
-# Showcase run: LHS 3844 (TIC 410153553), an M dwarf with an ultra-short-period small planet (P = 0.46 d, below the default 0.5 d search floor, so min_period is 0.35 here (the longest BLS duration tried, 8 h, must stay below it)); TESS SPOC 2-minute sector 1.
+# Showcase run: HD 15337 (TIC 120896927), a K dwarf with two known small transiting planets (1.6 and 2.4 Earth radii); the inner one, about 350 ppm deep, is near the detection limit of one sector. TESS SPOC 2-minute sector 4.
 # Probes only; Sentinels not run on this example. The three Probes are the deterministic matched-filter
 # detectors of configs/tess_pi_men_s1.toml with the same seeds; no AI reviewer is in this configuration, so no
 # key or CLI is needed and the manifest records the panel as "probes_only". Reproduce with:
-#   setuhq run configs/showcase/tess-lhs-3844-s1.toml --out runs/tess-lhs-3844-s1
-#   setuhq crossmatch runs/tess-lhs-3844-s1
+#   setuhq run configs/showcase/tess-hd-15337-s4.toml --out runs/tess-hd-15337-s4
+#   setuhq crossmatch runs/tess-hd-15337-s4
 
 [run]
-name = "tess-lhs-3844-s1"
+name = "tess-hd-15337-s4"
 subject_days = 13.0
 min_points = 300
 bin_minutes = 10.0
 detrend_window_days = 1.0
 
 [search]
-min_period = 0.35
+min_period = 0.5
 fap_trials = 10000    # block-bootstrap trials: resolves FAPs down to 1e-4
-fap_cache = "runs/tess-lhs-3844-s1/fap_null"  # the null maxima, committed with the run
+fap_cache = "runs/tess-hd-15337-s4/fap_null"  # the null maxima, committed with the run
 stellar = "tic"       # TIC Teff/log g for limb darkening, and ρ★ for the density check
 
 [aggregate]
@@ -25,8 +25,8 @@ min_planet_fraction = 0.5
 
 [[targets]]
 mission = "TESS"
-id = "TIC 410153553"
-sectors = [1]
+id = "TIC 120896927"
+sectors = [4]
 
 [[reviewers]]
 type = "simulated"

@@ -5,7 +5,7 @@
 https://setuhq.com is built by `setuhq site` (src/setuhq/site.py) from the stored runs and committed as `site/`;
 `.github/workflows/pages.yml` deploys `site/` as it is. Never edit `site/` by hand: change the code, then run
 `scripts/ci_local.sh` (or `setuhq site runs/tess-pi-men-s1 runs/tess-wasp-126-s1 runs/tess-toi-270-s5
-runs/tess-lhs-3844-s1 runs/tess-toi-236-s2 --catalog docs/discoveries/catalog.json --out site`).
+runs/tess-hd-15337-s4 runs/tess-toi-236-s2 --catalog docs/discoveries/catalog.json --out site`).
 
 `setuhq site` takes one or more runs. The first is the lead run: the sky map, the panel page and the home page's
 reference check are drawn from it (pi Men, checked against Huang et al. 2018). Every run, the lead included, is a
