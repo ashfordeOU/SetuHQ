@@ -67,7 +67,8 @@ function watch(page) {
   const errs = [];
   page.on("console", (m) => { if (m.type() === "error") errs.push("console: " + m.text()); });
   page.on("pageerror", (e) => errs.push("pageerror: " + e.message));
-  page.on("requestfailed", (r) => { if (!r.url().startsWith("blob:")) errs.push("requestfailed: " + r.url() + " " + (r.failure() || {}).errorText); });
+  // A request the browser cancels because the page moved on (net::ERR_ABORTED) is not a failure of the site.
+  page.on("requestfailed", (r) => { const why = (r.failure() || {}).errorText || ""; if (!r.url().startsWith("blob:") && !why.includes("ERR_ABORTED")) errs.push("requestfailed: " + r.url() + " " + why); });
   page.on("response", (r) => { if (r.url().startsWith(BASE) && r.status() >= 400 && r.request().resourceType() !== "document") errs.push(`response ${r.status()}: ${r.url()}`); });
   return errs;
 }
