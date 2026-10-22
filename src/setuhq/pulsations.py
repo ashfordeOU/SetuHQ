@@ -12,11 +12,13 @@ Methods reimplemented from their published descriptions:
   while significant peaks remain elsewhere), fit it, refit every amplitude and phase, and every ten peaks and at
   the end refit every sinusoid together by non-linear least squares (frequency, amplitude, phase); subtract,
   repeat. Extraction stops when no peak has S/N ≥ 4 (Breger et al. 1993), the noise being the mean amplitude of
-  the residual spectrum in a box around the peak (2 d⁻¹ wide by default, and at least 25/T). Every frequency's
+  the residual spectrum in a box around the peak (2 d⁻¹ wide by default, and at least 25/T), the peak's own
+  window (±2/T) left out. Every frequency's
   final S/N is measured on the final residual. Uncertainties follow Montgomery & O'Donoghue (1999). Peaks closer
   than 1.5/T to a stronger one are flagged unresolved (Loumos & Deeming 1978).
-* **Combination frequencies**: a frequency within the Rayleigh resolution of n·f_i + m·f_j (|n|, |m| ≤ 2) or a
-  harmonic (up to 4·f_i) of stronger ones is flagged as a likely combination.
+* **Combination frequencies**: a frequency within a quarter of the Rayleigh resolution (or 3σ_f) of n·f_i + m·f_j
+  (|n|, |m| ≤ 2) or a harmonic (up to 4·f_i) of the ten strongest, stronger frequencies is flagged as a possible
+  combination, and the rate at which a random frequency would be flagged by chance is reported with every list.
 * **Variability type** (heuristic, never certain): δ Scuti, γ Doradus, hybrid, solar-like or rotation, from where
   the significant amplitude lies (5 d⁻¹ as the p/g boundary; Grigahcène et al. 2010), harmonic structure, the
   detection of a solar-like power excess, and Teff when given. The result is ``likely`` or ``candidate`` with the
@@ -181,8 +183,11 @@ def prewhiten(time, flux, *, fmin: float | None = None, fmax: float | None = Non
         fr, amp = amplitude_spectrum(tt, resid, freq)
         snr = amp / _noise_curve(fr, amp, noise_box)
         k = int(np.nanargmax(snr))
-        if not np.isfinite(snr[k]) or snr[k] < snr_stop:
-            reason = f"highest S/N left is {snr[k]:.2f} < {snr_stop:g} (at {fr[k]:.5f} d⁻¹)"
+        # the stopping S/N leaves the peak's own window (±2/T) out of its noise box
+        box = (np.abs(fr - fr[k]) <= noise_box / 2) & (np.abs(fr - fr[k]) > 2.0 / T)
+        snr_k = float(amp[k] / np.mean(amp[box])) if box.any() else float(snr[k])
+        if not np.isfinite(snr_k) or snr_k < snr_stop:
+            reason = f"highest S/N left is {snr_k:.2f} < {snr_stop:g} (at {fr[k]:.5f} d⁻¹)"
             break
         new = _linear_refit([fr[k], 0.0, 0.0], tt, resid)
         new = _nonlinear_refit(new, tt, resid, T, max_nfev=20)
@@ -207,45 +212,87 @@ def prewhiten(time, flux, *, fmin: float | None = None, fmax: float | None = Non
                     "sigma_amplitude": math.sqrt(2.0 / N) * sig_res,
                     "sigma_phase": sig_res / (a * math.sqrt(2.0 * N)) / (2 * math.pi) if a > 0 else None})
     flag_combinations(out, resolution=1.0 / T)
+    chance = combination_chance_rate(out, 1.0 / T, (float(freq[0]), float(freq[-1])))
     for x in out:
         x["significant"] = bool(x["snr"] is not None and x["snr"] >= snr_stop)
     return {"frequencies": out, "n": nf, "n_significant": sum(x["significant"] for x in out), "stop": reason,
+            "combination_chance": chance,
             "baseline_days": T, "rayleigh": 1.0 / T, "n_points": int(N), "nyquist": nyquist(t), "t0": t0,
             "residual": resid, "time": t, "residual_rms": sig_res, "snr_stop": snr_stop, "noise_box": noise_box,
             "range": [float(freq[0]), float(freq[-1])]}
 
 
-def flag_combinations(freqs: list[dict], resolution: float, max_order: int = 2, max_harmonic: int = 4) -> None:
-    """Mark each frequency that sits within ``resolution`` of a harmonic or a two-term combination of stronger
-    ones (in place: ``combination`` names the match, ``unresolved`` marks a peak within 1.5/T of a stronger one)."""
-    for k, x in enumerate(freqs):
+MAX_PARENTS = 10        # combinations are sought among the strongest frequencies only
+COMBO_TOL_RAYLEIGH = 0.25  # within a quarter of the Rayleigh resolution, or 3σ of the frequency if larger
+
+
+def _combo_values(parents, max_order: int = 2, max_harmonic: int = 4):
+    """Every harmonic (2..max_harmonic × f_i) and two-term combination (n f_i + m f_j, |n|, |m| ≤ max_order, both
+    non-zero) of the parent frequencies, with a label."""
+    out = []
+    for i, a in enumerate(parents):
+        for h in range(2, max_harmonic + 1):
+            out.append((h * a["frequency"], f"{h}{a['id']}"))
+        for b in parents[i + 1:]:
+            for n in range(-max_order, max_order + 1):
+                for m in range(-max_order, max_order + 1):
+                    if n == 0 or m == 0:
+                        continue
+                    v = n * a["frequency"] + m * b["frequency"]
+                    if v > 0:
+                        sign = "+" if m > 0 else "-"
+                        out.append((v, f"{'' if n == 1 else n}{a['id']}{sign}{'' if abs(m) == 1 else abs(m)}{b['id']}"))
+    return out
+
+
+def flag_combinations(freqs: list[dict], resolution: float, max_order: int = 2, max_harmonic: int = 4,
+                      max_parents: int = MAX_PARENTS, tol_rayleigh: float = COMBO_TOL_RAYLEIGH) -> None:
+    """Mark each frequency that sits within the tolerance (``tol_rayleigh`` × 1/T, or 3σ of its frequency if larger)
+    of a harmonic or a two-term combination of the ``max_parents`` strongest frequencies that are stronger than it
+    (in place: ``combination`` names the match; ``unresolved`` marks a peak within 1.5/T of a stronger one)."""
+    by_amp = sorted(freqs, key=lambda y: -y["amplitude"])
+    for x in freqs:
         x["combination"] = None
-        x["unresolved"] = False
-        stronger = [y for y in freqs[:k] if y["amplitude"] >= x["amplitude"]] or freqs[:k]
-        for y in stronger:
-            if abs(x["frequency"] - y["frequency"]) < 1.5 * resolution:
-                x["unresolved"] = True
+        x["unresolved"] = any(y is not x and y["amplitude"] >= x["amplitude"] and abs(x["frequency"] - y["frequency"]) < 1.5 * resolution
+                              for y in freqs)
+        parents = [y for y in by_amp[:max_parents] if y is not x and y["amplitude"] > x["amplitude"]]
+        tol = max(tol_rayleigh * resolution, 3.0 * (x.get("sigma_frequency") or 0.0))
         best = None
-        for i, a in enumerate(stronger):
-            for h in range(2, max_harmonic + 1):
-                d = abs(x["frequency"] - h * a["frequency"])
-                if d < resolution and (best is None or d < best[0]):
-                    best = (d, f"{h}{a['id']}")
-            for b in stronger[i + 1:]:
-                for n in range(-max_order, max_order + 1):
-                    for m in range(-max_order, max_order + 1):
-                        if n == 0 or m == 0:
-                            continue
-                        v = n * a["frequency"] + m * b["frequency"]
-                        if v <= 0:
-                            continue
-                        d = abs(x["frequency"] - v)
-                        if d < resolution and (best is None or d < best[0]):
-                            sign = "+" if m > 0 else "-"
-                            best = (d, f"{'' if n == 1 else n}{a['id']}{sign}{'' if abs(m) == 1 else abs(m)}{b['id']}")
+        for v, lab in _combo_values(parents, max_order, max_harmonic):
+            d = abs(x["frequency"] - v)
+            if d < tol and (best is None or d < best[0]):
+                best = (d, lab)
         if best:
             x["combination"] = best[1]
             x["combination_offset_rayleigh"] = best[0] / resolution
+
+
+def combination_chance_rate(freqs: list[dict], resolution: float, frange, *, n_draws: int = 2000, seed: int = 0,
+                            max_order: int = 2, max_harmonic: int = 4, max_parents: int = MAX_PARENTS,
+                            tol_rayleigh: float = COMBO_TOL_RAYLEIGH) -> dict:
+    """How often an unrelated frequency would be flagged by chance: ``n_draws`` frequencies drawn uniformly over the
+    searched range are tested against this light curve's own parents and tolerance (the median σ_f of its
+    frequencies). Returns the chance rate and the expected number of chance flags among this list's non-parents."""
+    if not freqs:
+        return {"chance_rate": None, "expected_chance_flags": 0.0, "n_draws": 0}
+    parents = sorted(freqs, key=lambda y: -y["amplitude"])[:max_parents]
+    sig = float(np.median([x.get("sigma_frequency") or 0.0 for x in freqs]))
+    tol = max(tol_rayleigh * resolution, 3.0 * sig)
+    vals = np.array([v for v, _ in _combo_values(parents, max_order, max_harmonic)])
+    rng = np.random.default_rng(seed)
+    draws = rng.uniform(frange[0], frange[1], n_draws)
+    hit = np.zeros(n_draws, bool)
+    if vals.size:
+        vs = np.sort(vals)
+        k = np.searchsorted(vs, draws)
+        lo = np.abs(draws - vs[np.clip(k - 1, 0, vs.size - 1)])
+        hi = np.abs(draws - vs[np.clip(k, 0, vs.size - 1)])
+        hit = np.minimum(lo, hi) < tol
+    rate = float(hit.mean())
+    n_children = max(0, len(freqs) - len(parents))
+    flagged = sum(1 for x in freqs if x.get("combination"))
+    return {"chance_rate": rate, "tolerance": tol, "n_parents": len(parents), "n_draws": n_draws, "seed": seed,
+            "flagged": flagged, "expected_chance_flags": rate * n_children}
 
 
 # ---------------------------------------------------------------- power density and the background
@@ -265,6 +312,30 @@ def power_density(time, flux, *, fmax: float | None = None, oversample: int = 1)
     df_uhz = (f[1] - f[0]) * DAY_TO_UHZ
     scale = np.var(y) / (np.sum(p) * df_uhz * oversample) if np.sum(p) > 0 else 1.0
     return f * DAY_TO_UHZ, p * scale
+
+
+def averaged_power_density(time, flux, *, segment_days: float = 1.0, min_fill: float = 0.8):
+    """The power density averaged over consecutive ``segment_days`` stretches (each at least ``min_fill`` full), as
+    Salmon et al. (2024) average one-day periodograms of HR 10: (frequency in µHz, mean density, number averaged).
+    The maximum-likelihood background fit of :func:`fit_background` applies unchanged (an average of L χ²₂ bins
+    has the same most likely model, with smaller scatter)."""
+    t = np.asarray(time, float)
+    y = np.asarray(flux, float)
+    cad = float(np.median(np.diff(t)))
+    edges = np.arange(t[0], t[-1] + segment_days, segment_days)
+    grid, acc, n = None, None, 0
+    for a, b in zip(edges[:-1], edges[1:]):
+        m = (t >= a) & (t < b)
+        if m.sum() < min_fill * segment_days / cad:
+            continue
+        nu, p = power_density(t[m], y[m])
+        if grid is None:
+            grid, acc = nu, np.zeros_like(nu)
+        acc += np.interp(grid, nu, p)
+        n += 1
+    if n == 0:
+        raise ValueError("no stretch long enough to average")
+    return grid, acc / n, n
 
 
 def harvey(nu, a, b, c):
@@ -603,7 +674,8 @@ def analyse(time, flux, *, teff: float | None = None, fmin: float | None = None,
     bg = fit_background(nu, p, fmin_uhz=max(nu[0], 3.0 * (nu[1] - nu[0])))
     want_solar = solar if solar is not None else (pw["n_significant"] < 5 and (teff is None or teff < SOLAR_TEFF_MAX))
     sol = solar_like(time, flux, n_boot=n_boot, seed=seed) if want_solar else None
-    out = {"prewhitening": {k: v for k, v in pw.items() if k not in ("residual", "time")},
+    out = {"_time": pw["time"], "_residual": pw["residual"],
+           "prewhitening": {k: v for k, v in pw.items() if k not in ("residual", "time")},
            "background": {k: v for k, v in bg.items()}, "solar_like": sol,
            "type": classify(pw["frequencies"], teff=teff, solar=sol)}
     if n_surrogates:

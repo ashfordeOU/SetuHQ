@@ -102,6 +102,8 @@ def cmd_pulsations(args) -> int:
     teff = args.teff if args.teff is not None else (star or {}).get("teff")
     out = pu.analyse(t, f, teff=teff, fmin=args.fmin, fmax=args.fmax, max_frequencies=args.max_frequencies,
                      n_surrogates=args.surrogates, seed=args.seed, solar=True if args.solar else None)
+    out.pop("_time", None)
+    out.pop("_residual", None)
     pw = out["prewhitening"]
     print(f"{args.target}: {pw['n_significant']} frequencies at S/N ≥ {pw['snr_stop']:g} over {pw['baseline_days']:.1f} d "
           f"({pw['stop']}); type: {out['type']['label']} ({out['type']['confidence']} confidence)")

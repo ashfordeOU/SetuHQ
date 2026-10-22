@@ -160,3 +160,35 @@ def test_frequency_matching_is_one_to_one():
     m = pu.match_frequencies([10.0, 10.02, 20.0], [10.01, 20.5], 0.05)
     assert m["matched"] == 1 and m["recall"] == 0.5
     assert m["pairs"][0]["ours"] in (10.0, 10.02)
+
+
+def test_random_frequencies_are_rarely_flagged_as_combinations():
+    """Independent random frequencies: the flag must fire about as often as the reported chance rate, and rarely."""
+    rng = np.random.default_rng(11)
+    T = 27.0
+    rates, flagged, n = [], 0, 0
+    for _ in range(30):
+        fs = rng.uniform(5, 60, 40)
+        amps = np.sort(rng.uniform(1e-4, 1e-3, 40))[::-1]
+        lst = [{"id": f"f{i + 1}", "frequency": float(f), "amplitude": float(a), "sigma_frequency": 1e-4}
+               for i, (f, a) in enumerate(zip(fs, amps))]
+        pu.flag_combinations(lst, 1.0 / T)
+        ch = pu.combination_chance_rate(lst, 1.0 / T, (5, 60), n_draws=2000, seed=1)
+        children = lst[10:]
+        flagged += sum(1 for x in children if x["combination"])
+        n += len(children)
+        rates.append(ch["chance_rate"])
+    false_flag = flagged / n
+    assert false_flag < 0.15                                # bounded: was 37-67% with every stronger peak a parent
+    assert abs(false_flag - float(np.mean(rates))) < 0.05   # and the reported chance rate predicts it
+
+
+def test_averaged_power_density_keeps_the_harvey_frequency():
+    rng = np.random.default_rng(12)
+    t = np.arange(0.0, 20.0, CAD)
+    bg = {"theta": [math.log(1e-12), math.log(5e-10), math.log(150.0), 3.0], "ncomp": 1, "envelope": None}
+    y = pu.background_surrogate(t, bg, seed=3)
+    nu, p, n = pu.averaged_power_density(t, y, segment_days=1.0)
+    assert n >= 18
+    fit = pu.fit_background(nu, p, ncomp=1)
+    assert fit["components"][0]["b_uhz"] == pytest.approx(150.0, rel=0.25)

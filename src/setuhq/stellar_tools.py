@@ -96,6 +96,8 @@ def pulsation_spectrum(csv_path: str | None = None, time: list[float] | None = N
     lc, sources = _arrays(csv_path, time, flux, flux_err, target)
     out = pu.analyse(lc.time, lc.flux, teff=teff, fmin=fmin, fmax=fmax, max_frequencies=int(max_frequencies),
                      n_surrogates=int(n_surrogates), n_boot=30)
+    out.pop("_time", None)
+    out.pop("_residual", None)
     status = validation_status("pulsations")
     out["validation_status"] = status
     honesty = [COMPUTED, DETECTED, "S/N is the peak amplitude over the mean residual amplitude in a 2 d⁻¹ box; a "
