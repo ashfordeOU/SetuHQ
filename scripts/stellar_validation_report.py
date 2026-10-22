@@ -19,53 +19,56 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from setuhq import cheops as ch  # noqa: E402
 
-# (capability, check id, item, description, test on the item's result)
-CHECKS = [
-    ("flares", "aumic_recall", "aumic_gunther", "AU Mic S1: recall of Günther et al. (2020) flares, 95% interval lower bound ≥ 0.70",
-     lambda r: r["recall"]["ci95"][0] >= 0.70),
-    ("flares", "aumic_null", "aumic_gunther", "AU Mic S1: flux-inverted null finds at most 1 event per 10 days",
-     lambda r: r["ours"]["inverted_null"] <= r["ours"]["observing_days"] / 10),
-    ("flares", "proxima_bright_recall", "proxima_medina",
-     "Proxima S11-12: recall of Medina et al. (2020) flares with ED ≥ 3 s, every bin's 95% interval lower bound ≥ 0.5",
-     lambda r: all(b["ci95"][0] >= 0.5 for b in r["recall_by_published_ed"] if b["ed_lo_s"] >= 3)),
-    ("flares", "proxima_precision", "proxima_medina", "Proxima S11-12: at least 85% of our flares are in Medina et al.'s list",
-     lambda r: r["ours_matched"]["matched"] >= 0.85 * r["ours_matched"]["of"]),
-    ("flares", "energy_scale", "gunther_energy_star",
-     "TIC 150359500: our 9000 K bolometric energies within a factor 1.5 of Günther et al.'s (median ratio's 95% interval inside [0.67, 1.5])",
-     lambda r: r["energy_ratio_ours_over_published"]["ci95"] and 0.67 <= r["energy_ratio_ours_over_published"]["ci95"][0]
-     and r["energy_ratio_ours_over_published"]["ci95"][1] <= 1.5),
-    ("flares", "quiet_stars", "quiet_stars", "Quiet stars: fewer than 0.02 detections per day",
-     lambda r: r["false_positive_rate_per_day_upper"] is not None and r["false_positive_rate_per_day_upper"] < 0.02),
-    ("flares", "cheops_poyatos_complex", "cheops_flares",
-     "CHEOPS DRP M dwarfs (denoised): complex fraction's 95% interval contains Poyatos et al.'s ≈ 0.42",
-     lambda r: r["summary"]["denoised"]["complex_ci95"] and r["summary"]["denoised"]["complex_ci95"][0] <= 0.42 <= r["summary"]["denoised"]["complex_ci95"][1]),
-    ("flares", "cheops_poyatos_alpha", "cheops_flares",
-     "CHEOPS DRP M dwarfs (denoised): power-law index within 2σ (combined) of Poyatos et al.'s 1.99 ± 0.10",
-     lambda r: (r["summary"]["denoised"].get("power_law_above_median_energy") or {}).get("alpha") is not None
-     and abs(r["summary"]["denoised"]["power_law_above_median_energy"]["alpha"] - 1.99)
-     <= 2 * (r["summary"]["denoised"]["power_law_above_median_energy"]["alpha_err"] ** 2 + 0.10 ** 2) ** 0.5),
-    ("pulsations", "beta_pic_top10", "beta_pic", "β Pic S5-7: the 10 strongest of Zieba et al.'s (2019) frequencies all recovered within 3σ",
-     lambda r: r["recall_top10_strict"] == 1.0),
-    ("pulsations", "beta_pic_all", "beta_pic", "β Pic S5-7: at least 80% of the 54 published frequencies within the Rayleigh resolution",
-     lambda r: r["recall_all_loose"] >= 0.8),
-    ("pulsations", "hr10_top10", "hr10_tess", "HR 10 S2 and S29: the 10 strongest of Salmon et al.'s (2024) frequencies recovered within 1/T in both sectors",
-     lambda r: all(s["recall_top10_loose"] == 1.0 for s in r["sectors"].values())),
-    ("pulsations", "hr10_all", "hr10_tess", "HR 10 S2 and S29: at least 80% of the published frequencies within 1/T",
-     lambda r: all(s["recall_all_loose"] >= 0.8 for s in r["sectors"].values())),
-    ("pulsations", "toi197", "toi197", "TOI-197 S2: numax and Δν within 2σ of Huber et al. (2019)",
-     lambda r: r["ours"]["detected"] and abs(r.get("numax_z", 99)) <= 2 and abs(r.get("dnu_z", 99)) <= 2),
-    ("pulsations", "null", "hr10_tess", "HR 10 S29 residual: AR(1) surrogates give fewer than 1 false frequency per light curve on average",
-     lambda r: (r["sectors"]["29"].get("null") or [{}])[0].get("mean_false_per_lightcurve", 99) < 1),
-    ("cheops", "pycheops_same_input", "cheops_pycheops",
-     "Same input as pycheops: our decorrelation matches pycheops' to < 10 ppm rms on every reference visit",
-     lambda r: all(v.get("same_input", {}).get("rms_difference_ppm", 1e9) < 10 for v in r["visits"])),
-    ("cheops", "pycheops_end_to_end", "cheops_pycheops",
-     "End to end (DACE DRP light curve vs pycheops' DRP product): correlation ≥ 0.9 on every reference visit",
-     lambda r: all(v.get("end_to_end", {}).get("correlation", 0) >= 0.9 for v in r["visits"])),
-    ("cheops", "hr10_cheops_f1f2", "hr10_cheops",
-     "HR 10 CHEOPS, three public visits together: the two strongest TESS δ Scuti frequencies (f1, f2) found",
-     lambda r: all(r["combined"]["f1_f2_recovered"])),
-]
+# The metric each protocol check reads from its item's result. The thresholds and the pass rule are in the protocol
+# file (docs/results/stellar_validation_protocol_v2.json); this table only says where each number is.
+def _ci_low(r):
+    return r["ci95"][0]
+
+
+METRICS = {
+    "recall_ci_low": lambda r: _ci_low(r["recall"]),
+    "null_per_10d": lambda r: 10.0 * r["ours"]["inverted_null"] / r["ours"]["observing_days"],
+    "bright_recall_ci_low": lambda r: _ci_low(r["bright_recall"]),
+    "precision": lambda r: r["ours_matched"]["matched"] / r["ours_matched"]["of"],
+    "band_energy_ratio_ci": lambda r: r["band_energy_data_ed_magnitude_ratio_ours_over_published"]["ci95"],
+    "energy_ratio_ci": lambda r: r["energy_ratio_ours_over_published"]["ci95"],
+    "fp_per_day": lambda r: r["false_positive_rate_per_day_upper"],
+    "validation_split_rate": lambda r: r["validation_pooled"]["rate"],
+    "cheops_null_fraction": lambda r: r["summary"]["null_fraction"],
+    "cheops_bright_recovery_ci_low": lambda r: _ci_low(r["summary"]["injection_gate"]),
+    "complex_ci_contains": lambda r: r["summary"]["denoised"]["complex_ci95"],
+    "alpha_z": lambda r: abs(r["summary"]["denoised"]["power_law_above_median_energy"]["alpha"] - 1.92)
+    / (r["summary"]["denoised"]["power_law_above_median_energy"]["alpha_err"] ** 2 + 0.07 ** 2) ** 0.5,
+    "same_input_ok": lambda r: all(v.get("same_input_ok") for v in r["visits"]),
+    "end_to_end_min_corr": lambda r: min(v["end_to_end"]["correlation"] for v in r["visits"]),
+    "f1_f2_combined": lambda r: all(r["combined"]["f1_f2_recovered"]),
+    "top10_strict": lambda r: r["recall_top10_strict"],
+    "all_loose": lambda r: r["recall_all_loose"],
+    "hr10_top10_min": lambda r: min(x["recall_top10_loose"] for x in r["sectors"].values()),
+    "hr10_all_min": lambda r: min(x["recall_all_loose"] for x in r["sectors"].values()),
+    "ar1_false_per_lc": lambda r: r["sectors"]["29"]["null"][0]["mean_false_per_lightcurve"],
+    "max_combination_chance": lambda r: max(x["combination_chance"]["chance_rate"] for x in r["sectors"].values()),
+    "granulation_ratio": lambda r: r["granulation_averaged"]["b_uhz"] / 150.87,
+    "numax_abs_z": lambda r: abs(r["numax_z"]),
+    "dnu_abs_diff": lambda r: abs(r["ours"]["dnu_uhz"] - 28.94),
+}
+
+
+def _apply(op, value, threshold):
+    if op == ">=":
+        return value >= threshold
+    if op == "<=":
+        return value <= threshold
+    if op == "<":
+        return value < threshold
+    if op == "==":
+        return value == threshold
+    if op == "within":  # an interval (or a value) inside [lo, hi]
+        lo, hi = threshold
+        return (lo <= value[0] and value[1] <= hi) if isinstance(value, (list, tuple)) else lo <= value <= hi
+    if op == "contains":  # an interval containing the threshold
+        return value[0] <= threshold <= value[1]
+    raise ValueError(op)
 
 
 def _items(items_dir: Path) -> dict:
@@ -99,32 +102,50 @@ def _frac(r):
 def write_report(items_dir, out_json, out_md, protocol, protocol_sha, fingerprint, refs):
     items = _items(items_dir)
     checks = []
-    for cap, cid, item, text, fn in CHECKS:
-        rec = items.get(item)
+    for c in protocol["checks"]:
+        row = {"capability": c["capability"], "check": c["id"], "item": c["item"], "text": c["text"],
+               "tuning": bool(c.get("tuning")), "gate": bool(c.get("gate")), "gated": bool(c.get("gated"))}
+        rec = items.get(c["item"])
         if not rec or rec.get("status") != "ok":
-            checks.append({"capability": cap, "check": cid, "item": item, "text": text, "result": "not run",
-                           "why": (rec or {}).get("error", "item not run")})
+            checks.append({**row, "result": "not run", "why": (rec or {}).get("error", "item not run")})
             continue
         try:
-            ok = bool(fn(rec["result"]))
-            checks.append({"capability": cap, "check": cid, "item": item, "text": text, "result": "pass" if ok else "fail"})
-        except (KeyError, TypeError, IndexError, ZeroDivisionError) as exc:
-            checks.append({"capability": cap, "check": cid, "item": item, "text": text, "result": "not run",
-                           "why": f"{type(exc).__name__}: {exc}"})
+            value = METRICS[c["metric"]](rec["result"])
+            ok = bool(_apply(c["op"], value, c["threshold"]))
+            checks.append({**row, "value": value, "result": "pass" if ok else "fail"})
+        except (KeyError, TypeError, IndexError, ZeroDivisionError, ValueError) as exc:
+            checks.append({**row, "result": "not run", "why": f"{type(exc).__name__}: {exc}"})
+    # gated comparisons count only when every gate of their capability passes; otherwise they are inconclusive
+    for c in checks:
+        if c["gated"]:
+            gates = [g for g in checks if g["gate"] and g["capability"] == c["capability"]]
+            if not all(g["result"] == "pass" for g in gates):
+                c["computed_result"] = c["result"]
+                c["result"] = "inconclusive"
+                c["why"] = "a gate (the CHEOPS null or injection check) did not pass; the comparison is not interpretable"
+        if c["tuning"]:
+            c["computed_result"] = c["result"]
+            c["result"] = "tuning set"
     caps = {}
     for cap in ("flares", "pulsations", "cheops"):
-        cs = [c for c in checks if c["capability"] == cap]
+        cs = [c for c in checks if c["capability"] == cap and c["result"] in ("pass", "fail", "not run")]
         n_pass = sum(c["result"] == "pass" for c in cs)
-        status = "validated" if n_pass == len(cs) else "partly validated" if n_pass else "unvalidated"
-        caps[cap] = {"status": status, "passed": n_pass, "of": len(cs)}
+        status = "validated" if cs and n_pass == len(cs) else "partly validated" if n_pass else "unvalidated"
+        caps[cap] = {"status": status, "passed": n_pass, "of": len(cs),
+                     "inconclusive": sum(1 for c in checks if c["capability"] == cap and c["result"] == "inconclusive"),
+                     "tuning_set": sum(1 for c in checks if c["capability"] == cap and c["result"] == "tuning set")}
     # what could not be validated at all
     unvalidated = [
-        "Flare energies on stars whose TIC entry has no Teff (AU Mic and Proxima Cen in TIC v8.2): reported as unavailable.",
+        "Flare energies: on TESS they use the TESS magnitude and distance (Sullivan et al. 2015 zero point) when the TIC "
+        "has them, else TIC Teff and radius; on CHEOPS (no magnitude route) the TIC radius and, where the TIC has no Teff, "
+        "the Teff from the CHEOPS archive, labelled. A star with neither route gets energies reported as unavailable.",
+        "AU Mic sector 1 is the tuning star of the flare shape test: its numbers are reported, its null is not counted.",
         "GJ 1243: no machine-readable per-flare TESS catalogue was found; detections are reported, not compared.",
         "GJ 65: no per-flare table is public for Bruno et al. (2024); only an internal 120 s vs 20 s check.",
         "Poyatos et al. (2025) worked on 3-s CHEOPS imagettes reduced with PIPE; DACE serves DRP subarray light curves "
         "(about 42 s and longer), so the CHEOPS comparison is of aggregate numbers on different data products, not "
-        "flare by flare. Their per-flare catalogue is not public.",
+        "flare by flare, and it counts only when the CHEOPS null and injection gates pass. Their per-flare catalogue is "
+        "not public.",
         "Bruno et al. (2024): no per-flare catalogue; their complex fraction (≳ 30%) is quoted for context only.",
         "Wavelet denoising: tuned and checked by injection on SetuHQ's own data; Poyatos et al.'s optimal parameters "
         "were found on imagettes and are not reproduced here.",
@@ -188,30 +209,44 @@ def _markdown(rec, items) -> str:
     a("<!-- Generated by scripts/stellar_validation.py --report from the item records; do not edit by hand. -->")
     a("# Stellar validation: flares, pulsations and CHEOPS")
     a("")
-    a(f"Protocol v{rec['protocol']['version']}, frozen {rec['protocol']['frozen']}, seed {rec['protocol']['seed']}, "
-      f"sha256 `{rec['protocol_sha256'][:16]}…`; stellar code fingerprint `{rec['code_fingerprint'][:16]}…` "
-      f"(each item records the fingerprint of the files it depends on). Generated {rec['generated_at']}.")
+    a(f"Protocol v{rec['protocol']['version']} (`docs/results/stellar_validation_protocol_v2.json`, sha256 "
+      f"`{rec['protocol_sha256']}`), frozen {rec['protocol']['frozen']}, seed {rec['protocol']['seed']}; stellar code "
+      f"fingerprint `{rec['code_fingerprint'][:16]}…` (each item records the fingerprint of the files it depends on). "
+      f"Generated {rec['generated_at']}.")
+    a("")
+    a("**How far to trust this.** " + rec["protocol"]["history"])
+    a("")
+    a("Changes from v1:")
+    a("")
+    for ch_ in rec["protocol"]["changes_from_v1"]:
+        a(f"- {ch_}")
     a("")
     a("Every comparison is against **published numbers**; where ours and theirs disagree, both are shown. Flares and "
       "frequencies are *detected* at the significance stated; nothing here is a confirmation, and types are heuristic.")
     a("")
     a("## Status")
     a("")
-    a("| Capability | Status | Checks passed |")
-    a("|---|---|---|")
+    a("| Capability | Status | Checks passed | Inconclusive (gated) | Tuning-set results (not counted) |")
+    a("|---|---|---|---|---|")
     for k, v in rec["capabilities"].items():
-        a(f"| {k} | **{v['status']}** | {v['passed']} of {v['of']} |")
+        a(f"| {k} | **{v['status']}** | {v['passed']} of {v['of']} | {v['inconclusive']} | {v['tuning_set']} |")
     a("")
-    a("| Check | Result |")
-    a("|---|---|")
+    a("| Capability | Check | Value | Result |")
+    a("|---|---|---|---|")
     for c in rec["checks"]:
-        a(f"| {c['text']} | {c['result']}{' (' + c['why'] + ')' if c.get('why') else ''} |")
+        v = c.get("value")
+        vt = (f"[{v[0]:.2f}, {v[1]:.2f}]" if isinstance(v, (list, tuple)) and v and v[0] is not None
+              else f"{v:.3g}" if isinstance(v, float) else str(v) if v is not None else "")
+        res = c["result"] + (f" (computed: {c['computed_result']})" if c.get("computed_result") else "")
+        a(f"| {c['capability']} | {c['text']} | {vt} | {res}{' — ' + c['why'] if c.get('why') else ''} |")
     a("")
     a("## Flares")
     a("")
     if R.get("aumic_gunther"):
         r = R["aumic_gunther"]
-        a("### AU Mic, TESS sector 1 (2 min), against Günther et al. 2020")
+        a("### AU Mic, TESS sector 1 (2 min), against Günther et al. 2020 (tuning star)")
+        a("")
+        a(f"**{r.get('tuning_note', '')}**")
         a("")
         a("| Quantity | SetuHQ | Günther et al. 2020 |")
         a("|---|---|---|")
@@ -236,7 +271,8 @@ def _markdown(rec, items) -> str:
         a("|---|---|---|")
         a(f"| Flares | {r['ours']['flares']} events ({r['ours']['complex']} complex) | {r['published']['outbursts']} outbursts, {r['published']['flares']} components |")
         a(f"| Recall of published components | {_frac(r['recall'])} | |")
-        a(f"| E_bol ours / published, per matched event (median, 95% CI) | {_ci(r['energy_ratio_ours_over_published'])} | |")
+        a(f"| E_bol ours / published, per matched event, as they compute it (TIC Teff and radius) | {_ci(r['energy_ratio_ours_over_published'])} | |")
+        a(f"| E_bol ours (primary route: TESS magnitude and distance) / published | {_ci(r.get('energy_ratio_primary_route_ours_over_published'))} | |")
         a(f"| Flux-inverted null | {r['ours']['inverted_null']} | |")
         a("")
     if R.get("proxima_medina"):
@@ -255,18 +291,18 @@ def _markdown(rec, items) -> str:
         a(f"| ED ours / published (median, 95% CI) | {_ci(r['ed_ratio_ours_over_published'])} | |")
         if r.get("ed_data_ratio_ours_over_published"):
             a(f"| ED summed over our detection window / published | {_ci(r['ed_data_ratio_ours_over_published'])} | |")
-        a(f"| TESS-band energy, ours (model ED × L from Teff and R) / published | {_ci(r.get('band_energy_ratio_ours_over_published'))} | |")
-        a(f"| TESS-band energy, ours (model ED × L from Tmag and distance) / published | {_ci(r.get('band_energy_from_magnitude_ratio_ours_over_published'))} | |")
-        a(f"| TESS-band energy, ours (data ED × L from Tmag and distance) / published | {_ci(r.get('band_energy_data_ed_magnitude_ratio_ours_over_published'))} | |")
+        a(f"| Recall, published ED ≥ 3 s (pooled) | {_frac(r['bright_recall'])} | |")
+        a(f"| TESS-band energy, ours (model ED, primary luminosity) / published | {_ci(r.get('band_energy_ratio_ours_over_published'))} | |")
+        a(f"| TESS-band energy measured as Medina et al. do (data ED × magnitude-route luminosity, Sullivan et al. 2015 zero point) / published | {_ci(r.get('band_energy_data_ed_magnitude_ratio_ours_over_published'))} | |")
         a(f"| Flux-inverted null | {r['ours']['inverted_null']} | |")
         a("")
-        a("Our ED is the integral of the fitted template, which keeps the slow tail below the noise; Medina et al. sum "
-          "the data over the flare, so our EDs are larger by construction. TIC v8.2 has no Teff for Proxima Cen; the "
-          f"energies here use the CHEOPS archive's Teff ({(r.get('tic_values') or {}).get('teff')} K, labelled), and the "
-          "TESS-band luminosity from it and the TIC radius. The band-energy disagreement splits into the ED definition "
-          "(×1.6), our luminosity from Teff and radius against the one from the TESS magnitude and distance (×1.7; the "
-          "archive's 3200 K is hotter than most literature values for Proxima), and a remaining factor of about 1.8 "
-          "against Medina et al.'s luminosity, which we have not traced.")
+        lum = r.get("luminosity") or {}
+        a("Our default ED is the integral of the fitted template, which keeps the slow tail below the noise; Medina et al. "
+          "sum the data over the flare (their §3.3), so the like-for-like energy uses our data-summed ED. Medina et al. "
+          "derive the TESS-band luminosity from the TESS magnitude, the distance and Sullivan et al. (2015)'s zero point "
+          "(4.03 × 10⁻⁶ erg s⁻¹ cm⁻²), as SetuHQ's magnitude route now does: "
+          f"L_TESS = {_fmt(lum.get('l_band_magnitude_erg_s'), 3)} erg/s (TIC Tmag {lum.get('tmag')}, {_fmt(lum.get('distance_pc'), 3)} pc). "
+          "TIC v8.2 has no Teff for Proxima Cen, so the Teff and radius route is unavailable here.")
         a("")
     if R.get("gj1243") or R.get("gj65"):
         a("### GJ 1243 and GJ 65 (no per-flare reference)")
@@ -301,6 +337,23 @@ def _markdown(rec, items) -> str:
         a("Completeness curves by amplitude, ED and energy, with Wilson 95% intervals per bin, are in "
           "`stellar_validation.json` under `results.completeness`.")
         a("")
+    if R.get("false_split"):
+        r = R["false_split"]
+        a("### False splits: single flares that come back as several components")
+        a("")
+        a("| Star | Injected | Recovered clean (blends excluded) | Split into ≥ 2 | Rate [95% CI] | Real flares (complex) |")
+        a("|---|---|---|---|---|---|")
+        for k, v in r.items():
+            if k == "validation_pooled":
+                continue
+            a(f"| {k}{' (tuning star)' if v.get('tuning_set') else ''} | {v['injected']} | {v['recovered_clean']} ({v['blends_excluded']} blends) | "
+              f"{v['split']} | {_fmt(v['rate'])} [{v['ci95'][0]:.2f}, {v['ci95'][1]:.2f}] | {v['real_flares']} ({v['real_complex']}) |")
+        vp = r["validation_pooled"]
+        a(f"| **Proxima + GJ 1243** | | {vp['recovered_clean']} | {vp['split']} | {_fmt(vp['rate'])} [{vp['ci95'][0]:.2f}, {vp['ci95'][1]:.2f}] | |")
+        a("")
+        a("Before the review fixes (no effective-N correction, no visibility rule), single flares on AU Mic came back "
+          "split 41% of the time (21 of 51, blends included); the AR(1) effective-N correction alone gave 39%.")
+        a("")
     if R.get("quiet_stars"):
         r = R["quiet_stars"]
         a("### Nulls: quiet stars and flux-inverted light curves")
@@ -311,51 +364,6 @@ def _markdown(rec, items) -> str:
             a(f"| {s['star']} | {s.get('sectors')} | {_fmt(s.get('observing_days'), 3)} | {s.get('flares_detected')} | {s.get('inverted_null')} |")
         a(f"| **all** | | {r['total_days']:.1f} | {r['total_detections']} ({_fmt(r['false_positive_rate_per_day_upper'], 3)} per day) | |")
         a("")
-    if R.get("cheops_flares"):
-        r = R["cheops_flares"]
-        s = r["summary"]
-        a("### CHEOPS M dwarfs, against Poyatos et al. 2025 (aggregate only)")
-        a("")
-        a(f"Data: {r['data']}. Targets and visits used: "
-          + "; ".join(f"{t['star']} {t.get('used', 0)} of {t.get('public_visits', '?')} public" for t in r["targets"]) + ".")
-        a("")
-        a("| Quantity | SetuHQ original | SetuHQ denoised | Poyatos et al. 2025 |")
-        a("|---|---|---|---|")
-        o, d = s["original"], s["denoised"]
-        a(f"| Flares | {o['flares']} in {o['observing_days']:.2f} d | {d['flares']} | 215 original, 291 denoised (whole sample, imagettes) |")
-        g = s.get("denoising_gain")
-        a(f"| Gain from denoising | | {g:+.0%} | +35% |" if g is not None else "| Gain from denoising | | n/a | +35% |")
-        a(f"| Complex fraction | {_fmt(o['complex_fraction'])} {o['complex_ci95'] and [round(x, 2) for x in o['complex_ci95']]} | "
-          f"{_fmt(d['complex_fraction'])} {d['complex_ci95'] and [round(x, 2) for x in d['complex_ci95']]} | ≈ 0.42 |")
-        for key in ("original", "denoised"):
-            pl = s[key].get("power_law_above_median_energy")
-            if pl and pl.get("alpha"):
-                s[key]["_al"] = f"{pl['alpha']:.2f} ± {pl['alpha_err']:.2f} (n = {pl['n']})"
-        a(f"| Power-law α (above our median energy) | {o.get('_al', 'n/a')} | {d.get('_al', 'n/a')} | 1.94 ± 0.23 original, 1.99 ± 0.10 denoised |")
-        for key in ("original", "denoised"):
-            ln = s[key].get("vs_lognormal") or {}
-            s[key]["_ln"] = f"R = {ln['R']:.2f}, p = {ln['p_value']:.2f}: {ln['preferred']}" if ln.get("R") is not None else "n/a"
-        a(f"| Power law vs log-normal | {o['_ln']} | {d['_ln']} | log-normal preferred |")
-        a(f"| Flux-inverted null | {o['inverted_null']} | {d['inverted_null']} | FPR < 0.025 original, < 0.010 denoised (their injections) |")
-        a("")
-        a("Without a CHEOPS completeness curve per star, the power law is fitted above the median energy, not above a "
-          "90% completeness energy as Poyatos et al. do; the two indices are not strictly comparable.")
-        a("")
-    if R.get("denoise_grid"):
-        a("### Denoising parameters by injection (as Poyatos et al. chose theirs)")
-        a("")
-        for key, rows in R["denoise_grid"].items():
-            if not isinstance(rows, list):
-                a(f"- {key}: {rows}")
-                continue
-            a(f"**{key}**")
-            a("")
-            a("| Wavelet | Level | Recovered | Inverted null |")
-            a("|---|---|---|---|")
-            for x in rows:
-                a(f"| {x['wavelet'] or 'none'} | {x['level'] or ''} | {x['recovered']}/{x['injected']} = {x['fraction']:.2f} "
-                  f"[{x['ci95'][0]:.2f}, {x['ci95'][1]:.2f}] | {x['inverted_false_positives']} |")
-            a("")
     a("## Pulsations")
     a("")
     if R.get("beta_pic"):
@@ -384,7 +392,14 @@ def _markdown(rec, items) -> str:
         a("")
         g = r["granulation"]
         a(f"Granulation-like background (S29): our Harvey characteristic frequencies {', '.join(f'{b:.0f}' for b in g['ours_b_uhz_s29'])} µHz "
-          f"(exponents {', '.join(f'{c:.1f}' for c in g['ours_exponent_s29'])}); Salmon et al.: b = {g['published_b_uhz_s29']} µHz. {g['note']}.")
+          f"(exponents {', '.join(f'{c:.1f}' for c in g['ours_exponent_s29'])}); with Salmon et al.'s estimator (one-day "
+          f"periodograms averaged, one Harvey profile): {_fmt(g.get('averaged_estimator_b_uhz_s29'), 4)} µHz; Salmon et al.: "
+          f"b = {g['published_b_uhz_s29']} µHz. {g['note']}. A mismatch here is reported as one (check hr10_granulation), not explained away.")
+        for sec, x in r["sectors"].items():
+            ch_ = x.get("combination_chance") or {}
+            a(f"- S{sec}: {x.get('n_combinations', 0)} of the S/N ≥ 4 frequencies flagged as possible combinations; a random "
+              f"frequency would be flagged with probability {_fmt(ch_.get('chance_rate'), 3)} (tolerance {_fmt(ch_.get('tolerance'), 3)} d⁻¹, "
+              f"{ch_.get('n_parents')} parents), about {_fmt(ch_.get('expected_chance_flags'), 2)} chance flags expected.")
         nul = r["sectors"]["29"].get("null") or []
         for n_ in nul:
             a(f"- Null, {n_['kind']} surrogates of the S29 residual: {n_['mean_false_per_lightcurve']:.2f} false frequencies per light curve "
@@ -426,10 +441,68 @@ def _markdown(rec, items) -> str:
         else:
             a(f"| detection | none: {o.get('why')} | numax {r['published']['numax_uhz']} | |")
         a("")
-        a(f"{r['data_note']}. Envelope ΔBIC {o.get('delta_bic_envelope', 0):.1f}.")
+        a(f"{r['data_note']}. Envelope ΔBIC {o.get('delta_bic_envelope', 0):.1f}. The Δν search window is 0.7-1.4 × the "
+          f"scaling value ({_fmt(o.get('dnu_expected_uhz'), 3)} µHz), about ±6 µHz around the published value, so the "
+          "tighter check asks for agreement within 1 µHz; our bootstrap uncertainty is large because the bootstrap "
+          "redraws a smoothed spectrum.")
         a("")
     a("## CHEOPS")
     a("")
+    if R.get("cheops_flares"):
+        r = R["cheops_flares"]
+        s = r["summary"]
+        a("### CHEOPS M-dwarf flares, against Poyatos et al. 2025 (aggregate only; gated)")
+        a("")
+        a(f"Data: {r['data']}. Targets and visits used: "
+          + "; ".join(f"{t['star']} {t.get('used', 0)} of {t.get('public_visits', '?')} public" for t in r["targets"]) + ".")
+        a("")
+        ig = s["injection_gate"]
+        a(f"**Gates.** Injected flares with {ig['selection']}: {ig['recovered']}/{ig['of']} recovered "
+          f"[{ig['ci95'][0]:.2f}, {ig['ci95'][1]:.2f}] (all injections: {ig['all_recovered']}/{ig['all_injected']}). "
+          f"Flux-inverted null with the real flares masked: {s['original']['inverted_null']} (original) and "
+          f"{s['denoised']['inverted_null']} (denoised) against {s['original']['flares']} and {s['denoised']['flares']} flares "
+          f"(largest fraction {_fmt(s['null_fraction'])}). False splits of injected single flares: "
+          f"{s['false_split']['split']}/{s['false_split']['recovered_clean']}. The comparisons below count only if both gates pass.")
+        a("")
+        a("| Quantity | SetuHQ original | SetuHQ denoised | Poyatos et al. 2025 (journal) |")
+        a("|---|---|---|---|")
+        o, d = s["original"], s["denoised"]
+        a(f"| Flares | {o['flares']} in {o['observing_days']:.2f} d | {d['flares']} | 349 on 63 M dwarfs (imagettes) |")
+        g = s.get("denoising_gain")
+        a(f"| Gain from denoising | | {g:+.0%} | +34% |" if g is not None else "| Gain from denoising | | n/a | +34% |")
+        a(f"| Complex fraction | {_fmt(o['complex_fraction'])} {o['complex_ci95'] and [round(x, 2) for x in o['complex_ci95']]} | "
+          f"{_fmt(d['complex_fraction'])} {d['complex_ci95'] and [round(x, 2) for x in d['complex_ci95']]} | ≈ 0.40 |")
+        for key in ("original", "denoised"):
+            pl = s[key].get("power_law_above_median_energy")
+            if pl and pl.get("alpha"):
+                s[key]["_al"] = f"{pl['alpha']:.2f} ± {pl['alpha_err']:.2f} (n = {pl['n']})"
+        a(f"| Power-law α (above our median energy) | {o.get('_al', 'n/a')} | {d.get('_al', 'n/a')} | 1.92 ± 0.07 |")
+        for key in ("original", "denoised"):
+            ln = s[key].get("vs_lognormal") or {}
+            s[key]["_ln"] = f"R = {ln['R']:.2f}, p = {ln['p_value']:.2f}: {ln['preferred']}" if ln.get("R") is not None else "n/a"
+        a(f"| Power law vs log-normal | {o['_ln']} | {d['_ln']} | log-normal preferred |")
+        a("")
+        a("The arXiv v2 numbers differ (291 flares on 62 stars, ~42% complex, +35%, α = 1.99 ± 0.10); the journal "
+          "version's are used. Without a CHEOPS completeness curve per star, the power law is fitted above the median "
+          "energy, not above a 90% completeness energy as Poyatos et al. do; the indices are not strictly comparable. "
+          "Energies use the TIC radius and, where the TIC has no Teff, the Teff from the CHEOPS archive (labelled).")
+        a("")
+    if R.get("denoise_grid"):
+        a("### Denoising parameters by injection (as Poyatos et al. chose theirs)")
+        a("")
+        for key, rows in R["denoise_grid"].items():
+            if not isinstance(rows, list):
+                a(f"- {key}: {rows}")
+                continue
+            a(f"**{key}**")
+            a("")
+            a("| Wavelet | Level | Recovered | Inverted null |")
+            a("|---|---|---|---|")
+            for x in rows:
+                a(f"| {x['wavelet'] or 'none'} | {x['level'] or ''} | {x['recovered']}/{x['injected']} = {x['fraction']:.2f} "
+                  f"[{x['ci95'][0]:.2f}, {x['ci95'][1]:.2f}] | {x['inverted_false_positives']} |")
+            a("")
+
     if R.get("cheops_pycheops"):
         r = R["cheops_pycheops"]
         a("### Detrending against pycheops (Maxted et al. 2022), same 15 decorrelation terms")

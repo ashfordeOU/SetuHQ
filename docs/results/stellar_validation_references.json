@@ -1158,22 +1158,38 @@
   "data": "TESS sector 2, 2-min, TASOC light curve"
  },
  "poyatos2025": {
-  "source": "Poyatos et al. 2025, A&A 699, A242 (arXiv:2412.15297v2)",
+  "source": "Poyatos et al. 2025, A&A 699, A242, doi:10.1051/0004-6361/202453517 (journal version; abstract as recorded in the University of Barcelona repository, hdl.handle.net/2445/224170)",
   "data": "CHEOPS imagettes (3 s cadence) reduced with PIPE, M dwarfs",
-  "flares_original": 215,
-  "flares_denoised": 291,
-  "denoising_gain_pct": 35.3,
-  "complex_fraction_approx": 0.42,
+  "flares_denoised": 349,
+  "stars": 63,
+  "complex_fraction_approx": 0.4,
+  "denoising_gain_pct": 34,
   "alpha_all_denoised": [
-   1.99,
-   0.1
+   1.92,
+   0.07
   ],
-  "alpha_all_original": [
-   1.94,
-   0.23
+  "energy_range_erg": [
+   2.2e+26,
+   8.1e+30
   ],
   "lognormal_preferred": true,
-  "note_versions": "The arXiv v2 abstract gives 291 flares on 62 M dwarfs, about 42% complex, +35% from denoising and alpha 1.99 +/- 0.10; the brief quoted 349 flares on 63 stars, about 40%, +34% and 1.92 +/- 0.07, which we could not find in the arXiv text."
+  "arxiv_v2_differences": {
+   "version": "arXiv:2412.15297v2 (9 Jul 2025)",
+   "flares_original": 215,
+   "flares_denoised": 291,
+   "stars": 62,
+   "complex_fraction_approx": 0.42,
+   "denoising_gain_pct": 35.3,
+   "alpha_all_denoised": [
+    1.99,
+    0.1
+   ],
+   "alpha_all_original": [
+    1.94,
+    0.23
+   ],
+   "note": "The arXiv v2 text gives these numbers; the journal version's abstract gives those above. SetuHQ compares with the journal version; the arXiv tables are the source for the method details only."
+  }
  },
  "bruno2024": {
   "source": "Bruno et al. 2024, A&A 686, A239 (arXiv:2403.17065)",

@@ -49,42 +49,13 @@ PYCHEOPS_DIR = Path(os.environ.get("SETUHQ_PYCHEOPS_REF", CACHE / "pycheops_ref"
 
 # ---------------------------------------------------------------- the frozen protocol
 
-PROTOCOL = {
-    "version": 1,
-    "frozen": "2026-10-21",
-    "seed": 20261021,
-    "flares": {
-        "match_window_days": 0.01,  # a published flare is recovered when its peak lies within one of our flare windows ± this
-        "aumic": {"tic": 441420236, "sectors": [1], "reference": "Günther et al. 2020, J/AJ/159/60"},
-        "gunther_energy_star": {"tic": 150359500, "sectors": [2], "reference": "Günther et al. 2020, J/AJ/159/60"},
-        "proxima": {"tic": 388857263, "sectors": [11, 12], "reference": "Medina et al. 2020, J/ApJ/905/107"},
-        "gj1243": {"tic": 273589987, "sectors": [14, 15]},
-        "gj65": {"tic": 632499596, "sectors": [30], "exptimes": [120, 20]},
-        "completeness": {"n_trials": 20, "per_trial": 10, "amp_range": [1e-4, 1e-1], "fwhm_minutes": [1.0, 60.0],
-                         "stars": ["aumic", "proxima", "gj1243"]},
-        "quiet": {"names": ["pi Men", "zeta Tuc", "beta Hyi"], "sector_limit": 2},
-        "cheops_targets": ["AU Mic", "AD Leo", "EV Lac", "GJ 65", "Proxima Cen"],
-        "tics": {"AU Mic": 441420236, "AD Leo": 95431305, "EV Lac": 154101678, "GJ 65": 632499596, "Proxima Cen": 388857263},
-        "teff_fallback": "when TIC v8.2 has no Teff, the CHEOPS archive's target record (DACE teff_k), labelled as such",
-        "cheops_max_visits_per_target": 25,
-        "cheops_min_cadence_s": 0, "cheops_max_cadence_s": 60,
-        "denoise_grid": {"wavelets": ["haar", "db4", "db18"], "levels": [1, 2, 3, 4], "n_trials": 3, "per_trial": 10},
-    },
-    "pulsations": {
-        "snr_stop": 4.0, "noise_box_cd": 2.0, "max_frequencies": 100,
-        "tolerance": "strict: 3 × the combined frequency uncertainty (ours and published, Montgomery & O'Donoghue); "
-                     "loose: the Rayleigh resolution 1/T",
-        "hr10": {"sectors": [2, 29], "fmin_cd": 0.05, "n_surrogates": 10},
-        "beta_pic": {"sectors": [5, 6, 7], "fmin_cd": 5.0},
-        "toi197": {"sectors": [2], "n_boot": 100},
-    },
-    "cheops": {"pycheops_visits": ["CH_PR100018_TG035201_V0300", "CH_PR100018_TG048901_V0300", "CH_PR100018_TG049601_V0300"],
-               "terms": ["t", "t2", "x", "y", "x2", "y2", "xy", "sin1", "cos1", "sin2", "cos2", "sin3", "cos3", "bg", "contam"]},
-}
+PROTOCOL_FILE = ROOT / "docs/results/stellar_validation_protocol_v2.json"
+PROTOCOL = json.loads(PROTOCOL_FILE.read_text())
 
 
 def protocol_hash() -> str:
-    return hashlib.sha256(json.dumps(PROTOCOL, sort_keys=True).encode()).hexdigest()
+    """sha256 of the committed protocol file, byte for byte."""
+    return hashlib.sha256(PROTOCOL_FILE.read_bytes()).hexdigest()
 
 
 def refs() -> dict:
@@ -122,8 +93,9 @@ def _bootstrap_median(x, n=2000, seed=0):
     return {"median": float(np.median(x)), "ci95": [float(np.percentile(b, 2.5)), float(np.percentile(b, 97.5))], "n": int(x.size)}
 
 
-def _star(name, tic):
-    """TIC values, with the CHEOPS archive's Teff when the TIC has none (labelled; see the protocol)."""
+def _cheops_star(name, tic):
+    """TIC values for a CHEOPS target, with the CHEOPS archive's Teff when the TIC has none, labelled (protocol v2:
+    CHEOPS items only; the CHEOPS band has no magnitude route)."""
     star = tic_star(tic, CACHE)
     if star is not None and not star.get("teff") and name:
         try:
@@ -131,7 +103,7 @@ def _star(name, tic):
         except ch.CheopsUnavailable:
             vs = []
         if vs and vs[0].get("teff_k"):
-            star = {**star, "teff": float(vs[0]["teff_k"]), "teff_source": "CHEOPS archive target record (DACE teff_k)"}
+            star = {**star, "teff": float(vs[0]["teff_k"]), "teff_source": "Teff from the CHEOPS archive (DACE teff_k)"}
     return star
 
 
@@ -145,7 +117,7 @@ def _flares_on(lcs, star, band="TESS", denoise=False):
         cad = float(np.median(np.diff(lc.time))) * 86400
         cfg = fl.config_for(band, cad, denoise=denoise)
         r = fl.detect_flares(lc.time, lc.flux, lc.flux_err, config=cfg, star=star, band=band)
-        r["inverted_null"] = fl.inverted_null(lc.time, lc.flux, lc.flux_err, config=cfg, band=band)
+        r["inverted_null"] = fl.inverted_null(lc.time, lc.flux, lc.flux_err, config=cfg, band=band, real_flares=r["flares"])
         r["sector"] = lc.provenance.get("sector")
         r["file_sha256"] = lc.provenance.get("file_sha256")
         for f in r["flares"]:
@@ -154,6 +126,12 @@ def _flares_on(lcs, star, band="TESS", denoise=False):
             f.pop("models", None)
         out.append(r)
     return out
+
+
+def _pooled(bins):
+    k = sum(b["recovered"] for b in bins)
+    n = sum(b["n"] for b in bins)
+    return {"recovered": k, "of": n, "fraction": k / n if n else None, "ci95": fl.wilson(k, n)}
 
 
 def _match_times(ours, ref_times, window):
@@ -177,7 +155,7 @@ def _vizier(cat):
 def item_aumic_gunther() -> dict:
     p = PROTOCOL["flares"]["aumic"]
     lcs = _tess(p["tic"], p["sectors"])
-    star = _star("AU Mic", p["tic"])
+    star = tic_star(p["tic"], CACHE)
     res = _flares_on(lcs, star)
     ours = [f for r in res for f in r["flares"]]
     g = _vizier("J/AJ/159/60/table1")
@@ -217,9 +195,11 @@ def item_aumic_gunther() -> dict:
             "amplitude_ratio_ours_over_published": _bootstrap_median(amp_ratio),
             "fwhm_ratio_ours_over_published_simple": _bootstrap_median(fwhm_ratio),
             "morphology_agreement": {"agree": simple_agree, "of": len(ev), "ci95": fl.wilson(simple_agree, len(ev))},
-            "energies": ("TIC v8.2 has no Teff for AU Mic; ours use the CHEOPS archive's Teff (labelled). Günther et al. "
-                         "give no energies for AU Mic, so there is nothing to compare them with"),
-            "energy_teff_source": (star or {}).get("teff_source", "TIC"),
+            "energies": ("from the TESS magnitude and distance (TIC v8.2 has no Teff for AU Mic). Günther et al. give no "
+                         "energies for AU Mic, so there is nothing to compare them with"),
+            "tuning_set": True,
+            "tuning_note": ("The flare shape threshold (ΔBIC ≥ 10 against symmetric bumps) was set on this light curve and its "
+                            "flux-inverted null; the null here is a tuning-set result, not a validation."),
             "per_sector": [{k2: r[k2] for k2 in ("sector", "file_sha256", "summary")} for r in res],
             "flares": ours}
 
@@ -239,7 +219,8 @@ def item_gunther_energy_star() -> dict:
     for h, e in zip(hits, g["Ebol"]):
         if h is not None and not np.ma.is_masked(e):
             per_event[h] = per_event.get(h, 0.0) + float(e)
-    ratio = [ours[h]["e_bol_erg"] / e for h, e in per_event.items() if ours[h].get("e_bol_erg")]
+    ratio = [ours[h]["e_bol_teff_radius_erg"] / e for h, e in per_event.items() if ours[h].get("e_bol_teff_radius_erg")]
+    ratio_primary = [ours[h]["e_bol_erg"] / e for h, e in per_event.items() if ours[h].get("e_bol_erg")]
     k = sum(h is not None for h in hits)
     return {"star": "TIC 150359500", "tic": p["tic"], "sectors": p["sectors"], "reference": p["reference"], "tic_values": star,
             "published": {"flares": int(len(tp)), "outbursts": int(len(set(g["Outbst"])))},
@@ -247,14 +228,16 @@ def item_gunther_energy_star() -> dict:
                      "inverted_null": sum(r["inverted_null"]["false_positives"] for r in res)},
             "recall": {"recovered": k, "of": int(len(tp)), "fraction": k / len(tp), "ci95": fl.wilson(k, len(tp))},
             "energy_ratio_ours_over_published": _bootstrap_median(ratio),
-            "energy_method": "both: ED × πR²σT⁴ ∫R B(Teff) / ∫R B(9000 K) (Günther et al. 2020 use the same 9000 K blackbody)",
+            "energy_ratio_primary_route_ours_over_published": _bootstrap_median(ratio_primary),
+            "energy_method": ("like for like: ED × πR²σT⁴ ∫R B(Teff) / ∫R B(9000 K) from TIC Teff and radius, as Günther et al. "
+                              "2020 compute it; the primary route (TESS magnitude and distance) is reported beside it"),
             "flares": ours}
 
 
 def item_proxima_medina() -> dict:
     p = PROTOCOL["flares"]["proxima"]
     lcs = _tess(p["tic"], p["sectors"])
-    star = _star("Proxima Cen", p["tic"])
+    star = tic_star(p["tic"], CACHE)
     res = _flares_on(lcs, star)
     ours = [f for r in res for f in r["flares"]]
     m = _vizier("J/ApJ/905/107/table3")
@@ -265,8 +248,8 @@ def item_proxima_medina() -> dict:
     ed_pairs = [(ours[h]["ed_s"], float(e)) for h, e in zip(hits, m["ED"]) if h is not None]
     ed_data_pairs = [(ours[h]["ed_data_s"], float(e)) for h, e in zip(hits, m["ED"]) if h is not None]
     en_pairs = [(ours[h].get("e_band_erg"), float(e)) for h, e in zip(hits, m["Energy"]) if h is not None]
-    enm_pairs = [(ours[h].get("e_band_from_magnitude_erg"), float(e)) for h, e in zip(hits, m["Energy"]) if h is not None]
-    end_pairs = [(ours[h].get("e_band_from_magnitude_erg", 0) * ours[h]["ed_data_s"] / ours[h]["ed_s"], float(e))
+    # as Medina et al. measure it: the data's ED (summed over the flare) times the magnitude-route luminosity
+    end_pairs = [((ours[h].get("e_band_magnitude_erg") or 0) * ours[h]["ed_data_s"] / ours[h]["ed_s"], float(e))
                  for h, e in zip(hits, m["Energy"]) if h is not None and ours[h]["ed_s"]]
     # recall as a function of the published ED
     edp = np.array(m["ED"], float)
@@ -290,8 +273,9 @@ def item_proxima_medina() -> dict:
             "ed_ratio_ours_over_published": _bootstrap_median([a / b for a, b in ed_pairs if b > 0]),
             "ed_data_ratio_ours_over_published": _bootstrap_median([a / b for a, b in ed_data_pairs if b > 0]),
             "band_energy_ratio_ours_over_published": _bootstrap_median([a / b for a, b in en_pairs if a and b > 0]),
-            "band_energy_from_magnitude_ratio_ours_over_published": _bootstrap_median([a / b for a, b in enm_pairs if a and b > 0]),
             "band_energy_data_ed_magnitude_ratio_ours_over_published": _bootstrap_median([a / b for a, b in end_pairs if a and b > 0]),
+            "bright_recall": _pooled([b for b in by_ed if b["ed_lo_s"] >= 3]),
+            "luminosity": fl.stellar_band_luminosity(star),
             "flares": ours}
 
 
@@ -312,7 +296,7 @@ def item_gj1243() -> dict:
 
 def item_gj65() -> dict:
     p = PROTOCOL["flares"]["gj65"]
-    star = _star("GJ 65", p["tic"])
+    star = tic_star(p["tic"], CACHE)
     out = {"star": "GJ 65 (BL Cet + UV Cet, blended in TESS pixels)", "tic": p["tic"], "sectors": p["sectors"], "tic_values": star}
     by = {}
     for ex in p["exptimes"]:
@@ -340,7 +324,7 @@ def item_completeness() -> dict:
     for name in c["stars"]:
         p = PROTOCOL["flares"][name]
         lc = _tess(p["tic"], p["sectors"][:1])[0]
-        star = _star({"aumic": "AU Mic", "proxima": "Proxima Cen"}.get(name), p["tic"])
+        star = tic_star(p["tic"], CACHE)
         real = fl.detect_flares(lc.time, lc.flux, lc.flux_err, star=star)["flares"]
         r = fl.inject_recover(lc.time, lc.flux, lc.flux_err, star=star, n_trials=c["n_trials"], per_trial=c["per_trial"],
                               seed=PROTOCOL["seed"], amp_range=tuple(c["amp_range"]), fwhm_minutes=tuple(c["fwhm_minutes"]),
@@ -364,6 +348,27 @@ def _named_tic(name):
     t = Catalogs.query_object(name, catalog="TIC", radius=0.003)
     t.sort("dstArcSec")
     return int(t[0]["ID"])
+
+
+def item_false_split() -> dict:
+    """Single Mendoza flares injected into each star's own light curve: how often one comes back as two or more
+    components. AU Mic is the tuning star (reported, not counted); Proxima and GJ 1243 are the check."""
+    c = PROTOCOL["flares"]["false_split"]
+    out = {}
+    for name in c["stars"]:
+        p = PROTOCOL["flares"][name]
+        lc = _tess(p["tic"], p["sectors"][:1])[0]
+        real = fl.detect_flares(lc.time, lc.flux, lc.flux_err)
+        r = fl.inject_recover(lc.time, lc.flux, lc.flux_err, n_trials=c["n_trials"], per_trial=c["per_trial"],
+                              seed=PROTOCOL["seed"] + 7, amp_range=tuple(c["amp_range"]), fwhm_minutes=tuple(c["fwhm_minutes"]),
+                              real_flares=real["flares"])
+        out[name] = {"tic": p["tic"], "sector": p["sectors"][0], "injected": r["n"], **fl.false_split_rate(r["injections"]),
+                     "real_flares": real["summary"]["n_flares"], "real_complex": real["summary"]["n_complex"],
+                     "tuning_set": name not in c["validation_stars"]}
+    val = [out[n] for n in c["validation_stars"]]
+    k, n = sum(v["split"] for v in val), sum(v["recovered_clean"] for v in val)
+    out["validation_pooled"] = {"split": k, "recovered_clean": n, "rate": k / n if n else None, "ci95": fl.wilson(k, n)}
+    return out
 
 
 def item_quiet_stars() -> dict:
@@ -414,7 +419,7 @@ def item_cheops_flares() -> dict:
         except ch.CheopsUnavailable as exc:
             out["targets"].append({"star": name, "error": str(exc)})
             continue
-        star = _star(name, PROTOCOL["flares"]["tics"][name])
+        star = _cheops_star(name, PROTOCOL["flares"]["tics"][name])
         row = {"star": name, "public_visits": lst["n_public"], "used": len(vs), "tic_values": star, "visits": []}
         for v in vs:
             try:
@@ -431,11 +436,21 @@ def item_cheops_flares() -> dict:
             for dn in (False, True):
                 cfg = fl.config_for("CHEOPS", vis.cadence_s, denoise=dn)
                 r = fl.detect_flares(d["time"][ok], d["flux"][ok], d["flux_err"][ok], config=cfg, star=star, band="CHEOPS")
-                nul = fl.inverted_null(d["time"][ok], d["flux"][ok], d["flux_err"][ok], config=cfg, band="CHEOPS")
+                nul = fl.inverted_null(d["time"][ok], d["flux"][ok], d["flux_err"][ok], config=cfg, band="CHEOPS",
+                                       real_flares=r["flares"])
                 for f in r["flares"]:
                     f.pop("models", None)
                 rec["denoised" if dn else "original"] = {"flares": r["flares"], "days": r["summary"]["observing_days"],
                                                          "inverted_null": nul["false_positives"]}
+                if not dn:
+                    ci = PROTOCOL["flares"]["cheops_injection"]
+                    inj = fl.inject_recover(d["time"][ok], d["flux"][ok], d["flux_err"][ok], config=cfg, band="CHEOPS",
+                                            n_trials=ci["n_trials"], per_trial=ci["per_trial"],
+                                            seed=PROTOCOL["seed"] + len(allv), amp_range=tuple(ci["amp_range"]),
+                                            fwhm_minutes=tuple(ci["fwhm_minutes"]), real_flares=r["flares"])
+                    rec["injections"] = [{k: x[k] for k in ("amplitude", "fwhm_minutes", "recovered", "snr", "n_components_recovered",
+                                                            "ed_s", "ed_recovered_s")} for x in inj["injections"]]
+                    rec["injections_cadence_s"] = vis.cadence_s
             row["visits"].append(rec)
             allv.append(v)
         out["targets"].append(row)
@@ -457,6 +472,20 @@ def item_cheops_flares() -> dict:
             summ[key]["vs_lognormal"] = fl.compare_lognormal(e_ok, emin)
     o, dn = summ["original"]["flares"], summ["denoised"]["flares"]
     summ["denoising_gain"] = (dn - o) / o if o else None
+    # the gates: injected flares that a working method must find, and the null
+    ci = PROTOCOL["flares"]["cheops_injection"]
+    inj = [x for t in out["targets"] for v in t.get("visits", []) for x in v.get("injections", [])
+           if x["snr"] and x["snr"] >= ci["gate_min_snr"]
+           and x["fwhm_minutes"] * 60 >= ci["gate_min_fwhm_cadences"] * (v.get("injections_cadence_s") or 60)]
+    allinj = [x for t in out["targets"] for v in t.get("visits", []) for x in v.get("injections", [])]
+    k = sum(x["recovered"] for x in inj)
+    summ["injection_gate"] = {"recovered": k, "of": len(inj), "fraction": k / len(inj) if inj else None,
+                              "ci95": fl.wilson(k, len(inj)), "all_injected": len(allinj),
+                              "all_recovered": sum(x["recovered"] for x in allinj),
+                              "selection": f"S/N ≥ {ci['gate_min_snr']:g} and FWHM ≥ {ci['gate_min_fwhm_cadences']:g} cadences"}
+    summ["false_split"] = fl.false_split_rate([x for x in allinj])
+    summ["null_fraction"] = max((summ[kk]["inverted_null"] / summ[kk]["flares"]) if summ[kk]["flares"] else 1.0
+                                for kk in ("original", "denoised"))
     out["summary"] = summ
     return out
 
@@ -534,13 +563,23 @@ def item_hr10_tess() -> dict:
             "amplitude_ratio_ours_over_published": _bootstrap_median(amp_pairs),
             "pairs_loose": m["loose"]["pairs"], "frequencies": pw["frequencies"],
             "type": a["type"], "background": {k: bg[k] for k in ("white", "components", "ncomp")},
-            "null": a.get("null"),
+            "null": a.get("null"), "combination_chance": pw["combination_chance"],
+            "n_combinations": sum(1 for x in sig if x.get("combination")),
         }
+        if sec == 29:
+            # Salmon et al.'s estimator: periodograms of one-day stretches of the pre-whitened residual, averaged, and
+            # one Harvey profile plus white noise
+            nu, pav, nseg = pu.averaged_power_density(a["_time"], a["_residual"], segment_days=p["hr10"]["average_segment_days"])
+            fit1 = pu.fit_background(nu, pav, ncomp=1, fmin_uhz=max(nu[0], 20.0))
+            out["granulation_averaged"] = {"segments": nseg, "b_uhz": fit1["components"][0]["b_uhz"],
+                                           "c": fit1["components"][0]["c"], "white": fit1["white"]}
     bgc = out["sectors"]["29"]["background"]["components"]
     out["granulation"] = {"ours_b_uhz_s29": [c["b_uhz"] for c in bgc], "ours_exponent_s29": [c["c"] for c in bgc],
                           "published_b_uhz_s29": r["granulation_b_uhz"]["tess_s29"],
+                          "averaged_estimator_b_uhz_s29": out.get("granulation_averaged", {}).get("b_uhz"),
                           "note": "Salmon et al. fit one Harvey component to an averaged periodogram (25 one-day series); "
-                                  "we fit one or two to the full periodogram by maximum likelihood"}
+                                  "SetuHQ's default fits one or two to the full periodogram by maximum likelihood, and the "
+                                  "validation also applies their estimator"}
     return out
 
 
@@ -693,7 +732,9 @@ def item_cheops_pycheops() -> dict:
         rows.append({"file_key": fk, "programme": ch.programme_id(fk), "obs_id": found["obs_id"], "pi": found["pi_name"],
                      "pycheops_version": ref.get("pycheops_version"), "points_matched": int(m.sum()), "points_ours": int(vis.time.size),
                      "end_to_end": cmp(ours, rf[m]), "same_input": cmp(d2["flux"], rf[m]),
-                     "same_input_rms_ours_ppm": float(np.nanstd(d2["flux"]) * 1e6), "raw_inputs": cmp(vis.flux[idx][m], rr[m]),
+                     "same_input_rms_ours_ppm": float(np.nanstd(d2["flux"]) * 1e6),
+                     "same_input_ok": bool(cmp(d2["flux"], rf[m])["rms_difference_ppm"] < 10
+                                           or np.nanstd(d2["flux"]) < np.std(rf[m])), "raw_inputs": cmp(vis.flux[idx][m], rr[m]),
                      "rms_ours_ppm": float(np.nanstd(ours) * 1e6), "rms_pycheops_ppm": float(np.std(rf[m]) * 1e6)})
     return {"visits": rows, "terms": p["terms"], **ch.credit([r for r in rows if "obs_id" in r])}
 
@@ -715,7 +756,7 @@ def item_fingerprint(name: str) -> str:
 ITEMS = {
     "aumic_gunther": item_aumic_gunther, "gunther_energy_star": item_gunther_energy_star,
     "proxima_medina": item_proxima_medina, "gj1243": item_gj1243, "gj65": item_gj65, "completeness": item_completeness,
-    "quiet_stars": item_quiet_stars, "cheops_flares": item_cheops_flares, "denoise_grid": item_denoise_grid,
+    "quiet_stars": item_quiet_stars, "false_split": item_false_split, "cheops_flares": item_cheops_flares, "denoise_grid": item_denoise_grid,
     "hr10_tess": item_hr10_tess, "hr10_cheops": item_hr10_cheops, "beta_pic": item_beta_pic, "toi197": item_toi197,
     "cheops_pycheops": item_cheops_pycheops,
 }
