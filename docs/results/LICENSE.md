@@ -7,5 +7,7 @@ The results in this folder that SetuHQ computed (validation, benchmarks, calibra
 https://github.com/ashfordeOU/SetuHQ, link the licence, and say what you changed.
 
 Third-party data inside or behind these files keeps its own terms and acknowledgements (see
-[NOTICE](../../NOTICE)); CC BY 4.0 covers SetuHQ's own contribution. The code that made the files is
+[NOTICE](../../NOTICE)); CC BY 4.0 covers SetuHQ's own contribution. **CHEOPS-derived material is excluded**: the CHEOPS parts
+of `stellar_validation.*` stay under ESA's terms (CC BY-NC 3.0 IGO; commercial use needs ESA's prior
+authorisation), as [LICENSING.md](../../LICENSING.md) explains. The code that made the files is
 under AGPL-3.0-only or a commercial licence: see [LICENSING.md](../../LICENSING.md).

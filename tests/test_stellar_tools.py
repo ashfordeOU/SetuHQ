@@ -167,3 +167,17 @@ def test_validation_record_has_protocol_seed_fingerprint_and_labels():
         assert rec["capabilities"][cap]["status"] in ("validated", "partly validated", "unvalidated")
     assert all(len(v["code_fingerprint"]) == 64 for v in rec["items"].values() if v.get("code_fingerprint"))
     assert_credited(rec["cheops_credit"], [])
+
+
+def test_licensing_carves_out_cheops_data():
+    for rel in ("LICENSING.md", "NOTICE", "docs/PRO.md", "docs/results/LICENSE.md", "docs/STELLAR.md"):
+        text = " ".join((ROOT / rel).read_text().split())
+        assert "CC BY-NC 3.0 IGO" in text, rel
+    lic = " ".join((ROOT / "LICENSING.md").read_text().split())
+    assert "neither the commercial licence nor SetuHQ Pro covers them" in lic
+    assert "data.licences@esa.int" in lic and "GPL-3.0" in lic
+    notice = (ROOT / "NOTICE").read_text()
+    for word in ("DACE", "SVO Filter Profile Service", "Credit: ESA", "Benz", "not affiliated"):
+        assert word in notice, word
+    doc = " ".join((ROOT / "docs/STELLAR.md").read_text().split())
+    assert "ESA does not designate DACE" in doc and "University of Geneva's public API in front of the CHEOPS Mission Archive" in doc

@@ -53,16 +53,21 @@ The methods follow Bruno et al. (2024, A&A 686, A239), Poyatos et al. (2025, A&A
    double exponential, shape constants from GJ 1243), averaged over the exposure, plus a linear baseline. It is
    kept when one flare beats a quadratic by ΔBIC ≥ 6 and the chosen flare models beat as many symmetric Gaussian
    bumps by ΔBIC ≥ 10. Components are added one at a time, up to five, while each lowers the BIC by 6 or more
-   (Davenport et al. 2014; Bruno et al. and Poyatos et al. do the same with the AIC). A flare with two or more
+   (Davenport et al. 2014; Bruno et al. and Poyatos et al. do the same with the AIC). The BIC counts an effective
+   number of points, N(1 − ρ)/(1 + ρ) for the noise's lag-one correlation ρ, and an extra component must also be a
+   visible peak (3σ and a tenth of the strongest component): without these, injected single flares on AU Mic came
+   back split 41% of the time. The false-split rate is measured on injected single flares and reported. A flare with two or more
    components is *complex*. Recorded: peak time, amplitude, FWHM, rise and decay times, duration, the ED of the
    fitted model (`ed_s`) and of the data in the detection window (`ed_data_s`), each component, and the BIC and
    AIC of every model tried.
-5. **Energies.** E_band = ED × L★,band, with the band luminosity from the TIC Teff and radius (a Planck spectrum
-   through the TESS or CHEOPS response from the SVO Filter Profile Service), cross-checked against the TESS
-   magnitude and distance. E_bol assumes **the flare radiates as a 9000 K blackbody** (Shibayama et al. 2013;
-   Günther et al. 2020): E_bol = ED · πR★²σT⁴ ∫R B(Teff) dλ / ∫R B(9000 K) dλ. Without Teff and radius both are
-   **unavailable**, and say so. TIC v8.2 has no Teff for AU Mic or Proxima Cen; `--teff` supplies one, and the
-   record says it was supplied.
+5. **Energies.** E_band = ED × L★,band. The band luminosity comes from the TESS magnitude and the distance with
+   Sullivan et al. (2015)'s band-integrated zero point, 4.03 × 10⁻⁶ erg s⁻¹ cm⁻² at T = 0 (as Medina et al. 2020
+   do), when both are known; otherwise from Teff and radius (a Planck spectrum through the TESS or CHEOPS response
+   from the SVO Filter Profile Service). Both routes are reported side by side. E_bol assumes **the flare radiates as a 9000 K blackbody** (Shibayama et al. 2013;
+   Günther et al. 2020): E_bol = E_band σT⁴ / (4π ∫R B(9000 K) dλ), which with the Teff and radius route is their
+   ED · πR★²σT⁴ ∫R B(Teff) / ∫R B(9000 K). With neither route the energies are **unavailable**, and say so. TIC
+   v8.2 has no Teff for AU Mic or Proxima Cen; their energies use the magnitude route. A Teff from elsewhere (for
+   CHEOPS targets, the CHEOPS archive's) is labelled with its source in every record.
 6. **Flare frequency distribution.** The cumulative FFD; the maximum-likelihood power-law index above a
    completeness energy, with (α − 1)/√n as its uncertainty and the small-sample correction (Clauset, Shalizi &
    Newman 2009); and the Vuong likelihood-ratio test against a truncated log-normal, as Bruno et al. and Poyatos
@@ -70,8 +75,10 @@ The methods follow Bruno et al. (2024, A&A 686, A239), Poyatos et al. (2025, A&A
 7. **Completeness.** Synthetic Mendoza flares (log-uniform amplitude and FWHM) are multiplied into the star's own
    light curve, away from its real flares, and the whole detection runs again; recovery is reported against
    amplitude, ED and energy with Wilson 95% intervals, and the energy above which it stays at 90% or more.
-8. **Nulls.** The flux-inverted light curve (no star makes a downward flare; a transit becomes a bump, so this
-   is an upper bound), and quiet solar-type stars where every detection counts as a false positive.
+8. **Nulls.** The flux-inverted light curve with the real flares' windows masked (no star makes a downward flare;
+   unmasked, a real flare becomes a deep dip that drags the trend and leaves bumps beside it; a transit still
+   becomes a bump, so this is an upper bound), and quiet solar-type stars where every detection counts as a false
+   positive.
 
 The asymmetry test (step 4) was set on AU Mic's sector 1 and its flux-inverted null, then frozen before the other
 stars were run; the validation says so.
@@ -79,10 +86,14 @@ stars were run; the validation says so.
 ## Pulsations and asteroseismology (`src/setuhq/pulsations.py`)
 
 - **Amplitude spectrum**: Lomb-Scargle scaled to semi-amplitude, oversampled ten times the Rayleigh resolution.
-- **Pre-whitening**: the highest residual peak, then a non-linear least-squares refit of every extracted sinusoid
-  together, until the next peak's S/N falls below 4 (Breger et al. 1993), the noise being the mean residual
-  amplitude in a 2 d⁻¹ box. Uncertainties follow Montgomery & O'Donoghue (1999); peaks within 1.5/T of a stronger
-  one are flagged unresolved; harmonics and two-term combinations within 1/T are flagged.
+- **Pre-whitening**: the residual peak of highest S/N, fitted, then every amplitude and phase refitted, and every
+  sinusoid refitted together by non-linear least squares every ten peaks and at the end, until no peak has S/N ≥ 4
+  (Breger et al. 1993), the noise being the mean residual amplitude in a box (2 d⁻¹, at least 25/T) without the
+  peak's own ±2/T. Uncertainties follow Montgomery & O'Donoghue (1999); peaks within 1.5/T of a stronger one are
+  flagged unresolved; harmonics and two-term combinations of the ten strongest frequencies within a quarter of
+  1/T (or 3σ_f) are flagged as possible combinations, with the rate at which a random frequency would be flagged
+  by chance (about 6% for 40 random frequencies over 5-60 d⁻¹ in 27 days; it was 37-67% with every stronger peak
+  as a parent and a 1/T tolerance).
 - **Type** (heuristic): δ Scuti, γ Doradus, hybrid, solar-like or rotation from where the independent amplitude
   lies (5 d⁻¹ boundary), harmonics, a solar-like excess and Teff when known; confidence is medium or low, never
   high, with reasons and alternatives.
@@ -104,6 +115,7 @@ stars were run; the validation says so.
   No raw CHEOPS file is in the repository or the wheel; the tests use a 140-point derived excerpt of one public
   visit with its programme, file key, observation id and DRP version. `read_drp_fits` reads a DRP light-curve
   FITS file you downloaded yourself, offline.
+- **Status check twice.** A visit must be marked public in the listing and in its cached copy, or it is refused.
 - **Detrending** (after pycheops, Maxted et al. 2022): linear decorrelation against sin and cos of the roll angle
   φ, 2φ, 3φ, time (linear and quadratic), background, centroid (x, y, x², y², xy) and contamination, terms added
   while each lowers the BIC by 2, with upward excursions kept out of the fit; bad data are the DRP event flags,
@@ -116,14 +128,22 @@ stars were run; the validation says so.
 
 ### Data source and terms
 
-ESA's CHEOPS publication guidelines name the CHEOPS mission archive (cheops.unige.ch/archive_browser) as the
-place CHEOPS data are made available; its public light curves are served through DACE at the University of
-Geneva. From this environment the archive browser answered 403 and no separate ESA ESDC CHEOPS service was
-reachable, so SetuHQ uses DACE's public API (through its own client, `dace-query`, GPL-3.0, an optional extra).
-DACE publishes an acknowledgement it asks published material to include
+ESA's CHEOPS publication guidelines name the **CHEOPS Mission Archive** (cheops.unige.ch/archive_browser) and its
+**mirror at the ASI Space Science Data Center** (cheops-archive.ssdc.asi.it) as the places CHEOPS data are made
+public. SetuHQ probes both first (`cheops.probe_archives`, recorded in each listing): from here the Mission
+Archive answers 403, and the mirror is an interactive page with no documented programmatic interface. SetuHQ then
+falls back to **DACE** (dace.unige.ch), the University of Geneva's public API in front of the CHEOPS Mission
+Archive, through DACE's own client `dace-query` (GPL-3.0, the optional `[cheops]` extra). ESA does not designate
+DACE; each output names the source that served it. DACE asks published material to include its acknowledgement
 ([dace.unige.ch/publications](https://dace.unige.ch/publications/)), reproduced below; no separate DACE terms-of-use
-page was found. ESA's ESDC terms require prior authorisation from ESA (data.licences@esa.int) for any
-commercial use of its archive data: **SetuHQ's commercial licence covers SetuHQ's code, not CHEOPS data.**
+page was found.
+
+**Licence of the data.** Data in the ESA Space Science Archives are distributed under the **CC BY-NC 3.0 IGO**
+licence, and ESA's terms require prior authorisation (data.licences@esa.int) for any commercial use, including use
+that indirectly generates financial gain. CHEOPS data and every output derived from them stay under those terms:
+SetuHQ's CC BY 4.0 data licence does not apply to them, and **neither SetuHQ's commercial licence nor SetuHQ Pro
+covers them**; a hosted, Pro or other commercial use of CHEOPS data through SetuHQ needs ESA's authorisation first
+([LICENSING.md](../LICENSING.md), [NOTICE](../NOTICE), [PRO.md](PRO.md)).
 
 ### Acknowledgement and credit
 

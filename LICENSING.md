@@ -75,6 +75,23 @@ limb-darkening table, the WASP-39 b JWST spectrum), CC BY 4.0 covers only SetuHQ
 contribution, and the source's terms and requested acknowledgements apply to the rest. They are
 listed in [`NOTICE`](NOTICE).
 
+**CHEOPS data are excluded.** CHEOPS light curves, and every output derived from them (the CHEOPS
+parts of `docs/results/stellar_validation.*`, the test excerpt `tests/data/cheops_gj65_excerpt.json`,
+and anything `setuhq cheops` or the `get_cheops_lightcurve` tool produces), stay under ESA's terms:
+data in the ESA Space Science Archives are distributed under the **CC BY-NC 3.0 IGO** licence, and any
+commercial use, including use that indirectly generates financial gain, needs ESA's **prior
+authorisation** ([data.licences@esa.int](mailto:data.licences@esa.int); ESDC terms and conditions).
+CC BY 4.0 does not apply to them, and **neither the commercial licence nor SetuHQ Pro covers
+them**: a hosted, Pro or other commercial use of CHEOPS data through SetuHQ needs ESA's
+authorisation first. Every CHEOPS-derived output carries ESA's acknowledgement, the programme and
+visit ids, the credit line "Credit: ESA, <proposal PI>" and SetuHQ's statement that it is not
+affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS
+Consortium ([`docs/STELLAR.md`](docs/STELLAR.md)).
+
+**The `[cheops]` extra installs `dace-query`, which is licensed GPL-3.0.** It is optional, not
+shipped with SetuHQ and not needed for anything else; it is compatible with the AGPL-3.0 option,
+and a commercial licensee who installs it takes on its GPL-3.0 terms for that package.
+
 ---
 
 ## Why dual-license this way
