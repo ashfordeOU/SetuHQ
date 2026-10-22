@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+name: Feature request
+description: Suggest a capability, a data source, a check or a change to the app.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem it solves
+      description: What you are trying to do, and what stops you today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you propose
+      description: The behaviour you would like. If it changes a result, say how it would be checked (a test, a benchmark, a published reference).
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: I have read ROADMAP.md and searched the open issues for this.
+          required: true
+        - label: I understand that SetuHQ reports candidates, never confirmations, and a feature must keep that true.
+          required: true

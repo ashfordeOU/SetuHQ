@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# What the source distribution carries besides the package (src/setuhq) and pyproject.toml.
+# The stored runs, the site, the results, the README figures, caches and the test suite stay in the
+# repository: they are data or need it, and tests/test_release.py checks that none of them reach a dist.
+include README.md README.pypi.md CHANGELOG.md CITATION.cff codemeta.json
+include LICENSE LICENSING.md NOTICE TRADEMARKS.md
+prune tests
+prune runs
+prune site
+prune docs
+prune cache
+prune data
+prune tools
+prune scripts
+prune examples
+prune configs
+prune paper

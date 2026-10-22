@@ -307,7 +307,7 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
             "<tr>"
             f"<td>{r['tic']}</td>"
             f"<td>{r['t_center']:.3f}</td>"
-            f"<td>{'' if r['period_days'] is None else f'{r['period_days']:.3f}'}</td>"
+            f"<td>{'' if r['period_days'] is None else format(r['period_days'], '.3f')}</td>"
             f"<td>{r['duration_hours']:.2f}</td>"
             f"<td>{r['depth_ppm']:.0f}</td>"
             f"<td>{r['snr']:.1f}</td>"

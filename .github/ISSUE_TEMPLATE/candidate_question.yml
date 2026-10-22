@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+name: Candidate or result question
+description: Ask about a candidate, a dip, a docket entry, a benchmark number or a leaderboard result.
+labels: ["candidate-question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **SetuHQ outputs are candidates, never confirmations.** A SetuHQ candidate is a dip that a
+        reviewer panel marked and the pipeline vetted, fitted and gave a bounded false-alarm
+        probability. It is not a confirmed, validated or discovered planet; only follow-up
+        observations can decide that. Please do not announce a SetuHQ candidate as a planet, and do
+        not submit it anywhere (ExoFOP, a paper, the press) on the strength of this issue.
+  - type: input
+    id: tic
+    attributes:
+      label: TIC ID
+      description: The TESS Input Catalog number of the star, e.g. TIC 261136679.
+      placeholder: TIC
+    validations:
+      required: true
+  - type: input
+    id: sector
+    attributes:
+      label: TESS sector(s)
+      placeholder: "1"
+    validations:
+      required: true
+  - type: input
+    id: docket
+    attributes:
+      label: Docket link
+      description: The link to the candidate in the Docket (https://setuhq.com/docket/...) or in the app, or the run directory and candidate ID for a local run.
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: "What looks wrong or unclear: a check, a fit value, the false-alarm probability, a reviewer's mark or reason, a benchmark number."
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Other evidence
+      description: Anything you checked elsewhere (the TOI catalogue, ExoFOP, the NASA Exoplanet Archive, a published paper), with links.
+  - type: checkboxes
+    id: understood
+    attributes:
+      label: Understood
+      options:
+        - label: I understand that a SetuHQ output is a candidate, not a confirmation or a discovery.
+          required: true

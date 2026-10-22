@@ -5,7 +5,8 @@ with uncertainties, plus the stellar-density and V-shape tests.
 
 Model. A circular orbit; the planet is a dark disc of radius k (in stellar radii) at sky separation z(t).
 The star has the quadratic limb-darkening law I(μ)/I(1) = 1 − u1(1 − μ) − u2(1 − μ)² with Claret (2017) TESS
-coefficients interpolated in Teff and log g (``docs/results/claret2017_tess_quadratic.json``). The blocked
+coefficients interpolated in Teff and log g (``setuhq/data/claret2017_tess_quadratic.json``, a byte-identical copy
+of ``docs/results/claret2017_tess_quadratic.json`` shipped in the package). The blocked
 flux is integrated numerically over the covered part of the disc (in radius, with the covered arc at each
 radius), which is exact up to quadrature error for any k, so the same code models planets and grazing
 eclipsing binaries. Long cadences are supersampled.
@@ -28,12 +29,14 @@ import json
 import math
 from dataclasses import asdict, dataclass, field
 from functools import lru_cache
-from pathlib import Path
+from importlib.resources import files
 
 import numpy as np
 from scipy.optimize import least_squares
 
-LD_TABLE = Path(__file__).resolve().parents[2] / "docs" / "results" / "claret2017_tess_quadratic.json"
+# The package copy, so an installed wheel fits transits without a checkout; tests/test_release.py keeps it
+# byte-identical to docs/results/claret2017_tess_quadratic.json.
+LD_TABLE = files("setuhq") / "data" / "claret2017_tess_quadratic.json"
 G_SI = 6.67430e-11  # m³ kg⁻¹ s⁻² (CODATA 2018)
 DAY = 86400.0
 SUN_TEFF, SUN_LOGG = 5772.0, 4.438

@@ -571,10 +571,39 @@ def build_parser() -> argparse.ArgumentParser:
     lb.add_argument("--submissions", default=str(Path(__file__).resolve().parents[2] / "docs/leaderboard/submissions"),
                     help="directory of submissions to score when rebuilding")
     lb.set_defaults(func=cmd_leaderboard)
+
+    # Everything after 'mcp' goes to setuhq-mcp unchanged (main() hands it over before this parser runs), so
+    # 'setuhq mcp --list-tools' and 'setuhq mcp --http 8080' mean what they mean for setuhq-mcp. It exists so a
+    # launcher that runs the package's own command ('uvx --from "setuhq[mcp]" setuhq mcp', the MCP registry
+    # entry in server.json) starts the server.
+    mcp = sub.add_parser("mcp", add_help=False, help="start the MCP server over stdio, as setuhq-mcp does "
+                                                     "(needs the mcp extra: pip install 'setuhq[mcp]')")
+    mcp.add_argument("args", nargs=argparse.REMAINDER)
+    mcp.set_defaults(func=lambda args: cmd_mcp(args.args))
     return parser
 
 
+MCP_MISSING = ("setuhq mcp: the MCP server needs the MCP SDK, which is the 'mcp' extra: "
+               "pip install 'setuhq[mcp]' (or, without installing, uvx --from 'setuhq[mcp]' setuhq mcp)")
+
+
+def cmd_mcp(argv: list[str]) -> int:
+    """``setuhq mcp [setuhq-mcp options]``: the MCP server, with a plain error when the SDK is not installed."""
+    import importlib.util
+
+    no_sdk_needed = {"--list-tools", "--version", "-h", "--help"}
+    if importlib.util.find_spec("mcp") is None and not no_sdk_needed & set(argv):
+        print(MCP_MISSING, file=sys.stderr)
+        return 2
+    from setuhq import mcp_server
+
+    return mcp_server.main(argv)
+
+
 def main(argv=None) -> int:
+    argv = sys.argv[1:] if argv is None else list(argv)
+    if argv[:1] == ["mcp"]:
+        return cmd_mcp(argv[1:])
     args = build_parser().parse_args(argv)
     from setuhq.docket import CrossmatchUnavailable
 

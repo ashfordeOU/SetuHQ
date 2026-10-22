@@ -1,0 +1,56 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.ashfordeOU/setuhq",
+  "title": "SetuHQ transit search",
+  "description": "Search, vet and explain TESS transit candidates with provenance. Candidates, never confirmations.",
+  "version": "0.1.0",
+  "websiteUrl": "https://setuhq.com",
+  "repository": {
+    "url": "https://github.com/ashfordeOU/SetuHQ",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "setuhq",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "runtimeArguments": [
+        {
+          "type": "named",
+          "name": "--with",
+          "value": "mcp>=1.10",
+          "description": "The MCP SDK, which is the package's 'mcp' extra (pyproject.toml): the server needs it."
+        }
+      ],
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp",
+          "description": "The 'setuhq mcp' subcommand: the MCP server over stdio."
+        }
+      ],
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SETUHQ_ROOT",
+          "description": "Data root the tools read and write (a SetuHQ checkout holds the stored runs, the catalogue and the benchmarks). No tool reaches outside it. Default: the checkout the package runs from, else the working directory.",
+          "isRequired": false,
+          "format": "filepath"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "command": "setuhq mcp",
+      "install": "pip install 'setuhq[mcp]'",
+      "uvx": "uvx --with 'mcp>=1.10' setuhq mcp",
+      "docs": "https://github.com/ashfordeOU/SetuHQ/blob/main/docs/MCP-INSTALL.md",
+      "also": "setuhq-mcp (the same server, installed by pip install 'setuhq[mcp]')"
+    }
+  }
+}

@@ -1,0 +1,250 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# The release pipeline. One tag push, one workflow run, one order:
+#
+#   tag -> verify -> build -> release -> pypi
+#
+#   verify   the tag equals the version in src/setuhq/__init__.py, every surface
+#            scripts/check_version_sync.py checks agrees, CHANGELOG.md's [Unreleased] is empty and the
+#            release's date equals CITATION.cff's, and CI (ci.yml) finished green on exactly this commit
+#            in a push to main, with the commit an ancestor of origin/main. It does not rerun the test
+#            suite: ci.yml already ran it on this commit, and a tag on any other commit is refused.
+#   build    the sdist and the wheel with `python -m build`, `twine check --strict`,
+#            scripts/check_dist.py (what each carries, and no data), then a clean install of the
+#            wheel: `setuhq --help`, the MCP stdio smoke test of `setuhq-mcp` and `setuhq mcp`, and a
+#            read of the reference tables it ships. The files become this run's `dist` artifact, and
+#            every later job uses exactly those bytes.
+#   release  attests build provenance for both files and creates the GitHub Release for the tag, with
+#            the CHANGELOG section as notes (scripts/changelog_extract.py). On a re-run it never
+#            replaces a file the release already carries: a file with different bytes fails the job, a
+#            missing one is added, and the notes are refreshed.
+#   pypi     uploads the same `dist` artifact to PyPI by trusted publishing: environment `pypi`, the
+#            job's OIDC identity and nothing else. The trusted publisher on PyPI names THIS file,
+#            release.yml (a job in it is the top-level workflow PyPI matches; nothing else in the
+#            repository can publish to `pypi`).
+#
+# RETRY: "Re-run failed jobs" on the tag's Release run. A re-run reuses the run's own `dist` artifact
+# (kept for 90 days), so PyPI and the GitHub Release always receive the bytes that were attested; nothing
+# is ever rebuilt for them.
+#
+# DRY RUN: a manual dispatch, on any branch. It runs verify (reporting a missing CI run as a warning) and
+# build, and keeps the dists as a workflow artifact. It attests, releases and publishes nothing, except
+# that with `testpypi` set it uploads that dry-run build to TestPyPI (environment `testpypi`), which needs
+# its own pending publisher there. A dispatch never reaches PyPI.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      testpypi:
+        description: "Also upload this dry-run build to TestPyPI (needs the TestPyPI publisher; see docs/RELEASING.md)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read  # read ci.yml's runs for this commit
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          fetch-depth: 0  # the ancestry check below needs main's history
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+        with:
+          python-version: "3.13"
+      - name: Version, tag, changelog and dates agree
+        id: v
+        run: |
+          set -euo pipefail
+          version="$(python3 scripts/check_version_sync.py --print-version)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            python3 scripts/check_version_sync.py --tag "$GITHUB_REF_NAME"
+          else
+            echo "::notice::dry run of $GITHUB_REF: checking the surfaces without a tag"
+            python3 scripts/check_version_sync.py
+          fi
+          python3 scripts/changelog_extract.py "$version" > /dev/null
+      - name: CI is green on this exact commit, pushed to main
+        # Fails closed on a tag push: the commit must be on main, and ci.yml must have finished green on it in a
+        # push to main. A dry run reports the same answer as a warning.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          sha="$(git rev-parse HEAD)"
+          problem=""
+          git fetch --quiet origin main
+          if ! git merge-base --is-ancestor "$sha" origin/main; then
+            problem="$sha is not on main (not an ancestor of origin/main)"
+          else
+            n="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/runs?head_sha=${sha}&status=success&event=push&branch=main" --jq '.total_count')"
+            [ "${n:-0}" -gt 0 ] || problem="no successful ci.yml run for $sha in a push to main"
+          fi
+          if [ -z "$problem" ]; then
+            echo "CI is green on $sha in a push to main, and main contains it"
+          elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            echo "::error::$problem: merge to main, wait for CI, then tag that commit"; exit 1
+          else
+            echo "::warning::$problem; a release of this commit would stop here"
+          fi
+
+  build:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+        with:
+          python-version: "3.13"
+      - name: Build the sdist and the wheel
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet "build==1.6.1" "twine==7.0.0"
+          python3 -m build --outdir dist .
+          ls -l dist
+      - name: twine check
+        run: python3 -m twine check --strict dist/*
+      - name: What the dists carry (package, type marker, tables, fonts, licences; no runs, site, docs or caches)
+        run: python3 scripts/check_dist.py dist
+      - name: The version inside the dists is the tag's
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: |
+          set -euo pipefail
+          test -f "dist/setuhq-${VERSION}-py3-none-any.whl"
+          test -f "dist/setuhq-${VERSION}.tar.gz"
+      - name: Clean install of the wheel, then the commands
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/clean
+          /tmp/clean/bin/python -m pip install --quiet "$(ls dist/*.whl)[mcp]"
+          cd "$RUNNER_TEMP"
+          /tmp/clean/bin/setuhq --help
+          /tmp/clean/bin/setuhq-mcp --version
+          /tmp/clean/bin/setuhq-mcp --list-tools
+          python3 "$GITHUB_WORKSPACE/scripts/smoke_mcp.py" --min-tools 16 -- /tmp/clean/bin/setuhq-mcp
+          python3 "$GITHUB_WORKSPACE/scripts/smoke_mcp.py" --min-tools 16 -- /tmp/clean/bin/setuhq mcp
+          # The reference tables ship in the wheel: the fit and the vetting read them outside a checkout.
+          /tmp/clean/bin/python -c "from setuhq import transitfit, dvtests; transitfit.ld_coeffs(5772.0, 4.438); dvtests._null_tables()"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 90
+
+  release:
+    needs: [verify, build]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write      # create the GitHub Release and upload its files
+      id-token: write      # sign the build-provenance attestation
+      attestations: write  # store it
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+        with:
+          name: dist
+          path: dist
+      - name: Attest build provenance (sdist and wheel)
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be  # v2.4.0
+        with:
+          subject-path: |
+            dist/*.whl
+            dist/*.tar.gz
+      - name: Release notes from CHANGELOG.md
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: python3 scripts/changelog_extract.py "$VERSION" > RELEASE_NOTES.md
+      - name: Create the GitHub Release, or complete it on a re-run without replacing any file
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
+            gh release create "$TAG" dist/* --verify-tag --title "SetuHQ $TAG" --notes-file RELEASE_NOTES.md
+            exit 0
+          fi
+          mkdir -p published
+          gh release download "$TAG" --dir published --pattern '*.whl' --pattern '*.tar.gz' || true
+          for f in dist/*; do
+            name="$(basename "$f")"
+            if [ -f "published/$name" ]; then
+              if ! cmp -s "$f" "published/$name"; then
+                echo "::error::the release already carries $name with different bytes; it is never replaced"; exit 1
+              fi
+              echo "$name: already on the release, same bytes"
+            else
+              gh release upload "$TAG" "$f"
+              echo "$name: added"
+            fi
+          done
+          gh release edit "$TAG" --notes-file RELEASE_NOTES.md
+
+  pypi:
+    needs: [verify, build, release]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: pypi
+      url: https://pypi.org/project/setuhq/
+    permissions:
+      id-token: write  # trusted publishing: the only credential this job has
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+        with:
+          name: dist
+          path: dist
+      - run: ls -l dist
+      - name: Publish to PyPI (trusted publishing; PEP 740 attestations)
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+        with:
+          packages-dir: dist
+          skip-existing: true
+          verbose: true
+
+  # The dry run's upload rehearsal: the build above, never a tag's, to TestPyPI only.
+  testpypi:
+    needs: build
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.testpypi }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/setuhq/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+        with:
+          name: dist
+          path: dist
+      - name: Publish to TestPyPI (trusted publishing)
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: dist
+          skip-existing: true
+          verbose: true

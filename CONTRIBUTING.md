@@ -17,7 +17,7 @@ public issue. Conduct is governed by [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install -e ".[dev,readme]"   # add ,mcp,agents for the MCP server and the agent example
+.venv/bin/python -m pip install -e ".[dev]" -r requirements-readme.txt   # add ,mcp,agents for the MCP server and the agent example
 .venv/bin/python -m pytest -q                         # offline tests; network- and slow-marked tests are deselected
 scripts/ci_local.sh --quick                           # what CI runs: tests, paper numbers, README --check
 scripts/ci_local.sh                                   # plus the slow tests, the sweep check and every site build

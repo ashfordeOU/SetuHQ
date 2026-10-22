@@ -64,6 +64,9 @@ project's, and it is kept as it was.
 
 ### Changed
 
+- **Python 3.11 or later.** `setuhq.config` reads TOML with `tomllib`, which the standard library has from
+  3.11.
+
 - **Renamed from exoplan to SetuHQ.** The Python package is `setuhq` (`src/setuhq`), the
   distribution `setuhq`, the command `setuhq` and the MCP server `setuhq-mcp`. The Claude Code
   plugin, its MCP server entry and its slash commands are `setuhq` and `/setuhq-…`
@@ -98,13 +101,17 @@ project's, and it is kept as it was.
   (`78b84333…`, the current rules), and the real-TOI benchmark's per-star code fingerprints
   (`14f6f4830a525d78` = 76de67d, `e4fe4c99663ccba8` = 40cceca). `scripts/benchmark_real_tois.py`
   hashes each file under the path it had then (`src/exoplan/…`) and reads old commits from either
-  path. The benchmark's fingerprint of the current code is also unchanged (`0b8e86a1fb71e777`),
-  and so is the classification fingerprint.
-  **One value changes: the search fingerprint of the current code** (`ff5f2568…` before this
-  release). `starsearch.py`, which holds the fingerprint function, is itself one of the fingerprinted
-  search files, and the canonicalisation added to it is a change to that file's code. No committed
-  file records the old value: the committed sweep record names the search code of 0e87409, which
-  still verifies. The practical effect is that a sweep cache or a contribution bundle made with the
+  path. The classification fingerprint is unchanged.
+  **The fingerprints of the current code change.** The search fingerprint goes from `ff5f2568…` before
+  this release to `f7317ec9…`: `starsearch.py`, which holds the fingerprint function, is itself one of the
+  fingerprinted search files and gained the canonicalisation, and `transitfit.py` now reads its
+  limb-darkening table from the package. For that second reason the real-TOI benchmark's fingerprint of
+  the current code goes from `0b8e86a1fb71e777` to `b1bf1166c71abdff`. No committed file records an old
+  value: the committed sweep record names the search code of 0e87409, and the benchmark names the
+  per-star codes above, which all still verify. The benchmark's threshold audit at the results' own
+  commit is unchanged and clean; it now also tracks the sha256 of the reference tables, and accepts the
+  table's move into the package only as that exact change of `LD_TABLE`. It therefore records 114 values
+  (the 113 before, plus the limb-darkening table's hash). The practical effect is that a sweep cache or a contribution bundle made with the
   pre-release code is treated as made by different search code (a fresh search, or a refused
   bundle), as for any other code change.
 - **Licence: AGPL-3.0-only or a commercial licence from Ashforde OÜ** (was MIT), with SetuHQ's own
@@ -124,6 +131,34 @@ project's, and it is kept as it was.
   tags on every page. `pages.yml` deploys the committed `site/`.
 
 ### Added
+
+- **Release machinery.** A `v*` tag runs `.github/workflows/release.yml`: it checks the tag against the
+  version, this changelog and CI (a green push run on `main` for that commit, which `main` contains), builds
+  the sdist and the wheel, runs `twine check`, checks what they carry, installs the wheel cleanly, attests
+  build provenance, creates the GitHub Release with this changelog's section as notes, and uploads the same
+  attested files to PyPI as `setuhq` by trusted publishing (no token). A re-run never replaces a file
+  already on the release. `mcp-publish.yml` lists the server in the official MCP registry as
+  `io.github.ashfordeOU/setuhq` by GitHub OIDC; `auto-tag.yml` is optional and off by default. The steps
+  are in [docs/RELEASING.md](docs/RELEASING.md).
+- **One version.** `__version__` in `src/setuhq/__init__.py` is the only place it is written for the
+  package (pyproject reads it); `scripts/check_version_sync.py` fails when CITATION.cff, codemeta.json,
+  .zenodo.json, server.json, smithery.yaml or the plugin manifests disagree, when the release date here
+  differs from CITATION.cff's `date-released`, and, for a release tag, when `[Unreleased]` is not empty.
+  `scripts/set_release_date.py` sets both dates on the release day.
+- **The package runs without a checkout.** The two reference tables the pipeline reads, the Claret 2017
+  limb-darkening coefficients and the secondary-eclipse calibration, ship in the package as
+  `src/setuhq/data/claret2017_tess_quadratic.json` and `src/setuhq/data/secondary_calibration.json`, and
+  `transitfit` and `dvtests` read them with `importlib.resources`. They are byte-identical copies of the
+  canonical files in `docs/results/`; `tests/test_release.py` fails until a rewritten original is copied
+  over. `setuhq run` from a plain `pip install "setuhq[tess]"` searches, vets and fits outside a checkout.
+- **`setuhq mcp`** starts the MCP server over stdio, as `setuhq-mcp` does, and says which extra to install
+  when the MCP SDK is missing. The MCP registry entry (`server.json`) launches it as
+  `uvx --with=mcp>=1.10 setuhq==<version> mcp`.
+- The package ships `py.typed`; its PyPI page is `README.pypi.md` (absolute links only). The exact versions
+  the README figures need are in `requirements-readme.txt`, not in the package metadata.
+- `examples/quickstart.ipynb`: the stored pi Men run offline, from candidates to an MCP tool call; a test
+  runs it. `paper/` holds the JOSS paper; issue forms, a pull request template, Dependabot and
+  `.editorconfig` are under `.github/` and at the root. CI also runs the fast tests on Python 3.11.
 
 - [`CITATION.cff`](CITATION.cff), [`codemeta.json`](codemeta.json),
   [`GOVERNANCE.md`](GOVERNANCE.md), [`SECURITY.md`](SECURITY.md),

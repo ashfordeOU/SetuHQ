@@ -1,0 +1,61 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+name: Bug report
+description: Something in SetuHQ does not work as documented (code, the app, the MCP server, the site).
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. A security problem (a leaked key, reading outside the data root, a way to
+        reach a writing tool over HTTP) does not belong here: report it privately, as
+        [SECURITY.md](https://github.com/ashfordeOU/SetuHQ/blob/main/SECURITY.md) explains.
+        Never paste an API key or a token into an issue.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, including the full error message or traceback.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce it
+      description: The exact command or tool call, the config file (or the values you changed) and the target (TIC and sector), so it can be run again.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: SetuHQ version or commit
+      description: "`python -c 'import setuhq; print(setuhq.__version__)'` and, for a checkout, `git rev-parse --short HEAD`."
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Python version, how SetuHQ was installed (pip, checkout), and for the MCP server the client.
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where
+      options:
+        - Command line (setuhq)
+        - MCP server (setuhq-mcp)
+        - The app or the site (setuhq.com)
+        - Sentinels (an AI provider)
+        - Benchmark or leaderboard
+        - Packaging or install
+        - Other
+    validations:
+      required: true

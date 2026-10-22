@@ -242,7 +242,7 @@ def markdown(r: dict) -> str:
         f"{_fmt((sec.get('phase_05') or {}).get('depth_ppm'), 1)} ± {_fmt((sec.get('phase_05') or {}).get('sigma_ppm'), 1)} ppm | "
         f"{'secondary_any_phase' if 'secondary_any_phase' in r['lightcurve_flags'] else 'none'} at the default setting"
         f"{'; **' + lt['secondary_flag_stability']['verdict'] + '**' if lt.get('secondary_flag_stability') else ''} |",
-        f"| odd/even depth ({oe.get("source", "")}) | odd {_fmt(oe.get('odd_depth_ppm'), 0)} ± {_fmt(oe.get('odd_err_ppm'), 0)} ppm (n = {oe.get('n_odd')}), "
+        f"| odd/even depth ({oe.get('source', '')}) | odd {_fmt(oe.get('odd_depth_ppm'), 0)} ± {_fmt(oe.get('odd_err_ppm'), 0)} ppm (n = {oe.get('n_odd')}), "
         f"even {_fmt(oe.get('even_depth_ppm'), 0)} ± {_fmt(oe.get('even_err_ppm'), 0)} ppm (n = {oe.get('n_even')}): "
         f"{_fmt(oe.get('delta_sigma'), 1)}σ | {'odd_even_depth' if 'odd_even_depth' in r['lightcurve_flags'] else 'none'} |",
     ]
