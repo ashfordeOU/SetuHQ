@@ -26,6 +26,18 @@ breaking changes are called out explicitly.
     before; controls 641 and 861 vetted dips per 1,000 star-sectors (573 and 848 before).
   - The pre-registered feed rule, evaluated again unchanged: noise 6.1 (4.0–9.4) false signals per
     100 targets under it, 27.8 (23.1–33.1) under the old rule; feed-level completeness 17%.
+  - Why the controls and FP rates moved: on the inverted control 16 of the 24 newly passing dips were
+    rejected by the old odd/even test and 5 are deep inverted features the old cleaning deleted; 4 of the
+    5 newly passing FP TOIs were rejected by the old odd/even test.
+  - The calibration record's provenance is corrected: its Probe rates were measured on the code of
+    2026-10-16 (03f23bd); since the limb-darkened injections (fbc1ed9) the same seed gives 0.9, 0.8 and
+    0.6. The weights stay frozen; a test shows both sets make the same two-of-three decisions.
+  - The threshold sweep's held-out score fell from 0.875 to 0.833 (2 of 48 injections at 1000 ppm), a
+    change that came with the limb-darkened injections, not the two fixes: the sweep dates from 2026-10-16.
+  - Each historical record's note now names its re-run instead of "Not re-run since".
+  - The re-run's report adds a stale-ephemeris audit (2 held-out CP/KP misses with a comparable dip within
+    12 h of a predicted epoch, TOI 1905.01 among them) and the window-measurement limit; the matching rule
+    is unchanged.
   - The live catalogue, the injection-recovery benchmark and the threshold sweep; the leaderboard
     (Probes J 0.35 against the metadata floor's 0.39, paired ΔJ +0.04, −0.10 to +0.17: still not
     shown to beat it) and the methods paper read the re-run.
@@ -33,6 +45,10 @@ breaking changes are called out explicitly.
     stars whose subjects are byte-identical; the 3 others are left out.
 - **No site-wide banner.** A page built from a record that carries a code note states it once, in
   plain language, at the top of that page; no page of the current site carries one.
+- **`candidates.csv` and `candidates.json` carry 10 more columns** on runs made with the current code:
+  `sector`, `crowdsap`, `secondary_phase`, `secondary_snr`, `centroid_offset_arcsec`, `centroid_sigma`, `fpp`,
+  `nfpp`, `fpp_method` and `validation_label` (the extended-vetting and reduced-FPP results; the full records are
+  under `metrics`). The stored pi Men run now has them: FPP 0.0186 and 0.0148 per subject, class "undetermined".
 - The Docket's page data keeps only the metrics the page reads (the extended-vetting record per dip
   stays in `candidates.json`).
 

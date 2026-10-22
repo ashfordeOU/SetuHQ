@@ -38,7 +38,7 @@
         "benchmark-dark.svg"
       ],
       "sources": {
-        "docs/results/benchmark_real_tois_clipfix.json": "a30fecf398f99bfff03ff581e3bea6d7bb3a4945971326d88ef6ae23e2e8dc1f",
+        "docs/results/benchmark_real_tois_clipfix.json": "668e0b291b34c37d069da991469e0ca997224b66161627f6ad76ea727354b046",
         "docs/paper/references.json": "0b1742b0fd5e4b5e4bb401f4acb7ea6b8b9534b334dc69781ec22de89928d113",
         "docs/results/benchmark_toi_sample.json": "b0ac192b2363be04579c856e82f275ec4a451f0566e83f4ef87c4287c4fe39f7"
       },
@@ -50,7 +50,7 @@
         "feed-noise-dark.svg"
       ],
       "sources": {
-        "docs/results/benchmark_real_tois_clipfix.json": "a30fecf398f99bfff03ff581e3bea6d7bb3a4945971326d88ef6ae23e2e8dc1f"
+        "docs/results/benchmark_real_tois_clipfix.json": "668e0b291b34c37d069da991469e0ca997224b66161627f6ad76ea727354b046"
       },
       "commit": "5f8978f"
     },
@@ -84,7 +84,7 @@
       "sources": {
         "docs/threshold_sweep.json": "d3d8fb4fc907ddf12015486f98b83ab4c0e78102b729cefd5d42b87c2a6ac939",
         "docs/results/exoplanet_map.json": "949a62e97e0ba84eb55c1a7675b8e6b065e519de43e2dcdc79a49761707dd56e",
-        "docs/results/benchmark_real_tois.json": "3a461b731a82f309d04be90c1f72231c87d8ff4c2cf855497cb28af1f53544da"
+        "docs/results/benchmark_real_tois.json": "e20c7fb812a60f4e119857eb996cf83fdcc3bda3ba5f86a4225be0510b595b4e"
       },
       "commit": "5f8978f"
     },
@@ -123,7 +123,7 @@
   },
   "repo_counts": {
     "modules": 49,
-    "tests": 736,
+    "tests": 737,
     "network": 2,
     "slow": 4,
     "chapters": 15,

@@ -13,7 +13,7 @@
    (every known TOI's transits removed, then 0.5-day blocks shuffled, so no real transit or periodicity
    survives): any vetted candidate there is a false alarm. Controls are vetted but not fitted (the fit's
    flags do not change whether a dip passes).
-4. **The panel.** The Probes (the deterministic detectors) with their calibrated weights, the sector-wide
+4. **The panel.** The Probes (the deterministic detectors) with their frozen calibrated weights, the sector-wide
    BLS search, vetting and the limb-darkened fit; no FAP (it is not part of vetting).
 5. **Scoring.** A TOI is *recovered* when a dip that passed vetting lies on its ephemeris (``match_toi``). An FP
    TOI the panel found is *flagged* when vetting rejected it or marked it with an eclipsing-binary sign
@@ -523,6 +523,37 @@ def _against_first_lines(data: dict) -> list[str]:
     return lines
 
 
+def _stale_lines(data: dict) -> list[str]:
+    """Two known limits of the measurement: missed TOIs whose dip sits near a drifted published ephemeris, and the
+    window depth and duration of a deep transit the Probes marked only in part."""
+    st = data.get("stale_ephemeris")
+    if not st:
+        return []
+    lines = ["", "## Known limits of the matching and of the dip measurement", "",
+             f"**Stale published ephemerides.** The frozen rule counts a TOI as recovered only when a vetted dip lies on its "
+             f"published ephemeris. An audit (not a rule; the matching is unchanged) finds {st['held_out']} held-out CP/KP TOIs "
+             f"({st['all']} in both halves) counted as missed although {st['rule']}. Such a dip may be the TOI's own transit "
+             "against an ephemeris that has drifted since it was published; they stay misses here.", ""]
+    if st["stars"]:
+        lines += ["| half | TOI | offset from the predicted epoch (h) | dip depth / TOI depth | dip duration (h) | TOI duration (h) | dip period (d) | TOI period (d) |",
+                  "|---|---|---:|---:|---:|---:|---:|---:|"]
+        for x in st["stars"]:
+            lines.append(f"| {x['half'].replace('_', '-')} | {x['toi']} | {x['offset_hours']:+.1f} | {x['depth_ratio']:.2f} | "
+                         f"{x['dip_duration_hours']:.2f} | {x['toi_duration_hours']:.2f} | {x['dip_period_days'] or '—'} | "
+                         f"{x['toi_period_days']:.4f} |")
+        lines.append("")
+    lines += ["One is checked by hand: TOI 1905.01. Its sector holds two full transits about 25 ppt deep and 2.5 h long "
+              "(BTJD 3776.91 and 3794.09); the published ephemeris predicts them 7.2 h later, 7σ of its propagated "
+              "error, so even a perfect detection would not match. The first run's \"recovery\" was a residual dip left at "
+              "the predicted time after the clipping had cut the transit out.", "",
+              "**Window depth and duration on deep, clear transits.** A dip's depth and duration are measured over the window "
+              "the Probes marked. On TOI 1905.01 the marks cover only the ingress, so the dip reads 0.79 h and 2.9 ppt against "
+              "the transit's 2.5 h and 25 ppt (the limb-darkened fit of the same dip gets them right: 25.3 ppt, 2.75 h), and the BLS period is an alias (3P/2). "
+              "Changing how the window is measured would change frozen outcomes, so it is recorded as a known limit "
+              "(ROADMAP), not changed here.", ""]
+    return lines
+
+
 def _feed_summary(rs: list[dict]) -> dict | None:
     """Dips the live discovery feed would admit (its full rule, FAP < 0.01 over 200 trials included), per variant.
 
@@ -869,6 +900,7 @@ def to_markdown(data: dict) -> str:
     lines += _clip_lines(data)
     lines += _feed_lines(data, h)
     lines += _against_first_lines(data)
+    lines += _stale_lines(data)
     lines += ["", "### Completeness by planet radius and period (held-out)", "", "| bin | recovered |", "|---|---|"]
     for r in h["completeness_by_radius"]:
         lines.append(f"| {r['bin'][0]}–{r['bin'][1]} R⊕ | {_pct(r)} |")

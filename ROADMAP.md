@@ -37,6 +37,14 @@ Work is ordered by where the evidence is weakest and matters most, not by the si
 
 ## Next
 
+- **Measure deep, clear transits on the whole transit, not the marked window.** A dip's depth and duration come
+  from the window the Probes marked; on a deep transit marked over the ingress only (TOI 1905.01: 0.79 h and 2.9 ppt
+  against 2.5 h and 25 ppt) they are badly wrong, and the BLS can then settle on an alias, although the limb-darkened
+  fit of the same dip is right. A change would alter frozen benchmark outcomes, so it waits for the next
+  pre-registered version of the benchmark.
+- **Stale published ephemerides.** Two held-out CP/KP TOIs are missed with a vetted dip of comparable depth within
+  12 h of a predicted epoch (TOI 1905.01: 7.2 h, 7σ of the propagated error). A pre-registered matching rule that
+  refits the ephemeris from the sector's own transits would separate detection from ephemeris age.
 - **Vetting on real false positives.** Benchmark the pixel-level centroid test on Kepler
   `koi_fpflag_co` KOIs and TESS FP TOIs; it has only been tested on synthetic target pixel files.
 - **Statistical validation, run for real.** Run the TRICERATOPS adapter on real targets once MAST,

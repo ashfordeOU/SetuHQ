@@ -1149,11 +1149,16 @@ def bench_verdict(d: dict) -> str:
         if sel:
             parts.append(f"SetuHQ is {word} {_and([c['name'] for c in sel])} ("
                          + ("the interval excludes it" if len(sel) == 1 else "each interval excludes the reference") + ")")
-    cons = [c for c in d["cmp"] if c["verdict"] == "consistent"]
-    if cons:
-        parts.append(f"consistent with {_and([c['name'] for c in cons])} ("
-                     + _and([f"{c['ours']['n']} stars" for c in cons]) + ": the interval includes it)")
+    for c in [c for c in d["cmp"] if c["verdict"] == "consistent"]:
+        o, ref = c["ours"], c["ref"]
+        diff = 100 * (o["rate"] - ref)
+        where = c["name"].split("rate ", 1)[1] if "rate " in c["name"] else ""
+        parts.append(f"not distinguishable from {c['who']}'s {c['ref_text']} {where} ({pct(o['rate'])}, {pct(o['lo'])}–"
+                     f"{pct(o['hi'])} over {o['n']} stars; a {abs(diff):.0f}-point {'lower' if diff < 0 else 'higher'} "
+                     "estimate the interval cannot resolve)")
     s = "; ".join(parts) + "."
+    if any(c["who"] == "Planet Hunters TESS" for c in d["cmp"]):
+        s += " Planet Hunters TESS's rates carry their own uncertainty and come from sectors 1 to 26."
     return s[0].upper() + s[1:]
 
 

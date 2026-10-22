@@ -154,7 +154,7 @@ def main(argv=None) -> int:
     inputs_hash = L.write_inputs(sample)
     held, sub40 = L.scope_tois(sample, "held_out"), L.sentinel_subsample(benchmark)
     bsrc = {"file": str(L.BENCHMARK.relative_to(ROOT)), "sha256": _sha(L.BENCHMARK), "rows": "per_star (checked)"}
-    pmethod = ("The three Probes (Sensitive, Typical, Cautious) with their calibrated weights, sector-wide BLS, "
+    pmethod = ("The three Probes (Sensitive, Typical, Cautious) with their frozen calibrated weights, sector-wide BLS, "
                "light-curve vetting and the limb-darkened fit, on each star's first SPOC 2-minute sector, as in the "
                "benchmark report; every consensus event on the real and control curves, with its light-curve vetting flags "
                "(the extended-vetting flags, which never change pass/fail by default, are left out). No FAP rule.")

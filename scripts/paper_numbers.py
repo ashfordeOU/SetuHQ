@@ -63,10 +63,10 @@ PENDING = {
                           "feedrule_scrambled": ("held_out.scrambled.new_signals_per_1000", "int"),
                           "feedrule_completeness": ("held_out.completeness", "pct"),
                           "feedrule_per100": ("held_out.expected_false_per_100_targets", "f1")}},
-    "pixel": {"label": "S2 pixel vetting", "file": "docs/results/pixel_vetting.json",
+    "pixel": {"label": "pixel vetting not yet run on the benchmark", "file": "docs/results/pixel_vetting.json",
               "keys": {"pixel_fp_flagged": ("held_out.fp_flagged", "pct"),
                        "pixel_cpkp_flagged": ("held_out.cp_kp_flagged", "pct")}},
-    "fpp": {"label": "S3 FPP", "file": "docs/results/fpp_validation.json",
+    "fpp": {"label": "reduced FPP not yet scored on the benchmark", "file": "docs/results/fpp_validation.json",
             "keys": {"fpp_fp_validated": ("held_out.fp_validated", "pct"),
                      "fpp_cpkp_likely": ("held_out.cp_kp_likely_planet", "pct")}},
 }
@@ -237,10 +237,20 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
 
     n.update(cmp_pht_mid=against(pht_mid, "pht_mid"), cmp_pht_large=against(pht_large, "pht_large"),
              cmp_robo=against(h["completeness"], "robovetter_completeness"))
-    rows = {"3 to 4 R⊕": n["cmp_pht_mid"], "above 4 R⊕": n["cmp_pht_large"]}
-    n["cmp_pht_sentence"] = "; ".join(f"{k}, {v} Planet Hunters TESS's rate" for k, v in rows.items())
-    n["cmp_pht_note"] = (f" With {pht_mid['n']} stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart."
-                         if n["cmp_pht_mid"] == "consistent with" else "")
+    def pht_words(label, verdict, ours, ref_key):
+        ref = vals[ref_key]["value"]
+        if verdict != "consistent with":
+            return f"{label}, {verdict} Planet Hunters TESS's rate"
+        d = 100 * (ours["rate"] - ref)
+        return (f"{label}, not distinguishable from Planet Hunters TESS's {100 * ref:.0f}% ({100 * ours['rate']:.0f}%, "
+                f"{100 * ours['lo']:.0f}–{100 * ours['hi']:.0f}%; a {abs(d):.0f}-point {'lower' if d < 0 else 'higher'} estimate the "
+                "interval cannot resolve)")
+
+    n["cmp_pht_sentence"] = "; ".join([pht_words("3 to 4 R⊕", n["cmp_pht_mid"], pht_mid, "pht_mid"),
+                                       pht_words("above 4 R⊕", n["cmp_pht_large"], pht_large, "pht_large")])
+    n["cmp_pht_note"] = ((f" With {pht_mid['n']} stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart."
+                          if n["cmp_pht_mid"] == "consistent with" else "")
+                         + " Planet Hunters TESS's rates carry their own uncertainty and come from sectors 1 to 26.")
     # The qualitative claims the text makes about these numbers: the script fails rather than print them untrue.
     small = small_rate_of(h)
     claim(small["rate"] is not None and small["rate"] < h["completeness"]["rate"] - 0.2,

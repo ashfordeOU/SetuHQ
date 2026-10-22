@@ -22,7 +22,7 @@
 
 <!-- generated:badges by tools/gen_readme_assets.py --write-readme; edit the generator, not this block -->
 <p align="center">
-  <a href="scripts/ci_local.sh"><img src="https://img.shields.io/badge/tests-736%20collected-377D0C?style=flat-square&labelColor=0A1226" height="18" alt="736 tests collected by pytest: 730 run offline in CI, 4 slow ones and 2 network ones by scripts/ci_local.sh"></a>
+  <a href="scripts/ci_local.sh"><img src="https://img.shields.io/badge/tests-737%20collected-377D0C?style=flat-square&labelColor=0A1226" height="18" alt="737 tests collected by pytest: 731 run offline in CI, 4 slow ones and 2 network ones by scripts/ci_local.sh"></a>
   <a href="#evidence"><img src="https://img.shields.io/badge/held--out%20completeness-60%25%20%2890%2F150%29-066A86?style=flat-square&labelColor=0A1226" height="18" alt="Held-out completeness on 662 real TOIs: 90 of 150 confirmed or known planets on searchable stars, Wilson 95% interval 52 to 67%"></a>
   <a href="#the-app"><img src="https://img.shields.io/badge/catalogue-8%2C376%20planets-066A86?style=flat-square&labelColor=0A1226" height="18" alt="The catalogue holds all 8,376 exoplanet.eu records, fetched 2026-10-18"></a>
   <a href="#the-app"><img src="https://img.shields.io/badge/Methods-15%20chapters-066A86?style=flat-square&labelColor=0A1226" height="18" alt="15 animated Methods chapters with tested physics"></a>
@@ -360,7 +360,7 @@ SetuHQ reports what it measured, including where it falls short.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/benchmark-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/benchmark-light.svg">
-  <img src="docs/assets/readme/benchmark-light.svg" alt="Blind benchmark on 662 real TESS Objects of Interest (NASA Exoplanet Archive TOI table, fetched 2026-10-19, seed 20261019), held-out half, the three Probes. Completeness is the share of confirmed or known planets (CP/KP) on searchable stars recovered as a vetted dip on the ephemeris, with Wilson 95% intervals. Left, in the bins the published references use: All radii: SetuHQ 60% (90/150, 52%–67%) against Kepler Robovetter DR25 &gt; 85% (vetting only, on detected TCEs, P &lt; 100 d); 3–4 R⊕: SetuHQ 44% (4/9, 19%–73%) against Planet Hunters TESS 51% (a citizen-science search); &gt; 4 R⊕: SetuHQ 79% (81/102, 71%–86%) against Planet Hunters TESS 85% (a citizen-science search). SetuHQ is below the Kepler Robovetter's completeness (the interval excludes it); consistent with Planet Hunters TESS's rate at 3 to 4 R⊕ and Planet Hunters TESS's rate above 4 R⊕ (9 stars and 102 stars: the interval includes it). Right: overall 60% (90/150, 52%–67%); first run, pre-fix code: 57% (86/150). By planet radius: &lt; 2 R⊕: 10% (2/20, 3%–30%); 2–4 R⊕: 23% (6/26, 11%–42%); 4–8 R⊕: 45% (5/11, 21%–72%); &gt; 8 R⊕: 84% (76/91, 75%–90%). By period: 0.5–2 d: 41% (12/29, 26%–59%); 2–5 d: 73% (57/78, 62%–82%); 5–13 d: 49% (21/43, 35%–63%). References, each value checked in its source paper: Thompson et al. 2018; Eisner et al. 2021. Measured on a stated benchmark, not discoveries. Sources: docs/results/benchmark_real_tois_clipfix.json, docs/results/benchmark_toi_sample.json (radii) and docs/paper/references.json (references), commit 5f8978f." width="100%">
+  <img src="docs/assets/readme/benchmark-light.svg" alt="Blind benchmark on 662 real TESS Objects of Interest (NASA Exoplanet Archive TOI table, fetched 2026-10-19, seed 20261019), held-out half, the three Probes. Completeness is the share of confirmed or known planets (CP/KP) on searchable stars recovered as a vetted dip on the ephemeris, with Wilson 95% intervals. Left, in the bins the published references use: All radii: SetuHQ 60% (90/150, 52%–67%) against Kepler Robovetter DR25 &gt; 85% (vetting only, on detected TCEs, P &lt; 100 d); 3–4 R⊕: SetuHQ 44% (4/9, 19%–73%) against Planet Hunters TESS 51% (a citizen-science search); &gt; 4 R⊕: SetuHQ 79% (81/102, 71%–86%) against Planet Hunters TESS 85% (a citizen-science search). SetuHQ is below the Kepler Robovetter's completeness (the interval excludes it); not distinguishable from Planet Hunters TESS's 51% at 3 to 4 R⊕ (44%, 19%–73% over 9 stars; a 7-point lower estimate the interval cannot resolve); not distinguishable from Planet Hunters TESS's 85% above 4 R⊕ (79%, 71%–86% over 102 stars; a 6-point lower estimate the interval cannot resolve). Planet Hunters TESS's rates carry their own uncertainty and come from sectors 1 to 26. Right: overall 60% (90/150, 52%–67%); first run, pre-fix code: 57% (86/150). By planet radius: &lt; 2 R⊕: 10% (2/20, 3%–30%); 2–4 R⊕: 23% (6/26, 11%–42%); 4–8 R⊕: 45% (5/11, 21%–72%); &gt; 8 R⊕: 84% (76/91, 75%–90%). By period: 0.5–2 d: 41% (12/29, 26%–59%); 2–5 d: 73% (57/78, 62%–82%); 5–13 d: 49% (21/43, 35%–63%). References, each value checked in its source paper: Thompson et al. 2018; Eisner et al. 2021. Measured on a stated benchmark, not discoveries. Sources: docs/results/benchmark_real_tois_clipfix.json, docs/results/benchmark_toi_sample.json (radii) and docs/paper/references.json (references), commit 5f8978f." width="100%">
 </picture>
 
 <picture>
@@ -414,17 +414,17 @@ subject image and prompt is byte-identical. Extended vetting, the reduced FPP an
   collapses to the same 1.55 d vetting window, so the 12 settings are 2 distinct vetting windows (1.55 and 2 d) × 6
   bin sizes, all on the same data (the reviewer's 15-setting grid, windows 0.75–2 d × 3 bin sizes, is 6 distinct
   settings for the same reason).
-* **No reduced FPP for pi Men c: it is not stable.** Across the pipeline's five detrending settings (the default,
-  and windows ×0.75 and ×1.5 with masks of 1.0 and 2.0 T14) under two noise models, the FPP ranges from 0.0079 to
-  0.093 (median 0.0086 at the robust spread; it was 0.008–0.62 before the null's tail was smoothed): refused
-  (odds spread 12.9×; 10× allowed), a narrow margin; the label is "not validated: no contrast curve". One setting
-  (window ×0.75, mask 2 T14) carries the high end. On a wider grid (absolute windows 0.75–2 d × masks 1.0, 1.5 and
-  2.0 T14) the secondary scan passes the white-noise gate on 6 of 15 settings and fails it on 9 (FPP 0.007–0.16
-  where it passes), and the largest brightening ranges from 2.6 to 6.2σ with the setting: the 5.8σ brightening once
-  quoted for the default setting is not robust, and neither is a single FPP. The earlier quotes (0.0082 here, 0.17
-  and 0.0074 before) each came from one setting.
-  NFPP would be 0 (every TIC neighbour within 150″ would need an eclipse deeper than 100%, one of them only
-  marginally). pi Men c is a published planet with a measured mass; this shows the scheme's limits on real data.
+* **The reduced FPP of pi Men c, from the stored run** (`metrics.validation` in `candidates.json`; the scheme's
+  priors are a stated choice, see Honest limits). Per 13-day subject: 0.019 on the first (0.0186) and 0.015 on the
+  second (0.0148). Over the pipeline's five detrending settings (the default, and windows ×0.75 and ×1.5 with masks
+  of 1.0 and 2.0 T14) under two noise models the range is 0.0111–0.0216 (second subject 0.0123–0.0190), a log-odds
+  spread of 0.29 dex (0.19), so the stability gate passes. The class is "undetermined": the range straddles the
+  0.015 threshold. NFPP is unknown, because the run has no neighbour table, and the label is "not validated: no
+  contrast curve". pi Men c is a published planet with a measured mass; this shows the scheme's limits on real data.
+  History: on 2026-10-20 the joint fit of all five epochs over the whole sector (`scripts/vet_pi_men_s2.py`,
+  [docs/results/pi_men_s2_vetting.json](docs/results/pi_men_s2_vetting.json)) gave 0.0079–0.093 across the same
+  settings and was refused as unstable (odds spread 12.9×; 10× allowed); on a wider grid its secondary scan was
+  white on 6 of 15 settings, and its largest brightening ranged from 2.6 to 6.2σ.
 * **Ephemeris cone.** Exporting the stored run (`setuhq export runs/tess-pi-men-s1 --allow-unchecked`; the
   archive's TOI table timed out, HTTP 504) gives one signal, P = 6.2681 ± 0.0012 d from the first subject's joint
   fit, and its predicted transit in October 2026 (epoch 479) carries σ = 13.8 h, a 3σ window of 86 h. A one-subject
@@ -460,7 +460,7 @@ along with a flux-inverted and a block-scrambled copy as false-alarm controls. H
 95% intervals:
 
 <!-- generated:benchmark-results by tools/gen_readme_assets.py --write-readme; edit the generator, not this block -->
-* **Completeness: 60% (90 of 150 CP/KP on searchable stars; 52 to 67%).** It is 84% above 8 R⊕, 45% at 4 to 8 R⊕, 23% at 2 to 4 R⊕ and 10% below 2 R⊕. In the bins the published references use: all radii: 60% (90/150; 52 to 67%) against Kepler Robovetter DR25's > 85% (vetting only, on detected TCEs, P < 100 d); 3 to 4 R⊕: 44% (4/9; 19 to 73%) against Planet Hunters TESS's 51% (a citizen-science search); above 4 R⊕: 79% (81/102; 71 to 86%) against Planet Hunters TESS's 85% (a citizen-science search). SetuHQ is below the Kepler Robovetter's completeness (the interval excludes it); consistent with Planet Hunters TESS's rate at 3 to 4 R⊕ and Planet Hunters TESS's rate above 4 R⊕ (9 stars and 102 stars: the interval includes it).
+* **Completeness: 60% (90 of 150 CP/KP on searchable stars; 52 to 67%).** It is 84% above 8 R⊕, 45% at 4 to 8 R⊕, 23% at 2 to 4 R⊕ and 10% below 2 R⊕. In the bins the published references use: all radii: 60% (90/150; 52 to 67%) against Kepler Robovetter DR25's > 85% (vetting only, on detected TCEs, P < 100 d); 3 to 4 R⊕: 44% (4/9; 19 to 73%) against Planet Hunters TESS's 51% (a citizen-science search); above 4 R⊕: 79% (81/102; 71 to 86%) against Planet Hunters TESS's 85% (a citizen-science search). SetuHQ is below the Kepler Robovetter's completeness (the interval excludes it); not distinguishable from Planet Hunters TESS's 51% at 3 to 4 R⊕ (44%, 19%–73% over 9 stars; a 7-point lower estimate the interval cannot resolve); not distinguishable from Planet Hunters TESS's 85% above 4 R⊕ (79%, 71%–86% over 102 stars; a 6-point lower estimate the interval cannot resolve). Planet Hunters TESS's rates carry their own uncertainty and come from sectors 1 to 26.
 <!-- /generated:benchmark-results -->
 * FP TOIs: the panel found the dip of 77% and rejected or flagged 68% of those as binary-like.
   This applies to FP stars with 2-minute data only (124 of 158). FP TOIs are far more often
@@ -493,6 +493,11 @@ along with a flux-inverted and a block-scrambled copy as false-alarm controls. H
 
 Injection-recovery benchmark for the Probes (re-run on the current code):
 [docs/results/injection_recovery_simulated_panel.md](docs/results/injection_recovery_simulated_panel.md).
+It and the threshold sweep were first made on the code of 2026-10-16, before the injected transits became
+limb-darkened (2026-10-19), so their changes on the re-run are not the two fixes' alone. The sweep's held-out score
+fell from 0.875 to 0.833 because 2 of its 48 injections at 1000 ppm are no longer recovered (6 to 5 of 12 at 2 h,
+12 to 11 at 4 h); that change appears with the limb-darkened injections and is already there on the pre-fix code of
+5a03087.
 The Sentinels are not in the benchmark. Each injected subject would need its own CLI
 call, so the Sentinels are calibrated separately on a small sample (10 injected and 10
 empty subjects: weight 0.5 each, against 0.4 to 0.6 for the Probes).
@@ -763,10 +768,14 @@ events and nulls. That second step is not built yet.
   300 ppm about 1.5 times the 2-minute scatter, is affected by neither fix), the live discovery catalogue, the
   injection-recovery benchmark, the threshold sweep, the real-TOI benchmark (and so the real-TOI leaderboard and the
   methods paper's numbers) and the feed-rule evaluation. The first runs are kept as the historical record, each with
-  the pre-fix note in its own file: `docs/results/benchmark_real_tois.{md,json}`, `feed_rule_validation.json`,
-  `feed_rule_live_rerun.json` and `docs/discoveries/catalog_v1_fap200.json`. The calibration record
-  (`reviewer_weights_full_panel.calibration.json`) keeps its note: its Sentinel rates cannot be measured again
-  without calling the Sentinels. A consequence of (2): a simulated eccentric binary (0.8% primary,
+  the pre-fix note in its own file, naming its re-run: `docs/results/benchmark_real_tois.{md,json}`,
+  `feed_rule_validation.json`, `feed_rule_live_rerun.json` and `docs/discoveries/catalog_v1_fap200.json`. The
+  calibration record (`reviewer_weights_full_panel.calibration.json`) is not re-run: its Sentinel rates cannot be
+  measured again without calling the Sentinels. Its Probe rates (TPR 0.6, 0.6 and 0.4) were measured on the code of
+  2026-10-16; since the injected transits became limb-darkened (2026-10-19) the same seed gives 0.9, 0.8 and 0.6.
+  The weights stay frozen, as a parameter of the benchmark protocol: with three Probes, a minimum score of 0.5 and a
+  minimum planet fraction of 0.5, either weight set accepts exactly the dips at least two of the three Probes mark,
+  so every consensus decision is the same (`tests/test_calibration_equivalence.py`). A consequence of (2): a simulated eccentric binary (0.8% primary,
   0.4% secondary at phase 0.37) now passes default vetting, because its earlier `odd_even_mismatch` failures were
   spurious; each of its 8 events on the primary ephemeris is caught by `secondary_any_phase` (a flag, or a failure
   with `[vetting] decide = true`; its secondary eclipses, found as events of their own, are flagged `off_ephemeris`
@@ -795,9 +804,18 @@ events and nulls. That second step is not built yet.
   with the protocol unchanged, 23 of the 27 exposed CP/KP stars are recovered (21 before), all 3 of those misses
   among them, and held-out completeness is 60% (90/150) against 57% (86/150): 5 stars gained and 1 lost, +3 points,
   not shown to exceed resampling noise (paired bootstrap 95% CI 0 to +6 points; McNemar p = 0.22). Most of the gains
-  are deep planets the old odd/even test rejected. The one loss, TOI 1905.01, was a first-run "recovery" by a
-  9-hour residual dip at 4% of the TOI's depth, left where the clipping had cut the transit out; the re-run's dip at that epoch
-  is a 0.8-hour, 2.9 ppt event on an 8.58-day period, not the TOI's 5.72 days, so it does not count. The first run is kept, with its pre-fix note, in
+  are deep planets the old odd/even test rejected. The same fix explains most of the other moves: on the inverted
+  control, 16 of the 24 dips that pass vetting now and did not before were rejected by the old odd/even test and 5
+  are deep inverted features the old cleaning deleted (3 others; 3 no longer pass), which takes it from 573 to 641
+  vetted dips per 1,000 star-sectors; and 4 of the 5 FP TOIs whose dip now passes were rejected by the old odd/even
+  test (one no longer passes), which takes FP dips passing vetting from 31% to 34%. The one loss, TOI 1905.01, is a stale published ephemeris: its sector holds two full transits,
+  about 25 ppt and 2.5 h, but the ephemeris predicts them 7.2 h later (7σ of its propagated error), so even a perfect
+  detection would not match. The first run's "recovery" was a residual dip left at the predicted time after the
+  clipping had cut the transit out; the re-run's dip is the real transit, measured on a window the Probes marked over
+  the ingress only (0.79 h, 2.9 ppt; the limb-darkened fit gives 25.3 ppt and 2.75 h) and on an alias period (3P/2).
+  An audit finds 2 held-out CP/KP misses of this kind (a vetted dip of comparable depth within 12 h of a predicted
+  epoch, off the matching tolerance); the frozen matching rule is unchanged, so they stay misses (the re-run's report,
+  "Known limits"). The first run is kept, with its pre-fix note, in
   [docs/results/benchmark_real_tois.md](docs/results/benchmark_real_tois.md).
 
 </details>
@@ -854,7 +872,7 @@ that changes a result is in the config, and its hash goes into the manifest.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/architecture-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/architecture-light.svg">
-  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 49 modules (one Python package, src/setuhq); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, app, crossmatch, plate, report, leaderboard); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 736 tests (2 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/setuhq, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 5f8978f." width="100%">
+  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 49 modules (one Python package, src/setuhq); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, app, crossmatch, plate, report, leaderboard); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 737 tests (2 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/setuhq, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 5f8978f." width="100%">
 </picture>
 
 <details>

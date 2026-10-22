@@ -235,7 +235,9 @@ def test_benchmark_compares_matched_bins_and_words_the_verdict_from_the_interval
     assert by["pht_mid"]["verdict"] == "consistent" and by["pht_hi"]["verdict"] == "consistent"
     assert "vetting only, on detected TCEs" in by["robovetter"]["note"]
     sentence = gen.bench_verdict(d)
-    assert "consistent with Planet Hunters TESS's rate at 3 to 4 R⊕" in sentence
+    assert "not distinguishable from Planet Hunters TESS's 51% at 3 to 4 R⊕ (44%" in sentence
+    assert "not distinguishable from Planet Hunters TESS's 85% above 4 R⊕ (79%, 71%–86% over 102 stars; a 6-point lower" in sentence
+    assert "own uncertainty and come from sectors 1 to 26" in sentence
     assert "vetter" not in gen.bench_desc(d).replace("Robovetter", "")
 
 

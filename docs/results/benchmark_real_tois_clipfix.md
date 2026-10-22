@@ -4,7 +4,7 @@ This is the pre-registered protocol run again on the current code, after the two
 
 Measured on a stated benchmark; not discoveries. Sample: NASA Exoplanet Archive, table toi, fetched 2026-10-19, seed 20261019, sha256 `6f0e111ec8d2c38d…` (300 CP/KP, 300 FP, 62 FA TOIs). Rule: tfopwg_disp in CP/KP (positive), FP, FA; 0.5 ≤ P ≤ 13.0 d; period, mid-time and duration published; one TOI per star; seeded order; halves by sha256(seed:TIC) parity.
 
-Panel: the three Probes (deterministic detectors) with their calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed's FAP (200 trials). Each star's first SPOC 2-minute sector; the same light curve flux-inverted and block-scrambled as false-alarm controls. Nothing was tuned on this sample, so both halves are reported; the held-out half (by a hash of the TIC) is the headline. The headline completeness is over searchable stars (those with a SPOC 2-minute light curve), because that is what the pipeline can search and what the references measure; completeness over all stars is given beside it.
+Panel: the three Probes (deterministic detectors) with their frozen calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed's FAP (200 trials). Each star's first SPOC 2-minute sector; the same light curve flux-inverted and block-scrambled as false-alarm controls. Nothing was tuned on this sample, so both halves are reported; the held-out half (by a hash of the TIC) is the headline. The headline completeness is over searchable stars (those with a SPOC 2-minute light curve), because that is what the pipeline can search and what the references measure; completeness over all stars is given beside it.
 
 **Headline: the live discovery feed's "new" signals are consistent with noise.** On light curves with every real signal destroyed (flux-inverted and scrambled), the feed's own rule admits about 12 false new signals per 100 targets reviewed; the live feed shows 15.8 new signals per 100 targets (3 over 19 targets; 95% CI 6–38). On the real light curves of TOI hosts the same rule found 23 new signals per 1,000 star-sectors. The feed has since moved to a pre-registered two-sector rule, measured on this code at the end of this report.
 
@@ -79,6 +79,22 @@ The first run (docs/results/benchmark_real_tois.json, pipeline code commit 76de6
 | Feed level (frozen rule), inverted curves: distinct new signals per 1,000 star-sectors | 55 | 58 |  |
 | Feed level (frozen rule), scrambled curves: distinct new signals per 1,000 star-sectors | 65 | 61 |  |
 | Whole sample (both halves): completeness | 56% (166/298; 95% CI 50–61%) | 60% (179/298; 95% CI 54–65%) | +4 points (95% CI +2 to +7); 14 gained, 1 lost; McNemar p = 0.00098 |
+
+Why the inverted control and the FP TOIs pass more often: of the dips on inverted curves that pass vetting now and did not before, 16 were rejected in the first run by the old odd/even test, 5 are new dips deeper than 10× the point-to-point scatter (inverted bumps the old cleaning deleted) and 3 are other; 3 that passed before no longer do. Of the 5 FP TOIs whose dip now passes vetting, 4 were rejected in the first run by the old odd/even test; 1 FP TOI's dip no longer passes.
+
+
+## Known limits of the matching and of the dip measurement
+
+**Stale published ephemerides.** The frozen rule counts a TOI as recovered only when a vetted dip lies on its published ephemeris. An audit (not a rule; the matching is unchanged) finds 2 held-out CP/KP TOIs (2 in both halves) counted as missed although a vetted dip matching no TOI of the star, of depth within 3x the TOI's (window or fitted depth, the larger), off the nearest predicted epoch by more than the matching tolerance but by at most 12 h and a quarter period. Such a dip may be the TOI's own transit against an ephemeris that has drifted since it was published; they stay misses here.
+
+| half | TOI | offset from the predicted epoch (h) | dip depth / TOI depth | dip duration (h) | TOI duration (h) | dip period (d) | TOI period (d) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| held-out | 1905.01 | -8.4 | 0.99 | 0.79 | 2.65 | 8.5813 | 5.7223 |
+| held-out | 6821.01 | -10.4 | 2.49 | 0.89 | 2.15 | — | 3.5357 |
+
+One is checked by hand: TOI 1905.01. Its sector holds two full transits about 25 ppt deep and 2.5 h long (BTJD 3776.91 and 3794.09); the published ephemeris predicts them 7.2 h later, 7σ of its propagated error, so even a perfect detection would not match. The first run's "recovery" was a residual dip left at the predicted time after the clipping had cut the transit out.
+
+**Window depth and duration on deep, clear transits.** A dip's depth and duration are measured over the window the Probes marked. On TOI 1905.01 the marks cover only the ingress, so the dip reads 0.79 h and 2.9 ppt against the transit's 2.5 h and 25 ppt (the limb-darkened fit of the same dip gets them right: 25.3 ppt, 2.75 h), and the BLS period is an alias (3P/2). Changing how the window is measured would change frozen outcomes, so it is recorded as a known limit (ROADMAP), not changed here.
 
 
 ### Completeness by planet radius and period (held-out)

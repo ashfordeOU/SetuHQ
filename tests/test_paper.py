@@ -148,11 +148,11 @@ def test_pending_results_fill_from_their_file_when_it_exists(tmp_path):
     assert out["pixel_fp_flagged"] == "47% (70/150; 95% CI 39–55%)" and status["pixel"]["filled"]
     assert out["feedrule_rule"] == "both sectors" and not status["feedrule"]["filled"]
     assert out["feedrule_inverted"].startswith("*pending: stricter feed rule (no `held_out.inverted")
-    assert out["fpp_fp_validated"] == "*pending: S3 FPP*"
+    assert out["fpp_fp_validated"] == "*pending: reduced FPP not yet scored on the benchmark*"
     n, _ = PN.numbers(ROOT)
     n.update(out)
     paper = PN.render(TEMPLATE, n)
-    assert "47% (70/150; 95% CI 39–55%)" in paper and "*pending: S2 pixel vetting*" not in paper
+    assert "47% (70/150; 95% CI 39–55%)" in paper and "*pending: pixel vetting not yet run on the benchmark*" not in paper
 
 
 def test_every_doi_was_resolved_and_every_value_checked_in_its_paper():
@@ -256,8 +256,10 @@ def test_the_planet_hunters_comparison_is_stated_by_significance():
 
     for (lo, hi), ref, label in (((3, 4), 0.51, "3 to 4 R⊕"), ((4, float("inf")), 0.85, "above 4 R⊕")):
         _, low, up = bin_rate(lo, hi)
-        word = "significantly below" if up < ref else "significantly above" if low > ref else "consistent with"
-        assert f"{label}, {word} Planet Hunters TESS's rate" in FLAT
+        if up < ref or low > ref:
+            assert f"{label}, {'significantly below' if up < ref else 'significantly above'} Planet Hunters TESS's rate" in FLAT
+        else:
+            assert f"{label}, not distinguishable from Planet Hunters TESS's {100 * ref:.0f}% (" in FLAT
     assert "in every comparable row" not in FLAT
 
 

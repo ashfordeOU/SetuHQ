@@ -54,6 +54,9 @@ def _edition_paths(edition: str):
 
 EDITION = os.environ.get("SETUHQ_BENCH_EDITION", "first")
 CACHE, OUT_MD = _edition_paths(EDITION)
+# The Probes and their frozen calibrated weights (docs/results/reviewer_weights_full_panel.json, measured on the code of
+# 2026-10-16; on the current code the same calibration gives other rates but, with three Probes and these thresholds,
+# the same consensus decisions: tests/test_calibration_equivalence.py). A parameter of the frozen protocol.
 PROBES = [("volunteer-sensitive", 4.5, 0.05, 11, 0.6), ("volunteer-typical", 5.0, 0.10, 12, 0.6), ("volunteer-cautious", 5.5, 0.15, 13, 0.4)]
 
 
@@ -202,7 +205,7 @@ def run_curves(toi: dict, lc, sector: int, out: dict) -> dict:
         run_dir.mkdir(parents=True, exist_ok=True)
         (run_dir / "stellar.json").write_text(json.dumps({target: star}))
         try:
-            run_pipeline(cfg, [curve], reviewers, run_dir, weights=weights, weights_source="calibrated Probe weights")
+            run_pipeline(cfg, [curve], reviewers, run_dir, weights=weights, weights_source="frozen calibrated Probe weights")
             cands = json.loads((run_dir / "candidates.json").read_text())
         except Exception:  # noqa: BLE001
             out[name] = {"error": traceback.format_exc(limit=2)[-400:]}
@@ -367,7 +370,7 @@ def _fresh_variant(cfg, curve, run_dir: Path) -> list[dict]:
     if stellar:
         (run_dir / "stellar.json").write_text(stellar)
     reviewers = [SimulatedVolunteer(rid, snr_threshold=snr, miss_probability=miss, seed=seed) for rid, snr, miss, seed, _ in PROBES]
-    run_pipeline(cfg, [curve], reviewers, run_dir, weights={rid: w for rid, *_, w in PROBES}, weights_source="calibrated Probe weights")
+    run_pipeline(cfg, [curve], reviewers, run_dir, weights={rid: w for rid, *_, w in PROBES}, weights_source="frozen calibrated Probe weights")
     return json.loads((run_dir / "candidates.json").read_text())
 
 
@@ -938,7 +941,94 @@ def against_first_run(results: list[dict], sample: dict, summary: dict) -> dict 
             "explained_still_missed": [n for n in explained if not ((new.get(n) or {}).get("real") and rec(new[n]))]}
     prov = first["code_provenance"]["commit"]
     return {"file": "docs/results/benchmark_real_tois.json", "code": ", ".join(f"commit {c}" for c in prov.values()),
-            "stars_paired_held_out": len(both), "rows": rows, "clipping": clip}
+            "stars_paired_held_out": len(both), "rows": rows, "clipping": clip, "why": why_changed(held, old, new),
+            "note": why_note(why_changed(held, old, new))}
+
+
+def why_changed(held: list[dict], old: dict, new: dict) -> dict:
+    """Why the inverted control and the FP TOIs pass more often on the fixed code: each dip that passes vetting now
+    and did not in the first run (matched by mid-time within 0.05 d), by what the first run did with it."""
+    out = {"inverted": {"was_odd_even_rejected": 0, "new_deep_dip": 0, "other": 0, "no_longer_passing": 0}, "fp": {}}
+    for t in held:
+        a, b = (old.get(t["toi"]) or {}), (new.get(t["toi"]) or {})
+        if not (a.get("real") and b.get("real")):
+            continue
+        clip = CLIP / f"{t['tic']}.json"
+        scatter = json.loads(clip.read_text())["scatter_ppm"] if clip.exists() else None
+        po, pn = FIRST_CACHE / str(t["tic"]) / "inverted" / "candidates.json", CACHE / str(t["tic"]) / "inverted" / "candidates.json"
+        if po.exists() and pn.exists():
+            co, cn = json.loads(po.read_text()), json.loads(pn.read_text())
+            for c in cn:
+                if not c["passed"]:
+                    continue
+                m = [x for x in co if abs(x["t_center"] - c["t_center"]) < 0.05]
+                if m and m[0]["passed"]:
+                    continue
+                if m and "odd_even_mismatch" in (m[0]["flags"] or ""):
+                    out["inverted"]["was_odd_even_rejected"] += 1
+                elif not m and scatter and (c["depth_ppm"] or 0) > 10 * scatter:
+                    out["inverted"]["new_deep_dip"] += 1
+                else:
+                    out["inverted"]["other"] += 1
+            out["inverted"]["no_longer_passing"] += sum(1 for c in co if c["passed"] and not any(
+                abs(x["t_center"] - c["t_center"]) < 0.05 and x["passed"] for x in cn))
+        if t["class"] == "fp" and a["real"]["recovered"] != b["real"]["recovered"]:
+            key = "gained" if b["real"]["recovered"] else "lost"
+            out["fp"].setdefault(key, []).append({"toi": t["toi"], "first_run_flags": a["real"]["eb_flags"]})
+    return out
+
+
+def why_note(w: dict) -> str:
+    inv, fp = w["inverted"], w["fp"]
+    gained = fp.get("gained") or []
+    oe = sum(1 for g in gained if "odd_even_mismatch" in g["first_run_flags"])
+    return (f"Why the inverted control and the FP TOIs pass more often: of the dips on inverted curves that pass vetting now "
+            f"and did not before, {inv['was_odd_even_rejected']} were rejected in the first run by the old odd/even test, "
+            f"{inv['new_deep_dip']} are new dips deeper than 10× the point-to-point scatter (inverted bumps the old cleaning "
+            f"deleted) and {inv['other']} are other; {inv['no_longer_passing']} that passed before no longer do. Of the "
+            f"{len(gained)} FP TOIs whose dip now passes vetting, {oe} were rejected in the first run by the old odd/even "
+            f"test; {len(fp.get('lost') or [])} FP TOI's dip no longer passes.")
+
+
+STALE_HOURS = 12.0  # how far from a predicted epoch a missed TOI's dip may sit and still count as a stale-ephemeris case
+STALE_DEPTH = 3.0   # the dip's depth (window or fitted, the larger) within this factor of the TOI's
+
+
+def stale_ephemeris(results: list[dict], sample: dict) -> dict:
+    """An audit, not a rule: CP/KP TOIs the benchmark counts as missed although a vetted dip of comparable depth sits
+    near a predicted epoch, off it by more than match_toi's tolerance but within STALE_HOURS (and a quarter period),
+    and matching no TOI of the star. Such a dip may be the TOI's own transit against a published ephemeris that has
+    drifted; the frozen matching rule is not changed, so these stay misses."""
+    from setuhq.discover import match_toi
+
+    toi = {t["toi"]: t for t in sample["tois"]}
+    rows = []
+    for r in results:
+        t = toi[r["toi"]]
+        if t["class"] != "positive" or not r.get("real") or r["real"]["recovered"] or not t.get("depth_ppm"):
+            continue
+        path = CACHE / str(r["tic"]) / "real" / "candidates.json"
+        full = _target(r["tic"])
+        t0, period = t["tranmid_bjd"] - 2457000.0, t["period"]
+        best = None
+        for c in json.loads(path.read_text()) if path.exists() else []:
+            if not c["passed"] or match_toi(c, full):
+                continue
+            n = round((c["t_center"] - t0) / period)
+            off = 24 * (c["t_center"] - (t0 + n * period))
+            ratio = max(c.get("depth_ppm") or 0, c.get("fit_depth_ppm") or 0) / t["depth_ppm"]
+            if abs(off) <= min(STALE_HOURS, 6 * period) and 1 / STALE_DEPTH <= ratio <= STALE_DEPTH:
+                if best is None or abs(off) < abs(best["offset_hours"]):
+                    best = {"toi": t["toi"], "half": t["half"], "offset_hours": round(off, 1), "depth_ratio": round(ratio, 2),
+                            "dip_duration_hours": round(c["duration_hours"], 2), "toi_duration_hours": t["duration_hours"],
+                            "dip_period_days": c.get("period_days") and round(c["period_days"], 4), "toi_period_days": period}
+        if best:
+            rows.append(best)
+    rows.sort(key=lambda x: (x["half"] != "held_out", x["toi"]))
+    return {"rule": (f"a vetted dip matching no TOI of the star, of depth within {STALE_DEPTH:g}x the TOI's (window or fitted "
+                     f"depth, the larger), off the nearest predicted epoch by more than the matching tolerance but by at most "
+                     f"{STALE_HOURS:g} h and a quarter period"),
+            "held_out": sum(1 for x in rows if x["half"] == "held_out"), "all": len(rows), "stars": rows}
 
 
 def cmd_report(args) -> int:
@@ -977,7 +1067,7 @@ def cmd_report(args) -> int:
                         kinds["periodic" if c.get("period_days") and (c.get("n_transits") or 0) >= 2 else "single"] += 1
             summary[half]["controls"][v]["kinds"] = kinds
     data = {"generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sample": {k: sample[k] for k in ("source", "fetched_at", "seed", "rule", "counts", "sha256")},
-            "panel": "the three Probes (deterministic detectors) with their calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed's FAP (200 trials)",
+            "panel": "the three Probes (deterministic detectors) with their frozen calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed's FAP (200 trials)",
             "stars_run": len(results), "summary": summary, "loss": B.loss_table(results, sample),
             "clipping": B.clipping_summary(results, sample, CLIP_RATIO), "summary_unaffected": summary_unaffected, "sentinels": sentinel_scores(sample),
             "feed_implication": B.feed_implication(summary["held_out"], live_feed()),
@@ -987,6 +1077,7 @@ def cmd_report(args) -> int:
             "per_star": [{k: r.get(k) for k in ("toi", "tic", "sector", "no_data", "real", "inverted", "scrambled")} for r in results]}
     if EDITION != "first":
         data = {"edition": EDITION, **data, "threshold_audit": explain_audit(data["threshold_audit"]),
+                "stale_ephemeris": stale_ephemeris(results, sample),
                 "against_first_run": against_first_run(results, sample, summary)}
     OUT_MD.with_suffix(".json").write_text(json.dumps(data, indent=1, default=float) + "\n")
     OUT_MD.write_text(B.to_markdown(data))

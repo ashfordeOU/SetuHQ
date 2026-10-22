@@ -1,5 +1,5 @@
 {
- "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since.",
+ "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Re-run on the current code: docs/results/benchmark_real_tois_clipfix.json.",
  "generated_at": "2026-10-20T20:26:14+00:00",
  "sample": {
   "source": "NASA Exoplanet Archive, table toi",

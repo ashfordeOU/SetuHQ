@@ -23,7 +23,7 @@ def test_a_note_is_one_plain_sentence_on_its_page_never_a_banner(tmp_path):
 def test_current_results_carry_no_note_and_the_historical_ones_keep_theirs(tmp_path):
     from pathlib import Path
 
-    from setuhq.codenote import HISTORICAL
+    from setuhq.codenote import HISTORICAL, historical_note
 
     # Re-run on the current code: no note, so no banner on any page built from them.
     assert code_note("runs/tess-pi-men-s1") is None
@@ -38,8 +38,12 @@ def test_current_results_carry_no_note_and_the_historical_ones_keep_theirs(tmp_p
     # Kept as the historical pre-fix record: each says so in its own file.
     for f in HISTORICAL:
         text = Path(f).read_text()
+        note = historical_note(f)
+        assert "Not re-run since" not in note  # each names its re-run, or why there is none
         if f.endswith(".json"):
-            assert json.loads(text)["code_note"] == PRE_FIX_NOTE, f
+            assert json.loads(text)["code_note"] == note, f
         else:
-            assert PRE_FIX_NOTE in text[:2000], f
+            assert note in text[:2000], f
+        rerun = HISTORICAL[f][1]
+        assert rerun is None or (Path(rerun).exists() and f"Re-run on the current code: {rerun}." in note), f
     assert "confirmed" not in PRE_FIX_NOTE.lower()

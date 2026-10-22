@@ -180,7 +180,8 @@ is the one proposed in Section 5.2.
 
 **Frozen sample and blinding.** Section 2. The pipeline sees only light curves with opaque subject ids.
 
-**The panel measured.** The three Probes with their calibrated weights, sector-wide BLS, vetting and the
+**The panel measured.** The three Probes with their frozen calibrated weights (measured on the code of 2026-10-16; on the current code the same
+calibration gives other rates but the same two-of-three consensus decisions), sector-wide BLS, vetting and the
 limb-darkened fit, without the FAP rule (it is not part of vetting). The feed-level table adds the feed's FAP
 ({{bench_feed_fap_trials}} trials) and its admission rule at the time. {{bench_stellar_sentence}} The Sentinels are measured separately on a stated subsample
 (Section 5.4), because every subject needs a CLI call.
@@ -415,7 +416,7 @@ These references measure different populations, data and tasks; they are context
 | completeness, above 4 R⊕ | {{ho_rad_above4}} | Planet Hunters TESS: {{ref_pht_large}} ({{cite_eisner2021}}) |
 | reliability against inverted and scrambled data | vetted false dips on {{ho_inverted_any}} and {{ho_scrambled_any}} of star-sectors | Robovetter DR25: reliability {{ref_robovetter_reliability}} for P < 100 d ({{cite_thompson2018}}) |
 | how many TOIs are false positives | the sample is stratified, not representative | prime mission: {{ref_toi_fp_fraction}} found false positive by follow-up ({{cite_guerrero2021}}); Kepler KOIs overall {{ref_kepler_fp_rate}} ({{cite_fressin2013}}) |
-| statistical validation | none in the code measured; S3, FP TOIs labelled validated: {{fpp_fp_validated}} | TRICERATOPS "validated": {{ref_triceratops_thresholds}} ({{cite_giacalone2021}}); vespa on all KOIs ({{cite_morton2016}}) |
+| statistical validation | none: the code computes a reduced FPP per periodic candidate, which by design never labels one validated; on this benchmark's FP TOIs: {{fpp_fp_validated}} | TRICERATOPS "validated": {{ref_triceratops_thresholds}} ({{cite_giacalone2021}}); vespa on all KOIs ({{cite_morton2016}}) |
 
 The radius rows use the bins Planet Hunters TESS reported, computed from the per-star rows and the TOI table's
 radii. Against Planet Hunters TESS, SetuHQ's completeness is, at {{cmp_pht_sentence}}.{{cmp_pht_note}} Its headline completeness is {{cmp_robo}} the Robovetter's, and it is
@@ -434,11 +435,13 @@ claim of matching either.
   {{lb_metadata_baseline_j}} for a model that never reads a light curve; {{floor_dj}}. The
   ephemeris is given to every method, so J mixes detection with vetting; separate detection (ephemeris withheld)
   and vetting rankings are future work.
-* **No pixel-level vetting.** There is no centroid or difference-image test, so blended and background eclipsing
-  binaries can pass. Pixel-level results are pending: FP stars flagged {{pixel_fp_flagged}}, CP/KP stars flagged
-  {{pixel_cpkp_flagged}}.
-* **No false-positive probability.** Nothing here is statistically validated; S3 results are pending
-  ({{fpp_fp_validated}} of FP TOIs labelled validated; {{fpp_cpkp_likely}} of CP/KP TOIs likely planets).
+* **No pixel-level vetting in the benchmark.** The code has a difference-image centroid test (off by default, read
+  from the SPOC target pixel file), but the benchmark did not run it, so blended and background eclipsing binaries
+  can pass here. FP stars flagged {{pixel_fp_flagged}}, CP/KP stars
+  flagged {{pixel_cpkp_flagged}}.
+* **No statistical validation.** Nothing here is statistically validated. The code computes a reduced
+  false-positive probability per periodic candidate (a documented approximation that never says "validated"). FP
+  TOIs labelled validated: {{fpp_fp_validated}}; CP/KP TOIs likely planets: {{fpp_cpkp_likely}}.
 * **The Sentinels are measured on {{sen_n}} stars,** were calibrated on {{cal_n_inj}} injected and {{cal_n_empty}} empty subjects,
   and never ran on the controls. The model version that answered is not recorded: the cache key holds the
   CLI's model setting ("default"), not the served model. Their errors are correlated.

@@ -1,6 +1,6 @@
 {
  "edition": "clipfix",
- "generated_at": "2026-10-21T22:45:24+00:00",
+ "generated_at": "2026-10-22T02:59:42+00:00",
  "sample": {
   "source": "NASA Exoplanet Archive, table toi",
   "fetched_at": "2026-10-19T11:00:16Z",
@@ -13,7 +13,7 @@
   },
   "sha256": "6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac"
  },
- "panel": "the three Probes (deterministic detectors) with their calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed's FAP (200 trials)",
+ "panel": "the three Probes (deterministic detectors) with their frozen calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed's FAP (200 trials)",
  "stars_run": 662,
  "summary": {
   "held_out": {
@@ -2490,7 +2490,7 @@
   },
   "edition": "clipfix",
   "first_validation": {
-   "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since.",
+   "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Re-run on the current code: docs/results/feed_rule_validation_clipfix.json.",
    "rule": {
     "name": "two_sector",
     "period_tol": 0.005,
@@ -2579,7 +2579,7 @@
    ]
   },
   "first_live": {
-   "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since.",
+   "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Re-run on the current code: docs/results/feed_rule_live_rerun_clipfix.json.",
    "when": "2026-10-20T18:58:30+00:00",
    "targets": 19,
    "rule": "two-sector rule, FAP < 0.001 over 2,000 trials (pre-registered 8909cda; held-out validation docs/results/feed_rule_validation.json)",
@@ -2614,7 +2614,7 @@
    "old_catalogue": "docs/discoveries/catalog_v1_fap200.json"
   }
  },
- "code_commit": "db41d03d026ce59ecd66c4a0ac3d34676e0bc520",
+ "code_commit": "7e944c70434b83cd72342c2b093e4f7c396fcbdb",
  "code_provenance": {
   "fingerprints": [
    "0b8e86a1fb71e777"
@@ -19922,6 +19922,33 @@
    }
   }
  ],
+ "stale_ephemeris": {
+  "rule": "a vetted dip matching no TOI of the star, of depth within 3x the TOI's (window or fitted depth, the larger), off the nearest predicted epoch by more than the matching tolerance but by at most 12 h and a quarter period",
+  "held_out": 2,
+  "all": 2,
+  "stars": [
+   {
+    "toi": "1905.01",
+    "half": "held_out",
+    "offset_hours": -8.4,
+    "depth_ratio": 0.99,
+    "dip_duration_hours": 0.79,
+    "toi_duration_hours": 2.648,
+    "dip_period_days": 8.5813,
+    "toi_period_days": 5.72226
+   },
+   {
+    "toi": "6821.01",
+    "half": "held_out",
+    "offset_hours": -10.4,
+    "depth_ratio": 2.49,
+    "dip_duration_hours": 0.89,
+    "toi_duration_hours": 2.148,
+    "dip_period_days": null,
+    "toi_period_days": 3.535713
+   }
+  ]
+ },
  "against_first_run": {
   "file": "docs/results/benchmark_real_tois.json",
   "code": "commit 76de67d, commit 40cceca",
@@ -20666,6 +20693,58 @@
     "7475.01"
    ],
    "explained_still_missed": []
-  }
+  },
+  "why": {
+   "inverted": {
+    "was_odd_even_rejected": 16,
+    "new_deep_dip": 5,
+    "other": 3,
+    "no_longer_passing": 3
+   },
+   "fp": {
+    "gained": [
+     {
+      "toi": "1030.01",
+      "first_run_flags": [
+       "density_mismatch",
+       "odd_even_mismatch"
+      ]
+     },
+     {
+      "toi": "1023.01",
+      "first_run_flags": [
+       "odd_even_mismatch",
+       "v_shape"
+      ]
+     },
+     {
+      "toi": "1070.01",
+      "first_run_flags": [
+       "odd_even_mismatch"
+      ]
+     },
+     {
+      "toi": "4420.01",
+      "first_run_flags": [
+       "odd_even_mismatch"
+      ]
+     },
+     {
+      "toi": "1615.01",
+      "first_run_flags": [
+       "density_mismatch",
+       "secondary_eclipse"
+      ]
+     }
+    ],
+    "lost": [
+     {
+      "toi": "416.01",
+      "first_run_flags": []
+     }
+    ]
+   }
+  },
+  "note": "Why the inverted control and the FP TOIs pass more often: of the dips on inverted curves that pass vetting now and did not before, 16 were rejected in the first run by the old odd/even test, 5 are new dips deeper than 10\u00d7 the point-to-point scatter (inverted bumps the old cleaning deleted) and 3 are other; 3 that passed before no longer do. Of the 5 FP TOIs whose dip now passes vetting, 4 were rejected in the first run by the old odd/even test; 1 FP TOI's dip no longer passes."
  }
 }

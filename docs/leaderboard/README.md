@@ -62,8 +62,8 @@ The leaderboard decides which events lie on the TOI's ephemeris with the benchma
 failed or carries an eclipsing-binary flag (odd/even, secondary, V shape, density). Control false alarms are the
 events that passed on the controls. A method no longer states its own outcomes.
 
-`tuned_on` is `none` or `tuning`. `scope` is `held_out` (all 345 held-out stars) or `sentinel_subsample` (the 40
-stars the Sentinels reviewed, listed in the benchmark report).
+`tuned_on` is `none` or `tuning`. `scope` is `held_out` (all 345 held-out stars) or `sentinel_subsample` (the stars
+the Sentinels reviewed with byte-identical subjects on the current code, 37 of the stated 40, listed in the benchmark report).
 
 ## Scoring and rank
 
@@ -92,7 +92,7 @@ leaderboard's terms by definition.
 
 **The controls gate ranking; they do not enter J.** Only held-out entries with both control lists on every searched
 star are ranked; the rest are listed as unranked. The control false-alarm rates are printed beside J for the reader
-to weigh. **The 40-star Sentinel subsample is never ranked: 40 stars cannot order these configurations.** Equal J
+to weigh. **The Sentinel subsample is never ranked: 37 stars cannot order these configurations.** It is the stated 40-star subsample less 3 stars (TOI 416.01, 1070.01 and 2547.01) whose subjects changed with the clipping fix: deep transits, whose Probe outcome the fix changed, so the left-out stars are a selection tied to the fix. Every entry of the subsample is scored on the same 37 stars, so the comparison between entries stays paired and fair. Equal J
 shares a rank; where intervals overlap, the order is not a measured difference. Every rate has a Wilson 95%
 interval.
 
@@ -155,7 +155,7 @@ SetuHQ's own configurations, built from the benchmark's stored outputs without r
 * **Metadata only, no light curve (a floor)**, on the held-out half, `tuned_on: tuning`.
 * **Probes only**, on the whole held-out half: every consensus event of the real and control runs. The scorer's
   outcomes equal the committed per-star rows of `benchmark_real_tois_clipfix.json` star by star (a test checks this).
-* On the Sentinels' 40-star subsample: **Probes only** (the same events, restricted), **Sentinel · Volunteer alone**
+* On the Sentinels' subsample (37 of the stated 40 stars): **Probes only** (the same events, restricted), **Sentinel · Volunteer alone**
   and **Sentinel · Skeptic alone** (each mark an event, passed when the persona called the subject a potential
   planet; the seed script stops unless they reproduce the report's committed totals and agreement).
 * Two **Probes + Sentinels** rows, *either* and *both*, derived by the leaderboard (`leaderboard.DERIVED`). They are

@@ -13,8 +13,8 @@
 *Draft methods paper in the style of the AAS journals (AJ). Markdown only: the aastex631 class is not
 available offline in the environment that produced this draft, so no LaTeX version is provided yet.*
 
-*Generated from the committed results by `scripts/paper_numbers.py` (benchmark report of 2026-10-21,
-code commit `db41d03`: the benchmark re-run on the current code, after the two fixes of Section 5.6). Results
+*Generated from the committed results by `scripts/paper_numbers.py` (benchmark report of 2026-10-22,
+code commit `7e944c7`: the benchmark re-run on the current code, after the two fixes of Section 5.6). Results
 that later work will change are marked pending; see the section "Pending results".*
 
 Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.
@@ -180,7 +180,8 @@ is the one proposed in Section 5.2.
 
 **Frozen sample and blinding.** Section 2. The pipeline sees only light curves with opaque subject ids.
 
-**The panel measured.** The three Probes with their calibrated weights, sector-wide BLS, vetting and the
+**The panel measured.** The three Probes with their frozen calibrated weights (measured on the code of 2026-10-16; on the current code the same
+calibration gives other rates but the same two-of-three consensus decisions), sector-wide BLS, vetting and the
 limb-darkened fit, without the FAP rule (it is not part of vetting). The feed-level table adds the feed's FAP
 (200 trials) and its admission rule at the time. The benchmark runs did not query the TIC: each star's parameters came from the TOI table's own columns (Teff, log g, R★). Limb darkening used Teff and log g (the Sun's values where missing; Teff was published for 306 of 309 searched held-out stars), and ρ★ was computed from log g and R★, so the density test could act only on the 268 stars with both. The Sentinels are measured separately on a stated subsample
 (Section 5.4), because every subject needs a CLI call.
@@ -203,7 +204,7 @@ come from synthetic injection tests, and the vetting, V-shape, density and FAP r
 light curve was downloaded.
 
 **Code version.** Each per-star result records a fingerprint of the pipeline code that produced it:
-`0b8e86a1fb71e777` = commit 8dde211 (HEAD differs only in comments and docstrings). The report was generated at commit `db41d03d026ce59ecd66c4a0ac3d34676e0bc520`. Every star, controls included, was
+`0b8e86a1fb71e777` = commit 8dde211 (HEAD differs only in comments and docstrings). The report was generated at commit `7e944c70434b83cd72342c2b093e4f7c396fcbdb`. Every star, controls included, was
 run again from its light curve with this code; no stored classification was reused. The first run, on the pre-fix
 code (commit 76de67d, 40cceca), is kept as `docs/results/benchmark_real_tois.json`.
 
@@ -415,10 +416,10 @@ These references measure different populations, data and tasks; they are context
 | completeness, above 4 R⊕ | 79% (81/102; 95% CI 71–86%) | Planet Hunters TESS: 85% (Eisner et al. 2021) |
 | reliability against inverted and scrambled data | vetted false dips on 22% (67/309; 95% CI 17–27%) and 25% (78/309; 95% CI 21–30%) of star-sectors | Robovetter DR25: reliability above 98% for P < 100 d (Thompson et al. 2018) |
 | how many TOIs are false positives | the sample is stratified, not representative | prime mission: 565 of 2,241 (about 25%) found false positive by follow-up (Guerrero et al. 2021); Kepler KOIs overall 9.4% (Fressin et al. 2013) |
-| statistical validation | none in the code measured; S3, FP TOIs labelled validated: *pending: S3 FPP* | TRICERATOPS "validated": FPP < 0.015 and NFPP < 10⁻³ (Giacalone et al. 2021); vespa on all KOIs (Morton et al. 2016) |
+| statistical validation | none: the code computes a reduced FPP per periodic candidate, which by design never labels one validated; on this benchmark's FP TOIs: *pending: reduced FPP not yet scored on the benchmark* | TRICERATOPS "validated": FPP < 0.015 and NFPP < 10⁻³ (Giacalone et al. 2021); vespa on all KOIs (Morton et al. 2016) |
 
 The radius rows use the bins Planet Hunters TESS reported, computed from the per-star rows and the TOI table's
-radii. Against Planet Hunters TESS, SetuHQ's completeness is, at 3 to 4 R⊕, consistent with Planet Hunters TESS's rate; above 4 R⊕, consistent with Planet Hunters TESS's rate. With 9 stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart. Its headline completeness is significantly below the Robovetter's, and it is
+radii. Against Planet Hunters TESS, SetuHQ's completeness is, at 3 to 4 R⊕, not distinguishable from Planet Hunters TESS's 51% (44%, 19–73%; a 7-point lower estimate the interval cannot resolve); above 4 R⊕, not distinguishable from Planet Hunters TESS's 85% (79%, 71–86%; a 6-point lower estimate the interval cannot resolve). With 9 stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart. Planet Hunters TESS's rates carry their own uncertainty and come from sectors 1 to 26. Its headline completeness is significantly below the Robovetter's, and it is
 far from Robovetter-level reliability: its vetted false-alarm rate on the controls is 641 and
 861 per 1,000 star-sectors before the feed's rule, and 58 and
 61 after it, against the project's own proposed target of at most one per 1,000. The
@@ -434,11 +435,13 @@ claim of matching either.
   +0.39 (+0.27 to +0.49) for a model that never reads a light curve; paired ΔJ (floor − Probes) = +0.039, 95% CI -0.096 to +0.173, P(ΔJ ≤ 0) = 0.29. The
   ephemeris is given to every method, so J mixes detection with vetting; separate detection (ephemeris withheld)
   and vetting rankings are future work.
-* **No pixel-level vetting.** There is no centroid or difference-image test, so blended and background eclipsing
-  binaries can pass. Pixel-level results are pending: FP stars flagged *pending: S2 pixel vetting*, CP/KP stars flagged
-  *pending: S2 pixel vetting*.
-* **No false-positive probability.** Nothing here is statistically validated; S3 results are pending
-  (*pending: S3 FPP* of FP TOIs labelled validated; *pending: S3 FPP* of CP/KP TOIs likely planets).
+* **No pixel-level vetting in the benchmark.** The code has a difference-image centroid test (off by default, read
+  from the SPOC target pixel file), but the benchmark did not run it, so blended and background eclipsing binaries
+  can pass here. FP stars flagged *pending: pixel vetting not yet run on the benchmark*, CP/KP stars
+  flagged *pending: pixel vetting not yet run on the benchmark*.
+* **No statistical validation.** Nothing here is statistically validated. The code computes a reduced
+  false-positive probability per periodic candidate (a documented approximation that never says "validated"). FP
+  TOIs labelled validated: *pending: reduced FPP not yet scored on the benchmark*; CP/KP TOIs likely planets: *pending: reduced FPP not yet scored on the benchmark*.
 * **The Sentinels are measured on 37 stars,** were calibrated on 10 injected and 10 empty subjects,
   and never ran on the controls. The model version that answered is not recorded: the cache key holds the
   CLI's model setting ("default"), not the served model. Their errors are correlated.
@@ -459,7 +462,7 @@ independent evidence such as radial velocities, and no SetuHQ output is called c
 
 ## 8 Reproducibility
 
-* **Code.** The benchmark report was generated at commit `db41d03d026ce59ecd66c4a0ac3d34676e0bc520` (Section 4 lists the pipeline
+* **Code.** The benchmark report was generated at commit `7e944c70434b83cd72342c2b093e4f7c396fcbdb` (Section 4 lists the pipeline
   fingerprints). The frozen sample is `docs/results/benchmark_toi_sample.json` (sha256 `6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac`); the report
   is `docs/results/benchmark_real_tois_clipfix.md` and `.json` (the first run, on the pre-fix code:
   `docs/results/benchmark_real_tois.md` and `.json`); the commands are in `scripts/benchmark_real_tois.py`
@@ -490,8 +493,8 @@ These numbers will change. Their placeholders print *pending* until the stated f
 script then fills them, and never guesses.
 
 * **stricter feed rule**: filled from `docs/results/feed_rule_validation_clipfix.json`.
-* **S2 pixel vetting**: pending; will be read from `docs/results/pixel_vetting.json`.
-* **S3 FPP**: pending; will be read from `docs/results/fpp_validation.json`.
+* **pixel vetting not yet run on the benchmark**: pending; will be read from `docs/results/pixel_vetting.json`.
+* **reduced FPP not yet scored on the benchmark**: pending; will be read from `docs/results/fpp_validation.json`.
 
 ## References
 
