@@ -16,8 +16,9 @@ from setuhq import brand
 from setuhq.codenote import PRE_FIX_NOTE, VISITOR_TEXT, visitor_note, with_code_note
 from setuhq.methods import CHAPTERS
 from setuhq.names import ATTRIBUTION
-from setuhq.routes import (ALIASES, CHAPTER_SLUGS, LEGACY_PAGES, ROUTE_PATHS, ROUTES_CORE_JS, from_hash, legacy_target,
-                           parse_path, route_table, url_for)
+from setuhq.routes import (ALIASES, CHAPTER_SLUGS, DIP_SLUGS, LEGACY_PAGES, ROUTE_PATHS, ROUTES_CORE_JS, from_hash,
+                           legacy_target, parse_path, route_table, set_dip_slugs, url_for)
+from setuhq.stubs import write_stubs
 from setuhq.site import PAGE_BUDGET, check_budget
 
 LEAD = "tess-x-001"
@@ -34,9 +35,18 @@ def test_every_view_has_one_clean_address_and_back():
         assert parse_path(path) == {"route": "methods", "params": {"ch": cid}}
     assert url_for("methods", {"ch": "survey"}) == "/how-it-works/" and url_for("methods", {"ch": "rv"}) == "/how-it-works/radial-velocity/"
     assert len(set(CHAPTER_SLUGS.values())) == len(CHAPTERS)
-    assert url_for("transit", {"dip": "tess-a-001"}) == "/candidates/tess-a-001/"
-    assert url_for("candidates", {"dip": "tess-a-001", "section": "ledger"}) == "/candidates/tess-a-001/case-file/#ledger"
-    assert parse_path("/candidates/tess-a-001/case-file/") == {"route": "candidates", "params": {"dip": "tess-a-001"}}
+    # A dip's address is readable: its star and its number, never the stored id.
+    keep = dict(DIP_SLUGS)
+    set_dip_slugs({"tess-a-001": "pi-men/dip-1"})
+    try:
+        assert url_for("transit", {"dip": "tess-a-001"}) == "/candidates/pi-men/dip-1/"
+        assert url_for("candidates", {"dip": "tess-a-001", "section": "ledger"}) == "/candidates/pi-men/dip-1/case-file/#ledger"
+        assert parse_path("/candidates/pi-men/dip-1/") == {"route": "transit", "params": {"dip": "tess-a-001"}}
+        assert parse_path("/candidates/pi-men/dip-1/case-file/") == {"route": "candidates", "params": {"dip": "tess-a-001"}}
+        assert parse_path("/candidates/tess-a-001/") is None
+        assert route_table(None)["dips"] == {"tess-a-001": "pi-men/dip-1"}
+    finally:
+        set_dip_slugs(keep)
     assert parse_path("/planets/pi-men-c/") == {"route": "planet", "params": {"id": "pi-men-c"}}
     assert parse_path("/stars/pi-men/") == {"route": "star", "params": {"id": "pi-men"}}
     # A deep link keeps its view query; the address bar's copy (keep_query=False) drops it.
@@ -103,9 +113,15 @@ def test_each_page_has_its_own_address_title_and_preview(site):
               "/candidates/", "/candidates/radius-ratios/", "/how-it-works/", "/how-it-works/radial-velocity/", "/evidence/",
               "/evidence/leaderboard/", "/evidence/runs/", "/docs/", "/planets/pi-men-c/", "/stars/pi-men/"):
         assert p in pages, p
-    dips = json.loads(next(site.glob("assets/data/app-*.json")).read_text())["dossier_ids"]
-    for d in dips:
-        assert f"/candidates/{d}/" in pages and f"/candidates/{d}/case-file/" in pages
+    data = json.loads(next(site.glob("assets/data/app-*.json")).read_text())
+    for d in data["dossier_ids"]:
+        slug = data["routes"]["dips"][d]
+        assert re.fullmatch(r"[a-z0-9-]+/dip-\d+", slug), slug
+        assert f"/candidates/{slug}/" in pages and f"/candidates/{slug}/case-file/" in pages
+        assert f"/candidates/{d}/" not in pages
+        label = data["dips"][d]["label"]  # e.g. "pi Men, dip 2 (6.27 d)"
+        assert re.fullmatch(r".+, dip \d+( \([\d.]+ d\))?", label), label
+        assert html_mod.escape(label, quote=False) in (site / "candidates" / slug / "index.html").read_text()
     assert sum(p.startswith("/how-it-works/") for p in pages) == len(CHAPTERS)
     titles = set()
     for p in pages:
@@ -138,8 +154,9 @@ def test_pages_stay_within_the_budget_and_share_cached_files(site):
 
 def test_sitemap_robots_404_and_forwarding_pages(site):
     pages = _pages(site)
-    sitemap = (site / "sitemap.xml").read_text()
+    sitemap = (site / "sitemap-pages.xml").read_text()
     assert all(f"<loc>{brand.SITE_URL}{p}</loc>" in sitemap for p in pages)
+    assert f"<sitemapindex" in (index := (site / "sitemap.xml").read_text()) and f"{brand.SITE_URL}/sitemap-pages.xml" in index
     assert "Sitemap: https://setuhq.com/sitemap.xml" in (site / "robots.txt").read_text()
     nf = (site / "404.html").read_text()
     assert '<meta name="robots" content="noindex">' in nf and 'rel="canonical"' not in nf
@@ -206,3 +223,63 @@ def test_quiet_note_helpers():
     assert out.index("</h1>") < out.index(VISITOR_TEXT) < out.index("<p>x")
     assert "5a03087" not in out and "preprocess" not in out and "background" not in out
     assert "confirmed" not in VISITOR_TEXT.lower()
+
+
+def _visible_text(html: str) -> str:
+    html = re.sub(r"<(script|style|template)\b.*?</\1>", " ", html, flags=re.S | re.I)
+    html = re.sub(r"<!--.*?-->|<[^>]+>", " ", html, flags=re.S)
+    return html_mod.unescape(html)
+
+
+def test_no_old_project_name_in_what_a_visitor_reads(site):
+    """The project was once called exoplan. Stored records keep that name (they are hashed and are not edited), but the
+    pages map it to SetuHQ when they draw them. Only the history note ("then called exoplan") and the technical pages,
+    which quote a stored record verbatim, may show it."""
+    technical = {"/docs/", "/evidence/runs/", "/evidence/report/"}
+    pages = _pages(site) + ["/evidence/plates/", "/evidence/report/", "/candidates/case-file/"]
+    for p in pages:
+        if p in technical or not (site / p.strip("/") / "index.html").exists():  # the stand-alone pages: built by setuhq site
+            continue
+        text = _visible_text((site / p.strip("/") / "index.html").read_text()).replace(PRE_FIX_NOTE, "")
+        old = [m for m in re.findall(r".{0,40}\bexoplan\b.{0,20}", text, re.I) if "then called exoplan" not in m.lower()]
+        assert not old, (p, old[:3])
+    # The app's views, drawn into every page by the script, are held to the same rule outside the Docs section.
+    views = next(site.glob("assets/views-*.html")).read_text()
+    views = re.sub(r'<section class="route" id="route-(docs|runs)".*?</section>\s*(?=<section class="route"|$)', "", views, flags=re.S)
+    old = [m for m in re.findall(r".{0,40}\bexoplan\b.{0,20}", _visible_text(views).replace(PRE_FIX_NOTE, ""), re.I)
+           if "then called exoplan" not in m.lower()]
+    assert not old, old[:3]
+
+
+def test_public_name_maps_the_old_name():
+    from setuhq.names import public_name, public_text
+    assert public_name("exoplan") == public_name(" Exoplan ") == "SetuHQ" and public_name("ada") == "ada"
+    assert "exoplan" not in public_text("exoplan 0.4 (src/exoplan/search.py)").lower()
+    assert public_text("printed by 'exoplan calibrate'") == "printed by 'setuhq calibrate'"
+
+
+def test_every_catalogue_planet_and_star_gets_a_small_page(site, tmp_path):
+    """setuhq.stubs, run at deploy time on a copy of the site: a page for every planet and star without one."""
+    for rel in ("assets/stub-template.html", "assets/data/catalogue.json"):
+        (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(site / rel, tmp_path / rel)
+    (tmp_path / "planets" / "pi-men-c").mkdir(parents=True)
+    (tmp_path / "planets" / "pi-men-c" / "index.html").write_text("pre-rendered")
+    r = write_stubs(tmp_path)
+    cat = json.loads((tmp_path / "assets/data/catalogue.json").read_text())
+    assert r["planets"] == len(cat["planets"]["name"]) - 1 and r["stars"] > 1000
+    assert (tmp_path / "planets" / "pi-men-c" / "index.html").read_text() == "pre-rendered"  # a real page wins
+    assert r["bytes_max"] < 8_000
+    i = cat["planets"]["slug"].index("kepler-22-b")
+    page = (tmp_path / "planets" / "kepler-22-b" / "index.html").read_text()
+    name = cat["planets"]["name"][i]
+    assert f"<title>{name} · Planets · SetuHQ</title>" in page and f'<link rel="canonical" href="{brand.SITE_URL}/planets/kepler-22-b/">' in page
+    assert re.search(rf"<h1[^>]*>{re.escape(name)}</h1>", page) and "{{" not in page
+    assert 'data-route="planet"' in page or "data-chrome" in page
+    star = (tmp_path / "stars" / "kepler-22" / "index.html").read_text()
+    assert "<title>Kepler-22 · Stars · SetuHQ</title>" in star and "known planet" in star
+    index = (tmp_path / "sitemap.xml").read_text()
+    for f in ("sitemap-pages.xml", "sitemap-planets-1.xml", "sitemap-stars-1.xml"):
+        assert f"{brand.SITE_URL}/{f}" in index
+    assert f"<loc>{brand.SITE_URL}/planets/kepler-22-b/</loc>" in (tmp_path / "sitemap-planets-1.xml").read_text()
+    assert "/planets/pi-men-c/" not in (tmp_path / "sitemap-planets-1.xml").read_text()

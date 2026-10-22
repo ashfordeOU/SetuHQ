@@ -49,7 +49,10 @@ def test_every_figure_comes_from_the_committed_catalogue(pi_men_app):
     assert "null" not in d["counts"] and "vs" not in d and "sky" not in d
     assert json.loads((pi_men_app.parent / "assets/data/variables.json").read_text()) == CAT
     assert "entries" not in d and "coverage" not in d
-    over = _route(page, "overview")
+    # The home page says it in one sentence and links here; the counts and the null comparison live on this page.
+    home = _route(page, "overview")
+    assert '<p class="sweepline">We have searched ' in home and "null " not in home
+    over = _route(page, "variables")
     c = CAT["counts"]
     for n, label in ((c["stars_searched"], "stars searched"), (c["star_sectors_searched"], "star-sectors"),
                      (c["dips_reviewed"], "dips reviewed"), (c["entries"], "catalogue entries")):

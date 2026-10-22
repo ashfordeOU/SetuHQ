@@ -16,6 +16,7 @@ import shutil
 from pathlib import Path
 
 from setuhq import brand
+from setuhq.names import public_text
 
 STYLE = """
 :root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#15803d;--bad:#dc2626;--warn:#b45309;--radius:14px}
@@ -207,8 +208,8 @@ def build_report(
         "provenance": "Provenance",
     }
     nav = "".join(f"<a href='#{k}'>{v}</a>" for k, v in sections.items())
-    validation_html = _md_tables(Path(validation_md).read_text()) if validation_md else "<p class='note'>No validation run attached.</p>"
-    benchmark_html = _md_tables(Path(benchmark_md).read_text()) if benchmark_md else "<p class='note'>No benchmark attached.</p>"
+    validation_html = _md_tables(public_text(Path(validation_md).read_text())) if validation_md else "<p class='note'>No validation run attached.</p>"
+    benchmark_html = _md_tables(public_text(Path(benchmark_md).read_text())) if benchmark_md else "<p class='note'>No benchmark attached.</p>"
     packages = " · ".join(f"{k} {v}" for k, v in manifest.get("packages", {}).items())
     reviewers = "".join(
         f"<tr><td>{html.escape(r['id'])}</td><td>{html.escape(r['kind'])}</td><td>{r['weight']:.3f}</td></tr>"

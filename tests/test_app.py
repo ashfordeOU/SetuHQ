@@ -128,7 +128,7 @@ def test_five_sections_and_every_view_exist(run_dir, catalog, tmp_path):
         assert f'data-nav="{sid}">{label}</a>' in nav
     assert "#/" not in nav
     # Every view of the app has its section and its heading, and belongs to one section of the top bar.
-    views = [r for r in ROUTE_META if r != "notfound"]
+    views = [r for r in ROUTE_META if r != "notfound" and not ROUTE_META[r].get("page")]
     for sid in views:
         assert f'id="route-{sid}"' in page
         assert re.search(rf'<h1 [^>]*id="h-{sid}" tabindex="-1">', page), sid
@@ -341,7 +341,7 @@ def test_overview_hero_states_the_argument_from_stored_values(run_dir, catalog, 
     assert "does not say whether" in hero["archive"]
     assert "Stored error, verbatim: " + NO_STORED_CROSSMATCH in hero["archive"] and "unreachable" not in hero["archive"]
     # Windows are lettered in time order and carry their outcome; the curve is the stored flux in ppm.
-    assert [w["letter"] for w in hero["windows"]][:3] == ["A", "B", "C"][:len(hero["windows"])]
+    assert [w["letter"] for w in hero["windows"]][:3] == ["1", "2", "3"][:len(hero["windows"])]
     assert [w["t_start"] for w in hero["windows"]] == sorted(w["t_start"] for w in hero["windows"])
     assert sum(len(s["t"]) for s in hero["subjects"]) == hero["n_points"]
     subj = hero["subjects"][0]
@@ -428,8 +428,8 @@ def test_feed_is_named_for_what_it_holds(run_dir, catalog, tmp_path):
     path = tmp_path / "known.json"
     path.write_text(json.dumps(mostly_known))
     page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=path))
-    assert '<h2 id="h-feedsec">Feed</h2>' in page
-    assert "2 of them match a known TOI period" in _route(page, "explorer")
+    assert '<h2 id="h-feedsec">From the search feed: ' in page
+    assert re.search(r"2 of \d+ match a known TOI period", _route(page, "explorer"))
 
 
 def test_top_candidates_name_the_archive_match(run_dir, catalog, tmp_path):
@@ -546,7 +546,10 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
 
 def test_candidates_have_shared_note_and_copy_link(run_dir, tmp_path):
     cands = _route(site_bundle(build_app(run_dir, tmp_path / "app", title="t")), "explorer")
-    assert 'id="copylayout"' in cands and "Copy link to this view" in cands
+    # One "Copy link to this view" (the page's own, beside the breadcrumbs); the card controls wait behind Customise.
+    assert 'id="copylayout"' not in cands and "Copy link to this view" not in cands
+    assert '<button class="btn" id="customise" type="button" aria-pressed="false" aria-controls="widgets layouttools">Customise</button>' in cands
+    assert '<div class="layoutbar" id="layouttools" role="group" aria-label="Arrange the cards" hidden>' in cands
     assert 'id="sharednote" hidden>This is a shared view, shown for this visit only.' in cands
 
 

@@ -160,7 +160,7 @@ def test_archived_report_has_icon_44px_nav_and_wrapped_tables(run_dir, tmp_path)
         assert "class='scroll'" in page[max(0, m.start() - 120):m.start()], page[m.start() - 120:m.start()]
     from setuhq.app import SUBNAV
 
-    assert ("Run report", "/evidence/report/", []) in SUBNAV["evidence"]
+    assert ("Run report", "/evidence/report/", ["report"]) in SUBNAV["evidence"]  # marked current on its page
 
 
 def test_theme_control_is_an_icon_named_for_screen_readers():

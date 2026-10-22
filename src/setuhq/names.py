@@ -33,6 +33,25 @@ _PREFIXES = {"sentinel": ("claude-", "sentinel-", "gpt-", "openai-", "gemini-", 
              "probe": ("volunteer-", "sim-", "probe-")}
 
 
+# SetuHQ was called exoplan before its public release, and records stored then (sweep credits, run notes) say so.
+# Pages show the current name; the records are left as stored (they are hashed).
+LEGACY_NAME = "exoplan"
+
+
+def public_name(name: str) -> str:
+    """A contributor or tool name as a page shows it: the old project name becomes SetuHQ."""
+    return "SetuHQ" if str(name).strip().lower() == LEGACY_NAME else str(name)
+
+
+def public_text(text: str) -> str:
+    """Stored prose (a validation note) as a page shows it: the old name and its source paths read as today's."""
+    import re
+
+    text = text.replace("src/exoplan/", "src/setuhq/")
+    text = re.sub(r"(['`])exoplan (?=[a-z])", r"\1setuhq ", text)  # a quoted command: 'exoplan calibrate'
+    return re.sub(r"\bexoplan\b", "SetuHQ", text)
+
+
 def provider_label(kind: str | None) -> str | None:
     """'OpenAI' for an openai Sentinel, 'Claude (Claude Code CLI)' for claude_code; None for a Probe."""
     return PROVIDER_BY_KIND.get(kind or "")

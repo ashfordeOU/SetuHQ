@@ -53,7 +53,10 @@ def test_one_caption_per_candidate_each_unconfirmed(run_dir, catalog, tmp_path):
     for cid in ids:
         mine = [c for c in caps if cid in c]
         assert len(mine) == 1, cid
-        assert "unconfirmed" in mine[0]
+        assert '<span class="word cand">candidate</span>' in mine[0]
+    # "candidate, unconfirmed" once in the lede, not on every caption.
+    assert '<span class="hedge">Candidate, unconfirmed.</span>' in page
+    assert not any("unconfirmed" in c for c in caps)
     # One plate per star: the run's star and the two feed stars.
     assert page.count('<article class="plate"') == 3
     assert "<script" not in page  # one self-contained file, plain SVG
@@ -72,7 +75,7 @@ def test_run_captions_state_stored_values(run_dir, tmp_path):
         assert f"Marked by {r['n_reviewers']} of 2 reviewers" in cap
         if r.get("period_days"):
             assert f"Lies on a {float(r['period_days']):.3f}-day BLS period" in cap
-        assert cap.endswith("Candidate, unconfirmed.")
+        assert "unconfirmed" not in cap  # said once, in the lede
     # Each subject of the star is drawn whole, with a folded panel where it has a stored period.
     assert star["subjects"] and all(len(s["time"]) == len(s["flux"]) for s in star["subjects"])
 
@@ -81,7 +84,7 @@ def test_feed_caption_marks_archive_status_with_the_no_detection_statement():
     known = {"t_center": 10.0, "time_unit": "BTJD", "depth_ppm": 500, "duration_hours": 2, "snr": 8, "n_reviewers": 3,
              "period_days": 2.5, "n_transits": 4, "status": "known_toi"}
     cap = feed_caption(known)
-    assert "period matches a known TOI" in cap and NO_DETECTION in cap and cap.endswith("Candidate, unconfirmed.")
+    assert "period matches a known TOI" in cap and NO_DETECTION in cap and cap.endswith(".")
     assert NO_DETECTION not in feed_caption(dict(known, status="new_candidate"))
 
 

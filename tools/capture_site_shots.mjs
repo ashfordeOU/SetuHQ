@@ -71,7 +71,7 @@ const SHOTS = [
     alt: "Catalogue: all 8,376 exoplanet.eu records in a sortable, filterable table with text search and CSV export, each row linking to the planet's own page." },
   { view: "planet", route: "/planets/pi-men-c/", anchor: "#route-planet",
     alt: "A planet page, pi Men c (transit, discovered 2018, super-Earth): the star and planet drawn to scale from stored values (orbit not to scale), the transit light curve from stored values with SetuHQ's own stored points, and the stored parameters from exoplanet.eu with their bounds." },
-  { view: "transit", route: "/candidates/tess-fa3483ce6f83-000/", anchor: "#route-transit",
+  { view: "transit", route: "/candidates/pi-men/dip-2/", anchor: "#route-transit",
     alt: "Transit case for the dip at BTJD 1331.77 on pi Men c: 241 ppm, 2.46 hours, SNR 16.0, a candidate, unconfirmed. The seven dips of the run as tabs, the transit played back from stored values, the panel score of 1.00 with the reason (its period matches pi Men c: a known planet recovered, not a discovery) and each reviewer's stored marks, Probes and Sentinels." },
   { view: "methods-rv", route: "/how-it-works/radial-velocity/", anchor: '#mx-rv figure[data-vis="wobble"]', heading: true,
     alt: "Methods, chapter 4 of 15, Radial velocity: 51 Peg b and its star orbiting their shared centre of mass, with the radial-velocity curve (K = 56.7 m/s from m sin i; stored 55.77 m/s) and the star's spectral lines shifting; labelled a model from stored values, the star's motion exaggerated 1,000 times." },

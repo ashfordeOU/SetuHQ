@@ -58,6 +58,19 @@ LEGACY_PAGES = {"/app/": "/", "/docket/": "/candidates/case-file/", "/plate/": "
                 "/report/": "/evidence/report/", "/dashboard/": "/candidates/", "/discoveries/": "/candidates/"}
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,119}$")
 DIP_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$")
+# A dip's readable address, "<star>/dip-<n>" (/candidates/pi-men/dip-2/), by its stored candidate id. The build
+# sets it from the run (app.app_data); an id it does not know keeps its own id as the address.
+DIP_SLUGS: dict[str, str] = {}
+
+
+def set_dip_slugs(slugs: dict[str, str]) -> None:
+    DIP_SLUGS.clear()
+    DIP_SLUGS.update(slugs)
+
+
+def _dip_id(star: str, dip: str) -> str | None:
+    want = f"{star}/{dip}"
+    return next((i for i, s in DIP_SLUGS.items() if s == want), None)
 
 
 def url_for(route: str, params: dict | None = None, *, keep_query: bool = True) -> str:
@@ -69,7 +82,7 @@ def url_for(route: str, params: dict | None = None, *, keep_query: bool = True) 
     ident = params.pop(key, None) if key else None
     section = params.pop("section", None) if route == "candidates" else None
     if route in ("transit", "candidates"):
-        path = "/candidates/" + (quote(str(ident), safe="._-") + "/" if ident else "")
+        path = "/candidates/" + ((DIP_SLUGS.get(str(ident)) or quote(str(ident), safe="._-")) + "/" if ident else "")
         path += "case-file/" if route == "candidates" and ident else ""
         if route == "candidates" and not ident:
             path = "/candidates/case-file/"
@@ -115,11 +128,12 @@ def parse_path(path: str, query: str = "") -> dict | None:
         return {"route": "methods", "params": {**params, "ch": ch}} if ch else None
     if len(parts) == 2 and parts[0] in ("planets", "stars") and SLUG_RE.match(parts[1]):
         return {"route": "planet" if parts[0] == "planets" else "star", "params": {**params, "id": parts[1]}}
-    if parts[:1] == ["candidates"] and len(parts) in (2, 3) and DIP_RE.match(parts[1]) and parts[1] != "case-file":
-        if len(parts) == 2:
-            return {"route": "transit", "params": {**params, "dip": parts[1]}}
-        if parts[2] == "case-file":
-            return {"route": "candidates", "params": {**params, "dip": parts[1]}}
+    if parts[:1] == ["candidates"] and len(parts) in (3, 4) and SLUG_RE.match(parts[1]) and re.match(r"^dip-\d{1,4}$", parts[2]):
+        dip = _dip_id(parts[1], parts[2]) or f"{parts[1]}/{parts[2]}"
+        if len(parts) == 3:
+            return {"route": "transit", "params": {**params, "dip": dip}}
+        if parts[3] == "case-file":
+            return {"route": "candidates", "params": {**params, "dip": dip}}
     return None
 
 
@@ -141,7 +155,7 @@ def legacy_target(path: str, hash_: str = "", lead: str | None = None) -> str | 
 def route_table(lead: str | None = None) -> dict:
     """The tables the page's copy of these functions reads (``lead``: the run's lead dip, for old links that named none)."""
     return {"paths": ROUTE_PATHS, "identity": IDENTITY, "chapters": CHAPTER_SLUGS, "aliases": ALIASES,
-            "legacy": LEGACY_PAGES, "lead": lead}
+            "legacy": LEGACY_PAGES, "lead": lead, "dips": dict(DIP_SLUGS)}
 
 
 # The page's twin of url_for, from_hash, parse_path and legacy_target. It expects `RT`, the route table.
@@ -153,7 +167,8 @@ function rtUrl(route, params, keepQuery){
   if (key){ ident = params[key] || null; delete params[key]; }
   if (route === 'candidates'){ section = params.section || null; delete params.section; }
   if (route === 'transit' || route === 'candidates'){
-    path = ident ? '/candidates/' + encodeURIComponent(ident) + '/' + (route === 'candidates' ? 'case-file/' : '') : (route === 'candidates' ? '/candidates/case-file/' : '/candidates/');
+    const slug = ident ? ((RT.dips || {})[ident] || encodeURIComponent(ident)) : null;
+    path = slug ? '/candidates/' + slug + '/' + (route === 'candidates' ? 'case-file/' : '') : (route === 'candidates' ? '/candidates/case-file/' : '/candidates/');
   } else if (route === 'planet' || route === 'star'){
     path = (route === 'planet' ? '/planets/' : '/stars/') + (ident ? ident + '/' : '');
   } else if (route === 'methods'){
@@ -185,10 +200,10 @@ function rtParse(pathname, search){
   }
   if (parts.length === 2 && (parts[0] === 'planets' || parts[0] === 'stars') && /^[a-z0-9][a-z0-9-]{0,119}$/.test(parts[1]))
     return {route: parts[0] === 'planets' ? 'planet' : 'star', params: Object.assign(params, {id: parts[1]})};
-  if (parts[0] === 'candidates' && (parts.length === 2 || parts.length === 3) && parts[1] !== 'case-file' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/.test(decodeURIComponent(parts[1]))){
-    const dip = decodeURIComponent(parts[1]);
-    if (parts.length === 2) return {route: 'transit', params: Object.assign(params, {dip})};
-    if (parts[2] === 'case-file') return {route: 'candidates', params: Object.assign(params, {dip})};
+  if (parts[0] === 'candidates' && (parts.length === 3 || parts.length === 4) && /^[a-z0-9][a-z0-9-]{0,119}$/.test(parts[1]) && /^dip-\d{1,4}$/.test(parts[2])){
+    const want = parts[1] + '/' + parts[2], dip = Object.keys(RT.dips || {}).find(i => RT.dips[i] === want) || want;
+    if (parts.length === 3) return {route: 'transit', params: Object.assign(params, {dip})};
+    if (parts[3] === 'case-file') return {route: 'candidates', params: Object.assign(params, {dip})};
   }
   return null;
 }

@@ -117,7 +117,9 @@ body[data-route="overview"] main{padding-top:8px}
 .route>header.launch .sub{margin:16px auto 0}
 .launch .ctas{margin-top:24px}
 .planetfig{margin:28px 0 0;background:transparent;border-radius:0;overflow:visible}
-.planetfig svg{border-radius:28px;border:1px solid rgba(255,255,255,.06)}
+.planetfig svg{border-radius:28px;border:1px solid rgba(255,255,255,.06);height:clamp(140px,17vw,240px)!important}
+.sweepline{margin:0;font-size:17px;line-height:1.5;color:var(--ink-2);max-width:72ch}
+.sweepline a{white-space:nowrap}
 .planetfig figcaption{position:static;margin:8px 4px 0;font-size:12px;color:var(--ink-3);text-align:left}
 .proof{margin:0 auto}
 .dohere{display:grid;gap:14px}
@@ -128,6 +130,28 @@ body[data-route="overview"] main{padding-top:8px}
 .docard b{font-size:17px;font-weight:600;letter-spacing:-.02em}
 .docard span{font-size:13.5px;line-height:1.45;color:var(--ink-2)}
 .docard i{position:absolute;right:16px;top:16px;font-style:normal;font-size:20px;color:var(--cyan)}
+/* Candidates: the dips a visitor can open, the cards behind Customise, the feed's compact table */
+.rundiplist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.rundiplist li{display:flex;align-items:stretch;gap:8px}
+.rundip{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:10px 14px;border:1px solid var(--line);border-radius:14px;color:var(--ink);text-decoration:none;background:var(--panel-2)}
+.rundip:hover{border-color:var(--line-3);color:var(--ink)}
+.rundip b{font-weight:600;font-size:15px}
+.rundip .muted{grid-column:1;font-size:13px}
+.rundip .tag{grid-row:1/3;grid-column:2}
+.rundipcf{display:inline-flex;align-items:center;padding:0 14px;border:1px solid var(--line);border-radius:14px;text-decoration:none;font-size:13px;white-space:nowrap}
+.tag.cand{color:var(--yellow);border-color:color-mix(in oklab,var(--yellow) 35%,transparent);background:color-mix(in oklab,var(--yellow) 8%,transparent)}
+.secthead #customise{margin-left:auto}
+#widgets:not(.customising) .wctl{display:none}
+#layouttools[hidden]{display:none}
+.feedsec{display:grid;gap:18px}
+.exfilters{align-items:flex-start}
+.exfilters>div{justify-content:flex-start}
+.scatter.astable{padding-bottom:0}
+table.excompact{font:13px var(--sans);color:var(--ink)}
+table.excompact th,table.excompact td{border-bottom:1px solid var(--line)}
+table.excompact th button{display:inline-flex;align-items:center;gap:8px;min-height:44px;background:none;border:0;padding:0;color:var(--ink);font:500 14px var(--sans);cursor:pointer;text-transform:none;letter-spacing:0}
+table.excompact th button i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-underline-offset:4px}
 /* prose pages: Docs and Page not found */
 .prose{display:grid;gap:10px;max-width:880px}
 .prose h2{font-size:22px;margin-top:22px}
@@ -161,6 +185,11 @@ body[data-route="overview"] main{padding-top:8px}
   .pagebar{padding:10px 16px 0}
   .pbin{gap:8px}
   body[data-route="candidates"] #route-candidates>.provnote{margin:8px 16px;flex:none}
+  main a.rundip{display:grid;padding:10px 14px;line-height:1.4}
+  main a.rundipcf{display:inline-flex;padding:0 12px}
+  .rundiplist li{flex-direction:column}
+  .rundipcf{min-height:44px;justify-content:center}
+  .scatter.astable{overflow-x:auto}
   main .provnote a{display:inline;min-height:0;min-width:0;padding:0;line-height:inherit}
   main{padding-top:16px}
   .subnav{gap:6px}
@@ -201,7 +230,7 @@ function openMenu(){
   m.hidden = false; b.setAttribute('aria-expanded', 'true'); b.setAttribute('aria-label', 'Close the menu');
   const first = m.querySelector('a'); if (first) first.focus();
 }
-(function(){
+function initShell(){
   for (const b of document.querySelectorAll('[data-theme-toggle]')) b.addEventListener('click', () => applyTheme(SETUHQ_THEMES[(SETUHQ_THEMES.indexOf(currentTheme()) + 1) % SETUHQ_THEMES.length], true));
   applyTheme(currentTheme(), false);
   const mb = document.getElementById('menubtn'), m = document.getElementById('menu');
@@ -220,6 +249,8 @@ function openMenu(){
     m.addEventListener('click', e => { if (e.target.closest('a')) setTimeout(() => closeMenu(false), 0); });
     window.addEventListener('resize', () => { if (window.innerWidth >= 900) closeMenu(false); });
   }
+}
+function bootApp(){
   // The app: its data and every view's markup are two shared files (cached across pages). The page's own view
   // is already here, rendered at build time; the others join it hidden, so a link can change the view in place.
   const b = document.body.dataset;
@@ -246,6 +277,18 @@ function openMenu(){
     const n = document.getElementById('bootnote'); if (n) n.hidden = false;
     console.warn('SetuHQ: the interactive views could not load', err);
   });
+}
+(function(){
+  // A small page (a catalogue planet or star written at deploy time, setuhq.stubs) carries no header or footer of
+  // its own: the shared chrome file (cached like the rest) is put in place first.
+  const c = document.body.dataset.chrome;
+  if (!c){ initShell(); bootApp(); return; }
+  fetch(c).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(t => {
+    const tpl = document.createElement('template'); tpl.innerHTML = t;
+    const top = tpl.content.querySelector('[data-chrome-part="top"]'), bottom = tpl.content.querySelector('[data-chrome-part="bottom"]');
+    if (top) document.getElementById('chrome-top').replaceWith(...top.childNodes);
+    if (bottom) document.getElementById('chrome-bottom').replaceWith(...bottom.childNodes);
+  }).catch(err => console.warn('SetuHQ: the header could not load', err)).then(() => { initShell(); bootApp(); });
 })();
 """
 
@@ -339,7 +382,7 @@ def _crumbs(route: str, name: str | None, params: dict, lead: str | None) -> str
     if route == "methods" and params.get("ch") and params["ch"] != CHAPTERS[0][0]:
         chain.append(("How it works", "/how-it-works/"))
     if route == "candidates" and params.get("dip"):
-        chain.append((params["dip"], url_for("transit", {"dip": params["dip"]})))
+        chain.append((name_of_dip(params["dip"]), url_for("transit", {"dip": params["dip"]})))
     if not chain:
         return '<nav class="crumbs" id="crumbs" aria-label="Breadcrumb" hidden></nav>'
     here = "Case file" if route == "candidates" else (name or m.get("label", ""))
@@ -356,6 +399,13 @@ def _subnav(route: str, lead: str | None) -> str:
     links = "".join(f'<a href="{html.escape(from_hash(h, lead=lead) if h.startswith("#/") else h)}"'
                     f'{cur if route in rs else ""}>{html.escape(label)}</a>' for label, h, rs in items)
     return f'<nav class="subnav" id="subnav" aria-label="In this section">{links}</nav>'
+
+
+DIP_LABELS: dict[str, str] = {}
+
+
+def name_of_dip(dip: str) -> str:
+    return DIP_LABELS.get(dip, dip)
 
 
 VIEW_STATE_ROUTES = ("explorer", "sky", "galaxy", "catalogue", "variables")
@@ -402,6 +452,23 @@ def page(*, route: str, title: str, description: str, path: str | None, body: st
 # Pages of their own: Docs, Page not found, the forwarding pages
 # ---------------------------------------------------------------------------------------------------------
 
+def python_floor() -> str:
+    """The oldest Python SetuHQ supports, as pyproject.toml's requires-python states it (e.g. "3.11")."""
+    spec = ""
+    pyproject = Path(__file__).resolve().parents[2] / "pyproject.toml"
+    if pyproject.is_file():
+        m = re.search(r'^requires-python\s*=\s*"([^"]*)"', pyproject.read_text(), re.M)
+        spec = m.group(1) if m else ""
+    if not spec:
+        try:
+            from importlib.metadata import metadata
+            spec = metadata("setuhq").get("Requires-Python") or ""
+        except Exception:  # not installed: the checkout's floor below
+            spec = ""
+    m = re.search(r">=\s*(\d+\.\d+)", spec)
+    return m.group(1) if m else "3.11"
+
+
 def docs_section(data: dict) -> str:
     """The Docs page: get started, contribute, connect an assistant, the data, and the technical details."""
     e = html.escape
@@ -421,7 +488,7 @@ def docs_section(data: dict) -> str:
       </div>
       <div class="prose">
         <h2 id="start">Install and first run</h2>
-        <p>SetuHQ needs Python 3.10 or newer.</p>
+        <p>SetuHQ needs Python {python_floor()} or newer.</p>
         <pre tabindex="0"><code>pip install "setuhq[tess] @ git+{REPO_URL}"
 setuhq run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
 setuhq site runs/tess-pi-men-s1 --out site     # this website, from your run</code></pre>
@@ -445,7 +512,7 @@ setuhq-mcp --list-tools</code></pre>
         <p>SetuHQ's own data, benchmark, leaderboard and paper are under CC BY 4.0; the code is under the AGPL-3.0 (a commercial licence is available). Cite it with <a rel="noopener" href="{REPO_URL}/blob/main/CITATION.cff">CITATION.cff</a>.</p>
         <h2 id="provenance">Technical details: where the figures come from</h2>
         {prov}
-        <p>Every number on the candidate and evidence pages is read from stored files: the run directory, the discovery catalogue and the calibrated reviewer weights. <a href="/evidence/runs/">Runs and configuration</a> lists the files, the configuration and its hash.</p>
+        <p>Every number on the candidate and evidence pages is read from stored files: the run directory, the search catalogue and the calibrated reviewer weights. <a href="/evidence/runs/">Runs and configuration</a> lists the files, the configuration and its hash.</p>
       </div>"""
 
 
@@ -475,21 +542,18 @@ def forward_page(target: str, title: str, lead: str | None = None) -> str:
 # Server-rendered views that the app also draws: a dip, a planet, a star, a chapter
 # ---------------------------------------------------------------------------------------------------------
 
-def _dip_header(section: str, d: dict) -> tuple[str, str]:
+def _dip_header(section: str, d: dict, label: str) -> tuple[str, str]:
     """The Transit view with its header filled in for one dip, as the app draws it (the app redraws it, with the
-    playback). Returns the section and the heading's text."""
+    playback). Returns the section and the heading's text: the dip's plain name, "pi Men, dip 2 (6.27 d)"."""
     e = html.escape
-    when = f"{d['time_unit']} {d['t']:.2f}"
-    h1 = f"{when}, dip {d['letter']}, {d['status_label']}"
     out = section.replace('<p class="eyebrow" id="txkicker"></p>', f'<p class="eyebrow" id="txkicker">{e(d["status_label"])}</p>', 1)
-    out = out.replace('<h1 class="lead-h" id="h-transit" tabindex="-1"></h1>',
-                      f'<h1 class="lead-h" id="h-transit" tabindex="-1">{e(when)}<span class="sr">, dip {e(d["letter"])}, {e(d["status_label"])}</span></h1>', 1)
-    out = out.replace('<p id="txsub"></p>', f'<p id="txsub">{d["depth_ppm"]:,.0f} ppm · {d["duration_hours"]:.2f} hours · SNR {d["snr"]:.1f} · {e(UNCONFIRMED)}</p>', 1)
+    out = out.replace('<h1 class="lead-h" id="h-transit" tabindex="-1"></h1>', f'<h1 class="lead-h" id="h-transit" tabindex="-1">{e(label)}</h1>', 1)
+    out = out.replace('<p id="txsub"></p>', f'<p id="txsub">{e(d["time_unit"])} {d["t"]:.2f} · {d["depth_ppm"]:,.0f} ppm · {d["duration_hours"]:.2f} hours · SNR {d["snr"]:.1f} · {e(UNCONFIRMED)}</p>', 1)
     out = out.replace('<p class="casefile" id="txcase"></p>', f'<p class="casefile" id="txcase"><a class="btn primary" href="{e(url_for("candidates", {"dip": d["id"]}))}">Open the full case file ›</a></p>', 1)
     if d.get("verdict"):
         out = out.replace('<section class="glass scorecard" id="txscore" aria-label="Panel score and verdict"></section>',
                           f'<section class="glass scorecard" id="txscore" aria-label="Panel score and verdict"><p>{e(d["verdict"])}</p></section>', 1)
-    return out, h1
+    return out, label
 
 
 def _title(route: str, name: str | None = None) -> str:
@@ -545,7 +609,12 @@ def _chapter_section(section: str, cid: str) -> str:
     marker = '<article class="mxch" id="mx-'
     head, *chapters = section.split(marker)
     keep = next(c for c in chapters if c.startswith(cid + '"')).replace(" hidden>", ">", 1)
-    return head.replace(f'data-ch="{cid}">', f'data-ch="{cid}" aria-current="step">', 1) + marker + keep
+    head = head.replace(f'data-ch="{cid}">', f'data-ch="{cid}" aria-current="step">', 1)
+    if cid != CHAPTERS[0][0]:  # a chapter's page opens with its own title, not the section's introduction
+        title = dict(CHAPTERS)[cid]
+        head = head.replace('<header class="headrow">', '<header class="headrow deep">', 1)
+        head = re.sub(r'(<h1 class="lead-h" id="h-methods" tabindex="-1">).*?(</h1>)', lambda m: m.group(1) + html.escape(title) + m.group(2), head, count=1, flags=re.S)
+    return head + marker + keep
 
 
 def _named_objects(data: dict) -> list[str]:
@@ -600,6 +669,8 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     out.mkdir(parents=True, exist_ok=True)
     (out / ".nojekyll").write_text("")
     lead = data["routes"].get("lead")
+    DIP_LABELS.clear()
+    DIP_LABELS.update({i: d["label"] for i, d in data["dips"].items()})
     adir = out / "assets"
     (adir / "data").mkdir(parents=True, exist_ok=True)
     (adir / "frame").mkdir(parents=True, exist_ok=True)
@@ -617,10 +688,14 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     css = APP_CSS + brand.LOGO_CSS + STARFIELD_CSS + SITE_CSS
     routes_html = "".join(f'<section class="route" id="route-{k}" data-route="{k}" aria-labelledby="h-{k}" hidden>{v}</section>'
                           for k, v in sections.items())
+    chrome = (f'<div data-chrome-part="top">{_topbar(lead)}\n{_pagebar("planet", None, {}, lead)}</div>'
+              f'<div data-chrome-part="bottom">{_footer_html(lead)}<div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>'
+              f'{SEARCH_DIALOG}{LEARN_BAR}<template id="mxsystpl">{system_stage()}</template></div>')
+    chrome = clean_links(chrome, lead)
     starfield = STARFIELD.format(dust=data["deco"]["dust"], bright=data["deco"]["bright"])
-    for key, name, text in (("css", "site", css), ("js", "site", SHELL_JS), ("app", "app", app_js), ("data", "data/app", payload),
-                            ("routes", "views", routes_html), ("starfield", "starfield", starfield)):
-        ext = {"css": "css", "js": "js", "app": "js", "data": "json", "routes": "html", "starfield": "svg"}[key]
+    for key, name, text in (("shell", "shell", shell_css()), ("css", "site", css), ("js", "site", SHELL_JS), ("app", "app", app_js), ("data", "data/app", payload),
+                            ("routes", "views", routes_html), ("starfield", "starfield", starfield), ("chrome", "chrome", chrome)):
+        ext = {"shell": "css", "css": "css", "js": "js", "app": "js", "data": "json", "routes": "html", "starfield": "svg", "chrome": "html"}[key]
         rel = f"assets/{name}-{_sha(text)}.{ext}"
         (out / rel).write_text(text)
         assets[key] = "/" + rel
@@ -665,10 +740,10 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     view("planets", _title("planets"), "What each candidate's depth would imply if it were a planet: the planet-to-star radius ratio, and why no planet size is stated.", "/candidates/radius-ratios/", name="Radius ratios")
     target = hero.get("target") or "the run's star"
     for d in data["story"]["dips"]:
-        sec, h1 = _dip_header(sections["transit"], d)
+        sec, h1 = _dip_header(sections["transit"], d, data["dips"][d["id"]]["label"])
         view("transit", _title("transit", h1), f"{h1}. The transit played back from stored values, who on the panel marked it, and its vetting. A {UNCONFIRMED}.",
              url_for("transit", {"dip": d["id"]}), body=sec, name=h1, params={"dip": d["id"]})
-        view("candidates", _title("candidates", f"dip {d['letter']}"), f"Every check behind the verdict on dip {d['letter']} ({d['id']}) in {target}: the transit strip, the measurements and the verdict ledger.",
+        view("candidates", _title("candidates", data["dips"][d["id"]]["label"]), f"Every check behind the verdict on {data['dips'][d['id']]['label']}: the transit strip, the measurements and the verdict ledger.",
              url_for("candidates", {"dip": d["id"]}), name="Case file", params={"dip": d["id"]})
     for i, (cid, ctitle) in enumerate(CHAPTERS):
         path = url_for("methods", {"ch": cid})
@@ -677,7 +752,7 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
              path, body=_chapter_section(sections["methods"], cid), name=ctitle, params={"ch": cid}, partial=True)
     view("sentinels", _title("sentinels"), f"The reviewers behind every verdict, their calibration, and how the panel scores blind on real TESS Objects of Interest. {ATTRIBUTION}", "/evidence/")
     view("leaderboard", _title("leaderboard"), "Methods scored blind on the held-out half of the real-TOI benchmark, with Wilson 95% intervals.", "/evidence/leaderboard/", name="Leaderboard")
-    view("runs", _title("runs"), "Every discovery run, its errors as stored, and the configuration behind the candidate pages.", "/evidence/runs/", name="Runs")
+    view("runs", _title("runs"), "Every search run, its errors as stored, and the configuration behind the candidate pages.", "/evidence/runs/", name="Runs")
     view("docs", _title("docs"), "Install SetuHQ, search a star, contribute a sweep, connect an AI assistant over MCP, and download the data.", "/docs/")
 
     # Planet and star pages for every object the site names.
@@ -724,6 +799,9 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
                     require_crossmatch=require_crossmatch)
         build_report(run_dir, out / "evidence" / "report", title=f"{title}: {target}", validation_md=validation_md,
                      benchmark_md=benchmark_md)
+        for sub, route, label in (("evidence/plates", "plates", "Plates"), ("evidence/report", "report", "Run report")):
+            f = out / sub / "index.html"
+            f.write_text(wrap_standalone(f.read_text(), route, label, assets, lead))
         pages += ["/candidates/case-file/", "/evidence/plates/", "/evidence/report/"]
 
     # Old addresses.
@@ -734,10 +812,14 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
         d.mkdir(parents=True, exist_ok=True)
         (d / "index.html").write_text(forward_page(new, names[old], lead))
 
-    # sitemap.xml and robots.txt
+    # sitemap.xml (an index; setuhq.stubs adds the catalogue's planets and stars at deploy time) and robots.txt
     urls = "".join(f"<url><loc>{html.escape(brand.SITE_URL + p)}</loc></url>" for p in pages)
-    (out / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
-                                     f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
+    (out / "sitemap-pages.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
+                                           f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
+    (out / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+                                     f'<sitemap><loc>{brand.SITE_URL}/sitemap-pages.xml</loc></sitemap></sitemapindex>\n')
+    # The small pages for the rest of the catalogue: their template and the header and footer they borrow.
+    (out / "assets" / "stub-template.html").write_text(stub_template(assets, lead))
     (out / "robots.txt").write_text(f"User-agent: *\nDisallow: /assets/frame/\nAllow: /\n\nSitemap: {brand.SITE_URL}/sitemap.xml\n")
     (out / "assets" / "pages.json").write_text(json.dumps(sorted(set(pages)), indent=0) + "\n")
     return out / "index.html"
@@ -747,6 +829,77 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
 # work saved to disk or printed; they have a budget of their own.
 STANDALONE = ("candidates/case-file", "evidence/plates", "evidence/report")
 STANDALONE_BUDGET = 400_000
+
+
+# ---------------------------------------------------------------------------------------------------------
+# The stand-alone pages (the run report, the plates) in the site's header and footer
+# ---------------------------------------------------------------------------------------------------------
+
+def stub_template(assets: dict, lead: str | None) -> str:
+    """The page setuhq.stubs fills in for each catalogue planet and star: its own head, a heading and a line of
+    facts, and the shared files, which bring the header, the footer and the full page."""
+    return f"""<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{{{{TITLE}}}}</title>
+{brand.head("{{TITLE}}", "{{DESC}}", "{{PATH}}", prefix="/")}
+<meta name="color-scheme" content="dark light">
+<script>{THEME_HEAD_JS}</script>
+<link rel="stylesheet" href="/assets/fonts/fonts.css"><link rel="stylesheet" href="{assets['css']}">
+<script src="{assets['js']}" defer></script>
+</head>
+<body data-page="{{{{ROUTE}}}}" data-route="{{{{ROUTE}}}}" data-data="{assets['data']}" data-routes="{assets['routes']}" data-app="{assets['app']}" data-chrome="{assets['chrome']}">
+<img class="starfield" src="{assets['starfield']}" alt="" aria-hidden="true">
+<div id="chrome-top"></div>
+<main id="main"><div id="content" tabindex="-1"><section class="route" id="route-{{{{ROUTE}}}}" data-route="{{{{ROUTE}}}}" aria-labelledby="h-{{{{ROUTE}}}}" data-partial>
+<header><h1 class="lead-h" id="h-{{{{ROUTE}}}}" tabindex="-1">{{{{H1}}}}</h1><p>{{{{FACTS}}}}</p></header>
+<noscript><p>{{{{NOSCRIPT}}}} <a href="/catalogue/">The catalogue of known planets</a> · <a href="/">SetuHQ home</a></p></noscript>
+</section></div></main>
+<div id="chrome-bottom"></div>
+</body></html>
+"""
+
+
+def shell_css() -> str:
+    """The header's, menu's, page bar's and footer's styles for a page with its own stylesheet: the colour tokens
+    scoped to those parts (.shellscope), so the page's own tokens and layout are untouched."""
+    tokens = APP_CSS[:APP_CSS.index("*{box-sizing:border-box}")]
+    tokens = tokens[tokens.index(":root{color-scheme:dark;"):]
+    tokens = (tokens.replace(':root{color-scheme:dark;', '.shellscope{color-scheme:dark;', 1)
+              .replace(':root[data-theme="light"]{', ':root[data-theme="light"] .shellscope{', 1)
+              .replace(':root[data-theme="system"]{', ':root[data-theme="system"] .shellscope{', 1))
+    base = ("\n.shellscope,.shellscope *{box-sizing:border-box}"
+            ".shellscope{font:400 15px/1.5 var(--sans);letter-spacing:-.01em;color:var(--ink);-webkit-font-smoothing:antialiased}"
+            ".shellscope a{color:var(--cyan)}.shellscope :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px}"
+            ".shellscope .sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}"
+            ".shellscope .brand{display:flex;align-items:center;gap:9px;min-height:44px;color:var(--ink);text-decoration:none}"
+            ".shellscope .nav ul{list-style:none;margin:0;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}"
+            ".shellscope .nav a{display:flex;align-items:center;min-height:38px;padding:0 16px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}"
+            ".shellscope .nav a:hover{color:var(--ink)}.shellscope .nav a[aria-current=\"page\"]{background:var(--seg-bg);color:var(--seg-ink)}"
+            ".sitefoot.shellscope{margin-top:0}"
+            # The pages' own element rules (a sticky, filled <nav>, a spaced <footer>) do not reach the shell.
+            ".shellscope nav{position:static;background:transparent;border:0;z-index:auto;top:auto}"
+            ".shellscope .footnav h2{letter-spacing:0}"
+            "nav.report-nav{top:60px}\n")
+    site = "\n".join(l for l in SITE_CSS.split("\n") if not l.strip().startswith(("main{", "main ", "body[data-route")))
+    return tokens + base + brand.LOGO_CSS + site
+
+
+def wrap_standalone(page_html: str, route: str, name: str, assets: dict, lead: str | None) -> str:
+    """A page built by its own module (the report, the plates), with the site's header, breadcrumbs, section links
+    and footer, and the theme control (their stylesheets follow data-theme already). Search needs the app, so it is
+    left out; the page's own logo link goes, since the header has it."""
+    page_html = re.sub(r'<a href="/" aria-label="SetuHQ, home">.*?</a>', "", page_html, count=1, flags=re.S)
+    head = (f'<script>{THEME_HEAD_JS}</script><link rel="stylesheet" href="/assets/fonts/fonts.css">'
+            f'<link rel="stylesheet" href="{assets["shell"]}"><script src="{assets["js"]}" defer></script>')
+    top = (_topbar(lead).replace(SEARCH_BUTTON, "").replace('<header class="topbar">', '<header class="topbar shellscope">', 1)
+           .replace('<a class="skip" href="#content">Skip to content</a>\n', ""))
+    bar = _pagebar(route, name, {}, lead).replace('<div class="pagebar">', '<div class="pagebar shellscope">', 1)
+    bar = re.sub(r'<div class="pagetools">.*?</div></div></div>$', "</div></div>", bar, flags=re.S)
+    foot = _footer_html(lead).replace('<footer class="sitefoot">', '<footer class="sitefoot shellscope">', 1)
+    page_html = page_html.replace("</head>", head + "</head>", 1)
+    page_html = re.sub(r"(<body[^>]*>)", lambda m: m.group(1) + "\n" + top + "\n" + bar, page_html, count=1)
+    return page_html.replace("</body>", foot + '<div id="announce" class="sr" aria-live="polite"></div></body>', 1)
 
 
 def check_budget(out_dir: str | Path, budget: int = PAGE_BUDGET) -> list[str]:

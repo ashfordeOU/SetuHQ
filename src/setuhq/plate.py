@@ -111,6 +111,8 @@ ol.captions{list-style:none;margin:12px 0 0;padding:0;border-top:1px solid var(-
 ol.captions li{border-bottom:1px solid var(--hair);padding:7px 0;break-inside:avoid;page-break-inside:avoid}
 p.caption{margin:0;font-size:14px;line-height:1.5;hyphens:auto}
 p.caption b.fig{font-weight:600}
+.printonly{display:none}
+.word.cand{color:var(--ink)}
 .word{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.05em;border:1px solid currentColor;padding:2px 4px;margin-right:4px;white-space:nowrap;display:inline-block;vertical-align:1px}
 .archive{margin:12px 0 0;border:1px solid var(--rule);padding:8px 10px;font-size:13px;break-inside:avoid}
 .archive p{margin:0}
@@ -130,6 +132,7 @@ footer.colophon p{margin:3px 0}
   @bottom-left{content:"Candidate, unconfirmed. Stored values only.";font:8pt Georgia,serif;color:#444}
   @bottom-right{content:counter(page) " / " counter(pages);font:8pt Georgia,serif;color:#444}}
 @media print{
+  .printonly{display:inline}
   :root{--paper:#fff;--ink:#000;--rule:#999;--hair:#bbb;--muted:#333;--pt:#777;--win:#ece6d2}
   body{font-size:9.5pt;line-height:1.42;background:#fff}
   .skip,nav.toc{display:none}
@@ -228,8 +231,7 @@ def run_caption(c: dict, n_panel: int, kinds: dict[str, str], comparison: dict |
     line = (comparison or {}).get("line")
     if line:
         parts.append(f"Archive: {line}. {NO_DETECTION}")
-    parts.append(UNCONFIRMED)
-    return " ".join(parts)
+    return " ".join(parts)  # "candidate, unconfirmed" is said once in the lede; each caption carries a candidate tag
 
 
 def feed_caption(r: dict) -> str:
@@ -252,7 +254,6 @@ def feed_caption(r: dict) -> str:
         parts.append(f"Status: {status}. {NO_DETECTION}")
     else:
         parts.append(f"Status: {status}.")
-    parts.append(UNCONFIRMED)
     return " ".join(parts)
 
 
@@ -418,7 +419,7 @@ def river_svg(stars: list[dict]) -> str:
             h = (rh - 10) * math.log10(max(_num(c["snr"]) or 1.0, 1.0)) / lmax
             cls = STATUS_CLASS.get(st, "")
             out.append(f'<g><title>{_e(s["star"])} · {_e(unit)} {_f(c["t_center"], 3)} · SNR {_f(c["snr"], 1)} · '
-                       f'{_e(STATUS_WORD.get(st, st))} · candidate, unconfirmed</title>'
+                       f'{_e(STATUS_WORD.get(st, st))} · candidate</title>'
                        f'<line class="t {cls}" x1="{x:.1f}" x2="{x:.1f}" y1="{base}" y2="{base - h:.1f}"/>'
                        f'<circle class="cap {cls}" cx="{x:.1f}" cy="{base - h:.1f}" r="2.2"/></g>')
         # The statuses in words, one per line, beside the row.
@@ -624,21 +625,21 @@ def _plate(s: dict, i: int) -> str:
                    f'{_e(NO_DETECTION)}</p></div>') if s.get("crossmatch_line") else ""
     else:
         span = s.get("sector_span") or []
-        sub = (f'Discovery feed · {len(s["candidates"])} entr{"ies" if len(s["candidates"]) != 1 else "y"}'
+        sub = (f'Search feed · {len(s["candidates"])} entr{"ies" if len(s["candidates"]) != 1 else "y"}'
                + (f' · TESS sectors {span[0]} to {span[-1]}' if span else ""))
         figs.append(f'''<figure aria-labelledby="{pid}-f0">
   <div class="scroll" tabindex="0" role="region" aria-label="Time strip for {_e(s["star"])}, scrolls sideways on a narrow screen">{feed_strip_svg(s)}</div>
   {_legend(sorted({c.get("status") for c in s["candidates"]}))}
   <figcaption id="{pid}-f0"><b class="flabel">Plate {i}, panel i.</b> The catalogue's candidates for {_e(s["star"])} by mid-time; tick height is log SNR, colour and word give the status.</figcaption>
 </figure>
-<p class="nocurve">No light curve is stored for this star in this build: the discovery catalogue keeps measured values only, so there is no whole-subject curve and no folded panel.</p>''')
+<p class="nocurve">No light curve is stored for this star in this build: the search catalogue keeps measured values only, so there is no whole-subject curve and no folded panel.</p>''')
         archive = ""
-    caps = "".join(f'<li id="{pid}-{letters[c["candidate_id"]]}"><p class="caption">{_word(c.get("status"))}'
+    caps = "".join(f'<li id="{pid}-{letters[c["candidate_id"]]}"><p class="caption"><span class="word cand">candidate</span>{_word(c.get("status"))}'
                    f'<b class="fig">{i}{letters[c["candidate_id"]]}. <span class="mono">{_e(c["candidate_id"])}</span>.</b> '
                    f'{_e(c["caption"])}</p></li>' for c in s["candidates"])
     return f'''<article class="plate" id="{pid}" aria-labelledby="{pid}-h">
 <h2 class="ptitle" id="{pid}-h"><span class="num">Plate {i}</span> {_e(s["star"])}</h2>
-<p class="psub">{sub}. Every candidate on this plate: candidate, unconfirmed.</p>
+<p class="psub">{sub}.<span class="printonly"> Every candidate on this plate: candidate, unconfirmed.</span></p>
 {"".join(figs)}
 <ol class="captions" aria-label="Captions for plate {i}">{caps}</ol>
 {archive}
@@ -672,7 +673,7 @@ def plate_page(data: dict) -> str:
 <header class="mast">
   <p class="kicker"><a href="/" aria-label="SetuHQ, home">{brand.logo()}</a><span>plates</span></p>
   <h1>{title}</h1>
-  <p><span class="hedge">Candidate, unconfirmed.</span> {n} candidates on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the discovery catalogue" if cat["path"] else ""}. Every number is a stored value.</p>
+  <p><span class="hedge">Candidate, unconfirmed.</span> {n} candidates on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Every number is a stored value.</p>
   <ul class="notes">
     <li>{_e(scope)}</li>
     <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.</li>
@@ -683,15 +684,15 @@ def plate_page(data: dict) -> str:
 <nav class="toc" aria-label="Plates"><h2>Plates</h2><ol>{toc}</ol></nav>
 <section class="river" aria-labelledby="river-h">
   <h2 class="ptitle" id="river-h"><span class="num">River of time</span> the whole feed</h2>
-  <p class="psub">One row per star, a tick per candidate. Height is log SNR; colour is status, and each row lists its statuses in words. Stretches of more than {RIVER_GAP_DAYS:.0f} days with no candidate are cut, so the segments are not drawn to a common time scale: each has its own, labelled at its start and end, with its span in days (d) beneath it. A known TOI period is an archive value: {_e(NO_DETECTION)} Candidate, unconfirmed.</p>
+  <p class="psub">One row per star, a tick per candidate. Height is log SNR; colour is status, and each row lists its statuses in words. Stretches of more than {RIVER_GAP_DAYS:.0f} days with no candidate are cut, so the segments are not drawn to a common time scale: each has its own, labelled at its start and end, with its span in days (d) beneath it. A known TOI period is an archive value: {_e(NO_DETECTION)}</p>
   <div class="scroll" tabindex="0" role="region" aria-label="River of time, scrolls sideways on a narrow screen">{river_svg(stars)}</div>
   {_legend(statuses)}
 </section>
 <div id="plates">{plates}</div>
 <footer class="colophon">
   <p>Run {_e(run["name"])} ({_e(run["dir"])}), created {_e(run["created_at"])}, config sha256 {_e(run["config_sha256"][:16])}…</p>
-  <p>{f'Discovery catalogue {_e(cat["path"])}, updated {_e(cat["updated"])}, {cat["n"]} entries.' if cat["path"] else "No discovery catalogue was given to this build."}</p>
-  <p>Candidate, unconfirmed. Stored values only; nothing on this page is fitted or looked up when it is built.</p>
+  <p>{f'Search catalogue {_e(cat["path"])}, updated {_e(cat["updated"])}, {cat["n"]} entries.' if cat["path"] else "No search catalogue was given to this build."}</p>
+  <p>Stored values only; nothing on this page is fitted or looked up when it is built.</p>
 </footer>
 </main>
 </body></html>

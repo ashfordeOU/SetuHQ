@@ -44,15 +44,15 @@ from setuhq.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTA
 from setuhq.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFAULT_CATALOGUE, SEARCH_BUTTON, SEARCH_DIALOG,
                                catalogue_meta, catalogue_section, load_catalogue, mentions, planet_page, star_page, tic_names)
 from setuhq.objects import obj_link
-from setuhq.everything import (DEFAULT_SWEEP, VARIABLES_CSS, VARIABLES_JS, VARIABLES_JSON, load_sweep, overview_counter, sky_chip, sweep_payload,
+from setuhq.everything import (sweep_line, DEFAULT_SWEEP, VARIABLES_CSS, VARIABLES_JS, VARIABLES_JSON, load_sweep, overview_counter, sky_chip, sweep_payload,
                                sky_layer_svg, sweep_meta, tabs as catalogue_tabs, variables_section)
 from setuhq.learn import LEARN_BAR, LEARN_CSS, LEARN_JS, learn_card, learn_steps
 from setuhq.mission import GRIDS as MISSION_GRIDS, MISSION_CSS, MISSION_JS, PANES as MISSION_PANES, mission_section
 from setuhq.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section, system_stage, CHAPTERS, CHAPTER_PLANETS
 from setuhq.codenote import code_note
 from setuhq.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
-from setuhq.names import ATTRIBUTION, PROVIDER_BY_KIND, SENTINEL_KINDS, panel_phrase, reviewer_names, reviewer_provenance
-from setuhq.routes import ALIASES, from_hash, route_table
+from setuhq.names import ATTRIBUTION, PROVIDER_BY_KIND, public_text, SENTINEL_KINDS, panel_phrase, reviewer_names, reviewer_provenance
+from setuhq.routes import ALIASES, from_hash, route_table, set_dip_slugs
 from setuhq.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
 
 # The site's five sections, in the top bar, for its three audiences: visitors (Explore, How it works), researchers
@@ -67,7 +67,7 @@ SUBNAV = {
     "candidates": [("All candidates", "#/explorer", ["explorer"]), ("Dips", "#/transit", ["transit"]),
                    ("Case files", "#/candidates", ["candidates"]), ("Radius ratios", "#/planets", ["planets"])],
     "evidence": [("The panel", "#/sentinels", ["sentinels"]), ("Leaderboard", "#/leaderboard", ["leaderboard"]),
-                 ("Runs", "#/runs", ["runs"]), ("Run report", "/evidence/report/", []), ("Plates", "/evidence/plates/", [])],
+                 ("Runs", "#/runs", ["runs"]), ("Run report", "/evidence/report/", ["report"]), ("Plates", "/evidence/plates/", ["plates"])],
 }
 # Every view: its name, its section, its breadcrumbs (deep pages only: a list of (label, address)), and its title.
 # A title template's {name} is the page's own heading (a planet, a star, a dip).
@@ -88,6 +88,9 @@ ROUTE_META = {
     "sentinels": {"label": "The panel", "nav": "evidence", "title": "Evidence: the panel, measured · SetuHQ"},
     "leaderboard": {"label": "Leaderboard", "nav": "evidence", "title": "Leaderboard · Evidence · SetuHQ", "crumbs": [("Evidence", "#/sentinels")]},
     "runs": {"label": "Runs", "nav": "evidence", "title": "Runs · Evidence · SetuHQ", "crumbs": [("Evidence", "#/sentinels")]},
+    # Pages of their own (built by report.py and plate.py), in the site's header: not views of the app.
+    "report": {"label": "Run report", "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
+    "plates": {"label": "Plates", "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
     "docs": {"label": "Docs", "nav": "docs", "title": "Docs: get started with SetuHQ · SetuHQ"},
     "notfound": {"label": "Page not found", "nav": None, "title": "Page not found · SetuHQ"},
 }
@@ -266,8 +269,8 @@ def planet_cards(run_candidates: list[dict], run_name: str, feed: list[dict], cr
     for r in feed:
         star = _tic_label(r["tic"])
         entry = card(star)
-        if "discovery feed" not in entry["sources"]:
-            entry["sources"].append("discovery feed")
+        if "search feed" not in entry["sources"]:
+            entry["sources"].append("search feed")
         entry["entries"].append({
             "source": "feed", "id": r["candidate_id"], "depth_ppm": r["depth_ppm"],
             "ratio": radius_ratio(r["depth_ppm"]), "period_days": r.get("period_days"),
@@ -352,7 +355,7 @@ def calibration_plane(weights: dict | None, record: dict | None, kinds: dict[str
                            "n_empty": None, "consistent": None, "uncalibrated": True})
     points.sort(key=lambda p: (p["kind"] != "simulated", p["id"]))
     return {"points": points, "iso": list(ISO_WEIGHTS), "floor": (record or {}).get("floor", WEIGHT_FLOOR),
-            "source": (record or {}).get("source", ""), "rule": (record or {}).get("rule", "weight = max(TPR - FPR, floor)")}
+            "source": public_text((record or {}).get("source", "")), "rule": (record or {}).get("rule", "weight = max(TPR - FPR, floor)")}
 
 
 def dip_agreement(dips: list[dict], kinds: dict[str, str]) -> list[dict]:
@@ -377,12 +380,22 @@ MATCH_QUALIFIER = ("Each dip is this pipeline's own candidate, unconfirmed as an
 
 
 def _letter(i: int) -> str:
-    """A, B, ... Z, AA, AB ...: a short label for the i-th marked window on the light curve."""
-    out = ""
-    i += 1
-    while i:
-        i, r = divmod(i - 1, 26)
-        out = chr(65 + r) + out
+    """The i-th marked window's number in time order (1, 2, 3 ...), as in story._letter."""
+    return str(i + 1)
+
+
+def dip_names(cands: list[dict], star_names: dict[str, str]) -> dict[str, dict]:
+    """Every dip of the run with its readable address and plain label: numbered in time order, under its star's
+    name (or its TIC): {"tess-…-000": {"n": 2, "slug": "pi-men/dip-2", "label": "pi Men, dip 2 (6.27 d)"}}."""
+    from setuhq.objects import slugify
+
+    out = {}
+    for i, c in enumerate(sorted(cands, key=lambda c: c["t_start"])):
+        target = c.get("target") or c.get("subject_id") or "star"
+        star = star_names.get(target) or target
+        period = f" ({c['period_days']:.2f} d)" if c.get("period_days") else ""
+        out[c["candidate_id"]] = {"n": i + 1, "slug": f"{slugify(star)}/dip-{i + 1}", "label": f"{star}, dip {i + 1}{period}",
+                                  "star": star}
     return out
 
 
@@ -638,6 +651,8 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     hero = overview_hero(dock, top_rows)
     calib = {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name}
     story = story_data(run_dir, dock, feed, calib, hero, targets_path=targets_path)
+    dips = dip_names(cands, {story["star"]["target"]: story["star"]["name"]} if story["star"].get("name") else {})
+    set_dip_slugs({i: d["slug"] for i, d in dips.items()})
     galaxy = galaxy_data(map_path, notable_path, coverage_path=coverage_path, setuhq_star=story["star"]["name"] or "pi Men",
                          setuhq_planet=story.get("planet"), lead_dip=story.get("lead_dip"))
     return {
@@ -655,6 +670,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "no_stellar_radius": NO_STELLAR_RADIUS,
         "ratio_scale_max": RATIO_SCALE_MAX,
         "dossier_ids": [c["candidate_id"] for c in cands],
+        "dips": dips,
         "run": {
             "name": run_name, "dir": str(run_dir), "created_at": manifest.get("created_at", ""),
             "counts": manifest.get("counts", {}),
@@ -1332,7 +1348,11 @@ const setHash = setAddress;
 const DIP_IDS = new Set(D.dossier_ids);
 const dipHref = (id, section) => rtUrl('candidates', {dip: id, section: section || null});
 // A dip identifier: a link to its dossier in the Docket when the run has one, plain text otherwise.
-const dipLink = id => DIP_IDS.has(id) ? `<a class="dip" href="${dipHref(id)}" title="Open ${esc(id)} in the Docket">${esc(id)}</a>` : `<span class="dip" title="${esc(id)} (no dossier in this run)">${esc(id)}</span>`;
+// A dip's plain name: "pi Men, dip 2 (6.27 d)" for one of the run's dips; a search-feed entry is "entry 4" beside
+// its TIC. The stored id stays in the title, for anyone matching it to a file.
+const DIP_NAME = id => ((D.dips || {})[id] || {}).label || null;
+const entryNo = id => { const m = /-(\d+)$/.exec(String(id)); return m ? 'entry ' + (Number(m[1]) + 1) : String(id); };
+const dipLink = id => DIP_IDS.has(id) ? `<a class="dip" href="${dipHref(id)}" title="Open its case file (stored id ${esc(id)})">${esc(DIP_NAME(id) || id)}</a>` : `<span class="dip" title="Stored id ${esc(id)}; no case file in this run">${esc(entryNo(id))}</span>`;
 // A stored ISO-8601 time as a readable local date; the full stored value stays in the title.
 function when(iso){
   const d = new Date(iso);
@@ -1397,7 +1417,7 @@ function widgetBody(id){
       const note = xm ? `<p class="note">Archive cross-match: ${n === 1 ? 'this dip is' : `these ${n} dips are`} consistent with <b>${esc(xm.consistent_with)}</b>, a published planet${xm.dP_pct !== null && xm.dP_pct !== undefined ? ` (period difference ${fmt(xm.dP_pct,2)}%)` : ''}. ${n === 1 ? 'It is a transit' : 'They are repeat transits'} of one known planet, not ${n === 1 ? 'a discovery' : n + ' discoveries'}. ${esc(D.no_detection)}</p>` : '';
       // One line per dip. On a phone the status shows as its short word and the hedge moves to the
       // signal line above, so each row stays one 44 px line; the full words stay for screen readers.
-      return `<li>${head}${note}<ul>${g.dips.map(x => `<li class="toprow">${dipLink(x.id)}<span class="mono">SNR ${fmt(x.snr,1)}</span><span class="mono">${fmt(x.depth_ppm,0)} ppm</span><span class="st"><span class="long">${esc(x.outcome_label)}</span><span class="short" aria-hidden="true">${esc(OUTCOME_SHORT[x.outcome] || x.outcome_label)}</span></span><span class="muted unc">${esc(D.unconfirmed)}</span></li>`).join('')}</ul></li>`;
+      return `<li>${head}${note}<ul>${g.dips.map(x => `<li class="toprow">${dipLink(x.id)}<span class="mono">SNR ${fmt(x.snr,1)}</span><span class="mono">${fmt(x.depth_ppm,0)} ppm</span><span class="st"><span class="long">${esc(x.outcome_label)}</span><span class="short" aria-hidden="true">${esc(OUTCOME_SHORT[x.outcome] || x.outcome_label)}</span></span><span class="tag cand unc" title="${esc(D.unconfirmed)}">candidate</span></li>`).join('')}</ul></li>`;
     }).join('')}</ul>`;
   }
   const r = D.run, c = r.counts || {}, dc = r.docket_counts || {};
@@ -1409,7 +1429,7 @@ function widgetBody(id){
   }
   if (id === 'discoveries'){
     const f = D.catalog.candidates, nNew = f.filter(x => x.status === 'new_candidate').length, nKnown = f.filter(x => x.status === 'known_toi').length;
-    if (!D.catalog.path) return '<p class="empty">No discovery catalogue was given to this build.</p>';
+    if (!D.catalog.path) return '<p class="empty">No search catalogue was given to this build.</p>';
     return `<div><span class="big">${f.length}</span> <span class="muted">feed entries</span></div>
       <p style="margin:0">${nKnown} match a known TOI period · ${nNew} new candidate${nNew===1?'':'s'} · ${esc(D.catalog.targets_reviewed)} targets reviewed</p>
       <p style="margin:0">${UNC} every entry</p>
@@ -1417,7 +1437,7 @@ function widgetBody(id){
   }
   if (id === 'runs'){
     const runs = D.catalog.runs.slice(-5).reverse();
-    if (!runs.length) return '<p class="empty">No discovery runs are stored in the catalogue.</p>';
+    if (!runs.length) return '<p class="empty">No search runs are stored in the catalogue.</p>';
     return `<ul class="runlist">${runs.map(x => `<li><b>${when(x.time)}</b><span>${(x.targets||[]).length} targets · ${esc(x.new ?? '–')} new · ${esc(x.known ?? '–')} known · ${(x.errors||[]).length} error${(x.errors||[]).length===1?'':'s'}</span></li>`).join('')}</ul>
       <p class="muted" style="margin:0;font-size:12px">This page's run: ${esc(r.name)}, ${when(r.created_at)}.</p>`;
   }
@@ -1469,8 +1489,14 @@ function layoutAction(act, id, size){
   const back = $('#route-explorer ' + focusSel); if (back) back.focus();
 }
 $('#route-explorer').addEventListener('click', e => { const b = e.target.closest('button[data-act]'); if (b) layoutAction(b.dataset.act, b.dataset.id, b.dataset.size); });
-$('#ownlayout').addEventListener('click', () => { layout = ownLayout.map(x => ({...x})); sharedView = false; renderOverview(); $('#copylayout').focus(); say('Showing your own layout.'); });
-$('#copylayout').addEventListener('click', () => copyViewLink('explorer', $('#copystate'), $('#copyfallback')));
+$('#ownlayout').addEventListener('click', () => { layout = ownLayout.map(x => ({...x})); sharedView = false; renderOverview(); $('#customise').focus(); say('Showing your own layout.'); });
+// The cards' controls stay out of the way until the viewer asks to customise.
+$('#customise').addEventListener('click', () => {
+  const on = $('#customise').getAttribute('aria-pressed') !== 'true';
+  $('#customise').setAttribute('aria-pressed', String(on)); $('#customise').textContent = on ? 'Done' : 'Customise';
+  $('#widgets').classList.toggle('customising', on); $('#layouttools').hidden = !on;
+  say(on ? 'Customise: each card can be hidden, moved or resized.' : 'Done customising.');
+});
 $('#resetlayout').addEventListener('click', () => { layout = normaliseLayout(null, WIDGET_IDS, D.default_size); saveLayout(); renderOverview(); $('#resetlayout').focus(); say('Layout reset: every widget shown in the default order and size.'); });
 
 // ---------- candidates (the Docket) ----------
@@ -1601,7 +1627,7 @@ const leadDip = () => (D.hero && D.hero.lead && D.hero.lead.dip) || D.dossier_id
 // The phone dip picker above the frame: every dip in time order, with its letter and outcome.
 function renderDipPicker(){
   const sel = $('#dippick'); if (!sel) return;
-  sel.innerHTML = D.hero.windows.map(w => `<option value="${esc(w.id)}">${esc(w.letter)} · ${esc(w.outcome)} · ${esc(w.id)}</option>`).join('');
+  sel.innerHTML = D.hero.windows.map(w => `<option value="${esc(w.id)}">${esc(DIP_NAME(w.id) || 'dip ' + w.letter)} · ${esc(w.outcome)}</option>`).join('');
   if (frame.dip) sel.value = frame.dip;
 }
 function renderCandidates(){ renderDipPicker(); /* the frame loads in openDip, with the dip from the URL */ }
@@ -1650,12 +1676,12 @@ function syncFeedURL(push){
 applyFeedView(ownFeedView);
 const COLS = [
   ['tic', 'TIC', x => x.tic, x => (D.tic_names || {})[x.tic] ? `${esc(x.tic)} · ${objLink('star', D.tic_names[x.tic])}` : esc(x.tic)],
-  ['candidate_id', 'dip', x => x.candidate_id, x => dipLink(x.candidate_id)],
+  ['candidate_id', 'entry', x => x.candidate_id, x => dipLink(x.candidate_id)],
   ['t_center', 'mid-time', x => x.t_center, x => `${fmt(x.t_center,3)}<small>${esc(x.time_unit)}</small>`],
   ['period_days', 'period (d)', x => x.period_days, x => fmt(x.period_days,4)],
   ['depth_ppm', 'depth (ppm)', x => x.depth_ppm, x => fmt(x.depth_ppm,0)],
   ['snr', 'SNR', x => x.snr, x => fmt(x.snr,1)],
-  ['status', 'status', x => x.status, x => `${esc(D.status_label[x.status] || x.status)}<small>${esc(D.unconfirmed)}</small>`],
+  ['status', 'status', x => x.status, x => `${esc(D.status_label[x.status] || x.status)} <span class="tag cand" title="${esc(D.unconfirmed)}">candidate</span>`],
 ];
 const NUMERIC = new Set(['tic','t_center','period_days','depth_ppm','snr']);
 function discRows(){
@@ -1690,7 +1716,7 @@ function feedSortBar(){
 // One card per entry, three lines: the dip and its status; TIC · P · depth · SNR on one mono line; the hedge.
 function feedCards(rows){
   if (!rows.length) return '<p class="empty feedcards">No feed entries with this status.</p>';
-  return `<ol class="feedcards">${rows.map(x => `<li><div class="fc1">${dipLink(x.candidate_id)}<span class="fcst">${esc(D.status_label[x.status] || x.status)}</span></div><div class="fc2 mono">${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}</div><div class="fc3">${esc(D.unconfirmed)} · mid-time ${fmt(x.t_center,2)} ${esc(x.time_unit)}</div></li>`).join('')}</ol>`;
+  return `<ol class="feedcards">${rows.map(x => `<li><div class="fc1">${dipLink(x.candidate_id)}<span class="fcst">${esc(D.status_label[x.status] || x.status)}</span></div><div class="fc2 mono">${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}</div><div class="fc3"><span class="tag cand" title="${esc(D.unconfirmed)}">candidate</span> mid-time ${fmt(x.t_center,2)} ${esc(x.time_unit)}</div></li>`).join('')}</ol>`;
 }
 function renderDiscHead(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length, ft = D.catalog.found_times;
@@ -1932,7 +1958,7 @@ function renderRuns(){
       <div class="line"><b>${when(x.time)}</b><span>${plural((x.targets||[]).length, 'target')}</span><span>${esc(x.new ?? '–')} new</span><span>${esc(x.known ?? '–')} known TOI</span><span>${esc(x.filtered_deep ?? '–')} filtered as too deep</span><span>${esc(x.filtered_single ?? '–')} filtered for too few transits</span><span class="${ne ? 'err' : 'muted'}">${ne ? plural(ne, 'error') : 'no errors'}</span></div>
       ${ne ? x.errors.map(e => `<pre class="err">${esc(e)}</pre>`).join('') : ''}
       ${(x.targets||[]).length ? `<details><summary>Targets</summary><p class="mono" style="margin:4px 0 0;font-size:12px">${(x.targets||[]).map(t => 'TIC ' + esc(t)).join(', ')}</p></details>` : ''}
-      ${(x.tracebacks||[]).length ? `<details><summary>${plural(x.tracebacks.length, 'traceback')} (verbatim)</summary>${x.tracebacks.map(t => `<pre class="err">${esc(t)}</pre>`).join('')}</details>` : ''}</li>`; }).join('')}</ol>` : '<p class="empty">No discovery runs are stored in the catalogue.</p>';
+      ${(x.tracebacks||[]).length ? `<details><summary>${plural(x.tracebacks.length, 'traceback')} (verbatim)</summary>${x.tracebacks.map(t => `<pre class="err">${esc(t)}</pre>`).join('')}</details>` : ''}</li>`; }).join('')}</ol>` : '<p class="empty">No search runs are stored in the catalogue.</p>';
   const c = D.config;
   const pk = Object.entries(c.packages || {});
   $('#runconfig').innerHTML = `<dl class="kv">
@@ -1951,7 +1977,7 @@ function renderRuns(){
   </dl>
   <h3 style="margin-top:14px">Measured inputs</h3>
   ${(c.inputs||[]).map(x => `<p style="margin:4px 0 0" class="mono">${esc(Object.entries(x).map(([k,v]) => k + ' ' + v).join(' · '))}</p>`).join('') || '<p class="empty">No inputs stored.</p>'}`;
-  $('#catconfig').innerHTML = D.catalog.path ? `<dl class="kv"><dt>catalogue</dt><dd>${esc(D.catalog.path)}</dd><dt>config</dt><dd>${esc(D.catalog.config)}</dd><dt>config hash (sha256)</dt><dd>${esc(D.catalog.config_sha256)}</dd><dt>updated</dt><dd>${when(D.catalog.updated)}</dd><dt>targets reviewed</dt><dd>${esc(D.catalog.targets_reviewed)}</dd></dl>` : '<p class="empty">No discovery catalogue was given to this build.</p>';
+  $('#catconfig').innerHTML = D.catalog.path ? `<dl class="kv"><dt>catalogue</dt><dd>${esc(D.catalog.path)}</dd><dt>config</dt><dd>${esc(D.catalog.config)}</dd><dt>config hash (sha256)</dt><dd>${esc(D.catalog.config_sha256)}</dd><dt>updated</dt><dd>${when(D.catalog.updated)}</dd><dt>targets reviewed</dt><dd>${esc(D.catalog.targets_reviewed)}</dd></dl>` : '<p class="empty">No search catalogue was given to this build.</p>';
 }
 
 // The archive cross-match this page was built from: the file, and when it is the repository's fallback,
@@ -2134,8 +2160,8 @@ function renderTransit(){
   txs.dip = d.id;
   const i = DIPS.indexOf(d), prev = DIPS[(i + DIPS.length - 1) % DIPS.length], next = DIPS[(i + 1) % DIPS.length], inCmp = txs.cmp.includes(d.id);
   $('#txkicker').textContent = d.status_label; $('#txkicker').style.color = STC[d.status];
-  $('#h-transit').innerHTML = `${esc(d.time_unit)} ${tval(d.t)}<span class="sr">, dip ${esc(d.letter)}, ${esc(d.status_label)}</span>`;
-  $('#txsub').textContent = `${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} hours · SNR ${fmt(d.snr, 1)} · ${D.unconfirmed}`;
+  $('#h-transit').textContent = DIP_NAME(d.id) || `dip ${d.letter}`;
+  $('#txsub').textContent = `${d.time_unit} ${tval(d.t)} · ${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} hours · SNR ${fmt(d.snr, 1)} · ${D.unconfirmed}`;
   $('#txnav').innerHTML = `<a class="roundbtn" href="${transitHref(prev.id)}" aria-label="Previous dip, ${esc(prev.time_unit)} ${tval(prev.t)}">‹</a><a class="roundbtn" href="${transitHref(next.id)}" aria-label="Next dip, ${esc(next.time_unit)} ${tval(next.t)}">›</a><button type="button" class="cmpbtn" id="cmptoggle" aria-pressed="${inCmp}">${inCmp ? 'In compare' : 'Add to compare'}</button>`;
   $('#txchips').innerHTML = DIPS.map(x => `<a href="${transitHref(x.id)}" aria-current="${x.id === d.id}" style="--c:${STC[x.status]}" title="${esc(x.id)} · ${esc(x.status_label)}"><i></i>${esc(x.letter)} · ${tval(x.t)}</a>`).join('');
   // Keep the current dip's chip in view in the sideways-scrolling row (without moving the page).
@@ -2195,24 +2221,41 @@ function encodeExView(v){
 const currentEx = () => ({stars: TICS.map(String).filter(t => ex.stars[t]), snr: ex.snrMin, new: ex.fNew, known: ex.fKnown});
 function applyEx(v){ for (const t of TICS) ex.stars[t] = v.stars.includes(String(t)); ex.snrMin = v.snr; ex.fNew = v.new; ex.fKnown = v.known; }
 function renderExplorer(){
-  if (!EXF.length){ $('#exscatter').innerHTML = '<p class="empty">No discovery catalogue was given to this build.</p>'; return; }
+  if (!EXF.length){ $('#exscatter').innerHTML = '<p class="empty">No search catalogue was given to this build.</p>'; return; }
   const nNew = EXF.filter(f => f.status === 'new_candidate').length, nKnown = EXF.length - nNew;
   $('#exstars').innerHTML = TICS.map(t => `<button type="button" class="pill" data-tic="${t}" aria-pressed="${ex.stars[t]}" style="--c:${starColour(t)}"><i></i>TIC ${esc(t)}</button>`).join('');
   $('#exstatus').innerHTML = `<button type="button" data-f="fNew" aria-pressed="${ex.fNew}">New ${nNew}</button><button type="button" data-f="fKnown" aria-pressed="${ex.fKnown}">Known TOI ${nKnown}</button>`;
   const snrs = [0, 7, 8, 9, 10].filter(v => v === 0 || EXF.some(f => f.snr >= v));
   $('#exsnr').innerHTML = snrs.map(v => `<button type="button" data-snr="${v}" aria-pressed="${ex.snrMin === v}">${v ? 'SNR ' + v + '+' : 'Any SNR'}</button>`).join('');
-  const per = EXF.map(f => f.period_days).filter(p => p > 0), dep = EXF.map(f => f.depth_ppm).filter(x => x > 0);
-  const p0 = Math.max(0.5, Math.floor(Math.min(...per))), p1 = Math.ceil(Math.max(...per) + 0.5), d1 = Math.ceil(Math.max(...dep) / 500) * 500;
-  const X = p => (Math.log(p) - Math.log(p0)) / (Math.log(p1) - Math.log(p0)) * 100, Yp = dp => (1 - dp / d1) * 100;
-  const pticks = [1, 2, 3, 5, 7, 10, 20].filter(p => p >= p0 && p <= p1), dticks = []; for (let v = 0; v <= d1; v += 500) dticks.push(v);
-  const grid = pticks.map(p => `M${X(p).toFixed(2)} 0V52`).join('') + dticks.map(v => `M0 ${(Yp(v) * .52).toFixed(2)}H100`).join('');
   const shown = EXF.filter(exShown);
   $('#excount').textContent = `${shown.length} of ${EXF.length} shown`;
-  $('#exscatter').innerHTML = `<svg viewBox="0 0 100 52" preserveAspectRatio="none" aria-hidden="true"><path d="${grid}" stroke="rgba(255,255,255,.07)" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>`
+  // Fewer than three distinct periods make an almost empty plot: a compact table says the same, readably.
+  // Distinct periods: values within 2 per cent of each other are one period (one signal's repeat transits).
+  const periods = []; for (const p of shown.map(f => f.period_days || 0).sort((a, b) => a - b)) if (!periods.length || p > periods[periods.length - 1] * 1.02) periods.push(p);
+  const box = $('#exscatter'), compact = periods.length < 3;
+  box.classList.toggle('astable', compact);
+  $('#h-scatter').textContent = compact ? `Entries by star and period (${periods.length} period${periods.length === 1 ? '' : 's'}: too few for a plot)` : 'Depth against period (period on a log scale)';
+  $('#exfoot').hidden = compact;
+  if (compact){
+    const groups = []; for (const f of shown){ const k = f.tic + '|' + periods.findIndex(p => Math.abs((f.period_days || 0) - p) <= p * 0.02 + 1e-9); let g = groups.find(x => x.k === k); if (!g){ g = {k, f, list: []}; groups.push(g); } g.list.push(f); }
+    const rng = (a, d) => { const lo = Math.min(...a), hi = Math.max(...a); return lo === hi ? fmt(lo, d) : `${fmt(lo, d)}–${fmt(hi, d)}`; };
+    box.innerHTML = groups.length ? `<table class="excompact"><thead><tr><th scope="col">Star</th><th scope="col" class="num">Period (d)</th><th scope="col" class="num">Entries</th><th scope="col" class="num">Depth (ppm)</th><th scope="col" class="num">SNR</th><th scope="col">Status</th></tr></thead><tbody>${groups.map(g => `<tr><th scope="row"><button type="button" data-i="${g.list[0].i}" aria-pressed="${g.list.some(f => f.i === ex.sel)}" style="--c:${g.f.status === 'new_candidate' ? '#FFD60A' : starColour(g.f.tic)}"><i></i>TIC ${esc(g.f.tic)}</button></th><td class="num">${fmt(g.f.period_days, 3)}</td><td class="num">${g.list.length}</td><td class="num">${rng(g.list.map(f => f.depth_ppm), 0)}</td><td class="num">${rng(g.list.map(f => f.snr), 1)}</td><td>${esc(D.status_label[g.f.status] || g.f.status)}</td></tr>`).join('')}</tbody></table>`
+      : '<p class="empty">No entry matches these filters.</p>';
+    renderExSel(); return;
+  }
+  const per = shown.map(f => f.period_days).filter(p => p > 0), dep = shown.map(f => f.depth_ppm).filter(x => x > 0);
+  // Log axis: the range widened to whole 1-2-5 steps, with a tick at each.
+  const steps = []; for (let k = -2; k <= 4; k++) for (const m of [1, 1.5, 2, 3, 5, 7]) steps.push(m * Math.pow(10, k));
+  const p0 = steps.filter(v => v <= Math.min(...per) / 1.1).pop() || 0.01, p1 = steps.find(v => v >= Math.max(...per) * 1.1) || 1e4;
+  const dticks = niceTicks(0, Math.max(...dep) * 1.1, 4), d1 = dticks[dticks.length - 1] >= Math.max(...dep) ? dticks[dticks.length - 1] : Math.max(...dep) * 1.1;
+  const X = p => (Math.log(p) - Math.log(p0)) / (Math.log(p1) - Math.log(p0)) * 100, Yp = dp => (1 - dp / d1) * 100;
+  const pticks = steps.filter(p => p >= p0 && p <= p1);
+  const grid = pticks.map(p => `M${X(p).toFixed(2)} 0V52`).join('') + dticks.map(v => `M0 ${(Yp(v) * .52).toFixed(2)}H100`).join('');
+  box.innerHTML = `<svg viewBox="0 0 100 52" preserveAspectRatio="none" aria-hidden="true"><path d="${grid}" stroke="rgba(255,255,255,.07)" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>`
     + shown.map(f => { const s = Math.round(7 + Math.max(0, (f.snr || 7) - 7) * 1.4), c = f.status === 'new_candidate' ? '#FFD60A' : starColour(f.tic);
       return `<button type="button" data-i="${f.i}" aria-pressed="${f.i === ex.sel}" aria-label="TIC ${esc(f.tic)}, period ${fmt(f.period_days, 3)} days, depth ${fmt(f.depth_ppm, 0)} ppm, SNR ${fmt(f.snr, 1)}, ${esc(D.status_label[f.status] || f.status)}, ${esc(D.unconfirmed)}" style="left:${X(f.period_days).toFixed(2)}%;top:${Yp(f.depth_ppm).toFixed(2)}%;--s:${s}px;--c:${c};--g:${Math.round(Math.max(0, (f.snr || 6) - 6) * 2)}px"><i></i></button>`; }).join('')
-    + pticks.map(p => `<span class="ax" style="left:${X(p).toFixed(1)}%;bottom:-18px;transform:translateX(-50%)">${p}${p === pticks[0] ? ' d' : ''}</span>`).join('')
-    + `<span class="ax" style="left:0;top:-2px">${d1} ppm</span><span class="ax" style="left:0;bottom:2px">0</span>`;
+    + pticks.map(p => `<span class="ax" style="left:${X(p).toFixed(1)}%;bottom:-18px;transform:translateX(-50%)">${+p.toPrecision(3)}${p === pticks[pticks.length - 1] ? ' d' : ''}</span>`).join('')
+    + dticks.map(v => `<span class="ax" style="left:2px;top:calc(${Yp(v).toFixed(1)}% - 14px)">${v.toLocaleString('en-GB')}${v === dticks[dticks.length - 1] ? ' ppm' : ''}</span>`).join('');
   renderExSel();
 }
 function renderExSel(){
@@ -2224,11 +2267,11 @@ function renderExSel(){
       <g class="orbit" style="transform-origin:0 0"><circle cx="100" cy="0" r="${Math.max(1.2, 46 * k).toFixed(2)}" fill="var(--ink)"/><circle cx="100" cy="0" r="10" fill="none" stroke="var(--line-3)" stroke-width=".8"/></g></svg>
     <p class="small" style="text-align:center">Planet disc to scale from depth: Rp/R* ${fmt(k, 4)} · orbit not to scale · no stellar radius stored</p>
     <dl class="statgrid"><div><dt>Period</dt><dd>${fmt(f.period_days, 3)} d</dd></div><div><dt>Depth</dt><dd>${fmt(f.depth_ppm, 0)} ppm</dd></div><div><dt>Duration</dt><dd>${fmt(f.duration_hours, 2)} h</dd></div><div><dt>SNR</dt><dd>${fmt(f.snr, 1)}</dd></div></dl>
-    <p class="small">TESS sectors ${esc(f.sectors || 'not stored')}. Dip <span class="mono">${esc(f.id)}</span>. ${isNew ? '' : 'A TOI match compares a stored period with archive values. '}${esc(D.no_detection)} ${esc(_cap(D.unconfirmed))}.</p>`;
+    <p class="small">TESS sectors ${esc(f.sectors || 'not stored')}. Feed ${esc(entryNo(f.id))} for this star (stored id <span class="mono">${esc(f.id)}</span>). ${isNew ? '' : 'A TOI match compares a stored period with archive values. '}${esc(D.no_detection)} ${esc(_cap(D.unconfirmed))}.</p>`;
 }
 const _cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 $('#route-explorer').addEventListener('click', e => {
-  const t = e.target.closest('button[data-tic]'), f = e.target.closest('#exstatus button[data-f]'), n = e.target.closest('button[data-snr]'), p = e.target.closest('#exscatter button[data-i]');
+  const t = e.target.closest('#exstars button[data-tic]'), f = e.target.closest('#exstatus button[data-f]'), n = e.target.closest('button[data-snr]'), p = e.target.closest('#exscatter button[data-i]');
   if (t){ ex.stars[t.dataset.tic] = !ex.stars[t.dataset.tic]; syncFeedURL(true); renderExplorer(); $(`#exstars button[data-tic="${t.dataset.tic}"]`).focus(); say($('#excount').textContent); }
   else if (f){ ex[f.dataset.f] = !ex[f.dataset.f]; syncFeedURL(true); renderExplorer(); $(`#exstatus button[data-f="${f.dataset.f}"]`).focus(); say($('#excount').textContent); }
   else if (n){ ex.snrMin = +n.dataset.snr; syncFeedURL(true); renderExplorer(); $(`#exsnr button[data-snr="${n.dataset.snr}"]`).focus(); say($('#excount').textContent); }
@@ -2283,13 +2326,13 @@ function pageChrome(r, params){
   const m = META[r] || {}, h1 = $('#route-' + r + ' h1');
   $$('.nav a[data-nav], .menu a[data-nav]').forEach(a => { if (a.dataset.nav === m.nav) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
   const win = r === 'candidates' ? (D.hero.windows || []).find(w => w.id === params.get('dip')) : null;
-  const name = r === 'methods' ? (D.chapter_titles[params.get('ch')] || m.label) : win ? 'dip ' + win.letter : (r === 'planet' || r === 'star' || r === 'transit') && h1 ? h1.textContent.trim() : m.label;
+  const name = r === 'methods' ? (D.chapter_titles[params.get('ch')] || m.label) : win ? (DIP_NAME(win.id) || 'dip ' + win.letter) : (r === 'planet' || r === 'star' || r === 'transit') && h1 ? h1.textContent.trim() : m.label;
   document.title = m.title_tpl ? m.title_tpl.replace('{name}', name) : `${m.label} · SetuHQ`;
   const crumbs = $('#crumbs');
   if (crumbs){
     const chain = (m.crumbs || []).map(([label, href]) => `<li><a href="${esc(href)}">${esc(label)}</a></li>`);
     if (r === 'methods' && params.get('ch') && params.get('ch') !== MX_FIRST) chain.push(`<li><a href="${esc(rtUrl('methods'))}">How it works</a></li>`);
-    if (r === 'candidates' && params.get('dip')) chain.push(`<li><a href="${esc(transitHref(params.get('dip')))}">${esc(params.get('dip'))}</a></li>`);
+    if (r === 'candidates' && params.get('dip')) chain.push(`<li><a href="${esc(transitHref(params.get('dip')))}">${esc(DIP_NAME(params.get('dip')) || params.get('dip'))}</a></li>`);
     crumbs.hidden = !chain.length;
     crumbs.innerHTML = chain.length ? `<ol>${chain.join('')}<li aria-current="page">${esc(r === 'candidates' ? 'Case file' : name)}</li></ol>` : '';
   }
@@ -2446,22 +2489,22 @@ def _planet_figure(deco: dict) -> str:
     """The home page's artist's impression: a planet's limb lit by its star, cropped to the lit limb, with its
     caption directly under it. Decorative, and labelled so."""
     return f"""<figure class="planetfig">
-        <svg viewBox="0 120 1440 360" role="img" aria-label="Artist's impression of a planet's limb lit by its star. No image of pi Men c exists." style="display:block;width:100%;height:auto">
+        <svg viewBox="0 120 1440 360" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Artist's impression of a planet's limb lit by its star. No image of pi Men c exists." style="display:block;width:100%;height:auto">
           <defs>
             <radialGradient id="pBody" cx="35%" cy="15%" r="85%"><stop offset="0" stop-color="#3C5E8C"/><stop offset=".35" stop-color="#1D3352"/><stop offset=".7" stop-color="#0A1222"/><stop offset="1" stop-color="#000"/></radialGradient>
             <radialGradient id="pAtm" cx="50%" cy="100%" r="62%"><stop offset=".86" stop-color="#64D2FF" stop-opacity="0"/><stop offset=".92" stop-color="#64D2FF" stop-opacity=".55"/><stop offset=".97" stop-color="#0A84FF" stop-opacity=".18"/><stop offset="1" stop-color="#0A84FF" stop-opacity="0"/></radialGradient>
             <radialGradient id="sGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFF4D6"/><stop offset=".08" stop-color="#FFD28A" stop-opacity=".9"/><stop offset=".3" stop-color="#FF9F2E" stop-opacity=".18"/><stop offset="1" stop-color="#FF9F2E" stop-opacity="0"/></radialGradient>
             <filter id="soft"><feGaussianBlur stdDeviation="9"/></filter>
-            <clipPath id="pClip"><circle cx="720" cy="1380" r="1000"/></clipPath>
+            <clipPath id="pClip"><circle cx="720" cy="1290" r="1000"/></clipPath>
           </defs>
           <rect x="0" y="120" width="1440" height="360" fill="#000"/>
           <path class="twinkle" d="{deco['bright']}" stroke="#E8EEFF" stroke-width="1.6" stroke-linecap="round"/>
-          <circle class="breathe" cx="1170" cy="215" r="200" fill="url(#sGlow)"/>
-          <circle cx="1170" cy="215" r="9" fill="#FFFBEF"/>
-          <circle cx="720" cy="1380" r="1060" fill="url(#pAtm)"/>
-          <circle cx="720" cy="1380" r="1000" fill="url(#pBody)"/>
+          <circle class="breathe" cx="1090" cy="200" r="210" fill="url(#sGlow)"/>
+          <circle cx="1090" cy="200" r="9" fill="#FFFBEF"/>
+          <circle cx="720" cy="1290" r="1060" fill="url(#pAtm)"/>
+          <circle cx="720" cy="1290" r="1000" fill="url(#pBody)"/>
           <g clip-path="url(#pClip)"><g class="clouds" filter="url(#soft)" opacity=".35"><path d="{deco['bands']}" stroke="#BFD6F2" stroke-width="16" fill="none" stroke-linecap="round"/></g></g>
-          <path d="M-280 1380 A1000 1000 0 0 1 1720 1380" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
+          <path d="M-280 1290 A1000 1000 0 0 1 1720 1290" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
         </svg>
         <figcaption>Artist's impression of a planet lit by its star. No image of pi Men c exists.</figcaption>
       </figure>"""
@@ -2503,7 +2546,7 @@ def _overview(data: dict, with_view: bool = True) -> str:
       {_planet_figure(data["deco"])}
       {_do_here()}
       <div class="proof" role="list" aria-label="What this run shows">{proof.replace('<div>', '<div role="listitem">')}</div>
-      {overview_counter(data.get("sweep"))}
+      {sweep_line(data.get("sweep"))}
       {teaser_html(data.get("galaxy"), data.get("galaxy_teaser"))}
       {_honest(data)}
       {learn_card() if with_view else ""}"""
@@ -2822,29 +2865,32 @@ def _transit(data: dict) -> str:
 
 
 def _explorer(data: dict) -> str:
+    """The Candidates page's opening: what a visitor can open (the run's dips, each with a case file), then the
+    run's own figures. The search feed follows in its own section (route_sections)."""
     e = html.escape
     feed = data["catalog"]["candidates"]
-    stars = len({r["tic"] for r in feed})
-    n_new = sum(1 for r in feed if r.get("status") == "new_candidate")
-    t1 = f"{len(feed)} signals from {stars} star{'s' if stars != 1 else ''}." if feed else "No discovery feed in this build."
-    t2 = ((f"{n_new} at no known TOI period. All unconfirmed." if n_new else "Each at a known TOI period. None confirmed by SetuHQ.")
-          if feed else "")
-    return f"""<header class="headrow">
-        <div>{_eyebrow("Explorer")}<h1 class="lead-h" id="h-explorer" tabindex="-1">{e(t1)}<br><span class="grey">{e(t2)}</span></h1></div>
-        <div class="filters">
-          <div class="chips" id="exstars" role="group" aria-label="Stars"></div>
-          <div><div class="segctl" id="exstatus" role="group" aria-label="Status"></div><div class="segctl" id="exsnr" role="group" aria-label="Minimum SNR"></div></div>
-        </div>
+    dips = sorted(data["dips"].items(), key=lambda kv: kv[1]["n"])
+    star = dips[0][1]["star"] if dips else data["run"]["name"]
+    by_id = {d["id"]: d for d in data["story"]["dips"]}
+    rows = []
+    for i, d in dips:
+        s = by_id.get(i, {})
+        rows.append(f'<li><a class="rundip" href="#/transit?dip={e(i)}"><b>{e(d["label"])}</b>'
+                    f'<span class="muted">{e(s.get("status_label", ""))} · {s.get("depth_ppm", 0):,.0f} ppm · SNR {s.get("snr", 0):.1f}</span>'
+                    f'<span class="tag cand">candidate</span></a>'
+                    f'<a class="rundipcf" href="#/candidates?dip={e(i)}" aria-label="Case file for {e(d["label"])}">Case file ›</a></li>')
+    lede = (f"Each is a {UNCONFIRMED}: a dip the panel of Sentinels and Probes marked in {e(star)}'s TESS light curve, "
+            f"not a planet. Open one to watch it played back, or its case file for every check behind its verdict.")
+    more = (f" Further down: the search feed's {len(feed)} entries from other stars, which have no case file yet." if feed else "")
+    return f"""<header>
+        <h1 class="lead-h" id="h-explorer" tabindex="-1">{len(dips)} dip{"s" if len(dips) != 1 else ""} you can open, from the {e(star)} run.</h1>
+        <p>{lede}{e(more)}</p>
       </header>
-      <div class="row2">
-        <section class="space scatterbox" aria-labelledby="h-scatter">
-          <div class="cap"><span id="h-scatter">Depth against period · period on a log scale</span><span id="excount"></span></div>
-          <div class="scatter" id="exscatter"></div>
-          <p class="foot">Each point a feed entry; size and glow follow SNR; yellow: no known TOI period. {e(NO_DETECTION)} Every entry is a {UNCONFIRMED}.</p>
-        </section>
-        <aside class="glass selpanel" id="exsel" aria-label="Selected signal"></aside>
-      </div>
-      <p class="casefile"><a href="#/planets">Radius ratios by star ›</a><span>What each depth would imply, if it were a planet; the stellar-radius limitation is stated there.</span></p>"""
+      <section class="card rundips" aria-labelledby="h-rundips">
+        <h2 id="h-rundips">The {e(star)} run: {len(dips)} dip{"s" if len(dips) != 1 else ""} with case files</h2>
+        <ul class="rundiplist">{"".join(rows)}</ul>
+        <p class="small"><a href="#/planets">Radius ratios by star ›</a> What each depth would imply, if it were a planet.</p>
+      </section>"""
 
 
 def _sentinels(data: dict) -> str:
@@ -2895,7 +2941,6 @@ def route_sections(data: dict) -> dict[str, str]:
     unc = html.escape(UNCONFIRMED)
     nodet = html.escape(NO_DETECTION)
     feed = data["catalog"]["candidates"]
-    flabel = html.escape(feed_label(feed))
     n_known = sum(1 for r in feed if r.get("status") == "known_toi")
     xm_targets = ", ".join(html.escape(str(t)) for t in data.get("crossmatch_targets") or []) or "no star"
     prov = provenance_note(data)
@@ -2904,20 +2949,32 @@ def route_sections(data: dict) -> dict[str, str]:
     out["sky"] = _sky(data)
     out["galaxy"] = galaxy_section(data.get("galaxy"), "", UNCONFIRMED, data.get("coverage"))
     out["transit"] = _transit(data).replace('<p class="txnotice"', prov + '<p class="txnotice"', 1)
+    n_stars = len({r["tic"] for r in feed})
     out["explorer"] = f"""{_explorer(data)}
       {prov}
-      <p class="note rule" id="sharednote" hidden>This is a shared view, shown for this visit only. Your own layout is unchanged unless you change a widget here. <button class="btn" id="ownlayout" type="button">Show my layout</button></p>
-      <div class="secthead"><h2 id="h-glance">This run at a glance</h2><p>Each card can be hidden, moved or resized; your arrangement is kept in this browser.</p></div>
-      <div class="widgets" id="widgets"></div>
-      <div class="layoutbar" role="group" aria-label="Arrange the cards">
+      <p class="note rule" id="sharednote" hidden>This is a shared view, shown for this visit only. Your own layout is unchanged unless you change a card here. <button class="btn" id="ownlayout" type="button">Show my layout</button></p>
+      <div class="secthead"><h2 id="h-glance">This run at a glance</h2><button class="btn" id="customise" type="button" aria-pressed="false" aria-controls="widgets layouttools">Customise</button></div>
+      <div class="layoutbar" id="layouttools" role="group" aria-label="Arrange the cards" hidden>
+        <p class="small" style="flex:1 1 100%">Each card can be hidden, moved or resized; your arrangement is kept in this browser.</p>
         <div class="layoutbar" id="hiddenlist"></div>
         <button class="btn" id="resetlayout" type="button">Reset layout</button>
-        <button class="btn" id="copylayout" type="button">Copy link to this view</button>
-        <span class="muted" id="copystate" role="status"></span>
-        <input class="copyfallback" id="copyfallback" type="text" readonly aria-label="Link to this view" hidden>
       </div>
-      <div class="secthead"><h2 id="h-feedsec">{flabel}</h2><p>The feed from the discovery catalogue: {len(feed)} entries, {n_known} of them match a known TOI period. Every entry is a {unc}: a dip the panel marked, not a planet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></div>
+      <div class="widgets" id="widgets"></div>
+      <section class="feedsec" aria-labelledby="h-feedsec">
+      <div class="secthead"><h2 id="h-feedsec">From the search feed: {len(feed)} entr{"y" if len(feed) == 1 else "ies"} from {n_stars} other star{"" if n_stars == 1 else "s"}</h2><p>SetuHQ's search batches run the same panel over more TESS stars. These entries are leads for review: {n_known} of {len(feed)} match a known TOI period, and none has a case file yet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></div>
       <p class="note rule"><b>Feed rule.</b> An entry joins the feed when its depth is at most {rule["max_depth_ppm"]:,.0f} ppm and its signal has at least {rule["min_transits"]} transits. This is an admission rule, not a vetting result.</p>
+      <div class="filters exfilters">
+        <div class="chips" id="exstars" role="group" aria-label="Stars"></div>
+        <div><div class="segctl" id="exstatus" role="group" aria-label="Status"></div><div class="segctl" id="exsnr" role="group" aria-label="Minimum SNR"></div></div>
+      </div>
+      <div class="row2">
+        <section class="space scatterbox" aria-labelledby="h-scatter">
+          <div class="cap"><span id="h-scatter">Depth against period</span><span id="excount"></span></div>
+          <div class="scatter" id="exscatter"></div>
+          <p class="foot" id="exfoot">Each point a feed entry; size and glow follow SNR; yellow: no known TOI period. {nodet}</p>
+        </section>
+        <aside class="glass selpanel" id="exsel" aria-label="Selected entry"></aside>
+      </div>
       <section class="card" aria-labelledby="h-feed" style="display:grid;gap:10px">
         <h2 id="h-feed">Feed entries</h2>
         <p class="muted" id="feedhead" style="margin:0;font-size:13px"></p>
@@ -2933,6 +2990,7 @@ def route_sections(data: dict) -> dict[str, str]:
         <h2 id="h-time">Timeline by star</h2>
         <div class="legend"><span><i class="k-new"></i>new candidate</span><span><i class="k-known"></i>period matches a known TOI</span><span>each dot: {unc}</span></div>
         <div id="timeline"></div>
+      </section>
       </section>"""
     out["sentinels"] = f"""{_sentinels(data)}
       {prov}
@@ -2955,13 +3013,14 @@ def route_sections(data: dict) -> dict[str, str]:
       </section>
       <div class="cards" id="panelcards"></div>
       <p class="casefile"><a href="#/leaderboard">The real-TOI leaderboard ›</a><span>SetuHQ's configurations, and any method submitted, scored blind on the held-out half.</span></p>
-      <p class="casefile"><a href="#/runs">Runs and configuration ›</a><span>Every discovery run, its errors as stored, and the configuration behind these pages.</span></p>"""
+      <p class="casefile"><a href="#/runs">Runs and configuration ›</a><span>Every search run, its errors as stored, and the configuration behind these pages.</span></p>"""
     out["methods"] = methods_section(data["examples"], data.get("galaxy"), {**data["story"], "run_created": run.get("created_at", "")}, data.get("coverage"), "")
     out["mission"] = mission_section("")
     out["catalogue"] = catalogue_section(data.get("catalogue_meta"), "").replace("</header>", "</header>" + (catalogue_tabs("catalogue") if data.get("sweep") else ""), 1)
     out["planet"] = planet_page("")
     out["star"] = star_page("") + '<section class="card stsweep" id="stsweep" aria-labelledby="h-stsweep" hidden><h2 id="h-stsweep">In SetuHQ\'s sweep</h2><div id="stsweepbody"></div></section>'
-    out["variables"] = variables_section(data.get("sweep"), "")
+    # The sweep's figures, each class against its own null, open its page (the home page says it in one sentence).
+    out["variables"] = variables_section(data.get("sweep"), "").replace("</header>", "</header>" + overview_counter(data.get("sweep")).replace('<a class="btn" href="#/variables">Everything that dims ›</a>', ""), 1)
     out["candidates"] = f"""<header><h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The case file for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
       {prov}
       <div class="frametools"><a id="fullpage" href="/candidates/case-file/">Open full page</a><span class="muted">The case file on its own page, at the same dip.</span></div>
@@ -2975,12 +3034,12 @@ def route_sections(data: dict) -> dict[str, str]:
       <p class="note">Published planets come from the stored archive cross-match, which covers {xm_targets}. The other stars have no stored cross-match, so their cards have no archive box. {nodet}</p>
       <div class="cards" id="planetcards"></div>"""
     out["leaderboard"] = _leaderboard(data.get("leaderboard"))
-    out["runs"] = f"""<header><h1 class="lead-h" id="h-runs" tabindex="-1">Every discovery run, its errors as stored, and the configuration behind these pages.</h1><p>The discovery run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
+    out["runs"] = f"""<header><h1 class="lead-h" id="h-runs" tabindex="-1">Every search run, its errors as stored, and the configuration behind these pages.</h1><p>The search run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
       {prov}
-      <section class="card" aria-labelledby="h-hist" style="display:grid;gap:4px"><h2 id="h-hist">Discovery runs</h2><div id="runtable"></div></section>
-      <details class="card cfg"><summary>Configuration: run {html.escape(run["name"])} and the discovery catalogue</summary><div>
+      <section class="card" aria-labelledby="h-hist" style="display:grid;gap:4px"><h2 id="h-hist">Search runs</h2><div id="runtable"></div></section>
+      <details class="card cfg"><summary>Configuration: run {html.escape(run["name"])} and the search catalogue</summary><div>
         <section aria-labelledby="h-cfg"><h3 id="h-cfg">This run's configuration</h3><div id="runconfig"></div></section>
-        <section aria-labelledby="h-catcfg"><h3 id="h-catcfg">Discovery catalogue</h3><div id="catconfig"></div></section>
+        <section aria-labelledby="h-catcfg"><h3 id="h-catcfg">Search catalogue</h3><div id="catconfig"></div></section>
       </div></details>
       <p class="small">Calibrated weights: {html.escape(data["weights_path"] or "no weights file")}. Archive cross-match: {html.escape(data.get("crossmatch_file") or "crossmatch.json")}. Built from {html.escape(run["dir"])} and {html.escape(data["catalog"]["path"] or "no catalogue")}.</p>"""
     return out

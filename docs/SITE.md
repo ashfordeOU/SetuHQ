@@ -51,8 +51,8 @@ One clean address per page; no `#/` routes and no view state in the address.
 | A planet | `/planets/<slug>/` | `/app/#/planet/<slug>` |
 | A star | `/stars/<slug>/` | `/app/#/star/<slug>` |
 | Candidates | `/candidates/` | `/app/#/explorer`, `#/discoveries`, `#/feed`, `/dashboard/`, `/discoveries/` |
-| A dip | `/candidates/<dip>/` | `/app/#/transit?dip=<dip>`, `#/cockpit` (no dip: the lead dip) |
-| Its case file | `/candidates/<dip>/case-file/` (`#ledger` etc. for a section) | `/app/#/candidates?dip=<dip>&section=...`, `/docket/#<dip>` |
+| A dip | `/candidates/<star>/dip-<n>/` (e.g. `/candidates/pi-men/dip-2/`) | `/app/#/transit?dip=<stored id>`, `#/cockpit` (no dip: the lead dip) |
+| Its case file | `/candidates/<star>/dip-<n>/case-file/` (`#ledger` etc. for a section) | `/app/#/candidates?dip=<stored id>&section=...`, `/docket/#<stored id>` |
 | Case file (stand-alone page) | `/candidates/case-file/` | `/docket/` |
 | Radius ratios | `/candidates/radius-ratios/` | `/app/#/planets` |
 | How it works (chapter 1) | `/how-it-works/` | `/app/#/methods`, `#/methods?ch=survey` |
@@ -90,9 +90,15 @@ Every page above has its own `index.html`, with its own title, description, cano
 and its own view rendered in the HTML, so it reads without JavaScript. Planet and star pages are pre-rendered for
 every planet and star the site names (the Methods chapters, the Galaxy tour and notables, the run's star): about 50
 planets and 30 stars. The catalogue holds 8,376 planets and 5,684 stars; a page for each would add some 14,000
-folders (over 100 MB) to the repository at every rebuild, so the others are drawn by the app from `404.html` at the
-same clean address. They work and can be linked, but GitHub Pages serves them with status 404, so search engines do
-not index them. `sitemap.xml` lists the pre-rendered pages; `robots.txt` points to it.
+folders to the repository at every rebuild, so the others are written at deploy time and never committed:
+`PYTHONPATH=src python3 -m setuhq.stubs site` (standard library only) runs in `pages.yml` and `discover.yml` just
+before the upload, and in `scripts/site_e2e.sh` on a copy of the site. Each is a small page (about 3 KB) with its
+own title, description, canonical address, heading and one line of facts, from `assets/stub-template.html` (written
+by the build); the shared script adds the header and footer (`assets/chrome-*.html`) and draws the full planet or
+star page. So every catalogue planet and star is served with status 200 and can be indexed. `sitemap.xml` is an
+index of `sitemap-pages.xml` (the build's pages) and, after the stubs, `sitemap-planets-1.xml` and
+`sitemap-stars-1.xml`; `robots.txt` points to it. A dip's address names its star and its number in the run
+(`/candidates/pi-men/dip-2/`); the stored id stays in the data, and the old addresses that used it forward.
 
 ### Shared files and the page budget
 
@@ -134,7 +140,8 @@ sentence disappears everywhere.
   sideways overflow, title, description, canonical, Open Graph image, alt text on every image, one heading, a reload
   shows the same page, and an axe-core scan with no serious or critical violation); the top bar and sub-navigation
   in place; Back and Forward; the phone menu and the keyboard; the skip link and visible focus; the search overlay;
-  every old address; the 404 page; and a crawl of every internal link from the home page.
+  every old address; the 404 page; a sample of the deploy-time planet and star pages; and a crawl of every
+  internal link from the home page.
 * `node tests/e2e/gallery.mjs --site site --out <dir> [--light] [--full]` takes a screenshot of every page at both
   sizes, with a contact sheet (`index.html`), for looking at the site.
 

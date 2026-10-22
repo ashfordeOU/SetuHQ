@@ -20,7 +20,7 @@ import html
 import json
 from pathlib import Path
 
-from setuhq.names import ATTRIBUTION
+from setuhq.names import ATTRIBUTION, public_name
 from setuhq.variables import LS_EDGE_FRACTION
 
 DEFAULT_SWEEP = "docs/sweep/catalogue.json"
@@ -50,7 +50,7 @@ def _slice_line(src: dict) -> str:
     sen, prb = bool(kinds & {"claude", "claude_code"}), bool(kinds & {"simulated"})
     who = "Probes and Sentinels" if sen and prb else "Sentinels only" if sen else "Probes only"
     return (f"Sector {src['sector']}: {src.get('searched', 0):,} of the {src.get('targets_in_sector') or 0:,} SPOC 2-minute targets "
-            f"searched ({who}; by {src['name']})")
+            f"searched ({who}; by {public_name(src['name'])})")
 
 
 def class_view(cat: dict) -> dict:
@@ -168,6 +168,19 @@ def overview_counter(meta: dict | None, app_href: str = "") -> str:
       </section>"""
 
 
+def sweep_line(meta: dict | None) -> str:
+    """The home page's one plain sentence about the sweep, with a link to the figures behind it."""
+    if not meta:
+        return ""
+    c = meta["counts"]
+    labels = {k["id"]: k["label"] for k in meta["classes"]}
+    real = [labels[k].lower() for k in meta["order"] if k not in meta["noise_like"] and k != "unclassified"]
+    found = (f"{', '.join(real)} {'stands' if len(real) == 1 else 'stand'} out above chance so far" if real
+             else "nothing yet stands out above chance")
+    return (f'<p class="sweepline">We have searched {c["stars_searched"]:,} stars for anything that dims; {found}. '
+            f'<a href="#/variables">See the evidence ›</a></p>')
+
+
 def sky_layer_svg(meta: dict | None) -> str:
     """The sweep's coverage on the Sky map: one dot per searched star-sector, amber where it has an entry in a
     class that exceeds its null."""
@@ -229,7 +242,7 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
     unc = (c.get("null") or {}).get("uncompared") or {}
     uncompared = ("Not compared, for want of a null of the same kind: "
                   + ", ".join(f"{n:,} {labels[k]['label'].lower()} entries of another kind" for k, n in unc.items()) + ".") if unc else ""
-    contributors = "".join(f'<li><b>{e(x["name"])}</b> <span class="muted">{x["star_sectors"]:,} star-sectors'
+    contributors = "".join(f'<li><b>{e(public_name(x["name"]))}</b> <span class="muted">{x["star_sectors"]:,} star-sectors'
                            + (f' · attested by {e(", ".join(x["attested_by"]))}' if x.get("attested_by") else "")
                            + (f' · {x["duplicates_not_credited"]:,} identical re-submissions not credited' if x.get("duplicates_not_credited") else "")
                            + (f' · {x["superseded"]:,} earlier searches since replaced by a later one (kept as provenance)' if x.get("superseded") else "")
@@ -438,7 +451,9 @@ function vaFigures(e){
   }
   return bits.join(' · ');
 }
-function vaCredit(e){ return `<p class="vacredit">Searched by ${(e.credit || []).map(c => `<b>${esc(c.name)}</b>`).join(', ') || 'not stored'}</p>`; }
+// The old project name in stored credits reads as SetuHQ (names.public_name).
+const PUB = n => /^\s*exoplan\s*$/i.test(String(n)) ? 'SetuHQ' : String(n);
+function vaCredit(e){ return `<p class="vacredit">Searched by ${(e.credit || []).map(c => `<b>${esc(PUB(c.name))}</b>`).join(', ') || 'not stored'}</p>`; }
 function vaDetail(e){
   const kind = Object.fromEntries((e.panel || []).map(p => [p.id, p.kind]));
   const w = e.weights || {};
@@ -473,7 +488,7 @@ function vaObject(tic, id){
   if (!cov.length){ $('#vaobjbody').innerHTML = `<p>TIC ${tic} is not in the sweep yet.</p><div class="pllinks"><a class="vaall" href="${R(`#/variables`)}">All entries ›</a></div>`; return; }
   const r = cov[0], rej = r.rejected || {};
   const dl = [['Position (RA, Dec)', r.ra !== null && r.ra !== undefined ? `${vaNum(r.ra, 3)}°, ${vaNum(r.dec, 3)}°` : 'not stored'], ['TESS magnitude', vaNum(r.tmag, 2)],
-    ['Sectors searched', cov.filter(x => x.status === 'searched').map(x => x.sector).join(', ') || 'none'], ['Searched by', cov.flatMap(x => x.searched_by).join(', ') || '—'],
+    ['Sectors searched', cov.filter(x => x.status === 'searched').map(x => x.sector).join(', ') || 'none'], ['Searched by', cov.flatMap(x => x.searched_by).map(PUB).join(', ') || '—'],
     ['Light-curve points', vaNum(r.n_points, 0)], ['Consensus dips', vaNum(r.n_dips, 0)],
     ['Rejected', `${rej.below_consensus ?? 0} mark clusters below consensus · ${rej.failed_vetting ?? 0} dips failed vetting`],
     ['Known TOIs on this TIC', (r.tois || []).map(t => `${t.toi}${t.disposition ? ' (' + t.disposition + ')' : ''}`).join(', ') || 'none in the cached TOI table']];
@@ -558,7 +573,7 @@ function vaForStar(salt){
     const hit = tics.filter(t => va.cov[t]);
     if (!hit.length) return;
     $('#stsweepbody').innerHTML = hit.map(t => { const es = va.byTic[t] || [], r = va.cov[t][0];
-      return `<p><a href="${vaTicHref(t)}">TIC ${t} in the sweep ›</a> ${es.length} entr${es.length === 1 ? 'y' : 'ies'} (${es.map(e => VA_LABEL[e.class]).filter((x, i, a) => a.indexOf(x) === i).join(', ') || 'none'}); searched by ${esc(va.cov[t].flatMap(x => x.searched_by).join(', '))}, sector ${va.cov[t].map(x => x.sector).join(', ')}.</p>`; }).join('');
+      return `<p><a href="${vaTicHref(t)}">TIC ${t} in the sweep ›</a> ${es.length} entr${es.length === 1 ? 'y' : 'ies'} (${es.map(e => VA_LABEL[e.class]).filter((x, i, a) => a.indexOf(x) === i).join(', ') || 'none'}); searched by ${esc(va.cov[t].flatMap(x => x.searched_by).map(PUB).join(', '))}, sector ${va.cov[t].map(x => x.sector).join(', ')}.</p>`; }).join('');
     box.hidden = false;
   }).catch(() => {});
 }

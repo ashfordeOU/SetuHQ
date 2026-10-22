@@ -2869,6 +2869,10 @@ function mxShowChapter(ch){
   $$('#route-methods .mxch').forEach(a => { const on = a.dataset.ch === ch; if (a.hidden === on){ a.hidden = !on; } mxActivate(a, on && current === 'methods'); });
   $$('#route-methods .mxtoc a').forEach(a => { if (a.dataset.ch === ch) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current'); });
   mxCurrent = ch;
+  // A chapter's own page opens with its title (the section's introduction is the first chapter's page only).
+  const hd = $('#route-methods > header.headrow'), h1 = $('#h-methods'), deep = ch !== MX.chapters[0];
+  if (h1){ if (!h1.dataset.intro) h1.dataset.intro = h1.innerHTML; h1.innerHTML = deep ? esc(MX.labels[ch]) : h1.dataset.intro; }
+  if (hd) hd.classList.toggle('deep', deep);
   if (ch === 'equations') mxEquationsInit();
 }
 let mxCurrent = null;
@@ -3024,6 +3028,8 @@ METHODS_CSS = r"""
 .mxtoc a[aria-current="step"]{background:var(--seg-bg);color:var(--seg-ink);border-color:transparent}
 .mxtoc a[aria-current="step"] .mono{color:inherit;opacity:.7}
 .mxch{display:grid;gap:16px}
+#route-methods>header.deep p,#route-methods>header.deep~.mxch>header h2{display:none}
+#route-methods>header.deep~.mxch>header .eyebrow{margin:0}
 .mxch[hidden]{display:none}
 .mxch>header h2{margin:0;font:600 clamp(26px,3.4vw,40px)/1.08 var(--sans);letter-spacing:-.02em}
 .mxch>header .eyebrow{margin:0 0 6px}

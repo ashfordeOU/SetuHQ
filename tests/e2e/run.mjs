@@ -11,8 +11,8 @@
 //   a reload of the address shows the same page; an axe-core scan with no serious or critical violation.
 // Then: the top bar's links and sub-navigation (in place, by the History API), the phone menu (open, close, Escape,
 // keyboard), the skip link and visible focus, the search overlay (/ and Ctrl+K, arrows, Enter, Escape), Back and
-// Forward, every old address forwarding, the 404 page (and a catalogue planet drawn from it), and a crawl of every
-// internal link from the home page.
+// Forward, every old address forwarding, the 404 page, a sample of the catalogue's planet and star pages (written
+// by setuhq.stubs, as the deploy does), and a crawl of every internal link from the home page.
 // --quick runs the page matrix on a sample (the home page and one page of each kind) instead of every page.
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
@@ -38,12 +38,15 @@ function check(ok, what, detail = "") {
 const pages = JSON.parse(readFileSync(join(SITE, "assets", "pages.json"), "utf8"));
 const dataFile = readdirSync(join(SITE, "assets", "data")).find((f) => /^app-.*\.json$/.test(f));
 const D = JSON.parse(readFileSync(join(SITE, "assets", "data", dataFile), "utf8"));
-const LEAD = D.routes.lead;
-const DIPS = D.dossier_ids;
+const SLUG = (id) => D.routes.dips[id] || id;  // a dip's readable address, e.g. pi-men/dip-2
+const LEAD = SLUG(D.routes.lead);
+const IDS = D.dossier_ids;  // the stored ids, as the old addresses wrote them
+const DIPS = IDS.map(SLUG);
 const catalogue = JSON.parse(readFileSync(join(SITE, "assets", "data", "catalogue.json"), "utf8"));
 const PLANET_SLUGS = new Set(catalogue.planets.slug);
 const STAR_SLUGS = new Set(catalogue.stars.slugs);
 const STANDALONE = ["/candidates/case-file/", "/evidence/plates/", "/evidence/report/"];  // their own pages, not the app's
+const TECHNICAL = ["/docs/", "/evidence/runs/", "/evidence/report/"];  // pages that may quote a stored record verbatim
 // One known axe finding, named here so it cannot hide another: on a phone the stand-alone case file's signal list
 // (a listbox) makes each signal's header an accordion button, which ARIA does not allow inside a listbox. Fixing it
 // means a tree pattern for that list; until then it is reported (as "known") rather than failed.
@@ -131,6 +134,9 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
     check(f.ogTitle, "has og:title");
     check(f.imgs.length === 0, "every image has alt text", f.imgs.join(" "));
     check(f.hashLinks.length === 0, "no old #/ links", f.hashLinks.slice(0, 5).join(" "));
+    // The project's old name stays out of what a visitor reads; only a quoted record keeps it ("then called exoplan").
+    const old = await page.evaluate(() => (document.body.innerText.match(/.{0,30}\bexoplan\b.{0,20}/gi) || []).filter((m) => !/then called exoplan/i.test(m)));
+    check(old.length === 0 || TECHNICAL.includes(p), "no old project name in the visible text", old.slice(0, 3).join(" | "));
     if (app) check(f.h1s.length === 1, "exactly one visible h1", JSON.stringify(f.h1s));
     if (app && size === "desktop") {
       const html = readFileSync(join(SITE, p, "index.html"), "utf8");
@@ -319,16 +325,16 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
     ["/app/", "/"], ["/app/#/", "/"], ["/app/#/overview", "/"], ["/app/#/overview?layout=kpis.L,discoveries.M,runs.M,top.L", "/"],
     ["/app/#/sky", "/explore/"], ["/app/#/galaxy", "/explore/galaxy/"], ["/app/#/galaxy?focus=pi%20Men", "/explore/galaxy/?focus=pi+Men"],
     ["/app/#/catalogue", "/catalogue/"], ["/app/#/catalogue?q=kepler", "/catalogue/?q=kepler"], ["/app/#/variables", "/catalogue/everything-that-dims/"],
-    ["/app/#/mission", "/explore/mission-control/"], ["/app/#/transit", `/candidates/${LEAD}/`], [`/app/#/transit?dip=${DIPS[0]}`, `/candidates/${DIPS[0]}/`],
+    ["/app/#/mission", "/explore/mission-control/"], ["/app/#/transit", `/candidates/${LEAD}/`], [`/app/#/transit?dip=${IDS[0]}`, `/candidates/${DIPS[0]}/`],
     ["/app/#/explorer", "/candidates/"], ["/app/#/explorer?sort=depth&filter=new", "/candidates/?sort=depth&filter=new"],
-    ["/app/#/candidates", `/candidates/${LEAD}/case-file/`], [`/app/#/candidates?dip=${DIPS[1]}`, `/candidates/${DIPS[1]}/case-file/`],
-    [`/app/#/candidates?dip=${DIPS[1]}&section=ledger`, `/candidates/${DIPS[1]}/case-file/#ledger`],
+    ["/app/#/candidates", `/candidates/${LEAD}/case-file/`], [`/app/#/candidates?dip=${IDS[1]}`, `/candidates/${DIPS[1]}/case-file/`],
+    [`/app/#/candidates?dip=${IDS[1]}&section=ledger`, `/candidates/${DIPS[1]}/case-file/#ledger`],
     ["/app/#/planets", "/candidates/radius-ratios/"], ["/app/#/sentinels", "/evidence/"], ["/app/#/leaderboard", "/evidence/leaderboard/"],
     ["/app/#/runs", "/evidence/runs/"], ["/app/#/methods", "/how-it-works/"],
     ["/app/#/planet/pi-men-c", "/planets/pi-men-c/"], ["/app/#/star/pi-men", "/stars/pi-men/"],
     ["/app/#/discoveries", "/candidates/"], ["/app/#/feed", "/candidates/"], ["/app/#/panel", "/evidence/"], ["/app/#/home", "/explore/"],
     ["/app/#/cockpit", `/candidates/${LEAD}/`], ["/app/#/about", "/"], ["/app/#/no-such-section", "/"],
-    ["/docket/", "/candidates/case-file/*"], [`/docket/#${DIPS[2]}`, `/candidates/${DIPS[2]}/case-file/`],
+    ["/docket/", "/candidates/case-file/*"], [`/docket/#${IDS[2]}`, `/candidates/${DIPS[2]}/case-file/`],
     ["/plate/", "/evidence/plates/"], ["/report/", "/evidence/report/"], ["/dashboard/", "/candidates/"], ["/discoveries/", "/candidates/"],
     ["/app", "/"], ["/docket", "/candidates/case-file/*"],
   ];
@@ -361,12 +367,38 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
   const links = await page.$$eval("#route-notfound a", (as) => as.map((a) => a.getAttribute("href")));
   for (const p of ["/", "/explore/", "/candidates/", "/how-it-works/", "/evidence/", "/docs/"]) check(links.includes(p), `it links to ${p}`);
   check(await page.evaluate(() => !document.querySelector('link[rel="canonical"]')) && await page.evaluate(() => (document.querySelector('meta[name="robots"]') || {}).content === "noindex"), "it is not indexed");
-  // A catalogue planet without a page of its own is drawn by the app from the 404 page.
-  const slug = [...PLANET_SLUGS].find((s) => !pages.includes(`/planets/${s}/`));
-  await page.goto(BASE + `/planets/${slug}/`); await ready(page);
-  await page.waitForFunction(() => !/^(Planet|Planet not found)$/.test(document.getElementById("h-planet").textContent), null, { timeout: 15000 }).catch(() => {});
-  const h = await page.textContent("#h-planet");
-  check(h && !/not found/.test(h) && h !== "Planet", `a catalogue planet without its own page (${slug}) is still drawn`, h);
+  // A planet address the catalogue does not know is a 404 too.
+  const r2 = await page.goto(BASE + "/planets/no-such-planet-b/");
+  check(r2.status() === 404, "an unknown planet is a 404", r2.status());
+  await ctx.close();
+}
+
+// ---------------------------------------------------------------- the catalogue's planet and star pages (stubs)
+{
+  const ctx = await context("desktop", "dark");
+  const page = await ctx.newPage();
+  current = "catalogue pages";
+  const errs = watch(page);
+  const pick = (all, kind) => { const rest = [...all].filter((s) => !pages.includes(`/${kind}/${s}/`)).sort(); return [0, 0.25, 0.5, 0.75, 0.999].map((q) => rest[Math.floor(q * (rest.length - 1))]); };
+  check(readdirSync(join(SITE, "planets")).length > 5000, "every catalogue planet has a page (run setuhq.stubs on the site first)", readdirSync(join(SITE, "planets")).length);
+  for (const [kind, all, h] of [["planets", PLANET_SLUGS, "#h-planet"], ["stars", STAR_SLUGS, "#h-star"]]) {
+    for (const slug of pick(all, kind)) {
+      const p = `/${kind}/${slug}/`;
+      const res = await page.goto(BASE + p, { waitUntil: "load" });
+      check(res.status() === 200, `${p}: HTTP 200`, res.status());
+      const html = readFileSync(join(SITE, p, "index.html"), "utf8");
+      check(/<h1[^>]*>[^<]{2,}<\/h1>/.test(html), `${p}: its name is in the HTML without JavaScript`);
+      try { await ready(page); } catch (e) { check(false, `${p}: the app starts`, e.message); continue; }
+      await page.waitForFunction((sel) => { const e = document.querySelector(sel); return e && !/^(Planet|Star|.*not found)$/.test(e.textContent.trim()); }, h, { timeout: 15000 }).catch(() => {});
+      const f = await pageFacts(page);
+      check(f.canonical === SITE_URL + p, `${p}: canonical is its own address`, f.canonical);
+      check(/· SetuHQ$/.test(f.title), `${p}: has its own title`, f.title);
+      check(f.h1s.length === 1 && !/not found/i.test(f.h1s[0]), `${p}: the page is drawn, with one heading`, JSON.stringify(f.h1s));
+      check(await page.evaluate(() => !!document.querySelector(".topbar .nav") && !!document.querySelector("footer")), `${p}: has the site's header and footer`);
+      check(f.over <= 1, `${p}: no sideways overflow`, f.over);
+    }
+  }
+  check(errs.length === 0, "no errors", errs.slice(0, 4).join(" | "));
   await ctx.close();
 }
 
@@ -389,15 +421,14 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
       if (pages.includes(key) && !seen.has(key)) { seen.add(key); queue.push(key); }
     }
   }
-  let bad = [], viaApp = 0;
+  let bad = [], stubs = 0;
   for (const [path, from] of targets) {
     if (pages.includes(path)) continue;
-    const m = /^\/(planets|stars)\/([a-z0-9-]+)\/$/.exec(path);
-    if (m && (m[1] === "planets" ? PLANET_SLUGS : STAR_SLUGS).has(m[2])) { viaApp++; continue; }  // drawn by the app from 404.html
+    if (/^\/(planets|stars)\//.test(path)) stubs++;  // a catalogue page written at deploy time: it must be served too
     const r = await page.request.get(BASE + path);
     if (r.status() !== 200) bad.push(`${path} (from ${from}): ${r.status()}`);
   }
-  check(bad.length === 0, `every internal link resolves (${targets.size} addresses from ${seen.size} pages; ${viaApp} catalogue pages drawn by the app)`, bad.slice(0, 10).join(" | "));
+  check(bad.length === 0, `every internal link resolves (${targets.size} addresses from ${seen.size} pages; ${stubs} of them catalogue pages written at deploy time)`, bad.slice(0, 10).join(" | "));
   check(seen.size >= pages.length * 0.9, "the crawl from / reaches the pages", `${seen.size} of ${pages.length}`);
   await ctx.close();
 }

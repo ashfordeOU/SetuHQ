@@ -11,6 +11,8 @@
 #
 # Needs Node.js 18+ and the playwright package with Chromium: `npm install playwright` next to the repository (or
 # globally), or SETUHQ_PLAYWRIGHT=<its folder>. It never downloads a browser; PLAYWRIGHT_BROWSERS_PATH picks one.
+# The test runs on a copy of the site with the deploy-time pages added (python -m setuhq.stubs: a small page for every
+# catalogue planet and star, as pages.yml writes them before upload), so site/ itself is never changed.
 # Writes .site-e2e.json (every failed check, and the axe totals).
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -18,4 +20,9 @@ SITE="${1:-site}"
 [[ $# -gt 0 ]] && shift
 command -v node >/dev/null || { echo "site_e2e: node is not installed" >&2; exit 2; }
 test -s "$SITE/assets/pages.json" || { echo "site_e2e: $SITE is not a built site (no assets/pages.json); run setuhq site first" >&2; exit 2; }
-exec node tests/e2e/run.mjs --site "$SITE" --report .site-e2e.json "$@"
+PY="${PYTHON:-python3}"
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
+cp -R "$SITE" "$WORK/site"
+PYTHONPATH=src "$PY" -m setuhq.stubs "$WORK/site"
+node tests/e2e/run.mjs --site "$WORK/site" --report .site-e2e.json "$@"

@@ -286,7 +286,7 @@ const { chromium } = require(%s);
         assert r["empty"] == [False, True] and r["cleared"] == ["", True]
         assert r["scroll"]["adds"] == 20 and r["scroll"]["ordered"]  # one new row per row scrolled, none re-rendered
         assert r["planet"]["h1"] == "pi Men c" and "not stored" in r["planet"]["params"]
-        assert "/candidates/tess-fa3483ce6f83-000/" in r["planet"]["links"] and "/how-it-works/transits/" in r["planet"]["links"]
+        assert "/candidates/pi-men/dip-2/" in r["planet"]["links"] and "/how-it-works/transits/" in r["planet"]["links"]
         assert "/explore/galaxy/?focus=pi+Men" in r["planet"]["links"] and "/explore/" in r["planet"]["links"]
         assert r["star"]["h1"] == "pi Men" and r["missing"]["h1"] == "Planet not found"
         assert r["search"] == ["/planets/wasp-39-b/", "WASP-39 b", False]
@@ -358,7 +358,7 @@ const { chromium } = require(%s);
     assert out["errs"] == []
     assert "year=2000~2005" in out["hash"] and "mass=1~2" in out["hash"], out["hash"]
     assert out["boxes"] == ["2000", "2005", "1", "2"]  # year first: it comes first in the page
-    assert out["seen"][0] == "Where SetuHQ shows it:" and "/candidates/tess-fa3483ce6f83-000/" in out["seen"][1]
+    assert out["seen"][0] == "Where SetuHQ shows it:" and "/candidates/pi-men/dip-2/" in out["seen"][1]
 
 
 def test_phone_cards_are_cheap_to_lay_out():

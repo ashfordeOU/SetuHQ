@@ -137,6 +137,7 @@ svg .hl{fill:var(--ink)}
 .prov{font:11px/1.6 "Geist Mono",monospace;color:var(--muted);border-top:1px solid var(--rule);padding-top:10px;overflow-wrap:anywhere}
 .empty{color:var(--muted);font-style:italic;padding:12px 0}
 .hint{font:12px "Geist Mono",monospace;color:var(--muted)}
+.tagcand{display:inline-block;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
 kbd{font:11px "Geist Mono",monospace;border:1px solid var(--rule);border-radius:4px;padding:0 4px}
 .strip{position:relative;padding:8px;min-width:0;overflow:hidden}
 .strip svg{width:100%;touch-action:pan-y}
@@ -281,7 +282,8 @@ function renderRunHeader(){
   const chips = [['all', `all ${n(c.signals)}`], ['passed', `${n(c.passed)} passed`], ['flagged', `${n(c.flagged)} flagged`], ['rejected', `${n(c.rejected)} rejected`]];
   box.innerHTML = `<h1>${esc(D.title)}</h1>
     <p class="counts"><b>${c.signals} signal${c.signals===1?'':'s'} · ${c.dips} dip${c.dips===1?'':'s'}</b><br>
-    <span class="revcount">${c.reviewers} reviewers: ${reviewerSummary(Object.keys(D.reviewers))}</span></p>
+    <span class="revcount">${c.reviewers} reviewers: ${reviewerSummary(Object.keys(D.reviewers))}</span><br>
+    <span class="revcount">Every signal here is a candidate, unconfirmed.</span></p>
     <div class="chips" role="group" aria-label="Filter signals by vetting outcome">${chips.map(([k,l]) => `<button class="chip" data-f="${k}" aria-pressed="${state.filter===k}">${l}</button>`).join('')}</div>
     <div class="hint" style="margin-top:8px"><kbd>j</kbd>/<kbd>k</kbd> move · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> filter, <kbd>0</kbd> all · <kbd>s</kbd> strip</div>
     <button class="listtoggle" id="listtoggle" aria-expanded="${!state.listCollapsed}" aria-controls="listbody">${state.listCollapsed ? 'Show' : 'Hide'} the signal list</button>`;
@@ -685,7 +687,7 @@ function scopeNote(c){
   const eph = c.period_days ? `BLS period ${fmt(c.period_days,3)} d, t0 ${fmt(c.bls_t0,4)}, duration ${fmt((c.bls_duration_days||0)*24,1)} h; ${(c.epochs||[]).length} predicted epochs measured in this subject.` : 'No BLS ephemeris covers this dip.';
   const s = sigById[c.signal_id], merged = s && (s.bls||[]).length > 1 ? ` This signal merges ${s.bls.length} per-subject BLS results; epoch numbers E count on the reference subject's ephemeris.` : '';
   const where = D.search_scope === 'sector' ? `the BLS search ran once on all of this target's sectors stitched together; epochs are measured per ${days} subject.` : `the BLS search and its epochs are per ${days} subject, not per TESS sector.`;
-  return `Scope: ${where} ${eph}${merged} Depth and duration are the consensus window's measured values. This is a candidate, unconfirmed.`;
+  return `Scope: ${where} ${eph}${merged} Depth and duration are the consensus window's measured values.`;
 }
 
 // The archive line in the verdict card: one sentence, with the full provenance one click away.
@@ -752,7 +754,7 @@ function renderDossier(){
     </section>
     <p class="filternote" id="filternote" hidden></p>
     <div class="head">
-      <div><div class="hint">candidate, unconfirmed · ${esc(c.target)} · ${esc(c.mission)} · subject ${esc(c.subject_id)}</div>
+      <div><div class="hint"><span class="tagcand">candidate</span> ${esc(c.target)} · ${esc(c.mission)} · subject ${esc(c.subject_id)}</div>
       <h2>Signal ${esc(sigLabel(s))} <span class="dipid">· dip ${e !== null ? 'E'+e+' · ' : ''}${esc(c.candidate_id)}</span></h2></div>
       <div class="sigout">signal: ${outBadge(s.outcome)}</div>
     </div>

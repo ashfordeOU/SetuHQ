@@ -62,7 +62,8 @@ const U = %s;
   const b = await chromium.launch({ executablePath: %s, args: ['--allow-file-access-from-files'] });
   const out = [];
   for (const [w, h, mob] of [[1360, 900, false], [390, 844, true]]) for (const theme of ['dark', 'light']) {
-    const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
+    // Reduced motion: no stage animation for Playwright's stability wait to stall on, so a click needs no force.
+    const c = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob, reducedMotion: 'reduce' });
     await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
     const r = {w, theme, errs};
@@ -73,8 +74,9 @@ const U = %s;
     await p.goto(U + '#/overview'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(300);
     await p.click('#learngo'); await p.waitForTimeout(600);
     r.step1 = await p.evaluate(() => [location.pathname, document.querySelector('#learnbar').hidden, document.querySelector('#learnpos').textContent]);
-    // The bar is fixed; under a heavily loaded machine the methods stages' animation can stall Playwright's stability wait.
-    await p.click('#learnnext', {force: true}); await p.waitForTimeout(400); await p.click('#learnnext', {force: true}); await p.waitForTimeout(600);
+    // Each step waits for the bar's position to change, not for a fixed time.
+    const next = async () => { const was = await p.textContent('#learnpos'); await p.click('#learnnext'); await p.waitForFunction(t => document.querySelector('#learnpos').textContent !== t, was, {timeout: 15000}); };
+    await next(); await next(); await p.waitForFunction(() => document.documentElement.dataset.ready === '1');
     r.step3 = await p.evaluate(() => [location.pathname, document.querySelector('#learnpos').textContent]);
     r.small = await p.evaluate(() => [...document.querySelectorAll('#learnbar a, #learnbar button')].filter(e => { const q = e.getBoundingClientRect(); return q.width && (q.height < 44 || q.width < 44); }).length);
     r.docW = await p.evaluate(() => document.documentElement.scrollWidth);
@@ -104,7 +106,7 @@ const U = %s;
         assert r["card0"] == ["Start the path", f"0 of {n} visited", True]
         assert r["noBar"] is True
         assert r["step1"] == ["/how-it-works/", False, f"Learn path · 1 of {n} · How a survey works"]
-        assert r["step3"] == ["/candidates/tess-fa3483ce6f83-000/", f"Learn path · 3 of {n} · SetuHQ's own transit: the case file"]
+        assert r["step3"] == ["/candidates/pi-men/dip-2/", f"Learn path · 3 of {n} · SetuHQ's own transit: the case file"]
         assert r["small"] == 0 and r["docW"] == r["w"]
         assert r["reload"][0] is False and set(r["reload"][1]) == {"galaxy", "ch:survey", "ch:transit", "transit"}
         assert r["left"] is True

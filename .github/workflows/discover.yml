@@ -62,6 +62,8 @@ jobs:
           git add -A docs/discoveries site
           git diff --cached --quiet || git commit -m "Discovery batch $(date -u +%Y-%m-%dT%H:%MZ)"
           git push
+      - name: Catalogue planet and star pages (deploy-time, never committed)
+        run: PYTHONPATH=src python3 -m setuhq.stubs site
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa  # v3
         with:
           path: site
