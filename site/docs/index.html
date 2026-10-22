@@ -13,11 +13,11 @@
 <script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/site-0ba1243009.css">
-<link rel="preload" href="/assets/data/app-31a6c2bad6.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/data/app-83549d74cc.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-f46053c2fd.js" as="script">
 <script src="/assets/site-8efaa37a95.js" defer></script>
 </head>
-<body class="page-docs" data-page="docs" data-route="docs" data-data="/assets/data/app-31a6c2bad6.json" data-routes="/assets/views-478cae4606.html" data-app="/assets/app-f46053c2fd.js">
+<body class="page-docs" data-page="docs" data-route="docs" data-data="/assets/data/app-83549d74cc.json" data-routes="/assets/views-1905b8bc03.html" data-app="/assets/app-f46053c2fd.js">
 <img class="starfield" src="/assets/starfield-7d78158d28.svg" alt="" aria-hidden="true">
 <a class="skip" href="#content">Skip to content</a>
 <header class="topbar">
@@ -46,7 +46,7 @@
       </div>
       <div class="prose">
         <h2 id="start">Install and first run</h2>
-        <p>SetuHQ needs Python 3.10 or newer.</p>
+        <p>SetuHQ needs Python 3.11 or newer.</p>
         <pre tabindex="0"><code>pip install "setuhq[tess] @ git+https://github.com/ashfordeOU/SetuHQ"
 setuhq run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
 setuhq site runs/tess-pi-men-s1 --out site     # this website, from your run</code></pre>
@@ -69,7 +69,7 @@ setuhq-mcp --list-tools</code></pre>
         </ul>
         <p>SetuHQ's own data, benchmark, leaderboard and paper are under CC BY 4.0; the code is under the AGPL-3.0 (a commercial licence is available). Cite it with <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/CITATION.cff">CITATION.cff</a>.</p>
         <h2 id="provenance">Technical details: where the figures come from</h2>
-        <p>The candidate pages show figures from the stored run <code>tess-pi-men-s1</code>, made with an earlier version of the pipeline. Two later fixes change default results, and a re-run on the current code is in progress. The run's own record says:</p><blockquote class="technote"><p>Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py&#x27;s odd/even test no longer fails clean deep planets. Not re-run since.</p></blockquote>
+        <p>The candidate pages show figures from the stored run <code>tess-pi-men-s1</code>, made with the current code.</p>
         <p>Every number on the candidate and evidence pages is read from stored files: the run directory, the search catalogue and the calibrated reviewer weights. <a href="/evidence/runs/">Runs and configuration</a> lists the files, the configuration and its hash.</p>
       </div>
 </section>

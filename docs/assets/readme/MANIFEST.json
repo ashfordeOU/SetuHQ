@@ -27,10 +27,10 @@
         "pi-men-dark.svg"
       ],
       "sources": {
-        "runs/tess-pi-men-s1": "bb9176770fdecbf8f316c2aa9906785b9f3562de3deab559b4d92ef1d22e5859",
+        "runs/tess-pi-men-s1": "d68d2b4f17073bca7814789d55e0af4632846ddffe60b7387c86c2359fa2a412",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "5f8978f"
+      "commit": "b742c73"
     },
     "benchmark": {
       "files": [
@@ -70,11 +70,11 @@
         "flow-pipeline-dark.svg"
       ],
       "sources": {
-        "runs/tess-pi-men-s1": "bb9176770fdecbf8f316c2aa9906785b9f3562de3deab559b4d92ef1d22e5859",
+        "runs/tess-pi-men-s1": "d68d2b4f17073bca7814789d55e0af4632846ddffe60b7387c86c2359fa2a412",
         "configs/tess_pi_men_s1.toml": "ecc1bf3a744ca6aea3199135cbb9f907b5203d13a047bb608305dc530a0c968b",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "5f8978f"
+      "commit": "b742c73"
     },
     "architecture": {
       "files": [
@@ -94,10 +94,10 @@
         "methods-strip-dark.svg"
       ],
       "sources": {
-        "src/setuhq/methods.py": "8c48f85242f1fce6d9f437400325d232c926236d932f89e2f082bf708098b6e1",
+        "src/setuhq/methods.py": "5624827c8c8588ef794b41a1581bbf23850670c01cc8b6bcc7b2b50d5ec6b887",
         "docs/results/methods_examples.json": "5190fc392d23af5ca9446ed4b06bdd24948a23534f2eefe763a47d31adec4974"
       },
-      "commit": "b00ba2f"
+      "commit": "5f5e110"
     }
   },
   "brand": {
@@ -122,8 +122,8 @@
     }
   },
   "repo_counts": {
-    "modules": 49,
-    "tests": 737,
+    "modules": 53,
+    "tests": 800,
     "network": 2,
     "slow": 4,
     "chapters": 15,
@@ -143,35 +143,35 @@
       "check-sweep",
       "dashboard",
       "docket",
-      "app",
       "crossmatch",
       "plate",
       "report",
-      "leaderboard"
+      "leaderboard",
+      "mcp"
     ]
   },
   "app_screenshots": {
     "captured_by": "tools/capture_site_shots.mjs",
     "record": "app/SHOTS.json",
     "files": {
-      "catalogue-dark.webp": "4d9ed9a7b899ab62ee5bae7565f3f24f8250bcf18dd5bcb9e711a303015eeacb",
-      "catalogue-light.webp": "8e40f31971f5dddb7bd15ca40c6184ff982e33e76b721c032fa4a1dd1fb4b6c7",
-      "galaxy-dark.webp": "c9c93aeaa1e1520d16f361ef8cde7663d6e29e3201d5d39afaee72ba0168aee6",
-      "galaxy-light.webp": "efe021a1cd2d30b938b1719a187a6f000b13f4e0734d4c8c8dbfceb2b9e65b55",
-      "methods-atmospheres-dark.webp": "293c41790de83bc5ebd969454e0178cf7d0303a031b4f051144215dc35884e8a",
-      "methods-atmospheres-light.webp": "c3bdc254be8d9a1de0881042fcceffe0f868372d58d108f3a7eb91fd576f8d7b",
-      "methods-rv-dark.webp": "3d2e8a0d570fdf6922056d71b43922c6fc377bc7cde9f8fb98c64fb113ceff50",
-      "methods-rv-light.webp": "0945306e0fc5cf9b53ea92c94ea805c4f65f3b93d21447b8c1e9a14c986b611e",
-      "methods-starlight-dark.webp": "ffefdf2c73dfdd682865696f4dba82fbcbd74a7903f0b6215a7bc003a76c16ad",
-      "methods-starlight-light.webp": "acac0bb4784c8cc5d6b9bcdd5fcc272b06fc28d48194ce719f809d1a0857953d",
-      "mission-dark.webp": "38107b16ef87cbf9abd1f718b5df2a25884ec639065b2ecba5ab1e5a7da110b2",
-      "mission-light.webp": "c6e8f457c1fbd2cc8fc1c4d3ba8fe28bbd7adaa64b41e49319b8d1caf8d9cc80",
-      "overview-dark.webp": "439df40a894cf2175d220e837519de2c07e83e4adc3e47a6cce8c2e4b3b9b785",
-      "overview-light.webp": "d7afd2d2442102aa97098ff2759323884f259d2415088e9924d5bb1ad6f02d62",
-      "planet-dark.webp": "3c3baa4309aa1239c7e153f6df01f9b5d87f839fc5c322d9219eb8682e585c9b",
-      "planet-light.webp": "a910407f3adbf667f583bdafb4d5d5d239d1cffd60817dae2d45e26837f205b6",
-      "transit-dark.webp": "864767147684a0b4a90d1ec4f77830c5747825973a4ed524c6a5b8dee92d3031",
-      "transit-light.webp": "eeb4d58cc3aa88174e50a98c79ae97ab1bff7bbe9fa521a716ab87183fcdc154"
+      "catalogue-dark.webp": "bfa6b4ee63d015f2839efb044cc489873d3e161825b559f0ba25e0bc2d7a8352",
+      "catalogue-light.webp": "1ea070250e9f17eb0552181f41e9a61df8a5629cc8fe5867aaef62a4d8617f27",
+      "galaxy-dark.webp": "a6df6ef84e9eda1417210b13f990dc283464d0f23e8ed5996d84a3a9982ba787",
+      "galaxy-light.webp": "eca0937ec3ae4ccad92264f269d0c19e3182928f5ee650f73e1f85a94beac841",
+      "methods-atmospheres-dark.webp": "2efd42a5ae3421f724142f3331ce5c2777b699b3634377d8c06f134e63a4a7fe",
+      "methods-atmospheres-light.webp": "afdbe73bbe42b0d538e74725bbafac2fd866d20ca752f038c92c57ed996487ce",
+      "methods-rv-dark.webp": "8c37e3b6519d540f5f9ff49b6dfc012e4b0d1c122dd82be44fd0c2bddb693ebf",
+      "methods-rv-light.webp": "bf8d63afe2c80b3ec7ff91ad6d2b88f8d0893b39e51e285369be77a12efc0805",
+      "methods-starlight-dark.webp": "cc98db7a3f636455b5fd5c4c8aa71ac38eff47d74477f3b06a7526e8d98d81a2",
+      "methods-starlight-light.webp": "3ba1c312168fa9c2c8bc4e10bea36c6d8913a8e07396e97e1e43ea6c6e47dc45",
+      "mission-dark.webp": "d932e045f717f87d6177463270dbf8d6152bcd76b71c73ae340057712d913f55",
+      "mission-light.webp": "38b529b78a3b46931db260f4e22aa3ab9478b7a3ae6d7855b9c01b3b31a88486",
+      "overview-dark.webp": "046641eaddd0f0166830c418c0888319c6db4300fa463c82e6e49fa4da4dbdfb",
+      "overview-light.webp": "8c86fdf14a24c5210d3e8e3ab88492b249fdf45c92b7cd266086e99135b6b31b",
+      "planet-dark.webp": "8b21b96716adcfa699624b05f9b70715b18b73c290e6d1c311c52aa3618e0eff",
+      "planet-light.webp": "b483ec19eb479db861d4b0a3990d3c00535440670a9f0b34e21ccf85039ed9bb",
+      "transit-dark.webp": "91f7a2348eaaa5aed58271f0519ba279a2bd0f45768b1ee899b33142b1fe0037",
+      "transit-light.webp": "57b8d8b54eceb0f1a738ca7efc85543a79d20ccb82fdd85eba2f51ff370665b2"
     }
   },
   "made_with": {
