@@ -59,7 +59,7 @@ LEGACY_PAGES = {"/app/": "/", "/docket/": "/candidates/case-file/", "/plate/": "
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,119}$")
 DIP_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$")
 # A dip's readable address, "<star>/dip-<n>" (/candidates/pi-men/dip-2/), by its stored candidate id. The build
-# sets it from the run's pinned slugs (app.pinned_dip_slugs, runs/<run>/slugs.json); an id it does not know keeps its
+# sets it from the run's pinned slugs (setuhq.dipslugs, runs/<run>/slugs.json); an id it does not know keeps its
 # own id as the address. GONE_DIPS: addresses once given to a dip that is no longer in the run, which stay 404s.
 DIP_SLUGS: dict[str, str] = {}
 GONE_DIPS: list[str] = []

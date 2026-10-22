@@ -102,25 +102,32 @@ index of `sitemap-pages.xml` (the build's pages) and, after the stubs, `sitemap-
 ### Dip addresses are permanent
 
 A dip's address names its star and its number for that star (`/candidates/pi-men/dip-2/`); the stored id stays in
-the data, and the old addresses that used it forward. The numbers are pinned in `runs/<run>/slugs.json` (dip id to
-address), which `setuhq site` writes the first time it builds a run and only ever adds to:
+the data, and the old addresses that used it forward. The numbers are pinned in `runs/<run>/slugs.json`, which
+`setuhq site` writes the first time it builds a run and only ever adds to (`setuhq.dipslugs`). Each entry holds the
+address and its dip's subject, mid-time and duration (and the candidate id it had, for reference). An address
+belongs to the dip, not to the id: a candidate id is `{subject}-{rank}`, so a re-run that ranks dips differently
+swaps ids, and matching by id would point an address at another dip. On every build:
 
-* a dip already in the file keeps its address, however the run is rebuilt;
-* a new dip id gets the next free number of its star (in time order among the new ones), never a number in use;
-* a dip that leaves the run keeps its entry, so its number is never given to another dip. Its address is not
+* each pinned address is matched to the run's dip in the same subject whose mid-time is within the pinned dip's
+  duration, and never more than half a day, nearest first, one dip per address; it keeps its address;
+* a dip that matches no address gets the next free number of its star (in time order among the new ones);
+* an address that matches no dip (the dip left the run, or moved by more than its duration) keeps its entry, so its
+  number is never given to another dip. Its address is not
   built, so GitHub Pages answers it with `404.html`, which says "This dip is no longer in the run" and links to the
   candidates (`routes.GONE_DIPS`, `D.routes.gone`). An address the run never had is an ordinary not-found page.
   Neither ever shows another dip in its place.
 
 The re-run on the fixed code (the rerun-fixed branch) rebuilds `runs/tess-pi-men-s1` with the same seven dips, field
-for field, so the same candidate ids, and the committed `slugs.json` keeps them at `pi-men/dip-1` to `pi-men/dip-7`.
+for field, in the same subjects at the same mid-times, so the committed `slugs.json` keeps them at `pi-men/dip-1` to
+`pi-men/dip-7` (checked against that branch's `candidates.json`). The plates name each run dip the same way
+("pi Men, dip 5"), with its stored id after it.
 Keep `slugs.json` when a run folder is regenerated: deleting it would let the next build number the dips afresh.
 
 ### A dip's status
 
 Only a dip that passed vetting is a candidate ("candidate, unconfirmed", tag "candidate"). A flagged dip is open
 (tag "flagged") and a rejected dip is not a candidate (tag "rejected"; its page plays back "the dip", not "the
-transit"). One table drives every tag and phrase: `app.DIP_STATE` (page script: `DIPSTATE`, `DIPTAG`).
+transit"). One table drives every tag, phrase and count: `names.DIP_STATE` and `names.dip_count` ("7 dips (5 candidates, 1 flagged, 1 rejected)"; page script: `DIPSTATE`, `DIPTAG`).
 
 ### Shared files and the page budget
 

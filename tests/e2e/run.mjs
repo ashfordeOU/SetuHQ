@@ -409,6 +409,23 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
     const d = D.story.dips.find((x) => `/candidates/${SLUG(x.id)}/` === href);
     check(d && tag === { passed: "candidate", flagged: "flagged", rejected: "rejected" }[d.outcome], `${href}: its tag follows its outcome`, `${tag} for ${d && d.outcome}`);
   }
+  // The run's count, as every page must give it: "7 dips (5 candidates, 1 flagged, 1 rejected)".
+  const k = (o) => D.story.dips.filter((d) => d.outcome === o).length, nd = D.story.dips.length;
+  const runCount = `${nd} dips (` + [[k("passed"), "candidate", "candidates"], [k("flagged"), "flagged", "flagged"], [k("rejected"), "rejected", "rejected"]]
+    .filter(([n]) => n).map(([n, one, many]) => `${n} ${n === 1 ? one : many}`).join(", ") + ")";
+  // The plates: the run plate's line, and no count anywhere (text, SVG descriptions, labels) that calls every dip a candidate.
+  await page.goto(BASE + "/evidence/plates/", { waitUntil: "load" });
+  const pl = await page.evaluate(() => ({ text: document.body.innerText,
+    svg: [...document.querySelectorAll("svg desc, svg title, [aria-label]")].map((e) => e.getAttribute("aria-label") || e.textContent).join(" | "),
+    rows: [...document.querySelectorAll("p.caption b.fig")].map((b) => b.textContent) }));
+  check(pl.text.includes(`· ${runCount} ·`), "the plates count the run's dips by status", runCount);
+  check(!/\b\d+ candidates? (on|by) /.test(pl.text + pl.svg), "no plate count calls every dip a candidate", (pl.text + pl.svg).match(/.{0,30}\d+ candidates? (on|by) .{0,20}/g));
+  const named = D.story.dips.map((d) => (D.dips[d.id] || {}).label).filter(Boolean).map((l) => l.replace(/ \([\d.]+ d\)$/, ""));
+  check(named.every((l) => pl.rows.some((r) => r.includes(l + "."))), "each run dip's plate row leads with its name", pl.rows.slice(0, 3).join(" | "));
+  // The case file's intro.
+  await page.goto(BASE + `/candidates/${SLUG(D.story.dips[0].id)}/case-file/`); await ready(page);
+  const intro = await page.evaluate(() => document.querySelector("#route-candidates header").textContent);
+  check(/Each signal that passed vetting is a candidate, unconfirmed; a rejected or flagged one is named by its status\./.test(intro) && !/Every signal here is a candidate/.test(intro), "the case file's intro names what is a candidate", intro.slice(0, 200));
   await ctx.close();
 }
 

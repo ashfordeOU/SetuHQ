@@ -285,30 +285,75 @@ def test_every_catalogue_planet_and_star_gets_a_small_page(site, tmp_path):
     assert "/planets/pi-men-c/" not in (tmp_path / "sitemap-planets-1.xml").read_text()
 
 
-def test_dip_addresses_are_pinned_per_star_and_never_renumbered(tmp_path):
-    from setuhq.app import dip_names, load_pinned_slugs, pinned_dip_slugs
+def _dip(i, t, subject="s1", target="TIC 1", dur=2.0):
+    return {"candidate_id": i, "t_start": t - 0.05, "t_center": t, "subject_id": subject, "target": target,
+            "duration_hours": dur, "period_days": None}
 
-    def c(i, t, target="TIC 1"):
-        return {"candidate_id": i, "t_start": t, "target": target, "period_days": None}
+
+def test_dip_addresses_are_pinned_per_star_and_never_renumbered(tmp_path):
+    from setuhq import dipslugs
+    from setuhq.app import dip_names, pin_run_dips
+
     names = {"TIC 1": "pi Men", "TIC 2": "HD 1"}
-    first = dip_names([c("a", 3), c("b", 1), c("x", 2, "TIC 2")], names)
-    assert {i: d["slug"] for i, d in first.items()} == {"b": "pi-men/dip-1", "a": "pi-men/dip-2", "x": "hd-1/dip-1"}
-    every, gone = pinned_dip_slugs(tmp_path, first, {})
-    assert gone == [] and load_pinned_slugs(tmp_path) == every
-    # A rebuilt run: "b" is gone and "c" is new, earlier in time than "a". Nobody is renumbered; "c" gets the next
-    # number of its star, and "b"'s address is not given to anyone.
-    again = dip_names([c("a", 3), c("c", 0.5)], names, load_pinned_slugs(tmp_path))
-    assert again["a"]["slug"] == "pi-men/dip-2" and again["c"]["slug"] == "pi-men/dip-3" and again["c"]["label"] == "pi Men, dip 3"
-    every, gone = pinned_dip_slugs(tmp_path, again, load_pinned_slugs(tmp_path))
-    assert gone == ["hd-1/dip-1", "pi-men/dip-1"] and load_pinned_slugs(tmp_path)["b"] == "pi-men/dip-1"
+    first, gone = pin_run_dips(tmp_path, [_dip("s1-000", 3), _dip("s1-001", 1), _dip("s2-000", 2, "s2", "TIC 2")], names)
+    assert {i: d["slug"] for i, d in first.items()} == {"s1-001": "pi-men/dip-1", "s1-000": "pi-men/dip-2", "s2-000": "hd-1/dip-1"}
+    assert gone == [] and first["s1-000"]["label"] == "pi Men, dip 2"
+    saved = dipslugs.load(tmp_path)
+    assert {e["slug"]: (e["subject"], e["t_center"], e["star"]) for e in saved}["pi-men/dip-2"] == ("s1", 3, "pi Men")
+    # A rebuilt run: the dip at t=1 is gone and a new one at t=0.5 appears, earlier than the rest. Nobody is
+    # renumbered; the new dip gets the next number of its star, and the gone address is not given to anyone.
+    again, gone = pin_run_dips(tmp_path, [_dip("s1-000", 3), _dip("s1-001", 0.5), _dip("s2-000", 2, "s2", "TIC 2")], names)
+    assert again["s1-000"]["slug"] == "pi-men/dip-2" and again["s1-001"]["slug"] == "pi-men/dip-3" and gone == ["pi-men/dip-1"]
+    assert [e["slug"] for e in dipslugs.load(tmp_path)] == ["hd-1/dip-1", "pi-men/dip-1", "pi-men/dip-2", "pi-men/dip-3"]
+    # Same input again: nothing changes, nothing is written.
+    assert pin_run_dips(tmp_path, [_dip("s1-000", 3), _dip("s1-001", 0.5), _dip("s2-000", 2, "s2", "TIC 2")], names)[1] == ["pi-men/dip-1"]
+    assert dip_names([], names)[0] == {}
+
+
+def test_an_older_slugs_file_is_read_by_id_once_then_pinned_by_time(tmp_path):
+    from setuhq import dipslugs
+    from setuhq.app import pin_run_dips
+
+    (tmp_path / "slugs.json").write_text(json.dumps({"slugs": {"s1-000": "pi-men/dip-4"}}))
+    names, gone = pin_run_dips(tmp_path, [_dip("s1-000", 10.0), _dip("s1-001", 20.0)], {"TIC 1": "pi Men"})
+    assert names["s1-000"]["slug"] == "pi-men/dip-4" and names["s1-001"]["slug"] == "pi-men/dip-5" and gone == []
+    assert {e["slug"]: e["t_center"] for e in dipslugs.load(tmp_path)} == {"pi-men/dip-4": 10.0, "pi-men/dip-5": 20.0}
+
+
+def test_an_address_follows_its_dip_not_its_rank(tmp_path):
+    """A candidate id is {subject}-{rank}: a re-run that ranks two dips the other way swaps their ids. Each address
+    stays with its dip (same subject, same mid-time within its duration)."""
+    from setuhq.app import pin_run_dips
+
+    names = {"TIC 1": "pi Men"}
+    before, _ = pin_run_dips(tmp_path, [_dip("s1-000", 10.0), _dip("s1-001", 20.0)], names)
+    assert before["s1-000"]["slug"] == "pi-men/dip-1" and before["s1-001"]["slug"] == "pi-men/dip-2"
+    swapped, gone = pin_run_dips(tmp_path, [_dip("s1-001", 10.001), _dip("s1-000", 20.0)], names)
+    assert swapped["s1-001"]["slug"] == "pi-men/dip-1" and swapped["s1-000"]["slug"] == "pi-men/dip-2" and gone == []
+    # A dip that moved by more than its duration is not the same dip: its address is gone and it gets a new number.
+    moved, gone = pin_run_dips(tmp_path, [_dip("s1-001", 10.001), _dip("s1-000", 20.3)], names)
+    assert moved["s1-001"]["slug"] == "pi-men/dip-1" and moved["s1-000"]["slug"] == "pi-men/dip-3" and gone == ["pi-men/dip-2"]
+    # Two dips half a day apart in one subject (as pi Men's dip 5 and dip 6): each keeps its own address.
+    tmp2 = tmp_path / "close"
+    tmp2.mkdir()
+    a, _ = pin_run_dips(tmp2, [_dip("s1-000", 48.38, dur=9.9), _dip("s1-001", 48.94, dur=0.9)], names)
+    b, _ = pin_run_dips(tmp2, [_dip("s1-001", 48.38, dur=9.9), _dip("s1-000", 48.94, dur=0.9)], names)
+    assert a["s1-000"]["slug"] == b["s1-001"]["slug"] and a["s1-001"]["slug"] == b["s1-000"]["slug"]
 
 
 def test_the_pi_men_run_keeps_its_seven_addresses(site):
-    """runs/tess-pi-men-s1/slugs.json pins dip-1 to dip-7; a rebuilt run with the same dips keeps them."""
-    pinned = json.loads(Path("runs/tess-pi-men-s1/slugs.json").read_text())["slugs"]
-    assert sorted(pinned.values()) == sorted(f"pi-men/dip-{n}" for n in range(1, 8))
+    """runs/tess-pi-men-s1/slugs.json pins dip-1 to dip-7 to the dips by subject and mid-time; the run as stored maps
+    to them exactly (and so does the re-run on the fixed code, which has the same seven dips at the same times)."""
+    from setuhq import dipslugs
+
+    pinned = dipslugs.load("runs/tess-pi-men-s1")
+    assert [e["slug"] for e in pinned] == [f"pi-men/dip-{n}" for n in range(1, 8)]
+    assert all(e["subject"] and e["t_center"] and e["duration_hours"] for e in pinned)
+    cands = json.loads(Path("runs/tess-pi-men-s1/candidates.json").read_text())
+    slugs, gone, entries = dipslugs.pin(cands, pinned, lambda c: "pi-men")
+    assert gone == [] and entries == pinned and sorted(slugs.values()) == [e["slug"] for e in pinned]
     data = json.loads(next(site.glob("assets/data/app-*.json")).read_text())
-    assert data["routes"]["dips"] == pinned and data["routes"]["gone"] == []
+    assert data["routes"]["dips"] == slugs and data["routes"]["gone"] == []
 
 
 def test_a_rejected_dip_is_never_called_a_candidate(site):

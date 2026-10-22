@@ -33,7 +33,8 @@ import re
 from pathlib import Path
 
 from setuhq import brand
-from setuhq.names import ATTRIBUTION, SENTINEL_KINDS
+from setuhq import dipslugs
+from setuhq.names import ATTRIBUTION, SENTINEL_KINDS, dip_count
 from setuhq.docket import OUTCOME_LABEL, docket_data
 
 UNCONFIRMED = "Candidate, unconfirmed."
@@ -111,6 +112,7 @@ ol.captions{list-style:none;margin:12px 0 0;padding:0;border-top:1px solid var(-
 ol.captions li{border-bottom:1px solid var(--hair);padding:7px 0;break-inside:avoid;page-break-inside:avoid}
 p.caption{margin:0;font-size:14px;line-height:1.5;hyphens:auto}
 p.caption b.fig{font-weight:600}
+p.caption .sid{color:var(--muted);font-size:.85em}
 .printonly{display:none}
 .word.cand{color:var(--ink)}
 .word{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.05em;border:1px solid currentColor;padding:2px 4px;margin-right:4px;white-space:nowrap;display:inline-block;vertical-align:1px}
@@ -283,6 +285,13 @@ def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | No
         catalog = json.loads(Path(catalog_path).read_text())
     feed = catalog.get("candidates") or []
 
+    # Each run dip's name on the website ("pi Men, dip 5"), from the run's pinned addresses (setuhq.dipslugs); a dip
+    # the file does not hold yet is named by its star's TIC and the next number, as the site will name it.
+    slugs, _, entries = dipslugs.pin(dock["candidates"], dipslugs.load(run_dir),
+                                     lambda c: re.sub(r"[^a-z0-9]+", "-", (c.get("target") or c["subject_id"]).lower()).strip("-"))
+    star_word = {e["slug"]: e.get("star") for e in entries}
+    target = {c["candidate_id"]: c.get("target") or c["subject_id"] for c in dock["candidates"]}
+    labels = {i: f'{star_word.get(s) or target[i]}, dip {s.rpartition("/dip-")[2]}' for i, s in slugs.items()}
     stars: list[dict] = []
     by_target: dict[str, list[dict]] = {}
     for c in dock["candidates"]:
@@ -308,7 +317,7 @@ def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | No
             "candidates": [{**{k: c.get(k) for k in ("candidate_id", "subject_id", "t_center", "t_start", "t_end", "time_unit",
                                                      "depth_ppm", "duration_hours", "snr", "n_reviewers", "period_days",
                                                      "bls_t0", "outcome", "flags", "reviewers")},
-                            "status": c.get("outcome"),
+                            "status": c.get("outcome"), "label": labels.get(c["candidate_id"]),
                             "archive_line": (comparison.get(c["candidate_id"]) or {}).get("line", ""),
                             "caption": run_caption(c, len(kinds), kinds, comparison.get(c["candidate_id"]))}
                            for c in cands],
@@ -404,7 +413,7 @@ def river_svg(stars: list[dict]) -> str:
     unit = events[0][1].get("time_unit") or ""
     out = [f'<svg class="wide" viewBox="0 0 {W:g} {H}" role="img" aria-labelledby="river-t river-d">'
            f'<title id="river-t">River of time</title>'
-           f'<desc id="river-d">{len(events)} candidates on {len(stars)} stars by mid-time ({_e(unit)}); tick height is log SNR '
+           f'<desc id="river-d">{dip_count([c.get("status") for _, c in events])} on {len(stars)} stars by mid-time ({_e(unit)}); tick height is log SNR '
            f'and colour is status, written beside each row. Empty stretches longer than {RIVER_GAP_DAYS:.0f} days are cut, and the '
            f'{len(clusters)} segments are not drawn to a common time scale: each is labelled at its start and end, with its span.</desc>']
     for i, s in enumerate(stars):
@@ -543,7 +552,7 @@ def feed_strip_svg(s: dict) -> str:
     base = H - pb
     lmax = math.log10(max(max(_num(c["snr"]) or 1 for c in cands), 10.0))
     unit = cands[0].get("time_unit") or ""
-    out = [f'<svg class="wide" viewBox="0 0 {W} {H}" role="img" aria-label="{_e(s["star"])}: {len(cands)} candidates by mid-time '
+    out = [f'<svg class="wide" viewBox="0 0 {W} {H}" role="img" aria-label="{_e(s["star"])}: {dip_count([c.get("status") for c in cands])} by mid-time '
            f'({_e(unit)}), tick height log SNR, colour status. No light curve is stored for this star.">']
     for i, c in enumerate(cands):
         x = X(c["t_center"])
@@ -589,6 +598,13 @@ def plate_labels(page: str) -> list[str]:
     return panels + caps
 
 
+def _dip_name(c: dict) -> str:
+    """A run dip leads with its name on the website ("pi Men, dip 5."), its stored id after it; a feed entry has its id."""
+    if c.get("label"):
+        return f'{_e(c["label"])}.</b> <span class="sid mono">stored id {_e(c["candidate_id"])}.</span> '
+    return f'<span class="mono">{_e(c["candidate_id"])}</span>.</b> '
+
+
 def _cand_word(status: str) -> str:
     """The small "candidate" tag, only on what is one: a rejected or flagged dip is named by its status word alone."""
     return '<span class="word cand">candidate</span>' if status in ("passed", "new_candidate", "known_toi") else ""
@@ -609,7 +625,7 @@ def _plate(s: dict, i: int) -> str:
     letters = dict(zip((c["candidate_id"] for c in s["candidates"]), _letters(len(s["candidates"]))))
     figs = []
     if s["source"] == "run":
-        sub = (f'Run {_e(s["run"])} · {len(s["candidates"])} candidate{"s" if len(s["candidates"]) != 1 else ""} · '
+        sub = (f'Run {_e(s["run"])} · {dip_count([c.get("status") for c in s["candidates"]])} · '
                f'{len(s["subjects"])} subject{"s" if len(s["subjects"]) != 1 else ""}')
         for k, subj in enumerate(s["subjects"]):
             mine = [c for c in s["candidates"] if c["subject_id"] == subj["subject_id"]]
@@ -640,7 +656,7 @@ def _plate(s: dict, i: int) -> str:
 <p class="nocurve">No light curve is stored for this star in this build: the search catalogue keeps measured values only, so there is no whole-subject curve and no folded panel.</p>''')
         archive = ""
     caps = "".join(f'<li id="{pid}-{letters[c["candidate_id"]]}"><p class="caption">{_cand_word(c.get("status"))}{_word(c.get("status"))}'
-                   f'<b class="fig">{i}{letters[c["candidate_id"]]}. <span class="mono">{_e(c["candidate_id"])}</span>.</b> '
+                   f'<b class="fig">{i}{letters[c["candidate_id"]]}. {_dip_name(c)}'
                    f'{_e(c["caption"])}</p></li>' for c in s["candidates"])
     return f'''<article class="plate" id="{pid}" aria-labelledby="{pid}-h">
 <h2 class="ptitle" id="{pid}-h"><span class="num">Plate {i}</span> {_e(s["star"])}</h2>
@@ -678,7 +694,7 @@ def plate_page(data: dict) -> str:
 <header class="mast">
   <p class="kicker"><a href="/" aria-label="SetuHQ, home">{brand.logo()}</a><span>plates</span></p>
   <h1>{title}</h1>
-  <p><span class="hedge">Candidate, unconfirmed.</span> {n} dips on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
+  <p><span class="hedge">Candidate, unconfirmed.</span> {dip_count([c.get("status") for s in stars for c in s["candidates"]])} on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
   <ul class="notes">
     <li>{_e(scope)}</li>
     <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.</li>

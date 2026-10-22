@@ -180,3 +180,23 @@ def test_plate_says_a_fallback_cross_match_was_recorded_not_fetched():
     assert text.startswith("recorded 2026-10-16 (commit 0f6dbdc) in docs/results/pi_men_crossmatch.json")
     assert "fetched" not in text and "ModuleNotFoundError: x" in text
     assert _xm_dated({"fetched_at": "2026-10-18T00:00:00+00:00"}) == "fetched 2026-10-18T00:00:00+00:00"
+
+
+def test_counts_name_each_dip_by_its_status_and_rows_lead_with_the_run_label(run_dir, catalog, tmp_path):
+    """The plates count dips, not candidates: "7 dips (5 candidates, 1 flagged, 1 rejected)", in the header, each run
+    plate's line, the river's description and each strip's label. A run dip's caption leads with its website name."""
+    from setuhq.names import dip_count
+
+    data = plate_data(run_dir, title="t", catalog_path=catalog)
+    page = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog).read_text()
+    every = [c.get("status") for s in data["stars"] for c in s["candidates"]]
+    assert f"</span> {dip_count(every)} on {len(data['stars'])} stars" in page
+    assert re.search(r'<desc id="river-d">' + re.escape(dip_count(every)) + " on ", page)
+    for s in data["stars"]:
+        if s["source"] == "run":
+            assert f"Run {s['run']} · {dip_count([c.get('status') for c in s['candidates']])} · " in page
+            for c in s["candidates"]:
+                assert c["label"] and re.search(rf'<b class="fig">\d+[a-z]+\. {re.escape(c["label"])}\.</b> <span class="sid mono">stored id {re.escape(c["candidate_id"])}\.</span>', page), c
+    assert not re.search(r"\d+ candidates? (on|by) ", page)  # every count is of dips, by status
+    assert dip_count(["passed"] * 5 + ["flagged", "rejected"]) == "7 dips (5 candidates, 1 flagged, 1 rejected)"
+    assert dip_count(["known_toi", "new_candidate"]) == "2 dips (2 candidates)"

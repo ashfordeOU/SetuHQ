@@ -4,13 +4,14 @@
 // html and body hide sideways overflow, so a page can be wider than the window with no scroll bar: its text is then
 // cut off at the right edge, and document.scrollWidth does not show it. This looks at each element instead.
 // Not counted, by name: what sits inside a deliberate sideways scroller listed in SCROLLERS (wide tables and the
-// like, which scroll on a phone), and decorative drawing (ART: canvas, svg) that may run past the edge on purpose.
+// like, which scroll on a phone), and decorative drawing that may run past the edge on purpose (ART: canvas, the home
+// artwork, and an svg marked decorative with aria-hidden="true" or class "art"). A chart (an svg with role="img") counts.
 // A scroller not on the list is reported (as "unlisted scroller"), so a new one is a decision, not an accident.
 // What an ancestor hides with overflow (other than html and body) is cut to that ancestor first.
 (() => {
   const W = document.documentElement.clientWidth;
   const out = [];
-  const ART = "canvas, svg, svg *, .planetfig, .planetfig *";
+  const ART = "canvas, svg[aria-hidden=\"true\"], svg[aria-hidden=\"true\"] *, svg.art, svg.art *, .planetfig, .planetfig *";
   const SCROLLERS = "%SCROLLERS%";
   const scroller = (el) => { const s = getComputedStyle(el); return /(auto|scroll)/.test(s.overflowX) && el.scrollWidth > el.clientWidth + 1; };
   const name = (el) => el.tagName.toLowerCase() + (el.id ? "#" + el.id : "") + (el.className && typeof el.className === "string" ? "." + el.className.trim().split(/\s+/).join(".") : "");

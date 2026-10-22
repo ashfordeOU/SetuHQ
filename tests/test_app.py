@@ -179,6 +179,9 @@ def test_every_discovery_surface_says_unconfirmed(run_dir, catalog, tmp_path):
     assert data["unconfirmed"] == UNCONFIRMED == "candidate, unconfirmed"
     for sid in ("candidates", "explorer", "planets", "sky"):
         assert UNCONFIRMED in _route(page, sid), sid
+    # The case file's intro names what is a candidate and what is not.
+    assert f"Each signal that passed vetting is a {UNCONFIRMED}; a rejected or flagged one is named by its status." in _route(page, "candidates")
+    assert "Every signal here is a" not in page
     # A dip's page says its own status (candidate, flagged or rejected), from its vetting outcome.
     assert "${DIPPHRASE(d.outcome)}" in re.search(r"function renderTransit\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "const DIPTAG = o =>" in APP_JS and "D.dip_state" in APP_JS

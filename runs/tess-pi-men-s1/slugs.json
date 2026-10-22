@@ -1,12 +1,61 @@
 {
- "note": "Each dip's address on the website (/candidates/<slug>/), given once and never changed. Written by setuhq site; a dip that leaves the run keeps its entry.",
- "slugs": {
-  "tess-fa3483ce6f83-002": "pi-men/dip-1",
-  "tess-fa3483ce6f83-000": "pi-men/dip-2",
-  "tess-fa3483ce6f83-001": "pi-men/dip-3",
-  "tess-04b815001aa6-004": "pi-men/dip-4",
-  "tess-04b815001aa6-006": "pi-men/dip-5",
-  "tess-04b815001aa6-005": "pi-men/dip-6",
-  "tess-04b815001aa6-003": "pi-men/dip-7"
- }
+ "note": "Each dip's address on the website (/candidates/<slug>/), given once and never changed. An address belongs to a dip by its subject and mid-time (within its duration, at most half a day), not by its candidate id, which is a rank. Written by setuhq site; a dip that leaves the run keeps its entry, so its number is never reused.",
+ "dips": [
+  {
+   "slug": "pi-men/dip-1",
+   "subject": "tess-fa3483ce6f83",
+   "t_center": 1325.4965677643372,
+   "duration_hours": 2.1199683317190647,
+   "id": "tess-fa3483ce6f83-002",
+   "star": "pi Men"
+  },
+  {
+   "slug": "pi-men/dip-2",
+   "subject": "tess-fa3483ce6f83",
+   "t_center": 1331.7711478689805,
+   "duration_hours": 2.45509771106299,
+   "id": "tess-fa3483ce6f83-000",
+   "star": "pi Men"
+  },
+  {
+   "slug": "pi-men/dip-3",
+   "subject": "tess-fa3483ce6f83",
+   "t_center": 1338.0516953231054,
+   "duration_hours": 2.2009685448192613,
+   "id": "tess-fa3483ce6f83-001",
+   "star": "pi Men"
+  },
+  {
+   "slug": "pi-men/dip-4",
+   "subject": "tess-04b815001aa6",
+   "t_center": 1344.2666586711957,
+   "duration_hours": 0.8412162327167607,
+   "id": "tess-04b815001aa6-004",
+   "star": "pi Men"
+  },
+  {
+   "slug": "pi-men/dip-5",
+   "subject": "tess-04b815001aa6",
+   "t_center": 1348.3831550208442,
+   "duration_hours": 9.875053208041209,
+   "id": "tess-04b815001aa6-006",
+   "star": "pi Men"
+  },
+  {
+   "slug": "pi-men/dip-6",
+   "subject": "tess-04b815001aa6",
+   "t_center": 1348.936446522426,
+   "duration_hours": 0.8747217693307903,
+   "id": "tess-04b815001aa6-005",
+   "star": "pi Men"
+  },
+  {
+   "slug": "pi-men/dip-7",
+   "subject": "tess-04b815001aa6",
+   "t_center": 1350.5717262194837,
+   "duration_hours": 1.8894896366691682,
+   "id": "tess-04b815001aa6-003",
+   "star": "pi Men"
+  }
+ ]
 }

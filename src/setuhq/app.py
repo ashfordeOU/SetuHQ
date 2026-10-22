@@ -51,7 +51,8 @@ from setuhq.mission import GRIDS as MISSION_GRIDS, MISSION_CSS, MISSION_JS, PANE
 from setuhq.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section, system_stage, CHAPTERS, CHAPTER_PLANETS
 from setuhq.codenote import code_note
 from setuhq.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
-from setuhq.names import ATTRIBUTION, PROVIDER_BY_KIND, public_text, SENTINEL_KINDS, panel_phrase, reviewer_names, reviewer_provenance
+from setuhq import dipslugs
+from setuhq.names import ATTRIBUTION, DIP_STATE, PROVIDER_BY_KIND, dip_state, public_text, SENTINEL_KINDS, panel_phrase, reviewer_names, reviewer_provenance
 from setuhq.routes import ALIASES, from_hash, route_table, set_dip_slugs
 from setuhq.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
 
@@ -120,15 +121,6 @@ SIZES = ("S", "M", "L")
 DEFAULT_SIZE = {"kpis": "L", "discoveries": "M", "runs": "M", "top": "L"}
 
 UNCONFIRMED = "candidate, unconfirmed"
-# A run dip's status in one word, from its vetting outcome: only a dip that passed vetting is a candidate. A rejected
-# dip is never called one; a flagged dip is open (waiting for review). (class, tag word, full phrase)
-DIP_STATE = {"passed": ("cand", "candidate", UNCONFIRMED),
-             "flagged": ("open", "flagged", "flagged for review, open"),
-             "rejected": ("rej", "rejected", "rejected by vetting, not a candidate")}
-
-
-def dip_state(outcome: str | None) -> tuple[str, str, str]:
-    return DIP_STATE.get(outcome or "", DIP_STATE["flagged"])
 
 
 def dip_tag(outcome: str | None) -> str:
@@ -398,65 +390,35 @@ def _letter(i: int) -> str:
     return str(i + 1)
 
 
-SLUGS_FILE = "slugs.json"
-
-
-def dip_names(cands: list[dict], star_names: dict[str, str], pinned: dict[str, str] | None = None) -> dict[str, dict]:
+def dip_names(cands: list[dict], star_names: dict[str, str], pinned: list[dict] | None = None) -> tuple[dict[str, dict], list[str], list[dict]]:
     """Every dip of the run with its readable address and plain label, numbered per star under its star's name (or
     its TIC): {"tess-…-000": {"n": 2, "slug": "pi-men/dip-2", "label": "pi Men, dip 2 (6.27 d)"}}.
 
-    ``pinned`` (dip id -> slug, from runs/<run>/slugs.json) wins: a dip keeps the address it was first given. A dip
-    not in it gets the next number of its star, in time order, so no address is ever renumbered or reused."""
+    ``pinned`` (runs/<run>/slugs.json, setuhq.dipslugs) wins: an address stays with its dip (by subject and mid-time,
+    not by candidate id, which is a rank), a new dip gets the next free number of its star, and an address whose dip
+    left the run is gone, never reused. Returns the names, the gone slugs and the entries to keep."""
     from setuhq.objects import slugify
 
-    pinned = dict(pinned or {})
-    used: dict[str, int] = {}
-    for slug in pinned.values():
-        star, _, n = slug.rpartition("/dip-")
-        if n.isdigit():
-            used[star] = max(used.get(star, 0), int(n))
-    out = {}
-    for c in sorted(cands, key=lambda c: (c["t_start"], c["candidate_id"])):
+    def star_of(c: dict) -> str:
         target = c.get("target") or c.get("subject_id") or "star"
-        star = star_names.get(target) or target
-        slug = pinned.get(c["candidate_id"])
-        if not slug:
-            n = used.get(slugify(star), 0) + 1
-            used[slugify(star)] = n
-            slug = f"{slugify(star)}/dip-{n}"
+        return star_names.get(target) or target
+
+    slugs, gone, entries = dipslugs.pin(cands, pinned or [], lambda c: slugify(star_of(c)), star_of)
+    out = {}
+    for c in cands:
+        slug = slugs[c["candidate_id"]]
         n = int(slug.rpartition("/dip-")[2])
         period = f" ({c['period_days']:.2f} d)" if c.get("period_days") else ""
-        out[c["candidate_id"]] = {"n": n, "slug": slug, "label": f"{star}, dip {n}{period}", "star": star}
-    return out
+        out[c["candidate_id"]] = {"n": n, "slug": slug, "label": f"{star_of(c)}, dip {n}{period}", "star": star_of(c)}
+    return out, gone, entries
 
 
-def pinned_dip_slugs(run_dir: Path, names: dict[str, dict], pinned: dict[str, str]) -> tuple[dict[str, str], list[str]]:
-    """Keep runs/<run>/slugs.json: every slug ever given stays (a rebuilt run keeps its addresses); a new dip's slug is
-    added. Returns the whole map and the slugs of dips no longer in the run (their pages answer "no longer in the run").
-    A read-only run folder is left as it is: the build still pins this run's slugs for its own pages."""
-    every = {**pinned, **{i: d["slug"] for i, d in names.items()}}
-    if every != pinned:
-        try:
-            (run_dir / SLUGS_FILE).write_text(json.dumps(
-                {"note": "Each dip's address on the website (/candidates/<slug>/), given once and never changed. "
-                         "Written by setuhq site; a dip that leaves the run keeps its entry.",
-                 "slugs": dict(sorted(every.items(), key=_slug_order))}, indent=1) + "\n")
-        except OSError:
-            pass
-    gone = sorted(s for i, s in every.items() if i not in names)
-    return every, gone
-
-
-def _slug_order(kv: tuple[str, str]) -> tuple[str, int]:
-    star, _, n = kv[1].rpartition("/dip-")
-    return star, int(n) if n.isdigit() else 0
-
-
-def load_pinned_slugs(run_dir: Path) -> dict[str, str]:
-    try:
-        return dict(json.loads((run_dir / SLUGS_FILE).read_text()).get("slugs") or {})
-    except (OSError, ValueError, AttributeError):
-        return {}
+def pin_run_dips(run_dir: str | Path, cands: list[dict], star_names: dict[str, str]) -> tuple[dict[str, dict], list[str]]:
+    """dip_names for a run folder: read runs/<run>/slugs.json, pin, and write it back when it changed."""
+    pinned = dipslugs.load(run_dir)
+    names, gone, entries = dip_names(cands, star_names, pinned)
+    dipslugs.save(run_dir, entries, pinned)
+    return names, gone
 
 
 def _median(values: list[float]) -> float | None:
@@ -711,9 +673,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     hero = overview_hero(dock, top_rows)
     calib = {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name}
     story = story_data(run_dir, dock, feed, calib, hero, targets_path=targets_path)
-    pinned = load_pinned_slugs(Path(run_dir))
-    dips = dip_names(cands, {story["star"]["target"]: story["star"]["name"]} if story["star"].get("name") else {}, pinned)
-    _, gone = pinned_dip_slugs(Path(run_dir), dips, pinned)
+    dips, gone = pin_run_dips(run_dir, cands, {story["star"]["target"]: story["star"]["name"]} if story["star"].get("name") else {})
     set_dip_slugs({i: d["slug"] for i, d in dips.items()}, gone)
     # The dip numbers the page shows (the chips, the picker) are the address numbers.
     for w in hero.get("windows") or []:
@@ -3118,7 +3078,7 @@ def route_sections(data: dict) -> dict[str, str]:
     out["star"] = star_page("") + '<section class="card stsweep" id="stsweep" aria-labelledby="h-stsweep" hidden><h2 id="h-stsweep">In SetuHQ\'s sweep</h2><div id="stsweepbody"></div></section>'
     # The sweep's figures, each class against its own null, open its page (the home page says it in one sentence).
     out["variables"] = variables_section(data.get("sweep"), "").replace("</header>", "</header>" + overview_counter(data.get("sweep")).replace('<a class="btn" href="#/variables">Everything that dims ›</a>', ""), 1)
-    out["candidates"] = f"""<header><h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The case file for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Every signal here is a {unc}.</p></header>
+    out["candidates"] = f"""<header><h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The case file for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Each signal that passed vetting is a {unc}; a rejected or flagged one is named by its status.</p></header>
       {prov}
       <div class="frametools"><a id="fullpage" href="/candidates/case-file/">Open full page</a><span class="muted">The case file on its own page, at the same dip.</span></div>
       <div class="dippicker"><label for="dippick">Dip</label><select id="dippick" aria-describedby="dippickhint"></select><span class="sr" id="dippickhint">Every dip in this run, lettered in time order, with its vetting outcome. Each is a {unc}.</span></div>
