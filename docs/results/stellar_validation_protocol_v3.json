@@ -1,0 +1,499 @@
+{
+ "kind": "setuhq-stellar-validation-protocol/3",
+ "version": 3,
+ "frozen": "2026-10-22",
+ "seed": 20261022,
+ "history": "Protocol v1 (frozen 2026-10-21) was not a blind protocol: its thresholds, and the algorithms it tested, were revised during development while looking at these same targets. v2 (committed 2f347d1) was committed before its run. v3 follows the review of the v2 results: it is committed on its own, before any v3 result exists, and its results record this file's sha256 and the commit that added it. v3 still uses the targets v1 and v2 used, so it is a re-test after review fixes, not an independent validation. Two criteria were relaxed after v1 and one tightened after v2; each check says so.",
+ "changes_from_v1": [
+  "Flare energies: the TESS magnitude route uses Sullivan et al. (2015)'s band-integrated zero point (4.03e-6 erg s^-1 cm^-2), as Medina et al. (2020) do, and is the primary band luminosity; the Teff and radius route is reported beside it. TESS items use TIC values only (no Teff fallback); CHEOPS items may use the CHEOPS archive's Teff, labelled.",
+  "Flare morphology: the BIC uses an effective number of points for the noise's lag-one correlation, and an extra component must be a visible peak (3 sigma and a tenth of the strongest component). A false-split check is added.",
+  "Flux-inverted null: the real flares' windows are masked first.",
+  "Injections: placed wholly inside one stretch of data, kept clear of real flares' full extent; blends (recovered ED more than 1.5 x injected) are excluded from the false-split rate and counted.",
+  "CHEOPS flare comparisons with Poyatos et al. (2025, journal version: 349 flares, ~40% complex, +34% from denoising, alpha 1.92 +/- 0.07) count under the CHEOPS capability, and only when the CHEOPS null and injection checks pass; otherwise they are inconclusive.",
+  "Proxima recall of bright flares: the published-ED >= 3 s bins are pooled (v1 required each bin, one of which held 4 flares).",
+  "pycheops same-input check: passes on a visit when our decorrelation matches pycheops' to < 10 ppm rms, or reaches a lower rms on the same points and terms (the least-squares optimum is unique; v1 failed a visit on which pycheops' fit is off it).",
+  "Pulsations: combination flags use the ten strongest frequencies as parents and a quarter-Rayleigh (or 3 sigma) tolerance, and a chance rate is reported; added checks on that rate, on TOI-197's delta-nu to 1 microHz, and on HR 10's granulation frequency with Salmon et al.'s averaged-periodogram estimator."
+ ],
+ "flares": {
+  "match_window_days": 0.01,
+  "aumic": {
+   "tic": 441420236,
+   "sectors": [
+    1
+   ],
+   "reference": "Günther et al. 2020, J/AJ/159/60",
+   "tuning_set": true
+  },
+  "gunther_energy_star": {
+   "tic": 150359500,
+   "sectors": [
+    2
+   ],
+   "reference": "Günther et al. 2020, J/AJ/159/60"
+  },
+  "proxima": {
+   "tic": 388857263,
+   "sectors": [
+    11,
+    12
+   ],
+   "reference": "Medina et al. 2020, J/ApJ/905/107"
+  },
+  "gj1243": {
+   "tic": 273589987,
+   "sectors": [
+    14,
+    15
+   ]
+  },
+  "gj65": {
+   "tic": 632499596,
+   "sectors": [
+    30
+   ],
+   "exptimes": [
+    120,
+    20
+   ]
+  },
+  "completeness": {
+   "n_trials": 20,
+   "per_trial": 10,
+   "amp_range": [
+    0.0001,
+    0.1
+   ],
+   "fwhm_minutes": [
+    1.0,
+    60.0
+   ],
+   "stars": [
+    "aumic",
+    "proxima",
+    "gj1243"
+   ]
+  },
+  "false_split": {
+   "n_trials": 10,
+   "per_trial": 10,
+   "amp_range": [
+    0.003,
+    0.05
+   ],
+   "fwhm_minutes": [
+    2.0,
+    40.0
+   ],
+   "stars": [
+    "aumic",
+    "proxima",
+    "gj1243"
+   ],
+   "validation_stars": [
+    "proxima",
+    "gj1243"
+   ]
+  },
+  "merge_check": {
+   "n_trials": 10,
+   "per_trial": 10,
+   "amp_range": [
+    0.003,
+    0.05
+   ],
+   "fwhm_minutes": [
+    2.0,
+    40.0
+   ],
+   "second_ratio": [
+    0.05,
+    0.5
+   ],
+   "separation_fwhm": [
+    1.0,
+    5.0
+   ],
+   "stars": [
+    "proxima",
+    "gj1243"
+   ],
+   "note": "reported, not counted; secondaries below 0.1 of the primary cannot be kept as components by construction"
+  },
+  "quiet": {
+   "names": [
+    "pi Men",
+    "zeta Tuc",
+    "beta Hyi"
+   ],
+   "sector_limit": 2
+  },
+  "cheops_targets": [
+   "AU Mic",
+   "AD Leo",
+   "EV Lac",
+   "GJ 65",
+   "Proxima Cen"
+  ],
+  "tics": {
+   "AU Mic": 441420236,
+   "AD Leo": 95431305,
+   "EV Lac": 154101678,
+   "GJ 65": 632499596,
+   "Proxima Cen": 388857263
+  },
+  "cheops_teff_fallback": "Teff from the CHEOPS archive (DACE teff_k) when the TIC has none, labelled",
+  "cheops_max_visits_per_target": 25,
+  "cheops_min_cadence_s": 0,
+  "cheops_max_cadence_s": 60,
+  "cheops_injection": {
+   "n_trials": 6,
+   "per_trial": 8,
+   "amp_range": [
+    0.0003,
+    0.03
+   ],
+   "fwhm_minutes": [
+    0.5,
+    10.0
+   ],
+   "gate_min_snr": 10.0,
+   "gate_min_fwhm_cadences": 3.0
+  },
+  "denoise_grid": {
+   "wavelets": [
+    "haar",
+    "db4",
+    "db18"
+   ],
+   "levels": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "n_trials": 3,
+   "per_trial": 10
+  },
+  "injection_placement": {
+   "draw": "amplitude and FWHM once per injection (log-uniform); position redrawn up to 200 times",
+   "must_fit_in_one_stretch": "from one FWHM (plus two cadences) before the peak to three FWHM (plus three cadences) after it; for a two-component injection, after the second peak",
+   "must_not_overlap": "two FWHM before to eight FWHM after the peak, other injections and detected real flares",
+   "reference": "cf. Poyatos et al. 2025, Sect. 2.3"
+  }
+ },
+ "pulsations": {
+  "snr_stop": 4.0,
+  "noise_box_cd": 2.0,
+  "max_frequencies": 100,
+  "tolerance": "strict: 3 x the combined frequency uncertainty (ours and published, Montgomery & O'Donoghue); loose: the Rayleigh resolution 1/T",
+  "hr10": {
+   "sectors": [
+    2,
+    29
+   ],
+   "fmin_cd": 0.05,
+   "n_surrogates": 10,
+   "average_segment_days": 1.0
+  },
+  "beta_pic": {
+   "sectors": [
+    5,
+    6,
+    7
+   ],
+   "fmin_cd": 5.0
+  },
+  "toi197": {
+   "sectors": [
+    2
+   ],
+   "n_boot": 100,
+   "dnu_search": "0.7 to 1.4 x the Stello et al. (2009) scaling value at numax"
+  }
+ },
+ "cheops": {
+  "pycheops_visits": [
+   "CH_PR100018_TG035201_V0300",
+   "CH_PR100018_TG048901_V0300",
+   "CH_PR100018_TG049601_V0300"
+  ],
+  "terms": [
+   "t",
+   "t2",
+   "x",
+   "y",
+   "x2",
+   "y2",
+   "xy",
+   "sin1",
+   "cos1",
+   "sin2",
+   "cos2",
+   "sin3",
+   "cos3",
+   "bg",
+   "contam"
+  ]
+ },
+ "checks": [
+  {
+   "id": "aumic_recall",
+   "capability": "flares",
+   "item": "aumic_gunther",
+   "metric": "recall_ci_low",
+   "op": ">=",
+   "threshold": 0.7,
+   "text": "AU Mic S1 (tuning star): recall of Günther et al. (2020) flares, 95% interval lower bound >= 0.70"
+  },
+  {
+   "id": "aumic_null",
+   "capability": "flares",
+   "item": "aumic_gunther",
+   "metric": "null_per_10d",
+   "op": "<=",
+   "threshold": 1.0,
+   "tuning": true,
+   "text": "AU Mic S1 flux-inverted null at most 1 event per 10 days: the shape threshold was set on this star and this null, so it is a tuning-set result, not counted"
+  },
+  {
+   "id": "proxima_bright_recall",
+   "capability": "flares",
+   "item": "proxima_medina",
+   "metric": "bright_recall_ci_low",
+   "op": ">=",
+   "threshold": 0.5,
+   "text": "Proxima S11-12: recall of Medina et al. (2020) flares with ED >= 3 s (pooled), 95% interval lower bound >= 0.5",
+   "changed": "relaxed after v1"
+  },
+  {
+   "id": "proxima_precision",
+   "capability": "flares",
+   "item": "proxima_medina",
+   "metric": "precision",
+   "op": ">=",
+   "threshold": 0.85,
+   "text": "Proxima S11-12: at least 85% of our flares are in Medina et al.'s list"
+  },
+  {
+   "id": "proxima_null",
+   "capability": "flares",
+   "item": "proxima_medina",
+   "metric": "null_per_10d",
+   "op": "<=",
+   "threshold": 1.0,
+   "text": "Proxima S11-12: flux-inverted null (real flares masked) at most 1 event per 10 days"
+  },
+  {
+   "id": "proxima_band_energy",
+   "capability": "flares",
+   "item": "proxima_medina",
+   "metric": "band_energy_ratio_ci",
+   "op": "within",
+   "threshold": [
+    0.67,
+    1.5
+   ],
+   "text": "Proxima S11-12: TESS-band energy measured as Medina et al. do (data ED x magnitude-route luminosity), ours/theirs, 95% interval inside [0.67, 1.5]"
+  },
+  {
+   "id": "energy_scale",
+   "capability": "flares",
+   "item": "gunther_energy_star",
+   "metric": "energy_ratio_ci",
+   "op": "within",
+   "threshold": [
+    0.67,
+    1.5
+   ],
+   "text": "TIC 150359500: 9000 K bolometric energies computed as Günther et al. do (TIC Teff and radius), ours/theirs, 95% interval inside [0.67, 1.5]"
+  },
+  {
+   "id": "quiet_stars",
+   "capability": "flares",
+   "item": "quiet_stars",
+   "metric": "fp_per_day",
+   "op": "<",
+   "threshold": 0.02,
+   "text": "Quiet stars: fewer than 0.02 detections per day"
+  },
+  {
+   "id": "false_split",
+   "capability": "flares",
+   "item": "false_split",
+   "metric": "validation_split_ci_high",
+   "op": "<=",
+   "threshold": 0.15,
+   "text": "Injected single flares on Proxima and GJ 1243 (not the tuning star), pooled: the 95% upper bound of the rate that come back as two or more components is at most 15%",
+   "changed": "tightened after v2"
+  },
+  {
+   "id": "cheops_null",
+   "capability": "cheops",
+   "item": "cheops_flares",
+   "metric": "cheops_null_fraction",
+   "op": "<=",
+   "threshold": 0.1,
+   "gate": true,
+   "text": "Gate. CHEOPS DRP M dwarfs: flux-inverted null (real flares masked) at most 10% of the real flare count, with and without denoising"
+  },
+  {
+   "id": "cheops_injection",
+   "capability": "cheops",
+   "item": "cheops_flares",
+   "metric": "cheops_bright_recovery_ci_low",
+   "op": ">=",
+   "threshold": 0.8,
+   "gate": true,
+   "text": "Gate. CHEOPS DRP M dwarfs: injected flares with S/N >= 10 and FWHM >= 3 cadences recovered, 95% interval lower bound >= 0.8"
+  },
+  {
+   "id": "cheops_poyatos_complex",
+   "capability": "cheops",
+   "item": "cheops_flares",
+   "metric": "complex_ci_contains",
+   "op": "contains",
+   "threshold": 0.4,
+   "gated": true,
+   "text": "CHEOPS DRP M dwarfs (denoised): complex fraction's 95% interval contains Poyatos et al.'s ~0.40 (only if both gates pass)"
+  },
+  {
+   "id": "cheops_poyatos_alpha",
+   "capability": "cheops",
+   "item": "cheops_flares",
+   "metric": "alpha_z",
+   "op": "<=",
+   "threshold": 2.0,
+   "gated": true,
+   "text": "CHEOPS DRP M dwarfs (denoised): power-law index within 2 sigma (combined) of Poyatos et al.'s 1.92 +/- 0.07 (only if both gates pass)"
+  },
+  {
+   "id": "pycheops_same_input",
+   "capability": "cheops",
+   "item": "cheops_pycheops",
+   "metric": "same_input_ok",
+   "op": "==",
+   "threshold": true,
+   "text": "Same input as pycheops: on every reference visit our decorrelation matches pycheops' to < 10 ppm rms, or reaches a lower rms on the same points and terms",
+   "changed": "relaxed after v1"
+  },
+  {
+   "id": "pycheops_end_to_end",
+   "capability": "cheops",
+   "item": "cheops_pycheops",
+   "metric": "end_to_end_min_corr",
+   "op": ">=",
+   "threshold": 0.9,
+   "text": "End to end (DACE DRP arrays vs pycheops' DRP product): correlation >= 0.9 on every reference visit"
+  },
+  {
+   "id": "hr10_cheops_f1f2",
+   "capability": "cheops",
+   "item": "hr10_cheops",
+   "metric": "f1_f2_combined",
+   "op": "==",
+   "threshold": true,
+   "text": "HR 10 CHEOPS, three public visits together: the two strongest TESS delta Scuti frequencies (f1, f2) found"
+  },
+  {
+   "id": "beta_pic_top10",
+   "capability": "pulsations",
+   "item": "beta_pic",
+   "metric": "top10_strict",
+   "op": ">=",
+   "threshold": 1.0,
+   "text": "beta Pic S5-7: the 10 strongest of Zieba et al.'s (2019) frequencies all recovered within 3 sigma"
+  },
+  {
+   "id": "beta_pic_all",
+   "capability": "pulsations",
+   "item": "beta_pic",
+   "metric": "all_loose",
+   "op": ">=",
+   "threshold": 0.8,
+   "text": "beta Pic S5-7: at least 80% of the 54 published frequencies within the Rayleigh resolution"
+  },
+  {
+   "id": "hr10_top10",
+   "capability": "pulsations",
+   "item": "hr10_tess",
+   "metric": "hr10_top10_min",
+   "op": ">=",
+   "threshold": 1.0,
+   "text": "HR 10 S2 and S29: the 10 strongest of Salmon et al.'s (2024) frequencies recovered within 1/T in both sectors"
+  },
+  {
+   "id": "hr10_all",
+   "capability": "pulsations",
+   "item": "hr10_tess",
+   "metric": "hr10_all_min",
+   "op": ">=",
+   "threshold": 0.8,
+   "text": "HR 10 S2 and S29: at least 80% of the published frequencies within 1/T"
+  },
+  {
+   "id": "hr10_null",
+   "capability": "pulsations",
+   "item": "hr10_tess",
+   "metric": "ar1_false_per_lc",
+   "op": "<",
+   "threshold": 1.0,
+   "text": "HR 10 S29 residual: AR(1) surrogates give fewer than 1 false frequency per light curve on average"
+  },
+  {
+   "id": "combination_chance",
+   "capability": "pulsations",
+   "item": "hr10_tess",
+   "metric": "max_combination_chance",
+   "op": "<=",
+   "threshold": 0.15,
+   "text": "HR 10 S2 and S29: a random frequency would be flagged as a combination at most 15% of the time"
+  },
+  {
+   "id": "hr10_granulation",
+   "capability": "pulsations",
+   "item": "hr10_tess",
+   "metric": "granulation_ratio",
+   "op": "within",
+   "threshold": [
+    0.67,
+    1.5
+   ],
+   "text": "HR 10 S29: granulation characteristic frequency from Salmon et al.'s estimator (averaged one-day periodograms, one Harvey profile) within a factor 1.5 of their 150.87 microHz"
+  },
+  {
+   "id": "toi197_numax",
+   "capability": "pulsations",
+   "item": "toi197",
+   "metric": "numax_abs_z",
+   "op": "<=",
+   "threshold": 2.0,
+   "text": "TOI-197 S2: numax within 2 sigma of Huber et al. (2019)"
+  },
+  {
+   "id": "toi197_dnu",
+   "capability": "pulsations",
+   "item": "toi197",
+   "metric": "dnu_abs_diff",
+   "op": "<=",
+   "threshold": 1.0,
+   "text": "TOI-197 S2: delta-nu within 1 microHz of Huber et al.'s 28.94 (the search window is 0.7-1.4 x the scaling value, about 20-40 microHz)"
+  }
+ ],
+ "changes_from_v2": [
+  "Injection placement (all injection items): amplitude and FWHM are drawn once per injection and only the position is redrawn (up to 200 tries; an injection with no valid position is counted as unplaced, with its FWHM). A position is valid when the flare's start (one FWHM before the peak) and its peak plus three FWHM fall inside one stretch of data (cf. Poyatos et al. 2025, Sect. 2.3: only flares whose start and stop fall within one visit); the wider span (two FWHM before to eight after) must still not overlap another injection or a real flare. v2 redrew the FWHM with every position and required the whole wider span inside a stretch, so 60% of the CHEOPS injections had FWHM 0.5-1 min against 23% expected. The CHEOPS item reports the placed-FWHM histogram next to the injection gate.",
+  "Merge check (new, reported, not counted): two-component flares (second peak 5-50% of the first, log-uniform; 1-5 FWHM later) injected on Proxima and GJ 1243, the stars that did not tune the shape test; the merged fraction is reported overall and by ratio and separation. A secondary below min_component_fraction = 0.1 of the primary cannot be kept as a component by construction. No pass criterion: there is no published reference rate.",
+  "False-split check: the 15% limit applies to the Wilson 95% upper bound of the pooled Proxima + GJ 1243 rate, like the other checks' interval bounds (v2 used the point estimate). Proxima is reported on its own as well as pooled.",
+  "Proxima energies: Medina et al.'s TESS-band luminosity implied by their Table 3 (Energy / ED) is reported next to ours, with each input (TESS magnitude, distance, zero point) swapped in turn, Medina et al.'s values read from their Table 1. The proxima_band_energy check is unchanged and still uses TIC inputs. A luminosity-matched cross-check (our data ED times L from their TESS magnitude) is reported, labelled, and not counted.",
+  "Status rule: a capability is validated when every counted check passes, partly validated when more than half pass, and otherwise not validated, always shown with the count (k of n checks pass). v2 called any capability with one passing check partly validated.",
+  "CHEOPS-derived results (cheops_flares, hr10_cheops, cheops_pycheops and the CHEOPS part of denoise_grid) are written to docs/results/stellar_validation_cheops.json and .md under ESA's CC BY-NC 3.0 IGO terms; the main files keep only the CHEOPS capability's status and the pass or fail of its checks.",
+  "Each item's code fingerprint now covers scripts/stellar_validation.py as well as the modules it uses, so a change to how an item is measured invalidates its cached result.",
+  "Checks relaxed after v1 (proxima_bright_recall, pycheops_same_input) and tightened after v2 (false_split) are marked in their text."
+ ],
+ "status_rule": "validated: every counted check passes; partly validated: more than half pass; otherwise not validated. Always shown with 'k of n checks pass'. Gated comparisons whose gates fail are inconclusive and tuning-set checks are reported; neither is counted.",
+ "reported_not_counted": [
+  "merge_check (merged fraction of two-component injections, Proxima and GJ 1243)",
+  "Proxima luminosity-matched energy cross-check",
+  "Proxima false-split rate on its own",
+  "CHEOPS placed-FWHM histogram and unplaced injections"
+ ]
+}
