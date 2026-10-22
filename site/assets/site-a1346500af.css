@@ -388,6 +388,7 @@ details summary{cursor:pointer}
 details.cfg{padding:0}
 details.cfg>summary{padding:14px 20px;font-weight:600}
 details.cfg>div{padding:0 20px 16px;display:grid;gap:14px}
+details.cfg .mono{overflow-wrap:anywhere}
 .frametools{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px}
 pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;background:var(--coral-soft);color:var(--ink);padding:8px 11px;border-radius:8px}
 .frame{width:100%;height:calc(100vh - 190px);height:calc(100vh - var(--frame-offset, 190px));min-height:520px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--bg);display:block;box-shadow:var(--shadow)}
