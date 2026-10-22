@@ -354,7 +354,7 @@ def test_workflow_actions_are_pinned_by_commit_sha(name):
 
 
 def test_no_tokens_in_the_publishing_path():
-    for name in ("release.yml", "mcp-publish.yml"):
+    for name in ("release.yml", "mcp-publish.yml", "auto-tag.yml"):
         text = (WORKFLOWS / name).read_text(encoding="utf-8")
         assert "secrets." not in text, name
         assert "password:" not in text and "PYPI_API_TOKEN" not in text, name
@@ -376,13 +376,14 @@ def test_only_release_yml_publishes_to_pypi_on_a_tag_with_the_attested_files():
     jobs = _jobs("release.yml")
     pypi = jobs["pypi"]
     assert pypi["environment"]["name"] == "pypi" and pypi["permissions"] == {"id-token": "write"}
-    assert pypi["if"] == "${{ github.event_name == 'push' }}" and "release" in pypi["needs"]
+    assert pypi["if"] == RELEASE_IF and "release" in pypi["needs"]
     steps = pypi["steps"]
     assert not any("checkout" in st.get("uses", "") or "build" in str(st.get("run", "")) for st in steps)
     assert any(st.get("uses", "").startswith("actions/download-artifact@") and st["with"]["name"] == "dist"
                for st in steps)
     assert jobs["testpypi"]["environment"]["name"] == "testpypi"
     assert "workflow_dispatch" in jobs["testpypi"]["if"] and "repository-url" in str(jobs["testpypi"]["steps"])
+    assert "github.ref_type != 'tag'" in jobs["testpypi"]["if"]  # a dispatch on a tag is a release, not a rehearsal
     for name in sorted(p.name for p in WORKFLOWS.glob("*.yml")):
         text = (WORKFLOWS / name).read_text(encoding="utf-8")
         if name != "release.yml":
@@ -396,8 +397,65 @@ def test_a_release_rerun_never_replaces_a_file_and_ci_must_be_green_on_main():
     assert jobs_have_no_rebuild_on_dispatch(_jobs("release.yml"))
 
 
+# A run whose ref is a tag releases, whether a tag push or a dispatch on the tag started it; a dispatch on a branch
+# is a dry run. A later run for an already-released tag skips the publishing jobs.
+RELEASE_IF = "${{ github.ref_type == 'tag' && needs.verify.outputs.released != 'true' }}"
+
+
 def jobs_have_no_rebuild_on_dispatch(jobs: dict) -> bool:
-    return all(jobs[j]["if"] == "${{ github.event_name == 'push' }}" for j in ("release", "pypi"))
+    return all(jobs[j]["if"] == RELEASE_IF for j in ("release", "pypi"))
+
+
+def test_a_dispatch_on_a_tag_is_a_full_release_and_one_tag_publishes_once():
+    yaml = pytest.importorskip("yaml")
+    text = (WORKFLOWS / "release.yml").read_text(encoding="utf-8")
+    wf = yaml.safe_load(text)
+    on = wf[True]  # YAML 1.1 reads the key `on` as True
+    assert on["push"] == {"tags": ["v*"]} and "workflow_dispatch" in on
+    # Runs for one tag share a group and never cancel each other: a second run waits, then finds the release done.
+    assert wf["concurrency"] == {"group": "release-${{ github.ref }}", "cancel-in-progress": False}
+    verify = wf["jobs"]["verify"]
+    run = "\n".join(st.get("run", "") for st in verify["steps"])
+    # The tag check and the strict CI check key on the ref type, not the event, so a dispatch on a tag is as strict.
+    assert re.search(r'if \[ "\$GITHUB_REF_TYPE" = "tag" \]; then\s+python3 scripts/check_version_sync\.py --tag', run)
+    assert re.search(r'elif \[ "\$GITHUB_REF_TYPE" = "tag" \]; then\s+echo "::error::', run)
+    assert "GITHUB_EVENT_NAME" not in run
+    assert verify["outputs"]["released"] == "${{ steps.done.outputs.released }}"
+    done = next(st for st in verify["steps"] if st.get("id") == "done")
+    assert "gh release view" in done["run"] and "https://pypi.org/pypi/setuhq/" in done["run"]
+    assert wf["jobs"]["build"]["if"] == "${{ needs.verify.outputs.released != 'true' }}"
+    upload = next(st for st in wf["jobs"]["pypi"]["steps"] if "gh-action-pypi-publish" in st.get("uses", ""))
+    assert upload["with"]["skip-existing"] is True
+    assert "github.event_name" not in str({j: wf["jobs"][j].get("if") for j in ("release", "pypi")})
+
+
+def test_auto_tag_is_on_by_default_and_needs_no_secret():
+    yaml = pytest.importorskip("yaml")
+    text = (WORKFLOWS / "auto-tag.yml").read_text(encoding="utf-8")
+    wf = yaml.safe_load(text)
+    assert wf[True] == {"workflow_run": {"workflows": ["ci"], "types": ["completed"], "branches": ["main"]}}
+    assert wf["permissions"] == {"contents": "read"}
+    job = wf["jobs"]["tag"]
+    cond = " ".join(job["if"].split())
+    assert "vars.AUTO_TAG != 'false'" in cond and "vars.AUTO_TAG == 'true'" not in cond
+    for clause in ("github.event.workflow_run.conclusion == 'success'", "github.event.workflow_run.event == 'push'",
+                   "github.event.workflow_run.head_branch == 'main'",
+                   "github.event.workflow_run.head_repository.full_name == github.repository"):
+        assert clause in cond, clause
+    assert job["permissions"] == {"contents": "write", "actions": "write"}
+    assert "secrets." not in text and "RELEASE_TAG_TOKEN" not in text
+    tag_step, dispatch = (st for st in job["steps"] if "run" in st)
+    run = tag_step["run"]
+    # The safety checks: never move a tag, skip a stale head, check every surface against the tag.
+    assert 'git ls-remote --exit-code --tags origin "refs/tags/$tag"' in run
+    assert 'if [ "$head" != "$SHA" ]; then' in run and "${{ github.event.workflow_run.head_sha }}" == tag_step["env"]["SHA"]
+    assert 'python3 scripts/check_version_sync.py --tag "$tag"' in run
+    assert "--force" not in text and "push -f" not in text and "git tag -f" not in text
+    assert run.index("check_version_sync.py --tag") < run.index("git tag -a") < run.index("git push origin")
+    # The dispatch: only for a tag pushed in this run, on the tag ref, with the job's own token.
+    assert dispatch["if"] == "steps.tag.outputs.pushed == 'true'"
+    assert dispatch["env"]["GH_TOKEN"] == "${{ github.token }}"
+    assert 'gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "$TAG"' in dispatch["run"]
 
 
 def test_every_github_yaml_file_parses():

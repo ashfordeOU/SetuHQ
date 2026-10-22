@@ -17,6 +17,16 @@ breaking changes are called out explicitly.
   (static, from `__version__`, so `tools/gen_readme_assets.py --check` stays offline) and a DOI badge, its
   install section leads with `pip install setuhq`, and its Cite section names the DOIs.
 
+### Changed
+
+- **Releases are automatic.** A version bump merged to `main` releases itself once CI is green:
+  `auto-tag.yml` is now on by default (opt out with the variable `AUTO_TAG=false`), pushes the tag with the
+  workflow's own token and then dispatches `release.yml` on the tag; no `RELEASE_TAG_TOKEN` is needed.
+  `release.yml` runs the full release for any run whose ref is a tag, pushed or dispatched, with the same
+  strict checks; a dispatch on a branch is still a dry run. A second run for a tag that is already released
+  waits for the first (concurrency) and skips building and publishing. See
+  [docs/RELEASING.md](docs/RELEASING.md).
+
 ## [0.1.0] - 2026-10-22
 
 The first public release, under the name **SetuHQ** (*setu*, Sanskrit for bridge). Until this
