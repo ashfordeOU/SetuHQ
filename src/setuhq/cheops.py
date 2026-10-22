@@ -3,8 +3,14 @@
 """CHEOPS light curves: public Data Reduction Pipeline (DRP) photometry, roll-angle detrending, and a common
 timeline with TESS.
 
-**Public data only.** Visits are listed and fetched through DACE (dace.unige.ch, University of Geneva) in its
-public mode, with no credentials: SetuHQ never reads a ``.dacerc`` or any key, and it keeps only visits whose
+**Where the data come from.** ESA names the CHEOPS Mission Archive (cheops.unige.ch/archive_browser) and its mirror
+at the ASI Space Science Data Center (cheops-archive.ssdc.asi.it) as the places CHEOPS data are made public. SetuHQ
+tries them first (:func:`probe_archives`); neither offers a documented programmatic interface it can use (from
+here the Mission Archive answered 403 and the mirror is an interactive page), so visits are listed and fetched
+through DACE (dace.unige.ch), the University of Geneva's public API in front of the CHEOPS Mission Archive. ESA does
+not designate DACE; each output records which source served it.
+
+**Public data only.** DACE is used in its public mode, with no credentials: SetuHQ never reads a ``.dacerc`` or any key, and it keeps only visits whose
 archive record says ``status_published``. Proprietary visits are skipped and never cached. Requests go one at a
 time, per target, rate-limited and cached under ``cache/cheops/`` (one file per visit), so a visit is fetched
 once. No raw CHEOPS file is shipped with SetuHQ; the tests use a small derived excerpt with its provenance.
@@ -67,9 +73,15 @@ DACE_ACKNOWLEDGEMENT = (
 DISCLAIMER = ("SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS "
               "mission or the CHEOPS Consortium.")
 # ESDC terms: commercial use of ESA archive data needs ESA's prior authorisation.
-COMMERCIAL_NOTE = ("ESA's archive terms require prior authorisation (data.licences@esa.int) before any commercial use "
-                   "of CHEOPS data, including use that indirectly generates financial gain; SetuHQ's commercial licence "
-                   "covers SetuHQ's code, not CHEOPS data.")
+COMMERCIAL_NOTE = ("CHEOPS data, and outputs derived from them, stay under ESA's terms: data in the ESA Space Science "
+                   "Archives are distributed under the CC BY-NC 3.0 IGO licence, and any commercial use, including use "
+                   "that indirectly generates financial gain, needs ESA's prior authorisation (data.licences@esa.int). "
+                   "SetuHQ's commercial licence and SetuHQ Pro cover SetuHQ's code and services, not CHEOPS data or "
+                   "CHEOPS-derived outputs.")
+LICENCE = "CC BY-NC 3.0 IGO (ESA Space Science Archives terms); commercial use needs ESA's prior authorisation"
+ARCHIVES = {"mission_archive": "https://cheops.unige.ch/archive_browser/",
+            "asi_mirror": "https://cheops-archive.ssdc.asi.it/archive_browser/"}
+SERVED_BY = "DACE (dace.unige.ch): the University of Geneva's public API in front of the CHEOPS Mission Archive"
 TERMS_URLS = {"esa_publication_guidelines": "https://www.cosmos.esa.int/web/cheops-guest-observers-programme/publication-guidelines",
               "esdc_terms": "https://cosmos.esa.int/web/esdc/terms-and-conditions",
               "dace_acknowledgement": "https://dace.unige.ch/publications/"}
@@ -86,7 +98,7 @@ def credit(visits: list[dict] | None = None) -> dict:
                      "credit": CREDIT_TEMPLATE.format(pi=pi) if pi else "Credit: ESA"})
     return {"acknowledgement": ACKNOWLEDGEMENT, "credits": rows, "citations": list(CITATIONS),
             "dace_acknowledgement": DACE_ACKNOWLEDGEMENT, "disclaimer": DISCLAIMER, "commercial_use": COMMERCIAL_NOTE,
-            "terms": dict(TERMS_URLS)}
+            "licence": LICENCE, "served_by": SERVED_BY, "terms": dict(TERMS_URLS)}
 
 
 def credit_text(visits: list[dict] | None = None) -> str:
@@ -97,6 +109,22 @@ def credit_text(visits: list[dict] | None = None) -> str:
         lines.append(f"{r['programme']} {r['file_key']} (obs id {r['obs_id']}): {r['credit']}")
     lines += ["", "Cite: " + "; ".join(c["citations"]), "", c["dace_acknowledgement"], "", c["disclaimer"], c["commercial_use"]]
     return "\n".join(lines)
+
+
+def probe_archives(timeout: float = 10.0) -> dict:
+    """Whether ESA's named CHEOPS archives answer, and whether SetuHQ can use them programmatically (it cannot: they
+    offer no documented API). Recorded in each listing's provenance, before falling back to DACE."""
+    import urllib.request
+
+    out = {}
+    for name, url in ARCHIVES.items():
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, method="HEAD"), timeout=timeout) as r:
+                status = r.status
+        except Exception as exc:  # noqa: BLE001 (any failure is "not reachable", with the reason)
+            status = getattr(exc, "code", None) or type(exc).__name__
+        out[name] = {"url": url, "status": status, "programmatic_api": False}
+    return out
 
 
 def programme_id(file_key: str | None) -> str | None:
@@ -164,7 +192,7 @@ def public_only(rows: list[dict]) -> tuple[list[dict], int]:
 
 
 def list_visits(target: str, *, radius_arcsec: float = 60.0, cache_dir: str | Path = CACHE, refresh: bool = False,
-                query=None, resolve=None) -> dict:
+                query=None, resolve=None, probe: bool = True) -> dict:
     """The public CHEOPS visits of ``target`` (a name Sesame resolves, or 'RA DEC' in degrees): a cone search of
     the archive, latest DRP version per visit, proprietary ones dropped. Cached per target."""
     key = re.sub(r"[^A-Za-z0-9_.+-]+", "_", target.strip())
@@ -209,7 +237,8 @@ def list_visits(target: str, *, radius_arcsec: float = 60.0, cache_dir: str | Pa
     visits = [{k: _plain(r.get(k)) for k in LIST_FIELDS} for r in latest_versions(public)]
     out = {"target": target, "ra_deg": float(coord.ra.deg), "dec_deg": float(coord.dec.deg), "radius_arcsec": radius_arcsec,
            "visits": visits, "n_public": len(visits), "n_not_public_dropped": dropped,
-           "source": "DACE public mode (dace.unige.ch), CHEOPS DRP light curves", **credit(visits)}
+           "archives_tried": probe_archives() if probe else None,
+           "source": "DACE public mode, CHEOPS DRP light curves", **credit(visits)}
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(out, indent=1))
     return out
@@ -292,6 +321,8 @@ def fetch_visit(visit: dict, *, aperture: str = "default", cache_dir: str | Path
     path = Path(cache_dir) / "visits" / f"{fk}_{aperture}.json.gz"
     if path.exists():
         payload = json.loads(gzip.decompress(path.read_bytes()))
+        if not payload.get("meta", {}).get("status_published"):
+            raise CheopsUnavailable(f"{fk}: the cached copy is not marked public; refused (delete it)")
     else:
         if offline:
             raise CheopsUnavailable(f"{fk}: not in the cache and offline")

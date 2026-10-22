@@ -31,6 +31,7 @@ def assert_credited(out: dict, file_keys=()):
     for cite in ("Benz", "Hoyer", "Fortier"):
         assert cite in text
     assert "Data & Analysis Center for Exoplanets (DACE)" in text
+    assert "CC BY-NC 3.0 IGO" in text and "data.licences@esa.int" in text
     for fk in file_keys:
         assert fk in text and ch.programme_id(fk) in text
     if file_keys:
@@ -60,6 +61,8 @@ def test_fixture_is_a_small_derived_public_excerpt(excerpt):
     assert p["status_published"] is True and p["programme"] == "CH_PR100018" and p["file_key"].startswith("CH_PR100018_TG")
     assert p["obs_id"] and p["pi_name"] and p["drp_version"]
     assert FIXTURE.stat().st_size < 50_000
+    assert excerpt["credit"] == "Credit: ESA, Isabella PAGANO" and "CC BY-NC 3.0 IGO" in excerpt["licence"]
+    assert excerpt["acknowledgement"].startswith(ESA_SENTENCE)
     assert not any(FIXTURE.parent.glob("*.fits"))  # no raw CHEOPS file in the repository
 
 
@@ -90,13 +93,24 @@ def test_list_visits_without_network(tmp_path):
     raw = {"file_key": ["CH_PR100018_TG000101_V0300", "CH_PR100018_TG000102_V0300"], "status_published": [True, False],
            "db_lc_available": [True, True], "obs_id": [11, 12], "pi_name": ["P I", "P I"], "visit_id": [1, 2],
            "obj_id_catname": ["X", "X"]}
-    out = ch.list_visits("X", cache_dir=tmp_path, query=lambda c, r: raw, resolve=lambda n: SkyCoord(1 * u.deg, 2 * u.deg))
+    out = ch.list_visits("X", cache_dir=tmp_path, query=lambda c, r: raw, resolve=lambda n: SkyCoord(1 * u.deg, 2 * u.deg),
+                         probe=False)
     assert out["n_public"] == 1 and out["n_not_public_dropped"] == 1
     assert [v["file_key"] for v in out["visits"]] == ["CH_PR100018_TG000101_V0300"]
     assert_credited(out, ["CH_PR100018_TG000101_V0300"])
     # cached: a second call needs no query
     again = ch.list_visits("X", cache_dir=tmp_path, query=lambda c, r: pytest.fail("cached"), resolve=lambda n: None)
     assert again == json.loads(json.dumps(out))
+
+
+def test_a_cached_copy_not_marked_public_is_refused(tmp_path, excerpt):
+    meta = {**excerpt["meta"], "status_published": False}
+    vdir = tmp_path / "visits"
+    vdir.mkdir()
+    (vdir / f"{meta['file_key']}_default.json.gz").write_bytes(
+        gzip.compress(json.dumps({"meta": meta, "arrays": excerpt["arrays"]}).encode()))
+    with pytest.raises(ch.CheopsUnavailable, match="not marked public"):
+        ch.fetch_visit({**meta, "status_published": True}, cache_dir=tmp_path, offline=True)
 
 
 def test_a_visit_not_marked_public_is_refused_before_any_request(tmp_path):
