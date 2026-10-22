@@ -177,18 +177,21 @@ def test_every_discovery_surface_says_unconfirmed(run_dir, catalog, tmp_path):
     page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     data = _page_data(page)
     assert data["unconfirmed"] == UNCONFIRMED == "candidate, unconfirmed"
-    for sid in ("candidates", "explorer", "planets", "transit", "sky"):
+    for sid in ("candidates", "explorer", "planets", "sky"):
         assert UNCONFIRMED in _route(page, sid), sid
+    # A dip's page says its own status (candidate, flagged or rejected), from its vetting outcome.
+    assert "${DIPPHRASE(d.outcome)}" in re.search(r"function renderTransit\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "const DIPTAG = o =>" in APP_JS and "D.dip_state" in APP_JS
     # Rendered rows: the feed table status cell, the timeline dots, the top-candidates
-    # widget, the discovery-count widget and every planet entry carry the wording.
+    # widget and every planet entry carry the wording or the status tag.
     status_col = re.search(r"\['status', 'status'.*?\],\n", APP_JS, re.S).group(0)
-    assert "D.unconfirmed" in status_col
+    assert "FEEDTAG(x)" in status_col
     timeline = re.search(r"function timeline\(box\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "D.unconfirmed" in timeline
     widgets = re.search(r"function widgetBody\(id\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert widgets.count("D.unconfirmed") + widgets.count("${UNC}") >= 3
+    assert "${DIPTAG(x.outcome)}" in widgets  # the top dips: each tagged by its own outcome
     planets = re.search(r"function renderPlanets\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "${UNC}" in planets and "D.no_detection" in planets
+    assert "DIPTAG(e.outcome) : UNC}" in planets and "D.no_detection" in planets  # a run dip by its outcome, a feed entry by the hedge
     assert "candidate, unconfirmed" in data["docket_html"]
     # The feed rule is shown as a rule, not a vetting result.
     disc = _route(page, "explorer")
@@ -713,10 +716,9 @@ def test_top_candidate_rows_are_one_44px_line_on_a_phone():
     assert "height:44px" in row and "white-space:nowrap" in row and "align-items:center" in row
     link = re.search(r"\.toplist ul li\.toprow a\.dip\{([^}]*)\}", phone).group(1)
     assert "height:44px" in link and "padding:0" in link
-    # The status keeps a word on the row, and the hedge moves to the signal line.
-    assert ".toplist .unc{display:none}" in phone and ".phonehedge{display:inline}" in phone
+    # The status keeps a word on the row, with the dip's own status tag (no blanket hedge on the signal line).
     widgets = re.search(r"function widgetBody\(id\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert 'class="phonehedge"> · each a ${esc(D.unconfirmed)}' in widgets
+    assert "phonehedge" not in widgets and "${DIPTAG(x.outcome)}</li>" in widgets
 
 
 def _weights_files(tmp_path, *, with_record=True):
@@ -965,7 +967,7 @@ def test_phone_feed_is_three_line_cards_with_a_distinct_sort_group(run_dir, cata
     assert 'role="group" aria-label="Sort by"' in bar and '<span class="sortlbl" aria-hidden="true">Sort</span>' in bar
     assert "aria-pressed" in bar
     cards = re.search(r"function feedCards\(rows\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert cards.count('<div class="fc') == 3 and "D.unconfirmed" in cards
+    assert cards.count('<div class="fc') == 3 and "${FEEDTAG(x)}" in cards
     assert "${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}" in cards
     assert "#caltable{display:none}" in phone and ".calcards{display:grid" in phone
     cal = re.search(r"function renderCalibration\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)

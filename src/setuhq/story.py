@@ -97,7 +97,9 @@ def verdict_text(c: dict, status: dict, who: dict, cmp: dict) -> str:
                 f"recovered, not a discovery. The dip itself stays a candidate, unconfirmed as an independent detection.")
     else:
         single = " A single dip with no BLS period of its own." if not c.get("period_days") else ""
-        rest = f"{single} Marked by {who['text']}. Candidate, unconfirmed."
+        tail = {"passed": " Candidate, unconfirmed.", "flagged": " Open: a candidate only if review clears it."}.get(
+            out, " Not a candidate.")  # a rejected dip is never called a candidate
+        rest = f"{single} Marked by {who['text']}.{tail}"
     return first + rest
 
 

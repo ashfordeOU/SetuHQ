@@ -1,0 +1,12 @@
+{
+ "note": "Each dip's address on the website (/candidates/<slug>/), given once and never changed. Written by setuhq site; a dip that leaves the run keeps its entry.",
+ "slugs": {
+  "tess-fa3483ce6f83-002": "pi-men/dip-1",
+  "tess-fa3483ce6f83-000": "pi-men/dip-2",
+  "tess-fa3483ce6f83-001": "pi-men/dip-3",
+  "tess-04b815001aa6-004": "pi-men/dip-4",
+  "tess-04b815001aa6-006": "pi-men/dip-5",
+  "tess-04b815001aa6-005": "pi-men/dip-6",
+  "tess-04b815001aa6-003": "pi-men/dip-7"
+ }
+}

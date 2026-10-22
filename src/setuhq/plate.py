@@ -419,7 +419,7 @@ def river_svg(stars: list[dict]) -> str:
             h = (rh - 10) * math.log10(max(_num(c["snr"]) or 1.0, 1.0)) / lmax
             cls = STATUS_CLASS.get(st, "")
             out.append(f'<g><title>{_e(s["star"])} · {_e(unit)} {_f(c["t_center"], 3)} · SNR {_f(c["snr"], 1)} · '
-                       f'{_e(STATUS_WORD.get(st, st))} · candidate</title>'
+                       f'{_e(STATUS_WORD.get(st, st))}{" · candidate" if _cand_word(st) else ""}</title>'
                        f'<line class="t {cls}" x1="{x:.1f}" x2="{x:.1f}" y1="{base}" y2="{base - h:.1f}"/>'
                        f'<circle class="cap {cls}" cx="{x:.1f}" cy="{base - h:.1f}" r="2.2"/></g>')
         # The statuses in words, one per line, beside the row.
@@ -589,6 +589,11 @@ def plate_labels(page: str) -> list[str]:
     return panels + caps
 
 
+def _cand_word(status: str) -> str:
+    """The small "candidate" tag, only on what is one: a rejected or flagged dip is named by its status word alone."""
+    return '<span class="word cand">candidate</span>' if status in ("passed", "new_candidate", "known_toi") else ""
+
+
 def _word(status: str) -> str:
     return f'<span class="word {STATUS_CLASS.get(status, "")}">{_e(STATUS_WORD.get(status, status))}</span>'
 
@@ -634,7 +639,7 @@ def _plate(s: dict, i: int) -> str:
 </figure>
 <p class="nocurve">No light curve is stored for this star in this build: the search catalogue keeps measured values only, so there is no whole-subject curve and no folded panel.</p>''')
         archive = ""
-    caps = "".join(f'<li id="{pid}-{letters[c["candidate_id"]]}"><p class="caption"><span class="word cand">candidate</span>{_word(c.get("status"))}'
+    caps = "".join(f'<li id="{pid}-{letters[c["candidate_id"]]}"><p class="caption">{_cand_word(c.get("status"))}{_word(c.get("status"))}'
                    f'<b class="fig">{i}{letters[c["candidate_id"]]}. <span class="mono">{_e(c["candidate_id"])}</span>.</b> '
                    f'{_e(c["caption"])}</p></li>' for c in s["candidates"])
     return f'''<article class="plate" id="{pid}" aria-labelledby="{pid}-h">
@@ -673,7 +678,7 @@ def plate_page(data: dict) -> str:
 <header class="mast">
   <p class="kicker"><a href="/" aria-label="SetuHQ, home">{brand.logo()}</a><span>plates</span></p>
   <h1>{title}</h1>
-  <p><span class="hedge">Candidate, unconfirmed.</span> {n} candidates on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Every number is a stored value.</p>
+  <p><span class="hedge">Candidate, unconfirmed.</span> {n} dips on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
   <ul class="notes">
     <li>{_e(scope)}</li>
     <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.</li>

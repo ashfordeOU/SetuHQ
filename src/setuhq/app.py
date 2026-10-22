@@ -120,6 +120,20 @@ SIZES = ("S", "M", "L")
 DEFAULT_SIZE = {"kpis": "L", "discoveries": "M", "runs": "M", "top": "L"}
 
 UNCONFIRMED = "candidate, unconfirmed"
+# A run dip's status in one word, from its vetting outcome: only a dip that passed vetting is a candidate. A rejected
+# dip is never called one; a flagged dip is open (waiting for review). (class, tag word, full phrase)
+DIP_STATE = {"passed": ("cand", "candidate", UNCONFIRMED),
+             "flagged": ("open", "flagged", "flagged for review, open"),
+             "rejected": ("rej", "rejected", "rejected by vetting, not a candidate")}
+
+
+def dip_state(outcome: str | None) -> tuple[str, str, str]:
+    return DIP_STATE.get(outcome or "", DIP_STATE["flagged"])
+
+
+def dip_tag(outcome: str | None) -> str:
+    cls, word, phrase = dip_state(outcome)
+    return f'<span class="tag {cls}" title="{html.escape(phrase)}">{word}</span>'
 NO_DETECTION = "Archive values only. This page claims no detection."
 NO_STELLAR_RADIUS = ("No stellar radius is stored in the run or the catalogue, so this page does not "
                      "convert the ratio to a planet radius in Earth or Jupiter units.")
@@ -263,7 +277,7 @@ def planet_cards(run_candidates: list[dict], run_name: str, feed: list[dict], cr
             "source": "run", "id": c["candidate_id"], "depth_ppm": c["depth_ppm"],
             "ratio": radius_ratio(c["depth_ppm"]), "period_days": c.get("period_days"),
             "n_transits": c.get("n_transits"), "t_center": c["t_center"], "time_unit": c["time_unit"],
-            "status": OUTCOME_LABEL.get(c.get("outcome"), ""),
+            "status": OUTCOME_LABEL.get(c.get("outcome"), ""), "outcome": c.get("outcome"),
             "archive_line": (comparison.get(c["candidate_id"]) or {}).get("line", ""),
         })
     for r in feed:
@@ -366,7 +380,7 @@ def dip_agreement(dips: list[dict], kinds: dict[str, str]) -> list[dict]:
     for d in dips:
         who = [r for r in kinds if r in (d.get("reviewers") or [])]
         out.append({
-            "id": d["candidate_id"], "target": d.get("target", ""), "outcome_label": OUTCOME_LABEL.get(d.get("outcome"), ""),
+            "id": d["candidate_id"], "target": d.get("target", ""), "outcome": d.get("outcome"), "outcome_label": OUTCOME_LABEL.get(d.get("outcome"), ""),
             "reviewers": who, "n": len(who), "of": len(kinds),
             "n_sim": sum(r in sim_all for r in who), "of_sim": len(sim_all),
             "n_claude": sum(r in cl_all for r in who), "of_claude": len(cl_all),
@@ -384,19 +398,65 @@ def _letter(i: int) -> str:
     return str(i + 1)
 
 
-def dip_names(cands: list[dict], star_names: dict[str, str]) -> dict[str, dict]:
-    """Every dip of the run with its readable address and plain label: numbered in time order, under its star's
-    name (or its TIC): {"tess-…-000": {"n": 2, "slug": "pi-men/dip-2", "label": "pi Men, dip 2 (6.27 d)"}}."""
+SLUGS_FILE = "slugs.json"
+
+
+def dip_names(cands: list[dict], star_names: dict[str, str], pinned: dict[str, str] | None = None) -> dict[str, dict]:
+    """Every dip of the run with its readable address and plain label, numbered per star under its star's name (or
+    its TIC): {"tess-…-000": {"n": 2, "slug": "pi-men/dip-2", "label": "pi Men, dip 2 (6.27 d)"}}.
+
+    ``pinned`` (dip id -> slug, from runs/<run>/slugs.json) wins: a dip keeps the address it was first given. A dip
+    not in it gets the next number of its star, in time order, so no address is ever renumbered or reused."""
     from setuhq.objects import slugify
 
+    pinned = dict(pinned or {})
+    used: dict[str, int] = {}
+    for slug in pinned.values():
+        star, _, n = slug.rpartition("/dip-")
+        if n.isdigit():
+            used[star] = max(used.get(star, 0), int(n))
     out = {}
-    for i, c in enumerate(sorted(cands, key=lambda c: c["t_start"])):
+    for c in sorted(cands, key=lambda c: (c["t_start"], c["candidate_id"])):
         target = c.get("target") or c.get("subject_id") or "star"
         star = star_names.get(target) or target
+        slug = pinned.get(c["candidate_id"])
+        if not slug:
+            n = used.get(slugify(star), 0) + 1
+            used[slugify(star)] = n
+            slug = f"{slugify(star)}/dip-{n}"
+        n = int(slug.rpartition("/dip-")[2])
         period = f" ({c['period_days']:.2f} d)" if c.get("period_days") else ""
-        out[c["candidate_id"]] = {"n": i + 1, "slug": f"{slugify(star)}/dip-{i + 1}", "label": f"{star}, dip {i + 1}{period}",
-                                  "star": star}
+        out[c["candidate_id"]] = {"n": n, "slug": slug, "label": f"{star}, dip {n}{period}", "star": star}
     return out
+
+
+def pinned_dip_slugs(run_dir: Path, names: dict[str, dict], pinned: dict[str, str]) -> tuple[dict[str, str], list[str]]:
+    """Keep runs/<run>/slugs.json: every slug ever given stays (a rebuilt run keeps its addresses); a new dip's slug is
+    added. Returns the whole map and the slugs of dips no longer in the run (their pages answer "no longer in the run").
+    A read-only run folder is left as it is: the build still pins this run's slugs for its own pages."""
+    every = {**pinned, **{i: d["slug"] for i, d in names.items()}}
+    if every != pinned:
+        try:
+            (run_dir / SLUGS_FILE).write_text(json.dumps(
+                {"note": "Each dip's address on the website (/candidates/<slug>/), given once and never changed. "
+                         "Written by setuhq site; a dip that leaves the run keeps its entry.",
+                 "slugs": dict(sorted(every.items(), key=_slug_order))}, indent=1) + "\n")
+        except OSError:
+            pass
+    gone = sorted(s for i, s in every.items() if i not in names)
+    return every, gone
+
+
+def _slug_order(kv: tuple[str, str]) -> tuple[str, int]:
+    star, _, n = kv[1].rpartition("/dip-")
+    return star, int(n) if n.isdigit() else 0
+
+
+def load_pinned_slugs(run_dir: Path) -> dict[str, str]:
+    try:
+        return dict(json.loads((run_dir / SLUGS_FILE).read_text()).get("slugs") or {})
+    except (OSError, ValueError, AttributeError):
+        return {}
 
 
 def _median(values: list[float]) -> float | None:
@@ -651,8 +711,17 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     hero = overview_hero(dock, top_rows)
     calib = {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name}
     story = story_data(run_dir, dock, feed, calib, hero, targets_path=targets_path)
-    dips = dip_names(cands, {story["star"]["target"]: story["star"]["name"]} if story["star"].get("name") else {})
-    set_dip_slugs({i: d["slug"] for i, d in dips.items()})
+    pinned = load_pinned_slugs(Path(run_dir))
+    dips = dip_names(cands, {story["star"]["target"]: story["star"]["name"]} if story["star"].get("name") else {}, pinned)
+    _, gone = pinned_dip_slugs(Path(run_dir), dips, pinned)
+    set_dip_slugs({i: d["slug"] for i, d in dips.items()}, gone)
+    # The dip numbers the page shows (the chips, the picker) are the address numbers.
+    for w in hero.get("windows") or []:
+        if w["id"] in dips:
+            w["letter"] = str(dips[w["id"]]["n"])
+    for d in story.get("dips") or []:
+        if d["id"] in dips:
+            d["letter"] = str(dips[d["id"]]["n"])
     galaxy = galaxy_data(map_path, notable_path, coverage_path=coverage_path, setuhq_star=story["star"]["name"] or "pi Men",
                          setuhq_planet=story.get("planet"), lead_dip=story.get("lead_dip"))
     return {
@@ -666,6 +735,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "default_layout": default_layout(),
         "default_size": DEFAULT_SIZE,
         "unconfirmed": UNCONFIRMED,
+        "dip_state": DIP_STATE,
         "no_detection": NO_DETECTION,
         "no_stellar_radius": NO_STELLAR_RADIUS,
         "ratio_scale_max": RATIO_SCALE_MAX,
@@ -802,7 +872,8 @@ a:hover{color:var(--ink)}
 .nav a[aria-current="page"]{background:var(--seg-bg);color:var(--seg-ink)}
 main{min-width:0;padding:36px clamp(16px,3vw,40px) 56px}
 main:focus{outline:none}
-.route{display:grid;gap:22px;min-width:0;max-width:1280px;margin:0 auto;animation:rise .45s var(--ease) both}
+.route{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;min-width:0;max-width:1280px;margin:0 auto;animation:rise .45s var(--ease) both}
+.route>*{min-width:0}
 .route[hidden]{display:none}
 .route>header{display:grid;gap:8px;padding-bottom:4px}
 .route>header .eyebrow{margin:0;font-size:15px;font-weight:500;color:var(--star);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
@@ -984,9 +1055,9 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .scatter{position:relative;width:100%;padding-bottom:52%}
 .scatter svg{position:absolute;inset:0;width:100%;height:100%}
 .scatter .ax{position:absolute;font-size:11px;color:#8E8E93}
-.scatter button{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border:0;padding:0;background:transparent;border-radius:50%;cursor:pointer}
-.scatter button i{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);border-radius:50%;background:var(--c);box-shadow:0 0 var(--g) var(--c)}
-.scatter button[aria-pressed="true"] i{outline:2px solid #fff;outline-offset:2px}
+.scatter>button{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border:0;padding:0;background:transparent;border-radius:50%;cursor:pointer}
+.scatter>button i{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);border-radius:50%;background:var(--c);box-shadow:0 0 var(--g) var(--c)}
+.scatter>button[aria-pressed="true"] i{outline:2px solid #fff;outline-offset:2px}
 .scatterbox .foot{margin-top:28px;font-size:12px;color:#8E8E93}
 .selpanel{flex:1 1 320px;max-width:400px;padding:22px;display:flex;flex-direction:column;gap:14px;border-radius:28px}
 .selpanel .st{margin:0;font-size:13px;font-weight:500;color:var(--c)}
@@ -1042,7 +1113,7 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .toplist>li{border-top:1px solid var(--line);padding-top:11px;display:grid;gap:6px}
 .toplist>li:first-child{border-top:0;padding-top:0}
 .toplist ul li{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline;font-size:13px}
-.toplist .st .short,.phonehedge{display:none}
+.toplist .st .short{display:none}
 .toplist .note{font-size:12.5px}
 .kpis{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
 .kpi{border-top:1px solid var(--line-2);padding-top:8px}
@@ -1159,6 +1230,8 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .dipsbox,.selpanel{max-width:none}
 }
 @media (max-width:699.98px){
+  .dipchips{flex-wrap:wrap;overflow-x:visible}
+  .dipchips a{flex:1 0 30%}
   table.bench tr{display:block;border-top:1px solid var(--line);padding:6px 0}table.bench tr:first-child{border-top:0}table.bench th,table.bench td{display:block;width:auto;border:0;padding:2px 12px}
   main{padding:20px 16px 40px}
   .route{gap:18px}
@@ -1217,8 +1290,6 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .toplist .st .long{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .toplist .st .short{display:inline;overflow:hidden;text-overflow:ellipsis}
   .toplist .st{min-width:0;overflow:hidden;text-overflow:ellipsis}
-  .toplist .unc{display:none}
-  .phonehedge{display:inline}
   /* The feed table scrolls sideways in its own region; the page alone scrolls vertically. */
   .tablewrap.scrollbox{max-height:none}
   /* Candidates: the header collapses and the Docket fills the screen under the top bar, so only the frame scrolls. */
@@ -1308,6 +1379,12 @@ const NS = 'http://www.w3.org/2000/svg';
 function el(tag, a={}, p){ const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
 function tx(svg, x, y, s, anchor='start', cls=''){ const t = el('text', {x, y, 'text-anchor': anchor, class: cls}, svg); t.textContent = s; return t; }
 const UNC = `<span class="tag unc">${esc(D.unconfirmed)}</span>`;
+// A run dip's status from its vetting outcome (app.py DIP_STATE): a tag, and the phrase. Only a passed dip is a candidate.
+const DIPSTATE = o => (D.dip_state || {})[o] || (D.dip_state || {}).flagged || ['cand', 'candidate', D.unconfirmed];
+const DIPTAG = o => { const [c, w, p] = DIPSTATE(o); return `<span class="tag ${c}" title="${esc(p)}">${esc(w)}</span>`; };
+const DIPPHRASE = o => DIPSTATE(o)[2];
+// A feed entry passed vetting (discover.py admits only those), so it is a candidate; a stored outcome would say otherwise.
+const FEEDTAG = x => DIPTAG(x.outcome || 'passed');
 const say = msg => { const a = $('#announce'); a.textContent = ''; setTimeout(() => { a.textContent = msg; }, 30); };
 // A Sentinel is an AI reviewer on any provider (Claude by default); PROV(id) is its provider, model and calibration.
 const SENTINEL_KINDS = D.sentinel_kinds || ['claude', 'claude_code'];
@@ -1413,11 +1490,12 @@ function widgetBody(id){
     for (const x of r.top){ let g = groups.find(g => g.signal_id === x.signal_id); if (!g){ g = {signal_id: x.signal_id, dips: []}; groups.push(g); } g.dips.push(x); }
     return `<ul class="toplist">${groups.map(g => {
       const f = g.dips[0], n = g.dips.length, xm = g.dips.find(x => x.consistent_with);
-      const head = `<div><b>${esc(f.target)}</b> <span class="muted">· signal ${f.period_days ? 'P ' + fmt(f.period_days,3) + ' d' : 'with no period (one transit)'} · ${n} of the top dips${f.signal_dips > n ? `, ${f.signal_dips} dips in the run` : ''}<span class="phonehedge"> · each a ${esc(D.unconfirmed)}</span></span></div>`;
+      const tic = String(f.target).replace(/^TIC\s*/, ''), star = (D.tic_names || {})[tic];
+      const head = `<div><b>${star ? esc(star) : esc(f.target)}</b> <span class="muted">${star ? `· ${esc(f.target)} ` : ''}· signal ${f.period_days ? 'P ' + fmt(f.period_days,3) + ' d' : 'with no period (one transit)'} · ${n} of the top dips${f.signal_dips > n ? `, ${f.signal_dips} dips in the run` : ''}</span></div>`;
       const note = xm ? `<p class="note">Archive cross-match: ${n === 1 ? 'this dip is' : `these ${n} dips are`} consistent with <b>${esc(xm.consistent_with)}</b>, a published planet${xm.dP_pct !== null && xm.dP_pct !== undefined ? ` (period difference ${fmt(xm.dP_pct,2)}%)` : ''}. ${n === 1 ? 'It is a transit' : 'They are repeat transits'} of one known planet, not ${n === 1 ? 'a discovery' : n + ' discoveries'}. ${esc(D.no_detection)}</p>` : '';
       // One line per dip. On a phone the status shows as its short word and the hedge moves to the
       // signal line above, so each row stays one 44 px line; the full words stay for screen readers.
-      return `<li>${head}${note}<ul>${g.dips.map(x => `<li class="toprow">${dipLink(x.id)}<span class="mono">SNR ${fmt(x.snr,1)}</span><span class="mono">${fmt(x.depth_ppm,0)} ppm</span><span class="st"><span class="long">${esc(x.outcome_label)}</span><span class="short" aria-hidden="true">${esc(OUTCOME_SHORT[x.outcome] || x.outcome_label)}</span></span><span class="tag cand unc" title="${esc(D.unconfirmed)}">candidate</span></li>`).join('')}</ul></li>`;
+      return `<li>${head}${note}<ul>${g.dips.map(x => `<li class="toprow">${dipLink(x.id)}<span class="mono">SNR ${fmt(x.snr,1)}</span><span class="mono">${fmt(x.depth_ppm,0)} ppm</span><span class="st"><span class="long">${esc(x.outcome_label)}</span><span class="short" aria-hidden="true">${esc(OUTCOME_SHORT[x.outcome] || x.outcome_label)}</span></span>${DIPTAG(x.outcome)}</li>`).join('')}</ul></li>`;
     }).join('')}</ul>`;
   }
   const r = D.run, c = r.counts || {}, dc = r.docket_counts || {};
@@ -1432,7 +1510,6 @@ function widgetBody(id){
     if (!D.catalog.path) return '<p class="empty">No search catalogue was given to this build.</p>';
     return `<div><span class="big">${f.length}</span> <span class="muted">feed entries</span></div>
       <p style="margin:0">${nKnown} match a known TOI period · ${nNew} new candidate${nNew===1?'':'s'} · ${esc(D.catalog.targets_reviewed)} targets reviewed</p>
-      <p style="margin:0">${UNC} every entry</p>
       <p class="muted" style="margin:0;font-size:12px">Catalogue updated ${when(D.catalog.updated)}.</p>`;
   }
   if (id === 'runs'){
@@ -1444,7 +1521,7 @@ function widgetBody(id){
   if (id === 'top'){
     if (!r.top.length) return '<p class="empty">This run stored no candidates.</p>';
     return `${topBody(r)}
-      <p class="muted" style="margin:0;font-size:12px">The run's dips with the highest stored SNR, grouped by signal. Every one is a ${esc(D.unconfirmed)}. Select a dip to open its dossier.</p>`;
+      <p class="muted" style="margin:0;font-size:12px">The run's dips with the highest stored SNR, grouped by signal; the tag is each dip's vetting status. Select a dip to open its dossier.</p>`;
   }
   return '';
 }
@@ -1681,7 +1758,7 @@ const COLS = [
   ['period_days', 'period (d)', x => x.period_days, x => fmt(x.period_days,4)],
   ['depth_ppm', 'depth (ppm)', x => x.depth_ppm, x => fmt(x.depth_ppm,0)],
   ['snr', 'SNR', x => x.snr, x => fmt(x.snr,1)],
-  ['status', 'status', x => x.status, x => `${esc(D.status_label[x.status] || x.status)} <span class="tag cand" title="${esc(D.unconfirmed)}">candidate</span>`],
+  ['status', 'status', x => x.status, x => `${esc(D.status_label[x.status] || x.status)} ${FEEDTAG(x)}`],
 ];
 const NUMERIC = new Set(['tic','t_center','period_days','depth_ppm','snr']);
 function discRows(){
@@ -1716,7 +1793,7 @@ function feedSortBar(){
 // One card per entry, three lines: the dip and its status; TIC · P · depth · SNR on one mono line; the hedge.
 function feedCards(rows){
   if (!rows.length) return '<p class="empty feedcards">No feed entries with this status.</p>';
-  return `<ol class="feedcards">${rows.map(x => `<li><div class="fc1">${dipLink(x.candidate_id)}<span class="fcst">${esc(D.status_label[x.status] || x.status)}</span></div><div class="fc2 mono">${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}</div><div class="fc3"><span class="tag cand" title="${esc(D.unconfirmed)}">candidate</span> mid-time ${fmt(x.t_center,2)} ${esc(x.time_unit)}</div></li>`).join('')}</ol>`;
+  return `<ol class="feedcards">${rows.map(x => `<li><div class="fc1">${dipLink(x.candidate_id)}<span class="fcst">${esc(D.status_label[x.status] || x.status)}</span></div><div class="fc2 mono">${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}</div><div class="fc3">${FEEDTAG(x)} mid-time ${fmt(x.t_center,2)} ${esc(x.time_unit)}</div></li>`).join('')}</ol>`;
 }
 function renderDiscHead(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length, ft = D.catalog.found_times;
@@ -1826,7 +1903,7 @@ function renderPlanets(){
   const cards = D.planets, MAX = D.ratio_scale_max;
   $('#planetcards').innerHTML = cards.length ? cards.map(s => {
     const rowHtml = e => `<div class="ratio">
-      <div>${dipLink(e.id)} ${UNC}</div>
+      <div>${dipLink(e.id)} ${e.source === 'run' ? DIPTAG(e.outcome) : UNC}</div>
       <div class="muted" style="font-size:12px">${e.source === 'run' ? 'this run' : 'feed'} · ${esc(e.status)} · ${e.period_days ? 'P ' + fmt(e.period_days,3) + ' d' : 'no period'}${e.n_transits ? ' · ' + e.n_transits + ' transits' : ''}</div>
       ${e.ratio === null ? '<div class="formula">No positive stored depth, so no ratio.</div>' : `<div class="formula">Rp/R* = √depth = √(${fmt(e.depth_ppm,1)} ppm × 10⁻⁶) = <b>${fmt(e.ratio,4)}</b></div>
       <div class="scale" role="img" aria-label="Rp/R* ${fmt(e.ratio,4)} on a scale from 0 to ${fmt(MAX,2)}"><i style="width:${Math.min(100, e.ratio / MAX * 100).toFixed(2)}%"></i></div>
@@ -1851,7 +1928,7 @@ function renderPanel(){
   renderCalibration(); calWidth = $('#calplane').clientWidth;
   const ag = D.agreement;
   $('#agreement').innerHTML = ag.length ? `<ul class="agree">${ag.map(a => `<li>
-      <span>${dipLink(a.id)}<small class="muted" style="display:block;font-size:11px">${esc(a.target)} · ${esc(a.outcome_label)} · ${esc(D.unconfirmed)}</small></span>
+      <span>${dipLink(a.id)}<small class="muted" style="display:block;font-size:11px">${esc(a.target)} · ${esc(DIPPHRASE(a.outcome))}</small></span>
       <span><b>${a.n} of ${a.of} reviewers</b> marked it: ${a.n_claude} of ${plural(a.of_claude, 'Sentinel')}, ${a.n_sim} of ${plural(a.of_sim, 'Probe')}<small class="muted" style="display:block;font-size:11px">${a.reviewers.map(r => `<span title="reviewer id ${esc(r)}">${esc(NAME(r))}</span>`).join(', ') || 'none'}</small></span>
       <a href="${dipHref(a.id, 'ledger')}">Verdict ledger</a></li>`).join('')}</ul>` : '<p class="empty">The run stored no dips.</p>';
   $('#panelcards').innerHTML = D.panel.length ? D.panel.map(r => `<article class="card"><h2>${esc(NAME(r.id))} <span class="sub mono" title="reviewer id">${esc(r.id)}</span></h2>
@@ -2061,7 +2138,7 @@ function renderSky(){
   $('#skyrev').innerHTML = REV_FILTERS.map(([k, l]) => `<button type="button" data-rev="${k}" aria-pressed="${sky.rev === k}">${esc(l)}</button>`).join('');
   const shown = DIPS.filter(skyShown);
   $('#skycount').textContent = `${shown.length} of ${DIPS.length}`;
-  $('#skydips').innerHTML = shown.length ? shown.map(d => `<a class="dipitem" href="${transitHref(d.id)}" style="--c:${STC[d.status]}"><i></i><b>${esc(d.time_unit)} ${tval(d.t)}</b><span class="st">${esc(d.status_label)}</span><span class="sub">${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} h · ${d.who.sentinels === d.who.of_sentinels && d.who.probes === d.who.of_probes ? `all ${d.who.of_sentinels + d.who.of_probes} reviewers` : `${d.who.probes} Probes, ${d.who.sentinels} Sentinels`} · ${esc(D.unconfirmed)}</span></a>`).join('')
+  $('#skydips').innerHTML = shown.length ? shown.map(d => `<a class="dipitem" href="${transitHref(d.id)}" style="--c:${STC[d.status]}"><i></i><b>${esc(d.time_unit)} ${tval(d.t)}</b><span class="st">${esc(d.status_label)}</span><span class="sub">${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} h · ${d.who.sentinels === d.who.of_sentinels && d.who.probes === d.who.of_probes ? `all ${d.who.of_sentinels + d.who.of_probes} reviewers` : `${d.who.probes} Probes, ${d.who.sentinels} Sentinels`} · ${esc(DIPPHRASE(d.outcome))}</span></a>`).join('')
     : '<p class="empty" style="margin:12px">No dips match.</p>';
   skyTimeline();
 }
@@ -2161,7 +2238,8 @@ function renderTransit(){
   const i = DIPS.indexOf(d), prev = DIPS[(i + DIPS.length - 1) % DIPS.length], next = DIPS[(i + 1) % DIPS.length], inCmp = txs.cmp.includes(d.id);
   $('#txkicker').textContent = d.status_label; $('#txkicker').style.color = STC[d.status];
   $('#h-transit').textContent = DIP_NAME(d.id) || `dip ${d.letter}`;
-  $('#txsub').textContent = `${d.time_unit} ${tval(d.t)} · ${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} hours · SNR ${fmt(d.snr, 1)} · ${D.unconfirmed}`;
+  $('#txsub').textContent = `${d.time_unit} ${tval(d.t)} · ${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} hours · SNR ${fmt(d.snr, 1)} · ${DIPPHRASE(d.outcome)}`;
+  $('#txcapword').textContent = d.outcome === 'rejected' ? 'The dip, played back' : 'The transit, played back';
   $('#txnav').innerHTML = `<a class="roundbtn" href="${transitHref(prev.id)}" aria-label="Previous dip, ${esc(prev.time_unit)} ${tval(prev.t)}">‹</a><a class="roundbtn" href="${transitHref(next.id)}" aria-label="Next dip, ${esc(next.time_unit)} ${tval(next.t)}">›</a><button type="button" class="cmpbtn" id="cmptoggle" aria-pressed="${inCmp}">${inCmp ? 'In compare' : 'Add to compare'}</button>`;
   $('#txchips').innerHTML = DIPS.map(x => `<a href="${transitHref(x.id)}" aria-current="${x.id === d.id}" style="--c:${STC[x.status]}" title="${esc(x.id)} · ${esc(x.status_label)}"><i></i>${esc(x.letter)} · ${tval(x.t)}</a>`).join('');
   // Keep the current dip's chip in view in the sideways-scrolling row (without moving the page).
@@ -2267,7 +2345,7 @@ function renderExSel(){
       <g class="orbit" style="transform-origin:0 0"><circle cx="100" cy="0" r="${Math.max(1.2, 46 * k).toFixed(2)}" fill="var(--ink)"/><circle cx="100" cy="0" r="10" fill="none" stroke="var(--line-3)" stroke-width=".8"/></g></svg>
     <p class="small" style="text-align:center">Planet disc to scale from depth: Rp/R* ${fmt(k, 4)} · orbit not to scale · no stellar radius stored</p>
     <dl class="statgrid"><div><dt>Period</dt><dd>${fmt(f.period_days, 3)} d</dd></div><div><dt>Depth</dt><dd>${fmt(f.depth_ppm, 0)} ppm</dd></div><div><dt>Duration</dt><dd>${fmt(f.duration_hours, 2)} h</dd></div><div><dt>SNR</dt><dd>${fmt(f.snr, 1)}</dd></div></dl>
-    <p class="small">TESS sectors ${esc(f.sectors || 'not stored')}. Feed ${esc(entryNo(f.id))} for this star (stored id <span class="mono">${esc(f.id)}</span>). ${isNew ? '' : 'A TOI match compares a stored period with archive values. '}${esc(D.no_detection)} ${esc(_cap(D.unconfirmed))}.</p>`;
+    <p class="small">TESS sectors ${esc(f.sectors || 'not stored')}. Feed ${esc(entryNo(f.id))} for this star (stored id <span class="mono">${esc(f.id)}</span>). ${isNew ? '' : 'A TOI match compares a stored period with archive values. '}${esc(D.no_detection)}</p>`;
 }
 const _cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 $('#route-explorer').addEventListener('click', e => {
@@ -2316,9 +2394,22 @@ const ROUTES = () => $$('#content > .route').map(s => s.dataset.route);
 function parseLoc(){
   const p = rtParse(location.pathname, location.search) || {route: document.body.dataset.page === 'notfound' ? 'notfound' : (document.body.dataset.page || 'overview'), params: {}};
   if (!$('#route-' + p.route)) p.route = 'notfound';
+  // A dip address the run does not hold is not found: never another dip in its place. One the run once held says so.
+  let gone = '';
+  if ((p.route === 'transit' || p.route === 'candidates') && p.params.dip && !((D.routes.dips || {})[p.params.dip])){
+    gone = (D.routes.gone || []).includes(p.params.dip) ? p.params.dip : ''; p.route = 'notfound';
+  }
+  nfSay(gone);
   const params = new URLSearchParams(p.params);
   if (p.route === 'candidates' && location.hash.length > 1 && !params.has('section')) params.set('section', location.hash.slice(1));
   return {route: p.route, params};
+}
+// The not-found page, or "this dip is no longer in the run" for an address a dip once had (D.routes.gone).
+function nfSay(gone){
+  const h = $('#h-notfound'), p = h && h.closest('header').querySelector('p'); if (!h || !p) return;
+  if (!h.dataset.plain) { h.dataset.plain = h.textContent; p.dataset.plain = p.textContent; }
+  h.textContent = gone ? 'This dip is no longer in the run.' : h.dataset.plain;
+  p.innerHTML = gone ? `The address /candidates/${esc(gone)}/ belonged to a dip that a later version of the run no longer holds. Its number is not given to another dip. <a href="${esc(rtUrl('explorer'))}">See the dips the run holds now ›</a>` : esc(p.dataset.plain);
 }
 let current = null;
 // The header follows the page: the section it belongs to, its breadcrumbs (deep pages only), its sub-navigation and title.
@@ -2847,7 +2938,7 @@ def _transit(data: dict) -> str:
       <nav class="dipchips" id="txchips" aria-label="Dips"></nav>
       <div class="row2">
         <section class="space theatre" id="txtheatre" aria-label="Transit theatre">
-          <div class="cap"><span>The transit, played back</span><span id="txcap"></span></div>
+          <div class="cap"><span id="txcapword">The transit, played back</span><span id="txcap"></span></div>
           {system_stage("txsysfig", "The star in its blackbody colour with the planet crossing it, and a limb-darkened model light curve with this dip's stored points overlaid.")}
           <p class="foot" id="txfoot"></p>
           <div class="pllinks" id="txlinks"></div>
@@ -2861,7 +2952,7 @@ def _transit(data: dict) -> str:
       <section class="row2" id="txorbit" aria-label="Orbit and compare"></section>
       <p class="casefile" id="txcase"></p>
       <p class="small" id="txarchive"></p>
-      <p class="small">Every dip here is a {UNCONFIRMED}. Stored values only: the points, marks, scores, flags and words are as the run stored them.</p>"""
+      <p class="small">Only a dip that passed vetting is a candidate, and it stays unconfirmed; a rejected dip is not one. Stored values only: the points, marks, scores, flags and words are as the run stored them.</p>"""
 
 
 def _explorer(data: dict) -> str:
@@ -2877,10 +2968,16 @@ def _explorer(data: dict) -> str:
         s = by_id.get(i, {})
         rows.append(f'<li><a class="rundip" href="#/transit?dip={e(i)}"><b>{e(d["label"])}</b>'
                     f'<span class="muted">{e(s.get("status_label", ""))} · {s.get("depth_ppm", 0):,.0f} ppm · SNR {s.get("snr", 0):.1f}</span>'
-                    f'<span class="tag cand">candidate</span></a>'
+                    f'{dip_tag(s.get("outcome"))}</a>'
                     f'<a class="rundipcf" href="#/candidates?dip={e(i)}" aria-label="Case file for {e(d["label"])}">Case file ›</a></li>')
-    lede = (f"Each is a {UNCONFIRMED}: a dip the panel of Sentinels and Probes marked in {e(star)}'s TESS light curve, "
-            f"not a planet. Open one to watch it played back, or its case file for every check behind its verdict.")
+    outs = [by_id.get(i, {}).get("outcome") for i, _ in dips]
+    n_pass, n_flag, n_rej = outs.count("passed"), outs.count("flagged"), outs.count("rejected")
+    parts = [f"{n_pass} passed vetting ({'a' if n_pass == 1 else 'each a'} {UNCONFIRMED})"] if n_pass else []
+    parts += [f"{n_flag} {'is' if n_flag == 1 else 'are'} flagged for review"] if n_flag else []
+    parts += [f"{n_rej} {'was' if n_rej == 1 else 'were'} rejected by vetting ({'not a candidate' if n_rej == 1 else 'not candidates'})"] if n_rej else []
+    status = (", ".join(parts[:-1]) + " and " + parts[-1] if len(parts) > 1 else "".join(parts)) + "." if parts else ""
+    lede = (f"Dips the panel of Sentinels and Probes marked in {e(star)}'s TESS light curve: {status[0].lower() + status[1:] if status else ''} "
+            f"None is a confirmed planet. Open one to watch it played back, or its case file for every check behind its verdict.")
     more = (f" Further down: the search feed's {len(feed)} entries from other stars, which have no case file yet." if feed else "")
     return f"""<header>
         <h1 class="lead-h" id="h-explorer" tabindex="-1">{len(dips)} dip{"s" if len(dips) != 1 else ""} you can open, from the {e(star)} run.</h1>

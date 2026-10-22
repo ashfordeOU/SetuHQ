@@ -199,7 +199,7 @@ def test_js_filter_equals_python_filter_and_the_url_round_trips(tmp_path):
 def test_null_values_read_not_stored():
     js = C.CATALOGUE_JS
     fmt = re.search(r"const ctFmt = .*?\n", js).group(0)
-    val = js[js.index("function ctVal("):js.index("function ctMoll(")]
+    val = js[js.index("function ctErr("):js.index("function ctMoll(")]
     script = ("const esc = s => String(s); const ct = {P: {mass: [null, 2.5], mass_lo: [null, 0.1], mass_hi: [null, 0.2], e: [0, null], e_lo: [null, null], e_hi: [null, null]}};\n"
               + fmt + val + "console.log(JSON.stringify([ctVal(0, 'mass', 'MJ'), ctVal(1, 'mass', 'MJ'), ctVal(0, 'e', ''), ctVal(1, 'e', '')]));")
     out = _node(script)
@@ -411,3 +411,41 @@ const { chromium } = require(%s);
     assert out["cells"] == [10] and out["na"] is True
     assert out["rows"] <= 12 and out["visible"] >= 4  # the rows in view, plus two each side, during a fling
     assert out["first"] > 150  # 10 × 2,500 px down at 128 px a card
+
+
+def test_stored_upper_limits_and_missing_errors_in_words():
+    """exoplanet.eu stores an upper limit as lower error = value and upper error = 0 (the range 0 to the value): it reads
+    "≤ value", with no error. Both errors 0 means none was stored. A theoretical mass or radius says so."""
+    from setuhq.stubs import is_upper_limit, stored
+
+    assert is_upper_limit(0.0286, 0.0286, 0) and not is_upper_limit(0.72, 0, 0) and not is_upper_limit(1.5, 0.1, 0)
+    assert not is_upper_limit(1.0, None, None) and not is_upper_limit(2.0, 0.3, 0.3)
+    P = {"mass": [0.0286, 1.2, 0.5, None], "mass_lo": [0.0286, 0, 0.1, None], "mass_hi": [0, 0, 0.2, None],
+         "mass_type": ["Theoretical", None, None, None]}
+    assert stored(P, "mass", 0, 4, "MJ") == "≤ 0.0286 MJ (theoretical estimate)"
+    assert stored(P, "mass", 1, 4, "MJ") == "1.2000 MJ" and stored(P, "mass", 2, 1, "MJ") == "0.5 MJ"
+    assert stored(P, "mass", 3, 4, "MJ") is None
+    # The committed catalogue: 330 stored limits and 68 values with both errors 0 (the review's count).
+    cat = json.loads(Path("site/assets/data/catalogue.json").read_text())["planets"]
+    lim = zero = 0
+    for k in [k[:-3] for k in cat if k.endswith("_lo") and k[:-3] + "_hi" in cat]:
+        for x, lo, hi in zip(cat[k], cat[k + "_lo"], cat[k + "_hi"]):
+            if None in (x, lo, hi):
+                continue
+            lim += is_upper_limit(x, lo, hi)
+            zero += lo == 0 and hi == 0
+    assert (lim, zero) == (330, 68)
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
+def test_the_planet_page_draws_limits_and_missing_errors_like_the_stubs():
+    fmt = re.search(r"const ctFmt = .*?;\n", C.CATALOGUE_JS).group(0)
+    err = re.search(r"function ctErr\(x, lo, hi\)\{.*?\n\}\n", C.CATALOGUE_JS, re.S).group(0)
+    cases = [[0.0286, 0.0286, 0], [0.72, 0, 0], [1.5, 0.1, 0.2], [2, 0.3, 0.3], [1, None, None], [1, 0.5, 0]]
+    script = f"{fmt}{err}console.log(JSON.stringify({json.dumps(cases)}.map(([x, lo, hi]) => ctErr(x, lo, hi))));"
+    out = json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
+    assert out == [{"limit": True, "err": ""}, {"limit": False, "err": ""}, {"limit": False, "err": " −0.1 / +0.2"},
+                   {"limit": False, "err": " ± 0.3"}, {"limit": False, "err": ""}, {"limit": False, "err": " −0.5 / +0"}]
+    from setuhq.stubs import is_upper_limit
+    assert [c["limit"] for c in out] == [is_upper_limit(*c) for c in cases]  # the page and the stubs agree
+    assert "theoretical estimate" in C.CATALOGUE_JS and "Upper limit from the stored range" in C.CATALOGUE_JS

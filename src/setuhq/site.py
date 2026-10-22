@@ -30,7 +30,7 @@ from pathlib import Path
 
 from setuhq import brand
 from setuhq.app import (APP_CSS, APP_JS, DEFAULT_SWEEP, DEFAULT_WEIGHTS, FONTS_DIR, GALAXY_JSON, NAV, ROUTE_META, SUBNAV,
-                        UNCONFIRMED, app_data, app_payload, galaxy_json, route_sections)
+                        UNCONFIRMED, app_data, app_payload, dip_state, galaxy_json, route_sections)
 from setuhq.catalogue import CATALOGUE_JSON, SEARCH_BUTTON, SEARCH_DIALOG
 from setuhq.codenote import technical_note_html
 from setuhq.galaxy import CSV_NAME, TEASER_JS, map_csv
@@ -40,6 +40,7 @@ from setuhq.names import ATTRIBUTION
 from setuhq.objects import slugify
 from setuhq.everything import VARIABLES_JSON
 from setuhq.routes import CHAPTER_SLUGS, LEGACY_PAGES, ROUTES_CORE_JS, from_hash, legacy_js, url_for
+from setuhq.stubs import stored
 
 REPO_URL = brand.REPO_URL
 # Each page's HTML (its own view, the shell, the head) stays under this many characters; everything shared is a
@@ -140,10 +141,14 @@ body[data-route="overview"] main{padding-top:8px}
 .rundip .tag{grid-row:1/3;grid-column:2}
 .rundipcf{display:inline-flex;align-items:center;padding:0 14px;border:1px solid var(--line);border-radius:14px;text-decoration:none;font-size:13px;white-space:nowrap}
 .tag.cand{color:var(--yellow);border-color:color-mix(in oklab,var(--yellow) 35%,transparent);background:color-mix(in oklab,var(--yellow) 8%,transparent)}
+.tag.rej{color:var(--red);border-color:color-mix(in oklab,var(--red) 35%,transparent);background:color-mix(in oklab,var(--red) 8%,transparent)}
+.tag.open{color:var(--ink-2)}
 .secthead #customise{margin-left:auto}
 #widgets:not(.customising) .wctl{display:none}
 #layouttools[hidden]{display:none}
-.feedsec{display:grid;gap:18px}
+.feedsec{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;min-width:0}
+.feedsec>*,.feedsec .row2>*{min-width:0}
+.feedsec .row2{align-items:start}
 .exfilters{align-items:flex-start}
 .exfilters>div{justify-content:flex-start}
 .scatter.astable{padding-bottom:0}
@@ -548,7 +553,9 @@ def _dip_header(section: str, d: dict, label: str) -> tuple[str, str]:
     e = html.escape
     out = section.replace('<p class="eyebrow" id="txkicker"></p>', f'<p class="eyebrow" id="txkicker">{e(d["status_label"])}</p>', 1)
     out = out.replace('<h1 class="lead-h" id="h-transit" tabindex="-1"></h1>', f'<h1 class="lead-h" id="h-transit" tabindex="-1">{e(label)}</h1>', 1)
-    out = out.replace('<p id="txsub"></p>', f'<p id="txsub">{e(d["time_unit"])} {d["t"]:.2f} · {d["depth_ppm"]:,.0f} ppm · {d["duration_hours"]:.2f} hours · SNR {d["snr"]:.1f} · {e(UNCONFIRMED)}</p>', 1)
+    out = out.replace('<p id="txsub"></p>', f'<p id="txsub">{e(d["time_unit"])} {d["t"]:.2f} · {d["depth_ppm"]:,.0f} ppm · {d["duration_hours"]:.2f} hours · SNR {d["snr"]:.1f} · {e(dip_state(d.get("outcome"))[2])}</p>', 1)
+    if d.get("outcome") == "rejected":  # a rejected dip is not called a transit
+        out = out.replace('<span id="txcapword">The transit, played back</span>', '<span id="txcapword">The dip, played back</span>', 1)
     out = out.replace('<p class="casefile" id="txcase"></p>', f'<p class="casefile" id="txcase"><a class="btn primary" href="{e(url_for("candidates", {"dip": d["id"]}))}">Open the full case file ›</a></p>', 1)
     if d.get("verdict"):
         out = out.replace('<section class="glass scorecard" id="txscore" aria-label="Panel score and verdict"></section>',
@@ -563,15 +570,6 @@ def _title(route: str, name: str | None = None) -> str:
     return tpl.replace("{name}", name or m["label"])
 
 
-def _fmt(v, d=2, unit=""):
-    if v is None:
-        return None
-    try:
-        return f"{float(v):,.{d}f}{(' ' + unit) if unit else ''}"
-    except (TypeError, ValueError):
-        return html.escape(str(v))
-
-
 def _planet_section(section: str, cat: dict, i: int) -> tuple[str, str, str]:
     e = html.escape
     P = cat["planets"]
@@ -580,10 +578,10 @@ def _planet_section(section: str, cat: dict, i: int) -> tuple[str, str, str]:
     year = P["year"][i]
     host = f'<a href="/stars/{slugify(star)}/">{e(star)}</a>' if star else "host not stored"
     sub = f'{host} · {e(str(method))} · discovered {year if year else "year not stored"}'
-    rows = [("Orbital period", _fmt(P["period"][i], 4, "days")), ("Radius", _fmt(P["radius"][i], 3, "Jupiter radii")),
-            ("Mass", _fmt(P["mass"][i], 4, "Jupiter masses")), ("Semi-major axis", _fmt(P["a"][i], 4, "AU")),
-            ("Distance", _fmt(P["dist"][i], 2, "pc")), ("Star temperature", _fmt(P["steff"][i], 0, "K"))]
-    table = "".join(f'<tr><th scope="row">{e(k)}</th><td>{v}</td></tr>' for k, v in rows if v)
+    rows = [("Orbital period", stored(P, "period", i, 4, "days")), ("Radius", stored(P, "radius", i, 3, "Jupiter radii")),
+            ("Mass", stored(P, "mass", i, 4, "Jupiter masses")), ("Semi-major axis", stored(P, "a", i, 4, "AU")),
+            ("Distance", stored(P, "dist", i, 2, "pc")), ("Star temperature", stored(P, "steff", i, 0, "K"))]
+    table = "".join(f'<tr><th scope="row">{e(k)}</th><td>{e(v)}</td></tr>' for k, v in rows if v)
     table = (f'<table class="pltable"><tbody>{table}</tbody></table><p class="small">Stored values from {e(cat["source_short"])}, '
              f'fetched {e(cat["fetched_at"][:10])}. SetuHQ did not discover this planet.</p>')
     out = section.replace('<h1 class="lead-h" id="h-planet" tabindex="-1">Planet</h1><p id="plsub"></p>',
@@ -736,12 +734,13 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     view("catalogue", _title("catalogue"), "Every planet in exoplanet.eu, searchable and sortable, each with its own page. SetuHQ did not discover these planets.", "/catalogue/", name="Catalogue")
     view("variables", _title("variables"), "SetuHQ's sweep of TESS sectors: every dip found and classified, each class set against its own null.", "/catalogue/everything-that-dims/", name="Everything that dims")
     feed = data["catalog"]["candidates"]
-    view("explorer", _title("explorer"), f"{len(feed)} signals the panel marked in TESS light curves, with the run's dips and their case files. Every one is a {UNCONFIRMED}.", "/candidates/")
+    view("explorer", _title("explorer"), f"The run's dips and their case files, and {len(feed)} entries of the search feed. Candidates are unconfirmed; none is a confirmed planet.", "/candidates/")
     view("planets", _title("planets"), "What each candidate's depth would imply if it were a planet: the planet-to-star radius ratio, and why no planet size is stated.", "/candidates/radius-ratios/", name="Radius ratios")
     target = hero.get("target") or "the run's star"
     for d in data["story"]["dips"]:
         sec, h1 = _dip_header(sections["transit"], d, data["dips"][d["id"]]["label"])
-        view("transit", _title("transit", h1), f"{h1}. The transit played back from stored values, who on the panel marked it, and its vetting. A {UNCONFIRMED}.",
+        what = "dip" if d.get("outcome") == "rejected" else "transit"
+        view("transit", _title("transit", h1), f"{h1}. The {what} played back from stored values, who on the panel marked it, and its vetting: {dip_state(d.get('outcome'))[2]}.",
              url_for("transit", {"dip": d["id"]}), body=sec, name=h1, params={"dip": d["id"]})
         view("candidates", _title("candidates", data["dips"][d["id"]]["label"]), f"Every check behind the verdict on {data['dips'][d['id']]['label']}: the transit strip, the measurements and the verdict ledger.",
              url_for("candidates", {"dip": d["id"]}), name="Case file", params={"dip": d["id"]})

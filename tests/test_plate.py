@@ -53,7 +53,8 @@ def test_one_caption_per_candidate_each_unconfirmed(run_dir, catalog, tmp_path):
     for cid in ids:
         mine = [c for c in caps if cid in c]
         assert len(mine) == 1, cid
-        assert '<span class="word cand">candidate</span>' in mine[0]
+        rejected = 'class="word s-rej"' in mine[0] or 'class="word s-flag"' in mine[0]
+        assert ('<span class="word cand">candidate</span>' in mine[0]) != rejected, mine[0]  # only a candidate is tagged one
     # "candidate, unconfirmed" once in the lede, not on every caption.
     assert '<span class="hedge">Candidate, unconfirmed.</span>' in page
     assert not any("unconfirmed" in c for c in caps)

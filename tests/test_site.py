@@ -283,3 +283,48 @@ def test_every_catalogue_planet_and_star_gets_a_small_page(site, tmp_path):
         assert f"{brand.SITE_URL}/{f}" in index
     assert f"<loc>{brand.SITE_URL}/planets/kepler-22-b/</loc>" in (tmp_path / "sitemap-planets-1.xml").read_text()
     assert "/planets/pi-men-c/" not in (tmp_path / "sitemap-planets-1.xml").read_text()
+
+
+def test_dip_addresses_are_pinned_per_star_and_never_renumbered(tmp_path):
+    from setuhq.app import dip_names, load_pinned_slugs, pinned_dip_slugs
+
+    def c(i, t, target="TIC 1"):
+        return {"candidate_id": i, "t_start": t, "target": target, "period_days": None}
+    names = {"TIC 1": "pi Men", "TIC 2": "HD 1"}
+    first = dip_names([c("a", 3), c("b", 1), c("x", 2, "TIC 2")], names)
+    assert {i: d["slug"] for i, d in first.items()} == {"b": "pi-men/dip-1", "a": "pi-men/dip-2", "x": "hd-1/dip-1"}
+    every, gone = pinned_dip_slugs(tmp_path, first, {})
+    assert gone == [] and load_pinned_slugs(tmp_path) == every
+    # A rebuilt run: "b" is gone and "c" is new, earlier in time than "a". Nobody is renumbered; "c" gets the next
+    # number of its star, and "b"'s address is not given to anyone.
+    again = dip_names([c("a", 3), c("c", 0.5)], names, load_pinned_slugs(tmp_path))
+    assert again["a"]["slug"] == "pi-men/dip-2" and again["c"]["slug"] == "pi-men/dip-3" and again["c"]["label"] == "pi Men, dip 3"
+    every, gone = pinned_dip_slugs(tmp_path, again, load_pinned_slugs(tmp_path))
+    assert gone == ["hd-1/dip-1", "pi-men/dip-1"] and load_pinned_slugs(tmp_path)["b"] == "pi-men/dip-1"
+
+
+def test_the_pi_men_run_keeps_its_seven_addresses(site):
+    """runs/tess-pi-men-s1/slugs.json pins dip-1 to dip-7; a rebuilt run with the same dips keeps them."""
+    pinned = json.loads(Path("runs/tess-pi-men-s1/slugs.json").read_text())["slugs"]
+    assert sorted(pinned.values()) == sorted(f"pi-men/dip-{n}" for n in range(1, 8))
+    data = json.loads(next(site.glob("assets/data/app-*.json")).read_text())
+    assert data["routes"]["dips"] == pinned and data["routes"]["gone"] == []
+
+
+def test_a_rejected_dip_is_never_called_a_candidate(site):
+    data = json.loads(next(site.glob("assets/data/app-*.json")).read_text())
+    outcome = {d["id"]: d["outcome"] for d in data["story"]["dips"]}
+    assert "rejected" in outcome.values()
+    for i, o in outcome.items():
+        page = (site / "candidates" / data["routes"]["dips"][i] / "index.html").read_text()
+        sub = re.search(r'<p id="txsub">(.*?)</p>', page).group(1)
+        cap = re.search(r'<span id="txcapword">(.*?)</span>', page).group(1)
+        if o == "rejected":
+            assert "candidate, unconfirmed" not in sub and "not a candidate" in sub and cap == "The dip, played back", i
+            assert "Candidate, unconfirmed" not in re.search(r'id="txscore".*?</section>', page, re.S).group(0)
+        elif o == "passed":
+            assert sub.endswith("candidate, unconfirmed") and cap == "The transit, played back", i
+    cands = (site / "candidates" / "index.html").read_text()
+    for i, o in outcome.items():
+        row = re.search(rf'<a class="rundip" href="/candidates/{re.escape(data["routes"]["dips"][i])}/">.*?</a>', cands, re.S).group(0)
+        assert {"passed": 'class="tag cand"', "flagged": 'class="tag open"', "rejected": 'class="tag rej"'}[o] in row, (i, row)

@@ -405,8 +405,8 @@ function ctRowHTML(r){
     if (k === 'star'){ v = P.star[i] ? esc(P.star[i]) : null; cls = ''; }
     else if (k === 'method'){ v = `<i style="background:${col(P.method[i])}"></i>${esc(CTM.method_label[P.method[i]] || P.method[i])}`; cls = ''; }
     else if (k === 'year') v = P.year[i] || null;
-    else if (k === 'mass') v = P.mass[i] !== null ? ctFmt(P.mass[i], 3) : (P.msini[i] !== null ? ctFmt(P.msini[i], 3) + ' sin i' : null);
-    else v = ctFmt(P[k][i], k === 'period' ? 5 : k === 'radius' ? 3 : 4);
+    else if (k === 'mass') v = P.mass[i] !== null ? ctLim(i, 'mass') + ctFmt(P.mass[i], 3) : (P.msini[i] !== null ? ctLim(i, 'msini') + ctFmt(P.msini[i], 3) + ' sin i' : null);
+    else v = P[k][i] === null || P[k][i] === undefined ? null : ctLim(i, k) + ctFmt(P[k][i], k === 'period' ? 5 : k === 'radius' ? 3 : 4);
     // On a phone card each cell carries its label and unit as plain text (no extra boxes to style or lay out).
     if (v === null) return `<span role="cell" class="${cls} na" aria-label="not stored">—</span>`;
     return phone ? `<span role="cell">${k === 'star' || k === 'method' ? '' : lab + ' '}${v}${unit ? ' ' + unit : ''}</span>` : `<span role="cell" class="${cls}">${v}</span>`;
@@ -494,13 +494,30 @@ const CT_ROWS = [
   ['RV semi-amplitude K', 'k', 'm/s'], ['Equilibrium temperature', 'teq', 'K'], ['Measured temperature', 'tmeas', 'K'], ['Spin–orbit angle λ', 'lambda', '°']];
 const CT_STAR_ROWS = [['Effective temperature', 'steff', 'K'], ['Radius', 'srad', 'R☉'], ['Mass', 'smass', 'M☉'], ['Metallicity [Fe/H]', 'smet', 'dex'],
   ['Age', 'sage', 'Gyr'], ['Distance', 'dist', 'pc'], ['V magnitude', 'vmag', ''], ['RA (J2000)', 'ra', '°'], ['Dec (J2000)', 'dec', '°']];
+// A stored value's error as the page shows it. exoplanet.eu stores an upper limit as lower error = value and upper
+// error = 0, the range from 0 to the value: that reads "≤ value", with no error. Both errors 0 means none was
+// stored: none is shown. Otherwise ± or − / +. (The planet stubs and pre-rendered pages: setuhq.stubs.is_upper_limit.)
+function ctErr(x, lo, hi){
+  const has = v => v !== null && v !== undefined;
+  if (!has(lo) || !has(hi) || (lo === 0 && hi === 0)) return {limit: false, err: ''};
+  if (hi === 0 && lo > 0 && Math.abs(lo - x) <= 1e-9 * Math.max(Math.abs(x), 1e-30)) return {limit: true, err: ''};
+  return {limit: false, err: lo === hi ? ` ± ${ctFmt(lo)}` : ` −${ctFmt(lo)} / +${ctFmt(hi)}`};
+}
+// "≤ " before a stored upper limit, in the table as on the planet's page.
+const ctLim = (i, k) => { const P = ct.P; return P[k + '_lo'] && P[k + '_hi'] && ctErr(P[k][i], P[k + '_lo'][i], P[k + '_hi'][i]).limit ? '≤ ' : ''; };
+const CT_TYPE = {mass: 'mass_type', radius: 'radius_type'};  // how the value was obtained; "Theoretical" is said so
 function ctVal(i, k, unit){
   const P = ct.P, x = P[k][i]; if (x === null || x === undefined) return '<td class="v na">not stored</td>';
-  const lo = P[k + '_lo'] ? P[k + '_lo'][i] : null, hi = P[k + '_hi'] ? P[k + '_hi'][i] : null;
-  const err = lo !== null && lo !== undefined && hi !== null && hi !== undefined ? (lo === hi ? ` ± ${ctFmt(lo)}` : ` −${ctFmt(lo)} / +${ctFmt(hi)}`) : '';
-  return `<td class="v">${ctFmt(x, 6)}${err}${unit ? ' ' + unit : ''}</td>`;
+  const lo = P[k + '_lo'] ? P[k + '_lo'][i] : null, hi = P[k + '_hi'] ? P[k + '_hi'][i] : null, r = ctErr(x, lo, hi);
+  const lim = r.limit ? '<span class="lim" title="Upper limit from the stored range (0 to this value)">≤ </span>' : '';
+  const theory = CT_TYPE[k] && P[CT_TYPE[k]] && P[CT_TYPE[k]][i] === 'Theoretical' ? ' <span class="na">· theoretical estimate</span>' : '';
+  return `<td class="v">${lim}${ctFmt(x, 6)}${r.err}${unit ? ' ' + unit : ''}${theory}</td>`;
 }
-function ctTable(i, rows){ return `<table class="pltable"><tbody>${rows.map(([lab, k, u]) => `<tr><th scope="row">${esc(lab)}</th>${ctVal(i, k, u)}</tr>`).join('')}</tbody></table>`; }
+function ctTable(i, rows){
+  const P = ct.P, limits = rows.some(([, k]) => P[k][i] !== null && P[k][i] !== undefined && P[k + '_lo'] && P[k + '_hi'] && ctErr(P[k][i], P[k + '_lo'][i], P[k + '_hi'][i]).limit);
+  return `<table class="pltable"><tbody>${rows.map(([lab, k, u]) => `<tr><th scope="row">${esc(lab)}</th>${ctVal(i, k, u)}</tr>`).join('')}</tbody></table>`
+    + (limits ? '<p class="small">≤: an upper limit, from the stored range (0 to the value).</p>' : '');
+}
 function ctMoll(ra, dec){ // Mollweide, 400 × 200 units, centred on RA 0°, RA increasing to the left
   let lam = -((ra > 180 ? ra - 360 : ra) * Math.PI / 180), phi = dec * Math.PI / 180, th = phi;
   for (let k = 0; k < 30; k++){ const f = 2 * th + Math.sin(2 * th) - Math.PI * Math.sin(phi); th -= f / (2 + 2 * Math.cos(2 * th) + 1e-12); }
@@ -534,7 +551,7 @@ function plShow(slug){
     const clsName = cls === null ? 'class not determinable (no radius or mass stored)' : ['Earth-size', 'Super-Earth', 'Sub-Neptune', 'Neptune-like', 'Gas giant'][cls] + (P.radius[i] === null ? ' (by mass)' : '');
     $('#h-planet').textContent = P.name[i]; if (current === 'planet') pageChrome('planet', new URLSearchParams({id: slug}));
     $('#plsub').innerHTML = `${star ? `<a href="${ctStarHref(star)}">${esc(star)}</a>` : 'host not stored'} · ${esc(CTM.method_label[P.method[i]] || P.method[i])} · discovered ${P.year[i] || 'year not stored'} · ${esc(clsName)}`;
-    $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds.</p>`;
+    $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds; none is shown where none is stored.</p>`;
     const sibs = star ? ct.byStar[star].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)) : [i];
     $('#plhost').innerHTML = (star ? `<p><a href="${ctStarHref(star)}">${esc(star)}</a>${P.sptype[i] ? ' · ' + esc(P.sptype[i]) : ''}${P.steff[i] !== null ? ' · ' + ctFmt(P.steff[i]) + ' K' : ''}</p>` : '<p>Host star not stored.</p>')
       + `<ul class="pllist">${sibs.map(j => `<li><a href="${ctPlanetHref(j)}"${j === i ? ' aria-current="page"' : ''}><span>${esc(P.name[j])}</span><span class="mono">${ctFmt(P.period[j], 5) ? ctFmt(P.period[j], 5) + ' d' : 'period —'}</span></a></li>`).join('')}</ul>`;

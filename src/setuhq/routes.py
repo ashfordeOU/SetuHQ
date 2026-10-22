@@ -59,13 +59,16 @@ LEGACY_PAGES = {"/app/": "/", "/docket/": "/candidates/case-file/", "/plate/": "
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,119}$")
 DIP_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$")
 # A dip's readable address, "<star>/dip-<n>" (/candidates/pi-men/dip-2/), by its stored candidate id. The build
-# sets it from the run (app.app_data); an id it does not know keeps its own id as the address.
+# sets it from the run's pinned slugs (app.pinned_dip_slugs, runs/<run>/slugs.json); an id it does not know keeps its
+# own id as the address. GONE_DIPS: addresses once given to a dip that is no longer in the run, which stay 404s.
 DIP_SLUGS: dict[str, str] = {}
+GONE_DIPS: list[str] = []
 
 
-def set_dip_slugs(slugs: dict[str, str]) -> None:
+def set_dip_slugs(slugs: dict[str, str], gone: list[str] | tuple[str, ...] = ()) -> None:
     DIP_SLUGS.clear()
     DIP_SLUGS.update(slugs)
+    GONE_DIPS[:] = sorted(gone)
 
 
 def _dip_id(star: str, dip: str) -> str | None:
@@ -155,7 +158,7 @@ def legacy_target(path: str, hash_: str = "", lead: str | None = None) -> str | 
 def route_table(lead: str | None = None) -> dict:
     """The tables the page's copy of these functions reads (``lead``: the run's lead dip, for old links that named none)."""
     return {"paths": ROUTE_PATHS, "identity": IDENTITY, "chapters": CHAPTER_SLUGS, "aliases": ALIASES,
-            "legacy": LEGACY_PAGES, "lead": lead, "dips": dict(DIP_SLUGS)}
+            "legacy": LEGACY_PAGES, "lead": lead, "dips": dict(DIP_SLUGS), "gone": list(GONE_DIPS)}
 
 
 # The page's twin of url_for, from_hash, parse_path and legacy_target. It expects `RT`, the route table.

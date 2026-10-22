@@ -6,7 +6,7 @@
 //   node tests/e2e/run.mjs --site site [--quick] [--report e2e-report.json]
 //
 // Every page listed in site/assets/pages.json, at 1440 x 900 and 390 x 844, dark and light:
-//   HTTP 200; no console error, page error or failed request; the app starts; no sideways overflow; the title,
+//   HTTP 200; no console error, page error or failed request; the app starts; no sideways overflow and nothing cut off at the right edge; the title,
 //   description, canonical address and Open Graph image; every image has alt text; no old #/ link; one heading;
 //   a reload of the address shows the same page; an axe-core scan with no serious or critical violation.
 // Then: the top bar's links and sub-navigation (in place, by the History API), the phone menu (open, close, Escape,
@@ -51,6 +51,16 @@ const TECHNICAL = ["/docs/", "/evidence/runs/", "/evidence/report/"];  // pages 
 // (a listbox) makes each signal's header an accordion button, which ARIA does not allow inside a listbox. Fixing it
 // means a tree pattern for that list; until then it is reported (as "known") rather than failed.
 const KNOWN_AXE = [{ page: "/candidates/case-file/", rule: "aria-required-children", target: "#rows" }];
+// The deliberate sideways scrollers: what is inside them may run past the window, because they scroll. Anything else
+// whose right edge passes the window is cut off (html and body hide sideways overflow), and fails (tests/e2e/clipped.js).
+const SCROLLERS = [
+  "div.tablewrap", "div.scroll",  // wide tables
+  "pre",  // code on the Docs page
+  "#exscatter.astable",  // the candidates' compact period table, on a phone
+  "div.cthead",  // the catalogue table's header, scrolled with its body
+  ".mxtoc ol",  // How it works: the chapter list, one row on a phone
+].join(", ");
+const CLIPPED = readFileSync(join(HERE, "clipped.js"), "utf8").replace("%SCROLLERS%", SCROLLERS);
 
 const { chromium } = await loadPlaywright();
 const server = await serve(SITE);
@@ -127,6 +137,8 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
     await page.waitForTimeout(250);
     const f = await pageFacts(page);
     check(f.over <= 1, "no sideways overflow", `${f.over}px wider than the window`);
+    const cut = await page.evaluate(CLIPPED);
+    check(cut.length === 0, "nothing in the page is cut off at the right edge", cut.slice(0, 4).join(" | "));
     check(f.title && f.title.length > 3, "has a title", f.title);
     check(f.description && f.description.length > 20, "has a description", f.description);
     check(f.canonical === SITE_URL + p, "canonical is its own address", f.canonical);
@@ -367,9 +379,36 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
   const links = await page.$$eval("#route-notfound a", (as) => as.map((a) => a.getAttribute("href")));
   for (const p of ["/", "/explore/", "/candidates/", "/how-it-works/", "/evidence/", "/docs/"]) check(links.includes(p), `it links to ${p}`);
   check(await page.evaluate(() => !document.querySelector('link[rel="canonical"]')) && await page.evaluate(() => (document.querySelector('meta[name="robots"]') || {}).content === "noindex"), "it is not indexed");
+  // A dip address the run does not hold is a 404 that says so: never another dip in its place.
+  const r3 = await page.goto(BASE + "/candidates/pi-men/dip-99/");
+  check(r3.status() === 404, "an unknown dip address is a 404", r3.status());
+  await ready(page);
+  check(await page.evaluate(() => !document.getElementById("route-notfound").hidden && document.getElementById("route-transit").hidden), "an unknown dip shows the not-found page, not another dip");
   // A planet address the catalogue does not know is a 404 too.
   const r2 = await page.goto(BASE + "/planets/no-such-planet-b/");
   check(r2.status() === 404, "an unknown planet is a 404", r2.status());
+  await ctx.close();
+}
+
+// ---------------------------------------------------------------- a dip's status follows its vetting outcome
+{
+  const ctx = await context("phone", "light");
+  const page = await ctx.newPage();
+  current = "dip status";
+  for (const d of D.story.dips) {
+    await page.goto(BASE + `/candidates/${SLUG(d.id)}/`); await ready(page);
+    const s = await page.evaluate(() => ({ text: document.getElementById("route-transit").innerText, tags: [...document.querySelectorAll("#route-transit .tag")].filter((t) => t.offsetParent).map((t) => t.textContent) }));
+    if (d.outcome === "rejected") {
+      check(!/candidate, unconfirmed/i.test(s.text) && !s.tags.includes("candidate"), `${SLUG(d.id)} (rejected) is never called a candidate`, s.text.match(/.{0,40}candidate.{0,20}/gi));
+      check(/The dip, played back/.test(s.text) && !/The transit, played back/.test(s.text), `${SLUG(d.id)} (rejected) is a dip, not a transit`);
+    }
+  }
+  await page.goto(BASE + "/candidates/"); await ready(page);
+  const tags = await page.evaluate(() => [...document.querySelectorAll(".rundips li")].map((li) => [li.querySelector(".rundip").getAttribute("href"), li.querySelector(".tag").textContent]));
+  for (const [href, tag] of tags) {
+    const d = D.story.dips.find((x) => `/candidates/${SLUG(x.id)}/` === href);
+    check(d && tag === { passed: "candidate", flagged: "flagged", rejected: "rejected" }[d.outcome], `${href}: its tag follows its outcome`, `${tag} for ${d && d.outcome}`);
+  }
   await ctx.close();
 }
 
@@ -396,6 +435,8 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
       check(f.h1s.length === 1 && !/not found/i.test(f.h1s[0]), `${p}: the page is drawn, with one heading`, JSON.stringify(f.h1s));
       check(await page.evaluate(() => !!document.querySelector(".topbar .nav") && !!document.querySelector("footer")), `${p}: has the site's header and footer`);
       check(f.over <= 1, `${p}: no sideways overflow`, f.over);
+      const cut = await page.evaluate(CLIPPED);
+      check(cut.length === 0, `${p}: nothing cut off at the right edge`, cut.slice(0, 4).join(" | "));
     }
   }
   check(errs.length === 0, "no errors", errs.slice(0, 4).join(" | "));

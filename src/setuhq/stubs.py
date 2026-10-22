@@ -37,6 +37,29 @@ def _fmt(v, d: int, unit: str) -> str | None:
         return None
 
 
+def is_upper_limit(x, lo, hi) -> bool:
+    """exoplanet.eu stores an upper limit as lower error = value and upper error = 0 (the range from 0 to the value).
+    Both errors 0 means no error was stored, which is not a limit. The page's twin is ctErr in catalogue.py."""
+    try:
+        x, lo, hi = float(x), float(lo), float(hi)
+    except (TypeError, ValueError):
+        return False
+    return hi == 0 and lo > 0 and abs(lo - x) <= 1e-9 * max(abs(x), 1e-30)
+
+
+def stored(P: dict, k: str, i: int, d: int, unit: str) -> str | None:
+    """One stored value as words: "≤ 0.029 Jupiter masses" for an upper limit, "(theoretical estimate)" when the
+    catalogue says the mass or radius is a theoretical one."""
+    s = _fmt(P[k][i], d, unit)
+    if s is None:
+        return None
+    if is_upper_limit(P[k][i], (P.get(k + "_lo") or [None] * (i + 1))[i], (P.get(k + "_hi") or [None] * (i + 1))[i]):
+        s = "≤ " + s
+    if (P.get(k + "_type") or [None] * (i + 1))[i] == "Theoretical":
+        s += " (theoretical estimate)"
+    return s
+
+
 def _page(tpl: str, **kw: str) -> str:
     for k, v in kw.items():
         tpl = tpl.replace("{{" + k + "}}", v)
@@ -48,8 +71,8 @@ def planet_page(tpl: str, cat: dict, i: int) -> tuple[str, str]:
     name, star, year = P["name"][i], P["star"][i], P["year"][i]
     method = (P.get("method_raw") or P["method"])[i] or "a method not stored"
     facts = [f"orbiting {star}" if star else "host star not stored", f"found by {method}" + (f" in {year}" if year else "")]
-    facts += [x for x in (_fmt(P["period"][i], 3, "day orbit"), _fmt(P["radius"][i], 3, "Jupiter radii"),
-                          _fmt(P["dist"][i], 1, "parsecs away")) if x]
+    facts += [x for x in (stored(P, "period", i, 3, "day orbit"), stored(P, "radius", i, 3, "Jupiter radii"),
+                          stored(P, "dist", i, 1, "parsecs away")) if x]
     line = "; ".join(facts) + "."
     desc = f"{name}, a planet {line} Stored parameters from {cat['source_short']}, drawn to scale. SetuHQ did not discover it."
     path = f"/planets/{P['slug'][i]}/"

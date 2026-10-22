@@ -97,8 +97,30 @@ own title, description, canonical address, heading and one line of facts, from `
 by the build); the shared script adds the header and footer (`assets/chrome-*.html`) and draws the full planet or
 star page. So every catalogue planet and star is served with status 200 and can be indexed. `sitemap.xml` is an
 index of `sitemap-pages.xml` (the build's pages) and, after the stubs, `sitemap-planets-1.xml` and
-`sitemap-stars-1.xml`; `robots.txt` points to it. A dip's address names its star and its number in the run
-(`/candidates/pi-men/dip-2/`); the stored id stays in the data, and the old addresses that used it forward.
+`sitemap-stars-1.xml`; `robots.txt` points to it.
+
+### Dip addresses are permanent
+
+A dip's address names its star and its number for that star (`/candidates/pi-men/dip-2/`); the stored id stays in
+the data, and the old addresses that used it forward. The numbers are pinned in `runs/<run>/slugs.json` (dip id to
+address), which `setuhq site` writes the first time it builds a run and only ever adds to:
+
+* a dip already in the file keeps its address, however the run is rebuilt;
+* a new dip id gets the next free number of its star (in time order among the new ones), never a number in use;
+* a dip that leaves the run keeps its entry, so its number is never given to another dip. Its address is not
+  built, so GitHub Pages answers it with `404.html`, which says "This dip is no longer in the run" and links to the
+  candidates (`routes.GONE_DIPS`, `D.routes.gone`). An address the run never had is an ordinary not-found page.
+  Neither ever shows another dip in its place.
+
+The re-run on the fixed code (the rerun-fixed branch) rebuilds `runs/tess-pi-men-s1` with the same seven dips, field
+for field, so the same candidate ids, and the committed `slugs.json` keeps them at `pi-men/dip-1` to `pi-men/dip-7`.
+Keep `slugs.json` when a run folder is regenerated: deleting it would let the next build number the dips afresh.
+
+### A dip's status
+
+Only a dip that passed vetting is a candidate ("candidate, unconfirmed", tag "candidate"). A flagged dip is open
+(tag "flagged") and a rejected dip is not a candidate (tag "rejected"; its page plays back "the dip", not "the
+transit"). One table drives every tag and phrase: `app.DIP_STATE` (page script: `DIPSTATE`, `DIPTAG`).
 
 ### Shared files and the page budget
 
