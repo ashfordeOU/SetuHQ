@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The dashboard has moved · SetuHQ</title><meta name="robots" content="noindex">
 <link rel="canonical" href="https://setuhq.com/candidates/">
-<script>(function(){var RT={"paths":{"overview":"/","sky":"/explore/","galaxy":"/explore/galaxy/","mission":"/explore/mission-control/","catalogue":"/catalogue/","variables":"/catalogue/everything-that-dims/","explorer":"/candidates/","planets":"/candidates/radius-ratios/","methods":"/how-it-works/","sentinels":"/evidence/","leaderboard":"/evidence/leaderboard/","runs":"/evidence/runs/","docs":"/docs/"},"identity":{"transit":"dip","candidates":"dip","planet":"id","star":"id","methods":"ch"},"chapters":{"survey":"","transit":"transits","doppler":"doppler-shift","rv":"radial-velocity","astrometry":"astrometry","microlensing":"microlensing","imaging":"direct-imaging","timing":"timing","radio":"radio","falsepos":"false-positives","spectroscopy":"atmospheres","molecules":"molecules-and-life","population":"population","equations":"equations-of-life","history":"history"},"aliases":{"discoveries":"explorer","feed":"explorer","panel":"sentinels","home":"sky","cockpit":"transit","about":"overview"},"legacy":{"/app/":"/","/docket/":"/candidates/case-file/","/plate/":"/evidence/plates/","/report/":"/evidence/report/","/dashboard/":"/candidates/","/discoveries/":"/candidates/"},"lead":"tess-fa3483ce6f83-000"};
+<script>(function(){var RT={"paths":{"overview":"/","sky":"/explore/","galaxy":"/explore/galaxy/","mission":"/explore/mission-control/","catalogue":"/catalogue/","variables":"/catalogue/everything-that-dims/","explorer":"/candidates/","planets":"/candidates/radius-ratios/","methods":"/how-it-works/","sentinels":"/evidence/","leaderboard":"/evidence/leaderboard/","runs":"/evidence/runs/","docs":"/docs/"},"identity":{"transit":"dip","candidates":"dip","planet":"id","star":"id","methods":"ch"},"chapters":{"survey":"","transit":"transits","doppler":"doppler-shift","rv":"radial-velocity","astrometry":"astrometry","microlensing":"microlensing","imaging":"direct-imaging","timing":"timing","radio":"radio","falsepos":"false-positives","spectroscopy":"atmospheres","molecules":"molecules-and-life","population":"population","equations":"equations-of-life","history":"history"},"aliases":{"discoveries":"explorer","feed":"explorer","panel":"sentinels","home":"sky","cockpit":"transit","about":"overview"},"legacy":{"/app/":"/","/docket/":"/candidates/case-file/","/plate/":"/evidence/plates/","/report/":"/evidence/report/","/dashboard/":"/candidates/","/discoveries/":"/candidates/"},"lead":"tess-fa3483ce6f83-000","dips":{"tess-fa3483ce6f83-002":"pi-men/dip-1","tess-fa3483ce6f83-000":"pi-men/dip-2","tess-fa3483ce6f83-001":"pi-men/dip-3","tess-04b815001aa6-004":"pi-men/dip-4","tess-04b815001aa6-006":"pi-men/dip-5","tess-04b815001aa6-005":"pi-men/dip-6","tess-04b815001aa6-003":"pi-men/dip-7"}};
 function rtUrl(route, params, keepQuery){
   params = Object.assign({}, params || {}); for (const k of Object.keys(params)) if (params[k] === null || params[k] === undefined || params[k] === '') delete params[k];
   route = RT.aliases[route] || route;
@@ -10,7 +10,8 @@ function rtUrl(route, params, keepQuery){
   if (key){ ident = params[key] || null; delete params[key]; }
   if (route === 'candidates'){ section = params.section || null; delete params.section; }
   if (route === 'transit' || route === 'candidates'){
-    path = ident ? '/candidates/' + encodeURIComponent(ident) + '/' + (route === 'candidates' ? 'case-file/' : '') : (route === 'candidates' ? '/candidates/case-file/' : '/candidates/');
+    const slug = ident ? ((RT.dips || {})[ident] || encodeURIComponent(ident)) : null;
+    path = slug ? '/candidates/' + slug + '/' + (route === 'candidates' ? 'case-file/' : '') : (route === 'candidates' ? '/candidates/case-file/' : '/candidates/');
   } else if (route === 'planet' || route === 'star'){
     path = (route === 'planet' ? '/planets/' : '/stars/') + (ident ? ident + '/' : '');
   } else if (route === 'methods'){
@@ -42,10 +43,10 @@ function rtParse(pathname, search){
   }
   if (parts.length === 2 && (parts[0] === 'planets' || parts[0] === 'stars') && /^[a-z0-9][a-z0-9-]{0,119}$/.test(parts[1]))
     return {route: parts[0] === 'planets' ? 'planet' : 'star', params: Object.assign(params, {id: parts[1]})};
-  if (parts[0] === 'candidates' && (parts.length === 2 || parts.length === 3) && parts[1] !== 'case-file' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/.test(decodeURIComponent(parts[1]))){
-    const dip = decodeURIComponent(parts[1]);
-    if (parts.length === 2) return {route: 'transit', params: Object.assign(params, {dip})};
-    if (parts[2] === 'case-file') return {route: 'candidates', params: Object.assign(params, {dip})};
+  if (parts[0] === 'candidates' && (parts.length === 3 || parts.length === 4) && /^[a-z0-9][a-z0-9-]{0,119}$/.test(parts[1]) && /^dip-\d{1,4}$/.test(parts[2])){
+    const want = parts[1] + '/' + parts[2], dip = Object.keys(RT.dips || {}).find(i => RT.dips[i] === want) || want;
+    if (parts.length === 3) return {route: 'transit', params: Object.assign(params, {dip})};
+    if (parts[3] === 'case-file') return {route: 'candidates', params: Object.assign(params, {dip})};
   }
   return null;
 }
