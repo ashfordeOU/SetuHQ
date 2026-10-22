@@ -12,6 +12,7 @@ import pytest
 
 from setuhq import mission as MC
 from setuhq.app import APP_JS
+from conftest import served, site_bundle
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -29,7 +30,7 @@ def _route(page, rid):
 
 
 def test_six_panes_each_with_its_tools_and_no_insignia(built):
-    sec = _route(built.read_text(), "mission")
+    sec = _route(site_bundle(built), "mission")
     assert [p for p, _ in MC.PANES] == ["galaxy", "sky", "lc", "cat", "sys", "feed"]
     for pid, label in MC.PANES:
         pane = re.search(rf'<section class="mcpane" id="mcp-{pid}".*?</section>', sec, re.S).group(0)
@@ -75,7 +76,7 @@ def test_galaxy_selection_feeds_the_linked_selection():
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
 def test_mission_control_in_the_browser(built, tmp_path):
-    url = built.resolve().as_uri()
+    url = served(built)
     script = tmp_path / "mc.js"
     script.write_text("""
 const { chromium } = require(%s);
@@ -88,20 +89,20 @@ const U = %s;
     await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = [], ext = [];
     p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
-    p.on('request', r => { if (!/^(file|data|blob):/.test(r.url())) ext.push(r.url()); });
-    await p.goto(U + '#/mission'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready && gx.sel >= 0, null, {timeout: 30000}); await p.waitForTimeout(500);
+    p.on('request', r => { if (!/^(file|data|blob):|^http:..127.0.0.1:/.test(r.url())) ext.push(r.url()); });
+    await p.goto(U + '#/mission'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready && gx.sel >= 0, null, {timeout: 30000}); await p.waitForTimeout(500);
     const r = {w, theme, errs, ext};
     r.init = await p.evaluate(() => ({star: mc.star, gx: gx.G.hosts.n[gx.sel], inPane: !!document.querySelector('#mcb-galaxy #gxstage'), sys: document.querySelector('#mcsyspick').selectedOptions[0].textContent,
       lc: !!document.querySelector('#mclc svg'), tele: document.querySelector('#mctele').textContent,
       cols: [...new Set([...document.querySelectorAll('.mcpane:not([hidden])')].map(e => Math.round(e.getBoundingClientRect().left)))].length}));
     await p.fill('#mcq', 'HR 8799'); await p.waitForTimeout(250); await p.click('[data-mcstar="HR 8799"]'); await p.waitForTimeout(1500);
-    r.brush = await p.evaluate(() => ({star: mc.star, hash: location.hash, gx: gx.sel >= 0 ? gx.G.hosts.n[gx.sel] : null, sys: document.querySelector('#mcsyspick').selectedOptions[0].textContent,
+    r.brush = await p.evaluate(() => ({star: mc.star, hash: ('#/mission' + (encodeMission(mc.layout) ? '?' + encodeMission(mc.layout) : '')), gx: gx.sel >= 0 ? gx.G.hosts.n[gx.sel] : null, sys: document.querySelector('#mcsyspick').selectedOptions[0].textContent,
       sky: document.querySelector('#mcsky svg').getAttribute('aria-label').startsWith('HR 8799'), lc: document.querySelector('#mclcnote').textContent, tele: document.querySelector('#mctele').textContent}));
     r.small = await p.evaluate(() => [...document.querySelectorAll('#route-mission a, #route-mission button, #route-mission select, #route-mission input')].filter(e => { const q = e.getBoundingClientRect(); return q.width && (q.height < 44 || q.width < 44) && !e.closest('p,li,td,dd,figcaption,.gxstage'); }).length);
     r.wide = await p.evaluate(() => { const vw = document.documentElement.clientWidth; return [...document.querySelectorAll('#route-mission *')].filter(e => { const q = e.getBoundingClientRect(); return q.width && q.right > vw + 1 && !e.closest('.gxstage'); }).length; });
     if (!mob){
       await p.click('#mcp-sky [data-mc="prev"]'); await p.click('#mcp-feed [data-mc="hide"]'); await p.click('[data-mcgrid="tile"]'); await p.waitForTimeout(200);
-      r.url = await p.evaluate(() => location.hash);
+      r.url = await p.evaluate(() => ('#/mission' + (encodeMission(mc.layout) ? '?' + encodeMission(mc.layout) : '')));
       await p.keyboard.press('F6'); const f1 = await p.evaluate(() => document.activeElement.id); await p.keyboard.press('Alt+3'); r.keys = [f1, await p.evaluate(() => document.activeElement.id)];
       await p.click('#mcsave'); r.saved = await p.evaluate(() => JSON.parse(localStorage.getItem('setuhq-mission')));
       const [pop] = await Promise.all([c.waitForEvent('page'), p.click('#mcp-sys [data-mc="pop"]')]); await pop.waitForTimeout(2500);
@@ -109,9 +110,9 @@ const U = %s;
       await p.fill('#mcq', 'TRAPPIST'); await p.waitForTimeout(250); await p.click('[data-mcstar="TRAPPIST-1"]'); await p.waitForTimeout(1200);
       r.popFollows = await pop.evaluate(() => [mc.star, document.querySelector('#mcsyspick').selectedOptions[0].textContent]);
       await pop.close(); await p.waitForTimeout(800); r.back = await p.evaluate(() => document.querySelector('#mcp-sys .mcpopped').hidden);
-      await p.goto(U + '#/galaxy'); await p.waitForTimeout(800); r.home = await p.evaluate(() => !!document.querySelector('#route-galaxy #gxstage'));
+      await p.goto(U + '#/galaxy'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(800); r.home = await p.evaluate(() => !!document.querySelector('#route-galaxy #gxstage'));
       // Leaving before the catalogue arrives must not pull the map back into the pane.
-      const q = await c.newPage(); await q.goto(U + '#/mission'); await q.goto(U + '#/galaxy'); await q.waitForTimeout(2000);
+      const q = await c.newPage(); await q.goto(U + '#/mission'); await q.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await q.goto(U + '#/galaxy'); await q.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await q.waitForTimeout(2000);
       r.fast = await q.evaluate(() => !!document.querySelector('#route-galaxy #gxstage')); await q.close();
     }
     out.push(r); await c.close();
@@ -154,7 +155,7 @@ const U = %s;
   const c = await b.newContext({ viewport: { width: 1360, height: 900 } }); const p = await c.newPage(), errs = [], r = {};
   p.on('pageerror', e => errs.push(e.message));
   // B1: a fresh tab on #/mission: the map is on and a drag turns the camera.
-  await p.goto(U + '#/mission'); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 30000}); await p.waitForTimeout(2600);
+  await p.goto(U + '#/mission'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForFunction(() => typeof gx !== 'undefined' && gx.ready, null, {timeout: 30000}); await p.waitForTimeout(2600);
   await p.$eval('#gxcanvas', e => e.scrollIntoView({block: 'center'})); await p.waitForTimeout(200);
   const bx = await (await p.$('#mcb-galaxy #gxcanvas')).boundingBox(), x = bx.x + bx.width * 0.75, y = bx.y + bx.height * 0.5;
   const yaw0 = await p.evaluate(() => gx.cam.yaw);
@@ -172,7 +173,7 @@ const U = %s;
   r.b6a = await p.evaluate(() => [document.activeElement.dataset.mcshow, document.activeElement === document.body]);
   r.b6b = await p.evaluate(() => [...document.querySelectorAll('.mcpane')].map(x => x.querySelector('.mcnum').textContent));
   await p.keyboard.press('Control+Alt+Digit2'); r.ctrlalt = await p.evaluate(() => document.activeElement.id);
-  await p.keyboard.press('Alt+ArrowLeft'); r.altLeft = await p.evaluate(() => location.hash);
+  await p.keyboard.press('Alt+ArrowLeft'); r.altLeft = await p.evaluate(() => ('#/mission' + (encodeMission(mc.layout) ? '?' + encodeMission(mc.layout) : '')));
   for (const id of ['galaxy', 'lc', 'cat', 'sys', 'feed']) { const bt = await p.$(`#mcp-${id} [data-mc="hide"]`); if (await bt.isEnabled()) await bt.click(); }
   r.oneLeft = await p.evaluate(() => document.querySelectorAll('.mcpane:not([hidden])').length);
   await p.click('#mcreset'); await p.waitForTimeout(400); r.resetOn = await p.evaluate(() => gx.on);
@@ -180,7 +181,7 @@ const U = %s;
   await p.$eval('#mcp-sky', e => e.scrollIntoView({block: 'center'}));
   const a = await (await p.$('#mcp-sky .mchead h2')).boundingBox(), t = await (await p.$('#mcp-lc .mcbody')).boundingBox();
   await p.mouse.move(a.x + 20, a.y + a.height / 2); await p.mouse.down(); await p.mouse.move(a.x + 40, a.y + 30, {steps: 5}); await p.mouse.move(t.x + 50, t.y + 50, {steps: 10}); await p.mouse.up(); await p.waitForTimeout(300);
-  r.dnd = await p.evaluate(() => location.hash); await p.click('#mcreset'); await p.waitForTimeout(300);
+  r.dnd = await p.evaluate(() => ('#/mission' + (encodeMission(mc.layout) ? '?' + encodeMission(mc.layout) : ''))); await p.click('#mcreset'); await p.waitForTimeout(300);
   // B3 and B5: a popped Sky window fits its window, sleeps the map, and the main pane catches up when it closes.
   const [pop] = await Promise.all([c.waitForEvent('page'), p.click('#mcp-sky [data-mc="pop"]')]); await pop.waitForTimeout(2500);
   r.b5 = await pop.evaluate(() => [document.documentElement.scrollHeight === window.innerHeight, gx.on]);
@@ -194,11 +195,11 @@ const U = %s;
   r.tele = await p.evaluate(() => document.querySelector('#mctele').hasAttribute('aria-live') || document.querySelector('#mctele').hasAttribute('role'));
   // B7: storage blocked: Save says so.
   const c2 = await b.newContext({ viewport: { width: 1360, height: 900 } }); await c2.addInitScript(() => { Object.defineProperty(window, 'localStorage', {get(){ throw new Error('blocked'); }}); });
-  const q = await c2.newPage(); await q.goto(U + '#/mission'); await q.waitForTimeout(1500); await q.click('#mcsave'); await q.waitForTimeout(200);
+  const q = await c2.newPage(); await q.goto(U + '#/mission'); await q.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await q.waitForTimeout(1500); await q.click('#mcsave'); await q.waitForTimeout(200);
   r.b7 = await q.evaluate(() => document.querySelector('#announce').textContent);
   r.errs = errs; console.log(JSON.stringify(r)); await b.close();
 })();
-""" % (json.dumps(PLAYWRIGHT), json.dumps(built.resolve().as_uri()), json.dumps(CHROMIUM)))
+""" % (json.dumps(PLAYWRIGHT), json.dumps(served(built)), json.dumps(CHROMIUM)))
     res = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=300)
     assert res.returncode == 0, res.stderr
     r = json.loads(res.stdout.strip().splitlines()[-1])

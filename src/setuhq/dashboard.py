@@ -343,7 +343,7 @@ def build_dashboard(run_dir: str | Path, out_dir: str | Path, *, title: str, cat
 
     body = f"""
 <header class='hero'><div class='wrap'>
-  <a href="../" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
+  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
   <h1>{title}</h1>
   <p class='lead'>Blind-coded light curves, an AI-and-simulated review panel, skill-weighted consensus, and vetting. Click any candidate to see its light curve and each reviewer's marks.</p>
 </div></header>

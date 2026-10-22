@@ -16,9 +16,10 @@ import shutil
 from pathlib import Path
 
 from setuhq import brand
+from setuhq.names import public_text
 
 STYLE = """
-:root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#16a34a;--bad:#dc2626;--warn:#d97706;--radius:14px}
+:root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#15803d;--bad:#dc2626;--warn:#b45309;--radius:14px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}}
 :root[data-theme="dark"]{--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}
 *{box-sizing:border-box}
@@ -85,7 +86,7 @@ def _md_tables(text: str) -> str:
         header, body = table[0], [r for r in table[2:]]
         cells = "".join(f"<th>{html.escape(c)}</th>" for c in header)
         rows = "".join("<tr>" + "".join(f"<td>{html.escape(c)}</td>" for c in r) + "</tr>" for r in body)
-        out.append(f"<div class='scroll'><table><thead><tr>{cells}</tr></thead><tbody>{rows}</tbody></table></div>")
+        out.append(f"<div class='scroll' tabindex='0' role='region' aria-label='Table, scrolls sideways on a narrow screen'><table><thead><tr>{cells}</tr></thead><tbody>{rows}</tbody></table></div>")
         table.clear()
 
     for raw in text.splitlines():
@@ -129,7 +130,7 @@ def _panel_section(run_dir: Path) -> str:
             )
         cards.append(
             f"<div class='card' style='margin-bottom:14px'><h3>{html.escape(subject_id)}</h3>"
-            "<div class='scroll'><table><thead><tr><th>reviewer</th><th>label</th><th>marks (BTJD)</th><th>rationale</th></tr></thead>"
+            "<div class='scroll' tabindex='0' role='region' aria-label='Reviewer labels and rationales'><table><thead><tr><th>reviewer</th><th>label</th><th>marks (BTJD)</th><th>rationale</th></tr></thead>"
             f"<tbody>{''.join(body)}</tbody></table></div></div>"
         )
     return "".join(cards) or "<p class='note'>No classifications recorded.</p>"
@@ -207,8 +208,8 @@ def build_report(
         "provenance": "Provenance",
     }
     nav = "".join(f"<a href='#{k}'>{v}</a>" for k, v in sections.items())
-    validation_html = _md_tables(Path(validation_md).read_text()) if validation_md else "<p class='note'>No validation run attached.</p>"
-    benchmark_html = _md_tables(Path(benchmark_md).read_text()) if benchmark_md else "<p class='note'>No benchmark attached.</p>"
+    validation_html = _md_tables(public_text(Path(validation_md).read_text())) if validation_md else "<p class='note'>No validation run attached.</p>"
+    benchmark_html = _md_tables(public_text(Path(benchmark_md).read_text())) if benchmark_md else "<p class='note'>No benchmark attached.</p>"
     packages = " · ".join(f"{k} {v}" for k, v in manifest.get("packages", {}).items())
     reviewers = "".join(
         f"<tr><td>{html.escape(r['id'])}</td><td>{html.escape(r['kind'])}</td><td>{r['weight']:.3f}</td></tr>"
@@ -224,7 +225,7 @@ def build_report(
 <style>{STYLE}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
 <body>
 <header class='hero' id='overview'><div class='wrap'>
-  <a href="../" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
+  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
   <h1>{html.escape(title)}</h1>
   <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p>
 </div></header>
@@ -331,7 +332,7 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
 <style>{STYLE}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
 <body>
 <header class='hero'><div class='wrap'>
-  <a href="../" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
+  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
   <h1>Search feed</h1>
   <p class='lead'>An AI review panel searches TESS light curves on a schedule. Each entry is a dip that passed the pipeline's vetting and matches no known ephemeris. These are candidates. None is a confirmed planet until independent follow-up confirms it.</p>
 </div></header>

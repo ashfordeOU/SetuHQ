@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /assets/frame/
+Allow: /
+
+Sitemap: https://setuhq.com/sitemap.xml

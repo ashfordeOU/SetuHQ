@@ -1,14 +1,18 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """A stored result's code note: when a run or a catalogue was made with older code whose results a later fix would
-change, its record carries ``code_note``.
+change, its record (a run's manifest, or the discovery catalogue) carries ``code_note``, a technical account of what
+changed.
 
 There is no site-wide banner. A result made on the current code carries no note, and its pages say nothing extra.
 Since the re-run on the fixed code (2026-10-21) the stored pi Men run, the live discovery catalogue, the pi Men
 validation, the injection-recovery benchmark, the threshold sweep, the real-TOI benchmark and the feed-rule
 evaluation are all current. The results kept as the historical pre-fix record carry the pre-fix note in their
-own files only (:data:`HISTORICAL`, :func:`historical_note`). A page built from a record that still carries a note states it once, in plain
-language (:data:`PLAIN`), as an ordinary paragraph at the top of that page: no banner, no commit hash, no code name."""
+own files only (:data:`HISTORICAL`, :func:`historical_note`).
+
+A page built from a record that still carries a note shows one plain sentence, as a quiet note in the page itself
+(never a banner, no commit hash, no code name), with a "details" link to the Docs page, which quotes the technical
+note in full (:func:`technical_note_html`)."""
 
 from __future__ import annotations
 
@@ -54,6 +58,14 @@ def historical_note(path: str) -> str:
     return PRE_FIX + (f" Re-run on the current code: {rerun}." if rerun else " " + NOT_RERUN[path])
 
 
+# The one sentence a visitor reads, wherever a note applies.
+VISITOR_TEXT = "These figures come from an earlier version of the pipeline, made before later fixes that change results."
+DETAILS_HREF = "/docs/#provenance"
+NOTE_CLASS = "provnote"
+# Inline so it reads the same on every page (the app's own stylesheet refines .provnote).
+NOTE_STYLE = "margin:8px 0;font-size:13px;line-height:1.5"
+
+
 def code_note(run_dir: str | Path) -> str | None:
     path = Path(run_dir) / "manifest.json"
     if not path.exists():
@@ -71,11 +83,27 @@ def plain_note(note: str) -> str:
     return re.sub(r"\s{2,}", " ", text).strip()
 
 
-def with_code_note(page: str, note: str | None) -> str:
-    """The page with ``note`` stated once, in plain language, as an ordinary paragraph right after ``<body>``; the
-    page is unchanged without a note. No banner: nothing fixed, dismissable or scripted."""
+def visitor_note(note: str | None, *, details_href: str = DETAILS_HREF) -> str:
+    """The quiet one-sentence note for a page built from a run that carries ``note``; empty without one."""
+    if not note:
+        return ""
+    return (f'<p class="{NOTE_CLASS}" role="note" style="{NOTE_STYLE}">{html.escape(VISITOR_TEXT)} '
+            f'<a href="{html.escape(details_href)}">Details</a></p>')
+
+
+def technical_note_html(note: str | None) -> str:
+    """The Docs page's account of the note, verbatim (commit, functions and all), or empty."""
+    if not note:
+        return ""
+    return f'<blockquote class="technote"><p>{html.escape(note)}</p></blockquote>'
+
+
+def with_code_note(page: str, note: str | None, *, details_href: str = DETAILS_HREF) -> str:
+    """The page with the quiet note right after its first heading (or, without one, at the start of its body);
+    the page is unchanged without a note."""
     if not note:
         return page
-    para = (f'<p class="codenote" role="note" style="margin:0;padding:8px 16px;font:13px/1.4 system-ui,sans-serif">'
-            f'{html.escape(plain_note(note))}</p>')
-    return re.sub(r"(<body[^>]*>)", lambda m: m.group(1) + "\n" + para, page, count=1)
+    p = visitor_note(note, details_href=details_href)
+    if "</h1>" in page:
+        return page.replace("</h1>", "</h1>" + p, 1)
+    return re.sub(r"(<body[^>]*>)", lambda m: m.group(1) + "\n" + p, page, count=1)

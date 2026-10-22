@@ -97,7 +97,9 @@ def verdict_text(c: dict, status: dict, who: dict, cmp: dict) -> str:
                 f"recovered, not a discovery. The dip itself stays a candidate, unconfirmed as an independent detection.")
     else:
         single = " A single dip with no BLS period of its own." if not c.get("period_days") else ""
-        rest = f"{single} Marked by {who['text']}. Candidate, unconfirmed."
+        tail = {"passed": " Candidate, unconfirmed.", "flagged": " Open: a candidate only if review clears it."}.get(
+            out, " Not a candidate.")  # a rejected dip is never called a candidate
+        rest = f"{single} Marked by {who['text']}.{tail}"
     return first + rest
 
 
@@ -191,19 +193,19 @@ def story_data(run_dir: str | Path, dock: dict, feed: list[dict], calibration: d
     proof = []
     if planet and v.get("pl_name") == planet:
         proof.append({"big": str(v.get("epochs_recovered", "")), "colour": "#64D2FF",
-                      "text": f"transits of {planet} found in blind-coded subjects, {abs(v.get('mean_timing_offset_min', 0)):.0f} "
-                              f"minutes from the archive on average (validation note). A known planet, recovered."})
+                      "text": f"transits of {planet} found without being told where to look, each about "
+                              f"{abs(v.get('mean_timing_offset_min', 0)):.0f} minutes from its published timing. A known planet, recovered."})
     elif planet:
         proof.append({"big": str(counts["known"]), "colour": "#64D2FF",
                       "text": f"dips on the period of {planet}, a known planet. Recovered, not discovered."})
     proof.append({"big": f"{len(sentinels)} + {len(probes)}", "colour": "#F5F5F7",
-                  "text": "Sentinels and Probes, each weighted by how it scored on planted transits."})
+                  "text": "AI Sentinels and Probes read every light curve; each vote counts as much as it scored on planted test transits."})
     if feed:
         stars = {r["tic"] for r in feed}
         n_new = sum(1 for r in feed if r.get("status") == "new_candidate")
         proof.append({"big": str(len(feed)), "colour": "#FFD60A",
-                      "text": f"signals on {len(stars)} star{'s' if len(stars) != 1 else ''} in the open feed. {n_new} new, "
-                              f"every one a candidate, unconfirmed."})
+                      "text": f"entries from {len(stars)} more star{'s' if len(stars) != 1 else ''} in the search feed, "
+                              f"{n_new} at a new period. Leads for review, not planets."})
     opens = [d for d in dips if d["status"] == "open"]
     if opens:
         w = opens[0]["who"]
@@ -247,11 +249,8 @@ def story_data(run_dir: str | Path, dock: dict, feed: list[dict], calibration: d
 
 
 def _letter(i: int) -> str:
-    out, i = "", i + 1
-    while i:
-        i, r = divmod(i - 1, 26)
-        out = chr(65 + r) + out
-    return out
+    """A dip's number in time order (1, 2, 3 ...): its plain label, "dip 2", and its address, /candidates/<star>/dip-2/."""
+    return str(i + 1)
 
 
 # ---------- decorative and projected geometry (computed once, at build time) ----------

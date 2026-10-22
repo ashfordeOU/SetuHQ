@@ -39,6 +39,7 @@ from setuhq.app import (
 )
 from setuhq.cli import main
 from setuhq.docket import NO_STORED_CROSSMATCH
+from conftest import site_bundle
 
 WIDGET_IDS = [w for w, _ in WIDGETS]
 
@@ -75,8 +76,13 @@ def catalog(tmp_path):
 
 
 def _page_data(page: str) -> dict:
+    """The app's data (assets/data/app-*.json), with the case file's framed Docket (a file of its own) as docket_html."""
     raw = re.search(r'<script id="data" type="application/json">(.*?)</script>', page, re.S).group(1)
-    return json.loads(raw.replace("<\\/", "</"))
+    data = json.loads(raw.replace("<\\/", "</"))
+    frame = re.search(r'<template id="docket-frame">(.*)</template>', page, re.S)
+    if frame:
+        data["docket_html"] = frame.group(1)
+    return data
 
 
 def _route(page: str, sid: str) -> str:
@@ -86,7 +92,7 @@ def _route(page: str, sid: str) -> str:
 def test_app_builds_from_run_dir_and_catalogue(run_dir, catalog, tmp_path):
     assert main(["app", str(run_dir), "--catalog", str(catalog), "--out", str(tmp_path / "app"), "--title", "setuhq",
                  "--allow-missing-crossmatch"]) == 0
-    page = (tmp_path / "app" / "index.html").read_text()
+    page = site_bundle(tmp_path / "app" / "index.html")
     data = _page_data(page)
     assert data["title"] == "setuhq"
     assert [c["candidate_id"] for c in data["catalog"]["candidates"]] == ["tess-x-001", "tess-y-002"]
@@ -94,42 +100,50 @@ def test_app_builds_from_run_dir_and_catalogue(run_dir, catalog, tmp_path):
     assert data["config"]["config_name"] == "app"
     assert {r["id"] for r in data["panel"]} == {"vol-a", "vol-b"}
     assert all(r["kind"] == "simulated" for r in data["panel"])
-    # The Docket is embedded whole, rendered by docket.py.
-    assert data["docket_html"].startswith("<!doctype html>")
-    # One self-contained file: no external script.
-    assert not re.search(r"<script[^>]+src=", page)
+    # The Docket the case file frames is a file of its own, rendered by docket.py, beside the site.
+    frame = tmp_path / "app" / data["docket_frame"].lstrip("/")
+    assert data["docket_frame"].startswith("/assets/frame/") and frame.read_text().startswith("<!doctype html>")
+    # Every script is the site's own: no script from another site.
+    home = (tmp_path / "app" / "index.html").read_text()
+    assert all(src.startswith("/assets/") for src in re.findall(r'<script[^>]+src="([^"]+)"', home))
+    # The stand-alone pages the command also builds, and every old address forwarding.
+    for sub in ("candidates/case-file", "evidence/plates", "evidence/report", "app", "docket", "plate", "report"):
+        assert (tmp_path / "app" / sub / "index.html").exists(), sub
 
 
 def test_app_builds_without_catalogue(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     data = _page_data(page)
     assert data["catalog"]["candidates"] == [] and data["catalog"]["runs"] == []
 
 
-def test_nine_sections_and_seven_pages_exist(run_dir, catalog, tmp_path):
-    from setuhq.app import ROUTE_ALIASES, SUBPAGES
+def test_five_sections_and_every_view_exist(run_dir, catalog, tmp_path):
+    from setuhq.app import ROUTE_ALIASES, ROUTE_META, SUBNAV
 
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
-    assert [s for s, _ in SECTIONS] == ["overview", "sky", "galaxy", "catalogue", "transit", "explorer", "sentinels", "methods", "mission"]
-    assert [s for s, _, _ in SUBPAGES] == ["candidates", "planets", "runs", "planet", "star", "leaderboard", "variables"]
-    nav = re.search(r'<nav class="nav" aria-label="Sections">.*?</nav>', page, re.S).group(0)
+    index = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog)
+    page = site_bundle(index)
+    assert SECTIONS == [("explore", "Explore"), ("candidates", "Candidates"), ("how", "How it works"), ("evidence", "Evidence"), ("docs", "Docs")]
+    nav = re.search(r'<nav class="nav" aria-label="Main">.*?</nav>', index.read_text(), re.S).group(0)
     for sid, label in SECTIONS:
-        assert f'href="#/{sid}" data-route="{sid}">{label}</a>' in nav
-    for sid in [s for s, _ in SECTIONS] + [s for s, _, _ in SUBPAGES]:
+        assert f'data-nav="{sid}">{label}</a>' in nav
+    assert "#/" not in nav
+    # Every view of the app has its section and its heading, and belongs to one section of the top bar.
+    views = [r for r in ROUTE_META if r != "notfound" and not ROUTE_META[r].get("page")]
+    for sid in views:
         assert f'id="route-{sid}"' in page
         assert re.search(rf'<h1 [^>]*id="h-{sid}" tabindex="-1">', page), sid
-    # Each page names the section it belongs to, and links back to it.
-    for sid, label, parent in SUBPAGES:
-        assert f'<a href="#/{parent}">' in _route(page, sid)
-    # Old addresses open the section that replaced them (the query is kept).
+        assert ROUTE_META[sid]["nav"] in (None, *dict(SECTIONS)), sid
+    # Every view but the planet and star pages is listed in its section's sub-navigation or is the section's own page.
+    listed = {r for items in SUBNAV.values() for _, _, rs in items for r in rs}
+    assert set(views) - listed - {"overview", "methods", "docs"} == set()
+    # Old addresses open the view that replaced them (setuhq.routes forwards them).
     assert ROUTE_ALIASES["discoveries"] == "explorer" and ROUTE_ALIASES["panel"] == "sentinels"
-    assert _page_data(page)["aliases"] == ROUTE_ALIASES
-    assert "if (p.alias){ setHash('#/' + p.route + (p.query ? '?' + p.query : ''), false); }" in APP_JS
+    assert _page_data(page)["routes"]["aliases"] == ROUTE_ALIASES
     assert "aria-current" in APP_JS
 
 
 def test_planet_cards_never_state_an_earth_or_jupiter_radius(run_dir, catalog, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     data = _page_data(page)
     planets = _route(page, "planets")
     no_radius = re.compile(r"\d\s*(R⊕|R_⊕|R♃|R_?J\b|R_?E\b|R_?earth|R_?jup|Earth radi|Jupiter radi|M⊕)", re.I)
@@ -160,21 +174,27 @@ def test_radius_ratio_is_sqrt_depth():
 
 
 def test_every_discovery_surface_says_unconfirmed(run_dir, catalog, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     data = _page_data(page)
     assert data["unconfirmed"] == UNCONFIRMED == "candidate, unconfirmed"
-    for sid in ("candidates", "explorer", "planets", "transit", "sky"):
+    for sid in ("candidates", "explorer", "planets", "sky"):
         assert UNCONFIRMED in _route(page, sid), sid
+    # The case file's intro names what is a candidate and what is not.
+    assert f"Each signal that passed vetting is a {UNCONFIRMED}; a rejected or flagged one is named by its status." in _route(page, "candidates")
+    assert "Every signal here is a" not in page
+    # A dip's page says its own status (candidate, flagged or rejected), from its vetting outcome.
+    assert "${DIPPHRASE(d.outcome)}" in re.search(r"function renderTransit\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "const DIPTAG = o =>" in APP_JS and "D.dip_state" in APP_JS
     # Rendered rows: the feed table status cell, the timeline dots, the top-candidates
-    # widget, the discovery-count widget and every planet entry carry the wording.
+    # widget and every planet entry carry the wording or the status tag.
     status_col = re.search(r"\['status', 'status'.*?\],\n", APP_JS, re.S).group(0)
-    assert "D.unconfirmed" in status_col
+    assert "FEEDTAG(x)" in status_col
     timeline = re.search(r"function timeline\(box\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "D.unconfirmed" in timeline
     widgets = re.search(r"function widgetBody\(id\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert widgets.count("D.unconfirmed") + widgets.count("${UNC}") >= 3
+    assert "${DIPTAG(x.outcome)}" in widgets  # the top dips: each tagged by its own outcome
     planets = re.search(r"function renderPlanets\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "${UNC}" in planets and "D.no_detection" in planets
+    assert "DIPTAG(e.outcome) : UNC}" in planets and "D.no_detection" in planets  # a run dip by its outcome, a feed entry by the hedge
     assert "candidate, unconfirmed" in data["docket_html"]
     # The feed rule is shown as a rule, not a vetting result.
     disc = _route(page, "explorer")
@@ -203,9 +223,11 @@ def test_layout_round_trips_through_the_url():
     assert decode_layout(text) == layout
     assert decode_layout("") == widget_layout(None)
     assert decode_layout("junk,,top.Q.x") == widget_layout([{"id": "top"}])
-    # The page reads and writes the same string in the hash query.
-    assert "'#/overview?layout=' + encodeLayout(layout)" in APP_JS
+    # The page reads the same string from a shared link's query (/candidates/?layout=...), and writes it only
+    # into the link that "Copy link to this view" makes.
+    assert "'layout=' + encodeLayout(layout)" in APP_JS
     assert "p.params.get('layout')" in APP_JS
+    assert re.search(r"function syncLayoutURL\(\)\{ /\* nothing", APP_JS)
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
@@ -228,12 +250,12 @@ console.log(JSON.stringify([[readLayout(undefined, 'k', ids, sizes), readLayout(
 
 
 def test_dip_identifiers_link_to_the_dossier(run_dir, catalog, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     data = _page_data(page)
     ids = [c["candidate_id"] for c in json.loads((run_dir / "candidates.json").read_text())]
     assert data["dossier_ids"] == ids
-    # One link builder, in the ?dip= form, used by the Overview, the Planets, the Panel and the feed.
-    assert "`#/candidates?dip=${encodeURIComponent(id)}" in APP_JS
+    # One link builder, to the dip's case file (/candidates/<dip>/case-file/), used by the widgets, the Planets, the Panel and the feed.
+    assert "const dipHref = (id, section) => rtUrl('candidates', {dip: id, section: section || null});" in APP_JS
     for fn in ("widgetBody", "renderPlanets", "renderPanel"):
         body = re.search(rf"function {fn}\(.*?\n\}}\n", APP_JS, re.S).group(0)
         assert "dipLink(" in body, fn
@@ -241,27 +263,30 @@ def test_dip_identifiers_link_to_the_dossier(run_dir, catalog, tmp_path):
     # The top-candidates widget is a list of links, not a table without anchors.
     top = re.search(r"function topBody.*?\n  \}\n", APP_JS, re.S).group(0)
     assert "<table" not in top and "dipLink(x.id)" in top
-    # The shell forwards ?dip= to the Docket frame as the frame's location hash.
+    # The shell forwards the dip in its address to the Docket frame as the frame's location hash.
     assert "p.params.get('dip')" in APP_JS
-    assert "docketBlob + (dip ? '#' + encodeURIComponent(dip) : '')" in APP_JS
+    assert "return D.docket_frame + (dip ? '#' + encodeURIComponent(dip) : '');" in APP_JS
     assert "fromHash = decodeURIComponent(location.hash.slice(1))" in data["docket_html"]
 
 
 def test_skip_target_is_not_a_route(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     href = re.search(r'<a class="skip" href="#([^"]+)"', page).group(1)
     assert not href.startswith("/") and href not in [s for s, _ in SECTIONS]
     assert re.search(rf'<div id="{href}" tabindex="-1">', page)
     assert page.index('<main id="main">') < page.index(f'id="{href}"')
-    # The router leaves non-route hashes alone.
-    assert "if (!h.startsWith('#/')) return null;" in APP_JS
-    assert "const p = parseHash(location.hash); if (!p) return;" in APP_JS
+    # The router reads the path; a plain hash on the same page (the skip link's) is left to the browser.
+    assert "if (u.pathname === location.pathname && u.search === location.search && u.hash && current !== 'candidates') return;" in APP_JS
+    assert "rtParse(location.pathname, location.search)" in APP_JS
 
 
-def test_top_bar_is_a_pill_switcher_with_no_drawer(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+def test_top_bar_has_five_sections_search_theme_and_a_phone_menu(run_dir, tmp_path):
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     top = re.search(r'<header class="topbar">.*?</header>', page, re.S).group(0)
-    assert '<nav class="nav" aria-label="Sections">' in top and 'class="brand"' in top and "data-theme-toggle" in top
+    assert '<nav class="nav" aria-label="Main">' in top and 'class="brand"' in top and "data-theme-toggle" in top
+    assert 'id="gsearchbtn"' in top and 'id="menubtn" aria-expanded="false" aria-controls="menu"' in top and 'id="menu" hidden' in top
+    # No run chip, no current-page label, no visible theme words: icons with accessible names.
+    assert "Sector 1" not in top and 'id="curlabel"' not in top and "Dark (default)" not in top and "themelbl" not in top
     assert 'id="sidebar"' not in page and "openDrawer" not in APP_JS
     # The bar's height (two rows on a phone) is measured into --top for the case file's frame.
     assert "document.documentElement.style.setProperty('--top'" in APP_JS and "ResizeObserver" in APP_JS
@@ -270,19 +295,19 @@ def test_top_bar_is_a_pill_switcher_with_no_drawer(run_dir, tmp_path):
 
 def test_shell_and_docket_use_only_self_hosted_fonts(run_dir, tmp_path):
     out = build_app(run_dir, tmp_path / "app", title="t")
-    page = out.read_text()
+    page = site_bundle(out)
     data = _page_data(page)
     assert "fonts.googleapis.com" not in page and "fonts.gstatic.com" not in page
     assert f'<link rel="stylesheet" href="{FONTS_CSS}">' in page
-    css = (out.parent / FONTS_CSS).read_text()
+    css = (out.parent / FONTS_CSS.lstrip("/")).read_text()
     for family in ("Geist", "Geist Mono", "Unbounded"):
         assert f"font-family: '{family}'" in css
     for url in re.findall(r"url\((files/[^)]+)\)", css):
         assert (out.parent / "assets" / "fonts" / url).stat().st_size > 1000, url
     assert (out.parent / "assets" / "fonts" / "OFL-geist.txt").exists()
-    # The framed copy carries a placeholder the shell swaps for the absolute address (a blob has no base).
-    assert FRAME_FONTS_HREF in data["docket_html"] and "fonts.googleapis.com" not in data["docket_html"]
-    assert data["fonts_css"] == FONTS_CSS and "split(D.frame_fonts_href).join(href)" in APP_JS
+    # The framed copy, served from assets/frame/, links the site's one copy of the fonts.
+    assert FRAME_FONTS_HREF == FONTS_CSS == "/assets/fonts/fonts.css"
+    assert f'href="{FONTS_CSS}"' in data["docket_html"] and "fonts.googleapis.com" not in data["docket_html"]
     assert "Inter Tight" not in data["docket_html"] and "JetBrains Mono" not in data["docket_html"]
     # The standalone Docket loads its own copy of the same fonts, beside it.
     docket = docket_mod.build_docket(run_dir, tmp_path / "docket", title="t")
@@ -322,12 +347,12 @@ def test_overview_hero_states_the_argument_from_stored_values(run_dir, catalog, 
     assert "does not say whether" in hero["archive"]
     assert "Stored error, verbatim: " + NO_STORED_CROSSMATCH in hero["archive"] and "unreachable" not in hero["archive"]
     # Windows are lettered in time order and carry their outcome; the curve is the stored flux in ppm.
-    assert [w["letter"] for w in hero["windows"]][:3] == ["A", "B", "C"][:len(hero["windows"])]
+    assert [w["letter"] for w in hero["windows"]][:3] == ["1", "2", "3"][:len(hero["windows"])]
     assert [w["t_start"] for w in hero["windows"]] == sorted(w["t_start"] for w in hero["windows"])
     assert sum(len(s["t"]) for s in hero["subjects"]) == hero["n_points"]
     subj = hero["subjects"][0]
     assert len(subj["t"]) == len(subj["ppm"])
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     overview = _route(page, "overview")
     assert "What this page does not claim" in overview and "No stellar radius is stored" in overview
     assert UNCONFIRMED in overview and NO_DETECTION.split(". ")[1] in overview
@@ -343,7 +368,7 @@ def html_unescape(text: str) -> str:
 
 
 def test_planets_state_the_stellar_radius_limitation_once(run_dir, catalog, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     planets = _route(page, "planets")
     assert planets.count(NO_STELLAR_RADIUS) == 1
     body = re.search(r"function renderPlanets\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
@@ -354,7 +379,7 @@ def test_planets_state_the_stellar_radius_limitation_once(run_dir, catalog, tmp_
 
 
 def test_panel_lists_marks_per_dip(run_dir, catalog, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     data = _page_data(page)
     rows = json.loads((run_dir / "candidates.json").read_text())
     by_id = {r["candidate_id"]: set(filter(None, r["reviewers"].split(";"))) for r in rows}
@@ -376,7 +401,7 @@ ISO = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}")
 
 
 def test_no_raw_iso_timestamp_in_overview_or_runs_headings(run_dir, catalog, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     for sid in ("overview", "runs"):
         assert not ISO.search(_route(page, sid)), sid
     # Rendered headings and footers pass stored times through when(), which keeps the ISO value in a title.
@@ -408,9 +433,9 @@ def test_feed_is_named_for_what_it_holds(run_dir, catalog, tmp_path):
     mostly_known["candidates"][0]["status"] = "known_toi"
     path = tmp_path / "known.json"
     path.write_text(json.dumps(mostly_known))
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=path).read_text()
-    assert '<h2 id="h-feedsec">Feed</h2>' in page
-    assert "2 of them match a known TOI period" in _route(page, "explorer")
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=path))
+    assert '<h2 id="h-feedsec">From the search feed: ' in page
+    assert re.search(r"2 of \d+ match a known TOI period", _route(page, "explorer"))
 
 
 def test_top_candidates_name_the_archive_match(run_dir, catalog, tmp_path):
@@ -432,7 +457,7 @@ def test_app_data_keeps_docket_counts(run_dir, catalog):
 
 
 def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     docket_html = _page_data(page)["docket_html"]
     # The shell's copy of the Docket carries the bridge; the standalone Docket page does not.
     assert FRAME_BRIDGE_JS in docket_html and docket_html.index(FRAME_BRIDGE_JS) < docket_html.index("</head>")
@@ -461,21 +486,17 @@ def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path
 
 
 def test_blocked_frame_shows_a_message_and_a_link(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     cand = _route(page, "candidates")
     msg = re.search(r'<p class="note blocked" id="frameblocked" role="alert" hidden>(.*?)</p>', cand).group(1)
-    assert msg == 'The dossier could not load in this view. <a id="blockedlink" href="../docket/">Open it on its own page.</a>'
-    # A frame that never reports ready falls back to srcdoc, then to the message; the frame is hidden.
+    assert msg == 'The case file could not load in this view. <a id="blockedlink" href="/candidates/case-file/">Open it on its own page.</a>'
+    # A frame that never reports ready is replaced by the message; the frame is hidden.
     failed = re.search(r"function frameLoadFailed\(gen\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "loadDocket(frame.dip, frame.section, 'srcdoc')" in failed and "showBlocked()" in failed
+    assert "showBlocked()" in failed
     blocked = re.search(r"function showBlocked\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "f.hidden = true" in blocked and "$('#frameblocked').hidden = false" in blocked
-    # About three seconds for the blob frame, then a shorter wait for the srcdoc copy, which needs no fetch.
-    assert "setTimeout(() => frameLoadFailed(gen), url ? 3000 : 1500)" in APP_JS
-    from setuhq.galaxy import GALAXY_JS
-    from setuhq.methods import METHODS_JS
-    from setuhq.catalogue import CATALOGUE_JS
-    assert "6000" not in APP_JS.replace(GALAXY_JS, "").replace(METHODS_JS, "").replace(CATALOGUE_JS, "")
+    # The frame is a same-origin file: six seconds to report ready before the message shows.
+    assert "setTimeout(() => frameLoadFailed(gen), 6000)" in APP_JS
     assert ".frame[hidden]{display:none}" in APP_CSS
 
 
@@ -491,7 +512,7 @@ def test_phone_touch_targets_are_at_least_44px():
     def has(selector, prop):
         return any(selector in [x.strip() for x in sel.split(",")] and prop in body for sel, body in rules.items())
 
-    for sel in ("main a", "summary", ".btn", ".chip", ".nav a", "th button"):
+    for sel in ("main a", "summary", ".btn", ".chip", "th button"):
         assert has(sel, "min-height:44px"), sel
     assert has("main a", "min-width:44px") and has("th button", "min-width:44px")
     assert has("main a", "padding:12px 0") and has("summary", "padding:12px 0")
@@ -513,10 +534,12 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     # (and the theme choice, in applyTheme, and the Learn path's progress, in learnSave).
     # (and Mission Control's saved default, in its "Save as my default" handler).
     # (and, in sessionStorage only, that the Sky's or Galaxy's survey-scan intro has played, in mxIntroEnd).
-    assert APP_JS.count("setItem(") == 6 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
+    assert APP_JS.count("setItem(") == 5 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
     assert "sessionStorage.setItem('setuhq-intro-' + I.key, 'done')" in re.search(r"function mxIntroEnd\(I, skipped\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LEARN_KEY" in re.search(r"function learnSave\(\)\{.*?\}\s*\}", APP_JS, re.S).group(0)
-    assert "s.setItem('setuhq-theme', t)" in re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    from setuhq.site import SHELL_JS
+
+    assert "localStorage.setItem('setuhq-theme', t)" in re.search(r"function applyTheme\(t, announce\)\{.*?\n\}\n", SHELL_JS, re.S).group(0)
     assert "s.setItem(LAYOUT_KEY" in re.search(r"function saveLayout\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(FEED_KEY" in re.search(r"function saveFeedView\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     callers = [m.start() for m in re.finditer(r"saveLayout\(\);", APP_JS)]
@@ -524,13 +547,16 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     reset = re.search(r"\$\('#resetlayout'\)\.addEventListener.*?\n", APP_JS)
     assert callers and all(action.start() < c < action.end() or reset.start() < c < reset.end() for c in callers)
     # The page says when a shared layout is showing, and offers a link to copy the current one.
-    assert "navigator.clipboard.writeText(url)" in APP_JS and "'#/overview?layout=' + encodeLayout(layout)" in APP_JS
+    assert "navigator.clipboard.writeText(url)" in APP_JS and "'layout=' + encodeLayout(layout)" in APP_JS
 
 
-def test_overview_has_shared_note_and_copy_link(run_dir, tmp_path):
-    overview = _route(build_app(run_dir, tmp_path / "app", title="t").read_text(), "overview")
-    assert 'id="copylayout"' in overview and "Copy link to this layout" in overview
-    assert 'id="sharednote" hidden>This is a shared layout, shown for this view only.' in overview
+def test_candidates_have_shared_note_and_copy_link(run_dir, tmp_path):
+    cands = _route(site_bundle(build_app(run_dir, tmp_path / "app", title="t")), "explorer")
+    # One "Copy link to this view" (the page's own, beside the breadcrumbs); the card controls wait behind Customise.
+    assert 'id="copylayout"' not in cands and "Copy link to this view" not in cands
+    assert '<button class="btn" id="customise" type="button" aria-pressed="false" aria-controls="widgets layouttools">Customise</button>' in cands
+    assert '<div class="layoutbar" id="layouttools" role="group" aria-label="Arrange the cards" hidden>' in cands
+    assert 'id="sharednote" hidden>This is a shared view, shown for this visit only.' in cands
 
 
 def test_archive_box_states_no_detection_once():
@@ -608,7 +634,7 @@ def test_phone_rule_in_the_docket_makes_44px_targets(run_dir, tmp_path):
         assert "font-size" not in covered[cls]
     # After the Docket's own rules, so it wins at equal specificity; in both the standalone page and the shell's copy.
     assert css.index("@media (max-width:700px){") > css.index(".dipbtn{")
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     assert "@media (max-width:700px){" in _page_data(page)["docket_html"]
 
 
@@ -639,7 +665,8 @@ def test_feed_sort_and_filter_round_trip_through_the_url():
     # The page reads the same query on load and writes it back when the viewer changes a control.
     assert "fv === encodeFeedView(D.feed_view.default) ? '' : fv" in APP_JS and "'#/explorer' + (q ? '?' + q : '')" in APP_JS
     go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "decodeFeedView(p.params)" in go and "ownFeedView" in go and "syncFeedURL()" in go
+    # Opening the page never writes the view into the address; a change tidies the address to the page's own.
+    assert "decodeFeedView(p.params)" in go and "ownFeedView" in go and "syncFeedURL()" not in go
     sort_click = re.search(r"\$\('#disctable'\).addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
     chip_click = re.search(r"\$\('#discchips'\).addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
     for handler in (sort_click, chip_click):
@@ -654,7 +681,7 @@ def test_feed_view_round_trips_in_the_page_script(run_dir, catalog, tmp_path):
     node = shutil.which("node")
     if not node:
         pytest.skip("node is not installed")
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     data = _page_data(page)
     funcs = re.search(r"const shortOf = .*?\nfunction decodeFeedView\(params\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     script = ("const D = " + json.dumps({"feed_view": data["feed_view"]}) + ";\n"
@@ -669,7 +696,7 @@ def test_feed_view_round_trips_in_the_page_script(run_dir, catalog, tmp_path):
 
 
 def test_frame_is_hidden_until_the_docket_reports_ready(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     cand = _route(page, "candidates")
     # The frame starts hidden (no height, not visible) and the loading line holds its slot.
     assert '<iframe class="frame waiting" id="docketframe"' in cand
@@ -692,10 +719,9 @@ def test_top_candidate_rows_are_one_44px_line_on_a_phone():
     assert "height:44px" in row and "white-space:nowrap" in row and "align-items:center" in row
     link = re.search(r"\.toplist ul li\.toprow a\.dip\{([^}]*)\}", phone).group(1)
     assert "height:44px" in link and "padding:0" in link
-    # The status keeps a word on the row, and the hedge moves to the signal line.
-    assert ".toplist .unc{display:none}" in phone and ".phonehedge{display:inline}" in phone
+    # The status keeps a word on the row, with the dip's own status tag (no blanket hedge on the signal line).
     widgets = re.search(r"function widgetBody\(id\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert 'class="phonehedge"> · each a ${esc(D.unconfirmed)}' in widgets
+    assert "phonehedge" not in widgets and "${DIPTAG(x.outcome)}</li>" in widgets
 
 
 def _weights_files(tmp_path, *, with_record=True):
@@ -712,7 +738,7 @@ def _weights_files(tmp_path, *, with_record=True):
 
 def test_calibration_plane_is_read_from_the_weights_file(run_dir, tmp_path):
     weights = _weights_files(tmp_path)
-    page = build_app(run_dir, tmp_path / "app", title="t", weights_path=weights).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", weights_path=weights))
     cal = _page_data(page)["calibration"]
     pts = {p["id"]: p for p in cal["points"]}
     assert set(pts) == {"vol-a", "vol-b", "claude-x"}
@@ -748,7 +774,7 @@ def test_calibration_plane_never_invents_rates(run_dir, tmp_path):
     assert cal["points"][0] | {} == {"id": "c", "kind": "claude_code", "weight": 0.4, "tpr": 0.5, "fpr": 0.1,
                                       "n_injected": 10, "n_empty": 10, "consistent": True}
     # The Panel cards still read a flat weight from either form.
-    page = build_app(run_dir, tmp_path / "app", title="t", weights_path=weights).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", weights_path=weights))
     assert {r["id"]: r["calibrated_weight"] for r in _page_data(page)["panel"]} == {"vol-a": 0.6, "vol-b": 0.05}
 
 
@@ -783,7 +809,7 @@ console.log(JSON.stringify([archiveNote([known, fresh]), archiveNote([fresh]), h
     assert NO_DETECTION in head_known and NO_DETECTION not in head_new
     assert "${noDossierLine(rows)}${archiveNote(rows)}</caption>" in APP_JS
     # The route's header line says it too when the catalogue holds a known TOI match.
-    feed = _route(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text(), "explorer")
+    feed = _route(site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog)), "explorer")
     header = re.search(r'<div class="secthead"><h2 id="h-feedsec">.*?</div>', feed, re.S).group(0)
     assert "match a known TOI period" in header and NO_DETECTION in header
 
@@ -854,7 +880,7 @@ def test_overview_names_the_archive_match_from_the_stored_fallback(run_dir, tmp_
         hero = app_mod.overview_hero(dock, [{"signal_id": dock["candidates"][0]["signal_id"], "consistent_with": "Test c"}])
         assert hero["headline"].endswith(", consistent with Test c.") and hero["accent"] == "A known planet, not a discovery."
         assert "consistent with Test c, a published planet: a known planet, not a discovery." in hero["archive"]
-        assert str(path) in hero["archive"] and NO_DETECTION in hero["archive"]
+        assert "(the repository's stored copy)" in hero["archive"] and str(path) not in hero["archive"] and NO_DETECTION in hero["archive"]
     finally:
         (run_dir / "crossmatch.json").unlink()
 
@@ -881,7 +907,8 @@ def test_unknown_dip_shows_a_notice_and_rewrites_to_the_lead_dip():
               "const frame = {ready: true, notice: ''}; const said = [], hashes = [], told = [];\n"
               "const el = {dataset: {loaded: '1'}, textContent: '', hidden: true};\n"
               "const $ = () => el; const say = m => said.push(m); const fitFrame = () => {};\n"
-              "const setHash = (h, push) => { hashes.push([h, push]); return true; };\n"
+              "const setAddress = (h, push) => { hashes.push([h, push]); return true; };\n"
+              "const dipHref = id => '/candidates/' + id + '/case-file/';\n"
               "const readyStatus = () => frameStatus(''); const tellFrame = d => told.push(d);\n"
               "const loadDocket = () => {}; const setFullHrefs = () => {}; const syncShellURL = () => {};\n"
               + lead + status + open_dip +
@@ -889,40 +916,44 @@ def test_unknown_dip_shows_a_notice_and_rewrites_to_the_lead_dip():
               "console.log(JSON.stringify({said, hashes, told, status: el.textContent, hidden: el.hidden}));")
     out = json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
     assert out["status"] == "No dip zzz in run run-1; showing the lead dip b." and out["hidden"] is False
-    assert out["hashes"] == [["#/candidates?dip=b", False]]  # replaced, not a new history entry
+    assert out["hashes"] == [["/candidates/b/case-file/", False]]  # replaced, not a new history entry
     assert out["told"] == ["b"] and out["said"][0].startswith("No dip zzz")
-    # Unknown sections go to the Overview, rewritten the same way.
-    go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "if (p.unknown){ setHash('#/overview', false);" in go
-    assert "unknown: ROUTES.includes(route) ? null : route" in APP_JS
+    # An address no view has shows the Page not found view (404.html is served for it).
+    assert "if (!$('#route-' + p.route)) p.route = 'notfound';" in APP_JS
 
 
 def test_viewer_changes_are_history_entries_and_back_is_followed():
-    hist = re.search(r"function setHash\(h, push\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "history.pushState(null, '', h)" in hist and "history.replaceState(null, '', h)" in hist
+    hist = re.search(r"function setAddress\(url, push\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "history.pushState(null, '', url)" in hist and "history.replaceState(null, '', url)" in hist
+    # The views name places in the old form; the address bar gets the clean path, without view state.
+    assert "rtFromHash(url, false)" in hist and "const setHash = setAddress;" in APP_JS
     sync = re.search(r"function syncShellURL\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "const push = !!frame.dip && !!shown && shown !== frame.dip;" in sync
-    assert "window.addEventListener('popstate', onNavigate);" in APP_JS
-    assert "window.addEventListener('hashchange', onNavigate);" in APP_JS
-    # The layout rewrite on load replaces; it is not a viewer's change.
-    assert "setHash('#/overview?layout=' + encodeLayout(layout), false)" in APP_JS
+    # A link to another page of the app is a new history entry made in place; Back and Forward are followed.
+    nav = re.search(r"function navTo\(href\)\{.*?\n\}\n", APP_JS, re.S).group(0)
+    assert "history.pushState(null, '', u.pathname + u.search + u.hash)" in nav and "go(parseLoc(), true)" in nav
+    assert "window.addEventListener('popstate', () => {" in APP_JS
 
 
 def test_theme_control_meta_and_first_paint(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    from setuhq.site import SHELL_JS, SITE_CSS
+
+    index = build_app(run_dir, tmp_path / "app", title="t")
+    page = index.read_text()
     head = page[:page.index("</head>")]
-    assert '<meta name="description" content="SetuHQ run ' in head and "candidate, unconfirmed" in head
+    assert '<meta name="description" content="' in head and "candidate, unconfirmed" in head
     assert '<meta name="color-scheme" content="dark light">' in head
-    assert head.count('<meta name="theme-color"') == 2
+    assert head.count('<meta name="theme-color"') == 1
     # The stored choice is applied by an inline script before the stylesheet: no flash of the wrong theme.
-    assert head.index("localStorage.getItem('setuhq-theme')") < head.index('<style>')
+    assert head.index("localStorage.getItem('setuhq-theme')") < head.index('<link rel="stylesheet" href="/assets/site-')
     assert "try{" in head and "catch(e){}" in head
-    # One control, in the top bar, a 44 px target.
-    assert page.count("<button class=\"btn themebtn\" type=\"button\" data-theme-toggle") == 1
-    assert ".themebtn{min-height:44px" in APP_CSS and "min-width:44px" in _phone_css()
-    apply = re.search(r"function applyTheme\(t\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "setAttribute('data-theme', t)" in apply and "try {" in apply and "postMessage({source: 'setuhq-shell', theme: t}" in apply
-    assert "THEMES = ['dark', 'light', 'system']" in APP_JS and "var t='dark'" in head
+    # One control, in the top bar: an icon, a 44 px target, named for screen readers (no visible words).
+    assert page.count('<button class="iconbtn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Switch to light"') == 1
+    assert ".iconbtn{width:44px;height:44px" in SITE_CSS
+    apply = re.search(r"function applyTheme\(t, announce\)\{.*?\n\}\n", SHELL_JS, re.S).group(0)
+    assert "setAttribute('data-theme', t)" in apply and "try {" in apply and "new CustomEvent('setuhq-theme'" in apply
+    assert "postMessage({source: 'setuhq-shell', theme: e.detail}" in APP_JS
+    assert "SETUHQ_THEMES = ['dark', 'light', 'system']" in SHELL_JS and "var t='dark'" in head
     # The framed Docket follows the theme.
     assert "document.documentElement.setAttribute('data-theme', m.theme)" in FRAME_BRIDGE_JS
     assert ':root[data-theme=\"light\"]' in FRAME_THEME_CSS and "--paper:#000" in FRAME_THEME_CSS
@@ -939,14 +970,14 @@ def test_phone_feed_is_three_line_cards_with_a_distinct_sort_group(run_dir, cata
     assert 'role="group" aria-label="Sort by"' in bar and '<span class="sortlbl" aria-hidden="true">Sort</span>' in bar
     assert "aria-pressed" in bar
     cards = re.search(r"function feedCards\(rows\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert cards.count('<div class="fc') == 3 and "D.unconfirmed" in cards
+    assert cards.count('<div class="fc') == 3 and "${FEEDTAG(x)}" in cards
     assert "${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}" in cards
     assert "#caltable{display:none}" in phone and ".calcards{display:grid" in phone
     cal = re.search(r"function renderCalibration\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "$('#calcards').innerHTML" in cal and "<dl class=\"kv calcard\">" in cal
     # Desktop: every feed row shows (no clipped scroll box), and the region's name says so.
     assert ".tablewrap.scrollbox{overflow-x:auto}" in APP_CSS and "max-height:70vh" not in APP_CSS
-    page = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog).read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog))
     assert 'aria-label="Feed table, every entry shown; scrolls sideways when wider than the screen"' in page
 
 
@@ -963,7 +994,7 @@ def test_hero_qualifies_an_archive_match_in_the_lede_and_the_box(run_dir, tmp_pa
     assert plain["qualifier"] == f"Every one is a {UNCONFIRMED}." and plain["match"] is None
     data = app_data(run_dir, title="t")
     data["hero"] = matched
-    page = app_mod.app_page(data)
+    page = "".join(app_mod.route_sections(data).values())
     lede = re.search(r'<p class="muted" style="margin:0;max-width:80ch">(.*?)</p>', page, re.S).group(1)
     assert "not that this run confirmed it." in lede
     box = re.search(r"<li><b>No confirmed planet.</b>(.*?)</li>", page, re.S).group(1)
@@ -1003,12 +1034,12 @@ def test_signals_button_lands_on_the_current_signal_header():
 
 
 def test_phone_dip_picker_lists_every_dip_with_its_outcome(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     cand = _route(page, "candidates")
     assert '<select id="dippick"' in cand and '<label for="dippick">' in cand
     pick = re.search(r"function renderDipPicker\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "D.hero.windows.map" in pick and "w.outcome" in pick
-    assert "$('#dippick').addEventListener('change', e => { location.hash = dipHref(e.target.value); });" in APP_JS
+    assert "$('#dippick').addEventListener('change', e => navTo(dipHref(e.target.value)));" in APP_JS
     assert ".dippicker select{flex:1;min-width:0;min-height:44px" in _phone_css()
     # Inside the framed Docket, a fixed "Signals" button jumps back to the list on a phone.
     assert "jumpToList" in docket_mod.DOCKET_JS and ".jumplist{display:inline-flex" in docket_mod.DOCKET_CSS
@@ -1056,7 +1087,7 @@ def test_panel_page_attribution_and_ids_unchanged_in_data(run_dir, tmp_path):
 
     assert ATTRIBUTION == ("Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
                            "Probes are deterministic matched-filter detectors.")
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     assert ATTRIBUTION in _route(page, "sentinels")
     assert "superintelligence" not in page.lower()
     data = _page_data(page)

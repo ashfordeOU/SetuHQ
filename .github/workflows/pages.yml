@@ -3,7 +3,8 @@ name: pages
 
 # Publishes the committed site/ to GitHub Pages, served at https://setuhq.com (site/CNAME), on every push to
 # main, or by hand. site/ is built and committed with scripts/ci_local.sh
-# (the app, the docket, the plates and the report from the stored run); this workflow deploys it as it is.
+# (setuhq site: every page, the report, the plates and the case file); this workflow adds the catalogue's planet
+# and star pages (setuhq.stubs) and deploys it.
 
 on:
   push:
@@ -27,6 +28,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+      # A small page for every catalogue planet and star the build did not pre-render (~14,000, ~3 KB each), and
+      # the sitemaps that list them: written here, before the upload, and never committed. Standard library only.
+      - name: Catalogue planet and star pages
+        run: PYTHONPATH=src python3 -m setuhq.stubs site
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa  # v3
         with:
           path: site

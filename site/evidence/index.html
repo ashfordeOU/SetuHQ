@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Evidence: the panel, measured · SetuHQ</title>
+<link rel="icon" type="image/svg+xml" href="/assets/brand/setuhq-favicon.svg">
+<meta name="description" content="The reviewers behind every verdict, their calibration, and how the panel scores blind on real TESS Objects of Interest. Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.">
+<link rel="canonical" href="https://setuhq.com/evidence/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="Evidence: the panel, measured · SetuHQ"><meta property="og:description" content="The reviewers behind every verdict, their calibration, and how the panel scores blind on real TESS Objects of Interest. Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors."><meta property="og:url" content="https://setuhq.com/evidence/"><meta property="og:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Evidence: the panel, measured · SetuHQ"><meta name="twitter:description" content="The reviewers behind every verdict, their calibration, and how the panel scores blind on real TESS Objects of Interest. Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors."><meta name="twitter:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png">
+
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#000000">
+<script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/assets/site-0ba1243009.css">
+<link rel="preload" href="/assets/data/app-31a6c2bad6.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/app-f46053c2fd.js" as="script">
+<script src="/assets/site-8efaa37a95.js" defer></script>
+</head>
+<body class="page-sentinels" data-page="sentinels" data-route="sentinels" data-data="/assets/data/app-31a6c2bad6.json" data-routes="/assets/views-478cae4606.html" data-app="/assets/app-f46053c2fd.js">
+<img class="starfield" src="/assets/starfield-7d78158d28.svg" alt="" aria-hidden="true">
+<a class="skip" href="#content">Skip to content</a>
+<header class="topbar">
+  <div class="tbin">
+    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="579" height="132"></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/explore/" data-nav="explore">Explore</a></li><li><a href="/candidates/" data-nav="candidates">Candidates</a></li><li><a href="/how-it-works/" data-nav="how">How it works</a></li><li><a href="/evidence/" data-nav="evidence">Evidence</a></li><li><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav>
+    <div class="tools">
+      <button class="iconbtn searchbtn" type="button" id="gsearchbtn" aria-label="Search planets, stars and pages (press /)" aria-haspopup="dialog" title="Search (/)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      <button class="iconbtn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Switch to light" title="Theme: dark"><svg class="ti ti-dark" viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 12.6A6.5 6.5 0 0 1 7.4 4.5a6.5 6.5 0 1 0 8.1 8.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><svg class="ti ti-light" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="ti ti-system" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3.4a6.6 6.6 0 0 1 0 13.2z" fill="currentColor"/></svg></button>
+      <button class="iconbtn menubtn" type="button" id="menubtn" aria-expanded="false" aria-controls="menu" aria-label="Open the menu"><svg class="mi-open" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><svg class="mi-close" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+  <div class="menu" id="menu" hidden><nav aria-label="Main"><ul><li class="msec"><a href="/explore/" data-nav="explore">Explore</a><ul class="msub"><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></li><li class="msec"><a href="/candidates/" data-nav="candidates">Candidates</a><ul class="msub"><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/pi-men/dip-2/">Dips</a></li><li><a href="/candidates/pi-men/dip-2/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></li><li class="msec"><a href="/how-it-works/" data-nav="how">How it works</a></li><li class="msec"><a href="/evidence/" data-nav="evidence">Evidence</a><ul class="msub"><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></li><li class="msec"><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav></div>
+</header>
+<div class="pagebar"><div class="pbin"><nav class="crumbs" id="crumbs" aria-label="Breadcrumb" hidden></nav><nav class="subnav" id="subnav" aria-label="In this section"><a href="/evidence/" aria-current="page">The panel</a><a href="/evidence/leaderboard/">Leaderboard</a><a href="/evidence/runs/">Runs</a><a href="/evidence/report/">Run report</a><a href="/evidence/plates/">Plates</a></nav><div class="pagetools"><button class="btn" type="button" id="copyview" hidden>Copy link to this view</button><span class="muted" id="copyviewstate" role="status"></span><input class="copyfallback" id="copyviewbox" type="text" readonly aria-label="Link to this view" hidden></div></div></div>
+<main id="main">
+ <div id="content" tabindex="-1">
+<section class="route" id="route-sentinels" data-route="sentinels" aria-labelledby="h-sentinels">
+<header class="headrow">
+        <div><h1 class="lead-h" id="h-sentinels" tabindex="-1">Five reviewers.<br><span class="grey">Each one earns its vote.</span></h1>
+        <p>The panel that marked dips in run tess-pi-men-s1: the Sentinels and the Probes, no people. <span class="attribution">Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</span></p></div>
+        <div class="segctl" id="senfilter" role="group" aria-label="Show"></div>
+      </header>
+      <div class="row2">
+        <figure class="space ringfig" id="senring"></figure>
+        <div class="revcards" id="sencards"></div>
+      </div>
+      <section class="glass marked" id="senmarked" aria-label="What the selected reviewer marked"></section>
+      <p class="muted" style="margin:0;font-size:13px">Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors. Weights come from 10 planted and 10 empty light curves each: too few to separate 0.6 from 0.5.</p>
+      <p class="provnote" role="note" style="margin:8px 0;font-size:13px;line-height:1.5">These figures come from an earlier version of the pipeline; a re-run on the current code is in progress. <a href="/docs/#provenance">Details</a></p>
+      <section class="card bench" aria-labelledby="h-bench" style="display:grid;gap:8px"><h2 id="h-bench">Measured on real TOIs</h2><p class="note" style="margin:0"><b>The live feed&#x27;s new signals are consistent with noise.</b> Noise alone should give about 12.9 false new_candidate signals per 100 targets reviewed, against 15.8 per 100 on the live feed. Under that earlier rule a new_candidate on the feed was more likely noise than a signal.</p><p class="note" style="margin:0"><b>Update 2026-10-20: a stricter feed rule, pre-registered and tested once.</b> The signal must now pass in both reviewed sectors with a FAP below 0.001 over 2,000 trials. On the held-out half, noise alone gives 6.1 false signals per 100 targets (95% CI 4.0–9.4), down from 23.0 (18.6–28.0). That is still far above the 0.3 new signals per 100 targets the real light curves give, so the feed is still dominated by false alarms, and feed-level completeness fell from 39% to 17%. A feed admission is a lead for human or follow-up review, not a candidate of any confirmed status. Re-run under the new rule, 0 of the live feed&#x27;s 3 earlier new signals survive.</p><p class="note" style="margin:0"><b>Measured on a stated benchmark, not discoveries.</b> 300 confirmed or known planets (CP/KP), 300 false positives and 62 false alarms from the TOI table (fetched 2026-10-19, seed 20261019), one TOI per star; held-out half shown. Panel: the three Probes (deterministic detectors) with their calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed&#x27;s FAP (200 trials).</p><div class="tablewrap" role="region" tabindex="0" aria-label="Benchmark results"><table class="bench"><tbody><tr><th scope='row'>Headline: planets recovered on searchable stars (CP/KP TOIs, a vetted dip on the published ephemeris)</th><td>57% <span class='muted'>(86/150; 95% CI 49–65%)</span></td></tr><tr><th scope='row'>Planets recovered over all CP/KP stars (no 2-minute data counts as missed)</th><td>57% <span class='muted'>(86/152; 95% CI 49–64%)</span></td></tr><tr><th scope='row'>Planets recovered, stars exposed to the clipping bug excluded</th><td>53% <span class='muted'>(65/123; 95% CI 44–61%)</span></td></tr><tr><th scope='row'>Not searchable (no SPOC 2-minute light curve)</th><td>36 stars <span class='muted'>(2 CP/KP, 34 FP, 0 FA)</span> <b>skewed toward FP</b>: the FP rows describe FP stars with 2-minute data only</td></tr><tr><th scope='row'>False-positive TOIs found by the panel</th><td>77% <span class='muted'>(96/124; 95% CI 69–84%)</span></td></tr><tr><th scope='row'>… of those, rejected or flagged binary-like</th><td>68% <span class='muted'>(65/96; 95% CI 58–76%)</span></td></tr><tr><th scope='row'>False alarms on inverted light curves at the feed&#x27;s level (its full rule, FAP &lt; 0.01)</th><td>55 per 1,000 star-sectors <span class='muted'>(17 over 309; 177 vetted dips before the feed's rule)</span></td></tr><tr><th scope='row'>False alarms on scrambled light curves at the feed&#x27;s level (its full rule, FAP &lt; 0.01)</th><td>65 per 1,000 star-sectors <span class='muted'>(20 over 309; 262 vetted dips before the feed's rule)</span></td></tr><tr><th scope='row'>claude-volunteer: CP/KP dips marked (subsample of 40 stars)</th><td>50% <span class='muted'>(10/20; 95% CI 30–70%)</span></td></tr><tr><th scope='row'>claude-skeptic: CP/KP dips marked (subsample of 40 stars)</th><td>50% <span class='muted'>(10/20; 95% CI 30–70%)</span></td></tr></tbody></table></div><p class="note" style="margin:0"><b>Known bug in the code that measured this.</b> The cleaning step deletes points more than 10× the scatter below the running median, so very deep transits and eclipses lose their in-transit points. 27 CP/KP, 11 FP and 0 FA held-out stars are exposed (depth over 8× the scatter); 3 of their CP/KP misses are explained by it. A fix is coming; only those stars will be re-run.</p><p class="muted" style="margin:0;font-size:12px"><a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/results/benchmark_real_tois.md">Full results</a>. TFOPWG dispositions are the reference, not ground truth for every TOI.</p></section>
+      <p class="note rule"><b>Weights.</b> A reviewer's weight is its calibration skill from injection tests: the share of planted transits it finds minus the share of empty light curves it marks, with a floor. The weight a run used is the one its record stores; when it differs from the calibrated weight, the run did not use the calibrated weights. <a href="/evidence/runs/">Files and configuration ›</a></p>
+      <section class="card" aria-labelledby="h-cal" style="display:grid;gap:8px">
+        <h2 id="h-cal">Calibration plane</h2>
+        <p class="muted" style="margin:0;font-size:13px">Each reviewer at its false-alarm rate (x: share of empty subjects it marked) and recall (y: share of injected transits it found) in calibration. Point size is its calibrated weight. The lines join points of equal weight, weight = TPR − FPR, floored at 0.05; up and to the left is better. Stored values only.</p>
+        <div class="legend"><span><i class="k-sim"></i>Probe (deterministic detector), not a person</span><span><i class="k-cl"></i>Sentinel (Claude), not a person</span><span>size: calibrated weight</span></div>
+        <div id="calplane"></div>
+        <p class="note" id="calsample" style="margin:0"></p>
+        <div class="tablewrap" id="caltable" tabindex="0" role="region" aria-label="Calibration rates per reviewer"></div>
+        <div class="calcards" id="calcards"></div>
+        <p class="muted" id="calsource" style="margin:0;font-size:12px;overflow-wrap:anywhere"></p>
+      </section>
+      <section class="card" aria-labelledby="h-agree" style="display:grid;gap:8px">
+        <h2 id="h-agree">Marks per dip</h2>
+        <p class="muted" style="margin:0;font-size:13px">Which reviewers marked each dip, from the run's stored reviewer list. The verdict ledger link opens the dip's checks in its case file.</p>
+        <div id="agreement"></div>
+      </section>
+      <div class="cards" id="panelcards"></div>
+      <p class="casefile"><a href="/evidence/leaderboard/">The real-TOI leaderboard ›</a><span>SetuHQ's configurations, and any method submitted, scored blind on the held-out half.</span></p>
+      <p class="casefile"><a href="/evidence/runs/">Runs and configuration ›</a><span>Every search run, its errors as stored, and the configuration behind these pages.</span></p>
+</section>
+ </div>
+ <p class="note" id="bootnote" hidden>The interactive parts of this page could not load. Its text above is complete; reload to try again.</p>
+</main>
+<footer class="sitefoot"><div class="fin">
+  <nav class="footnav" aria-label="Site"><div><h2>Explore</h2><ul><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></div><div><h2>Candidates</h2><ul><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/pi-men/dip-2/">Dips</a></li><li><a href="/candidates/pi-men/dip-2/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></div><div><h2>How it works</h2><ul><li><a href="/how-it-works/">Overview</a></li><li><a href="/how-it-works/transits/">Transit</a></li><li><a href="/how-it-works/doppler-shift/">Toward and away</a></li><li><a href="/how-it-works/radial-velocity/">Radial velocity</a></li><li><a href="/how-it-works/astrometry/">Astrometry</a></li><li><a href="/how-it-works/">All 15 chapters</a></li></ul></div><div><h2>Evidence</h2><ul><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></div><div><h2>Docs</h2><ul><li><a href="/docs/">Get started</a></li><li><a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ">Source code</a></li><li><a href="/docs/#contribute">Contributing a sweep</a></li><li><a href="/docs/#data">Data downloads</a></li></ul></div></nav>
+  <p class="attribution">Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+  <p>Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ's data under CC BY 4.0. "SetuHQ" and the Setu mark are trademarks of Ashforde OÜ.</p>
+</div></footer>
+<div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
+<dialog class="gsearch" id="gsearch" aria-labelledby="gsearchlbl">
+  <label class="gsfield"><span class="sr" id="gsearchlbl">Search planets, stars and pages</span>
+    <input type="search" id="gsq" role="combobox" aria-expanded="true" aria-controls="gsresults" aria-autocomplete="list" placeholder="Search planets, stars, pages" autocomplete="off"></label>
+  <ul class="gsresults" id="gsresults" role="listbox" aria-label="Results"></ul>
+  <p class="gshint">↑ ↓ to move · Enter to open · Esc to close</p>
+</dialog>
+<nav class="learnbar" id="learnbar" aria-label="Learn path" hidden>
+  <span class="lpos mono" id="learnpos"></span><a class="btn" id="learnprev" href="/">‹ Back</a><a class="btn primary" id="learnnext" href="/">Next ›</a>
+  <button class="btn" type="button" id="learnleave" aria-label="Leave the path">Leave</button>
+</nav>
+<template id="mxsystpl"><figure class="mxstage tall" data-vis="system">
+          <div class="mxcanvas"><canvas role="img" aria-label="A star and its planet, drawn from stored values."></canvas></div>
+          <div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
+          <div class="mxctl" role="group" aria-label="Animation controls">
+            <button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the orbit">
+            <button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button>
+          </div>
+          <figcaption class="mxdesc">A star and its planet, drawn from stored values.</figcaption>
+        </figure></template>
+
+</body></html>

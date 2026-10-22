@@ -12,6 +12,7 @@ import pytest
 
 from setuhq import docket as docket_mod
 from setuhq.everything import DEFAULT_SWEEP, VARIABLES_JS, load_sweep, sweep_meta, variables_filter
+from conftest import served, site_bundle
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -27,7 +28,7 @@ def archive_unreachable(monkeypatch):
 
 
 def _page(built):
-    return built.read_text()
+    return site_bundle(built)
 
 
 def _data(page):
@@ -48,18 +49,21 @@ def test_every_figure_comes_from_the_committed_catalogue(pi_men_app):
     assert "null" not in d["counts"] and "vs" not in d and "sky" not in d
     assert json.loads((pi_men_app.parent / "assets/data/variables.json").read_text()) == CAT
     assert "entries" not in d and "coverage" not in d
-    over = _route(page, "overview")
+    # The home page says it in one sentence and links here; the counts and the null comparison live on this page.
+    home = _route(page, "overview")
+    assert '<p class="sweepline">We have searched ' in home and "null " not in home
+    over = _route(page, "variables")
     c = CAT["counts"]
     for n, label in ((c["stars_searched"], "stars searched"), (c["star_sectors_searched"], "star-sectors"),
                      (c["dips_reviewed"], "dips reviewed"), (c["entries"], "catalogue entries")):
         assert f'<b class="mono">{n:,}</b><span>{label}</span>' in over
     for k, n in c["by_class"].items():
-        assert f'#/variables?class={k}"' in over and f"<b class=\"mono\">{n:,}</b>" in over
+        assert f'/catalogue/everything-that-dims/?class={k}"' in over and f"<b class=\"mono\">{n:,}</b>" in over
         if k != "unclassified":
             assert f'null {c["null"]["by_class"][k]["null"]:,} · excess' in over
     for k in c["null"]["noise_like"]:
-        seg = over.split(f'#/variables?class={k}"')[1].split("</li>")[0]
-        assert "not distinguishable from noise in this slice" in seg and "var(--ink-3)" in over.split(f'#/variables?class={k}"')[1][:40]
+        seg = over.split(f'/catalogue/everything-that-dims/?class={k}"')[1].split("</li>")[0]
+        assert "not distinguishable from noise in this slice" in seg and "var(--ink-3)" in over.split(f'/catalogue/everything-that-dims/?class={k}"')[1][:40]
     assert "nothing is extrapolated" in over and "No entry is a new planet" in over
     src = CAT["sources"][0]
     assert f"{src['searched']:,} of the {src['targets_in_sector']:,} SPOC 2-minute targets" in over
@@ -86,8 +90,8 @@ def test_the_page_states_the_slice_the_rules_the_control_and_the_attribution(pi_
     for k in nul["noise_like"]:
         assert next(x["label"] for x in CAT["classes"] if x["id"] == k) in v.split("not distinguishable from noise in this slice:")[1].split("</p>")[0]
     assert "VA_NOISE.has(e.class)" in page and "Planet-candidate rule" in page
-    assert '<a href="#/catalogue">Known planets</a>' in v and 'aria-current=page>Everything that dims' in v
-    assert 'href="#/variables">Everything that dims</a>' in _route(page, "catalogue")
+    assert '<a href="/catalogue/">Known planets</a>' in v and 'aria-current=page>Everything that dims' in v
+    assert 'href="/catalogue/everything-that-dims/">Everything that dims</a>' in _route(page, "catalogue")
     assert "superintelligence" not in page.lower()
     assert "confirmed planet" not in re.sub(r"(new or confirmed planet|not a confirmed planet)", "", v.lower())
 
@@ -137,7 +141,7 @@ def test_the_page_filter_matches_python(tmp_path):
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
 def test_everything_that_dims_in_the_browser(pi_men_app, tmp_path):
-    url = pi_men_app.resolve().as_uri()
+    url = served(pi_men_app)
     ent = next(e for e in CAT["entries"] if e["kind"] == "dip")
     tic = ent["tic"]
     n_tic = sum(1 for e in CAT["entries"] if e["tic"] == tic)
@@ -153,8 +157,8 @@ const { chromium } = require(%s);
     await c.addInitScript(t => { try { localStorage.setItem('setuhq-theme', t); } catch (e) {} }, theme);
     const p = await c.newPage(), errs = [];
     p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
-    p.on('request', r => { if (!/^(file|data|blob):/.test(r.url())) ext.push(r.url()); });
-    const look = async route => { await p.goto(%s + route); await p.waitForTimeout(1200); return p.evaluate(() => {
+    p.on('request', r => { if (!/^(file|data|blob):|^http:..127.0.0.1:/.test(r.url())) ext.push(r.url()); });
+    const look = async route => { await p.goto(%s + route); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(1200); return p.evaluate(() => {
       const vw = document.documentElement.clientWidth, sec = document.querySelector('.route:not([hidden])');
       const small = [...sec.querySelectorAll('a,button,select,input,summary')].filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.width < 44 || r.height < 44) && !e.closest('p,td,dd,figcaption'); }).map(e => e.className || e.tagName);
       const wide = [...sec.querySelectorAll('*')].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.right > vw + 1 && !e.closest('.tablewrap'); }).map(e => e.tagName + '.' + e.className);
@@ -165,7 +169,7 @@ const { chromium } = require(%s);
     const r = {w, theme, errs};
     r.list = await look('#/variables');
     await p.click('#vaclasses [data-vc="%s"]'); await p.waitForTimeout(300);
-    r.filtered = await p.evaluate(() => [location.hash, document.querySelector('#vacount').textContent]);
+    r.filtered = await p.evaluate(() => ['#/variables?' + encodeVarView(va.view), document.querySelector('#vacount').textContent]);
     r.tic = await look('#/variables?tic=%s&id=%s');
     r.overview = await look('#/overview');
     r.counter = await p.evaluate(() => [...document.querySelectorAll('.sweeptiles b')].map(b => b.textContent));

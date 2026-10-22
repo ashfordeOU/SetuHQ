@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Page not found · SetuHQ</title>
+<link rel="icon" type="image/svg+xml" href="/assets/brand/setuhq-favicon.svg">
+<meta name="description" content="This page is not on SetuHQ.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="Page not found · SetuHQ"><meta property="og:description" content="This page is not on SetuHQ."><meta property="og:url" content="https://setuhq.com/"><meta property="og:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Page not found · SetuHQ"><meta name="twitter:description" content="This page is not on SetuHQ."><meta name="twitter:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#000000">
+<script>(function(){var RT={"paths":{"overview":"/","sky":"/explore/","galaxy":"/explore/galaxy/","mission":"/explore/mission-control/","catalogue":"/catalogue/","variables":"/catalogue/everything-that-dims/","explorer":"/candidates/","planets":"/candidates/radius-ratios/","methods":"/how-it-works/","sentinels":"/evidence/","leaderboard":"/evidence/leaderboard/","runs":"/evidence/runs/","docs":"/docs/"},"identity":{"transit":"dip","candidates":"dip","planet":"id","star":"id","methods":"ch"},"chapters":{"survey":"","transit":"transits","doppler":"doppler-shift","rv":"radial-velocity","astrometry":"astrometry","microlensing":"microlensing","imaging":"direct-imaging","timing":"timing","radio":"radio","falsepos":"false-positives","spectroscopy":"atmospheres","molecules":"molecules-and-life","population":"population","equations":"equations-of-life","history":"history"},"aliases":{"discoveries":"explorer","feed":"explorer","panel":"sentinels","home":"sky","cockpit":"transit","about":"overview"},"legacy":{"/app/":"/","/docket/":"/candidates/case-file/","/plate/":"/evidence/plates/","/report/":"/evidence/report/","/dashboard/":"/candidates/","/discoveries/":"/candidates/"},"lead":"tess-fa3483ce6f83-000","dips":{"tess-fa3483ce6f83-000":"pi-men/dip-2","tess-fa3483ce6f83-001":"pi-men/dip-3","tess-fa3483ce6f83-002":"pi-men/dip-1","tess-04b815001aa6-003":"pi-men/dip-7","tess-04b815001aa6-004":"pi-men/dip-4","tess-04b815001aa6-005":"pi-men/dip-6","tess-04b815001aa6-006":"pi-men/dip-5"},"gone":[]};
+function rtUrl(route, params, keepQuery){
+  params = Object.assign({}, params || {}); for (const k of Object.keys(params)) if (params[k] === null || params[k] === undefined || params[k] === '') delete params[k];
+  route = RT.aliases[route] || route;
+  const key = RT.identity[route]; let ident = null, section = null, path;
+  if (key){ ident = params[key] || null; delete params[key]; }
+  if (route === 'candidates'){ section = params.section || null; delete params.section; }
+  if (route === 'transit' || route === 'candidates'){
+    const slug = ident ? ((RT.dips || {})[ident] || encodeURIComponent(ident)) : null;
+    path = slug ? '/candidates/' + slug + '/' + (route === 'candidates' ? 'case-file/' : '') : (route === 'candidates' ? '/candidates/case-file/' : '/candidates/');
+  } else if (route === 'planet' || route === 'star'){
+    path = (route === 'planet' ? '/planets/' : '/stars/') + (ident ? ident + '/' : '');
+  } else if (route === 'methods'){
+    const slug = RT.chapters[ident || 'survey'] || '';
+    path = '/how-it-works/' + (slug ? slug + '/' : '');
+  } else path = RT.paths[route] || '/';
+  const q = keepQuery === false ? '' : new URLSearchParams(params).toString();
+  return path + (q ? '?' + q : '') + (section ? '#' + section : '');
+}
+function rtFromHash(h, keepQuery){
+  const body = String(h || '').replace(/^#/, '').replace(/^\//, ''), i = body.indexOf('?');
+  let route = i < 0 ? body : body.slice(0, i);
+  try { route = decodeURIComponent(route); } catch (e) { /* keep as typed */ }
+  const params = Object.fromEntries(new URLSearchParams(i < 0 ? '' : body.slice(i + 1)));
+  const m = /^(planet|star)\/([a-z0-9-]{1,120})$/.exec(route);
+  if (m){ route = m[1]; params.id = m[2]; }
+  if (!(route in RT.paths) && !(route in RT.identity) && !(route in RT.aliases)) return '/';
+  if (route === 'overview') return '/';
+  if (['transit', 'candidates'].includes(RT.aliases[route] || route) && !params.dip && RT.lead) params.dip = RT.lead;
+  return rtUrl(route, params, keepQuery);
+}
+function rtParse(pathname, search){
+  const parts = String(pathname || '/').split('/').filter(Boolean), params = Object.fromEntries(new URLSearchParams(search || ''));
+  const norm = '/' + parts.join('/') + (parts.length ? '/' : '');
+  for (const r in RT.paths) if (RT.paths[r] === norm && norm !== '/how-it-works/') return {route: r, params};
+  if (parts[0] === 'how-it-works' && parts.length <= 2){
+    const slug = parts[1] || ''; const ch = Object.keys(RT.chapters).find(c => RT.chapters[c] === slug);
+    return ch ? {route: 'methods', params: Object.assign(params, {ch})} : null;
+  }
+  if (parts.length === 2 && (parts[0] === 'planets' || parts[0] === 'stars') && /^[a-z0-9][a-z0-9-]{0,119}$/.test(parts[1]))
+    return {route: parts[0] === 'planets' ? 'planet' : 'star', params: Object.assign(params, {id: parts[1]})};
+  if (parts[0] === 'candidates' && (parts.length === 3 || parts.length === 4) && /^[a-z0-9][a-z0-9-]{0,119}$/.test(parts[1]) && /^dip-\d{1,4}$/.test(parts[2])){
+    const want = parts[1] + '/' + parts[2], dip = Object.keys(RT.dips || {}).find(i => RT.dips[i] === want) || want;
+    if (parts.length === 3) return {route: 'transit', params: Object.assign(params, {dip})};
+    if (parts[3] === 'case-file') return {route: 'candidates', params: Object.assign(params, {dip})};
+  }
+  return null;
+}
+function rtLegacy(pathname, hash){
+  let p = String(pathname || '/'); if (!p.endsWith('/')) p += '/';
+  hash = hash || '';
+  if (p === '/app/' || p === '/'){
+    if (hash.startsWith('#/') || hash === '#') return rtFromHash(hash);
+    return p === '/app/' ? '/' : null;
+  }
+  if (p === '/docket/' && hash.length > 1 && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/.test(hash.slice(1))) return rtUrl('candidates', {dip: hash.slice(1)});
+  if (p in RT.legacy) return RT.legacy[p] + (hash && hash !== '#' ? hash : '');
+  return null;
+}
+var t=rtLegacy(location.pathname,location.hash);if(t&&t!==location.pathname+location.search+location.hash){location.replace(t);}})();</script>
+<script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/assets/site-0ba1243009.css">
+<link rel="preload" href="/assets/data/app-31a6c2bad6.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/app-f46053c2fd.js" as="script">
+<script src="/assets/site-8efaa37a95.js" defer></script>
+</head>
+<body class="page-notfound" data-page="notfound" data-route="notfound" data-data="/assets/data/app-31a6c2bad6.json" data-routes="/assets/views-478cae4606.html" data-app="/assets/app-f46053c2fd.js">
+<img class="starfield" src="/assets/starfield-7d78158d28.svg" alt="" aria-hidden="true">
+<a class="skip" href="#content">Skip to content</a>
+<header class="topbar">
+  <div class="tbin">
+    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="579" height="132"></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/explore/" data-nav="explore">Explore</a></li><li><a href="/candidates/" data-nav="candidates">Candidates</a></li><li><a href="/how-it-works/" data-nav="how">How it works</a></li><li><a href="/evidence/" data-nav="evidence">Evidence</a></li><li><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav>
+    <div class="tools">
+      <button class="iconbtn searchbtn" type="button" id="gsearchbtn" aria-label="Search planets, stars and pages (press /)" aria-haspopup="dialog" title="Search (/)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      <button class="iconbtn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Switch to light" title="Theme: dark"><svg class="ti ti-dark" viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 12.6A6.5 6.5 0 0 1 7.4 4.5a6.5 6.5 0 1 0 8.1 8.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><svg class="ti ti-light" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="ti ti-system" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3.4a6.6 6.6 0 0 1 0 13.2z" fill="currentColor"/></svg></button>
+      <button class="iconbtn menubtn" type="button" id="menubtn" aria-expanded="false" aria-controls="menu" aria-label="Open the menu"><svg class="mi-open" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><svg class="mi-close" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+  <div class="menu" id="menu" hidden><nav aria-label="Main"><ul><li class="msec"><a href="/explore/" data-nav="explore">Explore</a><ul class="msub"><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></li><li class="msec"><a href="/candidates/" data-nav="candidates">Candidates</a><ul class="msub"><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/pi-men/dip-2/">Dips</a></li><li><a href="/candidates/pi-men/dip-2/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></li><li class="msec"><a href="/how-it-works/" data-nav="how">How it works</a></li><li class="msec"><a href="/evidence/" data-nav="evidence">Evidence</a><ul class="msub"><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></li><li class="msec"><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav></div>
+</header>
+<div class="pagebar"><div class="pbin"><nav class="crumbs" id="crumbs" aria-label="Breadcrumb" hidden></nav><nav class="subnav" id="subnav" aria-label="In this section" hidden></nav><div class="pagetools"><button class="btn" type="button" id="copyview" hidden>Copy link to this view</button><span class="muted" id="copyviewstate" role="status"></span><input class="copyfallback" id="copyviewbox" type="text" readonly aria-label="Link to this view" hidden></div></div></div>
+<main id="main">
+ <div id="content" tabindex="-1">
+<section class="route" id="route-notfound" data-route="notfound" aria-labelledby="h-notfound">
+<header><h1 class="lead-h" id="h-notfound" tabindex="-1">This page is not here.</h1>
+        <p>The address may be mistyped, or the page may have moved when the site was reorganised. Old addresses forward on their own; this one has no new home.</p></header>
+      <div class="nfsearch"><a class="btn primary" href="/">Go to the home page</a><button class="btn" type="button" data-open-search>Search planets, stars and pages</button></div>
+      <ul class="docards"><li><a class="docard" href="/explore/"><b>Explore</b><i aria-hidden="true">›</i></a></li><li><a class="docard" href="/candidates/"><b>Candidates</b><i aria-hidden="true">›</i></a></li><li><a class="docard" href="/how-it-works/"><b>How it works</b><i aria-hidden="true">›</i></a></li><li><a class="docard" href="/evidence/"><b>Evidence</b><i aria-hidden="true">›</i></a></li><li><a class="docard" href="/docs/"><b>Docs</b><i aria-hidden="true">›</i></a></li></ul>
+</section>
+ </div>
+ <p class="note" id="bootnote" hidden>The interactive parts of this page could not load. Its text above is complete; reload to try again.</p>
+</main>
+<footer class="sitefoot"><div class="fin">
+  <nav class="footnav" aria-label="Site"><div><h2>Explore</h2><ul><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></div><div><h2>Candidates</h2><ul><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/pi-men/dip-2/">Dips</a></li><li><a href="/candidates/pi-men/dip-2/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></div><div><h2>How it works</h2><ul><li><a href="/how-it-works/">Overview</a></li><li><a href="/how-it-works/transits/">Transit</a></li><li><a href="/how-it-works/doppler-shift/">Toward and away</a></li><li><a href="/how-it-works/radial-velocity/">Radial velocity</a></li><li><a href="/how-it-works/astrometry/">Astrometry</a></li><li><a href="/how-it-works/">All 15 chapters</a></li></ul></div><div><h2>Evidence</h2><ul><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></div><div><h2>Docs</h2><ul><li><a href="/docs/">Get started</a></li><li><a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ">Source code</a></li><li><a href="/docs/#contribute">Contributing a sweep</a></li><li><a href="/docs/#data">Data downloads</a></li></ul></div></nav>
+  <p class="attribution">Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+  <p>Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ's data under CC BY 4.0. "SetuHQ" and the Setu mark are trademarks of Ashforde OÜ.</p>
+</div></footer>
+<div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
+<dialog class="gsearch" id="gsearch" aria-labelledby="gsearchlbl">
+  <label class="gsfield"><span class="sr" id="gsearchlbl">Search planets, stars and pages</span>
+    <input type="search" id="gsq" role="combobox" aria-expanded="true" aria-controls="gsresults" aria-autocomplete="list" placeholder="Search planets, stars, pages" autocomplete="off"></label>
+  <ul class="gsresults" id="gsresults" role="listbox" aria-label="Results"></ul>
+  <p class="gshint">↑ ↓ to move · Enter to open · Esc to close</p>
+</dialog>
+<nav class="learnbar" id="learnbar" aria-label="Learn path" hidden>
+  <span class="lpos mono" id="learnpos"></span><a class="btn" id="learnprev" href="/">‹ Back</a><a class="btn primary" id="learnnext" href="/">Next ›</a>
+  <button class="btn" type="button" id="learnleave" aria-label="Leave the path">Leave</button>
+</nav>
+<template id="mxsystpl"><figure class="mxstage tall" data-vis="system">
+          <div class="mxcanvas"><canvas role="img" aria-label="A star and its planet, drawn from stored values."></canvas></div>
+          <div class="mxbadges"><span class="mxlabel model">Model from stored values</span><span class="mxexag" aria-live="polite"></span></div>
+          <div class="mxctl" role="group" aria-label="Animation controls">
+            <button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the orbit">
+            <button class="btn mxsize" type="button" aria-pressed="false">Planet ×5</button>
+          </div>
+          <figcaption class="mxdesc">A star and its planet, drawn from stored values.</figcaption>
+        </figure></template>
+
+</body></html>

@@ -62,31 +62,33 @@ step "sweep catalogue: only ingested, intact contributions, and catalogue.json r
 grep "check-sweep: note:" "$LOG" | tail -n 1 || true
 ok
 
-step "app shell builds from the stored run"
-"$EX" app "$RUN" --catalog "$CAT" --out site/app --title "SetuHQ" --landing site/index.html >> "$LOG" 2>&1
-ok
-
-step "docket builds from the stored run"
-"$EX" docket "$RUN" --out site/docket --title "SetuHQ docket: pi Men (TESS sector 1)" >> "$LOG" 2>&1
-ok
-
-step "plate builds from the stored run"
-"$EX" plate "$RUN" --catalog "$CAT" --out site/plate --title "SetuHQ plates" >> "$LOG" 2>&1
-ok
-
-step "archived run report builds from the stored run"
-"$EX" report "$RUN" --out site/report --title "SetuHQ: pi Men (TESS sector 1)" \
+step "the site builds from the stored run (setuhq site: every page, the report, the plates, the case file)"
+"$EX" site "$RUN" --catalog "$CAT" --out site --title "SetuHQ" \
   --validation docs/results/pi_men_validation.md --benchmark docs/results/injection_recovery_simulated_panel.md >> "$LOG" 2>&1
 ok
 
 step "no built page loads fonts or scripts from another site"
 if grep -rl "fonts.googleapis\|fonts.gstatic" site --include=*.html; then echo "external fonts found" | tee -a "$LOG"; exit 1; fi
+if grep -rlE '<script[^>]+src="(https?:)?//' site --include=*.html; then echo "external script found" | tee -a "$LOG"; exit 1; fi
 ok
 
-step "site files exist"
-for f in site/index.html site/app/index.html site/docket/index.html site/plate/index.html site/report/index.html; do
+step "site files exist, and no site-wide banner"
+for f in site/index.html site/404.html site/sitemap.xml site/robots.txt site/explore/index.html site/candidates/index.html \
+         site/how-it-works/index.html site/evidence/index.html site/docs/index.html site/candidates/case-file/index.html \
+         site/evidence/plates/index.html site/evidence/report/index.html site/app/index.html; do
   test -s "$f" || { echo "missing $f" | tee -a "$LOG"; exit 1; }
 done
+if grep -rl 'id="codenote"' site --include=*.html; then echo "a site-wide banner is back" | tee -a "$LOG"; exit 1; fi
+ok
+
+step "end-to-end: every page in Chromium, both sizes and themes, axe-core (scripts/site_e2e.sh)"
+if command -v node >/dev/null; then
+  scripts/site_e2e.sh site 2>&1 | tail -n 40 | tee -a "$LOG"
+  test "${PIPESTATUS[0]}" -eq 0
+else
+  echo "   node is not installed: the end-to-end test was not run" | tee -a "$LOG"
+  [[ -n "${CI:-}" ]] && exit 1
+fi
 ok
 
 echo "full local check passed" | tee -a "$LOG"

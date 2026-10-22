@@ -9,9 +9,8 @@ name: discover
 #   secret is set; without it the Sentinel is skipped and listed as skipped in the run's manifest, so the batch
 #   runs on the Probes only.
 # * Every commit it makes is authored and committed as ashfordeOU. Before it commits, it rebuilds every page
-#   that embeds the feed's catalogue (the app and its landing page and the plates, with the commands
-#   scripts/ci_local.sh uses, and the dashboard; `setuhq discover` writes the feed page itself) and runs the
-#   fast tests. A push made with GITHUB_TOKEN does not start ci.yml, so these checks run here.
+#   that embeds the feed's catalogue (the whole site, with the command scripts/ci_local.sh uses; it also replaces
+#   the feed page `setuhq discover` writes with a forward to /candidates/) and runs the fast tests. A push made with GITHUB_TOKEN does not start ci.yml, so these checks run here.
 # * The feed's admissions are leads for review, not planets: under the pre-registered two-sector rule the
 #   feed is still dominated by false alarms (README, Evidence).
 
@@ -50,11 +49,9 @@ jobs:
         run: .venv/bin/setuhq discover configs/discovery.toml --batch-size 20 --time-budget-min 300
       - name: Rebuild the pages that embed the catalogue
         run: |
-          .venv/bin/setuhq app runs/tess-pi-men-s1 --catalog docs/discoveries/catalog.json --out site/app --title "SetuHQ" --landing site/index.html
-          .venv/bin/setuhq plate runs/tess-pi-men-s1 --catalog docs/discoveries/catalog.json --out site/plate --title "SetuHQ plates"
-          .venv/bin/setuhq dashboard runs/tess-pi-men-s1 --catalog docs/discoveries/catalog.json --out site/dashboard --title "SetuHQ: pi Men (TESS sector 1)"
+          .venv/bin/setuhq site runs/tess-pi-men-s1 --catalog docs/discoveries/catalog.json --out site --title "SetuHQ"
       - name: Fast tests before the push
-        run: .venv/bin/python -m pytest -q tests/test_discover.py tests/test_codenote.py tests/test_brand.py tests/test_licensing.py tests/test_catalogue.py
+        run: .venv/bin/python -m pytest -q tests/test_discover.py tests/test_codenote.py tests/test_brand.py tests/test_licensing.py tests/test_catalogue.py tests/test_site.py
       - name: Commit catalogue and pages (as ashfordeOU)
         env:
           GIT_AUTHOR_NAME: ashfordeOU
@@ -62,9 +59,11 @@ jobs:
           GIT_COMMITTER_NAME: ashfordeOU
           GIT_COMMITTER_EMAIL: 236818772+ashfordeOU@users.noreply.github.com
         run: |
-          git add docs/discoveries site/discoveries site/app site/index.html site/plate site/dashboard
+          git add -A docs/discoveries site
           git diff --cached --quiet || git commit -m "Discovery batch $(date -u +%Y-%m-%dT%H:%MZ)"
           git push
+      - name: Catalogue planet and star pages (deploy-time, never committed)
+        run: PYTHONPATH=src python3 -m setuhq.stubs site
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa  # v3
         with:
           path: site

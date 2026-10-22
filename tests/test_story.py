@@ -11,6 +11,7 @@ import pytest
 from setuhq import docket as docket_mod
 from setuhq.app import APP_CSS, APP_JS, app_data, build_app
 from setuhq.story import decoration, mollweide, number_words, sky_geometry
+from conftest import site_bundle
 
 
 @pytest.fixture(autouse=True)
@@ -79,7 +80,7 @@ def test_sky_position_is_the_stored_coordinates_and_field_stars_are_decorative(r
     x, y = mollweide(84.2912, -80.4691)
     assert data["sky_geo"]["x"] == round(x, 2) and data["sky_geo"]["y"] == round(y, 2)
     assert y > 200  # near the south celestial pole, at the bottom of the map
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     sky = re.search(r'<section class="route" id="route-sky".*?(?=<section class="route" id="route-)', page, re.S).group(0)
     assert "Field stars decorative" in sky and "feed stars not plotted (positions not stored)" in sky
     # Without stored coordinates the target is not plotted, and the map says so.
@@ -90,8 +91,8 @@ def test_sky_position_is_the_stored_coordinates_and_field_stars_are_decorative(r
 
 
 def test_overview_labels_the_artists_impression_and_the_theatre_says_what_is_not_fitted(run_dir, tmp_path):
-    page = build_app(run_dir, tmp_path / "app", title="t").read_text()
-    assert "Artist's impression. No image of pi Men c exists." in page
+    page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
+    assert "Artist's impression of a planet lit by its star. No image of pi Men c exists." in page
     theatre = re.search(r"function txTheatre\(d\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     # The playback is the shared system view; every stored-values honesty line stays.
     assert "impact parameter illustrative (b = 0)" in theatre and "Dashed: the limb-darkened fit stored for this dip." in theatre
@@ -119,13 +120,11 @@ def test_number_words():
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
 def test_old_routes_redirect_and_unknown_dips_are_named():
-    parse = re.search(r"function parseHash\(h\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    script = ("const D = {aliases: {discoveries: 'explorer', panel: 'sentinels'}}; const ROUTES = ['overview','sky','transit','explorer','sentinels','candidates','planets','runs'];\n"
-              + parse + "console.log(JSON.stringify(['#/discoveries?sort=depth&filter=new', '#/panel', '#/nowhere', '#/transit?dip=x'].map(h => { const p = parseHash(h); return [p.route, p.alias || null, p.query || null, p.unknown || null, p.params.toString()]; })));")
-    out = json.loads(subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout)
-    assert out[0] == ["explorer", "discoveries", "sort=depth&filter=new", None, "sort=depth&filter=new"]
-    assert out[1][:2] == ["sentinels", "panel"] and out[2][0] == "overview" and out[2][3] == "nowhere"
-    assert out[3][0] == "transit" and out[3][4] == "dip=x"
+    from setuhq.routes import from_hash
+
+    # Old in-app names (#/discoveries, #/panel) and unknown ones forward to a clean address (tests/test_site.py has them all).
+    assert from_hash("#/discoveries?sort=depth&filter=new") == "/candidates/?sort=depth&filter=new"
+    assert from_hash("#/panel") == "/evidence/" and from_hash("#/nowhere") == "/" and from_hash("#/transit?dip=x") == "/candidates/x/"
     opener = re.search(r"function openTransit\(dip\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "No dip ${dip} in run ${D.run.name}; showing the lead dip ${S.lead_dip}." in opener
     assert "setHash(transitHref(dip), false)" in opener
@@ -148,24 +147,21 @@ def test_explorer_and_sentinels_read_the_stored_feed_and_calibration(run_dir, tm
     assert "planted transits found" in js and "empty light curves marked" in js
 
 
-def test_landing_page_is_the_overview_linking_into_the_app(run_dir, tmp_path):
-    from setuhq.app import FONTS_CSS, build_landing
+def test_home_page_is_the_overview_linking_into_the_site(run_dir, tmp_path):
+    from setuhq.app import FONTS_CSS
     from setuhq.cli import main
 
-    path = build_landing(run_dir, tmp_path / "site" / "index.html", title="setuhq")
-    page = path.read_text()
+    assert main(["site", str(run_dir), "--out", str(tmp_path / "site"), "--title", "setuhq", "--no-extras", "--allow-missing-crossmatch"]) == 0
+    page = (tmp_path / "site" / "index.html").read_text()
     assert "The sky, reviewed." in page and "What this page does not claim" in page
-    assert 'href="app/#/sky"' in page and 'href="app/#/overview" data-route="overview" aria-current="page"' in page
-    assert f'href="app/{FONTS_CSS}"' in page and "fonts.googleapis" not in page
+    assert 'href="/explore/"' in page and 'href="/candidates/" data-nav="candidates">Candidates</a>' in page
+    assert f'href="{FONTS_CSS}"' in page and "fonts.googleapis" not in page
     assert "Artist&#x27;s impression" in page or "Artist's impression" in page
-    assert 'href="report/"' in page and "candidate, unconfirmed" in page
+    assert 'href="/evidence/report/"' in page and "candidate, unconfirmed" in page
+    # The run's arrangeable cards live on Candidates, not on the home page.
     assert "Your view" not in page and 'id="widgets"' not in page
-    # No external script; the only script is the theme control (and the first-paint theme line).
-    assert not re.search(r"<script[^>]+src=", page)
-    # The CLI writes it beside the app.
-    assert main(["app", str(run_dir), "--out", str(tmp_path / "s2" / "app"), "--title", "t",
-                 "--landing", str(tmp_path / "s2" / "index.html"), "--allow-missing-crossmatch"]) == 0
-    assert (tmp_path / "s2" / "index.html").exists()
+    # Every script is the site's own.
+    assert all(src.startswith("/assets/") for src in re.findall(r"<script[^>]+src=\"([^\"]+)\"", page))
 
 
 def test_round_four_polish_in_the_framed_docket():

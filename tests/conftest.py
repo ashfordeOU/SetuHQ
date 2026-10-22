@@ -97,3 +97,54 @@ def app_run(tmp_path_factory):
 def story_run(tmp_path_factory):
     """The synthetic run the story, methods, galaxy and round-6/7 tests read (built once per session)."""
     return _synthetic_run(tmp_path_factory.mktemp("storyrun"), seed=5, target="TIC STORY-1", name="story")
+
+
+def site_bundle(index_path) -> str:
+    """A built site as one text, for the tests that read the app's views: every view's markup (the shared views file),
+    then the home page, the app's data as a JSON script tag, the stylesheet and the script."""
+    from pathlib import Path
+
+    root = Path(index_path).parent
+    one = lambda pattern: next(root.glob(pattern)).read_text()  # noqa: E731
+    data = one("assets/data/app-*.json").replace("</", "<\\/")
+    return (f'<main>{one("assets/views-*.html")}</main>\n{Path(index_path).read_text()}\n'
+            f'<script id="data" type="application/json">{data}</script>\n<style>{one("assets/site-*.css")}</style>\n'
+            f'<script>{one("assets/site-*.js")}</script><script>{one("assets/app-*.js")}</script>\n'
+            f'<template id="docket-frame">{one("assets/frame/case-file-*.html")}</template>')
+
+
+_SERVERS = {}
+
+
+def served(index_path) -> str:
+    """The address of a built site served at a local domain root, as GitHub Pages serves it (a folder's index.html,
+    404.html for anything else), for the tests that drive Chromium. One server per site, for the session."""
+    import functools
+    import http.server
+    import threading
+    from pathlib import Path
+
+    root = Path(index_path).resolve().parent
+    if root not in _SERVERS:
+        class Handler(http.server.SimpleHTTPRequestHandler):
+            def log_message(self, *a):
+                pass
+
+            def send_error(self, code, message=None, explain=None):
+                nf = root / "404.html"
+                if code == 404 and nf.exists():
+                    body = nf.read_bytes()
+                    self.send_response(404)
+                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+                super().send_error(code, message, explain)
+
+        Handler.extensions_map = {**Handler.extensions_map, ".js": "text/javascript", ".json": "application/json",
+                                  ".woff2": "font/woff2", ".svg": "image/svg+xml"}
+        srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(Handler, directory=str(root)))
+        threading.Thread(target=srv.serve_forever, daemon=True).start()
+        _SERVERS[root] = f"http://127.0.0.1:{srv.server_address[1]}/"
+    return _SERVERS[root]

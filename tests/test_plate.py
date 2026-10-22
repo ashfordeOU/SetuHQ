@@ -53,7 +53,11 @@ def test_one_caption_per_candidate_each_unconfirmed(run_dir, catalog, tmp_path):
     for cid in ids:
         mine = [c for c in caps if cid in c]
         assert len(mine) == 1, cid
-        assert "unconfirmed" in mine[0]
+        rejected = 'class="word s-rej"' in mine[0] or 'class="word s-flag"' in mine[0]
+        assert ('<span class="word cand">candidate</span>' in mine[0]) != rejected, mine[0]  # only a candidate is tagged one
+    # "candidate, unconfirmed" once in the lede, not on every caption.
+    assert '<span class="hedge">Candidate, unconfirmed.</span>' in page
+    assert not any("unconfirmed" in c for c in caps)
     # One plate per star: the run's star and the two feed stars.
     assert page.count('<article class="plate"') == 3
     assert "<script" not in page  # one self-contained file, plain SVG
@@ -72,7 +76,7 @@ def test_run_captions_state_stored_values(run_dir, tmp_path):
         assert f"Marked by {r['n_reviewers']} of 2 reviewers" in cap
         if r.get("period_days"):
             assert f"Lies on a {float(r['period_days']):.3f}-day BLS period" in cap
-        assert cap.endswith("Candidate, unconfirmed.")
+        assert "unconfirmed" not in cap  # said once, in the lede
     # Each subject of the star is drawn whole, with a folded panel where it has a stored period.
     assert star["subjects"] and all(len(s["time"]) == len(s["flux"]) for s in star["subjects"])
 
@@ -81,7 +85,7 @@ def test_feed_caption_marks_archive_status_with_the_no_detection_statement():
     known = {"t_center": 10.0, "time_unit": "BTJD", "depth_ppm": 500, "duration_hours": 2, "snr": 8, "n_reviewers": 3,
              "period_days": 2.5, "n_transits": 4, "status": "known_toi"}
     cap = feed_caption(known)
-    assert "period matches a known TOI" in cap and NO_DETECTION in cap and cap.endswith("Candidate, unconfirmed.")
+    assert "period matches a known TOI" in cap and NO_DETECTION in cap and cap.endswith(".")
     assert NO_DETECTION not in feed_caption(dict(known, status="new_candidate"))
 
 
@@ -176,3 +180,23 @@ def test_plate_says_a_fallback_cross_match_was_recorded_not_fetched():
     assert text.startswith("recorded 2026-10-16 (commit 0f6dbdc) in docs/results/pi_men_crossmatch.json")
     assert "fetched" not in text and "ModuleNotFoundError: x" in text
     assert _xm_dated({"fetched_at": "2026-10-18T00:00:00+00:00"}) == "fetched 2026-10-18T00:00:00+00:00"
+
+
+def test_counts_name_each_dip_by_its_status_and_rows_lead_with_the_run_label(run_dir, catalog, tmp_path):
+    """The plates count dips, not candidates: "7 dips (5 candidates, 1 flagged, 1 rejected)", in the header, each run
+    plate's line, the river's description and each strip's label. A run dip's caption leads with its website name."""
+    from setuhq.names import dip_count
+
+    data = plate_data(run_dir, title="t", catalog_path=catalog)
+    page = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog).read_text()
+    every = [c.get("status") for s in data["stars"] for c in s["candidates"]]
+    assert f"</span> {dip_count(every)} on {len(data['stars'])} stars" in page
+    assert re.search(r'<desc id="river-d">' + re.escape(dip_count(every)) + " on ", page)
+    for s in data["stars"]:
+        if s["source"] == "run":
+            assert f"Run {s['run']} · {dip_count([c.get('status') for c in s['candidates']])} · " in page
+            for c in s["candidates"]:
+                assert c["label"] and re.search(rf'<b class="fig">\d+[a-z]+\. {re.escape(c["label"])}\.</b> <span class="sid mono">stored id {re.escape(c["candidate_id"])}\.</span>', page), c
+    assert not re.search(r"\d+ candidates? (on|by) ", page)  # every count is of dips, by status
+    assert dip_count(["passed"] * 5 + ["flagged", "rejected"]) == "7 dips (5 candidates, 1 flagged, 1 rejected)"
+    assert dip_count(["known_toi", "new_candidate"]) == "2 dips (2 candidates)"

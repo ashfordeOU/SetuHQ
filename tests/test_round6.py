@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from setuhq import docket as docket_mod
-from setuhq.app import APP_CSS, APP_JS, FRAME_BRIDGE_JS, THEME_BUTTON, LANDING_JS, build_app, build_landing
+from setuhq.app import APP_CSS, APP_JS, FRAME_BRIDGE_JS, build_app
 from setuhq.plate import build_plate
 from setuhq.report import build_report
 
@@ -84,7 +84,7 @@ def test_dark_theme_text_pairs_meet_4_5_to_1():
 
 def test_sky_names_simbad_in_its_note_and_its_pin(tmp_path):
     out = build_app(Path("runs/tess-pi-men-s1"), tmp_path / "app", title="t", catalog_path="docs/discoveries/catalog.json")
-    page = out.read_text()
+    page = (out.parent / "explore" / "index.html").read_text()
     assert ("Field stars decorative · feed stars not plotted (positions not stored) · pi Men placed from SIMBAD "
             "(ICRS J2000) · dashed: the ecliptic") in page
     pin = re.search(r'<a class="skypin"[^>]*>', page).group(0)
@@ -110,7 +110,7 @@ console.log(JSON.stringify(cases.map(c => { const v = decodeSkyView(new URLSearc
     handler = re.search(r"\$\('#route-sky'\)\.addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
     assert handler.count("syncSkyURL(true)") == 2
     go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "applySky(decodeSkyView(p.params))" in go and "syncSkyURL(false)" in go
+    assert "applySky(decodeSkyView(p.params))" in go and "syncSkyURL(false)" not in go  # the address is never rewritten on load
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node is not installed")
@@ -128,7 +128,7 @@ console.log(JSON.stringify(cases.map(c => { const v = decodeExView(new URLSearch
     assert out[5][1] == "stars=348835438,348770361"
     sync = re.search(r"function syncFeedURL\(push\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "encodeExView(currentEx())" in sync
-    handler = re.search(r"\$\('#route-explorer'\)\.addEventListener.*?\n\}\);", APP_JS, re.S).group(0)
+    handler = re.search(r"\$\('#route-explorer'\)\.addEventListener\('click', e => \{\n.*?\n\}\);", APP_JS, re.S).group(0)
     assert handler.count("syncFeedURL(true)") == 3
     go = re.search(r"function go\(p, moveFocus\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "applyEx(decodeExView(p.params))" in go
@@ -142,7 +142,8 @@ def test_collapsed_signal_buttons_name_their_dip_list():
 
 
 def test_no_built_page_loads_google_fonts(run_dir, tmp_path):  # noqa: F811
-    pages = [build_app(run_dir, tmp_path / "app", title="t"), build_landing(run_dir, tmp_path / "index.html", title="t"),
+    home = build_app(run_dir, tmp_path / "app", title="t")
+    pages = [*sorted(home.parent.rglob("*.html")),
              docket_mod.build_docket(run_dir, tmp_path / "docket", title="t"), build_plate(run_dir, tmp_path / "plate", title="t"),
              build_report(run_dir, tmp_path / "report", title="t")]
     for p in pages:
@@ -157,10 +158,14 @@ def test_archived_report_has_icon_44px_nav_and_wrapped_tables(run_dir, tmp_path)
     assert re.search(r"nav a\{[^}]*min-height:44px", page)
     for m in re.finditer(r"<table", page):
         assert "class='scroll'" in page[max(0, m.start() - 120):m.start()], page[m.start() - 120:m.start()]
-    landing = Path(build_landing(run_dir, tmp_path / "index.html", title="t")).read_text()
-    assert '<a href="report/">Full run report (archived)</a>' in landing
+    from setuhq.app import SUBNAV
+
+    assert ("Run report", "/evidence/report/", ["report"]) in SUBNAV["evidence"]  # marked current on its page
 
 
-def test_theme_control_says_dark_is_the_default():
-    assert '<span class="themelbl">Dark (default)</span>' in THEME_BUTTON and "dark (default)" in THEME_BUTTON
-    assert "dark: 'Dark (default)'" in APP_JS and "dark: 'Dark (default)'" in LANDING_JS
+def test_theme_control_is_an_icon_named_for_screen_readers():
+    from setuhq.site import SHELL_JS, _topbar
+
+    top = _topbar(None)
+    assert 'data-theme-toggle aria-label="Colour theme: dark. Switch to light"' in top and "Dark (default)" not in top
+    assert "Colour theme: ${THEME_SAY[t]}. Switch to ${THEME_SAY[next]}" in SHELL_JS

@@ -11,6 +11,8 @@ cache/
 data/raw/
 *.sqlite
 .ci-local.log
+.site-e2e.json
+node_modules/
 # Local secrets and machine state: keys stay in the environment, never in a file here.
 .env
 .env.*

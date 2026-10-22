@@ -33,6 +33,25 @@ _PREFIXES = {"sentinel": ("claude-", "sentinel-", "gpt-", "openai-", "gemini-", 
              "probe": ("volunteer-", "sim-", "probe-")}
 
 
+# SetuHQ was called exoplan before its public release, and records stored then (sweep credits, run notes) say so.
+# Pages show the current name; the records are left as stored (they are hashed).
+LEGACY_NAME = "exoplan"
+
+
+def public_name(name: str) -> str:
+    """A contributor or tool name as a page shows it: the old project name becomes SetuHQ."""
+    return "SetuHQ" if str(name).strip().lower() == LEGACY_NAME else str(name)
+
+
+def public_text(text: str) -> str:
+    """Stored prose (a validation note) as a page shows it: the old name and its source paths read as today's."""
+    import re
+
+    text = text.replace("src/exoplan/", "src/setuhq/")
+    text = re.sub(r"(['`])exoplan (?=[a-z])", r"\1setuhq ", text)  # a quoted command: 'exoplan calibrate'
+    return re.sub(r"\bexoplan\b", "SetuHQ", text)
+
+
 def provider_label(kind: str | None) -> str | None:
     """'OpenAI' for an openai Sentinel, 'Claude (Claude Code CLI)' for claude_code; None for a Probe."""
     return PROVIDER_BY_KIND.get(kind or "")
@@ -111,3 +130,27 @@ def reviewer_names(kinds: dict[str, str]) -> dict[str, dict]:
     return {rid: {"id": rid, "name": display_name(rid, k), "short": short_name(rid, k), "role": role(k) or "other",
                   "provider": provider_label(k)}
             for rid, k in kinds.items()}
+
+
+# A dip's status from its vetting outcome: only a dip that passed vetting is a candidate. A rejected dip is never
+# called one; a flagged dip is open (waiting for review). (class, tag word, full phrase.) A search-feed entry passed
+# vetting to enter the feed (discover.py), so its statuses count as candidates.
+DIP_STATE = {"passed": ("cand", "candidate", "candidate, unconfirmed"),
+             "flagged": ("open", "flagged", "flagged for review, open"),
+             "rejected": ("rej", "rejected", "rejected by vetting, not a candidate")}
+FEED_STATUSES = ("new_candidate", "known_toi")
+
+
+def dip_state(outcome: str | None) -> tuple[str, str, str]:
+    return DIP_STATE.get("passed" if outcome in FEED_STATUSES else outcome or "", DIP_STATE["flagged"])
+
+
+def dip_count(outcomes: list[str | None]) -> str:
+    """"7 dips (5 candidates, 1 flagged, 1 rejected)": a count that never calls a rejected dip a candidate."""
+    words = [dip_state(o)[1] for o in outcomes]
+    n, parts = len(words), []
+    for w, one, many in (("candidate", "candidate", "candidates"), ("flagged", "flagged", "flagged"), ("rejected", "rejected", "rejected")):
+        k = words.count(w)
+        if k:
+            parts.append(f"{k} {one if k == 1 else many}")
+    return f"{n} dip{'' if n == 1 else 's'}" + (f" ({', '.join(parts)})" if parts else "")

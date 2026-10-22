@@ -383,7 +383,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
       </section>
       <details class="card gxtablecard"><summary>View as table: the 50 nearest systems</summary>
         <div class="tablewrap" tabindex="0" role="region" aria-label="The 50 nearest systems">{nearest_table(g)}</div>
-        <p><a href="assets/data/{CSV_NAME}" download>Download every plotted planet (CSV, {c['kept']:,} rows)</a>, derived from exoplanet_map.json.</p>
+        <p><a href="/assets/data/{CSV_NAME}" download>Download every plotted planet (CSV, {c['kept']:,} rows)</a>, derived from the stored exoplanet.eu map.</p>
       </details>"""
 
 
@@ -495,13 +495,14 @@ GALAXY_CSS = r"""
 .gxtime input{flex:1 1 240px;min-width:0;min-height:44px;accent-color:#0A84FF}
 .gxtime output{font-size:14px;min-width:150px}
 .covchips .chip i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px}
-.covchips .chip[aria-pressed="false"]{opacity:.6}
+.covchips .chip[aria-pressed="false"] i{opacity:.4}
 .covpanel{display:grid;gap:10px}
 .covpanel h3{margin:6px 0 0;font-size:15px}
 .covpanel p{margin:0}
 .gxmethods .chip i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
 .gxmethods .chip .mono{color:var(--ink-3);margin-left:6px;font-size:12px}
-.gxmethods .chip[aria-pressed="false"]{opacity:.55}
+.gxmethods .chip[aria-pressed="true"] .mono{color:inherit}
+.gxmethods .chip[aria-pressed="false"]{color:var(--ink-3)}
 .gxmethods .chip[aria-pressed="false"] i{background:transparent!important;box-shadow:inset 0 0 0 1px var(--ink-3)}
 .gxrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .gxsel{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
@@ -660,7 +661,7 @@ const gxRM = window.matchMedia('(prefers-reduced-motion: reduce)');
 const gxPhone = window.matchMedia('(max-width: 699.98px)');
 // The map's arrays live in assets/data/galaxy.json (same origin), fetched on the first visit.
 function gxLoad(){
-  if (!gx.loading) gx.loading = fetch('assets/data/galaxy.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(G => { gx.G = G; return G; });
+  if (!gx.loading) gx.loading = fetch('/assets/data/galaxy.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(G => { gx.G = G; return G; });
   return gx.loading;
 }
 const gxFmt = (x, d) => x == null ? '—' : x.toLocaleString('en-GB', {maximumFractionDigits: d, minimumFractionDigits: 0});
@@ -1186,8 +1187,8 @@ function gxSelect(h, planet){
   gx.hud = null; gx.cards = null;
   if (h < 0){ card.hidden = true; gxKick(); return; }
   const ps = gxHostPlanets(h), star = G.star;
-  const lensNote = ps.some(i => G.methods[P.m[i]] === 'microlensing') ? '<p>Found by microlensing; the distance comes from a model of the event. <a href="#/methods?ch=microlensing">How microlensing works ›</a></p>' : '';
-  const exo = star.host === h ? `<p>SetuHQ's run reviewed this star's TESS light curve: ${esc(star.planet || '')} is the planet it recovered. <a href="#/transit${star.lead_dip ? '?dip=' + encodeURIComponent(star.lead_dip) : ''}">Open the Transit case ›</a></p>` : '';
+  const lensNote = ps.some(i => G.methods[P.m[i]] === 'microlensing') ? '<p>Found by microlensing; the distance comes from a model of the event. <a href="' + R('#/methods?ch=microlensing') + '">How microlensing works ›</a></p>' : '';
+  const exo = star.host === h ? `<p>SetuHQ's run reviewed this star's TESS light curve: ${esc(star.planet || '')} is the planet it recovered. <a href="${R(`#/transit${star.lead_dip ? '?dip=' + encodeURIComponent(star.lead_dip) : ''}`)}">Open the Transit case ›</a></p>` : '';
   card.innerHTML = `<button class="btn x" type="button" aria-label="Close">×</button><h3>${esc(H.n[h])}</h3>
     <p class="mono">${gxLy(H.d[h])} ly · ${gxFmt(H.d[h], 3)} pc · RA ${gxFmt(H.ra[h], 3)}° Dec ${gxFmt(H.dec[h], 3)}° · V ${H.v[h] == null ? '—' : gxSig(H.v[h])}</p>
     <p>${G.host_n[h]} planet${G.host_n[h] === 1 ? '' : 's'} in ${esc(G.source_short)}${G.host_n[h] > gx.per[h] ? `, ${gx.per[h]} shown by the filters` : ''}.</p>
@@ -1303,7 +1304,7 @@ function applyGalaxy(v){
 function gxFocus(name){
   const h = gx.G.hosts.n.indexOf(name), note = $('#gxfocusnote');
   note.hidden = h >= 0;
-  if (h < 0){ note.innerHTML = `No star “${esc(name)}” on the map (no stored distance or not in the catalogue). <a href="#/catalogue?q=${encodeURIComponent(name)}">Search the Catalogue ›</a>`; return; }
+  if (h < 0){ note.innerHTML = `No star “${esc(name)}” on the map (no stored distance or not in the catalogue). <a href="${R(`#/catalogue?q=${encodeURIComponent(name)}`)}">Search the Catalogue ›</a>`; return; }
   gxSelect(h); gxFly(Object.assign(gxHostCam(h), {dist: 140}), 2400);
 }
 function syncGalaxyURL(push){ if (current !== 'galaxy' || !gx.view) return; const q = encodeGalaxyView(gx.view); setHash('#/galaxy' + (q ? '?' + q : ''), !!push); }
@@ -1312,7 +1313,7 @@ function renderGalaxy(){
   if (!GXM) return;
   const note = $('#gxload'); note.hidden = false;
   gxLoad().then(() => { note.hidden = true; gxStart(); gxShown(gxWanted()); }).catch(() => {
-    note.textContent = 'The map data (assets/data/galaxy.json) could not be loaded here. The table below lists the nearest systems, and the CSV holds every plotted planet.';
+    note.textContent = 'The map data could not be loaded here. The table below lists the nearest systems, and the CSV holds every plotted planet.';
   });
 }
 function gxStart(){
@@ -1630,7 +1631,7 @@ def coverage_panel(cov: dict | None, g: dict | None) -> str:
                         f"<td class='num'>{r['p90_ly']:,}</td></tr>" for m, r in cov["reach"].items())
     return f"""<section class="card covpanel" aria-labelledby="h-cov">
         <h2 id="h-cov">Where we have looked</h2>
-        <p class="muted">The cloud's shape is where surveys looked and what each method can see, not where planets are. {e(cov['tess_rule'])} {e(cov['method'])} Catalogue hosts: {h['all']:,} stars in exoplanet_map.json, each tested at its own position. {e(cov['gaia'])}</p>
+        <p class="muted">The cloud's shape is where surveys looked and what each method can see, not where planets are. {e(cov['tess_rule'])} {e(cov['method'])} Catalogue hosts: {h['all']:,} stars in the stored exoplanet.eu map, each tested at its own position. {e(cov['gaia'])}</p>
         <div class="tablewrap" tabindex="0" role="region" aria-label="Survey coverage"><table class="gxtable"><thead><tr><th scope="col">Footprint</th><th scope="col" class="num">Sky</th><th scope="col" class="num">Square degrees</th><th scope="col" class="num">Catalogue hosts inside</th><th scope="col">Source</th></tr></thead><tbody>{body}</tbody></table></div>
         <h3>How far each method reaches in this catalogue</h3>
         <p class="muted">Distances of the stars each method found planets around, from the dataset: half lie within the median, nine in ten within the 90th percentile. Microlensing distances are model-dependent.</p>

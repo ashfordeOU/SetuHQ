@@ -20,7 +20,7 @@ import html
 import json
 from pathlib import Path
 
-from setuhq.names import ATTRIBUTION
+from setuhq.names import ATTRIBUTION, public_name
 from setuhq.variables import LS_EDGE_FRACTION
 
 DEFAULT_SWEEP = "docs/sweep/catalogue.json"
@@ -50,7 +50,7 @@ def _slice_line(src: dict) -> str:
     sen, prb = bool(kinds & {"claude", "claude_code"}), bool(kinds & {"simulated"})
     who = "Probes and Sentinels" if sen and prb else "Sentinels only" if sen else "Probes only"
     return (f"Sector {src['sector']}: {src.get('searched', 0):,} of the {src.get('targets_in_sector') or 0:,} SPOC 2-minute targets "
-            f"searched ({who}; by {src['name']})")
+            f"searched ({who}; by {public_name(src['name'])})")
 
 
 def class_view(cat: dict) -> dict:
@@ -96,7 +96,7 @@ def sweep_meta(cat: dict | None, catalogue: dict | None = None, path: str = DEFA
             "noise_text": NOISE_LIKE, "sky_found_classes": sorted(real),
             "sources": cat.get("sources") or [], "contributors": cat.get("contributors") or [],
             "slices": [_slice_line(s) for s in cat.get("sources") or []], "tic_names": names, "sky": sky, "n_sky": len(sky),
-            "sorts": [k for k, _ in SORTS], "sort_labels": dict(SORTS), "json": VARIABLES_JSON, "coherence": coherence}
+            "sorts": [k for k, _ in SORTS], "sort_labels": dict(SORTS), "json": "/" + VARIABLES_JSON, "coherence": coherence}
 
 
 def sweep_payload(meta: dict) -> dict:
@@ -163,9 +163,22 @@ def overview_counter(meta: dict | None, app_href: str = "") -> str:
         <p class="muted">Every star searched, every dip kept and classified, nothing thrown away. So far: {slices}. A first slice, not the sky.</p>
         <div class="sweeptiles" role="list" aria-label="Sweep figures">{tiles}</div>
         <ul class="sweepcls" aria-label="Catalogue entries by class, each against its null">{rows}</ul>
-        <p class="small">Read from {e(meta['path'])} (built {e(meta['generated_at'][:16].replace('T', ' '))} UTC); nothing is extrapolated. {f"Each class is set against its own null on the same {n_null:,} star-sectors (what its rule finds where its signal cannot be; the rules table says which). " + (f"In this slice only {e(', '.join(real))} {'exceeds its null' if len(real) == 1 else 'exceed their nulls'}; the rest are {e(NOISE_LIKE)}. "
+        <p class="small">Read from the sweep's committed catalogue (built {e(meta['generated_at'][:16].replace('T', ' '))} UTC); nothing is extrapolated. {f"Each class is set against its own null on the same {n_null:,} star-sectors (what its rule finds where its signal cannot be; the rules table says which). " + (f"In this slice only {e(', '.join(real))} {'exceeds its null' if len(real) == 1 else 'exceed their nulls'}; the rest are {e(NOISE_LIKE)}. "
        if real else f"In this slice no class exceeds its null: every one is {e(NOISE_LIKE)}. ") if n_null else ""}No entry is a new planet.</p>
       </section>"""
+
+
+def sweep_line(meta: dict | None) -> str:
+    """The home page's one plain sentence about the sweep, with a link to the figures behind it."""
+    if not meta:
+        return ""
+    c = meta["counts"]
+    labels = {k["id"]: k["label"] for k in meta["classes"]}
+    real = [labels[k].lower() for k in meta["order"] if k not in meta["noise_like"] and k != "unclassified"]
+    found = (f"{', '.join(real)} {'stands' if len(real) == 1 else 'stand'} out above chance so far" if real
+             else "nothing yet stands out above chance")
+    return (f'<p class="sweepline">We have searched {c["stars_searched"]:,} stars for anything that dims; {found}. '
+            f'<a href="#/variables">See the evidence ›</a></p>')
 
 
 def sky_layer_svg(meta: dict | None) -> str:
@@ -229,7 +242,7 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
     unc = (c.get("null") or {}).get("uncompared") or {}
     uncompared = ("Not compared, for want of a null of the same kind: "
                   + ", ".join(f"{n:,} {labels[k]['label'].lower()} entries of another kind" for k, n in unc.items()) + ".") if unc else ""
-    contributors = "".join(f'<li><b>{e(x["name"])}</b> <span class="muted">{x["star_sectors"]:,} star-sectors'
+    contributors = "".join(f'<li><b>{e(public_name(x["name"]))}</b> <span class="muted">{x["star_sectors"]:,} star-sectors'
                            + (f' · attested by {e(", ".join(x["attested_by"]))}' if x.get("attested_by") else "")
                            + (f' · {x["duplicates_not_credited"]:,} identical re-submissions not credited' if x.get("duplicates_not_credited") else "")
                            + (f' · {x["superseded"]:,} earlier searches since replaced by a later one (kept as provenance)' if x.get("superseded") else "")
@@ -273,7 +286,7 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
         <div class="ctbar"><p class="mono" id="vacount" role="status" aria-live="polite">Loading the sweep catalogue…</p>
           <button class="btn" type="button" id="vareset">Clear filters</button>
           <button class="btn" type="button" id="vacsv">Download CSV of this view</button>
-          <a class="btn" href="{VARIABLES_JSON}" download="setuhq-everything-that-dims.json">Download the catalogue (JSON)</a></div>
+          <a class="btn" href="/{VARIABLES_JSON}" download="setuhq-everything-that-dims.json">Download the catalogue (JSON)</a></div>
       </section>
       <section class="card vaobj" id="vaobj" aria-labelledby="h-vaobj" hidden><h2 id="h-vaobj" tabindex="-1">TIC</h2><div id="vaobjbody"></div></section>
       <div class="valist" id="valist" aria-label="Entries"></div>
@@ -427,7 +440,7 @@ function vaSort(rows, key){
   return rows.slice().sort((a, b) => { const x = by(a), y = by(b); for (let i = 0; i < x.length; i++){ if (x[i] < y[i]) return -1; if (x[i] > y[i]) return 1; } return 0; });
 }
 const vaNum = (x, d) => x === null || x === undefined ? '—' : Number(x).toLocaleString('en-GB', {maximumFractionDigits: d, minimumFractionDigits: d});
-const vaTicHref = (tic, id) => `#/variables?tic=${tic}` + (id ? '&id=' + encodeURIComponent(id) : '');
+const vaTicHref = (tic, id) => R(`#/variables?tic=${tic}` + (id ? '&id=' + encodeURIComponent(id) : ''));
 function vaFigures(e){
   const bits = e.kind === 'variability' ? ['whole sector'] : [`${esc(e.time_unit || 'BTJD')} ${vaNum(e.t_center, 3)}`];
   if (e.kind === 'variability') bits.push(`period ${vaNum(e.period_days, 4)} d`, `semi-amplitude ${vaNum(e.amplitude_ppm, 0)} ppm`);
@@ -438,7 +451,9 @@ function vaFigures(e){
   }
   return bits.join(' · ');
 }
-function vaCredit(e){ return `<p class="vacredit">Searched by ${(e.credit || []).map(c => `<b>${esc(c.name)}</b>`).join(', ') || 'not stored'}</p>`; }
+// The old project name in stored credits reads as SetuHQ (names.public_name).
+const PUB = n => /^\s*exoplan\s*$/i.test(String(n)) ? 'SetuHQ' : String(n);
+function vaCredit(e){ return `<p class="vacredit">Searched by ${(e.credit || []).map(c => `<b>${esc(PUB(c.name))}</b>`).join(', ') || 'not stored'}</p>`; }
 function vaDetail(e){
   const kind = Object.fromEntries((e.panel || []).map(p => [p.id, p.kind]));
   const w = e.weights || {};
@@ -470,16 +485,16 @@ function vaObject(tic, id){
   box.hidden = false;
   const name = (VA.tic_names || {})[tic];
   $('#h-vaobj').textContent = `TIC ${tic}` + (name ? ` · ${name}` : '');
-  if (!cov.length){ $('#vaobjbody').innerHTML = `<p>TIC ${tic} is not in the sweep yet.</p><div class="pllinks"><a class="vaall" href="#/variables">All entries ›</a></div>`; return; }
+  if (!cov.length){ $('#vaobjbody').innerHTML = `<p>TIC ${tic} is not in the sweep yet.</p><div class="pllinks"><a class="vaall" href="${R(`#/variables`)}">All entries ›</a></div>`; return; }
   const r = cov[0], rej = r.rejected || {};
   const dl = [['Position (RA, Dec)', r.ra !== null && r.ra !== undefined ? `${vaNum(r.ra, 3)}°, ${vaNum(r.dec, 3)}°` : 'not stored'], ['TESS magnitude', vaNum(r.tmag, 2)],
-    ['Sectors searched', cov.filter(x => x.status === 'searched').map(x => x.sector).join(', ') || 'none'], ['Searched by', cov.flatMap(x => x.searched_by).join(', ') || '—'],
+    ['Sectors searched', cov.filter(x => x.status === 'searched').map(x => x.sector).join(', ') || 'none'], ['Searched by', cov.flatMap(x => x.searched_by).map(PUB).join(', ') || '—'],
     ['Light-curve points', vaNum(r.n_points, 0)], ['Consensus dips', vaNum(r.n_dips, 0)],
     ['Rejected', `${rej.below_consensus ?? 0} mark clusters below consensus · ${rej.failed_vetting ?? 0} dips failed vetting`],
     ['Known TOIs on this TIC', (r.tois || []).map(t => `${t.toi}${t.disposition ? ' (' + t.disposition + ')' : ''}`).join(', ') || 'none in the cached TOI table']];
   $('#vaobjbody').innerHTML = `<dl class="vaobjgrid">${dl.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`
     + (name ? `<div class="pllinks">${objLink('star', name, name + ' in the planet catalogue ›')}</div>` : '')
-    + `<p class="small">${es.length} entr${es.length === 1 ? 'y' : 'ies'} below, every one shown. Light curve sha256 <span class="mono">${esc(r.file_sha256 || 'not stored')}</span>.</p><div class="pllinks"><a class="vaall" href="#/variables">All entries ›</a></div>`;
+    + `<p class="small">${es.length} entr${es.length === 1 ? 'y' : 'ies'} below, every one shown. Light curve sha256 <span class="mono">${esc(r.file_sha256 || 'not stored')}</span>.</p><div class="pllinks"><a class="vaall" href="${R(`#/variables`)}">All entries ›</a></div>`;
 }
 function vaApply(){
   if (!va.E || !va.view) return;
@@ -539,7 +554,7 @@ function applyVariables(v){ va.view = v; if (va.rendered) vaApply(); }
 function vaSearch(q){
   if (!VA) return [];
   const out = [];
-  for (const c of VA.classes) if (c.label.toLowerCase().includes(q)) out.push({kind: 'class', label: c.label, sub: `${VA.counts.by_class[c.id].toLocaleString('en-GB')} in the sweep`, href: '#/variables?class=' + c.id});
+  for (const c of VA.classes) if (c.label.toLowerCase().includes(q)) out.push({kind: 'class', label: c.label, sub: `${VA.counts.by_class[c.id].toLocaleString('en-GB')} in the sweep`, href: R('#/variables?class=' + c.id)});
   const d = q.replace(/^tic\s*/, '');
   if (va.C && /^\d{2,}$/.test(d)){
     let n = 0;
@@ -558,7 +573,7 @@ function vaForStar(salt){
     const hit = tics.filter(t => va.cov[t]);
     if (!hit.length) return;
     $('#stsweepbody').innerHTML = hit.map(t => { const es = va.byTic[t] || [], r = va.cov[t][0];
-      return `<p><a href="${vaTicHref(t)}">TIC ${t} in the sweep ›</a> ${es.length} entr${es.length === 1 ? 'y' : 'ies'} (${es.map(e => VA_LABEL[e.class]).filter((x, i, a) => a.indexOf(x) === i).join(', ') || 'none'}); searched by ${esc(va.cov[t].flatMap(x => x.searched_by).join(', '))}, sector ${va.cov[t].map(x => x.sector).join(', ')}.</p>`; }).join('');
+      return `<p><a href="${vaTicHref(t)}">TIC ${t} in the sweep ›</a> ${es.length} entr${es.length === 1 ? 'y' : 'ies'} (${es.map(e => VA_LABEL[e.class]).filter((x, i, a) => a.indexOf(x) === i).join(', ') || 'none'}); searched by ${esc(va.cov[t].flatMap(x => x.searched_by).map(PUB).join(', '))}, sector ${va.cov[t].map(x => x.sector).join(', ')}.</p>`; }).join('');
     box.hidden = false;
   }).catch(() => {});
 }

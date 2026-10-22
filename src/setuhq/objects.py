@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
-"""One object model: every planet and star has one canonical page, #/planet/<slug> or #/star/<slug>.
+"""One object model: every planet and star has one canonical page, /planets/<slug>/ or /stars/<slug>/.
 
 The page's objSlug (app.py) applies the same rule, and the tests check that every name in the catalogue
 gives its stored slug either way, so any view can link a name without loading the catalogue.
@@ -19,11 +19,11 @@ def slugify(name: str) -> str:
 
 
 def planet_href(name: str) -> str:
-    return "#/planet/" + slugify(name)
+    return "/planets/" + slugify(name) + "/"
 
 
 def star_href(name: str) -> str:
-    return "#/star/" + slugify(name)
+    return "/stars/" + slugify(name) + "/"
 
 
 def obj_link(kind: str, name: str, label: str | None = None, cls: str = "") -> str:
