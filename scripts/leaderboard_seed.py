@@ -3,11 +3,11 @@
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Seed the real-TOI leaderboard with SetuHQ's own configurations, from stored results only.
 
-    python scripts/leaderboard_seed.py --cache /path/to/cache/bench
+    python scripts/leaderboard_seed.py --cache /path/to/cache/bench_clipfix
     # writes docs/leaderboard/{tuning_inputs.json, submissions/*.json}
 
 Nothing is re-run. A submission lists detected events, and the leaderboard does the scoring, so the entries are
-built from the benchmark's stored per-star outputs (the gitignored ``cache/bench``):
+built from the benchmark's stored per-star outputs (the gitignored ``cache/bench_clipfix``, the re-run on the current code):
 
 * the Probes: every consensus event of the real, inverted and scrambled runs (``<tic>/<curve>/candidates.json``:
   mid-time, duration, BLS period, whether it passed vetting, and its flags);
@@ -15,7 +15,7 @@ built from the benchmark's stored per-star outputs (the gitignored ``cache/bench
   when the persona labelled the subject a potential planet. The Sentinels were never run on the controls.
 
 Before writing, the script scores the entries with the leaderboard and checks that the outcomes equal the per-star
-rows committed in docs/results/benchmark_real_tois.json (Probes) and the committed per-persona totals and agreement
+rows committed in docs/results/benchmark_real_tois_clipfix.json (Probes) and the committed per-persona totals and agreement
 (Sentinels); it stops if anything differs. The Probes + Sentinels combinations are derived by the leaderboard
 itself (``leaderboard.DERIVED``). Once written, the submissions are committed, so scoring needs no cache.
 """
@@ -44,9 +44,13 @@ def _sha(path: Path) -> str:
 
 def _event(c: dict) -> dict:
     flags = c["flags"].split(";") if isinstance(c["flags"], str) else list(c["flags"] or [])
+    # Only the vetting vocabulary the leaderboard scores (L.FLAGS). The extended (DV-style) vetting flags the current
+    # code adds (secondary_any_phase, odd_even_depth, odd_even_timing, timing_inconsistent, crowded) only add
+    # information by default (decide = false: they never change pass/fail), and the benchmark's scoring does not
+    # read them, so they are not submitted.
     e = {"t_center": round(float(c["t_center"]), 6), "duration_hours": round(float(c["duration_hours"]), 6),
          "period_days": round(float(c["period_days"]), 8) if c.get("period_days") else None,
-         "passed": bool(c["passed"]), "flags": [f for f in flags if f]}
+         "passed": bool(c["passed"]), "flags": [f for f in flags if f in L.FLAGS]}
     if c.get("snr") is not None:
         e["snr"] = round(float(c["snr"]), 4)
     return e
@@ -121,6 +125,11 @@ def check(subs: dict, sample: dict, benchmark: dict) -> None:
 def submission(sid, name, kind, scope, method, preds, sources, benchmark, inputs_hash, sample) -> dict:
     prov = benchmark["code_provenance"]
     ta = benchmark["threshold_audit"]
+    tuning = (f"none: no threshold changed after the sample was frozen (threshold audit: {ta['values_checked']} values, frozen "
+              f"after {ta['frozen_after']}, clean = {ta['clean']})" if ta["clean"] else
+              f"none: nothing was tuned on this sample; the threshold audit ({ta['values_checked']} values, frozen after "
+              f"{ta['frozen_after']}) lists each value changed since with its reason, none chosen on held-out results"
+              + (f" ({len(ta.get('unexplained') or {})} not explained)" if ta.get("unexplained") else ""))
     return {"format": L.FORMAT, "id": sid, "name": name, "kind": kind, "submitter": "exoplan (seeded entry)",
             "sample_sha256": sample["sha256"], "inputs_sha256": inputs_hash, "tuned_on": "none", "scope": scope,
             "provenance": {
@@ -128,16 +137,15 @@ def submission(sid, name, kind, scope, method, preds, sources, benchmark, inputs
                 "code_version": (f"benchmark report from commit {benchmark['code_commit'][:7]}; pipeline code fingerprints "
                                  + ", ".join(f"{fp} = commit {c}" for fp, c in prov["commit"].items())),
                 "generated_from": sources,
-                "tuning": (f"none: no threshold changed after the sample was frozen (threshold audit: {ta['values_checked']} "
-                           f"values, frozen after {ta['frozen_after']}, clean = {ta['clean']})"),
+                "tuning": tuning,
                 "seeded_by": "scripts/leaderboard_seed.py"},
             "predictions": preds}
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--cache", type=Path, default=ROOT / "cache/bench",
-                    help="the benchmark's per-star outputs (cache/bench), with sentinels.json")
+    ap.add_argument("--cache", type=Path, default=ROOT / "cache/bench_clipfix",
+                    help="the benchmark's per-star outputs (cache/bench_clipfix), with sentinels.json")
     args = ap.parse_args(argv)
     if not args.cache.exists():
         raise SystemExit(f"{args.cache} not found: the committed submissions are kept as they are.")
@@ -145,19 +153,20 @@ def main(argv=None) -> int:
     benchmark = json.loads(L.BENCHMARK.read_text())
     inputs_hash = L.write_inputs(sample)
     held, sub40 = L.scope_tois(sample, "held_out"), L.sentinel_subsample(benchmark)
-    bsrc = {"file": "docs/results/benchmark_real_tois.json", "sha256": _sha(L.BENCHMARK), "rows": "per_star (checked)"}
-    pmethod = ("The three Probes (Sensitive, Typical, Cautious) with their calibrated weights, sector-wide BLS, "
+    bsrc = {"file": str(L.BENCHMARK.relative_to(ROOT)), "sha256": _sha(L.BENCHMARK), "rows": "per_star (checked)"}
+    pmethod = ("The three Probes (Sensitive, Typical, Cautious) with their frozen calibrated weights, sector-wide BLS, "
                "light-curve vetting and the limb-darkened fit, on each star's first SPOC 2-minute sector, as in the "
-               "benchmark report; every consensus event on the real and control curves. No FAP rule.")
+               "benchmark report; every consensus event on the real and control curves, with its light-curve vetting flags "
+               "(the extended-vetting flags, which never change pass/fail by default, are left out). No FAP rule.")
     preds, (digest, nfiles) = probe_predictions(args.cache, benchmark, held)
-    csrc = {"file": "cache/bench/<tic>/{real,inverted,scrambled}/candidates.json (gitignored)",
+    csrc = {"file": f"{args.cache.name and 'cache/' + args.cache.name}/<tic>/{{real,inverted,scrambled}}/candidates.json (gitignored)",
             "sha256": digest, "rows": f"{nfiles} files; sha256 over their sha256s in sample order"}
     subs = {"probes": submission("probes", "Probes only", "probes", "held_out", pmethod, preds, [csrc, bsrc], benchmark,
                                  inputs_hash, sample)}
     keep = set(sub40)
     subs["probes-subsample"] = submission(
         "probes-subsample", "Probes only", "probes", "sentinel_subsample",
-        pmethod + " Restricted to the Sentinels' 40-star subsample, to compare like with like.",
+        pmethod + " Restricted to the Sentinels' subsample, to compare like with like.",
         sorted([p for p in preds if p["toi"] in keep], key=lambda p: sub40.index(p["toi"])), [csrc, bsrc], benchmark,
         inputs_hash, sample)
     spath = args.cache / "sentinels.json"
@@ -165,14 +174,17 @@ def main(argv=None) -> int:
         cache = json.loads(spath.read_text())
         if cache["subsample"] != sub40:
             raise SystemExit("the Sentinel cache's subsample is not the committed one. Not writing.")
-        ssrc = {"file": "cache/bench/sentinels.json (gitignored)", "sha256": _sha(spath),
+        ssrc = {"file": f"cache/{args.cache.name}/sentinels.json (gitignored)", "sha256": _sha(spath),
                 "rows": "per star and subject: the persona's label and marks"}
         sp = sentinel_predictions(cache, sample, sub40)
         for p, label in (("claude-volunteer", "Sentinel · Volunteer alone"), ("claude-skeptic", "Sentinel · Skeptic alone")):
             subs[p] = submission(p, label, "sentinel", "sentinel_subsample",
                                  f"One Sentinel persona ({p.split('-')[1]}) through the Claude Code CLI on every 13-day subject "
                                  "of the star's real light curve; each mark is an event, passed when the persona called the "
-                                 "subject a potential planet. Not run on the controls.", sp[p], [ssrc, bsrc], benchmark,
+                                 "subject a potential planet. Not run on the controls."
+                                 + (f" The answers are the first run's, stored, reused on the {len(cache['subsample'])} stars "
+                                    "whose subject images are byte-identical on the current code; no Sentinel was asked again."
+                                    if cache.get("carried") else ""), sp[p], [ssrc, bsrc], benchmark,
                                  inputs_hash, sample)
     else:
         print(f"{spath} not found: the committed Sentinel submissions are kept as they are.")

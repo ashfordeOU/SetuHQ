@@ -27,10 +27,10 @@
         "pi-men-dark.svg"
       ],
       "sources": {
-        "runs/tess-pi-men-s1": "caebf4dfda9f42dd01db47799a5ffae0a8545628bcca081c3d3ed117cba4bee8",
+        "runs/tess-pi-men-s1": "bb9176770fdecbf8f316c2aa9906785b9f3562de3deab559b4d92ef1d22e5859",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "87810d7"
+      "commit": "5f8978f"
     },
     "benchmark": {
       "files": [
@@ -38,11 +38,11 @@
         "benchmark-dark.svg"
       ],
       "sources": {
-        "docs/results/benchmark_real_tois.json": "2688f1668136273a84762cb00a06de15504f9b553e5b5c63d70e68fd5d892138",
+        "docs/results/benchmark_real_tois_clipfix.json": "fb928c4e0de189c69c85c9f064de7bbc625757b303cb0b52705079d3c4487944",
         "docs/paper/references.json": "0b1742b0fd5e4b5e4bb401f4acb7ea6b8b9534b334dc69781ec22de89928d113",
         "docs/results/benchmark_toi_sample.json": "b0ac192b2363be04579c856e82f275ec4a451f0566e83f4ef87c4287c4fe39f7"
       },
-      "commit": "8dde211"
+      "commit": "c72b2fb"
     },
     "feed-noise": {
       "files": [
@@ -50,9 +50,9 @@
         "feed-noise-dark.svg"
       ],
       "sources": {
-        "docs/results/benchmark_real_tois.json": "2688f1668136273a84762cb00a06de15504f9b553e5b5c63d70e68fd5d892138"
+        "docs/results/benchmark_real_tois_clipfix.json": "fb928c4e0de189c69c85c9f064de7bbc625757b303cb0b52705079d3c4487944"
       },
-      "commit": "8dde211"
+      "commit": "c72b2fb"
     },
     "sky-coverage": {
       "files": [
@@ -70,11 +70,11 @@
         "flow-pipeline-dark.svg"
       ],
       "sources": {
-        "runs/tess-pi-men-s1": "caebf4dfda9f42dd01db47799a5ffae0a8545628bcca081c3d3ed117cba4bee8",
+        "runs/tess-pi-men-s1": "bb9176770fdecbf8f316c2aa9906785b9f3562de3deab559b4d92ef1d22e5859",
         "configs/tess_pi_men_s1.toml": "ecc1bf3a744ca6aea3199135cbb9f907b5203d13a047bb608305dc530a0c968b",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "87810d7"
+      "commit": "5f8978f"
     },
     "architecture": {
       "files": [
@@ -82,11 +82,11 @@
         "architecture-dark.svg"
       ],
       "sources": {
-        "docs/threshold_sweep.json": "56b5661ec49a113ed59d5663fb3fb07c03e013a20667a12abd712fd07db0134e",
+        "docs/threshold_sweep.json": "d3d8fb4fc907ddf12015486f98b83ab4c0e78102b729cefd5d42b87c2a6ac939",
         "docs/results/exoplanet_map.json": "949a62e97e0ba84eb55c1a7675b8e6b065e519de43e2dcdc79a49761707dd56e",
-        "docs/results/benchmark_real_tois.json": "2688f1668136273a84762cb00a06de15504f9b553e5b5c63d70e68fd5d892138"
+        "docs/results/benchmark_real_tois.json": "e20c7fb812a60f4e119857eb996cf83fdcc3bda3ba5f86a4225be0510b595b4e"
       },
-      "commit": "8dde211"
+      "commit": "8bee5cc"
     },
     "methods-strip": {
       "files": [
@@ -123,7 +123,7 @@
   },
   "repo_counts": {
     "modules": 49,
-    "tests": 733,
+    "tests": 737,
     "network": 2,
     "slow": 4,
     "chapters": 15,

@@ -926,9 +926,9 @@ def pimen_data() -> dict:
                        "dur": c["duration_hours"]})
     jf = v["joint_fit"]
     cad = float(np.median(np.diff(t)))
-    weights = load_json("runs/tess-pi-men-s1/manifest.json")["weights"]
+    manifest = load_json("runs/tess-pi-men-s1/manifest.json")
     return {"v": v, "t": t, "f": fl, "subs": subs, "marks": marks, "events": events, "jf": jf, "cad": cad, "cands": cands,
-            "sentinel_rows": sentinel_rows, "weights": weights, "commit": commit_of(*PIMEN_SRC)}
+            "sentinel_rows": sentinel_rows, "weights": manifest["weights"], "manifest": manifest, "commit": commit_of(*PIMEN_SRC)}
 
 
 def pimen_desc(d: dict) -> str:
@@ -1056,7 +1056,9 @@ def pimen(t: dict, d: dict) -> Svg:
 # Benchmark: completeness by radius, with Wilson intervals and the published references
 # --------------------------------------------------------------------------------------
 
-BENCH_SRC = "docs/results/benchmark_real_tois.json"
+# The benchmark on the current code (the re-run after the two fixes); the first run, on the pre-fix code, stays in
+# docs/results/benchmark_real_tois.json as the historical record.
+BENCH_SRC = "docs/results/benchmark_real_tois_clipfix.json"
 BENCH_REFS = "docs/paper/references.json"   # the published reference values, as the methods paper's claims read them
 BENCH_SAMPLE = "docs/results/benchmark_toi_sample.json"
 
@@ -1121,8 +1123,18 @@ def bench_data() -> dict:
     ]
     for c in cmp_:
         c["verdict"] = _verdict(c["ours"], c["ref"])
-    return {"b": b, "h": h, "u": b["summary_unaffected"]["held_out"], "refs": rf, "cmp": cmp_,
+    first = (b.get("against_first_run") or {}).get("rows", [{}])[0].get("first")
+    return {"b": b, "h": h, "u": b["summary_unaffected"]["held_out"], "first": first, "refs": rf, "cmp": cmp_,
             "commit": commit_of(BENCH_SRC, BENCH_REFS, BENCH_SAMPLE)}
+
+
+def first_run_text(d: dict) -> str:
+    """The comparison line under the headline: the first run on the pre-fix code, or the stars the bug exposed left out."""
+    if d.get("first"):
+        f_ = d["first"]
+        return f"first run, pre-fix code: {pct(f_['rate'])} ({f_['k']}/{f_['n']})"
+    uc = d["u"]["completeness"]
+    return f"without the stars exposed to the known clipping bug {pct(uc['rate'])} ({uc['k']}/{uc['n']})"
 
 
 def _and(items: list[str]) -> str:
@@ -1137,11 +1149,16 @@ def bench_verdict(d: dict) -> str:
         if sel:
             parts.append(f"SetuHQ is {word} {_and([c['name'] for c in sel])} ("
                          + ("the interval excludes it" if len(sel) == 1 else "each interval excludes the reference") + ")")
-    cons = [c for c in d["cmp"] if c["verdict"] == "consistent"]
-    if cons:
-        parts.append(f"consistent with {_and([c['name'] for c in cons])} ("
-                     + _and([f"{c['ours']['n']} stars" for c in cons]) + ": the interval includes it)")
+    for c in [c for c in d["cmp"] if c["verdict"] == "consistent"]:
+        o, ref = c["ours"], c["ref"]
+        diff = 100 * (o["rate"] - ref)
+        where = c["name"].split("rate ", 1)[1] if "rate " in c["name"] else ""
+        parts.append(f"not distinguishable from {c['who']}'s {c['ref_text']} {where} ({pct(o['rate'])}, {pct(o['lo'])}–"
+                     f"{pct(o['hi'])} over {o['n']} stars; a {abs(diff):.0f}-point {'lower' if diff < 0 else 'higher'} "
+                     "estimate the interval cannot resolve)")
     s = "; ".join(parts) + "."
+    if any(c["who"] == "Planet Hunters TESS" for c in d["cmp"]):
+        s += " Planet Hunters TESS's rates carry their own uncertainty and come from sectors 1 to 26."
     return s[0].upper() + s[1:]
 
 
@@ -1169,13 +1186,11 @@ def bench_desc(d: dict) -> str:
                     for i, x in enumerate(h["completeness_by_radius"]))
     per = "; ".join(f"{x['bin'][0]:g}–{x['bin'][1]:g} d: {_pct_ci(x)}" for x in h["completeness_by_period"])
     cmps = "; ".join(f"{c['bin']}: SetuHQ {_pct_ci(c['ours'])} against {c['who']} {c['ref_text']} ({c['note']})" for c in d["cmp"])
-    uc = u["completeness"]
     return (f"Blind benchmark on {b['stars_run']} real TESS Objects of Interest (NASA Exoplanet Archive TOI table, fetched "
             f"{b['sample']['fetched_at'][:10]}, seed {b['sample']['seed']}), held-out half, the three Probes. Completeness is the share of "
             f"confirmed or known planets (CP/KP) on searchable stars recovered as a vetted dip on the ephemeris, with Wilson 95% intervals. "
             f"Left, in the bins the published references use: {cmps}. {bench_verdict(d)} "
-            f"Right: overall {_pct_ci(h['completeness'])}; without the stars exposed to the known clipping bug {pct(uc['rate'])} "
-            f"({uc['k']}/{uc['n']}). By planet radius: {rad}. By period: {per}. References, each value checked in its source paper: "
+            f"Right: overall {_pct_ci(h['completeness'])}; {first_run_text(d)}. By planet radius: {rad}. By period: {per}. References, each value checked in its source paper: "
             f"{rf['robovetter_ref']}; {rf['pht_ref']}. Measured on a stated benchmark, not discoveries. "
             f"Sources: {BENCH_SRC}, {BENCH_SAMPLE} (radii) and {BENCH_REFS} (references), commit {d['commit']}.")
 
@@ -1230,8 +1245,8 @@ def benchmark(t: dict, d: dict) -> Svg:
     s.text("Held-out completeness", RX0 + 20, PLOT_TOP + 28, 11, t["ink3"], "mono", 500, ls=0.08, upper=True)
     s.text(pct(c0["rate"]), RX0 + 20, PLOT_TOP + 80, 50, t["ink"], "sans", 600, ls=-0.03)
     s.text(f"{c0['k']} of {c0['n']} · interval {pct(c0['lo'])}–{pct(c0['hi'])}", RX0 + 20, PLOT_TOP + 102, 11.5, t["ink2"], "mono", 400)
-    uc = u["completeness"]
-    s.text(f"{pct(uc['rate'])} ({uc['k']}/{uc['n']}) without the clipping-bug stars", RX0 + 20, PLOT_TOP + 120, 11.5, t["ink3"], "mono", 400)
+    s.text(first_run_text(d) if d.get("first") else f"{pct(u['completeness']['rate'])} ({u['completeness']['k']}/{u['completeness']['n']}) "
+           "without the clipping-bug stars", RX0 + 20, PLOT_TOP + 120, 11.5, t["ink3"], "mono", 400)
     QX0, QX1 = RX0 + 84, RX1 - 92
     qx = lambda p: QX0 + p * (QX1 - QX0)  # noqa: E731
 
@@ -1317,22 +1332,38 @@ def feed_desc(d: dict) -> str:
             f"Source: {BENCH_SRC} (held-out half, feed-level table{', feed_rule' if d['b'].get('feed_rule') else ''}), commit {d['commit']}.")
 
 
+def fold_text(fr: dict) -> str:
+    """How many times lower the worse control's noise is under the two-sector rule than under the old one."""
+    o, n = fr["validation"]["held_out_old_rule"], fr["validation"]["held_out"]
+    a, b = o["expected_false_per_100_targets"], n["expected_false_per_100_targets"]
+    return f"{a / b:.1f}-fold" if b else "to zero"
+
+
 def feed_rule_sentence(d: dict) -> str:
     fr = d["b"].get("feed_rule")
     if not fr or not fr.get("validation"):
         return "A fix is proposed in the benchmark report and not applied. "
     n = fr["validation"]["held_out"]
-    return ("The pre-registered two-sector rule (FAP < 0.001 over 2,000 trials, the signal in both sectors), tested once on the "
-            "held-out half with the discovery config, lowers the worse control about fourfold, but noise still outnumbers the "
-            f"{n['real_new_per_100_targets']:.1f} real new signals per 100 targets, so admissions are leads for review. ")
+    where = ("measured on the held-out half with the discovery config on the current code" if fr.get("edition") == "clipfix"
+             else "tested once on the held-out half with the discovery config")
+    more = n["expected_false_per_100_targets"] >= n["real_new_per_100_targets"]
+    return (f"The pre-registered two-sector rule (FAP < 0.001 over 2,000 trials, the signal in both sectors), {where}, lowers the worse "
+            f"control {fold_text(fr)}, " + ("but noise still outnumbers the " if more else "and noise is now below the ")
+            + f"{n['real_new_per_100_targets']:.1f} real new signals per 100 targets, so admissions are leads for review. ")
 
 
 def feed_noise(t: dict, d: dict) -> Svg:
     rows = feed_rows(d)
     imp = d["b"]["feed_implication"]
     s = Svg(W, H, "The live feed's new signals against the controls", feed_desc(d))
-    title = ("Noise falls about fourfold under the new rule, and still outnumbers real signals" if d["b"].get("feed_rule")
-             else "The live feed's “new” signals are consistent with noise")
+    fr = d["b"].get("feed_rule")
+    if fr and fr.get("validation"):
+        n = fr["validation"]["held_out"]
+        title = (f"Noise falls {fold_text(fr)} under the new rule, and "
+                 + ("still outnumbers real signals" if n["expected_false_per_100_targets"] >= n["real_new_per_100_targets"]
+                    else "falls below the real signals"))
+    else:
+        title = "The live feed's “new” signals are consistent with noise"
     frame(s, t, "Evidence · feed-level false alarms · held-out half", title,
           f"Source: {BENCH_SRC} (feed-level table and feed_implication) · commit {d['commit']}", t["open"])
     panel(s, t, MX0, PLOT_TOP, MX1 - MX0, PLOT_BOTTOM - PLOT_TOP)
@@ -2062,7 +2093,9 @@ def pimen_results_block() -> str:
     bound, tail = _sci_label(fap[0]["fap_label"]), _sci_label(fap[0]["fap_tail_label"])
     lines = [
         f"Real data, TESS SPOC sector 1 of pi Men (TIC {star['tic']}), the three Probes plus the two Sentinels "
-        "(Skeptic and Volunteer, on Claude via the CLI), as stored in `runs/tess-pi-men-s1`:",
+        "(Skeptic and Volunteer, on Claude via the CLI), as stored in `runs/tess-pi-men-s1`, run on the current code"
+        + (" (the Sentinels' stored answers reused: the subject images and prompts are byte-identical)"
+           if (d.get("manifest") or {}).get("sentinel_answers") else "") + ":",
         "",
         f"* {len(ev)} consensus dips: {len(passed)} passed vetting, {len(flagged)} of them flagged `off_ephemeris`, and "
         f"{len(rejected)} failed it (" + "; ".join(", ".join(f"`{x}`" for x in e["flags"]) for e in rejected) + ").",
@@ -2070,7 +2103,7 @@ def pimen_results_block() -> str:
         f"predicted epochs in the {span:.0f}-day window are recovered, with a mean timing offset of "
         + f"{xm['mean_timing_offset_min']:+.0f}".replace("-", "−")
         + " minutes against the NASA Exoplanet Archive value (docs/results/pi_men_crossmatch.json).",
-        "* **Transit shape, limb-darkened fit** (re-vetted from the stored classifications; see",
+        "* **Transit shape, limb-darkened fit** (see",
         "  [docs/results/pi_men_validation.md](docs/results/pi_men_validation.md)). A joint fit of",
         f"  the {jf['n_epochs']} epochs, with the period free near the BLS period ({jf['period_days']:.4f} ± {jf['period_err']:.4f} d; "
         f"Huang: {h['pl_orbper']:.5f} d), gives the like-for-like quantities first: **Rp/R★ = {jf['k']:.4f} ± {jf['k_err']:.4f} "

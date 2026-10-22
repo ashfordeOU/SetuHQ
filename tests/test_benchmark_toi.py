@@ -229,3 +229,46 @@ def test_the_committed_benchmark_fingerprints_still_verify_after_the_rename():
             pytest.skip("needs the full history (fetch-depth 0)")
         assert BR.code_fingerprint(commit) == fp
     assert all(f.startswith("src/setuhq/") for f in BR.CODE_FILES) and BR._label(BR.CODE_FILES[0]) == "src/exoplan/discover.py"
+
+
+def test_a_paired_change_has_a_bootstrap_interval_and_an_exact_mcnemar_test():
+    before = [True] * 50 + [False] * 50
+    after = [True] * 50 + [True] * 10 + [False] * 40  # 10 gained, none lost
+    pc = B.paired_change(before, after)
+    assert pc["gained"] == 10 and pc["lost"] == 0 and pc["delta"] == pytest.approx(0.10)
+    assert 0 < pc["lo"] < 0.10 < pc["hi"] and pc["mcnemar_p"] == pytest.approx(2 / 2**10)
+    same = B.paired_change(before, before)
+    assert same["delta"] == 0 and same["mcnemar_p"] == 1.0 and same["lo"] == same["hi"] == 0
+    assert B.mcnemar_p(3, 3) == 1.0 and B.mcnemar_p(0, 0) == 1.0
+
+
+def test_the_rerun_audit_gives_each_changed_threshold_its_reason():
+    import importlib.util
+    import sys
+
+    spec = importlib.util.spec_from_file_location("bench_script3", Path("scripts/benchmark_real_tois.py"))
+    S = importlib.util.module_from_spec(spec)
+    sys.modules["bench_script3"] = S
+    spec.loader.exec_module(S)
+    au = S.explain_audit({"changed": {"src/setuhq/vet.py:ODD_EVEN_FLOOR": [None, "0.02"], "configs/sweep.toml:[run]name": [None, "x"],
+                                      "src/setuhq/vet.py:SOMETHING_NEW": ["1", "2"]}, "values_checked": 3, "paths": ["configs"],
+                          "frozen_after": "fbc1ed9", "ignored_not_thresholds": {}})
+    assert [g["short"] for g in au["explained"]] == ["the all-sky sweep's new configs", "the odd/even fix"]
+    assert au["unexplained"] == {"src/setuhq/vet.py:SOMETHING_NEW": ["1", "2"]}
+    md = "\n".join(B._clipfix_audit_lines(au))
+    assert "**Not explained: src/setuhq/vet.py:SOMETHING_NEW: 1 → 2.**" in md and "106c797" in md
+
+
+def test_the_rerun_report_compares_with_the_first_run_and_states_the_fix():
+    r = {"k": 3, "n": 4, "rate": 0.75, "lo": 0.3, "hi": 0.95}
+    pc = B.paired_change([True, False, False, True], [True, True, True, True])
+    data = {"edition": "clipfix", "clipping": {"ratio": 8.0, "held_out": {"affected": {"positive": 2, "fp": 1, "fa": 0}, "measured": 9,
+                                                                           "median_removed_fraction_affected": 0.0}},
+            "summary": {"held_out": {"completeness": r, "fp_seen": r, "fp_flagged_of_seen": r}},
+            "against_first_run": {"file": "first.json", "code": "commit abc", "rows": [{"measure": "completeness", "first": r, "this": r, "paired": pc}],
+                                  "clipping": {"n": 2, "first_recovered": 1, "now_recovered": 2, "first_median_removed": 0.31,
+                                               "first_explained": ["5972.01"], "explained_now_recovered": ["5972.01"], "explained_still_missed": []}}}
+    md = "\n".join(B._clip_lines(data) + B._against_first_lines(data))
+    assert "The clipping bug, fixed" in md and "median 0% (first run: 31%)" in md and "recovered now: TOI 5972.01" in md
+    assert "Exposed CP/KP recovered: 2 of 2 (first run: 1 of 2)" in md and "Known bug" not in md
+    assert "| completeness | 75% (3/4; 95% CI 30–95%) | 75% (3/4; 95% CI 30–95%) | +50 points" in md and "2 gained, 0 lost" in md

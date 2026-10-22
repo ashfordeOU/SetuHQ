@@ -9,8 +9,8 @@
       "snr_threshold": 4.0,
       "miss_probability": 0.05
     },
-    "best_holdout_score": 0.875,
-    "default_holdout_score": 0.875,
+    "best_holdout_score": 0.8333,
+    "default_holdout_score": 0.8333,
     "rule": "promote only if the best search setting beats the default on the held-out seed"
   },
   "trials": [
@@ -75,9 +75,9 @@
         "miss_probability": 0.05
       },
       "seed": 202,
-      "completeness": 0.875,
+      "completeness": 0.8333,
       "false_positives_per_subject": 0.0,
-      "score": 0.875,
+      "score": 0.8333,
       "stage": "holdout"
     },
     {
@@ -86,9 +86,9 @@
         "miss_probability": 0.1
       },
       "seed": 202,
-      "completeness": 0.875,
+      "completeness": 0.8333,
       "false_positives_per_subject": 0.0,
-      "score": 0.875,
+      "score": 0.8333,
       "stage": "holdout"
     }
   ]

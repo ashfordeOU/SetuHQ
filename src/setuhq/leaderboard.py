@@ -31,7 +31,8 @@ predicate on both sides: a *clean candidate* (an on-ephemeris event that passed,
 J = clean CP/KP share + not-clean FP share − 1, so calling every TOI a planet, flagged or not, scores J = 0, and
 calling a star "not searched" counts it as not offered. J over every star of the scope is reported beside it. An
 entry without control lists for every searched star is listed but not ranked; the controls gate ranking and do not
-enter J. The Sentinels' 40-star subsample is never ranked: its intervals are too wide to order anything.
+enter J. The Sentinels' stated subsample (40 stars; 37 whose subjects the re-run on the fixed code left byte-identical)
+is never ranked: its intervals are too wide to order anything.
 
 **Labels.** The public inputs (``docs/leaderboard/tuning_inputs.json``) hold the tuning half with its
 dispositions and, for the held-out half, only TIC, TOI name and ephemeris. A submission states the hash of the
@@ -55,7 +56,9 @@ ROOT = Path(__file__).resolve().parents[2]
 FORMAT = "exoplan-leaderboard/2"
 INPUTS_FORMAT = "exoplan-leaderboard-inputs/1"
 SAMPLE = ROOT / "docs/results/benchmark_toi_sample.json"
-BENCHMARK = ROOT / "docs/results/benchmark_real_tois.json"
+# The benchmark on the current code (the re-run after the two fixes); the first run, on the pre-fix code, is kept in
+# docs/results/benchmark_real_tois.json as the historical record.
+BENCHMARK = ROOT / "docs/results/benchmark_real_tois_clipfix.json"
 LB_DIR = ROOT / "docs/leaderboard"
 INPUTS = LB_DIR / "tuning_inputs.json"
 SUBMISSIONS = LB_DIR / "submissions"
@@ -460,8 +463,11 @@ def floor_note(floor: dict | None) -> str:
             f"dispositions ({dj_text(dj)}).")
 
 
-SUBSAMPLE_NOTE = ("40 stars cannot order these configurations: the subsample is listed, never ranked, and every "
-                  "interval is wide.")
+def subsample_note(n: int) -> str:
+    return f"{n} stars cannot order these configurations: the subsample is listed, never ranked, and every interval is wide."
+
+
+SUBSAMPLE_NOTE = subsample_note(40)  # the stated subsample's size; the scored note uses the benchmark's own count
 
 
 def build(sample: dict, inputs: dict, benchmark: dict, submissions: list) -> dict:
@@ -489,11 +495,12 @@ def build(sample: dict, inputs: dict, benchmark: dict, submissions: list) -> dic
                                        "generated_from": [f"docs/leaderboard/submissions/{p}.json" for p in parts]},
                         "scores": score_rows(rows)})
     # Ranking: held-out entries with every control measured, by Youden's J. Equal J shares a rank. Nothing else
-    # is ranked: an entry without controls hides its false alarms, and 40 stars cannot order anything.
+    # is ranked: an entry without controls hides its false alarms, and a subsample of tens of stars cannot order anything.
+    n_sub = len(sentinel_subsample(benchmark))
     jv = lambda e: e["scores"]["youden_j"]["j"]  # noqa: E731
     for e in entries:
         e["ranked"] = e["scope"] == "held_out" and e["scores"]["controls_complete"] and jv(e) is not None
-        e["unranked_reason"] = ("" if e["ranked"] else "subsample: 40 stars cannot order configurations"
+        e["unranked_reason"] = ("" if e["ranked"] else f"subsample: {n_sub} stars cannot order configurations"
                                 if e["scope"] == "sentinel_subsample" else "controls not measured for every searched star")
     ranked = [e for e in entries if e["ranked"]]
     for e in entries:
@@ -513,7 +520,7 @@ def build(sample: dict, inputs: dict, benchmark: dict, submissions: list) -> dic
             "sentinel_subsample": sentinel_subsample(benchmark),
             "sentinel_subsample_sha256": canonical_sha256(sentinel_subsample(benchmark)),
             "sentinel_agreement": (benchmark.get("sentinels") or {}).get("agreement"),
-            "benchmark_code_commit": benchmark.get("code_commit"), "rules": RULES, "subsample_note": SUBSAMPLE_NOTE,
+            "benchmark_code_commit": benchmark.get("code_commit"), "rules": RULES, "subsample_note": subsample_note(n_sub),
             "entries": entries, "refused": refused}
 
 
@@ -532,7 +539,7 @@ RULES = [
     "not a measured difference.",
     "The controls gate ranking and do not enter J: only held-out entries with both control lists on every searched "
     "star are ranked, others are listed unranked. The control lists are the method's own report; the leaderboard "
-    "cannot recompute them without the light curves. The 40-star Sentinel subsample is never ranked.",
+    "cannot recompute them without the light curves. The Sentinel subsample is never ranked.",
     "A floor: the metadata-only baseline uses no light curve at all, only the public TOI number, period, duration, "
     "ephemeris errors and epoch, with a logistic regression fitted on the tuning half. A method that does not beat "
     "it is not shown to read the light curves better than the catalogue's own metadata predicts dispositions.",
@@ -574,7 +581,7 @@ def small_rate(s: dict) -> dict | None:
 
 
 SCOPE_LABEL = {"held_out": "Held-out half (every held-out star)",
-               "sentinel_subsample": "The Sentinels' stated subsample (40 held-out stars: 20 CP/KP, 20 FP), not ranked"}
+               "sentinel_subsample": "The Sentinels' stated subsample ({n} held-out stars), not ranked"}
 
 
 def to_markdown(res: dict) -> str:
@@ -593,7 +600,7 @@ def to_markdown(res: dict) -> str:
         if not es:
             continue
         head = "| rank | entry | Youden J |" if scope == "held_out" else "| entry | Youden J |"
-        lines += ["", f"## {SCOPE_LABEL[scope]}", ""]
+        lines += ["", f"## {SCOPE_LABEL[scope].format(n=len(res.get('sentinel_subsample') or []))}", ""]
         if scope == "sentinel_subsample":
             lines += [f"**{res['subsample_note']}**", ""]
         elif res.get("floor_note"):
@@ -615,7 +622,7 @@ def to_markdown(res: dict) -> str:
     lines += ["", "Clean completeness and FP rejection use the same predicate (a clean candidate: on the ephemeris, "
               "passed, no eclipsing-binary flag) over the searchable set the benchmark fixed. The benchmark report's "
               "headline completeness counts a recovered dip even when flagged, and its \"rejected or flagged\" rate is "
-              "over the FP dips the panel found; both are in docs/results/benchmark_real_tois.md. Reliability depends on "
+              "over the FP dips the panel found; both are in docs/results/benchmark_real_tois_clipfix.md. Reliability depends on "
               "the sample's class mix; it is not the reliability on the TOI catalogue.", ""]
     return "\n".join(lines)
 

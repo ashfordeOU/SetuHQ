@@ -17,6 +17,14 @@ known TOI masked first).
 
 ``tune`` writes docs/results/feed_rule_preregistration.json; it is committed before ``evaluate`` runs, and
 ``evaluate`` refuses to run unless that file is committed (its commit hash is recorded with the results).
+
+The clipping-fixed re-run (``--edition clipfix``) evaluates the same pre-registered rule again, unchanged, on the
+current code: the held-out stars' same two sectors (as the first run recorded them, read from the download cache)
+into cache/feedrule_clipfix and docs/results/feed_rule_validation_clipfix.json. The first evaluation stays as the
+historical pre-fix record. Nothing is tuned again:
+
+    python scripts/feed_rule_eval.py --edition clipfix rerun --half held_out --workers 4
+    python scripts/feed_rule_eval.py --edition clipfix evaluate
 """
 
 from __future__ import annotations
@@ -40,9 +48,11 @@ import benchmark_real_tois as BR  # noqa: E402
 from setuhq import benchmark_toi as B  # noqa: E402
 from setuhq import discover as Dv  # noqa: E402
 
-CACHE = ROOT / "cache/feedrule"
 PREREG = ROOT / "docs/results/feed_rule_preregistration.json"
-RESULTS = ROOT / "docs/results/feed_rule_validation.json"
+FIRST_CACHE = ROOT / "cache/feedrule"
+EDITIONS = {"first": ("cache/feedrule", "docs/results/feed_rule_validation.json"),
+            "clipfix": ("cache/feedrule_clipfix", "docs/results/feed_rule_validation_clipfix.json")}
+CACHE, RESULTS = (ROOT / p for p in EDITIONS[BR.EDITION])
 VARIANTS = ("real", "inverted", "scrambled")
 OLD = {"trials": 200, "cut": 0.01}
 NEW = {"trials": 2000, "cut": 0.001}
@@ -112,6 +122,61 @@ def run_star(toi: dict) -> dict:
             continue
         out[name] = {"candidates": len(json.loads((run_dir / "candidates.json").read_text()))}
     return out
+
+
+def rerun_star(toi: dict) -> dict:
+    """One star again on the current code: the two sectors the first run recorded, from the download cache."""
+    import shutil
+
+    from setuhq.pipeline import run_pipeline
+
+    first = json.loads((FIRST_CACHE / f"{toi['tic']}.json").read_text())
+    out = {k: first.get(k) for k in ("tic", "toi", "sectors", "n_sectors_available")}
+    if not first.get("sectors"):
+        return dict(out, no_data=True)
+    shutil.rmtree(CACHE / str(toi["tic"]), ignore_errors=True)
+    try:
+        curves = curves_for(toi["tic"], first["sectors"])
+    except Exception as exc:  # noqa: BLE001
+        return dict(out, error=f"download failed: {type(exc).__name__}: {str(exc)[:200]}")
+    cfg = discovery_config()
+    weights = json.loads((ROOT / "docs/results/reviewer_weights.json").read_text())
+    for name, cs in curves.items():
+        run_dir = CACHE / str(toi["tic"]) / name
+        run_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            run_pipeline(cfg, cs, probes(cfg), run_dir, weights=weights, weights_source="docs/results/reviewer_weights.json")
+        except Exception:  # noqa: BLE001
+            out[name] = {"error": traceback.format_exc(limit=2)[-400:]}
+            continue
+        out[name] = {"candidates": len(json.loads((run_dir / "candidates.json").read_text()))}
+    return out
+
+
+def cmd_rerun(args) -> int:
+    """The first run's stars of one half again, on the current code, into this edition's cache (resumable)."""
+    if CACHE == FIRST_CACHE:
+        print("rerun writes a new edition: use --edition clipfix")
+        return 1
+    CACHE.mkdir(parents=True, exist_ok=True)
+    todo = [t for t in half_tois(args.half) if (FIRST_CACHE / f"{t['tic']}.json").exists() and not (CACHE / f"{t['tic']}.json").exists()]
+    print(f"{len(todo)} stars to re-run", flush=True)
+    t0 = time.time()
+    with ProcessPoolExecutor(max_workers=args.workers) as pool:
+        futures = {pool.submit(rerun_star, t): t for t in todo}
+        for i, fut in enumerate(as_completed(futures), 1):
+            t = futures[fut]
+            try:
+                res = fut.result()
+            except Exception as exc:  # noqa: BLE001
+                res = {"tic": t["tic"], "toi": t["toi"], "error": f"worker failed: {exc}"}
+            if "error" not in res:  # a failure is retried by the next run
+                (CACHE / f"{t['tic']}.json").write_text(json.dumps(res))
+            else:
+                print(f"TIC {t['tic']}: {res['error'][:120]}", flush=True)
+            if i % 10 == 0:
+                print(f"{i}/{len(todo)} in {time.time() - t0:.0f} s", flush=True)
+    return 0
 
 
 def cmd_run(args) -> int:
@@ -347,6 +412,11 @@ def cmd_evaluate(args) -> int:
     if RESULTS.exists() and not args.again:
         print(f"{RESULTS} exists: the held-out evaluation runs once.")
         return 1
+    if CACHE != FIRST_CACHE:  # a re-run edition: every held-out star the first run had must have been re-run
+        missing = [t["tic"] for t in half_tois("held_out") if (FIRST_CACHE / f"{t['tic']}.json").exists() and not (CACHE / f"{t['tic']}.json").exists()]
+        if missing:
+            print(f"{len(missing)} held-out stars of the first run are not re-run yet (e.g. TIC {missing[0]}); run 'rerun' first")
+            return 1
     prereg = json.loads(PREREG.read_text())
     stars = score_half("held_out", [{"name": "old"}, prereg["chosen"]], args.workers)
     old, new = summarise_rule(stars, 0), summarise_rule(stars, 1)
@@ -372,7 +442,17 @@ def cmd_evaluate(args) -> int:
                      "identical admission inputs with them on, on a seeded 20-star subsample.",
                      "A worker restart stopped the first held-out run at 120 of 345 stars before it wrote anything; the "
                      "script then gained a per-star store so the run resumes (the rule and the scoring are unchanged), "
-                     "and the run was restarted. The trials already computed were reused from their cache."]}
+                     "and the run was restarted. The trials already computed were reused from their cache."]
+                    if CACHE == FIRST_CACHE else
+                    ["Each star's first two SPOC 2-minute sectors (the live feed reviews the latest two); a star with one sector "
+                     "cannot pass the two-sector rule and counts as one target.",
+                     "Re-run of the first evaluation (docs/results/feed_rule_validation.json, made with pre-fix code) on the "
+                     "current code: the same pre-registered rule, unchanged and not tuned again; the same held-out stars and the "
+                     "same two sectors of each (as the first run recorded them, read from the download cache); the same controls "
+                     "and scoring. Every pipeline run and every FAP trial was made afresh into cache/feedrule_clipfix.",
+                     "Discovery config: subject-mode BLS, the three Probes with the feed's weights file. Fit and TIC stellar "
+                     "parameters off, because admission never reads them."]
+           , "edition": BR.EDITION, "first_evaluation": None if CACHE == FIRST_CACHE else "docs/results/feed_rule_validation.json"}
     RESULTS.write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps(out, indent=1))
     return 0
@@ -431,7 +511,13 @@ def cmd_check_stellar(args) -> int:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--edition", choices=sorted(EDITIONS), default=None,
+                    help="'first' (pre-fix code, the historical record) or 'clipfix' (the re-run on the fixed code)")
     sub = ap.add_subparsers(dest="cmd", required=True)
+    rr = sub.add_parser("rerun", help="one half's stars again on the current code, from the first run's sectors")
+    rr.add_argument("--half", choices=("held_out", "tuning"), default="held_out")
+    rr.add_argument("--workers", type=int, default=4)
+    rr.set_defaults(func=cmd_rerun)
     r = sub.add_parser("run")
     r.add_argument("--workers", type=int, default=3)
     r.set_defaults(func=cmd_run)
@@ -446,6 +532,10 @@ def main(argv=None) -> int:
     ev.add_argument("--again", action="store_true", help="re-run after a crash; the rule cannot change (it is committed)")
     ev.set_defaults(func=cmd_evaluate)
     args = ap.parse_args(argv)
+    if args.edition:
+        global CACHE, RESULTS
+        BR.set_edition(args.edition)
+        CACHE, RESULTS = (ROOT / p for p in EDITIONS[args.edition])
     return args.func(args)
 
 

@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """pi Men c: the limb-darkened fit of the stored run against Huang et al. 2018 (and the archive's default row).
 
-Reads ``runs/tess-pi-men-s1`` (candidates.json, after ``setuhq rebuild``; subjects/*.json; stellar.json) and
+Reads ``runs/tess-pi-men-s1`` (candidates.json, as scripts/rerun_pi_men.py wrote it; subjects/*.json; stellar.json) and
 the reference rows in ``docs/results/pi_men_reference.json`` (NASA Exoplanet Archive ``ps`` table; refreshed
 with ``--refresh`` when the archive answers). Writes ``docs/results/pi_men_validation.md`` and the JSON beside it.
 
@@ -125,7 +125,7 @@ def main(argv=None) -> int:
     lines = [
         "# pi Men c: the limb-darkened fit against Huang et al. 2018",
         "",
-        f"Run `{run}` (TESS SPOC sector 1, 10-minute bins), rebuilt from its stored classifications with the limb-darkened",
+        f"Run `{run}` (TESS SPOC sector 1, 10-minute bins), run on the current code (scripts/rerun_pi_men.py), with the limb-darkened",
         f"fit (`src/setuhq/transitfit.py`). {len(on)} of {len(pred)} predicted epochs are recovered by the panel. Limb darkening:",
         f"Claret 2017 TESS quadratic u₁ = {u1:.3f}, u₂ = {u2:.3f} for the TIC's Teff {fmt(star.get('teff'), 0)} K and log g {fmt(star.get('logg'))}.",
         f"Reference: {ref['source']}, fetched {ref['fetched_at'][:10]} (`{REF}`).",

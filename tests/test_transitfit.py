@@ -138,7 +138,12 @@ def test_stored_pi_men_run_carries_the_fit_and_bounded_fap():
     assert len(on) == 5 and all(r["fap_label"] == "< 1.0e-04 (10,000 trials)" for r in on)
     assert all(250 < float(r["fit_depth_ppm"]) < 350 and float(r["fit_depth_err_ppm"]) > 0 for r in on)
     manifest = json.loads((run / "manifest.json").read_text())
-    assert manifest["rebuilds"][-1]["fap_trials"] == 10000 and "not asked again" in manifest["rebuilds"][-1]["reused"]
+    # Re-run from the start on the current code: the Sentinels answered from their store only (byte-identical inputs),
+    # and every result field equals the replaced pre-fix run's.
+    assert manifest["sentinel_answers"]["answered_from_store"] == manifest["sentinel_answers"]["expected"] == 4
+    assert "no Sentinel was asked again" in manifest["sentinel_answers"]["how"] and "code_note" not in manifest
+    assert manifest["replaces"]["same_results"] and manifest["replaces"]["differences"] == []
+    assert manifest["replaces"]["had_pre_fix_note"]
     val = json.loads(Path("docs/results/pi_men_validation.json").read_text())
     r = val["ratios_vs_huang_2018"]
     assert 0.9 < r["depth"] < 1.1 and 0.9 < r["duration"] < 1.1  # the box gave 0.81 and 0.64

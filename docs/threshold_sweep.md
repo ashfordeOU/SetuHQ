@@ -2,8 +2,6 @@
 
 Not the real-TOI leaderboard: that one scores whole methods on the frozen benchmark, in [docs/leaderboard/leaderboard.md](leaderboard/leaderboard.md). This sweep tunes Probe thresholds on synthetic light curves.
 
-Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since. Deep injections may be under-recovered here.
-
 Score is mean completeness on the injection grid. A setting with false positives above the budget scores zero. Search and held-out seeds are different, and only a setting that wins on the held-out seed can be promoted.
 
 | stage | snr threshold | miss prob | seed | completeness | FP / empty subject | score |
@@ -13,7 +11,7 @@ Score is mean completeness on the injection grid. A setting with false positives
 | search | 5.0 | 0.1 | 101 | 0.917 | 0.000 | 0.917 |
 | search | 5.5 | 0.1 | 101 | 0.917 | 0.000 | 0.917 |
 | search | 6.0 | 0.1 | 101 | 0.917 | 0.000 | 0.917 |
-| holdout | 4.0 | 0.05 | 202 | 0.875 | 0.000 | 0.875 |
-| holdout | 5.0 | 0.1 | 202 | 0.875 | 0.000 | 0.875 |
+| holdout | 4.0 | 0.05 | 202 | 0.833 | 0.000 | 0.833 |
+| holdout | 5.0 | 0.1 | 202 | 0.833 | 0.000 | 0.833 |
 
 Decision: **keep default** → `{'snr_threshold': 5.0, 'miss_probability': 0.1}`

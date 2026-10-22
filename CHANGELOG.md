@@ -10,6 +10,52 @@ breaking changes are called out explicitly.
 
 ## [Unreleased]
 
+### Changed
+
+- **Every stored result that can be re-run without calling a Sentinel is re-run on the fixed code**
+  (after the two fixes that change default results: `preprocess.clean` keeps deep dips, and `vet.py`'s
+  odd/even test no longer fails clean deep planets). The first runs are kept beside the re-runs, each
+  with the pre-fix note in its own file (`codenote.HISTORICAL`).
+  - The stored pi Men run, from the start (`scripts/rerun_pi_men.py`): every dip, vetting result, fit
+    and FAP equals the first run's (Rp/R★ 0.0179 ± 0.0017 and T14 3.07 ± 0.17 h against Huang et al.
+    2018); the Sentinels' stored answers were reused because the subject images and prompts are
+    byte-identical.
+  - The real-TOI benchmark, all 662 TOIs, protocol unchanged (`benchmark_real_tois.py --edition
+    clipfix`): held-out completeness 60% (90/150) against 57% (86/150), 5 stars gained and 1 lost
+    (paired bootstrap 95% CI 0 to +6 points, McNemar p = 0.22); FP found 77% and flagged 68% as
+    before; controls 641 and 861 vetted dips per 1,000 star-sectors (573 and 848 before).
+  - The pre-registered feed rule, evaluated again unchanged: noise 6.1 (4.0–9.4) false signals per
+    100 targets under it, 27.8 (23.1–33.1) under the old rule; feed-level completeness 17%.
+  - Why the controls and FP rates moved: on the inverted control 16 of the 24 newly passing dips were
+    rejected by the old odd/even test and 5 are deep inverted features the old cleaning deleted; 4 of the
+    5 newly passing FP TOIs were rejected by the old odd/even test.
+  - The calibration record's provenance is corrected: its Probe rates were measured on the code of
+    2026-10-16 (03f23bd); since the limb-darkened injections (fbc1ed9) the same seed gives 0.9, 0.8 and
+    0.6. The weights stay frozen; a test shows both sets make the same two-of-three decisions.
+  - The threshold sweep's held-out score fell from 0.875 to 0.833 (2 of 48 injections at 1000 ppm), a
+    change that came with the limb-darkened injections, not the two fixes: the sweep dates from 2026-10-16.
+  - Each historical record's note now names its re-run instead of "Not re-run since".
+  - The re-run's report adds a stale-ephemeris audit (one held-out CP/KP miss, TOI 1905.01: no dip on the
+    published ephemeris, a comparable dip within 12 h and at least 3σ of the propagated ephemeris error off
+    it) and the window-measurement limit; the matching rule is unchanged.
+  - The live catalogue, the injection-recovery benchmark and the threshold sweep; the leaderboard
+    (Probes J 0.35 against the metadata floor's 0.39, paired ΔJ +0.04, −0.10 to +0.17: still not
+    shown to beat it) and the methods paper read the re-run.
+  - The Sentinels were not asked again: their stored answers are used on the 37 of the 40 subsample
+    stars whose subjects are byte-identical; the 3 others are left out.
+- **No site-wide banner.** A page built from a record that carries a code note states it once, in
+  plain language, at the top of that page; no page of the current site carries one.
+- **`candidates.csv` and `candidates.json` carry 10 more columns** on runs made with the current code:
+  `sector`, `crowdsap`, `secondary_phase`, `secondary_snr`, `centroid_offset_arcsec`, `centroid_sigma`, `fpp`,
+  `nfpp`, `fpp_method` and `validation_label` (the extended-vetting and reduced-FPP results; the full records are
+  under `metrics`). The stored pi Men run now has them: FPP 0.0186 and 0.0148 per subject, class "undetermined".
+- The Docket's page data keeps only the metrics the page reads (the extended-vetting record per dip
+  stays in `candidates.json`).
+
+### Added
+
+- `codemeta.json` names Ashforde OÜ as copyright holder.
+
 ## [0.1.0] - 2026-10-20
 
 The first public release, under the name **SetuHQ** (*setu*, Sanskrit for bridge). Until this

@@ -1,9 +1,10 @@
 {
   "weights_file": "reviewer_weights_full_panel.json",
   "floor": 0.05,
-  "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since.",
+  "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run: its Sentinel rates cannot be measured again without calling the Sentinels, and the weights are a frozen parameter of the benchmark protocol (see current_code in this file).",
   "rule": "weight = max(TPR - FPR, floor)",
-  "source": "Per-reviewer rates printed by 'exoplan calibrate' when it wrote reviewer_weights_full_panel.json on 2026-10-16. Sample size from the commit that added the weights: n = 10 injected and 10 empty subjects per reviewer.",
+  "source": "Per-reviewer rates printed by 'exoplan calibrate' when it wrote reviewer_weights_full_panel.json on 2026-10-16, with the code of commit 03f23bd (the commit that added the weights): n = 10 injected and 10 empty subjects per reviewer, seed 0.",
+  "current_code": "The Probes' rates do not reproduce on later code: since commit fbc1ed9 (2026-10-19) the injected transits are limb-darkened, not trapezoids, and the same calibration (seed 0, 10 + 10 subjects) gives TPR 0.9, 0.8 and 0.6 (FPR 0) for volunteer-sensitive, volunteer-typical and volunteer-cautious, on 5a03087 and on the current code alike. The weights stay frozen: they are a parameter of the benchmark protocol. With three Probes, min_score = 0.5 and min_planet_fraction = 0.5, both weight sets accept exactly the dips at least two of the three Probes mark (tests/test_calibration_equivalence.py), so every consensus decision is the same.",
   "reviewers": {
     "claude-skeptic": {"tpr": 0.5, "fpr": 0.0, "weight": 0.5, "n_injected": 10, "n_empty": 10, "provider": "claude-code", "model": "default"},
     "claude-volunteer": {"tpr": 0.5, "fpr": 0.0, "weight": 0.5, "n_injected": 10, "n_empty": 10, "provider": "claude-code", "model": "default"},

@@ -1,7 +1,8 @@
 # The real-TOI leaderboard
 
 A public leaderboard on SetuHQ's frozen benchmark of 662 real TESS Objects of Interest
-([docs/results/benchmark_real_tois.md](../results/benchmark_real_tois.md)). It scores a method's detected events
+([docs/results/benchmark_real_tois_clipfix.md](../results/benchmark_real_tois_clipfix.md), the benchmark on the
+current code; its first run, on the pre-fix code, is [benchmark_real_tois.md](../results/benchmark_real_tois.md)). It scores a method's detected events
 on the **held-out half** only. The table is [leaderboard.md](leaderboard.md) (data: [leaderboard.json](leaderboard.json));
 the app shows it at `#/leaderboard`.
 
@@ -61,8 +62,8 @@ The leaderboard decides which events lie on the TOI's ephemeris with the benchma
 failed or carries an eclipsing-binary flag (odd/even, secondary, V shape, density). Control false alarms are the
 events that passed on the controls. A method no longer states its own outcomes.
 
-`tuned_on` is `none` or `tuning`. `scope` is `held_out` (all 345 held-out stars) or `sentinel_subsample` (the 40
-stars the Sentinels reviewed, listed in the benchmark report).
+`tuned_on` is `none` or `tuning`. `scope` is `held_out` (all 345 held-out stars) or `sentinel_subsample` (the stars
+the Sentinels reviewed with byte-identical subjects on the current code, 37 of the stated 40, listed in the benchmark report).
 
 ## Scoring and rank
 
@@ -86,12 +87,12 @@ side, so a copy of the public ephemerides with `flags: ["v_shape"]` on every sta
 removes the dip from both sides, and that copy scores 0.
 
 The benchmark report's headline completeness counts a recovered dip even when flagged, and its "FP TOIs rejected or
-flagged" is over the FP dips the Probes found. Both are in docs/results/benchmark_real_tois.md and differ from the
+flagged" is over the FP dips the Probes found. Both are in docs/results/benchmark_real_tois_clipfix.md and differ from the
 leaderboard's terms by definition.
 
 **The controls gate ranking; they do not enter J.** Only held-out entries with both control lists on every searched
 star are ranked; the rest are listed as unranked. The control false-alarm rates are printed beside J for the reader
-to weigh. **The 40-star Sentinel subsample is never ranked: 40 stars cannot order these configurations.** Equal J
+to weigh. **The Sentinel subsample is never ranked: 37 stars cannot order these configurations.** It is the stated 40-star subsample less 3 stars (TOI 416.01, 1070.01 and 2547.01) whose subjects changed with the clipping fix: deep transits, whose Probe outcome the fix changed, so the left-out stars are a selection tied to the fix. Every entry of the subsample is scored on the same 37 stars, so the comparison between entries stays paired and fair. Equal J
 shares a rank; where intervals overlap, the order is not a measured difference. Every rate has a Wilson 95%
 interval.
 
@@ -148,13 +149,13 @@ The leaderboard refuses a submission, and lists every reason, when:
 ## The seeded entries
 
 SetuHQ's own configurations, built from the benchmark's stored outputs without re-running anything
-(`scripts/leaderboard_seed.py --cache <cache/bench>`), and the metadata floor
+(`scripts/leaderboard_seed.py --cache <cache/bench_clipfix>`, the benchmark's re-run on the current code), and the metadata floor
 (`scripts/leaderboard_metadata_baseline.py`, from the public inputs only):
 
 * **Metadata only, no light curve (a floor)**, on the held-out half, `tuned_on: tuning`.
 * **Probes only**, on the whole held-out half: every consensus event of the real and control runs. The scorer's
-  outcomes equal the committed per-star rows of `benchmark_real_tois.json` star by star (a test checks this).
-* On the Sentinels' 40-star subsample: **Probes only** (the same events, restricted), **Sentinel · Volunteer alone**
+  outcomes equal the committed per-star rows of `benchmark_real_tois_clipfix.json` star by star (a test checks this).
+* On the Sentinels' subsample (37 of the stated 40 stars): **Probes only** (the same events, restricted), **Sentinel · Volunteer alone**
   and **Sentinel · Skeptic alone** (each mark an event, passed when the persona called the subject a potential
   planet; the seed script stops unless they reproduce the report's committed totals and agreement).
 * Two **Probes + Sentinels** rows, *either* and *both*, derived by the leaderboard (`leaderboard.DERIVED`). They are

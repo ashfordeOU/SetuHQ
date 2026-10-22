@@ -2469,7 +2469,9 @@ def _overview(data: dict, with_view: bool = True) -> str:
       {_view_head() if with_view else ""}"""
 
 
-BENCHMARK_JSON = "docs/results/benchmark_real_tois.json"
+# The benchmark on the current code: the re-run after the two fixes. The first run (pre-fix code) stays in
+# docs/results/benchmark_real_tois.json as the historical record.
+BENCHMARK_JSON = "docs/results/benchmark_real_tois_clipfix.json"
 
 
 def _load_benchmark(path: str | Path = BENCHMARK_JSON) -> dict | None:
@@ -2477,8 +2479,11 @@ def _load_benchmark(path: str | Path = BENCHMARK_JSON) -> dict | None:
     if not Path(path).exists():
         return None
     d = json.loads(Path(path).read_text())
-    keep = ("generated_at", "sample", "panel", "stars_run", "summary", "sentinels", "feed_implication", "clipping", "code_provenance", "feed_rule")
+    keep = ("edition", "generated_at", "sample", "panel", "stars_run", "summary", "sentinels", "feed_implication", "clipping", "code_provenance", "feed_rule")
     out = {k: d[k] for k in keep if k in d}
+    if d.get("against_first_run"):
+        af = d["against_first_run"]
+        out["first_run"] = {"completeness": af["rows"][0]["first"], "clipping": af.get("clipping")}
     if d.get("summary_unaffected"):
         out["unaffected_held_out"] = {k: d["summary_unaffected"]["held_out"].get(k) for k in ("completeness", "fp_seen", "fp_flagged_of_seen")}
     return out
@@ -2499,8 +2504,11 @@ def _benchmark_card(b: dict | None) -> str:
         return f"{100 * r['rate']:.0f}% <span class='muted'>({r['k']}/{r['n']}; 95% CI {100 * r['lo']:.0f}–{100 * r['hi']:.0f}%)</span>"
 
     ns = h.get("not_searchable") or {}
+    clipfix = b.get("edition") == "clipfix"
     rows = [("Headline: planets recovered on searchable stars (CP/KP TOIs, a vetted dip on the published ephemeris)", pct(h["completeness"])),
             ("Planets recovered over all CP/KP stars (no 2-minute data counts as missed)", pct(h.get("completeness_all_stars"))),
+            ("Planets recovered in the first run, on the pre-fix code (the historical record)", pct((b.get("first_run") or {}).get("completeness")))
+            if clipfix else
             ("Planets recovered, stars exposed to the clipping bug excluded", pct((b.get("unaffected_held_out") or {}).get("completeness"))),
             ("Not searchable (no SPOC 2-minute light curve)", f"{sum(ns.values())} stars <span class='muted'>({ns.get('positive', 0)} CP/KP, {ns.get('fp', 0)} FP, {ns.get('fa', 0)} FA)</span>"
              + (" <b>skewed toward FP</b>: the FP rows describe FP stars with 2-minute data only" if ns.get("fp", 0) > 2 * max(1, ns.get("positive", 0)) else "")),
@@ -2526,21 +2534,32 @@ def _benchmark_card(b: dict | None) -> str:
     if frv:
         n, o, live = frv["held_out"], frv["held_out_old_rule"], fr.get("live")
         verdict_rule = (
-            f'<p class="note" style="margin:0"><b>Update {e(frv["evaluated_at"][:10])}: a stricter feed rule, pre-registered and tested once.</b> '
-            f'The signal must now pass in both reviewed sectors with a FAP below {frv["rule"]["fap_cut"]:g} over {frv["rule"]["fap_trials"]:,} trials. '
+            (f'<p class="note" style="margin:0"><b>The feed&#x27;s stricter rule, pre-registered and measured again on this code.</b> '
+             if fr.get("edition") == "clipfix" else
+             f'<p class="note" style="margin:0"><b>Update {e(frv["evaluated_at"][:10])}: a stricter feed rule, pre-registered and tested once.</b> ')
+            + f'The signal must now pass in both reviewed sectors with a FAP below {frv["rule"]["fap_cut"]:g} over {frv["rule"]["fap_trials"]:,} trials. '
             f'On the held-out half, noise alone gives {n["expected_false_per_100_targets"]:.1f} false signals per 100 targets '
             f'(95% CI {n["expected_false_ci_per_100_targets"][0]:.1f}–{n["expected_false_ci_per_100_targets"][1]:.1f}), down from '
             f'{o["expected_false_per_100_targets"]:.1f} ({o["expected_false_ci_per_100_targets"][0]:.1f}–{o["expected_false_ci_per_100_targets"][1]:.1f}). '
             f'That is still far above the {n["real_new_per_100_targets"]:.1f} new signals per 100 targets the real light curves give, so the feed '
             f'is still dominated by false alarms, and feed-level completeness fell from {100 * o["completeness"]["rate"]:.0f}% to '
             f'{100 * n["completeness"]["rate"]:.0f}%. A feed admission is a lead for human or follow-up review, not a candidate of any confirmed status.'
-            + (f' Re-run under the new rule, {live["new_signals"]} of the live feed&#x27;s {live["old_new_signals"]} earlier new signals survive.' if live else "")
+            + ((f' Re-run on this code, the live feed&#x27;s {live["targets"]} targets admit {live["new_signals"]} new signals.'
+                if fr.get("edition") == "clipfix" else
+                f' Re-run under the new rule, {live["new_signals"]} of the live feed&#x27;s {live["old_new_signals"]} earlier new signals survive.') if live else "")
             + '</p>')
     else:
         verdict_rule = ""
     clip = (b.get("clipping") or {}).get("held_out")
     clipnote = ""
-    if clip:
+    fclip = (b.get("first_run") or {}).get("clipping")
+    if clip and clipfix and fclip:
+        a = clip["affected"]
+        clipnote = (f'<p class="note" style="margin:0"><b>The clipping bug is fixed in the code that measured this.</b> {a["positive"]} CP/KP, '
+                    f'{a["fp"]} FP and {a["fa"]} FA held-out stars were exposed (depth over {b["clipping"]["ratio"]:g}× the scatter); '
+                    f'{fclip["now_recovered"]} of the {fclip["n"]} exposed CP/KP are recovered now, against {fclip["first_recovered"]} in the '
+                    f'first run.</p>')
+    elif clip:
         a = clip["affected"]
         clipnote = (f'<p class="note" style="margin:0"><b>Known bug in the code that measured this.</b> The cleaning step deletes points '
                     f'more than 10× the scatter below the running median, so very deep transits and eclipses lose their in-transit points. '
@@ -2560,12 +2579,14 @@ def _benchmark_card(b: dict | None) -> str:
             f'(CP/KP), {s["counts"]["fp"]} false positives and {s["counts"]["fa"]} false alarms from the TOI table (fetched {e(s["fetched_at"][:10])}, seed {s["seed"]}), '
             f'one TOI per star; held-out half shown. Panel: {e(b["panel"])}.</p>'
             f'<div class="tablewrap" role="region" aria-label="Benchmark results"><table class="bench"><tbody>{body}</tbody></table></div>{clipnote}'
-            f'<p class="muted" style="margin:0;font-size:12px">Full results: docs/results/benchmark_real_tois.md. TFOPWG dispositions are the reference, not ground truth for every TOI.</p></section>')
+            f'<p class="muted" style="margin:0;font-size:12px">Full results: '
+            + ('docs/results/benchmark_real_tois_clipfix.md (first run, pre-fix code: docs/results/benchmark_real_tois.md)' if clipfix
+               else 'docs/results/benchmark_real_tois.md') + f'. TFOPWG dispositions are the reference, not ground truth for every TOI.</p></section>')
 
 
 LEADERBOARD_JSON = "docs/leaderboard/leaderboard.json"
 LEADERBOARD_SCOPES = {"held_out": ("Held-out half", "every held-out star"),
-                      "sentinel_subsample": ("The Sentinels' subsample", "40 held-out stars: 20 CP/KP, 20 FP · not ranked")}
+                      "sentinel_subsample": ("The Sentinels' subsample", "{n} held-out stars · not ranked")}
 
 
 def _load_leaderboard(path: str | Path = LEADERBOARD_JSON) -> dict | None:
@@ -2638,7 +2659,7 @@ def _leaderboard(lb: dict | None) -> str:
         rank_th = '<th scope="col">Rank</th>' if ranked_scope else ""
         lead_text = (lb.get("floor_note") or "") if ranked_scope else lb.get("subsample_note", "")
         lead = f'<p class="note" style="margin:0"><b>{e(lead_text)}</b></p>' if lead_text else ""
-        out.append(f'<section class="card lb" aria-labelledby="{hid}"><h2 id="{hid}">{e(title)} <span class="sub">{e(sub)}</span></h2>{lead}'
+        out.append(f'<section class="card lb" aria-labelledby="{hid}"><h2 id="{hid}">{e(title)} <span class="sub">{e(sub.format(n=len(lb.get("sentinel_subsample") or [])))}</span></h2>{lead}'
                    f'<div class="tablewrap" role="region" aria-labelledby="{hid}"><table class="lbtable"><thead><tr>'
                    f'{rank_th}<th scope="col">Entry</th><th scope="col">Youden J</th><th scope="col">Youden J, all stars</th>{ths}</tr></thead>'
                    f'<tbody>{"".join(rows)}</tbody></table></div>'

@@ -13,9 +13,9 @@
 *Draft methods paper in the style of the AAS journals (AJ). Markdown only: the aastex631 class is not
 available offline in the environment that produced this draft, so no LaTeX version is provided yet.*
 
-*Generated from the committed results by `scripts/paper_numbers.py` (benchmark report of 2026-10-20,
-code commit `8909cda`). Results that later work will change are marked pending; see the section
-"Pending results".*
+*Generated from the committed results by `scripts/paper_numbers.py` (benchmark report of 2026-10-22,
+code commit `0ae8ccf`: the benchmark re-run on the current code, after the two fixes of Section 5.6). Results
+that later work will change are marked pending; see the section "Pending results".*
 
 Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.
 
@@ -30,21 +30,22 @@ alone, fitted with a limb-darkened model, and given a bounded block-bootstrap fa
 measure the deterministic panel on a frozen, blind sample of 662 TESS Objects of Interest
 (300 confirmed or known planets, 300 false positives and 62 false alarms, one per star),
 split by star into a tuning and a held-out half, with flux-inverted and block-scrambled copies of every light
-curve as false-alarm controls. On the held-out half the panel recovers 57% (86/150; 95% CI 49–65%) of the CP/KP TOIs
+curve as false-alarm controls. On the held-out half the panel recovers 60% (90/150; 95% CI 52–67%) of the CP/KP TOIs
 on stars with SPOC 2-minute data, but only 10% (2/20; 95% CI 3–30%) below 2 R⊕ and 23% (6/26; 95% CI 11–42%) at 2 to 4 R⊕. It finds the
 dip of 77% (96/124; 95% CI 69–84%) of the false-positive TOIs with 2-minute data and rejects or flags 68% (65/96; 95% CI 58–76%) of the
 dips it found; counted over every held-out FP star, 80% (127/158; 95% CI 73–86%) are not offered as clean candidates.
 The controls
 show that the live discovery feed's "new" signals are consistent with noise: the feed's own admission rule passes
-55 and 65 false signals per 1,000 star-sectors on the inverted and
-scrambled curves, about 12.9 per 100 targets, against 15.8 per 100 on the live
-feed. The two Sentinel personas, tested on a stated subsample of 40 held-out stars, each mark
-50% (10/20; 95% CI 30–70%) of the CP/KP dips and agree on 38 of 40 stars (φ = 0.89): they are one
-correlated voter, not two. We report a known bug in the code that produced these numbers, the class skew
+58 and 61 false signals per 1,000 star-sectors on the inverted and
+scrambled curves, about 12.3 per 100 targets, against 15.8 per 100 on the live
+feed. The two Sentinel personas, tested on a stated subsample of 37 held-out stars, each mark
+47% (9/19; 95% CI 27–68%) of the CP/KP dips and agree on 35 of 37 stars (φ = 0.88): they are one
+correlated voter, not two. We report a bug in the code of the benchmark's first run, fixed since, and the same
+protocol re-run on the fixed code (the numbers above), the class skew
 of the stars that could not be searched, and a public leaderboard on the frozen sample that scores submitted
 events itself and ranks by Youden's J. On that leaderboard a baseline that never reads a light curve, a logistic
 regression on catalogue metadata fitted on the tuning half, scores J = +0.39 (+0.27 to +0.49) against
-+0.30 (+0.19 to +0.41) for the Probes. The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11). Nothing here is a
++0.35 (+0.23 to +0.45) for the Probes. The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.039, 95% CI -0.096 to +0.173, P(ΔJ ≤ 0) = 0.29). Nothing here is a
 discovery, and no SetuHQ output is called a confirmed or validated planet.
 
 ## 1 Introduction
@@ -179,7 +180,8 @@ is the one proposed in Section 5.2.
 
 **Frozen sample and blinding.** Section 2. The pipeline sees only light curves with opaque subject ids.
 
-**The panel measured.** The three Probes with their calibrated weights, sector-wide BLS, vetting and the
+**The panel measured.** The three Probes with their frozen calibrated weights (measured on the code of 2026-10-16; on the current code the same
+calibration gives other rates but the same two-of-three consensus decisions), sector-wide BLS, vetting and the
 limb-darkened fit, without the FAP rule (it is not part of vetting). The feed-level table adds the feed's FAP
 (200 trials) and its admission rule at the time. The benchmark runs did not query the TIC: each star's parameters came from the TOI table's own columns (Teff, log g, R★). Limb darkening used Teff and log g (the Sun's values where missing; Teff was published for 306 of 309 searched held-out stars), and ρ★ was computed from log g and R★, so the density test could act only on the 268 stars with both. The Sentinels are measured separately on a stated subsample
 (Section 5.4), because every subject needs a CLI call.
@@ -195,15 +197,16 @@ known TOI's transits masked, then 0.5-day blocks shuffled, so no real transit or
 Any vetted dip on a control is a false alarm: the reliability idea of Thompson et al. 2018.
 
 **Held-out split and threshold audit.** Nothing was tuned on this sample, so both halves are reported and the
-held-out half is the headline. An automated audit compares every threshold-like value (113 module
+held-out half is the headline. An automated audit compares every threshold-like value (177 module
 constants, config keys and reviewer weights) with the commit before the sample was frozen (`fbc1ed9`):
-0 changed (clean) across the 3 commits since. The Probe thresholds and weights
+56 changed across the 95 commits since, each listed with its reason in the benchmark report: the all-sky sweep's new configs (37); the feed's two-sector rule, pre-registered on the tuning half (5); the odd/even fix (1); extended vetting, which only adds flags (9); the reduced false-positive probability (3); a redaction list that is not a threshold (1). None was chosen on this sample's held-out results, and none of the vetting thresholds the scores read changed except the odd/even fix's error floor. The Probe thresholds and weights
 come from synthetic injection tests, and the vetting, V-shape, density and FAP rules were set before any TOI
 light curve was downloaded.
 
 **Code version.** Each per-star result records a fingerprint of the pipeline code that produced it:
-`14f6f4830a525d78` = commit 76de67d; `e4fe4c99663ccba8` = commit 40cceca. The report was generated at commit `8909cdae23aa1e478ff6b0dc35d393e504af2a2d`. Results from the earlier
-fingerprint were re-vetted from their stored classifications with the later code, controls included.
+`0b8e86a1fb71e777` = commit 8dde211 (HEAD differs only in comments and docstrings). The report was generated at commit `0ae8ccf0a23502a2324759a23a7d5ca277d63bcc`. Every star, controls included, was
+run again from its light curve with this code; no stored classification was reused. The first run, on the pre-fix
+code (commit 76de67d, 40cceca), is kept as `docs/results/benchmark_real_tois.json`.
 
 ## 5 Results
 
@@ -213,27 +216,27 @@ All rates are for the held-out half unless stated, with Wilson 95% intervals.
 
 | measure | result |
 |---|---|
-| CP/KP TOIs recovered, searchable stars (headline) | 57% (86/150; 95% CI 49–65%) |
-| CP/KP TOIs recovered, all stars (no 2-minute data counts as missed) | 57% (86/152; 95% CI 49–64%) |
+| CP/KP TOIs recovered, searchable stars (headline) | 60% (90/150; 95% CI 52–67%) |
+| CP/KP TOIs recovered, all stars (no 2-minute data counts as missed) | 59% (90/152; 95% CI 51–67%) |
 | below 2 R⊕ | 10% (2/20; 95% CI 3–30%) |
 | 2 to 4 R⊕ | 23% (6/26; 95% CI 11–42%) |
-| 4 to 8 R⊕ | 36% (4/11; 95% CI 15–65%) |
-| 8 to 30 R⊕ | 80% (73/91; 95% CI 71–87%) |
+| 4 to 8 R⊕ | 45% (5/11; 95% CI 21–72%) |
+| 8 to 30 R⊕ | 84% (76/91; 95% CI 75–90%) |
 | P in 0.5–2 d | 41% (12/29; 95% CI 26–59%) |
-| P in 2–5 d | 67% (52/78; 95% CI 56–76%) |
-| P in 5–13 d | 51% (22/43; 95% CI 37–65%) |
-| CP/KP dips flagged binary-like (the cost of the flags) | 33% (40/123; 95% CI 25–41%) |
-| tuning half, for comparison | 54% (80/148; 95% CI 46–62%) |
-| both halves | 56% (166/298; 95% CI 50–61%) |
+| P in 2–5 d | 73% (57/78; 95% CI 62–82%) |
+| P in 5–13 d | 49% (21/43; 95% CI 35–63%) |
+| CP/KP dips flagged binary-like (the cost of the flags) | 26% (32/122; 95% CI 19–35%) |
+| tuning half, for comparison | 60% (89/148; 95% CI 52–68%) |
+| both halves | 60% (179/298; 95% CI 54–65%) |
 
 **Completeness is low for small planets.** Below 4 R⊕ the panel recovers 17% (8/46; 95% CI 9–31%); at 8 to 30 R⊕ it recovers
-80% (73/91; 95% CI 71–87%). The headline is therefore carried by giant planets, which dominate the CP/KP sample. Of the
-150 searchable CP/KP TOIs, 86 were recovered (82 on a periodic signal at the TOI's
-period, 0 at an alias of it, 4 without a period) and 64 were not. On recovered CP/KP
-TOIs the fit's median depth and duration ratios to the TOI values are 0.97 and 1.02.
+84% (76/91; 95% CI 75–90%). The headline is therefore carried by giant planets, which dominate the CP/KP sample. Of the
+150 searchable CP/KP TOIs, 90 were recovered (87 on a periodic signal at the TOI's
+period, 0 at an alias of it, 3 without a period) and 60 were not. On recovered CP/KP
+TOIs the fit's median depth and duration ratios to the TOI values are 0.99 and 1.02.
 
 The injection-recovery benchmark of the Probes on synthetic light curves agrees in shape. Recovered, by injected
-depth, at durations of 1, 2 and 4 h: 300 ppm: 0/20, 0/20, 0/20; 1,000 ppm: 1/20, 12/20, 18/20; 3,000 ppm: 20/20, 19/20, 20/20; with 0.000 vetted candidates per empty subject over
+depth, at durations of 1, 2 and 4 h: 300 ppm: 0/20, 0/20, 0/20; 1,000 ppm: 3/20, 16/20, 20/20; 3,000 ppm: 20/20, 19/20, 20/20; with 0.000 vetted candidates per empty subject over
 40 empty subjects. Synthetic noise is not sky noise: the empty-subject rate there is far below what the
 real-data controls show next.
 
@@ -241,27 +244,28 @@ real-data controls show next.
 
 | control | vetted false dips | per 1,000 star-sectors | star-sectors with any |
 |---|---|---|---|
-| inverted | 177 over 309 (93 periodic, 84 single) | 573 | 21% (65/309; 95% CI 17–26%) |
-| scrambled | 262 over 309 (67 periodic, 195 single) | 848 | 25% (78/309; 95% CI 21–30%) |
+| inverted | 198 over 309 (106 periodic, 92 single) | 641 | 22% (67/309; 95% CI 17–27%) |
+| scrambled | 266 over 309 (68 periodic, 198 single) | 861 | 25% (78/309; 95% CI 21–30%) |
 
 At the level of vetting alone, real light curves with every signal destroyed produce
-573 (inverted) and 848 (scrambled) vetted dips per 1,000 star-sectors. The discovery feed's admission rule (Section 3.7) removes most
+641 (inverted) and 861 (scrambled) vetted dips per 1,000 star-sectors. The discovery feed's admission rule (Section 3.7) removes most
 of them:
 
 | curve | admitted | distinct `new_candidate` signals | per 1,000 star-sectors | star-sectors with any |
 |---|---|---|---|---|
-| real | 222 (206 on a known TOI) | 5 | 16 | |
-| inverted | 76 | 17 | 55 | 6% (17/309; 95% CI 3–9%) |
-| scrambled | 30 | 20 | 65 | 6% (20/309; 95% CI 4–10%) |
+| real | 226 (207 on a known TOI) | 7 | 23 | |
+| inverted | 91 | 18 | 58 | 6% (18/309; 95% CI 4–9%) |
+| scrambled | 29 | 19 | 61 | 6% (19/309; 95% CI 4–9%) |
 
-**The feed's "new" signals are consistent with noise.** The worse control gives 65 false new signals per
+**The feed's "new" signals are consistent with noise.** The worse control gives 61 false new signals per
 1,000 star-sectors. The feed reviews 2 sectors per target, so noise alone should give about
-12.9 false `new_candidate` signals per 100 targets. This estimate is an approximation: it adds the
+12.3 false `new_candidate` signals per 100 targets. This estimate is an approximation: it adds the
 single-sector control rate over the sectors the feed reviews, as if each sector were an independent draw, and it
 ignores that the feed reviews a star's two latest sectors, not its first, and that noise in the two sectors may be
 correlated. The live catalogue (updated 2026-10-17) holds 3 distinct new signals over
-19 targets: 15.8 per 100 (95% CI 6–38). Noise alone would account for 0.82 of that rate, at least half, so a `new_candidate` on the feed is more likely noise than a signal. The proposed fix (requiring the signal in each
-of the two sectors independently, and a stricter FAP) has not been applied in the code measured here. It was chosen on the tuning half only, pre-registered at commit `8909cda`, and measured once on the held-out half with the discovery config itself (docs/results/feed_rule_validation.json):
+19 targets: 15.8 per 100 (95% CI 6–38). Noise alone would account for 0.78 of that rate, at least half, so a `new_candidate` on the feed is more likely noise than a signal. This table keeps the rule the
+protocol was frozen with. The fix the first run proposed (requiring the signal in each of the two sectors
+independently, and a stricter FAP) is now the feed's rule. It was chosen on the tuning half only and pre-registered at commit `8909cda`; its first held-out evaluation ran on the pre-fix code (docs/results/feed_rule_validation.json). Measured again, unchanged, on the held-out half with the discovery config and the current code (docs/results/feed_rule_validation_clipfix.json):
 
 | stricter feed rule | held-out result |
 |---|---|
@@ -271,7 +275,7 @@ of the two sectors independently, and a stricter FAP) has not been applied in th
 | CP/KP completeness | 17% (26/150; 95% CI 12–24%) |
 | false `new_candidate` signals expected per 100 targets | 6.1 |
 
-On the same evaluation the earlier rule gives 23.0 false signals per 100 targets: the new rule lowers the noise 3.7-fold (the 95% intervals do not overlap), but noise still outnumbers the 0.3 real new signals per 100 targets, and feed-level completeness falls from 39% to 17%. A feed admission is a lead for review, not a candidate of any confirmed status.
+On the same evaluation the earlier rule gives 27.8 false signals per 100 targets: the new rule lowers the noise 4.5-fold (the 95% intervals do not overlap), but noise still outnumbers the 1.6 real new signals per 100 targets, and feed-level completeness falls from 39% to 17%. A feed admission is a lead for review, not a candidate of any confirmed status.
 
 ### 5.3 False-positive TOIs
 
@@ -279,7 +283,7 @@ On the same evaluation the earlier rule gives 23.0 false signals per 100 targets
 |---|---|
 | FP TOIs whose dip the panel found | 77% (96/124; 95% CI 69–84%) |
 | … of those, rejected or flagged binary-like | 68% (65/96; 95% CI 58–76%) |
-| FP TOIs whose dip passed vetting (with or without flags) | 31% (38/124; 95% CI 23–39%) |
+| FP TOIs whose dip passed vetting (with or without flags) | 34% (42/124; 95% CI 26–43%) |
 | FA TOIs whose dip the panel found | 34% (12/35; 95% CI 21–51%) |
 
 These rates describe only FP stars with 2-minute data (Section 5.5). We found no published light-curve-only
@@ -287,16 +291,16 @@ reference for the share of FP TOIs flagged.
 
 ### 5.4 The Sentinels on a stated subsample
 
-Both Sentinels reviewed every subject of 40 held-out stars drawn with a fixed seed (20 CP/KP and
-20 FP), on the real light curves only. Scored per star: did the persona mark a dip on the TOI's
+Both Sentinels reviewed every subject of 37 held-out stars drawn with a fixed seed (19 CP/KP and
+18 FP), on the real light curves only. The Sentinels were not asked again for the re-run (no API key or signed-in CLI was available): their answers from the first run are carried over for the 37 of the 40 subsample stars whose every subject image and prompt are byte-identical on the current code; the other 3 are left out, not guessed. Scored per star: did the persona mark a dip on the TOI's
 ephemeris as a potential planet.
 
 | persona | CP/KP dips marked | FP dips marked as a potential planet | failed calls |
 |---|---|---|---|
-| Sentinel · Volunteer | 50% (10/20; 95% CI 30–70%) | 20% (4/20; 95% CI 8–42%) | 0 |
-| Sentinel · Skeptic | 50% (10/20; 95% CI 30–70%) | 20% (4/20; 95% CI 8–42%) | 0 |
+| Sentinel · Volunteer | 47% (9/19; 95% CI 27–68%) | 22% (4/18; 95% CI 9–45%) | 0 |
+| Sentinel · Skeptic | 47% (9/19; 95% CI 27–68%) | 22% (4/18; 95% CI 9–45%) | 0 |
 
-**The two personas are correlated.** They agree on 38 of 40 stars (φ = 0.89). They share
+**The two personas are correlated.** They agree on 35 of 37 stars (φ = 0.88). They share
 one model, so the panel should count them as one correlated voter, not two independent ones. On the CP/KP
 TOIs below 4 R⊕ in this subsample, Volunteer marked 0% (0/8; 95% CI 0–32%) and Skeptic
 0% (0/8; 95% CI 0–32%). The
@@ -311,29 +315,36 @@ describe 124 of 158 held-out FP TOIs, a population different from the full TOI F
 are not the panel's reliability on all FP TOIs. The loss is a property of the stars and is reported, not
 repaired.
 
-### 5.6 A known bug in the code that produced these numbers
+### 5.6 A bug in the first run's code, fixed, and the re-run
 
-`preprocess.clean` deletes every point more than 10 times the point-to-point scatter below the running median,
-with no run-length test, so a transit or eclipse deeper than about 10 times the per-cadence scatter loses its
-in-transit points before review and BLS. A star is counted as exposed when the TOI depth exceeds 8
-times the per-cadence scatter. In the held-out half 27 CP/KP, 11 FP and 0 FA stars are
-exposed (of 309 measured); 21 exposed CP/KP TOIs were recovered anyway and 6
-were missed, of which 3 lost at least half of their in-transit points to the bug (TOI
-5801.01, 5972.01, 7475.01). The median share of in-transit points removed on exposed stars is 31%. In the
-tuning half 7 of 8 exposed misses are explained by it.
+In the code of the benchmark's first run (commit 76de67d, 40cceca), `preprocess.clean` deleted every point more than 10
+times the point-to-point scatter below the running median, with no run-length test, so a transit or eclipse deeper
+than about 10 times the per-cadence scatter lost its in-transit points before review and BLS. A star is counted as
+exposed when the TOI depth exceeds 8 times the per-cadence scatter. In the held-out half 27 CP/KP,
+11 FP and 0 FA stars were exposed (of 309 measured); 21 exposed CP/KP TOIs were
+recovered anyway and 6 were missed, of which 3 lost at least half of their in-transit points
+to the bug (TOI 5801.01, 5972.01, 7475.01). The median share of in-transit points removed on exposed stars was
+31%. In the tuning half 7 of 8 exposed misses were explained by it.
 
-| held-out measure | all stars | exposed stars excluded | after the fix |
+Two fixes followed. `clean` now keeps a low point that is part of a dip (a run of at least max(3, 20 minutes /
+cadence) cadences more than 3σ below the median), and `vet.py`'s odd/even test, which the deep dips now reaching it
+failed spuriously, inflates its errors by the per-epoch depths' scatter and carries a 2% systematic floor. Both change
+default results. The whole benchmark was then run again on the fixed code with the protocol unchanged: the same
+sample, seed, split, light curves, controls and scoring, nothing tuned. The numbers in Section 5.1 to Section 5.5 are the
+re-run's.
+
+| held-out measure | first run | first run, exposed stars excluded | re-run on the fixed code |
 |---|---|---|---|
-| completeness (searchable) | 57% (86/150; 95% CI 49–65%) | 53% (65/123; 95% CI 44–61%) | *pending: clipping-fixed re-run* |
-| FP TOIs found | 77% (96/124; 95% CI 69–84%) | 75% (85/113; 95% CI 67–82%) | *pending: clipping-fixed re-run* |
-| … rejected or flagged | 68% (65/96; 95% CI 58–76%) | 68% (58/85; 95% CI 58–77%) | *pending: clipping-fixed re-run* |
-| feed-level false signals per 1,000, inverted | 55 | 48 | *pending: clipping-fixed re-run* |
-| feed-level false signals per 1,000, scrambled | 65 | 59 | *pending: clipping-fixed re-run* |
+| completeness (searchable) | 57% (86/150; 95% CI 49–65%) | 53% (65/123; 95% CI 44–61%) | 60% (90/150; 95% CI 52–67%) |
+| FP TOIs found | 77% (96/124; 95% CI 69–84%) | 75% (85/113; 95% CI 67–82%) | 77% (96/124; 95% CI 69–84%) |
+| … rejected or flagged | 68% (65/96; 95% CI 58–76%) | 68% (58/85; 95% CI 58–77%) | 68% (65/96; 95% CI 58–76%) |
+| feed-level false signals per 1,000, inverted | 55 | 48 | 58 |
+| feed-level false signals per 1,000, scrambled | 65 | 59 | 61 |
 
-Excluding exposed stars changes the completeness from 57% to 53% (65/123; 95% CI 44–61%): exposed
-CP/KP TOIs are deep, and 21 of 27 were recovered despite the bug. The
-fix is on a separate branch; after it merges only the exposed stars are re-run (code *pending: clipping-fixed re-run*), and the
-last column is filled from that re-run.
+On the 150 held-out CP/KP stars both runs searched, the re-run recovers 5 that the first run missed and misses 1 that it recovered: a change of +3 percentage points (paired bootstrap 95% CI +0 to +6, 20,000 draws; exact McNemar p = 0.22), so the fix is not shown to change completeness. Of the 27 exposed CP/KP stars, the first run recovered 21
+and the re-run 23; of the misses the bug explained, the re-run recovers TOI 5801.01, 5972.01, 7475.01 (still
+missed: none). The first run's report is kept as `docs/results/benchmark_real_tois.md`; the re-run's,
+with every measure side by side, is `docs/results/benchmark_real_tois_clipfix.md`.
 
 ### 5.7 The leaderboard's seeded entries
 
@@ -352,12 +363,12 @@ and are the method's own report.
 | entry | scope | rank | Youden J | Youden J, all stars | clean completeness, searchable CP/KP | FP rejection, searchable FP | inverted control: stars with any | reliability |
 |---|---|---|---|---|---|---|---|---|
 | Metadata only, no light curve (a floor) | held-out half | 1 | +0.39 (+0.27 to +0.49) | +0.46 (+0.35 to +0.55) | 76% (114/150; 95% CI 69–82%) | 63% (78/124; 95% CI 54–71%) | 54% (166/309; 95% CI 48–59%) | 69% (114/166; 95% CI 61–75%) |
-| Probes only | held-out half | 2 | +0.30 (+0.19 to +0.41) | +0.35 (+0.24 to +0.44) | 55% (83/150; 95% CI 47–63%) | 75% (93/124; 95% CI 67–82%) | 21% (65/309; 95% CI 17–26%) | 70% (83/118; 95% CI 62–78%) |
-| Probes only | Sentinel subsample | not ranked | +0.15 (-0.14 to +0.41) | +0.15 (-0.14 to +0.41) | 45% (9/20; 95% CI 26–66%) | 70% (14/20; 95% CI 48–85%) | 8% (3/40; 95% CI 3–20%) | 60% (9/15; 95% CI 36–80%) |
-| Sentinel · Volunteer alone | Sentinel subsample | not ranked | +0.30 (+0.01 to +0.53) | +0.30 (+0.01 to +0.53) | 50% (10/20; 95% CI 30–70%) | 80% (16/20; 95% CI 58–92%) | not measured | 71% (10/14; 95% CI 45–88%) |
-| Sentinel · Skeptic alone | Sentinel subsample | not ranked | +0.30 (+0.01 to +0.53) | +0.30 (+0.01 to +0.53) | 50% (10/20; 95% CI 30–70%) | 80% (16/20; 95% CI 58–92%) | not measured | 71% (10/14; 95% CI 45–88%) |
-| Probes + Sentinels, either (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | +0.10 (-0.19 to +0.37) | +0.10 (-0.19 to +0.37) | 50% (10/20; 95% CI 30–70%) | 60% (12/20; 95% CI 39–78%) | not measured | 56% (10/18; 95% CI 34–75%) |
-| Probes + Sentinels, both (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | +0.30 (+0.02 to +0.53) | +0.30 (+0.02 to +0.53) | 45% (9/20; 95% CI 26–66%) | 85% (17/20; 95% CI 64–95%) | not measured | 75% (9/12; 95% CI 47–91%) |
+| Probes only | held-out half | 2 | +0.35 (+0.23 to +0.45) | +0.40 (+0.29 to +0.49) | 60% (90/150; 95% CI 52–67%) | 75% (93/124; 95% CI 67–82%) | 22% (67/309; 95% CI 17–27%) | 72% (90/125; 95% CI 64–79%) |
+| Probes only | Sentinel subsample | not ranked | +0.14 (-0.16 to +0.41) | +0.14 (-0.16 to +0.41) | 42% (8/19; 95% CI 23–64%) | 72% (13/18; 95% CI 49–88%) | 8% (3/37; 95% CI 3–21%) | 62% (8/13; 95% CI 36–82%) |
+| Sentinel · Volunteer alone | Sentinel subsample | not ranked | +0.25 (-0.05 to +0.50) | +0.25 (-0.05 to +0.50) | 47% (9/19; 95% CI 27–68%) | 78% (14/18; 95% CI 55–91%) | not measured | 69% (9/13; 95% CI 42–87%) |
+| Sentinel · Skeptic alone | Sentinel subsample | not ranked | +0.25 (-0.05 to +0.50) | +0.25 (-0.05 to +0.50) | 47% (9/19; 95% CI 27–68%) | 78% (14/18; 95% CI 55–91%) | not measured | 69% (9/13; 95% CI 42–87%) |
+| Probes + Sentinels, either (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | +0.08 (-0.22 to +0.36) | +0.08 (-0.22 to +0.36) | 47% (9/19; 95% CI 27–68%) | 61% (11/18; 95% CI 39–80%) | not measured | 56% (9/16; 95% CI 33–77%) |
+| Probes + Sentinels, both (star-level rule, fixed before scoring, not panel consensus) | Sentinel subsample | not ranked | +0.25 (-0.04 to +0.50) | +0.25 (-0.04 to +0.50) | 42% (8/19; 95% CI 23–64%) | 83% (15/18; 95% CI 61–94%) | not measured | 73% (8/11; 95% CI 43–90%) |
 
 **A baseline that never reads a light curve.** The first row is a floor: a logistic regression on the public TOI
 number, period, duration, ephemeris errors and epoch, fitted on the tuning half, that places one passed event on the
@@ -365,7 +376,7 @@ published ephemeris of each held-out star with a SPOC 2-minute light curve that 
 submits the others as not searched, so its columns count the same stars as the Probes'. It reports the same events
 on the controls, because it ignores the light curve, so its control false-alarm rate is high. The two entries are
 compared by a paired ΔJ over the same stars (20,000 stratified bootstrap resamples of the searchable CP/KP and FP
-stars, both entries scored on each), not by whether their marginal intervals overlap. **The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11).** A
+stars, both entries scored on each), not by whether their marginal intervals overlap. **The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.039, 95% CI -0.096 to +0.173, P(ΔJ ≤ 0) = 0.29).** A
 light-curve method should be judged against this floor, not against zero.
 
 The FP measures in this paper differ by definition. Section 5.3's "rejected or flagged" is over the FP dips the
@@ -377,7 +388,7 @@ that are CP/KP, on this sample's class mix (150 CP/KP, 124 FP and 35 FA searched
 which is not the TOI catalogue's. The two Probes + Sentinels rules were stated before any of them was scored, as
 star-level combinations of the stored outcomes: *either* gives a clean candidate when the Probes give one or either
 Sentinel marks the dip as a potential planet; *both* only when the Probes give one and a Sentinel marks it too. They
-are not a run of the panel's mark-level consensus. **40 stars cannot order these configurations:** the subsample
+are not a run of the panel's mark-level consensus. **37 stars cannot order these configurations:** the subsample
 is never ranked, and every pair of their completeness intervals overlaps.
 
 ### 5.8 Single-star validation: pi Men c
@@ -400,18 +411,18 @@ These references measure different populations, data and tasks; they are context
 
 | quantity | SetuHQ (held-out) | published reference |
 |---|---|---|
-| completeness | 57% (86/150; 95% CI 49–65%) on searchable stars, end to end (search, review, vetting) | Robovetter DR25: above 85% for P < 100 d, vetting alone, on injected transits already detected as TCEs (Thompson et al. 2018) |
+| completeness | 60% (90/150; 95% CI 52–67%) on searchable stars, end to end (search, review, vetting) | Robovetter DR25: above 85% for P < 100 d, vetting alone, on injected transits already detected as TCEs (Thompson et al. 2018) |
 | completeness, 3 to 4 R⊕ | 44% (4/9; 95% CI 19–73%) | Planet Hunters TESS: 51% (Eisner et al. 2021) |
-| completeness, above 4 R⊕ | 75% (77/102; 95% CI 66–83%) | Planet Hunters TESS: 85% (Eisner et al. 2021) |
-| reliability against inverted and scrambled data | vetted false dips on 21% (65/309; 95% CI 17–26%) and 25% (78/309; 95% CI 21–30%) of star-sectors | Robovetter DR25: reliability above 98% for P < 100 d (Thompson et al. 2018) |
+| completeness, above 4 R⊕ | 79% (81/102; 95% CI 71–86%) | Planet Hunters TESS: 85% (Eisner et al. 2021) |
+| reliability against inverted and scrambled data | vetted false dips on 22% (67/309; 95% CI 17–27%) and 25% (78/309; 95% CI 21–30%) of star-sectors | Robovetter DR25: reliability above 98% for P < 100 d (Thompson et al. 2018) |
 | how many TOIs are false positives | the sample is stratified, not representative | prime mission: 565 of 2,241 (about 25%) found false positive by follow-up (Guerrero et al. 2021); Kepler KOIs overall 9.4% (Fressin et al. 2013) |
-| statistical validation | none in the code measured; S3, FP TOIs labelled validated: *pending: S3 FPP* | TRICERATOPS "validated": FPP < 0.015 and NFPP < 10⁻³ (Giacalone et al. 2021); vespa on all KOIs (Morton et al. 2016) |
+| statistical validation | none: the code computes a reduced FPP per periodic candidate, which by design never labels one validated; on this benchmark's FP TOIs: *pending: reduced FPP not yet scored on the benchmark* | TRICERATOPS "validated": FPP < 0.015 and NFPP < 10⁻³ (Giacalone et al. 2021); vespa on all KOIs (Morton et al. 2016) |
 
 The radius rows use the bins Planet Hunters TESS reported, computed from the per-star rows and the TOI table's
-radii. Against Planet Hunters TESS, SetuHQ's completeness is, at 3 to 4 R⊕, consistent with Planet Hunters TESS's rate; above 4 R⊕, significantly below Planet Hunters TESS's rate. With 9 stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart. Its headline completeness is significantly below the Robovetter's, and it is
-far from Robovetter-level reliability: its vetted false-alarm rate on the controls is 573 and
-848 per 1,000 star-sectors before the feed's rule, and 55 and
-65 after it, against the project's own proposed target of at most one per 1,000. The
+radii. Against Planet Hunters TESS, SetuHQ's completeness is, at 3 to 4 R⊕, not distinguishable from Planet Hunters TESS's 51% (44%, 19–73%; a 7-point lower estimate the interval cannot resolve); above 4 R⊕, not distinguishable from Planet Hunters TESS's 85% (79%, 71–86%; a 6-point lower estimate the interval cannot resolve). With 9 stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart. Planet Hunters TESS's rates carry their own uncertainty and come from sectors 1 to 26. Its headline completeness is significantly below the Robovetter's, and it is
+far from Robovetter-level reliability: its vetted false-alarm rate on the controls is 641 and
+861 per 1,000 star-sectors before the feed's rule, and 58 and
+61 after it, against the project's own proposed target of at most one per 1,000. The
 comparison is not like for like. The Robovetter's completeness measures the vetting step on events the Kepler
 pipeline had already detected, while SetuHQ's includes its own search; Kepler had a four-year baseline against
 one TESS sector here; Planet Hunters TESS searched sectors 1 to 26 with human volunteers and science-team vetting;
@@ -420,25 +431,28 @@ claim of matching either.
 
 ## 7 Limitations
 
-* **Against a metadata-only floor, the benchmark cannot show that the Probes beat it** (Section 5.7): J +0.30 (+0.19 to +0.41) against
-  +0.39 (+0.27 to +0.49) for a model that never reads a light curve; paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11. The
+* **Against a metadata-only floor, the benchmark cannot show that the Probes beat it** (Section 5.7): J +0.35 (+0.23 to +0.45) against
+  +0.39 (+0.27 to +0.49) for a model that never reads a light curve; paired ΔJ (floor − Probes) = +0.039, 95% CI -0.096 to +0.173, P(ΔJ ≤ 0) = 0.29. The
   ephemeris is given to every method, so J mixes detection with vetting; separate detection (ephemeris withheld)
   and vetting rankings are future work.
-* **No pixel-level vetting.** There is no centroid or difference-image test, so blended and background eclipsing
-  binaries can pass. Pixel-level results are pending: FP stars flagged *pending: S2 pixel vetting*, CP/KP stars flagged
-  *pending: S2 pixel vetting*.
-* **No false-positive probability.** Nothing here is statistically validated; S3 results are pending
-  (*pending: S3 FPP* of FP TOIs labelled validated; *pending: S3 FPP* of CP/KP TOIs likely planets).
-* **The Sentinels are measured on 40 stars,** were calibrated on 10 injected and 10 empty subjects,
+* **No pixel-level vetting in the benchmark.** The code has a difference-image centroid test (off by default, read
+  from the SPOC target pixel file), but the benchmark did not run it, so blended and background eclipsing binaries
+  can pass here. FP stars flagged *pending: pixel vetting not yet run on the benchmark*, CP/KP stars
+  flagged *pending: pixel vetting not yet run on the benchmark*.
+* **No statistical validation.** Nothing here is statistically validated. The code computes a reduced
+  false-positive probability per periodic candidate (a documented approximation that never says "validated"). FP
+  TOIs labelled validated: *pending: reduced FPP not yet scored on the benchmark*; CP/KP TOIs likely planets: *pending: reduced FPP not yet scored on the benchmark*.
+* **The Sentinels are measured on 37 stars,** were calibrated on 10 injected and 10 empty subjects,
   and never ran on the controls. The model version that answered is not recorded: the cache key holds the
   CLI's model setting ("default"), not the served model. Their errors are correlated.
-* **The clipping bug** (Section 5.6) affects deep transits in the code version measured.
+* **The clipping bug** (Section 5.6) is fixed in the code measured here; the first run, made before the fix, is kept
+  as the historical record.
 * **The density test could act only on 268 of 309 searched held-out stars,** those whose TOI-table entry gives both log g and R★.
 * **One sector per star, 2-minute data only.** Stars with only full-frame-image data are not searchable, and
   that loss is skewed toward FP TOIs (Section 5.5). Single transits and long periods are outside the sample's
   0.5 to 13.0 d range.
 * **Dispositions are the reference, not the truth.** Some CP/KP and FP labels may be wrong.
-* **The feed's `new_candidate` signals are consistent with noise:** noise alone would account for 0.82 of their
+* **The feed's `new_candidate` signals are consistent with noise:** noise alone would account for 0.78 of their
   rate (Section 5.2).
 * **FAPs are bounded by the trials;** the Gumbel tail is extrapolated and indicative only.
 * **Synthetic injections are not sky noise** (Section 5.1).
@@ -448,10 +462,12 @@ independent evidence such as radial velocities, and no SetuHQ output is called c
 
 ## 8 Reproducibility
 
-* **Code.** The benchmark report was generated at commit `8909cdae23aa1e478ff6b0dc35d393e504af2a2d` (Section 4 lists the pipeline
+* **Code.** The benchmark report was generated at commit `0ae8ccf0a23502a2324759a23a7d5ca277d63bcc` (Section 4 lists the pipeline
   fingerprints). The frozen sample is `docs/results/benchmark_toi_sample.json` (sha256 `6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac`); the report
-  is `docs/results/benchmark_real_tois.md` and `.json`; the commands are in `scripts/benchmark_real_tois.py`
-  (`freeze`, `run`, `sentinels`, `clipping`, `feed`, `report`). Downloads and per-subject outputs live in the
+  is `docs/results/benchmark_real_tois_clipfix.md` and `.json` (the first run, on the pre-fix code:
+  `docs/results/benchmark_real_tois.md` and `.json`); the commands are in `scripts/benchmark_real_tois.py`
+  (`freeze`, `run`, `sentinels`, `clipping`, `feed`, `report`, and with `--edition clipfix`: `rerun`,
+  `sentinels-carry`, `clipping`, `feed`, `report`). Downloads and per-subject outputs live in the
   gitignored `cache/`; the committed JSON holds every per-star outcome.
 * **Sentinel responses** are cached by hash and replayed without new calls; the per-star Sentinel outcomes are
   committed in the leaderboard's seeded submissions.
@@ -476,10 +492,9 @@ independent evidence such as radial velocities, and no SetuHQ output is called c
 These numbers will change. Their placeholders print *pending* until the stated file exists; the numbers
 script then fills them, and never guesses.
 
-* **clipping-fixed re-run**: pending; will be read from `docs/results/benchmark_real_tois_clipfix.json`.
-* **stricter feed rule**: filled from `docs/results/feed_rule_validation.json`.
-* **S2 pixel vetting**: pending; will be read from `docs/results/pixel_vetting.json`.
-* **S3 FPP**: pending; will be read from `docs/results/fpp_validation.json`.
+* **stricter feed rule**: filled from `docs/results/feed_rule_validation_clipfix.json`.
+* **pixel vetting not yet run on the benchmark**: pending; will be read from `docs/results/pixel_vetting.json`.
+* **reduced FPP not yet scored on the benchmark**: pending; will be read from `docs/results/fpp_validation.json`.
 
 ## References
 

@@ -54,7 +54,7 @@ MAX_FAP_TRIALS = 2000  # the tool's bound on bootstrap trials, so one call stays
 MAX_ROWS = 200
 
 BENCHMARKS = {
-    "real_tois": ("docs/results/benchmark_real_tois.json", "Blind benchmark on 662 real TOIs (held-out half), with controls."),
+    "real_tois": ("docs/results/benchmark_real_tois_clipfix.json", "Blind benchmark on 662 real TOIs (held-out half), with controls, on the current code."),
     "injection": ("docs/results/injection_recovery_simulated_panel.md", "Injection-recovery of the Probes on synthetic light curves."),
     "pi_men_validation": ("docs/results/pi_men_validation.json", "pi Men c recovered from the stored run, against the archive."),
     "weights": ("docs/results/reviewer_weights_full_panel.calibration.json", "Calibrated reviewer weights and the rates behind them."),

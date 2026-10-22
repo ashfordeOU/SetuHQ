@@ -40,6 +40,7 @@
       "name": "Ashforde OÜ"
     }
   },
+  "copyrightHolder": {"@type": "Organization", "name": "Ashforde OÜ"},
   "developmentStatus": "active",
   "issueTracker": "https://github.com/ashfordeOU/SetuHQ/issues",
   "referencePublication": "CITATION.cff"

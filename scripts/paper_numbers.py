@@ -11,13 +11,15 @@ filled from this script's table, which reads only committed files (docs/results/
 docs/leaderboard/leaderboard.json, docs/paper/references.json, and the method constants in the code and configs).
 A re-run after the results change updates the paper; tests/test_paper.py checks the paper against the JSON.
 
-**Pending results.** Three pieces of later work will change numbers in the paper. Each has a stated file; until
-that file exists its placeholders print as *pending*, never a guess:
+The benchmark numbers are those of the re-run on the current code (``docs/results/benchmark_real_tois_clipfix.json``,
+after the two fixes that change default results); the first run, on the pre-fix code
+(``docs/results/benchmark_real_tois.json``), is the historical record and gives the paper's "first run" column and the
+clipping bug's exposure. The stricter feed rule's numbers are its re-measurement on the current code
+(``docs/results/feed_rule_validation_clipfix.json``).
 
-* the clipping-fixed re-run of the stars exposed to the preprocess clipping bug
-  (``docs/results/benchmark_real_tois_clipfix.json``, the benchmark report's schema);
-* the stricter discovery-feed rule, chosen on the tuning half and measured once on the held-out half
-  (``docs/results/feed_rule_validation.json``);
+**Pending results.** Later work will change numbers in the paper. Each has a stated file; until that file exists
+its placeholders print as *pending*, never a guess:
+
 * the S2–S4 pixel-level vetting and false-positive-probability work
   (``docs/results/pixel_vetting.json`` and ``docs/results/fpp_validation.json``).
 
@@ -43,7 +45,9 @@ PAPER = Path("docs/paper")
 TEMPLATE = PAPER / "paper.template.md"
 OUT_MD = PAPER / "paper.md"
 OUT_JSON = PAPER / "numbers.json"
-BENCHMARK = Path("docs/results/benchmark_real_tois.json")
+BENCHMARK = Path("docs/results/benchmark_real_tois_clipfix.json")
+FIRST_RUN = Path("docs/results/benchmark_real_tois.json")  # the first run, on the pre-fix code: the historical record
+FEED_RULE = Path("docs/results/feed_rule_validation_clipfix.json")
 SAMPLE = Path("docs/results/benchmark_toi_sample.json")
 PI_MEN = Path("docs/results/pi_men_validation.json")
 INJECTION = Path("docs/results/injection_recovery_simulated_panel.md")
@@ -53,23 +57,16 @@ REFERENCES = PAPER / "references.json"
 
 # The later work that will change the paper: where its result will be, and which keys the paper reads from it.
 PENDING = {
-    "clipfix": {"label": "clipping-fixed re-run", "file": "docs/results/benchmark_real_tois_clipfix.json",
-                "keys": {"clipfix_completeness": ("summary.held_out.completeness", "pct"),
-                         "clipfix_fp_seen": ("summary.held_out.fp_seen", "pct"),
-                         "clipfix_fp_flagged": ("summary.held_out.fp_flagged_of_seen", "pct"),
-                         "clipfix_feed_inverted": ("summary.held_out.feed.inverted.new_signals_per_1000", "int"),
-                         "clipfix_feed_scrambled": ("summary.held_out.feed.scrambled.new_signals_per_1000", "int"),
-                         "clipfix_code": ("code_commit", "commit")}},
-    "feedrule": {"label": "stricter feed rule", "file": "docs/results/feed_rule_validation.json",
+    "feedrule": {"label": "stricter feed rule", "file": "docs/results/feed_rule_validation_clipfix.json",
                  "keys": {"feedrule_rule": ("rule", "rule"),
                           "feedrule_inverted": ("held_out.inverted.new_signals_per_1000", "int"),
                           "feedrule_scrambled": ("held_out.scrambled.new_signals_per_1000", "int"),
                           "feedrule_completeness": ("held_out.completeness", "pct"),
                           "feedrule_per100": ("held_out.expected_false_per_100_targets", "f1")}},
-    "pixel": {"label": "S2 pixel vetting", "file": "docs/results/pixel_vetting.json",
+    "pixel": {"label": "pixel vetting not yet run on the benchmark", "file": "docs/results/pixel_vetting.json",
               "keys": {"pixel_fp_flagged": ("held_out.fp_flagged", "pct"),
                        "pixel_cpkp_flagged": ("held_out.cp_kp_flagged", "pct")}},
-    "fpp": {"label": "S3 FPP", "file": "docs/results/fpp_validation.json",
+    "fpp": {"label": "reduced FPP not yet scored on the benchmark", "file": "docs/results/fpp_validation.json",
             "keys": {"fpp_fp_validated": ("held_out.fp_validated", "pct"),
                      "fpp_cpkp_likely": ("held_out.cp_kp_likely_planet", "pct")}},
 }
@@ -179,8 +176,9 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
     inj = injection_table((root / INJECTION).read_text())
     cfg = tomllib.loads((root / "configs/default.toml").read_text())
     disc = tomllib.loads((root / "configs/discovery.toml").read_text())
+    F = json.loads((root / FIRST_RUN).read_text())  # the first run, on the pre-fix code
     h, t, a = B["summary"]["held_out"], B["summary"]["tuning"], B["summary"]["all"]
-    hu = B["summary_unaffected"]["held_out"]
+    hu = F["summary_unaffected"]["held_out"]  # the first run without the stars its clipping bug exposed
     s = B["sample"]
     n = {}
 
@@ -239,10 +237,20 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
 
     n.update(cmp_pht_mid=against(pht_mid, "pht_mid"), cmp_pht_large=against(pht_large, "pht_large"),
              cmp_robo=against(h["completeness"], "robovetter_completeness"))
-    rows = {"3 to 4 R⊕": n["cmp_pht_mid"], "above 4 R⊕": n["cmp_pht_large"]}
-    n["cmp_pht_sentence"] = "; ".join(f"{k}, {v} Planet Hunters TESS's rate" for k, v in rows.items())
-    n["cmp_pht_note"] = (f" With {pht_mid['n']} stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart."
-                         if n["cmp_pht_mid"] == "consistent with" else "")
+    def pht_words(label, verdict, ours, ref_key):
+        ref = vals[ref_key]["value"]
+        if verdict != "consistent with":
+            return f"{label}, {verdict} Planet Hunters TESS's rate"
+        d = 100 * (ours["rate"] - ref)
+        return (f"{label}, not distinguishable from Planet Hunters TESS's {100 * ref:.0f}% ({100 * ours['rate']:.0f}%, "
+                f"{100 * ours['lo']:.0f}–{100 * ours['hi']:.0f}%; a {abs(d):.0f}-point {'lower' if d < 0 else 'higher'} estimate the "
+                "interval cannot resolve)")
+
+    n["cmp_pht_sentence"] = "; ".join([pht_words("3 to 4 R⊕", n["cmp_pht_mid"], pht_mid, "pht_mid"),
+                                       pht_words("above 4 R⊕", n["cmp_pht_large"], pht_large, "pht_large")])
+    n["cmp_pht_note"] = ((f" With {pht_mid['n']} stars in the 3 to 4 R⊕ bin the interval cannot tell the two apart."
+                          if n["cmp_pht_mid"] == "consistent with" else "")
+                         + " Planet Hunters TESS's rates carry their own uncertainty and come from sectors 1 to 26.")
     # The qualitative claims the text makes about these numbers: the script fails rather than print them untrue.
     small = small_rate_of(h)
     claim(small["rate"] is not None and small["rate"] < h["completeness"]["rate"] - 0.2,
@@ -285,19 +293,21 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
              feed_fap_trials=f"{disc['search']['fap_trials']:,}")
     # The rule the benchmark's feed-level table applied: the earlier one, as the feed-rule evaluation records it once the
     # feed has moved on to the pre-registered rule; until then, the discovery config's own.
-    fr_path = root / "docs/results/feed_rule_validation.json"
+    fr_path = root / FEED_RULE
     old = json.loads(fr_path.read_text())["held_out_old_rule"]["rule"] if fr_path.exists() else None
     if fr_path.exists():
         v = json.loads(fr_path.read_text())
         ho, oo = v["held_out"], v["held_out_old_rule"]
-        n["feedrule_intro"] = (f"It was chosen on the tuning half only, pre-registered at commit `{v['preregistration_commit'][:7]}`, and "
-                               "measured once on the held-out half with the discovery config itself "
-                               "(docs/results/feed_rule_validation.json):")
+        n["feedrule_intro"] = (f"It was chosen on the tuning half only and pre-registered at commit `{v['preregistration_commit'][:7]}`; its "
+                               "first held-out evaluation ran on the pre-fix code (docs/results/feed_rule_validation.json). Measured "
+                               "again, unchanged, on the held-out half with the discovery config and the current code "
+                               f"({FEED_RULE}):")
         claim(ho["expected_false_per_100_targets"] > ho["real_new_per_100_targets"],
               "the feed-rule sentence says noise still outnumbers the real new signals")
         n["feedrule_after"] = (
             f"On the same evaluation the earlier rule gives {oo['expected_false_per_100_targets']:.1f} false signals per 100 targets: "
-            f"the new rule lowers the noise {oo['expected_false_per_100_targets'] / ho['expected_false_per_100_targets']:.1f}-fold"
+            + (f"the new rule lowers the noise {oo['expected_false_per_100_targets'] / ho['expected_false_per_100_targets']:.1f}-fold"
+               if ho["expected_false_per_100_targets"] else "the new rule lowers the noise to zero")
             + (" (the 95% intervals do not overlap)" if v.get("fix_clearly_lowers_noise") else " (the 95% intervals overlap)")
             + f", but noise still outnumbers the {ho['real_new_per_100_targets']:.1f} real new signals per 100 targets, and "
             f"feed-level completeness falls from {100 * oo['completeness']['rate']:.0f}% to {100 * ho['completeness']['rate']:.0f}%. "
@@ -323,9 +333,32 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
     n.update(tu_completeness=pct(t["completeness"]), all_completeness=pct(a["completeness"]),
              all_fp_seen=pct(a["fp_seen"]), all_fp_flagged=pct(a["fp_flagged_of_seen"]), all_no_data=a["no_data"])
 
-    # The clipping bug.
-    cl = B["clipping"]
+    # The clipping bug, as the first run (pre-fix code) measured it, and the re-run on the fixed code.
+    cl = F["clipping"]
     ch = cl["held_out"]
+    fh = F["summary"]["held_out"]
+    af = B["against_first_run"]
+    pc = af["rows"][0]["paired"]
+    claim(af["rows"][0]["measure"].startswith("**Completeness"), "the first comparison row is the headline completeness")
+    n.update(first_completeness=pct(fh["completeness"]), first_completeness_rate=p0(fh["completeness"]["rate"]),
+             first_fp_seen=pct(fh["fp_seen"]), first_fp_flagged=pct(fh["fp_flagged_of_seen"]),
+             first_feed_inverted=f"{fh['feed']['inverted']['new_signals_per_1000']:.0f}",
+             first_feed_scrambled=f"{fh['feed']['scrambled']['new_signals_per_1000']:.0f}",
+             first_code=", ".join(F["code_provenance"]["commit"].values()),
+             rerun_paired_stars=pc["n"], rerun_gained=pc["gained"], rerun_lost=pc["lost"],
+             rerun_delta=f"{100 * pc['delta']:+.0f}".replace("-", "−"),
+             rerun_delta_ci=f"{100 * pc['lo']:+.0f} to {100 * pc['hi']:+.0f}".replace("-", "−"),
+             rerun_mcnemar=f"{pc['mcnemar_p']:.2g}", rerun_draws=f"{pc['draws']:,}",
+             rerun_exposed_n=af["clipping"]["n"], rerun_exposed_first=af["clipping"]["first_recovered"],
+             rerun_exposed_now=af["clipping"]["now_recovered"],
+             rerun_explained_now=(", ".join(af["clipping"]["explained_now_recovered"]) or "none"),
+             rerun_explained_still=(", ".join(af["clipping"]["explained_still_missed"]) or "none"))
+    n["rerun_change_sentence"] = (
+        f"On the {pc['n']} held-out CP/KP stars both runs searched, the re-run recovers {pc['gained']} that the first run missed "
+        f"and misses {pc['lost']} that it recovered: a change of {n['rerun_delta']} percentage points (paired bootstrap 95% CI "
+        f"{n['rerun_delta_ci']}, {pc['draws']:,} draws; exact McNemar p = {pc['mcnemar_p']:.2g}), "
+        + ("so the fix is not shown to change completeness." if pc["lo"] <= 0 <= pc["hi"] else
+           "so the change is larger than the resampling noise."))
     n.update(clip_ratio=f"{cl['ratio']:g}", clip_pos=ch["affected"]["positive"], clip_fp=ch["affected"]["fp"],
              clip_fa=ch["affected"]["fa"], clip_measured=ch["measured"], clip_recovered=ch["cp_kp_affected_recovered"],
              clip_missed=ch["cp_kp_affected_missed"], clip_explained=ch["cp_kp_misses_explained"],
@@ -334,8 +367,8 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
              clip_unaff_fp_flagged=pct(hu["fp_flagged_of_seen"]),
              clip_unaff_feed_inverted=f"{hu['feed']['inverted']['new_signals_per_1000']:.0f}",
              clip_unaff_feed_scrambled=f"{hu['feed']['scrambled']['new_signals_per_1000']:.0f}",
-             clip_tuning_explained=B["clipping"]["tuning"]["cp_kp_misses_explained"],
-             clip_tuning_missed=B["clipping"]["tuning"]["cp_kp_affected_missed"])
+             clip_tuning_explained=cl["tuning"]["cp_kp_misses_explained"],
+             clip_tuning_missed=cl["tuning"]["cp_kp_affected_missed"])
 
     # The Sentinels.
     se = B["sentinels"]
@@ -343,12 +376,30 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
         v = se["personas"][pid]
         n.update({f"sen_{key}_cpkp": pct(v["cp_kp_marked"]), f"sen_{key}_fp": pct(v["fp_marked_as_planet"]),
                   f"sen_{key}_errors": v["errors"]})
+    carry = se.get("carried")
+    n["sen_carry_sentence"] = (
+        f"The Sentinels were not asked again for the re-run (no API key or signed-in CLI was available): their answers "
+        f"from the first run are carried over for the {len(carry['stars'])} of the {len(carry['stated_subsample'])} subsample stars whose "
+        "every subject image and prompt are byte-identical on the current code"
+        + (f"; the other {len(carry['not_carried'])} are left out, not guessed." if carry["not_carried"] else ", which is all of them.")
+        if carry else "")
     n.update(sen_n=se["n_stars"], sen_agree=se["agreement"]["agree"], sen_agree_n=se["agreement"]["n"],
-             sen_phi=f"{se['agreement']['phi']:.2f}", sen_per_class=se["n_stars"] // 2, sen_prompt=PROMPT_VERSION)
+             sen_phi=f"{se['agreement']['phi']:.2f}", sen_per_class=se["n_stars"] // 2, sen_prompt=PROMPT_VERSION,
+             sen_n_pos=se["personas"]["claude-volunteer"]["cp_kp_marked"]["n"],
+             sen_n_fp=se["personas"]["claude-volunteer"]["fp_marked_as_planet"]["n"])
     claim(se["agreement"]["phi"] >= 0.7, "the text says the two personas count as one correlated voter (φ ≥ 0.7)")
 
     # Code version and the threshold audit.
     ta, cp = B["threshold_audit"], B["code_provenance"]
+    groups = ta.get("explained") or []
+    n["audit_sentence"] = (
+        f"{len(ta['changed'])} changed across the {len(ta['commits_since'])} commits since, each listed with its reason in the "
+        "benchmark report: " + "; ".join(f"{g['short']} ({len(g['keys'])})" for g in groups)
+        + (f"; and {len(ta['unexplained'])} not explained" if ta.get("unexplained") else "")
+        + ". None was chosen on this sample's held-out results, and none of the vetting thresholds the scores read changed "
+          "except the odd/even fix's error floor" if not ta["clean"] else
+        f"{len(ta['changed'])} changed (clean) across the {len(ta['commits_since'])} commits since")
+    claim(ta["clean"] or not ta.get("unexplained"), "the text says every threshold changed since the freeze has a stated reason")
     n.update(code_commit=B["code_commit"][:7], code_commit_full=B["code_commit"], audit_values=ta["values_checked"],
              audit_frozen=ta["frozen_after"], audit_changed=len(ta["changed"]), audit_clean="clean" if ta["clean"] else "NOT clean",
              audit_commits=len(ta["commits_since"]), generated_at=B["generated_at"][:10],
@@ -408,7 +459,7 @@ def numbers(root: Path = ROOT) -> tuple[dict, dict]:
              m_edge=f"{vt['edge_days'].default:g}", m_sigma=f"{vt['sigma_threshold'].default:g}",
              m_rho_lo=f"{transitfit.RHO_BOUNDS[0]:g}", m_rho_hi=f"{transitfit.RHO_BOUNDS[1]:g}",
              m_fap_block=f"{search.FAP_BLOCK_DAYS:g}", m_fap_default=search.FAP_TRIALS, m_tail_floor="10⁻⁶" if search.FAP_TAIL_FLOOR == 1e-6 else f"{search.FAP_TAIL_FLOOR:g}",
-             m_weight_floor=f"{calibrate.WEIGHT_FLOOR:g}", m_feed_depth=f"{discover.MAX_FEED_DEPTH_PPM:,.0f}",
+             m_weight_floor=f"{calibrate.WEIGHT_FLOOR:g}", m_odd_even_floor=f"{100 * vet.ODD_EVEN_FLOOR:g}%", m_feed_depth=f"{discover.MAX_FEED_DEPTH_PPM:,.0f}",
              m_feed_transits=discover.MIN_FEED_TRANSITS, m_feed_fap=f"{discover.MAX_FEED_FAP:g}",
              m_feed_two_sector=(f", and the same signal (periods within {100 * discover.TWO_SECTOR_PERIOD_TOL:g}%) reaches these parts "
                                 "of the rule in both reviewed sectors" if hasattr(discover, "TWO_SECTOR_PERIOD_TOL") else ""))

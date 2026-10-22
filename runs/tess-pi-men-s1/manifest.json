@@ -1,6 +1,6 @@
 {
-  "exoplan_version": "0.1.0",
-  "created_at": "2026-10-17T23:30:07+00:00",
+  "setuhq_version": "0.1.0",
+  "created_at": "2026-10-21T11:44:52+00:00",
   "python": "3.13.16",
   "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
   "packages": {
@@ -8,14 +8,14 @@
     "scipy": "1.18.1",
     "astropy": "8.0.2",
     "matplotlib": "3.11.2",
-    "lightkurve": "2.6.0",
-    "anthropic": "1.15.0"
+    "lightkurve": "2.6.0"
   },
   "config_name": "tess-pi-men-s1",
-  "config_sha256": "fd677ce6cc4ece7896618730d84ab4208d18dc87fd388108bed6072d7aeb72ad",
+  "config_sha256": "585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6",
   "subject_days": 13.0,
   "search_scope": "subject",
   "claude_prompt_version": "2026-10-16.1",
+  "sentinel_prompt_version": "2026-10-16.1",
   "inputs": [
     {
       "source": "MAST",
@@ -25,6 +25,8 @@
       "flux_column": "pdcsap_flux",
       "time_unit": "BTJD",
       "lightkurve_version": "2.6.0",
+      "file": "tess2018206045859-s0001-0000000261136679-0120-s_lc.fits",
+      "file_sha256": "1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609",
       "target": "TIC 261136679",
       "mission": "TESS"
     }
@@ -33,30 +35,57 @@
     {
       "id": "volunteer-sensitive",
       "kind": "simulated",
-      "weight": 0.6
+      "weight": 0.6,
+      "calibration": "calibrated",
+      "calibration_note": "measured by injection"
     },
     {
       "id": "volunteer-typical",
       "kind": "simulated",
-      "weight": 0.6
+      "weight": 0.6,
+      "calibration": "calibrated",
+      "calibration_note": "measured by injection"
     },
     {
       "id": "volunteer-cautious",
       "kind": "simulated",
-      "weight": 0.4
+      "weight": 0.4,
+      "calibration": "calibrated",
+      "calibration_note": "measured by injection"
     },
     {
       "id": "claude-volunteer",
       "kind": "claude_code",
-      "weight": 0.5
+      "weight": 0.5,
+      "calibration": "calibrated",
+      "calibration_note": "measured by injection",
+      "provider": "claude-code",
+      "provider_label": "Claude Code CLI (Claude, Anthropic)",
+      "model": "default",
+      "persona": "volunteer",
+      "prompt_version": "2026-10-16.1",
+      "models_reported": [],
+      "called_at": null,
+      "cached_answers": 2
     },
     {
       "id": "claude-skeptic",
       "kind": "claude_code",
-      "weight": 0.5
+      "weight": 0.5,
+      "calibration": "calibrated",
+      "calibration_note": "measured by injection",
+      "provider": "claude-code",
+      "provider_label": "Claude Code CLI (Claude, Anthropic)",
+      "model": "default",
+      "persona": "skeptic",
+      "prompt_version": "2026-10-16.1",
+      "models_reported": [],
+      "called_at": null,
+      "cached_answers": 2
     }
   ],
   "skipped_reviewers": [],
+  "skipped_reviewers_detail": [],
   "weights": {
     "claude-skeptic": 0.5,
     "claude-volunteer": 0.5,
@@ -72,61 +101,51 @@
     "consensus_events": 7,
     "passed_vetting": 6
   },
-  "rebuilds": [
-    {
-      "at": "2026-10-19T10:46:05+00:00",
-      "exoplan_version": "0.1.0",
-      "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
-      "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g",
-      "fap_trials": 10000,
-      "stellar": "tic",
-      "config_sha256": "5144cd5273f6aa315915ed7d7fee28c9485303d2509ee7e6799c63d3796e35ba"
-    },
-    {
-      "at": "2026-10-19T12:09:47+00:00",
-      "exoplan_version": "0.1.0",
-      "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
-      "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g",
-      "fap_trials": 10000,
-      "stellar": "tic",
-      "config_sha256": "585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6"
-    },
-    {
-      "at": "2026-10-19T12:13:07+00:00",
-      "exoplan_version": "0.1.0",
-      "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
-      "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g",
-      "fap_trials": 10000,
-      "stellar": "tic",
-      "config_sha256": "585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6",
-      "code": "c78b981-dirty",
-      "inputs": [
-        {
-          "target": "TIC 261136679",
-          "sector": 1,
-          "file": "tess2018206045859-s0001-0000000261136679-0120-s_lc.fits",
-          "file_sha256": "1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609"
-        }
-      ]
-    },
-    {
-      "at": "2026-10-19T12:33:09+00:00",
-      "exoplan_version": "0.1.0",
-      "reused": "stored classifications (classifications.csv); the reviewers were not asked again",
-      "transit_fit": "limb-darkened model (transitfit.py), Claret 2017 TESS LD from the TIC Teff and log g",
-      "fap_trials": 10000,
-      "stellar": "tic",
-      "config_sha256": "585955d5e7a1d141566ebb52d9c0859d3ae4d2131b67720df3320a3c57308ac6",
-      "code": "c78b981-dirty",
-      "inputs": [
-        {
-          "target": "TIC 261136679",
-          "sector": 1,
-          "file": "tess2018206045859-s0001-0000000261136679-0120-s_lc.fits",
-          "file_sha256": "1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609"
-        }
-      ]
-    }
-  ],
-  "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since."
+  "sentinel_answers": {
+    "how": "stored answers only (cache/claude-code), reused because each subject image and prompt are byte-identical to the first run's; no Sentinel was asked again",
+    "prompt_image_dir": "the first run's runs/tess-pi-men-s1/subjects (the absolute path its prompts named)",
+    "answered_from_store": 4,
+    "expected": 4,
+    "not_answered": 0
+  },
+  "code": "f689e95",
+  "replaces": {
+    "created_at": "2026-10-17T23:30:07+00:00",
+    "had_pre_fix_note": true,
+    "candidates": [
+      7,
+      7
+    ],
+    "fields_compared": [
+      "candidate_id",
+      "subject_id",
+      "t_start",
+      "t_end",
+      "t_center",
+      "duration_hours",
+      "score",
+      "n_reviewers",
+      "planet_fraction",
+      "reviewers",
+      "passed",
+      "flags",
+      "depth_ppm",
+      "snr",
+      "period_days",
+      "n_transits",
+      "fap",
+      "fap_label",
+      "fap_trials",
+      "fap_exceed",
+      "fap_tail",
+      "fit_t0",
+      "fit_depth_ppm",
+      "fit_t14_hours",
+      "fit_b",
+      "fit_k",
+      "fit_rho_star"
+    ],
+    "differences": [],
+    "same_results": true
+  }
 }

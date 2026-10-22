@@ -1,0 +1,97 @@
+{
+ "when": "2026-10-21T10:35:00+00:00",
+ "targets": 19,
+ "rule": "two-sector rule, FAP < 0.001 over 2,000 trials (pre-registered 8909cda)",
+ "toi_table": "cache/toi/toi.csv fetched 2026-10-19T11:00:16Z (the copy the previous live run used)",
+ "reviewers": "the three Probes with the feed's weights file (no Sentinel: no API key is used)",
+ "sectors": {
+  "348684813": [
+   61
+  ],
+  "348684814": [
+   99
+  ],
+  "348755723": [
+   8,
+   35
+  ],
+  "348755728": [
+   88,
+   99
+  ],
+  "348756659": [
+   88,
+   99
+  ],
+  "348770361": [
+   94,
+   95
+  ],
+  "348835438": [
+   88,
+   99
+  ],
+  "348844154": [
+   95,
+   96
+  ],
+  "348995212": [
+   97,
+   98
+  ],
+  "349071261": [
+   44,
+   71
+  ],
+  "349088467": [
+   90,
+   91
+  ],
+  "349095149": [
+   97,
+   98
+  ],
+  "349312122": [
+   77
+  ],
+  "349373192": [
+   12,
+   13
+  ],
+  "349408306": [
+   97,
+   98
+  ],
+  "349410350": [
+   97,
+   98
+  ],
+  "349440621": [
+   78,
+   79
+  ],
+  "349488688": [
+   52,
+   79
+  ],
+  "349503728": [
+   100,
+   101
+  ]
+ },
+ "new_signals": 0,
+ "new_entries": 0,
+ "known_signals": 2,
+ "known_entries": 24,
+ "run_log": {
+  "errors": [],
+  "new": 0,
+  "known": 24,
+  "filtered_deep": 66,
+  "filtered_fap": 2,
+  "filtered_one_sector": 2,
+  "filtered_single": 1,
+  "reclassified": 0
+ },
+ "previous_run": "docs/results/feed_rule_live_rerun.json (pre-fix code)"
+}
