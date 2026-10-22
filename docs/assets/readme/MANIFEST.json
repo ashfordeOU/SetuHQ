@@ -27,10 +27,10 @@
         "pi-men-dark.svg"
       ],
       "sources": {
-        "runs/tess-pi-men-s1": "2a3ab7ea444fa8824440e0f70e253d436f92e4e7160dbc255bb2eba92bfd7555",
+        "runs/tess-pi-men-s1": "e26edba666925e081ae922bd0354c4be71f924671d74918fc83b658d3514e311",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "7045c62"
+      "commit": "e4cd8ff"
     },
     "benchmark": {
       "files": [
@@ -70,11 +70,11 @@
         "flow-pipeline-dark.svg"
       ],
       "sources": {
-        "runs/tess-pi-men-s1": "2a3ab7ea444fa8824440e0f70e253d436f92e4e7160dbc255bb2eba92bfd7555",
+        "runs/tess-pi-men-s1": "e26edba666925e081ae922bd0354c4be71f924671d74918fc83b658d3514e311",
         "configs/tess_pi_men_s1.toml": "ecc1bf3a744ca6aea3199135cbb9f907b5203d13a047bb608305dc530a0c968b",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "7045c62"
+      "commit": "e4cd8ff"
     },
     "architecture": {
       "files": [
@@ -122,8 +122,8 @@
     }
   },
   "repo_counts": {
-    "modules": 52,
-    "tests": 751,
+    "modules": 53,
+    "tests": 754,
     "network": 2,
     "slow": 4,
     "chapters": 15,
