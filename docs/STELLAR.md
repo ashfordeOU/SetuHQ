@@ -163,30 +163,34 @@ The protocol, its seed, the published numbers compared against and every result 
 `scripts/stellar_validation.py` (resumable per item; `--report` rebuilds the two files). The published values
 are transcribed, with their sources, in [results/stellar_validation_references.json](results/stellar_validation_references.json).
 
-Status (protocol v1, seed 20261021): **flares partly validated** (6 of 8 checks), **pulsations partly validated**
-(4 of 6), **CHEOPS unvalidated** (0 of 3 checks; the decorrelation itself agrees with pycheops on two of three
-visits). In short:
+Status under protocol v2 (committed before its run; seed 20261022): **flares partly validated** (6 of 8 checks;
+the AU Mic null is a tuning-set result and not counted), **pulsations partly validated** (7 of 9), **CHEOPS partly
+validated** (2 of 5, with the two Poyatos et al. comparisons inconclusive because the CHEOPS gates fail). v1 and the
+algorithms were revised during development on these same targets; v2 is a re-test after review fixes, not an
+independent validation. In short:
 
-- **Flares, TESS.** AU Mic sector 1: 37 of Günther et al.'s 46 flare components fall in a SetuHQ flare
-  (0.80, 95% CI 0.67-0.89), peak amplitudes agree (ours/theirs 0.97, 0.88-1.08), no flare on the inverted light
-  curve; our complex fraction is higher (0.59 against 0.46). Proxima Cen sectors 11-12: 59 of our 61 flares are in
-  Medina et al.'s list, but we recover only half of theirs (0.49), mostly missing flares with ED below 3 s (0.15
-  below 1 s; 0.77 at 3-10 s). Energies: our 9000 K bolometric energies are 1.15× Günther et al.'s (1.05-1.34) for
-  TIC 150359500; for Proxima our TESS-band energies are 4.3× Medina et al.'s, which we trace to the ED definition,
-  the stellar luminosity and an untraced factor of about 1.8. Quiet stars: 1 detection in 147 days.
-- **Flares, CHEOPS.** On public DRP light curves of five M dwarfs (11.3 days), the complex fraction (0.52,
-  0.38-0.66) and the power-law index (2.08 ± 0.24) are consistent with Poyatos et al.'s 0.42 and 1.99 ± 0.10, but
-  denoising gains nothing on DRP data (−2% against their +35% on imagettes) and the inverted null finds 8 events,
-  so CHEOPS flare lists carry a substantial false-positive share.
-- **Pulsations.** β Pic sectors 5-7: all 54 of Zieba et al.'s frequencies recovered within 3σ. HR 10: 76% and 61% of
-  Salmon et al.'s frequencies in sectors 2 and 29 (8 and 9 of their 10 strongest), amplitudes within 10%; red-noise
-  surrogates give 0.1-0.2 false frequencies per light curve. TOI-197: numax 433 ± 5 µHz and Δν 28.8 ± 3.0 µHz
-  against Huber et al.'s 430 ± 18 and 28.94 ± 0.15. Our granulation frequency for HR 10 (56 µHz, one component)
-  disagrees with Salmon et al.'s 151 µHz from a different estimator.
-- **CHEOPS.** On the same input points and terms our decorrelation reproduces pycheops to 0.03 and 0.5 ppm on two
-  visits; on the third pycheops' fit has three times our rms on the same points, so it did not reach the
-  least-squares optimum. End to end the DACE arrays and pycheops' product differ (correlation 0.61-0.89). HR 10's
-  strongest frequency is found in every CHEOPS visit, the second only in one.
+- **Flares, TESS.** AU Mic sector 1 (the tuning star): 36 of Günther et al.'s 46 flare components fall in a SetuHQ
+  flare (0.78, 95% CI 0.64-0.88; the check needs 0.70 at the lower bound and fails), complex fraction 0.42 against
+  their 0.46, amplitudes 0.92× theirs. Proxima Cen sectors 11-12: all 48 of our flares are in Medina et al.'s list;
+  we recover 0.72 (0.58-0.83) of their flares with ED ≥ 3 s but only 0.40 overall. TESS-band energies measured as
+  they measure them (data ED × the Sullivan et al. 2015 magnitude-route luminosity) are 1.33× theirs (1.15-1.51;
+  just outside the 1.5 bound). 9000 K bolometric energies for TIC 150359500, computed as Günther et al. do, are
+  1.14× theirs (1.02-1.29). Single injected flares split into two or more components 12% of the time on Proxima
+  and GJ 1243 (7-19%), down from 41% on AU Mic before the fixes. Quiet stars: 1 detection in 147 days.
+- **Flares, CHEOPS (gated).** Bright injected flares are recovered 0.73 of the time (0.65-0.81) and the masked
+  inverted null finds 7 events against 47 flares without denoising (0.15) and 8 against 57 with it, so both gates fail and the Poyatos et al. comparisons
+  (complex fraction 0.42 against ~0.40; α 2.07 ± 0.22 against 1.92 ± 0.07; denoising +21% against +34%) are
+  reported as inconclusive.
+- **Pulsations.** β Pic sectors 5-7: all 54 of Zieba et al.'s frequencies recovered within 3σ. HR 10: 95% and 74%
+  of Salmon et al.'s frequencies in sectors 2 and 29, all of their 10 strongest in both, amplitudes within 10%;
+  AR(1) surrogates give 0.6 false frequencies per light curve; a random frequency would be flagged as a combination
+  2-3% of the time. HR 10's granulation frequency disagrees with Salmon et al.'s even with their estimator (70
+  against 151 µHz). TOI-197: numax 433 ± 6 µHz and Δν 28.8 µHz against Huber et al.'s 430 ± 18 and 28.94 ± 0.15
+  (within 0.15 µHz; our bootstrap uncertainty, 2.4 µHz, is large).
+- **CHEOPS.** On the same input our decorrelation reproduces pycheops (0.03 and 0.5 ppm) or reaches a lower rms
+  where pycheops' fit is off the optimum (648 against 1706 ppm); end to end the DACE arrays and pycheops' DRP
+  product differ (correlation 0.61-0.89). HR 10's two strongest δ Scuti frequencies are found in the three public
+  CHEOPS visits together.
 
 What is not validated, and why, is listed in the results file.
 

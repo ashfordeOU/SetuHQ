@@ -24,8 +24,12 @@ breaking changes are called out explicitly.
   type, and red-noise surrogates. CHEOPS: public DRP light curves only, through DACE (extra
   `[cheops]`), roll-angle decorrelation, one timeline with TESS, and ESA's acknowledgement, the
   programme and visit ids, the credit line and SetuHQ's independence disclaimer on every output.
-  Validated under a frozen protocol against published results in
+  Validated against published results under protocol v2
+  (`docs/results/stellar_validation_protocol_v2.json`, committed before its run) in
   `docs/results/stellar_validation.md`, with what is not validated listed there.
+- **CHEOPS data stay under ESA's terms** (CC BY-NC 3.0 IGO; commercial use needs ESA's prior
+  authorisation): `LICENSING.md`, `NOTICE` and `docs/PRO.md` exclude them from CC BY 4.0, the
+  commercial licence and Pro.
 
 ## [0.1.0] - 2026-10-20
 
