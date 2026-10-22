@@ -4,6 +4,7 @@
   "name": "SetuHQ",
   "description": "The open exoplanet observatory: a reproducible transit search of public TESS light curves with a calibrated panel of AI Sentinels and deterministic Probes, a blind real-TOI benchmark and a public leaderboard",
   "version": "0.1.0",
+  "identifier": "https://doi.org/10.5281/zenodo.23568348",
   "license": ["https://spdx.org/licenses/AGPL-3.0-only", "https://spdx.org/licenses/CC-BY-4.0"],
   "codeRepository": "https://github.com/ashfordeOU/SetuHQ",
   "url": "https://setuhq.com",

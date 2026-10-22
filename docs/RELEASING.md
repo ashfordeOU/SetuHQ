@@ -41,8 +41,8 @@ These need the owner's accounts; nothing in the repository can do them.
 3. **Zenodo.** Sign in at <https://zenodo.org> with GitHub, open <https://zenodo.org/account/settings/github/>,
    and switch `ashfordeOU/SetuHQ` **on**. From then on every published GitHub Release is archived and
    gets a DOI; `.zenodo.json` supplies the title, the creator (Chakshu Baweja, Ashforde OÜ), the licence
-   (`agpl-3.0-only`, Zenodo's id), the keywords and the links. Switch it on **before** the first tag, or
-   v0.1.0 gets no DOI.
+   (`agpl-3.0-only`, Zenodo's id), the keywords and the links. (Done: v0.1.0 is archived, version DOI
+   `10.5281/zenodo.23568349`, concept DOI `10.5281/zenodo.23568348`.)
 4. **MCP registry.** Nothing to set up: `mcp-publish.yml` logs in with GitHub OIDC, which the registry
    accepts for the `io.github.ashfordeOU/*` namespace. See `packaging/mcp/SUBMITTING.md` for the
    directories that need a form (Smithery, Glama, the Claude Code plugin directory).
@@ -110,24 +110,17 @@ Check a downloaded file's provenance with `gh attestation verify setuhq-X.Y.Z-py
 
 1. **PyPI:** <https://pypi.org/project/setuhq/X.Y.Z/> shows the version, and `pip install "setuhq[mcp]==X.Y.Z"`
    in a clean environment gives working `setuhq`, `setuhq mcp` and `setuhq-mcp` commands.
-2. **DOI:** take the DOIs from the Zenodo record. Use the **concept DOI** (all versions) for the badge and the
-   general citation, and the **version DOI** for this release. Then, in one pull request:
-   - `CITATION.cff`: add `doi: <concept DOI>` and an `identifiers:` entry with the version DOI;
-   - `codemeta.json`: add `"identifier": "https://doi.org/<concept DOI>"`;
-   - `.zenodo.json`: add a `related_identifiers` entry `{"identifier": "<concept DOI>", "relation":
-     "isVersionOf", "scheme": "doi", "resource_type": "software"}`;
-   - `paper/paper.bib`: the `setuhq` entry's `doi`;
-   - README: the DOI badge and the Cite section's "there is no DOI yet" sentence (see below).
-3. **README badges and install line,** once the package is live (they are not added before, so the README
-   never shows a badge that 404s). The badge row is generated: add them in `tools/gen_readme_assets.py`
-   (the `generated:badges` block), then `python tools/gen_readme_assets.py --write-readme`.
-   - PyPI: `https://img.shields.io/pypi/v/setuhq?style=flat-square&labelColor=0A1226` linking to
-     `https://pypi.org/project/setuhq/`;
-   - DOI: `https://zenodo.org/badge/DOI/<concept DOI>.svg` linking to `https://doi.org/<concept DOI>`;
-   - MCP registry: a static shields badge `MCP registry | io.github.ashfordeOU/setuhq` linking to
-     `https://registry.modelcontextprotocol.io/v0/servers?search=io.github.ashfordeOU/setuhq`, once
-     `mcp-publish.yml` has run;
-   - Install section: `pip install "setuhq[mcp]"` as the first line, the git install as the second.
+2. **DOI:** nothing to change. Zenodo mints each release's version DOI itself; the repository carries only the
+   **concept DOI** `10.5281/zenodo.23568348` (all versions; it resolves to the latest), which v0.1.0 created:
+   `CITATION.cff` (`doi:` and `identifiers:`), `codemeta.json` (`identifier`), `paper/paper.bib` (the
+   `setuhq` entry), the README badge (`CONCEPT_DOI` in `tools/gen_readme_assets.py`) and its Cite section.
+   `.zenodo.json` carries no DOI: Zenodo assigns it. `tests/test_release.py` pins these.
+3. **README badges** are generated (`tools/gen_readme_assets.py`, the `generated:badges` block). The PyPI badge
+   is a static shields badge from `__version__`, so `tools/gen_readme_assets.py --check` stays offline and
+   deterministic; the version bump changes it, so run `python tools/gen_readme_assets.py --write-readme` in the
+   release pull request. Still to add once `mcp-publish.yml` has run: a static shields badge `MCP registry |
+   io.github.ashfordeOU/setuhq` linking to
+   `https://registry.modelcontextprotocol.io/v0/servers?search=io.github.ashfordeOU/setuhq`.
 4. **MCP registry:** Actions, **Publish to the MCP registry**, on the tag (dry run first). See
    `packaging/mcp/SUBMITTING.md`.
 5. **Release notes** are always the CHANGELOG section. To change them, fix CHANGELOG.md on `main` and run

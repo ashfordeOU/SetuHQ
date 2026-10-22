@@ -10,6 +10,13 @@ breaking changes are called out explicitly.
 
 ## [Unreleased]
 
+### Added
+
+- **DOI and PyPI.** The Zenodo concept DOI `10.5281/zenodo.23568348` (all versions) is in `CITATION.cff`
+  (`doi`, `identifiers`), `codemeta.json` (`identifier`) and `paper/paper.bib`; the README has a PyPI badge
+  (static, from `__version__`, so `tools/gen_readme_assets.py --check` stays offline) and a DOI badge, its
+  install section leads with `pip install setuhq`, and its Cite section names the DOIs.
+
 ## [0.1.0] - 2026-10-22
 
 The first public release, under the name **SetuHQ** (*setu*, Sanskrit for bridge). Until this

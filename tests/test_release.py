@@ -311,6 +311,29 @@ def test_directory_listings():
     assert "candidate, never a confirmation" in zen["description"]
 
 
+CONCEPT_DOI = "10.5281/zenodo.23568348"  # Zenodo, all versions; minted with v0.1.0
+
+
+def test_the_concept_doi_is_in_the_citation_metadata_and_the_readme():
+    yaml = pytest.importorskip("yaml")
+    cff = yaml.safe_load((ROOT / "CITATION.cff").read_text(encoding="utf-8"))
+    assert cff["doi"] == CONCEPT_DOI
+    assert {"type": "doi", "value": CONCEPT_DOI} in [{k: i[k] for k in ("type", "value")} for i in cff["identifiers"]]
+    meta = json.loads((ROOT / "codemeta.json").read_text(encoding="utf-8"))
+    assert meta["identifier"] == f"https://doi.org/{CONCEPT_DOI}"
+    zen = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
+    assert "doi" not in zen  # Zenodo mints each version's DOI itself
+    bib = (ROOT / "paper" / "paper.bib").read_text(encoding="utf-8")
+    assert re.search(r"@misc\{setuhq,[^@]*doi\s*=\s*\{" + re.escape(CONCEPT_DOI) + r"\}", bib)
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    badges = readme.split("<!-- generated:badges", 1)[1].split("<!-- /generated:badges -->", 1)[0]
+    import setuhq
+    assert '<a href="https://pypi.org/project/setuhq/">' in badges
+    assert f"https://img.shields.io/badge/PyPI-v{setuhq.__version__}-" in badges  # static: --check stays offline
+    assert f'<a href="https://doi.org/{CONCEPT_DOI}">' in badges
+    assert "no DOI yet" not in readme and "pip install setuhq" in readme
+
+
 # ---------------------------------------------------------------- workflows
 
 
