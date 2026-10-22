@@ -4,9 +4,13 @@ __pycache__/
 .pytest_cache/
 build/
 dist/
-# Runs stay local, except the stored pi Men run the site and the tests are built from.
+# Runs stay local, except the stored runs the site and the tests are built from: pi Men and the worked examples.
 runs/*
 !runs/tess-pi-men-s1/
+!runs/tess-wasp-126-s1/
+!runs/tess-toi-270-s5/
+!runs/tess-lhs-3844-s1/
+!runs/tess-toi-236-s2/
 cache/
 data/raw/
 *.sqlite

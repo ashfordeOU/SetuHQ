@@ -61,7 +61,7 @@ RUNS = [
      "kind": "Small planet, ultra-short period", "planets": ["LHS 3844 b"], "paper": "VANDERSPEK_ET_AL__2019",
      "summary": "An Earth-sized planet (about 1.3 Earth radii) that orbits its small M dwarf every 11 hours, in half-hour transits.",
      "why": ("A small planet with very short, frequent transits, near the limit of a 10-minute-binned search: its period is below "
-             "the default 0.5-day floor, so this run searches from 0.3 days.")},
+             "the default 0.5-day floor, so this run searches from 0.35 days.")},
     {"run": "tess-toi-236-s2", "star": "TOI-236", "tic": 9727392, "config": "configs/showcase/tess-toi-236-s2.toml",
      "kind": "Known false positive", "toi": "236.01",
      "summary": "A TESS Object of Interest the TOI table dispositions as a false positive (FP): a 2.4% dip every 4.5 days.",
@@ -174,11 +174,16 @@ def on_ephemeris(cands: list[dict], subjects: list[dict], period: float, t0_btjd
     return {"predicted": predicted, "dips": dips, "recovered": recovered}
 
 
+def _flags(c: dict) -> list[str]:
+    f = c.get("flags") or []
+    return [x for x in (f.split(";") if isinstance(f, str) else f) if x]
+
+
 def outcome_of(c: dict) -> str:
     """A dip's vetting outcome as the site names it (setuhq.docket)."""
     from setuhq.docket import outcome, vetting_checks
 
-    return outcome(vetting_checks(c), c.get("flags") or [], c.get("passed"))
+    return outcome(vetting_checks({**c, "flags": _flags(c)}), _flags(c), c.get("passed"))
 
 
 def compare_planet(name: str, rows: list[dict], paper: str, cands: list[dict], subjects: list[dict]) -> dict:
@@ -226,9 +231,7 @@ def compare_fp(spec: dict, cands: list[dict], subjects: list[dict]) -> dict:
     m = on_ephemeris(cands, subjects, toi["period"], toi["tranmid_bjd"] - BTJD, toi["duration_hours"])
     dips = [d["c"] for d in m["dips"]]
     outs = [outcome_of(c) for c in dips]
-    flags = sorted({f for c in dips for f in c.get("flags") or []})
-    # The secondary eclipse: a dip half a period from the TOI's transits.
-    half = on_ephemeris(cands, subjects, toi["period"], toi["tranmid_bjd"] - BTJD + toi["period"] / 2, toi["duration_hours"])
+    flags = sorted({f for c in dips for f in _flags(c)})
     return {
         "toi": spec["toi"], "disposition": toi["disposition"],
         "toi_source": f"{sample['source']}, fetched {sample['fetched_at'][:10]} (the real-TOI benchmark's frozen sample, sha256 {sample['sha256'][:16]}…)",
@@ -236,7 +239,7 @@ def compare_fp(spec: dict, cands: list[dict], subjects: list[dict]) -> dict:
                       "radius_re": toi["radius_re"]},
         "predicted_transits": len(m["predicted"]), "recovered_transits": len(m["recovered"]),
         "dips_on_ephemeris": len(dips), "outcomes": {k: outs.count(k) for k in ("passed", "flagged", "rejected") if outs.count(k)},
-        "flags": flags, "dips_at_half_phase": len(half["dips"]),
+        "flags": flags,
         "setuhq": {"period_days": _median([c.get("period_days") for c in dips]), "depth_ppm": _median([c.get("depth_ppm") for c in dips]),
                    "t14_hours": _median([c.get("fit_t14_hours") for c in dips]),
                    "secondary_snr": _median([c.get("secondary_snr") for c in dips])},
@@ -277,7 +280,9 @@ def run_entry(spec: dict, reference: dict) -> dict:
             entry["outcome"] = ("Its dips passed vetting: SetuHQ did not catch this known false positive here, and says so. "
                                 f"Flags: {', '.join(fp['flags']) or 'none'}.")
         else:
-            entry["outcome"] = (f"Caught: its dips on the TOI ephemeris were {verdict} by vetting "
+            n = fp["dips_on_ephemeris"]
+            entry["outcome"] = (f"Caught: {'all ' + str(n) + ' dips' if n > 1 else 'its dip'} on the TOI ephemeris "
+                                f"{'were' if n > 1 else 'was'} {verdict} by vetting "
                                 f"({', '.join(fp['flags']) or 'no flag'}), so none is a candidate.")
         return entry
     planets = []
@@ -319,7 +324,7 @@ def markdown(e: dict, reference: dict) -> str:
                   f"| transits predicted in the data / with a dip | {fp['predicted_transits']} | {fp['recovered_transits']} |",
                   f"| dips on the ephemeris, by vetting outcome | | {', '.join(f'{v} {k}' for k, v in fp['outcomes'].items()) or 'none'} |",
                   f"| vetting flags on those dips | | {', '.join(f'`{x}`' for x in fp['flags']) or 'none'} |",
-                  f"| dips half a period away (a secondary eclipse) | | {fp['dips_at_half_phase']} |", ""]
+                  f"| secondary eclipse at phase 0.5, SNR (vetting's search) | | {_f(fp['setuhq']['secondary_snr'], 1)} |", ""]
         return "\n".join(lines) + "\n"
     lines += ["## Against the discovery paper", "",
               f"Published values: {reference['source']}, fetched {reference['fetched_at'][:10]} "
@@ -397,24 +402,32 @@ def docs_page(entries: list[dict], reference: dict) -> str:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--fetch", action="store_true", help="query the archive and store the rows first")
+    ap.add_argument("--check", action="store_true", help="write nothing; fail when a stored output is not what the runs give")
     ap.add_argument("--partial", action="store_true", help="leave out the runs that are not stored yet (a preview)")
     args = ap.parse_args(argv)
-    reference = fetch() if args.fetch else json.loads(REFERENCE.read_text())
+    reference = fetch() if args.fetch and not args.check else json.loads(REFERENCE.read_text())
     missing = [spec["run"] for spec in RUNS if not (ROOT / "runs" / spec["run"] / "manifest.json").exists()]
     if missing and not args.partial:
         print(f"showcase_compare: runs not stored: {', '.join(missing)} (run them, or pass --partial)", file=sys.stderr)
         return 1
     entries = [run_entry(spec, reference) for spec in RUNS if spec["run"] not in missing]
-    MD_DIR.mkdir(parents=True, exist_ok=True)
-    for e in entries:
-        if not e.get("validation"):
-            (MD_DIR / f"{e['run']}.md").write_text(markdown(e, reference))
+    outputs = {MD_DIR / f"{e['run']}.md": markdown(e, reference) for e in entries if not e.get("validation")}
     doc = {"note": ("The worked examples the site shows, in its order, each compared with the literature "
                     "(scripts/showcase_compare.py). Probes only on every run but the lead (pi Men), which has the "
                     "Sentinels too. Known planets are named with their reference; SetuHQ's dips stay candidates."),
            "reference": str(REFERENCE.relative_to(ROOT)), "runs": entries}
-    SHOWCASE.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
-    (ROOT / "docs/SHOWCASE.md").write_text(docs_page(entries, reference))
+    outputs[SHOWCASE] = json.dumps(doc, indent=1, ensure_ascii=False) + "\n"
+    outputs[ROOT / "docs/SHOWCASE.md"] = docs_page(entries, reference)
+    if args.check:
+        stale = [str(p.relative_to(ROOT)) for p, text in outputs.items() if not p.exists() or p.read_text() != text]
+        if stale:
+            print(f"showcase_compare --check: not current: {', '.join(stale)} (run scripts/showcase_compare.py)", file=sys.stderr)
+            return 1
+        print(f"showcase_compare --check: {len(outputs)} files current")
+        return 0
+    MD_DIR.mkdir(parents=True, exist_ok=True)
+    for p, text in outputs.items():
+        p.write_text(text)
     for e in entries:
         print(f"{e['star']:10s} {e['count']:45s} {e['outcome']}")
     return 0

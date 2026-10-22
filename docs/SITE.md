@@ -2,9 +2,16 @@
 
 # The website: structure, addresses and tests
 
-https://setuhq.com is built by `setuhq site` (src/setuhq/site.py) from the stored run and committed as `site/`;
+https://setuhq.com is built by `setuhq site` (src/setuhq/site.py) from the stored runs and committed as `site/`;
 `.github/workflows/pages.yml` deploys `site/` as it is. Never edit `site/` by hand: change the code, then run
-`scripts/ci_local.sh` (or `setuhq site runs/tess-pi-men-s1 --catalog docs/discoveries/catalog.json --out site`).
+`scripts/ci_local.sh` (or `setuhq site runs/tess-pi-men-s1 runs/tess-wasp-126-s1 runs/tess-toi-270-s5
+runs/tess-lhs-3844-s1 runs/tess-toi-236-s2 --catalog docs/discoveries/catalog.json --out site`).
+
+`setuhq site` takes one or more runs. The first is the lead run: the sky map, the panel page and the home page's
+reference check are drawn from it (pi Men, checked against Huang et al. 2018). Every run, the lead included, is a
+worked example (docs/SHOWCASE.md, described by docs/results/showcase.json): a card on the home page, a group of dips
+on Candidates, a page and a case file for each dip, and its own stand-alone case file, plates and run report. A run
+whose configuration names no Sentinel is labelled "Probes only; Sentinels not run on this example" on each of them.
 
 ## Who it is for, and the five sections
 
@@ -53,15 +60,15 @@ One clean address per page; no `#/` routes and no view state in the address.
 | Candidates | `/candidates/` | `/app/#/explorer`, `#/discoveries`, `#/feed`, `/dashboard/`, `/discoveries/` |
 | A dip | `/candidates/<star>/dip-<n>/` (e.g. `/candidates/pi-men/dip-2/`) | `/app/#/transit?dip=<stored id>`, `#/cockpit` (no dip: the lead dip) |
 | Its case file | `/candidates/<star>/dip-<n>/case-file/` (`#ledger` etc. for a section) | `/app/#/candidates?dip=<stored id>&section=...`, `/docket/#<stored id>` |
-| Case file (stand-alone page) | `/candidates/case-file/` | `/docket/` |
+| Case file (stand-alone page) | `/candidates/case-file/` (the lead run); `/candidates/<star>/case-file/` (each other example run) | `/docket/` |
 | Radius ratios | `/candidates/radius-ratios/` | `/app/#/planets` |
 | How it works (chapter 1) | `/how-it-works/` | `/app/#/methods`, `#/methods?ch=survey` |
 | A chapter | `/how-it-works/<chapter>/`, e.g. `radial-velocity`, `atmospheres` | `/app/#/methods?ch=<id>` |
 | Evidence: the panel | `/evidence/` | `/app/#/sentinels`, `#/panel` |
 | Leaderboard | `/evidence/leaderboard/` | `/app/#/leaderboard` |
 | Runs | `/evidence/runs/` | `/app/#/runs` |
-| Run report | `/evidence/report/` | `/report/` |
-| Plates | `/evidence/plates/` | `/plate/` |
+| Run report | `/evidence/report/` (the lead run); `/evidence/report/<star>/` (each other example run) | `/report/` |
+| Plates | `/evidence/plates/` (the lead run and the search feed); `/evidence/plates/<star>/` (each other example run) | `/plate/` |
 | Docs | `/docs/` | (new) |
 
 The table lives in `src/setuhq/routes.py` (`ROUTE_PATHS`, `CHAPTER_SLUGS`, `LEGACY_PAGES`), with its twin in the

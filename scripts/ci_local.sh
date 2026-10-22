@@ -52,6 +52,8 @@ if [[ "$QUICK" -eq 1 ]]; then
 fi
 
 RUN="runs/tess-pi-men-s1"
+# The worked examples, shown beside the lead run (docs/SHOWCASE.md): each gets its dips' pages, case file, plates and report.
+SHOWCASE_RUNS="runs/tess-wasp-126-s1 runs/tess-toi-270-s5 runs/tess-lhs-3844-s1 runs/tess-toi-236-s2"
 CAT="docs/discoveries/catalog.json"
 EX="$VENV/bin/setuhq"
 
@@ -62,8 +64,13 @@ step "sweep catalogue: only ingested, intact contributions, and catalogue.json r
 grep "check-sweep: note:" "$LOG" | tail -n 1 || true
 ok
 
-step "the site builds from the stored run (setuhq site: every page, the report, the plates, the case file)"
-"$EX" site "$RUN" --catalog "$CAT" --out site --title "SetuHQ" \
+step "the worked examples' comparison with the literature is current (scripts/showcase_compare.py --check)"
+"$VENV/bin/python" scripts/showcase_compare.py --check 2>&1 | tee -a "$LOG"
+ok
+
+step "the site builds from the stored runs (setuhq site: every page, and each run's report, plates and case file)"
+# shellcheck disable=SC2086
+"$EX" site "$RUN" $SHOWCASE_RUNS --catalog "$CAT" --out site --title "SetuHQ" \
   --validation docs/results/pi_men_validation.md --benchmark docs/results/injection_recovery_simulated_panel.md >> "$LOG" 2>&1
 ok
 
@@ -75,7 +82,9 @@ ok
 step "site files exist, and no site-wide banner"
 for f in site/index.html site/404.html site/sitemap.xml site/robots.txt site/explore/index.html site/candidates/index.html \
          site/how-it-works/index.html site/evidence/index.html site/docs/index.html site/candidates/case-file/index.html \
-         site/evidence/plates/index.html site/evidence/report/index.html site/app/index.html; do
+         site/evidence/plates/index.html site/evidence/report/index.html site/app/index.html \
+         site/candidates/wasp-126/case-file/index.html site/evidence/plates/toi-270/index.html site/evidence/report/lhs-3844/index.html \
+         site/candidates/toi-236/dip-1/index.html; do
   test -s "$f" || { echo "missing $f" | tee -a "$LOG"; exit 1; }
 done
 if grep -rl 'id="codenote"' site --include=*.html; then echo "a site-wide banner is back" | tee -a "$LOG"; exit 1; fi

@@ -1,4 +1,4 @@
-# Showcase run: LHS 3844 (TIC 410153553), an M dwarf with an ultra-short-period small planet (P = 0.46 d, below the default 0.5 d search floor, so min_period is 0.3 here); TESS SPOC 2-minute sector 1.
+# Showcase run: LHS 3844 (TIC 410153553), an M dwarf with an ultra-short-period small planet (P = 0.46 d, below the default 0.5 d search floor, so min_period is 0.35 here (the longest BLS duration tried, 8 h, must stay below it)); TESS SPOC 2-minute sector 1.
 # Probes only; Sentinels not run on this example. The three Probes are the deterministic matched-filter
 # detectors of configs/tess_pi_men_s1.toml with the same seeds; no AI reviewer is in this configuration, so no
 # key or CLI is needed and the manifest records the panel as "probes_only". Reproduce with:
@@ -13,7 +13,7 @@ bin_minutes = 10.0
 detrend_window_days = 1.0
 
 [search]
-min_period = 0.3
+min_period = 0.35
 fap_trials = 10000    # block-bootstrap trials: resolves FAPs down to 1e-4
 fap_cache = "runs/tess-lhs-3844-s1/fap_null"  # the null maxima, committed with the run
 stellar = "tic"       # TIC Teff/log g for limb darkening, and ρ★ for the density check

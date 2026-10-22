@@ -103,7 +103,7 @@ def test_static_mentions_are_links(built):
     assert '<template id="mxsystpl">' in page and 'id="txlinks"' in _route(page, "transit")
     # Dynamic views use the page's twin renderer.
     for snippet in ("objLink('star', H.n[h], 'Star page ›')", "objLink('planet', p.pl_name)", "objLink('star', p.hostname)",
-                    "objLink('planet', S.planet, S.planet + ' ›')", "objLink('planet', name, name + ' ›')", "${ticLink(x.tic)}"):
+                    "objLink('planet', planet, planet + ' ›')", "objLink('planet', name, name + ' ›')", "${ticLink(x.tic)}"):
         assert snippet in APP_JS, snippet
     assert _page_data(page)["tic_names"] == {"261136679": "pi Men"}
 
