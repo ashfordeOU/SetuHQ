@@ -1,0 +1,50 @@
+# Showcase run: LHS 3844 (TIC 410153553), an M dwarf with an ultra-short-period small planet (P = 0.46 d, below the default 0.5 d search floor, so min_period is 0.3 here); TESS SPOC 2-minute sector 1.
+# Probes only; Sentinels not run on this example. The three Probes are the deterministic matched-filter
+# detectors of configs/tess_pi_men_s1.toml with the same seeds; no AI reviewer is in this configuration, so no
+# key or CLI is needed and the manifest records the panel as "probes_only". Reproduce with:
+#   setuhq run configs/showcase/tess-lhs-3844-s1.toml --out runs/tess-lhs-3844-s1
+#   setuhq crossmatch runs/tess-lhs-3844-s1
+
+[run]
+name = "tess-lhs-3844-s1"
+subject_days = 13.0
+min_points = 300
+bin_minutes = 10.0
+detrend_window_days = 1.0
+
+[search]
+min_period = 0.3
+fap_trials = 10000    # block-bootstrap trials: resolves FAPs down to 1e-4
+fap_cache = "runs/tess-lhs-3844-s1/fap_null"  # the null maxima, committed with the run
+stellar = "tic"       # TIC Teff/log g for limb darkening, and ρ★ for the density check
+
+[aggregate]
+cluster_gap_days = 0.05
+min_score = 0.5
+min_planet_fraction = 0.5
+
+[[targets]]
+mission = "TESS"
+id = "TIC 410153553"
+sectors = [1]
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-sensitive"
+snr_threshold = 4.5
+miss_probability = 0.05
+seed = 11
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-typical"
+snr_threshold = 5.0
+miss_probability = 0.10
+seed = 12
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-cautious"
+snr_threshold = 5.5
+miss_probability = 0.15
+seed = 13

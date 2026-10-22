@@ -714,6 +714,17 @@ def _reviewer_entry(r, weights: dict, basis: dict, classifications: list[Classif
     return entry
 
 
+def _panel_record(config) -> dict:
+    """The run's panel as configured: 'probes_only' when no Sentinel is in the config, with the label pages show."""
+    from setuhq.config import SENTINEL_TYPES
+    from setuhq.names import PROBES_ONLY
+
+    sentinels = [str(s.get("id")) for s in config.reviewers if s.get("type") in SENTINEL_TYPES]
+    if sentinels:
+        return {"mode": "probes_and_sentinels", "sentinels_configured": sentinels}
+    return {"mode": "probes_only", "sentinels_configured": [], "note": PROBES_ONLY}
+
+
 def write_manifest(out, config, lightcurves, active, skipped, weights, subjects, classifications, candidates,
                    *, weights_source: str = "uniform 1.0", weight_basis: dict | None = None,
                    skipped_detail: list[dict] | None = None) -> None:
@@ -740,6 +751,10 @@ def write_manifest(out, config, lightcurves, active, skipped, weights, subjects,
         # The weights used for consensus, for every reviewer the run knew about, and their source.
         "weights": {k: float(v) for k, v in sorted(weights.items())},
         "weights_source": weights_source,
+        # Which reviewers the configuration named: a run with no Sentinel in it says so here and on every page.
+        "panel": _panel_record(config),
+        # The code that ran (git describe --always --dirty), next to the data and config hashes.
+        "code": _git_describe(),
         "counts": {
             "light_curves": len(lightcurves),
             "subjects": len(subjects),

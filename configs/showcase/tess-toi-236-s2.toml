@@ -1,0 +1,50 @@
+# Showcase run: TOI-236 (TIC 9727392), a TESS Object of Interest dispositioned false positive (FP) in the TOI table, from the real-TOI benchmark's FP set; TESS SPOC 2-minute sector 2.
+# Probes only; Sentinels not run on this example. The three Probes are the deterministic matched-filter
+# detectors of configs/tess_pi_men_s1.toml with the same seeds; no AI reviewer is in this configuration, so no
+# key or CLI is needed and the manifest records the panel as "probes_only". Reproduce with:
+#   setuhq run configs/showcase/tess-toi-236-s2.toml --out runs/tess-toi-236-s2
+#   setuhq crossmatch runs/tess-toi-236-s2
+
+[run]
+name = "tess-toi-236-s2"
+subject_days = 13.0
+min_points = 300
+bin_minutes = 10.0
+detrend_window_days = 1.0
+
+[search]
+min_period = 0.5
+fap_trials = 10000    # block-bootstrap trials: resolves FAPs down to 1e-4
+fap_cache = "runs/tess-toi-236-s2/fap_null"  # the null maxima, committed with the run
+stellar = "tic"       # TIC Teff/log g for limb darkening, and ρ★ for the density check
+
+[aggregate]
+cluster_gap_days = 0.05
+min_score = 0.5
+min_planet_fraction = 0.5
+
+[[targets]]
+mission = "TESS"
+id = "TIC 9727392"
+sectors = [2]
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-sensitive"
+snr_threshold = 4.5
+miss_probability = 0.05
+seed = 11
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-typical"
+snr_threshold = 5.0
+miss_probability = 0.10
+seed = 12
+
+[[reviewers]]
+type = "simulated"
+id = "volunteer-cautious"
+snr_threshold = 5.5
+miss_probability = 0.15
+seed = 13

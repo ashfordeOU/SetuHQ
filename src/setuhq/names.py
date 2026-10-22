@@ -19,6 +19,21 @@ PROBE_KINDS = ("simulated",)
 ATTRIBUTION = ("Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
                "Probes are deterministic matched-filter detectors.")
 
+# A run whose configuration names no Sentinel: the label every page shows for it, and its manifest record.
+PROBES_ONLY = "Probes only; Sentinels not run on this example"
+
+
+def panel_mode(manifest: dict) -> str:
+    """'probes_only' when the run's configuration named no Sentinel (recorded in the manifest's 'panel'; a run
+    written before that field is read from its reviewers), else 'probes_and_sentinels'."""
+    mode = (manifest.get("panel") or {}).get("mode") if isinstance(manifest.get("panel"), dict) else None
+    if mode:
+        return mode
+    kinds = [r.get("kind") for r in (manifest.get("reviewers") or [])] + \
+            [r.get("kind") for r in (manifest.get("skipped_reviewers_detail") or [])]
+    return "probes_and_sentinels" if any(k in SENTINEL_KINDS for k in kinds) else "probes_only"
+
+
 # Who runs each Sentinel kind: the provider tag shown beside a Sentinel's name.
 PROVIDER_BY_KIND = {
     "claude": "Claude (Anthropic API)",

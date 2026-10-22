@@ -53,6 +53,9 @@ def resolve_weights(config, explicit: str | None, default: str | None = DEFAULT_
         sentinels = {str(spec.get("id")) for spec in config.reviewers if spec.get("type") in SENTINEL_TYPES}
         if ids and set(calibrated) == ids:
             return {k: float(v) for k, v in calibrated.items()}, str(default)
+        if ids and ids < set(calibrated) and not ids & sentinels:
+            # A Probes-only run: the calibrated weights of the Probes it has, no Sentinel to weigh.
+            return {k: float(v) for k, v in calibrated.items() if k in ids}, f"{default} (Probes only)"
         if ids & set(calibrated) and (ids - set(calibrated)) <= sentinels:
             new = ", ".join(sorted(ids - set(calibrated)))
             return ({k: float(v) for k, v in calibrated.items() if k in ids},
