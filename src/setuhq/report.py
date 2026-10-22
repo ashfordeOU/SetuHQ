@@ -18,7 +18,7 @@ from pathlib import Path
 from setuhq import brand
 
 STYLE = """
-:root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#15803d;--bad:#dc2626;--warn:#d97706;--radius:14px}
+:root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#15803d;--bad:#dc2626;--warn:#b45309;--radius:14px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}}
 :root[data-theme="dark"]{--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}
 *{box-sizing:border-box}
