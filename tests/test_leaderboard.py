@@ -163,7 +163,7 @@ def test_the_subsample_is_never_ranked_and_says_why():
     sub = [e for e in RESULTS["entries"] if e["scope"] == "sentinel_subsample"]
     assert sub and all(e["rank"] is None and not e["ranked"] for e in sub)
     md = L.RESULTS_MD.read_text()
-    assert "40 stars cannot order these configurations" in md
+    assert f"{len(RESULTS['sentinel_subsample'])} stars cannot order these configurations" in md
     part = md.split("## The Sentinels' stated subsample")[1]
     assert "| rank |" not in part.split("\n\n")[2]
 
@@ -400,7 +400,7 @@ def test_app_leaderboard_route_shows_the_table_rules_and_hash(pi_men_app):
     c = ENTRY["probes"]["scores"]["completeness_clean_searchable"]
     assert f"{c['k']}/{c['n']}" in sec and "Youden J" in sec and "not measured" in sec
     assert RESULTS["floor_note"] in sec
-    assert "40 stars cannot order these configurations" in sec
+    assert f"{len(RESULTS['sentinel_subsample'])} stars cannot order these configurations" in sec
     assert sec.count('data-l="Rank"') == sum(1 for e in RESULTS["entries"] if e["scope"] == "held_out")
     from setuhq.names import ATTRIBUTION
 

@@ -1508,6 +1508,12 @@ def crossmatch_line(result: dict) -> str:
     return f"Known-planet cross-match not run ({result.get('error') or NO_STORED_CROSSMATCH})"
 
 
+# The stored metrics the Docket reads (vetting_checks). A run's metrics also hold the extended (DV-style) vetting
+# record, tens of kilobytes per dip that no page reads, so the page data keeps only these.
+PAGE_METRICS = ("snr", "duration_minutes", "n_in_transit", "depth", "odd_depth", "even_depth", "odd_err", "even_err",
+                "secondary_depth", "secondary_err")
+
+
 def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
                 refresh_crossmatch: bool = False, crossmatch_fallback: str | Path | None = DEFAULT_CROSSMATCH,
                 require_crossmatch: bool = False) -> dict:
@@ -1518,7 +1524,7 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
     by_id = {r["candidate_id"]: r for r in rows}
     for c in run["candidates"]:
         row = by_id[c["candidate_id"]]
-        c["metrics"] = row.get("metrics", {})
+        c["metrics"] = {k: v for k, v in (row.get("metrics") or {}).items() if k in PAGE_METRICS}
         c["target"] = row.get("target", "")
         c["mission"] = row.get("mission", "")
         c["flags"] = [f for f in c["flags"] if f]

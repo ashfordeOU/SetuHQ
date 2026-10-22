@@ -1132,3 +1132,13 @@ def test_the_sentinels_page_states_the_benchmark_as_measured_not_discovered(tmp_
     assert "a lead for human or follow-up review, not a candidate of any confirmed status" in upd and "0 of the live feed&#x27;s 3" in upd
     assert "reliable" not in upd.lower() and " clean" not in upd.lower()
     assert "table.bench th,table.bench td{white-space:normal" in APP_CSS  # labels wrap; nothing hides off to the side
+    # The re-run on the fixed code: the first run beside it, the bug stated as fixed, the feed rule measured again.
+    first = {"k": 2, "n": 4, "rate": 0.5, "lo": 0.15, "hi": 0.85}
+    path.write_text(json.dumps(dict(b, edition="clipfix", per_star=[], clipping={"ratio": 8.0, "held_out": {"affected": {"positive": 27, "fp": 11, "fa": 0}}},
+                                    against_first_run={"rows": [{"first": first}], "clipping": {"n": 27, "first_recovered": 21, "now_recovered": 25}},
+                                    feed_rule=dict(rule, edition="clipfix", live={"targets": 19, "new_signals": 0}))))
+    fixed = _benchmark_card(_load_benchmark(path))
+    assert "Planets recovered in the first run, on the pre-fix code" in fixed and "50% <span class='muted'>(2/4" in fixed
+    assert "The clipping bug is fixed in the code that measured this." in fixed and "25 of the 27 exposed CP/KP are recovered now, against 21" in fixed
+    assert "Known bug" not in fixed and "measured again on this code" in fixed and "the live feed&#x27;s 19 targets admit 0 new signals" in fixed
+    assert "benchmark_real_tois_clipfix.md" in fixed

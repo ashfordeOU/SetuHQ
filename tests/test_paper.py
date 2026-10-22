@@ -18,7 +18,8 @@ from setuhq.benchmark_toi import wilson  # noqa: E402
 PAPER = (ROOT / "docs/paper/paper.md").read_text()
 FLAT = " ".join(PAPER.split())  # line breaks in the prose do not matter
 TEMPLATE = (ROOT / "docs/paper/paper.template.md").read_text()
-B = json.loads((ROOT / "docs/results/benchmark_real_tois.json").read_text())
+B = json.loads((ROOT / "docs/results/benchmark_real_tois_clipfix.json").read_text())  # the benchmark on the current code
+F = json.loads((ROOT / "docs/results/benchmark_real_tois.json").read_text())  # its first run, on the pre-fix code
 PM = json.loads((ROOT / "docs/results/pi_men_validation.json").read_text())
 REFS = json.loads((ROOT / "docs/paper/references.json").read_text())
 H = B["summary"]["held_out"]
@@ -54,7 +55,7 @@ def test_the_template_types_no_result():
 
 def test_headline_numbers_match_the_benchmark_json():
     for r in (H["completeness"], H["completeness_all_stars"], H["fp_seen"], H["fp_flagged_of_seen"], H["pos_flagged"],
-              H["fa_seen"], B["summary_unaffected"]["held_out"]["completeness"]):
+              H["fa_seen"], F["summary_unaffected"]["held_out"]["completeness"], F["summary"]["held_out"]["completeness"]):
         assert pct(r) in FLAT, pct(r)
     for b in H["completeness_by_radius"] + H["completeness_by_period"]:
         assert pct(b) in FLAT
@@ -82,8 +83,10 @@ def test_negative_results_are_reported_with_their_numbers():
     assert "class skew" in FLAT.lower()
     loss = B["loss"]["held_out"]
     assert f"describe {loss['fp']['data']} of {loss['fp']['n']} held-out FP TOIs" in FLAT
-    cl = B["clipping"]["held_out"]
-    assert "A known bug in the code that produced these numbers" in FLAT
+    cl = F["clipping"]["held_out"]
+    assert "A bug in the first run's code, fixed, and the re-run" in FLAT
+    pc = B["against_first_run"]["rows"][0]["paired"]
+    assert f"recovers {pc['gained']} that the first run missed and misses {pc['lost']} that it recovered" in FLAT
     assert f"{cl['affected']['positive']} CP/KP, {cl['affected']['fp']} FP and {cl['affected']['fa']} FA stars" in FLAT
     assert ", ".join(cl["explained_tois"]) in FLAT
 
@@ -135,25 +138,21 @@ def test_pending_results_print_pending_never_a_guess():
 
 
 def test_pending_results_fill_from_their_file_when_it_exists(tmp_path):
-    clip = tmp_path / PN.PENDING["clipfix"]["file"]
-    clip.parent.mkdir(parents=True)
+    pix = tmp_path / PN.PENDING["pixel"]["file"]
+    pix.parent.mkdir(parents=True)
     r = {"k": 70, "n": 150, "rate": 70 / 150, "lo": 0.39, "hi": 0.55}
-    clip.write_text(json.dumps({"summary": {"held_out": {"completeness": r, "fp_seen": r, "fp_flagged_of_seen": r,
-                                                          "feed": {"inverted": {"new_signals_per_1000": 12.0},
-                                                                   "scrambled": {"new_signals_per_1000": 20.4}}}},
-                                "code_commit": "abcdef0123"}))
+    pix.write_text(json.dumps({"held_out": {"fp_flagged": r, "cp_kp_flagged": r}}))
     feed = tmp_path / PN.PENDING["feedrule"]["file"]
     feed.write_text(json.dumps({"rule": "both sectors"}))  # keys missing: those stay pending, named
     out, status = PN.pending_numbers(tmp_path)
-    assert out["clipfix_completeness"] == "47% (70/150; 95% CI 39–55%)" and out["clipfix_code"] == "abcdef0"
-    assert out["clipfix_feed_scrambled"] == "20" and status["clipfix"]["filled"]
+    assert out["pixel_fp_flagged"] == "47% (70/150; 95% CI 39–55%)" and status["pixel"]["filled"]
     assert out["feedrule_rule"] == "both sectors" and not status["feedrule"]["filled"]
     assert out["feedrule_inverted"].startswith("*pending: stricter feed rule (no `held_out.inverted")
-    assert out["pixel_fp_flagged"] == "*pending: S2 pixel vetting*"
+    assert out["fpp_fp_validated"] == "*pending: S3 FPP*"
     n, _ = PN.numbers(ROOT)
     n.update(out)
     paper = PN.render(TEMPLATE, n)
-    assert "47% (70/150; 95% CI 39–55%)" in paper and "*pending: clipping-fixed re-run*" not in paper
+    assert "47% (70/150; 95% CI 39–55%)" in paper and "*pending: S2 pixel vetting*" not in paper
 
 
 def test_every_doi_was_resolved_and_every_value_checked_in_its_paper():
@@ -213,11 +212,12 @@ def test_the_feed_estimate_is_called_an_approximation():
 
 
 def _tmp_root(tmp_path):
-    for rel in ("docs/results/benchmark_real_tois.json", "docs/results/pi_men_validation.json",
+    for rel in ("docs/results/benchmark_real_tois.json", "docs/results/benchmark_real_tois_clipfix.json",
+                "docs/results/pi_men_validation.json",
                 "docs/results/injection_recovery_simulated_panel.md", "docs/results/reviewer_weights_full_panel.calibration.json",
                 "docs/results/benchmark_toi_sample.json", "docs/leaderboard/leaderboard.json", "docs/paper/references.json",
                 "docs/paper/paper.template.md", "configs/default.toml", "configs/discovery.toml",
-                "docs/results/feed_rule_validation.json",
+                "docs/results/feed_rule_validation.json", "docs/results/feed_rule_validation_clipfix.json",
                 "runs/tess-pi-men-s1/candidates.json"):
         dst = tmp_path / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
@@ -229,7 +229,7 @@ def _tmp_root(tmp_path):
 def test_qualitative_claims_fail_or_change_when_the_data_stops_supporting_them(tmp_path, what):
     root = _tmp_root(tmp_path)
     assert PN.build(root)[0] == PAPER  # an exact copy renders the committed paper
-    path = root / "docs/results/benchmark_real_tois.json"
+    path = root / "docs/results/benchmark_real_tois_clipfix.json"
     data = json.loads(path.read_text())
     if what == "correlated voter":
         data["sentinels"]["agreement"]["phi"] = 0.4

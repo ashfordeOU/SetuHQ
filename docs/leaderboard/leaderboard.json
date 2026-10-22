@@ -3,9 +3,9 @@
  "license": "CC-BY-4.0",
  "floor": {
   "probes": {
-   "j": 0.30333333333333323,
-   "lo": 0.18816083931077343,
-   "hi": 0.406189645709363
+   "j": 0.3500000000000001,
+   "lo": 0.23479371967186408,
+   "hi": 0.4511540000789469
   },
   "floor": {
    "j": 0.38903225806451625,
@@ -13,10 +13,10 @@
    "hi": 0.4897816054458294
   },
   "paired": {
-   "delta_j": 0.08569892473118301,
-   "lo": -0.05247311827957013,
-   "hi": 0.22322580645161283,
-   "p_le_0": 0.11175,
+   "delta_j": 0.03903225806451616,
+   "lo": -0.09602150537634402,
+   "hi": 0.1730107526881719,
+   "p_le_0": 0.2857,
    "draws": 20000,
    "seed": 20261019,
    "stars": {
@@ -26,7 +26,7 @@
   },
   "verdict": "not_shown"
  },
- "floor_note": "The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.086, 95% CI -0.052 to +0.223, P(ΔJ ≤ 0) = 0.11).",
+ "floor_note": "The benchmark cannot show that the Probes read light curves better than catalogue metadata predicts dispositions (paired ΔJ (floor − Probes) = +0.039, 95% CI -0.096 to +0.173, P(ΔJ ≤ 0) = 0.29).",
  "sample_sha256": "6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac",
  "inputs_sha256": "d0e4f2d9c5538800e9a34d018757f99e1d1672060e71ae56bbaf87fcaf0c15b4",
  "full_sample_sha256": "3d420ac0bc628e2fe02b0c3b4c73b287f75a6ee2be351bf42011497d7e45c3cf",
@@ -37,7 +37,6 @@
   "1634.01",
   "1846.01",
   "246.01",
-  "2547.01",
   "4379.01",
   "439.01",
   "4426.01",
@@ -52,7 +51,6 @@
   "6017.01",
   "750.01",
   "1030.01",
-  "1070.01",
   "1087.01",
   "1360.01",
   "1539.01",
@@ -65,32 +63,31 @@
   "3578.01",
   "3745.01",
   "4036.01",
-  "416.01",
   "4265.01",
   "4502.01",
   "5540.01",
   "6116.01",
   "973.01"
  ],
- "sentinel_subsample_sha256": "79d9b347ba1667bd3e919ee7e80d50016e1e06d106dd2531ad59ed0c7a0353b9",
+ "sentinel_subsample_sha256": "999c61bddc47cae0f47674ea77e1524c77697ad7da35d52f2abd7578924016b2",
  "sentinel_agreement": {
-  "n": 40,
-  "agree": 38,
-  "phi": 0.8901098901098901
+  "n": 37,
+  "agree": 35,
+  "phi": 0.8814102564102564
  },
- "benchmark_code_commit": "8909cdae23aa1e478ff6b0dc35d393e504af2a2d",
+ "benchmark_code_commit": "db41d03d026ce59ecd66c4a0ac3d34676e0bc520",
  "rules": [
   "Scored on the held-out half of the frozen sample only (TOIs by sha256(seed:TIC) parity); the tuning half is never scored.",
   "A submission lists, for every star of its scope, the events its method detected on the real light curve and on the flux-inverted and block-scrambled controls (time, duration, period, its own pass verdict and flags). The leaderboard decides which events lie on the TOI's ephemeris (the benchmark's score_star and match_toi) and counts control false alarms itself. Self-reported outcomes are not accepted.",
   "Rank: Youden's J on the searchable set the benchmark fixed (stars with a SPOC 2-minute light curve), with one predicate on both sides, a clean candidate (on the ephemeris, passed, no eclipsing-binary flag): J = the share of CP/KP stars offered as clean candidates + the share of FP stars not offered − 1, with a square-and-add Wilson interval. Calling every TOI a planet, with or without a flag, scores J = 0; a searchable star called not searched counts as not offered. J over every star of the scope is shown beside it. Where intervals overlap, the order is not a measured difference.",
-  "The controls gate ranking and do not enter J: only held-out entries with both control lists on every searched star are ranked, others are listed unranked. The control lists are the method's own report; the leaderboard cannot recompute them without the light curves. The 40-star Sentinel subsample is never ranked.",
+  "The controls gate ranking and do not enter J: only held-out entries with both control lists on every searched star are ranked, others are listed unranked. The control lists are the method's own report; the leaderboard cannot recompute them without the light curves. The Sentinel subsample is never ranked.",
   "A floor: the metadata-only baseline uses no light curve at all, only the public TOI number, period, duration, ephemeris errors and epoch, with a logistic regression fitted on the tuning half. A method that does not beat it is not shown to read the light curves better than the catalogue's own metadata predicts dispositions.",
   "A submission states the sha256 of the public inputs it was built from (tuning half with labels, held-out half without). Any other hash, tuned_on other than none or tuning, a field outside the whitelist, a missing or extra star, or missing provenance: refused, with the reasons listed.",
   "The hash is an attestation: the held-out labels are public in the repository, so the leaderboard cannot prove they were not read, and a method's pass verdicts and control events are its own report. Maintainer-held decoy light curves and prospective scoring on TOIs still undispositioned would close these gaps; neither exists yet.",
   "FP rejection: FP stars whose TOI dip the method did not offer as a clean candidate (recovered and not flagged). Reliability: the share of clean candidates on TOI dips that are CP/KP, on this sample's class mix, which is not the TOI catalogue's. All rates carry Wilson 95% intervals. TFOPWG dispositions are the reference, not ground truth for every TOI.",
   "Measured on a stated benchmark; nothing on this leaderboard is a discovery."
  ],
- "subsample_note": "40 stars cannot order these configurations: the subsample is listed, never ranked, and every interval is wide.",
+ "subsample_note": "37 stars cannot order these configurations: the subsample is listed, never ranked, and every interval is wide.",
  "entries": [
   {
    "id": "metadata-baseline",
@@ -107,7 +104,7 @@
       "sha256": "57d8f4ea25e107e8ad68cf43f53f0f40aa5469b36e948c2dc411c464c624498b"
      },
      {
-      "file": "docs/results/benchmark_real_tois.json",
+      "file": "docs/results/benchmark_real_tois_clipfix.json",
       "rows": "per_star no_data only (searchability)"
      }
     ],
@@ -337,44 +334,44 @@
    "kind": "probes",
    "tuned_on": "none",
    "provenance": {
-    "method": "The three Probes (Sensitive, Typical, Cautious) with their calibrated weights, sector-wide BLS, light-curve vetting and the limb-darkened fit, on each star's first SPOC 2-minute sector, as in the benchmark report; every consensus event on the real and control curves. No FAP rule. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
-    "code_version": "benchmark report from commit 76de67d; pipeline code fingerprints 14f6f4830a525d78 = commit 76de67d, e4fe4c99663ccba8 = commit 40cceca",
+    "method": "The three Probes (Sensitive, Typical, Cautious) with their calibrated weights, sector-wide BLS, light-curve vetting and the limb-darkened fit, on each star's first SPOC 2-minute sector, as in the benchmark report; every consensus event on the real and control curves, with its light-curve vetting flags (the extended-vetting flags, which never change pass/fail by default, are left out). No FAP rule. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
+    "code_version": "benchmark report from commit db41d03; pipeline code fingerprints 0b8e86a1fb71e777 = commit 8dde211",
     "generated_from": [
      {
-      "file": "cache/bench/<tic>/{real,inverted,scrambled}/candidates.json (gitignored)",
-      "sha256": "454f8a76b734631bfdd9b9b8da2364c331533f4e5808e48c469ea40b03b9dd1d",
+      "file": "cache/bench_clipfix/<tic>/{real,inverted,scrambled}/candidates.json (gitignored)",
+      "sha256": "e55d37ddab277ca27870607e4b44bae80c4a2ea75b4253dd793d70e409db1d1e",
       "rows": "927 files; sha256 over their sha256s in sample order"
      },
      {
-      "file": "docs/results/benchmark_real_tois.json",
-      "sha256": "2337b5c06246a1ecf4af7564990a0da8a13f6b37953fba8be74841a266659439",
+      "file": "docs/results/benchmark_real_tois_clipfix.json",
+      "sha256": "635bd4b4e2b077723ab6ec425a9ffe131c35fbefafb500d3770759a049c22766",
       "rows": "per_star (checked)"
      }
     ],
-    "tuning": "none: no threshold changed after the sample was frozen (threshold audit: 113 values, frozen after fbc1ed9, clean = True)",
+    "tuning": "none: nothing was tuned on this sample; the threshold audit (177 values, frozen after fbc1ed9) lists each value changed since with its reason, none chosen on held-out results",
     "seeded_by": "scripts/leaderboard_seed.py"
    },
    "scores": {
     "completeness": {
-     "k": 86,
+     "k": 90,
      "n": 150,
-     "rate": 0.5733333333333334,
-     "lo": 0.4933252680952499,
-     "hi": 0.649679096007766
+     "rate": 0.6,
+     "lo": 0.5200491578541916,
+     "hi": 0.6749567931953754
     },
     "completeness_all_stars": {
-     "k": 86,
+     "k": 90,
      "n": 152,
-     "rate": 0.5657894736842105,
-     "lo": 0.4863321408787125,
-     "hi": 0.6420034133670542
+     "rate": 0.5921052631578947,
+     "lo": 0.5126436447344322,
+     "hi": 0.6670261312096413
     },
     "completeness_clean": {
-     "k": 83,
+     "k": 90,
      "n": 150,
-     "rate": 0.5533333333333333,
-     "lo": 0.4734311837242303,
-     "hi": 0.6305719901688721
+     "rate": 0.6,
+     "lo": 0.5200491578541916,
+     "hi": 0.6749567931953754
     },
     "completeness_by_radius": [
      {
@@ -400,22 +397,22 @@
       ]
      },
      {
-      "k": 4,
+      "k": 5,
       "n": 11,
-      "rate": 0.36363636363636365,
-      "lo": 0.15166470989133157,
-      "hi": 0.6461988273798758,
+      "rate": 0.45454545454545453,
+      "lo": 0.21271271487637833,
+      "hi": 0.7199084642140241,
       "bin": [
        4,
        8
       ]
      },
      {
-      "k": 73,
+      "k": 76,
       "n": 91,
-      "rate": 0.8021978021978022,
-      "lo": 0.7088597622175292,
-      "hi": 0.871055399872483,
+      "rate": 0.8351648351648352,
+      "lo": 0.7456929432672272,
+      "hi": 0.8974856910507862,
       "bin": [
        8,
        30
@@ -458,11 +455,11 @@
      "hi": 0.5084805061591524
     },
     "completeness_clean_searchable": {
-     "k": 83,
+     "k": 90,
      "n": 150,
-     "rate": 0.5533333333333333,
-     "lo": 0.4734311837242303,
-     "hi": 0.6305719901688721
+     "rate": 0.6,
+     "lo": 0.5200491578541916,
+     "hi": 0.6749567931953754
     },
     "fp_rejection_searchable": {
      "k": 93,
@@ -472,28 +469,28 @@
      "hi": 0.817923566498214
     },
     "youden_j": {
-     "j": 0.30333333333333323,
-     "lo": 0.18816083931077343,
-     "hi": 0.406189645709363
+     "j": 0.3500000000000001,
+     "lo": 0.23479371967186408,
+     "hi": 0.4511540000789469
     },
     "completeness_clean_all_stars": {
-     "k": 83,
+     "k": 90,
      "n": 152,
-     "rate": 0.5460526315789473,
-     "lo": 0.4667416343776487,
-     "hi": 0.623093253594388
+     "rate": 0.5921052631578947,
+     "lo": 0.5126436447344322,
+     "hi": 0.6670261312096413
     },
     "youden_j_all_stars": {
-     "j": 0.34985009993337757,
-     "lo": 0.24484519840955876,
-     "hi": 0.4441586553702768
+     "j": 0.3959027315123249,
+     "lo": 0.29078401829037553,
+     "hi": 0.48848773384907446
     },
     "reliability": {
-     "k": 83,
-     "n": 118,
-     "rate": 0.7033898305084746,
-     "lo": 0.6156202992874991,
-     "hi": 0.7783342744735062
+     "k": 90,
+     "n": 125,
+     "rate": 0.72,
+     "lo": 0.6356343859128949,
+     "hi": 0.7912468406546534
     },
     "reliability_mix": {
      "positive": 150,
@@ -503,20 +500,20 @@
     "controls": {
      "inverted": {
       "star_sectors": 309,
-      "vetted_false_alarms": 177,
-      "per_1000_star_sectors": 572.8155339805825,
+      "vetted_false_alarms": 198,
+      "per_1000_star_sectors": 640.7766990291262,
       "stars_with_any": {
-       "k": 65,
+       "k": 67,
        "n": 309,
-       "rate": 0.21035598705501618,
-       "lo": 0.16861015896220224,
-       "hi": 0.25921503837547083
+       "rate": 0.2168284789644013,
+       "lo": 0.17450956663544626,
+       "hi": 0.2661016598119995
       }
      },
      "scrambled": {
       "star_sectors": 309,
-      "vetted_false_alarms": 262,
-      "per_1000_star_sectors": 847.8964401294498,
+      "vetted_false_alarms": 266,
+      "per_1000_star_sectors": 860.84142394822,
       "stars_with_any": {
        "k": 78,
        "n": 309,
@@ -560,44 +557,264 @@
    "kind": "probes",
    "tuned_on": "none",
    "provenance": {
-    "method": "The three Probes (Sensitive, Typical, Cautious) with their calibrated weights, sector-wide BLS, light-curve vetting and the limb-darkened fit, on each star's first SPOC 2-minute sector, as in the benchmark report; every consensus event on the real and control curves. No FAP rule. Restricted to the Sentinels' 40-star subsample, to compare like with like. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
-    "code_version": "benchmark report from commit 76de67d; pipeline code fingerprints 14f6f4830a525d78 = commit 76de67d, e4fe4c99663ccba8 = commit 40cceca",
+    "method": "The three Probes (Sensitive, Typical, Cautious) with their calibrated weights, sector-wide BLS, light-curve vetting and the limb-darkened fit, on each star's first SPOC 2-minute sector, as in the benchmark report; every consensus event on the real and control curves, with its light-curve vetting flags (the extended-vetting flags, which never change pass/fail by default, are left out). No FAP rule. Restricted to the Sentinels' subsample, to compare like with like. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
+    "code_version": "benchmark report from commit db41d03; pipeline code fingerprints 0b8e86a1fb71e777 = commit 8dde211",
     "generated_from": [
      {
-      "file": "cache/bench/<tic>/{real,inverted,scrambled}/candidates.json (gitignored)",
-      "sha256": "454f8a76b734631bfdd9b9b8da2364c331533f4e5808e48c469ea40b03b9dd1d",
+      "file": "cache/bench_clipfix/<tic>/{real,inverted,scrambled}/candidates.json (gitignored)",
+      "sha256": "e55d37ddab277ca27870607e4b44bae80c4a2ea75b4253dd793d70e409db1d1e",
       "rows": "927 files; sha256 over their sha256s in sample order"
      },
      {
-      "file": "docs/results/benchmark_real_tois.json",
-      "sha256": "2337b5c06246a1ecf4af7564990a0da8a13f6b37953fba8be74841a266659439",
+      "file": "docs/results/benchmark_real_tois_clipfix.json",
+      "sha256": "635bd4b4e2b077723ab6ec425a9ffe131c35fbefafb500d3770759a049c22766",
       "rows": "per_star (checked)"
      }
     ],
-    "tuning": "none: no threshold changed after the sample was frozen (threshold audit: 113 values, frozen after fbc1ed9, clean = True)",
+    "tuning": "none: nothing was tuned on this sample; the threshold audit (177 values, frozen after fbc1ed9) lists each value changed since with its reason, none chosen on held-out results",
+    "seeded_by": "scripts/leaderboard_seed.py"
+   },
+   "scores": {
+    "completeness": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "completeness_all_stars": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "completeness_clean": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "completeness_by_radius": [
+     {
+      "k": 0,
+      "n": 4,
+      "rate": 0.0,
+      "lo": 0.0,
+      "hi": 0.4898908403969213,
+      "bin": [
+       0,
+       2
+      ]
+     },
+     {
+      "k": 0,
+      "n": 4,
+      "rate": 0.0,
+      "lo": 0.0,
+      "hi": 0.4898908403969213,
+      "bin": [
+       2,
+       4
+      ]
+     },
+     {
+      "k": 0,
+      "n": 1,
+      "rate": 0.0,
+      "lo": 0.0,
+      "hi": 0.7934506882081973,
+      "bin": [
+       4,
+       8
+      ]
+     },
+     {
+      "k": 8,
+      "n": 10,
+      "rate": 0.8,
+      "lo": 0.4901624691221323,
+      "hi": 0.9433178490622331,
+      "bin": [
+       8,
+       30
+      ]
+     }
+    ],
+    "fp_found": {
+     "k": 14,
+     "n": 18,
+     "rate": 0.7777777777777778,
+     "lo": 0.5478541549399641,
+     "hi": 0.9099907195415445
+    },
+    "fp_flagged_of_found": {
+     "k": 9,
+     "n": 14,
+     "rate": 0.6428571428571429,
+     "lo": 0.38764422924295516,
+     "hi": 0.8365526834990504
+    },
+    "fp_rejection": {
+     "k": 13,
+     "n": 18,
+     "rate": 0.7222222222222222,
+     "lo": 0.4912734325899035,
+     "hi": 0.8750024669953034
+    },
+    "fp_rejection_all_stars": {
+     "k": 13,
+     "n": 18,
+     "rate": 0.7222222222222222,
+     "lo": 0.4912734325899035,
+     "hi": 0.8750024669953034
+    },
+    "fa_found": {
+     "k": 0,
+     "n": 0,
+     "rate": null,
+     "lo": null,
+     "hi": null
+    },
+    "completeness_clean_searchable": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "fp_rejection_searchable": {
+     "k": 13,
+     "n": 18,
+     "rate": 0.7222222222222222,
+     "lo": 0.4912734325899035,
+     "hi": 0.8750024669953034
+    },
+    "youden_j": {
+     "j": 0.14327485380116967,
+     "lo": -0.15555334293113365,
+     "hi": 0.40799961502616655
+    },
+    "completeness_clean_all_stars": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "youden_j_all_stars": {
+     "j": 0.14327485380116967,
+     "lo": -0.15555334293113365,
+     "hi": 0.40799961502616655
+    },
+    "reliability": {
+     "k": 8,
+     "n": 13,
+     "rate": 0.6153846153846154,
+     "lo": 0.3552289133643685,
+     "hi": 0.8229029231436777
+    },
+    "reliability_mix": {
+     "positive": 19,
+     "fp": 18,
+     "fa": 0
+    },
+    "controls": {
+     "inverted": {
+      "star_sectors": 37,
+      "vetted_false_alarms": 11,
+      "per_1000_star_sectors": 297.2972972972973,
+      "stars_with_any": {
+       "k": 3,
+       "n": 37,
+       "rate": 0.08108108108108109,
+       "lo": 0.02796057388250915,
+       "hi": 0.21300679483709983
+      }
+     },
+     "scrambled": {
+      "star_sectors": 37,
+      "vetted_false_alarms": 33,
+      "per_1000_star_sectors": 891.8918918918919,
+      "stars_with_any": {
+       "k": 8,
+       "n": 37,
+       "rate": 0.21621621621621623,
+       "lo": 0.11386511935374596,
+       "hi": 0.37195148526276334
+      }
+     }
+    },
+    "controls_complete": true,
+    "coverage": {
+     "stars": 37,
+     "searched": 37,
+     "by_class": {
+      "positive": [
+       19,
+       19
+      ],
+      "fp": [
+       18,
+       18
+      ],
+      "fa": [
+       0,
+       0
+      ]
+     }
+    }
+   },
+   "ranked": false,
+   "unranked_reason": "subsample: 37 stars cannot order configurations",
+   "rank": null
+  },
+  {
+   "id": "claude-skeptic",
+   "name": "Sentinel · Skeptic alone",
+   "scope": "sentinel_subsample",
+   "kind": "sentinel",
+   "tuned_on": "none",
+   "provenance": {
+    "method": "One Sentinel persona (skeptic) through the Claude Code CLI on every 13-day subject of the star's real light curve; each mark is an event, passed when the persona called the subject a potential planet. Not run on the controls. The answers are the first run's, stored, reused on the 37 stars whose subject images are byte-identical on the current code; no Sentinel was asked again. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
+    "code_version": "benchmark report from commit db41d03; pipeline code fingerprints 0b8e86a1fb71e777 = commit 8dde211",
+    "generated_from": [
+     {
+      "file": "cache/bench_clipfix/sentinels.json (gitignored)",
+      "sha256": "ee7b79eb37e93bf2ea81df0909b6bbb53cb7cacaf21a8ca45cbe55cc12fc658a",
+      "rows": "per star and subject: the persona's label and marks"
+     },
+     {
+      "file": "docs/results/benchmark_real_tois_clipfix.json",
+      "sha256": "635bd4b4e2b077723ab6ec425a9ffe131c35fbefafb500d3770759a049c22766",
+      "rows": "per_star (checked)"
+     }
+    ],
+    "tuning": "none: nothing was tuned on this sample; the threshold audit (177 values, frozen after fbc1ed9) lists each value changed since with its reason, none chosen on held-out results",
     "seeded_by": "scripts/leaderboard_seed.py"
    },
    "scores": {
     "completeness": {
      "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "completeness_all_stars": {
      "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "completeness_clean": {
      "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "completeness_by_radius": [
      {
@@ -635,10 +852,10 @@
      },
      {
       "k": 9,
-      "n": 11,
-      "rate": 0.8181818181818182,
-      "lo": 0.5230194356457672,
-      "hi": 0.9486323107214162,
+      "n": 10,
+      "rate": 0.9,
+      "lo": 0.5958499704752279,
+      "hi": 0.982123787103926,
       "bin": [
        8,
        30
@@ -646,32 +863,32 @@
      }
     ],
     "fp_found": {
-     "k": 16,
-     "n": 20,
-     "rate": 0.8,
-     "lo": 0.583982565906683,
-     "hi": 0.9193423379822393
+     "k": 4,
+     "n": 18,
+     "rate": 0.2222222222222222,
+     "lo": 0.09000928045845544,
+     "hi": 0.45214584506003586
     },
     "fp_flagged_of_found": {
-     "k": 10,
-     "n": 16,
-     "rate": 0.625,
-     "lo": 0.38641040376611335,
-     "hi": 0.8151876754845355
+     "k": 0,
+     "n": 4,
+     "rate": 0.0,
+     "lo": 0.0,
+     "hi": 0.4898908403969213
     },
     "fp_rejection": {
      "k": 14,
-     "n": 20,
-     "rate": 0.7,
-     "lo": 0.4810271799475211,
-     "hi": 0.8545227559784271
+     "n": 18,
+     "rate": 0.7777777777777778,
+     "lo": 0.5478541549399641,
+     "hi": 0.9099907195415445
     },
     "fp_rejection_all_stars": {
      "k": 14,
-     "n": 20,
-     "rate": 0.7,
-     "lo": 0.4810271799475211,
-     "hi": 0.8545227559784271
+     "n": 18,
+     "rate": 0.7777777777777778,
+     "lo": 0.5478541549399641,
+     "hi": 0.9099907195415445
     },
     "fa_found": {
      "k": 0,
@@ -682,265 +899,45 @@
     },
     "completeness_clean_searchable": {
      "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "fp_rejection_searchable": {
      "k": 14,
-     "n": 20,
-     "rate": 0.7,
-     "lo": 0.4810271799475211,
-     "hi": 0.8545227559784271
+     "n": 18,
+     "rate": 0.7777777777777778,
+     "lo": 0.5478541549399641,
+     "hi": 0.9099907195415445
     },
     "youden_j": {
-     "j": 0.1499999999999999,
-     "lo": -0.14109647535943953,
-     "hi": 0.4090478479630762
+     "j": 0.2514619883040936,
+     "lo": -0.053528971461809405,
+     "hi": 0.498970930389138
     },
     "completeness_clean_all_stars": {
      "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "youden_j_all_stars": {
-     "j": 0.1499999999999999,
-     "lo": -0.14109647535943953,
-     "hi": 0.4090478479630762
+     "j": 0.2514619883040936,
+     "lo": -0.053528971461809405,
+     "hi": 0.498970930389138
     },
     "reliability": {
      "k": 9,
-     "n": 15,
-     "rate": 0.6,
-     "lo": 0.35746829954344506,
-     "hi": 0.8017550397372577
+     "n": 13,
+     "rate": 0.6923076923076923,
+     "lo": 0.42369342985078007,
+     "hi": 0.8731929643292967
     },
     "reliability_mix": {
-     "positive": 20,
-     "fp": 20,
-     "fa": 0
-    },
-    "controls": {
-     "inverted": {
-      "star_sectors": 40,
-      "vetted_false_alarms": 5,
-      "per_1000_star_sectors": 125.0,
-      "stars_with_any": {
-       "k": 3,
-       "n": 40,
-       "rate": 0.075,
-       "lo": 0.025836025573262464,
-       "hi": 0.19864233651643165
-      }
-     },
-     "scrambled": {
-      "star_sectors": 40,
-      "vetted_false_alarms": 34,
-      "per_1000_star_sectors": 850.0,
-      "stars_with_any": {
-       "k": 9,
-       "n": 40,
-       "rate": 0.225,
-       "lo": 0.12316091264273149,
-       "hi": 0.37503096870942354
-      }
-     }
-    },
-    "controls_complete": true,
-    "coverage": {
-     "stars": 40,
-     "searched": 40,
-     "by_class": {
-      "positive": [
-       20,
-       20
-      ],
-      "fp": [
-       20,
-       20
-      ],
-      "fa": [
-       0,
-       0
-      ]
-     }
-    }
-   },
-   "ranked": false,
-   "unranked_reason": "subsample: 40 stars cannot order configurations",
-   "rank": null
-  },
-  {
-   "id": "claude-skeptic",
-   "name": "Sentinel · Skeptic alone",
-   "scope": "sentinel_subsample",
-   "kind": "sentinel",
-   "tuned_on": "none",
-   "provenance": {
-    "method": "One Sentinel persona (skeptic) through the Claude Code CLI on every 13-day subject of the star's real light curve; each mark is an event, passed when the persona called the subject a potential planet. Not run on the controls. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
-    "code_version": "benchmark report from commit 76de67d; pipeline code fingerprints 14f6f4830a525d78 = commit 76de67d, e4fe4c99663ccba8 = commit 40cceca",
-    "generated_from": [
-     {
-      "file": "cache/bench/sentinels.json (gitignored)",
-      "sha256": "26cf90b705d94a4b107a5e3b7b771d413f4a3241323eeba5aa7239e7f98f1c08",
-      "rows": "per star and subject: the persona's label and marks"
-     },
-     {
-      "file": "docs/results/benchmark_real_tois.json",
-      "sha256": "2337b5c06246a1ecf4af7564990a0da8a13f6b37953fba8be74841a266659439",
-      "rows": "per_star (checked)"
-     }
-    ],
-    "tuning": "none: no threshold changed after the sample was frozen (threshold audit: 113 values, frozen after fbc1ed9, clean = True)",
-    "seeded_by": "scripts/leaderboard_seed.py"
-   },
-   "scores": {
-    "completeness": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "completeness_all_stars": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "completeness_clean": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "completeness_by_radius": [
-     {
-      "k": 0,
-      "n": 4,
-      "rate": 0.0,
-      "lo": 0.0,
-      "hi": 0.4898908403969213,
-      "bin": [
-       0,
-       2
-      ]
-     },
-     {
-      "k": 0,
-      "n": 4,
-      "rate": 0.0,
-      "lo": 0.0,
-      "hi": 0.4898908403969213,
-      "bin": [
-       2,
-       4
-      ]
-     },
-     {
-      "k": 0,
-      "n": 1,
-      "rate": 0.0,
-      "lo": 0.0,
-      "hi": 0.7934506882081973,
-      "bin": [
-       4,
-       8
-      ]
-     },
-     {
-      "k": 10,
-      "n": 11,
-      "rate": 0.9090909090909091,
-      "lo": 0.6226415608917041,
-      "hi": 0.9837678272946745,
-      "bin": [
-       8,
-       30
-      ]
-     }
-    ],
-    "fp_found": {
-     "k": 5,
-     "n": 20,
-     "rate": 0.25,
-     "lo": 0.11186170069997625,
-     "hi": 0.46870087939258864
-    },
-    "fp_flagged_of_found": {
-     "k": 1,
-     "n": 5,
-     "rate": 0.2,
-     "lo": 0.03622410822563066,
-     "hi": 0.6244653729700049
-    },
-    "fp_rejection": {
-     "k": 16,
-     "n": 20,
-     "rate": 0.8,
-     "lo": 0.583982565906683,
-     "hi": 0.9193423379822393
-    },
-    "fp_rejection_all_stars": {
-     "k": 16,
-     "n": 20,
-     "rate": 0.8,
-     "lo": 0.583982565906683,
-     "hi": 0.9193423379822393
-    },
-    "fa_found": {
-     "k": 0,
-     "n": 0,
-     "rate": null,
-     "lo": null,
-     "hi": null
-    },
-    "completeness_clean_searchable": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "fp_rejection_searchable": {
-     "k": 16,
-     "n": 20,
-     "rate": 0.8,
-     "lo": 0.583982565906683,
-     "hi": 0.9193423379822393
-    },
-    "youden_j": {
-     "j": 0.30000000000000004,
-     "lo": 0.005135926436361182,
-     "hi": 0.5335034982207965
-    },
-    "completeness_clean_all_stars": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "youden_j_all_stars": {
-     "j": 0.30000000000000004,
-     "lo": 0.005135926436361182,
-     "hi": 0.5335034982207965
-    },
-    "reliability": {
-     "k": 10,
-     "n": 14,
-     "rate": 0.7142857142857143,
-     "lo": 0.45350915474002584,
-     "hi": 0.8827862143729825
-    },
-    "reliability_mix": {
-     "positive": 20,
-     "fp": 20,
+     "positive": 19,
+     "fp": 18,
      "fa": 0
     },
     "controls": {
@@ -949,16 +946,16 @@
     },
     "controls_complete": false,
     "coverage": {
-     "stars": 40,
-     "searched": 40,
+     "stars": 37,
+     "searched": 37,
      "by_class": {
       "positive": [
-       20,
-       20
+       19,
+       19
       ],
       "fp": [
-       20,
-       20
+       18,
+       18
       ],
       "fa": [
        0,
@@ -968,7 +965,7 @@
     }
    },
    "ranked": false,
-   "unranked_reason": "subsample: 40 stars cannot order configurations",
+   "unranked_reason": "subsample: 37 stars cannot order configurations",
    "rank": null
   },
   {
@@ -978,44 +975,44 @@
    "kind": "sentinel",
    "tuned_on": "none",
    "provenance": {
-    "method": "One Sentinel persona (volunteer) through the Claude Code CLI on every 13-day subject of the star's real light curve; each mark is an event, passed when the persona called the subject a potential planet. Not run on the controls. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
-    "code_version": "benchmark report from commit 76de67d; pipeline code fingerprints 14f6f4830a525d78 = commit 76de67d, e4fe4c99663ccba8 = commit 40cceca",
+    "method": "One Sentinel persona (volunteer) through the Claude Code CLI on every 13-day subject of the star's real light curve; each mark is an event, passed when the persona called the subject a potential planet. Not run on the controls. The answers are the first run's, stored, reused on the 37 stars whose subject images are byte-identical on the current code; no Sentinel was asked again. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.",
+    "code_version": "benchmark report from commit db41d03; pipeline code fingerprints 0b8e86a1fb71e777 = commit 8dde211",
     "generated_from": [
      {
-      "file": "cache/bench/sentinels.json (gitignored)",
-      "sha256": "26cf90b705d94a4b107a5e3b7b771d413f4a3241323eeba5aa7239e7f98f1c08",
+      "file": "cache/bench_clipfix/sentinels.json (gitignored)",
+      "sha256": "ee7b79eb37e93bf2ea81df0909b6bbb53cb7cacaf21a8ca45cbe55cc12fc658a",
       "rows": "per star and subject: the persona's label and marks"
      },
      {
-      "file": "docs/results/benchmark_real_tois.json",
-      "sha256": "2337b5c06246a1ecf4af7564990a0da8a13f6b37953fba8be74841a266659439",
+      "file": "docs/results/benchmark_real_tois_clipfix.json",
+      "sha256": "635bd4b4e2b077723ab6ec425a9ffe131c35fbefafb500d3770759a049c22766",
       "rows": "per_star (checked)"
      }
     ],
-    "tuning": "none: no threshold changed after the sample was frozen (threshold audit: 113 values, frozen after fbc1ed9, clean = True)",
+    "tuning": "none: nothing was tuned on this sample; the threshold audit (177 values, frozen after fbc1ed9) lists each value changed since with its reason, none chosen on held-out results",
     "seeded_by": "scripts/leaderboard_seed.py"
    },
    "scores": {
     "completeness": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
+     "k": 9,
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "completeness_all_stars": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
+     "k": 9,
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "completeness_clean": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
+     "k": 9,
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "completeness_by_radius": [
      {
@@ -1052,11 +1049,11 @@
       ]
      },
      {
-      "k": 10,
-      "n": 11,
-      "rate": 0.9090909090909091,
-      "lo": 0.6226415608917041,
-      "hi": 0.9837678272946745,
+      "k": 9,
+      "n": 10,
+      "rate": 0.9,
+      "lo": 0.5958499704752279,
+      "hi": 0.982123787103926,
       "bin": [
        8,
        30
@@ -1064,32 +1061,32 @@
      }
     ],
     "fp_found": {
-     "k": 7,
-     "n": 20,
-     "rate": 0.35,
-     "lo": 0.18119182312398308,
-     "hi": 0.5671457249315559
+     "k": 6,
+     "n": 18,
+     "rate": 0.3333333333333333,
+     "lo": 0.16278774656229916,
+     "hi": 0.5625053287487956
     },
     "fp_flagged_of_found": {
-     "k": 3,
-     "n": 7,
-     "rate": 0.42857142857142855,
-     "lo": 0.15821985399244537,
-     "hi": 0.7495416372469643
+     "k": 2,
+     "n": 6,
+     "rate": 0.3333333333333333,
+     "lo": 0.09677141021353453,
+     "hi": 0.7000066870052566
     },
     "fp_rejection": {
-     "k": 16,
-     "n": 20,
-     "rate": 0.8,
-     "lo": 0.583982565906683,
-     "hi": 0.9193423379822393
+     "k": 14,
+     "n": 18,
+     "rate": 0.7777777777777778,
+     "lo": 0.5478541549399641,
+     "hi": 0.9099907195415445
     },
     "fp_rejection_all_stars": {
-     "k": 16,
-     "n": 20,
-     "rate": 0.8,
-     "lo": 0.583982565906683,
-     "hi": 0.9193423379822393
+     "k": 14,
+     "n": 18,
+     "rate": 0.7777777777777778,
+     "lo": 0.5478541549399641,
+     "hi": 0.9099907195415445
     },
     "fa_found": {
      "k": 0,
@@ -1099,46 +1096,46 @@
      "hi": null
     },
     "completeness_clean_searchable": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
+     "k": 9,
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "fp_rejection_searchable": {
-     "k": 16,
-     "n": 20,
-     "rate": 0.8,
-     "lo": 0.583982565906683,
-     "hi": 0.9193423379822393
+     "k": 14,
+     "n": 18,
+     "rate": 0.7777777777777778,
+     "lo": 0.5478541549399641,
+     "hi": 0.9099907195415445
     },
     "youden_j": {
-     "j": 0.30000000000000004,
-     "lo": 0.005135926436361182,
-     "hi": 0.5335034982207965
+     "j": 0.2514619883040936,
+     "lo": -0.053528971461809405,
+     "hi": 0.498970930389138
     },
     "completeness_clean_all_stars": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
+     "k": 9,
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "youden_j_all_stars": {
-     "j": 0.30000000000000004,
-     "lo": 0.005135926436361182,
-     "hi": 0.5335034982207965
+     "j": 0.2514619883040936,
+     "lo": -0.053528971461809405,
+     "hi": 0.498970930389138
     },
     "reliability": {
-     "k": 10,
-     "n": 14,
-     "rate": 0.7142857142857143,
-     "lo": 0.45350915474002584,
-     "hi": 0.8827862143729825
+     "k": 9,
+     "n": 13,
+     "rate": 0.6923076923076923,
+     "lo": 0.42369342985078007,
+     "hi": 0.8731929643292967
     },
     "reliability_mix": {
-     "positive": 20,
-     "fp": 20,
+     "positive": 19,
+     "fp": 18,
      "fa": 0
     },
     "controls": {
@@ -1147,16 +1144,16 @@
     },
     "controls_complete": false,
     "coverage": {
-     "stars": 40,
-     "searched": 40,
+     "stars": 37,
+     "searched": 37,
      "by_class": {
       "positive": [
-       20,
-       20
+       19,
+       19
       ],
       "fp": [
-       20,
-       20
+       18,
+       18
       ],
       "fa": [
        0,
@@ -1166,7 +1163,7 @@
     }
    },
    "ranked": false,
-   "unranked_reason": "subsample: 40 stars cannot order configurations",
+   "unranked_reason": "subsample: 37 stars cannot order configurations",
    "rank": null
   },
   {
@@ -1186,25 +1183,214 @@
    },
    "scores": {
     "completeness": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "completeness_all_stars": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "completeness_clean": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "completeness_by_radius": [
+     {
+      "k": 0,
+      "n": 4,
+      "rate": 0.0,
+      "lo": 0.0,
+      "hi": 0.4898908403969213,
+      "bin": [
+       0,
+       2
+      ]
+     },
+     {
+      "k": 0,
+      "n": 4,
+      "rate": 0.0,
+      "lo": 0.0,
+      "hi": 0.4898908403969213,
+      "bin": [
+       2,
+       4
+      ]
+     },
+     {
+      "k": 0,
+      "n": 1,
+      "rate": 0.0,
+      "lo": 0.0,
+      "hi": 0.7934506882081973,
+      "bin": [
+       4,
+       8
+      ]
+     },
+     {
+      "k": 8,
+      "n": 10,
+      "rate": 0.8,
+      "lo": 0.4901624691221323,
+      "hi": 0.9433178490622331,
+      "bin": [
+       8,
+       30
+      ]
+     }
+    ],
+    "fp_found": {
+     "k": 14,
+     "n": 18,
+     "rate": 0.7777777777777778,
+     "lo": 0.5478541549399641,
+     "hi": 0.9099907195415445
+    },
+    "fp_flagged_of_found": {
+     "k": 11,
+     "n": 14,
+     "rate": 0.7857142857142857,
+     "lo": 0.5241076920169465,
+     "hi": 0.9242861334670647
+    },
+    "fp_rejection": {
+     "k": 15,
+     "n": 18,
+     "rate": 0.8333333333333334,
+     "lo": 0.6077796169796655,
+     "hi": 0.9416342323981449
+    },
+    "fp_rejection_all_stars": {
+     "k": 15,
+     "n": 18,
+     "rate": 0.8333333333333334,
+     "lo": 0.6077796169796655,
+     "hi": 0.9416342323981449
+    },
+    "fa_found": {
+     "k": 0,
+     "n": 0,
+     "rate": null,
+     "lo": null,
+     "hi": null
+    },
+    "completeness_clean_searchable": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "fp_rejection_searchable": {
+     "k": 15,
+     "n": 18,
+     "rate": 0.8333333333333334,
+     "lo": 0.6077796169796655,
+     "hi": 0.9416342323981449
+    },
+    "youden_j": {
+     "j": 0.2543859649122808,
+     "lo": -0.040292549218963636,
+     "hi": 0.49618439491329536
+    },
+    "completeness_clean_all_stars": {
+     "k": 8,
+     "n": 19,
+     "rate": 0.42105263157894735,
+     "lo": 0.23141891166171535,
+     "hi": 0.637240966168742
+    },
+    "youden_j_all_stars": {
+     "j": 0.2543859649122808,
+     "lo": -0.040292549218963636,
+     "hi": 0.49618439491329536
+    },
+    "reliability": {
+     "k": 8,
+     "n": 11,
+     "rate": 0.7272727272727273,
+     "lo": 0.4343546966810743,
+     "hi": 0.9025394078669138
+    },
+    "reliability_mix": {
+     "positive": 19,
+     "fp": 18,
+     "fa": 0
+    },
+    "controls": {
+     "inverted": null,
+     "scrambled": null
+    },
+    "controls_complete": false,
+    "coverage": {
+     "stars": 37,
+     "searched": 37,
+     "by_class": {
+      "positive": [
+       19,
+       19
+      ],
+      "fp": [
+       18,
+       18
+      ],
+      "fa": [
+       0,
+       0
+      ]
+     }
+    }
+   },
+   "ranked": false,
+   "unranked_reason": "subsample: 37 stars cannot order configurations",
+   "rank": null
+  },
+  {
+   "id": "probes-or-sentinel",
+   "name": "Probes + Sentinels, either (star-level rule, fixed before scoring, not panel consensus)",
+   "scope": "sentinel_subsample",
+   "kind": "derived",
+   "tuned_on": "none",
+   "provenance": {
+    "method": "A clean candidate when the Probes give one or either Sentinel marks the TOI's dip as a potential planet. Applied by the leaderboard to the component entries' scored outcomes.",
+    "code_version": "src/setuhq/leaderboard.py (DERIVED)",
+    "generated_from": [
+     "docs/leaderboard/submissions/probes-subsample.json",
+     "docs/leaderboard/submissions/claude-volunteer.json",
+     "docs/leaderboard/submissions/claude-skeptic.json"
+    ]
+   },
+   "scores": {
+    "completeness": {
      "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "completeness_all_stars": {
      "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "completeness_clean": {
      "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
     },
     "completeness_by_radius": [
      {
@@ -1242,10 +1428,10 @@
      },
      {
       "k": 9,
-      "n": 11,
-      "rate": 0.8181818181818182,
-      "lo": 0.5230194356457672,
-      "hi": 0.9486323107214162,
+      "n": 10,
+      "rate": 0.9,
+      "lo": 0.5958499704752279,
+      "hi": 0.982123787103926,
       "bin": [
        8,
        30
@@ -1253,270 +1439,81 @@
      }
     ],
     "fp_found": {
-     "k": 16,
-     "n": 20,
-     "rate": 0.8,
-     "lo": 0.583982565906683,
-     "hi": 0.9193423379822393
-    },
-    "fp_flagged_of_found": {
-     "k": 13,
-     "n": 16,
-     "rate": 0.8125,
-     "lo": 0.5699111883245088,
-     "hi": 0.9340840098021131
-    },
-    "fp_rejection": {
-     "k": 17,
-     "n": 20,
-     "rate": 0.85,
-     "lo": 0.6395811333571357,
-     "hi": 0.9476312545132735
-    },
-    "fp_rejection_all_stars": {
-     "k": 17,
-     "n": 20,
-     "rate": 0.85,
-     "lo": 0.6395811333571357,
-     "hi": 0.9476312545132735
-    },
-    "fa_found": {
-     "k": 0,
-     "n": 0,
-     "rate": null,
-     "lo": null,
-     "hi": null
-    },
-    "completeness_clean_searchable": {
-     "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
-    },
-    "fp_rejection_searchable": {
-     "k": 17,
-     "n": 20,
-     "rate": 0.85,
-     "lo": 0.6395811333571357,
-     "hi": 0.9476312545132735
-    },
-    "youden_j": {
-     "j": 0.30000000000000004,
-     "lo": 0.015282312660029995,
-     "hi": 0.5296962500280928
-    },
-    "completeness_clean_all_stars": {
-     "k": 9,
-     "n": 20,
-     "rate": 0.45,
-     "lo": 0.25819785703764037,
-     "hi": 0.6579146589808726
-    },
-    "youden_j_all_stars": {
-     "j": 0.30000000000000004,
-     "lo": 0.015282312660029995,
-     "hi": 0.5296962500280928
-    },
-    "reliability": {
-     "k": 9,
-     "n": 12,
-     "rate": 0.75,
-     "lo": 0.4676946629183366,
-     "hi": 0.9110583323051143
-    },
-    "reliability_mix": {
-     "positive": 20,
-     "fp": 20,
-     "fa": 0
-    },
-    "controls": {
-     "inverted": null,
-     "scrambled": null
-    },
-    "controls_complete": false,
-    "coverage": {
-     "stars": 40,
-     "searched": 40,
-     "by_class": {
-      "positive": [
-       20,
-       20
-      ],
-      "fp": [
-       20,
-       20
-      ],
-      "fa": [
-       0,
-       0
-      ]
-     }
-    }
-   },
-   "ranked": false,
-   "unranked_reason": "subsample: 40 stars cannot order configurations",
-   "rank": null
-  },
-  {
-   "id": "probes-or-sentinel",
-   "name": "Probes + Sentinels, either (star-level rule, fixed before scoring, not panel consensus)",
-   "scope": "sentinel_subsample",
-   "kind": "derived",
-   "tuned_on": "none",
-   "provenance": {
-    "method": "A clean candidate when the Probes give one or either Sentinel marks the TOI's dip as a potential planet. Applied by the leaderboard to the component entries' scored outcomes.",
-    "code_version": "src/setuhq/leaderboard.py (DERIVED)",
-    "generated_from": [
-     "docs/leaderboard/submissions/probes-subsample.json",
-     "docs/leaderboard/submissions/claude-volunteer.json",
-     "docs/leaderboard/submissions/claude-skeptic.json"
-    ]
-   },
-   "scores": {
-    "completeness": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "completeness_all_stars": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "completeness_clean": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "completeness_by_radius": [
-     {
-      "k": 0,
-      "n": 4,
-      "rate": 0.0,
-      "lo": 0.0,
-      "hi": 0.4898908403969213,
-      "bin": [
-       0,
-       2
-      ]
-     },
-     {
-      "k": 0,
-      "n": 4,
-      "rate": 0.0,
-      "lo": 0.0,
-      "hi": 0.4898908403969213,
-      "bin": [
-       2,
-       4
-      ]
-     },
-     {
-      "k": 0,
-      "n": 1,
-      "rate": 0.0,
-      "lo": 0.0,
-      "hi": 0.7934506882081973,
-      "bin": [
-       4,
-       8
-      ]
-     },
-     {
-      "k": 10,
-      "n": 11,
-      "rate": 0.9090909090909091,
-      "lo": 0.6226415608917041,
-      "hi": 0.9837678272946745,
-      "bin": [
-       8,
-       30
-      ]
-     }
-    ],
-    "fp_found": {
-     "k": 16,
-     "n": 20,
-     "rate": 0.8,
-     "lo": 0.583982565906683,
-     "hi": 0.9193423379822393
-    },
-    "fp_flagged_of_found": {
-     "k": 8,
-     "n": 16,
-     "rate": 0.5,
-     "lo": 0.27999563470387406,
-     "hi": 0.7200043652961259
-    },
-    "fp_rejection": {
-     "k": 12,
-     "n": 20,
-     "rate": 0.6,
-     "lo": 0.3865814992347542,
-     "hi": 0.7811934687282198
-    },
-    "fp_rejection_all_stars": {
-     "k": 12,
-     "n": 20,
-     "rate": 0.6,
-     "lo": 0.3865814992347542,
-     "hi": 0.7811934687282198
-    },
-    "fa_found": {
-     "k": 0,
-     "n": 0,
-     "rate": null,
-     "lo": null,
-     "hi": null
-    },
-    "completeness_clean_searchable": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "fp_rejection_searchable": {
-     "k": 12,
-     "n": 20,
-     "rate": 0.6,
-     "lo": 0.3865814992347542,
-     "hi": 0.7811934687282198
-    },
-    "youden_j": {
-     "j": 0.10000000000000009,
-     "lo": -0.1929654357004723,
-     "hi": 0.3703929791175186
-    },
-    "completeness_clean_all_stars": {
-     "k": 10,
-     "n": 20,
-     "rate": 0.5,
-     "lo": 0.2992980068701797,
-     "hi": 0.7007019931298203
-    },
-    "youden_j_all_stars": {
-     "j": 0.10000000000000009,
-     "lo": -0.1929654357004723,
-     "hi": 0.3703929791175186
-    },
-    "reliability": {
-     "k": 10,
+     "k": 14,
      "n": 18,
-     "rate": 0.5555555555555556,
-     "lo": 0.3371641549342691,
-     "hi": 0.7544048199620327
+     "rate": 0.7777777777777778,
+     "lo": 0.5478541549399641,
+     "hi": 0.9099907195415445
+    },
+    "fp_flagged_of_found": {
+     "k": 7,
+     "n": 14,
+     "rate": 0.5,
+     "lo": 0.2679920230881164,
+     "hi": 0.7320079769118836
+    },
+    "fp_rejection": {
+     "k": 11,
+     "n": 18,
+     "rate": 0.6111111111111112,
+     "lo": 0.38619041442114627,
+     "hi": 0.7969475353714572
+    },
+    "fp_rejection_all_stars": {
+     "k": 11,
+     "n": 18,
+     "rate": 0.6111111111111112,
+     "lo": 0.38619041442114627,
+     "hi": 0.7969475353714572
+    },
+    "fa_found": {
+     "k": 0,
+     "n": 0,
+     "rate": null,
+     "lo": null,
+     "hi": null
+    },
+    "completeness_clean_searchable": {
+     "k": 9,
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
+    },
+    "fp_rejection_searchable": {
+     "k": 11,
+     "n": 18,
+     "rate": 0.6111111111111112,
+     "lo": 0.38619041442114627,
+     "hi": 0.7969475353714572
+    },
+    "youden_j": {
+     "j": 0.08479532163742687,
+     "lo": -0.2164420150251467,
+     "hi": 0.3646445507307013
+    },
+    "completeness_clean_all_stars": {
+     "k": 9,
+     "n": 19,
+     "rate": 0.47368421052631576,
+     "lo": 0.27329805032541393,
+     "hi": 0.6829219089514051
+    },
+    "youden_j_all_stars": {
+     "j": 0.08479532163742687,
+     "lo": -0.2164420150251467,
+     "hi": 0.3646445507307013
+    },
+    "reliability": {
+     "k": 9,
+     "n": 16,
+     "rate": 0.5625,
+     "lo": 0.3317855624393811,
+     "hi": 0.7690134771859434
     },
     "reliability_mix": {
-     "positive": 20,
-     "fp": 20,
+     "positive": 19,
+     "fp": 18,
      "fa": 0
     },
     "controls": {
@@ -1525,16 +1522,16 @@
     },
     "controls_complete": false,
     "coverage": {
-     "stars": 40,
-     "searched": 40,
+     "stars": 37,
+     "searched": 37,
      "by_class": {
       "positive": [
-       20,
-       20
+       19,
+       19
       ],
       "fp": [
-       20,
-       20
+       18,
+       18
       ],
       "fa": [
        0,
@@ -1544,7 +1541,7 @@
     }
    },
    "ranked": false,
-   "unranked_reason": "subsample: 40 stars cannot order configurations",
+   "unranked_reason": "subsample: 37 stars cannot order configurations",
    "rank": null
   }
  ],

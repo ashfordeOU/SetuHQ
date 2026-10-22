@@ -14,8 +14,8 @@
 available offline in the environment that produced this draft, so no LaTeX version is provided yet.*
 
 *Generated from the committed results by `scripts/paper_numbers.py` (benchmark report of {{generated_at}},
-code commit `{{code_commit}}`). Results that later work will change are marked pending; see the section
-"Pending results".*
+code commit `{{code_commit}}`: the benchmark re-run on the current code, after the two fixes of Section 5.6). Results
+that later work will change are marked pending; see the section "Pending results".*
 
 Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.
 
@@ -40,7 +40,8 @@ show that the live discovery feed's "new" signals are {{feed_bad}}: the feed's o
 scrambled curves, about {{feed_expected_per100}} per 100 targets, against {{feed_live_per100}} per 100 on the live
 feed. The two Sentinel personas, tested on a stated subsample of {{sen_n}} held-out stars, each mark
 {{sen_vol_cpkp}} of the CP/KP dips and agree on {{sen_agree}} of {{sen_agree_n}} stars (φ = {{sen_phi}}): they are one
-correlated voter, not two. We report a known bug in the code that produced these numbers, the class skew
+correlated voter, not two. We report a bug in the code of the benchmark's first run, fixed since, and the same
+protocol re-run on the fixed code (the numbers above), the class skew
 of the stars that could not be searched, and a public leaderboard on the frozen sample that scores submitted
 events itself and ranks by Youden's J. On that leaderboard a baseline that never reads a light curve, a logistic
 regression on catalogue metadata fitted on the tuning half, scores J = {{lb_metadata_baseline_j}} against
@@ -197,13 +198,14 @@ Any vetted dip on a control is a false alarm: the reliability idea of {{cite_tho
 **Held-out split and threshold audit.** Nothing was tuned on this sample, so both halves are reported and the
 held-out half is the headline. An automated audit compares every threshold-like value ({{audit_values}} module
 constants, config keys and reviewer weights) with the commit before the sample was frozen (`{{audit_frozen}}`):
-{{audit_changed}} changed ({{audit_clean}}) across the {{audit_commits}} commits since. The Probe thresholds and weights
+{{audit_sentence}}. The Probe thresholds and weights
 come from synthetic injection tests, and the vetting, V-shape, density and FAP rules were set before any TOI
 light curve was downloaded.
 
 **Code version.** Each per-star result records a fingerprint of the pipeline code that produced it:
-{{code_fingerprints}}. The report was generated at commit `{{code_commit_full}}`. Results from the earlier
-fingerprint were re-vetted from their stored classifications with the later code, controls included.
+{{code_fingerprints}}. The report was generated at commit `{{code_commit_full}}`. Every star, controls included, was
+run again from its light curve with this code; no stored classification was reused. The first run, on the pre-fix
+code (commit {{first_code}}), is kept as `docs/results/benchmark_real_tois.json`.
 
 ## 5 Results
 
@@ -260,8 +262,9 @@ of them:
 single-sector control rate over the sectors the feed reviews, as if each sector were an independent draw, and it
 ignores that the feed reviews a star's two latest sectors, not its first, and that noise in the two sectors may be
 correlated. The live catalogue (updated {{feed_live_updated}}) holds {{feed_live_new}} distinct new signals over
-{{feed_live_targets}} targets: {{feed_live_per100}} per 100 (95% CI {{feed_live_ci}}). {{feed_half_sentence}} The proposed fix (requiring the signal in each
-of the two sectors independently, and a stricter FAP) has not been applied in the code measured here. {{feedrule_intro}}
+{{feed_live_targets}} targets: {{feed_live_per100}} per 100 (95% CI {{feed_live_ci}}). {{feed_half_sentence}} This table keeps the rule the
+protocol was frozen with. The fix the first run proposed (requiring the signal in each of the two sectors
+independently, and a stricter FAP) is now the feed's rule. {{feedrule_intro}}
 
 | stricter feed rule | held-out result |
 |---|---|
@@ -287,8 +290,8 @@ reference for the share of FP TOIs flagged.
 
 ### 5.4 The Sentinels on a stated subsample
 
-Both Sentinels reviewed every subject of {{sen_n}} held-out stars drawn with a fixed seed ({{sen_per_class}} CP/KP and
-{{sen_per_class}} FP), on the real light curves only. Scored per star: did the persona mark a dip on the TOI's
+Both Sentinels reviewed every subject of {{sen_n}} held-out stars drawn with a fixed seed ({{sen_n_pos}} CP/KP and
+{{sen_n_fp}} FP), on the real light curves only. {{sen_carry_sentence}} Scored per star: did the persona mark a dip on the TOI's
 ephemeris as a potential planet.
 
 | persona | CP/KP dips marked | FP dips marked as a potential planet | failed calls |
@@ -311,29 +314,36 @@ describe {{held_out_fp_data}} of {{held_out_fp_n}} held-out FP TOIs, a populatio
 are not the panel's reliability on all FP TOIs. The loss is a property of the stars and is reported, not
 repaired.
 
-### 5.6 A known bug in the code that produced these numbers
+### 5.6 A bug in the first run's code, fixed, and the re-run
 
-`preprocess.clean` deletes every point more than 10 times the point-to-point scatter below the running median,
-with no run-length test, so a transit or eclipse deeper than about 10 times the per-cadence scatter loses its
-in-transit points before review and BLS. A star is counted as exposed when the TOI depth exceeds {{clip_ratio}}
-times the per-cadence scatter. In the held-out half {{clip_pos}} CP/KP, {{clip_fp}} FP and {{clip_fa}} FA stars are
-exposed (of {{clip_measured}} measured); {{clip_recovered}} exposed CP/KP TOIs were recovered anyway and {{clip_missed}}
-were missed, of which {{clip_explained}} lost at least half of their in-transit points to the bug (TOI
-{{clip_tois}}). The median share of in-transit points removed on exposed stars is {{clip_median_removed}}. In the
-tuning half {{clip_tuning_explained}} of {{clip_tuning_missed}} exposed misses are explained by it.
+In the code of the benchmark's first run (commit {{first_code}}), `preprocess.clean` deleted every point more than 10
+times the point-to-point scatter below the running median, with no run-length test, so a transit or eclipse deeper
+than about 10 times the per-cadence scatter lost its in-transit points before review and BLS. A star is counted as
+exposed when the TOI depth exceeds {{clip_ratio}} times the per-cadence scatter. In the held-out half {{clip_pos}} CP/KP,
+{{clip_fp}} FP and {{clip_fa}} FA stars were exposed (of {{clip_measured}} measured); {{clip_recovered}} exposed CP/KP TOIs were
+recovered anyway and {{clip_missed}} were missed, of which {{clip_explained}} lost at least half of their in-transit points
+to the bug (TOI {{clip_tois}}). The median share of in-transit points removed on exposed stars was
+{{clip_median_removed}}. In the tuning half {{clip_tuning_explained}} of {{clip_tuning_missed}} exposed misses were explained by it.
 
-| held-out measure | all stars | exposed stars excluded | after the fix |
+Two fixes followed. `clean` now keeps a low point that is part of a dip (a run of at least max(3, 20 minutes /
+cadence) cadences more than 3σ below the median), and `vet.py`'s odd/even test, which the deep dips now reaching it
+failed spuriously, inflates its errors by the per-epoch depths' scatter and carries a {{m_odd_even_floor}} systematic floor. Both change
+default results. The whole benchmark was then run again on the fixed code with the protocol unchanged: the same
+sample, seed, split, light curves, controls and scoring, nothing tuned. The numbers in Section 5.1 to Section 5.5 are the
+re-run's.
+
+| held-out measure | first run | first run, exposed stars excluded | re-run on the fixed code |
 |---|---|---|---|
-| completeness (searchable) | {{ho_completeness}} | {{clip_unaff_completeness}} | {{clipfix_completeness}} |
-| FP TOIs found | {{ho_fp_seen}} | {{clip_unaff_fp_seen}} | {{clipfix_fp_seen}} |
-| … rejected or flagged | {{ho_fp_flagged}} | {{clip_unaff_fp_flagged}} | {{clipfix_fp_flagged}} |
-| feed-level false signals per 1,000, inverted | {{feed_inverted_per1000}} | {{clip_unaff_feed_inverted}} | {{clipfix_feed_inverted}} |
-| feed-level false signals per 1,000, scrambled | {{feed_scrambled_per1000}} | {{clip_unaff_feed_scrambled}} | {{clipfix_feed_scrambled}} |
+| completeness (searchable) | {{first_completeness}} | {{clip_unaff_completeness}} | {{ho_completeness}} |
+| FP TOIs found | {{first_fp_seen}} | {{clip_unaff_fp_seen}} | {{ho_fp_seen}} |
+| … rejected or flagged | {{first_fp_flagged}} | {{clip_unaff_fp_flagged}} | {{ho_fp_flagged}} |
+| feed-level false signals per 1,000, inverted | {{first_feed_inverted}} | {{clip_unaff_feed_inverted}} | {{feed_inverted_per1000}} |
+| feed-level false signals per 1,000, scrambled | {{first_feed_scrambled}} | {{clip_unaff_feed_scrambled}} | {{feed_scrambled_per1000}} |
 
-Excluding exposed stars changes the completeness from {{ho_completeness_rate}} to {{clip_unaff_completeness}}: exposed
-CP/KP TOIs are deep, and {{clip_recovered}} of {{clip_pos}} were recovered despite the bug. The
-fix is on a separate branch; after it merges only the exposed stars are re-run (code {{clipfix_code}}), and the
-last column is filled from that re-run.
+{{rerun_change_sentence}} Of the {{rerun_exposed_n}} exposed CP/KP stars, the first run recovered {{rerun_exposed_first}}
+and the re-run {{rerun_exposed_now}}; of the misses the bug explained, the re-run recovers TOI {{rerun_explained_now}} (still
+missed: {{rerun_explained_still}}). The first run's report is kept as `docs/results/benchmark_real_tois.md`; the re-run's,
+with every measure side by side, is `docs/results/benchmark_real_tois_clipfix.md`.
 
 ### 5.7 The leaderboard's seeded entries
 
@@ -432,7 +442,8 @@ claim of matching either.
 * **The Sentinels are measured on {{sen_n}} stars,** were calibrated on {{cal_n_inj}} injected and {{cal_n_empty}} empty subjects,
   and never ran on the controls. The model version that answered is not recorded: the cache key holds the
   CLI's model setting ("default"), not the served model. Their errors are correlated.
-* **The clipping bug** (Section 5.6) affects deep transits in the code version measured.
+* **The clipping bug** (Section 5.6) is fixed in the code measured here; the first run, made before the fix, is kept
+  as the historical record.
 * {{bench_density_limit}}
 * **One sector per star, 2-minute data only.** Stars with only full-frame-image data are not searchable, and
   that loss is skewed toward FP TOIs (Section 5.5). Single transits and long periods are outside the sample's
@@ -450,8 +461,10 @@ independent evidence such as radial velocities, and no SetuHQ output is called c
 
 * **Code.** The benchmark report was generated at commit `{{code_commit_full}}` (Section 4 lists the pipeline
   fingerprints). The frozen sample is `docs/results/benchmark_toi_sample.json` (sha256 `{{sample_sha}}`); the report
-  is `docs/results/benchmark_real_tois.md` and `.json`; the commands are in `scripts/benchmark_real_tois.py`
-  (`freeze`, `run`, `sentinels`, `clipping`, `feed`, `report`). Downloads and per-subject outputs live in the
+  is `docs/results/benchmark_real_tois_clipfix.md` and `.json` (the first run, on the pre-fix code:
+  `docs/results/benchmark_real_tois.md` and `.json`); the commands are in `scripts/benchmark_real_tois.py`
+  (`freeze`, `run`, `sentinels`, `clipping`, `feed`, `report`, and with `--edition clipfix`: `rerun`,
+  `sentinels-carry`, `clipping`, `feed`, `report`). Downloads and per-subject outputs live in the
   gitignored `cache/`; the committed JSON holds every per-star outcome.
 * **Sentinel responses** are cached by hash and replayed without new calls; the per-star Sentinel outcomes are
   committed in the leaderboard's seeded submissions.

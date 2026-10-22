@@ -129,7 +129,7 @@ def build_submission() -> dict:
                "code_version": "scripts/leaderboard_metadata_baseline.py",
                "generated_from": [{"file": "docs/leaderboard/tuning_inputs.json",
                                    "sha256": hashlib.sha256(L.INPUTS.read_bytes()).hexdigest()},
-                                  {"file": "docs/results/benchmark_real_tois.json", "rows": "per_star no_data only (searchability)"}],
+                                  {"file": str(L.BENCHMARK.relative_to(ROOT)), "rows": "per_star no_data only (searchability)"}],
                "features": list(FEATURES), "threshold": round(th, 6), "tuning_cv_j": round(j_cv, 4),
                "coefficients": [round(float(c), 6) for c in model.w]},
            "predictions": preds}

@@ -195,7 +195,7 @@ def test_readme_generated_blocks_and_badges_come_from_the_data(gen):
         assert f"<!-- generated:{name} " in text and f"<!-- /generated:{name} -->" in text, name
     blocks = gen.readme_blocks()
     rc = gen.repo_counts()
-    b = json.loads((ROOT / "docs/results/benchmark_real_tois.json").read_text(encoding="utf-8"))
+    b = json.loads((ROOT / "docs/results/benchmark_real_tois_clipfix.json").read_text(encoding="utf-8"))
     c = b["summary"]["held_out"]["completeness"]
     badges = blocks["badges"]
     assert f"tests-{rc['tests']}%20collected" in badges
@@ -226,12 +226,13 @@ def test_benchmark_compares_matched_bins_and_words_the_verdict_from_the_interval
     d = gen.bench_data()
     by = {c["key"]: c for c in d["cmp"]}
     assert (by["pht_mid"]["ours"]["k"], by["pht_mid"]["ours"]["n"]) == (4, 9)
-    assert (by["pht_hi"]["ours"]["k"], by["pht_hi"]["ours"]["n"]) == (77, 102)
+    assert (by["pht_hi"]["ours"]["k"], by["pht_hi"]["ours"]["n"]) == (81, 102)  # the re-run (77/102 in the first run)
     for c in d["cmp"]:
         o = c["ours"]
         want = "below" if o["hi"] < c["ref"] else "above" if o["lo"] > c["ref"] else "consistent"
         assert c["verdict"] == want
-    assert by["pht_mid"]["verdict"] == "consistent" and by["pht_hi"]["verdict"] == "below"
+    # On the re-run, 79% (71-86%) above 4 R⊕: the interval now includes Planet Hunters TESS's 85%.
+    assert by["pht_mid"]["verdict"] == "consistent" and by["pht_hi"]["verdict"] == "consistent"
     assert "vetting only, on detected TCEs" in by["robovetter"]["note"]
     sentence = gen.bench_verdict(d)
     assert "consistent with Planet Hunters TESS's rate at 3 to 4 R⊕" in sentence

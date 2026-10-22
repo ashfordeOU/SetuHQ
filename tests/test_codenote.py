@@ -7,23 +7,39 @@ import json
 from setuhq.codenote import PRE_FIX_NOTE, code_note, with_code_note
 
 
-def test_banner_goes_right_after_body(tmp_path):
+def test_a_note_is_one_plain_sentence_on_its_page_never_a_banner(tmp_path):
+    from setuhq.codenote import PLAIN
+
     page = '<html><head></head><body class="x"><main>hi</main></body></html>'
-    out = with_code_note(page, "Pre-fix code: <old>")
-    assert out.index('class="codenote"') > out.index('<body class="x">')
-    assert out.index('class="codenote"') < out.index("<main>")
-    assert "Pre-fix code: &lt;old&gt;" in out                # escaped
+    out = with_code_note(page, PRE_FIX_NOTE)
+    assert out.index('class="codenote"') > out.index('<body class="x">') and out.index('class="codenote"') < out.index("<main>")
+    assert PLAIN[PRE_FIX_NOTE] in out and "5a03087" not in out and "preprocess" not in out and "vet.py" not in out
+    # no banner: nothing fixed, dismissable or scripted
+    assert "<script" not in out and "position:fixed" not in out and "button" not in out and "localStorage" not in out
     assert with_code_note(page, None) == page
-    # a 44 x 44 px dismiss button; the banner takes taps (no pointer-events:none); the dismissal is remembered
-    assert "width:44px;height:44px" in out and "pointer-events:none" not in out
-    assert "localStorage.setItem" in out and "catch(e)" in out and "data-fixed=" in out and "position:relative" in out
-    # in the fixed bar the note is one line with a "more" button that opens it
-    assert "text-overflow:ellipsis" in out and 'class="cn-more"' in out and "aria-expanded" in out
+    assert "&lt;old&gt;" in with_code_note(page, "Older code: <old>")  # escaped
 
 
-def test_the_stored_run_carries_the_pre_fix_note(tmp_path):
-    assert code_note("runs/tess-pi-men-s1") == PRE_FIX_NOTE
+def test_current_results_carry_no_note_and_the_historical_ones_keep_theirs(tmp_path):
+    from pathlib import Path
+
+    from setuhq.codenote import HISTORICAL
+
+    # Re-run on the current code: no note, so no banner on any page built from them.
+    assert code_note("runs/tess-pi-men-s1") is None
     (tmp_path / "manifest.json").write_text(json.dumps({"config_name": "x"}))
     assert code_note(tmp_path) is None
-    assert json.loads(open("docs/discoveries/catalog.json").read())["code_note"] == PRE_FIX_NOTE
+    assert "code_note" not in json.loads(open("docs/discoveries/catalog.json").read())
+    for f in ("docs/results/pi_men_validation.md", "docs/results/injection_recovery_simulated_panel.md", "docs/threshold_sweep.md",
+              "docs/results/benchmark_real_tois_clipfix.md", "docs/leaderboard/leaderboard.md", "docs/paper/paper.md"):
+        assert PRE_FIX_NOTE not in Path(f).read_text(), f
+    for page in Path("site").rglob("*.html"):
+        assert 'class="codenote"' not in page.read_text(), page
+    # Kept as the historical pre-fix record: each says so in its own file.
+    for f in HISTORICAL:
+        text = Path(f).read_text()
+        if f.endswith(".json"):
+            assert json.loads(text)["code_note"] == PRE_FIX_NOTE, f
+        else:
+            assert PRE_FIX_NOTE in text[:2000], f
     assert "confirmed" not in PRE_FIX_NOTE.lower()

@@ -1,7 +1,8 @@
 # The real-TOI leaderboard
 
 A public leaderboard on SetuHQ's frozen benchmark of 662 real TESS Objects of Interest
-([docs/results/benchmark_real_tois.md](../results/benchmark_real_tois.md)). It scores a method's detected events
+([docs/results/benchmark_real_tois_clipfix.md](../results/benchmark_real_tois_clipfix.md), the benchmark on the
+current code; its first run, on the pre-fix code, is [benchmark_real_tois.md](../results/benchmark_real_tois.md)). It scores a method's detected events
 on the **held-out half** only. The table is [leaderboard.md](leaderboard.md) (data: [leaderboard.json](leaderboard.json));
 the app shows it at `#/leaderboard`.
 
@@ -86,7 +87,7 @@ side, so a copy of the public ephemerides with `flags: ["v_shape"]` on every sta
 removes the dip from both sides, and that copy scores 0.
 
 The benchmark report's headline completeness counts a recovered dip even when flagged, and its "FP TOIs rejected or
-flagged" is over the FP dips the Probes found. Both are in docs/results/benchmark_real_tois.md and differ from the
+flagged" is over the FP dips the Probes found. Both are in docs/results/benchmark_real_tois_clipfix.md and differ from the
 leaderboard's terms by definition.
 
 **The controls gate ranking; they do not enter J.** Only held-out entries with both control lists on every searched
@@ -148,12 +149,12 @@ The leaderboard refuses a submission, and lists every reason, when:
 ## The seeded entries
 
 SetuHQ's own configurations, built from the benchmark's stored outputs without re-running anything
-(`scripts/leaderboard_seed.py --cache <cache/bench>`), and the metadata floor
+(`scripts/leaderboard_seed.py --cache <cache/bench_clipfix>`, the benchmark's re-run on the current code), and the metadata floor
 (`scripts/leaderboard_metadata_baseline.py`, from the public inputs only):
 
 * **Metadata only, no light curve (a floor)**, on the held-out half, `tuned_on: tuning`.
 * **Probes only**, on the whole held-out half: every consensus event of the real and control runs. The scorer's
-  outcomes equal the committed per-star rows of `benchmark_real_tois.json` star by star (a test checks this).
+  outcomes equal the committed per-star rows of `benchmark_real_tois_clipfix.json` star by star (a test checks this).
 * On the Sentinels' 40-star subsample: **Probes only** (the same events, restricted), **Sentinel · Volunteer alone**
   and **Sentinel · Skeptic alone** (each mark an event, passed when the persona called the subject a potential
   planet; the seed script stops unless they reproduce the report's committed totals and agreement).
