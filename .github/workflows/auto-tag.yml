@@ -1,21 +1,23 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# Optional: tag a release once main is green on a version bump. OFF by default.
+# Release automatically once main is green on a version bump. ON by default.
 #
-# The default flow is manual: the owner tags a commit that is already green on main
-# (docs/RELEASING.md). This workflow does that one step for them, and nothing else, once it is
-# switched on. When CI (ci.yml) finishes green on a push to main, it reads the version from
-# src/setuhq/__init__.py; if no vX.Y.Z tag exists yet, it checks every version surface
-# (scripts/check_version_sync.py) and the CHANGELOG section, then pushes an annotated tag on
-# exactly the commit CI verified. release.yml then runs on that tag push, unchanged.
+# When CI (ci.yml) finishes green on a push to main, this reads the version from src/setuhq/__init__.py. If
+# no vX.Y.Z tag exists yet, it checks every version surface and the CHANGELOG section
+# (scripts/check_version_sync.py --tag), pushes an annotated tag on exactly the commit CI verified, and then
+# starts release.yml on that tag (workflow_dispatch with --ref vX.Y.Z). release.yml treats a dispatch on a
+# tag exactly like a tag push: verify (with the strict CI check), build, release, attest, pypi.
 #
-# It never moves or replaces a tag, and it skips a commit that is no longer main's head.
+# Why a dispatch and no secret: a tag pushed with the workflow's own GITHUB_TOKEN starts no other workflow
+# (GitHub's rule against recursive runs), but a workflow_dispatch made with GITHUB_TOKEN does start one; so
+# the tag push needs `contents: write`, the dispatch `actions: write`, and nothing else. No personal access
+# token is used or needed.
 #
-# To switch it on (both are needed; with either missing it does nothing):
-#   1. Repository variable AUTO_TAG = true (Settings -> Secrets and variables -> Actions -> Variables).
-#   2. Repository secret RELEASE_TAG_TOKEN: a fine-grained token for ashfordeOU/SetuHQ only, with
-#      Contents: read and write. A tag pushed with the workflow's own GITHUB_TOKEN does not start
-#      other workflows, so release.yml would never run; that is why a separate token is needed.
-# With AUTO_TAG on and the secret missing, the job fails, so a bump is never left silently untagged.
+# It never moves or replaces a tag, it skips a commit that is no longer main's head, and it dispatches
+# only for a tag it pushed itself in this run. A version that is already tagged is left alone: a manual
+# tag push starts release.yml by itself.
+#
+# To switch it off: repository variable AUTO_TAG = false (Settings -> Secrets and variables -> Actions ->
+# Variables). Any other value, or none, leaves it on.
 name: Auto-tag
 
 on:
@@ -34,32 +36,28 @@ concurrency:
 jobs:
   tag:
     if: >-
-      vars.AUTO_TAG == 'true' &&
+      vars.AUTO_TAG != 'false' &&
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.head_branch == 'main' &&
       github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write  # push the tag
+      actions: write   # start release.yml on it (workflow_dispatch)
     steps:
-      - name: The tag token is present
-        env:
-          TOKEN: ${{ secrets.RELEASE_TAG_TOKEN }}
-        run: |
-          if [ -z "$TOKEN" ]; then
-            echo "::error::AUTO_TAG is on but RELEASE_TAG_TOKEN is not set; see docs/RELEASING.md"
-            exit 1
-          fi
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.RELEASE_TAG_TOKEN }}
       - name: Tag the version if it is new
+        id: tag
         env:
           SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
           set -euo pipefail
+          echo "pushed=false" >> "$GITHUB_OUTPUT"
           version="$(python3 scripts/check_version_sync.py --print-version)"
           tag="v$version"
           if git ls-remote --exit-code --tags origin "refs/tags/$tag" > /dev/null; then
@@ -76,5 +74,32 @@ jobs:
           git config user.name ashfordeOU
           git config user.email 236818772+ashfordeOU@users.noreply.github.com
           git tag -a "$tag" HEAD -F "$RUNNER_TEMP/tag-message.txt"
-          git push origin "refs/tags/$tag"
-          echo "Pushed $tag on $SHA; release.yml runs on it."
+          # A plain push never overwrites: if the tag appeared meanwhile (a manual push), it is refused, and
+          # that push has started release.yml itself.
+          if ! git push origin "refs/tags/$tag"; then
+            if git ls-remote --exit-code --tags origin "refs/tags/$tag" > /dev/null; then
+              echo "$tag was pushed by someone else meanwhile; its own push starts release.yml."
+              exit 0
+            fi
+            echo "::error::could not push $tag; if a tag ruleset covers v*, GitHub Actions must be allowed to create tags (docs/RELEASING.md)"
+            exit 1
+          fi
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Pushed $tag on $SHA."
+      - name: Start release.yml on the new tag
+        if: steps.tag.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "$TAG"; then break; fi
+            if [ "$attempt" = 3 ]; then
+              echo "::error::$TAG is pushed but release.yml did not start; run it by hand: Actions, Release, Run workflow, on tag $TAG"
+              exit 1
+            fi
+            sleep 20
+          done
+          echo "Started release.yml on $TAG: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/workflows/release.yml"

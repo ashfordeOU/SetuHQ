@@ -22,7 +22,9 @@
 
 <!-- generated:badges by tools/gen_readme_assets.py --write-readme; edit the generator, not this block -->
 <p align="center">
-  <a href="scripts/ci_local.sh"><img src="https://img.shields.io/badge/tests-808%20collected-377D0C?style=flat-square&labelColor=0A1226" height="18" alt="808 tests collected by pytest: 802 run offline in CI, 4 slow ones and 2 network ones by scripts/ci_local.sh"></a>
+  <a href="https://pypi.org/project/setuhq/"><img src="https://img.shields.io/badge/PyPI-v0.1.0-066A86?style=flat-square&labelColor=0A1226" height="18" alt="SetuHQ 0.1.0 on PyPI: pip install setuhq"></a>
+  <a href="https://doi.org/10.5281/zenodo.23568348"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23568348-3F4B67?style=flat-square&labelColor=0A1226" height="18" alt="Zenodo concept DOI 10.5281/zenodo.23568348, which resolves to the latest archived release"></a>
+  <a href="scripts/ci_local.sh"><img src="https://img.shields.io/badge/tests-803%20collected-377D0C?style=flat-square&labelColor=0A1226" height="18" alt="803 tests collected by pytest: 797 run offline in CI, 4 slow ones and 2 network ones by scripts/ci_local.sh"></a>
   <a href="#evidence"><img src="https://img.shields.io/badge/held--out%20completeness-60%25%20%2890%2F150%29-066A86?style=flat-square&labelColor=0A1226" height="18" alt="Held-out completeness on 662 real TOIs: 90 of 150 confirmed or known planets on searchable stars, Wilson 95% interval 52 to 67%"></a>
   <a href="#the-app"><img src="https://img.shields.io/badge/catalogue-8%2C376%20planets-066A86?style=flat-square&labelColor=0A1226" height="18" alt="The catalogue holds all 8,376 exoplanet.eu records, fetched 2026-10-18"></a>
   <a href="#the-app"><img src="https://img.shields.io/badge/Methods-15%20chapters-066A86?style=flat-square&labelColor=0A1226" height="18" alt="15 animated Methods chapters with tested physics"></a>
@@ -862,13 +864,19 @@ events and nulls. That second step is not built yet.
 
 ## Install
 
-SetuHQ needs Python 3.11 or later. Tagged releases are set up to publish to PyPI as `setuhq`
-([docs/RELEASING.md](docs/RELEASING.md)); once v0.1.0 is there, `pip install "setuhq[mcp]"` installs the
-package and the MCP server. Until then, install it from this repository:
+SetuHQ needs Python 3.11 or later. Each tagged release is published to PyPI as
+[`setuhq`](https://pypi.org/project/setuhq/) ([docs/RELEASING.md](docs/RELEASING.md)):
 
 ```bash
-pip install "git+https://github.com/ashfordeOU/SetuHQ"            # the setuhq and setuhq-mcp commands
-pip install "setuhq[tess,mcp] @ git+https://github.com/ashfordeOU/SetuHQ"   # with TESS downloads and the MCP server
+pip install setuhq                   # the setuhq command
+pip install "setuhq[mcp]"            # with the MCP server (setuhq mcp, setuhq-mcp)
+pip install "setuhq[tess,mcp]"       # with TESS downloads too
+```
+
+The latest code on `main`, between releases:
+
+```bash
+pip install "setuhq[tess,mcp] @ git+https://github.com/ashfordeOU/SetuHQ"
 ```
 
 To work on it, or to rebuild the stored run, the benchmark and the site, use a checkout:
@@ -908,7 +916,7 @@ that changes a result is in the config, and its hash goes into the manifest.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/architecture-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/architecture-light.svg">
-  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 53 modules (one Python package, src/setuhq); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, crossmatch, plate, report, leaderboard, mcp); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 808 tests (2 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/setuhq, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 8bee5cc." width="100%">
+  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 53 modules (one Python package, src/setuhq); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, crossmatch, plate, report, leaderboard, mcp); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 803 tests (2 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/setuhq, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 8bee5cc." width="100%">
 </picture>
 
 <details>
@@ -1002,7 +1010,7 @@ honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for 
 
 | Channel | Command | Requires |
 |---|---|---|
-| Install | `pip install -e '.[mcp]'` in a checkout, then `setuhq-mcp --list-tools` | Python 3.11+ |
+| Install | `pip install "setuhq[mcp]"` (or `pip install -e '.[mcp]'` in a checkout), then `setuhq-mcp --list-tools` | Python 3.11+ |
 | Claude Code | `claude mcp add setuhq -- /path/to/SetuHQ/.venv/bin/setuhq-mcp` | the install |
 | Claude Code plugin | `/plugin install setuhq --marketplace ashfordeOU/SetuHQ` | `setuhq-mcp` on PATH |
 | Claude Desktop, Cursor, VS Code, Codex CLI, Gemini CLI | snippets in [`docs/MCP-INSTALL.md`](docs/MCP-INSTALL.md) | the install |
@@ -1064,8 +1072,11 @@ The methods paper draft is [docs/paper/paper.md](docs/paper/paper.md) and the re
 ## Cite
 
 Cite the software with [`CITATION.cff`](CITATION.cff) (GitHub's *Cite this repository* button
-reads it) and name the commit you used. The methods paper is a draft
-([docs/paper/paper.md](docs/paper/paper.md)); there is no DOI yet.
+reads it) and name the version or commit you used. Every release is archived on Zenodo: the concept
+DOI [10.5281/zenodo.23568348](https://doi.org/10.5281/zenodo.23568348) covers all versions and resolves
+to the latest, and each release has its own version DOI on its Zenodo record (v0.1.0:
+[10.5281/zenodo.23568349](https://doi.org/10.5281/zenodo.23568349)). The methods paper is a draft
+([docs/paper/paper.md](docs/paper/paper.md)) and has no DOI of its own yet.
 
 ## Licence
 

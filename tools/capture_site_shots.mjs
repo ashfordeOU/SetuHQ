@@ -7,7 +7,7 @@
 //     its intro animations off and every drawing at rest), the colour theme set before first paint;
 //   * one frame: 1360 x 850 CSS px (16:10), the app's content column (x 40 to 1400, the 1280 px
 //     column plus its 40 px gutters), starting 32 px above the shot's anchor element: the route's
-//     section for a page, a Methods chapter's named stage (figure.mxstage) or the heading that introduces it, and never
+//     section for a page (a shot may start closer, `above`, when the block before it is nearer), a Methods chapter's named stage (figure.mxstage) or the heading that introduces it, and never
 //     above the end of the block before it (so no frame opens on a sliver of earlier text). The top bar and the page bar
 //     (breadcrumbs, sub-navigation) are hidden, so no
 //     frame carries navigation chrome, and nothing is cut by anything but the frame's bottom edge.
@@ -65,7 +65,8 @@ const SHOTS = [
     alt: "Mission Control: the catalogue line (8,376 planets and 5,684 stars from exoplanet.eu, fetched 2026-10-18; 8,049 planets placed; the run tess-pi-men-s1 with 7 dips; the feed's 28 entries) and six linked panes: the Galaxy with pi Men selected and its three planets, the sky position, the stored light curve with its dips, a catalogue slice, the system view and the Sentinel feed. Selecting a star in one pane selects it in every pane." },
   { view: "overview", route: "/", anchor: "#route-overview",
     alt: "Overview: the landing page, The sky, reviewed. SetuHQ searches any TESS star's public light curve for transits; a calibrated panel of Sentinels (AI reviewers) and Probes (deterministic detectors) marks the dips, and vetting explains every verdict; nothing is called a planet until it is one. Below, an artist's impression of a planet, labelled as one, and what you can do here." },
-  { view: "examples", route: "/", anchor: "#examples",
+  // above: the gap to the "What you can do here" cards is narrower than the usual 32 px, so start closer.
+  { view: "examples", route: "/", anchor: "#examples", above: 12,
     alt: "Worked examples on the home page: five cards, one per stored run on public TESS light curves, each with what kind of example it is, the star, a one-line summary, its dips counted by vetting outcome (a candidate stays unconfirmed; a rejected dip is not a candidate), its sector and panel, and links to its case file, plates and run report. WASP-126, hot Jupiter: 8 dips (8 candidates), TESS sector 1, Probes only; TOI-270, multi-planet system: 7 dips (5 candidates, 2 flagged), TESS sector 5, Probes only; HD 15337, small planets near the limit: 3 dips (2 candidates, 1 flagged), TESS sector 4, Probes only; TOI-236, known false positive: 6 dips (6 rejected), TESS sector 2, Probes only; pi Men, reference check: 7 dips (5 candidates, 1 flagged, 1 rejected), TESS sector 1, Probes and Sentinels." },
   { view: "galaxy", route: "/explore/galaxy/", anchor: "#route-galaxy",
     alt: "Galaxy: every known exoplanet, around the Sun. 8,049 planets around 5,433 stars placed where exoplanet.eu lists them, in 3D galactic coordinates, with distance rings in light-years, a radar and a heads-up readout of the planets near the aim. The app states that it maps these planets and did not find them." },
@@ -139,7 +140,7 @@ for (const theme of ["light", "dark"]) {
         if (r.height && r.bottom <= t + 0.5 && !b.contains(start)) prev = Math.max(prev, r.bottom);
       }
       return Math.max(t - above, prev + 6) + scrollY;
-    }, [s.anchor, !!s.heading, FRAME.above]);
+    }, [s.anchor, !!s.heading, s.above ?? FRAME.above]);
     const y0 = Math.max(0, Math.round(top));
     const vy = (VIEWPORT.height - FRAME.height) / 2;   // the frame sits in the middle of the window
     await page.evaluate((y) => scrollTo(0, y), y0 - vy);

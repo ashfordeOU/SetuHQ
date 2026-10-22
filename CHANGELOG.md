@@ -10,6 +10,33 @@ breaking changes are called out explicitly.
 
 ## [Unreleased]
 
+### Added
+
+- **DOI and PyPI.** The Zenodo concept DOI `10.5281/zenodo.23568348` (all versions) is in `CITATION.cff`
+  (`doi`, `identifiers`), `codemeta.json` (`identifier`) and `paper/paper.bib`; the README has a PyPI badge
+  (static, from `__version__`, so `tools/gen_readme_assets.py --check` stays offline) and a DOI badge, its
+  install section leads with `pip install setuhq`, and its Cite section names the DOIs.
+- **Worked examples on more stars.** Four more stored runs on public TESS SPOC light curves, Probes only (the
+  manifest records `"panel": {"mode": "probes_only"}` and pages say "Probes only; Sentinels not run on this
+  example"): WASP-126 (a hot Jupiter), TOI-270 (three planets), HD 15337 (small planets near the limit) and
+  TOI-236 (a false positive in the TOI table, rejected by vetting). Each is compared with the literature by
+  `scripts/showcase_compare.py` (docs/SHOWCASE.md, docs/results/showcase/); pi Men stays as the reference check.
+
+### Changed
+
+- **`setuhq site` takes several runs** (the lead run first). The home page shows every example run as a card,
+  Candidates groups the dips by star, and every run's dips get pages and case files, with its own case file,
+  plates and report under its star's address. A manifest now also records the code that ran.
+- **The header logo's hit area** matches its drawing: the image box is pinned and centred in a 44 px link
+  (WebKit placed the link's box above the logo); e2e checks it on every page.
+- **Releases are automatic.** A version bump merged to `main` releases itself once CI is green:
+  `auto-tag.yml` is now on by default (opt out with the variable `AUTO_TAG=false`), pushes the tag with the
+  workflow's own token and then dispatches `release.yml` on the tag; no `RELEASE_TAG_TOKEN` is needed.
+  `release.yml` runs the full release for any run whose ref is a tag, pushed or dispatched, with the same
+  strict checks; a dispatch on a branch is still a dry run. A second run for a tag that is already released
+  waits for the first (concurrency) and skips building and publishing. See
+  [docs/RELEASING.md](docs/RELEASING.md).
+
 ## [0.1.0] - 2026-10-22
 
 The first public release, under the name **SetuHQ** (*setu*, Sanskrit for bridge). Until this

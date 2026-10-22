@@ -83,6 +83,7 @@ from setuhq import benchmark_toi as BT  # noqa: E402
 from setuhq import galaxy as GX  # noqa: E402
 from setuhq import methods as MX  # noqa: E402
 from setuhq import transitfit as TF  # noqa: E402
+from setuhq import __version__  # noqa: E402
 
 FONT_DIR = ROOT / "tools" / "readme-fonts"
 OUT = ROOT / "docs" / "assets" / "readme"
@@ -2032,6 +2033,10 @@ def shield(href: str, label: str, message: str, color: str, alt: str) -> str:
     return f'  <a href="{href}"><img src="{url}" height="18" alt="{esc(alt)}"></a>'
 
 
+# The concept DOI (all versions) Zenodo minted with v0.1.0; each release also gets its own version DOI.
+CONCEPT_DOI = "10.5281/zenodo.23568348"
+
+
 def badges_block() -> str:
     rc = repo_counts()
     b = load_json(BENCH_SRC)
@@ -2039,6 +2044,11 @@ def badges_block() -> str:
     m = load_json(HERO_SRC)
     offline = rc["tests"] - rc["network"] - rc["slow"]
     rows = [
+        # Static badges, from __version__ and the concept DOI, so --check stays the same offline.
+        shield("https://pypi.org/project/setuhq/", "PyPI", f"v{__version__}", "066A86",
+               f"SetuHQ {__version__} on PyPI: pip install setuhq"),
+        shield(f"https://doi.org/{CONCEPT_DOI}", "DOI", CONCEPT_DOI, "3F4B67",
+               f"Zenodo concept DOI {CONCEPT_DOI}, which resolves to the latest archived release"),
         shield("scripts/ci_local.sh", "tests", f"{rc['tests']} collected", "377D0C",
                f"{rc['tests']} tests collected by pytest: {offline} run offline in CI, {rc['slow']} slow ones and "
                f"{rc['network']} network ones by scripts/ci_local.sh"),

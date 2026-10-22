@@ -1,13 +1,22 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# The release pipeline. One tag push, one workflow run, one order:
+# The release pipeline. One tag, one workflow run, one order:
 #
 #   tag -> verify -> build -> release -> pypi
+#
+# A RELEASE run is any run whose ref is a tag (github.ref_type == 'tag'), started either way:
+#   - by auto-tag.yml, the normal path: it pushes the tag with GITHUB_TOKEN (which starts no workflow) and
+#     then dispatches this workflow on the tag (`gh workflow run release.yml --ref vX.Y.Z`), which does;
+#   - by a manual tag push (`git push origin vX.Y.Z`), or Run workflow on the tag in the Actions tab.
+# Both run every job below with the same checks; github.ref is the tag either way, so the `pypi`
+# environment's v* tag rule and the trusted publisher (this file, environment `pypi`) match both.
 #
 #   verify   the tag equals the version in src/setuhq/__init__.py, every surface
 #            scripts/check_version_sync.py checks agrees, CHANGELOG.md's [Unreleased] is empty and the
 #            release's date equals CITATION.cff's, and CI (ci.yml) finished green on exactly this commit
 #            in a push to main, with the commit an ancestor of origin/main. It does not rerun the test
-#            suite: ci.yml already ran it on this commit, and a tag on any other commit is refused.
+#            suite: ci.yml already ran it on this commit, and a tag on any other commit is refused. It
+#            also reports whether the tag is already fully released (the GitHub Release carries both
+#            files and PyPI has the version); if so, the run stops there, green (see ONE RELEASE below).
 #   build    the sdist and the wheel with `python -m build`, `twine check --strict`,
 #            scripts/check_dist.py (what each carries, and no data), then a clean install of the
 #            wheel: `setuhq --help`, the MCP stdio smoke test of `setuhq-mcp` and `setuhq mcp`, and a
@@ -22,14 +31,26 @@
 #            release.yml (a job in it is the top-level workflow PyPI matches; nothing else in the
 #            repository can publish to `pypi`).
 #
+# ONE RELEASE per tag, however many runs start for it (a tag push and a dispatch, or two dispatches):
+#   1. The workflow-level concurrency group is the ref, so runs for one tag never overlap; a later one
+#      waits until the earlier one has finished (cancel-in-progress is off, so none is cut short).
+#   2. A later run's verify sees the finished release and skips build, release and pypi: nothing is
+#      rebuilt, attested or uploaded twice.
+#   3. If the earlier run stopped half-way, a later run rebuilds. Files with the same bytes as the release's
+#      are kept as they are; files that differ (setuptools stamps archive times, so they usually do) make
+#      the release job fail before pypi, since it never replaces a file. PyPI itself never accepts a
+#      second file under an existing name; `skip-existing` only turns "already there" into a skip, so a
+#      retry succeeds instead of failing, and pypi runs only after release has accepted the files.
+#   To finish a half-done release, use "Re-run failed jobs" on its own run (below), not a new run.
+#
 # RETRY: "Re-run failed jobs" on the tag's Release run. A re-run reuses the run's own `dist` artifact
 # (kept for 90 days), so PyPI and the GitHub Release always receive the bytes that were attested; nothing
 # is ever rebuilt for them.
 #
-# DRY RUN: a manual dispatch, on any branch. It runs verify (reporting a missing CI run as a warning) and
-# build, and keeps the dists as a workflow artifact. It attests, releases and publishes nothing, except
-# that with `testpypi` set it uploads that dry-run build to TestPyPI (environment `testpypi`), which needs
-# its own pending publisher there. A dispatch never reaches PyPI.
+# DRY RUN: a manual dispatch on a branch (ref_type 'branch'). It runs verify (reporting a missing CI run as
+# a warning) and build, and keeps the dists as a workflow artifact. It attests, releases and publishes
+# nothing, except that with `testpypi` set it uploads that dry-run build to TestPyPI (environment
+# `testpypi`), which needs its own pending publisher there. A dispatch on a branch never reaches PyPI.
 name: Release
 
 on:
@@ -38,7 +59,7 @@ on:
   workflow_dispatch:
     inputs:
       testpypi:
-        description: "Also upload this dry-run build to TestPyPI (needs the TestPyPI publisher; see docs/RELEASING.md)"
+        description: "Dry run on a branch only: also upload its build to TestPyPI (needs the TestPyPI publisher; see docs/RELEASING.md). Ignored on a tag."
         required: false
         type: boolean
         default: false
@@ -59,6 +80,7 @@ jobs:
       actions: read  # read ci.yml's runs for this commit
     outputs:
       version: ${{ steps.v.outputs.version }}
+      released: ${{ steps.done.outputs.released }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
         with:
@@ -72,7 +94,7 @@ jobs:
           set -euo pipefail
           version="$(python3 scripts/check_version_sync.py --print-version)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
             python3 scripts/check_version_sync.py --tag "$GITHUB_REF_NAME"
           else
             echo "::notice::dry run of $GITHUB_REF: checking the surfaces without a tag"
@@ -80,8 +102,8 @@ jobs:
           fi
           python3 scripts/changelog_extract.py "$version" > /dev/null
       - name: CI is green on this exact commit, pushed to main
-        # Fails closed on a tag push: the commit must be on main, and ci.yml must have finished green on it in a
-        # push to main. A dry run reports the same answer as a warning.
+        # Fails closed on a tag (pushed or dispatched): the commit must be on main, and ci.yml must have finished
+        # green on it in a push to main. A dry run on a branch reports the same answer as a warning.
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -97,14 +119,34 @@ jobs:
           fi
           if [ -z "$problem" ]; then
             echo "CI is green on $sha in a push to main, and main contains it"
-          elif [ "$GITHUB_EVENT_NAME" = "push" ]; then
+          elif [ "$GITHUB_REF_TYPE" = "tag" ]; then
             echo "::error::$problem: merge to main, wait for CI, then tag that commit"; exit 1
           else
             echo "::warning::$problem; a release of this commit would stop here"
           fi
+      - name: Is this tag already released?
+        # A second run for the same tag (a tag push and a dispatch, say) waits for the first (concurrency) and
+        # then stops here: the GitHub Release already carries both files and PyPI has the version.
+        id: done
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.v.outputs.version }}
+        run: |
+          set -euo pipefail
+          released=false
+          if [ "$GITHUB_REF_TYPE" = "tag" ] \
+             && assets="$(gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' 2> /dev/null)" \
+             && grep -qxF "setuhq-${VERSION}-py3-none-any.whl" <<< "$assets" \
+             && grep -qxF "setuhq-${VERSION}.tar.gz" <<< "$assets" \
+             && curl -fsS --retry 3 -o /dev/null "https://pypi.org/pypi/setuhq/${VERSION}/json"; then
+            released=true
+            echo "::notice::$GITHUB_REF_NAME is already released (GitHub Release and PyPI); nothing to do"
+          fi
+          echo "released=$released" >> "$GITHUB_OUTPUT"
 
   build:
     needs: verify
+    if: ${{ needs.verify.outputs.released != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -153,7 +195,7 @@ jobs:
 
   release:
     needs: [verify, build]
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.ref_type == 'tag' && needs.verify.outputs.released != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -204,7 +246,7 @@ jobs:
 
   pypi:
     needs: [verify, build, release]
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.ref_type == 'tag' && needs.verify.outputs.released != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -222,13 +264,13 @@ jobs:
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
         with:
           packages-dir: dist
-          skip-existing: true
+          skip-existing: true  # a retry of this run's bytes; PyPI never takes a second file under one name
           verbose: true
 
   # The dry run's upload rehearsal: the build above, never a tag's, to TestPyPI only.
   testpypi:
     needs: build
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.testpypi }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref_type != 'tag' && inputs.testpypi }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
