@@ -38,11 +38,11 @@
         "benchmark-dark.svg"
       ],
       "sources": {
-        "docs/results/benchmark_real_tois_clipfix.json": "668e0b291b34c37d069da991469e0ca997224b66161627f6ad76ea727354b046",
+        "docs/results/benchmark_real_tois_clipfix.json": "fb928c4e0de189c69c85c9f064de7bbc625757b303cb0b52705079d3c4487944",
         "docs/paper/references.json": "0b1742b0fd5e4b5e4bb401f4acb7ea6b8b9534b334dc69781ec22de89928d113",
         "docs/results/benchmark_toi_sample.json": "b0ac192b2363be04579c856e82f275ec4a451f0566e83f4ef87c4287c4fe39f7"
       },
-      "commit": "8bee5cc"
+      "commit": "c72b2fb"
     },
     "feed-noise": {
       "files": [
@@ -50,9 +50,9 @@
         "feed-noise-dark.svg"
       ],
       "sources": {
-        "docs/results/benchmark_real_tois_clipfix.json": "668e0b291b34c37d069da991469e0ca997224b66161627f6ad76ea727354b046"
+        "docs/results/benchmark_real_tois_clipfix.json": "fb928c4e0de189c69c85c9f064de7bbc625757b303cb0b52705079d3c4487944"
       },
-      "commit": "8bee5cc"
+      "commit": "c72b2fb"
     },
     "sky-coverage": {
       "files": [
