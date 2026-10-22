@@ -797,7 +797,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     showcase.sort(key=lambda c: order.index(c["run"]) if c["run"] in order else len(order))
     galaxy = galaxy_data(map_path, notable_path, coverage_path=coverage_path, setuhq_star=story["star"]["name"] or "pi Men",
                          setuhq_planet=story.get("planet"), lead_dip=story.get("lead_dip"))
-    return {
+    out = {
         "title": title,
         "nav": [{"id": k, "label": label, "href": from_hash(h)} for k, label, h in NAV],
         "route_meta": route_meta(),
@@ -891,6 +891,14 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "docket_frame": "",  # the address of the framed copy, set by the site builder
         "code_note": code_note(run_dir) or catalog.get("code_note"),
     }
+    # A star or planet link only where the site has its page: the catalogue (exoplanet.eu) may not list every
+    # example star (a false-positive host has no planet; a catalogue snapshot may lack one).
+    stars = set(((cat or {}).get("stars") or {}).get("slugs") or [])
+    planets = set(((cat or {}).get("planets") or {}).get("name") or [])
+    for ctx in out["run_ctx"].values():
+        ctx["star_page"] = bool(ctx["star"].get("name")) and slugify(ctx["star"]["name"]) in stars
+        ctx["planet_page"] = bool(ctx.get("planet")) and ctx["planet"] in planets
+    return out
 
 
 APP_CSS = """
@@ -2284,7 +2292,7 @@ function txTheatre(d){
   const {st} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}, on: current === 'transit', caption: false});
   if (!(known && star)){ st.opt.sys.bSrc = 'illustrative'; mxKick(st); }
   // The canonical pages for the planet (when the dip matches one) and the star.
-  $('#txlinks').innerHTML = (known && planet ? objLink('planet', planet, planet + ' ›') : '') + (C.star && C.star.name ? objLink('star', C.star.name, C.star.name + ' ›') : '');
+  $('#txlinks').innerHTML = (known && planet && C.planet_page !== false ? objLink('planet', planet, planet + ' ›') : '') + (C.star && C.star.name && C.star_page !== false ? objLink('star', C.star.name, C.star.name + ' ›') : '');
 }
 function lanesHTML(d){
   const pct = v => Math.max(0, Math.min(100, (v + d.half) / (2 * d.half) * 100));

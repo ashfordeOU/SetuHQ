@@ -1598,16 +1598,27 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
     return data
 
 
+def _finite(x):
+    if isinstance(x, float):
+        return x if math.isfinite(x) else None
+    if isinstance(x, dict):
+        return {k: _finite(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_finite(v) for v in x]
+    return x
+
+
 def docket_page(data: dict) -> str:
     """The Docket as one self-contained HTML page for the given ``docket_data``."""
     title = data["title"]
-    payload = json.dumps(data).replace("</", "<\\/")
+    # JSON has no Infinity or NaN: a non-finite stored value (an undefined error bar) is written as null.
+    payload = json.dumps(_finite(data), allow_nan=False).replace("</", "<\\/")
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{html.escape(title)}</title>
 {brand.head(title, "The Docket: a case file for each dip of one of SetuHQ's stored runs, with its vetting, its fit and every reviewer's marks. Candidates, never confirmations.", data.get("page_path") or "/candidates/case-file/")}
-<link rel="stylesheet" href="{DOCKET_FONTS_CSS}">
+<link rel="stylesheet" href="{data.get("fonts_href") or DOCKET_FONTS_CSS}">
 <style>{DOCKET_CSS}</style></head>
 <body>
 <div class="app">
@@ -1634,8 +1645,9 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
     """The stand-alone case file; ``path`` is its address on the site (default /candidates/case-file/)."""
     data = docket_data(run_dir, title=title, star=star, refresh_crossmatch=refresh_crossmatch,
                        require_crossmatch=require_crossmatch)
-    if path:
+    if path:  # a page of the site: its address, and the site's one copy of the fonts
         data["page_path"] = path
+        data["fonts_href"] = "/" + DOCKET_FONTS_CSS
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"

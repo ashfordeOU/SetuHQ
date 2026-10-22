@@ -898,7 +898,7 @@ function txTheatre(d){
   const {st} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}, on: current === 'transit', caption: false});
   if (!(known && star)){ st.opt.sys.bSrc = 'illustrative'; mxKick(st); }
   // The canonical pages for the planet (when the dip matches one) and the star.
-  $('#txlinks').innerHTML = (known && planet ? objLink('planet', planet, planet + ' ›') : '') + (C.star && C.star.name ? objLink('star', C.star.name, C.star.name + ' ›') : '');
+  $('#txlinks').innerHTML = (known && planet && C.planet_page !== false ? objLink('planet', planet, planet + ' ›') : '') + (C.star && C.star.name && C.star_page !== false ? objLink('star', C.star.name, C.star.name + ' ›') : '');
 }
 function lanesHTML(d){
   const pct = v => Math.max(0, Math.min(100, (v + d.half) / (2 * d.half) * 100));

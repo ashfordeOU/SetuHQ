@@ -427,7 +427,8 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
   const ctx = await context("phone", "light");
   const page = await ctx.newPage();
   current = "dip status";
-  for (const d of D.story.dips) {
+  const ALL = D.story.dips.concat(D.showcase_dips || []);  // every example run's dips
+  for (const d of ALL) {
     await page.goto(BASE + `/candidates/${SLUG(d.id)}/`); await ready(page);
     const s = await page.evaluate(() => ({ text: document.getElementById("route-transit").innerText, tags: [...document.querySelectorAll("#route-transit .tag")].filter((t) => t.offsetParent).map((t) => t.textContent) }));
     if (d.outcome === "rejected") {
@@ -438,7 +439,7 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
   await page.goto(BASE + "/candidates/"); await ready(page);
   const tags = await page.evaluate(() => [...document.querySelectorAll(".rundips li")].map((li) => [li.querySelector(".rundip").getAttribute("href"), li.querySelector(".tag").textContent]));
   for (const [href, tag] of tags) {
-    const d = D.story.dips.find((x) => `/candidates/${SLUG(x.id)}/` === href);
+    const d = ALL.find((x) => `/candidates/${SLUG(x.id)}/` === href);
     check(d && tag === { passed: "candidate", flagged: "flagged", rejected: "rejected" }[d.outcome], `${href}: its tag follows its outcome`, `${tag} for ${d && d.outcome}`);
   }
   // The run's count, as every page must give it: "7 dips (5 candidates, 1 flagged, 1 rejected)".
