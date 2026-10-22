@@ -17,6 +17,12 @@ const NS = 'http://www.w3.org/2000/svg';
 function el(tag, a={}, p){ const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
 function tx(svg, x, y, s, anchor='start', cls=''){ const t = el('text', {x, y, 'text-anchor': anchor, class: cls}, svg); t.textContent = s; return t; }
 const UNC = `<span class="tag unc">${esc(D.unconfirmed)}</span>`;
+// A run dip's status from its vetting outcome (app.py DIP_STATE): a tag, and the phrase. Only a passed dip is a candidate.
+const DIPSTATE = o => (D.dip_state || {})[o] || (D.dip_state || {}).flagged || ['cand', 'candidate', D.unconfirmed];
+const DIPTAG = o => { const [c, w, p] = DIPSTATE(o); return `<span class="tag ${c}" title="${esc(p)}">${esc(w)}</span>`; };
+const DIPPHRASE = o => DIPSTATE(o)[2];
+// A feed entry passed vetting (discover.py admits only those), so it is a candidate; a stored outcome would say otherwise.
+const FEEDTAG = x => DIPTAG(x.outcome || 'passed');
 const say = msg => { const a = $('#announce'); a.textContent = ''; setTimeout(() => { a.textContent = msg; }, 30); };
 // A Sentinel is an AI reviewer on any provider (Claude by default); PROV(id) is its provider, model and calibration.
 const SENTINEL_KINDS = D.sentinel_kinds || ['claude', 'claude_code'];
@@ -181,11 +187,12 @@ function widgetBody(id){
     for (const x of r.top){ let g = groups.find(g => g.signal_id === x.signal_id); if (!g){ g = {signal_id: x.signal_id, dips: []}; groups.push(g); } g.dips.push(x); }
     return `<ul class="toplist">${groups.map(g => {
       const f = g.dips[0], n = g.dips.length, xm = g.dips.find(x => x.consistent_with);
-      const head = `<div><b>${esc(f.target)}</b> <span class="muted">· signal ${f.period_days ? 'P ' + fmt(f.period_days,3) + ' d' : 'with no period (one transit)'} · ${n} of the top dips${f.signal_dips > n ? `, ${f.signal_dips} dips in the run` : ''}<span class="phonehedge"> · each a ${esc(D.unconfirmed)}</span></span></div>`;
+      const tic = String(f.target).replace(/^TIC\s*/, ''), star = (D.tic_names || {})[tic];
+      const head = `<div><b>${star ? esc(star) : esc(f.target)}</b> <span class="muted">${star ? `· ${esc(f.target)} ` : ''}· signal ${f.period_days ? 'P ' + fmt(f.period_days,3) + ' d' : 'with no period (one transit)'} · ${n} of the top dips${f.signal_dips > n ? `, ${f.signal_dips} dips in the run` : ''}</span></div>`;
       const note = xm ? `<p class="note">Archive cross-match: ${n === 1 ? 'this dip is' : `these ${n} dips are`} consistent with <b>${esc(xm.consistent_with)}</b>, a published planet${xm.dP_pct !== null && xm.dP_pct !== undefined ? ` (period difference ${fmt(xm.dP_pct,2)}%)` : ''}. ${n === 1 ? 'It is a transit' : 'They are repeat transits'} of one known planet, not ${n === 1 ? 'a discovery' : n + ' discoveries'}. ${esc(D.no_detection)}</p>` : '';
       // One line per dip. On a phone the status shows as its short word and the hedge moves to the
       // signal line above, so each row stays one 44 px line; the full words stay for screen readers.
-      return `<li>${head}${note}<ul>${g.dips.map(x => `<li class="toprow">${dipLink(x.id)}<span class="mono">SNR ${fmt(x.snr,1)}</span><span class="mono">${fmt(x.depth_ppm,0)} ppm</span><span class="st"><span class="long">${esc(x.outcome_label)}</span><span class="short" aria-hidden="true">${esc(OUTCOME_SHORT[x.outcome] || x.outcome_label)}</span></span><span class="tag cand unc" title="${esc(D.unconfirmed)}">candidate</span></li>`).join('')}</ul></li>`;
+      return `<li>${head}${note}<ul>${g.dips.map(x => `<li class="toprow">${dipLink(x.id)}<span class="mono">SNR ${fmt(x.snr,1)}</span><span class="mono">${fmt(x.depth_ppm,0)} ppm</span><span class="st"><span class="long">${esc(x.outcome_label)}</span><span class="short" aria-hidden="true">${esc(OUTCOME_SHORT[x.outcome] || x.outcome_label)}</span></span>${DIPTAG(x.outcome)}</li>`).join('')}</ul></li>`;
     }).join('')}</ul>`;
   }
   const r = D.run, c = r.counts || {}, dc = r.docket_counts || {};
@@ -200,7 +207,6 @@ function widgetBody(id){
     if (!D.catalog.path) return '<p class="empty">No search catalogue was given to this build.</p>';
     return `<div><span class="big">${f.length}</span> <span class="muted">feed entries</span></div>
       <p style="margin:0">${nKnown} match a known TOI period · ${nNew} new candidate${nNew===1?'':'s'} · ${esc(D.catalog.targets_reviewed)} targets reviewed</p>
-      <p style="margin:0">${UNC} every entry</p>
       <p class="muted" style="margin:0;font-size:12px">Catalogue updated ${when(D.catalog.updated)}.</p>`;
   }
   if (id === 'runs'){
@@ -212,7 +218,7 @@ function widgetBody(id){
   if (id === 'top'){
     if (!r.top.length) return '<p class="empty">This run stored no candidates.</p>';
     return `${topBody(r)}
-      <p class="muted" style="margin:0;font-size:12px">The run's dips with the highest stored SNR, grouped by signal. Every one is a ${esc(D.unconfirmed)}. Select a dip to open its dossier.</p>`;
+      <p class="muted" style="margin:0;font-size:12px">The run's dips with the highest stored SNR, grouped by signal; the tag is each dip's vetting status. Select a dip to open its dossier.</p>`;
   }
   return '';
 }
@@ -449,7 +455,7 @@ const COLS = [
   ['period_days', 'period (d)', x => x.period_days, x => fmt(x.period_days,4)],
   ['depth_ppm', 'depth (ppm)', x => x.depth_ppm, x => fmt(x.depth_ppm,0)],
   ['snr', 'SNR', x => x.snr, x => fmt(x.snr,1)],
-  ['status', 'status', x => x.status, x => `${esc(D.status_label[x.status] || x.status)} <span class="tag cand" title="${esc(D.unconfirmed)}">candidate</span>`],
+  ['status', 'status', x => x.status, x => `${esc(D.status_label[x.status] || x.status)} ${FEEDTAG(x)}`],
 ];
 const NUMERIC = new Set(['tic','t_center','period_days','depth_ppm','snr']);
 function discRows(){
@@ -484,7 +490,7 @@ function feedSortBar(){
 // One card per entry, three lines: the dip and its status; TIC · P · depth · SNR on one mono line; the hedge.
 function feedCards(rows){
   if (!rows.length) return '<p class="empty feedcards">No feed entries with this status.</p>';
-  return `<ol class="feedcards">${rows.map(x => `<li><div class="fc1">${dipLink(x.candidate_id)}<span class="fcst">${esc(D.status_label[x.status] || x.status)}</span></div><div class="fc2 mono">${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}</div><div class="fc3"><span class="tag cand" title="${esc(D.unconfirmed)}">candidate</span> mid-time ${fmt(x.t_center,2)} ${esc(x.time_unit)}</div></li>`).join('')}</ol>`;
+  return `<ol class="feedcards">${rows.map(x => `<li><div class="fc1">${dipLink(x.candidate_id)}<span class="fcst">${esc(D.status_label[x.status] || x.status)}</span></div><div class="fc2 mono">${ticLink(x.tic)} · P ${fmt(x.period_days,3)} d · ${fmt(x.depth_ppm,0)} ppm · SNR ${fmt(x.snr,1)}</div><div class="fc3">${FEEDTAG(x)} mid-time ${fmt(x.t_center,2)} ${esc(x.time_unit)}</div></li>`).join('')}</ol>`;
 }
 function renderDiscHead(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length, ft = D.catalog.found_times;
@@ -594,7 +600,7 @@ function renderPlanets(){
   const cards = D.planets, MAX = D.ratio_scale_max;
   $('#planetcards').innerHTML = cards.length ? cards.map(s => {
     const rowHtml = e => `<div class="ratio">
-      <div>${dipLink(e.id)} ${UNC}</div>
+      <div>${dipLink(e.id)} ${e.source === 'run' ? DIPTAG(e.outcome) : UNC}</div>
       <div class="muted" style="font-size:12px">${e.source === 'run' ? 'this run' : 'feed'} · ${esc(e.status)} · ${e.period_days ? 'P ' + fmt(e.period_days,3) + ' d' : 'no period'}${e.n_transits ? ' · ' + e.n_transits + ' transits' : ''}</div>
       ${e.ratio === null ? '<div class="formula">No positive stored depth, so no ratio.</div>' : `<div class="formula">Rp/R* = √depth = √(${fmt(e.depth_ppm,1)} ppm × 10⁻⁶) = <b>${fmt(e.ratio,4)}</b></div>
       <div class="scale" role="img" aria-label="Rp/R* ${fmt(e.ratio,4)} on a scale from 0 to ${fmt(MAX,2)}"><i style="width:${Math.min(100, e.ratio / MAX * 100).toFixed(2)}%"></i></div>
@@ -619,7 +625,7 @@ function renderPanel(){
   renderCalibration(); calWidth = $('#calplane').clientWidth;
   const ag = D.agreement;
   $('#agreement').innerHTML = ag.length ? `<ul class="agree">${ag.map(a => `<li>
-      <span>${dipLink(a.id)}<small class="muted" style="display:block;font-size:11px">${esc(a.target)} · ${esc(a.outcome_label)} · ${esc(D.unconfirmed)}</small></span>
+      <span>${dipLink(a.id)}<small class="muted" style="display:block;font-size:11px">${esc(a.target)} · ${esc(DIPPHRASE(a.outcome))}</small></span>
       <span><b>${a.n} of ${a.of} reviewers</b> marked it: ${a.n_claude} of ${plural(a.of_claude, 'Sentinel')}, ${a.n_sim} of ${plural(a.of_sim, 'Probe')}<small class="muted" style="display:block;font-size:11px">${a.reviewers.map(r => `<span title="reviewer id ${esc(r)}">${esc(NAME(r))}</span>`).join(', ') || 'none'}</small></span>
       <a href="${dipHref(a.id, 'ledger')}">Verdict ledger</a></li>`).join('')}</ul>` : '<p class="empty">The run stored no dips.</p>';
   $('#panelcards').innerHTML = D.panel.length ? D.panel.map(r => `<article class="card"><h2>${esc(NAME(r.id))} <span class="sub mono" title="reviewer id">${esc(r.id)}</span></h2>
@@ -829,7 +835,7 @@ function renderSky(){
   $('#skyrev').innerHTML = REV_FILTERS.map(([k, l]) => `<button type="button" data-rev="${k}" aria-pressed="${sky.rev === k}">${esc(l)}</button>`).join('');
   const shown = DIPS.filter(skyShown);
   $('#skycount').textContent = `${shown.length} of ${DIPS.length}`;
-  $('#skydips').innerHTML = shown.length ? shown.map(d => `<a class="dipitem" href="${transitHref(d.id)}" style="--c:${STC[d.status]}"><i></i><b>${esc(d.time_unit)} ${tval(d.t)}</b><span class="st">${esc(d.status_label)}</span><span class="sub">${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} h · ${d.who.sentinels === d.who.of_sentinels && d.who.probes === d.who.of_probes ? `all ${d.who.of_sentinels + d.who.of_probes} reviewers` : `${d.who.probes} Probes, ${d.who.sentinels} Sentinels`} · ${esc(D.unconfirmed)}</span></a>`).join('')
+  $('#skydips').innerHTML = shown.length ? shown.map(d => `<a class="dipitem" href="${transitHref(d.id)}" style="--c:${STC[d.status]}"><i></i><b>${esc(d.time_unit)} ${tval(d.t)}</b><span class="st">${esc(d.status_label)}</span><span class="sub">${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} h · ${d.who.sentinels === d.who.of_sentinels && d.who.probes === d.who.of_probes ? `all ${d.who.of_sentinels + d.who.of_probes} reviewers` : `${d.who.probes} Probes, ${d.who.sentinels} Sentinels`} · ${esc(DIPPHRASE(d.outcome))}</span></a>`).join('')
     : '<p class="empty" style="margin:12px">No dips match.</p>';
   skyTimeline();
 }
@@ -929,7 +935,8 @@ function renderTransit(){
   const i = DIPS.indexOf(d), prev = DIPS[(i + DIPS.length - 1) % DIPS.length], next = DIPS[(i + 1) % DIPS.length], inCmp = txs.cmp.includes(d.id);
   $('#txkicker').textContent = d.status_label; $('#txkicker').style.color = STC[d.status];
   $('#h-transit').textContent = DIP_NAME(d.id) || `dip ${d.letter}`;
-  $('#txsub').textContent = `${d.time_unit} ${tval(d.t)} · ${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} hours · SNR ${fmt(d.snr, 1)} · ${D.unconfirmed}`;
+  $('#txsub').textContent = `${d.time_unit} ${tval(d.t)} · ${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} hours · SNR ${fmt(d.snr, 1)} · ${DIPPHRASE(d.outcome)}`;
+  $('#txcapword').textContent = d.outcome === 'rejected' ? 'The dip, played back' : 'The transit, played back';
   $('#txnav').innerHTML = `<a class="roundbtn" href="${transitHref(prev.id)}" aria-label="Previous dip, ${esc(prev.time_unit)} ${tval(prev.t)}">‹</a><a class="roundbtn" href="${transitHref(next.id)}" aria-label="Next dip, ${esc(next.time_unit)} ${tval(next.t)}">›</a><button type="button" class="cmpbtn" id="cmptoggle" aria-pressed="${inCmp}">${inCmp ? 'In compare' : 'Add to compare'}</button>`;
   $('#txchips').innerHTML = DIPS.map(x => `<a href="${transitHref(x.id)}" aria-current="${x.id === d.id}" style="--c:${STC[x.status]}" title="${esc(x.id)} · ${esc(x.status_label)}"><i></i>${esc(x.letter)} · ${tval(x.t)}</a>`).join('');
   // Keep the current dip's chip in view in the sideways-scrolling row (without moving the page).
@@ -1035,7 +1042,7 @@ function renderExSel(){
       <g class="orbit" style="transform-origin:0 0"><circle cx="100" cy="0" r="${Math.max(1.2, 46 * k).toFixed(2)}" fill="var(--ink)"/><circle cx="100" cy="0" r="10" fill="none" stroke="var(--line-3)" stroke-width=".8"/></g></svg>
     <p class="small" style="text-align:center">Planet disc to scale from depth: Rp/R* ${fmt(k, 4)} · orbit not to scale · no stellar radius stored</p>
     <dl class="statgrid"><div><dt>Period</dt><dd>${fmt(f.period_days, 3)} d</dd></div><div><dt>Depth</dt><dd>${fmt(f.depth_ppm, 0)} ppm</dd></div><div><dt>Duration</dt><dd>${fmt(f.duration_hours, 2)} h</dd></div><div><dt>SNR</dt><dd>${fmt(f.snr, 1)}</dd></div></dl>
-    <p class="small">TESS sectors ${esc(f.sectors || 'not stored')}. Feed ${esc(entryNo(f.id))} for this star (stored id <span class="mono">${esc(f.id)}</span>). ${isNew ? '' : 'A TOI match compares a stored period with archive values. '}${esc(D.no_detection)} ${esc(_cap(D.unconfirmed))}.</p>`;
+    <p class="small">TESS sectors ${esc(f.sectors || 'not stored')}. Feed ${esc(entryNo(f.id))} for this star (stored id <span class="mono">${esc(f.id)}</span>). ${isNew ? '' : 'A TOI match compares a stored period with archive values. '}${esc(D.no_detection)}</p>`;
 }
 const _cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 $('#route-explorer').addEventListener('click', e => {
@@ -3422,8 +3429,8 @@ function ctRowHTML(r){
     if (k === 'star'){ v = P.star[i] ? esc(P.star[i]) : null; cls = ''; }
     else if (k === 'method'){ v = `<i style="background:${col(P.method[i])}"></i>${esc(CTM.method_label[P.method[i]] || P.method[i])}`; cls = ''; }
     else if (k === 'year') v = P.year[i] || null;
-    else if (k === 'mass') v = P.mass[i] !== null ? ctFmt(P.mass[i], 3) : (P.msini[i] !== null ? ctFmt(P.msini[i], 3) + ' sin i' : null);
-    else v = ctFmt(P[k][i], k === 'period' ? 5 : k === 'radius' ? 3 : 4);
+    else if (k === 'mass') v = P.mass[i] !== null ? ctLim(i, 'mass') + ctFmt(P.mass[i], 3) : (P.msini[i] !== null ? ctLim(i, 'msini') + ctFmt(P.msini[i], 3) + ' sin i' : null);
+    else v = P[k][i] === null || P[k][i] === undefined ? null : ctLim(i, k) + ctFmt(P[k][i], k === 'period' ? 5 : k === 'radius' ? 3 : 4);
     // On a phone card each cell carries its label and unit as plain text (no extra boxes to style or lay out).
     if (v === null) return `<span role="cell" class="${cls} na" aria-label="not stored">—</span>`;
     return phone ? `<span role="cell">${k === 'star' || k === 'method' ? '' : lab + ' '}${v}${unit ? ' ' + unit : ''}</span>` : `<span role="cell" class="${cls}">${v}</span>`;
@@ -3511,13 +3518,30 @@ const CT_ROWS = [
   ['RV semi-amplitude K', 'k', 'm/s'], ['Equilibrium temperature', 'teq', 'K'], ['Measured temperature', 'tmeas', 'K'], ['Spin–orbit angle λ', 'lambda', '°']];
 const CT_STAR_ROWS = [['Effective temperature', 'steff', 'K'], ['Radius', 'srad', 'R☉'], ['Mass', 'smass', 'M☉'], ['Metallicity [Fe/H]', 'smet', 'dex'],
   ['Age', 'sage', 'Gyr'], ['Distance', 'dist', 'pc'], ['V magnitude', 'vmag', ''], ['RA (J2000)', 'ra', '°'], ['Dec (J2000)', 'dec', '°']];
+// A stored value's error as the page shows it. exoplanet.eu stores an upper limit as lower error = value and upper
+// error = 0, the range from 0 to the value: that reads "≤ value", with no error. Both errors 0 means none was
+// stored: none is shown. Otherwise ± or − / +. (The planet stubs and pre-rendered pages: setuhq.stubs.is_upper_limit.)
+function ctErr(x, lo, hi){
+  const has = v => v !== null && v !== undefined;
+  if (!has(lo) || !has(hi) || (lo === 0 && hi === 0)) return {limit: false, err: ''};
+  if (hi === 0 && lo > 0 && Math.abs(lo - x) <= 1e-9 * Math.max(Math.abs(x), 1e-30)) return {limit: true, err: ''};
+  return {limit: false, err: lo === hi ? ` ± ${ctFmt(lo)}` : ` −${ctFmt(lo)} / +${ctFmt(hi)}`};
+}
+// "≤ " before a stored upper limit, in the table as on the planet's page.
+const ctLim = (i, k) => { const P = ct.P; return P[k + '_lo'] && P[k + '_hi'] && ctErr(P[k][i], P[k + '_lo'][i], P[k + '_hi'][i]).limit ? '≤ ' : ''; };
+const CT_TYPE = {mass: 'mass_type', radius: 'radius_type'};  // how the value was obtained; "Theoretical" is said so
 function ctVal(i, k, unit){
   const P = ct.P, x = P[k][i]; if (x === null || x === undefined) return '<td class="v na">not stored</td>';
-  const lo = P[k + '_lo'] ? P[k + '_lo'][i] : null, hi = P[k + '_hi'] ? P[k + '_hi'][i] : null;
-  const err = lo !== null && lo !== undefined && hi !== null && hi !== undefined ? (lo === hi ? ` ± ${ctFmt(lo)}` : ` −${ctFmt(lo)} / +${ctFmt(hi)}`) : '';
-  return `<td class="v">${ctFmt(x, 6)}${err}${unit ? ' ' + unit : ''}</td>`;
+  const lo = P[k + '_lo'] ? P[k + '_lo'][i] : null, hi = P[k + '_hi'] ? P[k + '_hi'][i] : null, r = ctErr(x, lo, hi);
+  const lim = r.limit ? '<span class="lim" title="Upper limit from the stored range (0 to this value)">≤ </span>' : '';
+  const theory = CT_TYPE[k] && P[CT_TYPE[k]] && P[CT_TYPE[k]][i] === 'Theoretical' ? ' <span class="na">· theoretical estimate</span>' : '';
+  return `<td class="v">${lim}${ctFmt(x, 6)}${r.err}${unit ? ' ' + unit : ''}${theory}</td>`;
 }
-function ctTable(i, rows){ return `<table class="pltable"><tbody>${rows.map(([lab, k, u]) => `<tr><th scope="row">${esc(lab)}</th>${ctVal(i, k, u)}</tr>`).join('')}</tbody></table>`; }
+function ctTable(i, rows){
+  const P = ct.P, limits = rows.some(([, k]) => P[k][i] !== null && P[k][i] !== undefined && P[k + '_lo'] && P[k + '_hi'] && ctErr(P[k][i], P[k + '_lo'][i], P[k + '_hi'][i]).limit);
+  return `<table class="pltable"><tbody>${rows.map(([lab, k, u]) => `<tr><th scope="row">${esc(lab)}</th>${ctVal(i, k, u)}</tr>`).join('')}</tbody></table>`
+    + (limits ? '<p class="small">≤: an upper limit, from the stored range (0 to the value).</p>' : '');
+}
 function ctMoll(ra, dec){ // Mollweide, 400 × 200 units, centred on RA 0°, RA increasing to the left
   let lam = -((ra > 180 ? ra - 360 : ra) * Math.PI / 180), phi = dec * Math.PI / 180, th = phi;
   for (let k = 0; k < 30; k++){ const f = 2 * th + Math.sin(2 * th) - Math.PI * Math.sin(phi); th -= f / (2 + 2 * Math.cos(2 * th) + 1e-12); }
@@ -3551,7 +3575,7 @@ function plShow(slug){
     const clsName = cls === null ? 'class not determinable (no radius or mass stored)' : ['Earth-size', 'Super-Earth', 'Sub-Neptune', 'Neptune-like', 'Gas giant'][cls] + (P.radius[i] === null ? ' (by mass)' : '');
     $('#h-planet').textContent = P.name[i]; if (current === 'planet') pageChrome('planet', new URLSearchParams({id: slug}));
     $('#plsub').innerHTML = `${star ? `<a href="${ctStarHref(star)}">${esc(star)}</a>` : 'host not stored'} · ${esc(CTM.method_label[P.method[i]] || P.method[i])} · discovered ${P.year[i] || 'year not stored'} · ${esc(clsName)}`;
-    $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds.</p>`;
+    $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds; none is shown where none is stored.</p>`;
     const sibs = star ? ct.byStar[star].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)) : [i];
     $('#plhost').innerHTML = (star ? `<p><a href="${ctStarHref(star)}">${esc(star)}</a>${P.sptype[i] ? ' · ' + esc(P.sptype[i]) : ''}${P.steff[i] !== null ? ' · ' + ctFmt(P.steff[i]) + ' K' : ''}</p>` : '<p>Host star not stored.</p>')
       + `<ul class="pllist">${sibs.map(j => `<li><a href="${ctPlanetHref(j)}"${j === i ? ' aria-current="page"' : ''}><span>${esc(P.name[j])}</span><span class="mono">${ctFmt(P.period[j], 5) ? ctFmt(P.period[j], 5) + ' d' : 'period —'}</span></a></li>`).join('')}</ul>`;
@@ -4115,9 +4139,22 @@ const ROUTES = () => $$('#content > .route').map(s => s.dataset.route);
 function parseLoc(){
   const p = rtParse(location.pathname, location.search) || {route: document.body.dataset.page === 'notfound' ? 'notfound' : (document.body.dataset.page || 'overview'), params: {}};
   if (!$('#route-' + p.route)) p.route = 'notfound';
+  // A dip address the run does not hold is not found: never another dip in its place. One the run once held says so.
+  let gone = '';
+  if ((p.route === 'transit' || p.route === 'candidates') && p.params.dip && !((D.routes.dips || {})[p.params.dip])){
+    gone = (D.routes.gone || []).includes(p.params.dip) ? p.params.dip : ''; p.route = 'notfound';
+  }
+  nfSay(gone);
   const params = new URLSearchParams(p.params);
   if (p.route === 'candidates' && location.hash.length > 1 && !params.has('section')) params.set('section', location.hash.slice(1));
   return {route: p.route, params};
+}
+// The not-found page, or "this dip is no longer in the run" for an address a dip once had (D.routes.gone).
+function nfSay(gone){
+  const h = $('#h-notfound'), p = h && h.closest('header').querySelector('p'); if (!h || !p) return;
+  if (!h.dataset.plain) { h.dataset.plain = h.textContent; p.dataset.plain = p.textContent; }
+  h.textContent = gone ? 'This dip is no longer in the run.' : h.dataset.plain;
+  p.innerHTML = gone ? `The address /candidates/${esc(gone)}/ belonged to a dip that a later version of the run no longer holds. Its number is not given to another dip. <a href="${esc(rtUrl('explorer'))}">See the dips the run holds now ›</a>` : esc(p.dataset.plain);
 }
 let current = null;
 // The header follows the page: the section it belongs to, its breadcrumbs (deep pages only), its sub-navigation and title.

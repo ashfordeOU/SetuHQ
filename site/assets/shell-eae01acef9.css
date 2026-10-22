@@ -113,10 +113,14 @@
 .rundip .tag{grid-row:1/3;grid-column:2}
 .rundipcf{display:inline-flex;align-items:center;padding:0 14px;border:1px solid var(--line);border-radius:14px;text-decoration:none;font-size:13px;white-space:nowrap}
 .tag.cand{color:var(--yellow);border-color:color-mix(in oklab,var(--yellow) 35%,transparent);background:color-mix(in oklab,var(--yellow) 8%,transparent)}
+.tag.rej{color:var(--red);border-color:color-mix(in oklab,var(--red) 35%,transparent);background:color-mix(in oklab,var(--red) 8%,transparent)}
+.tag.open{color:var(--ink-2)}
 .secthead #customise{margin-left:auto}
 #widgets:not(.customising) .wctl{display:none}
 #layouttools[hidden]{display:none}
-.feedsec{display:grid;gap:18px}
+.feedsec{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;min-width:0}
+.feedsec>*,.feedsec .row2>*{min-width:0}
+.feedsec .row2{align-items:start}
 .exfilters{align-items:flex-start}
 .exfilters>div{justify-content:flex-start}
 .scatter.astable{padding-bottom:0}

@@ -312,7 +312,7 @@ function renderRunHeader(){
   box.innerHTML = `<h1>${esc(D.title)}</h1>
     <p class="counts"><b>${c.signals} signal${c.signals===1?'':'s'} · ${c.dips} dip${c.dips===1?'':'s'}</b><br>
     <span class="revcount">${c.reviewers} reviewers: ${reviewerSummary(Object.keys(D.reviewers))}</span><br>
-    <span class="revcount">Every signal here is a candidate, unconfirmed.</span></p>
+    <span class="revcount">A signal that passes vetting is a candidate, unconfirmed; a rejected one is not a candidate.</span></p>
     <div class="chips" role="group" aria-label="Filter signals by vetting outcome">${chips.map(([k,l]) => `<button class="chip" data-f="${k}" aria-pressed="${state.filter===k}">${l}</button>`).join('')}</div>
     <div class="hint" style="margin-top:8px"><kbd>j</kbd>/<kbd>k</kbd> move · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> filter, <kbd>0</kbd> all · <kbd>s</kbd> strip</div>
     <button class="listtoggle" id="listtoggle" aria-expanded="${!state.listCollapsed}" aria-controls="listbody">${state.listCollapsed ? 'Show' : 'Hide'} the signal list</button>`;
@@ -783,7 +783,7 @@ function renderDossier(){
     </section>
     <p class="filternote" id="filternote" hidden></p>
     <div class="head">
-      <div><div class="hint"><span class="tagcand">candidate</span> ${esc(c.target)} · ${esc(c.mission)} · subject ${esc(c.subject_id)}</div>
+      <div><div class="hint"><span class="tagcand">${c.outcome === 'passed' ? 'candidate' : c.outcome === 'rejected' ? 'rejected' : 'flagged'}</span> ${esc(c.target)} · ${esc(c.mission)} · subject ${esc(c.subject_id)}</div>
       <h2>Signal ${esc(sigLabel(s))} <span class="dipid">· dip ${e !== null ? 'E'+e+' · ' : ''}${esc(c.candidate_id)}</span></h2></div>
       <div class="sigout">signal: ${outBadge(s.outcome)}</div>
     </div>
