@@ -4,7 +4,7 @@
 
 > **Licence.** CHEOPS-derived results. Everything in this file is derived from CHEOPS data (ESA) and is distributed under ESA's terms, the CC BY-NC 3.0 IGO licence, not under SetuHQ's CC BY 4.0, its commercial licence or SetuHQ Pro; commercial use needs ESA's prior authorisation (data.licences@esa.int). SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium.
 
-Protocol v3 (`docs/results/stellar_validation_protocol_v3.json`, sha256 `c978f04c24b831c7f09d6ddd4d84e94cdee9b297a9ee87358ad8614da8f1b1ba`, committed in `b2ac54c26149`), frozen 2026-10-22, seed 20261022; stellar code fingerprint `1d625f69621398a4…` (each item records the fingerprint of the files it depends on, this script included). Generated 2026-10-22T05:53:25+00:00.
+Protocol v3 (`docs/results/stellar_validation_protocol_v3.json`, sha256 `c978f04c24b831c7f09d6ddd4d84e94cdee9b297a9ee87358ad8614da8f1b1ba`, committed in `b2ac54c26149`), frozen 2026-10-22, seed 20261022; stellar code fingerprint `1d625f69621398a4…` (each item records the fingerprint of the files it depends on, this script included). Generated 2026-10-22T06:54:39+00:00.
 
 Status: **not validated (2 of 5 checks pass)**; 2 comparisons inconclusive (gated). The TESS results and the other capabilities are in `stellar_validation.md`.
 
@@ -26,13 +26,15 @@ Data: CHEOPS DRP (subarray) light curves via DACE public mode; Poyatos et al. us
 
 **Where the injections landed.** Amplitude and FWHM are drawn once per injection (log-uniform, FWHM 0.5-10 min) and only the position is redrawn; a flare is placed when its start (one FWHM before the peak) and its peak plus three FWHM fall inside one stretch of data (cf. Poyatos et al. 2025, Sect. 2.3, who count only flares whose start and stop fall within one visit). Placed: 1501; no position found: 851.
 
-| FWHM (min) | Placed | Placed fraction | Expected (log-uniform) |
-|---|---|---|---|
-| 0.50-0.91 | 418 | 0.28 | 0.20 |
-| 0.91-1.66 | 378 | 0.25 | 0.20 |
-| 1.66-3.02 | 292 | 0.19 | 0.20 |
-| 3.02-5.49 | 226 | 0.15 | 0.20 |
-| 5.49-10.00 | 187 | 0.12 | 0.20 |
+| FWHM (min) | Placed | Placed fraction | Expected (log-uniform) | No position found (of drawn) | Gate flares recovered |
+|---|---|---|---|---|---|
+| 0.50-0.91 | 418 | 0.28 | 0.20 | 60/478 = 13% | 0/0 |
+| 0.91-1.66 | 378 | 0.25 | 0.20 | 104/482 = 22% | 0/0 |
+| 1.66-3.02 | 292 | 0.19 | 0.20 | 152/444 = 34% | 70/99 |
+| 3.02-5.49 | 226 | 0.15 | 0.20 | 224/450 = 50% | 89/147 |
+| 5.49-10.00 | 187 | 0.12 | 0.20 | 311/498 = 62% | 24/111 |
+
+**The injection gate is conditional on placement.** Long flares more often find no position in the short CHEOPS stretches, so the gate measures recovery of the flares that fit, weighted toward short ones. Giving each log-FWHM bin that holds gate flares its log-uniform (equal) weight gives a recovered fraction of 0.51, against 0.51 unweighted (reported, not a protocol number); the gate fails either way. The placement-conditional recovery of the longest bin is the weak point.
 
 | Quantity | SetuHQ original | SetuHQ denoised | Poyatos et al. 2025 (journal) |
 |---|---|---|---|

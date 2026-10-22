@@ -637,10 +637,32 @@ def _markdown_cheops(crec, rec, items) -> str:
               f"who count only flares whose start and stop fall within one visit). Placed: {pl['n_placed']}; no "
               f"position found: {pl['n_unplaced']}.")
             a("")
-            a("| FWHM (min) | Placed | Placed fraction | Expected (log-uniform) |")
-            a("|---|---|---|---|")
-            for b in pl["histogram"]:
-                a(f"| {b['lo_min']:.2f}-{b['hi_min']:.2f} | {b['placed']} | {_fmt(b['placed_fraction'])} | {b['expected_fraction']:.2f} |")
+            un = pl.get("unplaced_fwhm_minutes") or []
+            ci_ = rec["protocol"]["flares"]["cheops_injection"]
+            gate = [(x["fwhm_minutes"], x["recovered"]) for t in r["targets"] for v in t.get("visits", [])
+                    for x in v.get("injections", []) if x["snr"] and x["snr"] >= ci_["gate_min_snr"]
+                    and x["fwhm_minutes"] * 60 >= ci_["gate_min_fwhm_cadences"] * (v.get("injections_cadence_s") or 60)]
+            a("| FWHM (min) | Placed | Placed fraction | Expected (log-uniform) | No position found (of drawn) | Gate flares recovered |")
+            a("|---|---|---|---|---|---|")
+            w_rec = w_sum = 0.0
+            for i, b in enumerate(pl["histogram"]):
+                last = i == len(pl["histogram"]) - 1
+                inb = (lambda f, b=b, last=last: b["lo_min"] <= f < b["hi_min"] or (last and f == b["hi_min"]))
+                nu = sum(1 for f in un if inb(f))
+                g = [rc for f, rc in gate if inb(f)]
+                if g:
+                    w_rec += b["expected_fraction"] * sum(g) / len(g)
+                    w_sum += b["expected_fraction"]
+                a(f"| {b['lo_min']:.2f}-{b['hi_min']:.2f} | {b['placed']} | {_fmt(b['placed_fraction'])} | "
+                  f"{b['expected_fraction']:.2f} | {nu}/{nu + b['placed']} = {nu / max(nu + b['placed'], 1):.0%} | "
+                  f"{sum(g)}/{len(g)} |")
+            a("")
+            a("**The injection gate is conditional on placement.** Long flares more often find no position in the "
+              "short CHEOPS stretches, so the gate measures recovery of the flares that fit, weighted toward short "
+              "ones. Giving each log-FWHM bin that holds gate flares its log-uniform (equal) weight gives a recovered "
+              f"fraction of {w_rec / w_sum:.2f}, against {sum(rc for _, rc in gate) / max(len(gate), 1):.2f} unweighted "
+              "(reported, not a protocol number); the gate fails either way. The placement-conditional recovery of the "
+              "longest bin is the weak point.")
             a("")
         a("| Quantity | SetuHQ original | SetuHQ denoised | Poyatos et al. 2025 (journal) |")
         a("|---|---|---|---|")

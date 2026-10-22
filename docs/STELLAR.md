@@ -203,12 +203,13 @@ on these same targets, so v3 is a re-test after review fixes, not an independent
   criterion.
 - **Quiet stars.** There was 1 detection in 147 days.
 - **Flares, CHEOPS (gated).** Amplitude and FWHM are now drawn once per injection.
-  - The placed FWHM is still skewed short: 28% of injections fall in 0.5-0.9 min and 13% in 5.5-10 min, against
-    20% expected in each bin. 851 of 2352 injections, mostly long ones, found no position in the short CHEOPS
-    visits. In v2 the skew was 60% against 23% expected.
+  - The placed FWHM is still skewed short: 28% of injections fall in 0.5-0.9 min and 12% in 5.5-10 min, against
+    20% expected in each bin. 851 of 2352 injections found no position in the short CHEOPS visits: 13%, 22%, 34%, 50%
+    and 62% of those drawn in the five bins from shortest to longest. In v2 the skew was 60% against 23% expected.
   - With the fairer mix, bright injected flares (S/N ≥ 10, FWHM ≥ 3 cadences) are recovered 0.51 of the time
-    (0.46-0.56), down from v2's 0.73. Of the long flares among them (FWHM 5.5-10 min), 24 of 110 are recovered. The
-    v2 gate was flattered by the short-flare skew.
+    (0.46-0.56), down from v2's 0.73. Of the long flares among them (FWHM 5.5-10 min), 24 of 111 are recovered. The
+    v2 gate was flattered by the short-flare skew. The gate is conditional on placement: it measures recovery of
+    the flares that fit in a stretch. With equal weight per log-FWHM bin it is 0.51 as well, so it fails either way.
   - The masked inverted null finds 7 events against 47 flares (0.15).
   - Both gates fail. The Poyatos et al. comparisons are therefore reported as inconclusive: complex fraction 0.42
     against ~0.40; α 2.07 ± 0.22 against 1.92 ± 0.07; denoising +21% against +34%. The numbers are in

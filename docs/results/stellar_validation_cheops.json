@@ -1,7 +1,7 @@
 {
  "kind": "setuhq-stellar-validation-cheops/1",
  "licence_notice": "CHEOPS-derived results. Everything in this file is derived from CHEOPS data (ESA) and is distributed under ESA's terms, the CC BY-NC 3.0 IGO licence, not under SetuHQ's CC BY 4.0, its commercial licence or SetuHQ Pro; commercial use needs ESA's prior authorisation (data.licences@esa.int). SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium.",
- "generated_at": "2026-10-22T05:53:25+00:00",
+ "generated_at": "2026-10-22T06:54:39+00:00",
  "protocol_file": "docs/results/stellar_validation_protocol_v3.json",
  "protocol_sha256": "c978f04c24b831c7f09d6ddd4d84e94cdee9b297a9ee87358ad8614da8f1b1ba",
  "protocol_commit": "b2ac54c261490510feb38619971ee59a3e1c10a4",

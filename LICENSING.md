@@ -90,7 +90,10 @@ affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or
 Consortium ([`docs/STELLAR.md`](docs/STELLAR.md)). `docs/results/stellar_validation.json` and `.md`
 hold no CHEOPS-derived values: of the CHEOPS capability they keep only its status label and the
 pass or fail of each of its checks (key `capabilities.cheops` and the `checks` rows with capability
-`cheops`), and they name the CHEOPS file under `cheops_results_in`.
+`cheops`), and they name the CHEOPS file under `cheops_results_in`. They also keep, in the protocol
+configuration, the CHEOPS programme and visit identifiers (file keys such as `CH_PR100018_TG035201_V0300`)
+and the target names the protocol selects: these are identifiers, not data derived from CHEOPS
+observations, so they stay outside this carve-out.
 
 **The `[cheops]` extra installs `dace-query`, which is licensed GPL-3.0.** It is optional, not
 shipped with SetuHQ and not needed for anything else, and it is compatible with the AGPL-3.0 option.
