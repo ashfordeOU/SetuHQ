@@ -34,6 +34,7 @@ nav.toc{margin:0 0 22px;font-size:14px}
 nav.toc h2{font-size:13px;font-weight:600;margin:0 0 4px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 nav.toc ol{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:0 18px}
 nav.toc a{display:inline-flex;align-items:center;min-height:44px}
+nav.toc h2.otherh{margin-top:10px}
 section.river,article.plate{border-top:1px solid var(--ink);padding-top:10px;margin-top:26px}
 h2.ptitle{font-size:20px;font-weight:600;margin:0;line-height:1.25}
 h2.ptitle .num{font-size:14px;color:var(--muted);font-weight:400}
@@ -119,11 +120,11 @@ footer.colophon p{margin:3px 0}
   /* Figures print at about 0.66 to 0.69 pt per SVG unit, so 12.5 units is at least 8.2 pt on paper. */
   svg text{font-size:12.5px}
 }
-.kicker a{display:inline-block;vertical-align:middle;margin-right:10px}.brandlogo{display:block;height:20px;width:auto}.brandlogo.dk{display:none}@media screen and (prefers-color-scheme: dark){:root:not([data-theme="light"]) .brandlogo.dk{display:block}:root:not([data-theme="light"]) .brandlogo.lt{display:none}}@media screen{:root[data-theme="dark"] .brandlogo.dk{display:block}:root[data-theme="dark"] .brandlogo.lt{display:none}}</style><script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script><link rel="stylesheet" href="/assets/fonts/fonts.css"><link rel="stylesheet" href="/assets/shell-eae01acef9.css"><script src="/assets/site-8efaa37a95.js" defer></script></head>
+.kicker a{display:inline-block;vertical-align:middle;margin-right:10px}.brandlogo{display:block;height:20px;width:auto;aspect-ratio:579/132;flex:none;max-width:none}.brandlogo.dk{display:none}@media screen and (prefers-color-scheme: dark){:root:not([data-theme="light"]) .brandlogo.dk{display:block}:root:not([data-theme="light"]) .brandlogo.lt{display:none}}@media screen{:root[data-theme="dark"] .brandlogo.dk{display:block}:root[data-theme="dark"] .brandlogo.lt{display:none}}</style><script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script><link rel="stylesheet" href="/assets/fonts/fonts.css"><link rel="stylesheet" href="/assets/shell-bc8aa1c299.css"><script src="/assets/site-8efaa37a95.js" defer></script></head>
 <body>
 <header class="topbar shellscope">
   <div class="tbin">
-    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="579" height="132"></a>
+    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="105" height="24"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="105" height="24"></a>
     <nav class="nav" aria-label="Main"><ul><li><a href="/explore/" data-nav="explore">Explore</a></li><li><a href="/candidates/" data-nav="candidates">Candidates</a></li><li><a href="/how-it-works/" data-nav="how">How it works</a></li><li><a href="/evidence/" data-nav="evidence">Evidence</a></li><li><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav>
     <div class="tools">
       
@@ -147,7 +148,7 @@ footer.colophon p{margin:3px 0}
     <li>Status is written as a word beside every colour.</li>
   </ul>
 </header>
-<nav class="toc" aria-label="Plates"><h2>Plates</h2><ol><li><a href="#plate-TIC-261136679">Plate 1 · TIC 261136679</a></li><li><a href="#plate-TIC-348770361">Plate 2 · TIC 348770361</a></li><li><a href="#plate-TIC-349088467">Plate 3 · TIC 349088467</a></li></ol></nav>
+<nav class="toc" aria-label="Plates"><h2>Plates</h2><ol><li><a href="#plate-TIC-261136679">Plate 1 · TIC 261136679</a></li><li><a href="#plate-TIC-348770361">Plate 2 · TIC 348770361</a></li><li><a href="#plate-TIC-349088467">Plate 3 · TIC 349088467</a></li></ol><h2 class="otherh">Plates of the other example stars</h2><ol><li><a href="/evidence/plates/wasp-126/">WASP-126</a></li><li><a href="/evidence/plates/toi-270/">TOI-270</a></li><li><a href="/evidence/plates/hd-15337/">HD 15337</a></li><li><a href="/evidence/plates/toi-236/">TOI-236</a></li></ol></nav>
 <section class="river" aria-labelledby="river-h">
   <h2 class="ptitle" id="river-h"><span class="num">River of time</span> the whole feed</h2>
   <p class="psub">One row per star, a tick per candidate. Height is log SNR; colour is status, and each row lists its statuses in words. Stretches of more than 30 days with no candidate are cut, so the segments are not drawn to a common time scale: each has its own, labelled at its start and end, with its span in days (d) beneath it. A known TOI period is an archive value: Archive values only. This page claims no detection.</p>

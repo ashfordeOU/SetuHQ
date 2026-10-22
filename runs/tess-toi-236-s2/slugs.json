@@ -1,0 +1,53 @@
+{
+ "note": "Each dip's address on the website (/candidates/<slug>/), given once and never changed. An address belongs to a dip by its subject and mid-time (within its duration, at most half a day), not by its candidate id, which is a rank. Written by setuhq site; a dip that leaves the run keeps its entry, so its number is never reused.",
+ "dips": [
+  {
+   "slug": "toi-236/dip-1",
+   "subject": "tess-997691b39aab",
+   "t_center": 1355.3033362818887,
+   "duration_hours": 6.217141691746292,
+   "id": "tess-997691b39aab-002",
+   "star": "TOI-236"
+  },
+  {
+   "slug": "toi-236/dip-2",
+   "subject": "tess-997691b39aab",
+   "t_center": 1359.8335423136464,
+   "duration_hours": 7.3036592742209905,
+   "id": "tess-997691b39aab-001",
+   "star": "TOI-236"
+  },
+  {
+   "slug": "toi-236/dip-3",
+   "subject": "tess-997691b39aab",
+   "t_center": 1364.313782302278,
+   "duration_hours": 8.598839492164188,
+   "id": "tess-997691b39aab-000",
+   "star": "TOI-236"
+  },
+  {
+   "slug": "toi-236/dip-4",
+   "subject": "tess-01e315ee5ebf",
+   "t_center": 1368.9087645358336,
+   "duration_hours": 4.004314370298744,
+   "id": "tess-01e315ee5ebf-004",
+   "star": "TOI-236"
+  },
+  {
+   "slug": "toi-236/dip-5",
+   "subject": "tess-01e315ee5ebf",
+   "t_center": 1373.4758471884866,
+   "duration_hours": 3.5356167320042005,
+   "id": "tess-01e315ee5ebf-005",
+   "star": "TOI-236"
+  },
+  {
+   "slug": "toi-236/dip-6",
+   "subject": "tess-01e315ee5ebf",
+   "t_center": 1378.002992531157,
+   "duration_hours": 4.18962420578282,
+   "id": "tess-01e315ee5ebf-003",
+   "star": "TOI-236"
+  }
+ ]
+}

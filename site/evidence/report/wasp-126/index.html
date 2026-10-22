@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>SetuHQ: WASP-126</title>
+<link rel="icon" type="image/svg+xml" href="assets/brand/setuhq-favicon.svg">
+<meta name="description" content="The archived report of SetuHQ&#x27;s stored run tess-wasp-126-s1: every candidate, its vetting and provenance. Candidates, never confirmations.">
+<link rel="canonical" href="https://setuhq.com/evidence/report/wasp-126/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="SetuHQ: WASP-126"><meta property="og:description" content="The archived report of SetuHQ&#x27;s stored run tess-wasp-126-s1: every candidate, its vetting and provenance. Candidates, never confirmations."><meta property="og:url" content="https://setuhq.com/evidence/report/wasp-126/"><meta property="og:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="SetuHQ: WASP-126"><meta name="twitter:description" content="The archived report of SetuHQ&#x27;s stored run tess-wasp-126-s1: every candidate, its vetting and provenance. Candidates, never confirmations."><meta name="twitter:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png">
+<style>
+:root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#15803d;--bad:#dc2626;--warn:#b45309;--radius:14px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}}
+:root[data-theme="dark"]{--bg:#0b0d14;--panel:#141826;--ink:#e8ebf5;--muted:#9aa1b8;--line:#262c40;--accent:#818cf8;--accent-2:#2dd4bf;--good:#4ade80;--bad:#f87171;--warn:#fbbf24}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.hero{padding:56px 16px 36px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+h1{font-size:clamp(28px,5vw,42px);margin:0 0 8px;letter-spacing:-.02em}
+h2{font-size:24px;margin:40px 0 12px;letter-spacing:-.01em}
+h3{font-size:17px;margin:0 0 6px}
+p.lead{font-size:18px;max-width:760px;margin:0;opacity:.95}
+nav{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;flex-wrap:wrap;gap:4px 14px;padding-top:6px;padding-bottom:6px}
+summary{display:flex;align-items:center;min-height:44px;cursor:pointer}
+nav a{color:var(--muted);text-decoration:none;white-space:nowrap;font-size:14px;display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
+nav a:hover{color:var(--accent)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.stat{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.stat small{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px}
+.pipeline{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.step{flex:1 1 150px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+.step b{display:block;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+.step span{font-size:14px;color:var(--muted)}
+.arrow{align-self:center;color:var(--muted)}
+.cands{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.cand img{width:100%;border-radius:10px;border:1px solid var(--line);background:#fff}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;margin:2px 4px 2px 0;border:1px solid var(--line);color:var(--muted)}
+.tag.pass{color:var(--good);border-color:var(--good)}
+.tag.fail{color:var(--bad);border-color:var(--bad)}
+.tag.flag{color:var(--warn);border-color:var(--warn)}
+.bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin:8px 0}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
+.kv>div{min-width:0;overflow-wrap:anywhere}
+.grid>*,.cands>*{min-width:0}
+code{overflow-wrap:anywhere}
+.kv div:nth-child(odd){color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.scroll{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:4px 14px}
+.note{font-size:14px;color:var(--muted)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto}
+footer{margin:48px 0 24px;color:var(--muted);font-size:13px}
+@media (max-width:600px){.cands{grid-template-columns:1fr}.step{flex-basis:100%}.arrow{display:none}}
+.hero .brandlogo{height:28px;width:auto;aspect-ratio:579/132;flex:none;max-width:none;margin-bottom:18px}</style><script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script><link rel="stylesheet" href="/assets/fonts/fonts.css"><link rel="stylesheet" href="/assets/shell-bc8aa1c299.css"><script src="/assets/site-8efaa37a95.js" defer></script></head>
+<body>
+<header class="topbar shellscope">
+  <div class="tbin">
+    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="105" height="24"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="105" height="24"></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/explore/" data-nav="explore">Explore</a></li><li><a href="/candidates/" data-nav="candidates">Candidates</a></li><li><a href="/how-it-works/" data-nav="how">How it works</a></li><li><a href="/evidence/" data-nav="evidence">Evidence</a></li><li><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav>
+    <div class="tools">
+      
+      <button class="iconbtn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Switch to light" title="Theme: dark"><svg class="ti ti-dark" viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 12.6A6.5 6.5 0 0 1 7.4 4.5a6.5 6.5 0 1 0 8.1 8.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><svg class="ti ti-light" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="ti ti-system" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3.4a6.6 6.6 0 0 1 0 13.2z" fill="currentColor"/></svg></button>
+      <button class="iconbtn menubtn" type="button" id="menubtn" aria-expanded="false" aria-controls="menu" aria-label="Open the menu"><svg class="mi-open" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><svg class="mi-close" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+  <div class="menu" id="menu" hidden><nav aria-label="Main"><ul><li class="msec"><a href="/explore/" data-nav="explore">Explore</a><ul class="msub"><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></li><li class="msec"><a href="/candidates/" data-nav="candidates">Candidates</a><ul class="msub"><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/pi-men/dip-2/">Dips</a></li><li><a href="/candidates/pi-men/dip-2/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></li><li class="msec"><a href="/how-it-works/" data-nav="how">How it works</a></li><li class="msec"><a href="/evidence/" data-nav="evidence">Evidence</a><ul class="msub"><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></li><li class="msec"><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav></div>
+</header>
+<div class="pagebar shellscope"><div class="pbin"><nav class="crumbs" id="crumbs" aria-label="Breadcrumb"><ol><li><a href="/evidence/">Evidence</a></li><li aria-current="page">Run report: WASP-126</li></ol></nav><nav class="subnav" id="subnav" aria-label="In this section"><a href="/evidence/">The panel</a><a href="/evidence/leaderboard/">Leaderboard</a><a href="/evidence/runs/">Runs</a><a href="/evidence/report/" aria-current="page">Run report</a><a href="/evidence/plates/">Plates</a></nav></div></div>
+<header class='hero' id='overview'><div class='wrap'>
+  
+  <h1>SetuHQ: WASP-126</h1>
+  <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p><p class='lead'><b>Probes only; Sentinels not run on this example.</b> Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+</div></header>
+<nav class='report-nav' aria-label='Sections'><div class='wrap'><a href='#overview'>Overview</a><a href='#pipeline'>Pipeline</a><a href='#candidates'>Candidates</a><a href='#panel'>Panel</a><a href='#validation'>Validation</a><a href='#benchmark'>Benchmark</a><a href='#provenance'>Provenance</a></div></nav>
+<main class='wrap'>
+
+<section class='grid' style='margin-top:28px'>
+  <div class='card stat'>1<small>light curves</small></div>
+  <div class='card stat'>2<small>blind-coded subjects</small></div>
+  <div class='card stat'>6<small>independent reviews</small></div>
+  <div class='card stat'>8<small>consensus dips</small></div>
+  <div class='card stat' style='color:var(--good)'>8<small>passed vetting</small></div>
+</section>
+
+<section id='pipeline'><h2>How a run works</h2>
+<div class='pipeline'>
+  <div class='step'><b>1 · Ingest</b><span>TESS SPOC from MAST or CHEOPS FITS, time system kept as delivered</span></div><div class='arrow'>→</div>
+  <div class='step'><b>2 · Clean &amp; detrend</b><span>Spike clip, masked local-quadratic baseline, 10-min bins</span></div><div class='arrow'>→</div>
+  <div class='step'><b>3 · Blind subjects</b><span>13-day segments with opaque IDs. The target name never reaches a reviewer</span></div><div class='arrow'>→</div>
+  <div class='step'><b>4 · Review panel</b><span>Each subject marked and labelled by every reviewer, independently</span></div><div class='arrow'>→</div>
+  <div class='step'><b>5 · Consensus</b><span>Clustered marks, skill-weighted score, panel must say "potential planet"</span></div><div class='arrow'>→</div>
+  <div class='step'><b>6 · Vet</b><span>SNR, duration, edges, odd/even depth, secondary eclipse, ephemeris fit</span></div>
+</div>
+<p class='note'>Thresholds, weights and every input are written to <code>manifest.json</code>, so a result can be rerun exactly.</p>
+</section>
+
+<section id='candidates'><h2>Candidates</h2>
+<p class='note'>Passed candidates are the catalogue. Rejected and flagged events are kept on purpose, so a reader can see what the vetting decided and why.</p>
+<div class='cands'>
+<article class='card cand'>
+  <h3>tess-5935bad1a3b4-000</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-5935bad1a3b4.png' alt='Blind-coded subject plot for tess-5935bad1a3b4-000' loading='lazy'>
+  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1327.504 BTJD</div>
+    <div>Duration</div><div>4.42 h</div>
+    <div>Depth</div><div>4414 ppm</div>
+    <div>SNR</div><div>37.3</div>
+    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>3.288 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-291acb98cabe-001</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-291acb98cabe.png' alt='Blind-coded subject plot for tess-291acb98cabe-001' loading='lazy'>
+  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1343.960 BTJD</div>
+    <div>Duration</div><div>4.21 h</div>
+    <div>Depth</div><div>5149 ppm</div>
+    <div>SNR</div><div>37.8</div>
+    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>3.290 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-291acb98cabe-002</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-291acb98cabe.png' alt='Blind-coded subject plot for tess-291acb98cabe-002' loading='lazy'>
+  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1340.669 BTJD</div>
+    <div>Duration</div><div>4.19 h</div>
+    <div>Depth</div><div>4664 ppm</div>
+    <div>SNR</div><div>34.2</div>
+    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>3.290 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-5935bad1a3b4-003</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-5935bad1a3b4.png' alt='Blind-coded subject plot for tess-5935bad1a3b4-003' loading='lazy'>
+  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1334.086 BTJD</div>
+    <div>Duration</div><div>3.79 h</div>
+    <div>Depth</div><div>5197 ppm</div>
+    <div>SNR</div><div>41.2</div>
+    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>3.288 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-5935bad1a3b4-004</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-5935bad1a3b4.png' alt='Blind-coded subject plot for tess-5935bad1a3b4-004' loading='lazy'>
+  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1330.799 BTJD</div>
+    <div>Duration</div><div>3.72 h</div>
+    <div>Depth</div><div>5313 ppm</div>
+    <div>SNR</div><div>42.2</div>
+    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>3.288 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-291acb98cabe-005</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-291acb98cabe.png' alt='Blind-coded subject plot for tess-291acb98cabe-005' loading='lazy'>
+  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1347.236 BTJD</div>
+    <div>Duration</div><div>3.55 h</div>
+    <div>Depth</div><div>5191 ppm</div>
+    <div>SNR</div><div>34.9</div>
+    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>3.290 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-291acb98cabe-006</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-291acb98cabe.png' alt='Blind-coded subject plot for tess-291acb98cabe-006' loading='lazy'>
+  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1350.526 BTJD</div>
+    <div>Duration</div><div>3.50 h</div>
+    <div>Depth</div><div>5548 ppm</div>
+    <div>SNR</div><div>37.3</div>
+    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>3.290 d</div>
+  </div>
+</article>
+<article class='card cand'>
+  <h3>tess-5935bad1a3b4-007</h3>
+  <span class='tag pass'>passed vetting</span>
+  <img src='assets/tess-5935bad1a3b4.png' alt='Blind-coded subject plot for tess-5935bad1a3b4-007' loading='lazy'>
+  <div class='bar' title='consensus score 1.00'><i style='width:100%'></i></div>
+  <div class='kv'>
+    <div>Mid-time</div><div>1337.389 BTJD</div>
+    <div>Duration</div><div>3.35 h</div>
+    <div>Depth</div><div>5930 ppm</div>
+    <div>SNR</div><div>45.0</div>
+    <div>Panel agreement</div><div>100% of skill-weighted reviewers, 3 marked it</div>
+    <div>Says planet</div><div>100% of panel</div>
+    <div>Reviewers</div><div>volunteer-cautious;volunteer-sensitive;volunteer-typical</div>
+    <div>Periodic hint</div><div>3.288 d</div>
+  </div>
+</article></div>
+</section>
+
+<section id='panel'><h2>Panel decisions</h2>
+<p class='note'>Every reviewer's answer for every blind-coded subject. Disagreement is kept visible, because it is where the consensus is earned.</p>
+<div class='card' style='margin-bottom:14px'><h3>tess-291acb98cabe</h3><div class='scroll' tabindex='0' role='region' aria-label='Reviewer labels and rationales'><table><thead><tr><th>reviewer</th><th>label</th><th>marks (BTJD)</th><th>rationale</th></tr></thead><tbody><tr><td>volunteer-sensitive</td><td>potential planet</td><td>1340.561–1340.787, 1343.872–1344.062, 1347.145–1347.300, 1350.453–1350.629</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-typical</td><td>potential planet</td><td>1340.582–1340.748, 1343.853–1344.048, 1347.162–1347.312, 1350.439–1350.599</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-cautious</td><td>potential planet</td><td>1340.644–1340.756, 1343.904–1344.032, 1347.168–1347.310, 1350.470–1350.599</td><td class='note'>simulated detector</td></tr></tbody></table></div></div><div class='card' style='margin-bottom:14px'><h3>tess-5935bad1a3b4</h3><div class='scroll' tabindex='0' role='region' aria-label='Reviewer labels and rationales'><table><thead><tr><th>reviewer</th><th>label</th><th>marks (BTJD)</th><th>rationale</th></tr></thead><tbody><tr><td>volunteer-sensitive</td><td>potential planet</td><td>1327.394–1327.596, 1330.722–1330.862, 1334.007–1334.166, 1337.298–1337.433</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-typical</td><td>potential planet</td><td>1327.412–1327.609, 1330.748–1330.877, 1333.988–1334.165, 1337.320–1337.459</td><td class='note'>simulated detector</td></tr><tr><td>volunteer-cautious</td><td>potential planet</td><td>1327.428–1327.558, 1330.717–1330.901, 1334.033–1334.153, 1337.324–1337.461</td><td class='note'>simulated detector</td></tr></tbody></table></div></div>
+</section>
+
+<section id='validation'><h2>Validation against known planets</h2><p class='note'>*Hot Jupiter.* A Jupiter-sized planet on a 3.3-day orbit: deep, easy transits, in the TESS southern continuous viewing zone.</p>
+<p class='note'>Run runs/tess-wasp-126-s1 (TESS SPOC 2-minute, sector 1; config configs/showcase/tess-wasp-126-s1.toml, sha256 23bb51a268efd59e…; code v0.1.0-3-g0c029a2). Light curves: public TESS data from MAST tess2018206045859-s0001-0000000025155310-0120-s_lc.fits (sha256 12ddd623b04bdd35…).</p>
+<p class='note'>**Probes only; Sentinels not run on this example.** 8 dips (8 candidates).</p>
+<p class='note'>The easy case: a transit about 0.6% deep that any search should find, so it shows the whole path from light curve to fit with little doubt about the signal.</p>
+<p class='note'>Published values: NASA Exoplanet Archive, table ps (every row for each planet), fetched 2026-10-22 (docs/results/showcase_reference.json). Each planet&#x27;s transits are predicted from the archive row named below; SetuHQ&#x27;s values are the medians over the dips on that ephemeris that were not rejected (the limb-darkened fit&#x27;s Rp/R★, T14 and mid-transit depth, and the BLS period). Depth definitions differ between papers and this fit, so compare Rp/R★ and T14 first. A blank published value is one the archive does not hold for that paper; it is not compared.</p>
+<p class='note'>Ephemeris from Ivshina &amp; Winn 2022; compared with Maxted et al. 2016 (https://ui.adsabs.harvard.edu/abs/2016A&amp;A...591A..55M/abstract).</p>
+<div class='scroll' tabindex='0' role='region' aria-label='Table, scrolls sideways on a narrow screen'><table><thead><tr><th>quantity</th><th>SetuHQ</th><th>Maxted et al. 2016</th><th>ratio</th><th>archive default (Pearson 2019)</th><th>ratio</th></tr></thead><tbody><tr><td>P (d)</td><td>3.28895</td><td>3.28880</td><td>1.000</td><td>3.28883</td><td>1.000</td></tr><tr><td>Rp/R★</td><td>0.0780</td><td></td><td></td><td>0.0780</td><td>1.000</td></tr><tr><td>T14 (h)</td><td>3.48</td><td>3.41</td><td>1.021</td><td></td><td></td></tr><tr><td>depth (ppm)</td><td>7,056</td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p class='note'>Transits predicted in the stored light curve: 8; with a dip on them: 8 (8 dips; 8 passed; mean offset -14.7 min).</p>
+<p class='note'>A known planet found again is a check of the pipeline, not a discovery. 1 of 1 known planet has dips on its published ephemeris: WASP-126 b, 8 of 8 transits (8 candidates).</p></section>
+<section id='benchmark'><h2>Injection recovery</h2><p class='note'>Panel: volunteer-sensitive, volunteer-typical, volunteer-cautious</p>
+<p class='note'>Weights: volunteer-cautious=0.633, volunteer-sensitive=0.667, volunteer-typical=0.667</p>
+<p class='note'>Completeness is the fraction of injected transits recovered as a vetted candidate, with the consensus centred within half a transit duration of the injection.</p>
+<div class='scroll' tabindex='0' role='region' aria-label='Table, scrolls sideways on a narrow screen'><table><thead><tr><th>depth (ppm)</th><th>duration (h)</th><th>subjects</th><th>recovered</th><th>completeness</th></tr></thead><tbody><tr><td>300</td><td>1.0</td><td>20</td><td>0</td><td>0.00</td></tr><tr><td>300</td><td>2.0</td><td>20</td><td>0</td><td>0.00</td></tr><tr><td>300</td><td>4.0</td><td>20</td><td>0</td><td>0.00</td></tr><tr><td>1000</td><td>1.0</td><td>20</td><td>3</td><td>0.15</td></tr><tr><td>1000</td><td>2.0</td><td>20</td><td>16</td><td>0.80</td></tr><tr><td>1000</td><td>4.0</td><td>20</td><td>20</td><td>1.00</td></tr><tr><td>3000</td><td>1.0</td><td>20</td><td>20</td><td>1.00</td></tr><tr><td>3000</td><td>2.0</td><td>20</td><td>19</td><td>0.95</td></tr><tr><td>3000</td><td>4.0</td><td>20</td><td>20</td><td>1.00</td></tr></tbody></table></div>
+<p class='note'>False positives: 0.000 vetted candidates per empty subject (40 empty subjects).</p></section>
+
+<section id='provenance'><h2>Provenance</h2>
+<div class='grid'>
+ <div class='card'><h3>Reviewer panel</h3><div class='scroll' tabindex='0' role='region' aria-label='Reviewer panel table'><table><thead><tr><th>id</th><th>kind</th><th>weight</th></tr></thead><tbody><tr><td>volunteer-sensitive</td><td>simulated</td><td>0.600</td></tr><tr><td>volunteer-typical</td><td>simulated</td><td>0.600</td></tr><tr><td>volunteer-cautious</td><td>simulated</td><td>0.400</td></tr></tbody></table></div>
+ <p class='note'>Skipped (unavailable here): none</p></div>
+ <div class='card'><h3>Run</h3><div class='kv'>
+   <div>Config</div><div>tess-wasp-126-s1</div>
+   <div>Config SHA-256</div><div><code>23bb51a268efd59e…</code></div>
+   <div>Created</div><div>2026-10-22T17:31:06+00:00</div>
+   <div>SetuHQ</div><div>0.1.0</div>
+   <div>Packages</div><div class='note'>numpy 2.5.4 · scipy 1.18.1 · astropy 8.0.2 · matplotlib 3.11.2 · lightkurve 2.6.0</div>
+ </div></div>
+</div>
+<details style='margin-top:14px'><summary>Raw manifest</summary><pre>{
+  &quot;setuhq_version&quot;: &quot;0.1.0&quot;,
+  &quot;created_at&quot;: &quot;2026-10-22T17:31:06+00:00&quot;,
+  &quot;python&quot;: &quot;3.13.16&quot;,
+  &quot;platform&quot;: &quot;Linux-6.18.44-fc-v140-x86_64-with-glibc2.39&quot;,
+  &quot;packages&quot;: {
+    &quot;numpy&quot;: &quot;2.5.4&quot;,
+    &quot;scipy&quot;: &quot;1.18.1&quot;,
+    &quot;astropy&quot;: &quot;8.0.2&quot;,
+    &quot;matplotlib&quot;: &quot;3.11.2&quot;,
+    &quot;lightkurve&quot;: &quot;2.6.0&quot;
+  },
+  &quot;config_name&quot;: &quot;tess-wasp-126-s1&quot;,
+  &quot;config_sha256&quot;: &quot;23bb51a268efd59e7124e171f62f494748ba97788571a0c715f4cdf3d640d460&quot;,
+  &quot;subject_days&quot;: 13.0,
+  &quot;search_scope&quot;: &quot;subject&quot;,
+  &quot;claude_prompt_version&quot;: &quot;2026-10-16.1&quot;,
+  &quot;sentinel_prompt_version&quot;: &quot;2026-10-16.1&quot;,
+  &quot;inputs&quot;: [
+    {
+      &quot;source&quot;: &quot;MAST&quot;,
+      &quot;author&quot;: &quot;SPOC&quot;,
+      &quot;sector&quot;: 1,
+      &quot;exptime_s&quot;: 120,
+      &quot;flux_column&quot;: &quot;pdcsap_flux&quot;,
+      &quot;time_unit&quot;: &quot;BTJD&quot;,
+      &quot;lightkurve_version&quot;: &quot;2.6.0&quot;,
+      &quot;file&quot;: &quot;tess2018206045859-s0001-0000000025155310-0120-s_lc.fits&quot;,
+      &quot;file_sha256&quot;: &quot;12ddd623b04bdd354f27b5c89287b3a25a800d65cdf2733a1d0d04ab98e2d790&quot;,
+      &quot;crowdsap&quot;: 0.97252083,
+      &quot;flfrcsap&quot;: 0.88525611,
+      &quot;target&quot;: &quot;TIC 25155310&quot;,
+      &quot;mission&quot;: &quot;TESS&quot;
+    }
+  ],
+  &quot;reviewers&quot;: [
+    {
+      &quot;id&quot;: &quot;volunteer-sensitive&quot;,
+      &quot;kind&quot;: &quot;simulated&quot;,
+      &quot;weight&quot;: 0.6,
+      &quot;calibration&quot;: &quot;calibrated&quot;,
+      &quot;calibration_note&quot;: &quot;measured by injection&quot;
+    },
+    {
+      &quot;id&quot;: &quot;volunteer-typical&quot;,
+      &quot;kind&quot;: &quot;simulated&quot;,
+      &quot;weight&quot;: 0.6,
+      &quot;calibration&quot;: &quot;calibrated&quot;,
+      &quot;calibration_note&quot;: &quot;measured by injection&quot;
+    },
+    {
+      &quot;id&quot;: &quot;volunteer-cautious&quot;,
+      &quot;kind&quot;: &quot;simulated&quot;,
+      &quot;weight&quot;: 0.4,
+      &quot;calibration&quot;: &quot;calibrated&quot;,
+      &quot;calibration_note&quot;: &quot;measured by injection&quot;
+    }
+  ],
+  &quot;skipped_reviewers&quot;: [],
+  &quot;skipped_reviewers_detail&quot;: [],
+  &quot;weights&quot;: {
+    &quot;volunteer-cautious&quot;: 0.4,
+    &quot;volunteer-sensitive&quot;: 0.6,
+    &quot;volunteer-typical&quot;: 0.6
+  },
+  &quot;weights_source&quot;: &quot;docs/results/reviewer_weights_full_panel.json (Probes only)&quot;,
+  &quot;panel&quot;: {
+    &quot;mode&quot;: &quot;probes_only&quot;,
+    &quot;sentinels_configured&quot;: [],
+    &quot;note&quot;: &quot;Probes only; Sentinels not run on this example&quot;
+  },
+  &quot;code&quot;: &quot;v0.1.0-3-g0c029a2&quot;,
+  &quot;counts&quot;: {
+    &quot;light_curves&quot;: 1,
+    &quot;subjects&quot;: 2,
+    &quot;classifications&quot;: 6,
+    &quot;consensus_events&quot;: 8,
+    &quot;passed_vetting&quot;: 8
+  }
+}</pre></details>
+</section>
+
+<footer>Generated by SetuHQ. Code: AGPL-3.0-only or a commercial licence from Ashforde OÜ; results: CC BY 4.0. Results on synthetic data are not claims about real sky data.</footer>
+</main><footer class="sitefoot shellscope"><div class="fin">
+  <nav class="footnav" aria-label="Site"><div><h2>Explore</h2><ul><li><a href="/explore/">Sky map</a></li><li><a href="/explore/galaxy/">Galaxy</a></li><li><a href="/catalogue/">Catalogue</a></li><li><a href="/catalogue/everything-that-dims/">Everything that dims</a></li><li><a href="/explore/mission-control/">Mission Control</a></li></ul></div><div><h2>Candidates</h2><ul><li><a href="/candidates/">All candidates</a></li><li><a href="/candidates/pi-men/dip-2/">Dips</a></li><li><a href="/candidates/pi-men/dip-2/case-file/">Case files</a></li><li><a href="/candidates/radius-ratios/">Radius ratios</a></li></ul></div><div><h2>How it works</h2><ul><li><a href="/how-it-works/">Overview</a></li><li><a href="/how-it-works/transits/">Transit</a></li><li><a href="/how-it-works/doppler-shift/">Toward and away</a></li><li><a href="/how-it-works/radial-velocity/">Radial velocity</a></li><li><a href="/how-it-works/astrometry/">Astrometry</a></li><li><a href="/how-it-works/">All 15 chapters</a></li></ul></div><div><h2>Evidence</h2><ul><li><a href="/evidence/">The panel</a></li><li><a href="/evidence/leaderboard/">Leaderboard</a></li><li><a href="/evidence/runs/">Runs</a></li><li><a href="/evidence/report/">Run report</a></li><li><a href="/evidence/plates/">Plates</a></li></ul></div><div><h2>Docs</h2><ul><li><a href="/docs/">Get started</a></li><li><a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ">Source code</a></li><li><a href="/docs/#contribute">Contributing a sweep</a></li><li><a href="/docs/#data">Data downloads</a></li></ul></div></nav>
+  <p class="attribution">Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+  <p>Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ's data under CC BY 4.0. "SetuHQ" and the Setu mark are trademarks of Ashforde OÜ.</p>
+</div></footer><div id="announce" class="sr" aria-live="polite"></div></body></html>

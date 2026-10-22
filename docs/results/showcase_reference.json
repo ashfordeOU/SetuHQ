@@ -1,0 +1,837 @@
+{
+ "source": "NASA Exoplanet Archive, table ps (every row for each planet)",
+ "url": "https://exoplanetarchive.ipac.caltech.edu/TAP/sync",
+ "query": "select pl_name,hostname,default_flag,pl_refname,disc_refname,pl_orbper,pl_orbpererr1,pl_tranmid,pl_ratror,pl_ratrorerr1,pl_trandep,pl_trandur,pl_trandurerr1,pl_rade from ps where pl_name in ('WASP-126 b','TOI-270 b','TOI-270 c','TOI-270 d','HD 15337 b','HD 15337 c') order by pl_name, default_flag desc",
+ "fetched_at": "2026-10-22T18:35:24+00:00",
+ "note": "pl_trandep is in percent (x 10^4 for ppm); pl_trandur in hours; pl_tranmid in BJD (TDB).",
+ "rows": {
+  "HD 15337 b": [
+   {
+    "pl_name": "HD 15337 b",
+    "hostname": "HD 15337",
+    "default_flag": true,
+    "pl_refname": {
+     "code": "ROS_AMP_AACUTE_RIO_ET_AL__2024",
+     "label": "Rosário et al. 2024",
+     "url": "https://ui.adsabs.harvard.edu/abs/2024A&A...686A.282R/abstract"
+    },
+    "disc_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "pl_orbper": 4.7559804,
+    "pl_orbpererr1": 6.2e-06,
+    "pl_tranmid": 2458411.4623,
+    "pl_ratror": 0.01898,
+    "pl_ratrorerr1": 0.0003,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": 1.77
+   },
+   {
+    "pl_name": "HD 15337 b",
+    "hostname": "HD 15337",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "DUMUSQUE_ET_AL__2019",
+     "label": "Dumusque et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019A&A...627A..43D/abstract"
+    },
+    "disc_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "pl_orbper": 4.75642,
+    "pl_orbpererr1": 0.00021,
+    "pl_tranmid": 2458411.46202,
+    "pl_ratror": 0.01856,
+    "pl_ratrorerr1": 0.00048,
+    "pl_trandep": 0.0344,
+    "pl_trandur": 2.5536,
+    "pl_trandurerr1": 0.036,
+    "pl_rade": 1.699
+   },
+   {
+    "pl_name": "HD 15337 b",
+    "hostname": "HD 15337",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "disc_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "pl_orbper": 4.75615,
+    "pl_orbpererr1": 0.00017,
+    "pl_tranmid": 2458411.46156,
+    "pl_ratror": 0.01761,
+    "pl_ratrorerr1": 0.00055,
+    "pl_trandep": null,
+    "pl_trandur": 2.49,
+    "pl_trandurerr1": 0.06,
+    "pl_rade": 1.64
+   },
+   {
+    "pl_name": "HD 15337 b",
+    "hostname": "HD 15337",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "EXOFOP",
+     "label": "ExoFOP",
+     "url": "https://exofop.ipac.caltech.edu/tess/view_toi.php"
+    },
+    "disc_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "pl_orbper": 4.75599951974,
+    "pl_orbpererr1": 6.44616e-06,
+    "pl_tranmid": 2460984.453442,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": 0.03605191,
+    "pl_trandur": 2.4468544,
+    "pl_trandurerr1": 0.3338445,
+    "pl_rade": 1.47900686
+   }
+  ],
+  "HD 15337 c": [
+   {
+    "pl_name": "HD 15337 c",
+    "hostname": "HD 15337",
+    "default_flag": true,
+    "pl_refname": {
+     "code": "ROS_AMP_AACUTE_RIO_ET_AL__2024",
+     "label": "Rosário et al. 2024",
+     "url": "https://ui.adsabs.harvard.edu/abs/2024A&A...686A.282R/abstract"
+    },
+    "disc_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "pl_orbper": 17.180546,
+    "pl_orbpererr1": 2.1e-05,
+    "pl_tranmid": 2458414.55162,
+    "pl_ratror": 0.02707,
+    "pl_ratrorerr1": 0.00091,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": 2.526
+   },
+   {
+    "pl_name": "HD 15337 c",
+    "hostname": "HD 15337",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "disc_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "pl_orbper": 17.1784,
+    "pl_orbpererr1": 0.0016,
+    "pl_tranmid": 2458414.5501,
+    "pl_ratror": 0.0256,
+    "pl_ratrorerr1": 0.0011,
+    "pl_trandep": null,
+    "pl_trandur": 2.25,
+    "pl_trandurerr1": 0.2,
+    "pl_rade": 2.39
+   },
+   {
+    "pl_name": "HD 15337 c",
+    "hostname": "HD 15337",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "EXOFOP",
+     "label": "ExoFOP",
+     "url": "https://exofop.ipac.caltech.edu/tess/view_toi.php"
+    },
+    "disc_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "pl_orbper": 17.17966727335,
+    "pl_orbpererr1": 2.829182e-05,
+    "pl_tranmid": 2460974.324328,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": 0.05613005,
+    "pl_trandur": 2.1061533,
+    "pl_trandurerr1": 0.7270993,
+    "pl_rade": 2.03666791
+   },
+   {
+    "pl_name": "HD 15337 c",
+    "hostname": "HD 15337",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "WALLACK_ET_AL_2026",
+     "label": "Wallack et al. 2026",
+     "url": "https://ui.adsabs.harvard.edu/abs/2026AJ....171..180W/abstract"
+    },
+    "disc_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "pl_orbper": null,
+    "pl_orbpererr1": null,
+    "pl_tranmid": 2460149.75624,
+    "pl_ratror": 0.02837,
+    "pl_ratrorerr1": 9e-05,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": null
+   },
+   {
+    "pl_name": "HD 15337 c",
+    "hostname": "HD 15337",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "DUMUSQUE_ET_AL__2019",
+     "label": "Dumusque et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019A&A...627A..43D/abstract"
+    },
+    "disc_refname": {
+     "code": "GANDOLFI_ET_AL__2019",
+     "label": "Gandolfi et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract"
+    },
+    "pl_orbper": 17.1784,
+    "pl_orbpererr1": 0.0016,
+    "pl_tranmid": 2458414.55,
+    "pl_ratror": 0.02754,
+    "pl_ratrorerr1": 0.00091,
+    "pl_trandep": 0.0758,
+    "pl_trandur": 2.232,
+    "pl_trandurerr1": 0.0552,
+    "pl_rade": 2.522
+   }
+  ],
+  "TOI-270 b": [
+   {
+    "pl_name": "TOI-270 b",
+    "hostname": "TOI-270",
+    "default_flag": true,
+    "pl_refname": {
+     "code": "KAYE_ET_AL__2022",
+     "label": "Kaye et al. 2022",
+     "url": "https://ui.adsabs.harvard.edu/abs/2022MNRAS.510.5464K/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 3.35992,
+    "pl_orbpererr1": 5e-05,
+    "pl_tranmid": 2458461.01464,
+    "pl_ratror": 0.0307,
+    "pl_ratrorerr1": 0.0012,
+    "pl_trandep": null,
+    "pl_trandur": 1.294,
+    "pl_trandurerr1": 0.026,
+    "pl_rade": 1.28
+   },
+   {
+    "pl_name": "TOI-270 b",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 3.36008,
+    "pl_orbpererr1": 6.5e-05,
+    "pl_tranmid": 2458461.01464,
+    "pl_ratror": 0.03,
+    "pl_ratrorerr1": 0.0015,
+    "pl_trandep": 0.0901,
+    "pl_trandur": 1.387,
+    "pl_trandurerr1": 0.04,
+    "pl_rade": 1.247
+   },
+   {
+    "pl_name": "TOI-270 b",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "COULOMBE_ET_AL__2025",
+     "label": "Coulombe et al. 2025",
+     "url": "https://ui.adsabs.harvard.edu/abs/2025AJ....170..226C/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": null,
+    "pl_orbpererr1": null,
+    "pl_tranmid": 2460222.240084,
+    "pl_ratror": 0.03144,
+    "pl_ratrorerr1": 0.0001,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": 1.306
+   },
+   {
+    "pl_name": "TOI-270 b",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "VAN_EYLEN_ET_AL__2021",
+     "label": "Van Eylen et al. 2021",
+     "url": "https://ui.adsabs.harvard.edu/abs/2021MNRAS.507.2154V/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 3.3601538,
+    "pl_orbpererr1": 4.8e-06,
+    "pl_tranmid": 2458387.09505,
+    "pl_ratror": 0.0292,
+    "pl_ratrorerr1": 0.00069,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": 1.206
+   },
+   {
+    "pl_name": "TOI-270 b",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "KOKORI_ET_AL__2023",
+     "label": "Kokori et al. 2023",
+     "url": "https://ui.adsabs.harvard.edu/abs/2023ApJS..265....4K/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 3.360156,
+    "pl_orbpererr1": 1.2e-05,
+    "pl_tranmid": 2458891.1154,
+    "pl_ratror": 0.03,
+    "pl_ratrorerr1": 0.0015,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": null
+   },
+   {
+    "pl_name": "TOI-270 b",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "WEISSERMAN_ET_AL_2026",
+     "label": "Weisserman et al. 2026",
+     "url": "https://ui.adsabs.harvard.edu/abs/2026A&A...709A.165W/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 3.36,
+    "pl_orbpererr1": null,
+    "pl_tranmid": null,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": 1.28
+   },
+   {
+    "pl_name": "TOI-270 b",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "EXOFOP",
+     "label": "ExoFOP",
+     "url": "https://exofop.ipac.caltech.edu/tess/view_toi.php"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 3.36016705471,
+    "pl_orbpererr1": 3.52255e-06,
+    "pl_tranmid": 2460987.858405,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": 0.09766941,
+    "pl_trandur": 1.3266673,
+    "pl_trandurerr1": 0.4358403,
+    "pl_rade": 1.22346662
+   }
+  ],
+  "TOI-270 c": [
+   {
+    "pl_name": "TOI-270 c",
+    "hostname": "TOI-270",
+    "default_flag": true,
+    "pl_refname": {
+     "code": "KAYE_ET_AL__2022",
+     "label": "Kaye et al. 2022",
+     "url": "https://ui.adsabs.harvard.edu/abs/2022MNRAS.510.5464K/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 5.66051,
+    "pl_orbpererr1": 4e-05,
+    "pl_tranmid": 2458463.08056,
+    "pl_ratror": 0.056,
+    "pl_ratrorerr1": 0.0017,
+    "pl_trandep": null,
+    "pl_trandur": 1.682,
+    "pl_trandurerr1": 0.019,
+    "pl_rade": 2.33
+   },
+   {
+    "pl_name": "TOI-270 c",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "KOKORI_ET_AL__2023",
+     "label": "Kokori et al. 2023",
+     "url": "https://ui.adsabs.harvard.edu/abs/2023ApJS..265....4K/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 5.6605746,
+    "pl_orbpererr1": 4.6e-06,
+    "pl_tranmid": 2458734.79487,
+    "pl_ratror": 0.05825,
+    "pl_ratrorerr1": 0.00079,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": null
+   },
+   {
+    "pl_name": "TOI-270 c",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 5.660172,
+    "pl_orbpererr1": 3.5e-05,
+    "pl_tranmid": 2458463.08481,
+    "pl_ratror": 0.05825,
+    "pl_ratrorerr1": 0.00079,
+    "pl_trandep": 0.3394,
+    "pl_trandur": 1.658,
+    "pl_trandurerr1": 0.015,
+    "pl_rade": 2.42
+   },
+   {
+    "pl_name": "TOI-270 c",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "EXOFOP",
+     "label": "ExoFOP",
+     "url": "https://exofop.ipac.caltech.edu/tess/view_toi.php"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 5.66047732509,
+    "pl_orbpererr1": 1.70564e-06,
+    "pl_tranmid": 2460982.004741,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": 0.3451844,
+    "pl_trandur": 1.6617716,
+    "pl_trandurerr1": 0.2415571,
+    "pl_rade": 2.36259553
+   },
+   {
+    "pl_name": "TOI-270 c",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "VAN_EYLEN_ET_AL__2021",
+     "label": "Van Eylen et al. 2021",
+     "url": "https://ui.adsabs.harvard.edu/abs/2021MNRAS.507.2154V/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 5.6605731,
+    "pl_orbpererr1": 3.1e-06,
+    "pl_tranmid": 2458389.50285,
+    "pl_ratror": 0.05701,
+    "pl_ratrorerr1": 0.00071,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": 2.355
+   }
+  ],
+  "TOI-270 d": [
+   {
+    "pl_name": "TOI-270 d",
+    "hostname": "TOI-270",
+    "default_flag": true,
+    "pl_refname": {
+     "code": "KAYE_ET_AL__2022",
+     "label": "Kaye et al. 2022",
+     "url": "https://ui.adsabs.harvard.edu/abs/2022MNRAS.510.5464K/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 11.38194,
+    "pl_orbpererr1": 0.00011,
+    "pl_tranmid": 2458469.33823,
+    "pl_ratror": 0.0491,
+    "pl_ratrorerr1": 0.0016,
+    "pl_trandep": null,
+    "pl_trandur": 2.117,
+    "pl_trandurerr1": 0.018,
+    "pl_rade": 2.0
+   },
+   {
+    "pl_name": "TOI-270 d",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "VAN_EYLEN_ET_AL__2021",
+     "label": "Van Eylen et al. 2021",
+     "url": "https://ui.adsabs.harvard.edu/abs/2021MNRAS.507.2154V/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 11.379573,
+    "pl_orbpererr1": 1.3e-05,
+    "pl_tranmid": 2458389.68186,
+    "pl_ratror": 0.05163,
+    "pl_ratrorerr1": 0.00069,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": 2.133
+   },
+   {
+    "pl_name": "TOI-270 d",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "EXOFOP",
+     "label": "ExoFOP",
+     "url": "https://exofop.ipac.caltech.edu/tess/view_toi.php"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 11.37969912166,
+    "pl_orbpererr1": 7.29772e-06,
+    "pl_tranmid": 2460984.247091,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": 0.29609549,
+    "pl_trandur": 2.0489434,
+    "pl_trandurerr1": 0.1264448,
+    "pl_rade": 2.02340091
+   },
+   {
+    "pl_name": "TOI-270 d",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 11.38014,
+    "pl_orbpererr1": 0.00011,
+    "pl_tranmid": 2458469.33834,
+    "pl_ratror": 0.05143,
+    "pl_ratrorerr1": 0.00074,
+    "pl_trandep": 0.2645,
+    "pl_trandur": 2.148,
+    "pl_trandurerr1": 0.018,
+    "pl_rade": 2.13
+   },
+   {
+    "pl_name": "TOI-270 d",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "MIKAL_EVANS_ET_AL__2023",
+     "label": "Mikal-Evans et al. 2023",
+     "url": "https://ui.adsabs.harvard.edu/abs/2023AJ....165...84M/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 11.38014,
+    "pl_orbpererr1": null,
+    "pl_tranmid": 2459129.34868,
+    "pl_ratror": 0.05278,
+    "pl_ratrorerr1": 0.00095,
+    "pl_trandep": 0.2786,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": 2.19
+   },
+   {
+    "pl_name": "TOI-270 d",
+    "hostname": "TOI-270",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "KOKORI_ET_AL__2023",
+     "label": "Kokori et al. 2023",
+     "url": "https://ui.adsabs.harvard.edu/abs/2023ApJS..265....4K/abstract"
+    },
+    "disc_refname": {
+     "code": "G_UUML_NTHER_ET_AL__2019",
+     "label": "Günther et al. 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract"
+    },
+    "pl_orbper": 11.379568,
+    "pl_orbpererr1": 1.2e-05,
+    "pl_tranmid": 2458776.58464,
+    "pl_ratror": 0.05143,
+    "pl_ratrorerr1": 0.00074,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": null
+   }
+  ],
+  "WASP-126 b": [
+   {
+    "pl_name": "WASP-126 b",
+    "hostname": "WASP-126",
+    "default_flag": true,
+    "pl_refname": {
+     "code": "PEARSON_2019",
+     "label": "Pearson 2019",
+     "url": "https://ui.adsabs.harvard.edu/abs/2019AJ....158..243P/abstract"
+    },
+    "disc_refname": {
+     "code": "MAXTED_ET_AL__2016",
+     "label": "Maxted et al. 2016",
+     "url": "https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract"
+    },
+    "pl_orbper": 3.28883,
+    "pl_orbpererr1": 3.71e-05,
+    "pl_tranmid": null,
+    "pl_ratror": 0.078,
+    "pl_ratrorerr1": null,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": null
+   },
+   {
+    "pl_name": "WASP-126 b",
+    "hostname": "WASP-126",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "IVSHINA__AMP__WINN_2022",
+     "label": "Ivshina & Winn 2022",
+     "url": "https://ui.adsabs.harvard.edu/abs/2022ApJS..259...62I/abstract"
+    },
+    "disc_refname": {
+     "code": "MAXTED_ET_AL__2016",
+     "label": "Maxted et al. 2016",
+     "url": "https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract"
+    },
+    "pl_orbper": 3.288787,
+    "pl_orbpererr1": 4.4e-07,
+    "pl_tranmid": 2458327.520637,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": null
+   },
+   {
+    "pl_name": "WASP-126 b",
+    "hostname": "WASP-126",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "MACIEJEWSKI_2020",
+     "label": "Maciejewski 2020",
+     "url": "https://ui.adsabs.harvard.edu/abs/2020AcA....70..181M/abstract"
+    },
+    "disc_refname": {
+     "code": "MAXTED_ET_AL__2016",
+     "label": "Maxted et al. 2016",
+     "url": "https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract"
+    },
+    "pl_orbper": 3.2887884,
+    "pl_orbpererr1": 1.3e-06,
+    "pl_tranmid": 2456890.32004,
+    "pl_ratror": 0.07712,
+    "pl_ratrorerr1": 0.00063,
+    "pl_trandep": 0.595,
+    "pl_trandur": 3.42,
+    "pl_trandurerr1": 0.05,
+    "pl_rade": null
+   },
+   {
+    "pl_name": "WASP-126 b",
+    "hostname": "WASP-126",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "MAXTED_ET_AL__2016",
+     "label": "Maxted et al. 2016",
+     "url": "https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract"
+    },
+    "disc_refname": {
+     "code": "MAXTED_ET_AL__2016",
+     "label": "Maxted et al. 2016",
+     "url": "https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract"
+    },
+    "pl_orbper": 3.2888,
+    "pl_orbpererr1": 1e-05,
+    "pl_tranmid": 2456890.3191,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": null,
+    "pl_trandur": 3.408,
+    "pl_trandurerr1": 0.048,
+    "pl_rade": 10.76064
+   },
+   {
+    "pl_name": "WASP-126 b",
+    "hostname": "WASP-126",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "EXOFOP",
+     "label": "ExoFOP",
+     "url": "https://exofop.ipac.caltech.edu/tess/view_toi.php"
+    },
+    "disc_refname": {
+     "code": "MAXTED_ET_AL__2016",
+     "label": "Maxted et al. 2016",
+     "url": "https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract"
+    },
+    "pl_orbper": 3.28878982693,
+    "pl_orbpererr1": 3.4183e-07,
+    "pl_tranmid": 2458327.519958,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": 0.70057248,
+    "pl_trandur": 3.4367717,
+    "pl_trandurerr1": 0.0099877,
+    "pl_rade": 10.51358773
+   },
+   {
+    "pl_name": "WASP-126 b",
+    "hostname": "WASP-126",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "KOKORI_ET_AL__2023",
+     "label": "Kokori et al. 2023",
+     "url": "https://ui.adsabs.harvard.edu/abs/2023ApJS..265....4K/abstract"
+    },
+    "disc_refname": {
+     "code": "MAXTED_ET_AL__2016",
+     "label": "Maxted et al. 2016",
+     "url": "https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract"
+    },
+    "pl_orbper": 3.28878703,
+    "pl_orbpererr1": 4.4e-07,
+    "pl_tranmid": 2458827.416215,
+    "pl_ratror": 0.0781,
+    "pl_ratrorerr1": 0.0013,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": null
+   },
+   {
+    "pl_name": "WASP-126 b",
+    "hostname": "WASP-126",
+    "default_flag": false,
+    "pl_refname": {
+     "code": "KOKORI_ET_AL__2022",
+     "label": "Kokori et al. 2022",
+     "url": "https://ui.adsabs.harvard.edu/abs/2022ApJS..258...40K/abstract"
+    },
+    "disc_refname": {
+     "code": "MAXTED_ET_AL__2016",
+     "label": "Maxted et al. 2016",
+     "url": "https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract"
+    },
+    "pl_orbper": 3.2887885,
+    "pl_orbpererr1": 1.8e-06,
+    "pl_tranmid": 2457758.5601,
+    "pl_ratror": null,
+    "pl_ratrorerr1": null,
+    "pl_trandep": null,
+    "pl_trandur": null,
+    "pl_trandurerr1": null,
+    "pl_rade": null
+   }
+  ]
+ }
+}

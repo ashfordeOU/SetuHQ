@@ -1,0 +1,29 @@
+{
+  "source": "NASA Exoplanet Archive, table ps (default_flag = 1)",
+  "targets": [
+    "TIC 120896927"
+  ],
+  "star": null,
+  "fetched_at": "2026-10-22T18:48:36+00:00",
+  "planets": [
+    {
+      "pl_name": "HD 15337 b",
+      "hostname": "HD 15337",
+      "pl_orbper": 4.7559804,
+      "pl_tranmid": 2458411.4623,
+      "tran_flag": true,
+      "rv_flag": true,
+      "tic_id": "TIC 120896927"
+    },
+    {
+      "pl_name": "HD 15337 c",
+      "hostname": "HD 15337",
+      "pl_orbper": 17.180546,
+      "pl_tranmid": 2458414.55162,
+      "tran_flag": true,
+      "rv_flag": true,
+      "tic_id": "TIC 120896927"
+    }
+  ],
+  "status": "matched"
+}

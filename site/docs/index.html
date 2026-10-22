@@ -12,17 +12,17 @@
 <meta name="theme-color" content="#000000">
 <script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
-<link rel="stylesheet" href="/assets/site-a1346500af.css">
-<link rel="preload" href="/assets/data/app-83549d74cc.json" as="fetch" crossorigin="anonymous">
-<link rel="preload" href="/assets/app-f46053c2fd.js" as="script">
+<link rel="stylesheet" href="/assets/site-51f69db463.css">
+<link rel="preload" href="/assets/data/app-7b241e9ed4.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/app-0d3a287f56.js" as="script">
 <script src="/assets/site-8efaa37a95.js" defer></script>
 </head>
-<body class="page-docs" data-page="docs" data-route="docs" data-data="/assets/data/app-83549d74cc.json" data-routes="/assets/views-1905b8bc03.html" data-app="/assets/app-f46053c2fd.js">
+<body class="page-docs" data-page="docs" data-route="docs" data-data="/assets/data/app-7b241e9ed4.json" data-routes="/assets/views-44fedc2f3a.html" data-app="/assets/app-0d3a287f56.js">
 <img class="starfield" src="/assets/starfield-7d78158d28.svg" alt="" aria-hidden="true">
 <a class="skip" href="#content">Skip to content</a>
 <header class="topbar">
   <div class="tbin">
-    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="579" height="132"></a>
+    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="105" height="24"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="105" height="24"></a>
     <nav class="nav" aria-label="Main"><ul><li><a href="/explore/" data-nav="explore">Explore</a></li><li><a href="/candidates/" data-nav="candidates">Candidates</a></li><li><a href="/how-it-works/" data-nav="how">How it works</a></li><li><a href="/evidence/" data-nav="evidence">Evidence</a></li><li><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav>
     <div class="tools">
       <button class="iconbtn searchbtn" type="button" id="gsearchbtn" aria-label="Search planets, stars and pages (press /)" aria-haspopup="dialog" title="Search (/)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
@@ -39,7 +39,7 @@
 <header><h1 class="lead-h" id="h-docs" tabindex="-1">Run it yourself.</h1>
         <p>SetuHQ is open source. Install it, search a star's light curve with the same panel this site shows, contribute a sweep of the sky, or let your AI assistant use it.</p></header>
       <div class="docgrid">
-        <section class="card"><h2>Get started</h2><p>Install, then search pi Men's TESS light curve as this site's run did.</p><a href="#start">Install and first run ›</a></section>
+        <section class="card"><h2>Get started</h2><p>Install, then search any TESS star's light curve, as each of this site's example runs did.</p><a href="#start">Install and first run ›</a></section>
         <section class="card"><h2>Contribute a sweep</h2><p>Search a slice of a TESS sector on your own machine and send the result, with credit.</p><a href="#contribute">How to contribute ›</a></section>
         <section class="card"><h2>Use it from an assistant</h2><p>The MCP server lets an assistant run SetuHQ's own code and read its results.</p><a href="#mcp">Connect over MCP ›</a></section>
         <section class="card"><h2>Data and files</h2><p>Every catalogue on this site as a download, and the reports behind the evidence.</p><a href="#data">Downloads ›</a></section>
@@ -48,9 +48,10 @@
         <h2 id="start">Install and first run</h2>
         <p>SetuHQ needs Python 3.11 or newer.</p>
         <pre tabindex="0"><code>pip install "setuhq[tess] @ git+https://github.com/ashfordeOU/SetuHQ"
-setuhq run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
-setuhq site runs/tess-pi-men-s1 --out site     # this website, from your run</code></pre>
-        <p>The run downloads the light curve from MAST, cleans it, lets the panel mark dips, vets each signal and writes every result with its provenance. The Probes run with no account; the Sentinels need an API key for their provider. Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+setuhq run configs/showcase/tess-wasp-126-s1.toml --out runs/tess-wasp-126-s1   # or any star: copy a config, change its TIC and sectors
+setuhq crossmatch runs/tess-wasp-126-s1          # the NASA Exoplanet Archive's planets for the star
+setuhq site runs/tess-wasp-126-s1 --out site     # a website from your run (several runs: list them all)</code></pre>
+        <p>Every example on this site has its configuration in <code>configs/</code> and its one-line command in <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/SHOWCASE.md">docs/SHOWCASE.md</a>. The run downloads the light curve from MAST, cleans it, lets the panel mark dips, vets each signal and writes every result with its provenance. The Probes run with no account; the Sentinels need an API key for their provider. Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
         <h2 id="contribute">Contribute a sweep</h2>
         <p>A sweep searches every 2-minute target of a TESS sector and keeps every dip it finds, classified, with nothing thrown away. You can run a slice and send it in:</p>
         <pre tabindex="0"><code>setuhq sweep configs/sweep.toml --sector 5 --limit 200 --workers 3
@@ -64,12 +65,12 @@ setuhq-mcp --list-tools</code></pre>
         <ul>
           <li><a href="/assets/data/catalogue.json">The catalogue of known planets (JSON)</a> and <a href="/assets/data/exoplanet_map.csv">every planet on the Galaxy map (CSV)</a>, from exoplanet.eu.</li>
           <li><a href="/assets/data/variables.json">Everything that dims (JSON)</a>: every entry of SetuHQ's sweep, with its credit.</li>
-          <li><a href="/evidence/report/">The run report</a>, <a href="/evidence/plates/">the plates</a> and <a href="/candidates/case-file/">the case file</a> for run tess-pi-men-s1.</li>
+          <li>WASP-126 (Hot Jupiter): <a href="/evidence/report/wasp-126/">the run report</a>, <a href="/evidence/plates/wasp-126/">the plates</a> and <a href="/candidates/wasp-126/case-file/">the case file</a> of run tess-wasp-126-s1.</li><li>TOI-270 (Multi-planet system): <a href="/evidence/report/toi-270/">the run report</a>, <a href="/evidence/plates/toi-270/">the plates</a> and <a href="/candidates/toi-270/case-file/">the case file</a> of run tess-toi-270-s5.</li><li>HD 15337 (Small planets near the limit): <a href="/evidence/report/hd-15337/">the run report</a>, <a href="/evidence/plates/hd-15337/">the plates</a> and <a href="/candidates/hd-15337/case-file/">the case file</a> of run tess-hd-15337-s4.</li><li>TOI-236 (Known false positive): <a href="/evidence/report/toi-236/">the run report</a>, <a href="/evidence/plates/toi-236/">the plates</a> and <a href="/candidates/toi-236/case-file/">the case file</a> of run tess-toi-236-s2.</li><li>pi Men (Reference check): <a href="/evidence/report/">the run report</a>, <a href="/evidence/plates/">the plates</a> and <a href="/candidates/case-file/">the case file</a> of run tess-pi-men-s1.</li>
           <li>The benchmark, the leaderboard and the paper: <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/tree/main/docs">docs/ in the repository</a>.</li>
         </ul>
         <p>SetuHQ's own data, benchmark, leaderboard and paper are under CC BY 4.0; the code is under the AGPL-3.0 (a commercial licence is available). Cite it with <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/CITATION.cff">CITATION.cff</a>.</p>
         <h2 id="provenance">Technical details: where the figures come from</h2>
-        <p>The candidate pages show figures from the stored run <code>tess-pi-men-s1</code>, made with the current code.</p>
+        <p>The candidate pages show figures from the stored runs (<code>tess-wasp-126-s1</code>, <code>tess-toi-270-s5</code>, <code>tess-hd-15337-s4</code>, <code>tess-toi-236-s2</code>, <code>tess-pi-men-s1</code>), made with the current code.</p>
         <p>Every number on the candidate and evidence pages is read from stored files: the run directory, the search catalogue and the calibrated reviewer weights. <a href="/evidence/runs/">Runs and configuration</a> lists the files, the configuration and its hash.</p>
       </div>
 </section>

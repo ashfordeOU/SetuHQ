@@ -1,0 +1,29 @@
+{
+ "note": "Each dip's address on the website (/candidates/<slug>/), given once and never changed. An address belongs to a dip by its subject and mid-time (within its duration, at most half a day), not by its candidate id, which is a rank. Written by setuhq site; a dip that leaves the run keeps its entry, so its number is never reused.",
+ "dips": [
+  {
+   "slug": "hd-15337/dip-1",
+   "subject": "tess-38b5a559eee2",
+   "t_center": 1414.5530197055468,
+   "duration_hours": 2.053610624912835,
+   "id": "tess-38b5a559eee2-001",
+   "star": "HD 15337"
+  },
+  {
+   "slug": "hd-15337/dip-2",
+   "subject": "tess-08a8c4eac6ff",
+   "t_center": 1425.7279957329188,
+   "duration_hours": 2.0831546299214097,
+   "id": "tess-08a8c4eac6ff-000",
+   "star": "HD 15337"
+  },
+  {
+   "slug": "hd-15337/dip-3",
+   "subject": "tess-08a8c4eac6ff",
+   "t_center": 1431.731677325547,
+   "duration_hours": 1.8726777182782826,
+   "id": "tess-08a8c4eac6ff-002",
+   "star": "HD 15337"
+  }
+ ]
+}

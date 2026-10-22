@@ -294,15 +294,19 @@ def run_entry(spec: dict, reference: dict) -> dict:
     entry["reference"] = ref["label"] if ref else ""
     entry["reference_url"] = ref["url"] if ref else ""
     found = [p for p in planets if p.get("recovered_transits")]
+    for p in planets:
+        r = (p.get("ratio") or {}).get("period_days")
+        p["period_recovered"] = bool(r and abs(r - 1) <= 0.02)
 
     def said(p):
         o = p.get("outcomes") or {}
         words = {"passed": ("candidate", "candidates"), "flagged": ("flagged", "flagged"), "rejected": ("rejected", "rejected")}
         return ", ".join(f"{v} {words[k][v != 1]}" for k, v in o.items())
 
-    entry["outcome"] = (f"{len(found)} of {len(planets)} known planet{'s' if len(planets) != 1 else ''} found again on "
-                        f"{'their' if len(planets) != 1 else 'its'} published ephemeris"
+    entry["outcome"] = (f"{len(found)} of {len(planets)} known planet{'s' if len(planets) != 1 else ''} "
+                        f"{'have' if len(found) != 1 else 'has'} dips on {'their' if len(planets) != 1 else 'its'} published ephemeris"
                         + (": " + "; ".join(f"{p['planet']}, {p['recovered_transits']} of {p['predicted_transits']} transits ({said(p)})"
+                                            + ("" if p["period_recovered"] or p["setuhq"].get("period_days") is None else ", its period missed")
                                             for p in found) if found else "")
                         + (f"; no dip on {', '.join(p['planet'] for p in planets if p not in found)}" if len(found) < len(planets) else "")
                         + ".")
@@ -365,6 +369,11 @@ def markdown(e: dict, reference: dict) -> str:
             lines.append(row)
         if not p["dips_on_ephemeris"]:
             lines += ["", "The panel marked no dip on this planet's transits in this run, so nothing is compared."]
+        elif p["ratio"].get("period_days") and abs(p["ratio"]["period_days"] - 1) > 0.02:
+            lines += ["", f"The BLS period stored on these dips ({_f(p['setuhq']['period_days'], 4)} d) is not this planet's: within a "
+                          "13-day subject the search paired dips that belong to different transits (another planet's, or an alias), "
+                          "so the period ratio is a miss, not a recovery, and the fit that used it (Rp/R★, depth) is less reliable "
+                          "than its T14. The dips sit on the published ephemeris; the period does not."]
         elif p["setuhq"].get("period_days") is None:
             lines += ["", "Each 13-day subject holds only one of its transits, so the search found no period for these dips; vetting "
                           "flags each `off_ephemeris` (open, not a candidate). The period is not compared."]

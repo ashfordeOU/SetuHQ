@@ -51,7 +51,8 @@
 ## Every dip in the sky, reviewed and explained
 
 TESS has watched about 98% of the sky. Almost all of that light is public, and almost none of it
-has been looked at dip by dip. SetuHQ does the looking: a **reviewer panel** of AI **Sentinels**
+has been looked at dip by dip. SetuHQ searches any TESS star: give it a TIC id and a sector or two,
+and it does the looking: a **reviewer panel** of AI **Sentinels**
 and deterministic **Probes** marks every dip in blind-coded light curves, the way Planet Hunters
 volunteers do. Each verdict keeps its marks, its weights and, for the Sentinels, their reasons
 in words. Then the pipeline does the physics: limb-darkened transit fits, bounded false-alarm
@@ -67,6 +68,31 @@ probabilities, odd/even and secondary checks, and an honest label on everything.
   TESS candidates, with controls, a public leaderboard and its negative results printed first.
 - **An observatory you can explore.** Every known exoplanet in 3D, a full catalogue, and
   fifteen animated chapters on how planets are found, all in one app.
+
+## Worked examples
+
+Five stored runs on public TESS light curves from MAST, chosen to show different kinds of star and
+signal. Each keeps its data hash, configuration hash and code fingerprint; every dip is counted by
+its vetting outcome (a candidate stays unconfirmed; a rejected dip is not a candidate). Known planets
+are named with their reference: finding one again checks the pipeline, it is not a discovery. Every
+run but pi Men is Probes only; Sentinels not run on this example.
+
+| Star | Kind | TESS sector | Dips | Against the literature |
+|---|---|---|---|---|
+| [WASP-126](https://setuhq.com/candidates/wasp-126/case-file/) | Hot Jupiter | 1 | 8 dips (8 candidates) | 1 of 1 known planet has dips on its published ephemeris: WASP-126 b, 8 of 8 transits (8 candidates). |
+| [TOI-270](https://setuhq.com/candidates/toi-270/case-file/) | Multi-planet system | 5 | 7 dips (5 candidates, 2 flagged) | 2 of 3 known planets have dips on their published ephemeris: TOI-270 c, 5 of 5 transits (5 candidates); TOI-270 d, 2 of 2 transits (2 flagged); no dip on TOI-270 b. |
+| [HD 15337](https://setuhq.com/candidates/hd-15337/case-file/) | Small planets near the limit | 4 | 3 dips (2 candidates, 1 flagged) | 2 of 2 known planets have dips on their published ephemeris: HD 15337 b, 1 of 5 transits (1 candidate), its period missed; HD 15337 c, 2 of 2 transits (1 candidate, 1 flagged), its period missed. |
+| [TOI-236](https://setuhq.com/candidates/toi-236/case-file/) | Known false positive | 2 | 6 dips (6 rejected) | Caught: all 6 dips on the TOI ephemeris were rejected by vetting (secondary_any_phase, secondary_eclipse), so none is a candidate. |
+| [pi Men](https://setuhq.com/candidates/case-file/) | Reference check | 1 | 7 dips (5 candidates, 1 flagged, 1 rejected) | Rp/R★ and T14 within 5% of Huang et al. 2018 (docs/results/pi_men_validation.md). |
+
+Why each was chosen, its full comparison with the literature and the one command that reproduces it:
+[docs/SHOWCASE.md](docs/SHOWCASE.md). On the site, each has its dips, case file, plates and run report.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/app/examples-dark.webp">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/app/examples-light.webp">
+  <img src="docs/assets/readme/app/examples-light.webp" alt="Worked examples on the home page: five cards, one per stored run on public TESS light curves, each with what kind of example it is, the star, a one-line summary, its dips counted by vetting outcome (a candidate stays unconfirmed; a rejected dip is not a candidate), its sector and panel, and links to its case file, plates and run report. WASP-126, hot Jupiter: 8 dips (8 candidates), TESS sector 1, Probes only; TOI-270, multi-planet system: 7 dips (5 candidates, 2 flagged), TESS sector 5, Probes only; HD 15337, small planets near the limit: 3 dips (2 candidates, 1 flagged), TESS sector 4, Probes only; TOI-236, known false positive: 6 dips (6 rejected), TESS sector 2, Probes only; pi Men, reference check: 7 dips (5 candidates, 1 flagged, 1 rejected), TESS sector 1, Probes and Sentinels." width="100%">
+</picture>
 
 ## What's new in 0.1.0
 
@@ -115,11 +141,11 @@ telemetry strip is computed from the app's own data.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/app/overview-dark.webp">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/app/overview-light.webp">
-  <img src="docs/assets/readme/app/overview-light.webp" alt="Overview: the landing page, The sky, reviewed. A calibrated panel of Sentinels (Claude) and Probes (deterministic detectors) reads every light curve; every verdict explained; nothing called a planet until it is one. Below, an artist's impression of pi Men, labelled as one." width="100%">
+  <img src="docs/assets/readme/app/overview-light.webp" alt="Overview: the landing page, The sky, reviewed. SetuHQ searches any TESS star's public light curve for transits; a calibrated panel of Sentinels (AI reviewers) and Probes (deterministic detectors) marks the dips, and vetting explains every verdict; nothing is called a planet until it is one. Below, an artist's impression of a planet, labelled as one, and what you can do here." width="100%">
 </picture>
 
-**Overview.** The landing page: what the panel is, and that nothing is called a planet until it
-is one.
+**Overview.** The landing page: SetuHQ searches any TESS star, what the panel is, and that
+nothing is called a planet until it is one. Below it, the worked examples.
 
 </td>
 <td width="50%" valign="top">
@@ -234,10 +260,11 @@ differential imaging, from real Fraunhofer numerics.
 
 ## Capabilities
 
-### A known planet, found blind and fitted
+### The reference check: a known planet, found blind and fitted
 
-The stored run on pi Men (TESS sector 1): the panel's marks, the seven consensus dips and the
-limb-darkened fit, against Huang et al. 2018.
+One of the worked examples, and the one checked in most depth: the stored run on pi Men (TESS
+sector 1), with the Sentinels as well as the Probes. The panel's marks, the seven consensus dips and
+the limb-darkened fit, against Huang et al. 2018.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/pi-men-dark.svg">
@@ -353,6 +380,9 @@ SetuHQ reports what it measured, including where it falls short.
 |---|---|---|
 | pi Men c, Rp/R★ against Huang et al. 2018 | **1.05** (0.0179 ± 0.0017) | [validation](docs/results/pi_men_validation.md) |
 | pi Men c, transit duration T14 | **1.04** (3.07 ± 0.17 h) | [validation](docs/results/pi_men_validation.md) |
+| Worked examples, Probes only: WASP-126 b, Rp/R★ against Pearson 2019 and T14 against Maxted et al. 2016 | **1.00** and **1.02** (8 of 8 transits) | [showcase](docs/SHOWCASE.md) |
+| … TOI-270 c and d (Günther et al. 2019), HD 15337 b and c (Gandolfi et al. 2019) | dips on each published ephemeris but TOI-270 b's; the periods of HD 15337 missed in one sector | [showcase](docs/SHOWCASE.md) |
+| … TOI-236.01, a false positive in the TOI table | **rejected**: all 6 dips, secondary eclipse | [showcase](docs/SHOWCASE.md) |
 | Real-TOI benchmark, held-out completeness | **60%** (90/150; 52–67%), re-run on the current code; 57% (86/150) in the first run, on the pre-fix code | [benchmark](docs/results/benchmark_real_tois_clipfix.md) |
 | … planets below 2 R⊕ | 10% | [benchmark](docs/results/benchmark_real_tois_clipfix.md) |
 | Live feed’s “new” signals | **consistent with noise** under the old rule (≈12 per 100 targets from controls vs 15.8 observed). On the current code the pre-registered two-sector rule cuts held-out noise about 4.5-fold, from 27.8 (23.1–33.1) to 6.1 (4.0–9.4) per 100 targets, still above the 1.6 real new signals per 100, and more than halves completeness; the live feed re-run under it admits 0 new signals | [validation](docs/results/feed_rule_validation_clipfix.json) |
@@ -854,6 +884,9 @@ pip install -e ".[tess,dev]"         # add ,claude for the Anthropic API backend
 ```bash
 pytest -q                            # offline tests (network- and slow-marked tests are deselected)
 
+setuhq run configs/showcase/tess-wasp-126-s1.toml --out runs/tess-wasp-126-s1   # any star: a config names its TIC and sectors
+setuhq crossmatch runs/tess-wasp-126-s1    # the archive's known planets for the star, for the pages
+setuhq site runs/tess-pi-men-s1 runs/tess-wasp-126-s1 --out site   # the website from one or more runs
 setuhq run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
 setuhq rebuild runs/tess-pi-men-s1 configs/tess_pi_men_s1.toml   # re-vet from the stored classifications
 setuhq report runs/tess-pi-men-s1 --out site/report --validation docs/results/pi_men_validation.md

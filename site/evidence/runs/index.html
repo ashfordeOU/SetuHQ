@@ -12,17 +12,17 @@
 <meta name="theme-color" content="#000000">
 <script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
-<link rel="stylesheet" href="/assets/site-a1346500af.css">
-<link rel="preload" href="/assets/data/app-83549d74cc.json" as="fetch" crossorigin="anonymous">
-<link rel="preload" href="/assets/app-f46053c2fd.js" as="script">
+<link rel="stylesheet" href="/assets/site-51f69db463.css">
+<link rel="preload" href="/assets/data/app-7b241e9ed4.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/app-0d3a287f56.js" as="script">
 <script src="/assets/site-8efaa37a95.js" defer></script>
 </head>
-<body class="page-runs" data-page="runs" data-route="runs" data-data="/assets/data/app-83549d74cc.json" data-routes="/assets/views-1905b8bc03.html" data-app="/assets/app-f46053c2fd.js">
+<body class="page-runs" data-page="runs" data-route="runs" data-data="/assets/data/app-7b241e9ed4.json" data-routes="/assets/views-44fedc2f3a.html" data-app="/assets/app-0d3a287f56.js">
 <img class="starfield" src="/assets/starfield-7d78158d28.svg" alt="" aria-hidden="true">
 <a class="skip" href="#content">Skip to content</a>
 <header class="topbar">
   <div class="tbin">
-    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="579" height="132"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="579" height="132"></a>
+    <a class="brand" href="/" aria-label="SetuHQ, home"><img class="brandlogo dk" src="/assets/brand/setuhq-logo-dark.svg" alt="SetuHQ" width="105" height="24"><img class="brandlogo lt" src="/assets/brand/setuhq-logo-light.svg" alt="SetuHQ" width="105" height="24"></a>
     <nav class="nav" aria-label="Main"><ul><li><a href="/explore/" data-nav="explore">Explore</a></li><li><a href="/candidates/" data-nav="candidates">Candidates</a></li><li><a href="/how-it-works/" data-nav="how">How it works</a></li><li><a href="/evidence/" data-nav="evidence">Evidence</a></li><li><a href="/docs/" data-nav="docs">Docs</a></li></ul></nav>
     <div class="tools">
       <button class="iconbtn searchbtn" type="button" id="gsearchbtn" aria-label="Search planets, stars and pages (press /)" aria-haspopup="dialog" title="Search (/)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
@@ -38,6 +38,10 @@
 <section class="route" id="route-runs" data-route="runs" aria-labelledby="h-runs">
 <header><h1 class="lead-h" id="h-runs" tabindex="-1">Every search run, its errors as stored, and the configuration behind these pages.</h1><p>The search run history from the catalogue, and the configuration of run tess-pi-men-s1. Error messages are shown as stored.</p></header>
       
+      <section class="card" aria-labelledby="h-exruns" style="display:grid;gap:8px"><h2 id="h-exruns">The example runs</h2>
+        <p class="muted" style="margin:0;font-size:13px">Every stored run the candidate pages show, with the sha256 of each light-curve file read from MAST, of the configuration, and the code that ran (git describe). Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+        <div class="tablewrap" tabindex="0" role="region" aria-label="The example runs and their provenance"><table><thead><tr><th scope="col">Star and run</th><th scope="col">Dips</th><th scope="col">Light curve sha256</th><th scope="col">Config sha256</th><th scope="col">Code</th><th scope="col">Panel</th></tr></thead><tbody><tr><th scope="row">WASP-126<br><span class="muted mono">tess-wasp-126-s1</span></th><td>8 dips (8 candidates)</td><td>sector 1: <span class="mono">12ddd623b04bdd35…</span></td><td><span class="mono">23bb51a268efd59e…</span></td><td><span class="mono">v0.1.0-3-g0c029a2</span></td><td>Probes only; Sentinels not run on this example</td></tr><tr><th scope="row">TOI-270<br><span class="muted mono">tess-toi-270-s5</span></th><td>7 dips (5 candidates, 2 flagged)</td><td>sector 5: <span class="mono">739250df0d1ccda4…</span></td><td><span class="mono">e60af3c4e98d4a76…</span></td><td><span class="mono">v0.1.0-3-g0c029a2</span></td><td>Probes only; Sentinels not run on this example</td></tr><tr><th scope="row">HD 15337<br><span class="muted mono">tess-hd-15337-s4</span></th><td>3 dips (2 candidates, 1 flagged)</td><td>sector 4: <span class="mono">a0d03d3e07a18ab1…</span></td><td><span class="mono">e21c63a794b2aeb3…</span></td><td><span class="mono">v0.1.0-6-g2bf0522</span></td><td>Probes only; Sentinels not run on this example</td></tr><tr><th scope="row">TOI-236<br><span class="muted mono">tess-toi-236-s2</span></th><td>6 dips (6 rejected)</td><td>sector 2: <span class="mono">35374d1f753db7ea…</span></td><td><span class="mono">eef6f1318b3b1dac…</span></td><td><span class="mono">v0.1.0-3-g0c029a2</span></td><td>Probes only; Sentinels not run on this example</td></tr><tr><th scope="row">pi Men<br><span class="muted mono">tess-pi-men-s1</span></th><td>7 dips (5 candidates, 1 flagged, 1 rejected)</td><td>sector 1: <span class="mono">1eecffff3afa7e8c…</span></td><td><span class="mono">585955d5e7a1d141…</span></td><td><span class="mono">f689e95</span></td><td>Probes and Sentinels</td></tr></tbody></table></div>
+      </section>
       <section class="card" aria-labelledby="h-hist" style="display:grid;gap:4px"><h2 id="h-hist">Search runs</h2><div id="runtable"></div></section>
       <details class="card cfg"><summary>Configuration: run tess-pi-men-s1 and the search catalogue</summary><div>
         <section aria-labelledby="h-cfg"><h3 id="h-cfg">This run's configuration</h3><div id="runconfig"></div></section>

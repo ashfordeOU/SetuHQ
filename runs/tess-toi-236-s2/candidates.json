@@ -1,0 +1,3284 @@
+[
+  {
+    "subject_id": "tess-997691b39aab",
+    "target": "TIC 9727392",
+    "mission": "TESS",
+    "t_start": 1364.134639812858,
+    "t_end": 1364.4929247916982,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 3,
+    "planet_fraction": 1.0,
+    "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": false,
+    "flags": "secondary_eclipse",
+    "depth_ppm": 10820.230283104303,
+    "snr": 75.71367722210047,
+    "period_days": 4.536551119169707,
+    "n_transits": 3,
+    "fap": 9.999000099990002e-05,
+    "metrics": {
+      "n_in_transit": 51.0,
+      "depth": 0.010820230283104304,
+      "snr": 75.71367722210047,
+      "duration_minutes": 515.9303695298513,
+      "odd_err": 0.0002014687344109344,
+      "even_err": 0.00014431740533690868,
+      "secondary_depth": 0.0007122924995607294,
+      "secondary_err": 0.0001221534611760073,
+      "odd_even_error_scale": 1.0,
+      "period": 4.536551119169707,
+      "odd_depth": 0.021300811412955256,
+      "even_depth": 0.02153926530135175,
+      "dv": {
+        "crowding": {
+          "crowdsap": 0.95167005,
+          "flfrcsap": 0.85172087,
+          "crowding_min": 0.8,
+          "crowded": false
+        },
+        "secondary": {
+          "phase": 0.5053510011802901,
+          "depth_ppm": 1310.2893585067443,
+          "sigma_ppm": 113.0981349886958,
+          "snr": 11.585419676794036,
+          "n_points": 86,
+          "max_brightening_snr": 3.6894579635811335,
+          "n_trials": 80,
+          "duration_days": 0.20691691245828303,
+          "excluded_days": 0.20691691245828303,
+          "scan_median_snr": -0.2981811499994588,
+          "scan_robust_sigma": 2.1270764854535043,
+          "scan_std_snr": 1.6518507028011853,
+          "n_epochs": 3,
+          "max_epoch_share": 0.36772976147454856,
+          "phase_05": {
+            "phase": 0.5019287596373084,
+            "depth_ppm": 1264.05068644031,
+            "sigma_ppm": 111.17564703127564,
+            "snr": 11.369852303038186
+          },
+          "albedo": 4.197882834746098,
+          "threshold_rule": "5.61 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 80 positions)",
+          "threshold_sigma": 11.936897483168716,
+          "periodic": true,
+          "significant": false
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 23328.953503182274,
+          "odd_err_ppm": 530.931692708303,
+          "n_odd": 1,
+          "even_depth_ppm": 23641.986792131513,
+          "even_err_ppm": 510.3402067853524,
+          "n_even": 2,
+          "error_scale": 1.0,
+          "epoch_chi2": 0.3528627711303952,
+          "epoch_dof": 1,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.4250661015953147,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 3,
+          "o_minus_c_minutes": [
+            0.21562506546615623,
+            -0.43125013191456674,
+            0.2837685326448991
+          ],
+          "linear": {
+            "t0": 1364.39454626415,
+            "period": 4.534521475817938,
+            "period_err": 0.00039227461705871355,
+            "chi2": 0.5292313064981478,
+            "dof": 1,
+            "p_value": 0.46693021355443587,
+            "inconsistent": false
+          },
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": -2,
+              "t_mid": 1355.325653052143,
+              "sigma": 0.0005172922811457076,
+              "depth": 0.02374018016523217,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": -1,
+              "t_mid": 1359.8597253090738,
+              "sigma": 0.0005172922811457076,
+              "depth": 0.023328953503182273,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 0,
+              "t_mid": 1364.394743325631,
+              "sigma": 0.0005934286283322539,
+              "depth": 0.02350949365193738,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 4.534679460658527,
+        "t0": 1364.3946239903037,
+        "duration_days": 0.20691691245828303,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.5053510011802901,
+            "depth_ppm": 1183.4120812216354,
+            "sigma_ppm": 102.92882344189195,
+            "snr": 11.497382770431898,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.057647180328872,
+            "scan_std_snr": 0.9563285520256679,
+            "max_brightening_snr": 2.3151235521056623,
+            "periodic": true,
+            "max_epoch_share": 0.3847426433836617,
+            "n_epochs": 3,
+            "phase_05": {
+              "phase": 0.5019287596373084,
+              "depth_ppm": 1136.1106181867476,
+              "sigma_ppm": 101.17919756558338,
+              "snr": 11.228697652502449
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5053510011802901,
+            "depth_ppm": 1375.2919207562497,
+            "sigma_ppm": 107.30614967250796,
+            "snr": 12.816524728112597,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.7497888461538114,
+            "scan_std_snr": 1.73552615529871,
+            "max_brightening_snr": 3.1147060095879624,
+            "periodic": true,
+            "max_epoch_share": 0.38447735161550783,
+            "n_epochs": 3,
+            "phase_05": {
+              "phase": 0.5019287596373084,
+              "depth_ppm": 1329.7385321668908,
+              "sigma_ppm": 105.48211623001892,
+              "snr": 12.606293651401579
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5053510011802901,
+            "depth_ppm": 1586.9196184923328,
+            "sigma_ppm": 111.2893893352965,
+            "snr": 14.259397306163724,
+            "n_trials": 80,
+            "scan_robust_sigma": 4.174607923705498,
+            "scan_std_snr": 2.837336880545821,
+            "max_brightening_snr": 5.354612655786229,
+            "periodic": true,
+            "max_epoch_share": 0.353050343580931,
+            "n_epochs": 3,
+            "phase_05": {
+              "phase": 0.5019287596373084,
+              "depth_ppm": 1536.40772017416,
+              "sigma_ppm": 109.39764716990064,
+              "snr": 14.044248298942236
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 0.9832214765100671
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": null,
+        "nfpp": null,
+        "probabilities": {},
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.0433956095996701,
+          "secondary_source": "all-phase search (phase 0.505)",
+          "fpp_stability": {
+            "n_settings": 4,
+            "white_settings": 0,
+            "range": [
+              0.02352750562389183,
+              0.9999901483233146
+            ],
+            "median_robust": 0.9629414678667582,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.3718741269121577,
+                "white": false
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.9299864723304228,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.9999648637264056,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.9999901483233146,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.9629414678667582,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.9670129854136267,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.02352750562389183,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.24061986872736607,
+                "white": false
+              }
+            ],
+            "log10_odds_spread": 6.6245696993582746
+          },
+          "secondary_bayes_factor_eb_vs_tp": 4.4185841057832995
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "FPP not computed: unstable across 4 detrending settings and two noise models (range 0.0235\u20131): refused (odds spread 4.21e+06\u00d7; 10\u00d7 allowed)",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)",
+          "FPP not computed: unstable across 4 detrending settings and two noise models (range 0.0235\u20131): refused (odds spread 4.21e+06\u00d7; 10\u00d7 allowed)"
+        ],
+        "refused": "FPP not computed: unstable across 4 detrending settings and two noise models (range 0.0235\u20131): refused (odds spread 4.21e+06\u00d7; 10\u00d7 allowed)"
+      }
+    },
+    "candidate_id": "tess-997691b39aab-000",
+    "bls_t0": 1355.3242332797947,
+    "bls_duration_days": 0.16666666666666666,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1355.3242332797947,
+        "n_points": 24,
+        "depth_ppm": 21682.415813128464,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1359.8607843989644,
+        "n_points": 24,
+        "depth_ppm": 21352.12196484304,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1364.3973355181342,
+        "n_points": 24,
+        "depth_ppm": 21490.004986769785,
+        "sigma_ppm": 208.32511570813395
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1357.5925088393797,
+        "n_points": 24,
+        "depth_ppm": 733.1011164234402,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1362.1290599585493,
+        "n_points": 24,
+        "depth_ppm": 651.0022849358643,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1366.665611077719,
+        "n_points": 23,
+        "depth_ppm": 925.6199949830846,
+        "sigma_ppm": 212.80573832114518
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.9838577266882206,
+        "marks": [
+          {
+            "t_start": 1364.134639812858,
+            "t_end": 1364.4871412576463,
+            "overlap_frac": 0.9838577266882206,
+            "centre_gap_days": 0.031200623411905326,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1364.1261598234046,
+            "t_end": 1364.5586880674493,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.00033278676301051746,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 0.841975756406603,
+        "marks": [
+          {
+            "t_start": 1364.1912575256301,
+            "t_end": 1364.4929247916982,
+            "overlap_frac": 0.841975756406603,
+            "centre_gap_days": 0.00033278676301051746,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "fit": {
+      "t0": 1364.3946239903037,
+      "t0_err": 0.0004500491435434311,
+      "k": 0.14112013528281042,
+      "k_err": 0.000414331409841813,
+      "depth_ppm": 23279.980882345175,
+      "depth_err_ppm": 135.71042151561204,
+      "t14_hours": 4.966005898998793,
+      "t14_err_hours": 0.01672786818448433,
+      "b": 0.0,
+      "b_err": 0.04055366212862669,
+      "t23_hours": 3.732160300321801,
+      "period_days": 4.534679460658527,
+      "a_rs": 7.987677713674092,
+      "rho_star": 0.46882021758859294,
+      "rho_star_err": 0.005285455530161027,
+      "u1": 0.3282639658,
+      "u2": 0.21921766775999998,
+      "chi2": 717.7691617840907,
+      "dof": 765,
+      "n_points": 772,
+      "n_epochs": 3,
+      "grazing": false,
+      "v_shape_dchi2": 0.0,
+      "v_shape": false,
+      "rho_catalogue": 0.37012665488,
+      "rho_ratio": 1.2666480822371216,
+      "rho_flag": false,
+      "notes": [
+        "b < 0.08 (1\u03c3): b, a/R\u2605 and \u03c1\u2605 are degenerate; a/R\u2605 7.99 is at the best-fit b, unconstrained"
+      ],
+      "b_range": [
+        0.0,
+        0.08110732425725338
+      ],
+      "rho_range": [
+        0.46428964876407175,
+        0.46882021758859294
+      ],
+      "depth_range_ppm": [
+        23279.980882345175,
+        23283.216296782983
+      ],
+      "t14_range_hours": [
+        4.966005898998793,
+        4.970178220276282
+      ],
+      "period_err": 0.0003474778890662644,
+      "period_free": true,
+      "period_search": 4.536551119169707,
+      "b_upper_limit": true,
+      "a_rs_range": [
+        7.961859403056921,
+        7.987677713674092
+      ],
+      "t23_over_t14": 0.7515416566609899,
+      "rho_prior": null,
+      "with_density_prior": {
+        "t0": 1364.394623870447,
+        "t0_err": 0.00045010615487281144,
+        "k": 0.141114818061283,
+        "k_err": 0.00044963841392371755,
+        "depth_ppm": 23278.22951376013,
+        "depth_err_ppm": 135.8486992149177,
+        "t14_hours": 4.966823031611003,
+        "t14_err_hours": 0.018597115976246387,
+        "b": 2.2896147891989773e-07,
+        "b_err": 0.08112628649760255,
+        "t23_hours": 3.732813226064736,
+        "period_days": 4.534678831690505,
+        "a_rs": 7.986334296302912,
+        "rho_star": 0.46858384004759884,
+        "rho_star_err": 0.010175955776358676,
+        "u1": 0.3282639658,
+        "u2": 0.21921766775999998,
+        "chi2": 718.832491783986,
+        "dof": 765,
+        "n_points": 772,
+        "n_epochs": 3,
+        "grazing": false,
+        "v_shape_dchi2": 0.0,
+        "v_shape": false,
+        "rho_catalogue": 0.37012665488,
+        "rho_ratio": 1.2660094426312527,
+        "rho_flag": false,
+        "notes": [
+          "with a Gaussian \u03c1\u2605 prior 0.37 \u00b1 0.096 g/cm\u00b3"
+        ],
+        "b_range": [
+          0.0,
+          0.1622525729952051
+        ],
+        "rho_range": [
+          0.4506030912991558,
+          0.4685838400476265
+        ],
+        "depth_range_ppm": [
+          23278.22951376013,
+          23291.821111125933
+        ],
+        "t14_range_hours": [
+          4.966823031611003,
+          4.9836739046594305
+        ],
+        "period_err": 0.0003475144919399709,
+        "period_free": true,
+        "period_search": 4.536551119169707,
+        "b_upper_limit": true,
+        "a_rs_range": [
+          7.88282863930291,
+          7.9863342963030695
+        ],
+        "t23_over_t14": 0.7515494718268606,
+        "rho_prior": [
+          0.37012665488,
+          0.09559495295300001
+        ]
+      }
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
+    "fap_trials": 10000,
+    "fap_exceed": 0,
+    "fap_tail": 1e-06,
+    "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
+    "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
+    "fap_snr": 181.2851712103979,
+    "sector": 2,
+    "t_center": 1364.313782302278,
+    "duration_hours": 8.598839492164188,
+    "fit_t0": 1364.3946239903037,
+    "fit_t0_err": 0.0004500491435434311,
+    "fit_depth_ppm": 23279.980882345175,
+    "fit_depth_err_ppm": 135.71042151561204,
+    "fit_t14_hours": 4.966005898998793,
+    "fit_t14_err_hours": 0.01672786818448433,
+    "fit_b": 0.0,
+    "fit_b_err": 0.04055366212862669,
+    "fit_k": 0.14112013528281042,
+    "fit_rho_star": 0.46882021758859294,
+    "fit_rho_star_err": 0.005285455530161027,
+    "star_rho": 0.37012665488,
+    "crowdsap": 0.95167005,
+    "secondary_phase": 0.5053510011802901,
+    "secondary_snr": 11.585419676794036,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": null,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
+  },
+  {
+    "subject_id": "tess-997691b39aab",
+    "target": "TIC 9727392",
+    "mission": "TESS",
+    "t_start": 1359.6813827454334,
+    "t_end": 1359.9857018818593,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 3,
+    "planet_fraction": 1.0,
+    "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": false,
+    "flags": "secondary_eclipse",
+    "depth_ppm": 12334.194474937,
+    "snr": 80.16593779713625,
+    "period_days": 4.536551119169707,
+    "n_transits": 3,
+    "fap": 9.999000099990002e-05,
+    "metrics": {
+      "n_in_transit": 44.0,
+      "depth": 0.012334194474937,
+      "snr": 80.16593779713625,
+      "duration_minutes": 438.21955645325943,
+      "odd_err": 0.0002014687344109344,
+      "even_err": 0.00014431740533690868,
+      "secondary_depth": 0.0007122924995607294,
+      "secondary_err": 0.0001221534611760073,
+      "odd_even_error_scale": 1.0,
+      "period": 4.536551119169707,
+      "odd_depth": 0.021300811412955256,
+      "even_depth": 0.02153926530135175,
+      "dv": {
+        "crowding": {
+          "crowdsap": 0.95167005,
+          "flfrcsap": 0.85172087,
+          "crowding_min": 0.8,
+          "crowded": false
+        },
+        "secondary": {
+          "phase": 0.5053510011802901,
+          "depth_ppm": 1310.2893585067443,
+          "sigma_ppm": 113.0981349886958,
+          "snr": 11.585419676794036,
+          "n_points": 86,
+          "max_brightening_snr": 3.6894579635811335,
+          "n_trials": 80,
+          "duration_days": 0.20691691245828303,
+          "excluded_days": 0.20691691245828303,
+          "scan_median_snr": -0.2981811499994588,
+          "scan_robust_sigma": 2.1270764854535043,
+          "scan_std_snr": 1.6518507028011853,
+          "n_epochs": 3,
+          "max_epoch_share": 0.36772976147454856,
+          "phase_05": {
+            "phase": 0.5019287596373084,
+            "depth_ppm": 1264.05068644031,
+            "sigma_ppm": 111.17564703127564,
+            "snr": 11.369852303038186
+          },
+          "albedo": 4.197882834746098,
+          "threshold_rule": "5.61 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 80 positions)",
+          "threshold_sigma": 11.936897483168716,
+          "periodic": true,
+          "significant": false
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 23641.986792131513,
+          "odd_err_ppm": 510.3402067853524,
+          "n_odd": 2,
+          "even_depth_ppm": 23328.953503182274,
+          "even_err_ppm": 530.931692708303,
+          "n_even": 1,
+          "error_scale": 1.0,
+          "epoch_chi2": 0.3528627711303952,
+          "epoch_dof": 1,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.4250661015953147,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 3,
+          "o_minus_c_minutes": [
+            0.21562506579357432,
+            -0.43125013125973055,
+            0.2837685336271534
+          ],
+          "linear": {
+            "t0": 1359.8600247883317,
+            "period": 4.534521475817589,
+            "period_err": 0.00039227461705871344,
+            "chi2": 0.5292313064981479,
+            "dof": 1,
+            "p_value": 0.46693021355443587,
+            "inconsistent": false
+          },
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": -1,
+              "t_mid": 1355.325653052143,
+              "sigma": 0.0005172922811457076,
+              "depth": 0.02374018016523217,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 0,
+              "t_mid": 1359.8597253090738,
+              "sigma": 0.0005172922811457076,
+              "depth": 0.023328953503182273,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 1,
+              "t_mid": 1364.394743325631,
+              "sigma": 0.0005934286283322539,
+              "depth": 0.02350949365193738,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 4.534679460658527,
+        "t0": 1359.8599445296452,
+        "duration_days": 0.20691691245828303,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.5053510011802901,
+            "depth_ppm": 1183.4120812216354,
+            "sigma_ppm": 102.92882344189195,
+            "snr": 11.497382770431898,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.057647180328872,
+            "scan_std_snr": 0.9563285520256679,
+            "max_brightening_snr": 2.3151235521056623,
+            "periodic": true,
+            "max_epoch_share": 0.3847426433836617,
+            "n_epochs": 3,
+            "phase_05": {
+              "phase": 0.5019287596373084,
+              "depth_ppm": 1136.1106181867476,
+              "sigma_ppm": 101.17919756558338,
+              "snr": 11.228697652502449
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5053510011802901,
+            "depth_ppm": 1375.2919207562497,
+            "sigma_ppm": 107.30614967250796,
+            "snr": 12.816524728112597,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.7497888461538114,
+            "scan_std_snr": 1.73552615529871,
+            "max_brightening_snr": 3.1147060095879624,
+            "periodic": true,
+            "max_epoch_share": 0.38447735161550783,
+            "n_epochs": 3,
+            "phase_05": {
+              "phase": 0.5019287596373084,
+              "depth_ppm": 1329.7385321668908,
+              "sigma_ppm": 105.48211623001892,
+              "snr": 12.606293651401579
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5053510011802901,
+            "depth_ppm": 1586.9196184923328,
+            "sigma_ppm": 111.2893893352965,
+            "snr": 14.259397306163724,
+            "n_trials": 80,
+            "scan_robust_sigma": 4.174607923705498,
+            "scan_std_snr": 2.837336880545821,
+            "max_brightening_snr": 5.354612655786229,
+            "periodic": true,
+            "max_epoch_share": 0.353050343580931,
+            "n_epochs": 3,
+            "phase_05": {
+              "phase": 0.5019287596373084,
+              "depth_ppm": 1536.40772017416,
+              "sigma_ppm": 109.39764716990064,
+              "snr": 14.044248298942236
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 0.9832214765100671
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": null,
+        "nfpp": null,
+        "probabilities": {},
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.0433956095996701,
+          "secondary_source": "all-phase search (phase 0.505)",
+          "fpp_stability": {
+            "n_settings": 4,
+            "white_settings": 0,
+            "range": [
+              0.02352750562389183,
+              0.9999901483233146
+            ],
+            "median_robust": 0.9629414678667582,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.3718741269121577,
+                "white": false
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.9299864723304228,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.9999648637264056,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.9999901483233146,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.9629414678667582,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.9670129854136267,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.02352750562389183,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.24061986872736607,
+                "white": false
+              }
+            ],
+            "log10_odds_spread": 6.6245696993582746
+          },
+          "secondary_bayes_factor_eb_vs_tp": 4.4185841057832995
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "FPP not computed: unstable across 4 detrending settings and two noise models (range 0.0235\u20131): refused (odds spread 4.21e+06\u00d7; 10\u00d7 allowed)",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)",
+          "FPP not computed: unstable across 4 detrending settings and two noise models (range 0.0235\u20131): refused (odds spread 4.21e+06\u00d7; 10\u00d7 allowed)"
+        ],
+        "refused": "FPP not computed: unstable across 4 detrending settings and two noise models (range 0.0235\u20131): refused (odds spread 4.21e+06\u00d7; 10\u00d7 allowed)"
+      }
+    },
+    "candidate_id": "tess-997691b39aab-001",
+    "bls_t0": 1355.3242332797947,
+    "bls_duration_days": 0.16666666666666666,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1355.3242332797947,
+        "n_points": 24,
+        "depth_ppm": 21682.415813128464,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1359.8607843989644,
+        "n_points": 24,
+        "depth_ppm": 21352.12196484304,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1364.3973355181342,
+        "n_points": 24,
+        "depth_ppm": 21490.004986769785,
+        "sigma_ppm": 208.32511570813395
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1357.5925088393797,
+        "n_points": 24,
+        "depth_ppm": 733.1011164234402,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1362.1290599585493,
+        "n_points": 24,
+        "depth_ppm": 651.0022849358643,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1366.665611077719,
+        "n_points": 23,
+        "depth_ppm": 925.6199949830846,
+        "sigma_ppm": 212.80573832114518
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.7854727919273383,
+        "marks": [
+          {
+            "t_start": 1359.6891973362324,
+            "t_end": 1359.9282317379577,
+            "overlap_frac": 0.7854727919273383,
+            "centre_gap_days": 0.0036155118802980724,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1359.6146976846737,
+            "t_end": 1359.9955003657558,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.0036155118802980724,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1359.6813827454334,
+            "t_end": 1359.9857018818593,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.024827776551319403,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "fit": {
+      "t0": 1359.8599445296452,
+      "t0_err": 0.0005685816695903263,
+      "k": 0.14112013528281042,
+      "k_err": 0.000414331409841813,
+      "depth_ppm": 23279.980882345175,
+      "depth_err_ppm": 135.71042151561204,
+      "t14_hours": 4.966005898998793,
+      "t14_err_hours": 0.01672786818448433,
+      "b": 0.0,
+      "b_err": 0.04055366212862669,
+      "t23_hours": 3.732160300321801,
+      "period_days": 4.534679460658527,
+      "a_rs": 7.987677713674092,
+      "rho_star": 0.46882021758859294,
+      "rho_star_err": 0.005285455530161027,
+      "u1": 0.3282639658,
+      "u2": 0.21921766775999998,
+      "chi2": 717.7691617840907,
+      "dof": 765,
+      "n_points": 772,
+      "n_epochs": 3,
+      "grazing": false,
+      "v_shape_dchi2": 0.0,
+      "v_shape": false,
+      "rho_catalogue": 0.37012665488,
+      "rho_ratio": 1.2666480822371216,
+      "rho_flag": false,
+      "notes": [
+        "b < 0.08 (1\u03c3): b, a/R\u2605 and \u03c1\u2605 are degenerate; a/R\u2605 7.99 is at the best-fit b, unconstrained"
+      ],
+      "b_range": [
+        0.0,
+        0.08110732425725338
+      ],
+      "rho_range": [
+        0.46428964876407175,
+        0.46882021758859294
+      ],
+      "depth_range_ppm": [
+        23279.980882345175,
+        23283.216296782983
+      ],
+      "t14_range_hours": [
+        4.966005898998793,
+        4.970178220276282
+      ],
+      "period_err": 0.0003474778890662644,
+      "period_free": true,
+      "period_search": 4.536551119169707,
+      "b_upper_limit": true,
+      "a_rs_range": [
+        7.961859403056921,
+        7.987677713674092
+      ],
+      "t23_over_t14": 0.7515416566609899,
+      "rho_prior": null,
+      "with_density_prior": {
+        "t0": 1359.8599450387565,
+        "t0_err": 0.0005686491649186548,
+        "k": 0.141114818061283,
+        "k_err": 0.00044963841392371755,
+        "depth_ppm": 23278.22951376013,
+        "depth_err_ppm": 135.8486992149177,
+        "t14_hours": 4.966823031611003,
+        "t14_err_hours": 0.018597115976246387,
+        "b": 2.2896147891989773e-07,
+        "b_err": 0.08112628649760255,
+        "t23_hours": 3.732813226064736,
+        "period_days": 4.534678831690505,
+        "a_rs": 7.986334296302912,
+        "rho_star": 0.46858384004759884,
+        "rho_star_err": 0.010175955776358676,
+        "u1": 0.3282639658,
+        "u2": 0.21921766775999998,
+        "chi2": 718.832491783986,
+        "dof": 765,
+        "n_points": 772,
+        "n_epochs": 3,
+        "grazing": false,
+        "v_shape_dchi2": 0.0,
+        "v_shape": false,
+        "rho_catalogue": 0.37012665488,
+        "rho_ratio": 1.2660094426312527,
+        "rho_flag": false,
+        "notes": [
+          "with a Gaussian \u03c1\u2605 prior 0.37 \u00b1 0.096 g/cm\u00b3"
+        ],
+        "b_range": [
+          0.0,
+          0.1622525729952051
+        ],
+        "rho_range": [
+          0.4506030912991558,
+          0.4685838400476265
+        ],
+        "depth_range_ppm": [
+          23278.22951376013,
+          23291.821111125933
+        ],
+        "t14_range_hours": [
+          4.966823031611003,
+          4.9836739046594305
+        ],
+        "period_err": 0.0003475144919399709,
+        "period_free": true,
+        "period_search": 4.536551119169707,
+        "b_upper_limit": true,
+        "a_rs_range": [
+          7.88282863930291,
+          7.9863342963030695
+        ],
+        "t23_over_t14": 0.7515494718268606,
+        "rho_prior": [
+          0.37012665488,
+          0.09559495295300001
+        ]
+      }
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
+    "fap_trials": 10000,
+    "fap_exceed": 0,
+    "fap_tail": 1e-06,
+    "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
+    "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
+    "fap_snr": 181.2851712103979,
+    "sector": 2,
+    "t_center": 1359.8335423136464,
+    "duration_hours": 7.3036592742209905,
+    "fit_t0": 1359.8599445296452,
+    "fit_t0_err": 0.0005685816695903263,
+    "fit_depth_ppm": 23279.980882345175,
+    "fit_depth_err_ppm": 135.71042151561204,
+    "fit_t14_hours": 4.966005898998793,
+    "fit_t14_err_hours": 0.01672786818448433,
+    "fit_b": 0.0,
+    "fit_b_err": 0.04055366212862669,
+    "fit_k": 0.14112013528281042,
+    "fit_rho_star": 0.46882021758859294,
+    "fit_rho_star_err": 0.005285455530161027,
+    "star_rho": 0.37012665488,
+    "crowdsap": 0.95167005,
+    "secondary_phase": 0.5053510011802901,
+    "secondary_snr": 11.585419676794036,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": null,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
+  },
+  {
+    "subject_id": "tess-997691b39aab",
+    "target": "TIC 9727392",
+    "mission": "TESS",
+    "t_start": 1355.1738124966441,
+    "t_end": 1355.4328600671336,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 3,
+    "planet_fraction": 1.0,
+    "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": false,
+    "flags": "secondary_eclipse",
+    "depth_ppm": 14883.549375582006,
+    "snr": 88.70745549429301,
+    "period_days": 4.536551119169707,
+    "n_transits": 3,
+    "fap": 9.999000099990002e-05,
+    "metrics": {
+      "n_in_transit": 37.0,
+      "depth": 0.014883549375582006,
+      "snr": 88.70745549429301,
+      "duration_minutes": 373.0285015047775,
+      "odd_err": 0.0002014687344109344,
+      "even_err": 0.00014431740533690868,
+      "secondary_depth": 0.0007122924995607294,
+      "secondary_err": 0.0001221534611760073,
+      "odd_even_error_scale": 1.0,
+      "period": 4.536551119169707,
+      "odd_depth": 0.021300811412955256,
+      "even_depth": 0.02153926530135175,
+      "dv": {
+        "crowding": {
+          "crowdsap": 0.95167005,
+          "flfrcsap": 0.85172087,
+          "crowding_min": 0.8,
+          "crowded": false
+        },
+        "secondary": {
+          "phase": 0.5053510011802901,
+          "depth_ppm": 1310.2893585067443,
+          "sigma_ppm": 113.0981349886958,
+          "snr": 11.585419676794036,
+          "n_points": 86,
+          "max_brightening_snr": 3.6894579635811335,
+          "n_trials": 80,
+          "duration_days": 0.20691691245828303,
+          "excluded_days": 0.20691691245828303,
+          "scan_median_snr": -0.2981811499994588,
+          "scan_robust_sigma": 2.1270764854535043,
+          "scan_std_snr": 1.6518507028011853,
+          "n_epochs": 3,
+          "max_epoch_share": 0.36772976147454856,
+          "phase_05": {
+            "phase": 0.5019287596373084,
+            "depth_ppm": 1264.05068644031,
+            "sigma_ppm": 111.17564703127564,
+            "snr": 11.369852303038186
+          },
+          "albedo": 4.197882834746098,
+          "threshold_rule": "5.61 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 80 positions)",
+          "threshold_sigma": 11.936897483168716,
+          "periodic": true,
+          "significant": false
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 23328.953503182274,
+          "odd_err_ppm": 530.931692708303,
+          "n_odd": 1,
+          "even_depth_ppm": 23641.986792131513,
+          "even_err_ppm": 510.3402067853524,
+          "n_even": 2,
+          "error_scale": 1.0,
+          "epoch_chi2": 0.3528627711303952,
+          "epoch_dof": 1,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.4250661015953147,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 3,
+          "o_minus_c_minutes": [
+            0.2156250667758286,
+            -0.43125013093231246,
+            0.2837685332997353
+          ],
+          "linear": {
+            "t0": 1355.3255033125133,
+            "period": 4.534521475818139,
+            "period_err": 0.00039227461705871344,
+            "chi2": 0.5292313064981479,
+            "dof": 1,
+            "p_value": 0.46693021355443587,
+            "inconsistent": false
+          },
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": 0,
+              "t_mid": 1355.325653052143,
+              "sigma": 0.0005172922811457076,
+              "depth": 0.02374018016523217,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 1,
+              "t_mid": 1359.8597253090738,
+              "sigma": 0.0005172922811457076,
+              "depth": 0.023328953503182273,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 2,
+              "t_mid": 1364.394743325631,
+              "sigma": 0.0005934286283322539,
+              "depth": 0.02350949365193738,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 4.534679460658527,
+        "t0": 1355.3252650689867,
+        "duration_days": 0.20691691245828303,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.5053510011802901,
+            "depth_ppm": 1183.4120812216354,
+            "sigma_ppm": 102.92882344189195,
+            "snr": 11.497382770431898,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.057647180328872,
+            "scan_std_snr": 0.9563285520256679,
+            "max_brightening_snr": 2.3151235521056623,
+            "periodic": true,
+            "max_epoch_share": 0.3847426433836617,
+            "n_epochs": 3,
+            "phase_05": {
+              "phase": 0.5019287596373084,
+              "depth_ppm": 1136.1106181867476,
+              "sigma_ppm": 101.17919756558338,
+              "snr": 11.228697652502449
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5053510011802901,
+            "depth_ppm": 1375.2919207562497,
+            "sigma_ppm": 107.30614967250796,
+            "snr": 12.816524728112597,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.7497888461538114,
+            "scan_std_snr": 1.73552615529871,
+            "max_brightening_snr": 3.1147060095879624,
+            "periodic": true,
+            "max_epoch_share": 0.38447735161550783,
+            "n_epochs": 3,
+            "phase_05": {
+              "phase": 0.5019287596373084,
+              "depth_ppm": 1329.7385321668908,
+              "sigma_ppm": 105.48211623001892,
+              "snr": 12.606293651401579
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5053510011802901,
+            "depth_ppm": 1586.9196184923328,
+            "sigma_ppm": 111.2893893352965,
+            "snr": 14.259397306163724,
+            "n_trials": 80,
+            "scan_robust_sigma": 4.174607923705498,
+            "scan_std_snr": 2.837336880545821,
+            "max_brightening_snr": 5.354612655786229,
+            "periodic": true,
+            "max_epoch_share": 0.353050343580931,
+            "n_epochs": 3,
+            "phase_05": {
+              "phase": 0.5019287596373084,
+              "depth_ppm": 1536.40772017416,
+              "sigma_ppm": 109.39764716990064,
+              "snr": 14.044248298942236
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 0.9832214765100671
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": null,
+        "nfpp": null,
+        "probabilities": {},
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.0433956095996701,
+          "secondary_source": "all-phase search (phase 0.505)",
+          "fpp_stability": {
+            "n_settings": 4,
+            "white_settings": 0,
+            "range": [
+              0.02352750562389183,
+              0.9999901483233146
+            ],
+            "median_robust": 0.9629414678667582,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.3718741269121577,
+                "white": false
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.9299864723304228,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.9999648637264056,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.9999901483233146,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.9629414678667582,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.9670129854136267,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.02352750562389183,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.24061986872736607,
+                "white": false
+              }
+            ],
+            "log10_odds_spread": 6.6245696993582746
+          },
+          "secondary_bayes_factor_eb_vs_tp": 4.4185841057832995
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "FPP not computed: unstable across 4 detrending settings and two noise models (range 0.0235\u20131): refused (odds spread 4.21e+06\u00d7; 10\u00d7 allowed)",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)",
+          "FPP not computed: unstable across 4 detrending settings and two noise models (range 0.0235\u20131): refused (odds spread 4.21e+06\u00d7; 10\u00d7 allowed)"
+        ],
+        "refused": "FPP not computed: unstable across 4 detrending settings and two noise models (range 0.0235\u20131): refused (odds spread 4.21e+06\u00d7; 10\u00d7 allowed)"
+      }
+    },
+    "candidate_id": "tess-997691b39aab-002",
+    "bls_t0": 1355.3242332797947,
+    "bls_duration_days": 0.16666666666666666,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1355.3242332797947,
+        "n_points": 24,
+        "depth_ppm": 21682.415813128464,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1359.8607843989644,
+        "n_points": 24,
+        "depth_ppm": 21352.12196484304,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1364.3973355181342,
+        "n_points": 24,
+        "depth_ppm": 21490.004986769785,
+        "sigma_ppm": 208.32511570813395
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1357.5925088393797,
+        "n_points": 24,
+        "depth_ppm": 733.1011164234402,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1362.1290599585493,
+        "n_points": 24,
+        "depth_ppm": 651.0022849358643,
+        "sigma_ppm": 208.32511570813395
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1366.665611077719,
+        "n_points": 23,
+        "depth_ppm": 925.6199949830846,
+        "sigma_ppm": 212.80573832114518
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.6397474085119967,
+        "marks": [
+          {
+            "t_start": 1355.2334158723008,
+            "t_end": 1355.3991408842028,
+            "overlap_frac": 0.6397474085119967,
+            "centre_gap_days": 0.002712952015826886,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1355.125548011269,
+            "t_end": 1355.5124346492664,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.002712952015826886,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1355.1738124966441,
+            "t_end": 1355.4328600671336,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.012942096363076416,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "fit": {
+      "t0": 1355.3252650689867,
+      "t0_err": 0.0008279539631911695,
+      "k": 0.14112013528281042,
+      "k_err": 0.000414331409841813,
+      "depth_ppm": 23279.980882345175,
+      "depth_err_ppm": 135.71042151561204,
+      "t14_hours": 4.966005898998793,
+      "t14_err_hours": 0.01672786818448433,
+      "b": 0.0,
+      "b_err": 0.04055366212862669,
+      "t23_hours": 3.732160300321801,
+      "period_days": 4.534679460658527,
+      "a_rs": 7.987677713674092,
+      "rho_star": 0.46882021758859294,
+      "rho_star_err": 0.005285455530161027,
+      "u1": 0.3282639658,
+      "u2": 0.21921766775999998,
+      "chi2": 717.7691617840907,
+      "dof": 765,
+      "n_points": 772,
+      "n_epochs": 3,
+      "grazing": false,
+      "v_shape_dchi2": 0.0,
+      "v_shape": false,
+      "rho_catalogue": 0.37012665488,
+      "rho_ratio": 1.2666480822371216,
+      "rho_flag": false,
+      "notes": [
+        "b < 0.08 (1\u03c3): b, a/R\u2605 and \u03c1\u2605 are degenerate; a/R\u2605 7.99 is at the best-fit b, unconstrained"
+      ],
+      "b_range": [
+        0.0,
+        0.08110732425725338
+      ],
+      "rho_range": [
+        0.46428964876407175,
+        0.46882021758859294
+      ],
+      "depth_range_ppm": [
+        23279.980882345175,
+        23283.216296782983
+      ],
+      "t14_range_hours": [
+        4.966005898998793,
+        4.970178220276282
+      ],
+      "period_err": 0.0003474778890662644,
+      "period_free": true,
+      "period_search": 4.536551119169707,
+      "b_upper_limit": true,
+      "a_rs_range": [
+        7.961859403056921,
+        7.987677713674092
+      ],
+      "t23_over_t14": 0.7515416566609899,
+      "rho_prior": null,
+      "with_density_prior": {
+        "t0": 1355.325266207066,
+        "t0_err": 0.0008280463991151533,
+        "k": 0.141114818061283,
+        "k_err": 0.00044963841392371755,
+        "depth_ppm": 23278.22951376013,
+        "depth_err_ppm": 135.8486992149177,
+        "t14_hours": 4.966823031611003,
+        "t14_err_hours": 0.018597115976246387,
+        "b": 2.2896147891989773e-07,
+        "b_err": 0.08112628649760255,
+        "t23_hours": 3.732813226064736,
+        "period_days": 4.534678831690505,
+        "a_rs": 7.986334296302912,
+        "rho_star": 0.46858384004759884,
+        "rho_star_err": 0.010175955776358676,
+        "u1": 0.3282639658,
+        "u2": 0.21921766775999998,
+        "chi2": 718.832491783986,
+        "dof": 765,
+        "n_points": 772,
+        "n_epochs": 3,
+        "grazing": false,
+        "v_shape_dchi2": 0.0,
+        "v_shape": false,
+        "rho_catalogue": 0.37012665488,
+        "rho_ratio": 1.2660094426312527,
+        "rho_flag": false,
+        "notes": [
+          "with a Gaussian \u03c1\u2605 prior 0.37 \u00b1 0.096 g/cm\u00b3"
+        ],
+        "b_range": [
+          0.0,
+          0.1622525729952051
+        ],
+        "rho_range": [
+          0.4506030912991558,
+          0.4685838400476265
+        ],
+        "depth_range_ppm": [
+          23278.22951376013,
+          23291.821111125933
+        ],
+        "t14_range_hours": [
+          4.966823031611003,
+          4.9836739046594305
+        ],
+        "period_err": 0.0003475144919399709,
+        "period_free": true,
+        "period_search": 4.536551119169707,
+        "b_upper_limit": true,
+        "a_rs_range": [
+          7.88282863930291,
+          7.9863342963030695
+        ],
+        "t23_over_t14": 0.7515494718268606,
+        "rho_prior": [
+          0.37012665488,
+          0.09559495295300001
+        ]
+      }
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
+    "fap_trials": 10000,
+    "fap_exceed": 0,
+    "fap_tail": 1e-06,
+    "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
+    "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
+    "fap_snr": 181.2851712103979,
+    "sector": 2,
+    "t_center": 1355.3033362818887,
+    "duration_hours": 6.217141691746292,
+    "fit_t0": 1355.3252650689867,
+    "fit_t0_err": 0.0008279539631911695,
+    "fit_depth_ppm": 23279.980882345175,
+    "fit_depth_err_ppm": 135.71042151561204,
+    "fit_t14_hours": 4.966005898998793,
+    "fit_t14_err_hours": 0.01672786818448433,
+    "fit_b": 0.0,
+    "fit_b_err": 0.04055366212862669,
+    "fit_k": 0.14112013528281042,
+    "fit_rho_star": 0.46882021758859294,
+    "fit_rho_star_err": 0.005285455530161027,
+    "star_rho": 0.37012665488,
+    "crowdsap": 0.95167005,
+    "secondary_phase": 0.5053510011802901,
+    "secondary_snr": 11.585419676794036,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": null,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
+  },
+  {
+    "subject_id": "tess-01e315ee5ebf",
+    "target": "TIC 9727392",
+    "mission": "TESS",
+    "t_start": 1377.9157086935363,
+    "t_end": 1378.0902763687773,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 3,
+    "planet_fraction": 1.0,
+    "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": false,
+    "flags": "secondary_eclipse;secondary_any_phase",
+    "depth_ppm": 21012.5879686518,
+    "snr": 106.74405522234078,
+    "period_days": 4.534964153885758,
+    "n_transits": 3,
+    "fap": 9.999000099990002e-05,
+    "metrics": {
+      "n_in_transit": 26.0,
+      "depth": 0.021012587968651797,
+      "snr": 106.74405522234078,
+      "duration_minutes": 251.37745234696922,
+      "odd_err": 0.00020776993509712206,
+      "even_err": 0.00014579873783743453,
+      "secondary_depth": 0.0008224148066597881,
+      "secondary_err": 0.00014892081471133513,
+      "odd_even_error_scale": 1.0,
+      "period": 4.534964153885758,
+      "odd_depth": 0.021601650656587923,
+      "even_depth": 0.021391636911424206,
+      "dv": {
+        "crowding": {
+          "crowdsap": 0.95167005,
+          "flfrcsap": 0.85172087,
+          "crowding_min": 0.8,
+          "crowded": false
+        },
+        "secondary": {
+          "phase": 0.5025106975257851,
+          "depth_ppm": 1391.756267134836,
+          "sigma_ppm": 135.2517356931017,
+          "snr": 10.290117609232428,
+          "n_points": 57,
+          "max_brightening_snr": 3.227807052315824,
+          "n_trials": 80,
+          "duration_days": 0.20619502794823485,
+          "excluded_days": 0.20619502794823485,
+          "scan_median_snr": -0.37789910856384856,
+          "scan_robust_sigma": 1.438341885200747,
+          "scan_std_snr": 1.2130709314626713,
+          "n_epochs": 2,
+          "max_epoch_share": 0.5025239126094001,
+          "phase_05": {
+            "phase": 0.5002368934645821,
+            "depth_ppm": 1293.3661628307113,
+            "sigma_ppm": 132.93956983556308,
+            "snr": 9.728978094562171
+          },
+          "albedo": 4.451833755549338,
+          "threshold_rule": "5.61 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 80 positions)",
+          "threshold_sigma": 8.071801717900307,
+          "periodic": true,
+          "significant": true
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 23672.670211174882,
+          "odd_err_ppm": 589.2811205306534,
+          "n_odd": 1,
+          "even_depth_ppm": 23593.285057535442,
+          "even_err_ppm": 531.8095386000851,
+          "n_even": 2,
+          "error_scale": 1.3387688503765298,
+          "epoch_chi2": 1.792302034738495,
+          "epoch_dof": 1,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.1000100489140013,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 3,
+          "o_minus_c_minutes": [
+            -0.2860950867034262,
+            0.4130380548303947,
+            -0.20651902774261544
+          ],
+          "linear": {
+            "t0": 1377.9977884601303,
+            "period": 4.534304557056628,
+            "period_err": 0.0003961270109388084,
+            "chi2": 0.49424408336361925,
+            "dof": 1,
+            "p_value": 0.4820401995492084,
+            "inconsistent": false
+          },
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": -2,
+              "t_mid": 1368.9289806688735,
+              "sigma": 0.0006067270544814179,
+              "depth": 0.023357698881521952,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": -1,
+              "t_mid": 1373.4637707350562,
+              "sigma": 0.0005154875698705872,
+              "depth": 0.023672670211174883,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 0,
+              "t_mid": 1377.9976450441388,
+              "sigma": 0.0005154875698705872,
+              "depth": 0.02384866568487811,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 4.534142397458282,
+        "t0": 1377.997725049371,
+        "duration_days": 0.20619502794823485,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.5025106975257851,
+            "depth_ppm": 1303.9749023904258,
+            "sigma_ppm": 125.91517635790548,
+            "snr": 10.35597884312185,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.13891061911431,
+            "scan_std_snr": 0.9620251084729693,
+            "max_brightening_snr": 2.518218234081686,
+            "periodic": true,
+            "max_epoch_share": 0.5208109106448464,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.5002368934645821,
+              "depth_ppm": 1203.663546114564,
+              "sigma_ppm": 123.76262156643634,
+              "snr": 9.725582174004224
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5025106975257851,
+            "depth_ppm": 1411.5511470930153,
+            "sigma_ppm": 128.24417549198014,
+            "snr": 11.006746635298754,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.2596480585413183,
+            "scan_std_snr": 1.2804814091009236,
+            "max_brightening_snr": 4.92007147511224,
+            "periodic": true,
+            "max_epoch_share": 0.5212647766864904,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.5002368934645821,
+              "depth_ppm": 1310.960847249465,
+              "sigma_ppm": 126.0518058156783,
+              "snr": 10.400175061089111
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5025106975257851,
+            "depth_ppm": 1507.1050649851925,
+            "sigma_ppm": 130.8927018931345,
+            "snr": 11.514049623757076,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.536289846217125,
+            "scan_std_snr": 1.3961987330905425,
+            "max_brightening_snr": 4.025072949767729,
+            "periodic": true,
+            "max_epoch_share": 0.533794780419193,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.5002368934645821,
+              "depth_ppm": 1406.3830298818302,
+              "sigma_ppm": 128.65505492492838,
+              "snr": 10.93142458104324
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 0.9965986394557823
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": 0.9977914939259824,
+        "nfpp": null,
+        "probabilities": {
+          "tp": 0.05124204385244983,
+          "eb": 0.948612618653871,
+          "eb2p": 0.00014533749367906694
+        },
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.04254440770285117,
+          "secondary_source": "all-phase search (phase 0.503)",
+          "fpp_stability": {
+            "n_settings": 4,
+            "white_settings": 0,
+            "range": [
+              0.9487579561475502,
+              0.9999086787831452
+            ],
+            "median_robust": 0.9977914939259824,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.9487579561475502,
+                "white": false
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.9962613175782511,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.9988295120191079,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.9999086787831452,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.9977914939259824,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.9970617262663614,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.9754084455638928,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.9944602605102503,
+                "white": false
+              }
+            ],
+            "log10_odds_spread": 2.7718596610016535
+          },
+          "secondary_bayes_factor_eb_vs_tp": 138.84291306549613
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "likely false positive (by number, reduced scheme): FPP above 0.5 on every one of 4 detrending settings \u00d7 2 noise models (range 0.949\u20131)",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)"
+        ],
+        "refused": null
+      }
+    },
+    "candidate_id": "tess-01e315ee5ebf-003",
+    "bls_t0": 1368.9291034793855,
+    "bls_duration_days": 0.16666666666666666,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1368.9291034793855,
+        "n_points": 24,
+        "depth_ppm": 21336.51381436985,
+        "sigma_ppm": 204.88817781947478
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1373.4640676332713,
+        "n_points": 24,
+        "depth_ppm": 21642.02372475599,
+        "sigma_ppm": 204.88817781947478
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1377.999031787157,
+        "n_points": 25,
+        "depth_ppm": 21549.727334796542,
+        "sigma_ppm": 200.7485959945357
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1371.1965855563283,
+        "n_points": 23,
+        "depth_ppm": 935.5332311922205,
+        "sigma_ppm": 209.2948793329052
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1375.731549710214,
+        "n_points": 24,
+        "depth_ppm": 741.8049334751986,
+        "sigma_ppm": 204.88817781947478
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.8110711761585241,
+        "marks": [
+          {
+            "t_start": 1377.9306467530355,
+            "t_end": 1378.0722335627124,
+            "overlap_frac": 0.8110711761585241,
+            "centre_gap_days": 0.0015523732829478831,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1377.9157086935363,
+            "t_end": 1378.0902763687773,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.0011036644623345637,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1377.9039869136243,
+            "t_end": 1378.104205477614,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.0011036644623345637,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "fit": {
+      "t0": 1377.997725049371,
+      "t0_err": 0.00048095243012340476,
+      "k": 0.14178935108510296,
+      "k_err": 0.0004793232811840087,
+      "depth_ppm": 23500.92819069305,
+      "depth_err_ppm": 146.88974490013035,
+      "t14_hours": 4.9486806707576365,
+      "t14_err_hours": 0.019672290477405263,
+      "b": 3.0164811833855466e-08,
+      "b_err": 0.0811745087382641,
+      "t23_hours": 3.7140816084317136,
+      "period_days": 4.534142397458282,
+      "a_rs": 8.019208238998702,
+      "rho_star": 0.4745064080013595,
+      "rho_star_err": 0.010513071489571068,
+      "u1": 0.3282639658,
+      "u2": 0.21921766775999998,
+      "chi2": 277.3592542330214,
+      "dof": 351,
+      "n_points": 358,
+      "n_epochs": 3,
+      "grazing": false,
+      "v_shape_dchi2": 0.0,
+      "v_shape": false,
+      "rho_catalogue": 0.37012665488,
+      "rho_ratio": 1.2820109055782563,
+      "rho_flag": false,
+      "notes": [
+        "b < 0.16 (1\u03c3): b, a/R\u2605 and \u03c1\u2605 are degenerate; a/R\u2605 8.02 is at the best-fit b, unconstrained"
+      ],
+      "b_range": [
+        0.0,
+        0.1623490174765282
+      ],
+      "rho_range": [
+        0.45615711716078056,
+        0.4745064080013601
+      ],
+      "depth_range_ppm": [
+        23500.92819069305,
+        23515.235481144646
+      ],
+      "t14_range_hours": [
+        4.9486806707576365,
+        4.965996489949358
+      ],
+      "period_err": 0.00035888421722382363,
+      "period_free": true,
+      "period_search": 4.534964153885758,
+      "b_upper_limit": true,
+      "a_rs_range": [
+        7.914465881504986,
+        8.019208238998706
+      ],
+      "t23_over_t14": 0.7505195537021977,
+      "rho_prior": null,
+      "with_density_prior": {
+        "t0": 1377.9977233165855,
+        "t0_err": 0.0004810464172108879,
+        "k": 0.14178410539413663,
+        "k_err": 0.0004794758047871179,
+        "depth_ppm": 23499.192243861435,
+        "depth_err_ppm": 146.8765626796945,
+        "t14_hours": 4.949683465393035,
+        "t14_err_hours": 0.019612286377254765,
+        "b": 1.7536136268816807e-07,
+        "b_err": 0.08117420997538877,
+        "t23_hours": 3.71487189993979,
+        "period_days": 4.534141645114165,
+        "a_rs": 8.01755647930246,
+        "rho_star": 0.47421341580815213,
+        "rho_star_err": 0.010479797592712795,
+        "u1": 0.3282639658,
+        "u2": 0.21921766775999998,
+        "chi2": 278.54815074948414,
+        "dof": 351,
+        "n_points": 358,
+        "n_epochs": 3,
+        "grazing": false,
+        "v_shape_dchi2": 0.0,
+        "v_shape": false,
+        "rho_catalogue": 0.37012665488,
+        "rho_ratio": 1.2812193057587231,
+        "rho_flag": false,
+        "notes": [
+          "with a Gaussian \u03c1\u2605 prior 0.37 \u00b1 0.096 g/cm\u00b3"
+        ],
+        "b_range": [
+          0.0,
+          0.16234841995077753
+        ],
+        "rho_range": [
+          0.45592854701677027,
+          0.47421341580816856
+        ],
+        "depth_range_ppm": [
+          23499.192243861435,
+          23513.84804753609
+        ],
+        "t14_range_hours": [
+          4.949683465393035,
+          4.966813635617289
+        ],
+        "period_err": 0.000358953857742738,
+        "period_free": true,
+        "period_search": 4.534964153885758,
+        "b_upper_limit": true,
+        "a_rs_range": [
+          7.913142924490946,
+          8.017556479302552
+        ],
+        "t23_over_t14": 0.7505271652042516,
+        "rho_prior": [
+          0.37012665488,
+          0.09559495295300001
+        ]
+      }
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
+    "fap_trials": 10000,
+    "fap_exceed": 0,
+    "fap_tail": 1e-06,
+    "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
+    "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
+    "fap_snr": 178.0699381660471,
+    "sector": 2,
+    "t_center": 1378.002992531157,
+    "duration_hours": 4.18962420578282,
+    "fit_t0": 1377.997725049371,
+    "fit_t0_err": 0.00048095243012340476,
+    "fit_depth_ppm": 23500.92819069305,
+    "fit_depth_err_ppm": 146.88974490013035,
+    "fit_t14_hours": 4.9486806707576365,
+    "fit_t14_err_hours": 0.019672290477405263,
+    "fit_b": 3.0164811833855466e-08,
+    "fit_b_err": 0.0811745087382641,
+    "fit_k": 0.14178935108510296,
+    "fit_rho_star": 0.4745064080013595,
+    "fit_rho_star_err": 0.010513071489571068,
+    "star_rho": 0.37012665488,
+    "crowdsap": 0.95167005,
+    "secondary_phase": 0.5025106975257851,
+    "secondary_snr": 10.290117609232428,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": 0.9977914939259824,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
+  },
+  {
+    "subject_id": "tess-01e315ee5ebf",
+    "target": "TIC 9727392",
+    "mission": "TESS",
+    "t_start": 1368.8253413197858,
+    "t_end": 1368.9921877518816,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 3,
+    "planet_fraction": 1.0,
+    "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": false,
+    "flags": "secondary_eclipse;secondary_any_phase",
+    "depth_ppm": 20071.674927633398,
+    "snr": 97.96404624828271,
+    "period_days": 4.534964153885758,
+    "n_transits": 3,
+    "fap": 9.999000099990002e-05,
+    "metrics": {
+      "n_in_transit": 24.0,
+      "depth": 0.0200716749276334,
+      "snr": 97.96404624828271,
+      "duration_minutes": 240.25886221792462,
+      "odd_err": 0.00020776993509712206,
+      "even_err": 0.00014579873783743453,
+      "secondary_depth": 0.0008224148066597881,
+      "secondary_err": 0.00014892081471133513,
+      "odd_even_error_scale": 1.0,
+      "period": 4.534964153885758,
+      "odd_depth": 0.021601650656587923,
+      "even_depth": 0.021391636911424206,
+      "dv": {
+        "crowding": {
+          "crowdsap": 0.95167005,
+          "flfrcsap": 0.85172087,
+          "crowding_min": 0.8,
+          "crowded": false
+        },
+        "secondary": {
+          "phase": 0.5025106975257851,
+          "depth_ppm": 1391.756267134836,
+          "sigma_ppm": 135.2517356931017,
+          "snr": 10.290117609232428,
+          "n_points": 57,
+          "max_brightening_snr": 3.227807052315824,
+          "n_trials": 80,
+          "duration_days": 0.20619502794823485,
+          "excluded_days": 0.20619502794823485,
+          "scan_median_snr": -0.37789910856384856,
+          "scan_robust_sigma": 1.438341885200747,
+          "scan_std_snr": 1.2130709314626713,
+          "n_epochs": 2,
+          "max_epoch_share": 0.5025239126094001,
+          "phase_05": {
+            "phase": 0.5002368934645821,
+            "depth_ppm": 1293.3661628307113,
+            "sigma_ppm": 132.93956983556308,
+            "snr": 9.728978094562171
+          },
+          "albedo": 4.451833755549338,
+          "threshold_rule": "5.61 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 80 positions)",
+          "threshold_sigma": 8.071801717900307,
+          "periodic": true,
+          "significant": true
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 23672.670211174882,
+          "odd_err_ppm": 589.2811205306534,
+          "n_odd": 1,
+          "even_depth_ppm": 23593.285057535442,
+          "even_err_ppm": 531.8095386000851,
+          "n_even": 2,
+          "error_scale": 1.3387688503765298,
+          "epoch_chi2": 1.792302034738495,
+          "epoch_dof": 1,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.1000100489140013,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 3,
+          "o_minus_c_minutes": [
+            -0.28609508506633574,
+            0.41303805581264896,
+            -0.20651902708777925
+          ],
+          "linear": {
+            "t0": 1368.9291793460159,
+            "period": 4.534304557057014,
+            "period_err": 0.00039612701093880837,
+            "chi2": 0.4942440831181872,
+            "dof": 1,
+            "p_value": 0.4820401996579877,
+            "inconsistent": false
+          },
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": 0,
+              "t_mid": 1368.9289806688735,
+              "sigma": 0.0006067270544814179,
+              "depth": 0.023357698881521952,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 1,
+              "t_mid": 1373.4637707350562,
+              "sigma": 0.0005154875698705872,
+              "depth": 0.023672670211174883,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 2,
+              "t_mid": 1377.9976450441388,
+              "sigma": 0.0005154875698705872,
+              "depth": 0.02384866568487811,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 4.534142397458282,
+        "t0": 1368.9294402544544,
+        "duration_days": 0.20619502794823485,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.5025106975257851,
+            "depth_ppm": 1303.9749023904258,
+            "sigma_ppm": 125.91517635790548,
+            "snr": 10.35597884312185,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.13891061911431,
+            "scan_std_snr": 0.9620251084729693,
+            "max_brightening_snr": 2.518218234081686,
+            "periodic": true,
+            "max_epoch_share": 0.5208109106448464,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.5002368934645821,
+              "depth_ppm": 1203.663546114564,
+              "sigma_ppm": 123.76262156643634,
+              "snr": 9.725582174004224
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5025106975257851,
+            "depth_ppm": 1411.5511470930153,
+            "sigma_ppm": 128.24417549198014,
+            "snr": 11.006746635298754,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.2596480585413183,
+            "scan_std_snr": 1.2804814091009236,
+            "max_brightening_snr": 4.92007147511224,
+            "periodic": true,
+            "max_epoch_share": 0.5212647766864904,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.5002368934645821,
+              "depth_ppm": 1310.960847249465,
+              "sigma_ppm": 126.0518058156783,
+              "snr": 10.400175061089111
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5025106975257851,
+            "depth_ppm": 1507.1050649851925,
+            "sigma_ppm": 130.8927018931345,
+            "snr": 11.514049623757076,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.536289846217125,
+            "scan_std_snr": 1.3961987330905425,
+            "max_brightening_snr": 4.025072949767729,
+            "periodic": true,
+            "max_epoch_share": 0.533794780419193,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.5002368934645821,
+              "depth_ppm": 1406.3830298818302,
+              "sigma_ppm": 128.65505492492838,
+              "snr": 10.93142458104324
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 0.9965986394557823
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": 0.9977914939259824,
+        "nfpp": null,
+        "probabilities": {
+          "tp": 0.05124204385244983,
+          "eb": 0.948612618653871,
+          "eb2p": 0.00014533749367906694
+        },
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.04254440770285117,
+          "secondary_source": "all-phase search (phase 0.503)",
+          "fpp_stability": {
+            "n_settings": 4,
+            "white_settings": 0,
+            "range": [
+              0.9487579561475502,
+              0.9999086787831452
+            ],
+            "median_robust": 0.9977914939259824,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.9487579561475502,
+                "white": false
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.9962613175782511,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.9988295120191079,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.9999086787831452,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.9977914939259824,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.9970617262663614,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.9754084455638928,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.9944602605102503,
+                "white": false
+              }
+            ],
+            "log10_odds_spread": 2.7718596610016535
+          },
+          "secondary_bayes_factor_eb_vs_tp": 138.84291306549613
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "likely false positive (by number, reduced scheme): FPP above 0.5 on every one of 4 detrending settings \u00d7 2 noise models (range 0.949\u20131)",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)"
+        ],
+        "refused": null
+      }
+    },
+    "candidate_id": "tess-01e315ee5ebf-004",
+    "bls_t0": 1368.9291034793855,
+    "bls_duration_days": 0.16666666666666666,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1368.9291034793855,
+        "n_points": 24,
+        "depth_ppm": 21336.51381436985,
+        "sigma_ppm": 204.88817781947478
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1373.4640676332713,
+        "n_points": 24,
+        "depth_ppm": 21642.02372475599,
+        "sigma_ppm": 204.88817781947478
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1377.999031787157,
+        "n_points": 25,
+        "depth_ppm": 21549.727334796542,
+        "sigma_ppm": 200.7485959945357
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1371.1965855563283,
+        "n_points": 23,
+        "depth_ppm": 935.5332311922205,
+        "sigma_ppm": 209.2948793329052
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1375.731549710214,
+        "n_points": 24,
+        "depth_ppm": 741.8049334751986,
+        "sigma_ppm": 204.88817781947478
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.8206453767365871,
+        "marks": [
+          {
+            "t_start": 1368.8552659987572,
+            "t_end": 1369.0188844669767,
+            "overlap_frac": 0.8206453767365871,
+            "centre_gap_days": 0.0284127425081806,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 0.998776773662293,
+        "marks": [
+          {
+            "t_start": 1368.8253413197858,
+            "t_end": 1368.9919836609315,
+            "overlap_frac": 0.998776773662293,
+            "centre_gap_days": 0.00016257967922683747,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1368.8248120694773,
+            "t_end": 1368.9921877518816,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.00016257967922683747,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "fit": {
+      "t0": 1368.9294402544544,
+      "t0_err": 0.000864006230030221,
+      "k": 0.14178935108510296,
+      "k_err": 0.0004793232811840087,
+      "depth_ppm": 23500.92819069305,
+      "depth_err_ppm": 146.88974490013035,
+      "t14_hours": 4.9486806707576365,
+      "t14_err_hours": 0.019672290477405263,
+      "b": 3.0164811833855466e-08,
+      "b_err": 0.0811745087382641,
+      "t23_hours": 3.7140816084317136,
+      "period_days": 4.534142397458282,
+      "a_rs": 8.019208238998702,
+      "rho_star": 0.4745064080013595,
+      "rho_star_err": 0.010513071489571068,
+      "u1": 0.3282639658,
+      "u2": 0.21921766775999998,
+      "chi2": 277.3592542330214,
+      "dof": 351,
+      "n_points": 358,
+      "n_epochs": 3,
+      "grazing": false,
+      "v_shape_dchi2": 0.0,
+      "v_shape": false,
+      "rho_catalogue": 0.37012665488,
+      "rho_ratio": 1.2820109055782563,
+      "rho_flag": false,
+      "notes": [
+        "b < 0.16 (1\u03c3): b, a/R\u2605 and \u03c1\u2605 are degenerate; a/R\u2605 8.02 is at the best-fit b, unconstrained"
+      ],
+      "b_range": [
+        0.0,
+        0.1623490174765282
+      ],
+      "rho_range": [
+        0.45615711716078056,
+        0.4745064080013601
+      ],
+      "depth_range_ppm": [
+        23500.92819069305,
+        23515.235481144646
+      ],
+      "t14_range_hours": [
+        4.9486806707576365,
+        4.965996489949358
+      ],
+      "period_err": 0.00035888421722382363,
+      "period_free": true,
+      "period_search": 4.534964153885758,
+      "b_upper_limit": true,
+      "a_rs_range": [
+        7.914465881504986,
+        8.019208238998706
+      ],
+      "t23_over_t14": 0.7505195537021977,
+      "rho_prior": null,
+      "with_density_prior": {
+        "t0": 1368.9294400263573,
+        "t0_err": 0.0008641742552662668,
+        "k": 0.14178410539413663,
+        "k_err": 0.0004794758047871179,
+        "depth_ppm": 23499.192243861435,
+        "depth_err_ppm": 146.8765626796945,
+        "t14_hours": 4.949683465393035,
+        "t14_err_hours": 0.019612286377254765,
+        "b": 1.7536136268816807e-07,
+        "b_err": 0.08117420997538877,
+        "t23_hours": 3.71487189993979,
+        "period_days": 4.534141645114165,
+        "a_rs": 8.01755647930246,
+        "rho_star": 0.47421341580815213,
+        "rho_star_err": 0.010479797592712795,
+        "u1": 0.3282639658,
+        "u2": 0.21921766775999998,
+        "chi2": 278.54815074948414,
+        "dof": 351,
+        "n_points": 358,
+        "n_epochs": 3,
+        "grazing": false,
+        "v_shape_dchi2": 0.0,
+        "v_shape": false,
+        "rho_catalogue": 0.37012665488,
+        "rho_ratio": 1.2812193057587231,
+        "rho_flag": false,
+        "notes": [
+          "with a Gaussian \u03c1\u2605 prior 0.37 \u00b1 0.096 g/cm\u00b3"
+        ],
+        "b_range": [
+          0.0,
+          0.16234841995077753
+        ],
+        "rho_range": [
+          0.45592854701677027,
+          0.47421341580816856
+        ],
+        "depth_range_ppm": [
+          23499.192243861435,
+          23513.84804753609
+        ],
+        "t14_range_hours": [
+          4.949683465393035,
+          4.966813635617289
+        ],
+        "period_err": 0.000358953857742738,
+        "period_free": true,
+        "period_search": 4.534964153885758,
+        "b_upper_limit": true,
+        "a_rs_range": [
+          7.913142924490946,
+          8.017556479302552
+        ],
+        "t23_over_t14": 0.7505271652042516,
+        "rho_prior": [
+          0.37012665488,
+          0.09559495295300001
+        ]
+      }
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
+    "fap_trials": 10000,
+    "fap_exceed": 0,
+    "fap_tail": 1e-06,
+    "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
+    "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
+    "fap_snr": 178.0699381660471,
+    "sector": 2,
+    "t_center": 1368.9087645358336,
+    "duration_hours": 4.004314370298744,
+    "fit_t0": 1368.9294402544544,
+    "fit_t0_err": 0.000864006230030221,
+    "fit_depth_ppm": 23500.92819069305,
+    "fit_depth_err_ppm": 146.88974490013035,
+    "fit_t14_hours": 4.9486806707576365,
+    "fit_t14_err_hours": 0.019672290477405263,
+    "fit_b": 3.0164811833855466e-08,
+    "fit_b_err": 0.0811745087382641,
+    "fit_k": 0.14178935108510296,
+    "fit_rho_star": 0.4745064080013595,
+    "fit_rho_star_err": 0.010513071489571068,
+    "star_rho": 0.37012665488,
+    "crowdsap": 0.95167005,
+    "secondary_phase": 0.5025106975257851,
+    "secondary_snr": 10.290117609232428,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": 0.9977914939259824,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
+  },
+  {
+    "subject_id": "tess-01e315ee5ebf",
+    "target": "TIC 9727392",
+    "mission": "TESS",
+    "t_start": 1373.40218850657,
+    "t_end": 1373.5495058704034,
+    "time_unit": "BTJD",
+    "score": 1.0,
+    "n_reviewers": 3,
+    "planet_fraction": 1.0,
+    "reviewers": "volunteer-cautious;volunteer-sensitive;volunteer-typical",
+    "passed": false,
+    "flags": "secondary_eclipse;secondary_any_phase",
+    "depth_ppm": 21811.60646387237,
+    "snr": 99.5806094225475,
+    "period_days": 4.534964153885758,
+    "n_transits": 3,
+    "fap": 9.999000099990002e-05,
+    "metrics": {
+      "n_in_transit": 21.0,
+      "depth": 0.02181160646387237,
+      "snr": 99.5806094225475,
+      "duration_minutes": 212.13700392025203,
+      "odd_err": 0.00020776993509712206,
+      "even_err": 0.00014579873783743453,
+      "secondary_depth": 0.0008224148066597881,
+      "secondary_err": 0.00014892081471133513,
+      "odd_even_error_scale": 1.0,
+      "period": 4.534964153885758,
+      "odd_depth": 0.021601650656587923,
+      "even_depth": 0.021391636911424206,
+      "dv": {
+        "crowding": {
+          "crowdsap": 0.95167005,
+          "flfrcsap": 0.85172087,
+          "crowding_min": 0.8,
+          "crowded": false
+        },
+        "secondary": {
+          "phase": 0.5025106975257851,
+          "depth_ppm": 1391.756267134836,
+          "sigma_ppm": 135.2517356931017,
+          "snr": 10.290117609232428,
+          "n_points": 57,
+          "max_brightening_snr": 3.227807052315824,
+          "n_trials": 80,
+          "duration_days": 0.20619502794823485,
+          "excluded_days": 0.20619502794823485,
+          "scan_median_snr": -0.37789910856384856,
+          "scan_robust_sigma": 1.438341885200747,
+          "scan_std_snr": 1.2130709314626713,
+          "n_epochs": 2,
+          "max_epoch_share": 0.5025239126094001,
+          "phase_05": {
+            "phase": 0.5002368934645821,
+            "depth_ppm": 1293.3661628307113,
+            "sigma_ppm": 132.93956983556308,
+            "snr": 9.728978094562171
+          },
+          "albedo": 4.451833755549338,
+          "threshold_rule": "5.61 \u00d7 max(1, the scan's robust spread) (white-noise 99.9% quantile for 80 positions)",
+          "threshold_sigma": 8.071801717900307,
+          "periodic": true,
+          "significant": true
+        },
+        "odd_even_depth": {
+          "odd_depth_ppm": 23593.285057535442,
+          "odd_err_ppm": 531.8095386000851,
+          "n_odd": 2,
+          "even_depth_ppm": 23672.670211174882,
+          "even_err_ppm": 589.2811205306534,
+          "n_even": 1,
+          "error_scale": 1.3387688503765298,
+          "epoch_chi2": 1.792302034738495,
+          "epoch_dof": 1,
+          "floor_fraction": 0.02,
+          "delta_sigma": 0.1000100489140013,
+          "both_parities_detected": true,
+          "significant": false,
+          "source": "per-epoch fits (transit shape plus a local baseline)"
+        },
+        "timing": {
+          "n_epochs": 3,
+          "o_minus_c_minutes": [
+            -0.28609508604859,
+            0.41303805548523087,
+            -0.20651902708777925
+          ],
+          "linear": {
+            "t0": 1373.4634839030732,
+            "period": 4.534304557056764,
+            "period_err": 0.00039612701093880837,
+            "chi2": 0.49424408336361925,
+            "dof": 1,
+            "p_value": 0.4820401995492084,
+            "inconsistent": false
+          },
+          "odd_even": null,
+          "skipped_epochs": [],
+          "epochs": [
+            {
+              "epoch": -1,
+              "t_mid": 1368.9289806688735,
+              "sigma": 0.0006067270544814179,
+              "depth": 0.023357698881521952,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 0,
+              "t_mid": 1373.4637707350562,
+              "sigma": 0.0005154875698705872,
+              "depth": 0.023672670211174883,
+              "at_scan_edge": false
+            },
+            {
+              "epoch": 1,
+              "t_mid": 1377.9976450441388,
+              "sigma": 0.0005154875698705872,
+              "depth": 0.02384866568487811,
+              "at_scan_edge": false
+            }
+          ]
+        },
+        "period": 4.534142397458282,
+        "t0": 1373.4635826519127,
+        "duration_days": 0.20619502794823485,
+        "transit_masked_detrend": true,
+        "masked_phases": [
+          0.5
+        ],
+        "secondary_variants": [
+          {
+            "phase": 0.5025106975257851,
+            "depth_ppm": 1303.9749023904258,
+            "sigma_ppm": 125.91517635790548,
+            "snr": 10.35597884312185,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.13891061911431,
+            "scan_std_snr": 0.9620251084729693,
+            "max_brightening_snr": 2.518218234081686,
+            "periodic": true,
+            "max_epoch_share": 0.5208109106448464,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.5002368934645821,
+              "depth_ppm": 1203.663546114564,
+              "sigma_ppm": 123.76262156643634,
+              "snr": 9.725582174004224
+            },
+            "window_scale": 0.75,
+            "mask_t14": 1.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5025106975257851,
+            "depth_ppm": 1411.5511470930153,
+            "sigma_ppm": 128.24417549198014,
+            "snr": 11.006746635298754,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.2596480585413183,
+            "scan_std_snr": 1.2804814091009236,
+            "max_brightening_snr": 4.92007147511224,
+            "periodic": true,
+            "max_epoch_share": 0.5212647766864904,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.5002368934645821,
+              "depth_ppm": 1310.960847249465,
+              "sigma_ppm": 126.0518058156783,
+              "snr": 10.400175061089111
+            },
+            "window_scale": 0.75,
+            "mask_t14": 2.0,
+            "anchor_support": 1.0
+          },
+          {
+            "phase": 0.5025106975257851,
+            "depth_ppm": 1507.1050649851925,
+            "sigma_ppm": 130.8927018931345,
+            "snr": 11.514049623757076,
+            "n_trials": 80,
+            "scan_robust_sigma": 1.536289846217125,
+            "scan_std_snr": 1.3961987330905425,
+            "max_brightening_snr": 4.025072949767729,
+            "periodic": true,
+            "max_epoch_share": 0.533794780419193,
+            "n_epochs": 2,
+            "phase_05": {
+              "phase": 0.5002368934645821,
+              "depth_ppm": 1406.3830298818302,
+              "sigma_ppm": 128.65505492492838,
+              "snr": 10.93142458104324
+            },
+            "window_scale": 1.5,
+            "mask_t14": 1.0,
+            "anchor_support": 0.9965986394557823
+          }
+        ],
+        "ephemeris_source": "transit fit"
+      },
+      "validation": {
+        "method": "SetuHQ reduced FPP",
+        "fpp": 0.9977914939259824,
+        "nfpp": null,
+        "probabilities": {
+          "tp": 0.05124204385244983,
+          "eb": 0.948612618653871,
+          "eb2p": 0.00014533749367906694
+        },
+        "evidence": {
+          "odd_even_bayes_factor_eb2p_vs_tp": 0.04254440770285117,
+          "secondary_source": "all-phase search (phase 0.503)",
+          "fpp_stability": {
+            "n_settings": 4,
+            "white_settings": 0,
+            "range": [
+              0.9487579561475502,
+              0.9999086787831452
+            ],
+            "median_robust": 0.9977914939259824,
+            "rows": [
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "robust spread",
+                "fpp": 0.9487579561475502,
+                "white": false
+              },
+              {
+                "window_scale": 1.0,
+                "mask_t14": "default",
+                "noise": "std",
+                "fpp": 0.9962613175782511,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.9988295120191079,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.9999086787831452,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "robust spread",
+                "fpp": 0.9977914939259824,
+                "white": false
+              },
+              {
+                "window_scale": 0.75,
+                "mask_t14": 2.0,
+                "noise": "std",
+                "fpp": 0.9970617262663614,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "robust spread",
+                "fpp": 0.9754084455638928,
+                "white": false
+              },
+              {
+                "window_scale": 1.5,
+                "mask_t14": 1.0,
+                "noise": "std",
+                "fpp": 0.9944602605102503,
+                "white": false
+              }
+            ],
+            "log10_odds_spread": 2.7718596610016535
+          },
+          "secondary_bayes_factor_eb_vs_tp": 138.84291306549613
+        },
+        "priors": {
+          "tp": 0.75,
+          "eb": 0.1,
+          "eb2p": 0.05,
+          "nfp": 0.1,
+          "source": "illustrative: a 25% false-positive total (Guerrero et al. 2021, TOIs) split 10/5/10 between EB, EBx2P and nearby stars by choice"
+        },
+        "not_modelled": [
+          "unresolved bound companions (HEB, planet on a companion)",
+          "unresolved background stars (BEB, planet on a background star)"
+        ],
+        "contrast_curve": null,
+        "label": "not validated: no contrast curve",
+        "fpp_class": "likely false positive (by number, reduced scheme): FPP above 0.5 on every one of 4 detrending settings \u00d7 2 noise models (range 0.949\u20131)",
+        "notes": [
+          "no neighbour table: nearby-star scenarios not evaluated (NFPP unknown)"
+        ],
+        "refused": null
+      }
+    },
+    "candidate_id": "tess-01e315ee5ebf-005",
+    "bls_t0": 1368.9291034793855,
+    "bls_duration_days": 0.16666666666666666,
+    "epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1368.9291034793855,
+        "n_points": 24,
+        "depth_ppm": 21336.51381436985,
+        "sigma_ppm": 204.88817781947478
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1373.4640676332713,
+        "n_points": 24,
+        "depth_ppm": 21642.02372475599,
+        "sigma_ppm": 204.88817781947478
+      },
+      {
+        "epoch": 2,
+        "t_mid": 1377.999031787157,
+        "n_points": 25,
+        "depth_ppm": 21549.727334796542,
+        "sigma_ppm": 200.7485959945357
+      }
+    ],
+    "secondary_epochs": [
+      {
+        "epoch": 0,
+        "t_mid": 1371.1965855563283,
+        "n_points": 23,
+        "depth_ppm": 935.5332311922205,
+        "sigma_ppm": 209.2948793329052
+      },
+      {
+        "epoch": 1,
+        "t_mid": 1375.731549710214,
+        "n_points": 24,
+        "depth_ppm": 741.8049334751986,
+        "sigma_ppm": 204.88817781947478
+      }
+    ],
+    "mark_audit": [
+      {
+        "reviewer_id": "volunteer-cautious",
+        "counted": true,
+        "overlap_frac": 0.8450724501693735,
+        "marks": [
+          {
+            "t_start": 1373.411886209845,
+            "t_end": 1373.5363800554524,
+            "overlap_frac": 0.8450724501693735,
+            "centre_gap_days": 0.004151825896315131,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-sensitive",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1373.388082417279,
+            "t_end": 1373.5495058704034,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.005338988807352507,
+            "counted": true
+          }
+        ]
+      },
+      {
+        "reviewer_id": "volunteer-typical",
+        "counted": true,
+        "overlap_frac": 1.0,
+        "marks": [
+          {
+            "t_start": 1373.40218850657,
+            "t_end": 1373.5543814105201,
+            "overlap_frac": 1.0,
+            "centre_gap_days": 0.004151825896315131,
+            "counted": true
+          }
+        ]
+      }
+    ],
+    "count_rule": {
+      "gap_days": 0.05,
+      "min_score": 0.5,
+      "text": "marks are taken in order of start time and a mark joins the cluster when its interval overlaps the cluster's interval or its centre lies within 0.05 d of the previous mark's centre (interval single-linkage clustering, aggregate.py); each reviewer counts once, with the mark nearest the cluster's median centre; a cluster whose weighted share is below 0.5 is dropped, and of two clusters on one dip only the stronger is kept"
+    },
+    "search_scope": "subject",
+    "fit": {
+      "t0": 1373.4635826519127,
+      "t0_err": 0.0006000942604407788,
+      "k": 0.14178935108510296,
+      "k_err": 0.0004793232811840087,
+      "depth_ppm": 23500.92819069305,
+      "depth_err_ppm": 146.88974490013035,
+      "t14_hours": 4.9486806707576365,
+      "t14_err_hours": 0.019672290477405263,
+      "b": 3.0164811833855466e-08,
+      "b_err": 0.0811745087382641,
+      "t23_hours": 3.7140816084317136,
+      "period_days": 4.534142397458282,
+      "a_rs": 8.019208238998702,
+      "rho_star": 0.4745064080013595,
+      "rho_star_err": 0.010513071489571068,
+      "u1": 0.3282639658,
+      "u2": 0.21921766775999998,
+      "chi2": 277.3592542330214,
+      "dof": 351,
+      "n_points": 358,
+      "n_epochs": 3,
+      "grazing": false,
+      "v_shape_dchi2": 0.0,
+      "v_shape": false,
+      "rho_catalogue": 0.37012665488,
+      "rho_ratio": 1.2820109055782563,
+      "rho_flag": false,
+      "notes": [
+        "b < 0.16 (1\u03c3): b, a/R\u2605 and \u03c1\u2605 are degenerate; a/R\u2605 8.02 is at the best-fit b, unconstrained"
+      ],
+      "b_range": [
+        0.0,
+        0.1623490174765282
+      ],
+      "rho_range": [
+        0.45615711716078056,
+        0.4745064080013601
+      ],
+      "depth_range_ppm": [
+        23500.92819069305,
+        23515.235481144646
+      ],
+      "t14_range_hours": [
+        4.9486806707576365,
+        4.965996489949358
+      ],
+      "period_err": 0.00035888421722382363,
+      "period_free": true,
+      "period_search": 4.534964153885758,
+      "b_upper_limit": true,
+      "a_rs_range": [
+        7.914465881504986,
+        8.019208238998706
+      ],
+      "t23_over_t14": 0.7505195537021977,
+      "rho_prior": null,
+      "with_density_prior": {
+        "t0": 1373.4635816714713,
+        "t0_err": 0.0006002112357327423,
+        "k": 0.14178410539413663,
+        "k_err": 0.0004794758047871179,
+        "depth_ppm": 23499.192243861435,
+        "depth_err_ppm": 146.8765626796945,
+        "t14_hours": 4.949683465393035,
+        "t14_err_hours": 0.019612286377254765,
+        "b": 1.7536136268816807e-07,
+        "b_err": 0.08117420997538877,
+        "t23_hours": 3.71487189993979,
+        "period_days": 4.534141645114165,
+        "a_rs": 8.01755647930246,
+        "rho_star": 0.47421341580815213,
+        "rho_star_err": 0.010479797592712795,
+        "u1": 0.3282639658,
+        "u2": 0.21921766775999998,
+        "chi2": 278.54815074948414,
+        "dof": 351,
+        "n_points": 358,
+        "n_epochs": 3,
+        "grazing": false,
+        "v_shape_dchi2": 0.0,
+        "v_shape": false,
+        "rho_catalogue": 0.37012665488,
+        "rho_ratio": 1.2812193057587231,
+        "rho_flag": false,
+        "notes": [
+          "with a Gaussian \u03c1\u2605 prior 0.37 \u00b1 0.096 g/cm\u00b3"
+        ],
+        "b_range": [
+          0.0,
+          0.16234841995077753
+        ],
+        "rho_range": [
+          0.45592854701677027,
+          0.47421341580816856
+        ],
+        "depth_range_ppm": [
+          23499.192243861435,
+          23513.84804753609
+        ],
+        "t14_range_hours": [
+          4.949683465393035,
+          4.966813635617289
+        ],
+        "period_err": 0.000358953857742738,
+        "period_free": true,
+        "period_search": 4.534964153885758,
+        "b_upper_limit": true,
+        "a_rs_range": [
+          7.913142924490946,
+          8.017556479302552
+        ],
+        "t23_over_t14": 0.7505271652042516,
+        "rho_prior": [
+          0.37012665488,
+          0.09559495295300001
+        ]
+      }
+    },
+    "fap_label": "< 1.0e-04 (10,000 trials)",
+    "fap_trials": 10000,
+    "fap_exceed": 0,
+    "fap_tail": 1e-06,
+    "fap_tail_label": "< 1e-06 (indicative, extrapolated beyond the trials, conservative: BLS maxima are lighter-tailed than Gumbel)",
+    "fap_method": "block bootstrap: the detected box is removed, the residuals are cut into 0.5-day blocks and shuffled, and BLS reruns on each of 10,000 copies; p = (k + 1)/(N + 1) with k copies reaching the observed SNR (Davison & Hinkley 1997); with k = 0 it is an upper bound. Tail: a Gumbel fit to the 10,000 null maxima, indicative, extrapolated beyond the trials, conservative (BLS maxima are lighter-tailed than Gumbel), never given below 1e-6",
+    "fap_snr": 178.0699381660471,
+    "sector": 2,
+    "t_center": 1373.4758471884866,
+    "duration_hours": 3.5356167320042005,
+    "fit_t0": 1373.4635826519127,
+    "fit_t0_err": 0.0006000942604407788,
+    "fit_depth_ppm": 23500.92819069305,
+    "fit_depth_err_ppm": 146.88974490013035,
+    "fit_t14_hours": 4.9486806707576365,
+    "fit_t14_err_hours": 0.019672290477405263,
+    "fit_b": 3.0164811833855466e-08,
+    "fit_b_err": 0.0811745087382641,
+    "fit_k": 0.14178935108510296,
+    "fit_rho_star": 0.4745064080013595,
+    "fit_rho_star_err": 0.010513071489571068,
+    "star_rho": 0.37012665488,
+    "crowdsap": 0.95167005,
+    "secondary_phase": 0.5025106975257851,
+    "secondary_snr": 10.290117609232428,
+    "centroid_offset_arcsec": null,
+    "centroid_sigma": null,
+    "fpp": 0.9977914939259824,
+    "nfpp": null,
+    "fpp_method": "SetuHQ reduced FPP",
+    "validation_label": "not validated: no contrast curve"
+  }
+]

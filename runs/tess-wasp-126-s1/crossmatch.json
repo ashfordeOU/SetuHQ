@@ -1,0 +1,20 @@
+{
+  "source": "NASA Exoplanet Archive, table ps (default_flag = 1)",
+  "targets": [
+    "TIC 25155310"
+  ],
+  "star": null,
+  "fetched_at": "2026-10-22T17:31:45+00:00",
+  "planets": [
+    {
+      "pl_name": "WASP-126 b",
+      "hostname": "WASP-126",
+      "pl_orbper": 3.28883,
+      "pl_tranmid": null,
+      "tran_flag": true,
+      "rv_flag": true,
+      "tic_id": "TIC 25155310"
+    }
+  ],
+  "status": "matched"
+}

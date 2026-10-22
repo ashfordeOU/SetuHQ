@@ -1,0 +1,80 @@
+{
+  "setuhq_version": "0.1.0",
+  "created_at": "2026-10-22T18:48:34+00:00",
+  "python": "3.13.16",
+  "platform": "Linux-6.18.44-fc-v140-x86_64-with-glibc2.39",
+  "packages": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "astropy": "8.0.2",
+    "matplotlib": "3.11.2",
+    "lightkurve": "2.6.0"
+  },
+  "config_name": "tess-hd-15337-s4",
+  "config_sha256": "e21c63a794b2aeb3199eccccc7a36917d3cd23c0f937f756866e11b968abdf71",
+  "subject_days": 13.0,
+  "search_scope": "subject",
+  "claude_prompt_version": "2026-10-16.1",
+  "sentinel_prompt_version": "2026-10-16.1",
+  "inputs": [
+    {
+      "source": "MAST",
+      "author": "SPOC",
+      "sector": 4,
+      "exptime_s": 120,
+      "flux_column": "pdcsap_flux",
+      "time_unit": "BTJD",
+      "lightkurve_version": "2.6.0",
+      "file": "tess2018292075959-s0004-0000000120896927-0124-s_lc.fits",
+      "file_sha256": "a0d03d3e07a18ab133fe1fe31b9f3d45870a8c0f7a00d8dd2e5759bfd2e70f5e",
+      "crowdsap": 0.99993479,
+      "flfrcsap": 0.94710827,
+      "target": "TIC 120896927",
+      "mission": "TESS"
+    }
+  ],
+  "reviewers": [
+    {
+      "id": "volunteer-sensitive",
+      "kind": "simulated",
+      "weight": 0.6,
+      "calibration": "calibrated",
+      "calibration_note": "measured by injection"
+    },
+    {
+      "id": "volunteer-typical",
+      "kind": "simulated",
+      "weight": 0.6,
+      "calibration": "calibrated",
+      "calibration_note": "measured by injection"
+    },
+    {
+      "id": "volunteer-cautious",
+      "kind": "simulated",
+      "weight": 0.4,
+      "calibration": "calibrated",
+      "calibration_note": "measured by injection"
+    }
+  ],
+  "skipped_reviewers": [],
+  "skipped_reviewers_detail": [],
+  "weights": {
+    "volunteer-cautious": 0.4,
+    "volunteer-sensitive": 0.6,
+    "volunteer-typical": 0.6
+  },
+  "weights_source": "docs/results/reviewer_weights_full_panel.json (Probes only)",
+  "panel": {
+    "mode": "probes_only",
+    "sentinels_configured": [],
+    "note": "Probes only; Sentinels not run on this example"
+  },
+  "code": "v0.1.0-6-g2bf0522",
+  "counts": {
+    "light_curves": 1,
+    "subjects": 2,
+    "classifications": 6,
+    "consensus_events": 3,
+    "passed_vetting": 3
+  }
+}

@@ -1,0 +1,69 @@
+{
+ "note": "Each dip's address on the website (/candidates/<slug>/), given once and never changed. An address belongs to a dip by its subject and mid-time (within its duration, at most half a day), not by its candidate id, which is a rank. Written by setuhq site; a dip that leaves the run keeps its entry, so its number is never reused.",
+ "dips": [
+  {
+   "slug": "wasp-126/dip-1",
+   "subject": "tess-5935bad1a3b4",
+   "t_center": 1327.503903215385,
+   "duration_hours": 4.416153948777719,
+   "id": "tess-5935bad1a3b4-000",
+   "star": "WASP-126"
+  },
+  {
+   "slug": "wasp-126/dip-2",
+   "subject": "tess-5935bad1a3b4",
+   "t_center": 1330.7992403802039,
+   "duration_hours": 3.724561284361698,
+   "id": "tess-5935bad1a3b4-004",
+   "star": "WASP-126"
+  },
+  {
+   "slug": "wasp-126/dip-3",
+   "subject": "tess-5935bad1a3b4",
+   "t_center": 1334.0859209630185,
+   "duration_hours": 3.7939560207742034,
+   "id": "tess-5935bad1a3b4-003",
+   "star": "WASP-126"
+  },
+  {
+   "slug": "wasp-126/dip-4",
+   "subject": "tess-5935bad1a3b4",
+   "t_center": 1337.3894484040102,
+   "duration_hours": 3.349280940254175,
+   "id": "tess-5935bad1a3b4-007",
+   "star": "WASP-126"
+  },
+  {
+   "slug": "wasp-126/dip-5",
+   "subject": "tess-291acb98cabe",
+   "t_center": 1340.6692611451042,
+   "duration_hours": 4.186093698088371,
+   "id": "tess-291acb98cabe-002",
+   "star": "WASP-126"
+  },
+  {
+   "slug": "wasp-126/dip-6",
+   "subject": "tess-291acb98cabe",
+   "t_center": 1343.959873666187,
+   "duration_hours": 4.209711602734387,
+   "id": "tess-291acb98cabe-001",
+   "star": "WASP-126"
+  },
+  {
+   "slug": "wasp-126/dip-7",
+   "subject": "tess-291acb98cabe",
+   "t_center": 1347.2357976554513,
+   "duration_hours": 3.5516790336296253,
+   "id": "tess-291acb98cabe-005",
+   "star": "WASP-126"
+  },
+  {
+   "slug": "wasp-126/dip-8",
+   "subject": "tess-291acb98cabe",
+   "t_center": 1350.5263164945818,
+   "duration_hours": 3.496862484496887,
+   "id": "tess-291acb98cabe-006",
+   "star": "WASP-126"
+  }
+ ]
+}

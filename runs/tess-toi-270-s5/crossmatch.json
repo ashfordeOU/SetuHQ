@@ -1,0 +1,38 @@
+{
+  "source": "NASA Exoplanet Archive, table ps (default_flag = 1)",
+  "targets": [
+    "TIC 259377017"
+  ],
+  "star": null,
+  "fetched_at": "2026-10-22T18:05:44+00:00",
+  "planets": [
+    {
+      "pl_name": "TOI-270 b",
+      "hostname": "TOI-270",
+      "pl_orbper": 3.35992,
+      "pl_tranmid": 2458461.01464,
+      "tran_flag": true,
+      "rv_flag": true,
+      "tic_id": "TIC 259377017"
+    },
+    {
+      "pl_name": "TOI-270 c",
+      "hostname": "TOI-270",
+      "pl_orbper": 5.66051,
+      "pl_tranmid": 2458463.08056,
+      "tran_flag": true,
+      "rv_flag": true,
+      "tic_id": "TIC 259377017"
+    },
+    {
+      "pl_name": "TOI-270 d",
+      "hostname": "TOI-270",
+      "pl_orbper": 11.38194,
+      "pl_tranmid": 2458469.33823,
+      "tran_flag": true,
+      "rv_flag": true,
+      "tic_id": "TIC 259377017"
+    }
+  ],
+  "status": "matched"
+}
