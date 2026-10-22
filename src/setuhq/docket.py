@@ -48,7 +48,7 @@ from pathlib import Path
 from setuhq import brand
 from setuhq.dashboard import _load_run
 from setuhq.discover import MAX_FEED_DEPTH_PPM, MAX_FEED_FAP, MIN_FEED_TRANSITS, TWO_SECTOR_PERIOD_TOL, two_sector_partner
-from setuhq.names import ATTRIBUTION, PROVIDER_BY_KIND, SENTINEL_KINDS, reviewer_names, reviewer_provenance
+from setuhq.names import ATTRIBUTION, PROBES_ONLY, PROVIDER_BY_KIND, SENTINEL_KINDS, panel_mode, reviewer_names, reviewer_provenance
 from setuhq.vet import DISQUALIFYING
 
 DOCKET_CSS = """
@@ -282,7 +282,7 @@ function renderRunHeader(){
   const chips = [['all', `all ${n(c.signals)}`], ['passed', `${n(c.passed)} passed`], ['flagged', `${n(c.flagged)} flagged`], ['rejected', `${n(c.rejected)} rejected`]];
   box.innerHTML = `<h1>${esc(D.title)}</h1>
     <p class="counts"><b>${c.signals} signal${c.signals===1?'':'s'} · ${c.dips} dip${c.dips===1?'':'s'}</b><br>
-    <span class="revcount">${c.reviewers} reviewers: ${reviewerSummary(Object.keys(D.reviewers))}</span><br>
+    <span class="revcount">${c.reviewers} reviewers: ${reviewerSummary(Object.keys(D.reviewers))}</span><br>${D.panel_note ? `<span class="revcount"><b>${esc(D.panel_note)}.</b></span><br>` : ''}
     <span class="revcount">A signal that passes vetting is a candidate, unconfirmed; a rejected one is not a candidate.</span></p>
     <div class="chips" role="group" aria-label="Filter signals by vetting outcome">${chips.map(([k,l]) => `<button class="chip" data-f="${k}" aria-pressed="${state.filter===k}">${l}</button>`).join('')}</div>
     <div class="hint" style="margin-top:8px"><kbd>j</kbd>/<kbd>k</kbd> move · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> filter, <kbd>0</kbd> all · <kbd>s</kbd> strip</div>
@@ -778,7 +778,7 @@ function renderDossier(){
     ${sec('cmp', 'Comparisons', 'phase fold · stored per-epoch depths · secondary window', '<div class="compare" id="cmp"></div>')}
     ${sec('ledger', 'Verdict ledger', 'every check, measured value, rule', `<div class="scroll"><table class="ledger" role="table" aria-label="Verdict ledger for ${esc(c.candidate_id)}"><thead role="rowgroup"><tr role="row" class="lhead"><th role="columnheader" scope="col">Check</th><th role="columnheader" scope="col">Value</th><th role="columnheader" scope="col">Rule</th><th role="columnheader" scope="col">Why</th></tr></thead><tbody role="rowgroup">${ledger(c)}</tbody></table></div><p class="scope">Rows marked signal-level are measured once per BLS ephemeris over all its epochs in the subject, not per dip, so every dip from that subject shows the same value (a merged signal shows each subject's own value). σ values are the stored errors; Δ uses √(σ_odd² + σ_even²), as the vetting code does.${(s.bls||[]).length > 1 ? ' <b>' + esc(D.cross_subject_note) + '</b>' : ''}</p>`)}
     ${sec('rev', 'Reviewers', `${nAll} reviewers: ${esc(reviewerSummary(Object.keys(D.reviewers)))}`, `<p class="hint attribution">${esc(D.attribution)}</p><div class="rat">${rationales(c)}</div>`)}
-    <div class="prov">${esc(D.attribution)}<br>run ${esc(D.provenance.run_time)} · config ${esc(D.provenance.config_sha256.slice(0,16))} · pipeline ${esc(D.provenance.setuhq_version)} · Sentinel prompt ${esc(D.provenance.claude_prompt_version || '')}${D.provenance.sentinels ? ` · Sentinels: ${esc(D.provenance.sentinels)}` : ''}<br>candidate ${esc(c.candidate_id)} · signal ${esc(s.signal_id)} · subject ${esc(c.subject_id)}<br>cross-match: ${esc((D.crossmatch||{}).source || '')} · status ${esc((D.crossmatch||{}).status || 'not_run')}</div>`;
+    <div class="prov">${esc(D.attribution)}${D.panel_note ? ` ${esc(D.panel_note)}.` : ''}<br>run ${esc(D.provenance.run_time)} · config ${esc(D.provenance.config_sha256.slice(0,16))} · pipeline ${esc(D.provenance.setuhq_version)} · Sentinel prompt ${esc(D.provenance.claude_prompt_version || '')}${D.provenance.sentinels ? ` · Sentinels: ${esc(D.provenance.sentinels)}` : ''}<br>candidate ${esc(c.candidate_id)} · signal ${esc(s.signal_id)} · subject ${esc(c.subject_id)}<br>cross-match: ${esc((D.crossmatch||{}).source || '')} · status ${esc((D.crossmatch||{}).status || 'not_run')}</div>`;
   document.querySelectorAll('.sectoggle').forEach(b => b.addEventListener('click', () => toggleSection(b.dataset.sec)));
   rest.querySelectorAll('.dipbtn').forEach(b => b.addEventListener('click', () => select(b.dataset.dip)));
   if (subj){
@@ -1574,6 +1574,8 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
         "sentinel_kinds": list(SENTINEL_KINDS),
         "provider_by_kind": PROVIDER_BY_KIND,
         "attribution": ATTRIBUTION,
+        # A run with no Sentinel in its configuration says so wherever its reviewers are named.
+        "panel_note": PROBES_ONLY if panel_mode(run["manifest"]) == "probes_only" else "",
         "subject_days": run["manifest"].get("subject_days"),
         "search_scope": run["manifest"].get("search_scope", "subject"),
         "counts": {
@@ -1604,7 +1606,7 @@ def docket_page(data: dict) -> str:
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{html.escape(title)}</title>
-{brand.head(title, "The Docket: a case file for each dip of SetuHQ's stored run, with its vetting, its fit and every reviewer's marks. Candidates, never confirmations.", "/candidates/case-file/")}
+{brand.head(title, "The Docket: a case file for each dip of one of SetuHQ's stored runs, with its vetting, its fit and every reviewer's marks. Candidates, never confirmations.", data.get("page_path") or "/candidates/case-file/")}
 <link rel="stylesheet" href="{DOCKET_FONTS_CSS}">
 <style>{DOCKET_CSS}</style></head>
 <body>
@@ -1628,9 +1630,12 @@ def docket_page(data: dict) -> str:
 
 
 def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: str | None = None,
-                 refresh_crossmatch: bool = False, require_crossmatch: bool = False) -> Path:
+                 refresh_crossmatch: bool = False, require_crossmatch: bool = False, path: str | None = None) -> Path:
+    """The stand-alone case file; ``path`` is its address on the site (default /candidates/case-file/)."""
     data = docket_data(run_dir, title=title, star=star, refresh_crossmatch=refresh_crossmatch,
                        require_crossmatch=require_crossmatch)
+    if path:
+        data["page_path"] = path
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"
@@ -1639,6 +1644,7 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
     path.write_text(with_code_note(docket_page(data), code_note(run_dir)))
     import shutil
 
-    shutil.copytree(FONTS_DIR, out / "assets" / "fonts", dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))
+    if not data.get("page_path"):  # a page of the site uses the site's one copy of the fonts
+        shutil.copytree(FONTS_DIR, out / "assets" / "fonts", dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))
     brand.copy_assets(out)
-    return path
+    return out / "index.html"

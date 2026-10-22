@@ -52,7 +52,9 @@ from setuhq.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examp
 from setuhq.codenote import code_note
 from setuhq.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
 from setuhq import dipslugs
-from setuhq.names import ATTRIBUTION, DIP_STATE, PROVIDER_BY_KIND, dip_state, public_text, SENTINEL_KINDS, panel_phrase, reviewer_names, reviewer_provenance
+from setuhq.names import (ATTRIBUTION, DIP_STATE, PROBES_ONLY, PROVIDER_BY_KIND, dip_count, dip_state, panel_mode, public_text, SENTINEL_KINDS,
+                          panel_phrase, reviewer_names, reviewer_provenance)
+from setuhq.objects import slugify
 from setuhq.routes import ALIASES, from_hash, route_table, set_dip_slugs
 from setuhq.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
 
@@ -616,13 +618,120 @@ def with_frame_bridge(docket_html: str) -> str:
         "</head>", f"<style>{FRAME_THEME_CSS}{FRAME_PHONE_CSS}</style><script>{FRAME_BRIDGE_JS}</script></head>", 1)
 
 
+DEFAULT_SHOWCASE = "docs/results/showcase.json"
+
+
+def load_showcase(path: str | Path | None = DEFAULT_SHOWCASE) -> dict[str, dict]:
+    """The example runs' descriptions (docs/results/showcase.json), by run name; {} when the file is absent."""
+    if path is None or not Path(path).exists():
+        return {}
+    return {r["run"]: r for r in json.loads(Path(path).read_text()).get("runs") or []}
+
+
+def _top_rows(dock: dict) -> list[dict]:
+    """The run's five highest-SNR dips, each with its archive match, as the Candidates cards and the hero read them."""
+    cands = dock["candidates"]
+    comparison = ((dock.get("crossmatch") or {}).get("comparison") or {}).get("by_candidate") or {}
+    per_signal: dict[str, int] = {}
+    for c in cands:
+        per_signal[c.get("signal_id", "")] = per_signal.get(c.get("signal_id", ""), 0) + 1
+
+    def archive_match(cid: str) -> dict:
+        cmp = comparison.get(cid) or {}
+        name = cmp.get("consistent_with")
+        hit = next((p for p in cmp.get("planets") or [] if p.get("pl_name") == name), {}) if name else {}
+        return {"consistent_with": name, "dP_pct": hit.get("dP_pct"), "pl_orbper": hit.get("pl_orbper"),
+                "archive_line": cmp.get("line", "")}
+
+    return [{"id": c["candidate_id"], "target": c.get("target", ""), "depth_ppm": c["depth_ppm"], "snr": c["snr"],
+             "period_days": c.get("period_days"), "outcome": c["outcome"],
+             "outcome_label": OUTCOME_LABEL[c["outcome"]], "signal_id": c.get("signal_id", ""),
+             "signal_dips": per_signal.get(c.get("signal_id", ""), 1), **archive_match(c["candidate_id"])}
+            for c in sorted(cands, key=lambda c: -c["snr"])[:5]]
+
+
+def example_run(run_dir: str | Path, *, title: str, require_crossmatch: bool = False,
+                targets_path: str | Path | None = DEFAULT_TARGETS, calibrated: dict | None = None,
+                record: dict | None = None) -> dict:
+    """One more stored run for the site, beside the lead: its case file's data, its dips (named and pinned to their
+    addresses, setuhq.dipslugs) and the same per-dip story the lead's dips have. Stored files only."""
+    run_dir = Path(run_dir)
+    dock = docket_data(run_dir, title=f"{title} · candidates", require_crossmatch=require_crossmatch)
+    manifest = json.loads((run_dir / "manifest.json").read_text())
+    name = manifest.get("config_name") or run_dir.name
+    hero = overview_hero(dock, _top_rows(dock))
+    calib = calibration_plane(calibrated, record, dock["reviewers"])
+    story = story_data(run_dir, dock, [], calib, hero, targets_path=targets_path)
+    names, gone = pin_run_dips(run_dir, dock["candidates"],
+                               {story["star"]["target"]: story["star"]["name"]} if story["star"].get("name") else {})
+    for d in names.values():
+        d["run"] = name
+    for d in story["dips"]:
+        d["letter"] = str(names[d["id"]]["n"]) if d["id"] in names else d["letter"]
+        d["run"] = name
+    star = story["star"]["name"] or story["star"]["target"] or name
+    return {"run": name, "dir": str(run_dir), "manifest": manifest, "story": story, "hero": hero, "dock": dock,
+            "names": names, "gone": gone, "slug": slugify(star), "lead": False}
+
+
+def example_paths(x: dict) -> dict:
+    """Where an example run's stand-alone pages live: the lead's at the site's first addresses, the others under
+    their star's address."""
+    if x.get("lead"):
+        return {"case_file": "/candidates/case-file/", "plates": "/evidence/plates/", "report": "/evidence/report/"}
+    slug = x.get("slug") or slugify(x["story"]["star"]["name"] or x["run"])
+    return {"case_file": f"/candidates/{slug}/case-file/", "plates": f"/evidence/plates/{slug}/",
+            "report": f"/evidence/report/{slug}/"}
+
+
+def run_context(x: dict) -> dict:
+    """What a dip's page needs from its own run: the star, the planet the archive matches, the lead signal, and
+    where its case file is."""
+    st = x["story"]
+    return {"run": x["run"], "star": st["star"], "planet": st.get("planet"), "lead": x["hero"].get("lead"),
+            "lead_dip": st.get("lead_dip"), "probes_only": panel_mode(x["manifest"]) == "probes_only",
+            **example_paths(x)}
+
+
+def example_card(x: dict, meta: dict) -> dict:
+    """One example run as the home page's gallery and the Candidates page show it: the star, what kind of example it
+    is (docs/results/showcase.json), its dips counted by outcome, its panel, and its addresses."""
+    st, m = x["story"], x["manifest"]
+    dips = sorted(st["dips"], key=lambda d: int(d.get("letter") or 0))
+    outcomes = [d.get("outcome") for d in dips]
+    sectors = sorted({i.get("sector") for i in m.get("inputs") or [] if i.get("sector") is not None})
+    star = st["star"]["name"] or st["star"]["target"] or x["run"]
+    lead_dip = st.get("lead_dip") or (dips[0]["id"] if dips else None)
+    mode = panel_mode(m)
+    return {
+        "run": x["run"], "star": star, "target": st["star"]["target"], "slug": slugify(star),
+        "kind": meta.get("kind") or "", "summary": meta.get("summary") or "", "why": meta.get("why") or "",
+        "outcome_line": meta.get("outcome") or "", "reference": meta.get("reference") or "",
+        "planet": st.get("planet"), "sectors": sectors, "mission": "TESS",
+        "n_dips": len(dips), "count": dip_count(outcomes),
+        "counts": {k: sum(1 for o in outcomes if dip_state(o)[1] == w) for k, w in
+                   (("candidates", "candidate"), ("flagged", "flagged"), ("rejected", "rejected"))},
+        "panel": mode, "panel_label": PROBES_ONLY if mode == "probes_only" else "Probes and Sentinels",
+        "lead": bool(x.get("lead")), "lead_dip": lead_dip,
+        "dips": [{"id": d["id"], "n": int(d.get("letter") or 0), "outcome": d.get("outcome"), "status_label": d.get("status_label", ""),
+                  "depth_ppm": d.get("depth_ppm"), "snr": d.get("snr"), "period_days": d.get("period_days"),
+                  "label": (x["names"].get(d["id"]) or {}).get("label") or f"{star}, dip {d.get('letter')}"} for d in dips],
+        **example_paths(x),
+    }
+
+
 def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
              weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None,
              require_crossmatch: bool = False, targets_path: str | Path | None = DEFAULT_TARGETS,
              map_path: str | Path | None = DEFAULT_MAP, notable_path: str | Path | None = DEFAULT_NOTABLE,
              coverage_path: str | Path | None = DEFAULT_COVERAGE, examples_path: str | Path | None = DEFAULT_EXAMPLES,
-             catalogue_path: str | Path | None = DEFAULT_CATALOGUE, sweep_path: str | Path | None = DEFAULT_SWEEP) -> dict:
+             catalogue_path: str | Path | None = DEFAULT_CATALOGUE, sweep_path: str | Path | None = DEFAULT_SWEEP,
+             extra_runs: list[str | Path] | tuple = (), showcase_path: str | Path | None = DEFAULT_SHOWCASE) -> dict:
     """Everything the shell shows, read from stored files only.
+
+    ``run_dir`` is the lead run (the sky map, the panel and the home page's reference check are drawn from it);
+    ``extra_runs`` are the other stored example runs. Every run's dips get a page, a case file and a card in the
+    home page's gallery, grouped by star; ``showcase_path`` (docs/results/showcase.json) describes each run.
 
     With ``require_crossmatch`` the build fails (``CrossmatchUnavailable``) when no stored archive
     cross-match is usable, instead of building a page that cannot say what the archive knows."""
@@ -651,29 +760,23 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     feed = catalog.get("candidates") or []
     run_name = manifest.get("config_name") or run_dir.name
     cands = dock["candidates"]
-    top = sorted(cands, key=lambda c: -c["snr"])[:5]
     crossmatch = dock.get("crossmatch") or {}
-    comparison = (crossmatch.get("comparison") or {}).get("by_candidate") or {}
-    per_signal: dict[str, int] = {}
-    for c in cands:
-        per_signal[c.get("signal_id", "")] = per_signal.get(c.get("signal_id", ""), 0) + 1
-
-    def archive_match(cid: str) -> dict:
-        cmp = comparison.get(cid) or {}
-        name = cmp.get("consistent_with")
-        hit = next((p for p in cmp.get("planets") or [] if p.get("pl_name") == name), {}) if name else {}
-        return {"consistent_with": name, "dP_pct": hit.get("dP_pct"), "pl_orbper": hit.get("pl_orbper"),
-                "archive_line": cmp.get("line", "")}
-
-    top_rows = [{"id": c["candidate_id"], "target": c.get("target", ""), "depth_ppm": c["depth_ppm"], "snr": c["snr"],
-                     "period_days": c.get("period_days"), "outcome": c["outcome"],
-                     "outcome_label": OUTCOME_LABEL[c["outcome"]], "signal_id": c.get("signal_id", ""),
-                     "signal_dips": per_signal.get(c.get("signal_id", ""), 1), **archive_match(c["candidate_id"])}
-                    for c in top]
+    top_rows = _top_rows(dock)
     hero = overview_hero(dock, top_rows)
     calib = {**calibration_plane(calibrated, record, dock["reviewers"]), "record_path": record_name}
     story = story_data(run_dir, dock, feed, calib, hero, targets_path=targets_path)
     dips, gone = pin_run_dips(run_dir, cands, {story["star"]["target"]: story["star"]["name"]} if story["star"].get("name") else {})
+    for d in dips.values():
+        d["run"] = run_name
+    meta = load_showcase(showcase_path)
+    extras = [example_run(r, title=title, require_crossmatch=require_crossmatch, targets_path=targets_path,
+                          calibrated=calibrated, record=record) for r in extra_runs or ()]
+    for x in extras:
+        clash = {d["slug"] for d in x["names"].values()} & {d["slug"] for d in dips.values()}
+        if clash:
+            raise ValueError(f"run {x['run']}: dip addresses already taken by another run: {sorted(clash)}")
+        dips.update(x["names"])
+        gone = list(gone) + list(x["gone"])
     set_dip_slugs({i: d["slug"] for i, d in dips.items()}, gone)
     # The dip numbers the page shows (the chips, the picker) are the address numbers.
     for w in hero.get("windows") or []:
@@ -682,6 +785,10 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     for d in story.get("dips") or []:
         if d["id"] in dips:
             d["letter"] = str(dips[d["id"]]["n"])
+        d["run"] = run_name
+    lead_example = {"run": run_name, "dir": str(run_dir), "manifest": manifest, "story": story, "hero": hero, "dock": dock,
+                    "names": {i: d for i, d in dips.items() if d.get("run") == run_name}, "lead": True}
+    showcase = [example_card(x, meta.get(x["run"]) or {}) for x in [lead_example] + extras]
     galaxy = galaxy_data(map_path, notable_path, coverage_path=coverage_path, setuhq_star=story["star"]["name"] or "pi Men",
                          setuhq_planet=story.get("planet"), lead_dip=story.get("lead_dip"))
     return {
@@ -699,8 +806,16 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "no_detection": NO_DETECTION,
         "no_stellar_radius": NO_STELLAR_RADIUS,
         "ratio_scale_max": RATIO_SCALE_MAX,
-        "dossier_ids": [c["candidate_id"] for c in cands],
+        "dossier_ids": [c["candidate_id"] for c in cands] + [i for x in extras for i in x["names"]],
         "dips": dips,
+        # Every stored example run, the lead first: its card (home page, Candidates), its dips and its case file.
+        "showcase": showcase,
+        "showcase_source": str(showcase_path) if meta else "",
+        "showcase_dips": [d for x in extras for d in x["story"]["dips"]],
+        "run_ctx": {x["run"]: run_context(x) for x in [lead_example] + extras},
+        "docket_frames": {},  # each run's framed case file, by run name, set by the site builder
+        "extra_docket_html": {x["run"]: with_frame_bridge(docket_page(x["dock"])) for x in extras},
+        "extra_runs": [{"run": x["run"], "dir": x["dir"], "slug": x["slug"], "star": x["story"]["star"]["name"] or x["run"]} for x in extras],
         "run": {
             "name": run_name, "dir": str(run_dir), "created_at": manifest.get("created_at", ""),
             "counts": manifest.get("counts", {}),
@@ -764,6 +879,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "sentinel_kinds": list(SENTINEL_KINDS),
         "provider_by_kind": PROVIDER_BY_KIND,
         "attribution": ATTRIBUTION,
+        "probes_only_label": PROBES_ONLY,
         "weights_path": weights_name,
         "docket_html": with_frame_bridge(docket_page(dock)),
         "docket_frame": "",  # the address of the framed copy, set by the site builder
@@ -1548,8 +1664,11 @@ const LOADING_TEXT = 'Loading the Docket…';
 const frame = {ready: false, mode: null, dip: null, section: null, pending: null, crossOrigin: false, timer: null, gen: 0,
   frameURLFailed: false, shellURLFailed: false};
 // The shell's copy of the Docket is a file of its own (D.docket_frame, same origin); the dip is its hash.
-function docketURL(dip){ return D.docket_frame + (dip ? '#' + encodeURIComponent(dip) : ''); }
-const fullHref = dip => '/candidates/case-file/' + (dip ? '#' + encodeURIComponent(dip) : '');
+// Each example run has its own case file; a dip opens its own run's (D.docket_frames, by run name).
+const runOf = dip => ((D.dips || {})[dip] || {}).run || D.run.name;
+const RUNCTX = dip => (D.run_ctx || {})[runOf(dip)] || {};
+function docketURL(dip){ return ((D.docket_frames || {})[runOf(dip)] || D.docket_frame) + (dip ? '#' + encodeURIComponent(dip) : ''); }
+const fullHref = dip => (RUNCTX(dip).case_file || '/candidates/case-file/') + (dip ? '#' + encodeURIComponent(dip) : '');
 function setFullHrefs(dip){ for (const a of $$('#fullpage, #topfull, #blockedlink')) a.href = fullHref(dip); }
 // Keep the shell URL and the full-page links on the dip (and section) the frame shows.
 function syncShellURL(){
@@ -1625,6 +1744,7 @@ window.addEventListener('message', e => {
 });
 function loadDocket(dip, section, mode){
   const f = $('#docketframe'), url = docketURL(dip), gen = ++frame.gen;
+  frame.run = runOf(dip);
   Object.assign(frame, {ready: false, mode: 'file', dip, section: section || null, pending: {dip, section: section || null},
     frameURLFailed: false});
   // Not shown until it reports ready: an empty bordered box would sit under the loading line.
@@ -1654,7 +1774,7 @@ function openDip(dip, section){
     if (frame.ready) readyStatus(); else frameStatus(f.dataset.loaded ? LOADING_TEXT : '');
   } else if (dip) frame.notice = '';
   if (!DOCKET_SECTIONS.includes(section)) section = null;
-  if (!f.dataset.loaded){ f.dataset.loaded = '1'; loadDocket(dip, section); setFullHrefs(dip); }
+  if (!f.dataset.loaded || (dip && frame.run && runOf(dip) !== frame.run)){ f.dataset.loaded = '1'; loadDocket(dip, section); setFullHrefs(dip); }
   else if (!frame.ready){ if (dip || section) frame.pending = {dip: dip || frame.dip, section}; setFullHrefs(dip || frame.dip); }
   else if (dip || section) tellFrame(dip, section);
   else syncShellURL();
@@ -1665,7 +1785,8 @@ const leadDip = () => (D.hero && D.hero.lead && D.hero.lead.dip) || D.dossier_id
 // The phone dip picker above the frame: every dip in time order, with its letter and outcome.
 function renderDipPicker(){
   const sel = $('#dippick'); if (!sel) return;
-  sel.innerHTML = D.hero.windows.map(w => `<option value="${esc(w.id)}">${esc(DIP_NAME(w.id) || 'dip ' + w.letter)} · ${esc(w.outcome)}</option>`).join('');
+  // Grouped by star: the lead run's dips first, then each other example run's.
+  sel.innerHTML = (D.showcase || []).map(c => `<optgroup label="${esc(c.star)}">${c.dips.map(w => `<option value="${esc(w.id)}">${esc(w.label)} · ${esc(w.outcome)}</option>`).join('')}</optgroup>`).join('');
   if (frame.dip) sel.value = frame.dip;
 }
 function renderCandidates(){ renderDipPicker(); /* the frame loads in openDip, with the dip from the URL */ }
@@ -2032,7 +2153,9 @@ function xmConfig(x){
 // Stored values only: the points are the run's stored flux, the marks the reviewers' stored spans,
 // the scores, flags, rationales and confidences as stored. Decorative art is labelled as such.
 const S = D.story;
-const DIPS = S.dips, DIP_BY = Object.fromEntries(DIPS.map(d => [d.id, d]));
+// DIPS: the lead run's dips (the sky map and the panel read them); ALL_DIPS adds every other example run's.
+const DIPS = S.dips, ALL_DIPS = DIPS.concat(D.showcase_dips || []), DIP_BY = Object.fromEntries(ALL_DIPS.map(d => [d.id, d]));
+const CTX = d => (D.run_ctx || {})[d.run] || {star: S.star, planet: S.planet, lead: D.hero.lead};
 const STC = {known: 'var(--blue)', open: 'var(--yellow)', rejected: 'var(--red)'};
 const STC_SPACE = S.colours;  // the same colours as hex, for the space panels (dark in both themes)
 const fmtSigned = (x, d) => (x >= 0 ? '+' : '−') + Math.abs(x).toFixed(d);
@@ -2134,28 +2257,28 @@ const txs = {dip: null, cmp: []};
 // A dip matched to a known planet uses that planet's stored radii and orbit; any other dip shows what a planet
 // as deep as the stored depth would cast, with the orbit and the impact parameter illustrative (b = 0).
 function txTheatre(d){
-  const known = d.status === 'known', k = d.ratio || 0;
-  const star = typeof MX !== 'undefined' && MX && S.planet ? MX.examples[S.planet] : null;
+  const known = d.status === 'known', k = d.ratio || 0, C = CTX(d), planet = C.planet;
+  const star = typeof MX !== 'undefined' && MX && planet ? MX.examples[planet] || null : null;
   const model = (d.model || []).map(p => [p[0], p[1]]);
   let p, bNote;
-  if (known && star){ p = Object.assign({name: S.planet}, star); bNote = `impact parameter ${star.impact_parameter != null ? 'as stored' : 'illustrative'}`; }
+  if (known && star){ p = Object.assign({name: planet}, star); bNote = `impact parameter ${star.impact_parameter != null ? 'as stored' : 'illustrative'}`; }
   else {
     // Rp/R★ = √depth; the duration sets a/R★ for an illustrative period (the lead signal's), b = 0 (not fitted).
-    const P = (D.hero.lead && D.hero.lead.period_days) || 6, T14 = Math.max(0.02, (d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * (1 + k);
+    const P = (C.lead && C.lead.period_days) || 6, T14 = Math.max(0.02, (d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * (1 + k);
     const st = star || {};
     p = {name: 'a planet this deep', star_teff: st.star_teff || 5772, star_radius: st.star_radius || 1, radius: st.star_radius ? k * st.star_radius * 6.957e8 / 7.1492e7 : null,
       orbital_period: P, semi_major_axis: ars * (st.star_radius || 1) * 6.957e8 / 1.495978707e11, impact_parameter: 0};
     bNote = 'impact parameter illustrative (b = 0), not the fit\'s';
   }
-  $('#txcap').textContent = known && star ? `${S.planet}, from stored values` : 'what a planet this deep would cast';
+  $('#txcap').textContent = known && star ? `${planet}, from stored values` : 'what a planet this deep would cast';
   $('#txfoot').textContent = (known && star
-      ? `${S.planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}): the line is a limb-darkened model from those values, not a fit to this dip; ${bNote}. The match says the planet is already known; it does not confirm the dip.`
+      ? `${planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}): the line is a limb-darkened model from those values, not a fit to this dip; ${bNote}. The match says the planet is already known; it does not confirm the dip.`
       : `If it were a planet: Rp/R★ = √depth = ${fmt(k, 4)}, from the stored depth ${fmt(d.depth_ppm, 0)} ppm; the star is the target as the catalogue stores it; orbit and period illustrative; ${bNote}.`)
     + ` Dots: the ${d.pts.length} stored flux values within ${fmt(d.half * 24, 1)} hours of mid-time (${esc(d.time_unit)} ${fmt(d.t, 3)}). ${model.length ? 'Dashed: the limb-darkened fit stored for this dip.' : 'No transit fit is stored for this dip.'} The star's surface texture is decorative.`;
   const {st} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}, on: current === 'transit', caption: false});
   if (!(known && star)){ st.opt.sys.bSrc = 'illustrative'; mxKick(st); }
   // The canonical pages for the planet (when the dip matches one) and the star.
-  $('#txlinks').innerHTML = (known && S.planet ? objLink('planet', S.planet, S.planet + ' ›') : '') + (S.star.name ? objLink('star', S.star.name, S.star.name + ' ›') : '');
+  $('#txlinks').innerHTML = (known && planet ? objLink('planet', planet, planet + ' ›') : '') + (C.star && C.star.name ? objLink('star', C.star.name, C.star.name + ' ›') : '');
 }
 function lanesHTML(d){
   const pct = v => Math.max(0, Math.min(100, (v + d.half) / (2 * d.half) * 100));
@@ -2168,14 +2291,15 @@ function lanesHTML(d){
 }
 function quoteHTML(d){
   const q = d.quotes[0];
+  if (!q && CTX(d).probes_only) return `<div class="quote"><p style="font-size:14px">${esc(D.probes_only_label)}: the Probes marked this run, and no Sentinel was in its configuration, so no Sentinel's words are stored.</p></div>`;
   if (!q) return `<div class="quote"><p style="font-size:14px">No Sentinel rationale is stored for this subject.</p></div>`;
   return `<div class="quote"><div class="who"><b title="reviewer id ${esc(q.id)}">${esc(q.name)}</b><span>${q.confidence === null || q.confidence === undefined ? 'confidence not stored' : 'confidence ' + fmt(q.confidence, 1)}</span></div>
     <p>“${esc(q.text)}”</p><small>Its stored rationale for subject ${esc(d.subject_label || d.subject)} (${esc(d.time_unit)} ${fmt(d.subject_start, 1)} to ${fmt(d.subject_end, 1)}), one per subject, not per dip. It ${q.marked ? 'marked' : 'did not mark'} this dip. A Sentinel is an AI model${PROV(q.id || '') ? ` (${esc(PROV(q.id))})` : ''}, not a person.</small></div>`;
 }
 function orbitHTML(d){
-  const L = D.hero.lead; if (!L || d.phase === null || d.phase === undefined) return '';
+  const C = CTX(d), L = C.lead; if (!L || d.phase === null || d.phase === undefined) return '';
   const ang = Math.PI / 2 + d.phase * 2 * Math.PI, px = 100 + 80 * Math.cos(ang), py = 100 + 80 * Math.sin(ang);
-  const who = S.planet ? `${esc(S.planet)}'s orbit` : "the lead signal's orbit";
+  const who = C.planet ? `${esc(C.planet)}'s orbit` : "the lead signal's orbit";
   const near = Math.abs(d.phase) < 0.02;
   return `<figure class="glass orbitfig"><svg viewBox="0 0 200 200" role="img" aria-label="Orbit seen from above, with this dip at phase ${fmtSigned(d.phase, 2)} of the lead signal; the transit point faces us (bottom).">
       <circle cx="100" cy="100" r="80" fill="none" stroke="var(--line-2)" stroke-width=".8"/>
@@ -2196,13 +2320,14 @@ function trayHTML(){
 function renderTransit(){
   const d = DIP_BY[txs.dip] || DIP_BY[S.lead_dip]; if (!d) return;
   txs.dip = d.id;
-  const i = DIPS.indexOf(d), prev = DIPS[(i + DIPS.length - 1) % DIPS.length], next = DIPS[(i + 1) % DIPS.length], inCmp = txs.cmp.includes(d.id);
+  // The chips, Previous and Next stay within the dip's own run (its star).
+  const RD = ALL_DIPS.filter(x => x.run === d.run), i = RD.indexOf(d), prev = RD[(i + RD.length - 1) % RD.length], next = RD[(i + 1) % RD.length], inCmp = txs.cmp.includes(d.id);
   $('#txkicker').textContent = d.status_label; $('#txkicker').style.color = STC[d.status];
   $('#h-transit').textContent = DIP_NAME(d.id) || `dip ${d.letter}`;
   $('#txsub').textContent = `${d.time_unit} ${tval(d.t)} · ${fmt(d.depth_ppm, 0)} ppm · ${fmt(d.duration_hours, 2)} hours · SNR ${fmt(d.snr, 1)} · ${DIPPHRASE(d.outcome)}`;
   $('#txcapword').textContent = d.outcome === 'rejected' ? 'The dip, played back' : 'The transit, played back';
   $('#txnav').innerHTML = `<a class="roundbtn" href="${transitHref(prev.id)}" aria-label="Previous dip, ${esc(prev.time_unit)} ${tval(prev.t)}">‹</a><a class="roundbtn" href="${transitHref(next.id)}" aria-label="Next dip, ${esc(next.time_unit)} ${tval(next.t)}">›</a><button type="button" class="cmpbtn" id="cmptoggle" aria-pressed="${inCmp}">${inCmp ? 'In compare' : 'Add to compare'}</button>`;
-  $('#txchips').innerHTML = DIPS.map(x => `<a href="${transitHref(x.id)}" aria-current="${x.id === d.id}" style="--c:${STC[x.status]}" title="${esc(x.id)} · ${esc(x.status_label)}"><i></i>${esc(x.letter)} · ${tval(x.t)}</a>`).join('');
+  $('#txchips').innerHTML = RD.map(x => `<a href="${transitHref(x.id)}" aria-current="${x.id === d.id}" style="--c:${STC[x.status]}" title="${esc(x.id)} · ${esc(x.status_label)}"><i></i>${esc(x.letter)} · ${tval(x.t)}</a>`).join('');
   // Keep the current dip's chip in view in the sideways-scrolling row (without moving the page).
   const row = $('#txchips'), chip = $('#txchips a[aria-current="true"]');
   if (row && chip) row.scrollLeft = chip.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2;
@@ -2377,8 +2502,8 @@ let current = null;
 function pageChrome(r, params){
   const m = META[r] || {}, h1 = $('#route-' + r + ' h1');
   $$('.nav a[data-nav], .menu a[data-nav]').forEach(a => { if (a.dataset.nav === m.nav) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-  const win = r === 'candidates' ? (D.hero.windows || []).find(w => w.id === params.get('dip')) : null;
-  const name = r === 'methods' ? (D.chapter_titles[params.get('ch')] || m.label) : win ? (DIP_NAME(win.id) || 'dip ' + win.letter) : (r === 'planet' || r === 'star' || r === 'transit') && h1 ? h1.textContent.trim() : m.label;
+  const win = r === 'candidates' ? (D.dips || {})[params.get('dip')] : null;
+  const name = r === 'methods' ? (D.chapter_titles[params.get('ch')] || m.label) : win ? win.label : (r === 'planet' || r === 'star' || r === 'transit') && h1 ? h1.textContent.trim() : m.label;
   document.title = m.title_tpl ? m.title_tpl.replace('{name}', name) : `${m.label} · SetuHQ`;
   const crumbs = $('#crumbs');
   if (crumbs){
@@ -2541,7 +2666,7 @@ def _planet_figure(deco: dict) -> str:
     """The home page's artist's impression: a planet's limb lit by its star, cropped to the lit limb, with its
     caption directly under it. Decorative, and labelled so."""
     return f"""<figure class="planetfig">
-        <svg viewBox="0 120 1440 360" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Artist's impression of a planet's limb lit by its star. No image of pi Men c exists." style="display:block;width:100%;height:auto">
+        <svg viewBox="0 120 1440 360" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Artist's impression of a planet's limb lit by its star. It shows no real planet." style="display:block;width:100%;height:auto">
           <defs>
             <radialGradient id="pBody" cx="35%" cy="15%" r="85%"><stop offset="0" stop-color="#3C5E8C"/><stop offset=".35" stop-color="#1D3352"/><stop offset=".7" stop-color="#0A1222"/><stop offset="1" stop-color="#000"/></radialGradient>
             <radialGradient id="pAtm" cx="50%" cy="100%" r="62%"><stop offset=".86" stop-color="#64D2FF" stop-opacity="0"/><stop offset=".92" stop-color="#64D2FF" stop-opacity=".55"/><stop offset=".97" stop-color="#0A84FF" stop-opacity=".18"/><stop offset="1" stop-color="#0A84FF" stop-opacity="0"/></radialGradient>
@@ -2558,14 +2683,14 @@ def _planet_figure(deco: dict) -> str:
           <g clip-path="url(#pClip)"><g class="clouds" filter="url(#soft)" opacity=".35"><path d="{deco['bands']}" stroke="#BFD6F2" stroke-width="16" fill="none" stroke-linecap="round"/></g></g>
           <path d="M-280 1290 A1000 1000 0 0 1 1720 1290" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
         </svg>
-        <figcaption>Artist's impression of a planet lit by its star. No image of pi Men c exists.</figcaption>
+        <figcaption>Artist's impression of a planet lit by its star. It shows no real planet; SetuHQ works from light curves, not images.</figcaption>
       </figure>"""
 
 
 # The home page's "what you can do here" row: one card per section of the site, in plain words.
 DO_HERE = [
     ("#/sky", "Explore the sky", "Every known exoplanet on a 3D map of the Galaxy, the sky TESS has covered, and a searchable catalogue of known planets."),
-    ("#/explorer", "See the candidates", "Dips the panel marked in real TESS light curves, each with its full case file. Candidates, never confirmed planets."),
+    ("#/explorer", "See the candidates", "Dips the panel marked in the example stars' TESS light curves, each with its full case file. Candidates, never confirmed planets."),
     ("#/methods", "Learn how it works", "Fifteen illustrated chapters on how planets are found, from a star's wobble to reading an atmosphere."),
     ("#/sentinels", "Check the evidence", "How the panel scores on real, known objects: the blind benchmark, the public leaderboard and the calibration."),
     ("#/docs", "Run it yourself", "Install SetuHQ, search a star, contribute a sweep of the sky, or connect your AI assistant over MCP."),
@@ -2582,22 +2707,53 @@ def _do_here() -> str:
       </section>"""
 
 
+def _gallery(data: dict) -> str:
+    """The home page's worked examples: one card per stored run, in a fixed order (docs/results/showcase.json),
+    with its star, what kind of example it is, its dips counted by outcome, its panel and its pages."""
+    e = html.escape
+    cards = data.get("showcase") or []
+    if not cards:
+        return ""
+    items = []
+    for c in cards:
+        first = c["lead_dip"]
+        sectors = ", ".join(str(x) for x in c["sectors"]) or "not stored"
+        links = (f'<a href="{e(c["case_file"])}">Case file</a><a href="{e(c["plates"])}">Plates</a>'
+                 f'<a href="{e(c["report"])}">Run report</a>')
+        items.append(f"""<li><article class="excard" aria-labelledby="ex-{e(c["slug"])}">
+          <p class="exkind">{e(c["kind"] or "Example run")}</p>
+          <h3 id="ex-{e(c["slug"])}">{f'<a href="#/transit?dip={e(first)}">{e(c["star"])}</a>' if first else e(c["star"])}</h3>
+          <p class="exsum">{e(c["summary"])}</p>
+          <p class="excount">{e(c["count"])}</p>
+          <p class="exmeta">{e(c["mission"])} sector{"s" if len(c["sectors"]) != 1 else ""} {e(sectors)} · {e(c["panel_label"])}</p>
+          <p class="exlinks">{links}</p>
+        </article></li>""")
+    return f"""<section class="examples" id="examples" aria-labelledby="h-examples">
+        <div class="secthead"><h2 id="h-examples">Worked examples: {len(cards)} stars, one pipeline</h2>
+        <p>Each is a stored run on public TESS light curves from MAST, with its data, configuration and code hashed. Every dip is counted by its vetting outcome; a candidate stays unconfirmed, and a rejected dip is not a candidate.</p></div>
+        <ul class="excards">{"".join(items)}</ul>
+      </section>"""
+
+
 def _overview(data: dict, with_view: bool = True) -> str:
     e = html.escape
     st = data["story"]
-    lead = st.get("lead_dip")
     planet = st.get("planet")
-    watch = (f'<a class="btn ghost" href="#/transit?dip={e(lead)}">Watch it find {e(planet)} ›</a>' if planet and lead
-             else (f'<a class="btn ghost" href="#/transit?dip={e(lead)}">Watch the lead dip ›</a>' if lead else ""))
+    n_ex = len(data.get("showcase") or [])
+    more = f'<a class="btn ghost" href="#examples">See {number_words(n_ex)} worked examples ›</a>' if n_ex > 1 else ""
     proof = "".join(f'<div><b style="--c:{p["colour"]}">{e(p["big"])}</b><span>{e(p["text"])}</span></div>' for p in st["proof"])
+    ref = (f"The reference check: {e(planet)}, a known planet, found again in run {e(data['run']['name'])}" if planet
+           else f"The reference run: {e(data['run']['name'])}")
     return f"""<header class="launch">
         <h1 id="h-overview" tabindex="-1">The sky, reviewed.</h1>
-        <p class="sub">A calibrated panel of Sentinels (Claude) and Probes (deterministic detectors) reads every light curve. Every verdict, explained. Nothing called a planet until it is one.</p>
-        <div class="ctas"><a class="btn primary" href="#/sky">Explore the sky</a>{watch}</div>
+        <p class="sub">SetuHQ searches any TESS star's public light curve for transits. A calibrated panel of Sentinels (AI reviewers) and Probes (deterministic detectors) marks the dips, and vetting explains every verdict. Nothing is called a planet until it is one.</p>
+        <div class="ctas"><a class="btn primary" href="#/sky">Explore the sky</a>{more}</div>
       </header>
       {_planet_figure(data["deco"])}
       {_do_here()}
-      <div class="proof" role="list" aria-label="What this run shows">{proof.replace('<div>', '<div role="listitem">')}</div>
+      {_gallery(data)}
+      <section class="refcheck" aria-labelledby="h-refcheck"><div class="secthead"><h2 id="h-refcheck">{ref}</h2></div>
+      <div class="proof" role="list" aria-label="What the reference run shows">{proof.replace('<div>', '<div role="listitem">')}</div></section>
       {sweep_line(data.get("sweep"))}
       {teaser_html(data.get("galaxy"), data.get("galaxy_teaser"))}
       {_honest(data)}
@@ -2941,38 +3097,34 @@ def _transit(data: dict) -> str:
 
 
 def _explorer(data: dict) -> str:
-    """The Candidates page's opening: what a visitor can open (the run's dips, each with a case file), then the
-    run's own figures. The search feed follows in its own section (route_sections)."""
+    """The Candidates page's opening: what a visitor can open (every example run's dips, grouped by star, each
+    with a case file), then the lead run's own figures. The search feed follows in its own section."""
     e = html.escape
     feed = data["catalog"]["candidates"]
-    dips = sorted(data["dips"].items(), key=lambda kv: kv[1]["n"])
-    star = dips[0][1]["star"] if dips else data["run"]["name"]
-    by_id = {d["id"]: d for d in data["story"]["dips"]}
-    rows = []
-    for i, d in dips:
-        s = by_id.get(i, {})
-        rows.append(f'<li><a class="rundip" href="#/transit?dip={e(i)}"><b>{e(d["label"])}</b>'
-                    f'<span class="muted">{e(s.get("status_label", ""))} · {s.get("depth_ppm", 0):,.0f} ppm · SNR {s.get("snr", 0):.1f}</span>'
-                    f'{dip_tag(s.get("outcome"))}</a>'
-                    f'<a class="rundipcf" href="#/candidates?dip={e(i)}" aria-label="Case file for {e(d["label"])}">Case file ›</a></li>')
-    outs = [by_id.get(i, {}).get("outcome") for i, _ in dips]
-    n_pass, n_flag, n_rej = outs.count("passed"), outs.count("flagged"), outs.count("rejected")
-    parts = [f"{n_pass} passed vetting ({'a' if n_pass == 1 else 'each a'} {UNCONFIRMED})"] if n_pass else []
-    parts += [f"{n_flag} {'is' if n_flag == 1 else 'are'} flagged for review"] if n_flag else []
-    parts += [f"{n_rej} {'was' if n_rej == 1 else 'were'} rejected by vetting ({'not a candidate' if n_rej == 1 else 'not candidates'})"] if n_rej else []
-    status = (", ".join(parts[:-1]) + " and " + parts[-1] if len(parts) > 1 else "".join(parts)) + "." if parts else ""
-    lede = (f"Dips the panel of Sentinels and Probes marked in {e(star)}'s TESS light curve: {status[0].lower() + status[1:] if status else ''} "
-            f"None is a confirmed planet. Open one to watch it played back, or its case file for every check behind its verdict.")
+    cards = data.get("showcase") or []
+    n_all = sum(c["n_dips"] for c in cards)
+    groups = []
+    for c in cards:
+        rows = []
+        for d in c["dips"]:
+            rows.append(f'<li><a class="rundip" href="#/transit?dip={e(d["id"])}"><b>{e(d["label"])}</b>'
+                        f'<span class="muted">{e(d.get("status_label") or "")} · {d.get("depth_ppm") or 0:,.0f} ppm · SNR {d.get("snr") or 0:.1f}</span>'
+                        f'{dip_tag(d.get("outcome"))}</a>'
+                        f'<a class="rundipcf" href="#/candidates?dip={e(d["id"])}" aria-label="Case file for {e(d["label"])}">Case file ›</a></li>')
+        hid = f'h-run-{e(c["slug"])}'
+        groups.append(f"""<section class="card rundips" aria-labelledby="{hid}">
+        <h2 id="{hid}">{e(c["star"])}{f' · {e(c["kind"])}' if c["kind"] else ""}: {e(c["count"])}</h2>
+        <p class="small">Run {e(c["run"])}, TESS sector{"s" if len(c["sectors"]) != 1 else ""} {e(", ".join(str(x) for x in c["sectors"]))}. {e(c["panel_label"])}.{f" {e(c['outcome_line'])}" if c["outcome_line"] else ""}</p>
+        <ul class="rundiplist">{"".join(rows)}</ul>
+        <p class="small runlinks"><a href="{e(c["case_file"])}">The run's case file ›</a> <a href="{e(c["plates"])}">Plates ›</a> <a href="{e(c["report"])}">Run report ›</a></p>
+      </section>""")
     more = (f" Further down: the search feed's {len(feed)} entries from other stars, which have no case file yet." if feed else "")
     return f"""<header>
-        <h1 class="lead-h" id="h-explorer" tabindex="-1">{len(dips)} dip{"s" if len(dips) != 1 else ""} you can open, from the {e(star)} run.</h1>
-        <p>{lede}{e(more)}</p>
+        <h1 class="lead-h" id="h-explorer" tabindex="-1">{n_all} dip{"s" if n_all != 1 else ""} you can open, from {number_words(len(cards))} example star{"s" if len(cards) != 1 else ""}.</h1>
+        <p>Dips the panel marked in each example star's TESS light curve, grouped by star and counted by vetting outcome. A dip that passed vetting is a {UNCONFIRMED}; a flagged one is open; a rejected one is not a candidate. None is a confirmed planet. Open one to watch it played back, or its case file for every check behind its verdict.{e(more)}</p>
       </header>
-      <section class="card rundips" aria-labelledby="h-rundips">
-        <h2 id="h-rundips">The {e(star)} run: {len(dips)} dip{"s" if len(dips) != 1 else ""} with case files</h2>
-        <ul class="rundiplist">{"".join(rows)}</ul>
-        <p class="small"><a href="#/planets">Radius ratios by star ›</a> What each depth would imply, if it were a planet.</p>
-      </section>"""
+      {"".join(groups)}
+      <p class="small"><a href="#/planets">Radius ratios by star ›</a> What each depth would imply, if it were a planet.</p>"""
 
 
 def _sentinels(data: dict) -> str:
@@ -3002,7 +3154,7 @@ def app_payload(data: dict) -> dict:
     data = {**data, "methods": methods_meta(data["examples"], data.get("galaxy"), data["story"], data.get("coverage"))}
     slim = {**data, "sweep": sweep_payload(data["sweep"])} if data.get("sweep") else data
     server_only = ("galaxy", "coverage", "examples", "catalogue", "benchmark", "sweep_full", "leaderboard", "sky_geo", "deco",
-                   "galaxy_teaser", "docket_html", "code_note")
+                   "galaxy_teaser", "docket_html", "code_note", "extra_docket_html")
     return {k: v for k, v in slim.items() if k not in server_only}
 
 
@@ -3035,7 +3187,7 @@ def route_sections(data: dict) -> dict[str, str]:
     out["explorer"] = f"""{_explorer(data)}
       {prov}
       <p class="note rule" id="sharednote" hidden>This is a shared view, shown for this visit only. Your own layout is unchanged unless you change a card here. <button class="btn" id="ownlayout" type="button">Show my layout</button></p>
-      <div class="secthead"><h2 id="h-glance">This run at a glance</h2><button class="btn" id="customise" type="button" aria-pressed="false" aria-controls="widgets layouttools">Customise</button></div>
+      <div class="secthead"><h2 id="h-glance">The reference run ({html.escape(run["name"])}) at a glance</h2><button class="btn" id="customise" type="button" aria-pressed="false" aria-controls="widgets layouttools">Customise</button></div>
       <div class="layoutbar" id="layouttools" role="group" aria-label="Arrange the cards" hidden>
         <p class="small" style="flex:1 1 100%">Each card can be hidden, moved or resized; your arrangement is kept in this browser.</p>
         <div class="layoutbar" id="hiddenlist"></div>
@@ -3103,13 +3255,13 @@ def route_sections(data: dict) -> dict[str, str]:
     out["star"] = star_page("") + '<section class="card stsweep" id="stsweep" aria-labelledby="h-stsweep" hidden><h2 id="h-stsweep">In SetuHQ\'s sweep</h2><div id="stsweepbody"></div></section>'
     # The sweep's figures, each class against its own null, open its page (the home page says it in one sentence).
     out["variables"] = variables_section(data.get("sweep"), "").replace("</header>", "</header>" + overview_counter(data.get("sweep")).replace('<a class="btn" href="#/variables">Everything that dims ›</a>', ""), 1)
-    out["candidates"] = f"""<header><h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The case file for run {html.escape(run["name"])}: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Each signal that passed vetting is a {unc}; a rejected or flagged one is named by its status.</p></header>
+    out["candidates"] = f"""<header><h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The case file for the dip's run: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Each signal that passed vetting is a {unc}; a rejected or flagged one is named by its status.</p></header>
       {prov}
       <div class="frametools"><a id="fullpage" href="/candidates/case-file/">Open full page</a><span class="muted">The case file on its own page, at the same dip.</span></div>
-      <div class="dippicker"><label for="dippick">Dip</label><select id="dippick" aria-describedby="dippickhint"></select><span class="sr" id="dippickhint">Every dip in this run, lettered in time order, with its vetting outcome. Each is a {unc}.</span></div>
+      <div class="dippicker"><label for="dippick">Dip</label><select id="dippick" aria-describedby="dippickhint"></select><span class="sr" id="dippickhint">Every dip of every example run, grouped by star and numbered in time order, with its vetting outcome. A dip that passed vetting is a {unc}.</span></div>
       <p class="note" id="framestatus" role="status" hidden></p>
       <p class="note blocked" id="frameblocked" role="alert" hidden>The case file could not load in this view. <a id="blockedlink" href="/candidates/case-file/">Open it on its own page.</a></p>
-      <iframe class="frame waiting" id="docketframe" title="Case file for run {html.escape(run["name"])}: signals, dips and vetting"></iframe>"""
+      <iframe class="frame waiting" id="docketframe" title="Case file: signals, dips and vetting"></iframe>"""
     out["planets"] = f"""<header><h1 class="lead-h" id="h-planets" tabindex="-1">What each depth would imply, if it were a planet.</h1><p>One card per star in the run or the feed. Each entry is a {unc}; the ratio below is what its stored depth implies if it were a planet.</p></header>
       {prov}
       <p class="note"><b>Radius ratio only.</b> Rp/R* = √depth, with depth as a fraction (ppm × 10⁻⁶). This assumes a full, undiluted transit and ignores limb darkening. {html.escape(NO_STELLAR_RADIUS)} Each bar is a ratio scale from 0 to {data["ratio_scale_max"]:.2f}, the same on every card.</p>

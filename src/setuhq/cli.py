@@ -328,10 +328,11 @@ def cmd_docket(args) -> int:
 def cmd_site(args) -> int:
     from setuhq.site import build_site, check_budget
 
-    path = build_site(args.run_dir, args.out, title=args.title, catalog_path=args.catalog,
+    runs = list(args.run_dir)
+    path = build_site(runs[0], args.out, title=args.title, catalog_path=args.catalog,
                       weights_path=args.weights, star=args.star, require_crossmatch=not args.allow_missing_crossmatch,
                       sweep_path=args.sweep, validation_md=args.validation, benchmark_md=args.benchmark,
-                      extras=not args.no_extras)
+                      extras=not args.no_extras, extra_runs=runs[1:], showcase_path=args.showcase)
     print(f"site written to {path.parent}")
     over = check_budget(path.parent)
     for line in over:
@@ -527,10 +528,14 @@ def build_parser() -> argparse.ArgumentParser:
                      help="build even when no stored archive cross-match is usable; the page then prints the stored error")
     docket.set_defaults(func=cmd_docket)
 
-    for name, helptext in (("site", "build the website (every page, the shared files, the report, plates and case file) from a run"),
+    for name, helptext in (("site", "build the website (every page, the shared files, the reports, plates and case files) from one or more runs"),
                            ("app", "the same as 'setuhq site' (the old name, when the site was one app page)")):
         site = sub.add_parser(name, help=helptext)
-        site.add_argument("run_dir")
+        site.add_argument("run_dir", nargs="+", help="the stored runs: the lead run first (the sky map, the panel and the home "
+                                                    "page's reference check), then any other example runs; each gets its dips' "
+                                                    "pages, its case file, its plates and its report")
+        site.add_argument("--showcase", default="docs/results/showcase.json",
+                          help="the example runs' descriptions and literature comparisons (scripts/showcase_compare.py)")
         site.add_argument("--out", required=True, help="the site's root folder (site/ for setuhq.com)")
         site.add_argument("--title", default="SetuHQ")
         site.add_argument("--catalog", help="discovery catalogue JSON for the Candidates and Runs pages")

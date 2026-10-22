@@ -29,7 +29,7 @@ import shutil
 from pathlib import Path
 
 from setuhq import brand
-from setuhq.app import (APP_CSS, APP_JS, DEFAULT_SWEEP, DEFAULT_WEIGHTS, FONTS_DIR, GALAXY_JSON, NAV, ROUTE_META, SUBNAV,
+from setuhq.app import (APP_CSS, APP_JS, DEFAULT_SHOWCASE, DEFAULT_SWEEP, DEFAULT_WEIGHTS, FONTS_DIR, GALAXY_JSON, NAV, ROUTE_META, SUBNAV,
                         UNCONFIRMED, app_data, app_payload, dip_state, galaxy_json, route_sections)
 from setuhq.catalogue import CATALOGUE_JSON, SEARCH_BUTTON, SEARCH_DIALOG
 from setuhq.codenote import technical_note_html
@@ -132,6 +132,24 @@ body[data-route="overview"] main{padding-top:8px}
 .docard b{font-size:17px;font-weight:600;letter-spacing:-.02em}
 .docard span{font-size:13.5px;line-height:1.45;color:var(--ink-2)}
 .docard i{position:absolute;right:16px;top:16px;font-style:normal;font-size:20px;color:var(--cyan)}
+/* the home page's worked examples: one card per stored run */
+.examples{display:grid;gap:14px}
+.excards{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.excard{display:flex;flex-direction:column;gap:6px;height:100%;padding:18px;border-radius:20px;border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+.excard p{margin:0}
+.excard h3{margin:0;font-size:22px;font-weight:600;letter-spacing:-.02em}
+.excard h3 a{color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;min-height:32px}
+.excard h3 a:hover{text-decoration:underline}
+.exkind{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--cyan)}
+:root[data-theme="light"] .exkind{color:color-mix(in oklab,var(--cyan) 45%,#000)}
+@media (prefers-color-scheme: light){:root[data-theme="system"] .exkind{color:color-mix(in oklab,var(--cyan) 45%,#000)}}
+.exsum{font-size:14px;line-height:1.45;color:var(--ink-2)}
+.excount{font-size:14px;font-weight:600;color:var(--ink)}
+.exmeta{font-size:12.5px;color:var(--ink-3)}
+.exlinks{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:auto!important;padding-top:6px}
+.exlinks a,.runlinks a{display:inline-flex;align-items:center;min-height:32px;font-size:13.5px}
+.runlinks{display:flex;flex-wrap:wrap;gap:4px 16px}
+.refcheck{display:grid;gap:14px}
 /* Candidates: the dips a visitor can open, the cards behind Customise, the feed's compact table */
 .rundiplist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .rundiplist li{display:flex;align-items:stretch;gap:8px}
@@ -622,6 +640,7 @@ def _named_objects(data: dict) -> list[str]:
     names = [n for ns in CHAPTER_PLANETS.values() for n in ns]
     names += [x["name"] for x in (data.get("galaxy") or {}).get("notable", [])]
     names += list(((data.get("catalogue_meta") or {}).get("mentions") or {}).keys())
+    names += [ctx["planet"] for ctx in (data.get("run_ctx") or {}).values() if ctx.get("planet")]
     if data["story"].get("planet"):
         names.append(data["story"]["planet"])
     seen, out = set(), []
@@ -659,12 +678,18 @@ def _clear(out: Path) -> None:
 def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ", catalog_path: str | Path | None = None,
                weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None, require_crossmatch: bool = False,
                sweep_path: str | Path | None = DEFAULT_SWEEP, validation_md: str | Path | None = None,
-               benchmark_md: str | Path | None = None, extras: bool = True) -> Path:
+               benchmark_md: str | Path | None = None, extras: bool = True, extra_runs: list | tuple = (),
+               showcase_path: str | Path | None = DEFAULT_SHOWCASE) -> Path:
     """Write the whole site into ``out_dir``; returns the home page's path. ``extras`` also builds the run report,
-    the plates and the stand-alone case file (the tests leave them out when they only need the app)."""
+    the plates and the stand-alone case file (the tests leave them out when they only need the app).
+
+    ``run_dir`` is the lead run; ``extra_runs`` are the other stored example runs, each with its dips' pages, its
+    case file at /candidates/<star>/case-file/, its plates at /evidence/plates/<star>/ and its report at
+    /evidence/report/<star>/."""
     out = Path(out_dir)
     data = app_data(run_dir, title=title, catalog_path=catalog_path, weights_path=weights_path, star=star,
-                    require_crossmatch=require_crossmatch, sweep_path=sweep_path)
+                    require_crossmatch=require_crossmatch, sweep_path=sweep_path, extra_runs=extra_runs,
+                    showcase_path=showcase_path)
     _clear(out)
     out.mkdir(parents=True, exist_ok=True)
     (out / ".nojekyll").write_text("")
@@ -681,6 +706,11 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     frame_name = f"assets/frame/case-file-{_sha(frame_html)}.html"
     (out / frame_name).write_text(frame_html)
     data["docket_frame"] = "/" + frame_name
+    data["docket_frames"] = {data["run"]["name"]: data["docket_frame"]}
+    for rname, fhtml in data["extra_docket_html"].items():
+        fname = f"assets/frame/case-file-{_sha(fhtml)}.html"
+        (out / fname).write_text(fhtml)
+        data["docket_frames"][rname] = "/" + fname
     sections = {k: clean_links(v, lead) for k, v in route_sections(data).items()}
     sections["docs"] = clean_links(docs_section(data), lead)
     payload = json.dumps(app_payload(data), separators=(",", ":"), ensure_ascii=False, allow_nan=False)
@@ -739,7 +769,7 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     view("explorer", _title("explorer"), f"The run's dips and their case files, and {len(feed)} entries of the search feed. Candidates are unconfirmed; none is a confirmed planet.", "/candidates/")
     view("planets", _title("planets"), "What each candidate's depth would imply if it were a planet: the planet-to-star radius ratio, and why no planet size is stated.", "/candidates/radius-ratios/", name="Radius ratios")
     target = hero.get("target") or "the run's star"
-    for d in data["story"]["dips"]:
+    for d in data["story"]["dips"] + data["showcase_dips"]:
         sec, h1 = _dip_header(sections["transit"], d, data["dips"][d["id"]]["label"])
         what = "dip" if d.get("outcome") == "rejected" else "transit"
         view("transit", _title("transit", h1), f"{h1}. The {what} played back from stored values, who on the panel marked it, and its vetting: {dip_state(d.get('outcome'))[2]}.",
@@ -770,8 +800,9 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
             view("planet", _title("planet", nm), desc, f"/planets/{P['slug'][k]}/", body=sec, name=nm, params={"id": P["slug"][k]})
             if P["star"][k]:
                 stars.setdefault(P["star"][k], [])
-        if data["story"]["star"].get("name"):
-            stars.setdefault(data["story"]["star"]["name"], [])
+        for ctx in data["run_ctx"].values():  # every example run's star
+            if ctx["star"].get("name"):
+                stars.setdefault(ctx["star"]["name"], [])
         for k, s in enumerate(P["star"]):
             if s in stars:
                 stars[s].append(k)
@@ -796,14 +827,30 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
 
         build_docket(run_dir, out / "candidates" / "case-file", title=f"{title}: case file, {target}", star=star,
                      require_crossmatch=require_crossmatch)
+        plate_links = [(c["star"], c["plates"]) for c in data["showcase"]]
         build_plate(run_dir, out / "evidence" / "plates", title=f"{title} plates", catalog_path=catalog_path, star=star,
-                    require_crossmatch=require_crossmatch)
+                    require_crossmatch=require_crossmatch, others=[x for x in plate_links if x[1] != "/evidence/plates/"])
         build_report(run_dir, out / "evidence" / "report", title=f"{title}: {target}", validation_md=validation_md,
                      benchmark_md=benchmark_md)
-        for sub, route, label in (("evidence/plates", "plates", "Plates"), ("evidence/report", "report", "Run report")):
+        wrap = [("evidence/plates", "plates", "Plates"), ("evidence/report", "report", "Run report")]
+        standalone = ["/candidates/case-file/", "/evidence/plates/", "/evidence/report/"]
+        # Every other example run: its own case file, plates and report, under its star's address.
+        for x in data["extra_runs"]:
+            card = next(c for c in data["showcase"] if c["run"] == x["run"])
+            build_docket(x["dir"], out / card["case_file"].strip("/"), title=f"{title}: case file, {x['star']}",
+                         require_crossmatch=require_crossmatch, path=card["case_file"])
+            build_plate(x["dir"], out / card["plates"].strip("/"), title=f"{title} plates: {x['star']}", catalog_path=None,
+                        require_crossmatch=require_crossmatch, path=card["plates"],
+                        others=[x for x in plate_links if x[1] != card["plates"]])
+            build_report(x["dir"], out / card["report"].strip("/"), title=f"{title}: {x['star']}",
+                         validation_md=_showcase_md(x["run"]), benchmark_md=benchmark_md)
+            wrap += [(card["plates"].strip("/"), "plates", f"Plates: {x['star']}"), (card["report"].strip("/"), "report", f"Run report: {x['star']}")]
+            standalone += [card["case_file"], card["plates"], card["report"]]
+        for sub, route, label in wrap:
             f = out / sub / "index.html"
             f.write_text(wrap_standalone(f.read_text(), route, label, assets, lead))
-        pages += ["/candidates/case-file/", "/evidence/plates/", "/evidence/report/"]
+        pages += standalone
+        (out / "assets" / "standalone.json").write_text(json.dumps(standalone, indent=0) + "\n")
 
     # Old addresses.
     names = {"/app/": "The app", "/docket/": "The Docket", "/plate/": "The plates", "/report/": "The run report",
@@ -830,6 +877,21 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
 # work saved to disk or printed; they have a budget of their own.
 STANDALONE = ("candidates/case-file", "evidence/plates", "evidence/report")
 STANDALONE_BUDGET = 400_000
+# Each example run's comparison with the literature (scripts/showcase_compare.py), embedded in its run report.
+SHOWCASE_MD_DIR = "docs/results/showcase"
+
+
+def _showcase_md(run: str) -> str | None:
+    path = Path(SHOWCASE_MD_DIR) / f"{run}.md"
+    return str(path) if path.exists() else None
+
+
+def _standalone(rel: str) -> bool:
+    """A stand-alone page: the lead run's (candidates/case-file, evidence/plates, evidence/report) or another example
+    run's (candidates/<star>/case-file, evidence/plates/<star>, evidence/report/<star>)."""
+    parts = rel.split("/")
+    return rel in STANDALONE or (len(parts) == 3 and parts[0] == "candidates" and parts[2] == "case-file") or \
+        (len(parts) == 3 and "/".join(parts[:2]) in ("evidence/plates", "evidence/report"))
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -911,6 +973,6 @@ def check_budget(out_dir: str | Path, budget: int = PAGE_BUDGET) -> list[str]:
             continue  # shared, cached files, not pages
         n = len(p.read_text())
         rel = p.parent.relative_to(out_dir).as_posix()
-        if n > (STANDALONE_BUDGET if rel in STANDALONE else budget):
+        if n > (STANDALONE_BUDGET if _standalone(rel) else budget):
             bad.append(f"{p.relative_to(out_dir)}: {n:,}")
     return bad

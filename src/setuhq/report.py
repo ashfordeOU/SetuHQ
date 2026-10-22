@@ -16,7 +16,7 @@ import shutil
 from pathlib import Path
 
 from setuhq import brand
-from setuhq.names import public_text
+from setuhq.names import ATTRIBUTION, PROBES_ONLY, panel_mode, public_text
 
 STYLE = """
 :root{--bg:#f6f7fb;--panel:#ffffff;--ink:#14161f;--muted:#5b6175;--line:#e2e5ef;--accent:#4f46e5;--accent-2:#0ea5a4;--good:#15803d;--bad:#dc2626;--warn:#b45309;--radius:14px}
@@ -221,13 +221,13 @@ def build_report(
 <html lang='en'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
 <title>{html.escape(title)}</title>
-{brand.head(title, "The archived report of SetuHQ's stored run on pi Men (TESS sector 1): every candidate, its vetting and provenance. Candidates, never confirmations.", brand.page_path(out_dir))}
+{brand.head(title, f"The archived report of SetuHQ's stored run {html.escape(manifest.get('config_name') or run_dir.name)}: every candidate, its vetting and provenance. Candidates, never confirmations.", brand.page_path(out_dir))}
 <style>{STYLE}.hero .brandlogo{{height:28px;width:auto;aspect-ratio:579/132;flex:none;max-width:none;margin-bottom:18px}}</style></head>
 <body>
 <header class='hero' id='overview'><div class='wrap'>
   <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False, height=28)}</a>
   <h1>{html.escape(title)}</h1>
-  <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p>
+  <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p>{f"<p class='lead'><b>{html.escape(PROBES_ONLY)}.</b> {html.escape(ATTRIBUTION)}</p>" if panel_mode(manifest) == "probes_only" else ""}
 </div></header>
 <nav class='report-nav' aria-label='Sections'><div class='wrap'>{nav}</div></nav>
 <main class='wrap'>

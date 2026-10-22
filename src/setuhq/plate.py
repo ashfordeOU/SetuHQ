@@ -34,7 +34,7 @@ from pathlib import Path
 
 from setuhq import brand
 from setuhq import dipslugs
-from setuhq.names import ATTRIBUTION, SENTINEL_KINDS, dip_count
+from setuhq.names import ATTRIBUTION, PROBES_ONLY, SENTINEL_KINDS, dip_count, panel_mode
 from setuhq.docket import OUTCOME_LABEL, docket_data
 
 UNCONFIRMED = "Candidate, unconfirmed."
@@ -80,6 +80,7 @@ nav.toc{margin:0 0 22px;font-size:14px}
 nav.toc h2{font-size:13px;font-weight:600;margin:0 0 4px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 nav.toc ol{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:0 18px}
 nav.toc a{display:inline-flex;align-items:center;min-height:44px}
+nav.toc h2.otherh{margin-top:10px}
 section.river,article.plate{border-top:1px solid var(--ink);padding-top:10px;margin-top:26px}
 h2.ptitle{font-size:20px;font-weight:600;margin:0;line-height:1.25}
 h2.ptitle .num{font-size:14px;color:var(--muted);font-weight:400}
@@ -339,6 +340,7 @@ def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | No
         })
     return {
         "title": title, "stars": stars, "kinds": kinds,
+        "panel_note": PROBES_ONLY if panel_mode(manifest) == "probes_only" else "",
         "subject_days": manifest.get("subject_days"),
         "run": {"name": manifest.get("config_name") or run_dir.name, "dir": str(run_dir),
                 "created_at": manifest.get("created_at", ""), "config_sha256": manifest.get("config_sha256", "")},
@@ -682,11 +684,13 @@ def plate_page(data: dict) -> str:
     plates = "".join(_plate(s, i) for i, s in enumerate(stars, 1))
     cat = data["catalog"]
     run = data["run"]
+    others = "".join(f'<li><a href="{_e(href)}">{_e(name)}</a></li>' for name, href in data.get("others") or [])
+    others = f'<h2 class="otherh">Plates of the other example stars</h2><ol>{others}</ol>' if others else ""
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
-{brand.head(data["title"], "SetuHQ's plates: one print-ready plate per star, from the stored run and the search feed. Every number is a stored value; every candidate is unconfirmed.", "/evidence/plates/")}
+{brand.head(data["title"], "SetuHQ's plates: one print-ready plate per star, from the stored run and the search feed. Every number is a stored value; every candidate is unconfirmed.", data.get("page_path") or "/evidence/plates/")}
 <style>{PLATE_CSS}{PLATE_LOGO_CSS}</style></head>
 <body>
 <a class="skip" href="#plates">Skip to the plates</a>
@@ -697,12 +701,12 @@ def plate_page(data: dict) -> str:
   <p><span class="hedge">Candidate, unconfirmed.</span> {dip_count([c.get("status") for s in stars for c in s["candidates"]])} on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
   <ul class="notes">
     <li>{_e(scope)}</li>
-    <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.</li>
+    <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.{f" {_e(data['panel_note'])}." if data.get("panel_note") else ""}</li>
     <li>{_e(NO_RADIUS)}</li>
     <li>Status is written as a word beside every colour.</li>
   </ul>
 </header>
-<nav class="toc" aria-label="Plates"><h2>Plates</h2><ol>{toc}</ol></nav>
+<nav class="toc" aria-label="Plates"><h2>Plates</h2><ol>{toc}</ol>{others}</nav>
 <section class="river" aria-labelledby="river-h">
   <h2 class="ptitle" id="river-h"><span class="num">River of time</span> the whole feed</h2>
   <p class="psub">One row per star, a tick per candidate. Height is log SNR; colour is status, and each row lists its statuses in words. Stretches of more than {RIVER_GAP_DAYS:.0f} days with no candidate are cut, so the segments are not drawn to a common time scale: each has its own, labelled at its start and end, with its span in days (d) beneath it. A known TOI period is an archive value: {_e(NO_DETECTION)}</p>
@@ -721,8 +725,13 @@ def plate_page(data: dict) -> str:
 
 
 def build_plate(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
-                star: str | None = None, require_crossmatch: bool = False) -> Path:
+                star: str | None = None, require_crossmatch: bool = False, path: str | None = None,
+                others: list[tuple[str, str]] | None = None) -> Path:
+    """The plates page; ``path`` is its address on the site (default /evidence/plates/), ``others`` the
+    (name, address) of the other example runs' plates, linked from this page."""
     data = plate_data(run_dir, title=title, catalog_path=catalog_path, star=star, require_crossmatch=require_crossmatch)
+    data["page_path"] = path or "/evidence/plates/"
+    data["others"] = others or []
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / "index.html"

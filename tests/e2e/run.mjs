@@ -45,12 +45,14 @@ const DIPS = IDS.map(SLUG);
 const catalogue = JSON.parse(readFileSync(join(SITE, "assets", "data", "catalogue.json"), "utf8"));
 const PLANET_SLUGS = new Set(catalogue.planets.slug);
 const STAR_SLUGS = new Set(catalogue.stars.slugs);
-const STANDALONE = ["/candidates/case-file/", "/evidence/plates/", "/evidence/report/"];  // their own pages, not the app's
-const TECHNICAL = ["/docs/", "/evidence/runs/", "/evidence/report/"];  // pages that may quote a stored record verbatim
+// Their own pages, not the app's: every example run's case file, plates and report (the build lists them).
+const STANDALONE = (() => { try { return JSON.parse(readFileSync(join(SITE, "assets", "standalone.json"), "utf8")); }
+  catch (e) { return ["/candidates/case-file/", "/evidence/plates/", "/evidence/report/"]; } })();
+const TECHNICAL = ["/docs/", "/evidence/runs/", ...STANDALONE.filter((p) => p.startsWith("/evidence/report/"))];  // pages that may quote a stored record verbatim
 // One known axe finding, named here so it cannot hide another: on a phone the stand-alone case file's signal list
 // (a listbox) makes each signal's header an accordion button, which ARIA does not allow inside a listbox. Fixing it
 // means a tree pattern for that list; until then it is reported (as "known") rather than failed.
-const KNOWN_AXE = [{ page: "/candidates/case-file/", rule: "aria-required-children", target: "#rows" }];
+const KNOWN_AXE = STANDALONE.filter((p) => p.endsWith("/case-file/")).map((page) => ({ page, rule: "aria-required-children", target: "#rows" }));
 // The deliberate sideways scrollers: what is inside them may run past the window, because they scroll. Anything else
 // whose right edge passes the window is cut off (html and body hide sideways overflow), and fails (tests/e2e/clipped.js).
 const SCROLLERS = [
