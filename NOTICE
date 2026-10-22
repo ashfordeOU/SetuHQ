@@ -106,7 +106,9 @@ WASP-39 b JWST spectrum (CC BY 4.0):
 
 ESA CHEOPS (not covered by the AGPL, CC BY 4.0, the commercial licence or Pro):
   Public CHEOPS Data Reduction Pipeline light curves, read through DACE (below),
-  in the CHEOPS parts of docs/results/stellar_validation.json and .md and in
+  in docs/results/stellar_validation_cheops.json and .md (all CHEOPS-derived
+  validation results; the main stellar_validation files keep only the CHEOPS
+  status and pass/fail labels) and in
   tests/data/cheops_gj65_excerpt.json (a 140-point derived excerpt of visit
   CH_PR100018_TG035201_V0300). Data in the ESA Space Science Archives are
   distributed under the CC BY-NC 3.0 IGO licence; commercial use needs ESA's

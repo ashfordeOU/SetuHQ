@@ -75,8 +75,9 @@ limb-darkening table, the WASP-39 b JWST spectrum), CC BY 4.0 covers only SetuHQ
 contribution, and the source's terms and requested acknowledgements apply to the rest. They are
 listed in [`NOTICE`](NOTICE).
 
-**CHEOPS data are excluded.** CHEOPS light curves, and every output derived from them (the CHEOPS
-parts of `docs/results/stellar_validation.*`, the test excerpt `tests/data/cheops_gj65_excerpt.json`,
+**CHEOPS data are excluded.** CHEOPS light curves, and every output derived from them (the files
+`docs/results/stellar_validation_cheops.json` and `docs/results/stellar_validation_cheops.md`, which
+hold every CHEOPS-derived validation result; the test excerpt `tests/data/cheops_gj65_excerpt.json`;
 and anything `setuhq cheops` or the `get_cheops_lightcurve` tool produces), stay under ESA's terms:
 data in the ESA Space Science Archives are distributed under the **CC BY-NC 3.0 IGO** licence, and any
 commercial use, including use that indirectly generates financial gain, needs ESA's **prior
@@ -86,11 +87,16 @@ them**: a hosted, Pro or other commercial use of CHEOPS data through SetuHQ need
 authorisation first. Every CHEOPS-derived output carries ESA's acknowledgement, the programme and
 visit ids, the credit line "Credit: ESA, <proposal PI>" and SetuHQ's statement that it is not
 affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS
-Consortium ([`docs/STELLAR.md`](docs/STELLAR.md)).
+Consortium ([`docs/STELLAR.md`](docs/STELLAR.md)). `docs/results/stellar_validation.json` and `.md`
+hold no CHEOPS-derived values: of the CHEOPS capability they keep only its status label and the
+pass or fail of each of its checks (key `capabilities.cheops` and the `checks` rows with capability
+`cheops`), and they name the CHEOPS file under `cheops_results_in`.
 
 **The `[cheops]` extra installs `dace-query`, which is licensed GPL-3.0.** It is optional, not
-shipped with SetuHQ and not needed for anything else; it is compatible with the AGPL-3.0 option,
-and a commercial licensee who installs it takes on its GPL-3.0 terms for that package.
+shipped with SetuHQ and not needed for anything else, and it is compatible with the AGPL-3.0 option.
+A commercial licensee who would distribute `dace-query` together with SetuHQ, or a product built on
+it, should seek legal advice first: the GPL may extend to the combined work, and the commercial
+licence does not cover `dace-query`.
 
 ---
 
