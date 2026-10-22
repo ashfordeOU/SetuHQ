@@ -90,7 +90,8 @@ def test_a_tag_needs_an_empty_unreleased_section_and_matching_dates(tmp_path):
     assert f"## [{ver}] - 2031-02-03" in cl.read_text(encoding="utf-8")
     assert 'date-released: "2031-02-03"' in (root / "CITATION.cff").read_text(encoding="utf-8")
     text = cl.read_text(encoding="utf-8")
-    empty = text.replace("## [Unreleased]\n", "## [Unreleased]\n\n", 1)
+    # [Unreleased] with its entries (if any) taken out, as on the day of a release.
+    empty = re.sub(r"(## \[Unreleased\]\n).*?(?=\n## \[)", r"\1\n", text, count=1, flags=re.S)
     cl.write_text(empty, encoding="utf-8")
     assert sync.check(root, tag=f"v{ver}")[1] == []
     cl.write_text(text.replace("## [Unreleased]\n", "## [Unreleased]\n\n- a change not in the release\n", 1),

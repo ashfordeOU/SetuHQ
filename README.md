@@ -94,7 +94,8 @@ SetuHQ finds and vets *candidates*.
 
 Every screenshot below is one frame rule: a 1440 × 900 window at twice the pixel density, motion
 reduced so every drawing is at rest, cropped to the app's 1360 × 850 content frame (16:10)
-starting just above the section shown. Light and dark follow your GitHub theme.
+starting just above the section shown. Light and dark follow your GitHub theme. The site's sections, addresses
+and end-to-end tests are described in [docs/SITE.md](docs/SITE.md).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/app/mission-dark.webp">
@@ -556,7 +557,7 @@ published pipelines.
 
 <br>
 
-* **The real-TOI leaderboard** ([docs/leaderboard/](docs/leaderboard/README.md), and `#/leaderboard` in the app)
+* **The real-TOI leaderboard** ([docs/leaderboard/](docs/leaderboard/README.md), and [/evidence/leaderboard/](https://setuhq.com/evidence/leaderboard/) on the site)
   takes a method's detected events per star of the held-out half of the frozen 662-TOI benchmark, and scores them
   itself: completeness, FP rejection, control false alarms and reliability, with Wilson intervals. It ranks by
   Youden's J on the benchmark's searchable set with one predicate (a clean candidate) on both sides, so calling every
@@ -612,8 +613,8 @@ setuhq bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out bundl
 setuhq ingest bundle/ --attested-by <pr-author>   # sealed, not signed: re-searches every finding + max(3, 5%) by a nonce
 ```
 
-The site reads `docs/sweep/catalogue.json`: the Overview's counter, #/variables (Catalogue › Everything that
-dims, with filters, per-TIC pages and CSV/JSON export), the sweep layer on the Sky map, Mission Control's
+The site reads `docs/sweep/catalogue.json`: the home page's counter, /catalogue/everything-that-dims/ (Explore ›
+Everything that dims, with filters, per-TIC pages and CSV/JSON export), the sweep layer on the Sky map, Mission Control's
 telemetry and the search. Anyone can add a sector with their own Claude subscription or API key (kept in
 their environment, never in a file) and be credited: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -831,7 +832,9 @@ events and nulls. That second step is not built yet.
 
 ## Install
 
-SetuHQ needs Python 3.10 or later. It is not on PyPI; install it from this repository:
+SetuHQ needs Python 3.11 or later. Tagged releases are set up to publish to PyPI as `setuhq`
+([docs/RELEASING.md](docs/RELEASING.md)); once v0.1.0 is there, `pip install "setuhq[mcp]"` installs the
+package and the MCP server. Until then, install it from this repository:
 
 ```bash
 pip install "git+https://github.com/ashfordeOU/SetuHQ"            # the setuhq and setuhq-mcp commands
@@ -966,7 +969,7 @@ honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for 
 
 | Channel | Command | Requires |
 |---|---|---|
-| Install | `pip install -e '.[mcp]'` in a checkout, then `setuhq-mcp --list-tools` | Python 3.10+ |
+| Install | `pip install -e '.[mcp]'` in a checkout, then `setuhq-mcp --list-tools` | Python 3.11+ |
 | Claude Code | `claude mcp add setuhq -- /path/to/SetuHQ/.venv/bin/setuhq-mcp` | the install |
 | Claude Code plugin | `/plugin install setuhq --marketplace ashfordeOU/SetuHQ` | `setuhq-mcp` on PATH |
 | Claude Desktop, Cursor, VS Code, Codex CLI, Gemini CLI | snippets in [`docs/MCP-INSTALL.md`](docs/MCP-INSTALL.md) | the install |
