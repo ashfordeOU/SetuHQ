@@ -199,7 +199,7 @@ def story_data(run_dir: str | Path, dock: dict, feed: list[dict], calibration: d
         proof.append({"big": str(counts["known"]), "colour": "#64D2FF",
                       "text": f"dips on the period of {planet}, a known planet. Recovered, not discovered."})
     proof.append({"big": f"{len(sentinels)} + {len(probes)}", "colour": "#F5F5F7",
-                  "text": "AI Sentinels and Probes read every light curve; each vote counts as much as it scored on planted test transits."})
+                  "text": "AI Sentinels and Probes read this run's light curve; each vote counts as much as it scored on planted test transits."})
     if feed:
         stars = {r["tic"] for r in feed}
         n_new = sum(1 for r in feed if r.get("status") == "new_candidate")
