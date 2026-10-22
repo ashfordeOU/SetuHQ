@@ -30,7 +30,7 @@
         "runs/tess-pi-men-s1": "bb9176770fdecbf8f316c2aa9906785b9f3562de3deab559b4d92ef1d22e5859",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "db41d03"
+      "commit": "5f8978f"
     },
     "benchmark": {
       "files": [
@@ -42,7 +42,7 @@
         "docs/paper/references.json": "0b1742b0fd5e4b5e4bb401f4acb7ea6b8b9534b334dc69781ec22de89928d113",
         "docs/results/benchmark_toi_sample.json": "b0ac192b2363be04579c856e82f275ec4a451f0566e83f4ef87c4287c4fe39f7"
       },
-      "commit": "d6f8ae8"
+      "commit": "5f8978f"
     },
     "feed-noise": {
       "files": [
@@ -52,7 +52,7 @@
       "sources": {
         "docs/results/benchmark_real_tois_clipfix.json": "a30fecf398f99bfff03ff581e3bea6d7bb3a4945971326d88ef6ae23e2e8dc1f"
       },
-      "commit": "d6f8ae8"
+      "commit": "5f8978f"
     },
     "sky-coverage": {
       "files": [
@@ -74,7 +74,7 @@
         "configs/tess_pi_men_s1.toml": "ecc1bf3a744ca6aea3199135cbb9f907b5203d13a047bb608305dc530a0c968b",
         "docs/results/pi_men_validation.json": "5209f96fb12e32852ebaa16595e36026327ef8904c01370b2bbc80ddc29a7371"
       },
-      "commit": "db41d03"
+      "commit": "5f8978f"
     },
     "architecture": {
       "files": [
@@ -86,7 +86,7 @@
         "docs/results/exoplanet_map.json": "949a62e97e0ba84eb55c1a7675b8e6b065e519de43e2dcdc79a49761707dd56e",
         "docs/results/benchmark_real_tois.json": "3a461b731a82f309d04be90c1f72231c87d8ff4c2cf855497cb28af1f53544da"
       },
-      "commit": "db41d03"
+      "commit": "5f8978f"
     },
     "methods-strip": {
       "files": [
