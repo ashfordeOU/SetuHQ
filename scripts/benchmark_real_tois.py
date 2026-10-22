@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import sys
 import time
@@ -992,12 +993,14 @@ def why_note(w: dict) -> str:
 
 STALE_HOURS = 12.0  # how far from a predicted epoch a missed TOI's dip may sit and still count as a stale-ephemeris case
 STALE_DEPTH = 3.0   # the dip's depth (window or fitted, the larger) within this factor of the TOI's
+STALE_SIGMA = 3.0   # and its offset at least this many sigma of the ephemeris error propagated to that epoch
 
 
 def stale_ephemeris(results: list[dict], sample: dict) -> dict:
-    """An audit, not a rule: CP/KP TOIs the benchmark counts as missed although a vetted dip of comparable depth sits
-    near a predicted epoch, off it by more than match_toi's tolerance but within STALE_HOURS (and a quarter period),
-    and matching no TOI of the star. Such a dip may be the TOI's own transit against a published ephemeris that has
+    """An audit, not a rule: CP/KP TOIs the benchmark counts as missed, with no dip at all on the published ephemeris
+    (not "seen"), although a vetted dip of comparable depth sits near a predicted epoch, off it by more than
+    match_toi's tolerance and by at least STALE_SIGMA sigma of the propagated ephemeris error, but within STALE_HOURS
+    (and a quarter period), and matching no TOI of the star. Such a dip may be the TOI's own transit against a published ephemeris that has
     drifted; the frozen matching rule is not changed, so these stay misses."""
     from setuhq.discover import match_toi
 
@@ -1005,7 +1008,7 @@ def stale_ephemeris(results: list[dict], sample: dict) -> dict:
     rows = []
     for r in results:
         t = toi[r["toi"]]
-        if t["class"] != "positive" or not r.get("real") or r["real"]["recovered"] or not t.get("depth_ppm"):
+        if t["class"] != "positive" or not r.get("real") or r["real"]["seen"] or not t.get("depth_ppm"):
             continue
         path = CACHE / str(r["tic"]) / "real" / "candidates.json"
         full = _target(r["tic"])
@@ -1016,18 +1019,23 @@ def stale_ephemeris(results: list[dict], sample: dict) -> dict:
                 continue
             n = round((c["t_center"] - t0) / period)
             off = 24 * (c["t_center"] - (t0 + n * period))
+            sigma_h = 24 * math.hypot(t.get("tranmid_err") or 0.0, n * (t.get("period_err") or 0.0))
+            if abs(off) < STALE_SIGMA * sigma_h:
+                continue
             ratio = max(c.get("depth_ppm") or 0, c.get("fit_depth_ppm") or 0) / t["depth_ppm"]
             if abs(off) <= min(STALE_HOURS, 6 * period) and 1 / STALE_DEPTH <= ratio <= STALE_DEPTH:
                 if best is None or abs(off) < abs(best["offset_hours"]):
-                    best = {"toi": t["toi"], "half": t["half"], "offset_hours": round(off, 1), "depth_ratio": round(ratio, 2),
+                    best = {"toi": t["toi"], "half": t["half"], "offset_hours": round(off, 1),
+                            "offset_sigma": round(abs(off) / sigma_h, 1) if sigma_h else None, "depth_ratio": round(ratio, 2),
                             "dip_duration_hours": round(c["duration_hours"], 2), "toi_duration_hours": t["duration_hours"],
                             "dip_period_days": c.get("period_days") and round(c["period_days"], 4), "toi_period_days": period}
         if best:
             rows.append(best)
     rows.sort(key=lambda x: (x["half"] != "held_out", x["toi"]))
-    return {"rule": (f"a vetted dip matching no TOI of the star, of depth within {STALE_DEPTH:g}x the TOI's (window or fitted "
-                     f"depth, the larger), off the nearest predicted epoch by more than the matching tolerance but by at most "
-                     f"{STALE_HOURS:g} h and a quarter period"),
+    return {"rule": (f"no dip lies on the published ephemeris but a vetted dip matching no TOI of the star, of depth within "
+                     f"{STALE_DEPTH:g}x the TOI's (window or fitted depth, the larger), lies off the nearest predicted epoch by "
+                     f"more than the matching tolerance and by at least {STALE_SIGMA:g} sigma of the propagated ephemeris error, "
+                     f"but by at most {STALE_HOURS:g} h and a quarter period"),
             "held_out": sum(1 for x in rows if x["half"] == "held_out"), "all": len(rows), "stars": rows}
 
 

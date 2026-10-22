@@ -531,18 +531,20 @@ def _stale_lines(data: dict) -> list[str]:
         return []
     lines = ["", "## Known limits of the matching and of the dip measurement", "",
              f"**Stale published ephemerides.** The frozen rule counts a TOI as recovered only when a vetted dip lies on its "
-             f"published ephemeris. An audit (not a rule; the matching is unchanged) finds {st['held_out']} held-out CP/KP TOIs "
-             f"({st['all']} in both halves) counted as missed although {st['rule']}. Such a dip may be the TOI's own transit "
-             "against an ephemeris that has drifted since it was published; they stay misses here.", ""]
+             f"published ephemeris. An audit (not a rule; the matching is unchanged) finds {st['held_out']} held-out CP/KP "
+             f"TOI{'' if st['held_out'] == 1 else 's'} ({st['all']} in both halves) counted as missed although {st['rule']}. Such a dip may be the TOI's own transit "
+             "against an ephemeris that has drifted since it was published; the frozen rule still counts it as a miss.", ""]
     if st["stars"]:
-        lines += ["| half | TOI | offset from the predicted epoch (h) | dip depth / TOI depth | dip duration (h) | TOI duration (h) | dip period (d) | TOI period (d) |",
-                  "|---|---|---:|---:|---:|---:|---:|---:|"]
+        lines += ["| half | TOI | offset from the predicted epoch (h)¹ | offset / ephemeris σ | dip depth / TOI depth | dip duration (h) | TOI duration (h) | dip period (d) | TOI period (d) |",
+                  "|---|---|---:|---:|---:|---:|---:|---:|---:|"]
         for x in st["stars"]:
-            lines.append(f"| {x['half'].replace('_', '-')} | {x['toi']} | {x['offset_hours']:+.1f} | {x['depth_ratio']:.2f} | "
+            lines.append(f"| {x['half'].replace('_', '-')} | {x['toi']} | {x['offset_hours']:+.1f} | {x.get('offset_sigma') or '—'} | {x['depth_ratio']:.2f} | "
                          f"{x['dip_duration_hours']:.2f} | {x['toi_duration_hours']:.2f} | {x['dip_period_days'] or '—'} | "
                          f"{x['toi_period_days']:.4f} |")
-        lines.append("")
-    lines += ["One is checked by hand: TOI 1905.01. Its sector holds two full transits about 25 ppt deep and 2.5 h long "
+        lines += ["", "¹ The offset of the dip's centre, which is the centre of the window the Probes marked. For TOI 1905.01 that "
+                  "window covers only the ingress, so its centre sits 8.4 h before the prediction while the transit's own centre "
+                  "is 7.2 h before it.", ""]
+    lines += ["Checked by hand: TOI 1905.01. Its sector holds two full transits about 25 ppt deep and 2.5 h long "
               "(BTJD 3776.91 and 3794.09); the published ephemeris predicts them 7.2 h later, 7σ of its propagated "
               "error, so even a perfect detection would not match. The first run's \"recovery\" was a residual dip left at "
               "the predicted time after the clipping had cut the transit out.", "",

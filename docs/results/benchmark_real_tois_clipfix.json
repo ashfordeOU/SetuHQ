@@ -1,6 +1,6 @@
 {
  "edition": "clipfix",
- "generated_at": "2026-10-22T02:59:42+00:00",
+ "generated_at": "2026-10-22T05:58:17+00:00",
  "sample": {
   "source": "NASA Exoplanet Archive, table toi",
   "fetched_at": "2026-10-19T11:00:16Z",
@@ -2614,7 +2614,7 @@
    "old_catalogue": "docs/discoveries/catalog_v1_fap200.json"
   }
  },
- "code_commit": "7e944c70434b83cd72342c2b093e4f7c396fcbdb",
+ "code_commit": "0ae8ccf0a23502a2324759a23a7d5ca277d63bcc",
  "code_provenance": {
   "fingerprints": [
    "0b8e86a1fb71e777"
@@ -19923,29 +19923,20 @@
   }
  ],
  "stale_ephemeris": {
-  "rule": "a vetted dip matching no TOI of the star, of depth within 3x the TOI's (window or fitted depth, the larger), off the nearest predicted epoch by more than the matching tolerance but by at most 12 h and a quarter period",
-  "held_out": 2,
-  "all": 2,
+  "rule": "no dip lies on the published ephemeris but a vetted dip matching no TOI of the star, of depth within 3x the TOI's (window or fitted depth, the larger), lies off the nearest predicted epoch by more than the matching tolerance and by at least 3 sigma of the propagated ephemeris error, but by at most 12 h and a quarter period",
+  "held_out": 1,
+  "all": 1,
   "stars": [
    {
     "toi": "1905.01",
     "half": "held_out",
     "offset_hours": -8.4,
+    "offset_sigma": 8.3,
     "depth_ratio": 0.99,
     "dip_duration_hours": 0.79,
     "toi_duration_hours": 2.648,
     "dip_period_days": 8.5813,
     "toi_period_days": 5.72226
-   },
-   {
-    "toi": "6821.01",
-    "half": "held_out",
-    "offset_hours": -10.4,
-    "depth_ratio": 2.49,
-    "dip_duration_hours": 0.89,
-    "toi_duration_hours": 2.148,
-    "dip_period_days": null,
-    "toi_period_days": 3.535713
    }
   ]
  },

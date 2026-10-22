@@ -4,7 +4,7 @@ Not to be confused with the injection threshold sweep in [docs/threshold_sweep.m
 
 Measured on a stated benchmark; not discoveries. Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.
 
-Frozen sample sha256 `6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac` (docs/results/benchmark_toi_sample.json). Public inputs (tuning half with labels, held-out half without) sha256 `d0e4f2d9c5538800e9a34d018757f99e1d1672060e71ae56bbaf87fcaf0c15b4` (docs/leaderboard/tuning_inputs.json). Sentinel subsample sha256 `999c61bddc47cae0f47674ea77e1524c77697ad7da35d52f2abd7578924016b2`. Benchmark code commit `7e944c70434b83cd72342c2b093e4f7c396fcbdb`.
+Frozen sample sha256 `6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac` (docs/results/benchmark_toi_sample.json). Public inputs (tuning half with labels, held-out half without) sha256 `d0e4f2d9c5538800e9a34d018757f99e1d1672060e71ae56bbaf87fcaf0c15b4` (docs/leaderboard/tuning_inputs.json). Sentinel subsample sha256 `999c61bddc47cae0f47674ea77e1524c77697ad7da35d52f2abd7578924016b2`. Benchmark code commit `0ae8ccf0a23502a2324759a23a7d5ca277d63bcc`.
 
 ## Rules
 

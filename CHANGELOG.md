@@ -35,9 +35,9 @@ breaking changes are called out explicitly.
   - The threshold sweep's held-out score fell from 0.875 to 0.833 (2 of 48 injections at 1000 ppm), a
     change that came with the limb-darkened injections, not the two fixes: the sweep dates from 2026-10-16.
   - Each historical record's note now names its re-run instead of "Not re-run since".
-  - The re-run's report adds a stale-ephemeris audit (2 held-out CP/KP misses with a comparable dip within
-    12 h of a predicted epoch, TOI 1905.01 among them) and the window-measurement limit; the matching rule
-    is unchanged.
+  - The re-run's report adds a stale-ephemeris audit (one held-out CP/KP miss, TOI 1905.01: no dip on the
+    published ephemeris, a comparable dip within 12 h and at least 3σ of the propagated ephemeris error off
+    it) and the window-measurement limit; the matching rule is unchanged.
   - The live catalogue, the injection-recovery benchmark and the threshold sweep; the leaderboard
     (Probes J 0.35 against the metadata floor's 0.39, paired ΔJ +0.04, −0.10 to +0.17: still not
     shown to beat it) and the methods paper read the re-run.

@@ -85,14 +85,15 @@ Why the inverted control and the FP TOIs pass more often: of the dips on inverte
 
 ## Known limits of the matching and of the dip measurement
 
-**Stale published ephemerides.** The frozen rule counts a TOI as recovered only when a vetted dip lies on its published ephemeris. An audit (not a rule; the matching is unchanged) finds 2 held-out CP/KP TOIs (2 in both halves) counted as missed although a vetted dip matching no TOI of the star, of depth within 3x the TOI's (window or fitted depth, the larger), off the nearest predicted epoch by more than the matching tolerance but by at most 12 h and a quarter period. Such a dip may be the TOI's own transit against an ephemeris that has drifted since it was published; they stay misses here.
+**Stale published ephemerides.** The frozen rule counts a TOI as recovered only when a vetted dip lies on its published ephemeris. An audit (not a rule; the matching is unchanged) finds 1 held-out CP/KP TOI (1 in both halves) counted as missed although no dip lies on the published ephemeris but a vetted dip matching no TOI of the star, of depth within 3x the TOI's (window or fitted depth, the larger), lies off the nearest predicted epoch by more than the matching tolerance and by at least 3 sigma of the propagated ephemeris error, but by at most 12 h and a quarter period. Such a dip may be the TOI's own transit against an ephemeris that has drifted since it was published; the frozen rule still counts it as a miss.
 
-| half | TOI | offset from the predicted epoch (h) | dip depth / TOI depth | dip duration (h) | TOI duration (h) | dip period (d) | TOI period (d) |
-|---|---|---:|---:|---:|---:|---:|---:|
-| held-out | 1905.01 | -8.4 | 0.99 | 0.79 | 2.65 | 8.5813 | 5.7223 |
-| held-out | 6821.01 | -10.4 | 2.49 | 0.89 | 2.15 | — | 3.5357 |
+| half | TOI | offset from the predicted epoch (h)¹ | offset / ephemeris σ | dip depth / TOI depth | dip duration (h) | TOI duration (h) | dip period (d) | TOI period (d) |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| held-out | 1905.01 | -8.4 | 8.3 | 0.99 | 0.79 | 2.65 | 8.5813 | 5.7223 |
 
-One is checked by hand: TOI 1905.01. Its sector holds two full transits about 25 ppt deep and 2.5 h long (BTJD 3776.91 and 3794.09); the published ephemeris predicts them 7.2 h later, 7σ of its propagated error, so even a perfect detection would not match. The first run's "recovery" was a residual dip left at the predicted time after the clipping had cut the transit out.
+¹ The offset of the dip's centre, which is the centre of the window the Probes marked. For TOI 1905.01 that window covers only the ingress, so its centre sits 8.4 h before the prediction while the transit's own centre is 7.2 h before it.
+
+Checked by hand: TOI 1905.01. Its sector holds two full transits about 25 ppt deep and 2.5 h long (BTJD 3776.91 and 3794.09); the published ephemeris predicts them 7.2 h later, 7σ of its propagated error, so even a perfect detection would not match. The first run's "recovery" was a residual dip left at the predicted time after the clipping had cut the transit out.
 
 **Window depth and duration on deep, clear transits.** A dip's depth and duration are measured over the window the Probes marked. On TOI 1905.01 the marks cover only the ingress, so the dip reads 0.79 h and 2.9 ppt against the transit's 2.5 h and 25 ppt (the limb-darkened fit of the same dip gets them right: 25.3 ppt, 2.75 h), and the BLS period is an alias (3P/2). Changing how the window is measured would change frozen outcomes, so it is recorded as a known limit (ROADMAP), not changed here.
 

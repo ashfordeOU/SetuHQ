@@ -14,7 +14,7 @@
 available offline in the environment that produced this draft, so no LaTeX version is provided yet.*
 
 *Generated from the committed results by `scripts/paper_numbers.py` (benchmark report of 2026-10-22,
-code commit `7e944c7`: the benchmark re-run on the current code, after the two fixes of Section 5.6). Results
+code commit `0ae8ccf`: the benchmark re-run on the current code, after the two fixes of Section 5.6). Results
 that later work will change are marked pending; see the section "Pending results".*
 
 Sentinels run on Claude (Anthropic). Probes are deterministic matched-filter detectors.
@@ -204,7 +204,7 @@ come from synthetic injection tests, and the vetting, V-shape, density and FAP r
 light curve was downloaded.
 
 **Code version.** Each per-star result records a fingerprint of the pipeline code that produced it:
-`0b8e86a1fb71e777` = commit 8dde211 (HEAD differs only in comments and docstrings). The report was generated at commit `7e944c70434b83cd72342c2b093e4f7c396fcbdb`. Every star, controls included, was
+`0b8e86a1fb71e777` = commit 8dde211 (HEAD differs only in comments and docstrings). The report was generated at commit `0ae8ccf0a23502a2324759a23a7d5ca277d63bcc`. Every star, controls included, was
 run again from its light curve with this code; no stored classification was reused. The first run, on the pre-fix
 code (commit 76de67d, 40cceca), is kept as `docs/results/benchmark_real_tois.json`.
 
@@ -462,7 +462,7 @@ independent evidence such as radial velocities, and no SetuHQ output is called c
 
 ## 8 Reproducibility
 
-* **Code.** The benchmark report was generated at commit `7e944c70434b83cd72342c2b093e4f7c396fcbdb` (Section 4 lists the pipeline
+* **Code.** The benchmark report was generated at commit `0ae8ccf0a23502a2324759a23a7d5ca277d63bcc` (Section 4 lists the pipeline
   fingerprints). The frozen sample is `docs/results/benchmark_toi_sample.json` (sha256 `6f0e111ec8d2c38d3e7927505f0be4a2c7fae8b73d7cc17c37646baedf044cac`); the report
   is `docs/results/benchmark_real_tois_clipfix.md` and `.json` (the first run, on the pre-fix code:
   `docs/results/benchmark_real_tois.md` and `.json`); the commands are in `scripts/benchmark_real_tois.py`

@@ -813,9 +813,9 @@ events and nulls. That second step is not built yet.
   detection would not match. The first run's "recovery" was a residual dip left at the predicted time after the
   clipping had cut the transit out; the re-run's dip is the real transit, measured on a window the Probes marked over
   the ingress only (0.79 h, 2.9 ppt; the limb-darkened fit gives 25.3 ppt and 2.75 h) and on an alias period (3P/2).
-  An audit finds 2 held-out CP/KP misses of this kind (a vetted dip of comparable depth within 12 h of a predicted
-  epoch, off the matching tolerance); the frozen matching rule is unchanged, so they stay misses (the re-run's report,
-  "Known limits"). The first run is kept, with its pre-fix note, in
+  An audit finds it is the only held-out CP/KP miss of this kind (no dip on the published ephemeris, but a vetted
+  dip of comparable depth within 12 h of a predicted epoch and at least 3σ of the propagated ephemeris error off it);
+  the frozen matching rule is unchanged, so it stays a miss (the re-run's report, "Known limits"). The first run is kept, with its pre-fix note, in
   [docs/results/benchmark_real_tois.md](docs/results/benchmark_real_tois.md).
 
 </details>
