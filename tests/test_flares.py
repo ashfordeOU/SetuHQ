@@ -106,7 +106,7 @@ def test_symmetric_bumps_are_rejected_by_the_shape_test():
 
 def test_energies_unavailable_without_teff_and_radius():
     e = fl.flare_energies(10.0, {"teff": None, "radius": 0.3})
-    assert e["e_bol_erg"] is None and e["status"] == "unavailable" and "Teff" in e["why"]
+    assert e["e_bol_erg"] is None and e["status"] == "unavailable" and "Teff" in e["why"] and "magnitude" in e["why"]
     assert fl.flare_energies(10.0, None)["status"] == "unavailable"
 
 
@@ -116,13 +116,26 @@ def test_bolometric_energy_matches_the_closed_form():
     e = fl.flare_energies(ed, star, "TESS")
     r = 0.35 * 6.957e10
     expect = ed * math.pi * r ** 2 * 5.670374419e-5 * 9000.0 ** 4 * band_integral(3300.0, "TESS") / band_integral(9000.0, "TESS")
-    assert e["e_bol_erg"] == pytest.approx(expect, rel=1e-9)
-    # a 9000 K flare puts about a fifth of its light in the TESS band (Günther et al. 2020 use the same model)
+    assert e["e_bol_erg"] == pytest.approx(expect, rel=1e-9)        # Shibayama et al. 2013 / Günther et al. 2020
+    assert e["luminosity_route"].startswith("Teff") and e["teff_source"] == "TIC v8.2"
+    # a 9000 K flare puts about a fifth of its light in the TESS band (Medina et al. 2020 quote 20.9%)
     assert 0.15 < band_fraction(9000.0, "TESS") < 0.3
-    # band energy uses the star's band luminosity
-    lum = fl.stellar_band_luminosity({**star, "tmag": 9.0, "distance_pc": 10.0})
-    assert e["e_band_erg"] == pytest.approx(ed * lum["l_band_erg_s"])
-    assert lum["l_band_from_magnitude_erg_s"] > 0
+
+
+def test_magnitude_route_uses_sullivan_zero_point_and_is_primary():
+    star = {"teff": 3300.0, "radius": 0.35, "tmag": 9.0, "distance_pc": 10.0}
+    lum = fl.stellar_band_luminosity(star)
+    pc = 3.0856775814913673e18
+    expect = 4 * math.pi * (10 * pc) ** 2 * 4.03e-6 * 10 ** (-0.4 * 9.0)
+    assert lum["l_band_magnitude_erg_s"] == pytest.approx(expect, rel=1e-12)
+    assert lum["l_band_erg_s"] == lum["l_band_magnitude_erg_s"] and lum["route"].startswith("magnitude")
+    e = fl.flare_energies(20.0, star)
+    assert e["e_band_erg"] == pytest.approx(20.0 * expect) and e["e_band_teff_radius_erg"] > 0
+    # no Teff, but a magnitude and a distance: energies from the magnitude route
+    assert fl.flare_energies(20.0, {"tmag": 9.0, "distance_pc": 10.0})["status"] == "computed"
+    # a fallback Teff carries its label
+    e2 = fl.flare_energies(20.0, {"teff": 3200.0, "radius": 0.2, "teff_source": "Teff from the CHEOPS archive"}, "CHEOPS")
+    assert e2["teff_source"] == "Teff from the CHEOPS archive"
 
 
 def test_planck_integral_against_stefan_boltzmann():
@@ -204,3 +217,23 @@ def test_savgol_detrend_on_a_cheops_like_visit():
     out = fl.detect_flares(t, f, config=fl.config_for("CHEOPS"), band="CHEOPS", star={"teff": 3000, "radius": 0.2})
     assert any(abs(x["t_peak"] - t[40]) < 3 * cad for x in out["flares"])
     assert out["summary"]["savgol_degrees"] and min(out["summary"]["savgol_degrees"]) >= 2
+
+
+def test_bic_effective_n_penalises_red_noise():
+    assert fl._bic(1.0, 100, 3, rho=0.5) > fl._bic(1.0, 100, 3) - 100   # finite, and
+    d_white = fl._bic(1.0, 100, 3) - fl._bic(0.8, 100, 6)
+    d_red = fl._bic(1.0, 100, 3, rho=0.6) - fl._bic(0.8, 100, 6, rho=0.6)
+    assert d_red < d_white                     # an extra component needs more improvement in red noise
+
+
+def test_single_flares_are_rarely_split():
+    t, f = _lc(seed=21, days=6.0)
+    r = fl.inject_recover(t, f, n_trials=2, per_trial=10, amp_range=(5e-3, 5e-2), fwhm_minutes=(3.0, 30.0), seed=2)
+    fs = fl.false_split_rate(r["injections"])
+    assert fs["recovered_clean"] >= 10 and fs["rate"] <= 0.2
+
+
+def test_inverted_null_masks_real_flares():
+    t, f = _lc(seed=8, flares=[(2.0, 30.0, 0.05), (4.5, 20.0, 0.04)])
+    nul = fl.inverted_null(t, f)
+    assert nul["masked_real_flares"] >= 2 and nul["false_positives"] == 0

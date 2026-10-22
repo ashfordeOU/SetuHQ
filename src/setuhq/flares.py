@@ -21,14 +21,17 @@ Methods reimplemented from their published descriptions (no code or text copied)
   quadratic by ΔBIC ≥ 6, and the chosen templates beat as many symmetric Gaussian bumps by ΔBIC ≥ 10 (a flare
   rises faster than it decays; noise, residual spots and inverted transits do not: this test was set on AU Mic
   sector 1 and its flux-inverted null, then frozen); further components are added one at a time while each lowers the BIC by 6 or more, up to
-  five (Davenport et al. 2014; Bruno et al. 2024 and Poyatos et al. 2025 use the same scheme with the AIC).
+  five (Davenport et al. 2014; Bruno et al. 2024 and Poyatos et al. 2025 use the same scheme with the AIC). The BIC
+  uses an effective number of points for the noise's lag-one correlation, and an extra component must also be a
+  visible peak (3σ and a tenth of the strongest component); the false-split rate on injected single flares is
+  measured and reported.
   Rise and decay times, amplitude, FWHM and the equivalent duration (ED) are recorded for the flare and for
   each component.
-* **Energies**: E_band = ED × L★,band, the star's quiescent luminosity in the band from TIC Teff and radius
-  (Planck spectrum through the instrument response, :mod:`setuhq.passbands`), cross-checked against the TESS
-  magnitude and distance when both are known; E_bol assumes the flare is a 9000 K blackbody (Shibayama et al.
-  2013; Günther et al. 2020): E_bol = ED · πR★² σT⁴ ∫R B(Teff) / ∫R B(9000 K). Without Teff and radius both
-  energies are ``None`` and labelled unavailable; nothing is guessed.
+* **Energies**: E_band = ED × L★,band, the star's quiescent luminosity in the band from the TESS magnitude and
+  distance with Sullivan et al. (2015)'s zero point (as Medina et al. 2020 do) when both are known, else from Teff
+  and radius (Planck spectrum through the instrument response, :mod:`setuhq.passbands`); both routes are reported
+  side by side. E_bol assumes the flare is a 9000 K blackbody (Shibayama et al. 2013; Günther et al. 2020). Without
+  either route the energies are ``None`` and labelled unavailable; nothing is guessed.
 * **Flare frequency distribution**: the maximum-likelihood power-law index above a completeness limit, with its
   uncertainty (Clauset, Shalizi & Newman 2009), and the Vuong likelihood-ratio comparison with a truncated
   log-normal (as Bruno et al. 2024 and Poyatos et al. 2025 do after Verbeeck et al. 2019).
@@ -144,6 +147,9 @@ class FlareConfig:
     level: int = 2                     # SWT decomposition level (capped by each stretch's length)
     template: str = "mendoza2022"
     min_delta_bic: float = 6.0         # a flare must beat a quadratic, and each extra component the last model
+    min_component_sigma: float = 3.0     # an extra component's amplitude: at least this × the local scatter
+    min_component_fraction: float = 0.1  # and this fraction of the strongest component's
+    ar1_correction: bool = True        # the BIC uses an effective number of points for the residual's lag-one correlation
     min_shape_delta_bic: float = 10.0  # and the chosen templates must beat as many symmetric Gaussian bumps by this much
     max_components: int = 5
     min_fwhm_cadences: float = 0.25    # a fitted component narrower than this fraction of a cadence is rejected
@@ -375,7 +381,7 @@ def swt_denoise(x, *, wavelet: str = "db18", level: int = 2) -> np.ndarray:
     x = np.asarray(x, float)
     n = x.size
     filt = pywt.Wavelet(wavelet).dec_len
-    level = int(max(1, min(level, pywt.swt_max_level(max(n, 2)))))
+    level = int(max(1, min(level, int(math.floor(math.log2(max(n, 2)))))))  # the padding below makes any length work
     if n < max(filt, 2 ** level) or level < 1:
         return x.copy()
     block = 2 ** level
@@ -459,16 +465,21 @@ def _model(params, t, n, exposure, template):
     return y
 
 
-def _bic(rss: float, m: int, k: int) -> float:
-    """BIC with the noise variance estimated from the fit: M ln(RSS / M) + k ln M."""
-    return m * math.log(max(rss, 1e-300) / m) + k * math.log(m)
+def _bic(rss: float, m: int, k: int, rho: float = 0.0) -> float:
+    """BIC with the noise variance estimated from the fit: N ln(RSS / M) + k ln N, with N the effective number of
+    independent points, M (1 − ρ) / (1 + ρ) for a lag-one correlation ρ of the noise (ρ = 0: the usual M). Red
+    noise makes every extra component look more significant than it is; this takes that back."""
+    n_eff = m * (1.0 - rho) / (1.0 + rho) if rho > 0 else m
+    n_eff = max(n_eff, k + 2.0)
+    return n_eff * math.log(max(rss, 1e-300) / m) + k * math.log(n_eff)
 
 
 def _aic(rss: float, m: int, k: int) -> float:
     return m * math.log(max(rss, 1e-300) / m) + 2 * k
 
 
-def fit_flare(t, r, *, t_start: float, t_end: float, cadence: float, config: FlareConfig) -> dict:
+def fit_flare(t, r, *, t_start: float, t_end: float, cadence: float, config: FlareConfig, rho: float = 0.0,
+              sigma: float | None = None) -> dict:
     """Fit 0..max_components flare templates (plus a linear baseline) to the residual ``r`` in a window, and pick
     the number of components by BIC (each one must lower it by ``min_delta_bic``). The null is a quadratic.
 
@@ -481,7 +492,8 @@ def fit_flare(t, r, *, t_start: float, t_end: float, cadence: float, config: Fla
     tt = t - t[0]
     quad = np.polyfit(tt, r, 2)
     rss0 = float(np.sum((r - np.polyval(quad, tt)) ** 2))
-    tried = [{"n": 0, "bic": _bic(rss0, m, 3), "aic": _aic(rss0, m, 3), "rss": rss0}]
+    rho = rho if config.ar1_correction else 0.0
+    tried = [{"n": 0, "bic": _bic(rss0, m, 3, rho), "aic": _aic(rss0, m, 3), "rss": rss0}]
     fwhm_lo = max(config.min_fwhm_cadences * cadence * 0.5, 1e-6)
     fwhm_hi = max(2.0 * dur, 4 * cadence)
     best = None
@@ -506,11 +518,20 @@ def fit_flare(t, r, *, t_start: float, t_end: float, cadence: float, config: Fla
             break
         rss = float(np.sum(sol.fun ** 2))
         kpar = 2 + 3 * n
-        entry = {"n": n, "bic": _bic(rss, m, kpar), "aic": _aic(rss, m, kpar), "rss": rss, "params": sol.x}
+        entry = {"n": n, "bic": _bic(rss, m, kpar, rho), "aic": _aic(rss, m, kpar), "rss": rss, "params": sol.x}
         tried.append(entry)
         prev = tried[-2]
         if prev["bic"] - entry["bic"] < config.min_delta_bic:
             break
+        if n > 1:
+            # An extra component must also be a visible peak: at least min_component_sigma × the local scatter and
+            # min_component_fraction of the strongest component. A bright flare's small departures from the template
+            # (or from the trend under it) otherwise pass the BIC as a stream of tiny components.
+            amps = np.exp(np.asarray(sol.x[4::3]))
+            noise = sigma if sigma else _robust_sigma(r - _model(sol.x, t, n, cadence, config.template))
+            if amps.min() < max(config.min_component_sigma * noise, config.min_component_fraction * amps.max()):
+                entry["rejected"] = "a component below the visibility limits"
+                break
         best = entry
         params = sol.x
     shape = None
@@ -536,7 +557,7 @@ def fit_flare(t, r, *, t_start: float, t_end: float, cadence: float, config: Fla
         g0 = np.clip(g0, np.array(lo_g) + 1e-12, np.array(hi_g) - 1e-12)
         try:
             gs = optimize.least_squares(lambda p: gauss(p) - r, g0, bounds=(lo_g, hi_g), max_nfev=400 * (nb + 1))
-            shape = _bic(float(np.sum(gs.fun ** 2)), m, 2 + 3 * nb) - best["bic"]
+            shape = _bic(float(np.sum(gs.fun ** 2)), m, 2 + 3 * nb, rho) - best["bic"]
         except (ValueError, FloatingPointError):
             shape = None
     validated = best is not None and shape is not None and shape >= config.min_shape_delta_bic
@@ -550,7 +571,7 @@ def fit_flare(t, r, *, t_start: float, t_end: float, cadence: float, config: Fla
             comps.append({"t_peak": float(tp), "fwhm_days": fw, "amplitude": am,
                           "ed_s": am * fw * area * 86400.0, "too_narrow": fw < config.min_fwhm_cadences * cadence})
         comps.sort(key=lambda c: c["t_peak"])
-    return {"validated": validated, "beats_quadratic": best is not None,
+    return {"validated": validated, "beats_quadratic": best is not None, "rho": round(float(rho), 4),
             "delta_bic_shape": None if shape is None else round(shape, 3), "n_components": len(comps), "components": comps,
             "params": None if best is None else best["params"],
             "models": [{k: (round(v, 3) if isinstance(v, float) else v) for k, v in e.items() if k != "params"} for e in tried],
@@ -575,49 +596,78 @@ def _half_max_width(t, y) -> float:
     return float(tr - tl)
 
 
+def _lag1(r, keep) -> float:
+    """Lag-one autocorrelation of the quiet residual of one stretch (pairs of consecutive quiet points), at least 0."""
+    r = np.asarray(r, float)
+    ok = np.asarray(keep, bool) & np.isfinite(r)
+    pair = ok[:-1] & ok[1:]
+    if pair.sum() < 10:
+        return 0.0
+    a, b = r[:-1][pair], r[1:][pair]
+    if np.std(a) == 0 or np.std(b) == 0:
+        return 0.0
+    return float(np.clip(np.corrcoef(a, b)[0, 1], 0.0, 0.95))
+
+
 # ---------------------------------------------------------------- energies
 
 
+# Sullivan et al. (2015, ApJ 809, 77, §6.1): a T = 0 star gives 4.03e-6 erg s^-1 cm^-2 integrated over the TESS band
+# (an A0V template through the TESS response, Vega at 3.44e-9 erg s^-1 cm^-2 Å^-1 at 5556 Å). Medina et al. (2020,
+# §3.3) and most TESS flare studies use it for the stars' TESS-band luminosity.
+TESS_ZERO_POINT_ERG_S_CM2 = 4.03e-6
+
+
 def stellar_band_luminosity(star: dict | None, band: str = "TESS") -> dict:
-    """The star's quiescent luminosity in the band, from TIC Teff and radius (a Planck spectrum through the
-    response), and from the TESS magnitude and distance when both are given (TESS only, SVO zero point and
-    effective width). Missing inputs give ``None`` with the reason; nothing is guessed."""
+    """The star's quiescent luminosity in the band, by two routes reported side by side:
+
+    * **magnitude** (TESS only): 4πd² × 4.03e-6 erg s⁻¹ cm⁻² × 10^(−0.4 Tmag) (Sullivan et al. 2015's zero point), from
+      the TESS magnitude and the distance;
+    * **Teff and radius**: 4πR² · π∫R B_λ(Teff) dλ, a Planck spectrum through the instrument response.
+
+    The magnitude route is the primary one when Tmag and the distance are known (it needs no model of the star's
+    spectrum); otherwise Teff and radius. Missing inputs give ``None`` with the reason; nothing is guessed. A
+    ``teff_source`` in ``star`` (for example "Teff from the CHEOPS archive") is carried into the result."""
     star = star or {}
     teff, rad = star.get("teff"), star.get("radius")
-    out = {"band": band, "teff": teff, "radius_rsun": rad, "distance_pc": star.get("distance_pc"),
-           "l_band_erg_s": None, "l_band_from_magnitude_erg_s": None, "method": None}
+    mag, d = star.get("tmag"), star.get("distance_pc")
+    out = {"band": band, "teff": teff, "teff_source": star.get("teff_source", "TIC v8.2" if teff else None),
+           "radius_rsun": rad, "tmag": mag, "distance_pc": d,
+           "l_band_teff_radius_erg_s": None, "l_band_magnitude_erg_s": None, "l_band_erg_s": None, "route": None}
     if teff and rad and teff > 0 and rad > 0:
         r_cm = rad * R_SUN_CM
-        out["l_band_erg_s"] = 4.0 * math.pi * r_cm ** 2 * math.pi * band_integral(teff, band)
-        out["method"] = "Planck spectrum at the TIC Teff through the instrument response, 4πR²·π∫R B_λ dλ"
-    else:
-        out["why_unavailable"] = "no TIC Teff and radius: the band luminosity, and so the flare energies, are unavailable"
-    mag, d = star.get("tmag"), star.get("distance_pc")
+        out["l_band_teff_radius_erg_s"] = 4.0 * math.pi * r_cm ** 2 * math.pi * band_integral(teff, band)
     if band.upper() == "TESS" and mag is not None and d and d > 0:
-        from setuhq.passbands import PASSBANDS
-
-        p = PASSBANDS["TESS"]
-        lam = p["wavelength_eff_angstrom"]
-        f_lambda0 = p["zero_point_jy"] * 1e-23 * 2.99792458e18 / lam ** 2  # erg s^-1 cm^-2 Å^-1 at T = 0
-        flux = f_lambda0 * p["width_eff_angstrom"] * 10 ** (-0.4 * mag)
-        out["l_band_from_magnitude_erg_s"] = 4.0 * math.pi * (d * PC_CM) ** 2 * flux
+        out["l_band_magnitude_erg_s"] = 4.0 * math.pi * (d * PC_CM) ** 2 * TESS_ZERO_POINT_ERG_S_CM2 * 10 ** (-0.4 * mag)
+    if out["l_band_magnitude_erg_s"]:
+        out["l_band_erg_s"], out["route"] = out["l_band_magnitude_erg_s"], "magnitude and distance (Sullivan et al. 2015 zero point)"
+    elif out["l_band_teff_radius_erg_s"]:
+        out["l_band_erg_s"], out["route"] = out["l_band_teff_radius_erg_s"], f"Teff ({out['teff_source']}) and radius, Planck spectrum"
+    else:
+        out["why_unavailable"] = ("neither a TESS magnitude and distance nor a Teff and radius: the band luminosity, and so the "
+                                  "flare energies, are unavailable")
     return out
 
 
 def flare_energies(ed_s: float, star: dict | None, band: str = "TESS", temperature: float = FLARE_TEMPERATURE_K) -> dict:
-    """E_band = ED × L★,band and E_bol for a ``temperature`` blackbody flare (both erg), or ``None`` when the
-    star's Teff and radius are not known."""
+    """E_band = ED × L★,band (the primary route of :func:`stellar_band_luminosity`) and E_bol for a ``temperature``
+    blackbody flare, E_bol = E_band σT⁴ / (4π ∫R B_λ(T) dλ) (Shibayama et al. 2013; Günther et al. 2020: with L★,band
+    from Teff and radius this is their ED · πR★²σT⁴ ∫R B(Teff) / ∫R B(T)). Both routes are reported side by side;
+    ``None`` with the reason when neither is possible."""
     lum = stellar_band_luminosity(star, band)
     if lum["l_band_erg_s"] is None or ed_s is None or not np.isfinite(ed_s):
         return {"e_band_erg": None, "e_bol_erg": None, "status": "unavailable",
                 "why": lum.get("why_unavailable", "no equivalent duration")}
-    teff, rad = float(lum["teff"]), float(lum["radius_rsun"])
-    r_cm = rad * R_SUN_CM
-    e_bol = ed_s * math.pi * r_cm ** 2 * SIGMA_SB * temperature ** 4 * band_integral(teff, band) / band_integral(temperature, band)
-    out = {"e_band_erg": ed_s * lum["l_band_erg_s"], "e_bol_erg": e_bol, "status": "computed",
+    conv = SIGMA_SB * temperature ** 4 / (4.0 * math.pi * band_integral(temperature, band))
+    e_band = ed_s * lum["l_band_erg_s"]
+    out = {"e_band_erg": e_band, "e_bol_erg": e_band * conv, "status": "computed", "luminosity_route": lum["route"],
            "assumption": f"the flare radiates as a {temperature:.0f} K blackbody (Shibayama et al. 2013; Günther et al. 2020)"}
-    if lum.get("l_band_from_magnitude_erg_s"):
-        out["e_band_from_magnitude_erg"] = ed_s * lum["l_band_from_magnitude_erg_s"]
+    if lum["l_band_magnitude_erg_s"]:
+        out["e_band_magnitude_erg"] = ed_s * lum["l_band_magnitude_erg_s"]
+    if lum["l_band_teff_radius_erg_s"]:
+        out["e_band_teff_radius_erg"] = ed_s * lum["l_band_teff_radius_erg_s"]
+        out["e_bol_teff_radius_erg"] = out["e_band_teff_radius_erg"] * conv
+        out["teff_source"] = lum["teff_source"]
     return out
 
 
@@ -668,6 +718,7 @@ def detect_flares(time, flux, flux_err=None, *, config: FlareConfig | None = Non
     seg_of = np.empty(t.size, int)
     for k, sl in enumerate(segs):
         seg_of[sl] = k
+    rho_of = [_lag1(resid[sl], det["quiet"][sl]) for sl in segs]
     for i, j in cands:
         sl = segs[seg_of[i]]
         dur = t[j] - t[i] + cad
@@ -675,7 +726,8 @@ def detect_flares(time, flux, flux_err=None, *, config: FlareConfig | None = Non
         hi_t = t[j] + max(10 * cad, 1.0 * dur)
         w = np.flatnonzero((t >= lo_t) & (t <= hi_t))
         w = w[(w >= sl.start) & (w < sl.stop)]
-        fit = fit_flare(t[w], resid[w], t_start=t[i], t_end=t[j], cadence=cad, config=config)
+        fit = fit_flare(t[w], resid[w], t_start=t[i], t_end=t[j], cadence=cad, config=config, rho=rho_of[seg_of[i]],
+                        sigma=float(np.nanmedian(sigma[w])))
         peak_k = i + int(np.argmax(resid[i:j + 1]))
         sig = float(resid[peak_k] / sigma[peak_k]) if sigma[peak_k] > 0 else float("nan")
         base = {"t_start": float(t[i]), "t_end": float(t[j]), "n_points": int(j - i + 1),
@@ -720,6 +772,7 @@ def detect_flares(time, flux, flux_err=None, *, config: FlareConfig | None = Non
             "components": comp_out, "delta_bic_vs_quadratic": fit["delta_bic_vs_quadratic"],
             "delta_aic_vs_quadratic": fit["delta_aic_vs_quadratic"], "delta_bic_shape": fit["delta_bic_shape"],
             "models": fit["models"],
+            "delta_bic_components": [round(a["bic"] - b["bic"], 3) for a, b in zip(fit["models"][1:], fit["models"][2:])],
             "model_rms": round(float(np.std(resid[w] - model_flare)), 7), **energies,
         })
     days = float(sum(t[sl][-1] - t[sl][0] + cad for sl in segs))
@@ -727,7 +780,8 @@ def detect_flares(time, flux, flux_err=None, *, config: FlareConfig | None = Non
                "n_candidates": len(cands), "n_flares": len(flares), "n_rejected": len(rejected),
                "n_complex": sum(1 for x in flares if x["n_components"] > 1),
                "rate_per_day": round(len(flares) / days, 4) if days > 0 else None,
-               "median_sigma": float(np.nanmedian(sigma)), "band": band, "window_days_used": config.window_days,
+               "median_sigma": float(np.nanmedian(sigma)), "band": band,
+               "noise_lag1_correlation": [round(x, 4) for x in rho_of], "window_days_used": config.window_days,
                "rotation_period_days": prot,
                "savgol_degrees": det["savgol_degrees"],
                "energy_basis": stellar_band_luminosity(star, band)}
@@ -805,8 +859,9 @@ def inject_recover(time, flux, flux_err=None, *, config: FlareConfig | None = No
                    real_flares: list[dict] | None = None) -> dict:
     """Completeness of the whole detection on this star's own light curve.
 
-    Each trial injects ``per_trial`` Mendoza flares (log-uniform amplitude and FWHM) at random observed times, with
-    no two flares' spans (two FWHM before to eight after, plus margins) overlapping and away from the detected real flares, multiplying the flux, and runs
+    Each trial injects ``per_trial`` Mendoza flares (log-uniform amplitude and FWHM) at random observed times, each
+    span (two FWHM before to eight after, plus a few cadences) inside one stretch of data, no two overlapping, away
+    from the detected real flares; it multiplies the flux and runs
     :func:`detect_flares` again. A flare is recovered when a detected flare's window contains its peak (within one
     cadence). Returns every injection (amplitude, FWHM, true ED, energy if the star has Teff and radius, recovered,
     recovered ED) and completeness curves against amplitude, ED and energy."""
@@ -816,7 +871,11 @@ def inject_recover(time, flux, flux_err=None, *, config: FlareConfig | None = No
     cad = cadence_of(t)
     if config is None:
         config = config_for(mission or band, cad * 86400.0)
-    busy = [(fl["t_start"] - 0.05, fl["t_end"] + 0.05) for fl in (real_flares or [])]
+    busy = [(fl["t_start"] - 10 * cad, fl["t_end"] + max(4 * (fl["t_end"] - fl["t_start"]), 0.1)) for fl in (real_flares or [])]
+    stretches = segments(t, config.gap_cadences * cad)
+    seg_id = np.empty(t.size, int)
+    for q, sl in enumerate(stretches):
+        seg_id[sl] = q
     rows = []
     area = template_area("mendoza2022")
     for trial in range(n_trials):
@@ -825,12 +884,14 @@ def inject_recover(time, flux, flux_err=None, *, config: FlareConfig | None = No
         tries = 0
         while len(placed) < per_trial and tries < 50 * per_trial:
             tries += 1
-            tp = float(t[rng.integers(t.size)] + rng.uniform(-0.5, 0.5) * cad)  # on the data, not in a gap
+            ix = int(rng.integers(t.size))
+            tp = float(t[ix] + rng.uniform(-0.5, 0.5) * cad)  # on the data, not in a gap
             amp = float(10 ** rng.uniform(*np.log10(amp_range)))
             fw = float(10 ** rng.uniform(*np.log10(fwhm_minutes))) / 1440.0
-            span = (tp - 2 * fw - 0.02, tp + 8 * fw + 0.05)
-            if not np.any((t > tp - cad) & (t < tp + cad)):
-                continue  # in a gap
+            span = (tp - 2 * fw - 2 * cad, tp + 8 * fw + 3 * cad)
+            sl = stretches[seg_id[ix]]
+            if span[0] < t[sl.start] or span[1] > t[sl.stop - 1]:
+                continue  # a flare across a gap cannot be detected by design (as in Poyatos et al.): not injected
             if any(a < span[1] and b > span[0] for a, b in busy + [p[3] for p in placed]):
                 continue
             placed.append((tp, fw, amp, span))
@@ -845,7 +906,10 @@ def inject_recover(time, flux, flux_err=None, *, config: FlareConfig | None = No
             rows.append({"trial": trial, "t_peak": tp, "amplitude": amp, "fwhm_minutes": fw * 1440, "ed_s": ed,
                          "e_bol_erg": en, "recovered": bool(hit),
                          "ed_recovered_s": hit[0]["ed_s"] if hit else None,
-                         "amplitude_recovered": hit[0]["amplitude"] if hit else None})
+                         "amplitude_recovered": hit[0]["amplitude"] if hit else None,
+                         "n_components_recovered": hit[0]["n_components"] if hit else None,
+                         "delta_bic_components": hit[0].get("delta_bic_components") if hit else None,
+                         "snr": amp / float(out["summary"]["median_sigma"]) if out["summary"].get("median_sigma") else None})
     return {"injections": rows, "n": len(rows), "seed": seed, "config": config.as_dict(),
             "by_amplitude": completeness_curve(rows, "amplitude"), "by_ed": completeness_curve(rows, "ed_s"),
             "by_energy": completeness_curve(rows, "e_bol_erg") if any(r["e_bol_erg"] for r in rows) else None}
@@ -892,16 +956,39 @@ def completeness_limit(curve: list[dict], level: float = 0.9) -> float | None:
 
 
 def inverted_null(time, flux, flux_err=None, *, config: FlareConfig | None = None, band: str = "TESS",
-                  mission: str | None = None) -> dict:
-    """The detection on the flux turned upside down (2 − flux): every 'flare' it finds is a false positive of the
-    method on this star's own noise (a real dip, such as a transit or an eclipse, becomes a bump, so this null is an
-    upper bound on the false-positive rate). Returns the count and the rate per day."""
+                  mission: str | None = None, real_flares: list[dict] | None = None) -> dict:
+    """The detection on the flux turned upside down (2 − flux), with the real flares' windows (detected first, or
+    given) left out: every 'flare' it finds is a false positive of the method on this star's own noise. Without the
+    masking a real flare becomes a deep dip that drags the trend down and leaves bumps beside it. A real dip (a
+    transit, an eclipse) still becomes a bump, so this null is an upper bound. Returns the count and the rate per day."""
+    t = np.asarray(time, float)
     f = np.asarray(flux, float)
-    out = detect_flares(time, 2.0 * np.nanmedian(f) - f, flux_err, config=config, band=band, mission=mission)
+    e = None if flux_err is None else np.asarray(flux_err, float)
+    if real_flares is None:
+        real_flares = detect_flares(t, f, e, config=config, band=band, mission=mission)["flares"]
+    cad = cadence_of(t)
+    keep = np.ones(t.size, bool)
+    for fl in real_flares:
+        dur = fl["t_end"] - fl["t_start"]
+        keep &= ~((t >= fl["t_start"] - 5 * cad) & (t <= fl["t_end"] + max(10 * cad, dur)))
+    out = detect_flares(t[keep], 2.0 * np.nanmedian(f) - f[keep], None if e is None else e[keep], config=config,
+                        band=band, mission=mission)
     s = out["summary"]
-    return {"false_positives": s["n_flares"], "observing_days": s["observing_days"],
+    return {"false_positives": s["n_flares"], "observing_days": s["observing_days"], "masked_real_flares": len(real_flares),
             "rate_per_day": s.get("rate_per_day"), "events": [{k: x[k] for k in ("t_peak", "amplitude", "ed_s", "peak_sigma")}
                                                               for x in out["flares"]]}
+
+
+def false_split_rate(injections: list[dict]) -> dict:
+    """Of the injected single flares that were recovered, the fraction that came back as two or more components
+    (each injection is one Mendoza template, so every split is false), with a Wilson 95% interval."""
+    rec = [x for x in injections if x.get("recovered") and x.get("n_components_recovered")]
+    # a recovered ED well above the injected one means the injection merged with a real flare or noise: a blend
+    blend = [x for x in rec if x.get("ed_recovered_s") and x["ed_s"] > 0 and x["ed_recovered_s"] / x["ed_s"] > 1.5]
+    clean = [x for x in rec if x not in blend]
+    k = sum(1 for x in clean if x["n_components_recovered"] >= 2)
+    return {"split": k, "recovered_clean": len(clean), "blends_excluded": len(blend),
+            "rate": k / len(clean) if clean else None, "ci95": wilson(k, len(clean))}
 
 
 def tune_denoising(time, flux, flux_err=None, *, wavelets=("haar", "db4", "db18"), levels=(1, 2, 3, 4),
