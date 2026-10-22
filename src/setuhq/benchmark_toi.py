@@ -499,7 +499,8 @@ def _num_text(v) -> str:
 def _change_text(pc: dict | None) -> str:
     if not pc or pc.get("delta") is None:
         return ""
-    return (f"{100 * pc['delta']:+.0f} points (95% CI {100 * pc['lo']:+.0f} to {100 * pc['hi']:+.0f}); "
+    sg = lambda x: f"{100 * x:+.0f}".replace("-", "−")  # noqa: E731
+    return (f"{sg(pc['delta'])} points (95% CI {sg(pc['lo'])} to {sg(pc['hi'])}); "
             f"{pc['gained']} gained, {pc['lost']} lost; McNemar p = {pc['mcnemar_p']:.2g}")
 
 
@@ -756,11 +757,11 @@ def _sentinel_lines(se: dict) -> list[str]:
     if carry:
         lines += [f"The Sentinels were not asked again: no API key or signed-in CLI was available for this run. Their answers from the "
                   f"first run are carried over only for the stars whose every subject image and prompt are byte-identical on this code "
-                  f"({len(carry['stars'])} of {len(se['subsample'])} stars of the stated subsample); the other "
+                  f"({len(carry['stars'])} of the {len(carry['stated_subsample'])} stars of the stated subsample); the other "
                   f"{len(carry['not_carried'])} stars' subjects changed with the fix, so they are left out of this table, not guessed."
                   + (f" Left out: TOI {', '.join(sorted(carry['not_carried']))}." if carry["not_carried"] else ""), ""]
     lines += [f"{who} reviewed every subject of {se['n_stars']} "
-             "held-out stars drawn with a fixed seed (half CP/KP, half FP), on the real light curves only. Scored per star: did the "
+             "held-out stars drawn with a fixed seed (" + (f"{_class_counts(se)} here; half CP/KP, half FP as drawn" if carry else "half CP/KP, half FP") + "), on the real light curves only. Scored per star: did the "
              "persona mark a dip on the TOI's ephemeris as a potential planet.", "",
              "| persona | CP/KP dips marked | FP dips marked as a potential planet | failed calls |", "|---|---|---|---:|"]
     for rid, v in se["personas"].items():
@@ -789,6 +790,11 @@ def _sentinel_lines(se: dict) -> list[str]:
             lines += ["", f"No effective number of independent Sentinels: fewer than two reviewers with a defined φ.{left_out}", ""]
         lines += ["Only Claude has been benchmarked on the full subsample before; a provider's rates here are its first measurement.", ""]
     return lines
+
+
+def _class_counts(se: dict) -> str:
+    v = next(iter(se["personas"].values()))
+    return f"{v['cp_kp_marked']['n']} CP/KP and {v['fp_marked_as_planet']['n']} FP"
 
 
 def _who(rid: str, se: dict) -> str:

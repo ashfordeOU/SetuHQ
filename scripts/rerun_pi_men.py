@@ -73,7 +73,7 @@ def compare(previous: Path, new: Path) -> dict:
             same = x == y or (isinstance(x, float) and isinstance(y, float) and abs(x - y) <= 1e-9 * max(1.0, abs(x)))
             if not same:
                 diffs.append({"candidate": a.get("candidate_id"), "field": k, "before": x, "after": y})
-    return {"created_at": pm.get("created_at"), "code_note": pm.get("code_note"), "candidates": [len(old), len(now)],
+    return {"created_at": pm.get("created_at"), "had_pre_fix_note": bool(pm.get("code_note")), "candidates": [len(old), len(now)],
             "fields_compared": list(RESULT_FIELDS), "differences": diffs,
             "same_results": len(old) == len(now) and not diffs}
 
@@ -113,7 +113,7 @@ def main(argv=None) -> int:
     manifest["sentinel_answers"] = {
         "how": ("stored answers only (cache/claude-code), reused because each subject image and prompt are byte-identical "
                 "to the first run's; no Sentinel was asked again"),
-        "prompt_image_dir": args.prompt_dir,
+        "prompt_image_dir": "the first run's runs/tess-pi-men-s1/subjects (the absolute path its prompts named)",
         "answered_from_store": len(answered), "expected": expected,
         "not_answered": expected - len(answered),
     }

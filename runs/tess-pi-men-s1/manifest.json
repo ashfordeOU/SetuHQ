@@ -103,7 +103,7 @@
   },
   "sentinel_answers": {
     "how": "stored answers only (cache/claude-code), reused because each subject image and prompt are byte-identical to the first run's; no Sentinel was asked again",
-    "prompt_image_dir": "/workspace/EXOPLAN/runs/tess-pi-men-s1/subjects",
+    "prompt_image_dir": "the first run's runs/tess-pi-men-s1/subjects (the absolute path its prompts named)",
     "answered_from_store": 4,
     "expected": 4,
     "not_answered": 0
@@ -111,7 +111,7 @@
   "code": "f689e95",
   "replaces": {
     "created_at": "2026-10-17T23:30:07+00:00",
-    "code_note": "Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since.",
+    "had_pre_fix_note": true,
     "candidates": [
       7,
       7

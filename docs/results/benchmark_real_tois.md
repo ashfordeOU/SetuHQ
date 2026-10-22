@@ -1,5 +1,7 @@
 # Blind benchmark on real TESS Objects of Interest
 
+Pre-fix code: made with SetuHQ (then called exoplan) up to commit 5a03087, before two fixes that change default results: preprocess.clean no longer deletes dips deeper than 10 times the point-to-point scatter, and vet.py's odd/even test no longer fails clean deep planets. Not re-run since. The same protocol re-run on the fixed code: docs/results/benchmark_real_tois_clipfix.md.
+
 Measured on a stated benchmark; not discoveries. Sample: NASA Exoplanet Archive, table toi, fetched 2026-10-19, seed 20261019, sha256 `6f0e111ec8d2c38d…` (300 CP/KP, 300 FP, 62 FA TOIs). Rule: tfopwg_disp in CP/KP (positive), FP, FA; 0.5 ≤ P ≤ 13.0 d; period, mid-time and duration published; one TOI per star; seeded order; halves by sha256(seed:TIC) parity.
 
 Panel: the three Probes (deterministic detectors) with their calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed's FAP (200 trials). Each star's first SPOC 2-minute sector; the same light curve flux-inverted and block-scrambled as false-alarm controls. Nothing was tuned on this sample, so both halves are reported; the held-out half (by a hash of the TIC) is the headline. The headline completeness is over searchable stars (those with a SPOC 2-minute light curve), because that is what the pipeline can search and what the references measure; completeness over all stars is given beside it.

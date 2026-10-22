@@ -143,7 +143,7 @@ def test_stored_pi_men_run_carries_the_fit_and_bounded_fap():
     assert manifest["sentinel_answers"]["answered_from_store"] == manifest["sentinel_answers"]["expected"] == 4
     assert "no Sentinel was asked again" in manifest["sentinel_answers"]["how"] and "code_note" not in manifest
     assert manifest["replaces"]["same_results"] and manifest["replaces"]["differences"] == []
-    assert manifest["replaces"]["code_note"].startswith("Pre-fix code")
+    assert manifest["replaces"]["had_pre_fix_note"]
     val = json.loads(Path("docs/results/pi_men_validation.json").read_text())
     r = val["ratios_vs_huang_2018"]
     assert 0.9 < r["depth"] < 1.1 and 0.9 < r["duration"] < 1.1  # the box gave 0.81 and 0.64

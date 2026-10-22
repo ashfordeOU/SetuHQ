@@ -680,10 +680,12 @@ def cmd_sentinels_carry(args) -> int:
         else:
             carried.append(name)
             results[name] = first["results"][name]
-    out = {"subsample": first["subsample"], "results": results, "reviewers": first.get("reviewers") or {},
+    # The subsample is the carried stars: a star whose subjects changed has no valid Sentinel answer, so it is left out
+    # of every Sentinel measure (the report, the leaderboard's subsample scope), not counted as missed.
+    out = {"subsample": carried, "results": results, "reviewers": first.get("reviewers") or {},
            "carried": {"from": "cache/bench/sentinels.json (the first run's stored answers; no Sentinel was asked again)",
                        "rule": "every real subject's image and data byte-identical on this code", "stars": carried,
-                       "not_carried": not_carried}}
+                       "stated_subsample": first["subsample"], "not_carried": not_carried}}
     (CACHE / "sentinels.json").write_text(json.dumps(out, indent=1))
     print(f"carried {len(carried)} of {len(first['subsample'])} stars; not carried: {not_carried}")
     return 0
