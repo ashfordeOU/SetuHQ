@@ -502,11 +502,11 @@ def docs_section(data: dict) -> str:
     prov = (f"<p>The candidate pages show figures from the stored run <code>{e(run['name'])}</code>, made with an earlier "
             f"version of the pipeline. Later fixes change default results, and this run has not been re-run on the "
             f"current code. The run's own record says:</p>{technical_note_html(note)}") if note else (
-            f"<p>The candidate pages show figures from the stored run <code>{e(run['name'])}</code>, made with the current code.</p>")
+            f"<p>The candidate pages show figures from the stored runs ({', '.join('<code>' + e(c['run']) + '</code>' for c in data.get('showcase') or []) or '<code>' + e(run['name']) + '</code>'}), made with the current code.</p>")
     return f"""<header><h1 class="lead-h" id="h-docs" tabindex="-1">Run it yourself.</h1>
         <p>SetuHQ is open source. Install it, search a star's light curve with the same panel this site shows, contribute a sweep of the sky, or let your AI assistant use it.</p></header>
       <div class="docgrid">
-        <section class="card"><h2>Get started</h2><p>Install, then search pi Men's TESS light curve as this site's run did.</p><a href="#start">Install and first run ›</a></section>
+        <section class="card"><h2>Get started</h2><p>Install, then search any TESS star's light curve, as each of this site's example runs did.</p><a href="#start">Install and first run ›</a></section>
         <section class="card"><h2>Contribute a sweep</h2><p>Search a slice of a TESS sector on your own machine and send the result, with credit.</p><a href="#contribute">How to contribute ›</a></section>
         <section class="card"><h2>Use it from an assistant</h2><p>The MCP server lets an assistant run SetuHQ's own code and read its results.</p><a href="#mcp">Connect over MCP ›</a></section>
         <section class="card"><h2>Data and files</h2><p>Every catalogue on this site as a download, and the reports behind the evidence.</p><a href="#data">Downloads ›</a></section>
@@ -515,9 +515,10 @@ def docs_section(data: dict) -> str:
         <h2 id="start">Install and first run</h2>
         <p>SetuHQ needs Python {python_floor()} or newer.</p>
         <pre tabindex="0"><code>pip install "setuhq[tess] @ git+{REPO_URL}"
-setuhq run configs/tess_pi_men_s1.toml --out runs/tess-pi-men-s1
-setuhq site runs/tess-pi-men-s1 --out site     # this website, from your run</code></pre>
-        <p>The run downloads the light curve from MAST, cleans it, lets the panel mark dips, vets each signal and writes every result with its provenance. The Probes run with no account; the Sentinels need an API key for their provider. {e(ATTRIBUTION)}</p>
+setuhq run configs/showcase/tess-wasp-126-s1.toml --out runs/tess-wasp-126-s1   # or any star: copy a config, change its TIC and sectors
+setuhq crossmatch runs/tess-wasp-126-s1          # the NASA Exoplanet Archive's planets for the star
+setuhq site runs/tess-wasp-126-s1 --out site     # a website from your run (several runs: list them all)</code></pre>
+        <p>Every example on this site has its configuration in <code>configs/</code> and its one-line command in <a rel="noopener" href="{REPO_URL}/blob/main/docs/SHOWCASE.md">docs/SHOWCASE.md</a>. The run downloads the light curve from MAST, cleans it, lets the panel mark dips, vets each signal and writes every result with its provenance. The Probes run with no account; the Sentinels need an API key for their provider. {e(ATTRIBUTION)}</p>
         <h2 id="contribute">Contribute a sweep</h2>
         <p>A sweep searches every 2-minute target of a TESS sector and keeps every dip it finds, classified, with nothing thrown away. You can run a slice and send it in:</p>
         <pre tabindex="0"><code>setuhq sweep configs/sweep.toml --sector 5 --limit 200 --workers 3
@@ -531,7 +532,7 @@ setuhq-mcp --list-tools</code></pre>
         <ul>
           <li><a href="/{CATALOGUE_JSON}">The catalogue of known planets (JSON)</a> and <a href="/assets/data/{CSV_NAME}">every planet on the Galaxy map (CSV)</a>, from exoplanet.eu.</li>
           <li><a href="/{VARIABLES_JSON}">Everything that dims (JSON)</a>: every entry of SetuHQ's sweep, with its credit.</li>
-          <li><a href="/evidence/report/">The run report</a>, <a href="/evidence/plates/">the plates</a> and <a href="/candidates/case-file/">the case file</a> for run {e(run["name"])}.</li>
+          {"".join(f'<li>{e(c["star"])} ({e(c["kind"] or c["run"])}): <a href="{e(c["report"])}">the run report</a>, <a href="{e(c["plates"])}">the plates</a> and <a href="{e(c["case_file"])}">the case file</a> of run {e(c["run"])}.</li>' for c in data.get("showcase") or [])}
           <li>The benchmark, the leaderboard and the paper: <a rel="noopener" href="{REPO_URL}/tree/main/docs">docs/ in the repository</a>.</li>
         </ul>
         <p>SetuHQ's own data, benchmark, leaderboard and paper are under CC BY 4.0; the code is under the AGPL-3.0 (a commercial licence is available). Cite it with <a rel="noopener" href="{REPO_URL}/blob/main/CITATION.cff">CITATION.cff</a>.</p>

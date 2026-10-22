@@ -1,6 +1,10 @@
 {
-  "source": "SIMBAD, ICRS J2000 coordinates of the named star (pi Mensae, HD 39091). Used only to place the star on the all-sky map.",
+  "source": "pi Men: SIMBAD, ICRS J2000 coordinates of the named star (pi Mensae, HD 39091). The other example stars: TESS Input Catalog v8.2 (MAST, queried 2026-10-22) coordinates of each TIC. Used only to name each star and place it on the all-sky map.",
   "targets": {
-    "TIC 261136679": {"name": "pi Men", "ra_deg": 84.2912, "dec_deg": -80.4691}
+    "TIC 261136679": {"name": "pi Men", "ra_deg": 84.2912, "dec_deg": -80.4691},
+    "TIC 25155310": {"name": "WASP-126", "ra_deg": 63.3739, "dec_deg": -69.2268},
+    "TIC 259377017": {"name": "TOI-270", "ra_deg": 68.4155, "dec_deg": -51.9562},
+    "TIC 410153553": {"name": "LHS 3844", "ra_deg": 340.4922, "dec_deg": -69.1690},
+    "TIC 9727392": {"name": "TOI-236", "ra_deg": 358.4447, "dec_deg": -10.8850}
   }
 }

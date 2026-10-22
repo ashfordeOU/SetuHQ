@@ -92,7 +92,7 @@ def test_sky_position_is_the_stored_coordinates_and_field_stars_are_decorative(r
 
 def test_overview_labels_the_artists_impression_and_the_theatre_says_what_is_not_fitted(run_dir, tmp_path):
     page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
-    assert "Artist's impression of a planet lit by its star. No image of pi Men c exists." in page
+    assert "Artist's impression of a planet lit by its star. It shows no real planet; SetuHQ works from light curves, not images." in page
     theatre = re.search(r"function txTheatre\(d\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     # The playback is the shared system view; every stored-values honesty line stays.
     assert "impact parameter illustrative (b = 0)" in theatre and "Dashed: the limb-darkened fit stored for this dip." in theatre

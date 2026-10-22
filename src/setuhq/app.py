@@ -713,6 +713,9 @@ def example_card(x: dict, meta: dict) -> dict:
                    (("candidates", "candidate"), ("flagged", "flagged"), ("rejected", "rejected"))},
         "panel": mode, "panel_label": PROBES_ONLY if mode == "probes_only" else "Probes and Sentinels",
         "lead": bool(x.get("lead")), "lead_dip": lead_dip,
+        # Provenance: each input file's hash, the configuration's hash and the code that ran.
+        "inputs": [{"file": i.get("file"), "file_sha256": i.get("file_sha256"), "sector": i.get("sector")} for i in m.get("inputs") or []],
+        "config_sha256": m.get("config_sha256", ""), "code": m.get("code") or "", "created_at": m.get("created_at", ""),
         "dips": [{"id": d["id"], "n": int(d.get("letter") or 0), "outcome": d.get("outcome"), "status_label": d.get("status_label", ""),
                   "depth_ppm": d.get("depth_ppm"), "snr": d.get("snr"), "period_days": d.get("period_days"),
                   "label": (x["names"].get(d["id"]) or {}).get("label") or f"{star}, dip {d.get('letter')}"} for d in dips],
@@ -789,6 +792,9 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     lead_example = {"run": run_name, "dir": str(run_dir), "manifest": manifest, "story": story, "hero": hero, "dock": dock,
                     "names": {i: d for i, d in dips.items() if d.get("run") == run_name}, "lead": True}
     showcase = [example_card(x, meta.get(x["run"]) or {}) for x in [lead_example] + extras]
+    # The order docs/results/showcase.json gives (a run it does not list keeps its place after those it does).
+    order = list(meta)
+    showcase.sort(key=lambda c: order.index(c["run"]) if c["run"] in order else len(order))
     galaxy = galaxy_data(map_path, notable_path, coverage_path=coverage_path, setuhq_star=story["star"]["name"] or "pi Men",
                          setuhq_planet=story.get("planet"), lead_dip=story.get("lead_dip"))
     return {
@@ -3127,6 +3133,24 @@ def _explorer(data: dict) -> str:
       <p class="small"><a href="#/planets">Radius ratios by star ›</a> What each depth would imply, if it were a planet.</p>"""
 
 
+def _example_runs_table(data: dict) -> str:
+    """Evidence > Runs: every stored example run with its provenance (the input files' sha256, the configuration's
+    sha256, the code that ran) and its panel."""
+    e = html.escape
+    rows = []
+    for c in data.get("showcase") or []:
+        files = "<br>".join(f'sector {e(str(i["sector"]))}: <span class="mono">{e((i.get("file_sha256") or "not stored")[:16])}…</span>' for i in c["inputs"]) or "not stored"
+        rows.append(f'<tr><th scope="row">{e(c["star"])}<br><span class="muted mono">{e(c["run"])}</span></th><td>{e(c["count"])}</td>'
+                    f'<td>{files}</td><td><span class="mono">{e(c["config_sha256"][:16])}…</span></td>'
+                    f'<td><span class="mono">{e(c["code"] or "not recorded")}</span></td><td>{e(c["panel_label"])}</td></tr>')
+    if not rows:
+        return ""
+    return f"""<section class="card" aria-labelledby="h-exruns" style="display:grid;gap:8px"><h2 id="h-exruns">The example runs</h2>
+        <p class="muted" style="margin:0;font-size:13px">Every stored run the candidate pages show, with the sha256 of each light-curve file read from MAST, of the configuration, and the code that ran (git describe). {e(ATTRIBUTION)}</p>
+        <div class="tablewrap" tabindex="0" role="region" aria-label="The example runs and their provenance"><table><thead><tr><th scope="col">Star and run</th><th scope="col">Dips</th><th scope="col">Light curve sha256</th><th scope="col">Config sha256</th><th scope="col">Code</th><th scope="col">Panel</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>
+      </section>"""
+
+
 def _sentinels(data: dict) -> str:
     e = html.escape
     st = data["story"]
@@ -3270,6 +3294,7 @@ def route_sections(data: dict) -> dict[str, str]:
     out["leaderboard"] = _leaderboard(data.get("leaderboard"))
     out["runs"] = f"""<header><h1 class="lead-h" id="h-runs" tabindex="-1">Every search run, its errors as stored, and the configuration behind these pages.</h1><p>The search run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
       {prov}
+      {_example_runs_table(data)}
       <section class="card" aria-labelledby="h-hist" style="display:grid;gap:4px"><h2 id="h-hist">Search runs</h2><div id="runtable"></div></section>
       <details class="card cfg"><summary>Configuration: run {html.escape(run["name"])} and the search catalogue</summary><div>
         <section aria-labelledby="h-cfg"><h3 id="h-cfg">This run's configuration</h3><div id="runconfig"></div></section>

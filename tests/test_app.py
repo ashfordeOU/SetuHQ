@@ -265,7 +265,7 @@ def test_dip_identifiers_link_to_the_dossier(run_dir, catalog, tmp_path):
     assert "<table" not in top and "dipLink(x.id)" in top
     # The shell forwards the dip in its address to the Docket frame as the frame's location hash.
     assert "p.params.get('dip')" in APP_JS
-    assert "return D.docket_frame + (dip ? '#' + encodeURIComponent(dip) : '');" in APP_JS
+    assert "return ((D.docket_frames || {})[runOf(dip)] || D.docket_frame) + (dip ? '#' + encodeURIComponent(dip) : '');" in APP_JS
     assert "fromHash = decodeURIComponent(location.hash.slice(1))" in data["docket_html"]
 
 
@@ -1038,7 +1038,7 @@ def test_phone_dip_picker_lists_every_dip_with_its_outcome(run_dir, tmp_path):
     cand = _route(page, "candidates")
     assert '<select id="dippick"' in cand and '<label for="dippick">' in cand
     pick = re.search(r"function renderDipPicker\(\)\{.*?\n\}\n", APP_JS, re.S).group(0)
-    assert "D.hero.windows.map" in pick and "w.outcome" in pick
+    assert "(D.showcase || []).map" in pick and "c.dips.map" in pick and "w.outcome" in pick
     assert "$('#dippick').addEventListener('change', e => navTo(dipHref(e.target.value)));" in APP_JS
     assert ".dippicker select{flex:1;min-width:0;min-height:44px" in _phone_css()
     # Inside the framed Docket, a fixed "Signals" button jumps back to the list on a phone.
@@ -1099,7 +1099,7 @@ def test_panel_page_attribution_and_ids_unchanged_in_data(run_dir, tmp_path):
     # The Docket shows the attribution in its provenance and names lanes by short display name.
     assert _page_data_docket(data["docket_html"])["attribution"] == ATTRIBUTION
     js = docket_mod.DOCKET_JS
-    assert "${esc(D.attribution)}<br>run" in js and "SHORT_NAME(n)" in js and "NAME(n)} (id ${n})" in js
+    assert "${esc(D.attribution)}${D.panel_note ? ` ${esc(D.panel_note)}.` : ''}<br>run" in js and "SHORT_NAME(n)" in js and "NAME(n)} (id ${n})" in js
     # The reviewer cards and the calibration rows show the name with the id beside it.
     assert "nameWithId(p.id)" in APP_JS and '<span class="sub mono" title="reviewer id">${esc(r.id)}</span>' in APP_JS
     for word in ("Claude reviewers were", "simulated detector, not", "SIM = simulated"):
