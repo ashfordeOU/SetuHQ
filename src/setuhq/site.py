@@ -335,7 +335,8 @@ def _footer_html(lead: str | None) -> str:
             links += [(t, url_for("methods", {"ch": c})) for c, t in CHAPTERS[1:5]] + [("All 15 chapters", from_hash(h))]
         if k == "docs":
             links += [("Source code", REPO_URL), ("Contributing a sweep", "/docs/#contribute"), ("Data downloads", "/docs/#data")]
-        lis = "".join(f'<li><a{" rel=\"noopener\"" if u.startswith("http") else ""} href="{html.escape(u)}">{html.escape(t)}</a></li>' for t, u in links)
+        rel = ' rel="noopener"'
+        lis = "".join(f'<li><a{rel if u.startswith("http") else ""} href="{html.escape(u)}">{html.escape(t)}</a></li>' for t, u in links)
         cols.append(f'<div><h2>{html.escape(label)}</h2><ul>{lis}</ul></div>')
     return f"""<footer class="sitefoot"><div class="fin">
   <nav class="footnav" aria-label="Site">{"".join(cols)}</nav>
