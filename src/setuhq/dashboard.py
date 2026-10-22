@@ -343,7 +343,7 @@ def build_dashboard(run_dir: str | Path, out_dir: str | Path, *, title: str, cat
 
     body = f"""
 <header class='hero'><div class='wrap'>
-  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
+  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False, height=28)}</a>
   <h1>{title}</h1>
   <p class='lead'>Blind-coded light curves, an AI-and-simulated review panel, skill-weighted consensus, and vetting. Click any candidate to see its light curve and each reviewer's marks.</p>
 </div></header>
@@ -399,7 +399,7 @@ def build_dashboard(run_dir: str | Path, out_dir: str | Path, *, title: str, cat
 <meta name='viewport' content='width=device-width,initial-scale=1'>
 <title>{title}</title>
 {brand.head(title, "SetuHQ's dashboard of the stored run: light curves, every reviewer's marks and the panel's agreement. Candidates, never confirmations.", brand.page_path(out_dir))}
-<style>{STYLE}{DASHBOARD_CSS}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
+<style>{STYLE}{DASHBOARD_CSS}.hero .brandlogo{{height:28px;width:auto;aspect-ratio:579/132;flex:none;max-width:none;margin-bottom:18px}}</style></head>
 <body>{body}</body></html>
 """
     out = Path(out_dir)

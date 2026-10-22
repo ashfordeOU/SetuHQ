@@ -824,7 +824,7 @@ a:hover{color:var(--ink)}
 #content:focus{outline:none}
 /* the top bar: brand, the pill section switcher, the run, the theme control */
 .topbar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 18px;padding:8px clamp(16px,3vw,32px);background:color-mix(in oklab,var(--bg) 62%,transparent);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:9px;min-height:44px;padding:0 4px;color:var(--ink);text-decoration:none;font-weight:600;font-size:17px;letter-spacing:-.02em}
+.brand{display:inline-flex;align-items:center;gap:9px;height:44px;min-height:44px;line-height:0;position:relative;padding:0 4px;color:var(--ink);text-decoration:none;font-weight:600;font-size:17px;letter-spacing:-.02em}
 .brand:hover{color:var(--ink)}
 .nav ul{list-style:none;margin:0;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
 .nav a{display:flex;align-items:center;min-height:36px;padding:0 16px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:13px;font-weight:500;white-space:nowrap;transition:background-color .25s var(--ease),color .25s var(--ease)}

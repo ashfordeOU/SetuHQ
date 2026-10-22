@@ -37,7 +37,10 @@ SOCIAL_CARD_ALT = ("The SetuHQ logo on navy, with the line The open exoplanet ob
 # The logo shows the variant for the page's theme: dark by default, light under data-theme="light", and the
 # system's choice under data-theme="system". Pages without a theme control show the dark variant on their own
 # dark ground unless they say otherwise.
-LOGO_CSS = (".brandlogo{display:block;height:24px;width:auto}.brandlogo.lt{display:none}"
+# The image's box is pinned (height, aspect ratio, no flex shrink or stretch), so its hit area and its drawing
+# cannot drift apart in any engine (WebKit sized the 579 x 132 attribute box differently inside the flex link).
+LOGO_BOX = "height:{h}px;width:auto;aspect-ratio:579/132;flex:none;max-width:none;align-self:center"
+LOGO_CSS = (".brandlogo{display:block;" + LOGO_BOX.format(h=24) + "}.brandlogo.lt{display:none}"
             ":root[data-theme=\"light\"] .brandlogo.dk{display:none}:root[data-theme=\"light\"] .brandlogo.lt{display:block}"
             "@media (prefers-color-scheme: light){:root[data-theme=\"system\"] .brandlogo.dk{display:none}"
             ":root[data-theme=\"system\"] .brandlogo.lt{display:block}}")
@@ -62,14 +65,17 @@ def copy_assets(out_dir: str | Path, *, social_card: bool = False) -> list[Path]
     return out
 
 
-def logo(prefix: str = "", *, themed: bool = True) -> str:
-    """The lockup as images (dark and light variants, one shown by :data:`LOGO_CSS`); text when the files are absent."""
+def logo(prefix: str = "", *, themed: bool = True, height: int = 24) -> str:
+    """The lockup as images (dark and light variants, one shown by :data:`LOGO_CSS`); text when the files are absent.
+    The width and height attributes are the size it is drawn at (``height`` px tall), so the box it reserves
+    before its CSS applies is the box it ends up with."""
     if not available():
         return f'<span class="brandname">{NAME}</span>'
-    dk = f'<img class="brandlogo dk" src="{html.escape(prefix + ASSETS + LOGO_DARK)}" alt="{NAME}" width="{LOGO_W}" height="{LOGO_H}">'
+    size = f'width="{round(height * LOGO_W / LOGO_H)}" height="{height}"'
+    dk = f'<img class="brandlogo dk" src="{html.escape(prefix + ASSETS + LOGO_DARK)}" alt="{NAME}" {size}>'
     if not themed:
         return dk
-    lt = f'<img class="brandlogo lt" src="{html.escape(prefix + ASSETS + LOGO_LIGHT)}" alt="{NAME}" width="{LOGO_W}" height="{LOGO_H}">'
+    lt = f'<img class="brandlogo lt" src="{html.escape(prefix + ASSETS + LOGO_LIGHT)}" alt="{NAME}" {size}>'
     return dk + lt
 
 

@@ -222,10 +222,10 @@ def build_report(
 <meta name='viewport' content='width=device-width,initial-scale=1'>
 <title>{html.escape(title)}</title>
 {brand.head(title, "The archived report of SetuHQ's stored run on pi Men (TESS sector 1): every candidate, its vetting and provenance. Candidates, never confirmations.", brand.page_path(out_dir))}
-<style>{STYLE}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
+<style>{STYLE}.hero .brandlogo{{height:28px;width:auto;aspect-ratio:579/132;flex:none;max-width:none;margin-bottom:18px}}</style></head>
 <body>
 <header class='hero' id='overview'><div class='wrap'>
-  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
+  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False, height=28)}</a>
   <h1>{html.escape(title)}</h1>
   <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Built to follow the Planet Hunters CHEOPS workflow.</p>
 </div></header>
@@ -329,10 +329,10 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
 <meta name='viewport' content='width=device-width,initial-scale=1'>
 <title>SetuHQ search feed</title>
 {brand.head("SetuHQ search feed", "Dips from SetuHQ's search batches that passed vetting and match no known ephemeris: leads for review, not planets.", brand.page_path(out_dir))}
-<style>{STYLE}.hero .brandlogo{{height:28px;width:auto;margin-bottom:18px}}</style></head>
+<style>{STYLE}.hero .brandlogo{{height:28px;width:auto;aspect-ratio:579/132;flex:none;max-width:none;margin-bottom:18px}}</style></head>
 <body>
 <header class='hero'><div class='wrap'>
-  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False)}</a>
+  <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False, height=28)}</a>
   <h1>Search feed</h1>
   <p class='lead'>An AI review panel searches TESS light curves on a schedule. Each entry is a dip that passed the pipeline's vetting and matches no known ephemeris. These are candidates. None is a confirmed planet until independent follow-up confirms it.</p>
 </div></header>

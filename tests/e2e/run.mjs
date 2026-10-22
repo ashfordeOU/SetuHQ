@@ -90,6 +90,22 @@ async function ready(page) {
   await page.waitForFunction(() => document.documentElement.dataset.ready === "1", null, { timeout: 20000 });
 }
 
+// The visible logo image in a link home, its box and its link's box, and what is under the image's centre.
+const LOGO_GEOMETRY = () => {
+  const img = [...document.querySelectorAll('a[href="/"] img.brandlogo')].find((i) => {
+    const r = i.getBoundingClientRect();
+    return r.width > 0 && r.height > 0 && getComputedStyle(i).visibility !== "hidden";
+  });
+  if (!img) return null;
+  const a = img.closest("a");
+  a.scrollIntoView({ block: "center" });
+  const r = img.getBoundingClientRect(), b = a.getBoundingClientRect();
+  const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+  const box = (q) => [q.left, q.top, q.width, q.height].map((v) => Math.round(v)).join(",");
+  return { inside: r.left >= b.left - 0.5 && r.right <= b.right + 0.5 && r.top >= b.top - 0.5 && r.bottom <= b.bottom + 0.5,
+    hit: !!hit && a.contains(hit), img: box(r), link: box(b), at: hit ? hit.tagName + "." + hit.className : "nothing" };
+};
+
 async function pageFacts(page) {
   return page.evaluate(() => {
     const meta = (sel) => (document.querySelector(sel) || {}).content || (document.querySelector(sel) || {}).href || null;
@@ -145,6 +161,13 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
     check(f.ogImage && f.ogImage.startsWith(SITE_URL + "/assets/brand/"), "og:image is the site's social card", f.ogImage);
     check(f.ogTitle, "has og:title");
     check(f.imgs.length === 0, "every image has alt text", f.imgs.join(" "));
+    // The home link's logo: its drawing lies inside the link's box, and a click on its centre lands on the link.
+    const logo = await page.evaluate(LOGO_GEOMETRY);
+    if (app) check(!!logo, "the header shows the logo as the home link");
+    if (logo) {
+      check(logo.inside, "the logo lies inside its link's box", `img ${logo.img} link ${logo.link}`);
+      check(logo.hit, "the logo's centre hits its link", logo.at);
+    }
     check(f.hashLinks.length === 0, "no old #/ links", f.hashLinks.slice(0, 5).join(" "));
     // The project's old name stays out of what a visitor reads; only a quoted record keeps it ("then called exoplan").
     const old = await page.evaluate(() => (document.body.innerText.match(/.{0,30}\bexoplan\b.{0,20}/gi) || []).filter((m) => !/then called exoplan/i.test(m)));
@@ -213,6 +236,13 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
   await page.goForward(); await page.waitForFunction(() => location.pathname === "/explore/galaxy/");
   check(await page.evaluate(() => !document.getElementById("route-galaxy").hidden), "Forward shows the Galaxy again");
   check(await page.evaluate(() => window.__same === 1), "all of it without a reload");
+  // The logo goes home.
+  current = "the logo";
+  await page.goto(BASE + "/docs/"); await ready(page);
+  await page.click(".topbar a.brand img.brandlogo.dk");
+  await page.waitForFunction(() => location.pathname === "/");
+  check(await page.evaluate(() => location.pathname === "/"), "clicking the logo goes to /");
+  current = "a dip, its case file, Back";
   // A dip: its page, its case file, Back.
   await page.goto(BASE + "/candidates/"); await ready(page);
   await page.click('#subnav a:text-is("Dips")');

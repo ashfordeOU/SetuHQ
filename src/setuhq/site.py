@@ -63,7 +63,8 @@ SITE_CSS = r"""
 /* ---------- the site shell: top bar, menu, breadcrumbs, sub-navigation, footer ---------- */
 .topbar{display:block;position:sticky;top:0;z-index:40;padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));background:color-mix(in oklab,var(--bg) 78%,transparent);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);border-bottom:1px solid var(--line)}
 .tbin{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:12px;min-height:60px}
-.tbin .brand{flex:none;padding:0}
+.tbin .brand{flex:none;padding:0;align-self:center;transform:none}
+.brand .brandname{line-height:1.2}
 .nav{flex:1 1 auto;display:flex;justify-content:center;min-width:0}
 .nav ul{padding:3px}
 .nav a{min-height:38px;padding:0 16px;font-size:14px}
@@ -872,7 +873,7 @@ def shell_css() -> str:
             ".shellscope{font:400 15px/1.5 var(--sans);letter-spacing:-.01em;color:var(--ink);-webkit-font-smoothing:antialiased}"
             ".shellscope a{color:var(--cyan)}.shellscope :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px}"
             ".shellscope .sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}"
-            ".shellscope .brand{display:flex;align-items:center;gap:9px;min-height:44px;color:var(--ink);text-decoration:none}"
+            ".shellscope .brand{display:inline-flex;align-items:center;gap:9px;height:44px;min-height:44px;line-height:0;color:var(--ink);text-decoration:none}"
             ".shellscope .nav ul{list-style:none;margin:0;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}"
             ".shellscope .nav a{display:flex;align-items:center;min-height:38px;padding:0 16px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}"
             ".shellscope .nav a:hover{color:var(--ink)}.shellscope .nav a[aria-current=\"page\"]{background:var(--seg-bg);color:var(--seg-ink)}"

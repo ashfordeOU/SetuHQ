@@ -49,7 +49,7 @@ RIVER_GAP_DAYS = 30.0  # stretches of time with no candidate longer than this ar
 FLAG_WORDS = {"off_ephemeris": "off its star's ephemeris", "edge_event": "at a data edge"}
 
 # The logo on the plates' paper: the light-ground variant, and the dark-ground one where the page turns dark.
-PLATE_LOGO_CSS = (".kicker a{display:inline-block;vertical-align:middle;margin-right:10px}.brandlogo{display:block;height:20px;width:auto}"
+PLATE_LOGO_CSS = (".kicker a{display:inline-block;vertical-align:middle;margin-right:10px}.brandlogo{display:block;height:20px;width:auto;aspect-ratio:579/132;flex:none;max-width:none}"
                   ".brandlogo.dk{display:none}@media screen and (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) "
                   ".brandlogo.dk{display:block}:root:not([data-theme=\"light\"]) .brandlogo.lt{display:none}}"
                   "@media screen{:root[data-theme=\"dark\"] .brandlogo.dk{display:block}:root[data-theme=\"dark\"] .brandlogo.lt{display:none}}")
@@ -692,7 +692,7 @@ def plate_page(data: dict) -> str:
 <a class="skip" href="#plates">Skip to the plates</a>
 <main class="sheet">
 <header class="mast">
-  <p class="kicker"><a href="/" aria-label="SetuHQ, home">{brand.logo()}</a><span>plates</span></p>
+  <p class="kicker"><a href="/" aria-label="SetuHQ, home">{brand.logo(height=20)}</a><span>plates</span></p>
   <h1>{title}</h1>
   <p><span class="hedge">Candidate, unconfirmed.</span> {dip_count([c.get("status") for s in stars for c in s["candidates"]])} on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
   <ul class="notes">
