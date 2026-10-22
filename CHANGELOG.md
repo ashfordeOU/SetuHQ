@@ -10,6 +10,12 @@ breaking changes are called out explicitly.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-22
+
+The first public release, under the name **SetuHQ** (*setu*, Sanskrit for bridge). Until this
+release the code was developed privately as `exoplan`; the history before this entry is that
+project's, and it is kept as it was.
+
 ### Changed
 
 - **Every stored result that can be re-run without calling a Sentinel is re-run on the fixed code**
@@ -51,18 +57,6 @@ breaking changes are called out explicitly.
   under `metrics`). The stored pi Men run now has them: FPP 0.0186 and 0.0148 per subject, class "undetermined".
 - The Docket's page data keeps only the metrics the page reads (the extended-vetting record per dip
   stays in `candidates.json`).
-
-### Added
-
-- `codemeta.json` names Ashforde OÜ as copyright holder.
-
-## [0.1.0] - 2026-10-20
-
-The first public release, under the name **SetuHQ** (*setu*, Sanskrit for bridge). Until this
-release the code was developed privately as `exoplan`; the history before this entry is that
-project's, and it is kept as it was.
-
-### Changed
 
 - **Python 3.11 or later.** `setuhq.config` reads TOML with `tomllib`, which the standard library has from
   3.11.
@@ -131,6 +125,8 @@ project's, and it is kept as it was.
   tags on every page. `pages.yml` deploys the committed `site/`.
 
 ### Added
+
+- `codemeta.json` names Ashforde OÜ as copyright holder.
 
 - **Release machinery.** A `v*` tag runs `.github/workflows/release.yml`: it checks the tag against the
   version, this changelog and CI (a green push run on `main` for that commit, which `main` contains), builds
