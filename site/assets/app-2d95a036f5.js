@@ -4194,6 +4194,105 @@ function missionShown(on){
   if (!on) document.body.classList.remove('mcpop');
 }
 
+// ---------- viz.hero (V01): the featured star's transit, looped while on screen; Pause; a still under reduced motion ----------
+window.SetuHero = window.SetuHero || {frames: 0, playing: false};
+(function(){
+  const RMq = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+  function setup(st){
+    if (st._hero) return; st._hero = true;
+    const fig = st.querySelector('.herofig'), btn = st.querySelector('[data-hero-pause]'); if (!fig) return;
+    let rot = []; try { rot = JSON.parse(st.dataset.rotate || '[]'); } catch (e) { rot = []; }
+    const S = {vis: false, paused: RMq(), raf: 0, t0: 0, el: 0, last: 0, times: [], slow: false, p: null};
+    try { S.p = JSON.parse(fig.dataset.params || '{}'); } catch (e) { S.p = {}; }
+    const cv = () => fig._sr && fig._sr.cv;
+    function draw(t){ const c = cv(); if (!c || !window.SetuRender) return false; SetuRender.transit(c, Object.assign({}, S.p, {t})); return true; }
+    // One featured run per UTC day (the same for every visitor that day); the page itself is rendered with the lead.
+    if (!RMq() && rot.length > 1){
+      const pick = rot[Math.floor(Date.now() / 864e5) % rot.length];
+      if (pick && pick.run !== st.dataset.run){
+        S.p = pick.p; st.dataset.run = pick.run; fig.dataset.params = JSON.stringify(pick.p);
+        const img = fig.querySelector('img.rstill'), cap = fig.querySelector('figcaption');
+        if (img) img.alt = pick.alt; if (cap) cap.innerHTML = pick.caption;
+        if (fig._sr){ fig._sr.p = pick.p; fig._sr.cv.setAttribute('aria-label', pick.alt); draw(null); }
+      }
+    }
+    function setBtn(){ if (!btn) return; btn.setAttribute('aria-pressed', S.paused ? 'true' : 'false'); btn.hidden = !cv(); }
+    function frame(now){
+      S.raf = 0; if (!want()) return;
+      const fps = S.slow ? 30 : 60; if (now - S.last < 1000 / fps - 1){ S.raf = requestAnimationFrame(frame); return; }
+      S.el += Math.min(100, now - (S.last || now)); S.last = now;
+      const a = performance.now(); if (!draw(S.el / 1000)) return; const dt = performance.now() - a;
+      SetuHero.frames++; S.times.push(dt); if (S.times.length > 60) S.times.shift();
+      if (S.times.length === 60){ const m = S.times.slice().sort((x, y) => x - y)[30]; if (m > 33){ S.paused = true; S.dead = true; draw(null); setBtn(); return; } S.slow = m > 20; }
+      S.raf = requestAnimationFrame(frame);
+    }
+    const want = () => S.vis && !S.paused && !document.hidden && !S.dead && !!cv();
+    function kick(){ SetuHero.playing = want(); if (SetuHero.playing && !S.raf){ S.last = 0; S.raf = requestAnimationFrame(frame); } if (!SetuHero.playing && S.raf){ cancelAnimationFrame(S.raf); S.raf = 0; } }
+    function ensure(){ if (!fig._sr && window.SetuRender && !fig.closest('[hidden]')) { try { SetuRender.mount(fig.parentElement); } catch (e) { /* the still stays */ } }
+      if (fig._sr && rot.length && fig._sr.cv.getAttribute('aria-label') !== (fig.querySelector('img.rstill') || {}).alt){ fig._sr.p = S.p; fig._sr.cv.setAttribute('aria-label', fig.querySelector('img.rstill').alt); draw(null); } setBtn(); }
+    if (btn) btn.addEventListener('click', () => { S.paused = !S.paused; S.dead = false; S.times = []; setBtn(); kick(); });
+    document.addEventListener('visibilitychange', kick);
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(en => { S.vis = en.isIntersecting; if (S.vis) ensure(); kick(); }), {rootMargin: '80px'}).observe(fig);
+    else { S.vis = true; ensure(); kick(); }
+    ensure();
+  }
+  const all = () => document.querySelectorAll('.herostage[data-viz="hero"]').forEach(setup);
+  window.SetuHero.setup = all;
+  all();
+})();
+
+// ---------- viz.gallery (V03): each card's stage, drawn once on a canvas with the renderer's star when it comes on screen ----------
+(function(){
+  function draw(fig){
+    if (fig._g || !window.SetuRender) return; const box = fig.querySelector('.gbox'), sv = box && box.querySelector('svg'); if (!sv) return;
+    if (SetuRender.path() === 'still') return;
+    let p = {}; try { p = JSON.parse(fig.dataset.params || '{}'); } catch (e) { return; }
+    const cv = document.createElement('canvas'), r = box.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
+    const W = Math.max(2, Math.round(r.width * d)), H = Math.max(2, Math.round(r.height * d)), S = Math.min(W, H);
+    cv.width = W; cv.height = H; cv.setAttribute('aria-hidden', 'true');
+    const c = cv.getContext('2d'); if (!c) return;
+    try {
+      c.fillStyle = '#000'; c.fillRect(0, 0, W, H);
+      const cx = W / 2, cy = H / 2, R = S * 0.30, u = S / 240;
+      SetuRender.drawStar2D(c, cx, cy, R, p.teff || 5772, 0, {glow: 1.55, sync: true, gl: true, granulation: !!p.teff});
+      c.font = `600 ${11 * u}px ${getComputedStyle(document.body).fontFamily}`; c.textAlign = 'center';
+      for (const b of p.bodies || []){
+        const x = cx + b.x * R, y = cy + b.y * R, rr = Math.max(0.8 * u, b.k * R);
+        if (b.kind === 'occ'){
+          c.fillStyle = '#2A2E36'; c.beginPath(); c.arc(x, y, rr, 0, 7); c.fill(); c.setLineDash([3 * u, 3 * u]); c.strokeStyle = '#9AA3B5'; c.lineWidth = u; c.stroke(); c.setLineDash([]);
+          c.font = `400 ${10.5 * u}px ui-monospace,monospace`; c.fillStyle = '#9AA3B5'; c.fillText('occulter not identified', cx, cy + R + 26 * u); continue;
+        }
+        if (b.kind === 'missed'){ c.setLineDash([2 * u, 2 * u]); c.strokeStyle = '#ECEFF5'; c.lineWidth = .9 * u; c.beginPath(); c.arc(x, y, rr, 0, 7); c.stroke(); c.setLineDash([]); }
+        else SetuRender.drawPlanet2D(c, x, y, rr, 'silhouette');
+        if (rr < 3 * u){ c.strokeStyle = 'rgba(4,6,11,.55)'; c.lineWidth = u; c.beginPath(); c.arc(x, y, 7 * u, 0, 7); c.stroke(); }
+        c.fillStyle = '#04060B'; c.fillText(b.l, x, y - Math.max(rr, 7 * u) - 5 * u);
+      }
+    } catch (e) { return; }
+    box.appendChild(cv); sv.hidden = true; fig._g = true;
+  }
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting && !en.target.closest('[hidden]')){ io.unobserve(en.target); draw(en.target); } }), {rootMargin: '120px'}) : null;
+  function all(){ document.querySelectorAll('figure.gstage[data-viz="gstage"]').forEach(f => { if (f._gq) return; f._gq = true; if (io) io.observe(f); else draw(f); }); }
+  window.SetuGallery = {setup: all};
+  all();
+})();
+
+// ---------- viz.tempstrip (V09): in filter mode the two handles announce {lo, hi} as setu:teff-range ----------
+(function(){
+  function wire(root){
+    if (root._ts) return; root._ts = true;
+    const lo = root.querySelector('[data-ts="lo"]'), hi = root.querySelector('[data-ts="hi"]'); if (!lo || !hi) return;
+    const send = src => {
+      let a = Number(lo.value), b = Number(hi.value);
+      if (a > b){ if (src === lo) lo.value = a = b; else hi.value = b = a; }
+      lo.setAttribute('aria-valuetext', a.toLocaleString('en-US') + ' K'); hi.setAttribute('aria-valuetext', b.toLocaleString('en-US') + ' K');
+      root.dispatchEvent(new CustomEvent('setu:teff-range', {bubbles: true, detail: {lo: a, hi: b}}));
+    };
+    lo.addEventListener('input', () => send(lo)); hi.addEventListener('input', () => send(hi));
+  }
+  window.SetuTempstrip = {wire: root => Array.from(root ? [root] : document.querySelectorAll('[data-viz="tempstrip"][data-filter="1"]')).forEach(wire)};
+  window.SetuTempstrip.wire();
+})();
+
 // ---------- viz/panelring (V06): the markup of setuhq.viz.panelring.html, and a one-time convergence on screen ----------
 window.SetuPanelRing = (function(){
   const W = 360, H = 240, CX = 180, CY = 120, RING = 46, COL = {left: 56, right: 304};

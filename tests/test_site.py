@@ -191,12 +191,14 @@ def test_the_home_page(site):
     home = (site / "index.html").read_text()
     hero = re.search(r'<header class="launch">.*?</header>', home, re.S).group(0)
     assert '<p class="kick">' not in hero and "<h1" in hero
-    fig = re.search(r'<figure class="planetfig">.*?</figure>', home, re.S).group(0)
-    assert re.search(r"</svg>\s*<figcaption>Artist's impression", fig)  # the caption right under its image
+    # The hero is the featured run's transit (setuhq.viz.hero): a still with alt text, its tag and its caption.
+    fig = re.search(r'<figure class="stage rfig herofig".*?</figure>', hero, re.S).group(0)
+    assert 'data-render="transit"' in fig and "Artist&#x27;s impression</a>" in fig and "Model from stored values." in fig
+    assert 'class="planetfig"' not in home and 'class="gxteaser' not in home
     row = re.search(r'<section class="dohere".*?</section>', home, re.S).group(0)
     for href in ("/explore/", "/candidates/", "/how-it-works/", "/evidence/", "/docs/"):
         assert f'href="{href}"' in row, href
-    assert home.index('class="dohere"') < home.index('class="proof"')
+    assert home.index('class="proof"') < home.index('class="dohere"')
     assert ATTRIBUTION in home  # in the footer of every page
     assert ATTRIBUTION in (site / "evidence" / "index.html").read_text()
 

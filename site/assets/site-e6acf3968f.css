@@ -160,9 +160,8 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .launch h1{margin:10px 0 0;font-weight:700;font-size:clamp(52px,8.4vw,120px);line-height:1;letter-spacing:-.045em}
 .route>header.launch .sub{margin:20px auto 0;max-width:620px;font-size:clamp(17px,1.6vw,21px);line-height:1.45;color:var(--ink-2)}
 .launch .ctas{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:30px}
-.planetfig{margin:44px 0 0;width:100%;position:relative;border-radius:28px;overflow:hidden;background:#000}
-.planetfig figcaption{position:absolute;left:20px;top:16px;font-size:12px;color:#8E8E93}
-.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1px;width:min(100%,1100px);margin:-70px auto 0;background:var(--line);border-radius:22px;overflow:hidden;position:relative;text-align:left}
+#route-overview{gap:var(--s-8,64px)}
+.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1px;width:min(100%,1100px);margin:0 auto;background:var(--line);border-radius:22px;overflow:hidden;position:relative;text-align:left}
 .proof>div{background:color-mix(in oklab,var(--panel) 88%,transparent);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);padding:22px 24px}
 .proof b{display:block;font-size:40px;font-weight:600;letter-spacing:-.03em;line-height:1.05}
 .proof span{display:block;margin-top:8px;font-size:14px;line-height:1.45;color:var(--ink-2)}
@@ -175,6 +174,29 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .secthead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;border-top:1px solid var(--line);padding-top:22px}
 .secthead h2{font-size:15px;color:var(--ink-3);font-weight:500}
 .secthead p{margin:0;font-size:13px;color:var(--ink-3);max-width:72ch}
+/* the home page's bands: an eyebrow, a heading, the drawing, its source */
+.band{display:grid;gap:18px;min-width:0}
+.bandhead{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:22px}
+.bandeyebrow{margin:0;font:var(--t-eyebrow);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.bandhead h2{font:var(--t-h2);letter-spacing:-.02em;color:var(--ink);max-width:30ch;text-wrap:balance}
+.bandmore,.bandnote{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink-2);max-width:90ch}
+.bandmore a{display:inline-flex;align-items:center;min-height:32px}
+.ctrlist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden}
+.ctr a{position:relative;display:grid;align-content:start;gap:8px;height:100%;padding:24px 40px 22px 20px;background:var(--bg-2);color:var(--ink);text-decoration:none;transition:background-color var(--d-1) var(--ease)}
+.ctr a:hover{background:var(--bg-3);color:var(--ink)}
+.ctrn{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font:700 clamp(30px,3.6vw,46px)/1 var(--sans);letter-spacing:-.03em}
+.ctrn .odoci{font:var(--t-data);font-weight:500;letter-spacing:0;color:var(--ink-2)}
+.ctrl{font-size:13.5px;line-height:1.4;color:var(--ink-2)}
+.ctrs{font-size:11.5px;line-height:1.4;color:var(--ink-3)}
+.ctr i{position:absolute;right:16px;top:22px;font-style:normal;font-size:20px;color:var(--cyan)}
+.homesweep .sweepline{margin:0}
+@media (max-width:899.9px){
+  .ctrlist{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:699.9px){
+  #route-overview{gap:var(--s-7,48px)}
+  .ctrlist{grid-template-columns:minmax(0,1fr)}
+}
 /* Sky */
 .skymap{flex:999 1 640px;padding:18px;background:radial-gradient(120% 120% at 50% 0%,#0B1220 0%,#000 60%)}
 .skymap svg{display:block;width:100%;height:auto}
@@ -1409,6 +1431,87 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
   .docard{padding:16px 40px 16px 16px}
   main a.docard{display:flex;padding:16px 40px 16px 16px;line-height:1.45}
   main .subnav a,main .pagetools .btn{display:inline-flex;padding-top:0;padding-bottom:0}
+}
+
+/* ---------- viz.hero (V01): a live transit of the featured star behind the heading ---------- */
+#route-overview>header.launch{display:block;text-align:left;padding:0;gap:0}
+.herostage{position:relative;border-radius:var(--r-l);overflow:hidden;background:var(--stage);border:1px solid var(--stage-line)}
+.herostage .herofig{border:0;border-radius:0}
+.herostage .herofig .rbox{aspect-ratio:16/8.4;border-radius:0}
+.herostage .herofig .rbox>img.rstill{object-fit:cover;object-position:75% 50%}
+.herostage .herofig .readout{border-top:1px solid var(--stage-line);padding:10px 16px 12px;font-size:12px;line-height:1.5}
+.herostage .herofig .readout b{color:var(--stage-ink);font-weight:600}
+.herostage .stage-tag{top:14px;right:14px}
+.herocopy{position:absolute;left:0;top:0;width:100%;z-index:1;padding-bottom:28px!important;display:flex;flex-direction:column;justify-content:flex-start;gap:16px;
+  padding:clamp(28px,5.5%,72px) 0 0 clamp(20px,5%,64px);background:linear-gradient(90deg,#000 0 38%,transparent 70%);-webkit-mask:linear-gradient(180deg,#000 calc(100% - 28px),transparent);mask:linear-gradient(180deg,#000 calc(100% - 28px),transparent);color:var(--stage-ink);pointer-events:none}
+.herocopy>*{pointer-events:auto;max-width:min(46%,540px)}
+#route-overview .herocopy h1{margin:0;font:var(--t-hero);font-size:clamp(40px,5.2vw,76px);letter-spacing:-.045em;color:var(--stage-ink);text-wrap:balance}
+#route-overview>header.launch .herocopy .sub{margin:0;font-size:clamp(15px,1.2vw,17px);line-height:1.5;color:#C9CFDB}
+#route-overview .herocopy .ctas{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-start;margin:4px 0 0}
+#route-overview .herocopy .btn.primary{background:var(--stage-ink);color:#04060B}
+#route-overview .herocopy .btn.ghost{color:#64D2FF}
+#route-overview .herocopy .btn.ghost:hover{color:#fff}
+.herostage .heroctrls{left:auto;right:14px;bottom:14px}
+.herostage .heroctrls .btn{min-height:36px;padding:0 14px;font-size:12.5px}
+.herostage .heroctrls .btn[aria-pressed="true"]{background:var(--stage-ink);color:#04060B;border-color:transparent}
+.herostage .heroctrls .btn[hidden]{display:none}
+@media (max-width:899.98px){
+  .herocopy{position:static;width:auto;aspect-ratio:auto;padding:28px 18px 8px;background:var(--stage)}
+  .herocopy>*{max-width:none}
+  .herostage .herofig .rbox{aspect-ratio:4/3.3}
+  #route-overview .herocopy h1{font-size:clamp(36px,9vw,56px)}
+  #route-overview .herocopy .ctas{flex-direction:column;align-items:stretch}
+  .herostage .heroctrls{top:10px;left:10px;right:auto;bottom:auto}
+  .herostage .heroctrls .btn{min-height:44px}
+}
+
+/* ---------- viz.gallery (V03): each worked example's star in its colour, what the run measured as shadows ---------- */
+#route-overview .excards{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))}
+#route-overview .excard{padding:0;overflow:hidden;gap:0;background:var(--bg-2);-webkit-backdrop-filter:none;backdrop-filter:none;transition:transform var(--d-2) var(--ease),border-color var(--d-2) var(--ease)}
+#route-overview .excard:hover{transform:translateY(-2px);border-color:var(--line-3)}
+.exbody{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px;flex:1}
+.exbody p{margin:0}
+.gstage{margin:0;border:0;border-bottom:1px solid var(--line);border-radius:0;display:grid}
+.gbox{position:relative;aspect-ratio:1/1;background:var(--stage)}
+.gbox>svg,.gbox>canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.gbox>svg[hidden]{display:none}
+.gstage .stage-tag{font-size:10px;min-height:22px;padding:2px 7px}
+.gstage .readout{background:var(--stage);color:var(--stage-dim);padding:8px 12px 10px;margin:0;font:400 12px/1.45 var(--sans);letter-spacing:0}
+@media (max-width:699.98px){
+  .gbox{aspect-ratio:16/10}
+  .gstage .readout{font-size:11.5px}
+}
+.bandsrc{margin:0;font-size:12px;line-height:1.45;color:var(--ink-3);max-width:90ch}
+
+/* ---------- viz.tempstrip (V09): star colour from 2,500 K to 10,000 K ---------- */
+.tstrip{margin:0;display:grid;gap:8px;min-width:0}
+.tsmarks{position:relative;height:calc(var(--rows,1) * 30px + 34px)}
+.tsmark{position:absolute;bottom:0;transform:translateX(-50%);display:grid;justify-items:center;gap:1px;font:500 11px/1.2 var(--mono);color:var(--ink-2);white-space:nowrap;padding-bottom:calc(var(--row) * 30px + 8px)}
+.tsmark::after{content:"";position:absolute;left:50%;bottom:0;width:1px;height:calc(var(--row) * 30px + 6px);background:var(--line-3)}
+.tsmark b{font-weight:600;color:var(--ink)}
+.tsmark i{font-style:normal;color:var(--ink-3)}
+.tsmark.sun b{color:var(--ink-2);font-weight:500}
+.tsbar{position:relative;height:40px;border-radius:var(--r-s);border:1px solid var(--line)}
+.tstick{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:#04060B;box-shadow:0 0 0 1px rgba(255,255,255,.7);border-radius:2px}
+.tsaxis{position:relative;height:16px;font:400 11px/1 var(--mono);color:var(--ink-3)}
+.tsaxis span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.tsaxis span:first-child{transform:none}
+.tsaxis span:last-child{transform:translateX(-100%)}
+.tstrip figcaption{display:grid;gap:10px}
+.tslist{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13.5px;color:var(--ink-2)}
+.tslist li{display:inline-flex;align-items:center;gap:8px}
+.tslist a{color:var(--ink)}
+.tsk{font:var(--t-data);color:var(--ink-3)}
+.tsnote{color:var(--ink-3);font-size:12.5px}
+.tsdot{width:12px;height:12px;border-radius:50%;border:1px solid var(--line-2);flex:none}
+.tssrc{margin:0;font-size:12px;line-height:1.45;color:var(--ink-3);max-width:90ch}
+.tsfilter{position:absolute;inset:0}
+.tsfilter input{position:absolute;inset:0;width:100%;height:100%;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
+.tsfilter input::-webkit-slider-thumb{pointer-events:auto;-webkit-appearance:none;width:22px;height:44px;border-radius:8px;background:var(--ink);border:2px solid var(--bg);cursor:ew-resize}
+.tsfilter input::-moz-range-thumb{pointer-events:auto;width:22px;height:44px;border-radius:8px;background:var(--ink);border:2px solid var(--bg);cursor:ew-resize}
+@media (max-width:699.98px){
+  .tsmarks{display:none}
+  .tsaxis span:nth-child(even){display:none}
 }
 
 /* ---------- viz/panelring (V06): the reviewers converging on the stored panel score ---------- */
