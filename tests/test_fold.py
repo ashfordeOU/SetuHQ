@@ -69,7 +69,8 @@ def test_the_figure_states_its_numbers_label_and_source():
     assert "Source: SetuHQ&#x27;s stored run runs/tess-pi-men-s1" in h and "pi_men_validation.json" in h
     assert h.count('<svg viewBox') == 2 and len(re.findall(r'role="img" aria-label="[^"]*\d[^"]*"', h)) == 3
     assert '<button class="btn foldbtn" type="button" aria-pressed="false" hidden>' in h
-    assert 'class="stage foldfig compact"' in F.html({"source": "x"}, where="home", compact=True)
+    small = F.html({"source": "x"}, where="home", compact=True)
+    assert 'class="stage foldfig compact"' in small and "60-minute bins" in small and len(small) < len(h) < 16_000
     for word in ("habitable", "confirmed", "discovered", "synthetic", "illustrative"):
         assert word not in h.lower()
 

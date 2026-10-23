@@ -140,6 +140,10 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 .lookgrid .readout b{display:block;color:var(--stage-ink);font:600 13px/1.3 var(--sans);margin-bottom:2px}
 .rendrow{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
 .rendrow .rbox{aspect-ratio:4/3}
+.looktable td,.looktable th{white-space:normal;font-family:var(--sans);font-size:13px}
+.looktable th code{font:var(--t-data)}
+.swatch{display:inline-block;width:18px;height:18px;border-radius:50%;margin-right:8px;vertical-align:-4px;border:1px solid var(--line-2)}
+.nfcards .docard span{font-size:13.5px}
 /* the footer */
 .sitefoot{border-top:1px solid var(--line);margin-top:24px;padding:28px max(16px,env(safe-area-inset-right,0px)) max(28px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:color-mix(in oklab,var(--bg) 86%,transparent)}
 .fin{max-width:1280px;margin:0 auto;display:grid;gap:18px}

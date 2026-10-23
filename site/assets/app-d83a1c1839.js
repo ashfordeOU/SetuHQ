@@ -681,10 +681,10 @@ function calPlane(box){
   const f = C.floor;
   el('polygon', {points: `${X(0) - pad},${Y(f)} ${X(0)},${Y(f)} ${X(1-f)},${Y(1)} ${X(1)},${Y(1)} ${X(1)},${Y(0)} ${X(0) - pad},${Y(0)}`, class: 'floor'}, svg);
   for (const t of [0, 0.2, 0.4, 0.6, 0.8, 1]){
-    el('line', {x1: X(t), x2: X(t), y1: Y(0), y2: Y(0) + 4, stroke: 'var(--muted)'}, svg); tx(svg, X(t), Y(0) + 16, String(t), 'middle');
-    el('line', {x1: X(0) - pad - 4, x2: X(0) - pad, y1: Y(t), y2: Y(t), stroke: 'var(--muted)'}, svg); tx(svg, X(0) - pad - 7, Y(t) + 4, String(t), 'end');
+    el('line', {x1: X(t), x2: X(t), y1: Y(0), y2: Y(0) + 4, stroke: 'var(--ink-3)'}, svg); tx(svg, X(t), Y(0) + 16, String(t), 'middle');
+    el('line', {x1: X(0) - pad - 4, x2: X(0) - pad, y1: Y(t), y2: Y(t), stroke: 'var(--ink-3)'}, svg); tx(svg, X(0) - pad - 7, Y(t) + 4, String(t), 'end');
   }
-  el('rect', {x: X(0) - pad, y: Y(1), width: side + pad, height: side, fill: 'none', stroke: 'var(--rule)'}, svg);
+  el('rect', {x: X(0) - pad, y: Y(1), width: side + pad, height: side, fill: 'none', stroke: 'var(--line-2)'}, svg);
   tx(svg, X(0.5), H - 6, 'false-alarm rate (FPR, empty subjects)', 'middle', 'lbl');
   const yl = tx(svg, 12, Y(0.5), 'recall (TPR, injected transits)', 'middle', 'lbl'); yl.setAttribute('transform', `rotate(-90 12 ${Y(0.5)})`);
   // Lines of constant weight: TPR = FPR + w. Wide: labelled along the line. Narrow: the weight sits level above
@@ -714,6 +714,13 @@ function calPlane(box){
     el('title', {}, c).textContent = g.items.map(p => `${NAME(p.id)} (id ${p.id}; ${p.kind === 'simulated' ? 'Probe, not a person' : isSentinel(p.kind) ? `Sentinel, ${PROVIDER_OF(p.kind)}` : p.kind}): TPR ${fmt(p.tpr,2)}, FPR ${fmt(p.fpr,2)}, weight ${fmt(p.weight,2)}, ${fmtN(p)}`).join('\n');
     const word = g.kind === 'claude' ? 'Sentinel' : g.kind === 'simulated' ? 'Probe' : g.kind;
     tx(svg, cx + r + 6, cy + 4, `${plural(g.items.length, word)} · w ${fmt(g.items[0].weight,2)}`, 'start', 'lbl');
+  }
+  // S06: the plane answers on hover and on the arrow keys: the reviewers at the nearest false-alarm rate.
+  if (typeof SetuUI !== 'undefined' && SetuUI.crosshair){
+    const byX = groups.slice().sort((a, b) => a.fpr - b.fpr);
+    svg.setAttribute('tabindex', '0');
+    SetuUI.crosshair(svg, {x0: -(pl + pad) / side, x1: (W - pl - pad) / side, xs: byX.map(g => g.fpr), readout: $('#calread') || undefined,
+      fmt: i => byX[i].items.map(p => `${NAME(p.id)}: false-alarm rate ${fmt(p.fpr,2)} · recall ${fmt(p.tpr,2)} · weight ${fmt(p.weight,2)}`).join('; ')});
   }
 }
 function renderCalibration(){
@@ -4171,6 +4178,193 @@ function missionShown(on){
   const fig = $('#mcsys'); if (fig && fig._mx){ fig._mx.on = on; if (on) mxKick(fig._mx); }
   if (!on) document.body.classList.remove('mcpop');
 }
+
+// ---------- viz.hero (V01): the featured star's transit, looped while on screen; Pause; a still under reduced motion ----------
+window.SetuHero = window.SetuHero || {frames: 0, playing: false};
+(function(){
+  const RMq = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+  function setup(st){
+    if (st._hero) return; st._hero = true;
+    const fig = st.querySelector('.herofig'), btn = st.querySelector('[data-hero-pause]'); if (!fig) return;
+    let rot = []; try { rot = JSON.parse(st.dataset.rotate || '[]'); } catch (e) { rot = []; }
+    const S = {vis: false, paused: RMq(), raf: 0, t0: 0, el: 0, last: 0, times: [], slow: false, p: null};
+    try { S.p = JSON.parse(fig.dataset.params || '{}'); } catch (e) { S.p = {}; }
+    const cv = () => fig._sr && fig._sr.cv;
+    function draw(t){ const c = cv(); if (!c || !window.SetuRender) return false; SetuRender.transit(c, Object.assign({}, S.p, {t})); return true; }
+    // One featured run per UTC day (the same for every visitor that day); the page itself is rendered with the lead.
+    if (!RMq() && rot.length > 1){
+      const pick = rot[Math.floor(Date.now() / 864e5) % rot.length];
+      if (pick && pick.run !== st.dataset.run){
+        S.p = pick.p; st.dataset.run = pick.run; fig.dataset.params = JSON.stringify(pick.p);
+        const img = fig.querySelector('img.rstill'), cap = fig.querySelector('figcaption');
+        if (img) img.alt = pick.alt; if (cap) cap.innerHTML = pick.caption;
+        if (fig._sr){ fig._sr.p = pick.p; fig._sr.cv.setAttribute('aria-label', pick.alt); draw(null); }
+      }
+    }
+    function setBtn(){ if (!btn) return; btn.setAttribute('aria-pressed', S.paused ? 'true' : 'false'); btn.hidden = !cv(); }
+    function frame(now){
+      S.raf = 0; if (!want()) return;
+      const fps = S.slow ? 30 : 60; if (now - S.last < 1000 / fps - 1){ S.raf = requestAnimationFrame(frame); return; }
+      S.el += Math.min(100, now - (S.last || now)); S.last = now;
+      const a = performance.now(); if (!draw(S.el / 1000)) return; const dt = performance.now() - a;
+      SetuHero.frames++; S.times.push(dt); if (S.times.length > 60) S.times.shift();
+      if (S.times.length === 60){ const m = S.times.slice().sort((x, y) => x - y)[30]; if (m > 33){ S.paused = true; S.dead = true; draw(null); setBtn(); return; } S.slow = m > 20; }
+      S.raf = requestAnimationFrame(frame);
+    }
+    const want = () => S.vis && !S.paused && !document.hidden && !S.dead && !!cv();
+    function kick(){ SetuHero.playing = want(); if (SetuHero.playing && !S.raf){ S.last = 0; S.raf = requestAnimationFrame(frame); } if (!SetuHero.playing && S.raf){ cancelAnimationFrame(S.raf); S.raf = 0; } }
+    function ensure(){ if (!fig._sr && window.SetuRender && !fig.closest('[hidden]')) { try { SetuRender.mount(fig.parentElement); } catch (e) { /* the still stays */ } }
+      if (fig._sr && rot.length && fig._sr.cv.getAttribute('aria-label') !== (fig.querySelector('img.rstill') || {}).alt){ fig._sr.p = S.p; fig._sr.cv.setAttribute('aria-label', fig.querySelector('img.rstill').alt); draw(null); } setBtn(); }
+    if (btn) btn.addEventListener('click', () => { S.paused = !S.paused; S.dead = false; S.times = []; setBtn(); kick(); });
+    document.addEventListener('visibilitychange', kick);
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(en => { S.vis = en.isIntersecting; if (S.vis) ensure(); kick(); }), {rootMargin: '80px'}).observe(fig);
+    else { S.vis = true; ensure(); kick(); }
+    ensure();
+  }
+  const all = () => document.querySelectorAll('.herostage[data-viz="hero"]').forEach(setup);
+  window.SetuHero.setup = all;
+  all();
+})();
+
+// ---------- viz.gallery (V03): each card's stage, drawn once on a canvas with the renderer's star when it comes on screen ----------
+(function(){
+  function draw(fig){
+    if (fig._g || !window.SetuRender) return; const box = fig.querySelector('.gbox'), sv = box && box.querySelector('svg'); if (!sv) return;
+    if (SetuRender.path() === 'still') return;
+    let p = {}; try { p = JSON.parse(fig.dataset.params || '{}'); } catch (e) { return; }
+    const cv = document.createElement('canvas'), r = box.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
+    const W = Math.max(2, Math.round(r.width * d)), H = Math.max(2, Math.round(r.height * d)), S = Math.min(W, H);
+    cv.width = W; cv.height = H; cv.setAttribute('aria-hidden', 'true');
+    const c = cv.getContext('2d'); if (!c) return;
+    try {
+      c.fillStyle = '#000'; c.fillRect(0, 0, W, H);
+      const cx = W / 2, cy = H / 2, R = S * 0.30, u = S / 240;
+      SetuRender.drawStar2D(c, cx, cy, R, p.teff || 5772, 0, {glow: 1.55, sync: true, gl: true, granulation: !!p.teff});
+      c.font = `600 ${11 * u}px ${getComputedStyle(document.body).fontFamily}`; c.textAlign = 'center';
+      for (const b of p.bodies || []){
+        const x = cx + b.x * R, y = cy + b.y * R, rr = Math.max(0.8 * u, b.k * R);
+        if (b.kind === 'occ'){
+          c.fillStyle = '#2A2E36'; c.beginPath(); c.arc(x, y, rr, 0, 7); c.fill(); c.setLineDash([3 * u, 3 * u]); c.strokeStyle = '#9AA3B5'; c.lineWidth = u; c.stroke(); c.setLineDash([]);
+          c.font = `400 ${10.5 * u}px ui-monospace,monospace`; c.fillStyle = '#9AA3B5'; c.fillText('occulter not identified', cx, cy + R + 26 * u); continue;
+        }
+        if (b.kind === 'missed'){ c.setLineDash([2 * u, 2 * u]); c.strokeStyle = '#ECEFF5'; c.lineWidth = .9 * u; c.beginPath(); c.arc(x, y, rr, 0, 7); c.stroke(); c.setLineDash([]); }
+        else SetuRender.drawPlanet2D(c, x, y, rr, 'silhouette');
+        if (rr < 3 * u){ c.strokeStyle = 'rgba(4,6,11,.55)'; c.lineWidth = u; c.beginPath(); c.arc(x, y, 7 * u, 0, 7); c.stroke(); }
+        c.fillStyle = '#04060B'; c.fillText(b.l, x, y - Math.max(rr, 7 * u) - 5 * u);
+      }
+    } catch (e) { return; }
+    box.appendChild(cv); sv.hidden = true; fig._g = true;
+  }
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting && !en.target.closest('[hidden]')){ io.unobserve(en.target); draw(en.target); } }), {rootMargin: '120px'}) : null;
+  function all(){ document.querySelectorAll('figure.gstage[data-viz="gstage"]').forEach(f => { if (f._gq) return; f._gq = true; if (io) io.observe(f); else draw(f); }); }
+  window.SetuGallery = {setup: all};
+  all();
+})();
+
+// ---------- viz.tempstrip (V09): in filter mode the two handles announce {lo, hi} as setu:teff-range ----------
+(function(){
+  function wire(root){
+    if (root._ts) return; root._ts = true;
+    const lo = root.querySelector('[data-ts="lo"]'), hi = root.querySelector('[data-ts="hi"]'); if (!lo || !hi) return;
+    const send = src => {
+      let a = Number(lo.value), b = Number(hi.value);
+      if (a > b){ if (src === lo) lo.value = a = b; else hi.value = b = a; }
+      lo.setAttribute('aria-valuetext', a.toLocaleString('en-US') + ' K'); hi.setAttribute('aria-valuetext', b.toLocaleString('en-US') + ' K');
+      root.dispatchEvent(new CustomEvent('setu:teff-range', {bubbles: true, detail: {lo: a, hi: b}}));
+    };
+    lo.addEventListener('input', () => send(lo)); hi.addEventListener('input', () => send(hi));
+  }
+  window.SetuTempstrip = {wire: root => Array.from(root ? [root] : document.querySelectorAll('[data-viz="tempstrip"][data-filter="1"]')).forEach(wire)};
+  window.SetuTempstrip.wire();
+})();
+
+// ---------- V05 the fold (setuhq.viz.fold): pi Men's stored light curve, folded on the joint-fit period ----------
+(function(){
+  const figs = Array.from(document.querySelectorAll('figure.foldfig'));
+  if (!figs.length) return;
+  const RM = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+  let loading = null;
+  const load = () => loading || (loading = new Promise((res, rej) => {
+    const url = ((window.D || {}).viz_files || {}).stories;
+    if (!url) return rej(new Error('no stories file'));
+    fetch(url).then(r => r.ok ? r.json() : Promise.reject(new Error(r.status))).then(j => j && j.fold ? res(j.fold) : rej(new Error('no fold'))).catch(rej);
+  }));
+  const mix = (a, b, t) => a + (b - a) * t, ease = k => k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+  // Each bin: [x in time order, x in phase within the window (outside 0..1 leaves the frame), ppm].
+  function prep(F){
+    const w = F.bin_min / 1440, P = F.p, W = F.window_h, span = F.span[1] - F.span[0], pts = [];
+    for (const [i0, vals] of F.segs) vals.forEach((v, k) => { const t = F.t_start + (i0 + k + .5) * w, ph = ((t - F.t0 + P / 2) % P + P) % P - P / 2;
+      pts.push([(t - F.span[0]) / span, (ph * 24 + W) / (2 * W), v]); });
+    const vals = pts.map(p => p[2]).sort((a, b) => a - b);
+    let lo = Math.min(vals[Math.floor(.003 * vals.length)], -1.7 * F.depth_ppm), hi = Math.max(vals[Math.floor(.997 * vals.length) - 1], .8 * F.depth_ppm);
+    const step = hi - lo > 700 ? 200 : 100; lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+    const acc = {};
+    for (const p of pts) if (p[1] >= 0 && p[1] <= 1){ const k = Math.floor((p[1] * 2 * W - W) / .5 + .5); (acc[k] = acc[k] || []).push(p[2]); }
+    const mean = Object.keys(acc).map(Number).sort((a, b) => a - b).map(k => [(k * .5 + W) / (2 * W), acc[k].reduce((a, b) => a + b, 0) / acc[k].length]);
+    return {pts, lo, hi, step, mean};
+  }
+  figs.forEach(fig => {
+    const btn = fig.querySelector('.foldbtn'), live = fig.querySelector('.foldlive'), cv = live && live.querySelector('canvas'), state = fig.querySelector('.foldstate');
+    if (!btn || !cv) return;
+    let F = null, G = null, k = 0, target = 0, raf = 0, vis = false, touched = false, last = 0, font = '';
+    function draw(){
+      const dpr = Math.min(2, window.devicePixelRatio || 1), r = cv.getBoundingClientRect();
+      const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
+      if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
+      const c = cv.getContext('2d'); if (!c) return;
+      font = font || getComputedStyle(document.body).getPropertyValue('--mono').trim() || 'monospace';
+      const e = ease(k), L = 46 * dpr, R = 12 * dpr, T = 30 * dpr, B = 30 * dpr, pw = w - L - R;
+      const Y = v => T + (h - T - B) * (1 - (v - G.lo) / (G.hi - G.lo));
+      c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
+      c.font = `${11 * dpr}px ${font}`; c.lineWidth = dpr;
+      for (let v = G.lo; v <= G.hi + 1e-9; v += G.step){ const y = Y(v); c.strokeStyle = 'rgba(255,255,255,.08)'; c.beginPath(); c.moveTo(L, y); c.lineTo(w - R, y); c.stroke();
+        c.fillStyle = '#9AA3B5'; c.textAlign = 'right'; c.fillText((v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v), L - 6 * dpr, y + 4 * dpr); }
+      c.textAlign = 'left'; c.fillText('ppm', 4 * dpr, 14 * dpr);
+      c.textAlign = 'right'; c.fillText(e < .5 ? `BTJD ${F.span[0].toFixed(1)}–${F.span[1].toFixed(1)}, in time order` : `hours from mid-transit, folded on ${F.p.toFixed(4)} d`, w - R, h - 9 * dpr);
+      c.fillStyle = e > .6 ? 'rgba(100,210,255,.75)' : 'rgba(236,239,245,.6)';
+      const s = 2.2 * dpr;
+      for (const [tx, px, v] of G.pts){ const f = mix(tx, Math.max(-.2, Math.min(1.2, px)), e); if (f < 0 || f > 1) continue; c.fillRect(L + f * pw - s / 2, Y(v) - s / 2, s, s); }
+      if (e > .85){
+        const a = (e - .85) / .15;
+        c.strokeStyle = `rgba(255,179,64,${a})`; c.lineWidth = 2.2 * dpr; c.beginPath();
+        G.mean.forEach(([f, v], i) => { const x = L + f * pw, y = Y(v); if (i) c.lineTo(x, y); else c.moveTo(x, y); }); c.stroke();
+        c.fillStyle = `rgba(255,179,64,${a})`; c.textAlign = 'right'; c.fillText(`${Math.round(F.depth_ppm)} ppm deep, ${F.t14_h.toFixed(2)} h (joint fit)`, w - R - 4 * dpr, Y((F.base_ppm || 0) - F.depth_ppm) + 18 * dpr);
+        c.setLineDash([4 * dpr, 4 * dpr]); c.lineWidth = dpr; c.beginPath(); c.moveTo(L, Y((F.base_ppm || 0) - F.depth_ppm)); c.lineTo(w - R, Y((F.base_ppm || 0) - F.depth_ppm)); c.stroke(); c.setLineDash([]);
+      }
+    }
+    function frame(now){
+      raf = 0;
+      const dt = Math.min(.05, Math.max(0, (now - (last || now)) / 1000)); last = now;
+      k += (target - k) * Math.min(1, dt * 2.6);
+      if (Math.abs(target - k) < .002) k = target;
+      draw();
+      if (k !== target && vis && !document.hidden) raf = requestAnimationFrame(frame);
+    }
+    const run = () => { if (raf || !F) return; if (RM() || !vis || document.hidden){ k = target; draw(); return; } last = 0; raf = requestAnimationFrame(frame); };
+    const setTarget = (t, say) => { target = t; btn.setAttribute('aria-pressed', String(!!t)); btn.textContent = t ? 'Unfold to time' : 'Fold on the period';
+      if (say && state) state.textContent = t ? `Folded on ${F.p.toFixed(4)} days: the dip appears at zero hours.` : 'In time order: each transit is a handful of points among the rest.'; run(); };
+    const goLive = () => { fig.classList.add('live'); live.hidden = false; draw(); };
+    btn.hidden = false;
+    btn.addEventListener('click', () => { touched = true;
+      load().then(d => { if (!F){ F = d; G = prep(F); } const next = target ? 0 : 1;
+        if (!fig.classList.contains('live')){ k = RM() ? next : 0; goLive(); }
+        setTarget(next, true); }).catch(() => { btn.hidden = true; }); });
+    if (!('IntersectionObserver' in window)) return;
+    // Near the viewport: fetch the bins and (with motion allowed) swap the still for the canvas.
+    const near = new IntersectionObserver(es => { if (!es.some(x => x.isIntersecting)) return; near.disconnect();
+      if (RM()) return;
+      load().then(d => { F = F || d; G = G || prep(F); if (!fig.classList.contains('live')){ k = target; goLive(); } if (vis) arm(); }).catch(() => {}); }, {rootMargin: '600px'});
+    near.observe(fig);
+    // On screen: fold once on its own (unless the visitor already used the toggle); off screen: stop where it is headed.
+    const arm = () => { if (!touched && !RM() && F && target === 0) setTimeout(() => { if (!touched && vis && target === 0){ touched = true; setTarget(1, false); } }, 900); };
+    const io = new IntersectionObserver(es => { vis = es.some(x => x.isIntersecting);
+      if (!vis){ if (raf){ cancelAnimationFrame(raf); raf = 0; k = target; if (F) draw(); } return; }
+      arm(); run(); }, {rootMargin: '80px', threshold: .3});
+    io.observe(fig);
+    document.addEventListener('visibilitychange', () => { if (document.hidden){ if (raf){ cancelAnimationFrame(raf); raf = 0; } } else run(); });
+    let rz = 0; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (F && fig.classList.contains('live')) draw(); }, 150); });
+  });
+})();
 // ---------- router ----------
 const RENDER = {overview: () => {}, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, variables: renderVariables, transit: renderTransit,
   explorer: () => { renderExplorer(); renderDiscoveries(); }, sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns,

@@ -181,18 +181,35 @@ def _axes(lo: float, hi: float, step: int, xlabels: list[tuple[float, str]], xti
     return "".join(out)
 
 
-def _panels(fd: dict) -> tuple[str, str]:
+def _paired(bs: list[tuple[float, int]], width_d: float) -> list[tuple[float, int]]:
+    """Adjacent 30-minute bins averaged in pairs (60 minutes), for the compact still; a lone bin stays as it is."""
+    out, i = [], 0
+    while i < len(bs):
+        if i + 1 < len(bs) and bs[i + 1][0] - bs[i][0] < 1.5 * width_d:
+            out.append(((bs[i][0] + bs[i + 1][0]) / 2, round((bs[i][1] + bs[i + 1][1]) / 2)))
+            i += 2
+        else:
+            out.append(bs[i])
+            i += 1
+    return out
+
+
+def _panels(fd: dict, compact: bool = False) -> tuple[str, str]:
     lo, hi, step = _yrange(fd)
     Y = lambda v: _T + (_H - _T - _B) * (1 - (v - lo) / (hi - lo))  # noqa: E731
     t0, t1 = fd["span"]
     X = lambda t: _L + (_W - _L - _R) * (t - t0) / (t1 - t0)  # noqa: E731
     bs = bins(fd)
-    d1 = _dots([(X(t), Y(v)) for t, v in bs])
+    # The compact still (the home page) draws the time-ordered panel at 60 minutes, and says so; the folded panel
+    # and the canvas keep the 30-minute bins.
+    ub = _paired(bs, fd["bin_min"] / 1440.0) if compact else bs
+    ubin = 2 * fd["bin_min"] if compact else fd["bin_min"]
+    d1 = _dots([(X(t), Y(v)) for t, v in ub])
     first = math.ceil((t0 - fd["t0"]) / fd["p"])
     mids = [fd["t0"] + n * fd["p"] for n in range(first, first + 40) if t0 <= fd["t0"] + n * fd["p"] <= t1]
     ticks = "".join(f'<path d="M{X(m):.1f} {_H - _B + 1}v6" class="mk"/>' for m in mids)
     xl = [(X(d), f"{d:.0f}") for d in range(math.ceil(t0 / 5) * 5, int(t1) + 1, 5)]
-    a1 = (f"Unfolded: {fd['n_points']:,} stored points of pi Men in TESS, BTJD {t0:.1f} to {t1:.1f}, binned to {fd['bin_min']} minutes. "
+    a1 = (f"Unfolded: {fd['n_points']:,} stored points of pi Men in TESS, BTJD {t0:.1f} to {t1:.1f}, binned to {ubin} minutes. "
           f"Each of the {len(mids)} transits, {fd['depth_ppm']:.0f} ppm deep, is a handful of points among the rest; ticks under the axis mark their predicted times.")
     un = (f'<svg viewBox="0 0 {_W} {_H}" role="img" aria-label="{_html.escape(a1)}" class="foldsvg">'
           f'{_axes(lo, hi, step, xl, "BTJD (days)")}<path d="{d1}" class="pt"/>{ticks}</svg>')
@@ -225,13 +242,13 @@ def html(data: dict, **opts) -> str:
     e = _html.escape
     where = "".join(c for c in str(opts.get("where") or "page") if c.isalnum() or c == "-") or "page"
     compact = bool(opts.get("compact"))
-    un, fo = _panels(fd)
+    un, fo = _panels(fd, compact)
     alt = text_alternative(fd)
     cap = f"fold-cap-{where}"
     return (f'<figure class="stage foldfig{" compact" if compact else ""}" data-fold="{e(where)}" aria-labelledby="{cap}">'
             f'<span class="stage-tag">{LABEL}</span>'
             f'<div class="foldpanels">'
-            f'<div class="foldpanel"><p class="foldlbl"><b>Unfolded</b> · {fd["span"][1] - fd["span"][0]:.0f} days in time order</p>{un}</div>'
+            f'<div class="foldpanel"><p class="foldlbl"><b>Unfolded</b> · {fd["span"][1] - fd["span"][0]:.0f} days in time order{", 60-minute bins" if compact else ""}</p>{un}</div>'
             f'<div class="foldpanel"><p class="foldlbl"><b>Folded</b> on the {fd["p"]:.4f}-day period</p>{fo}</div></div>'
             f'<div class="foldlive" hidden><canvas role="img" aria-label="{e(alt)}"></canvas></div>'
             f'<div class="foldctl"><button class="btn foldbtn" type="button" aria-pressed="false" hidden>Fold on the period</button>'
