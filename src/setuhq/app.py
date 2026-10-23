@@ -1689,11 +1689,11 @@ const runOf = dip => ((D.dips || {})[dip] || {}).run || D.run.name;
 const RUNCTX = dip => (D.run_ctx || {})[runOf(dip)] || {};
 function docketURL(dip){ return ((D.docket_frames || {})[runOf(dip)] || D.docket_frame) + (dip ? '#' + encodeURIComponent(dip) : ''); }
 const fullHref = dip => (RUNCTX(dip).case_file || '/candidates/case-file/') + (dip ? '#' + encodeURIComponent(dip) : '');
-function setFullHrefs(dip){ for (const a of $$('#fullpage, #topfull, #blockedlink')) a.href = fullHref(dip); }
+function setFullHrefs(dip){ for (const a of $$('#fullpage, #topfull, #blockedlink')) a.href = fullHref(dip); showDipStar(dip || leadDip()); }
 // Keep the shell URL and the full-page links on the dip (and section) the frame shows.
 function showDipStar(dip){ const run = runOf(dip); for (const s of $$('#route-candidates .dipstar')) s.hidden = s.dataset.run !== run; }
 function syncShellURL(){
-  setFullHrefs(frame.dip); showDipStar(frame.dip);
+  setFullHrefs(frame.dip);
   const pick = $('#dippick'); if (pick && frame.dip && pick.value !== frame.dip) pick.value = frame.dip;
   if (current !== 'candidates' || !frame.dip) return;
   const h = dipHref(frame.dip, frame.section);
@@ -1795,7 +1795,6 @@ function openDip(dip, section){
     if (frame.ready) readyStatus(); else frameStatus(f.dataset.loaded ? LOADING_TEXT : '');
   } else if (dip) frame.notice = '';
   if (!DOCKET_SECTIONS.includes(section)) section = null;
-  showDipStar(dip || frame.dip || leadDip());
   if (!f.dataset.loaded || (dip && frame.run && runOf(dip) !== frame.run)){ f.dataset.loaded = '1'; loadDocket(dip, section); setFullHrefs(dip); }
   else if (!frame.ready){ if (dip || section) frame.pending = {dip: dip || frame.dip, section}; setFullHrefs(dip || frame.dip); }
   else if (dip || section) tellFrame(dip, section);
