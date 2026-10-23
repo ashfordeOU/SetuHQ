@@ -289,6 +289,8 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .dipstars{display:inline-flex;line-height:0}
 .dipstar[hidden]{display:none}
 .dipstar .stardisc{width:28px;height:28px}
+/* On a phone the dip picker takes its own full-width line, in the narrower sans, so a dip's whole name shows. */
+@media (max-width:700px){body .dippicker{flex-wrap:wrap}body .dippicker select{flex:1 1 100%;width:100%;font:500 16px/1.2 var(--sans)}}
 .scatterbox{flex:999 1 620px;padding:22px;background:radial-gradient(110% 110% at 50% 100%,#120A1E 0%,#000 60%)}
 .scatterbox .cap{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--stage-dim);margin-bottom:10px}
 .scatter{position:relative;width:100%;padding-bottom:52%}

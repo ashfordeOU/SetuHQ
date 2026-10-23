@@ -56,7 +56,8 @@ def test_one_caption_per_candidate_each_unconfirmed(run_dir, catalog, tmp_path):
         rejected = 'class="word s-rej"' in mine[0] or 'class="word s-flag"' in mine[0]
         assert ('<span class="word cand">candidate</span>' in mine[0]) != rejected, mine[0]  # only a candidate is tagged one
     # "candidate, unconfirmed" once in the lede, not on every caption.
-    assert '<span class="hedge">Candidate, unconfirmed.</span>' in page
+    assert "Each dip that passed vetting is a candidate, unconfirmed, and is tagged so" in page
+    assert '<span class="hedge">' not in page  # the count says what each dip is; no blanket word in front of it
     assert not any("unconfirmed" in c for c in caps)
     # One plate per star: the run's star and the two feed stars.
     assert page.count('<article class="plate"') == 3
@@ -190,7 +191,8 @@ def test_counts_name_each_dip_by_its_status_and_rows_lead_with_the_run_label(run
     data = plate_data(run_dir, title="t", catalog_path=catalog)
     page = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog).read_text()
     every = [c.get("status") for s in data["stars"] for c in s["candidates"]]
-    assert f"</span> {dip_count(every)} on {len(data['stars'])} stars" in page
+    n = len(data["stars"])
+    assert f"<p>{dip_count(every)} on {n} star{'' if n == 1 else 's'}, one plate per star" in page
     assert re.search(r'<desc id="river-d">' + re.escape(dip_count(every)) + " on ", page)
     for s in data["stars"]:
         if s["source"] == "run":
@@ -216,7 +218,10 @@ def test_plates_read_the_site_tokens_and_print_light(run_dir, catalog, tmp_path)
     out = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog)
     page = out.read_text()
     assert '<html lang="en" data-theme="system">' in page and '<link rel="stylesheet" href="assets/fonts/fonts.css">' in page
-    assert (tmp_path / "plate" / "assets" / "fonts" / "fonts.css").exists()
+    fonts = tmp_path / "plate" / "assets" / "fonts"
+    assert (fonts / "fonts.css").exists() and "Unbounded" not in (fonts / "fonts.css").read_text()
+    assert not list(fonts.glob("files/unbounded-*")) and list(fonts.glob("files/geist-*")) and list(fonts.glob("files/geistmono-*"))
+    assert ".topbar,.pagebar,.skip{display:none!important}" in PLATE_CSS  # the site's chrome does not print
     site = build_plate(run_dir, tmp_path / "site", title="t", catalog_path=catalog, path="/evidence/plates/x/").read_text()
     assert '<link rel="stylesheet" href="/assets/fonts/fonts.css">' in site and not (tmp_path / "site" / "assets" / "fonts").exists()
 

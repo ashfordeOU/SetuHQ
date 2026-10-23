@@ -92,6 +92,7 @@ footer.colophon p{margin:3px 0}
   @bottom-right{content:counter(page) " / " counter(pages);font:8pt "Geist Mono",Menlo,monospace;color:#444}}
 @media print{
   .printonly{display:inline}
+  .topbar,.pagebar,.skip{display:none!important}
   :root,:root[data-theme]{--paper:#fff}
   body{font-size:9.5pt;line-height:1.42;background:#fff}
   .skip,nav.toc{display:none}
@@ -142,7 +143,7 @@ footer.colophon p{margin:3px 0}
 <header class="mast">
   <p class="kicker"><span>plates</span></p>
   <h1>SetuHQ plates</h1>
-  <p><span class="hedge">Candidate, unconfirmed.</span> 31 dips (29 candidates, 1 flagged, 1 rejected) on 3 stars, one plate per star, from run tess-pi-men-s1 and the search catalogue. Each dip that passed vetting is a candidate and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
+  <p>31 dips (29 candidates, 1 flagged, 1 rejected) on 3 stars, one plate per star, from run tess-pi-men-s1 and the search catalogue. Each dip that passed vetting is a candidate, unconfirmed, and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
   <ul class="notes">
     <li>BLS periods and epochs are found per 13-day subject (a fixed-length cut of a sector), not per sector.</li>
     <li>The panel is the Sentinels and the Probes, no people. Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors. A dip's consensus interval is where their marks agree.</li>

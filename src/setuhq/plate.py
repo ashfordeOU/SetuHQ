@@ -136,6 +136,7 @@ footer.colophon p{margin:3px 0}
   @bottom-right{content:counter(page) " / " counter(pages);font:8pt "Geist Mono",Menlo,monospace;color:#444}}
 @media print{
   .printonly{display:inline}
+  .topbar,.pagebar,.skip{display:none!important}
   :root,:root[data-theme]{--paper:#fff}
   body{font-size:9.5pt;line-height:1.42;background:#fff}
   .skip,nav.toc{display:none}
@@ -420,7 +421,7 @@ def river_svg(stars: list[dict]) -> str:
     unit = events[0][1].get("time_unit") or ""
     out = [f'<svg class="wide" viewBox="0 0 {W:g} {H}" role="img" aria-labelledby="river-t river-d">'
            f'<title id="river-t">River of time</title>'
-           f'<desc id="river-d">{dip_count([c.get("status") for _, c in events])} on {len(stars)} stars by mid-time ({_e(unit)}); tick height is log SNR '
+           f'<desc id="river-d">{dip_count([c.get("status") for _, c in events])} on {len(stars)} star{"" if len(stars) == 1 else "s"} by mid-time ({_e(unit)}); tick height is log SNR '
            f'and colour is status, written beside each row. Empty stretches longer than {RIVER_GAP_DAYS:.0f} days are cut, and the '
            f'{len(clusters)} segments are not drawn to a common time scale: each is labelled at its start and end, with its span.</desc>']
     for i, s in enumerate(stars):
@@ -716,7 +717,7 @@ def plate_page(data: dict) -> str:
 <header class="mast">
   <p class="kicker"><a href="/" aria-label="SetuHQ, home">{brand.logo(height=20)}</a><span>plates</span></p>
   <h1>{title}</h1>
-  <p><span class="hedge">Candidate, unconfirmed.</span> {dip_count([c.get("status") for s in stars for c in s["candidates"]])} on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
+  <p>{dip_count([c.get("status") for s in stars for c in s["candidates"]])} on {len(stars)} star{"" if len(stars) == 1 else "s"}, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate, unconfirmed, and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
   <ul class="notes">
     <li>{_e(scope)}</li>
     <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.{f" {_e(data['panel_note'])}." if data.get("panel_note") else ""}</li>
@@ -765,9 +766,7 @@ def build_plate(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog
     site_page = data["fonts_href"].startswith("/")
     path.write_text(with_code_note(plate_page(data), code_note(run_dir)))
     if not site_page:
-        import shutil
-
-        from setuhq.docket import FONTS_DIR
-        shutil.copytree(FONTS_DIR, out / "assets" / "fonts", dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))
+        from setuhq.docket import copy_page_fonts
+        copy_page_fonts(out)
     brand.copy_assets(out)
     return path

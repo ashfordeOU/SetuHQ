@@ -203,7 +203,8 @@ kbd{font:11px var(--mono);border:1px solid var(--rule);border-radius:4px;padding
   .readout{min-height:44px;box-sizing:border-box}
   .dippick{display:flex;align-items:center;gap:10px;margin:12px 0 4px}
   .dippick label{font:500 12px var(--sans);color:var(--muted)}
-  .dippick select{flex:1 1 0;width:0;min-width:0;min-height:44px;font:500 16px var(--mono);color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:0 8px}
+  .dippick{flex-wrap:wrap}
+  .dippick select{flex:1 1 100%;width:100%;min-width:0;min-height:44px;font:500 16px var(--sans);color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:0 8px}
   html.framed .dippick{display:none}
 }
 
@@ -1606,6 +1607,27 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
     return data
 
 
+PAGE_FONTS = ("geist-", "geistmono-", "setu-symbols")  # the files a stand-alone page reads; not the wordmark's Unbounded
+
+
+def copy_page_fonts(out: str | Path) -> None:
+    """Beside a stand-alone page (the case file, the plates): Geist, Geist Mono and SetuHQ's symbol font, their
+    licences, and a fonts.css without the faces it does not copy."""
+    import re
+    import shutil
+
+    dest = Path(out) / "assets" / "fonts"
+    (dest / "files").mkdir(parents=True, exist_ok=True)
+    for f in sorted((FONTS_DIR / "files").iterdir()):
+        if f.name.startswith(PAGE_FONTS):
+            shutil.copyfile(f, dest / "files" / f.name)
+    for f in ("OFL-geist.txt", "OFL-geist-mono.txt"):
+        shutil.copyfile(FONTS_DIR / f, dest / f)
+    css = (FONTS_DIR / "fonts.css").read_text()
+    css = re.sub(r"/\* Unbounded[^*]*\*/\s*@font-face \{[^}]*\}\s*", "", css)
+    (dest / "fonts.css").write_text(css.replace("Geist, Geist Mono and Unbounded are", "Geist and Geist Mono are"))
+
+
 def run_star_params(run_dir: str | Path, target: str) -> dict:
     """The run's star as its stellar.json stores it: {target, teff, radius, source}, or {} when it is not stored."""
     path = Path(run_dir) / "stellar.json"
@@ -1692,9 +1714,7 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
     from setuhq.codenote import code_note, with_code_note
 
     path.write_text(with_code_note(docket_page(data), code_note(run_dir)))
-    import shutil
-
     if not data.get("page_path"):  # a page of the site uses the site's one copy of the fonts
-        shutil.copytree(FONTS_DIR, out / "assets" / "fonts", dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))
+        copy_page_fonts(out)
     brand.copy_assets(out)
     return out / "index.html"
