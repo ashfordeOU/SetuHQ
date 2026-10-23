@@ -411,6 +411,7 @@ CATALOGUE_CSS = r"""
 @media (min-width:1100px){.ctrow .ctcls{display:inline-block}}
 .ctstrip{display:grid;gap:6px;margin:6px 0 10px}
 .ctstriplab{margin:0;font-size:12px;color:var(--ink-3)}
+.ctstrip .tsbar{height:46px}  /* the two handles fill the bar inside its border: a 44 px target on a phone */
 .gsresults .ctdot{width:16px;height:16px;vertical-align:-3px}
 .plextra{display:grid;gap:16px}
 .stubfig{max-width:420px}
