@@ -37,8 +37,9 @@ body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 var(--sans)
 .sighead small,.row small{display:block;font:11px var(--mono);color:var(--muted)}
 .signame{font-weight:600;font-size:13px}
 .row{display:grid;grid-template-columns:90px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 16px 6px 28px;cursor:pointer;border-left:3px solid transparent}
-.row:hover{background:var(--sel)}
-.row[aria-selected="true"]{border-left-color:var(--ink);background:var(--sel)}
+/* The selected and hovered rows sit on the panel, so the status words keep 4.5:1 in both themes. */
+.row:hover{background:var(--panel)}
+.row[aria-selected="true"]{border-left-color:var(--ink);background:var(--panel)}
 #rows:focus-visible .row[aria-selected="true"]{outline:2px solid var(--fit);outline-offset:-2px}
 .glyph{font:600 12px var(--mono);white-space:nowrap}
 .word{font-weight:500}
@@ -75,7 +76,7 @@ svg .hl{fill:var(--ink)}
 .hero-wrap{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:8px}
 .dips{display:flex;flex-wrap:wrap;gap:6px}
 .dipbtn{font:12px var(--mono);background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:5px 9px;cursor:pointer}
-.dipbtn.cur{border-color:var(--ink);background:var(--sel)}
+.dipbtn.cur{border-color:var(--ink);background:var(--panel);box-shadow:inset 0 0 0 1px var(--ink)}
 .compare{display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
 .compare>div{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:8px;min-width:0}
 .compare p{margin:4px 0 0;font:12px var(--sans);color:var(--muted)}
