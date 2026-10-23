@@ -92,7 +92,7 @@ def test_sky_position_is_the_stored_coordinates_and_field_stars_are_decorative(r
 
 def test_overview_labels_the_artists_impression_and_the_theatre_says_what_is_not_fitted(run_dir, tmp_path):
     page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
-    assert "Artist's impression of a planet lit by its star. It shows no real planet; SetuHQ works from light curves, not images." in page
+    assert "Planet pictures are artist's impressions, chosen from measured radius and irradiation" in page.replace("&#x27;", "'")
     theatre = re.search(r"function txTheatre\(d\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     # The playback is the shared system view; every stored-values honesty line stays.
     assert "impact parameter illustrative (b = 0)" in theatre and "Dashed: the signal\\'s stored limb-darkened fit, at this dip." in theatre
@@ -159,7 +159,7 @@ def test_home_page_is_the_overview_linking_into_the_site(run_dir, tmp_path):
     assert "The sky, reviewed." in page and "What this page does not claim" in page
     assert 'href="/explore/"' in page and 'href="/candidates/" data-nav="candidates">Candidates</a>' in page
     assert f'href="{FONTS_CSS}"' in page and "fonts.googleapis" not in page
-    assert "Artist&#x27;s impression" in page or "Artist's impression" in page
+    assert "artist's impressions" in page.replace("&#x27;", "'")
     assert 'href="/evidence/report/"' in page and "candidate, unconfirmed" in page
     # The run's arrangeable cards live on Candidates, not on the home page.
     assert "Your view" not in page and 'id="widgets"' not in page

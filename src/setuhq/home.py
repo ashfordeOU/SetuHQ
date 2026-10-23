@@ -208,7 +208,6 @@ def _overview(data: dict, with_view: bool = True) -> str:
     bands.append(f'<div class="homesweep" id="band-sweep">{sweep}</div>' if sweep else "")
     bands.append(_do_here())
     bands.append(_honest(data))
-    if with_view:
-        bands.append(learn_card())
+    bands.append(learn_card() if with_view else "")
     return "\n      ".join(b for b in bands if b)
 
