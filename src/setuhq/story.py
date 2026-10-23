@@ -169,6 +169,8 @@ def story_data(run_dir: str | Path, dock: dict, feed: list[dict], calibration: d
             "fit_depth_ppm": (c.get("fit") or {}).get("depth_ppm"), "fit_t14_hours": (c.get("fit") or {}).get("t14_hours"),
             # The fit's own shape, so a dip page can draw this dip's model: Rp/R★, b and the limb darkening it used.
             "fit_k": (c.get("fit") or {}).get("k"), "fit_b": (c.get("fit") or {}).get("b"),
+            # Where the fit puts this dip's mid-time, from the dip's own mid-time (days): the model is drawn there.
+            "fit_dt0": round((c.get("fit") or {})["t0"] - c["t_center"], 6) if (c.get("fit") or {}).get("t0") is not None else None,
             "fit_ld": [(c.get("fit") or {}).get("u1"), (c.get("fit") or {}).get("u2")] if (c.get("fit") or {}).get("u1") is not None else None,
             "lanes": lanes, "who": who, "quotes": quotes, "phase": phase,
             "on_lead": c.get("signal_id") == lead.get("signal_id"),

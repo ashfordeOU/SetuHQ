@@ -95,7 +95,10 @@ def test_overview_labels_the_artists_impression_and_the_theatre_says_what_is_not
     assert "Artist's impression of a planet lit by its star. It shows no real planet; SetuHQ works from light curves, not images." in page
     theatre = re.search(r"function txTheatre\(d\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     # The playback is the shared system view; every stored-values honesty line stays.
-    assert "impact parameter illustrative (b = 0)" in theatre and "Dashed: the limb-darkened fit stored for this dip." in theatre
+    assert "impact parameter illustrative (b = 0)" in theatre and "Dashed: the signal\\'s stored limb-darkened fit, at this dip." in theatre
+    # The fit is the signal's joint fit: the model is drawn at its t0 and T14, and is never called this dip's own.
+    assert "from this dip\\'s stored fit" not in theatre and "mid-time and T14 from the signal\\'s stored fit" in theatre
+    assert "t0_offset_days: timed ? d.fit_dt0 : 0" in theatre and "only its depth is the fit\\'s" in theatre
     assert "No transit fit is stored for this dip." in theatre and "box" not in theatre
     assert "Rp/R★ = √depth" in theatre and "orbit and period illustrative" in theatre
     assert "it does not confirm the dip" in theatre and "The star's surface texture is decorative." in theatre

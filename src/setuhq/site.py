@@ -843,7 +843,8 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
         for x in data["extra_runs"]:
             card = next(c for c in data["showcase"] if c["run"] == x["run"])
             build_docket(x["dir"], out / card["case_file"].strip("/"), title=f"{title}: case file, {x['star']}",
-                         require_crossmatch=require_crossmatch, path=card["case_file"], caveat=card["caveat"])
+                         require_crossmatch=require_crossmatch, path=card["case_file"], caveat=card["caveat"],
+                         period_wrong=data["run_ctx"][x["run"]]["period_wrong"])
             build_plate(x["dir"], out / card["plates"].strip("/"), title=f"{title} plates: {x['star']}", catalog_path=None,
                         require_crossmatch=require_crossmatch, path=card["plates"], caveat=card["caveat"],
                         period_wrong=data["run_ctx"][x["run"]]["period_wrong"],

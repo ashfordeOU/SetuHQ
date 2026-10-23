@@ -94,7 +94,7 @@
         "methods-strip-dark.svg"
       ],
       "sources": {
-        "src/setuhq/methods.py": "cd7a0ec188d27e3d25f1de2fca742f07c4d9743129ef9a779a54db4d12a997a2",
+        "src/setuhq/methods.py": "956057751598b14042bbfd2f5ba462de35851be0b9d704c9de85fc957ff4e5f1",
         "docs/results/methods_examples.json": "5190fc392d23af5ca9446ed4b06bdd24948a23534f2eefe763a47d31adec4974"
       },
       "commit": "61949d6"
@@ -123,7 +123,7 @@
   },
   "repo_counts": {
     "modules": 53,
-    "tests": 812,
+    "tests": 814,
     "network": 2,
     "slow": 4,
     "chapters": 15,

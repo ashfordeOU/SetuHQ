@@ -528,7 +528,17 @@
      "period_days": 4.535757636527732,
      "depth_ppm": 17477.612151607704,
      "t14_hours": 4.957343284878215,
-     "secondary_snr": 10.937768643013232
+     "secondary_snr": 10.937768643013232,
+     "fit_per_signal": [
+      {
+       "rp_rs": 0.1411,
+       "depth_ppm": 23280
+      },
+      {
+       "rp_rs": 0.1418,
+       "depth_ppm": 23501
+      }
+     ]
     }
    },
    "reference": "TOI table (NASA Exoplanet Archive): TOI-236.01 dispositioned FP",

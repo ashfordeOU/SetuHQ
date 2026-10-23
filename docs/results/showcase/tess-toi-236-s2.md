@@ -16,7 +16,8 @@ Source: NASA Exoplanet Archive, table toi, fetched 2026-10-19 (the real-TOI benc
 |---|---:|---:|
 | disposition | FP | Caught: all 6 dips on the TOI ephemeris were rejected by vetting (secondary_any_phase, secondary_eclipse), so none is a candidate. |
 | period (d) | 4.53445 | 4.5358 (BLS) |
-| depth (ppm) | 23,575 | 17,478 (box) |
+| depth (ppm) | 23,575 | 17,478 (box); 23,280 / 23,501 (fit, per signal) |
+| Rp/R★ | | 0.1411 / 0.1418 (fit, per signal) |
 | T14 (h) | 4.94 | 4.96 (fit) |
 | transits predicted in the data / with a dip | 6 | 6 |
 | dips on the ephemeris, by vetting outcome | | 6 rejected |

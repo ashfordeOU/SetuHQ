@@ -814,6 +814,8 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         x["meta"] = meta.get(x["run"]) or {}
         if x["meta"].get("caveat"):
             x["dock"]["caveat"] = x["meta"]["caveat"]
+        if x["meta"].get("bls_period_not_planets"):
+            x["dock"]["period_wrong"] = list(x["meta"]["bls_period_not_planets"])
     showcase = [example_card(x, meta.get(x["run"]) or {}) for x in [lead_example] + extras]
     # The order docs/results/showcase.json gives (a run it does not list keeps its place after those it does).
     order = list(meta)
@@ -2304,22 +2306,27 @@ function txTheatre(d){
   else {
     // This dip's own shape: the stored fit's Rp/R★, b and limb darkening when a fit is stored, else Rp/R★ = √depth and
     // b = 0. The star is the run's own (its TIC Teff and radius as the run stored them); the period is illustrative.
-    const SP = C.star_params || {}, kk = d.fit_k || k, fitted = !!d.fit_k;
+    // The fit is the signal's joint fit, shared by all of its dips; where it stores a mid-time and a T14, the model is
+    // drawn there (its own t0, its own duration), so it lies on the dashed stored fit.
+    const SP = C.star_params || {}, kk = d.fit_k || k, fitted = !!d.fit_k, timed = fitted && d.fit_dt0 != null && !!d.fit_t14_hours;
     const teff = (star && star.star_teff) || SP.teff || null, rs = (star && star.star_radius) || SP.radius || null;
     const P = (!wrongP(d) && d.period_days) || (C.lead && !wrongP(d) && C.lead.period_days) || 6;
-    const T14 = Math.max(0.02, (d.fit_t14_hours || d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * (1 + kk);
+    const bb = fitted && d.fit_b != null ? d.fit_b : 0, chord = Math.sqrt(Math.max(1e-4, (1 + kk) ** 2 - bb * bb));
+    const T14 = Math.max(0.02, (d.fit_t14_hours || d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * chord;
     p = {name: 'a planet this deep', star_teff: teff, star_radius: rs || 1, radius: kk * (rs || 1) * 6.957e8 / 7.1492e7,
       orbital_period: P, semi_major_axis: ars * (rs || 1) * 6.957e8 / 1.495978707e11,
-      impact_parameter: fitted && d.fit_b != null ? d.fit_b : 0, ld: fitted ? d.fit_ld : null};
-    bNote = fitted ? 'Rp/R★, b and limb darkening from this dip\'s stored fit' : 'impact parameter illustrative (b = 0), not fitted';
+      impact_parameter: bb, ld: fitted ? d.fit_ld : null, t0_offset_days: timed ? d.fit_dt0 : 0};
+    bNote = timed ? 'Rp/R★, b, limb darkening, mid-time and T14 from the signal\'s stored fit'
+      : fitted ? 'Rp/R★, b and limb darkening from the signal\'s stored fit; only its depth is the fit\'s, the mid-time and duration are illustrative'
+      : 'impact parameter illustrative (b = 0), not fitted';
     starNote = teff ? `the star: ${Math.round(teff).toLocaleString('en-GB')} K${rs ? ', ' + fmt(rs, 2) + ' R☉' : ''} (${SP.source || 'as stored'})` : 'the star\'s temperature is not stored (drawn at the Sun\'s)';
     k2 = kk;
   }
   $('#txcap').textContent = known && star ? `${planet}, from stored values` : 'what a planet this deep would cast';
   $('#txfoot').textContent = (known && star
       ? `${planet} and its star as ${MX.source} stores them (fetched ${MX.fetched_at.slice(0, 10)}): the line is a limb-darkened model from those values, not a fit to this dip; ${bNote}. The match says the planet is already known; it does not confirm the dip.`
-      : `If it were a planet: Rp/R★ = ${d.fit_k ? fmt(k2, 4) + ' from this dip\'s stored fit' : '√depth = ' + fmt(k2, 4) + ', from the stored depth ' + fmt(d.depth_ppm, 0) + ' ppm'}; ${starNote}; orbit and period illustrative; ${bNote}.`)
-    + ` Dots: the ${d.pts.length} stored flux values within ${fmt(d.half * 24, 1)} hours of mid-time (${esc(d.time_unit)} ${fmt(d.t, 3)}). ${model.length ? 'Dashed: the limb-darkened fit stored for this dip.' : 'No transit fit is stored for this dip.'} The star's surface texture is decorative.`;
+      : `If it were a planet: Rp/R★ = ${d.fit_k ? fmt(k2, 4) + ' from the signal\'s stored fit' : '√depth = ' + fmt(k2, 4) + ', from the stored depth ' + fmt(d.depth_ppm, 0) + ' ppm'}; ${starNote}; orbit and period illustrative; ${bNote}.`)
+    + ` Dots: the ${d.pts.length} stored flux values within ${fmt(d.half * 24, 1)} hours of mid-time (${esc(d.time_unit)} ${fmt(d.t, 3)}). ${model.length ? 'Dashed: the signal\'s stored limb-darkened fit, at this dip.' : 'No transit fit is stored for this dip.'} The star's surface texture is decorative.`;
   const {st, S: SS} = mxSystemView($('#txsysfig'), p, {dip: {pts: d.pts, model}, on: current === 'transit', caption: false});
   if (!(known && star)){ st.opt.sys.bSrc = d.fit_k ? 'stored fit' : 'illustrative'; mxKick(st); }
   // What the drawing shows, for the tests: the star's temperature and the model's depth at mid-transit (ppm).

@@ -151,3 +151,27 @@ def test_a_run_that_missed_something_says_so_and_names_no_wrong_period():
                 assert p["setuhq"]["period_days"] is None  # never a median of disagreeing periods
             if p.get("period_wrong"):
                 assert set(p["dip_ids"]) <= set(e["bls_period_not_planets"])
+
+
+def test_the_false_positive_states_its_fit_and_dips_carry_their_fit_offset():
+    # TOI-236 has a stored fit (k 0.1411, 23,280 ppm on its first signal): the comparison says so, per signal.
+    fp = next(e for e in _examples() if e.get("false_positive"))["false_positive"]
+    fits = fp["setuhq"]["fit_per_signal"]
+    assert fits and fits[0] == {"rp_rs": 0.1411, "depth_ppm": 23280}
+    md = (ROOT / "docs/results/showcase/tess-toi-236-s2.md").read_text()
+    assert "23,280 / 23,501 (fit, per signal)" in md and "0.1411 / 0.1418 (fit, per signal)" in md and "no fit" not in md
+
+
+def test_a_dip_page_draws_the_model_at_its_fit_and_the_case_file_names_a_wrong_period():
+    from setuhq.app import example_run
+    from setuhq.docket import DOCKET_JS
+    from setuhq.methods import METHODS_JS
+
+    run = ROOT / "runs/tess-wasp-126-s1"
+    stored = {c["candidate_id"]: c for c in json.loads((run / "candidates.json").read_text())}
+    dips = example_run(run, title="t")["story"]["dips"]
+    # Each dip carries where the signal's joint fit puts its mid-time, so the model is drawn there.
+    assert dips and all(d["fit_dt0"] == pytest.approx(stored[d["id"]]["fit"]["t0"] - d["t"], abs=1e-6) for d in dips)
+    assert "zOf = f => { f -= f0;" in METHODS_JS and "dt0: p.t0_offset_days || 0" in METHODS_JS
+    # The case file names a BLS period known not to be the planet's (showcase.json bls_period_not_planets).
+    assert "(not the planet's)" in DOCKET_JS and "D.period_wrong" in DOCKET_JS

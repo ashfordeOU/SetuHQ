@@ -246,7 +246,10 @@ def compare_fp(spec: dict, cands: list[dict], subjects: list[dict]) -> dict:
         "flags": flags,
         "setuhq": {"period_days": _median([c.get("period_days") for c in dips]), "depth_ppm": _median([c.get("depth_ppm") for c in dips]),
                    "t14_hours": _median([c.get("fit_t14_hours") for c in dips]),
-                   "secondary_snr": _median([c.get("secondary_snr") for c in dips])},
+                   "secondary_snr": _median([c.get("secondary_snr") for c in dips]),
+                   # The stored limb-darkened fit of each signal (one joint fit per signal, shared by its dips).
+                   "fit_per_signal": [{"rp_rs": k, "depth_ppm": dep} for k, dep in sorted(
+                       {(round(c["fit_k"], 4), round(c["fit_depth_ppm"])) for c in dips if c.get("fit_k") and c.get("fit_depth_ppm")})]},
     }
 
 
@@ -378,7 +381,11 @@ def markdown(e: dict, reference: dict) -> str:
                   "| quantity | TOI table | SetuHQ |", "|---|---:|---:|",
                   f"| disposition | {fp['disposition']} | {e['outcome']} |",
                   f"| period (d) | {_f(p['period_days'], 5)} | {_f(fp['setuhq']['period_days'], 4)} (BLS) |",
-                  f"| depth (ppm) | {_f(p['depth_ppm'], 0)} | {_f(fp['setuhq']['depth_ppm'], 0)} (box) |",
+                  f"| depth (ppm) | {_f(p['depth_ppm'], 0)} | {_f(fp['setuhq']['depth_ppm'], 0)} (box); "
+                  + (" / ".join(_f(x['depth_ppm'], 0) for x in fp['setuhq'].get('fit_per_signal') or []) or "no fit stored")
+                  + (" (fit, per signal)" if fp['setuhq'].get('fit_per_signal') else "") + " |",
+                  f"| Rp/R★ | | " + (" / ".join(_f(x['rp_rs'], 4) for x in fp['setuhq'].get('fit_per_signal') or []) or "no fit stored")
+                  + (" (fit, per signal)" if fp['setuhq'].get('fit_per_signal') else "") + " |",
                   f"| T14 (h) | {_f(p['t14_hours'], 2)} | {_f(fp['setuhq']['t14_hours'], 2)} (fit) |",
                   f"| transits predicted in the data / with a dip | {fp['predicted_transits']} | {fp['recovered_transits']} |",
                   f"| dips on the ephemeris, by vetting outcome | | {', '.join(f'{v} {k}' for k, v in fp['outcomes'].items()) or 'none'} |",

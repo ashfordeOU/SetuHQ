@@ -1875,7 +1875,7 @@ function mxSystemParams(p, dip){
   if (b == null && p.inclination != null && a && rs){ b = ars * Math.cos(p.inclination * Math.PI / 180); bSrc = 'from a/R★ and i'; }
   if (b == null || b > 1 + k){ b = 0.3; bSrc = 'illustrative'; }
   return {teff, rs, rp, a, P, k, ars, b, bSrc, scale, cls: mxClassOf(rp, p.mass || p.mass_sini), name: p.name || '', dip: dip || null, inc: p.inclination,
-    ld: p.ld && p.ld[0] != null ? p.ld : null};
+    ld: p.ld && p.ld[0] != null ? p.ld : null, dt0: p.t0_offset_days || 0};
 }
 function mxDurations(P, ars, k, b){
   const inc = Math.acos(Math.min(1, b / ars)), si = Math.sin(inc), f = x => P / Math.PI * Math.asin(Math.min(1, x / (ars * si)));
@@ -1912,7 +1912,8 @@ function mxDrawSystem(c, w, h, t, st){
   // Light curve: model from stored values, limb-darkened (small-planet Mandel & Agol 2002).
   const gx0 = 54, gy0 = sceneH + 26, gw = w - gx0 - 18, gh = h - gy0 - 40;
   mxGlassPanel(c, 10, sceneH + 6, w - 20, h - sceneH - 12);
-  const zOf = f => S.ars * Math.sqrt(Math.sin(2 * Math.PI * f) ** 2 + (S.b / S.ars) ** 2 * Math.cos(2 * Math.PI * f) ** 2);
+  // A dip page draws the model at its fit's mid-time (S.dt0 days from the dip's own), so it lies on the stored fit.
+  const f0 = (S.dt0 || 0) / P, zOf = f => { f -= f0; return S.ars * Math.sqrt(Math.sin(2 * Math.PI * f) ** 2 + (S.b / S.ars) ** 2 * Math.cos(2 * Math.PI * f) ** 2); };
   const depth = 1 - mxFlux(S.b / 1, S.k, u1, u2), floor = Math.min(1 - 1.35 * Math.max(depth, 1e-5), ...(S.dip && S.dip.pts ? S.dip.pts.map(p => 1 + p[1] * 1e-6 - 0.00002) : [1]), ...(S.dip && S.dip.model ? S.dip.model.map(p => 1 + p[1] * 1e-6 - 0.00002) : [1]));
   const X = f => gx0 + (f + win) / (2 * win) * gw, Y = v => gy0 + (1 - v) / (1 - floor) * gh * 0.86 + 6;
   mxAxes(c, gx0, gy0, gw, gh, {y: 'BRIGHTNESS (%)', x: 'TIME FROM MID-TRANSIT (h)'});
