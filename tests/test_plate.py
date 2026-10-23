@@ -56,7 +56,8 @@ def test_one_caption_per_candidate_each_unconfirmed(run_dir, catalog, tmp_path):
         rejected = 'class="word s-rej"' in mine[0] or 'class="word s-flag"' in mine[0]
         assert ('<span class="word cand">candidate</span>' in mine[0]) != rejected, mine[0]  # only a candidate is tagged one
     # "candidate, unconfirmed" once in the lede, not on every caption.
-    assert '<span class="hedge">Candidate, unconfirmed.</span>' in page
+    assert "Each dip that passed vetting is a candidate, unconfirmed, and is tagged so" in page
+    assert '<span class="hedge">' not in page  # the count says what each dip is; no blanket word in front of it
     assert not any("unconfirmed" in c for c in caps)
     # One plate per star: the run's star and the two feed stars.
     assert page.count('<article class="plate"') == 3
@@ -190,7 +191,8 @@ def test_counts_name_each_dip_by_its_status_and_rows_lead_with_the_run_label(run
     data = plate_data(run_dir, title="t", catalog_path=catalog)
     page = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog).read_text()
     every = [c.get("status") for s in data["stars"] for c in s["candidates"]]
-    assert f"</span> {dip_count(every)} on {len(data['stars'])} stars" in page
+    n = len(data["stars"])
+    assert f"<p>{dip_count(every)} on {n} star{'' if n == 1 else 's'}, one plate per star" in page
     assert re.search(r'<desc id="river-d">' + re.escape(dip_count(every)) + " on ", page)
     for s in data["stars"]:
         if s["source"] == "run":
@@ -200,3 +202,36 @@ def test_counts_name_each_dip_by_its_status_and_rows_lead_with_the_run_label(run
     assert not re.search(r"\d+ candidates? (on|by) ", page)  # every count is of dips, by status
     assert dip_count(["passed"] * 5 + ["flagged", "rejected"]) == "7 dips (5 candidates, 1 flagged, 1 rejected)"
     assert dip_count(["known_toi", "new_candidate"]) == "2 dips (2 candidates)"
+
+
+def test_plates_read_the_site_tokens_and_print_light(run_dir, catalog, tmp_path):
+    """The plates are on the site's tokens (design.PLATE_ALIASES): dark first, the light set on request, and the light
+    set on white paper in print. No paper colour of their own is left; the type is Geist; the run's star heads its
+    plate as a static disc; and a stand-alone copy carries its own fonts."""
+    from setuhq.design import PLATE_ALIASES, PRINT_CSS, tokens_css
+
+    assert PLATE_CSS.startswith(tokens_css(":root", aliases=PLATE_ALIASES) + PRINT_CSS)
+    own = PLATE_CSS.replace(PRINT_CSS, "").replace(tokens_css(":root", aliases=PLATE_ALIASES), "")
+    assert "#fbfaf7" not in own and "#f7f6f2" not in own and "#131417" not in own
+    assert "--paper:var(--bg)" in PLATE_CSS and ":root[data-theme=\"light\"]{" in PLATE_CSS and "@media print{:root{" in PLATE_CSS
+    assert "Georgia" not in own and "serif;" not in own.replace("sans-serif", "") and "font:15px/1.55 var(--sans)" in own
+    out = build_plate(run_dir, tmp_path / "plate", title="t", catalog_path=catalog)
+    page = out.read_text()
+    assert '<html lang="en" data-theme="system">' in page and '<link rel="stylesheet" href="assets/fonts/fonts.css">' in page
+    fonts = tmp_path / "plate" / "assets" / "fonts"
+    assert (fonts / "fonts.css").exists() and "Unbounded" not in (fonts / "fonts.css").read_text()
+    assert not list(fonts.glob("files/unbounded-*")) and list(fonts.glob("files/geist-*")) and list(fonts.glob("files/geistmono-*"))
+    assert ".topbar,.pagebar,.skip{display:none!important}" in PLATE_CSS  # the site's chrome does not print
+    site = build_plate(run_dir, tmp_path / "site", title="t", catalog_path=catalog, path="/evidence/plates/x/").read_text()
+    assert '<link rel="stylesheet" href="/assets/fonts/fonts.css">' in site and not (tmp_path / "site" / "assets" / "fonts").exists()
+
+
+def test_a_run_plate_is_headed_by_its_star_in_its_blackbody_colour(tmp_path):
+    from setuhq.renderer import star_svg_stops
+
+    page = build_plate("runs/tess-toi-270-s5", tmp_path / "p", title="t", catalog_path=None).read_text()
+    head = re.search(r'<p class="pstar">(.*?)</p>', page, re.S).group(1)
+    stellar = json.loads(open("runs/tess-toi-270-s5/stellar.json").read())["TIC 259377017"]
+    assert f'{stellar["teff"]:,.0f} K' in head and "TESS Input Catalog" in head
+    first = "#" + "".join(f"{c:02x}" for c in star_svg_stops(stellar["teff"])[0])
+    assert f'stop-color="{first}"' in head

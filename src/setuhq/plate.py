@@ -35,6 +35,7 @@ from pathlib import Path
 from setuhq import brand
 from setuhq import dipslugs
 from setuhq.names import ATTRIBUTION, PROBES_ONLY, SENTINEL_KINDS, dip_count, panel_mode
+from setuhq.design import PLATE_ALIASES, PRINT_CSS, tokens_css
 from setuhq.docket import OUTCOME_LABEL, docket_data
 
 UNCONFIRMED = "Candidate, unconfirmed."
@@ -49,21 +50,20 @@ RIVER_GAP_DAYS = 30.0  # stretches of time with no candidate longer than this ar
 FLAG_WORDS = {"off_ephemeris": "off its star's ephemeris", "edge_event": "at a data edge"}
 
 # The logo on the plates' paper: the light-ground variant, and the dark-ground one where the page turns dark.
+# The logo for the ground it sits on: the dark set by default (the site's tokens are dark-first), the light one under
+# data-theme="light", under "system" on a light device, and on paper.
 PLATE_LOGO_CSS = (".kicker a{display:inline-block;vertical-align:middle;margin-right:10px}.brandlogo{display:block;height:20px;width:auto;aspect-ratio:579/132;flex:none;max-width:none}"
-                  ".brandlogo.dk{display:none}@media screen and (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) "
-                  ".brandlogo.dk{display:block}:root:not([data-theme=\"light\"]) .brandlogo.lt{display:none}}"
-                  "@media screen{:root[data-theme=\"dark\"] .brandlogo.dk{display:block}:root[data-theme=\"dark\"] .brandlogo.lt{display:none}}")
+                  ".brandlogo.lt{display:none}"
+                  ":root[data-theme=\"light\"] .brandlogo.dk{display:none}:root[data-theme=\"light\"] .brandlogo.lt{display:block}"
+                  "@media (prefers-color-scheme: light){:root[data-theme=\"system\"] .brandlogo.dk{display:none}:root[data-theme=\"system\"] .brandlogo.lt{display:block}}"
+                  "@media print{.brandlogo.dk{display:none!important}.brandlogo.lt{display:block!important}}")
 PLATE_CSS = """
-:root{--paper:#fbfaf7;--ink:#141414;--rule:#c9c6bd;--hair:#dcd9d0;--muted:#5d5f66;--pt:#8d8f96;--win:#e9e3cf;
---pass:#2e7d4f;--flag:#8a6400;--rej:#b23a3a;--new:#1f5fbf;--known:#64666e;--fit:#1f5fbf}
-@media screen and (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#131417;--ink:#ecebe6;--rule:#3a3c43;--hair:#2a2c32;--muted:#a3a5ad;--pt:#7b7e87;--win:#3a3526;
---pass:#5cc08a;--flag:#e0b243;--rej:#ef7070;--new:#6fa0ff;--known:#9a9ca4;--fit:#6fa0ff;color-scheme:dark}}
-@media screen{:root[data-theme="dark"]{--paper:#131417;--ink:#ecebe6;--rule:#3a3c43;--hair:#2a2c32;--muted:#a3a5ad;--pt:#7b7e87;--win:#3a3526;
---pass:#5cc08a;--flag:#e0b243;--rej:#ef7070;--new:#6fa0ff;--known:#9a9ca4;--fit:#6fa0ff;color-scheme:dark}}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--paper);color:var(--ink);font:15px/1.55 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;overflow-x:hidden}
-.num,.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;font-size:.9em}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--sans);letter-spacing:-.005em;overflow-x:hidden}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.9em}
+.pstar{display:flex;align-items:center;gap:10px;margin:2px 0 8px;font:12px/1.45 var(--mono);color:var(--muted)}
+.pstar .stardisc{flex:none;width:36px;height:36px}
 a{color:var(--fit)}
 :focus-visible{outline:2px solid var(--fit);outline-offset:2px}
 .skip{position:absolute;left:8px;top:-60px;background:var(--ink);color:var(--paper);padding:10px 14px;z-index:9;min-height:44px;display:inline-flex;align-items:center}
@@ -73,7 +73,7 @@ header.mast{border-bottom:1px solid var(--ink);padding-bottom:12px;margin-bottom
 header.mast h1{font-weight:600;font-size:28px;line-height:1.15;margin:0;letter-spacing:-.01em}
 header.mast p{margin:6px 0 0}
 .hedge{font-weight:600}
-.kicker{font:12px/1.4 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+.kicker{font:12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
 .notes{margin:12px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted);border-top:1px solid var(--hair)}
 .notes li{border-bottom:1px solid var(--hair);padding:5px 0}
 nav.toc{margin:0 0 22px;font-size:14px}
@@ -88,10 +88,10 @@ h2.ptitle .num{font-size:14px;color:var(--muted);font-weight:400}
 figure{margin:12px 0 0;break-inside:avoid;page-break-inside:avoid}
 figcaption{font-size:13px;color:var(--muted);margin-top:4px}
 .figrow{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(0,1fr);gap:10px;align-items:start}
-.panel h3{font:600 12px/1.3 ui-monospace,Menlo,monospace;margin:0 0 2px;color:var(--muted);letter-spacing:.02em}
+.panel h3{font:600 12px/1.3 var(--mono);margin:0 0 2px;color:var(--muted);letter-spacing:.02em}
 .scroll{overflow-x:auto;min-width:0}
 svg{display:block;width:100%;height:auto}
-svg text{font:11px ui-monospace,Menlo,Consolas,monospace;fill:var(--muted)}
+svg text{font:11px var(--mono);fill:var(--muted)}
 svg .ink{fill:var(--ink)}
 svg .axis{stroke:var(--ink);stroke-width:.75}
 svg .grid{stroke:var(--hair);stroke-width:.5}
@@ -100,10 +100,10 @@ svg .win{fill:var(--win)}
 svg .winedge{stroke:var(--ink);stroke-width:.6}
 svg .epoch{fill:var(--ink)}
 svg .durwin{fill:var(--win)}
-.s-pass{color:var(--pass)} .s-flag{color:var(--flag)} .s-rej{color:var(--rej)} .s-new{color:var(--new)} .s-known{color:var(--known)}
-svg .t.s-pass{stroke:var(--pass)} svg .t.s-flag{stroke:var(--flag)} svg .t.s-rej{stroke:var(--rej)} svg .t.s-new{stroke:var(--new)} svg .t.s-known{stroke:var(--known)}
+.s-pass{color:var(--pass)} .s-flag{color:var(--flag)} .s-rej{color:var(--reject)} .s-new{color:var(--new)} .s-known{color:var(--known)}
+svg .t.s-pass{stroke:var(--pass)} svg .t.s-flag{stroke:var(--flag)} svg .t.s-rej{stroke:var(--reject)} svg .t.s-new{stroke:var(--new)} svg .t.s-known{stroke:var(--known)}
 svg .t{stroke-width:2.2;stroke-linecap:butt}
-svg .cap.s-pass{fill:var(--pass)} svg .cap.s-flag{fill:var(--flag)} svg .cap.s-rej{fill:var(--rej)} svg .cap.s-new{fill:var(--new)} svg .cap.s-known{fill:var(--paper);stroke:var(--known);stroke-width:1.2}
+svg .cap.s-pass{fill:var(--pass)} svg .cap.s-flag{fill:var(--flag)} svg .cap.s-rej{fill:var(--reject)} svg .cap.s-new{fill:var(--new)} svg .cap.s-known{fill:var(--paper);stroke:var(--known);stroke-width:1.2}
 svg .brk{stroke:var(--muted);stroke-width:.8}
 .legend{display:flex;flex-wrap:wrap;gap:2px 16px;font-size:12px;margin:6px 0 0}
 .legend span{display:inline-flex;align-items:center;gap:6px}
@@ -116,7 +116,7 @@ p.caption b.fig{font-weight:600}
 p.caption .sid{color:var(--muted);font-size:.85em}
 .printonly{display:none}
 .word.cand{color:var(--ink)}
-.word{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.05em;border:1px solid currentColor;padding:2px 4px;margin-right:4px;white-space:nowrap;display:inline-block;vertical-align:1px}
+.word{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.05em;border:1px solid currentColor;padding:2px 4px;margin-right:4px;white-space:nowrap;display:inline-block;vertical-align:1px}
 .archive{margin:12px 0 0;border:1px solid var(--rule);padding:8px 10px;font-size:13px;break-inside:avoid}
 .archive p{margin:0}
 .nocurve{margin:10px 0 0;font-size:13px;color:var(--muted);border-left:2px solid var(--rule);padding-left:8px}
@@ -132,11 +132,12 @@ footer.colophon p{margin:3px 0}
   .scroll{border:1px solid var(--hair)}
 }
 @page{size:A4;margin:14mm 13mm 16mm;
-  @bottom-left{content:"Candidate, unconfirmed. Stored values only.";font:8pt Georgia,serif;color:#444}
-  @bottom-right{content:counter(page) " / " counter(pages);font:8pt Georgia,serif;color:#444}}
+  @bottom-left{content:"Candidate, unconfirmed. Stored values only.";font:8pt "Geist",Arial,sans-serif;color:#444}
+  @bottom-right{content:counter(page) " / " counter(pages);font:8pt "Geist Mono",Menlo,monospace;color:#444}}
 @media print{
   .printonly{display:inline}
-  :root{--paper:#fff;--ink:#000;--rule:#999;--hair:#bbb;--muted:#333;--pt:#777;--win:#ece6d2}
+  .topbar,.pagebar,.skip{display:none!important}
+  :root,:root[data-theme]{--paper:#fff}
   body{font-size:9.5pt;line-height:1.42;background:#fff}
   .skip,nav.toc{display:none}
   .sheet{max-width:none;padding:0}
@@ -167,6 +168,10 @@ footer.colophon p{margin:3px 0}
   svg text{font-size:12.5px}
 }
 """
+
+# The site's tokens under the plates' own names (design.PLATE_ALIASES), then the light set on white paper for print.
+PLATE_CSS = tokens_css(":root", aliases=PLATE_ALIASES) + PRINT_CSS + PLATE_CSS
+FONTS_HREF = "assets/fonts/fonts.css"  # beside a stand-alone page; the site's pages use its one copy at /assets/
 
 
 def _e(x) -> str:
@@ -314,6 +319,7 @@ def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | No
             })
         stars.append({
             "star": target, "source": "run", "run": manifest.get("config_name") or run_dir.name,
+            "star_params": dock.get("star") if (dock.get("star") or {}).get("target") == target else {},
             "subjects": subjects,
             "candidates": [{**{k: c.get(k) for k in ("candidate_id", "subject_id", "t_center", "t_start", "t_end", "time_unit",
                                                      "depth_ppm", "duration_hours", "snr", "n_reviewers", "period_days",
@@ -415,7 +421,7 @@ def river_svg(stars: list[dict]) -> str:
     unit = events[0][1].get("time_unit") or ""
     out = [f'<svg class="wide" viewBox="0 0 {W:g} {H}" role="img" aria-labelledby="river-t river-d">'
            f'<title id="river-t">River of time</title>'
-           f'<desc id="river-d">{dip_count([c.get("status") for _, c in events])} on {len(stars)} stars by mid-time ({_e(unit)}); tick height is log SNR '
+           f'<desc id="river-d">{dip_count([c.get("status") for _, c in events])} on {len(stars)} star{"" if len(stars) == 1 else "s"} by mid-time ({_e(unit)}); tick height is log SNR '
            f'and colour is status, written beside each row. Empty stretches longer than {RIVER_GAP_DAYS:.0f} days are cut, and the '
            f'{len(clusters)} segments are not drawn to a common time scale: each is labelled at its start and end, with its span.</desc>']
     for i, s in enumerate(stars):
@@ -662,11 +668,22 @@ def _plate(s: dict, i: int) -> str:
                    f'{_e(c["caption"])}</p></li>' for c in s["candidates"])
     return f'''<article class="plate" id="{pid}" aria-labelledby="{pid}-h">
 <h2 class="ptitle" id="{pid}-h"><span class="num">Plate {i}</span> {_e(s["star"])}</h2>
-<p class="psub">{sub}.<span class="printonly"> Every candidate on this plate: candidate, unconfirmed.</span></p>
+{_star_line(s.get("star_params") or {}, f"{pid}-star")}<p class="psub">{sub}.<span class="printonly"> Every candidate on this plate: candidate, unconfirmed.</span></p>
 {"".join(figs)}
 <ol class="captions" aria-label="Captions for plate {i}">{caps}</ol>
 {archive}
 </article>'''
+
+
+def _star_line(sp: dict, uid: str) -> str:
+    """A run plate's head: its star as a static disc in its blackbody colour, with the TIC Teff it is drawn from."""
+    if not sp.get("teff"):
+        return ""
+    from setuhq.renderer import star_svg
+
+    r = f', {sp["radius"]:.2f} R☉' if sp.get("radius") else ""
+    return (f'<p class="pstar">{star_svg(sp["teff"], 18, uid=uid)}<span>{_e(sp["target"])} in its blackbody colour: '
+            f'{sp["teff"]:,.0f} K{r} ({_e(sp.get("source") or "as the run stores it")}).</span></p>')
 
 
 def plate_page(data: dict) -> str:
@@ -687,9 +704,11 @@ def plate_page(data: dict) -> str:
     others = "".join(f'<li><a href="{_e(href)}">{_e(name)}</a></li>' for name, href in data.get("others") or [])
     others = f'<h2 class="otherh">Plates of the other example stars</h2><ol>{others}</ol>' if others else ""
     return f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en" data-theme="system"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark light">
 <title>{title}</title>
+<link rel="stylesheet" href="{_e(data.get("fonts_href") or FONTS_HREF)}">
 {brand.head(data["title"], "SetuHQ's plates: one print-ready plate per star, from the stored run and the search feed. Every number is a stored value; every candidate is unconfirmed.", data.get("page_path") or "/evidence/plates/")}
 <style>{PLATE_CSS}{PLATE_LOGO_CSS}</style></head>
 <body>
@@ -698,7 +717,7 @@ def plate_page(data: dict) -> str:
 <header class="mast">
   <p class="kicker"><a href="/" aria-label="SetuHQ, home">{brand.logo(height=20)}</a><span>plates</span></p>
   <h1>{title}</h1>
-  <p><span class="hedge">Candidate, unconfirmed.</span> {dip_count([c.get("status") for s in stars for c in s["candidates"]])} on {len(stars)} stars, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
+  <p>{dip_count([c.get("status") for s in stars for c in s["candidates"]])} on {len(stars)} star{"" if len(stars) == 1 else "s"}, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate, unconfirmed, and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
   <ul class="notes">
     <li>{_e(scope)}</li>
     <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.{f" {_e(data['panel_note'])}." if data.get("panel_note") else ""}</li>
@@ -731,6 +750,8 @@ def build_plate(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog
     (name, address) of the other example runs' plates, linked from this page."""
     data = plate_data(run_dir, title=title, catalog_path=catalog_path, star=star, require_crossmatch=require_crossmatch)
     data["page_path"] = path or "/evidence/plates/"
+    # A page of the site uses the site's one copy of the fonts; a stand-alone page gets its own copy beside it.
+    data["fonts_href"] = "/" + FONTS_HREF if path else FONTS_HREF
     data["others"] = others or []
     data["caveat"] = caveat
     for s in data["stars"]:  # a BLS period known not to be the dip's planet's is said to be so
@@ -742,6 +763,10 @@ def build_plate(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog
     path = out / "index.html"
     from setuhq.codenote import code_note, with_code_note
 
+    site_page = data["fonts_href"].startswith("/")
     path.write_text(with_code_note(plate_page(data), code_note(run_dir)))
+    if not site_page:
+        from setuhq.docket import copy_page_fonts
+        copy_page_fonts(out)
     brand.copy_assets(out)
     return path

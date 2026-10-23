@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
 """Phase 4 of the redesign: the Evidence pages (the panel's input to the ring, the benchmark's counters, the
 leaderboard's interval bars, the runs' star discs), Docs, How the pictures are drawn, 404 and the forwarding pages."""
+import html
 import re
 
 from setuhq import app as A
@@ -40,18 +41,17 @@ def test_the_leaderboard_bars_are_the_stored_intervals():
     assert lb["floor_note"] in page and ATTRIBUTION in page and "content-visibility:auto" in A.LEADERBOARD_CSS
 
 
-def test_the_panel_ring_gets_every_stored_reviewer(tmp_path):
+def test_the_panel_page_draws_v06_in_panel_mode_with_every_reviewer():
     story = {"reviewers": [{"id": "claude-skeptic", "name": "Sentinel · Skeptic", "role": "sentinel", "weight": 0.5},
                            {"id": "volunteer-typical", "name": "Probe · Typical", "role": "probe", "weight": 0.6}]}
-    data = {"story": story, "run": {"name": "r", "reviewer_kinds": {"claude-skeptic": "claude", "volunteer-typical": "simulated"}},
-            "reviewer_provenance": {"claude-skeptic": {"provider_label": "Claude (Anthropic)", "model": "m"}}, "weights_path": "w.json",
-            "calibration": {"floor": 0.05, "record_path": "c.json"}}
-    d = A.panel_ring_input(data)
-    assert d["mode"] == "panel" and d["source"] and d["attribution"] == ATTRIBUTION and d["probes_only"] is False
-    assert [r["id"] for r in d["reviewers"]] == ["claude-skeptic", "volunteer-typical"]
-    assert d["reviewers"][0]["provider"] == "Claude (Anthropic)" and d["reviewers"][1]["weight"] == 0.6
-    story["reviewers"] = story["reviewers"][1:]
-    assert A.panel_ring_input(data)["probes_only"] is True
+    data = {"story": story, "run": {"name": "r", "reviewer_kinds": {}}, "weights_path": "w.json",
+            "reviewer_provenance": {"claude-skeptic": {"provider_label": "Claude (Anthropic)", "model": "m"}}}
+    sec = A._sentinels(data)
+    ring = re.search(r'<div class="panelring" data-panelring="panel">.*?</figure>', sec, re.S).group(0)
+    for r in story["reviewers"]:
+        assert html.escape(r["name"]) in ring
+    assert "panel score" not in ring  # no dip, so no score
+    assert sec.count(html.escape(ATTRIBUTION)) >= 2 and '<div hidden><figure id="senring"></figure></div>' in sec
 
 
 def test_the_runs_table_has_a_star_disc_per_run():
