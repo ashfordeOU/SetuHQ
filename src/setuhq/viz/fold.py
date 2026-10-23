@@ -11,6 +11,8 @@ the fit is not in this build the component draws nothing and its caller leaves t
 
 * :func:`html` is the server-rendered figure: two static SVG panels (unfolded and folded), which are the no-JS
   fallback and the reduced-motion still, a fold toggle (``aria-pressed``), and a caption with the numbers and source.
+  The compact figure (the home page) leaves the SVG panels out for its page budget: under reduced motion its canvas
+  draws the same two panels once from stories.json, and without JavaScript its caption carries the numbers.
 * :data:`JS` turns the panels into one canvas on which the points slide from time to phase when the figure comes
   into view (or when the toggle is pressed). It animates only while on screen and the page is visible; under
   reduced motion it runs no loop and draws one frame, only when the toggle asks for it.
@@ -181,35 +183,18 @@ def _axes(lo: float, hi: float, step: int, xlabels: list[tuple[float, str]], xti
     return "".join(out)
 
 
-def _paired(bs: list[tuple[float, int]], width_d: float) -> list[tuple[float, int]]:
-    """Adjacent 30-minute bins averaged in pairs (60 minutes), for the compact still; a lone bin stays as it is."""
-    out, i = [], 0
-    while i < len(bs):
-        if i + 1 < len(bs) and bs[i + 1][0] - bs[i][0] < 1.5 * width_d:
-            out.append(((bs[i][0] + bs[i + 1][0]) / 2, round((bs[i][1] + bs[i + 1][1]) / 2)))
-            i += 2
-        else:
-            out.append(bs[i])
-            i += 1
-    return out
-
-
-def _panels(fd: dict, compact: bool = False) -> tuple[str, str]:
+def _panels(fd: dict) -> tuple[str, str]:
     lo, hi, step = _yrange(fd)
     Y = lambda v: _T + (_H - _T - _B) * (1 - (v - lo) / (hi - lo))  # noqa: E731
     t0, t1 = fd["span"]
     X = lambda t: _L + (_W - _L - _R) * (t - t0) / (t1 - t0)  # noqa: E731
     bs = bins(fd)
-    # The compact still (the home page) draws the time-ordered panel at 60 minutes, and says so; the folded panel
-    # and the canvas keep the 30-minute bins.
-    ub = _paired(bs, fd["bin_min"] / 1440.0) if compact else bs
-    ubin = 2 * fd["bin_min"] if compact else fd["bin_min"]
-    d1 = _dots([(X(t), Y(v)) for t, v in ub])
+    d1 = _dots([(X(t), Y(v)) for t, v in bs])
     first = math.ceil((t0 - fd["t0"]) / fd["p"])
     mids = [fd["t0"] + n * fd["p"] for n in range(first, first + 40) if t0 <= fd["t0"] + n * fd["p"] <= t1]
     ticks = "".join(f'<path d="M{X(m):.1f} {_H - _B + 1}v6" class="mk"/>' for m in mids)
     xl = [(X(d), f"{d:.0f}") for d in range(math.ceil(t0 / 5) * 5, int(t1) + 1, 5)]
-    a1 = (f"Unfolded: {fd['n_points']:,} stored points of pi Men in TESS, BTJD {t0:.1f} to {t1:.1f}, binned to {ubin} minutes. "
+    a1 = (f"Unfolded: {fd['n_points']:,} stored points of pi Men in TESS, BTJD {t0:.1f} to {t1:.1f}, binned to {fd['bin_min']} minutes. "
           f"Each of the {len(mids)} transits, {fd['depth_ppm']:.0f} ppm deep, is a handful of points among the rest; ticks under the axis mark their predicted times.")
     un = (f'<svg viewBox="0 0 {_W} {_H}" role="img" aria-label="{_html.escape(a1)}" class="foldsvg">'
           f'{_axes(lo, hi, step, xl, "BTJD (days)")}<path d="{d1}" class="pt"/>{ticks}</svg>')
@@ -242,18 +227,26 @@ def html(data: dict, **opts) -> str:
     e = _html.escape
     where = "".join(c for c in str(opts.get("where") or "page") if c.isalnum() or c == "-") or "page"
     compact = bool(opts.get("compact"))
-    un, fo = _panels(fd, compact)
+    # The compact figure (the home page, which has a tight budget) carries no static panels: its canvas draws the
+    # same two panels from stories.json under reduced motion, and without JavaScript its caption states the numbers.
+    un, fo = ("", "") if compact else _panels(fd)
     alt = text_alternative(fd)
     cap = f"fold-cap-{where}"
     return (f'<figure class="stage foldfig{" compact" if compact else ""}" data-fold="{e(where)}" aria-labelledby="{cap}">'
             f'<span class="stage-tag">{LABEL}</span>'
-            f'<div class="foldpanels">'
-            f'<div class="foldpanel"><p class="foldlbl"><b>Unfolded</b> · {fd["span"][1] - fd["span"][0]:.0f} days in time order{", 60-minute bins" if compact else ""}</p>{un}</div>'
-            f'<div class="foldpanel"><p class="foldlbl"><b>Folded</b> on the {fd["p"]:.4f}-day period</p>{fo}</div></div>'
-            f'<div class="foldlive" hidden><canvas role="img" aria-label="{e(alt)}"></canvas></div>'
-            f'<div class="foldctl"><button class="btn foldbtn" type="button" aria-pressed="false" hidden>Fold on the period</button>'
+            + ("" if compact else
+               f'<div class="foldpanels">'
+               f'<div class="foldpanel"><p class="foldlbl"><b>Unfolded</b> · {fd["span"][1] - fd["span"][0]:.0f} days in time order</p>{un}</div>'
+               f'<div class="foldpanel"><p class="foldlbl"><b>Folded</b> on the {fd["p"]:.4f}-day period</p>{fo}</div></div>')
+            + (f'<div class="foldlive" hidden><canvas role="img" aria-labelledby="{cap}"></canvas></div>' if compact else
+               f'<div class="foldlive" hidden><canvas role="img" aria-label="{e(alt)}"></canvas></div>')
+            + f'<div class="foldctl"><button class="btn foldbtn" type="button" aria-pressed="false" hidden>Fold on the period</button>'
             f'<span class="foldstate" aria-live="polite"></span></div>'
-            f'<figcaption id="{cap}" class="readout">{e(alt)} <span class="foldsrc">Source: {e(fd["source"])}</span></figcaption></figure>')
+            f'<figcaption id="{cap}" class="readout">{e(alt)} <span class="foldsrc">Source: {e(_short_source(fd) if compact else fd["source"])}</span></figcaption></figure>')
+
+
+def _short_source(fd: dict) -> str:
+    return f"SetuHQ's stored run {fd['run']} (TESS, SPOC 2-minute flux), 30-minute bins; period and mid-transit from {fd['fit_file']}."
 
 
 def data(app_data: dict) -> dict:
@@ -294,6 +287,7 @@ CSS = """
   .foldsvg{font-size:17px}
   .foldsvg .pt{stroke-width:3.4}
   .foldlive,.foldfig.compact .foldlive{aspect-ratio:4/3}
+  .foldfig.split .foldlive{aspect-ratio:4/5}
 }
 """
 
@@ -326,31 +320,41 @@ JS = r"""
   figs.forEach(fig => {
     const btn = fig.querySelector('.foldbtn'), live = fig.querySelector('.foldlive'), cv = live && live.querySelector('canvas'), state = fig.querySelector('.foldstate');
     if (!btn || !cv) return;
-    let F = null, G = null, k = 0, target = 0, raf = 0, vis = false, touched = false, last = 0, font = '';
+    let F = null, G = null, k = 0, target = 0, raf = 0, vis = false, touched = false, last = 0, font = '', split = false;
+    const compact = fig.classList.contains('compact');
+    // One panel of the plot inside the rectangle (ox, oy, W, H) of the canvas, at fold progress e (0 time order, 1 folded).
+    function panel(c, dpr, ox, oy, W, H, e, title){
+      const L = ox + 46 * dpr, R = 12 * dpr, T = oy + (title ? 44 : 30) * dpr, B = 30 * dpr, pw = ox + W - L - R;
+      const Y = v => T + (oy + H - T - B) * (1 - (v - G.lo) / (G.hi - G.lo));
+      c.font = `${11 * dpr}px ${font}`; c.lineWidth = dpr;
+      if (title){ c.fillStyle = '#ECEFF5'; c.textAlign = 'left'; c.fillText(title, ox + 4 * dpr, oy + 14 * dpr); }
+      for (let v = G.lo; v <= G.hi + 1e-9; v += G.step){ const y = Y(v); c.strokeStyle = 'rgba(255,255,255,.08)'; c.beginPath(); c.moveTo(L, y); c.lineTo(ox + W - R, y); c.stroke();
+        c.fillStyle = '#9AA3B5'; c.textAlign = 'right'; c.fillText((v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v), L - 6 * dpr, y + 4 * dpr); }
+      c.textAlign = 'left'; c.fillText('ppm', ox + 4 * dpr, T - 16 * dpr);
+      c.textAlign = 'right'; c.fillText(e < .5 ? `BTJD ${F.span[0].toFixed(1)}–${F.span[1].toFixed(1)}, in time order` : `hours from mid-transit, folded on ${F.p.toFixed(4)} d`, ox + W - R, oy + H - 9 * dpr);
+      c.fillStyle = e > .6 ? 'rgba(100,210,255,.75)' : 'rgba(236,239,245,.6)';
+      const s = 2.2 * dpr;
+      for (const [tx, px, v] of G.pts){ const f = mix(tx, Math.max(-.2, Math.min(1.2, px)), e); if (f < 0 || f > 1) continue; c.fillRect(L + f * pw - s / 2, Y(v) - s / 2, s, s); }
+      if (e > .85){
+        const a = (e - .85) / .15, yd = Y((F.base_ppm || 0) - F.depth_ppm);
+        c.strokeStyle = `rgba(255,179,64,${a})`; c.lineWidth = 2.2 * dpr; c.beginPath();
+        G.mean.forEach(([f, v], i) => { const x = L + f * pw, y = Y(v); if (i) c.lineTo(x, y); else c.moveTo(x, y); }); c.stroke();
+        c.fillStyle = `rgba(255,179,64,${a})`; c.textAlign = 'right'; c.fillText(`${Math.round(F.depth_ppm)} ppm deep, ${F.t14_h.toFixed(2)} h (joint fit)`, ox + W - R - 4 * dpr, yd + 18 * dpr);
+        c.setLineDash([4 * dpr, 4 * dpr]); c.lineWidth = dpr; c.beginPath(); c.moveTo(L, yd); c.lineTo(ox + W - R, yd); c.stroke(); c.setLineDash([]);
+      }
+    }
     function draw(){
       const dpr = Math.min(2, window.devicePixelRatio || 1), r = cv.getBoundingClientRect();
       const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
       if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
       const c = cv.getContext('2d'); if (!c) return;
       font = font || getComputedStyle(document.body).getPropertyValue('--mono').trim() || 'monospace';
-      const e = ease(k), L = 46 * dpr, R = 12 * dpr, T = 30 * dpr, B = 30 * dpr, pw = w - L - R;
-      const Y = v => T + (h - T - B) * (1 - (v - G.lo) / (G.hi - G.lo));
       c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
-      c.font = `${11 * dpr}px ${font}`; c.lineWidth = dpr;
-      for (let v = G.lo; v <= G.hi + 1e-9; v += G.step){ const y = Y(v); c.strokeStyle = 'rgba(255,255,255,.08)'; c.beginPath(); c.moveTo(L, y); c.lineTo(w - R, y); c.stroke();
-        c.fillStyle = '#9AA3B5'; c.textAlign = 'right'; c.fillText((v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v), L - 6 * dpr, y + 4 * dpr); }
-      c.textAlign = 'left'; c.fillText('ppm', 4 * dpr, 14 * dpr);
-      c.textAlign = 'right'; c.fillText(e < .5 ? `BTJD ${F.span[0].toFixed(1)}–${F.span[1].toFixed(1)}, in time order` : `hours from mid-transit, folded on ${F.p.toFixed(4)} d`, w - R, h - 9 * dpr);
-      c.fillStyle = e > .6 ? 'rgba(100,210,255,.75)' : 'rgba(236,239,245,.6)';
-      const s = 2.2 * dpr;
-      for (const [tx, px, v] of G.pts){ const f = mix(tx, Math.max(-.2, Math.min(1.2, px)), e); if (f < 0 || f > 1) continue; c.fillRect(L + f * pw - s / 2, Y(v) - s / 2, s, s); }
-      if (e > .85){
-        const a = (e - .85) / .15;
-        c.strokeStyle = `rgba(255,179,64,${a})`; c.lineWidth = 2.2 * dpr; c.beginPath();
-        G.mean.forEach(([f, v], i) => { const x = L + f * pw, y = Y(v); if (i) c.lineTo(x, y); else c.moveTo(x, y); }); c.stroke();
-        c.fillStyle = `rgba(255,179,64,${a})`; c.textAlign = 'right'; c.fillText(`${Math.round(F.depth_ppm)} ppm deep, ${F.t14_h.toFixed(2)} h (joint fit)`, w - R - 4 * dpr, Y((F.base_ppm || 0) - F.depth_ppm) + 18 * dpr);
-        c.setLineDash([4 * dpr, 4 * dpr]); c.lineWidth = dpr; c.beginPath(); c.moveTo(L, Y((F.base_ppm || 0) - F.depth_ppm)); c.lineTo(w - R, Y((F.base_ppm || 0) - F.depth_ppm)); c.stroke(); c.setLineDash([]);
-      }
+      if (!split) return panel(c, dpr, 0, 0, w, h, ease(k), '');
+      // The reduced-motion still drawn from the bins (the compact figure carries no static panels): both panels at once.
+      const wide = w > 1.4 * h, a = 'Unfolded: in time order', b = `Folded on the ${F.p.toFixed(4)}-day period`;
+      if (wide){ panel(c, dpr, 0, 0, w / 2, h, 0, a); panel(c, dpr, w / 2, 0, w / 2, h, 1, b); }
+      else { panel(c, dpr, 0, 0, w, h / 2, 0, a); panel(c, dpr, 0, h / 2, w, h / 2, 1, b); }
     }
     function frame(now){
       raf = 0;
@@ -363,16 +367,18 @@ JS = r"""
     const run = () => { if (raf || !F) return; if (RM() || !vis || document.hidden){ k = target; draw(); return; } last = 0; raf = requestAnimationFrame(frame); };
     const setTarget = (t, say) => { target = t; btn.setAttribute('aria-pressed', String(!!t)); btn.textContent = t ? 'Unfold to time' : 'Fold on the period';
       if (say && state) state.textContent = t ? `Folded on ${F.p.toFixed(4)} days: the dip appears at zero hours.` : 'In time order: each transit is a handful of points among the rest.'; run(); };
-    const goLive = () => { fig.classList.add('live'); live.hidden = false; draw(); };
+    const goLive = () => { fig.classList.add('live'); fig.classList.toggle('split', split); live.hidden = false; draw(); };
     btn.hidden = false;
     btn.addEventListener('click', () => { touched = true;
       load().then(d => { if (!F){ F = d; G = prep(F); } const next = target ? 0 : 1;
+        split = false; fig.classList.remove('split');
         if (!fig.classList.contains('live')){ k = RM() ? next : 0; goLive(); }
         setTarget(next, true); }).catch(() => { btn.hidden = true; }); });
     if (!('IntersectionObserver' in window)) return;
     // Near the viewport: fetch the bins and (with motion allowed) swap the still for the canvas.
     const near = new IntersectionObserver(es => { if (!es.some(x => x.isIntersecting)) return; near.disconnect();
-      if (RM()) return;
+      // Reduced motion: the full figure keeps its static panels; the compact one draws the same two panels once.
+      if (RM()){ if (compact) load().then(d => { F = F || d; G = G || prep(F); if (!fig.classList.contains('live')){ split = true; goLive(); } }).catch(() => {}); return; }
       load().then(d => { F = F || d; G = G || prep(F); if (!fig.classList.contains('live')){ k = target; goLive(); } if (vis) arm(); }).catch(() => {}); }, {rootMargin: '600px'});
     near.observe(fig);
     // On screen: fold once on its own (unless the visitor already used the toggle); off screen: stop where it is headed.

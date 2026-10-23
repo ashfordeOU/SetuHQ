@@ -70,7 +70,8 @@ def test_the_figure_states_its_numbers_label_and_source():
     assert h.count('<svg viewBox') == 2 and len(re.findall(r'role="img" aria-label="[^"]*\d[^"]*"', h)) == 3
     assert '<button class="btn foldbtn" type="button" aria-pressed="false" hidden>' in h
     small = F.html({"source": "x"}, where="home", compact=True)
-    assert 'class="stage foldfig compact"' in small and "60-minute bins" in small and len(small) < len(h) < 16_000
+    assert 'class="stage foldfig compact"' in small and "<svg" not in small and len(small) < 1_600 and len(h) < 16_000
+    assert "3,485 points over BTJD 1325.3–1351.3" in small and "Real data, cited" in small and "split = true" in F.JS
     for word in ("habitable", "confirmed", "discovered", "synthetic", "illustrative"):
         assert word not in h.lower()
 
