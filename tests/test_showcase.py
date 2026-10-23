@@ -70,7 +70,7 @@ def test_the_home_page_shows_every_example_with_its_dip_count(multi):
         assert c["count"] in gallery and c["star"] in gallery
         assert c["case_file"] in gallery
     assert PROBES_ONLY in gallery
-    assert home.index('class="dohere"') < home.index('class="examples"') < home.index('class="proof"')
+    assert home.index('class="examples"') < home.index('class="proof"') < home.index('class="dohere"')
     cands = (multi / "candidates" / "index.html").read_text()
     for c in data["showcase"]:
         assert f'id="h-run-{c["slug"]}"' in cands
