@@ -86,7 +86,7 @@ def test_brand_files_are_the_approved_logo(gen):
 def test_readme_alt_text_is_each_figures_desc_and_every_picture_is_paired(gen):
     assert gen.check_readme() == []
     pics = gen.readme_pictures(README.read_text(encoding="utf-8"))
-    assert len(pics) == 19  # the logo, 8 figures and 10 screenshots
+    assert len(pics) == 20  # the logo, 8 figures, the showcase line-up and 10 screenshots
     for p in pics:
         assert p["light"].endswith(("-light.svg", "-light.webp")) and p["dark"] == p["light"].replace("-light.", "-dark.")
 
