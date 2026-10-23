@@ -181,7 +181,7 @@ CSS = """
 .orbtable table{width:100%;table-layout:fixed;font-size:12.5px}
 .orbtable th,.orbtable td{overflow-wrap:anywhere}
 .orbtable td{font-family:var(--mono);font-variant-numeric:tabular-nums}
-@media (max-width:699.98px){.orbbox.cv{aspect-ratio:4/5}}
+@media (max-width:699.98px){.orbbox.cv{aspect-ratio:4/5.4}}
 """
 
 JS = r"""
@@ -203,13 +203,13 @@ JS = r"""
       if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
       const c = cv.getContext('2d'), narrow = w / d < 600, days = S.t * p.speed, ph = (days % T) / T;
       c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
-      const cx = narrow ? w * .5 : w * .23, cy = narrow ? h * .3 : h * .48, R = narrow ? Math.min(w * .42, h * .25) : Math.min(h * .42, w * .2);
+      const cx = narrow ? w * .5 : w * .23, cy = narrow ? h * .25 : h * .48, R = narrow ? Math.min(w * .4, h * .18) : Math.min(h * .42, w * .2);
       c.font = `${11 * d}px ${getComputedStyle(fig).fontFamily}`; c.lineWidth = d;
       c.strokeStyle = 'rgba(255,179,64,.5)'; c.setLineDash([4 * d, 5 * d]); c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy + R + 22 * d); c.stroke(); c.setLineDash([]);
       c.fillStyle = '#FFB340'; c.fillText('to the observer', cx + 8 * d, cy + R + 20 * d);
       const sR = Math.max(5 * d, R * .06);
       if (window.SetuRender) SetuRender.drawStar2D(c, cx, cy, sR, p.teff || 5772, 0, {flat: true, glow: 2.2}); else { c.fillStyle = `rgb(${rgb})`; c.beginPath(); c.arc(cx, cy, sR, 0, TAU); c.fill(); }
-      const gx = narrow ? w * .06 : w * .5, gw = narrow ? w * .88 : w * .46, top = narrow ? h * .62 : h * .14, lane = Math.min(64 * d, (narrow ? h * .34 : h * .78) / ps.length);
+      const gx = narrow ? w * .06 : w * .5, gw = narrow ? w * .88 : w * .46, top = narrow ? h * .58 : h * .14, lane = Math.min(64 * d, (narrow ? h * .27 : h * .78) / ps.length);
       c.fillStyle = '#9AA3B5'; c.fillText(`one ${T.toFixed(2)}-day period · depth k² (ppm), one scale`, gx, top - 8 * d);
       ps.forEach((q, i) => {
         const rr = R * q.a / amax, th = Math.PI / 2 + TAU * (days / q.P + q.f), x = cx + rr * Math.cos(th), y = cy + rr * Math.sin(th);
