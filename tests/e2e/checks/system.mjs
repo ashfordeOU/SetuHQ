@@ -111,6 +111,32 @@ export default async function system(h) {
     await ctx.close();
   }
 
+  // ---------------------------------------------------------------- ⊕ ☉ ★: Geist lacks them; SetuHQ's own symbol font keeps them narrow
+  setGroup("symbols");
+  {
+    const ctx = await context();
+    const page = await ctx.newPage();
+    for (const p of [PICS, "/explore/galaxy/", "/how-it-works/population/", "/evidence/leaderboard/"]) {
+      await page.goto(BASE + p); await ready(page); await page.evaluate(() => document.fonts.ready);
+      const r = await page.evaluate(() => {
+        const out = [], w = document.createTreeWalker(document.querySelector(".route:not([hidden])") || document.body, NodeFilter.SHOW_TEXT);
+        for (let n = w.nextNode(); n && out.length < 40; n = w.nextNode()) {
+          const t = n.nodeValue;
+          for (let i = t.indexOf("⊕"); i > 0; i = t.indexOf("⊕", i + 1)) {
+            if (!/[A-Za-z]/.test(t[i - 1])) continue;
+            const rg = document.createRange(); rg.setStart(n, i); rg.setEnd(n, i + 1); const sym = rg.getBoundingClientRect().width;
+            rg.setStart(n, i - 1); rg.setEnd(n, i); const prev = rg.getBoundingClientRect().width;
+            if (sym && prev) out.push({ ratio: sym / prev, text: t.slice(Math.max(0, i - 6), i + 1) });
+          }
+        }
+        return out;
+      });
+      const wide = r.filter((x) => x.ratio > 1.3);
+      check(r.length > 0 && wide.length === 0, `${p}: ⊕ is no wider than 1.3× the letter before it (${r.length} measured)`, JSON.stringify(wide.slice(0, 3)));
+    }
+    await ctx.close();
+  }
+
   // ---------------------------------------------------------------- layout shift, the header, axe with motion on
   setGroup("layout shift and header");
   {

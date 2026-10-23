@@ -553,7 +553,9 @@ def figure(kind: str, params: dict, alt: str, caption: str, label: str = LABEL_A
     e = html.escape
     uid = uid or _sha(kind + json.dumps(params, sort_keys=True) + caption, 8)
     src = still or (still_href(params["look"], 512 if size > 160 else 160) if params.get("look") else "")
-    tag = (f'<a class="stage-tag" href="{PICTURES}">{e(label)}</a>' if label == LABEL_ART else f'<span class="stage-tag">{e(label)}</span>')
+    # A planet's tag always links to the page that explains the pictures (an artist's impression, or the Solar
+    # System references, which are illustrations).
+    tag = (f'<a class="stage-tag" href="{PICTURES}">{e(label)}</a>' if label == LABEL_ART or kind == "planet" else f'<span class="stage-tag">{e(label)}</span>')
     img = (f'<img class="rstill" src="{e(src)}" width="{size}" height="{size}" loading="lazy" decoding="async" alt="{e(alt)}">'
            if src else f'<img class="rstill" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="{size}" height="{size}" alt="{e(alt)}">')
     pri = ' data-priority="first"' if priority else ""

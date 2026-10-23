@@ -164,7 +164,8 @@ read the same tokens.
 * **Type.** Self-hosted Geist and Geist Mono only (no new files). `fonts.css` adds metric-matched local fallbacks
   (Arial and Menlo scaled to Geist's average width, with its ascent and descent: `tools/font_fallback.py`,
   `design.FONT_FALLBACK`, checked by a test), and each page preloads the Latin Geist file, so the web font arriving
-  shifts nothing.
+  shifts nothing. Geist has no ⊕, ☉ or ★, so `tools/symbol_font.py` draws them into an 880-byte font registered under
+  both families for exactly those code points: "R⊕" never falls back to a glyph twice a letter's width (an e2e check).
 * **Motion.** One curve (`--ease`, `cubic-bezier(.2,.7,.2,1)`) and three durations (`--d-1` 150 ms for hover and
   press, `--d-2` 350 ms for reveals and lifts, `--d-3` 600 ms for view changes and fills). A lint in the tests
   rejects any other curve or duration in any stylesheet (infinite decorative loops are listed in `design.LOOP_ALLOW`).

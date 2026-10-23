@@ -584,7 +584,10 @@ def pictures_section() -> str:
         bands = ", ".join(L["bands"]) or "Solar System reference"
         cap = f"<b>{e(name)}</b>{e(L['composition'])} · {e(bands)}<br>{e(L['surface'])}"
         alt = f"Artist's impression: the {name} look, for {rule_words(name)}: {L['surface']}. A still of the look, not of a particular planet."
-        cards.append("<li>" + renderer.figure("planet", {"look": name, "seed": 1}, alt, cap, size=160, uid=f"lk-{name}") + "</li>")
+        ref = name.startswith("ref-")  # the Solar System's own planets: illustrations, not impressions of an exoplanet
+        alt = alt.replace("Artist's impression:", "Illustration:", 1) if ref else alt
+        cards.append("<li>" + renderer.figure("planet", {"look": name, "seed": 1}, alt, cap, size=160, uid=f"lk-{name}",
+                                              label="Illustration" if ref else renderer.LABEL_ART) + "</li>")
     rad = "".join(f"<tr><td>{e(c)}</td><td>{'below ' + format(edge, 'g') + ' R⊕' if edge != float('inf') else '10 R⊕ or more'}</td><td>{e(why)}</td></tr>"
                   for edge, c, why in COMPOSITION_RULES["radius"])
     mass = "".join(f"<tr><td>{e(c)}</td><td>{'below ' + format(edge, 'g') + ' M⊕' if edge != float('inf') else '50 M⊕ or more'}</td><td>{e(why)}</td></tr>"

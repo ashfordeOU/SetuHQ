@@ -387,7 +387,8 @@ def test_the_pictures_page_exists_with_one_heading_and_is_in_the_sitemap(site):
     assert len(re.findall(r"<h1\b", page)) == 1 and "How the pictures are drawn." in page
     assert "/docs/pictures/" in json.loads((site / "assets" / "pages.json").read_text())
     assert f"<loc>{brand.SITE_URL}/docs/pictures/</loc>" in (site / "sitemap-pages.xml").read_text()
-    assert page.count('data-render="planet"') == 18 and page.count('href="/docs/pictures/">Artist&#x27;s impression</a>') == 18
+    assert page.count('data-render="planet"') == 18 and page.count('href="/docs/pictures/">Artist&#x27;s impression</a>') == 15
+    assert page.count('href="/docs/pictures/">Illustration</a>') == 3  # the Solar System references
     assert "How the pictures are drawn ›" in (site / "index.html").read_text()  # the footer links it on every page
     assert url_for("pictures") == "/docs/pictures/" and parse_path("/docs/pictures/")["route"] == "pictures"
 

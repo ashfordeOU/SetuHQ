@@ -111,3 +111,16 @@ def test_a_rate_is_never_shown_without_its_interval():
         D.odometer_html("60%", is_rate=True)
     out = D.odometer_html("60%", is_rate=True, rate=(90, 150, 0.52, 0.67))
     assert "90 of 150 (52–67%)" in out and 'data-odo="60%"' in out and ">60%<" in out
+
+
+def test_the_symbols_geist_lacks_have_a_narrow_font_of_their_own():
+    spec = importlib.util.spec_from_file_location("symbol_font", ROOT / "tools" / "symbol_font.py")
+    sf = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(sf)
+    assert sf.OUT.read_bytes() == sf.build()  # the committed file is what the tool writes
+    from fontTools.ttLib import TTFont
+    f = TTFont(str(sf.OUT))
+    assert {0x2295, 0x2609, 0x2605} <= set(f.getBestCmap()) and all(f["hmtx"][g][0] == 600 for g in ("earth", "sun", "star"))
+    css = (ROOT / "src/setuhq/fonts/fonts.css").read_text()
+    for fam in ("'Geist'", "'Geist Mono'"):
+        assert re.search(rf"font-family:{fam};[^}}]*setu-symbols\.woff[^}}]*unicode-range:U\+2295,U\+2605,U\+2609", css), fam
