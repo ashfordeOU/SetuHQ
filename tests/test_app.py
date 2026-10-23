@@ -303,7 +303,10 @@ def test_shell_and_docket_use_only_self_hosted_fonts(run_dir, tmp_path):
     for family in ("Geist", "Geist Mono", "Unbounded"):
         assert f"font-family: '{family}'" in css
     for url in re.findall(r"url\((files/[^)]+)\)", css):
-        assert (out.parent / "assets" / "fonts" / url).stat().st_size > 1000, url
+        f = out.parent / "assets" / "fonts" / url
+        # A real font, not a stub: the web fonts are tens of kilobytes; SetuHQ's own three symbols (⊕ ☉ ★) are a
+        # complete WOFF of under a kilobyte (tools/symbol_font.py).
+        assert f.read_bytes()[:4] == b"wOFF" if url.endswith("setu-symbols.woff") else f.stat().st_size > 1000, url
     assert (out.parent / "assets" / "fonts" / "OFL-geist.txt").exists()
     # The framed copy, served from assets/frame/, links the site's one copy of the fonts.
     assert FRAME_FONTS_HREF == FONTS_CSS == "/assets/fonts/fonts.css"
