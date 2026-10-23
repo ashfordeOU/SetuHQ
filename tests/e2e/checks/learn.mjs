@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2026 Ashforde OÜ
-// Phase 4: How it works, Evidence and Docs. The fold (V05) toggles with aria-pressed and is two still panels under
+// Phase 4 (the fold is looked for in the Transits chapter: the home page's copy sits hidden in the same document): How it works, Evidence and Docs. The fold (V05) toggles with aria-pressed and is two still panels under
 // reduced motion; every chapter's stages carry a label; the panel figure on /evidence/ lists every reviewer in the
 // stored record; the benchmark's counters carry their intervals; the leaderboard's bars are the stored intervals to
 // 1 px; /docs/pictures/ has one table row per look; the 404 page keeps its starfield and cards.
@@ -16,10 +16,10 @@ export default async function learn(h) {
     const ctx = await context({ motion: "no-preference" });
     const page = await ctx.newPage(); const errs = watch(page);
     await page.goto(BASE + TR); await ready(page);
-    await page.evaluate(() => document.querySelector("figure.foldfig").scrollIntoView({ block: "center" }));
-    await page.waitForFunction(() => document.querySelector("figure.foldfig").classList.contains("live"), null, { timeout: 8000 }).catch(() => {});
-    check(await page.evaluate(() => document.querySelector("figure.foldfig").classList.contains("live")), "with motion, the still becomes the canvas near the viewport");
-    const btn = page.locator("figure.foldfig .foldbtn");
+    await page.evaluate(() => document.querySelector("#route-methods figure.foldfig").scrollIntoView({ block: "center" }));
+    await page.waitForFunction(() => document.querySelector("#route-methods figure.foldfig").classList.contains("live"), null, { timeout: 8000 }).catch(() => {});
+    check(await page.evaluate(() => document.querySelector("#route-methods figure.foldfig").classList.contains("live")), "with motion, the still becomes the canvas near the viewport");
+    const btn = page.locator("#route-methods figure.foldfig .foldbtn");
     check(await btn.isVisible(), "the fold toggle is shown");
     await page.waitForTimeout(2600);  // the fold plays once on its own when it comes into view
     const a0 = await btn.getAttribute("aria-pressed");
@@ -28,9 +28,9 @@ export default async function learn(h) {
     check(a0 !== a1 && ["true", "false"].includes(a1), "the toggle flips aria-pressed", `${a0} → ${a1}`);
     await btn.click(); await page.waitForTimeout(300);
     check(await btn.getAttribute("aria-pressed") === a0, "and flips it back");
-    const label = await page.locator("figure.foldfig canvas").getAttribute("aria-label");
+    const label = await page.locator("#route-methods figure.foldfig canvas").getAttribute("aria-label");
     check(/3,485 points/.test(label || "") && /6\.2680/.test(label || ""), "the canvas states its numbers", label);
-    const inner = await page.evaluate(() => document.querySelector("figure.foldfig").textContent);
+    const inner = await page.evaluate(() => document.querySelector("#route-methods figure.foldfig").textContent);
     check(inner.includes("Real data, cited") && inner.includes("runs/tess-pi-men-s1"), "it is labelled real data and names its run");
     check(errs.length === 0, "no console errors (fold, motion)", errs.join(" | "));
     await ctx.close();
@@ -39,16 +39,16 @@ export default async function learn(h) {
     const ctx = await context({ motion: "reduce" });
     const page = await ctx.newPage(); const errs = watch(page);
     await page.goto(BASE + TR); await ready(page);
-    await page.evaluate(() => document.querySelector("figure.foldfig").scrollIntoView({ block: "center" }));
+    await page.evaluate(() => document.querySelector("#route-methods figure.foldfig").scrollIntoView({ block: "center" }));
     await page.waitForTimeout(1200);
-    const s = await page.evaluate(() => { const f = document.querySelector("figure.foldfig");
+    const s = await page.evaluate(() => { const f = document.querySelector("#route-methods figure.foldfig");
       return { live: f.classList.contains("live"), panels: [...f.querySelectorAll(".foldpanel svg")].filter((x) => x.getBoundingClientRect().width > 50).length,
         labels: [...f.querySelectorAll(".foldlbl")].map((x) => x.textContent), canvasShown: !f.querySelector(".foldlive").hidden }; });
     check(!s.live && !s.canvasShown && s.panels === 2, "reduced motion: the two-panel still, no canvas", JSON.stringify(s));
     check(s.labels.length === 2 && /Unfolded/.test(s.labels[0]) && /Folded/.test(s.labels[1]), "each panel has its own label", JSON.stringify(s.labels));
-    const btn = page.locator("figure.foldfig .foldbtn");
+    const btn = page.locator("#route-methods figure.foldfig .foldbtn");
     await btn.click(); await page.waitForTimeout(500);
-    check(await btn.getAttribute("aria-pressed") === "true" && await page.evaluate(() => document.querySelector("figure.foldfig").classList.contains("live")),
+    check(await btn.getAttribute("aria-pressed") === "true" && await page.evaluate(() => document.querySelector("#route-methods figure.foldfig").classList.contains("live")),
       "reduced motion: the toggle shows the folded frame on request");
     check(errs.length === 0, "no console errors (fold, reduced motion)", errs.join(" | "));
     await ctx.close();
@@ -57,7 +57,7 @@ export default async function learn(h) {
     const ctx = await context({ js: false });
     const page = await ctx.newPage();
     await page.goto(BASE + TR);
-    const n = await page.evaluate(() => [...document.querySelectorAll("figure.foldfig .foldpanel svg[role=img]")].filter((x) => x.getBoundingClientRect().width > 50).length);
+    const n = await page.evaluate(() => [...document.querySelectorAll("#route-methods figure.foldfig .foldpanel svg[role=img]")].filter((x) => x.getBoundingClientRect().width > 50).length);
     check(n === 2, "without JavaScript the fold is its two panels");
     await ctx.close();
   }
