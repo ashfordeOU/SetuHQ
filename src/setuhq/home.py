@@ -13,9 +13,9 @@
 9. the reference check, the sweep line and what a visitor can do here;
 10. what this page does not claim.
 
-Bands 4 to 7 are drawn by modules other phases own; each is called through its fixed signature
-(``html(data, **opts)``, with ``data = {"source", "app", ...}`` and ``where="home"``) and a band whose module
-returns "" is left out. Every number on the page comes from stored files: the runs, showcase.json, the catalogue,
+Bands 4 to 7 are drawn by the other components' modules, each called through its fixed signature
+(``html(data, **opts)``, with ``data = {"source", "app", ...}`` and ``where="home"``); a module returns "" only when
+its stored input is not in the build (no catalogue, no stored run or fit), and that band is then left out. Every number on the page comes from stored files: the runs, showcase.json, the catalogue,
 the benchmark JSON and the chapter list.
 """
 
@@ -133,7 +133,7 @@ def _band(key: str, title: str, body: str, *, eyebrow: str = "", more: str = "")
 
 
 def _placed(name: str, data: dict, source: str, **extra) -> str:
-    """A band drawn by another phase's module, through its fixed signature; "" while that module is a stub."""
+    """A band drawn by another component's module, through its fixed signature; "" when its stored input is missing."""
     mod = importlib.import_module(f"setuhq.viz.{name}")
     return mod.html({"source": source, "app": data, **extra}, where="home", compact=True) or ""
 
@@ -157,8 +157,11 @@ def _temps(data: dict) -> str:
            f'the Sun 5,772 K (IAU 2015 nominal). <a href="{PICTURES}">How the pictures are drawn ›</a>')
     body = tempstrip.html({"source": src, "markers": marks})
     lo, hi = min(m["teff"] for m in marks), max(m["teff"] for m in marks)
-    title = f"Any star: from {round(lo):,} K to {round(hi):,} K, one pipeline" if len(marks) > 1 else "The example star's colour"
-    return _band("tempstrip", title, body, eyebrow="Every kind of star")
+    # Only as wide as the stored examples: n stars from the coolest to the hottest Teff stored, never "any star".
+    n = len(marks)
+    title = (f"{number_words(n).capitalize()} example stars: {round(lo):,}\u00a0K to {round(hi):,}\u00a0K, one pipeline" if n > 1
+             else "The example star's colour")
+    return _band("tempstrip", title, body, eyebrow="The example stars' colours")
 
 
 def _hero_copy(n_ex: int) -> str:

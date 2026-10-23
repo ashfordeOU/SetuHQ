@@ -59,7 +59,7 @@ def _text(page: str) -> str:
 def test_the_bands_come_in_the_order_of_the_design(data, monkeypatch):
     from setuhq import home
 
-    # The bands other phases draw are stubs until they merge; give each a marker so the order can be checked.
+    # Give each band drawn by another component's module a marker, so the order can be checked on its own.
     for name in ("lineup", "fold", "panelring", "skyyears", "timeline"):
         mod = __import__(f"setuhq.viz.{name}", fromlist=["html"])
         monkeypatch.setattr(mod, "html", lambda d, _n=name, **o: (viz.require_source(d), f'<div class="stub-{_n}"></div>')[1])
@@ -76,7 +76,7 @@ def test_the_bands_come_in_the_order_of_the_design(data, monkeypatch):
     assert 'class="planetfig"' not in page and "gxteaser" not in page
 
 
-def test_a_band_whose_module_is_a_stub_is_left_out(data):
+def test_a_band_whose_module_draws_nothing_is_left_out(data):
     page = _overview(data)
     for band, name in (("lineup", "lineup"), ("fold", "fold"), ("sky", "skyyears")):
         mod = __import__(f"setuhq.viz.{name}", fromlist=["html"])

@@ -13,7 +13,7 @@ import pytest
 
 from setuhq import docket as docket_mod
 from setuhq.app import APP_JS, SUBNAV, build_app
-from setuhq.galaxy import (CLASSES, DEFAULT_MAP, DEFAULT_NOTABLE, GALAXY_JS, LY_PER_PC, TEASER_JS, galactic_lb,
+from setuhq.galaxy import (CLASSES, DEFAULT_MAP, DEFAULT_NOTABLE, GALAXY_JS, LY_PER_PC, galactic_lb,
                             galactic_xyz, galaxy_data, galaxy_meta, planet_class)
 
 from test_story import run_dir  # noqa: F401  (fixture)
@@ -184,18 +184,17 @@ def test_page_states_source_definition_and_what_is_not_plotted(run_dir, tmp_path
 
 
 def test_no_external_requests_and_reduced_motion():
-    for js in (GALAXY_JS, TEASER_JS):
+    for js in (GALAXY_JS,):
         assert "XMLHttpRequest" not in js and "import(" not in js and "new Image" not in js
         # The one fetch is the map's own data file, a relative path on the same origin.
         assert re.findall(r"fetch\(([^)]*)\)", js) in ([], ["'/assets/data/galaxy.json'"])
         assert not re.search(r"https?://(?!www\.w3\.org/2000/svg)", js)
-    # Under reduced motion: no drift, no animated intro (a cut), the timeline only on a click; the teaser holds still.
+    # Under reduced motion: no drift, no animated intro (a cut), the timeline only on a click.
     frame = re.search(r"function gxFrame\(t\)\{.*?\n\}\n", GALAXY_JS, re.S).group(0)
     assert "!gxRM.matches && gx.auto" in frame
     fly = re.search(r"function gxFly\(to, ms\)\{.*?\n\}\n", GALAXY_JS, re.S).group(0)
     assert "if (gxRM.matches || !ms" in fly
     assert "gx.play = {" in re.search(r"function gxPlay\(\)\{.*?\n\}\n", GALAXY_JS, re.S).group(0)
-    assert "if (!rm.matches) raf = requestAnimationFrame(tick)" in TEASER_JS
 
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")

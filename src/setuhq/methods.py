@@ -1700,7 +1700,6 @@ const MX = D.methods || null;
 const MX_GM = {sun: 1.3271244e20, jup: 1.2668653e17, earth: 3.986004e14}, MX_R = {sun: 6.957e8, jup: 7.1492e7, earth: 6.3781e6};
 const MX_AU = 1.495978707e11, MX_DAY = 86400, MX_C = 299792458;
 function mxK(P, mp, ms, e, sini){ const gmp = mp * MX_GM.jup, gms = ms * MX_GM.sun; return Math.cbrt(2 * Math.PI / (P * MX_DAY)) * gmp * (sini == null ? 1 : sini) / Math.pow(gms + gmp, 2 / 3) / Math.sqrt(1 - (e || 0) ** 2); }
-function mxBary(a, mp, ms){ const q = mp * MX_GM.jup / (ms * MX_GM.sun + mp * MX_GM.jup); return [a * q, a * (1 - q)]; }
 function mxKeplerE(M, e){
   M = M % (2 * Math.PI); let E = e < 0.8 ? M : Math.PI;
   for (let i = 0; i < 60; i++){ const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-12) break; }

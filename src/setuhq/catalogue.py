@@ -143,7 +143,9 @@ def catalogue_section(meta: dict | None, eyebrow: str) -> str:
                      f'<input type="number" inputmode="decimal" step="any" data-rk="{key}" data-end="lo" aria-label="{e(lab)} from" placeholder="from">'
                      f'<input type="number" inputmode="decimal" step="any" data-rk="{key}" data-end="hi" aria-label="{e(lab)} to" placeholder="to"></fieldset>'
                      for _, lab, unit, key in RANGES)
-    note = f" {e(meta['note'])}." if meta.get("note") else ""
+    from setuhq.galaxy import source_note
+
+    note, note_detail = source_note(meta.get("note"))
     from setuhq.viz import tempstrip
 
     # V09 as the host-temperature filter: two handles over the blackbody strip (the number boxes below stay too).
@@ -154,7 +156,7 @@ def catalogue_section(meta: dict | None, eyebrow: str) -> str:
         <div>{eyebrow}<h1 class="lead-h" id="h-catalogue" tabindex="-1">Every known exoplanet.<br><span class="grey">{c['rows']:,} records, searchable.</span></h1>
         <p>All {c['rows']:,} planets in {e(meta['source_short'])}, including the {c['rows'] - c['with_distance']:,} with no stored distance that the Galaxy map cannot place. SetuHQ did not discover these planets; it catalogues them.</p></div>
       </header>
-      <p class="note"><b>Data: {e(meta['source_name'])}, fetched {e(meta['fetched_at'][:10])}.</b> <a href="{e(meta['url'])}" rel="noopener">{e(meta['url'])}</a>.{note} {e(meta['definition'])} A value the source does not give reads "not stored".</p>
+      <p class="note"><b>Data: {e(meta['source_name'])}, fetched {e(meta['fetched_at'][:10])}.</b> <a href="{e(meta['url'])}" rel="noopener">{e(meta['url'])}</a>.{note} {e(meta['definition'])} A value the source does not give reads "not stored".</p>{note_detail}
       <section class="card ctfilters" aria-label="Search and filters">
         <label class="ctsearch"><span class="sr">Search planets and stars</span><input type="search" id="ctq" placeholder="Search {c['rows']:,} planets and {c['stars']:,} stars" autocomplete="off"></label>
         <div class="chips" id="ctmethods" role="group" aria-label="Detection method">{chips}</div>
@@ -782,22 +784,17 @@ function ctOrbits(name, ps){
     + `<figcaption class="skysrc">The ${esc(name)} system from above: each planet dips the star's light when it crosses the line of sight to the observer. Orbit sizes are the stored semi-major axes (or Kepler's third law from the period and the star's mass); dip depth is (Rp/R★)² from the stored radii. Circular orbits, star and planets not to scale, phases illustrative (no transit times are stored). Source: ${esc(ctSrc())}.</figcaption>`
     + `<details class="orbtable"><summary>The planets: period, orbit and dip depth</summary><div class="tablewrap" tabindex="0" role="region" aria-label="${esc(name)}: period, orbit and dip depth"><table class="pltable"><thead><tr><th scope="col">Planet</th><th scope="col">P (d)</th><th scope="col">a (AU)</th><th scope="col">Rp (R⊕)</th><th scope="col">Depth k² (ppm)</th></tr></thead><tbody>${rows}</tbody></table></div><p class="small">a from ${esc(ct.C.source_short)}; * from Kepler's third law (period and the star's mass). — : radius not stored.</p></details></figure>`;
 }
-// The portrait turns (0.12 rad/s) while on screen, the tab visible and the viewer has not paused it; under reduced motion
-// it holds its still until Spin is pressed. Its own loop, at 30 fps (15 on the Canvas2D path).
+// The portrait turns (0.12 rad/s) through the renderer's scheduler (SetuRender.play): only while on screen and the
+// tab is visible, within the page's animation budget and frame governor. Under reduced motion it holds its still
+// until Spin is pressed; Pause stops it.
 function ctSpin(root){
   const fig = root && root.querySelector('[data-render="planet"]'), btn = fig && fig.querySelector('[data-spin]');
   if (!btn || fig._spin) return; fig._spin = 1;
-  const S = {on: false, t: 0, raf: 0, vis: true, last: 0, at: 0}, ok = () => fig._sr && fig._sr.cv && window.SetuRender;
+  const S = {on: false, user: false}, ok = () => fig._sr && fig._sr.cv && window.SetuRender && SetuRender.play;
   const set = () => { btn.hidden = !ok(); btn.textContent = S.on ? 'Pause' : 'Spin'; btn.setAttribute('aria-pressed', String(S.on)); };
-  const frame = now => { S.raf = 0; if (!S.on || !S.vis || document.hidden || !ok() || !fig.isConnected) return;
-    const dt = Math.min(.1, (now - (S.last || now)) / 1000); S.last = now; S.t += dt;
-    if (now - S.at >= (SetuRender.stats().path === 'canvas2d' ? 66 : 33)){ S.at = now; try { SetuRender.planet(fig._sr.cv, Object.assign({}, fig._sr.p, {t: S.t})); } catch (e) { S.on = false; set(); return; } }
-    S.raf = requestAnimationFrame(frame); };
-  const kick = () => { if (!S.raf && S.on && S.vis && !document.hidden){ S.last = 0; S.raf = requestAnimationFrame(frame); } };
-  btn.addEventListener('click', () => { S.on = !S.on; set(); kick(); });
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { S.vis = e.isIntersecting; kick(); }), {rootMargin: '80px'}).observe(fig);
-  document.addEventListener('visibilitychange', kick);
-  let n = 0; const wait = () => { if (ok()){ S.on = !matchMedia('(prefers-reduced-motion: reduce)').matches; set(); kick(); } else if (n++ < 60) setTimeout(wait, 250); };
+  const sync = () => { if (ok()) SetuRender.play(fig, S.on, {user: S.user}); };
+  btn.addEventListener('click', () => { S.on = !S.on; S.user = S.on; set(); sync(); });
+  let n = 0; const wait = () => { if (ok()){ S.on = !matchMedia('(prefers-reduced-motion: reduce)').matches; set(); sync(); } else if (n++ < 60) setTimeout(wait, 250); };
   wait();
 }
 // The shared animated system, from planet i's stored values only; the caption says what is not stored.

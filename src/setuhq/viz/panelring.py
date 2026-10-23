@@ -240,7 +240,7 @@ CSS = """
 /* ---------- viz/panelring (V06): the reviewers converging on the stored panel score ---------- */
 .panelring{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;min-width:0}
 .prfig{margin:0;display:grid;grid-template-columns:minmax(0,1fr);min-width:0;background-color:var(--stage);background-image:radial-gradient(ellipse at 50% 42%,#0E1630 0,#000 70%)}
-.prfig svg{display:block;width:100%;height:auto;margin-top:30px}
+.prfig svg{display:block;width:100%;max-width:520px;height:auto;margin:30px auto 0}
 .prfig .prline{fill:none;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:0;stroke-opacity:.85;transition:stroke-dashoffset var(--d-3) var(--ease)}
 .prfig .prline.sen{stroke:var(--sen)}
 .prfig .prline.prb{stroke:var(--prb-ink)}

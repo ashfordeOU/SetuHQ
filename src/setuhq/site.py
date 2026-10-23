@@ -34,7 +34,7 @@ from setuhq.app import (APP_CSS, APP_JS, DEFAULT_SHOWCASE, DEFAULT_SWEEP, DEFAUL
                         UNCONFIRMED, app_data, app_payload, dip_state, galaxy_json, route_sections)
 from setuhq.catalogue import CATALOGUE_JSON, SEARCH_BUTTON, SEARCH_DIALOG
 from setuhq.codenote import technical_note_html
-from setuhq.galaxy import CSV_NAME, TEASER_JS, map_csv
+from setuhq.galaxy import CSV_NAME, map_csv
 from setuhq.learn import LEARN_BAR
 from setuhq.methods import CHAPTER_PLANETS, CHAPTERS, system_stage
 from setuhq.names import ATTRIBUTION
@@ -121,11 +121,8 @@ body[data-route="overview"] main{padding-top:8px}
 .launch h1{margin:0;font-size:clamp(44px,7vw,96px)}
 .route>header.launch .sub{margin:16px auto 0}
 .launch .ctas{margin-top:24px}
-.planetfig{margin:28px 0 0;background:transparent;border-radius:0;overflow:visible}
-.planetfig svg{border-radius:28px;border:1px solid rgba(255,255,255,.06);height:clamp(140px,17vw,240px)!important}
 .sweepline{margin:0;font-size:17px;line-height:1.5;color:var(--ink-2);max-width:72ch}
 .sweepline a{white-space:nowrap}
-.planetfig figcaption{position:static;margin:8px 4px 0;font-size:12px;color:var(--ink-3);text-align:left}
 .proof{margin:0 auto}
 .dohere{display:grid;gap:14px}
 .dohere h2{font-size:15px;color:var(--ink-3);font-weight:500}
@@ -237,8 +234,6 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
   .crumbs a{min-height:44px}
   .footnav a{min-height:44px}
   .route>header.launch{padding-top:12px}
-  .planetfig{margin-top:20px}
-  .planetfig svg{border-radius:18px}
   .proof{margin-top:0}
   .docard{padding:16px 40px 16px 16px}
   main a.docard{display:flex;padding:16px 40px 16px 16px;line-height:1.45}
@@ -927,13 +922,9 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
                          assets=assets, lead=lead, **kw))
 
     run, hero = data["run"], data["hero"]
-    teaser = ""
-    if data.get("galaxy_teaser"):
-        t = json.dumps(data["galaxy_teaser"], separators=(",", ":")).replace("</", "<\\/")
-        teaser = f'<script id="teaser-data" type="application/json">{t}</script><script>{TEASER_JS}</script>'
     view("overview", _title("overview"),
          f"{brand.TAGLINE} A calibrated panel of Sentinels and Probes reads TESS light curves and explains every verdict. "
-         f"Every SetuHQ result is a {UNCONFIRMED}.", "/", extra_body=teaser)
+         f"Every SetuHQ result is a {UNCONFIRMED}.", "/")
     view("sky", _title("sky"), f"The run's star on an all-sky map, with the dips the panel marked and where surveys have looked. {hero['headline']}", "/explore/")
     view("galaxy", _title("galaxy"), "Every known exoplanet with a stored distance, placed in 3D around the Sun, by discovery method and year.", "/explore/galaxy/", name="Galaxy")
     view("mission", _title("mission"), "A tiling workspace of SetuHQ's views, linked by one selected star: the Galaxy, the sky, the light curve, the catalogue and the panel's feed.", "/explore/mission-control/", name="Mission Control")
@@ -1007,7 +998,7 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
         build_plate(run_dir, out / "evidence" / "plates", title=f"{title} plates", catalog_path=catalog_path, star=star,
                     require_crossmatch=require_crossmatch, others=[x for x in plate_links if x[1] != "/evidence/plates/"])
         build_report(run_dir, out / "evidence" / "report", title=f"{title}: {target}", validation_md=validation_md,
-                     benchmark_md=benchmark_md)
+                     benchmark_md=benchmark_md, path="/evidence/report/")
         wrap = [("evidence/plates", "plates", "Plates"), ("evidence/report", "report", "Run report")]
         standalone = ["/candidates/case-file/", "/evidence/plates/", "/evidence/report/"]
         # Every other example run: its own case file, plates and report, under its star's address.
@@ -1021,7 +1012,7 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
                         period_wrong=data["run_ctx"][x["run"]]["period_wrong"],
                         others=[x for x in plate_links if x[1] != card["plates"]])
             build_report(x["dir"], out / card["report"].strip("/"), title=f"{title}: {x['star']}",
-                         validation_md=_showcase_md(x["run"]), benchmark_md=benchmark_md)
+                         validation_md=_showcase_md(x["run"]), benchmark_md=benchmark_md, path=card["report"])
             wrap += [(card["plates"].strip("/"), "plates", f"Plates: {x['star']}"), (card["report"].strip("/"), "report", f"Run report: {x['star']}")]
             standalone += [card["case_file"], card["plates"], card["report"]]
         for sub, route, label in wrap:

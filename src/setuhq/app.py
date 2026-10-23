@@ -40,8 +40,8 @@ from setuhq import brand
 from setuhq.design import BASE_CSS, MOTION_CSS, tokens_css
 from setuhq.benchmark_toi import wilson
 from setuhq.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
-from setuhq.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, TEASER_JS, galaxy_data,
-                            galaxy_meta, galaxy_section, map_csv, teaser_points)
+from setuhq.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, galaxy_data,
+                            galaxy_meta, galaxy_section, map_csv)
 from setuhq.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFAULT_CATALOGUE, SEARCH_BUTTON, SEARCH_DIALOG,
                                catalogue_meta, catalogue_section, load_catalogue, mentions, planet_page, star_page, tic_names)
 from setuhq.objects import obj_link
@@ -717,7 +717,8 @@ def example_card(x: dict, meta: dict) -> dict:
         "kind": meta.get("kind") or "", "summary": meta.get("summary") or "", "why": meta.get("why") or "",
         "caveat": meta.get("caveat") or "",
         "outcome_line": meta.get("outcome") or "", "reference": meta.get("reference") or "",
-        "planet": st.get("planet"), "sectors": sectors, "mission": "TESS",
+        "planet": st.get("planet"), "planets": [q["planet"] for q in meta.get("planets") or [] if q.get("planet")],
+        "sectors": sectors, "mission": "TESS",
         "n_dips": len(dips), "count": dip_count(outcomes),
         "counts": {k: sum(1 for o in outcomes if dip_state(o)[1] == w) for k, w in
                    (("candidates", "candidate"), ("flagged", "flagged"), ("rejected", "rejected"))},
@@ -888,7 +889,6 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
         "catalogue_meta": catalogue_meta(cat, galaxy["methods"] if galaxy else None, galaxy["method_label"] if galaxy else None,
                                          {e["name"]: [e["ref"], e["ref_label"]] for e in (galaxy or {}).get("notable", [])},
                                          mentions((galaxy or {}).get("notable"), CHAPTERS, CHAPTER_PLANETS, story)),
-        "galaxy_teaser": teaser_points(galaxy),
         "sky_geo": sky_geometry(story["star"]["ra_deg"], story["star"]["dec_deg"]),
         "deco": decoration(),
         "planets": planet_cards(cands, run_name, feed, crossmatch),
@@ -1116,8 +1116,6 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .theatre .cap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font:var(--t-data);color:var(--stage-dim)}
 .theatre svg{display:block;width:100%;height:auto}
 .theatre .foot{font-size:12px;color:var(--stage-dim);line-height:1.5;margin:0}
-.axisrow{display:flex;justify-content:space-between;gap:8px;font:11px var(--mono);color:var(--stage-dim);margin-top:-6px}
-.axisrow span:nth-child(2){text-align:center}
 .tx-side{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:14px}
 .scorecard{padding:14px;display:grid;gap:12px}
 .scorecard .txverdict{margin:0;font-size:14px;line-height:1.5;color:var(--ink-2)}
@@ -1314,6 +1312,7 @@ svg.calplane .pt.cl{fill:var(--blue);fill-opacity:.85;stroke:var(--blue);stroke-
 .card h2 .sub{font:500 11px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.04em}
 .idtag{font:400 11px var(--mono);color:var(--ink-3);margin-left:4px;text-transform:none;letter-spacing:0}
 details summary{cursor:pointer}
+.srcnote{margin:-4px 0 12px;font-size:12.5px;color:var(--ink-3)}.srcnote summary{display:inline-flex;align-items:center;min-height:32px}.srcnote p{margin:4px 0 0;overflow-wrap:anywhere}
 /* panel, runs */
 #route-sentinels .row2>.panelring{flex:1 1 360px;min-width:0}
 .benchodo{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
@@ -3306,12 +3305,12 @@ def _sentinels(data: dict) -> str:
 
 def app_payload(data: dict) -> dict:
     """What the page's script reads (written once to assets/data/app-<hash>.json and shared by every page). The
-    leaderboard, the sky geometry, the decoration and the galaxy teaser are rendered into the HTML at build time;
+    leaderboard, the sky geometry and the decoration are rendered into the HTML at build time;
     the Docket the case file frames is a file of its own."""
     data = {**data, "methods": methods_meta(data["examples"], data.get("galaxy"), data["story"], data.get("coverage"))}
     slim = {**data, "sweep": sweep_payload(data["sweep"])} if data.get("sweep") else data
     server_only = ("galaxy", "coverage", "examples", "catalogue", "benchmark", "sweep_full", "leaderboard", "sky_geo", "deco",
-                   "galaxy_teaser", "docket_html", "code_note", "extra_docket_html")
+                   "docket_html", "code_note", "extra_docket_html")
     return {k: v for k, v in slim.items() if k not in server_only}
 
 
@@ -3451,15 +3450,6 @@ def galaxy_json(data: dict) -> str:
     Galactic l and b go to the CSV only; the page draws from x, y, z."""
     g = {**data["galaxy"], "hosts": {k: v for k, v in data["galaxy"]["hosts"].items() if k not in ("l", "b")}}
     return json.dumps(g, separators=(",", ":"), ensure_ascii=False)
-
-
-def _galaxy_scripts(data: dict, galaxy_payload: str = "") -> str:
-    """The map's arrays (parsed only when the Galaxy opens) and the Overview teaser's points and code."""
-    out = f'<script id="galaxy-data" type="application/json">{galaxy_payload}</script>' if galaxy_payload else ""
-    if data.get("galaxy_teaser"):
-        teaser = json.dumps(data["galaxy_teaser"], separators=(",", ":")).replace("</", "<\\/")
-        out += f'<script id="teaser-data" type="application/json">{teaser}</script><script>{TEASER_JS}</script>'
-    return out
 
 
 def _input_label(data: dict) -> str:

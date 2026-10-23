@@ -131,22 +131,28 @@ def stage(card: dict, app: dict, meta: dict | None = None) -> dict:
 
 
 def caption(st: dict) -> str:
-    """The card stage's visible caption: every number and where it comes from."""
-    t = f"Star disc in its blackbody colour, {round(st['teff']):,} K ({TIC})" if st["teff"] else "No Teff stored: the star disc is neutral grey"
+    """The card stage's visible caption, short and the same shape on every card: the star's Teff and its source, then
+    each body drawn with its Rp/R★ and where that number comes from. What is common to every stage (the disc is in its
+    blackbody colour; sizes to scale, positions illustrative) is said once, under the gallery (:data:`STAGE_NOTE`)."""
+    t = f"Star {round(st['teff']):,} K ({TIC})" if st["teff"] else "No Teff stored: neutral grey disc"
     parts = []
     for b in st["bodies"]:
         if b["kind"] == "occ":
-            parts.append(f"a neutral occulter at {b['k']:.3f} ({b['src']}), labelled occulter not identified")
+            parts.append(f"occulter not identified, √depth {b['k']:.3f} (run fit)")
         elif b["kind"] == "missed":
-            parts.append(f"dashed: {b['name']} at Rp/R★ {b['k']:.4f} ({b['src']})")
+            parts.append(f"{_letter(b['name'])} dashed, Rp/R★ {b['k']:.4f} ({b['src']})")
         else:
-            parts.append(f"silhouette of {b['name']} at Rp/R★ {b['k']:.4f} ({b['src']})")
-    body = "; ".join([t] + parts) + "."
+            parts.append(f"{_letter(b['name'])} Rp/R★ {b['k']:.4f} ({b['src']})")
+    body = " · ".join([t] + parts)
     if st["note"]:
-        body += f" {st['note'][0].upper()}{st['note'][1:]}."
-    if st["bodies"]:
-        body += " Sizes to scale; positions on the disc are illustrative."
-    return body
+        body += f" · {st['note']}"
+    return body + "."
+
+
+# What every stage shares, said once under the cards rather than on each.
+STAGE_NOTE = ("Each stage: the star's disc in its blackbody colour at the Teff its run stores, and what the run measured "
+              "as a shadow at its fitted Rp/R★ (a planet the run missed is a dashed outline). Sizes are to scale against "
+              "the disc; where each sits on it is illustrative.")
 
 
 def svg(st: dict, uid: str) -> str:
@@ -224,7 +230,7 @@ def html(data: dict, **opts) -> str:
         <div class="secthead"><h2 id="h-examples">Worked examples: {len(cards)} stars, one pipeline</h2>
         <p>Each is a stored run on public TESS light curves from MAST, with its data, configuration and code hashed. Every dip is counted by its vetting outcome; a candidate stays unconfirmed, and a rejected dip is not a candidate.</p></div>
         <ul class="excards">{"".join(items)}</ul>
-        <p class="bandsrc">Stages: {e(data["source"])}. What a run measured is drawn as a shadow at its fitted size; no candidate is given planet art.</p>
+        <p class="bandsrc">{e(STAGE_NOTE)} No candidate is given planet art. Stages: {e(data["source"])}.</p>
       </section>"""
 
 
@@ -244,8 +250,11 @@ def data(app_data: dict) -> dict:
 
 CSS = """
 /* ---------- viz.gallery (V03): each worked example's star in its colour, what the run measured as shadows ---------- */
-#route-overview .excards{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))}
-#route-overview .excard{padding:0;overflow:hidden;gap:0;background:var(--bg-2);-webkit-backdrop-filter:none;backdrop-filter:none;transition:transform var(--d-2) var(--ease),border-color var(--d-2) var(--ease)}
+#route-overview .excards{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));row-gap:16px}
+/* Every card in a row has the same shape: its stage, caption and text sit on shared row lines (subgrid). */
+#route-overview .excards>li{display:grid;grid-row:span 3;grid-template-rows:subgrid}
+#route-overview .excard{grid-row:span 3;display:grid;grid-template-rows:subgrid;padding:0;overflow:hidden;gap:0;background:var(--bg-2);-webkit-backdrop-filter:none;backdrop-filter:none;transition:transform var(--d-2) var(--ease),border-color var(--d-2) var(--ease)}
+#route-overview .excard .gstage{grid-row:span 2;grid-template-rows:subgrid}
 #route-overview .excard:hover{transform:translateY(-2px);border-color:var(--line-3)}
 .exbody{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px;flex:1}
 .exbody p{margin:0}
@@ -254,7 +263,7 @@ CSS = """
 .gbox>svg,.gbox>canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .gbox>svg[hidden]{display:none}
 .gstage .stage-tag{font-size:10px;min-height:22px;padding:2px 7px}
-.gstage .readout{background:var(--stage);color:var(--stage-dim);padding:8px 12px 10px;margin:0;font:400 12px/1.45 var(--sans);letter-spacing:0}
+.gstage .readout{background:var(--stage);color:var(--stage-dim);padding:8px 12px 10px;margin:0;font:var(--t-data);letter-spacing:0;font-size:11.5px}
 @media (max-width:699.98px){
   .gbox{aspect-ratio:16/10}
   .gstage .readout{font-size:11.5px}

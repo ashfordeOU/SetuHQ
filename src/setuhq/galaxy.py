@@ -187,20 +187,17 @@ def galaxy_meta(g: dict | None) -> dict | None:
             "layers": [k for k, _ in COV_LAYERS] if g.get("coverage") else []}
 
 
-def teaser_points(g: dict | None, n: int = 1400) -> dict | None:
-    """The nearest ``n`` hosts, for the Overview's small rotating render: [x, y, z] in ly and a method index."""
-    if g is None:
-        return None
-    H = g["hosts"]
-    first = {}
-    for i, h in enumerate(g["planets"]["h"]):
-        y = g["planets"]["y"][i] or 9999
-        if h not in first or y < first[h][0]:
-            first[h] = (y, g["planets"]["m"][i])
-    order = sorted(range(len(H["n"])), key=lambda h: H["d"][h])[:n]
-    return {"p": [[round(H["x"][h]), round(H["y"][h]), round(H["z"][h]), first[h][1]] for h in order],
-            "colours": [g["method_colour"][mt] for mt in g["methods"]], "n": len(order),
-            "reach_ly": round(H["d"][order[-1]] * LY_PER_PC) if order else 0}
+def source_note(note: str | None) -> tuple[str, str]:
+    """A fetch note for visitors: (a plain sentence for the source paragraph, a <details> with the raw note). The raw
+    text (an HTTP error, say) stays out of the sentence; it is kept, folded, for anyone checking the data."""
+    if not note:
+        return "", ""
+    e = html.escape
+    if note.startswith("NASA Exoplanet Archive not used"):
+        say = "The NASA Exoplanet Archive could not be reached when this list was fetched, so it comes from exoplanet.eu alone."
+    else:
+        say = "One of the sources could not be used when this list was fetched."
+    return (f" {say}", f'<details class="srcnote"><summary>Technical detail of the fetch</summary><p class="mono">{e(note)}</p></details>')
 
 
 def fmt_date(iso: str) -> str:
@@ -293,7 +290,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
         f'<span>{e(nt["tagline"])}</span><span class="mono">{e(g["method_label"][nt["method"]])}{" · method showcase" if nt["showcase"] else ""}</span></button>'
         f'<a class="gxref" href="{e(nt["ref"])}" rel="noopener">{e(nt["ref_label"])}</a>{obj_link("planet", nt["name"], "Planet page ›", "gxref")}</li>'
         for k, nt in enumerate(g["notable"]))
-    note = f" {e(g['note'])}." if g.get("note") else ""
+    note, note_detail = source_note(g.get("note"))
     feed = ", ".join(f"TIC {t}" for t in g["feed_tics"])
     return f"""<header class="headrow">
         <div>{eyebrow}<h1 class="lead-h" id="h-galaxy" tabindex="-1">Every known exoplanet,<br><span class="grey">around the Sun.</span></h1>
@@ -350,7 +347,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
       </details>
       <p class="gxkeys muted" id="gxkeys">Drag to orbit · scroll or pinch to zoom · double-click a star to centre on it · arrow keys orbit · + and − zoom · Enter selects the star under the reticle · Esc clears.</p>
       <div class="gxnotes">
-        <p class="note"><b>{e(source_line(g))}</b> <a href="{e(g['url'])}" rel="noopener">{e(g['url'])}</a>.{note} {e(g['definition'])} The list includes {g['exocomets']} entries exoplanet.eu names as exocomets. {c['dropped_no_distance']:,} of its {c['rows']:,} planets have no stored distance and are not plotted.</p>
+        <p class="note"><b>{e(source_line(g))}</b> <a href="{e(g['url'])}" rel="noopener">{e(g['url'])}</a>.{note} {e(g['definition'])} The list includes {g['exocomets']} entries exoplanet.eu names as exocomets. {c['dropped_no_distance']:,} of its {c['rows']:,} planets have no stored distance and are not plotted.</p>{note_detail}
         <p class="note"><b>Not plotted.</b> The feed's stars ({e(feed)}) have no stored positions, so they are not on this map. {e(star['name'])} is placed from the dataset, like every other star; {e(star['planet'] or star['name'])} is the planet SetuHQ's run {('recovered') if star['planet'] else 'reviewed'}.</p>
         <p class="note"><b>How to read it.</b> Positions: heliocentric galactic coordinates from RA, Dec (J2000) and distance; x points to the Galactic centre and the grid is the Galactic plane. Axis ticks are in light-years (1 pc = {LY_PER_PC:.3f} ly). Colour: the detection method of the earliest planet shown for each star ({e(g['method_rule'])}). Size: planets per star. Microlensing distances come from models of each event and are uncertain (<a href="#/methods?ch=microlensing">how microlensing works</a>). The bias in the cloud is where surveys looked and what each method can see, not where planets are. The Milky Way is an artist's impression drawn by the page, not data; the Sun's position in it is approximate.</p>
         <p class="note">{e(CLASS_RULE)}</p>
@@ -365,23 +362,6 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
         <div class="tablewrap" tabindex="0" role="region" aria-label="The 50 nearest systems">{nearest_table(g)}</div>
         <p><a href="/assets/data/{CSV_NAME}" download>Download every plotted planet (CSV, {c['kept']:,} rows)</a>, derived from the stored exoplanet.eu map.</p>
       </details>"""
-
-
-def teaser_html(g: dict | None, t: dict | None) -> str:
-    e = html.escape
-    if g is None or t is None:
-        return ""
-    c = g["counts"]
-    return f"""<section class="gxteaser space" aria-labelledby="h-gxteaser">
-        <canvas class="gxtcanvas" data-teaser role="img" aria-label="A slowly turning 3D view of the {t['n']:,} nearest planet-hosting stars around the Sun, coloured by detection method."></canvas>
-        <div class="gxtcopy">
-          <p class="kick">Galaxy</p>
-          <h2 id="h-gxteaser">{c['kept']:,} known exoplanets, around the Sun.</h2>
-          <p>Every planet with a stored distance, placed in 3D, from the Sun out to the Milky Way's bulge. Fly to the Kepler field, scrub the discovery years from {g['years'][0]}, or take the tour.</p>
-          <a class="btn primary" href="#/galaxy">Explore every known exoplanet ›</a>
-          <p class="small">{e(source_line(g))} SetuHQ did not discover these planets.</p>
-        </div>
-      </section>"""
 
 
 GALAXY_CSS = r"""
@@ -510,13 +490,6 @@ GALAXY_CSS = r"""
 .gxtable th,.gxtable td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 .gxtable .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
 .gxtablecard a{display:inline-flex;align-items:center;min-height:44px}
-/* the Overview's teaser */
-.gxteaser{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;min-height:360px;background:#000}
-.gxtcanvas{width:100%;height:100%;min-height:360px;display:block}
-.gxtcopy{padding:28px 32px 28px 8px;display:grid;gap:10px;justify-items:start}
-.gxtcopy h2{margin:0;font:600 clamp(24px,3vw,34px)/1.1 var(--sans);letter-spacing:-.02em;color:var(--stage-ink)}
-.gxtcopy p{margin:0;color:var(--stage-dim)}
-.gxtcopy .small{font-size:12px}
 @media (max-width:699.98px){
   .gxstage{height:64vh;min-height:380px;border-radius:20px}
   .gxtr{right:8px;top:8px;gap:6px}
@@ -537,54 +510,12 @@ GALAXY_CSS = r"""
   .gxsheet[open] .gxcontrols{max-height:52vh;overflow:auto}
   .gxtime output{min-width:0}
   .gxmethods .chip,.gxsheet .chip,.gxsheet .btn{min-height:44px}
-  .gxteaser{grid-template-columns:1fr}
-  .gxtcanvas{min-height:260px;height:260px}
-  .gxtcopy{padding:0 18px 22px}
   .gxkeys{display:none}
 }
 @media (prefers-reduced-motion: reduce){
   .gxradar .sweep,.gxorbit .spin1,.gxorbit .spin2{animation:none!important}
   .gxcall{transition:none}
 }
-"""
-
-
-TEASER_JS = r"""
-// The Overview's Galaxy teaser: the nearest planet hosts, turning slowly (still under reduced motion).
-(function(){
-  var src = document.getElementById('teaser-data'); if (!src) return;
-  var T = JSON.parse(src.textContent), rm = window.matchMedia('(prefers-reduced-motion: reduce)');
-  Array.prototype.forEach.call(document.querySelectorAll('canvas[data-teaser]'), function(cv){
-    var ctx = cv.getContext('2d'); if (!ctx) return;
-    var reach = T.reach_ly || 1, a = -0.6, seen = false, raf = 0, last = 0;
-    // Runs only while the canvas is on screen (seen by the observer and laid out) and the tab is visible.
-    function live(){ return seen && !document.hidden && cv.getClientRects().length > 0; }
-    function size(){ var r = cv.getBoundingClientRect(), k = Math.min(2, window.devicePixelRatio || 1); cv.width = Math.max(1, Math.round(r.width * k)); cv.height = Math.max(1, Math.round(r.height * k)); return k; }
-    var k = size();
-    function draw(){
-      var w = cv.width, h = cv.height, s = Math.min(w, h) * 0.46 / reach, ca = Math.cos(a), sa = Math.sin(a), tilt = 0.42, ct = Math.cos(tilt), st = Math.sin(tilt);
-      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
-      ctx.strokeStyle = 'rgba(100,210,255,.22)'; ctx.lineWidth = k;
-      for (var r = 1; r <= 3; r++){ ctx.beginPath(); ctx.ellipse(w / 2, h / 2, reach * s * r / 3, reach * s * r / 3 * st, 0, 0, 2 * Math.PI); ctx.stroke(); }
-      for (var i = 0; i < T.p.length; i++){
-        var p = T.p[i], x = p[0] * ca - p[1] * sa, y = p[0] * sa + p[1] * ca, z = p[2];
-        var sy = y * st - z * ct, depth = y * ct + z * st, f = 1 + depth / reach * 0.25;
-        ctx.globalAlpha = Math.max(.25, Math.min(1, .75 + depth / reach * .4));
-        ctx.fillStyle = T.colours[p[3]];
-        ctx.fillRect(w / 2 + x * s * f - k, h / 2 + sy * s * f - k, 2 * k, 2 * k);
-      }
-      ctx.globalAlpha = 1; ctx.fillStyle = '#FFB340'; ctx.beginPath(); ctx.arc(w / 2, h / 2, 3.5 * k, 0, 2 * Math.PI); ctx.fill();
-    }
-    function tick(t){ raf = 0; if (!live()){ last = 0; return; } if (last) a += Math.min(50, t - last) * 0.00006; last = t; draw(); if (!rm.matches) raf = requestAnimationFrame(tick); }
-    function start(){ if (!live() || raf) return; last = 0; raf = requestAnimationFrame(tick); }
-    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; start(); }).observe(cv);
-    else { seen = true; start(); }
-    document.addEventListener('visibilitychange', start);
-    window.addEventListener('hashchange', function(){ setTimeout(start, 0); });
-    window.addEventListener('resize', function(){ k = size(); draw(); });
-    draw();
-  });
-})();
 """
 
 

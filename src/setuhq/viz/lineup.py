@@ -63,8 +63,9 @@ def showcase_entries(app: dict) -> list[dict]:
             continue
         star = c.get("star") or ""
         hosts = {star.lower()}
-        if c.get("planet"):
-            j = find_planet(cat, c["planet"])
+        # The run's own planet, and the known planets showcase.json lists for it (HD 15337's are TOI-402 A's).
+        for name in [c.get("planet")] + list(c.get("planets") or []):
+            j = find_planet(cat, name) if name else None
             if j is not None and P["star"][j]:
                 hosts.add(P["star"][j].lower())
         for i, s in enumerate(P["star"]):

@@ -104,10 +104,13 @@ export default async function home(h) {
     const f0 = await page.evaluate(() => window.SetuHero.frames); await page.waitForTimeout(500);
     const f1 = await page.evaluate(() => window.SetuHero.frames);
     check(f1 > f0, "the transit plays while on screen", `${f0} → ${f1}`);
+    const sr = await page.evaluate(() => ({ s: SetuRender.stats(), on: SetuRender.playing(document.querySelector(".herofig")) }));
+    check(sr.on && sr.s.animating >= 1 && sr.s.frames > 0, "the hero's loop is the renderer's: SetuRender.stats() counts it", JSON.stringify(sr));
     await btn.click(); await page.waitForTimeout(150);
     const p0 = await page.evaluate(() => window.SetuHero.frames); await page.waitForTimeout(500);
     const p1 = await page.evaluate(() => window.SetuHero.frames);
     check((await btn.getAttribute("aria-pressed")) === "true" && p1 === p0, "Pause sets aria-pressed and stops the frames", `${p0} → ${p1}`);
+    check(!(await page.evaluate(() => SetuRender.playing(document.querySelector(".herofig")))), "paused, the hero leaves the renderer's running set");
     await btn.click(); await page.waitForTimeout(500);
     check((await btn.getAttribute("aria-pressed")) === "false" && (await page.evaluate(() => window.SetuHero.frames)) > p1, "pressing it again plays");
     await page.evaluate(() => { Object.defineProperty(document, "hidden", { configurable: true, get: () => true }); document.dispatchEvent(new Event("visibilitychange")); });

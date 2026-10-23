@@ -152,8 +152,9 @@ their own data inline so they work saved or printed; their budget is 400,000.
 ## The visual system
 
 One source for the look of every page: `src/setuhq/design.py`. The site's stylesheet, the header and footer around
-the stand-alone pages (`.shellscope`), and later the case file, plates, report and README figures (through aliases)
-read the same tokens.
+the stand-alone pages (`.shellscope`), the case file, plates, run report, search feed page and dashboard (through
+aliases), and the README figures (`tools/gen_readme_assets.py` reads `design.TOKENS` and `design.METHOD`) read the
+same tokens.
 
 * **Tokens.** `design.TOKENS` holds each colour as (dark, light); `design.tokens_css(scope, aliases)` writes the dark
   block, the light block and the light block for "your device's setting". The ground is `#04060B` in dark and
@@ -190,14 +191,60 @@ read the same tokens.
   `/docs/pictures/` prints every rule, source and still; every "Artist's impression" tag links there.
 * **Components** live in `src/setuhq/viz/` (one module each, fixed signatures: `html(data)`, `CSS`, `JS`, optional
   `data(app_data)`); `viz.write_data` merges their build-time data into `assets/data/stories-<hash>.json` and
-  `sky-<hash>.json`. A component not yet built returns "" and its page leaves the band out.
+  `sky-<hash>.json`. Every component is built; one returns "" only when its stored input is not in the build (no
+  catalogue, no stored run or fit, fewer than two planets with a period), and its page then leaves that band out.
+* **The renderer's scheduler.** Every renderer drawing that moves runs through it: the starfield, the home page's
+  hero (its Pause button calls `SetuRender.play`) and a planet portrait's Spin (0.12 rad/s, started with motion
+  allowed, held still under reduced motion until pressed). Each stops off screen and in a hidden tab, counts against
+  the 4 (2 on a small touch screen) animating at once, obeys the frame governor, and shows in `SetuRender.stats()`.
+  The canvases that are not renderer drawings keep their own loops under the same rules (only on screen and with the
+  tab visible, a Pause or Play button, still under reduced motion): the sky by year (V04) and the orbits (V08) play
+  with motion allowed; the fold (V05) folds once on arrival; the panel ring (V06) converges once.
 * **Honesty rules**, each tested: real data shows its source; every picture carries one of five labels (Artist's
   impression, Model from stored values, Real data, cited, Illustration, Speculative model); SetuHQ's output is never
   called confirmed, discovered, a discovery or a new planet (a lint over every built page and 200 stubs,
   tests/test_honesty_lint.py); the attribution line is always `names.ATTRIBUTION`; a rate always shows its interval.
-* **Budgets** (`site.check_asset_budget`, run by `setuhq site`): the stylesheet 140,000 bytes, the app's script
-  430,000, the renderer 64,000, each still 40,000 (512 px) or 8,000 (160 px) and 850,000 in all, the home page 90,000
-  characters and `/explore/` 160,000, each deploy-time stub 4,096 bytes.
+* **Budgets** (`site.check_asset_budget`, run by `setuhq site`, which fails over any): the stylesheet 140,000 bytes,
+  the app's script 430,000, the renderer 64,000, `stories-*.json` 40,000 and `sky-*.json` 160,000, each still 40,000
+  (512 px) or 8,000 (160 px) and 850,000 in all, the home page 90,000 characters and `/explore/` 160,000, each
+  deploy-time stub 4,096 bytes; every other page 200,000 characters and a stand-alone page 400,000.
+
+### Inventory: what each surface draws
+
+| Surface | Built by | Visual components (label on the picture) |
+| --- | --- | --- |
+| Home `/` | `home.py` | hero V01 (`viz/hero.py`: Model from stored values, the planet tagged Artist's impression); worked examples V03 (`viz/gallery.py`: Model from stored values); temperature strip V09 (`viz/tempstrip.py`); line-up V07 (`viz/lineup.py`: Artist's impression); fold V05 (`viz/fold.py`: Real data, cited); the lead dip's panel ring V06 (`viz/panelring.py`: Real data, cited); sky by year V04 and timeline V12 (`viz/skyyears.py`, `viz/timeline.py`: Real data, cited); counters V10 (`design.odometer_html`) |
+| Explore: sky, Galaxy, catalogue, Everything that dims, Mission Control | `app.py` (Sky), `galaxy.py`, `catalogue.py`, `everything.py`, `mission.py` | the sky by year V04 and timeline V12 on `/explore/`; the host-temperature filter V09 on the catalogue |
+| Planet and star pages (pre-rendered and deploy-time) | `catalogue.py`, `stubs.py` | portrait V02 (`renderer.figure`: Artist's impression, with Spin), star disc (Model from stored values), line-up V07 with the planet stepping in, orbits V08 (`viz/orbits.py`: Model from stored values) |
+| Candidates: dips, case files, plates | `app.py` (Transit, Explorer), `docket.py`, `plate.py` | a dip's panel ring V06; orbits V08 on TOI-270's dips; the case file and plates draw the star with `renderer.star_svg` (no renderer, works offline) |
+| How it works, Evidence, Docs | `methods.py`, `learn.py`, `app.py` (Sentinels, leaderboard, runs), `site.py` | the fold V05 in the Transits chapter; V04 and V12 in Methods population; the panel ring in panel mode on `/evidence/`; `/docs/pictures/` prints every look, rule, source and still |
+| Run report, search feed page, dashboard (CLI outputs) | `report.py`, `dashboard.py` | see "The CLI outputs" below |
+
+The five labels are the only ones used: Artist's impression, Model from stored values, Real data, cited, Illustration
+and Speculative model; an e2e check reads one on every stage of every page it visits.
+
+## The CLI outputs
+
+`setuhq report` (the run report, also served on the site at `/evidence/report/`), `setuhq discover` (its search
+feed page), `setuhq dashboard`, `setuhq docket` (the case file) and `setuhq plate` (the plates) write HTML that works
+opened from disk and printed:
+
+* the site's tokens inline, under each page's own names (`design.REPORT_ALIASES`, `DOCKET_ALIASES`,
+  `PLATE_ALIASES`), with the light set on white paper for print (`design.PRINT_CSS`);
+* Geist and Geist Mono copied beside the page (`assets/fonts/`; a page of the site uses the site's one copy);
+* the star as a static disc in its blackbody colour (`renderer.star_svg`, from the run's stellar.json), never the
+  renderer or WebGL; the report's hero is a black stage with that disc, the dip count (`names.dip_count`) and, for a
+  probes-only run, `names.PROBES_ONLY`;
+* each dip named by its vetting outcome as the case file decides it (`names.DIP_STATE`), the blind-coded PNG the
+  reviewers saw shown byte for byte on a white plate ("The image the reviewers saw (no markers)"), and
+  `names.ATTRIBUTION` in the panel section;
+* the dashboard's charts in the status colours (yellow a candidate, grey flagged, red rejected, blue the panel's
+  agreement and a known TOI) and the shared crosshair (`design.CROSSHAIR_JS`) on its light curve; the feed page's
+  entries per night as a static stacked bar chart with its numbers in a table.
+
+`tests/test_report_style.py` checks the tokens, the fonts, the outcome words, the attribution and the PNG bytes;
+`tests/e2e/checks/outputs.mjs` opens all five (built by `tests/e2e/build_outputs.py`) over HTTP and from disk, with
+no request to another site, axe in both themes, no sideways scroll on a phone and a PDF print.
 
 ## The home page
 
@@ -215,13 +262,25 @@ files:
   the false positive TOI-236 is an unlit occulter, "occulter not identified"), above the card's text, caveat and
   panel label.
 * **The temperature strip** (`viz/tempstrip.py`): a 31-stop blackbody gradient from 2,500 to 10,000 K with each
-  example star and the Sun marked; in filter mode it dispatches `setu:teff-range` with `{lo, hi}`.
-* The line-up, the fold, the panel, and the sky with its timeline, when their modules draw them.
+  example star and the Sun marked, under the heading "Five example stars: 3,532 K to 6,422 K, one pipeline" (the
+  count and the range read from the stored Teffs: the examples span M to F dwarfs, not every kind of star); in filter
+  mode it dispatches `setu:teff-range` with `{lo, hi}`.
+* **The line-up** (`viz/lineup.py`): every known planet of the worked examples with a stored radius (the planets
+  showcase.json names, so HD 15337's b and c, which exoplanet.eu lists under TOI-402 A, are in it), to one scale
+  beside Earth, Neptune and Jupiter.
+* **The fold** (`viz/fold.py`): pi Men's stored light curve, which folds itself once on the joint-fit period when it
+  comes on screen (its button folds and unfolds it); under reduced motion the two panels side by side.
+* **Who reviews a dip** (`viz/panelring.py`): the lead dip's stored panel at a readable size (the ring is at most
+  520 px wide), with the attribution line.
+* **The sky by year and the timeline** (`viz/skyyears.py`, `viz/timeline.py`).
 * **The counters** (`design.odometer_html`): the catalogue's rows, the real-TOI benchmark's sample, its held-out
   completeness with its Wilson interval, and the chapters of How it works, each linking to its proof.
 * The reference check, the sweep line, "What you can do here" and "What this page does not claim".
 
-`assets/data/stories-<hash>.json` carries the gallery's stages and the counters (`viz.gallery.data`).
+Each gallery card has the same shape: its stage, a one-line caption of the numbers drawn (the star's Teff and each
+body's Rp/R★ with its source), then its text; what every stage shares is said once under the cards.
+`assets/data/stories-<hash>.json` carries the gallery's stages, the counters, the line-up, the timeline and the fold's
+bins. The page carries no Galaxy teaser: the sky band replaced it, and its data and script were removed.
 `tests/e2e/checks/home.mjs` checks the bands at both sizes and in both themes, the counters without JavaScript, the
 hero's first frame and its Pause button, the strip's Teffs, the tab order and axe with motion on.
 
@@ -259,8 +318,10 @@ sentence disappears everywhere.
   `checks/system.mjs` checks the renderer's three paths (WebGL in SwiftShader, Canvas2D with WebGL blocked, the stills
   with JavaScript off), the animation budget, that hidden or scrolled-away drawings stop, reduced-motion stills, the
   labels on every picture, black stages in light mode, layout shift (at most 0.02 on the home page and a planet page),
-  the header that settles, and axe with motion on. `SETUHQ_E2E_BROWSERS=chromium,webkit` adds a WebKit pass when
-  Playwright's WebKit is installed.
+  the header that settles, and axe with motion on. `checks/home.mjs` (phase 1), `checks/explore.mjs` (2),
+  `checks/candidates.mjs` (3), `checks/learn.mjs` (4) and `checks/outputs.mjs` (5, the CLI outputs) check their
+  surfaces; `--only <name>` runs one. `SETUHQ_E2E_BROWSERS=chromium,webkit` adds a WebKit pass when Playwright's
+  WebKit is installed.
 * `node tests/e2e/gallery.mjs --site site --out <dir> [--light] [--full]` takes a screenshot of every page at both
   sizes, with a contact sheet (`index.html`), for looking at the site.
 

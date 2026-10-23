@@ -9,7 +9,9 @@
 * optionally ``data(app_data) -> dict``: its section of a build-time data file; :func:`write_data` merges the
   sections by key (a key written twice is an error) into ``assets/data/stories-<hash>.json`` (and ``sky-<hash>.json``).
 
-A component whose owner has not built it yet returns "" and its caller leaves the band out.
+Every component is built. One returns "" only when its stored input is not in the build (no catalogue, no stored
+run or fit, fewer than two planets with a period); its caller then leaves that band out, so a page never shows an
+empty frame labelled as data.
 """
 
 from __future__ import annotations

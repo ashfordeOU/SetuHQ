@@ -16,7 +16,9 @@ What is drawn, and from what:
 
 The page is rendered with the lead run (stable for search engines and screenshots). With motion allowed, the script
 features one eligible run per UTC day (a run with a catalogue planet; a false positive never is), loops the crossing
-every 7.5 s while the hero is on screen and the tab is visible, and has a Pause button. Under reduced motion it shows
+every 7.5 s while the hero is on screen and the tab is visible, and has a Pause button. The loop is the renderer's
+(``SetuRender.play``): the hero counts against the page's animation budget and obeys its frame governor, and
+``SetuRender.stats()`` reports it. Under reduced motion it shows
 the designed still: mid-transit, the curve drawn in full, the depth labelled, the lead run.
 
 Without JavaScript the still is an SVG image written here: the same star, planet silhouette and model curve.
@@ -245,18 +247,21 @@ CSS = """
 """
 
 JS = r"""
-// ---------- viz.hero (V01): the featured star's transit, looped while on screen; Pause; a still under reduced motion ----------
-window.SetuHero = window.SetuHero || {frames: 0, playing: false};
+// ---------- viz.hero (V01): the featured star's transit, looped while on screen through the renderer's scheduler; Pause; a still under reduced motion ----------
+window.SetuHero = window.SetuHero || {frames: 0};
 (function(){
   const RMq = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
   function setup(st){
     if (st._hero) return; st._hero = true;
     const fig = st.querySelector('.herofig'), btn = st.querySelector('[data-hero-pause]'); if (!fig) return;
     let rot = []; try { rot = JSON.parse(st.dataset.rotate || '[]'); } catch (e) { rot = []; }
-    const S = {vis: false, paused: RMq(), raf: 0, t0: 0, el: 0, last: 0, times: [], slow: false, p: null};
+    // paused: the visitor's choice (pressed under reduced motion); user: the visitor pressed play, so it may run then.
+    const S = {paused: RMq(), user: false, p: null};
     try { S.p = JSON.parse(fig.dataset.params || '{}'); } catch (e) { S.p = {}; }
-    const cv = () => fig._sr && fig._sr.cv;
-    function draw(t){ const c = cv(); if (!c || !window.SetuRender) return false; SetuRender.transit(c, Object.assign({}, S.p, {t})); return true; }
+    const T = () => fig._sr;
+    // The loop itself is SetuRender's (on screen only, the tab visible, the frame governor); this only counts its frames.
+    Object.defineProperty(window.SetuHero, 'playing', {configurable: true, get: () => !!(window.SetuRender && SetuRender.playing && SetuRender.playing(fig))});
+    function still(){ const t = T(); if (!t) return; t.p = S.p; try { SetuRender.transit(t.cv, Object.assign({}, S.p, {t: null})); } catch (e) { /* the frame stays */ } }
     // One featured run per UTC day (the same for every visitor that day); the page itself is rendered with the lead.
     if (!RMq() && rot.length > 1){
       const pick = rot[Math.floor(Date.now() / 864e5) % rot.length];
@@ -264,28 +269,22 @@ window.SetuHero = window.SetuHero || {frames: 0, playing: false};
         S.p = pick.p; st.dataset.run = pick.run; fig.dataset.params = JSON.stringify(pick.p);
         const img = fig.querySelector('img.rstill'), cap = fig.querySelector('figcaption');
         if (img) img.alt = pick.alt; if (cap) cap.innerHTML = pick.caption;
-        if (fig._sr){ fig._sr.p = pick.p; fig._sr.cv.setAttribute('aria-label', pick.alt); draw(null); }
       }
     }
-    function setBtn(){ if (!btn) return; btn.setAttribute('aria-pressed', S.paused ? 'true' : 'false'); btn.hidden = !cv(); }
-    function frame(now){
-      S.raf = 0; if (!want()) return;
-      const fps = S.slow ? 30 : 60; if (now - S.last < 1000 / fps - 1){ S.raf = requestAnimationFrame(frame); return; }
-      S.el += Math.min(100, now - (S.last || now)); S.last = now;
-      const a = performance.now(); if (!draw(S.el / 1000)) return; const dt = performance.now() - a;
-      SetuHero.frames++; S.times.push(dt); if (S.times.length > 60) S.times.shift();
-      if (S.times.length === 60){ const m = S.times.slice().sort((x, y) => x - y)[30]; if (m > 33){ S.paused = true; S.dead = true; draw(null); setBtn(); return; } S.slow = m > 20; }
-      S.raf = requestAnimationFrame(frame);
+    function setBtn(){ if (!btn) return; btn.setAttribute('aria-pressed', S.paused ? 'true' : 'false'); btn.hidden = !T(); }
+    function sync(){ if (!T() || !window.SetuRender || !SetuRender.play) return;
+      SetuRender.play(fig, !S.paused, {user: S.user, onframe: () => { window.SetuHero.frames++; }}); }
+    function ensure(){
+      if (!T() && window.SetuRender && !fig.closest('[hidden]')) { try { SetuRender.mount(fig.parentElement); } catch (e) { /* the still stays */ } }
+      const t = T(), img = fig.querySelector('img.rstill');
+      if (t && img && t.cv.getAttribute('aria-label') !== img.alt){ t.cv.setAttribute('aria-label', img.alt); still(); }
+      if (t && !t._hero){ t._hero = true; t.p = S.p; sync(); }
+      setBtn();
     }
-    const want = () => S.vis && !S.paused && !document.hidden && !S.dead && !!cv();
-    function kick(){ SetuHero.playing = want(); if (SetuHero.playing && !S.raf){ S.last = 0; S.raf = requestAnimationFrame(frame); } if (!SetuHero.playing && S.raf){ cancelAnimationFrame(S.raf); S.raf = 0; } }
-    function ensure(){ if (!fig._sr && window.SetuRender && !fig.closest('[hidden]')) { try { SetuRender.mount(fig.parentElement); } catch (e) { /* the still stays */ } }
-      if (fig._sr && rot.length && fig._sr.cv.getAttribute('aria-label') !== (fig.querySelector('img.rstill') || {}).alt){ fig._sr.p = S.p; fig._sr.cv.setAttribute('aria-label', fig.querySelector('img.rstill').alt); draw(null); } setBtn(); }
-    if (btn) btn.addEventListener('click', () => { S.paused = !S.paused; S.dead = false; S.times = []; setBtn(); kick(); });
-    document.addEventListener('visibilitychange', kick);
-    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(en => { S.vis = en.isIntersecting; if (S.vis) ensure(); kick(); }), {rootMargin: '80px'}).observe(fig);
-    else { S.vis = true; ensure(); kick(); }
-    ensure();
+    if (btn) btn.addEventListener('click', () => { S.paused = !S.paused; S.user = !S.paused; setBtn(); sync(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) ensure(); }), {rootMargin: '80px'}).observe(fig);
+    // The renderer's script may arrive after this one: look again for a few seconds.
+    let n = 0; const wait = () => { ensure(); if (!T() && n++ < 40) setTimeout(wait, 250); }; wait();
   }
   const all = () => document.querySelectorAll('.herostage[data-viz="hero"]').forEach(setup);
   window.SetuHero.setup = all;
