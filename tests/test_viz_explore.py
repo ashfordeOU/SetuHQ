@@ -116,7 +116,7 @@ def test_lineup_html_draws_earth_only_as_the_reference(app):
     for ref in ("Earth", "Neptune", "Jupiter"):
         assert f"<b>{ref}</b>" in h
     # Earth (the only look with oceans) is drawn once, as the reference; every other picture is an exoplanet look.
-    assert re.findall(r"/(ref-[a-z]+)-160", h).count("ref-earth") == 2 and set(re.findall(r"/(ref-[a-z]+)-", h)) == {"ref-earth", "ref-neptune", "ref-jupiter"}
+    assert h.count("/ref-earth-") == 1 and set(re.findall(r"/(ref-[a-z]+)-", h)) == {"ref-earth", "ref-neptune", "ref-jupiter"}
     assert "habitable" not in h.lower()
 
 

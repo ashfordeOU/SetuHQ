@@ -82,9 +82,9 @@ def html(data: dict, **opts) -> str:
         for k, v in enumerate(c):
             if not v:
                 continue
-            paths[METHODS[k]].append(f"M{x:.1f} {H - B - (acc + v) * sy:.1f}h{bw * .72:.1f}v{v * sy:.1f}h{-bw * .72:.1f}z")
+            paths[METHODS[k]].append(f"M{x:.0f} {H - B - (acc + v) * sy:.0f}h{bw * .72:.0f}v{round(H - B - acc * sy) - round(H - B - (acc + v) * sy)}h{-round(bw * .72)}z")
             acc += v
-    xl = "".join(f'<text x="{L + i * bw + bw / 2:.0f}" y="{H - 8}" text-anchor="middle">{y}</text>' for i, y in enumerate(years) if y % 5 == 0)
+    xl = "".join(f'<text x="{L + i * bw + bw / 2:.0f}" y="{H - 8}" text-anchor="middle">{y}</text>' for i, y in enumerate(years) if y % (10 if opts.get("compact") else 5) == 0)
     bars = "".join(f'<path d="{"".join(p)}" fill="{METHOD[m][0]}"/>' for m, p in paths.items() if p)
     peak = max(range(len(years)), key=lambda i: tot[i])
     aria = (f"Bar chart of the {sum(tot):,} catalogued planets by discovery year, {years[0]}–{years[-1]}, stacked by method; "
@@ -96,9 +96,14 @@ def html(data: dict, **opts) -> str:
     head = "".join(f'<th scope="col">{e(LABEL[m])}</th>' for m in METHODS)
     body = "".join(f'<tr><th scope="row">{y}</th><td>{tot[i]:,}</td>' + "".join(f"<td>{v:,}</td>" for v in cs[i]) + "</tr>" for i, y in enumerate(years))
     noyear = f" {t['no_year']:,} records without a year are not drawn." if t["no_year"] else ""
+    # The compact band (the home page) leaves the table to the full chart on /explore/.
+    table = ('<p class="skysrc"><a href="/explore/#timeline">The counts by year and method, as a table ›</a></p>' if opts.get("compact") else
+             f'<details class="tltable"><summary>Planets by year and method</summary><div class="tablewrap" tabindex="0" role="region" '
+             f'aria-label="Planets by year and method"><table class="pltable"><thead><tr><th scope="col">Year</th><th scope="col">All</th>{head}</tr></thead>'
+             f'<tbody>{body}</tbody></table></div></details>')
     uid = e(opts.get("uid") or f"tl-{opts.get('where') or 'x'}")
     return (f'<figure class="timeline{" compact" if opts.get("compact") else ""}" id="{uid}" data-viz="timeline" data-x0="{x0:.4f}" data-x1="{x1:.4f}" '
-            f"data-rows='{e(json.dumps(rowsj, separators=(',', ':')), quote=False)}' data-labels='{e(json.dumps([LABEL[m] for m in METHODS]), quote=False)}'>"
+            f"data-rows='{e(json.dumps(rowsj, separators=(',', ':')), quote=False)}'>"
             f'<div class="stage tlstage"><svg class="tlsvg" viewBox="0 0 {W} {H}" role="img" aria-label="{e(aria)}">'
             f'<g class="tlgrid">{"".join(grid)}</g><g>{bars}</g><g class="tlx">{xl}</g></svg>'
             f'<span class="stage-tag">Real data, cited</span></div>'
@@ -106,9 +111,7 @@ def html(data: dict, **opts) -> str:
             f'<figcaption><ul class="skylegend" aria-label="Discovery method">{legend}</ul>'
             f'<p class="skysrc">Planets per discovery year, stacked by the method that found them.{noyear} SetuHQ did not discover these planets. '
             f'Source: {e(data["source"])}.</p></figcaption>'
-            f'<details class="tltable"><summary>Planets by year and method</summary><div class="tablewrap" tabindex="0" role="region" '
-            f'aria-label="Planets by year and method"><table class="pltable"><thead><tr><th scope="col">Year</th><th scope="col">All</th>{head}</tr></thead>'
-            f'<tbody>{body}</tbody></table></div></details></figure>')
+            f'{table}</figure>')
 
 
 CSS = """
@@ -130,7 +133,7 @@ JS = r"""
 (function(){
   function wire(fig){
     if (fig._tl || !window.SetuUI || !SetuUI.crosshair) return; fig._tl = true;
-    const rows = JSON.parse(fig.dataset.rows), labels = JSON.parse(fig.dataset.labels), svg = fig.querySelector('.tlsvg');
+    const rows = JSON.parse(fig.dataset.rows), labels = __LABELS__, svg = fig.querySelector('.tlsvg');
     const f = n => n.toLocaleString('en-GB');
     SetuUI.crosshair(svg, {x0: +fig.dataset.x0, x1: +fig.dataset.x1, xs: rows.map(r => r[0]), readout: fig.querySelector('.tlread'),
       fmt: i => { const r = rows[i]; return `${r[0]}: ${f(r[1])} planet${r[1] === 1 ? '' : 's'}` + (r[1] ? ' · ' + r.slice(2).map((v, k) => [v, k]).filter(a => a[0]).sort((a, b) => b[0] - a[0]).map(([v, k]) => `${labels[k]} ${f(v)}`).join(' · ') : ''); }});
@@ -138,4 +141,4 @@ JS = r"""
   window.SetuTimeline = {wire: root => (root || document).querySelectorAll('[data-viz="timeline"]').forEach(wire)};
   window.SetuTimeline.wire();
 })();
-"""
+""".replace("__LABELS__", json.dumps([LABEL[m] for m in METHODS]))

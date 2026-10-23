@@ -29,6 +29,7 @@ METHODS = list(METHOD)  # the sky file's method index: design.METHOD's order
 LABEL = {"transit": "transit", "rv": "radial velocity", "imaging": "imaging", "microlensing": "microlensing",
          "astrometry": "astrometry", "timing": "timing", "other": "other"}
 STATIC_MAX = 1500  # points in the map drawn without JavaScript
+STATIC_COMPACT = 150  # the same, in the compact band (the home page keeps to its budget)
 YEAR_S = 0.42      # seconds per year while playing
 FRAME = (-460, -235, 920, 470)  # the Mollweide frame of setuhq.story.mollweide (RA increasing to the left)
 
@@ -60,12 +61,14 @@ def data(app_data: dict) -> dict:
     return {"m": METHODS, "p": rows(cat), "source": source_text(cat), "fetched_at": cat.get("fetched_at")}
 
 
-def graticule() -> str:
-    """Parallels every 30° and meridians every 60°, in whole frame units (faint: the map is the dots)."""
-    pt = lambda ra, dec: "%d %d" % tuple(round(v) for v in mollweide(ra, dec))  # noqa: E731
-    out = ["M" + "L".join(pt(ra, dec) for ra in range(-180, 181, 10)) for dec in (-60, -30, 0, 30, 60)]
-    out += ["M" + "L".join(pt(ra, d) for d in range(-90, 91, 10)) for ra in (-120, -60, 0, 60, 120)]
-    return "".join(out)
+def graticule(meridians: bool = True) -> str:
+    """Parallels every 30° and (unless ``meridians`` is False: the compact band) meridians every 60°, in whole frame units with relative steps (faint: the map is the dots)."""
+    def line(pts):
+        pts = [tuple(round(v) for v in mollweide(ra, dec)) for ra, dec in pts]
+        return f"M{pts[0][0]} {pts[0][1]}" + "".join(f"l{x - px} {y - py}" for (px, py), (x, y) in zip(pts, pts[1:]))
+    out = [line([(ra, dec) for ra in range(-180, 181, 15)]) for dec in (-60, -30, 0, 30, 60)]
+    out += [line([(ra, d) for d in range(-90, 91, 15)]) for ra in (-120, -60, 60, 120)] if meridians else []
+    return "".join(out) + f"M0 {round(mollweide(0, -90)[1])}V{round(mollweide(0, 90)[1])}"
 
 
 def counts(rs: list[list], year: int | None = None) -> dict[str, int]:
@@ -98,13 +101,15 @@ def html(data: dict, **opts) -> str:
     src = ((data.get("app") or {}).get("viz_files") or {}).get("sky", "")
     c = counts(rs)
     n = sum(c.values())
-    step = max(1, math.ceil(len(rs) / STATIC_MAX))
-    paths: dict[str, list[str]] = {m: [] for m in METHODS}
+    step = max(1, math.ceil(len(rs) / (STATIC_COMPACT if opts.get("compact") else STATIC_MAX)))
+    from setuhq.galaxy import dots_path
+
+    paths: dict[str, list] = {m: [] for m in METHODS}
     for r in rs[::step]:
-        x, y = mollweide(r[0] / 10, r[1] / 10)
-        paths[METHODS[r[2]]].append(f"M{round(x)} {round(y)}h0")
-    dots = "".join(f'<path d="{"".join(p)}" stroke="{METHOD[m][0]}"/>' for m, p in paths.items() if p)
+        paths[METHODS[r[2]]].append(mollweide(r[0] / 10, r[1] / 10))
+    dots = "".join(f'<path d="{dots_path(p)}" stroke="{METHOD[m][0]}"/>' for m, p in paths.items() if p)
     shown = sum(len(p) for p in paths.values())
+    compact = bool(opts.get("compact"))
     aria = (f"All-sky map (Mollweide, RA increasing to the left) of the {n:,} catalogued planets at their host stars' "
             f"positions, coloured by discovery method, as of {y1}: " + ", ".join(f"{LABEL[k]} {v:,}" for k, v in c.items() if v) + ".")
     legend = "".join(f'<li><i style="background:{METHOD[m][0]}"></i>{e(LABEL[m])}</li>' for m in METHODS if c[m])
@@ -117,22 +122,21 @@ def html(data: dict, **opts) -> str:
     cap = (f'<ul class="skylegend" aria-label="Discovery method">{legend}</ul>'
            f'<p class="skysrc">Each dot is a catalogued planet at its host star\'s position (RA and Dec, J2000), coloured by the method that '
            f'found it, appearing in its discovery year.{nojs} SetuHQ did not discover these planets. Source: {e(data["source"])}.</p>')
-    cols = e(json.dumps([METHOD[m][0] for m in METHODS]), quote=False)
-    labels = e(json.dumps([LABEL[m] for m in METHODS]), quote=False)
     return (f'<figure class="skyyears{" compact" if opts.get("compact") else ""}" id="{uid}" data-viz="skyyears" data-src="{e(src)}" '
-            f"data-y0=\"{y0}\" data-y1=\"{y1}\" data-cols='{cols}' data-labels='{labels}'>"
+            f'data-y0="{y0}" data-y1="{y1}">'
             f'<div class="stage skystage"><div class="skybox">'
             f'<svg class="skybase" viewBox="{" ".join(map(str, FRAME))}" role="img" aria-label="{e(aria)}">'
             f'<ellipse rx="{round(SKY_R * 2 * SQRT2)}" ry="{round(SKY_R * SQRT2)}" fill="rgba(255,255,255,.015)" stroke="rgba(120,140,180,.3)" stroke-width=".8"/>'
-            f'<path d="{graticule()}" stroke="rgba(120,140,180,.13)" stroke-width=".8" fill="none"/>'
+            f'<path d="{graticule(not compact)}" stroke="rgba(120,140,180,.13)" stroke-width=".8" fill="none"/>'
             f'<g class="skydots" stroke-width="2.4" stroke-linecap="round">{dots}</g></svg>'
             f'{opts.get("overlay") or ""}</div>'
             f'<span class="stage-tag">Real data, cited</span><span class="skyyear" aria-hidden="true">{y1}</span></div>'
             f'{tools}<p class="readout skyread">{e(readout_text(c))}</p><p class="sr" data-sky="live" aria-live="polite"></p>'
             f'<figcaption>{cap}</figcaption>'
-            f'<details class="skytable"><summary>Planets by discovery method, as of {y1}</summary><table class="pltable"><thead><tr>'
-            f'<th scope="col">Method</th><th scope="col">Planets</th></tr></thead><tbody>{table}<tr><th scope="row">All</th><td>{n:,}</td></tr>'
-            f'</tbody></table></details></figure>')
+            + ("" if compact else  # the compact band's counts by method are in the map's label and the readout
+               f'<details class="skytable"><summary>Planets by discovery method, as of {y1}</summary><table class="pltable"><thead><tr>'
+               f'<th scope="col">Method</th><th scope="col">Planets</th></tr></thead><tbody>{table}<tr><th scope="row">All</th><td>{n:,}</td></tr>'
+               f'</tbody></table></details>') + '</figure>')
 
 
 CSS = """
@@ -162,7 +166,7 @@ JS = r"""
 // ---------- viz.skyyears (V04): the sky by discovery year; fetched near the screen, played while on screen ----------
 (function(){
   const RM = () => matchMedia('(prefers-reduced-motion: reduce)').matches, PER = __YEAR_S__ * 1000, HOLD = 3000;
-  const R = __SKY_R__, S2 = Math.SQRT2;
+  const R = __SKY_R__, S2 = Math.SQRT2, COLS = __COLS__, LABELS = __LABELS__;  // the sky file's method order (design.METHOD)
   function moll(ra, dec){
     ra = ra > 180 ? ra - 360 : ra; const lam = -ra * Math.PI / 180, phi = dec * Math.PI / 180; let th = phi;
     for (let k = 0; k < 30; k++){ const f = 2 * th + Math.sin(2 * th) - Math.PI * Math.sin(phi); th -= f / (2 + 2 * Math.cos(2 * th) + 1e-12); }
@@ -172,7 +176,7 @@ JS = r"""
   function wire(fig){
     if (fig._sky || !fig.dataset.src || !window.fetch) return;
     const S = fig._sky = {vis: false, pts: null, playing: false, year: +fig.dataset.y1, tonly: false, t: 0, last: 0, said: 0, raf: 0, held: 0};
-    const y0 = +fig.dataset.y0, y1 = +fig.dataset.y1, cols = JSON.parse(fig.dataset.cols), labels = JSON.parse(fig.dataset.labels);
+    const y0 = +fig.dataset.y0, y1 = +fig.dataset.y1, cols = COLS, labels = LABELS;
     const q = s => fig.querySelector(s), box = q('.skybox'), play = q('[data-sky="play"]'), tr = q('[data-sky="transit"]'), rng = q('[data-sky="year"]');
     const out = q('.skyread'), live = q('[data-sky="live"]'), tag = q('.skyyear');
     let cv = null;
@@ -234,4 +238,5 @@ JS = r"""
   window.SetuSky = {wire: root => (root || document).querySelectorAll('[data-viz="skyyears"]').forEach(wire)};
   window.SetuSky.wire();
 })();
-""".replace("__YEAR_S__", str(YEAR_S)).replace("__SKY_R__", repr(SKY_R))
+""".replace("__YEAR_S__", str(YEAR_S)).replace("__SKY_R__", repr(SKY_R)).replace(
+    "__COLS__", json.dumps([METHOD[m][0] for m in METHODS])).replace("__LABELS__", json.dumps([LABEL[m] for m in METHODS]))
