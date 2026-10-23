@@ -1059,20 +1059,24 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .secthead h2{font-size:15px;color:var(--ink-3);font-weight:500}
 .secthead p{margin:0;font-size:13px;color:var(--ink-3);max-width:72ch}
 /* Sky */
-.skymap{flex:999 1 640px;padding:18px;background:radial-gradient(120% 120% at 50% 0%,#0B1220 0%,#000 60%)}
-.skymap svg{display:block;width:100%;height:auto}
+.skymap{flex:999 1 640px;display:grid;gap:10px;min-width:0;align-content:start}
+.skyover{pointer-events:none}
+.skyover .skymark{pointer-events:auto}
 .skycov{display:grid;gap:8px;padding:14px 16px;border-radius:var(--r)}
 .skycov p{margin:0;font-size:13px;color:var(--ink-2)}
 .skycov a{display:inline-flex;align-items:center;min-height:44px}
 .theatre .mxstage{padding:0 12px 4px}
 .theatre .mxctl,.theatre .mxbadges{padding:0 2px}
-.skypin{position:absolute;min-height:44px;padding:10px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(28,28,30,.72);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:#F5F5F7;text-decoration:none;line-height:1.35;font-size:12px}
-.skypin b{font-size:15px;font-weight:600;display:block}
-.skypin span{display:block;color:#A1A1A6}
+.skypin{position:absolute;z-index:3;transform:translate(16px,-50%);min-height:44px;padding:8px 12px;border-radius:var(--r-s);border:1px solid rgba(255,255,255,.16);background:rgba(4,6,11,.82);color:var(--stage-ink);text-decoration:none;line-height:1.3;font-size:12px;white-space:nowrap}
+.skypin b{font-size:14px;font-weight:600;display:block}
+.skypin span{display:block;color:var(--stage-dim)}
 .skypin em{font-style:normal;color:#64D2FF}
-.skynote{position:absolute;right:20px;bottom:14px;font-size:11px;color:#8E8E93;text-align:right;max-width:60%}
+.skynote{margin:0;font-size:12px;color:var(--ink-3)}
 .skymark.on{cursor:zoom-in}
-.skylinks .skyzoom{min-height:44px;color:#F5F5F7;border-color:rgba(255,255,255,.18)}
+.sktl{display:grid;gap:10px}
+.secth{margin:0;font:var(--t-h3);letter-spacing:-.01em}
+@media screen and (max-width:699.98px){main .skybox a.skypin{position:absolute;display:flex;align-items:center;margin:0;padding:4px 10px}.skybox .skypin span,.skybox .skypin em{display:none}.skybox .skypin b{font-size:12px}}
+.skylinks .skyzoom{min-height:44px}
 .dipsbox{flex:1 1 300px;max-width:380px;padding:10px;display:flex;flex-direction:column;gap:2px;border-radius:28px}
 .dipsbox .dhead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 6px}
 .dipsbox .dhead b{font-size:15px;font-weight:600}
@@ -2238,7 +2242,7 @@ function renderSky(){
     : '<p class="empty" style="margin:12px">No dips match.</p>';
   skyTimeline();
 }
-function skyTimeline(box = $('#skytimeline'), capEl = $('#skytlcap')){
+function skyTimeline(box = $('#skytimeline'), capEl = $('#skytlcap'), read = $('#skytlread')){
   if (!box) return;
   const subs = D.hero.subjects; if (!subs.length){ box.innerHTML = '<p class="empty">No light curve is stored.</p>'; return; }
   const a = subs[0].start, b = subs[subs.length - 1].end, W = 1000, H = 84;
@@ -2248,6 +2252,12 @@ function skyTimeline(box = $('#skytimeline'), capEl = $('#skytlcap')){
   for (const d of DIPS){ const on = skyShown(d), x = X(d.t).toFixed(1); ticks += `<path d="M${x} 66 V82" stroke="${on ? STC[d.status] : 'var(--line-2)'}" stroke-width="${on ? 2.5 : 1.5}" stroke-linecap="round"><title>${esc(d.time_unit)} ${tval(d.t)} · ${esc(d.status_label)}</title></path>`; }
   capEl.innerHTML = `<span>${esc(D.hero.time_unit)} ${fmt(a, 1)}</span><span>Stored brightness over the run, ${D.hero.n_points.toLocaleString('en-GB')} points; ticks: the dips shown above</span><span>${fmt(b, 1)}</span>`;
   box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Light curve of run ${esc(D.run.name)}: ${D.hero.n_points} stored points from ${esc(D.hero.time_unit)} ${fmt(a, 1)} to ${fmt(b, 1)}, with ${DIPS.filter(skyShown).length} of ${DIPS.length} dips ticked."><path d="${pts}" stroke="var(--ink)" stroke-width="1.1" stroke-linecap="round" opacity=".45"/>${ticks}</svg>`;
+  // S06: the curve answers on hover and on the arrow keys, one stored point at a time (every 4th, for the keys).
+  const xs = [], ys = [];
+  if (read && window.SetuUI && SetuUI.crosshair){
+    subs.forEach(s => s.t.forEach((t, i) => { if (i % 4 === 0){ xs.push(t); ys.push(s.ppm[i]); } }));
+    SetuUI.crosshair(box.querySelector('svg'), {x0: a, x1: b, xs, readout: read, fmt: i => `${D.hero.time_unit} ${fmt(xs[i], 2)} · ${ys[i] < 0 ? '−' : '+'}${fmt(Math.abs(ys[i]), 0)} ppm`});
+  }
 }
 // Zoom from the run star's marker into its system view (a magnifier; an illustration of scale).
 function skyZoom(name, back){
@@ -2909,53 +2919,56 @@ def _leaderboard(lb: dict | None) -> str:
 
 
 def _sky(data: dict) -> str:
+    """The Explore page: the sky by discovery year (V04, every catalogue planet) as the base layer, with the survey
+    coverage layers, the ecliptic and the run star's pin over it in the same frame; the run's dips beside it; the
+    coverage chips; the planets per year (V12); and the run's light curve."""
+    from setuhq.viz import skyyears, timeline
+
     e = html.escape
     st, geo, h = data["story"], data["sky_geo"], data["hero"]
     star = st["star"]
-    pin = ""
+    pin = marker = ""
     if geo.get("x") is not None:
-        bl = (geo["x"] + 460) / 920 * 100 + 3
-        bt = (geo["y"] + 235) / 470 * 100 - 34
         lead = st.get("lead_dip")
         known = f"{e(st['planet'])} · known planet" if st.get("planet") else f"{len(st['dips'])} dips · {UNCONFIRMED}"
-        pin = (f'<a class="skypin" href="#/transit?dip={e(lead or "")}" style="left:{bl:.1f}%;top:{bt:.1f}%" '
+        pin = (f'<a class="skypin" href="#/transit?dip={e(lead or "")}" style="left:{(geo["x"] + 460) / 920 * 100:.1f}%;top:{(geo["y"] + 235) / 470 * 100:.1f}%" '
                f'title="{e(star["name"])} placed from SIMBAD (ICRS J2000): RA {star["ra_deg"]:.2f}°, Dec {star["dec_deg"]:.2f}°">'
                f'<b>{e(star["name"])}</b><span>{known}</span><em>Open ›</em></a>')
         zoom = f' data-zoom="{e(st["planet"])}"' if st.get("planet") else ""
         marker = (f'<g class="skymark"{zoom}><circle class="pulse" cx="{geo["x"]}" cy="{geo["y"]}" r="22" fill="url(#pmg)"/>'
                   f'<circle cx="{geo["x"]}" cy="{geo["y"]}" r="10" fill="none" stroke="#64D2FF" stroke-width=".8"/>'
                   f'<circle class="skydot" cx="{geo["x"]}" cy="{geo["y"]}" r="3.2" fill="#FFFFFF"/></g>')
-        where = (f"{e(star['name'])} at RA {star['ra_deg']:.2f}°, Dec {star['dec_deg']:.2f}° ({e(star['source'])})")
+        where = f"{e(star['name'])} at RA {star['ra_deg']:.2f}°, Dec {star['dec_deg']:.2f}° ({e(star['source'])})"
     else:
-        marker, where = "", "The target's sky position is not stored, so it is not plotted."
+        where = "The target's sky position is not stored, so it is not plotted"
     placed = f'{e(star["name"])} placed from SIMBAD (ICRS J2000) · ' if geo.get("x") is not None else "target not plotted (no position stored) · "
-    # The canonical pages for the run's star and its known planet.
+    overlay = (f'<svg class="skyover" viewBox="-460 -235 920 470" role="img" aria-label="Survey coverage layers (hidden until chosen), the ecliptic, and the run\'s star: {where}.">'
+               f'<defs><radialGradient id="pmg"><stop offset="0" stop-color="#64D2FF" stop-opacity=".9"/><stop offset="1" stop-color="#64D2FF" stop-opacity="0"/></radialGradient></defs>'
+               f'{sky_layers_svg(data.get("coverage"))}{sky_layer_svg(data.get("sweep"))}'
+               f'<path d="{geo["ecl"]}" stroke="#FFB340" stroke-width=".9" fill="none" stroke-dasharray="2 6" opacity=".7"/>{marker}</svg>{pin}')
+    cat = data.get("catalogue")
+    src = skyyears.source_text(cat) if cat else ""
+    base = skyyears.html({"source": src, "app": data}, where="explore", overlay=overlay, uid="skyyears") if cat else ""
+    if not base:  # no catalogue in this build: the map is the frame, the layers and the pin
+        base = (f'<div class="stage skystage"><div class="skybox">{overlay}</div><span class="stage-tag">Real data, cited</span></div>')
+    tl = timeline.html({"source": src, "app": data}, where="explore", uid="timeline") if cat else ""
     links = "".join(obj_link(k, n, f"{n} ›") for k, n in (("star", star.get("name")), ("planet", st.get("planet"))) if n)
     if st.get("planet") and geo.get("x") is not None:
         links += (f'<button class="btn skyzoom" type="button" data-zoom="{e(st["planet"])}" hidden>'
                   f'Zoom into the {e(st["planet"])} system ›</button>')
     links = f'<div class="pllinks skylinks">{links}</div>' if links else ""
     t1, t2 = st["sky_title"]
+    tl_sec = (f'<section class="sktl" aria-labelledby="h-sktl"><h2 id="h-sktl" class="secth">Planets found each year, by method</h2>{tl}</section>' if tl else "")
     return f"""<header class="headrow">
         <div>{_eyebrow("Sky")}<h1 class="lead-h" id="h-sky" tabindex="-1">{e(t1)}<br><span class="grey">{e(t2)}</span></h1></div>
         <div class="chips" id="skychips" role="group" aria-label="Show dips by status"></div>
       </header>
       <p class="muted" style="margin:0;max-width:80ch">{e(h["lede"])} {e(h["qualifier"])} {e(h["archive"])}</p>
       <div class="row2">
-        <section class="space skymap" aria-labelledby="h-skymap">
+        <section class="skymap" aria-labelledby="h-skymap">
           <h2 id="h-skymap" class="sr">Sky map</h2>
-          <svg viewBox="-460 -235 920 470" role="img" aria-label="All-sky map (Mollweide). {where}. Field stars are decorative; the feed's stars are not plotted because their positions are not stored.">
-            <defs><radialGradient id="pmg"><stop offset="0" stop-color="#64D2FF" stop-opacity=".9"/><stop offset="1" stop-color="#64D2FF" stop-opacity="0"/></radialGradient></defs>
-            <ellipse rx="452" ry="226" fill="rgba(255,255,255,.015)" stroke="rgba(255,255,255,.14)" stroke-width=".8"/>
-            <path d="{geo['grat']}" stroke="rgba(255,255,255,.06)" stroke-width=".8" fill="none"/>
-            <path class="twinkle" d="{geo['stars']}" stroke="#E8EEFF" stroke-width="1.1" stroke-linecap="round"/>
-            {sky_layers_svg(data.get("coverage"))}
-            {sky_layer_svg(data.get("sweep"))}
-            <path d="{geo['ecl']}" stroke="#FFB340" stroke-width=".9" fill="none" stroke-dasharray="2 6" opacity=".7"/>
-            {marker}
-          </svg>
-          {pin}
-          <p class="skynote">Field stars decorative · feed stars not plotted (positions not stored) · {placed}dashed: the ecliptic</p>
+          {base}
+          <p class="skynote">Feed stars not plotted (positions not stored) · {placed}dashed: the ecliptic</p>
           {links}
         </section>
         <aside class="glass dipsbox" aria-labelledby="h-skydips">
@@ -2965,10 +2978,12 @@ def _sky(data: dict) -> str:
         </aside>
       </div>
       {_sky_coverage(data)}
+      {tl_sec}
       <section class="glass runline" aria-labelledby="h-skytl">
         <h2 id="h-skytl" class="sr">The run's light curve</h2>
         <div class="cap" id="skytlcap"></div>
         <div id="skytimeline"></div>
+        <p class="xread" id="skytlread" aria-live="polite"></p>
       </section>"""
 
 

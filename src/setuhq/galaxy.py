@@ -20,6 +20,7 @@ import json
 import math
 from pathlib import Path
 
+from setuhq.design import METHOD
 from setuhq.looks import CLASS_RULE, CLASSES, MJ_IN_ME, RJ_IN_RE, planet_class  # noqa: F401 (the size classes live in setuhq.looks)
 from setuhq.objects import obj_link
 
@@ -35,8 +36,8 @@ ICRS_TO_GAL = (
     (+0.4941094278755837, -0.4448296299600112, +0.7469822444972189),
     (-0.8676661490190047, -0.1980763734312015, +0.4559837761750669),
 )
-METHOD_COLOUR = {"transit": "#64D2FF", "rv": "#FF6961", "imaging": "#30D158", "microlensing": "#BF5AF2",
-                 "astrometry": "#FFD60A", "timing": "#7D7AFF", "other": "#A1A1A6"}
+# The method colours are the design system's (design.METHOD), dark values: the Galaxy is a stage in both themes.
+METHOD_COLOUR = {k: v[0] for k, v in METHOD.items()}
 PRESETS = [("near", "Solar neighbourhood"), ("kepler", "Kepler field"), ("galaxy", "Whole galaxy"), ("pimen", "pi Men")]
 DIST_STEPS = [0, 50, 100, 250, 500, 1000, 2500, 10000]  # light-years; 0 = every distance
 TICKS_LY = [250, 500, 1000, 2500, 10000, 25000]
@@ -319,7 +320,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
         <section class="gxcard glass" id="gxcard" aria-label="Selected system" hidden></section>
         <p class="gxmw" id="gxmw" hidden>Milky Way: artist's impression; Sun's position approximate (~{SUN_TO_GC_LY:,} ly from the centre)</p>
         <p class="gxfocusnote" id="gxfocusnote" role="status" hidden></p>
-        <p class="gxnogl" id="gxload" role="status" hidden>Loading the map of {c['kept']:,} planets…</p>
+        <div class="gxnogl gxskel" id="gxload" role="status" hidden><span class="skel"></span><span class="skel"></span><span class="skel"></span><p>Loading the map of {c['kept']:,} planets…</p></div>
         <p class="gxnogl" id="gxnogl" hidden>This browser did not start WebGL, so the 3D map cannot be drawn. The table below lists the nearest systems, and the CSV holds every plotted planet.</p>
         <div class="gxtourbar glass" id="gxtourbar" role="group" aria-label="Tour" hidden>
           <button class="btn" type="button" id="gxtprev" aria-label="Previous stop">‹</button>
@@ -389,34 +390,34 @@ GALAXY_CSS = r"""
 .gxstage{position:relative;height:min(76vh,780px);min-height:460px;background:#000;touch-action:none;user-select:none;-webkit-user-select:none}
 .gxstage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;outline:none}
 .gxstage canvas:active{cursor:grabbing}
-.gxstage canvas:focus-visible{box-shadow:inset 0 0 0 2px #0A84FF}
+.gxstage canvas:focus-visible{box-shadow:inset 0 0 0 2px var(--blue)}
 .gxleaders,.gxlayer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
 .gxleaders line{stroke:rgba(255,255,255,.42);stroke-width:1;stroke-dasharray:3 4}
-.gxlbl{position:absolute;left:0;top:0;font:500 11px/1 var(--mono);color:#A1A1A6;white-space:nowrap;will-change:transform}
+.gxlbl{position:absolute;left:0;top:0;font:500 11px/1 var(--mono);color:var(--stage-dim);white-space:nowrap;will-change:transform}
 .gxlbl.tick{color:#64D2FF}
 .gxlbl.tick::before{content:"";position:absolute;left:-3px;top:-3px;width:5px;height:5px;border-radius:50%;background:#64D2FF}
 .gxlbl.tick span{position:absolute;left:6px;top:4px}
 .gxlbl.axis{color:#64D2FF;font:600 12px/1 var(--sans)}
 .gxlbl.sun{color:#FFB340;font:600 12px/1 var(--sans)}
-.gxlbl.region{color:#F5F5F7;font:500 12px/1.3 var(--sans);background:rgba(28,28,30,.6);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:6px 9px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-.gxlbl.region small{display:block;color:#A1A1A6;font:500 11px/1.3 var(--mono)}
+.gxlbl.region{color:var(--stage-ink);font:500 12px/1.3 var(--sans);background:rgba(11,15,24,.6);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:6px 9px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.gxlbl.region small{display:block;color:var(--stage-dim);font:500 11px/1.3 var(--mono)}
 .gxring{position:absolute;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;border:1px solid rgba(255,255,255,.7);box-shadow:0 0 14px 3px rgba(100,210,255,.45),inset 0 0 8px rgba(100,210,255,.4)}
 .gxring.ex{border-color:#FFB340;box-shadow:0 0 14px 3px rgba(255,179,64,.5),inset 0 0 8px rgba(255,179,64,.4)}
-.gxcall{position:absolute;left:0;top:0;width:224px;padding:10px 12px;border-radius:14px;background:rgba(18,18,20,.72);border:1px solid rgba(255,255,255,.14);color:#F5F5F7;-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);pointer-events:auto;cursor:pointer;transition:opacity var(--d-1) var(--ease)}
+.gxcall{position:absolute;left:0;top:0;width:224px;padding:10px 12px;border-radius:14px;background:rgba(11,15,24,.72);border:1px solid rgba(255,255,255,.14);color:var(--stage-ink);-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);pointer-events:auto;cursor:pointer;transition:opacity var(--d-1) var(--ease)}
 .gxcall.ex{border-color:rgba(255,179,64,.55)}
 .gxcall.sel{border-color:#64D2FF}
 .gxcall b{display:flex;align-items:center;gap:7px;font:600 14px/1.25 var(--sans)}
 .gxcall b i{flex:none;width:8px;height:8px;border-radius:50%}
-.gxcall p{margin:3px 0 7px;font:400 12px/1.35 var(--sans);color:#C7C7CC}
+.gxcall p{margin:3px 0 7px;font:400 12px/1.35 var(--sans);color:var(--stage-dim)}
 .gxcall dl{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;margin:0;font:500 11px/1.45 var(--mono)}
-.gxcall dt{color:#8E8E93}
-.gxcall dd{margin:0;color:#F5F5F7}
+.gxcall dt{color:var(--stage-dim)}
+.gxcall dd{margin:0;color:var(--stage-ink)}
 .gxreticle{position:absolute;left:50%;top:50%;width:38px;height:38px;margin:-19px 0 0 -19px;pointer-events:none;opacity:.55}
 .gxreticle::before,.gxreticle::after{content:"";position:absolute;background:rgba(255,255,255,.75)}
 .gxreticle::before{left:18px;top:0;width:1px;height:38px;-webkit-mask:linear-gradient(#000 0 13px,transparent 13px 25px,#000 25px);mask:linear-gradient(#000 0 13px,transparent 13px 25px,#000 25px)}
 .gxreticle::after{top:18px;left:0;height:1px;width:38px;-webkit-mask:linear-gradient(90deg,#000 0 13px,transparent 13px 25px,#000 25px);mask:linear-gradient(90deg,#000 0 13px,transparent 13px 25px,#000 25px)}
 .gxaim{position:absolute;left:0;top:0;width:26px;height:26px;margin:-13px 0 0 -13px;pointer-events:none;border:1px solid #64D2FF;border-radius:4px;-webkit-mask:conic-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);clip-path:polygon(0 0,35% 0,35% 4%,65% 4%,65% 0,100% 0,100% 35%,96% 35%,96% 65%,100% 65%,100% 100%,65% 100%,65% 96%,35% 96%,35% 100%,0 100%,0 65%,4% 65%,4% 35%,0 35%)}
-.gxhud{position:absolute;pointer-events:none;color:#F5F5F7}
+.gxhud{position:absolute;pointer-events:none;color:var(--stage-ink)}
 .gxtr{right:14px;top:14px;display:grid;justify-items:end;gap:8px;max-width:270px}
 .gxradar{width:104px;height:104px;overflow:visible}
 .gxradar circle{fill:none}
@@ -430,7 +431,7 @@ GALAXY_CSS = r"""
 .gxradar .sun{fill:#FFB340}
 .gxradar .sweep{transform-origin:0 0;animation:gxsweep 4s linear infinite}
 @keyframes gxsweep{to{transform:rotate(360deg)}}
-.gxtel{margin:0;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);font:500 11px/1.5 var(--mono);color:#C7C7CC;white-space:pre;min-width:220px;max-width:270px;overflow:hidden;text-overflow:ellipsis}
+.gxtel{margin:0;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);font:500 11px/1.5 var(--mono);color:var(--stage-dim);white-space:pre;min-width:220px;max-width:270px;overflow:hidden;text-overflow:ellipsis}
 .gxtel b{color:#64D2FF;font-weight:600}
 .gxbl{left:14px;bottom:14px;display:flex;align-items:center;gap:10px}
 .gxorbit{width:40px;height:40px}
@@ -440,28 +441,34 @@ GALAXY_CSS = r"""
 .gxorbit .spin1{animation:gxspin 6s linear infinite}
 .gxorbit .spin2{animation:gxspin 14s linear infinite}
 @keyframes gxspin{to{transform:rotate(360deg)}}
-.gxcounter{margin:0;font:600 22px/1 var(--mono);letter-spacing:.02em;color:#F5F5F7}
+.gxcounter{margin:0;font:600 22px/1 var(--mono);letter-spacing:.02em;color:var(--stage-ink)}
 .gxcounter i{font-style:normal;color:#64D2FF;margin:0 4px}
-.gxcounter small{display:block;margin-top:4px;font:500 11px/1 var(--sans);color:#A1A1A6;letter-spacing:0}
-.gxtip{position:absolute;left:0;top:0;z-index:4;pointer-events:none;padding:8px 10px;border-radius:12px;font:500 12px/1.45 var(--sans);color:#F5F5F7;background:rgba(18,18,20,.85);border:1px solid rgba(255,255,255,.14);max-width:260px}
-.gxtip .mono{font-size:11px;color:#A1A1A6}
-.gxcard{position:absolute;left:14px;top:14px;z-index:5;width:min(320px,calc(100% - 28px));max-height:calc(100% - 120px);overflow:auto;padding:14px;border-radius:18px;background:rgba(18,18,20,.82);border:1px solid rgba(255,255,255,.14);color:#F5F5F7;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.gxcounter small{display:block;margin-top:4px;font:500 11px/1 var(--sans);color:var(--stage-dim);letter-spacing:0}
+.gxtip{position:absolute;left:0;top:0;z-index:4;pointer-events:none;padding:8px 10px;border-radius:12px;font:500 12px/1.45 var(--sans);color:var(--stage-ink);background:rgba(11,15,24,.85);border:1px solid rgba(255,255,255,.14);max-width:260px}
+.gxtip .mono{font-size:11px;color:var(--stage-dim)}
+.gxcard{position:absolute;left:14px;top:14px;z-index:5;width:min(320px,calc(100% - 28px));max-height:calc(100% - 120px);overflow:auto;padding:14px;border-radius:18px;background:rgba(11,15,24,.82);border:1px solid rgba(255,255,255,.14);color:var(--stage-ink);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
 .gxcard h3{margin:0 40px 2px 0;font:600 17px/1.25 var(--sans)}
-.gxcard .mono{font-size:12px;color:#A1A1A6}
+.gxcard .mono{font-size:12px;color:var(--stage-dim)}
 .gxcard ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px}
-.gxcard li button{all:unset;box-sizing:border-box;display:grid;gap:1px;width:100%;min-height:44px;padding:6px 10px;border-radius:10px;cursor:pointer;color:#F5F5F7;font:500 13px/1.3 var(--sans)}
-.gxcard li button span{font:500 11px/1.3 var(--mono);color:#A1A1A6}
+.gxcard li button{all:unset;box-sizing:border-box;display:grid;gap:1px;width:100%;min-height:44px;padding:6px 10px;border-radius:10px;cursor:pointer;color:var(--stage-ink);font:500 13px/1.3 var(--sans)}
+.gxcard li button span{font:500 11px/1.3 var(--mono);color:var(--stage-dim)}
 .gxcard li button:hover,.gxcard li button[aria-pressed="true"]{background:rgba(255,255,255,.08)}
-.gxcard li button:focus-visible{outline:2px solid #0A84FF}
+.gxcard li button:focus-visible{outline:2px solid var(--blue)}
 .gxcard .x{position:absolute;right:8px;top:8px;width:44px;height:44px;min-height:44px;padding:0;justify-content:center;border-radius:50%}
 .gxcard a{color:#64D2FF}
-.gxcard p{margin:8px 0 0;font-size:12px;color:#C7C7CC}
-.gxmw{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);margin:0;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);font:500 12px/1.3 var(--sans);color:#C7C7CC;text-align:center;max-width:calc(100% - 300px)}
-.gxnogl{position:absolute;inset:auto 20px 50% 20px;margin:0;text-align:center;color:#C7C7CC}
-.gxfocusnote{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;width:max-content;max-width:calc(100% - 28px);margin:0;padding:6px 6px 6px 14px;border-radius:16px;background:rgba(18,18,20,.9);border:1px solid rgba(255,255,255,.14);color:#F5F5F7;font-size:13px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.gxcard p{margin:8px 0 0;font-size:12px;color:var(--stage-dim)}
+.gxmw{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);margin:0;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);font:500 12px/1.3 var(--sans);color:var(--stage-dim);text-align:center;max-width:calc(100% - 300px)}
+.gxpic{position:relative;margin:8px 0 2px;border-radius:var(--r-s);overflow:hidden;background:#000}
+.gxpic canvas{display:block;width:100%;height:88px}
+.gxpictag{position:absolute;right:6px;top:6px;padding:2px 7px;border-radius:var(--r-xs);background:var(--stage-tag-bg);color:var(--stage-ink);font:500 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+.gxnogl{position:absolute;inset:auto 20px 50% 20px;margin:0;text-align:center;color:var(--stage-dim)}
+.gxskel{inset:auto max(20px,calc(50% - 180px)) 45% max(20px,calc(50% - 180px));padding:14px 16px;border-radius:var(--r-m);border:1px solid var(--stage-line);background:rgba(11,15,24,.7);--bg-3:#121826;--line-2:#262F44}
+.gxskel .skel:nth-child(2){width:80%}.gxskel .skel:nth-child(3){width:55%}
+.gxskel p{margin:10px 0 0;font-size:13px}
+.gxfocusnote{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;width:max-content;max-width:calc(100% - 28px);margin:0;padding:6px 6px 6px 14px;border-radius:16px;background:rgba(11,15,24,.9);border:1px solid rgba(255,255,255,.14);color:var(--stage-ink);font-size:13px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .gxfocusnote a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;color:#64D2FF}
 .gxfocusnote[hidden]{display:none}
-.gxtourbar{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:rgba(18,18,20,.82);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#F5F5F7}
+.gxtourbar{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:rgba(11,15,24,.82);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:var(--stage-ink)}
 .gxtourbar[hidden],.gxcard[hidden],.gxtip[hidden],.gxaim[hidden],.gxmw[hidden],.gxnogl[hidden]{display:none}
 .gxtourbar .btn{min-height:44px;min-width:44px;justify-content:center}
 .gxtourbar .mono{font-size:12px;padding:0 6px;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
@@ -471,7 +478,7 @@ GALAXY_CSS = r"""
 .gxsheet>summary .mono{font-weight:500;color:var(--ink-2);font-size:13px}
 .gxcontrols{display:grid;gap:12px;padding:0 16px 16px}
 .gxtime{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.gxtime input{flex:1 1 240px;min-width:0;min-height:44px;accent-color:#0A84FF}
+.gxtime input{flex:1 1 240px;min-width:0;min-height:44px;accent-color:var(--blue)}
 .gxtime output{font-size:14px;min-width:150px}
 .covchips .chip i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px}
 .covchips .chip[aria-pressed="false"] i{opacity:.4}
@@ -507,8 +514,8 @@ GALAXY_CSS = r"""
 .gxteaser{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;min-height:360px;background:#000}
 .gxtcanvas{width:100%;height:100%;min-height:360px;display:block}
 .gxtcopy{padding:28px 32px 28px 8px;display:grid;gap:10px;justify-items:start}
-.gxtcopy h2{margin:0;font:600 clamp(24px,3vw,34px)/1.1 var(--sans);letter-spacing:-.02em;color:#F5F5F7}
-.gxtcopy p{margin:0;color:#A1A1A6}
+.gxtcopy h2{margin:0;font:600 clamp(24px,3vw,34px)/1.1 var(--sans);letter-spacing:-.02em;color:var(--stage-ink)}
+.gxtcopy p{margin:0;color:var(--stage-dim)}
 .gxtcopy .small{font-size:12px}
 @media (max-width:699.98px){
   .gxstage{height:64vh;min-height:380px;border-radius:20px}
@@ -1173,9 +1180,27 @@ function gxSelect(h, planet){
     <p>${G.host_n[h]} planet${G.host_n[h] === 1 ? '' : 's'} in ${esc(G.source_short)}${G.host_n[h] > gx.per[h] ? `, ${gx.per[h]} shown by the filters` : ''}.</p>
     ${gxLinks(h)}<ul>${ps.map(i => `<li><button type="button" data-gxp="${i}" aria-pressed="${i === gx.selPlanet}">${esc(P.n[i])}<span>${P.y[i] || '—'} · ${esc(gxMethod(i))} · ${esc(gxClass(i))}</span></button>${typeof MX !== 'undefined' && MX && MX.examples[P.n[i]] ? `<button class="btn gxsys" type="button" data-gxsys="${esc(P.n[i])}">Open the system view ›</button>` : ''}</li>`).join('')}</ul>${exo}${lensNote}`;
   card.hidden = false;
+  gxPic(card);
   gxKick();
   // Mission Control's linked selection: the star picked here is selected in every pane and window.
   if (typeof mcBrush === 'function') mcBrush(H.n[h], 'galaxy');
+}
+// The selected system's sheet: the star in its blackbody colour and the selected planet as its look (SetuRender),
+// from the catalogue's row; the planet is an artist's impression, and the two are not to scale.
+function gxPic(card){
+  const P0 = gx.G.planets, name = gx.selPlanet >= 0 ? P0.n[gx.selPlanet] : null;
+  if (!name || !window.SetuRender || typeof ctLoad !== 'function' || !CTM) return;
+  ctLoad().then(() => {
+    const P = ct.P, i = P.name.indexOf(name); if (i < 0 || card.hidden || P0.n[gx.selPlanet] !== name) return;
+    const lk = SetuRender.look(ctRow(i)), teff = P.steff[i]; if (!teff && !lk.name) return;
+    let box = card.querySelector('.gxpic'); if (!box){ box = document.createElement('div'); box.className = 'gxpic'; card.querySelector('h3').after(box); }
+    const alt = `${teff ? `The star in its blackbody colour, ${Math.round(teff).toLocaleString('en-US')} K` : 'Star temperature not stored'}; ${name}: ${lk.name ? `an artist's impression, ${lk.composition}, ${lk.band || 'irradiation not computable'}` : 'no radius or mass stored, so no planet is drawn'}. Not to scale.`;
+    box.innerHTML = `<canvas role="img" aria-label="${esc(alt)}"></canvas><a class="gxpictag" href="/docs/pictures/">${lk.name ? "Artist's impression" : 'Model from stored values'}</a>`;
+    const cv = box.querySelector('canvas'), d = Math.min(2, devicePixelRatio || 1), w = cv.clientWidth || 288, h = 88;
+    cv.width = w * d; cv.height = h * d; const c = cv.getContext('2d'); c.scale(d, d); c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
+    if (teff) SetuRender.drawStar2D(c, 52, h / 2, 30, teff, 0, {flat: true, glow: 1.6});
+    if (lk.name) SetuRender.drawPlanet2D(c, w - 64, h / 2, 26, lk.name, true, {seed: SetuRender.fnv(P.slug[i]), neutral: lk.neutral, sync: true});
+  }).catch(() => {});
 }
 // Where a host is on screen (for the zoom lens into its system view), or null when it is behind the camera.
 function gxScreenPoint(h){
@@ -1529,20 +1554,36 @@ def coverage_gl(cov: dict | None) -> dict | None:
     }
 
 
-def _moll_path(pts, close=False) -> str:
+def dots_path(pts) -> str:
+    """Round dots (``h0`` with a round cap) at whole frame units, each after the first a relative move: a fraction of
+    the bytes of absolute coordinates, for the same picture at the map's size."""
+    out, px, py = [], None, None
+    for x, y in pts:
+        x, y = round(x), round(y)
+        out.append(f"M{x} {y}h0" if px is None else f"m{x - px} {y - py}h0")
+        px, py = x, y
+    return "".join(out)
+
+
+def rel_path(pts, close: bool = False) -> str:
+    """A Mollweide outline in tenths of a frame unit, with relative steps (a new subpath where it wraps the edge)."""
     from setuhq.story import mollweide
 
     out, last = [], None
     for ra, dec in pts:
-        x, y = mollweide(ra, dec)
-        out.append(("M" if last is None or abs(x - last[0]) > 300 else "L") + f"{x:.1f} {y:.1f}")
+        x, y = (round(v * 10) for v in mollweide(ra, dec))
+        if last is None or abs(x - last[0]) > 3000:
+            out.append(f"M{x / 10:g} {y / 10:g}")
+        else:
+            out.append(f"l{(x - last[0]) / 10:g} {(y - last[1]) / 10:g}")
         last = (x, y)
     s = "".join(out)
-    return s + ("Z" if close and "M" not in s[1:] else "")
+    return s + ("z" if close and "M" not in s[1:] else "")
 
 
 def sky_layers_svg(cov: dict | None) -> str:
-    """The coverage layers on the Sky section's Mollweide map, each a group the page shows or hides."""
+    """The coverage layers on the Sky section's Mollweide map, each a group the page shows or hides (one path per
+    layer and style, in compact relative coordinates: the layers are most of the sky map's page)."""
     if cov is None:
         return ""
     from setuhq.story import mollweide
@@ -1562,19 +1603,16 @@ def sky_layers_svg(cov: dict | None) -> str:
             buckets[1].append((x, y))
         elif i not in kep and i not in k2:
             unm.append((x, y))
-    dots = lambda pts: "".join(f"M{x:.1f} {y:.1f}h0" for x, y in pts)  # noqa: E731
-    tess = "".join(f'<path d="{dots(buckets[k])}" stroke="#0A84FF" stroke-opacity="{o}" stroke-width="17" stroke-linecap="round"/>'
-                   for k, o in ((1, .14), (3, .28), (13, .55)))
-    polys = lambda ps, c: "".join(f'<path d="{_moll_path(p, True)}" fill="{c}" fill-opacity=".35" stroke="{c}" stroke-width=".5"/>' for p in ps)  # noqa: E731
-    corot = "".join(f'<path d="{_moll_path(_ring(e["ra"], e["dec"], cov["corot"]["radius_deg"]))}" fill="none" stroke="{COV_COLOUR["corot"]}" stroke-width="1.2"/>'
-                    for e in cov["corot"]["eyes"])
-    bulge = f'<path d="{_moll_path(_bulge_outline(cov["bulge"]))}" fill="{COV_COLOUR["bulge"]}" fill-opacity=".18" stroke="{COV_COLOUR["bulge"]}" stroke-dasharray="3 3" stroke-width="1"/>'
-    return (f'<g class="covl" data-layer="tess" style="display:none">{tess}</g>'
+    tess = "".join(f'<path d="{dots_path(buckets[k])}" stroke-opacity="{o}"/>' for k, o in ((1, .14), (3, .28), (13, .55)))
+    polys = lambda ps, c: f'<path d="{"".join(rel_path(p, True) for p in ps)}" fill="{c}" fill-opacity=".35" stroke="{c}" stroke-width=".5"/>'  # noqa: E731
+    corot = f'<path d="{"".join(rel_path(_ring(e["ra"], e["dec"], cov["corot"]["radius_deg"])) for e in cov["corot"]["eyes"])}" fill="none" stroke="{COV_COLOUR["corot"]}" stroke-width="1.2"/>'
+    bulge = f'<path d="{rel_path(_bulge_outline(cov["bulge"]))}" fill="{COV_COLOUR["bulge"]}" fill-opacity=".18" stroke="{COV_COLOUR["bulge"]}" stroke-dasharray="3 3" stroke-width="1"/>'
+    return (f'<g class="covl" data-layer="tess" style="display:none" stroke="{COV_COLOUR["tess"]}" stroke-width="17" stroke-linecap="round">{tess}</g>'
             f'<g class="covl" data-layer="kepler" style="display:none">{polys(modules(cov["kepler"]["channels"]), COV_COLOUR["kepler"])}</g>'
             f'<g class="covl" data-layer="k2" style="display:none">{polys([p for c in cov["k2"] for p in modules(c["channels"])], COV_COLOUR["k2"])}</g>'
             f'<g class="covl" data-layer="corot" style="display:none">{corot}</g>'
             f'<g class="covl" data-layer="bulge" style="display:none">{bulge}</g>'
-            f'<g class="covl" data-layer="unmapped" style="display:none"><path d="{dots(unm)}" stroke="{COV_COLOUR["unmapped"]}" stroke-opacity=".55" stroke-width="17" stroke-linecap="round"/></g>')
+            f'<g class="covl" data-layer="unmapped" style="display:none"><path d="{dots_path(unm)}" stroke="{COV_COLOUR["unmapped"]}" stroke-opacity=".55" stroke-width="17" stroke-linecap="round"/></g>')
 
 
 def coverage_chips(cov: dict | None, scope: str) -> str:

@@ -14,20 +14,35 @@ header and footer (assets/chrome-*.html) and draw the full planet or star page. 
 ``assets/stub-template.html``, written by the site build. ``sitemap.xml`` becomes an index of the build's own
 ``sitemap-pages.xml`` and one sitemap each for the planets and the stars (each well under 50,000 addresses).
 
-Standard library only, so the deploy job needs no install.
+Each planet page also carries its portrait in the template's ``{{PORTRAIT}}`` slot: the still of its look (an
+artist's impression chosen by setuhq.looks from the measured radius or mass and the irradiation) with alt text that
+gives the look and its numbers, and the ``data-render`` parameters the renderer upgrades it with. A planet with neither
+radius nor mass gets a line saying no planet is drawn. Each star page carries a static disc in its blackbody colour.
+Every page stays at most 4,096 bytes.
+
+Standard library only (setuhq.looks is too), so the deploy job needs no install.
 """
 
 from __future__ import annotations
 
 import html
 import json
+import math
 import sys
 from pathlib import Path
+
+from setuhq import looks
 
 SITE_URL = "https://setuhq.com"
 TEMPLATE = "assets/stub-template.html"
 CATALOGUE = "assets/data/catalogue.json"
 SITEMAP_MAX = 50_000
+STUB_MAX = 4096
+PICTURES = "/docs/pictures/"
+# Claret (2017) quadratic limb darkening for TESS by Teff: the twin of setuhq.methods.CLARET_TESS (a test pins it).
+CLARET_TESS = [(3000, 0.1693, 0.5023), (3500, 0.1959, 0.4178), (4000, 0.3390, 0.2994), (4500, 0.5037, 0.1581),
+               (5500, 0.3862, 0.2061), (6000, 0.3345, 0.2282), (6500, 0.3079, 0.2295), (7000, 0.2847, 0.2310),
+               (8000, 0.2331, 0.2353), (10000, 0.1602, 0.2331)]
 
 
 def _fmt(v, d: int, unit: str) -> str | None:
@@ -60,6 +75,63 @@ def stored(P: dict, k: str, i: int, d: int, unit: str) -> str | None:
     return s
 
 
+def _ld(teff: float) -> tuple[float, float]:
+    rows = CLARET_TESS
+    if teff <= rows[0][0]:
+        return rows[0][1], rows[0][2]
+    if teff >= rows[-1][0]:
+        return rows[-1][1], rows[-1][2]
+    for (t0, a0, b0), (t1, a1, b1) in zip(rows, rows[1:]):
+        if t0 <= teff <= t1:
+            f = (teff - t0) / (t1 - t0)
+            return a0 + f * (a1 - a0), b0 + f * (b1 - b0)
+    return rows[-1][1], rows[-1][2]
+
+
+def star_svg(teff: float, r_px: float, *, uid: str, label: str | None = None) -> str:
+    """The twin of setuhq.renderer.star_svg (a test pins them equal): a disc in its blackbody colour with quadratic limb
+    darkening, as 11 radial-gradient stops."""
+    rgb, (u1, u2) = looks.teff_rgb(teff), _ld(teff)
+
+    def inten(r: float) -> float:
+        mu = math.sqrt(max(0.0, 1 - r * r))
+        return 1 - u1 * (1 - mu) - u2 * (1 - mu) ** 2
+    stops = "".join(f'<stop offset="{i / 10:g}" stop-color="#{"".join(f"{round(c * inten(min(i / 10, 0.999))):02x}" for c in rgb)}"/>'
+                    for i in range(11))
+    d = f"{2 * r_px:g}"
+    a11y = f'role="img" aria-label="{html.escape(label)}"' if label else 'aria-hidden="true"'
+    return (f'<svg class="stardisc" viewBox="0 0 {d} {d}" width="{d}" height="{d}" {a11y}><defs><radialGradient id="sd-{uid}">{stops}'
+            f'</radialGradient></defs><circle cx="{r_px:g}" cy="{r_px:g}" r="{r_px:g}" fill="url(#sd-{uid})"/></svg>')
+
+
+def stills_base(site: str | Path) -> str:
+    """The stills' folder on the site (assets/render/<hash>/, written by the build)."""
+    d = Path(site) / "assets" / "render"
+    sub = sorted(p.name for p in d.iterdir() if p.is_dir()) if d.is_dir() else []
+    return f"/assets/render/{sub[0]}/" if sub else ""
+
+
+def portrait(cat: dict, i: int, stills: str) -> str:
+    """The planet's portrait figure (the renderer's element contract): its look's 512 px still, the "Artist's
+    impression" tag linking to /docs/pictures/, the parameters, and a caption with the look and its numbers."""
+    P = cat["planets"]
+    row = {k: P[k][i] for k in ("radius", "mass", "msini", "a", "period", "srad", "smass", "steff", "teq") if k in P}
+    lk = looks.look(row)
+    if lk["name"] is None:
+        return '<p class="plnone">No radius or mass stored, so no planet is drawn.</p>'
+    e = html.escape
+    size = f"{lk['rp_re']:.2f} Earth radii" if lk["rp_re"] is not None else f"radius not measured, {lk['mp_me']:,.1f} Earth masses"
+    temp = f"Teq {lk['teq']:,.0f} K" if lk["teq"] is not None else "irradiation not computable"
+    alt = f"Artist's impression: {lk['composition']}, {lk['band'] or 'neutral colours'}, {size}, {temp}."
+    params = {"look": lk["name"], "seed": looks.seed(P["slug"][i]), "rp_re": lk["rp_re"], "teq": lk["teq"], "animate": False}
+    if lk["neutral"]:
+        params["neutral"] = True
+    cap = f"{e(size)}, {e(temp)} ({e(cat['source_short'])}); composition not measured."
+    return (f"<figure class=\"stage rfig stubfig\" data-render=\"planet\" data-params='{json.dumps(params, separators=(',', ':'))}' aria-labelledby=\"pcap\">"
+            f'<div class="rbox"><img class="rstill" src="{stills}{lk["name"]}-512.webp" width="512" height="512" alt="{e(alt)}"></div>'
+            f'<a class="stage-tag" href="{PICTURES}">Artist\'s impression</a><figcaption id="pcap" class="readout">{cap}</figcaption></figure>')
+
+
 def _page(tpl: str, **kw: str) -> str:
     kw.setdefault("PORTRAIT", "")  # the planet's portrait figure (the template's slot; empty until a page passes one)
     for k, v in kw.items():
@@ -67,7 +139,7 @@ def _page(tpl: str, **kw: str) -> str:
     return tpl
 
 
-def planet_page(tpl: str, cat: dict, i: int) -> tuple[str, str]:
+def planet_page(tpl: str, cat: dict, i: int, stills: str = "") -> tuple[str, str]:
     P, e = cat["planets"], html.escape
     name, star, year = P["name"][i], P["star"][i], P["year"][i]
     method = (P.get("method_raw") or P["method"])[i] or "a method not stored"
@@ -75,20 +147,25 @@ def planet_page(tpl: str, cat: dict, i: int) -> tuple[str, str]:
     facts += [x for x in (stored(P, "period", i, 3, "day orbit"), stored(P, "radius", i, 3, "Jupiter radii"),
                           stored(P, "dist", i, 1, "parsecs away")) if x]
     line = "; ".join(facts) + "."
-    desc = f"{name}, a planet {line} Stored parameters from {cat['source_short']}, drawn to scale. SetuHQ did not discover it."
+    # The description is the name and how it was found (the numbers are in the page's facts): the page stays small.
+    desc = f"{name}, a planet {'; '.join(facts[:2])}. Stored values from {cat['source_short']}; SetuHQ did not discover it."
     path = f"/planets/{P['slug'][i]}/"
     return path, _page(tpl, TITLE=e(f"{name} · Planets · SetuHQ"), DESC=e(desc), PATH=path, ROUTE="planet", H1=e(name),
-                       FACTS=e(line[0].upper() + line[1:]), NOSCRIPT=e(f"{name}: {line}"))
+                       FACTS=e(line[0].upper() + line[1:]), NOSCRIPT=e(f"{name}: the full page needs JavaScript."),
+                       PORTRAIT=portrait(cat, i, stills) if stills else "")
 
 
 def star_page(tpl: str, cat: dict, name: str, slug: str, idx: list[int]) -> tuple[str, str]:
     P, e = cat["planets"], html.escape
-    names = ", ".join(P["name"][i] for i in idx[:6]) + (f" and {len(idx) - 6} more" if len(idx) > 6 else "")
+    names = ", ".join(P["name"][i] for i in idx[:4]) + (f" and {len(idx) - 4} more" if len(idx) > 4 else "")
     line = f"{len(idx)} known planet{'s' if len(idx) != 1 else ''} in {cat['source_short']}: {names}."
     desc = f"{name}, a star with {line}"
     path = f"/stars/{slug}/"
+    teff = next((P["steff"][i] for i in idx if P["steff"][i]), None)
+    disc = (f'<p class="stubstar">{star_svg(teff, 48, uid="s")} Drawn in its blackbody colour: {teff:,.0f} K '
+            f'({e(cat["source_short"])}).</p>') if teff else ""
     return path, _page(tpl, TITLE=e(f"{name} · Stars · SetuHQ"), DESC=e(desc), PATH=path, ROUTE="star", H1=e(name),
-                       FACTS=e(line), NOSCRIPT=e(f"{name}: {line}"))
+                       FACTS=e(line), NOSCRIPT=e(f"{name}: the full page needs JavaScript."), PORTRAIT=disc)
 
 
 def _urlset(paths: list[str]) -> str:
@@ -114,8 +191,9 @@ def write_stubs(site: str | Path) -> dict:
         out[kind].append(path)
         sizes.append(len(text.encode()))
 
+    stills = stills_base(site)
     for i in range(len(P["name"])):
-        write(*planet_page(tpl, cat, i), "planets")
+        write(*planet_page(tpl, cat, i, stills), "planets")
     by_star: dict[str, list[int]] = {}
     for i, s in enumerate(P["star"]):
         if s:
