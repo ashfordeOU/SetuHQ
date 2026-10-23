@@ -20,13 +20,12 @@ import json
 import math
 from pathlib import Path
 
+from setuhq.looks import CLASS_RULE, CLASSES, MJ_IN_ME, RJ_IN_RE, planet_class  # noqa: F401 (the size classes live in setuhq.looks)
 from setuhq.objects import obj_link
 
 DEFAULT_MAP = "docs/results/exoplanet_map.json"
 DEFAULT_NOTABLE = "docs/results/notable_planets.json"
 LY_PER_PC = 3.261563777
-RJ_IN_RE = 11.209   # Jupiter's equatorial radius in Earth radii (71,492 km / 6,378 km)
-MJ_IN_ME = 317.83   # Jupiter's mass in Earth masses
 SUN_TO_GC_LY = 26000  # the Sun's distance from the Galactic centre, approximately, as the page states
 # The Kepler field: centre RA 19h22m40s, Dec +44°30′; a disc of 7° holds the whole field of view.
 KEPLER_FIELD = {"ra": 290.6667, "dec": 44.5, "radius_deg": 7.0}
@@ -38,12 +37,6 @@ ICRS_TO_GAL = (
 )
 METHOD_COLOUR = {"transit": "#64D2FF", "rv": "#FF6961", "imaging": "#30D158", "microlensing": "#BF5AF2",
                  "astrometry": "#FFD60A", "timing": "#7D7AFF", "other": "#A1A1A6"}
-CLASSES = ["Earth-size", "Super-Earth", "Sub-Neptune", "Neptune-like", "Gas giant"]
-CLASS_RULE = ("How we classify: by radius when exoplanet.eu gives one, in Earth radii (1 RJ = 11.21 R⊕): "
-              "Earth-size below 1.25, super-Earth 1.25–2, sub-Neptune 2–4, Neptune-like 4–10, gas giant 10 or more. "
-              "Without a radius, by mass (or m sin i, a minimum mass) in Earth masses (1 MJ = 317.8 M⊕): "
-              "Earth-size below 2, super-Earth 2–10, Neptune-like 10–50, gas giant 50 or more. "
-              "With neither, the class is shown as a dash.")
 PRESETS = [("near", "Solar neighbourhood"), ("kepler", "Kepler field"), ("galaxy", "Whole galaxy"), ("pimen", "pi Men")]
 DIST_STEPS = [0, 50, 100, 250, 500, 1000, 2500, 10000]  # light-years; 0 = every distance
 TICKS_LY = [250, 500, 1000, 2500, 10000, 25000]
@@ -70,20 +63,6 @@ def galactic_xyz(ra_deg: float, dec_deg: float, dist: float) -> tuple[float, flo
     centre, y toward l = 90°, z toward the north Galactic pole."""
     x, y, z = _rot(_unit(ra_deg, dec_deg))
     return x * dist, y * dist, z * dist
-
-
-def planet_class(radius_rj: float | None, mass_mj: float | None) -> int | None:
-    """Index into CLASSES by the rule in CLASS_RULE; None when neither radius nor mass is given."""
-    if radius_rj is not None and radius_rj > 0:
-        re = radius_rj * RJ_IN_RE
-        for i, cut in enumerate((1.25, 2.0, 4.0, 10.0)):
-            if re < cut:
-                return i
-        return 4
-    if mass_mj is not None and mass_mj > 0:
-        me = mass_mj * MJ_IN_ME
-        return 0 if me < 2 else 1 if me < 10 else 3 if me < 50 else 4
-    return None
 
 
 def load_map(path: str | Path | None = DEFAULT_MAP) -> dict | None:

@@ -192,38 +192,8 @@ def transit_probability(rstar_rsun: float, a_au: float) -> float:
     return rstar_rsun * R_SUN / (a_au * AU)
 
 
-# CIE 1931 colour-matching functions, multi-lobe Gaussian fit (Wyman, Sloan & Shirley 2013, JCGT 2(2), 1).
-def _g(x, mu, s1, s2):
-    t = (x - mu) / (s1 if x < mu else s2)
-    return math.exp(-0.5 * t * t)
-
-
-def cmf(lam_nm: float) -> tuple[float, float, float]:
-    x = 1.056 * _g(lam_nm, 599.8, 37.9, 31.0) + 0.362 * _g(lam_nm, 442.0, 16.0, 26.7) - 0.065 * _g(lam_nm, 501.1, 20.4, 26.2)
-    y = 0.821 * _g(lam_nm, 568.8, 46.9, 40.5) + 0.286 * _g(lam_nm, 530.9, 16.3, 31.1)
-    z = 1.217 * _g(lam_nm, 437.0, 11.8, 36.0) + 0.681 * _g(lam_nm, 459.0, 26.0, 13.8)
-    return x, y, z
-
-
-def teff_rgb(teff: float) -> tuple[int, int, int]:
-    """A blackbody's colour as sRGB (D65 white), normalised to its brightest channel: Planck spectrum ×
-    CIE 1931 colour matching, XYZ → linear sRGB, clipped at zero, gamma-encoded."""
-    X = Y = Z = 0.0
-    for lam in range(380, 781, 5):
-        l = lam * 1e-9
-        b = 1 / (l ** 5 * (math.exp(1.4387769e-2 / (l * teff)) - 1))
-        x, y, z = cmf(lam)
-        X, Y, Z = X + b * x, Y + b * y, Z + b * z
-    r = 3.2406 * X - 1.5372 * Y - 0.4986 * Z
-    g = -0.9689 * X + 1.8758 * Y + 0.0415 * Z
-    bl = 0.0557 * X - 0.2040 * Y + 1.0570 * Z
-    m = max(r, g, bl)
-    out = []
-    for c in (r, g, bl):
-        c = max(0.0, c / m)
-        c = 12.92 * c if c <= 0.0031308 else 1.055 * c ** (1 / 2.4) - 0.055
-        out.append(round(255 * min(1.0, c)))
-    return tuple(out)
+# Blackbody colour (Planck x CIE 1931, sRGB): setuhq.looks, re-exported here.
+from setuhq.looks import _g, cmf, teff_rgb  # noqa: E402,F401
 
 
 def spectral_class(teff: float) -> tuple[str, str]:

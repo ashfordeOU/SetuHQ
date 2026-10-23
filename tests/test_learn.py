@@ -48,7 +48,7 @@ def test_the_card_and_bar_are_in_the_shell_and_progress_is_guarded(built):
         assert "try {" in body and "catch (e)" in body, fn
     assert "on = learn.active && i >= 0" in js and "learnVisit(p);" in APP_JS
     # Only the app has it: the static landing page has no script to keep progress.
-    assert "learn_card() if with_view" in Path("src/setuhq/app.py").read_text()
+    assert "learn_card() if with_view" in Path("src/setuhq/home.py").read_text()  # the home page (setuhq.home)
 
 
 @pytest.mark.skipif(not HAVE_BROWSER, reason="node, Playwright or Chromium is not available")
