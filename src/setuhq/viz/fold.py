@@ -316,13 +316,13 @@ JS = r"""
       if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
       const c = cv.getContext('2d'); if (!c) return;
       font = font || getComputedStyle(document.body).getPropertyValue('--mono').trim() || 'monospace';
-      const e = ease(k), L = 46 * dpr, R = 12 * dpr, T = 16 * dpr, B = 30 * dpr, pw = w - L - R;
+      const e = ease(k), L = 46 * dpr, R = 12 * dpr, T = 30 * dpr, B = 30 * dpr, pw = w - L - R;
       const Y = v => T + (h - T - B) * (1 - (v - G.lo) / (G.hi - G.lo));
       c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
       c.font = `${11 * dpr}px ${font}`; c.lineWidth = dpr;
       for (let v = G.lo; v <= G.hi + 1e-9; v += G.step){ const y = Y(v); c.strokeStyle = 'rgba(255,255,255,.08)'; c.beginPath(); c.moveTo(L, y); c.lineTo(w - R, y); c.stroke();
         c.fillStyle = '#9AA3B5'; c.textAlign = 'right'; c.fillText((v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v), L - 6 * dpr, y + 4 * dpr); }
-      c.textAlign = 'left'; c.fillText('ppm', 4 * dpr, T - 4 * dpr);
+      c.textAlign = 'left'; c.fillText('ppm', 4 * dpr, 14 * dpr);
       c.textAlign = 'right'; c.fillText(e < .5 ? `BTJD ${F.span[0].toFixed(1)}–${F.span[1].toFixed(1)}, in time order` : `hours from mid-transit, folded on ${F.p.toFixed(4)} d`, w - R, h - 9 * dpr);
       c.fillStyle = e > .6 ? 'rgba(100,210,255,.75)' : 'rgba(236,239,245,.6)';
       const s = 2.2 * dpr;
