@@ -4618,6 +4618,7 @@ window.SetuPanelRing = (function(){
   }
   function html(d){
     const mode = d.mode || 'dip', uid = e(d.uid || 'pr');
+    if (!(d.reviewers || []).filter(r => !(d.probes_only && r.role === 'sentinel')).length && (mode !== 'dip' || !has(d.score))) return '';  // nothing stored: no ring
     const rs = (d.reviewers || []).filter(r => !(d.probes_only && r.role === 'sentinel'));
     const score = mode === 'dip' && has(d.score) ? d.score : null, circ = 2 * Math.PI * RING, lines = [], dots = [];
     layout(rs).forEach((r, i) => {
@@ -4668,8 +4669,21 @@ window.SetuPanelRing = (function(){
       io.observe(f);
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => mount(document)); else mount(document);
-  return {html, dipModel, mount, layout};
+  // A ring sent in its smallest form (setuhq.viz.panelring.summary) is drawn in full from the app's stored record.
+  function fill(root){
+    const A = window.D; if (!A) return;
+    (root || document).querySelectorAll('[data-pr-dip]').forEach(el => {
+      const d = [...((A.story || {}).dips || []), ...(A.showcase_dips || [])].find(x => x.id === el.dataset.prDip); if (!d) return;
+      const run = d.run || (A.run || {}).name, w = Object.fromEntries(((A.calibration || {}).points || []).map(p => [p.id, p.weight]));
+      const m = dipModel(d, {weights: w, provenance: A.reviewer_provenance, weights_path: A.weights_path, run, label: ((A.dips || {})[d.id] || {}).label || '',
+        probes_only: !!(((A.run_ctx || {})[run] || {}).probes_only)});
+      m.uid = el.dataset.prUid || m.uid;
+      const t = document.createElement('div'); t.innerHTML = html(m); if (t.firstElementChild) el.replaceWith(t.firstElementChild);
+    });
+  }
+  const init = () => { fill(document); mount(document); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  return {html, dipModel, mount, layout, fill};
 })();
 
 // ---------- V05 the fold (setuhq.viz.fold): pi Men's stored light curve, folded on the joint-fit period ----------

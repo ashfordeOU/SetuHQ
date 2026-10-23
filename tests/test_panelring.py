@@ -141,3 +141,14 @@ def test_the_page_script_draws_what_python_draws(data, tmp_path):
     out = json.loads(subprocess.run(["node", str(f)], capture_output=True, text=True, check=True).stdout)
     assert out["html"] == [P.html(m) for m in models]
     assert out["models"] == models[:-1]
+
+
+def test_nothing_stored_draws_nothing():
+    """No reviewers and no score: no ring at all, never an empty one labelled real data."""
+    assert P.html({"source": "x"}) == ""
+    assert P.html({"source": "x", "mode": "panel", "reviewers": []}) == ""
+    assert P.html({"source": "x", "reviewers": [], "score": None, "outcome": "flagged"}) == ""
+    one = P.html({"source": "x", "reviewers": [{"id": "a", "name": "A", "role": "probe", "marked": True, "weight": 0.5}], "score": 0.4})
+    assert "Real data, cited" in one and "1 of 1 marked it" in one
+    assert P.summary({"source": "x", "reviewers": [], "score": None}, "d") == ""
+    assert P.JS.count("return '';  // nothing stored: no ring") == 1

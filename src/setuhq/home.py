@@ -31,7 +31,7 @@ from setuhq.learn import learn_card
 from setuhq.names import ATTRIBUTION, PROBES_ONLY, panel_phrase
 from setuhq.renderer import PICTURES
 from setuhq.story import number_words
-from setuhq.viz import gallery, hero, tempstrip
+from setuhq.viz import gallery, hero, panelring, tempstrip
 
 # The bands, in page order (a test pins it); each key is also the band's id ("band-<key>").
 BANDS = ("hero", "gallery", "tempstrip", "lineup", "fold", "panel", "sky", "counters", "refcheck", "sweep", "dohere", "honest")
@@ -182,8 +182,12 @@ def _overview(data: dict, with_view: bool = True) -> str:
     lineup = _placed("lineup", data, _cat_source(data)) if data.get("catalogue") else ""
     fold = _placed("fold", data, "pi Men's stored light curve (runs/tess-pi-men-s1/subjects), folded on the joint-fit period in docs/results/pi_men_validation.json")
     run = data["run"]["name"]
-    ring = _placed("panelring", data, f"run {run}: the stored marks and the calibrated weights ({data.get('weights_path') or 'not stored'})",
-                   dip=st.get("lead_dip"), run=run)
+    # The lead dip's own panel, as its dip page draws it (setuhq.viz.panelring.for_dip): its stored marks, calibrated
+    # weights and stored score. No dip, or no stored record, leaves the band out; it never shows an empty ring.
+    lead_ring = panelring.for_dip(data, st["lead_dip"]) if st.get("lead_dip") else None
+    # In its smallest form (the page's budget is tight): the stored counts, score and status in words; the script
+    # draws the full ring from the same record.
+    ring = panelring.summary({**lead_ring, "uid": "home"}, st["lead_dip"]) if lead_ring else ""
     probes_only = ((data.get("run_ctx") or {}).get(run) or {}).get("probes_only")
     sky = (_placed("skyyears", data, _cat_source(data)) + _placed("timeline", data, _cat_source(data))) if data.get("catalogue") else ""
     bands = [

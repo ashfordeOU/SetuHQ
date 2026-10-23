@@ -78,10 +78,42 @@ def test_the_bands_come_in_the_order_of_the_design(data, monkeypatch):
 
 def test_a_band_whose_module_is_a_stub_is_left_out(data):
     page = _overview(data)
-    for band, name in (("lineup", "lineup"), ("fold", "fold"), ("panel", "panelring"), ("sky", "skyyears")):
+    for band, name in (("lineup", "lineup"), ("fold", "fold"), ("sky", "skyyears")):
         mod = __import__(f"setuhq.viz.{name}", fromlist=["html"])
         if mod.html({"source": "x", "app": data}, where="home") == "" and (name != "skyyears" or viz.timeline.html({"source": "x", "app": data}) == ""):
             assert f'id="band-{band}"' not in page
+    # The panel band is the lead dip's own ring; with no lead dip there is no band.
+    nolead = {**data, "story": {**data["story"], "lead_dip": None}}
+    assert 'id="band-panel"' not in _overview(nolead)
+
+
+# ---------------------------------------------------------------- who reviews (V06): the lead dip's stored panel
+
+
+def _ring_numbers(fragment: str) -> dict:
+    t = _text(fragment)
+    m = re.search(r"(\d+) of (\d+) marked it · panel score ([\d.]+|not stored), as stored", t)
+    body = re.search(r"<tbody>(.*?)</tbody>", fragment, re.S)
+    return {"marked": int(m.group(1)), "of": int(m.group(2)), "score": m.group(3),
+            "rows": len(re.findall(r"<tr>", body.group(1))) if body else 0, "label": "Real data, cited" in t}
+
+
+def test_the_home_ring_is_the_lead_dips_stored_panel(data):
+    from setuhq.viz import panelring
+
+    lead = data["story"]["lead_dip"]
+    band = re.search(r'<section class="band" id="band-panel".*?</section>', _overview(data), re.S).group(0)
+    dip_page = panelring.html(panelring.for_dip(data, lead))  # exactly what the dip's own page draws
+    home, page = _ring_numbers(band), _ring_numbers(dip_page)
+    d = next(x for x in data["story"]["dips"] if x["id"] == lead)
+    stored = sum(1 for ln in d["lanes"] if ln["counted"])
+    # The home page sends the ring in its smallest form (the script draws it in full from the same record).
+    assert f'data-pr-dip="{lead}"' in band and home["rows"] == 0
+    assert {k: home[k] for k in ("marked", "of", "score", "label")} == {k: page[k] for k in ("marked", "of", "score", "label")}
+    assert home["of"] == page["rows"] == len(data["story"]["reviewers"]) > 0
+    assert home["marked"] == stored > 0 and home["score"] != "not stored"
+    assert home["score"] == panelring._f2(d["score"]) and home["label"]
+    assert "0 of 0" not in _text(band) and "score not stored" not in _text(band)
 
 
 # ---------------------------------------------------------------- counters (V10)

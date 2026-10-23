@@ -111,6 +111,8 @@ def html(data: dict, **opts) -> str:
     uid = _e(data.get("uid") or "pr")
     rs = [r for r in data.get("reviewers") or [] if not (data.get("probes_only") and r.get("role") == "sentinel")]
     score = data.get("score") if mode == "dip" else None
+    if not rs and score is None:
+        return ""  # nothing stored to draw: never an empty ring labelled real data
     circ = 2 * math.pi * RING
     lines, dots = [], []
     for i, r in enumerate(layout(rs)):
@@ -186,6 +188,23 @@ def dip_model(dip: dict, *, weights: dict, provenance: dict | None = None, probe
                    "weight": weights.get(ln["id"]), "provider": provider})
     return {"source": source_line(run, weights_path), "mode": "dip", "reviewers": rs, "score": dip.get("score"),
             "outcome": dip.get("outcome"), "label": label, "probes_only": probes_only, "uid": dip.get("id") or "pr"}
+
+
+def summary(data: dict, dip_id: str) -> str:
+    """A dip's ring in its smallest form, for a page with a tight budget (the home page): the label, the stored
+    counts, score and status in words, and the source; the page's script draws the full ring in its place
+    (``SetuPanelRing.fill``) from the same stored record. "" when nothing is stored, as :func:`html`."""
+    require_source(data)
+    rs = [r for r in data.get("reviewers") or [] if not (data.get("probes_only") and r.get("role") == "sentinel")]
+    score = data.get("score")
+    if not rs and score is None:
+        return ""
+    cls, _, phrase = dip_state(data.get("outcome"))
+    k = sum(1 for r in rs if r.get("marked"))
+    return (f'<div class="panelring" data-panelring="dip" data-pr-dip="{_e(dip_id)}" data-pr-uid="{_e(data.get("uid") or "pr")}">'
+            f'<figure class="stage prfig"><span class="stage-tag">{LABEL}</span><p class="prverdict"><span>{k} of {len(rs)} marked it · panel score '
+            f'{"not stored" if score is None else _f2(score)}, as stored</span><strong class="prword {_e(cls)}" data-verdict="{_e(phrase)}">{_e(phrase)}</strong></p>'
+            f'<figcaption class="readout">Source: {_e(data["source"])}.</figcaption></figure></div>')
 
 
 def weights_of(app_data: dict) -> dict:
@@ -281,6 +300,7 @@ window.SetuPanelRing = (function(){
   }
   function html(d){
     const mode = d.mode || 'dip', uid = e(d.uid || 'pr');
+    if (!(d.reviewers || []).filter(r => !(d.probes_only && r.role === 'sentinel')).length && (mode !== 'dip' || !has(d.score))) return '';  // nothing stored: no ring
     const rs = (d.reviewers || []).filter(r => !(d.probes_only && r.role === 'sentinel'));
     const score = mode === 'dip' && has(d.score) ? d.score : null, circ = 2 * Math.PI * RING, lines = [], dots = [];
     layout(rs).forEach((r, i) => {
@@ -331,8 +351,21 @@ window.SetuPanelRing = (function(){
       io.observe(f);
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => mount(document)); else mount(document);
-  return {html, dipModel, mount, layout};
+  // A ring sent in its smallest form (setuhq.viz.panelring.summary) is drawn in full from the app's stored record.
+  function fill(root){
+    const A = window.D; if (!A) return;
+    (root || document).querySelectorAll('[data-pr-dip]').forEach(el => {
+      const d = [...((A.story || {}).dips || []), ...(A.showcase_dips || [])].find(x => x.id === el.dataset.prDip); if (!d) return;
+      const run = d.run || (A.run || {}).name, w = Object.fromEntries(((A.calibration || {}).points || []).map(p => [p.id, p.weight]));
+      const m = dipModel(d, {weights: w, provenance: A.reviewer_provenance, weights_path: A.weights_path, run, label: ((A.dips || {})[d.id] || {}).label || '',
+        probes_only: !!(((A.run_ctx || {})[run] || {}).probes_only)});
+      m.uid = el.dataset.prUid || m.uid;
+      const t = document.createElement('div'); t.innerHTML = html(m); if (t.firstElementChild) el.replaceWith(t.firstElementChild);
+    });
+  }
+  const init = () => { fill(document); mount(document); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  return {html, dipModel, mount, layout, fill};
 })();
 """
 JS = (JS.replace("__DIP_STATE__", json.dumps({k: list(v) for k, v in DIP_STATE.items()}), 1)
