@@ -1372,11 +1372,11 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         CP = cat["planets"]
         for i, nm in enumerate(CP["name"]):
             if CP["star"][i] == "Kepler-9" and CP["period"][i]:
-                rp, rs = CP["radius"][i], CP["srad"][i]
-                k9_rows.append({"name": nm, "period_d": CP["period"][i], "a_au": CP["a"][i], "radius_rj": rp,
-                                "k": rp * R_JUP / (rs * R_SUN) if rp and rs else None, "steff": CP["steff"][i], "srad": rs, "smass": CP["smass"][i]})
-    k9_orbits = _band("orbits", {"source": _cat_source(app), "app": app, "star": "Kepler-9", "planets": k9_rows},
-                      where="methods-timing") if k9_rows else ""
+                k9_rows.append({"name": nm, "slug": CP["slug"][i], "period": CP["period"][i], "a": CP["a"][i], "radius": CP["radius"][i],
+                                "srad": CP["srad"][i], "smass": CP["smass"][i], "steff": CP["steff"][i]})
+    k9_teff = next((r["steff"] for r in k9_rows if r["steff"]), None)
+    k9_orbits = _band("orbits", {"source": _cat_source(app), "app": app, "star": "Kepler-9", "teff": k9_teff, "planets": k9_rows},
+                      where="methods-timing", uid="mx-k9") if k9_rows else ""
     ch["timing"] = f"""
       <p class="mxlede">A transit is one moment in an orbit. The rest of the orbit carries information too: when transits arrive, how the planet glows as it turns, when it slips behind its star, and which half of the spinning star it covers.</p>
       {_stage("timing", LABEL_ILL, "Four scenes. Transit timing: two planets near a 2:1 period ratio tug each other, so the inner planet's transits arrive early and late and an O−C diagram builds up. Secondary eclipse: the planet slips behind its star half an orbit after transit, a much smaller dip, drawn ten times deeper. Phase curve: a tidally locked planet shows more of its hot day side towards occultation, with its peak shifted by winds. Rossiter–McLaughlin: the planet covers the approaching and then the receding half of the rotating star, so the star's measured velocity swings during transit.",

@@ -258,7 +258,9 @@ const { chromium } = require(%s);
       await p.goto(%s + '#/methods?ch=' + ch); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(500);
       out.push(Object.assign({w, ch, errs: errs.slice()}, await p.evaluate(ch => {
         const art = document.querySelector('#mx-' + ch), vw = document.documentElement.clientWidth;
-        const lit = [...art.querySelectorAll('canvas')].map(cv => { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let n = 0; for (let i = 0; i < d.length; i += 4 * 97) if (d[i] + d[i + 1] + d[i + 2] > 60) n++; return n; });
+        // The chapter's own stages: the shared components it places (the sky by year, the timeline, the orbits) draw when
+        // they come on screen, and their own tests check them.
+        const lit = [...art.querySelectorAll('.mxstage canvas')].map(cv => { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let n = 0; for (let i = 0; i < d.length; i += 4 * 97) if (d[i] + d[i + 1] + d[i + 2] > 60) n++; return n; });
         const small = [...art.querySelectorAll('a,button,select,input,summary')].filter(e => { const r = e.getBoundingClientRect(); return r.width && (r.width < 44 || r.height < 44) && !e.closest('p,li,dd'); }).map(e => e.className || e.tagName);
         const wide = [...art.querySelectorAll('*')].filter(e => !e.closest('.tablewrap') && e.getBoundingClientRect().right > vw + 1).map(e => e.tagName + '.' + e.className);
         const shown = [...document.querySelectorAll('.mxch')].filter(a => getComputedStyle(a).display !== 'none').length;
@@ -279,7 +281,7 @@ const { chromium } = require(%s);
     for r in json.loads(res.stdout.strip().splitlines()[-1]):
         assert r["errs"] == [] and r["hidden"] is False and r["shown"] == 1, r  # one chapter at a time
         assert r["cut"] == [] and r["clash"] == [], r
-        assert all(n > 5 for n in r["lit"]), r  # every canvas drew something
+        assert all(n > 5 for n in r["lit"]), json.dumps(r)  # every canvas drew something
         assert r["wide"] == [], r
         if r["w"] == 390:
             assert r["small"] == [], r
