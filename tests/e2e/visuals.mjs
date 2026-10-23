@@ -3,7 +3,10 @@
 // The end-to-end test of the site's visual system (docs/SITE.md, "The visual system"), run by scripts/site_e2e.sh after
 // tests/e2e/run.mjs:
 //
-//   node tests/e2e/visuals.mjs --site site [--browser chromium|webkit] [--report visuals-report.json]
+//   node tests/e2e/visuals.mjs --site site [--browser chromium|webkit] [--report visuals-report.json] [--outputs DIR] [--only NAME]
+//
+// --outputs: the CLI outputs built by tests/e2e/build_outputs.py (scripts/site_e2e.sh builds them; without it
+// checks/outputs.mjs builds its own). --only: run one module of checks/ (e.g. --only outputs).
 //
 // It runs every module in tests/e2e/checks/ (each exports a default async function given the helpers below), in name
 // order: checks/system.mjs is the renderer, the motion budget, the honesty labels, the stages in light mode, layout
@@ -49,10 +52,11 @@ function watch(page) {
 const ready = (page) => page.waitForFunction(() => document.documentElement.dataset.ready === "1", null, { timeout: 20000 });
 const AXE = readFileSync(join(HERE, "vendor", "axe.min.js"), "utf8");
 const D = JSON.parse(readFileSync(join(SITE, "assets", "data", readdirSync(join(SITE, "assets", "data")).find((f) => /^app-.*\.json$/.test(f))), "utf8"));
-const helpers = { browser, BASE, SITE, BROWSER, D, check, setGroup, context, watch, ready, AXE,
+const helpers = { browser, BASE, SITE, BROWSER, D, check, setGroup, context, watch, ready, AXE, OUTPUTS: arg("outputs", ""),
   pages: JSON.parse(readFileSync(join(SITE, "assets", "pages.json"), "utf8")) };
+const ONLY = arg("only", "");
 
-for (const f of readdirSync(join(HERE, "checks")).filter((x) => x.endsWith(".mjs")).sort()) {
+for (const f of readdirSync(join(HERE, "checks")).filter((x) => x.endsWith(".mjs") && (!ONLY || x === ONLY + ".mjs")).sort()) {
   setGroup(f);
   try { await (await import(pathToFileURL(join(HERE, "checks", f)).href)).default(helpers); }
   catch (e) { check(false, `${f} ran to the end`, e.stack || e.message); }
