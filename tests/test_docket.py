@@ -543,3 +543,24 @@ def test_lane_labels_are_short_display_names():
     assert "fitLabel(t, sn.slice(0, sp), sn.slice(sp + 1), pl - 8)" in js
     assert "SEN = Sentinel (AI model, Claude by default; provider beside each name; not a person), PRB = Probe (deterministic matched-filter detector; not a person)" in js
     assert "reviewers: ${reviewerSummary(" in js and "Sentinel${cl === 1 ? '' : 's'}" in js
+
+
+def test_the_case_file_reads_the_site_tokens_and_prints_light(run_dir, tmp_path):
+    """The case file is on the site's tokens (design.DOCKET_ALIASES): the lanes in the Sentinels' and the Probes'
+    colours, the fit in blue, dark first and light on request or on a light device, light on white paper in print;
+    no paper colour of its own is left. It follows the theme a visitor chose on the site, and its head is the run's
+    star as a static disc when the run stores its temperature."""
+    from setuhq.design import DOCKET_ALIASES, PRINT_CSS, tokens_css
+    from setuhq.docket import DOCKET_CSS, star_head
+
+    assert DOCKET_CSS.startswith(tokens_css(":root", aliases=DOCKET_ALIASES) + PRINT_CSS)
+    own = DOCKET_CSS.replace(PRINT_CSS, "").replace(tokens_css(":root", aliases=DOCKET_ALIASES), "")
+    assert "#f7f6f2" not in own and "#fbfaf7" not in own and "#121317" not in own
+    for k, v in (("l-det", "prb"), ("l-cl1", "sen"), ("fit", "blue"), ("paper", "bg")):
+        assert f"--{k}:var(--{v})" in DOCKET_CSS
+    assert '"Geist' not in own and "var(--sans)" in own and "var(--mono)" in own
+    page = build_docket(run_dir, tmp_path / "d", title="t").read_text()
+    assert '<html lang="en" data-theme="system">' in page and 'localStorage.getItem("setuhq-theme")' in page
+    assert star_head({}) == ""
+    head = star_head({"target": "TIC 1", "teff": 5772.0, "radius": 1.0, "source": "test"})
+    assert 'class="stardisc"' in head and "5,772 K" in head and "1.00 R☉" in head

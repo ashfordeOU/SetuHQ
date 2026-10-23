@@ -291,8 +291,9 @@ function docketURL(dip){ return ((D.docket_frames || {})[runOf(dip)] || D.docket
 const fullHref = dip => (RUNCTX(dip).case_file || '/candidates/case-file/') + (dip ? '#' + encodeURIComponent(dip) : '');
 function setFullHrefs(dip){ for (const a of $$('#fullpage, #topfull, #blockedlink')) a.href = fullHref(dip); }
 // Keep the shell URL and the full-page links on the dip (and section) the frame shows.
+function showDipStar(dip){ const run = runOf(dip); for (const s of $$('#route-candidates .dipstar')) s.hidden = s.dataset.run !== run; }
 function syncShellURL(){
-  setFullHrefs(frame.dip);
+  setFullHrefs(frame.dip); showDipStar(frame.dip);
   const pick = $('#dippick'); if (pick && frame.dip && pick.value !== frame.dip) pick.value = frame.dip;
   if (current !== 'candidates' || !frame.dip) return;
   const h = dipHref(frame.dip, frame.section);
@@ -394,6 +395,7 @@ function openDip(dip, section){
     if (frame.ready) readyStatus(); else frameStatus(f.dataset.loaded ? LOADING_TEXT : '');
   } else if (dip) frame.notice = '';
   if (!DOCKET_SECTIONS.includes(section)) section = null;
+  showDipStar(dip || frame.dip || leadDip());
   if (!f.dataset.loaded || (dip && frame.run && runOf(dip) !== frame.run)){ f.dataset.loaded = '1'; loadDocket(dip, section); setFullHrefs(dip); }
   else if (!frame.ready){ if (dip || section) frame.pending = {dip: dip || frame.dip, section}; setFullHrefs(dip || frame.dip); }
   else if (dip || section) tellFrame(dip, section);
@@ -586,6 +588,12 @@ function timeline(box){
   });
   for (const t of niceTicks(a, b, narrow ? 3 : 6)){ if (t < a || t > b) continue; el('line', {x1: X(t), x2: X(t), y1: H - pb, y2: H - pb + 4, stroke: 'var(--muted)'}, svg); tx(svg, X(t), H - pb + 16, String(t), 'middle'); }
   tx(svg, W - pr, H - 4, `mid-time (${unit})`, 'end');
+  // S06: a rule and a readout follow the pointer (or the arrow keys, with the chart focused) to the nearest entry.
+  if (window.SetuUI && SetuUI.crosshair){
+    const k = (b - a) / (W - pl - pr), sorted = f.slice().sort((p, q) => p.t_center - q.t_center);
+    SetuUI.crosshair(svg, {x0: a - pl * k, x1: b + pr * k, xs: sorted.map(x => x.t_center), readout: $('#tlread'),
+      fmt: i => { const x = sorted[i]; return `${unit} ${fmt(x.t_center, 3)} · TIC ${x.tic} · ${D.status_label[x.status] || x.status} · depth ${fmt(x.depth_ppm, 0)} ppm · ${D.unconfirmed}`; }});
+  }
 }
 let discWidth = -1;
 function renderDiscCharts(force){
@@ -601,13 +609,22 @@ function renderDiscCharts(force){
 function renderDiscoveries(){ renderDiscHead(); renderDiscChips(); renderDiscTable(); renderDiscCharts(true); }
 
 // ---------- planets ----------
+// The star (its TIC Teff, a static disc from the page's template; grey where no temperature is stored) and a black
+// silhouette disc at Rp/R* = sqrt(depth): what the dip would cast if it were a planet. Never planet art.
+let rrN = 0;
+function ratioDisc(star, k){
+  const t = $('#rrdiscs'), src = t && t.content.querySelector(`[data-star="${CSS.escape(star)}"]`), R = 20, rk = Math.max(0.6, k * R), id = 'rrd' + (rrN++);
+  const disc = src ? src.innerHTML.replace(/sd-(rr\d+)/g, `sd-$1-${id}`) : `<svg class="stardisc" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#5E6472"/></svg>`;
+  const teff = src ? Number(src.dataset.teff) : null;
+  return `<figure class="rrfig" role="img" aria-label="Silhouette at Rp/R★ ${fmt(k, 4)} = √depth, if it were a planet, on ${esc(star)}${teff ? ` in its blackbody colour, ${teff.toLocaleString('en-GB')} K` : ', whose temperature is not stored (drawn grey)'}"><span class="rrdisc" aria-hidden="true">${disc}<svg class="rrsil" viewBox="0 0 40 40" width="40" height="40"><circle cx="${(R + R * 0.18).toFixed(2)}" cy="20" r="${rk.toFixed(2)}" fill="#000"/></svg></span></figure>`;
+}
 function renderPlanets(){
   const cards = D.planets, MAX = D.ratio_scale_max;
   $('#planetcards').innerHTML = cards.length ? cards.map(s => {
     const rowHtml = e => `<div class="ratio">
       <div>${dipLink(e.id)} ${e.source === 'run' ? DIPTAG(e.outcome) : UNC}</div>
       <div class="muted" style="font-size:12px">${e.source === 'run' ? 'this run' : 'feed'} · ${esc(e.status)} · ${e.period_days ? 'P ' + fmt(e.period_days,3) + ' d' : 'no period'}${e.n_transits ? ' · ' + e.n_transits + ' transits' : ''}</div>
-      ${e.ratio === null ? '<div class="formula">No positive stored depth, so no ratio.</div>' : `<div class="formula">Rp/R* = √depth = √(${fmt(e.depth_ppm,1)} ppm × 10⁻⁶) = <b>${fmt(e.ratio,4)}</b></div>
+      ${e.ratio === null ? '<div class="formula">No positive stored depth, so no ratio.</div>' : `<div class="rrrow">${ratioDisc(s.star, e.ratio)}<div class="formula">Rp/R* = √depth = √(${fmt(e.depth_ppm,1)} ppm × 10⁻⁶) = <b>${fmt(e.ratio,4)}</b></div></div>
       <div class="scale" role="img" aria-label="Rp/R* ${fmt(e.ratio,4)} on a scale from 0 to ${fmt(MAX,2)}"><i style="width:${Math.min(100, e.ratio / MAX * 100).toFixed(2)}%"></i></div>
       <div class="scalecap" aria-hidden="true"><span>0</span><span>${e.ratio > MAX ? 'beyond ' : ''}${fmt(MAX,2)} max</span></div>`}
       ${e.archive_line ? `<div class="muted" style="font-size:12px">Archive comparison: ${esc(e.archive_line)}. ${esc(D.no_detection)}</div>` : ''}
@@ -871,6 +888,7 @@ $('#route-sky').addEventListener('click', e => {
 
 // ---------- Transit (the per-dip cockpit) ----------
 const txs = {dip: null, cmp: []};
+const PR_WEIGHTS = Object.fromEntries(((D.calibration || {}).points || []).map(p => [p.id, p.weight]));
 // The transit, played back with the shared system view: the star from the catalogue (blackbody colour from its
 // Teff, limb darkening), the planet crossing it, a limb-darkened model curve, and this dip's stored points and its
 // stored limb-darkened fit.
@@ -971,7 +989,12 @@ function renderTransit(){
   const row = $('#txchips'), chip = $('#txchips a[aria-current="true"]');
   if (row && chip) row.scrollLeft = chip.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2;
   txTheatre(d);
-  $('#txscore').innerHTML = `<div class="top"><span>Panel score (weighted share that marked it)</span><b>${fmt(d.score, 2)}</b></div><div class="bar" style="--c:${STC[d.status]}"><i style="width:${Math.round((d.score || 0) * 100)}%"></i></div><p>${esc(d.verdict)}</p>`;
+  // V06: who marked it, each by its calibrated weight, converging on the stored panel score (setuhq.viz.panelring).
+  const C = CTX(d);
+  $('#txscore').innerHTML = SetuPanelRing.html(SetuPanelRing.dipModel(d, {weights: PR_WEIGHTS, provenance: D.reviewer_provenance, weights_path: D.weights_path,
+    run: d.run || D.run.name, label: DIP_NAME(d.id) || '', probes_only: !!C.probes_only})) + `<p class="txverdict">${esc(d.verdict)}</p>`;
+  SetuPanelRing.mount($('#txscore'));
+  for (const f of $$('#route-transit .txinset')) f.hidden = f.dataset.run !== (d.run || D.run.name);
   $('#txlanes').innerHTML = lanesHTML(d);
   $('#txquote').innerHTML = quoteHTML(d);
   $('#txorbit').innerHTML = orbitHTML(d) + trayHTML();
@@ -4171,6 +4194,88 @@ function missionShown(on){
   const fig = $('#mcsys'); if (fig && fig._mx){ fig._mx.on = on; if (on) mxKick(fig._mx); }
   if (!on) document.body.classList.remove('mcpop');
 }
+
+// ---------- viz/panelring (V06): the markup of setuhq.viz.panelring.html, and a one-time convergence on screen ----------
+window.SetuPanelRing = (function(){
+  const W = 360, H = 240, CX = 180, CY = 120, RING = 46, COL = {left: 56, right: 304};
+  const STATE = {"passed": ["cand", "candidate", "candidate, unconfirmed"], "flagged": ["open", "flagged", "flagged for review, open"], "rejected": ["rej", "rejected", "rejected by vetting, not a candidate"]}, FEED = ['new_candidate', 'known_toi'], PROBES_ONLY = "Probes only; Sentinels not run on this example", ATTRIBUTION = "Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.";
+  const state = o => STATE[FEED.includes(o) ? 'passed' : (o || '')] || STATE.flagged;
+  const n = x => String(Math.floor(x * 10 + 0.5) / 10);
+  const e = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+  const wf = w => (w === null || w === undefined) ? 'not stored' : w.toFixed(2);
+  const cl = v => Math.max(0, Math.min(1, v));
+  const has = v => v !== null && v !== undefined;
+  function layout(rs){
+    const roles = new Set(rs.map(r => r.role)), sides = {left: [], right: []};
+    rs.forEach((r, i) => sides[roles.size > 1 ? (r.role === 'sentinel' ? 'left' : 'right') : (i % 2 === 0 ? 'right' : 'left')].push(r));
+    const out = [];
+    for (const side of ['left', 'right']){
+      const list = sides[side], k = list.length, step = Math.min(64, 190 / Math.max(k, 1));
+      list.forEach((r, i) => { const off = i - (k - 1) / 2;
+        out.push(Object.assign({}, r, {side, x: COL[side], y: CY + off * step, rad: 9 + 9 * cl(r.weight || 0), ty: CY + off * 10})); });
+    }
+    return out;
+  }
+  function aria(d, rs){
+    const panel = d.mode === 'panel', who = rs.map(r => `${r.name}, weight ${wf(r.weight)}` + (panel ? '' : (r.marked ? ', marked it' : ', no mark'))).join('; ');
+    if (panel) return `The panel: ${rs.length} reviewers, each with its calibrated weight: ${who}.`;
+    return `${d.label || 'This dip'}: ${rs.filter(r => r.marked).length} of ${rs.length} reviewers marked it (${who}). Panel score ${has(d.score) ? d.score.toFixed(2) : 'not stored'} as stored: ${state(d.outcome)[2]}.`;
+  }
+  function html(d){
+    const mode = d.mode || 'dip', uid = e(d.uid || 'pr');
+    const rs = (d.reviewers || []).filter(r => !(d.probes_only && r.role === 'sentinel'));
+    const score = mode === 'dip' && has(d.score) ? d.score : null, circ = 2 * Math.PI * RING, lines = [], dots = [];
+    layout(rs).forEach((r, i) => {
+      const left = r.side === 'left', x1 = r.x + (left ? r.rad : -r.rad), x2 = left ? CX - (RING + 8) : CX + (RING + 8), mx = (x1 + x2) / 2;
+      const on = mode === 'panel' || !!r.marked, cls = (r.role === 'sentinel' ? 'sen' : 'prb') + (on ? '' : ' off'), sw = 1 + 3 * cl(r.weight || 0);
+      lines.push(`<path class="prline ${cls}" d="M${n(x1)} ${n(r.y)}C${n(mx)} ${n(r.y)} ${n(mx)} ${n(r.ty)} ${n(x2)} ${n(r.ty)}" stroke-width="${n(sw)}" pathLength="100" style="transition-delay:${i * 60}ms"/>`);
+      const name = r.name || r.id, k = name.indexOf(' · '), head = k >= 0 ? name.slice(0, k) : name, tail = k >= 0 ? name.slice(k + 3) : '', ly = r.y + r.rad + 12;
+      dots.push(`<g class="prnode ${cls}"><circle cx="${n(r.x)}" cy="${n(r.y)}" r="${n(r.rad)}"/><text x="${n(r.x)}" y="${n(ly)}">${e(head)}</text><text x="${n(r.x)}" y="${n(ly + 12)}">${e(tail)}${tail ? ' · ' : ''}${wf(r.weight)}</text></g>`);
+    });
+    const track = `<circle class="prtrack" cx="${CX}" cy="${CY}" r="${RING}"/>`;
+    const ring = score !== null
+      ? `${track}<circle class="prring" cx="${CX}" cy="${CY}" r="${RING}" stroke-dasharray="${n(circ)}" style="--off:${n(circ * (1 - cl(score)))};--c:${n(circ)}" transform="rotate(-90 ${CX} ${CY})"/><text class="prnum" x="${CX}" y="${CY + 7}">${score.toFixed(2)}</text><text class="prsub" x="${CX}" y="${CY + 22}">panel score</text>`
+      : mode === 'dip' ? `${track}<text class="prsub" x="${CX}" y="${CY + 4}">score not stored</text>`
+      : `${track}<text class="prnum" x="${CX}" y="${CY + 7}">${rs.length}</text><text class="prsub" x="${CX}" y="${CY + 22}">reviewers</text>`;
+    let verdict = '', what = 'Every reviewer in the panel, sized by its calibrated weight; no dip is selected, so no score is drawn.';
+    if (mode === 'dip'){
+      const [c, , phrase] = state(d.outcome);
+      verdict = `<p class="prverdict"><span>${rs.filter(r => r.marked).length} of ${rs.length} marked it · panel score ${score !== null ? score.toFixed(2) : 'not stored'}, as stored</span><strong class="prword ${e(c)}" data-verdict="${e(phrase)}">${e(phrase)}</strong></p>`;
+      what = "Each reviewer's stored mark on this dip (a solid line: it marked the dip; dashed: no mark), each sized by its calibrated weight; the ring fills to the panel score as the run stored it.";
+    }
+    const note = (d.probes_only ? ` ${e(PROBES_ONLY)}.` : '') + (rs.some(r => r.role === 'sentinel') ? ` ${e(ATTRIBUTION)}` : '');
+    const rows = rs.map(r => `<tr><th scope="row">${e(r.name || r.id)} <span class="mono">${e(r.id)}</span></th><td>${r.role === 'sentinel' ? 'Sentinel' : 'Probe'}</td><td>${e(r.provider || '')}</td>` + (mode === 'panel' ? '' : `<td>${r.marked ? 'yes' : 'no'}</td>`) + `<td class="num">${wf(r.weight)}</td></tr>`).join('');
+    const head = '<tr><th scope="col">Reviewer</th><th scope="col">Role</th><th scope="col">Provider</th>' + (mode === 'panel' ? '' : '<th scope="col">Marked this dip</th>') + '<th scope="col" class="num">Calibrated weight</th></tr>';
+    return `<div class="panelring" data-panelring="${e(mode)}"><figure class="stage prfig" aria-labelledby="prcap-${uid}"><span class="stage-tag">Real data, cited</span><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${e(aria(Object.assign({}, d, {mode}), rs))}"><g class="prlines" aria-hidden="true">${lines.join('')}</g>${ring}<g class="prnodes">${dots.join('')}</g></svg>${verdict}<figcaption class="readout" id="prcap-${uid}">${what} Source: ${e(d.source)}.${note}</figcaption></figure><details class="prtable"><summary>The marks and weights as a table</summary><div class="tablewrap"><table><thead>${head}</thead><tbody>${rows}</tbody></table></div></details></div>`;
+  }
+  // The data for one dip, as setuhq.viz.panelring.dip_model builds it.
+  function dipModel(dip, o){
+    const prov = o.provenance || {}, w = o.weights || {}, rs = [];
+    for (const ln of dip.lanes || []){
+      if (ln.role !== 'sentinel' && ln.role !== 'probe') continue;
+      rs.push({id: ln.id, name: ln.name || ln.id, role: ln.role, marked: !!ln.counted, weight: has(w[ln.id]) ? w[ln.id] : null,
+        provider: ln.role === 'sentinel' ? ((prov[ln.id] || {}).provider_label || 'provider not recorded') : 'deterministic matched filter'});
+    }
+    return {source: `run ${o.run || 'as stored'}, its stored marks and panel score; calibrated weights from ${o.weights_path || 'no weights file'}`,
+      mode: 'dip', reviewers: rs, score: has(dip.score) ? dip.score : null, outcome: dip.outcome, label: o.label || '', probes_only: !!o.probes_only, uid: dip.id || 'pr'};
+  }
+  // Once, when it comes on screen: the lines draw in, the nodes fill and the ring fills to the score. Still under
+  // reduced motion (the markup is already at its final values).
+  let io = null;
+  function mount(root){
+    const figs = Array.from((root || document).querySelectorAll('.prfig:not([data-pr])'));
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window);
+    figs.forEach(f => {
+      f.dataset.pr = '1'; if (still) return;
+      f.classList.add('pr-pre');
+      io = io || new IntersectionObserver(es => es.forEach(en => { if (!en.isIntersecting) return; io.unobserve(en.target);
+        requestAnimationFrame(() => requestAnimationFrame(() => en.target.classList.remove('pr-pre'))); }), {rootMargin: '0px 0px -10% 0px'});
+      io.observe(f);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => mount(document)); else mount(document);
+  return {html, dipModel, mount, layout};
+})();
 // ---------- router ----------
 const RENDER = {overview: () => {}, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, variables: renderVariables, transit: renderTransit,
   explorer: () => { renderExplorer(); renderDiscoveries(); }, sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns,

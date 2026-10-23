@@ -599,17 +599,9 @@ FRAME_PHONE_CSS = ""
 # Also only in the shell's copy: the Docket in the shell's family dress (Kshana's Observatory tokens and
 # Geist type), so the framed page reads as part of the app. Same layout and rules; only colour and type change.
 DOCKET_FONTS = DOCKET_FONTS_CSS  # the standalone Docket's own (self-hosted) font stylesheet
-FRAME_THEME_CSS = (
-    # The shell's dark-first palette: black ground, near-white ink, system colours; a light variant on request.
-    ":root{--paper:#000;--ink:#F5F5F7;--rule:rgba(255,255,255,.14);--muted:#8E8E93;--fit:#0A84FF;--pass:#30D158;"
-    "--flag:#FFD60A;--reject:#FF453A;--panel:#1C1C1E;--sel:rgba(255,255,255,.08);--cons:#F5F5F7;color-scheme:dark}"
-    ":root[data-theme=\"light\"]{--paper:#F5F5F7;--ink:#1D1D1F;--rule:rgba(0,0,0,.14);--muted:#6E6E73;--fit:#0066CC;"
-    "--pass:#1F7A35;--flag:#8A6100;--reject:#C9001B;--panel:#FFFFFF;--sel:rgba(0,0,0,.06);--cons:#1D1D1F;color-scheme:light}"
-    "@media (prefers-color-scheme: light){:root[data-theme=\"system\"]{--paper:#F5F5F7;--ink:#1D1D1F;--rule:rgba(0,0,0,.14);"
-    "--muted:#6E6E73;--fit:#0066CC;--pass:#1F7A35;--flag:#8A6100;--reject:#C9001B;--panel:#FFFFFF;--sel:rgba(0,0,0,.06);"
-    "--cons:#1D1D1F;color-scheme:light}}"
-    "body{-webkit-font-smoothing:antialiased;letter-spacing:-.01em}"
-)
+# The case file itself now reads the site's tokens (design.tokens_css with DOCKET_ALIASES, in docket.DOCKET_CSS), so
+# the framed copy needs only the app's type finish on top; the bridge sets data-theme from the shell's theme.
+FRAME_THEME_CSS = "body{-webkit-font-smoothing:antialiased;letter-spacing:-.01em}"
 
 
 def with_frame_bridge(docket_html: str) -> str:
@@ -1094,14 +1086,17 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .dipchips a{flex:1 0 auto;display:flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 14px;border-radius:11px;color:var(--ink-2);font-size:13px;text-decoration:none;white-space:nowrap}
 .dipchips a i{width:6px;height:6px;border-radius:50%;background:var(--c)}
 .dipchips a[aria-current="true"]{background:var(--seg-bg);color:var(--seg-ink)}
-.theatre{flex:999 1 620px;padding:22px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(90% 90% at 30% 20%,#1A1206 0%,#000 65%)}
-.theatre .cap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:#8E8E93}
+.theatre{flex:999 1 620px;padding:22px;display:flex;flex-direction:column;gap:12px;border-radius:var(--r-l);background-image:radial-gradient(90% 90% at 30% 20%,#1A1206 0%,#000 65%)}
+.theatre .cap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font:var(--t-data);color:var(--stage-dim)}
 .theatre svg{display:block;width:100%;height:auto}
-.theatre .foot{font-size:12px;color:#8E8E93;line-height:1.5;margin:0}
-.axisrow{display:flex;justify-content:space-between;gap:8px;font:11px var(--mono);color:#8E8E93;margin-top:-6px}
+.theatre .foot{font-size:12px;color:var(--stage-dim);line-height:1.5;margin:0}
+.axisrow{display:flex;justify-content:space-between;gap:8px;font:11px var(--mono);color:var(--stage-dim);margin-top:-6px}
 .axisrow span:nth-child(2){text-align:center}
 .tx-side{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:14px}
-.scorecard{padding:18px 20px}
+.scorecard{padding:14px;display:grid;gap:12px}
+.scorecard .txverdict{margin:0;font-size:14px;line-height:1.5;color:var(--ink-2)}
+.txinset{min-width:0}
+.txinset[hidden]{display:none}
 .scorecard .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .scorecard .top span{font-size:13px;color:var(--ink-3)}
 .scorecard .top b{font-size:34px;font-weight:600;letter-spacing:-.03em}
@@ -1112,7 +1107,7 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .lanes .lane{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:center}
 .lanes .lane span{font-size:13px}
 .lanes .track{position:relative;height:8px;border-radius:4px;background:var(--panel-2)}
-.lanes .track i{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--c)}
+.lanes .track i{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--c);transition:width var(--d-3) var(--ease)}
 .lanes .track i.uncounted{background:transparent;border:1px dashed var(--c)}
 .lanes .track em{position:absolute;left:0;top:-5px;font-style:normal;font-size:11px;color:var(--ink-3)}
 .lanes .win{position:absolute;top:-4px;bottom:-4px;border-left:1px dashed var(--line-3);border-right:1px dashed var(--line-3)}
@@ -1137,16 +1132,25 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .txnotice{margin:0;font-size:14px;color:var(--yellow)}
 .txnotice[hidden]{display:none}
 .casefile{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13px;color:var(--ink-3)}
+@media (max-width:700px){.scorecard{padding:10px}.theatre{padding:16px}}
 /* Explorer */
+.rundiphead{display:flex;align-items:center;gap:14px;min-width:0}
+.rundiphead .stardisc{flex:none;width:56px;height:56px}
+.rundiplist li{content-visibility:auto;contain-intrinsic-size:auto 66px}
+#tlread{margin:4px 0 0;min-height:1.4em}
+/* the case file's header: the dip's star, beside the tools (desktop) and the dip picker (phone) */
+.dipstars{display:inline-flex;line-height:0}
+.dipstar[hidden]{display:none}
+.dipstar .stardisc{width:28px;height:28px}
 .scatterbox{flex:999 1 620px;padding:22px;background:radial-gradient(110% 110% at 50% 100%,#120A1E 0%,#000 60%)}
-.scatterbox .cap{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#8E8E93;margin-bottom:10px}
+.scatterbox .cap{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--stage-dim);margin-bottom:10px}
 .scatter{position:relative;width:100%;padding-bottom:52%}
 .scatter svg{position:absolute;inset:0;width:100%;height:100%}
-.scatter .ax{position:absolute;font-size:11px;color:#8E8E93}
+.scatter .ax{position:absolute;font:11px var(--mono);color:var(--stage-dim)}
 .scatter>button{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border:0;padding:0;background:transparent;border-radius:50%;cursor:pointer}
 .scatter>button i{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);border-radius:50%;background:var(--c);box-shadow:0 0 var(--g) var(--c)}
 .scatter>button[aria-pressed="true"] i{outline:2px solid #fff;outline-offset:2px}
-.scatterbox .foot{margin-top:28px;font-size:12px;color:#8E8E93}
+.scatterbox .foot{margin-top:28px;font-size:12px;color:var(--stage-dim)}
 .selpanel{flex:1 1 320px;max-width:400px;padding:22px;display:flex;flex-direction:column;gap:14px;border-radius:28px}
 .selpanel .st{margin:0;font-size:13px;font-weight:500;color:var(--c)}
 .selpanel h2{font-size:28px;font-weight:600;letter-spacing:-.03em}
@@ -1269,7 +1273,11 @@ svg.calplane .pt.cl{fill:var(--fit);fill-opacity:.85;stroke:var(--fit);stroke-wi
 /* planets */
 .ratio{display:grid;gap:5px;border-top:1px solid var(--line);padding-top:11px;margin-top:11px}
 .ratio .formula{font:12px var(--mono);overflow-wrap:anywhere}
-.scale{position:relative;height:8px;background:var(--bg-2);border-radius:999px;overflow:hidden}
+.scale{position:relative;height:8px;background:var(--bg-3);border-radius:999px;overflow:hidden}
+.rrrow{display:flex;align-items:center;gap:12px;min-width:0}
+.rrfig{margin:0;flex:none;padding:6px;border-radius:var(--r-s);background:var(--stage);line-height:0}
+.rrdisc{position:relative;display:block;width:40px;height:40px}
+.rrdisc svg{position:absolute;inset:0;width:40px;height:40px}
 .scale i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--cyan),color-mix(in oklab,var(--cyan) 60%,var(--lime)));border-radius:999px;min-width:3px}
 .scalecap{display:flex;justify-content:space-between;font:11px var(--mono);color:var(--ink-3)}
 .archive{margin-top:14px;border:1px dashed var(--line-2);border-radius:11px;padding:11px 12px;font-size:13px}
@@ -1683,8 +1691,9 @@ function docketURL(dip){ return ((D.docket_frames || {})[runOf(dip)] || D.docket
 const fullHref = dip => (RUNCTX(dip).case_file || '/candidates/case-file/') + (dip ? '#' + encodeURIComponent(dip) : '');
 function setFullHrefs(dip){ for (const a of $$('#fullpage, #topfull, #blockedlink')) a.href = fullHref(dip); }
 // Keep the shell URL and the full-page links on the dip (and section) the frame shows.
+function showDipStar(dip){ const run = runOf(dip); for (const s of $$('#route-candidates .dipstar')) s.hidden = s.dataset.run !== run; }
 function syncShellURL(){
-  setFullHrefs(frame.dip);
+  setFullHrefs(frame.dip); showDipStar(frame.dip);
   const pick = $('#dippick'); if (pick && frame.dip && pick.value !== frame.dip) pick.value = frame.dip;
   if (current !== 'candidates' || !frame.dip) return;
   const h = dipHref(frame.dip, frame.section);
@@ -1786,6 +1795,7 @@ function openDip(dip, section){
     if (frame.ready) readyStatus(); else frameStatus(f.dataset.loaded ? LOADING_TEXT : '');
   } else if (dip) frame.notice = '';
   if (!DOCKET_SECTIONS.includes(section)) section = null;
+  showDipStar(dip || frame.dip || leadDip());
   if (!f.dataset.loaded || (dip && frame.run && runOf(dip) !== frame.run)){ f.dataset.loaded = '1'; loadDocket(dip, section); setFullHrefs(dip); }
   else if (!frame.ready){ if (dip || section) frame.pending = {dip: dip || frame.dip, section}; setFullHrefs(dip || frame.dip); }
   else if (dip || section) tellFrame(dip, section);
@@ -1978,6 +1988,12 @@ function timeline(box){
   });
   for (const t of niceTicks(a, b, narrow ? 3 : 6)){ if (t < a || t > b) continue; el('line', {x1: X(t), x2: X(t), y1: H - pb, y2: H - pb + 4, stroke: 'var(--muted)'}, svg); tx(svg, X(t), H - pb + 16, String(t), 'middle'); }
   tx(svg, W - pr, H - 4, `mid-time (${unit})`, 'end');
+  // S06: a rule and a readout follow the pointer (or the arrow keys, with the chart focused) to the nearest entry.
+  if (window.SetuUI && SetuUI.crosshair){
+    const k = (b - a) / (W - pl - pr), sorted = f.slice().sort((p, q) => p.t_center - q.t_center);
+    SetuUI.crosshair(svg, {x0: a - pl * k, x1: b + pr * k, xs: sorted.map(x => x.t_center), readout: $('#tlread'),
+      fmt: i => { const x = sorted[i]; return `${unit} ${fmt(x.t_center, 3)} · TIC ${x.tic} · ${D.status_label[x.status] || x.status} · depth ${fmt(x.depth_ppm, 0)} ppm · ${D.unconfirmed}`; }});
+  }
 }
 let discWidth = -1;
 function renderDiscCharts(force){
@@ -1993,13 +2009,22 @@ function renderDiscCharts(force){
 function renderDiscoveries(){ renderDiscHead(); renderDiscChips(); renderDiscTable(); renderDiscCharts(true); }
 
 // ---------- planets ----------
+// The star (its TIC Teff, a static disc from the page's template; grey where no temperature is stored) and a black
+// silhouette disc at Rp/R* = sqrt(depth): what the dip would cast if it were a planet. Never planet art.
+let rrN = 0;
+function ratioDisc(star, k){
+  const t = $('#rrdiscs'), src = t && t.content.querySelector(`[data-star="${CSS.escape(star)}"]`), R = 20, rk = Math.max(0.6, k * R), id = 'rrd' + (rrN++);
+  const disc = src ? src.innerHTML.replace(/sd-(rr\d+)/g, `sd-$1-${id}`) : `<svg class="stardisc" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#5E6472"/></svg>`;
+  const teff = src ? Number(src.dataset.teff) : null;
+  return `<figure class="rrfig" role="img" aria-label="Silhouette at Rp/R★ ${fmt(k, 4)} = √depth, if it were a planet, on ${esc(star)}${teff ? ` in its blackbody colour, ${teff.toLocaleString('en-GB')} K` : ', whose temperature is not stored (drawn grey)'}"><span class="rrdisc" aria-hidden="true">${disc}<svg class="rrsil" viewBox="0 0 40 40" width="40" height="40"><circle cx="${(R + R * 0.18).toFixed(2)}" cy="20" r="${rk.toFixed(2)}" fill="#000"/></svg></span></figure>`;
+}
 function renderPlanets(){
   const cards = D.planets, MAX = D.ratio_scale_max;
   $('#planetcards').innerHTML = cards.length ? cards.map(s => {
     const rowHtml = e => `<div class="ratio">
       <div>${dipLink(e.id)} ${e.source === 'run' ? DIPTAG(e.outcome) : UNC}</div>
       <div class="muted" style="font-size:12px">${e.source === 'run' ? 'this run' : 'feed'} · ${esc(e.status)} · ${e.period_days ? 'P ' + fmt(e.period_days,3) + ' d' : 'no period'}${e.n_transits ? ' · ' + e.n_transits + ' transits' : ''}</div>
-      ${e.ratio === null ? '<div class="formula">No positive stored depth, so no ratio.</div>' : `<div class="formula">Rp/R* = √depth = √(${fmt(e.depth_ppm,1)} ppm × 10⁻⁶) = <b>${fmt(e.ratio,4)}</b></div>
+      ${e.ratio === null ? '<div class="formula">No positive stored depth, so no ratio.</div>' : `<div class="rrrow">${ratioDisc(s.star, e.ratio)}<div class="formula">Rp/R* = √depth = √(${fmt(e.depth_ppm,1)} ppm × 10⁻⁶) = <b>${fmt(e.ratio,4)}</b></div></div>
       <div class="scale" role="img" aria-label="Rp/R* ${fmt(e.ratio,4)} on a scale from 0 to ${fmt(MAX,2)}"><i style="width:${Math.min(100, e.ratio / MAX * 100).toFixed(2)}%"></i></div>
       <div class="scalecap" aria-hidden="true"><span>0</span><span>${e.ratio > MAX ? 'beyond ' : ''}${fmt(MAX,2)} max</span></div>`}
       ${e.archive_line ? `<div class="muted" style="font-size:12px">Archive comparison: ${esc(e.archive_line)}. ${esc(D.no_detection)}</div>` : ''}
@@ -2263,6 +2288,7 @@ $('#route-sky').addEventListener('click', e => {
 
 // ---------- Transit (the per-dip cockpit) ----------
 const txs = {dip: null, cmp: []};
+const PR_WEIGHTS = Object.fromEntries(((D.calibration || {}).points || []).map(p => [p.id, p.weight]));
 // The transit, played back with the shared system view: the star from the catalogue (blackbody colour from its
 // Teff, limb darkening), the planet crossing it, a limb-darkened model curve, and this dip's stored points and its
 // stored limb-darkened fit.
@@ -2363,7 +2389,12 @@ function renderTransit(){
   const row = $('#txchips'), chip = $('#txchips a[aria-current="true"]');
   if (row && chip) row.scrollLeft = chip.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2;
   txTheatre(d);
-  $('#txscore').innerHTML = `<div class="top"><span>Panel score (weighted share that marked it)</span><b>${fmt(d.score, 2)}</b></div><div class="bar" style="--c:${STC[d.status]}"><i style="width:${Math.round((d.score || 0) * 100)}%"></i></div><p>${esc(d.verdict)}</p>`;
+  // V06: who marked it, each by its calibrated weight, converging on the stored panel score (setuhq.viz.panelring).
+  const C = CTX(d);
+  $('#txscore').innerHTML = SetuPanelRing.html(SetuPanelRing.dipModel(d, {weights: PR_WEIGHTS, provenance: D.reviewer_provenance, weights_path: D.weights_path,
+    run: d.run || D.run.name, label: DIP_NAME(d.id) || '', probes_only: !!C.probes_only})) + `<p class="txverdict">${esc(d.verdict)}</p>`;
+  SetuPanelRing.mount($('#txscore'));
+  for (const f of $$('#route-transit .txinset')) f.hidden = f.dataset.run !== (d.run || D.run.name);
   $('#txlanes').innerHTML = lanesHTML(d);
   $('#txquote').innerHTML = quoteHTML(d);
   $('#txorbit').innerHTML = orbitHTML(d) + trayHTML();
@@ -2995,6 +3026,44 @@ def _sky_coverage(data: dict) -> str:
                if data.get("sweep") and data["sweep"].get("sky") else "") + '</section>')
 
 
+# The example kind (docs/results/showcase.json) whose dips get the system's orbits (V08) beside the playback.
+ORBIT_INSET_KIND = "Multi-planet system"
+
+
+def _system_rows(cat: dict | None, star: str) -> list[dict]:
+    """The catalogue planets of an example star (exoplanet.eu), with a period and a radius, as viz.orbits reads them."""
+    if not cat or not star:
+        return []
+    from setuhq.looks import row
+    P = cat["planets"]
+    out = []
+    for i, s in enumerate(P["star"]):
+        if (s or "").lower() == star.lower() and P["period"][i] and P["radius"][i]:
+            out.append({"name": P["name"][i], "slug": P["slug"][i], "k": (P.get("k") or [None] * len(P["name"]))[i], **row(cat, i)})
+    return sorted(out, key=lambda r: r["period"])
+
+
+def _orbit_insets(data: dict) -> str:
+    """V08 beside the dips of a multi-planet example (TOI-270): its catalogue planets' orbits and dips, one figure
+    per run, shown by the page for that run's dips. viz.orbits draws it; until it does, nothing is added."""
+    from setuhq.viz import orbits
+
+    cat = data.get("catalogue")
+    out = []
+    for c in data.get("showcase") or []:
+        if c.get("kind") != ORBIT_INSET_KIND:
+            continue
+        rows = _system_rows(cat, c["star"])
+        if len(rows) < 2:
+            continue
+        sp = ((data.get("run_ctx") or {}).get(c["run"]) or {}).get("star_params") or {}
+        h = orbits.html({"source": f'{(cat or {}).get("source_name", "the catalogue")}, fetched {str((cat or {}).get("fetched_at", ""))[:10]}',
+                         "star": c["star"], "teff": sp.get("teff"), "planets": rows, "inset": True, "uid": f'tx-{c["slug"]}'})
+        if h:
+            out.append(f'<div class="txinset" data-run="{html.escape(c["run"])}" hidden>{h}</div>')
+    return "".join(out)
+
+
 def _transit(data: dict) -> str:
     return f"""<header class="headrow">
         <div><p class="eyebrow" id="txkicker"></p><h1 class="lead-h" id="h-transit" tabindex="-1"></h1><p id="txsub"></p></div>
@@ -3016,10 +3085,23 @@ def _transit(data: dict) -> str:
         </aside>
       </div>
       <section class="row2" id="txorbit" aria-label="Orbit and compare"></section>
+      {_orbit_insets(data)}
       <p class="note" id="txcaveat" hidden></p>
       <p class="casefile" id="txcase"></p>
       <p class="small" id="txarchive"></p>
       <p class="small">Only a dip that passed vetting is a candidate, and it stays unconfirmed; a rejected dip is not one. Stored values only: the points, marks, scores, flags and words are as the run stored them.</p>"""
+
+
+def _star_disc(data: dict, run: str, r_px: float, uid: str, star: str) -> str:
+    """A run's star as a static disc in its blackbody colour (its TIC Teff, stellar.json), named for screen readers;
+    "" when the run stores no temperature."""
+    from setuhq.renderer import star_svg
+
+    sp = ((data.get("run_ctx") or {}).get(run) or {}).get("star_params") or {}
+    if not sp.get("teff"):
+        return ""
+    return star_svg(sp["teff"], r_px, uid=f"{uid}-{int(r_px)}",
+                    label=f'{star} in its blackbody colour, {sp["teff"]:,.0f} K ({sp.get("source") or "as the run stores it"})')
 
 
 def _explorer(data: dict) -> str:
@@ -3039,7 +3121,7 @@ def _explorer(data: dict) -> str:
                         f'<a class="rundipcf" href="#/candidates?dip={e(d["id"])}" aria-label="Case file for {e(d["label"])}">Case file ›</a></li>')
         hid = f'h-run-{e(c["slug"])}'
         groups.append(f"""<section class="card rundips" aria-labelledby="{hid}">
-        <h2 id="{hid}">{e(c["star"])}{f' · {e(c["kind"])}' if c["kind"] else ""}: {e(c["count"])}</h2>
+        <div class="rundiphead">{_star_disc(data, c["run"], 28, c["slug"], c["star"])}<h2 id="{hid}">{e(c["star"])}{f' · {e(c["kind"])}' if c["kind"] else ""}: {e(c["count"])}</h2></div>
         <p class="small">Run {e(c["run"])}, TESS sector{"s" if len(c["sectors"]) != 1 else ""} {e(", ".join(str(x) for x in c["sectors"]))}. {e(c["panel_label"])}.{f" {e(c['outcome_line'])}" if c["outcome_line"] else ""}{f" {e(c['caveat'])}" if c["caveat"] else ""}</p>
         <ul class="rundiplist">{"".join(rows)}</ul>
         <p class="small runlinks"><a href="{e(c["case_file"])}">The run's case file ›</a> <a href="{e(c["plates"])}">Plates ›</a> <a href="{e(c["report"])}">Run report ›</a></p>
@@ -3051,6 +3133,27 @@ def _explorer(data: dict) -> str:
       </header>
       {"".join(groups)}
       <p class="small"><a href="#/planets">Radius ratios by star ›</a> What each depth would imply, if it were a planet.</p>"""
+
+
+def _dip_stars(data: dict, prefix: str) -> str:
+    """Each example run's star disc for the case file's header; the page shows the one of the dip's run."""
+    discs = "".join(f'<span class="dipstar" data-run="{html.escape(c["run"])}" hidden>{_star_disc(data, c["run"], 14, prefix + "-" + c["slug"], c["star"])}</span>'
+                    for c in data.get("showcase") or [])
+    return f'<span class="dipstars">{discs}</span>'
+
+
+def _ratio_discs(data: dict) -> str:
+    """For the radius-ratio cards: each card's star as a static disc (TIC Teff), keyed by the card's star; the page
+    copies it beside each ratio with the silhouette at Rp/R★ = √depth."""
+    from setuhq.renderer import star_svg
+
+    teff = {ctx["star"].get("target"): (ctx.get("star_params") or {}).get("teff") for ctx in (data.get("run_ctx") or {}).values()}
+    out = []
+    for i, s in enumerate(data.get("planets") or []):
+        t = teff.get(s["star"])
+        if t:
+            out.append(f'<span data-star="{html.escape(s["star"])}" data-teff="{t:.0f}">{star_svg(t, 20, uid=f"rr{i}")}</span>')
+    return "".join(out)
 
 
 def _example_runs_table(data: dict) -> str:
@@ -3170,6 +3273,7 @@ def route_sections(data: dict) -> dict[str, str]:
         <h2 id="h-time">Timeline by star</h2>
         <div class="legend"><span><i class="k-new"></i>new candidate</span><span><i class="k-known"></i>period matches a known TOI</span><span>each dot: {unc}</span></div>
         <div id="timeline"></div>
+        <p class="xread" id="tlread" aria-live="polite"></p>
       </section>
       </section>"""
     out["sentinels"] = f"""{_sentinels(data)}
@@ -3203,8 +3307,8 @@ def route_sections(data: dict) -> dict[str, str]:
     out["variables"] = variables_section(data.get("sweep"), "").replace("</header>", "</header>" + overview_counter(data.get("sweep")).replace('<a class="btn" href="#/variables">Everything that dims ›</a>', ""), 1)
     out["candidates"] = f"""<header><h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The case file for the dip's run: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Each signal that passed vetting is a {unc}; a rejected or flagged one is named by its status.</p></header>
       {prov}
-      <div class="frametools"><a id="fullpage" href="/candidates/case-file/">Open full page</a><span class="muted">The case file on its own page, at the same dip.</span></div>
-      <div class="dippicker"><label for="dippick">Dip</label><select id="dippick" aria-describedby="dippickhint"></select><span class="sr" id="dippickhint">Every dip of every example run, grouped by star and numbered in time order, with its vetting outcome. A dip that passed vetting is a {unc}.</span></div>
+      <div class="frametools">{_dip_stars(data, "cft")}<a id="fullpage" href="/candidates/case-file/">Open full page</a><span class="muted">The case file on its own page, at the same dip.</span></div>
+      <div class="dippicker">{_dip_stars(data, "cfp")}<label for="dippick">Dip</label><select id="dippick" aria-describedby="dippickhint"></select><span class="sr" id="dippickhint">Every dip of every example run, grouped by star and numbered in time order, with its vetting outcome. A dip that passed vetting is a {unc}.</span></div>
       <p class="note" id="framestatus" role="status" hidden></p>
       <p class="note blocked" id="frameblocked" role="alert" hidden>The case file could not load in this view. <a id="blockedlink" href="/candidates/case-file/">Open it on its own page.</a></p>
       <iframe class="frame waiting" id="docketframe" title="Case file: signals, dips and vetting"></iframe>"""
@@ -3212,6 +3316,8 @@ def route_sections(data: dict) -> dict[str, str]:
       {prov}
       <p class="note"><b>Radius ratio only.</b> Rp/R* = √depth, with depth as a fraction (ppm × 10⁻⁶). This assumes a full, undiluted transit and ignores limb darkening. {html.escape(NO_STELLAR_RADIUS)} Each bar is a ratio scale from 0 to {data["ratio_scale_max"]:.2f}, the same on every card.</p>
       <p class="note">Published planets come from the stored archive cross-match, which covers {xm_targets}. The other stars have no stored cross-match, so their cards have no archive box. {nodet}</p>
+      <p class="note"><b>Silhouettes.</b> Beside each ratio, the star in its blackbody colour (its TIC temperature, where the run stores one; grey where none is stored) with a black disc at Rp/R★ = √depth: the silhouette at Rp/R★ = √depth, if it were a planet. These are not planets, so none is drawn as one.</p>
+      <template id="rrdiscs">{_ratio_discs(data)}</template>
       <div class="cards" id="planetcards"></div>"""
     out["leaderboard"] = _leaderboard(data.get("leaderboard"))
     out["runs"] = f"""<header><h1 class="lead-h" id="h-runs" tabindex="-1">Every search run, its errors as stored, and the configuration behind these pages.</h1><p>The search run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>

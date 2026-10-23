@@ -649,9 +649,11 @@ def forward_page(target: str, title: str, lead: str | None = None) -> str:
 # Server-rendered views that the app also draws: a dip, a planet, a star, a chapter
 # ---------------------------------------------------------------------------------------------------------
 
-def _dip_header(section: str, d: dict, label: str, caveat: str = "") -> tuple[str, str]:
+def _dip_header(section: str, d: dict, label: str, caveat: str = "", panel: dict | None = None) -> tuple[str, str]:
     """The Transit view with its header filled in for one dip, as the app draws it (the app redraws it, with the
-    playback). Returns the section and the heading's text: the dip's plain name, "pi Men, dip 2 (6.27 d)"."""
+    playback). ``panel`` is the dip's panel ring data (setuhq.viz.panelring.for_dip): the reviewers converging on
+    its stored score, readable without JavaScript. Returns the section and the heading's text: the dip's plain name,
+    "pi Men, dip 2 (6.27 d)"."""
     e = html.escape
     out = section.replace('<p class="eyebrow" id="txkicker"></p>', f'<p class="eyebrow" id="txkicker">{e(d["status_label"])}</p>', 1)
     out = out.replace('<h1 class="lead-h" id="h-transit" tabindex="-1"></h1>', f'<h1 class="lead-h" id="h-transit" tabindex="-1">{e(label)}</h1>', 1)
@@ -661,9 +663,14 @@ def _dip_header(section: str, d: dict, label: str, caveat: str = "") -> tuple[st
     if d.get("outcome") == "rejected":  # a rejected dip is not called a transit
         out = out.replace('<span id="txcapword">The transit, played back</span>', '<span id="txcapword">The dip, played back</span>', 1)
     out = out.replace('<p class="casefile" id="txcase"></p>', f'<p class="casefile" id="txcase"><a class="btn primary" href="{e(url_for("candidates", {"dip": d["id"]}))}">Open the full case file ›</a></p>', 1)
-    if d.get("verdict"):
+    ring = viz.panelring.html(panel) if panel else ""
+    verdict = f'<p class="txverdict">{e(d["verdict"])}</p>' if d.get("verdict") else ""
+    if ring or verdict:
         out = out.replace('<section class="glass scorecard" id="txscore" aria-label="Panel score and verdict"></section>',
-                          f'<section class="glass scorecard" id="txscore" aria-label="Panel score and verdict"><p>{e(d["verdict"])}</p></section>', 1)
+                          f'<section class="glass scorecard" id="txscore" aria-label="Panel score and verdict">{ring}{verdict}</section>', 1)
+    run = d.get("run") or ""
+    if run:  # a multi-planet example's dips show its orbits inset (V08); the others' stay hidden
+        out = out.replace(f'<div class="txinset" data-run="{e(run)}" hidden>', f'<div class="txinset" data-run="{e(run)}">', 1)
     return out, label
 
 
@@ -858,7 +865,7 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     target = hero.get("target") or "the run's star"
     for d in data["story"]["dips"] + data["showcase_dips"]:
         sec, h1 = _dip_header(sections["transit"], d, data["dips"][d["id"]]["label"],
-                              (data["showcase_meta"].get(d.get("run")) or {}).get("caveat", ""))
+                              (data["showcase_meta"].get(d.get("run")) or {}).get("caveat", ""), viz.panelring.for_dip(data, d["id"]))
         what = "dip" if d.get("outcome") == "rejected" else "transit"
         view("transit", _title("transit", h1), f"{h1}. The {what} played back from stored values, who on the panel marked it, and its vetting: {dip_state(d.get('outcome'))[2]}.",
              url_for("transit", {"dip": d["id"]}), body=sec, name=h1, params={"dip": d["id"]})
