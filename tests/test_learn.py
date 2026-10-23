@@ -129,15 +129,17 @@ const U = %s;
     p.on('pageerror', e => errs.push(e.message));
     const r = {w, errs};
     await p.goto(U + '#/overview'); await p.waitForFunction(() => document.documentElement.dataset.ready === '1', null, {timeout: 30000}).catch(() => {}); await p.waitForTimeout(600);
-    await p.focus('#learngo'); await p.keyboard.press('Enter'); await p.waitForTimeout(500);
+    // Each step waits for the state it changes, not a fixed time (a loaded machine is slower than 500 ms).
+    const until = (f, a) => p.waitForFunction(f, a, {timeout: 15000}).catch(() => {});
+    await p.focus('#learngo'); await p.keyboard.press('Enter'); await until(() => !document.querySelector('#learnbar').hidden);
     r.step1Prev = await p.evaluate(() => document.querySelector('#learnprev').hidden);
-    await p.focus('#learnnext'); await p.keyboard.press('Enter'); await p.waitForTimeout(500);
+    await p.focus('#learnnext'); await p.keyboard.press('Enter'); await until(() => location.pathname === '/how-it-works/transits/' && !document.querySelector('#learnprev').hidden);
     r.step2Prev = await p.evaluate(() => [document.querySelector('#learnprev').hidden, location.pathname]);
     // Back from step 2 to step 1 with the keyboard: Back disappears, focus goes to Next.
-    await p.focus('#learnprev'); await p.keyboard.press('Enter'); await p.waitForTimeout(500);
+    await p.focus('#learnprev'); await p.keyboard.press('Enter'); await until(() => location.pathname === '/how-it-works/' && document.querySelector('#learnprev').hidden);
     r.back = await p.evaluate(() => [location.pathname, document.activeElement.id, document.activeElement === document.body, document.querySelector('#learnprev').hidden]);
     // Leave with the keyboard: the bar goes, focus goes to the page's heading.
-    await p.focus('#learnleave'); await p.keyboard.press('Enter'); await p.waitForTimeout(300);
+    await p.focus('#learnleave'); await p.keyboard.press('Enter'); await until(() => document.querySelector('#learnbar').hidden);
     r.leave = await p.evaluate(() => [document.querySelector('#learnbar').hidden, document.activeElement === document.body, document.activeElement.tagName, document.activeElement.id]);
     out.push(r); await c.close();
   }
