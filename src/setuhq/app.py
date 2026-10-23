@@ -1187,7 +1187,7 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .widget.size-L{grid-column:1/-1}
 .widget>header{display:flex;justify-content:space-between;align-items:center;gap:6px 8px;flex-wrap:wrap}
 .widget>header h2{display:flex;align-items:center;gap:11px}
-.widget>header h2 .idx{font:500 11px/1 var(--display);color:var(--cyan)}
+.widget>header h2 .idx{font:500 11px/1 var(--mono);color:var(--cyan)}
 .wctl{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .wctl .btn{padding:2px 8px;min-height:30px;min-width:30px;font-size:12px;border-radius:8px}
 .seg{display:inline-flex}
@@ -1216,7 +1216,7 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .runlines>li{border-top:1px solid var(--line);padding:11px 0;font-size:13px;display:grid;gap:4px}
 .runlines>li:first-child{border-top:0}
 .runlines .line{display:flex;flex-wrap:wrap;gap:2px 14px;align-items:baseline}
-.runlines .err{color:var(--reject)}
+.runlines .err{color:var(--red)}
 .ratio summary{font-size:13px}
 /* tables: Kshana's table treatment, mono uppercase heads over hairlines */
 .tablewrap{overflow-x:auto;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
@@ -1246,26 +1246,26 @@ td small{display:block;color:var(--ink-3);font-size:11px}
 svg{display:block;width:100%;height:auto}
 svg text{font:11px var(--mono);fill:var(--ink-3)}
 svg .grid{stroke:var(--line)}
-svg .bar{fill:var(--fit)}
+svg .bar{fill:var(--blue)}
 svg .lbl{fill:var(--ink)}
 .legend{display:flex;flex-wrap:wrap;gap:4px 16px;font:500 11.5px/1.5 var(--mono);color:var(--ink-3)}
 .legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
-.legend .k-new{background:var(--fit)}
-.legend .k-known{border:2px solid var(--muted)}
-.legend .k-sim{border:2px solid var(--muted)}
-.legend .k-cl{background:var(--fit)}
+.legend .k-new{background:var(--blue)}
+.legend .k-known{border:2px solid var(--ink-3)}
+.legend .k-sim{border:2px solid var(--ink-3)}
+.legend .k-cl{background:var(--blue)}
 svg.calplane{margin:0 auto}
-svg.calplane .floor{fill:var(--sel)}
-svg.calplane .iso{stroke:var(--muted);stroke-dasharray:4 3}
-svg.calplane .floorline{stroke:var(--flag)}
-svg.calplane .isolbl{fill:var(--muted);font-size:11px}
-svg.calplane .floorlbl{fill:var(--flag)}
-svg.calplane .samplelbl{fill:var(--flag);font-weight:600}
-svg.calplane .pt.sim{fill:var(--panel);fill-opacity:.85;stroke:var(--muted);stroke-width:2}
+svg.calplane .floor{fill:var(--bg-3)}
+svg.calplane .iso{stroke:var(--ink-3);stroke-dasharray:4 3}
+svg.calplane .floorline{stroke:var(--yellow)}
+svg.calplane .isolbl{fill:var(--ink-3);font-size:11px}
+svg.calplane .floorlbl{fill:var(--yellow)}
+svg.calplane .samplelbl{fill:var(--yellow);font-weight:600}
+svg.calplane .pt.sim{fill:var(--panel);fill-opacity:.85;stroke:var(--ink-3);stroke-width:2}
 svg.calplane .lbl,svg.calplane .samplelbl,svg.calplane .isolbl{paint-order:stroke;stroke:var(--panel);stroke-width:7px;stroke-linejoin:round}
 #caltable th,#caltable td{white-space:nowrap}
 #caltable tbody th{font:400 13px var(--mono);text-transform:none;letter-spacing:0;color:var(--ink)}
-svg.calplane .pt.cl{fill:var(--fit);fill-opacity:.85;stroke:var(--fit);stroke-width:1.5}
+svg.calplane .pt.cl{fill:var(--blue);fill-opacity:.85;stroke:var(--blue);stroke-width:1.5}
 /* planets */
 .ratio{display:grid;gap:5px;border-top:1px solid var(--line);padding-top:11px;margin-top:11px}
 .ratio .formula{font:12px var(--mono);overflow-wrap:anywhere}
@@ -1279,6 +1279,16 @@ svg.calplane .pt.cl{fill:var(--fit);fill-opacity:.85;stroke:var(--fit);stroke-wi
 .idtag{font:400 11px var(--mono);color:var(--ink-3);margin-left:4px;text-transform:none;letter-spacing:0}
 details summary{cursor:pointer}
 /* panel, runs */
+.benchodo{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.benchodo li{display:grid;gap:4px;border-top:1px solid var(--line-2);padding-top:10px}
+.benchnum{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font:600 clamp(28px,3.2vw,40px)/1.05 var(--mono);letter-spacing:-.03em;color:var(--ink)}
+.benchnum .odoci{font:var(--t-data);letter-spacing:0;color:var(--ink-2)}
+.benchlbl{font-size:13px;color:var(--ink-3)}
+.runstar{display:flex;align-items:flex-start;gap:10px}
+.rundisc{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--stage)}
+.rundisc svg{width:32px;height:32px}
+.rundisc.none{border:1px dashed var(--line-3);background:none}
+.t-data{font:var(--t-data);font-variant-numeric:tabular-nums}
 .kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;font-size:13px;margin:11px 0 0}
 .kv dt{color:var(--ink-3)}
 .kv dd{margin:0;font-family:var(--mono);overflow-wrap:anywhere;min-width:0}
@@ -1424,6 +1434,13 @@ table.lbtable .na{color:var(--ink-3);font-style:italic}
 table.lbtable .ci{white-space:nowrap}
 .lbrules{margin:0;padding-left:22px;display:grid;gap:8px;color:var(--ink-2);font-size:14px;line-height:1.5;max-width:96ch}
 .lbhash dd{font-size:12px}
+/* interval bars drawn from the stored lo–hi (app.lb_bar); light rows (S05) */
+table.lbtable tbody tr{content-visibility:auto;contain-intrinsic-size:auto 88px}
+svg.lbbar{display:block;width:100%;max-width:120px;height:12px;margin-top:6px}
+svg.lbbar .tr{fill:var(--line-2)}
+svg.lbbar .iv{fill:color-mix(in oklab,var(--blue) 55%,transparent)}
+svg.lbbar .pv{fill:var(--ink)}
+svg.lbbar .z{stroke:var(--ink-3);stroke-width:1}
 @media (max-width:699.98px){
   table.lbtable thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
   table.lbtable,table.lbtable tbody{display:block}
@@ -2073,10 +2090,10 @@ function calPlane(box){
   const f = C.floor;
   el('polygon', {points: `${X(0) - pad},${Y(f)} ${X(0)},${Y(f)} ${X(1-f)},${Y(1)} ${X(1)},${Y(1)} ${X(1)},${Y(0)} ${X(0) - pad},${Y(0)}`, class: 'floor'}, svg);
   for (const t of [0, 0.2, 0.4, 0.6, 0.8, 1]){
-    el('line', {x1: X(t), x2: X(t), y1: Y(0), y2: Y(0) + 4, stroke: 'var(--muted)'}, svg); tx(svg, X(t), Y(0) + 16, String(t), 'middle');
-    el('line', {x1: X(0) - pad - 4, x2: X(0) - pad, y1: Y(t), y2: Y(t), stroke: 'var(--muted)'}, svg); tx(svg, X(0) - pad - 7, Y(t) + 4, String(t), 'end');
+    el('line', {x1: X(t), x2: X(t), y1: Y(0), y2: Y(0) + 4, stroke: 'var(--ink-3)'}, svg); tx(svg, X(t), Y(0) + 16, String(t), 'middle');
+    el('line', {x1: X(0) - pad - 4, x2: X(0) - pad, y1: Y(t), y2: Y(t), stroke: 'var(--ink-3)'}, svg); tx(svg, X(0) - pad - 7, Y(t) + 4, String(t), 'end');
   }
-  el('rect', {x: X(0) - pad, y: Y(1), width: side + pad, height: side, fill: 'none', stroke: 'var(--rule)'}, svg);
+  el('rect', {x: X(0) - pad, y: Y(1), width: side + pad, height: side, fill: 'none', stroke: 'var(--line-2)'}, svg);
   tx(svg, X(0.5), H - 6, 'false-alarm rate (FPR, empty subjects)', 'middle', 'lbl');
   const yl = tx(svg, 12, Y(0.5), 'recall (TPR, injected transits)', 'middle', 'lbl'); yl.setAttribute('transform', `rotate(-90 12 ${Y(0.5)})`);
   // Lines of constant weight: TPR = FPR + w. Wide: labelled along the line. Narrow: the weight sits level above
@@ -2106,6 +2123,13 @@ function calPlane(box){
     el('title', {}, c).textContent = g.items.map(p => `${NAME(p.id)} (id ${p.id}; ${p.kind === 'simulated' ? 'Probe, not a person' : isSentinel(p.kind) ? `Sentinel, ${PROVIDER_OF(p.kind)}` : p.kind}): TPR ${fmt(p.tpr,2)}, FPR ${fmt(p.fpr,2)}, weight ${fmt(p.weight,2)}, ${fmtN(p)}`).join('\n');
     const word = g.kind === 'claude' ? 'Sentinel' : g.kind === 'simulated' ? 'Probe' : g.kind;
     tx(svg, cx + r + 6, cy + 4, `${plural(g.items.length, word)} · w ${fmt(g.items[0].weight,2)}`, 'start', 'lbl');
+  }
+  // S06: the plane answers on hover and on the arrow keys: the reviewers at the nearest false-alarm rate.
+  if (typeof SetuUI !== 'undefined' && SetuUI.crosshair){
+    const byX = groups.slice().sort((a, b) => a.fpr - b.fpr);
+    svg.setAttribute('tabindex', '0');
+    SetuUI.crosshair(svg, {x0: -(pl + pad) / side, x1: (W - pl - pad) / side, xs: byX.map(g => g.fpr), readout: $('#calread') || undefined,
+      fmt: i => byX[i].items.map(p => `${NAME(p.id)}: false-alarm rate ${fmt(p.fpr,2)} · recall ${fmt(p.tpr,2)} · weight ${fmt(p.weight,2)}`).join('; ')});
   }
 }
 function renderCalibration(){
@@ -2705,6 +2729,25 @@ def _load_benchmark(path: str | Path = BENCHMARK_JSON) -> dict | None:
     return out
 
 
+def _bench_counters(b: dict) -> str:
+    """The benchmark's headline numbers as counters (V10): each rate with its k of n and Wilson 95% interval, read
+    from the stored JSON; the TOIs in the sample; nothing without its source."""
+    from setuhq.design import odometer_html
+
+    e = html.escape
+    h, cnt = b["summary"]["held_out"], b["sample"]["counts"]
+    items = [(odometer_html(f"{sum(cnt.values()):,}", label=f"{sum(cnt.values()):,} TOIs in the sample"),
+              f"TOIs in the frozen sample: {cnt['positive']} CP/KP, {cnt['fp']} FP, {cnt['fa']} FA")]
+    for key, label in (("completeness", "planets recovered on searchable stars (held-out half)"),
+                       ("fp_seen", "false-positive TOIs found by the panel"), ("fp_flagged_of_seen", "of those, rejected or flagged binary-like")):
+        r = h.get(key) or {}
+        if r.get("rate") is None:
+            continue
+        items.append((odometer_html(f"{100 * r['rate']:.0f}%", label=f"{100 * r['rate']:.0f}%", rate=(r["k"], r["n"], r["lo"], r["hi"]), is_rate=True), label))
+    return ('<ul class="benchodo" aria-label="Headline numbers">'
+            + "".join(f'<li><b class="benchnum">{o}</b><span class="benchlbl">{e(t)}</span></li>' for o, t in items) + '</ul>')
+
+
 def _benchmark_card(b: dict | None) -> str:
     """The Sentinels page's statement of measured performance: on a stated benchmark, never as discoveries."""
     e = html.escape
@@ -2745,6 +2788,7 @@ def _benchmark_card(b: dict | None) -> str:
             rows.append((f"{rid}: CP/KP dips marked (subsample of {se['n_stars']} stars)", pct(v["cp_kp_marked"])))
     body = "".join(f"<tr><th scope='row'>{e(k)}</th><td>{v}</td></tr>" for k, v in rows)
     imp = b.get("feed_implication")
+    counters = _bench_counters(b)
     fr = (b.get("feed_rule") or {})
     frv = fr.get("validation")
     if frv:
@@ -2793,7 +2837,7 @@ def _benchmark_card(b: dict | None) -> str:
     return (f'<section class="card bench" aria-labelledby="h-bench" style="display:grid;gap:8px"><h2 id="h-bench">Measured on real TOIs</h2>{verdict}{verdict_rule}'
             f'<p class="note" style="margin:0"><b>Measured on a stated benchmark, not discoveries.</b> {s["counts"]["positive"]} confirmed or known planets '
             f'(CP/KP), {s["counts"]["fp"]} false positives and {s["counts"]["fa"]} false alarms from the TOI table (fetched {e(s["fetched_at"][:10])}, seed {s["seed"]}), '
-            f'one TOI per star; held-out half shown. Panel: {e(b["panel"])}.</p>'
+            f'one TOI per star; held-out half shown. Panel: {e(b["panel"])}.</p>{counters}'
             f'<div class="tablewrap" role="region" tabindex="0" aria-label="Benchmark results"><table class="bench"><tbody>{body}</tbody></table></div>{clipnote}'
             f'<p class="muted" style="margin:0;font-size:12px">'
             + (f'<a rel="noopener" href="{brand.REPO_URL}/blob/main/docs/results/benchmark_real_tois_clipfix.md">Full results</a> '
@@ -2815,18 +2859,33 @@ def _load_leaderboard(path: str | Path = LEADERBOARD_JSON) -> dict | None:
     return json.loads(Path(path).read_text())
 
 
+LB_BAR_W = 120  # viewBox units (and at most 120 px): every interval bar runs 0 to 100% (or −1 to +1 for J) across its width
+
+
+def lb_bar(v: float, lo: float, hi: float, a: float = 0.0, b: float = 1.0) -> str:
+    """An interval bar drawn from the stored values: a track from a to b, the interval lo–hi as a bar, the value as
+    a tick. Decorative beside the printed numbers (aria-hidden); data-lo/data-hi carry the stored values."""
+    X = lambda x: LB_BAR_W * (min(b, max(a, x)) - a) / (b - a)  # noqa: E731
+    zero = f'<line x1="{X(0):.2f}" x2="{X(0):.2f}" y1="0" y2="12" class="z"/>' if a < 0 < b else ""
+    return (f'<svg class="lbbar" width="{LB_BAR_W}" height="12" viewBox="0 0 {LB_BAR_W} 12" preserveAspectRatio="none" aria-hidden="true" data-lo="{lo:.6f}" data-hi="{hi:.6f}" data-a="{a:g}" data-b="{b:g}">'
+            f'<rect x="0" y="5" width="{LB_BAR_W}" height="2" class="tr"/>{zero}'
+            f'<rect x="{X(lo):.2f}" y="2" width="{max(0.0, X(hi) - X(lo)):.2f}" height="8" rx="2" class="iv"/>'
+            f'<rect x="{X(v) - 1:.2f}" y="0" width="2" height="12" class="pv"/></svg>')
+
+
 def _lb_cell(r: dict | None, label: str, missing: str = "n/a") -> str:
     e = html.escape
     if not r or r.get("rate") is None:
         return f'<td data-l="{e(label)}"><span class="na">{e(missing)}</span></td>'
     return (f'<td data-l="{e(label)}"><span class="v">{100 * r["rate"]:.0f}%</span>'
-            f'<span class="ci">{r["k"]}/{r["n"]} · {100 * r["lo"]:.0f}–{100 * r["hi"]:.0f}%</span></td>')
+            f'<span class="ci">{r["k"]}/{r["n"]} · {100 * r["lo"]:.0f}–{100 * r["hi"]:.0f}%</span>{lb_bar(r["rate"], r["lo"], r["hi"])}</td>')
 
 
 def _lb_j(j: dict, label: str) -> str:
     if j["j"] is None:
         return f'<td data-l="{label}"><span class="na">n/a</span></td>'
-    return f'<td data-l="{label}"><span class="v">{j["j"]:+.2f}</span><span class="ci">{j["lo"]:+.2f} to {j["hi"]:+.2f}</span></td>'
+    return (f'<td data-l="{label}"><span class="v">{j["j"]:+.2f}</span><span class="ci">{j["lo"]:+.2f} to {j["hi"]:+.2f}</span>'
+            f'{lb_bar(j["j"], j["lo"], j["hi"], -1.0, 1.0)}</td>')
 
 
 def _leaderboard(lb: dict | None) -> str:
@@ -2882,7 +2941,7 @@ def _leaderboard(lb: dict | None) -> str:
                    f'<div class="tablewrap" role="region" tabindex="0" aria-labelledby="{hid}"><table class="lbtable"><thead><tr>'
                    f'{rank_th}<th scope="col">Entry</th><th scope="col">Youden J</th><th scope="col">Youden J, all stars</th>{ths}</tr></thead>'
                    f'<tbody>{"".join(rows)}</tbody></table></div>'
-                   f'<p class="small">Each cell: the rate, then k/n and the Wilson 95% interval. {e(note)}</p></section>')
+                   f'<p class="small">Each cell: the rate, then k/n and the Wilson 95% interval, drawn as a bar from 0 to 100% (Youden J from −1 to +1, with a mark at 0). {e(note)}</p></section>')
     if any(x["scope"] == "sentinel_subsample" for x in lb["entries"]):
         ag = lb.get("sentinel_agreement") or {}
         agree = (f" (they agree on {ag['agree']} of {ag['n']} stars, φ = {ag['phi']:.2f})"
@@ -3056,13 +3115,20 @@ def _explorer(data: dict) -> str:
 def _example_runs_table(data: dict) -> str:
     """Evidence > Runs: every stored example run with its provenance (the input files' sha256, the configuration's
     sha256, the code that ran) and its panel."""
+    from setuhq.renderer import star_svg
+
     e = html.escape
     rows = []
     for c in data.get("showcase") or []:
-        files = "<br>".join(f'sector {e(str(i["sector"]))}: <span class="mono">{e((i.get("file_sha256") or "not stored")[:16])}…</span>' for i in c["inputs"]) or "not stored"
-        rows.append(f'<tr><th scope="row">{e(c["star"])}<br><span class="muted mono">{e(c["run"])}</span></th><td>{e(c["count"])}</td>'
-                    f'<td>{files}</td><td><span class="mono">{e(c["config_sha256"][:16])}…</span></td>'
-                    f'<td><span class="mono">{e(c["code"] or "not recorded")}</span></td><td>{e(c["panel_label"])}</td></tr>')
+        files = "<br>".join(f'sector {e(str(i["sector"]))}: <span class="mono t-data">{e((i.get("file_sha256") or "not stored")[:16])}…</span>' for i in c["inputs"]) or "not stored"
+        sp = ((data.get("run_ctx") or {}).get(c["run"]) or {}).get("star_params") or {}
+        disc = (f'<span class="rundisc" title="{e(c["star"])}: TIC Teff {sp["teff"]:,.0f} K, in its blackbody colour">'
+                f'{star_svg(sp["teff"], 16, uid="run-" + c["run"])}</span>') if sp.get("teff") else '<span class="rundisc none" aria-hidden="true"></span>'
+        teff_line = f'<br><span class="muted">TIC Teff {sp["teff"]:,.0f} K</span>' if sp.get("teff") else ""
+        rows.append(f'<tr><th scope="row"><span class="runstar">{disc}<span>{e(c["star"])}<br><span class="muted mono t-data">{e(c["run"])}</span>'
+                    f'{teff_line}</span></span></th><td>{e(c["count"])}</td>'
+                    f'<td>{files}</td><td><span class="mono t-data">{e(c["config_sha256"][:16])}…</span></td>'
+                    f'<td><span class="mono t-data">{e(c["code"] or "not recorded")}</span></td><td>{e(c["panel_label"])}</td></tr>')
     if not rows:
         return ""
     return f"""<section class="card" aria-labelledby="h-exruns" style="display:grid;gap:8px"><h2 id="h-exruns">The example runs</h2>
@@ -3071,9 +3137,32 @@ def _example_runs_table(data: dict) -> str:
       </section>"""
 
 
+def panel_ring_input(data: dict) -> dict:
+    """What the Evidence page passes to the panel ring (V06, setuhq.viz.panelring) in panel mode: every reviewer
+    in the stored record with its role, provider and calibrated weight, no dip and so no score."""
+    st, prov = data["story"], data.get("reviewer_provenance") or {}
+    kinds = data["run"].get("reviewer_kinds") or {}
+    reviewers = [{"id": r["id"], "name": r["name"], "role": r["role"], "kind": kinds.get(r["id"], ""),
+                  "provider": (prov.get(r["id"]) or {}).get("provider_label") or ("SetuHQ (deterministic code)" if r["role"] == "probe" else PROVIDER_BY_KIND.get(kinds.get(r["id"], ""), "")),
+                  "model": (prov.get(r["id"]) or {}).get("model") or "",
+                  "weight": r.get("weight"), "tpr": r.get("tpr"), "fpr": r.get("fpr"),
+                  "n_injected": r.get("n_injected"), "n_empty": r.get("n_empty")} for r in st["reviewers"]]
+    calib = data.get("calibration") or {}
+    return {"source": f"Calibrated weights: {data.get('weights_path') or 'no weights file'}"
+                      + (f"; rates: {calib['record_path']}" if calib.get("record_path") else "")
+                      + f"; reviewers as run {data['run']['name']}'s manifest lists them.",
+            "mode": "panel", "run": data["run"]["name"], "reviewers": reviewers, "floor": calib.get("floor"),
+            "probes_only": not any(r["role"] == "sentinel" for r in reviewers), "attribution": ATTRIBUTION,
+            "probes_only_label": PROBES_ONLY}
+
+
 def _sentinels(data: dict) -> str:
+    from setuhq.viz import panelring
+
     e = html.escape
     st = data["story"]
+    # V06 in panel mode replaces the orbital ring when it is built; until then the ring stays (and the band is left out).
+    ring6 = panelring.html(panel_ring_input(data), mode="panel", where="evidence") or ""
     n = len(st["reviewers"])
     n_inj = max([r.get("n_injected") or 0 for r in st["reviewers"]] or [0])
     caveat = (f" Weights come from {n_inj} planted and {n_inj} empty light curves each: too few to separate 0.6 from 0.5."
@@ -3084,11 +3173,11 @@ def _sentinels(data: dict) -> str:
         <div class="segctl" id="senfilter" role="group" aria-label="Show"></div>
       </header>
       <div class="row2">
-        <figure class="space ringfig" id="senring"></figure>
+        {ring6 or '<figure class="space ringfig" id="senring"></figure>'}
         <div class="revcards" id="sencards"></div>
       </div>
       <section class="glass marked" id="senmarked" aria-label="What the selected reviewer marked"></section>
-      <p class="muted" style="margin:0;font-size:13px">{e(ATTRIBUTION)}{e(caveat)}</p>"""
+      <p class="muted" style="margin:0;font-size:13px">{e(ATTRIBUTION)}{e(caveat)}</p>{'<div hidden><figure id="senring"></figure></div>' if ring6 else ''}"""
 
 
 def app_payload(data: dict) -> dict:
@@ -3181,6 +3270,7 @@ def route_sections(data: dict) -> dict[str, str]:
         <p class="muted" style="margin:0;font-size:13px">Each reviewer at its false-alarm rate (x: share of empty subjects it marked) and recall (y: share of injected transits it found) in calibration. Point size is its calibrated weight. The lines join points of equal weight, weight = TPR − FPR, floored at {data["calibration"]["floor"]}; up and to the left is better. Stored values only.</p>
         <div class="legend"><span><i class="k-sim"></i>Probe (deterministic detector), not a person</span><span><i class="k-cl"></i>Sentinel (Claude), not a person</span><span>size: calibrated weight</span></div>
         <div id="calplane"></div>
+        <p class="xread" id="calread" aria-live="polite"></p>
         <p class="note" id="calsample" style="margin:0"></p>
         <div class="tablewrap" id="caltable" tabindex="0" role="region" aria-label="Calibration rates per reviewer"></div>
         <div class="calcards" id="calcards"></div>
@@ -3194,7 +3284,7 @@ def route_sections(data: dict) -> dict[str, str]:
       <div class="cards" id="panelcards"></div>
       <p class="casefile"><a href="#/leaderboard">The real-TOI leaderboard ›</a><span>SetuHQ's configurations, and any method submitted, scored blind on the held-out half.</span></p>
       <p class="casefile"><a href="#/runs">Runs and configuration ›</a><span>Every search run, its errors as stored, and the configuration behind these pages.</span></p>"""
-    out["methods"] = methods_section(data["examples"], data.get("galaxy"), {**data["story"], "run_created": run.get("created_at", "")}, data.get("coverage"), "")
+    out["methods"] = methods_section(data["examples"], data.get("galaxy"), {**data["story"], "run_created": run.get("created_at", "")}, data.get("coverage"), "", app=data)
     out["mission"] = mission_section("")
     out["catalogue"] = catalogue_section(data.get("catalogue_meta"), "").replace("</header>", "</header>" + (catalogue_tabs("catalogue") if data.get("sweep") else ""), 1)
     out["planet"] = planet_page("")

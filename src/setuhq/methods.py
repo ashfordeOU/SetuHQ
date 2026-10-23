@@ -756,6 +756,8 @@ LABEL_ILL = "Illustration"
 LABEL_MODEL = "Model from stored values"
 LABEL_DATA = "Real data, cited"
 LABEL_SPEC = "Speculative model"
+LABEL_ART = "Artist's impression"  # planet art (setuhq.renderer.LABEL_ART): its tag links to /docs/pictures/
+LABELS = (LABEL_ART, LABEL_MODEL, LABEL_DATA, LABEL_ILL, LABEL_SPEC)  # the five honesty labels, in the order /docs/pictures/ explains them
 
 
 def _src(keys) -> str:
@@ -828,8 +830,9 @@ TUNIT = {"system": "orbit", "scan": "survey sweep", "cgfam": "sequence", "radio"
 
 
 def honesty_label(label: str) -> str:
-    """The one badge every drawing carries: illustration, model from stored values, real data, or speculative."""
-    lab_cls = {LABEL_ILL: "ill", LABEL_MODEL: "model", LABEL_DATA: "data", LABEL_SPEC: "spec"}[label]
+    """The one badge every drawing carries: illustration, model from stored values, real data, speculative, or an
+    artist's impression."""
+    lab_cls = {LABEL_ILL: "ill", LABEL_MODEL: "model", LABEL_DATA: "data", LABEL_SPEC: "spec", LABEL_ART: "art"}[label]
     return f'<span class="mxlabel {lab_cls}">{html.escape(label)}</span>'
 
 
@@ -1006,7 +1009,98 @@ def _pop_meta() -> dict | None:
     return {"valley": pop["valley"], "hz": [[p["teff"], p["s"], int(p["conservative"]), p["name"], p["radius_re"]] for p in pop["hz"]["planets"]]}
 
 
-def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None, eyebrow: str) -> str:
+def _band(name: str, payload: dict, **opts) -> str:
+    """A shared visual component (setuhq.viz.<name>) placed in a chapter, or "" while its owner has not built it
+    (the chapter then leaves the band out)."""
+    import importlib
+
+    return importlib.import_module(f"setuhq.viz.{name}").html(payload, **opts) or ""
+
+
+def _cat_source(app: dict | None) -> str:
+    cat = (app or {}).get("catalogue") or {}
+    return f"{cat.get('source_name') or cat.get('source_short') or 'exoplanet.eu'}, fetched {(cat.get('fetched_at') or '')[:10] or 'date not stored'}"
+
+
+# The star each chapter's card shows, in its blackbody colour: the first planet of the chapter whose host the
+# examples file (exoplanet.eu) stores a temperature for.
+TOC_FALLBACK = {"radio": [], "falsepos": [], "history": ["51 Peg b"], "population": ["pi Men c"]}
+
+
+def _toc_star(cid: str, ex: dict) -> tuple[str, float] | None:
+    for n in (CHAPTER_PLANETS.get(cid) or []) + TOC_FALLBACK.get(cid, []):
+        x = _ex(ex, n)
+        if x.get("star_teff"):
+            return (x.get("star_name") or n.rsplit(" ", 1)[0], float(x["star_teff"]))
+    return None
+
+
+def _toc(ex: dict) -> str:
+    """The chapter list as cards: number, title, and a 64 px disc of the chapter's star in its blackbody colour."""
+    from setuhq.renderer import star_svg
+
+    e = html.escape
+    items = []
+    for i, (c, t) in enumerate(CHAPTERS):
+        st = _toc_star(c, ex)
+        art = (f'<span class="mxtocart">{star_svg(st[1], 32, uid=f"toc-{c}")}</span>' if st
+               else f'<span class="mxtocart none" aria-hidden="true"></span>')
+        star = f'<span class="mxtocs">{e(st[0])} · {st[1]:,.0f} K</span>' if st else '<span class="mxtocs">no single star</span>'
+        items.append(f'<li><a href="#/methods?ch={c}" data-ch="{c}">{art}<span class="mxtoct"><span class="mono">{i + 1:02d}</span> {e(t)}</span>{star}</a></li>')
+    return "".join(items)
+
+
+DEFAULT_SHOWCASE = "docs/results/showcase.json"
+
+
+def _fp_example(app: dict | None, showcase_path: str = DEFAULT_SHOWCASE) -> str:
+    """The False-positives chapter's own case: the example run on a TOI the TOI table dispositions as a false
+    positive (docs/results/showcase.json), drawn as its star (TIC Teff, in its blackbody colour) and a neutral,
+    unlit occulter, because what eclipses the star is not identified."""
+    from setuhq.renderer import star_svg
+    from setuhq.routes import url_for
+
+    e = html.escape
+    path = (app or {}).get("showcase_source") or showcase_path
+    if not path or not Path(path).exists():
+        return ""
+    run = next((r for r in json.loads(Path(path).read_text()).get("runs") or [] if r.get("false_positive")), None)
+    if not run:
+        return ""
+    fp = run["false_positive"]
+    ctx = ((app or {}).get("run_ctx") or {}).get(run["run"]) or {}
+    teff = (ctx.get("star_params") or {}).get("teff")
+    src = (ctx.get("star_params") or {}).get("source") or "TESS Input Catalog v8.2 (MAST)"
+    if teff is None and Path("runs", run["run"], "stellar.json").exists():
+        st = next(iter(json.loads(Path("runs", run["run"], "stellar.json").read_text()).values()), {}) or {}
+        teff, src = st.get("teff"), st.get("source") or src
+    if teff is None:
+        return ""
+    se = fp.get("setuhq") or {}
+    outs = fp.get("outcomes") or {}
+    n = sum(outs.values())
+    verdict = (f"all {n} dips rejected by vetting" if outs and set(outs) == {"rejected"}
+               else ", ".join(f"{v} {k}" for k, v in outs.items()))
+    line = f"secondary eclipse at SNR {se['secondary_snr']:.1f}; {verdict}" if se.get("secondary_snr") is not None else verdict
+    k = next((x.get("rp_rs") for x in se.get("fit_per_signal") or [] if x.get("rp_rs")), 0.14)
+    r = 56
+    case = ctx.get("case_file") or url_for("candidates")
+    occ = (f'<svg class="mxocc" viewBox="0 0 {2 * r} {2 * r}" width="{2 * r}" height="{2 * r}" aria-hidden="true">'
+           f'<circle cx="{r + 0.62 * r:.1f}" cy="{r + 0.25 * r:.1f}" r="{k * r:.1f}" fill="#3A3F4B" stroke="#6B7385" stroke-width="1"/></svg>')
+    alt = (f"{run['star']}: the star disc in its blackbody colour at {teff:,.0f} K, with a neutral grey disc on it labelled occulter not identified. "
+           f"{line}.")
+    return f"""<figure class="stage mxfpcase" aria-labelledby="cap-mxfp">
+        <span class="stage-tag">{LABEL_ILL}</span>
+        <div class="mxfpart" role="img" aria-label="{e(alt)}">{star_svg(teff, r, uid="mxfp")}{occ}<span class="mxocclbl">occulter not identified</span></div>
+        <figcaption id="cap-mxfp" class="readout"><b>{e(run['star'])}: {e(line)}.</b> {e(fp.get('disposition', 'FP'))} in the TOI table (TOI-{e(fp.get('toi', ''))}); SetuHQ's example run {e(run['run'])} caught it: {e(run.get('outcome') or '')}
+          The star is drawn in its blackbody colour from its TIC Teff ({teff:,.0f} K, {e(src)}); the occulter is neutral and unlit, drawn at the fitted ratio {k:.3f} of the star's radius, because what eclipses the star is not identified. Source: {e(path)}. <a href="{e(case)}">Open its case file ›</a></figcaption>
+      </figure>"""
+
+
+def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None, eyebrow: str, app: dict | None = None) -> str:
+    """The How it works view: its chapters, each with its drawings, numbers and sources. ``app`` (the site's data,
+    setuhq.app.app_data) feeds the shared components the chapters place: the fold (V05), the timeline (V12), the sky
+    by year (V04), the orbits (V08) and the temperature strip (V09)."""
     e = html.escape
     P = ex.get("planets") or {}
     pm, peg, w39 = _ex(ex, "pi Men c"), _ex(ex, "51 Peg b"), _ex(ex, "WASP-39 b")
@@ -1018,11 +1112,13 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         if not g:
             return ""
         n = counts.get(method, 0)
+        # The catalogue's timeline (V12) for this method; the small year chart until it is built.
+        years = _band("timeline", {"source": _cat_source(app), "app": app, "methods": [method]}, where=f"methods-{method}", compact=True) or year_chart(g, method)
         return (f'<p class="mxcount"><b>{n:,}</b> of the {total:,} planets with a stored distance in {e(g["source_short"])} were found by '
                 f'{e(g["method_label"][method].lower())} (the first method listed). <a href="#/galaxy?method={method}">Show them on the Galaxy map ›</a></p>'
-                f'{year_chart(g, method)}')
+                f'{years}')
 
-    toc = "".join(f'<li><a href="#/methods?ch={c}" data-ch="{c}"><span class="mono">{i + 1:02d}</span>{e(t)}</a></li>' for i, (c, t) in enumerate(CHAPTERS))
+    toc = _toc(ex)
 
     # ----- worked numbers -----
     k_pm = rv_semi_amplitude(pm["orbital_period"], pm["mass"], pm["star_mass"], pm.get("eccentricity") or 0, math.sin(math.radians(pm["inclination"]))) if pm else None
@@ -1058,6 +1154,13 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
     alpha_earth10 = astrometric_signature_uas(GM_EARTH / GM_JUP, 1.0, 1.0, 10)
     theta_e = einstein_angle_mas(0.3, 0.125)
 
+    fold = _band("fold", {"source": "SetuHQ's stored run of pi Men, TESS sector 1 (runs/tess-pi-men-s1)", "app": app}, where="methods")
+    fold_band = (f'<section class="mxfold" aria-labelledby="h-mx-fold"><h3 id="h-mx-fold">How a planet hides in the noise</h3>'
+                 f'<p>Each transit of pi Men c dims its star by about 300 parts per million, for three hours, once every six days. In a month of '
+                 f'measurements that is a handful of points among more than a thousand. Fold the month on the planet\'s period, so every '
+                 f'transit lands on top of the others, and the dip stands out. This is SetuHQ\'s own stored light curve, not a simulation.</p>'
+                 f'{fold}</section>') if fold else ""
+
     ch = {}
     ch["survey"] = f"""
       <p class="mxlede">A survey points a camera at many stars at once and measures each one's brightness again and again. Most stars never show a planet. Only planets whose orbits happen to line up with us can cross their star's face.</p>
@@ -1072,6 +1175,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
       </div>"""
     ch["transit"] = f"""
       <p class="mxlede">When a planet crosses its star, it blocks a little light. The dip's depth gives the planet's size relative to the star; its repetition gives the period. <b>This is what SetuHQ does</b>: its run found pi Men c's transits in TESS sector 1. <a href="#/transit{('?dip=' + e(lead)) if lead else ''}">Open SetuHQ's Transit case ›</a></p>
+      {fold_band}
       {system_stage("", f"pi Men, a {e(row)}-like star ({pm.get('star_teff', 6037):.0f} K, drawn in its blackbody colour) with pi Men c crossing it at impact parameter {b_pm}. Below, a limb-darkened model light curve drawn from the stored radii, with SetuHQ's stored points for its lead dip overlaid as dots.",
                '<label class="mxb"><span>b</span><input type="range" min="0" max="1000" value="' + str(round(b_pm / (1 + k_ratio) * 1000)) + '" aria-label="Impact parameter"></label>')}
       <div class="mxtext">
@@ -1249,8 +1353,12 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
     hist += (f'<li class="mxpaper own"><span class="mono yr">{e(run_year or "2026")}</span><div><p class="au">SetuHQ (this project)</p><h4>pi Men c recovered in a blind search of TESS sector 1</h4>'
              f'<p>SetuHQ\'s run found dips at pi Men c\'s period without being told where to look. pi Men c was already known (Huang et al. 2018); this is a recovery, not a discovery.</p>'
              f'<p class="links"><a href="#/transit{("?dip=" + e(lead)) if lead else ""}">Open the Transit case ›</a></p></div></li>')
+    hist_tl = _band("timeline", {"source": _cat_source(app), "app": app,
+                                 "annotations": [{"year": y, "label": t, "who": au} for y, au, t, _k, _s, _w, _l in HISTORY]},
+                    where="methods-history")
     ch["history"] = f"""
       <p class="mxlede">Key papers and milestones, summarised in our own words. Each links to its paper (DOI) and to the part of SetuHQ it relates to.</p>
+      {hist_tl}
       <ol class="mxtimeline">{hist}</ol>"""
 
 
@@ -1258,6 +1366,17 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
     t1b, k9b, k9c, hd189 = _ex(ex, "TRAPPIST-1 b"), _ex(ex, "Kepler-9 b"), _ex(ex, "Kepler-9 c"), _ex(ex, "HD 189733 Ab")
     k_t1b = t1b["radius"] * R_JUP / (t1b["star_radius"] * R_SUN) if t1b else 0.087
     occ_bb = thermal_eclipse_depth(k_t1b, 503, t1b.get("star_teff") or 2566, 15) * 1e6
+    k9_rows = []
+    cat = (app or {}).get("catalogue") or {}
+    if cat.get("planets"):
+        CP = cat["planets"]
+        for i, nm in enumerate(CP["name"]):
+            if CP["star"][i] == "Kepler-9" and CP["period"][i]:
+                rp, rs = CP["radius"][i], CP["srad"][i]
+                k9_rows.append({"name": nm, "period_d": CP["period"][i], "a_au": CP["a"][i], "radius_rj": rp,
+                                "k": rp * R_JUP / (rs * R_SUN) if rp and rs else None, "steff": CP["steff"][i], "srad": rs, "smass": CP["smass"][i]})
+    k9_orbits = _band("orbits", {"source": _cat_source(app), "app": app, "star": "Kepler-9", "planets": k9_rows},
+                      where="methods-timing") if k9_rows else ""
     ch["timing"] = f"""
       <p class="mxlede">A transit is one moment in an orbit. The rest of the orbit carries information too: when transits arrive, how the planet glows as it turns, when it slips behind its star, and which half of the spinning star it covers.</p>
       {_stage("timing", LABEL_ILL, "Four scenes. Transit timing: two planets near a 2:1 period ratio tug each other, so the inner planet's transits arrive early and late and an O−C diagram builds up. Secondary eclipse: the planet slips behind its star half an orbit after transit, a much smaller dip, drawn ten times deeper. Phase curve: a tidally locked planet shows more of its hot day side towards occultation, with its peak shifted by winds. Rossiter–McLaughlin: the planet covers the approaching and then the receding half of the rotating star, so the star's measured velocity swings during transit.",
@@ -1271,6 +1390,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                     ("Rossiter–McLaughlin, HD 189733 b", f"{rm_amplitude(3.5, 0.157):.0f} m/s", "K_R ≈ V sin I · k² with V sin I = 3.5 km/s and k = 0.157, both from Gaudi & Winn 2007 Table 1, which lists 88 m/s [calc]"),
                     ("Rossiter–McLaughlin, HD 189733 b (measured V sin I)", f"{rm_amplitude(3.316, 0.15812):.0f} m/s", "V sin I = 3.316 +0.017/−0.067 km/s and k = 0.15812, measured by Triaud et al. 2009 (Table 2) [calc]"),
                     ("Rossiter–McLaughlin, HD 209458 b", f"{rm_amplitude(4.7, 0.121):.0f} m/s", "V sin I = 4.7 km/s, k = 0.121 (Gaudi & Winn 2007 list 70 m/s) [calc]")])}
+        {k9_orbits}
         <p class="note">SetuHQ measures each dip's time and checks the odd and even dips against each other; it does not fit timing variations, phase curves or eclipses. The secondary-eclipse depth on the canvas is drawn ten times deeper and says so; the TTV amplitude is illustrative. Spin–orbit angles span aligned, polar and retrograde orbits (Albrecht et al. 2022).</p>
       </div>"""
 
@@ -1319,6 +1439,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
       <p class="mxlede">Many transit-like dips are not planets on the target star. A dip is evidence; vetting asks what else could make it. This is where SetuHQ's own checks live.</p>
       {_stage("falsepos", LABEL_ILL, "Five ways to fake a planet, each with its sky geometry on a grid of TESS pixels (21 arcseconds each, drawn to scale) and the light curve it makes: an eclipsing binary with a V-shaped grazing eclipse; a background eclipsing binary diluted by the target's light; a hierarchical triple; odd and even eclipses of different depth when the period is half the true one; and an instrumental jump such as a momentum dump.",
                '<label class="mxmode"><span>Scenario</span><select><option value="eb">Eclipsing binary (grazing, V-shaped)</option><option value="beb">Background eclipsing binary</option><option value="heb">Hierarchical triple</option><option value="oddeven">Odd and even depths differ</option><option value="sys">Systematics</option></select></label>', tall=True)}
+      {_fp_example(app)}
       <div class="mxtext">
         <h3>How often, and what SetuHQ checks</h3>
         {_num_rows([("Kepler candidates that were false positives", "9.4%", "overall; 17.7% for giants (Fressin et al. 2013)"),
@@ -1354,13 +1475,20 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
       </div>"""
     else:
         pop_html = '<p class="note">The population figures (docs/results/population_stats.json) are not in this build.</p>'
+    pop_viz = (_band("timeline", {"source": _cat_source(app), "app": app, "methods": ["transit", "all"]}, where="methods-population")
+               + _band("skyyears", {"source": _cat_source(app), "app": app}, where="methods-population", compact=True))
     ch["population"] = f"""
-      <p class="mxlede">With thousands of planets, patterns appear. Two of them: a valley in the sizes of small planets, and the zone around each star where liquid water could last.</p>{pop_html}"""
+      <p class="mxlede">With thousands of planets, patterns appear. Two of them: a valley in the sizes of small planets, and the zone around each star where liquid water could last.</p>{pop_viz}{pop_html}"""
 
     # ----- equations of life -----
     mc = drake_mc()
+    hz_teff = list(range(2600, 7201, 100))  # Kopparapu et al. 2014 fits hold for 2,600–7,200 K
+    hz_strip = _band("tempstrip", {"source": "Kopparapu et al. 2014 (habitable-zone fluxes); star colours from looks.teff_rgb", "app": app,
+                                   "hz": {"teff": hz_teff, **{lim: [round(hz_seff(lim, t), 4) for t in hz_teff] for lim in KOPPARAPU}},
+                                   "markers": [{"name": "the Sun", "teff": 5772}]}, where="methods-equations")
     ch["equations"] = f"""
       <p class="mxlede">The Drake and Seager equations are ways to organise what we do not know. They are speculative frameworks, not predictions: no number on this page is an estimate of real civilisations or of life.</p>
+      {hz_strip}
       <div class="mxeq" role="group" aria-label="Drake equation calculator">
         <p class="mono mxeqf">N = R★ · f_p · n_e · f_l · f_i · f_c · L</p>
         <div class="mxterms" id="mxdrake"></div>
@@ -3010,11 +3138,18 @@ METHODS_CSS = r"""
 /* ---------- methods ---------- */
 #route-methods{grid-template-columns:minmax(0,1fr)}
 #route-methods>*{min-width:0}
-.mxtoc ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
-.mxtoc a{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink-2);text-decoration:none;font-size:13px;font-weight:500}
-.mxtoc a .mono{font-size:11px;color:var(--ink-3)}
-.mxtoc a[aria-current="step"]{background:var(--seg-bg);color:var(--seg-ink);border-color:transparent}
-.mxtoc a[aria-current="step"] .mono{color:inherit;opacity:.7}
+/* the chapter list: one card per chapter, with its star in its blackbody colour (a 64 px still) */
+.mxtoc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:8px}
+.mxtoc a{display:grid;grid-template-columns:64px minmax(0,1fr);grid-template-rows:auto auto;column-gap:12px;row-gap:2px;align-items:center;min-height:80px;padding:8px 12px 8px 8px;border-radius:var(--r-s);border:1px solid var(--line);background:var(--bg-2);color:var(--ink);text-decoration:none;font-size:13.5px;font-weight:600;line-height:1.25;transition:transform var(--d-1) var(--ease),border-color var(--d-1) var(--ease)}
+.mxtoc a:hover{transform:translateY(-2px);border-color:var(--line-3)}
+.mxtocart{grid-row:1/3;display:grid;place-items:center;width:64px;height:64px;border-radius:var(--r-xs);background:var(--stage)}
+.mxtocart svg{width:56px;height:56px;display:block}
+.mxtocart.none::after{content:"";width:28px;height:28px;border-radius:50%;border:1px dashed var(--stage-dim)}
+.mxtoct{align-self:end}
+.mxtoct .mono{font:var(--t-data);color:var(--ink-3);font-weight:400}
+.mxtocs{align-self:start;font:var(--t-data);font-size:11.5px;color:var(--ink-3);font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mxtoc a[aria-current="step"]{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+.mxtoc a[aria-current="step"] .mono{color:var(--blue)}
 .mxch{display:grid;gap:16px}
 #route-methods>header.deep p,#route-methods>header.deep~.mxch>header h2{display:none}
 #route-methods>header.deep~.mxch>header .eyebrow{margin:0}
@@ -3025,6 +3160,25 @@ METHODS_CSS = r"""
 .mxstage{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px;min-width:0}
 .mxstage.stage{padding:8px 8px 12px}
 .mxstage.stage .mxbadges,.mxstage.stage .mxctl,.mxstage.stage .mxdesc{padding:0 6px}
+/* the honesty label sits at the stage's top right, in the stage-tag style (design .stage-tag) */
+.mxstage.stage .mxbadges{order:-1;justify-content:flex-end;min-height:24px}
+.stage .mxlabel{border:0;border-radius:var(--r-xs);padding:5px 9px;background:var(--stage-tag-bg);font:500 11px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.stage .mxlabel.ill,.stage .mxlabel.art{color:var(--stage-dim)}
+.stage .mxlabel.model{color:#FFB340}
+.stage .mxlabel.data{color:#30D158}
+.stage .mxlabel.spec{color:#D0A8FF}
+.mxstage.stage .mxexag{order:-1}
+.mxstage.stage .mxdesc{color:var(--stage-dim)}
+/* the fold (V05) above the transit lab; the false-positive case beside the vetting lab */
+.mxfold{display:grid;gap:10px}
+.mxfold h3{margin:0;font:var(--t-h3)}
+.mxfold>p{margin:0;max-width:78ch;color:var(--ink-2)}
+.mxfpcase{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;padding:40px 16px 16px}
+.mxfpart{position:relative;width:112px;height:132px;background:var(--stage)}
+.mxfpart svg{position:absolute;left:0;top:0}
+.mxocclbl{position:absolute;left:0;right:-40px;bottom:0;font:500 11px/1.2 var(--mono);color:var(--stage-dim);letter-spacing:.06em;text-transform:uppercase}
+.mxfpcase .readout{padding:0;background:var(--stage);color:var(--stage-dim);max-width:90ch;line-height:1.55}
+.mxfpcase .readout b{color:var(--stage-ink)}
 .mxart{display:inline-flex;align-items:center;min-height:44px;font:500 12px/1.4 var(--sans);color:var(--stage-ink);text-underline-offset:3px}
 .mxart[hidden]{display:none}
 .mxch{grid-template-columns:minmax(0,1fr)}
@@ -3214,9 +3368,11 @@ METHODS_CSS = r"""
   .mxcanvas{height:min(62vh,440px)}
   .mxstage.tall .mxcanvas{height:min(76vh,560px)}
   .mxstage[data-vis="cgfam"] .mxcanvas{height:min(84vh,660px)}
-  .mxtoc ol{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .mxtoc ol{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
   .mxtoc ol::-webkit-scrollbar{display:none}
-  .mxtoc a{white-space:nowrap}
+  .mxtoc li{flex:0 0 210px}
+  .mxtoc a{white-space:normal}
+  .mxfpcase{grid-template-columns:minmax(0,1fr)}
   .mxpaper{grid-template-columns:1fr}
   /* Numbers tables become cards on a phone: one block per row, the value left-aligned under its name. */
   .mxnums thead{display:none}

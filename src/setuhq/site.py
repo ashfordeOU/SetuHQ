@@ -201,6 +201,10 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 .lookgrid .readout b{display:block;color:var(--stage-ink);font:600 13px/1.3 var(--sans);margin-bottom:2px}
 .rendrow{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
 .rendrow .rbox{aspect-ratio:4/3}
+.looktable td,.looktable th{white-space:normal;font-family:var(--sans);font-size:13px}
+.looktable th code{font:var(--t-data)}
+.swatch{display:inline-block;width:18px;height:18px;border-radius:50%;margin-right:8px;vertical-align:-4px;border:1px solid var(--line-2)}
+.nfcards .docard span{font-size:13.5px}
 /* the footer */
 .sitefoot{border-top:1px solid var(--line);margin-top:24px;padding:28px max(16px,env(safe-area-inset-right,0px)) max(28px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:color-mix(in oklab,var(--bg) 86%,transparent)}
 .fin{max-width:1280px;margin:0 auto;display:grid;gap:18px}
@@ -540,6 +544,7 @@ def docs_section(data: dict) -> str:
         <section class="card"><h2>Contribute a sweep</h2><p>Search a slice of a TESS sector on your own machine and send the result, with credit.</p><a href="#contribute">How to contribute ›</a></section>
         <section class="card"><h2>Use it from an assistant</h2><p>The MCP server lets an assistant run SetuHQ's own code and read its results.</p><a href="#mcp">Connect over MCP ›</a></section>
         <section class="card"><h2>Data and files</h2><p>Every catalogue on this site as a download, and the reports behind the evidence.</p><a href="#data">Downloads ›</a></section>
+        <section class="card"><h2>How the pictures are drawn</h2><p>Stars in their blackbody colour; planets as artist's impressions chosen from measured radius and irradiation. Every rule and source.</p><a href="/docs/pictures/">The pictures ›</a></section>
       </div>
       <div class="prose">
         <h2 id="start">Install and first run</h2>
@@ -603,6 +608,37 @@ def pictures_section() -> str:
                          "An illustration of a transit: a planet with Rp/R★ = 0.1 crossing a Sun-like star at b = 0.3, and the limb-darkened model light curve it causes.",
                          "Illustration: Rp/R★ = 0.1, b = 0.3, a 5,772 K star; the curve is the small-planet Mandel & Agol (2002) model with quadratic limb darkening.",
                          label="Illustration", uid="pic-transit", still=sun_src)
+    from setuhq.looks import teff_rgb
+    from setuhq.methods import LABELS
+
+    looktable = "".join(f'<tr data-look="{e(r["look"])}"><th scope="row"><code>{e(r["look"])}</code></th><td>{e(r["composition"])}</td>'
+                        f'<td>{e(", ".join(r["bands"]) or "Solar System reference")}</td><td>{e(rule_words(r["look"]))}</td><td>{e(r["surface"])}</td></tr>'
+                        for r in renderer.look_table_rows())
+    swatches = "".join(f'<tr><th scope="row">{t:,} K</th><td><span class="swatch" style="background:rgb{teff_rgb(t)}"></span>'
+                       f'<code>rgb({", ".join(map(str, teff_rgb(t)))})</code></td><td>{e(w)}</td></tr>'
+                       for t, w in ((3532, "a cool M dwarf"), (5175, "a K dwarf"), (5772, "the Sun (IAU 2015 nominal)"), (6421, "TOI-236, an F star (TIC v8.2)"), (10000, "an A star")))
+    label_what = {"Artist's impression": "Planet art: a look chosen from the measured radius (or mass) and irradiation. The tag links here.",
+                  "Model from stored values": "A drawing computed from stored numbers (catalogue values, a fit): a model light curve, an orbit, a star disc at its Teff.",
+                  "Real data, cited": "Measured data plotted as stored, with its source printed under it: SetuHQ's light curves, the catalogue's counts.",
+                  "Illustration": "A schematic to explain an idea; its scales are chosen to show it, and say so.",
+                  "Speculative model": "A framework with unknown terms (the Drake equation): not a prediction."}
+    labels = "".join(f'<tr><th scope="row">{e(lab)}</th><td>{e(label_what[lab])}</td></tr>' for lab in LABELS)
+    surfaces = "".join(f'<tr><th scope="row">{e(a)}</th><td>{e(b)}</td><td>{e(c)}</td></tr>' for a, b, c in (
+        ("Planet pictures (planet pages, the gallery, the line-up)", "an artist's impression from the look table; size to scale only when a radius is stored", "radius, mass, a, R★, Teff, Teq from exoplanet.eu"),
+        ("Star discs (everywhere)", "the star's blackbody colour and limb darkening; granulation is texture", "Teff (TIC v8.2 for the example runs, exoplanet.eu otherwise)"),
+        ("A dip's silhouette (candidates, radius ratios)", "a black disc at Rp/R★ = √depth, if it were a planet: never planet art", "the stored depth"),
+        ("Light curves, folds and dip strips", "plotted as stored; nothing smoothed except stated bins", "the runs' stored subjects and fits"),
+        ("Methods drawings", "illustrations or models, each labelled, with its exaggeration stated", "the catalogue and cited papers, numbers in each chapter's table"),
+        ("The background starfield", "decorative, seeded so every visitor sees the same field; hidden from screen readers", "none")))
+    stills = "".join(f'<tr><th scope="row">{e(a)}</th><td>{e(b)}</td></tr>' for a, b in (
+        ("The home page's transit", "the planet at mid-transit, the light curve drawn to the end of egress, the depth labelled"),
+        ("A planet portrait", "the planet turned 0.6 radians, lit from the upper left"),
+        ("The sky by year", "the final year, every host, with a Play button"),
+        ("The fold", "two panels side by side: the light curve in time order and folded on the period"),
+        ("The panel ring", "the marks, weights and score at their stored values, the verdict word shown"),
+        ("Orbits", "the planets at their phases for t = 0, one at conjunction with its dip marked"),
+        ("Counters and timelines", "the final numbers and the full bars"),
+        ("The starfield", "its static image")))
     return f"""<header><h1 class="lead-h" id="h-pictures" tabindex="-1">How the pictures are drawn.</h1>
         <p>Every star on SetuHQ is drawn in its blackbody colour from its stored temperature. Every planet is an artist's impression: its look is chosen from two measured things, its radius (or, without one, its mass) and the light it gets from its star. Nothing in a picture is measured beyond those numbers, and composition never is.</p></header>
       <section class="prose" aria-labelledby="h-pic-rules"><h2 id="h-pic-rules">The rules</h2>
@@ -614,21 +650,56 @@ def pictures_section() -> str:
         <div class="tablewrap"><table><thead><tr><th scope="col">Band</th><th scope="col">Teq</th><th scope="col">Why</th></tr></thead><tbody>{bands}</tbody></table></div>
         <p>A star's colour: a Planck spectrum from 380 to 780 nm, through the CIE 1931 colour-matching functions (the multi-lobe fit of Wyman, Sloan and Shirley 2013), to sRGB, normalised so the colour is a hue, not a brightness. Limb darkening is the quadratic law with Claret's (2017) TESS-band coefficients, applied to a visible disc. Granulation and planet surfaces are texture only: decorative, never data.</p>
       </section>
+      <section class="prose" aria-labelledby="h-pic-table"><h2 id="h-pic-table">The look table</h2>
+        <p>One row per look: what it is drawn for, by the rules above, and what its surface shows. The same table (setuhq.looks.LOOKS) drives the pictures, so a picture can only be one of these.</p>
+        <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-table"><table class="looktable"><thead><tr><th scope="col">Look</th><th scope="col">Composition</th><th scope="col">Bands</th><th scope="col">Drawn for</th><th scope="col">Surface</th></tr></thead><tbody>{looktable}</tbody></table></div>
+      </section>
       <section aria-labelledby="h-pic-looks"><h2 id="h-pic-looks">The {len(LOOKS)} looks</h2>
         <p class="lookintro">Each look as its still (seed 1). Oceans and continents are drawn only for Earth itself, the Solar System reference; no exoplanet is given water.</p>
         <ul class="lookgrid">{"".join(cards)}</ul>
       </section>
+      <section class="prose" aria-labelledby="h-pic-labels"><h2 id="h-pic-labels">The five labels</h2>
+        <p>Every picture on the site carries one of these, on the picture itself.</p>
+        <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-labels"><table><tbody>{labels}</tbody></table></div>
+        <h2 id="h-pic-real">What is real and what is drawn</h2>
+        <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-real"><table><thead><tr><th scope="col">Where</th><th scope="col">What is drawn</th><th scope="col">What is measured in it</th></tr></thead><tbody>{surfaces}</tbody></table></div>
+        <h2 id="h-pic-colour">Star colour</h2>
+        <p>The colour is computed, not picked: Planck's law at the star's Teff, sampled from 380 to 780 nm in 5 nm steps, weighted by the CIE 1931 colour-matching functions (the multi-lobe fit of Wyman, Sloan and Shirley 2013), converted from XYZ to linear sRGB, normalised to the brightest channel and gamma-encoded. Teff is clamped to 1,000–40,000 K. Because of the normalisation every star is equally bright on screen: the colour is a hue, not a luminosity. The limb darkening is the quadratic law with Claret's (2017) coefficients for the TESS band, a red-optical law applied to a visible disc.</p>
+        <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-colour"><table><thead><tr><th scope="col">Teff</th><th scope="col">Colour</th><th scope="col">For example</th></tr></thead><tbody>{swatches}</tbody></table></div>
+      </section>
       <section aria-labelledby="h-pic-draw"><h2 id="h-pic-draw">The star and the transit</h2>
         <div class="rendrow">{star}{tr}</div>
+      </section>
+      <section class="prose" aria-labelledby="h-pic-still"><h2 id="h-pic-still">With reduced motion</h2>
+        <p>When your device asks for reduced motion, nothing loops: each drawing shows one designed frame, and anything that plays waits for its button.</p>
+        <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-still"><table><thead><tr><th scope="col">Drawing</th><th scope="col">Its still</th></tr></thead><tbody>{stills}</tbody></table></div>
       </section>"""
 
 
+NOTFOUND_LINES = {"explore": "The sky, the Galaxy and every catalogued planet.", "candidates": "Every dip the example runs found, with its checks.",
+                  "how": "Fifteen chapters on how planets are found.", "evidence": "The reviewers, the benchmark and the runs.",
+                  "docs": "Install SetuHQ and run it yourself."}
+
+
 def notfound_section() -> str:
-    cards = "".join(f'<li><a class="docard" href="{from_hash(h)}"><b>{html.escape(label)}</b><i aria-hidden="true">›</i></a></li>' for _, label, h in NAV)
+    cards = "".join(f'<li><a class="docard" href="{from_hash(h)}"><b>{html.escape(label)}</b>'
+                    + (f'<span>{html.escape(NOTFOUND_LINES[k])}</span>' if k in NOTFOUND_LINES else "")
+                    + '<i aria-hidden="true">›</i></a></li>' for k, label, h in NAV)
     return f"""<header><h1 class="lead-h" id="h-notfound" tabindex="-1">This page is not here.</h1>
         <p>The address may be mistyped, or the page may have moved when the site was reorganised. Old addresses forward on their own; this one has no new home.</p></header>
       <div class="nfsearch"><a class="btn primary" href="/">Go to the home page</a><button class="btn" type="button" data-open-search>Search planets, stars and pages</button></div>
-      <ul class="docards">{cards}</ul>"""
+      <ul class="docards nfcards">{cards}</ul>"""
+
+
+def forward_css() -> str:
+    """The forwarding page's inline style, from the design tokens' dark values (no external file)."""
+    from setuhq.design import TOKENS
+
+    t = {k: v[0] for k, v in TOKENS.items()}
+    return (f"html{{background:{t['bg']};color:{t['ink']};font:16px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif}}"
+            f"body{{margin:0 auto;padding:48px max(16px,env(safe-area-inset-left,0px));max-width:640px}}"
+            f"main{{border:1px solid {t['line']};border-radius:20px;background:{t['panel']};padding:24px}}"
+            f"h1{{font-size:24px;letter-spacing:-.02em;margin:0 0 8px}}p{{margin:0;color:{t['ink-2']}}}a{{color:{t['sen']}}}")
 
 
 def forward_page(target: str, title: str, lead: str | None = None) -> str:
@@ -640,8 +711,8 @@ def forward_page(target: str, title: str, lead: str | None = None) -> str:
 <link rel="canonical" href="{brand.SITE_URL}{e(target)}">
 <script>{legacy_js(lead)}</script>
 <noscript><meta http-equiv="refresh" content="0; url={e(target)}"></noscript>
-<style>html{{background:#000;color:#F5F5F7;font:16px/1.5 system-ui,sans-serif}}body{{margin:0;padding:48px 16px;max-width:640px;margin:0 auto}}a{{color:#64D2FF}}</style>
-</head><body><main><h1 style="font-size:24px">This page has moved.</h1><p>{e(title)} is now at <a href="{e(target)}">{e(brand.SITE_URL + target)}</a>.</p></main></body></html>
+<style>{forward_css()}</style>
+</head><body><main><h1>This page has moved.</h1><p>{e(title)} is now at <a href="{e(target)}">{e(brand.SITE_URL + target)}</a>.</p></main></body></html>
 """
 
 

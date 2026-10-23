@@ -538,3 +538,42 @@ def test_every_time_scrubber_speaks_in_its_visuals_unit(page_html):
     animated = set(re.findall(r'data-vis="(\w+)"', sec)) - {"jwst", "atmlab", "valley", "hz", "drake"}
     assert animated <= set(M.TUNIT), animated - set(M.TUNIT)
     assert "sc.setAttribute('aria-valuetext', vt)" in M.METHODS_JS
+
+
+# ---------- the redesign (phase 4): labels, the chapter cards, the fold, the false-positive case ----------
+def test_label_art_exists_and_every_stage_call_passes_a_label():
+    import ast
+
+    assert M.LABEL_ART == "Artist's impression" and M.honesty_label(M.LABEL_ART) == '<span class="mxlabel art">Artist&#x27;s impression</span>'
+    assert set(M.LABELS) == {M.LABEL_ART, M.LABEL_MODEL, M.LABEL_DATA, M.LABEL_ILL, M.LABEL_SPEC}
+    tree = ast.parse(Path(M.__file__).read_text())
+    calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "_stage"]
+    assert len(calls) >= 15
+    for c in calls:
+        lab = c.args[1] if len(c.args) > 1 else next((k.value for k in c.keywords if k.arg == "label"), None)
+        assert isinstance(lab, ast.Name) and lab.id in ("LABEL_ILL", "LABEL_MODEL", "LABEL_DATA", "LABEL_SPEC", "LABEL_ART"), ast.dump(c)[:200]
+
+
+def test_the_chapter_list_is_cards_with_the_chapters_star(page_html):
+    sec = _route(page_html, "methods")
+    toc = re.search(r'<nav class="mxtoc".*?</nav>', sec, re.S).group(0)
+    cards = re.findall(r'<li><a href="[^"]+" data-ch="(\w+)">(.*?)</a></li>', toc, re.S)
+    assert [c for c, _ in cards] == [c for c, _ in M.CHAPTERS]
+    pm = EX["planets"]["pi Men c"]
+    transit = dict(cards)["transit"]
+    assert 'class="stardisc"' in transit and f"pi Men · {pm['star_teff']:,.0f} K" in transit
+
+
+def test_the_transit_chapter_folds_pi_mens_light_curve_above_the_lab(page_html):
+    art = re.search(r'<article class="mxch" id="mx-transit".*?(?=<article class="mxch")', _route(page_html, "methods"), re.S).group(0)
+    assert art.index('class="stage foldfig"') < art.index('data-vis="system"')
+    assert "Real data, cited" in art and "How a planet hides in the noise" in art
+
+
+def test_the_false_positive_chapter_shows_toi_236():
+    sec = M.methods_section(EX, None, {}, None, "", app={})
+    art = re.search(r'<article class="mxch" id="mx-falsepos".*?(?=<article class="mxch")', sec, re.S).group(0)
+    assert "TOI-236: secondary eclipse at SNR 10.9; all 6 dips rejected by vetting." in art
+    assert "occulter not identified" in art and '<span class="stage-tag">Illustration</span>' in art
+    assert "6,422 K" in art or "6,421 K" in art
+    assert "confirmed" not in art.split("TOI-236", 1)[1].split("</figure>", 1)[0].replace("not confirmed", "")
