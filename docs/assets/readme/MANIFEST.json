@@ -97,7 +97,7 @@
         "src/setuhq/methods.py": "b65e69d1977d00393db349a02b541247a0f3cbf6570050fa25f816298e020c10",
         "docs/results/methods_examples.json": "5190fc392d23af5ca9446ed4b06bdd24948a23534f2eefe763a47d31adec4974"
       },
-      "commit": "bcf66d6"
+      "commit": "70fa8f2"
     }
   },
   "brand": {
@@ -123,7 +123,7 @@
   },
   "repo_counts": {
     "modules": 57,
-    "tests": 855,
+    "tests": 856,
     "network": 2,
     "slow": 4,
     "chapters": 15,
