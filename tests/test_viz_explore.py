@@ -89,8 +89,10 @@ def test_timeline_is_a_small_static_svg_with_its_table(app):
     svg = re.search(r'<svg class="tlsvg".*?</svg>', h, re.S).group(0)
     assert len(svg) <= 12_000 and 'role="img"' in svg
     assert SRC in h and "Real data, cited" in h and "<table" in h and 'data-viz="timeline"' in h
-    rows = json.loads(re.search(r"data-rows='([^']*)'", h).group(1))
-    assert sum(r[1] for r in rows) == sum(sum(r[2:]) for r in rows)
+    words = re.search(r'data-counts="([^"]*)"', h).group(1).split(" ")
+    t = timeline.by_year(app["catalogue"])
+    assert [[int(x) for x in w.split(".")] for w in words] == [c[:len(w.split("."))] for c, w in zip(t["counts"], words)]
+    assert sum(int(x) for w in words for x in w.split(".")) == sum(map(sum, t["counts"]))
 
 
 # ---------------------------------------------------------------- V07 line-up

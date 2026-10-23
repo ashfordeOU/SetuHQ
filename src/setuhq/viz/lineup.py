@@ -122,7 +122,7 @@ def html(data: dict, **opts) -> str:
         # The 160 px still, or the 512 px one for a disc drawn wider than 80 px (at one Earth radius per 8 px).
         px = 512 if p["rp_re"] / rmax * 90 > 40 else 160
         lis.append(f'<li class="{cls}" style="--re:{p["rp_re"]:.3f}"><img src="{still_href(lk, px)}" width="160" height="160" loading="lazy" '
-                   f'alt="{e(p["name"])}, {e(fmt_r(p["rp_re"]))}: {"a Solar System reference" if p.get("ref") else "an artist&#x27;s impression"}"><b>{name}</b><span>{e(fmt_r(p["rp_re"]))}</span></li>')
+                   f'alt=""><b>{name}</b><span>{e(fmt_r(p["rp_re"]))}</span></li>')  # the name and radius beside it are the text
     big = max(its, key=lambda p: p["rp_re"])
     small = min(its, key=lambda p: p["rp_re"])
     title = e(data.get("title") or "Planets to scale")

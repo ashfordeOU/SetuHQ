@@ -29,7 +29,7 @@ METHODS = list(METHOD)  # the sky file's method index: design.METHOD's order
 LABEL = {"transit": "transit", "rv": "radial velocity", "imaging": "imaging", "microlensing": "microlensing",
          "astrometry": "astrometry", "timing": "timing", "other": "other"}
 STATIC_MAX = 1500  # points in the map drawn without JavaScript
-STATIC_COMPACT = 150  # the same, in the compact band (the home page keeps to its budget)
+STATIC_COMPACT = 100  # the same, in the compact band (the home page keeps to its budget)
 YEAR_S = 0.42      # seconds per year while playing
 FRAME = (-460, -235, 920, 470)  # the Mollweide frame of setuhq.story.mollweide (RA increasing to the left)
 
@@ -62,11 +62,11 @@ def data(app_data: dict) -> dict:
 
 
 def graticule(meridians: bool = True) -> str:
-    """Parallels every 30° and (unless ``meridians`` is False: the compact band) meridians every 60°, in whole frame units with relative steps (faint: the map is the dots)."""
+    """Parallels every 30° and meridians every 60° (the compact band: three parallels and the central meridian), in whole frame units with relative steps (faint: the map is the dots)."""
     def line(pts):
         pts = [tuple(round(v) for v in mollweide(ra, dec)) for ra, dec in pts]
         return f"M{pts[0][0]} {pts[0][1]}" + "".join(f"l{x - px} {y - py}" for (px, py), (x, y) in zip(pts, pts[1:]))
-    out = [line([(ra, dec) for ra in range(-180, 181, 15)]) for dec in (-60, -30, 0, 30, 60)]
+    out = [line([(ra, dec) for ra in range(-180, 181, 15)]) for dec in ((-60, -30, 0, 30, 60) if meridians else (-30, 0, 30))]
     out += [line([(ra, d) for d in range(-90, 91, 15)]) for ra in (-120, -60, 60, 120)] if meridians else []
     return "".join(out) + f"M0 {round(mollweide(0, -90)[1])}V{round(mollweide(0, 90)[1])}"
 

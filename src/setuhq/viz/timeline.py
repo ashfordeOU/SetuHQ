@@ -91,7 +91,13 @@ def html(data: dict, **opts) -> str:
             f"the most in one year: {tot[peak]:,} in {years[peak]}.")
     # The crosshair maps the SVG's width linearly to years: its left edge and right edge in year units.
     x0, x1 = years[0] - .5 - L / bw, years[-1] + .5 + R_ / bw
-    rowsj = [[y, tot[i], *cs[i]] for i, y in enumerate(years)]
+    # The counts for the crosshair, compactly: one word per year from the first, each method's count joined by dots
+    # (trailing zeros left out).
+    def word(c: list[int]) -> str:
+        while c and not c[-1]:
+            c = c[:-1]
+        return ".".join(map(str, c)) or "0"
+    counts_attr = " ".join(word(list(c)) for c in cs)
     legend = "".join(f'<li><i style="background:{METHOD[m][0]}"></i>{e(LABEL[m])}</li>' for k, m in enumerate(METHODS) if any(c[k] for c in cs))
     head = "".join(f'<th scope="col">{e(LABEL[m])}</th>' for m in METHODS)
     body = "".join(f'<tr><th scope="row">{y}</th><td>{tot[i]:,}</td>' + "".join(f"<td>{v:,}</td>" for v in cs[i]) + "</tr>" for i, y in enumerate(years))
@@ -103,7 +109,7 @@ def html(data: dict, **opts) -> str:
              f'<tbody>{body}</tbody></table></div></details>')
     uid = e(opts.get("uid") or f"tl-{opts.get('where') or 'x'}")
     return (f'<figure class="timeline{" compact" if opts.get("compact") else ""}" id="{uid}" data-viz="timeline" data-x0="{x0:.4f}" data-x1="{x1:.4f}" '
-            f"data-rows='{e(json.dumps(rowsj, separators=(',', ':')), quote=False)}'>"
+            f'data-y0="{years[0]}" data-counts="{counts_attr}">'
             f'<div class="stage tlstage"><svg class="tlsvg" viewBox="0 0 {W} {H}" role="img" aria-label="{e(aria)}">'
             f'<g class="tlgrid">{"".join(grid)}</g><g>{bars}</g><g class="tlx">{xl}</g></svg>'
             f'<span class="stage-tag">Real data, cited</span></div>'
@@ -133,7 +139,7 @@ JS = r"""
 (function(){
   function wire(fig){
     if (fig._tl || !window.SetuUI || !SetuUI.crosshair) return; fig._tl = true;
-    const rows = JSON.parse(fig.dataset.rows), labels = __LABELS__, svg = fig.querySelector('.tlsvg');
+    const y0 = +fig.dataset.y0, rows = fig.dataset.counts.split(' ').map((w, i) => { const c = w.split('.').map(Number); return [y0 + i, c.reduce((a, b) => a + b, 0)].concat(c); }), labels = __LABELS__, svg = fig.querySelector('.tlsvg');
     const f = n => n.toLocaleString('en-GB');
     SetuUI.crosshair(svg, {x0: +fig.dataset.x0, x1: +fig.dataset.x1, xs: rows.map(r => r[0]), readout: fig.querySelector('.tlread'),
       fmt: i => { const r = rows[i]; return `${r[0]}: ${f(r[1])} planet${r[1] === 1 ? '' : 's'}` + (r[1] ? ' · ' + r.slice(2).map((v, k) => [v, k]).filter(a => a[0]).sort((a, b) => b[0] - a[0]).map(([v, k]) => `${labels[k]} ${f(v)}`).join(' · ') : ''); }});
