@@ -265,3 +265,36 @@ def test_generator_check_passes():
         pytest.skip("each figure names its source's commit, which needs the full git history")
     out = subprocess.run([sys.executable, str(GEN), "--check"], cwd=ROOT, capture_output=True, text=True)
     assert out.returncode == 0, out.stdout + out.stderr
+
+
+def test_the_figures_theme_is_the_design_tokens(gen):
+    """The README figures read their colours from setuhq.design, never a copy: every colour, the rules and the
+    method colours of each theme equal design.TOKENS and design.METHOD (the dark ground is #04060B, not #000)."""
+    from setuhq import design
+
+    for i, t in enumerate((gen.DARK, gen.LIGHT)):
+        assert t["name"] == ("dark", "light")[i]
+        for key, tok in gen.THEME_TOKENS.items():
+            assert t[key] == design.TOKENS[tok][i].upper(), (t["name"], key)
+        assert t["method"] == {k: v[i] for k, v in design.METHOD.items()}
+        assert len(t["lines"]) == 3
+    assert gen.DARK["bg"] == "#04060B" and gen.LIGHT["bg"] == "#F5F5F7"
+    assert gen.DARK["lines"] == ("#1B2232", "#262F44", "#39435A")
+    assert gen.LIGHT["lines"] == (("#000000", 0.08), ("#000000", 0.14), ("#000000", 0.26))
+    assert gen.line(gen.LIGHT, 0) == gen.blend("#000000", "#F5F5F7", 0.08)
+
+
+def test_the_showcase_line_up_is_recorded_and_described(gen):
+    """The line-up figure (D7): both variants exist, LINEUP.json records them and the spec and renderer that drew them,
+    and its alt text names every radius and its source."""
+    rec = json.loads((ROOT / "docs/assets/readme/lineup/LINEUP.json").read_text(encoding="utf-8"))
+    assert set(rec["files"]) == set(gen.LINEUP_FILES)
+    spec = gen.lineup_spec()
+    assert rec["alt"] == spec["alt"] and rec["spec_sha256"] == gen.lineup_spec_sha(spec)
+    for it in spec["items"]:
+        assert f"{it['name']} {it['label']}" in spec["alt"]
+    assert "exoplanet.eu" in spec["alt"] and "Artist's impressions" in spec["alt"]
+    assert not any(it["name"].startswith("TOI-236") for it in spec["items"])
+    assert gen.check_lineup() == []
+    for name in gen.LINEUP_FILES:
+        assert (ROOT / "docs/assets/readme/lineup" / name).stat().st_size < 250_000

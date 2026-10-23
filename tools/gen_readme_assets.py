@@ -5,9 +5,10 @@
 
 Every picture under docs/assets/readme/ (except the app screenshots in app/) and every file in
 docs/assets/brand/ (except its README) is written by this
-script as a self-contained SVG in the visual system of the SetuHQ app: the app's colour tokens
-(Apple dark and light; known #0A84FF, open #FFD60A, rejected #FF453A, Sentinels #64D2FF, Probes
-#BF5AF2 in the dark theme), its typeface (Geist and Geist Mono) and one figure grid:
+script as a self-contained SVG in the visual system of the SetuHQ site: its colour tokens, read from
+setuhq.design.TOKENS and design.METHOD (the observatory ground #04060B in dark and #F5F5F7 in light;
+known #0A84FF, open #FFD60A, rejected #FF453A, Sentinels #64D2FF, Probes #BF5AF2 in the dark theme),
+its typeface (Geist and Geist Mono) and one figure grid:
 
     1200 x 600 px, 40 px margins, a mono eyebrow, a 24 px title, the plot between y = 108 and
     y = 532, and a footer that names the source file and the commit that last changed it.
@@ -80,6 +81,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from setuhq import benchmark_toi as BT  # noqa: E402
+from setuhq import design as D  # noqa: E402
 from setuhq import galaxy as GX  # noqa: E402
 from setuhq import methods as MX  # noqa: E402
 from setuhq import transitfit as TF  # noqa: E402
@@ -102,25 +104,31 @@ SHOT_WIDTH = 1600         # every app screenshot, in pixels
 SHOT_QUALITY = 80         # WebP quality
 
 # --------------------------------------------------------------------------------------
-# Theme: the app's tokens (src/setuhq/app.py :root and :root[data-theme="light"])
+# Theme: the site's tokens (setuhq.design.TOKENS and design.METHOD), read, never retyped
 # --------------------------------------------------------------------------------------
 
-DARK = {
-    "name": "dark", "bg": "#000000", "panel": "#1C1C1E", "ink": "#F5F5F7", "ink2": "#A1A1A6", "ink3": "#8E8E93",
-    "line_rgb": "#FFFFFF", "line_a": (0.08, 0.14, 0.24),
-    "known": "#0A84FF", "open": "#FFD60A", "rejected": "#FF453A", "sen": "#64D2FF", "prb": "#BF5AF2",
-    "green": "#30D158", "amber": "#FFB340", "coral": "#FF6961", "brand": "#0A84FF", "mark_ink": "#F5F5F7",
-    "method": dict(GX.METHOD_COLOUR),
-}
-LIGHT = {
-    "name": "light", "bg": "#F5F5F7", "panel": "#FFFFFF", "ink": "#1D1D1F", "ink2": "#424245", "ink3": "#5E5E63",
-    "line_rgb": "#000000", "line_a": (0.08, 0.14, 0.26),
-    "known": "#0066CC", "open": "#8A6100", "rejected": "#C9001B", "sen": "#006E99", "prb": "#8944AB",
-    "green": "#1F7A35", "amber": "#A05A00", "coral": "#C9001B", "brand": "#0066CC", "mark_ink": "#1D1D1F",
-    # the dark method colours, darkened the way the app's light tokens darken its accents
-    "method": {"transit": "#006E99", "rv": "#C9001B", "imaging": "#1F7A35", "microlensing": "#8944AB",
-               "astrometry": "#8A6100", "timing": "#5856D6", "other": "#6E6E73"},
-}
+# Each figure colour and the design token it is (tests/test_readme_assets.py checks the two stay equal).
+THEME_TOKENS = {"bg": "bg", "panel": "panel", "ink": "ink", "ink2": "ink-2", "ink3": "ink-3", "known": "blue", "open": "yellow",
+                "rejected": "red", "sen": "sen", "prb": "prb", "green": "green", "amber": "amber", "coral": "coral",
+                "brand": "blue", "mark_ink": "ink"}
+LINE_TOKENS = ("line", "line-2", "line-3")
+
+
+def _rgba(v: str):
+    """A token as a solid hex, or (hex, alpha) for an rgba() token (flattened over its ground where it is drawn)."""
+    m = re.fullmatch(r"rgba\((\d+),(\d+),(\d+),([\d.]+)\)", v.replace(" ", ""))
+    return ("#%02X%02X%02X" % tuple(int(x) for x in m.groups()[:3]), float(m.group(4))) if m else v.upper()
+
+
+def theme(i: int) -> dict:
+    """The figures' palette for design's theme ``i`` (0 dark, 1 light)."""
+    t = {"name": ("dark", "light")[i], **{k: D.TOKENS[tok][i].upper() for k, tok in THEME_TOKENS.items()}}
+    t["lines"] = tuple(_rgba(D.TOKENS[k][i]) for k in LINE_TOKENS)
+    t["method"] = {k: v[i] for k, v in D.METHOD.items()}
+    return t
+
+
+DARK, LIGHT = theme(0), theme(1)
 THEMES = (LIGHT, DARK)
 
 
@@ -136,7 +144,9 @@ def blend(fg: str, bg: str, a: float) -> str:
 
 
 def line(t: dict, level: int = 0, on: str | None = None) -> str:
-    return blend(t["line_rgb"], on or t["bg"], t["line_a"][level])
+    """A rule at the token's level: the dark theme's solid line tokens, or the light theme's rgba() over its ground."""
+    v = t["lines"][level]
+    return v if isinstance(v, str) else blend(v[0], on or t["bg"], v[1])
 
 
 def soft(t: dict, color: str, a: float = 0.14, on: str | None = None) -> str:
@@ -1958,6 +1968,76 @@ def methods_strip(t: dict, d: dict) -> Svg:
 # --------------------------------------------------------------------------------------
 
 # The figures, in README order: name -> (builder, data loader, source paths for the manifest)
+# --------------------------------------------------------------------------------------
+# The showcase line-up (a raster figure): the worked examples' known planets to one scale, drawn by the site's
+# renderer (tools/render_stills.mjs --figure lineup) from the spec below; lineup/LINEUP.json records what drew it.
+# --------------------------------------------------------------------------------------
+
+LINEUP_DIR = OUT / "lineup"
+LINEUP_REL = f"{REL_OUT}/lineup"
+LINEUP_SRC = "docs/results/exoplanet_catalogue.json"
+LINEUP_SHOWCASE = "docs/results/showcase.json"
+LINEUP_SIZE = (1600, 580)
+LINEUP_FILES = ("showcase-lineup-light.webp", "showcase-lineup-dark.webp")
+
+
+def lineup_spec() -> dict:
+    """What the line-up draws: each planet's name, radius (exoplanet.eu, in Earth radii), look (setuhq.looks, from the
+    measured radius and the computed irradiation) and seed, with Earth, Neptune and Jupiter as the references; the
+    source line and the alt text, which states every radius and its source."""
+    from setuhq.catalogue import load_catalogue
+    from setuhq.looks import seed as look_seed
+    from setuhq.viz import lineup as LU
+
+    cat = load_catalogue(ROOT / LINEUP_SRC)
+    runs = json.loads((ROOT / LINEUP_SHOWCASE).read_text(encoding="utf-8"))["runs"]
+    cards = [{"star": r["star"], "kind": r.get("kind") or "", "planets": [q["planet"] for q in r.get("planets") or [] if q.get("planet")]}
+             for r in runs]
+    items = [{"name": x["name"], "rp_re": x["rp_re"], "look": x["look"], "ref": bool(x.get("ref")),
+              "label": LU.fmt_r(x["rp_re"]), "seed": look_seed(x["slug"]) if x.get("slug") else 1}
+             for x in LU.items(LU.showcase_entries({"catalogue": cat, "showcase": cards}))]
+    commit = commit_of(LINEUP_SRC, LINEUP_SHOWCASE)
+    source = f"{cat['source_name']}, fetched {cat['fetched_at'][:10]}"
+    words = "; ".join(f"{x['name']} {x['label']}" + (", Solar System reference" if x["ref"] else "") for x in items)
+    alt = (f"Artist's impressions of the worked examples' known planets, to one scale beside Earth, Neptune and Jupiter, "
+           f"smallest to largest: {words}. Radii: {source} ({LINEUP_SRC}, with the planets named in {LINEUP_SHOWCASE}, "
+           f"commit {commit}); 1 RJ = 11.209 R⊕. Each look is chosen from the measured radius and the computed "
+           f"irradiation (setuhq.looks); composition is not measured, and only Earth is drawn with oceans. "
+           f"Drawn by tools/render_stills.mjs --figure lineup on the site renderer's Canvas2D path.")
+    fonts = ROOT / "src" / "setuhq" / "fonts" / "files"
+    return {"width": LINEUP_SIZE[0], "height": LINEUP_SIZE[1], "items": items, "source": source, "commit": commit, "alt": alt,
+            "files": list(LINEUP_FILES), "out": str(LINEUP_DIR),
+            "fonts": {"sans": str(fonts / "geist-gyByhwUxId8gMEwcGFWNOITd.woff2"), "mono": str(fonts / "geistmono-or3nQ6H-1_WfwkMZI_qYFrcdmhHkjko.woff2"),
+                      "symbols": str(fonts / "setu-symbols.woff")}}
+
+
+def lineup_spec_sha(spec: dict) -> str:
+    keep = {k: v for k, v in spec.items() if k not in ("out", "fonts")}
+    return hashlib.sha256(json.dumps(keep, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+
+
+def check_lineup() -> list[str]:
+    """The line-up figures exist, unchanged, drawn from the current spec by the current renderer."""
+    from setuhq.renderer import render_js_sha
+
+    rec_path = LINEUP_DIR / "LINEUP.json"
+    if not rec_path.exists():
+        return [f"{LINEUP_REL}/LINEUP.json is missing: run node tools/render_stills.mjs --figure lineup"]
+    rec = json.loads(rec_path.read_text(encoding="utf-8"))
+    bad = []
+    if rec.get("spec_sha256") != lineup_spec_sha(lineup_spec()):
+        bad.append(f"{LINEUP_REL}: drawn from an older spec (radii, looks or text changed): run node tools/render_stills.mjs --figure lineup")
+    if rec.get("render_js_sha256") != render_js_sha():
+        bad.append(f"{LINEUP_REL}: drawn by an older renderer: run node tools/render_stills.mjs --figure lineup")
+    for name in LINEUP_FILES:
+        f = LINEUP_DIR / name
+        if not f.exists() or hashlib.sha256(f.read_bytes()).hexdigest() != (rec.get("files") or {}).get(name):
+            bad.append(f"{LINEUP_REL}/{name} is missing or differs from its LINEUP.json hash")
+    extra = {p.name for p in LINEUP_DIR.iterdir() if p.is_file()} - set(LINEUP_FILES) - {"LINEUP.json"}
+    bad += [f"{LINEUP_REL}/{n} is not recorded in LINEUP.json" for n in sorted(extra)]
+    return bad
+
+
 FIGURES = {
     "hero": (hero, hero_data, [HERO_SRC]),
     "pi-men": (pimen, pimen_data, list(PIMEN_SRC)),
@@ -2010,6 +2090,10 @@ def build() -> dict[str, bytes]:
     if shots.exists():
         manifest["app_screenshots"] = {"captured_by": "tools/capture_site_shots.mjs", "record": "app/SHOTS.json",
                                        "files": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(APP_DIR.glob("*.webp"))}}
+    if (LINEUP_DIR / "LINEUP.json").exists():
+        manifest["showcase_lineup"] = {"drawn_by": "tools/render_stills.mjs --figure lineup", "record": "lineup/LINEUP.json",
+                                       "files": {n: hashlib.sha256((LINEUP_DIR / n).read_bytes()).hexdigest()
+                                                 for n in LINEUP_FILES if (LINEUP_DIR / n).exists()}}
     manifest["made_with"] = made_with()   # recorded, not compared: --check names them when a file differs
     out[f"{REL_OUT}/MANIFEST.json"] = (json.dumps(manifest, indent=2, ensure_ascii=False) + "\n").encode()
     return out
@@ -2218,6 +2302,8 @@ def readme_blocks() -> dict[str, str]:
 
 
 def alt_for(path: str, assets: dict[str, bytes] | None) -> str | None:
+    if path.startswith(LINEUP_REL + "/"):
+        return lineup_spec()["alt"]
     if path.startswith(REL_OUT + "/app/"):
         rec = json.loads((APP_DIR / "SHOTS.json").read_text(encoding="utf-8"))
         return {s_["file"]: s_["alt"] for s_ in rec["shots"]}.get(Path(path).name)
@@ -2301,7 +2387,10 @@ def check_readme(assets: dict[str, bytes] | None = None) -> list[str]:
         if p["src"] != p["light"] or p["dark"] != p["light"].replace("-light.", "-dark."):
             bad.append(f"README: {p['src']} is not paired as -light / -dark")
         name = Path(p["light"]).name
-        if p["light"].startswith(REL_OUT + "/app/"):
+        if p["light"].startswith(LINEUP_REL + "/"):
+            if esc(lineup_spec()["alt"]) != p["alt"]:
+                bad.append(f"README: the alt text of {name} is not the line-up's own (gen_readme_assets.lineup_spec)")
+        elif p["light"].startswith(REL_OUT + "/app/"):
             for v in (p["light"], p["dark"]):
                 if Path(v).name not in shot_alt:
                     bad.append(f"README: {v} is not recorded in app/SHOTS.json")
@@ -2318,7 +2407,7 @@ def check_readme(assets: dict[str, bytes] | None = None) -> list[str]:
             if not (ROOT / v).exists():
                 bad.append(f"README: {v} does not exist")
     used = {Path(p["light"]).name.rsplit("-light.", 1)[0] for p in pics if p["light"]}
-    for name in FIGURES:
+    for name in list(FIGURES) + ["showcase-lineup"]:
         if name not in used:
             bad.append(f"README: the figure {name} is generated but not shown")
     return bad
@@ -2423,6 +2512,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--check", action="store_true", help="regenerate in memory and fail if any committed file differs")
     ap.add_argument("--import-shots", metavar="DIR", help="import a capture_site_shots.mjs run into docs/assets/readme/app/")
+    ap.add_argument("--lineup-spec", action="store_true", help="print what the showcase line-up draws (JSON), for tools/render_stills.mjs --figure lineup")
     ap.add_argument("--write-readme", action="store_true",
                     help="rewrite README.md's generated blocks (badges, numbers) and every picture's alt text from its source")
     args = ap.parse_args()
@@ -2435,6 +2525,10 @@ def main() -> int:
               "or checked without the repository's git history. Clone https://github.com/ashfordeOU/SetuHQ with its "
               "full history (git clone, or fetch-depth: 0 in CI) and run this again.", file=sys.stderr)
         return 2
+    if args.lineup_spec:
+        spec = lineup_spec()
+        print(json.dumps({**spec, "spec_sha256": lineup_spec_sha(spec)}, ensure_ascii=False))
+        return 0
     assets = build()
     if args.write_readme:
         text = README.read_text(encoding="utf-8")
@@ -2469,7 +2563,7 @@ def main() -> int:
                   + (" (different versions can change the outlines: pip install -r requirements-readme.txt)" if was != now else ""))
         for n in extra:
             print(f"not generated by this script: {n}")
-        problems = check_readme(assets) + check_shots(assets)
+        problems = check_readme(assets) + check_shots(assets) + check_lineup()
         text = README.read_text(encoding="utf-8")
         if render_readme(text, assets) != text:
             problems.append("README: its badges, generated numbers or alt text differ from the data; "

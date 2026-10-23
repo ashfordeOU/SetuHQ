@@ -21,8 +21,30 @@ breaking changes are called out explicitly.
   example"): WASP-126 (a hot Jupiter), TOI-270 (three planets), HD 15337 (small planets near the limit) and
   TOI-236 (a false positive in the TOI table, rejected by vetting). Each is compared with the literature by
   `scripts/showcase_compare.py` (docs/SHOWCASE.md, docs/results/showcase/); pi Men stays as the reference check.
+- **A README figure of the showcase planets to scale** (`docs/assets/readme/lineup/`): the worked examples' known
+  planets beside Earth, Neptune and Jupiter, drawn by the site's renderer (`node tools/render_stills.mjs --figure
+  lineup`) from exoplanet.eu's radii, labelled as artist's impressions, its alt text stating every radius and its
+  source; `tools/gen_readme_assets.py --check` fails when it is stale.
 
 ### Changed
+
+- **The CLI's HTML outputs in the site's visual system.** `setuhq report`, the search feed page of `setuhq
+  discover` and `setuhq dashboard` read `setuhq.design`'s tokens (the old indigo palette is gone), print in the
+  light set, and use Geist and Geist Mono copied beside the page; nothing loads from another site. The report opens
+  on a black stage with the run's star in its blackbody colour (from its stellar.json), its dips counted by vetting
+  outcome, and each dip's blind-coded image on a white plate, byte for byte; the dashboard names dips by outcome and
+  answers on hover and the arrow keys along its light curve; the feed page adds a bar chart of entries per night.
+  Checked by `tests/test_report_style.py` and the e2e module `tests/e2e/checks/outputs.mjs` (axe in both themes,
+  opened from disk, printed to PDF).
+- **The README figures read their colours from `setuhq.design`** (the dark ground is now the site's `#04060B`), and
+  every screenshot was recaptured from the redesigned site.
+- **The home page, tidied.** The temperature strip's heading says what the examples span ("Five example stars:
+  3,532 K to 6,422 K, one pipeline", not "any star"); the gallery's cards share one shape with a one-line caption
+  each; the line-up includes every showcase planet with a radius (HD 15337 b and c were missing); the panel ring is
+  drawn at a readable size; the unused Galaxy teaser's data and script (about 23 KB) are gone from `/`. The hero's
+  transit and a planet portrait's spin now run through the renderer's scheduler (`SetuRender.play`), so they count
+  against the page's animation budget and frame governor.
+- **The catalogue's fetch note** reads as a plain sentence; the raw error stays in a folded "Technical detail".
 
 - **`setuhq site` takes several runs** (the lead run first). The home page shows every example run as a card,
   Candidates groups the dips by star, and every run's dips get pages and case files, with its own case file,

@@ -1,0 +1,16 @@
+{
+ "note": "Drawn by tools/render_stills.mjs --figure lineup on SetuRender's Canvas2D path in Chromium, from tools/gen_readme_assets.py --lineup-spec.",
+ "spec_sha256": "d6e7a90330deca19fba4c263a3dcb1dd235829a95d2f1e9397e271cbc914f951",
+ "render_js_sha256": "3dee4d8683ee726382afc38fdffaf27855a79d023284177b4c1d6e75df1264bf",
+ "size": [
+  1600,
+  580
+ ],
+ "source": "The Extrasolar Planets Encyclopaedia (exoplanet.eu), fetched 2026-10-18",
+ "commit": "5e92880",
+ "alt": "Artist's impressions of the worked examples' known planets, to one scale beside Earth, Neptune and Jupiter, smallest to largest: Earth 1.00 R⊕, Solar System reference; TOI-270 b 1.25 R⊕; HD 15337 b 1.77 R⊕; pi Men c 1.87 R⊕; TOI-270 d 2.13 R⊕; TOI-270 c 2.33 R⊕; HD 15337 c 2.53 R⊕; Neptune 3.88 R⊕, Solar System reference; WASP-126 b 0.96 RJ; Jupiter 1.00 RJ, Solar System reference. Radii: The Extrasolar Planets Encyclopaedia (exoplanet.eu), fetched 2026-10-18 (docs/results/exoplanet_catalogue.json, with the planets named in docs/results/showcase.json, commit 5e92880); 1 RJ = 11.209 R⊕. Each look is chosen from the measured radius and the computed irradiation (setuhq.looks); composition is not measured, and only Earth is drawn with oceans. Drawn by tools/render_stills.mjs --figure lineup on the site renderer's Canvas2D path.",
+ "files": {
+  "showcase-lineup-light.webp": "3db23cbfb8134fbee7080440eed10f753de18312c6e72054b2670cf48fcc90ea",
+  "showcase-lineup-dark.webp": "8f30a38a393c6ebeb874525f8339d5e168a26201c408b038499df91b3a78373b"
+ }
+}
