@@ -180,7 +180,7 @@ def test_page_states_source_definition_and_what_is_not_plotted(run_dir, tmp_path
     assert 'href="/assets/data/exoplanet_map.csv" download' in sec
     assert [label for label, _, _ in SUBNAV["explore"]][:3] == ["Sky map", "Galaxy", "Catalogue"]
     home = (tmp_path / "app" / "index.html").read_text()
-    assert 'href="/explore/galaxy/">Explore every known exoplanet ›</a>' in home and "teaser-data" in home
+    assert 'class="gxteaser' not in home  # the home page's sky band replaced the teaser; the Galaxy keeps its page
 
 
 def test_no_external_requests_and_reduced_motion():

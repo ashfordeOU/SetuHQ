@@ -199,6 +199,32 @@ read the same tokens.
   430,000, the renderer 64,000, each still 40,000 (512 px) or 8,000 (160 px) and 850,000 in all, the home page 90,000
   characters and `/explore/` 160,000, each deploy-time stub 4,096 bytes.
 
+## The home page
+
+`src/setuhq/home.py` lays out `/` in bands (`home.BANDS`, pinned by tests/test_home.py), every number read from stored
+files:
+
+* **The hero** (`viz/hero.py`): "The sky, reviewed." over a live transit of a featured run's star, in its blackbody
+  colour at the Teff its stellar.json stores (TIC v8.2), crossed by the run's catalogue planet at Rp/R★ = the
+  catalogue radius over the stored stellar radius and the catalogue's b; the model light curve beneath it, its depth
+  and duration in the caption and the alt text. The page is written with the lead run; with motion on, the script
+  features one eligible run per UTC day (never a false positive), loops only while on screen and the tab is visible,
+  and has a Pause button. Under reduced motion it is the lead run's still. Without JavaScript it is an SVG still.
+* **The worked examples** (`viz/gallery.py`), one card per run in docs/results/showcase.json order: a stage with the
+  star disc and what the run measured as shadows at its own fitted Rp/R★ (a planet the run missed is a dashed outline;
+  the false positive TOI-236 is an unlit occulter, "occulter not identified"), above the card's text, caveat and
+  panel label.
+* **The temperature strip** (`viz/tempstrip.py`): a 31-stop blackbody gradient from 2,500 to 10,000 K with each
+  example star and the Sun marked; in filter mode it dispatches `setu:teff-range` with `{lo, hi}`.
+* The line-up, the fold, the panel, and the sky with its timeline, when their modules draw them.
+* **The counters** (`design.odometer_html`): the catalogue's rows, the real-TOI benchmark's sample, its held-out
+  completeness with its Wilson interval, and the chapters of How it works, each linking to its proof.
+* The reference check, the sweep line, "What you can do here" and "What this page does not claim".
+
+`assets/data/stories-<hash>.json` carries the gallery's stages and the counters (`viz.gallery.data`).
+`tests/e2e/checks/home.mjs` checks the bands at both sizes and in both themes, the counters without JavaScript, the
+hero's first frame and its Pause button, the strip's Teffs, the tab order and axe with motion on.
+
 ## The header
 
 The logo (home), the five sections, a search icon (also `/` or Ctrl/Cmd+K) that opens an overlay, and a theme icon

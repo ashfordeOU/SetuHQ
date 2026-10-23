@@ -1043,9 +1043,8 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .launch h1{margin:10px 0 0;font-weight:700;font-size:clamp(52px,8.4vw,120px);line-height:1;letter-spacing:-.045em}
 .route>header.launch .sub{margin:20px auto 0;max-width:620px;font-size:clamp(17px,1.6vw,21px);line-height:1.45;color:var(--ink-2)}
 .launch .ctas{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:30px}
-.planetfig{margin:44px 0 0;width:100%;position:relative;border-radius:28px;overflow:hidden;background:#000}
-.planetfig figcaption{position:absolute;left:20px;top:16px;font-size:12px;color:#8E8E93}
-.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1px;width:min(100%,1100px);margin:-70px auto 0;background:var(--line);border-radius:22px;overflow:hidden;position:relative;text-align:left}
+#route-overview{gap:var(--s-8,64px)}
+.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1px;width:min(100%,1100px);margin:0 auto;background:var(--line);border-radius:22px;overflow:hidden;position:relative;text-align:left}
 .proof>div{background:color-mix(in oklab,var(--panel) 88%,transparent);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);padding:22px 24px}
 .proof b{display:block;font-size:40px;font-weight:600;letter-spacing:-.03em;line-height:1.05}
 .proof span{display:block;margin-top:8px;font-size:14px;line-height:1.45;color:var(--ink-2)}
@@ -1058,6 +1057,29 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .secthead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;border-top:1px solid var(--line);padding-top:22px}
 .secthead h2{font-size:15px;color:var(--ink-3);font-weight:500}
 .secthead p{margin:0;font-size:13px;color:var(--ink-3);max-width:72ch}
+/* the home page's bands: an eyebrow, a heading, the drawing, its source */
+.band{display:grid;gap:18px;min-width:0}
+.bandhead{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:22px}
+.bandeyebrow{margin:0;font:var(--t-eyebrow);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.bandhead h2{font:var(--t-h2);letter-spacing:-.02em;color:var(--ink);max-width:30ch;text-wrap:balance}
+.bandmore,.bandnote{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink-2);max-width:90ch}
+.bandmore a{display:inline-flex;align-items:center;min-height:32px}
+.ctrlist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden}
+.ctr a{position:relative;display:grid;align-content:start;gap:8px;height:100%;padding:24px 40px 22px 20px;background:var(--bg-2);color:var(--ink);text-decoration:none;transition:background-color var(--d-1) var(--ease)}
+.ctr a:hover{background:var(--bg-3);color:var(--ink)}
+.ctrn{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font:700 clamp(30px,3.6vw,46px)/1 var(--sans);letter-spacing:-.03em}
+.ctrn .odoci{font:var(--t-data);font-weight:500;letter-spacing:0;color:var(--ink-2)}
+.ctrl{font-size:13.5px;line-height:1.4;color:var(--ink-2)}
+.ctrs{font-size:11.5px;line-height:1.4;color:var(--ink-3)}
+.ctr i{position:absolute;right:16px;top:22px;font-style:normal;font-size:20px;color:var(--cyan)}
+.homesweep .sweepline{margin:0}
+@media (max-width:899.9px){
+  .ctrlist{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:699.9px){
+  #route-overview{gap:var(--s-7,48px)}
+  .ctrlist{grid-template-columns:minmax(0,1fr)}
+}
 /* Sky */
 .skymap{flex:999 1 640px;display:grid;gap:10px;min-width:0;align-content:start}
 .skyover{pointer-events:none}
