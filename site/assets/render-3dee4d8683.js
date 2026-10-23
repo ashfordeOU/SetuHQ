@@ -370,19 +370,26 @@ const ST = {mounted: 0, frames: 0, stills: 0, governor: 'full', times: []};
 const targets = [], active = [], waiting = [];
 let raf = 0, last = 0;
 const maxActive = () => COARSE() ? 2 : 4;
-function canAnimate(){ return !RM() && ST.governor !== 'stills'; }
-function want(T){ if (T.wanted || !canAnimate() || !T.anim) return; T.wanted = true; if (active.length < maxActive()){ active.push(T); kick(); } else waiting.push(T); }
-function unwant(T){ T.wanted = false; let i = active.indexOf(T); if (i >= 0) active.splice(i, 1); i = waiting.indexOf(T); if (i >= 0) waiting.splice(i, 1);
+// A target the visitor started (a Play or Spin button) may run under reduced motion; nothing runs once the governor
+// has dropped the page to stills.
+function canAnimate(T){ return (!RM() || T.user) && ST.governor !== 'stills'; }
+function want(T){ if (T.wanted || T.paused || !canAnimate(T) || !T.anim) return; T.wanted = true;
+  // The page's first target (the hero) never waits behind others: it takes the last running target's place.
+  if (active.length >= maxActive() && T.el.dataset.priority === 'first') waiting.unshift(active.pop());
+  if (active.length < maxActive()){ active.push(T); kick(); } else waiting.push(T); }
+function unwant(T){ T.wanted = false; T.at = 0; let i = active.indexOf(T); if (i >= 0) active.splice(i, 1); i = waiting.indexOf(T); if (i >= 0) waiting.splice(i, 1);
   while (active.length < maxActive() && waiting.length) active.push(waiting.shift()); if (active.length) kick(); }
 function kick(){ if (!raf && active.length && !document.hidden) raf = requestAnimationFrame(loop); }
 function loop(now){
   raf = 0; if (document.hidden || !active.length) return;
   const fps = ST.governor === '30fps' ? 30 : 60, slow = G.path === 'canvas2d' ? 15 : fps;
   const t0 = performance.now();
-  for (const T of active){ const min = 1000 / (T.kind === 'starfield' ? fps : slow); if (now - T.at < min - 1) continue; T.at = now; T.t = (now - T.t0) / 1000; try { T.draw(T.t); } catch (e) { T.anim = false; } }
+  // Each target keeps its own clock, which stops while it is paused or off screen (it resumes where it was).
+  for (const T of active){ const min = 1000 / (T.kind === 'starfield' ? fps : slow); if (T.at && now - T.at < min - 1) continue;
+    T.t += T.at ? Math.min(100, now - T.at) / 1000 : 0; T.at = now; try { T.draw(T.t); if (T.onframe) T.onframe(); } catch (e) { T.anim = false; } }
   ST.frames++;
   const dt = performance.now() - t0; ST.times.push(dt); if (ST.times.length > 60) ST.times.shift();
-  if (ST.times.length === 60){ const m = ST.times.slice().sort((a, b) => a - b)[30]; if (m > 33){ ST.governor = 'stills'; active.splice(0); waiting.splice(0); return; } if (m > 20) ST.governor = '30fps'; }
+  if (ST.times.length === 60){ const m = ST.times.slice().sort((a, b) => a - b)[30]; if (m > 33){ ST.governor = 'stills'; active.forEach(T => { try { T.draw(STILL_T[T.kind]); } catch (e) { /* kept */ } }); active.splice(0); waiting.splice(0); return; } if (m > 20) ST.governor = '30fps'; }
   if (G.path === 'canvas2d' && dt > 24 && active.length === 1 && active[0].kind !== 'starfield'){ const T = active[0]; T.anim = false; unwant(T); }
   kick();
 }
@@ -400,17 +407,17 @@ function upgrade(el){
   const box = el.querySelector('.rbox') || el, img = box.querySelector('img.rstill');
   const cv = document.createElement('canvas'); cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', (img && img.alt) || el.getAttribute('aria-label') || '');
   box.appendChild(cv);
-  const T = {el, cv, kind, p, at: 0, t0: performance.now(), t: 0, anim: p.animate !== false, draw: t => DRAW[kind](cv, Object.assign({}, p, {t}))};
+  const T = {el, cv, kind, p, at: 0, t: 0, anim: p.animate !== false, draw: t => DRAW[kind](cv, Object.assign({}, T.p, {t}))};
   try { DRAW[kind](cv, Object.assign({}, p, {t: STILL_T[kind]})); ST.stills++; } catch (e) { cv.remove(); try { console.info('SetuRender: kept the still image', e && e.message); } catch (err) { /* none */ } return; }
   if (img){ img.hidden = true; }
   el._sr = T; targets.push(T); ST.mounted++;
-  if (T.anim) observe(T);
+  if (T.anim){ T.obs = true; observe(T); }
 }
 function mountStarfield(el, p){
   if (RM() || el._sr) return; let cv = null;
   try { cv = document.createElement('canvas'); if (!cv.getContext('2d')) return; } catch (e) { return; }
   cv.setAttribute('aria-hidden', 'true'); el.appendChild(cv);
-  const T = {el, cv, kind: 'starfield', p, at: 0, t0: performance.now(), t: 0, anim: true, par: [0, 0], aim: [0, 0], draw(){
+  const T = {el, cv, kind: 'starfield', p, at: 0, t: 0, anim: true, par: [0, 0], aim: [0, 0], draw(){
     if (!el.offsetParent && getComputedStyle(el).position !== 'fixed') return;
     const f = Math.min(1, window.scrollY / Math.max(1, innerHeight)); cv.style.opacity = String(1 - f); if (f >= 1) return;
     T.par[0] += (T.aim[0] - T.par[0]) * .08; T.par[1] += (T.aim[1] - T.par[1]) * .08;
@@ -430,10 +437,22 @@ function mount(root){
   // A figure in a hidden view (every view's markup is in the page) waits: the router mounts a view when it shows it.
   els.filter(el => !el.closest('[hidden]')).forEach(el => { try { upgrade(el); } catch (e) { try { console.info('SetuRender: kept the still image', e && e.message); } catch (err) { /* none */ } } });
 }
+// A component's own controls (the hero's Pause, a portrait's Spin) run its figure through this scheduler, so it obeys the
+// same budget: on screen only, the tab visible, at most 4 at once, the frame governor. on: play or pause; user: the
+// visitor asked (it may then run under reduced motion); onframe: called after each frame drawn.
+function play(el, on, o){
+  const T = el && el._sr; if (!T || T.kind === 'starfield') return false; o = o || {};
+  if (o.onframe) T.onframe = o.onframe; if (o.user !== undefined) T.user = !!o.user;
+  T.paused = !on; T.anim = true;
+  if (!T.obs){ T.obs = true; observe(T); }
+  if (on && (T.vis || !('IntersectionObserver' in window))) want(T); else if (!on) unwant(T);
+  return true;
+}
+const playing = el => !!(el && el._sr && active.includes(el._sr));
 function stats(){ return {path: G.path || path(), mounted: ST.mounted, animating: active.length, frames: ST.frames, stills: ST.stills, contexts: G.gl ? 1 : 0, governor: ST.governor}; }
 let rz = 0;
-addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => targets.forEach(T => { if (T.kind !== 'starfield' && !T.wanted) try { T.draw(T.anim ? T.t : STILL_T[T.kind]); } catch (e) { /* kept */ } }), 150); });
-window.SetuRender = {mount, star, planet, transit, starfield: starfieldDraw, teffRGB, look, transitFlux, ldCoeffs, drawStar2D, drawPlanet2D, stats, fnv, LOOKS, path};
+addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => targets.forEach(T => { if (T.kind !== 'starfield' && !T.wanted) try { T.draw(T.t || STILL_T[T.kind]); } catch (e) { /* kept */ } }), 150); });
+window.SetuRender = {mount, star, planet, transit, starfield: starfieldDraw, teffRGB, look, transitFlux, ldCoeffs, drawStar2D, drawPlanet2D, play, playing, stats, fnv, LOOKS, path};
 // Nothing renders until 200 ms after the page is parsed, except a target marked data-priority="first" (the hero).
 const start = () => { document.querySelectorAll('[data-render][data-priority="first"]').forEach(el => { try { upgrade(el); } catch (e) { /* kept */ } }); idle(() => mount(document)); };
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();

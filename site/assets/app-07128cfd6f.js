@@ -1989,7 +1989,6 @@ const MX = D.methods || null;
 const MX_GM = {sun: 1.3271244e20, jup: 1.2668653e17, earth: 3.986004e14}, MX_R = {sun: 6.957e8, jup: 7.1492e7, earth: 6.3781e6};
 const MX_AU = 1.495978707e11, MX_DAY = 86400, MX_C = 299792458;
 function mxK(P, mp, ms, e, sini){ const gmp = mp * MX_GM.jup, gms = ms * MX_GM.sun; return Math.cbrt(2 * Math.PI / (P * MX_DAY)) * gmp * (sini == null ? 1 : sini) / Math.pow(gms + gmp, 2 / 3) / Math.sqrt(1 - (e || 0) ** 2); }
-function mxBary(a, mp, ms){ const q = mp * MX_GM.jup / (ms * MX_GM.sun + mp * MX_GM.jup); return [a * q, a * (1 - q)]; }
 function mxKeplerE(M, e){
   M = M % (2 * Math.PI); let E = e < 0.8 ? M : Math.PI;
   for (let i = 0; i < 60; i++){ const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-12) break; }
@@ -3762,22 +3761,17 @@ function ctOrbits(name, ps){
     + `<figcaption class="skysrc">The ${esc(name)} system from above: each planet dips the star's light when it crosses the line of sight to the observer. Orbit sizes are the stored semi-major axes (or Kepler's third law from the period and the star's mass); dip depth is (Rp/R★)² from the stored radii. Circular orbits, star and planets not to scale, phases illustrative (no transit times are stored). Source: ${esc(ctSrc())}.</figcaption>`
     + `<details class="orbtable"><summary>The planets: period, orbit and dip depth</summary><div class="tablewrap" tabindex="0" role="region" aria-label="${esc(name)}: period, orbit and dip depth"><table class="pltable"><thead><tr><th scope="col">Planet</th><th scope="col">P (d)</th><th scope="col">a (AU)</th><th scope="col">Rp (R⊕)</th><th scope="col">Depth k² (ppm)</th></tr></thead><tbody>${rows}</tbody></table></div><p class="small">a from ${esc(ct.C.source_short)}; * from Kepler's third law (period and the star's mass). — : radius not stored.</p></details></figure>`;
 }
-// The portrait turns (0.12 rad/s) while on screen, the tab visible and the viewer has not paused it; under reduced motion
-// it holds its still until Spin is pressed. Its own loop, at 30 fps (15 on the Canvas2D path).
+// The portrait turns (0.12 rad/s) through the renderer's scheduler (SetuRender.play): only while on screen and the
+// tab is visible, within the page's animation budget and frame governor. Under reduced motion it holds its still
+// until Spin is pressed; Pause stops it.
 function ctSpin(root){
   const fig = root && root.querySelector('[data-render="planet"]'), btn = fig && fig.querySelector('[data-spin]');
   if (!btn || fig._spin) return; fig._spin = 1;
-  const S = {on: false, t: 0, raf: 0, vis: true, last: 0, at: 0}, ok = () => fig._sr && fig._sr.cv && window.SetuRender;
+  const S = {on: false, user: false}, ok = () => fig._sr && fig._sr.cv && window.SetuRender && SetuRender.play;
   const set = () => { btn.hidden = !ok(); btn.textContent = S.on ? 'Pause' : 'Spin'; btn.setAttribute('aria-pressed', String(S.on)); };
-  const frame = now => { S.raf = 0; if (!S.on || !S.vis || document.hidden || !ok() || !fig.isConnected) return;
-    const dt = Math.min(.1, (now - (S.last || now)) / 1000); S.last = now; S.t += dt;
-    if (now - S.at >= (SetuRender.stats().path === 'canvas2d' ? 66 : 33)){ S.at = now; try { SetuRender.planet(fig._sr.cv, Object.assign({}, fig._sr.p, {t: S.t})); } catch (e) { S.on = false; set(); return; } }
-    S.raf = requestAnimationFrame(frame); };
-  const kick = () => { if (!S.raf && S.on && S.vis && !document.hidden){ S.last = 0; S.raf = requestAnimationFrame(frame); } };
-  btn.addEventListener('click', () => { S.on = !S.on; set(); kick(); });
-  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { S.vis = e.isIntersecting; kick(); }), {rootMargin: '80px'}).observe(fig);
-  document.addEventListener('visibilitychange', kick);
-  let n = 0; const wait = () => { if (ok()){ S.on = !matchMedia('(prefers-reduced-motion: reduce)').matches; set(); kick(); } else if (n++ < 60) setTimeout(wait, 250); };
+  const sync = () => { if (ok()) SetuRender.play(fig, S.on, {user: S.user}); };
+  btn.addEventListener('click', () => { S.on = !S.on; S.user = S.on; set(); sync(); });
+  let n = 0; const wait = () => { if (ok()){ S.on = !matchMedia('(prefers-reduced-motion: reduce)').matches; set(); sync(); } else if (n++ < 60) setTimeout(wait, 250); };
   wait();
 }
 // The shared animated system, from planet i's stored values only; the caption says what is not stored.
@@ -4347,18 +4341,21 @@ function missionShown(on){
   if (!on) document.body.classList.remove('mcpop');
 }
 
-// ---------- viz.hero (V01): the featured star's transit, looped while on screen; Pause; a still under reduced motion ----------
-window.SetuHero = window.SetuHero || {frames: 0, playing: false};
+// ---------- viz.hero (V01): the featured star's transit, looped while on screen through the renderer's scheduler; Pause; a still under reduced motion ----------
+window.SetuHero = window.SetuHero || {frames: 0};
 (function(){
   const RMq = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
   function setup(st){
     if (st._hero) return; st._hero = true;
     const fig = st.querySelector('.herofig'), btn = st.querySelector('[data-hero-pause]'); if (!fig) return;
     let rot = []; try { rot = JSON.parse(st.dataset.rotate || '[]'); } catch (e) { rot = []; }
-    const S = {vis: false, paused: RMq(), raf: 0, t0: 0, el: 0, last: 0, times: [], slow: false, p: null};
+    // paused: the visitor's choice (pressed under reduced motion); user: the visitor pressed play, so it may run then.
+    const S = {paused: RMq(), user: false, p: null};
     try { S.p = JSON.parse(fig.dataset.params || '{}'); } catch (e) { S.p = {}; }
-    const cv = () => fig._sr && fig._sr.cv;
-    function draw(t){ const c = cv(); if (!c || !window.SetuRender) return false; SetuRender.transit(c, Object.assign({}, S.p, {t})); return true; }
+    const T = () => fig._sr;
+    // The loop itself is SetuRender's (on screen only, the tab visible, the frame governor); this only counts its frames.
+    Object.defineProperty(window.SetuHero, 'playing', {configurable: true, get: () => !!(window.SetuRender && SetuRender.playing && SetuRender.playing(fig))});
+    function still(){ const t = T(); if (!t) return; t.p = S.p; try { SetuRender.transit(t.cv, Object.assign({}, S.p, {t: null})); } catch (e) { /* the frame stays */ } }
     // One featured run per UTC day (the same for every visitor that day); the page itself is rendered with the lead.
     if (!RMq() && rot.length > 1){
       const pick = rot[Math.floor(Date.now() / 864e5) % rot.length];
@@ -4366,28 +4363,22 @@ window.SetuHero = window.SetuHero || {frames: 0, playing: false};
         S.p = pick.p; st.dataset.run = pick.run; fig.dataset.params = JSON.stringify(pick.p);
         const img = fig.querySelector('img.rstill'), cap = fig.querySelector('figcaption');
         if (img) img.alt = pick.alt; if (cap) cap.innerHTML = pick.caption;
-        if (fig._sr){ fig._sr.p = pick.p; fig._sr.cv.setAttribute('aria-label', pick.alt); draw(null); }
       }
     }
-    function setBtn(){ if (!btn) return; btn.setAttribute('aria-pressed', S.paused ? 'true' : 'false'); btn.hidden = !cv(); }
-    function frame(now){
-      S.raf = 0; if (!want()) return;
-      const fps = S.slow ? 30 : 60; if (now - S.last < 1000 / fps - 1){ S.raf = requestAnimationFrame(frame); return; }
-      S.el += Math.min(100, now - (S.last || now)); S.last = now;
-      const a = performance.now(); if (!draw(S.el / 1000)) return; const dt = performance.now() - a;
-      SetuHero.frames++; S.times.push(dt); if (S.times.length > 60) S.times.shift();
-      if (S.times.length === 60){ const m = S.times.slice().sort((x, y) => x - y)[30]; if (m > 33){ S.paused = true; S.dead = true; draw(null); setBtn(); return; } S.slow = m > 20; }
-      S.raf = requestAnimationFrame(frame);
+    function setBtn(){ if (!btn) return; btn.setAttribute('aria-pressed', S.paused ? 'true' : 'false'); btn.hidden = !T(); }
+    function sync(){ if (!T() || !window.SetuRender || !SetuRender.play) return;
+      SetuRender.play(fig, !S.paused, {user: S.user, onframe: () => { window.SetuHero.frames++; }}); }
+    function ensure(){
+      if (!T() && window.SetuRender && !fig.closest('[hidden]')) { try { SetuRender.mount(fig.parentElement); } catch (e) { /* the still stays */ } }
+      const t = T(), img = fig.querySelector('img.rstill');
+      if (t && img && t.cv.getAttribute('aria-label') !== img.alt){ t.cv.setAttribute('aria-label', img.alt); still(); }
+      if (t && !t._hero){ t._hero = true; t.p = S.p; sync(); }
+      setBtn();
     }
-    const want = () => S.vis && !S.paused && !document.hidden && !S.dead && !!cv();
-    function kick(){ SetuHero.playing = want(); if (SetuHero.playing && !S.raf){ S.last = 0; S.raf = requestAnimationFrame(frame); } if (!SetuHero.playing && S.raf){ cancelAnimationFrame(S.raf); S.raf = 0; } }
-    function ensure(){ if (!fig._sr && window.SetuRender && !fig.closest('[hidden]')) { try { SetuRender.mount(fig.parentElement); } catch (e) { /* the still stays */ } }
-      if (fig._sr && rot.length && fig._sr.cv.getAttribute('aria-label') !== (fig.querySelector('img.rstill') || {}).alt){ fig._sr.p = S.p; fig._sr.cv.setAttribute('aria-label', fig.querySelector('img.rstill').alt); draw(null); } setBtn(); }
-    if (btn) btn.addEventListener('click', () => { S.paused = !S.paused; S.dead = false; S.times = []; setBtn(); kick(); });
-    document.addEventListener('visibilitychange', kick);
-    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(en => { S.vis = en.isIntersecting; if (S.vis) ensure(); kick(); }), {rootMargin: '80px'}).observe(fig);
-    else { S.vis = true; ensure(); kick(); }
-    ensure();
+    if (btn) btn.addEventListener('click', () => { S.paused = !S.paused; S.user = !S.paused; setBtn(); sync(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) ensure(); }), {rootMargin: '80px'}).observe(fig);
+    // The renderer's script may arrive after this one: look again for a few seconds.
+    let n = 0; const wait = () => { ensure(); if (!T() && n++ < 40) setTimeout(wait, 250); }; wait();
   }
   const all = () => document.querySelectorAll('.herostage[data-viz="hero"]').forEach(setup);
   window.SetuHero.setup = all;

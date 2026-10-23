@@ -241,8 +241,6 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .theatre .cap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font:var(--t-data);color:var(--stage-dim)}
 .theatre svg{display:block;width:100%;height:auto}
 .theatre .foot{font-size:12px;color:var(--stage-dim);line-height:1.5;margin:0}
-.axisrow{display:flex;justify-content:space-between;gap:8px;font:11px var(--mono);color:var(--stage-dim);margin-top:-6px}
-.axisrow span:nth-child(2){text-align:center}
 .tx-side{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:14px}
 .scorecard{padding:14px;display:grid;gap:12px}
 .scorecard .txverdict{margin:0;font-size:14px;line-height:1.5;color:var(--ink-2)}
@@ -439,6 +437,7 @@ svg.calplane .pt.cl{fill:var(--blue);fill-opacity:.85;stroke:var(--blue);stroke-
 .card h2 .sub{font:500 11px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.04em}
 .idtag{font:400 11px var(--mono);color:var(--ink-3);margin-left:4px;text-transform:none;letter-spacing:0}
 details summary{cursor:pointer}
+.srcnote{margin:-4px 0 12px;font-size:12.5px;color:var(--ink-3)}.srcnote summary{display:inline-flex;align-items:center;min-height:32px}.srcnote p{margin:4px 0 0;overflow-wrap:anywhere}
 /* panel, runs */
 #route-sentinels .row2>.panelring{flex:1 1 360px;min-width:0}
 .benchodo{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
@@ -702,13 +701,6 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
 .gxtable th,.gxtable td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 .gxtable .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
 .gxtablecard a{display:inline-flex;align-items:center;min-height:44px}
-/* the Overview's teaser */
-.gxteaser{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;min-height:360px;background:#000}
-.gxtcanvas{width:100%;height:100%;min-height:360px;display:block}
-.gxtcopy{padding:28px 32px 28px 8px;display:grid;gap:10px;justify-items:start}
-.gxtcopy h2{margin:0;font:600 clamp(24px,3vw,34px)/1.1 var(--sans);letter-spacing:-.02em;color:var(--stage-ink)}
-.gxtcopy p{margin:0;color:var(--stage-dim)}
-.gxtcopy .small{font-size:12px}
 @media (max-width:699.98px){
   .gxstage{height:64vh;min-height:380px;border-radius:20px}
   .gxtr{right:8px;top:8px;gap:6px}
@@ -729,9 +721,6 @@ pre.err{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0;font-size:12px;
   .gxsheet[open] .gxcontrols{max-height:52vh;overflow:auto}
   .gxtime output{min-width:0}
   .gxmethods .chip,.gxsheet .chip,.gxsheet .btn{min-height:44px}
-  .gxteaser{grid-template-columns:1fr}
-  .gxtcanvas{min-height:260px;height:260px}
-  .gxtcopy{padding:0 18px 22px}
   .gxkeys{display:none}
 }
 @media (prefers-reduced-motion: reduce){
@@ -1401,11 +1390,8 @@ body[data-route="overview"] main{padding-top:8px}
 .launch h1{margin:0;font-size:clamp(44px,7vw,96px)}
 .route>header.launch .sub{margin:16px auto 0}
 .launch .ctas{margin-top:24px}
-.planetfig{margin:28px 0 0;background:transparent;border-radius:0;overflow:visible}
-.planetfig svg{border-radius:28px;border:1px solid rgba(255,255,255,.06);height:clamp(140px,17vw,240px)!important}
 .sweepline{margin:0;font-size:17px;line-height:1.5;color:var(--ink-2);max-width:72ch}
 .sweepline a{white-space:nowrap}
-.planetfig figcaption{position:static;margin:8px 4px 0;font-size:12px;color:var(--ink-3);text-align:left}
 .proof{margin:0 auto}
 .dohere{display:grid;gap:14px}
 .dohere h2{font-size:15px;color:var(--ink-3);font-weight:500}
@@ -1517,8 +1503,6 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
   .crumbs a{min-height:44px}
   .footnav a{min-height:44px}
   .route>header.launch{padding-top:12px}
-  .planetfig{margin-top:20px}
-  .planetfig svg{border-radius:18px}
   .proof{margin-top:0}
   .docard{padding:16px 40px 16px 16px}
   main a.docard{display:flex;padding:16px 40px 16px 16px;line-height:1.45}
@@ -1558,8 +1542,11 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 }
 
 /* ---------- viz.gallery (V03): each worked example's star in its colour, what the run measured as shadows ---------- */
-#route-overview .excards{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))}
-#route-overview .excard{padding:0;overflow:hidden;gap:0;background:var(--bg-2);-webkit-backdrop-filter:none;backdrop-filter:none;transition:transform var(--d-2) var(--ease),border-color var(--d-2) var(--ease)}
+#route-overview .excards{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));row-gap:16px}
+/* Every card in a row has the same shape: its stage, caption and text sit on shared row lines (subgrid). */
+#route-overview .excards>li{display:grid;grid-row:span 3;grid-template-rows:subgrid}
+#route-overview .excard{grid-row:span 3;display:grid;grid-template-rows:subgrid;padding:0;overflow:hidden;gap:0;background:var(--bg-2);-webkit-backdrop-filter:none;backdrop-filter:none;transition:transform var(--d-2) var(--ease),border-color var(--d-2) var(--ease)}
+#route-overview .excard .gstage{grid-row:span 2;grid-template-rows:subgrid}
 #route-overview .excard:hover{transform:translateY(-2px);border-color:var(--line-3)}
 .exbody{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px;flex:1}
 .exbody p{margin:0}
@@ -1568,7 +1555,7 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 .gbox>svg,.gbox>canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .gbox>svg[hidden]{display:none}
 .gstage .stage-tag{font-size:10px;min-height:22px;padding:2px 7px}
-.gstage .readout{background:var(--stage);color:var(--stage-dim);padding:8px 12px 10px;margin:0;font:400 12px/1.45 var(--sans);letter-spacing:0}
+.gstage .readout{background:var(--stage);color:var(--stage-dim);padding:8px 12px 10px;margin:0;font:var(--t-data);letter-spacing:0;font-size:11.5px}
 @media (max-width:699.98px){
   .gbox{aspect-ratio:16/10}
   .gstage .readout{font-size:11.5px}
@@ -1666,7 +1653,7 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 /* ---------- viz/panelring (V06): the reviewers converging on the stored panel score ---------- */
 .panelring{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;min-width:0}
 .prfig{margin:0;display:grid;grid-template-columns:minmax(0,1fr);min-width:0;background-color:var(--stage);background-image:radial-gradient(ellipse at 50% 42%,#0E1630 0,#000 70%)}
-.prfig svg{display:block;width:100%;height:auto;margin-top:30px}
+.prfig svg{display:block;width:100%;max-width:520px;height:auto;margin:30px auto 0}
 .prfig .prline{fill:none;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:0;stroke-opacity:.85;transition:stroke-dashoffset var(--d-3) var(--ease)}
 .prfig .prline.sen{stroke:var(--sen)}
 .prfig .prline.prb{stroke:var(--prb-ink)}

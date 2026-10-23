@@ -60,11 +60,8 @@
 .launch h1{margin:0;font-size:clamp(44px,7vw,96px)}
 .route>header.launch .sub{margin:16px auto 0}
 .launch .ctas{margin-top:24px}
-.planetfig{margin:28px 0 0;background:transparent;border-radius:0;overflow:visible}
-.planetfig svg{border-radius:28px;border:1px solid rgba(255,255,255,.06);height:clamp(140px,17vw,240px)!important}
 .sweepline{margin:0;font-size:17px;line-height:1.5;color:var(--ink-2);max-width:72ch}
 .sweepline a{white-space:nowrap}
-.planetfig figcaption{position:static;margin:8px 4px 0;font-size:12px;color:var(--ink-3);text-align:left}
 .proof{margin:0 auto}
 .dohere{display:grid;gap:14px}
 .dohere h2{font-size:15px;color:var(--ink-3);font-weight:500}
@@ -171,8 +168,6 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
   .crumbs a{min-height:44px}
   .footnav a{min-height:44px}
   .route>header.launch{padding-top:12px}
-  .planetfig{margin-top:20px}
-  .planetfig svg{border-radius:18px}
   .proof{margin-top:0}
   .docard{padding:16px 40px 16px 16px}
 }
