@@ -960,7 +960,9 @@ def test_theme_control_meta_and_first_paint(run_dir, tmp_path):
     assert "SETUHQ_THEMES = ['dark', 'light', 'system']" in SHELL_JS and "var t='dark'" in head
     # The framed Docket follows the theme.
     assert "document.documentElement.setAttribute('data-theme', m.theme)" in FRAME_BRIDGE_JS
-    assert ':root[data-theme=\"light\"]' in FRAME_THEME_CSS and "--paper:#000" in FRAME_THEME_CSS
+    # Its colours are the site's tokens under the Docket's names (design.DOCKET_ALIASES), dark first, in the Docket itself.
+    from setuhq.docket import DOCKET_CSS
+    assert ':root[data-theme="light"]{' in DOCKET_CSS and "--paper:var(--bg)" in DOCKET_CSS and "--paper:#" not in FRAME_THEME_CSS
 
 
 def test_phone_feed_is_three_line_cards_with_a_distinct_sort_group(run_dir, catalog, tmp_path):

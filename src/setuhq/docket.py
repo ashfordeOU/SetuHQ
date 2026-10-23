@@ -49,102 +49,100 @@ from setuhq import brand
 from setuhq.dashboard import _load_run
 from setuhq.discover import MAX_FEED_DEPTH_PPM, MAX_FEED_FAP, MIN_FEED_TRANSITS, TWO_SECTOR_PERIOD_TOL, two_sector_partner
 from setuhq.names import ATTRIBUTION, PROBES_ONLY, PROVIDER_BY_KIND, SENTINEL_KINDS, panel_mode, reviewer_names, reviewer_provenance
+from setuhq.design import DOCKET_ALIASES, PRINT_CSS, tokens_css
 from setuhq.vet import DISQUALIFYING
 
 DOCKET_CSS = """
-:root{--paper:#f7f6f2;--ink:#16181d;--rule:#d9d7d0;--muted:#595c64;--fit:#1f5fbf;--pass:#256b43;--flag:#7a5900;--reject:#b23a3a;--panel:#fcfbf8;--sel:#ebe9e1;
---l-det:#6e6444;--l-det2:#4d6a78;--l-cl1:#765aa0;--l-cl2:#9a5633;--cons:#16181d}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#121317;--ink:#ecebe6;--rule:#2a2c33;--muted:#9a9ca4;--fit:#6fa0ff;--pass:#5cc08a;--flag:#e0b243;--reject:#ef7070;--panel:#17181d;--sel:#22242b;--l-det:#b5a777;--l-det2:#8bb0c0;--l-cl1:#a98bd6;--l-cl2:#d88a62;--cons:#ecebe6;color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#121317;--ink:#ecebe6;--rule:#2a2c33;--muted:#9a9ca4;--fit:#6fa0ff;--pass:#5cc08a;--flag:#e0b243;--reject:#ef7070;--panel:#17181d;--sel:#22242b;--l-det:#b5a777;--l-det2:#8bb0c0;--l-cl1:#a98bd6;--l-cl2:#d88a62;--cons:#ecebe6;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 "Geist",system-ui,sans-serif;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-width:0}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 var(--sans);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-width:0}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.mono{font-family:"Geist Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 :focus-visible{outline:2px solid var(--fit);outline-offset:2px}
 .app{display:grid;grid-template-columns:340px minmax(0,1fr);min-height:100vh;min-width:0}
 .list{border-right:1px solid var(--rule);padding:18px 0;overflow:auto;max-height:100vh;position:sticky;top:0;min-width:0}
 .run{padding:0 16px 14px;border-bottom:1px solid var(--rule);margin-bottom:8px}
-.run h1{font:600 17px/1.2 "Geist",sans-serif;margin:0 0 6px}
-.counts{margin:0 0 8px;font:13px/1.5 "Geist Mono",monospace}
+.run h1{font:600 17px/1.2 var(--sans);margin:0 0 6px}
+.counts{margin:0 0 8px;font:13px/1.5 var(--mono)}
 .revcount{color:var(--ink)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font:12px "Geist Mono",monospace;border:1px solid var(--rule);background:none;color:var(--muted);padding:3px 8px;border-radius:999px;cursor:pointer}
+.chip{font:12px var(--mono);border:1px solid var(--rule);background:none;color:var(--muted);padding:3px 8px;border-radius:999px;cursor:pointer}
 .chip[aria-pressed="true"]{color:var(--ink);border-color:var(--ink)}
-.listtoggle{display:none;margin-top:10px;font:12px "Geist Mono",monospace;background:none;border:1px solid var(--rule);color:var(--ink);border-radius:4px;padding:4px 10px;cursor:pointer}
+.listtoggle{display:none;margin-top:10px;font:12px var(--mono);background:none;border:1px solid var(--rule);color:var(--ink);border-radius:4px;padding:4px 10px;cursor:pointer}
 #rows:focus-visible{outline:2px solid var(--fit);outline-offset:-2px}
 .sig{border-bottom:1px solid var(--rule);padding:4px 0 6px}
 .sighead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 16px 4px;cursor:pointer}
-.sighead small,.row small{display:block;font:11px "Geist Mono",monospace;color:var(--muted)}
+.sighead small,.row small{display:block;font:11px var(--mono);color:var(--muted)}
 .signame{font-weight:600;font-size:13px}
 .row{display:grid;grid-template-columns:90px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 16px 6px 28px;cursor:pointer;border-left:3px solid transparent}
-.row:hover{background:var(--sel)}
-.row[aria-selected="true"]{border-left-color:var(--ink);background:var(--sel)}
+/* The selected and hovered rows sit on the panel, so the status words keep 4.5:1 in both themes. */
+.row:hover{background:var(--panel)}
+.row[aria-selected="true"]{border-left-color:var(--ink);background:var(--panel)}
 #rows:focus-visible .row[aria-selected="true"]{outline:2px solid var(--fit);outline-offset:-2px}
-.glyph{font:600 12px "Geist Mono",monospace;white-space:nowrap}
+.glyph{font:600 12px var(--mono);white-space:nowrap}
 .word{font-weight:500}
-.badge{font:600 11px "Geist Mono",monospace;white-space:nowrap}
+.badge{font:600 11px var(--mono);white-space:nowrap}
 .g-pass{color:var(--pass)}.g-flag{color:var(--flag)}.g-fail{color:var(--reject)}.g-nm{color:var(--muted)}
 .dossier{padding:22px 28px 40px;min-width:0;display:grid;gap:22px;align-content:start}
 #dtop,#drest{display:grid;gap:22px;min-width:0;align-content:start}
 #listslot:empty{display:none}
 .outcome{border:1px solid currentColor;border-left-width:6px;border-radius:6px;padding:12px 14px;display:grid;gap:4px;background:var(--panel)}
-.out-main{font:600 20px/1.2 "Geist",sans-serif}
+.out-main{font:600 20px/1.2 var(--sans)}
 .out-main .glyph{font:inherit}
-.out-why,.out-feed,.xm{margin:0;font:13px/1.5 "Geist",sans-serif;color:var(--ink)}
+.out-why,.out-feed,.xm{margin:0;font:13px/1.5 var(--sans);color:var(--ink)}
 .xm-k{color:var(--muted)}
 .head{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--rule);padding-bottom:12px}
-.head h2{font:600 22px/1.25 "Geist",sans-serif;margin:0}
-.dipid{font:500 14px "Geist Mono",monospace;color:var(--muted);overflow-wrap:anywhere}
-.sigout{font:12px "Geist Mono",monospace;color:var(--muted)}
-.facts{display:flex;flex-wrap:wrap;gap:6px 22px;font:13px "Geist Mono",monospace}
+.head h2{font:600 22px/1.25 var(--sans);margin:0}
+.dipid{font:500 14px var(--mono);color:var(--muted);overflow-wrap:anywhere}
+.sigout{font:12px var(--mono);color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:6px 22px;font:13px var(--mono)}
 .facts span{color:var(--muted);margin-right:6px}
 .sec{display:grid;gap:8px;min-width:0}
 .sec>header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px}
 .sec>header h3{margin:0}
-.sectoggle{font:600 12px/1 "Geist Mono",monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:none;border:0;padding:4px 0;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.sectoggle{font:600 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:none;border:0;padding:4px 0;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .sectoggle:hover{color:var(--ink)}
 .caret{display:inline-block;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid currentColor;transition:transform 150ms cubic-bezier(.2,.7,.2,1)}
 .sectoggle[aria-expanded="false"] .caret{transform:rotate(-90deg)}
-.sec>header em{font:12px "Geist",sans-serif;color:var(--muted);font-style:normal}
+.sec>header em{font:12px var(--sans);color:var(--muted);font-style:normal}
 .secbody{display:grid;gap:8px;min-width:0}
 .secbody[hidden]{display:none}
 svg{display:block;width:100%;height:auto;overflow:visible}
-svg text{font:11px "Geist Mono",monospace;fill:var(--muted)}
+svg text{font:11px var(--mono);fill:var(--muted)}
 svg .grid{stroke:var(--rule);stroke-width:1}
 svg .hl{fill:var(--ink)}
 .hero-wrap{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:8px}
 .dips{display:flex;flex-wrap:wrap;gap:6px}
-.dipbtn{font:12px "Geist Mono",monospace;background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:5px 9px;cursor:pointer}
-.dipbtn.cur{border-color:var(--ink);background:var(--sel)}
+.dipbtn{font:12px var(--mono);background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:5px 9px;cursor:pointer}
+.dipbtn.cur{border-color:var(--ink);background:var(--panel);box-shadow:inset 0 0 0 1px var(--ink)}
 .compare{display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
 .compare>div{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:8px;min-width:0}
-.compare p{margin:4px 0 0;font:12px "Geist",sans-serif;color:var(--muted)}
+.compare p{margin:4px 0 0;font:12px var(--sans);color:var(--muted)}
 .scroll{min-width:0}
-.ledger{width:100%;border-collapse:collapse;font:13px "Geist Mono",monospace}
+.ledger{width:100%;border-collapse:collapse;font:13px var(--mono)}
 .ledger td{padding:7px 8px;border-bottom:1px solid var(--rule);vertical-align:top;min-width:0;overflow-wrap:anywhere}
 .ledger td.c-name{white-space:nowrap}
 .ledger tr.chk:focus-visible{outline:2px solid var(--fit);outline-offset:-2px}
 .ledger tr.chk-not_measured td.c-val{color:var(--muted)}
-.ledger th.grp{text-align:left;font:600 11px "Geist Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:14px 8px 6px;border-bottom:1px solid var(--rule)}
-.ledger .why{font:13px "Geist",sans-serif;color:var(--muted)}
+.ledger th.grp{text-align:left;font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:14px 8px 6px;border-bottom:1px solid var(--rule)}
+.ledger .why{font:13px var(--sans);color:var(--muted)}
 .rat{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));min-width:0}
 .rat>div{border-top:2px solid var(--rule);padding-top:8px;min-width:0}
-.rat b{font:600 12px "Geist Mono",monospace}
+.rat b{font:600 12px var(--mono)}
 .rat p{margin:6px 0 0;color:var(--muted);font-size:13px}
-.kind{display:inline-block;font:600 11px "Geist Mono",monospace;border-radius:3px;padding:0 5px;border:1px solid currentColor}
+.kind{display:inline-block;font:600 11px var(--mono);border-radius:3px;padding:0 5px;border:1px solid currentColor}
 .kind-sim{color:var(--l-det)}.kind-cl{color:var(--l-cl1)}
-.prov{font:11px/1.6 "Geist Mono",monospace;color:var(--muted);border-top:1px solid var(--rule);padding-top:10px;overflow-wrap:anywhere}
+.prov{font:11px/1.6 var(--mono);color:var(--muted);border-top:1px solid var(--rule);padding-top:10px;overflow-wrap:anywhere}
 .empty{color:var(--muted);font-style:italic;padding:12px 0}
-.hint{font:12px "Geist Mono",monospace;color:var(--muted)}
+.hint{font:12px var(--mono);color:var(--muted)}
 .tagcand{display:inline-block;border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-right:4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
-kbd{font:11px "Geist Mono",monospace;border:1px solid var(--rule);border-radius:4px;padding:0 4px}
+kbd{font:11px var(--mono);border:1px solid var(--rule);border-radius:4px;padding:0 4px}
 .strip{position:relative;padding:8px;min-width:0;overflow:hidden}
 .strip svg{width:100%;touch-action:pan-y}
 .strip .lanelbl,.strip .halo{paint-order:stroke;stroke:var(--panel);stroke-width:3px;stroke-linejoin:round}
-.tip{position:absolute;z-index:2;max-width:min(340px,80%);background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:6px 8px;font:11px/1.45 "Geist Mono",monospace;color:var(--ink);pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.12)}
-.readout{margin-top:6px;min-height:3em;font:11px/1.45 "Geist Mono",monospace;color:var(--ink);overflow-wrap:anywhere}
-.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font:12px "Geist",sans-serif;color:var(--muted)}
+.tip{position:absolute;z-index:2;max-width:min(340px,80%);background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:6px 8px;font:11px/1.45 var(--mono);color:var(--ink);pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.readout{margin-top:6px;min-height:3em;font:11px/1.45 var(--mono);color:var(--ink);overflow-wrap:anywhere}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font:12px var(--sans);color:var(--muted)}
 .legend i{display:inline-block;vertical-align:middle;margin-right:6px}
 .legend .k-pt{width:6px;height:6px;border-radius:50%;background:var(--ink)}
 .legend .k-box{width:16px;height:0;border-top:2px solid var(--fit)}
@@ -152,21 +150,21 @@ kbd{font:11px "Geist Mono",monospace;border:1px solid var(--rule);border-radius:
 .legend .k-lane{width:14px;height:8px;border-radius:2px;background:var(--l-det)}
 .legend .k-hatch{width:14px;height:8px;border-radius:2px;border:1px solid var(--muted);background:repeating-linear-gradient(45deg,var(--muted) 0 2px,transparent 2px 4px)}
 .panelfact{flex-basis:100%;min-width:0;overflow-wrap:anywhere}
-.countrule{margin:4px 0 0;font:12px/1.5 "Geist",sans-serif;color:var(--muted)}
+.countrule{margin:4px 0 0;font:12px/1.5 var(--sans);color:var(--muted)}
 .countlist{color:var(--muted)}
-.scope{margin:0;font:12px/1.5 "Geist",sans-serif;color:var(--muted)}
-.filternote{margin:0;border:1px dashed var(--flag);border-radius:6px;padding:8px 12px;font:13px/1.5 "Geist",sans-serif}
+.scope{margin:0;font:12px/1.5 var(--sans);color:var(--muted)}
+.filternote{margin:0;border:1px dashed var(--flag);border-radius:6px;padding:8px 12px;font:13px/1.5 var(--sans)}
 .filternote[hidden]{display:none}
 .xm-cmp{display:block;margin-top:2px}
 .xm-one{margin:0}
 .xm-prov{margin-top:4px;font-size:12px;color:var(--muted)}
-.xm-prov summary{cursor:pointer;display:flex;align-items:center;min-height:28px;font:600 12px "Geist Mono",monospace;color:var(--muted);border-radius:4px}
+.xm-prov summary{cursor:pointer;display:flex;align-items:center;min-height:28px;font:600 12px var(--mono);color:var(--muted);border-radius:4px}
 .xm-prov summary:focus-visible{outline:2px solid var(--fit);outline-offset:2px}
 .xm-prov ul{margin:4px 0 0;padding-left:18px;overflow-wrap:anywhere}
 .sighead{scroll-margin-top:calc(var(--top, 0px) + 8px)}
 @media (max-width:699.98px){.xm-prov summary{display:flex;align-items:center;min-height:44px;padding:12px 0;box-sizing:border-box}}
-.ledger thead th{text-align:left;font:600 11px "Geist Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;border-bottom:1px solid var(--ink)}
-.epochs{margin:6px 0 0;padding-left:16px;font:12px "Geist Mono",monospace;color:var(--ink)}
+.ledger thead th{text-align:left;font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;border-bottom:1px solid var(--ink)}
+.epochs{margin:6px 0 0;padding-left:16px;font:12px var(--mono);color:var(--ink)}
 @media (max-width:900px){
   .app{grid-template-columns:minmax(0,1fr)}
   .list{display:none}
@@ -191,22 +189,30 @@ kbd{font:11px "Geist Mono",monospace;border:1px solid var(--rule);border-radius:
 }
 /* Phone (both the standalone page and the shell's framed copy): 44 px targets, a fixed Signals jump, the
    signal list as an accordion, and (standalone only; the shell has its own) a dip picker at the top. */
+.runstar{display:flex;align-items:center;gap:12px;margin:0;font:12px/1.45 var(--mono);color:var(--muted)}
+.runstar .stardisc{flex:none;width:44px;height:44px}
+@media print{:root,:root[data-theme]{--paper:#fff}}
 .jumplist,.dippick{display:none}
 @media (max-width:700px){
-  .jumplist{display:inline-flex;align-items:center;position:fixed;right:12px;bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:30;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--rule);background:var(--ink);color:var(--paper);font:500 14px/1 "Geist",sans-serif;box-shadow:0 10px 30px -12px rgba(0,0,0,.5);cursor:pointer}
+  .jumplist{display:inline-flex;align-items:center;position:fixed;right:12px;bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:30;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--rule);background:var(--ink);color:var(--paper);font:500 14px/1 var(--sans);box-shadow:0 10px 30px -12px rgba(0,0,0,.5);cursor:pointer}
   .dipbtn,.chip,.listtoggle{min-height:44px;padding:10px 12px;box-sizing:border-box}
   .sectoggle{min-height:44px;padding:12px 0;box-sizing:border-box}
   #rows .sig:not(.cur) .row{display:none}
-  .showdips{display:block;margin-top:4px;font:500 12px/1.4 "Geist",sans-serif;color:var(--fit)}
+  .showdips{display:block;margin-top:4px;font:500 12px/1.4 var(--sans);color:var(--fit)}
   #rows .sighead[role=button]{min-height:44px;cursor:pointer}
   .readout{min-height:44px;box-sizing:border-box}
   .dippick{display:flex;align-items:center;gap:10px;margin:12px 0 4px}
-  .dippick label{font:500 12px "Geist",sans-serif;color:var(--muted)}
-  .dippick select{flex:1 1 0;width:0;min-width:0;min-height:44px;font:500 16px "Geist Mono",monospace;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:0 8px}
+  .dippick label{font:500 12px var(--sans);color:var(--muted)}
+  .dippick{flex-wrap:wrap}
+  .dippick select{flex:1 1 100%;width:100%;min-width:0;min-height:44px;font:500 16px var(--sans);color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:0 8px}
   html.framed .dippick{display:none}
 }
 
 """
+
+# The site's tokens under the Docket's own names (design.DOCKET_ALIASES): the observatory surfaces in dark, the light set
+# under data-theme="light" (or "system" on a light device), and the light set on white paper in print.
+DOCKET_CSS = tokens_css(":root", aliases=DOCKET_ALIASES) + PRINT_CSS + DOCKET_CSS
 
 DOCKET_JS = r"""
 const D = JSON.parse(document.getElementById('data').textContent);
@@ -1565,6 +1571,7 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
         xm["comparison"] = compare_with_archive(xm.get("planets") or [], run["candidates"], validation=xm.get("validation"))
     data = {
         "title": title,
+        "star": run_star_params(run_dir, targets[0] if targets else ""),
         "candidates": run["candidates"],
         "signals": signals,
         "subjects": run["subjects"],
@@ -1600,6 +1607,49 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
     return data
 
 
+PAGE_FONTS = ("geist-", "geistmono-", "setu-symbols")  # the files a stand-alone page reads; not the wordmark's Unbounded
+
+
+def copy_page_fonts(out: str | Path) -> None:
+    """Beside a stand-alone page (the case file, the plates): Geist, Geist Mono and SetuHQ's symbol font, their
+    licences, and a fonts.css without the faces it does not copy."""
+    import re
+    import shutil
+
+    dest = Path(out) / "assets" / "fonts"
+    (dest / "files").mkdir(parents=True, exist_ok=True)
+    for f in sorted((FONTS_DIR / "files").iterdir()):
+        if f.name.startswith(PAGE_FONTS):
+            shutil.copyfile(f, dest / "files" / f.name)
+    for f in ("OFL-geist.txt", "OFL-geist-mono.txt"):
+        shutil.copyfile(FONTS_DIR / f, dest / f)
+    css = (FONTS_DIR / "fonts.css").read_text()
+    css = re.sub(r"/\* Unbounded[^*]*\*/\s*@font-face \{[^}]*\}\s*", "", css)
+    (dest / "fonts.css").write_text(css.replace("Geist, Geist Mono and Unbounded are", "Geist and Geist Mono are"))
+
+
+def run_star_params(run_dir: str | Path, target: str) -> dict:
+    """The run's star as its stellar.json stores it: {target, teff, radius, source}, or {} when it is not stored."""
+    path = Path(run_dir) / "stellar.json"
+    s = ((json.loads(path.read_text()) or {}).get(target) or {}) if path.exists() and target else {}
+    return {"target": target, "teff": s.get("teff"), "radius": s.get("radius"), "source": s.get("source") or ""} if s.get("teff") else {}
+
+
+def star_head(star: dict, uid: str = "docket") -> str:
+    """The case file's head: the run's star as a static disc in its blackbody colour (no script, no network)."""
+    if not star or not star.get("teff"):
+        return ""
+    from setuhq.renderer import star_svg
+
+    r = f', {star["radius"]:.2f} R☉' if star.get("radius") else ""
+    words = f'{star["target"]} in its blackbody colour: {star["teff"]:,.0f} K{r} ({star.get("source") or "as the run stores it"})'
+    return f'<p class="runstar">{star_svg(star["teff"], 22, uid=uid)}<span>{html.escape(words)}.</span></p>'
+
+
+THEME_JS = ('try{var t=localStorage.getItem("setuhq-theme");if(t==="light"||t==="dark"||t==="system")'
+            'document.documentElement.setAttribute("data-theme",t)}catch(e){}')
+
+
 def _finite(x):
     if isinstance(x, float):
         return x if math.isfinite(x) else None
@@ -1616,9 +1666,11 @@ def docket_page(data: dict) -> str:
     # JSON has no Infinity or NaN: a non-finite stored value (an undefined error bar) is written as null.
     payload = json.dumps(_finite(data), allow_nan=False).replace("</", "<\\/")
     return f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en" data-theme="system"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
 <title>{html.escape(title)}</title>
+<script>{THEME_JS}</script>
 {brand.head(title, "The Docket: a case file for each dip of one of SetuHQ's stored runs, with its vetting, its fit and every reviewer's marks. Candidates, never confirmations.", data.get("page_path") or "/candidates/case-file/")}
 <link rel="stylesheet" href="{data.get("fonts_href") or DOCKET_FONTS_CSS}">
 <style>{DOCKET_CSS}</style></head>
@@ -1632,7 +1684,7 @@ def docket_page(data: dict) -> str:
       </div>
     </section>
   </aside>
-  <main class="dossier" id="dossier"><div id="dtop"></div><div id="listslot"></div><div id="drest"></div></main>
+  <main class="dossier" id="dossier">{star_head(data.get("star") or {})}<div id="dtop"></div><div id="listslot"></div><div id="drest"></div></main>
 </div>
 <div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
 <div id="filterlive" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -1662,9 +1714,7 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
     from setuhq.codenote import code_note, with_code_note
 
     path.write_text(with_code_note(docket_page(data), code_note(run_dir)))
-    import shutil
-
     if not data.get("page_path"):  # a page of the site uses the site's one copy of the fonts
-        shutil.copytree(FONTS_DIR, out / "assets" / "fonts", dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))
+        copy_page_fonts(out)
     brand.copy_assets(out)
     return out / "index.html"
