@@ -287,7 +287,8 @@ class _Rand:
 
 
 def sky_geometry(ra_deg: float | None, dec_deg: float | None) -> dict:
-    """Graticule, ecliptic, decorative field stars and the target's projected position."""
+    """Graticule, ecliptic and the target's projected position. (The map's stars are the catalogue's real hosts,
+    drawn by setuhq.viz.skyyears; the decorative field stars are gone.)"""
     grat = []
     for dec in range(-60, 61, 30):
         grat.append("".join(("M" if ra == -180 else "L") + "%.1f %.1f" % mollweide(ra, dec) for ra in range(-180, 181, 6)))
@@ -301,10 +302,8 @@ def sky_geometry(ra_deg: float | None, dec_deg: float | None) -> dict:
         x, y = mollweide(al, de * 180 / math.pi)
         ecl.append(("M" if prev is None or abs(x - prev) > 200 else "L") + "%.1f %.1f" % (x, y))
         prev = x
-    r = _Rand(131)
-    stars = "".join("M%.1f %.1fh0" % mollweide(r() * 360, math.asin(2 * r() - 1) * 180 / math.pi) for _ in range(900))
     pos = mollweide(ra_deg, dec_deg) if ra_deg is not None and dec_deg is not None else None
-    return {"grat": "".join(grat), "ecl": "".join(ecl), "stars": stars,
+    return {"grat": "".join(grat), "ecl": "".join(ecl),
             "x": round(pos[0], 2) if pos else None, "y": round(pos[1], 2) if pos else None}
 
 

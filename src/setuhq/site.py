@@ -753,6 +753,10 @@ def _title(route: str, name: str | None = None) -> str:
 
 
 def _planet_section(section: str, cat: dict, i: int) -> tuple[str, str, str]:
+    """A pre-rendered planet page: its heading, facts and stored values, its portrait beside its star and its place in
+    the line-up (setuhq.catalogue.planet_extras); the app adds the rest."""
+    from setuhq.catalogue import planet_extras
+
     e = html.escape
     P = cat["planets"]
     name, star = P["name"][i], P["star"][i]
@@ -769,18 +773,23 @@ def _planet_section(section: str, cat: dict, i: int) -> tuple[str, str, str]:
     out = section.replace('<h1 class="lead-h" id="h-planet" tabindex="-1">Planet</h1><p id="plsub"></p>',
                           f'<h1 class="lead-h" id="h-planet" tabindex="-1">{e(name)}</h1><p id="plsub">{sub}</p>', 1)
     out = out.replace('<div id="plparams"></div>', f'<div id="plparams">{table}</div>', 1)
+    out = out.replace('<div class="plextra" id="plextra"></div>', f'<div class="plextra" id="plextra">{planet_extras(cat, i)}</div>', 1)
     desc = (f"{name}: a planet found by {method}{f' in {year}' if year else ''}"
             f"{f', orbiting {star}' if star else ''}. Its stored parameters from {cat['source_short']}, drawn to scale.")
     return out, name, desc
 
 
 def _star_section(section: str, cat: dict, name: str, idx: list[int]) -> tuple[str, str]:
+    """A pre-rendered star page: the star in its blackbody colour, the orbits of its planets (two or more with a period)
+    and its planets with their pictures (setuhq.catalogue.star_extras, still_list)."""
+    from setuhq.catalogue import star_extras, still_list
+
     e = html.escape
     P = cat["planets"]
-    lis = "".join(f'<li><a href="/planets/{P["slug"][i]}/">{e(P["name"][i])}</a></li>' for i in idx)
     out = section.replace('<h1 class="lead-h" id="h-star" tabindex="-1">Star</h1><p id="stsub"></p>',
                           f'<h1 class="lead-h" id="h-star" tabindex="-1">{e(name)}</h1><p id="stsub">{len(idx)} known planet{"s" if len(idx) != 1 else ""} in {e(cat["source_short"])}</p>', 1)
-    out = out.replace('<div id="stplanets"></div>', f'<div id="stplanets"><ul>{lis}</ul></div>', 1)
+    out = out.replace('<div id="stplanets"></div>', f'<div id="stplanets">{still_list(cat, idx)}</div>', 1)
+    out = out.replace('<div class="plextra" id="stextra"></div>', f'<div class="plextra" id="stextra">{star_extras(cat, name, idx)}</div>', 1)
     return out, f"{name}: a star with {len(idx)} known planet{'s' if len(idx) != 1 else ''}, from {cat['source_short']}."
 
 

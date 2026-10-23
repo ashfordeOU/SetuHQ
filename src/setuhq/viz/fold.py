@@ -232,21 +232,25 @@ def html(data: dict, **opts) -> str:
     un, fo = ("", "") if compact else _panels(fd)
     alt = text_alternative(fd)
     cap = f"fold-cap-{where}"
-    return (f'<figure class="stage foldfig{" compact" if compact else ""}" data-fold="{e(where)}" aria-labelledby="{cap}">'
+    if compact:
+        # The home page's budget is tight: the figure is its label and caption; the script adds the canvas and the
+        # toggle (and, under reduced motion, draws the two panels on it once).
+        return (f'<figure class="stage foldfig compact"><span class="stage-tag">{LABEL}</span>'
+                f'<figcaption>{e(_short_caption(fd))}</figcaption></figure>')
+    return (f'<figure class="stage foldfig" data-fold="{e(where)}" aria-labelledby="{cap}">'
             f'<span class="stage-tag">{LABEL}</span>'
-            + ("" if compact else
-               f'<div class="foldpanels">'
-               f'<div class="foldpanel"><p class="foldlbl"><b>Unfolded</b> · {fd["span"][1] - fd["span"][0]:.0f} days in time order</p>{un}</div>'
-               f'<div class="foldpanel"><p class="foldlbl"><b>Folded</b> on the {fd["p"]:.4f}-day period</p>{fo}</div></div>')
-            + (f'<div class="foldlive" hidden><canvas role="img" aria-labelledby="{cap}"></canvas></div>' if compact else
-               f'<div class="foldlive" hidden><canvas role="img" aria-label="{e(alt)}"></canvas></div>')
-            + f'<div class="foldctl"><button class="btn foldbtn" type="button" aria-pressed="false" hidden>Fold on the period</button>'
+            f'<div class="foldpanels">'
+            f'<div class="foldpanel"><p class="foldlbl"><b>Unfolded</b> · {fd["span"][1] - fd["span"][0]:.0f} days in time order</p>{un}</div>'
+            f'<div class="foldpanel"><p class="foldlbl"><b>Folded</b> on the {fd["p"]:.4f}-day period</p>{fo}</div></div>'
+            f'<div class="foldlive" hidden><canvas role="img" aria-label="{e(alt)}"></canvas></div>'
+            f'<div class="foldctl"><button class="btn foldbtn" type="button" aria-pressed="false" hidden>Fold on the period</button>'
             f'<span class="foldstate" aria-live="polite"></span></div>'
-            f'<figcaption id="{cap}" class="readout">{e(alt)} <span class="foldsrc">Source: {e(_short_source(fd) if compact else fd["source"])}</span></figcaption></figure>')
+            f'<figcaption id="{cap}" class="readout">{e(alt)} <span class="foldsrc">Source: {e(fd["source"])}</span></figcaption></figure>')
 
 
-def _short_source(fd: dict) -> str:
-    return f"SetuHQ's stored run {fd['run']} (TESS, SPOC 2-minute flux), 30-minute bins; period and mid-transit from {fd['fit_file']}."
+def _short_caption(fd: dict) -> str:
+    """The compact figure's caption: its numbers and its source in one line."""
+    return f"{fd['n_points']:,} points folded on {fd['p']:.4f} d: a {fd['depth_ppm']:.0f} ppm, {fd['t14_h']:.2f} h dip. Source: {fd['run']}."
 
 
 def data(app_data: dict) -> dict:
@@ -280,7 +284,7 @@ CSS = """
 .foldctl .btn[hidden]{display:none}
 .foldctl .btn[aria-pressed="true"]{background:#0A84FF;border-color:#0A84FF;color:#fff}
 .foldstate{font:var(--t-data);color:var(--stage-dim)}
-.foldfig .readout{background:var(--stage);color:var(--stage-dim);padding:2px 2px 0;margin:0}
+.foldfig .readout,.foldfig.compact figcaption{background:var(--stage);color:var(--stage-dim);padding:2px 2px 0;margin:0;font:var(--t-data)}
 .foldsrc{display:block;margin-top:4px}
 @media (max-width:699.98px){
   .foldpanels{grid-template-columns:minmax(0,1fr)}
@@ -318,6 +322,13 @@ JS = r"""
     return {pts, lo, hi, step, mean};
   }
   figs.forEach(fig => {
+    // The compact figure (the home page) arrives as its label and caption: the canvas and the toggle are added here.
+    if (!fig.querySelector('.foldlive')){ const cap = fig.querySelector('figcaption');
+      cap.id = cap.id || 'fold-cap-' + Math.random().toString(36).slice(2, 8);
+      // Its full source line arrives with the bins (stories.json).
+      load().then(d => { if (!cap.querySelector('.foldsrc')) cap.insertAdjacentHTML('beforeend', ` <span class="foldsrc">${d.source.replace(/[<&>]/g, '')}</span>`); }).catch(() => {});
+      cap.insertAdjacentHTML('beforebegin', `<div class="foldlive" hidden><canvas role="img" aria-labelledby="${cap.id}"></canvas></div>`
+        + '<div class="foldctl"><button class="btn foldbtn" type="button" aria-pressed="false" hidden>Fold on the period</button><span class="foldstate" aria-live="polite"></span></div>'); }
     const btn = fig.querySelector('.foldbtn'), live = fig.querySelector('.foldlive'), cv = live && live.querySelector('canvas'), state = fig.querySelector('.foldstate');
     if (!btn || !cv) return;
     let F = null, G = null, k = 0, target = 0, raf = 0, vis = false, touched = false, last = 0, font = '', split = false;

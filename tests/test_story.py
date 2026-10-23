@@ -82,7 +82,7 @@ def test_sky_position_is_the_stored_coordinates_and_field_stars_are_decorative(r
     assert y > 200  # near the south celestial pole, at the bottom of the map
     page = site_bundle(build_app(run_dir, tmp_path / "app", title="t"))
     sky = re.search(r'<section class="route" id="route-sky".*?(?=<section class="route" id="route-)', page, re.S).group(0)
-    assert "Field stars decorative" in sky and "feed stars not plotted (positions not stored)" in sky
+    assert "Field stars" not in sky and "Feed stars not plotted (positions not stored)" in sky  # the map's dots are real hosts (viz.skyyears)
     # Without stored coordinates the target is not plotted, and the map says so.
     assert sky_geometry(None, None)["x"] is None
     assert "The target&#x27;s sky position is not stored" in sky or "sky position is not stored" in sky

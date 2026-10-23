@@ -869,7 +869,7 @@ function renderSky(){
     : '<p class="empty" style="margin:12px">No dips match.</p>';
   skyTimeline();
 }
-function skyTimeline(box = $('#skytimeline'), capEl = $('#skytlcap')){
+function skyTimeline(box = $('#skytimeline'), capEl = $('#skytlcap'), read = $('#skytlread')){
   if (!box) return;
   const subs = D.hero.subjects; if (!subs.length){ box.innerHTML = '<p class="empty">No light curve is stored.</p>'; return; }
   const a = subs[0].start, b = subs[subs.length - 1].end, W = 1000, H = 84;
@@ -879,6 +879,12 @@ function skyTimeline(box = $('#skytimeline'), capEl = $('#skytlcap')){
   for (const d of DIPS){ const on = skyShown(d), x = X(d.t).toFixed(1); ticks += `<path d="M${x} 66 V82" stroke="${on ? STC[d.status] : 'var(--line-2)'}" stroke-width="${on ? 2.5 : 1.5}" stroke-linecap="round"><title>${esc(d.time_unit)} ${tval(d.t)} · ${esc(d.status_label)}</title></path>`; }
   capEl.innerHTML = `<span>${esc(D.hero.time_unit)} ${fmt(a, 1)}</span><span>Stored brightness over the run, ${D.hero.n_points.toLocaleString('en-GB')} points; ticks: the dips shown above</span><span>${fmt(b, 1)}</span>`;
   box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Light curve of run ${esc(D.run.name)}: ${D.hero.n_points} stored points from ${esc(D.hero.time_unit)} ${fmt(a, 1)} to ${fmt(b, 1)}, with ${DIPS.filter(skyShown).length} of ${DIPS.length} dips ticked."><path d="${pts}" stroke="var(--ink)" stroke-width="1.1" stroke-linecap="round" opacity=".45"/>${ticks}</svg>`;
+  // S06: the curve answers on hover and on the arrow keys, one stored point at a time (every 4th, for the keys).
+  const xs = [], ys = [];
+  if (read && window.SetuUI && SetuUI.crosshair){
+    subs.forEach(s => s.t.forEach((t, i) => { if (i % 4 === 0){ xs.push(t); ys.push(s.ppm[i]); } }));
+    SetuUI.crosshair(box.querySelector('svg'), {x0: a, x1: b, xs, readout: read, fmt: i => `${D.hero.time_unit} ${fmt(xs[i], 2)} · ${ys[i] < 0 ? '−' : '+'}${fmt(Math.abs(ys[i]), 0)} ppm`});
+  }
 }
 // Zoom from the run star's marker into its system view (a magnifier; an illustration of scale).
 function skyZoom(name, back){
@@ -1730,9 +1736,27 @@ function gxSelect(h, planet){
     <p>${G.host_n[h]} planet${G.host_n[h] === 1 ? '' : 's'} in ${esc(G.source_short)}${G.host_n[h] > gx.per[h] ? `, ${gx.per[h]} shown by the filters` : ''}.</p>
     ${gxLinks(h)}<ul>${ps.map(i => `<li><button type="button" data-gxp="${i}" aria-pressed="${i === gx.selPlanet}">${esc(P.n[i])}<span>${P.y[i] || '—'} · ${esc(gxMethod(i))} · ${esc(gxClass(i))}</span></button>${typeof MX !== 'undefined' && MX && MX.examples[P.n[i]] ? `<button class="btn gxsys" type="button" data-gxsys="${esc(P.n[i])}">Open the system view ›</button>` : ''}</li>`).join('')}</ul>${exo}${lensNote}`;
   card.hidden = false;
+  gxPic(card);
   gxKick();
   // Mission Control's linked selection: the star picked here is selected in every pane and window.
   if (typeof mcBrush === 'function') mcBrush(H.n[h], 'galaxy');
+}
+// The selected system's sheet: the star in its blackbody colour and the selected planet as its look (SetuRender),
+// from the catalogue's row; the planet is an artist's impression, and the two are not to scale.
+function gxPic(card){
+  const P0 = gx.G.planets, name = gx.selPlanet >= 0 ? P0.n[gx.selPlanet] : null;
+  if (!name || !window.SetuRender || typeof ctLoad !== 'function' || !CTM) return;
+  ctLoad().then(() => {
+    const P = ct.P, i = P.name.indexOf(name); if (i < 0 || card.hidden || P0.n[gx.selPlanet] !== name) return;
+    const lk = SetuRender.look(ctRow(i)), teff = P.steff[i]; if (!teff && !lk.name) return;
+    let box = card.querySelector('.gxpic'); if (!box){ box = document.createElement('div'); box.className = 'gxpic'; card.querySelector('h3').after(box); }
+    const alt = `${teff ? `The star in its blackbody colour, ${Math.round(teff).toLocaleString('en-US')} K` : 'Star temperature not stored'}; ${name}: ${lk.name ? `an artist's impression, ${lk.composition}, ${lk.band || 'irradiation not computable'}` : 'no radius or mass stored, so no planet is drawn'}. Not to scale.`;
+    box.innerHTML = `<canvas role="img" aria-label="${esc(alt)}"></canvas><a class="gxpictag" href="/docs/pictures/">${lk.name ? "Artist's impression" : 'Model from stored values'}</a>`;
+    const cv = box.querySelector('canvas'), d = Math.min(2, devicePixelRatio || 1), w = cv.clientWidth || 288, h = 88;
+    cv.width = w * d; cv.height = h * d; const c = cv.getContext('2d'); c.scale(d, d); c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
+    if (teff) SetuRender.drawStar2D(c, 52, h / 2, 30, teff, 0, {flat: true, glow: 1.6});
+    if (lk.name) SetuRender.drawPlanet2D(c, w - 64, h / 2, 26, lk.name, true, {seed: SetuRender.fnv(P.slug[i]), neutral: lk.neutral, sync: true});
+  }).catch(() => {});
 }
 // Where a host is on screen (for the zoom lens into its system view), or null when it is behind the camera.
 function gxScreenPoint(h){
@@ -3490,6 +3514,15 @@ function ctApply(){
   $('#ctempty').hidden = ct.idx.length > 0; $('#ctscroll').hidden = !ct.idx.length;
   ctRows(true);
 }
+// The host's colour (its stored Teff as a blackbody, SetuRender.teffRGB; cached by 50 K) and the size class (CLASS_RULE).
+const ctDotC = {};
+function ctDot(teff){
+  if (!(teff > 0) || !window.SetuRender) return '<i class="ctdot none" aria-hidden="true"></i>';
+  const k = Math.round(teff / 50) * 50, c = ctDotC[k] || (ctDotC[k] = SetuRender.teffRGB(k).join(','));
+  return `<i class="ctdot" style="background:rgb(${c})" aria-hidden="true"></i>`;
+}
+const CT_CLASSES = ['Earth-size', 'Super-Earth', 'Sub-Neptune', 'Neptune-like', 'Gas giant'];
+function ctCls(i){ const P = ct.P, c = typeof mxClassOf === 'function' ? mxClassOf(P.radius[i], P.mass[i] !== null ? P.mass[i] : P.msini[i]) : null; return c === null || c === undefined ? '' : CT_CLASSES[c]; }
 // One row: the planet's name is the row header, then one cell per column header (10 in all, at every width).
 // On a phone the same cells wrap into a card, each with its label shown.
 const CT_COLS = [['star', 'Host', ''], ['year', 'Year', ''], ['method', 'Method', ''], ['mass', 'Mass', 'MJ'], ['radius', 'Radius', 'RJ'],
@@ -3498,7 +3531,7 @@ function ctRowHTML(r){
   const P = ct.P, i = ct.idx[r], h = ct.rowH, phone = h > 50, col = m => GXM && GXM.method_colour ? GXM.method_colour[m] : '#8E8E93';
   const cell = (k, lab, unit) => {
     let v, cls = 'num';
-    if (k === 'star'){ v = P.star[i] ? esc(P.star[i]) : null; cls = ''; }
+    if (k === 'star'){ v = P.star[i] ? ctDot(P.steff[i]) + esc(P.star[i]) : null; cls = ''; }
     else if (k === 'method'){ v = `<i style="background:${col(P.method[i])}"></i>${esc(CTM.method_label[P.method[i]] || P.method[i])}`; cls = ''; }
     else if (k === 'year') v = P.year[i] || null;
     else if (k === 'mass') v = P.mass[i] !== null ? ctLim(i, 'mass') + ctFmt(P.mass[i], 3) : (P.msini[i] !== null ? ctLim(i, 'msini') + ctFmt(P.msini[i], 3) + ' sin i' : null);
@@ -3507,7 +3540,7 @@ function ctRowHTML(r){
     if (v === null) return `<span role="cell" class="${cls} na" aria-label="not stored">—</span>`;
     return phone ? `<span role="cell">${k === 'star' || k === 'method' ? '' : lab + ' '}${v}${unit ? ' ' + unit : ''}</span>` : `<span role="cell" class="${cls}">${v}</span>`;
   };
-  return `<a class="${h > 50 ? 'ctcard' : 'ctrow'}" role="row" aria-rowindex="${r + 1}" href="${ctPlanetHref(i)}" style="top:${r * h}px"><span role="rowheader"><b>${esc(P.name[i])}</b></span>${CT_COLS.map(c => cell(...c)).join('')}</a>`;
+  return `<a class="${h > 50 ? 'ctcard' : 'ctrow'}" role="row" aria-rowindex="${r + 1}" href="${ctPlanetHref(i)}" style="top:${r * h}px"><span role="rowheader"><b>${esc(P.name[i])}</b>${ctCls(i) ? ` <span class="ctcls">${esc(ctCls(i))}</span>` : ''}</span>${CT_COLS.map(c => cell(...c)).join('')}</a>`;
 }
 // Only the rows in view (plus a margin) are in the page. Scrolling keeps the rows already there and adds or
 // removes only those entering or leaving the window, in order.
@@ -3540,6 +3573,8 @@ function ctControls(){
   $$('#ctmethods [data-cm]').forEach(b => b.setAttribute('aria-pressed', String(v.methods.includes(b.dataset.cm))));
   // Never overwrite a box being typed in, or one whose range is still waiting to apply.
   $$('#route-catalogue [data-rk]').forEach(inp => { if (document.activeElement === inp || ct.rangeT[inp.dataset.rk]) return; const r = v[inp.dataset.rk] || [null, null], x = r[inp.dataset.end === 'lo' ? 0 : 1]; inp.value = x === null ? '' : x; });
+  const tr = v.teff || [null, null];
+  $$('#route-catalogue [data-ts]').forEach(inp => { if (document.activeElement === inp) return; const x = inp.dataset.ts === 'lo' ? (tr[0] ?? 2500) : (tr[1] ?? 10000); inp.value = x; inp.setAttribute('aria-valuetext', Number(x).toLocaleString('en-US') + ' K'); });
   $('#ctmulti').setAttribute('aria-pressed', String(v.multi)); $('#cthasdist').setAttribute('aria-pressed', String(v.hasdist));
   $$('#cttable .cth').forEach(h => h.setAttribute('aria-sort', h.dataset.sort === v.sort ? (v.dir === 'desc' ? 'descending' : 'ascending') : 'none'));
   if (Object.keys(v).some(k => Array.isArray(v[k]) && v[k].length === 2 && (v[k][0] !== null || v[k][1] !== null) && k !== 'methods')) $('#route-catalogue .ctmore').open = true;
@@ -3571,6 +3606,9 @@ function ctBind(){
   const relayout = () => { if (current !== 'catalogue' || !ct.P) return; const h = ctPhone() ? CT_CARD_H : 44; if (h !== ct.rowH){ ct.rowH = h; $('#ctspacer').style.height = ct.idx.length * h + 'px'; } ctRows(true); };
   if (window.ResizeObserver) new ResizeObserver(relayout).observe($('#ctscroll'));
   $('#ctcsv').addEventListener('click', ctCsv);
+  // V09: the temperature strip's two handles set the host-temperature range (the strip's ends mean no limit).
+  $('#route-catalogue').addEventListener('setu:teff-range', e => { const d = e.detail || {}, lo = Number(d.lo), hi = Number(d.hi);
+    ct.view.teff = [lo > 2500 ? lo : null, hi < 10000 ? hi : null]; ctApply(); syncCatURL(false); });
 }
 // CSV of the filtered, sorted view: every stored column with its errors; empty where not stored.
 function ctCsv(){
@@ -3641,12 +3679,15 @@ function plShow(slug){
     const i = ct.bySlug[slug], note = $('#plnote');
     const body = $$('#route-planet .plgrid, #route-planet .plmore, #route-planet #plref').map(x => x.closest('.plgrid, .plmore, section.card'));
     if (i === undefined){ note.innerHTML = `No planet "${esc(slug)}" in the catalogue. <a href="${R(`#/catalogue?q=${encodeURIComponent(slug.replace(/-/g, ' '))}`)}">Search the Catalogue ›</a>`; note.hidden = false;
-      $('#h-planet').textContent = 'Planet not found'; $('#plsub').textContent = ''; body.forEach(x => { x.hidden = true; }); plShown(false); return; }
+      $('#h-planet').textContent = 'Planet not found'; $('#plsub').textContent = ''; $('#plextra').innerHTML = ''; body.forEach(x => { x.hidden = true; }); plShown(false); return; }
     note.hidden = true; body.forEach(x => { x.hidden = false; });
     const P = ct.P, star = P.star[i], cls = mxClassOf(P.radius[i], P.mass[i] !== null ? P.mass[i] : P.msini[i]);
     const clsName = cls === null ? 'class not determinable (no radius or mass stored)' : ['Earth-size', 'Super-Earth', 'Sub-Neptune', 'Neptune-like', 'Gas giant'][cls] + (P.radius[i] === null ? ' (by mass)' : '');
     $('#h-planet').textContent = P.name[i]; if (current === 'planet') pageChrome('planet', new URLSearchParams({id: slug}));
     $('#plsub').innerHTML = `${star ? `<a href="${ctStarHref(star)}">${esc(star)}</a>` : 'host not stored'} · ${esc(CTM.method_label[P.method[i]] || P.method[i])} · discovered ${P.year[i] || 'year not stored'} · ${esc(clsName)}`;
+    const ex = $('#plextra'), hero = ex && ex.querySelector('#plhero');
+    if (ex && !(hero && hero.dataset.slug === slug)){ ex.innerHTML = ctPlanetExtras(i); if (window.SetuRender) SetuRender.mount(ex); }
+    ctSpin(ex);
     $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds; none is shown where none is stored.</p>`;
     const sibs = star ? ct.byStar[star].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)) : [i];
     $('#plhost').innerHTML = (star ? `<p><a href="${ctStarHref(star)}">${esc(star)}</a>${P.sptype[i] ? ' · ' + esc(P.sptype[i]) : ''}${P.steff[i] !== null ? ' · ' + ctFmt(P.steff[i]) + ' K' : ''}</p>` : '<p>Host star not stored.</p>')
@@ -3659,6 +3700,85 @@ function plShow(slug){
       <div class="pllinks">${ch ? `<a href="${R(`#/methods?ch=${ch}`)}">How ${esc((CTM.method_label[P.method[i]] || '').toLowerCase())} works ›</a>` : ''}</div>${ctSeen(P.name[i], ch ? R('#/methods?ch=' + ch) : '')}`;
     plSystem($('#plsys'), i, current === 'planet');
   }).catch(() => { $('#plnote').textContent = 'The catalogue file could not be loaded here.'; $('#plnote').hidden = false; });
+}
+// ---------- the portrait, its star, the line-up and the orbits (twins of catalogue.planet_extras and star_extras) ----------
+const CT_PIC = '/docs/pictures/', CT_GIF = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=', CT_RE = 11.209;
+const CT_SPIN = '<div class="stage-ctrls"><button class="btn" type="button" data-spin aria-pressed="false" hidden>Spin</button></div>';
+const ctStill = (lk, px) => (CTM.stills || '') + lk + '-' + px + '.webp';
+const ctSrc = () => `${ct.C.source_short}, fetched ${String(ct.C.fetched_at).slice(0, 10)}`;
+const ctN0 = x => Math.round(x).toLocaleString('en-US');
+function ctRow(i){ const o = {}; for (const k of ['radius', 'mass', 'msini', 'a', 'period', 'srad', 'smass', 'steff', 'teq']) o[k] = ct.P[k][i]; return o; }
+function ctFig(kind, params, alt, cap, label, still, extra){
+  const tag = kind === 'planet' ? `<a class="stage-tag" href="${CT_PIC}">${esc(label)}</a>` : `<span class="stage-tag">${esc(label)}</span>`;
+  return `<figure class="stage rfig" data-render="${kind}" data-params='${esc(JSON.stringify(params))}' aria-label="${esc(alt)}"><div class="rbox"><img class="rstill" src="${esc(still)}" width="512" height="512" alt="${esc(alt)}">${extra || ''}</div>${tag}<figcaption class="readout">${cap}</figcaption></figure>`;
+}
+function ctPortrait(i){
+  const P = ct.P, lk = window.SetuRender ? SetuRender.look(ctRow(i)) : {name: null}; if (!lk.name) return '';
+  const comp = {envelope: 'an envelope planet', rock: 'a rocky planet', neptune: 'a Neptune-like planet', giant: 'a gas giant', ambiguous: 'a planet of unknown make-up'}[lk.composition];
+  const size = lk.rp_re !== null ? `${lk.rp_re.toFixed(2)} Earth radii` : `radius not measured (${lk.mp_me.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1})} Earth masses)`;
+  const alt = `Artist's impression of ${P.name[i]}: ${comp}${lk.band ? ` in the ${lk.band} band` : ''}, ${size}, ${lk.teq !== null ? ctN0(lk.teq) + ' K' : 'irradiation not computable'}.`;
+  const cap = esc(`Artist's impression · ${lk.composition}${lk.band ? ', ' + lk.band : ', irradiation not computable'} · ${lk.reasons.join(' ')}`) + ` Source: ${esc(ctSrc())}. <a href="${CT_PIC}">How the pictures are drawn ›</a>`;
+  const params = {look: lk.name, seed: SetuRender.fnv(P.slug[i]), rp_re: lk.rp_re, teq: lk.teq, animate: false}; if (lk.neutral) params.neutral = true;
+  return ctFig('planet', params, alt, cap, "Artist's impression", ctStill(lk.name, 512), CT_SPIN);
+}
+function ctStarFig(name, teff, srad){
+  if (!teff) return '';
+  const rad = srad ? `, radius ${srad.toFixed(2)} R☉` : '';
+  return ctFig('star', {teff, rstar_rsun: srad, animate: false}, `${name} drawn in its blackbody colour, ${ctN0(teff)} K${rad}.`,
+    `${esc(name)} in its blackbody colour: ${ctN0(teff)} K${esc(rad)} (${esc(ctSrc())}). Brightness normalised; the surface texture is decorative.`, 'Model from stored values', CT_GIF);
+}
+function ctLineup(i){
+  const P = ct.P; if (!P.radius[i] || !window.SetuRender) return '';
+  const fr = r => r < 6 ? `${r.toFixed(2)} R⊕` : `${(r / CT_RE).toFixed(2)} RJ`;
+  const its = [['Earth', 1, 'ref-earth'], ['Neptune', 3.88, 'ref-neptune'], ['Jupiter', CT_RE, 'ref-jupiter']].map(([name, re, look]) => ({name, re, look, ref: 1}))
+    .concat([{name: P.name[i], re: Math.round(P.radius[i] * CT_RE * 1000) / 1000, look: SetuRender.look(ctRow(i)).name, focus: 1}]).sort((a, b) => a.re - b.re);
+  const big = its[its.length - 1], small = its[0];
+  const lis = its.map(q => `<li class="luitem${q.ref ? ' ref' : ''}${q.focus ? ' focus' : ''}" style="--re:${q.re.toFixed(3)}"><img src="${ctStill(q.look, q.re / big.re * 90 > 40 ? 512 : 160)}" width="160" height="160" loading="lazy" alt=""><b>${esc(q.name)}</b><span>${fr(q.re)}</span></li>`).join('');
+  return `<section class="pllineup" aria-label="${esc(P.name[i])} in the line-up"><figure class="lineup" data-viz="lineup" aria-label="${esc(P.name[i])} to scale"><div class="stage lustage" style="--rmax:${big.re.toFixed(3)}"><ol class="lurow">${lis}</ol><a class="stage-tag" href="${CT_PIC}">Artist's impression</a></div>`
+    + `<figcaption class="skysrc">To scale: one Earth radius is the same width all along the row, so ${esc(big.name)} is ${(big.re / small.re).toFixed(1)} times as wide as ${esc(small.name)}. Each picture is an artist's impression chosen from the measured radius and the computed irradiation; composition is not measured. Earth, Neptune and Jupiter are the Solar System references (only Earth is drawn with oceans). Radii: ${esc(ctSrc())} (1 RJ = 11.209 R⊕). <a href="${CT_PIC}">How the pictures are drawn ›</a></figcaption></figure></section>`;
+}
+function ctPlanetExtras(i){
+  const P = ct.P, pic = ctPortrait(i), st = ctStarFig(P.star[i] || 'The host star', P.steff[i], P.srad[i]);
+  return `<div class="plhero${pic ? '' : ' solo'}" id="plhero" data-slug="${esc(P.slug[i])}">${pic}${st}${pic ? '' : '<p class="plnone">No radius or mass stored, so no planet is drawn.</p>'}</div>` + ctLineup(i);
+}
+// V08 on a star page (twin of viz.orbits.system and html): a from the catalogue or Kepler's third law, depth (Rp/R★)².
+function ctOrbits(name, ps){
+  const P = ct.P, hex = c => '#' + c.map(v => v.toString(16).padStart(2, '0')).join('');
+  const pl = ps.filter(j => P.period[j] > 0).map(j => {
+    let a = P.a[j] > 0 ? P.a[j] : null, src = 'catalogue';
+    if (a === null){ a = P.smass[j] > 0 ? Math.cbrt(P.smass[j] * (P.period[j] / 365.25) ** 2) : null; src = "Kepler's third law"; }
+    const rp = P.radius[j] > 0 ? P.radius[j] : null, rs = P.srad[j] > 0 ? P.srad[j] : null, k = rp && rs ? rp * 71492 / 695700 / rs : null;
+    const lk = window.SetuRender ? SetuRender.look(ctRow(j)).name : null, L = lk && SetuRender.LOOKS[lk];
+    return a === null ? null : {name: P.name[j], slug: P.slug[j], P: P.period[j], a, src, re: rp && rp * CT_RE, d: k && k * k * 1e6,
+      w: rs ? P.period[j] / Math.PI * Math.asin(Math.min(1, rs * 695700 / 149597870.7 / a)) * 24 : null, c: hex(L ? L.pal[2] : [170, 182, 204])};
+  }).filter(Boolean).sort((x, y) => x.P - y.P);
+  if (pl.length < 2) return '';
+  const short = n => { const t = n.toLowerCase().startsWith(name.toLowerCase()) ? n.slice(name.length).trim() : ''; return t.length > 0 && t.length <= 3 ? t : n; };
+  const T = pl[pl.length - 1].P, f2 = (x, d) => x.toLocaleString('en-US', {minimumFractionDigits: d, maximumFractionDigits: d});
+  const params = {teff: P.steff[ps[0]], speed: Math.max(1.6, Math.min(T / 12, pl[0].P / 1.5)), planets: pl.map((q, i) => ({n: short(q.name), P: q.P, a: q.a, d: q.d, w: q.w, c: q.c, f: i ? (i * .4) % 1 : 0}))};
+  const label = `The ${pl.length} planets of ${name} seen from above, with their dips over one ${T.toFixed(2)}-day period of the outermost: ` + pl.map(q => `${q.name} every ${q.P.toFixed(2)} d at ${q.a.toFixed(4)} AU` + (q.d ? `, ${f2(q.d, 0)} ppm deep` : '')).join('; ') + '.';
+  const rows = pl.map(q => `<tr><th scope="row"><a href="/planets/${esc(q.slug)}/">${esc(q.name)}</a></th><td>${f2(q.P, 4)}</td><td>${q.a.toFixed(4)}${q.src === 'catalogue' ? '' : '*'}</td><td>${q.re ? q.re.toFixed(2) : '—'}</td><td>${q.d ? f2(q.d, 0) : '—'}</td></tr>`).join('');
+  return `<figure class="orbits" data-viz="orbits" data-params='${esc(JSON.stringify(params))}'><div class="stage orbstage"><div class="orbbox"><svg class="orbsvg" role="img" aria-label="${esc(label)}"></svg></div><span class="stage-tag">Model from stored values</span><div class="stage-ctrls"><button class="btn" type="button" data-orb="play" aria-pressed="false" hidden>Play</button></div></div>`
+    + `<figcaption class="skysrc">The ${esc(name)} system from above: each planet dips the star's light when it crosses the line of sight to the observer. Orbit sizes are the stored semi-major axes (or Kepler's third law from the period and the star's mass); dip depth is (Rp/R★)² from the stored radii. Circular orbits, star and planets not to scale, phases illustrative (no transit times are stored). Source: ${esc(ctSrc())}.</figcaption>`
+    + `<details class="orbtable"><summary>The planets: period, orbit and dip depth</summary><div class="tablewrap" tabindex="0" role="region" aria-label="${esc(name)}: period, orbit and dip depth"><table class="pltable"><thead><tr><th scope="col">Planet</th><th scope="col">P (d)</th><th scope="col">a (AU)</th><th scope="col">Rp (R⊕)</th><th scope="col">Depth k² (ppm)</th></tr></thead><tbody>${rows}</tbody></table></div><p class="small">a from ${esc(ct.C.source_short)}; * from Kepler's third law (period and the star's mass). — : radius not stored.</p></details></figure>`;
+}
+// The portrait turns (0.12 rad/s) while on screen, the tab visible and the viewer has not paused it; under reduced motion
+// it holds its still until Spin is pressed. Its own loop, at 30 fps (15 on the Canvas2D path).
+function ctSpin(root){
+  const fig = root && root.querySelector('[data-render="planet"]'), btn = fig && fig.querySelector('[data-spin]');
+  if (!btn || fig._spin) return; fig._spin = 1;
+  const S = {on: false, t: 0, raf: 0, vis: true, last: 0, at: 0}, ok = () => fig._sr && fig._sr.cv && window.SetuRender;
+  const set = () => { btn.hidden = !ok(); btn.textContent = S.on ? 'Pause' : 'Spin'; btn.setAttribute('aria-pressed', String(S.on)); };
+  const frame = now => { S.raf = 0; if (!S.on || !S.vis || document.hidden || !ok() || !fig.isConnected) return;
+    const dt = Math.min(.1, (now - (S.last || now)) / 1000); S.last = now; S.t += dt;
+    if (now - S.at >= (SetuRender.stats().path === 'canvas2d' ? 66 : 33)){ S.at = now; try { SetuRender.planet(fig._sr.cv, Object.assign({}, fig._sr.p, {t: S.t})); } catch (e) { S.on = false; set(); return; } }
+    S.raf = requestAnimationFrame(frame); };
+  const kick = () => { if (!S.raf && S.on && S.vis && !document.hidden){ S.last = 0; S.raf = requestAnimationFrame(frame); } };
+  btn.addEventListener('click', () => { S.on = !S.on; set(); kick(); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { S.vis = e.isIntersecting; kick(); }), {rootMargin: '80px'}).observe(fig);
+  document.addEventListener('visibilitychange', kick);
+  let n = 0; const wait = () => { if (ok()){ S.on = !matchMedia('(prefers-reduced-motion: reduce)').matches; set(); kick(); } else if (n++ < 60) setTimeout(wait, 250); };
+  wait();
 }
 // The shared animated system, from planet i's stored values only; the caption says what is not stored.
 // Back-links: where SetuHQ itself shows this planet or star (the Transit case, Galaxy tour stops, Methods chapters).
@@ -3676,7 +3796,7 @@ function stShow(slug){
     const name = ct.starBySlug[slug], note = $('#stnote');
     const body = $$('#route-star .plgrid, #route-star .plmore');
     if (!name){ note.innerHTML = `No star "${esc(slug)}" in the catalogue. <a href="${R(`#/catalogue?q=${encodeURIComponent(slug.replace(/-/g, ' '))}`)}">Search the Catalogue ›</a>`; note.hidden = false;
-      $('#h-star').textContent = 'Star not found'; $('#stsub').textContent = ''; body.forEach(x => { x.hidden = true; }); return; }
+      $('#h-star').textContent = 'Star not found'; $('#stsub').textContent = ''; $('#stextra').innerHTML = ''; body.forEach(x => { x.hidden = true; }); return; }
     note.hidden = true; body.forEach(x => { x.hidden = false; });
     const P = ct.P, ps = ct.byStar[name].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)), i = ps[0];
     $('#h-star').textContent = name; if (current === 'star') pageChrome('star', new URLSearchParams({id: slug}));
@@ -3684,7 +3804,11 @@ function stShow(slug){
     const [cl, row] = teff !== null ? mxClass(teff) : [null, null];
     $('#stsub').textContent = `${ps.length} planet${ps.length === 1 ? '' : 's'} in ${ct.C.source_short}` + (P.sptype[i] ? ` · stored type ${P.sptype[i]}` : '') + (cl ? ` · class ${cl} from Teff (nearest ${row})` : '');
     $('#stparams').innerHTML = ctTable(i, CT_STAR_ROWS) + (P.salt[i] ? `<p class="small">Also known as ${esc(P.salt[i])}.</p>` : '');
-    $('#stplanets').innerHTML = `<ul class="pllist">${ps.map(j => `<li><a href="${ctPlanetHref(j)}"><span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul>`;
+    const thumb = j => { const lk = window.SetuRender && SetuRender.look(ctRow(j)).name; return lk ? `<img class="plthumb" src="${ctStill(lk, 160)}" width="40" height="40" loading="lazy" alt="">` : '<span class="plthumb none" aria-hidden="true"></span>'; };
+    $('#stplanets').innerHTML = `<ul class="pllist plthumbs">${ps.map(j => `<li><a href="${ctPlanetHref(j)}">${thumb(j)}<span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul><p class="small">Pictures: artist's impressions from the measured radius and irradiation. <a href="${CT_PIC}">How the pictures are drawn ›</a></p>`;
+    const sx = $('#stextra'), sh = sx && sx.querySelector('#sthero');
+    if (sx && !(sh && sh.dataset.star === name)){ const f = ctStarFig(name, P.steff[i], P.srad[i]) + ctOrbits(name, ps); sx.innerHTML = f ? `<div class="sthero" id="sthero" data-star="${esc(name)}">${f}</div>` : ''; if (window.SetuRender) SetuRender.mount(sx); }
+    if (window.SetuOrbits) SetuOrbits.wire(sx);
     $('#stwhere').innerHTML = ctWhere(i, name) + ctSeen(name, R('#/sky'));
     if (typeof vaForStar === 'function') vaForStar(P.salt[i]);
     // The system view with one of its planets (the innermost first); the picker switches planet.
@@ -3710,15 +3834,15 @@ function gsSearch(q){
   if (q && ct.P){
     const P = ct.P, starts = [], has = [];
     for (let i = 0; i < P.name.length && starts.length < 40; i++){ const n = P.name[i].toLowerCase(), a = (P.alt[i] || '').toLowerCase(); if (n.startsWith(q)) starts.push(i); else if ((n.includes(q) || a.includes(q)) && has.length < 40) has.push(i); }
-    for (const i of starts.concat(has).slice(0, 12)) res.push({kind: 'planet', label: P.name[i], sub: P.star[i] || '', href: ctPlanetHref(i)});
-    let n = 0; for (const s of ct.C.stars.names){ if (s.toLowerCase().includes(q)){ res.push({kind: 'star', label: s, sub: `${ct.byStar[s].length} planet${ct.byStar[s].length === 1 ? '' : 's'}`, href: ctStarHref(s)}); if (++n >= 6) break; } }
+    for (const i of starts.concat(has).slice(0, 12)) res.push({kind: 'planet', label: P.name[i], sub: P.star[i] || '', href: ctPlanetHref(i), teff: P.steff[i], cls: ctCls(i)});
+    let n = 0; for (const s of ct.C.stars.names){ if (s.toLowerCase().includes(q)){ res.push({kind: 'star', label: s, sub: `${ct.byStar[s].length} planet${ct.byStar[s].length === 1 ? '' : 's'}`, href: ctStarHref(s), teff: P.steff[ct.byStar[s][0]]}); if (++n >= 6) break; } }
   }
   if (q && typeof vaSearch === 'function') res.push(...vaSearch(q));
   return st.slice(0, q ? 6 : 20).concat(res);
 }
 function gsRender(){
   const q = $('#gsq').value; gs.items = gsSearch(q); gs.sel = Math.min(gs.sel, Math.max(0, gs.items.length - 1));
-  $('#gsresults').innerHTML = gs.items.length ? gs.items.map((x, k) => `<li role="option" id="gs-${k}" aria-selected="${k === gs.sel}"><a href="${x.href}" tabindex="-1"><span>${esc(x.label)}${x.sub ? ` <span class="kind">${esc(x.sub)}</span>` : ''}</span><span class="kind">${x.kind}</span></a></li>`).join('')
+  $('#gsresults').innerHTML = gs.items.length ? gs.items.map((x, k) => `<li role="option" id="gs-${k}" aria-selected="${k === gs.sel}"><a href="${x.href}" tabindex="-1"><span>${x.kind === 'planet' || x.kind === 'star' ? ctDot(x.teff) : ''}${esc(x.label)}${x.cls ? ` <span class="ctcls">${esc(x.cls)}</span>` : ''}${x.sub ? ` <span class="kind">${esc(x.sub)}</span>` : ''}</span><span class="kind">${x.kind}</span></a></li>`).join('')
     : `<li class="gshint">${ct.P ? 'Nothing matches.' : 'Loading the catalogue…'}</li>`;
   $('#gsq').setAttribute('aria-activedescendant', gs.items.length ? 'gs-' + gs.sel : '');
   const cur = $('#gs-' + gs.sel); if (cur) cur.scrollIntoView({block: 'nearest'});
@@ -3836,7 +3960,28 @@ function vaCard(e, sel){
   return `<article class="vaent${sel ? ' sel' : ''}" id="va-${esc(e.id)}" style="--c:${VA.colours[e.class]}" aria-label="${esc(VA_LABEL[e.class])}, TIC ${e.tic}">
     <header><span class="vacls"><i aria-hidden="true"></i>${esc(VA_LABEL[e.class])}</span><span class="tag">confidence: ${esc(e.confidence)}</span>${unc}
       <a href="${vaTicHref(e.tic, e.id)}">TIC ${e.tic}</a><span class="muted">sector ${e.sector} · ${esc(e.kind)}${toi}</span></header>
-    <p class="vanum mono">${vaFigures(e)}</p><p>${why}</p>${vaDetail(e)}${vaCredit(e)}</article>`;
+    <p class="vanum mono">${vaFigures(e)}</p>${vaStrip(e)}<p>${why}</p>${vaDetail(e)}${vaCredit(e)}</article>`;
+}
+// Each dip's strip: the subject's time span, the dip's window, and every reviewer's stored marks, one lane each. It
+// answers on hover and on the arrow keys (S06): how many reviewers marked that moment.
+function vaStrip(e){
+  const ms = e.marks || [], a = e.t_start, b = e.t_end;
+  if (e.kind !== 'dip' || !ms.length || a === null || a === undefined || !(b > a)) return '';
+  const ids = [...new Set(ms.map(m => m[0]))].sort(), W = 600, lane = 5, H = 8 + ids.length * (lane + 2), cl = t => Math.max(a, Math.min(b, t));
+  // A span [t0, t1] inside the strip: at least `min` wide, and never past either end.
+  const span = (t0, t1, min) => { const w = Math.min(W, Math.max(min, (cl(t1) - cl(t0)) / (b - a) * W)), x = Math.min(W - w, (cl(t0) - a) / (b - a) * W); return `x="${x.toFixed(1)}" width="${w.toFixed(1)}"`; };
+  const win = e.t_center !== null && e.duration_hours ? `<rect ${span(e.t_center - e.duration_hours / 48, e.t_center + e.duration_hours / 48, 1)} y="0" height="${H}" fill="var(--c)" opacity=".22"/>` : '';
+  const bars = ms.map(m => `<rect ${span(m[1], m[2], 1.5)} y="${4 + ids.indexOf(m[0]) * (lane + 2)}" height="${lane}" rx="1.5" fill="${m[3] ? 'var(--ink)' : 'var(--ink-3)'}"/>`).join('');
+  return `<div class="vastrip"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" data-a="${a}" data-b="${b}" aria-label="Marks over the subject, ${esc(e.time_unit || 'BTJD')} ${vaNum(a, 2)} to ${vaNum(b, 2)}: ${ids.length} reviewer${ids.length === 1 ? '' : 's'} marked it; the shaded band is the dip's window.">${win}${bars}</svg><p class="xread"></p></div>`;
+}
+function vaXhair(root){
+  if (!window.SetuUI || !SetuUI.crosshair) return;
+  root.querySelectorAll('.vastrip svg').forEach(svg => {
+    const card = svg.closest('.vaent'), e = va.byId[card.id.slice(3)]; if (!e) return;
+    const a = +svg.dataset.a, b = +svg.dataset.b, xs = Array.from({length: 121}, (_, k) => a + (b - a) * k / 120), n = new Set(e.marks.map(m => m[0])).size;
+    SetuUI.crosshair(svg, {x0: a, x1: b, xs, readout: svg.parentElement.querySelector('.xread'), fmt: i => { const t = xs[i], k = new Set(e.marks.filter(m => m[1] <= t && t <= m[2]).map(m => m[0])).size;
+      return `${e.time_unit || 'BTJD'} ${vaNum(t, 3)} · ${k} of ${n} reviewer${n === 1 ? '' : 's'} marked this moment`; }});
+  });
 }
 function vaObject(tic, id){
   const box = $('#vaobj'), es = va.byTic[tic] || [], cov = va.cov[tic] || [];
@@ -3872,6 +4017,7 @@ function vaApply(){
   va.rows = rows;
   const shown = tic !== null ? rows : rows.slice(0, va.shown);
   $('#valist').innerHTML = shown.map(e => vaCard(e, e.id === v.id)).join('');
+  vaXhair($('#valist'));
   $('#vaempty').hidden = rows.length > 0 || tic !== null;
   $('#vamore').hidden = shown.length >= rows.length;
   $('#vamore').textContent = `Show ${Math.min(60, rows.length - shown.length)} more of ${rows.length - shown.length}`;
@@ -4081,7 +4227,7 @@ const MC_RENDER = {
   lc(){
     const own = mc.star === D.story.star.name;
     $('#mclcnote').textContent = own ? `The run's stored light curve of ${D.story.star.name} (${D.story.star.target}); ticks mark its dips.` : `SetuHQ has reviewed one light curve, ${D.story.star.name}'s (${D.story.star.target}). It has none for ${mc.star}.`;
-    if (own) skyTimeline($('#mclc'), $('#mclccap')); else { $('#mclc').innerHTML = ''; $('#mclccap').innerHTML = ''; }
+    if (own) skyTimeline($('#mclc'), $('#mclccap'), $('#mclcread')); else { $('#mclc').innerHTML = ''; $('#mclccap').innerHTML = ''; $('#mclcread').textContent = ''; }
   },
   cat(){
     const ps = mcStarPlanets(mc.star), P = ct.P;
@@ -4300,6 +4446,150 @@ window.SetuHero = window.SetuHero || {frames: 0, playing: false};
   window.SetuTempstrip.wire();
 })();
 
+// ---------- viz.skyyears (V04): the sky by discovery year; fetched near the screen, played while on screen ----------
+(function(){
+  const RM = () => matchMedia('(prefers-reduced-motion: reduce)').matches, PER = 0.42 * 1000, HOLD = 3000;
+  const R = 159.80613254815972, S2 = Math.SQRT2, COLS = ["#64D2FF", "#FF6961", "#30D158", "#BF5AF2", "#FFD60A", "#7D7AFF", "#A1A1A6"], LABELS = ["transit", "radial velocity", "imaging", "microlensing", "astrometry", "timing", "other"];  // the sky file's method order (design.METHOD)
+  function moll(ra, dec){
+    ra = ra > 180 ? ra - 360 : ra; const lam = -ra * Math.PI / 180, phi = dec * Math.PI / 180; let th = phi;
+    for (let k = 0; k < 30; k++){ const f = 2 * th + Math.sin(2 * th) - Math.PI * Math.sin(phi); th -= f / (2 + 2 * Math.cos(2 * th) + 1e-12); }
+    return [(R * 2 * S2 / Math.PI * lam * Math.cos(th) + 460) / 920, (235 - R * S2 * Math.sin(th)) / 470];
+  }
+  const fmtN = n => n.toLocaleString('en-GB');
+  function wire(fig){
+    if (fig._sky || !fig.dataset.src || !window.fetch) return;
+    const S = fig._sky = {vis: false, pts: null, playing: false, year: +fig.dataset.y1, tonly: false, t: 0, last: 0, said: 0, raf: 0, held: 0};
+    const y0 = +fig.dataset.y0, y1 = +fig.dataset.y1, cols = COLS, labels = LABELS;
+    const q = s => fig.querySelector(s), box = q('.skybox'), play = q('[data-sky="play"]'), tr = q('[data-sky="transit"]'), rng = q('[data-sky="year"]');
+    const out = q('.skyread'), live = q('[data-sky="live"]'), tag = q('.skyyear');
+    let cv = null;
+    function load(){
+      if (S.loading) return; S.loading = true;
+      fetch(fig.dataset.src).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(j => {
+        S.pts = j.p.map(a => [a[0] / 10, a[1] / 10, a[2], a[3] || y1]).sort((a, b) => a[3] - b[3]).map(a => moll(a[0], a[1]).concat([a[2], a[3]]));
+        S.tr = j.m.indexOf('transit');
+        cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true');
+        const over = box.querySelector('.skyover'); if (over) box.insertBefore(cv, over); else box.appendChild(cv);
+        q('.skydots').setAttribute('hidden', ''); const nj = q('.skynojs'); if (nj) nj.remove();
+        [play, tr, rng.closest('label')].forEach(el => { el.hidden = false; });
+        S.playing = !RM(); if (S.playing) S.year = y0;
+        setPlay(); draw(); kick();
+      }).catch(() => { /* the static map stays */ });
+    }
+    function summary(){
+      const c = cols.map(() => 0); let n = 0;
+      for (const a of S.pts){ if (a[3] > S.year) break; if (S.tonly && a[2] !== S.tr) continue; c[a[2]]++; n++; }
+      const top = c.map((v, k) => [v, k]).filter(a => a[0]).sort((a, b) => b[0] - a[0]).slice(0, 4);
+      return [n, `${fmtN(n)} planets shown${S.tonly ? ' (transits only)' : ''} · ` + top.map(([v, k]) => `${labels[k]} ${fmtN(v)}`).join(' · ')];
+    }
+    function draw(){
+      if (!cv || !S.pts) return;
+      const r = box.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1), w = Math.max(2, Math.round(r.width * d)), h = Math.max(2, Math.round(r.height * d));
+      if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
+      const ctx = cv.getContext('2d'); ctx.clearRect(0, 0, w, h);
+      const sm = Math.max(1.3 * d, w / 700), bg = sm * 1.9;
+      for (const a of S.pts){
+        if (a[3] > S.year) break; if (S.tonly && a[2] !== S.tr) continue;
+        const fresh = S.year - a[3] < 1, s = fresh ? bg : sm;
+        ctx.globalAlpha = fresh ? 1 : .72; ctx.fillStyle = cols[a[2]]; ctx.fillRect(a[0] * w - s / 2, a[1] * h - s / 2, s, s);
+      }
+      ctx.globalAlpha = 1;
+      const [n, t] = summary(); out.textContent = t; tag.textContent = String(S.year);
+      rng.value = String(S.year); rng.setAttribute('aria-valuetext', `${S.year}: ${fmtN(n)} planets`);
+      // The live region speaks only while playing, at most once every 2 s; a scrubbed year is read from the slider.
+      const now = performance.now(); if (S.playing && now - S.said > 2000){ S.said = now; live.textContent = t; }
+    }
+    function setPlay(){ play.textContent = S.playing ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', String(S.playing)); }
+    function frame(now){
+      S.raf = 0; if (!S.playing || !S.vis || document.hidden) return;
+      const dt = Math.min(100, now - (S.last || now)); S.last = now;
+      if (S.year >= y1){ S.held += dt; if (S.held >= HOLD){ S.held = 0; S.year = y0; S.t = 0; draw(); } }
+      else { S.t += dt; if (S.t >= PER){ S.t = 0; S.year++; draw(); } }
+      S.raf = requestAnimationFrame(frame);
+    }
+    function kick(){ if (!S.raf && S.playing && S.vis && !document.hidden){ S.last = 0; S.raf = requestAnimationFrame(frame); } }
+    play.addEventListener('click', () => { S.playing = !S.playing; if (S.playing && S.year >= y1){ S.year = y0; S.t = 0; draw(); } setPlay(); kick(); });
+    tr.addEventListener('click', () => { S.tonly = !S.tonly; tr.setAttribute('aria-pressed', String(S.tonly)); draw(); });
+    rng.addEventListener('input', () => { S.playing = false; setPlay(); S.year = +rng.value; draw(); });
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) load(); }), {rootMargin: '600px'}).observe(fig);
+      new IntersectionObserver(es => es.forEach(e => { S.vis = e.isIntersecting; if (S.vis) kick(); }), {rootMargin: '80px'}).observe(box);
+    } else { S.vis = true; load(); }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+    let rz = 0; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(draw, 150); });
+  }
+  window.SetuSky = {wire: root => (root || document).querySelectorAll('[data-viz="skyyears"]').forEach(wire)};
+  window.SetuSky.wire();
+})();
+
+// ---------- viz.timeline (V12): the bars answer on hover and on the arrow keys (SetuUI.crosshair, S06) ----------
+(function(){
+  function wire(fig){
+    if (fig._tl || !window.SetuUI || !SetuUI.crosshair) return; fig._tl = true;
+    const y0 = +fig.dataset.y0, rows = fig.dataset.counts.split(' ').map((w, i) => { const c = w.split('.').map(Number); return [y0 + i, c.reduce((a, b) => a + b, 0)].concat(c); }), labels = ["transit", "radial velocity", "imaging", "microlensing", "astrometry", "timing", "other"], svg = fig.querySelector('.tlsvg');
+    const f = n => n.toLocaleString('en-GB');
+    SetuUI.crosshair(svg, {x0: +fig.dataset.x0, x1: +fig.dataset.x1, xs: rows.map(r => r[0]), readout: fig.querySelector('.tlread'),
+      fmt: i => { const r = rows[i]; return `${r[0]}: ${f(r[1])} planet${r[1] === 1 ? '' : 's'}` + (r[1] ? ' · ' + r.slice(2).map((v, k) => [v, k]).filter(a => a[0]).sort((a, b) => b[0] - a[0]).map(([v, k]) => `${labels[k]} ${f(v)}`).join(' · ') : ''); }});
+  }
+  window.SetuTimeline = {wire: root => (root || document).querySelectorAll('[data-viz="timeline"]').forEach(wire)};
+  window.SetuTimeline.wire();
+})();
+
+// ---------- viz.orbits (V08): the system from above; the dips in a strip; played while on screen, with Pause ----------
+(function(){
+  const RM = () => matchMedia('(prefers-reduced-motion: reduce)').matches, TAU = Math.PI * 2;
+  function wire(fig){
+    if (fig._orb) return;
+    let p; try { p = JSON.parse(fig.dataset.params); } catch (e) { return; }
+    const box = fig.querySelector('.orbbox'), btn = fig.querySelector('[data-orb="play"]'), svg = box.querySelector('svg');
+    const cv = document.createElement('canvas'); if (!cv.getContext) return;
+    cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', svg.getAttribute('aria-label'));
+    box.classList.add('cv'); box.appendChild(cv); svg.setAttribute('hidden', '');
+    const S = fig._orb = {t: 0, playing: !RM(), vis: false, raf: 0, last: 0};
+    const ps = p.planets, T = ps[ps.length - 1].P, amax = Math.max(...ps.map(q => q.a)), dmax = Math.max(1, ...ps.map(q => q.d || 0));
+    const rgb = window.SetuRender ? SetuRender.teffRGB(p.teff || 5772) : [255, 241, 234];
+    function draw(){
+      const r = box.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1), w = Math.max(2, Math.round(r.width * d)), h = Math.max(2, Math.round(r.height * d));
+      if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
+      const c = cv.getContext('2d'), narrow = w / d < 600, days = S.t * p.speed, ph = (days % T) / T;
+      c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
+      const cx = narrow ? w * .5 : w * .23, cy = narrow ? h * .25 : h * .48, R = narrow ? Math.min(w * .4, h * .18) : Math.min(h * .42, w * .2);
+      c.font = `${11 * d}px ${getComputedStyle(fig).fontFamily}`; c.lineWidth = d;
+      c.strokeStyle = 'rgba(255,179,64,.5)'; c.setLineDash([4 * d, 5 * d]); c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy + R + 22 * d); c.stroke(); c.setLineDash([]);
+      c.fillStyle = '#FFB340'; c.fillText('to the observer', cx + 8 * d, cy + R + 20 * d);
+      const sR = Math.max(5 * d, R * .06);
+      if (window.SetuRender) SetuRender.drawStar2D(c, cx, cy, sR, p.teff || 5772, 0, {flat: true, glow: 2.2}); else { c.fillStyle = `rgb(${rgb})`; c.beginPath(); c.arc(cx, cy, sR, 0, TAU); c.fill(); }
+      const gx = narrow ? w * .06 : w * .5, gw = narrow ? w * .88 : w * .46, top = narrow ? h * .58 : h * .14, lane = Math.min(64 * d, (narrow ? h * .27 : h * .78) / ps.length);
+      c.fillStyle = '#9AA3B5'; c.fillText(`one ${T.toFixed(2)}-day period · depth k² (ppm), one scale`, gx, top - 8 * d);
+      ps.forEach((q, i) => {
+        const rr = R * q.a / amax, th = Math.PI / 2 + TAU * (days / q.P + q.f), x = cx + rr * Math.cos(th), y = cy + rr * Math.sin(th);
+        c.strokeStyle = 'rgba(255,255,255,.14)'; c.beginPath(); c.arc(cx, cy, rr, 0, TAU); c.stroke();
+        const off = Math.abs(Math.atan2(Math.sin(th - Math.PI / 2), Math.cos(th - Math.PI / 2))), on = off < Math.max(.05, Math.PI * (q.w || 1) / 24 / q.P);
+        c.fillStyle = q.c; c.beginPath(); c.arc(x, y, 4.5 * d, 0, TAU); c.fill();
+        if (on){ c.strokeStyle = q.c; c.beginPath(); c.arc(x, y, 10 * d, 0, TAU); c.stroke(); }
+        c.fillStyle = '#ECEFF5'; c.fillText(q.n, x + 8 * d, y - 7 * d);
+        const base = top + 18 * d + i * lane, hh = q.d ? Math.max(2 * d, q.d / dmax * (lane - 30 * d)) : 0, ww = Math.max(2 * d, (q.w || 1) / 24 / T * gw);
+        c.strokeStyle = q.c; c.lineWidth = 1.6 * d; c.beginPath(); c.moveTo(gx, base);
+        for (let n = Math.ceil(q.f - 1e-9); (n - q.f) * q.P <= T; n++){ const tc = (n - q.f) * q.P; if (tc < 0 || !q.d) continue; const xc = gx + tc / T * gw; c.lineTo(xc - ww / 2, base); c.lineTo(xc - ww / 2, base + hh); c.lineTo(xc + ww / 2, base + hh); c.lineTo(xc + ww / 2, base); }
+        c.lineTo(gx + gw, base); c.stroke(); c.lineWidth = d;
+        c.fillStyle = on ? '#ECEFF5' : '#9AA3B5'; c.fillText(`${q.n} · ${q.P.toFixed(2)} d · ${q.d ? Math.round(q.d).toLocaleString('en-GB') + ' ppm' : 'radius not stored'}`, gx, base - 6 * d);
+      });
+      const hx = gx + ph * gw; c.strokeStyle = 'rgba(236,239,245,.55)'; c.beginPath(); c.moveTo(hx, top + 4 * d); c.lineTo(hx, top + 18 * d + ps.length * lane - 10 * d); c.stroke();
+    }
+    function setBtn(){ btn.hidden = false; btn.textContent = S.playing ? 'Pause' : 'Play'; btn.setAttribute('aria-pressed', String(S.playing)); }
+    function frame(now){ S.raf = 0; if (!S.playing || !S.vis || document.hidden) return; S.t += Math.min(.1, (now - (S.last || now)) / 1000); S.last = now; draw(); S.raf = requestAnimationFrame(frame); }
+    function kick(){ if (!S.raf && S.playing && S.vis && !document.hidden){ S.last = 0; S.raf = requestAnimationFrame(frame); } }
+    btn.addEventListener('click', () => { S.playing = !S.playing; setBtn(); kick(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { S.vis = e.isIntersecting; if (S.vis){ draw(); kick(); } }), {rootMargin: '80px'}).observe(box);
+    else { S.vis = true; kick(); }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+    let rz = 0; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(draw, 150); });
+    setBtn(); draw();
+  }
+  window.SetuOrbits = {wire: root => (root || document).querySelectorAll('[data-viz="orbits"]').forEach(wire)};
+  window.SetuOrbits.wire();
+})();
+
 // ---------- viz/panelring (V06): the markup of setuhq.viz.panelring.html, and a one-time convergence on screen ----------
 window.SetuPanelRing = (function(){
   const W = 360, H = 240, CX = 180, CY = 120, RING = 46, COL = {left: 56, right: 304};
@@ -4408,33 +4698,50 @@ window.SetuPanelRing = (function(){
     return {pts, lo, hi, step, mean};
   }
   figs.forEach(fig => {
+    // The compact figure (the home page) arrives as its label and caption: the canvas and the toggle are added here.
+    if (!fig.querySelector('.foldlive')){ const cap = fig.querySelector('figcaption');
+      cap.id = cap.id || 'fold-cap-' + Math.random().toString(36).slice(2, 8);
+      // Its full source line arrives with the bins (stories.json).
+      load().then(d => { if (!cap.querySelector('.foldsrc')) cap.insertAdjacentHTML('beforeend', ` <span class="foldsrc">${d.source.replace(/[<&>]/g, '')}</span>`); }).catch(() => {});
+      cap.insertAdjacentHTML('beforebegin', `<div class="foldlive" hidden><canvas role="img" aria-labelledby="${cap.id}"></canvas></div>`
+        + '<div class="foldctl"><button class="btn foldbtn" type="button" aria-pressed="false" hidden>Fold on the period</button><span class="foldstate" aria-live="polite"></span></div>'); }
     const btn = fig.querySelector('.foldbtn'), live = fig.querySelector('.foldlive'), cv = live && live.querySelector('canvas'), state = fig.querySelector('.foldstate');
     if (!btn || !cv) return;
-    let F = null, G = null, k = 0, target = 0, raf = 0, vis = false, touched = false, last = 0, font = '';
+    let F = null, G = null, k = 0, target = 0, raf = 0, vis = false, touched = false, last = 0, font = '', split = false;
+    const compact = fig.classList.contains('compact');
+    // One panel of the plot inside the rectangle (ox, oy, W, H) of the canvas, at fold progress e (0 time order, 1 folded).
+    function panel(c, dpr, ox, oy, W, H, e, title){
+      const L = ox + 46 * dpr, R = 12 * dpr, T = oy + (title ? 44 : 30) * dpr, B = 30 * dpr, pw = ox + W - L - R;
+      const Y = v => T + (oy + H - T - B) * (1 - (v - G.lo) / (G.hi - G.lo));
+      c.font = `${11 * dpr}px ${font}`; c.lineWidth = dpr;
+      if (title){ c.fillStyle = '#ECEFF5'; c.textAlign = 'left'; c.fillText(title, ox + 4 * dpr, oy + 14 * dpr); }
+      for (let v = G.lo; v <= G.hi + 1e-9; v += G.step){ const y = Y(v); c.strokeStyle = 'rgba(255,255,255,.08)'; c.beginPath(); c.moveTo(L, y); c.lineTo(ox + W - R, y); c.stroke();
+        c.fillStyle = '#9AA3B5'; c.textAlign = 'right'; c.fillText((v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v), L - 6 * dpr, y + 4 * dpr); }
+      c.textAlign = 'left'; c.fillText('ppm', ox + 4 * dpr, T - 16 * dpr);
+      c.textAlign = 'right'; c.fillText(e < .5 ? `BTJD ${F.span[0].toFixed(1)}–${F.span[1].toFixed(1)}, in time order` : `hours from mid-transit, folded on ${F.p.toFixed(4)} d`, ox + W - R, oy + H - 9 * dpr);
+      c.fillStyle = e > .6 ? 'rgba(100,210,255,.75)' : 'rgba(236,239,245,.6)';
+      const s = 2.2 * dpr;
+      for (const [tx, px, v] of G.pts){ const f = mix(tx, Math.max(-.2, Math.min(1.2, px)), e); if (f < 0 || f > 1) continue; c.fillRect(L + f * pw - s / 2, Y(v) - s / 2, s, s); }
+      if (e > .85){
+        const a = (e - .85) / .15, yd = Y((F.base_ppm || 0) - F.depth_ppm);
+        c.strokeStyle = `rgba(255,179,64,${a})`; c.lineWidth = 2.2 * dpr; c.beginPath();
+        G.mean.forEach(([f, v], i) => { const x = L + f * pw, y = Y(v); if (i) c.lineTo(x, y); else c.moveTo(x, y); }); c.stroke();
+        c.fillStyle = `rgba(255,179,64,${a})`; c.textAlign = 'right'; c.fillText(`${Math.round(F.depth_ppm)} ppm deep, ${F.t14_h.toFixed(2)} h (joint fit)`, ox + W - R - 4 * dpr, yd + 18 * dpr);
+        c.setLineDash([4 * dpr, 4 * dpr]); c.lineWidth = dpr; c.beginPath(); c.moveTo(L, yd); c.lineTo(ox + W - R, yd); c.stroke(); c.setLineDash([]);
+      }
+    }
     function draw(){
       const dpr = Math.min(2, window.devicePixelRatio || 1), r = cv.getBoundingClientRect();
       const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
       if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
       const c = cv.getContext('2d'); if (!c) return;
       font = font || getComputedStyle(document.body).getPropertyValue('--mono').trim() || 'monospace';
-      const e = ease(k), L = 46 * dpr, R = 12 * dpr, T = 30 * dpr, B = 30 * dpr, pw = w - L - R;
-      const Y = v => T + (h - T - B) * (1 - (v - G.lo) / (G.hi - G.lo));
       c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
-      c.font = `${11 * dpr}px ${font}`; c.lineWidth = dpr;
-      for (let v = G.lo; v <= G.hi + 1e-9; v += G.step){ const y = Y(v); c.strokeStyle = 'rgba(255,255,255,.08)'; c.beginPath(); c.moveTo(L, y); c.lineTo(w - R, y); c.stroke();
-        c.fillStyle = '#9AA3B5'; c.textAlign = 'right'; c.fillText((v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v), L - 6 * dpr, y + 4 * dpr); }
-      c.textAlign = 'left'; c.fillText('ppm', 4 * dpr, 14 * dpr);
-      c.textAlign = 'right'; c.fillText(e < .5 ? `BTJD ${F.span[0].toFixed(1)}–${F.span[1].toFixed(1)}, in time order` : `hours from mid-transit, folded on ${F.p.toFixed(4)} d`, w - R, h - 9 * dpr);
-      c.fillStyle = e > .6 ? 'rgba(100,210,255,.75)' : 'rgba(236,239,245,.6)';
-      const s = 2.2 * dpr;
-      for (const [tx, px, v] of G.pts){ const f = mix(tx, Math.max(-.2, Math.min(1.2, px)), e); if (f < 0 || f > 1) continue; c.fillRect(L + f * pw - s / 2, Y(v) - s / 2, s, s); }
-      if (e > .85){
-        const a = (e - .85) / .15;
-        c.strokeStyle = `rgba(255,179,64,${a})`; c.lineWidth = 2.2 * dpr; c.beginPath();
-        G.mean.forEach(([f, v], i) => { const x = L + f * pw, y = Y(v); if (i) c.lineTo(x, y); else c.moveTo(x, y); }); c.stroke();
-        c.fillStyle = `rgba(255,179,64,${a})`; c.textAlign = 'right'; c.fillText(`${Math.round(F.depth_ppm)} ppm deep, ${F.t14_h.toFixed(2)} h (joint fit)`, w - R - 4 * dpr, Y((F.base_ppm || 0) - F.depth_ppm) + 18 * dpr);
-        c.setLineDash([4 * dpr, 4 * dpr]); c.lineWidth = dpr; c.beginPath(); c.moveTo(L, Y((F.base_ppm || 0) - F.depth_ppm)); c.lineTo(w - R, Y((F.base_ppm || 0) - F.depth_ppm)); c.stroke(); c.setLineDash([]);
-      }
+      if (!split) return panel(c, dpr, 0, 0, w, h, ease(k), '');
+      // The reduced-motion still drawn from the bins (the compact figure carries no static panels): both panels at once.
+      const wide = w > 1.4 * h, a = 'Unfolded: in time order', b = `Folded on the ${F.p.toFixed(4)}-day period`;
+      if (wide){ panel(c, dpr, 0, 0, w / 2, h, 0, a); panel(c, dpr, w / 2, 0, w / 2, h, 1, b); }
+      else { panel(c, dpr, 0, 0, w, h / 2, 0, a); panel(c, dpr, 0, h / 2, w, h / 2, 1, b); }
     }
     function frame(now){
       raf = 0;
@@ -4447,16 +4754,18 @@ window.SetuPanelRing = (function(){
     const run = () => { if (raf || !F) return; if (RM() || !vis || document.hidden){ k = target; draw(); return; } last = 0; raf = requestAnimationFrame(frame); };
     const setTarget = (t, say) => { target = t; btn.setAttribute('aria-pressed', String(!!t)); btn.textContent = t ? 'Unfold to time' : 'Fold on the period';
       if (say && state) state.textContent = t ? `Folded on ${F.p.toFixed(4)} days: the dip appears at zero hours.` : 'In time order: each transit is a handful of points among the rest.'; run(); };
-    const goLive = () => { fig.classList.add('live'); live.hidden = false; draw(); };
+    const goLive = () => { fig.classList.add('live'); fig.classList.toggle('split', split); live.hidden = false; draw(); };
     btn.hidden = false;
     btn.addEventListener('click', () => { touched = true;
       load().then(d => { if (!F){ F = d; G = prep(F); } const next = target ? 0 : 1;
+        split = false; fig.classList.remove('split');
         if (!fig.classList.contains('live')){ k = RM() ? next : 0; goLive(); }
         setTarget(next, true); }).catch(() => { btn.hidden = true; }); });
     if (!('IntersectionObserver' in window)) return;
     // Near the viewport: fetch the bins and (with motion allowed) swap the still for the canvas.
     const near = new IntersectionObserver(es => { if (!es.some(x => x.isIntersecting)) return; near.disconnect();
-      if (RM()) return;
+      // Reduced motion: the full figure keeps its static panels; the compact one draws the same two panels once.
+      if (RM()){ if (compact) load().then(d => { F = F || d; G = G || prep(F); if (!fig.classList.contains('live')){ split = true; goLive(); } }).catch(() => {}); return; }
       load().then(d => { F = F || d; G = G || prep(F); if (!fig.classList.contains('live')){ k = target; goLive(); } if (vis) arm(); }).catch(() => {}); }, {rootMargin: '600px'});
     near.observe(fig);
     // On screen: fold once on its own (unless the visitor already used the toggle); off screen: stop where it is headed.

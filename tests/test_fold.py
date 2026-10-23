@@ -70,8 +70,10 @@ def test_the_figure_states_its_numbers_label_and_source():
     assert h.count('<svg viewBox') == 2 and len(re.findall(r'role="img" aria-label="[^"]*\d[^"]*"', h)) == 3
     assert '<button class="btn foldbtn" type="button" aria-pressed="false" hidden>' in h
     small = F.html({"source": "x"}, where="home", compact=True)
-    assert 'class="stage foldfig compact"' in small and "<svg" not in small and len(small) < 1_600 and len(h) < 16_000
-    assert "3,485 points over BTJD 1325.3–1351.3" in small and "Real data, cited" in small and "split = true" in F.JS
+    # The home page's figure fits its budget: the label and the numbers with the run; the rest comes with its bins.
+    assert 'class="stage foldfig compact"' in small and "<svg" not in small and len(small) < 230 and len(h) < 16_000
+    assert "3,485 points folded on 6.2680 d: a 292 ppm, 3.07 h dip. Source: runs/tess-pi-men-s1." in small and "Real data, cited" in small
+    assert "split = true" in F.JS and "foldsrc" in F.JS
     for word in ("habitable", "confirmed", "discovered", "synthetic", "illustrative"):
         assert word not in h.lower()
 

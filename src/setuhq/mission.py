@@ -61,7 +61,7 @@ def _pane_body(pid: str) -> str:
     if pid == "sky":
         return '<div id="mcsky"></div>'
     if pid == "lc":
-        return '<div class="mccap" id="mclccap"></div><div id="mclc"></div><p class="mcnote" id="mclcnote"></p>'
+        return '<div class="mccap" id="mclccap"></div><div id="mclc"></div><p class="xread" id="mclcread" aria-live="polite"></p><p class="mcnote" id="mclcnote"></p>'
     if pid == "cat":
         return ('<label class="mcfind"><span class="sr">Find a star</span><input type="search" id="mcq" placeholder="Find a star" autocomplete="off"></label>'
                 '<ul class="mcfound" id="mcfound"></ul><div id="mccat"></div>')
@@ -108,7 +108,7 @@ body[data-route="mission"] main{padding-top:14px}
 .mcbody[hidden]{display:none}
 .mcpane[data-pane="galaxy"] .mcbody{padding:0;overflow:hidden;position:relative}
 .mcpane .gxstage{height:100%;min-height:0;border-radius:0;flex:1}
-.mcpane[data-pane="galaxy"] .mcnote{position:absolute;right:10px;bottom:10px;z-index:7;margin:0;max-width:calc(100% - 20px);padding:6px 10px;border-radius:12px;background:rgba(18,18,20,.85);color:#F5F5F7;font-size:12px}
+.mcpane[data-pane="galaxy"] .mcnote{position:absolute;right:10px;bottom:10px;z-index:7;margin:0;max-width:calc(100% - 20px);padding:6px 10px;border-radius:12px;background:rgba(11,15,24,.85);color:var(--stage-ink);font-size:12px}
 .mcpane[data-pane="galaxy"] .mcnote:empty{display:none}
 .mcpane .mxstage{margin:0}
 .mcpane .mxstage .mxcanvas{min-height:220px}
@@ -230,7 +230,7 @@ const MC_RENDER = {
   lc(){
     const own = mc.star === D.story.star.name;
     $('#mclcnote').textContent = own ? `The run's stored light curve of ${D.story.star.name} (${D.story.star.target}); ticks mark its dips.` : `SetuHQ has reviewed one light curve, ${D.story.star.name}'s (${D.story.star.target}). It has none for ${mc.star}.`;
-    if (own) skyTimeline($('#mclc'), $('#mclccap')); else { $('#mclc').innerHTML = ''; $('#mclccap').innerHTML = ''; }
+    if (own) skyTimeline($('#mclc'), $('#mclccap'), $('#mclcread')); else { $('#mclc').innerHTML = ''; $('#mclccap').innerHTML = ''; $('#mclcread').textContent = ''; }
   },
   cat(){
     const ps = mcStarPlanets(mc.star), P = ct.P;

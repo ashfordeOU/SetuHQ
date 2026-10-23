@@ -144,7 +144,10 @@ def overview_counter(meta: dict | None, app_href: str = "") -> str:
     labels = {k["id"]: k["label"] for k in meta["classes"]}
     big = [(c["stars_searched"], "stars searched"), (c["star_sectors_searched"], "star-sectors"), (c["dips_reviewed"], "dips reviewed"),
            (c["entries"], "catalogue entries")]
-    tiles = "".join(f'<div role="listitem"><b class="mono">{n:,}</b><span>{e(t)}</span></div>' for n, t in big)
+    from setuhq.design import odometer_html
+
+    # V10: each figure rolls to its value as it comes into view; the number itself is in the HTML.
+    tiles = "".join(f'<div role="listitem"><b class="mono">{odometer_html(f"{n:,}")}</b><span>{e(t)}</span></div>' for n, t in big)
     vs = meta.get("vs") or {}
     rows = ""
     for k in meta["order"]:
@@ -186,15 +189,15 @@ def sky_layer_svg(meta: dict | None) -> str:
     class that exceeds its null."""
     if not meta or not meta.get("sky"):
         return ""
+    from setuhq.galaxy import dots_path
     from setuhq.story import mollweide
 
     plain, found = [], []
     for ra, dec, f in meta["sky"]:
-        x, y = mollweide(ra, dec)
-        (found if f else plain).append(f"M{x:.1f} {y:.1f}h0")
+        (found if f else plain).append(mollweide(ra, dec))
     return (f'<g class="covl" data-layer="sweep" style="display:none">'
-            f'<path d="{"".join(plain)}" stroke="{SKY_SWEEP_COLOUR}" stroke-width="3" stroke-linecap="round" stroke-opacity=".8"/>'
-            f'<path d="{"".join(found)}" stroke="{SKY_FOUND_COLOUR}" stroke-width="5" stroke-linecap="round"/></g>')
+            f'<path d="{dots_path(plain)}" stroke="{SKY_SWEEP_COLOUR}" stroke-width="3" stroke-linecap="round" stroke-opacity=".8"/>'
+            f'<path d="{dots_path(found)}" stroke="{SKY_FOUND_COLOUR}" stroke-width="5" stroke-linecap="round"/></g>')
 
 
 def sky_chip(meta: dict | None) -> str:
@@ -324,7 +327,10 @@ VARIABLES_CSS = r"""
 .vasort{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3)}
 .vasort select{padding:0 10px;border-radius:12px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 14px var(--sans)}
 .valist{display:grid;gap:10px}
-.vaent{display:grid;gap:6px;padding:14px 16px;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:16px;background:var(--glass-2);min-width:0}
+.vastrip{position:relative;display:grid;gap:2px}
+.vastrip svg{display:block;width:100%;overflow:hidden;height:auto;max-height:64px;border-radius:var(--r-xs);background:var(--panel-2)}
+.vastrip .xread{margin:0;font-size:12px}
+.vaent{content-visibility:auto;contain-intrinsic-size:auto 180px;display:grid;gap:6px;padding:14px 16px;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:16px;background:var(--glass-2);min-width:0}
 .vaent:target,.vaent.sel{outline:2px solid var(--blue);outline-offset:2px}
 .vaent header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
 .vacls{display:inline-flex;align-items:center;font-weight:600}
@@ -478,7 +484,28 @@ function vaCard(e, sel){
   return `<article class="vaent${sel ? ' sel' : ''}" id="va-${esc(e.id)}" style="--c:${VA.colours[e.class]}" aria-label="${esc(VA_LABEL[e.class])}, TIC ${e.tic}">
     <header><span class="vacls"><i aria-hidden="true"></i>${esc(VA_LABEL[e.class])}</span><span class="tag">confidence: ${esc(e.confidence)}</span>${unc}
       <a href="${vaTicHref(e.tic, e.id)}">TIC ${e.tic}</a><span class="muted">sector ${e.sector} · ${esc(e.kind)}${toi}</span></header>
-    <p class="vanum mono">${vaFigures(e)}</p><p>${why}</p>${vaDetail(e)}${vaCredit(e)}</article>`;
+    <p class="vanum mono">${vaFigures(e)}</p>${vaStrip(e)}<p>${why}</p>${vaDetail(e)}${vaCredit(e)}</article>`;
+}
+// Each dip's strip: the subject's time span, the dip's window, and every reviewer's stored marks, one lane each. It
+// answers on hover and on the arrow keys (S06): how many reviewers marked that moment.
+function vaStrip(e){
+  const ms = e.marks || [], a = e.t_start, b = e.t_end;
+  if (e.kind !== 'dip' || !ms.length || a === null || a === undefined || !(b > a)) return '';
+  const ids = [...new Set(ms.map(m => m[0]))].sort(), W = 600, lane = 5, H = 8 + ids.length * (lane + 2), cl = t => Math.max(a, Math.min(b, t));
+  // A span [t0, t1] inside the strip: at least `min` wide, and never past either end.
+  const span = (t0, t1, min) => { const w = Math.min(W, Math.max(min, (cl(t1) - cl(t0)) / (b - a) * W)), x = Math.min(W - w, (cl(t0) - a) / (b - a) * W); return `x="${x.toFixed(1)}" width="${w.toFixed(1)}"`; };
+  const win = e.t_center !== null && e.duration_hours ? `<rect ${span(e.t_center - e.duration_hours / 48, e.t_center + e.duration_hours / 48, 1)} y="0" height="${H}" fill="var(--c)" opacity=".22"/>` : '';
+  const bars = ms.map(m => `<rect ${span(m[1], m[2], 1.5)} y="${4 + ids.indexOf(m[0]) * (lane + 2)}" height="${lane}" rx="1.5" fill="${m[3] ? 'var(--ink)' : 'var(--ink-3)'}"/>`).join('');
+  return `<div class="vastrip"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" data-a="${a}" data-b="${b}" aria-label="Marks over the subject, ${esc(e.time_unit || 'BTJD')} ${vaNum(a, 2)} to ${vaNum(b, 2)}: ${ids.length} reviewer${ids.length === 1 ? '' : 's'} marked it; the shaded band is the dip's window.">${win}${bars}</svg><p class="xread"></p></div>`;
+}
+function vaXhair(root){
+  if (!window.SetuUI || !SetuUI.crosshair) return;
+  root.querySelectorAll('.vastrip svg').forEach(svg => {
+    const card = svg.closest('.vaent'), e = va.byId[card.id.slice(3)]; if (!e) return;
+    const a = +svg.dataset.a, b = +svg.dataset.b, xs = Array.from({length: 121}, (_, k) => a + (b - a) * k / 120), n = new Set(e.marks.map(m => m[0])).size;
+    SetuUI.crosshair(svg, {x0: a, x1: b, xs, readout: svg.parentElement.querySelector('.xread'), fmt: i => { const t = xs[i], k = new Set(e.marks.filter(m => m[1] <= t && t <= m[2]).map(m => m[0])).size;
+      return `${e.time_unit || 'BTJD'} ${vaNum(t, 3)} · ${k} of ${n} reviewer${n === 1 ? '' : 's'} marked this moment`; }});
+  });
 }
 function vaObject(tic, id){
   const box = $('#vaobj'), es = va.byTic[tic] || [], cov = va.cov[tic] || [];
@@ -514,6 +541,7 @@ function vaApply(){
   va.rows = rows;
   const shown = tic !== null ? rows : rows.slice(0, va.shown);
   $('#valist').innerHTML = shown.map(e => vaCard(e, e.id === v.id)).join('');
+  vaXhair($('#valist'));
   $('#vaempty').hidden = rows.length > 0 || tic !== null;
   $('#vamore').hidden = shown.length >= rows.length;
   $('#vamore').textContent = `Show ${Math.min(60, rows.length - shown.length)} more of ${rows.length - shown.length}`;

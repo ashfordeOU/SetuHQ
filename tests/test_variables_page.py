@@ -56,7 +56,8 @@ def test_every_figure_comes_from_the_committed_catalogue(pi_men_app):
     c = CAT["counts"]
     for n, label in ((c["stars_searched"], "stars searched"), (c["star_sectors_searched"], "star-sectors"),
                      (c["dips_reviewed"], "dips reviewed"), (c["entries"], "catalogue entries")):
-        assert f'<b class="mono">{n:,}</b><span>{label}</span>' in over
+        # V10: the number is in the HTML (the odometer rolls to it), so a page without JavaScript reads it too.
+        assert f'<b class="mono"><span class="odo" data-odo="{n:,}">{n:,}</span></b><span>{label}</span>' in over
     for k, n in c["by_class"].items():
         assert f'/catalogue/everything-that-dims/?class={k}"' in over and f"<b class=\"mono\">{n:,}</b>" in over
         if k != "unclassified":

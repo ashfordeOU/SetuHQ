@@ -75,6 +75,8 @@ def catalogue_meta(cat: dict | None, methods: list[str] | None = None, method_la
     """The small part the shell needs before the data file arrives: counts, the source line and the filters.
     ``refs`` maps a planet name to [URL, label] of its discovery paper, from SetuHQ's own checked list
     (docs/results/notable_planets.json): the catalogue dataset itself stores no DOI."""
+    from setuhq.renderer import stills_hash
+
     if cat is None:
         return None
     P = cat["planets"]
@@ -85,7 +87,8 @@ def catalogue_meta(cat: dict | None, methods: list[str] | None = None, method_la
             "url": cat["url"], "fetched_at": cat["fetched_at"], "definition": cat["definition"], "note": cat.get("note", ""),
             "methods": m, "method_label": method_label or {k: k for k in m}, "per_method": per,
             "years": [min(years), max(years)], "ranges": [[k, lab, unit, key] for k, lab, unit, key in RANGES],
-            "sorts": SORTS, "method_chapter": METHOD_CHAPTER, "units": cat["units"], "refs": refs or {}, "mentions": seen or {}}
+            "sorts": SORTS, "method_chapter": METHOD_CHAPTER, "units": cat["units"], "refs": refs or {}, "mentions": seen or {},
+            "stills": f"/assets/render/{stills_hash()}/"}
 
 
 def catalogue_filter(cat: dict, v: dict) -> list[int]:
@@ -141,6 +144,12 @@ def catalogue_section(meta: dict | None, eyebrow: str) -> str:
                      f'<input type="number" inputmode="decimal" step="any" data-rk="{key}" data-end="hi" aria-label="{e(lab)} to" placeholder="to"></fieldset>'
                      for _, lab, unit, key in RANGES)
     note = f" {e(meta['note'])}." if meta.get("note") else ""
+    from setuhq.viz import tempstrip
+
+    # V09 as the host-temperature filter: two handles over the blackbody strip (the number boxes below stay too).
+    strip = tempstrip.html({"source": f"Star colour: a Planck spectrum through the CIE 1931 colour-matching functions; host Teff: {meta['source_short']}",
+                            "markers": [], "sun": True, "title": "Host star temperature, 2,500 K to 10,000 K: drag either handle to filter"}, filter=True)
+    strip = f'<div class="ctstrip"><p class="ctstriplab">Host temperature</p>{strip}</div>' if strip else ""
     return f"""<header class="headrow">
         <div>{eyebrow}<h1 class="lead-h" id="h-catalogue" tabindex="-1">Every known exoplanet.<br><span class="grey">{c['rows']:,} records, searchable.</span></h1>
         <p>All {c['rows']:,} planets in {e(meta['source_short'])}, including the {c['rows'] - c['with_distance']:,} with no stored distance that the Galaxy map cannot place. SetuHQ did not discover these planets; it catalogues them.</p></div>
@@ -150,7 +159,7 @@ def catalogue_section(meta: dict | None, eyebrow: str) -> str:
         <label class="ctsearch"><span class="sr">Search planets and stars</span><input type="search" id="ctq" placeholder="Search {c['rows']:,} planets and {c['stars']:,} stars" autocomplete="off"></label>
         <div class="chips" id="ctmethods" role="group" aria-label="Detection method">{chips}</div>
         <details class="ctmore"><summary>Ranges and more</summary>
-          <div class="ctranges">{ranges}</div>
+          {strip}<div class="ctranges">{ranges}</div>
           <div class="ctchecks"><button class="chip" type="button" id="ctmulti" aria-pressed="false">Multi-planet systems</button><button class="chip" type="button" id="cthasdist" aria-pressed="false">Has a distance</button></div>
         </details>
         <div class="ctbar"><p class="mono" id="ctcount" role="status" aria-live="polite">Loading the catalogue…</p>
@@ -168,6 +177,7 @@ def catalogue_section(meta: dict | None, eyebrow: str) -> str:
 def planet_page(eyebrow_html: str) -> str:
     return f"""<header>{eyebrow_html}<h1 class="lead-h" id="h-planet" tabindex="-1">Planet</h1><p id="plsub"></p></header>
       <p class="note" id="plnote" role="status" hidden></p>
+      <div class="plextra" id="plextra"></div>
       <div class="plgrid">
         {system_stage("plsys", "The planet's system, drawn from stored values.")}
         <section class="card plparams" aria-labelledby="h-plparams"><h2 id="h-plparams">Stored parameters</h2><div id="plparams"></div></section>
@@ -182,6 +192,7 @@ def planet_page(eyebrow_html: str) -> str:
 def star_page(eyebrow_html: str) -> str:
     return f"""<header>{eyebrow_html}<h1 class="lead-h" id="h-star" tabindex="-1">Star</h1><p id="stsub"></p></header>
       <p class="note" id="stnote" role="status" hidden></p>
+      <div class="plextra" id="stextra"></div>
       <div class="plgrid">
         <div class="stsysw"><label class="stpick"><span>System view of</span><select id="stpick"></select></label>
         {system_stage("stsys", "The star and one of its planets, drawn from stored values.")}</div>
@@ -191,6 +202,108 @@ def star_page(eyebrow_html: str) -> str:
         <section class="card" aria-labelledby="h-stplanets"><h2 id="h-stplanets">Its planets</h2><div id="stplanets"></div></section>
         <section class="card" aria-labelledby="h-stwhere"><h2 id="h-stwhere">Where it is</h2><div id="stwhere"></div></section>
       </div>"""
+
+
+# ---------- planet and star pages: the portrait, the star, the line-up and the orbits (pre-rendered pages) ----------
+
+def _src(cat: dict) -> str:
+    return f"{cat.get('source_short') or 'exoplanet.eu'}, fetched {str(cat.get('fetched_at') or '')[:10]}"
+
+
+SPIN_BTN = '<div class="stage-ctrls"><button class="btn" type="button" data-spin aria-pressed="false" hidden>Spin</button></div>'
+
+
+def portrait(cat: dict, i: int) -> str:
+    """V02: the planet's artist's impression from its measured radius (or mass) and irradiation (setuhq.looks), with
+    its look, the reasons and the source in the caption; "" when neither radius nor mass is stored."""
+    from setuhq import looks, renderer
+
+    P = cat["planets"]
+    lk = looks.look(looks.row(cat, i))
+    if lk["name"] is None:
+        return ""
+    name = P["name"][i]
+    size = f"{lk['rp_re']:.2f} Earth radii" if lk["rp_re"] is not None else f"radius not measured ({lk['mp_me']:,.1f} Earth masses)"
+    temp = f"{lk['teq']:,.0f} K" if lk["teq"] is not None else "irradiation not computable"
+    comp = {"envelope": "an envelope planet", "rock": "a rocky planet", "neptune": "a Neptune-like planet", "giant": "a gas giant",
+            "ambiguous": "a planet of unknown make-up"}[lk["composition"]]
+    alt = f"Artist's impression of {name}: {comp}" + (f" in the {lk['band']} band" if lk["band"] else "") + f", {size}, {temp}."
+    params = {"look": lk["name"], "seed": looks.seed(P["slug"][i]), "rp_re": lk["rp_re"], "teq": lk["teq"], "animate": False}
+    if lk["neutral"]:
+        params["neutral"] = True
+    cap = (html.escape(looks.caption(looks.row(cat, i), lk)) + f" Source: {html.escape(_src(cat))}. "
+           f'<a href="{renderer.PICTURES}">How the pictures are drawn ›</a>')
+    fig = renderer.figure("planet", params, alt, cap, uid=f"pl-{P['slug'][i]}", priority=True)
+    return fig.replace('</div><a class="stage-tag"', SPIN_BTN + '</div><a class="stage-tag"', 1)
+
+
+def star_figure(name: str, teff: float | None, srad: float | None, source: str, uid: str) -> str:
+    """The host star in its blackbody colour from its stored Teff (setuhq.looks.teff_rgb, Claret 2017 limb darkening);
+    the still is the same disc as an SVG, so it shows without JavaScript."""
+    from urllib.parse import quote
+
+    from setuhq import renderer
+
+    if not teff:
+        return ""
+    svg = renderer.star_svg(teff, 64, uid=uid).replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ', 1)
+    rad = f", radius {srad:.2f} R☉" if srad else ""
+    alt = f"{name} drawn in its blackbody colour, {teff:,.0f} K{rad}."
+    cap = (f"{html.escape(name)} in its blackbody colour: {teff:,.0f} K{rad} ({html.escape(source)}). Brightness normalised; "
+           "the surface texture is decorative.")
+    return renderer.figure("star", {"teff": teff, "rstar_rsun": srad, "animate": False}, alt, cap, label="Model from stored values",
+                           size=256, uid=uid, still="data:image/svg+xml," + quote(svg))
+
+
+def planet_extras(cat: dict, i: int) -> str:
+    """The planet page's opening: the portrait beside its host star (or the star alone, saying why there is no planet),
+    then the planet in the line-up beside Earth, Neptune and Jupiter when its radius is stored (V07)."""
+    from setuhq.viz import lineup
+
+    P = cat["planets"]
+    star = P["star"][i] or ""
+    pic = portrait(cat, i)
+    st = star_figure(star or "The host star", P["steff"][i], P["srad"][i], _src(cat), f"st-{P['slug'][i]}")
+    none = "" if pic else '<p class="plnone">No radius or mass stored, so no planet is drawn.</p>'
+    hero = f'<div class="plhero{" solo" if not pic else ""}" id="plhero" data-slug="{html.escape(P["slug"][i])}">{pic}{st}{none}</div>'
+    en = lineup.entry(cat, i)
+    lu = lineup.html({"source": _src(cat), "planets": [en], "focus": en["name"], "title": f"{P['name'][i]} to scale"}) if en else ""
+    lu = f'<section class="pllineup" aria-label="{html.escape(P["name"][i])} in the line-up">{lu}</section>' if lu else ""
+    return hero + lu
+
+
+def star_extras(cat: dict, name: str, idx: list[int]) -> str:
+    """The star page's opening: the star in its blackbody colour, its place on the temperature strip (V09, when that
+    module draws), and the orbits of its planets when two or more have a period (V08)."""
+    from setuhq.looks import row
+    from setuhq.objects import slugify as _slug
+    from setuhq.viz import orbits, tempstrip
+
+    P = cat["planets"]
+    i = idx[0]
+    teff = P["steff"][i]
+    fig = star_figure(name, teff, P["srad"][i], _src(cat), f"st-{_slug(name)}")
+    strip = tempstrip.html({"source": f"Teff: {_src(cat)}; star colour: a Planck spectrum through the CIE 1931 colour-matching functions",
+                            "markers": [{"name": name, "teff": teff}]}) if teff else ""
+    rows = [{"name": P["name"][j], "slug": P["slug"][j], **row(cat, j)} for j in idx]
+    orb = orbits.html({"source": _src(cat), "star": name, "teff": teff, "planets": rows, "uid": f"orb-{_slug(name)}"})
+    if not (fig or strip or orb):
+        return ""
+    return f'<div class="sthero" id="sthero" data-star="{html.escape(name)}">{fig}{strip}{orb}</div>'
+
+
+def still_list(cat: dict, idx: list[int]) -> str:
+    """The star's planets, each with its look's 160 px still (an artist's impression) or none without radius or mass."""
+    from setuhq import looks, renderer
+
+    P = cat["planets"]
+    out = []
+    for j in idx:
+        lk = looks.look(looks.row(cat, j))["name"]
+        img = (f'<img class="plthumb" src="{renderer.still_href(lk, 160)}" width="40" height="40" loading="lazy" alt="">' if lk
+               else '<span class="plthumb none" aria-hidden="true"></span>')
+        out.append(f'<li><a href="/planets/{P["slug"][j]}/">{img}<span>{html.escape(P["name"][j])}</span></a></li>')
+    return f'<ul class="pllist plthumbs">{"".join(out)}</ul><p class="small">Pictures: artist\'s impressions from the measured radius and irradiation. <a href="/docs/pictures/">How the pictures are drawn ›</a></p>'
 
 
 # The top bar's search: an icon button that opens the search overlay (also on / and Ctrl or Cmd K).
@@ -289,7 +402,34 @@ CATALOGUE_CSS = r"""
 .gsresults .kind{font:500 11px var(--mono);color:var(--ink-3);text-transform:uppercase}
 .gsresults [aria-selected="true"] .kind{color:inherit;opacity:.7}
 .gshint{margin:8px 4px 0;font-size:12px;color:var(--ink-3)}
+.ctrow{content-visibility:auto;contain-intrinsic-size:auto 44px}
+.ctcard{content-visibility:auto;contain-intrinsic-size:auto 128px}
+.ctdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:baseline;box-shadow:0 0 0 1px var(--line-2)}
+.ctdot.none{background:transparent}
+.ctcls{display:inline-block;margin-left:6px;padding:0 6px;border-radius:var(--r-pill);border:1px solid var(--line-2);font:500 11px/1.4 var(--mono);color:var(--ink-3);vertical-align:1px}
+.ctrow .ctcls{display:none}
+@media (min-width:1100px){.ctrow .ctcls{display:inline-block}}
+.ctstrip{display:grid;gap:6px;margin:6px 0 10px}
+.ctstriplab{margin:0;font-size:12px;color:var(--ink-3)}
+.ctstrip .tsbar{height:46px}  /* the two handles fill the bar inside its border: a 44 px target on a phone */
+.gsresults .ctdot{width:16px;height:16px;vertical-align:-3px}
+.plextra{display:grid;gap:16px}
+.stubfig{max-width:420px}
+.stubstar{display:flex;align-items:center;gap:14px;margin:0;color:var(--ink-2);font-size:14px}
+.stubstar svg{flex:none}
+.plextra:empty{display:none}
+.plhero{display:grid;grid-template-columns:minmax(0,520px) minmax(0,300px);gap:16px;align-items:start}
+.plhero.solo{grid-template-columns:minmax(0,300px) minmax(0,1fr)}
+.plnone{margin:0;align-self:center;color:var(--ink-2)}
+.plhero .readout,.sthero .readout{font-size:12px;line-height:1.45}
+.sthero{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:16px;align-items:start}
+.sthero>.orbits,.sthero>.tstrip{grid-column:1/-1}
+.plthumbs a{justify-content:flex-start}
+.plthumbs .mono{margin-left:auto}
+.plthumb{width:40px;height:40px;border-radius:50%;flex:none;background:#000}
+.plthumb.none{display:inline-block;border:1px dashed var(--line-2);background:none}
 @media (prefers-reduced-motion: reduce){.ctmore summary::before{transition:none}}
+@media (max-width:699.98px){.plhero,.plhero.solo,.sthero{grid-template-columns:minmax(0,1fr)}.plextra a.stage-tag{min-height:44px;min-width:44px}}
 @media (max-width:699.98px){
   /* Phone: the column headers stay (one per cell) as a row of sort buttons that scrolls sideways. */
   .cthead{display:flex;gap:6px;padding:6px;overflow-x:auto;overscroll-behavior-x:contain}
@@ -394,6 +534,15 @@ function ctApply(){
   $('#ctempty').hidden = ct.idx.length > 0; $('#ctscroll').hidden = !ct.idx.length;
   ctRows(true);
 }
+// The host's colour (its stored Teff as a blackbody, SetuRender.teffRGB; cached by 50 K) and the size class (CLASS_RULE).
+const ctDotC = {};
+function ctDot(teff){
+  if (!(teff > 0) || !window.SetuRender) return '<i class="ctdot none" aria-hidden="true"></i>';
+  const k = Math.round(teff / 50) * 50, c = ctDotC[k] || (ctDotC[k] = SetuRender.teffRGB(k).join(','));
+  return `<i class="ctdot" style="background:rgb(${c})" aria-hidden="true"></i>`;
+}
+const CT_CLASSES = ['Earth-size', 'Super-Earth', 'Sub-Neptune', 'Neptune-like', 'Gas giant'];
+function ctCls(i){ const P = ct.P, c = typeof mxClassOf === 'function' ? mxClassOf(P.radius[i], P.mass[i] !== null ? P.mass[i] : P.msini[i]) : null; return c === null || c === undefined ? '' : CT_CLASSES[c]; }
 // One row: the planet's name is the row header, then one cell per column header (10 in all, at every width).
 // On a phone the same cells wrap into a card, each with its label shown.
 const CT_COLS = [['star', 'Host', ''], ['year', 'Year', ''], ['method', 'Method', ''], ['mass', 'Mass', 'MJ'], ['radius', 'Radius', 'RJ'],
@@ -402,7 +551,7 @@ function ctRowHTML(r){
   const P = ct.P, i = ct.idx[r], h = ct.rowH, phone = h > 50, col = m => GXM && GXM.method_colour ? GXM.method_colour[m] : '#8E8E93';
   const cell = (k, lab, unit) => {
     let v, cls = 'num';
-    if (k === 'star'){ v = P.star[i] ? esc(P.star[i]) : null; cls = ''; }
+    if (k === 'star'){ v = P.star[i] ? ctDot(P.steff[i]) + esc(P.star[i]) : null; cls = ''; }
     else if (k === 'method'){ v = `<i style="background:${col(P.method[i])}"></i>${esc(CTM.method_label[P.method[i]] || P.method[i])}`; cls = ''; }
     else if (k === 'year') v = P.year[i] || null;
     else if (k === 'mass') v = P.mass[i] !== null ? ctLim(i, 'mass') + ctFmt(P.mass[i], 3) : (P.msini[i] !== null ? ctLim(i, 'msini') + ctFmt(P.msini[i], 3) + ' sin i' : null);
@@ -411,7 +560,7 @@ function ctRowHTML(r){
     if (v === null) return `<span role="cell" class="${cls} na" aria-label="not stored">—</span>`;
     return phone ? `<span role="cell">${k === 'star' || k === 'method' ? '' : lab + ' '}${v}${unit ? ' ' + unit : ''}</span>` : `<span role="cell" class="${cls}">${v}</span>`;
   };
-  return `<a class="${h > 50 ? 'ctcard' : 'ctrow'}" role="row" aria-rowindex="${r + 1}" href="${ctPlanetHref(i)}" style="top:${r * h}px"><span role="rowheader"><b>${esc(P.name[i])}</b></span>${CT_COLS.map(c => cell(...c)).join('')}</a>`;
+  return `<a class="${h > 50 ? 'ctcard' : 'ctrow'}" role="row" aria-rowindex="${r + 1}" href="${ctPlanetHref(i)}" style="top:${r * h}px"><span role="rowheader"><b>${esc(P.name[i])}</b>${ctCls(i) ? ` <span class="ctcls">${esc(ctCls(i))}</span>` : ''}</span>${CT_COLS.map(c => cell(...c)).join('')}</a>`;
 }
 // Only the rows in view (plus a margin) are in the page. Scrolling keeps the rows already there and adds or
 // removes only those entering or leaving the window, in order.
@@ -444,6 +593,8 @@ function ctControls(){
   $$('#ctmethods [data-cm]').forEach(b => b.setAttribute('aria-pressed', String(v.methods.includes(b.dataset.cm))));
   // Never overwrite a box being typed in, or one whose range is still waiting to apply.
   $$('#route-catalogue [data-rk]').forEach(inp => { if (document.activeElement === inp || ct.rangeT[inp.dataset.rk]) return; const r = v[inp.dataset.rk] || [null, null], x = r[inp.dataset.end === 'lo' ? 0 : 1]; inp.value = x === null ? '' : x; });
+  const tr = v.teff || [null, null];
+  $$('#route-catalogue [data-ts]').forEach(inp => { if (document.activeElement === inp) return; const x = inp.dataset.ts === 'lo' ? (tr[0] ?? 2500) : (tr[1] ?? 10000); inp.value = x; inp.setAttribute('aria-valuetext', Number(x).toLocaleString('en-US') + ' K'); });
   $('#ctmulti').setAttribute('aria-pressed', String(v.multi)); $('#cthasdist').setAttribute('aria-pressed', String(v.hasdist));
   $$('#cttable .cth').forEach(h => h.setAttribute('aria-sort', h.dataset.sort === v.sort ? (v.dir === 'desc' ? 'descending' : 'ascending') : 'none'));
   if (Object.keys(v).some(k => Array.isArray(v[k]) && v[k].length === 2 && (v[k][0] !== null || v[k][1] !== null) && k !== 'methods')) $('#route-catalogue .ctmore').open = true;
@@ -475,6 +626,9 @@ function ctBind(){
   const relayout = () => { if (current !== 'catalogue' || !ct.P) return; const h = ctPhone() ? CT_CARD_H : 44; if (h !== ct.rowH){ ct.rowH = h; $('#ctspacer').style.height = ct.idx.length * h + 'px'; } ctRows(true); };
   if (window.ResizeObserver) new ResizeObserver(relayout).observe($('#ctscroll'));
   $('#ctcsv').addEventListener('click', ctCsv);
+  // V09: the temperature strip's two handles set the host-temperature range (the strip's ends mean no limit).
+  $('#route-catalogue').addEventListener('setu:teff-range', e => { const d = e.detail || {}, lo = Number(d.lo), hi = Number(d.hi);
+    ct.view.teff = [lo > 2500 ? lo : null, hi < 10000 ? hi : null]; ctApply(); syncCatURL(false); });
 }
 // CSV of the filtered, sorted view: every stored column with its errors; empty where not stored.
 function ctCsv(){
@@ -545,12 +699,15 @@ function plShow(slug){
     const i = ct.bySlug[slug], note = $('#plnote');
     const body = $$('#route-planet .plgrid, #route-planet .plmore, #route-planet #plref').map(x => x.closest('.plgrid, .plmore, section.card'));
     if (i === undefined){ note.innerHTML = `No planet "${esc(slug)}" in the catalogue. <a href="${R(`#/catalogue?q=${encodeURIComponent(slug.replace(/-/g, ' '))}`)}">Search the Catalogue ›</a>`; note.hidden = false;
-      $('#h-planet').textContent = 'Planet not found'; $('#plsub').textContent = ''; body.forEach(x => { x.hidden = true; }); plShown(false); return; }
+      $('#h-planet').textContent = 'Planet not found'; $('#plsub').textContent = ''; $('#plextra').innerHTML = ''; body.forEach(x => { x.hidden = true; }); plShown(false); return; }
     note.hidden = true; body.forEach(x => { x.hidden = false; });
     const P = ct.P, star = P.star[i], cls = mxClassOf(P.radius[i], P.mass[i] !== null ? P.mass[i] : P.msini[i]);
     const clsName = cls === null ? 'class not determinable (no radius or mass stored)' : ['Earth-size', 'Super-Earth', 'Sub-Neptune', 'Neptune-like', 'Gas giant'][cls] + (P.radius[i] === null ? ' (by mass)' : '');
     $('#h-planet').textContent = P.name[i]; if (current === 'planet') pageChrome('planet', new URLSearchParams({id: slug}));
     $('#plsub').innerHTML = `${star ? `<a href="${ctStarHref(star)}">${esc(star)}</a>` : 'host not stored'} · ${esc(CTM.method_label[P.method[i]] || P.method[i])} · discovered ${P.year[i] || 'year not stored'} · ${esc(clsName)}`;
+    const ex = $('#plextra'), hero = ex && ex.querySelector('#plhero');
+    if (ex && !(hero && hero.dataset.slug === slug)){ ex.innerHTML = ctPlanetExtras(i); if (window.SetuRender) SetuRender.mount(ex); }
+    ctSpin(ex);
     $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds; none is shown where none is stored.</p>`;
     const sibs = star ? ct.byStar[star].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)) : [i];
     $('#plhost').innerHTML = (star ? `<p><a href="${ctStarHref(star)}">${esc(star)}</a>${P.sptype[i] ? ' · ' + esc(P.sptype[i]) : ''}${P.steff[i] !== null ? ' · ' + ctFmt(P.steff[i]) + ' K' : ''}</p>` : '<p>Host star not stored.</p>')
@@ -563,6 +720,85 @@ function plShow(slug){
       <div class="pllinks">${ch ? `<a href="${R(`#/methods?ch=${ch}`)}">How ${esc((CTM.method_label[P.method[i]] || '').toLowerCase())} works ›</a>` : ''}</div>${ctSeen(P.name[i], ch ? R('#/methods?ch=' + ch) : '')}`;
     plSystem($('#plsys'), i, current === 'planet');
   }).catch(() => { $('#plnote').textContent = 'The catalogue file could not be loaded here.'; $('#plnote').hidden = false; });
+}
+// ---------- the portrait, its star, the line-up and the orbits (twins of catalogue.planet_extras and star_extras) ----------
+const CT_PIC = '/docs/pictures/', CT_GIF = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=', CT_RE = 11.209;
+const CT_SPIN = '<div class="stage-ctrls"><button class="btn" type="button" data-spin aria-pressed="false" hidden>Spin</button></div>';
+const ctStill = (lk, px) => (CTM.stills || '') + lk + '-' + px + '.webp';
+const ctSrc = () => `${ct.C.source_short}, fetched ${String(ct.C.fetched_at).slice(0, 10)}`;
+const ctN0 = x => Math.round(x).toLocaleString('en-US');
+function ctRow(i){ const o = {}; for (const k of ['radius', 'mass', 'msini', 'a', 'period', 'srad', 'smass', 'steff', 'teq']) o[k] = ct.P[k][i]; return o; }
+function ctFig(kind, params, alt, cap, label, still, extra){
+  const tag = kind === 'planet' ? `<a class="stage-tag" href="${CT_PIC}">${esc(label)}</a>` : `<span class="stage-tag">${esc(label)}</span>`;
+  return `<figure class="stage rfig" data-render="${kind}" data-params='${esc(JSON.stringify(params))}' aria-label="${esc(alt)}"><div class="rbox"><img class="rstill" src="${esc(still)}" width="512" height="512" alt="${esc(alt)}">${extra || ''}</div>${tag}<figcaption class="readout">${cap}</figcaption></figure>`;
+}
+function ctPortrait(i){
+  const P = ct.P, lk = window.SetuRender ? SetuRender.look(ctRow(i)) : {name: null}; if (!lk.name) return '';
+  const comp = {envelope: 'an envelope planet', rock: 'a rocky planet', neptune: 'a Neptune-like planet', giant: 'a gas giant', ambiguous: 'a planet of unknown make-up'}[lk.composition];
+  const size = lk.rp_re !== null ? `${lk.rp_re.toFixed(2)} Earth radii` : `radius not measured (${lk.mp_me.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1})} Earth masses)`;
+  const alt = `Artist's impression of ${P.name[i]}: ${comp}${lk.band ? ` in the ${lk.band} band` : ''}, ${size}, ${lk.teq !== null ? ctN0(lk.teq) + ' K' : 'irradiation not computable'}.`;
+  const cap = esc(`Artist's impression · ${lk.composition}${lk.band ? ', ' + lk.band : ', irradiation not computable'} · ${lk.reasons.join(' ')}`) + ` Source: ${esc(ctSrc())}. <a href="${CT_PIC}">How the pictures are drawn ›</a>`;
+  const params = {look: lk.name, seed: SetuRender.fnv(P.slug[i]), rp_re: lk.rp_re, teq: lk.teq, animate: false}; if (lk.neutral) params.neutral = true;
+  return ctFig('planet', params, alt, cap, "Artist's impression", ctStill(lk.name, 512), CT_SPIN);
+}
+function ctStarFig(name, teff, srad){
+  if (!teff) return '';
+  const rad = srad ? `, radius ${srad.toFixed(2)} R☉` : '';
+  return ctFig('star', {teff, rstar_rsun: srad, animate: false}, `${name} drawn in its blackbody colour, ${ctN0(teff)} K${rad}.`,
+    `${esc(name)} in its blackbody colour: ${ctN0(teff)} K${esc(rad)} (${esc(ctSrc())}). Brightness normalised; the surface texture is decorative.`, 'Model from stored values', CT_GIF);
+}
+function ctLineup(i){
+  const P = ct.P; if (!P.radius[i] || !window.SetuRender) return '';
+  const fr = r => r < 6 ? `${r.toFixed(2)} R⊕` : `${(r / CT_RE).toFixed(2)} RJ`;
+  const its = [['Earth', 1, 'ref-earth'], ['Neptune', 3.88, 'ref-neptune'], ['Jupiter', CT_RE, 'ref-jupiter']].map(([name, re, look]) => ({name, re, look, ref: 1}))
+    .concat([{name: P.name[i], re: Math.round(P.radius[i] * CT_RE * 1000) / 1000, look: SetuRender.look(ctRow(i)).name, focus: 1}]).sort((a, b) => a.re - b.re);
+  const big = its[its.length - 1], small = its[0];
+  const lis = its.map(q => `<li class="luitem${q.ref ? ' ref' : ''}${q.focus ? ' focus' : ''}" style="--re:${q.re.toFixed(3)}"><img src="${ctStill(q.look, q.re / big.re * 90 > 40 ? 512 : 160)}" width="160" height="160" loading="lazy" alt=""><b>${esc(q.name)}</b><span>${fr(q.re)}</span></li>`).join('');
+  return `<section class="pllineup" aria-label="${esc(P.name[i])} in the line-up"><figure class="lineup" data-viz="lineup" aria-label="${esc(P.name[i])} to scale"><div class="stage lustage" style="--rmax:${big.re.toFixed(3)}"><ol class="lurow">${lis}</ol><a class="stage-tag" href="${CT_PIC}">Artist's impression</a></div>`
+    + `<figcaption class="skysrc">To scale: one Earth radius is the same width all along the row, so ${esc(big.name)} is ${(big.re / small.re).toFixed(1)} times as wide as ${esc(small.name)}. Each picture is an artist's impression chosen from the measured radius and the computed irradiation; composition is not measured. Earth, Neptune and Jupiter are the Solar System references (only Earth is drawn with oceans). Radii: ${esc(ctSrc())} (1 RJ = 11.209 R⊕). <a href="${CT_PIC}">How the pictures are drawn ›</a></figcaption></figure></section>`;
+}
+function ctPlanetExtras(i){
+  const P = ct.P, pic = ctPortrait(i), st = ctStarFig(P.star[i] || 'The host star', P.steff[i], P.srad[i]);
+  return `<div class="plhero${pic ? '' : ' solo'}" id="plhero" data-slug="${esc(P.slug[i])}">${pic}${st}${pic ? '' : '<p class="plnone">No radius or mass stored, so no planet is drawn.</p>'}</div>` + ctLineup(i);
+}
+// V08 on a star page (twin of viz.orbits.system and html): a from the catalogue or Kepler's third law, depth (Rp/R★)².
+function ctOrbits(name, ps){
+  const P = ct.P, hex = c => '#' + c.map(v => v.toString(16).padStart(2, '0')).join('');
+  const pl = ps.filter(j => P.period[j] > 0).map(j => {
+    let a = P.a[j] > 0 ? P.a[j] : null, src = 'catalogue';
+    if (a === null){ a = P.smass[j] > 0 ? Math.cbrt(P.smass[j] * (P.period[j] / 365.25) ** 2) : null; src = "Kepler's third law"; }
+    const rp = P.radius[j] > 0 ? P.radius[j] : null, rs = P.srad[j] > 0 ? P.srad[j] : null, k = rp && rs ? rp * 71492 / 695700 / rs : null;
+    const lk = window.SetuRender ? SetuRender.look(ctRow(j)).name : null, L = lk && SetuRender.LOOKS[lk];
+    return a === null ? null : {name: P.name[j], slug: P.slug[j], P: P.period[j], a, src, re: rp && rp * CT_RE, d: k && k * k * 1e6,
+      w: rs ? P.period[j] / Math.PI * Math.asin(Math.min(1, rs * 695700 / 149597870.7 / a)) * 24 : null, c: hex(L ? L.pal[2] : [170, 182, 204])};
+  }).filter(Boolean).sort((x, y) => x.P - y.P);
+  if (pl.length < 2) return '';
+  const short = n => { const t = n.toLowerCase().startsWith(name.toLowerCase()) ? n.slice(name.length).trim() : ''; return t.length > 0 && t.length <= 3 ? t : n; };
+  const T = pl[pl.length - 1].P, f2 = (x, d) => x.toLocaleString('en-US', {minimumFractionDigits: d, maximumFractionDigits: d});
+  const params = {teff: P.steff[ps[0]], speed: Math.max(1.6, Math.min(T / 12, pl[0].P / 1.5)), planets: pl.map((q, i) => ({n: short(q.name), P: q.P, a: q.a, d: q.d, w: q.w, c: q.c, f: i ? (i * .4) % 1 : 0}))};
+  const label = `The ${pl.length} planets of ${name} seen from above, with their dips over one ${T.toFixed(2)}-day period of the outermost: ` + pl.map(q => `${q.name} every ${q.P.toFixed(2)} d at ${q.a.toFixed(4)} AU` + (q.d ? `, ${f2(q.d, 0)} ppm deep` : '')).join('; ') + '.';
+  const rows = pl.map(q => `<tr><th scope="row"><a href="/planets/${esc(q.slug)}/">${esc(q.name)}</a></th><td>${f2(q.P, 4)}</td><td>${q.a.toFixed(4)}${q.src === 'catalogue' ? '' : '*'}</td><td>${q.re ? q.re.toFixed(2) : '—'}</td><td>${q.d ? f2(q.d, 0) : '—'}</td></tr>`).join('');
+  return `<figure class="orbits" data-viz="orbits" data-params='${esc(JSON.stringify(params))}'><div class="stage orbstage"><div class="orbbox"><svg class="orbsvg" role="img" aria-label="${esc(label)}"></svg></div><span class="stage-tag">Model from stored values</span><div class="stage-ctrls"><button class="btn" type="button" data-orb="play" aria-pressed="false" hidden>Play</button></div></div>`
+    + `<figcaption class="skysrc">The ${esc(name)} system from above: each planet dips the star's light when it crosses the line of sight to the observer. Orbit sizes are the stored semi-major axes (or Kepler's third law from the period and the star's mass); dip depth is (Rp/R★)² from the stored radii. Circular orbits, star and planets not to scale, phases illustrative (no transit times are stored). Source: ${esc(ctSrc())}.</figcaption>`
+    + `<details class="orbtable"><summary>The planets: period, orbit and dip depth</summary><div class="tablewrap" tabindex="0" role="region" aria-label="${esc(name)}: period, orbit and dip depth"><table class="pltable"><thead><tr><th scope="col">Planet</th><th scope="col">P (d)</th><th scope="col">a (AU)</th><th scope="col">Rp (R⊕)</th><th scope="col">Depth k² (ppm)</th></tr></thead><tbody>${rows}</tbody></table></div><p class="small">a from ${esc(ct.C.source_short)}; * from Kepler's third law (period and the star's mass). — : radius not stored.</p></details></figure>`;
+}
+// The portrait turns (0.12 rad/s) while on screen, the tab visible and the viewer has not paused it; under reduced motion
+// it holds its still until Spin is pressed. Its own loop, at 30 fps (15 on the Canvas2D path).
+function ctSpin(root){
+  const fig = root && root.querySelector('[data-render="planet"]'), btn = fig && fig.querySelector('[data-spin]');
+  if (!btn || fig._spin) return; fig._spin = 1;
+  const S = {on: false, t: 0, raf: 0, vis: true, last: 0, at: 0}, ok = () => fig._sr && fig._sr.cv && window.SetuRender;
+  const set = () => { btn.hidden = !ok(); btn.textContent = S.on ? 'Pause' : 'Spin'; btn.setAttribute('aria-pressed', String(S.on)); };
+  const frame = now => { S.raf = 0; if (!S.on || !S.vis || document.hidden || !ok() || !fig.isConnected) return;
+    const dt = Math.min(.1, (now - (S.last || now)) / 1000); S.last = now; S.t += dt;
+    if (now - S.at >= (SetuRender.stats().path === 'canvas2d' ? 66 : 33)){ S.at = now; try { SetuRender.planet(fig._sr.cv, Object.assign({}, fig._sr.p, {t: S.t})); } catch (e) { S.on = false; set(); return; } }
+    S.raf = requestAnimationFrame(frame); };
+  const kick = () => { if (!S.raf && S.on && S.vis && !document.hidden){ S.last = 0; S.raf = requestAnimationFrame(frame); } };
+  btn.addEventListener('click', () => { S.on = !S.on; set(); kick(); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { S.vis = e.isIntersecting; kick(); }), {rootMargin: '80px'}).observe(fig);
+  document.addEventListener('visibilitychange', kick);
+  let n = 0; const wait = () => { if (ok()){ S.on = !matchMedia('(prefers-reduced-motion: reduce)').matches; set(); kick(); } else if (n++ < 60) setTimeout(wait, 250); };
+  wait();
 }
 // The shared animated system, from planet i's stored values only; the caption says what is not stored.
 // Back-links: where SetuHQ itself shows this planet or star (the Transit case, Galaxy tour stops, Methods chapters).
@@ -580,7 +816,7 @@ function stShow(slug){
     const name = ct.starBySlug[slug], note = $('#stnote');
     const body = $$('#route-star .plgrid, #route-star .plmore');
     if (!name){ note.innerHTML = `No star "${esc(slug)}" in the catalogue. <a href="${R(`#/catalogue?q=${encodeURIComponent(slug.replace(/-/g, ' '))}`)}">Search the Catalogue ›</a>`; note.hidden = false;
-      $('#h-star').textContent = 'Star not found'; $('#stsub').textContent = ''; body.forEach(x => { x.hidden = true; }); return; }
+      $('#h-star').textContent = 'Star not found'; $('#stsub').textContent = ''; $('#stextra').innerHTML = ''; body.forEach(x => { x.hidden = true; }); return; }
     note.hidden = true; body.forEach(x => { x.hidden = false; });
     const P = ct.P, ps = ct.byStar[name].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)), i = ps[0];
     $('#h-star').textContent = name; if (current === 'star') pageChrome('star', new URLSearchParams({id: slug}));
@@ -588,7 +824,11 @@ function stShow(slug){
     const [cl, row] = teff !== null ? mxClass(teff) : [null, null];
     $('#stsub').textContent = `${ps.length} planet${ps.length === 1 ? '' : 's'} in ${ct.C.source_short}` + (P.sptype[i] ? ` · stored type ${P.sptype[i]}` : '') + (cl ? ` · class ${cl} from Teff (nearest ${row})` : '');
     $('#stparams').innerHTML = ctTable(i, CT_STAR_ROWS) + (P.salt[i] ? `<p class="small">Also known as ${esc(P.salt[i])}.</p>` : '');
-    $('#stplanets').innerHTML = `<ul class="pllist">${ps.map(j => `<li><a href="${ctPlanetHref(j)}"><span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul>`;
+    const thumb = j => { const lk = window.SetuRender && SetuRender.look(ctRow(j)).name; return lk ? `<img class="plthumb" src="${ctStill(lk, 160)}" width="40" height="40" loading="lazy" alt="">` : '<span class="plthumb none" aria-hidden="true"></span>'; };
+    $('#stplanets').innerHTML = `<ul class="pllist plthumbs">${ps.map(j => `<li><a href="${ctPlanetHref(j)}">${thumb(j)}<span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul><p class="small">Pictures: artist's impressions from the measured radius and irradiation. <a href="${CT_PIC}">How the pictures are drawn ›</a></p>`;
+    const sx = $('#stextra'), sh = sx && sx.querySelector('#sthero');
+    if (sx && !(sh && sh.dataset.star === name)){ const f = ctStarFig(name, P.steff[i], P.srad[i]) + ctOrbits(name, ps); sx.innerHTML = f ? `<div class="sthero" id="sthero" data-star="${esc(name)}">${f}</div>` : ''; if (window.SetuRender) SetuRender.mount(sx); }
+    if (window.SetuOrbits) SetuOrbits.wire(sx);
     $('#stwhere').innerHTML = ctWhere(i, name) + ctSeen(name, R('#/sky'));
     if (typeof vaForStar === 'function') vaForStar(P.salt[i]);
     // The system view with one of its planets (the innermost first); the picker switches planet.
@@ -614,15 +854,15 @@ function gsSearch(q){
   if (q && ct.P){
     const P = ct.P, starts = [], has = [];
     for (let i = 0; i < P.name.length && starts.length < 40; i++){ const n = P.name[i].toLowerCase(), a = (P.alt[i] || '').toLowerCase(); if (n.startsWith(q)) starts.push(i); else if ((n.includes(q) || a.includes(q)) && has.length < 40) has.push(i); }
-    for (const i of starts.concat(has).slice(0, 12)) res.push({kind: 'planet', label: P.name[i], sub: P.star[i] || '', href: ctPlanetHref(i)});
-    let n = 0; for (const s of ct.C.stars.names){ if (s.toLowerCase().includes(q)){ res.push({kind: 'star', label: s, sub: `${ct.byStar[s].length} planet${ct.byStar[s].length === 1 ? '' : 's'}`, href: ctStarHref(s)}); if (++n >= 6) break; } }
+    for (const i of starts.concat(has).slice(0, 12)) res.push({kind: 'planet', label: P.name[i], sub: P.star[i] || '', href: ctPlanetHref(i), teff: P.steff[i], cls: ctCls(i)});
+    let n = 0; for (const s of ct.C.stars.names){ if (s.toLowerCase().includes(q)){ res.push({kind: 'star', label: s, sub: `${ct.byStar[s].length} planet${ct.byStar[s].length === 1 ? '' : 's'}`, href: ctStarHref(s), teff: P.steff[ct.byStar[s][0]]}); if (++n >= 6) break; } }
   }
   if (q && typeof vaSearch === 'function') res.push(...vaSearch(q));
   return st.slice(0, q ? 6 : 20).concat(res);
 }
 function gsRender(){
   const q = $('#gsq').value; gs.items = gsSearch(q); gs.sel = Math.min(gs.sel, Math.max(0, gs.items.length - 1));
-  $('#gsresults').innerHTML = gs.items.length ? gs.items.map((x, k) => `<li role="option" id="gs-${k}" aria-selected="${k === gs.sel}"><a href="${x.href}" tabindex="-1"><span>${esc(x.label)}${x.sub ? ` <span class="kind">${esc(x.sub)}</span>` : ''}</span><span class="kind">${x.kind}</span></a></li>`).join('')
+  $('#gsresults').innerHTML = gs.items.length ? gs.items.map((x, k) => `<li role="option" id="gs-${k}" aria-selected="${k === gs.sel}"><a href="${x.href}" tabindex="-1"><span>${x.kind === 'planet' || x.kind === 'star' ? ctDot(x.teff) : ''}${esc(x.label)}${x.cls ? ` <span class="ctcls">${esc(x.cls)}</span>` : ''}${x.sub ? ` <span class="kind">${esc(x.sub)}</span>` : ''}</span><span class="kind">${x.kind}</span></a></li>`).join('')
     : `<li class="gshint">${ct.P ? 'Nothing matches.' : 'Loading the catalogue…'}</li>`;
   $('#gsq').setAttribute('aria-activedescendant', gs.items.length ? 'gs-' + gs.sel : '');
   const cur = $('#gs-' + gs.sel); if (cur) cur.scrollIntoView({block: 'nearest'});
