@@ -37,6 +37,7 @@ import math
 from pathlib import Path
 
 from setuhq import brand
+from setuhq.design import BASE_CSS, MOTION_CSS, tokens_css
 from setuhq.benchmark_toi import wilson
 from setuhq.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
 from setuhq.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, TEASER_JS, galaxy_data,
@@ -57,6 +58,7 @@ from setuhq.names import (ATTRIBUTION, DIP_STATE, PROBES_ONLY, PROVIDER_BY_KIND,
 from setuhq.objects import slugify
 from setuhq.routes import ALIASES, from_hash, route_table, set_dip_slugs
 from setuhq.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
+from setuhq.viz import VIZ_JS
 
 # The site's five sections, in the top bar, for its three audiences: visitors (Explore, How it works), researchers
 # (Candidates, Evidence) and contributors (Docs). docs/SITE.md gives the reasons. Each section's pages are listed in
@@ -71,6 +73,7 @@ SUBNAV = {
                    ("Case files", "#/candidates", ["candidates"]), ("Radius ratios", "#/planets", ["planets"])],
     "evidence": [("The panel", "#/sentinels", ["sentinels"]), ("Leaderboard", "#/leaderboard", ["leaderboard"]),
                  ("Runs", "#/runs", ["runs"]), ("Run report", "/evidence/report/", ["report"]), ("Plates", "/evidence/plates/", ["plates"])],
+    "docs": [("Get started", "#/docs", ["docs"]), ("How the pictures are drawn", "#/pictures", ["pictures"])],
 }
 # Every view: its name, its section, its breadcrumbs (deep pages only: a list of (label, address)), and its title.
 # A title template's {name} is the page's own heading (a planet, a star, a dip).
@@ -95,6 +98,7 @@ ROUTE_META = {
     "report": {"label": "Run report", "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
     "plates": {"label": "Plates", "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
     "docs": {"label": "Docs", "nav": "docs", "title": "Docs: get started with SetuHQ · SetuHQ"},
+    "pictures": {"label": "How the pictures are drawn", "nav": "docs", "title": "How the pictures are drawn · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
     "notfound": {"label": "Page not found", "nav": None, "title": "Page not found · SetuHQ"},
 }
 SECTIONS = [(k, label) for k, label, _ in NAV]
@@ -928,44 +932,12 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
 
 
 APP_CSS = """
-/* The approved design: a pure black ground, frosted glass, hairlines, Geist with bold tight headlines and a
-   grey second line, and system colours: blue for a known planet, yellow for open, red for rejected, cyan for
-   the Sentinels, purple for the Probes, amber for the star. Dark first; a light variant uses the same names.
-   The "space" panels (sky map, transit theatre, scatter, orbits) stay dark in both themes. */
-:root{color-scheme:dark;
-  --bg:#000;--bg-2:#0B0B0D;--bg-3:#161618;
-  --glass:rgba(28,28,30,.55);--glass-2:rgba(28,28,30,.45);--panel:#1C1C1E;--panel-2:rgba(255,255,255,.06);
-  --line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);--line-3:rgba(255,255,255,.24);
-  --ink:#F5F5F7;--ink-2:#A1A1A6;--ink-3:#8E8E93;
-  --blue:#0A84FF;--yellow:#FFD60A;--red:#FF453A;--sen:#64D2FF;--prb:#BF5AF2;--prb-ink:#D0A8FF;--star:#FFB340;--green:#30D158;
-  --cyan:#64D2FF;--lime:#30D158;--amber:#FFB340;--coral:#FF6961;--magenta:#BF5AF2;
-  --cyan-soft:rgba(100,210,255,.12);--lime-soft:rgba(48,209,88,.14);--amber-soft:rgba(255,179,64,.14);--coral-soft:rgba(255,69,58,.16);
-  --seg-bg:#F5F5F7;--seg-ink:#000;--btn-bg:#0071E3;--btn-ink:#FFFFFF;
-  --shadow:none;--gloss:none;
-  --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;--display:var(--sans);
-  --r:22px;--ease:cubic-bezier(.2,.8,.2,1);
-  --paper:var(--bg);--rule:var(--line-2);--muted:var(--ink-3);--fit:var(--blue);--pass:var(--green);--flag:var(--yellow);--reject:var(--red);--sel:var(--panel-2);--side:var(--bg-2);
-  --top:60px}
-:root[data-theme="light"]{color-scheme:light;
-  --bg:#F5F5F7;--bg-2:#FFFFFF;--bg-3:#E8E8ED;
-  --glass:rgba(255,255,255,.72);--glass-2:rgba(255,255,255,.6);--panel:#FFFFFF;--panel-2:rgba(0,0,0,.05);
-  --line:rgba(0,0,0,.08);--line-2:rgba(0,0,0,.14);--line-3:rgba(0,0,0,.26);
-  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#5E5E63;
-  --blue:#0066CC;--yellow:#7A5600;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
-  --cyan:#0066CC;--lime:#1F7A35;--amber:#A05A00;--coral:#C9001B;--magenta:#8944AB;
-  --cyan-soft:rgba(0,102,204,.1);--lime-soft:rgba(31,122,53,.12);--amber-soft:rgba(160,90,0,.12);--coral-soft:rgba(201,0,27,.1);
-  --seg-bg:#1D1D1F;--seg-ink:#FFFFFF;--btn-bg:#0071E3;--btn-ink:#FFFFFF}
-@media (prefers-color-scheme: light){:root[data-theme="system"]{color-scheme:light;
-  --bg:#F5F5F7;--bg-2:#FFFFFF;--bg-3:#E8E8ED;
-  --glass:rgba(255,255,255,.72);--glass-2:rgba(255,255,255,.6);--panel:#FFFFFF;--panel-2:rgba(0,0,0,.05);
-  --line:rgba(0,0,0,.08);--line-2:rgba(0,0,0,.14);--line-3:rgba(0,0,0,.26);
-  --ink:#1D1D1F;--ink-2:#424245;--ink-3:#5E5E63;
-  --blue:#0066CC;--yellow:#7A5600;--red:#C9001B;--sen:#006E99;--prb:#8944AB;--prb-ink:#8944AB;--star:#A05A00;--green:#1F7A35;
-  --cyan:#0066CC;--lime:#1F7A35;--amber:#A05A00;--coral:#C9001B;--magenta:#8944AB;
-  --cyan-soft:rgba(0,102,204,.1);--lime-soft:rgba(31,122,53,.12);--amber-soft:rgba(160,90,0,.12);--coral-soft:rgba(201,0,27,.1);
-  --seg-bg:#1D1D1F;--seg-ink:#FFFFFF;--btn-bg:#0071E3;--btn-ink:#FFFFFF}}
-*{box-sizing:border-box}
+/* The approved design: an observatory-dark ground (light variant with the same names), hairlines, Geist with bold
+   tight headlines and a grey second line, and system colours: blue for a known planet, yellow for open, red for
+   rejected, cyan for the Sentinels, purple for the Probes, amber for the star. The tokens, the stage component and
+   the motion rules come from setuhq.design (one source for the site, the stand-alone pages and the README figures);
+   stages ("space" panels, planet art) stay black in both themes. */
+""" + tokens_css() + BASE_CSS + MOTION_CSS + """*{box-sizing:border-box}
 html{background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;overflow-x:hidden}
 body{background:transparent;color:var(--ink);font:400 15px/1.5 var(--sans);letter-spacing:-.01em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
@@ -983,22 +955,22 @@ a:hover{color:var(--ink)}
 .brand{display:inline-flex;align-items:center;gap:9px;height:44px;min-height:44px;line-height:0;position:relative;padding:0 4px;color:var(--ink);text-decoration:none;font-weight:600;font-size:17px;letter-spacing:-.02em}
 .brand:hover{color:var(--ink)}
 .nav ul{list-style:none;margin:0;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
-.nav a{display:flex;align-items:center;min-height:36px;padding:0 16px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:13px;font-weight:500;white-space:nowrap;transition:background-color .25s var(--ease),color .25s var(--ease)}
+.nav a{display:flex;align-items:center;min-height:36px;padding:0 16px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:13px;font-weight:500;white-space:nowrap;transition:background-color var(--d-1) var(--ease),color var(--d-1) var(--ease)}
 .nav a:hover{color:var(--ink)}
 .nav a[aria-current="page"]{background:var(--seg-bg);color:var(--seg-ink)}
 main{min-width:0;padding:36px clamp(16px,3vw,40px) 56px}
 main:focus{outline:none}
-.route{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;min-width:0;max-width:1280px;margin:0 auto;animation:rise .45s var(--ease) both}
+.route{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;min-width:0;max-width:1280px;margin:0 auto;animation:rise var(--d-2) var(--ease) both}
 .route>*{min-width:0}
 .route[hidden]{display:none}
 .route>header{display:grid;gap:8px;padding-bottom:4px}
-.route>header .eyebrow{margin:0;font-size:15px;font-weight:500;color:var(--star);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.route>header .eyebrow{margin:0;font:var(--t-eyebrow);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .route>header .eyebrow .idx{display:none}
 .route>header .eyebrow .parent{color:var(--ink-3);font-weight:400}
 .route>header .eyebrow .parent a{color:var(--ink-3);display:inline-block;padding:12px 0;margin:-12px 0;line-height:20px}
 .route h1:focus{outline:none}
 .route>header p{margin:0;color:var(--ink-2);max-width:72ch;font-size:clamp(15px,1.2vw,17px);line-height:1.5}
-.route>header .lead-h,.headline{margin:0;font-weight:700;font-size:clamp(34px,4.4vw,60px);line-height:1.02;letter-spacing:-.045em;color:var(--ink);max-width:22ch;text-wrap:balance}
+.route>header .lead-h,.headline{margin:0;font:var(--t-h1);letter-spacing:-.04em;color:var(--ink);max-width:22ch;text-wrap:balance}
 .headline .grey,.lead-h .grey{color:var(--ink-3)}
 #route-candidates>header .lead-h,#route-planets>header .lead-h,#route-runs>header .lead-h{font-size:clamp(28px,3vw,42px)}
 .headrow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
@@ -1012,7 +984,7 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .tag.sim{color:var(--prb-ink)}
 .tag.cl{color:var(--sen);background:var(--cyan-soft);border-color:transparent}
 .muted{color:var(--ink-3)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 13px/1.2 var(--sans);color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;min-height:34px;text-decoration:none;transition:background-color .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),transform .25s var(--ease)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 13px/1.2 var(--sans);color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;min-height:34px;text-decoration:none;transition:background-color var(--d-1) var(--ease),color var(--d-1) var(--ease),border-color var(--d-1) var(--ease),transform var(--d-2) var(--ease)}
 .btn:hover{border-color:var(--line-3);color:var(--ink)}
 .btn[aria-disabled="true"]{opacity:.45;cursor:default}
 .btn.primary{background:var(--btn-bg);color:var(--btn-ink);border-color:transparent;min-height:48px;padding:0 24px;font-size:17px}
@@ -1035,7 +1007,7 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .pill[aria-pressed="true"] i{background:var(--c)}
 .pill .n{color:var(--ink-3)}
 /* space panels: dark in both themes */
-.space{border-radius:28px;border:1px solid rgba(255,255,255,.08);color:#F5F5F7;overflow:hidden;position:relative;min-width:0;--ink:#F5F5F7;--ink-2:#A1A1A6;--ink-3:#8E8E93;--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);--panel:#1C1C1E;--panel-2:rgba(255,255,255,.06);--cyan:#64D2FF}
+.space{border-radius:28px;border:1px solid var(--stage-line);background-color:var(--stage);color:var(--stage-ink);overflow:hidden;position:relative;min-width:0;--ink:var(--stage-ink);--ink-2:#AEB6C6;--ink-3:var(--stage-dim);--line:var(--stage-line);--line-2:rgba(255,255,255,.14);--panel:#11151F;--panel-2:rgba(255,255,255,.06);--cyan:#64D2FF}
 .space svg text{fill:#A1A1A6}
 .glass{background:var(--glass);border:1px solid var(--line);border-radius:24px;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);min-width:0}
 .row2{display:flex;flex-wrap:wrap;gap:18px;align-items:stretch}
@@ -1052,14 +1024,14 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 @keyframes sweep{from{transform:translateX(var(--from))}to{transform:translateX(var(--to))}}
 @keyframes reveal{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes head{from{transform:translateX(0)}to{transform:translateX(var(--w))}}
-.twinkle{animation:twinkle 6s ease-in-out infinite}
-.twinkle2{animation:twinkle 9s ease-in-out infinite 2s}
+.twinkle{animation:twinkle 6s var(--ease) infinite}
+.twinkle2{animation:twinkle 9s var(--ease) infinite 2s}
 .orbit{animation:orbit 60s linear infinite}
 .orbitfast{animation:orbit 14s linear infinite}
 .orbitslow{animation:orbit 90s linear infinite reverse}
 .clouds{animation:drift 90s linear infinite}
-.pulse{animation:pulse 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-.breathe{animation:breathe 7s ease-in-out infinite}
+.pulse{animation:pulse 3.2s var(--ease) infinite;transform-box:fill-box;transform-origin:center}
+.breathe{animation:breathe 7s var(--ease) infinite}
 /* the transit theatre: one 10 s clock for the shadow, the curve drawing in and the playhead */
 .sweep{animation:sweep 10s linear infinite}
 .reveal{transform-box:fill-box;transform-origin:0 0;animation:reveal 10s linear infinite}
@@ -2315,7 +2287,8 @@ function txTheatre(d){
     const T14 = Math.max(0.02, (d.fit_t14_hours || d.duration_hours || 2) / 24), ars = P / (Math.PI * T14) * chord;
     p = {name: 'a planet this deep', star_teff: teff, star_radius: rs || 1, radius: kk * (rs || 1) * 6.957e8 / 7.1492e7,
       orbital_period: P, semi_major_axis: ars * (rs || 1) * 6.957e8 / 1.495978707e11,
-      impact_parameter: bb, ld: fitted ? d.fit_ld : null, t0_offset_days: timed ? d.fit_dt0 : 0};
+      impact_parameter: bb, ld: fitted ? d.fit_ld : null, t0_offset_days: timed ? d.fit_dt0 : 0,
+      look: 'silhouette'};  // a candidate is drawn as a silhouette at Rp/R★, never as planet art
     bNote = timed ? 'Rp/R★, b, limb darkening, mid-time and T14 from the signal\'s stored fit'
       : fitted ? 'Rp/R★, b and limb darkening from the signal\'s stored fit; only its depth is the fit\'s, the mid-time and duration are illustrative'
       : 'impact parameter illustrative (b = 0), not fitted';
@@ -2531,7 +2504,7 @@ $('#route-sentinels').addEventListener('click', e => {
 // ---------- router ----------
 const RENDER = {overview: () => {}, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, variables: renderVariables, transit: renderTransit,
   explorer: () => { renderExplorer(); renderDiscoveries(); }, sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns,
-  leaderboard: () => {}, docs: () => {}, notfound: () => {}};
+  leaderboard: () => {}, docs: () => {}, pictures: () => {}, notfound: () => {}};
 const rendered = new Set();
 const META = D.route_meta, MX_FIRST = Object.keys(D.chapter_titles)[0];
 const ROUTES = () => $$('#content > .route').map(s => s.dataset.route);
@@ -2594,6 +2567,16 @@ function show(r, moveFocus, params){
   mxIntroRoute(r);
   txSysShown(r === 'transit');
   plShown(r);
+  // The shared renderer upgrades the view's pictures; the header settles; counters roll (setuhq.design, setuhq.renderer).
+  const sec = $('#route-' + r);
+  if (window.SetuRender && sec) SetuRender.mount(sec);
+  if (window.SetuUI){ SetuUI.settle(); SetuUI.odometer(sec); }
+}
+// A change of view in place is a view transition (V13), except under reduced motion or on the first draw.
+function viewTransition(f){
+  if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) return f();
+  try { const t = document.startViewTransition(f); [t.ready, t.finished, t.updateCallbackDone].forEach(q => q && q.catch(() => {})); }
+  catch (e) { f(); }
 }
 function go(p, moveFocus){
   // A new page moves focus to its heading; a new chapter keeps focus where it is (the Learn bar, the contents) and scrolls up.
@@ -2654,8 +2637,9 @@ function navTo(href){
   closeMenu();
   if (!p || !$('#route-' + p.route)){ location.href = u.href; return; }
   try { history.pushState(null, '', u.pathname + u.search + u.hash); } catch (err) { location.href = u.href; return; }
-  go(parseLoc(), true);
+  viewTransition(() => go(parseLoc(), true));
 }
+// Back and Forward change the view at once (a page restored from the back-forward cache must not wait on a transition).
 window.addEventListener('popstate', () => { const gsd = $('#gsearch'); if (gsd && gsd.open) gsd.close(); closeMenu(); go(parseLoc(), true); });
 $('.skip').addEventListener('click', e => { e.preventDefault(); const c = $('#content'); c.focus({preventScroll: true}); c.scrollIntoView(); });
 // ---------- "Copy link to this view": the one way view settings reach an address ----------
@@ -2693,7 +2677,7 @@ fromOldHash();
 go(parseLoc(), false);
 """
 # The Galaxy section's code sits ahead of the router, which calls it.
-APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + VARIABLES_JS + LEARN_JS + MISSION_JS + "// ---------- router ----------\n", 1)
+APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + VARIABLES_JS + LEARN_JS + MISSION_JS + VIZ_JS + "// ---------- router ----------\n", 1)
 
 
 def _eyebrow(label: str, parent: tuple[str, str] | None = None) -> str:

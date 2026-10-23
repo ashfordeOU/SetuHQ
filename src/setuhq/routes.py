@@ -40,6 +40,7 @@ ROUTE_PATHS = {
     "leaderboard": "/evidence/leaderboard/",
     "runs": "/evidence/runs/",
     "docs": "/docs/",
+    "pictures": "/docs/pictures/",
 }
 # The parameter that names the page (it goes in the path, never in the query).
 IDENTITY = {"transit": "dip", "candidates": "dip", "planet": "id", "star": "id", "methods": "ch"}

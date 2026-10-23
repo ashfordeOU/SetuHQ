@@ -178,7 +178,9 @@ def test_the_fit_and_the_vetting_read_the_package_copies():
     assert transitfit.LD_TABLE.read_bytes() == (ROOT / "docs/results/claret2017_tess_quadratic.json").read_bytes()
     assert dvtests.CALIBRATION_FILE.read_bytes() == (ROOT / "docs/results/secondary_calibration.json").read_bytes()
     assert "src/setuhq/data" in str(transitfit.LD_TABLE).replace("\\", "/")
-    assert sorted(p.name for p in (ROOT / "src/setuhq/data").iterdir()) == sorted(PACKAGE_DATA)
+    # Besides the reference tables: the renderer's stills (setuhq.renderer; drawn by tools/render_stills.mjs).
+    assert sorted(p.name for p in (ROOT / "src/setuhq/data").iterdir()) == sorted(PACKAGE_DATA + ("stills",))
+    assert {p.suffix for p in (ROOT / "src/setuhq/data/stills").iterdir()} == {".webp", ".json"}
 
 
 def test_pypi_readme_has_only_absolute_links_and_honest_wording():

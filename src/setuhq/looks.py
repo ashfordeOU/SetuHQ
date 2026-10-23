@@ -176,6 +176,28 @@ REFERENCES = {"ref-earth": ("Earth", 1.0), "ref-neptune": ("Neptune", 3.88), "re
 STILL_SEED = 1  # every still is drawn with this seed
 
 
+def rule_words(name: str) -> str:
+    """A look's rule in words, with its numbers: "radius 1.6 to 4 R⊕, Teq 350 to 1,000 K" (for alt text and tables)."""
+    if name in REFERENCES:
+        body, re_ = REFERENCES[name]
+        return f"{body}, {re_:.2f} R⊕, the Solar System reference"
+    L = LOOKS[name]
+    comp = L["composition"]
+    if comp == "ambiguous":
+        size = "no radius, mass 2 to 10 M⊕"
+    else:
+        edges = [0.0] + [e for e, _, _ in COMPOSITION_RULES["radius"]]
+        i = [c for _, c, _ in COMPOSITION_RULES["radius"]].index(comp)
+        lo, hi = edges[i], edges[i + 1]
+        size = (f"radius below {hi:g} R⊕" if lo == 0 else f"radius {lo:g} R⊕ or more" if hi == math.inf else f"radius {lo:g} to {hi:g} R⊕")
+    bedges = [0.0] + [e for e, _, _ in BANDS]
+    names = [b for _, b, _ in BANDS]
+    idx = [names.index(b) for b in L["bands"]]
+    lo, hi = bedges[min(idx)], bedges[max(idx) + 1]
+    teq = f"Teq below {fmt(hi)} K" if lo == 0 else f"Teq {fmt(lo)} K or more" if hi == math.inf else f"Teq {fmt(lo)} to {fmt(hi)} K"
+    return f"{size}, {teq}" if comp != "ambiguous" else f"{size}, any Teq"
+
+
 def _num(v) -> float | None:
     try:
         x = float(v)

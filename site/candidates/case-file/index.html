@@ -61,7 +61,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 "Geist",sys
 .sec>header h3{margin:0}
 .sectoggle{font:600 12px/1 "Geist Mono",monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:none;border:0;padding:4px 0;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .sectoggle:hover{color:var(--ink)}
-.caret{display:inline-block;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid currentColor;transition:transform .15s}
+.caret{display:inline-block;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid currentColor;transition:transform 150ms cubic-bezier(.2,.7,.2,1)}
 .sectoggle[aria-expanded="false"] .caret{transform:rotate(-90deg)}
 .sec>header em{font:12px "Geist",sans-serif;color:var(--muted);font-style:normal}
 .secbody{display:grid;gap:8px;min-width:0}

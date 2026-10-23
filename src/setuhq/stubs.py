@@ -61,6 +61,7 @@ def stored(P: dict, k: str, i: int, d: int, unit: str) -> str | None:
 
 
 def _page(tpl: str, **kw: str) -> str:
+    kw.setdefault("PORTRAIT", "")  # the planet's portrait figure (the template's slot; empty until a page passes one)
     for k, v in kw.items():
         tpl = tpl.replace("{{" + k + "}}", v)
     return tpl

@@ -19,7 +19,7 @@ from setuhq.names import ATTRIBUTION
 from setuhq.routes import (ALIASES, CHAPTER_SLUGS, DIP_SLUGS, LEGACY_PAGES, ROUTE_PATHS, ROUTES_CORE_JS, from_hash,
                            legacy_target, parse_path, route_table, set_dip_slugs, url_for)
 from setuhq.stubs import write_stubs
-from setuhq.site import PAGE_BUDGET, check_budget
+from setuhq.site import PAGE_BUDGET, STUB_BUDGET, check_asset_budget, check_budget
 
 LEAD = "tess-x-001"
 
@@ -269,7 +269,7 @@ def test_every_catalogue_planet_and_star_gets_a_small_page(site, tmp_path):
     cat = json.loads((tmp_path / "assets/data/catalogue.json").read_text())
     assert r["planets"] == len(cat["planets"]["name"]) - 1 and r["stars"] > 1000
     assert (tmp_path / "planets" / "pi-men-c" / "index.html").read_text() == "pre-rendered"  # a real page wins
-    assert r["bytes_max"] < 8_000
+    assert r["bytes_max"] <= 4_096  # each stub stays small (site.STUB_BUDGET), its portrait slot included
     i = cat["planets"]["slug"].index("kepler-22-b")
     page = (tmp_path / "planets" / "kepler-22-b" / "index.html").read_text()
     name = cat["planets"]["name"][i]
@@ -373,3 +373,36 @@ def test_a_rejected_dip_is_never_called_a_candidate(site):
     for i, o in outcome.items():
         row = re.search(rf'<a class="rundip" href="/candidates/{re.escape(data["routes"]["dips"][i])}/">.*?</a>', cands, re.S).group(0)
         assert {"passed": 'class="tag cand"', "flagged": 'class="tag open"', "rejected": 'class="tag rej"'}[o] in row, (i, row)
+
+
+def test_shared_assets_stay_within_their_budgets(site):
+    assert check_asset_budget(site) == []
+    assert STUB_BUDGET == 4_096
+    assert next((site / "assets").glob("render-*.js")).stat().st_size <= 64_000
+    assert len(list((site / "assets" / "render").glob("*/*.webp"))) == 36
+
+
+def test_the_pictures_page_exists_with_one_heading_and_is_in_the_sitemap(site):
+    page = (site / "docs" / "pictures" / "index.html").read_text()
+    assert len(re.findall(r"<h1\b", page)) == 1 and "How the pictures are drawn." in page
+    assert "/docs/pictures/" in json.loads((site / "assets" / "pages.json").read_text())
+    assert f"<loc>{brand.SITE_URL}/docs/pictures/</loc>" in (site / "sitemap-pages.xml").read_text()
+    assert page.count('data-render="planet"') == 18 and page.count('href="/docs/pictures/">Artist&#x27;s impression</a>') == 18
+    assert "How the pictures are drawn ›" in (site / "index.html").read_text()  # the footer links it on every page
+    assert url_for("pictures") == "/docs/pictures/" and parse_path("/docs/pictures/")["route"] == "pictures"
+
+
+def test_no_page_loads_fonts_or_scripts_from_another_site(site):
+    for f in site.rglob("*.html"):
+        t = f.read_text()
+        assert "fonts.googleapis" not in t and "fonts.gstatic" not in t, f
+        assert not re.search(r'<script[^>]+src="(https?:)?//', t), f
+
+
+def test_every_page_has_the_starfield_the_renderer_and_the_font_preload(site):
+    page = (site / "index.html").read_text()
+    assert re.search(r'<script src="/assets/render-[0-9a-f]+\.js" defer></script>', page)
+    assert '<link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>' in page
+    assert '<div class="starfield" data-render="starfield"' in page and '<script type="speculationrules">' in page
+    assert '<meta name="view-transition" content="same-origin">' in page
+    assert "{{PORTRAIT}}" in (site / "assets" / "stub-template.html").read_text()

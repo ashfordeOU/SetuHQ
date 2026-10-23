@@ -62,11 +62,11 @@ LEARN_CSS = r"""
 .learnbtns{display:flex;flex-wrap:wrap;gap:8px}
 .learnbtns .btn{min-height:44px}
 .learnmeter{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
-.learnmeter i{display:block;height:100%;width:0;background:var(--blue);border-radius:999px;transition:width .4s}
+.learnmeter i{display:block;height:100%;width:0;background:var(--blue);border-radius:999px;transition:width var(--d-3) var(--ease)}
 .learncount{margin:0;font-size:12px;color:var(--ink-3)}
 .learnlist summary{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;font-weight:600;list-style:none}
 .learnlist summary::-webkit-details-marker{display:none}
-.learnlist summary::before{content:"›";display:inline-block;transition:transform .2s;color:var(--ink-3)}
+.learnlist summary::before{content:"›";display:inline-block;transition:transform var(--d-1) var(--ease);color:var(--ink-3)}
 .learnlist[open] summary::before{transform:rotate(90deg)}
 .learnlist ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:4px}
 .learnlist a{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;min-height:48px;padding:4px 10px;border-radius:12px;color:var(--ink);text-decoration:none}

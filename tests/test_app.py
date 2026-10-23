@@ -318,8 +318,9 @@ def test_shell_and_docket_use_only_self_hosted_fonts(run_dir, tmp_path):
 
 def test_tokens_follow_the_approved_design():
     root = re.search(r":root\{color-scheme:dark;(.*?)\}", APP_CSS, re.S).group(1)
-    for token in ("--bg:#000", "--ink:#F5F5F7", "--blue:#0A84FF", "--yellow:#FFD60A", "--red:#FF453A",
-                  "--sen:#64D2FF", "--prb:#BF5AF2", "--star:#FFB340"):
+    # The redesign's observatory ground and ink (setuhq.design.TOKENS); the accents keep the logo's and plates' hues.
+    for token in ("--bg:#04060B", "--ink:#ECEFF5", "--blue:#0A84FF", "--yellow:#FFD60A", "--red:#FF453A",
+                  "--sen:#64D2FF", "--prb:#BF5AF2", "--star:#FFB340", "--stage:#000000"):
         assert token in root, token
     # Dark first; light on request, or with the system when the viewer chooses "system".
     assert ':root[data-theme="light"]{color-scheme:light;' in APP_CSS

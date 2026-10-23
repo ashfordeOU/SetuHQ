@@ -13,7 +13,8 @@
 # globally), or SETUHQ_PLAYWRIGHT=<its folder>. It never downloads a browser; PLAYWRIGHT_BROWSERS_PATH picks one.
 # The test runs on a copy of the site with the deploy-time pages added (python -m setuhq.stubs: a small page for every
 # catalogue planet and star, as pages.yml writes them before upload), so site/ itself is never changed.
-# Writes .site-e2e.json (every failed check, and the axe totals).
+# Writes .site-e2e.json (every failed check, and the axe totals) and .site-e2e-visuals.json (the visual system's checks).
+# SETUHQ_E2E_BROWSERS=chromium,webkit adds a WebKit pass of the visual checks when Playwright's WebKit is installed.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 SITE="${1:-site}"
@@ -26,3 +27,14 @@ trap 'rm -rf "$WORK"' EXIT
 cp -R "$SITE" "$WORK/site"
 PYTHONPATH=src "$PY" -m setuhq.stubs "$WORK/site"
 node tests/e2e/run.mjs --site "$WORK/site" --report .site-e2e.json "$@"
+# The visual system (tests/e2e/visuals.mjs: the renderer, the motion budget, labels, stages, layout shift), in Chromium.
+node tests/e2e/visuals.mjs --site "$WORK/site" --report .site-e2e-visuals.json
+# Optional: the same checks in WebKit (Safari's engine), when SETUHQ_E2E_BROWSERS names it and Playwright's WebKit is
+# installed. It is never downloaded; without it the owner checks an iPhone and Safari on macOS by hand.
+if [[ ",${SETUHQ_E2E_BROWSERS:-}," == *",webkit,"* ]]; then
+  if node -e "import('./tests/e2e/lib.mjs').then(m=>m.loadPlaywright()).then(p=>{process.exit(require('node:fs').existsSync(p.webkit.executablePath())?0:1)}).catch(()=>process.exit(1))" 2>/dev/null; then
+    node tests/e2e/visuals.mjs --site "$WORK/site" --browser webkit --report .site-e2e-webkit.json
+  else
+    echo "site_e2e: SETUHQ_E2E_BROWSERS names webkit, but Playwright's WebKit is not installed: the WebKit pass was skipped" >&2
+  fi
+fi

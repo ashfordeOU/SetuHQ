@@ -42,6 +42,15 @@ step "methods paper numbers match the committed JSON (scripts/paper_numbers.py -
 "$VENV/bin/python" scripts/paper_numbers.py --check 2>&1 | tee -a "$LOG"
 ok
 
+step "the renderer's stills were drawn by the current renderer and look table (tools/render_stills.mjs --check)"
+if command -v node >/dev/null; then
+  PYTHON="$VENV/bin/python" node tools/render_stills.mjs --check 2>&1 | tee -a "$LOG"
+  test "${PIPESTATUS[0]}" -eq 0
+else
+  echo "   node is not installed: the stills check runs in pytest (tests/test_renderer.py) instead" | tee -a "$LOG"
+fi
+ok
+
 step "README figures, brand files and screenshots are current (tools/gen_readme_assets.py --check)"
 "$VENV/bin/python" tools/gen_readme_assets.py --check 2>&1 | tee -a "$LOG"
 ok

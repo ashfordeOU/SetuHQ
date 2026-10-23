@@ -326,7 +326,7 @@ def cmd_docket(args) -> int:
 
 
 def cmd_site(args) -> int:
-    from setuhq.site import build_site, check_budget
+    from setuhq.site import build_site, check_asset_budget, check_budget
 
     runs = list(args.run_dir)
     path = build_site(runs[0], args.out, title=args.title, catalog_path=args.catalog,
@@ -337,7 +337,10 @@ def cmd_site(args) -> int:
     over = check_budget(path.parent)
     for line in over:
         print(f"over the per-page budget: {line}", file=sys.stderr)
-    return 1 if over else 0
+    assets = check_asset_budget(path.parent)
+    for line in assets:
+        print(f"over an asset budget: {line}", file=sys.stderr)
+    return 1 if over or assets else 0
 
 
 def cmd_plate(args) -> int:

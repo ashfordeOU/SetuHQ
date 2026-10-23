@@ -28,7 +28,8 @@ import re
 import shutil
 from pathlib import Path
 
-from setuhq import brand
+from setuhq import brand, renderer
+from setuhq.design import CROSSHAIR_JS, FONT_PRELOAD, MOTION_JS, tokens_css
 from setuhq.app import (APP_CSS, APP_JS, DEFAULT_SHOWCASE, DEFAULT_SWEEP, DEFAULT_WEIGHTS, FONTS_DIR, GALAXY_JSON, NAV, ROUTE_META, SUBNAV,
                         UNCONFIRMED, app_data, app_payload, dip_state, galaxy_json, route_sections)
 from setuhq.catalogue import CATALOGUE_JSON, SEARCH_BUTTON, SEARCH_DIALOG
@@ -41,6 +42,8 @@ from setuhq.objects import slugify
 from setuhq.everything import VARIABLES_JSON
 from setuhq.routes import CHAPTER_SLUGS, LEGACY_PAGES, ROUTES_CORE_JS, from_hash, legacy_js, url_for
 from setuhq.stubs import stored
+from setuhq.looks import BANDS, COMPOSITION_RULES, LOOKS, rule_words
+from setuhq import viz
 
 REPO_URL = brand.REPO_URL
 # Each page's HTML (its own view, the shell, the head) stays under this many characters; everything shared is a
@@ -70,7 +73,7 @@ SITE_CSS = r"""
 .nav a{min-height:38px;padding:0 16px;font-size:14px}
 .nav a[aria-current="page"]{background:var(--seg-bg);color:var(--seg-ink)}
 .tools{display:flex;align-items:center;gap:2px;margin-left:auto;flex:none}
-.iconbtn{width:44px;height:44px;border-radius:999px;border:1px solid transparent;background:transparent;color:var(--ink-2);display:inline-grid;place-items:center;cursor:pointer;padding:0;transition:background-color .2s var(--ease),color .2s var(--ease)}
+.iconbtn{width:44px;height:44px;border-radius:999px;border:1px solid transparent;background:transparent;color:var(--ink-2);display:inline-grid;place-items:center;cursor:pointer;padding:0;transition:background-color var(--d-1) var(--ease),color var(--d-1) var(--ease)}
 .iconbtn:hover{color:var(--ink);background:var(--panel-2)}
 .iconbtn svg{width:20px;height:20px;display:block}
 .iconbtn kbd{display:none}
@@ -127,8 +130,8 @@ body[data-route="overview"] main{padding-top:8px}
 .dohere{display:grid;gap:14px}
 .dohere h2{font-size:15px;color:var(--ink-3);font-weight:500}
 .docards{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr))}
-.docard{position:relative;display:flex;flex-direction:column;gap:6px;height:100%;padding:18px 40px 18px 18px;border-radius:20px;border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:var(--ink);text-decoration:none;transition:border-color .2s var(--ease),transform .2s var(--ease)}
-.docard:hover{border-color:var(--line-3);color:var(--ink);transform:translateY(-1px)}
+.docard{position:relative;display:flex;flex-direction:column;gap:6px;height:100%;padding:18px 40px 18px 18px;border-radius:20px;border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:var(--ink);text-decoration:none;transition:border-color var(--d-1) var(--ease),transform var(--d-2) var(--ease)}
+.docard:hover{border-color:var(--line-3);color:var(--ink);transform:translateY(-2px)}
 .docard b{font-size:17px;font-weight:600;letter-spacing:-.02em}
 .docard span{font-size:13.5px;line-height:1.45;color:var(--ink-2)}
 .docard i{position:absolute;right:16px;top:16px;font-style:normal;font-size:20px;color:var(--cyan)}
@@ -190,6 +193,14 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 .technote{margin:0;padding:12px 16px;border-left:3px solid var(--line-3);background:var(--panel-2);border-radius:0 12px 12px 0}
 .technote p{margin:0;font:13px/1.55 var(--mono);color:var(--ink-2)}
 .nfsearch{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+/* How the pictures are drawn: the look grid and the rule tables */
+.lookintro{margin:0 0 12px;max-width:90ch;color:var(--ink-2)}
+.lookgrid{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr))}
+.lookgrid .rfig{border-radius:var(--r-m)}
+.lookgrid .readout{font-size:12px}
+.lookgrid .readout b{display:block;color:var(--stage-ink);font:600 13px/1.3 var(--sans);margin-bottom:2px}
+.rendrow{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.rendrow .rbox{aspect-ratio:4/3}
 /* the footer */
 .sitefoot{border-top:1px solid var(--line);margin-top:24px;padding:28px max(16px,env(safe-area-inset-right,0px)) max(28px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:color-mix(in oklab,var(--bg) 86%,transparent)}
 .fin{max-width:1280px;margin:0 auto;display:grid;gap:18px}
@@ -284,6 +295,8 @@ function bootApp(){
                fetch(b.routes).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })]).then(([D, routes]) => {
     const tpl = document.createElement('template'); tpl.innerHTML = routes;
     const content = document.getElementById('content');
+    const sys = tpl.content.querySelector('template#mxsystpl');
+    if (sys && !document.getElementById('mxsystpl')) document.body.appendChild(sys);
     for (const sec of Array.from(tpl.content.querySelectorAll('section.route'))){
       const mine = document.getElementById(sec.id);
       if (mine && !mine.hasAttribute('data-partial')) continue;
@@ -315,7 +328,7 @@ function bootApp(){
     if (bottom) document.getElementById('chrome-bottom').replaceWith(...bottom.childNodes);
   }).catch(err => console.warn('SetuHQ: the header could not load', err)).then(() => { initShell(); bootApp(); });
 })();
-"""
+""" + MOTION_JS + CROSSHAIR_JS
 
 
 def _sha(text: str | bytes) -> str:
@@ -350,11 +363,11 @@ def _footer_html(lead: str | None) -> str:
     cols = []
     for k, label, h in NAV:
         links = [("Get started" if k == "docs" else "Overview", from_hash(h))] if k in ("how", "docs") else []
-        links += [(sl, from_hash(sh, lead=lead) if sh.startswith("#/") else sh) for sl, sh, _ in SUBNAV.get(k, [])]
+        links += [(sl, from_hash(sh, lead=lead) if sh.startswith("#/") else sh) for sl, sh, _ in SUBNAV.get(k, []) if sh != h and sh != "#/pictures"]
         if k == "how":
             links += [(t, url_for("methods", {"ch": c})) for c, t in CHAPTERS[1:5]] + [("All 15 chapters", from_hash(h))]
         if k == "docs":
-            links += [("Source code", REPO_URL), ("Contributing a sweep", "/docs/#contribute"), ("Data downloads", "/docs/#data")]
+            links += [("How the pictures are drawn ›", "/docs/pictures/"), ("Source code", REPO_URL), ("Contributing a sweep", "/docs/#contribute"), ("Data downloads", "/docs/#data")]
         rel = ' rel="noopener"'
         lis = "".join(f'<li><a{rel if u.startswith("http") else ""} href="{html.escape(u)}">{html.escape(t)}</a></li>' for t, u in links)
         cols.append(f'<div><h2>{html.escape(label)}</h2><ul>{lis}</ul></div>')
@@ -376,14 +389,31 @@ def _head(title: str, description: str, path: str | None, assets: dict, *, extra
 {meta}
 {'<meta name="robots" content="noindex">' if noindex else ''}
 <meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#04060B">
+<meta name="view-transition" content="same-origin">
 {extra}<script>{THEME_HEAD_JS}</script>
+<link rel="preload" href="{FONT_PRELOAD}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="{assets['css']}">
 <link rel="preload" href="{assets['data']}" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="{assets['app']}" as="script">
+<script src="{assets['render']}" defer></script>
 <script src="{assets['js']}" defer></script>
+<script type="speculationrules">{SPECULATION}</script>
 </head>"""
+
+
+# S03: the stand-alone pages (case files, plates, reports) are fetched ahead when a link to one is likely; the
+# app's own views need nothing, as they share the loaded data.
+SPECULATION = json.dumps({"prefetch": [{"where": {"href_matches": ["/candidates/*/case-file/", "/evidence/plates/*", "/evidence/report/*"]},
+                                        "eagerness": "moderate"}]}, separators=(",", ":"))
+
+
+def starfield_html(src: str) -> str:
+    """V11: the background starfield. The SVG is the still (no JavaScript, reduced motion); the renderer draws the
+    seeded canvas field over the top of the page. Decorative."""
+    return (f'<div class="starfield" data-render="starfield" data-params=\'{{"seed":314}}\' aria-hidden="true">'
+            f'<img class="rstill" src="{src}" alt=""></div>')
 
 
 def _topbar(lead: str | None) -> str:
@@ -454,7 +484,7 @@ def page(*, route: str, title: str, description: str, path: str | None, body: st
     boot = f' data-data="{assets["data"]}" data-routes="{assets["routes"]}" data-app="{assets["app"]}"' if app else ""
     out = f"""{_head(title, description, path, assets, extra=extra_head, noindex=noindex)}
 <body class="page-{route}" data-page="{route}" data-route="{route}"{boot}>
-<img class="starfield" src="{assets['starfield']}" alt="" aria-hidden="true">
+{starfield_html(assets['starfield'])}
 {_topbar(lead)}
 {_pagebar(route, name, params, lead)}
 <main id="main">
@@ -467,7 +497,6 @@ def page(*, route: str, title: str, description: str, path: str | None, body: st
 <div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
 {SEARCH_DIALOG}
 {LEARN_BAR}
-<template id="mxsystpl">{system_stage()}</template>
 {extra_body}
 </body></html>
 """
@@ -541,6 +570,54 @@ setuhq-mcp --list-tools</code></pre>
         {prov}
         <p>Every number on the candidate and evidence pages is read from stored files: the run directory, the search catalogue and the calibrated reviewer weights. <a href="/evidence/runs/">Runs and configuration</a> lists the files, the configuration and its hash.</p>
       </div>"""
+
+
+def pictures_section() -> str:
+    """How the pictures are drawn (/docs/pictures/): the renderer's honesty page. Phase 0 writes its skeleton: what a
+    picture is and is not, the look table from setuhq.looks.LOOKS with every still, and the rules with their sources.
+    Every "Artist's impression" tag on the site links here."""
+    from urllib.parse import quote
+
+    e = html.escape
+    cards = []
+    for name, L in LOOKS.items():
+        bands = ", ".join(L["bands"]) or "Solar System reference"
+        cap = f"<b>{e(name)}</b>{e(L['composition'])} · {e(bands)}<br>{e(L['surface'])}"
+        alt = f"Artist's impression: the {name} look, for {rule_words(name)}: {L['surface']}. A still of the look, not of a particular planet."
+        cards.append("<li>" + renderer.figure("planet", {"look": name, "seed": 1}, alt, cap, size=160, uid=f"lk-{name}") + "</li>")
+    rad = "".join(f"<tr><td>{e(c)}</td><td>{'below ' + format(edge, 'g') + ' R⊕' if edge != float('inf') else '10 R⊕ or more'}</td><td>{e(why)}</td></tr>"
+                  for edge, c, why in COMPOSITION_RULES["radius"])
+    mass = "".join(f"<tr><td>{e(c)}</td><td>{'below ' + format(edge, 'g') + ' M⊕' if edge != float('inf') else '50 M⊕ or more'}</td><td>{e(why)}</td></tr>"
+                   for edge, c, why in COMPOSITION_RULES["mass"])
+    bands = "".join(f"<tr><td>{e(b)}</td><td>{'below ' + format(edge, ',.0f') + ' K' if edge != float('inf') else '2,000 K or more'}</td><td>{e(why)}</td></tr>"
+                    for edge, b, why in BANDS)
+    sun = renderer.star_svg(5772, 60, uid="pic-sun")
+    sun_src = "data:image/svg+xml," + quote(sun.replace('class="stardisc" ', 'xmlns="http://www.w3.org/2000/svg" '))
+    star = renderer.figure("star", {"teff": 5772, "seed": 1}, "The Sun's disc, 5,772 K, in its blackbody colour with limb darkening.",
+                           "The Sun, 5,772 K (IAU 2015 nominal), in its blackbody colour; limb darkening from Claret (2017), TESS band. The surface texture is decorative.",
+                           label="Illustration", uid="pic-star", still=sun_src)
+    tr = renderer.figure("transit", {"teff": 5772, "k": 0.1, "b": 0.3, "look": "giant-hot", "seed": 1, "layout": "theatre"},
+                         "An illustration of a transit: a planet with Rp/R★ = 0.1 crossing a Sun-like star at b = 0.3, and the limb-darkened model light curve it causes.",
+                         "Illustration: Rp/R★ = 0.1, b = 0.3, a 5,772 K star; the curve is the small-planet Mandel & Agol (2002) model with quadratic limb darkening.",
+                         label="Illustration", uid="pic-transit", still=sun_src)
+    return f"""<header><h1 class="lead-h" id="h-pictures" tabindex="-1">How the pictures are drawn.</h1>
+        <p>Every star on SetuHQ is drawn in its blackbody colour from its stored temperature. Every planet is an artist's impression: its look is chosen from two measured things, its radius (or, without one, its mass) and the light it gets from its star. Nothing in a picture is measured beyond those numbers, and composition never is.</p></header>
+      <section class="prose" aria-labelledby="h-pic-rules"><h2 id="h-pic-rules">The rules</h2>
+        <p>Composition, from the radius in Earth radii (1 RJ = 11.209 R⊕):</p>
+        <div class="tablewrap"><table><thead><tr><th scope="col">Drawn as</th><th scope="col">Radius</th><th scope="col">Why</th></tr></thead><tbody>{rad}</tbody></table></div>
+        <p>Without a radius, from the mass (or m sin i, a minimum mass) in Earth masses; such a planet is drawn at a fixed size, marked not to scale. With neither, no planet is drawn.</p>
+        <div class="tablewrap"><table><thead><tr><th scope="col">Drawn as</th><th scope="col">Mass</th><th scope="col">Why</th></tr></thead><tbody>{mass}</tbody></table></div>
+        <p>Temperature band, from the equilibrium temperature Teq = 278.3 K × S<sup>1/4</sup>, where S = R★² (Teff / 5,772 K)⁴ / a² is the light the planet gets relative to Earth (zero albedo, full redistribution). Without a, a comes from Kepler's third law; without R★ or Teff, the catalogue's stored Teq is used; without that, the colours are neutral.</p>
+        <div class="tablewrap"><table><thead><tr><th scope="col">Band</th><th scope="col">Teq</th><th scope="col">Why</th></tr></thead><tbody>{bands}</tbody></table></div>
+        <p>A star's colour: a Planck spectrum from 380 to 780 nm, through the CIE 1931 colour-matching functions (the multi-lobe fit of Wyman, Sloan and Shirley 2013), to sRGB, normalised so the colour is a hue, not a brightness. Limb darkening is the quadratic law with Claret's (2017) TESS-band coefficients, applied to a visible disc. Granulation and planet surfaces are texture only: decorative, never data.</p>
+      </section>
+      <section aria-labelledby="h-pic-looks"><h2 id="h-pic-looks">The {len(LOOKS)} looks</h2>
+        <p class="lookintro">Each look as its still (seed 1). Oceans and continents are drawn only for Earth itself, the Solar System reference; no exoplanet is given water.</p>
+        <ul class="lookgrid">{"".join(cards)}</ul>
+      </section>
+      <section aria-labelledby="h-pic-draw"><h2 id="h-pic-draw">The star and the transit</h2>
+        <div class="rendrow">{star}{tr}</div>
+      </section>"""
 
 
 def notfound_section() -> str:
@@ -660,13 +737,11 @@ def _named_objects(data: dict) -> list[str]:
 # ---------------------------------------------------------------------------------------------------------
 
 STARFIELD = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1100" preserveAspectRatio="xMidYMid slice">'
-             '<style>@keyframes t{{0%,100%{{opacity:.25}}50%{{opacity:.75}}}}.a{{animation:t 6s ease-in-out infinite}}.b{{animation:t 9s ease-in-out infinite 2s}}'
+             '<style>@keyframes t{{0%,100%{{opacity:.25}}50%{{opacity:.75}}}}.a{{animation:t 6s cubic-bezier(.2,.7,.2,1) infinite}}.b{{animation:t 9s cubic-bezier(.2,.7,.2,1) infinite 2s}}'
              '@media (prefers-reduced-motion: reduce){{.a,.b{{animation:none}}}}</style>'
              '<path class="a" d="{dust}" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" opacity=".5"/>'
              '<path class="b" d="{bright}" stroke="#E8EEFF" stroke-width="1.8" stroke-linecap="round"/></svg>')
-STARFIELD_CSS = (".starfield{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;pointer-events:none}"
-                 ":root[data-theme=\"light\"] .starfield{display:none}"
-                 "@media (prefers-color-scheme: light){:root[data-theme=\"system\"] .starfield{display:none}}")
+STARFIELD_CSS = renderer.RENDER_CSS  # the starfield's rules live with the renderer (V11)
 
 
 def _clear(out: Path) -> None:
@@ -704,8 +779,9 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     (adir / "data").mkdir(parents=True, exist_ok=True)
     (adir / "frame").mkdir(parents=True, exist_ok=True)
 
-    # Shared, cached files, named by content.
-    assets = {}
+    # Shared, cached files, named by content: the renderer and its stills first (the views' figures point at them).
+    assets = dict(renderer.write_assets(out))
+    data["viz_files"] = viz.write_data(out, data)
     frame_html = data["docket_html"]
     frame_name = f"assets/frame/case-file-{_sha(frame_html)}.html"
     (out / frame_name).write_text(frame_html)
@@ -717,11 +793,15 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
         data["docket_frames"][rname] = "/" + fname
     sections = {k: clean_links(v, lead) for k, v in route_sections(data).items()}
     sections["docs"] = clean_links(docs_section(data), lead)
+    sections["pictures"] = clean_links(pictures_section(), lead)
     payload = json.dumps(app_payload(data), separators=(",", ":"), ensure_ascii=False, allow_nan=False)
     app_js = APP_JS.replace("const RT = D.routes;\n", "const RT = D.routes;\n" + ROUTES_CORE_JS, 1)
-    css = APP_CSS + brand.LOGO_CSS + STARFIELD_CSS + SITE_CSS
+    css = APP_CSS + brand.LOGO_CSS + renderer.RENDER_CSS + SITE_CSS + viz.VIZ_CSS
     routes_html = "".join(f'<section class="route" id="route-{k}" data-route="{k}" aria-labelledby="h-{k}" hidden>{v}</section>'
                           for k, v in sections.items())
+    # The shared system view's markup (the Galaxy's sheet copies it) rides in the shared views file, not in every page.
+    routes_html += f'<template id="mxsystpl">{system_stage()}</template>'
+
     chrome = (f'<div data-chrome-part="top">{_topbar(lead)}\n{_pagebar("planet", None, {}, lead)}</div>'
               f'<div data-chrome-part="bottom">{_footer_html(lead)}<div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>'
               f'{SEARCH_DIALOG}{LEARN_BAR}<template id="mxsystpl">{system_stage()}</template></div>')
@@ -790,6 +870,7 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     view("leaderboard", _title("leaderboard"), "Methods scored blind on the held-out half of the real-TOI benchmark, with Wilson 95% intervals.", "/evidence/leaderboard/", name="Leaderboard")
     view("runs", _title("runs"), "Every search run, its errors as stored, and the configuration behind the candidate pages.", "/evidence/runs/", name="Runs")
     view("docs", _title("docs"), "Install SetuHQ, search a star, contribute a sweep, connect an AI assistant over MCP, and download the data.", "/docs/")
+    view("pictures", _title("pictures"), "How SetuHQ draws its pictures: stars in their blackbody colour, and planets as artist's impressions chosen from measured radius and irradiation, with every rule and source.", "/docs/pictures/", name="How the pictures are drawn")
 
     # Planet and star pages for every object the site names.
     cat = data.get("catalogue")
@@ -916,13 +997,14 @@ def stub_template(assets: dict, lead: str | None) -> str:
 <meta name="color-scheme" content="dark light">
 <script>{THEME_HEAD_JS}</script>
 <link rel="stylesheet" href="/assets/fonts/fonts.css"><link rel="stylesheet" href="{assets['css']}">
-<script src="{assets['js']}" defer></script>
+<script src="{assets['render']}" defer></script><script src="{assets['js']}" defer></script>
 </head>
 <body data-page="{{{{ROUTE}}}}" data-route="{{{{ROUTE}}}}" data-data="{assets['data']}" data-routes="{assets['routes']}" data-app="{assets['app']}" data-chrome="{assets['chrome']}">
-<img class="starfield" src="{assets['starfield']}" alt="" aria-hidden="true">
+{starfield_html(assets['starfield'])}
 <div id="chrome-top"></div>
 <main id="main"><div id="content" tabindex="-1"><section class="route" id="route-{{{{ROUTE}}}}" data-route="{{{{ROUTE}}}}" aria-labelledby="h-{{{{ROUTE}}}}" data-partial>
 <header><h1 class="lead-h" id="h-{{{{ROUTE}}}}" tabindex="-1">{{{{H1}}}}</h1><p>{{{{FACTS}}}}</p></header>
+{{{{PORTRAIT}}}}
 <noscript><p>{{{{NOSCRIPT}}}} <a href="/catalogue/">The catalogue of known planets</a> · <a href="/">SetuHQ home</a></p></noscript>
 </section></div></main>
 <div id="chrome-bottom"></div>
@@ -933,11 +1015,7 @@ def stub_template(assets: dict, lead: str | None) -> str:
 def shell_css() -> str:
     """The header's, menu's, page bar's and footer's styles for a page with its own stylesheet: the colour tokens
     scoped to those parts (.shellscope), so the page's own tokens and layout are untouched."""
-    tokens = APP_CSS[:APP_CSS.index("*{box-sizing:border-box}")]
-    tokens = tokens[tokens.index(":root{color-scheme:dark;"):]
-    tokens = (tokens.replace(':root{color-scheme:dark;', '.shellscope{color-scheme:dark;', 1)
-              .replace(':root[data-theme="light"]{', ':root[data-theme="light"] .shellscope{', 1)
-              .replace(':root[data-theme="system"]{', ':root[data-theme="system"] .shellscope{', 1))
+    tokens = tokens_css(".shellscope")
     base = ("\n.shellscope,.shellscope *{box-sizing:border-box}"
             ".shellscope{font:400 15px/1.5 var(--sans);letter-spacing:-.01em;color:var(--ink);-webkit-font-smoothing:antialiased}"
             ".shellscope a{color:var(--cyan)}.shellscope :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px}"
@@ -970,6 +1048,38 @@ def wrap_standalone(page_html: str, route: str, name: str, assets: dict, lead: s
     page_html = page_html.replace("</head>", head + "</head>", 1)
     page_html = re.sub(r"(<body[^>]*>)", lambda m: m.group(1) + "\n" + top + "\n" + bar, page_html, count=1)
     return page_html.replace("</body>", foot + '<div id="announce" class="sr" aria-live="polite"></div></body>', 1)
+
+
+# The shared files' budgets (bytes), and two pages' own (characters), on top of PAGE_BUDGET and STANDALONE_BUDGET.
+ASSET_BUDGET = {"site-*.css": 140_000, "app-*.js": 430_000, "render-*.js": renderer.RENDER_BUDGET,
+                "data/sky-*.json": viz.DATA_BUDGET["sky"], "data/stories-*.json": viz.DATA_BUDGET["stories"]}
+PAGE_BUDGETS = {"index.html": 90_000, "explore/index.html": 160_000}
+STILL_BUDGET = {512: 40_000, 160: 8_000, "all": 850_000}
+STUB_BUDGET = 4_096
+
+
+def check_asset_budget(out_dir: str | Path) -> list[str]:
+    """The shared files over their budgets (the stylesheet, the app's script, the renderer, the data files, each
+    still and all of them) and the home and Explore pages over theirs, as 'path: size' lines."""
+    out, bad = Path(out_dir), []
+    for pattern, cap in ASSET_BUDGET.items():
+        for f in sorted((out / "assets").glob(pattern)):
+            if f.stat().st_size > cap:
+                bad.append(f"{f.relative_to(out)}: {f.stat().st_size:,} bytes (budget {cap:,})")
+    for rel, cap in PAGE_BUDGETS.items():
+        f = out / rel
+        if f.exists() and len(f.read_text()) > cap:
+            bad.append(f"{rel}: {len(f.read_text()):,} characters (budget {cap:,})")
+    total = 0
+    for f in sorted((out / "assets" / "render").glob("*/*.webp")):
+        n = f.stat().st_size
+        total += n
+        px = 160 if f.stem.endswith("-160") else 512
+        if n > STILL_BUDGET[px]:
+            bad.append(f"{f.relative_to(out)}: {n:,} bytes (budget {STILL_BUDGET[px]:,})")
+    if total > STILL_BUDGET["all"]:
+        bad.append(f"assets/render: {total:,} bytes of stills (budget {STILL_BUDGET['all']:,})")
+    return bad
 
 
 def check_budget(out_dir: str | Path, budget: int = PAGE_BUDGET) -> list[str]:

@@ -402,7 +402,7 @@ GALAXY_CSS = r"""
 .gxlbl.region small{display:block;color:#A1A1A6;font:500 11px/1.3 var(--mono)}
 .gxring{position:absolute;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;border:1px solid rgba(255,255,255,.7);box-shadow:0 0 14px 3px rgba(100,210,255,.45),inset 0 0 8px rgba(100,210,255,.4)}
 .gxring.ex{border-color:#FFB340;box-shadow:0 0 14px 3px rgba(255,179,64,.5),inset 0 0 8px rgba(255,179,64,.4)}
-.gxcall{position:absolute;left:0;top:0;width:224px;padding:10px 12px;border-radius:14px;background:rgba(18,18,20,.72);border:1px solid rgba(255,255,255,.14);color:#F5F5F7;-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);pointer-events:auto;cursor:pointer;transition:opacity .25s var(--ease)}
+.gxcall{position:absolute;left:0;top:0;width:224px;padding:10px 12px;border-radius:14px;background:rgba(18,18,20,.72);border:1px solid rgba(255,255,255,.14);color:#F5F5F7;-webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);pointer-events:auto;cursor:pointer;transition:opacity var(--d-1) var(--ease)}
 .gxcall.ex{border-color:rgba(255,179,64,.55)}
 .gxcall.sel{border-color:#64D2FF}
 .gxcall b{display:flex;align-items:center;gap:7px;font:600 14px/1.25 var(--sans)}

@@ -833,12 +833,16 @@ def honesty_label(label: str) -> str:
     return f'<span class="mxlabel {lab_cls}">{html.escape(label)}</span>'
 
 
-def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = False, static: bool = False, fid: str = "") -> str:
-    """A visual: a canvas with its honesty label, a text description for screen readers, and controls."""
+def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = False, static: bool = False, fid: str = "",
+           art: bool = False) -> str:
+    """A visual: a black stage (setuhq.design .stage, the same in both themes) holding a canvas, its honesty label, a
+    text description for screen readers, and controls. ``art``: it draws a planet, an artist's impression, which
+    links to /docs/pictures/."""
     e = html.escape
-    return f"""<figure class="mxstage{' tall' if tall else ''}" data-vis="{vis}"{f' id="{fid}"' if fid else ''}>
+    art_tag = '<a class="mxart" href="/docs/pictures/">Planet: artist\'s impression ›</a>' if art else ""
+    return f"""<figure class="mxstage stage{' tall' if tall else ''}" data-vis="{vis}"{f' id="{fid}"' if fid else ''}>
           <div class="mxcanvas"><canvas role="img" aria-label="{e(desc)}"></canvas></div>
-          <div class="mxbadges">{honesty_label(label)}<span class="mxexag" aria-live="polite"></span></div>
+          <div class="mxbadges">{honesty_label(label)}{art_tag}<span class="mxexag" aria-live="polite"></span></div>
           <div class="mxctl" role="group" aria-label="{'Controls' if static else 'Animation controls'}">
             {'' if static else '<button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the ' + TUNIT.get(vis, "cycle") + '">'}
             {controls}
@@ -852,7 +856,7 @@ SIZE_BUTTON = '<button class="btn mxsize" type="button" aria-pressed="false">Pla
 
 def system_stage(fid: str = "", desc: str = "A star and its planet, drawn from stored values.", extra: str = "") -> str:
     """The shared animated system (MXV.system): Methods, the Transit case, the Galaxy's sheet, planet and star pages."""
-    return _stage("system", LABEL_MODEL, desc, SIZE_BUTTON + extra, tall=True, fid=fid)
+    return _stage("system", LABEL_MODEL, desc, SIZE_BUTTON + extra, tall=True, fid=fid, art=True)
 
 
 CHAPTERS = [("survey", "How a survey works"), ("transit", "Transit"), ("doppler", "Toward and away"),
@@ -1785,10 +1789,15 @@ function mxActivate(article, on){
   });
 }
 document.addEventListener('visibilitychange', () => mxStages.forEach(mxKick));
+document.addEventListener('setu-render-ready', () => mxStages.forEach(mxKick));  // the renderer finished a surface in idle time
 
 // ---------- shared drawing pieces ----------
 function mxText(c, s, x, y, o){ o = o || {}; c.font = `${o.w || 500} ${o.size || 11}px ${o.mono ? '"Geist Mono",ui-monospace,monospace' : '"Geist",system-ui,sans-serif'}`; c.fillStyle = o.color || '#A1A1A6'; c.textAlign = o.align || 'left'; c.textBaseline = o.base || 'alphabetic'; c.fillText(s, x, y); }
+// The star and the planet are drawn by the shared renderer (setuhq.renderer, window.SetuRender) when it is loaded:
+// the same blackbody colour and limb darkening, the planet's look from its measured values. Below each adapter is
+// the drawing it falls back to when the renderer is missing.
 function mxStar(c, x, y, R, teff, t, opt){
+  if (window.SetuRender) return SetuRender.drawStar2D(c, x, y, R, teff, t, opt);
   opt = opt || {};
   const rgb = mxTeffRGB(teff), [u1, u2] = mxLd(teff);
   // Corona glow.
@@ -1814,6 +1823,9 @@ function mxStar(c, x, y, R, teff, t, opt){
   return rgb;
 }
 function mxPlanet(c, x, y, r, cls, lit){
+  // cls: a look's name (setuhq.looks), "silhouette" (a candidate: never planet art), or an old class number.
+  if (window.SetuRender) return SetuRender.drawPlanet2D(c, x, y, r, cls, lit);
+  if (typeof cls === 'string') cls = cls === 'silhouette' ? 2 : /giant|jupiter/.test(cls) ? 4 : /neptune/.test(cls) ? 3 : /envelope|ambiguous/.test(cls) ? 2 : 0;
   // Look by class: 0 Earth-size, 1 super-Earth (rocky); 2 sub-Neptune, 3 Neptune-like (haze); 4 gas giant (bands).
   c.save(); c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.clip();
   const base = cls >= 4 ? [196, 160, 120] : cls >= 2 ? [120, 170, 214] : [150, 128, 110];
@@ -1834,6 +1846,9 @@ function mxAxes(c, x, y, w, h, o){
   mxText(c, o.x, x + w - 6, y + h - 6, {size: 11, w: 600, color: '#8E8E93', mono: true, align: 'right'});
 }
 function mxGlassPanel(c, x, y, w, h){ c.fillStyle = 'rgba(28,28,30,.72)'; c.strokeStyle = 'rgba(255,255,255,.12)'; c.lineWidth = 1; c.beginPath(); c.roundRect ? c.roundRect(x, y, w, h, 14) : c.rect(x, y, w, h); c.fill(); c.stroke(); }
+// The planet's look from its stored values (setuhq.looks.look, by way of SetuRender.look); null without the renderer.
+const mxLookOf = p => window.SetuRender ? SetuRender.look({radius: p.radius, mass: p.mass, msini: p.mass_sini, a: p.semi_major_axis, period: p.orbital_period,
+  srad: p.star_radius, smass: p.star_mass, steff: p.star_teff, teq: p.temp_calculated}).name : null;
 const mxClassOf = (rp, mp) => { if (rp){ const re = rp * 11.209; return re < 1.25 ? 0 : re < 2 ? 1 : re < 4 ? 2 : re < 10 ? 3 : 4; } if (mp){ const me = mp * 317.83; return me < 2 ? 0 : me < 10 ? 1 : me < 50 ? 3 : 4; } return null; };
 
 // ---------- the animated system: star (Teff colour, limb darkening, granulation), orbit, planet, light curve ----------
@@ -1845,7 +1860,7 @@ function mxSystemParams(p, dip){
   if (b == null && p.inclination != null && a && rs){ b = ars * Math.cos(p.inclination * Math.PI / 180); bSrc = 'from a/R★ and i'; }
   if (b == null || b > 1 + k){ b = 0.3; bSrc = 'illustrative'; }
   return {teff, rs, rp, a, P, k, ars, b, bSrc, scale, cls: mxClassOf(rp, p.mass || p.mass_sini), name: p.name || '', dip: dip || null, inc: p.inclination,
-    ld: p.ld && p.ld[0] != null ? p.ld : null, dt0: p.t0_offset_days || 0};
+    ld: p.ld && p.ld[0] != null ? p.ld : null, dt0: p.t0_offset_days || 0, look: p.look || mxLookOf(p)};
 }
 function mxDurations(P, ars, k, b){
   const inc = Math.acos(Math.min(1, b / ars)), si = Math.sin(inc), f = x => P / Math.PI * Math.asin(Math.min(1, x / (ars * si)));
@@ -1863,7 +1878,7 @@ function mxDrawSystem(c, w, h, t, st){
   const big = !!st.opt.big, rpx = Math.max(1.5, S.k * Rs * (big ? 5 : 1));
   c.setLineDash([4, 6]); c.strokeStyle = 'rgba(255,255,255,.28)'; c.lineWidth = 1;
   c.beginPath(); c.ellipse(cx, cy, A, Math.max(0.5, By), 0, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
-  const cls = S.cls == null ? 2 : S.cls;
+  const cls = S.look || (S.cls == null ? 2 : S.cls);
   if (!front) mxPlanet(c, px, py, rpx, cls, true);
   mxStar(c, cx, cy, Rs, S.teff, t);
   if (front){ const over = Math.hypot(px - cx, py - cy) < Rs + rpx; mxPlanet(c, px, py, rpx, cls, !over); }
@@ -2864,6 +2879,7 @@ function mxSystemView(fig, p, o){
     + (nonTransit ? ' At the stored inclination this planet does not transit; the view shows a transit to explain the method.' : '');
   const desc = `${p.name}: a ${Math.round(S.teff).toLocaleString('en-GB')} K star drawn in its blackbody colour, the planet crossing at b = ${S.b.toFixed(2)} (${S.bSrc}), and a limb-darkened model light curve from the stored values.`;
   fig.querySelector('canvas').setAttribute('aria-label', o.desc || desc);
+  const art = fig.querySelector('.mxart'); if (art) art.hidden = S.look === 'silhouette';  // a candidate is a silhouette, not art
   if (o.caption !== false) fig.querySelector('figcaption').textContent = note;
   st.on = !!o.on; st.t = MXV.system.key; mxDraw(st);
   if (st.on && !mxRM.matches && !st.started){ st.started = true; mxPlay(st, true); } else mxKick(st);
@@ -3007,9 +3023,13 @@ METHODS_CSS = r"""
 .mxch>header .eyebrow{margin:0 0 6px}
 .mxlede{margin:0;max-width:78ch;font-size:17px;line-height:1.55;color:var(--ink)}
 .mxstage{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px;min-width:0}
+.mxstage.stage{padding:8px 8px 12px}
+.mxstage.stage .mxbadges,.mxstage.stage .mxctl,.mxstage.stage .mxdesc{padding:0 6px}
+.mxart{display:inline-flex;align-items:center;min-height:44px;font:500 12px/1.4 var(--sans);color:var(--stage-ink);text-underline-offset:3px}
+.mxart[hidden]{display:none}
 .mxch{grid-template-columns:minmax(0,1fr)}
 .mxch>*{min-width:0}
-.mxcanvas{position:relative;height:clamp(300px,52vh,520px);border-radius:24px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.08)}
+.mxcanvas{position:relative;height:clamp(300px,52vh,520px);border-radius:calc(var(--r-m) - 4px);overflow:hidden;background:#000;border:1px solid var(--stage-line)}
 .mxstage.tall .mxcanvas{height:clamp(420px,66vh,640px)}
 .mxcanvas canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .mxbadges{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0}
@@ -3154,7 +3174,7 @@ METHODS_CSS = r"""
 .mxlens i{position:absolute;display:block;transform:translate(-50%,-50%);border-radius:50%;border:2px solid rgba(255,255,255,.75);box-shadow:0 0 0 1px rgba(0,0,0,.45),inset 0 0 24px rgba(100,210,255,.35)}
 .mxlens span{position:absolute;left:50%;top:64px;transform:translateX(-50%);max-width:calc(100% - 24px);padding:6px 12px;border-radius:999px;background:rgba(28,28,30,.86);border:1px solid rgba(255,255,255,.16);color:#F5F5F7;font:500 12px/1.4 var(--sans);text-align:center}
 /* the survey-scan intro over the Sky and Galaxy maps: no pointer capture except its Skip button */
-.mxintro{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity .4s var(--ease)}
+.mxintro{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity var(--d-2) var(--ease)}
 .mxintro.out{opacity:0}
 .mxintro canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .mxintrobar{position:absolute;right:12px;top:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;max-width:calc(100% - 24px);color:#F5F5F7}

@@ -70,6 +70,7 @@ One clean address per page; no `#/` routes and no view state in the address.
 | Run report | `/evidence/report/` (the lead run); `/evidence/report/<star>/` (each other example run) | `/report/` |
 | Plates | `/evidence/plates/` (the lead run and the search feed); `/evidence/plates/<star>/` (each other example run) | `/plate/` |
 | Docs | `/docs/` | (new) |
+| How the pictures are drawn | `/docs/pictures/` | (new) |
 
 The table lives in `src/setuhq/routes.py` (`ROUTE_PATHS`, `CHAPTER_SLUGS`, `LEGACY_PAGES`), with its twin in the
 page's script. GitHub Pages cannot redirect, so each old directory (`/app/`, `/docket/`, `/plate/`, `/report/`,
@@ -148,6 +149,55 @@ Each page stays under 200,000 characters of HTML (`setuhq.site.PAGE_BUDGET`; `se
 checks it). The old single app page was about 1.4 million. The stand-alone case file, plates and run report carry
 their own data inline so they work saved or printed; their budget is 400,000.
 
+## The visual system
+
+One source for the look of every page: `src/setuhq/design.py`. The site's stylesheet, the header and footer around
+the stand-alone pages (`.shellscope`), and later the case file, plates, report and README figures (through aliases)
+read the same tokens.
+
+* **Tokens.** `design.TOKENS` holds each colour as (dark, light); `design.tokens_css(scope, aliases)` writes the dark
+  block, the light block and the light block for "your device's setting". The ground is `#04060B` in dark and
+  `#F5F5F7` in light; the accents (blue for a known planet and focus, yellow for open, red for rejected, cyan for the
+  Sentinels, purple for the Probes) keep the logo's and the plates' hues. Every ink passes 4.5:1 on every surface and
+  every accent 3:1 on the ground (tests/test_design.py). A **stage** (`.stage`, and every `[data-render]` figure and
+  Methods drawing) is black in both themes, with its own ink.
+* **Type.** Self-hosted Geist and Geist Mono only (no new files). `fonts.css` adds metric-matched local fallbacks
+  (Arial and Menlo scaled to Geist's average width, with its ascent and descent: `tools/font_fallback.py`,
+  `design.FONT_FALLBACK`, checked by a test), and each page preloads the Latin Geist file, so the web font arriving
+  shifts nothing.
+* **Motion.** One curve (`--ease`, `cubic-bezier(.2,.7,.2,1)`) and three durations (`--d-1` 150 ms for hover and
+  press, `--d-2` 350 ms for reveals and lifts, `--d-3` 600 ms for view changes and fills). A lint in the tests
+  rejects any other curve or duration in any stylesheet (infinite decorative loops are listed in `design.LOOP_ALLOW`).
+  Under reduced motion the durations are 0 ms, view transitions are off, and every drawing shows a designed still.
+  Changing view in place is a view transition; the home page's header is clear over the hero and fills after 40 px.
+* **The renderer** (`src/setuhq/renderer.py`, served as `/assets/render-<hash>.js`, at most 64,000 bytes):
+  `window.SetuRender` draws stars in their blackbody colour (Planck × CIE 1931, `looks.teff_rgb`, with Claret 2017
+  limb darkening) and planets as artist's impressions, on one WebGL1 context per page, with a Canvas2D fallback, and
+  the still `<img>` beneath both. A figure is `<figure class="stage rfig" data-render="planet|star|transit"
+  data-params='{…}'>` holding its still (with alt text), its honesty tag and a caption with the numbers and the
+  source; `SetuRender.mount()` adds a canvas and hides the still, and a failed upgrade leaves the still. A drawing
+  animates only while on screen and the page is visible, at most 4 at once (2 on a small touch screen); a slow device
+  drops to 30 fps, then to stills. `SetuRender.stats()` reports the path (`webgl`, `canvas2d` or `still`). The Methods
+  drawings' `mxStar` and `mxPlanet` draw through it. The background starfield (V11) is a seeded canvas over the top of
+  each page; its SVG is the still.
+* **Planet looks** (`src/setuhq/looks.py`, standard library only): composition from the radius (rock below 1.6 R⊕,
+  Rogers 2015; envelope to 4; Neptune-like to 10; giant above), or without one from the mass (then drawn not to
+  scale); temperature band from Teq = 278.3 K × S^¼ computed from a, R★ and Teff (cold, temperate, warm, hot,
+  ultra-hot). Eighteen looks, each with a still (`src/setuhq/data/stills/`, drawn by `node tools/render_stills.mjs`
+  on the Canvas2D path; `--check` and a test fail when the renderer or the table changed since). No exoplanet is given
+  water, and no look or caption says "habitable". A candidate dip is a silhouette at Rp/R★, never planet art.
+  `/docs/pictures/` prints every rule, source and still; every "Artist's impression" tag links there.
+* **Components** live in `src/setuhq/viz/` (one module each, fixed signatures: `html(data)`, `CSS`, `JS`, optional
+  `data(app_data)`); `viz.write_data` merges their build-time data into `assets/data/stories-<hash>.json` and
+  `sky-<hash>.json`. A component not yet built returns "" and its page leaves the band out.
+* **Honesty rules**, each tested: real data shows its source; every picture carries one of five labels (Artist's
+  impression, Model from stored values, Real data, cited, Illustration, Speculative model); SetuHQ's output is never
+  called confirmed, discovered, a discovery or a new planet (a lint over every built page and 200 stubs,
+  tests/test_honesty_lint.py); the attribution line is always `names.ATTRIBUTION`; a rate always shows its interval.
+* **Budgets** (`site.check_asset_budget`, run by `setuhq site`): the stylesheet 140,000 bytes, the app's script
+  430,000, the renderer 64,000, each still 40,000 (512 px) or 8,000 (160 px) and 850,000 in all, the home page 90,000
+  characters and `/explore/` 160,000, each deploy-time stub 4,096 bytes.
+
 ## The header
 
 The logo (home), the five sections, a search icon (also `/` or Ctrl/Cmd+K) that opens an overlay, and a theme icon
@@ -178,6 +228,12 @@ sentence disappears everywhere.
   in place; Back and Forward; the phone menu and the keyboard; the skip link and visible focus; the search overlay;
   every old address; the 404 page; a sample of the deploy-time planet and star pages; and a crawl of every
   internal link from the home page.
+* `tests/e2e/visuals.mjs` (run by `scripts/site_e2e.sh` after `run.mjs`) runs every module in `tests/e2e/checks/`;
+  `checks/system.mjs` checks the renderer's three paths (WebGL in SwiftShader, Canvas2D with WebGL blocked, the stills
+  with JavaScript off), the animation budget, that hidden or scrolled-away drawings stop, reduced-motion stills, the
+  labels on every picture, black stages in light mode, layout shift (at most 0.02 on the home page and a planet page),
+  the header that settles, and axe with motion on. `SETUHQ_E2E_BROWSERS=chromium,webkit` adds a WebKit pass when
+  Playwright's WebKit is installed.
 * `node tests/e2e/gallery.mjs --site site --out <dir> [--light] [--full]` takes a screenshot of every page at both
   sizes, with a contact sheet (`index.html`), for looking at the site.
 

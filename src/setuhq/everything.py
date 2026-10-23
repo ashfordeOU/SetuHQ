@@ -333,7 +333,7 @@ VARIABLES_CSS = r"""
 .vanum{font-size:12.5px!important;color:var(--ink)!important}
 .vaent details summary{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;font-size:13px;font-weight:600;list-style:none;color:var(--cyan)}
 .vaent details summary::-webkit-details-marker{display:none}
-.vaent details summary::before{content:"›";display:inline-block;transition:transform .2s;color:var(--ink-3)}
+.vaent details summary::before{content:"›";display:inline-block;transition:transform var(--d-1) var(--ease);color:var(--ink-3)}
 .vaent details[open] summary::before{transform:rotate(90deg)}
 .vaent details>div{display:grid;gap:10px;padding-top:4px}
 .vaent h3{margin:0;font-size:12px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em}

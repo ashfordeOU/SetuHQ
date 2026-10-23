@@ -214,7 +214,7 @@ CATALOGUE_CSS = r"""
 .ctsearch input{width:100%;min-height:48px;padding:0 16px;border-radius:14px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font:500 16px var(--sans)}
 .ctmore summary{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;font-weight:600;list-style:none}
 .ctmore summary::-webkit-details-marker{display:none}
-.ctmore summary::before{content:"›";display:inline-block;transition:transform .2s;color:var(--ink-3)}
+.ctmore summary::before{content:"›";display:inline-block;transition:transform var(--d-1) var(--ease);color:var(--ink-3)}
 .ctmore[open] summary::before{transform:rotate(90deg)}
 .ctranges{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:6px}
 .ctrange{border:1px solid var(--line);border-radius:12px;padding:6px 10px 10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0;min-width:0}

@@ -1,0 +1,84 @@
+{
+ "note": "Drawn by tools/render_stills.mjs on SetuRender's Canvas2D path in Chromium; seed 1, rotation 0.6 rad, lit from the upper left.",
+ "render_js_sha256": "fdf59f1f1c1b6e24304ad52003616b493bf0800c0d2c8e9e2d119db920f915d7",
+ "looks_sha256": "e3d380d7fef4d8aa15ad423ef40a58e7ed5ec5d878a829547974f9253f0290b8",
+ "seed": 1,
+ "sizes": [
+  512,
+  160
+ ],
+ "files": {
+  "rock-cold": {
+   "160": "b36ee0365776191c816c927bc237ee8fcc8e44644e9a38bfc221bc0d613bcc3a",
+   "512": "e5bea823e2d68ee25fbcbe24785281fe6c3fe05a88935b701a762ddd81932cf6"
+  },
+  "rock-temperate": {
+   "160": "b6648907a55169054abe7f78af906dd600e08cdd60f386d7b1a9ceb7abc9eaf4",
+   "512": "a505684bec9817e62defca5799c34aed8ec75e85d4facd0fb6884c5c44a2f39e"
+  },
+  "rock-warm": {
+   "160": "9a38f19fad5be10f59eb4597aef6a08ee12cab6f0e7bd3bbc1db7d64080e5d4c",
+   "512": "1b4196b1abc5da1eeb8cb47d0d52ecea48da0b89821e230e708e865abc5e30f5"
+  },
+  "rock-hot": {
+   "160": "ac29bb39b530aaa3e56bbaa6c80d531e18cf001d6f98f0b127924f4d60cad095",
+   "512": "c752b260b2d36938ef71b1a90467e8bcafd6e6a9c728d777cf39479a2af32c48"
+  },
+  "envelope-cool": {
+   "160": "5a3742f5494a72c7043aacca94d5244120b377318dd36be694ed6be3e922bb5b",
+   "512": "e0e2365fb8768ea9838303828013bdc518336cc9bf90931bdeef0755b2c4be84"
+  },
+  "envelope-warm": {
+   "160": "74a203770ff8e249778da6c0d5298f64f5f64d7bb6fedd312119ad1357b7af92",
+   "512": "0b191c46ceb95b44348ead34ff26da141994f5761d7e13b9f734236f1f5730ab"
+  },
+  "envelope-hot": {
+   "160": "b53a795b634c619ad6289f2f01cd8712d0fe27b0b60871c4f59c51c0aa095ad5",
+   "512": "9947d2d1b8510ca0b84201c48899c815306291d768c8fc4a003905fa97c543fd"
+  },
+  "neptune-cool": {
+   "160": "67c1c6e2eff8f90494c77130ea01d060ea65a0db26468e8daef1fcfb42459ce9",
+   "512": "1dad7719fec0d908a56c9dc5008579924110c1ccf92280b978d122b0d941e56e"
+  },
+  "neptune-warm": {
+   "160": "ddaf2b0b92c089a11a0dc28843f25714d6c4cc7882c975175befcff196cfdc3d",
+   "512": "833c4e98d4ee54603ea0d5c97e4c49477672f96459434f74825e13e3b46f9d11"
+  },
+  "neptune-hot": {
+   "160": "57a0dc64bbd42eab8454189ef5521863c28baf7ba9505c560f413234b30649ff",
+   "512": "1588f52f1f69ceb551eb0d83725e2ba46252bb33c23f6a3db51400b0c53b0258"
+  },
+  "giant-cool": {
+   "160": "053571d6dfb41479f0ef7c0197aa3c91bc89ff273ddc702a0060216fa67fbfe9",
+   "512": "67b99c66ba8547fc030ccc433ec3e9f98399e2b85e66f9ca389f3e68267ea7ad"
+  },
+  "giant-warm": {
+   "160": "f918f4cc1672c91fa611d9366d715d94676acf01d78ef896b5cd844e6bc274f2",
+   "512": "3d1e29cfed53ae8f1c2b7ee0550bb38fbe2d394cb6e930e84d5d8f00a5bce2b1"
+  },
+  "giant-hot": {
+   "160": "fd96c63249db0d5d19a776a3ac84a867a70dd8749ec5e42e2c792b1fc8b8137c",
+   "512": "076f2f5896c418d1a044573d26fd816a625c70cc65da454c2424c7203013c4ac"
+  },
+  "giant-ultrahot": {
+   "160": "eae5fcc877b71f0d172f88c4bb5200bb3d14b618b4503acb73af7f264a6cd01b",
+   "512": "ccc8f6685c5af5ff131caba16ca8b6d76bfb0a9f916f8e664fa601b70a99e99e"
+  },
+  "ambiguous": {
+   "160": "a8ab79c122e445efe1eda880a73ec8a9b4d9996671df6cbd1c54b73179ef071a",
+   "512": "88539501897a059b004010b28d9b6f9884ed8e8f4a44f113293e5554098e58db"
+  },
+  "ref-earth": {
+   "160": "684e22fe17385e2d74dd6c0f71926d5491043961af0b54aff44bed85022d9aa0",
+   "512": "6beb879d528824c4e547469e00a45107adc9a2ab991b0cbca537db41b9f4d7c6"
+  },
+  "ref-neptune": {
+   "160": "e5174b00bcde75df195c30af4264773b8ecd61dbe85faf97d83a3df5acf62c42",
+   "512": "bb0e37a64c35ce37b6cbbb12318e3dda800daf46555bfa2e025aa20b82a43afd"
+  },
+  "ref-jupiter": {
+   "160": "68cd9ff87fedac643a98b9e22a1b97c71a10854a529a525daab626e09f303e8b",
+   "512": "23578cf245f566dd3c84831ed2e3f42b1b7b8cd9478492e2522f9d87dd1b4f0e"
+  }
+ }
+}

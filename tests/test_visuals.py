@@ -227,7 +227,7 @@ def test_js_atom_positions_match_python(tmp_path):
 # ---------- the page ----------
 def test_blocking_starlight_has_the_four_families_and_a_plate(page_html):
     art = _chapter(page_html, "imaging")
-    fig = re.search(r'<figure class="mxstage tall" data-vis="cgfam">.*?</figure>', art, re.S).group(0)
+    fig = re.search(r'<figure class="mxstage stage tall" data-vis="cgfam">.*?</figure>', art, re.S).group(0)
     assert '<span class="mxlabel ill">Illustration</span>' in fig
     for v in ("lyot", "apod", "vortex", "adi"):
         assert f'<option value="{v}">' in fig
