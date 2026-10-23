@@ -437,7 +437,7 @@ svg.calplane .pt.cl{fill:var(--blue);fill-opacity:.85;stroke:var(--blue);stroke-
 .card h2 .sub{font:500 11px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.04em}
 .idtag{font:400 11px var(--mono);color:var(--ink-3);margin-left:4px;text-transform:none;letter-spacing:0}
 details summary{cursor:pointer}
-.srcnote{margin:-4px 0 12px;font-size:12.5px;color:var(--ink-3)}.srcnote summary{display:inline-flex;align-items:center;min-height:32px}.srcnote p{margin:4px 0 0;overflow-wrap:anywhere}
+.srcnote{margin:-6px 0 12px;font-size:12.5px;color:var(--ink-3)}.srcnote summary{padding:6px 0;width:max-content}.srcnote p{margin:4px 0 0;overflow-wrap:anywhere}
 /* panel, runs */
 #route-sentinels .row2>.panelring{flex:1 1 360px;min-width:0}
 .benchodo{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
