@@ -954,8 +954,8 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     view("leaderboard", _title("leaderboard"), "Methods scored blind on the held-out half of the real-TOI benchmark, with Wilson 95% intervals.", "/evidence/leaderboard/", name="Leaderboard")
     view("runs", _title("runs"), "Every search run, its errors as stored, and the configuration behind the candidate pages.", "/evidence/runs/", name="Runs")
     view("docs", _title("docs"), "Install SetuHQ, search a star, contribute a sweep, connect an AI assistant over MCP, and download the data.", "/docs/")
-    view("stellar", _title("stellar"), "Flares, pulsations and CHEOPS light curves: how far each of SetuHQ's stellar tools is validated (flares and pulsations partly, CHEOPS not), with two figures of real TESS data.", "/evidence/stellar/", name="Stars")
-    view("stellardocs", _title("stellardocs"), "Run SetuHQ's stellar commands: flares, pulsations and public CHEOPS light curves, with their validation status and ESA's terms for CHEOPS data.", "/docs/stellar/", name="Flares and pulsations")
+    view("stellar", _title("stellar"), "Flares, pulsations, CHEOPS light curves, eclipsing binaries, rotation and transients: how far each of SetuHQ's stellar tools is validated, with every counted check and figures of real TESS data.", "/evidence/stellar/", name="Stars")
+    view("stellardocs", _title("stellardocs"), "Run SetuHQ's stellar commands: flares, pulsations, public CHEOPS light curves, eclipsing binaries, rotation and transients, with their validation status and ESA's terms for CHEOPS data.", "/docs/stellar/", name="Flares and pulsations")
     view("propose", _title("propose"), "Prepare a CHEOPS Guest Observers proposal with setuhq propose cheops: a drafting aid that checks the rules and the target and never submits anything.", "/docs/cheops-proposals/", name="CHEOPS proposals")
     view("pictures", _title("pictures"), "How SetuHQ draws its pictures: stars in their blackbody colour, and planets as artist's impressions chosen from measured radius and irradiation, with every rule and source.", "/docs/pictures/", name="How the pictures are drawn")
 

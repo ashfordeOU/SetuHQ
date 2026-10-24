@@ -158,6 +158,16 @@ Published flare and pulsation catalogues (VizieR):
   tables, read for comparison only; published frequency lists and values in
   docs/results/stellar_validation_references.json are cited there.
 
+Published eclipsing-binary, rotation and supernova catalogues (VizieR):
+  Prša et al. 2022 (J/ApJS/258/16), Canto Martins et al. 2020 (J/ApJS/250/20) and
+  Fausnaugh et al. 2023 (J/ApJ/956/108), transcribed into the protocol v4 file
+  docs/results/stellar_validation_protocol_v4.json for comparison only.
+
+TESScut:
+  Cutouts of TESS full-frame images (SPOC) through MAST's TESScut service
+  (Brasseur et al. 2019, ascl:1905.007) for the transient tools and validation;
+  the cutouts are not stored, only derived light curves and numbers.
+
 SIMBAD:
   The ICRS coordinates of pi Mensae (HD 39091) in docs/results/targets.json, used
   only to place the star on the sky map. This research has made use of the

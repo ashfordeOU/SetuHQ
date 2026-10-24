@@ -7,7 +7,10 @@
   validated, 7 of 9; CHEOPS not validated, 2 of 5), every counted check, and two figures of real TESS data
   (``docs/results/stellar_figures.json``, written by ``scripts/stellar_figures.py``): a flaring M dwarf and a
   δ Scuti star's amplitude spectrum, each labelled "Real data, cited" with its source, beside the star drawn by
-  the renderer at its TIC Teff ("Model from stored values"). The CHEOPS part carries ESA's acknowledgement, each
+  the renderer at its TIC Teff ("Model from stored values"). Then protocol v4's capabilities
+  (``docs/results/stellar_validation_v4.json``): eclipsing binaries, rotation and transients, their status, one figure
+  of real TESS data each (``docs/results/stellar_figures_v4.json``: the first held-out target of each, whatever its
+  result; the binary and the rotator beside their stars, the supernova with none) and every counted check. The CHEOPS part carries ESA's acknowledgement, each
   programme's credit line, the three papers, DACE's acknowledgement, the disclaimer and the licence carve-out.
 * ``/docs/stellar/`` (:func:`docs_stellar_section`): the commands, what they write, and the CHEOPS terms.
 * ``/docs/cheops-proposals/`` (:func:`docs_propose_section`): ``setuhq propose cheops``, a drafting aid.
@@ -32,7 +35,10 @@ FIGURES = "docs/results/stellar_figures.json"
 REPO = "https://github.com/ashfordeOU/SetuHQ"
 LABEL_DATA = "Real data, cited"
 LABEL_MODEL = "Model from stored values"
+VALIDATION_V4 = "docs/results/stellar_validation_v4.json"
+FIGURES_V4 = "docs/results/stellar_figures_v4.json"
 CAPS = (("flares", "Flares"), ("pulsations", "Pulsations"), ("cheops", "CHEOPS light curves"))
+CAPS_V4 = (("binaries", "Eclipsing binaries"), ("rotation", "Rotation"), ("transients", "Transients"))
 # The status words, shown with their counts; never "validated" for a capability that is not.
 STATUS_CLASS = {"validated": "ok", "partly validated": "part", "not validated": "no"}
 
@@ -55,8 +61,8 @@ def _load(rel: str) -> dict | None:
 
 
 def status() -> dict:
-    """{capability: {"status", "label", "passed", "of", ...}} from the stored validation, or {}."""
-    return (_load(VALIDATION) or {}).get("capabilities") or {}
+    """{capability: {"status", "label", "passed", "of", ...}} from the stored validations (protocol v3's and v4's), or {}."""
+    return {**((_load(VALIDATION) or {}).get("capabilities") or {}), **((_load(VALIDATION_V4) or {}).get("capabilities") or {})}
 
 
 def status_label(cap: str) -> str:
@@ -73,9 +79,19 @@ def protocol_line() -> str:
             f"{str(v.get('protocol_commit', ''))[:12]} before its run")
 
 
-def _status_cards(e) -> str:
+def protocol_v4_line() -> str:
+    v = _load(VALIDATION_V4) or {}
+    if not v:
+        return "Protocol v4's results are not in this build"
+    return (f"Protocol v4 ({v.get('protocol_file', '')}, sha256 {str(v.get('protocol_sha256', ''))[:12]}…), frozen "
+            f"{v.get('protocol_frozen', 'not stored')}, committed on its own in {str(v.get('protocol_commit', ''))[:12]} before any v4 "
+            "code or run; targets drawn by seeded rules from the catalogues, a tuning split used while the methods were written "
+            "and a held-out split run once, which alone is counted")
+
+
+def _status_cards(e, caps=CAPS) -> str:
     out = []
-    for cap, name in CAPS:
+    for cap, name in caps:
         s = status().get(cap) or {}
         word = s.get("status", "not in this build")
         extra = []
@@ -89,8 +105,8 @@ def _status_cards(e) -> str:
     return f'<ul class="stcards">{"".join(out)}</ul>'
 
 
-def _checks_table(e) -> str:
-    v = _load(VALIDATION) or {}
+def _checks_table(e, rel=VALIDATION, version="v3", hid="h-st-checks") -> str:
+    v = _load(rel) or {}
     rows = []
     for c in v.get("checks") or []:
         val = c.get("value")
@@ -107,8 +123,8 @@ def _checks_table(e) -> str:
             res = f"{res} (computed: {c['computed_result']})"
         rows.append(f'<tr><td>{e(c["capability"])}</td><td>{e(c.get("text", ""))}</td><td class="mono">{shown}</td>'
                     f'<td class="stres {e(c.get("result", "").split()[0])}">{e(res)}</td></tr>')
-    return ('<div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-st-checks"><table class="sttable"><thead><tr>'
-            '<th scope="col">Capability</th><th scope="col">Check (protocol v3)</th><th scope="col">Value</th>'
+    return (f'<div class="tablewrap" tabindex="0" role="region" aria-labelledby="{hid}"><table class="sttable"><thead><tr>'
+            f'<th scope="col">Capability</th><th scope="col">Check (protocol {version})</th><th scope="col">Value</th>'
             f'<th scope="col">Result</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>')
 
 
@@ -230,6 +246,177 @@ def figures_html() -> str:
             + _figure("pulsation", psvg, pcap, _star((p.get("tic_values") or {}).get("teff"), p["star"], p["tic"], "st-puls-star"), "st-puls"))
 
 
+def _path(points, X, Y) -> str:
+    d, pen = [], False
+    for x, y in points:
+        if y is None:
+            pen = False
+            continue
+        d.append(f"{'L' if pen else 'M'}{X(x):.1f} {Y(y):.1f}")
+        pen = True
+    return "".join(d)
+
+
+def binary_svg(b: dict) -> tuple[str, str]:
+    """The eclipsing-binary figure: the phase curve folded on SetuHQ's period (SVG) and its text alternative."""
+    ph, fl = b["phase"], b["flux"]
+    good = [v for v in fl if v is not None]
+    lo, hi = min(good), max(good)
+    pad = (hi - lo) * 0.08 or 0.001
+    lo, hi = lo - pad, hi + pad
+    X = lambda p: _L + (_W - _L - _R) * p  # noqa: E731
+    Y = lambda v: _T + (_H - _T - _B) * (1 - (v - lo) / (hi - lo))  # noqa: E731
+    o, c = b["ours"], b["catalogue"]
+    marks = []
+    if c.get("phase_s_2g") is not None:
+        sp = (c["phase_s_2g"] - c["phase_p_2g"]) % 1.0
+        marks.append(f'<path d="M{X(sp):.1f} {_T - 2}v-8" class="pub"/>')
+    marks.append(f'<path d="M{X(0.0) + 1:.1f} {_T - 2}v-8" class="pub"/>')
+    sec = o.get("secondary")
+    for x in [0.0] + ([sec["phase"]] if sec else []):
+        marks.append(f'<path d="M{X(x) + 1:.1f} {_H - _B + 2}v6" class="ours-t"/>')
+    frame = _frame(_ticks(0, 1, 5), _ticks(lo, hi, 4), X, Y, lambda v: f"{v:g}", lambda v: f"{v:.3g}", "orbital phase", "relative flux")
+    alt = (f"Phase curve of TIC {b['tic']}, TESS sector {b['sector']}, folded on SetuHQ's period of {o['period']:.5f} days "
+           f"(Prša et al. 2022 list {c['period_d']:.5f} days): the primary eclipse at phase 0 is {o['primary']['depth']:.3f} deep "
+           + (f"and a secondary eclipse sits at phase {sec['phase']:.3f}" if sec else "and no secondary eclipse is found")
+           + f"; morphology class {o['morphology']}. Ticks above the plot: the catalogue's eclipse phases; below it: SetuHQ's.")
+    svg = (f'<svg viewBox="0 0 {_W} {_H}" role="img" aria-label="{html.escape(alt)}" class="stsvg">{frame}'
+           f'<path d="{_path(zip(ph, fl), X, Y)}" class="lc"/>{"".join(marks)}</svg>')
+    return svg, alt
+
+
+def rotation_svg(r: dict) -> tuple[str, str]:
+    """The rotation figure: the 2-hour light curve with the measured period marked (SVG) and its text alternative."""
+    t, f = r["lc_2h"]["time"], r["lc_2h"]["flux"]
+    t0 = t[0]
+    ppt = [(x - t0, (v - 1) * 1e3) for x, v in zip(t, f)]
+    vals = [v for _, v in ppt]
+    lo, hi = math.floor(min(vals)), math.ceil(max(vals))
+    span = t[-1] - t0
+    X = lambda d: _L + (_W - _L - _R) * d / span  # noqa: E731
+    Y = lambda v: _T + (_H - _T - _B) * (1 - (v - lo) / (hi - lo or 1))  # noqa: E731
+    pts, prev = [], None
+    for d, v in ppt:
+        if prev is not None and d - prev > 0.5:
+            pts.append((d, None))
+        pts.append((d, v))
+        prev = d
+    o = r["ours"]
+    P = o.get("period")
+    ticks = ""
+    if P:
+        ticks = "".join(f'<path d="M{X(k * P):.1f} {_T - 2}v-8" class="ours-t"/>' for k in range(int(span / P) + 1))
+    pub = "".join(f'<path d="M{X(k * r["published"]):.1f} {_H - _B + 2}v6" class="pub"/>' for k in range(int(span / r["published"]) + 1))
+    frame = _frame(_ticks(0, span, 6), _ticks(lo, hi, 4), X, Y, lambda v: f"{v:g}", lambda v: f"{v:+g}" if v else "0",
+                   f"days from BTJD {t0:.2f}", "ppt")
+    alt = (f"TESS light curve of TIC {r['tic']}, sector {r['sector']}, in 2-hour bins, in parts per thousand about its median, "
+           f"over {span:.0f} days. " + (f"SetuHQ measures a rotation period of {P:.2f} ± {o['period_err']:.2f} days (ticks above the plot, one per rotation)"
+                                       if P else "SetuHQ reports no rotation period for it")
+           + f"; Canto Martins et al. (2020) give {r['published']} ± {r['published_err']} days (ticks below the plot).")
+    svg = (f'<svg viewBox="0 0 {_W} {_H}" role="img" aria-label="{html.escape(alt)}" class="stsvg">{frame}'
+           f'<path d="{_path(pts, X, Y)}" class="lc"/>{ticks}{pub}</svg>')
+    return svg, alt
+
+
+def transient_svg(s: dict) -> tuple[str, str]:
+    """The supernova figure: the difference light curve in 6-hour bins (SVG) and its text alternative."""
+    t, f = s["lc_6h"]["time"], s["lc_6h"]["flux_e_s"]
+    t0 = t[0]
+    lo, hi = math.floor(min(f) / 10) * 10, math.ceil(max(f) / 10) * 10
+    span = t[-1] - t0
+    X = lambda d: _L + (_W - _L - _R) * d / span  # noqa: E731
+    Y = lambda v: _T + (_H - _T - _B) * (1 - (v - lo) / (hi - lo or 1))  # noqa: E731
+    pts, prev = [], None
+    for x, v in zip(t, f):
+        if prev is not None and x - prev > 1.0:
+            pts.append((x - t0, None))
+        pts.append((x - t0, v))
+        prev = x
+    p = s["published"]
+    pub = ""
+    for key in ("t_peak_btjd", "t_first_light_btjd"):
+        if t0 <= p[key] <= t[-1]:
+            pub += f'<path d="M{X(p[key] - t0):.1f} {_T - 2}v-8" class="pub"/>'
+    m = s.get("matched") or {}
+    ours = ""
+    if m.get("t_peak") is not None:
+        ours = f'<circle cx="{X(m["t_peak"] - t0):.1f}" cy="{Y(m["peak"]):.1f}" r="4" class="ours"/>'
+    frame = _frame(_ticks(0, span, 6), _ticks(lo, hi, 4), X, Y, lambda v: f"{v:g}", lambda v: f"{v:g}",
+                   f"days from BTJD {t0:.2f}", "e⁻/s")
+    alt = (f"Difference light curve at the position of {s['name']} ({s['other']}), TESS sector {s['sector']} full-frame images, "
+           f"6-hour bins, in electrons per second over {span:.0f} days. "
+           + (f"SetuHQ's matched transient candidate peaks at BTJD {m['t_peak']:.2f} (the dot), class hint {m['class_hint']}"
+              if m else "SetuHQ finds no transient candidate within 10 days of the published peak")
+           + f"; Fausnaugh et al. (2023) give the peak at BTJD {p['t_peak_btjd']:.2f} and first light at {p['t_first_light_btjd']:.2f} "
+           "(ticks above the plot, where they fall inside the sector).")
+    svg = (f'<svg viewBox="0 0 {_W} {_H}" role="img" aria-label="{html.escape(alt)}" class="stsvg">{frame}'
+           f'<path d="{_path(pts, X, Y)}" class="lc"/>{pub}{ours}</svg>')
+    return svg, alt
+
+
+def figures_v4_html() -> str:
+    """One figure of real TESS data per protocol v4 capability: the first held-out target of each, whatever its result."""
+    e = html.escape
+    fig = _load(FIGURES_V4)
+    if not fig:
+        return '<p class="note">The protocol v4 figures\' stored data (docs/results/stellar_figures_v4.json) are not in this build.</p>'
+    out = []
+    b = fig.get("binary")
+    if b:
+        svg, _ = binary_svg(b)
+        o, c = b["ours"], b["catalogue"]
+        cap = (f'<b>An eclipsing binary.</b> TIC {b["tic"]}, folded on SetuHQ\'s period of {o["period"]:.5f} d '
+               f'(Prša et al. 2022: {c["period_d"]:.5f} d; {"a match within 0.5%" if o.get("period_match") else "not a match within 0.5%"}). '
+               f'SetuHQ {"flags it as an eclipsing-binary candidate" if o.get("eb_candidate") else "does not flag it"}; morphology class '
+               f'{e(str(o.get("morphology")))} (catalogue coefficient {c["morph"]}). <span class="key pub">Ticks above</span>: the catalogue\'s eclipse phases; <span class="key ours">below</span>: SetuHQ\'s. '
+               f'Eclipsing-binary analysis is {e(status_label("binaries"))}; a binary SetuHQ finds is a candidate, never new. '
+               f'<span class="stsrc">Source: {e(b["source"])}</span>')
+        out.append(_figure("binary", svg, cap, _star((b.get("tic_values") or {}).get("teff"), f"TIC {b['tic']}", b["tic"], "st-eb-star"), "st-eb"))
+    r = fig.get("rotation")
+    if r:
+        svg, _ = rotation_svg(r)
+        o = r["ours"]
+        cap = (f'<b>Spot modulation.</b> TIC {r["tic"]}, sector {r["sector"]}. '
+               + (f'<span class="key ours">Ticks above</span>: SetuHQ\'s period, {o["period"]:.2f} ± {o["period_err"]:.2f} d. ' if o.get("period")
+                  else "SetuHQ reports no period for this star. ")
+               + f'<span class="key pub">Ticks below</span>: Canto Martins et al. (2020), {r["published"]} ± {r["published_err"]} d. '
+               f'One sector cannot measure periods beyond about 13 days. Rotation measurement is {e(status_label("rotation"))}. '
+               f'<span class="stsrc">Source: {e(r["source"])}</span>')
+        out.append(_figure("rotation", svg, cap, _star((r.get("tic_values") or {}).get("teff"), f"TIC {r['tic']}", r["tic"], "st-rot-star"), "st-rot"))
+    s = fig.get("transient")
+    if s:
+        svg, _ = transient_svg(s)
+        m = s.get("matched") or {}
+        cap = (f'<b>A supernova in the full-frame images.</b> {e(s["name"])} ({e(s["other"])}), a type Ia supernova, sector {s["sector"]}. '
+               + (f'<span class="key ours">Dot</span>: SetuHQ\'s matched transient candidate, class hint {e(m["class_hint"])}. ' if m
+                  else "SetuHQ finds no candidate within 10 days of the published peak. ")
+               + '<span class="key pub">Ticks</span>: Fausnaugh et al. (2023)\'s peak and first light. '
+               f'Transient detection is {e(status_label("transients"))}; a transient SetuHQ finds is a candidate, never new. '
+               f'<span class="stsrc">Source: {e(s["source"])}</span>')
+        note = ('<p class="small stnodisc">A supernova shines in a distant galaxy, not in a catalogued star, so no star disc is '
+                'drawn beside it.</p>')
+        out.append(_figure("transient", svg, cap, note, "st-tr"))
+    return "".join(out)
+
+
+def v4_section(e) -> str:
+    """The protocol v4 part of /evidence/stellar/: status cards, the figures, every counted check, what is not validated."""
+    v = _load(VALIDATION_V4) or {}
+    unval = "".join(f"<li>{e(x)}</li>" for x in v.get("unvalidated") or [])
+    return f"""<section aria-labelledby="h-st-v4"><h2 id="h-st-v4">Binaries, rotation and transients</h2>
+        <p>Three more capabilities were tested under protocol v4, written and committed before any of their code existed. Their targets were drawn from published catalogues by seeded rules; part of each sample tuned the methods, and only the held-out rest, run once, is counted.</p>
+        {_status_cards(e, CAPS_V4)}
+        <p class="small">{e(protocol_v4_line())}.</p>
+        {figures_v4_html()}
+      </section>
+      <section class="prose" aria-labelledby="h-st-checks4"><h2 id="h-st-checks4">Every counted check, protocol v4</h2>
+        <p>Misses stay on this list as misses. An eclipsing binary or a transient SetuHQ finds is a candidate, never new and never confirmed; class and morphology hints are heuristic.</p>
+        {_checks_table(e, VALIDATION_V4, "v4", "h-st-checks4")}
+        <h3>Not validated</h3><ul>{unval}</ul>
+        <p>Full results: <a rel="noopener" href="{REPO}/blob/main/docs/results/stellar_validation_v4.md">stellar_validation_v4.md</a>. Data: public TESS light curves and full-frame-image cutouts from MAST; published values from Prša et al. (2022), Canto Martins et al. (2020), Fausnaugh et al. (2023) and Medina et al. (2020) through VizieR.</p>
+      </section>"""
+
+
 def cheops_block(e) -> str:
     """ESA's acknowledgement, each programme's credit line, the papers, DACE's acknowledgement, the disclaimer and
     the terms (setuhq.cheops.credit), with the programmes read from the CHEOPS results file."""
@@ -254,12 +441,12 @@ def cheops_block(e) -> str:
 
 
 def evidence_section() -> str:
-    """/evidence/stellar/: the stellar capabilities' validation, with two figures of real TESS data."""
+    """/evidence/stellar/: the stellar capabilities' validation (protocols v3 and v4), with five figures of real TESS data."""
     e = html.escape
     v = _load(VALIDATION) or {}
     unval = "".join(f"<li>{e(x)}</li>" for x in v.get("unvalidated") or [])
     return f"""<header><h1 class="lead-h" id="h-stellar" tabindex="-1">Stars, measured.</h1>
-        <p>Beyond planets, SetuHQ detects stellar flares, extracts pulsation frequencies and reads public CHEOPS light curves. Each capability was compared with published results under a protocol committed before its run. None is fully validated, and each page and tool output says how far it is.</p></header>
+        <p>Beyond planets, SetuHQ detects stellar flares, extracts pulsation frequencies, reads public CHEOPS light curves, and finds eclipsing binaries, rotation periods and transients. Each capability was compared with published results under a protocol committed before its run, and each page and tool output says how far its validation went.</p></header>
       {_status_cards(e)}
       <p class="small">{e(protocol_line())}. Rule: validated when every counted check passes; partly validated when more than half do; otherwise not validated. Protocol v3 re-tests the targets earlier versions used, so it is a re-test after review fixes, not an independent validation.</p>
       <section aria-labelledby="h-st-figs"><h2 id="h-st-figs">What the detectors see</h2>
@@ -271,6 +458,7 @@ def evidence_section() -> str:
         <h3>Not validated</h3><ul>{unval}</ul>
         <p>Full results: <a rel="noopener" href="{REPO}/blob/main/docs/results/stellar_validation.md">stellar_validation.md</a>. Run the tools yourself: <a href="/docs/stellar/">Flares, pulsations and CHEOPS ›</a></p>
       </section>
+      {v4_section(e)}
       {cheops_block(e)}"""
 
 
@@ -280,19 +468,26 @@ def docs_stellar_section() -> str:
     from setuhq import cheops as ch
 
     return f"""<header><h1 class="lead-h" id="h-stellardocs" tabindex="-1">Flares, pulsations and CHEOPS.</h1>
-        <p>Three commands look at the star rather than its planets. Each writes one JSON record with its result, its provenance (version, code fingerprint, every input's sha256) and its labels. A flare or a frequency is detected at a stated significance, never confirmed; a variability type is likely or a candidate.</p></header>
+        <p>Six commands look at the star rather than its planets. Each writes one JSON record with its result, its provenance (version, code fingerprint, every input's sha256) and its labels. A flare or a frequency is detected at a stated significance, never confirmed; a variability type is likely or a candidate.</p></header>
       <div class="docgrid">
         <section class="card"><h2>Flares</h2><p>Detection, template fits with multi-component models, energies for a 9000 K blackbody, completeness and nulls.</p><p class="stword part">{e(status_label("flares"))}</p></section>
         <section class="card"><h2>Pulsations</h2><p>Pre-whitening, combination flags, the granulation background, numax and Δν, a heuristic type.</p><p class="stword part">{e(status_label("pulsations"))}</p></section>
         <section class="card"><h2>CHEOPS light curves</h2><p>Public CHEOPS visits, detrended against roll angle, on one timeline with TESS.</p><p class="stword no">{e(status_label("cheops"))}</p></section>
+        <section class="card"><h2>Eclipsing binaries</h2><p>Period, primary and secondary eclipses, the secondary's phase with an e·cosω hint, a morphology class, and a candidate flag with its reasons.</p><p class="stword {STATUS_CLASS.get(status().get("binaries", {}).get("status"), "no")}">{e(status_label("binaries"))}</p></section>
+        <section class="card"><h2>Rotation</h2><p>Spot-modulation periods from a periodogram and the autocorrelation function, with uncertainties and half/double handling; up to about 13 days in one sector.</p><p class="stword {STATUS_CLASS.get(status().get("rotation", {}).get("status"), "no")}">{e(status_label("rotation"))}</p></section>
+        <section class="card"><h2>Transients</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids.</p><p class="stword {STATUS_CLASS.get(status().get("transients", {}).get("status"), "no")}">{e(status_label("transients"))}</p></section>
       </div>
       <div class="prose">
         <h2 id="st-run">Run them</h2>
         <pre tabindex="0"><code>pip install "setuhq[tess,wavelets,cheops]"     # lightkurve (MAST), PyWavelets (denoising), DACE's client (CHEOPS)
 setuhq flares "TIC 150359500" --sector 2 --out flares.json
 setuhq pulsations "TIC 270577175" --sector 5 --out beta-pic.json
-setuhq cheops "HR 10" --max-visits 1 --out hr10_cheops.json</code></pre>
-        <p>The same tools are available to an AI assistant over MCP: <code>find_flares</code>, <code>pulsation_spectrum</code> and <code>get_cheops_lightcurve</code>. Every answer carries its capability's validation status. The methods, their sources and every limit are in <a rel="noopener" href="{REPO}/blob/main/docs/STELLAR.md">docs/STELLAR.md</a>; the checks are on <a href="/evidence/stellar/">Evidence: stars, measured</a>.</p>
+setuhq cheops "HR 10" --max-visits 1 --out hr10_cheops.json
+setuhq binaries "TIC 79225651" --sector 1 --out eb.json
+setuhq rotation "TIC 44797824" --sector 4 --out rotation.json
+setuhq transients --ra 64.52583 --dec -63.61567 --time 1360.4 --out transient.json   # a TESScut cutout, 11 x 11 pixels</code></pre>
+        <p>An eclipsing binary or a transient these commands find is a candidate, never new and never confirmed. <code>setuhq binaries</code> also gives advisory hints for a transit candidate's ephemeris (<code>--transit-period</code>, <code>--transit-epoch</code>); SetuHQ's planet vetting does not use them. <code>setuhq rotation</code> works on one sector at a time and reports periods beyond about 13 days as beyond its limit. <code>setuhq transients</code> reads a SPOC light curve, or with <code>--ra</code> and <code>--dec</code> a small cutout of the full-frame images from MAST's TESScut, deleted after use unless <code>--keep-cutout</code>.</p>
+        <p>The same tools are available to an AI assistant over MCP: <code>find_flares</code>, <code>pulsation_spectrum</code>, <code>get_cheops_lightcurve</code>, <code>find_eclipsing_binary</code>, <code>rotation_period</code> and <code>find_transients</code>. Every answer carries its capability's validation status. The methods, their sources and every limit are in <a rel="noopener" href="{REPO}/blob/main/docs/STELLAR.md">docs/STELLAR.md</a>; the checks are on <a href="/evidence/stellar/">Evidence: stars, measured</a>.</p>
         <h2 id="st-cheops">CHEOPS data and its terms</h2>
         <ul>
           <li><b>Public data only.</b> Visits are read through DACE (dace.unige.ch), the University of Geneva's public API in front of the CHEOPS Mission Archive, in public mode with no key. ESA does not designate DACE; each record names the source that served it. Proprietary visits are skipped and never cached; no raw CHEOPS file is stored in the repository or shipped in the package.</li>
@@ -350,6 +545,7 @@ CSS = """
 .stfig .readout b{color:var(--stage-ink)}
 .stfig .key.ours{color:#FFB340}.stfig .key.pub{color:#64D2FF}
 .stsrc{display:block;margin-top:4px}
+.stsvg .ours-t{stroke:#FFB340;stroke-width:2}
 .sttable td{vertical-align:top}.stres.pass{color:var(--green)}.stres.fail{color:var(--red)}
 @media (max-width:699.98px){.stfigrow{grid-template-columns:minmax(0,1fr)}.stfigrow>.rfig{max-width:150px}.stsvg{font-size:22px}}
 """

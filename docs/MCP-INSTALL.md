@@ -163,6 +163,9 @@ gemini mcp add -e SETUHQ_ROOT=/path/to/SetuHQ setuhq /path/to/SetuHQ/.venv/bin/s
 | `find_flares` | Stellar flares in a light curve: detection (optional wavelet denoising), template morphology with multi-component fits chosen by BIC, ED, energies (9000 K blackbody) and the flux-inverted null | `flares.detect_flares` |
 | `pulsation_spectrum` | Frequency analysis: pre-whitening to S/N 4, combination flags, granulation background, numax/Δν, a heuristic type and an optional red-noise null | `pulsations.analyse` |
 | `get_cheops_lightcurve` | Public CHEOPS DRP light curves of a target (DACE public mode), detrended against roll angle, background and centroid, with ESA's acknowledgement and credit; needs network and `.[cheops]` unless cached (writes the cache, so over HTTP only with `--allow-writes`) | `cheops.get_cheops_lightcurve` |
+| `find_eclipsing_binary` | Eclipsing binaries and ellipsoidal or reflection variables: period (odd/even and equal-minima rules), primary and secondary eclipses, secondary phase with an e·cosω hint, a heuristic morphology and a candidate flag with reasons; optional advisory vetting hints that SetuHQ's vetting does not use | `binaries.analyse` |
+| `rotation_period` | A rotation period from spot modulation (Lomb-Scargle and ACF) with an uncertainty and half/double handling; periods beyond about 13 days are reported as beyond one sector's limit | `rotation.measure` |
+| `find_transients` | Non-periodic brightenings on three time scales: peak, amplitude, rise and decay, class hints (flare-like, extragalactic-transient-like) and false-alarm screens (momentum dumps, scattered light, asteroids, periodic stars); every event a candidate | `transients.find_transients` |
 
 Every tool returns `{"tool", "result", "provenance", "honesty"}`. Error messages give paths relative to the
 data root, never the server's absolute paths.

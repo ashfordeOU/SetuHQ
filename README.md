@@ -1034,6 +1034,7 @@ honesty labels. Stdio by default; `--http HOST:PORT` serves streamable HTTP for 
 | `rv_semi_amplitude`, `transit_depth`, `microlensing_magnification`, `habitable_zone` | the Methods physics |
 | `benchmark_results`, `sentinel_providers` | the stored benchmarks; which providers can run here |
 | `find_flares`, `pulsation_spectrum`, `get_cheops_lightcurve` | stellar flares, pulsations and public CHEOPS light curves ([docs/STELLAR.md](docs/STELLAR.md)) |
+| `find_eclipsing_binary`, `rotation_period`, `find_transients` | eclipsing binaries, rotation periods and transients, each with its protocol v4 validation status ([docs/STELLAR.md](docs/STELLAR.md)) |
 
 The plugin adds slash commands over the tools (`/setuhq-vet`, `/setuhq-explain`, `/setuhq-sweep`,
 `/setuhq-catalogue`, `/setuhq-physics`, `/setuhq-benchmarks`, `/setuhq-stellar`) and four skills in [`skills/`](skills/):

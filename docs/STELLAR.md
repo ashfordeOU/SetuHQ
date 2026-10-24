@@ -10,6 +10,11 @@ confirmed; a variability type is *likely* or a *candidate*; an energy rests on s
 reported as unavailable. Each capability carries the status its validation earned
 ([results/stellar_validation.md](results/stellar_validation.md)); a tool output says it.
 
+It also finds **eclipsing binaries** and ellipsoidal or reflection variables, measures **rotation periods** from
+spot modulation, and detects **transients**, brightenings that do not repeat, with screens for the instrument's own
+false alarms. These three were tested under protocol v4
+([results/stellar_validation_v4.md](results/stellar_validation_v4.md)).
+
 **SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium.**
 The names CHEOPS and ESA are used descriptively; SetuHQ shows no mission logos or artwork and reproduces no
 figures from the papers it follows.
@@ -22,9 +27,14 @@ setuhq flares my_lightcurve.csv --teff 3200 --radius 0.3 --denoise
 setuhq pulsations "TIC 289592423" --sector 29 --surrogates 10 --out hr10.json   # HR 10: frequencies and the null
 setuhq cheops "HR 10" --max-visits 1 --out hr10_cheops.json                    # public CHEOPS visits, detrended
 setuhq cheops "EV Lac" --flares --denoise
+setuhq binaries "TIC 79225651" --sector 1 --out eb.json                        # an eclipsing binary: period, eclipses, e cos w hint
+setuhq rotation "TIC 44797824" --sector 4 --out rot.json                       # a rotation period, one sector at a time
+setuhq transients --ra 64.52583 --dec -63.61567 --time 1360.4 --out sn.json    # a TESScut cutout of the full-frame images
+setuhq transients "TIC 388857263" --sector 11                                  # brightenings in a SPOC light curve
 ```
 
-MCP tools (`setuhq-mcp`): `find_flares`, `pulsation_spectrum`, `get_cheops_lightcurve`; the plugin's
+MCP tools (`setuhq-mcp`): `find_flares`, `pulsation_spectrum`, `get_cheops_lightcurve`, `find_eclipsing_binary`,
+`rotation_period`, `find_transients`; the plugin's
 `/setuhq-stellar` command uses them. Each answer carries its provenance (version, code, input sha256), its
 labels and its capability's validation status.
 
@@ -161,6 +171,76 @@ Cite: Benz, W., et al. 2021, Experimental Astronomy, 51, 109 (the mission); Hoye
 
 This publication makes use of The Data & Analysis Center for Exoplanets (DACE), which is a facility based at the University of Geneva (CH) dedicated to extrasolar planets data visualisation, exchange and analysis. DACE is a platform of the Swiss National Centre of Competence in Research (NCCR) PlanetS, federating the Swiss expertise in Exoplanet research. The DACE platform is available at https://dace.unige.ch.
 
+## Eclipsing binaries (`src/setuhq/binaries.py`)
+
+`setuhq binaries`, MCP `find_eclipsing_binary`. An eclipsing binary SetuHQ finds is a **candidate**, never new and
+never confirmed.
+
+- **Period.** A box search (BLS) on a copy flattened with a 1-day running median that masks low points, and a
+  Lomb-Scargle periodogram on the unflattened curve (which keeps ellipsoidal and contact variation). Each candidate
+  period is scored by the variance its binned phase curve explains, on a copy divided by a running median over a
+  whole number of cycles (at least a day), which keeps the binary's own variation and removes slower spots and drifts.
+  The shortest coherent period is halved while half of it explains 90% as much, unless the two halves of each
+  cycle differ significantly and in the same way in both halves of the data. The orbital period is then the
+  photometric one when its fold holds two minima; twice it when alternate minima differ (odd/even) consistently
+  through the data; twice it for a deep (≥ 5%) or continuous single minimum, with equal minima assumed and the
+  period marked ambiguous; otherwise (one shallow, narrow dip per cycle: transit-like) the photometric one. When the
+  box-search period differs from the strongest signal's, it is analysed again on the flattened curve and kept if
+  it is binary-like and explains more of it (an eclipsing binary under stronger spot modulation).
+- **Eclipses.** On the folded, binned curve (200 to 1000 bins, about three cadences each): primary depth
+  1 − minimum / out-of-eclipse level (the 90th percentile), full width at half depth in phase units, significance;
+  the secondary is the deepest minimum more than 1.5 primary widths from it, kept at 5σ.
+- **e·cosω hint.** (π/2)(φ₂ − 0.5) from the secondary's phase φ₂ (Sterne 1940; first order in e). A hint only.
+- **Morphology.** Detached (primary FWHM ≤ 0.08 in phase on a flat curve), contact or ellipsoidal (FWHM ≥ 0.18;
+  ellipsoidal when the minima are similar and shallower than 10%), semi-detached otherwise, reflection-like for a
+  single broad minimum. A heuristic, compared with the Matijevič et al. (2012) coefficient Prša et al. (2022) give.
+- **Candidate flag.** A coherent signal (primary S/N ≥ 10), a phase curve whose shape and amplitude agree between
+  the halves of the data (spots change, a binary does not), and one of: a secondary eclipse, a consistent odd/even
+  difference, a primary deeper than 5%, or a steady continuous variation. A single shallow dip with no secondary is
+  transit-like and not flagged. A star with large, stable spots can still look ellipsoidal.
+- **Vetting hints, advisory.** With a transit candidate's period, epoch and duration, `vetting_hints` gives odd and
+  even depths, the strongest secondary at any phase, and the ellipsoidal and reflection amplitudes. **SetuHQ's
+  planet vetting (`vet.py`) does not use them; its results and the frozen benchmark are unchanged.** Using them in
+  vetting would need its own pre-registered evaluation.
+
+## Rotation (`src/setuhq/rotation.py`)
+
+`setuhq rotation`, MCP `rotation_period`. Flares and outliers are clipped, the light curve is binned to 30 minutes,
+and two methods run: a Lomb-Scargle periodogram (the peak's half width at half maximum is the uncertainty's
+core) and the autocorrelation function (McQuillan, Aigrain & Mazeh 2013), smoothed with a Gaussian scaled to the
+periodogram period. A period is **detected** only when an ACF peak lies within 15% of it, the semi-amplitude (half
+the 5-95% range of 2-hour-smoothed bins) is at least 0.5 ppt and three times the 30-minute noise, the normalised
+periodogram power is at least 0.1, and, for periods up to a quarter of the baseline, both halves of the light curve
+give it (or its half) within 20%. **Half and double:** when the ACF peaks more than 10% higher at twice the
+periodogram period than at it (two spot groups), the period is doubled and the alias kept beside it. The
+uncertainty combines the peak's half width, half the difference between the two methods and the ACF peaks' scatter.
+
+**The limit.** One TESS sector is about 27 days with a gap in the middle, and SPOC's PDC can attenuate slow
+variability, so **periods longer than about 13 days are not measured from one sector**: they are reported as
+beyond the limit, never as a period. SetuHQ does not stitch sectors; doing so needs care with sector-to-sector
+offsets and would need its own validation.
+
+## Transients (`src/setuhq/transients.py`, `src/setuhq/ffi.py`)
+
+`setuhq transients`, MCP `find_transients`. A transient SetuHQ finds is a **candidate**, never new and never
+confirmed, and a class hint is not a classification (that needs a spectrum).
+
+- **Data.** SPOC 2-minute light curves cover only stars chosen before each sector, so supernovae and other
+  extragalactic transients are seen only in the full-frame images. `ffi.py` asks MAST's TESScut for a small cutout
+  (11 × 11 pixels, one sector), builds a reference image from the quarter of cadences in which the target aperture
+  is faintest, subtracts it and a plane fitted to the background pixels, and sums a 3 × 3 aperture at the target and
+  at two control positions about four pixels away. The aperture correction is measured on the cutout's brightest
+  stars, or 0.85 (a Gaussian of FWHM 2 pixels) labelled as assumed. Magnitudes use TESS's zero point, 20.44 mag for
+  1 e⁻/s. Cutouts are deleted after use unless kept; only derived numbers are stored.
+- **Search** on three time scales: fast (2-minute residuals from a 0.5-day median, stars only), medium (1-hour bins
+  against a 3-day median that masks brightenings) and slow (6-hour bins against the faint baseline, bridged across
+  the mid-sector gap). Each candidate gets its peak time and amplitude, rise time (for slow events from a fit of
+  A (t − t₀)², the fireball model, to the rise below 40% of the peak), decay to half, FWHM and asymmetry.
+- **Class hints:** flare-like, extragalactic-transient-like (supernova or tidal disruption event: photometry alone
+  cannot tell which), and four likely false alarms: momentum-dump-like (TESS quality bit 32), scattered-light-like
+  (bits 2048 and 4096, or seen in every control aperture), asteroid-crossing-like (symmetric, or a moving
+  difference-image centroid) and periodic-variability-like (a slow brightening on a periodic star).
+
 ## Validation
 
 The protocol, its seed, the published numbers compared against and every result are in
@@ -227,7 +307,49 @@ on these same targets, so v3 is a re-test after review fixes, not an independent
 
 What is not validated, and why, is listed in the results file.
 
+### Protocol v4: eclipsing binaries, rotation, transients
+
+Protocol v4 (`results/stellar_validation_protocol_v4.json`, committed on its own in b6f22eb before any v4 code
+existed; seed 20261024) drew its targets from the published catalogues by seeded rules on catalogue metadata alone,
+and split each sample into a tuning set, used while the methods were written, and a held-out set, run once with the
+code as committed (ffc73af). Only held-out targets count; the same status rule applies. Results:
+[results/stellar_validation_v4.md](results/stellar_validation_v4.md) and `.json`, from `scripts/stellar_validation_v4.py`.
+
+- **Eclipsing binaries: partly validated (5 of 8 checks pass).** 24 held-out EBs from Prša et al. (2022). 17 are
+  flagged, all 17 at the catalogue's period within 0.5% (0.71, 95% CI 0.51-0.85), so both the detection check
+  (lower bound ≥ 0.80) and the period check (≥ 0.70) **fail**. Of the seven misses, three fail the test that the two halves of
+  the data give the same phase curve (two detached systems of 6-7 days with few eclipses in each half, and one at a correlation of 0.88 against 0.9), three fall below
+  the signal threshold (primary S/N or explained variance; two of them at the catalogue's period), and one is a
+  continuous variation at twice the catalogue's period whose halves cannot be compared. Among the matches the primary depth is 0.97 of
+  the catalogue's (0.95-1.10), the secondary phase agrees within 0.01 for 14 of 15, the widths rank-correlate at
+  0.96, and detached-or-not agrees for 15 of 17: these pass. Of seven planet hosts and quiet stars, one (TOI-236) is
+  flagged, within the limit of one. Injected detached EBs: 60 of 70 periods recovered (lower bound 0.76 against
+  0.85): **fail**.
+- **Rotation: not validated (3 of 6 checks pass).** 24 held-out stars from Canto Martins et al. (2020), one sector
+  each (one could not be fetched for its listed sector and counts as a miss). 20 have a detected period (0.83, lower
+  bound 0.64 against 0.70: **fail**); 14 are within 10% (lower bound 0.39 against 0.60: **fail**) and 17 within 10%
+  of the period, half or double it (0.51 against 0.75: **fail**). Several misses are periods doubled by the
+  two-spot-group rule. The uncertainties cover all 14 matches, the three quiet stars give no period, and injected
+  spot modulation is recovered 58 of 60 times: these pass. Of 15 injections beyond the limit (13-30 d), 11 were
+  reported as beyond it and 3 as an alias inside the range (reported, not counted).
+- **Transients: not validated (1 of 9 checks pass).** 15 held-out type Ia supernovae from Fausnaugh et al. (2023),
+  each in one TESScut sector. 14 have a candidate within 10 days of the published peak (pass), but only 9 peak within
+  2 days, half are classed extragalactic-transient-like, rise times run short (median ratio 0.76) and peaks faint
+  (median +0.56 mag) because the reference image often already holds supernova light when first light precedes the
+  sector: these **fail**. 69% of the candidates matching Medina et al.'s Proxima flares are flare-like (lower bound
+  0.60 against 0.80); the quiet stars give 0.55 unscreened candidates a day against a limit of 0.05; 23% of control
+  apertures carry a supernova-like candidate against 10%; and 45 of 60 injected momentum-dump spikes and asteroid-like
+  bumps are screened (lower bound 0.63 against 0.80): all **fail**. The transient tools are a search aid whose
+  candidates need checking by eye; they are not validated.
+
 ## Limits
+
+- Eclipsing binaries: equal minima double the period by assumption; a detached binary with few eclipses per half
+  of the data can fail the stability test, and one whose secondary is not seen looks transit-like; a star with
+  large, stable spots can look ellipsoidal.
+- Rotation: one sector, periods up to about 13 days; the two-spot-group rule can double a period wrongly.
+- Transients: one sector per cutout; scattered light and asteroid crossings are screened, not removed, and the
+  screens and class hints failed their checks.
 
 - TESS 2-minute cadence resolves few flares shorter than about 6 minutes; the morphology of short, low-amplitude
   flares is poorly constrained, and the asymmetry test rejects flares whose rise is unresolved.

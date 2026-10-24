@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // SPDX-FileCopyrightText: 2026 Ashforde OÜ
-// The stellar pages: /evidence/stellar/ (the validation status of flares, pulsations and CHEOPS, two figures of
-// real TESS data, the stars at their TIC Teff, ESA's terms), /docs/stellar/ and /docs/cheops-proposals/. Each status
+// The stellar pages: /evidence/stellar/ (the validation status of flares, pulsations and CHEOPS under protocol v3 and
+// of eclipsing binaries, rotation and transients under protocol v4, five figures of real TESS data, the stars at their TIC Teff, ESA's terms), /docs/stellar/ and /docs/cheops-proposals/. Each status
 // is shown with its count and never as "validated"; each figure is a black stage labelled "Real data, cited" with
 // its source, in both themes, at both sizes and under reduced motion; no request leaves the site.
-const STATUS = ["partly validated (5 of 8 checks pass)", "partly validated (7 of 9 checks pass)", "not validated (2 of 5 checks pass)"];
+const STATUS = ["partly validated (5 of 8 checks pass)", "partly validated (7 of 9 checks pass)", "not validated (2 of 5 checks pass)",
+  // protocol v4: eclipsing binaries, rotation, transients
+  "partly validated (5 of 8 checks pass)", "not validated (3 of 6 checks pass)", "not validated (1 of 9 checks pass)"];
 const DISCLAIMER = "SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium";
 
 export default async function stellar(h) {
@@ -32,11 +34,14 @@ export default async function stellar(h) {
       };
     });
     for (const s of STATUS) check(r.text.includes(s), `${tag}: the status "${s}" is shown`);
-    check(JSON.stringify(r.cards) === JSON.stringify(["partly validated", "partly validated", "not validated"]), `${tag}: the three status cards`, JSON.stringify(r.cards));
-    check(r.figs.length === 2 && r.figs.every((f) => f.tag === "Real data, cited" && f.bg === "rgb(0, 0, 0)"), `${tag}: two figures, each a black stage labelled Real data, cited`, JSON.stringify(r.figs.map((f) => [f.tag, f.bg])));
+    check(JSON.stringify(r.cards) === JSON.stringify(["partly validated", "partly validated", "not validated", "partly validated", "not validated", "not validated"]),
+      `${tag}: the six status cards (protocol v3 and v4)`, JSON.stringify(r.cards));
+    check(r.figs.length === 5 && r.figs.every((f) => f.tag === "Real data, cited" && f.bg === "rgb(0, 0, 0)"), `${tag}: five figures, each a black stage labelled Real data, cited`, JSON.stringify(r.figs.map((f) => [f.tag, f.bg])));
     check(r.figs.every((f) => /TESS sector \d+/.test(f.src) && /MAST/.test(f.src) && f.alt.length > 80), `${tag}: each figure names its source and states its numbers`);
-    check(r.stars.length === 2 && r.stars[0].teff === 3286 && r.stars[1].teff > 7000 && r.stars.every((s) => s.tag === "Model from stored values" && s.shown),
-      `${tag}: both stars drawn at their TIC Teff, labelled`, JSON.stringify(r.stars));
+    check(r.stars.length === 4 && r.stars[0].teff === 3286 && r.stars[1].teff > 7000 && r.stars[2].teff === 6053 && r.stars[3].teff === 5767
+      && r.stars.every((s) => s.tag === "Model from stored values" && s.shown),
+      `${tag}: the four stars drawn at their TIC Teff, labelled (a supernova has none)`, JSON.stringify(r.stars));
+    check(!/\bnew (eclipsing binary|transient|supernova)\b|confirmed (transient|eclipsing)/i.test(r.text), `${tag}: no candidate is called new or confirmed`);
     check(r.text.includes(DISCLAIMER) && /Credit: ESA, \S/.test(await page.evaluate(() => document.querySelector("#route-stellar .stcheops").textContent)), `${tag}: the CHEOPS part carries the disclaimer and the credit lines`);
     check(r.current === "Stars", `${tag}: Evidence's sub-navigation marks Stars`, r.current);
     check(r.sideways <= 0, `${tag}: no sideways scroll`, r.sideways);
@@ -58,7 +63,7 @@ export default async function stellar(h) {
     const page = await ctx.newPage();
     await page.goto(BASE + "/evidence/stellar/");
     const n = await page.evaluate(() => document.querySelectorAll("figure.stfig svg[role=img]").length);
-    check(n === 2, "without JavaScript both figures are drawn", n);
+    check(n === 5, "without JavaScript all five figures are drawn", n);
     await ctx.close();
   }
 }

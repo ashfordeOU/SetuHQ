@@ -12,6 +12,22 @@ breaking changes are called out explicitly.
 
 ### Added
 
+- **Eclipsing binaries, rotation and transients** ([docs/STELLAR.md](docs/STELLAR.md)). `setuhq binaries`,
+  `setuhq rotation` and `setuhq transients`, and the MCP tools `find_eclipsing_binary`, `rotation_period` and
+  `find_transients`. Binaries: period from a box search and a periodogram with odd/even and equal-minima rules,
+  primary and secondary eclipse depths and widths, the secondary phase with an e·cosω hint, a heuristic morphology
+  and a candidate flag with reasons, plus advisory vetting hints that the planet vetting does not use (its results
+  and the frozen benchmark are unchanged). Rotation: Lomb-Scargle and the autocorrelation function, uncertainties,
+  half/double handling, and periods beyond about 13 days reported as beyond one sector's limit. Transients: three
+  time scales, rise and decay times, amplitude, flare-like and supernova-like hints, and screens for momentum dumps,
+  scattered light, asteroid crossings and periodic stars; TESScut difference photometry for any sky position
+  (cutouts not stored). Every eclipsing binary or transient found is a candidate, never new. Validated under
+  protocol v4 (`docs/results/stellar_validation_protocol_v4.json`, committed on its own before any v4 code; seeded
+  target draws with tuning and held-out splits): eclipsing binaries partly validated (5 of 8 checks pass), rotation
+  not validated (3 of 6), transients not validated (1 of 9). Results in `docs/results/stellar_validation_v4.md`;
+  `/evidence/stellar/` gains the three status cards, one "Real data, cited" figure each and every counted check, and
+  `/docs/stellar/` the three commands.
+
 - **Beyond planets: stellar flares, pulsations and CHEOPS** ([docs/STELLAR.md](docs/STELLAR.md)).
   `setuhq flares`, `setuhq pulsations` and `setuhq cheops`, and the MCP tools `find_flares`,
   `pulsation_spectrum` and `get_cheops_lightcurve` (slash command `/setuhq-stellar`). Flares: a

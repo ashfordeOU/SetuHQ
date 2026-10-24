@@ -21,6 +21,9 @@ from setuhq.routes import parse_path, url_for
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATION = json.loads((ROOT / "docs/results/stellar_validation.json").read_text())
 FIG = json.loads((ROOT / "docs/results/stellar_figures.json").read_text())
+FIG4 = json.loads((ROOT / "docs/results/stellar_figures_v4.json").read_text())
+LABELS_V4 = {"binaries": "partly validated (5 of 8 checks pass)", "rotation": "not validated (3 of 6 checks pass)",
+             "transients": "not validated (1 of 9 checks pass)"}
 LABELS = {"flares": "partly validated (5 of 8 checks pass)", "pulsations": "partly validated (7 of 9 checks pass)",
           "cheops": "not validated (2 of 5 checks pass)"}
 
@@ -33,12 +36,17 @@ def test_status_is_read_from_the_record_and_matches_what_the_docs_say():
     for cap, label in LABELS.items():
         assert VALIDATION["capabilities"][cap]["label"] == label
         assert SP.status_label(cap) == label
+    v4 = json.loads((ROOT / "docs/results/stellar_validation_v4.json").read_text())
+    stellar_md = (ROOT / "docs/STELLAR.md").read_text()
+    for cap, label in LABELS_V4.items():
+        assert v4["capabilities"][cap]["label"] == label and SP.status_label(cap) == label
+        assert label in stellar_md and label in (ROOT / "docs/results/stellar_validation_v4.md").read_text()
 
 
 @pytest.mark.parametrize("section", ["evidence_section", "docs_stellar_section"])
 def test_every_page_shows_each_status_with_its_count_and_never_calls_one_validated(section):
     text = _text(getattr(SP, section)())
-    for label in LABELS.values():
+    for label in list(LABELS.values()) + list(LABELS_V4.values()):
         assert label in text
     # "validated" only ever appears as "partly validated", "not validated" or in the status rule's definition
     for m in re.finditer(r"(\w+)\W+validated", text):
@@ -49,8 +57,15 @@ def test_every_page_shows_each_status_with_its_count_and_never_calls_one_validat
 
 def test_the_figures_are_real_tess_data_with_their_source_and_the_stars_at_tic_teff():
     page = SP.evidence_section()
-    assert page.count('<span class="stage-tag">Real data, cited</span>') == 2
-    assert page.count('<span class="stage-tag">Model from stored values</span>') == 2  # the two star discs
+    assert page.count('<span class="stage-tag">Real data, cited</span>') == 5  # flare, pulsation, binary, rotation, transient
+    assert page.count('<span class="stage-tag">Model from stored values</span>') == 4  # the stars; a supernova has none
+    assert "no star disc is drawn beside it" in _text(page)
+    for f in (FIG4["binary"], FIG4["rotation"]):
+        teff = round(f["tic_values"]["teff"])
+        assert f["tic_values"]["source"].startswith("TESS Input Catalog v8.2")
+        assert f'data-render="star" data-params=\'{{"teff":{teff},"seed":1}}\'' in page
+        assert len(f["file_sha256"]) == 64 and "Source: " + f["source"][:40] in _text(page)
+    assert "Prša et al. (2022)" in page and "Canto Martins et al. (2020)" in page and "Fausnaugh et al. (2023)" in page
     assert FIG["flare"]["tic_values"]["teff"] == 3286.0 and FIG["pulsation"]["tic_values"]["teff"] > 7000
     for f in (FIG["flare"], FIG["pulsation"]):
         teff = round(f["tic_values"]["teff"])
@@ -72,8 +87,24 @@ def test_the_flare_figure_draws_what_the_stored_record_holds():
 
 
 def test_no_cheops_data_in_the_figures():
-    assert "No CHEOPS data" in FIG["licence"]
-    assert "CH_PR" not in json.dumps(FIG)
+    assert "No CHEOPS data" in FIG["licence"] and "no CHEOPS data" in FIG4["licence"]
+    assert "CH_PR" not in json.dumps(FIG) and "CH_PR" not in json.dumps(FIG4)
+
+
+def test_the_v4_figures_draw_the_first_held_out_target_whatever_its_result():
+    proto = json.loads((ROOT / "docs/results/stellar_validation_protocol_v4.json").read_text())
+    first = lambda cap: next(x for x in proto[cap]["targets"] if x["split"] == "held_out")  # noqa: E731
+    assert FIG4["binary"]["tic"] == first("binaries")["tic"] and FIG4["rotation"]["tic"] == first("rotation")["tic"]
+    assert FIG4["transient"]["name"] == first("transients")["name"]
+    svg, alt = SP.binary_svg(FIG4["binary"])
+    assert "Prša et al. 2022" in alt and svg.count('class="pub"') >= 1
+    svg, alt = SP.rotation_svg(FIG4["rotation"])
+    assert "Canto Martins et al. (2020)" in alt and 'class="ours-t"' in svg
+    svg, alt = SP.transient_svg(FIG4["transient"])
+    assert "Fausnaugh et al. (2023)" in alt and "<circle" in svg
+    page = SP.evidence_section()
+    for word in ("new eclipsing binary", "new transient", "confirmed transient", "confirmed eclipsing"):
+        assert word not in _text(page).lower()
 
 
 def test_the_cheops_block_carries_esas_terms():
