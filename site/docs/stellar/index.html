@@ -3,10 +3,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Flares, pulsations and CHEOPS · Docs · SetuHQ</title>
 <link rel="icon" type="image/svg+xml" href="/assets/brand/setuhq-favicon.svg">
-<meta name="description" content="Run SetuHQ&#x27;s stellar commands: flares, pulsations and public CHEOPS light curves, with their validation status and ESA&#x27;s terms for CHEOPS data.">
+<meta name="description" content="Run SetuHQ&#x27;s stellar commands: flares, pulsations, public CHEOPS light curves, eclipsing binaries, rotation and transients, with their validation status and ESA&#x27;s terms for CHEOPS data.">
 <link rel="canonical" href="https://setuhq.com/docs/stellar/">
-<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="Flares, pulsations and CHEOPS · Docs · SetuHQ"><meta property="og:description" content="Run SetuHQ&#x27;s stellar commands: flares, pulsations and public CHEOPS light curves, with their validation status and ESA&#x27;s terms for CHEOPS data."><meta property="og:url" content="https://setuhq.com/docs/stellar/"><meta property="og:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Flares, pulsations and CHEOPS · Docs · SetuHQ"><meta name="twitter:description" content="Run SetuHQ&#x27;s stellar commands: flares, pulsations and public CHEOPS light curves, with their validation status and ESA&#x27;s terms for CHEOPS data."><meta name="twitter:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png">
+<meta property="og:type" content="website"><meta property="og:site_name" content="SetuHQ"><meta property="og:title" content="Flares, pulsations and CHEOPS · Docs · SetuHQ"><meta property="og:description" content="Run SetuHQ&#x27;s stellar commands: flares, pulsations, public CHEOPS light curves, eclipsing binaries, rotation and transients, with their validation status and ESA&#x27;s terms for CHEOPS data."><meta property="og:url" content="https://setuhq.com/docs/stellar/"><meta property="og:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The SetuHQ logo on navy, with the line The open exoplanet observatory: from public sky data to reviewed, explained candidates, and setuhq.com.">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Flares, pulsations and CHEOPS · Docs · SetuHQ"><meta name="twitter:description" content="Run SetuHQ&#x27;s stellar commands: flares, pulsations, public CHEOPS light curves, eclipsing binaries, rotation and transients, with their validation status and ESA&#x27;s terms for CHEOPS data."><meta name="twitter:image" content="https://setuhq.com/assets/brand/setuhq-social-card.png">
 
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#04060B">
@@ -14,14 +14,14 @@
 <script>(function(){var t='dark';try{var s=localStorage.getItem('setuhq-theme');if(s==='light'||s==='system')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
 <link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
-<link rel="stylesheet" href="/assets/site-a53d684365.css">
+<link rel="stylesheet" href="/assets/site-8d0e9e21b2.css">
 <link rel="preload" href="/assets/data/app-3628ba34af.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-dfd1d8ce43.js" as="script">
 <script src="/assets/render-3dee4d8683.js" defer></script>
 <script src="/assets/site-67a712c95a.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":["/candidates/*/case-file/","/evidence/plates/*","/evidence/report/*"]},"eagerness":"moderate"}]}</script>
 </head>
-<body class="page-stellardocs" data-page="stellardocs" data-route="stellardocs" data-data="/assets/data/app-3628ba34af.json" data-routes="/assets/views-e41a737d08.html" data-app="/assets/app-dfd1d8ce43.js">
+<body class="page-stellardocs" data-page="stellardocs" data-route="stellardocs" data-data="/assets/data/app-3628ba34af.json" data-routes="/assets/views-ce1462c3ad.html" data-app="/assets/app-dfd1d8ce43.js">
 <div class="starfield" data-render="starfield" data-params='{"seed":314}' aria-hidden="true"><img class="rstill" src="/assets/starfield-e45ec374c5.svg" alt=""></div>
 <a class="skip" href="#content">Skip to content</a>
 <header class="topbar">
@@ -41,19 +41,26 @@
  <div id="content" tabindex="-1">
 <section class="route" id="route-stellardocs" data-route="stellardocs" aria-labelledby="h-stellardocs">
 <header><h1 class="lead-h" id="h-stellardocs" tabindex="-1">Flares, pulsations and CHEOPS.</h1>
-        <p>Three commands look at the star rather than its planets. Each writes one JSON record with its result, its provenance (version, code fingerprint, every input's sha256) and its labels. A flare or a frequency is detected at a stated significance, never confirmed; a variability type is likely or a candidate.</p></header>
+        <p>Six commands look at the star rather than its planets. Each writes one JSON record with its result, its provenance (version, code fingerprint, every input's sha256) and its labels. A flare or a frequency is detected at a stated significance, never confirmed; a variability type is likely or a candidate.</p></header>
       <div class="docgrid">
         <section class="card"><h2>Flares</h2><p>Detection, template fits with multi-component models, energies for a 9000 K blackbody, completeness and nulls.</p><p class="stword part">partly validated (5 of 8 checks pass)</p></section>
         <section class="card"><h2>Pulsations</h2><p>Pre-whitening, combination flags, the granulation background, numax and Δν, a heuristic type.</p><p class="stword part">partly validated (7 of 9 checks pass)</p></section>
         <section class="card"><h2>CHEOPS light curves</h2><p>Public CHEOPS visits, detrended against roll angle, on one timeline with TESS.</p><p class="stword no">not validated (2 of 5 checks pass)</p></section>
+        <section class="card"><h2>Eclipsing binaries</h2><p>Period, primary and secondary eclipses, the secondary's phase with an e·cosω hint, a morphology class, and a candidate flag with its reasons.</p><p class="stword part">partly validated (5 of 8 checks pass)</p></section>
+        <section class="card"><h2>Rotation</h2><p>Spot-modulation periods from a periodogram and the autocorrelation function, with uncertainties and half/double handling; up to about 13 days in one sector.</p><p class="stword no">not validated (3 of 6 checks pass)</p></section>
+        <section class="card"><h2>Transients</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids.</p><p class="stword no">not validated (1 of 9 checks pass)</p></section>
       </div>
       <div class="prose">
         <h2 id="st-run">Run them</h2>
         <pre tabindex="0"><code>pip install "setuhq[tess,wavelets,cheops]"     # lightkurve (MAST), PyWavelets (denoising), DACE's client (CHEOPS)
 setuhq flares "TIC 150359500" --sector 2 --out flares.json
 setuhq pulsations "TIC 270577175" --sector 5 --out beta-pic.json
-setuhq cheops "HR 10" --max-visits 1 --out hr10_cheops.json</code></pre>
-        <p>The same tools are available to an AI assistant over MCP: <code>find_flares</code>, <code>pulsation_spectrum</code> and <code>get_cheops_lightcurve</code>. Every answer carries its capability's validation status. The methods, their sources and every limit are in <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/STELLAR.md">docs/STELLAR.md</a>; the checks are on <a href="/evidence/stellar/">Evidence: stars, measured</a>.</p>
+setuhq cheops "HR 10" --max-visits 1 --out hr10_cheops.json
+setuhq binaries "TIC 79225651" --sector 1 --out eb.json
+setuhq rotation "TIC 44797824" --sector 4 --out rotation.json
+setuhq transients --ra 64.52583 --dec -63.61567 --time 1360.4 --out transient.json   # a TESScut cutout, 11 x 11 pixels</code></pre>
+        <p>An eclipsing binary or a transient these commands find is a candidate, never new and never confirmed. <code>setuhq binaries</code> also gives advisory hints for a transit candidate's ephemeris (<code>--transit-period</code>, <code>--transit-epoch</code>); SetuHQ's planet vetting does not use them. <code>setuhq rotation</code> works on one sector at a time and reports periods beyond about 13 days as beyond its limit. <code>setuhq transients</code> reads a SPOC light curve, or with <code>--ra</code> and <code>--dec</code> a small cutout of the full-frame images from MAST's TESScut, deleted after use unless <code>--keep-cutout</code>.</p>
+        <p>The same tools are available to an AI assistant over MCP: <code>find_flares</code>, <code>pulsation_spectrum</code>, <code>get_cheops_lightcurve</code>, <code>find_eclipsing_binary</code>, <code>rotation_period</code> and <code>find_transients</code>. Every answer carries its capability's validation status. The methods, their sources and every limit are in <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/STELLAR.md">docs/STELLAR.md</a>; the checks are on <a href="/evidence/stellar/">Evidence: stars, measured</a>.</p>
         <h2 id="st-cheops">CHEOPS data and its terms</h2>
         <ul>
           <li><b>Public data only.</b> Visits are read through DACE (dace.unige.ch), the University of Geneva's public API in front of the CHEOPS Mission Archive, in public mode with no key. ESA does not designate DACE; each record names the source that served it. Proprietary visits are skipped and never cached; no raw CHEOPS file is stored in the repository or shipped in the package.</li>

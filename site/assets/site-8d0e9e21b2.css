@@ -1732,5 +1732,6 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 .stfig .readout b{color:var(--stage-ink)}
 .stfig .key.ours{color:#FFB340}.stfig .key.pub{color:#64D2FF}
 .stsrc{display:block;margin-top:4px}
+.stsvg .ours-t{stroke:#FFB340;stroke-width:2}
 .sttable td{vertical-align:top}.stres.pass{color:var(--green)}.stres.fail{color:var(--red)}
 @media (max-width:699.98px){.stfigrow{grid-template-columns:minmax(0,1fr)}.stfigrow>.rfig{max-width:150px}.stsvg{font-size:22px}}
