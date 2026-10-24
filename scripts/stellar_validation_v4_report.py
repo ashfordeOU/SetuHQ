@@ -64,7 +64,7 @@ UNVALIDATED = [
     "order is compared. The e·cosω values are first-order hints from the secondary's phase, not compared with "
     "radial-velocity orbits.",
     "Rotation: one sector per star, as the protocol fixes; periods longer than about 13 days are not measured, and "
-    "stitching sectors (with care for sector-to-sector offsets) is neither done nor validated. Canto Martins et al. "
+    "stitching sectors (with care for sector-to-sector offsets) is not done and not validated. Canto Martins et al. "
     "(2020) used every sector available to them.",
     "Transients: one TESScut sector per supernova, as the protocol fixes. When first light falls before that sector "
     "begins, the reference image already holds supernova light, so the rise time and the peak brightness are "
