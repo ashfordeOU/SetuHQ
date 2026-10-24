@@ -192,7 +192,7 @@ def planet_page(eyebrow_html: str) -> str:
 
 
 def star_page(eyebrow_html: str) -> str:
-    return f"""<header>{eyebrow_html}<h1 class="lead-h" id="h-star" tabindex="-1">Star</h1><p id="stsub"></p></header>
+    return f"""<header>{eyebrow_html}<h1 class="lead-h" id="h-star" tabindex="-1">Star</h1><p id="stsub"></p><p class="small" id="stlight"></p></header>
       <p class="note" id="stnote" role="status" hidden></p>
       <div class="plextra" id="stextra"></div>
       <div class="plgrid">
@@ -708,7 +708,7 @@ function plShow(slug){
     $('#h-planet').textContent = P.name[i]; if (current === 'planet') pageChrome('planet', new URLSearchParams({id: slug}));
     $('#plsub').innerHTML = `${star ? `<a href="${ctStarHref(star)}">${esc(star)}</a>` : 'host not stored'} · ${esc(CTM.method_label[P.method[i]] || P.method[i])} · discovered ${P.year[i] || 'year not stored'} · ${esc(clsName)}`;
     const ex = $('#plextra'), hero = ex && ex.querySelector('#plhero');
-    if (ex && !(hero && hero.dataset.slug === slug)){ ex.innerHTML = ctPlanetExtras(i); if (window.SetuRender) SetuRender.mount(ex); }
+    if (ex && !(hero && hero.dataset.slug === slug)){ ex.innerHTML = ctPlanetExtras(i); if (window.SetuRender) SetuRender.mount(ex); SetuUI.limits(ex); }
     ctSpin(ex);
     $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds; none is shown where none is stored.</p>`;
     const sibs = star ? ct.byStar[star].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)) : [i];
@@ -820,11 +820,13 @@ function stShow(slug){
     const teff = P.steff[i];
     const [cl, row] = teff !== null ? mxClass(teff) : [null, null];
     $('#stsub').textContent = `${ps.length} planet${ps.length === 1 ? '' : 's'} in ${ct.C.source_short}` + (P.sptype[i] ? ` · stored type ${P.sptype[i]}` : '') + (cl ? ` · class ${cl} from Teff (nearest ${row})` : '');
+    const pc = P.dist[i], ly = pc * 3.261563777, k = 10 ** Math.max(0, String(Math.trunc(ly)).length - 2);
+    $('#stlight').textContent = pc > 0 ? `The light from this star left it about ${Math.max(1, Math.round(ly / k) * k).toLocaleString('en-GB')} years ago (distance ${+pc.toPrecision(6)} pc, ${ctSrc()}).` : '';
     $('#stparams').innerHTML = ctTable(i, CT_STAR_ROWS) + (P.salt[i] ? `<p class="small">Also known as ${esc(P.salt[i])}.</p>` : '');
     const thumb = j => { const lk = window.SetuRender && SetuRender.look(ctRow(j)).name; return lk ? `<img class="plthumb" src="${ctStill(lk, 160)}" width="40" height="40" loading="lazy" alt="">` : '<span class="plthumb none" aria-hidden="true"></span>'; };
     $('#stplanets').innerHTML = `<ul class="pllist plthumbs">${ps.map(j => `<li><a href="${ctPlanetHref(j)}">${thumb(j)}<span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul><p class="small">Pictures: artist's impressions from the measured radius and irradiation. <a href="${CT_PIC}">How the pictures are drawn ›</a></p>`;
     const sx = $('#stextra'), sh = sx && sx.querySelector('#sthero');
-    if (sx && !(sh && sh.dataset.star === name)){ const f = ctStarFig(name, P.steff[i], P.srad[i]) + ctOrbits(name, ps); sx.innerHTML = f ? `<div class="sthero" id="sthero" data-star="${esc(name)}">${f}</div>` : ''; if (window.SetuRender) SetuRender.mount(sx); }
+    if (sx && !(sh && sh.dataset.star === name)){ const f = ctStarFig(name, P.steff[i], P.srad[i]) + ctOrbits(name, ps); sx.innerHTML = f ? `<div class="sthero" id="sthero" data-star="${esc(name)}">${f}</div>` : ''; if (window.SetuRender) SetuRender.mount(sx); SetuUI.limits(sx); }
     if (window.SetuOrbits) SetuOrbits.wire(sx);
     $('#stwhere').innerHTML = ctWhere(i, name) + ctSeen(name, R('#/sky'));
     if (typeof vaForStar === 'function') vaForStar(P.salt[i]);

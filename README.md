@@ -24,7 +24,7 @@
 <p align="center">
   <a href="https://pypi.org/project/setuhq/"><img src="https://img.shields.io/badge/PyPI-v0.1.0-066A86?style=flat-square&labelColor=0A1226" height="18" alt="SetuHQ 0.1.0 on PyPI: pip install setuhq"></a>
   <a href="https://doi.org/10.5281/zenodo.23568348"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23568348-3F4B67?style=flat-square&labelColor=0A1226" height="18" alt="Zenodo concept DOI 10.5281/zenodo.23568348, which resolves to the latest archived release"></a>
-  <a href="scripts/ci_local.sh"><img src="https://img.shields.io/badge/tests-1137%20collected-377D0C?style=flat-square&labelColor=0A1226" height="18" alt="1137 tests collected by pytest: 1130 run offline in CI, 4 slow ones and 3 network ones by scripts/ci_local.sh"></a>
+  <a href="scripts/ci_local.sh"><img src="https://img.shields.io/badge/tests-1159%20collected-377D0C?style=flat-square&labelColor=0A1226" height="18" alt="1159 tests collected by pytest: 1152 run offline in CI, 4 slow ones and 3 network ones by scripts/ci_local.sh"></a>
   <a href="#evidence"><img src="https://img.shields.io/badge/held--out%20completeness-60%25%20%2890%2F150%29-066A86?style=flat-square&labelColor=0A1226" height="18" alt="Held-out completeness on 662 real TOIs: 90 of 150 confirmed or known planets on searchable stars, Wilson 95% interval 52 to 67%"></a>
   <a href="#the-app"><img src="https://img.shields.io/badge/catalogue-8%2C376%20planets-066A86?style=flat-square&labelColor=0A1226" height="18" alt="The catalogue holds all 8,376 exoplanet.eu records, fetched 2026-10-18"></a>
   <a href="#the-app"><img src="https://img.shields.io/badge/Methods-15%20chapters-066A86?style=flat-square&labelColor=0A1226" height="18" alt="15 animated Methods chapters with tested physics"></a>
@@ -925,7 +925,7 @@ that changes a result is in the config, and its hash goes into the manifest.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/architecture-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/architecture-light.svg">
-  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 65 modules (one Python package, src/setuhq); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, crossmatch, plate, report, leaderboard, mcp); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 1,137 tests (3 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/setuhq, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 8bee5cc." width="100%">
+  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 72 modules (one Python package, src/setuhq); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, crossmatch, plate, report, leaderboard, mcp); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 1,159 tests (3 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/setuhq, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 8bee5cc." width="100%">
 </picture>
 
 <details>
@@ -1045,32 +1045,33 @@ outward-facing. Its conclusions are candidates for a person to review, not disco
 
 ## Editions
 
-The whole engine is free. SetuHQ Pro and custom studies are for institutions that need more, and
-every paid route starts with a message: there are no prices here.
+The whole engine is free, and stays free. SetuHQ Pro and custom studies are for institutions that
+need more. There are no prices: every paid route starts with a message to
+[contact@ashforde.org](mailto:contact@ashforde.org). The same comparison is on
+[setuhq.com/editions/](https://setuhq.com/editions/).
 
-| | Free | SetuHQ Pro | Custom study |
+| | Open core | SetuHQ Pro | Custom study |
 |---|---|---|---|
-| What it is | the whole open SetuHQ: search, Sentinels and Probes, vetting, the benchmark and leaderboard, the sweep, the MCP server and the app, with no feature gate | a proprietary overlay on the same open engine, under contract | a study done for you on the open engine, under contract: a sector sweep, a candidate dossier or a yield study |
-| Licence | AGPL-3.0-only, or a commercial licence | proprietary | contract |
-| Status | available | **planned; available on request** (not built yet) | on request |
-| How to start | [install](#install) or open [setuhq.com](https://setuhq.com) | [request a Pro evaluation](mailto:contact@ashforde.org?subject=SetuHQ%20Pro%20evaluation) | [request a study](mailto:contact@ashforde.org?subject=SetuHQ%20custom%20study) |
+| Why it matters | anyone can search a TESS light curve, see every check behind a verdict and repeat the numbers | institutions need scale, privacy, packaging and accountability; Pro sells those, never better science | your question, run on the open engine, with a result you can rerun for free |
+| Who it is for | researchers, students, reviewers, sweep contributors, developers and AI assistants over MCP | follow-up and mission teams, AI providers and research groups, universities, planetariums and app makers | teams that need a sector sweep, a candidate dossier or a yield study |
+| What is included | the search, Sentinels and Probes, vetting and the fit, the frozen benchmark and leaderboard, the sweep, the MCP server and the site, with no feature gate | all **in development**: Pro Calibrate, Pro Workspace, Pro Sweeps, Pro Follow-up, Education & Dome, commercial licence & SDK ([`docs/PRO.md`](docs/PRO.md)) | the open engine as it is: no new code, every figure labelled |
+| Terms | free, under the AGPL-3.0-only or a commercial licence from Ashforde OÜ | available under contract; a proprietary overlay that depends on the open core and never forks it. Nothing in this column is live yet | scoped to your question, under contract |
+| How to start | [install](#install) or open [setuhq.com](https://setuhq.com) | [request an evaluation](mailto:contact@ashforde.org?subject=SetuHQ%20Pro%20evaluation) | [request a study](mailto:contact@ashforde.org?subject=SetuHQ%20custom%20study) |
 
-What Pro would be, in the words of [`docs/PRO.md`](docs/PRO.md):
+> **A strict superset of open SetuHQ, and no new science.** Pro depends on the open engine and
+> never forks it; no free feature moves behind a licence. Pro adds no detection, vetting or fitting
+> method, and nothing Pro produces, or a custom study, is a confirmation or validation of a planet.
 
-> **A strict superset of open SetuHQ.** Pro depends on the open engine and never forks it. Every
-> open feature stays open, and no free feature moves behind a licence.
->
-> **No new science.** Pro adds no detection, vetting or fitting method and changes none. Every Pro
-> number comes from open-engine runs that anyone can repeat with the free code.
+**Licensing.** One engine, two licences: the GNU AGPL-3.0-only, or a commercial licence from
+Ashforde OÜ for use the AGPL does not suit (a closed product, or a hosted service without the source
+offer); ask at [contact@ashforde.org](mailto:contact@ashforde.org?subject=SetuHQ%20commercial%20licence).
+See [Licence](#licence) and [`LICENSING.md`](LICENSING.md).
 
-Pro is planned around what a public repository cannot give an institution: a calibration
-certificate for any AI reviewer on the frozen benchmark (Pro Calibrate, the lead product);
-private target lists, embargoed candidates and team workspaces (Pro Workspace); hosted sweeps
-at scale (Pro Sweeps); follow-up packets with observability from the customer's telescopes (Pro
-Follow-up); classroom and planetarium editions (Education & Dome); and the commercial licence with
-an SDK. None of it is built yet; [`docs/PRO.md`](docs/PRO.md) says what each would build on and
-what it still needs. Nothing Pro produces is a confirmation or validation of a planet, and neither
-is a custom study.
+**CHEOPS.** CHEOPS data and every feature derived from them stay under ESA's terms (CC BY-NC 3.0
+IGO): they are never part of SetuHQ Pro or the commercial licence, and commercial use needs ESA's
+prior written authorisation.
+
+Library users: the stable API is [`setuhq.api`](docs/API.md).
 
 ## Research
 

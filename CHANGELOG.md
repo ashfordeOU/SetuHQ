@@ -12,6 +12,35 @@ breaking changes are called out explicitly.
 
 ### Added
 
+- **Each dip's journey, step by step.** Every dip page and case file shows six dated steps: found by SetuHQ, vetted
+  (passed, flagged or rejected), panel reviewed (or Probes only), whether it matches a TOI, follow-up ("not
+  announced" unless the TFOP Working Group's disposition is recorded) and whether the literature has a planet at its
+  period (with the reference). The last three are other teams' records from the NASA Exoplanet Archive, stored in
+  `docs/results/showcase_archive.json` by `scripts/fetch_showcase_archive.py`; a step with no record is hollow.
+  Dip and star pages also say how long ago the light left the star, from the catalogue's stored distance.
+- **Where TESS is now** (`/explore/tess-now/`): each sector's four camera fields from the published schedule, saved
+  on 2026-10-24 from the TESS Science Office's sector pages by `scripts/fetch_tess_schedule.py`
+  (`docs/results/tess_schedule.json`), on the sky map, with a sector scrubber and the catalogued stars inside the
+  fields highlighted. Labelled "Pointing from the published schedule, not live telemetry".
+- **Be the vetter** (`/candidates/be-the-vetter/`): eight stored dips from the example runs, each with its light
+  curve, fold, odd and even depths and secondary; the visitor calls pass, flag or reject, then sees the stored
+  vetting decision and its reasons. A learning exercise: answers stay in the browser and are never collected.
+- **Editions** (`/editions/`, linked from the footer and Docs): the open core, SetuHQ Pro (under contract, in
+  development) and a custom study compared row by row, the two licences and the CHEOPS carve-out. No prices; every
+  paid route starts with a message to contact@ashforde.org.
+- **Figures say their source and limits.** Every labelled figure has a "Source / limits" disclosure built from its
+  label and caption, and the orbit views carry a dismissible first-visit hint ("Sizes not to scale · phases
+  illustrative"). The orbit views (V08) gain focus (all, the star, each planet), zoom and reset buttons; the Galaxy
+  gains All, Selected star, zoom and Reset view buttons.
+- **A stable public API** (`setuhq.api`, [docs/API.md](docs/API.md)): the names code outside the repository may rely
+  on, pinned by `tests/test_api.py`. `setuhq.panel.standard_probes()` returns the standard Probe panel as
+  `configs/sweep.toml` lists it; the wheel ships the calibrated reviewer weights
+  (`setuhq/data/reviewer_weights_full_panel.json` and its calibration record), which an installed package uses by
+  default. Sentinels take a provider key per call (`api_key=` on `ClaudeReviewer`, `OpenAIReviewer`,
+  `OpenAICompatibleReviewer`, `GeminiReviewer` and their backends), held as a `Secret` that is never logged, cached,
+  pickled or written to a manifest; the environment variables stay the fallback, and a config file still never holds
+  a key.
+
 - **Beyond planets: stellar flares, pulsations and CHEOPS** ([docs/STELLAR.md](docs/STELLAR.md)).
   `setuhq flares`, `setuhq pulsations` and `setuhq cheops`, and the MCP tools `find_flares`,
   `pulsation_spectrum` and `get_cheops_lightcurve` (slash command `/setuhq-stellar`). Flares: a

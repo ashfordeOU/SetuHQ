@@ -538,7 +538,8 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     # (and the theme choice, in applyTheme, and the Learn path's progress, in learnSave).
     # (and Mission Control's saved default, in its "Save as my default" handler).
     # (and, in sessionStorage only, that the Sky's or Galaxy's survey-scan intro has played, in mxIntroEnd).
-    assert APP_JS.count("setItem(") == 5 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
+    # (and Be the vetter's own answers, under their own key, in vtWire: never a layout).
+    assert APP_JS.count("setItem(") == 6 and APP_JS.count("localStorage.setItem('setuhq-vetter'") == 1 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
     assert "sessionStorage.setItem('setuhq-intro-' + I.key, 'done')" in re.search(r"function mxIntroEnd\(I, skipped\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LEARN_KEY" in re.search(r"function learnSave\(\)\{.*?\}\s*\}", APP_JS, re.S).group(0)
     from setuhq.site import SHELL_JS

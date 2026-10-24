@@ -45,7 +45,7 @@ import math
 from datetime import datetime, timezone
 from pathlib import Path
 
-from setuhq import brand
+from setuhq import brand, journey
 from setuhq.dashboard import _load_run
 from setuhq.discover import MAX_FEED_DEPTH_PPM, MAX_FEED_FAP, MIN_FEED_TRANSITS, TWO_SECTOR_PERIOD_TOL, two_sector_partner
 from setuhq.names import ATTRIBUTION, PROBES_ONLY, PROVIDER_BY_KIND, SENTINEL_KINDS, panel_mode, reviewer_names, reviewer_provenance
@@ -213,7 +213,7 @@ kbd{font:11px var(--mono);border:1px solid var(--rule);border-radius:4px;padding
 
 # The site's tokens under the Docket's own names (design.DOCKET_ALIASES): the observatory surfaces in dark, the light set
 # under data-theme="light" (or "system" on a light device), and the light set on white paper in print.
-DOCKET_CSS = tokens_css(":root", aliases=DOCKET_ALIASES) + PRINT_CSS + DOCKET_CSS
+DOCKET_CSS = tokens_css(":root", aliases=DOCKET_ALIASES) + PRINT_CSS + DOCKET_CSS + journey.CSS
 
 DOCKET_JS = r"""
 const D = JSON.parse(document.getElementById('data').textContent);
@@ -761,6 +761,7 @@ function renderDossier(){
       <div class="out-why">${reasons.length ? 'because: ' + esc(reasons.join(' · ')) : 'every vetting check measured and passing'}</div>
       ${crossmatchLine(c, `<span class="xm-k">Feed admission rule (discover.py), not vetting:</span> ${esc(c.feed.result)}${feedFail.length ? ' · ' + esc(feedFail.join(', ')) : ''}`)}
     </section>
+    ${(D.journey || {})[c.candidate_id] || ''}
     <p class="filternote" id="filternote" hidden></p>
     <div class="head">
       <div><div class="hint"><span class="tagcand">${c.outcome === 'passed' ? 'candidate' : c.outcome === 'rejected' ? 'rejected' : 'flagged'}</span> ${esc(c.target)} · ${esc(c.mission)} · subject ${esc(c.subject_id)}</div>
@@ -1597,6 +1598,9 @@ def docket_data(run_dir: str | Path, *, title: str, star: str | None = None,
         "cross_subject_note": CROSS_SUBJECT_NOTE,
         "outcome_label": OUTCOME_LABEL,
         "crossmatch": xm,
+        # Each dip's steps so far, each dated (setuhq.journey); the other teams' records come from the stored archive file.
+        "journey": journey.for_run(run["candidates"], target=targets[0] if targets else "", run_time=run["manifest"].get("created_at", ""),
+                                   probes_only=panel_mode(run["manifest"]) == "probes_only"),
         "provenance": {
             "run_time": run["manifest"]["created_at"],
             "config_sha256": run["manifest"]["config_sha256"],
