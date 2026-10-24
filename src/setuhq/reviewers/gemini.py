@@ -15,7 +15,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from setuhq.reviewers.http import Transport, check_endpoint, post_json, redact
-from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer
+from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer, as_secret, key_value
 from setuhq.reviewers.task import ReviewError
 
 GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
@@ -27,10 +27,11 @@ class GeminiBackend:
     provider = "gemini"
 
     def __init__(self, model: str, *, base_url: str = GEMINI_BASE_URL, max_tokens: int = 8192,
-                 timeout: float = 120.0, transport: Transport | None = None):
+                 timeout: float = 120.0, transport: Transport | None = None, api_key: str | None = None):
         if not model:
             raise ValueError("a gemini Sentinel needs a 'model' (a vision model id)")
-        check_endpoint(base_url)
+        self._key = as_secret(api_key)  # a key passed in code; else GEMINI_API_KEY
+        check_endpoint(base_url, extra_keys=[api_key] if isinstance(api_key, str) else ())
         self.model = model
         self.base_url = base_url.rstrip("/")
         self.max_tokens = max_tokens
@@ -38,7 +39,7 @@ class GeminiBackend:
         self.transport = transport
 
     def missing(self) -> str | None:
-        return None if os.environ.get(KEY_ENV["gemini"]) else f"{KEY_ENV['gemini']} is not set"
+        return None if key_value(self._key, KEY_ENV["gemini"]) else f"{KEY_ENV['gemini']} is not set"
 
     def cache_tag(self) -> str:
         return self.provider
@@ -60,7 +61,7 @@ class GeminiBackend:
     def call(self, system: str, user: str, image: Path) -> Reply:
         send = self.transport or post_json
         url = f"{self.base_url}/models/{quote(self.model, safe='')}:generateContent"
-        data = send(url, {"x-goog-api-key": os.environ.get(KEY_ENV["gemini"], "")}, self.body(system, user, image),
+        data = send(url, {"x-goog-api-key": key_value(self._key, KEY_ENV["gemini"])}, self.body(system, user, image),
                     self.timeout)
         return parse_generate_content(data)
 
@@ -95,7 +96,7 @@ class GeminiReviewer(SentinelReviewer):
     def __init__(self, reviewer_id: str, model: str = "", persona: str = "volunteer",
                  cache_dir: str | Path | None = None, max_tokens: int = 8192, retries: int = 3,
                  timeout: float = 120.0, base_url: str = GEMINI_BASE_URL, transport: Transport | None = None,
-                 kind: str = "gemini"):
+                 kind: str = "gemini", api_key: str | None = None):
         super().__init__(reviewer_id, GeminiBackend(model, base_url=base_url, max_tokens=max_tokens, timeout=timeout,
-                                                    transport=transport),
+                                                    transport=transport, api_key=api_key),
                          persona=persona, cache_dir=cache_dir, retries=retries, kind=kind)

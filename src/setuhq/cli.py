@@ -47,6 +47,10 @@ def resolve_weights(config, explicit: str | None, default: str | None = DEFAULT_
 
     if explicit:
         return json.loads(Path(explicit).read_text()), str(explicit)
+    if default == DEFAULT_WEIGHTS and not Path(default).exists():
+        from setuhq.panel import packaged_weights_path
+
+        default = str(packaged_weights_path() or default)  # an installed wheel: the calibrated weights it ships
     if default and Path(default).exists():
         calibrated = json.loads(Path(default).read_text())
         ids = {str(spec.get("id")) for spec in config.reviewers}

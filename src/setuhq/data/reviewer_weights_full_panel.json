@@ -1,0 +1,7 @@
+{
+  "claude-skeptic": 0.5,
+  "claude-volunteer": 0.5,
+  "volunteer-cautious": 0.4,
+  "volunteer-sensitive": 0.6,
+  "volunteer-typical": 0.6
+}

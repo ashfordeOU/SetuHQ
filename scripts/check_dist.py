@@ -25,7 +25,8 @@ FORBIDDEN = ("runs/", "site/", "docs/", "cache/", "data/", "tests/", "tools/", "
              "paper/", ".github/", ".venv/")
 WHEEL_REQUIRED = ("setuhq/__init__.py", "setuhq/py.typed", "setuhq/mcp_server.py", "setuhq/tools.py",
                   "setuhq/fonts/fonts.css", "setuhq/fonts/OFL-geist.txt",
-                  "setuhq/data/claret2017_tess_quadratic.json", "setuhq/data/secondary_calibration.json")
+                  "setuhq/data/claret2017_tess_quadratic.json", "setuhq/data/secondary_calibration.json",
+                  "setuhq/data/reviewer_weights_full_panel.json", "setuhq/data/reviewer_weights_full_panel.calibration.json")
 WHEEL_LICENCES = ("LICENSE", "NOTICE", "LICENSING.md")
 SDIST_REQUIRED = ("pyproject.toml", "README.pypi.md", "PKG-INFO", "LICENSE", "src/setuhq/__init__.py",
                   "src/setuhq/py.typed", "src/setuhq/data/claret2017_tess_quadratic.json")

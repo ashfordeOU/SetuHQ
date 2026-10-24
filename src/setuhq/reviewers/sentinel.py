@@ -18,8 +18,9 @@ model's text and the model id the provider reports. The reviewer does the rest:
   (UTC, when the provider answered; kept in the cache so a cached answer keeps its time),
   ``prompt_version``, ``persona`` and ``cached``.
 
-Keys are read from the environment only, one variable per provider (:data:`KEY_ENV`); they
-are never written to the cache, the manifest or an error message.
+Keys are read from the environment, one variable per provider (:data:`KEY_ENV`), unless code passes one to a
+reviewer's or backend's constructor (``api_key=``; a config file never holds one). Either way a key is never
+written to the cache, the manifest, a log or an error message: a passed key is held as a :class:`Secret`.
 """
 
 from __future__ import annotations
@@ -44,6 +45,44 @@ KEY_ENV = {
     "openai": "OPENAI_API_KEY",
     "gemini": "GEMINI_API_KEY",
 }
+
+
+
+class Secret:
+    """A provider key passed in code. Its ``repr`` and ``str`` never show it; :meth:`reveal` is for the request only."""
+
+    __slots__ = ("_value",)
+
+    def __init__(self, value: str):
+        if not isinstance(value, str) or not value:
+            raise ValueError("api_key must be a non-empty string")
+        self._value = value
+
+    def reveal(self) -> str:
+        return self._value
+
+    def __repr__(self) -> str:
+        return "Secret('[redacted]')"
+
+    __str__ = __repr__
+
+    def __reduce__(self):  # never pickled (a run's state, a cache): the key stays in memory only
+        raise TypeError("a provider key is not pickled")
+
+
+def as_secret(api_key) -> Secret | None:
+    """``api_key`` (a string, a :class:`Secret` or None) as a :class:`Secret`, or None."""
+    return api_key if isinstance(api_key, Secret) or api_key is None else Secret(api_key)
+
+
+def key_value(secret: Secret | None, env: str | None) -> str:
+    """The key a request sends: the one passed in code, else the environment variable's value, else ""."""
+    if secret is not None:
+        return secret.reveal()
+    import os
+
+    return os.environ.get(env, "") if env else ""
+
 
 # How the pages and the manifest name each provider. Keys are the provider ids recorded per review.
 PROVIDER_LABELS = {
