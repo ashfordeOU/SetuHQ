@@ -593,6 +593,10 @@ def build_parser() -> argparse.ArgumentParser:
                                                      "(needs the mcp extra: pip install 'setuhq[mcp]')")
     mcp.add_argument("args", nargs=argparse.REMAINDER)
     mcp.set_defaults(func=lambda args: cmd_mcp(args.args))
+
+    from setuhq.propose.cli import add_parser as add_propose  # 'setuhq propose cheops' and 'setuhq propose lint'
+
+    add_propose(sub)
     return parser
 
 

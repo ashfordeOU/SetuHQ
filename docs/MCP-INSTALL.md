@@ -159,11 +159,13 @@ gemini mcp add -e SETUHQ_ROOT=/path/to/SetuHQ setuhq /path/to/SetuHQ/.venv/bin/s
 | `habitable_zone` | Kopparapu et al. 2014 edges in AU | `methods.hz_distance_au` |
 | `benchmark_results` | The stored benchmarks: real TOIs, the real-TOI leaderboard, injection-recovery, pi Men, calibration, threshold sweep | `docs/results/`, `docs/leaderboard/`, `docs/threshold_sweep.json` |
 | `sentinel_providers` | Which Sentinel providers can run here (never shows a key) | `reviewers` |
+| `cheops_proposal_pack` | A CHEOPS Guest Observers proposal preparation pack in a new `runs/propose/<run_name>`: rules check, target status, estimates, anonymised drafts, checklist ([CHEOPS-PROPOSALS.md](CHEOPS-PROPOSALS.md)) | `propose.pack.build_pack` |
 
 Every tool returns `{"tool", "result", "provenance", "honesty"}`. Error messages give paths relative to the
 data root, never the server's absolute paths.
 
-Only the two `run_pipeline_*` tools write, and only into a **new** directory `runs/mcp/<run_name>`: a name
+Only the two `run_pipeline_*` tools and `cheops_proposal_pack` write, and only into a **new** directory
+`runs/mcp/<run_name>` (the pack: `runs/propose/<run_name>`, with no cache written elsewhere): a name
 that is not a plain name, or a directory that already exists, is refused, so a tool can never overwrite a
 stored, reviewed run (such as `runs/tess-pi-men-s1`) or anything else in the data root. They reach outside
 this computer: `run_pipeline_tess` downloads from MAST, and with `sentinels: true` a run may call a provider's
@@ -180,7 +182,7 @@ down by default:
 |---|---|
 | `--http PORT` or `--http HOST:PORT` | binds to `127.0.0.1` unless you name another host; keep it there, or behind your own authenticating proxy |
 | (default) | read-only tools only: the catalogue, stored runs, vetting, the fit, the FAP, the physics, the benchmarks |
-| `--allow-writes` | adds `run_pipeline_csv` and `run_pipeline_tess` (each creates a new `runs/mcp/<run_name>`), Probes only |
+| `--allow-writes` | adds `run_pipeline_csv` and `run_pipeline_tess` (each creates a new `runs/mcp/<run_name>`), Probes only, and `cheops_proposal_pack` (a new `runs/propose/<run_name>`; reads public SIMBAD, ESA and archive pages) |
 | `--allow-sentinels` | with `--allow-writes`: lets a run use Sentinels, which may spend the server's AI-provider keys |
 
 Over stdio the server is your own process and every tool is there (a pipeline run still uses Probes unless

@@ -1,0 +1,6 @@
+﻿Synthetic test list in the RTL CSV format as of 01-01-2027;;;;
+Target Name;Gaia identifier;Right Ascension [deg];Declination [deg];Notes 
+AU Mic;N/A;311,2897;-31,3409;
+Synthetic-1;N/A;10,0;-5,0;made-up entry
+TOI-396;N/A;42,98436;-30,81452;
+AlphaCenB;N/A;219,8961;-60,83753;"a note; with a semicolon"

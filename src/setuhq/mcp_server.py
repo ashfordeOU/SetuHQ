@@ -11,7 +11,8 @@ read and their SHA-256) and honesty labels (a candidate is not a discovery; Sent
     setuhq-mcp --http 8080 --allow-writes --allow-sentinels   # also pipeline runs, and Sentinels in them
 
 Over stdio the server is the user's own process, so every tool is there. Over HTTP it has no
-authentication, so by default it binds to 127.0.0.1 and leaves out the tools that write (pipeline runs);
+authentication, so by default it binds to 127.0.0.1 and leaves out the tools that write (pipeline runs and the
+CHEOPS proposal preparation pack);
 ``--allow-writes`` adds them, and Sentinels (which may call a paid AI API) need ``--allow-sentinels`` too.
 
 Install with ``pip install -e '.[mcp]'``. ``SETUHQ_ROOT`` sets the data root (default: this checkout); no tool
@@ -89,8 +90,9 @@ def build_server(host: str = DEFAULT_HOST, port: int = 8080, *, allow_writes: bo
 
     ``allow_writes=False`` leaves out the tools that write a run directory; ``allow_sentinels=False`` keeps them
     to Probes. Tool annotations say what each does: the write tools only ever create a new directory
-    (``runs/mcp/<run_name>``, refused if it exists), so they are not destructive, and they reach outside this
-    computer (MAST, and a provider's API when Sentinels run).
+    (``runs/mcp/<run_name>`` or ``runs/propose/<run_name>``, refused if it exists), so they are not destructive,
+    and they reach outside this computer (MAST; public SIMBAD, ESA and archive pages for the proposal pack; and a
+    provider's API when Sentinels run).
     """
     from mcp.types import ToolAnnotations
 
@@ -129,7 +131,9 @@ def main(argv=None) -> int:
                         help="serve streamable HTTP at http://HOST:PORT/mcp instead of stdio (self-hosting; HOST "
                              "defaults to 127.0.0.1). It has no authentication: read-only tools only, unless allowed below")
     parser.add_argument("--allow-writes", action="store_true",
-                        help="with --http: also expose the pipeline-run tools (each writes a new runs/mcp/<name>)")
+                        help="with --http: also expose the tools that write: the pipeline runs (each a new "
+                             "runs/mcp/<name>) and cheops_proposal_pack (a new runs/propose/<name>; it reads public "
+                             "SIMBAD, ESA and archive pages)")
     parser.add_argument("--allow-sentinels", action="store_true",
                         help="with --http: let pipeline runs use Sentinels, which may call a paid AI API with this "
                              "server's keys")

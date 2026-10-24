@@ -1,0 +1,420 @@
+{
+ "parameters": [
+  {
+   "variableName": "visit_id",
+   "variableNumber": 1,
+   "label": "Visit ID",
+   "group": "Identifier",
+   "description": "Visit ID",
+   "unit": "",
+   "intValues": [
+    1817,
+    4298,
+    3957
+   ]
+  },
+  {
+   "variableName": "obj_id_catname",
+   "variableNumber": 2,
+   "label": "Object",
+   "group": "Identifier",
+   "description": "Star name",
+   "unit": "",
+   "stringValues": [
+    "WASP-18",
+    "WASP-18",
+    "WASP-18"
+   ]
+  },
+  {
+   "variableName": "obj_pos_coordinates_hms_dms",
+   "variableNumber": 3,
+   "label": "Coordinates",
+   "group": "Coordinates",
+   "description": "Coordinates",
+   "unit": "DEG_SDEG",
+   "stringValues": [
+    "24.354305 / -45.67788",
+    "24.354305267334 / -45.6778793334961",
+    "24.354305267334 / -45.6778793334961"
+   ]
+  },
+  {
+   "variableName": "date_mjd_start",
+   "variableNumber": 4,
+   "label": "Start Obs",
+   "group": "Other",
+   "description": "Start of observation",
+   "unit": "MJD",
+   "doubleValues": [
+    59098.0622846271,
+    59878.411849562,
+    59444.9806321079
+   ]
+  },
+  {
+   "variableName": "date_mjd_end",
+   "variableNumber": 5,
+   "label": "End Obs",
+   "group": "Other",
+   "description": "End of observation",
+   "unit": "MJD",
+   "doubleValues": [
+    59098.3095252312,
+    59878.839743888,
+    59445.2230602659
+   ]
+  },
+  {
+   "variableName": "pi_name",
+   "variableNumber": 6,
+   "label": "PI Name",
+   "group": "Observation",
+   "description": "PI name",
+   "unit": "",
+   "stringValues": [
+    "Fakefirst FAKEPI-ALPHA",
+    "Fakefirst FAKEPI-ALPHA",
+    "Fakefirst FAKEPI-BETA"
+   ]
+  },
+  {
+   "variableName": "full_program_name",
+   "variableNumber": 7,
+   "label": "Program",
+   "group": "Identifier",
+   "description": "Full program identifier",
+   "unit": "",
+   "stringValues": [
+    "PR100016",
+    "PR100016",
+    "PR100012"
+   ]
+  },
+  {
+   "variableName": "file_key",
+   "variableNumber": 8,
+   "label": "File key",
+   "group": "Other",
+   "description": "File key",
+   "unit": "",
+   "stringValues": [
+    "CH_PR100016_TG010702_V0300",
+    "CH_PR100016_TG015703_V0200",
+    "CH_PR100012_TG001201_V0200"
+   ]
+  },
+  {
+   "variableName": "data_pipe_version",
+   "variableNumber": 9,
+   "label": "Pipeline Version",
+   "group": "Observation",
+   "description": "Pipeline Version",
+   "unit": "",
+   "stringValues": [
+    "14.1.2",
+    "13.1.0",
+    "13.1.0"
+   ]
+  },
+  {
+   "variableName": "data_arch_rev",
+   "variableNumber": 10,
+   "label": "Arch Rev",
+   "group": "Pipeline",
+   "description": "Archive Revision",
+   "unit": "",
+   "intValues": [
+    3,
+    2,
+    2
+   ]
+  },
+  {
+   "variableName": "file_rootpath",
+   "variableNumber": 11,
+   "label": "File path",
+   "group": "Other",
+   "description": "File path",
+   "unit": "",
+   "stringValues": [
+    "PR10/PR100016_TG010702_V0300",
+    "PR10/PR100016_TG015703_V0200",
+    "PR10/PR100012_TG001201_V0200"
+   ]
+  },
+  {
+   "variableName": "pi_uid",
+   "variableNumber": 12,
+   "label": "PI Uid",
+   "group": "Observation",
+   "description": "PI Uid",
+   "unit": "",
+   "intValues": [
+    900001,
+    900001,
+    900002
+   ]
+  },
+  {
+   "variableName": "prog_id",
+   "variableNumber": 13,
+   "label": "Program ID",
+   "group": "Identifier",
+   "description": "Program identifier",
+   "unit": "",
+   "stringValues": [
+    "PR10",
+    "PR10",
+    "PR10"
+   ]
+  },
+  {
+   "variableName": "data_proc_num",
+   "variableNumber": 14,
+   "label": "Proc Num",
+   "group": "Pipeline",
+   "description": "Proc Num",
+   "unit": "",
+   "intValues": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "variableName": "bjd_start",
+   "variableNumber": 15,
+   "label": "BJD Start",
+   "group": "Time",
+   "description": "Start time (Barycentric Julian Date)",
+   "unit": "BJD",
+   "doubleValues": [
+    2459098.56585072,
+    2459878.91482995,
+    2459445.48374968
+   ]
+  },
+  {
+   "variableName": "bjd_end",
+   "variableNumber": 16,
+   "label": "BJD End",
+   "group": "Time",
+   "description": "End time (Barycentric Julian Date)",
+   "unit": "BJD",
+   "doubleValues": [
+    2459098.81309496,
+    2459879.34270843,
+    2459445.72618573
+   ]
+  },
+  {
+   "variableName": "obj_mag_cheops",
+   "variableNumber": 17,
+   "label": "Mag Cheops",
+   "group": "Flux",
+   "description": "Magnitude Cheops",
+   "unit": "",
+   "doubleValues": [
+    9.16104718728283,
+    9.16104718728283,
+    9.16092574934931
+   ]
+  },
+  {
+   "variableName": "obj_mag_cheops_err",
+   "variableNumber": 18,
+   "label": "Mag Cheops err",
+   "group": "Flux",
+   "description": "Magnitude Cheops error",
+   "unit": "",
+   "doubleValues": [
+    0.0,
+    0.0,
+    0.01
+   ]
+  },
+  {
+   "variableName": "obj_mag_v",
+   "variableNumber": 19,
+   "label": "Mag V",
+   "group": "Flux",
+   "description": "Mag V",
+   "unit": "",
+   "doubleValues": [
+    9.166,
+    9.166,
+    9.166
+   ]
+  },
+  {
+   "variableName": "obj_mag_v_err",
+   "variableNumber": 20,
+   "label": "Mag V err",
+   "group": "Flux",
+   "description": "Mag V err",
+   "unit": "",
+   "doubleValues": [
+    0.0,
+    0.0,
+    0.01
+   ]
+  },
+  {
+   "variableName": "teff_k",
+   "variableNumber": 21,
+   "label": "Teff",
+   "group": "Stellar",
+   "description": "Stellar effective temperature",
+   "unit": "K",
+   "doubleValues": [
+    6431.0,
+    6431.0,
+    6340.0
+   ]
+  },
+  {
+   "variableName": "ra_deg",
+   "variableNumber": 22,
+   "label": "RA",
+   "group": "Coordinates",
+   "description": "Right Ascension (J2000)",
+   "unit": "DEG",
+   "doubleValues": [
+    24.354305,
+    24.354305267334,
+    24.354305267334
+   ]
+  },
+  {
+   "variableName": "dec_deg",
+   "variableNumber": 23,
+   "label": "Dec",
+   "group": "Coordinates",
+   "description": "Declination (J2000)",
+   "unit": "SDEG",
+   "doubleValues": [
+    -45.67788,
+    -45.6778793334961,
+    -45.6778793334961
+   ]
+  },
+  {
+   "variableName": "obj_sptype",
+   "variableNumber": 24,
+   "label": "Spectral Type",
+   "group": "Flux",
+   "description": "Spectral type",
+   "unit": "",
+   "stringValues": [
+    "F8V",
+    "F8V",
+    "F6V"
+   ]
+  },
+  {
+   "variableName": "obs_exptime",
+   "variableNumber": 25,
+   "label": "Exp. Time",
+   "group": "Observation",
+   "description": "Exposure time",
+   "unit": "SEC",
+   "stringValues": [
+    "50.0",
+    "50.0",
+    "53.0"
+   ]
+  },
+  {
+   "variableName": "obs_id",
+   "variableNumber": 26,
+   "label": "Obs ID",
+   "group": "Observation",
+   "description": "Obs ID",
+   "unit": "",
+   "intValues": [
+    1226569,
+    1930496,
+    1568173
+   ]
+  },
+  {
+   "variableName": "obs_nexp",
+   "variableNumber": 27,
+   "label": "Obs Nexp",
+   "group": "Observation",
+   "description": "Obs Nexp",
+   "unit": "",
+   "intValues": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "variableName": "obs_total_exptime",
+   "variableNumber": 28,
+   "label": "Tot Exp Time",
+   "group": "Observation",
+   "description": "Total exposure time",
+   "unit": "SEC",
+   "doubleValues": [
+    50.0,
+    50.0,
+    53.0
+   ]
+  },
+  {
+   "variableName": "prog_type",
+   "variableNumber": 29,
+   "label": "Prog Type",
+   "group": "Observation",
+   "description": "Observation program type",
+   "unit": "",
+   "intValues": [
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "variableName": "req_id",
+   "variableNumber": 30,
+   "label": "Req ID",
+   "group": "Observation",
+   "description": "Req ID",
+   "unit": "",
+   "intValues": [
+    107,
+    157,
+    12
+   ]
+  },
+  {
+   "variableName": "status_published",
+   "variableNumber": 31,
+   "label": "Public data",
+   "group": "Observation",
+   "description": "Public data",
+   "unit": "",
+   "boolValues": [
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "variableName": "db_lc_available",
+   "variableNumber": 32,
+   "label": "LC Available",
+   "group": "Other",
+   "description": "LC Available",
+   "unit": "",
+   "boolValues": [
+    true,
+    true,
+    true
+   ]
+  }
+ ]
+}

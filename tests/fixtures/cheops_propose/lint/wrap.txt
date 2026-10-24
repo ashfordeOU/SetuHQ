@@ -1,0 +1,4 @@
+As presented in our
+previous work, the radius is 2 R_E.
+We have
+previously shown this.
