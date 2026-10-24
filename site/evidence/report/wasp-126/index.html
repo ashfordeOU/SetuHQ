@@ -64,7 +64,7 @@ h1{font:var(--t-h1);letter-spacing:-.04em;margin:0 0 10px;text-wrap:balance}
 .herostage h1{color:var(--stage-ink)}
 p.lead{font:var(--t-lede);max-width:72ch;margin:0 0 8px;color:var(--stage-dim)}
 .herostage .count{font:600 17px/1.35 var(--sans);color:var(--stage-ink);margin:0 0 6px}
-.herostage .runstar{font:var(--t-data);color:var(--stage-dim);margin:0}
+.herostage .runstar{font:var(--t-data);color:var(--stage-dim);margin:0;overflow-wrap:anywhere}
 .herostage .probes{font:var(--t-small);color:var(--stage-ink);margin:8px 0 0}
 h2{font:var(--t-h2);letter-spacing:-.02em;margin:44px 0 12px}
 h3{font:var(--t-h3);letter-spacing:-.01em;margin:0 0 6px;overflow-wrap:anywhere}
@@ -103,7 +103,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 th{font:var(--t-eyebrow);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
 .scroll{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-m);padding:4px 14px}
-.note{font:var(--t-small);color:var(--ink-3)}
+.note{font:var(--t-small);color:var(--ink-3);overflow-wrap:anywhere}
 p.note{max-width:90ch}
 code,pre{font-family:var(--mono);font-size:12.5px}
 pre{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-s);padding:14px;overflow-x:auto}
@@ -115,7 +115,7 @@ pre{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-s
 .chart .known{fill:var(--blue)}
 .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font:var(--t-small);color:var(--ink-2);margin:8px 0 0}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-footer{margin:48px 0 24px;color:var(--ink-3);font:var(--t-small)}
+footer{margin:48px 0 24px;color:var(--ink-3);font:var(--t-small);overflow-wrap:anywhere}
 @media (max-width:600px){.cands{grid-template-columns:1fr}.step{flex-basis:100%}.arrow{display:none}
   .herostage{grid-template-columns:1fr;padding:20px 18px}.herostage .stardisc{width:84px}}
 @media print{nav{display:none}body{font-size:12px}.card,.scroll,.step{break-inside:avoid}}
@@ -148,7 +148,7 @@ footer{margin:48px 0 24px;color:var(--ink-3);font:var(--t-small)}
 <main class='wrap'>
 
 <section class='grid' style='margin-top:24px' aria-label='The run in numbers'>
-  <div class='card stat'>1<small>light curves</small></div>
+  <div class='card stat'>1<small>light curve</small></div>
   <div class='card stat'>2<small>blind-coded subjects</small></div>
   <div class='card stat'>6<small>independent reviews</small></div>
   <div class='card stat'>8<small>dips the panel agreed on</small></div>
