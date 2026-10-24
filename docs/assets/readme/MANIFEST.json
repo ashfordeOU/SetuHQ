@@ -122,8 +122,8 @@
     }
   },
   "repo_counts": {
-    "modules": 65,
-    "tests": 1137,
+    "modules": 72,
+    "tests": 1159,
     "network": 3,
     "slow": 4,
     "chapters": 15,

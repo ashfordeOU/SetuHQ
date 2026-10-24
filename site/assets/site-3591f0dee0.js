@@ -132,3 +132,23 @@ SetuUI.crosshair = function(el, o){
   el.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){ e.preventDefault(); place((i < 0 ? 0 : i) + (e.key === 'ArrowRight' ? 1 : -1)); } });
   el.addEventListener('blur', () => { rule.hidden = true; });
 };
+
+(function(){
+const LIM = {"real data, cited": "Stored measurements, binned or folded as stored.", "model from stored values": "A model drawn from stored numbers; not an image of the object.", "artist's impression": "Not an observation: a look chosen from measured radius and irradiation.", "illustration": "Explains an idea; not data.", "speculative model": "Beyond what is measured: a possibility, not a result."}, K = 'setuhq-hints', q = (s, e) => Array.from((e || document).querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"]/g, c => '&#' + c.charCodeAt(0) + ';'), seen = () => { try { return JSON.parse(localStorage.getItem(K)) || []; } catch (e) { return []; } };
+SetuUI.limits = root => q('.stage-tag', root).forEach(tag => {
+  const st = tag.closest('.stage'); if (!st || st._sl || (st.offsetWidth && st.offsetWidth < 200)) return; st._sl = 1;
+  const fig = st.closest('figure') || st, lab = tag.textContent.trim(), cap = fig.querySelector('figcaption') || document.getElementById(fig.getAttribute('aria-labelledby') || '-'), h = fig.dataset.hint;
+  const src = ((cap && cap.textContent.match(/Sources?:\s*([^]*?)(?:\.\s+(?=[A-Z])|\.?\s*$)/)) || [])[1];
+  st.insertAdjacentHTML('beforeend', `<details class="srclim"><summary>Source / limits</summary><div><p><b>${esc(lab)}.</b> ${esc(LIM[lab.toLowerCase()] || '')}</p><p>Source: ${esc(src || 'as the caption states')}.</p></div></details>`
+    + (h && !seen().includes(h) ? `<p class="fxhint">${esc(h)} <button type="button" class="btn" data-fxh="${esc(h)}" aria-label="Dismiss the hint: ${esc(h)}">×</button></p>` : ''));
+});
+addEventListener('click', e => {
+  const b = e.target.closest('[data-fxh]'), c = e.target.closest('[data-copy]');
+  if (b){ const s = seen(), m = b.closest('.stage').querySelector('summary'); s.push(b.dataset.fxh); try { localStorage.setItem(K, JSON.stringify(s)); } catch (x) {}
+    q('.fxhint').forEach(p => p.lastChild.dataset.fxh === b.dataset.fxh && p.remove()); m.focus(); }
+  if (c){ const say = c.parentNode.querySelector('[role=status]'), no = () => { getSelection().selectAllChildren(c.previousElementSibling); say.textContent = 'Address selected: press Ctrl or Cmd C'; };
+    navigator.clipboard ? navigator.clipboard.writeText(c.dataset.copy).then(() => { say.textContent = 'Copied ' + c.dataset.copy; }, no) : no(); }
+});
+addEventListener('keydown', e => { const d = e.key === 'Escape' && e.target.closest && e.target.closest('.srclim[open]'); if (d){ d.open = false; d.firstChild.focus(); } });
+})();
