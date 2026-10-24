@@ -72,8 +72,9 @@ SUBNAV = {
     "candidates": [("All candidates", "#/explorer", ["explorer"]), ("Dips", "#/transit", ["transit"]),
                    ("Case files", "#/candidates", ["candidates"]), ("Radius ratios", "#/planets", ["planets"])],
     "evidence": [("The panel", "#/sentinels", ["sentinels"]), ("Leaderboard", "#/leaderboard", ["leaderboard"]),
-                 ("Runs", "#/runs", ["runs"]), ("Run report", "/evidence/report/", ["report"]), ("Plates", "/evidence/plates/", ["plates"])],
-    "docs": [("Get started", "#/docs", ["docs"]), ("How the pictures are drawn", "#/pictures", ["pictures"])],
+                 ("Runs", "#/runs", ["runs"]), ("Stars", "#/stellar", ["stellar"]), ("Run report", "/evidence/report/", ["report"]), ("Plates", "/evidence/plates/", ["plates"])],
+    "docs": [("Get started", "#/docs", ["docs"]), ("How the pictures are drawn", "#/pictures", ["pictures"]),
+             ("Flares and pulsations", "#/stellardocs", ["stellardocs"]), ("CHEOPS proposals", "#/propose", ["propose"])],
 }
 # Every view: its name, its section, its breadcrumbs (deep pages only: a list of (label, address)), and its title.
 # A title template's {name} is the page's own heading (a planet, a star, a dip).
@@ -94,11 +95,14 @@ ROUTE_META = {
     "sentinels": {"label": "The panel", "nav": "evidence", "title": "Evidence: the panel, measured · SetuHQ"},
     "leaderboard": {"label": "Leaderboard", "nav": "evidence", "title": "Leaderboard · Evidence · SetuHQ", "crumbs": [("Evidence", "#/sentinels")]},
     "runs": {"label": "Runs", "nav": "evidence", "title": "Runs · Evidence · SetuHQ", "crumbs": [("Evidence", "#/sentinels")]},
+    "stellar": {"label": "Stars", "nav": "evidence", "title": "Stars, measured: flares and pulsations · Evidence · SetuHQ", "crumbs": [("Evidence", "#/sentinels")]},
     # Pages of their own (built by report.py and plate.py), in the site's header: not views of the app.
     "report": {"label": "Run report", "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
     "plates": {"label": "Plates", "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
     "docs": {"label": "Docs", "nav": "docs", "title": "Docs: get started with SetuHQ · SetuHQ"},
     "pictures": {"label": "How the pictures are drawn", "nav": "docs", "title": "How the pictures are drawn · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
+    "stellardocs": {"label": "Flares and pulsations", "nav": "docs", "title": "Flares, pulsations and CHEOPS · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
+    "propose": {"label": "CHEOPS proposals", "nav": "docs", "title": "Prepare a CHEOPS proposal · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
     "notfound": {"label": "Page not found", "nav": None, "title": "Page not found · SetuHQ"},
 }
 SECTIONS = [(k, label) for k, label, _ in NAV]
@@ -2592,7 +2596,7 @@ $('#route-sentinels').addEventListener('click', e => {
 // ---------- router ----------
 const RENDER = {overview: () => {}, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, variables: renderVariables, transit: renderTransit,
   explorer: () => { renderExplorer(); renderDiscoveries(); }, sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns,
-  leaderboard: () => {}, docs: () => {}, pictures: () => {}, notfound: () => {}};
+  leaderboard: () => {}, docs: () => {}, pictures: () => {}, stellar: () => {}, stellardocs: () => {}, propose: () => {}, notfound: () => {}};
 const rendered = new Set();
 const META = D.route_meta, MX_FIRST = Object.keys(D.chapter_titles)[0];
 const ROUTES = () => $$('#content > .route').map(s => s.dataset.route);

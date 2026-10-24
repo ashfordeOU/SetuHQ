@@ -30,6 +30,24 @@ breaking changes are called out explicitly.
   (2 of 5). The results are in `docs/results/stellar_validation.md`, with the CHEOPS-derived results
   in `docs/results/stellar_validation_cheops.md` under ESA's terms; what is not validated is listed
   there.
+- **A CHEOPS Guest Observers proposal helper** ([docs/CHEOPS-PROPOSALS.md](docs/CHEOPS-PROPOSALS.md)).
+  `setuhq propose cheops <target>` writes a preparation pack for the Running Call (the rules and cycles checked,
+  the target's coordinates, a Reserved Target List match and its prior public visits, planning estimates from
+  published in-flight performance, anonymised drafts, ESA's seven steps as a checklist, and every source with its
+  sha256); `setuhq propose lint` is an anonymity aid for drafts and PDFs (extra `[propose]`). The MCP tool
+  `cheops_proposal_pack` and `/setuhq-cheops-propose` do the same. It never logs in, submits or automates an ESA
+  system; the RTL is downloaded at run time and never committed; archive answers are filtered in memory, so no
+  proprietary data and no PI name or id reaches the pack or the cache.
+- **The stellar tools on the site, in the visual system.** `/evidence/stellar/` shows each capability's status with
+  its count, read from the stored record (flares partly validated, 5 of 8 checks pass; pulsations partly validated,
+  7 of 9; CHEOPS not validated, 2 of 5), every counted check, and two figures of real TESS data labelled "Real data,
+  cited" with their sources: TIC 150359500's flares in sector 2 against Günther et al. (2020), and beta Pic's
+  amplitude spectrum in sector 5 against Zieba et al. (2019), each star drawn by the renderer at its TIC v8.2
+  Teff. Its CHEOPS part carries ESA's acknowledgement, each programme's credit line, the three papers, DACE's
+  acknowledgement, the disclaimer and the CC BY-NC 3.0 IGO carve-out. `/docs/stellar/` documents the commands and
+  `/docs/cheops-proposals/` the proposal helper. The figures' data are `docs/results/stellar_figures.json`
+  (`scripts/stellar_figures.py`, public SPOC files only). Checked by `tests/test_stellarpages.py` and the e2e module
+  `tests/e2e/checks/stellar.mjs`.
 - **CHEOPS data stay under ESA's terms** (CC BY-NC 3.0 IGO; commercial use needs ESA's prior
   authorisation): `LICENSING.md`, `NOTICE` and `docs/PRO.md` exclude them from CC BY 4.0, the
   commercial licence and Pro.
@@ -49,6 +67,11 @@ breaking changes are called out explicitly.
 
 ### Changed
 
+- **The stellar commands print their validation status.** `setuhq flares`, `setuhq pulsations` and `setuhq cheops`
+  print the capability's status with its count on every run and write it into the record (`validation_status`), as
+  the MCP tools already did, so no output presents a detector as more validated than it is.
+- **DACE is described as what it is** in the proposal helper's pack and documentation: the University of Geneva's
+  public API in front of the CHEOPS Mission Archive, not designated by ESA.
 - **The CLI's HTML outputs in the site's visual system.** `setuhq report`, the search feed page of `setuhq
   discover` and `setuhq dashboard` read `setuhq.design`'s tokens (the old indigo palette is gone), print in the
   light set, and use Geist and Geist Mono copied beside the page; nothing loads from another site. The report opens

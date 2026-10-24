@@ -192,8 +192,8 @@ def build_pack(target: str, out_dir: Path, *, root: Path, programme: str = "regu
                         "programme_id": v.get("full_program_name"), "start_utc": _mjd_iso(v.get("date_mjd_start")),
                         "end_utc": _mjd_iso(v.get("date_mjd_end")), "light_curve_available": v.get("db_lc_available")}
                        for v in public]
-        archive = {"checked": True, "source": f"DACE public CHEOPS metadata ({sources.DACE_CHEOPS}), the query interface "
-                                              "of the CHEOPS Mission Archive",
+        archive = {"checked": True, "source": f"DACE public CHEOPS metadata ({sources.DACE_CHEOPS}): the University of "
+                                              "Geneva's public API in front of the CHEOPS Mission Archive, not designated by ESA",
                    "cone_radius_arcsec": ARCHIVE_RADIUS_ARCSEC, "already_observed": bool(public or hidden),
                    "n_public": len(public), "n_not_public": hidden, "public_visits": public_rows,
                    "no_match_queries": no_match,

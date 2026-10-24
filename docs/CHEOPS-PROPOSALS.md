@@ -76,8 +76,8 @@ Both were read on 21 October 2026. If they disagree with the pack, they win.
   - by name, tolerant of spaces, dashes and spelling variants;
   - by every SIMBAD alias;
   - by position within 20″. Entries within 2′ are listed for a manual line-of-sight check.
-- **Prior observations** come from the public metadata in [DACE](https://dace.unige.ch/), the public query
-  interface of the CHEOPS Mission Archive, by position (30″) and by name: your own target name, SIMBAD's main
+- **Prior observations** come from the public metadata in [DACE](https://dace.unige.ch/), the University of
+  Geneva's public API in front of the CHEOPS Mission Archive (ESA does not designate DACE), by position (30″) and by name: your own target name, SIMBAD's main
   identifier, and the TOI and TIC aliases. DACE's name search matches substrings, so the pack keeps only visits
   of that object or its planets ("WASP-18 b", not "WASP-187 b"). Each answer is filtered in memory
   before anything is stored: the pack and the cache keep only public visits' public fields (ids, file keys,

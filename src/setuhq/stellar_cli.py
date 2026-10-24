@@ -51,6 +51,16 @@ def _write(record: dict, out: str | None) -> None:
         print(f"wrote {out}")
 
 
+def _status(capability: str, what: str) -> str:
+    """The capability's validation status as the committed record states it (setuhq.stellar_tools), printed with
+    every run, so no output presents an unvalidated detector as validated."""
+    from setuhq.stellar_tools import validation_status
+
+    status = validation_status(capability)
+    print(f"{what}: {status} against published results (docs/results/stellar_validation.md)")
+    return status
+
+
 def _stitched(lcs):
     t = np.concatenate([lc.time for lc in lcs])
     f = np.concatenate([lc.flux / np.median(lc.flux) for lc in lcs])
@@ -88,7 +98,8 @@ def cmd_flares(args) -> int:
     energies = [f["e_bol_erg"] for r in per for f in r["flares"] if f.get("e_bol_erg")]
     days = sum(r["summary"]["observing_days"] for r in per)
     record = {"kind": "setuhq-flares/1", "target": args.target, "star": star, "mission": args.mission, "results": per,
-              "ffd": fl.ffd(energies, days), "label": LABEL, "provenance": provenance(inputs)}
+              "ffd": fl.ffd(energies, days), "label": LABEL, "validation_status": _status("flares", "flare detection"),
+              "provenance": provenance(inputs)}
     _write(record, args.out)
     return 0
 
@@ -111,7 +122,7 @@ def cmd_pulsations(args) -> int:
         print(f"  {x['id']:>4} {x['frequency']:10.5f} d⁻¹ {x['frequency_uhz']:9.3f} µHz  A={x['amplitude'] * 1e6:8.1f} ppm "
               f"S/N={x['snr']:.1f}{'  ' + x['combination'] if x['combination'] else ''}")
     record = {"kind": "setuhq-pulsations/1", "target": args.target, "star": star, **out, "label": LABEL,
-              "provenance": provenance(inputs)}
+              "validation_status": _status("pulsations", "frequency analysis"), "provenance": provenance(inputs)}
     _write(record, args.out)
     return 0
 
@@ -149,7 +160,7 @@ def cmd_cheops(args) -> int:
     print("\n" + ch.credit_text([v["provenance"] for v in out["visits"]]))
     record = {"kind": "setuhq-cheops/1", "target": args.target, "n_public_visits": out["n_public_visits"],
               "n_not_public_dropped": out["n_not_public_dropped"], "visits": rows,
-              **ch.credit([v["provenance"] for v in out["visits"]]),
+              "validation_status": _status("cheops", "CHEOPS ingest"), **ch.credit([v["provenance"] for v in out["visits"]]),
               "provenance": provenance([{"path": r["provenance"]["file_key"], "sha256": r["provenance"]["sha256"]} for r in rows])}
     _write(record, args.out)
     return 0

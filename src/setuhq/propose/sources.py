@@ -13,8 +13,8 @@ a cache directory is given, responses are reused for the same UTC day (the RTL i
 and fetch date); the cache lives under ``cache/`` (git-ignored), so no ESA file is committed to the repository.
 The RTL is never vendored: ESA's pages give no redistribution terms for it, so it is downloaded at run time.
 
-Archive metadata comes from DACE (Data and Analysis Center for Exoplanets, University of Geneva), the public
-query interface of the CHEOPS Mission Archive. Only public metadata is kept: for visits whose data are not yet
+Archive metadata comes from DACE (Data and Analysis Center for Exoplanets), the University of Geneva's public API in
+front of the CHEOPS Mission Archive; ESA does not designate DACE, and ESA's Mission Archive stays definitive. Only public metadata is kept: for visits whose data are not yet
 public only their number is reported, and no PI names are stored from any visit.
 """
 

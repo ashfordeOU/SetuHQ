@@ -43,7 +43,7 @@ from setuhq.everything import VARIABLES_JSON
 from setuhq.routes import CHAPTER_SLUGS, LEGACY_PAGES, ROUTES_CORE_JS, from_hash, legacy_js, url_for
 from setuhq.stubs import stored
 from setuhq.looks import BANDS, COMPOSITION_RULES, LOOKS, rule_words
-from setuhq import viz
+from setuhq import stellarpages, viz
 
 REPO_URL = brand.REPO_URL
 # Each page's HTML (its own view, the shell, the head) stays under this many characters; everything shared is a
@@ -879,9 +879,12 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     sections = {k: clean_links(v, lead) for k, v in route_sections(data).items()}
     sections["docs"] = clean_links(docs_section(data), lead)
     sections["pictures"] = clean_links(pictures_section(), lead)
+    sections["stellar"] = clean_links(stellarpages.evidence_section(), lead)
+    sections["stellardocs"] = clean_links(stellarpages.docs_stellar_section(), lead)
+    sections["propose"] = clean_links(stellarpages.docs_propose_section(), lead)
     payload = json.dumps(app_payload(data), separators=(",", ":"), ensure_ascii=False, allow_nan=False)
     app_js = APP_JS.replace("const RT = D.routes;\n", "const RT = D.routes;\n" + ROUTES_CORE_JS, 1)
-    css = APP_CSS + brand.LOGO_CSS + renderer.RENDER_CSS + SITE_CSS + viz.VIZ_CSS
+    css = APP_CSS + brand.LOGO_CSS + renderer.RENDER_CSS + SITE_CSS + viz.VIZ_CSS + stellarpages.CSS
     routes_html = "".join(f'<section class="route" id="route-{k}" data-route="{k}" aria-labelledby="h-{k}" hidden>{v}</section>'
                           for k, v in sections.items())
     # The shared system view's markup (the Galaxy's sheet copies it) rides in the shared views file, not in every page.
@@ -951,6 +954,9 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     view("leaderboard", _title("leaderboard"), "Methods scored blind on the held-out half of the real-TOI benchmark, with Wilson 95% intervals.", "/evidence/leaderboard/", name="Leaderboard")
     view("runs", _title("runs"), "Every search run, its errors as stored, and the configuration behind the candidate pages.", "/evidence/runs/", name="Runs")
     view("docs", _title("docs"), "Install SetuHQ, search a star, contribute a sweep, connect an AI assistant over MCP, and download the data.", "/docs/")
+    view("stellar", _title("stellar"), "Flares, pulsations and CHEOPS light curves: how far each of SetuHQ's stellar tools is validated (flares and pulsations partly, CHEOPS not), with two figures of real TESS data.", "/evidence/stellar/", name="Stars")
+    view("stellardocs", _title("stellardocs"), "Run SetuHQ's stellar commands: flares, pulsations and public CHEOPS light curves, with their validation status and ESA's terms for CHEOPS data.", "/docs/stellar/", name="Flares and pulsations")
+    view("propose", _title("propose"), "Prepare a CHEOPS Guest Observers proposal with setuhq propose cheops: a drafting aid that checks the rules and the target and never submits anything.", "/docs/cheops-proposals/", name="CHEOPS proposals")
     view("pictures", _title("pictures"), "How SetuHQ draws its pictures: stars in their blackbody colour, and planets as artist's impressions chosen from measured radius and irradiation, with every rule and source.", "/docs/pictures/", name="How the pictures are drawn")
 
     # Planet and star pages for every object the site names.

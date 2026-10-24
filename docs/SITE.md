@@ -67,10 +67,13 @@ One clean address per page; no `#/` routes and no view state in the address.
 | Evidence: the panel | `/evidence/` | `/app/#/sentinels`, `#/panel` |
 | Leaderboard | `/evidence/leaderboard/` | `/app/#/leaderboard` |
 | Runs | `/evidence/runs/` | `/app/#/runs` |
+| Stars: flares, pulsations, CHEOPS | `/evidence/stellar/` | (new) |
 | Run report | `/evidence/report/` (the lead run); `/evidence/report/<star>/` (each other example run) | `/report/` |
 | Plates | `/evidence/plates/` (the lead run and the search feed); `/evidence/plates/<star>/` (each other example run) | `/plate/` |
 | Docs | `/docs/` | (new) |
 | How the pictures are drawn | `/docs/pictures/` | (new) |
+| Flares, pulsations and CHEOPS (the commands) | `/docs/stellar/` | (new) |
+| CHEOPS proposals | `/docs/cheops-proposals/` | (new) |
 
 The table lives in `src/setuhq/routes.py` (`ROUTE_PATHS`, `CHAPTER_SLUGS`, `LEGACY_PAGES`), with its twin in the
 page's script. GitHub Pages cannot redirect, so each old directory (`/app/`, `/docket/`, `/plate/`, `/report/`,
@@ -218,6 +221,7 @@ same tokens.
 | Planet and star pages (pre-rendered and deploy-time) | `catalogue.py`, `stubs.py` | portrait V02 (`renderer.figure`: Artist's impression, with Spin), star disc (Model from stored values), line-up V07 with the planet stepping in, orbits V08 (`viz/orbits.py`: Model from stored values) |
 | Candidates: dips, case files, plates | `app.py` (Transit, Explorer), `docket.py`, `plate.py` | a dip's panel ring V06; orbits V08 on TOI-270's dips; the case file and plates draw the star with `renderer.star_svg` (no renderer, works offline) |
 | How it works, Evidence, Docs | `methods.py`, `learn.py`, `app.py` (Sentinels, leaderboard, runs), `site.py` | the fold V05 in the Transits chapter; V04 and V12 in Methods population; the panel ring in panel mode on `/evidence/`; `/docs/pictures/` prints every look, rule, source and still |
+| Evidence: stars; Docs: the stellar commands and CHEOPS proposals | `stellarpages.py` | `/evidence/stellar/`: a flaring M dwarf's TESS light curve and a δ Scuti star's amplitude spectrum (static SVG on a stage: Real data, cited, each with its source line, the detections and the published values), beside each star drawn by the renderer at its TIC v8.2 Teff (Model from stored values); the validation status of each capability read from `docs/results/stellar_validation.json`, always with its count (flares and pulsations partly validated, CHEOPS not validated); ESA's acknowledgement, programme credit lines, papers, DACE's acknowledgement, the disclaimer and the CC BY-NC 3.0 IGO carve-out. The figures' data: `docs/results/stellar_figures.json`, written by `scripts/stellar_figures.py` from public SPOC files (no CHEOPS data) |
 | Run report, search feed page, dashboard (CLI outputs) | `report.py`, `dashboard.py` | see "The CLI outputs" below |
 
 The five labels are the only ones used: Artist's impression, Model from stored values, Real data, cited, Illustration

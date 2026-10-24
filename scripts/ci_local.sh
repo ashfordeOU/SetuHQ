@@ -93,7 +93,8 @@ for f in site/index.html site/404.html site/sitemap.xml site/robots.txt site/exp
          site/how-it-works/index.html site/evidence/index.html site/docs/index.html site/candidates/case-file/index.html \
          site/evidence/plates/index.html site/evidence/report/index.html site/app/index.html \
          site/candidates/wasp-126/case-file/index.html site/evidence/plates/toi-270/index.html site/evidence/report/hd-15337/index.html \
-         site/candidates/toi-236/dip-1/index.html; do
+         site/candidates/toi-236/dip-1/index.html site/evidence/stellar/index.html site/docs/stellar/index.html \
+         site/docs/cheops-proposals/index.html; do
   test -s "$f" || { echo "missing $f" | tee -a "$LOG"; exit 1; }
 done
 if grep -rl 'id="codenote"' site --include=*.html; then echo "a site-wide banner is back" | tee -a "$LOG"; exit 1; fi
