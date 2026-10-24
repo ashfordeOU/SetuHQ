@@ -47,7 +47,8 @@ def test_plugin_and_marketplace_manifests_are_valid():
 def test_slash_commands_use_only_real_tools():
     commands = sorted((ROOT / "commands").glob("*.md"))
     assert {c.stem for c in commands} == {"setuhq-vet", "setuhq-explain", "setuhq-sweep", "setuhq-catalogue",
-                                         "setuhq-physics", "setuhq-benchmarks", "setuhq-cheops-propose"}
+                                         "setuhq-physics", "setuhq-benchmarks", "setuhq-cheops-propose",
+                                         "setuhq-stellar"}
     used = set()
     for path in commands:
         meta, body = _frontmatter(path)

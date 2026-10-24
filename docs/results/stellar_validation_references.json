@@ -1,0 +1,1199 @@
+{
+ "note": "Published numbers only, transcribed from the papers' tables for comparison; see each source.",
+ "hr10": {
+  "source": "Salmon et al. 2024, A&A 690, A73 (HR 10 as seen by CHEOPS and TESS), Tables A.1 and A.2",
+  "data": "TESS sectors 2 and 29, 2-min, SAP flux corrected with CBVs (Nardiello et al. 2020 recipe); FELIX pre-whitening to S/N 5.0 (their 4-sigma level), local noise = median in a window of 300 x the resolution",
+  "tic": 289592423,
+  "sectors": {
+   "2": [
+    {
+     "id": "f21",
+     "frequency_uhz": 3.572,
+     "sigma_uhz": 0.039,
+     "amplitude_pct": 0.0197,
+     "snr": 6.0
+    },
+    {
+     "id": "f13",
+     "frequency_uhz": 5.472,
+     "sigma_uhz": 0.029,
+     "amplitude_pct": 0.0258,
+     "snr": 8.0
+    },
+    {
+     "id": "f12",
+     "frequency_uhz": 13.508,
+     "sigma_uhz": 0.028,
+     "amplitude_pct": 0.0259,
+     "snr": 8.5
+    },
+    {
+     "id": "f16",
+     "frequency_uhz": 15.457,
+     "sigma_uhz": 0.03,
+     "amplitude_pct": 0.0242,
+     "snr": 7.9
+    },
+    {
+     "id": "f9",
+     "frequency_uhz": 16.457,
+     "sigma_uhz": 0.025,
+     "amplitude_pct": 0.0287,
+     "snr": 9.3
+    },
+    {
+     "id": "f2",
+     "frequency_uhz": 17.713,
+     "sigma_uhz": 0.005,
+     "amplitude_pct": 0.1413,
+     "snr": 46.1
+    },
+    {
+     "id": "f6",
+     "frequency_uhz": 18.886,
+     "sigma_uhz": 0.02,
+     "amplitude_pct": 0.0351,
+     "snr": 11.5
+    },
+    {
+     "id": "f14",
+     "frequency_uhz": 22.961,
+     "sigma_uhz": 0.028,
+     "amplitude_pct": 0.0255,
+     "snr": 8.4
+    },
+    {
+     "id": "f11",
+     "frequency_uhz": 34.192,
+     "sigma_uhz": 0.025,
+     "amplitude_pct": 0.0273,
+     "snr": 9.4
+    },
+    {
+     "id": "f17",
+     "frequency_uhz": 34.965,
+     "sigma_uhz": 0.03,
+     "amplitude_pct": 0.0224,
+     "snr": 7.8
+    },
+    {
+     "id": "f10",
+     "frequency_uhz": 35.65,
+     "sigma_uhz": 0.024,
+     "amplitude_pct": 0.0277,
+     "snr": 9.6
+    },
+    {
+     "id": "f4",
+     "frequency_uhz": 42.611,
+     "sigma_uhz": 0.013,
+     "amplitude_pct": 0.051,
+     "snr": 18.2
+    },
+    {
+     "id": "f25",
+     "frequency_uhz": 52.477,
+     "sigma_uhz": 0.04,
+     "amplitude_pct": 0.0155,
+     "snr": 5.8
+    },
+    {
+     "id": "f22",
+     "frequency_uhz": 53.849,
+     "sigma_uhz": 0.033,
+     "amplitude_pct": 0.0186,
+     "snr": 7.1
+    },
+    {
+     "id": "f26",
+     "frequency_uhz": 70.389,
+     "sigma_uhz": 0.038,
+     "amplitude_pct": 0.0152,
+     "snr": 6.1
+    },
+    {
+     "id": "f3",
+     "frequency_uhz": 71.421,
+     "sigma_uhz": 0.009,
+     "amplitude_pct": 0.0618,
+     "snr": 25.1
+    },
+    {
+     "id": "f5",
+     "frequency_uhz": 72.595,
+     "sigma_uhz": 0.015,
+     "amplitude_pct": 0.0379,
+     "snr": 15.4
+    },
+    {
+     "id": "f1",
+     "frequency_uhz": 73.846,
+     "sigma_uhz": 0.003,
+     "amplitude_pct": 0.1951,
+     "snr": 79.8
+    },
+    {
+     "id": "f20",
+     "frequency_uhz": 90.352,
+     "sigma_uhz": 0.027,
+     "amplitude_pct": 0.0199,
+     "snr": 8.7
+    },
+    {
+     "id": "f8",
+     "frequency_uhz": 91.554,
+     "sigma_uhz": 0.017,
+     "amplitude_pct": 0.0322,
+     "snr": 14.0
+    },
+    {
+     "id": "f15",
+     "frequency_uhz": 92.778,
+     "sigma_uhz": 0.021,
+     "amplitude_pct": 0.025,
+     "snr": 10.9
+    },
+    {
+     "id": "f23",
+     "frequency_uhz": 126.424,
+     "sigma_uhz": 0.027,
+     "amplitude_pct": 0.0174,
+     "snr": 8.5
+    },
+    {
+     "id": "f19",
+     "frequency_uhz": 138.053,
+     "sigma_uhz": 0.022,
+     "amplitude_pct": 0.0202,
+     "snr": 10.7
+    },
+    {
+     "id": "f24",
+     "frequency_uhz": 156.496,
+     "sigma_uhz": 0.025,
+     "amplitude_pct": 0.0164,
+     "snr": 9.4
+    },
+    {
+     "id": "f18",
+     "frequency_uhz": 199.09,
+     "sigma_uhz": 0.015,
+     "amplitude_pct": 0.0216,
+     "snr": 15.5
+    },
+    {
+     "id": "f27",
+     "frequency_uhz": 212.62,
+     "sigma_uhz": 0.022,
+     "amplitude_pct": 0.0137,
+     "snr": 10.4
+    },
+    {
+     "id": "f7",
+     "frequency_uhz": 216.808,
+     "sigma_uhz": 0.009,
+     "amplitude_pct": 0.0333,
+     "snr": 25.7
+    },
+    {
+     "id": "f31",
+     "frequency_uhz": 220.165,
+     "sigma_uhz": 0.033,
+     "amplitude_pct": 0.009,
+     "snr": 7.0
+    },
+    {
+     "id": "f29",
+     "frequency_uhz": 240.503,
+     "sigma_uhz": 0.024,
+     "amplitude_pct": 0.0112,
+     "snr": 9.6
+    },
+    {
+     "id": "f28",
+     "frequency_uhz": 324.345,
+     "sigma_uhz": 0.017,
+     "amplitude_pct": 0.01225,
+     "snr": 13.7
+    },
+    {
+     "id": "f30",
+     "frequency_uhz": 326.834,
+     "sigma_uhz": 0.021,
+     "amplitude_pct": 0.00972,
+     "snr": 11.0
+    },
+    {
+     "id": "f36",
+     "frequency_uhz": 339.604,
+     "sigma_uhz": 0.045,
+     "amplitude_pct": 0.00438,
+     "snr": 5.1
+    },
+    {
+     "id": "f35",
+     "frequency_uhz": 347.361,
+     "sigma_uhz": 0.039,
+     "amplitude_pct": 0.00507,
+     "snr": 6.0
+    },
+    {
+     "id": "f33",
+     "frequency_uhz": 355.664,
+     "sigma_uhz": 0.031,
+     "amplitude_pct": 0.00626,
+     "snr": 7.5
+    },
+    {
+     "id": "f34",
+     "frequency_uhz": 369.211,
+     "sigma_uhz": 0.031,
+     "amplitude_pct": 0.00611,
+     "snr": 7.6
+    },
+    {
+     "id": "f32",
+     "frequency_uhz": 398.22,
+     "sigma_uhz": 0.027,
+     "amplitude_pct": 0.00661,
+     "snr": 8.6
+    },
+    {
+     "id": "f39",
+     "frequency_uhz": 407.774,
+     "sigma_uhz": 0.046,
+     "amplitude_pct": 0.00384,
+     "snr": 5.1
+    },
+    {
+     "id": "f38",
+     "frequency_uhz": 415.722,
+     "sigma_uhz": 0.045,
+     "amplitude_pct": 0.00384,
+     "snr": 5.1
+    },
+    {
+     "id": "f40",
+     "frequency_uhz": 457.409,
+     "sigma_uhz": 0.045,
+     "amplitude_pct": 0.00374,
+     "snr": 5.2
+    },
+    {
+     "id": "f37",
+     "frequency_uhz": 612.019,
+     "sigma_uhz": 0.034,
+     "amplitude_pct": 0.00412,
+     "snr": 6.8
+    },
+    {
+     "id": "f41",
+     "frequency_uhz": 614.996,
+     "sigma_uhz": 0.044,
+     "amplitude_pct": 0.00322,
+     "snr": 5.3
+    }
+   ],
+   "29": [
+    {
+     "id": "f25",
+     "frequency_uhz": 1.424,
+     "sigma_uhz": 0.042,
+     "amplitude_pct": 0.0179,
+     "snr": 5.8
+    },
+    {
+     "id": "f15",
+     "frequency_uhz": 2.528,
+     "sigma_uhz": 0.029,
+     "amplitude_pct": 0.0256,
+     "snr": 8.4
+    },
+    {
+     "id": "f11",
+     "frequency_uhz": 4.294,
+     "sigma_uhz": 0.024,
+     "amplitude_pct": 0.0304,
+     "snr": 10.0
+    },
+    {
+     "id": "f12",
+     "frequency_uhz": 5.194,
+     "sigma_uhz": 0.026,
+     "amplitude_pct": 0.0284,
+     "snr": 9.4
+    },
+    {
+     "id": "f17",
+     "frequency_uhz": 15.45,
+     "sigma_uhz": 0.033,
+     "amplitude_pct": 0.0221,
+     "snr": 7.4
+    },
+    {
+     "id": "f10",
+     "frequency_uhz": 16.566,
+     "sigma_uhz": 0.023,
+     "amplitude_pct": 0.0312,
+     "snr": 10.5
+    },
+    {
+     "id": "f2",
+     "frequency_uhz": 17.6931,
+     "sigma_uhz": 0.0065,
+     "amplitude_pct": 0.1108,
+     "snr": 37.5
+    },
+    {
+     "id": "f24",
+     "frequency_uhz": 18.554,
+     "sigma_uhz": 0.039,
+     "amplitude_pct": 0.0184,
+     "snr": 6.2
+    },
+    {
+     "id": "f4",
+     "frequency_uhz": 18.951,
+     "sigma_uhz": 0.013,
+     "amplitude_pct": 0.0541,
+     "snr": 18.3
+    },
+    {
+     "id": "f16",
+     "frequency_uhz": 21.061,
+     "sigma_uhz": 0.031,
+     "amplitude_pct": 0.023,
+     "snr": 7.9
+    },
+    {
+     "id": "f9",
+     "frequency_uhz": 22.917,
+     "sigma_uhz": 0.019,
+     "amplitude_pct": 0.0364,
+     "snr": 12.7
+    },
+    {
+     "id": "f32",
+     "frequency_uhz": 34.108,
+     "sigma_uhz": 0.045,
+     "amplitude_pct": 0.0147,
+     "snr": 5.4
+    },
+    {
+     "id": "f30",
+     "frequency_uhz": 35.011,
+     "sigma_uhz": 0.043,
+     "amplitude_pct": 0.0154,
+     "snr": 5.6
+    },
+    {
+     "id": "f20",
+     "frequency_uhz": 35.525,
+     "sigma_uhz": 0.035,
+     "amplitude_pct": 0.0192,
+     "snr": 7.0
+    },
+    {
+     "id": "f33",
+     "frequency_uhz": 37.466,
+     "sigma_uhz": 0.046,
+     "amplitude_pct": 0.0144,
+     "snr": 5.3
+    },
+    {
+     "id": "f5",
+     "frequency_uhz": 42.603,
+     "sigma_uhz": 0.014,
+     "amplitude_pct": 0.0461,
+     "snr": 17.4
+    },
+    {
+     "id": "f14",
+     "frequency_uhz": 53.599,
+     "sigma_uhz": 0.024,
+     "amplitude_pct": 0.0261,
+     "snr": 10.2
+    },
+    {
+     "id": "f28",
+     "frequency_uhz": 60.318,
+     "sigma_uhz": 0.037,
+     "amplitude_pct": 0.0164,
+     "snr": 6.5
+    },
+    {
+     "id": "f22",
+     "frequency_uhz": 71.341,
+     "sigma_uhz": 0.032,
+     "amplitude_pct": 0.0185,
+     "snr": 7.7
+    },
+    {
+     "id": "f7",
+     "frequency_uhz": 72.653,
+     "sigma_uhz": 0.014,
+     "amplitude_pct": 0.0409,
+     "snr": 17.1
+    },
+    {
+     "id": "f31",
+     "frequency_uhz": 73.262,
+     "sigma_uhz": 0.038,
+     "amplitude_pct": 0.0153,
+     "snr": 6.4
+    },
+    {
+     "id": "f1",
+     "frequency_uhz": 73.8543,
+     "sigma_uhz": 0.0023,
+     "amplitude_pct": 0.2525,
+     "snr": 106.0
+    },
+    {
+     "id": "f34",
+     "frequency_uhz": 81.353,
+     "sigma_uhz": 0.045,
+     "amplitude_pct": 0.0126,
+     "snr": 5.4
+    },
+    {
+     "id": "f29",
+     "frequency_uhz": 87.867,
+     "sigma_uhz": 0.034,
+     "amplitude_pct": 0.016,
+     "snr": 7.1
+    },
+    {
+     "id": "f6",
+     "frequency_uhz": 91.509,
+     "sigma_uhz": 0.012,
+     "amplitude_pct": 0.0452,
+     "snr": 20.3
+    },
+    {
+     "id": "f3",
+     "frequency_uhz": 92.7814,
+     "sigma_uhz": 0.0091,
+     "amplitude_pct": 0.0594,
+     "snr": 26.8
+    },
+    {
+     "id": "f36",
+     "frequency_uhz": 109.303,
+     "sigma_uhz": 0.042,
+     "amplitude_pct": 0.0119,
+     "snr": 5.8
+    },
+    {
+     "id": "f37",
+     "frequency_uhz": 118.773,
+     "sigma_uhz": 0.044,
+     "amplitude_pct": 0.011,
+     "snr": 5.5
+    },
+    {
+     "id": "f18",
+     "frequency_uhz": 126.429,
+     "sigma_uhz": 0.021,
+     "amplitude_pct": 0.022,
+     "snr": 11.4
+    },
+    {
+     "id": "f35",
+     "frequency_uhz": 137.175,
+     "sigma_uhz": 0.036,
+     "amplitude_pct": 0.0123,
+     "snr": 6.8
+    },
+    {
+     "id": "f13",
+     "frequency_uhz": 138.001,
+     "sigma_uhz": 0.017,
+     "amplitude_pct": 0.0268,
+     "snr": 14.7
+    },
+    {
+     "id": "f21",
+     "frequency_uhz": 156.531,
+     "sigma_uhz": 0.021,
+     "amplitude_pct": 0.0189,
+     "snr": 11.6
+    },
+    {
+     "id": "f42",
+     "frequency_uhz": 165.91,
+     "sigma_uhz": 0.042,
+     "amplitude_pct": 0.0088,
+     "snr": 5.8
+    },
+    {
+     "id": "f19",
+     "frequency_uhz": 199.096,
+     "sigma_uhz": 0.016,
+     "amplitude_pct": 0.0197,
+     "snr": 15.6
+    },
+    {
+     "id": "f44",
+     "frequency_uhz": 205.658,
+     "sigma_uhz": 0.041,
+     "amplitude_pct": 0.0073,
+     "snr": 5.9
+    },
+    {
+     "id": "f38",
+     "frequency_uhz": 207.772,
+     "sigma_uhz": 0.027,
+     "amplitude_pct": 0.0109,
+     "snr": 9.0
+    },
+    {
+     "id": "f27",
+     "frequency_uhz": 212.628,
+     "sigma_uhz": 0.018,
+     "amplitude_pct": 0.0165,
+     "snr": 13.9
+    },
+    {
+     "id": "f39",
+     "frequency_uhz": 214.542,
+     "sigma_uhz": 0.026,
+     "amplitude_pct": 0.0108,
+     "snr": 9.2
+    },
+    {
+     "id": "f8",
+     "frequency_uhz": 216.8029,
+     "sigma_uhz": 0.0075,
+     "amplitude_pct": 0.0376,
+     "snr": 32.4
+    },
+    {
+     "id": "f26",
+     "frequency_uhz": 220.13,
+     "sigma_uhz": 0.016,
+     "amplitude_pct": 0.0174,
+     "snr": 15.2
+    },
+    {
+     "id": "f43",
+     "frequency_uhz": 240.457,
+     "sigma_uhz": 0.034,
+     "amplitude_pct": 0.0073,
+     "snr": 7.1
+    },
+    {
+     "id": "f41",
+     "frequency_uhz": 251.885,
+     "sigma_uhz": 0.025,
+     "amplitude_pct": 0.00946,
+     "snr": 9.7
+    },
+    {
+     "id": "f49",
+     "frequency_uhz": 322.214,
+     "sigma_uhz": 0.037,
+     "amplitude_pct": 0.00496,
+     "snr": 6.6
+    },
+    {
+     "id": "f23",
+     "frequency_uhz": 324.3621,
+     "sigma_uhz": 0.0099,
+     "amplitude_pct": 0.01839,
+     "snr": 24.6
+    },
+    {
+     "id": "f40",
+     "frequency_uhz": 326.802,
+     "sigma_uhz": 0.017,
+     "amplitude_pct": 0.01072,
+     "snr": 14.5
+    },
+    {
+     "id": "f47",
+     "frequency_uhz": 339.558,
+     "sigma_uhz": 0.032,
+     "amplitude_pct": 0.00545,
+     "snr": 7.6
+    },
+    {
+     "id": "f54",
+     "frequency_uhz": 344.723,
+     "sigma_uhz": 0.045,
+     "amplitude_pct": 0.00382,
+     "snr": 5.4
+    },
+    {
+     "id": "f46",
+     "frequency_uhz": 347.365,
+     "sigma_uhz": 0.028,
+     "amplitude_pct": 0.00616,
+     "snr": 8.8
+    },
+    {
+     "id": "f53",
+     "frequency_uhz": 355.615,
+     "sigma_uhz": 0.041,
+     "amplitude_pct": 0.00401,
+     "snr": 6.0
+    },
+    {
+     "id": "f45",
+     "frequency_uhz": 369.235,
+     "sigma_uhz": 0.023,
+     "amplitude_pct": 0.007,
+     "snr": 10.8
+    },
+    {
+     "id": "f50",
+     "frequency_uhz": 398.167,
+     "sigma_uhz": 0.03,
+     "amplitude_pct": 0.00484,
+     "snr": 8.2
+    },
+    {
+     "id": "f55",
+     "frequency_uhz": 433.569,
+     "sigma_uhz": 0.036,
+     "amplitude_pct": 0.00372,
+     "snr": 6.9
+    },
+    {
+     "id": "f56",
+     "frequency_uhz": 457.389,
+     "sigma_uhz": 0.038,
+     "amplitude_pct": 0.00333,
+     "snr": 6.4
+    },
+    {
+     "id": "f48",
+     "frequency_uhz": 471.04,
+     "sigma_uhz": 0.023,
+     "amplitude_pct": 0.00529,
+     "snr": 10.5
+    },
+    {
+     "id": "f57",
+     "frequency_uhz": 477.586,
+     "sigma_uhz": 0.037,
+     "amplitude_pct": 0.00326,
+     "snr": 6.6
+    },
+    {
+     "id": "f59",
+     "frequency_uhz": 534.309,
+     "sigma_uhz": 0.041,
+     "amplitude_pct": 0.00268,
+     "snr": 6.0
+    },
+    {
+     "id": "f60",
+     "frequency_uhz": 542.365,
+     "sigma_uhz": 0.044,
+     "amplitude_pct": 0.00246,
+     "snr": 5.6
+    },
+    {
+     "id": "f58",
+     "frequency_uhz": 545.024,
+     "sigma_uhz": 0.036,
+     "amplitude_pct": 0.00298,
+     "snr": 6.8
+    },
+    {
+     "id": "f51",
+     "frequency_uhz": 608.303,
+     "sigma_uhz": 0.021,
+     "amplitude_pct": 0.0047,
+     "snr": 11.7
+    },
+    {
+     "id": "f52",
+     "frequency_uhz": 611.978,
+     "sigma_uhz": 0.021,
+     "amplitude_pct": 0.00465,
+     "snr": 11.5
+    },
+    {
+     "id": "f61",
+     "frequency_uhz": 615.023,
+     "sigma_uhz": 0.044,
+     "amplitude_pct": 0.00221,
+     "snr": 5.5
+    },
+    {
+     "id": "f62",
+     "frequency_uhz": 817.495,
+     "sigma_uhz": 0.042,
+     "amplitude_pct": 0.00198,
+     "snr": 5.8
+    }
+   ]
+  },
+  "granulation_b_uhz": {
+   "tess_s29": 150.87,
+   "cheops_visit1": 165.06
+  },
+  "flicker_index": {
+   "tess": [
+    2.07,
+    0.09
+   ],
+   "cheops": [
+    2.09,
+    0.15
+   ]
+  },
+  "cheops_file_keys": [
+   "CH_PR100010_TG001501",
+   "CH_PR100010_TG001502",
+   "CH_PR100010_TG001503"
+  ]
+ },
+ "beta_pic": {
+  "source": "Zieba et al. 2019, A&A 625, L13 (Transiting exocomets detected in broadband light by TESS in the beta Pictoris system), Appendix table",
+  "data": "TESS sectors 5-7 PDCSAP (sector 4 excluded), Period04 pre-whitening to S/N 4 (Breger et al. 1993)",
+  "tic": 270577175,
+  "sectors": [
+   5,
+   6,
+   7
+  ],
+  "frequencies": [
+   {
+    "id": "f1",
+    "frequency_cd": 47.438928,
+    "sigma_cd": 1.2e-05,
+    "amplitude_mmag": 1.048,
+    "snr": 34.3
+   },
+   {
+    "id": "f2",
+    "frequency_cd": 53.691744,
+    "sigma_cd": 1.2e-05,
+    "amplitude_mmag": 1.048,
+    "snr": 36.4
+   },
+   {
+    "id": "f3",
+    "frequency_cd": 50.491833,
+    "sigma_cd": 1.3e-05,
+    "amplitude_mmag": 0.94,
+    "snr": 39.6
+   },
+   {
+    "id": "f4",
+    "frequency_cd": 54.23744,
+    "sigma_cd": 2e-05,
+    "amplitude_mmag": 0.568,
+    "snr": 41.7
+   },
+   {
+    "id": "f5",
+    "frequency_cd": 39.06304,
+    "sigma_cd": 3.0000000000000004e-05,
+    "amplitude_mmag": 0.442,
+    "snr": 40.4
+   },
+   {
+    "id": "f6",
+    "frequency_cd": 46.54302,
+    "sigma_cd": 3.0000000000000004e-05,
+    "amplitude_mmag": 0.414,
+    "snr": 27.3
+   },
+   {
+    "id": "f7",
+    "frequency_cd": 48.91878,
+    "sigma_cd": 5e-05,
+    "amplitude_mmag": 0.23,
+    "snr": 19.1
+   },
+   {
+    "id": "f8",
+    "frequency_cd": 43.52779,
+    "sigma_cd": 6.000000000000001e-05,
+    "amplitude_mmag": 0.217,
+    "snr": 20.6
+   },
+   {
+    "id": "f9",
+    "frequency_cd": 47.28386,
+    "sigma_cd": 7.000000000000001e-05,
+    "amplitude_mmag": 0.175,
+    "snr": 22.1
+   },
+   {
+    "id": "f10",
+    "frequency_cd": 57.45209,
+    "sigma_cd": 8e-05,
+    "amplitude_mmag": 0.163,
+    "snr": 27.0
+   },
+   {
+    "id": "f11",
+    "frequency_cd": 34.76041,
+    "sigma_cd": 9e-05,
+    "amplitude_mmag": 0.143,
+    "snr": 37.4
+   },
+   {
+    "id": "f12",
+    "frequency_cd": 38.12911,
+    "sigma_cd": 9e-05,
+    "amplitude_mmag": 0.133,
+    "snr": 33.2
+   },
+   {
+    "id": "f13",
+    "frequency_cd": 45.26957,
+    "sigma_cd": 0.0001,
+    "amplitude_mmag": 0.122,
+    "snr": 15.9
+   },
+   {
+    "id": "f14",
+    "frequency_cd": 51.49625,
+    "sigma_cd": 0.00011,
+    "amplitude_mmag": 0.118,
+    "snr": 15.5
+   },
+   {
+    "id": "f15",
+    "frequency_cd": 47.27019,
+    "sigma_cd": 0.00012000000000000002,
+    "amplitude_mmag": 0.108,
+    "snr": 15.5
+   },
+   {
+    "id": "f16",
+    "frequency_cd": 53.85463,
+    "sigma_cd": 0.00014000000000000001,
+    "amplitude_mmag": 0.09,
+    "snr": 13.0
+   },
+   {
+    "id": "f17",
+    "frequency_cd": 49.7125,
+    "sigma_cd": 0.00016,
+    "amplitude_mmag": 0.077,
+    "snr": 12.9
+   },
+   {
+    "id": "f18",
+    "frequency_cd": 50.83102,
+    "sigma_cd": 0.00015000000000000001,
+    "amplitude_mmag": 0.087,
+    "snr": 15.7
+   },
+   {
+    "id": "f19",
+    "frequency_cd": 43.82885,
+    "sigma_cd": 0.00015000000000000001,
+    "amplitude_mmag": 0.083,
+    "snr": 12.9
+   },
+   {
+    "id": "f20",
+    "frequency_cd": 65.13492,
+    "sigma_cd": 0.00015000000000000001,
+    "amplitude_mmag": 0.082,
+    "snr": 24.1
+   },
+   {
+    "id": "f21",
+    "frequency_cd": 44.6834,
+    "sigma_cd": 0.00015000000000000001,
+    "amplitude_mmag": 0.083,
+    "snr": 16.9
+   },
+   {
+    "id": "f22",
+    "frequency_cd": 49.55926,
+    "sigma_cd": 0.00016,
+    "amplitude_mmag": 0.079,
+    "snr": 14.9
+   },
+   {
+    "id": "f23",
+    "frequency_cd": 42.03524,
+    "sigma_cd": 0.00016,
+    "amplitude_mmag": 0.077,
+    "snr": 16.7
+   },
+   {
+    "id": "f24",
+    "frequency_cd": 41.65028,
+    "sigma_cd": 0.00017,
+    "amplitude_mmag": 0.073,
+    "snr": 18.2
+   },
+   {
+    "id": "f25",
+    "frequency_cd": 48.1378,
+    "sigma_cd": 0.0002,
+    "amplitude_mmag": 0.062,
+    "snr": 15.4
+   },
+   {
+    "id": "f26",
+    "frequency_cd": 45.90034,
+    "sigma_cd": 0.0002,
+    "amplitude_mmag": 0.064,
+    "snr": 14.3
+   },
+   {
+    "id": "f27",
+    "frequency_cd": 50.2686,
+    "sigma_cd": 0.0002,
+    "amplitude_mmag": 0.056,
+    "snr": 15.8
+   },
+   {
+    "id": "f28",
+    "frequency_cd": 75.6781,
+    "sigma_cd": 0.0002,
+    "amplitude_mmag": 0.051,
+    "snr": 17.2
+   },
+   {
+    "id": "f29",
+    "frequency_cd": 58.3472,
+    "sigma_cd": 0.00030000000000000003,
+    "amplitude_mmag": 0.041,
+    "snr": 9.2
+   },
+   {
+    "id": "f30",
+    "frequency_cd": 54.2283,
+    "sigma_cd": 0.0002,
+    "amplitude_mmag": 0.062,
+    "snr": 9.2
+   },
+   {
+    "id": "f31",
+    "frequency_cd": 45.4369,
+    "sigma_cd": 0.00030000000000000003,
+    "amplitude_mmag": 0.049,
+    "snr": 13.4
+   },
+   {
+    "id": "f32",
+    "frequency_cd": 54.4625,
+    "sigma_cd": 0.00030000000000000003,
+    "amplitude_mmag": 0.048,
+    "snr": 9.5
+   },
+   {
+    "id": "f33",
+    "frequency_cd": 53.5523,
+    "sigma_cd": 0.00030000000000000003,
+    "amplitude_mmag": 0.038,
+    "snr": 12.6
+   },
+   {
+    "id": "f34",
+    "frequency_cd": 42.1729,
+    "sigma_cd": 0.00030000000000000003,
+    "amplitude_mmag": 0.044,
+    "snr": 12.5
+   },
+   {
+    "id": "f35",
+    "frequency_cd": 58.2512,
+    "sigma_cd": 0.00030000000000000003,
+    "amplitude_mmag": 0.041,
+    "snr": 13.7
+   },
+   {
+    "id": "f36",
+    "frequency_cd": 42.396,
+    "sigma_cd": 0.00030000000000000003,
+    "amplitude_mmag": 0.04,
+    "snr": 4.7
+   },
+   {
+    "id": "f37",
+    "frequency_cd": 52.9223,
+    "sigma_cd": 0.00030000000000000003,
+    "amplitude_mmag": 0.04,
+    "snr": 9.0
+   },
+   {
+    "id": "f38",
+    "frequency_cd": 53.68985,
+    "sigma_cd": 7.000000000000001e-05,
+    "amplitude_mmag": 0.174,
+    "snr": 15.5
+   },
+   {
+    "id": "f39",
+    "frequency_cd": 57.0484,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.032,
+    "snr": 15.4
+   },
+   {
+    "id": "f40",
+    "frequency_cd": 50.6455,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.033,
+    "snr": 6.7
+   },
+   {
+    "id": "f41",
+    "frequency_cd": 37.4786,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.033,
+    "snr": 6.6
+   },
+   {
+    "id": "f42",
+    "frequency_cd": 69.3752,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.033,
+    "snr": 13.7
+   },
+   {
+    "id": "f43",
+    "frequency_cd": 41.3189,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.033,
+    "snr": 18.9
+   },
+   {
+    "id": "f44",
+    "frequency_cd": 61.4461,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.032,
+    "snr": 4.3
+   },
+   {
+    "id": "f45",
+    "frequency_cd": 22.8145,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.031,
+    "snr": 4.3
+   },
+   {
+    "id": "f46",
+    "frequency_cd": 64.6154,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.03,
+    "snr": 4.2
+   },
+   {
+    "id": "f47",
+    "frequency_cd": 71.0441,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.036,
+    "snr": 4.2
+   },
+   {
+    "id": "f48",
+    "frequency_cd": 52.3034,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.031,
+    "snr": 8.8
+   },
+   {
+    "id": "f49",
+    "frequency_cd": 47.4101,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.035,
+    "snr": 10.0
+   },
+   {
+    "id": "f50",
+    "frequency_cd": 76.3167,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.03,
+    "snr": 10.4
+   },
+   {
+    "id": "f51",
+    "frequency_cd": 45.3553,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.028,
+    "snr": 10.1
+   },
+   {
+    "id": "f52",
+    "frequency_cd": 53.4991,
+    "sigma_cd": 0.0004,
+    "amplitude_mmag": 0.031,
+    "snr": 8.2
+   },
+   {
+    "id": "f53",
+    "frequency_cd": 69.5526,
+    "sigma_cd": 0.0005,
+    "amplitude_mmag": 0.027,
+    "snr": 4.6
+   },
+   {
+    "id": "f54",
+    "frequency_cd": 56.1099,
+    "sigma_cd": 0.0005,
+    "amplitude_mmag": 0.026,
+    "snr": 4.0
+   }
+  ]
+ },
+ "toi197": {
+  "source": "Huber et al. 2019, AJ 157, 245 (TOI-197), section 3",
+  "tic": 441462736,
+  "sectors": [
+   2
+  ],
+  "numax_uhz": [
+   430.0,
+   18.0
+  ],
+  "dnu_uhz": [
+   28.94,
+   0.15
+  ],
+  "data": "TESS sector 2, 2-min, TASOC light curve"
+ },
+ "poyatos2025": {
+  "source": "Poyatos et al. 2025, A&A 699, A242, doi:10.1051/0004-6361/202453517 (journal version; abstract as recorded in the University of Barcelona repository, hdl.handle.net/2445/224170)",
+  "data": "CHEOPS imagettes (3 s cadence) reduced with PIPE, M dwarfs",
+  "flares_denoised": 349,
+  "stars": 63,
+  "complex_fraction_approx": 0.4,
+  "denoising_gain_pct": 34,
+  "alpha_all_denoised": [
+   1.92,
+   0.07
+  ],
+  "energy_range_erg": [
+   2.2e+26,
+   8.1e+30
+  ],
+  "lognormal_preferred": true,
+  "arxiv_v2_differences": {
+   "version": "arXiv:2412.15297v2 (9 Jul 2025)",
+   "flares_original": 215,
+   "flares_denoised": 291,
+   "stars": 62,
+   "complex_fraction_approx": 0.42,
+   "denoising_gain_pct": 35.3,
+   "alpha_all_denoised": [
+    1.99,
+    0.1
+   ],
+   "alpha_all_original": [
+    1.94,
+    0.23
+   ],
+   "note": "The arXiv v2 text gives these numbers; the journal version's abstract gives those above. SetuHQ compares with the journal version; the arXiv tables are the source for the method details only."
+  }
+ },
+ "bruno2024": {
+  "source": "Bruno et al. 2024, A&A 686, A239 (arXiv:2403.17065)",
+  "complex_fraction_min": 0.3,
+  "note": "130 late-K and M stars, CHEOPS 3-s imagettes and TESS 20-s; no per-flare table was found in VizieR (only light curves)"
+ }
+}

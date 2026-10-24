@@ -678,3 +678,8 @@ TOOLS = [
     (benchmark_results, True), (sentinel_providers, True),
     (cheops_proposal_pack, False),
 ]
+
+# The stellar tools (flares, pulsations, CHEOPS): setuhq.stellar_tools, imported last (it uses the helpers above).
+from setuhq.stellar_tools import STELLAR_TOOLS  # noqa: E402
+
+TOOLS += STELLAR_TOOLS

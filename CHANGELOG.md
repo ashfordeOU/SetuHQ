@@ -12,6 +12,27 @@ breaking changes are called out explicitly.
 
 ### Added
 
+- **Beyond planets: stellar flares, pulsations and CHEOPS** ([docs/STELLAR.md](docs/STELLAR.md)).
+  `setuhq flares`, `setuhq pulsations` and `setuhq cheops`, and the MCP tools `find_flares`,
+  `pulsation_spectrum` and `get_cheops_lightcurve` (slash command `/setuhq-stellar`). Flares: a
+  flare-preserving detrend, Chang et al. (2015) candidate criteria, optional stationary-wavelet
+  denoising (Poyatos et al. 2025; extra `[wavelets]`), Mendoza et al. (2022) template fits with
+  multi-component models chosen by BIC, energies for a 9000 K blackbody, the flare frequency
+  distribution (maximum-likelihood power law and a log-normal comparison), injection-recovery
+  completeness and flux-inverted and quiet-star nulls. Pulsations: pre-whitening to S/N 4 with a
+  multi-sine refit, combination flags, Harvey backgrounds, numax and Δν with a bootstrap, a heuristic
+  type, and red-noise surrogates. CHEOPS: public DRP light curves only, through DACE (extra
+  `[cheops]`), roll-angle decorrelation, one timeline with TESS, and ESA's acknowledgement, the
+  programme and visit ids, the credit line and SetuHQ's independence disclaimer on every output.
+  Compared against published results under protocol v3
+  (`docs/results/stellar_validation_protocol_v3.json`, committed before its run): flares partly
+  validated (5 of 8 checks pass), pulsations partly validated (7 of 9), CHEOPS not validated
+  (2 of 5). The results are in `docs/results/stellar_validation.md`, with the CHEOPS-derived results
+  in `docs/results/stellar_validation_cheops.md` under ESA's terms; what is not validated is listed
+  there.
+- **CHEOPS data stay under ESA's terms** (CC BY-NC 3.0 IGO; commercial use needs ESA's prior
+  authorisation): `LICENSING.md`, `NOTICE` and `docs/PRO.md` exclude them from CC BY 4.0, the
+  commercial licence and Pro.
 - **DOI and PyPI.** The Zenodo concept DOI `10.5281/zenodo.23568348` (all versions) is in `CITATION.cff`
   (`doi`, `identifiers`), `codemeta.json` (`identifier`) and `paper/paper.bib`; the README has a PyPI badge
   (static, from `__version__`, so `tools/gen_readme_assets.py --check` stays offline) and a DOI badge, its

@@ -142,7 +142,7 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     if args.list_tools:
         for fn, read_only in TOOLS:
-            print(f"{fn.__name__}{'' if read_only else '  (writes a new run directory; over HTTP only with --allow-writes)'}")
+            print(f"{fn.__name__}{'' if read_only else '  (writes: a new run directory or the cache; over HTTP only with --allow-writes)'}")
         return 0
     if args.http:
         try:

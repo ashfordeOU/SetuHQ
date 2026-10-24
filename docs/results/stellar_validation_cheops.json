@@ -1,0 +1,3697 @@
+{
+ "kind": "setuhq-stellar-validation-cheops/1",
+ "licence_notice": "CHEOPS-derived results. Everything in this file is derived from CHEOPS data (ESA) and is distributed under ESA's terms, the CC BY-NC 3.0 IGO licence, not under SetuHQ's CC BY 4.0, its commercial licence or SetuHQ Pro; commercial use needs ESA's prior authorisation (data.licences@esa.int). SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium.",
+ "generated_at": "2026-10-22T06:54:39+00:00",
+ "protocol_file": "docs/results/stellar_validation_protocol_v3.json",
+ "protocol_sha256": "c978f04c24b831c7f09d6ddd4d84e94cdee9b297a9ee87358ad8614da8f1b1ba",
+ "protocol_commit": "b2ac54c261490510feb38619971ee59a3e1c10a4",
+ "code_fingerprint": "1d625f69621398a4c9c1f4a0a7886c15a86165184b180abb4762f3fc31582bec",
+ "capability": {
+  "status": "not validated",
+  "label": "not validated (2 of 5 checks pass)",
+  "passed": 2,
+  "of": 5,
+  "inconclusive": 2,
+  "tuning_set": 0
+ },
+ "checks": [
+  {
+   "capability": "cheops",
+   "check": "cheops_null",
+   "item": "cheops_flares",
+   "text": "Gate. CHEOPS DRP M dwarfs: flux-inverted null (real flares masked) at most 10% of the real flare count, with and without denoising",
+   "changed": null,
+   "tuning": false,
+   "gate": true,
+   "gated": false,
+   "value": 0.14893617021276595,
+   "result": "fail"
+  },
+  {
+   "capability": "cheops",
+   "check": "cheops_injection",
+   "item": "cheops_flares",
+   "text": "Gate. CHEOPS DRP M dwarfs: injected flares with S/N >= 10 and FWHM >= 3 cadences recovered, 95% interval lower bound >= 0.8",
+   "changed": null,
+   "tuning": false,
+   "gate": true,
+   "gated": false,
+   "value": 0.46089680097443614,
+   "result": "fail"
+  },
+  {
+   "capability": "cheops",
+   "check": "cheops_poyatos_complex",
+   "item": "cheops_flares",
+   "text": "CHEOPS DRP M dwarfs (denoised): complex fraction's 95% interval contains Poyatos et al.'s ~0.40 (only if both gates pass)",
+   "changed": null,
+   "tuning": false,
+   "gate": false,
+   "gated": true,
+   "value": [
+    0.3018739975305186,
+    0.5502008985931862
+   ],
+   "result": "inconclusive",
+   "computed_result": "pass",
+   "why": "a gate (the CHEOPS null or injection check) did not pass; the comparison is not interpretable"
+  },
+  {
+   "capability": "cheops",
+   "check": "cheops_poyatos_alpha",
+   "item": "cheops_flares",
+   "text": "CHEOPS DRP M dwarfs (denoised): power-law index within 2 sigma (combined) of Poyatos et al.'s 1.92 +/- 0.07 (only if both gates pass)",
+   "changed": null,
+   "tuning": false,
+   "gate": false,
+   "gated": true,
+   "value": 0.6229766591980799,
+   "result": "inconclusive",
+   "computed_result": "pass",
+   "why": "a gate (the CHEOPS null or injection check) did not pass; the comparison is not interpretable"
+  },
+  {
+   "capability": "cheops",
+   "check": "pycheops_same_input",
+   "item": "cheops_pycheops",
+   "text": "Same input as pycheops: on every reference visit our decorrelation matches pycheops' to < 10 ppm rms, or reaches a lower rms on the same points and terms (relaxed after v1)",
+   "changed": "relaxed after v1",
+   "tuning": false,
+   "gate": false,
+   "gated": false,
+   "value": true,
+   "result": "pass"
+  },
+  {
+   "capability": "cheops",
+   "check": "pycheops_end_to_end",
+   "item": "cheops_pycheops",
+   "text": "End to end (DACE DRP arrays vs pycheops' DRP product): correlation >= 0.9 on every reference visit",
+   "changed": null,
+   "tuning": false,
+   "gate": false,
+   "gated": false,
+   "value": 0.6117033999380495,
+   "result": "fail"
+  },
+  {
+   "capability": "cheops",
+   "check": "hr10_cheops_f1f2",
+   "item": "hr10_cheops",
+   "text": "HR 10 CHEOPS, three public visits together: the two strongest TESS delta Scuti frequencies (f1, f2) found",
+   "changed": null,
+   "tuning": false,
+   "gate": false,
+   "gated": false,
+   "value": true,
+   "result": "pass"
+  }
+ ],
+ "results": {
+  "cheops_flares": {
+   "data": "CHEOPS DRP (subarray) light curves via DACE public mode; Poyatos et al. used 3-s imagettes reduced with PIPE, which DACE does not serve",
+   "acknowledgement": "CHEOPS is an ESA mission in partnership with Switzerland with important contributions to the payload and the ground segment from Austria, Belgium, France, Germany, Hungary, Italy, Portugal, Spain, Sweden, and the United Kingdom. The CHEOPS Consortium would like to gratefully acknowledge the support received by all the agencies, offices, universities, and industries involved. Their flexibility and willingness to explore new approaches were essential to the success of this mission. CHEOPS data analysed in this article will be made available in the CHEOPS mission archive (https://cheops.unige.ch/archive_browser/).",
+   "credits": [
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG001701_V0300",
+     "obs_id": 1169256,
+     "visit_id": 6113,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG001702_V0300",
+     "obs_id": 1204011,
+     "visit_id": 6164,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.3",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG038101_V0300",
+     "obs_id": 1223846,
+     "visit_id": 6385,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG038102_V0300",
+     "obs_id": 1225637,
+     "visit_id": 4395,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG038103_V0300",
+     "obs_id": 1225638,
+     "visit_id": 1803,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG038104_V0300",
+     "obs_id": 1225639,
+     "visit_id": 3468,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG038105_V0300",
+     "obs_id": 1225640,
+     "visit_id": 3940,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG038201_V0300",
+     "obs_id": 1232125,
+     "visit_id": 492,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG038202_V0300",
+     "obs_id": 1239858,
+     "visit_id": 2783,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG001801_V0300",
+     "obs_id": 1240182,
+     "visit_id": 6120,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG003201_V0300",
+     "obs_id": 1541157,
+     "visit_id": 3163,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG003001_V0300",
+     "obs_id": 1544605,
+     "visit_id": 5868,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.3",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG003401_V0300",
+     "obs_id": 1566129,
+     "visit_id": 3193,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG003601_V0300",
+     "obs_id": 1566187,
+     "visit_id": 2315,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG003402_V0300",
+     "obs_id": 1570785,
+     "visit_id": 621,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG003701_V0300",
+     "obs_id": 1576931,
+     "visit_id": 3509,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG003101_V0300",
+     "obs_id": 1585628,
+     "visit_id": 5226,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG003901_V0300",
+     "obs_id": 1592719,
+     "visit_id": 3937,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG009201_V0300",
+     "obs_id": 1833949,
+     "visit_id": 2052,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG010201_V0300",
+     "obs_id": 1848604,
+     "visit_id": 5994,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG011101_V0300",
+     "obs_id": 1852454,
+     "visit_id": 3626,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG011701_V0300",
+     "obs_id": 1862024,
+     "visit_id": 3901,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG011301_V0300",
+     "obs_id": 1870678,
+     "visit_id": 5888,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR130057",
+     "file_key": "CH_PR130057_TG000101_V0300",
+     "obs_id": 1876747,
+     "visit_id": 11490,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR130057",
+     "file_key": "CH_PR130057_TG000201_V0300",
+     "obs_id": 1877952,
+     "visit_id": 11560,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG037201_V0300",
+     "obs_id": 1420592,
+     "visit_id": 2696,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG037202_V0300",
+     "obs_id": 1445378,
+     "visit_id": 4759,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG049601_V0300",
+     "obs_id": 1711753,
+     "visit_id": 4741,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG049602_V0300",
+     "obs_id": 1783160,
+     "visit_id": 2736,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG049603_V0300",
+     "obs_id": 1991755,
+     "visit_id": 3224,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG049604_V0300",
+     "obs_id": 2044929,
+     "visit_id": 3921,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.3",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG049605_V0300",
+     "obs_id": 2044930,
+     "visit_id": 3195,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.3",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG036401_V0300",
+     "obs_id": 1278684,
+     "visit_id": 5036,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG048901_V0300",
+     "obs_id": 1646684,
+     "visit_id": 3265,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG048902_V0300",
+     "obs_id": 1923651,
+     "visit_id": 3505,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.3",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG048903_V0300",
+     "obs_id": 2183390,
+     "visit_id": 1658,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.3",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG035201_V0300",
+     "obs_id": 1259827,
+     "visit_id": 2593,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG035202_V0300",
+     "obs_id": 1278906,
+     "visit_id": 5742,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG035203_V0300",
+     "obs_id": 1282015,
+     "visit_id": 3933,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG047801_V0300",
+     "obs_id": 1627571,
+     "visit_id": 4438,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG047802_V0300",
+     "obs_id": 1627572,
+     "visit_id": 4025,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG047803_V0300",
+     "obs_id": 1639478,
+     "visit_id": 3316,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG047804_V0300",
+     "obs_id": 1649642,
+     "visit_id": 3024,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG047805_V0300",
+     "obs_id": 1654964,
+     "visit_id": 6235,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG052601_V0300",
+     "obs_id": 1930635,
+     "visit_id": 4428,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG052602_V0300",
+     "obs_id": 1937591,
+     "visit_id": 4434,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG033901_V0300",
+     "obs_id": 1498638,
+     "visit_id": 5579,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG046501_V0300",
+     "obs_id": 1531339,
+     "visit_id": 5222,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG046502_V0300",
+     "obs_id": 2090654,
+     "visit_id": 6097,
+     "pi_name": "Isabella PAGANO",
+     "drp_version": "14.1.3",
+     "credit": "Credit: ESA, Isabella PAGANO"
+    }
+   ],
+   "citations": [
+    "Benz, W., et al. 2021, Experimental Astronomy, 51, 109 (the CHEOPS mission)",
+    "Hoyer, S., et al. 2020, A&A, 635, A24 (the CHEOPS Data Reduction Pipeline)",
+    "Fortier, A., et al. 2024, A&A, 687, A302 (CHEOPS in-flight performance)"
+   ],
+   "dace_acknowledgement": "This publication makes use of The Data & Analysis Center for Exoplanets (DACE), which is a facility based at the University of Geneva (CH) dedicated to extrasolar planets data visualisation, exchange and analysis. DACE is a platform of the Swiss National Centre of Competence in Research (NCCR) PlanetS, federating the Swiss expertise in Exoplanet research. The DACE platform is available at https://dace.unige.ch.",
+   "disclaimer": "SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium.",
+   "commercial_use": "CHEOPS data, and outputs derived from them, stay under ESA's terms: data in the ESA Space Science Archives are distributed under the CC BY-NC 3.0 IGO licence, and any commercial use, including use that indirectly generates financial gain, needs ESA's prior authorisation (data.licences@esa.int). SetuHQ's commercial licence and SetuHQ Pro cover SetuHQ's code and services, not CHEOPS data or CHEOPS-derived outputs.",
+   "licence": "CC BY-NC 3.0 IGO (ESA Space Science Archives terms); commercial use needs ESA's prior authorisation",
+   "served_by": "DACE (dace.unige.ch): the University of Geneva's public API in front of the CHEOPS Mission Archive",
+   "terms": {
+    "esa_publication_guidelines": "https://www.cosmos.esa.int/web/cheops-guest-observers-programme/publication-guidelines",
+    "esdc_terms": "https://cosmos.esa.int/web/esdc/terms-and-conditions",
+    "dace_acknowledgement": "https://dace.unige.ch/publications/"
+   },
+   "summary": {
+    "original": {
+     "flares": 47,
+     "observing_days": 11.2916,
+     "complex": 25,
+     "complex_fraction": 0.5319148936170213,
+     "complex_ci95": [
+      0.39232141926770786,
+      0.6666853783153737
+     ],
+     "inverted_null": 7,
+     "power_law_above_median_energy": {
+      "n": 19,
+      "e_min": 8.408357467688705e+31,
+      "alpha": 2.2040499474682744,
+      "alpha_err": 0.27622800231524547,
+      "alpha_unbiased": 2.077307847734772
+     },
+     "vs_lognormal": {
+      "n": 19,
+      "R": -0.5668554225468938,
+      "R_normalised": -0.6838069979666711,
+      "p_value": 0.49409704706540947,
+      "preferred": "neither (p ≥ 0.1)",
+      "lognormal_mu_ln_erg": 72.9884568164092,
+      "lognormal_sigma": 1.2506640564009976,
+      "alpha": 2.2040499474682744
+     }
+    },
+    "denoised": {
+     "flares": 57,
+     "observing_days": 11.2916,
+     "complex": 24,
+     "complex_fraction": 0.42105263157894735,
+     "complex_ci95": [
+      0.3018739975305186,
+      0.5502008985931862
+     ],
+     "inverted_null": 8,
+     "power_law_above_median_energy": {
+      "n": 23,
+      "e_min": 6.9191272991773195e+31,
+      "alpha": 2.0650609934687965,
+      "alpha_err": 0.22208056898819203,
+      "alpha_unbiased": 1.9724469940367273
+     },
+     "vs_lognormal": {
+      "n": 23,
+      "R": -1.067541335595834,
+      "R_normalised": -1.0046130682491319,
+      "p_value": 0.3150832021451552,
+      "preferred": "neither (p ≥ 0.1)",
+      "lognormal_mu_ln_erg": 73.27111784981145,
+      "lognormal_sigma": 1.1962650477304733,
+      "alpha": 2.0650609934687965
+     }
+    },
+    "denoising_gain": 0.2127659574468085,
+    "injection_gate": {
+     "recovered": 183,
+     "of": 357,
+     "fraction": 0.5126050420168067,
+     "ci95": [
+      0.46089680097443614,
+      0.564044890892577
+     ],
+     "all_injected": 1501,
+     "all_recovered": 454,
+     "selection": "S/N ≥ 10 and FWHM ≥ 3 cadences"
+    },
+    "injection_placement": {
+     "n_placed": 1501,
+     "n_unplaced": 851,
+     "unplaced_fwhm_minutes": [
+      7.746081930155187,
+      3.8331125486525397,
+      1.584380218773578,
+      0.5440380535533029,
+      5.413436835666277,
+      9.875350794098598,
+      5.44852919127579,
+      8.577503096611776,
+      4.698337123865867,
+      9.821935401857806,
+      4.12405364418556,
+      2.1485837874016673,
+      1.1377165837573244,
+      4.321607445991057,
+      8.695531964013437,
+      6.427683792216731,
+      4.664001845213855,
+      8.296145722337851,
+      8.495964122191051,
+      4.666029443993879,
+      4.838122284405406,
+      2.9822073813997907,
+      8.134208563552612,
+      4.983983124870839,
+      2.4287558134342917,
+      9.715409948030903,
+      5.986077825807955,
+      8.271174835217918,
+      4.436406887184004,
+      4.618820030879235,
+      2.7499484101427822,
+      5.429190800988152,
+      6.732339621114658,
+      3.850581138288537,
+      3.230154514493304,
+      4.914595281467663,
+      4.12089987713377,
+      8.964217547058865,
+      3.0409651215579068,
+      3.7037840738932055,
+      8.887091095445284,
+      2.427580900520807,
+      4.3158592118891645,
+      4.672988722922655,
+      4.924724718593247,
+      1.3265783248576086,
+      4.680623870229237,
+      2.6927583151519414,
+      0.9072260049085994,
+      2.47946398378778,
+      7.025961476149912,
+      4.001227380017488,
+      3.275434876667079,
+      5.4989657053956815,
+      4.04396283419782,
+      5.955098069364221,
+      5.409400390776635,
+      6.129732691092998,
+      7.980951250149948,
+      2.6865747237560362,
+      2.1889879703949284,
+      2.321215123134292,
+      2.1398005499070396,
+      2.5060578031080665,
+      7.986570207392727,
+      1.4784424113191106,
+      1.7613080776942729,
+      6.49713210272498,
+      4.231135460201712,
+      1.6358277811145994,
+      9.07648866360728,
+      1.410082045594015,
+      1.951699176308913,
+      8.82470804189535,
+      1.8692670669197122,
+      2.36893474095633,
+      3.5138657673264877,
+      9.144093104600522,
+      2.0375495564565007,
+      7.436822168636232,
+      6.554956059047529,
+      7.138469600003871,
+      1.735643282421079,
+      2.2853147146150983,
+      0.9765392857431995,
+      9.339628891706381,
+      7.273418112524691,
+      7.909703557739122,
+      9.98835260539386,
+      3.4602840232606122,
+      9.680033961525927,
+      6.42908652574595,
+      3.2860025963491677,
+      7.880703259182617,
+      9.633918503162512,
+      6.266320741861,
+      1.7383561441819173,
+      0.5814831967924367,
+      1.6729973552194657,
+      3.91689758591349,
+      7.428399301168567,
+      3.3577227410972266,
+      9.460924048933583,
+      9.948747559016988,
+      0.9729724952356722,
+      2.090907457273747,
+      1.9547589696720769,
+      4.491788289046623,
+      2.4347353906895393,
+      7.822558373725092,
+      4.9947916777798405,
+      4.243341602620562,
+      6.154315241420448,
+      2.303414909797853,
+      2.691613305590646,
+      0.5203353998139472,
+      1.53738456774702,
+      1.8877344316062883,
+      3.279491078447711,
+      6.717716261251506,
+      5.358382153333898,
+      4.712412615203431,
+      5.2887991324589025,
+      4.191726829371041,
+      7.152327894139938,
+      7.5586161363362026,
+      4.1666922908699995,
+      2.728835889974862,
+      1.2511924131948573,
+      9.784067586730302,
+      9.871744865706125,
+      6.3352957572000195,
+      8.646012676376158,
+      0.652173115320433,
+      3.0645504092972553,
+      5.01773329583632,
+      6.672386240872374,
+      0.6330996361043179,
+      2.3152343567870948,
+      7.329351924940413,
+      1.347628623108126,
+      6.201802162699539,
+      7.661381218594875,
+      1.3761064861212695,
+      4.33795215831671,
+      8.35600941753684,
+      3.6611413420698486,
+      1.498064812898544,
+      8.031946968850866,
+      5.08816281898762,
+      8.794856358456814,
+      6.8156823091986265,
+      9.627817667052554,
+      1.9223285536831132,
+      4.960663256613566,
+      2.1843014300660895,
+      8.268315157709031,
+      2.9832291675078646,
+      0.8102690289881832,
+      6.825062200297895,
+      3.0948254171720175,
+      8.821672651423809,
+      0.8391706983864888,
+      1.4836329960722983,
+      2.0574180528696244,
+      4.672767327734125,
+      2.8127467699299475,
+      1.9099381264856345,
+      6.090126229318226,
+      3.0447962867198655,
+      0.628255938981961,
+      4.7814272227886905,
+      8.55469355101429,
+      2.245769418096813,
+      3.7299311840160687,
+      0.9273249784507868,
+      2.155101154579369,
+      0.9297552124794666,
+      7.484822207895311,
+      1.1576569762113003,
+      7.904679642000873,
+      4.781617334255031,
+      0.7183324745514231,
+      0.6825584774418584,
+      7.153193171977073,
+      4.8815892332668716,
+      5.686296710733876,
+      2.1526343840964826,
+      0.5307214748626202,
+      1.157240644608471,
+      8.253468174959362,
+      1.1141993843125513,
+      6.472646407660065,
+      1.8186584713291618,
+      1.2746323907281514,
+      9.758380928673361,
+      7.03403935105567,
+      6.974473956997694,
+      8.878666111356237,
+      6.598448951142539,
+      6.147376534121404,
+      7.988498442756803,
+      8.201503396362064,
+      9.356455574421224,
+      7.164488723820435,
+      9.17402509043142,
+      5.205138502044863,
+      9.002410359435736,
+      8.94257275755664,
+      9.925130523097849,
+      4.7594445679139765,
+      5.460022419545466,
+      4.237791084258499,
+      3.2740362238856036,
+      3.0294901471244615,
+      7.532565413608835,
+      5.772349175036374,
+      2.0273071388813055,
+      6.959745054237274,
+      6.150034429414706,
+      9.958066178722142,
+      2.174603199213127,
+      2.5664665071549733,
+      0.7721204913966605,
+      3.4713034859459455,
+      8.224225631441701,
+      3.5895346805776738,
+      1.6116668131303846,
+      3.1055187626692335,
+      1.366054611484366,
+      6.602768737067463,
+      6.677836735877514,
+      1.1758994544532133,
+      6.687309416828809,
+      2.9592702964261646,
+      4.293921448733305,
+      3.313566805431479,
+      4.799409418932218,
+      3.83520649918254,
+      4.103491154766812,
+      3.2110411365967515,
+      8.026197689551726,
+      8.049879977024148,
+      3.745970683361461,
+      5.528817677330641,
+      3.636903259624239,
+      7.251243086247365,
+      6.006497436832788,
+      2.4900305310547646,
+      1.65717575058133,
+      5.465609904826022,
+      7.540677545173706,
+      1.1081326522373682,
+      3.5058581671902243,
+      2.366466449589858,
+      1.7792075628935766,
+      2.136147683092289,
+      8.52694751193284,
+      3.314576179586288,
+      4.148517181466082,
+      3.6521867624388484,
+      7.048795859432366,
+      8.735756863191465,
+      6.649305292678193,
+      5.150077823875115,
+      6.638120654067896,
+      4.802175817652365,
+      1.028381663586076,
+      1.1825859056193997,
+      5.192149196312276,
+      0.754767649672959,
+      3.393703706854949,
+      4.940078887732426,
+      0.6084793366596066,
+      6.082066473043713,
+      5.519007863625832,
+      1.7721169532896368,
+      1.613602044306003,
+      1.9449647294903623,
+      5.305441825468586,
+      6.305918474970331,
+      1.193213147525461,
+      8.48874946598114,
+      9.630452973120114,
+      5.009530361878299,
+      2.503593133825236,
+      4.562571985953425,
+      2.5849280133972194,
+      1.9732804105023476,
+      0.6075167908503835,
+      4.30802662007088,
+      8.862524212210788,
+      1.6296684562551111,
+      1.106012768850098,
+      8.276565975947532,
+      6.692208744872252,
+      4.280493740661592,
+      7.546638595792015,
+      2.3624291125887407,
+      7.568291511145501,
+      1.4791342173797495,
+      0.7176145707535743,
+      5.099169493448533,
+      2.270953081251059,
+      7.703702960269737,
+      3.0718023410343784,
+      1.0063896085603374,
+      6.6322418108650725,
+      9.654719334072405,
+      7.265447238933652,
+      2.2264488575961603,
+      8.713293937422979,
+      5.70404512158569,
+      5.970376343338527,
+      2.625347118383129,
+      5.810015449193052,
+      7.708387709490956,
+      6.786558586798568,
+      0.556586252132089,
+      4.330946242276223,
+      4.189156575834079,
+      2.5705424100942653,
+      3.673430184458124,
+      9.74644793403336,
+      2.9476026753870035,
+      6.983336009920338,
+      7.18097366208023,
+      7.795786575730303,
+      9.336177673604222,
+      1.44202357749133,
+      3.08908881870057,
+      6.974921117417123,
+      4.039339926832133,
+      1.5338621848136276,
+      3.714155444765121,
+      1.3651000016287713,
+      1.3121366202814821,
+      3.366061179960953,
+      7.946805048210375,
+      2.3761012525455087,
+      2.594768085718621,
+      2.73321884939143,
+      0.8456143655232494,
+      0.5780321522118916,
+      1.5781944174673095,
+      2.7193155743889306,
+      4.108631983101713,
+      2.7094612647299288,
+      6.171184964203246,
+      3.3182594643941936,
+      2.463385942735959,
+      2.351945406161564,
+      9.665415276184566,
+      6.812395639257899,
+      6.634204996307158,
+      6.220190988628995,
+      8.952507176237239,
+      6.707404435294364,
+      9.41047100874308,
+      1.5608674083033953,
+      7.943507304740633,
+      6.74354565203199,
+      0.9666068374960454,
+      8.593161718321117,
+      7.970405145307365,
+      4.81112864933503,
+      3.7097965120158842,
+      6.948701153023902,
+      7.624199887418606,
+      3.786636392856332,
+      3.847688314845995,
+      6.441525730974268,
+      6.556786986012883,
+      4.548343152984294,
+      5.299971758494336,
+      3.583339860715839,
+      7.266633674630154,
+      3.7937875726846237,
+      9.785997527124938,
+      7.188875560705107,
+      7.774529125062089,
+      1.7660019445087909,
+      1.4121276316114422,
+      5.644442453628519,
+      3.637594016509445,
+      9.839471413388388,
+      9.00365127676929,
+      5.73614005817482,
+      2.4876380337035187,
+      2.6388806509164997,
+      5.493259566137881,
+      2.674577597530633,
+      0.9886820871392572,
+      6.505679536527989,
+      3.999443942625547,
+      9.473341197902158,
+      7.223779831500163,
+      7.931455523140939,
+      3.683095497303066,
+      6.388600614659411,
+      9.114611143785137,
+      6.8858686620701794,
+      9.11946754860544,
+      2.2574426487208243,
+      0.6822651378953214,
+      9.561961114456425,
+      3.2426037392653546,
+      4.014134194539309,
+      2.1144810910165295,
+      1.3121098930050081,
+      8.146010935294703,
+      1.2625383307528488,
+      8.398951772006518,
+      8.620986320650234,
+      4.532278764413182,
+      4.264221325209504,
+      8.60871615442863,
+      2.9935319174491855,
+      9.642929268887634,
+      7.949671657446698,
+      6.177185197849329,
+      7.828662678829467,
+      8.149666256506631,
+      9.98128813576696,
+      8.56854425312811,
+      7.50732156163622,
+      4.6139111074846255,
+      9.29869563223446,
+      5.373990291182129,
+      3.8129302959798212,
+      7.9518574525095325,
+      0.5432212955700784,
+      8.9992448360718,
+      4.616349239954603,
+      9.011305139245549,
+      0.9248301143329831,
+      0.9012367807374655,
+      6.037927903677328,
+      5.591261732023133,
+      1.5583688468626296,
+      5.2348496843133745,
+      7.242143344158392,
+      0.9553878483360663,
+      1.376984331037249,
+      5.070594481675678,
+      8.731186279650125,
+      7.8043379478410815,
+      2.8026660684654674,
+      4.824782178794924,
+      1.5005858481036285,
+      0.7554730058119551,
+      2.641953041853204,
+      5.802156339223581,
+      1.1898619979410772,
+      4.835552165691743,
+      6.446171089961605,
+      4.376495785180596,
+      2.7078713912930863,
+      1.184022103461208,
+      2.5521625149691496,
+      7.845704893156138,
+      1.032259679450295,
+      0.6474618738481847,
+      5.709484253280134,
+      3.5740181281019887,
+      1.3077825897431061,
+      3.646250957849417,
+      8.74338580319103,
+      1.9013803599261352,
+      2.731524138658609,
+      6.7224318522154505,
+      0.6143698634228225,
+      1.875664985704653,
+      0.8293592558368742,
+      0.5444296986880975,
+      4.036139729234521,
+      4.263556261759682,
+      9.521413960990708,
+      7.6909411101754435,
+      4.424195591587226,
+      2.714041868585909,
+      4.136400930041361,
+      6.34049369937415,
+      9.359098228987115,
+      1.0090747702209968,
+      3.0049366638632065,
+      7.783397943299256,
+      1.0874103559608757,
+      5.318185699940898,
+      3.4540114698703728,
+      2.190377919539872,
+      4.767195455923767,
+      1.827091345088545,
+      5.2868137013196055,
+      2.035709551268887,
+      8.899629631951779,
+      1.5339919455638908,
+      0.8705680849002184,
+      0.6064479066921916,
+      0.7664553886582713,
+      7.640483612845169,
+      2.0552441805955666,
+      1.3146055615066534,
+      9.175722283592464,
+      4.193346010889098,
+      1.0042436008172488,
+      9.281132000628416,
+      5.218059231913505,
+      5.817001724375794,
+      9.895329267618012,
+      2.3048993190544587,
+      9.344772957388463,
+      4.51911549054895,
+      2.469378682850526,
+      4.499962227214052,
+      5.611519082266774,
+      0.5128945440339346,
+      7.111691841529402,
+      4.204754121095212,
+      0.7074285168565143,
+      1.1677711847799632,
+      1.303923160658689,
+      1.3636195788859842,
+      3.176074260796176,
+      8.502331992011197,
+      3.987538039025337,
+      1.0506398846580416,
+      3.9708995650718673,
+      1.5185328232399469,
+      8.704720969958736,
+      9.92547118769637,
+      4.873413234698492,
+      7.259445788384925,
+      2.4199723395400694,
+      2.7948639411444836,
+      8.078435833656401,
+      2.598215107297975,
+      3.4028862959748474,
+      4.047922437713577,
+      2.663955355094495,
+      5.92938910220793,
+      1.8028589212382797,
+      5.282695989665859,
+      9.740793493329589,
+      9.638393053369843,
+      3.1588317686261416,
+      7.138807956067884,
+      3.8506186715136987,
+      0.960697620343581,
+      1.1329877333262042,
+      3.486010455275844,
+      1.4138887840112138,
+      2.9821231145993123,
+      5.31415422812546,
+      2.7487668403770344,
+      1.8935727522578518,
+      2.616438425489189,
+      1.0005266845490215,
+      0.7300326135598573,
+      2.6045165278265663,
+      3.985525239158036,
+      0.9676729886594815,
+      1.1015444737866156,
+      3.6921338080507202,
+      2.3834412936876808,
+      1.8805342642424843,
+      0.7733247214702127,
+      1.171342178743447,
+      4.298387453409241,
+      6.76701487947672,
+      6.244250188325137,
+      1.867822780032005,
+      1.178356455524978,
+      4.67568156844713,
+      2.413882638324567,
+      3.248279129999826,
+      1.4494674321103194,
+      7.057902961504031,
+      1.8550282580431758,
+      5.890372068726554,
+      0.8437207441887975,
+      9.472014404299165,
+      5.395358053887103,
+      5.098146828905745,
+      3.2704785975441077,
+      1.7517418029792693,
+      4.572391088858192,
+      4.86338449117173,
+      0.9462583092473635,
+      1.7529071933081488,
+      0.5675619287329324,
+      2.9122029764350756,
+      2.0103098678273223,
+      1.138286438006154,
+      4.935129992480035,
+      8.575785217143762,
+      2.1118979396626614,
+      7.836815947729747,
+      2.7001837846660512,
+      6.773781094265846,
+      1.05024641613885,
+      6.814889688925646,
+      4.247907614866545,
+      3.4724322520597357,
+      0.5847427899121493,
+      4.007662508575275,
+      1.138450682615118,
+      4.317598296611215,
+      1.145845555628536,
+      7.600396180597617,
+      2.262415228134068,
+      5.495706973847038,
+      8.996180477552292,
+      5.488115532625925,
+      5.883742665284428,
+      2.709519352327101,
+      0.938096667640199,
+      5.875325740300246,
+      0.8010923197795652,
+      5.059495783642787,
+      1.3084584696291706,
+      8.090113687161738,
+      2.5266128553663867,
+      8.774987055146564,
+      6.612853270250402,
+      7.3832553453466865,
+      0.6826872059162826,
+      7.574138983846742,
+      0.7660719813096716,
+      3.753286235658565,
+      4.508180792854591,
+      4.136983738284591,
+      5.032394379128702,
+      2.797748365947538,
+      0.958866501126201,
+      3.036336304348964,
+      1.467235630472404,
+      1.8511661927493501,
+      5.913417782034366,
+      5.989599854529597,
+      2.242901529441076,
+      2.422358318030434,
+      3.994543538952156,
+      2.2494020996628956,
+      0.9372049743069851,
+      4.8600273034443475,
+      7.137474933343544,
+      7.12262111294408,
+      9.939274928700176,
+      1.6131987942202541,
+      1.3806775076515212,
+      5.638268377547035,
+      3.097197541572084,
+      7.330762670356186,
+      0.8470244055349048,
+      8.79046298649154,
+      9.52717554841054,
+      7.375229871997537,
+      8.515689592448402,
+      6.7263668657878295,
+      3.722992028396325,
+      5.5388784666260245,
+      3.273631246664019,
+      9.384309368207932,
+      4.732284606080194,
+      5.466368768891288,
+      9.38783045661695,
+      6.595758858294746,
+      8.65214321602805,
+      6.344405382585595,
+      4.1055878673565145,
+      2.5703999772446102,
+      2.8061933323094554,
+      1.6965974237079495,
+      2.1593437152085917,
+      1.6812807444292646,
+      1.2331163731924102,
+      1.7604962240930873,
+      1.3245043056713361,
+      0.805381708330433,
+      2.794679000356189,
+      7.102165600337441,
+      0.8598004912115811,
+      2.25780834978063,
+      2.469497697096813,
+      6.530192139765269,
+      8.09295160621749,
+      8.35057387605177,
+      8.161503910424582,
+      5.368580264979016,
+      7.26107783990893,
+      7.7340801497811285,
+      7.380672176913225,
+      9.311949170575815,
+      3.319202455190865,
+      2.3315952461281158,
+      3.3296120971074963,
+      4.40507686872649,
+      1.3143440794710386,
+      1.7163015230753031,
+      6.780641166677051,
+      0.6717140789878477,
+      1.4409171109917729,
+      0.767815017988265,
+      2.1602411534292214,
+      6.939277465787789,
+      6.064200433453815,
+      4.519885722445668,
+      3.634759958546382,
+      3.3785867168844836,
+      1.0145481754176109,
+      8.748102263768674,
+      3.1827021151517583,
+      8.140394973537731,
+      2.6032782335766362,
+      8.791045027294144,
+      7.370975738341674,
+      5.806160595904369,
+      0.7072544941097533,
+      2.694627246400275,
+      2.7106596898636837,
+      2.490332528960096,
+      9.725699487590083,
+      3.979987561814252,
+      1.220969150496417,
+      0.9332015541897495,
+      1.627599689905718,
+      0.5129888533596391,
+      4.372540000479394,
+      1.1922697849759691,
+      1.5636441325016024,
+      9.663937061010285,
+      4.558431298019398,
+      4.554939933834217,
+      2.705081916454084,
+      0.5684486203746264,
+      0.6332582036861173,
+      3.9946754281248453,
+      3.1323800149366297,
+      7.149554393177598,
+      7.675848659455958,
+      3.0086320478693485,
+      2.0027343037748633,
+      6.558443495382158,
+      4.765191025544191,
+      5.258388006208976,
+      9.627774533468529,
+      5.107518484205848,
+      7.921350362534993,
+      4.111303252494822,
+      4.917238712062926,
+      3.248848130916175,
+      9.521577558656299,
+      7.089656699902602,
+      6.832787873032354,
+      4.0785708820299655,
+      2.560140061714092,
+      4.766432573021374,
+      4.031559879353284,
+      3.1333146247930244,
+      2.7486226035272274,
+      0.5791563095385197,
+      4.10461943410612,
+      3.1505653512997513,
+      7.652690836310757,
+      4.482350134264028,
+      3.3403876600755775,
+      1.0836910642638247,
+      7.351237614338222,
+      1.5392466453011588,
+      4.684232943232637,
+      3.688748050261917,
+      7.105241414631209,
+      8.364106517724116,
+      2.0480149683145883,
+      1.772915636607029,
+      1.7081111287901072,
+      3.347704180133022,
+      4.765429826710238,
+      7.657165134564695,
+      6.010931153812463,
+      0.9081695985246402,
+      1.7059390611032,
+      9.937616107384434,
+      5.089337848073713,
+      3.4423896818595083,
+      0.6537394326292401,
+      3.6512504634556238,
+      3.287599294524895,
+      3.240676261540204,
+      1.9923322191905082,
+      0.8297519222449861,
+      7.399434281187436,
+      6.8473822445861146,
+      2.1014809260948453,
+      5.937987562128814,
+      1.6050116191942716,
+      1.6539583992900537,
+      0.5582057487463863,
+      0.9599823785413444,
+      0.5851141525397316,
+      0.5258365565637356,
+      8.593199025646692,
+      1.9324564651734972,
+      0.9822007896198444,
+      2.9646483673009536,
+      1.3180084426572545,
+      9.289268038515232,
+      5.631298644185829,
+      0.619819370445301,
+      6.5194857055776065,
+      0.8284450331795763,
+      2.185378386998704,
+      3.5176220661797197,
+      7.8585874269602565,
+      1.409066453077359,
+      2.5313440743429316,
+      4.733338971343488,
+      0.8109072149131366,
+      6.739579589436714,
+      2.158448124369806,
+      1.5390628776250614,
+      5.585268216479405,
+      3.7329755951652954,
+      2.3843788795098577,
+      7.549042368435996,
+      2.8545399759217758,
+      9.544147249518208,
+      6.562091508215125,
+      7.771126311881416,
+      2.3861990220805605,
+      5.8943432185821925,
+      9.159610942513405,
+      6.352115778054479,
+      7.778010255382366,
+      7.8255895828653,
+      4.175758394249638,
+      1.9397776505476534,
+      3.6520384041205043,
+      9.368254990618025,
+      8.270936647009629,
+      5.405324191647013,
+      9.152846098757804,
+      3.2580892686765983,
+      5.843568360248157,
+      5.776070530755048,
+      8.592321375415576,
+      3.9122476928944234,
+      1.4746463294529593,
+      4.4140492814681345,
+      9.748477481357538
+     ],
+     "histogram": [
+      {
+       "lo_min": 0.5,
+       "hi_min": 0.9102821015130401,
+       "placed": 418,
+       "placed_fraction": 0.27848101265822783,
+       "expected_fraction": 0.19999999999999998
+      },
+      {
+       "lo_min": 0.9102821015130401,
+       "hi_min": 1.6572270086699934,
+       "placed": 378,
+       "placed_fraction": 0.2518321119253831,
+       "expected_fraction": 0.19999999999999998
+      },
+      {
+       "lo_min": 1.6572270086699934,
+       "hi_min": 3.017088168272581,
+       "placed": 292,
+       "placed_fraction": 0.19453697534976683,
+       "expected_fraction": 0.19999999999999996
+      },
+      {
+       "lo_min": 3.017088168272581,
+       "hi_min": 5.492802716530588,
+       "placed": 226,
+       "placed_fraction": 0.15056628914057296,
+       "expected_fraction": 0.19999999999999998
+      },
+      {
+       "lo_min": 5.492802716530588,
+       "hi_min": 10.0,
+       "placed": 187,
+       "placed_fraction": 0.1245836109260493,
+       "expected_fraction": 0.20000000000000004
+      }
+     ]
+    },
+    "false_split": {
+     "split": 46,
+     "recovered_clean": 422,
+     "blends_excluded": 32,
+     "rate": 0.10900473933649289,
+     "ci95": [
+      0.08272251713547564,
+      0.14234145031157508
+     ]
+    },
+    "null_fraction": 0.14893617021276595
+   },
+   "targets": [
+    {
+     "star": "AU Mic",
+     "public_visits": 262,
+     "used": 25
+    },
+    {
+     "star": "AD Leo",
+     "public_visits": 7,
+     "used": 7
+    },
+    {
+     "star": "EV Lac",
+     "public_visits": 4,
+     "used": 4
+    },
+    {
+     "star": "GJ 65",
+     "public_visits": 10,
+     "used": 10
+    },
+    {
+     "star": "Proxima Cen",
+     "public_visits": 3,
+     "used": 3
+    }
+   ]
+  },
+  "hr10_cheops": {
+   "star": "HR 10",
+   "acknowledgement": "CHEOPS is an ESA mission in partnership with Switzerland with important contributions to the payload and the ground segment from Austria, Belgium, France, Germany, Hungary, Italy, Portugal, Spain, Sweden, and the United Kingdom. The CHEOPS Consortium would like to gratefully acknowledge the support received by all the agencies, offices, universities, and industries involved. Their flexibility and willingness to explore new approaches were essential to the success of this mission. CHEOPS data analysed in this article will be made available in the CHEOPS mission archive (https://cheops.unige.ch/archive_browser/).",
+   "credits": [
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG001501_V0300",
+     "obs_id": 1257918,
+     "visit_id": 5015,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG001502_V0300",
+     "obs_id": 1268874,
+     "visit_id": 2894,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    },
+    {
+     "programme": "CH_PR100010",
+     "file_key": "CH_PR100010_TG001503_V0300",
+     "obs_id": 1272219,
+     "visit_id": 2433,
+     "pi_name": "Gyula SZABO",
+     "drp_version": "14.1.2",
+     "credit": "Credit: ESA, Gyula SZABO"
+    }
+   ],
+   "citations": [
+    "Benz, W., et al. 2021, Experimental Astronomy, 51, 109 (the CHEOPS mission)",
+    "Hoyer, S., et al. 2020, A&A, 635, A24 (the CHEOPS Data Reduction Pipeline)",
+    "Fortier, A., et al. 2024, A&A, 687, A302 (CHEOPS in-flight performance)"
+   ],
+   "dace_acknowledgement": "This publication makes use of The Data & Analysis Center for Exoplanets (DACE), which is a facility based at the University of Geneva (CH) dedicated to extrasolar planets data visualisation, exchange and analysis. DACE is a platform of the Swiss National Centre of Competence in Research (NCCR) PlanetS, federating the Swiss expertise in Exoplanet research. The DACE platform is available at https://dace.unige.ch.",
+   "disclaimer": "SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium.",
+   "commercial_use": "CHEOPS data, and outputs derived from them, stay under ESA's terms: data in the ESA Space Science Archives are distributed under the CC BY-NC 3.0 IGO licence, and any commercial use, including use that indirectly generates financial gain, needs ESA's prior authorisation (data.licences@esa.int). SetuHQ's commercial licence and SetuHQ Pro cover SetuHQ's code and services, not CHEOPS data or CHEOPS-derived outputs.",
+   "licence": "CC BY-NC 3.0 IGO (ESA Space Science Archives terms); commercial use needs ESA's prior authorisation",
+   "served_by": "DACE (dace.unige.ch): the University of Geneva's public API in front of the CHEOPS Mission Archive",
+   "terms": {
+    "esa_publication_guidelines": "https://www.cosmos.esa.int/web/cheops-guest-observers-programme/publication-guidelines",
+    "esdc_terms": "https://cosmos.esa.int/web/esdc/terms-and-conditions",
+    "dace_acknowledgement": "https://dace.unige.ch/publications/"
+   },
+   "combined": {
+    "visits": 3,
+    "baseline_days": 22.23198326025158,
+    "n_points": 8152,
+    "n_significant": 2,
+    "stop": "highest S/N left is 3.72 < 4 (at 56.32498 d⁻¹)",
+    "recall_tess_s29_published": 0.03225806451612903,
+    "ours_matched_fraction": 1.0,
+    "recall_top10": 0.2,
+    "frequencies": [
+     {
+      "id": "f1",
+      "frequency": 6.381299253389349,
+      "frequency_uhz": 73.85763024756191,
+      "amplitude": 0.0034279148510560826,
+      "phase": 0.26809994250708324,
+      "snr": 16.956119719602654,
+      "noise": 0.00020216387403145861,
+      "sigma_frequency": 0.00014915226766552093,
+      "sigma_amplitude": 2.061708864868749e-05,
+      "sigma_phase": 0.0004786162599096508,
+      "combination": null,
+      "unresolved": false,
+      "significant": true
+     },
+     {
+      "id": "f2",
+      "frequency": 1.5231687632703137,
+      "frequency_uhz": 17.62926809340641,
+      "amplitude": 0.0013303498050499817,
+      "phase": 0.755781563513054,
+      "snr": 7.062153233439644,
+      "noise": 0.00018837736325950984,
+      "sigma_frequency": 0.00038432092932138407,
+      "sigma_amplitude": 2.061708864868749e-05,
+      "sigma_phase": 0.0012332514193434782,
+      "combination": null,
+      "unresolved": false,
+      "significant": true
+     }
+    ],
+    "f1_f2_recovered": [
+     true,
+     true
+    ],
+    "background_b_uhz": [
+     101.22508980820866,
+     1726.9616714232052
+    ],
+    "terms": [
+     [
+      "sin2"
+     ],
+     [
+      "t"
+     ],
+     [
+      "t",
+      "t2",
+      "cos2",
+      "cos1"
+     ]
+    ]
+   },
+   "published_granulation_b_uhz_cheops_visit1": 165.06,
+   "note": "Salmon et al. used PIPE photometry of the 3-s imagettes (67 ppm per minute); DACE serves the DRP subarray light curve (42 s). They publish no CHEOPS frequency list, so ours is compared with their TESS sector 29 list.",
+   "visits": [
+    {
+     "file_key": "CH_PR100010_TG001501_V0300",
+     "programme": "CH_PR100010",
+     "obs_id": 1257918,
+     "pi": "Gyula SZABO",
+     "terms": [
+      "sin2"
+     ],
+     "rms_detrended_ppm": 2976.5175414492255,
+     "baseline_days": 2.0539034851826727,
+     "n_significant": 1,
+     "f1_f2_recovered": [
+      true,
+      false
+     ]
+    },
+    {
+     "file_key": "CH_PR100010_TG001502_V0300",
+     "programme": "CH_PR100010",
+     "obs_id": 1268874,
+     "pi": "Gyula SZABO",
+     "terms": [
+      "t"
+     ],
+     "rms_detrended_ppm": 3063.4412418269594,
+     "baseline_days": 2.033033715095371,
+     "n_significant": 2,
+     "f1_f2_recovered": [
+      true,
+      false
+     ]
+    },
+    {
+     "file_key": "CH_PR100010_TG001503_V0300",
+     "programme": "CH_PR100010",
+     "obs_id": 1272219,
+     "pi": "Gyula SZABO",
+     "terms": [
+      "t",
+      "t2",
+      "cos2",
+      "cos1"
+     ],
+     "rms_detrended_ppm": 2661.923645011225,
+     "baseline_days": 2.0636489293538034,
+     "n_significant": 2,
+     "f1_f2_recovered": [
+      true,
+      true
+     ]
+    }
+   ]
+  },
+  "cheops_pycheops": {
+   "terms": {
+    "esa_publication_guidelines": "https://www.cosmos.esa.int/web/cheops-guest-observers-programme/publication-guidelines",
+    "esdc_terms": "https://cosmos.esa.int/web/esdc/terms-and-conditions",
+    "dace_acknowledgement": "https://dace.unige.ch/publications/"
+   },
+   "acknowledgement": "CHEOPS is an ESA mission in partnership with Switzerland with important contributions to the payload and the ground segment from Austria, Belgium, France, Germany, Hungary, Italy, Portugal, Spain, Sweden, and the United Kingdom. The CHEOPS Consortium would like to gratefully acknowledge the support received by all the agencies, offices, universities, and industries involved. Their flexibility and willingness to explore new approaches were essential to the success of this mission. CHEOPS data analysed in this article will be made available in the CHEOPS mission archive (https://cheops.unige.ch/archive_browser/).",
+   "credits": [
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG035201_V0300",
+     "obs_id": 1259827,
+     "visit_id": null,
+     "pi_name": null,
+     "drp_version": null,
+     "credit": "Credit: ESA"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG048901_V0300",
+     "obs_id": 1646684,
+     "visit_id": null,
+     "pi_name": null,
+     "drp_version": null,
+     "credit": "Credit: ESA"
+    },
+    {
+     "programme": "CH_PR100018",
+     "file_key": "CH_PR100018_TG049601_V0300",
+     "obs_id": 1711753,
+     "visit_id": null,
+     "pi_name": null,
+     "drp_version": null,
+     "credit": "Credit: ESA"
+    }
+   ],
+   "citations": [
+    "Benz, W., et al. 2021, Experimental Astronomy, 51, 109 (the CHEOPS mission)",
+    "Hoyer, S., et al. 2020, A&A, 635, A24 (the CHEOPS Data Reduction Pipeline)",
+    "Fortier, A., et al. 2024, A&A, 687, A302 (CHEOPS in-flight performance)"
+   ],
+   "dace_acknowledgement": "This publication makes use of The Data & Analysis Center for Exoplanets (DACE), which is a facility based at the University of Geneva (CH) dedicated to extrasolar planets data visualisation, exchange and analysis. DACE is a platform of the Swiss National Centre of Competence in Research (NCCR) PlanetS, federating the Swiss expertise in Exoplanet research. The DACE platform is available at https://dace.unige.ch.",
+   "disclaimer": "SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium.",
+   "commercial_use": "CHEOPS data, and outputs derived from them, stay under ESA's terms: data in the ESA Space Science Archives are distributed under the CC BY-NC 3.0 IGO licence, and any commercial use, including use that indirectly generates financial gain, needs ESA's prior authorisation (data.licences@esa.int). SetuHQ's commercial licence and SetuHQ Pro cover SetuHQ's code and services, not CHEOPS data or CHEOPS-derived outputs.",
+   "licence": "CC BY-NC 3.0 IGO (ESA Space Science Archives terms); commercial use needs ESA's prior authorisation",
+   "served_by": "DACE (dace.unige.ch): the University of Geneva's public API in front of the CHEOPS Mission Archive",
+   "visits": [
+    {
+     "file_key": "CH_PR100018_TG035201_V0300",
+     "programme": "CH_PR100018",
+     "obs_id": 1259827,
+     "pi": "Isabella PAGANO",
+     "pycheops_version": "1.1.27",
+     "points_matched": 135,
+     "points_ours": 140,
+     "end_to_end": {
+      "rms_difference_ppm": 1444.5679843517198,
+      "correlation": 0.885646369194683,
+      "n": 135
+     },
+     "same_input": {
+      "rms_difference_ppm": 0.032402606812233725,
+      "correlation": 0.999999999930966,
+      "n": 135
+     },
+     "same_input_rms_ours_ppm": 2749.5266587477195,
+     "same_input_ok": true,
+     "raw_inputs": {
+      "rms_difference_ppm": 1056.4396047220578,
+      "correlation": 0.9941013694135603,
+      "n": 135
+     },
+     "rms_ours_ppm": 3110.8535513019838,
+     "rms_pycheops_ppm": 2749.5242918319987
+    },
+    {
+     "file_key": "CH_PR100018_TG048901_V0300",
+     "programme": "CH_PR100018",
+     "obs_id": 1646684,
+     "pi": "Isabella PAGANO",
+     "pycheops_version": "1.1.27",
+     "points_matched": 227,
+     "points_ours": 227,
+     "end_to_end": {
+      "rms_difference_ppm": 748.143353459186,
+      "correlation": 0.6117033999380495,
+      "n": 216
+     },
+     "same_input": {
+      "rms_difference_ppm": 685.6600950111539,
+      "correlation": 0.6863400617456052,
+      "n": 223
+     },
+     "same_input_rms_ours_ppm": 647.777270156058,
+     "same_input_ok": true,
+     "raw_inputs": {
+      "rms_difference_ppm": 159.7407246466833,
+      "correlation": 0.9993171586232098,
+      "n": 227
+     },
+     "rms_ours_ppm": 583.2752948381868,
+     "rms_pycheops_ppm": 1705.7546779170061
+    },
+    {
+     "file_key": "CH_PR100018_TG049601_V0300",
+     "programme": "CH_PR100018",
+     "obs_id": 1711753,
+     "pi": "Isabella PAGANO",
+     "pycheops_version": "1.1.27",
+     "points_matched": 255,
+     "points_ours": 258,
+     "end_to_end": {
+      "rms_difference_ppm": 14091.556170469334,
+      "correlation": 0.763380153459944,
+      "n": 248
+     },
+     "same_input": {
+      "rms_difference_ppm": 0.518645920901663,
+      "correlation": 0.9999999995850906,
+      "n": 255
+     },
+     "same_input_rms_ours_ppm": 17860.804069304246,
+     "same_input_ok": true,
+     "raw_inputs": {
+      "rms_difference_ppm": 104.89421481467312,
+      "correlation": 0.9999906759921392,
+      "n": 255
+     },
+     "rms_ours_ppm": 21784.060686105855,
+     "rms_pycheops_ppm": 17860.879003018195
+    }
+   ]
+  },
+  "denoise_grid.cheops_ev_lac": [
+   {
+    "wavelet": null,
+    "level": null,
+    "recovered": 8,
+    "injected": 29,
+    "fraction": 0.27586206896551724,
+    "ci95": [
+     0.1469858133850274,
+     0.4571747634443597
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "haar",
+    "level": 1,
+    "recovered": 10,
+    "injected": 29,
+    "fraction": 0.3448275862068966,
+    "ci95": [
+     0.19940508749190483,
+     0.5265522349284402
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 2,
+      "fraction": 0.6666666666666666,
+      "ci95": [
+       0.2076549551264879,
+       0.9385096847238394
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "haar",
+    "level": 2,
+    "recovered": 8,
+    "injected": 29,
+    "fraction": 0.27586206896551724,
+    "ci95": [
+     0.1469858133850274,
+     0.4571747634443597
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "haar",
+    "level": 3,
+    "recovered": 8,
+    "injected": 29,
+    "fraction": 0.27586206896551724,
+    "ci95": [
+     0.1469858133850274,
+     0.4571747634443597
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 2,
+      "fraction": 0.6666666666666666,
+      "ci95": [
+       0.2076549551264879,
+       0.9385096847238394
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.6576280471103807
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "haar",
+    "level": 4,
+    "recovered": 6,
+    "injected": 29,
+    "fraction": 0.20689655172413793,
+    "ci95": [
+     0.09845936515585207,
+     0.3839044660825772
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "db4",
+    "level": 1,
+    "recovered": 9,
+    "injected": 29,
+    "fraction": 0.3103448275862069,
+    "ci95": [
+     0.17275424489768068,
+     0.49230470472718546
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "db4",
+    "level": 2,
+    "recovered": 10,
+    "injected": 29,
+    "fraction": 0.3448275862068966,
+    "ci95": [
+     0.19940508749190483,
+     0.5265522349284402
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 2,
+      "fraction": 0.6666666666666666,
+      "ci95": [
+       0.2076549551264879,
+       0.9385096847238394
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "db4",
+    "level": 3,
+    "recovered": 8,
+    "injected": 29,
+    "fraction": 0.27586206896551724,
+    "ci95": [
+     0.1469858133850274,
+     0.4571747634443597
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 2,
+      "fraction": 0.6666666666666666,
+      "ci95": [
+       0.2076549551264879,
+       0.9385096847238394
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "db4",
+    "level": 4,
+    "recovered": 7,
+    "injected": 29,
+    "fraction": 0.2413793103448276,
+    "ci95": [
+     0.12218268185062131,
+     0.4210795221832869
+    ],
+    "inverted_false_positives": 1,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 2,
+      "fraction": 0.6666666666666666,
+      "ci95": [
+       0.2076549551264879,
+       0.9385096847238394
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.6576280471103807
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "db18",
+    "level": 1,
+    "recovered": 7,
+    "injected": 29,
+    "fraction": 0.2413793103448276,
+    "ci95": [
+     0.12218268185062131,
+     0.4210795221832869
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "db18",
+    "level": 2,
+    "recovered": 8,
+    "injected": 29,
+    "fraction": 0.27586206896551724,
+    "ci95": [
+     0.1469858133850274,
+     0.4571747634443597
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 2,
+      "fraction": 0.6666666666666666,
+      "ci95": [
+       0.2076549551264879,
+       0.9385096847238394
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "db18",
+    "level": 3,
+    "recovered": 7,
+    "injected": 29,
+    "fraction": 0.2413793103448276,
+    "ci95": [
+     0.12218268185062131,
+     0.4210795221832869
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 2,
+      "fraction": 0.6666666666666666,
+      "ci95": [
+       0.2076549551264879,
+       0.9385096847238394
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 2,
+      "fraction": 1.0,
+      "ci95": [
+       0.34237195288961925,
+       1.0
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     }
+    ]
+   },
+   {
+    "wavelet": "db18",
+    "level": 4,
+    "recovered": 5,
+    "injected": 29,
+    "fraction": 0.1724137931034483,
+    "ci95": [
+     0.07597745271479928,
+     0.34548800572815114
+    ],
+    "inverted_false_positives": 2,
+    "by_amplitude": [
+     {
+      "lo": 0.00031622776601683794,
+      "hi": 0.0005623413251903491,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0005623413251903491,
+      "hi": 0.001,
+      "n": 8,
+      "recovered": 1,
+      "fraction": 0.125,
+      "ci95": [
+       0.02241690886329617,
+       0.4708948057698615
+      ]
+     },
+     {
+      "lo": 0.001,
+      "hi": 0.0017782794100389228,
+      "n": 6,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.3903430336530645
+      ]
+     },
+     {
+      "lo": 0.0017782794100389228,
+      "hi": 0.0031622776601683794,
+      "n": 3,
+      "recovered": 0,
+      "fraction": 0.0,
+      "ci95": [
+       0.0,
+       0.5615060804490177
+      ]
+     },
+     {
+      "lo": 0.0031622776601683794,
+      "hi": 0.005623413251903491,
+      "n": 3,
+      "recovered": 1,
+      "fraction": 0.3333333333333333,
+      "ci95": [
+       0.0614903152761605,
+       0.7923450448735121
+      ]
+     },
+     {
+      "lo": 0.005623413251903491,
+      "hi": 0.01,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     },
+     {
+      "lo": 0.01,
+      "hi": 0.01778279410038923,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     },
+     {
+      "lo": 0.01778279410038923,
+      "hi": 0.03162277660168379,
+      "n": 2,
+      "recovered": 1,
+      "fraction": 0.5,
+      "ci95": [
+       0.09452865480086614,
+       0.9054713451991339
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "cheops_credit": {
+  "acknowledgement": "CHEOPS is an ESA mission in partnership with Switzerland with important contributions to the payload and the ground segment from Austria, Belgium, France, Germany, Hungary, Italy, Portugal, Spain, Sweden, and the United Kingdom. The CHEOPS Consortium would like to gratefully acknowledge the support received by all the agencies, offices, universities, and industries involved. Their flexibility and willingness to explore new approaches were essential to the success of this mission. CHEOPS data analysed in this article will be made available in the CHEOPS mission archive (https://cheops.unige.ch/archive_browser/).",
+  "credits": [
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG001701_V0300",
+    "obs_id": 1169256,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG001702_V0300",
+    "obs_id": 1204011,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.3",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG038101_V0300",
+    "obs_id": 1223846,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG038102_V0300",
+    "obs_id": 1225637,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG038103_V0300",
+    "obs_id": 1225638,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG038104_V0300",
+    "obs_id": 1225639,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG038105_V0300",
+    "obs_id": 1225640,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG038201_V0300",
+    "obs_id": 1232125,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG038202_V0300",
+    "obs_id": 1239858,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG001801_V0300",
+    "obs_id": 1240182,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG003201_V0300",
+    "obs_id": 1541157,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG003001_V0300",
+    "obs_id": 1544605,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.3",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG003401_V0300",
+    "obs_id": 1566129,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG003601_V0300",
+    "obs_id": 1566187,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG003402_V0300",
+    "obs_id": 1570785,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG003701_V0300",
+    "obs_id": 1576931,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG003101_V0300",
+    "obs_id": 1585628,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG003901_V0300",
+    "obs_id": 1592719,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG009201_V0300",
+    "obs_id": 1833949,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG010201_V0300",
+    "obs_id": 1848604,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG011101_V0300",
+    "obs_id": 1852454,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG011701_V0300",
+    "obs_id": 1862024,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG011301_V0300",
+    "obs_id": 1870678,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR130057",
+    "file_key": "CH_PR130057_TG000101_V0300",
+    "obs_id": 1876747,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR130057",
+    "file_key": "CH_PR130057_TG000201_V0300",
+    "obs_id": 1877952,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG037201_V0300",
+    "obs_id": 1420592,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG037202_V0300",
+    "obs_id": 1445378,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG049601_V0300",
+    "obs_id": 1711753,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG049602_V0300",
+    "obs_id": 1783160,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG049603_V0300",
+    "obs_id": 1991755,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG049604_V0300",
+    "obs_id": 2044929,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.3",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG049605_V0300",
+    "obs_id": 2044930,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.3",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG036401_V0300",
+    "obs_id": 1278684,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG048901_V0300",
+    "obs_id": 1646684,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG048902_V0300",
+    "obs_id": 1923651,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.3",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG048903_V0300",
+    "obs_id": 2183390,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.3",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG035201_V0300",
+    "obs_id": 1259827,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG035202_V0300",
+    "obs_id": 1278906,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG035203_V0300",
+    "obs_id": 1282015,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG047801_V0300",
+    "obs_id": 1627571,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG047802_V0300",
+    "obs_id": 1627572,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG047803_V0300",
+    "obs_id": 1639478,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG047804_V0300",
+    "obs_id": 1649642,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG047805_V0300",
+    "obs_id": 1654964,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG052601_V0300",
+    "obs_id": 1930635,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG052602_V0300",
+    "obs_id": 1937591,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG033901_V0300",
+    "obs_id": 1498638,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG046501_V0300",
+    "obs_id": 1531339,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100018",
+    "file_key": "CH_PR100018_TG046502_V0300",
+    "obs_id": 2090654,
+    "visit_id": null,
+    "pi_name": "Isabella PAGANO",
+    "drp_version": "14.1.3",
+    "credit": "Credit: ESA, Isabella PAGANO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG001501_V0300",
+    "obs_id": 1257918,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG001502_V0300",
+    "obs_id": 1268874,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   },
+   {
+    "programme": "CH_PR100010",
+    "file_key": "CH_PR100010_TG001503_V0300",
+    "obs_id": 1272219,
+    "visit_id": null,
+    "pi_name": "Gyula SZABO",
+    "drp_version": "14.1.2",
+    "credit": "Credit: ESA, Gyula SZABO"
+   }
+  ],
+  "citations": [
+   "Benz, W., et al. 2021, Experimental Astronomy, 51, 109 (the CHEOPS mission)",
+   "Hoyer, S., et al. 2020, A&A, 635, A24 (the CHEOPS Data Reduction Pipeline)",
+   "Fortier, A., et al. 2024, A&A, 687, A302 (CHEOPS in-flight performance)"
+  ],
+  "dace_acknowledgement": "This publication makes use of The Data & Analysis Center for Exoplanets (DACE), which is a facility based at the University of Geneva (CH) dedicated to extrasolar planets data visualisation, exchange and analysis. DACE is a platform of the Swiss National Centre of Competence in Research (NCCR) PlanetS, federating the Swiss expertise in Exoplanet research. The DACE platform is available at https://dace.unige.ch.",
+  "disclaimer": "SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium.",
+  "commercial_use": "CHEOPS data, and outputs derived from them, stay under ESA's terms: data in the ESA Space Science Archives are distributed under the CC BY-NC 3.0 IGO licence, and any commercial use, including use that indirectly generates financial gain, needs ESA's prior authorisation (data.licences@esa.int). SetuHQ's commercial licence and SetuHQ Pro cover SetuHQ's code and services, not CHEOPS data or CHEOPS-derived outputs.",
+  "licence": "CC BY-NC 3.0 IGO (ESA Space Science Archives terms); commercial use needs ESA's prior authorisation",
+  "served_by": "DACE (dace.unige.ch): the University of Geneva's public API in front of the CHEOPS Mission Archive",
+  "terms": {
+   "esa_publication_guidelines": "https://www.cosmos.esa.int/web/cheops-guest-observers-programme/publication-guidelines",
+   "esdc_terms": "https://cosmos.esa.int/web/esdc/terms-and-conditions",
+   "dace_acknowledgement": "https://dace.unige.ch/publications/"
+  }
+ },
+ "labels": [
+  "Flares and frequencies are detected at the stated significance; nothing here is confirmed.",
+  "Types are heuristic (likely or candidate). Energies assume a 9000 K blackbody flare."
+ ]
+}

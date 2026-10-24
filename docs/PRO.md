@@ -27,6 +27,15 @@ not yet beat a catalogue-metadata floor, and Pro will never imply otherwise.
   without consent, and never uses them to train anything.
 - **No claim of more planets.** Pro is never marketed as finding more planets than the open engine.
 
+## CHEOPS data are not part of Pro
+
+SetuHQ can read public CHEOPS light curves (`setuhq cheops`). Those data, and anything derived from
+them, stay under ESA's terms (CC BY-NC 3.0 IGO; commercial use needs ESA's prior authorisation from
+data.licences@esa.int). Neither Pro nor the commercial licence covers them: any hosted, Pro or other
+commercial use of CHEOPS data through SetuHQ needs ESA's authorisation first, and Pro will not offer
+it without that. SetuHQ is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS
+mission or the CHEOPS Consortium.
+
 ## Planned products
 
 Each one names what in the open code it would build on, and what would still have to be built.

@@ -597,6 +597,10 @@ def build_parser() -> argparse.ArgumentParser:
     from setuhq.propose.cli import add_parser as add_propose  # 'setuhq propose cheops' and 'setuhq propose lint'
 
     add_propose(sub)
+
+    from setuhq.stellar_cli import add_parsers as add_stellar  # flares, pulsations, cheops
+
+    add_stellar(sub)
     return parser
 
 

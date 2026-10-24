@@ -18,7 +18,8 @@ SECRET = "sk-test-NEVER-WRITE-THIS"
 EXPECTED = ["search_catalogue", "get_planet", "get_star", "list_candidates", "get_candidate", "vet_lightcurve",
             "fit_transit", "compute_fap", "run_pipeline_csv", "run_pipeline_tess", "rv_semi_amplitude", "transit_depth",
             "microlensing_magnification", "habitable_zone", "benchmark_results", "sentinel_providers",
-            "cheops_proposal_pack"]
+            "cheops_proposal_pack",
+            "find_flares", "pulsation_spectrum", "get_cheops_lightcurve"]
 
 
 @pytest.fixture(autouse=True)
@@ -69,7 +70,7 @@ def test_server_lists_every_tool_with_a_description(server):
         assert schema["type"] == "object"
     writes = {t.name for t in listed if not (t.annotations.read_only_hint if hasattr(t.annotations, "read_only_hint")
                                               else t.annotations.readOnlyHint)}
-    assert writes == {"run_pipeline_csv", "run_pipeline_tess", "cheops_proposal_pack"}
+    assert writes == {"run_pipeline_csv", "run_pipeline_tess", "cheops_proposal_pack", "get_cheops_lightcurve"}
 
 
 def _text(result):
