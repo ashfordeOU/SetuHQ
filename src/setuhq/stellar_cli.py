@@ -1,10 +1,12 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
-"""``setuhq flares``, ``setuhq pulsations`` and ``setuhq cheops``: the stellar commands.
+"""``setuhq flares``, ``setuhq pulsations``, ``setuhq cheops``, ``setuhq binaries``, ``setuhq rotation`` and
+``setuhq transients``: the stellar commands.
 
 Each writes one JSON record (``--out``) with the result, its provenance (version, the stellar code fingerprint,
 every input's sha256) and its labels, and prints a short summary. Detections are *detected* at a stated
-significance; a variability type is *likely* or *candidate*; nothing is confirmed.
+significance; a variability type is *likely* or *candidate*; nothing is confirmed. An eclipsing binary or a
+transient SetuHQ finds is a *candidate*, never new.
 """
 
 from __future__ import annotations
@@ -54,10 +56,10 @@ def _write(record: dict, out: str | None) -> None:
 def _status(capability: str, what: str) -> str:
     """The capability's validation status as the committed record states it (setuhq.stellar_tools), printed with
     every run, so no output presents an unvalidated detector as validated."""
-    from setuhq.stellar_tools import validation_status
+    from setuhq.stellar_tools import validation_file, validation_status
 
     status = validation_status(capability)
-    print(f"{what}: {status} against published results (docs/results/stellar_validation.md)")
+    print(f"{what}: {status} against published results ({validation_file(capability).replace('.json', '.md')})")
     return status
 
 
@@ -166,8 +168,134 @@ def cmd_cheops(args) -> int:
     return 0
 
 
+def _quality_for(target: str, lc, cache_root: str) -> dict | None:
+    """Momentum-dump and scattered-light times for a SPOC light curve: read from the FITS file (given, or the one
+    fetched into the cache), since the loaders drop flagged cadences. None for a CSV."""
+    from setuhq import transients as tr
+    from setuhq.stellar_io import parse_tic
+
+    p = Path(target)
+    if p.exists():
+        return tr.read_quality(p) if "fits" in p.name.lower() else None
+    tic = parse_tic(target)
+    idx = Path(cache_root) / "mast" / "stellar" / str(tic) / "index_120.json"
+    sec = lc.provenance.get("sector")
+    if tic and idx.exists() and sec is not None:
+        files = json.loads(idx.read_text())
+        if str(sec) in files:
+            return tr.read_quality(idx.parent / files[str(sec)])
+    return None
+
+
+def cmd_binaries(args) -> int:
+    from setuhq import binaries as eb
+    from setuhq.stellar_io import load_input, provenance
+
+    lcs, star, inputs = load_input(args.target, sectors=args.sector, exptime=args.exptime, cache_root=args.cache)
+    per = []
+    for lc in lcs:
+        out = eb.analyse(lc.time, lc.flux, lc.flux_err)
+        out.pop("phase_curve", None)
+        rec = {"sector": lc.provenance.get("sector"), **out}
+        if args.transit_period is not None:
+            rec["vetting_hints"] = eb.vetting_hints(lc.time, lc.flux, args.transit_period, args.transit_epoch,
+                                                    args.transit_duration, flux_err=lc.flux_err)
+        per.append(rec)
+        if out.get("period"):
+            sec = out["secondary"]
+            print(f"{lc.target} sector {rec['sector']}: {'eclipsing-binary candidate' if out['eb_candidate'] else 'not flagged'}; "
+                  f"P = {out['period']:.6f} ± {out['period_err']:.6f} d{' (ambiguous)' if out['period_ambiguous'] else ''}; "
+                  f"primary depth {out['primary']['depth']:.4f}, width {out['primary']['width_phase']:.3f} in phase; "
+                  + (f"secondary at phase {sec['phase']:.4f} (e cos w hint {sec['e_cos_omega_hint']:+.4f})" if sec else "no secondary")
+                  + f"; morphology {out['morphology']['class']}")
+        for r in out["reasons"]:
+            print(f"  - {r}")
+    record = {"kind": "setuhq-binaries/1", "target": args.target, "star": star, "results": per, "label": eb.LABEL,
+              "validation_status": _status("binaries", "eclipsing-binary analysis"), "provenance": provenance(inputs)}
+    _write(record, args.out)
+    return 0
+
+
+def cmd_rotation(args) -> int:
+    from setuhq import rotation as ro
+    from setuhq.stellar_io import load_input, provenance
+
+    lcs, star, inputs = load_input(args.target, sectors=args.sector, exptime=args.exptime, cache_root=args.cache)
+    per = []
+    for lc in lcs:
+        out = ro.measure(lc.time, lc.flux)
+        out.pop("periodogram", None)
+        per.append({"sector": lc.provenance.get("sector"), **out})
+        if out["detected"]:
+            print(f"{lc.target} sector {per[-1]['sector']}: rotation period {out['period']:.3f} ± {out['period_err']:.3f} d"
+                  + (f" (alias {out['alias']:.3f} d)" if out.get("alias") else "") + f"; {out['rule']}")
+        else:
+            print(f"{lc.target} sector {per[-1]['sector']}: no rotation period measured: {'; '.join(out['reasons'])}")
+    print(f"Limit: one TESS sector measures periods up to about {ro.LIMIT_DAYS:g} d; sectors are not stitched.")
+    record = {"kind": "setuhq-rotation/1", "target": args.target, "star": star, "results": per, "label": ro.LABEL,
+              "validation_status": _status("rotation", "rotation measurement"), "provenance": provenance(inputs)}
+    _write(record, args.out)
+    return 0
+
+
+def cmd_transients(args) -> int:
+    from setuhq import transients as tr
+    from setuhq.stellar_io import provenance
+
+    per, inputs = [], []
+    if args.ra is not None and args.dec is not None:
+        import hashlib
+
+        from setuhq import ffi
+
+        sector = args.sector[0] if args.sector else None
+        if sector is None:
+            if args.time is None:
+                print("setuhq transients: give --sector or --time with --ra/--dec", file=sys.stderr)
+                return 2
+            ch = ffi.choose_sector(args.ra, args.dec, args.time, Path(args.cache) / "tesscut")
+            sector = ch["sector"]
+            if sector is None:
+                print(f"setuhq transients: {ch['rule']}", file=sys.stderr)
+                return 2
+        path = ffi.fetch_cutout(args.ra, args.dec, sector, size=args.size, cache_dir=Path(args.cache) / "tesscut")
+        inputs.append({"path": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "sector": sector})
+        d = ffi.difference_lightcurve(path, args.ra, args.dec)
+        out = tr.find_transients(d["time"], d["flux"], d["flux_err"], mode="difference", quality=d["quality_times"],
+                                 controls=list(d["controls"].values()), centroid=d["centroid"],
+                                 zero_point=tr.TESS_ZERO_POINT, aperture_correction=d["aperture_correction"])
+        out["photometry"] = {k: d[k] for k in ("pixel", "aperture_pixel", "controls_used", "aperture_correction",
+                                               "aperture_correction_source", "n_reference_cadences", "camera", "ccd")}
+        out["data_credit"] = ffi.CREDIT
+        per.append({"sector": sector, **out})
+        if not args.keep_cutout:
+            path.unlink(missing_ok=True)
+        where = f"RA {args.ra:.5f} Dec {args.dec:+.5f}"
+    else:
+        from setuhq.stellar_io import load_input
+
+        lcs, _, inputs = load_input(args.target, sectors=args.sector, exptime=args.exptime, cache_root=args.cache)
+        for lc in lcs:
+            out = tr.find_transients(lc.time, lc.flux, lc.flux_err, quality=_quality_for(args.target, lc, args.cache))
+            per.append({"sector": lc.provenance.get("sector"), **out})
+        where = args.target
+    for r in per:
+        s = r["summary"]
+        print(f"{where} sector {r['sector']}: {s['n_candidates']} transient candidates "
+              f"({s['n_likely_false_alarms']} likely false alarms)")
+        for c in r["candidates"][:20]:
+            mag = f", T = {c['peak_mag']:.2f}" if c.get("peak_mag") is not None else ""
+            print(f"  BTJD {c['t_peak']:.3f} ({c['scale']}): peak {c['peak']:.4g}{mag}, rise {c['rise_time']:.3f} d, "
+                  f"decay {'> ' + format(c['decay_time_lower_limit'], '.2f') if c['decay_time'] is None else format(c['decay_time'], '.3f')} d; "
+                  f"{c['class_hint']}")
+    record = {"kind": "setuhq-transients/1", "target": args.target, "results": per, "label": tr.LABEL,
+              "validation_status": _status("transients", "transient detection"), "provenance": provenance(inputs)}
+    _write(record, args.out)
+    return 0
+
+
 def add_parsers(sub) -> None:
-    """Add the three stellar commands to ``setuhq``'s sub-parsers."""
+    """Add the six stellar commands to ``setuhq``'s sub-parsers."""
     def common(p, solar=False):
         p.add_argument("target", help="a TIC id (e.g. 'TIC 441420236'), a SPOC *_lc.fits file or a CSV (time, flux[, flux_err])")
         p.add_argument("--sector", type=int, nargs="*", help="TESS sectors (default: every SPOC sector)")
@@ -207,3 +335,31 @@ def add_parsers(sub) -> None:
     ch.add_argument("--cache", default="cache")
     ch.add_argument("--out", help="write the JSON record here")
     ch.set_defaults(func=cmd_cheops)
+
+    eb = sub.add_parser("binaries", help="eclipsing binaries and ellipsoidal or reflection variables: period, eclipses, "
+                                         "secondary phase (e cos w hint), morphology; a candidate flag with reasons")
+    common(eb)
+    eb.add_argument("--transit-period", type=float, help="advisory vetting hints at a transit candidate's period (d)")
+    eb.add_argument("--transit-epoch", type=float, help="its mid-transit time (BTJD)")
+    eb.add_argument("--transit-duration", type=float, default=0.1, help="its duration (d)")
+    eb.set_defaults(func=cmd_binaries)
+
+    ro = sub.add_parser("rotation", help="a rotation period from spot modulation (Lomb-Scargle and ACF), per sector; "
+                                         "periods beyond about 13 d are not measured")
+    common(ro)
+    ro.set_defaults(func=cmd_rotation)
+
+    tr = sub.add_parser("transients", help="non-periodic brightenings: rise, decay, amplitude, class hints and "
+                                           "false-alarm screens, in a SPOC light curve or a TESScut cutout of any position")
+    tr.add_argument("target", nargs="?", default="cutout", help="a TIC id, a SPOC *_lc.fits file or a CSV (omit with --ra/--dec)")
+    tr.add_argument("--sector", type=int, nargs="*", help="TESS sectors (with --ra/--dec: the one sector to cut out)")
+    tr.add_argument("--exptime", type=int, default=120, choices=(20, 120), help="TESS cadence in seconds")
+    tr.add_argument("--ra", type=float, help="RA (deg): photometry on a TESScut cutout of the full-frame images")
+    tr.add_argument("--dec", type=float, help="Dec (deg)")
+    tr.add_argument("--time", type=float, help="with --ra/--dec and no --sector: the sector containing this BTJD")
+    tr.add_argument("--size", type=int, default=11, help="cutout size in pixels (default 11)")
+    tr.add_argument("--keep-cutout", action="store_true", help="keep the downloaded cutout in the cache")
+    tr.add_argument("--cache", default="cache", help="cache root (MAST files, TIC values, cutouts)")
+    tr.add_argument("--seed", type=int, default=0)
+    tr.add_argument("--out", help="write the JSON record here")
+    tr.set_defaults(func=cmd_transients)

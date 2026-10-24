@@ -598,7 +598,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     add_propose(sub)
 
-    from setuhq.stellar_cli import add_parsers as add_stellar  # flares, pulsations, cheops
+    from setuhq.stellar_cli import add_parsers as add_stellar  # flares, pulsations, cheops, binaries, rotation, transients
 
     add_stellar(sub)
     return parser

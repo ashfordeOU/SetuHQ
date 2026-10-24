@@ -116,7 +116,7 @@ def test_mcp_server_lists_the_stellar_tools():
     from setuhq.tools import TOOLS
 
     names = [fn.__name__ for fn, _ in TOOLS]
-    assert names[-3:] == ["find_flares", "pulsation_spectrum", "get_cheops_lightcurve"]
+    assert names[-6:-3] == ["find_flares", "pulsation_spectrum", "get_cheops_lightcurve"]
     assert mcp_main(["--list-tools"]) == 0
 
 

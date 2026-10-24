@@ -19,7 +19,8 @@ EXPECTED = ["search_catalogue", "get_planet", "get_star", "list_candidates", "ge
             "fit_transit", "compute_fap", "run_pipeline_csv", "run_pipeline_tess", "rv_semi_amplitude", "transit_depth",
             "microlensing_magnification", "habitable_zone", "benchmark_results", "sentinel_providers",
             "cheops_proposal_pack",
-            "find_flares", "pulsation_spectrum", "get_cheops_lightcurve"]
+            "find_flares", "pulsation_spectrum", "get_cheops_lightcurve", "find_eclipsing_binary", "rotation_period",
+            "find_transients"]
 
 
 @pytest.fixture(autouse=True)

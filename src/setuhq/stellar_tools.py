@@ -1,12 +1,15 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
-"""The stellar tools for an AI assistant (MCP): flares, a pulsation spectrum and CHEOPS light curves.
+"""The stellar tools for an AI assistant (MCP): flares, a pulsation spectrum, CHEOPS light curves, eclipsing
+binaries, rotation periods and transients.
 
-Thin wrappers over :mod:`setuhq.flares`, :mod:`setuhq.pulsations` and :mod:`setuhq.cheops`, answering in the same
+Thin wrappers over :mod:`setuhq.flares`, :mod:`setuhq.pulsations`, :mod:`setuhq.cheops`, :mod:`setuhq.binaries`,
+:mod:`setuhq.rotation` and :mod:`setuhq.transients`, answering in the same
 envelope as every tool of :mod:`setuhq.tools` (result, provenance, honesty labels). Each carries the validation
-status of its capability as measured in ``docs/results/stellar_validation.json`` ("not validated" when that file
-does not say otherwise), and every answer built on CHEOPS data carries ESA's acknowledgement, the programme and
-visit ids, the credit line, the citations and SetuHQ's independence disclaimer.
+status of its capability as measured in ``docs/results/stellar_validation.json`` or, for the protocol v4
+capabilities, ``docs/results/stellar_validation_v4.json`` ("not validated" when the file does not say otherwise),
+and every answer built on CHEOPS data carries ESA's acknowledgement, the programme and visit ids, the credit line,
+the citations and SetuHQ's independence disclaimer.
 """
 
 from __future__ import annotations
@@ -18,8 +21,15 @@ DETECTED = ("Flares and frequencies are detected at the significance stated with
 ENERGY = ("Flare energies assume a 9000 K blackbody flare and use TIC Teff and radius; without them the energy is "
           "reported as unavailable, never guessed.")
 VALIDATION_FILE = "docs/results/stellar_validation.json"
+# Protocol v4's capabilities (eclipsing binaries, rotation, transients) have their own record beside it.
+VALIDATION_FILE_V4 = "docs/results/stellar_validation_v4.json"
+V4_CAPABILITIES = ("binaries", "rotation", "transients")
 MAX_POINTS = 200_000
 NO_RECORD = "not validated (no validation record)"
+
+
+def validation_file(capability: str) -> str:
+    return VALIDATION_FILE_V4 if capability in V4_CAPABILITIES else VALIDATION_FILE
 
 
 def validation_status(capability: str) -> str:
@@ -28,7 +38,7 @@ def validation_status(capability: str) -> str:
     from setuhq.tools import _path
 
     try:
-        data = json.loads(_path(VALIDATION_FILE).read_text())
+        data = json.loads(_path(validation_file(capability)).read_text())
     except Exception:  # noqa: BLE001 (no record: not validated)
         return NO_RECORD
     cap = (data.get("capabilities") or {}).get(capability) or {}
@@ -145,5 +155,75 @@ def get_cheops_lightcurve(target: str, file_key: str | None = None, max_visits: 
     return envelope("get_cheops_lightcurve", result, sources=sources, honesty=honesty)
 
 
+def find_eclipsing_binary(csv_path: str | None = None, time: list[float] | None = None, flux: list[float] | None = None,
+                          flux_err: list[float] | None = None, transit_period: float | None = None,
+                          transit_epoch: float | None = None, transit_duration_days: float | None = None,
+                          target: str = "custom") -> dict:
+    """Eclipsing binaries and ellipsoidal or reflection variables in a light curve (``binaries.analyse``): the
+    orbital period from a box search and a periodogram (doubled on an odd/even difference or for equal minima, and
+    said to be ambiguous then), the primary and secondary eclipses (phase, depth, width, significance), the
+    secondary's phase with its e·cosω hint, a heuristic morphology class and an eclipsing-binary candidate flag
+    with its reasons. With a transit candidate's period, epoch and duration it also returns advisory vetting hints
+    (odd/even depths, a secondary at any phase, ellipsoidal and reflection amplitudes) that SetuHQ's vetting does
+    not use. Time in days (BTJD for TESS)."""
+    from setuhq import binaries as eb
+    from setuhq.tools import COMPUTED, ToolError, envelope
+
+    lc, sources = _arrays(csv_path, time, flux, flux_err, target)
+    out = eb.analyse(lc.time, lc.flux, lc.flux_err)
+    out.pop("phase_curve", None)
+    if transit_period is not None:
+        if transit_epoch is None or not transit_duration_days:
+            raise ToolError("vetting hints need transit_period, transit_epoch and transit_duration_days together")
+        out["vetting_hints"] = eb.vetting_hints(lc.time, lc.flux, transit_period, transit_epoch, transit_duration_days,
+                                                flux_err=lc.flux_err)
+    status = validation_status("binaries")
+    out["validation_status"] = status
+    honesty = [COMPUTED, eb.LABEL, eb.VETTING_NOTE, f"Eclipsing-binary analysis is {status} (see {VALIDATION_FILE_V4})."]
+    return envelope("find_eclipsing_binary", out, sources=sources, honesty=honesty)
+
+
+def rotation_period(csv_path: str | None = None, time: list[float] | None = None, flux: list[float] | None = None,
+                    flux_err: list[float] | None = None, target: str = "custom") -> dict:
+    """A stellar rotation period from spot modulation (``rotation.measure``): a Lomb-Scargle periodogram and the
+    autocorrelation function, with an uncertainty, half/double alias handling and a detected flag. One TESS sector
+    cannot measure periods longer than about 13 days; those are reported as beyond the limit. Pass one sector (or
+    a light curve you stitched yourself, with care for sector-to-sector offsets). Time in days."""
+    from setuhq import rotation as ro
+    from setuhq.tools import COMPUTED, envelope
+
+    lc, sources = _arrays(csv_path, time, flux, flux_err, target)
+    out = ro.measure(lc.time, lc.flux)
+    out.pop("periodogram", None)
+    status = validation_status("rotation")
+    out["validation_status"] = status
+    honesty = [COMPUTED, ro.LABEL, f"Rotation measurement is {status} (see {VALIDATION_FILE_V4})."]
+    return envelope("rotation_period", out, sources=sources, honesty=honesty)
+
+
+def find_transients(csv_path: str | None = None, time: list[float] | None = None, flux: list[float] | None = None,
+                    flux_err: list[float] | None = None, difference_flux: bool = False,
+                    momentum_dump_times: list[float] | None = None, scattered_light_times: list[float] | None = None,
+                    target: str = "custom") -> dict:
+    """Non-periodic brightenings in a light curve (``transients.find_transients``) on three time scales, each
+    with its peak, amplitude, rise and decay times, FWHM and a class hint (flare-like, extragalactic-transient-like,
+    asteroid-crossing-like, momentum-dump-like, scattered-light-like or periodic-variability-like) with its reasons;
+    the last four are likely false alarms. difference_flux=True for a difference-imaging light curve in e-/s.
+    Momentum-dump and scattered-light times (TESS quality bits 32, 2048, 4096) sharpen the screens. Every event is
+    a transient candidate, never a new or confirmed object. Time in days (BTJD for TESS)."""
+    from setuhq import transients as tr
+    from setuhq.tools import COMPUTED, envelope
+
+    lc, sources = _arrays(csv_path, time, flux, flux_err, target)
+    quality = {"momentum_dump": list(momentum_dump_times or []), "scattered_light": list(scattered_light_times or [])}
+    out = tr.find_transients(lc.time, lc.flux, lc.flux_err, mode="difference" if difference_flux else "relative",
+                             quality=quality)
+    status = validation_status("transients")
+    out["validation_status"] = status
+    honesty = [COMPUTED, tr.LABEL, f"Transient detection is {status} (see {VALIDATION_FILE_V4})."]
+    return envelope("find_transients", out, sources=sources, honesty=honesty)
+
+
 # (function, read_only): get_cheops_lightcurve reaches the network and writes the cache.
-STELLAR_TOOLS = [(find_flares, True), (pulsation_spectrum, True), (get_cheops_lightcurve, False)]
+STELLAR_TOOLS = [(find_flares, True), (pulsation_spectrum, True), (get_cheops_lightcurve, False),
+                 (find_eclipsing_binary, True), (rotation_period, True), (find_transients, True)]
