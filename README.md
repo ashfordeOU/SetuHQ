@@ -24,7 +24,7 @@
 <p align="center">
   <a href="https://pypi.org/project/setuhq/"><img src="https://img.shields.io/badge/PyPI-v0.1.0-066A86?style=flat-square&labelColor=0A1226" height="18" alt="SetuHQ 0.1.0 on PyPI: pip install setuhq"></a>
   <a href="https://doi.org/10.5281/zenodo.23568348"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23568348-3F4B67?style=flat-square&labelColor=0A1226" height="18" alt="Zenodo concept DOI 10.5281/zenodo.23568348, which resolves to the latest archived release"></a>
-  <a href="scripts/ci_local.sh"><img src="https://img.shields.io/badge/tests-1137%20collected-377D0C?style=flat-square&labelColor=0A1226" height="18" alt="1137 tests collected by pytest: 1130 run offline in CI, 4 slow ones and 3 network ones by scripts/ci_local.sh"></a>
+  <a href="scripts/ci_local.sh"><img src="https://img.shields.io/badge/tests-1149%20collected-377D0C?style=flat-square&labelColor=0A1226" height="18" alt="1149 tests collected by pytest: 1142 run offline in CI, 4 slow ones and 3 network ones by scripts/ci_local.sh"></a>
   <a href="#evidence"><img src="https://img.shields.io/badge/held--out%20completeness-60%25%20%2890%2F150%29-066A86?style=flat-square&labelColor=0A1226" height="18" alt="Held-out completeness on 662 real TOIs: 90 of 150 confirmed or known planets on searchable stars, Wilson 95% interval 52 to 67%"></a>
   <a href="#the-app"><img src="https://img.shields.io/badge/catalogue-8%2C376%20planets-066A86?style=flat-square&labelColor=0A1226" height="18" alt="The catalogue holds all 8,376 exoplanet.eu records, fetched 2026-10-18"></a>
   <a href="#the-app"><img src="https://img.shields.io/badge/Methods-15%20chapters-066A86?style=flat-square&labelColor=0A1226" height="18" alt="15 animated Methods chapters with tested physics"></a>
@@ -556,8 +556,20 @@ so coverage advances each day, reviews the two latest sectors of each target, an
 every new dip in a deduplicated catalogue. A dip is `known_toi` when it matches a
 published TOI period, and `new_candidate` otherwise.
 
+**New signals are held for review (embargo, on by default).** A `new_candidate` is never published
+when it is found. The public catalogue, the site, the feed page, the dashboard and the workflow's logs
+show only signals that match known TOIs, plus one count: "N signals held for review; they are
+published only after review and reporting." No TIC, coordinates, period, epoch or depth of a held
+signal is written, printed or deployed, and the run logs list how many targets a batch reviewed, not
+which. A held signal goes to private review and, if it holds up, to ExoFOP before anything about it is
+public. It is not stored publicly at all: the search is deterministic and reproducible from the data, the
+config and the code (their hashes are in each run), so the private review pipeline re-searches those
+targets itself. Only a private deployment can opt out (`setuhq discover --publish-new`, or
+`embargo = false` under `[discover]` in its config); the public workflow sets neither, and a test checks
+it.
+
 - [`.github/workflows/discover.yml`](.github/workflows/discover.yml) runs one batch every six hours
-  (and on request), commits the catalogue as ashfordeOU, and deploys the site. Claude's
+  (and on request), checks the embargo, commits the catalogue as ashfordeOU, and deploys the site. Claude's
   API reviewer runs when the `ANTHROPIC_API_KEY` secret is set; without it the batch runs on the
   Probes only.
 - [`scripts/improve.py`](scripts/improve.py) sweeps panel thresholds on injection benchmarks.
@@ -583,7 +595,7 @@ cached on 2026-10-19), the 19 live targets admit 0 new signals and the same 24 e
 The catalogue built under the old rule is kept in
 [docs/discoveries/catalog_v1_fap200.json](docs/discoveries/catalog_v1_fap200.json).
 
-**What this can and cannot claim.** Every entry is a candidate. A detection here means the
+**What this can and cannot claim.** Every entry is a candidate. A held signal means the
 pipeline saw a vetted dip that matches no published ephemeris. It does not mean a planet has
 been found. Confirmation needs radial velocities, ground-based photometry, or the
 community's TESS follow-up. The pixel-level centroid test is new, off by default and unusable on saturated
@@ -925,7 +937,7 @@ that changes a result is in the config, and its hash goes into the manifest.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/architecture-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/architecture-light.svg">
-  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 65 modules (one Python package, src/setuhq); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, crossmatch, plate, report, leaderboard, mcp); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 1,137 tests (3 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/setuhq, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 8bee5cc." width="100%">
+  <img src="docs/assets/readme/architecture-light.svg" alt="SetuHQ's architecture, with counts read from the repository. Public data: exoplanet.eu (8,376 planets, fetched 2026-10-18); MAST (TESS SPOC light curves); TOI table (662 TOIs sampled with seed 20261019); Claret 2017 (TESS limb darkening); JWST (WASP-39 b spectrum, from Zenodo). Engine: 65 modules (one Python package, src/setuhq); Pipeline (preprocess, subjects, search, vet, transitfit); Scoring (aggregate, calibrate, benchmark_toi); Pages (report, app, galaxy, methods, mission). Reviewer panel: Sentinels (Claude by default; other providers supported and labelled); Probes (deterministic matched-filter detectors, seeded); Consensus (skill-weighted, calibrated). Surfaces: CLI, 18 commands (run, rebuild, calibrate, benchmark, discover, export, batch, sweep, bundle, ingest, check-sweep, dashboard, docket, crossmatch, plate, report, leaderboard, mcp); App (15 Methods chapters; Galaxy, Catalogue, Mission Control). Evidence: 1,149 tests (3 need the network, 4 are slow); pi Men c (checked against Huang 2018); Real-TOI benchmark (662 TOIs, with controls); Threshold sweep (7 trials, losers kept); Provenance (data, config and code hashes). Every candidate keeps its data hash, config hash, code fingerprint and every reviewer's marks; a run can be re-vetted without asking the reviewers again. Counts read from src/setuhq, the CLI and pytest --collect-only; data from docs/threshold_sweep.json, docs/results/exoplanet_map.json, docs/results/benchmark_real_tois.json (docs/threshold_sweep.json is the threshold sweep), commit 8bee5cc." width="100%">
 </picture>
 
 <details>

@@ -210,7 +210,8 @@ def story_data(run_dir: str | Path, dock: dict, feed: list[dict], calibration: d
         n_new = sum(1 for r in feed if r.get("status") == "new_candidate")
         proof.append({"big": str(len(feed)), "colour": "#FFD60A",
                       "text": f"entries from {len(stars)} more star{'s' if len(stars) != 1 else ''} in the search feed, "
-                              f"{n_new} at a new period. Leads for review, not planets."})
+                              + (f"{n_new} at a new period. " if n_new else "matching known TOIs. ")
+                              + "Leads for review, not planets."})
     opens = [d for d in dips if d["status"] == "open"]
     if opens:
         w = opens[0]["who"]

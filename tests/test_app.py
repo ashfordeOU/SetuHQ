@@ -66,7 +66,9 @@ def catalog(tmp_path):
              "status": "new_candidate", "candidate_id": "tess-x-001", "found": "2026-10-17T00:00:00+00:00",
              "status_note": "candidate only, not confirmed"}
     known = dict(entry, tic=5678, candidate_id="tess-y-002", status="known_toi", depth_ppm=1600.0)
-    data = {"candidates": [entry, known], "targets_reviewed": 2, "updated": "2026-10-17T00:00:00+00:00",
+    # A private deployment's catalogue (embargo off), so the page's handling of a new_candidate entry is tested;
+    # the public catalogue never holds one (tests/test_embargo.py).
+    data = {"embargo": False, "candidates": [entry, known], "targets_reviewed": 2, "updated": "2026-10-17T00:00:00+00:00",
             "config": "discovery", "config_sha256": "abc",
             "runs": [{"time": "2026-10-17T00:00:00+00:00", "targets": [1234, 5678], "new": 1, "known": 1,
                       "errors": ["TIC 9: LookupError: no SPOC 120s light curves found for 'TIC 9'"]}]}

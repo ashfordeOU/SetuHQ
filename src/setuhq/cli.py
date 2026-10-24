@@ -174,9 +174,15 @@ def cmd_discover(args) -> int:
         time_budget_s=args.time_budget_min * 60.0,
         work_dir=args.work_dir,
         cache_root=args.cache,
+        publish_new=args.publish_new,
     )
     site = build_discovery_site(args.catalog, args.site)
-    print(f"targets reviewed this run: {len(log['targets'])}, new candidates: {log['new']}, known: {log['known']}")
+    if "new" in log:  # --publish-new (a private deployment): new signals are kept and counted
+        print(f"targets reviewed this run: {len(log['targets'])}, new candidates: {log['new']}, known: {log['known']}")
+    else:  # embargo: this output is public (Actions logs), so only the catalogue's running total, no details
+        held = json.loads(Path(args.catalog).read_text()).get("held_for_review", 0)
+        print(f"targets reviewed this run: {log['n_targets']}, known TOI matches: {log['known']}, "
+              f"signals held for review (all runs): {held}")
     for error in log["errors"]:
         print(f"error: {error}")
     print(f"catalogue {args.catalog}, site {site}")
@@ -442,6 +448,10 @@ def build_parser() -> argparse.ArgumentParser:
     discover.add_argument("--time-budget-min", type=float, default=270.0)
     discover.add_argument("--work-dir", default="runs/discovery")
     discover.add_argument("--cache", default="cache")
+    discover.add_argument("--publish-new", action="store_true",
+                          help="private deployments only: keep signals that match no known TOI in the catalogue. By "
+                               "default they are withheld and only counted (held for review); the public workflow "
+                               "never passes this")
     discover.set_defaults(func=cmd_discover)
 
     export = sub.add_parser("export", help="write an ExoFOP CTOI-style table and predicted transit windows for a run")

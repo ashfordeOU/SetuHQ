@@ -137,7 +137,7 @@ def test_explorer_and_sentinels_read_the_stored_feed_and_calibration(run_dir, tm
     feed = [{"tic": 1, "candidate_id": "x-1", "period_days": 2.5, "depth_ppm": 900.0, "snr": 9.1, "duration_hours": 2.0,
              "status": "new_candidate", "sector_span": [3, 4], "t_center": 1500.0, "time_unit": "BTJD"}]
     cat = tmp_path / "c.json"
-    cat.write_text(json.dumps({"candidates": feed, "runs": []}))
+    cat.write_text(json.dumps({"embargo": False, "candidates": feed, "runs": []}))  # a private catalogue (embargo off)
     data = app_data(run_dir, title="t", catalog_path=cat)
     ex = data["story"]["explorer"]
     assert ex[0]["tic"] == 1 and ex[0]["sectors"] == "3–4" and ex[0]["depth_ppm"] == 900.0

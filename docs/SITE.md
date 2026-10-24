@@ -227,10 +227,26 @@ same tokens.
 The five labels are the only ones used: Artist's impression, Model from stored values, Real data, cited, Illustration
 and Speculative model; an e2e check reads one on every stage of every page it visits.
 
+## The search feed and the embargo
+
+The feed on Candidates (and its card on the overview and in Mission Control, the stand-alone feed page,
+the dashboard and the plates) shows only signals that match a known TOI. A signal that matches no known
+TOI is held for private review and reporting, and is published only after that: the public catalogue
+`docs/discoveries/catalog.json` carries just its count (`held_for_review`) and the date of the most recent
+hold (`held_last_date`), and wherever the feed is summarised the site shows one plain line, for example
+"2 signals held for review; they are published only after review and reporting." Nothing else about a
+held signal reaches a page, the catalogue's run logs (which count a batch's targets, `n_targets`, and do
+not list them), the Actions log or the Pages artifact. `setuhq discover` withholds such signals when it
+writes the catalogue (`discover.embargo_catalog`), and every page reads the catalogue through
+`discover.public_catalog`, which withholds them again unless the catalogue was written by a private
+deployment that opted out (`"embargo": false`, from `--publish-new` or `[discover] embargo = false`).
+`discover.yml` never opts out and stops before its commit if the catalogue holds anything but known-TOI
+matches.
+
 ## The CLI outputs
 
 `setuhq report` (the run report, also served on the site at `/evidence/report/`), `setuhq discover` (its search
-feed page), `setuhq dashboard`, `setuhq docket` (the case file) and `setuhq plate` (the plates) write HTML that works
+feed page; see "The search feed and the embargo" below), `setuhq dashboard`, `setuhq docket` (the case file) and `setuhq plate` (the plates) write HTML that works
 opened from disk and printed:
 
 * the site's tokens inline, under each page's own names (`design.REPORT_ALIASES`, `DOCKET_ALIASES`,

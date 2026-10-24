@@ -27,6 +27,17 @@ the strong periodic signal of their own target.
 
 The catalogue is a JSON file that accumulates across runs and is deduplicated on
 (TIC, mid-time within 0.05 day).
+
+Embargo (on by default). The catalogue ``setuhq discover`` writes is public: the scheduled workflow commits it
+and deploys the site built from it. So any entry whose status is not ``known_toi`` is withheld from it
+(:func:`embargo_catalog`): no TIC, coordinates, period, epoch, depth or any other field is written, logged or
+printed. The catalogue carries only ``held_for_review`` (a count) and ``held_last_date`` (the UTC date of the
+most recent hold). A withheld signal is not persisted anywhere public; the search is deterministic and
+reproducible from the data, the config and the code, so a private review pipeline re-searches those targets
+itself and reports a signal before it is published. Only a private deployment opts out, with ``--publish-new``
+or ``embargo = false`` under ``[discover]`` in its config; the public workflow sets neither. Every page that
+reads the catalogue goes through :func:`public_catalog`, which applies the same rule again unless the catalogue
+says ``"embargo": false``.
 """
 
 from __future__ import annotations
@@ -59,6 +70,7 @@ MAX_FEED_FAP = 0.001         # and that signal's empirical FAP must be below thi
 # Chosen on the real-TOI benchmark's tuning half only and pre-registered (docs/results/feed_rule_preregistration.json,
 # commit 8909cda) before its one held-out evaluation (docs/results/feed_rule_validation.json).
 TWO_SECTOR_PERIOD_TOL = 0.005
+PUBLIC_STATUS = "known_toi"  # under the embargo, the only status the public catalogue and site carry
 
 
 @dataclass
@@ -290,6 +302,73 @@ def feed_entry(candidate, target: Target, curves, run_time: datetime, run_log: d
     return entry
 
 
+def held_line(count: int) -> str:
+    """The one plain line the site shows wherever the feed is summarised. No details of a held signal."""
+    count = int(count or 0)
+    return (f"{count} {'signal' if count == 1 else 'signals'} held for review; "
+            "they are published only after review and reporting.")
+
+
+def embargo_catalog(catalog: dict, run_time: datetime) -> int:
+    """Withhold every entry that is not ``known_toi`` from ``catalog`` (in place); returns how many were withheld.
+    Run logs keep a count of targets (``n_targets``) in place of their TIC list.
+
+    Only the aggregate is kept: ``held_for_review`` (a count) and ``held_last_date`` (UTC date of the most recent
+    hold). The scheduled workflow searches the same rotation batch several times a day and the search is
+    deterministic, so holds on the same UTC date are counted once, as the most found by any run that day
+    (``held_on_last_date``). A signal re-found by a later day's run is counted again."""
+    kept = [e for e in catalog.get("candidates", []) if e.get("status") == PUBLIC_STATUS]
+    held = len(catalog.get("candidates", [])) - len(kept)
+    catalog["candidates"] = kept
+    # A run log names no target, only how many: a list of the batch's TICs would include the held signal's star.
+    for run in catalog.get("runs", []):
+        if "targets" in run:
+            run["n_targets"] = len(run.pop("targets") or [])
+    total = int(catalog.get("held_for_review") or 0)
+    if held:
+        day = run_time.astimezone(timezone.utc).date().isoformat()
+        if catalog.get("held_last_date") == day:
+            before = int(catalog.get("held_on_last_date") or 0)
+            total += max(0, held - before)
+            catalog["held_on_last_date"] = max(before, held)
+        else:
+            total += held
+            catalog["held_on_last_date"] = held
+        catalog["held_last_date"] = day
+    catalog["held_for_review"] = total
+    catalog.setdefault("held_last_date", None)
+    catalog["embargo"] = True
+    return held
+
+
+def public_catalog(catalog: dict) -> dict:
+    """The catalogue as a public page may show it: entries that are not ``known_toi`` are dropped, unless the
+    catalogue was written by a private deployment that opted out (``"embargo": false``). Pages call this on
+    every catalogue they read, so a catalogue that still holds such an entry never reaches the site. Run logs are
+    shown with a count of targets, not their TICs, as :func:`embargo_catalog` stores them."""
+    if catalog.get("embargo") is False:
+        return catalog
+    rows = catalog.get("candidates") or []
+    kept = [e for e in rows if e.get("status") == PUBLIC_STATUS]
+    runs = [{**{k: v for k, v in r.items() if k != "targets"}, "n_targets": r.get("n_targets", len(r.get("targets") or []))}
+            for r in catalog.get("runs") or []]
+    return {**catalog, "candidates": kept, "runs": runs,
+            "held_for_review": int(catalog.get("held_for_review") or 0) + len(rows) - len(kept)}
+
+
+def load_public_catalog(path: str | Path) -> dict:
+    """Read a catalogue for a public page (:func:`public_catalog`)."""
+    return public_catalog(json.loads(Path(path).read_text()))
+
+
+def embargo_setting(config: RunConfig, publish_new: bool = False) -> bool:
+    """True (withhold new signals) unless the CLI passed ``--publish-new`` or the config sets
+    ``[discover] embargo = false``. Anything else, including a missing setting, keeps the embargo on."""
+    if publish_new:
+        return False
+    return (config.raw.get("discover") or {}).get("embargo", True) is not False
+
+
 def load_catalog(path: Path) -> dict:
     if path.exists():
         return json.loads(path.read_text())
@@ -314,10 +393,15 @@ def run_discovery(
     work_dir: str | Path = "runs/discovery",
     cache_root: str | Path = "cache",
     tics: list[int] | None = None,
+    publish_new: bool = False,
 ) -> dict:
+    """One discovery batch into ``catalog_path``. The embargo (module docstring) is on unless ``publish_new`` or
+    the config's ``[discover] embargo = false`` turns it off. Under the embargo the returned run log, like the
+    stored one, holds no count or detail of withheld signals; the catalogue's ``held_for_review`` is the total."""
     run_time = run_time or datetime.now(timezone.utc)
     started = time.monotonic()
     config: RunConfig = load_config(config_path)
+    embargo = embargo_setting(config, publish_new)
     reviewers = build_reviewers(config.reviewers, cache_root=cache_root)
     weights_file = Path("docs/results/reviewer_weights.json")
     weights = json.loads(weights_file.read_text()) if weights_file.exists() else None
@@ -334,6 +418,7 @@ def run_discovery(
             run_log["errors"].append("time budget reached before the batch finished")
             break
         label = f"TIC {target.tic}"
+        held_here = False  # this target gave a signal the embargo withholds
         try:
             curves = load_tess(label)
             curves = sorted(curves, key=lambda c: c.provenance.get("sector", 0))[-sectors_per_target:]
@@ -352,16 +437,26 @@ def run_discovery(
                     continue
                 catalog["candidates"].append(entry)
                 if entry["status"] == "new_candidate":
+                    held_here = True
                     run_log["new"] += 1
                 else:
                     run_log["known"] += 1
         except Exception as exc:  # one bad target must not stop the batch
+            if embargo and held_here:  # naming the target would point at a withheld signal
+                run_log["errors"].append("one target stopped with an error after a signal was held (details withheld)")
+                continue
             run_log["errors"].append(f"{label}: {type(exc).__name__}: {exc}")
             run_log.setdefault("tracebacks", []).append(traceback.format_exc(limit=2))
 
     run_log["reclassified"] = reclassify_catalog(catalog, targets)
     catalog["targets_reviewed"] = catalog.get("targets_reviewed", 0) + len(run_log["targets"])
     catalog["runs"].append(run_log)
+    if embargo:
+        # Withheld before anything is written: the catalogue, the run log and the site built from them are public.
+        run_log.pop("new", None)
+        embargo_catalog(catalog, run_time)
+    else:
+        catalog["embargo"] = False
     catalog["runs"] = catalog["runs"][-200:]
     catalog["candidates"].sort(key=lambda c: (c["status"] != "new_candidate", -c["score"], -c["snr"]))
     catalog["updated"] = run_time.isoformat(timespec="seconds")
