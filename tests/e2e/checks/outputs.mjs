@@ -15,14 +15,14 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const OUTPUTS = ["report", "dashboard", "docket", "plate", "discover"];
 // The case file's signal list is a listbox whose rows are filled by its script (as on the site: run.mjs KNOWN_AXE).
 const KNOWN_AXE = [{ page: "docket", rule: "aria-required-children", target: "#rows" }];
+const pyOf = () => process.env.PYTHON || (existsSync(join(ROOT, ".venv", "bin", "python")) ? join(ROOT, ".venv", "bin", "python") : "python3");
 
 export default async function outputs(h) {
   const { check, setGroup, context, AXE } = h;
   let dir = h.OUTPUTS, own = false;
   if (!dir || !existsSync(join(dir, "report", "index.html"))) {
     dir = mkdtempSync(join(tmpdir(), "setuhq-outputs-")); own = true;
-    const py = process.env.PYTHON || (existsSync(join(ROOT, ".venv", "bin", "python")) ? join(ROOT, ".venv", "bin", "python") : "python3");
-    execFileSync(py, [join(ROOT, "tests", "e2e", "build_outputs.py"), dir], { cwd: ROOT, stdio: "ignore" });
+    execFileSync(pyOf(), [join(ROOT, "tests", "e2e", "build_outputs.py"), dir], { cwd: ROOT, stdio: "ignore" });
   }
   const server = await serve(dir);
   const BASE = `http://127.0.0.1:${server.address().port}`;
@@ -67,6 +67,23 @@ export default async function outputs(h) {
         await ctx.close();
       }
     }
+    // Built from a checkout path over 120 characters deep, every printed path is long and absolute: still no page
+    // scrolls sideways on a phone (long paths wrap).
+    setGroup("outputs: a deep checkout path");
+    const deep = mkdtempSync(join(tmpdir(), "setuhq-outputs-deep-"));
+    try {
+      execFileSync(pyOf(), [join(ROOT, "tests", "e2e", "build_outputs.py"), deep, "--deep"], { cwd: ROOT, stdio: "ignore" });
+      const ctx = await context({ size: "phone", theme: "dark" });
+      const page = await ctx.newPage();
+      for (const name of OUTPUTS) {
+        await page.goto(pathToFileURL(join(deep, name, "index.html")).href, { waitUntil: "load" }); await page.waitForTimeout(300);
+        const r = await page.evaluate(() => ({ wide: document.documentElement.scrollWidth - document.documentElement.clientWidth, long: document.body.textContent.includes("a-deliberately-long") }));
+        check(r.wide <= 0, `${name} built from a deep path: no sideways scroll on a phone`, JSON.stringify(r));
+      }
+      const plate = await (async () => { await page.goto(pathToFileURL(join(deep, "plate", "index.html")).href); return page.evaluate(() => document.querySelector("footer.colophon").textContent.includes("a-deliberately-long")); })();
+      check(plate, "the deep path is printed (so the check above saw it)");
+      await ctx.close();
+    } finally { rmSync(deep, { recursive: true, force: true }); }
     // The report's blind PNG is the stored file, byte for byte (also in tests/test_report_style.py).
     setGroup("outputs: the report's blind image");
     const same = execFileSync("sh", ["-c", `for f in "${ROOT}"/runs/tess-pi-men-s1/subjects/*.png; do cmp -s "$f" "${dir}/report/assets/$(basename "$f")" || echo "$f"; done`]).toString().trim();

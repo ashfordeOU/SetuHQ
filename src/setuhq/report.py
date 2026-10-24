@@ -46,7 +46,7 @@ h1{font:var(--t-h1);letter-spacing:-.04em;margin:0 0 10px;text-wrap:balance}
 .herostage h1{color:var(--stage-ink)}
 p.lead{font:var(--t-lede);max-width:72ch;margin:0 0 8px;color:var(--stage-dim)}
 .herostage .count{font:600 17px/1.35 var(--sans);color:var(--stage-ink);margin:0 0 6px}
-.herostage .runstar{font:var(--t-data);color:var(--stage-dim);margin:0}
+.herostage .runstar{font:var(--t-data);color:var(--stage-dim);margin:0;overflow-wrap:anywhere}
 .herostage .probes{font:var(--t-small);color:var(--stage-ink);margin:8px 0 0}
 h2{font:var(--t-h2);letter-spacing:-.02em;margin:44px 0 12px}
 h3{font:var(--t-h3);letter-spacing:-.01em;margin:0 0 6px;overflow-wrap:anywhere}
@@ -85,7 +85,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 th{font:var(--t-eyebrow);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
 .scroll{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-m);padding:4px 14px}
-.note{font:var(--t-small);color:var(--ink-3)}
+.note{font:var(--t-small);color:var(--ink-3);overflow-wrap:anywhere}
 p.note{max-width:90ch}
 code,pre{font-family:var(--mono);font-size:12.5px}
 pre{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-s);padding:14px;overflow-x:auto}
@@ -97,7 +97,7 @@ pre{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-s
 .chart .known{fill:var(--blue)}
 .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font:var(--t-small);color:var(--ink-2);margin:8px 0 0}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-footer{margin:48px 0 24px;color:var(--ink-3);font:var(--t-small)}
+footer{margin:48px 0 24px;color:var(--ink-3);font:var(--t-small);overflow-wrap:anywhere}
 @media (max-width:600px){.cands{grid-template-columns:1fr}.step{flex-basis:100%}.arrow{display:none}
   .herostage{grid-template-columns:1fr;padding:20px 18px}.herostage .stardisc{width:84px}}
 @media print{nav{display:none}body{font-size:12px}.card,.scroll,.step{break-inside:avoid}}
@@ -228,6 +228,11 @@ def _candidate_card(row: dict, image_rel: str | None, outcome: str | None = None
 </article>"""
 
 
+def _pl(n, word: str) -> str:
+    """The word for a count: 1 light curve, 2 light curves."""
+    return word if n == 1 else word + "s"
+
+
 def _star_line(star: dict) -> tuple[str, str]:
     """The hero's star: a static disc in its blackbody colour (renderer.star_svg) and the line that says where its
     Teff comes from; ("", "") when the run stores no Teff."""
@@ -326,11 +331,11 @@ def build_report(
 <main class='wrap'>
 
 <section class='grid' style='margin-top:24px' aria-label='The run in numbers'>
-  <div class='card stat'>{counts['light_curves']}<small>light curves</small></div>
-  <div class='card stat'>{counts['subjects']}<small>blind-coded subjects</small></div>
-  <div class='card stat'>{counts['classifications']}<small>independent reviews</small></div>
-  <div class='card stat'>{len(candidates)}<small>dips the panel agreed on</small></div>
-  <div class='card stat cand'>{n_cand}<small>candidates (passed vetting, unconfirmed)</small></div>
+  <div class='card stat'>{counts['light_curves']}<small>{_pl(counts['light_curves'], 'light curve')}</small></div>
+  <div class='card stat'>{counts['subjects']}<small>blind-coded {_pl(counts['subjects'], 'subject')}</small></div>
+  <div class='card stat'>{counts['classifications']}<small>independent {_pl(counts['classifications'], 'review')}</small></div>
+  <div class='card stat'>{len(candidates)}<small>{_pl(len(candidates), 'dip')} the panel agreed on</small></div>
+  <div class='card stat cand'>{n_cand}<small>{_pl(n_cand, 'candidate')} (passed vetting, unconfirmed)</small></div>
 </section>
 
 <section id='pipeline'><h2>How a run works</h2>
@@ -475,15 +480,15 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
   <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False, height=24)}</a>
   <p class='kick'>setuhq discover · scheduled batches</p>
   <h1>Search feed</h1>
-  <p class='count'>{html.escape(dip_count([r['status'] for r in rows]))}, from {catalog.get('targets_reviewed', 0)} targets reviewed</p>
+  <p class='count'>{html.escape(dip_count([r['status'] for r in rows]))}, from {catalog.get('targets_reviewed', 0)} {_pl(catalog.get('targets_reviewed', 0), 'target')} reviewed</p>
   <p class='lead'>An AI review panel searches TESS light curves on a schedule. Each entry is a dip that passed the pipeline's vetting and matches no known ephemeris, or a match to a known TOI that checks the pipeline. These are candidates. None is a confirmed planet until independent follow-up confirms it.</p>
  </div></div>
 </div></header>
 <main class='wrap'>
 <section class='grid' style='margin-top:24px' aria-label='The feed in numbers'>
-  <div class='card stat cand'>{len(new)}<small>new candidates (no TOI match)</small></div>
-  <div class='card stat'>{len(known)}<small>matches to known TOIs</small></div>
-  <div class='card stat'>{catalog.get('targets_reviewed', 0)}<small>targets reviewed</small></div>
+  <div class='card stat cand'>{len(new)}<small>new {_pl(len(new), 'candidate')} (no TOI match)</small></div>
+  <div class='card stat'>{len(known)}<small>{'match' if len(known) == 1 else 'matches'} to known TOIs</small></div>
+  <div class='card stat'>{catalog.get('targets_reviewed', 0)}<small>{_pl(catalog.get('targets_reviewed', 0), 'target')} reviewed</small></div>
   <div class='card stat' style='font-size:18px'>{html.escape(str(catalog.get('updated', 'never'))[:16].replace('T', ' '))}<small>last update (UTC)</small></div>
 </section>
 <section><h2>Entries per night</h2>{night_chart(catalog)}</section>

@@ -189,7 +189,8 @@ kbd{font:11px var(--mono);border:1px solid var(--rule);border-radius:4px;padding
 }
 /* Phone (both the standalone page and the shell's framed copy): 44 px targets, a fixed Signals jump, the
    signal list as an accordion, and (standalone only; the shell has its own) a dip picker at the top. */
-.runstar{display:flex;align-items:center;gap:12px;margin:0;font:12px/1.45 var(--mono);color:var(--muted)}
+.runstar{display:flex;align-items:center;gap:12px;margin:0;font:12px/1.45 var(--mono);color:var(--muted);overflow-wrap:anywhere}
+.runstar span{min-width:0}
 .runstar .stardisc{flex:none;width:44px;height:44px}
 @media print{:root,:root[data-theme]{--paper:#fff}}
 .jumplist,.dippick{display:none}

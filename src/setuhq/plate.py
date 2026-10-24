@@ -121,7 +121,7 @@ p.caption .sid{color:var(--muted);font-size:.85em}
 .archive p{margin:0}
 .nocurve{margin:10px 0 0;font-size:13px;color:var(--muted);border-left:2px solid var(--rule);padding-left:8px}
 footer.colophon{margin-top:30px;border-top:1px solid var(--ink);padding-top:8px;font-size:12px;color:var(--muted)}
-footer.colophon p{margin:3px 0}
+footer.colophon p{margin:3px 0;overflow-wrap:anywhere}
 @media (max-width:640px){
   .sheet{padding:18px 16px 40px}
   header.mast h1{font-size:23px}
@@ -278,6 +278,18 @@ def _xm_dated(xm: dict) -> str:
     return f"fetched {xm.get('fetched_at', '')}"
 
 
+def shown_path(p: str | Path | None) -> str:
+    """A path as a page prints it: relative to the working directory when it is inside it, else as given."""
+    if not p:
+        return ""
+    import os
+
+    try:
+        return Path(os.path.abspath(p)).relative_to(os.path.abspath(Path.cwd())).as_posix()
+    except (ValueError, OSError):
+        return str(p)
+
+
 def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None = None,
                star: str | None = None, require_crossmatch: bool = False) -> dict:
     """Everything the plates show, read from the run directory and the catalogue."""
@@ -348,9 +360,9 @@ def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | No
         "title": title, "stars": stars, "kinds": kinds,
         "panel_note": PROBES_ONLY if panel_mode(manifest) == "probes_only" else "",
         "subject_days": manifest.get("subject_days"),
-        "run": {"name": manifest.get("config_name") or run_dir.name, "dir": str(run_dir),
+        "run": {"name": manifest.get("config_name") or run_dir.name, "dir": shown_path(run_dir),
                 "created_at": manifest.get("created_at", ""), "config_sha256": manifest.get("config_sha256", "")},
-        "catalog": {"path": str(catalog_path) if catalog else "", "updated": catalog.get("updated", ""),
+        "catalog": {"path": shown_path(catalog_path) if catalog else "", "updated": catalog.get("updated", ""),
                     "n": len(feed)},
     }
 

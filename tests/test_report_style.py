@@ -123,3 +123,19 @@ def test_the_feed_page_has_its_per_night_chart_and_tables(outs):
     assert chart and "per night" in chart.group(1) and "24 matches to known TOIs" in chart.group(1)
     assert "<rect class='known'" in page and "candidate, unconfirmed" in page
     assert "None is a confirmed planet until independent follow-up confirms it." in page
+
+
+def test_counts_are_pluralised_and_long_paths_wrap(outs, tmp_path):
+    page = outs["report"].read_text()
+    assert "1<small>light curve</small>" in page and "1 light curves" not in page.replace("<small>", " ")
+    assert report._pl(1, "dip") == "dip" and report._pl(2, "dip") == "dips" and report._pl(0, "dip") == "dips"
+    # Every footer, note and path line may break inside a long path, so no page scrolls sideways on a phone.
+    from setuhq import docket, plate
+
+    assert "overflow-wrap:anywhere" in re.search(r"footer\{[^}]*\}", report.REPORT_CSS).group(0)
+    assert "footer.colophon p{margin:3px 0;overflow-wrap:anywhere}" in plate.PLATE_CSS
+    assert "overflow-wrap:anywhere" in re.search(r"\.runstar\{[^}]*\}", docket.DOCKET_CSS).group(0)
+    assert "footer,.note{overflow-wrap:anywhere}" in dashboard.DASHBOARD_CSS
+    # A path inside the working directory is printed relative to it; one outside, as given.
+    assert plate.shown_path(Path.cwd() / "runs" / "x") == "runs/x"
+    assert plate.shown_path(tmp_path / "x") == str(tmp_path / "x") and plate.shown_path(None) == ""

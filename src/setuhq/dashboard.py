@@ -29,7 +29,7 @@ from pathlib import Path
 from setuhq import brand
 from setuhq.design import CROSSHAIR_JS
 from setuhq.names import ATTRIBUTION, DIP_STATE
-from setuhq.report import FONTS_HREF, _head, _outcomes
+from setuhq.report import FONTS_HREF, _head, _outcomes, _pl
 
 DASHBOARD_CSS = """
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0}
@@ -64,6 +64,7 @@ tr.row.sel td{background:color-mix(in srgb,var(--blue) 14%,transparent)}
 .heat td{text-align:center;font-size:12px;padding:6px;color:var(--ink)}
 .heat td .note{color:var(--ink-2)}
 .empty{color:var(--ink-3);padding:24px;text-align:center}
+footer,.note{overflow-wrap:anywhere}
 """
 
 DASHBOARD_JS = r"""
@@ -274,7 +275,7 @@ function discovery(){
   const groups=[['new candidate (unconfirmed)',F.candidates.filter(r=>r.status==='new_candidate').length,'var(--yellow)'],['known TOI match',F.candidates.filter(r=>r.status==='known_toi').length,'var(--blue)']];
   const total=Math.max(1,groups.reduce((a,g)=>a+g[1],0));
   bs.innerHTML = groups.map(([l,n,c])=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><span>${l}</span><span>${n}</span></div><div class="bar"><i style="width:${(n/total*100).toFixed(0)}%;background:${c}"></i></div></div>`).join('') +
-    `<p class="note">${F.targets_reviewed} targets reviewed in total. Every entry is an unconfirmed candidate.</p>`;
+    `<p class="note">${F.targets_reviewed} target${F.targets_reviewed === 1 ? "" : "s"} reviewed in total. Every entry is an unconfirmed candidate.</p>`;
 }
 
 // ---------- wiring ----------
@@ -364,11 +365,11 @@ def build_dashboard(run_dir: str | Path, out_dir: str | Path, *, title: str, cat
     n_cand = sum(c["outcome"] == "passed" for c in run["candidates"])
     counts = run["manifest"]["counts"]
     kpis = [
-        [str(counts["light_curves"]), "light curves", None],
-        [str(counts["subjects"]), "blind-coded subjects", None],
-        [str(counts["classifications"]), "independent reviews", None],
-        [str(len(run["candidates"])), "dips the panel agreed on", None],
-        [str(n_cand), "candidates (passed vetting, unconfirmed)", "var(--yellow)"],
+        [str(counts["light_curves"]), _pl(counts["light_curves"], "light curve"), None],
+        [str(counts["subjects"]), "blind-coded " + _pl(counts["subjects"], "subject"), None],
+        [str(counts["classifications"]), "independent " + _pl(counts["classifications"], "review"), None],
+        [str(len(run["candidates"])), _pl(len(run["candidates"]), "dip") + " the panel agreed on", None],
+        [str(n_cand), _pl(n_cand, "candidate") + " (passed vetting, unconfirmed)", "var(--yellow)"],
     ]
     if discovery:
         kpis.append([str(sum(1 for r in discovery["candidates"] if r["status"] == "new_candidate")),
