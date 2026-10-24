@@ -556,8 +556,8 @@ so coverage advances each day, reviews the two latest sectors of each target, an
 every new dip in a deduplicated catalogue. A dip is `known_toi` when it matches a
 published TOI period, and `new_candidate` otherwise.
 
-- [`.github/workflows/discover.yml`](.github/workflows/discover.yml) runs one batch when started by
-  hand (its schedule is off), commits the catalogue as ashfordeOU, and deploys the site. Claude's
+- [`.github/workflows/discover.yml`](.github/workflows/discover.yml) runs one batch every six hours
+  (and on request), commits the catalogue as ashfordeOU, and deploys the site. Claude's
   API reviewer runs when the `ANTHROPIC_API_KEY` secret is set; without it the batch runs on the
   Probes only.
 - [`scripts/improve.py`](scripts/improve.py) sweeps panel thresholds on injection benchmarks.
