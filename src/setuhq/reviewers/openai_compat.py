@@ -39,7 +39,7 @@ class ChatCompletionsBackend:
         if auth not in ("bearer", "api-key", "none"):
             raise ValueError(f"auth must be 'bearer', 'api-key' or 'none', not {auth!r}")
         # no key in the URL or the query: from the environment, or passed in code (api_key)
-        check_endpoint(base_url, query, api_key_env, extra_keys=[api_key] if isinstance(api_key, str) else ())
+        check_endpoint(base_url, query, api_key_env, extra_keys=[api_key] if api_key else ())
         self._key = as_secret(api_key)
         self.provider = provider
         self.model = model

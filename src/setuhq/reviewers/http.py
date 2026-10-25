@@ -96,7 +96,8 @@ def safe_url(url: str | None) -> str | None:
 def check_endpoint(base_url: str, query: dict | None = None, key_env: str | None = None, extra_keys=()) -> None:
     """Refuse an endpoint that could carry a credential: a user:password part, a fragment, a ;param, a path
     segment that looks like a token, a credential-named query parameter, or any query value or URL part equal to
-    a provider key that is set (``PROVIDER_KEY_ENVS``, ``key_env`` and any key passed in code, ``extra_keys``). The
+    a provider key that is set (``PROVIDER_KEY_ENVS``, ``key_env`` and any key passed in code, ``extra_keys``: strings
+    or :class:`setuhq.reviewers.sentinel.Secret`, revealed here only to compare). The
     message never echoes the value."""
     from urllib.parse import parse_qsl
 
@@ -117,7 +118,7 @@ def check_endpoint(base_url: str, query: dict | None = None, key_env: str | None
     if bad:
         raise ValueError(f"query parameter(s) {', '.join(bad)} look like a credential; keys are read from the "
                          "environment only (api_key_env)")
-    keys = [os.environ.get(v, "") for v in (*PROVIDER_KEY_ENVS, *([key_env] if key_env else []))] + [k for k in extra_keys if k]
+    keys = [os.environ.get(v, "") for v in (*PROVIDER_KEY_ENVS, *([key_env] if key_env else []))] + [k.reveal() if hasattr(k, "reveal") else str(k) for k in extra_keys if k]
     keys = [k for k in keys if len(k) >= 4]
     if any(v == k or k in v for _, v in pairs for k in keys) or any(k in base_url for k in keys):
         raise ValueError("base_url or query holds the value of a provider key; keys are read from the environment only")

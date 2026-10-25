@@ -150,3 +150,38 @@ def _png() -> Path:
     p = Path(tempfile.mkdtemp()) / "x.png"
     p.write_bytes(b"\x89PNG\r\n\x1a\n")
     return p
+
+
+def _secret_in_url_cases():
+    from setuhq.reviewers.gemini import GeminiReviewer
+    from setuhq.reviewers.openai_compat import OpenAICompatibleReviewer, OpenAIReviewer
+
+    return [("openai", lambda k, url: OpenAIReviewer("o", model="m", base_url=url, api_key=k)),
+            ("openai-compatible", lambda k, url: OpenAICompatibleReviewer("c", model="m", base_url=url, api_key=k)),
+            ("gemini", lambda k, url: GeminiReviewer("g", model="m", base_url=url, api_key=k))]
+
+
+@pytest.mark.parametrize("where", ["https://example.org/{k}/v1", "https://example.org/v1?route={k}"])
+@pytest.mark.parametrize("case", range(3))
+def test_a_secret_key_in_the_url_is_refused_without_printing_it(monkeypatch, case, where):
+    from setuhq.reviewers.sentinel import Secret
+
+    for env in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY"):
+        monkeypatch.delenv(env, raising=False)
+    name, make = _secret_in_url_cases()[case]
+    url = where.format(k=KEY)
+    with pytest.raises(ValueError) as err:
+        make(Secret(KEY), url)
+    assert KEY not in str(err.value) and KEY not in repr(err.value), name
+    make(Secret(KEY), "https://example.org/v1")  # the same key, not in the URL: accepted
+
+
+def test_claude_takes_no_endpoint_so_a_key_cannot_reach_a_url():
+    """The Anthropic backend has no base_url or query: the SDK's own endpoint is used, so there is no URL to refuse."""
+    import inspect
+
+    from setuhq.reviewers.claude import AnthropicBackend, ClaudeReviewer
+
+    for cls in (ClaudeReviewer, AnthropicBackend):
+        params = inspect.signature(cls.__init__).parameters
+        assert "base_url" not in params and "query" not in params and "api_key" in params

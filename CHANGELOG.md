@@ -38,8 +38,9 @@ breaking changes are called out explicitly.
   (`setuhq/data/reviewer_weights_full_panel.json` and its calibration record), which an installed package uses by
   default. Sentinels take a provider key per call (`api_key=` on `ClaudeReviewer`, `OpenAIReviewer`,
   `OpenAICompatibleReviewer`, `GeminiReviewer` and their backends), held as a `Secret` that is never logged, cached,
-  pickled or written to a manifest; the environment variables stay the fallback, and a config file still never holds
-  a key.
+  pickled or written to a manifest; the environment variables stay the fallback, a config file still never holds
+  a key, and an endpoint whose URL or query holds the passed key (as a string or a `Secret`) is refused without
+  printing it.
 
 - **Beyond planets: stellar flares, pulsations and CHEOPS** ([docs/STELLAR.md](docs/STELLAR.md)).
   `setuhq flares`, `setuhq pulsations` and `setuhq cheops`, and the MCP tools `find_flares`,

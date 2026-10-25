@@ -31,7 +31,7 @@ class GeminiBackend:
         if not model:
             raise ValueError("a gemini Sentinel needs a 'model' (a vision model id)")
         self._key = as_secret(api_key)  # a key passed in code; else GEMINI_API_KEY
-        check_endpoint(base_url, extra_keys=[api_key] if isinstance(api_key, str) else ())
+        check_endpoint(base_url, extra_keys=[api_key] if api_key else ())
         self.model = model
         self.base_url = base_url.rstrip("/")
         self.max_tokens = max_tokens
