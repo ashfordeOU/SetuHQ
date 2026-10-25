@@ -1177,10 +1177,43 @@
       "filtered_one_sector": 1,
       "filtered_single": 1,
       "reclassified": 0
+    },
+    {
+      "time": "2026-10-25T06:41:37+00:00",
+      "targets": [
+        356539624,
+        356590734,
+        356682805,
+        356700488,
+        356710041,
+        356736743,
+        356747847,
+        356786657,
+        356822426,
+        356835341,
+        356867115,
+        356868487,
+        356871098,
+        356916207,
+        356919658,
+        356921678,
+        356978132,
+        356990855,
+        357048995,
+        357145112
+      ],
+      "errors": [],
+      "new": 0,
+      "known": 0,
+      "filtered_deep": 63,
+      "filtered_fap": 1,
+      "filtered_one_sector": 1,
+      "filtered_single": 1,
+      "reclassified": 0
     }
   ],
-  "targets_reviewed": 59,
-  "updated": "2026-10-25T01:04:02+00:00",
+  "targets_reviewed": 79,
+  "updated": "2026-10-25T06:41:37+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8"
 }
