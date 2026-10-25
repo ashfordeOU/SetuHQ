@@ -1150,7 +1150,10 @@ def wrap_standalone(page_html: str, route: str, name: str, assets: dict, lead: s
 
 
 # The shared files' budgets (bytes), and two pages' own (characters), on top of PAGE_BUDGET and STANDALONE_BUDGET.
-ASSET_BUDGET = {"site-*.css": 140_000, "app-*.js": 430_000, "render-*.js": renderer.RENDER_BUDGET,
+# The shell's script (site-*.js: the header, menu and theme, and SetuUI's figure utilities) runs on every page, the
+# stand-alone pages and deploy-time stubs included, so it stays small.
+SHELL_BUDGET = 16_000
+ASSET_BUDGET = {"site-*.css": 140_000, "app-*.js": 430_000, "site-*.js": SHELL_BUDGET, "render-*.js": renderer.RENDER_BUDGET,
                 "data/sky-*.json": viz.DATA_BUDGET["sky"], "data/stories-*.json": viz.DATA_BUDGET["stories"]}
 PAGE_BUDGETS = {"index.html": 90_000, "explore/index.html": 160_000}
 STILL_BUDGET = {512: 40_000, 160: 8_000, "all": 850_000}
@@ -1158,7 +1161,7 @@ STUB_BUDGET = 4_096
 
 
 def check_asset_budget(out_dir: str | Path) -> list[str]:
-    """The shared files over their budgets (the stylesheet, the app's script, the renderer, the data files, each
+    """The shared files over their budgets (the stylesheet, the app's script, the shell's script, the renderer, the data files, each
     still and all of them) and the home and Explore pages over theirs, as 'path: size' lines."""
     out, bad = Path(out_dir), []
     for pattern, cap in ASSET_BUDGET.items():

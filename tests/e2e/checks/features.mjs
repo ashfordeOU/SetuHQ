@@ -65,6 +65,10 @@ export default async function features(h) {
       sideways: document.documentElement.scrollWidth - innerWidth }));
     check(t0.text.includes("Pointing from the published schedule, not live telemetry") && /Schedule saved on \d{4}-\d\d-\d\d/.test(t0.text), `${tag}: TESS now carries its label and date stamp`);
     check(t0.on === 1 && /^Sector \d+: /.test(t0.read) && t0.bg === "rgb(0, 0, 0)" && t0.sideways <= 0, `${tag}: one sector shown on a black stage`, JSON.stringify(t0));
+    // Source / limits sits clear of the plotted map (on a phone, in a strip under it)
+    const ov = await page.evaluate(() => { const a = document.querySelector("#tnow .srclim summary").getBoundingClientRect(), b = document.querySelector("#tnow svg.tnsvg").getBoundingClientRect();
+      return { hit: a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top, a: [a.left, a.top, a.right, a.bottom].map(Math.round), b: [b.left, b.top, b.right, b.bottom].map(Math.round) }; });
+    check(size !== "phone" || !ov.hit, `${tag}: Source / limits does not cover the TESS map at 390 px`, JSON.stringify(ov));
     await page.focus("#tnrange"); await page.keyboard.press("ArrowRight");
     const t1 = await page.evaluate(() => ({ read: document.querySelector("#tnread").textContent, vt: document.querySelector("#tnrange").getAttribute("aria-valuetext"), on: document.querySelectorAll(".tnsec.on").length }));
     check(t1.read !== t0.read && t1.vt === t1.read && t1.on === 1, `${tag}: the scrubber moves by keyboard and says the sector`, JSON.stringify(t1));

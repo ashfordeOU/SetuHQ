@@ -224,8 +224,8 @@ same tokens.
   called confirmed, discovered, a discovery or a new planet (a lint over every built page and 200 stubs,
   tests/test_honesty_lint.py); the attribution line is always `names.ATTRIBUTION`; a rate always shows its interval.
 * **Budgets** (`site.check_asset_budget`, run by `setuhq site`, which fails over any): the stylesheet 140,000 bytes,
-  the app's script 430,000 (the shell's script, `site-*.js`, carries the shell and SetuUI's figure utilities and has
-  no budget of its own), the renderer 64,000, `stories-*.json` 40,000 and `sky-*.json` 160,000, each still 40,000
+  the app's script 430,000, the shell's script (`site-*.js`: the header, menu and theme, and SetuUI's figure
+  utilities, on every page and stub) 16,000, the renderer 64,000, `stories-*.json` 40,000 and `sky-*.json` 160,000, each still 40,000
   (512 px) or 8,000 (160 px) and 850,000 in all, the home page 90,000 characters and `/explore/` 160,000, each
   deploy-time stub 4,096 bytes; every other page 200,000 characters and a stand-alone page 400,000.
 

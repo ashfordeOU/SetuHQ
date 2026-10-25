@@ -208,6 +208,7 @@ def _readout(m: dict) -> str:
 
 CSS = """
 .tnsvg{display:block;width:100%;height:auto}.tnsec{display:none}.tnsec.on{display:inline}.tncam path{fill:rgba(100,210,255,.1);stroke:#64D2FF}
+@media (max-width:699.98px){.tnow .skystage{padding-bottom:60px}}
 .tnbase,.tnin{stroke:rgba(170,182,204,.35);stroke-width:2;stroke-linecap:round}.tnin{stroke:#FFD60A;stroke-width:3.4}.tnpin{fill:#ECEFF5;stroke:#FFB340;font:13px var(--mono)}
 """
 
