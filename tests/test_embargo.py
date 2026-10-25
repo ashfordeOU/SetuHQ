@@ -4,7 +4,7 @@
 
 import json
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -32,20 +32,34 @@ def _cand(t, p, depth, cid, sector):
                            snr=11.0, score=1.0, n_reviewers=3, candidate_id=cid)
 
 
+class _Boom:
+    """A candidate whose feed check raises: an error on the target after its other candidates were handled."""
+    @property
+    def passed(self):
+        raise RuntimeError("boom")
+
+
 @pytest.fixture
 def fake_search(monkeypatch):
     """run_discovery over the two targets above, with the archive, MAST and the pipeline replaced by stand-ins.
-    The feed rule itself (feed_entry), the TOI match and the catalogue writing are the real code."""
+    The feed rule itself (feed_entry), the TOI match and the catalogue writing are the real code. The returned
+    state switches the withheld signal off (``with_new``) or ends the new target with an error (``error``)."""
+    state = {"with_new": True, "error": False}
+
     def pipeline(config, curves, reviewers, out, **kw):
         tic = curves[0].tic
         t, p, d, cid = (NEW_T, NEW_P, NEW_DEPTH, NEW_ID) if tic == NEW_TIC else (KNOWN_T, KNOWN_P, 900.0, "tess-known-1")
         # The same signal in both reviewed sectors (the feed rule's two-sector part).
-        return SimpleNamespace(candidates=[_cand(t, p, d, cid, 1), _cand(t, p, d, cid + "b", 2)])
+        found = [_cand(t, p, d, cid, 1), _cand(t, p, d, cid + "b", 2)]
+        if tic == NEW_TIC:
+            found = (found if state["with_new"] else []) + ([_Boom()] if state["error"] else [])
+        return SimpleNamespace(candidates=found)
 
     monkeypatch.setattr(dv, "fetch_toi_targets", lambda: dict(TARGETS))
     monkeypatch.setattr(dv, "load_tess", lambda label: [SimpleNamespace(tic=int(label.split()[1]), provenance={"sector": s})
                                                          for s in (1, 2)])
     monkeypatch.setattr(dv, "run_pipeline", pipeline)
+    return state
 
 
 def _config(tmp_path, extra=""):
@@ -70,7 +84,7 @@ def _no_trace(text: str, where: str):
             pytest.fail(f"{s!r} (the withheld signal) found in {where}: ...{text[max(0, i - 120):i + 80]}...")
 
 
-def test_a_new_signal_is_withheld_and_only_counted(fake_search, tmp_path):
+def test_a_new_signal_is_withheld_without_a_count_or_a_date(fake_search, tmp_path):
     log, path = _discover(tmp_path)
     text = path.read_text()
     _no_trace(text, "the catalogue JSON")
@@ -79,18 +93,48 @@ def test_a_new_signal_is_withheld_and_only_counted(fake_search, tmp_path):
     assert cat["embargo"] is True
     assert [e["status"] for e in cat["candidates"]] == ["known_toi"]
     assert cat["candidates"][0]["tic"] == KNOWN_TIC and cat["candidates"][0]["toi_match"] == "9999.01"
-    assert cat["held_for_review"] == 1 and cat["held_last_date"] == "2026-10-24"
-    assert "new" not in log and all("new" not in r for r in cat["runs"])
+    assert not [k for k in cat if k.startswith("held")] and "held" not in text
+    assert "new" not in log and all("new" not in r and "targets" not in r for r in cat["runs"])
 
 
-def test_same_day_reruns_count_a_held_signal_once_and_a_later_day_again(fake_search, tmp_path):
-    _, path = _discover(tmp_path)
-    _discover(tmp_path, run_time=RUN_TIME + timedelta(hours=6), catalog=path)
-    cat = json.loads(path.read_text())
-    assert cat["held_for_review"] == 1 and len(cat["candidates"]) == 1  # the known match is deduplicated as before
-    _discover(tmp_path, run_time=RUN_TIME + timedelta(days=1), catalog=path)
-    cat = json.loads(path.read_text())
-    assert cat["held_for_review"] == 2 and cat["held_last_date"] == "2026-10-25"
+# The rule: a run that held a signal leaves exactly the public outputs a run without it leaves. Nothing is exempt:
+# the two runs share their run time, so even the timestamps (the only fields that could legitimately differ
+# between two real runs) are equal, and every byte must match.
+@pytest.mark.parametrize("error", [False, True], ids=["clean", "target-error"])
+def test_a_held_signal_leaves_the_public_outputs_byte_identical(fake_search, tmp_path, app_run, monkeypatch, capsys, error):
+    from setuhq.cli import main
+
+    outs = {}
+    for with_new in (True, False):
+        fake_search.update(with_new=with_new, error=error)
+        root = tmp_path / ("with" if with_new else "without")
+        (root / "docs" / "results").mkdir(parents=True)
+        monkeypatch.chdir(root)  # relative paths, so each page names the same files
+        monkeypatch.setattr(dv, "datetime", _FixedNow)
+        (root / "cfg.toml").write_text('[run]\nname = "discovery"\n')
+        main(["discover", "cfg.toml", "--catalog", "docs/catalog.json", "--site", "feed", "--work-dir", "work",
+              "--cache", "cache"])
+        printed = capsys.readouterr()
+        site = _build_public_pages(Path("docs/catalog.json"), Path("site"), app_run)
+        files = {f.relative_to(root).as_posix(): f.read_bytes() for d in ("docs", "site", "feed")
+                 for f in sorted((root / d).rglob("*")) if f.is_file()}
+        outs[with_new] = (printed.out, printed.err, files, site)
+    held, plain = outs[True], outs[False]
+    assert held[0] == plain[0] and held[1] == plain[1], "the command's output differs"
+    assert held[2].keys() == plain[2].keys()
+    differ = [n for n in held[2] if held[2][n] != plain[2][n]]
+    assert not differ, f"public files differ when a signal is held: {differ[:10]}"
+    cat = json.loads(held[2]["docs/catalog.json"])
+    if error:  # the error is recorded as any other, naming its target, with or without a held signal
+        assert cat["runs"][-1]["errors"] == [f"TIC {NEW_TIC}: RuntimeError: boom"]
+    else:
+        _no_trace(held[3], "the site of the run that held a signal")
+
+
+class _FixedNow(datetime):
+    @classmethod
+    def now(cls, tz=None):
+        return RUN_TIME
 
 
 def test_the_embargo_is_on_by_default_and_off_only_when_asked(fake_search, tmp_path):
@@ -143,8 +187,10 @@ def test_public_pages_from_an_embargoed_catalogue_hold_no_trace(fake_search, tmp
     whole = _build_public_pages(path, out, app_run)
     _no_trace(whole, "the built site")
     assert str(KNOWN_TIC) in whole  # the known-TOI match still publishes
-    line = held_line(1)
-    assert line == "1 signal held for review; they are published only after review and reporting."
+    line = held_line()
+    assert line == ("Signals that match no known TOI are held for private review; "
+                    "they are published only after review and reporting.")
+    assert not re.search(r"\d", line)  # no number
     for f in (out / "discoveries" / "index.html", out / "dashboard" / "index.html"):
         assert line in f.read_text() or json.dumps(line)[1:-1] in f.read_text(), f
     assert line in whole
@@ -173,18 +219,18 @@ def test_pages_withhold_a_new_signal_even_from_a_catalogue_that_still_holds_one(
     path = tmp_path / "old.json"
     path.write_text(json.dumps({"candidates": [new, known], "runs": []}))
     pub = public_catalog(json.loads(path.read_text()))
-    assert [e["tic"] for e in pub["candidates"]] == [KNOWN_TIC] and pub["held_for_review"] == 1
+    assert [e["tic"] for e in pub["candidates"]] == [KNOWN_TIC] and not [k for k in pub if k.startswith("held")]
     _no_trace(build_discovery_site(path, tmp_path / "feed").read_text(), "the feed page")
 
 
-def test_embargo_catalog_keeps_only_known_toi_entries():
+def test_embargo_catalog_keeps_only_known_toi_entries_and_stores_nothing_about_the_rest():
     cat = {"candidates": [{"tic": NEW_TIC, "status": "new_candidate"}, {"tic": KNOWN_TIC, "status": "known_toi"},
-                          {"tic": 5, "status": "something_else"}]}
+                          {"tic": 5, "status": "something_else"}],
+           "held_for_review": 3, "held_last_date": "2026-10-24", "held_on_last_date": 1,  # an earlier build's fields
+           "runs": [{"time": "t", "targets": [NEW_TIC, KNOWN_TIC], "errors": []}]}
     assert embargo_catalog(cat, RUN_TIME) == 2
-    assert cat["candidates"] == [{"tic": KNOWN_TIC, "status": "known_toi"}] and cat["held_for_review"] == 2
-    # A run that holds nothing leaves the count and the date as they were.
-    assert embargo_catalog(cat, RUN_TIME + timedelta(days=3)) == 0
-    assert cat["held_for_review"] == 2 and cat["held_last_date"] == "2026-10-24"
+    assert cat == {"candidates": [{"tic": KNOWN_TIC, "status": "known_toi"}], "embargo": True,
+                   "runs": [{"time": "t", "n_targets": 2, "errors": []}]}
 
 
 def test_the_discover_command_prints_no_detail_of_a_held_signal(fake_search, tmp_path, monkeypatch, capsys):
@@ -196,7 +242,8 @@ def test_the_discover_command_prints_no_detail_of_a_held_signal(fake_search, tmp
           "--work-dir", str(tmp_path / "w"), "--cache", str(tmp_path / "c")])
     out = capsys.readouterr()
     _no_trace(out.out + out.err, "the command's output (public in the Actions log)")
-    assert "signals held for review (all runs): 1" in out.out and "new candidates" not in out.out
+    assert "held" not in out.out and "new candidates" not in out.out
+    assert out.out.startswith("targets reviewed this run: 2, known TOI matches: 1\n")
 
 
 def _public_workflows(comments: bool = True):

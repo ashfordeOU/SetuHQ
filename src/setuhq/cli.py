@@ -179,10 +179,8 @@ def cmd_discover(args) -> int:
     site = build_discovery_site(args.catalog, args.site)
     if "new" in log:  # --publish-new (a private deployment): new signals are kept and counted
         print(f"targets reviewed this run: {len(log['targets'])}, new candidates: {log['new']}, known: {log['known']}")
-    else:  # embargo: this output is public (Actions logs), so only the catalogue's running total, no details
-        held = json.loads(Path(args.catalog).read_text()).get("held_for_review", 0)
-        print(f"targets reviewed this run: {log['n_targets']}, known TOI matches: {log['known']}, "
-              f"signals held for review (all runs): {held}")
+    else:  # embargo: this output is public (Actions logs), so it is the same whether or not a signal was held
+        print(f"targets reviewed this run: {log['n_targets']}, known TOI matches: {log['known']}")
     for error in log["errors"]:
         print(f"error: {error}")
     print(f"catalogue {args.catalog}, site {site}")
@@ -450,7 +448,7 @@ def build_parser() -> argparse.ArgumentParser:
     discover.add_argument("--cache", default="cache")
     discover.add_argument("--publish-new", action="store_true",
                           help="private deployments only: keep signals that match no known TOI in the catalogue. By "
-                               "default they are withheld and only counted (held for review); the public workflow "
+                               "default they are withheld from every public output (held for private review); the public workflow "
                                "never passes this")
     discover.set_defaults(func=cmd_discover)
 

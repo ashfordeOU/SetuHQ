@@ -31,8 +31,10 @@ The catalogue is a JSON file that accumulates across runs and is deduplicated on
 Embargo (on by default). The catalogue ``setuhq discover`` writes is public: the scheduled workflow commits it
 and deploys the site built from it. So any entry whose status is not ``known_toi`` is withheld from it
 (:func:`embargo_catalog`): no TIC, coordinates, period, epoch, depth or any other field is written, logged or
-printed. The catalogue carries only ``held_for_review`` (a count) and ``held_last_date`` (the UTC date of the
-most recent hold). A withheld signal is not persisted anywhere public; the search is deterministic and
+printed, not even a count or a date: every public output (the catalogue, its run log, the site, the
+command's output) is byte for byte what it would be had the signal not been found. Counts of held signals
+live only in the private review pipeline (setuhq-ops). A withheld signal is not persisted
+anywhere public; the search is deterministic and
 reproducible from the data, the config and the code, so a private review pipeline re-searches those targets
 itself and reports a signal before it is published. Only a private deployment opts out, with ``--publish-new``
 or ``embargo = false`` under ``[discover]`` in its config; the public workflow sets neither. Every page that
@@ -302,41 +304,32 @@ def feed_entry(candidate, target: Target, curves, run_time: datetime, run_log: d
     return entry
 
 
-def held_line(count: int) -> str:
-    """The one plain line the site shows wherever the feed is summarised. No details of a held signal."""
-    count = int(count or 0)
-    return (f"{count} {'signal' if count == 1 else 'signals'} held for review; "
-            "they are published only after review and reporting.")
+HELD_LINE = ("Signals that match no known TOI are held for private review; "
+             "they are published only after review and reporting.")
 
 
-def embargo_catalog(catalog: dict, run_time: datetime) -> int:
-    """Withhold every entry that is not ``known_toi`` from ``catalog`` (in place); returns how many were withheld.
-    Run logs keep a count of targets (``n_targets``) in place of their TIC list.
+def held_line() -> str:
+    """The one plain line the site shows wherever the feed is summarised. Static: no number, no date, nothing
+    that changes when a signal is held."""
+    return HELD_LINE
 
-    Only the aggregate is kept: ``held_for_review`` (a count) and ``held_last_date`` (UTC date of the most recent
-    hold). The scheduled workflow searches the same rotation batch several times a day and the search is
-    deterministic, so holds on the same UTC date are counted once, as the most found by any run that day
-    (``held_on_last_date``). A signal re-found by a later day's run is counted again."""
+
+def embargo_catalog(catalog: dict, run_time: datetime | None = None) -> int:
+    """Withhold every entry that is not ``known_toi`` from ``catalog`` (in place); returns how many were withheld
+    (for the caller only: it is never stored, printed or logged).
+
+    Rule: the catalogue written under the embargo is identical, byte for byte, to the one a run that found no
+    such signal would write. So no count, date or flag of a hold is stored, and run logs keep a count of their
+    targets (``n_targets``) in place of their TIC list. Counts of held signals belong to the private review
+    pipeline (setuhq-ops), which re-searches the targets itself."""
     kept = [e for e in catalog.get("candidates", []) if e.get("status") == PUBLIC_STATUS]
     held = len(catalog.get("candidates", [])) - len(kept)
     catalog["candidates"] = kept
-    # A run log names no target, only how many: a list of the batch's TICs would include the held signal's star.
     for run in catalog.get("runs", []):
         if "targets" in run:
             run["n_targets"] = len(run.pop("targets") or [])
-    total = int(catalog.get("held_for_review") or 0)
-    if held:
-        day = run_time.astimezone(timezone.utc).date().isoformat()
-        if catalog.get("held_last_date") == day:
-            before = int(catalog.get("held_on_last_date") or 0)
-            total += max(0, held - before)
-            catalog["held_on_last_date"] = max(before, held)
-        else:
-            total += held
-            catalog["held_on_last_date"] = held
-        catalog["held_last_date"] = day
-    catalog["held_for_review"] = total
-    catalog.setdefault("held_last_date", None)
+    for key in ("held_for_review", "held_last_date", "held_on_last_date"):  # from an earlier build: not public
+        catalog.pop(key, None)
     catalog["embargo"] = True
     return held
 
@@ -352,8 +345,7 @@ def public_catalog(catalog: dict) -> dict:
     kept = [e for e in rows if e.get("status") == PUBLIC_STATUS]
     runs = [{**{k: v for k, v in r.items() if k != "targets"}, "n_targets": r.get("n_targets", len(r.get("targets") or []))}
             for r in catalog.get("runs") or []]
-    return {**catalog, "candidates": kept, "runs": runs,
-            "held_for_review": int(catalog.get("held_for_review") or 0) + len(rows) - len(kept)}
+    return {**{k: v for k, v in catalog.items() if not k.startswith("held_")}, "candidates": kept, "runs": runs}
 
 
 def load_public_catalog(path: str | Path) -> dict:
@@ -397,7 +389,7 @@ def run_discovery(
 ) -> dict:
     """One discovery batch into ``catalog_path``. The embargo (module docstring) is on unless ``publish_new`` or
     the config's ``[discover] embargo = false`` turns it off. Under the embargo the returned run log, like the
-    stored one, holds no count or detail of withheld signals; the catalogue's ``held_for_review`` is the total."""
+    stored one, is what it would be had no withheld signal been found."""
     run_time = run_time or datetime.now(timezone.utc)
     started = time.monotonic()
     config: RunConfig = load_config(config_path)
@@ -418,7 +410,6 @@ def run_discovery(
             run_log["errors"].append("time budget reached before the batch finished")
             break
         label = f"TIC {target.tic}"
-        held_here = False  # this target gave a signal the embargo withholds
         try:
             curves = load_tess(label)
             curves = sorted(curves, key=lambda c: c.provenance.get("sector", 0))[-sectors_per_target:]
@@ -437,14 +428,12 @@ def run_discovery(
                     continue
                 catalog["candidates"].append(entry)
                 if entry["status"] == "new_candidate":
-                    held_here = True
                     run_log["new"] += 1
                 else:
                     run_log["known"] += 1
         except Exception as exc:  # one bad target must not stop the batch
-            if embargo and held_here:  # naming the target would point at a withheld signal
-                run_log["errors"].append("one target stopped with an error after a signal was held (details withheld)")
-                continue
+            # Recorded the same way whether or not the target gave a withheld signal (type, message, frames: never
+            # the entry), so an error record does not mark a target that gave one.
             run_log["errors"].append(f"{label}: {type(exc).__name__}: {exc}")
             run_log.setdefault("tracebacks", []).append(traceback.format_exc(limit=2))
 

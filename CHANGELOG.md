@@ -15,12 +15,14 @@ breaking changes are called out explicitly.
 - **Feed embargo: new signals are held for private review and reporting.** `setuhq discover` no longer
   publishes a signal that matches no known TOI (`new_candidate`). The public catalogue, the site (the
   Candidates feed, the overview and Mission Control cards, the runs page), the feed page, the dashboard,
-  the plates and the command's output carry only known-TOI matches and an aggregate,
-  `held_for_review` with `held_last_date`, shown as one line: "N signals held for review; they are
-  published only after review and reporting." Run logs keep a count of targets (`n_targets`) instead of
-  their TIC list, and an error on a target that gave a held signal is recorded without naming it. A
-  held signal is not stored publicly; the search is deterministic, so a private pipeline re-searches
-  those targets. On by default; a private deployment opts out with `--publish-new` or
+  the plates and the command's output carry only known-TOI matches and one static line: "Signals that
+  match no known TOI are held for private review; they are published only after review and reporting."
+  A hold leaves no public trace, not even a count or a date: every public output is byte for byte what
+  it would be had the signal not been found (tested by running the same targets with and without a
+  synthetic `new_candidate`). Run logs keep a count of targets (`n_targets`) instead of their TIC list,
+  and an error is recorded the same way whether or not its target gave a held signal. Counts of held
+  signals will live only in the private review pipeline (setuhq-ops, v0.3). A held signal is not stored
+  publicly; the search is deterministic, so that pipeline re-searches those targets. On by default; a private deployment opts out with `--publish-new` or
   `[discover] embargo = false`, which the public workflow never sets. `discover.yml` checks the
   catalogue before it commits. Tests: `tests/test_embargo.py`.
 

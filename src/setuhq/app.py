@@ -869,8 +869,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
             "path": catalog_name, "updated": catalog.get("updated", ""), "config": catalog.get("config", ""),
             "config_sha256": catalog.get("config_sha256", ""), "targets_reviewed": catalog.get("targets_reviewed", 0),
             "candidates": feed, "runs": catalog.get("runs") or [],
-            "embargo": catalog.get("embargo") is not False, "held_for_review": int(catalog.get("held_for_review") or 0),
-            "held_line": held_line(catalog.get("held_for_review") or 0),
+            "embargo": catalog.get("embargo") is not False, "held_line": held_line(),
             "found_times": sorted({str(r["found"]) for r in feed if r.get("found")}),
         },
         "feed_rule": {"max_depth_ppm": MAX_FEED_DEPTH_PPM, "min_transits": MIN_FEED_TRANSITS},
@@ -3339,7 +3338,7 @@ def route_sections(data: dict) -> dict[str, str]:
     nodet = html.escape(NO_DETECTION)
     feed = data["catalog"]["candidates"]
     n_known = sum(1 for r in feed if r.get("status") == "known_toi")
-    # The embargo: signals that match no known TOI are held for private review and reporting; only their count shows.
+    # The embargo: signals that match no known TOI are held for private review and reporting; one static line says so.
     held = (" The feed shows only signals that match a known TOI. " + html.escape(data["catalog"]["held_line"])
             if data["catalog"].get("embargo", True) else "")
     xm_targets = ", ".join(html.escape(str(t)) for t in data.get("crossmatch_targets") or []) or "no star"

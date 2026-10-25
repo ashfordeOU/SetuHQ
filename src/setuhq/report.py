@@ -441,7 +441,7 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
 
     catalog = load_public_catalog(catalog_path)  # the embargo: signals held for review never reach the page
     embargo = catalog.get("embargo") is not False
-    held = html.escape(held_line(catalog.get("held_for_review") or 0))
+    held = html.escape(held_line())
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     rows = catalog.get("candidates", [])
@@ -491,7 +491,7 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
 </div></header>
 <main class='wrap'>
 <section class='grid' style='margin-top:24px' aria-label='The feed in numbers'>
-  {f"<div class='card stat cand'>{int(catalog.get('held_for_review') or 0)}<small>held for review (no details published)</small></div>" if embargo else f"<div class='card stat cand'>{len(new)}<small>new {_pl(len(new), 'candidate')} (no TOI match)</small></div>"}
+  {"" if embargo else f"<div class='card stat cand'>{len(new)}<small>new {_pl(len(new), 'candidate')} (no TOI match)</small></div>"}
   <div class='card stat'>{len(known)}<small>{'match' if len(known) == 1 else 'matches'} to known TOIs</small></div>
   <div class='card stat'>{catalog.get('targets_reviewed', 0)}<small>{_pl(catalog.get('targets_reviewed', 0), 'target')} reviewed</small></div>
   <div class='card stat' style='font-size:18px'>{html.escape(str(catalog.get('updated', 'never'))[:16].replace('T', ' '))}<small>last update (UTC)</small></div>

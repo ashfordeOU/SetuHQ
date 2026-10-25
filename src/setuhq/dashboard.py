@@ -272,7 +272,7 @@ function discovery(){
     el('text',{x:W/2,y:H-4,'text-anchor':'middle'},svg).textContent='mid-time (BTJD); yellow: new candidate, blue: known TOI';
   }
   const bs=$('#c-status'); bs.innerHTML='';
-  const groups=[F.embargo?['held for review (no details published)',F.held_for_review,'var(--yellow)']:['new candidate (unconfirmed)',F.candidates.filter(r=>r.status==='new_candidate').length,'var(--yellow)'],['known TOI match',F.candidates.filter(r=>r.status==='known_toi').length,'var(--blue)']];
+  const groups=[...(F.embargo?[]:[['new candidate (unconfirmed)',F.candidates.filter(r=>r.status==='new_candidate').length,'var(--yellow)']]),['known TOI match',F.candidates.filter(r=>r.status==='known_toi').length,'var(--blue)']];
   const total=Math.max(1,groups.reduce((a,g)=>a+g[1],0));
   bs.innerHTML = groups.map(([l,n,c])=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><span>${l}</span><span>${n}</span></div><div class="bar"><i style="width:${(n/total*100).toFixed(0)}%;background:${c}"></i></div></div>`).join('') +
     `<p class="note">${F.targets_reviewed} target${F.targets_reviewed === 1 ? "" : "s"} reviewed in total. Every entry is an unconfirmed candidate.${F.embargo ? ' ' + esc(F.held_line) : ''}</p>`;
@@ -346,8 +346,7 @@ def _load_discovery(catalog_path: Path | None) -> dict | None:
     catalog = load_public_catalog(catalog_path)  # the embargo: signals held for review never reach the page
     return {
         "embargo": catalog.get("embargo") is not False,
-        "held_for_review": int(catalog.get("held_for_review") or 0),
-        "held_line": held_line(catalog.get("held_for_review") or 0),
+        "held_line": held_line(),
         "candidates": [
             {"tic": r["tic"], "t_center": r["t_center"], "snr": r["snr"], "status": r["status"],
              "period_days": r["period_days"], "found": r["found"]}
@@ -376,9 +375,7 @@ def build_dashboard(run_dir: str | Path, out_dir: str | Path, *, title: str, cat
         [str(len(run["candidates"])), _pl(len(run["candidates"]), "dip") + " the panel agreed on", None],
         [str(n_cand), _pl(n_cand, "candidate") + " (passed vetting, unconfirmed)", "var(--yellow)"],
     ]
-    if discovery and discovery["embargo"]:
-        kpis.append([str(discovery["held_for_review"]), "feed signals held for review (no details published)", "var(--yellow)"])
-    elif discovery:
+    if discovery and not discovery["embargo"]:
         kpis.append([str(sum(1 for r in discovery["candidates"] if r["status"] == "new_candidate")),
                      "new feed candidates (no TOI match)", "var(--yellow)"])
     words = {"pass": DIP_STATE["passed"][1:], "flag": DIP_STATE["flagged"][1:], "fail": DIP_STATE["rejected"][1:]}

@@ -558,10 +558,12 @@ published TOI period, and `new_candidate` otherwise.
 
 **New signals are held for review (embargo, on by default).** A `new_candidate` is never published
 when it is found. The public catalogue, the site, the feed page, the dashboard and the workflow's logs
-show only signals that match known TOIs, plus one count: "N signals held for review; they are
-published only after review and reporting." No TIC, coordinates, period, epoch or depth of a held
-signal is written, printed or deployed, and the run logs list how many targets a batch reviewed, not
-which. A held signal goes to private review and, if it holds up, to ExoFOP before anything about it is
+show only signals that match known TOIs, and one static line: "Signals that match no known TOI are
+held for private review; they are published only after review and reporting." A hold leaves no public
+trace: not its TIC, coordinates, period, epoch or depth, and not a count or a date. The catalogue, the
+site and the logs are the same as if the signal had not been found, and the run logs list how many
+targets a batch reviewed, not which. Counts of held signals are kept only in the private review
+pipeline. A held signal goes to private review and, if it holds up, to ExoFOP before anything about it is
 public. It is not stored publicly at all: the search is deterministic and reproducible from the data, the
 config and the code (their hashes are in each run), so the private review pipeline re-searches those
 targets itself. Only a private deployment can opt out (`setuhq discover --publish-new`, or
