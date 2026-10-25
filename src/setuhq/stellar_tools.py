@@ -25,6 +25,9 @@ VALIDATION_FILE = "docs/results/stellar_validation.json"
 VALIDATION_FILE_V4 = "docs/results/stellar_validation_v4.json"
 V4_CAPABILITIES = ("binaries", "rotation", "transients")
 MAX_POINTS = 200_000
+# Carried by every transient output (tool, CLI record and printout, the site): protocol v4 did not validate them.
+TRANSIENT_SEARCH_AID = ("The transient tools are a search aid whose candidates need checking by eye; their "
+                        "detections, class hints and false-alarm screens are not validated.")
 NO_RECORD = "not validated (no validation record)"
 
 
@@ -218,9 +221,10 @@ def find_transients(csv_path: str | None = None, time: list[float] | None = None
     quality = {"momentum_dump": list(momentum_dump_times or []), "scattered_light": list(scattered_light_times or [])}
     out = tr.find_transients(lc.time, lc.flux, lc.flux_err, mode="difference" if difference_flux else "relative",
                              quality=quality)
+    out["label"] = f"{tr.LABEL} {TRANSIENT_SEARCH_AID}"
     status = validation_status("transients")
     out["validation_status"] = status
-    honesty = [COMPUTED, tr.LABEL, f"Transient detection is {status} (see {VALIDATION_FILE_V4})."]
+    honesty = [COMPUTED, tr.LABEL, TRANSIENT_SEARCH_AID, f"Transient detection is {status} (see {VALIDATION_FILE_V4})."]
     return envelope("find_transients", out, sources=sources, honesty=honesty)
 
 

@@ -312,7 +312,9 @@ What is not validated, and why, is listed in the results file.
 Protocol v4 (`results/stellar_validation_protocol_v4.json`, committed on its own in b6f22eb before any v4 code
 existed; seed 20261024) drew its targets from the published catalogues by seeded rules on catalogue metadata alone,
 and split each sample into a tuning set, used while the methods were written, and a held-out set, run once with the
-code as committed (ffc73af). Only held-out targets count; the same status rule applies. Results:
+code as committed (ffc73af). `scripts/stellar_validation_v4_select.py` reproduces the three draws from VizieR and
+checks them against the frozen file. In the eclipsing-binary rule, Dp-2g and Phip-2g "present" means a non-empty value
+(Dp-2g also non-zero); every such value in the catalogue is positive, so the rule is Dp-2g > 0 and Phip-2g > 0. Only held-out targets count; the same status rule applies. Results:
 [results/stellar_validation_v4.md](results/stellar_validation_v4.md) and `.json`, from `scripts/stellar_validation_v4.py`.
 
 - **Eclipsing binaries: partly validated (5 of 8 checks pass).** 24 held-out EBs from Prša et al. (2022). 17 are

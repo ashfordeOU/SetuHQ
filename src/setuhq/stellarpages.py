@@ -258,30 +258,32 @@ def _path(points, X, Y) -> str:
 
 
 def binary_svg(b: dict) -> tuple[str, str]:
-    """The eclipsing-binary figure: the phase curve folded on SetuHQ's period (SVG) and its text alternative."""
-    ph, fl = b["phase"], b["flux"]
-    good = [v for v in fl if v is not None]
+    """The eclipsing-binary figure: the phase curve folded on SetuHQ's period, drawn from phase -0.5 to 0.5 so the
+    primary eclipse sits in the middle (SVG), and its text alternative."""
+    w = lambda p: (p + 0.5) % 1.0 - 0.5  # noqa: E731  (phase about the primary)
+    pts = sorted((w(p), v) for p, v in zip(b["phase"], b["flux"]))
+    good = [v for _, v in pts if v is not None]
     lo, hi = min(good), max(good)
     pad = (hi - lo) * 0.08 or 0.001
     lo, hi = lo - pad, hi + pad
-    X = lambda p: _L + (_W - _L - _R) * p  # noqa: E731
+    X = lambda p: _L + (_W - _L - _R) * (p + 0.5)  # noqa: E731
     Y = lambda v: _T + (_H - _T - _B) * (1 - (v - lo) / (hi - lo))  # noqa: E731
     o, c = b["ours"], b["catalogue"]
-    marks = []
+    marks = [f'<path d="M{X(0.0):.1f} {_T - 2}v-8" class="pub"/>']
     if c.get("phase_s_2g") is not None:
-        sp = (c["phase_s_2g"] - c["phase_p_2g"]) % 1.0
-        marks.append(f'<path d="M{X(sp):.1f} {_T - 2}v-8" class="pub"/>')
-    marks.append(f'<path d="M{X(0.0) + 1:.1f} {_T - 2}v-8" class="pub"/>')
+        marks.append(f'<path d="M{X(w(c["phase_s_2g"] - c["phase_p_2g"])):.1f} {_T - 2}v-8" class="pub"/>')
     sec = o.get("secondary")
-    for x in [0.0] + ([sec["phase"]] if sec else []):
-        marks.append(f'<path d="M{X(x) + 1:.1f} {_H - _B + 2}v6" class="ours-t"/>')
-    frame = _frame(_ticks(0, 1, 5), _ticks(lo, hi, 4), X, Y, lambda v: f"{v:g}", lambda v: f"{v:.3g}", "orbital phase", "relative flux")
+    for x in [0.0] + ([w(sec["phase"])] if sec else []):
+        marks.append(f'<path d="M{X(x):.1f} {_H - _B + 2}v6" class="ours-t"/>')
+    frame = _frame(_ticks(-0.5, 0.5, 4), _ticks(lo, hi, 4), X, Y, lambda v: f"{v:g}", lambda v: f"{v:.3g}",
+                   "orbital phase (primary eclipse at 0)", "relative flux")
     alt = (f"Phase curve of TIC {b['tic']}, TESS sector {b['sector']}, folded on SetuHQ's period of {o['period']:.5f} days "
-           f"(Prša et al. 2022 list {c['period_d']:.5f} days): the primary eclipse at phase 0 is {o['primary']['depth']:.3f} deep "
+           f"(Prša et al. 2022 list {c['period_d']:.5f} days), from phase -0.5 to 0.5: the primary eclipse at phase 0 is "
+           f"{o['primary']['depth']:.3f} deep "
            + (f"and a secondary eclipse sits at phase {sec['phase']:.3f}" if sec else "and no secondary eclipse is found")
            + f"; morphology class {o['morphology']}. Ticks above the plot: the catalogue's eclipse phases; below it: SetuHQ's.")
     svg = (f'<svg viewBox="0 0 {_W} {_H}" role="img" aria-label="{html.escape(alt)}" class="stsvg">{frame}'
-           f'<path d="{_path(zip(ph, fl), X, Y)}" class="lc"/>{"".join(marks)}</svg>')
+           f'<path d="{_path(pts, X, Y)}" class="lc"/>{"".join(marks)}</svg>')
     return svg, alt
 
 
@@ -392,11 +394,18 @@ def figures_v4_html() -> str:
                   else "SetuHQ finds no candidate within 10 days of the published peak. ")
                + '<span class="key pub">Ticks</span>: Fausnaugh et al. (2023)\'s peak and first light. '
                f'Transient detection is {e(status_label("transients"))}; a transient SetuHQ finds is a candidate, never new. '
+               f'{e(_search_aid())} '
                f'<span class="stsrc">Source: {e(s["source"])}</span>')
         note = ('<p class="small stnodisc">A supernova shines in a distant galaxy, not in a catalogued star, so no star disc is '
                 'drawn beside it.</p>')
         out.append(_figure("transient", svg, cap, note, "st-tr"))
     return "".join(out)
+
+
+def _search_aid() -> str:
+    from setuhq.stellar_tools import TRANSIENT_SEARCH_AID
+
+    return TRANSIENT_SEARCH_AID
 
 
 def v4_section(e) -> str:
@@ -406,6 +415,7 @@ def v4_section(e) -> str:
     return f"""<section aria-labelledby="h-st-v4"><h2 id="h-st-v4">Binaries, rotation and transients</h2>
         <p>Three more capabilities were tested under protocol v4, written and committed before any of their code existed. Their targets were drawn from published catalogues by seeded rules; part of each sample tuned the methods, and only the held-out rest, run once, is counted.</p>
         {_status_cards(e, CAPS_V4)}
+        <p class="note">{e(_search_aid())}</p>
         <p class="small">{e(protocol_v4_line())}.</p>
         {figures_v4_html()}
       </section>
@@ -475,7 +485,7 @@ def docs_stellar_section() -> str:
         <section class="card"><h2>CHEOPS light curves</h2><p>Public CHEOPS visits, detrended against roll angle, on one timeline with TESS.</p><p class="stword no">{e(status_label("cheops"))}</p></section>
         <section class="card"><h2>Eclipsing binaries</h2><p>Period, primary and secondary eclipses, the secondary's phase with an e·cosω hint, a morphology class, and a candidate flag with its reasons.</p><p class="stword {STATUS_CLASS.get(status().get("binaries", {}).get("status"), "no")}">{e(status_label("binaries"))}</p></section>
         <section class="card"><h2>Rotation</h2><p>Spot-modulation periods from a periodogram and the autocorrelation function, with uncertainties and half/double handling; up to about 13 days in one sector.</p><p class="stword {STATUS_CLASS.get(status().get("rotation", {}).get("status"), "no")}">{e(status_label("rotation"))}</p></section>
-        <section class="card"><h2>Transients</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids.</p><p class="stword {STATUS_CLASS.get(status().get("transients", {}).get("status"), "no")}">{e(status_label("transients"))}</p></section>
+        <section class="card"><h2>Transients</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids. {e(_search_aid())}</p><p class="stword {STATUS_CLASS.get(status().get("transients", {}).get("status"), "no")}">{e(status_label("transients"))}</p></section>
       </div>
       <div class="prose">
         <h2 id="st-run">Run them</h2>

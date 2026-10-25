@@ -210,3 +210,11 @@ const { chromium } = require(%s);
         assert r["skyLayer"] == ""
         assert f"Sweep {c['stars_searched']:,} stars" in r["tele"]
         assert any(f"TIC {tic}" in s for s in r["search"]), r["search"]
+
+
+def test_no_div_carries_an_aria_label_without_a_role(pi_men_app):
+    """axe's aria-prohibited-attr: a generic div may not be named. The entries list was <div aria-label="Entries">."""
+    page = _page(pi_men_app)
+    assert 'id="valist"' in page
+    bad = re.findall(r"<div(?![^>]*\brole=)[^>]*\baria-label=[^>]*>", page)
+    assert bad == [], bad[:3]

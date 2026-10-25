@@ -288,7 +288,10 @@ def cmd_transients(args) -> int:
             print(f"  BTJD {c['t_peak']:.3f} ({c['scale']}): peak {c['peak']:.4g}{mag}, rise {c['rise_time']:.3f} d, "
                   f"decay {'> ' + format(c['decay_time_lower_limit'], '.2f') if c['decay_time'] is None else format(c['decay_time'], '.3f')} d; "
                   f"{c['class_hint']}")
-    record = {"kind": "setuhq-transients/1", "target": args.target, "results": per, "label": tr.LABEL,
+    from setuhq.stellar_tools import TRANSIENT_SEARCH_AID
+
+    print(TRANSIENT_SEARCH_AID)
+    record = {"kind": "setuhq-transients/1", "target": args.target, "results": per, "label": f"{tr.LABEL} {TRANSIENT_SEARCH_AID}",
               "validation_status": _status("transients", "transient detection"), "provenance": provenance(inputs)}
     _write(record, args.out)
     return 0

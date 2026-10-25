@@ -168,3 +168,19 @@ def test_v4_documents_never_call_a_candidate_new_or_confirmed():
                     "we discovered", "setuhq discovered"):
             assert bad not in low, (rel, bad)
     assert re.search(r"candidate, never new and never confirmed", (ROOT / "docs/results/stellar_validation_v4.md").read_text())
+
+
+SEARCH_AID = "a search aid whose candidates need checking by eye"
+
+
+def test_every_transient_output_says_it_is_a_search_aid(tr_csv, tmp_path, capsys):
+    env = st.find_transients(csv_path="tr.csv")
+    assert any(SEARCH_AID in h for h in env["honesty"]) and SEARCH_AID in env["result"]["label"]
+    out = tmp_path / "tr.json"
+    assert main(["transients", str(tr_csv), "--out", str(out)]) == 0
+    assert SEARCH_AID in json.loads(out.read_text())["label"] and SEARCH_AID in capsys.readouterr().out
+    from setuhq import stellarpages as SP
+
+    for page in (SP.evidence_section(), SP.docs_stellar_section()):
+        assert SEARCH_AID in page
+    assert SEARCH_AID in (ROOT / "docs/STELLAR.md").read_text().replace("\n  ", " ")

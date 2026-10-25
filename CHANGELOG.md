@@ -24,7 +24,9 @@ breaking changes are called out explicitly.
   (cutouts not stored). Every eclipsing binary or transient found is a candidate, never new. Validated under
   protocol v4 (`docs/results/stellar_validation_protocol_v4.json`, committed on its own before any v4 code; seeded
   target draws with tuning and held-out splits): eclipsing binaries partly validated (5 of 8 checks pass), rotation
-  not validated (3 of 6), transients not validated (1 of 9). Results in `docs/results/stellar_validation_v4.md`;
+  not validated (3 of 6), transients not validated (1 of 9), and every transient output says the tools are a search aid whose
+  candidates need checking by eye. `scripts/stellar_validation_v4_select.py` reproduces the target draws. Results in
+  `docs/results/stellar_validation_v4.md`;
   `/evidence/stellar/` gains the three status cards, one "Real data, cited" figure each and every counted check, and
   `/docs/stellar/` the three commands.
 
@@ -118,6 +120,11 @@ breaking changes are called out explicitly.
   strict checks; a dispatch on a branch is still a dry run. A second run for a tag that is already released
   waits for the first (concurrency) and skips building and publishing. See
   [docs/RELEASING.md](docs/RELEASING.md).
+
+### Fixed
+
+- The sweep catalogue page's entry list no longer carries an `aria-label` on a role-less `<div>` (axe:
+  `aria-prohibited-attr`).
 
 ## [0.1.0] - 2026-10-22
 
