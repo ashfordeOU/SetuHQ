@@ -1411,10 +1411,49 @@
       ],
       "filtered_fap": 1,
       "reclassified": 0
+    },
+    {
+      "time": "2026-10-26T18:44:10+00:00",
+      "targets": [
+        357202877,
+        357244603,
+        357299852,
+        357373216,
+        357416482,
+        357457104,
+        357501308,
+        357536526,
+        357538688,
+        357634632,
+        357661805,
+        357801293,
+        357872559,
+        357896777,
+        357972447,
+        358070912
+      ],
+      "errors": [
+        "TIC 357312511: ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+        "TIC 357347296: LookupError: no SPOC 120s light curves found for 'TIC 357347296'",
+        "TIC 357858008: LookupError: no SPOC 120s light curves found for 'TIC 357858008'",
+        "TIC 357956179: LookupError: no SPOC 120s light curves found for 'TIC 357956179'"
+      ],
+      "new": 0,
+      "known": 0,
+      "filtered_deep": 62,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 793, in urlopen\n    response = self._make_request(\n        conn,\n    ...<10 lines>...\n        **response_kw,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 540, in _make_request\n    response = conn.getresponse()\nConnectionResetError: [Errno 104] Connection reset by peer\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/requests/adapters.py\", line 696, in send\n    resp = conn.urlopen(\n        method=request.method,\n    ...<9 lines>...\n        chunked=chunked,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 847, in urlopen\n    retries = retries.increment(\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\n    )\nurllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nrequests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 357347296'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 357858008'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 357956179'\n"
+      ],
+      "filtered_fap": 1,
+      "filtered_one_sector": 3,
+      "reclassified": 0
     }
   ],
-  "targets_reviewed": 147,
-  "updated": "2026-10-26T14:07:47+00:00",
+  "targets_reviewed": 163,
+  "updated": "2026-10-26T18:44:10+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8"
 }
