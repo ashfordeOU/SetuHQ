@@ -21,6 +21,10 @@ reads or writes outside it, and error messages give paths relative to it. Set-up
 
 from __future__ import annotations
 
+from setuhq import i18n
+from setuhq.i18n import N_, tr
+from setuhq.i18n_tools import tool_description
+
 import argparse
 import functools
 import sys
@@ -29,14 +33,14 @@ from setuhq import __version__
 from setuhq.tools import TOOLS, ToolError, root
 
 NAME = "setuhq"
-INSTRUCTIONS = (
+INSTRUCTIONS = N_("mcp.instructions",
     "SetuHQ searches public NASA TESS light curves for transits with a reviewer panel of Sentinels "
     "(AI models; Claude by default, other providers labelled) and Probes (deterministic detectors), then vets "
     "and fits each dip. Call these tools instead of estimating: they run SetuHQ's own code or read its stored, "
     "reviewed results. Every answer carries provenance and honesty labels; keep them when you report. "
     "Anything SetuHQ finds is a candidate, not a discovery. Do not submit, post or send anything outward "
-    "without the user's explicit approval."
-)
+    "without the user's explicit approval.",
+    note="The MCP server's instructions to the assistant. Keep every honesty rule: a candidate, not a discovery; nothing is sent without approval.")
 DEFAULT_HOST = "127.0.0.1"
 
 
@@ -98,7 +102,7 @@ def build_server(host: str = DEFAULT_HOST, port: int = 8080, *, allow_writes: bo
 
     cls, major = _server_class()
     tool_error = _sdk_tool_error(major)
-    kwargs = {"instructions": INSTRUCTIONS}
+    kwargs = {"instructions": tr("mcp.instructions", INSTRUCTIONS)}
     if major == 1:  # FastMCP takes the HTTP address in its settings
         kwargs |= {"host": host, "port": port}
     server = cls(NAME, **kwargs)
@@ -113,7 +117,7 @@ def build_server(host: str = DEFAULT_HOST, port: int = 8080, *, allow_writes: bo
             "openWorldHint": not read_only,  # MAST downloads; a provider's API when Sentinels are allowed and asked for
         })
         server.add_tool(_expose(fn, tool_error, allow_sentinels=allow_sentinels), name=fn.__name__,
-                        description=(fn.__doc__ or "").strip(), annotations=annotations)
+                        description=tool_description(fn.__name__, fn.__doc__ or ""), annotations=annotations)
     return server
 
 
@@ -138,8 +142,11 @@ def main(argv=None) -> int:
                         help="with --http: let pipeline runs use Sentinels, which may call a paid AI API with this "
                              "server's keys")
     parser.add_argument("--list-tools", action="store_true", help="print the tool names and exit")
+    parser.add_argument("--lang", metavar="LANG", help="language of the tool descriptions and of the human-facing text in results "
+                        "(else SETUHQ_LANG, LC_ALL, LC_MESSAGES or LANG; English by default). JSON keys and values read by code stay English")
     parser.add_argument("--version", action="version", version=f"setuhq-mcp {__version__}")
     args = parser.parse_args(argv)
+    i18n.set_lang(i18n.resolve_lang(args.lang))
     if args.list_tools:
         for fn, read_only in TOOLS:
             print(f"{fn.__name__}{'' if read_only else '  (writes: a new run directory or the cache; over HTTP only with --allow-writes)'}")

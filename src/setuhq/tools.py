@@ -21,6 +21,8 @@ environment.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, SOURCE, current, tr
+
 import functools
 import hashlib
 import json
@@ -34,16 +36,16 @@ from setuhq import __version__
 
 # ---------------------------------------------------------------- honesty labels
 
-CANDIDATE = ("A candidate, not a discovery: SetuHQ finds and vets dips in public TESS data. Confirming a planet "
+CANDIDATE = N_("mcp.honesty.candidate", "A candidate, not a discovery: SetuHQ finds and vets dips in public TESS data. Confirming a planet "
              "needs follow-up (radial velocities, imaging, statistical validation) by others.")
-PANEL = ("Sentinels are AI models, not people (Claude by default; other providers are labelled). Only Claude has "
+PANEL = N_("mcp.honesty.panel", "Sentinels are AI models, not people (Claude by default; other providers are labelled). Only Claude has "
          "been benchmarked. Probes are deterministic matched-filter detectors.")
-STORED = "Read from stored files; nothing was recomputed."
-COMPUTED = "Computed now by SetuHQ's own code from the inputs given; not a stored, reviewed result."
-CATALOGUE = ("Catalogue values are the source's measurements, shown as stored; a missing value is not a guess. "
+STORED = N_("mcp.honesty.stored", "Read from stored files; nothing was recomputed.")
+COMPUTED = N_("mcp.honesty.computed", "Computed now by SetuHQ's own code from the inputs given; not a stored, reviewed result.")
+CATALOGUE = N_("mcp.honesty.catalogue", "Catalogue values are the source's measurements, shown as stored; a missing value is not a guess. "
              "SetuHQ did not discover these planets.")
-FORMULA = "A textbook formula evaluated as stated; it describes an idealised case, not a measurement."
-UNREVIEWED = "No reviewer panel looked at this: it is a detector and vetting output only."
+FORMULA = N_("mcp.honesty.formula", "A textbook formula evaluated as stated; it describes an idealised case, not a measurement.")
+UNREVIEWED = N_("mcp.honesty.unreviewed", "No reviewer panel looked at this: it is a detector and vetting output only.")
 
 DEFAULT_RUN = "runs/tess-pi-men-s1"
 # Where the tools write: one new directory per run, never an existing one, so a stored, reviewed run
@@ -66,6 +68,21 @@ BENCHMARKS = {
 
 class ToolError(ValueError):
     """A request the tool cannot serve (a bad path, a missing file, an argument out of range)."""
+
+
+HONESTY_IDS = {CANDIDATE: "mcp.honesty.candidate", PANEL: "mcp.honesty.panel", STORED: "mcp.honesty.stored", COMPUTED: "mcp.honesty.computed",
+               CATALOGUE: "mcp.honesty.catalogue", FORMULA: "mcp.honesty.formula", UNREVIEWED: "mcp.honesty.unreviewed"}
+
+
+def _say(label: str) -> str:
+    """An honesty label in the current language (setuhq.i18n; SETUHQ_LANG or the server's --lang), English when it
+    has no translation. The labels are human-facing text; every key and machine-read value stays English."""
+    if current() == SOURCE:
+        return label
+    from setuhq.stellar_tools import TRANSIENT_SEARCH_AID
+
+    mid = HONESTY_IDS.get(label) or ("honesty.transients_aid" if label == TRANSIENT_SEARCH_AID else None)
+    return tr(mid, label) if mid else label
 
 
 # ---------------------------------------------------------------- root, paths, provenance
@@ -121,7 +138,7 @@ def envelope(tool: str, result, *, sources: list[dict] = (), honesty: list[str] 
         "result": _plain(result),
         "provenance": {"setuhq_version": __version__, "code": _code(),
                        "computed_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sources": list(sources)},
-        "honesty": list(honesty),
+        "honesty": [_say(h) for h in honesty],
     }
 
 
@@ -176,7 +193,7 @@ def _catalogue_meta(cat: dict, path: str) -> tuple[list[dict], list[str]]:
 def search_catalogue(query: str = "", method: str | None = None, limit: int = 20,
                      catalogue_path: str = DEFAULT_CATALOGUE) -> dict:
     """Search the exoplanet catalogue by planet or star name (or alternate name, e.g. a TIC id), optionally by
-    discovery method (transit, rv, imaging, microlensing, astrometry, timing). Wraps ``catalogue.catalogue_filter``."""
+    discovery method (``transit``, ``rv``, ``imaging``, ``microlensing``, ``astrometry``, ``timing``). Wraps ``catalogue.catalogue_filter``."""
     from setuhq.catalogue import catalogue_filter
 
     cat = _catalogue(catalogue_path)

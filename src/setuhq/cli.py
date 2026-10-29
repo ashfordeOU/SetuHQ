@@ -9,6 +9,8 @@ import json
 import sys
 from pathlib import Path
 
+from setuhq import i18n
+from setuhq.i18n import t
 from setuhq.calibrate import calibrate_weights, calibration_path, calibration_record, identity, weights_from_skills
 from setuhq.config import build_reviewers, load_config
 from setuhq.loaders import load_cheops, load_tess
@@ -81,18 +83,18 @@ def cmd_run(args) -> int:
     reviewers = build_reviewers(config.reviewers, cache_root=args.cache)
     default = None if args.uniform_weights else args.calibrated_weights
     weights, source = resolve_weights(config, args.weights, default)
-    print(f"reviewer weights: {source}")
+    print(t("cli.out.weights", "reviewer weights: {source}", source=source))
     record = load_calibration_record(args.weights or (default if weights is not None else None))
     summary = run_pipeline(config, _load_targets(config), reviewers, args.out, weights=weights, weights_source=source,
                            calibration=record)
-    print(f"light curves: {summary.n_light_curves}")
-    print(f"subjects:     {summary.n_subjects}")
-    print(f"classifications: {summary.n_classifications}")
-    print(f"consensus events: {summary.n_consensus} ({summary.n_passed} pass vetting)")
+    print(t("cli.out.lightcurves", "light curves: {n}", n=summary.n_light_curves))
+    print(t("cli.out.subjects", "subjects:     {n}", n=summary.n_subjects))
+    print(t("cli.out.classifications", "classifications: {n}", n=summary.n_classifications))
+    print(t("cli.out.consensus", "consensus events: {n} ({k} pass vetting)", n=summary.n_consensus, k=summary.n_passed))
     if summary.skipped_reviewers:
         reasons = {r.reviewer_id: (getattr(r, "unavailable_reason", lambda: None)() or "unavailable") for r in reviewers}
         print("skipped (unavailable) reviewers: " + ", ".join(f"{rid} ({reasons.get(rid)})" for rid in summary.skipped_reviewers))
-    print(f"outputs in {summary.run_dir}")
+    print(t("cli.out.outputs", "outputs in {path}", path=summary.run_dir))
     return 0
 
 
@@ -101,7 +103,7 @@ def cmd_rebuild(args) -> int:
 
     config = load_config(args.config)
     candidates = rebuild_run(config, _load_targets(config), args.run_dir)
-    print(f"rebuilt {len(candidates)} consensus events ({sum(c.passed for c in candidates)} pass vetting) in {args.run_dir}")
+    print(t("cli.out.rebuilt", "rebuilt {n} consensus events ({k} pass vetting) in {path}", n=len(candidates), k=sum(c.passed for c in candidates), path=args.run_dir))
     return 0
 
 
@@ -125,7 +127,7 @@ def cmd_calibrate(args) -> int:
     calibration_path(args.out).write_text(json.dumps(record, indent=2))
     for skill in skills.values():
         print(f"{skill.reviewer_id:24s} TPR={skill.tpr:.3f} FPR={skill.fpr:.3f} weight={skill.weight:.3f}")
-    print(f"weights written to {args.out}, rates to {calibration_path(args.out)}")
+    print(t("cli.out.weights_written", "weights written to {path}, rates to {rates}", path=args.out, rates=calibration_path(args.out)))
     return 0
 
 
@@ -163,7 +165,7 @@ def cmd_report(args) -> int:
         validation_md=args.validation,
         benchmark_md=args.benchmark,
     )
-    print(f"site written to {path}")
+    print(t("cli.out.site", "site written to {path}", path=path))
     return 0
 
 
@@ -184,10 +186,10 @@ def cmd_discover(args) -> int:
     if "new" in log:  # --publish-new (a private deployment): new signals are kept and counted
         print(f"targets reviewed this run: {len(log['targets'])}, new candidates: {log['new']}, known: {log['known']}")
     else:  # embargo: this output is public (Actions logs), so it is the same whether or not a signal was held
-        print(f"targets reviewed this run: {log['n_targets']}, known TOI matches: {log['known']}")
+        print(t("cli.out.discover", "targets reviewed this run: {n}, known TOI matches: {k}", n=log['n_targets'], k=log['known']))
     for error in log["errors"]:
         print(f"error: {error}")
-    print(f"catalogue {args.catalog}, site {site}")
+    print(t("cli.out.catalogue_site", "catalogue {catalogue}, site {site}", catalogue=args.catalog, site=site))
     return 0
 
 
@@ -224,7 +226,7 @@ def cmd_export(args) -> int:
     for row in summary["excluded"]:
         print(f"  excluded {row['candidate_id']}: {row['reason']}")
     print(f"field list: {CTOI_FIELDS_STATUS}")
-    print(f"outputs in {args.out}")
+    print(t("cli.out.outputs", "outputs in {path}", path=args.out))
     return 0
 
 
@@ -236,7 +238,7 @@ def cmd_batch(args) -> int:
     if not targets:
         raise SystemExit("give --targets FILE or --tic N [N ...]")
     weights, source = resolve_weights(load_config(args.config), args.weights)
-    print(f"reviewer weights: {source}")
+    print(t("cli.out.weights", "reviewer weights: {source}", source=source))
     tois = _toi_targets(args) if args.toi_cache else None
     log = run_batch(args.config, targets, work_dir=args.work_dir, cache_root=args.cache,
                     sectors_per_target=args.sectors, retries=args.retries,
@@ -320,7 +322,7 @@ def cmd_dashboard(args) -> int:
     from setuhq.dashboard import build_dashboard
 
     path = build_dashboard(args.run_dir, args.out, title=args.title, catalog_path=args.catalog)
-    print(f"dashboard written to {path}")
+    print(t("cli.out.dashboard", "dashboard written to {path}", path=path))
     return 0
 
 
@@ -329,7 +331,7 @@ def cmd_docket(args) -> int:
 
     path = build_docket(args.run_dir, args.out, title=args.title, star=args.star, refresh_crossmatch=args.refresh_crossmatch,
                         require_crossmatch=not args.allow_missing_crossmatch)
-    print(f"docket written to {path}")
+    print(t("cli.out.docket", "docket written to {path}", path=path))
     return 0
 
 
@@ -341,13 +343,13 @@ def cmd_site(args) -> int:
                       weights_path=args.weights, star=args.star, require_crossmatch=not args.allow_missing_crossmatch,
                       sweep_path=args.sweep, validation_md=args.validation, benchmark_md=args.benchmark,
                       extras=not args.no_extras, extra_runs=runs[1:], showcase_path=args.showcase)
-    print(f"site written to {path.parent}")
+    print(t("cli.out.site", "site written to {path}", path=path.parent))
     over = check_budget(path.parent)
     for line in over:
-        print(f"over the per-page budget: {line}", file=sys.stderr)
+        print(t("cli.out.page_budget", "over the per-page budget: {line}", line=line), file=sys.stderr)
     assets = check_asset_budget(path.parent)
     for line in assets:
-        print(f"over an asset budget: {line}", file=sys.stderr)
+        print(t("cli.out.asset_budget", "over an asset budget: {line}", line=line), file=sys.stderr)
     return 1 if over or assets else 0
 
 
@@ -356,7 +358,7 @@ def cmd_plate(args) -> int:
 
     path = build_plate(args.run_dir, args.out, title=args.title, catalog_path=args.catalog, star=args.star,
                        require_crossmatch=not args.allow_missing_crossmatch)
-    print(f"plates written to {path}")
+    print(t("cli.out.plates", "plates written to {path}", path=path))
     return 0
 
 
@@ -402,6 +404,8 @@ def cmd_leaderboard(args) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="setuhq", description=__doc__)
+    parser.add_argument("--lang", metavar="LANG", help="language of the output and help (en, nl, pl, pt, fi, sv, da, nb, cs, uk, ru, de, fr, es, et, ja, "
+                        "zh-Hans); else SETUHQ_LANG, LC_ALL, LC_MESSAGES or LANG; English by default. Files and JSON stay English")
     sub = parser.add_subparsers(dest="command", required=True)
 
     run = sub.add_parser("run", help="run the pipeline on the targets in a config file")
@@ -633,11 +637,31 @@ def cmd_mcp(argv: list[str]) -> int:
     return mcp_server.main(argv)
 
 
+def take_lang(argv: list[str]) -> tuple[str | None, list[str]]:
+    """``--lang X`` or ``--lang=X`` anywhere on the command line (it applies to every subcommand), and the rest."""
+    out, lang, i = [], None, 0
+    while i < len(argv):
+        a = argv[i]
+        if a == "--lang" and i + 1 < len(argv):
+            lang, i = argv[i + 1], i + 2
+            continue
+        if a.startswith("--lang="):
+            lang = a.split("=", 1)[1]
+        else:
+            out.append(a)
+        i += 1
+    return lang, out
+
+
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else list(argv)
+    lang, argv = take_lang(argv)
+    i18n.set_lang(i18n.resolve_lang(lang))
     if argv[:1] == ["mcp"]:
         return cmd_mcp(argv[1:])
-    args = build_parser().parse_args(argv)
+    from setuhq.i18n_cli import localize_parser
+
+    args = localize_parser(build_parser()).parse_args(argv)
     from setuhq.docket import CrossmatchUnavailable
 
     try:

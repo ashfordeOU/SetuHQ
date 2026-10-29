@@ -39,6 +39,8 @@ when it is available.
 
 from __future__ import annotations
 
+from setuhq.i18n import localize_output
+
 import html
 import json
 import math
@@ -1718,7 +1720,7 @@ def build_docket(run_dir: str | Path, out_dir: str | Path, *, title: str, star: 
     path = out / "index.html"
     from setuhq.codenote import code_note, with_code_note
 
-    path.write_text(with_code_note(docket_page(data), code_note(run_dir)))
+    path.write_text(localize_output(with_code_note(docket_page(data), code_note(run_dir))))
     if not data.get("page_path"):  # a page of the site uses the site's one copy of the fonts
         copy_page_fonts(out)
     brand.copy_assets(out)
