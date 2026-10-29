@@ -287,7 +287,17 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
   await page.waitForFunction(() => location.pathname === "/candidates/");
   check(await page.isHidden("#menu"), "following a link closes the menu");
   await page.click("#menubtn");
-  await page.mouse.click(200, 800);
+  // Tap a spot that is really outside the menu and on nothing clickable: below the menu when there is room,
+  // else the empty middle of the top bar (the open menu can fill a phone screen; a tap at a fixed point would land on a link).
+  const spot = await page.evaluate(() => {
+    const m = document.getElementById("menu").getBoundingClientRect();
+    const free = (x, y) => { const e = document.elementFromPoint(x, y); return e && !e.closest("#menu, a, button, input, select, textarea, summary, label"); };
+    if (m.bottom < innerHeight - 8 && free(innerWidth / 2, innerHeight - 4)) return [innerWidth / 2, innerHeight - 4];
+    for (let x = 8; x < innerWidth; x += 8) for (const y of [m.top / 2]) if (free(x, y)) return [x, y];
+    return null;
+  });
+  check(spot !== null, "there is a free spot outside the open menu");
+  if (spot) await page.mouse.click(spot[0], spot[1]);
   check(await page.isHidden("#menu"), "a tap outside closes it");
   // Every label in the top bar is whole (nothing cut off) on a phone.
   const clipped = await page.evaluate(() => [...document.querySelectorAll(".topbar a, .topbar button, #subnav a")].filter((e) => e.offsetParent && e.scrollWidth > e.clientWidth + 1).map((e) => e.textContent));
