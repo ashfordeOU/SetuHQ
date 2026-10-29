@@ -12,6 +12,8 @@ Pro or of the commercial licence (CC BY-NC 3.0 IGO).
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, span, t, th
+
 import html
 from urllib.parse import quote
 
@@ -94,11 +96,10 @@ def section() -> str:
     for r in ROWS:
         cells = "".join(f"<td>{start if r == 'How to start' else _cell(d[r])}</td>" for _, _, d, start in cols)
         body += f'<tr><th scope="row">{e(r)}</th>{cells}</tr>'
-    return f"""<header><p class="eyebrow">Docs</p><h1 class="lead-h" id="h-editions" tabindex="-1">Editions.</h1>
-        <p>The whole engine is free, and stays free. Ashforde OÜ sustains it with a commercial licence, SetuHQ Pro and custom studies,
-        not with a feature gate. There are no prices on this site: every paid route starts with a message.</p></header>
-      <h2 id="ed-compare">Compare the editions</h2>
-      <p>Read across a row to compare the three.</p>
+    return f"""<header><p class="eyebrow"{ik("nav.docs")}>Docs</p><h1 class="lead-h" id="h-editions" tabindex="-1"{ik("ed.h1")}>{t("ed.h1", "Editions.")}</h1>
+        <p{ik("ed.intro")}>{t("ed.intro", "The whole engine is free, and stays free. Ashforde OÜ sustains it with a commercial licence, SetuHQ Pro and custom studies, not with a feature gate. There are no prices on this site: every paid route starts with a message.")}</p></header>
+      <h2 id="ed-compare"{ik("ed.compare")}>{t("ed.compare", "Compare the editions")}</h2>
+      <p{ik("ed.compare.p")}>{t("ed.compare.p", "Read across a row to compare the three.")}</p>
       <div class="tablewrap" tabindex="0" role="region" aria-labelledby="ed-compare"><table class="pltable edtable">
         <thead><tr><td></td>{head}</tr></thead><tbody>{body}</tbody></table></div>
       <p class="note"><b>Pro is in development.</b> Every Pro capability above is planned and labelled "{DEV}"; none is live, and none

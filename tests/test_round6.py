@@ -14,6 +14,7 @@ from setuhq.plate import build_plate
 from setuhq.report import build_report
 
 from test_story import run_dir, targets  # noqa: F401  (fixtures)
+from setuhq.i18n import unkey
 
 
 @pytest.fixture(autouse=True)
@@ -149,7 +150,7 @@ def test_no_built_page_loads_google_fonts(run_dir, tmp_path):  # noqa: F811
     for p in pages:
         text = Path(p).read_text()
         assert "googleapis" not in text and "gstatic" not in text, p
-        assert not re.search(r"""<(?:script|link)(?![^>]*rel="canonical")[^>]+(?:src|href)=["']https?://""", text), p  # a canonical link is not a load
+        assert not re.search(r"""<(?:script|link)(?![^>]*rel="(?:canonical|alternate)")[^>]+(?:src|href)=["']https?://""", text), p  # a canonical or alternate link is not a load
 
 
 def test_archived_report_has_icon_44px_nav_and_wrapped_tables(run_dir, tmp_path):  # noqa: F811
@@ -166,6 +167,6 @@ def test_archived_report_has_icon_44px_nav_and_wrapped_tables(run_dir, tmp_path)
 def test_theme_control_is_an_icon_named_for_screen_readers():
     from setuhq.site import SHELL_JS, _topbar
 
-    top = _topbar(None)
+    top = unkey(_topbar(None))
     assert 'data-theme-toggle aria-label="Colour theme: dark. Switch to light"' in top and "Dark (default)" not in top
-    assert "Colour theme: ${THEME_SAY[t]}. Switch to ${THEME_SAY[next]}" in SHELL_JS
+    assert "TT('shell.theme.label', 'Colour theme: {t}. Switch to {next}', {t: THEME_SAY[t], next: THEME_SAY[next]})" in SHELL_JS

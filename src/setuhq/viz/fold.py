@@ -235,10 +235,10 @@ def html(data: dict, **opts) -> str:
     if compact:
         # The home page's budget is tight: the figure is its label and caption; the script adds the canvas and the
         # toggle (and, under reduced motion, draws the two panels on it once).
-        return (f'<figure class="stage foldfig compact"><span class="stage-tag">{LABEL}</span>'
+        return (f'<figure class="stage foldfig compact"><span class="stage-tag" data-i18n="label.real">{LABEL}</span>'
                 f'<figcaption>{e(_short_caption(fd))}</figcaption></figure>')
     return (f'<figure class="stage foldfig" data-fold="{e(where)}" aria-labelledby="{cap}">'
-            f'<span class="stage-tag">{LABEL}</span>'
+            f'<span class="stage-tag" data-i18n="label.real">{LABEL}</span>'
             f'<div class="foldpanels">'
             f'<div class="foldpanel"><p class="foldlbl"><b>Unfolded</b> · {fd["span"][1] - fd["span"][0]:.0f} days in time order</p>{un}</div>'
             f'<div class="foldpanel"><p class="foldlbl"><b>Folded</b> on the {fd["p"]:.4f}-day period</p>{fo}</div></div>'

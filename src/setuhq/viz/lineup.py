@@ -129,7 +129,7 @@ def html(data: dict, **opts) -> str:
     title = e(data.get("title") or "Planets to scale")
     return (f'<figure class="lineup" data-viz="lineup" aria-label="{title}">'
             f'<div class="stage lustage" style="--rmax:{rmax:.3f}"><ol class="lurow">{"".join(lis)}</ol>'
-            f'<a class="stage-tag" href="{PICTURES}">Artist\'s impression</a></div>'
+            f'<a class="stage-tag" href="{PICTURES}" data-i18n="label.art">Artist\'s impression</a></div>'
             f'<figcaption class="skysrc">To scale: one Earth radius is the same width all along the row, so {e(big["name"])} is '
             f'{big["rp_re"] / small["rp_re"]:.1f} times as wide as {e(small["name"])}. Each picture is an artist\'s impression chosen from the '
             f'measured radius and the computed irradiation; composition is not measured. Earth, Neptune and Jupiter are the Solar System '

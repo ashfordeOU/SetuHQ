@@ -14,6 +14,8 @@ the citations and SetuHQ's independence disclaimer.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_
+
 import json
 
 DETECTED = ("Flares and frequencies are detected at the significance stated with each one; a detection is not a "
@@ -26,8 +28,8 @@ VALIDATION_FILE_V4 = "docs/results/stellar_validation_v4.json"
 V4_CAPABILITIES = ("binaries", "rotation", "transients")
 MAX_POINTS = 200_000
 # Carried by every transient output (tool, CLI record and printout, the site): protocol v4 did not validate them.
-TRANSIENT_SEARCH_AID = ("The transient tools are a search aid whose candidates need checking by eye; their "
-                        "detections, class hints and false-alarm screens are not validated.")
+TRANSIENT_SEARCH_AID = N_("honesty.transients_aid", "The transient tools are a search aid whose candidates need checking by eye; their "
+                          "detections, class hints and false-alarm screens are not validated.", note="Carried by every transient output. Never stronger than the English.")
 NO_RECORD = "not validated (no validation record)"
 
 

@@ -161,7 +161,7 @@ def html(data: dict, **opts) -> str:
     head = ('<tr><th scope="col">Reviewer</th><th scope="col">Role</th><th scope="col">Provider</th>'
             + ("" if mode == "panel" else '<th scope="col">Marked this dip</th>') + '<th scope="col" class="num">Calibrated weight</th></tr>')
     return (f'<div class="panelring" data-panelring="{_e(mode)}"><figure class="stage prfig" aria-labelledby="prcap-{uid}">'
-            f'<span class="stage-tag">{LABEL}</span><svg viewBox="0 0 {W} {H}" role="img" aria-label="{_e(aria({**data, "mode": mode}, rs))}">'
+            f'<span class="stage-tag" data-i18n="label.real">{LABEL}</span><svg viewBox="0 0 {W} {H}" role="img" aria-label="{_e(aria({**data, "mode": mode}, rs))}">'
             f'<g class="prlines" aria-hidden="true">{"".join(lines)}</g>{ring}<g class="prnodes">{"".join(dots)}</g></svg>{verdict}'
             f'<figcaption class="readout" id="prcap-{uid}">{what} Source: {_e(data["source"])}.{note}</figcaption></figure>'
             f'<details class="prtable"><summary>The marks and weights as a table</summary><div class="tablewrap">'
@@ -202,7 +202,7 @@ def summary(data: dict, dip_id: str) -> str:
     cls, _, phrase = dip_state(data.get("outcome"))
     k = sum(1 for r in rs if r.get("marked"))
     return (f'<div class="panelring" data-panelring="dip" data-pr-dip="{_e(dip_id)}" data-pr-uid="{_e(data.get("uid") or "pr")}">'
-            f'<figure class="stage prfig"><span class="stage-tag">{LABEL}</span><p class="prverdict"><span>{k} of {len(rs)} marked it · panel score '
+            f'<figure class="stage prfig"><span class="stage-tag" data-i18n="label.real">{LABEL}</span><p class="prverdict"><span>{k} of {len(rs)} marked it · panel score '
             f'{"not stored" if score is None else _f2(score)}, as stored</span><strong class="prword {_e(cls)}" data-verdict="{_e(phrase)}">{_e(phrase)}</strong></p>'
             f'<figcaption class="readout">Source: {_e(data["source"])}.</figcaption></figure></div>')
 
@@ -324,7 +324,7 @@ window.SetuPanelRing = (function(){
     const note = (d.probes_only ? ` ${e(PROBES_ONLY)}.` : '') + (rs.some(r => r.role === 'sentinel') ? ` ${e(ATTRIBUTION)}` : '');
     const rows = rs.map(r => `<tr><th scope="row">${e(r.name || r.id)} <span class="mono">${e(r.id)}</span></th><td>${r.role === 'sentinel' ? 'Sentinel' : 'Probe'}</td><td>${e(r.provider || '')}</td>` + (mode === 'panel' ? '' : `<td>${r.marked ? 'yes' : 'no'}</td>`) + `<td class="num">${wf(r.weight)}</td></tr>`).join('');
     const head = '<tr><th scope="col">Reviewer</th><th scope="col">Role</th><th scope="col">Provider</th>' + (mode === 'panel' ? '' : '<th scope="col">Marked this dip</th>') + '<th scope="col" class="num">Calibrated weight</th></tr>';
-    return `<div class="panelring" data-panelring="${e(mode)}"><figure class="stage prfig" aria-labelledby="prcap-${uid}"><span class="stage-tag">__LABEL__</span><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${e(aria(Object.assign({}, d, {mode}), rs))}"><g class="prlines" aria-hidden="true">${lines.join('')}</g>${ring}<g class="prnodes">${dots.join('')}</g></svg>${verdict}<figcaption class="readout" id="prcap-${uid}">${what} Source: ${e(d.source)}.${note}</figcaption></figure><details class="prtable"><summary>The marks and weights as a table</summary><div class="tablewrap"><table><thead>${head}</thead><tbody>${rows}</tbody></table></div></details></div>`;
+    return `<div class="panelring" data-panelring="${e(mode)}"><figure class="stage prfig" aria-labelledby="prcap-${uid}"><span class="stage-tag" data-i18n="label.real">__LABEL__</span><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${e(aria(Object.assign({}, d, {mode}), rs))}"><g class="prlines" aria-hidden="true">${lines.join('')}</g>${ring}<g class="prnodes">${dots.join('')}</g></svg>${verdict}<figcaption class="readout" id="prcap-${uid}">${what} Source: ${e(d.source)}.${note}</figcaption></figure><details class="prtable"><summary>The marks and weights as a table</summary><div class="tablewrap"><table><thead>${head}</thead><tbody>${rows}</tbody></table></div></details></div>`;
   }
   // The data for one dip, as setuhq.viz.panelring.dip_model builds it.
   function dipModel(dip, o){

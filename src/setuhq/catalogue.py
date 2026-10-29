@@ -10,6 +10,8 @@ or the search box needs it. The page shows only stored values: a value the sourc
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, span, t, th
+
 import html
 import json
 import re
@@ -153,8 +155,8 @@ def catalogue_section(meta: dict | None, eyebrow: str) -> str:
                             "markers": [], "sun": True, "title": "Host star temperature, 2,500 K to 10,000 K: drag either handle to filter"}, filter=True)
     strip = f'<div class="ctstrip"><p class="ctstriplab">Host temperature</p>{strip}</div>' if strip else ""
     return f"""<header class="headrow">
-        <div>{eyebrow}<h1 class="lead-h" id="h-catalogue" tabindex="-1">Every known exoplanet.<br><span class="grey">{c['rows']:,} records, searchable.</span></h1>
-        <p>All {c['rows']:,} planets in {e(meta['source_short'])}, including the {c['rows'] - c['with_distance']:,} with no stored distance that the Galaxy map cannot place. SetuHQ did not discover these planets; it catalogues them.</p></div>
+        <div>{eyebrow}<h1 class="lead-h" id="h-catalogue" tabindex="-1"><span{ik("cat.h1")}>{t("cat.h1", "Every known exoplanet.")}</span><br><span class="grey"{ik("cat.h1b", n=c['rows'])}>{t("cat.h1b", "{n, number} records, searchable.", n=c['rows'])}</span></h1>
+        <p{ik("cat.intro", n=c['rows'], source=meta['source_short'], nodist=c['rows'] - c['with_distance'])}>{th("cat.intro", "All {n, number} planets in {source}, including the {nodist, number} with no stored distance that the Galaxy map cannot place. SetuHQ did not discover these planets; it catalogues them.", n=c['rows'], source=meta['source_short'], nodist=c['rows'] - c['with_distance'])}</p></div>
       </header>
       <p class="note"><b>Data: {e(meta['source_name'])}, fetched {e(meta['fetched_at'][:10])}.</b> <a href="{e(meta['url'])}" rel="noopener">{e(meta['url'])}</a>.{note} {e(meta['definition'])} A value the source does not give reads "not stored".</p>{note_detail}
       <section class="card ctfilters" aria-label="Search and filters">
@@ -176,19 +178,27 @@ def catalogue_section(meta: dict | None, eyebrow: str) -> str:
       <p class="small">Mass shows the true mass when stored, otherwise m sin i (marked "sin i"), a minimum. Units as the source stores them: Jupiter masses and radii, days, kelvin, parsecs.</p>"""
 
 
+N_("obj.params", "Stored parameters")
+N_("obj.host", "Its star and other planets")
+N_("obj.where", "Where it is")
+N_("obj.refs", "Discovery and references")
+N_("obj.sysview", "System view of")
+N_("obj.planets", "Its planets")
+
+
 def planet_page(eyebrow_html: str) -> str:
     return f"""<header>{eyebrow_html}<h1 class="lead-h" id="h-planet" tabindex="-1">Planet</h1><p id="plsub"></p></header>
       <p class="note" id="plnote" role="status" hidden></p>
       <div class="plextra" id="plextra"></div>
       <div class="plgrid">
         {system_stage("plsys", "The planet's system, drawn from stored values.")}
-        <section class="card plparams" aria-labelledby="h-plparams"><h2 id="h-plparams">Stored parameters</h2><div id="plparams"></div></section>
+        <section class="card plparams" aria-labelledby="h-plparams"><h2 id="h-plparams" data-i18n="obj.params">Stored parameters</h2><div id="plparams"></div></section>
       </div>
       <div class="plmore">
-        <section class="card" aria-labelledby="h-plhost"><h2 id="h-plhost">Its star and other planets</h2><div id="plhost"></div></section>
-        <section class="card" aria-labelledby="h-plwhere"><h2 id="h-plwhere">Where it is</h2><div id="plwhere"></div></section>
+        <section class="card" aria-labelledby="h-plhost"><h2 id="h-plhost" data-i18n="obj.host">Its star and other planets</h2><div id="plhost"></div></section>
+        <section class="card" aria-labelledby="h-plwhere"><h2 id="h-plwhere" data-i18n="obj.where">Where it is</h2><div id="plwhere"></div></section>
       </div>
-      <section class="card" aria-labelledby="h-plref"><h2 id="h-plref">Discovery and references</h2><div id="plref"></div></section>"""
+      <section class="card" aria-labelledby="h-plref"><h2 id="h-plref" data-i18n="obj.refs">Discovery and references</h2><div id="plref"></div></section>"""
 
 
 def star_page(eyebrow_html: str) -> str:
@@ -196,13 +206,13 @@ def star_page(eyebrow_html: str) -> str:
       <p class="note" id="stnote" role="status" hidden></p>
       <div class="plextra" id="stextra"></div>
       <div class="plgrid">
-        <div class="stsysw"><label class="stpick"><span>System view of</span><select id="stpick"></select></label>
+        <div class="stsysw"><label class="stpick"><span data-i18n="obj.sysview">System view of</span><select id="stpick"></select></label>
         {system_stage("stsys", "The star and one of its planets, drawn from stored values.")}</div>
-        <section class="card plparams" aria-labelledby="h-stparams"><h2 id="h-stparams">Stored parameters</h2><div id="stparams"></div></section>
+        <section class="card plparams" aria-labelledby="h-stparams"><h2 id="h-stparams" data-i18n="obj.params">Stored parameters</h2><div id="stparams"></div></section>
       </div>
       <div class="plmore">
-        <section class="card" aria-labelledby="h-stplanets"><h2 id="h-stplanets">Its planets</h2><div id="stplanets"></div></section>
-        <section class="card" aria-labelledby="h-stwhere"><h2 id="h-stwhere">Where it is</h2><div id="stwhere"></div></section>
+        <section class="card" aria-labelledby="h-stplanets"><h2 id="h-stplanets" data-i18n="obj.planets">Its planets</h2><div id="stplanets"></div></section>
+        <section class="card" aria-labelledby="h-stwhere"><h2 id="h-stwhere" data-i18n="obj.where">Where it is</h2><div id="stwhere"></div></section>
       </div>"""
 
 
@@ -309,8 +319,8 @@ def still_list(cat: dict, idx: list[int]) -> str:
 
 
 # The top bar's search: an icon button that opens the search overlay (also on / and Ctrl or Cmd K).
-SEARCH_BUTTON = ('<button class="iconbtn searchbtn" type="button" id="gsearchbtn" aria-label="Search planets, stars and pages (press /)" '
-                 'aria-haspopup="dialog" title="Search (/)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" '
+SEARCH_BUTTON = ('<button class="iconbtn searchbtn" type="button" id="gsearchbtn" aria-label="' + N_("shell.search", "Search planets, stars and pages (press /)") + '" '
+                 'aria-haspopup="dialog" title="' + N_("shell.search_title", "Search (/)") + '" data-i18n-attr="aria-label:shell.search|title:shell.search_title"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" '
                  'fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.7" '
                  'stroke-linecap="round"/></svg></button>')
 SEARCH_DIALOG = """<dialog class="gsearch" id="gsearch" aria-labelledby="gsearchlbl">
@@ -645,11 +655,11 @@ function applyCatalogue(v){ ct.view = v; if (ct.rendered) ctApply(); }
 
 // ---------- planet and star pages ----------
 const CT_ROWS = [
-  ['Mass', 'mass', 'MJ'], ['Minimum mass (m sin i)', 'msini', 'MJ'], ['Radius', 'radius', 'RJ'], ['Orbital period', 'period', 'd'],
-  ['Semi-major axis', 'a', 'AU'], ['Eccentricity', 'e', ''], ['Inclination', 'incl', '°'], ['Impact parameter', 'b', ''],
-  ['RV semi-amplitude K', 'k', 'm/s'], ['Equilibrium temperature', 'teq', 'K'], ['Measured temperature', 'tmeas', 'K'], ['Spin–orbit angle λ', 'lambda', '°']];
-const CT_STAR_ROWS = [['Effective temperature', 'steff', 'K'], ['Radius', 'srad', 'R☉'], ['Mass', 'smass', 'M☉'], ['Metallicity [Fe/H]', 'smet', 'dex'],
-  ['Age', 'sage', 'Gyr'], ['Distance', 'dist', 'pc'], ['V magnitude', 'vmag', ''], ['RA (J2000)', 'ra', '°'], ['Dec (J2000)', 'dec', '°']];
+  [T('obj.row.mass', 'Mass'), 'mass', 'MJ'], [T('obj.row.msini', 'Minimum mass (m sin i)'), 'msini', 'MJ'], [T('obj.row.radius', 'Radius'), 'radius', 'RJ'], [T('obj.row.period', 'Orbital period'), 'period', 'd'],
+  [T('obj.row.a', 'Semi-major axis'), 'a', 'AU'], [T('obj.row.e', 'Eccentricity'), 'e', ''], [T('obj.row.incl', 'Inclination'), 'incl', '°'], [T('obj.row.b', 'Impact parameter'), 'b', ''],
+  [T('obj.row.k', 'RV semi-amplitude K'), 'k', 'm/s'], [T('obj.row.teq', 'Equilibrium temperature'), 'teq', 'K'], [T('obj.row.tmeas', 'Measured temperature'), 'tmeas', 'K'], [T('obj.row.lambda', 'Spin–orbit angle λ'), 'lambda', '°']];
+const CT_STAR_ROWS = [[T('obj.row.steff', 'Effective temperature'), 'steff', 'K'], [T('obj.row.srad', 'Radius'), 'srad', 'R☉'], [T('obj.row.smass', 'Mass'), 'smass', 'M☉'], [T('obj.row.smet', 'Metallicity [Fe/H]'), 'smet', 'dex'],
+  [T('obj.row.sage', 'Age'), 'sage', 'Gyr'], [T('obj.row.dist', 'Distance'), 'dist', 'pc'], [T('obj.row.vmag', 'V magnitude'), 'vmag', ''], [T('obj.row.ra', 'RA (J2000)'), 'ra', '°'], [T('obj.row.dec', 'Dec (J2000)'), 'dec', '°']];
 // A stored value's error as the page shows it. exoplanet.eu stores an upper limit as lower error = value and upper
 // error = 0, the range from 0 to the value: that reads "≤ value", with no error. Both errors 0 means none was
 // stored: none is shown. Otherwise ± or − / +. (The planet stubs and pre-rendered pages: setuhq.stubs.is_upper_limit.)
@@ -704,13 +714,13 @@ function plShow(slug){
       $('#h-planet').textContent = 'Planet not found'; $('#plsub').textContent = ''; $('#plextra').innerHTML = ''; body.forEach(x => { x.hidden = true; }); plShown(false); return; }
     note.hidden = true; body.forEach(x => { x.hidden = false; });
     const P = ct.P, star = P.star[i], cls = mxClassOf(P.radius[i], P.mass[i] !== null ? P.mass[i] : P.msini[i]);
-    const clsName = cls === null ? 'class not determinable (no radius or mass stored)' : ['Earth-size', 'Super-Earth', 'Sub-Neptune', 'Neptune-like', 'Gas giant'][cls] + (P.radius[i] === null ? ' (by mass)' : '');
+    const clsName = cls === null ? T('obj.cls.none', 'class not determinable (no radius or mass stored)') : [T('obj.cls.earth', 'Earth-size'), T('obj.cls.super', 'Super-Earth'), T('obj.cls.subnep', 'Sub-Neptune'), T('obj.cls.nep', 'Neptune-like'), T('obj.cls.giant', 'Gas giant')][cls] + (P.radius[i] === null ? T('obj.cls.bymass', ' (by mass)') : '');
     $('#h-planet').textContent = P.name[i]; if (current === 'planet') pageChrome('planet', new URLSearchParams({id: slug}));
-    $('#plsub').innerHTML = `${star ? `<a href="${ctStarHref(star)}">${esc(star)}</a>` : 'host not stored'} · ${esc(CTM.method_label[P.method[i]] || P.method[i])} · discovered ${P.year[i] || 'year not stored'} · ${esc(clsName)}`;
+    $('#plsub').innerHTML = `${star ? `<a href="${ctStarHref(star)}">${esc(star)}</a>` : T('obj.nohost', 'host not stored')} · ${esc(CTM.method_label[P.method[i]] || P.method[i])} · ${P.year[i] ? T('obj.discovered', 'discovered {year}', {year: String(P.year[i])}) : T('obj.discovered_none', 'discovered year not stored')} · ${esc(clsName)}`;
     const ex = $('#plextra'), hero = ex && ex.querySelector('#plhero');
     if (ex && !(hero && hero.dataset.slug === slug)){ ex.innerHTML = ctPlanetExtras(i); if (window.SetuRender) SetuRender.mount(ex); SetuUI.limits(ex); }
     ctSpin(ex);
-    $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds; none is shown where none is stored.</p>`;
+    $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">${T('obj.units', 'Units as stored by {source}. Errors are the stored lower and upper bounds; none is shown where none is stored.', {source: ct.C.source_short})}</p>`;
     const sibs = star ? ct.byStar[star].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)) : [i];
     $('#plhost').innerHTML = (star ? `<p><a href="${ctStarHref(star)}">${esc(star)}</a>${P.sptype[i] ? ' · ' + esc(P.sptype[i]) : ''}${P.steff[i] !== null ? ' · ' + ctFmt(P.steff[i]) + ' K' : ''}</p>` : '<p>Host star not stored.</p>')
       + `<ul class="pllist">${sibs.map(j => `<li><a href="${ctPlanetHref(j)}"${j === i ? ' aria-current="page"' : ''}><span>${esc(P.name[j])}</span><span class="mono">${ctFmt(P.period[j], 5) ? ctFmt(P.period[j], 5) + ' d' : 'period —'}</span></a></li>`).join('')}</ul>`;
@@ -731,7 +741,8 @@ const ctSrc = () => `${ct.C.source_short}, fetched ${String(ct.C.fetched_at).sli
 const ctN0 = x => Math.round(x).toLocaleString('en-US');
 function ctRow(i){ const o = {}; for (const k of ['radius', 'mass', 'msini', 'a', 'period', 'srad', 'smass', 'steff', 'teq']) o[k] = ct.P[k][i]; return o; }
 function ctFig(kind, params, alt, cap, label, still, extra){
-  const tag = kind === 'planet' ? `<a class="stage-tag" href="${CT_PIC}">${esc(label)}</a>` : `<span class="stage-tag">${esc(label)}</span>`;
+  const lid = {"Artist's impression": 'label.art', 'Model from stored values': 'label.model', 'Illustration': 'label.illustration'}[label] || '';
+  const tag = kind === 'planet' ? `<a class="stage-tag" href="${CT_PIC}" data-i18n="${lid}">${esc(label)}</a>` : `<span class="stage-tag" data-i18n="${lid}">${esc(label)}</span>`;
   return `<figure class="stage rfig" data-render="${kind}" data-params='${esc(JSON.stringify(params))}' aria-label="${esc(alt)}"><div class="rbox"><img class="rstill" src="${esc(still)}" width="512" height="512" alt="${esc(alt)}">${extra || ''}</div>${tag}<figcaption class="readout">${cap}</figcaption></figure>`;
 }
 function ctPortrait(i){

@@ -112,7 +112,7 @@ def html(data: dict, **opts) -> str:
             f'data-y0="{years[0]}" data-counts="{counts_attr}">'
             f'<div class="stage tlstage"><svg class="tlsvg" viewBox="0 0 {W} {H}" role="img" aria-label="{e(aria)}">'
             f'<g class="tlgrid">{"".join(grid)}</g><g>{bars}</g><g class="tlx">{xl}</g></svg>'
-            f'<span class="stage-tag">Real data, cited</span></div>'
+            f'<span class="stage-tag" data-i18n="label.real">Real data, cited</span></div>'
             f'<p class="xread tlread" aria-live="polite">Point at a year, or focus the chart and use the arrow keys.</p>'
             f'<figcaption><ul class="skylegend" aria-label="Discovery method">{legend}</ul>'
             f'<p class="skysrc">Planets per discovery year, stacked by the method that found them.{noyear} SetuHQ did not discover these planets. '

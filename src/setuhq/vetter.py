@@ -15,6 +15,8 @@ without JavaScript, where the script adds the three answer buttons and the score
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, t
+
 import html
 import math
 from statistics import median
@@ -159,7 +161,7 @@ def section(data: dict) -> str:
             f'<article class="card vtcard" id="vt-{k + 1}" data-dip="{e(c["candidate_id"])}" data-out="{c["outcome"]}" aria-labelledby="vth-{k + 1}">'
             f'<h2 id="vth-{k + 1}">Dip {k + 1} of {len(chosen)}</h2>'
             f'<p class="small">{c["time_unit"]} {c["t_center"]:.2f} · {c["depth_ppm"]:,.0f} ppm deep · {c["duration_hours"]:.2f} hours · SNR {c["snr"]:.1f}</p>'
-            f'<figure class="vtfig"><div class="stage vtstage"><div class="vtgrid">{panels(c, subj)}</div><span class="stage-tag">Real data, cited</span></div>'
+            f'<figure class="vtfig"><div class="stage vtstage"><div class="vtgrid">{panels(c, subj)}</div><span class="stage-tag" data-i18n="label.real">Real data, cited</span></div>'
             f'<figcaption class="skysrc">Stored values of a SetuHQ example run (the star is named after you answer). Source: the run\'s stored '
             f'light curve (TESS SPOC, MAST) and the case file\'s stored measurements.</figcaption></figure>'
             f'<div class="vtpick" role="group" aria-label="Your call on dip {k + 1}" hidden>{btns}</div><p class="vtsay" role="status"></p>'
@@ -167,9 +169,9 @@ def section(data: dict) -> str:
             f'<p><b>Vetting: {e(word)}.</b> {e(st.get("verdict") or "")}</p><ul>{"".join(f"<li>{e(r)}</li>" for r in why)}</ul>'
             f'<p class="small">This was {f"<a href={chr(34)}{e(href)}{chr(34)}>{e(lab)}</a>" if href else e(lab)}. Panel score {c["score"]:.2f}, '
             f'marked by {c["n_reviewers"]} reviewers.{f" {e(probes)}." if probes else ""}</p></details></article>')
-    head = ('<header><p class="eyebrow">Candidates</p><h1 class="lead-h" id="h-vetter" tabindex="-1">Be the vetter.</h1>'
-            '<p>Each card is a real dip that one of SetuHQ\'s example runs stored. Look at its light curve, its fold, its odd and even depths '
-            'and its depth half an orbit later, then call it: pass, flag or reject. Then see what the vetting decided, and why.</p></header>')
+    head = (f'<header><p class="eyebrow"{ik("nav.candidates")}>Candidates</p><h1 class="lead-h" id="h-vetter" tabindex="-1"{ik("vt.h1")}>{t("vt.h1", "Be the vetter.")}</h1>'
+            f'<p{ik("vt.intro")}>' + t("vt.intro", "Each card is a real dip that one of SetuHQ's example runs stored. Look at its light curve, its fold, its odd and even depths "
+            "and its depth half an orbit later, then call it: pass, flag or reject. Then see what the vetting decided, and why.") + '</p></header>')
     score = ('<div class="vtscore" hidden><p role="status" id="vtscore"></p><button class="btn" type="button" id="vtreset">Clear my answers</button></div>')
     guide = ('<details class="card"><summary>What to look for</summary><ul><li><b>Light curve</b>: a dip with a flat floor and sharp edges is '
              'transit-like; a V shape or a lone spike is suspect.</li><li><b>Fold</b>: a real periodic dip lines up at one phase.</li>'

@@ -37,6 +37,7 @@ import math
 from pathlib import Path
 
 from setuhq import brand
+from setuhq.i18n import N_, k as ik, span, t, th
 from setuhq.design import BASE_CSS, MOTION_CSS, tokens_css
 from setuhq.benchmark_toi import wilson
 from setuhq.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS, held_line, load_public_catalog
@@ -64,53 +65,53 @@ from setuhq.features import JS as FEATURES_JS
 # The site's five sections, in the top bar, for its three audiences: visitors (Explore, How it works), researchers
 # (Candidates, Evidence) and contributors (Docs). docs/SITE.md gives the reasons. Each section's pages are listed in
 # its sub-navigation; every view of the app belongs to one section (overview, the home page, to none).
-NAV = [("explore", "Explore", "#/sky"), ("candidates", "Candidates", "#/explorer"), ("how", "How it works", "#/methods"),
-       ("evidence", "Evidence", "#/sentinels"), ("docs", "Docs", "#/docs")]
+NAV = [("explore", N_("nav.explore", "Explore"), "#/sky"), ("candidates", N_("nav.candidates", "Candidates"), "#/explorer"), ("how", N_("nav.how", "How it works"), "#/methods"),
+       ("evidence", N_("nav.evidence", "Evidence"), "#/sentinels"), ("docs", N_("nav.docs", "Docs"), "#/docs")]
 SUBNAV = {
-    "explore": [("Sky map", "#/sky", ["sky"]), ("Galaxy", "#/galaxy", ["galaxy"]),
-                ("Catalogue", "#/catalogue", ["catalogue", "planet", "star"]),
-                ("Everything that dims", "#/variables", ["variables"]), ("Mission Control", "#/mission", ["mission"]),
-                ("Where TESS is now", "#/tessnow", ["tessnow"])],
-    "candidates": [("All candidates", "#/explorer", ["explorer"]), ("Dips", "#/transit", ["transit"]),
-                   ("Case files", "#/candidates", ["candidates"]), ("Radius ratios", "#/planets", ["planets"]),
-                   ("Be the vetter", "#/vetter", ["vetter"])],
-    "evidence": [("The panel", "#/sentinels", ["sentinels"]), ("Leaderboard", "#/leaderboard", ["leaderboard"]),
-                 ("Runs", "#/runs", ["runs"]), ("Stars", "#/stellar", ["stellar"]), ("Run report", "/evidence/report/", ["report"]), ("Plates", "/evidence/plates/", ["plates"])],
-    "docs": [("Get started", "#/docs", ["docs"]), ("How the pictures are drawn", "#/pictures", ["pictures"]),
-             ("Flares and pulsations", "#/stellardocs", ["stellardocs"]), ("CHEOPS proposals", "#/propose", ["propose"]),
-             ("Editions", "#/editions", ["editions"])],
+    "explore": [(N_("subnav.sky", "Sky map"), "#/sky", ["sky"]), (N_("subnav.galaxy", "Galaxy"), "#/galaxy", ["galaxy"]),
+                (N_("subnav.catalogue", "Catalogue"), "#/catalogue", ["catalogue", "planet", "star"]),
+                (N_("subnav.variables", "Everything that dims"), "#/variables", ["variables"]), (N_("subnav.mission", "Mission Control"), "#/mission", ["mission"]),
+                (N_("subnav.tessnow", "Where TESS is now"), "#/tessnow", ["tessnow"])],
+    "candidates": [(N_("subnav.explorer", "All candidates"), "#/explorer", ["explorer"]), (N_("subnav.transit", "Dips"), "#/transit", ["transit"]),
+                   (N_("subnav.candidates", "Case files"), "#/candidates", ["candidates"]), (N_("subnav.planets", "Radius ratios"), "#/planets", ["planets"]),
+                   (N_("subnav.vetter", "Be the vetter"), "#/vetter", ["vetter"])],
+    "evidence": [(N_("subnav.sentinels", "The panel"), "#/sentinels", ["sentinels"]), (N_("subnav.leaderboard", "Leaderboard"), "#/leaderboard", ["leaderboard"]),
+                 (N_("subnav.runs", "Runs"), "#/runs", ["runs"]), (N_("subnav.stellar", "Stars"), "#/stellar", ["stellar"]), (N_("subnav.report", "Run report"), "/evidence/report/", ["report"]), (N_("subnav.plates", "Plates"), "/evidence/plates/", ["plates"])],
+    "docs": [(N_("subnav.docs", "Get started"), "#/docs", ["docs"]), (N_("subnav.pictures", "How the pictures are drawn"), "#/pictures", ["pictures"]),
+             (N_("subnav.stellardocs", "Flares and pulsations"), "#/stellardocs", ["stellardocs"]), (N_("subnav.propose", "CHEOPS proposals"), "#/propose", ["propose"]),
+             (N_("subnav.editions", "Editions"), "#/editions", ["editions"])],
 }
 # Every view: its name, its section, its breadcrumbs (deep pages only: a list of (label, address)), and its title.
 # A title template's {name} is the page's own heading (a planet, a star, a dip).
 ROUTE_META = {
-    "overview": {"label": "Home", "nav": None, "title": "SetuHQ: the sky, reviewed"},
-    "sky": {"label": "Sky map", "nav": "explore", "title": "Explore the sky · SetuHQ"},
-    "galaxy": {"label": "Galaxy", "nav": "explore", "title": "Galaxy · Explore · SetuHQ", "crumbs": [("Explore", "#/sky")]},
-    "mission": {"label": "Mission Control", "nav": "explore", "title": "Mission Control · Explore · SetuHQ", "crumbs": [("Explore", "#/sky")]},
-    "catalogue": {"label": "Catalogue", "nav": "explore", "title": "Catalogue of known exoplanets · SetuHQ", "crumbs": [("Explore", "#/sky")]},
-    "variables": {"label": "Everything that dims", "nav": "explore", "title": "Everything that dims · Catalogue · SetuHQ", "crumbs": [("Explore", "#/sky"), ("Catalogue", "#/catalogue")]},
-    "planet": {"label": "Planet", "nav": "explore", "title_tpl": "{name} · Planets · SetuHQ", "crumbs": [("Explore", "#/sky"), ("Catalogue", "#/catalogue")]},
-    "star": {"label": "Star", "nav": "explore", "title_tpl": "{name} · Stars · SetuHQ", "crumbs": [("Explore", "#/sky"), ("Catalogue", "#/catalogue")]},
-    "explorer": {"label": "Candidates", "nav": "candidates", "title": "Candidates · SetuHQ"},
-    "transit": {"label": "Candidate", "nav": "candidates", "title_tpl": "{name} · Candidates · SetuHQ", "crumbs": [("Candidates", "#/explorer")]},
-    "candidates": {"label": "Case file", "nav": "candidates", "title_tpl": "Case file for {name} · Candidates · SetuHQ", "crumbs": [("Candidates", "#/explorer")]},
-    "planets": {"label": "Radius ratios", "nav": "candidates", "title": "Radius ratios · Candidates · SetuHQ", "crumbs": [("Candidates", "#/explorer")]},
-    "methods": {"label": "How it works", "nav": "how", "title_tpl": "{name} · How it works · SetuHQ"},
-    "sentinels": {"label": "The panel", "nav": "evidence", "title": "Evidence: the panel, measured · SetuHQ"},
-    "leaderboard": {"label": "Leaderboard", "nav": "evidence", "title": "Leaderboard · Evidence · SetuHQ", "crumbs": [("Evidence", "#/sentinels")]},
-    "runs": {"label": "Runs", "nav": "evidence", "title": "Runs · Evidence · SetuHQ", "crumbs": [("Evidence", "#/sentinels")]},
-    "stellar": {"label": "Stars", "nav": "evidence", "title": "Stars, measured: flares and pulsations · Evidence · SetuHQ", "crumbs": [("Evidence", "#/sentinels")]},
+    "overview": {"label": N_("route.overview.label", "Home"), "nav": None, "title": N_("route.overview.title", "SetuHQ: the sky, reviewed")},
+    "sky": {"label": N_("route.sky.label", "Sky map"), "nav": "explore", "title": N_("route.sky.title", "Explore the sky · SetuHQ")},
+    "galaxy": {"label": N_("route.galaxy.label", "Galaxy"), "nav": "explore", "title": N_("route.galaxy.title", "Galaxy · Explore · SetuHQ"), "crumbs": [("Explore", "#/sky")]},
+    "mission": {"label": N_("route.mission.label", "Mission Control"), "nav": "explore", "title": N_("route.mission.title", "Mission Control · Explore · SetuHQ"), "crumbs": [("Explore", "#/sky")]},
+    "catalogue": {"label": N_("route.catalogue.label", "Catalogue"), "nav": "explore", "title": N_("route.catalogue.title", "Catalogue of known exoplanets · SetuHQ"), "crumbs": [("Explore", "#/sky")]},
+    "variables": {"label": N_("route.variables.label", "Everything that dims"), "nav": "explore", "title": N_("route.variables.title", "Everything that dims · Catalogue · SetuHQ"), "crumbs": [("Explore", "#/sky"), ("Catalogue", "#/catalogue")]},
+    "planet": {"label": N_("route.planet.label", "Planet"), "nav": "explore", "title_tpl": N_("route.planet.title", "{name} · Planets · SetuHQ"), "crumbs": [("Explore", "#/sky"), ("Catalogue", "#/catalogue")]},
+    "star": {"label": N_("route.star.label", "Star"), "nav": "explore", "title_tpl": N_("route.star.title", "{name} · Stars · SetuHQ"), "crumbs": [("Explore", "#/sky"), ("Catalogue", "#/catalogue")]},
+    "explorer": {"label": N_("route.explorer.label", "Candidates"), "nav": "candidates", "title": N_("route.explorer.title", "Candidates · SetuHQ")},
+    "transit": {"label": N_("route.transit.label", "Candidate"), "nav": "candidates", "title_tpl": N_("route.transit.title", "{name} · Candidates · SetuHQ"), "crumbs": [("Candidates", "#/explorer")]},
+    "candidates": {"label": N_("route.candidates.label", "Case file"), "nav": "candidates", "title_tpl": N_("route.candidates.title", "Case file for {name} · Candidates · SetuHQ"), "crumbs": [("Candidates", "#/explorer")]},
+    "planets": {"label": N_("route.planets.label", "Radius ratios"), "nav": "candidates", "title": N_("route.planets.title", "Radius ratios · Candidates · SetuHQ"), "crumbs": [("Candidates", "#/explorer")]},
+    "methods": {"label": N_("route.methods.label", "How it works"), "nav": "how", "title_tpl": N_("route.methods.title", "{name} · How it works · SetuHQ")},
+    "sentinels": {"label": N_("route.sentinels.label", "The panel"), "nav": "evidence", "title": N_("route.sentinels.title", "Evidence: the panel, measured · SetuHQ")},
+    "leaderboard": {"label": N_("route.leaderboard.label", "Leaderboard"), "nav": "evidence", "title": N_("route.leaderboard.title", "Leaderboard · Evidence · SetuHQ"), "crumbs": [("Evidence", "#/sentinels")]},
+    "runs": {"label": N_("route.runs.label", "Runs"), "nav": "evidence", "title": N_("route.runs.title", "Runs · Evidence · SetuHQ"), "crumbs": [("Evidence", "#/sentinels")]},
+    "stellar": {"label": N_("route.stellar.label", "Stars"), "nav": "evidence", "title": N_("route.stellar.title", "Stars, measured: flares and pulsations · Evidence · SetuHQ"), "crumbs": [("Evidence", "#/sentinels")]},
     # Pages of their own (built by report.py and plate.py), in the site's header: not views of the app.
-    "report": {"label": "Run report", "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
-    "plates": {"label": "Plates", "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
-    "docs": {"label": "Docs", "nav": "docs", "title": "Docs: get started with SetuHQ · SetuHQ"},
-    "pictures": {"label": "How the pictures are drawn", "nav": "docs", "title": "How the pictures are drawn · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
-    "stellardocs": {"label": "Flares and pulsations", "nav": "docs", "title": "Flares, pulsations and CHEOPS · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
-    "propose": {"label": "CHEOPS proposals", "nav": "docs", "title": "Prepare a CHEOPS proposal · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
-    "tessnow": {"label": "Where TESS is now", "nav": "explore", "title": "Where TESS is looking · Explore · SetuHQ", "crumbs": [("Explore", "#/sky")]},
-    "vetter": {"label": "Be the vetter", "nav": "candidates", "title": "Be the vetter · Candidates · SetuHQ", "crumbs": [("Candidates", "#/explorer")]},
-    "editions": {"label": "Editions", "nav": "docs", "title": "Editions: open core, SetuHQ Pro and custom study · SetuHQ", "crumbs": [("Docs", "#/docs")]},
-    "notfound": {"label": "Page not found", "nav": None, "title": "Page not found · SetuHQ"},
+    "report": {"label": N_("route.report.label", "Run report"), "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
+    "plates": {"label": N_("route.plates.label", "Plates"), "nav": "evidence", "page": True, "crumbs": [("Evidence", "#/sentinels")]},
+    "docs": {"label": N_("route.docs.label", "Docs"), "nav": "docs", "title": N_("route.docs.title", "Docs: get started with SetuHQ · SetuHQ")},
+    "pictures": {"label": N_("route.pictures.label", "How the pictures are drawn"), "nav": "docs", "title": N_("route.pictures.title", "How the pictures are drawn · Docs · SetuHQ"), "crumbs": [("Docs", "#/docs")]},
+    "stellardocs": {"label": N_("route.stellardocs.label", "Flares and pulsations"), "nav": "docs", "title": N_("route.stellardocs.title", "Flares, pulsations and CHEOPS · Docs · SetuHQ"), "crumbs": [("Docs", "#/docs")]},
+    "propose": {"label": N_("route.propose.label", "CHEOPS proposals"), "nav": "docs", "title": N_("route.propose.title", "Prepare a CHEOPS proposal · Docs · SetuHQ"), "crumbs": [("Docs", "#/docs")]},
+    "tessnow": {"label": N_("route.tessnow.label", "Where TESS is now"), "nav": "explore", "title": N_("route.tessnow.title", "Where TESS is looking · Explore · SetuHQ"), "crumbs": [("Explore", "#/sky")]},
+    "vetter": {"label": N_("route.vetter.label", "Be the vetter"), "nav": "candidates", "title": N_("route.vetter.title", "Be the vetter · Candidates · SetuHQ"), "crumbs": [("Candidates", "#/explorer")]},
+    "editions": {"label": N_("route.editions.label", "Editions"), "nav": "docs", "title": N_("route.editions.title", "Editions: open core, SetuHQ Pro and custom study · SetuHQ"), "crumbs": [("Docs", "#/docs")]},
+    "notfound": {"label": N_("route.notfound.label", "Page not found"), "nav": None, "title": N_("route.notfound.title", "Page not found · SetuHQ")},
 }
 SECTIONS = [(k, label) for k, label, _ in NAV]
 ROUTE_ALIASES = ALIASES  # old in-app names (#/discoveries ...), forwarded by setuhq.routes
@@ -137,13 +138,13 @@ WIDGETS = [
 SIZES = ("S", "M", "L")
 DEFAULT_SIZE = {"kpis": "L", "discoveries": "M", "runs": "M", "top": "L"}
 
-UNCONFIRMED = "candidate, unconfirmed"
+UNCONFIRMED = N_("honesty.unconfirmed", "candidate, unconfirmed", note="The status of every SetuHQ result. Never stronger than the English: not confirmed, not discovered.")
 
 
 def dip_tag(outcome: str | None) -> str:
     cls, word, phrase = dip_state(outcome)
     return f'<span class="tag {cls}" title="{html.escape(phrase)}">{word}</span>'
-NO_DETECTION = "Archive values only. This page claims no detection."
+NO_DETECTION = N_("honesty.no_detection", "Archive values only. This page claims no detection.")
 NO_STELLAR_RADIUS = ("No stellar radius is stored in the run or the catalogue, so this page does not "
                      "convert the ratio to a planet radius in Earth or Jupiter units.")
 STATUS_LABEL = {"new_candidate": "new candidate", "known_toi": "period matches a known TOI"}
@@ -1541,7 +1542,10 @@ function el(tag, a={}, p){ const e = document.createElementNS(NS, tag); for (con
 function tx(svg, x, y, s, anchor='start', cls=''){ const t = el('text', {x, y, 'text-anchor': anchor, class: cls}, svg); t.textContent = s; return t; }
 const UNC = `<span class="tag unc">${esc(D.unconfirmed)}</span>`;
 // A run dip's status from its vetting outcome (app.py DIP_STATE): a tag, and the phrase. Only a passed dip is a candidate.
-const DIPSTATE = o => (D.dip_state || {})[o] || (D.dip_state || {}).flagged || ['cand', 'candidate', D.unconfirmed];
+// Text in the visitor's language (setuhq.i18n: the catalogue the shell loaded; English when there is none).
+const T = (id, en, a) => window.SetuI18n ? SetuI18n.T(id, en, a) : en;
+const DIPSTATE0 = o => (D.dip_state || {})[o] || (D.dip_state || {}).flagged || ['cand', 'candidate', D.unconfirmed];
+const DIPSTATE = o => { const [c, w, p] = DIPSTATE0(o); return [c, T('dip.tag.' + c, w), T('dip.state.' + c, p)]; };
 const DIPTAG = o => { const [c, w, p] = DIPSTATE(o); return `<span class="tag ${c}" title="${esc(p)}">${esc(w)}</span>`; };
 const DIPPHRASE = o => DIPSTATE(o)[2];
 // A feed entry passed vetting (discover.py admits only those), so it is a candidate; a stored outcome would say otherwise.
@@ -1671,7 +1675,7 @@ function widgetBody(id){
     if (!D.catalog.path) return '<p class="empty">No search catalogue was given to this build.</p>';
     return `<div><span class="big">${f.length}</span> <span class="muted">feed entries</span></div>
       <p style="margin:0">${nKnown} match a known TOI period · ${D.catalog.embargo ? '' : `${nNew} new candidate${nNew===1?'':'s'} · `}${esc(D.catalog.targets_reviewed)} targets reviewed</p>
-      ${D.catalog.embargo ? `<p class="muted" style="margin:0">${esc(D.catalog.held_line)}</p>` : ''}
+      ${D.catalog.embargo ? `<p class="muted" style="margin:0">${esc(T('honesty.embargo', D.catalog.held_line))}</p>` : ''}
       <p class="muted" style="margin:0;font-size:12px">Catalogue updated ${when(D.catalog.updated)}.</p>`;
   }
   if (id === 'runs'){
@@ -2574,7 +2578,6 @@ function renderExSel(){
     <dl class="statgrid"><div><dt>Period</dt><dd>${fmt(f.period_days, 3)} d</dd></div><div><dt>Depth</dt><dd>${fmt(f.depth_ppm, 0)} ppm</dd></div><div><dt>Duration</dt><dd>${fmt(f.duration_hours, 2)} h</dd></div><div><dt>SNR</dt><dd>${fmt(f.snr, 1)}</dd></div></dl>
     <p class="small">TESS sectors ${esc(f.sectors || 'not stored')}. Feed ${esc(entryNo(f.id))} for this star (stored id <span class="mono">${esc(f.id)}</span>). ${isNew ? '' : 'A TOI match compares a stored period with archive values. '}${esc(D.no_detection)}</p>`;
 }
-const _cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 $('#route-explorer').addEventListener('click', e => {
   const t = e.target.closest('#exstars button[data-tic]'), f = e.target.closest('#exstatus button[data-f]'), n = e.target.closest('button[data-snr]'), p = e.target.closest('#exscatter button[data-i]');
   if (t){ ex.stars[t.dataset.tic] = !ex.stars[t.dataset.tic]; syncFeedURL(true); renderExplorer(); $(`#exstars button[data-tic="${t.dataset.tic}"]`).focus(); say($('#excount').textContent); }
@@ -2645,20 +2648,22 @@ function pageChrome(r, params){
   $$('.nav a[data-nav], .menu a[data-nav]').forEach(a => { if (a.dataset.nav === m.nav) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
   const win = r === 'candidates' ? (D.dips || {})[params.get('dip')] : null;
   const name = r === 'methods' ? (D.chapter_titles[params.get('ch')] || m.label) : win ? win.label : (r === 'planet' || r === 'star' || r === 'transit') && h1 ? h1.textContent.trim() : m.label;
-  document.title = m.title_tpl ? m.title_tpl.replace('{name}', name) : `${m.label} · SetuHQ`;
+  const lname = r === 'methods' ? T('chapter.' + params.get('ch'), name) : (r === 'planet' || r === 'star' || r === 'transit' || win) ? name : T('route.' + r + '.label', name);
+  document.title = m.title_tpl ? T('route.' + r + '.title', m.title_tpl, {name: lname}).replace(/&#(\d+);/g, (x, d) => String.fromCharCode(d)) : `${m.label} · SetuHQ`;
   const crumbs = $('#crumbs');
   if (crumbs){
-    const chain = (m.crumbs || []).map(([label, href]) => `<li><a href="${esc(href)}">${esc(label)}</a></li>`);
-    if (r === 'methods' && params.get('ch') && params.get('ch') !== MX_FIRST) chain.push(`<li><a href="${esc(rtUrl('methods'))}">How it works</a></li>`);
+    const CID = {Explore: 'nav.explore', Candidates: 'nav.candidates', Evidence: 'nav.evidence', Docs: 'nav.docs', Catalogue: 'route.catalogue.label'};
+    const chain = (m.crumbs || []).map(([label, href]) => `<li><a href="${esc(window.SetuI18n ? SetuI18n.href(href) : href)}">${esc(T(CID[label] || '', label))}</a></li>`);
+    if (r === 'methods' && params.get('ch') && params.get('ch') !== MX_FIRST) chain.push(`<li><a href="${esc(rtUrl('methods'))}">${esc(T('nav.how', 'How it works'))}</a></li>`);
     if (r === 'candidates' && params.get('dip')) chain.push(`<li><a href="${esc(transitHref(params.get('dip')))}">${esc(DIP_NAME(params.get('dip')) || params.get('dip'))}</a></li>`);
     crumbs.hidden = !chain.length;
-    crumbs.innerHTML = chain.length ? `<ol>${chain.join('')}<li aria-current="page">${esc(r === 'candidates' ? 'Case file' : name)}</li></ol>` : '';
+    crumbs.innerHTML = chain.length ? `<ol>${chain.join('')}<li aria-current="page">${esc(r === 'candidates' ? T('route.candidates.label', 'Case file') : lname)}</li></ol>` : '';
   }
   const sub = $('#subnav');
   if (sub){
     const items = (D.subnav[m.nav] || []);
     sub.hidden = !items.length;
-    sub.innerHTML = items.map(([label, route, routes]) => `<a href="${esc(R(route))}"${routes.includes(r) ? ' aria-current="page"' : ''}>${esc(label)}</a>`).join('');
+    sub.innerHTML = items.map(([label, route, routes]) => `<a href="${esc(window.SetuI18n ? SetuI18n.href(R(route)) : R(route))}"${routes.includes(r) ? ' aria-current="page"' : ''}>${esc(T('subnav.' + routes[0], label))}</a>`).join('');
   }
   const cv = $('#copyview'); if (cv) cv.hidden = !VIEW_QUERY[r];
 }
@@ -2679,6 +2684,7 @@ function show(r, moveFocus, params){
   // The shared renderer upgrades the view's pictures; the header settles; counters roll (setuhq.design, setuhq.renderer).
   const sec = $('#route-' + r);
   if (window.SetuRender && sec) SetuRender.mount(sec);
+  if (window.SetuI18n && sec) SetuI18n.apply(sec);
   if (window.SetuUI){ SetuUI.settle(); SetuUI.odometer(sec); SetuUI.limits(sec); }
 }
 // A change of view in place is a view transition (V13), except under reduced motion or on the first draw.
@@ -2973,14 +2979,21 @@ def _lb_j(j: dict, label: str) -> str:
             f'{lb_bar(j["j"], j["lo"], j["hi"], -1.0, 1.0)}</td>')
 
 
+N_("ex.h1", "{n, plural, one {# dip} other {# dips}} you can open, from {stars, plural, =1 {one example star} =2 {two example stars} =3 {three example stars} "
+   "=4 {four example stars} =5 {five example stars} =6 {six example stars} =7 {seven example stars} =8 {eight example stars} =9 {nine example stars} "
+   "=10 {ten example stars} one {# example star} other {# example stars}}.")
+N_("sen.h1", "{n, plural, =1 {One reviewer.} =2 {Two reviewers.} =3 {Three reviewers.} =4 {Four reviewers.} =5 {Five reviewers.} =6 {Six reviewers.} "
+   "=7 {Seven reviewers.} =8 {Eight reviewers.} =9 {Nine reviewers.} =10 {Ten reviewers.} one {# reviewer.} other {# reviewers.}}")
+
+
 def _leaderboard(lb: dict | None) -> str:
     """The Leaderboard page: the scored table per scope, the rules, and the frozen sample's hash. Static HTML."""
     e = html.escape
-    head = (f'<header>{_eyebrow("Leaderboard", ("sentinels", "Sentinels"))}<h1 class="lead-h" id="h-leaderboard" tabindex="-1">'
-            'Methods, scored blind on real TOIs.</h1><p>The public leaderboard on the frozen real-TOI benchmark: each entry\'s '
+    head = (f'<header>{_eyebrow("Leaderboard", ("sentinels", "Sentinels"))}<h1 class="lead-h" id="h-leaderboard" tabindex="-1"' + ik("lb.h1") + '>' + t("lb.h1", "Methods, scored blind on real TOIs.") + '</h1>'
+            f'<p{ik("lb.intro")}>' + t("lb.intro", "The public leaderboard on the frozen real-TOI benchmark: each entry's "
             'detected events, scored by the leaderboard itself on the held-out half only, with Wilson 95% intervals. Not the injection threshold sweep '
-            '(docs/threshold_sweep.md), which tunes Probe thresholds on synthetic light curves.</p></header>'
-            f'<p class="note"><b>Measured on a stated benchmark; nothing here is a discovery.</b> {e(ATTRIBUTION)}</p>')
+            '(docs/threshold_sweep.md), which tunes Probe thresholds on synthetic light curves.') + '</p></header>'
+            f'<p class="note"><b{ik("lb.note")}>{t("lb.note", "Measured on a stated benchmark; nothing here is a discovery.")}</b> <span{ik("honesty.attribution")}>{e(ATTRIBUTION)}</span></p>')
     if not lb:
         return head + ('<section class="card"><h2>Not built</h2><p class="muted" style="margin:0">The leaderboard has not been '
                        'scored for this build (setuhq leaderboard).</p></section>')
@@ -3084,7 +3097,7 @@ def _sky(data: dict) -> str:
     src = skyyears.source_text(cat) if cat else ""
     base = skyyears.html({"source": src, "app": data}, where="explore", overlay=overlay, uid="skyyears") if cat else ""
     if not base:  # no catalogue in this build: the map is the frame, the layers and the pin
-        base = (f'<div class="stage skystage"><div class="skybox">{overlay}</div><span class="stage-tag">Real data, cited</span></div>')
+        base = (f'<div class="stage skystage"><div class="skybox">{overlay}</div><span class="stage-tag" data-i18n="label.real">Real data, cited</span></div>')
     tl = timeline.html({"source": src, "app": data}, where="explore", uid="timeline") if cat else ""
     links = "".join(obj_link(k, n, f"{n} ›") for k, n in (("star", star.get("name")), ("planet", st.get("planet"))) if n)
     if st.get("planet") and geo.get("x") is not None:
@@ -3092,7 +3105,7 @@ def _sky(data: dict) -> str:
                   f'Zoom into the {e(st["planet"])} system ›</button>')
     links = f'<div class="pllinks skylinks">{links}</div>' if links else ""
     t1, t2 = st["sky_title"]
-    tl_sec = (f'<section class="sktl" aria-labelledby="h-sktl"><h2 id="h-sktl" class="secth">Planets found each year, by method</h2>{tl}</section>' if tl else "")
+    tl_sec = (f'<section class="sktl" aria-labelledby="h-sktl"><h2 id="h-sktl" class="secth"{ik("sky.tl")}>{t("sky.tl", "Planets found each year, by method")}</h2>{tl}</section>' if tl else "")
     return f"""<header class="headrow">
         <div>{_eyebrow("Sky")}<h1 class="lead-h" id="h-sky" tabindex="-1">{e(t1)}<br><span class="grey">{e(t2)}</span></h1></div>
         <div class="chips" id="skychips" role="group" aria-label="Show dips by status"></div>
@@ -3248,8 +3261,8 @@ def _explorer(data: dict) -> str:
       </section>""")
     more = (f" Further down: the search feed's {len(feed)} entries from other stars, which have no case file yet." if feed else "")
     return f"""<header>
-        <h1 class="lead-h" id="h-explorer" tabindex="-1">{n_all} dip{"s" if n_all != 1 else ""} you can open, from {number_words(len(cards))} example star{"s" if len(cards) != 1 else ""}.</h1>
-        <p>Dips the panel marked in each example star's TESS light curve, grouped by star and counted by vetting outcome. A dip that passed vetting is a {UNCONFIRMED}; a flagged one is open; a rejected one is not a candidate. None is a confirmed planet. Open one to watch it played back, or its case file for every check behind its verdict.{e(more)}</p>
+        <h1 class="lead-h" id="h-explorer" tabindex="-1"{ik("ex.h1", n=n_all, stars=len(cards))}>{n_all} dip{"s" if n_all != 1 else ""} you can open, from {number_words(len(cards))} example star{"s" if len(cards) != 1 else ""}.</h1>
+        <p><span{ik("ex.intro", status=UNCONFIRMED, **{"status@": "honesty.unconfirmed"})}>{th("ex.intro", "Dips the panel marked in each example star's TESS light curve, grouped by star and counted by vetting outcome. A dip that passed vetting is a {status}; a flagged one is open; a rejected one is not a candidate. None is a confirmed planet. Open one to watch it played back, or its case file for every check behind its verdict.", status=UNCONFIRMED)}</span>{span("ex.more", " Further down: the search feed's {n} entries from other stars, which have no case file yet.", n=len(feed)) if feed else ""}</p>
       </header>
       {"".join(groups)}
       <p class="small"><a href="#/planets">Radius ratios by star ›</a> What each depth would imply, if it were a planet.</p>"""
@@ -3314,8 +3327,8 @@ def _sentinels(data: dict) -> str:
     caveat = (f" Weights come from {n_inj} planted and {n_inj} empty light curves each: too few to separate 0.6 from 0.5."
               if n_inj else "")
     return f"""<header class="headrow">
-        <div>{_eyebrow("Sentinels and Probes")}<h1 class="lead-h" id="h-sentinels" tabindex="-1">{e(number_words(n).capitalize())} reviewers.<br><span class="grey">Each one earns its vote.</span></h1>
-        <p>The panel that marked dips in run {e(data["run"]["name"])}: the Sentinels and the Probes, no people. <span class="attribution">{e(ATTRIBUTION)}</span></p></div>
+        <div>{_eyebrow("Sentinels and Probes")}<h1 class="lead-h" id="h-sentinels" tabindex="-1"><span{ik("sen.h1", n=n)}>{e(number_words(n).capitalize())} reviewers.</span><br><span class="grey"{ik("sen.h1b")}>{t("sen.h1b", "Each one earns its vote.")}</span></h1>
+        <p>{span("sen.intro", "The panel that marked dips in run {run}: the Sentinels and the Probes, no people.", run=data["run"]["name"])} <span class="attribution"{ik("honesty.attribution")}>{e(ATTRIBUTION)}</span></p></div>
         <div class="segctl" id="senfilter" role="group" aria-label="Show"></div>
       </header>
       <div class="row2">
@@ -3356,7 +3369,7 @@ def route_sections(data: dict) -> dict[str, str]:
     feed = data["catalog"]["candidates"]
     n_known = sum(1 for r in feed if r.get("status") == "known_toi")
     # The embargo: signals that match no known TOI are held for private review and reporting; one static line says so.
-    held = (" The feed shows only signals that match a known TOI. " + html.escape(data["catalog"]["held_line"])
+    held = (" The feed shows only signals that match a known TOI. " + f'<span{ik("honesty.embargo")}>' + html.escape(data["catalog"]["held_line"]) + "</span>"
             if data["catalog"].get("embargo", True) else "")
     xm_targets = ", ".join(html.escape(str(t)) for t in data.get("crossmatch_targets") or []) or "no star"
     prov = provenance_note(data)
@@ -3441,14 +3454,14 @@ def route_sections(data: dict) -> dict[str, str]:
     out["star"] = star_page("") + '<section class="card stsweep" id="stsweep" aria-labelledby="h-stsweep" hidden><h2 id="h-stsweep">In SetuHQ\'s sweep</h2><div id="stsweepbody"></div></section>'
     # The sweep's figures, each class against its own null, open its page (the home page says it in one sentence).
     out["variables"] = variables_section(data.get("sweep"), "").replace("</header>", "</header>" + overview_counter(data.get("sweep")).replace('<a class="btn" href="#/variables">Everything that dims ›</a>', ""), 1)
-    out["candidates"] = f"""<header><h1 class="lead-h" id="h-candidates" tabindex="-1">Every signal, its dips, and the checks behind each verdict.</h1><p>The case file for the dip's run: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Each signal that passed vetting is a {unc}; a rejected or flagged one is named by its status.</p></header>
+    out["candidates"] = f"""<header><h1 class="lead-h" id="h-candidates" tabindex="-1"{ik("cf.h1")}>{t("cf.h1", "Every signal, its dips, and the checks behind each verdict.")}</h1><p{ik("cf.intro", status=UNCONFIRMED, **{"status@": "honesty.unconfirmed"})}>{th("cf.intro", "The case file for the dip's run: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Each signal that passed vetting is a {status}; a rejected or flagged one is named by its status.", status=UNCONFIRMED)}</p></header>
       {prov}
       <div class="frametools">{_dip_stars(data, "cft")}<a id="fullpage" href="/candidates/case-file/">Open full page</a><span class="muted">The case file on its own page, at the same dip.</span></div>
       <div class="dippicker">{_dip_stars(data, "cfp")}<label for="dippick">Dip</label><select id="dippick" aria-describedby="dippickhint"></select><span class="sr" id="dippickhint">Every dip of every example run, grouped by star and numbered in time order, with its vetting outcome. A dip that passed vetting is a {unc}.</span></div>
       <p class="note" id="framestatus" role="status" hidden></p>
       <p class="note blocked" id="frameblocked" role="alert" hidden>The case file could not load in this view. <a id="blockedlink" href="/candidates/case-file/">Open it on its own page.</a></p>
       <iframe class="frame waiting" id="docketframe" title="Case file: signals, dips and vetting"></iframe>"""
-    out["planets"] = f"""<header><h1 class="lead-h" id="h-planets" tabindex="-1">What each depth would imply, if it were a planet.</h1><p>One card per star in the run or the feed. Each entry is a {unc}; the ratio below is what its stored depth implies if it were a planet.</p></header>
+    out["planets"] = f"""<header><h1 class="lead-h" id="h-planets" tabindex="-1"{ik("rr.h1")}>{t("rr.h1", "What each depth would imply, if it were a planet.")}</h1><p{ik("rr.intro", status=UNCONFIRMED, **{"status@": "honesty.unconfirmed"})}>{th("rr.intro", "One card per star in the run or the feed. Each entry is a {status}; the ratio below is what its stored depth implies if it were a planet.", status=UNCONFIRMED)}</p></header>
       {prov}
       <p class="note"><b>Radius ratio only.</b> Rp/R* = √depth, with depth as a fraction (ppm × 10⁻⁶). This assumes a full, undiluted transit and ignores limb darkening. {html.escape(NO_STELLAR_RADIUS)} Each bar is a ratio scale from 0 to {data["ratio_scale_max"]:.2f}, the same on every card.</p>
       <p class="note">Published planets come from the stored archive cross-match, which covers {xm_targets}. The other stars have no stored cross-match, so their cards have no archive box. {nodet}</p>
@@ -3456,10 +3469,10 @@ def route_sections(data: dict) -> dict[str, str]:
       <template id="rrdiscs">{_ratio_discs(data)}</template>
       <div class="cards" id="planetcards"></div>"""
     out["leaderboard"] = _leaderboard(data.get("leaderboard"))
-    out["runs"] = f"""<header><h1 class="lead-h" id="h-runs" tabindex="-1">Every search run, its errors as stored, and the configuration behind these pages.</h1><p>The search run history from the catalogue, and the configuration of run {html.escape(run["name"])}. Error messages are shown as stored.</p></header>
+    out["runs"] = f"""<header><h1 class="lead-h" id="h-runs" tabindex="-1"{ik("runs.h1")}>{t("runs.h1", "Every search run, its errors as stored, and the configuration behind these pages.")}</h1><p{ik("runs.intro", run=run["name"])}>{th("runs.intro", "The search run history from the catalogue, and the configuration of run {run}. Error messages are shown as stored.", run=run["name"])}</p></header>
       {prov}
       {_example_runs_table(data)}
-      <section class="card" aria-labelledby="h-hist" style="display:grid;gap:4px"><h2 id="h-hist">Search runs</h2><div id="runtable"></div></section>
+      <section class="card" aria-labelledby="h-hist" style="display:grid;gap:4px"><h2 id="h-hist"{ik("runs.hist")}>{t("runs.hist", "Search runs")}</h2><div id="runtable"></div></section>
       <details class="card cfg"><summary>Configuration: run {html.escape(run["name"])} and the search catalogue</summary><div>
         <section aria-labelledby="h-cfg"><h3 id="h-cfg">This run's configuration</h3><div id="runconfig"></div></section>
         <section aria-labelledby="h-catcfg"><h3 id="h-catcfg">Search catalogue</h3><div id="catconfig"></div></section>

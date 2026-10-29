@@ -107,10 +107,12 @@ def site_bundle(index_path) -> str:
     root = Path(index_path).parent
     one = lambda pattern: next(root.glob(pattern)).read_text()  # noqa: E731
     data = one("assets/data/app-*.json").replace("</", "<\\/")
-    return (f'<main>{one("assets/views-*.html")}</main>\n{Path(index_path).read_text()}\n'
+    from setuhq.i18n import unkey
+
+    return unkey(f'<main>{one("assets/views-*.html")}</main>\n{Path(index_path).read_text()}\n'
             f'<script id="data" type="application/json">{data}</script>\n<style>{one("assets/site-*.css")}</style>\n'
             f'<script>{one("assets/site-*.js")}</script><script>{one("assets/app-*.js")}</script>\n'
-            f'<template id="docket-frame">{one("assets/frame/case-file-*.html")}</template>')
+            f'<template id="docket-frame">{one("assets/frame/case-file-*.html")}</template>')  # the markup, keys aside
 
 
 _SERVERS = {}

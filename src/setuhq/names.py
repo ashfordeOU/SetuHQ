@@ -11,16 +11,19 @@ and the pages keep each id beside its name (a tooltip or small mono text) so it 
 
 from __future__ import annotations
 
+from setuhq.i18n import N_
+
 # Every Sentinel config type. Claude (Anthropic) is the default; the others are supported and labelled.
 SENTINEL_KINDS = ("claude", "claude_code", "openai", "gemini", "openai_compatible")
 PROBE_KINDS = ("simulated",)
 
 # The attribution, word for word, on the Panel page and in the Docket's provenance.
-ATTRIBUTION = ("Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
-               "Probes are deterministic matched-filter detectors.")
+ATTRIBUTION = N_("honesty.attribution", "Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
+                 "Probes are deterministic matched-filter detectors.",
+                 note="The attribution line. Its meaning must not change: Sentinels and Probes stay as written; Claude (Anthropic) is named.")
 
 # A run whose configuration names no Sentinel: the label every page shows for it, and its manifest record.
-PROBES_ONLY = "Probes only; Sentinels not run on this example"
+PROBES_ONLY = N_("honesty.probes_only", "Probes only; Sentinels not run on this example", note="The label on every run made without AI reviewers.")
 
 
 def panel_mode(manifest: dict) -> str:
@@ -150,9 +153,9 @@ def reviewer_names(kinds: dict[str, str]) -> dict[str, dict]:
 # A dip's status from its vetting outcome: only a dip that passed vetting is a candidate. A rejected dip is never
 # called one; a flagged dip is open (waiting for review). (class, tag word, full phrase.) A search-feed entry passed
 # vetting to enter the feed (discover.py), so its statuses count as candidates.
-DIP_STATE = {"passed": ("cand", "candidate", "candidate, unconfirmed"),
-             "flagged": ("open", "flagged", "flagged for review, open"),
-             "rejected": ("rej", "rejected", "rejected by vetting, not a candidate")}
+DIP_STATE = {"passed": ("cand", N_("dip.tag.cand", "candidate"), N_("dip.state.cand", "candidate, unconfirmed")),
+             "flagged": ("open", N_("dip.tag.open", "flagged"), N_("dip.state.open", "flagged for review, open")),
+             "rejected": ("rej", N_("dip.tag.rej", "rejected"), N_("dip.state.rej", "rejected by vetting, not a candidate"))}
 FEED_STATUSES = ("new_candidate", "known_toi")
 
 

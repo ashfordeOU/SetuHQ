@@ -13,6 +13,8 @@ The Milky Way behind the map is drawn procedurally and is labelled as an artist'
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, span, t, th
+
 import csv
 import html
 import io
@@ -293,8 +295,8 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
     note, note_detail = source_note(g.get("note"))
     feed = ", ".join(f"TIC {t}" for t in g["feed_tics"])
     return f"""<header class="headrow">
-        <div>{eyebrow}<h1 class="lead-h" id="h-galaxy" tabindex="-1">Every known exoplanet,<br><span class="grey">around the Sun.</span></h1>
-        <p>{c['kept']:,} planets around {c['hosts']:,} stars, placed where they are. SetuHQ did not find these planets; it maps them from {e(g['source_short'])}.</p></div>
+        <div>{eyebrow}<h1 class="lead-h" id="h-galaxy" tabindex="-1"><span{ik("gx.h1")}>{t("gx.h1", "Every known exoplanet,")}</span><br><span class="grey"{ik("gx.h1b")}>{t("gx.h1b", "around the Sun.")}</span></h1>
+        <p{ik("gx.intro", n=c['kept'], hosts=c['hosts'], source=g['source_short'])}>{th("gx.intro", "{n, number} planets around {hosts, number} stars, placed where they are. SetuHQ did not find these planets; it maps them from {source}.", n=c['kept'], hosts=c['hosts'], source=g['source_short'])}</p></div>
         <div class="segctl gxpresets" id="gxpresets" role="group" aria-label="Camera view">{presets}</div>
       </header>
       <div class="gxstage space" id="gxstage">

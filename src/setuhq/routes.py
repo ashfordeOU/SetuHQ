@@ -23,6 +23,7 @@ import json
 import re
 from urllib.parse import parse_qsl, quote, urlencode
 
+from setuhq.i18n import TRANSLATIONS
 from setuhq.methods import CHAPTERS
 
 # Fixed paths. The routes with an identity in the path (transit, candidates, planet, star, methods) are below.
@@ -127,6 +128,8 @@ def from_hash(h: str, *, keep_query: bool = True, lead: str | None = None) -> st
 def parse_path(path: str, query: str = "") -> dict | None:
     """The route and parameters of a clean address, or None when no page has it."""
     parts = [p for p in (path or "/").split("/") if p]
+    if parts and parts[0] in TRANSLATIONS:  # a page in another language (/de/explore/) is the same page
+        parts = parts[1:]
     params = dict(parse_qsl((query or "").lstrip("?")))
     slug_ch = {v: k for k, v in CHAPTER_SLUGS.items()}
     fixed = {v: k for k, v in ROUTE_PATHS.items()}
@@ -164,12 +167,15 @@ def legacy_target(path: str, hash_: str = "", lead: str | None = None) -> str | 
 
 def route_table(lead: str | None = None) -> dict:
     """The tables the page's copy of these functions reads (``lead``: the run's lead dip, for old links that named none)."""
-    return {"paths": ROUTE_PATHS, "identity": IDENTITY, "chapters": CHAPTER_SLUGS, "aliases": ALIASES,
+    return {"paths": ROUTE_PATHS, "identity": IDENTITY, "chapters": CHAPTER_SLUGS, "aliases": ALIASES, "locales": list(TRANSLATIONS),
             "legacy": LEGACY_PAGES, "lead": lead, "dips": dict(DIP_SLUGS), "gone": list(GONE_DIPS)}
 
 
 # The page's twin of url_for, from_hash, parse_path and legacy_target. It expects `RT`, the route table.
 ROUTES_CORE_JS = r"""
+// A page in another language (/de/...): the pages that have an address in every language keep it.
+const RT_LP = ((/^\/([a-zA-Z-]+)\//.exec(typeof location === 'undefined' ? '' : location.pathname) || [])[1] || '');
+const rtLang = p => (RT.locales || []).includes(RT_LP) ? '/' + RT_LP + p : p;
 function rtUrl(route, params, keepQuery){
   params = Object.assign({}, params || {}); for (const k of Object.keys(params)) if (params[k] === null || params[k] === undefined || params[k] === '') delete params[k];
   route = RT.aliases[route] || route;
@@ -185,6 +191,7 @@ function rtUrl(route, params, keepQuery){
     const slug = RT.chapters[ident || 'survey'] || '';
     path = '/how-it-works/' + (slug ? slug + '/' : '');
   } else path = RT.paths[route] || '/';
+  if (route === 'methods' || (route in RT.paths && !RT.identity[route])) path = rtLang(path);
   const q = keepQuery === false ? '' : new URLSearchParams(params).toString();
   return path + (q ? '?' + q : '') + (section ? '#' + section : '');
 }
@@ -202,6 +209,7 @@ function rtFromHash(h, keepQuery){
 }
 function rtParse(pathname, search){
   const parts = String(pathname || '/').split('/').filter(Boolean), params = Object.fromEntries(new URLSearchParams(search || ''));
+  if (parts.length && (RT.locales || []).includes(parts[0])) parts.shift();
   const norm = '/' + parts.join('/') + (parts.length ? '/' : '');
   for (const r in RT.paths) if (RT.paths[r] === norm && norm !== '/how-it-works/') return {route: r, params};
   if (parts[0] === 'how-it-works' && parts.length <= 2){

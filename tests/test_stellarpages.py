@@ -17,6 +17,7 @@ from setuhq import cheops as ch
 from setuhq import stellarpages as SP
 from setuhq.app import ROUTE_META, SUBNAV
 from setuhq.routes import parse_path, url_for
+from setuhq.i18n import unkey
 
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATION = json.loads((ROOT / "docs/results/stellar_validation.json").read_text())
@@ -56,7 +57,7 @@ def test_every_page_shows_each_status_with_its_count_and_never_calls_one_validat
 
 
 def test_the_figures_are_real_tess_data_with_their_source_and_the_stars_at_tic_teff():
-    page = SP.evidence_section()
+    page = unkey(SP.evidence_section())
     assert page.count('<span class="stage-tag">Real data, cited</span>') == 5  # flare, pulsation, binary, rotation, transient
     assert page.count('<span class="stage-tag">Model from stored values</span>') == 4  # the stars; a supernova has none
     assert "no star disc is drawn beside it" in _text(page)

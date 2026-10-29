@@ -16,6 +16,7 @@ import pytest
 from setuhq import looks as L
 from setuhq import methods as M
 from setuhq import renderer as R
+from setuhq.i18n import unkey
 
 ROOT = Path(__file__).resolve().parents[1]
 HAVE_NODE = shutil.which("node") is not None
@@ -122,12 +123,13 @@ def test_the_element_contract():
     fig = R.figure("planet", {"look": "envelope-hot", "seed": L.seed("pi-men-c"), "rp_re": 1.874, "teq": 1179},
                    "Artist's impression of pi Men c: an envelope planet in the hot band, 1.87 Earth radii, 1,179 K.",
                    "Artist's impression · envelope, hot · …", uid="x")
+    fig = unkey(fig)
     assert fig.startswith('<figure class="stage rfig" data-render="planet" data-params=') and 'aria-labelledby="cap-x"' in fig
     assert re.search(r'<img class="rstill" src="/assets/render/[0-9a-f]{8}/envelope-hot-512\.webp" width="512" height="512" loading="lazy" decoding="async" alt="Artist', fig)
     assert '<a class="stage-tag" href="/docs/pictures/">Artist&#x27;s impression</a>' in fig and '<figcaption id="cap-x" class="readout">' in fig
     params = json.loads(re.search(r"data-params='([^']*)'", fig).group(1).replace("&quot;", '"'))
     assert params["look"] == "envelope-hot"
-    other = R.figure("transit", {"teff": 5772, "k": 0.1}, "alt", "cap", label="Illustration", uid="y", still="data:,")
+    other = unkey(R.figure("transit", {"teff": 5772, "k": 0.1}, "alt", "cap", label="Illustration", uid="y", still="data:,"))
     assert '<span class="stage-tag">Illustration</span>' in other and "/docs/pictures/" not in other
 
 

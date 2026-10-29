@@ -66,7 +66,7 @@ def test_one_renderer_for_the_system_view_and_the_honesty_label():
     # The stage markup and the label badge are written once, in methods._stage and methods.honesty_label.
     assert sum(t.count('class="btn mxplay"') for t in src.values()) == 1
     assert sum(len(re.findall(r'<span class="mxlabel [a-z]+">', t)) for t in src.values()) == 0
-    assert sum(t.count('<span class="mxlabel {lab_cls}">') for t in src.values()) == 1
+    assert sum(len(re.findall(r'<span class="mxlabel \{lab_cls\}"[^>]*>', t)) for t in src.values()) == 1
     # Every system view (Transit, the Galaxy's sheet, planet and star pages) goes through mxSystemView.
     js = APP_JS
     assert js.count("mxSystemParams(") == 3  # its definition, mxSystemView's call, MXV.system's own default

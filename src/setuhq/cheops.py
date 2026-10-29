@@ -34,6 +34,8 @@ amplitudes are not interchangeable.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_
+
 import gzip
 import json
 import math
@@ -70,8 +72,8 @@ DACE_ACKNOWLEDGEMENT = (
     "platform of the Swiss National Centre of Competence in Research (NCCR) PlanetS, federating the Swiss expertise "
     "in Exoplanet research. The DACE platform is available at https://dace.unige.ch."
 )
-DISCLAIMER = ("SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS "
-              "mission or the CHEOPS Consortium.")
+DISCLAIMER = N_("honesty.cheops_disclaimer", "SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS "
+                "mission or the CHEOPS Consortium.", note="ESA requires this disclaimer. Keep its full meaning; ESA and CHEOPS stay as written.")
 # ESDC terms: commercial use of ESA archive data needs ESA's prior authorisation.
 COMMERCIAL_NOTE = ("CHEOPS data, and outputs derived from them, stay under ESA's terms: data in the ESA Space Science "
                    "Archives are distributed under the CC BY-NC 3.0 IGO licence, and any commercial use, including use "

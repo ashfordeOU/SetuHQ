@@ -20,6 +20,8 @@ canvas with the shared renderer's star (granulation and glow) when it comes on s
 
 from __future__ import annotations
 
+from setuhq.i18n import k as ik, t
+
 import html as _html
 import json
 import math
@@ -191,7 +193,7 @@ def figure(st: dict, uid: str) -> str:
     cap = caption(st)
     p = {"teff": st["teff"], "bodies": [{k: b[k] for k in ("x", "y", "k", "kind")} | {"l": _letter(b["name"])} for b in st["bodies"]]}
     return (f"<figure class=\"stage gstage\" data-viz=\"gstage\" data-params='{e(json.dumps(p, separators=(',', ':')))}' "
-            f'aria-labelledby="gcap-{uid}"><div class="gbox">{svg(st, uid)}</div><span class="stage-tag">{LABEL}</span>'
+            f'aria-labelledby="gcap-{uid}"><div class="gbox">{svg(st, uid)}</div><span class="stage-tag" data-i18n="label.model">{LABEL}</span>'
             f'<figcaption id="gcap-{uid}" class="readout">{e(cap)}</figcaption></figure>')
 
 
@@ -215,8 +217,8 @@ def html(data: dict, **opts) -> str:
     for c in cards:
         first = c["lead_dip"]
         sectors = ", ".join(str(x) for x in c["sectors"]) or "not stored"
-        links = (f'<a href="{e(c["case_file"])}">Case file</a><a href="{e(c["plates"])}">Plates</a>'
-                 f'<a href="{e(c["report"])}">Run report</a>')
+        links = (f'<a href="{e(c["case_file"])}" data-i18n="route.candidates.label">Case file</a><a href="{e(c["plates"])}" data-i18n="subnav.plates">Plates</a>'
+                 f'<a href="{e(c["report"])}" data-i18n="subnav.report">Run report</a>')
         st = (data.get("stages") or {}).get(c["run"])
         items.append(f"""<li><article class="excard" aria-labelledby="ex-{e(c["slug"])}">{figure(st, e(c["slug"])) if st else ""}
           <div class="exbody"><p class="exkind">{e(c["kind"] or "Example run")}</p>
@@ -227,8 +229,8 @@ def html(data: dict, **opts) -> str:
           <p class="exlinks">{links}</p></div>
         </article></li>""")
     return f"""<section class="examples" id="examples" aria-labelledby="h-examples">
-        <div class="secthead"><h2 id="h-examples">Worked examples: {len(cards)} stars, one pipeline</h2>
-        <p>Each is a stored run on public TESS light curves from MAST, with its data, configuration and code hashed. Every dip is counted by its vetting outcome; a candidate stays unconfirmed, and a rejected dip is not a candidate.</p></div>
+        <div class="secthead"><h2 id="h-examples"{ik("home.examples", n=len(cards))}>{t("home.examples", "Worked examples: {n, plural, one {# star} other {# stars}}, one pipeline", n=len(cards))}</h2>
+        <p{ik("home.examples.p")}>{t("home.examples.p", "Each is a stored run on public TESS light curves from MAST, with its data, configuration and code hashed. Every dip is counted by its vetting outcome; a candidate stays unconfirmed, and a rejected dip is not a candidate.")}</p></div>
         <ul class="excards">{"".join(items)}</ul>
         <p class="bandsrc">{e(STAGE_NOTE)} No candidate is given planet art. Stages: {e(data["source"])}.</p>
       </section>"""

@@ -130,7 +130,7 @@ def html(data: dict, **opts) -> str:
             f'<path d="{graticule(not compact)}" stroke="rgba(120,140,180,.13)" stroke-width=".8" fill="none"/>'
             f'<g class="skydots" stroke-width="2.4" stroke-linecap="round">{dots}</g></svg>'
             f'{opts.get("overlay") or ""}</div>'
-            f'<span class="stage-tag">Real data, cited</span><span class="skyyear" aria-hidden="true">{y1}</span></div>'
+            f'<span class="stage-tag" data-i18n="label.real">Real data, cited</span><span class="skyyear" aria-hidden="true">{y1}</span></div>'
             f'{tools}<p class="readout skyread">{e(readout_text(c))}</p><p class="sr" data-sky="live" aria-live="polite"></p>'
             f'<figcaption>{cap}</figcaption>'
             + ("" if compact else  # the compact band's counts by method are in the map's label and the readout

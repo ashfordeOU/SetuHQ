@@ -158,7 +158,7 @@ def html(data: dict, **opts) -> str:
     note = f" Not drawn (no period, or no a and no star mass): {e(', '.join(n for n in left if n))}." if left else ""
     return (f'<figure class="orbits{" inset" if inset else ""}" id="{uid}" data-hint="Sizes not to scale · phases illustrative" data-viz="orbits" data-params=\'{e(json.dumps(params, separators=(",", ":")), quote=False)}\'>'
             f'<div class="stage orbstage"><div class="orbbox">{static_svg(ps, teff or 0, star, label)}</div>'
-            f'<span class="stage-tag">Model from stored values</span>'
+            f'<span class="stage-tag" data-i18n="label.model">Model from stored values</span>'
             f'<div class="stage-ctrls"><button class="btn" type="button" data-orb="play" aria-pressed="false" hidden>Play</button></div></div>'
             f'<div class="orbcam" role="group" aria-label="Camera: focus and zoom" hidden>'
             + "".join(f'<button class="chip" type="button" data-oc="{k}" aria-pressed="{str(k == "all").lower()}">{e(t)}</button>'

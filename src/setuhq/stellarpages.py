@@ -21,6 +21,8 @@ from another site. When a stored file is not in the build the page says so inste
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, span, t, th
+
 import html
 import json
 import math
@@ -219,7 +221,7 @@ def pulsation_svg(p: dict) -> tuple[str, str]:
 
 def _figure(kind: str, svg: str, caption: str, star: str, uid: str) -> str:
     return (f'<div class="stfigrow">{star}<figure class="stage stfig" data-fig="{kind}" aria-labelledby="cap-{uid}">'
-            f'<span class="stage-tag">{LABEL_DATA}</span>{svg}<figcaption id="cap-{uid}" class="readout">{caption}</figcaption></figure></div>')
+            f'<span class="stage-tag" data-i18n="label.real">{LABEL_DATA}</span>{svg}<figcaption id="cap-{uid}" class="readout">{caption}</figcaption></figure></div>')
 
 
 def figures_html() -> str:
@@ -394,7 +396,7 @@ def figures_v4_html() -> str:
                   else "SetuHQ finds no candidate within 10 days of the published peak. ")
                + '<span class="key pub">Ticks</span>: Fausnaugh et al. (2023)\'s peak and first light. '
                f'Transient detection is {e(status_label("transients"))}; a transient SetuHQ finds is a candidate, never new. '
-               f'{e(_search_aid())} '
+               f'<span{ik("honesty.transients_aid")}>{e(_search_aid())}</span> '
                f'<span class="stsrc">Source: {e(s["source"])}</span>')
         note = ('<p class="small stnodisc">A supernova shines in a distant galaxy, not in a catalogued star, so no star disc is '
                 'drawn beside it.</p>')
@@ -415,7 +417,7 @@ def v4_section(e) -> str:
     return f"""<section aria-labelledby="h-st-v4"><h2 id="h-st-v4">Binaries, rotation and transients</h2>
         <p>Three more capabilities were tested under protocol v4, written and committed before any of their code existed. Their targets were drawn from published catalogues by seeded rules; part of each sample tuned the methods, and only the held-out rest, run once, is counted.</p>
         {_status_cards(e, CAPS_V4)}
-        <p class="note">{e(_search_aid())}</p>
+        <p class="note"{ik("honesty.transients_aid")}>{e(_search_aid())}</p>
         <p class="small">{e(protocol_v4_line())}.</p>
         {figures_v4_html()}
       </section>
@@ -440,7 +442,7 @@ def cheops_block(e) -> str:
     return f"""<section class="prose stcheops" aria-labelledby="h-st-cheops"><h2 id="h-st-cheops">CHEOPS: {e(status_label("cheops"))}</h2>
         <p>SetuHQ reads public CHEOPS light curves (the Data Reduction Pipeline's photometry) through DACE, the University of Geneva's public API in front of the CHEOPS Mission Archive; ESA does not designate DACE. Only visits the archive marks as public are read, with no credentials, and no raw CHEOPS file is stored in this repository or shipped in the package. The CHEOPS capability is <b>not validated</b>: its null and injection gates failed, so two comparisons are inconclusive, and the end-to-end match with pycheops' product failed. The CHEOPS-derived numbers are not on this page: they are in <a rel="noopener" href="{REPO}/blob/main/{CHEOPS_RESULTS.replace('.json', '.md')}">stellar_validation_cheops.md</a>, under ESA's terms.</p>
         <p class="note"><b>Licence.</b> {e(ch.COMMERCIAL_NOTE)}</p>
-        <p class="note"><b>{e(ch.DISCLAIMER)}</b> No ESA logo, template or figure is used, and nothing here automates an ESA system.</p>
+        <p class="note"><b{ik("honesty.cheops_disclaimer")}>{e(ch.DISCLAIMER)}</b> No ESA logo, template or figure is used, and nothing here automates an ESA system.</p>
         <details><summary>ESA's acknowledgement, the programmes and their credit lines, and the papers</summary>
           <p>{e(ch.ACKNOWLEDGEMENT)}</p>
           <p>Programmes whose public visits the validation used:</p><ul>{plist or "<li>none stored in this build</li>"}</ul>
@@ -455,11 +457,11 @@ def evidence_section() -> str:
     e = html.escape
     v = _load(VALIDATION) or {}
     unval = "".join(f"<li>{e(x)}</li>" for x in v.get("unvalidated") or [])
-    return f"""<header><h1 class="lead-h" id="h-stellar" tabindex="-1">Stars, measured.</h1>
-        <p>Beyond planets, SetuHQ detects stellar flares, extracts pulsation frequencies, reads public CHEOPS light curves, and finds eclipsing binaries, rotation periods and transients. Each capability was compared with published results under a protocol committed before its run, and each page and tool output says how far its validation went.</p></header>
+    return f"""<header><h1 class="lead-h" id="h-stellar" tabindex="-1"{ik("st.h1")}>{t("st.h1", "Stars, measured.")}</h1>
+        <p{ik("st.intro")}>{t("st.intro", "Beyond planets, SetuHQ detects stellar flares, extracts pulsation frequencies, reads public CHEOPS light curves, and finds eclipsing binaries, rotation periods and transients. Each capability was compared with published results under a protocol committed before its run, and each page and tool output says how far its validation went.")}</p></header>
       {_status_cards(e)}
       <p class="small">{e(protocol_line())}. Rule: validated when every counted check passes; partly validated when more than half do; otherwise not validated. Protocol v3 re-tests the targets earlier versions used, so it is a re-test after review fixes, not an independent validation.</p>
-      <section aria-labelledby="h-st-figs"><h2 id="h-st-figs">What the detectors see</h2>
+      <section aria-labelledby="h-st-figs"><h2 id="h-st-figs"{ik("st.figs")}>{t("st.figs", "What the detectors see")}</h2>
         {figures_html()}
       </section>
       <section class="prose" aria-labelledby="h-st-checks"><h2 id="h-st-checks">Every counted check</h2>
@@ -477,15 +479,15 @@ def docs_stellar_section() -> str:
     e = html.escape
     from setuhq import cheops as ch
 
-    return f"""<header><h1 class="lead-h" id="h-stellardocs" tabindex="-1">Flares, pulsations and CHEOPS.</h1>
-        <p>Six commands look at the star rather than its planets. Each writes one JSON record with its result, its provenance (version, code fingerprint, every input's sha256) and its labels. A flare or a frequency is detected at a stated significance, never confirmed; a variability type is likely or a candidate.</p></header>
+    return f"""<header><h1 class="lead-h" id="h-stellardocs" tabindex="-1"{ik("sd.h1")}>{t("sd.h1", "Flares, pulsations and CHEOPS.")}</h1>
+        <p{ik("sd.intro")}>{t("sd.intro", "Six commands look at the star rather than its planets. Each writes one JSON record with its result, its provenance (version, code fingerprint, every input's sha256) and its labels. A flare or a frequency is detected at a stated significance, never confirmed; a variability type is likely or a candidate.")}</p></header>
       <div class="docgrid">
         <section class="card"><h2>Flares</h2><p>Detection, template fits with multi-component models, energies for a 9000 K blackbody, completeness and nulls.</p><p class="stword part">{e(status_label("flares"))}</p></section>
         <section class="card"><h2>Pulsations</h2><p>Pre-whitening, combination flags, the granulation background, numax and Δν, a heuristic type.</p><p class="stword part">{e(status_label("pulsations"))}</p></section>
         <section class="card"><h2>CHEOPS light curves</h2><p>Public CHEOPS visits, detrended against roll angle, on one timeline with TESS.</p><p class="stword no">{e(status_label("cheops"))}</p></section>
         <section class="card"><h2>Eclipsing binaries</h2><p>Period, primary and secondary eclipses, the secondary's phase with an e·cosω hint, a morphology class, and a candidate flag with its reasons.</p><p class="stword {STATUS_CLASS.get(status().get("binaries", {}).get("status"), "no")}">{e(status_label("binaries"))}</p></section>
         <section class="card"><h2>Rotation</h2><p>Spot-modulation periods from a periodogram and the autocorrelation function, with uncertainties and half/double handling; up to about 13 days in one sector.</p><p class="stword {STATUS_CLASS.get(status().get("rotation", {}).get("status"), "no")}">{e(status_label("rotation"))}</p></section>
-        <section class="card"><h2>Transients</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids. {e(_search_aid())}</p><p class="stword {STATUS_CLASS.get(status().get("transients", {}).get("status"), "no")}">{e(status_label("transients"))}</p></section>
+        <section class="card"><h2>Transients</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids. <span{ik("honesty.transients_aid")}>{e(_search_aid())}</span></p><p class="stword {STATUS_CLASS.get(status().get("transients", {}).get("status"), "no")}">{e(status_label("transients"))}</p></section>
       </div>
       <div class="prose">
         <h2 id="st-run">Run them</h2>
@@ -503,7 +505,7 @@ setuhq transients --ra 64.52583 --dec -63.61567 --time 1360.4 --out transient.js
           <li><b>Public data only.</b> Visits are read through DACE (dace.unige.ch), the University of Geneva's public API in front of the CHEOPS Mission Archive, in public mode with no key. ESA does not designate DACE; each record names the source that served it. Proprietary visits are skipped and never cached; no raw CHEOPS file is stored in the repository or shipped in the package.</li>
           <li><b>Credit on every output.</b> Each CHEOPS record and summary carries ESA's acknowledgement, each visit's programme ID and file key, the archive's credit line "Credit: ESA, &lt;proposal PI&gt;", and the papers to cite: {e("; ".join(ch.CITATIONS))}.</li>
           <li><b>Licence.</b> {e(ch.COMMERCIAL_NOTE)}</li>
-          <li><b>{e(ch.DISCLAIMER)}</b> No ESA logo, template or copied figure is used.</li>
+          <li><b{ik("honesty.cheops_disclaimer")}>{e(ch.DISCLAIMER)}</b> No ESA logo, template or copied figure is used.</li>
         </ul>
         <p>Preparing an observing proposal instead? <a href="/docs/cheops-proposals/">CHEOPS proposals ›</a></p>
       </div>"""
@@ -514,8 +516,8 @@ def docs_propose_section() -> str:
     e = html.escape
     from setuhq.propose.draft import DISCLAIMER, PREP_ONLY
 
-    return f"""<header><h1 class="lead-h" id="h-propose" tabindex="-1">Prepare a CHEOPS proposal.</h1>
-        <p><code>setuhq propose cheops</code> writes a preparation pack for the CHEOPS Guest Observers Running Call: the rules checked, the target's status, planning estimates, anonymised drafts and ESA's seven steps as a checklist. You run ESA's tools and submit yourself.</p></header>
+    return f"""<header><h1 class="lead-h" id="h-propose" tabindex="-1"{ik("pr.h1")}>{t("pr.h1", "Prepare a CHEOPS proposal.")}</h1>
+        <p{ik("pr.intro")}>{t("pr.intro", "<code>setuhq propose cheops</code> writes a preparation pack for the CHEOPS Guest Observers Running Call: the rules checked, the target's status, planning estimates, anonymised drafts and ESA's seven steps as a checklist. You run ESA's tools and submit yourself.")}</p></header>
       <p class="note"><b>{e(DISCLAIMER)}</b></p>
       <div class="prose">
         <pre tabindex="0"><code>setuhq propose cheops "TOI-1987" --orbits 30

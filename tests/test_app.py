@@ -40,6 +40,7 @@ from setuhq.app import (
 from setuhq.cli import main
 from setuhq.docket import NO_STORED_CROSSMATCH
 from conftest import site_bundle
+from setuhq.i18n import unkey
 
 WIDGET_IDS = [w for w, _ in WIDGETS]
 
@@ -125,7 +126,7 @@ def test_five_sections_and_every_view_exist(run_dir, catalog, tmp_path):
     index = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog)
     page = site_bundle(index)
     assert SECTIONS == [("explore", "Explore"), ("candidates", "Candidates"), ("how", "How it works"), ("evidence", "Evidence"), ("docs", "Docs")]
-    nav = re.search(r'<nav class="nav" aria-label="Main">.*?</nav>', index.read_text(), re.S).group(0)
+    nav = re.search(r'<nav class="nav" aria-label="Main">.*?</nav>', unkey(index.read_text()), re.S).group(0)
     for sid, label in SECTIONS:
         assert f'data-nav="{sid}">{label}</a>' in nav
     assert "#/" not in nav
@@ -1003,7 +1004,7 @@ def test_hero_qualifies_an_archive_match_in_the_lede_and_the_box(run_dir, tmp_pa
     assert plain["qualifier"] == f"Every one is a {UNCONFIRMED}." and plain["match"] is None
     data = app_data(run_dir, title="t")
     data["hero"] = matched
-    page = "".join(app_mod.route_sections(data).values())
+    page = unkey("".join(app_mod.route_sections(data).values()))
     lede = re.search(r'<p class="muted" style="margin:0;max-width:80ch">(.*?)</p>', page, re.S).group(1)
     assert "not that this run confirmed it." in lede
     box = re.search(r"<li><b>No confirmed planet.</b>(.*?)</li>", page, re.S).group(1)

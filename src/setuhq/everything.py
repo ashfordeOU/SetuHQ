@@ -16,6 +16,8 @@ flux-inverted copies of the same stars beside every class.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, span, t, th
+
 import html
 import json
 from pathlib import Path
@@ -274,8 +276,8 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
         coh_txt += (f' Limits: it finds a {chk["sinusoid_ppm"]:,.0f} ppm sinusoid in strong red noise only {case["variable"]}/{chk["n"]} '
                     f'times ({chk["script"]}), and cannot test periods longer than about {coh["testable_max_days"]:g} d in one sector.')
     return f"""<header class="headrow">
-        <div>{eyebrow}<h1 class="lead-h" id="h-variables" tabindex="-1">Everything that dims.<br><span class="grey">{c['entries']:,} entries, none thrown away.</span></h1>
-        <p>Every consensus dip of the panel, every brightening and every star's variability from the sweep, each classified by a stated rule, with its confidence, its cues and its provenance: the marks, the weights and the Sentinels' own words. {e(ATTRIBUTION)}</p></div>
+        <div>{eyebrow}<h1 class="lead-h" id="h-variables" tabindex="-1"><span{ik("var.h1")}>{t("var.h1", "Everything that dims.")}</span><br><span class="grey"{ik("var.h1b", n=c['entries'])}>{t("var.h1b", "{n, number} entries, none thrown away.", n=c['entries'])}</span></h1>
+        <p>{span("var.intro", "Every consensus dip of the panel, every brightening and every star's variability from the sweep, each classified by a stated rule, with its confidence, its cues and its provenance: the marks, the weights and the Sentinels' own words.")} <span{ik("honesty.attribution")}>{e(ATTRIBUTION)}</span></p></div>
       </header>
       {tabs("variables")}
       <p class="note"><b>A first slice, stated plainly.</b> {"; ".join(e(s) for s in meta["slices"])}. {c['stars_searched']:,} stars searched, {c['star_sectors_searched']:,} star-sectors, {c['dips_reviewed']:,} consensus dips reviewed{f", {sum(ns.values()):,} star-sectors recorded but not searched ({ns.get('no_data', 0)} no data, {ns.get('error', 0)} errors, {ns.get('pending', 0)} pending)" if sum(ns.values()) else ""}. This catalogue is separate from the discovery feed. <b>Nothing here is a new or confirmed planet.</b> A class is what the light curve's cues suggest; there is no pixel or centroid check, so a blended binary can look like anything.{e(verdict)}</p>

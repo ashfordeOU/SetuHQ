@@ -202,7 +202,7 @@ def write_stubs(site: str | Path) -> dict:
         if by_star.get(name):
             write(*star_page(tpl, cat, name, slug, by_star[name]), "stars")
     # The sitemaps: the build's own pages, then the planets and the stars, in files of at most 50,000 addresses.
-    files = ["sitemap-pages.xml"]
+    files = ["sitemap-pages.xml"] + sorted(p.name for p in site.glob("sitemap-lang-*.xml"))
     for kind in ("planets", "stars"):
         every = sorted(out[kind])  # the pre-rendered ones are in sitemap-pages.xml
         for k in range(0, len(every), SITEMAP_MAX):

@@ -16,6 +16,8 @@ them; the script only switches which sector's group is shown.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, t
+
 import html
 import json
 import math
@@ -27,7 +29,7 @@ from setuhq.story import SKY_R, SQRT2, mollweide
 SCHEDULE = "docs/results/tess_schedule.json"
 HALF = math.radians(12.0)  # half the side of a camera's 24° field
 FRAME = (-460, -235, 920, 470)
-LABEL = "Pointing from the published schedule, not live telemetry"
+LABEL = N_("honesty.tess_pointing", "Pointing from the published schedule, not live telemetry")
 
 
 def _root_path(p: str) -> Path:
@@ -142,9 +144,9 @@ def section(data: dict) -> str:
     e = html.escape
     sch = load()
     sectors = sch.get("sectors") or []
-    head = ('<header><p class="eyebrow">Explore</p><h1 class="lead-h" id="h-tessnow" tabindex="-1">Where TESS is looking.</h1>'
-            '<p>The NASA TESS satellite watches one strip of sky for about four weeks (a sector), with four cameras of 24° by 24° each. '
-            'This map shows the strips from the published schedule, and the stars with known planets inside them.</p></header>')
+    head = (f'<header><p class="eyebrow"{ik("nav.explore")}>Explore</p><h1 class="lead-h" id="h-tessnow" tabindex="-1"{ik("tn.h1")}>{t("tn.h1", "Where TESS is looking.")}</h1>'
+            f'<p{ik("tn.intro")}>' + t("tn.intro", "The NASA TESS satellite watches one strip of sky for about four weeks (a sector), with four cameras of 24° by 24° each. "
+            "This map shows the strips from the published schedule, and the stars with known planets inside them.") + '</p></header>')
     if not sectors:
         return head + '<p class="note">The saved TESS schedule is not in this build, so no pointing is drawn.</p>'
     from setuhq.galaxy import dots_path
@@ -184,10 +186,10 @@ def section(data: dict) -> str:
            f'{e(sch["saved"])}. Stars: {e((cat or {}).get("source_short") or "the catalogue")}, fetched {e(str((cat or {}).get("fetched_at") or "")[:10])}')
     scrub = (f'<div class="skytools"><label class="skyscrub tnscrub"><span>Sector</span><input type="range" id="tnrange" min="0" '
              f'max="{len(sectors) - 1}" step="1" value="{cur}" aria-valuetext="{e(read)}"></label></div>')
-    return (head + f'<p class="note"><b>{LABEL}.</b> Schedule saved on {e(sch["saved"])}; sectors {sectors[0]["sector"]} to '
+    return (head + f'<p class="note"><b><span{ik("honesty.tess_pointing")}>{LABEL}</span>.</b> Schedule saved on {e(sch["saved"])}; sectors {sectors[0]["sector"]} to '
             f'{sectors[-1]["sector"]}. The satellite can change plans; the TESS Science Office\'s pages are the authority.</p>'
             f'<figure class="tnow" id="tnow" data-meta=\'{e(json.dumps(meta, separators=(",", ":")), quote=False)}\' data-saved="{e(sch["saved"])}">'
-            f'<div class="stage skystage"><div class="skybox">{svg}</div><span class="stage-tag">Model from stored values</span></div>'
+            f'<div class="stage skystage"><div class="skybox">{svg}</div><span class="stage-tag" data-i18n="label.model">Model from stored values</span></div>'
             f'{scrub}<p class="readout" id="tnread" aria-live="polite">{e(read)}</p>'
             f'<figcaption class="skysrc">Each outlined square is one camera\'s 24° × 24° field, drawn around the boresight the schedule '
             f'publishes and aligned with the line of the four cameras, so its edges are approximate. Highlighted dots: catalogued stars with '

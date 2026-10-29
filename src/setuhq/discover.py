@@ -44,6 +44,8 @@ says ``"embargo": false``.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_
+
 import json
 import math
 import time
@@ -304,8 +306,9 @@ def feed_entry(candidate, target: Target, curves, run_time: datetime, run_log: d
     return entry
 
 
-HELD_LINE = ("Signals that match no known TOI are held for private review; "
-             "they are published only after review and reporting.")
+HELD_LINE = N_("honesty.embargo", "Signals that match no known TOI are held for private review; "
+               "they are published only after review and reporting.",
+               note="The feed embargo line. Static: never add a number, a count or a date in any language.")
 
 
 def held_line() -> str:
