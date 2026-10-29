@@ -32,7 +32,8 @@ def catalog(tmp_path):
              "status": "new_candidate", "candidate_id": "tess-x-001", "found": "2026-10-17T00:00:00+00:00"}
     known = dict(entry, tic=5678, candidate_id="tess-y-002", status="known_toi", depth_ppm=1600.0, t_center=1620.5)
     path = tmp_path / "catalog.json"
-    path.write_text(json.dumps({"candidates": [entry, known], "updated": "2026-10-17T00:00:00+00:00"}))
+    # A private deployment's catalogue (embargo off): the public one never holds a new_candidate (tests/test_embargo.py).
+    path.write_text(json.dumps({"embargo": False, "candidates": [entry, known], "updated": "2026-10-17T00:00:00+00:00"}))
     return path
 
 

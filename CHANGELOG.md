@@ -41,6 +41,19 @@ breaking changes are called out explicitly.
   pickled or written to a manifest; the environment variables stay the fallback, a config file still never holds
   a key, and an endpoint whose URL or query holds the passed key (as a string or a `Secret`) is refused without
   printing it.
+- **Feed embargo: new signals are held for private review and reporting.** `setuhq discover` no longer
+  publishes a signal that matches no known TOI (`new_candidate`). The public catalogue, the site (the
+  Candidates feed, the overview and Mission Control cards, the runs page), the feed page, the dashboard,
+  the plates and the command's output carry only known-TOI matches and one static line: "Signals that
+  match no known TOI are held for private review; they are published only after review and reporting."
+  A hold leaves no public trace, not even a count or a date: every public output is byte for byte what
+  it would be had the signal not been found (tested by running the same targets with and without a
+  synthetic `new_candidate`). Run logs keep a count of targets (`n_targets`) instead of their TIC list,
+  and an error is recorded the same way whether or not its target gave a held signal. Counts of held
+  signals will live only in the private review pipeline (setuhq-ops, v0.3). A held signal is not stored
+  publicly; the search is deterministic, so that pipeline re-searches those targets. On by default; a private deployment opts out with `--publish-new` or
+  `[discover] embargo = false`, which the public workflow never sets. `discover.yml` checks the
+  catalogue before it commits. Tests: `tests/test_embargo.py`.
 
 - **Beyond planets: stellar flares, pulsations and CHEOPS** ([docs/STELLAR.md](docs/STELLAR.md)).
   `setuhq flares`, `setuhq pulsations` and `setuhq cheops`, and the MCP tools `find_flares`,

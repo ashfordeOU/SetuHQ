@@ -77,7 +77,10 @@ def main(argv=None) -> int:
     if catalog.exists():
         catalog.unlink()
     log = Dv.run_discovery(config_path, catalog, tics=list(sectors), time_budget_s=8 * 3600, work_dir=args.work_dir,
-                           cache_root=str(ROOT / "cache"))
+                           cache_root=str(ROOT / "cache"),
+                           # The measurement counts new signals, so the embargo is off for this private catalogue: keep
+                           # --catalog out of the public repository; the record written below holds counts only.
+                           publish_new=True)
     cat = json.loads(catalog.read_text())
     new = [c for c in cat["candidates"] if c["status"] == "new_candidate"]
     known = [c for c in cat["candidates"] if c["status"] == "known_toi"]

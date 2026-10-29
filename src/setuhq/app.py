@@ -39,7 +39,7 @@ from pathlib import Path
 from setuhq import brand
 from setuhq.design import BASE_CSS, MOTION_CSS, tokens_css
 from setuhq.benchmark_toi import wilson
-from setuhq.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
+from setuhq.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS, held_line, load_public_catalog
 from setuhq.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, galaxy_data,
                             galaxy_meta, galaxy_section, map_csv)
 from setuhq.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFAULT_CATALOGUE, SEARCH_BUTTON, SEARCH_DIALOG,
@@ -766,7 +766,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     catalog = {"candidates": [], "runs": []}
     catalog_name = ""
     if catalog_path is not None and Path(catalog_path).exists():
-        catalog = json.loads(Path(catalog_path).read_text())
+        catalog = load_public_catalog(catalog_path)  # the embargo: signals held for review never reach a page
         catalog_name = str(catalog_path)
     calibrated, weights_name, record, record_name = None, "", None, ""
     if weights_path is not None and Path(weights_path).exists():
@@ -876,6 +876,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
             "path": catalog_name, "updated": catalog.get("updated", ""), "config": catalog.get("config", ""),
             "config_sha256": catalog.get("config_sha256", ""), "targets_reviewed": catalog.get("targets_reviewed", 0),
             "candidates": feed, "runs": catalog.get("runs") or [],
+            "embargo": catalog.get("embargo") is not False, "held_line": held_line(),
             "found_times": sorted({str(r["found"]) for r in feed if r.get("found")}),
         },
         "feed_rule": {"max_depth_ppm": MAX_FEED_DEPTH_PPM, "min_transits": MIN_FEED_TRANSITS},
@@ -1669,13 +1670,14 @@ function widgetBody(id){
     const f = D.catalog.candidates, nNew = f.filter(x => x.status === 'new_candidate').length, nKnown = f.filter(x => x.status === 'known_toi').length;
     if (!D.catalog.path) return '<p class="empty">No search catalogue was given to this build.</p>';
     return `<div><span class="big">${f.length}</span> <span class="muted">feed entries</span></div>
-      <p style="margin:0">${nKnown} match a known TOI period · ${nNew} new candidate${nNew===1?'':'s'} · ${esc(D.catalog.targets_reviewed)} targets reviewed</p>
+      <p style="margin:0">${nKnown} match a known TOI period · ${D.catalog.embargo ? '' : `${nNew} new candidate${nNew===1?'':'s'} · `}${esc(D.catalog.targets_reviewed)} targets reviewed</p>
+      ${D.catalog.embargo ? `<p class="muted" style="margin:0">${esc(D.catalog.held_line)}</p>` : ''}
       <p class="muted" style="margin:0;font-size:12px">Catalogue updated ${when(D.catalog.updated)}.</p>`;
   }
   if (id === 'runs'){
     const runs = D.catalog.runs.slice(-5).reverse();
     if (!runs.length) return '<p class="empty">No search runs are stored in the catalogue.</p>';
-    return `<ul class="runlist">${runs.map(x => `<li><b>${when(x.time)}</b><span>${(x.targets||[]).length} targets · ${esc(x.new ?? '–')} new · ${esc(x.known ?? '–')} known · ${(x.errors||[]).length} error${(x.errors||[]).length===1?'':'s'}</span></li>`).join('')}</ul>
+    return `<ul class="runlist">${runs.map(x => `<li><b>${when(x.time)}</b><span>${x.n_targets ?? (x.targets||[]).length} targets · ${x.new == null ? '' : `${esc(x.new)} new · `}${esc(x.known ?? '–')} known · ${(x.errors||[]).length} error${(x.errors||[]).length===1?'':'s'}</span></li>`).join('')}</ul>
       <p class="muted" style="margin:0;font-size:12px">This page's run: ${esc(r.name)}, ${when(r.created_at)}.</p>`;
   }
   if (id === 'top'){
@@ -1964,11 +1966,11 @@ function feedCards(rows){
 function renderDiscHead(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length, ft = D.catalog.found_times;
   const found = !ft.length ? 'no stored find time' : ft.length === 1 ? `found in the catalogue run of ${when(ft[0])}` : `found between ${when(ft[0])} and ${when(ft[ft.length-1])}`;
-  $('#feedhead').innerHTML = f.length ? `${f.length} entries, ${found}. <b>${n('known_toi')} match a known TOI period</b>; ${n('new_candidate')} are new candidates. Every entry is a ${esc(D.unconfirmed)}.${n('known_toi') ? ` A TOI match is an archive comparison. ${esc(D.no_detection)}` : ''}` : 'The feed is empty.';
+  $('#feedhead').innerHTML = (f.length ? `${f.length} entries, ${found}. <b>${n('known_toi')} match a known TOI period</b>${D.catalog.embargo ? '' : `; ${n('new_candidate')} are new candidates`}. Every entry is a ${esc(D.unconfirmed)}.${n('known_toi') ? ` A TOI match is an archive comparison. ${esc(D.no_detection)}` : ''}` : 'The feed is empty.') + (D.catalog.embargo ? ` ${esc(D.catalog.held_line)}` : '');
 }
 function renderDiscChips(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length;
-  const chips = [['all', `all ${f.length}`], ['new_candidate', `new ${n('new_candidate')}`], ['known_toi', `known TOI ${n('known_toi')}`]];
+  const chips = [['all', `all ${f.length}`], ['new_candidate', `new ${n('new_candidate')}`], ['known_toi', `known TOI ${n('known_toi')}`]].filter(c => !(D.catalog.embargo && c[0] === 'new_candidate'));
   $('#discchips').innerHTML = chips.map(([k, l]) => `<button class="chip" data-f="${k}" aria-pressed="${disc.filter === k}">${esc(l)}</button>`).join('');
 }
 
@@ -2220,7 +2222,7 @@ function renderRuns(){
   const runs = D.catalog.runs.slice().reverse();
   const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
   $('#runtable').innerHTML = runs.length ? `<ol class="runlines">${runs.map(x => { const ne = (x.errors||[]).length; return `<li>
-      <div class="line"><b>${when(x.time)}</b><span>${plural((x.targets||[]).length, 'target')}</span><span>${esc(x.new ?? '–')} new</span><span>${esc(x.known ?? '–')} known TOI</span><span>${esc(x.filtered_deep ?? '–')} filtered as too deep</span><span>${esc(x.filtered_single ?? '–')} filtered for too few transits</span><span class="${ne ? 'err' : 'muted'}">${ne ? plural(ne, 'error') : 'no errors'}</span></div>
+      <div class="line"><b>${when(x.time)}</b><span>${plural(x.n_targets ?? (x.targets||[]).length, 'target')}</span>${x.new == null ? '' : `<span>${esc(x.new)} new</span>`}<span>${esc(x.known ?? '–')} known TOI</span><span>${esc(x.filtered_deep ?? '–')} filtered as too deep</span><span>${esc(x.filtered_single ?? '–')} filtered for too few transits</span><span class="${ne ? 'err' : 'muted'}">${ne ? plural(ne, 'error') : 'no errors'}</span></div>
       ${ne ? x.errors.map(e => `<pre class="err">${esc(e)}</pre>`).join('') : ''}
       ${(x.targets||[]).length ? `<details><summary>Targets</summary><p class="mono" style="margin:4px 0 0;font-size:12px">${(x.targets||[]).map(t => 'TIC ' + esc(t)).join(', ')}</p></details>` : ''}
       ${(x.tracebacks||[]).length ? `<details><summary>${plural(x.tracebacks.length, 'traceback')} (verbatim)</summary>${x.tracebacks.map(t => `<pre class="err">${esc(t)}</pre>`).join('')}</details>` : ''}</li>`; }).join('')}</ol>` : '<p class="empty">No search runs are stored in the catalogue.</p>';
@@ -3353,6 +3355,9 @@ def route_sections(data: dict) -> dict[str, str]:
     nodet = html.escape(NO_DETECTION)
     feed = data["catalog"]["candidates"]
     n_known = sum(1 for r in feed if r.get("status") == "known_toi")
+    # The embargo: signals that match no known TOI are held for private review and reporting; one static line says so.
+    held = (" The feed shows only signals that match a known TOI. " + html.escape(data["catalog"]["held_line"])
+            if data["catalog"].get("embargo", True) else "")
     xm_targets = ", ".join(html.escape(str(t)) for t in data.get("crossmatch_targets") or []) or "no star"
     prov = provenance_note(data)
     out = {}
@@ -3374,7 +3379,7 @@ def route_sections(data: dict) -> dict[str, str]:
       </div>
       <div class="widgets" id="widgets"></div>
       <section class="feedsec" aria-labelledby="h-feedsec">
-      <div class="secthead"><h2 id="h-feedsec">From the search feed: {len(feed)} entr{"y" if len(feed) == 1 else "ies"} from {n_stars} other star{"" if n_stars == 1 else "s"}</h2><p>SetuHQ's search batches run the same panel over more TESS stars. These entries are leads for review: {n_known} of {len(feed)} match a known TOI period, and none has a case file yet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></div>
+      <div class="secthead"><h2 id="h-feedsec">From the search feed: {len(feed)} entr{"y" if len(feed) == 1 else "ies"} from {n_stars} other star{"" if n_stars == 1 else "s"}</h2><p>SetuHQ's search batches run the same panel over more TESS stars. These entries are leads for review: {n_known} of {len(feed)} match a known TOI period, and none has a case file yet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}{held}</p></div>
       <p class="note rule"><b>Feed rule.</b> An entry joins the feed when its depth is at most {rule["max_depth_ppm"]:,.0f} ppm and its signal has at least {rule["min_transits"]} transits. This is an admission rule, not a vetting result.</p>
       <div class="filters exfilters">
         <div class="chips" id="exstars" role="group" aria-label="Stars"></div>
