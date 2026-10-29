@@ -56,6 +56,7 @@ def _honest(data: dict) -> str:
     N_("panel.both", "{s, plural, one {# Sentinel} other {# Sentinels}} and {p, plural, one {# Probe} other {# Probes}}", note="How many reviewers of each kind. Sentinel and Probe stay as written.")
     N_("panel.sentinels", "{s, plural, one {# Sentinel} other {# Sentinels}}")
     N_("panel.probes", "{p, plural, one {# Probe} other {# Probes}}")
+    honest_image = t("home.honest.image", '<b>No image of the planet.</b> Planet pictures are artist\'s impressions, chosen from measured radius and irradiation; <a href="/docs/pictures/">How the pictures are drawn ›</a>')
     return f"""<section class="honest" id="band-honest" aria-labelledby="h-honest">
         <h2 id="h-honest"{ik("home.honest.h")}>{t("home.honest.h", "What this page does not claim")}</h2>
         <ul>
@@ -63,7 +64,7 @@ def _honest(data: dict) -> str:
           <li{ik("home.honest.sizes")}>{t("home.honest.sizes", "<b>No planet sizes.</b> No stellar radius is stored, so a depth gives only a planet-to-star radius ratio. The radius-ratio page shows the working.")}</li>
           <li><b{ik("home.honest.people")}>{t("home.honest.people", "No people on the panel.")}</b> {span("home.honest.panel", "The panel is the Sentinels and the Probes:")} {phrase}. <span{ik("honesty.attribution")}>{e(ATTRIBUTION)}</span>{weights}</li>
           <li{ik("home.honest.archive")}>{t("home.honest.archive", "<b>Archive values only.</b> This page claims no detection. A TOI or archive match compares a stored period with published values.")}</li>
-          <li{ik("home.honest.image")}>{t("home.honest.image", '<b>No image of the planet.</b> Planet pictures are artist\'s impressions, chosen from measured radius and irradiation; <a href="/docs/pictures/">How the pictures are drawn ›</a>')}</li>
+          <li{ik("home.honest.image")}>{honest_image}</li>
         </ul>
       </section>"""
 

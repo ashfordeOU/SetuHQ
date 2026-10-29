@@ -29,6 +29,10 @@ if [[ ! -x "$VENV/bin/python" ]]; then "$PY" -m venv "$VENV"; fi
 "$VENV/bin/python" -m pip install --quiet -e ".[dev]" -r requirements-readme.txt
 ok
 
+step "every Python file compiles under Python 3.11, the oldest version ci.yml tests (no 3.12-only f-string syntax)"
+git ls-files -z '*.py' | xargs -0 /usr/bin/python3.11 -m py_compile
+ok
+
 step "tests (python -m pytest -q, same as ci.yml)"
 "$VENV/bin/python" -m pytest -q -W ignore 2>&1 | tee -a "$LOG"
 step "slow tests (marker 'slow': the 200-trial FAP case; ci.yml leaves them out)"
