@@ -1,0 +1,3034 @@
+{
+ "@@locale": "zh-Hans",
+ "@@x-source-locale": "en",
+ "cat.h1": "每一颗已知的系外行星。",
+ "@cat.h1": {
+  "x-review": "machine",
+  "x-source": "c12b2894d2"
+ },
+ "cat.h1b": "{n, number} 条记录，可搜索。",
+ "@cat.h1b": {
+  "x-review": "machine",
+  "x-source": "0082f39a49"
+ },
+ "cat.intro": "{source} 中的全部 {n, number} 颗行星，包括 {nodist, number} 颗没有存储距离、银河地图无法放置的行星。这些行星不是 SetuHQ 发现的；它只是为它们编目。",
+ "@cat.intro": {
+  "x-review": "machine",
+  "x-source": "ca9826547d"
+ },
+ "cf.h1": "每个信号、它的凹陷，以及每个判定背后的检查。",
+ "@cf.h1": {
+  "x-review": "machine",
+  "x-source": "2b73eb58d2"
+ },
+ "cf.intro": "该凹陷所属运行的案卷：每个信号及其凹陷，附审查结果、凌星条带和判定记录。每个通过审查的信号都是{status}；被否决或待复核的信号按其状态标注。",
+ "@cf.intro": {
+  "x-review": "machine",
+  "x-source": "252d456e94"
+ },
+ "chapter.astrometry": "天体测量",
+ "@chapter.astrometry": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
+ "chapter.doppler": "靠近与远离",
+ "@chapter.doppler": {
+  "x-review": "machine",
+  "x-source": "982502489b"
+ },
+ "chapter.equations": "生命方程",
+ "@chapter.equations": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
+ "chapter.falsepos": "假阳性",
+ "@chapter.falsepos": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
+ "chapter.history": "历史与论文",
+ "@chapter.history": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "chapter.imaging": "遮挡星光",
+ "@chapter.imaging": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
+ "chapter.microlensing": "微引力透镜",
+ "@chapter.microlensing": {
+  "x-review": "machine",
+  "x-source": "7713c65bef"
+ },
+ "chapter.molecules": "分子与生命",
+ "@chapter.molecules": {
+  "x-review": "machine",
+  "x-source": "d0ac3c4b97"
+ },
+ "chapter.population": "行星族群",
+ "@chapter.population": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
+ "chapter.radio": "射电",
+ "@chapter.radio": {
+  "x-review": "machine",
+  "x-source": "2a7dfeb2f2"
+ },
+ "chapter.rv": "视向速度",
+ "@chapter.rv": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
+ "chapter.spectroscopy": "解读大气",
+ "@chapter.spectroscopy": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
+ },
+ "chapter.survey": "巡天如何进行",
+ "@chapter.survey": {
+  "x-review": "machine",
+  "x-source": "418a56729e"
+ },
+ "chapter.timing": "计时与相位",
+ "@chapter.timing": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
+ },
+ "chapter.transit": "凌星",
+ "@chapter.transit": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
+ },
+ "cli.argparse.argument": "参数 %(argument_name)s：%(message)s",
+ "@cli.argparse.argument": {
+  "x-review": "machine",
+  "x-source": "2ee7b9a91a"
+ },
+ "cli.argparse.choice": "无效的选择：%(value)r（可选值：%(choices)s）",
+ "@cli.argparse.choice": {
+  "x-review": "machine",
+  "x-source": "9dbc964dd3"
+ },
+ "cli.argparse.error": "%(prog)s：错误：%(message)s\n",
+ "@cli.argparse.error": {
+  "x-review": "machine",
+  "x-source": "954b9f0ae6"
+ },
+ "cli.argparse.help": "显示此帮助信息并退出",
+ "@cli.argparse.help": {
+  "x-review": "machine",
+  "x-source": "608017daf4"
+ },
+ "cli.argparse.one": "需要一个参数",
+ "@cli.argparse.one": {
+  "x-review": "machine",
+  "x-source": "d5d4f7b111"
+ },
+ "cli.argparse.options": "选项",
+ "@cli.argparse.options": {
+  "x-review": "machine",
+  "x-source": "a793ab8fcc"
+ },
+ "cli.argparse.positional": "位置参数",
+ "@cli.argparse.positional": {
+  "x-review": "machine",
+  "x-source": "a5f91c7a58"
+ },
+ "cli.argparse.required": "以下参数为必需：%s",
+ "@cli.argparse.required": {
+  "x-review": "machine",
+  "x-source": "25fb5034ca"
+ },
+ "cli.argparse.unrecognized": "无法识别的参数：%s",
+ "@cli.argparse.unrecognized": {
+  "x-review": "machine",
+  "x-source": "5ed6ba5c37"
+ },
+ "cli.argparse.usage": "用法：",
+ "@cli.argparse.usage": {
+  "x-review": "machine",
+  "x-source": "d85f7a9a6f"
+ },
+ "cli.argparse.version": "显示程序版本号并退出",
+ "@cli.argparse.version": {
+  "x-review": "machine",
+  "x-source": "d534d67f66"
+ },
+ "cli.cmd.app": "与 'setuhq site' 相同（网站还是单个应用页面时的旧名称）",
+ "@cli.cmd.app": {
+  "x-review": "machine",
+  "x-source": "f119fa15f1"
+ },
+ "cli.cmd.batch": "对目标列表运行 discover 流程，带缓存并可续跑",
+ "@cli.cmd.batch": {
+  "x-review": "machine",
+  "x-source": "40b27855e9"
+ },
+ "cli.cmd.benchmark": "已配置评审组的注入-回收基准测试",
+ "@cli.cmd.benchmark": {
+  "x-review": "machine",
+  "x-source": "4c26cdd1fc"
+ },
+ "cli.cmd.binaries": "食双星以及椭球或反射变星：周期、食、次食相位（e cos w 提示）、形态；附理由的候选标记",
+ "@cli.cmd.binaries": {
+  "x-review": "machine",
+  "x-source": "0abdc48c4a"
+ },
+ "cli.cmd.bundle": "将一次扫描的天区记录导出为贡献包，以内容哈希封存",
+ "@cli.cmd.bundle": {
+  "x-review": "machine",
+  "x-source": "9852df2e94"
+ },
+ "cli.cmd.calibrate": "通过注入估计评审者权重",
+ "@cli.cmd.calibrate": {
+  "x-review": "machine",
+  "x-source": "207a6e9d1b"
+ },
+ "cli.cmd.check-sweep": "检查每份贡献都已导入且完整，并检查目录与其已验证来源重建的结果一致",
+ "@cli.cmd.check-sweep": {
+  "x-review": "machine",
+  "x-source": "5634f750a9"
+ },
+ "cli.cmd.cheops": "CHEOPS Guest Observers Running Call：撰写提案准备包",
+ "@cli.cmd.cheops": {
+  "x-review": "machine",
+  "x-source": "4f36cba2a0"
+ },
+ "cli.cmd.crossmatch": "向 NASA Exoplanet Archive 查询运行的目标并存储 crossmatch.json",
+ "@cli.cmd.crossmatch": {
+  "x-review": "machine",
+  "x-source": "3b450e6853"
+ },
+ "cli.cmd.dashboard": "根据一次运行和可选的发现目录生成交互式仪表板",
+ "@cli.cmd.dashboard": {
+  "x-review": "machine",
+  "x-source": "75a27378f8"
+ },
+ "cli.cmd.discover": "运行一批计划中的发现搜索并更新目录",
+ "@cli.cmd.discover": {
+  "x-review": "machine",
+  "x-source": "c89cac74a5"
+ },
+ "cli.cmd.docket": "为一次运行生成候选案卷视图",
+ "@cli.cmd.docket": {
+  "x-review": "machine",
+  "x-source": "6d3fd99980"
+ },
+ "cli.cmd.export": "为一次运行写出 ExoFOP CTOI 格式的表格和预测凌星窗口",
+ "@cli.cmd.export": {
+  "x-review": "machine",
+  "x-source": "20cf1a8c0c"
+ },
+ "cli.cmd.flares": "检测恒星耀发：形态、能量、完备性和零假设检验",
+ "@cli.cmd.flares": {
+  "x-review": "machine",
+  "x-source": "9d57912ca7"
+ },
+ "cli.cmd.ingest": "验证贡献包并将其并入目录，附署名",
+ "@cli.cmd.ingest": {
+  "x-review": "machine",
+  "x-source": "d729fd0e7d"
+ },
+ "cli.cmd.leaderboard": "在冻结的真实 TOI 基准的保留半数上为提交评分，或根据所有已存储的提交重建 docs/leaderboard",
+ "@cli.cmd.leaderboard": {
+  "x-review": "machine",
+  "x-source": "eff0c84e54"
+ },
+ "cli.cmd.lint": "扫描提案文本（或经 pypdf 的 PDF）中任何破坏匿名性的内容；是辅助，不是保证",
+ "@cli.cmd.lint": {
+  "x-review": "machine",
+  "x-source": "dec0a3adc2"
+ },
+ "cli.cmd.mcp": "像 setuhq-mcp 一样通过 stdio 启动 MCP 服务器（需要 mcp 附加组件：pip install 'setuhq[mcp]'）",
+ "@cli.cmd.mcp": {
+  "x-review": "machine",
+  "x-source": "36efd33521"
+ },
+ "cli.cmd.plate": "生成可打印的图版页面：每颗恒星一张图版，附图注",
+ "@cli.cmd.plate": {
+  "x-review": "machine",
+  "x-source": "54445abdca"
+ },
+ "cli.cmd.propose": "准备观测提案（一个准备包；不提交任何内容）",
+ "@cli.cmd.propose": {
+  "x-review": "machine",
+  "x-source": "f565d45d49"
+ },
+ "cli.cmd.pulsations": "频率分析：预白化、组合频率、背景、numax/Δν、类型",
+ "@cli.cmd.pulsations": {
+  "x-review": "machine",
+  "x-source": "6f493bd600"
+ },
+ "cli.cmd.rebuild": "根据存储的分类重新审查已存储的运行（拟合、FAP、标记）",
+ "@cli.cmd.rebuild": {
+  "x-review": "machine",
+  "x-source": "aaf332ed6a"
+ },
+ "cli.cmd.report": "从运行目录生成静态 HTML 报告网站",
+ "@cli.cmd.report": {
+  "x-review": "machine",
+  "x-source": "52964d6b1b"
+ },
+ "cli.cmd.rotation": "由黑子调制得到的自转周期（Lomb-Scargle 和 ACF），逐天区；不测量超过约 13 d 的周期",
+ "@cli.cmd.rotation": {
+  "x-review": "machine",
+  "x-source": "ce419593f9"
+ },
+ "cli.cmd.run": "对配置文件中的目标运行流水线",
+ "@cli.cmd.run": {
+  "x-review": "machine",
+  "x-source": "ebbdd3027a"
+ },
+ "cli.cmd.site": "从一次或多次运行生成网站（所有页面、共享文件、报告、图版和案卷）",
+ "@cli.cmd.site": {
+  "x-review": "machine",
+  "x-source": "bdfe2af14f"
+ },
+ "cli.cmd.sweep": "搜索一个 TESS 天区的 SPOC 2 分钟目标（可续跑）并写入变星目录",
+ "@cli.cmd.sweep": {
+  "x-review": "machine",
+  "x-source": "7da0597b32"
+ },
+ "cli.cmd.transients": "非周期性增亮：上升、衰减、振幅、类别提示和误报筛选，适用于 SPOC 光变曲线或任意位置的 TESScut 切图",
+ "@cli.cmd.transients": {
+  "x-review": "machine",
+  "x-source": "edf6a53e13"
+ },
+ "cli.desc.propose.cheops": "SetuHQ 是独立的，与 ESA、CHEOPS 任务或 CHEOPS 联盟没有隶属关系，未获其认可，也不代表其运营。它不能替代 ESA 的 Target Checker、Visibility Tool、Exposure Time Calculator、Scheduling Feasibility Checker 或 Policies & Procedures 文件；以官方征集和工具为准。",
+ "@cli.desc.propose.cheops": {
+  "x-review": "machine",
+  "x-source": "cceac73b43"
+ },
+ "cli.desc.setuhq": "命令行界面：``setuhq run``、``setuhq benchmark``、``setuhq calibrate``、``setuhq site``、``setuhq plate`` 等。",
+ "@cli.desc.setuhq": {
+  "x-review": "machine",
+  "x-source": "b77812ae01"
+ },
+ "cli.opt.batch.max-targets": "本次会话处理这么多目标后停止",
+ "@cli.opt.batch.max-targets": {
+  "x-review": "machine",
+  "x-source": "d73a203b72"
+ },
+ "cli.opt.batch.retries": "在之后的会话中重试失败目标的次数",
+ "@cli.opt.batch.retries": {
+  "x-review": "machine",
+  "x-source": "c1df123c33"
+ },
+ "cli.opt.batch.sectors": "每个目标的最新天区数",
+ "@cli.opt.batch.sectors": {
+  "x-review": "machine",
+  "x-source": "9847836fea"
+ },
+ "cli.opt.batch.targets": "TIC 编号的文本文件，每行一个",
+ "@cli.opt.batch.targets": {
+  "x-review": "machine",
+  "x-source": "12cb2ebf9d"
+ },
+ "cli.opt.batch.tic": "TIC 编号",
+ "@cli.opt.batch.tic": {
+  "x-review": "machine",
+  "x-source": "1ec96f2b2c"
+ },
+ "cli.opt.batch.toi-cache": "缓存的存档 TOI 表，用于将推送条目标记为 known_toi 或 new_candidate",
+ "@cli.opt.batch.toi-cache": {
+  "x-review": "machine",
+  "x-source": "ce354b2d0e"
+ },
+ "cli.opt.batch.weights": "评审者权重 JSON",
+ "@cli.opt.batch.weights": {
+  "x-review": "machine",
+  "x-source": "53409ff573"
+ },
+ "cli.opt.benchmark.out": "要写入的 markdown 文件",
+ "@cli.opt.benchmark.out": {
+  "x-review": "machine",
+  "x-source": "eb949f2129"
+ },
+ "cli.opt.benchmark.weights": "权重 JSON",
+ "@cli.opt.benchmark.weights": {
+  "x-review": "machine",
+  "x-source": "5a7dbbe171"
+ },
+ "cli.opt.binaries.cache": "缓存根目录（MAST 文件、TIC 值）",
+ "@cli.opt.binaries.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.binaries.exptime": "TESS 采样间隔（秒）",
+ "@cli.opt.binaries.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.binaries.out": "将 JSON 记录写到这里",
+ "@cli.opt.binaries.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.binaries.sector": "TESS 天区（默认：每个 SPOC 天区）",
+ "@cli.opt.binaries.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.binaries.target": "TIC 编号（如 'TIC 441420236'）、SPOC *_lc.fits 文件或 CSV（time, flux[, flux_err]）",
+ "@cli.opt.binaries.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.binaries.transit-duration": "其持续时间（d）",
+ "@cli.opt.binaries.transit-duration": {
+  "x-review": "machine",
+  "x-source": "14084d1df6"
+ },
+ "cli.opt.binaries.transit-epoch": "其凌星中心时刻（BTJD）",
+ "@cli.opt.binaries.transit-epoch": {
+  "x-review": "machine",
+  "x-source": "8e38587901"
+ },
+ "cli.opt.binaries.transit-period": "凌星候选周期（d）处的参考性审查提示",
+ "@cli.opt.binaries.transit-period": {
+  "x-review": "machine",
+  "x-source": "2c253e7f29"
+ },
+ "cli.opt.bundle.contributor": "署名用的名字（由你选择；显示在网站上）",
+ "@cli.opt.bundle.contributor": {
+  "x-review": "machine",
+  "x-source": "52709c8c8b"
+ },
+ "cli.opt.bundle.out": "要写入的贡献包目录",
+ "@cli.opt.bundle.out": {
+  "x-review": "machine",
+  "x-source": "0fd5207362"
+ },
+ "cli.opt.bundle.record": "天区记录，例如 my-sweep/sector_0005.json.gz",
+ "@cli.opt.bundle.record": {
+  "x-review": "machine",
+  "x-source": "277968793c"
+ },
+ "cli.opt.calibrate.image-dir": "若评审者需要，在此渲染校准图像",
+ "@cli.opt.calibrate.image-dir": {
+  "x-review": "machine",
+  "x-source": "8ddc793e3a"
+ },
+ "cli.opt.calibrate.out": "要写入的权重 JSON",
+ "@cli.opt.calibrate.out": {
+  "x-review": "machine",
+  "x-source": "d107a13850"
+ },
+ "cli.opt.check-sweep.fix": "从已验证的来源重建 catalogue.json",
+ "@cli.opt.check-sweep.fix": {
+  "x-review": "machine",
+  "x-source": "f89150012c"
+ },
+ "cli.opt.check-sweep.ledger-base": "一个 git ref，本导入台账只能在其基础上追加；'auto' 表示与基础分支（SETUHQ_BASE、GITHUB_BASE_REF 或远程默认分支）的 merge-base。设置了 CI 时缺少基础会失败",
+ "@cli.opt.check-sweep.ledger-base": {
+  "x-review": "machine",
+  "x-source": "f6b4b1fabb"
+ },
+ "cli.opt.cheops.denoise": "与 --flares 一起：先做小波去噪",
+ "@cli.opt.cheops.denoise": {
+  "x-review": "machine",
+  "x-source": "bd0a95d70e"
+ },
+ "cli.opt.cheops.file-key": "一次访问（CH_PR..._TG..._V....）",
+ "@cli.opt.cheops.file-key": {
+  "x-review": "machine",
+  "x-source": "e108c5fdc1"
+ },
+ "cli.opt.cheops.flares": "同时检测每次访问中的耀发",
+ "@cli.opt.cheops.flares": {
+  "x-review": "machine",
+  "x-source": "1b9e23c896"
+ },
+ "cli.opt.cheops.offline": "仅用缓存，不联网",
+ "@cli.opt.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "7fb233fb38"
+ },
+ "cli.opt.cheops.out": "将 JSON 记录写到这里",
+ "@cli.opt.cheops.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.cheops.points": "在记录中包含去趋势后的数据点",
+ "@cli.opt.cheops.points": {
+  "x-review": "machine",
+  "x-source": "de5db37740"
+ },
+ "cli.opt.cheops.target": "恒星名称或以度为单位的 'RA DEC'",
+ "@cli.opt.cheops.target": {
+  "x-review": "machine",
+  "x-source": "19a2fbdcf5"
+ },
+ "cli.opt.crossmatch.star": "恒星名称（hostname 或 pl_name）；TIC 目标也按 tic_id 匹配",
+ "@cli.opt.crossmatch.star": {
+  "x-review": "machine",
+  "x-source": "25164e4aa2"
+ },
+ "cli.opt.dashboard.catalog": "要包含的发现目录 JSON",
+ "@cli.opt.dashboard.catalog": {
+  "x-review": "machine",
+  "x-source": "941f727440"
+ },
+ "cli.opt.discover.publish-new": "仅限私有部署：在目录中保留与任何已知 TOI 都不匹配的信号。默认情况下它们会从所有公开输出中扣留（供私下审阅）；公开流程从不传递此选项",
+ "@cli.opt.discover.publish-new": {
+  "x-review": "machine",
+  "x-source": "fa834dcccf"
+ },
+ "cli.opt.docket.allow-missing-crossmatch": "即使没有可用的已存储存档交叉匹配也生成；页面会显示存储的错误",
+ "@cli.opt.docket.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.docket.refresh-crossmatch": "先运行 'setuhq crossmatch'：查询存档并存储 crossmatch.json",
+ "@cli.opt.docket.refresh-crossmatch": {
+  "x-review": "machine",
+  "x-source": "16850a4df3"
+ },
+ "cli.opt.docket.star": "用于存档交叉匹配的恒星名称（hostname 或 pl_name）；TIC 目标也按 tic_id 匹配",
+ "@cli.opt.docket.star": {
+  "x-review": "machine",
+  "x-source": "fa232a85fb"
+ },
+ "cli.opt.export.allow-unchecked": "即使无法进行 TOI 重复检查也导出（各行会注明）",
+ "@cli.opt.export.allow-unchecked": {
+  "x-review": "machine",
+  "x-source": "00695ab022"
+ },
+ "cli.opt.export.days": "预测凌星窗口的时间跨度",
+ "@cli.opt.export.days": {
+  "x-review": "machine",
+  "x-source": "331c4f1544"
+ },
+ "cli.opt.export.toi-cache": "缓存的存档 TOI 表（缺失时获取并写到这里）",
+ "@cli.opt.export.toi-cache": {
+  "x-review": "machine",
+  "x-source": "a99eb8c584"
+ },
+ "cli.opt.flares.cache": "缓存根目录（MAST 文件、TIC 值）",
+ "@cli.opt.flares.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.flares.completeness": "N 次注入-回收试验（每次 10 个耀发）",
+ "@cli.opt.flares.completeness": {
+  "x-review": "machine",
+  "x-source": "138f48258e"
+ },
+ "cli.opt.flares.denoise": "先做平稳小波去噪（需要 setuhq[wavelets]）",
+ "@cli.opt.flares.denoise": {
+  "x-review": "machine",
+  "x-source": "923a73f3ed"
+ },
+ "cli.opt.flares.distance-pc": "覆盖 TIC 距离（pc）",
+ "@cli.opt.flares.distance-pc": {
+  "x-review": "machine",
+  "x-source": "5f618e8fe1"
+ },
+ "cli.opt.flares.exptime": "TESS 采样间隔（秒）",
+ "@cli.opt.flares.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.flares.mission": "设定检测默认值和波段",
+ "@cli.opt.flares.mission": {
+  "x-review": "machine",
+  "x-source": "707cfede2f"
+ },
+ "cli.opt.flares.no-null": "跳过通量翻转的零假设检验",
+ "@cli.opt.flares.no-null": {
+  "x-review": "machine",
+  "x-source": "15da4f002c"
+ },
+ "cli.opt.flares.out": "将 JSON 记录写到这里",
+ "@cli.opt.flares.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.flares.radius": "覆盖 TIC 半径（太阳半径）",
+ "@cli.opt.flares.radius": {
+  "x-review": "machine",
+  "x-source": "2333e6c1d4"
+ },
+ "cli.opt.flares.sector": "TESS 天区（默认：每个 SPOC 天区）",
+ "@cli.opt.flares.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.flares.target": "TIC 编号（如 'TIC 441420236'）、SPOC *_lc.fits 文件或 CSV（time, flux[, flux_err]）",
+ "@cli.opt.flares.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.flares.teff": "覆盖 TIC 的 Teff（K）",
+ "@cli.opt.flares.teff": {
+  "x-review": "machine",
+  "x-source": "f8dce33e3f"
+ },
+ "cli.opt.flares.tmag": "覆盖 TIC 的 TESS 星等",
+ "@cli.opt.flares.tmag": {
+  "x-review": "machine",
+  "x-source": "5d89050461"
+ },
+ "cli.opt.ingest.accept-sentinels": "接受含有 Sentinels 的贡献包，其凹陷无法在此重新搜索（目录会注明）",
+ "@cli.opt.ingest.accept-sentinels": {
+  "x-review": "machine",
+  "x-source": "43052bd204"
+ },
+ "cli.opt.ingest.attested-by": "发送贡献包者的 GitHub 登录名（拉取请求的作者）",
+ "@cli.opt.ingest.attested-by": {
+  "x-review": "machine",
+  "x-source": "99ebfcc35a"
+ },
+ "cli.opt.ingest.bundle": "贡献包目录或 .zip",
+ "@cli.opt.ingest.bundle": {
+  "x-review": "machine",
+  "x-source": "8a6728595c"
+ },
+ "cli.opt.ingest.verify-lightcurves": "除每个含行星候选或含超出其零假设的类别条目的恒星天区外，再随机获取并重新搜索的恒星天区数（默认：max(3, 5%%)）；每个条目都必须一致",
+ "@cli.opt.ingest.verify-lightcurves": {
+  "x-review": "machine",
+  "x-source": "a8325b1730"
+ },
+ "cli.opt.leaderboard.submission": "一个提交 JSON（docs/leaderboard/README.md）；省略则重建表格",
+ "@cli.opt.leaderboard.submission": {
+  "x-review": "machine",
+  "x-source": "0a572af021"
+ },
+ "cli.opt.leaderboard.submissions": "重建时要评分的提交目录",
+ "@cli.opt.leaderboard.submissions": {
+  "x-review": "machine",
+  "x-source": "d14c33cf89"
+ },
+ "cli.opt.plate.allow-missing-crossmatch": "即使没有可用的已存储存档交叉匹配也生成；页面会显示存储的错误",
+ "@cli.opt.plate.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.plate.catalog": "发现目录 JSON：其中的恒星也获得图版并加入时间之河",
+ "@cli.opt.plate.catalog": {
+  "x-review": "machine",
+  "x-source": "e0f0c444fc"
+ },
+ "cli.opt.plate.star": "用于存档交叉匹配的恒星名称，同 'setuhq docket'",
+ "@cli.opt.plate.star": {
+  "x-review": "machine",
+  "x-source": "5a6e358f96"
+ },
+ "cli.opt.propose.cheops.author-name": "匿名性检查必须标出的姓名（可重复；从不写入准备包）",
+ "@cli.opt.propose.cheops.author-name": {
+  "x-review": "machine",
+  "x-source": "4155c649d2"
+ },
+ "cli.opt.propose.cheops.coord-source": "--ra/--dec 的来源（ExoFOP 和 Gaia 的位置会被拒绝：历元不对）",
+ "@cli.opt.propose.cheops.coord-source": {
+  "x-review": "machine",
+  "x-source": "60a0952794"
+ },
+ "cli.opt.propose.cheops.cycle": "提交周期 YYYY-MM（默认：该项目下一个开放的周期）",
+ "@cli.opt.propose.cheops.cycle": {
+  "x-review": "machine",
+  "x-source": "0fd6ca07d8"
+ },
+ "cli.opt.propose.cheops.dec": "你的赤纬，单位度（ICRS，J2000）",
+ "@cli.opt.propose.cheops.dec": {
+  "x-review": "machine",
+  "x-source": "c89b51ca1f"
+ },
+ "cli.opt.propose.cheops.depth-ppm": "事件深度（凌星、食）或耀发振幅，ppm",
+ "@cli.opt.propose.cheops.depth-ppm": {
+  "x-review": "machine",
+  "x-source": "f68df536ad"
+ },
+ "cli.opt.propose.cheops.duration-hours": "事件持续时间，单位小时",
+ "@cli.opt.propose.cheops.duration-hours": {
+  "x-review": "machine",
+  "x-source": "5e5ef3e71f"
+ },
+ "cli.opt.propose.cheops.efficiency": "假定的观测效率（占位值；请从 Visibility Tool 获取你的值）",
+ "@cli.opt.propose.cheops.efficiency": {
+  "x-review": "machine",
+  "x-source": "365381f043"
+ },
+ "cli.opt.propose.cheops.flare-rate": "每天超过该振幅的耀发次数（用于 --event flare）",
+ "@cli.opt.propose.cheops.flare-rate": {
+  "x-review": "machine",
+  "x-source": "83b5c5aff0"
+ },
+ "cli.opt.propose.cheops.gmag": "Gaia G 星等（默认：SIMBAD 的值）",
+ "@cli.opt.propose.cheops.gmag": {
+  "x-review": "machine",
+  "x-source": "1501588e77"
+ },
+ "cli.opt.propose.cheops.institution": "匿名性检查必须标出的机构（可重复；从不写入准备包）",
+ "@cli.opt.propose.cheops.institution": {
+  "x-review": "machine",
+  "x-source": "c02f921244"
+ },
+ "cli.opt.propose.cheops.name": "runs/propose/ 下的准备包名称（默认 cheops-<target>-<cycle>）",
+ "@cli.opt.propose.cheops.name": {
+  "x-review": "machine",
+  "x-source": "31cda5b062"
+ },
+ "cli.opt.propose.cheops.no-cache": "不读写 cache/cheops-propose/",
+ "@cli.opt.propose.cheops.no-cache": {
+  "x-review": "machine",
+  "x-source": "082b236e30"
+ },
+ "cli.opt.propose.cheops.offline": "不发出任何网络请求（仅用缓存；检查项会显示 'not checked'）",
+ "@cli.opt.propose.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "fa7a0c88a2"
+ },
+ "cli.opt.propose.cheops.orbits": "你打算申请的轨道数（按项目上限检查）",
+ "@cli.opt.propose.cheops.orbits": {
+  "x-review": "machine",
+  "x-source": "8d710414cd"
+ },
+ "cli.opt.propose.cheops.out": "要创建的准备包目录（默认 runs/propose/<name>；从不覆盖）",
+ "@cli.opt.propose.cheops.out": {
+  "x-review": "machine",
+  "x-source": "fc29338ed1"
+ },
+ "cli.opt.propose.cheops.period": "周期，天",
+ "@cli.opt.propose.cheops.period": {
+  "x-review": "machine",
+  "x-source": "0f00d3ed0b"
+ },
+ "cli.opt.propose.cheops.period-err": "其 1σ 误差，天",
+ "@cli.opt.propose.cheops.period-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.ra": "你的赤经，单位度（ICRS，J2000），代替 SIMBAD 的值",
+ "@cli.opt.propose.cheops.ra": {
+  "x-review": "machine",
+  "x-source": "7452b9af9c"
+ },
+ "cli.opt.propose.cheops.snr": "事件的目标信噪比 S/N（默认 10）",
+ "@cli.opt.propose.cheops.snr": {
+  "x-review": "machine",
+  "x-source": "1bed72cce4"
+ },
+ "cli.opt.propose.cheops.t0": "凌星中心时刻，BJD_TDB（或 BTJD）",
+ "@cli.opt.propose.cheops.t0": {
+  "x-review": "machine",
+  "x-source": "3583f77acc"
+ },
+ "cli.opt.propose.cheops.t0-err": "其 1σ 误差，天",
+ "@cli.opt.propose.cheops.t0-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.target": "SIMBAD 中的目标名称（如 'TOI-1987'、'HD 39091'、'TIC 349088467'）",
+ "@cli.opt.propose.cheops.target": {
+  "x-review": "machine",
+  "x-source": "dc643ed38a"
+ },
+ "cli.opt.propose.cheops.window-end": "最后观测日期（默认 2029-12-31）",
+ "@cli.opt.propose.cheops.window-end": {
+  "x-review": "machine",
+  "x-source": "bb4ef3a3e8"
+ },
+ "cli.opt.propose.cheops.window-start": "最早观测日期（默认：该周期最早的开始日期）",
+ "@cli.opt.propose.cheops.window-start": {
+  "x-review": "machine",
+  "x-source": "f1537bbf4b"
+ },
+ "cli.opt.propose.lint.author-name": "要标出的姓名，包括常见变体（可重复）",
+ "@cli.opt.propose.lint.author-name": {
+  "x-review": "machine",
+  "x-source": "896776ed61"
+ },
+ "cli.opt.propose.lint.institution": "要标出的机构（可重复）",
+ "@cli.opt.propose.lint.institution": {
+  "x-review": "machine",
+  "x-source": "7dfbfc57ef"
+ },
+ "cli.opt.pulsations.cache": "缓存根目录（MAST 文件、TIC 值）",
+ "@cli.opt.pulsations.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.pulsations.exptime": "TESS 采样间隔（秒）",
+ "@cli.opt.pulsations.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.pulsations.fmax": "最高频率（d⁻¹；默认奈奎斯特频率）",
+ "@cli.opt.pulsations.fmax": {
+  "x-review": "machine",
+  "x-source": "1d96a068e1"
+ },
+ "cli.opt.pulsations.fmin": "最低频率（d⁻¹）",
+ "@cli.opt.pulsations.fmin": {
+  "x-review": "machine",
+  "x-source": "e982706993"
+ },
+ "cli.opt.pulsations.out": "将 JSON 记录写到这里",
+ "@cli.opt.pulsations.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.pulsations.sector": "TESS 天区（默认：每个 SPOC 天区）",
+ "@cli.opt.pulsations.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.pulsations.solar": "始终进行 numax/Δν 分析",
+ "@cli.opt.pulsations.solar": {
+  "x-review": "machine",
+  "x-source": "0cc921a51c"
+ },
+ "cli.opt.pulsations.surrogates": "用于虚假频率率的红噪声替代数据",
+ "@cli.opt.pulsations.surrogates": {
+  "x-review": "machine",
+  "x-source": "2d606e2fee"
+ },
+ "cli.opt.pulsations.target": "TIC 编号（如 'TIC 441420236'）、SPOC *_lc.fits 文件或 CSV（time, flux[, flux_err]）",
+ "@cli.opt.pulsations.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.pulsations.teff": "用于类型启发式判断的 Teff（K）（默认：TIC）",
+ "@cli.opt.pulsations.teff": {
+  "x-review": "machine",
+  "x-source": "3cd47aa62d"
+ },
+ "cli.opt.report.benchmark": "要嵌入的基准测试 markdown",
+ "@cli.opt.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "50a27fedb7"
+ },
+ "cli.opt.report.out": "要写入的网站目录",
+ "@cli.opt.report.out": {
+  "x-review": "machine",
+  "x-source": "439462c999"
+ },
+ "cli.opt.report.validation": "要嵌入的验证 markdown",
+ "@cli.opt.report.validation": {
+  "x-review": "machine",
+  "x-source": "8ea7211541"
+ },
+ "cli.opt.rotation.cache": "缓存根目录（MAST 文件、TIC 值）",
+ "@cli.opt.rotation.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.rotation.exptime": "TESS 采样间隔（秒）",
+ "@cli.opt.rotation.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.rotation.out": "将 JSON 记录写到这里",
+ "@cli.opt.rotation.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.rotation.sector": "TESS 天区（默认：每个 SPOC 天区）",
+ "@cli.opt.rotation.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.rotation.target": "TIC 编号（如 'TIC 441420236'）、SPOC *_lc.fits 文件或 CSV（time, flux[, flux_err]）",
+ "@cli.opt.rotation.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.run.cache": "Claude 响应的缓存根目录",
+ "@cli.opt.run.cache": {
+  "x-review": "machine",
+  "x-source": "eeda390458"
+ },
+ "cli.opt.run.calibrated-weights": "当评审者编号与配置一致时默认使用的已校准权重",
+ "@cli.opt.run.calibrated-weights": {
+  "x-review": "machine",
+  "x-source": "0d6473928d"
+ },
+ "cli.opt.run.out": "输出目录",
+ "@cli.opt.run.out": {
+  "x-review": "machine",
+  "x-source": "7e0ee3625e"
+ },
+ "cli.opt.run.uniform-weights": "每个评审者的权重都为 1.0",
+ "@cli.opt.run.uniform-weights": {
+  "x-review": "machine",
+  "x-source": "db3384cb7c"
+ },
+ "cli.opt.run.weights": "来自 'setuhq calibrate' 的评审者权重 JSON 文件（覆盖默认值）",
+ "@cli.opt.run.weights": {
+  "x-review": "machine",
+  "x-source": "802d0e0a5b"
+ },
+ "cli.opt.setuhq.lang": "输出和帮助的语言（en, nl, pl, pt, fi, sv, da, nb, cs, uk, ru, de, fr, es, et, ja, zh-Hans）；否则依次为 SETUHQ_LANG、LC_ALL、LC_MESSAGES 或 LANG；默认英语。文件和 JSON 保持英文",
+ "@cli.opt.setuhq.lang": {
+  "x-review": "machine",
+  "x-source": "02f46f5ea1"
+ },
+ "cli.opt.site.allow-missing-crossmatch": "即使没有可用的已存储存档交叉匹配也生成；页面会显示存储的错误",
+ "@cli.opt.site.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.site.benchmark": "运行报告的基准测试说明",
+ "@cli.opt.site.benchmark": {
+  "x-review": "machine",
+  "x-source": "8c60c65795"
+ },
+ "cli.opt.site.catalog": "用于“候选”和“运行”页面的发现目录 JSON",
+ "@cli.opt.site.catalog": {
+  "x-review": "machine",
+  "x-source": "3c64583755"
+ },
+ "cli.opt.site.no-extras": "不生成运行报告、图版和独立案卷",
+ "@cli.opt.site.no-extras": {
+  "x-review": "machine",
+  "x-source": "ea0dea2308"
+ },
+ "cli.opt.site.out": "网站根目录（setuhq.com 为 site/）",
+ "@cli.opt.site.out": {
+  "x-review": "machine",
+  "x-source": "ff9482ee28"
+ },
+ "cli.opt.site.run_dir": "已存储的运行：先是主运行（天图、评审组和主页的参考检查），然后是其他示例运行；每个运行都会获得其凹陷页面、案卷、图版和报告",
+ "@cli.opt.site.run_dir": {
+  "x-review": "machine",
+  "x-source": "935df39235"
+ },
+ "cli.opt.site.showcase": "示例运行的说明和文献对比（scripts/showcase_compare.py）",
+ "@cli.opt.site.showcase": {
+  "x-review": "machine",
+  "x-source": "a8d2fbc8b7"
+ },
+ "cli.opt.site.star": "案卷存档交叉匹配所用的恒星名称，同 'setuhq docket'",
+ "@cli.opt.site.star": {
+  "x-review": "machine",
+  "x-source": "3a81206f9b"
+ },
+ "cli.opt.site.sweep": "用于“一切变暗之物”、主页计数器和天空图层的扫描目录（setuhq sweep）",
+ "@cli.opt.site.sweep": {
+  "x-review": "machine",
+  "x-source": "2cbca7c299"
+ },
+ "cli.opt.site.validation": "运行报告的验证说明",
+ "@cli.opt.site.validation": {
+  "x-review": "machine",
+  "x-source": "3aa3ee0254"
+ },
+ "cli.opt.site.weights": "在“证据”页面显示的已校准评审者权重 JSON",
+ "@cli.opt.site.weights": {
+  "x-review": "machine",
+  "x-source": "17d9554285"
+ },
+ "cli.opt.sweep.cache": "缓存根目录：目标列表、光变曲线文件、逐星记录",
+ "@cli.opt.sweep.cache": {
+  "x-review": "machine",
+  "x-source": "4ceefeb748"
+ },
+ "cli.opt.sweep.classified-commit": "与 --reclassify 一起：最后一次对此类记录分类的 git 修订",
+ "@cli.opt.sweep.classified-commit": {
+  "x-review": "machine",
+  "x-source": "a041546a77"
+ },
+ "cli.opt.sweep.config": "扫描配置，例如 configs/sweep.toml（Probes）或 configs/sweep_sentinels.toml",
+ "@cli.opt.sweep.config": {
+  "x-review": "machine",
+  "x-source": "7d010ce268"
+ },
+ "cli.opt.sweep.contributor": "本次扫描署名的名字",
+ "@cli.opt.sweep.contributor": {
+  "x-review": "machine",
+  "x-source": "2d65f8895f"
+ },
+ "cli.opt.sweep.limit": "按扫描顺序处理该天区的目标数",
+ "@cli.opt.sweep.limit": {
+  "x-review": "machine",
+  "x-source": "b2105a1cbf"
+ },
+ "cli.opt.sweep.min-interval": "两次 MAST 请求之间的秒数（至少）",
+ "@cli.opt.sweep.min-interval": {
+  "x-review": "machine",
+  "x-source": "1e29475701"
+ },
+ "cli.opt.sweep.no-control": "跳过每颗恒星的通量翻转对照运行",
+ "@cli.opt.sweep.no-control": {
+  "x-review": "machine",
+  "x-source": "0af9322de6"
+ },
+ "cli.opt.sweep.out": "天区记录和 catalogue.json 的写入位置",
+ "@cli.opt.sweep.out": {
+  "x-review": "machine",
+  "x-source": "74a76b8e20"
+ },
+ "cli.opt.sweep.reclassify": "对已存储的恒星天区重新应用分类规则（仅在修改 variables.py 之后）",
+ "@cli.opt.sweep.reclassify": {
+  "x-review": "machine",
+  "x-source": "86ff3a8c91"
+ },
+ "cli.opt.sweep.rule-change": "与 --reclassify 一起：规则中改了什么（每项改动重复一次）",
+ "@cli.opt.sweep.rule-change": {
+  "x-review": "machine",
+  "x-source": "a0203dbc98"
+ },
+ "cli.opt.sweep.search-commit": "与 --reclassify 一起：搜索仅注明一个代码的记录的 git 修订",
+ "@cli.opt.sweep.search-commit": {
+  "x-review": "machine",
+  "x-source": "139e54a5b2"
+ },
+ "cli.opt.sweep.time-budget-min": "超过这么多分钟后不再开始新的恒星",
+ "@cli.opt.sweep.time-budget-min": {
+  "x-review": "machine",
+  "x-source": "838fb96162"
+ },
+ "cli.opt.sweep.weights": "已校准的权重；文件中没有的评审者权重为 1.0",
+ "@cli.opt.sweep.weights": {
+  "x-review": "machine",
+  "x-source": "015b47d6f0"
+ },
+ "cli.opt.sweep.workers": "同时搜索恒星的进程数（下载仍逐个进行）",
+ "@cli.opt.sweep.workers": {
+  "x-review": "machine",
+  "x-source": "8046b64f2f"
+ },
+ "cli.opt.transients.cache": "缓存根目录（MAST 文件、TIC 值、切图）",
+ "@cli.opt.transients.cache": {
+  "x-review": "machine",
+  "x-source": "4994163c4f"
+ },
+ "cli.opt.transients.dec": "Dec（度）",
+ "@cli.opt.transients.dec": {
+  "x-review": "machine",
+  "x-source": "9b73841e14"
+ },
+ "cli.opt.transients.exptime": "TESS 采样间隔（秒）",
+ "@cli.opt.transients.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.transients.keep-cutout": "将下载的切图保留在缓存中",
+ "@cli.opt.transients.keep-cutout": {
+  "x-review": "machine",
+  "x-source": "30d3ece3c5"
+ },
+ "cli.opt.transients.out": "将 JSON 记录写到这里",
+ "@cli.opt.transients.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.transients.ra": "RA（度）：在全帧图像的 TESScut 切图上做测光",
+ "@cli.opt.transients.ra": {
+  "x-review": "machine",
+  "x-source": "80c280d2d9"
+ },
+ "cli.opt.transients.sector": "TESS 天区（与 --ra/--dec 一起：要切图的那个天区）",
+ "@cli.opt.transients.sector": {
+  "x-review": "machine",
+  "x-source": "471c0813f6"
+ },
+ "cli.opt.transients.size": "切图大小，单位像素（默认 11）",
+ "@cli.opt.transients.size": {
+  "x-review": "machine",
+  "x-source": "c0ba5e1825"
+ },
+ "cli.opt.transients.target": "TIC 编号、SPOC *_lc.fits 文件或 CSV（使用 --ra/--dec 时省略）",
+ "@cli.opt.transients.target": {
+  "x-review": "machine",
+  "x-source": "eb65265df5"
+ },
+ "cli.opt.transients.time": "使用 --ra/--dec 且未给 --sector 时：包含此 BTJD 的天区",
+ "@cli.opt.transients.time": {
+  "x-review": "machine",
+  "x-source": "59af8e0810"
+ },
+ "cli.out.asset_budget": "超出资源预算：{line}",
+ "@cli.out.asset_budget": {
+  "x-review": "machine",
+  "x-source": "1a08ee7ef2"
+ },
+ "cli.out.catalogue_site": "目录 {catalogue}，网站 {site}",
+ "@cli.out.catalogue_site": {
+  "x-review": "machine",
+  "x-source": "45ece88b52"
+ },
+ "cli.out.classifications": "分类：{n}",
+ "@cli.out.classifications": {
+  "x-review": "machine",
+  "x-source": "0f32738b00"
+ },
+ "cli.out.consensus": "共识事件：{n}（{k} 个通过审查）",
+ "@cli.out.consensus": {
+  "x-review": "machine",
+  "x-source": "0e7161a11f"
+ },
+ "cli.out.dashboard": "仪表板已写入 {path}",
+ "@cli.out.dashboard": {
+  "x-review": "machine",
+  "x-source": "794588aab9"
+ },
+ "cli.out.discover": "本次运行审阅的目标：{n}，与已知 TOI 的匹配：{k}",
+ "@cli.out.discover": {
+  "x-review": "machine",
+  "x-source": "e86d5ed05d"
+ },
+ "cli.out.docket": "案卷已写入 {path}",
+ "@cli.out.docket": {
+  "x-review": "machine",
+  "x-source": "3461730266"
+ },
+ "cli.out.lightcurves": "光变曲线：{n}",
+ "@cli.out.lightcurves": {
+  "x-review": "machine",
+  "x-source": "b98d2bfa2b"
+ },
+ "cli.out.outputs": "输出位于 {path}",
+ "@cli.out.outputs": {
+  "x-review": "machine",
+  "x-source": "ad5b1626c3"
+ },
+ "cli.out.page_budget": "超出单页预算：{line}",
+ "@cli.out.page_budget": {
+  "x-review": "machine",
+  "x-source": "719f1ca170"
+ },
+ "cli.out.plates": "图版已写入 {path}",
+ "@cli.out.plates": {
+  "x-review": "machine",
+  "x-source": "3fd4254e8b"
+ },
+ "cli.out.rebuilt": "已重建 {n} 个共识事件（{k} 个通过审查），位于 {path}",
+ "@cli.out.rebuilt": {
+  "x-review": "machine",
+  "x-source": "06707f0892"
+ },
+ "cli.out.site": "网站已写入 {path}",
+ "@cli.out.site": {
+  "x-review": "machine",
+  "x-source": "e59ebe1ee1"
+ },
+ "cli.out.subjects": "对象：     {n}",
+ "@cli.out.subjects": {
+  "x-review": "machine",
+  "x-source": "184630bc2c"
+ },
+ "cli.out.weights": "评审者权重：{source}",
+ "@cli.out.weights": {
+  "x-review": "machine",
+  "x-source": "1089f763c0"
+ },
+ "cli.out.weights_written": "权重已写入 {path}，比率已写入 {rates}",
+ "@cli.out.weights_written": {
+  "x-review": "machine",
+  "x-source": "6828f69f91"
+ },
+ "desc.catalogue": "exoplanet.eu 中的每颗行星，可搜索、可排序，每颗都有自己的页面。这些行星不是 SetuHQ 发现的。",
+ "@desc.catalogue": {
+  "x-review": "machine",
+  "x-source": "4321b00077"
+ },
+ "desc.docs": "安装 SetuHQ，搜索一颗恒星，贡献一次扫描，通过 MCP 连接 AI 助手，并下载数据。",
+ "@desc.docs": {
+  "x-review": "machine",
+  "x-source": "242925f427"
+ },
+ "desc.editions": "SetuHQ 的版本：免费的开放核心（AGPL-3.0 或商业许可）、SetuHQ Pro（开发中，按合同提供）和定制研究。不标价格；每条付费途径都从一条消息开始。",
+ "@desc.editions": {
+  "x-review": "machine",
+  "x-source": "34320f5c27"
+ },
+ "desc.explorer": "本次运行的凹陷及其案卷，以及搜索推送中的 {n, plural, other {# 个条目}}。候选均未确认；没有一个是已确认的行星。",
+ "@desc.explorer": {
+  "x-review": "machine",
+  "x-source": "12bbc1141b"
+ },
+ "desc.galaxy": "每颗存储了距离的已知系外行星，按发现方法和年份，以三维方式放在太阳周围。",
+ "@desc.galaxy": {
+  "x-review": "machine",
+  "x-source": "1d04a19fb8"
+ },
+ "desc.leaderboard": "在真实 TOI 基准的保留半数上盲评的方法，附 Wilson 95% 区间。",
+ "@desc.leaderboard": {
+  "x-review": "machine",
+  "x-source": "f63d09cd7f"
+ },
+ "desc.methods": "“工作原理”共 {n} 章中的第 {i} 章：{title}。附物理原理和出处的动画讲解。",
+ "@desc.methods": {
+  "x-review": "machine",
+  "x-source": "72765a8c0c"
+ },
+ "desc.mission": "SetuHQ 各视图的平铺工作区，由一颗选中的恒星联动：银河、天空、光变曲线、目录和评审组推送。",
+ "@desc.mission": {
+  "x-review": "machine",
+  "x-source": "aea05e50d5"
+ },
+ "desc.overview": "{tagline} 由 Sentinels 和 Probes 组成的校准评审组读取 TESS 光变曲线，并解释每个判定。SetuHQ 的每个结果都是{status}。",
+ "@desc.overview": {
+  "x-review": "machine",
+  "x-source": "e4c31340b2"
+ },
+ "desc.pictures": "SetuHQ 如何绘图：恒星用其黑体颜色，行星则是根据测得的半径和辐照选择的艺术想象图，附每条规则和出处。",
+ "@desc.pictures": {
+  "x-review": "machine",
+  "x-source": "f81ce510dd"
+ },
+ "desc.planets": "如果每个候选的深度来自行星，它意味着什么：行星与恒星的半径比，以及为什么不给出行星大小。",
+ "@desc.planets": {
+  "x-review": "machine",
+  "x-source": "33a6642674"
+ },
+ "desc.propose": "用 setuhq propose cheops 准备 CHEOPS Guest Observers 提案：一个起草辅助工具，检查规则和目标，从不提交任何内容。",
+ "@desc.propose": {
+  "x-review": "machine",
+  "x-source": "415a0f0956"
+ },
+ "desc.runs": "每次搜索运行、按存储原样显示的错误，以及候选页面背后的配置。",
+ "@desc.runs": {
+  "x-review": "machine",
+  "x-source": "2fc865ecd8"
+ },
+ "desc.sentinels": "每个判定背后的评审者、他们的校准，以及评审组在真实 TESS Objects of Interest 上的盲评成绩。{attribution}",
+ "@desc.sentinels": {
+  "x-review": "machine",
+  "x-source": "6325eab793"
+ },
+ "desc.sky": "本次运行的恒星在全天图上，附评审组标记的凹陷和巡天观测过的区域。{headline}",
+ "@desc.sky": {
+  "x-review": "machine",
+  "x-source": "22c5e64296"
+ },
+ "desc.stellar": "耀发、脉动、CHEOPS 光变曲线、食双星、自转和暂现源：SetuHQ 每个恒星工具的验证程度，附每项计数的检查和真实 TESS 数据的图。",
+ "@desc.stellar": {
+  "x-review": "machine",
+  "x-source": "fd3ad97a67"
+ },
+ "desc.stellardocs": "运行 SetuHQ 的恒星命令：耀发、脉动、公开 CHEOPS 光变曲线、食双星、自转和暂现源，附其验证状态以及 ESA 对 CHEOPS 数据的条款。",
+ "@desc.stellardocs": {
+  "x-review": "machine",
+  "x-source": "69d64ce7ce"
+ },
+ "desc.tessnow": "TESS 卫星逐天区指向何处，依据其公布的观测计划：天图上的四个相机视场及其中已编目的恒星。不是实时遥测。",
+ "@desc.tessnow": {
+  "x-review": "machine",
+  "x-source": "b892187187"
+ },
+ "desc.variables": "SetuHQ 对 TESS 天区的扫描：每个找到并分类的凹陷，每个类别都与其自身的零假设对照。",
+ "@desc.variables": {
+  "x-review": "machine",
+  "x-source": "ec6feba9c3"
+ },
+ "desc.vetter": "查看 SetuHQ 示例运行中存储的一个真实凹陷，判为通过、待复核或否决，然后看看审查的结论。一个学习练习；答案不会被收集。",
+ "@desc.vetter": {
+  "x-review": "machine",
+  "x-source": "a0ad69fc0e"
+ },
+ "dip.state.cand": "候选，未确认",
+ "@dip.state.cand": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "dip.state.open": "待复核，未决",
+ "@dip.state.open": {
+  "x-review": "machine",
+  "x-source": "5c42a6d0b9"
+ },
+ "dip.state.rej": "被审查否决，不是候选",
+ "@dip.state.rej": {
+  "x-review": "machine",
+  "x-source": "0c75827454"
+ },
+ "dip.tag.cand": "候选",
+ "@dip.tag.cand": {
+  "x-review": "machine",
+  "x-source": "dda18a0e21"
+ },
+ "dip.tag.open": "待复核",
+ "@dip.tag.open": {
+  "x-review": "machine",
+  "x-source": "5588be887f"
+ },
+ "dip.tag.rej": "否决",
+ "@dip.tag.rej": {
+  "x-review": "machine",
+  "x-source": "20cd938a2e"
+ },
+ "docs.contribute": "贡献一次扫描",
+ "@docs.contribute": {
+  "x-review": "machine",
+  "x-source": "3118488db2"
+ },
+ "docs.contribute.a": "如何贡献 ›",
+ "@docs.contribute.a": {
+  "x-review": "machine",
+  "x-source": "fefd95f45c"
+ },
+ "docs.contribute.p": "在自己的电脑上搜索 TESS 天区的一部分，并发送结果，附署名。",
+ "@docs.contribute.p": {
+  "x-review": "machine",
+  "x-source": "7636e0e0dd"
+ },
+ "docs.data": "数据和文件",
+ "@docs.data": {
+  "x-review": "machine",
+  "x-source": "1544ff48d7"
+ },
+ "docs.data.a": "下载 ›",
+ "@docs.data.a": {
+  "x-review": "machine",
+  "x-source": "8e6ab2918b"
+ },
+ "docs.data.p": "本站所有目录的下载，以及证据背后的报告。",
+ "@docs.data.p": {
+  "x-review": "machine",
+  "x-source": "a7dd9ada99"
+ },
+ "docs.editions": "版本",
+ "@docs.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "docs.editions.a": "比较各版本 ›",
+ "@docs.editions.a": {
+  "x-review": "machine",
+  "x-source": "90fe459127"
+ },
+ "docs.editions.p": "开放核心免费。SetuHQ Pro（开发中）和定制研究按合同提供，不标价格：每项都从一条消息开始。",
+ "@docs.editions.p": {
+  "x-review": "machine",
+  "x-source": "a4c5119805"
+ },
+ "docs.h1": "自己运行。",
+ "@docs.h1": {
+  "x-review": "machine",
+  "x-source": "a1737d6898"
+ },
+ "docs.install": "安装与首次运行",
+ "@docs.install": {
+  "x-review": "machine",
+  "x-source": "ea230bebae"
+ },
+ "docs.intro": "SetuHQ 是开源软件。安装它，用本站展示的同一评审组搜索一颗恒星的光变曲线，贡献一次天空扫描，或让你的 AI 助手使用它。",
+ "@docs.intro": {
+  "x-review": "machine",
+  "x-source": "7d1db3c963"
+ },
+ "docs.mcp": "在助手中使用",
+ "@docs.mcp": {
+  "x-review": "machine",
+  "x-source": "ee854c3928"
+ },
+ "docs.mcp.a": "通过 MCP 连接 ›",
+ "@docs.mcp.a": {
+  "x-review": "machine",
+  "x-source": "c393096cc9"
+ },
+ "docs.mcp.h": "在 AI 助手中使用（MCP）",
+ "@docs.mcp.h": {
+  "x-review": "machine",
+  "x-source": "f46e936a3b"
+ },
+ "docs.mcp.p": "MCP 服务器让助手运行 SetuHQ 自己的代码并读取其结果。",
+ "@docs.mcp.p": {
+  "x-review": "machine",
+  "x-source": "eb88b7d692"
+ },
+ "docs.pictures": "图是如何绘制的",
+ "@docs.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "docs.pictures.a": "关于图 ›",
+ "@docs.pictures.a": {
+  "x-review": "machine",
+  "x-source": "d4afb0f5d1"
+ },
+ "docs.pictures.p": "恒星用其黑体颜色；行星是根据测得的半径和辐照选择的艺术想象图。每条规则和出处。",
+ "@docs.pictures.p": {
+  "x-review": "machine",
+  "x-source": "7c281d6576"
+ },
+ "docs.prov": "技术细节：图的来源",
+ "@docs.prov": {
+  "x-review": "machine",
+  "x-source": "1cfbcdad80"
+ },
+ "docs.python": "SetuHQ 需要 Python {v} 或更新版本。",
+ "@docs.python": {
+  "x-review": "machine",
+  "x-source": "3159020543"
+ },
+ "docs.start": "入门",
+ "@docs.start": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "docs.start.a": "安装与首次运行 ›",
+ "@docs.start.a": {
+  "x-review": "machine",
+  "x-source": "468f664b71"
+ },
+ "docs.start.p": "安装后，搜索任意 TESS 恒星的光变曲线，就像本站每个示例运行所做的那样。",
+ "@docs.start.p": {
+  "x-review": "machine",
+  "x-source": "2e8b6ed67a"
+ },
+ "ed.compare": "比较各版本",
+ "@ed.compare": {
+  "x-review": "machine",
+  "x-source": "0a79392035"
+ },
+ "ed.compare.p": "逐行阅读以比较三者。",
+ "@ed.compare.p": {
+  "x-review": "machine",
+  "x-source": "59ba9870b5"
+ },
+ "ed.h1": "版本。",
+ "@ed.h1": {
+  "x-review": "machine",
+  "x-source": "d98733b93e"
+ },
+ "ed.intro": "整个引擎都是免费的，并将一直免费。Ashforde OÜ 依靠商业许可、SetuHQ Pro 和定制研究来维持它，而不是靠功能限制。本站不标价格：每条付费途径都从一条消息开始。",
+ "@ed.intro": {
+  "x-review": "machine",
+  "x-source": "d588b090c3"
+ },
+ "ex.h1": "来自{stars, plural, =1 {一颗示例恒星} other {# 颗示例恒星}}、可以打开的 {n, plural, other {# 个凹陷}}。",
+ "@ex.h1": {
+  "x-review": "machine",
+  "x-source": "ad8e8b5e42"
+ },
+ "ex.intro": "评审组在每颗示例恒星的 TESS 光变曲线中标记的凹陷，按恒星分组，按审查结果计数。通过审查的凹陷是{status}；待复核的凹陷尚未决定；被否决的凹陷不是候选。没有一个是已确认的行星。打开一个即可观看回放，或打开其案卷查看判定背后的每项检查。",
+ "@ex.intro": {
+  "x-review": "machine",
+  "x-source": "3a25873c3b"
+ },
+ "ex.more": " 下方：来自其他恒星的搜索推送中的 {n} 个条目，它们还没有案卷。",
+ "@ex.more": {
+  "x-review": "machine",
+  "x-source": "96432c834d"
+ },
+ "footer.all_chapters": "全部 {n} 章",
+ "@footer.all_chapters": {
+  "x-review": "machine",
+  "x-source": "177340a477"
+ },
+ "footer.contribute": "贡献扫描",
+ "@footer.contribute": {
+  "x-review": "machine",
+  "x-source": "960b0242d4"
+ },
+ "footer.data": "数据下载",
+ "@footer.data": {
+  "x-review": "machine",
+  "x-source": "47e65bf65c"
+ },
+ "footer.nav": "网站",
+ "@footer.nav": {
+  "x-review": "machine",
+  "x-source": "fa7955814e"
+ },
+ "footer.overview": "概览",
+ "@footer.overview": {
+  "x-review": "machine",
+  "x-source": "d4b1ea5708"
+ },
+ "footer.pictures": "图是如何绘制的 ›",
+ "@footer.pictures": {
+  "x-review": "machine",
+  "x-source": "f4d87c6ca3"
+ },
+ "footer.source": "源代码",
+ "@footer.source": {
+  "x-review": "machine",
+  "x-source": "bf046c7395"
+ },
+ "gx.h1": "每一颗已知的系外行星，",
+ "@gx.h1": {
+  "x-review": "machine",
+  "x-source": "22fff7c222"
+ },
+ "gx.h1b": "环绕太阳。",
+ "@gx.h1b": {
+  "x-review": "machine",
+  "x-source": "0513cb70f1"
+ },
+ "gx.intro": "{hosts, number} 颗恒星周围的 {n, number} 颗行星，放在它们所在的位置。这些行星不是 SetuHQ 找到的；它根据 {source} 绘制它们的地图。",
+ "@gx.intro": {
+  "x-review": "machine",
+  "x-source": "b60778b897"
+ },
+ "hint.dismiss": "关闭提示：{h}",
+ "@hint.dismiss": {
+  "x-review": "machine",
+  "x-source": "704395b8f4"
+ },
+ "hint.orbits": "大小未按比例 · 相位仅作示意",
+ "@hint.orbits": {
+  "x-review": "machine",
+  "x-source": "f31d20fed2"
+ },
+ "home.band.counters": "证据，逐一计数",
+ "@home.band.counters": {
+  "x-review": "machine",
+  "x-source": "5f2b5a53a9"
+ },
+ "home.band.counters.e": "每个数字都链接到其依据",
+ "@home.band.counters.e": {
+  "x-review": "machine",
+  "x-source": "6d25c68528"
+ },
+ "home.band.fold": "行星如何隐藏在噪声中",
+ "@home.band.fold": {
+  "x-review": "machine",
+  "x-source": "79677ced9c"
+ },
+ "home.band.fold.e": "真实数据",
+ "@home.band.fold.e": {
+  "x-review": "machine",
+  "x-source": "6a758a8937"
+ },
+ "home.band.lineup": "示例中的行星，按比例",
+ "@home.band.lineup": {
+  "x-review": "machine",
+  "x-source": "aaf6e55de4"
+ },
+ "home.band.lineup.e": "按比例的行星",
+ "@home.band.lineup.e": {
+  "x-review": "machine",
+  "x-source": "f48421d1f6"
+ },
+ "home.band.panel": "谁来评审一个凹陷",
+ "@home.band.panel": {
+  "x-review": "machine",
+  "x-source": "fd782b5776"
+ },
+ "home.band.panel.e": "评审组",
+ "@home.band.panel.e": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "home.band.sky": "每颗已知行星的恒星，按其被找到的年份",
+ "@home.band.sky": {
+  "x-review": "machine",
+  "x-source": "25fe759e36"
+ },
+ "home.band.sky.e": "天空",
+ "@home.band.sky.e": {
+  "x-review": "machine",
+  "x-source": "587ffab2a1"
+ },
+ "home.band.tempstrip": "{n, plural, =1 {示例恒星的颜色} other {# 颗示例恒星：{lo, number, integer} K 至 {hi, number, integer} K，同一条流水线}}",
+ "@home.band.tempstrip": {
+  "x-review": "machine",
+  "x-source": "705ec8da04"
+ },
+ "home.band.tempstrip.e": "示例恒星的颜色",
+ "@home.band.tempstrip.e": {
+  "x-review": "machine",
+  "x-source": "d93001b796"
+ },
+ "home.ctr.benchmark": "盲评基准中的真实 TESS Objects of Interest",
+ "@home.ctr.benchmark": {
+  "x-review": "machine",
+  "x-source": "9672338f63"
+ },
+ "home.ctr.catalogue": "SetuHQ 用于核对的目录中的行星",
+ "@home.ctr.catalogue": {
+  "x-review": "machine",
+  "x-source": "01f04bca08"
+ },
+ "home.ctr.chapters": "讲解如何寻找行星的图解章节",
+ "@home.ctr.chapters": {
+  "x-review": "machine",
+  "x-source": "865afa5050"
+ },
+ "home.ctr.completeness": "盲测中找回的保留已知行星（Wilson 95% 区间）",
+ "@home.ctr.completeness": {
+  "x-review": "machine",
+  "x-source": "9439e30e8b"
+ },
+ "home.ctr.fetched": "{source}，获取于 {date, date}",
+ "@home.ctr.fetched": {
+  "x-review": "machine",
+  "x-source": "3fd1f86614"
+ },
+ "home.ctr.fetched_file": "{source}，获取于 {date, date}（{file}）",
+ "@home.ctr.fetched_file": {
+  "x-review": "machine",
+  "x-source": "6d503bce8f"
+ },
+ "home.ctr.heldout": "基准的保留半数（{file}）",
+ "@home.ctr.heldout": {
+  "x-review": "machine",
+  "x-source": "f9bd8675c1"
+ },
+ "home.do.docs": "自己运行",
+ "@home.do.docs": {
+  "x-review": "machine",
+  "x-source": "b3ab2275bd"
+ },
+ "home.do.docs.d": "安装 SetuHQ，搜索一颗恒星，贡献一次天空扫描，或通过 MCP 连接你的 AI 助手。",
+ "@home.do.docs.d": {
+  "x-review": "machine",
+  "x-source": "e150d9ac61"
+ },
+ "home.do.explorer": "查看候选",
+ "@home.do.explorer": {
+  "x-review": "machine",
+  "x-source": "db92ac3570"
+ },
+ "home.do.explorer.d": "评审组在示例恒星的 TESS 光变曲线中标记的凹陷，每个都有完整的案卷。是候选，绝不是已确认的行星。",
+ "@home.do.explorer.d": {
+  "x-review": "machine",
+  "x-source": "b2310d28d3"
+ },
+ "home.do.methods": "了解工作原理",
+ "@home.do.methods": {
+  "x-review": "machine",
+  "x-source": "e2c2e9609b"
+ },
+ "home.do.methods.d": "十五个图解章节，讲解如何寻找行星，从恒星的摆动到解读大气。",
+ "@home.do.methods.d": {
+  "x-review": "machine",
+  "x-source": "a4ab0f8d7a"
+ },
+ "home.do.sentinels": "检查证据",
+ "@home.do.sentinels": {
+  "x-review": "machine",
+  "x-source": "16cc8485e7"
+ },
+ "home.do.sentinels.d": "评审组在真实已知天体上的表现：盲评基准、公开排行榜和校准。",
+ "@home.do.sentinels.d": {
+  "x-review": "machine",
+  "x-source": "728efa2330"
+ },
+ "home.do.sky": "探索天空",
+ "@home.do.sky": {
+  "x-review": "machine",
+  "x-source": "0e734b0e38"
+ },
+ "home.do.sky.d": "银河三维地图上的每颗已知系外行星、TESS 覆盖过的天空，以及可搜索的已知行星目录。",
+ "@home.do.sky.d": {
+  "x-review": "machine",
+  "x-source": "33d22aaaf3"
+ },
+ "home.dohere": "在这里可以做什么",
+ "@home.dohere": {
+  "x-review": "machine",
+  "x-source": "c2f1fa481b"
+ },
+ "home.examples": "实例：{n, plural, other {# 颗恒星}}，同一条流水线",
+ "@home.examples": {
+  "x-review": "machine",
+  "x-source": "31c4bc580e"
+ },
+ "home.examples.p": "每个实例都是基于 MAST 公开 TESS 光变曲线的已存储运行，其数据、配置和代码都附有哈希。每个凹陷按审查结果计数；候选保持未确认，被否决的凹陷不是候选。",
+ "@home.examples.p": {
+  "x-review": "machine",
+  "x-source": "d13aa1075e"
+ },
+ "home.hero.h1": "天空，经过评审。",
+ "@home.hero.h1": {
+  "x-review": "machine",
+  "x-source": "c537af3dcb"
+ },
+ "home.hero.more": "{n, plural, other {查看 # 个实例 ›}}",
+ "@home.hero.more": {
+  "x-review": "machine",
+  "x-source": "50e5398098"
+ },
+ "home.hero.sub": "SetuHQ 在任意 TESS 恒星的公开光变曲线中搜索凌星。由 Sentinels（AI 评审者）和 Probes（确定性检测器）组成的校准评审组标记凹陷，审查则解释每个判定。在真正成为行星之前，任何东西都不会被称为行星。",
+ "@home.hero.sub": {
+  "x-review": "machine",
+  "x-source": "acf4d55d13"
+ },
+ "home.honest.archive": "<b>仅存档数值。</b>本页不声称任何检测。与 TOI 或存档的匹配，是将存储的周期与已发表的数值相比较。",
+ "@home.honest.archive": {
+  "x-review": "machine",
+  "x-source": "9caca54a23"
+ },
+ "home.honest.h": "本页不声称什么",
+ "@home.honest.h": {
+  "x-review": "machine",
+  "x-source": "738097d05c"
+ },
+ "home.honest.image": "<b>没有行星的图像。</b>行星图是根据测得的半径和辐照选择的艺术想象图；<a href=\"/docs/pictures/\">图是如何绘制的 ›</a>",
+ "@home.honest.image": {
+  "x-review": "machine",
+  "x-source": "e6974ba935"
+ },
+ "home.honest.panel": "评审组由 Sentinels 和 Probes 组成：",
+ "@home.honest.panel": {
+  "x-review": "machine",
+  "x-source": "a9433f2186"
+ },
+ "home.honest.people": "评审组中没有人。",
+ "@home.honest.people": {
+  "x-review": "machine",
+  "x-source": "7ffee760a9"
+ },
+ "home.honest.planet": "<b>没有已确认的行星。</b>这里的每个凹陷、信号和推送条目都是{status}。通过审查不等于确认。{match, select, none {} other {与 {match} 的匹配说明该行星早已为人所知，而不是本次运行确认了它。}}",
+ "@home.honest.planet": {
+  "x-review": "machine",
+  "x-source": "fddd51a0e3"
+ },
+ "home.honest.sizes": "<b>没有行星大小。</b>未存储恒星半径，因此深度只能给出行星与恒星的半径比。半径比页面展示了计算过程。",
+ "@home.honest.sizes": {
+  "x-review": "machine",
+  "x-source": "99d745ec98"
+ },
+ "home.honest.weights": " 它们的权重基于每个评审者各 {n} 条注入信号和 {n} 条空白光变曲线的校准，因此只是粗略值。",
+ "@home.honest.weights": {
+  "x-review": "machine",
+  "x-source": "46497d8bc1"
+ },
+ "home.more.sky": "探索天空 ›",
+ "@home.more.sky": {
+  "x-review": "machine",
+  "x-source": "86786f5a19"
+ },
+ "home.more.transit": "如何寻找凌星 ›",
+ "@home.more.transit": {
+  "x-review": "machine",
+  "x-source": "04e504e9e8"
+ },
+ "home.refcheck": "参考检查：已知行星 {planet}，在运行 {run} 中再次找到",
+ "@home.refcheck": {
+  "x-review": "machine",
+  "x-source": "e700c0ebab"
+ },
+ "home.refrun": "参考运行：{run}",
+ "@home.refrun": {
+  "x-review": "machine",
+  "x-source": "b698a243c0"
+ },
+ "honesty.attribution": "Sentinels 默认在 Claude（Anthropic）上运行；也支持其他提供方，并会标注。Probes 是确定性的匹配滤波检测器。",
+ "@honesty.attribution": {
+  "x-review": "machine",
+  "x-source": "7793394412"
+ },
+ "honesty.cheops_disclaimer": "SetuHQ 是独立的，与 ESA、CHEOPS 任务或 CHEOPS 联盟没有隶属关系，未获其认可，也不代表其运营。",
+ "@honesty.cheops_disclaimer": {
+  "x-review": "machine",
+  "x-source": "f163955866"
+ },
+ "honesty.embargo": "与任何已知 TOI 都不匹配的信号会被扣留以供私下审阅；只有在审阅和报告之后才会公布。",
+ "@honesty.embargo": {
+  "x-review": "machine",
+  "x-source": "7ab637a8c0"
+ },
+ "honesty.footer": "本站上 SetuHQ 的每个结果都是候选，绝不是已确认的行星。以 AGPL-3.0 开源；SetuHQ 的数据采用 CC BY 4.0。“SetuHQ”和 Setu 标志是 Ashforde OÜ 的商标。",
+ "@honesty.footer": {
+  "x-review": "machine",
+  "x-source": "69d7e6d4fb"
+ },
+ "honesty.no_detection": "仅存档数值。本页不声称任何检测。",
+ "@honesty.no_detection": {
+  "x-review": "machine",
+  "x-source": "fe680cebf0"
+ },
+ "honesty.none_confirmed": "在独立的后续观测确认之前，没有一个是已确认的行星。",
+ "@honesty.none_confirmed": {
+  "x-review": "machine",
+  "x-source": "3509876ac0"
+ },
+ "honesty.probes_only": "仅 Probes；此示例未运行 Sentinels",
+ "@honesty.probes_only": {
+  "x-review": "machine",
+  "x-source": "3cfb53c6a7"
+ },
+ "honesty.tess_pointing": "指向依据公布的观测计划，不是实时遥测",
+ "@honesty.tess_pointing": {
+  "x-review": "machine",
+  "x-source": "6faac5a432"
+ },
+ "honesty.transients_aid": "暂现源工具是一种搜索辅助，其候选需要人工目视检查；其检测、类别提示和误报筛选都未经验证。",
+ "@honesty.transients_aid": {
+  "x-review": "machine",
+  "x-source": "61272b381e"
+ },
+ "honesty.unconfirmed": "候选，未确认",
+ "@honesty.unconfirmed": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "i18n.mtnote": "本翻译由机器辅助完成，尚未经母语人士审阅。<a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">欢迎指正</a>。",
+ "@i18n.mtnote": {
+  "x-review": "machine",
+  "x-source": "3803a5c5dc"
+ },
+ "i18n.picker.label": "语言：{name}",
+ "@i18n.picker.label": {
+  "x-review": "machine",
+  "x-source": "d99eed9b59"
+ },
+ "i18n.picker.note": "除英语外，所有语言均由机器辅助翻译，尚未经母语人士审阅。<a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">欢迎指正</a>。",
+ "@i18n.picker.note": {
+  "x-review": "machine",
+  "x-source": "b19e30478b"
+ },
+ "i18n.suggest.dismiss": "关闭",
+ "@i18n.suggest.dismiss": {
+  "x-review": "machine",
+  "x-source": "48845bff33"
+ },
+ "i18n.suggest.go": "阅读中文版",
+ "@i18n.suggest.go": {
+  "x-review": "machine",
+  "x-source": "a9d0b8e36c"
+ },
+ "i18n.suggest.label": "语言",
+ "@i18n.suggest.label": {
+  "x-review": "machine",
+  "x-source": "a4fe65264e"
+ },
+ "i18n.suggest.text": "本页也有中文版。",
+ "@i18n.suggest.text": {
+  "x-review": "machine",
+  "x-source": "4d512860c4"
+ },
+ "label.art": "艺术想象图",
+ "@label.art": {
+  "x-review": "machine",
+  "x-source": "8b1a9bc32a"
+ },
+ "label.illustration": "示意图",
+ "@label.illustration": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
+ },
+ "label.model": "基于存储数值的模型",
+ "@label.model": {
+  "x-review": "machine",
+  "x-source": "f99882758e"
+ },
+ "label.real": "真实数据，附出处",
+ "@label.real": {
+  "x-review": "machine",
+  "x-source": "6f75938cc8"
+ },
+ "label.speculative": "推测性模型",
+ "@label.speculative": {
+  "x-review": "machine",
+  "x-source": "d1d38cf39a"
+ },
+ "lb.h1": "在真实 TOI 上盲评的方法。",
+ "@lb.h1": {
+  "x-review": "machine",
+  "x-source": "d7943ed0f0"
+ },
+ "lb.intro": "冻结的真实 TOI 基准上的公开排行榜：每个条目检测到的事件，由排行榜本身仅在保留半数上评分，附 Wilson 95% 区间。这不是在合成光变曲线上调整 Probe 阈值的注入阈值扫描（docs/threshold_sweep.md）。",
+ "@lb.intro": {
+  "x-review": "machine",
+  "x-source": "8e62d2c060"
+ },
+ "lb.note": "在明确说明的基准上测得；这里没有任何发现。",
+ "@lb.note": {
+  "x-review": "machine",
+  "x-source": "272d460db4"
+ },
+ "limits.art": "不是观测：外观根据测得的半径和辐照选择。",
+ "@limits.art": {
+  "x-review": "machine",
+  "x-source": "ec71f17b2e"
+ },
+ "limits.caption": "如图注所述",
+ "@limits.caption": {
+  "x-review": "machine",
+  "x-source": "dee533d112"
+ },
+ "limits.illustration": "解释一个概念；不是数据。",
+ "@limits.illustration": {
+  "x-review": "machine",
+  "x-source": "c4c6c22d05"
+ },
+ "limits.model": "根据存储数值绘制的模型；不是该天体的图像。",
+ "@limits.model": {
+  "x-review": "machine",
+  "x-source": "9f137900ab"
+ },
+ "limits.real": "存储的测量值，按存储方式分箱或折叠。",
+ "@limits.real": {
+  "x-review": "machine",
+  "x-source": "1e9288318d"
+ },
+ "limits.source": "出处：{s}。",
+ "@limits.source": {
+  "x-review": "machine",
+  "x-source": "cba3864e3a"
+ },
+ "limits.speculative": "超出测量范围：一种可能性，而非结果。",
+ "@limits.speculative": {
+  "x-review": "machine",
+  "x-source": "3fe7418bc2"
+ },
+ "limits.summary": "出处 / 局限",
+ "@limits.summary": {
+  "x-review": "machine",
+  "x-source": "ecbcc39e74"
+ },
+ "mc.intro": "在任意窗格中选择一颗恒星；每个窗格和每个弹出的窗口都会跟随。",
+ "@mc.intro": {
+  "x-review": "machine",
+  "x-source": "e6a5c8f840"
+ },
+ "mcp.honesty.candidate": "是候选，不是发现：SetuHQ 在公开 TESS 数据中寻找并审查凹陷。确认一颗行星需要他人进行后续观测（视向速度、成像、统计验证）。",
+ "@mcp.honesty.candidate": {
+  "x-review": "machine",
+  "x-source": "2109188b0d"
+ },
+ "mcp.honesty.catalogue": "目录数值是来源的测量值，按存储原样显示；缺失的数值不会被猜测。这些行星不是 SetuHQ 发现的。",
+ "@mcp.honesty.catalogue": {
+  "x-review": "machine",
+  "x-source": "01e280f468"
+ },
+ "mcp.honesty.computed": "由 SetuHQ 自己的代码根据给定输入即时计算；不是已存储、已评审的结果。",
+ "@mcp.honesty.computed": {
+  "x-review": "machine",
+  "x-source": "8ba17ff89a"
+ },
+ "mcp.honesty.formula": "按原样计算的教科书公式；描述的是理想化情形，不是测量。",
+ "@mcp.honesty.formula": {
+  "x-review": "machine",
+  "x-source": "cd6187025a"
+ },
+ "mcp.honesty.panel": "Sentinels 是 AI 模型，不是人（默认 Claude；其他提供方会标注）。只有 Claude 做过基准测试。Probes 是确定性的匹配滤波检测器。",
+ "@mcp.honesty.panel": {
+  "x-review": "machine",
+  "x-source": "9d2e4debf5"
+ },
+ "mcp.honesty.stored": "读取自已存储的文件；没有重新计算任何内容。",
+ "@mcp.honesty.stored": {
+  "x-review": "machine",
+  "x-source": "333f8aa8d7"
+ },
+ "mcp.honesty.unreviewed": "没有评审组看过这一结果：它只是检测器和审查的输出。",
+ "@mcp.honesty.unreviewed": {
+  "x-review": "machine",
+  "x-source": "832585f3e6"
+ },
+ "mcp.instructions": "SetuHQ 用由 Sentinels（AI 模型；默认 Claude，其他提供方会标注）和 Probes（确定性检测器）组成的评审组，在公开的 NASA TESS 光变曲线中搜索凌星，然后审查并拟合每个凹陷。请调用这些工具而不是自行估计：它们运行 SetuHQ 自己的代码，或读取其已存储、已评审的结果。每个回答都带有来源和诚实性标签；报告时请保留它们。SetuHQ 找到的任何东西都是候选，不是发现。未经用户明确同意，不要向外提交、发布或发送任何内容。",
+ "@mcp.instructions": {
+  "x-review": "machine",
+  "x-source": "8dcede2e8e"
+ },
+ "mcp.tool.benchmark_results": "一个已存储的基准或验证结果：real_tois（662 个 TOI 的盲评基准）、leaderboard（真实 TOI\n排行榜）、injection（Probes 的注入-回收）、pi_men_validation、weights（校准）或\nthreshold_sweep（合成数据，不是排行榜）。按存储原样返回。",
+ "@mcp.tool.benchmark_results": {
+  "x-review": "machine",
+  "x-source": "a8f12a0af7"
+ },
+ "mcp.tool.cheops_proposal_pack": "将 CHEOPS Guest Observers 提案的“准备”包（``propose.pack.build_pack``）写入新的\nruns/propose/<run_name>（若已存在则拒绝；不在其外写入任何内容，不使用缓存）：Running Call 规则\n检查（轨道上限、Large 项目的四月/十月规则、巴黎时间的下一个截止日期、最早开始时间）、\n目标状态（公开的 Reserved Target List、公开 CHEOPS 存档元数据、SIMBAD/MAST J2000\n坐标）、SetuHQ 存储的证据、精度和轨道数的粗略“估计”、附匿名性检查的匿名化\n草稿，以及 ESA 的分步检查清单。只读取公开页面；从不登录或提交。SetuHQ 独立于\nESA 和 CHEOPS 任务：以官方征集和 ESA 的工具为准。",
+ "@mcp.tool.cheops_proposal_pack": {
+  "x-review": "machine",
+  "x-source": "d9fdc80788"
+ },
+ "mcp.tool.compute_fap": "最强周期信号的经验误报概率（``search.false_alarm_probability``）：\n保留红噪声的分块自助法 BLS 重跑。有界：N 次试验时报告值不低于 1/(N + 1)，\nGumbel 尾部标注为参考值。每次调用 N 最多 2000。",
+ "@mcp.tool.compute_fap": {
+  "x-review": "machine",
+  "x-source": "01f4019412"
+ },
+ "mcp.tool.find_eclipsing_binary": "光变曲线中的食双星以及椭球或反射变星（``binaries.analyse``）：\n由箱形搜索和周期图得到的轨道周期（在奇偶差异或极小值相等时加倍，此时\n标注为有歧义）、主食和次食（相位、深度、宽度、显著性）、附 e·cosω 提示的\n次食相位、启发式形态类别，以及附理由的食双星候选标记。给定凌星候选的周期、历元和\n持续时间时，还会返回 SetuHQ 审查不使用的参考性审查提示（奇偶深度、任意相位的次食、\n椭球和反射振幅）。时间以天为单位（TESS 为 BTJD）。",
+ "@mcp.tool.find_eclipsing_binary": {
+  "x-review": "machine",
+  "x-source": "e45be3cbe7"
+ },
+ "mcp.tool.find_flares": "检测并刻画光变曲线中的恒星耀发（``flares.detect_flares``）：保留耀发的\n去趋势、sigma 截断候选（Chang et al. 2015 判据）、可选的小波去噪（Poyatos et al.\n2025）、用 BIC 选择多成分模型的 Mendoza et al. 2022 模板拟合、上升和衰减时间、\n振幅、FWHM、等效持续时间，以及给定 Teff 和半径时的能量（9000 K 黑体）。还会\n运行通量翻转的零假设检验。时间以天为单位（TESS 为 BTJD）；任务 TESS 或 CHEOPS 决定默认值。",
+ "@mcp.tool.find_flares": {
+  "x-review": "machine",
+  "x-source": "d650c20040"
+ },
+ "mcp.tool.find_transients": "光变曲线中的非周期性增亮（``transients.find_transients``），在三个时间尺度上，每个\n附峰值、振幅、上升和衰减时间、FWHM 以及类别提示（flare-like、extragalactic-transient-like、\nasteroid-crossing-like、momentum-dump-like、scattered-light-like 或 periodic-variability-like）及其理由；\n后四类很可能是误报。difference_flux=True 用于以 e-/s 为单位的差分成像光变曲线。\n动量卸载和散射光的时刻（TESS 质量位 32、2048、4096）使筛选更精准。每个事件都是\n暂现源候选，绝不是新天体或已确认的天体。时间以天为单位（TESS 为 BTJD）。",
+ "@mcp.tool.find_transients": {
+  "x-review": "machine",
+  "x-source": "54243a74ac"
+ },
+ "mcp.tool.fit_transit": "在一次凌星附近拟合 SetuHQ 的临边昏暗凌星模型（``transitfit.fit_transit``）：深度、T14、\n碰撞参数 b、中心时刻、Rp/R★ 和凌星密度 ρ★，各附误差和范围。临边昏暗\n采用针对恒星 Teff 和 log g 的 Claret 2017（未给定时按类太阳）。t0、持续时间和深度为初始猜测值。",
+ "@mcp.tool.fit_transit": {
+  "x-review": "machine",
+  "x-source": "3b77980915"
+ },
+ "mcp.tool.get_candidate": "一个共识凹陷及其完整来源：存储的候选（审查、拟合、FAP、每个评审者标记的\n审计）、运行清单（代码、配置哈希、附 SHA-256 的输入、附提供方和模型的评审者），以及每个\n评审者对其对象的存储分类（标签、标记、理由、提供方、模型）。",
+ "@mcp.tool.get_candidate": {
+  "x-review": "machine",
+  "x-source": "78f0b83b1a"
+ },
+ "mcp.tool.get_cheops_lightcurve": "通过 DACE 从 CHEOPS 存档获取目标的公开 CHEOPS DRP 光变曲线（``cheops.get_cheops_lightcurve``；\n若无缓存则需要 ``pip install 'setuhq[cheops]'`` 和网络）：按位置列出访问，跳过专有期内的\n访问，每次只获取一次并缓存，去除滚转角/背景/质心系统误差的相关性（各项由\nBIC 选择）。返回每次访问的来源（项目、文件键、观测编号、致谢）、去趋势摘要，以及\n指定 include_points 时以 BTJD 表示的去趋势数据点。附 ESA 的致谢和 SetuHQ 的免责声明。",
+ "@mcp.tool.get_cheops_lightcurve": {
+  "x-review": "machine",
+  "x-source": "06ff3dcf79"
+ },
+ "mcp.tool.get_planet": "一颗行星存储的目录记录及其宿主恒星的记录（名称精确匹配；请先使用 search_catalogue）。",
+ "@mcp.tool.get_planet": {
+  "x-review": "machine",
+  "x-source": "97084f4fb5"
+ },
+ "mcp.tool.get_star": "一颗宿主恒星存储的记录及其周围每颗已编目的行星（恒星名称精确匹配）。",
+ "@mcp.tool.get_star": {
+  "x-review": "machine",
+  "x-source": "df7232ade1"
+ },
+ "mcp.tool.habitable_zone": "一颗恒星宜居带的边界，单位 AU（``methods.hz_distance_au``，Kopparapu et al. 2014，1 M⊕）：\n近期金星和失控温室（内边界），最大温室和早期火星（外边界）。",
+ "@mcp.tool.habitable_zone": {
+  "x-review": "machine",
+  "x-source": "3608921db8"
+ },
+ "mcp.tool.list_candidates": "一次已存储运行的共识凹陷，附每个是否通过审查及其标记（``candidates.json``）。",
+ "@mcp.tool.list_candidates": {
+  "x-review": "machine",
+  "x-source": "0443efd099"
+ },
+ "mcp.tool.microlensing_magnification": "碰撞参数 u（以爱因斯坦半径为单位）处的点透镜放大率 A(u) = (u² + 2) / (u √(u² + 4))\n（``methods.paczynski``）。",
+ "@mcp.tool.microlensing_magnification": {
+  "x-review": "machine",
+  "x-source": "29faa074dc"
+ },
+ "mcp.tool.pulsation_spectrum": "光变曲线的频率分析（``pulsations.analyse``）：Lomb-Scargle 振幅谱、迭代\n预白化并以非线性多正弦重拟合直到 S/N 4（Breger et al. 1993）、组合频率\n标记、Harvey 型米粒组织背景、类太阳振子的 numax/Δν，以及附不确定度的启发式\n变星类型。频率单位为 d⁻¹ 和 µHz；时间以天为单位。n_surrogates > 0 时运行\n红噪声零假设检验（最多 20）。",
+ "@mcp.tool.pulsation_spectrum": {
+  "x-review": "machine",
+  "x-source": "97767afcfb"
+ },
+ "mcp.tool.rotation_period": "由黑子调制得到的恒星自转周期（``rotation.measure``）：Lomb-Scargle 周期图和\n自相关函数，附不确定度、半倍/倍周期混叠处理和检测标记。单个 TESS 天区\n无法测量长于约 13 天的周期；这类周期会报告为超出极限。请传入一个天区（或\n你自己拼接的光变曲线，注意天区间的偏移）。时间以天为单位。",
+ "@mcp.tool.rotation_period": {
+  "x-review": "machine",
+  "x-source": "2d6e72833f"
+ },
+ "mcp.tool.run_pipeline_csv": "在 CSV 光变曲线（time, flux[, flux_err]）上运行完整流水线（``pipeline.run_pipeline``），并写入\n新的运行目录 runs/mcp/<run_name>（若已存在则拒绝：从不覆盖任何内容）。除非 sentinels=True，\n否则仅用 Probes；此时 Sentinels 只在其密钥、SDK 或 CLI 存在的地方运行（清单会列出\n跳过的评审者及原因）。",
+ "@mcp.tool.run_pipeline_csv": {
+  "x-review": "machine",
+  "x-source": "6a2a86935b"
+ },
+ "mcp.tool.run_pipeline_tess": "从 MAST 下载某个 TIC 编号和天区的 TESS SPOC 光变曲线（``loaders.load_tess``；需要网络和 ``pip install -e '.[tess]'``），\n并在新的 runs/mcp/<run_name> 中对其运行流水线（从不使用已存在的\n目录）。除非 sentinels=True，否则仅用 Probes。",
+ "@mcp.tool.run_pipeline_tess": {
+  "x-review": "machine",
+  "x-source": "421d6522fe"
+ },
+ "mcp.tool.rv_semi_amplitude": "带有一颗行星的恒星的视向速度半振幅 K（m/s）（``methods.rv_semi_amplitude``）。",
+ "@mcp.tool.rv_semi_amplitude": {
+  "x-review": "machine",
+  "x-source": "0342cc898c"
+ },
+ "mcp.tool.search_catalogue": "按行星或恒星名称（或别名，例如 TIC 编号）搜索系外行星目录，也可按\n发现方法（``transit``、``rv``、``imaging``、``microlensing``、``astrometry``、``timing``）筛选。封装了 ``catalogue.catalogue_filter``。",
+ "@mcp.tool.search_catalogue": {
+  "x-review": "machine",
+  "x-source": "27fc845629"
+ },
+ "mcp.tool.sentinel_providers": "SetuHQ 支持的 Sentinel 提供方、各自的配置方式，以及能否在此运行（其密钥\n变量已设置，其 SDK 或 CLI 已存在）。从不返回密钥。",
+ "@mcp.tool.sentinel_providers": {
+  "x-review": "machine",
+  "x-source": "d8e703706c"
+ },
+ "mcp.tool.transit_depth": "中心凌星的深度：几何上的 (Rp/R★)²，以及考虑针对恒星 Teff 的 TESS 二次临边昏暗后的值\n（``methods.transit_flux``，z = 0，Claret 2017 系数）。给出 Rp/R★，或以地球半径为单位的 Rp\n和以太阳半径为单位的 R★。",
+ "@mcp.tool.transit_depth": {
+  "x-review": "machine",
+  "x-source": "6b52c6ad8e"
+ },
+ "mcp.tool.vet_lightcurve": "在光变曲线中搜索周期性凌星（BLS，``search.bls_search``），并用 SetuHQ 的审查来审查一个凹陷\n（``vet.vet_event``：SNR、持续时间、边缘、奇偶深度、次食）。以\nt_start/t_end 给出凹陷，或省略以审查最强周期信号的第一次凌星。光变曲线\n按流水线的方式准备（清理、去趋势、分箱）。",
+ "@mcp.tool.vet_lightcurve": {
+  "x-review": "machine",
+  "x-source": "645c79cc54"
+ },
+ "methods.chapter_n": "第 {i} 章，共 {n} 章",
+ "@methods.chapter_n": {
+  "x-review": "machine",
+  "x-source": "417be5d799"
+ },
+ "methods.h1": "行星是如何被找到的。",
+ "@methods.h1": {
+  "x-review": "machine",
+  "x-source": "583ac6e306"
+ },
+ "methods.h1b": "以及 SetuHQ 如何找到它们。",
+ "@methods.h1b": {
+  "x-review": "machine",
+  "x-source": "99b2b42598"
+ },
+ "methods.intro": "{n} 个章节，每章都是附物理原理和出处的动画讲解。每幅图都说明自己是示意图、基于存储数值的模型还是真实数据，以及夸张了多少。只有凌星一章讲的是 SetuHQ 自己做的事。",
+ "@methods.intro": {
+  "x-review": "machine",
+  "x-source": "c0a3069175"
+ },
+ "methods.planets": "本章中的行星",
+ "@methods.planets": {
+  "x-review": "machine",
+  "x-source": "6be85af173"
+ },
+ "methods.sources": "出处",
+ "@methods.sources": {
+  "x-review": "machine",
+  "x-source": "caf85b0888"
+ },
+ "nav.candidates": "候选",
+ "@nav.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "nav.docs": "文档",
+ "@nav.docs": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "nav.evidence": "证据",
+ "@nav.evidence": {
+  "x-review": "machine",
+  "x-source": "03867aea70"
+ },
+ "nav.explore": "探索",
+ "@nav.explore": {
+  "x-review": "machine",
+  "x-source": "3b73900b8d"
+ },
+ "nav.how": "工作原理",
+ "@nav.how": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "nf.candidates": "示例运行找到的每个凹陷，及其检查。",
+ "@nf.candidates": {
+  "x-review": "machine",
+  "x-source": "1347c55237"
+ },
+ "nf.docs": "安装 SetuHQ，自己运行。",
+ "@nf.docs": {
+  "x-review": "machine",
+  "x-source": "ae69454d62"
+ },
+ "nf.evidence": "评审者、基准和运行。",
+ "@nf.evidence": {
+  "x-review": "machine",
+  "x-source": "b14b42d506"
+ },
+ "nf.explore": "天空、银河和每颗已编目的行星。",
+ "@nf.explore": {
+  "x-review": "machine",
+  "x-source": "05950074cc"
+ },
+ "nf.h1": "此页面不在这里。",
+ "@nf.h1": {
+  "x-review": "machine",
+  "x-source": "3ba2f76d61"
+ },
+ "nf.home": "前往主页",
+ "@nf.home": {
+  "x-review": "machine",
+  "x-source": "adceddedfd"
+ },
+ "nf.how": "十五个章节，讲解如何寻找行星。",
+ "@nf.how": {
+  "x-review": "machine",
+  "x-source": "b04ce55cc1"
+ },
+ "nf.intro": "地址可能输错了，或者网站重新组织时页面已移动。旧地址会自动转发；这个地址没有新去处。",
+ "@nf.intro": {
+  "x-review": "machine",
+  "x-source": "76142af35c"
+ },
+ "nf.search": "搜索行星、恒星和页面",
+ "@nf.search": {
+  "x-review": "machine",
+  "x-source": "36738611e1"
+ },
+ "obj.cls.bymass": "（按质量）",
+ "@obj.cls.bymass": {
+  "x-review": "machine",
+  "x-source": "0fefa83c19"
+ },
+ "obj.cls.earth": "地球大小",
+ "@obj.cls.earth": {
+  "x-review": "machine",
+  "x-source": "793cad2691"
+ },
+ "obj.cls.giant": "气态巨行星",
+ "@obj.cls.giant": {
+  "x-review": "machine",
+  "x-source": "dc4da1dee3"
+ },
+ "obj.cls.nep": "类海王星",
+ "@obj.cls.nep": {
+  "x-review": "machine",
+  "x-source": "d9aa819eb6"
+ },
+ "obj.cls.none": "无法确定类别（未存储半径或质量）",
+ "@obj.cls.none": {
+  "x-review": "machine",
+  "x-source": "4c2ce50d4a"
+ },
+ "obj.cls.subnep": "亚海王星",
+ "@obj.cls.subnep": {
+  "x-review": "machine",
+  "x-source": "a17b446d03"
+ },
+ "obj.cls.super": "超级地球",
+ "@obj.cls.super": {
+  "x-review": "machine",
+  "x-source": "c9402130b8"
+ },
+ "obj.discovered": "发现于 {year} 年",
+ "@obj.discovered": {
+  "x-review": "machine",
+  "x-source": "aeef0079ed"
+ },
+ "obj.discovered_none": "未存储发现年份",
+ "@obj.discovered_none": {
+  "x-review": "machine",
+  "x-source": "ceb1245b3e"
+ },
+ "obj.host": "其恒星和其他行星",
+ "@obj.host": {
+  "x-review": "machine",
+  "x-source": "c247cb467a"
+ },
+ "obj.nohost": "未存储宿主恒星",
+ "@obj.nohost": {
+  "x-review": "machine",
+  "x-source": "1309987b39"
+ },
+ "obj.params": "存储的参数",
+ "@obj.params": {
+  "x-review": "machine",
+  "x-source": "a060be301b"
+ },
+ "obj.planets": "其行星",
+ "@obj.planets": {
+  "x-review": "machine",
+  "x-source": "0b1b4bc5af"
+ },
+ "obj.refs": "发现和参考文献",
+ "@obj.refs": {
+  "x-review": "machine",
+  "x-source": "11a5acd988"
+ },
+ "obj.row.a": "半长轴",
+ "@obj.row.a": {
+  "x-review": "machine",
+  "x-source": "7a98cb0909"
+ },
+ "obj.row.b": "碰撞参数",
+ "@obj.row.b": {
+  "x-review": "machine",
+  "x-source": "c30e761341"
+ },
+ "obj.row.dec": "Dec（J2000）",
+ "@obj.row.dec": {
+  "x-review": "machine",
+  "x-source": "31451795ef"
+ },
+ "obj.row.dist": "距离",
+ "@obj.row.dist": {
+  "x-review": "machine",
+  "x-source": "b7bdf7a2d6"
+ },
+ "obj.row.e": "偏心率",
+ "@obj.row.e": {
+  "x-review": "machine",
+  "x-source": "3642eea73f"
+ },
+ "obj.row.incl": "轨道倾角",
+ "@obj.row.incl": {
+  "x-review": "machine",
+  "x-source": "e1a57232e1"
+ },
+ "obj.row.k": "RV 半振幅 K",
+ "@obj.row.k": {
+  "x-review": "machine",
+  "x-source": "4bc68f8d51"
+ },
+ "obj.row.lambda": "自旋-轨道角 λ",
+ "@obj.row.lambda": {
+  "x-review": "machine",
+  "x-source": "f4a2329657"
+ },
+ "obj.row.mass": "质量",
+ "@obj.row.mass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.msini": "最小质量（m sin i）",
+ "@obj.row.msini": {
+  "x-review": "machine",
+  "x-source": "0a0c24bec0"
+ },
+ "obj.row.period": "轨道周期",
+ "@obj.row.period": {
+  "x-review": "machine",
+  "x-source": "278785d733"
+ },
+ "obj.row.ra": "RA（J2000）",
+ "@obj.row.ra": {
+  "x-review": "machine",
+  "x-source": "9cee37a6a6"
+ },
+ "obj.row.radius": "半径",
+ "@obj.row.radius": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.sage": "年龄",
+ "@obj.row.sage": {
+  "x-review": "machine",
+  "x-source": "39b7370f30"
+ },
+ "obj.row.smass": "质量",
+ "@obj.row.smass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.smet": "金属丰度 [Fe/H]",
+ "@obj.row.smet": {
+  "x-review": "machine",
+  "x-source": "b7e5ba6b1d"
+ },
+ "obj.row.srad": "半径",
+ "@obj.row.srad": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.steff": "有效温度",
+ "@obj.row.steff": {
+  "x-review": "machine",
+  "x-source": "bcd5903c63"
+ },
+ "obj.row.teq": "平衡温度",
+ "@obj.row.teq": {
+  "x-review": "machine",
+  "x-source": "a3016009fd"
+ },
+ "obj.row.tmeas": "测得温度",
+ "@obj.row.tmeas": {
+  "x-review": "machine",
+  "x-source": "592546ce16"
+ },
+ "obj.row.vmag": "V 星等",
+ "@obj.row.vmag": {
+  "x-review": "machine",
+  "x-source": "963ef1a54e"
+ },
+ "obj.sysview": "系统视图：",
+ "@obj.sysview": {
+  "x-review": "machine",
+  "x-source": "8f2681a95c"
+ },
+ "obj.units": "单位按 {source} 存储的方式。误差为存储的下限和上限；未存储时不显示。",
+ "@obj.units": {
+  "x-review": "machine",
+  "x-source": "1d415a6e1a"
+ },
+ "obj.where": "位置",
+ "@obj.where": {
+  "x-review": "machine",
+  "x-source": "751c664982"
+ },
+ "out.dash.footer": "由 SetuHQ 生成。基于合成数据的结果不是对真实天空数据的断言。",
+ "@out.dash.footer": {
+  "x-review": "machine",
+  "x-source": "98762ed655"
+ },
+ "out.feed.candidates": "这些是候选。",
+ "@out.feed.candidates": {
+  "x-review": "machine",
+  "x-source": "ee9b7f2cdf"
+ },
+ "out.feed.h1": "搜索推送",
+ "@out.feed.h1": {
+  "x-review": "machine",
+  "x-source": "22bc3c8839"
+ },
+ "out.feed.held": "扣留待审",
+ "@out.feed.held": {
+  "x-review": "machine",
+  "x-source": "57b7af20f8"
+ },
+ "out.feed.nights": "每晚条目",
+ "@out.feed.nights": {
+  "x-review": "machine",
+  "x-source": "6cd04f7bc5"
+ },
+ "out.plate.interval": "凹陷的共识区间是它们的标记一致的地方。",
+ "@out.plate.interval": {
+  "x-review": "machine",
+  "x-source": "1780c6e536"
+ },
+ "out.plate.others": "其他示例恒星的图版",
+ "@out.plate.others": {
+  "x-review": "machine",
+  "x-source": "df7ef77948"
+ },
+ "out.plate.panel": "评审组由 Sentinels 和 Probes 组成，没有人。",
+ "@out.plate.panel": {
+  "x-review": "machine",
+  "x-source": "15066e34e3"
+ },
+ "out.report.benchmark": "注入-回收",
+ "@out.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "6da1d36286"
+ },
+ "out.report.candidates": "候选",
+ "@out.report.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "out.report.panel": "评审组的决定",
+ "@out.report.panel": {
+  "x-review": "machine",
+  "x-source": "a929a43913"
+ },
+ "out.report.panel.p": "每个评审者对每个盲编码对象的回答。分歧保持可见，因为共识正是在那里形成的。",
+ "@out.report.panel.p": {
+  "x-review": "machine",
+  "x-source": "da09405f36"
+ },
+ "out.report.pipeline": "一次运行如何进行",
+ "@out.report.pipeline": {
+  "x-review": "machine",
+  "x-source": "baad56eb35"
+ },
+ "out.report.provenance": "来源",
+ "@out.report.provenance": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "out.report.validation": "用已知行星验证",
+ "@out.report.validation": {
+  "x-review": "machine",
+  "x-source": "4432fa961d"
+ },
+ "panel.both": "{s, plural, other {# 个 Sentinel}}和{p, plural, other {# 个 Probe}}",
+ "@panel.both": {
+  "x-review": "machine",
+  "x-source": "c6e6d6aa5e"
+ },
+ "panel.probes": "{p, plural, other {# 个 Probe}}",
+ "@panel.probes": {
+  "x-review": "machine",
+  "x-source": "5dce100851"
+ },
+ "panel.sentinels": "{s, plural, other {# 个 Sentinel}}",
+ "@panel.sentinels": {
+  "x-review": "machine",
+  "x-source": "70f14c3441"
+ },
+ "pic.colour": "恒星颜色",
+ "@pic.colour": {
+  "x-review": "machine",
+  "x-source": "dfe6307835"
+ },
+ "pic.draw": "恒星与凌星",
+ "@pic.draw": {
+  "x-review": "machine",
+  "x-source": "e0d9fd74d5"
+ },
+ "pic.h1": "图是如何绘制的。",
+ "@pic.h1": {
+  "x-review": "machine",
+  "x-source": "b56c1f91df"
+ },
+ "pic.intro": "SetuHQ 上的每颗恒星都根据其存储的温度以黑体颜色绘制。每颗行星都是艺术想象图：其外观根据两个测得的量来选择，即半径（没有半径时用质量）和它从恒星接收的光。图中除这些数字外没有任何测量内容，成分则从未被测量。",
+ "@pic.intro": {
+  "x-review": "machine",
+  "x-source": "3cf76ad409"
+ },
+ "pic.labels": "五种标签",
+ "@pic.labels": {
+  "x-review": "machine",
+  "x-source": "51668dd62a"
+ },
+ "pic.labels.p": "网站上的每幅图都带有其中一种标签，标在图本身上。",
+ "@pic.labels.p": {
+  "x-review": "machine",
+  "x-source": "880b424ff6"
+ },
+ "pic.real": "什么是真实的，什么是绘制的",
+ "@pic.real": {
+  "x-review": "machine",
+  "x-source": "79bd58ea67"
+ },
+ "pic.rules": "规则",
+ "@pic.rules": {
+  "x-review": "machine",
+  "x-source": "e3954c7ee3"
+ },
+ "pic.still": "减少动态效果时",
+ "@pic.still": {
+  "x-review": "machine",
+  "x-source": "a42e838475"
+ },
+ "pic.still.p": "当你的设备要求减少动态效果时，没有任何内容循环：每幅图显示一个设计好的画面，任何可播放的内容都等待其按钮。",
+ "@pic.still.p": {
+  "x-review": "machine",
+  "x-source": "b12a8bfb34"
+ },
+ "pic.table": "外观表",
+ "@pic.table": {
+  "x-review": "machine",
+  "x-source": "5bf530d59d"
+ },
+ "pr.h1": "准备 CHEOPS 提案。",
+ "@pr.h1": {
+  "x-review": "machine",
+  "x-source": "c189d495dd"
+ },
+ "pr.intro": "<code>setuhq propose cheops</code> 为 CHEOPS Guest Observers Running Call 撰写准备包：已检查的规则、目标状态、规划估计、匿名化草稿，以及作为检查清单的 ESA 七个步骤。ESA 的工具由你运行，提案由你自己提交。",
+ "@pr.intro": {
+  "x-review": "machine",
+  "x-source": "6893d1fea2"
+ },
+ "route.candidates.label": "案卷",
+ "@route.candidates.label": {
+  "x-review": "machine",
+  "x-source": "d12f22e06a"
+ },
+ "route.candidates.title": "{name} 的案卷 · 候选 · SetuHQ",
+ "@route.candidates.title": {
+  "x-review": "machine",
+  "x-source": "6265efaa30"
+ },
+ "route.catalogue.label": "目录",
+ "@route.catalogue.label": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "route.catalogue.title": "已知系外行星目录 · SetuHQ",
+ "@route.catalogue.title": {
+  "x-review": "machine",
+  "x-source": "1d55d9e531"
+ },
+ "route.docs.label": "文档",
+ "@route.docs.label": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "route.docs.title": "文档：SetuHQ 入门 · SetuHQ",
+ "@route.docs.title": {
+  "x-review": "machine",
+  "x-source": "273729a761"
+ },
+ "route.editions.label": "版本",
+ "@route.editions.label": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "route.editions.title": "版本：开放核心、SetuHQ Pro 和定制研究 · SetuHQ",
+ "@route.editions.title": {
+  "x-review": "machine",
+  "x-source": "facd044991"
+ },
+ "route.explorer.label": "候选",
+ "@route.explorer.label": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "route.explorer.title": "候选 · SetuHQ",
+ "@route.explorer.title": {
+  "x-review": "machine",
+  "x-source": "3377897bfa"
+ },
+ "route.galaxy.label": "银河",
+ "@route.galaxy.label": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "route.galaxy.title": "银河 · 探索 · SetuHQ",
+ "@route.galaxy.title": {
+  "x-review": "machine",
+  "x-source": "ad11918632"
+ },
+ "route.leaderboard.label": "排行榜",
+ "@route.leaderboard.label": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "route.leaderboard.title": "排行榜 · 证据 · SetuHQ",
+ "@route.leaderboard.title": {
+  "x-review": "machine",
+  "x-source": "2b687acd99"
+ },
+ "route.methods.label": "工作原理",
+ "@route.methods.label": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "route.methods.title": "{name} · 工作原理 · SetuHQ",
+ "@route.methods.title": {
+  "x-review": "machine",
+  "x-source": "1cbf3454bd"
+ },
+ "route.mission.label": "任务控制",
+ "@route.mission.label": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "route.mission.title": "任务控制 · 探索 · SetuHQ",
+ "@route.mission.title": {
+  "x-review": "machine",
+  "x-source": "3bbcc04226"
+ },
+ "route.notfound.label": "页面未找到",
+ "@route.notfound.label": {
+  "x-review": "machine",
+  "x-source": "a469ab4ca4"
+ },
+ "route.notfound.title": "页面未找到 · SetuHQ",
+ "@route.notfound.title": {
+  "x-review": "machine",
+  "x-source": "9ba0459ab7"
+ },
+ "route.overview.label": "主页",
+ "@route.overview.label": {
+  "x-review": "machine",
+  "x-source": "3a78695388"
+ },
+ "route.overview.title": "SetuHQ：天空，经过评审",
+ "@route.overview.title": {
+  "x-review": "machine",
+  "x-source": "1159339ef0"
+ },
+ "route.pictures.label": "图是如何绘制的",
+ "@route.pictures.label": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "route.pictures.title": "图是如何绘制的 · 文档 · SetuHQ",
+ "@route.pictures.title": {
+  "x-review": "machine",
+  "x-source": "09b9052231"
+ },
+ "route.planet.label": "行星",
+ "@route.planet.label": {
+  "x-review": "machine",
+  "x-source": "b6e3957877"
+ },
+ "route.planet.title": "{name} · 行星 · SetuHQ",
+ "@route.planet.title": {
+  "x-review": "machine",
+  "x-source": "1fcbb7f176"
+ },
+ "route.planets.label": "半径比",
+ "@route.planets.label": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "route.planets.title": "半径比 · 候选 · SetuHQ",
+ "@route.planets.title": {
+  "x-review": "machine",
+  "x-source": "ac2e38c1f9"
+ },
+ "route.plates.label": "图版",
+ "@route.plates.label": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "route.propose.label": "CHEOPS 提案",
+ "@route.propose.label": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "route.propose.title": "准备 CHEOPS 提案 · 文档 · SetuHQ",
+ "@route.propose.title": {
+  "x-review": "machine",
+  "x-source": "6f87c679a9"
+ },
+ "route.report.label": "运行报告",
+ "@route.report.label": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "route.runs.label": "运行",
+ "@route.runs.label": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "route.runs.title": "运行 · 证据 · SetuHQ",
+ "@route.runs.title": {
+  "x-review": "machine",
+  "x-source": "004653c043"
+ },
+ "route.sentinels.label": "评审组",
+ "@route.sentinels.label": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "route.sentinels.title": "证据：评审组，量化评估 · SetuHQ",
+ "@route.sentinels.title": {
+  "x-review": "machine",
+  "x-source": "789dfd2a1e"
+ },
+ "route.sky.label": "天图",
+ "@route.sky.label": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "route.sky.title": "探索天空 · SetuHQ",
+ "@route.sky.title": {
+  "x-review": "machine",
+  "x-source": "8b6fb90a8b"
+ },
+ "route.star.label": "恒星",
+ "@route.star.label": {
+  "x-review": "machine",
+  "x-source": "e357d39687"
+ },
+ "route.star.title": "{name} · 恒星 · SetuHQ",
+ "@route.star.title": {
+  "x-review": "machine",
+  "x-source": "fbb83b9cf8"
+ },
+ "route.stellar.label": "恒星",
+ "@route.stellar.label": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "route.stellar.title": "恒星测量：耀发和脉动 · 证据 · SetuHQ",
+ "@route.stellar.title": {
+  "x-review": "machine",
+  "x-source": "67e92dbcd1"
+ },
+ "route.stellardocs.label": "耀发和脉动",
+ "@route.stellardocs.label": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "route.stellardocs.title": "耀发、脉动和 CHEOPS · 文档 · SetuHQ",
+ "@route.stellardocs.title": {
+  "x-review": "machine",
+  "x-source": "ed9c362b70"
+ },
+ "route.tessnow.label": "TESS 现在在哪里",
+ "@route.tessnow.label": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "route.tessnow.title": "TESS 在看哪里 · 探索 · SetuHQ",
+ "@route.tessnow.title": {
+  "x-review": "machine",
+  "x-source": "b9141101d4"
+ },
+ "route.transit.label": "候选",
+ "@route.transit.label": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
+ "route.transit.title": "{name} · 候选 · SetuHQ",
+ "@route.transit.title": {
+  "x-review": "machine",
+  "x-source": "e3d2dd556b"
+ },
+ "route.variables.label": "一切变暗之物",
+ "@route.variables.label": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "route.variables.title": "一切变暗之物 · 目录 · SetuHQ",
+ "@route.variables.title": {
+  "x-review": "machine",
+  "x-source": "85fdb3c494"
+ },
+ "route.vetter.label": "当一回审查者",
+ "@route.vetter.label": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "route.vetter.title": "当一回审查者 · 候选 · SetuHQ",
+ "@route.vetter.title": {
+  "x-review": "machine",
+  "x-source": "f8e3bf1fc8"
+ },
+ "rr.h1": "如果是行星，每个深度意味着什么。",
+ "@rr.h1": {
+  "x-review": "machine",
+  "x-source": "ff54ab4721"
+ },
+ "rr.intro": "运行或推送中的每颗恒星一张卡片。每个条目都是{status}；下方的比值是其存储深度在来自行星时所意味的值。",
+ "@rr.intro": {
+  "x-review": "machine",
+  "x-source": "9889e603bf"
+ },
+ "runs.h1": "每次搜索运行、按存储原样显示的错误，以及这些页面背后的配置。",
+ "@runs.h1": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "runs.hist": "搜索运行",
+ "@runs.hist": {
+  "x-review": "machine",
+  "x-source": "26d6d37f90"
+ },
+ "runs.intro": "目录中的搜索运行历史，以及运行 {run} 的配置。错误信息按存储原样显示。",
+ "@runs.intro": {
+  "x-review": "machine",
+  "x-source": "95d99973c5"
+ },
+ "sd.h1": "耀发、脉动和 CHEOPS。",
+ "@sd.h1": {
+  "x-review": "machine",
+  "x-source": "a0c598f487"
+ },
+ "sd.intro": "六个命令关注的是恒星本身而不是其行星。每个命令写出一条 JSON 记录，包含结果、来源（版本、代码指纹、每个输入的 sha256）和标签。耀发或频率以给定的显著性被检测，从不被确认；变星类型是“可能”或“候选”。",
+ "@sd.intro": {
+  "x-review": "machine",
+  "x-source": "d9fdd750e3"
+ },
+ "sen.h1": "{n, plural, other {# 位评审者。}}",
+ "@sen.h1": {
+  "x-review": "machine",
+  "x-source": "18e2721f25"
+ },
+ "sen.h1b": "每一位都要赢得自己的一票。",
+ "@sen.h1b": {
+  "x-review": "machine",
+  "x-source": "67b1d265c9"
+ },
+ "sen.intro": "在运行 {run} 中标记凹陷的评审组：Sentinels 和 Probes，没有人。",
+ "@sen.intro": {
+  "x-review": "machine",
+  "x-source": "cfd243554e"
+ },
+ "shell.bootnote": "本页的交互部分未能加载。上面的文字是完整的；请刷新重试。",
+ "@shell.bootnote": {
+  "x-review": "machine",
+  "x-source": "a2f1ab571c"
+ },
+ "shell.breadcrumb": "面包屑导航",
+ "@shell.breadcrumb": {
+  "x-review": "machine",
+  "x-source": "2bd873d6c7"
+ },
+ "shell.copy_view": "复制此视图的链接",
+ "@shell.copy_view": {
+  "x-review": "machine",
+  "x-source": "709937ae3d"
+ },
+ "shell.home": "SetuHQ，主页",
+ "@shell.home": {
+  "x-review": "machine",
+  "x-source": "970b8e33a0"
+ },
+ "shell.in_section": "本栏目中",
+ "@shell.in_section": {
+  "x-review": "machine",
+  "x-source": "a4b1dbff1e"
+ },
+ "shell.menu_close": "关闭菜单",
+ "@shell.menu_close": {
+  "x-review": "machine",
+  "x-source": "d992820f3c"
+ },
+ "shell.menu_open": "打开菜单",
+ "@shell.menu_open": {
+  "x-review": "machine",
+  "x-source": "fc798c613b"
+ },
+ "shell.nav_main": "主导航",
+ "@shell.nav_main": {
+  "x-review": "machine",
+  "x-source": "eb814be3ca"
+ },
+ "shell.search": "搜索行星、恒星和页面（按 /）",
+ "@shell.search": {
+  "x-review": "machine",
+  "x-source": "781eaaf920"
+ },
+ "shell.search_title": "搜索（/）",
+ "@shell.search_title": {
+  "x-review": "machine",
+  "x-source": "bae77fae53"
+ },
+ "shell.skip": "跳到内容",
+ "@shell.skip": {
+  "x-review": "machine",
+  "x-source": "ac576a66d4"
+ },
+ "shell.theme.dark": "深色",
+ "@shell.theme.dark": {
+  "x-review": "machine",
+  "x-source": "e6bb5689be"
+ },
+ "shell.theme.label": "配色主题：{t}。切换到{next}",
+ "@shell.theme.label": {
+  "x-review": "machine",
+  "x-source": "c4ccc7de70"
+ },
+ "shell.theme.light": "浅色",
+ "@shell.theme.light": {
+  "x-review": "machine",
+  "x-source": "99a7026172"
+ },
+ "shell.theme.system": "设备设置",
+ "@shell.theme.system": {
+  "x-review": "machine",
+  "x-source": "2b67477bad"
+ },
+ "shell.theme.title": "主题：{t}",
+ "@shell.theme.title": {
+  "x-review": "machine",
+  "x-source": "79f90fbb1e"
+ },
+ "shell.view_link": "此视图的链接",
+ "@shell.view_link": {
+  "x-review": "machine",
+  "x-source": "5fb2ec761c"
+ },
+ "sky.tl": "每年找到的行星，按方法",
+ "@sky.tl": {
+  "x-review": "machine",
+  "x-source": "10dff603f9"
+ },
+ "st.figs": "检测器看到了什么",
+ "@st.figs": {
+  "x-review": "machine",
+  "x-source": "ff3ec0553b"
+ },
+ "st.h1": "恒星，测量。",
+ "@st.h1": {
+  "x-review": "machine",
+  "x-source": "ec1ba1f8f3"
+ },
+ "st.intro": "除了行星，SetuHQ 还检测恒星耀发、提取脉动频率、读取公开的 CHEOPS 光变曲线，并寻找食双星、自转周期和暂现源。每项功能都按运行前确定的协议与已发表结果进行了比较，每个页面和工具输出都会说明其验证进行到了什么程度。",
+ "@st.intro": {
+  "x-review": "machine",
+  "x-source": "7f59c8f0fc"
+ },
+ "subnav.candidates": "案卷",
+ "@subnav.candidates": {
+  "x-review": "machine",
+  "x-source": "379b0a5b2b"
+ },
+ "subnav.catalogue": "目录",
+ "@subnav.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "subnav.docs": "入门",
+ "@subnav.docs": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "subnav.editions": "版本",
+ "@subnav.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "subnav.explorer": "所有候选",
+ "@subnav.explorer": {
+  "x-review": "machine",
+  "x-source": "e2df94228e"
+ },
+ "subnav.galaxy": "银河",
+ "@subnav.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "subnav.leaderboard": "排行榜",
+ "@subnav.leaderboard": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "subnav.mission": "任务控制",
+ "@subnav.mission": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "subnav.pictures": "图是如何绘制的",
+ "@subnav.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "subnav.planets": "半径比",
+ "@subnav.planets": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "subnav.plates": "图版",
+ "@subnav.plates": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "subnav.propose": "CHEOPS 提案",
+ "@subnav.propose": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "subnav.report": "运行报告",
+ "@subnav.report": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "subnav.runs": "运行",
+ "@subnav.runs": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "subnav.sentinels": "评审组",
+ "@subnav.sentinels": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "subnav.sky": "天图",
+ "@subnav.sky": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "subnav.stellar": "恒星",
+ "@subnav.stellar": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "subnav.stellardocs": "耀发和脉动",
+ "@subnav.stellardocs": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "subnav.tessnow": "TESS 现在在哪里",
+ "@subnav.tessnow": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "subnav.transit": "凹陷",
+ "@subnav.transit": {
+  "x-review": "machine",
+  "x-source": "25efb1bd33"
+ },
+ "subnav.variables": "一切变暗之物",
+ "@subnav.variables": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "subnav.vetter": "当一回审查者",
+ "@subnav.vetter": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "tn.h1": "TESS 在看哪里。",
+ "@tn.h1": {
+  "x-review": "machine",
+  "x-source": "33a70ec6b1"
+ },
+ "tn.intro": "NASA 的 TESS 卫星用四台各为 24°×24° 的相机，对一条天区带观测约四周（一个天区）。此图显示公布的观测计划中的天区带，以及其中拥有已知行星的恒星。",
+ "@tn.intro": {
+  "x-review": "machine",
+  "x-source": "6cbf61a637"
+ },
+ "var.h1": "一切变暗之物。",
+ "@var.h1": {
+  "x-review": "machine",
+  "x-source": "00cffacfe5"
+ },
+ "var.h1b": "{n, number} 个条目，一个都没有丢弃。",
+ "@var.h1b": {
+  "x-review": "machine",
+  "x-source": "af9b7536fe"
+ },
+ "var.intro": "评审组的每个共识凹陷、扫描中的每次增亮和每颗恒星的变光，均按明确的规则分类，附置信度、线索和来源：标记、权重以及 Sentinels 自己的原话。",
+ "@var.intro": {
+  "x-review": "machine",
+  "x-source": "a3cde2962d"
+ },
+ "vt.h1": "当一回审查者。",
+ "@vt.h1": {
+  "x-review": "machine",
+  "x-source": "bc56851e50"
+ },
+ "vt.intro": "每张卡片都是 SetuHQ 某个示例运行存储的一个真实凹陷。看看它的光变曲线、折叠、奇数和偶数深度，以及半个轨道之后的深度，然后作出判断：通过、待复核或否决。再看看审查的结论以及原因。",
+ "@vt.intro": {
+  "x-review": "machine",
+  "x-source": "2d2a3a79d4"
+ }
+}

@@ -1,0 +1,3034 @@
+{
+ "@@locale": "ru",
+ "@@x-source-locale": "en",
+ "cat.h1": "Каждая известная экзопланета.",
+ "@cat.h1": {
+  "x-review": "machine",
+  "x-source": "c12b2894d2"
+ },
+ "cat.h1b": "{n, number} записей, с поиском.",
+ "@cat.h1b": {
+  "x-review": "machine",
+  "x-source": "0082f39a49"
+ },
+ "cat.intro": "Все планеты ({n, number}) из {source}, включая {nodist, number} без сохранённого расстояния, которые карта Галактики не может разместить. SetuHQ не открывал этих планет; он их каталогизирует.",
+ "@cat.intro": {
+  "x-review": "machine",
+  "x-source": "ca9826547d"
+ },
+ "cf.h1": "Каждый сигнал, его провалы и проверки за каждым вердиктом.",
+ "@cf.h1": {
+  "x-review": "machine",
+  "x-source": "2b73eb58d2"
+ },
+ "cf.intro": "Дело запуска, из которого взят провал: каждый сигнал и его провалы, с результатом проверки, полосой транзита и журналом вердиктов. Каждый сигнал, прошедший проверку, — это {status}; отклонённый или помеченный назван по своему статусу.",
+ "@cf.intro": {
+  "x-review": "machine",
+  "x-source": "252d456e94"
+ },
+ "chapter.astrometry": "Астрометрия",
+ "@chapter.astrometry": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
+ "chapter.doppler": "К нам и от нас",
+ "@chapter.doppler": {
+  "x-review": "machine",
+  "x-source": "982502489b"
+ },
+ "chapter.equations": "Уравнения жизни",
+ "@chapter.equations": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
+ "chapter.falsepos": "Ложноположительные сигналы",
+ "@chapter.falsepos": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
+ "chapter.history": "История и статьи",
+ "@chapter.history": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "chapter.imaging": "Заслоняя свет звезды",
+ "@chapter.imaging": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
+ "chapter.microlensing": "Микролинзирование",
+ "@chapter.microlensing": {
+  "x-review": "machine",
+  "x-source": "7713c65bef"
+ },
+ "chapter.molecules": "Молекулы и жизнь",
+ "@chapter.molecules": {
+  "x-review": "machine",
+  "x-source": "d0ac3c4b97"
+ },
+ "chapter.population": "Популяция",
+ "@chapter.population": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
+ "chapter.radio": "Радио",
+ "@chapter.radio": {
+  "x-review": "machine",
+  "x-source": "2a7dfeb2f2"
+ },
+ "chapter.rv": "Лучевая скорость",
+ "@chapter.rv": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
+ "chapter.spectroscopy": "Чтение атмосфер",
+ "@chapter.spectroscopy": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
+ },
+ "chapter.survey": "Как работает обзор неба",
+ "@chapter.survey": {
+  "x-review": "machine",
+  "x-source": "418a56729e"
+ },
+ "chapter.timing": "Время и фаза",
+ "@chapter.timing": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
+ },
+ "chapter.transit": "Транзит",
+ "@chapter.transit": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
+ },
+ "cli.argparse.argument": "аргумент %(argument_name)s: %(message)s",
+ "@cli.argparse.argument": {
+  "x-review": "machine",
+  "x-source": "2ee7b9a91a"
+ },
+ "cli.argparse.choice": "недопустимый выбор: %(value)r (выберите из %(choices)s)",
+ "@cli.argparse.choice": {
+  "x-review": "machine",
+  "x-source": "9dbc964dd3"
+ },
+ "cli.argparse.error": "%(prog)s: ошибка: %(message)s\n",
+ "@cli.argparse.error": {
+  "x-review": "machine",
+  "x-source": "954b9f0ae6"
+ },
+ "cli.argparse.help": "показать эту справку и выйти",
+ "@cli.argparse.help": {
+  "x-review": "machine",
+  "x-source": "608017daf4"
+ },
+ "cli.argparse.one": "ожидался один аргумент",
+ "@cli.argparse.one": {
+  "x-review": "machine",
+  "x-source": "d5d4f7b111"
+ },
+ "cli.argparse.options": "параметры",
+ "@cli.argparse.options": {
+  "x-review": "machine",
+  "x-source": "a793ab8fcc"
+ },
+ "cli.argparse.positional": "позиционные аргументы",
+ "@cli.argparse.positional": {
+  "x-review": "machine",
+  "x-source": "a5f91c7a58"
+ },
+ "cli.argparse.required": "требуются следующие аргументы: %s",
+ "@cli.argparse.required": {
+  "x-review": "machine",
+  "x-source": "25fb5034ca"
+ },
+ "cli.argparse.unrecognized": "нераспознанные аргументы: %s",
+ "@cli.argparse.unrecognized": {
+  "x-review": "machine",
+  "x-source": "5ed6ba5c37"
+ },
+ "cli.argparse.usage": "использование:",
+ "@cli.argparse.usage": {
+  "x-review": "machine",
+  "x-source": "d85f7a9a6f"
+ },
+ "cli.argparse.version": "показать номер версии программы и выйти",
+ "@cli.argparse.version": {
+  "x-review": "machine",
+  "x-source": "d534d67f66"
+ },
+ "cli.cmd.app": "то же, что 'setuhq site' (старое название, когда сайт был одной страницей приложения)",
+ "@cli.cmd.app": {
+  "x-review": "machine",
+  "x-source": "f119fa15f1"
+ },
+ "cli.cmd.batch": "запустить поток discover по списку целей, с кешем и возможностью продолжения",
+ "@cli.cmd.batch": {
+  "x-review": "machine",
+  "x-source": "40b27855e9"
+ },
+ "cli.cmd.benchmark": "бенчмарк внедрения и восстановления для настроенной панели",
+ "@cli.cmd.benchmark": {
+  "x-review": "machine",
+  "x-source": "4c26cdd1fc"
+ },
+ "cli.cmd.binaries": "затменные двойные и эллипсоидальные или отражательные переменные: период, затмения, фаза вторичного (подсказка e cos w), морфология; пометка кандидата с причинами",
+ "@cli.cmd.binaries": {
+  "x-review": "machine",
+  "x-source": "0abdc48c4a"
+ },
+ "cli.cmd.bundle": "экспортировать запись сектора из обзора как пакет вклада, запечатанный хешами содержимого",
+ "@cli.cmd.bundle": {
+  "x-review": "machine",
+  "x-source": "9852df2e94"
+ },
+ "cli.cmd.calibrate": "оценить веса рецензентов методом внедрения",
+ "@cli.cmd.calibrate": {
+  "x-review": "machine",
+  "x-source": "207a6e9d1b"
+ },
+ "cli.cmd.check-sweep": "проверить, что каждый вклад принят и цел и что каталог совпадает с тем, что воссоздают его проверенные источники",
+ "@cli.cmd.check-sweep": {
+  "x-review": "machine",
+  "x-source": "5634f750a9"
+ },
+ "cli.cmd.cheops": "CHEOPS Guest Observers Running Call: написать пакет подготовки заявки",
+ "@cli.cmd.cheops": {
+  "x-review": "machine",
+  "x-source": "4f36cba2a0"
+ },
+ "cli.cmd.crossmatch": "запросить NASA Exoplanet Archive о целях запуска и сохранить crossmatch.json",
+ "@cli.cmd.crossmatch": {
+  "x-review": "machine",
+  "x-source": "3b450e6853"
+ },
+ "cli.cmd.dashboard": "собрать интерактивную панель из запуска и необязательного каталога открытий",
+ "@cli.cmd.dashboard": {
+  "x-review": "machine",
+  "x-source": "75a27378f8"
+ },
+ "cli.cmd.discover": "запустить одну плановую партию поиска открытий и обновить каталог",
+ "@cli.cmd.discover": {
+  "x-review": "machine",
+  "x-source": "c89cac74a5"
+ },
+ "cli.cmd.docket": "собрать представление дел кандидатов для запуска",
+ "@cli.cmd.docket": {
+  "x-review": "machine",
+  "x-source": "6d3fd99980"
+ },
+ "cli.cmd.export": "записать таблицу в стиле ExoFOP CTOI и предсказанные окна транзитов для запуска",
+ "@cli.cmd.export": {
+  "x-review": "machine",
+  "x-source": "20cf1a8c0c"
+ },
+ "cli.cmd.flares": "обнаруживать звёздные вспышки: морфология, энергии, полнота и нулевой тест",
+ "@cli.cmd.flares": {
+  "x-review": "machine",
+  "x-source": "9d57912ca7"
+ },
+ "cli.cmd.ingest": "проверить пакет вклада и объединить его с каталогом, с указанием авторства",
+ "@cli.cmd.ingest": {
+  "x-review": "machine",
+  "x-source": "d729fd0e7d"
+ },
+ "cli.cmd.leaderboard": "оценить заявку на отложенной половине замороженного бенчмарка настоящих TOI или пересобрать docs/leaderboard из всех сохранённых заявок",
+ "@cli.cmd.leaderboard": {
+  "x-review": "machine",
+  "x-source": "eff0c84e54"
+ },
+ "cli.cmd.lint": "просканировать текст заявки (или PDF, через pypdf) на всё, что нарушает анонимность; помощь, а не гарантия",
+ "@cli.cmd.lint": {
+  "x-review": "machine",
+  "x-source": "dec0a3adc2"
+ },
+ "cli.cmd.mcp": "запустить сервер MCP через stdio, как setuhq-mcp (нужно дополнение mcp: pip install 'setuhq[mcp]')",
+ "@cli.cmd.mcp": {
+  "x-review": "machine",
+  "x-source": "36efd33521"
+ },
+ "cli.cmd.plate": "собрать страницу таблиц для печати: одна таблица на звезду, с подписями",
+ "@cli.cmd.plate": {
+  "x-review": "machine",
+  "x-source": "54445abdca"
+ },
+ "cli.cmd.propose": "подготовить заявку на наблюдения (подготовительный пакет; ничего не отправляется)",
+ "@cli.cmd.propose": {
+  "x-review": "machine",
+  "x-source": "f565d45d49"
+ },
+ "cli.cmd.pulsations": "частотный анализ: предварительное выбеливание, комбинации, фон, numax/Δν, тип",
+ "@cli.cmd.pulsations": {
+  "x-review": "machine",
+  "x-source": "6f493bd600"
+ },
+ "cli.cmd.rebuild": "повторно проверить сохранённый запуск (аппроксимация, FAP, пометки) по его сохранённым классификациям",
+ "@cli.cmd.rebuild": {
+  "x-review": "machine",
+  "x-source": "aaf332ed6a"
+ },
+ "cli.cmd.report": "собрать статический HTML-отчёт из каталога запуска",
+ "@cli.cmd.report": {
+  "x-review": "machine",
+  "x-source": "52964d6b1b"
+ },
+ "cli.cmd.rotation": "период вращения по пятенной модуляции (Lomb-Scargle и ACF), для каждого сектора; периоды длиннее примерно 13 д не измеряются",
+ "@cli.cmd.rotation": {
+  "x-review": "machine",
+  "x-source": "ce419593f9"
+ },
+ "cli.cmd.run": "запустить конвейер для целей из файла конфигурации",
+ "@cli.cmd.run": {
+  "x-review": "machine",
+  "x-source": "ebbdd3027a"
+ },
+ "cli.cmd.site": "собрать веб-сайт (каждую страницу, общие файлы, отчёты, таблицы и дела) из одного или нескольких запусков",
+ "@cli.cmd.site": {
+  "x-review": "machine",
+  "x-source": "bdfe2af14f"
+ },
+ "cli.cmd.sweep": "прочесать 2-минутные цели SPOC сектора TESS (с возможностью продолжения) в каталог переменности",
+ "@cli.cmd.sweep": {
+  "x-review": "machine",
+  "x-source": "7da0597b32"
+ },
+ "cli.cmd.transients": "непериодические поярчания: нарастание, спад, амплитуда, подсказки класса и фильтры ложных тревог, в кривой блеска SPOC или вырезке TESScut любой позиции",
+ "@cli.cmd.transients": {
+  "x-review": "machine",
+  "x-source": "edf6a53e13"
+ },
+ "cli.desc.propose.cheops": "SetuHQ независим и не связан с ESA, миссией CHEOPS или Консорциумом CHEOPS, не одобрен ими и не работает от их имени. Он не заменяет Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker от ESA или документ Policies & Procedures; определяющими являются официальный конкурс и инструменты.",
+ "@cli.desc.propose.cheops": {
+  "x-review": "machine",
+  "x-source": "cceac73b43"
+ },
+ "cli.desc.setuhq": "Интерфейс командной строки: ``setuhq run``, ``setuhq benchmark``, ``setuhq calibrate``, ``setuhq site``, ``setuhq plate`` и другие.",
+ "@cli.desc.setuhq": {
+  "x-review": "machine",
+  "x-source": "b77812ae01"
+ },
+ "cli.opt.batch.max-targets": "остановиться после стольких целей в этом сеансе",
+ "@cli.opt.batch.max-targets": {
+  "x-review": "machine",
+  "x-source": "d73a203b72"
+ },
+ "cli.opt.batch.retries": "повторные попытки неудачной цели в следующих сеансах",
+ "@cli.opt.batch.retries": {
+  "x-review": "machine",
+  "x-source": "c1df123c33"
+ },
+ "cli.opt.batch.sectors": "последние секторы на цель",
+ "@cli.opt.batch.sectors": {
+  "x-review": "machine",
+  "x-source": "9847836fea"
+ },
+ "cli.opt.batch.targets": "текстовый файл с идентификаторами TIC, по одному в строке",
+ "@cli.opt.batch.targets": {
+  "x-review": "machine",
+  "x-source": "12cb2ebf9d"
+ },
+ "cli.opt.batch.tic": "идентификаторы TIC",
+ "@cli.opt.batch.tic": {
+  "x-review": "machine",
+  "x-source": "1ec96f2b2c"
+ },
+ "cli.opt.batch.toi-cache": "сохранённая таблица TOI из архива, чтобы помечать записи ленты как known_toi или new_candidate",
+ "@cli.opt.batch.toi-cache": {
+  "x-review": "machine",
+  "x-source": "ce354b2d0e"
+ },
+ "cli.opt.batch.weights": "JSON с весами рецензентов",
+ "@cli.opt.batch.weights": {
+  "x-review": "machine",
+  "x-source": "53409ff573"
+ },
+ "cli.opt.benchmark.out": "файл markdown для записи",
+ "@cli.opt.benchmark.out": {
+  "x-review": "machine",
+  "x-source": "eb949f2129"
+ },
+ "cli.opt.benchmark.weights": "JSON с весами",
+ "@cli.opt.benchmark.weights": {
+  "x-review": "machine",
+  "x-source": "5a7dbbe171"
+ },
+ "cli.opt.binaries.cache": "корень кеша (файлы MAST, значения TIC)",
+ "@cli.opt.binaries.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.binaries.exptime": "каденс TESS в секундах",
+ "@cli.opt.binaries.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.binaries.out": "записать сюда запись JSON",
+ "@cli.opt.binaries.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.binaries.sector": "секторы TESS (по умолчанию: каждый сектор SPOC)",
+ "@cli.opt.binaries.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.binaries.target": "идентификатор TIC (напр. 'TIC 441420236'), файл SPOC *_lc.fits или CSV (time, flux[, flux_err])",
+ "@cli.opt.binaries.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.binaries.transit-duration": "его длительность (д)",
+ "@cli.opt.binaries.transit-duration": {
+  "x-review": "machine",
+  "x-source": "14084d1df6"
+ },
+ "cli.opt.binaries.transit-epoch": "момент середины его транзита (BTJD)",
+ "@cli.opt.binaries.transit-epoch": {
+  "x-review": "machine",
+  "x-source": "8e38587901"
+ },
+ "cli.opt.binaries.transit-period": "рекомендательные подсказки проверки при периоде кандидата с транзитом (д)",
+ "@cli.opt.binaries.transit-period": {
+  "x-review": "machine",
+  "x-source": "2c253e7f29"
+ },
+ "cli.opt.bundle.contributor": "имя для указания авторства (на ваш выбор; показывается на сайте)",
+ "@cli.opt.bundle.contributor": {
+  "x-review": "machine",
+  "x-source": "52709c8c8b"
+ },
+ "cli.opt.bundle.out": "каталог пакета для записи",
+ "@cli.opt.bundle.out": {
+  "x-review": "machine",
+  "x-source": "0fd5207362"
+ },
+ "cli.opt.bundle.record": "запись сектора, напр. my-sweep/sector_0005.json.gz",
+ "@cli.opt.bundle.record": {
+  "x-review": "machine",
+  "x-source": "277968793c"
+ },
+ "cli.opt.calibrate.image-dir": "куда рендерить калибровочные изображения, если они нужны рецензентам",
+ "@cli.opt.calibrate.image-dir": {
+  "x-review": "machine",
+  "x-source": "8ddc793e3a"
+ },
+ "cli.opt.calibrate.out": "JSON с весами для записи",
+ "@cli.opt.calibrate.out": {
+  "x-review": "machine",
+  "x-source": "d107a13850"
+ },
+ "cli.opt.check-sweep.fix": "пересобрать catalogue.json из проверенных источников",
+ "@cli.opt.check-sweep.fix": {
+  "x-review": "machine",
+  "x-source": "f89150012c"
+ },
+ "cli.opt.check-sweep.ledger-base": "git ref, чей журнал приёма этот может только расширять; 'auto' — это merge-base с базовой веткой (SETUHQ_BASE, GITHUB_BASE_REF или ветка по умолчанию удалённого репозитория). Отсутствие базы приводит к ошибке, если задан CI",
+ "@cli.opt.check-sweep.ledger-base": {
+  "x-review": "machine",
+  "x-source": "f6b4b1fabb"
+ },
+ "cli.opt.cheops.denoise": "с --flares: сначала вейвлетное подавление шума",
+ "@cli.opt.cheops.denoise": {
+  "x-review": "machine",
+  "x-source": "bd0a95d70e"
+ },
+ "cli.opt.cheops.file-key": "один визит (CH_PR..._TG..._V....)",
+ "@cli.opt.cheops.file-key": {
+  "x-review": "machine",
+  "x-source": "e108c5fdc1"
+ },
+ "cli.opt.cheops.flares": "также обнаруживать вспышки в каждом визите",
+ "@cli.opt.cheops.flares": {
+  "x-review": "machine",
+  "x-source": "1b9e23c896"
+ },
+ "cli.opt.cheops.offline": "только кеш, без сети",
+ "@cli.opt.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "7fb233fb38"
+ },
+ "cli.opt.cheops.out": "записать сюда запись JSON",
+ "@cli.opt.cheops.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.cheops.points": "включить в запись точки после удаления тренда",
+ "@cli.opt.cheops.points": {
+  "x-review": "machine",
+  "x-source": "de5db37740"
+ },
+ "cli.opt.cheops.target": "имя звезды или 'RA DEC' в градусах",
+ "@cli.opt.cheops.target": {
+  "x-review": "machine",
+  "x-source": "19a2fbdcf5"
+ },
+ "cli.opt.crossmatch.star": "имя звезды (hostname или pl_name); цели TIC также сопоставляются по tic_id",
+ "@cli.opt.crossmatch.star": {
+  "x-review": "machine",
+  "x-source": "25164e4aa2"
+ },
+ "cli.opt.dashboard.catalog": "JSON каталога открытий для включения",
+ "@cli.opt.dashboard.catalog": {
+  "x-review": "machine",
+  "x-source": "941f727440"
+ },
+ "cli.opt.discover.publish-new": "только частные развёртывания: оставлять в каталоге сигналы, не совпадающие ни с одним известным TOI. По умолчанию они удерживаются из всех публичных результатов (для закрытого рассмотрения); публичный поток никогда этого не передаёт",
+ "@cli.opt.discover.publish-new": {
+  "x-review": "machine",
+  "x-source": "fa834dcccf"
+ },
+ "cli.opt.docket.allow-missing-crossmatch": "собирать даже тогда, когда ни одно сохранённое сопоставление с архивом не пригодно; страница тогда выводит сохранённую ошибку",
+ "@cli.opt.docket.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.docket.refresh-crossmatch": "сначала запустить 'setuhq crossmatch': запросить архив и сохранить crossmatch.json",
+ "@cli.opt.docket.refresh-crossmatch": {
+  "x-review": "machine",
+  "x-source": "16850a4df3"
+ },
+ "cli.opt.docket.star": "имя звезды для сопоставления с архивом (hostname или pl_name); цели TIC также сопоставляются по tic_id",
+ "@cli.opt.docket.star": {
+  "x-review": "machine",
+  "x-source": "fa232a85fb"
+ },
+ "cli.opt.export.allow-unchecked": "экспортировать даже тогда, когда проверку дубликатов TOI выполнить нельзя (строки это указывают)",
+ "@cli.opt.export.allow-unchecked": {
+  "x-review": "machine",
+  "x-source": "00695ab022"
+ },
+ "cli.opt.export.days": "насколько вперёд предсказывать окна транзитов",
+ "@cli.opt.export.days": {
+  "x-review": "machine",
+  "x-source": "331c4f1544"
+ },
+ "cli.opt.export.toi-cache": "сохранённая таблица TOI из архива (загружается и записывается сюда при отсутствии)",
+ "@cli.opt.export.toi-cache": {
+  "x-review": "machine",
+  "x-source": "a99eb8c584"
+ },
+ "cli.opt.flares.cache": "корень кеша (файлы MAST, значения TIC)",
+ "@cli.opt.flares.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.flares.completeness": "N попыток внедрения и восстановления (по 10 вспышек)",
+ "@cli.opt.flares.completeness": {
+  "x-review": "machine",
+  "x-source": "138f48258e"
+ },
+ "cli.opt.flares.denoise": "сначала стационарное вейвлетное подавление шума (нужен setuhq[wavelets])",
+ "@cli.opt.flares.denoise": {
+  "x-review": "machine",
+  "x-source": "923a73f3ed"
+ },
+ "cli.opt.flares.distance-pc": "заменить расстояние из TIC (пк)",
+ "@cli.opt.flares.distance-pc": {
+  "x-review": "machine",
+  "x-source": "5f618e8fe1"
+ },
+ "cli.opt.flares.exptime": "каденс TESS в секундах",
+ "@cli.opt.flares.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.flares.mission": "задаёт параметры обнаружения по умолчанию и полосу",
+ "@cli.opt.flares.mission": {
+  "x-review": "machine",
+  "x-source": "707cfede2f"
+ },
+ "cli.opt.flares.no-null": "пропустить нулевой тест с инвертированным потоком",
+ "@cli.opt.flares.no-null": {
+  "x-review": "machine",
+  "x-source": "15da4f002c"
+ },
+ "cli.opt.flares.out": "записать сюда запись JSON",
+ "@cli.opt.flares.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.flares.radius": "заменить радиус из TIC (радиусы Солнца)",
+ "@cli.opt.flares.radius": {
+  "x-review": "machine",
+  "x-source": "2333e6c1d4"
+ },
+ "cli.opt.flares.sector": "секторы TESS (по умолчанию: каждый сектор SPOC)",
+ "@cli.opt.flares.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.flares.target": "идентификатор TIC (напр. 'TIC 441420236'), файл SPOC *_lc.fits или CSV (time, flux[, flux_err])",
+ "@cli.opt.flares.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.flares.teff": "заменить Teff из TIC (K)",
+ "@cli.opt.flares.teff": {
+  "x-review": "machine",
+  "x-source": "f8dce33e3f"
+ },
+ "cli.opt.flares.tmag": "заменить звёздную величину TESS из TIC",
+ "@cli.opt.flares.tmag": {
+  "x-review": "machine",
+  "x-source": "5d89050461"
+ },
+ "cli.opt.ingest.accept-sentinels": "принять пакет с Sentinels, чьи провалы здесь нельзя прочесать повторно (каталог это указывает)",
+ "@cli.opt.ingest.accept-sentinels": {
+  "x-review": "machine",
+  "x-source": "43052bd204"
+ },
+ "cli.opt.ingest.attested-by": "логин GitHub человека, отправившего пакет (автора pull request)",
+ "@cli.opt.ingest.attested-by": {
+  "x-review": "machine",
+  "x-source": "99ebfcc35a"
+ },
+ "cli.opt.ingest.bundle": "каталог пакета или .zip",
+ "@cli.opt.ingest.bundle": {
+  "x-review": "machine",
+  "x-source": "8a6728595c"
+ },
+ "cli.opt.ingest.verify-lightcurves": "сколько секторов звёзд случайно загрузить и прочесать повторно, сверх каждого с кандидатом в планеты или записью в классе, превышающем свой нулевой тест (по умолчанию: max(3, 5%%)); каждая запись должна совпасть",
+ "@cli.opt.ingest.verify-lightcurves": {
+  "x-review": "machine",
+  "x-source": "a8325b1730"
+ },
+ "cli.opt.leaderboard.submission": "заявка JSON (docs/leaderboard/README.md); опустите, чтобы пересобрать таблицу",
+ "@cli.opt.leaderboard.submission": {
+  "x-review": "machine",
+  "x-source": "0a572af021"
+ },
+ "cli.opt.leaderboard.submissions": "каталог заявок для оценки при пересборке",
+ "@cli.opt.leaderboard.submissions": {
+  "x-review": "machine",
+  "x-source": "d14c33cf89"
+ },
+ "cli.opt.plate.allow-missing-crossmatch": "собирать даже тогда, когда ни одно сохранённое сопоставление с архивом не пригодно; страница тогда выводит сохранённую ошибку",
+ "@cli.opt.plate.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.plate.catalog": "JSON каталога открытий: его звёзды получают таблицы и присоединяются к реке времени",
+ "@cli.opt.plate.catalog": {
+  "x-review": "machine",
+  "x-source": "e0f0c444fc"
+ },
+ "cli.opt.plate.star": "имя звезды для сопоставления с архивом, как в 'setuhq docket'",
+ "@cli.opt.plate.star": {
+  "x-review": "machine",
+  "x-source": "5a6e358f96"
+ },
+ "cli.opt.propose.cheops.author-name": "имя, которое должен пометить линт анонимности (можно повторять; никогда не записывается в пакет)",
+ "@cli.opt.propose.cheops.author-name": {
+  "x-review": "machine",
+  "x-source": "4155c649d2"
+ },
+ "cli.opt.propose.cheops.coord-source": "откуда взяты --ra/--dec (позиции из ExoFOP и Gaia отклоняются: не та эпоха)",
+ "@cli.opt.propose.cheops.coord-source": {
+  "x-review": "machine",
+  "x-source": "60a0952794"
+ },
+ "cli.opt.propose.cheops.cycle": "цикл подачи ГГГГ-ММ (по умолчанию: следующий открытый для программы)",
+ "@cli.opt.propose.cheops.cycle": {
+  "x-review": "machine",
+  "x-source": "0fd6ca07d8"
+ },
+ "cli.opt.propose.cheops.dec": "ваше склонение в градусах (ICRS, J2000)",
+ "@cli.opt.propose.cheops.dec": {
+  "x-review": "machine",
+  "x-source": "c89b51ca1f"
+ },
+ "cli.opt.propose.cheops.depth-ppm": "глубина события (транзит, затмение) или амплитуда вспышки, ppm",
+ "@cli.opt.propose.cheops.depth-ppm": {
+  "x-review": "machine",
+  "x-source": "f68df536ad"
+ },
+ "cli.opt.propose.cheops.duration-hours": "длительность события в часах",
+ "@cli.opt.propose.cheops.duration-hours": {
+  "x-review": "machine",
+  "x-source": "5e5ef3e71f"
+ },
+ "cli.opt.propose.cheops.efficiency": "предполагаемая эффективность наблюдений (заглушка; возьмите свою из Visibility Tool)",
+ "@cli.opt.propose.cheops.efficiency": {
+  "x-review": "machine",
+  "x-source": "365381f043"
+ },
+ "cli.opt.propose.cheops.flare-rate": "вспышек в сутки выше амплитуды (для --event flare)",
+ "@cli.opt.propose.cheops.flare-rate": {
+  "x-review": "machine",
+  "x-source": "83b5c5aff0"
+ },
+ "cli.opt.propose.cheops.gmag": "звёздная величина Gaia G (по умолчанию: из SIMBAD)",
+ "@cli.opt.propose.cheops.gmag": {
+  "x-review": "machine",
+  "x-source": "1501588e77"
+ },
+ "cli.opt.propose.cheops.institution": "учреждение, которое должен пометить линт анонимности (можно повторять; никогда не записывается в пакет)",
+ "@cli.opt.propose.cheops.institution": {
+  "x-review": "machine",
+  "x-source": "c02f921244"
+ },
+ "cli.opt.propose.cheops.name": "имя пакета в runs/propose/ (по умолчанию cheops-<target>-<cycle>)",
+ "@cli.opt.propose.cheops.name": {
+  "x-review": "machine",
+  "x-source": "31cda5b062"
+ },
+ "cli.opt.propose.cheops.no-cache": "не читать и не записывать cache/cheops-propose/",
+ "@cli.opt.propose.cheops.no-cache": {
+  "x-review": "machine",
+  "x-source": "082b236e30"
+ },
+ "cli.opt.propose.cheops.offline": "никаких сетевых запросов (только кеш; проверки тогда сообщают 'not checked')",
+ "@cli.opt.propose.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "fa7a0c88a2"
+ },
+ "cli.opt.propose.cheops.orbits": "орбиты, которые вы собираетесь запросить (проверяются по лимитам программы)",
+ "@cli.opt.propose.cheops.orbits": {
+  "x-review": "machine",
+  "x-source": "8d710414cd"
+ },
+ "cli.opt.propose.cheops.out": "каталог пакета для создания (по умолчанию runs/propose/<name>; никогда не перезаписывается)",
+ "@cli.opt.propose.cheops.out": {
+  "x-review": "machine",
+  "x-source": "fc29338ed1"
+ },
+ "cli.opt.propose.cheops.period": "период, сутки",
+ "@cli.opt.propose.cheops.period": {
+  "x-review": "machine",
+  "x-source": "0f00d3ed0b"
+ },
+ "cli.opt.propose.cheops.period-err": "его погрешность 1 сигма, сутки",
+ "@cli.opt.propose.cheops.period-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.ra": "ваше прямое восхождение в градусах (ICRS, J2000), вместо значения из SIMBAD",
+ "@cli.opt.propose.cheops.ra": {
+  "x-review": "machine",
+  "x-source": "7452b9af9c"
+ },
+ "cli.opt.propose.cheops.snr": "целевое S/N события (по умолчанию 10)",
+ "@cli.opt.propose.cheops.snr": {
+  "x-review": "machine",
+  "x-source": "1bed72cce4"
+ },
+ "cli.opt.propose.cheops.t0": "момент середины транзита, BJD_TDB (или BTJD)",
+ "@cli.opt.propose.cheops.t0": {
+  "x-review": "machine",
+  "x-source": "3583f77acc"
+ },
+ "cli.opt.propose.cheops.t0-err": "его погрешность 1 сигма, сутки",
+ "@cli.opt.propose.cheops.t0-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.target": "имя цели, как его знает SIMBAD (напр. 'TOI-1987', 'HD 39091', 'TIC 349088467')",
+ "@cli.opt.propose.cheops.target": {
+  "x-review": "machine",
+  "x-source": "dc643ed38a"
+ },
+ "cli.opt.propose.cheops.window-end": "последняя дата наблюдения (по умолчанию 2029-12-31)",
+ "@cli.opt.propose.cheops.window-end": {
+  "x-review": "machine",
+  "x-source": "bb4ef3a3e8"
+ },
+ "cli.opt.propose.cheops.window-start": "первая дата наблюдения (по умолчанию: самое раннее начало цикла)",
+ "@cli.opt.propose.cheops.window-start": {
+  "x-review": "machine",
+  "x-source": "f1537bbf4b"
+ },
+ "cli.opt.propose.lint.author-name": "имя для пометки, в обычных вариантах (можно повторять)",
+ "@cli.opt.propose.lint.author-name": {
+  "x-review": "machine",
+  "x-source": "896776ed61"
+ },
+ "cli.opt.propose.lint.institution": "учреждение для пометки (можно повторять)",
+ "@cli.opt.propose.lint.institution": {
+  "x-review": "machine",
+  "x-source": "7dfbfc57ef"
+ },
+ "cli.opt.pulsations.cache": "корень кеша (файлы MAST, значения TIC)",
+ "@cli.opt.pulsations.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.pulsations.exptime": "каденс TESS в секундах",
+ "@cli.opt.pulsations.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.pulsations.fmax": "наибольшая частота (д⁻¹; по умолчанию Найквиста)",
+ "@cli.opt.pulsations.fmax": {
+  "x-review": "machine",
+  "x-source": "1d96a068e1"
+ },
+ "cli.opt.pulsations.fmin": "наименьшая частота (д⁻¹)",
+ "@cli.opt.pulsations.fmin": {
+  "x-review": "machine",
+  "x-source": "e982706993"
+ },
+ "cli.opt.pulsations.out": "записать сюда запись JSON",
+ "@cli.opt.pulsations.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.pulsations.sector": "секторы TESS (по умолчанию: каждый сектор SPOC)",
+ "@cli.opt.pulsations.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.pulsations.solar": "всегда выполнять анализ numax/Δν",
+ "@cli.opt.pulsations.solar": {
+  "x-review": "machine",
+  "x-source": "0cc921a51c"
+ },
+ "cli.opt.pulsations.surrogates": "суррогаты красного шума для доли ложных частот",
+ "@cli.opt.pulsations.surrogates": {
+  "x-review": "machine",
+  "x-source": "2d606e2fee"
+ },
+ "cli.opt.pulsations.target": "идентификатор TIC (напр. 'TIC 441420236'), файл SPOC *_lc.fits или CSV (time, flux[, flux_err])",
+ "@cli.opt.pulsations.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.pulsations.teff": "Teff (K) для эвристики типа (по умолчанию: TIC)",
+ "@cli.opt.pulsations.teff": {
+  "x-review": "machine",
+  "x-source": "3cd47aa62d"
+ },
+ "cli.opt.report.benchmark": "markdown бенчмарка для встраивания",
+ "@cli.opt.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "50a27fedb7"
+ },
+ "cli.opt.report.out": "каталог сайта для записи",
+ "@cli.opt.report.out": {
+  "x-review": "machine",
+  "x-source": "439462c999"
+ },
+ "cli.opt.report.validation": "markdown валидации для встраивания",
+ "@cli.opt.report.validation": {
+  "x-review": "machine",
+  "x-source": "8ea7211541"
+ },
+ "cli.opt.rotation.cache": "корень кеша (файлы MAST, значения TIC)",
+ "@cli.opt.rotation.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.rotation.exptime": "каденс TESS в секундах",
+ "@cli.opt.rotation.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.rotation.out": "записать сюда запись JSON",
+ "@cli.opt.rotation.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.rotation.sector": "секторы TESS (по умолчанию: каждый сектор SPOC)",
+ "@cli.opt.rotation.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.rotation.target": "идентификатор TIC (напр. 'TIC 441420236'), файл SPOC *_lc.fits или CSV (time, flux[, flux_err])",
+ "@cli.opt.rotation.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.run.cache": "корень кеша для ответов Claude",
+ "@cli.opt.run.cache": {
+  "x-review": "machine",
+  "x-source": "eeda390458"
+ },
+ "cli.opt.run.calibrated-weights": "калиброванные веса, используемые по умолчанию, когда их идентификаторы рецензентов совпадают с конфигурацией",
+ "@cli.opt.run.calibrated-weights": {
+  "x-review": "machine",
+  "x-source": "0d6473928d"
+ },
+ "cli.opt.run.out": "выходной каталог",
+ "@cli.opt.run.out": {
+  "x-review": "machine",
+  "x-source": "7e0ee3625e"
+ },
+ "cli.opt.run.uniform-weights": "каждый рецензент весит 1.0",
+ "@cli.opt.run.uniform-weights": {
+  "x-review": "machine",
+  "x-source": "db3384cb7c"
+ },
+ "cli.opt.run.weights": "файл JSON с весами рецензентов от 'setuhq calibrate' (заменяет значения по умолчанию)",
+ "@cli.opt.run.weights": {
+  "x-review": "machine",
+  "x-source": "802d0e0a5b"
+ },
+ "cli.opt.setuhq.lang": "язык вывода и справки (en, nl, pl, pt, fi, sv, da, nb, cs, uk, ru, de, fr, es, et, ja, zh-Hans); иначе SETUHQ_LANG, LC_ALL, LC_MESSAGES или LANG; по умолчанию английский. Файлы и JSON остаются на английском",
+ "@cli.opt.setuhq.lang": {
+  "x-review": "machine",
+  "x-source": "02f46f5ea1"
+ },
+ "cli.opt.site.allow-missing-crossmatch": "собирать даже тогда, когда ни одно сохранённое сопоставление с архивом не пригодно; страница тогда выводит сохранённую ошибку",
+ "@cli.opt.site.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.site.benchmark": "заметки бенчмарка для отчёта о запуске",
+ "@cli.opt.site.benchmark": {
+  "x-review": "machine",
+  "x-source": "8c60c65795"
+ },
+ "cli.opt.site.catalog": "JSON каталога открытий для страниц Кандидаты и Запуски",
+ "@cli.opt.site.catalog": {
+  "x-review": "machine",
+  "x-source": "3c64583755"
+ },
+ "cli.opt.site.no-extras": "не включать отчёт о запуске, таблицы и отдельное дело",
+ "@cli.opt.site.no-extras": {
+  "x-review": "machine",
+  "x-source": "ea0dea2308"
+ },
+ "cli.opt.site.out": "корневая папка сайта (site/ для setuhq.com)",
+ "@cli.opt.site.out": {
+  "x-review": "machine",
+  "x-source": "ff9482ee28"
+ },
+ "cli.opt.site.run_dir": "сохранённые запуски: сначала основной запуск (карта неба, панель и эталонная проверка на главной странице), затем другие примеры запусков; каждый получает страницы своих провалов, дело, таблицы и отчёт",
+ "@cli.opt.site.run_dir": {
+  "x-review": "machine",
+  "x-source": "935df39235"
+ },
+ "cli.opt.site.showcase": "описания примеров запусков и сравнения с литературой (scripts/showcase_compare.py)",
+ "@cli.opt.site.showcase": {
+  "x-review": "machine",
+  "x-source": "a8d2fbc8b7"
+ },
+ "cli.opt.site.star": "имя звезды для сопоставления дела с архивом, как в 'setuhq docket'",
+ "@cli.opt.site.star": {
+  "x-review": "machine",
+  "x-source": "3a81206f9b"
+ },
+ "cli.opt.site.sweep": "каталог обзора (setuhq sweep) для Всего, что тускнеет, счётчика на главной и слоя неба",
+ "@cli.opt.site.sweep": {
+  "x-review": "machine",
+  "x-source": "2cbca7c299"
+ },
+ "cli.opt.site.validation": "заметки валидации для отчёта о запуске",
+ "@cli.opt.site.validation": {
+  "x-review": "machine",
+  "x-source": "3aa3ee0254"
+ },
+ "cli.opt.site.weights": "JSON калиброванных весов рецензентов, показанный на странице Доказательства",
+ "@cli.opt.site.weights": {
+  "x-review": "machine",
+  "x-source": "17d9554285"
+ },
+ "cli.opt.sweep.cache": "корень кеша: списки целей, файлы кривых блеска, записи по звёздам",
+ "@cli.opt.sweep.cache": {
+  "x-review": "machine",
+  "x-source": "4ceefeb748"
+ },
+ "cli.opt.sweep.classified-commit": "с --reclassify: ревизия git, которая в последний раз классифицировала такие записи",
+ "@cli.opt.sweep.classified-commit": {
+  "x-review": "machine",
+  "x-source": "a041546a77"
+ },
+ "cli.opt.sweep.config": "конфигурация обзора, напр. configs/sweep.toml (Probes) или configs/sweep_sentinels.toml",
+ "@cli.opt.sweep.config": {
+  "x-review": "machine",
+  "x-source": "7d010ce268"
+ },
+ "cli.opt.sweep.contributor": "имя, указанное для этого обзора",
+ "@cli.opt.sweep.contributor": {
+  "x-review": "machine",
+  "x-source": "2d65f8895f"
+ },
+ "cli.opt.sweep.limit": "сколько целей сектора, в порядке обзора",
+ "@cli.opt.sweep.limit": {
+  "x-review": "machine",
+  "x-source": "b2105a1cbf"
+ },
+ "cli.opt.sweep.min-interval": "секунд между запросами к MAST (не меньше)",
+ "@cli.opt.sweep.min-interval": {
+  "x-review": "machine",
+  "x-source": "1e29475701"
+ },
+ "cli.opt.sweep.no-control": "пропустить контрольный запуск с инвертированным потоком для каждой звезды",
+ "@cli.opt.sweep.no-control": {
+  "x-review": "machine",
+  "x-source": "0af9322de6"
+ },
+ "cli.opt.sweep.out": "куда идут запись сектора и catalogue.json",
+ "@cli.opt.sweep.out": {
+  "x-review": "machine",
+  "x-source": "74a76b8e20"
+ },
+ "cli.opt.sweep.reclassify": "повторно применить правила классификации к сохранённым секторам звёзд (только после изменения в variables.py)",
+ "@cli.opt.sweep.reclassify": {
+  "x-review": "machine",
+  "x-source": "86ff3a8c91"
+ },
+ "cli.opt.sweep.rule-change": "с --reclassify: что изменилось в правилах (повторите для каждого изменения)",
+ "@cli.opt.sweep.rule-change": {
+  "x-review": "machine",
+  "x-source": "a0203dbc98"
+ },
+ "cli.opt.sweep.search-commit": "с --reclassify: ревизия git, которая прочесала записи, называющие только один код",
+ "@cli.opt.sweep.search-commit": {
+  "x-review": "machine",
+  "x-source": "139e54a5b2"
+ },
+ "cli.opt.sweep.time-budget-min": "перестать начинать новые звёзды через столько минут",
+ "@cli.opt.sweep.time-budget-min": {
+  "x-review": "machine",
+  "x-source": "838fb96162"
+ },
+ "cli.opt.sweep.weights": "калиброванные веса; рецензент, которого нет в файле, весит 1.0",
+ "@cli.opt.sweep.weights": {
+  "x-review": "machine",
+  "x-source": "015b47d6f0"
+ },
+ "cli.opt.sweep.workers": "процессы, одновременно ищущие по звёздам (загрузки остаются по одной)",
+ "@cli.opt.sweep.workers": {
+  "x-review": "machine",
+  "x-source": "8046b64f2f"
+ },
+ "cli.opt.transients.cache": "корень кеша (файлы MAST, значения TIC, вырезки)",
+ "@cli.opt.transients.cache": {
+  "x-review": "machine",
+  "x-source": "4994163c4f"
+ },
+ "cli.opt.transients.dec": "Dec (°)",
+ "@cli.opt.transients.dec": {
+  "x-review": "machine",
+  "x-source": "9b73841e14"
+ },
+ "cli.opt.transients.exptime": "каденс TESS в секундах",
+ "@cli.opt.transients.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.transients.keep-cutout": "сохранить загруженную вырезку в кеше",
+ "@cli.opt.transients.keep-cutout": {
+  "x-review": "machine",
+  "x-source": "30d3ece3c5"
+ },
+ "cli.opt.transients.out": "записать сюда запись JSON",
+ "@cli.opt.transients.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.transients.ra": "RA (°): фотометрия на вырезке TESScut из полнокадровых изображений",
+ "@cli.opt.transients.ra": {
+  "x-review": "machine",
+  "x-source": "80c280d2d9"
+ },
+ "cli.opt.transients.sector": "секторы TESS (с --ra/--dec: один сектор для вырезки)",
+ "@cli.opt.transients.sector": {
+  "x-review": "machine",
+  "x-source": "471c0813f6"
+ },
+ "cli.opt.transients.size": "размер вырезки в пикселях (по умолчанию 11)",
+ "@cli.opt.transients.size": {
+  "x-review": "machine",
+  "x-source": "c0ba5e1825"
+ },
+ "cli.opt.transients.target": "идентификатор TIC, файл SPOC *_lc.fits или CSV (опустите с --ra/--dec)",
+ "@cli.opt.transients.target": {
+  "x-review": "machine",
+  "x-source": "eb65265df5"
+ },
+ "cli.opt.transients.time": "с --ra/--dec и без --sector: сектор, содержащий этот BTJD",
+ "@cli.opt.transients.time": {
+  "x-review": "machine",
+  "x-source": "59af8e0810"
+ },
+ "cli.out.asset_budget": "превышен бюджет ресурса: {line}",
+ "@cli.out.asset_budget": {
+  "x-review": "machine",
+  "x-source": "1a08ee7ef2"
+ },
+ "cli.out.catalogue_site": "каталог {catalogue}, сайт {site}",
+ "@cli.out.catalogue_site": {
+  "x-review": "machine",
+  "x-source": "45ece88b52"
+ },
+ "cli.out.classifications": "классификации: {n}",
+ "@cli.out.classifications": {
+  "x-review": "machine",
+  "x-source": "0f32738b00"
+ },
+ "cli.out.consensus": "события консенсуса: {n} ({k} прошли проверку)",
+ "@cli.out.consensus": {
+  "x-review": "machine",
+  "x-source": "0e7161a11f"
+ },
+ "cli.out.dashboard": "панель записана в {path}",
+ "@cli.out.dashboard": {
+  "x-review": "machine",
+  "x-source": "794588aab9"
+ },
+ "cli.out.discover": "целей рассмотрено в этом запуске: {n}, совпадений с известными TOI: {k}",
+ "@cli.out.discover": {
+  "x-review": "machine",
+  "x-source": "e86d5ed05d"
+ },
+ "cli.out.docket": "дела записаны в {path}",
+ "@cli.out.docket": {
+  "x-review": "machine",
+  "x-source": "3461730266"
+ },
+ "cli.out.lightcurves": "кривые блеска: {n}",
+ "@cli.out.lightcurves": {
+  "x-review": "machine",
+  "x-source": "b98d2bfa2b"
+ },
+ "cli.out.outputs": "результаты в {path}",
+ "@cli.out.outputs": {
+  "x-review": "machine",
+  "x-source": "ad5b1626c3"
+ },
+ "cli.out.page_budget": "превышен бюджет страницы: {line}",
+ "@cli.out.page_budget": {
+  "x-review": "machine",
+  "x-source": "719f1ca170"
+ },
+ "cli.out.plates": "таблицы записаны в {path}",
+ "@cli.out.plates": {
+  "x-review": "machine",
+  "x-source": "3fd4254e8b"
+ },
+ "cli.out.rebuilt": "пересобрано {n} событий консенсуса ({k} прошли проверку) в {path}",
+ "@cli.out.rebuilt": {
+  "x-review": "machine",
+  "x-source": "06707f0892"
+ },
+ "cli.out.site": "сайт записан в {path}",
+ "@cli.out.site": {
+  "x-review": "machine",
+  "x-source": "e59ebe1ee1"
+ },
+ "cli.out.subjects": "объекты:     {n}",
+ "@cli.out.subjects": {
+  "x-review": "machine",
+  "x-source": "184630bc2c"
+ },
+ "cli.out.weights": "веса рецензентов: {source}",
+ "@cli.out.weights": {
+  "x-review": "machine",
+  "x-source": "1089f763c0"
+ },
+ "cli.out.weights_written": "веса записаны в {path}, доли в {rates}",
+ "@cli.out.weights_written": {
+  "x-review": "machine",
+  "x-source": "6828f69f91"
+ },
+ "desc.catalogue": "Каждая планета из exoplanet.eu, с поиском и сортировкой, у каждой своя страница. SetuHQ не открывал этих планет.",
+ "@desc.catalogue": {
+  "x-review": "machine",
+  "x-source": "4321b00077"
+ },
+ "desc.docs": "Установите SetuHQ, прочешите звезду, добавьте обзор, подключите ИИ-ассистента через MCP и скачайте данные.",
+ "@desc.docs": {
+  "x-review": "machine",
+  "x-source": "242925f427"
+ },
+ "desc.editions": "Редакции SetuHQ: бесплатное открытое ядро (AGPL-3.0 или коммерческая лицензия), SetuHQ Pro (в разработке, по договору) и исследования на заказ. Без цен; каждый платный путь начинается с сообщения.",
+ "@desc.editions": {
+  "x-review": "machine",
+  "x-source": "34320f5c27"
+ },
+ "desc.explorer": "Провалы запуска и их дела, а также {n, plural, one {# запись} few {# записи} many {# записей} other {# записи}} поисковой ленты. Кандидаты не подтверждены; ни один не является подтверждённой планетой.",
+ "@desc.explorer": {
+  "x-review": "machine",
+  "x-source": "12bbc1141b"
+ },
+ "desc.galaxy": "Каждая известная экзопланета с сохранённым расстоянием, размещённая в 3D вокруг Солнца, по методу и году открытия.",
+ "@desc.galaxy": {
+  "x-review": "machine",
+  "x-source": "1d04a19fb8"
+ },
+ "desc.leaderboard": "Методы, оценённые вслепую на отложенной половине бенчмарка настоящих TOI, с 95% интервалами Уилсона.",
+ "@desc.leaderboard": {
+  "x-review": "machine",
+  "x-source": "f63d09cd7f"
+ },
+ "desc.methods": "Глава {i} из {n} раздела «Как это работает»: {title}. Анимированное объяснение с физикой и источниками.",
+ "@desc.methods": {
+  "x-review": "machine",
+  "x-source": "72765a8c0c"
+ },
+ "desc.mission": "Плиточное рабочее пространство представлений SetuHQ, связанных одной выбранной звездой: Галактика, небо, кривая блеска, каталог и лента панели.",
+ "@desc.mission": {
+  "x-review": "machine",
+  "x-source": "aea05e50d5"
+ },
+ "desc.overview": "{tagline} Откалиброванная панель Sentinels и Probes читает кривые блеска TESS и объясняет каждый вердикт. Каждый результат SetuHQ — это {status}.",
+ "@desc.overview": {
+  "x-review": "machine",
+  "x-source": "e4c31340b2"
+ },
+ "desc.pictures": "Как SetuHQ рисует свои изображения: звёзды в цвете абсолютно чёрного тела, а планеты как художественное представление, выбранное по измеренному радиусу и облучённости, с каждым правилом и источником.",
+ "@desc.pictures": {
+  "x-review": "machine",
+  "x-source": "f81ce510dd"
+ },
+ "desc.planets": "Что означала бы глубина каждого кандидата, будь он планетой: отношение радиусов планеты и звезды, и почему размер планеты не указан.",
+ "@desc.planets": {
+  "x-review": "machine",
+  "x-source": "33a6642674"
+ },
+ "desc.propose": "Подготовьте заявку CHEOPS Guest Observers командой setuhq propose cheops: помощь в составлении, которая проверяет правила и цель и никогда ничего не отправляет.",
+ "@desc.propose": {
+  "x-review": "machine",
+  "x-source": "415a0f0956"
+ },
+ "desc.runs": "Каждый поисковый запуск, его ошибки в сохранённом виде и конфигурация, стоящая за страницами кандидатов.",
+ "@desc.runs": {
+  "x-review": "machine",
+  "x-source": "2fc865ecd8"
+ },
+ "desc.sentinels": "Рецензенты за каждым вердиктом, их калибровка и то, как панель оценивается вслепую на настоящих TESS Objects of Interest. {attribution}",
+ "@desc.sentinels": {
+  "x-review": "machine",
+  "x-source": "6325eab793"
+ },
+ "desc.sky": "Звезда запуска на карте всего неба, с провалами, которые отметила панель, и местами, куда смотрели обзоры. {headline}",
+ "@desc.sky": {
+  "x-review": "machine",
+  "x-source": "22c5e64296"
+ },
+ "desc.stellar": "Вспышки, пульсации, кривые блеска CHEOPS, затменные двойные, вращение и транзиенты: насколько проверен каждый звёздный инструмент SetuHQ, с каждой учтённой проверкой и графиками настоящих данных TESS.",
+ "@desc.stellar": {
+  "x-review": "machine",
+  "x-source": "fd3ad97a67"
+ },
+ "desc.stellardocs": "Запускайте звёздные команды SetuHQ: вспышки, пульсации, публичные кривые блеска CHEOPS, затменные двойные, вращение и транзиенты, с их статусом валидации и условиями ESA для данных CHEOPS.",
+ "@desc.stellardocs": {
+  "x-review": "machine",
+  "x-source": "69d64ce7ce"
+ },
+ "desc.tessnow": "Куда направлен спутник TESS, сектор за сектором, по опубликованному расписанию: четыре поля камер на карте неба и каталогизированные звёзды в них. Не живая телеметрия.",
+ "@desc.tessnow": {
+  "x-review": "machine",
+  "x-source": "b892187187"
+ },
+ "desc.variables": "Обзор секторов TESS в SetuHQ: каждый найденный и классифицированный провал, каждый класс сопоставлен с собственным нулевым тестом.",
+ "@desc.variables": {
+  "x-review": "machine",
+  "x-source": "ec6feba9c3"
+ },
+ "desc.vetter": "Посмотрите на настоящий сохранённый провал из примеров запусков SetuHQ, оцените его как принятый, помеченный или отклонённый, а затем посмотрите, что решила проверка. Учебное упражнение; ответы не собираются.",
+ "@desc.vetter": {
+  "x-review": "machine",
+  "x-source": "a0ad69fc0e"
+ },
+ "dip.state.cand": "кандидат, не подтверждён",
+ "@dip.state.cand": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "dip.state.open": "помечен для рассмотрения, открыт",
+ "@dip.state.open": {
+  "x-review": "machine",
+  "x-source": "5c42a6d0b9"
+ },
+ "dip.state.rej": "отклонён проверкой, не кандидат",
+ "@dip.state.rej": {
+  "x-review": "machine",
+  "x-source": "0c75827454"
+ },
+ "dip.tag.cand": "кандидат",
+ "@dip.tag.cand": {
+  "x-review": "machine",
+  "x-source": "dda18a0e21"
+ },
+ "dip.tag.open": "помечен",
+ "@dip.tag.open": {
+  "x-review": "machine",
+  "x-source": "5588be887f"
+ },
+ "dip.tag.rej": "отклонён",
+ "@dip.tag.rej": {
+  "x-review": "machine",
+  "x-source": "20cd938a2e"
+ },
+ "docs.contribute": "Добавьте обзор",
+ "@docs.contribute": {
+  "x-review": "machine",
+  "x-source": "3118488db2"
+ },
+ "docs.contribute.a": "Как внести вклад ›",
+ "@docs.contribute.a": {
+  "x-review": "machine",
+  "x-source": "fefd95f45c"
+ },
+ "docs.contribute.p": "Прочешите часть сектора TESS на своём компьютере и отправьте результат, с указанием авторства.",
+ "@docs.contribute.p": {
+  "x-review": "machine",
+  "x-source": "7636e0e0dd"
+ },
+ "docs.data": "Данные и файлы",
+ "@docs.data": {
+  "x-review": "machine",
+  "x-source": "1544ff48d7"
+ },
+ "docs.data.a": "Загрузки ›",
+ "@docs.data.a": {
+  "x-review": "machine",
+  "x-source": "8e6ab2918b"
+ },
+ "docs.data.p": "Каждый каталог этого сайта для скачивания и отчёты, стоящие за доказательствами.",
+ "@docs.data.p": {
+  "x-review": "machine",
+  "x-source": "a7dd9ada99"
+ },
+ "docs.editions": "Редакции",
+ "@docs.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "docs.editions.a": "Сравнить редакции ›",
+ "@docs.editions.a": {
+  "x-review": "machine",
+  "x-source": "90fe459127"
+ },
+ "docs.editions.p": "Открытое ядро бесплатно. SetuHQ Pro (в разработке) и исследования на заказ — по договору, без цен: каждое начинается с сообщения.",
+ "@docs.editions.p": {
+  "x-review": "machine",
+  "x-source": "a4c5119805"
+ },
+ "docs.h1": "Запустите сами.",
+ "@docs.h1": {
+  "x-review": "machine",
+  "x-source": "a1737d6898"
+ },
+ "docs.install": "Установка и первый запуск",
+ "@docs.install": {
+  "x-review": "machine",
+  "x-source": "ea230bebae"
+ },
+ "docs.intro": "SetuHQ — открытое программное обеспечение. Установите его, прочешите кривую блеска звезды той же панелью, что показывает этот сайт, добавьте обзор неба или позвольте своему ИИ-ассистенту им пользоваться.",
+ "@docs.intro": {
+  "x-review": "machine",
+  "x-source": "7d1db3c963"
+ },
+ "docs.mcp": "Использование из ассистента",
+ "@docs.mcp": {
+  "x-review": "machine",
+  "x-source": "ee854c3928"
+ },
+ "docs.mcp.a": "Подключиться через MCP ›",
+ "@docs.mcp.a": {
+  "x-review": "machine",
+  "x-source": "c393096cc9"
+ },
+ "docs.mcp.h": "Использование из ИИ-ассистента (MCP)",
+ "@docs.mcp.h": {
+  "x-review": "machine",
+  "x-source": "f46e936a3b"
+ },
+ "docs.mcp.p": "Сервер MCP позволяет ассистенту запускать собственный код SetuHQ и читать его результаты.",
+ "@docs.mcp.p": {
+  "x-review": "machine",
+  "x-source": "eb88b7d692"
+ },
+ "docs.pictures": "Как рисуются изображения",
+ "@docs.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "docs.pictures.a": "Изображения ›",
+ "@docs.pictures.a": {
+  "x-review": "machine",
+  "x-source": "d4afb0f5d1"
+ },
+ "docs.pictures.p": "Звёзды в цвете абсолютно чёрного тела; планеты как художественное представление, выбранное по измеренному радиусу и облучённости. Каждое правило и источник.",
+ "@docs.pictures.p": {
+  "x-review": "machine",
+  "x-source": "7c281d6576"
+ },
+ "docs.prov": "Технические подробности: откуда берутся графики",
+ "@docs.prov": {
+  "x-review": "machine",
+  "x-source": "1cfbcdad80"
+ },
+ "docs.python": "SetuHQ требуется Python {v} или новее.",
+ "@docs.python": {
+  "x-review": "machine",
+  "x-source": "3159020543"
+ },
+ "docs.start": "Начало работы",
+ "@docs.start": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "docs.start.a": "Установка и первый запуск ›",
+ "@docs.start.a": {
+  "x-review": "machine",
+  "x-source": "468f664b71"
+ },
+ "docs.start.p": "Установите, а затем прочешите кривую блеска любой звезды TESS, как это сделал каждый пример запуска на этом сайте.",
+ "@docs.start.p": {
+  "x-review": "machine",
+  "x-source": "2e8b6ed67a"
+ },
+ "ed.compare": "Сравнить редакции",
+ "@ed.compare": {
+  "x-review": "machine",
+  "x-source": "0a79392035"
+ },
+ "ed.compare.p": "Читайте по строкам, чтобы сравнить все три.",
+ "@ed.compare.p": {
+  "x-review": "machine",
+  "x-source": "59ba9870b5"
+ },
+ "ed.h1": "Редакции.",
+ "@ed.h1": {
+  "x-review": "machine",
+  "x-source": "d98733b93e"
+ },
+ "ed.intro": "Весь движок бесплатен и останется таким. Ashforde OÜ поддерживает его коммерческой лицензией, SetuHQ Pro и исследованиями на заказ, а не блокировкой функций. На этом сайте нет цен: каждый платный путь начинается с сообщения.",
+ "@ed.intro": {
+  "x-review": "machine",
+  "x-source": "d588b090c3"
+ },
+ "ex.h1": "{n, plural, one {# провал} few {# провала} many {# провалов} other {# провала}}, которые можно открыть, из {stars, plural, =1 {одной звезды-примера} one {# звезды-примера} few {# звёзд-примеров} many {# звёзд-примеров} other {# звезды-примера}}.",
+ "@ex.h1": {
+  "x-review": "machine",
+  "x-source": "ad8e8b5e42"
+ },
+ "ex.intro": "Провалы, которые панель отметила в кривой блеска TESS каждой звезды-примера, сгруппированные по звёздам и подсчитанные по результату проверки. Провал, прошедший проверку, — это {status}; помеченный — открыт; отклонённый — не кандидат. Ни один не является подтверждённой планетой. Откройте один, чтобы посмотреть его воспроизведение, или его дело с каждой проверкой за вердиктом.",
+ "@ex.intro": {
+  "x-review": "machine",
+  "x-source": "3a25873c3b"
+ },
+ "ex.more": " Ниже: {n} записей поисковой ленты с других звёзд, у которых ещё нет дела.",
+ "@ex.more": {
+  "x-review": "machine",
+  "x-source": "96432c834d"
+ },
+ "footer.all_chapters": "Все главы ({n})",
+ "@footer.all_chapters": {
+  "x-review": "machine",
+  "x-source": "177340a477"
+ },
+ "footer.contribute": "Как добавить обзор",
+ "@footer.contribute": {
+  "x-review": "machine",
+  "x-source": "960b0242d4"
+ },
+ "footer.data": "Загрузка данных",
+ "@footer.data": {
+  "x-review": "machine",
+  "x-source": "47e65bf65c"
+ },
+ "footer.nav": "Сайт",
+ "@footer.nav": {
+  "x-review": "machine",
+  "x-source": "fa7955814e"
+ },
+ "footer.overview": "Обзор",
+ "@footer.overview": {
+  "x-review": "machine",
+  "x-source": "d4b1ea5708"
+ },
+ "footer.pictures": "Как рисуются изображения ›",
+ "@footer.pictures": {
+  "x-review": "machine",
+  "x-source": "f4d87c6ca3"
+ },
+ "footer.source": "Исходный код",
+ "@footer.source": {
+  "x-review": "machine",
+  "x-source": "bf046c7395"
+ },
+ "gx.h1": "Каждая известная экзопланета",
+ "@gx.h1": {
+  "x-review": "machine",
+  "x-source": "22fff7c222"
+ },
+ "gx.h1b": "вокруг Солнца.",
+ "@gx.h1b": {
+  "x-review": "machine",
+  "x-source": "0513cb70f1"
+ },
+ "gx.intro": "{n, number} планет вокруг {hosts, number} звёзд, размещённых там, где они есть. SetuHQ не находил этих планет; он наносит их на карту по данным {source}.",
+ "@gx.intro": {
+  "x-review": "machine",
+  "x-source": "b60778b897"
+ },
+ "hint.dismiss": "Закрыть подсказку: {h}",
+ "@hint.dismiss": {
+  "x-review": "machine",
+  "x-source": "704395b8f4"
+ },
+ "hint.orbits": "Размеры не в масштабе · фазы условны",
+ "@hint.orbits": {
+  "x-review": "machine",
+  "x-source": "f31d20fed2"
+ },
+ "home.band.counters": "Доказательства, подсчитанные",
+ "@home.band.counters": {
+  "x-review": "machine",
+  "x-source": "5f2b5a53a9"
+ },
+ "home.band.counters.e": "Каждое число ведёт к своему доказательству",
+ "@home.band.counters.e": {
+  "x-review": "machine",
+  "x-source": "6d25c68528"
+ },
+ "home.band.fold": "Как планета прячется в шуме",
+ "@home.band.fold": {
+  "x-review": "machine",
+  "x-source": "79677ced9c"
+ },
+ "home.band.fold.e": "Настоящие данные",
+ "@home.band.fold.e": {
+  "x-review": "machine",
+  "x-source": "6a758a8937"
+ },
+ "home.band.lineup": "Планеты из примеров, в масштабе",
+ "@home.band.lineup": {
+  "x-review": "machine",
+  "x-source": "aaf6e55de4"
+ },
+ "home.band.lineup.e": "Планеты в масштабе",
+ "@home.band.lineup.e": {
+  "x-review": "machine",
+  "x-source": "f48421d1f6"
+ },
+ "home.band.panel": "Кто рассматривает провал",
+ "@home.band.panel": {
+  "x-review": "machine",
+  "x-source": "fd782b5776"
+ },
+ "home.band.panel.e": "Панель",
+ "@home.band.panel.e": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "home.band.sky": "Звезда каждой известной планеты, по году, когда её нашли",
+ "@home.band.sky": {
+  "x-review": "machine",
+  "x-source": "25fe759e36"
+ },
+ "home.band.sky.e": "Небо",
+ "@home.band.sky.e": {
+  "x-review": "machine",
+  "x-source": "587ffab2a1"
+ },
+ "home.band.tempstrip": "{n, plural, =1 {Цвет звезды-примера} one {# звезда-пример: от {lo, number, integer} K до {hi, number, integer} K, один конвейер} few {# звезды-примера: от {lo, number, integer} K до {hi, number, integer} K, один конвейер} many {# звёзд-примеров: от {lo, number, integer} K до {hi, number, integer} K, один конвейер} other {# звезды-примера: от {lo, number, integer} K до {hi, number, integer} K, один конвейер}}",
+ "@home.band.tempstrip": {
+  "x-review": "machine",
+  "x-source": "705ec8da04"
+ },
+ "home.band.tempstrip.e": "Цвета звёзд-примеров",
+ "@home.band.tempstrip.e": {
+  "x-review": "machine",
+  "x-source": "d93001b796"
+ },
+ "home.ctr.benchmark": "настоящих TESS Objects of Interest в бенчмарке вслепую",
+ "@home.ctr.benchmark": {
+  "x-review": "machine",
+  "x-source": "9672338f63"
+ },
+ "home.ctr.catalogue": "планет в каталоге, с которым сверяется SetuHQ",
+ "@home.ctr.catalogue": {
+  "x-review": "machine",
+  "x-source": "01f04bca08"
+ },
+ "home.ctr.chapters": "иллюстрированных глав о том, как находят планеты",
+ "@home.ctr.chapters": {
+  "x-review": "machine",
+  "x-source": "865afa5050"
+ },
+ "home.ctr.completeness": "отложенных известных планет, найденных вслепую (95% интервал Уилсона)",
+ "@home.ctr.completeness": {
+  "x-review": "machine",
+  "x-source": "9439e30e8b"
+ },
+ "home.ctr.fetched": "{source}, получено {date, date}",
+ "@home.ctr.fetched": {
+  "x-review": "machine",
+  "x-source": "3fd1f86614"
+ },
+ "home.ctr.fetched_file": "{source}, получено {date, date} ({file})",
+ "@home.ctr.fetched_file": {
+  "x-review": "machine",
+  "x-source": "6d503bce8f"
+ },
+ "home.ctr.heldout": "отложенная половина бенчмарка ({file})",
+ "@home.ctr.heldout": {
+  "x-review": "machine",
+  "x-source": "f9bd8675c1"
+ },
+ "home.do.docs": "Запустите сами",
+ "@home.do.docs": {
+  "x-review": "machine",
+  "x-source": "b3ab2275bd"
+ },
+ "home.do.docs.d": "Установите SetuHQ, прочешите звезду, добавьте обзор неба или подключите своего ИИ-ассистента через MCP.",
+ "@home.do.docs.d": {
+  "x-review": "machine",
+  "x-source": "e150d9ac61"
+ },
+ "home.do.explorer": "Посмотреть кандидатов",
+ "@home.do.explorer": {
+  "x-review": "machine",
+  "x-source": "db92ac3570"
+ },
+ "home.do.explorer.d": "Провалы, которые панель отметила в кривых блеска TESS звёзд-примеров, каждый с полным делом. Кандидаты, никогда не подтверждённые планеты.",
+ "@home.do.explorer.d": {
+  "x-review": "machine",
+  "x-source": "b2310d28d3"
+ },
+ "home.do.methods": "Узнать, как это работает",
+ "@home.do.methods": {
+  "x-review": "machine",
+  "x-source": "e2c2e9609b"
+ },
+ "home.do.methods.d": "Пятнадцать иллюстрированных глав о том, как находят планеты, от покачивания звезды до чтения атмосферы.",
+ "@home.do.methods.d": {
+  "x-review": "machine",
+  "x-source": "a4ab0f8d7a"
+ },
+ "home.do.sentinels": "Проверить доказательства",
+ "@home.do.sentinels": {
+  "x-review": "machine",
+  "x-source": "16cc8485e7"
+ },
+ "home.do.sentinels.d": "Как панель оценивается на настоящих, известных объектах: бенчмарк вслепую, публичный рейтинг и калибровка.",
+ "@home.do.sentinels.d": {
+  "x-review": "machine",
+  "x-source": "728efa2330"
+ },
+ "home.do.sky": "Исследовать небо",
+ "@home.do.sky": {
+  "x-review": "machine",
+  "x-source": "0e734b0e38"
+ },
+ "home.do.sky.d": "Каждая известная экзопланета на 3D-карте Галактики, небо, охваченное TESS, и каталог известных планет с поиском.",
+ "@home.do.sky.d": {
+  "x-review": "machine",
+  "x-source": "33d22aaaf3"
+ },
+ "home.dohere": "Что здесь можно сделать",
+ "@home.dohere": {
+  "x-review": "machine",
+  "x-source": "c2f1fa481b"
+ },
+ "home.examples": "Примеры: {n, plural, one {# звезда} few {# звезды} many {# звёзд} other {# звезды}}, один конвейер",
+ "@home.examples": {
+  "x-review": "machine",
+  "x-source": "31c4bc580e"
+ },
+ "home.examples.p": "Каждый — это сохранённый запуск на публичных кривых блеска TESS из MAST, с данными, конфигурацией и кодом, помеченными хешами. Каждый провал подсчитан по результату проверки; кандидат остаётся неподтверждённым, а отклонённый провал — не кандидат.",
+ "@home.examples.p": {
+  "x-review": "machine",
+  "x-source": "d13aa1075e"
+ },
+ "home.hero.h1": "Небо, рассмотренное.",
+ "@home.hero.h1": {
+  "x-review": "machine",
+  "x-source": "c537af3dcb"
+ },
+ "home.hero.more": "{n, plural, one {Посмотреть # пример ›} few {Посмотреть # примера ›} many {Посмотреть # примеров ›} other {Посмотреть # примера ›}}",
+ "@home.hero.more": {
+  "x-review": "machine",
+  "x-source": "50e5398098"
+ },
+ "home.hero.sub": "SetuHQ ищет транзиты в публичной кривой блеска любой звезды TESS. Откалиброванная панель Sentinels (ИИ-рецензенты) и Probes (детерминированные детекторы) отмечает провалы, а проверка объясняет каждый вердикт. Ничто не называется планетой, пока ею не является.",
+ "@home.hero.sub": {
+  "x-review": "machine",
+  "x-source": "acf4d55d13"
+ },
+ "home.honest.archive": "<b>Только архивные значения.</b> Эта страница не заявляет никакого обнаружения. Совпадение с TOI или архивом сравнивает сохранённый период с опубликованными значениями.",
+ "@home.honest.archive": {
+  "x-review": "machine",
+  "x-source": "9caca54a23"
+ },
+ "home.honest.h": "Чего эта страница не утверждает",
+ "@home.honest.h": {
+  "x-review": "machine",
+  "x-source": "738097d05c"
+ },
+ "home.honest.image": "<b>Нет изображения планеты.</b> Изображения планет — художественное представление, выбранное по измеренному радиусу и облучённости; <a href=\"/docs/pictures/\">Как рисуются изображения ›</a>",
+ "@home.honest.image": {
+  "x-review": "machine",
+  "x-source": "e6974ba935"
+ },
+ "home.honest.panel": "Панель — это Sentinels и Probes:",
+ "@home.honest.panel": {
+  "x-review": "machine",
+  "x-source": "a9433f2186"
+ },
+ "home.honest.people": "В панели нет людей.",
+ "@home.honest.people": {
+  "x-review": "machine",
+  "x-source": "7ffee760a9"
+ },
+ "home.honest.planet": "<b>Нет подтверждённой планеты.</b> Каждый провал, сигнал и запись ленты здесь — это {status}. Прохождение проверки не является подтверждением.{match, select, none {} other { Совпадение с {match} означает, что планета уже известна, а не что этот запуск её подтвердил.}}",
+ "@home.honest.planet": {
+  "x-review": "machine",
+  "x-source": "fddd51a0e3"
+ },
+ "home.honest.sizes": "<b>Нет размеров планет.</b> Радиус звезды не сохранён, поэтому глубина даёт только отношение радиусов планеты и звезды. Страница отношений радиусов показывает расчёт.",
+ "@home.honest.sizes": {
+  "x-review": "machine",
+  "x-source": "99d745ec98"
+ },
+ "home.honest.weights": " Их веса опираются на калибровку с {n} кривыми блеска с подложенным сигналом и {n} пустыми для каждого, поэтому они приблизительны.",
+ "@home.honest.weights": {
+  "x-review": "machine",
+  "x-source": "46497d8bc1"
+ },
+ "home.more.sky": "Исследовать небо ›",
+ "@home.more.sky": {
+  "x-review": "machine",
+  "x-source": "86786f5a19"
+ },
+ "home.more.transit": "Как находят транзиты ›",
+ "@home.more.transit": {
+  "x-review": "machine",
+  "x-source": "04e504e9e8"
+ },
+ "home.refcheck": "Эталонная проверка: {planet}, известная планета, найденная снова в запуске {run}",
+ "@home.refcheck": {
+  "x-review": "machine",
+  "x-source": "e700c0ebab"
+ },
+ "home.refrun": "Эталонный запуск: {run}",
+ "@home.refrun": {
+  "x-review": "machine",
+  "x-source": "b698a243c0"
+ },
+ "honesty.attribution": "Sentinels по умолчанию работают на Claude (Anthropic); другие поставщики поддерживаются и помечаются. Probes — детерминированные детекторы с согласованным фильтром.",
+ "@honesty.attribution": {
+  "x-review": "machine",
+  "x-source": "7793394412"
+ },
+ "honesty.cheops_disclaimer": "SetuHQ независим и не связан с ESA, миссией CHEOPS или Консорциумом CHEOPS, не одобрен ими и не работает от их имени.",
+ "@honesty.cheops_disclaimer": {
+  "x-review": "machine",
+  "x-source": "f163955866"
+ },
+ "honesty.embargo": "Сигналы, не совпадающие ни с одним известным TOI, удерживаются для закрытого рассмотрения; их публикуют только после рассмотрения и сообщения.",
+ "@honesty.embargo": {
+  "x-review": "machine",
+  "x-source": "7ab637a8c0"
+ },
+ "honesty.footer": "Каждый результат SetuHQ на этом сайте — кандидат, никогда не подтверждённая планета. Открытый код под лицензией AGPL-3.0; данные SetuHQ под CC BY 4.0. «SetuHQ» и знак Setu — товарные знаки Ashforde OÜ.",
+ "@honesty.footer": {
+  "x-review": "machine",
+  "x-source": "69d7e6d4fb"
+ },
+ "honesty.no_detection": "Только архивные значения. Эта страница не заявляет никакого обнаружения.",
+ "@honesty.no_detection": {
+  "x-review": "machine",
+  "x-source": "fe680cebf0"
+ },
+ "honesty.none_confirmed": "Ни один не является подтверждённой планетой, пока независимые последующие наблюдения этого не подтвердят.",
+ "@honesty.none_confirmed": {
+  "x-review": "machine",
+  "x-source": "3509876ac0"
+ },
+ "honesty.probes_only": "Только Probes; Sentinels для этого примера не запускались",
+ "@honesty.probes_only": {
+  "x-review": "machine",
+  "x-source": "3cfb53c6a7"
+ },
+ "honesty.tess_pointing": "Наведение по опубликованному расписанию, не живая телеметрия",
+ "@honesty.tess_pointing": {
+  "x-review": "machine",
+  "x-source": "6faac5a432"
+ },
+ "honesty.transients_aid": "Инструменты для транзиентов — это помощь в поиске, и их кандидатов нужно проверять на глаз; их обнаружения, подсказки класса и фильтры ложных тревог не проверены на достоверность.",
+ "@honesty.transients_aid": {
+  "x-review": "machine",
+  "x-source": "61272b381e"
+ },
+ "honesty.unconfirmed": "кандидат, не подтверждён",
+ "@honesty.unconfirmed": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "i18n.mtnote": "Этот перевод выполнен с помощью машины и ещё не проверен носителем языка. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Исправления приветствуются</a>.",
+ "@i18n.mtnote": {
+  "x-review": "machine",
+  "x-source": "3803a5c5dc"
+ },
+ "i18n.picker.label": "Язык: {name}",
+ "@i18n.picker.label": {
+  "x-review": "machine",
+  "x-source": "d99eed9b59"
+ },
+ "i18n.picker.note": "Все языки, кроме английского, переведены с помощью машины и ещё не проверены носителями языка. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Исправления приветствуются</a>.",
+ "@i18n.picker.note": {
+  "x-review": "machine",
+  "x-source": "b19e30478b"
+ },
+ "i18n.suggest.dismiss": "Закрыть",
+ "@i18n.suggest.dismiss": {
+  "x-review": "machine",
+  "x-source": "48845bff33"
+ },
+ "i18n.suggest.go": "Читать на русском",
+ "@i18n.suggest.go": {
+  "x-review": "machine",
+  "x-source": "a9d0b8e36c"
+ },
+ "i18n.suggest.label": "Язык",
+ "@i18n.suggest.label": {
+  "x-review": "machine",
+  "x-source": "a4fe65264e"
+ },
+ "i18n.suggest.text": "Эта страница есть и на русском.",
+ "@i18n.suggest.text": {
+  "x-review": "machine",
+  "x-source": "4d512860c4"
+ },
+ "label.art": "Художественное представление",
+ "@label.art": {
+  "x-review": "machine",
+  "x-source": "8b1a9bc32a"
+ },
+ "label.illustration": "Иллюстрация",
+ "@label.illustration": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
+ },
+ "label.model": "Модель по сохранённым значениям",
+ "@label.model": {
+  "x-review": "machine",
+  "x-source": "f99882758e"
+ },
+ "label.real": "Настоящие данные, с источником",
+ "@label.real": {
+  "x-review": "machine",
+  "x-source": "6f75938cc8"
+ },
+ "label.speculative": "Спекулятивная модель",
+ "@label.speculative": {
+  "x-review": "machine",
+  "x-source": "d1d38cf39a"
+ },
+ "lb.h1": "Методы, оценённые вслепую на настоящих TOI.",
+ "@lb.h1": {
+  "x-review": "machine",
+  "x-source": "d7943ed0f0"
+ },
+ "lb.intro": "Публичный рейтинг на замороженном бенчмарке настоящих TOI: обнаруженные события каждой заявки, оценённые самим рейтингом только на отложенной половине, с 95% интервалами Уилсона. Это не пороговый обзор внедрением (docs/threshold_sweep.md), который настраивает пороги Probe на синтетических кривых блеска.",
+ "@lb.intro": {
+  "x-review": "machine",
+  "x-source": "8e62d2c060"
+ },
+ "lb.note": "Измерено на заявленном бенчмарке; ничто здесь не является открытием.",
+ "@lb.note": {
+  "x-review": "machine",
+  "x-source": "272d460db4"
+ },
+ "limits.art": "Не наблюдение: облик, выбранный по измеренному радиусу и облучённости.",
+ "@limits.art": {
+  "x-review": "machine",
+  "x-source": "ec71f17b2e"
+ },
+ "limits.caption": "как указано в подписи",
+ "@limits.caption": {
+  "x-review": "machine",
+  "x-source": "dee533d112"
+ },
+ "limits.illustration": "Объясняет идею; не данные.",
+ "@limits.illustration": {
+  "x-review": "machine",
+  "x-source": "c4c6c22d05"
+ },
+ "limits.model": "Модель, нарисованная по сохранённым числам; не изображение объекта.",
+ "@limits.model": {
+  "x-review": "machine",
+  "x-source": "9f137900ab"
+ },
+ "limits.real": "Сохранённые измерения, усреднённые или свёрнутые так, как сохранены.",
+ "@limits.real": {
+  "x-review": "machine",
+  "x-source": "1e9288318d"
+ },
+ "limits.source": "Источник: {s}.",
+ "@limits.source": {
+  "x-review": "machine",
+  "x-source": "cba3864e3a"
+ },
+ "limits.speculative": "За пределами измеренного: возможность, а не результат.",
+ "@limits.speculative": {
+  "x-review": "machine",
+  "x-source": "3fe7418bc2"
+ },
+ "limits.summary": "Источник / ограничения",
+ "@limits.summary": {
+  "x-review": "machine",
+  "x-source": "ecbcc39e74"
+ },
+ "mc.intro": "Выберите звезду на любой панели; каждая панель и каждое вынесенное окно следуют за ней.",
+ "@mc.intro": {
+  "x-review": "machine",
+  "x-source": "e6a5c8f840"
+ },
+ "mcp.honesty.candidate": "Кандидат, а не открытие: SetuHQ находит и проверяет провалы в публичных данных TESS. Подтверждение планеты требует последующих наблюдений (лучевые скорости, изображения, статистическая валидация), которые проводят другие.",
+ "@mcp.honesty.candidate": {
+  "x-review": "machine",
+  "x-source": "2109188b0d"
+ },
+ "mcp.honesty.catalogue": "Значения каталога — это измерения источника, показанные так, как сохранены; отсутствующее значение не угадывается. SetuHQ не открывал этих планет.",
+ "@mcp.honesty.catalogue": {
+  "x-review": "machine",
+  "x-source": "01e280f468"
+ },
+ "mcp.honesty.computed": "Вычислено только что собственным кодом SetuHQ из заданных входных данных; не сохранённый, рассмотренный результат.",
+ "@mcp.honesty.computed": {
+  "x-review": "machine",
+  "x-source": "8ba17ff89a"
+ },
+ "mcp.honesty.formula": "Учебная формула, вычисленная так, как записана; описывает идеализированный случай, а не измерение.",
+ "@mcp.honesty.formula": {
+  "x-review": "machine",
+  "x-source": "cd6187025a"
+ },
+ "mcp.honesty.panel": "Sentinels — это модели ИИ, а не люди (по умолчанию Claude; другие поставщики помечаются). Бенчмарк прошёл только Claude. Probes — детерминированные детекторы с согласованным фильтром.",
+ "@mcp.honesty.panel": {
+  "x-review": "machine",
+  "x-source": "9d2e4debf5"
+ },
+ "mcp.honesty.stored": "Прочитано из сохранённых файлов; ничего не пересчитано.",
+ "@mcp.honesty.stored": {
+  "x-review": "machine",
+  "x-source": "333f8aa8d7"
+ },
+ "mcp.honesty.unreviewed": "Ни одна панель рецензентов это не рассматривала: это только вывод детектора и проверки.",
+ "@mcp.honesty.unreviewed": {
+  "x-review": "machine",
+  "x-source": "832585f3e6"
+ },
+ "mcp.instructions": "SetuHQ ищет транзиты в публичных кривых блеска NASA TESS с панелью рецензентов из Sentinels (модели ИИ; по умолчанию Claude, другие поставщики помечаются) и Probes (детерминированные детекторы), а затем проверяет и аппроксимирует каждый провал. Вызывайте эти инструменты вместо оценок: они запускают собственный код SetuHQ или читают его сохранённые, рассмотренные результаты. Каждый ответ содержит происхождение и метки честности; сохраняйте их в своём отчёте. Всё, что находит SetuHQ, — кандидат, а не открытие. Ничего не отправляйте, не публикуйте и не пересылайте вовне без явного разрешения пользователя.",
+ "@mcp.instructions": {
+  "x-review": "machine",
+  "x-source": "8dcede2e8e"
+ },
+ "mcp.tool.benchmark_results": "Сохранённый результат бенчмарка или валидации: real_tois (бенчмарк вслепую на 662 TOI), leaderboard (рейтинг\nнастоящих TOI), injection (внедрение и восстановление для Probes), pi_men_validation, weights (калибровка) или\nthreshold_sweep (синтетический, не рейтинг). Возвращается так, как сохранён.",
+ "@mcp.tool.benchmark_results": {
+  "x-review": "machine",
+  "x-source": "a8f12a0af7"
+ },
+ "mcp.tool.cheops_proposal_pack": "Записывает ПОДГОТОВИТЕЛЬНЫЙ пакет заявки CHEOPS Guest Observers (``propose.pack.build_pack``) в новый\nruns/propose/<run_name> (отказ, если существует; ничего вне него не записывается, без кеша): проверка правил Running Call\n(лимиты орбит, правило апреля/октября для программ Large, ближайший срок по парижскому времени, самое раннее начало),\nстатус цели (публичный Reserved Target List, метаданные публичного архива CHEOPS, координаты SIMBAD/MAST J2000),\nсохранённые доказательства SetuHQ, грубые ОЦЕНКИ точности и орбит, анонимизированные черновики с линтом\nанонимности и пошаговый контрольный список ESA. Читает только публичные страницы; никогда не входит в систему и ничего не отправляет. SetuHQ независим\nот ESA и миссии CHEOPS: определяющими являются официальный конкурс и инструменты ESA.",
+ "@mcp.tool.cheops_proposal_pack": {
+  "x-review": "machine",
+  "x-source": "d9fdc80788"
+ },
+ "mcp.tool.compute_fap": "Эмпирическая вероятность ложной тревоги для сильнейшего периодического сигнала (``search.false_alarm_probability``):\nповторные запуски BLS с блочным бутстрепом, сохраняющие красный шум. Ограничено: при N попытках никогда не сообщается ниже 1/(N + 1),\nа хвост Гумбеля помечен как ориентировочный. N ограничено 2000 на вызов.",
+ "@mcp.tool.compute_fap": {
+  "x-review": "machine",
+  "x-source": "01f4019412"
+ },
+ "mcp.tool.find_eclipsing_binary": "Затменные двойные и эллипсоидальные или отражательные переменные в кривой блеска (``binaries.analyse``):\nорбитальный период по коробчатому поиску и периодограмме (удваивается при различии чётных/нечётных или при равных минимумах и тогда\nпомечается как неоднозначный), главное и вторичное затмения (фаза, глубина, ширина, значимость), фаза\nвторичного с подсказкой e·cosω, эвристический класс морфологии и пометка кандидата в затменные двойные\nс причинами. С периодом, эпохой и длительностью кандидата с транзитом также возвращает рекомендательные подсказки проверки\n(чётные/нечётные глубины, вторичное затмение в любой фазе, эллипсоидальные и отражательные амплитуды), которые проверка SetuHQ\nне использует. Время в сутках (BTJD для TESS).",
+ "@mcp.tool.find_eclipsing_binary": {
+  "x-review": "machine",
+  "x-source": "e45be3cbe7"
+ },
+ "mcp.tool.find_flares": "Обнаруживает и характеризует звёздные вспышки в кривой блеска (``flares.detect_flares``): удаление тренда\nс сохранением вспышек, кандидаты по сигма-отсечению (критерии Chang et al. 2015), необязательное вейвлетное подавление шума (Poyatos et al.\n2025), аппроксимации шаблоном Mendoza et al. 2022 с многокомпонентными моделями, выбранными по BIC, времена нарастания и спада,\nамплитуда, FWHM, эквивалентная длительность и энергии (абсолютно чёрное тело 9000 K), если заданы Teff и радиус. Также\nвыполняет нулевой тест с инвертированным потоком. Время в сутках (BTJD для TESS); миссия TESS или CHEOPS задаёт значения по умолчанию.",
+ "@mcp.tool.find_flares": {
+  "x-review": "machine",
+  "x-source": "d650c20040"
+ },
+ "mcp.tool.find_transients": "Непериодические поярчания в кривой блеска (``transients.find_transients``) на трёх временных масштабах, каждое\nс пиком, амплитудой, временами нарастания и спада, FWHM и подсказкой класса (flare-like, extragalactic-transient-like,\nasteroid-crossing-like, momentum-dump-like, scattered-light-like или periodic-variability-like) с причинами;\nпоследние четыре — вероятно ложные тревоги. difference_flux=True для кривой блеска из разностных изображений в e-/s.\nМоменты сброса углового момента и рассеянного света (биты качества TESS 32, 2048, 4096) обостряют фильтры. Каждое событие —\nкандидат в транзиенты, никогда не новый и не подтверждённый объект. Время в сутках (BTJD для TESS).",
+ "@mcp.tool.find_transients": {
+  "x-review": "machine",
+  "x-source": "54243a74ac"
+ },
+ "mcp.tool.fit_transit": "Аппроксимирует модель транзита SetuHQ с потемнением к краю (``transitfit.fit_transit``) вокруг одного транзита: глубина, T14,\nприцельный параметр b, момент середины, Rp/R★ и плотность по транзиту ρ★, каждое с погрешностью и диапазоном. Потемнение к краю\nпо Claret 2017 для Teff и log g звезды (как у Солнца, если не заданы). t0, длительность и глубина — начальные приближения.",
+ "@mcp.tool.fit_transit": {
+  "x-review": "machine",
+  "x-source": "3b77980915"
+ },
+ "mcp.tool.get_candidate": "Один провал консенсуса с полным происхождением: сохранённый кандидат (проверка, аппроксимация, FAP, аудит отметок\nкаждого рецензента), манифест запуска (код, хеш конфигурации, входные данные с SHA-256, рецензенты с поставщиком и моделью) и каждая\nсохранённая классификация его объекта рецензентом (метка, отметки, обоснование, поставщик, модель).",
+ "@mcp.tool.get_candidate": {
+  "x-review": "machine",
+  "x-source": "78f0b83b1a"
+ },
+ "mcp.tool.get_cheops_lightcurve": "Публичные кривые блеска CHEOPS DRP цели из архива CHEOPS через DACE (``cheops.get_cheops_lightcurve``;\nнужны ``pip install 'setuhq[cheops]'`` и сеть, если нет в кеше): визиты, найденные по позиции, проприетарные\nпропускаются, каждый загружается один раз и кешируется, систематика угла поворота/фона/центроида декоррелирована (члены выбраны\nпо BIC). Возвращает происхождение каждого визита (программа, ключ файла, id наблюдения, благодарности), сводку удаления тренда и,\nс include_points, точки после удаления тренда в BTJD. Содержит благодарность ESA и оговорку SetuHQ.",
+ "@mcp.tool.get_cheops_lightcurve": {
+  "x-review": "machine",
+  "x-source": "06ff3dcf79"
+ },
+ "mcp.tool.get_planet": "Сохранённая каталожная запись одной планеты и её родительской звезды (точное совпадение имени; сначала используйте search_catalogue).",
+ "@mcp.tool.get_planet": {
+  "x-review": "machine",
+  "x-source": "97084f4fb5"
+ },
+ "mcp.tool.get_star": "Сохранённая запись родительской звезды и каждая каталогизированная планета вокруг неё (точное имя звезды).",
+ "@mcp.tool.get_star": {
+  "x-review": "machine",
+  "x-source": "df7232ade1"
+ },
+ "mcp.tool.habitable_zone": "Границы зоны обитаемости в а. е. для звезды (``methods.hz_distance_au``, Kopparapu et al. 2014, 1 M⊕):\nнедавняя Венера и неуправляемый парниковый эффект (внутренние), максимальный парниковый эффект и ранний Марс (внешние).",
+ "@mcp.tool.habitable_zone": {
+  "x-review": "machine",
+  "x-source": "3608921db8"
+ },
+ "mcp.tool.list_candidates": "Провалы консенсуса сохранённого запуска, с тем, прошёл ли каждый проверку, и его пометками (``candidates.json``).",
+ "@mcp.tool.list_candidates": {
+  "x-review": "machine",
+  "x-source": "0443efd099"
+ },
+ "mcp.tool.microlensing_magnification": "Усиление точечной линзы A(u) = (u² + 2) / (u √(u² + 4)) при прицельном параметре u, в эйнштейновских радиусах\n(``methods.paczynski``).",
+ "@mcp.tool.microlensing_magnification": {
+  "x-review": "machine",
+  "x-source": "29faa074dc"
+ },
+ "mcp.tool.pulsation_spectrum": "Частотный анализ кривой блеска (``pulsations.analyse``): амплитудный спектр Lomb-Scargle, итеративное\nпредварительное выбеливание с нелинейной повторной аппроксимацией нескольких синусоид до S/N 4 (Breger et al. 1993), пометки комбинационных\nчастот, фон грануляции с профилем Харви, numax/Δν для осцилляторов солнечного типа и эвристический\nтип переменности с его неопределённостью. Частоты в д⁻¹ и мкГц; время в сутках. n_surrogates > 0 запускает\nнулевой тест красного шума (не более 20).",
+ "@mcp.tool.pulsation_spectrum": {
+  "x-review": "machine",
+  "x-source": "97767afcfb"
+ },
+ "mcp.tool.rotation_period": "Период вращения звезды по пятенной модуляции (``rotation.measure``): периодограмма Lomb-Scargle и\nавтокорреляционная функция, с неопределённостью, обработкой алиасов половины/удвоения и пометкой обнаружения. Один сектор TESS\nне измеряет периоды длиннее примерно 13 суток; о них сообщается как о выходящих за предел. Передайте один сектор (или\nкривую блеска, которую вы сшили сами, с учётом сдвигов между секторами). Время в сутках.",
+ "@mcp.tool.rotation_period": {
+  "x-review": "machine",
+  "x-source": "2d6e72833f"
+ },
+ "mcp.tool.run_pipeline_csv": "Запускает полный конвейер (``pipeline.run_pipeline``) на кривой блеска CSV (time, flux[, flux_err]) и записывает\nновый каталог запуска, runs/mcp/<run_name> (отказ, если существует: ничто никогда не перезаписывается). Только Probes,\nесли не sentinels=True; Sentinels тогда работают только там, где есть их ключ, SDK или CLI (манифест перечисляет\nпропущенные и причину).",
+ "@mcp.tool.run_pipeline_csv": {
+  "x-review": "machine",
+  "x-source": "6a2a86935b"
+ },
+ "mcp.tool.run_pipeline_tess": "Загружает кривую блеска TESS SPOC из MAST (``loaders.load_tess``; нужны сеть и ``pip install -e '.[tess]'``)\nдля идентификатора TIC и секторов и запускает на ней конвейер в новый runs/mcp/<run_name> (никогда не в существующий\nкаталог). Только Probes, если не sentinels=True.",
+ "@mcp.tool.run_pipeline_tess": {
+  "x-review": "machine",
+  "x-source": "421d6522fe"
+ },
+ "mcp.tool.rv_semi_amplitude": "Полуамплитуда лучевой скорости K (м/с) звезды с одной планетой (``methods.rv_semi_amplitude``).",
+ "@mcp.tool.rv_semi_amplitude": {
+  "x-review": "machine",
+  "x-source": "0342cc898c"
+ },
+ "mcp.tool.search_catalogue": "Ищет в каталоге экзопланет по имени планеты или звезды (или альтернативному имени, напр. идентификатору TIC), при желании по\nметоду открытия (``transit``, ``rv``, ``imaging``, ``microlensing``, ``astrometry``, ``timing``). Обёртка над ``catalogue.catalogue_filter``.",
+ "@mcp.tool.search_catalogue": {
+  "x-review": "machine",
+  "x-source": "27fc845629"
+ },
+ "mcp.tool.sentinel_providers": "Поставщики Sentinel, которых поддерживает SetuHQ, как настраивается каждый и может ли он здесь работать (его переменная\nс ключом задана, его SDK или CLI присутствует). Никогда не возвращает ключ.",
+ "@mcp.tool.sentinel_providers": {
+  "x-review": "machine",
+  "x-source": "d8e703706c"
+ },
+ "mcp.tool.transit_depth": "Глубина центрального транзита: (Rp/R★)² геометрически и с квадратичным потемнением к краю TESS для\nTeff звезды (``methods.transit_flux`` при z = 0, коэффициенты Claret 2017). Задайте Rp/R★ или Rp в радиусах Земли\nи R★ в радиусах Солнца.",
+ "@mcp.tool.transit_depth": {
+  "x-review": "machine",
+  "x-source": "6b52c6ad8e"
+ },
+ "mcp.tool.vet_lightcurve": "Ищет периодический транзит в кривой блеска (BLS, ``search.bls_search``) и проверяет один провал проверкой SetuHQ\n(``vet.vet_event``: SNR, длительность, края, чётные/нечётные глубины, вторичное затмение). Задайте провал как\nt_start/t_end или опустите их, чтобы проверить первый транзит сильнейшего периодического сигнала. Кривая блеска\nготовится так, как её готовит конвейер (очистка, удаление тренда, бинирование).",
+ "@mcp.tool.vet_lightcurve": {
+  "x-review": "machine",
+  "x-source": "645c79cc54"
+ },
+ "methods.chapter_n": "Глава {i} из {n}",
+ "@methods.chapter_n": {
+  "x-review": "machine",
+  "x-source": "417be5d799"
+ },
+ "methods.h1": "Как находят планеты.",
+ "@methods.h1": {
+  "x-review": "machine",
+  "x-source": "583ac6e306"
+ },
+ "methods.h1b": "И как их находит SetuHQ.",
+ "@methods.h1b": {
+  "x-review": "machine",
+  "x-source": "99b2b42598"
+ },
+ "methods.intro": "{n} глав, каждая — анимированное объяснение с физикой и источниками. Каждый рисунок сообщает, иллюстрация ли это, модель по сохранённым значениям или настоящие данные, и насколько он преувеличен. Только глава о транзите описывает то, что SetuHQ делает сам.",
+ "@methods.intro": {
+  "x-review": "machine",
+  "x-source": "c0a3069175"
+ },
+ "methods.planets": "Планеты в этой главе",
+ "@methods.planets": {
+  "x-review": "machine",
+  "x-source": "6be85af173"
+ },
+ "methods.sources": "Источники",
+ "@methods.sources": {
+  "x-review": "machine",
+  "x-source": "caf85b0888"
+ },
+ "nav.candidates": "Кандидаты",
+ "@nav.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "nav.docs": "Документация",
+ "@nav.docs": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "nav.evidence": "Доказательства",
+ "@nav.evidence": {
+  "x-review": "machine",
+  "x-source": "03867aea70"
+ },
+ "nav.explore": "Исследовать",
+ "@nav.explore": {
+  "x-review": "machine",
+  "x-source": "3b73900b8d"
+ },
+ "nav.how": "Как это работает",
+ "@nav.how": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "nf.candidates": "Каждый провал, найденный в примерах запусков, с его проверками.",
+ "@nf.candidates": {
+  "x-review": "machine",
+  "x-source": "1347c55237"
+ },
+ "nf.docs": "Установите SetuHQ и запустите его сами.",
+ "@nf.docs": {
+  "x-review": "machine",
+  "x-source": "ae69454d62"
+ },
+ "nf.evidence": "Рецензенты, бенчмарк и запуски.",
+ "@nf.evidence": {
+  "x-review": "machine",
+  "x-source": "b14b42d506"
+ },
+ "nf.explore": "Небо, Галактика и каждая каталогизированная планета.",
+ "@nf.explore": {
+  "x-review": "machine",
+  "x-source": "05950074cc"
+ },
+ "nf.h1": "Этой страницы здесь нет.",
+ "@nf.h1": {
+  "x-review": "machine",
+  "x-source": "3ba2f76d61"
+ },
+ "nf.home": "Перейти на главную страницу",
+ "@nf.home": {
+  "x-review": "machine",
+  "x-source": "adceddedfd"
+ },
+ "nf.how": "Пятнадцать глав о том, как находят планеты.",
+ "@nf.how": {
+  "x-review": "machine",
+  "x-source": "b04ce55cc1"
+ },
+ "nf.intro": "Возможно, адрес набран с ошибкой, или страница переехала при реорганизации сайта. Старые адреса перенаправляют сами; у этого нового места нет.",
+ "@nf.intro": {
+  "x-review": "machine",
+  "x-source": "76142af35c"
+ },
+ "nf.search": "Искать планеты, звёзды и страницы",
+ "@nf.search": {
+  "x-review": "machine",
+  "x-source": "36738611e1"
+ },
+ "obj.cls.bymass": " (по массе)",
+ "@obj.cls.bymass": {
+  "x-review": "machine",
+  "x-source": "0fefa83c19"
+ },
+ "obj.cls.earth": "Размера Земли",
+ "@obj.cls.earth": {
+  "x-review": "machine",
+  "x-source": "793cad2691"
+ },
+ "obj.cls.giant": "Газовый гигант",
+ "@obj.cls.giant": {
+  "x-review": "machine",
+  "x-source": "dc4da1dee3"
+ },
+ "obj.cls.nep": "Подобная Нептуну",
+ "@obj.cls.nep": {
+  "x-review": "machine",
+  "x-source": "d9aa819eb6"
+ },
+ "obj.cls.none": "класс не определить (не сохранены ни радиус, ни масса)",
+ "@obj.cls.none": {
+  "x-review": "machine",
+  "x-source": "4c2ce50d4a"
+ },
+ "obj.cls.subnep": "Субнептун",
+ "@obj.cls.subnep": {
+  "x-review": "machine",
+  "x-source": "a17b446d03"
+ },
+ "obj.cls.super": "Суперземля",
+ "@obj.cls.super": {
+  "x-review": "machine",
+  "x-source": "c9402130b8"
+ },
+ "obj.discovered": "открыта {year}",
+ "@obj.discovered": {
+  "x-review": "machine",
+  "x-source": "aeef0079ed"
+ },
+ "obj.discovered_none": "год открытия не сохранён",
+ "@obj.discovered_none": {
+  "x-review": "machine",
+  "x-source": "ceb1245b3e"
+ },
+ "obj.host": "Её звезда и другие планеты",
+ "@obj.host": {
+  "x-review": "machine",
+  "x-source": "c247cb467a"
+ },
+ "obj.nohost": "родительская звезда не сохранена",
+ "@obj.nohost": {
+  "x-review": "machine",
+  "x-source": "1309987b39"
+ },
+ "obj.params": "Сохранённые параметры",
+ "@obj.params": {
+  "x-review": "machine",
+  "x-source": "a060be301b"
+ },
+ "obj.planets": "Её планеты",
+ "@obj.planets": {
+  "x-review": "machine",
+  "x-source": "0b1b4bc5af"
+ },
+ "obj.refs": "Открытие и источники",
+ "@obj.refs": {
+  "x-review": "machine",
+  "x-source": "11a5acd988"
+ },
+ "obj.row.a": "Большая полуось",
+ "@obj.row.a": {
+  "x-review": "machine",
+  "x-source": "7a98cb0909"
+ },
+ "obj.row.b": "Прицельный параметр",
+ "@obj.row.b": {
+  "x-review": "machine",
+  "x-source": "c30e761341"
+ },
+ "obj.row.dec": "Dec (J2000)",
+ "@obj.row.dec": {
+  "x-review": "machine",
+  "x-source": "31451795ef"
+ },
+ "obj.row.dist": "Расстояние",
+ "@obj.row.dist": {
+  "x-review": "machine",
+  "x-source": "b7bdf7a2d6"
+ },
+ "obj.row.e": "Эксцентриситет",
+ "@obj.row.e": {
+  "x-review": "machine",
+  "x-source": "3642eea73f"
+ },
+ "obj.row.incl": "Наклонение",
+ "@obj.row.incl": {
+  "x-review": "machine",
+  "x-source": "e1a57232e1"
+ },
+ "obj.row.k": "Полуамплитуда RV K",
+ "@obj.row.k": {
+  "x-review": "machine",
+  "x-source": "4bc68f8d51"
+ },
+ "obj.row.lambda": "Угол спин–орбита λ",
+ "@obj.row.lambda": {
+  "x-review": "machine",
+  "x-source": "f4a2329657"
+ },
+ "obj.row.mass": "Масса",
+ "@obj.row.mass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.msini": "Минимальная масса (m sin i)",
+ "@obj.row.msini": {
+  "x-review": "machine",
+  "x-source": "0a0c24bec0"
+ },
+ "obj.row.period": "Орбитальный период",
+ "@obj.row.period": {
+  "x-review": "machine",
+  "x-source": "278785d733"
+ },
+ "obj.row.ra": "RA (J2000)",
+ "@obj.row.ra": {
+  "x-review": "machine",
+  "x-source": "9cee37a6a6"
+ },
+ "obj.row.radius": "Радиус",
+ "@obj.row.radius": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.sage": "Возраст",
+ "@obj.row.sage": {
+  "x-review": "machine",
+  "x-source": "39b7370f30"
+ },
+ "obj.row.smass": "Масса",
+ "@obj.row.smass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.smet": "Металличность [Fe/H]",
+ "@obj.row.smet": {
+  "x-review": "machine",
+  "x-source": "b7e5ba6b1d"
+ },
+ "obj.row.srad": "Радиус",
+ "@obj.row.srad": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.steff": "Эффективная температура",
+ "@obj.row.steff": {
+  "x-review": "machine",
+  "x-source": "bcd5903c63"
+ },
+ "obj.row.teq": "Равновесная температура",
+ "@obj.row.teq": {
+  "x-review": "machine",
+  "x-source": "a3016009fd"
+ },
+ "obj.row.tmeas": "Измеренная температура",
+ "@obj.row.tmeas": {
+  "x-review": "machine",
+  "x-source": "592546ce16"
+ },
+ "obj.row.vmag": "Звёздная величина V",
+ "@obj.row.vmag": {
+  "x-review": "machine",
+  "x-source": "963ef1a54e"
+ },
+ "obj.sysview": "Вид системы",
+ "@obj.sysview": {
+  "x-review": "machine",
+  "x-source": "8f2681a95c"
+ },
+ "obj.units": "Единицы так, как их сохранил {source}. Погрешности — сохранённые нижняя и верхняя границы; где они не сохранены, они не показываются.",
+ "@obj.units": {
+  "x-review": "machine",
+  "x-source": "1d415a6e1a"
+ },
+ "obj.where": "Где она",
+ "@obj.where": {
+  "x-review": "machine",
+  "x-source": "751c664982"
+ },
+ "out.dash.footer": "Создано SetuHQ. Результаты на синтетических данных не являются утверждениями о настоящих данных неба.",
+ "@out.dash.footer": {
+  "x-review": "machine",
+  "x-source": "98762ed655"
+ },
+ "out.feed.candidates": "Это кандидаты.",
+ "@out.feed.candidates": {
+  "x-review": "machine",
+  "x-source": "ee9b7f2cdf"
+ },
+ "out.feed.h1": "Поисковая лента",
+ "@out.feed.h1": {
+  "x-review": "machine",
+  "x-source": "22bc3c8839"
+ },
+ "out.feed.held": "Удержано для рассмотрения",
+ "@out.feed.held": {
+  "x-review": "machine",
+  "x-source": "57b7af20f8"
+ },
+ "out.feed.nights": "Записи за ночь",
+ "@out.feed.nights": {
+  "x-review": "machine",
+  "x-source": "6cd04f7bc5"
+ },
+ "out.plate.interval": "Интервал консенсуса провала — там, где их отметки совпадают.",
+ "@out.plate.interval": {
+  "x-review": "machine",
+  "x-source": "1780c6e536"
+ },
+ "out.plate.others": "Таблицы других звёзд-примеров",
+ "@out.plate.others": {
+  "x-review": "machine",
+  "x-source": "df7ef77948"
+ },
+ "out.plate.panel": "Панель — это Sentinels и Probes, без людей.",
+ "@out.plate.panel": {
+  "x-review": "machine",
+  "x-source": "15066e34e3"
+ },
+ "out.report.benchmark": "Внедрение и восстановление",
+ "@out.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "6da1d36286"
+ },
+ "out.report.candidates": "Кандидаты",
+ "@out.report.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "out.report.panel": "Решения панели",
+ "@out.report.panel": {
+  "x-review": "machine",
+  "x-source": "a929a43913"
+ },
+ "out.report.panel.p": "Ответ каждого рецензента для каждого объекта, закодированного вслепую. Разногласия остаются видимыми, потому что именно в них добывается консенсус.",
+ "@out.report.panel.p": {
+  "x-review": "machine",
+  "x-source": "da09405f36"
+ },
+ "out.report.pipeline": "Как работает запуск",
+ "@out.report.pipeline": {
+  "x-review": "machine",
+  "x-source": "baad56eb35"
+ },
+ "out.report.provenance": "Происхождение",
+ "@out.report.provenance": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "out.report.validation": "Валидация на известных планетах",
+ "@out.report.validation": {
+  "x-review": "machine",
+  "x-source": "4432fa961d"
+ },
+ "panel.both": "{s, plural, one {# Sentinel} few {# Sentinels} many {# Sentinels} other {# Sentinels}} и {p, plural, one {# Probe} few {# Probes} many {# Probes} other {# Probes}}",
+ "@panel.both": {
+  "x-review": "machine",
+  "x-source": "c6e6d6aa5e"
+ },
+ "panel.probes": "{p, plural, one {# Probe} few {# Probes} many {# Probes} other {# Probes}}",
+ "@panel.probes": {
+  "x-review": "machine",
+  "x-source": "5dce100851"
+ },
+ "panel.sentinels": "{s, plural, one {# Sentinel} few {# Sentinels} many {# Sentinels} other {# Sentinels}}",
+ "@panel.sentinels": {
+  "x-review": "machine",
+  "x-source": "70f14c3441"
+ },
+ "pic.colour": "Цвет звезды",
+ "@pic.colour": {
+  "x-review": "machine",
+  "x-source": "dfe6307835"
+ },
+ "pic.draw": "Звезда и транзит",
+ "@pic.draw": {
+  "x-review": "machine",
+  "x-source": "e0d9fd74d5"
+ },
+ "pic.h1": "Как рисуются изображения.",
+ "@pic.h1": {
+  "x-review": "machine",
+  "x-source": "b56c1f91df"
+ },
+ "pic.intro": "Каждая звезда в SetuHQ нарисована в цвете абсолютно чёрного тела по её сохранённой температуре. Каждая планета — художественное представление: её облик выбирается по двум измеренным величинам, радиусу (без него — массе) и свету, который она получает от своей звезды. Ничто на изображении не измерено сверх этих чисел, а состав — никогда.",
+ "@pic.intro": {
+  "x-review": "machine",
+  "x-source": "3cf76ad409"
+ },
+ "pic.labels": "Пять меток",
+ "@pic.labels": {
+  "x-review": "machine",
+  "x-source": "51668dd62a"
+ },
+ "pic.labels.p": "Каждое изображение на сайте несёт одну из них, прямо на себе.",
+ "@pic.labels.p": {
+  "x-review": "machine",
+  "x-source": "880b424ff6"
+ },
+ "pic.real": "Что настоящее, а что нарисовано",
+ "@pic.real": {
+  "x-review": "machine",
+  "x-source": "79bd58ea67"
+ },
+ "pic.rules": "Правила",
+ "@pic.rules": {
+  "x-review": "machine",
+  "x-source": "e3954c7ee3"
+ },
+ "pic.still": "При уменьшенном движении",
+ "@pic.still": {
+  "x-review": "machine",
+  "x-source": "a42e838475"
+ },
+ "pic.still.p": "Когда устройство просит уменьшить движение, ничто не зацикливается: каждый рисунок показывает один продуманный кадр, а всё, что воспроизводится, ждёт своей кнопки.",
+ "@pic.still.p": {
+  "x-review": "machine",
+  "x-source": "b12a8bfb34"
+ },
+ "pic.table": "Таблица обликов",
+ "@pic.table": {
+  "x-review": "machine",
+  "x-source": "5bf530d59d"
+ },
+ "pr.h1": "Подготовьте заявку на CHEOPS.",
+ "@pr.h1": {
+  "x-review": "machine",
+  "x-source": "c189d495dd"
+ },
+ "pr.intro": "<code>setuhq propose cheops</code> пишет подготовительный пакет для CHEOPS Guest Observers Running Call: проверенные правила, статус цели, плановые оценки, анонимизированные черновики и семь шагов ESA как контрольный список. Инструменты ESA вы запускаете и заявку подаёте сами.",
+ "@pr.intro": {
+  "x-review": "machine",
+  "x-source": "6893d1fea2"
+ },
+ "route.candidates.label": "Дело",
+ "@route.candidates.label": {
+  "x-review": "machine",
+  "x-source": "d12f22e06a"
+ },
+ "route.candidates.title": "Дело {name} · Кандидаты · SetuHQ",
+ "@route.candidates.title": {
+  "x-review": "machine",
+  "x-source": "6265efaa30"
+ },
+ "route.catalogue.label": "Каталог",
+ "@route.catalogue.label": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "route.catalogue.title": "Каталог известных экзопланет · SetuHQ",
+ "@route.catalogue.title": {
+  "x-review": "machine",
+  "x-source": "1d55d9e531"
+ },
+ "route.docs.label": "Документация",
+ "@route.docs.label": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "route.docs.title": "Документация: начало работы с SetuHQ · SetuHQ",
+ "@route.docs.title": {
+  "x-review": "machine",
+  "x-source": "273729a761"
+ },
+ "route.editions.label": "Редакции",
+ "@route.editions.label": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "route.editions.title": "Редакции: открытое ядро, SetuHQ Pro и исследование на заказ · SetuHQ",
+ "@route.editions.title": {
+  "x-review": "machine",
+  "x-source": "facd044991"
+ },
+ "route.explorer.label": "Кандидаты",
+ "@route.explorer.label": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "route.explorer.title": "Кандидаты · SetuHQ",
+ "@route.explorer.title": {
+  "x-review": "machine",
+  "x-source": "3377897bfa"
+ },
+ "route.galaxy.label": "Галактика",
+ "@route.galaxy.label": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "route.galaxy.title": "Галактика · Исследовать · SetuHQ",
+ "@route.galaxy.title": {
+  "x-review": "machine",
+  "x-source": "ad11918632"
+ },
+ "route.leaderboard.label": "Рейтинг",
+ "@route.leaderboard.label": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "route.leaderboard.title": "Рейтинг · Доказательства · SetuHQ",
+ "@route.leaderboard.title": {
+  "x-review": "machine",
+  "x-source": "2b687acd99"
+ },
+ "route.methods.label": "Как это работает",
+ "@route.methods.label": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "route.methods.title": "{name} · Как это работает · SetuHQ",
+ "@route.methods.title": {
+  "x-review": "machine",
+  "x-source": "1cbf3454bd"
+ },
+ "route.mission.label": "Центр управления",
+ "@route.mission.label": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "route.mission.title": "Центр управления · Исследовать · SetuHQ",
+ "@route.mission.title": {
+  "x-review": "machine",
+  "x-source": "3bbcc04226"
+ },
+ "route.notfound.label": "Страница не найдена",
+ "@route.notfound.label": {
+  "x-review": "machine",
+  "x-source": "a469ab4ca4"
+ },
+ "route.notfound.title": "Страница не найдена · SetuHQ",
+ "@route.notfound.title": {
+  "x-review": "machine",
+  "x-source": "9ba0459ab7"
+ },
+ "route.overview.label": "Главная",
+ "@route.overview.label": {
+  "x-review": "machine",
+  "x-source": "3a78695388"
+ },
+ "route.overview.title": "SetuHQ: небо, рассмотренное",
+ "@route.overview.title": {
+  "x-review": "machine",
+  "x-source": "1159339ef0"
+ },
+ "route.pictures.label": "Как рисуются изображения",
+ "@route.pictures.label": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "route.pictures.title": "Как рисуются изображения · Документация · SetuHQ",
+ "@route.pictures.title": {
+  "x-review": "machine",
+  "x-source": "09b9052231"
+ },
+ "route.planet.label": "Планета",
+ "@route.planet.label": {
+  "x-review": "machine",
+  "x-source": "b6e3957877"
+ },
+ "route.planet.title": "{name} · Планеты · SetuHQ",
+ "@route.planet.title": {
+  "x-review": "machine",
+  "x-source": "1fcbb7f176"
+ },
+ "route.planets.label": "Отношения радиусов",
+ "@route.planets.label": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "route.planets.title": "Отношения радиусов · Кандидаты · SetuHQ",
+ "@route.planets.title": {
+  "x-review": "machine",
+  "x-source": "ac2e38c1f9"
+ },
+ "route.plates.label": "Таблицы",
+ "@route.plates.label": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "route.propose.label": "Заявки на CHEOPS",
+ "@route.propose.label": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "route.propose.title": "Подготовьте заявку на CHEOPS · Документация · SetuHQ",
+ "@route.propose.title": {
+  "x-review": "machine",
+  "x-source": "6f87c679a9"
+ },
+ "route.report.label": "Отчёт о запуске",
+ "@route.report.label": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "route.runs.label": "Запуски",
+ "@route.runs.label": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "route.runs.title": "Запуски · Доказательства · SetuHQ",
+ "@route.runs.title": {
+  "x-review": "machine",
+  "x-source": "004653c043"
+ },
+ "route.sentinels.label": "Панель",
+ "@route.sentinels.label": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "route.sentinels.title": "Доказательства: панель, измеренная · SetuHQ",
+ "@route.sentinels.title": {
+  "x-review": "machine",
+  "x-source": "789dfd2a1e"
+ },
+ "route.sky.label": "Карта неба",
+ "@route.sky.label": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "route.sky.title": "Исследовать небо · SetuHQ",
+ "@route.sky.title": {
+  "x-review": "machine",
+  "x-source": "8b6fb90a8b"
+ },
+ "route.star.label": "Звезда",
+ "@route.star.label": {
+  "x-review": "machine",
+  "x-source": "e357d39687"
+ },
+ "route.star.title": "{name} · Звёзды · SetuHQ",
+ "@route.star.title": {
+  "x-review": "machine",
+  "x-source": "fbb83b9cf8"
+ },
+ "route.stellar.label": "Звёзды",
+ "@route.stellar.label": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "route.stellar.title": "Звёзды, измеренные: вспышки и пульсации · Доказательства · SetuHQ",
+ "@route.stellar.title": {
+  "x-review": "machine",
+  "x-source": "67e92dbcd1"
+ },
+ "route.stellardocs.label": "Вспышки и пульсации",
+ "@route.stellardocs.label": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "route.stellardocs.title": "Вспышки, пульсации и CHEOPS · Документация · SetuHQ",
+ "@route.stellardocs.title": {
+  "x-review": "machine",
+  "x-source": "ed9c362b70"
+ },
+ "route.tessnow.label": "Где сейчас TESS",
+ "@route.tessnow.label": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "route.tessnow.title": "Куда смотрит TESS · Исследовать · SetuHQ",
+ "@route.tessnow.title": {
+  "x-review": "machine",
+  "x-source": "b9141101d4"
+ },
+ "route.transit.label": "Кандидат",
+ "@route.transit.label": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
+ "route.transit.title": "{name} · Кандидаты · SetuHQ",
+ "@route.transit.title": {
+  "x-review": "machine",
+  "x-source": "e3d2dd556b"
+ },
+ "route.variables.label": "Всё, что тускнеет",
+ "@route.variables.label": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "route.variables.title": "Всё, что тускнеет · Каталог · SetuHQ",
+ "@route.variables.title": {
+  "x-review": "machine",
+  "x-source": "85fdb3c494"
+ },
+ "route.vetter.label": "Будьте проверяющим",
+ "@route.vetter.label": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "route.vetter.title": "Будьте проверяющим · Кандидаты · SetuHQ",
+ "@route.vetter.title": {
+  "x-review": "machine",
+  "x-source": "f8e3bf1fc8"
+ },
+ "rr.h1": "Что означала бы каждая глубина, будь это планета.",
+ "@rr.h1": {
+  "x-review": "machine",
+  "x-source": "ff54ab4721"
+ },
+ "rr.intro": "Одна карточка на звезду из запуска или ленты. Каждая запись — это {status}; отношение ниже показывает, что означает сохранённая глубина, будь это планета.",
+ "@rr.intro": {
+  "x-review": "machine",
+  "x-source": "9889e603bf"
+ },
+ "runs.h1": "Каждый поисковый запуск, его ошибки в сохранённом виде и конфигурация, стоящая за этими страницами.",
+ "@runs.h1": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "runs.hist": "Поисковые запуски",
+ "@runs.hist": {
+  "x-review": "machine",
+  "x-source": "26d6d37f90"
+ },
+ "runs.intro": "История поисковых запусков из каталога и конфигурация запуска {run}. Сообщения об ошибках показаны так, как сохранены.",
+ "@runs.intro": {
+  "x-review": "machine",
+  "x-source": "95d99973c5"
+ },
+ "sd.h1": "Вспышки, пульсации и CHEOPS.",
+ "@sd.h1": {
+  "x-review": "machine",
+  "x-source": "a0c598f487"
+ },
+ "sd.intro": "Шесть команд смотрят на звезду, а не на её планеты. Каждая записывает одну запись JSON с результатом, происхождением (версия, отпечаток кода, sha256 каждого входного файла) и метками. Вспышка или частота обнаруживается с заявленной значимостью, никогда не подтверждается; тип переменности — вероятный или кандидат.",
+ "@sd.intro": {
+  "x-review": "machine",
+  "x-source": "d9fdd750e3"
+ },
+ "sen.h1": "{n, plural, one {# рецензент.} few {# рецензента.} many {# рецензентов.} other {# рецензента.}}",
+ "@sen.h1": {
+  "x-review": "machine",
+  "x-source": "18e2721f25"
+ },
+ "sen.h1b": "Каждый заслуживает свой голос.",
+ "@sen.h1b": {
+  "x-review": "machine",
+  "x-source": "67b1d265c9"
+ },
+ "sen.intro": "Панель, отмечавшая провалы в запуске {run}: Sentinels и Probes, без людей.",
+ "@sen.intro": {
+  "x-review": "machine",
+  "x-source": "cfd243554e"
+ },
+ "shell.bootnote": "Интерактивные части этой страницы не загрузились. Текст выше полный; перезагрузите, чтобы попробовать снова.",
+ "@shell.bootnote": {
+  "x-review": "machine",
+  "x-source": "a2f1ab571c"
+ },
+ "shell.breadcrumb": "Навигационная цепочка",
+ "@shell.breadcrumb": {
+  "x-review": "machine",
+  "x-source": "2bd873d6c7"
+ },
+ "shell.copy_view": "Копировать ссылку на этот вид",
+ "@shell.copy_view": {
+  "x-review": "machine",
+  "x-source": "709937ae3d"
+ },
+ "shell.home": "SetuHQ, главная",
+ "@shell.home": {
+  "x-review": "machine",
+  "x-source": "970b8e33a0"
+ },
+ "shell.in_section": "В этом разделе",
+ "@shell.in_section": {
+  "x-review": "machine",
+  "x-source": "a4b1dbff1e"
+ },
+ "shell.menu_close": "Закрыть меню",
+ "@shell.menu_close": {
+  "x-review": "machine",
+  "x-source": "d992820f3c"
+ },
+ "shell.menu_open": "Открыть меню",
+ "@shell.menu_open": {
+  "x-review": "machine",
+  "x-source": "fc798c613b"
+ },
+ "shell.nav_main": "Главное",
+ "@shell.nav_main": {
+  "x-review": "machine",
+  "x-source": "eb814be3ca"
+ },
+ "shell.search": "Искать планеты, звёзды и страницы (нажмите /)",
+ "@shell.search": {
+  "x-review": "machine",
+  "x-source": "781eaaf920"
+ },
+ "shell.search_title": "Поиск (/)",
+ "@shell.search_title": {
+  "x-review": "machine",
+  "x-source": "bae77fae53"
+ },
+ "shell.skip": "Перейти к содержимому",
+ "@shell.skip": {
+  "x-review": "machine",
+  "x-source": "ac576a66d4"
+ },
+ "shell.theme.dark": "тёмная",
+ "@shell.theme.dark": {
+  "x-review": "machine",
+  "x-source": "e6bb5689be"
+ },
+ "shell.theme.label": "Цветовая тема: {t}. Переключить на {next}",
+ "@shell.theme.label": {
+  "x-review": "machine",
+  "x-source": "c4ccc7de70"
+ },
+ "shell.theme.light": "светлая",
+ "@shell.theme.light": {
+  "x-review": "machine",
+  "x-source": "99a7026172"
+ },
+ "shell.theme.system": "настройка устройства",
+ "@shell.theme.system": {
+  "x-review": "machine",
+  "x-source": "2b67477bad"
+ },
+ "shell.theme.title": "Тема: {t}",
+ "@shell.theme.title": {
+  "x-review": "machine",
+  "x-source": "79f90fbb1e"
+ },
+ "shell.view_link": "Ссылка на этот вид",
+ "@shell.view_link": {
+  "x-review": "machine",
+  "x-source": "5fb2ec761c"
+ },
+ "sky.tl": "Планеты, найденные за каждый год, по методу",
+ "@sky.tl": {
+  "x-review": "machine",
+  "x-source": "10dff603f9"
+ },
+ "st.figs": "Что видят детекторы",
+ "@st.figs": {
+  "x-review": "machine",
+  "x-source": "ff3ec0553b"
+ },
+ "st.h1": "Звёзды, измеренные.",
+ "@st.h1": {
+  "x-review": "machine",
+  "x-source": "ec1ba1f8f3"
+ },
+ "st.intro": "Помимо планет, SetuHQ обнаруживает звёздные вспышки, выделяет частоты пульсаций, читает публичные кривые блеска CHEOPS и находит затменные двойные, периоды вращения и транзиенты. Каждая возможность сравнивалась с опубликованными результатами по протоколу, зафиксированному до её запуска, и каждая страница и вывод инструмента сообщают, насколько далеко зашла валидация.",
+ "@st.intro": {
+  "x-review": "machine",
+  "x-source": "7f59c8f0fc"
+ },
+ "subnav.candidates": "Дела",
+ "@subnav.candidates": {
+  "x-review": "machine",
+  "x-source": "379b0a5b2b"
+ },
+ "subnav.catalogue": "Каталог",
+ "@subnav.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "subnav.docs": "Начало работы",
+ "@subnav.docs": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "subnav.editions": "Редакции",
+ "@subnav.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "subnav.explorer": "Все кандидаты",
+ "@subnav.explorer": {
+  "x-review": "machine",
+  "x-source": "e2df94228e"
+ },
+ "subnav.galaxy": "Галактика",
+ "@subnav.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "subnav.leaderboard": "Рейтинг",
+ "@subnav.leaderboard": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "subnav.mission": "Центр управления",
+ "@subnav.mission": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "subnav.pictures": "Как рисуются изображения",
+ "@subnav.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "subnav.planets": "Отношения радиусов",
+ "@subnav.planets": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "subnav.plates": "Таблицы",
+ "@subnav.plates": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "subnav.propose": "Заявки на CHEOPS",
+ "@subnav.propose": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "subnav.report": "Отчёт о запуске",
+ "@subnav.report": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "subnav.runs": "Запуски",
+ "@subnav.runs": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "subnav.sentinels": "Панель",
+ "@subnav.sentinels": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "subnav.sky": "Карта неба",
+ "@subnav.sky": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "subnav.stellar": "Звёзды",
+ "@subnav.stellar": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "subnav.stellardocs": "Вспышки и пульсации",
+ "@subnav.stellardocs": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "subnav.tessnow": "Где сейчас TESS",
+ "@subnav.tessnow": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "subnav.transit": "Провалы",
+ "@subnav.transit": {
+  "x-review": "machine",
+  "x-source": "25efb1bd33"
+ },
+ "subnav.variables": "Всё, что тускнеет",
+ "@subnav.variables": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "subnav.vetter": "Будьте проверяющим",
+ "@subnav.vetter": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "tn.h1": "Куда смотрит TESS.",
+ "@tn.h1": {
+  "x-review": "machine",
+  "x-source": "33a70ec6b1"
+ },
+ "tn.intro": "Спутник NASA TESS наблюдает одну полосу неба около четырёх недель (сектор) четырьмя камерами с полем 24° × 24° каждая. Эта карта показывает полосы из опубликованного расписания и звёзды с известными планетами в их пределах.",
+ "@tn.intro": {
+  "x-review": "machine",
+  "x-source": "6cbf61a637"
+ },
+ "var.h1": "Всё, что тускнеет.",
+ "@var.h1": {
+  "x-review": "machine",
+  "x-source": "00cffacfe5"
+ },
+ "var.h1b": "{n, number} записей, ни одна не выброшена.",
+ "@var.h1b": {
+  "x-review": "machine",
+  "x-source": "af9b7536fe"
+ },
+ "var.intro": "Каждый провал консенсуса панели, каждое поярчание и переменность каждой звезды из обзора, каждое классифицировано по заявленному правилу, с уверенностью, признаками и происхождением: отметки, веса и собственные слова Sentinels.",
+ "@var.intro": {
+  "x-review": "machine",
+  "x-source": "a3cde2962d"
+ },
+ "vt.h1": "Будьте проверяющим.",
+ "@vt.h1": {
+  "x-review": "machine",
+  "x-source": "bc56851e50"
+ },
+ "vt.intro": "Каждая карточка — настоящий провал, сохранённый одним из примеров запусков SetuHQ. Посмотрите на его кривую блеска, свёртку, чётные и нечётные глубины и глубину через пол-орбиты, а затем решите: принят, помечен или отклонён. Затем посмотрите, что решила проверка, и почему.",
+ "@vt.intro": {
+  "x-review": "machine",
+  "x-source": "2d2a3a79d4"
+ }
+}

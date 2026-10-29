@@ -1,0 +1,3034 @@
+{
+ "@@locale": "de",
+ "@@x-source-locale": "en",
+ "cat.h1": "Jeder bekannte Exoplanet.",
+ "@cat.h1": {
+  "x-review": "machine",
+  "x-source": "c12b2894d2"
+ },
+ "cat.h1b": "{n, number} Einträge, durchsuchbar.",
+ "@cat.h1b": {
+  "x-review": "machine",
+  "x-source": "0082f39a49"
+ },
+ "cat.intro": "Alle {n, number} Planeten in {source}, einschließlich der {nodist, number} ohne gespeicherte Entfernung, die die Galaxiekarte nicht platzieren kann. SetuHQ hat diese Planeten nicht entdeckt; es katalogisiert sie.",
+ "@cat.intro": {
+  "x-review": "machine",
+  "x-source": "ca9826547d"
+ },
+ "cf.h1": "Jedes Signal, seine Dips und die Prüfungen hinter jedem Urteil.",
+ "@cf.h1": {
+  "x-review": "machine",
+  "x-source": "2b73eb58d2"
+ },
+ "cf.intro": "Die Fallakte zum Lauf des Dips: jedes Signal und seine Dips, mit dem Vetting-Ergebnis, dem Transit-Streifen und dem Urteilsprotokoll. Jedes Signal, das das Vetting bestanden hat, ist ein {status}; ein verworfenes oder markiertes wird nach seinem Status benannt.",
+ "@cf.intro": {
+  "x-review": "machine",
+  "x-source": "252d456e94"
+ },
+ "chapter.astrometry": "Astrometrie",
+ "@chapter.astrometry": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
+ "chapter.doppler": "Hin und weg",
+ "@chapter.doppler": {
+  "x-review": "machine",
+  "x-source": "982502489b"
+ },
+ "chapter.equations": "Gleichungen des Lebens",
+ "@chapter.equations": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
+ "chapter.falsepos": "Falsch-Positive",
+ "@chapter.falsepos": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
+ "chapter.history": "Geschichte und Fachartikel",
+ "@chapter.history": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "chapter.imaging": "Sternenlicht abschirmen",
+ "@chapter.imaging": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
+ "chapter.microlensing": "Mikrolinsen",
+ "@chapter.microlensing": {
+  "x-review": "machine",
+  "x-source": "7713c65bef"
+ },
+ "chapter.molecules": "Moleküle und Leben",
+ "@chapter.molecules": {
+  "x-review": "machine",
+  "x-source": "d0ac3c4b97"
+ },
+ "chapter.population": "Population",
+ "@chapter.population": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
+ "chapter.radio": "Radio",
+ "@chapter.radio": {
+  "x-review": "machine",
+  "x-source": "2a7dfeb2f2"
+ },
+ "chapter.rv": "Radialgeschwindigkeit",
+ "@chapter.rv": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
+ "chapter.spectroscopy": "Atmosphären lesen",
+ "@chapter.spectroscopy": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
+ },
+ "chapter.survey": "Wie eine Durchmusterung funktioniert",
+ "@chapter.survey": {
+  "x-review": "machine",
+  "x-source": "418a56729e"
+ },
+ "chapter.timing": "Zeitmessung und Phase",
+ "@chapter.timing": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
+ },
+ "chapter.transit": "Transit",
+ "@chapter.transit": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
+ },
+ "cli.argparse.argument": "Argument %(argument_name)s: %(message)s",
+ "@cli.argparse.argument": {
+  "x-review": "machine",
+  "x-source": "2ee7b9a91a"
+ },
+ "cli.argparse.choice": "ungültige Auswahl: %(value)r (möglich sind %(choices)s)",
+ "@cli.argparse.choice": {
+  "x-review": "machine",
+  "x-source": "9dbc964dd3"
+ },
+ "cli.argparse.error": "%(prog)s: Fehler: %(message)s\n",
+ "@cli.argparse.error": {
+  "x-review": "machine",
+  "x-source": "954b9f0ae6"
+ },
+ "cli.argparse.help": "diese Hilfe anzeigen und beenden",
+ "@cli.argparse.help": {
+  "x-review": "machine",
+  "x-source": "608017daf4"
+ },
+ "cli.argparse.one": "ein Argument erwartet",
+ "@cli.argparse.one": {
+  "x-review": "machine",
+  "x-source": "d5d4f7b111"
+ },
+ "cli.argparse.options": "Optionen",
+ "@cli.argparse.options": {
+  "x-review": "machine",
+  "x-source": "a793ab8fcc"
+ },
+ "cli.argparse.positional": "Positionsargumente",
+ "@cli.argparse.positional": {
+  "x-review": "machine",
+  "x-source": "a5f91c7a58"
+ },
+ "cli.argparse.required": "folgende Argumente sind erforderlich: %s",
+ "@cli.argparse.required": {
+  "x-review": "machine",
+  "x-source": "25fb5034ca"
+ },
+ "cli.argparse.unrecognized": "unbekannte Argumente: %s",
+ "@cli.argparse.unrecognized": {
+  "x-review": "machine",
+  "x-source": "5ed6ba5c37"
+ },
+ "cli.argparse.usage": "Aufruf:",
+ "@cli.argparse.usage": {
+  "x-review": "machine",
+  "x-source": "d85f7a9a6f"
+ },
+ "cli.argparse.version": "Versionsnummer des Programms anzeigen und beenden",
+ "@cli.argparse.version": {
+  "x-review": "machine",
+  "x-source": "d534d67f66"
+ },
+ "cli.cmd.app": "wie 'setuhq site' (der alte Name, als die Website eine einzige App-Seite war)",
+ "@cli.cmd.app": {
+  "x-review": "machine",
+  "x-source": "f119fa15f1"
+ },
+ "cli.cmd.batch": "den Discover-Ablauf über eine Zielliste ausführen, zwischengespeichert und fortsetzbar",
+ "@cli.cmd.batch": {
+  "x-review": "machine",
+  "x-source": "40b27855e9"
+ },
+ "cli.cmd.benchmark": "Injektions-Wiederfindungs-Benchmark für das konfigurierte Panel",
+ "@cli.cmd.benchmark": {
+  "x-review": "machine",
+  "x-source": "4c26cdd1fc"
+ },
+ "cli.cmd.binaries": "Bedeckungsveränderliche und ellipsoidische oder Reflexions-Veränderliche: Periode, Bedeckungen, Phase der Nebenbedeckung (Hinweis auf e cos w), Morphologie; ein Kandidaten-Kennzeichen mit Gründen",
+ "@cli.cmd.binaries": {
+  "x-review": "machine",
+  "x-source": "0abdc48c4a"
+ },
+ "cli.cmd.bundle": "den Sektordatensatz eines Sweeps als Beitragspaket exportieren, versiegelt mit Inhalts-Hashes",
+ "@cli.cmd.bundle": {
+  "x-review": "machine",
+  "x-source": "9852df2e94"
+ },
+ "cli.cmd.calibrate": "Prüfergewichte durch Injektion schätzen",
+ "@cli.cmd.calibrate": {
+  "x-review": "machine",
+  "x-source": "207a6e9d1b"
+ },
+ "cli.cmd.check-sweep": "prüfen, dass jeder Beitrag aufgenommen und unversehrt ist und dass der Katalog dem entspricht, was seine geprüften Quellen ergeben",
+ "@cli.cmd.check-sweep": {
+  "x-review": "machine",
+  "x-source": "5634f750a9"
+ },
+ "cli.cmd.cheops": "CHEOPS Guest Observers Running Call: ein Vorbereitungspaket für einen Antrag schreiben",
+ "@cli.cmd.cheops": {
+  "x-review": "machine",
+  "x-source": "4f36cba2a0"
+ },
+ "cli.cmd.crossmatch": "das NASA Exoplanet Archive nach den Zielen des Laufs abfragen und crossmatch.json speichern",
+ "@cli.cmd.crossmatch": {
+  "x-review": "machine",
+  "x-source": "3b450e6853"
+ },
+ "cli.cmd.dashboard": "das interaktive Dashboard aus einem Lauf und einem optionalen Discovery-Katalog bauen",
+ "@cli.cmd.dashboard": {
+  "x-review": "machine",
+  "x-source": "75a27378f8"
+ },
+ "cli.cmd.discover": "einen geplanten Discovery-Durchgang ausführen und den Katalog aktualisieren",
+ "@cli.cmd.discover": {
+  "x-review": "machine",
+  "x-source": "c89cac74a5"
+ },
+ "cli.cmd.docket": "die Fallakten-Ansicht der Kandidaten für einen Lauf bauen",
+ "@cli.cmd.docket": {
+  "x-review": "machine",
+  "x-source": "6d3fd99980"
+ },
+ "cli.cmd.export": "eine Tabelle im Stil der ExoFOP-CTOI und vorhergesagte Transit-Fenster für einen Lauf schreiben",
+ "@cli.cmd.export": {
+  "x-review": "machine",
+  "x-source": "20cf1a8c0c"
+ },
+ "cli.cmd.flares": "stellare Flares detektieren: Morphologie, Energien, Vollständigkeit und eine Nullprobe",
+ "@cli.cmd.flares": {
+  "x-review": "machine",
+  "x-source": "9d57912ca7"
+ },
+ "cli.cmd.ingest": "ein Beitragspaket validieren und mit Namensnennung in den Katalog übernehmen",
+ "@cli.cmd.ingest": {
+  "x-review": "machine",
+  "x-source": "d729fd0e7d"
+ },
+ "cli.cmd.leaderboard": "eine Einreichung auf der zurückgehaltenen Hälfte des eingefrorenen Benchmarks mit echten TOIs bewerten oder docs/leaderboard aus jeder gespeicherten Einreichung neu bauen",
+ "@cli.cmd.leaderboard": {
+  "x-review": "machine",
+  "x-source": "eff0c84e54"
+ },
+ "cli.cmd.lint": "Antragstext (oder PDF, mit pypdf) nach allem durchsuchen, was die Anonymität bricht; eine Hilfe, keine Garantie",
+ "@cli.cmd.lint": {
+  "x-review": "machine",
+  "x-source": "dec0a3adc2"
+ },
+ "cli.cmd.mcp": "den MCP-Server über stdio starten, wie setuhq-mcp (benötigt das Extra mcp: pip install 'setuhq[mcp]')",
+ "@cli.cmd.mcp": {
+  "x-review": "machine",
+  "x-source": "36efd33521"
+ },
+ "cli.cmd.plate": "die druckfertige Tafelseite bauen: eine Tafel pro Stern, mit Bildunterschriften",
+ "@cli.cmd.plate": {
+  "x-review": "machine",
+  "x-source": "54445abdca"
+ },
+ "cli.cmd.propose": "einen Beobachtungsantrag vorbereiten (ein Vorbereitungspaket; nichts wird eingereicht)",
+ "@cli.cmd.propose": {
+  "x-review": "machine",
+  "x-source": "f565d45d49"
+ },
+ "cli.cmd.pulsations": "Frequenzanalyse: Prewhitening, Kombinationen, Hintergrund, numax/Δν, Typ",
+ "@cli.cmd.pulsations": {
+  "x-review": "machine",
+  "x-source": "6f493bd600"
+ },
+ "cli.cmd.rebuild": "einen gespeicherten Lauf (Fit, FAP, Kennzeichen) aus seinen gespeicherten Klassifikationen neu prüfen",
+ "@cli.cmd.rebuild": {
+  "x-review": "machine",
+  "x-source": "aaf332ed6a"
+ },
+ "cli.cmd.report": "eine statische HTML-Berichtsseite aus einem Laufverzeichnis bauen",
+ "@cli.cmd.report": {
+  "x-review": "machine",
+  "x-source": "52964d6b1b"
+ },
+ "cli.cmd.rotation": "eine Rotationsperiode aus Fleckenmodulation (Lomb-Scargle und ACF), pro Sektor; Perioden über etwa 13 d werden nicht gemessen",
+ "@cli.cmd.rotation": {
+  "x-review": "machine",
+  "x-source": "ce419593f9"
+ },
+ "cli.cmd.run": "die Pipeline auf die Ziele einer Konfigurationsdatei anwenden",
+ "@cli.cmd.run": {
+  "x-review": "machine",
+  "x-source": "ebbdd3027a"
+ },
+ "cli.cmd.site": "die Website bauen (jede Seite, die gemeinsamen Dateien, die Berichte, Tafeln und Fallakten) aus einem oder mehreren Läufen",
+ "@cli.cmd.site": {
+  "x-review": "machine",
+  "x-source": "bdfe2af14f"
+ },
+ "cli.cmd.sweep": "die SPOC-2-Minuten-Ziele eines TESS-Sektors durchsuchen (fortsetzbar) und in den Variabilitätskatalog schreiben",
+ "@cli.cmd.sweep": {
+  "x-review": "machine",
+  "x-source": "7da0597b32"
+ },
+ "cli.cmd.transients": "nicht periodische Aufhellungen: Anstieg, Abfall, Amplitude, Klassenhinweise und Fehlalarm-Filter, in einer SPOC-Lichtkurve oder einem TESScut-Ausschnitt einer beliebigen Position",
+ "@cli.cmd.transients": {
+  "x-review": "machine",
+  "x-source": "edf6a53e13"
+ },
+ "cli.desc.propose.cheops": "SetuHQ ist unabhängig und steht in keiner Verbindung zur ESA, zur CHEOPS-Mission oder zum CHEOPS-Konsortium, wird von ihnen nicht unterstützt und nicht in ihrem Auftrag betrieben. Es ersetzt nicht den Target Checker, das Visibility Tool, den Exposure Time Calculator, den Scheduling Feasibility Checker oder das Dokument Policies & Procedures der ESA; maßgeblich sind die offizielle Ausschreibung und die offiziellen Werkzeuge.",
+ "@cli.desc.propose.cheops": {
+  "x-review": "machine",
+  "x-source": "cceac73b43"
+ },
+ "cli.desc.setuhq": "Kommandozeile: ``setuhq run``, ``setuhq benchmark``, ``setuhq calibrate``, ``setuhq site``, ``setuhq plate`` und mehr.",
+ "@cli.desc.setuhq": {
+  "x-review": "machine",
+  "x-source": "b77812ae01"
+ },
+ "cli.opt.batch.max-targets": "nach so vielen Zielen in dieser Sitzung anhalten",
+ "@cli.opt.batch.max-targets": {
+  "x-review": "machine",
+  "x-source": "d73a203b72"
+ },
+ "cli.opt.batch.retries": "Wiederholungen eines fehlgeschlagenen Ziels in späteren Sitzungen",
+ "@cli.opt.batch.retries": {
+  "x-review": "machine",
+  "x-source": "c1df123c33"
+ },
+ "cli.opt.batch.sectors": "neueste Sektoren pro Ziel",
+ "@cli.opt.batch.sectors": {
+  "x-review": "machine",
+  "x-source": "9847836fea"
+ },
+ "cli.opt.batch.targets": "Textdatei mit TIC-IDs, eine pro Zeile",
+ "@cli.opt.batch.targets": {
+  "x-review": "machine",
+  "x-source": "12cb2ebf9d"
+ },
+ "cli.opt.batch.tic": "TIC-IDs",
+ "@cli.opt.batch.tic": {
+  "x-review": "machine",
+  "x-source": "1ec96f2b2c"
+ },
+ "cli.opt.batch.toi-cache": "zwischengespeicherte TOI-Tabelle des Archivs, um Feed-Einträge als known_toi oder new_candidate zu kennzeichnen",
+ "@cli.opt.batch.toi-cache": {
+  "x-review": "machine",
+  "x-source": "ce354b2d0e"
+ },
+ "cli.opt.batch.weights": "JSON mit Prüfergewichten",
+ "@cli.opt.batch.weights": {
+  "x-review": "machine",
+  "x-source": "53409ff573"
+ },
+ "cli.opt.benchmark.out": "zu schreibende Markdown-Datei",
+ "@cli.opt.benchmark.out": {
+  "x-review": "machine",
+  "x-source": "eb949f2129"
+ },
+ "cli.opt.benchmark.weights": "JSON mit Gewichten",
+ "@cli.opt.benchmark.weights": {
+  "x-review": "machine",
+  "x-source": "5a7dbbe171"
+ },
+ "cli.opt.binaries.cache": "Cache-Verzeichnis (MAST-Dateien, TIC-Werte)",
+ "@cli.opt.binaries.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.binaries.exptime": "TESS-Kadenz in Sekunden",
+ "@cli.opt.binaries.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.binaries.out": "den JSON-Datensatz hierhin schreiben",
+ "@cli.opt.binaries.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.binaries.sector": "TESS-Sektoren (Standard: jeder SPOC-Sektor)",
+ "@cli.opt.binaries.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.binaries.target": "eine TIC-ID (z. B. 'TIC 441420236'), eine SPOC-Datei *_lc.fits oder eine CSV-Datei (time, flux[, flux_err])",
+ "@cli.opt.binaries.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.binaries.transit-duration": "seine Dauer (d)",
+ "@cli.opt.binaries.transit-duration": {
+  "x-review": "machine",
+  "x-source": "14084d1df6"
+ },
+ "cli.opt.binaries.transit-epoch": "seine Transitmitte (BTJD)",
+ "@cli.opt.binaries.transit-epoch": {
+  "x-review": "machine",
+  "x-source": "8e38587901"
+ },
+ "cli.opt.binaries.transit-period": "beratende Vetting-Hinweise bei der Periode eines Transit-Kandidaten (d)",
+ "@cli.opt.binaries.transit-period": {
+  "x-review": "machine",
+  "x-source": "2c253e7f29"
+ },
+ "cli.opt.bundle.contributor": "der zu nennende Name (Ihre Wahl; auf der Website gezeigt)",
+ "@cli.opt.bundle.contributor": {
+  "x-review": "machine",
+  "x-source": "52709c8c8b"
+ },
+ "cli.opt.bundle.out": "zu schreibendes Paketverzeichnis",
+ "@cli.opt.bundle.out": {
+  "x-review": "machine",
+  "x-source": "0fd5207362"
+ },
+ "cli.opt.bundle.record": "der Sektordatensatz, z. B. my-sweep/sector_0005.json.gz",
+ "@cli.opt.bundle.record": {
+  "x-review": "machine",
+  "x-source": "277968793c"
+ },
+ "cli.opt.calibrate.image-dir": "wohin Kalibrierungsbilder gezeichnet werden, falls Prüfer sie brauchen",
+ "@cli.opt.calibrate.image-dir": {
+  "x-review": "machine",
+  "x-source": "8ddc793e3a"
+ },
+ "cli.opt.calibrate.out": "zu schreibendes JSON mit Gewichten",
+ "@cli.opt.calibrate.out": {
+  "x-review": "machine",
+  "x-source": "d107a13850"
+ },
+ "cli.opt.check-sweep.fix": "catalogue.json aus den geprüften Quellen neu bauen",
+ "@cli.opt.check-sweep.fix": {
+  "x-review": "machine",
+  "x-source": "f89150012c"
+ },
+ "cli.opt.check-sweep.ledger-base": "eine Git-Referenz, deren Aufnahmeprotokoll dieses nur erweitern darf; 'auto' ist die Merge-Basis mit dem Basiszweig (SETUHQ_BASE, GITHUB_BASE_REF oder der Standardzweig des Remotes). Eine fehlende Basis schlägt fehl, wenn CI gesetzt ist",
+ "@cli.opt.check-sweep.ledger-base": {
+  "x-review": "machine",
+  "x-source": "f6b4b1fabb"
+ },
+ "cli.opt.cheops.denoise": "mit --flares: zuerst Wavelet-Entrauschung",
+ "@cli.opt.cheops.denoise": {
+  "x-review": "machine",
+  "x-source": "bd0a95d70e"
+ },
+ "cli.opt.cheops.file-key": "ein Besuch (CH_PR..._TG..._V....)",
+ "@cli.opt.cheops.file-key": {
+  "x-review": "machine",
+  "x-source": "e108c5fdc1"
+ },
+ "cli.opt.cheops.flares": "auch Flares in jedem Besuch detektieren",
+ "@cli.opt.cheops.flares": {
+  "x-review": "machine",
+  "x-source": "1b9e23c896"
+ },
+ "cli.opt.cheops.offline": "nur Cache, kein Netzwerk",
+ "@cli.opt.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "7fb233fb38"
+ },
+ "cli.opt.cheops.out": "den JSON-Datensatz hierhin schreiben",
+ "@cli.opt.cheops.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.cheops.points": "die trendbereinigten Punkte in den Datensatz aufnehmen",
+ "@cli.opt.cheops.points": {
+  "x-review": "machine",
+  "x-source": "de5db37740"
+ },
+ "cli.opt.cheops.target": "ein Sternname oder 'RA DEC' in Grad",
+ "@cli.opt.cheops.target": {
+  "x-review": "machine",
+  "x-source": "19a2fbdcf5"
+ },
+ "cli.opt.crossmatch.star": "Sternname (hostname oder pl_name); TIC-Ziele passen auch über tic_id",
+ "@cli.opt.crossmatch.star": {
+  "x-review": "machine",
+  "x-source": "25164e4aa2"
+ },
+ "cli.opt.dashboard.catalog": "einzubeziehendes JSON des Discovery-Katalogs",
+ "@cli.opt.dashboard.catalog": {
+  "x-review": "machine",
+  "x-source": "941f727440"
+ },
+ "cli.opt.discover.publish-new": "nur private Installationen: Signale, die zu keinem bekannten TOI passen, im Katalog behalten. Standardmäßig werden sie aus jeder öffentlichen Ausgabe herausgehalten (für eine nicht öffentliche Prüfung zurückgehalten); der öffentliche Workflow setzt dies nie",
+ "@cli.opt.discover.publish-new": {
+  "x-review": "machine",
+  "x-source": "fa834dcccf"
+ },
+ "cli.opt.docket.allow-missing-crossmatch": "auch bauen, wenn kein gespeicherter Archivabgleich nutzbar ist; die Seite zeigt dann den gespeicherten Fehler",
+ "@cli.opt.docket.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.docket.refresh-crossmatch": "zuerst 'setuhq crossmatch' ausführen: das Archiv abfragen und crossmatch.json speichern",
+ "@cli.opt.docket.refresh-crossmatch": {
+  "x-review": "machine",
+  "x-source": "16850a4df3"
+ },
+ "cli.opt.docket.star": "Sternname für den Archivabgleich (hostname oder pl_name); TIC-Ziele passen auch über tic_id",
+ "@cli.opt.docket.star": {
+  "x-review": "machine",
+  "x-source": "fa232a85fb"
+ },
+ "cli.opt.export.allow-unchecked": "auch exportieren, wenn die TOI-Duplikatprüfung nicht möglich ist (die Zeilen sagen es)",
+ "@cli.opt.export.allow-unchecked": {
+  "x-review": "machine",
+  "x-source": "00695ab022"
+ },
+ "cli.opt.export.days": "wie weit im Voraus Transit-Fenster vorhergesagt werden",
+ "@cli.opt.export.days": {
+  "x-review": "machine",
+  "x-source": "331c4f1544"
+ },
+ "cli.opt.export.toi-cache": "zwischengespeicherte TOI-Tabelle des Archivs (abgerufen und hier geschrieben, wenn sie fehlt)",
+ "@cli.opt.export.toi-cache": {
+  "x-review": "machine",
+  "x-source": "a99eb8c584"
+ },
+ "cli.opt.flares.cache": "Cache-Verzeichnis (MAST-Dateien, TIC-Werte)",
+ "@cli.opt.flares.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.flares.completeness": "N Injektions-Wiederfindungs-Versuche (je 10 Flares)",
+ "@cli.opt.flares.completeness": {
+  "x-review": "machine",
+  "x-source": "138f48258e"
+ },
+ "cli.opt.flares.denoise": "zuerst stationäre Wavelet-Entrauschung (benötigt setuhq[wavelets])",
+ "@cli.opt.flares.denoise": {
+  "x-review": "machine",
+  "x-source": "923a73f3ed"
+ },
+ "cli.opt.flares.distance-pc": "die TIC-Entfernung überschreiben (pc)",
+ "@cli.opt.flares.distance-pc": {
+  "x-review": "machine",
+  "x-source": "5f618e8fe1"
+ },
+ "cli.opt.flares.exptime": "TESS-Kadenz in Sekunden",
+ "@cli.opt.flares.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.flares.mission": "legt die Detektionsvorgaben und das Band fest",
+ "@cli.opt.flares.mission": {
+  "x-review": "machine",
+  "x-source": "707cfede2f"
+ },
+ "cli.opt.flares.no-null": "die Nullprobe mit invertiertem Fluss überspringen",
+ "@cli.opt.flares.no-null": {
+  "x-review": "machine",
+  "x-source": "15da4f002c"
+ },
+ "cli.opt.flares.out": "den JSON-Datensatz hierhin schreiben",
+ "@cli.opt.flares.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.flares.radius": "den TIC-Radius überschreiben (Sonnenradien)",
+ "@cli.opt.flares.radius": {
+  "x-review": "machine",
+  "x-source": "2333e6c1d4"
+ },
+ "cli.opt.flares.sector": "TESS-Sektoren (Standard: jeder SPOC-Sektor)",
+ "@cli.opt.flares.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.flares.target": "eine TIC-ID (z. B. 'TIC 441420236'), eine SPOC-Datei *_lc.fits oder eine CSV-Datei (time, flux[, flux_err])",
+ "@cli.opt.flares.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.flares.teff": "die TIC-Teff überschreiben (K)",
+ "@cli.opt.flares.teff": {
+  "x-review": "machine",
+  "x-source": "f8dce33e3f"
+ },
+ "cli.opt.flares.tmag": "die TIC-TESS-Helligkeit überschreiben",
+ "@cli.opt.flares.tmag": {
+  "x-review": "machine",
+  "x-source": "5d89050461"
+ },
+ "cli.opt.ingest.accept-sentinels": "ein Paket mit Sentinels annehmen, dessen Dips hier nicht erneut durchsucht werden können (der Katalog sagt es)",
+ "@cli.opt.ingest.accept-sentinels": {
+  "x-review": "machine",
+  "x-source": "43052bd204"
+ },
+ "cli.opt.ingest.attested-by": "der GitHub-Login der Person, die das Paket gesendet hat (Autor des Pull-Requests)",
+ "@cli.opt.ingest.attested-by": {
+  "x-review": "machine",
+  "x-source": "99ebfcc35a"
+ },
+ "cli.opt.ingest.bundle": "Paketverzeichnis oder .zip",
+ "@cli.opt.ingest.bundle": {
+  "x-review": "machine",
+  "x-source": "8a6728595c"
+ },
+ "cli.opt.ingest.verify-lightcurves": "wie viele Stern-Sektoren zufällig abgerufen und erneut durchsucht werden, zusätzlich zu jedem mit einem Planetenkandidaten oder einem Eintrag in einer Klasse über ihrer Nullprobe (Standard: max(3, 5%%)); jeder Eintrag muss übereinstimmen",
+ "@cli.opt.ingest.verify-lightcurves": {
+  "x-review": "machine",
+  "x-source": "a8325b1730"
+ },
+ "cli.opt.leaderboard.submission": "ein JSON einer Einreichung (docs/leaderboard/README.md); weglassen, um die Tabelle neu zu bauen",
+ "@cli.opt.leaderboard.submission": {
+  "x-review": "machine",
+  "x-source": "0a572af021"
+ },
+ "cli.opt.leaderboard.submissions": "Verzeichnis der beim Neubau zu bewertenden Einreichungen",
+ "@cli.opt.leaderboard.submissions": {
+  "x-review": "machine",
+  "x-source": "d14c33cf89"
+ },
+ "cli.opt.plate.allow-missing-crossmatch": "auch bauen, wenn kein gespeicherter Archivabgleich nutzbar ist; die Seite zeigt dann den gespeicherten Fehler",
+ "@cli.opt.plate.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.plate.catalog": "JSON des Discovery-Katalogs: seine Sterne bekommen Tafeln und kommen in den Fluss der Zeit",
+ "@cli.opt.plate.catalog": {
+  "x-review": "machine",
+  "x-source": "e0f0c444fc"
+ },
+ "cli.opt.plate.star": "Sternname für den Archivabgleich, wie bei 'setuhq docket'",
+ "@cli.opt.plate.star": {
+  "x-review": "machine",
+  "x-source": "5a6e358f96"
+ },
+ "cli.opt.propose.cheops.author-name": "ein Name, den die Anonymitätsprüfung melden muss (wiederholbar; nie ins Paket geschrieben)",
+ "@cli.opt.propose.cheops.author-name": {
+  "x-review": "machine",
+  "x-source": "4155c649d2"
+ },
+ "cli.opt.propose.cheops.coord-source": "woher --ra/--dec stammen (Positionen von ExoFOP und Gaia werden abgelehnt: falsche Epoche)",
+ "@cli.opt.propose.cheops.coord-source": {
+  "x-review": "machine",
+  "x-source": "60a0952794"
+ },
+ "cli.opt.propose.cheops.cycle": "Einreichungszyklus JJJJ-MM (Standard: der nächste offene für das Programm)",
+ "@cli.opt.propose.cheops.cycle": {
+  "x-review": "machine",
+  "x-source": "0fd6ca07d8"
+ },
+ "cli.opt.propose.cheops.dec": "Ihre Dek. in Grad (ICRS, J2000)",
+ "@cli.opt.propose.cheops.dec": {
+  "x-review": "machine",
+  "x-source": "c89b51ca1f"
+ },
+ "cli.opt.propose.cheops.depth-ppm": "Ereignistiefe (Transit, Bedeckung) oder Flare-Amplitude, ppm",
+ "@cli.opt.propose.cheops.depth-ppm": {
+  "x-review": "machine",
+  "x-source": "f68df536ad"
+ },
+ "cli.opt.propose.cheops.duration-hours": "Ereignisdauer in Stunden",
+ "@cli.opt.propose.cheops.duration-hours": {
+  "x-review": "machine",
+  "x-source": "5e5ef3e71f"
+ },
+ "cli.opt.propose.cheops.efficiency": "anzunehmende Beobachtungseffizienz (Platzhalter; nehmen Sie Ihre aus dem Visibility Tool)",
+ "@cli.opt.propose.cheops.efficiency": {
+  "x-review": "machine",
+  "x-source": "365381f043"
+ },
+ "cli.opt.propose.cheops.flare-rate": "Flares pro Tag über der Amplitude (für --event flare)",
+ "@cli.opt.propose.cheops.flare-rate": {
+  "x-review": "machine",
+  "x-source": "83b5c5aff0"
+ },
+ "cli.opt.propose.cheops.gmag": "Gaia-G-Helligkeit (Standard: die von SIMBAD)",
+ "@cli.opt.propose.cheops.gmag": {
+  "x-review": "machine",
+  "x-source": "1501588e77"
+ },
+ "cli.opt.propose.cheops.institution": "eine Einrichtung, die die Anonymitätsprüfung melden muss (wiederholbar; nie ins Paket geschrieben)",
+ "@cli.opt.propose.cheops.institution": {
+  "x-review": "machine",
+  "x-source": "c02f921244"
+ },
+ "cli.opt.propose.cheops.name": "Paketname unter runs/propose/ (Standard cheops-<target>-<cycle>)",
+ "@cli.opt.propose.cheops.name": {
+  "x-review": "machine",
+  "x-source": "31cda5b062"
+ },
+ "cli.opt.propose.cheops.no-cache": "cache/cheops-propose/ weder lesen noch schreiben",
+ "@cli.opt.propose.cheops.no-cache": {
+  "x-review": "machine",
+  "x-source": "082b236e30"
+ },
+ "cli.opt.propose.cheops.offline": "keine Netzwerkanfrage stellen (nur Cache; Prüfungen sagen dann 'not checked')",
+ "@cli.opt.propose.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "fa7a0c88a2"
+ },
+ "cli.opt.propose.cheops.orbits": "Orbits, die Sie beantragen wollen (gegen die Grenzen des Programms geprüft)",
+ "@cli.opt.propose.cheops.orbits": {
+  "x-review": "machine",
+  "x-source": "8d710414cd"
+ },
+ "cli.opt.propose.cheops.out": "anzulegendes Paketverzeichnis (Standard runs/propose/<name>; nie überschrieben)",
+ "@cli.opt.propose.cheops.out": {
+  "x-review": "machine",
+  "x-source": "fc29338ed1"
+ },
+ "cli.opt.propose.cheops.period": "Periode, Tage",
+ "@cli.opt.propose.cheops.period": {
+  "x-review": "machine",
+  "x-source": "0f00d3ed0b"
+ },
+ "cli.opt.propose.cheops.period-err": "ihr 1-Sigma-Fehler, Tage",
+ "@cli.opt.propose.cheops.period-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.ra": "Ihre RA in Grad (ICRS, J2000), statt der von SIMBAD",
+ "@cli.opt.propose.cheops.ra": {
+  "x-review": "machine",
+  "x-source": "7452b9af9c"
+ },
+ "cli.opt.propose.cheops.snr": "Ziel-S/N für das Ereignis (Standard 10)",
+ "@cli.opt.propose.cheops.snr": {
+  "x-review": "machine",
+  "x-source": "1bed72cce4"
+ },
+ "cli.opt.propose.cheops.t0": "Transitmitte, BJD_TDB (oder BTJD)",
+ "@cli.opt.propose.cheops.t0": {
+  "x-review": "machine",
+  "x-source": "3583f77acc"
+ },
+ "cli.opt.propose.cheops.t0-err": "ihr 1-Sigma-Fehler, Tage",
+ "@cli.opt.propose.cheops.t0-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.target": "Zielname, wie SIMBAD ihn kennt (z. B. 'TOI-1987', 'HD 39091', 'TIC 349088467')",
+ "@cli.opt.propose.cheops.target": {
+  "x-review": "machine",
+  "x-source": "dc643ed38a"
+ },
+ "cli.opt.propose.cheops.window-end": "letztes Beobachtungsdatum (Standard 2029-12-31)",
+ "@cli.opt.propose.cheops.window-end": {
+  "x-review": "machine",
+  "x-source": "bb4ef3a3e8"
+ },
+ "cli.opt.propose.cheops.window-start": "erstes Beobachtungsdatum (Standard: frühester Beginn des Zyklus)",
+ "@cli.opt.propose.cheops.window-start": {
+  "x-review": "machine",
+  "x-source": "f1537bbf4b"
+ },
+ "cli.opt.propose.lint.author-name": "ein zu meldender Name, in seinen üblichen Varianten (wiederholbar)",
+ "@cli.opt.propose.lint.author-name": {
+  "x-review": "machine",
+  "x-source": "896776ed61"
+ },
+ "cli.opt.propose.lint.institution": "eine zu meldende Einrichtung (wiederholbar)",
+ "@cli.opt.propose.lint.institution": {
+  "x-review": "machine",
+  "x-source": "7dfbfc57ef"
+ },
+ "cli.opt.pulsations.cache": "Cache-Verzeichnis (MAST-Dateien, TIC-Werte)",
+ "@cli.opt.pulsations.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.pulsations.exptime": "TESS-Kadenz in Sekunden",
+ "@cli.opt.pulsations.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.pulsations.fmax": "höchste Frequenz (d⁻¹; Standard Nyquist)",
+ "@cli.opt.pulsations.fmax": {
+  "x-review": "machine",
+  "x-source": "1d96a068e1"
+ },
+ "cli.opt.pulsations.fmin": "niedrigste Frequenz (d⁻¹)",
+ "@cli.opt.pulsations.fmin": {
+  "x-review": "machine",
+  "x-source": "e982706993"
+ },
+ "cli.opt.pulsations.out": "den JSON-Datensatz hierhin schreiben",
+ "@cli.opt.pulsations.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.pulsations.sector": "TESS-Sektoren (Standard: jeder SPOC-Sektor)",
+ "@cli.opt.pulsations.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.pulsations.solar": "die numax/Δν-Analyse immer ausführen",
+ "@cli.opt.pulsations.solar": {
+  "x-review": "machine",
+  "x-source": "0cc921a51c"
+ },
+ "cli.opt.pulsations.surrogates": "Surrogate mit rotem Rauschen für die Rate falscher Frequenzen",
+ "@cli.opt.pulsations.surrogates": {
+  "x-review": "machine",
+  "x-source": "2d606e2fee"
+ },
+ "cli.opt.pulsations.target": "eine TIC-ID (z. B. 'TIC 441420236'), eine SPOC-Datei *_lc.fits oder eine CSV-Datei (time, flux[, flux_err])",
+ "@cli.opt.pulsations.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.pulsations.teff": "Teff (K) für die Typ-Heuristik (Standard: TIC)",
+ "@cli.opt.pulsations.teff": {
+  "x-review": "machine",
+  "x-source": "3cd47aa62d"
+ },
+ "cli.opt.report.benchmark": "einzubettendes Benchmark-Markdown",
+ "@cli.opt.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "50a27fedb7"
+ },
+ "cli.opt.report.out": "zu schreibendes Website-Verzeichnis",
+ "@cli.opt.report.out": {
+  "x-review": "machine",
+  "x-source": "439462c999"
+ },
+ "cli.opt.report.validation": "einzubettendes Validierungs-Markdown",
+ "@cli.opt.report.validation": {
+  "x-review": "machine",
+  "x-source": "8ea7211541"
+ },
+ "cli.opt.rotation.cache": "Cache-Verzeichnis (MAST-Dateien, TIC-Werte)",
+ "@cli.opt.rotation.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.rotation.exptime": "TESS-Kadenz in Sekunden",
+ "@cli.opt.rotation.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.rotation.out": "den JSON-Datensatz hierhin schreiben",
+ "@cli.opt.rotation.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.rotation.sector": "TESS-Sektoren (Standard: jeder SPOC-Sektor)",
+ "@cli.opt.rotation.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.rotation.target": "eine TIC-ID (z. B. 'TIC 441420236'), eine SPOC-Datei *_lc.fits oder eine CSV-Datei (time, flux[, flux_err])",
+ "@cli.opt.rotation.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.run.cache": "Cache-Verzeichnis für Antworten von Claude",
+ "@cli.opt.run.cache": {
+  "x-review": "machine",
+  "x-source": "eeda390458"
+ },
+ "cli.opt.run.calibrated-weights": "kalibrierte Gewichte, standardmäßig verwendet, wenn ihre Prüfer-IDs zur Konfiguration passen",
+ "@cli.opt.run.calibrated-weights": {
+  "x-review": "machine",
+  "x-source": "0d6473928d"
+ },
+ "cli.opt.run.out": "Ausgabeverzeichnis",
+ "@cli.opt.run.out": {
+  "x-review": "machine",
+  "x-source": "7e0ee3625e"
+ },
+ "cli.opt.run.uniform-weights": "jeden Prüfer mit 1.0 gewichten",
+ "@cli.opt.run.uniform-weights": {
+  "x-review": "machine",
+  "x-source": "db3384cb7c"
+ },
+ "cli.opt.run.weights": "JSON-Datei mit Prüfergewichten aus 'setuhq calibrate' (überschreibt den Standard)",
+ "@cli.opt.run.weights": {
+  "x-review": "machine",
+  "x-source": "802d0e0a5b"
+ },
+ "cli.opt.setuhq.lang": "Sprache der Ausgabe und der Hilfe (en, nl, pl, pt, fi, sv, da, nb, cs, uk, ru, de, fr, es, et, ja, zh-Hans); sonst SETUHQ_LANG, LC_ALL, LC_MESSAGES oder LANG; standardmäßig Englisch. Dateien und JSON bleiben englisch",
+ "@cli.opt.setuhq.lang": {
+  "x-review": "machine",
+  "x-source": "02f46f5ea1"
+ },
+ "cli.opt.site.allow-missing-crossmatch": "auch bauen, wenn kein gespeicherter Archivabgleich nutzbar ist; die Seite zeigt dann den gespeicherten Fehler",
+ "@cli.opt.site.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.site.benchmark": "Benchmark-Notizen für den Laufbericht",
+ "@cli.opt.site.benchmark": {
+  "x-review": "machine",
+  "x-source": "8c60c65795"
+ },
+ "cli.opt.site.catalog": "JSON des Discovery-Katalogs für die Seiten Kandidaten und Läufe",
+ "@cli.opt.site.catalog": {
+  "x-review": "machine",
+  "x-source": "3c64583755"
+ },
+ "cli.opt.site.no-extras": "den Laufbericht, die Tafeln und die eigenständige Fallakte weglassen",
+ "@cli.opt.site.no-extras": {
+  "x-review": "machine",
+  "x-source": "ea0dea2308"
+ },
+ "cli.opt.site.out": "das Wurzelverzeichnis der Website (site/ für setuhq.com)",
+ "@cli.opt.site.out": {
+  "x-review": "machine",
+  "x-source": "ff9482ee28"
+ },
+ "cli.opt.site.run_dir": "die gespeicherten Läufe: zuerst der Hauptlauf (die Himmelskarte, das Panel und die Referenzprüfung der Startseite), dann weitere Beispielläufe; jeder bekommt die Seiten seiner Dips, seine Fallakte, seine Tafeln und seinen Bericht",
+ "@cli.opt.site.run_dir": {
+  "x-review": "machine",
+  "x-source": "935df39235"
+ },
+ "cli.opt.site.showcase": "die Beschreibungen der Beispielläufe und Literaturvergleiche (scripts/showcase_compare.py)",
+ "@cli.opt.site.showcase": {
+  "x-review": "machine",
+  "x-source": "a8d2fbc8b7"
+ },
+ "cli.opt.site.star": "Sternname für den Archivabgleich der Fallakte, wie bei 'setuhq docket'",
+ "@cli.opt.site.star": {
+  "x-review": "machine",
+  "x-source": "3a81206f9b"
+ },
+ "cli.opt.site.sweep": "der Sweep-Katalog (setuhq sweep) für „Alles, was sich verdunkelt“, den Zähler der Startseite und die Himmelsebene",
+ "@cli.opt.site.sweep": {
+  "x-review": "machine",
+  "x-source": "2cbca7c299"
+ },
+ "cli.opt.site.validation": "Validierungsnotizen für den Laufbericht",
+ "@cli.opt.site.validation": {
+  "x-review": "machine",
+  "x-source": "3aa3ee0254"
+ },
+ "cli.opt.site.weights": "JSON mit kalibrierten Prüfergewichten, gezeigt auf der Seite Belege",
+ "@cli.opt.site.weights": {
+  "x-review": "machine",
+  "x-source": "17d9554285"
+ },
+ "cli.opt.sweep.cache": "Cache-Verzeichnis: Ziellisten, Lichtkurvendateien, Datensätze pro Stern",
+ "@cli.opt.sweep.cache": {
+  "x-review": "machine",
+  "x-source": "4ceefeb748"
+ },
+ "cli.opt.sweep.classified-commit": "mit --reclassify: die Git-Revision, die solche Datensätze zuletzt klassifiziert hat",
+ "@cli.opt.sweep.classified-commit": {
+  "x-review": "machine",
+  "x-source": "a041546a77"
+ },
+ "cli.opt.sweep.config": "Sweep-Konfiguration, z. B. configs/sweep.toml (Probes) oder configs/sweep_sentinels.toml",
+ "@cli.opt.sweep.config": {
+  "x-review": "machine",
+  "x-source": "7d010ce268"
+ },
+ "cli.opt.sweep.contributor": "der für diesen Sweep genannte Name",
+ "@cli.opt.sweep.contributor": {
+  "x-review": "machine",
+  "x-source": "2d65f8895f"
+ },
+ "cli.opt.sweep.limit": "wie viele Ziele des Sektors, in Sweep-Reihenfolge",
+ "@cli.opt.sweep.limit": {
+  "x-review": "machine",
+  "x-source": "b2105a1cbf"
+ },
+ "cli.opt.sweep.min-interval": "Sekunden zwischen MAST-Anfragen (mindestens)",
+ "@cli.opt.sweep.min-interval": {
+  "x-review": "machine",
+  "x-source": "1e29475701"
+ },
+ "cli.opt.sweep.no-control": "den Kontrolllauf mit invertiertem Fluss für jeden Stern überspringen",
+ "@cli.opt.sweep.no-control": {
+  "x-review": "machine",
+  "x-source": "0af9322de6"
+ },
+ "cli.opt.sweep.out": "wohin der Sektordatensatz und catalogue.json kommen",
+ "@cli.opt.sweep.out": {
+  "x-review": "machine",
+  "x-source": "74a76b8e20"
+ },
+ "cli.opt.sweep.reclassify": "die Klassifikationsregeln erneut auf die gespeicherten Stern-Sektoren anwenden (nur nach einer Änderung an variables.py)",
+ "@cli.opt.sweep.reclassify": {
+  "x-review": "machine",
+  "x-source": "86ff3a8c91"
+ },
+ "cli.opt.sweep.rule-change": "mit --reclassify: was sich an den Regeln geändert hat (für jede Änderung wiederholen)",
+ "@cli.opt.sweep.rule-change": {
+  "x-review": "machine",
+  "x-source": "a0203dbc98"
+ },
+ "cli.opt.sweep.search-commit": "mit --reclassify: die Git-Revision, die Datensätze durchsucht hat, die nur einen Code nennen",
+ "@cli.opt.sweep.search-commit": {
+  "x-review": "machine",
+  "x-source": "139e54a5b2"
+ },
+ "cli.opt.sweep.time-budget-min": "nach so vielen Minuten keine neuen Sterne mehr beginnen",
+ "@cli.opt.sweep.time-budget-min": {
+  "x-review": "machine",
+  "x-source": "838fb96162"
+ },
+ "cli.opt.sweep.weights": "kalibrierte Gewichte; ein Prüfer, der nicht in der Datei steht, wiegt 1.0",
+ "@cli.opt.sweep.weights": {
+  "x-review": "machine",
+  "x-source": "015b47d6f0"
+ },
+ "cli.opt.sweep.workers": "Prozesse, die gleichzeitig Sterne durchsuchen (Downloads bleiben einzeln)",
+ "@cli.opt.sweep.workers": {
+  "x-review": "machine",
+  "x-source": "8046b64f2f"
+ },
+ "cli.opt.transients.cache": "Cache-Verzeichnis (MAST-Dateien, TIC-Werte, Ausschnitte)",
+ "@cli.opt.transients.cache": {
+  "x-review": "machine",
+  "x-source": "4994163c4f"
+ },
+ "cli.opt.transients.dec": "Dek. (Grad)",
+ "@cli.opt.transients.dec": {
+  "x-review": "machine",
+  "x-source": "9b73841e14"
+ },
+ "cli.opt.transients.exptime": "TESS-Kadenz in Sekunden",
+ "@cli.opt.transients.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.transients.keep-cutout": "den heruntergeladenen Ausschnitt im Cache behalten",
+ "@cli.opt.transients.keep-cutout": {
+  "x-review": "machine",
+  "x-source": "30d3ece3c5"
+ },
+ "cli.opt.transients.out": "den JSON-Datensatz hierhin schreiben",
+ "@cli.opt.transients.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.transients.ra": "RA (Grad): Photometrie auf einem TESScut-Ausschnitt der Vollbilder",
+ "@cli.opt.transients.ra": {
+  "x-review": "machine",
+  "x-source": "80c280d2d9"
+ },
+ "cli.opt.transients.sector": "TESS-Sektoren (mit --ra/--dec: der eine auszuschneidende Sektor)",
+ "@cli.opt.transients.sector": {
+  "x-review": "machine",
+  "x-source": "471c0813f6"
+ },
+ "cli.opt.transients.size": "Ausschnittgröße in Pixeln (Standard 11)",
+ "@cli.opt.transients.size": {
+  "x-review": "machine",
+  "x-source": "c0ba5e1825"
+ },
+ "cli.opt.transients.target": "eine TIC-ID, eine SPOC-Datei *_lc.fits oder eine CSV-Datei (mit --ra/--dec weglassen)",
+ "@cli.opt.transients.target": {
+  "x-review": "machine",
+  "x-source": "eb65265df5"
+ },
+ "cli.opt.transients.time": "mit --ra/--dec und ohne --sector: der Sektor, der dieses BTJD enthält",
+ "@cli.opt.transients.time": {
+  "x-review": "machine",
+  "x-source": "59af8e0810"
+ },
+ "cli.out.asset_budget": "über einem Datei-Budget: {line}",
+ "@cli.out.asset_budget": {
+  "x-review": "machine",
+  "x-source": "1a08ee7ef2"
+ },
+ "cli.out.catalogue_site": "Katalog {catalogue}, Website {site}",
+ "@cli.out.catalogue_site": {
+  "x-review": "machine",
+  "x-source": "45ece88b52"
+ },
+ "cli.out.classifications": "Klassifikationen: {n}",
+ "@cli.out.classifications": {
+  "x-review": "machine",
+  "x-source": "0f32738b00"
+ },
+ "cli.out.consensus": "Konsensereignisse: {n} ({k} bestehen das Vetting)",
+ "@cli.out.consensus": {
+  "x-review": "machine",
+  "x-source": "0e7161a11f"
+ },
+ "cli.out.dashboard": "Dashboard geschrieben nach {path}",
+ "@cli.out.dashboard": {
+  "x-review": "machine",
+  "x-source": "794588aab9"
+ },
+ "cli.out.discover": "in diesem Lauf geprüfte Ziele: {n}, Übereinstimmungen mit bekannten TOIs: {k}",
+ "@cli.out.discover": {
+  "x-review": "machine",
+  "x-source": "e86d5ed05d"
+ },
+ "cli.out.docket": "Fallakte geschrieben nach {path}",
+ "@cli.out.docket": {
+  "x-review": "machine",
+  "x-source": "3461730266"
+ },
+ "cli.out.lightcurves": "Lichtkurven: {n}",
+ "@cli.out.lightcurves": {
+  "x-review": "machine",
+  "x-source": "b98d2bfa2b"
+ },
+ "cli.out.outputs": "Ausgaben in {path}",
+ "@cli.out.outputs": {
+  "x-review": "machine",
+  "x-source": "ad5b1626c3"
+ },
+ "cli.out.page_budget": "über dem Seitenbudget: {line}",
+ "@cli.out.page_budget": {
+  "x-review": "machine",
+  "x-source": "719f1ca170"
+ },
+ "cli.out.plates": "Tafeln geschrieben nach {path}",
+ "@cli.out.plates": {
+  "x-review": "machine",
+  "x-source": "3fd4254e8b"
+ },
+ "cli.out.rebuilt": "{n} Konsensereignisse neu gebaut ({k} bestehen das Vetting) in {path}",
+ "@cli.out.rebuilt": {
+  "x-review": "machine",
+  "x-source": "06707f0892"
+ },
+ "cli.out.site": "Website geschrieben nach {path}",
+ "@cli.out.site": {
+  "x-review": "machine",
+  "x-source": "e59ebe1ee1"
+ },
+ "cli.out.subjects": "Ausschnitte:  {n}",
+ "@cli.out.subjects": {
+  "x-review": "machine",
+  "x-source": "184630bc2c"
+ },
+ "cli.out.weights": "Prüfergewichte: {source}",
+ "@cli.out.weights": {
+  "x-review": "machine",
+  "x-source": "1089f763c0"
+ },
+ "cli.out.weights_written": "Gewichte geschrieben nach {path}, Raten nach {rates}",
+ "@cli.out.weights_written": {
+  "x-review": "machine",
+  "x-source": "6828f69f91"
+ },
+ "desc.catalogue": "Jeder Planet in exoplanet.eu, durchsuchbar und sortierbar, jeder mit eigener Seite. SetuHQ hat diese Planeten nicht entdeckt.",
+ "@desc.catalogue": {
+  "x-review": "machine",
+  "x-source": "4321b00077"
+ },
+ "desc.docs": "SetuHQ installieren, einen Stern durchsuchen, einen Sweep beitragen, einen KI-Assistenten über MCP anbinden und die Daten herunterladen.",
+ "@desc.docs": {
+  "x-review": "machine",
+  "x-source": "242925f427"
+ },
+ "desc.editions": "Die Editionen von SetuHQ: der freie offene Kern (AGPL-3.0 oder eine kommerzielle Lizenz), SetuHQ Pro (in Entwicklung, unter Vertrag) und individuelle Studien. Keine Preise; jeder bezahlte Weg beginnt mit einer Nachricht.",
+ "@desc.editions": {
+  "x-review": "machine",
+  "x-source": "34320f5c27"
+ },
+ "desc.explorer": "Die Dips des Laufs und ihre Fallakten sowie {n, plural, one {# Eintrag} other {# Einträge}} des Such-Feeds. Kandidaten sind unbestätigt; keiner ist ein bestätigter Planet.",
+ "@desc.explorer": {
+  "x-review": "machine",
+  "x-source": "12bbc1141b"
+ },
+ "desc.galaxy": "Jeder bekannte Exoplanet mit gespeicherter Entfernung, in 3D um die Sonne platziert, nach Entdeckungsmethode und Jahr.",
+ "@desc.galaxy": {
+  "x-review": "machine",
+  "x-source": "1d04a19fb8"
+ },
+ "desc.leaderboard": "Methoden, blind bewertet auf der zurückgehaltenen Hälfte des Benchmarks mit echten TOIs, mit 95-%-Wilson-Intervallen.",
+ "@desc.leaderboard": {
+  "x-review": "machine",
+  "x-source": "f63d09cd7f"
+ },
+ "desc.methods": "Kapitel {i} von {n} von „So funktioniert es“: {title}. Eine animierte Erklärung mit ihrer Physik und ihren Quellen.",
+ "@desc.methods": {
+  "x-review": "machine",
+  "x-source": "72765a8c0c"
+ },
+ "desc.mission": "Ein gekachelter Arbeitsbereich der Ansichten von SetuHQ, verbunden durch einen ausgewählten Stern: die Galaxie, der Himmel, die Lichtkurve, der Katalog und der Feed des Panels.",
+ "@desc.mission": {
+  "x-review": "machine",
+  "x-source": "aea05e50d5"
+ },
+ "desc.overview": "{tagline} Ein kalibriertes Panel aus Sentinels und Probes liest TESS-Lichtkurven und erklärt jedes Urteil. Jedes Ergebnis von SetuHQ ist ein {status}.",
+ "@desc.overview": {
+  "x-review": "machine",
+  "x-source": "e4c31340b2"
+ },
+ "desc.pictures": "Wie SetuHQ seine Bilder zeichnet: Sterne in ihrer Schwarzkörperfarbe und Planeten als künstlerische Darstellungen, gewählt nach gemessenem Radius und Einstrahlung, mit jeder Regel und Quelle.",
+ "@desc.pictures": {
+  "x-review": "machine",
+  "x-source": "f81ce510dd"
+ },
+ "desc.planets": "Was die Tiefe jedes Kandidaten bedeuten würde, wäre er ein Planet: das Radienverhältnis von Planet zu Stern, und warum keine Planetengröße angegeben wird.",
+ "@desc.planets": {
+  "x-review": "machine",
+  "x-source": "33a6642674"
+ },
+ "desc.propose": "Einen Antrag für das CHEOPS Guest Observers Programme mit setuhq propose cheops vorbereiten: eine Entwurfshilfe, die die Regeln und das Ziel prüft und nie etwas einreicht.",
+ "@desc.propose": {
+  "x-review": "machine",
+  "x-source": "415a0f0956"
+ },
+ "desc.runs": "Jeder Suchlauf, seine Fehler wie gespeichert und die Konfiguration hinter den Kandidatenseiten.",
+ "@desc.runs": {
+  "x-review": "machine",
+  "x-source": "2fc865ecd8"
+ },
+ "desc.sentinels": "Die Prüfer hinter jedem Urteil, ihre Kalibrierung und wie das Panel blind bei echten TESS Objects of Interest abschneidet. {attribution}",
+ "@desc.sentinels": {
+  "x-review": "machine",
+  "x-source": "6325eab793"
+ },
+ "desc.sky": "Der Stern des Laufs auf einer Himmelskarte, mit den Dips, die das Panel markiert hat, und wo Durchmusterungen hingesehen haben. {headline}",
+ "@desc.sky": {
+  "x-review": "machine",
+  "x-source": "22c5e64296"
+ },
+ "desc.stellar": "Flares, Pulsationen, CHEOPS-Lichtkurven, Bedeckungsveränderliche, Rotation und Transienten: wie weit jedes stellare Werkzeug von SetuHQ validiert ist, mit jeder gezählten Prüfung und Abbildungen echter TESS-Daten.",
+ "@desc.stellar": {
+  "x-review": "machine",
+  "x-source": "fd3ad97a67"
+ },
+ "desc.stellardocs": "Die stellaren Befehle von SetuHQ ausführen: Flares, Pulsationen, öffentliche CHEOPS-Lichtkurven, Bedeckungsveränderliche, Rotation und Transienten, mit ihrem Validierungsstand und den Bedingungen der ESA für CHEOPS-Daten.",
+ "@desc.stellardocs": {
+  "x-review": "machine",
+  "x-source": "69d64ce7ce"
+ },
+ "desc.tessnow": "Wohin der TESS-Satellit zeigt, Sektor für Sektor, nach seinem veröffentlichten Zeitplan: die vier Kamerafelder auf der Himmelskarte und die katalogisierten Sterne darin. Keine Live-Telemetrie.",
+ "@desc.tessnow": {
+  "x-review": "machine",
+  "x-source": "b892187187"
+ },
+ "desc.variables": "Der Sweep von SetuHQ über TESS-Sektoren: jeder gefundene und klassifizierte Dip, jede Klasse gegen ihre eigene Nullprobe gestellt.",
+ "@desc.variables": {
+  "x-review": "machine",
+  "x-source": "ec6feba9c3"
+ },
+ "desc.vetter": "Einen echten gespeicherten Dip aus den Beispielläufen von SetuHQ ansehen, ihn als bestanden, markiert oder verworfen einstufen und dann sehen, was das Vetting entschieden hat. Eine Lernübung; Antworten werden nicht gesammelt.",
+ "@desc.vetter": {
+  "x-review": "machine",
+  "x-source": "a0ad69fc0e"
+ },
+ "dip.state.cand": "Kandidat, unbestätigt",
+ "@dip.state.cand": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "dip.state.open": "zur Prüfung markiert, offen",
+ "@dip.state.open": {
+  "x-review": "machine",
+  "x-source": "5c42a6d0b9"
+ },
+ "dip.state.rej": "vom Vetting verworfen, kein Kandidat",
+ "@dip.state.rej": {
+  "x-review": "machine",
+  "x-source": "0c75827454"
+ },
+ "dip.tag.cand": "Kandidat",
+ "@dip.tag.cand": {
+  "x-review": "machine",
+  "x-source": "dda18a0e21"
+ },
+ "dip.tag.open": "markiert",
+ "@dip.tag.open": {
+  "x-review": "machine",
+  "x-source": "5588be887f"
+ },
+ "dip.tag.rej": "verworfen",
+ "@dip.tag.rej": {
+  "x-review": "machine",
+  "x-source": "20cd938a2e"
+ },
+ "docs.contribute": "Einen Sweep beitragen",
+ "@docs.contribute": {
+  "x-review": "machine",
+  "x-source": "3118488db2"
+ },
+ "docs.contribute.a": "So tragen Sie bei ›",
+ "@docs.contribute.a": {
+  "x-review": "machine",
+  "x-source": "fefd95f45c"
+ },
+ "docs.contribute.p": "Einen Ausschnitt eines TESS-Sektors auf dem eigenen Rechner durchsuchen und das Ergebnis einsenden, mit Namensnennung.",
+ "@docs.contribute.p": {
+  "x-review": "machine",
+  "x-source": "7636e0e0dd"
+ },
+ "docs.data": "Daten und Dateien",
+ "@docs.data": {
+  "x-review": "machine",
+  "x-source": "1544ff48d7"
+ },
+ "docs.data.a": "Downloads ›",
+ "@docs.data.a": {
+  "x-review": "machine",
+  "x-source": "8e6ab2918b"
+ },
+ "docs.data.p": "Jeder Katalog dieser Website als Download und die Berichte hinter den Belegen.",
+ "@docs.data.p": {
+  "x-review": "machine",
+  "x-source": "a7dd9ada99"
+ },
+ "docs.editions": "Editionen",
+ "@docs.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "docs.editions.a": "Die Editionen vergleichen ›",
+ "@docs.editions.a": {
+  "x-review": "machine",
+  "x-source": "90fe459127"
+ },
+ "docs.editions.p": "Der offene Kern ist frei. SetuHQ Pro (in Entwicklung) und individuelle Studien laufen unter Vertrag, ohne Preise: Jede beginnt mit einer Nachricht.",
+ "@docs.editions.p": {
+  "x-review": "machine",
+  "x-source": "a4c5119805"
+ },
+ "docs.h1": "Selbst ausführen.",
+ "@docs.h1": {
+  "x-review": "machine",
+  "x-source": "a1737d6898"
+ },
+ "docs.install": "Installation und erster Lauf",
+ "@docs.install": {
+  "x-review": "machine",
+  "x-source": "ea230bebae"
+ },
+ "docs.intro": "SetuHQ ist Open Source. Installieren Sie es, durchsuchen Sie die Lichtkurve eines Sterns mit demselben Panel, das diese Website zeigt, tragen Sie einen Sweep des Himmels bei oder lassen Sie Ihren KI-Assistenten es nutzen.",
+ "@docs.intro": {
+  "x-review": "machine",
+  "x-source": "7d1db3c963"
+ },
+ "docs.mcp": "Aus einem Assistenten nutzen",
+ "@docs.mcp": {
+  "x-review": "machine",
+  "x-source": "ee854c3928"
+ },
+ "docs.mcp.a": "Über MCP verbinden ›",
+ "@docs.mcp.a": {
+  "x-review": "machine",
+  "x-source": "c393096cc9"
+ },
+ "docs.mcp.h": "Aus einem KI-Assistenten nutzen (MCP)",
+ "@docs.mcp.h": {
+  "x-review": "machine",
+  "x-source": "f46e936a3b"
+ },
+ "docs.mcp.p": "Der MCP-Server lässt einen Assistenten den eigenen Code von SetuHQ ausführen und seine Ergebnisse lesen.",
+ "@docs.mcp.p": {
+  "x-review": "machine",
+  "x-source": "eb88b7d692"
+ },
+ "docs.pictures": "Wie die Bilder gezeichnet werden",
+ "@docs.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "docs.pictures.a": "Die Bilder ›",
+ "@docs.pictures.a": {
+  "x-review": "machine",
+  "x-source": "d4afb0f5d1"
+ },
+ "docs.pictures.p": "Sterne in ihrer Schwarzkörperfarbe; Planeten als künstlerische Darstellungen, gewählt nach gemessenem Radius und Einstrahlung. Jede Regel und Quelle.",
+ "@docs.pictures.p": {
+  "x-review": "machine",
+  "x-source": "7c281d6576"
+ },
+ "docs.prov": "Technische Details: woher die Zahlen kommen",
+ "@docs.prov": {
+  "x-review": "machine",
+  "x-source": "1cfbcdad80"
+ },
+ "docs.python": "SetuHQ benötigt Python {v} oder neuer.",
+ "@docs.python": {
+  "x-review": "machine",
+  "x-source": "3159020543"
+ },
+ "docs.start": "Erste Schritte",
+ "@docs.start": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "docs.start.a": "Installation und erster Lauf ›",
+ "@docs.start.a": {
+  "x-review": "machine",
+  "x-source": "468f664b71"
+ },
+ "docs.start.p": "Installieren, dann die Lichtkurve eines beliebigen TESS-Sterns durchsuchen, wie es jeder Beispiellauf dieser Website getan hat.",
+ "@docs.start.p": {
+  "x-review": "machine",
+  "x-source": "2e8b6ed67a"
+ },
+ "ed.compare": "Die Editionen vergleichen",
+ "@ed.compare": {
+  "x-review": "machine",
+  "x-source": "0a79392035"
+ },
+ "ed.compare.p": "Lesen Sie eine Zeile quer, um die drei zu vergleichen.",
+ "@ed.compare.p": {
+  "x-review": "machine",
+  "x-source": "59ba9870b5"
+ },
+ "ed.h1": "Editionen.",
+ "@ed.h1": {
+  "x-review": "machine",
+  "x-source": "d98733b93e"
+ },
+ "ed.intro": "Die ganze Maschine ist frei und bleibt frei. Ashforde OÜ finanziert sie mit einer kommerziellen Lizenz, SetuHQ Pro und individuellen Studien, nicht mit einer Funktionssperre. Auf dieser Website gibt es keine Preise: Jeder bezahlte Weg beginnt mit einer Nachricht.",
+ "@ed.intro": {
+  "x-review": "machine",
+  "x-source": "d588b090c3"
+ },
+ "ex.h1": "{n, plural, one {# Dip} other {# Dips}} zum Öffnen, von {stars, plural, =1 {einem Beispielstern} one {# Beispielstern} other {# Beispielsternen}}.",
+ "@ex.h1": {
+  "x-review": "machine",
+  "x-source": "ad8e8b5e42"
+ },
+ "ex.intro": "Dips, die das Panel in der TESS-Lichtkurve jedes Beispielsterns markiert hat, nach Stern gruppiert und nach Vetting-Ergebnis gezählt. Ein Dip, der das Vetting bestanden hat, ist ein {status}; ein markierter ist offen; ein verworfener ist kein Kandidat. Keiner ist ein bestätigter Planet. Öffnen Sie einen, um ihn abgespielt zu sehen, oder seine Fallakte für jede Prüfung hinter seinem Urteil.",
+ "@ex.intro": {
+  "x-review": "machine",
+  "x-source": "3a25873c3b"
+ },
+ "ex.more": " Weiter unten: die {n} Einträge des Such-Feeds von anderen Sternen, die noch keine Fallakte haben.",
+ "@ex.more": {
+  "x-review": "machine",
+  "x-source": "96432c834d"
+ },
+ "footer.all_chapters": "Alle {n} Kapitel",
+ "@footer.all_chapters": {
+  "x-review": "machine",
+  "x-source": "177340a477"
+ },
+ "footer.contribute": "Einen Sweep beitragen",
+ "@footer.contribute": {
+  "x-review": "machine",
+  "x-source": "960b0242d4"
+ },
+ "footer.data": "Daten-Downloads",
+ "@footer.data": {
+  "x-review": "machine",
+  "x-source": "47e65bf65c"
+ },
+ "footer.nav": "Website",
+ "@footer.nav": {
+  "x-review": "machine",
+  "x-source": "fa7955814e"
+ },
+ "footer.overview": "Überblick",
+ "@footer.overview": {
+  "x-review": "machine",
+  "x-source": "d4b1ea5708"
+ },
+ "footer.pictures": "Wie die Bilder gezeichnet werden ›",
+ "@footer.pictures": {
+  "x-review": "machine",
+  "x-source": "f4d87c6ca3"
+ },
+ "footer.source": "Quellcode",
+ "@footer.source": {
+  "x-review": "machine",
+  "x-source": "bf046c7395"
+ },
+ "gx.h1": "Jeder bekannte Exoplanet,",
+ "@gx.h1": {
+  "x-review": "machine",
+  "x-source": "22fff7c222"
+ },
+ "gx.h1b": "rund um die Sonne.",
+ "@gx.h1b": {
+  "x-review": "machine",
+  "x-source": "0513cb70f1"
+ },
+ "gx.intro": "{n, number} Planeten um {hosts, number} Sterne, dort platziert, wo sie sind. SetuHQ hat diese Planeten nicht gefunden; es kartiert sie nach {source}.",
+ "@gx.intro": {
+  "x-review": "machine",
+  "x-source": "b60778b897"
+ },
+ "hint.dismiss": "Hinweis schließen: {h}",
+ "@hint.dismiss": {
+  "x-review": "machine",
+  "x-source": "704395b8f4"
+ },
+ "hint.orbits": "Größen nicht maßstabsgetreu · Phasen zur Veranschaulichung",
+ "@hint.orbits": {
+  "x-review": "machine",
+  "x-source": "f31d20fed2"
+ },
+ "home.band.counters": "Die Belege, gezählt",
+ "@home.band.counters": {
+  "x-review": "machine",
+  "x-source": "5f2b5a53a9"
+ },
+ "home.band.counters.e": "Jede Zahl verweist auf ihren Beleg",
+ "@home.band.counters.e": {
+  "x-review": "machine",
+  "x-source": "6d25c68528"
+ },
+ "home.band.fold": "Wie sich ein Planet im Rauschen versteckt",
+ "@home.band.fold": {
+  "x-review": "machine",
+  "x-source": "79677ced9c"
+ },
+ "home.band.fold.e": "Echte Daten",
+ "@home.band.fold.e": {
+  "x-review": "machine",
+  "x-source": "6a758a8937"
+ },
+ "home.band.lineup": "Die Beispielplaneten, maßstabsgetreu",
+ "@home.band.lineup": {
+  "x-review": "machine",
+  "x-source": "aaf6e55de4"
+ },
+ "home.band.lineup.e": "Planeten maßstabsgetreu",
+ "@home.band.lineup.e": {
+  "x-review": "machine",
+  "x-source": "f48421d1f6"
+ },
+ "home.band.panel": "Wer einen Dip prüft",
+ "@home.band.panel": {
+  "x-review": "machine",
+  "x-source": "fd782b5776"
+ },
+ "home.band.panel.e": "Das Panel",
+ "@home.band.panel.e": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "home.band.sky": "Der Stern jedes bekannten Planeten, nach dem Jahr, in dem er gefunden wurde",
+ "@home.band.sky": {
+  "x-review": "machine",
+  "x-source": "25fe759e36"
+ },
+ "home.band.sky.e": "Der Himmel",
+ "@home.band.sky.e": {
+  "x-review": "machine",
+  "x-source": "587ffab2a1"
+ },
+ "home.band.tempstrip": "{n, plural, =1 {Die Farbe des Beispielsterns} one {# Beispielstern: {lo, number, integer} K bis {hi, number, integer} K, eine Pipeline} other {# Beispielsterne: {lo, number, integer} K bis {hi, number, integer} K, eine Pipeline}}",
+ "@home.band.tempstrip": {
+  "x-review": "machine",
+  "x-source": "705ec8da04"
+ },
+ "home.band.tempstrip.e": "Die Farben der Beispielsterne",
+ "@home.band.tempstrip.e": {
+  "x-review": "machine",
+  "x-source": "d93001b796"
+ },
+ "home.ctr.benchmark": "echte TESS Objects of Interest im Blind-Benchmark",
+ "@home.ctr.benchmark": {
+  "x-review": "machine",
+  "x-source": "9672338f63"
+ },
+ "home.ctr.catalogue": "Planeten im Katalog, mit dem SetuHQ abgleicht",
+ "@home.ctr.catalogue": {
+  "x-review": "machine",
+  "x-source": "01f04bca08"
+ },
+ "home.ctr.chapters": "illustrierte Kapitel darüber, wie Planeten gefunden werden",
+ "@home.ctr.chapters": {
+  "x-review": "machine",
+  "x-source": "865afa5050"
+ },
+ "home.ctr.completeness": "der zurückgehaltenen bekannten Planeten blind gefunden (95-%-Wilson-Intervall)",
+ "@home.ctr.completeness": {
+  "x-review": "machine",
+  "x-source": "9439e30e8b"
+ },
+ "home.ctr.fetched": "{source}, abgerufen am {date, date}",
+ "@home.ctr.fetched": {
+  "x-review": "machine",
+  "x-source": "3fd1f86614"
+ },
+ "home.ctr.fetched_file": "{source}, abgerufen am {date, date} ({file})",
+ "@home.ctr.fetched_file": {
+  "x-review": "machine",
+  "x-source": "6d503bce8f"
+ },
+ "home.ctr.heldout": "zurückgehaltene Hälfte des Benchmarks ({file})",
+ "@home.ctr.heldout": {
+  "x-review": "machine",
+  "x-source": "f9bd8675c1"
+ },
+ "home.do.docs": "Selbst ausführen",
+ "@home.do.docs": {
+  "x-review": "machine",
+  "x-source": "b3ab2275bd"
+ },
+ "home.do.docs.d": "SetuHQ installieren, einen Stern durchsuchen, einen Sweep des Himmels beitragen oder Ihren KI-Assistenten über MCP anbinden.",
+ "@home.do.docs.d": {
+  "x-review": "machine",
+  "x-source": "e150d9ac61"
+ },
+ "home.do.explorer": "Die Kandidaten ansehen",
+ "@home.do.explorer": {
+  "x-review": "machine",
+  "x-source": "db92ac3570"
+ },
+ "home.do.explorer.d": "Dips, die das Panel in den TESS-Lichtkurven der Beispielsterne markiert hat, jeder mit vollständiger Fallakte. Kandidaten, nie bestätigte Planeten.",
+ "@home.do.explorer.d": {
+  "x-review": "machine",
+  "x-source": "b2310d28d3"
+ },
+ "home.do.methods": "Lernen, wie es funktioniert",
+ "@home.do.methods": {
+  "x-review": "machine",
+  "x-source": "e2c2e9609b"
+ },
+ "home.do.methods.d": "Fünfzehn illustrierte Kapitel darüber, wie Planeten gefunden werden, vom Wackeln eines Sterns bis zum Lesen einer Atmosphäre.",
+ "@home.do.methods.d": {
+  "x-review": "machine",
+  "x-source": "a4ab0f8d7a"
+ },
+ "home.do.sentinels": "Die Belege prüfen",
+ "@home.do.sentinels": {
+  "x-review": "machine",
+  "x-source": "16cc8485e7"
+ },
+ "home.do.sentinels.d": "Wie das Panel bei echten, bekannten Objekten abschneidet: der Blind-Benchmark, die öffentliche Rangliste und die Kalibrierung.",
+ "@home.do.sentinels.d": {
+  "x-review": "machine",
+  "x-source": "728efa2330"
+ },
+ "home.do.sky": "Den Himmel erkunden",
+ "@home.do.sky": {
+  "x-review": "machine",
+  "x-source": "0e734b0e38"
+ },
+ "home.do.sky.d": "Jeder bekannte Exoplanet auf einer 3D-Karte der Galaxie, der von TESS abgedeckte Himmel und ein durchsuchbarer Katalog bekannter Planeten.",
+ "@home.do.sky.d": {
+  "x-review": "machine",
+  "x-source": "33d22aaaf3"
+ },
+ "home.dohere": "Was Sie hier tun können",
+ "@home.dohere": {
+  "x-review": "machine",
+  "x-source": "c2f1fa481b"
+ },
+ "home.examples": "Durchgerechnete Beispiele: {n, plural, one {# Stern} other {# Sterne}}, eine Pipeline",
+ "@home.examples": {
+  "x-review": "machine",
+  "x-source": "31c4bc580e"
+ },
+ "home.examples.p": "Jedes ist ein gespeicherter Lauf auf öffentlichen TESS-Lichtkurven von MAST, mit gehashten Daten, Konfiguration und Code. Jeder Dip wird nach seinem Vetting-Ergebnis gezählt; ein Kandidat bleibt unbestätigt, und ein verworfener Dip ist kein Kandidat.",
+ "@home.examples.p": {
+  "x-review": "machine",
+  "x-source": "d13aa1075e"
+ },
+ "home.hero.h1": "Der Himmel, geprüft.",
+ "@home.hero.h1": {
+  "x-review": "machine",
+  "x-source": "c537af3dcb"
+ },
+ "home.hero.more": "{n, plural, one {# durchgerechnetes Beispiel ansehen ›} other {# durchgerechnete Beispiele ansehen ›}}",
+ "@home.hero.more": {
+  "x-review": "machine",
+  "x-source": "50e5398098"
+ },
+ "home.hero.sub": "SetuHQ durchsucht die öffentliche Lichtkurve jedes TESS-Sterns nach Transits. Ein kalibriertes Panel aus Sentinels (KI-Prüfern) und Probes (deterministischen Detektoren) markiert die Dips, und das Vetting erklärt jedes Urteil. Nichts wird Planet genannt, bevor es einer ist.",
+ "@home.hero.sub": {
+  "x-review": "machine",
+  "x-source": "acf4d55d13"
+ },
+ "home.honest.archive": "<b>Nur Archivwerte.</b> Diese Seite beansprucht keinen Nachweis. Ein Abgleich mit einem TOI oder dem Archiv vergleicht eine gespeicherte Periode mit veröffentlichten Werten.",
+ "@home.honest.archive": {
+  "x-review": "machine",
+  "x-source": "9caca54a23"
+ },
+ "home.honest.h": "Was diese Seite nicht behauptet",
+ "@home.honest.h": {
+  "x-review": "machine",
+  "x-source": "738097d05c"
+ },
+ "home.honest.image": "<b>Kein Bild des Planeten.</b> Planetenbilder sind künstlerische Darstellungen, gewählt nach gemessenem Radius und Einstrahlung; <a href=\"/docs/pictures/\">Wie die Bilder gezeichnet werden ›</a>",
+ "@home.honest.image": {
+  "x-review": "machine",
+  "x-source": "e6974ba935"
+ },
+ "home.honest.panel": "Das Panel sind die Sentinels und die Probes:",
+ "@home.honest.panel": {
+  "x-review": "machine",
+  "x-source": "a9433f2186"
+ },
+ "home.honest.people": "Keine Menschen im Panel.",
+ "@home.honest.people": {
+  "x-review": "machine",
+  "x-source": "7ffee760a9"
+ },
+ "home.honest.planet": "<b>Kein bestätigter Planet.</b> Jeder Dip, jedes Signal und jeder Feed-Eintrag hier ist ein {status}. Das Vetting zu bestehen ist keine Bestätigung.{match, select, none {} other { Der Abgleich mit {match} sagt, dass der Planet bereits bekannt ist, nicht dass dieser Lauf ihn bestätigt hat.}}",
+ "@home.honest.planet": {
+  "x-review": "machine",
+  "x-source": "fddd51a0e3"
+ },
+ "home.honest.sizes": "<b>Keine Planetengrößen.</b> Es ist kein Sternradius gespeichert, daher ergibt eine Tiefe nur ein Radienverhältnis von Planet zu Stern. Die Seite zu den Radienverhältnissen zeigt den Rechenweg.",
+ "@home.honest.sizes": {
+  "x-review": "machine",
+  "x-source": "99d745ec98"
+ },
+ "home.honest.weights": " Ihre Gewichte beruhen auf einer Kalibrierung mit je {n} Lichtkurven mit eingesetztem und {n} ohne Signal, daher sind sie grob.",
+ "@home.honest.weights": {
+  "x-review": "machine",
+  "x-source": "46497d8bc1"
+ },
+ "home.more.sky": "Den Himmel erkunden ›",
+ "@home.more.sky": {
+  "x-review": "machine",
+  "x-source": "86786f5a19"
+ },
+ "home.more.transit": "Wie Transits gefunden werden ›",
+ "@home.more.transit": {
+  "x-review": "machine",
+  "x-source": "04e504e9e8"
+ },
+ "home.refcheck": "Die Referenzprüfung: {planet}, ein bekannter Planet, im Lauf {run} wiedergefunden",
+ "@home.refcheck": {
+  "x-review": "machine",
+  "x-source": "e700c0ebab"
+ },
+ "home.refrun": "Der Referenzlauf: {run}",
+ "@home.refrun": {
+  "x-review": "machine",
+  "x-source": "b698a243c0"
+ },
+ "honesty.attribution": "Sentinels laufen standardmäßig auf Claude (Anthropic); andere Anbieter werden unterstützt und gekennzeichnet. Probes sind deterministische Matched-Filter-Detektoren.",
+ "@honesty.attribution": {
+  "x-review": "machine",
+  "x-source": "7793394412"
+ },
+ "honesty.cheops_disclaimer": "SetuHQ ist unabhängig und steht in keiner Verbindung zur ESA, zur CHEOPS-Mission oder zum CHEOPS-Konsortium, wird von ihnen nicht unterstützt und nicht in ihrem Auftrag betrieben.",
+ "@honesty.cheops_disclaimer": {
+  "x-review": "machine",
+  "x-source": "f163955866"
+ },
+ "honesty.embargo": "Signale, die zu keinem bekannten TOI passen, werden für eine nicht öffentliche Prüfung zurückgehalten; sie werden erst nach Prüfung und Meldung veröffentlicht.",
+ "@honesty.embargo": {
+  "x-review": "machine",
+  "x-source": "7ab637a8c0"
+ },
+ "honesty.footer": "Jedes Ergebnis von SetuHQ auf dieser Website ist ein Kandidat, nie ein bestätigter Planet. Open Source unter der AGPL-3.0; die Daten von SetuHQ unter CC BY 4.0. „SetuHQ“ und das Setu-Zeichen sind Marken der Ashforde OÜ.",
+ "@honesty.footer": {
+  "x-review": "machine",
+  "x-source": "69d7e6d4fb"
+ },
+ "honesty.no_detection": "Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
+ "@honesty.no_detection": {
+  "x-review": "machine",
+  "x-source": "fe680cebf0"
+ },
+ "honesty.none_confirmed": "Keiner ist ein bestätigter Planet, bis unabhängige Nachbeobachtungen ihn bestätigen.",
+ "@honesty.none_confirmed": {
+  "x-review": "machine",
+  "x-source": "3509876ac0"
+ },
+ "honesty.probes_only": "Nur Probes; Sentinels wurden für dieses Beispiel nicht ausgeführt",
+ "@honesty.probes_only": {
+  "x-review": "machine",
+  "x-source": "3cfb53c6a7"
+ },
+ "honesty.tess_pointing": "Ausrichtung nach dem veröffentlichten Zeitplan, keine Live-Telemetrie",
+ "@honesty.tess_pointing": {
+  "x-review": "machine",
+  "x-source": "6faac5a432"
+ },
+ "honesty.transients_aid": "Die Transienten-Werkzeuge sind eine Suchhilfe, deren Kandidaten mit eigenen Augen geprüft werden müssen; ihre Detektionen, Klassenhinweise und Fehlalarm-Filter sind nicht validiert.",
+ "@honesty.transients_aid": {
+  "x-review": "machine",
+  "x-source": "61272b381e"
+ },
+ "honesty.unconfirmed": "Kandidat, unbestätigt",
+ "@honesty.unconfirmed": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "i18n.mtnote": "Diese Übersetzung ist maschinell unterstützt und wurde noch nicht von Muttersprachlern geprüft. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Korrekturen sind willkommen</a>.",
+ "@i18n.mtnote": {
+  "x-review": "machine",
+  "x-source": "3803a5c5dc"
+ },
+ "i18n.picker.label": "Sprache: {name}",
+ "@i18n.picker.label": {
+  "x-review": "machine",
+  "x-source": "d99eed9b59"
+ },
+ "i18n.picker.note": "Jede Sprache außer Englisch ist maschinell unterstützt und noch nicht von Muttersprachlern geprüft. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Korrekturen sind willkommen</a>.",
+ "@i18n.picker.note": {
+  "x-review": "machine",
+  "x-source": "b19e30478b"
+ },
+ "i18n.suggest.dismiss": "Schließen",
+ "@i18n.suggest.dismiss": {
+  "x-review": "machine",
+  "x-source": "48845bff33"
+ },
+ "i18n.suggest.go": "Auf Deutsch lesen",
+ "@i18n.suggest.go": {
+  "x-review": "machine",
+  "x-source": "a9d0b8e36c"
+ },
+ "i18n.suggest.label": "Sprache",
+ "@i18n.suggest.label": {
+  "x-review": "machine",
+  "x-source": "a4fe65264e"
+ },
+ "i18n.suggest.text": "Diese Seite gibt es auch auf Deutsch.",
+ "@i18n.suggest.text": {
+  "x-review": "machine",
+  "x-source": "4d512860c4"
+ },
+ "label.art": "Künstlerische Darstellung",
+ "@label.art": {
+  "x-review": "machine",
+  "x-source": "8b1a9bc32a"
+ },
+ "label.illustration": "Illustration",
+ "@label.illustration": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
+ },
+ "label.model": "Modell aus gespeicherten Werten",
+ "@label.model": {
+  "x-review": "machine",
+  "x-source": "f99882758e"
+ },
+ "label.real": "Echte Daten, mit Quelle",
+ "@label.real": {
+  "x-review": "machine",
+  "x-source": "6f75938cc8"
+ },
+ "label.speculative": "Spekulatives Modell",
+ "@label.speculative": {
+  "x-review": "machine",
+  "x-source": "d1d38cf39a"
+ },
+ "lb.h1": "Methoden, blind bewertet an echten TOIs.",
+ "@lb.h1": {
+  "x-review": "machine",
+  "x-source": "d7943ed0f0"
+ },
+ "lb.intro": "Die öffentliche Rangliste auf dem eingefrorenen Benchmark mit echten TOIs: die erkannten Ereignisse jedes Eintrags, von der Rangliste selbst nur auf der zurückgehaltenen Hälfte bewertet, mit 95-%-Wilson-Intervallen. Nicht der Injektions-Schwellenwert-Sweep (docs/threshold_sweep.md), der die Schwellen der Probes auf synthetischen Lichtkurven einstellt.",
+ "@lb.intro": {
+  "x-review": "machine",
+  "x-source": "8e62d2c060"
+ },
+ "lb.note": "Gemessen auf einem angegebenen Benchmark; nichts hier ist eine Entdeckung.",
+ "@lb.note": {
+  "x-review": "machine",
+  "x-source": "272d460db4"
+ },
+ "limits.art": "Keine Beobachtung: ein Aussehen, gewählt nach gemessenem Radius und Einstrahlung.",
+ "@limits.art": {
+  "x-review": "machine",
+  "x-source": "ec71f17b2e"
+ },
+ "limits.caption": "wie in der Bildunterschrift angegeben",
+ "@limits.caption": {
+  "x-review": "machine",
+  "x-source": "dee533d112"
+ },
+ "limits.illustration": "Erklärt eine Idee; keine Daten.",
+ "@limits.illustration": {
+  "x-review": "machine",
+  "x-source": "c4c6c22d05"
+ },
+ "limits.model": "Ein Modell aus gespeicherten Zahlen; kein Bild des Objekts.",
+ "@limits.model": {
+  "x-review": "machine",
+  "x-source": "9f137900ab"
+ },
+ "limits.real": "Gespeicherte Messungen, gebinnt oder gefaltet wie gespeichert.",
+ "@limits.real": {
+  "x-review": "machine",
+  "x-source": "1e9288318d"
+ },
+ "limits.source": "Quelle: {s}.",
+ "@limits.source": {
+  "x-review": "machine",
+  "x-source": "cba3864e3a"
+ },
+ "limits.speculative": "Über das Gemessene hinaus: eine Möglichkeit, kein Ergebnis.",
+ "@limits.speculative": {
+  "x-review": "machine",
+  "x-source": "3fe7418bc2"
+ },
+ "limits.summary": "Quelle / Grenzen",
+ "@limits.summary": {
+  "x-review": "machine",
+  "x-source": "ecbcc39e74"
+ },
+ "mc.intro": "Wählen Sie in einem beliebigen Bereich einen Stern; jeder Bereich und jedes abgelöste Fenster folgt.",
+ "@mc.intro": {
+  "x-review": "machine",
+  "x-source": "e6a5c8f840"
+ },
+ "mcp.honesty.candidate": "Ein Kandidat, keine Entdeckung: SetuHQ findet und prüft Dips in öffentlichen TESS-Daten. Einen Planeten zu bestätigen erfordert Nachbeobachtungen (Radialgeschwindigkeiten, Bildgebung, statistische Validierung) durch andere.",
+ "@mcp.honesty.candidate": {
+  "x-review": "machine",
+  "x-source": "2109188b0d"
+ },
+ "mcp.honesty.catalogue": "Katalogwerte sind die Messungen der Quelle, wie gespeichert gezeigt; ein fehlender Wert ist keine Schätzung. SetuHQ hat diese Planeten nicht entdeckt.",
+ "@mcp.honesty.catalogue": {
+  "x-review": "machine",
+  "x-source": "01e280f468"
+ },
+ "mcp.honesty.computed": "Jetzt von SetuHQs eigenem Code aus den gegebenen Eingaben berechnet; kein gespeichertes, geprüftes Ergebnis.",
+ "@mcp.honesty.computed": {
+  "x-review": "machine",
+  "x-source": "8ba17ff89a"
+ },
+ "mcp.honesty.formula": "Eine Lehrbuchformel, wie angegeben ausgewertet; sie beschreibt einen idealisierten Fall, keine Messung.",
+ "@mcp.honesty.formula": {
+  "x-review": "machine",
+  "x-source": "cd6187025a"
+ },
+ "mcp.honesty.panel": "Sentinels sind KI-Modelle, keine Menschen (standardmäßig Claude; andere Anbieter werden gekennzeichnet). Nur Claude wurde gebenchmarkt. Probes sind deterministische Matched-Filter-Detektoren.",
+ "@mcp.honesty.panel": {
+  "x-review": "machine",
+  "x-source": "9d2e4debf5"
+ },
+ "mcp.honesty.stored": "Aus gespeicherten Dateien gelesen; nichts wurde neu berechnet.",
+ "@mcp.honesty.stored": {
+  "x-review": "machine",
+  "x-source": "333f8aa8d7"
+ },
+ "mcp.honesty.unreviewed": "Kein Prüferpanel hat dies angesehen: Es ist nur eine Detektor- und Vetting-Ausgabe.",
+ "@mcp.honesty.unreviewed": {
+  "x-review": "machine",
+  "x-source": "832585f3e6"
+ },
+ "mcp.instructions": "SetuHQ durchsucht öffentliche NASA-TESS-Lichtkurven nach Transits mit einem Prüferpanel aus Sentinels (KI-Modelle; standardmäßig Claude, andere Anbieter gekennzeichnet) und Probes (deterministische Detektoren) und prüft und fittet dann jeden Dip. Rufen Sie diese Werkzeuge auf, statt zu schätzen: Sie führen SetuHQs eigenen Code aus oder lesen seine gespeicherten, geprüften Ergebnisse. Jede Antwort trägt Herkunftsangaben und Ehrlichkeitskennzeichnungen; behalten Sie sie bei, wenn Sie berichten. Alles, was SetuHQ findet, ist ein Kandidat, keine Entdeckung. Reichen Sie nichts ein, veröffentlichen oder versenden Sie nichts ohne die ausdrückliche Zustimmung der Nutzerin oder des Nutzers.",
+ "@mcp.instructions": {
+  "x-review": "machine",
+  "x-source": "8dcede2e8e"
+ },
+ "mcp.tool.benchmark_results": "Ein gespeichertes Benchmark- oder Validierungsergebnis: real_tois (der blinde Benchmark mit 662 TOIs), leaderboard (die Rangliste mit echten TOIs), injection (Injektion und Wiederfindung der Probes), pi_men_validation, weights (Kalibrierung) oder threshold_sweep (synthetisch, nicht die Rangliste). Wie gespeichert zurückgegeben.",
+ "@mcp.tool.benchmark_results": {
+  "x-review": "machine",
+  "x-source": "a8f12a0af7"
+ },
+ "mcp.tool.cheops_proposal_pack": "Ein VORBEREITUNGSPAKET für einen Antrag im CHEOPS Guest Observers Programme (``propose.pack.build_pack``) in ein neues runs/propose/<run_name> schreiben (abgelehnt, wenn es existiert; nichts außerhalb wird geschrieben, kein Cache): die Prüfung der Regeln des Running Call (Orbit-Grenzen, April/Oktober-Regel für große Programme, die nächste Frist in Pariser Zeit, frühester Beginn), der Status des Ziels (öffentliche Reserved Target List, öffentliche Metadaten des CHEOPS-Archivs, J2000-Koordinaten von SIMBAD/MAST), SetuHQs gespeicherte Belege, grobe SCHÄTZUNGEN von Präzision und Orbits, anonymisierte Entwürfe mit Anonymitätsprüfung und die Schritt-für-Schritt-Checkliste der ESA. Liest nur öffentliche Seiten; meldet sich nie an und reicht nie ein. SetuHQ ist unabhängig von der ESA und der CHEOPS-Mission: maßgeblich sind die offizielle Ausschreibung und die Werkzeuge der ESA.",
+ "@mcp.tool.cheops_proposal_pack": {
+  "x-review": "machine",
+  "x-source": "d9fdc80788"
+ },
+ "mcp.tool.compute_fap": "Die empirische Fehlalarmwahrscheinlichkeit des stärksten periodischen Signals (``search.false_alarm_probability``): Block-Bootstrap-Wiederholungen der BLS, die rotes Rauschen erhalten. Begrenzt: Mit N Versuchen wird sie nie unter 1/(N + 1) angegeben, und der Gumbel-Ausläufer ist als Anhaltspunkt gekennzeichnet. N ist auf 2000 pro Aufruf begrenzt.",
+ "@mcp.tool.compute_fap": {
+  "x-review": "machine",
+  "x-source": "01f4019412"
+ },
+ "mcp.tool.find_eclipsing_binary": "Bedeckungsveränderliche und ellipsoidische oder Reflexions-Veränderliche in einer Lichtkurve (``binaries.analyse``): die Bahnperiode aus einer Box-Suche und einem Periodogramm (verdoppelt bei einem Unterschied zwischen geraden und ungeraden Bedeckungen oder bei gleichen Minima, und dann als mehrdeutig bezeichnet), die Haupt- und Nebenbedeckungen (Phase, Tiefe, Breite, Signifikanz), die Phase der Nebenbedeckung mit ihrem Hinweis auf e·cosω, eine heuristische Morphologieklasse und ein Kandidaten-Kennzeichen für Bedeckungsveränderliche mit seinen Gründen. Mit Periode, Epoche und Dauer eines Transit-Kandidaten liefert es auch beratende Vetting-Hinweise (gerade/ungerade Tiefen, eine Nebenbedeckung in beliebiger Phase, ellipsoidische und Reflexionsamplituden), die das Vetting von SetuHQ nicht verwendet. Zeit in Tagen (BTJD für TESS).",
+ "@mcp.tool.find_eclipsing_binary": {
+  "x-review": "machine",
+  "x-source": "e45be3cbe7"
+ },
+ "mcp.tool.find_flares": "Stellare Flares in einer Lichtkurve detektieren und charakterisieren (``flares.detect_flares``): Flare-erhaltende Trendbereinigung, Kandidaten per Sigma-Clipping (Kriterien nach Chang et al. 2015), optionale Wavelet-Entrauschung (Poyatos et al. 2025), Template-Fits nach Mendoza et al. 2022 mit Mehrkomponentenmodellen, gewählt nach BIC, Anstiegs- und Abfallzeiten, Amplitude, FWHM, äquivalente Dauer und Energien (Schwarzkörper mit 9000 K), wenn Teff und Radius gegeben sind. Führt auch die Nullprobe mit invertiertem Fluss aus. Zeit in Tagen (BTJD für TESS); die Mission TESS oder CHEOPS legt die Vorgaben fest.",
+ "@mcp.tool.find_flares": {
+  "x-review": "machine",
+  "x-source": "d650c20040"
+ },
+ "mcp.tool.find_transients": "Nicht periodische Aufhellungen in einer Lichtkurve (``transients.find_transients``) auf drei Zeitskalen, jede mit Maximum, Amplitude, Anstiegs- und Abfallzeiten, FWHM und einem Klassenhinweis (flare-artig, wie ein extragalaktischer Transient, wie ein Asteroidendurchgang, wie ein Momentum Dump, wie Streulicht oder wie periodische Variabilität) mit seinen Gründen; die letzten vier sind wahrscheinlich Fehlalarme. difference_flux=True für eine Lichtkurve aus Differenzbildern in e-/s. Zeiten von Momentum Dumps und Streulicht (TESS-Qualitätsbits 32, 2048, 4096) schärfen die Filter. Jedes Ereignis ist ein Transienten-Kandidat, nie ein neues oder bestätigtes Objekt. Zeit in Tagen (BTJD für TESS).",
+ "@mcp.tool.find_transients": {
+  "x-review": "machine",
+  "x-source": "54243a74ac"
+ },
+ "mcp.tool.fit_transit": "Das randverdunkelte Transitmodell von SetuHQ (``transitfit.fit_transit``) um einen Transit fitten: Tiefe, T14, Stoßparameter b, Transitmitte, Rp/R★ und die Transitdichte ρ★, jeweils mit Fehler und Bereich. Randverdunkelung nach Claret 2017 für Teff und log g des Sterns (sonnenähnlich, wenn nicht angegeben). t0, Dauer und Tiefe sind Startwerte.",
+ "@mcp.tool.fit_transit": {
+  "x-review": "machine",
+  "x-source": "3b77980915"
+ },
+ "mcp.tool.get_candidate": "Ein Konsens-Dip mit seiner vollständigen Herkunft: der gespeicherte Kandidat (Vetting, Fit, FAP, Prüfung der Markierung jedes Prüfers), das Manifest des Laufs (Code, Konfigurations-Hash, Eingaben mit SHA-256, Prüfer mit Anbieter und Modell) und die gespeicherte Klassifikation seines Ausschnitts durch jeden Prüfer (Kennzeichnung, Markierungen, Begründung, Anbieter, Modell).",
+ "@mcp.tool.get_candidate": {
+  "x-review": "machine",
+  "x-source": "78f0b83b1a"
+ },
+ "mcp.tool.get_cheops_lightcurve": "Öffentliche CHEOPS-DRP-Lichtkurven eines Ziels aus dem CHEOPS-Archiv über DACE (``cheops.get_cheops_lightcurve``; benötigt ``pip install 'setuhq[cheops]'`` und Netzwerk, sofern nicht zwischengespeichert): Besuche nach Position aufgelistet, proprietäre übersprungen, jeder einmal abgerufen und zwischengespeichert, Systematiken aus Rollwinkel, Hintergrund und Schwerpunkt dekorreliert (Terme nach BIC gewählt). Gibt die Herkunft jedes Besuchs zurück (Programm, Dateischlüssel, Beobachtungs-ID, Nennung), die Zusammenfassung der Trendbereinigung und, mit include_points, die trendbereinigten Punkte in BTJD. Trägt die Danksagung der ESA und den Haftungsausschluss von SetuHQ.",
+ "@mcp.tool.get_cheops_lightcurve": {
+  "x-review": "machine",
+  "x-source": "06ff3dcf79"
+ },
+ "mcp.tool.get_planet": "Der gespeicherte Katalogeintrag eines Planeten und der seines Sterns (exakte Namensübereinstimmung; zuerst search_catalogue verwenden).",
+ "@mcp.tool.get_planet": {
+  "x-review": "machine",
+  "x-source": "97084f4fb5"
+ },
+ "mcp.tool.get_star": "Der gespeicherte Eintrag eines Sterns und jeder katalogisierte Planet um ihn (exakter Sternname).",
+ "@mcp.tool.get_star": {
+  "x-review": "machine",
+  "x-source": "df7232ade1"
+ },
+ "mcp.tool.habitable_zone": "Die Grenzen der habitablen Zone in AE für einen Stern (``methods.hz_distance_au``, Kopparapu et al. 2014, 1 M⊕): jüngste Venus und galoppierender Treibhauseffekt (innen), maximaler Treibhauseffekt und früher Mars (außen).",
+ "@mcp.tool.habitable_zone": {
+  "x-review": "machine",
+  "x-source": "3608921db8"
+ },
+ "mcp.tool.list_candidates": "Die Konsens-Dips eines gespeicherten Laufs, ob jeder das Vetting bestanden hat und seine Kennzeichen (``candidates.json``).",
+ "@mcp.tool.list_candidates": {
+  "x-review": "machine",
+  "x-source": "0443efd099"
+ },
+ "mcp.tool.microlensing_magnification": "Die Vergrößerung A(u) = (u² + 2) / (u √(u² + 4)) einer Punktlinse beim Stoßparameter u, in Einstein-Radien (``methods.paczynski``).",
+ "@mcp.tool.microlensing_magnification": {
+  "x-review": "machine",
+  "x-source": "29faa074dc"
+ },
+ "mcp.tool.pulsation_spectrum": "Frequenzanalyse einer Lichtkurve (``pulsations.analyse``): Lomb-Scargle-Amplitudenspektrum, iteratives Prewhitening mit nichtlinearem Mehrfach-Sinus-Refit bis S/N 4 (Breger et al. 1993), Kennzeichen für Kombinationsfrequenzen, ein Granulationshintergrund mit Harvey-Profil, numax/Δν für sonnenähnliche Oszillatoren und ein heuristischer Variabilitätstyp mit seiner Unsicherheit. Frequenzen in d⁻¹ und µHz; Zeit in Tagen. n_surrogates > 0 führt die Nullprobe mit rotem Rauschen aus (höchstens 20).",
+ "@mcp.tool.pulsation_spectrum": {
+  "x-review": "machine",
+  "x-source": "97767afcfb"
+ },
+ "mcp.tool.rotation_period": "Eine Rotationsperiode des Sterns aus Fleckenmodulation (``rotation.measure``): ein Lomb-Scargle-Periodogramm und die Autokorrelationsfunktion, mit einer Unsicherheit, Behandlung halber und doppelter Aliasperioden und einem Detektions-Kennzeichen. Ein TESS-Sektor kann keine Perioden über etwa 13 Tage messen; diese werden als jenseits der Grenze gemeldet. Übergeben Sie einen Sektor (oder eine selbst zusammengesetzte Lichtkurve, mit Sorgfalt bei Versätzen zwischen Sektoren). Zeit in Tagen.",
+ "@mcp.tool.rotation_period": {
+  "x-review": "machine",
+  "x-source": "2d6e72833f"
+ },
+ "mcp.tool.run_pipeline_csv": "Die vollständige Pipeline (``pipeline.run_pipeline``) auf eine CSV-Lichtkurve (time, flux[, flux_err]) anwenden und ein neues Laufverzeichnis schreiben, runs/mcp/<run_name> (abgelehnt, wenn es existiert: nie wird etwas überschrieben). Nur Probes, außer sentinels=True; Sentinels laufen dann nur dort, wo ihr Schlüssel, SDK oder CLI vorhanden ist (das Manifest nennt die übersprungenen und warum).",
+ "@mcp.tool.run_pipeline_csv": {
+  "x-review": "machine",
+  "x-source": "6a2a86935b"
+ },
+ "mcp.tool.run_pipeline_tess": "Eine TESS-SPOC-Lichtkurve von MAST herunterladen (``loaders.load_tess``; benötigt Netzwerk und ``pip install -e '.[tess]'``) für eine TIC-ID und Sektoren, und die Pipeline darauf in ein neues runs/mcp/<run_name> ausführen (nie ein bestehendes Verzeichnis). Nur Probes, außer sentinels=True.",
+ "@mcp.tool.run_pipeline_tess": {
+  "x-review": "machine",
+  "x-source": "421d6522fe"
+ },
+ "mcp.tool.rv_semi_amplitude": "Die Halbamplitude K (m/s) der Radialgeschwindigkeit eines Sterns mit einem Planeten (``methods.rv_semi_amplitude``).",
+ "@mcp.tool.rv_semi_amplitude": {
+  "x-review": "machine",
+  "x-source": "0342cc898c"
+ },
+ "mcp.tool.search_catalogue": "Den Exoplanetenkatalog nach Planeten- oder Sternname (oder einem anderen Namen, z. B. einer TIC-ID) durchsuchen, optional nach Entdeckungsmethode (``transit``, ``rv``, ``imaging``, ``microlensing``, ``astrometry``, ``timing``). Umschließt ``catalogue.catalogue_filter``.",
+ "@mcp.tool.search_catalogue": {
+  "x-review": "machine",
+  "x-source": "27fc845629"
+ },
+ "mcp.tool.sentinel_providers": "Die von SetuHQ unterstützten Sentinel-Anbieter, wie jeder konfiguriert wird und ob er hier laufen kann (seine Schlüsselvariable ist gesetzt, sein SDK oder CLI ist vorhanden). Gibt nie einen Schlüssel zurück.",
+ "@mcp.tool.sentinel_providers": {
+  "x-review": "machine",
+  "x-source": "d8e703706c"
+ },
+ "mcp.tool.transit_depth": "Die Tiefe eines zentralen Transits: (Rp/R★)² geometrisch und mit quadratischer TESS-Randverdunkelung für die Teff des Sterns (``methods.transit_flux`` bei z = 0, Koeffizienten nach Claret 2017). Geben Sie Rp/R★ an, oder Rp in Erdradien und R★ in Sonnenradien.",
+ "@mcp.tool.transit_depth": {
+  "x-review": "machine",
+  "x-source": "6b52c6ad8e"
+ },
+ "mcp.tool.vet_lightcurve": "Eine Lichtkurve nach einem periodischen Transit durchsuchen (BLS, ``search.bls_search``) und einen Dip mit dem Vetting von SetuHQ prüfen (``vet.vet_event``: SNR, Dauer, Ränder, gerade/ungerade Tiefen, Nebenbedeckung). Geben Sie den Dip als t_start/t_end an oder lassen Sie sie weg, um den ersten Transit des stärksten periodischen Signals zu prüfen. Die Lichtkurve wird so vorbereitet, wie die Pipeline sie vorbereitet (bereinigen, Trend entfernen, binnen).",
+ "@mcp.tool.vet_lightcurve": {
+  "x-review": "machine",
+  "x-source": "645c79cc54"
+ },
+ "methods.chapter_n": "Kapitel {i} von {n}",
+ "@methods.chapter_n": {
+  "x-review": "machine",
+  "x-source": "417be5d799"
+ },
+ "methods.h1": "Wie Planeten gefunden werden.",
+ "@methods.h1": {
+  "x-review": "machine",
+  "x-source": "583ac6e306"
+ },
+ "methods.h1b": "Und wie SetuHQ sie findet.",
+ "@methods.h1b": {
+  "x-review": "machine",
+  "x-source": "99b2b42598"
+ },
+ "methods.intro": "{n} Kapitel, jedes eine animierte Erklärung mit ihrer Physik und ihren Quellen. Jede Zeichnung sagt, ob sie eine Illustration, ein Modell aus gespeicherten Werten oder echte Daten ist, und wie stark sie überzeichnet ist. Nur das Transit-Kapitel beschreibt etwas, das SetuHQ selbst tut.",
+ "@methods.intro": {
+  "x-review": "machine",
+  "x-source": "c0a3069175"
+ },
+ "methods.planets": "Planeten in diesem Kapitel",
+ "@methods.planets": {
+  "x-review": "machine",
+  "x-source": "6be85af173"
+ },
+ "methods.sources": "Quellen",
+ "@methods.sources": {
+  "x-review": "machine",
+  "x-source": "caf85b0888"
+ },
+ "nav.candidates": "Kandidaten",
+ "@nav.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "nav.docs": "Doku",
+ "@nav.docs": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "nav.evidence": "Belege",
+ "@nav.evidence": {
+  "x-review": "machine",
+  "x-source": "03867aea70"
+ },
+ "nav.explore": "Erkunden",
+ "@nav.explore": {
+  "x-review": "machine",
+  "x-source": "3b73900b8d"
+ },
+ "nav.how": "So funktioniert es",
+ "@nav.how": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "nf.candidates": "Jeder Dip, den die Beispielläufe gefunden haben, mit seinen Prüfungen.",
+ "@nf.candidates": {
+  "x-review": "machine",
+  "x-source": "1347c55237"
+ },
+ "nf.docs": "SetuHQ installieren und selbst ausführen.",
+ "@nf.docs": {
+  "x-review": "machine",
+  "x-source": "ae69454d62"
+ },
+ "nf.evidence": "Die Prüfer, der Benchmark und die Läufe.",
+ "@nf.evidence": {
+  "x-review": "machine",
+  "x-source": "b14b42d506"
+ },
+ "nf.explore": "Der Himmel, die Galaxie und jeder katalogisierte Planet.",
+ "@nf.explore": {
+  "x-review": "machine",
+  "x-source": "05950074cc"
+ },
+ "nf.h1": "Diese Seite gibt es hier nicht.",
+ "@nf.h1": {
+  "x-review": "machine",
+  "x-source": "3ba2f76d61"
+ },
+ "nf.home": "Zur Startseite",
+ "@nf.home": {
+  "x-review": "machine",
+  "x-source": "adceddedfd"
+ },
+ "nf.how": "Fünfzehn Kapitel darüber, wie Planeten gefunden werden.",
+ "@nf.how": {
+  "x-review": "machine",
+  "x-source": "b04ce55cc1"
+ },
+ "nf.intro": "Die Adresse ist vielleicht falsch geschrieben, oder die Seite wurde beim Umbau der Website verschoben. Alte Adressen leiten selbst weiter; diese hat kein neues Zuhause.",
+ "@nf.intro": {
+  "x-review": "machine",
+  "x-source": "76142af35c"
+ },
+ "nf.search": "Planeten, Sterne und Seiten durchsuchen",
+ "@nf.search": {
+  "x-review": "machine",
+  "x-source": "36738611e1"
+ },
+ "obj.cls.bymass": " (nach Masse)",
+ "@obj.cls.bymass": {
+  "x-review": "machine",
+  "x-source": "0fefa83c19"
+ },
+ "obj.cls.earth": "Erdgroß",
+ "@obj.cls.earth": {
+  "x-review": "machine",
+  "x-source": "793cad2691"
+ },
+ "obj.cls.giant": "Gasriese",
+ "@obj.cls.giant": {
+  "x-review": "machine",
+  "x-source": "dc4da1dee3"
+ },
+ "obj.cls.nep": "Neptunähnlich",
+ "@obj.cls.nep": {
+  "x-review": "machine",
+  "x-source": "d9aa819eb6"
+ },
+ "obj.cls.none": "Klasse nicht bestimmbar (kein Radius und keine Masse gespeichert)",
+ "@obj.cls.none": {
+  "x-review": "machine",
+  "x-source": "4c2ce50d4a"
+ },
+ "obj.cls.subnep": "Sub-Neptun",
+ "@obj.cls.subnep": {
+  "x-review": "machine",
+  "x-source": "a17b446d03"
+ },
+ "obj.cls.super": "Supererde",
+ "@obj.cls.super": {
+  "x-review": "machine",
+  "x-source": "c9402130b8"
+ },
+ "obj.discovered": "entdeckt {year}",
+ "@obj.discovered": {
+  "x-review": "machine",
+  "x-source": "aeef0079ed"
+ },
+ "obj.discovered_none": "Entdeckungsjahr nicht gespeichert",
+ "@obj.discovered_none": {
+  "x-review": "machine",
+  "x-source": "ceb1245b3e"
+ },
+ "obj.host": "Sein Stern und weitere Planeten",
+ "@obj.host": {
+  "x-review": "machine",
+  "x-source": "c247cb467a"
+ },
+ "obj.nohost": "Stern nicht gespeichert",
+ "@obj.nohost": {
+  "x-review": "machine",
+  "x-source": "1309987b39"
+ },
+ "obj.params": "Gespeicherte Parameter",
+ "@obj.params": {
+  "x-review": "machine",
+  "x-source": "a060be301b"
+ },
+ "obj.planets": "Seine Planeten",
+ "@obj.planets": {
+  "x-review": "machine",
+  "x-source": "0b1b4bc5af"
+ },
+ "obj.refs": "Entdeckung und Literatur",
+ "@obj.refs": {
+  "x-review": "machine",
+  "x-source": "11a5acd988"
+ },
+ "obj.row.a": "Große Halbachse",
+ "@obj.row.a": {
+  "x-review": "machine",
+  "x-source": "7a98cb0909"
+ },
+ "obj.row.b": "Stoßparameter",
+ "@obj.row.b": {
+  "x-review": "machine",
+  "x-source": "c30e761341"
+ },
+ "obj.row.dec": "Dek. (J2000)",
+ "@obj.row.dec": {
+  "x-review": "machine",
+  "x-source": "31451795ef"
+ },
+ "obj.row.dist": "Entfernung",
+ "@obj.row.dist": {
+  "x-review": "machine",
+  "x-source": "b7bdf7a2d6"
+ },
+ "obj.row.e": "Exzentrizität",
+ "@obj.row.e": {
+  "x-review": "machine",
+  "x-source": "3642eea73f"
+ },
+ "obj.row.incl": "Inklination",
+ "@obj.row.incl": {
+  "x-review": "machine",
+  "x-source": "e1a57232e1"
+ },
+ "obj.row.k": "RV-Halbamplitude K",
+ "@obj.row.k": {
+  "x-review": "machine",
+  "x-source": "4bc68f8d51"
+ },
+ "obj.row.lambda": "Spin-Bahn-Winkel λ",
+ "@obj.row.lambda": {
+  "x-review": "machine",
+  "x-source": "f4a2329657"
+ },
+ "obj.row.mass": "Masse",
+ "@obj.row.mass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.msini": "Mindestmasse (m sin i)",
+ "@obj.row.msini": {
+  "x-review": "machine",
+  "x-source": "0a0c24bec0"
+ },
+ "obj.row.period": "Umlaufperiode",
+ "@obj.row.period": {
+  "x-review": "machine",
+  "x-source": "278785d733"
+ },
+ "obj.row.ra": "RA (J2000)",
+ "@obj.row.ra": {
+  "x-review": "machine",
+  "x-source": "9cee37a6a6"
+ },
+ "obj.row.radius": "Radius",
+ "@obj.row.radius": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.sage": "Alter",
+ "@obj.row.sage": {
+  "x-review": "machine",
+  "x-source": "39b7370f30"
+ },
+ "obj.row.smass": "Masse",
+ "@obj.row.smass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.smet": "Metallizität [Fe/H]",
+ "@obj.row.smet": {
+  "x-review": "machine",
+  "x-source": "b7e5ba6b1d"
+ },
+ "obj.row.srad": "Radius",
+ "@obj.row.srad": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.steff": "Effektivtemperatur",
+ "@obj.row.steff": {
+  "x-review": "machine",
+  "x-source": "bcd5903c63"
+ },
+ "obj.row.teq": "Gleichgewichtstemperatur",
+ "@obj.row.teq": {
+  "x-review": "machine",
+  "x-source": "a3016009fd"
+ },
+ "obj.row.tmeas": "Gemessene Temperatur",
+ "@obj.row.tmeas": {
+  "x-review": "machine",
+  "x-source": "592546ce16"
+ },
+ "obj.row.vmag": "V-Helligkeit",
+ "@obj.row.vmag": {
+  "x-review": "machine",
+  "x-source": "963ef1a54e"
+ },
+ "obj.sysview": "Systemansicht von",
+ "@obj.sysview": {
+  "x-review": "machine",
+  "x-source": "8f2681a95c"
+ },
+ "obj.units": "Einheiten wie bei {source} gespeichert. Fehler sind die gespeicherten unteren und oberen Grenzen; wo keine gespeichert sind, wird keiner gezeigt.",
+ "@obj.units": {
+  "x-review": "machine",
+  "x-source": "1d415a6e1a"
+ },
+ "obj.where": "Wo er ist",
+ "@obj.where": {
+  "x-review": "machine",
+  "x-source": "751c664982"
+ },
+ "out.dash.footer": "Erstellt von SetuHQ. Ergebnisse auf synthetischen Daten sind keine Aussagen über echte Himmelsdaten.",
+ "@out.dash.footer": {
+  "x-review": "machine",
+  "x-source": "98762ed655"
+ },
+ "out.feed.candidates": "Dies sind Kandidaten.",
+ "@out.feed.candidates": {
+  "x-review": "machine",
+  "x-source": "ee9b7f2cdf"
+ },
+ "out.feed.h1": "Such-Feed",
+ "@out.feed.h1": {
+  "x-review": "machine",
+  "x-source": "22bc3c8839"
+ },
+ "out.feed.held": "Zur Prüfung zurückgehalten",
+ "@out.feed.held": {
+  "x-review": "machine",
+  "x-source": "57b7af20f8"
+ },
+ "out.feed.nights": "Einträge pro Nacht",
+ "@out.feed.nights": {
+  "x-review": "machine",
+  "x-source": "6cd04f7bc5"
+ },
+ "out.plate.interval": "Das Konsensintervall eines Dips ist dort, wo ihre Markierungen übereinstimmen.",
+ "@out.plate.interval": {
+  "x-review": "machine",
+  "x-source": "1780c6e536"
+ },
+ "out.plate.others": "Tafeln der anderen Beispielsterne",
+ "@out.plate.others": {
+  "x-review": "machine",
+  "x-source": "df7ef77948"
+ },
+ "out.plate.panel": "Das Panel sind die Sentinels und die Probes, keine Menschen.",
+ "@out.plate.panel": {
+  "x-review": "machine",
+  "x-source": "15066e34e3"
+ },
+ "out.report.benchmark": "Injektion und Wiederfindung",
+ "@out.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "6da1d36286"
+ },
+ "out.report.candidates": "Kandidaten",
+ "@out.report.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "out.report.panel": "Entscheidungen des Panels",
+ "@out.report.panel": {
+  "x-review": "machine",
+  "x-source": "a929a43913"
+ },
+ "out.report.panel.p": "Die Antwort jedes Prüfers zu jedem blind codierten Ausschnitt. Uneinigkeit bleibt sichtbar, denn dort wird der Konsens verdient.",
+ "@out.report.panel.p": {
+  "x-review": "machine",
+  "x-source": "da09405f36"
+ },
+ "out.report.pipeline": "Wie ein Lauf funktioniert",
+ "@out.report.pipeline": {
+  "x-review": "machine",
+  "x-source": "baad56eb35"
+ },
+ "out.report.provenance": "Herkunft",
+ "@out.report.provenance": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "out.report.validation": "Validierung an bekannten Planeten",
+ "@out.report.validation": {
+  "x-review": "machine",
+  "x-source": "4432fa961d"
+ },
+ "panel.both": "{s, plural, one {# Sentinel} other {# Sentinels}} und {p, plural, one {# Probe} other {# Probes}}",
+ "@panel.both": {
+  "x-review": "machine",
+  "x-source": "c6e6d6aa5e"
+ },
+ "panel.probes": "{p, plural, one {# Probe} other {# Probes}}",
+ "@panel.probes": {
+  "x-review": "machine",
+  "x-source": "5dce100851"
+ },
+ "panel.sentinels": "{s, plural, one {# Sentinel} other {# Sentinels}}",
+ "@panel.sentinels": {
+  "x-review": "machine",
+  "x-source": "70f14c3441"
+ },
+ "pic.colour": "Sternfarbe",
+ "@pic.colour": {
+  "x-review": "machine",
+  "x-source": "dfe6307835"
+ },
+ "pic.draw": "Der Stern und der Transit",
+ "@pic.draw": {
+  "x-review": "machine",
+  "x-source": "e0d9fd74d5"
+ },
+ "pic.h1": "Wie die Bilder gezeichnet werden.",
+ "@pic.h1": {
+  "x-review": "machine",
+  "x-source": "b56c1f91df"
+ },
+ "pic.intro": "Jeder Stern auf SetuHQ wird in seiner Schwarzkörperfarbe nach seiner gespeicherten Temperatur gezeichnet. Jeder Planet ist eine künstlerische Darstellung: Sein Aussehen wird nach zwei gemessenen Größen gewählt, seinem Radius (oder, ohne ihn, seiner Masse) und dem Licht, das er von seinem Stern erhält. Nichts in einem Bild ist über diese Zahlen hinaus gemessen, und die Zusammensetzung nie.",
+ "@pic.intro": {
+  "x-review": "machine",
+  "x-source": "3cf76ad409"
+ },
+ "pic.labels": "Die fünf Kennzeichnungen",
+ "@pic.labels": {
+  "x-review": "machine",
+  "x-source": "51668dd62a"
+ },
+ "pic.labels.p": "Jedes Bild auf der Website trägt eine davon, auf dem Bild selbst.",
+ "@pic.labels.p": {
+  "x-review": "machine",
+  "x-source": "880b424ff6"
+ },
+ "pic.real": "Was echt ist und was gezeichnet",
+ "@pic.real": {
+  "x-review": "machine",
+  "x-source": "79bd58ea67"
+ },
+ "pic.rules": "Die Regeln",
+ "@pic.rules": {
+  "x-review": "machine",
+  "x-source": "e3954c7ee3"
+ },
+ "pic.still": "Mit reduzierter Bewegung",
+ "@pic.still": {
+  "x-review": "machine",
+  "x-source": "a42e838475"
+ },
+ "pic.still.p": "Wenn Ihr Gerät reduzierte Bewegung verlangt, läuft nichts in Schleife: Jede Zeichnung zeigt ein gestaltetes Einzelbild, und alles, was abläuft, wartet auf seine Schaltfläche.",
+ "@pic.still.p": {
+  "x-review": "machine",
+  "x-source": "b12a8bfb34"
+ },
+ "pic.table": "Die Tabelle der Erscheinungsbilder",
+ "@pic.table": {
+  "x-review": "machine",
+  "x-source": "5bf530d59d"
+ },
+ "pr.h1": "Einen CHEOPS-Antrag vorbereiten.",
+ "@pr.h1": {
+  "x-review": "machine",
+  "x-source": "c189d495dd"
+ },
+ "pr.intro": "<code>setuhq propose cheops</code> schreibt ein Vorbereitungspaket für den CHEOPS Guest Observers Running Call: die geprüften Regeln, den Status des Ziels, Planungsschätzungen, anonymisierte Entwürfe und die sieben Schritte der ESA als Checkliste. Die Werkzeuge der ESA führen Sie selbst aus, und Sie reichen selbst ein.",
+ "@pr.intro": {
+  "x-review": "machine",
+  "x-source": "6893d1fea2"
+ },
+ "route.candidates.label": "Fallakte",
+ "@route.candidates.label": {
+  "x-review": "machine",
+  "x-source": "d12f22e06a"
+ },
+ "route.candidates.title": "Fallakte zu {name} · Kandidaten · SetuHQ",
+ "@route.candidates.title": {
+  "x-review": "machine",
+  "x-source": "6265efaa30"
+ },
+ "route.catalogue.label": "Katalog",
+ "@route.catalogue.label": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "route.catalogue.title": "Katalog bekannter Exoplaneten · SetuHQ",
+ "@route.catalogue.title": {
+  "x-review": "machine",
+  "x-source": "1d55d9e531"
+ },
+ "route.docs.label": "Doku",
+ "@route.docs.label": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "route.docs.title": "Doku: Erste Schritte mit SetuHQ · SetuHQ",
+ "@route.docs.title": {
+  "x-review": "machine",
+  "x-source": "273729a761"
+ },
+ "route.editions.label": "Editionen",
+ "@route.editions.label": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "route.editions.title": "Editionen: offener Kern, SetuHQ Pro und individuelle Studie · SetuHQ",
+ "@route.editions.title": {
+  "x-review": "machine",
+  "x-source": "facd044991"
+ },
+ "route.explorer.label": "Kandidaten",
+ "@route.explorer.label": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "route.explorer.title": "Kandidaten · SetuHQ",
+ "@route.explorer.title": {
+  "x-review": "machine",
+  "x-source": "3377897bfa"
+ },
+ "route.galaxy.label": "Galaxie",
+ "@route.galaxy.label": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "route.galaxy.title": "Galaxie · Erkunden · SetuHQ",
+ "@route.galaxy.title": {
+  "x-review": "machine",
+  "x-source": "ad11918632"
+ },
+ "route.leaderboard.label": "Rangliste",
+ "@route.leaderboard.label": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "route.leaderboard.title": "Rangliste · Belege · SetuHQ",
+ "@route.leaderboard.title": {
+  "x-review": "machine",
+  "x-source": "2b687acd99"
+ },
+ "route.methods.label": "So funktioniert es",
+ "@route.methods.label": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "route.methods.title": "{name} · So funktioniert es · SetuHQ",
+ "@route.methods.title": {
+  "x-review": "machine",
+  "x-source": "1cbf3454bd"
+ },
+ "route.mission.label": "Mission Control",
+ "@route.mission.label": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "route.mission.title": "Mission Control · Erkunden · SetuHQ",
+ "@route.mission.title": {
+  "x-review": "machine",
+  "x-source": "3bbcc04226"
+ },
+ "route.notfound.label": "Seite nicht gefunden",
+ "@route.notfound.label": {
+  "x-review": "machine",
+  "x-source": "a469ab4ca4"
+ },
+ "route.notfound.title": "Seite nicht gefunden · SetuHQ",
+ "@route.notfound.title": {
+  "x-review": "machine",
+  "x-source": "9ba0459ab7"
+ },
+ "route.overview.label": "Start",
+ "@route.overview.label": {
+  "x-review": "machine",
+  "x-source": "3a78695388"
+ },
+ "route.overview.title": "SetuHQ: der Himmel, geprüft",
+ "@route.overview.title": {
+  "x-review": "machine",
+  "x-source": "1159339ef0"
+ },
+ "route.pictures.label": "Wie die Bilder gezeichnet werden",
+ "@route.pictures.label": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "route.pictures.title": "Wie die Bilder gezeichnet werden · Doku · SetuHQ",
+ "@route.pictures.title": {
+  "x-review": "machine",
+  "x-source": "09b9052231"
+ },
+ "route.planet.label": "Planet",
+ "@route.planet.label": {
+  "x-review": "machine",
+  "x-source": "b6e3957877"
+ },
+ "route.planet.title": "{name} · Planeten · SetuHQ",
+ "@route.planet.title": {
+  "x-review": "machine",
+  "x-source": "1fcbb7f176"
+ },
+ "route.planets.label": "Radienverhältnisse",
+ "@route.planets.label": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "route.planets.title": "Radienverhältnisse · Kandidaten · SetuHQ",
+ "@route.planets.title": {
+  "x-review": "machine",
+  "x-source": "ac2e38c1f9"
+ },
+ "route.plates.label": "Tafeln",
+ "@route.plates.label": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "route.propose.label": "CHEOPS-Anträge",
+ "@route.propose.label": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "route.propose.title": "Einen CHEOPS-Antrag vorbereiten · Doku · SetuHQ",
+ "@route.propose.title": {
+  "x-review": "machine",
+  "x-source": "6f87c679a9"
+ },
+ "route.report.label": "Laufbericht",
+ "@route.report.label": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "route.runs.label": "Läufe",
+ "@route.runs.label": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "route.runs.title": "Läufe · Belege · SetuHQ",
+ "@route.runs.title": {
+  "x-review": "machine",
+  "x-source": "004653c043"
+ },
+ "route.sentinels.label": "Das Panel",
+ "@route.sentinels.label": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "route.sentinels.title": "Belege: das Panel, gemessen · SetuHQ",
+ "@route.sentinels.title": {
+  "x-review": "machine",
+  "x-source": "789dfd2a1e"
+ },
+ "route.sky.label": "Himmelskarte",
+ "@route.sky.label": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "route.sky.title": "Den Himmel erkunden · SetuHQ",
+ "@route.sky.title": {
+  "x-review": "machine",
+  "x-source": "8b6fb90a8b"
+ },
+ "route.star.label": "Stern",
+ "@route.star.label": {
+  "x-review": "machine",
+  "x-source": "e357d39687"
+ },
+ "route.star.title": "{name} · Sterne · SetuHQ",
+ "@route.star.title": {
+  "x-review": "machine",
+  "x-source": "fbb83b9cf8"
+ },
+ "route.stellar.label": "Sterne",
+ "@route.stellar.label": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "route.stellar.title": "Sterne, gemessen: Flares und Pulsationen · Belege · SetuHQ",
+ "@route.stellar.title": {
+  "x-review": "machine",
+  "x-source": "67e92dbcd1"
+ },
+ "route.stellardocs.label": "Flares und Pulsationen",
+ "@route.stellardocs.label": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "route.stellardocs.title": "Flares, Pulsationen und CHEOPS · Doku · SetuHQ",
+ "@route.stellardocs.title": {
+  "x-review": "machine",
+  "x-source": "ed9c362b70"
+ },
+ "route.tessnow.label": "Wo TESS gerade ist",
+ "@route.tessnow.label": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "route.tessnow.title": "Wohin TESS schaut · Erkunden · SetuHQ",
+ "@route.tessnow.title": {
+  "x-review": "machine",
+  "x-source": "b9141101d4"
+ },
+ "route.transit.label": "Kandidat",
+ "@route.transit.label": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
+ "route.transit.title": "{name} · Kandidaten · SetuHQ",
+ "@route.transit.title": {
+  "x-review": "machine",
+  "x-source": "e3d2dd556b"
+ },
+ "route.variables.label": "Alles, was sich verdunkelt",
+ "@route.variables.label": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "route.variables.title": "Alles, was sich verdunkelt · Katalog · SetuHQ",
+ "@route.variables.title": {
+  "x-review": "machine",
+  "x-source": "85fdb3c494"
+ },
+ "route.vetter.label": "Selbst prüfen",
+ "@route.vetter.label": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "route.vetter.title": "Selbst prüfen · Kandidaten · SetuHQ",
+ "@route.vetter.title": {
+  "x-review": "machine",
+  "x-source": "f8e3bf1fc8"
+ },
+ "rr.h1": "Was jede Tiefe bedeuten würde, wäre es ein Planet.",
+ "@rr.h1": {
+  "x-review": "machine",
+  "x-source": "ff54ab4721"
+ },
+ "rr.intro": "Eine Karte pro Stern im Lauf oder im Feed. Jeder Eintrag ist ein {status}; das Verhältnis darunter ist das, was seine gespeicherte Tiefe ergibt, wäre er ein Planet.",
+ "@rr.intro": {
+  "x-review": "machine",
+  "x-source": "9889e603bf"
+ },
+ "runs.h1": "Jeder Suchlauf, seine Fehler wie gespeichert und die Konfiguration hinter diesen Seiten.",
+ "@runs.h1": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "runs.hist": "Suchläufe",
+ "@runs.hist": {
+  "x-review": "machine",
+  "x-source": "26d6d37f90"
+ },
+ "runs.intro": "Der Verlauf der Suchläufe aus dem Katalog und die Konfiguration des Laufs {run}. Fehlermeldungen werden wie gespeichert gezeigt.",
+ "@runs.intro": {
+  "x-review": "machine",
+  "x-source": "95d99973c5"
+ },
+ "sd.h1": "Flares, Pulsationen und CHEOPS.",
+ "@sd.h1": {
+  "x-review": "machine",
+  "x-source": "a0c598f487"
+ },
+ "sd.intro": "Sechs Befehle betrachten den Stern statt seiner Planeten. Jeder schreibt einen JSON-Datensatz mit seinem Ergebnis, seiner Herkunft (Version, Code-Fingerabdruck, sha256 jeder Eingabe) und seinen Kennzeichnungen. Ein Flare oder eine Frequenz wird mit einer angegebenen Signifikanz detektiert, nie bestätigt; ein Variabilitätstyp ist wahrscheinlich oder ein Kandidat.",
+ "@sd.intro": {
+  "x-review": "machine",
+  "x-source": "d9fdd750e3"
+ },
+ "sen.h1": "{n, plural, one {# Prüfer.} other {# Prüfer.}}",
+ "@sen.h1": {
+  "x-review": "machine",
+  "x-source": "18e2721f25"
+ },
+ "sen.h1b": "Jeder verdient sich seine Stimme.",
+ "@sen.h1b": {
+  "x-review": "machine",
+  "x-source": "67b1d265c9"
+ },
+ "sen.intro": "Das Panel, das im Lauf {run} Dips markiert hat: die Sentinels und die Probes, keine Menschen.",
+ "@sen.intro": {
+  "x-review": "machine",
+  "x-source": "cfd243554e"
+ },
+ "shell.bootnote": "Die interaktiven Teile dieser Seite konnten nicht geladen werden. Ihr Text oben ist vollständig; laden Sie neu, um es noch einmal zu versuchen.",
+ "@shell.bootnote": {
+  "x-review": "machine",
+  "x-source": "a2f1ab571c"
+ },
+ "shell.breadcrumb": "Brotkrumen",
+ "@shell.breadcrumb": {
+  "x-review": "machine",
+  "x-source": "2bd873d6c7"
+ },
+ "shell.copy_view": "Link zu dieser Ansicht kopieren",
+ "@shell.copy_view": {
+  "x-review": "machine",
+  "x-source": "709937ae3d"
+ },
+ "shell.home": "SetuHQ, Startseite",
+ "@shell.home": {
+  "x-review": "machine",
+  "x-source": "970b8e33a0"
+ },
+ "shell.in_section": "In diesem Bereich",
+ "@shell.in_section": {
+  "x-review": "machine",
+  "x-source": "a4b1dbff1e"
+ },
+ "shell.menu_close": "Menü schließen",
+ "@shell.menu_close": {
+  "x-review": "machine",
+  "x-source": "d992820f3c"
+ },
+ "shell.menu_open": "Menü öffnen",
+ "@shell.menu_open": {
+  "x-review": "machine",
+  "x-source": "fc798c613b"
+ },
+ "shell.nav_main": "Hauptmenü",
+ "@shell.nav_main": {
+  "x-review": "machine",
+  "x-source": "eb814be3ca"
+ },
+ "shell.search": "Planeten, Sterne und Seiten durchsuchen (Taste /)",
+ "@shell.search": {
+  "x-review": "machine",
+  "x-source": "781eaaf920"
+ },
+ "shell.search_title": "Suche (/)",
+ "@shell.search_title": {
+  "x-review": "machine",
+  "x-source": "bae77fae53"
+ },
+ "shell.skip": "Zum Inhalt springen",
+ "@shell.skip": {
+  "x-review": "machine",
+  "x-source": "ac576a66d4"
+ },
+ "shell.theme.dark": "dunkel",
+ "@shell.theme.dark": {
+  "x-review": "machine",
+  "x-source": "e6bb5689be"
+ },
+ "shell.theme.label": "Farbschema: {t}. Wechseln zu {next}",
+ "@shell.theme.label": {
+  "x-review": "machine",
+  "x-source": "c4ccc7de70"
+ },
+ "shell.theme.light": "hell",
+ "@shell.theme.light": {
+  "x-review": "machine",
+  "x-source": "99a7026172"
+ },
+ "shell.theme.system": "Einstellung Ihres Geräts",
+ "@shell.theme.system": {
+  "x-review": "machine",
+  "x-source": "2b67477bad"
+ },
+ "shell.theme.title": "Schema: {t}",
+ "@shell.theme.title": {
+  "x-review": "machine",
+  "x-source": "79f90fbb1e"
+ },
+ "shell.view_link": "Link zu dieser Ansicht",
+ "@shell.view_link": {
+  "x-review": "machine",
+  "x-source": "5fb2ec761c"
+ },
+ "sky.tl": "Jedes Jahr gefundene Planeten, nach Methode",
+ "@sky.tl": {
+  "x-review": "machine",
+  "x-source": "10dff603f9"
+ },
+ "st.figs": "Was die Detektoren sehen",
+ "@st.figs": {
+  "x-review": "machine",
+  "x-source": "ff3ec0553b"
+ },
+ "st.h1": "Sterne, gemessen.",
+ "@st.h1": {
+  "x-review": "machine",
+  "x-source": "ec1ba1f8f3"
+ },
+ "st.intro": "Über Planeten hinaus detektiert SetuHQ stellare Flares, extrahiert Pulsationsfrequenzen, liest öffentliche CHEOPS-Lichtkurven und findet Bedeckungsveränderliche, Rotationsperioden und Transienten. Jede Fähigkeit wurde nach einem vor ihrem Lauf festgelegten Protokoll mit veröffentlichten Ergebnissen verglichen, und jede Seite und jede Werkzeugausgabe sagt, wie weit ihre Validierung reicht.",
+ "@st.intro": {
+  "x-review": "machine",
+  "x-source": "7f59c8f0fc"
+ },
+ "subnav.candidates": "Fallakten",
+ "@subnav.candidates": {
+  "x-review": "machine",
+  "x-source": "379b0a5b2b"
+ },
+ "subnav.catalogue": "Katalog",
+ "@subnav.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "subnav.docs": "Erste Schritte",
+ "@subnav.docs": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "subnav.editions": "Editionen",
+ "@subnav.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "subnav.explorer": "Alle Kandidaten",
+ "@subnav.explorer": {
+  "x-review": "machine",
+  "x-source": "e2df94228e"
+ },
+ "subnav.galaxy": "Galaxie",
+ "@subnav.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "subnav.leaderboard": "Rangliste",
+ "@subnav.leaderboard": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "subnav.mission": "Mission Control",
+ "@subnav.mission": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "subnav.pictures": "Wie die Bilder gezeichnet werden",
+ "@subnav.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "subnav.planets": "Radienverhältnisse",
+ "@subnav.planets": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "subnav.plates": "Tafeln",
+ "@subnav.plates": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "subnav.propose": "CHEOPS-Anträge",
+ "@subnav.propose": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "subnav.report": "Laufbericht",
+ "@subnav.report": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "subnav.runs": "Läufe",
+ "@subnav.runs": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "subnav.sentinels": "Das Panel",
+ "@subnav.sentinels": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "subnav.sky": "Himmelskarte",
+ "@subnav.sky": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "subnav.stellar": "Sterne",
+ "@subnav.stellar": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "subnav.stellardocs": "Flares und Pulsationen",
+ "@subnav.stellardocs": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "subnav.tessnow": "Wo TESS gerade ist",
+ "@subnav.tessnow": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "subnav.transit": "Dips",
+ "@subnav.transit": {
+  "x-review": "machine",
+  "x-source": "25efb1bd33"
+ },
+ "subnav.variables": "Alles, was sich verdunkelt",
+ "@subnav.variables": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "subnav.vetter": "Selbst prüfen",
+ "@subnav.vetter": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "tn.h1": "Wohin TESS schaut.",
+ "@tn.h1": {
+  "x-review": "machine",
+  "x-source": "33a70ec6b1"
+ },
+ "tn.intro": "Der NASA-Satellit TESS beobachtet etwa vier Wochen lang einen Himmelsstreifen (einen Sektor), mit vier Kameras von je 24° mal 24°. Diese Karte zeigt die Streifen nach dem veröffentlichten Zeitplan und die Sterne mit bekannten Planeten darin.",
+ "@tn.intro": {
+  "x-review": "machine",
+  "x-source": "6cbf61a637"
+ },
+ "var.h1": "Alles, was sich verdunkelt.",
+ "@var.h1": {
+  "x-review": "machine",
+  "x-source": "00cffacfe5"
+ },
+ "var.h1b": "{n, number} Einträge, keiner verworfen.",
+ "@var.h1b": {
+  "x-review": "machine",
+  "x-source": "af9b7536fe"
+ },
+ "var.intro": "Jeder Konsens-Dip des Panels, jede Aufhellung und die Variabilität jedes Sterns aus dem Sweep, jeweils nach einer angegebenen Regel klassifiziert, mit Konfidenz, Hinweisen und Herkunft: den Markierungen, den Gewichten und den eigenen Worten der Sentinels.",
+ "@var.intro": {
+  "x-review": "machine",
+  "x-source": "a3cde2962d"
+ },
+ "vt.h1": "Selbst prüfen.",
+ "@vt.h1": {
+  "x-review": "machine",
+  "x-source": "bc56851e50"
+ },
+ "vt.intro": "Jede Karte ist ein echter Dip, den einer der Beispielläufe von SetuHQ gespeichert hat. Sehen Sie sich seine Lichtkurve, seine Faltung, seine geraden und ungeraden Tiefen und seine Tiefe eine halbe Umlaufbahn später an und entscheiden Sie dann: bestanden, markiert oder verworfen. Sehen Sie dann, was das Vetting entschieden hat, und warum.",
+ "@vt.intro": {
+  "x-review": "machine",
+  "x-source": "2d2a3a79d4"
+ }
+}

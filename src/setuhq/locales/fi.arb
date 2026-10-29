@@ -1,0 +1,3034 @@
+{
+ "@@locale": "fi",
+ "@@x-source-locale": "en",
+ "cat.h1": "Jokainen tunnettu eksoplaneetta.",
+ "@cat.h1": {
+  "x-review": "machine",
+  "x-source": "c12b2894d2"
+ },
+ "cat.h1b": "{n, number} tietuetta, haettavissa.",
+ "@cat.h1b": {
+  "x-review": "machine",
+  "x-source": "0082f39a49"
+ },
+ "cat.intro": "Kaikki {n, number} planeettaa lähteestä {source}, mukaan lukien ne {nodist, number}, joilta puuttuu tallennettu etäisyys ja joita Linnunradan kartta ei voi sijoittaa. SetuHQ ei ole löytänyt näitä planeettoja; se luetteloi ne.",
+ "@cat.intro": {
+  "x-review": "machine",
+  "x-source": "ca9826547d"
+ },
+ "cf.h1": "Jokainen signaali, sen notkahdukset ja tarkistukset jokaisen ratkaisun takana.",
+ "@cf.h1": {
+  "x-review": "machine",
+  "x-source": "2b73eb58d2"
+ },
+ "cf.intro": "Notkahduksen ajon tapauskansio: jokainen signaali ja sen notkahdukset, seulonnan tulos, ylikulkunauha ja ratkaisuloki. Jokainen seulonnan läpäissyt signaali on {status}; hylätty tai merkitty signaali nimetään tilansa mukaan.",
+ "@cf.intro": {
+  "x-review": "machine",
+  "x-source": "252d456e94"
+ },
+ "chapter.astrometry": "Astrometria",
+ "@chapter.astrometry": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
+ "chapter.doppler": "Lähestyy ja loittonee",
+ "@chapter.doppler": {
+  "x-review": "machine",
+  "x-source": "982502489b"
+ },
+ "chapter.equations": "Elämän yhtälöt",
+ "@chapter.equations": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
+ "chapter.falsepos": "Väärät positiiviset",
+ "@chapter.falsepos": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
+ "chapter.history": "Historia ja artikkelit",
+ "@chapter.history": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "chapter.imaging": "Tähden valon peittäminen",
+ "@chapter.imaging": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
+ "chapter.microlensing": "Mikrolinssi-ilmiö",
+ "@chapter.microlensing": {
+  "x-review": "machine",
+  "x-source": "7713c65bef"
+ },
+ "chapter.molecules": "Molekyylit ja elämä",
+ "@chapter.molecules": {
+  "x-review": "machine",
+  "x-source": "d0ac3c4b97"
+ },
+ "chapter.population": "Populaatio",
+ "@chapter.population": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
+ "chapter.radio": "Radio",
+ "@chapter.radio": {
+  "x-review": "machine",
+  "x-source": "2a7dfeb2f2"
+ },
+ "chapter.rv": "Säteisnopeus",
+ "@chapter.rv": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
+ "chapter.spectroscopy": "Kaasukehien lukeminen",
+ "@chapter.spectroscopy": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
+ },
+ "chapter.survey": "Miten kartoitus toimii",
+ "@chapter.survey": {
+  "x-review": "machine",
+  "x-source": "418a56729e"
+ },
+ "chapter.timing": "Ajoitus ja vaihe",
+ "@chapter.timing": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
+ },
+ "chapter.transit": "Ylikulku",
+ "@chapter.transit": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
+ },
+ "cli.argparse.argument": "argumentti %(argument_name)s: %(message)s",
+ "@cli.argparse.argument": {
+  "x-review": "machine",
+  "x-source": "2ee7b9a91a"
+ },
+ "cli.argparse.choice": "virheellinen valinta: %(value)r (vaihtoehdot: %(choices)s)",
+ "@cli.argparse.choice": {
+  "x-review": "machine",
+  "x-source": "9dbc964dd3"
+ },
+ "cli.argparse.error": "%(prog)s: virhe: %(message)s\n",
+ "@cli.argparse.error": {
+  "x-review": "machine",
+  "x-source": "954b9f0ae6"
+ },
+ "cli.argparse.help": "näytä tämä ohje ja lopeta",
+ "@cli.argparse.help": {
+  "x-review": "machine",
+  "x-source": "608017daf4"
+ },
+ "cli.argparse.one": "odotettiin yhtä argumenttia",
+ "@cli.argparse.one": {
+  "x-review": "machine",
+  "x-source": "d5d4f7b111"
+ },
+ "cli.argparse.options": "valitsimet",
+ "@cli.argparse.options": {
+  "x-review": "machine",
+  "x-source": "a793ab8fcc"
+ },
+ "cli.argparse.positional": "sijaintiargumentit",
+ "@cli.argparse.positional": {
+  "x-review": "machine",
+  "x-source": "a5f91c7a58"
+ },
+ "cli.argparse.required": "seuraavat argumentit vaaditaan: %s",
+ "@cli.argparse.required": {
+  "x-review": "machine",
+  "x-source": "25fb5034ca"
+ },
+ "cli.argparse.unrecognized": "tunnistamattomat argumentit: %s",
+ "@cli.argparse.unrecognized": {
+  "x-review": "machine",
+  "x-source": "5ed6ba5c37"
+ },
+ "cli.argparse.usage": "käyttö:",
+ "@cli.argparse.usage": {
+  "x-review": "machine",
+  "x-source": "d85f7a9a6f"
+ },
+ "cli.argparse.version": "näytä ohjelman versionumero ja lopeta",
+ "@cli.argparse.version": {
+  "x-review": "machine",
+  "x-source": "d534d67f66"
+ },
+ "cli.cmd.app": "sama kuin 'setuhq site' (vanha nimi ajalta, jolloin sivusto oli yksi sovellussivu)",
+ "@cli.cmd.app": {
+  "x-review": "machine",
+  "x-source": "f119fa15f1"
+ },
+ "cli.cmd.batch": "aja discover-kulku kohdeluettelon yli, välimuistilla ja jatkettavasti",
+ "@cli.cmd.batch": {
+  "x-review": "machine",
+  "x-source": "40b27855e9"
+ },
+ "cli.cmd.benchmark": "injektio- ja palautusvertailu määritetylle paneelille",
+ "@cli.cmd.benchmark": {
+  "x-review": "machine",
+  "x-source": "4c26cdd1fc"
+ },
+ "cli.cmd.binaries": "pimennysmuuttujat sekä ellipsoidiset tai heijastusmuuttujat: jakso, pimennykset, toisiopimennyksen vaihe (vihje e cos w:stä), morfologia; kandidaattimerkintä perusteluineen",
+ "@cli.cmd.binaries": {
+  "x-review": "machine",
+  "x-source": "0abdc48c4a"
+ },
+ "cli.cmd.bundle": "vie pyyhkäisyn sektoritietue osallistumispakettina, sinetöitynä sisältötiivisteillä",
+ "@cli.cmd.bundle": {
+  "x-review": "machine",
+  "x-source": "9852df2e94"
+ },
+ "cli.cmd.calibrate": "arvioi arvioijien painot injektiolla",
+ "@cli.cmd.calibrate": {
+  "x-review": "machine",
+  "x-source": "207a6e9d1b"
+ },
+ "cli.cmd.check-sweep": "tarkista, että jokainen osallistuminen on otettu mukaan ja ehjä ja että luettelo vastaa sitä, mitä sen varmennetut lähteet rakentavat",
+ "@cli.cmd.check-sweep": {
+  "x-review": "machine",
+  "x-source": "5634f750a9"
+ },
+ "cli.cmd.cheops": "CHEOPS Guest Observers Running Call: kirjoita ehdotuksen valmistelupaketti",
+ "@cli.cmd.cheops": {
+  "x-review": "machine",
+  "x-source": "4f36cba2a0"
+ },
+ "cli.cmd.crossmatch": "kysy NASA Exoplanet Archivelta ajon kohteet ja tallenna crossmatch.json",
+ "@cli.cmd.crossmatch": {
+  "x-review": "machine",
+  "x-source": "3b450e6853"
+ },
+ "cli.cmd.dashboard": "rakenna vuorovaikutteinen kojelauta ajosta ja valinnaisesta löytöluettelosta",
+ "@cli.cmd.dashboard": {
+  "x-review": "machine",
+  "x-source": "75a27378f8"
+ },
+ "cli.cmd.discover": "aja yksi ajastettu löytöerä ja päivitä luettelo",
+ "@cli.cmd.discover": {
+  "x-review": "machine",
+  "x-source": "c89cac74a5"
+ },
+ "cli.cmd.docket": "rakenna ajon kandidaattien tapauskansionäkymä",
+ "@cli.cmd.docket": {
+  "x-review": "machine",
+  "x-source": "6d3fd99980"
+ },
+ "cli.cmd.export": "kirjoita ExoFOPin CTOI-tyylinen taulukko ja ennustetut ylikulkuikkunat ajolle",
+ "@cli.cmd.export": {
+  "x-review": "machine",
+  "x-source": "20cf1a8c0c"
+ },
+ "cli.cmd.flares": "havaitse tähtien purkauksia: morfologia, energiat, kattavuus ja nollatesti",
+ "@cli.cmd.flares": {
+  "x-review": "machine",
+  "x-source": "9d57912ca7"
+ },
+ "cli.cmd.ingest": "validoi osallistumispaketti ja yhdistä se luetteloon nimen mainiten",
+ "@cli.cmd.ingest": {
+  "x-review": "machine",
+  "x-source": "d729fd0e7d"
+ },
+ "cli.cmd.leaderboard": "pisteytä osallistuminen jäädytetyn todellisten TOI-kohteiden vertailuaineiston pidätetyllä puoliskolla tai rakenna docs/leaderboard uudelleen jokaisesta tallennetusta osallistumisesta",
+ "@cli.cmd.leaderboard": {
+  "x-review": "machine",
+  "x-source": "eff0c84e54"
+ },
+ "cli.cmd.lint": "tarkista ehdotuksen teksti (tai PDF pypdf:llä) kaiken varalta, mikä rikkoo anonymiteetin; apu, ei takuu",
+ "@cli.cmd.lint": {
+  "x-review": "machine",
+  "x-source": "dec0a3adc2"
+ },
+ "cli.cmd.mcp": "käynnistä MCP-palvelin stdio:n yli, kuten setuhq-mcp (vaatii mcp-lisäosan: pip install 'setuhq[mcp]')",
+ "@cli.cmd.mcp": {
+  "x-review": "machine",
+  "x-source": "36efd33521"
+ },
+ "cli.cmd.plate": "rakenna painovalmis kuvalaattasivu: yksi laatta tähteä kohden, kuvateksteineen",
+ "@cli.cmd.plate": {
+  "x-review": "machine",
+  "x-source": "54445abdca"
+ },
+ "cli.cmd.propose": "valmistele havaintoehdotus (valmistelupaketti; mitään ei lähetetä)",
+ "@cli.cmd.propose": {
+  "x-review": "machine",
+  "x-source": "f565d45d49"
+ },
+ "cli.cmd.pulsations": "taajuusanalyysi: esivalkaisu, yhdistelmät, tausta, numax/Δν, tyyppi",
+ "@cli.cmd.pulsations": {
+  "x-review": "machine",
+  "x-source": "6f493bd600"
+ },
+ "cli.cmd.rebuild": "seulo tallennettu ajo uudelleen (sovitus, FAP, merkinnät) sen tallennetuista luokituksista",
+ "@cli.cmd.rebuild": {
+  "x-review": "machine",
+  "x-source": "aaf332ed6a"
+ },
+ "cli.cmd.report": "rakenna staattinen HTML-raporttisivusto ajohakemistosta",
+ "@cli.cmd.report": {
+  "x-review": "machine",
+  "x-source": "52964d6b1b"
+ },
+ "cli.cmd.rotation": "pyörimisjakso tähtipilkkujen modulaatiosta (Lomb-Scargle ja ACF), sektoreittain; yli noin 13 d jaksoja ei mitata",
+ "@cli.cmd.rotation": {
+  "x-review": "machine",
+  "x-source": "ce419593f9"
+ },
+ "cli.cmd.run": "aja putki määritystiedoston kohteille",
+ "@cli.cmd.run": {
+  "x-review": "machine",
+  "x-source": "ebbdd3027a"
+ },
+ "cli.cmd.site": "rakenna verkkosivusto (jokainen sivu, jaetut tiedostot, raportit, kuvalaatat ja tapauskansiot) yhdestä tai useammasta ajosta",
+ "@cli.cmd.site": {
+  "x-review": "machine",
+  "x-source": "bdfe2af14f"
+ },
+ "cli.cmd.sweep": "tutki TESS-sektorin SPOCin 2 minuutin kohteet (jatkettavasti) vaihteluluetteloon",
+ "@cli.cmd.sweep": {
+  "x-review": "machine",
+  "x-source": "7da0597b32"
+ },
+ "cli.cmd.transients": "jaksottomat kirkastumiset: nousu, lasku, amplitudi, luokkavihjeet ja väärien hälytysten suodattimet SPOC-valokäyrässä tai minkä tahansa sijainnin TESScut-rajauksessa",
+ "@cli.cmd.transients": {
+  "x-review": "machine",
+  "x-source": "edf6a53e13"
+ },
+ "cli.desc.propose.cheops": "SetuHQ on riippumaton, eikä se ole sidoksissa ESAan, CHEOPS-tehtävään tai CHEOPS-konsortioon, eikä niiden hyväksymä tai niiden puolesta ylläpidetty. Se ei korvaa ESA:n Target Checker-, Visibility Tool-, Exposure Time Calculator- tai Scheduling Feasibility Checker -työkaluja eikä Policies & Procedures -asiakirjaa; virallinen haku ja viralliset työkalut ovat ratkaisevia.",
+ "@cli.desc.propose.cheops": {
+  "x-review": "machine",
+  "x-source": "cceac73b43"
+ },
+ "cli.desc.setuhq": "Komentorivikäyttöliittymä: ``setuhq run``, ``setuhq benchmark``, ``setuhq calibrate``, ``setuhq site``, ``setuhq plate`` ja muita.",
+ "@cli.desc.setuhq": {
+  "x-review": "machine",
+  "x-source": "b77812ae01"
+ },
+ "cli.opt.batch.max-targets": "lopeta näin monen kohteen jälkeen tässä istunnossa",
+ "@cli.opt.batch.max-targets": {
+  "x-review": "machine",
+  "x-source": "d73a203b72"
+ },
+ "cli.opt.batch.retries": "epäonnistuneen kohteen uusintayritykset myöhemmissä istunnoissa",
+ "@cli.opt.batch.retries": {
+  "x-review": "machine",
+  "x-source": "c1df123c33"
+ },
+ "cli.opt.batch.sectors": "uusimmat sektorit kohdetta kohden",
+ "@cli.opt.batch.sectors": {
+  "x-review": "machine",
+  "x-source": "9847836fea"
+ },
+ "cli.opt.batch.targets": "tekstitiedosto TIC-tunnisteista, yksi riviä kohden",
+ "@cli.opt.batch.targets": {
+  "x-review": "machine",
+  "x-source": "12cb2ebf9d"
+ },
+ "cli.opt.batch.tic": "TIC-tunnisteet",
+ "@cli.opt.batch.tic": {
+  "x-review": "machine",
+  "x-source": "1ec96f2b2c"
+ },
+ "cli.opt.batch.toi-cache": "arkiston välimuistissa oleva TOI-taulukko syötteen merkintöjen merkitsemiseen known_toi tai new_candidate",
+ "@cli.opt.batch.toi-cache": {
+  "x-review": "machine",
+  "x-source": "ce354b2d0e"
+ },
+ "cli.opt.batch.weights": "arvioijien painojen JSON",
+ "@cli.opt.batch.weights": {
+  "x-review": "machine",
+  "x-source": "53409ff573"
+ },
+ "cli.opt.benchmark.out": "kirjoitettava markdown-tiedosto",
+ "@cli.opt.benchmark.out": {
+  "x-review": "machine",
+  "x-source": "eb949f2129"
+ },
+ "cli.opt.benchmark.weights": "painojen JSON",
+ "@cli.opt.benchmark.weights": {
+  "x-review": "machine",
+  "x-source": "5a7dbbe171"
+ },
+ "cli.opt.binaries.cache": "välimuistin juuri (MAST-tiedostot, TIC-arvot)",
+ "@cli.opt.binaries.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.binaries.exptime": "TESS-kadenssi sekunteina",
+ "@cli.opt.binaries.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.binaries.out": "kirjoita JSON-tietue tähän",
+ "@cli.opt.binaries.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.binaries.sector": "TESS-sektorit (oletus: jokainen SPOC-sektori)",
+ "@cli.opt.binaries.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.binaries.target": "TIC-tunniste (esim. 'TIC 441420236'), SPOC-tiedosto *_lc.fits tai CSV (time, flux[, flux_err])",
+ "@cli.opt.binaries.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.binaries.transit-duration": "sen kesto (d)",
+ "@cli.opt.binaries.transit-duration": {
+  "x-review": "machine",
+  "x-source": "14084d1df6"
+ },
+ "cli.opt.binaries.transit-epoch": "sen ylikulun keskihetki (BTJD)",
+ "@cli.opt.binaries.transit-epoch": {
+  "x-review": "machine",
+  "x-source": "8e38587901"
+ },
+ "cli.opt.binaries.transit-period": "neuvoa-antavat seulontavihjeet ylikulkukandidaatin jaksolla (d)",
+ "@cli.opt.binaries.transit-period": {
+  "x-review": "machine",
+  "x-source": "2c253e7f29"
+ },
+ "cli.opt.bundle.contributor": "mainittava nimi (oma valintasi; näytetään sivustolla)",
+ "@cli.opt.bundle.contributor": {
+  "x-review": "machine",
+  "x-source": "52709c8c8b"
+ },
+ "cli.opt.bundle.out": "kirjoitettava pakettihakemisto",
+ "@cli.opt.bundle.out": {
+  "x-review": "machine",
+  "x-source": "0fd5207362"
+ },
+ "cli.opt.bundle.record": "sektoritietue, esim. my-sweep/sector_0005.json.gz",
+ "@cli.opt.bundle.record": {
+  "x-review": "machine",
+  "x-source": "277968793c"
+ },
+ "cli.opt.calibrate.image-dir": "mihin kalibrointikuvat piirretään, jos arvioijat tarvitsevat niitä",
+ "@cli.opt.calibrate.image-dir": {
+  "x-review": "machine",
+  "x-source": "8ddc793e3a"
+ },
+ "cli.opt.calibrate.out": "kirjoitettava painojen JSON",
+ "@cli.opt.calibrate.out": {
+  "x-review": "machine",
+  "x-source": "d107a13850"
+ },
+ "cli.opt.check-sweep.fix": "rakenna catalogue.json uudelleen varmennetuista lähteistä",
+ "@cli.opt.check-sweep.fix": {
+  "x-review": "machine",
+  "x-source": "f89150012c"
+ },
+ "cli.opt.check-sweep.ledger-base": "git-viite, jonka sisäänottolokia tämä saa vain jatkaa; 'auto' on yhdistämiskanta perushaaran kanssa (SETUHQ_BASE, GITHUB_BASE_REF tai etävaraston oletus). Puuttuva kanta epäonnistuu, kun CI on asetettu",
+ "@cli.opt.check-sweep.ledger-base": {
+  "x-review": "machine",
+  "x-source": "f6b4b1fabb"
+ },
+ "cli.opt.cheops.denoise": "--flares-valitsimen kanssa: ensin kohinanpoisto aallokkeilla",
+ "@cli.opt.cheops.denoise": {
+  "x-review": "machine",
+  "x-source": "bd0a95d70e"
+ },
+ "cli.opt.cheops.file-key": "yksi käynti (CH_PR..._TG..._V....)",
+ "@cli.opt.cheops.file-key": {
+  "x-review": "machine",
+  "x-source": "e108c5fdc1"
+ },
+ "cli.opt.cheops.flares": "havaitse myös purkaukset jokaisessa käynnissä",
+ "@cli.opt.cheops.flares": {
+  "x-review": "machine",
+  "x-source": "1b9e23c896"
+ },
+ "cli.opt.cheops.offline": "vain välimuisti, ei verkkoa",
+ "@cli.opt.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "7fb233fb38"
+ },
+ "cli.opt.cheops.out": "kirjoita JSON-tietue tähän",
+ "@cli.opt.cheops.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.cheops.points": "sisällytä trendistä puhdistetut pisteet tietueeseen",
+ "@cli.opt.cheops.points": {
+  "x-review": "machine",
+  "x-source": "de5db37740"
+ },
+ "cli.opt.cheops.target": "tähden nimi tai 'RA DEC' asteina",
+ "@cli.opt.cheops.target": {
+  "x-review": "machine",
+  "x-source": "19a2fbdcf5"
+ },
+ "cli.opt.crossmatch.star": "tähden nimi (hostname tai pl_name); TIC-kohteet vastaavat myös tic_id:n perusteella",
+ "@cli.opt.crossmatch.star": {
+  "x-review": "machine",
+  "x-source": "25164e4aa2"
+ },
+ "cli.opt.dashboard.catalog": "sisällytettävä löytöluettelon JSON",
+ "@cli.opt.dashboard.catalog": {
+  "x-review": "machine",
+  "x-source": "941f727440"
+ },
+ "cli.opt.discover.publish-new": "vain yksityiset asennukset: pidä luettelossa signaalit, jotka eivät vastaa mitään tunnettua TOI-kohdetta. Oletuksena ne pidetään poissa kaikista julkisista tulosteista (pidätetty yksityistä tarkastusta varten); julkinen työnkulku ei koskaan anna tätä",
+ "@cli.opt.discover.publish-new": {
+  "x-review": "machine",
+  "x-source": "fa834dcccf"
+ },
+ "cli.opt.docket.allow-missing-crossmatch": "rakenna myös silloin, kun mikään tallennettu arkistovastaavuus ei ole käyttökelpoinen; sivu näyttää silloin tallennetun virheen",
+ "@cli.opt.docket.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.docket.refresh-crossmatch": "aja ensin 'setuhq crossmatch': kysy arkistolta ja tallenna crossmatch.json",
+ "@cli.opt.docket.refresh-crossmatch": {
+  "x-review": "machine",
+  "x-source": "16850a4df3"
+ },
+ "cli.opt.docket.star": "tähden nimi arkistovastaavuutta varten (hostname tai pl_name); TIC-kohteet vastaavat myös tic_id:n perusteella",
+ "@cli.opt.docket.star": {
+  "x-review": "machine",
+  "x-source": "fa232a85fb"
+ },
+ "cli.opt.export.allow-unchecked": "vie myös silloin, kun TOI-kaksoiskappaleiden tarkistusta ei voi tehdä (rivit kertovat sen)",
+ "@cli.opt.export.allow-unchecked": {
+  "x-review": "machine",
+  "x-source": "00695ab022"
+ },
+ "cli.opt.export.days": "kuinka pitkälle eteenpäin ylikulkuikkunat ennustetaan",
+ "@cli.opt.export.days": {
+  "x-review": "machine",
+  "x-source": "331c4f1544"
+ },
+ "cli.opt.export.toi-cache": "arkiston välimuistissa oleva TOI-taulukko (haetaan ja kirjoitetaan tänne, jos puuttuu)",
+ "@cli.opt.export.toi-cache": {
+  "x-review": "machine",
+  "x-source": "a99eb8c584"
+ },
+ "cli.opt.flares.cache": "välimuistin juuri (MAST-tiedostot, TIC-arvot)",
+ "@cli.opt.flares.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.flares.completeness": "N injektio- ja palautusyritystä (kussakin 10 purkausta)",
+ "@cli.opt.flares.completeness": {
+  "x-review": "machine",
+  "x-source": "138f48258e"
+ },
+ "cli.opt.flares.denoise": "ensin stationaarinen kohinanpoisto aallokkeilla (vaatii setuhq[wavelets])",
+ "@cli.opt.flares.denoise": {
+  "x-review": "machine",
+  "x-source": "923a73f3ed"
+ },
+ "cli.opt.flares.distance-pc": "ohita TIC-etäisyys (pc)",
+ "@cli.opt.flares.distance-pc": {
+  "x-review": "machine",
+  "x-source": "5f618e8fe1"
+ },
+ "cli.opt.flares.exptime": "TESS-kadenssi sekunteina",
+ "@cli.opt.flares.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.flares.mission": "määrää havaitsemisen oletukset ja kaistan",
+ "@cli.opt.flares.mission": {
+  "x-review": "machine",
+  "x-source": "707cfede2f"
+ },
+ "cli.opt.flares.no-null": "ohita käännetyn vuon nollatesti",
+ "@cli.opt.flares.no-null": {
+  "x-review": "machine",
+  "x-source": "15da4f002c"
+ },
+ "cli.opt.flares.out": "kirjoita JSON-tietue tähän",
+ "@cli.opt.flares.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.flares.radius": "ohita TIC-säde (Auringon säteinä)",
+ "@cli.opt.flares.radius": {
+  "x-review": "machine",
+  "x-source": "2333e6c1d4"
+ },
+ "cli.opt.flares.sector": "TESS-sektorit (oletus: jokainen SPOC-sektori)",
+ "@cli.opt.flares.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.flares.target": "TIC-tunniste (esim. 'TIC 441420236'), SPOC-tiedosto *_lc.fits tai CSV (time, flux[, flux_err])",
+ "@cli.opt.flares.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.flares.teff": "ohita TIC:n Teff (K)",
+ "@cli.opt.flares.teff": {
+  "x-review": "machine",
+  "x-source": "f8dce33e3f"
+ },
+ "cli.opt.flares.tmag": "ohita TIC:n TESS-magnitudi",
+ "@cli.opt.flares.tmag": {
+  "x-review": "machine",
+  "x-source": "5d89050461"
+ },
+ "cli.opt.ingest.accept-sentinels": "hyväksy paketti, jossa on Sentinels ja jonka notkahduksia ei voi tutkia uudelleen täällä (luettelo kertoo sen)",
+ "@cli.opt.ingest.accept-sentinels": {
+  "x-review": "machine",
+  "x-source": "43052bd204"
+ },
+ "cli.opt.ingest.attested-by": "paketin lähettäneen henkilön GitHub-tunnus (pull requestin tekijä)",
+ "@cli.opt.ingest.attested-by": {
+  "x-review": "machine",
+  "x-source": "99ebfcc35a"
+ },
+ "cli.opt.ingest.bundle": "pakettihakemisto tai .zip",
+ "@cli.opt.ingest.bundle": {
+  "x-review": "machine",
+  "x-source": "8a6728595c"
+ },
+ "cli.opt.ingest.verify-lightcurves": "kuinka monta tähtisektoria haetaan ja tutkitaan uudelleen satunnaisesti niiden lisäksi, joissa on planeettakandidaatti tai merkintä nollatestinsä ylittävässä luokassa (oletus: max(3, 5%%)); jokaisen merkinnän on täsmättävä",
+ "@cli.opt.ingest.verify-lightcurves": {
+  "x-review": "machine",
+  "x-source": "a8325b1730"
+ },
+ "cli.opt.leaderboard.submission": "osallistumisen JSON (docs/leaderboard/README.md); jätä pois rakentaaksesi taulukon uudelleen",
+ "@cli.opt.leaderboard.submission": {
+  "x-review": "machine",
+  "x-source": "0a572af021"
+ },
+ "cli.opt.leaderboard.submissions": "uudelleenrakennuksessa pisteytettävien osallistumisten hakemisto",
+ "@cli.opt.leaderboard.submissions": {
+  "x-review": "machine",
+  "x-source": "d14c33cf89"
+ },
+ "cli.opt.plate.allow-missing-crossmatch": "rakenna myös silloin, kun mikään tallennettu arkistovastaavuus ei ole käyttökelpoinen; sivu näyttää silloin tallennetun virheen",
+ "@cli.opt.plate.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.plate.catalog": "löytöluettelon JSON: sen tähdet saavat kuvalaatat ja liittyvät ajan virtaan",
+ "@cli.opt.plate.catalog": {
+  "x-review": "machine",
+  "x-source": "e0f0c444fc"
+ },
+ "cli.opt.plate.star": "tähden nimi arkistovastaavuutta varten, kuten komennossa 'setuhq docket'",
+ "@cli.opt.plate.star": {
+  "x-review": "machine",
+  "x-source": "5a6e358f96"
+ },
+ "cli.opt.propose.cheops.author-name": "nimi, joka anonymiteettitarkistuksen on merkittävä (toistettavissa; ei koskaan kirjoiteta pakettiin)",
+ "@cli.opt.propose.cheops.author-name": {
+  "x-review": "machine",
+  "x-source": "4155c649d2"
+ },
+ "cli.opt.propose.cheops.coord-source": "mistä --ra/--dec ovat peräisin (ExoFOPin ja Gaian sijainnit hylätään: väärä epookki)",
+ "@cli.opt.propose.cheops.coord-source": {
+  "x-review": "machine",
+  "x-source": "60a0952794"
+ },
+ "cli.opt.propose.cheops.cycle": "hakukierros VVVV-KK (oletus: ohjelman seuraava avoin)",
+ "@cli.opt.propose.cheops.cycle": {
+  "x-review": "machine",
+  "x-source": "0fd6ca07d8"
+ },
+ "cli.opt.propose.cheops.dec": "oma Dek. asteina (ICRS, J2000)",
+ "@cli.opt.propose.cheops.dec": {
+  "x-review": "machine",
+  "x-source": "c89b51ca1f"
+ },
+ "cli.opt.propose.cheops.depth-ppm": "tapahtuman syvyys (ylikulku, pimennys) tai purkauksen amplitudi, ppm",
+ "@cli.opt.propose.cheops.depth-ppm": {
+  "x-review": "machine",
+  "x-source": "f68df536ad"
+ },
+ "cli.opt.propose.cheops.duration-hours": "tapahtuman kesto tunteina",
+ "@cli.opt.propose.cheops.duration-hours": {
+  "x-review": "machine",
+  "x-source": "5e5ef3e71f"
+ },
+ "cli.opt.propose.cheops.efficiency": "oletettava havaintotehokkuus (paikkamerkki; ota omasi Visibility Toolista)",
+ "@cli.opt.propose.cheops.efficiency": {
+  "x-review": "machine",
+  "x-source": "365381f043"
+ },
+ "cli.opt.propose.cheops.flare-rate": "purkauksia päivässä amplitudin yläpuolella (--event flare -valitsimelle)",
+ "@cli.opt.propose.cheops.flare-rate": {
+  "x-review": "machine",
+  "x-source": "83b5c5aff0"
+ },
+ "cli.opt.propose.cheops.gmag": "Gaian G-magnitudi (oletus: SIMBADin)",
+ "@cli.opt.propose.cheops.gmag": {
+  "x-review": "machine",
+  "x-source": "1501588e77"
+ },
+ "cli.opt.propose.cheops.institution": "laitos, joka anonymiteettitarkistuksen on merkittävä (toistettavissa; ei koskaan kirjoiteta pakettiin)",
+ "@cli.opt.propose.cheops.institution": {
+  "x-review": "machine",
+  "x-source": "c02f921244"
+ },
+ "cli.opt.propose.cheops.name": "paketin nimi hakemistossa runs/propose/ (oletus cheops-<target>-<cycle>)",
+ "@cli.opt.propose.cheops.name": {
+  "x-review": "machine",
+  "x-source": "31cda5b062"
+ },
+ "cli.opt.propose.cheops.no-cache": "älä lue tai kirjoita hakemistoa cache/cheops-propose/",
+ "@cli.opt.propose.cheops.no-cache": {
+  "x-review": "machine",
+  "x-source": "082b236e30"
+ },
+ "cli.opt.propose.cheops.offline": "älä tee verkkopyyntöjä (vain välimuisti; tarkistukset sanovat silloin 'not checked')",
+ "@cli.opt.propose.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "fa7a0c88a2"
+ },
+ "cli.opt.propose.cheops.orbits": "kierrokset, joita aiot pyytää (tarkistetaan ohjelman rajoja vasten)",
+ "@cli.opt.propose.cheops.orbits": {
+  "x-review": "machine",
+  "x-source": "8d710414cd"
+ },
+ "cli.opt.propose.cheops.out": "luotava pakettihakemisto (oletus runs/propose/<name>; ei koskaan korvata)",
+ "@cli.opt.propose.cheops.out": {
+  "x-review": "machine",
+  "x-source": "fc29338ed1"
+ },
+ "cli.opt.propose.cheops.period": "jakso, päivinä",
+ "@cli.opt.propose.cheops.period": {
+  "x-review": "machine",
+  "x-source": "0f00d3ed0b"
+ },
+ "cli.opt.propose.cheops.period-err": "sen 1-sigman virhe, päivinä",
+ "@cli.opt.propose.cheops.period-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.ra": "oma RA asteina (ICRS, J2000) SIMBADin sijaan",
+ "@cli.opt.propose.cheops.ra": {
+  "x-review": "machine",
+  "x-source": "7452b9af9c"
+ },
+ "cli.opt.propose.cheops.snr": "tavoiteltu S/N tapahtumalle (oletus 10)",
+ "@cli.opt.propose.cheops.snr": {
+  "x-review": "machine",
+  "x-source": "1bed72cce4"
+ },
+ "cli.opt.propose.cheops.t0": "ylikulun keskihetki, BJD_TDB (tai BTJD)",
+ "@cli.opt.propose.cheops.t0": {
+  "x-review": "machine",
+  "x-source": "3583f77acc"
+ },
+ "cli.opt.propose.cheops.t0-err": "sen 1-sigman virhe, päivinä",
+ "@cli.opt.propose.cheops.t0-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.target": "kohteen nimi SIMBADin tuntemana (esim. 'TOI-1987', 'HD 39091', 'TIC 349088467')",
+ "@cli.opt.propose.cheops.target": {
+  "x-review": "machine",
+  "x-source": "dc643ed38a"
+ },
+ "cli.opt.propose.cheops.window-end": "viimeinen havaintopäivä (oletus 2029-12-31)",
+ "@cli.opt.propose.cheops.window-end": {
+  "x-review": "machine",
+  "x-source": "bb4ef3a3e8"
+ },
+ "cli.opt.propose.cheops.window-start": "ensimmäinen havaintopäivä (oletus: kierroksen varhaisin alku)",
+ "@cli.opt.propose.cheops.window-start": {
+  "x-review": "machine",
+  "x-source": "f1537bbf4b"
+ },
+ "cli.opt.propose.lint.author-name": "merkittävä nimi tavallisissa muodoissaan (toistettavissa)",
+ "@cli.opt.propose.lint.author-name": {
+  "x-review": "machine",
+  "x-source": "896776ed61"
+ },
+ "cli.opt.propose.lint.institution": "merkittävä laitos (toistettavissa)",
+ "@cli.opt.propose.lint.institution": {
+  "x-review": "machine",
+  "x-source": "7dfbfc57ef"
+ },
+ "cli.opt.pulsations.cache": "välimuistin juuri (MAST-tiedostot, TIC-arvot)",
+ "@cli.opt.pulsations.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.pulsations.exptime": "TESS-kadenssi sekunteina",
+ "@cli.opt.pulsations.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.pulsations.fmax": "suurin taajuus (d⁻¹; oletus Nyquist)",
+ "@cli.opt.pulsations.fmax": {
+  "x-review": "machine",
+  "x-source": "1d96a068e1"
+ },
+ "cli.opt.pulsations.fmin": "pienin taajuus (d⁻¹)",
+ "@cli.opt.pulsations.fmin": {
+  "x-review": "machine",
+  "x-source": "e982706993"
+ },
+ "cli.opt.pulsations.out": "kirjoita JSON-tietue tähän",
+ "@cli.opt.pulsations.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.pulsations.sector": "TESS-sektorit (oletus: jokainen SPOC-sektori)",
+ "@cli.opt.pulsations.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.pulsations.solar": "aja aina numax/Δν-analyysi",
+ "@cli.opt.pulsations.solar": {
+  "x-review": "machine",
+  "x-source": "0cc921a51c"
+ },
+ "cli.opt.pulsations.surrogates": "punaisen kohinan sijaisaineistot väärien taajuuksien osuutta varten",
+ "@cli.opt.pulsations.surrogates": {
+  "x-review": "machine",
+  "x-source": "2d606e2fee"
+ },
+ "cli.opt.pulsations.target": "TIC-tunniste (esim. 'TIC 441420236'), SPOC-tiedosto *_lc.fits tai CSV (time, flux[, flux_err])",
+ "@cli.opt.pulsations.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.pulsations.teff": "Teff (K) tyyppiheuristiikkaa varten (oletus: TIC)",
+ "@cli.opt.pulsations.teff": {
+  "x-review": "machine",
+  "x-source": "3cd47aa62d"
+ },
+ "cli.opt.report.benchmark": "upotettava vertailun markdown",
+ "@cli.opt.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "50a27fedb7"
+ },
+ "cli.opt.report.out": "kirjoitettava sivustohakemisto",
+ "@cli.opt.report.out": {
+  "x-review": "machine",
+  "x-source": "439462c999"
+ },
+ "cli.opt.report.validation": "upotettava validoinnin markdown",
+ "@cli.opt.report.validation": {
+  "x-review": "machine",
+  "x-source": "8ea7211541"
+ },
+ "cli.opt.rotation.cache": "välimuistin juuri (MAST-tiedostot, TIC-arvot)",
+ "@cli.opt.rotation.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.rotation.exptime": "TESS-kadenssi sekunteina",
+ "@cli.opt.rotation.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.rotation.out": "kirjoita JSON-tietue tähän",
+ "@cli.opt.rotation.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.rotation.sector": "TESS-sektorit (oletus: jokainen SPOC-sektori)",
+ "@cli.opt.rotation.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.rotation.target": "TIC-tunniste (esim. 'TIC 441420236'), SPOC-tiedosto *_lc.fits tai CSV (time, flux[, flux_err])",
+ "@cli.opt.rotation.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.run.cache": "välimuistin juuri Clauden vastauksille",
+ "@cli.opt.run.cache": {
+  "x-review": "machine",
+  "x-source": "eeda390458"
+ },
+ "cli.opt.run.calibrated-weights": "kalibroidut painot, joita käytetään oletuksena, kun niiden arvioijatunnisteet vastaavat määritystä",
+ "@cli.opt.run.calibrated-weights": {
+  "x-review": "machine",
+  "x-source": "0d6473928d"
+ },
+ "cli.opt.run.out": "tulostehakemisto",
+ "@cli.opt.run.out": {
+  "x-review": "machine",
+  "x-source": "7e0ee3625e"
+ },
+ "cli.opt.run.uniform-weights": "anna jokaiselle arvioijalle paino 1.0",
+ "@cli.opt.run.uniform-weights": {
+  "x-review": "machine",
+  "x-source": "db3384cb7c"
+ },
+ "cli.opt.run.weights": "arvioijien painojen JSON-tiedosto komennosta 'setuhq calibrate' (ohittaa oletuksen)",
+ "@cli.opt.run.weights": {
+  "x-review": "machine",
+  "x-source": "802d0e0a5b"
+ },
+ "cli.opt.setuhq.lang": "tulosteen ja ohjeen kieli (en, nl, pl, pt, fi, sv, da, nb, cs, uk, ru, de, fr, es, et, ja, zh-Hans); muuten SETUHQ_LANG, LC_ALL, LC_MESSAGES tai LANG; oletuksena englanti. Tiedostot ja JSON pysyvät englanninkielisinä",
+ "@cli.opt.setuhq.lang": {
+  "x-review": "machine",
+  "x-source": "02f46f5ea1"
+ },
+ "cli.opt.site.allow-missing-crossmatch": "rakenna myös silloin, kun mikään tallennettu arkistovastaavuus ei ole käyttökelpoinen; sivu näyttää silloin tallennetun virheen",
+ "@cli.opt.site.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.site.benchmark": "vertailun muistiinpanot ajoraporttiin",
+ "@cli.opt.site.benchmark": {
+  "x-review": "machine",
+  "x-source": "8c60c65795"
+ },
+ "cli.opt.site.catalog": "löytöluettelon JSON Kandidaatit- ja Ajot-sivuille",
+ "@cli.opt.site.catalog": {
+  "x-review": "machine",
+  "x-source": "3c64583755"
+ },
+ "cli.opt.site.no-extras": "jätä pois ajoraportti, kuvalaatat ja erillinen tapauskansio",
+ "@cli.opt.site.no-extras": {
+  "x-review": "machine",
+  "x-source": "ea0dea2308"
+ },
+ "cli.opt.site.out": "sivuston juurikansio (site/ setuhq.comille)",
+ "@cli.opt.site.out": {
+  "x-review": "machine",
+  "x-source": "ff9482ee28"
+ },
+ "cli.opt.site.run_dir": "tallennetut ajot: ensin pääajo (taivaankartta, paneeli ja etusivun vertailutarkistus), sitten muut esimerkkiajot; kukin saa notkahdustensa sivut, tapauskansionsa, kuvalaattansa ja raporttinsa",
+ "@cli.opt.site.run_dir": {
+  "x-review": "machine",
+  "x-source": "935df39235"
+ },
+ "cli.opt.site.showcase": "esimerkkiajojen kuvaukset ja vertailut kirjallisuuteen (scripts/showcase_compare.py)",
+ "@cli.opt.site.showcase": {
+  "x-review": "machine",
+  "x-source": "a8d2fbc8b7"
+ },
+ "cli.opt.site.star": "tähden nimi tapauskansion arkistovastaavuutta varten, kuten komennossa 'setuhq docket'",
+ "@cli.opt.site.star": {
+  "x-review": "machine",
+  "x-source": "3a81206f9b"
+ },
+ "cli.opt.site.sweep": "pyyhkäisyluettelo (setuhq sweep) sivulle Kaikki mikä himmenee, etusivun laskuriin ja taivaskerrokseen",
+ "@cli.opt.site.sweep": {
+  "x-review": "machine",
+  "x-source": "2cbca7c299"
+ },
+ "cli.opt.site.validation": "validoinnin muistiinpanot ajoraporttiin",
+ "@cli.opt.site.validation": {
+  "x-review": "machine",
+  "x-source": "3aa3ee0254"
+ },
+ "cli.opt.site.weights": "kalibroitujen arvioijapainojen JSON, näytetään Näytöt-sivulla",
+ "@cli.opt.site.weights": {
+  "x-review": "machine",
+  "x-source": "17d9554285"
+ },
+ "cli.opt.sweep.cache": "välimuistin juuri: kohdeluettelot, valokäyrätiedostot, tähtikohtaiset tietueet",
+ "@cli.opt.sweep.cache": {
+  "x-review": "machine",
+  "x-source": "4ceefeb748"
+ },
+ "cli.opt.sweep.classified-commit": "--reclassify-valitsimen kanssa: git-revisio, joka viimeksi luokitteli tällaiset tietueet",
+ "@cli.opt.sweep.classified-commit": {
+  "x-review": "machine",
+  "x-source": "a041546a77"
+ },
+ "cli.opt.sweep.config": "pyyhkäisyn määritys, esim. configs/sweep.toml (Probes) tai configs/sweep_sentinels.toml",
+ "@cli.opt.sweep.config": {
+  "x-review": "machine",
+  "x-source": "7d010ce268"
+ },
+ "cli.opt.sweep.contributor": "tästä pyyhkäisystä mainittava nimi",
+ "@cli.opt.sweep.contributor": {
+  "x-review": "machine",
+  "x-source": "2d65f8895f"
+ },
+ "cli.opt.sweep.limit": "kuinka monta sektorin kohdetta, pyyhkäisyjärjestyksessä",
+ "@cli.opt.sweep.limit": {
+  "x-review": "machine",
+  "x-source": "b2105a1cbf"
+ },
+ "cli.opt.sweep.min-interval": "sekunteja MAST-pyyntöjen välillä (vähintään)",
+ "@cli.opt.sweep.min-interval": {
+  "x-review": "machine",
+  "x-source": "1e29475701"
+ },
+ "cli.opt.sweep.no-control": "ohita jokaisen tähden käännetyn vuon kontrolliajo",
+ "@cli.opt.sweep.no-control": {
+  "x-review": "machine",
+  "x-source": "0af9322de6"
+ },
+ "cli.opt.sweep.out": "minne sektoritietue ja catalogue.json menevät",
+ "@cli.opt.sweep.out": {
+  "x-review": "machine",
+  "x-source": "74a76b8e20"
+ },
+ "cli.opt.sweep.reclassify": "sovella luokitussääntöjä uudelleen tallennettuihin tähtisektoreihin (vain variables.py-muutoksen jälkeen)",
+ "@cli.opt.sweep.reclassify": {
+  "x-review": "machine",
+  "x-source": "86ff3a8c91"
+ },
+ "cli.opt.sweep.rule-change": "--reclassify-valitsimen kanssa: mikä säännöissä muuttui (toista jokaiselle muutokselle)",
+ "@cli.opt.sweep.rule-change": {
+  "x-review": "machine",
+  "x-source": "a0203dbc98"
+ },
+ "cli.opt.sweep.search-commit": "--reclassify-valitsimen kanssa: git-revisio, joka tutki vain yhden koodin nimeävät tietueet",
+ "@cli.opt.sweep.search-commit": {
+  "x-review": "machine",
+  "x-source": "139e54a5b2"
+ },
+ "cli.opt.sweep.time-budget-min": "lopeta uusien tähtien aloittaminen näin monen minuutin jälkeen",
+ "@cli.opt.sweep.time-budget-min": {
+  "x-review": "machine",
+  "x-source": "838fb96162"
+ },
+ "cli.opt.sweep.weights": "kalibroidut painot; arvioija, jota ei ole tiedostossa, painaa 1.0",
+ "@cli.opt.sweep.weights": {
+  "x-review": "machine",
+  "x-source": "015b47d6f0"
+ },
+ "cli.opt.sweep.workers": "tähtiä samanaikaisesti tutkivat prosessit (lataukset tapahtuvat edelleen yksi kerrallaan)",
+ "@cli.opt.sweep.workers": {
+  "x-review": "machine",
+  "x-source": "8046b64f2f"
+ },
+ "cli.opt.transients.cache": "välimuistin juuri (MAST-tiedostot, TIC-arvot, rajaukset)",
+ "@cli.opt.transients.cache": {
+  "x-review": "machine",
+  "x-source": "4994163c4f"
+ },
+ "cli.opt.transients.dec": "Dek. (asteina)",
+ "@cli.opt.transients.dec": {
+  "x-review": "machine",
+  "x-source": "9b73841e14"
+ },
+ "cli.opt.transients.exptime": "TESS-kadenssi sekunteina",
+ "@cli.opt.transients.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.transients.keep-cutout": "säilytä ladattu rajaus välimuistissa",
+ "@cli.opt.transients.keep-cutout": {
+  "x-review": "machine",
+  "x-source": "30d3ece3c5"
+ },
+ "cli.opt.transients.out": "kirjoita JSON-tietue tähän",
+ "@cli.opt.transients.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.transients.ra": "RA (asteina): fotometria täysikuvien TESScut-rajauksesta",
+ "@cli.opt.transients.ra": {
+  "x-review": "machine",
+  "x-source": "80c280d2d9"
+ },
+ "cli.opt.transients.sector": "TESS-sektorit (--ra/--dec-valitsimilla: yksi rajattava sektori)",
+ "@cli.opt.transients.sector": {
+  "x-review": "machine",
+  "x-source": "471c0813f6"
+ },
+ "cli.opt.transients.size": "rajauksen koko pikseleinä (oletus 11)",
+ "@cli.opt.transients.size": {
+  "x-review": "machine",
+  "x-source": "c0ba5e1825"
+ },
+ "cli.opt.transients.target": "TIC-tunniste, SPOC-tiedosto *_lc.fits tai CSV (jätä pois --ra/--dec-valitsimilla)",
+ "@cli.opt.transients.target": {
+  "x-review": "machine",
+  "x-source": "eb65265df5"
+ },
+ "cli.opt.transients.time": "--ra/--dec-valitsimilla ja ilman --sector-valitsinta: sektori, joka sisältää tämän BTJD:n",
+ "@cli.opt.transients.time": {
+  "x-review": "machine",
+  "x-source": "59af8e0810"
+ },
+ "cli.out.asset_budget": "tiedostobudjetin yli: {line}",
+ "@cli.out.asset_budget": {
+  "x-review": "machine",
+  "x-source": "1a08ee7ef2"
+ },
+ "cli.out.catalogue_site": "luettelo {catalogue}, sivusto {site}",
+ "@cli.out.catalogue_site": {
+  "x-review": "machine",
+  "x-source": "45ece88b52"
+ },
+ "cli.out.classifications": "luokitukset: {n}",
+ "@cli.out.classifications": {
+  "x-review": "machine",
+  "x-source": "0f32738b00"
+ },
+ "cli.out.consensus": "konsensustapahtumat: {n} ({k} läpäisee seulonnan)",
+ "@cli.out.consensus": {
+  "x-review": "machine",
+  "x-source": "0e7161a11f"
+ },
+ "cli.out.dashboard": "kojelauta kirjoitettu kohteeseen {path}",
+ "@cli.out.dashboard": {
+  "x-review": "machine",
+  "x-source": "794588aab9"
+ },
+ "cli.out.discover": "tässä ajossa arvioidut kohteet: {n}, vastaavuudet tunnettuihin TOI-kohteisiin: {k}",
+ "@cli.out.discover": {
+  "x-review": "machine",
+  "x-source": "e86d5ed05d"
+ },
+ "cli.out.docket": "tapauskansio kirjoitettu kohteeseen {path}",
+ "@cli.out.docket": {
+  "x-review": "machine",
+  "x-source": "3461730266"
+ },
+ "cli.out.lightcurves": "valokäyrät: {n}",
+ "@cli.out.lightcurves": {
+  "x-review": "machine",
+  "x-source": "b98d2bfa2b"
+ },
+ "cli.out.outputs": "tulosteet kohteessa {path}",
+ "@cli.out.outputs": {
+  "x-review": "machine",
+  "x-source": "ad5b1626c3"
+ },
+ "cli.out.page_budget": "sivubudjetin yli: {line}",
+ "@cli.out.page_budget": {
+  "x-review": "machine",
+  "x-source": "719f1ca170"
+ },
+ "cli.out.plates": "kuvalaatat kirjoitettu kohteeseen {path}",
+ "@cli.out.plates": {
+  "x-review": "machine",
+  "x-source": "3fd4254e8b"
+ },
+ "cli.out.rebuilt": "{n} konsensustapahtumaa rakennettu uudelleen ({k} läpäisee seulonnan) kohteessa {path}",
+ "@cli.out.rebuilt": {
+  "x-review": "machine",
+  "x-source": "06707f0892"
+ },
+ "cli.out.site": "sivusto kirjoitettu kohteeseen {path}",
+ "@cli.out.site": {
+  "x-review": "machine",
+  "x-source": "e59ebe1ee1"
+ },
+ "cli.out.subjects": "segmentit:    {n}",
+ "@cli.out.subjects": {
+  "x-review": "machine",
+  "x-source": "184630bc2c"
+ },
+ "cli.out.weights": "arvioijien painot: {source}",
+ "@cli.out.weights": {
+  "x-review": "machine",
+  "x-source": "1089f763c0"
+ },
+ "cli.out.weights_written": "painot kirjoitettu kohteeseen {path}, osuudet kohteeseen {rates}",
+ "@cli.out.weights_written": {
+  "x-review": "machine",
+  "x-source": "6828f69f91"
+ },
+ "desc.catalogue": "Jokainen exoplanet.eu:n planeetta, haettavissa ja lajiteltavissa, kullakin oma sivunsa. SetuHQ ei ole näiden planeettojen löytäjä.",
+ "@desc.catalogue": {
+  "x-review": "machine",
+  "x-source": "4321b00077"
+ },
+ "desc.docs": "Asenna SetuHQ, tutki tähteä, osallistu pyyhkäisyyn, yhdistä tekoälyavustaja MCP:n kautta ja lataa aineisto.",
+ "@desc.docs": {
+  "x-review": "machine",
+  "x-source": "242925f427"
+ },
+ "desc.editions": "SetuHQ:n versiot: maksuton avoin ydin (AGPL-3.0 tai kaupallinen lisenssi), SetuHQ Pro (kehitteillä, sopimuksella) ja räätälöidyt tutkimukset. Ei hintoja; jokainen maksullinen reitti alkaa viestillä.",
+ "@desc.editions": {
+  "x-review": "machine",
+  "x-source": "34320f5c27"
+ },
+ "desc.explorer": "Ajon notkahdukset ja niiden tapauskansiot sekä {n, plural, one {# hakusyötteen merkintä} other {# hakusyötteen merkintää}}. Kandidaatit ovat vahvistamattomia; yksikään ei ole vahvistettu planeetta.",
+ "@desc.explorer": {
+  "x-review": "machine",
+  "x-source": "12bbc1141b"
+ },
+ "desc.galaxy": "Jokainen tunnettu eksoplaneetta, jolla on tallennettu etäisyys, sijoitettuna 3D:nä Auringon ympärille löytämismenetelmän ja vuoden mukaan.",
+ "@desc.galaxy": {
+  "x-review": "machine",
+  "x-source": "1d04a19fb8"
+ },
+ "desc.leaderboard": "Menetelmät pisteytettyinä sokkona todellisten TOI-kohteiden vertailuaineiston pidätetyllä puoliskolla, 95 %:n Wilsonin väleineen.",
+ "@desc.leaderboard": {
+  "x-review": "machine",
+  "x-source": "f63d09cd7f"
+ },
+ "desc.methods": "Luku {i}/{n} osiosta Näin se toimii: {title}. Animoitu selitys fysiikkoineen ja lähteineen.",
+ "@desc.methods": {
+  "x-review": "machine",
+  "x-source": "72765a8c0c"
+ },
+ "desc.mission": "SetuHQ:n näkymien ruudukkotyötila, jonka yksi valittu tähti yhdistää: Linnunrata, taivas, valokäyrä, luettelo ja paneelin syöte.",
+ "@desc.mission": {
+  "x-review": "machine",
+  "x-source": "aea05e50d5"
+ },
+ "desc.overview": "{tagline} Kalibroitu Sentinels- ja Probes-paneeli lukee TESS-valokäyriä ja perustelee jokaisen ratkaisun. Jokainen SetuHQ:n tulos on {status}.",
+ "@desc.overview": {
+  "x-review": "machine",
+  "x-source": "e4c31340b2"
+ },
+ "desc.pictures": "Miten SetuHQ piirtää kuvansa: tähdet mustan kappaleen värissään ja planeetat taiteilijan näkemyksinä, valittuina mitatun säteen ja säteilyn perusteella, jokainen sääntö ja lähde mukana.",
+ "@desc.pictures": {
+  "x-review": "machine",
+  "x-source": "f81ce510dd"
+ },
+ "desc.planets": "Mitä kunkin kandidaatin syvyys tarkoittaisi, jos se olisi planeetta: planeetan ja tähden säteiden suhde, ja miksi planeetan kokoa ei ilmoiteta.",
+ "@desc.planets": {
+  "x-review": "machine",
+  "x-source": "33a6642674"
+ },
+ "desc.propose": "Valmistele ehdotus CHEOPS Guest Observers -ohjelmaan komennolla setuhq propose cheops: kirjoitusapu, joka tarkistaa säännöt ja kohteen eikä koskaan lähetä mitään.",
+ "@desc.propose": {
+  "x-review": "machine",
+  "x-source": "415a0f0956"
+ },
+ "desc.runs": "Jokainen hakuajo, sen virheet tallennettuina ja kandidaattisivujen taustalla oleva määritys.",
+ "@desc.runs": {
+  "x-review": "machine",
+  "x-source": "2fc865ecd8"
+ },
+ "desc.sentinels": "Arvioijat jokaisen ratkaisun takana, heidän kalibrointinsa ja miten paneeli pärjää sokkona todellisilla TESS Objects of Interest -kohteilla. {attribution}",
+ "@desc.sentinels": {
+  "x-review": "machine",
+  "x-source": "6325eab793"
+ },
+ "desc.sky": "Ajon tähti koko taivaan kartalla, paneelin merkitsemät notkahdukset ja missä kartoitukset ovat katsoneet. {headline}",
+ "@desc.sky": {
+  "x-review": "machine",
+  "x-source": "22c5e64296"
+ },
+ "desc.stellar": "Purkaukset, sykkeet, CHEOPS-valokäyrät, pimennysmuuttujat, pyöriminen ja transientit: kuinka pitkälle kukin SetuHQ:n tähtityökalu on validoitu, jokainen laskettu tarkistus ja kuvat todellisesta TESS-aineistosta mukana.",
+ "@desc.stellar": {
+  "x-review": "machine",
+  "x-source": "fd3ad97a67"
+ },
+ "desc.stellardocs": "Aja SetuHQ:n tähtikomentoja: purkaukset, sykkeet, julkiset CHEOPS-valokäyrät, pimennysmuuttujat, pyöriminen ja transientit, niiden validointitila ja ESA:n ehdot CHEOPS-aineistolle.",
+ "@desc.stellardocs": {
+  "x-review": "machine",
+  "x-source": "69d64ce7ce"
+ },
+ "desc.tessnow": "Mihin TESS-satelliitti osoittaa, sektori kerrallaan, julkaistun aikataulunsa mukaan: neljä kamerakenttää taivaankartalla ja niiden sisällä olevat luetteloidut tähdet. Ei reaaliaikaista telemetriaa.",
+ "@desc.tessnow": {
+  "x-review": "machine",
+  "x-source": "b892187187"
+ },
+ "desc.variables": "SetuHQ:n pyyhkäisy TESS-sektorien läpi: jokainen löydetty ja luokiteltu notkahdus, kukin luokka omaa nollatestiään vasten.",
+ "@desc.variables": {
+  "x-review": "machine",
+  "x-source": "ec6feba9c3"
+ },
+ "desc.vetter": "Katso todellista tallennettua notkahdusta SetuHQ:n esimerkkiajoista, arvioi se hyväksytyksi, merkityksi tai hylätyksi ja katso sitten, mitä seulonta päätti. Harjoitus; vastauksia ei kerätä.",
+ "@desc.vetter": {
+  "x-review": "machine",
+  "x-source": "a0ad69fc0e"
+ },
+ "dip.state.cand": "kandidaatti, vahvistamaton",
+ "@dip.state.cand": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "dip.state.open": "merkitty tarkistettavaksi, avoin",
+ "@dip.state.open": {
+  "x-review": "machine",
+  "x-source": "5c42a6d0b9"
+ },
+ "dip.state.rej": "seulonnassa hylätty, ei kandidaatti",
+ "@dip.state.rej": {
+  "x-review": "machine",
+  "x-source": "0c75827454"
+ },
+ "dip.tag.cand": "kandidaatti",
+ "@dip.tag.cand": {
+  "x-review": "machine",
+  "x-source": "dda18a0e21"
+ },
+ "dip.tag.open": "merkitty",
+ "@dip.tag.open": {
+  "x-review": "machine",
+  "x-source": "5588be887f"
+ },
+ "dip.tag.rej": "hylätty",
+ "@dip.tag.rej": {
+  "x-review": "machine",
+  "x-source": "20cd938a2e"
+ },
+ "docs.contribute": "Osallistu pyyhkäisyyn",
+ "@docs.contribute": {
+  "x-review": "machine",
+  "x-source": "3118488db2"
+ },
+ "docs.contribute.a": "Näin osallistut ›",
+ "@docs.contribute.a": {
+  "x-review": "machine",
+  "x-source": "fefd95f45c"
+ },
+ "docs.contribute.p": "Tutki osa TESS-sektorista omalla koneellasi ja lähetä tulos, nimesi mainiten.",
+ "@docs.contribute.p": {
+  "x-review": "machine",
+  "x-source": "7636e0e0dd"
+ },
+ "docs.data": "Aineisto ja tiedostot",
+ "@docs.data": {
+  "x-review": "machine",
+  "x-source": "1544ff48d7"
+ },
+ "docs.data.a": "Lataukset ›",
+ "@docs.data.a": {
+  "x-review": "machine",
+  "x-source": "8e6ab2918b"
+ },
+ "docs.data.p": "Jokainen sivuston luettelo ladattavana sekä raportit näyttöjen takana.",
+ "@docs.data.p": {
+  "x-review": "machine",
+  "x-source": "a7dd9ada99"
+ },
+ "docs.editions": "Versiot",
+ "@docs.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "docs.editions.a": "Vertaa versioita ›",
+ "@docs.editions.a": {
+  "x-review": "machine",
+  "x-source": "90fe459127"
+ },
+ "docs.editions.p": "Avoin ydin on maksuton. SetuHQ Pro (kehitteillä) ja räätälöidyt tutkimukset ovat sopimuksella, ilman hintoja: kukin alkaa viestillä.",
+ "@docs.editions.p": {
+  "x-review": "machine",
+  "x-source": "a4c5119805"
+ },
+ "docs.h1": "Aja se itse.",
+ "@docs.h1": {
+  "x-review": "machine",
+  "x-source": "a1737d6898"
+ },
+ "docs.install": "Asennus ja ensimmäinen ajo",
+ "@docs.install": {
+  "x-review": "machine",
+  "x-source": "ea230bebae"
+ },
+ "docs.intro": "SetuHQ on avointa lähdekoodia. Asenna se, tutki tähden valokäyrää samalla paneelilla, jonka tämä sivusto näyttää, osallistu taivaan pyyhkäisyyn tai anna tekoälyavustajasi käyttää sitä.",
+ "@docs.intro": {
+  "x-review": "machine",
+  "x-source": "7d1db3c963"
+ },
+ "docs.mcp": "Käytä avustajasta",
+ "@docs.mcp": {
+  "x-review": "machine",
+  "x-source": "ee854c3928"
+ },
+ "docs.mcp.a": "Yhdistä MCP:n kautta ›",
+ "@docs.mcp.a": {
+  "x-review": "machine",
+  "x-source": "c393096cc9"
+ },
+ "docs.mcp.h": "Käytä tekoälyavustajasta (MCP)",
+ "@docs.mcp.h": {
+  "x-review": "machine",
+  "x-source": "f46e936a3b"
+ },
+ "docs.mcp.p": "MCP-palvelin antaa avustajan ajaa SetuHQ:n omaa koodia ja lukea sen tuloksia.",
+ "@docs.mcp.p": {
+  "x-review": "machine",
+  "x-source": "eb88b7d692"
+ },
+ "docs.pictures": "Miten kuvat piirretään",
+ "@docs.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "docs.pictures.a": "Kuvat ›",
+ "@docs.pictures.a": {
+  "x-review": "machine",
+  "x-source": "d4afb0f5d1"
+ },
+ "docs.pictures.p": "Tähdet mustan kappaleen värissään; planeetat taiteilijan näkemyksinä, valittuina mitatun säteen ja säteilyn perusteella. Jokainen sääntö ja lähde.",
+ "@docs.pictures.p": {
+  "x-review": "machine",
+  "x-source": "7c281d6576"
+ },
+ "docs.prov": "Tekniset tiedot: mistä luvut tulevat",
+ "@docs.prov": {
+  "x-review": "machine",
+  "x-source": "1cfbcdad80"
+ },
+ "docs.python": "SetuHQ vaatii Pythonin {v} tai uudemman.",
+ "@docs.python": {
+  "x-review": "machine",
+  "x-source": "3159020543"
+ },
+ "docs.start": "Aloita",
+ "@docs.start": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "docs.start.a": "Asennus ja ensimmäinen ajo ›",
+ "@docs.start.a": {
+  "x-review": "machine",
+  "x-source": "468f664b71"
+ },
+ "docs.start.p": "Asenna ja tutki sitten minkä tahansa TESS-tähden valokäyrää, kuten jokainen tämän sivuston esimerkkiajo teki.",
+ "@docs.start.p": {
+  "x-review": "machine",
+  "x-source": "2e8b6ed67a"
+ },
+ "ed.compare": "Vertaa versioita",
+ "@ed.compare": {
+  "x-review": "machine",
+  "x-source": "0a79392035"
+ },
+ "ed.compare.p": "Lue rivi poikki verrataksesi kolmea.",
+ "@ed.compare.p": {
+  "x-review": "machine",
+  "x-source": "59ba9870b5"
+ },
+ "ed.h1": "Versiot.",
+ "@ed.h1": {
+  "x-review": "machine",
+  "x-source": "d98733b93e"
+ },
+ "ed.intro": "Koko moottori on maksuton ja pysyy maksuttomana. Ashforde OÜ rahoittaa sen kaupallisella lisenssillä, SetuHQ Prolla ja räätälöidyillä tutkimuksilla, ei lukitsemalla ominaisuuksia. Sivustolla ei ole hintoja: jokainen maksullinen reitti alkaa viestillä.",
+ "@ed.intro": {
+  "x-review": "machine",
+  "x-source": "d588b090c3"
+ },
+ "ex.h1": "{n, plural, one {# avattava notkahdus} other {# avattavaa notkahdusta}} {stars, plural, =1 {yhdeltä esimerkkitähdeltä} one {# esimerkkitähdeltä} other {# esimerkkitähdeltä}}.",
+ "@ex.h1": {
+  "x-review": "machine",
+  "x-source": "ad8e8b5e42"
+ },
+ "ex.intro": "Paneelin merkitsemät notkahdukset kunkin esimerkkitähden TESS-valokäyrässä, ryhmiteltyinä tähden mukaan ja laskettuina seulonnan tuloksen mukaan. Seulonnan läpäissyt notkahdus on {status}; merkitty on avoin; hylätty ei ole kandidaatti. Yksikään ei ole vahvistettu planeetta. Avaa yksi nähdäksesi sen toistettuna, tai sen tapauskansio jokaista ratkaisun takana olevaa tarkistusta varten.",
+ "@ex.intro": {
+  "x-review": "machine",
+  "x-source": "3a25873c3b"
+ },
+ "ex.more": " Alempana: hakusyötteen {n} merkintää muilta tähdiltä, joilla ei vielä ole tapauskansiota.",
+ "@ex.more": {
+  "x-review": "machine",
+  "x-source": "96432c834d"
+ },
+ "footer.all_chapters": "Kaikki {n} lukua",
+ "@footer.all_chapters": {
+  "x-review": "machine",
+  "x-source": "177340a477"
+ },
+ "footer.contribute": "Osallistu pyyhkäisyyn",
+ "@footer.contribute": {
+  "x-review": "machine",
+  "x-source": "960b0242d4"
+ },
+ "footer.data": "Aineiston lataukset",
+ "@footer.data": {
+  "x-review": "machine",
+  "x-source": "47e65bf65c"
+ },
+ "footer.nav": "Sivusto",
+ "@footer.nav": {
+  "x-review": "machine",
+  "x-source": "fa7955814e"
+ },
+ "footer.overview": "Yleiskatsaus",
+ "@footer.overview": {
+  "x-review": "machine",
+  "x-source": "d4b1ea5708"
+ },
+ "footer.pictures": "Miten kuvat piirretään ›",
+ "@footer.pictures": {
+  "x-review": "machine",
+  "x-source": "f4d87c6ca3"
+ },
+ "footer.source": "Lähdekoodi",
+ "@footer.source": {
+  "x-review": "machine",
+  "x-source": "bf046c7395"
+ },
+ "gx.h1": "Jokainen tunnettu eksoplaneetta,",
+ "@gx.h1": {
+  "x-review": "machine",
+  "x-source": "22fff7c222"
+ },
+ "gx.h1b": "Auringon ympärillä.",
+ "@gx.h1b": {
+  "x-review": "machine",
+  "x-source": "0513cb70f1"
+ },
+ "gx.intro": "{n, number} planeettaa {hosts, number} tähden ympärillä, sijoitettuina paikoilleen. SetuHQ ei löytänyt näitä planeettoja; se kartoittaa ne lähteestä {source}.",
+ "@gx.intro": {
+  "x-review": "machine",
+  "x-source": "b60778b897"
+ },
+ "hint.dismiss": "Sulje vihje: {h}",
+ "@hint.dismiss": {
+  "x-review": "machine",
+  "x-source": "704395b8f4"
+ },
+ "hint.orbits": "Koot eivät ole mittakaavassa · vaiheet havainnollistavia",
+ "@hint.orbits": {
+  "x-review": "machine",
+  "x-source": "f31d20fed2"
+ },
+ "home.band.counters": "Näytöt laskettuina",
+ "@home.band.counters": {
+  "x-review": "machine",
+  "x-source": "5f2b5a53a9"
+ },
+ "home.band.counters.e": "Jokainen luku johtaa näyttöönsä",
+ "@home.band.counters.e": {
+  "x-review": "machine",
+  "x-source": "6d25c68528"
+ },
+ "home.band.fold": "Miten planeetta piiloutuu kohinaan",
+ "@home.band.fold": {
+  "x-review": "machine",
+  "x-source": "79677ced9c"
+ },
+ "home.band.fold.e": "Todellista aineistoa",
+ "@home.band.fold.e": {
+  "x-review": "machine",
+  "x-source": "6a758a8937"
+ },
+ "home.band.lineup": "Esimerkkiplaneetat mittakaavassa",
+ "@home.band.lineup": {
+  "x-review": "machine",
+  "x-source": "aaf6e55de4"
+ },
+ "home.band.lineup.e": "Planeetat mittakaavassa",
+ "@home.band.lineup.e": {
+  "x-review": "machine",
+  "x-source": "f48421d1f6"
+ },
+ "home.band.panel": "Kuka arvioi notkahduksen",
+ "@home.band.panel": {
+  "x-review": "machine",
+  "x-source": "fd782b5776"
+ },
+ "home.band.panel.e": "Paneeli",
+ "@home.band.panel.e": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "home.band.sky": "Jokaisen tunnetun planeetan tähti sen vuoden mukaan, jona se löydettiin",
+ "@home.band.sky": {
+  "x-review": "machine",
+  "x-source": "25fe759e36"
+ },
+ "home.band.sky.e": "Taivas",
+ "@home.band.sky.e": {
+  "x-review": "machine",
+  "x-source": "587ffab2a1"
+ },
+ "home.band.tempstrip": "{n, plural, =1 {Esimerkkitähden väri} one {# esimerkkitähti: {lo, number, integer} K – {hi, number, integer} K, yksi putki} other {# esimerkkitähteä: {lo, number, integer} K – {hi, number, integer} K, yksi putki}}",
+ "@home.band.tempstrip": {
+  "x-review": "machine",
+  "x-source": "705ec8da04"
+ },
+ "home.band.tempstrip.e": "Esimerkkitähtien värit",
+ "@home.band.tempstrip.e": {
+  "x-review": "machine",
+  "x-source": "d93001b796"
+ },
+ "home.ctr.benchmark": "todellista TESS Objects of Interest -kohdetta sokkovertailussa",
+ "@home.ctr.benchmark": {
+  "x-review": "machine",
+  "x-source": "9672338f63"
+ },
+ "home.ctr.catalogue": "planeettaa luettelossa, johon SetuHQ vertaa",
+ "@home.ctr.catalogue": {
+  "x-review": "machine",
+  "x-source": "01f04bca08"
+ },
+ "home.ctr.chapters": "kuvitettua lukua siitä, miten planeettoja löydetään",
+ "@home.ctr.chapters": {
+  "x-review": "machine",
+  "x-source": "865afa5050"
+ },
+ "home.ctr.completeness": "pidätetyistä tunnetuista planeetoista löydetty sokkona (95 %:n Wilsonin väli)",
+ "@home.ctr.completeness": {
+  "x-review": "machine",
+  "x-source": "9439e30e8b"
+ },
+ "home.ctr.fetched": "{source}, haettu {date, date}",
+ "@home.ctr.fetched": {
+  "x-review": "machine",
+  "x-source": "3fd1f86614"
+ },
+ "home.ctr.fetched_file": "{source}, haettu {date, date} ({file})",
+ "@home.ctr.fetched_file": {
+  "x-review": "machine",
+  "x-source": "6d503bce8f"
+ },
+ "home.ctr.heldout": "vertailuaineiston pidätetty puolisko ({file})",
+ "@home.ctr.heldout": {
+  "x-review": "machine",
+  "x-source": "f9bd8675c1"
+ },
+ "home.do.docs": "Aja se itse",
+ "@home.do.docs": {
+  "x-review": "machine",
+  "x-source": "b3ab2275bd"
+ },
+ "home.do.docs.d": "Asenna SetuHQ, tutki tähteä, osallistu taivaan pyyhkäisyyn tai yhdistä tekoälyavustajasi MCP:n kautta.",
+ "@home.do.docs.d": {
+  "x-review": "machine",
+  "x-source": "e150d9ac61"
+ },
+ "home.do.explorer": "Katso kandidaatit",
+ "@home.do.explorer": {
+  "x-review": "machine",
+  "x-source": "db92ac3570"
+ },
+ "home.do.explorer.d": "Paneelin merkitsemät notkahdukset esimerkkitähtien TESS-valokäyrissä, kullakin täysi tapauskansio. Kandidaatteja, ei koskaan vahvistettuja planeettoja.",
+ "@home.do.explorer.d": {
+  "x-review": "machine",
+  "x-source": "b2310d28d3"
+ },
+ "home.do.methods": "Opi, miten se toimii",
+ "@home.do.methods": {
+  "x-review": "machine",
+  "x-source": "e2c2e9609b"
+ },
+ "home.do.methods.d": "Viisitoista kuvitettua lukua siitä, miten planeettoja löydetään, tähden huojunnasta kaasukehän lukemiseen.",
+ "@home.do.methods.d": {
+  "x-review": "machine",
+  "x-source": "a4ab0f8d7a"
+ },
+ "home.do.sentinels": "Tarkista näytöt",
+ "@home.do.sentinels": {
+  "x-review": "machine",
+  "x-source": "16cc8485e7"
+ },
+ "home.do.sentinels.d": "Miten paneeli pärjää todellisilla, tunnetuilla kohteilla: sokkovertailu, julkinen tulostaulu ja kalibrointi.",
+ "@home.do.sentinels.d": {
+  "x-review": "machine",
+  "x-source": "728efa2330"
+ },
+ "home.do.sky": "Tutki taivasta",
+ "@home.do.sky": {
+  "x-review": "machine",
+  "x-source": "0e734b0e38"
+ },
+ "home.do.sky.d": "Jokainen tunnettu eksoplaneetta Linnunradan 3D-kartalla, TESSin kattama taivas ja tunnettujen planeettojen haettava luettelo.",
+ "@home.do.sky.d": {
+  "x-review": "machine",
+  "x-source": "33d22aaaf3"
+ },
+ "home.dohere": "Mitä voit tehdä täällä",
+ "@home.dohere": {
+  "x-review": "machine",
+  "x-source": "c2f1fa481b"
+ },
+ "home.examples": "Lasketut esimerkit: {n, plural, one {# tähti} other {# tähteä}}, yksi putki",
+ "@home.examples": {
+  "x-review": "machine",
+  "x-source": "31c4bc580e"
+ },
+ "home.examples.p": "Jokainen on tallennettu ajo MASTin julkisilla TESS-valokäyrillä, aineisto, määritys ja koodi tiivisteineen. Jokainen notkahdus lasketaan seulonnan tuloksen mukaan; kandidaatti pysyy vahvistamattomana, ja hylätty notkahdus ei ole kandidaatti.",
+ "@home.examples.p": {
+  "x-review": "machine",
+  "x-source": "d13aa1075e"
+ },
+ "home.hero.h1": "Taivas, arvioituna.",
+ "@home.hero.h1": {
+  "x-review": "machine",
+  "x-source": "c537af3dcb"
+ },
+ "home.hero.more": "{n, plural, one {Katso # laskettu esimerkki ›} other {Katso # laskettua esimerkkiä ›}}",
+ "@home.hero.more": {
+  "x-review": "machine",
+  "x-source": "50e5398098"
+ },
+ "home.hero.sub": "SetuHQ etsii ylikulkuja minkä tahansa TESS-tähden julkisesta valokäyrästä. Kalibroitu paneeli, jossa on Sentinels (tekoälyarvioijat) ja Probes (deterministiset ilmaisimet), merkitsee notkahdukset, ja seulonta perustelee jokaisen ratkaisun. Mitään ei kutsuta planeetaksi ennen kuin se on sellainen.",
+ "@home.hero.sub": {
+  "x-review": "machine",
+  "x-source": "acf4d55d13"
+ },
+ "home.honest.archive": "<b>Vain arkistoarvoja.</b> Tämä sivu ei väitä mitään havaintoa. TOI- tai arkistovastaavuus vertaa tallennettua jaksoa julkaistuihin arvoihin.",
+ "@home.honest.archive": {
+  "x-review": "machine",
+  "x-source": "9caca54a23"
+ },
+ "home.honest.h": "Mitä tämä sivu ei väitä",
+ "@home.honest.h": {
+  "x-review": "machine",
+  "x-source": "738097d05c"
+ },
+ "home.honest.image": "<b>Ei kuvaa planeetasta.</b> Planeettojen kuvat ovat taiteilijan näkemyksiä, valittuja mitatun säteen ja säteilyn perusteella; <a href=\"/docs/pictures/\">Miten kuvat piirretään ›</a>",
+ "@home.honest.image": {
+  "x-review": "machine",
+  "x-source": "e6974ba935"
+ },
+ "home.honest.panel": "Paneelissa ovat Sentinels ja Probes:",
+ "@home.honest.panel": {
+  "x-review": "machine",
+  "x-source": "a9433f2186"
+ },
+ "home.honest.people": "Paneelissa ei ole ihmisiä.",
+ "@home.honest.people": {
+  "x-review": "machine",
+  "x-source": "7ffee760a9"
+ },
+ "home.honest.planet": "<b>Ei vahvistettua planeettaa.</b> Jokainen notkahdus, signaali ja syötteen merkintä täällä on {status}. Seulonnan läpäiseminen ei ole vahvistus.{match, select, none {} other { Vastaavuus kohteen {match} kanssa kertoo, että planeetta tunnetaan jo, ei että tämä ajo olisi vahvistanut sen.}}",
+ "@home.honest.planet": {
+  "x-review": "machine",
+  "x-source": "fddd51a0e3"
+ },
+ "home.honest.sizes": "<b>Ei planeettojen kokoja.</b> Tähden sädettä ei ole tallennettu, joten syvyys antaa vain planeetan ja tähden säteiden suhteen. Säteiden suhteiden sivu näyttää laskun.",
+ "@home.honest.sizes": {
+  "x-review": "machine",
+  "x-source": "99d745ec98"
+ },
+ "home.honest.weights": " Niiden painot perustuvat kalibrointiin, jossa kullakin oli {n} valokäyrää istutetulla signaalilla ja {n} tyhjää, joten ne ovat karkeita.",
+ "@home.honest.weights": {
+  "x-review": "machine",
+  "x-source": "46497d8bc1"
+ },
+ "home.more.sky": "Tutki taivasta ›",
+ "@home.more.sky": {
+  "x-review": "machine",
+  "x-source": "86786f5a19"
+ },
+ "home.more.transit": "Miten ylikulkuja löydetään ›",
+ "@home.more.transit": {
+  "x-review": "machine",
+  "x-source": "04e504e9e8"
+ },
+ "home.refcheck": "Vertailutarkistus: {planet}, tunnettu planeetta, löydetty uudelleen ajossa {run}",
+ "@home.refcheck": {
+  "x-review": "machine",
+  "x-source": "e700c0ebab"
+ },
+ "home.refrun": "Vertailuajo: {run}",
+ "@home.refrun": {
+  "x-review": "machine",
+  "x-source": "b698a243c0"
+ },
+ "honesty.attribution": "Sentinels toimivat oletuksena Clauden (Anthropic) varassa; muita palveluntarjoajia tuetaan ja ne merkitään. Probes ovat deterministisiä sovitetun suodattimen ilmaisimia.",
+ "@honesty.attribution": {
+  "x-review": "machine",
+  "x-source": "7793394412"
+ },
+ "honesty.cheops_disclaimer": "SetuHQ on riippumaton, eikä se ole sidoksissa ESAan, CHEOPS-tehtävään tai CHEOPS-konsortioon, eikä niiden hyväksymä tai niiden puolesta ylläpidetty.",
+ "@honesty.cheops_disclaimer": {
+  "x-review": "machine",
+  "x-source": "f163955866"
+ },
+ "honesty.embargo": "Signaalit, jotka eivät vastaa mitään tunnettua TOI-kohdetta, pidätetään yksityistä tarkastusta varten; ne julkaistaan vasta tarkastuksen ja ilmoittamisen jälkeen.",
+ "@honesty.embargo": {
+  "x-review": "machine",
+  "x-source": "7ab637a8c0"
+ },
+ "honesty.footer": "Jokainen SetuHQ:n tulos tällä sivustolla on kandidaatti, ei koskaan vahvistettu planeetta. Avointa lähdekoodia AGPL-3.0-lisenssillä; SetuHQ:n aineisto CC BY 4.0 -lisenssillä. ”SetuHQ” ja Setu-tunnus ovat Ashforde OÜ:n tavaramerkkejä.",
+ "@honesty.footer": {
+  "x-review": "machine",
+  "x-source": "69d7e6d4fb"
+ },
+ "honesty.no_detection": "Vain arkistoarvoja. Tämä sivu ei väitä mitään havaintoa.",
+ "@honesty.no_detection": {
+  "x-review": "machine",
+  "x-source": "fe680cebf0"
+ },
+ "honesty.none_confirmed": "Yksikään ei ole vahvistettu planeetta ennen kuin riippumattomat jatkohavainnot vahvistavat sen.",
+ "@honesty.none_confirmed": {
+  "x-review": "machine",
+  "x-source": "3509876ac0"
+ },
+ "honesty.probes_only": "Vain Probes; Sentinels-arvioijia ei ajettu tässä esimerkissä",
+ "@honesty.probes_only": {
+  "x-review": "machine",
+  "x-source": "3cfb53c6a7"
+ },
+ "honesty.tess_pointing": "Suuntaus julkaistun aikataulun mukaan, ei reaaliaikaista telemetriaa",
+ "@honesty.tess_pointing": {
+  "x-review": "machine",
+  "x-source": "6faac5a432"
+ },
+ "honesty.transients_aid": "Transienttityökalut ovat hakuapu, jonka kandidaatit on tarkistettava silmämääräisesti; niiden havaintoja, luokkavihjeitä ja väärien hälytysten suodattimia ei ole validoitu.",
+ "@honesty.transients_aid": {
+  "x-review": "machine",
+  "x-source": "61272b381e"
+ },
+ "honesty.unconfirmed": "kandidaatti, vahvistamaton",
+ "@honesty.unconfirmed": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "i18n.mtnote": "Tämä käännös on tehty koneen avulla, eikä äidinkielinen puhuja ole vielä tarkistanut sitä. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Korjaukset ovat tervetulleita</a>.",
+ "@i18n.mtnote": {
+  "x-review": "machine",
+  "x-source": "3803a5c5dc"
+ },
+ "i18n.picker.label": "Kieli: {name}",
+ "@i18n.picker.label": {
+  "x-review": "machine",
+  "x-source": "d99eed9b59"
+ },
+ "i18n.picker.note": "Kaikki kielet englantia lukuun ottamatta on käännetty koneen avulla, eikä äidinkieliset puhujat ole vielä tarkistaneet niitä. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Korjaukset ovat tervetulleita</a>.",
+ "@i18n.picker.note": {
+  "x-review": "machine",
+  "x-source": "b19e30478b"
+ },
+ "i18n.suggest.dismiss": "Sulje",
+ "@i18n.suggest.dismiss": {
+  "x-review": "machine",
+  "x-source": "48845bff33"
+ },
+ "i18n.suggest.go": "Lue suomeksi",
+ "@i18n.suggest.go": {
+  "x-review": "machine",
+  "x-source": "a9d0b8e36c"
+ },
+ "i18n.suggest.label": "Kieli",
+ "@i18n.suggest.label": {
+  "x-review": "machine",
+  "x-source": "a4fe65264e"
+ },
+ "i18n.suggest.text": "Tämä sivu on myös suomeksi.",
+ "@i18n.suggest.text": {
+  "x-review": "machine",
+  "x-source": "4d512860c4"
+ },
+ "label.art": "Taiteilijan näkemys",
+ "@label.art": {
+  "x-review": "machine",
+  "x-source": "8b1a9bc32a"
+ },
+ "label.illustration": "Havainnekuva",
+ "@label.illustration": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
+ },
+ "label.model": "Malli tallennetuista arvoista",
+ "@label.model": {
+  "x-review": "machine",
+  "x-source": "f99882758e"
+ },
+ "label.real": "Todellista aineistoa, lähde mainittu",
+ "@label.real": {
+  "x-review": "machine",
+  "x-source": "6f75938cc8"
+ },
+ "label.speculative": "Spekulatiivinen malli",
+ "@label.speculative": {
+  "x-review": "machine",
+  "x-source": "d1d38cf39a"
+ },
+ "lb.h1": "Menetelmät, pisteytettyinä sokkona todellisilla TOI-kohteilla.",
+ "@lb.h1": {
+  "x-review": "machine",
+  "x-source": "d7943ed0f0"
+ },
+ "lb.intro": "Julkinen tulostaulu jäädytetyllä todellisten TOI-kohteiden vertailuaineistolla: kunkin osallistujan havaitsemat tapahtumat, tulostaulun itsensä pisteyttäminä vain pidätetyllä puoliskolla, 95 %:n Wilsonin väleineen. Ei injektioiden kynnyspyyhkäisy (docs/threshold_sweep.md), joka säätää Probesin kynnyksiä synteettisillä valokäyrillä.",
+ "@lb.intro": {
+  "x-review": "machine",
+  "x-source": "8e62d2c060"
+ },
+ "lb.note": "Mitattu ilmoitetulla vertailuaineistolla; mikään tässä ei ole löytö.",
+ "@lb.note": {
+  "x-review": "machine",
+  "x-source": "272d460db4"
+ },
+ "limits.art": "Ei havainto: ulkonäkö valittu mitatun säteen ja säteilyn perusteella.",
+ "@limits.art": {
+  "x-review": "machine",
+  "x-source": "ec71f17b2e"
+ },
+ "limits.caption": "kuten kuvateksti kertoo",
+ "@limits.caption": {
+  "x-review": "machine",
+  "x-source": "dee533d112"
+ },
+ "limits.illustration": "Selittää ajatuksen; ei aineistoa.",
+ "@limits.illustration": {
+  "x-review": "machine",
+  "x-source": "c4c6c22d05"
+ },
+ "limits.model": "Malli tallennetuista luvuista; ei kuva kohteesta.",
+ "@limits.model": {
+  "x-review": "machine",
+  "x-source": "9f137900ab"
+ },
+ "limits.real": "Tallennettuja mittauksia, ryhmiteltyinä tai taitettuina kuten tallennettu.",
+ "@limits.real": {
+  "x-review": "machine",
+  "x-source": "1e9288318d"
+ },
+ "limits.source": "Lähde: {s}.",
+ "@limits.source": {
+  "x-review": "machine",
+  "x-source": "cba3864e3a"
+ },
+ "limits.speculative": "Mitatun tuolla puolen: mahdollisuus, ei tulos.",
+ "@limits.speculative": {
+  "x-review": "machine",
+  "x-source": "3fe7418bc2"
+ },
+ "limits.summary": "Lähde / rajat",
+ "@limits.summary": {
+  "x-review": "machine",
+  "x-source": "ecbcc39e74"
+ },
+ "mc.intro": "Valitse tähti missä tahansa ruudussa; jokainen ruutu ja jokainen irrotettu ikkuna seuraa.",
+ "@mc.intro": {
+  "x-review": "machine",
+  "x-source": "e6a5c8f840"
+ },
+ "mcp.honesty.candidate": "Kandidaatti, ei löytö: SetuHQ löytää ja seuloo notkahduksia julkisesta TESS-aineistosta. Planeetan vahvistaminen vaatii muiden tekemiä jatkohavaintoja (säteisnopeudet, kuvantaminen, tilastollinen validointi).",
+ "@mcp.honesty.candidate": {
+  "x-review": "machine",
+  "x-source": "2109188b0d"
+ },
+ "mcp.honesty.catalogue": "Luettelon arvot ovat lähteen mittauksia, näytettyinä tallennettuina; puuttuva arvo ei ole arvaus. SetuHQ ei ole näiden planeettojen löytäjä.",
+ "@mcp.honesty.catalogue": {
+  "x-review": "machine",
+  "x-source": "01e280f468"
+ },
+ "mcp.honesty.computed": "Laskettu nyt SetuHQ:n omalla koodilla annetuista syötteistä; ei tallennettu, tarkastettu tulos.",
+ "@mcp.honesty.computed": {
+  "x-review": "machine",
+  "x-source": "8ba17ff89a"
+ },
+ "mcp.honesty.formula": "Oppikirjan kaava laskettuna kuten esitetty; se kuvaa idealisoitua tapausta, ei mittausta.",
+ "@mcp.honesty.formula": {
+  "x-review": "machine",
+  "x-source": "cd6187025a"
+ },
+ "mcp.honesty.panel": "Sentinels ovat tekoälymalleja, eivät ihmisiä (oletuksena Claude; muut palveluntarjoajat merkitään). Vain Claude on testattu vertailuaineistolla. Probes ovat deterministisiä sovitetun suodattimen ilmaisimia.",
+ "@mcp.honesty.panel": {
+  "x-review": "machine",
+  "x-source": "9d2e4debf5"
+ },
+ "mcp.honesty.stored": "Luettu tallennetuista tiedostoista; mitään ei laskettu uudelleen.",
+ "@mcp.honesty.stored": {
+  "x-review": "machine",
+  "x-source": "333f8aa8d7"
+ },
+ "mcp.honesty.unreviewed": "Mikään arvioijapaneeli ei katsonut tätä: se on vain ilmaisimen ja seulonnan tuloste.",
+ "@mcp.honesty.unreviewed": {
+  "x-review": "machine",
+  "x-source": "832585f3e6"
+ },
+ "mcp.instructions": "SetuHQ etsii ylikulkuja NASAn julkisista TESS-valokäyristä arvioijapaneelilla, jossa on Sentinels (tekoälymalleja; oletuksena Claude, muut palveluntarjoajat merkittyinä) ja Probes (deterministisiä ilmaisimia), ja seuloo ja sovittaa sitten jokaisen notkahduksen. Kutsu näitä työkaluja arvioimisen sijaan: ne ajavat SetuHQ:n omaa koodia tai lukevat sen tallennettuja, tarkastettuja tuloksia. Jokaisessa vastauksessa on alkuperä ja rehellisyysmerkinnät; säilytä ne raportoidessasi. Kaikki, mitä SetuHQ löytää, on kandidaatti, ei löytö. Älä lähetä, julkaise tai toimita mitään ulos ilman käyttäjän nimenomaista hyväksyntää.",
+ "@mcp.instructions": {
+  "x-review": "machine",
+  "x-source": "8dcede2e8e"
+ },
+ "mcp.tool.benchmark_results": "Tallennettu vertailu- tai validointitulos: real_tois (sokkovertailu 662 TOI-kohteella), leaderboard (todellisten TOI-kohteiden tulostaulu), injection (Probesin injektio ja palautus), pi_men_validation, weights (kalibrointi) tai threshold_sweep (synteettinen, ei tulostaulu). Palautetaan tallennettuna.",
+ "@mcp.tool.benchmark_results": {
+  "x-review": "machine",
+  "x-source": "a8f12a0af7"
+ },
+ "mcp.tool.cheops_proposal_pack": "Kirjoita CHEOPS Guest Observers -ehdotuksen VALMISTELUPAKETTI (``propose.pack.build_pack``) uuteen hakemistoon runs/propose/<run_name> (hylätään, jos se on olemassa; sen ulkopuolelle ei kirjoiteta mitään, ei välimuistia): Running Callin sääntöjen tarkistus (kierrosrajat, huhti-/lokakuun sääntö suurille ohjelmille, seuraava määräaika Pariisin aikaa, varhaisin alku), kohteen tila (julkinen Reserved Target List, CHEOPS-arkiston julkiset metatiedot, SIMBADin/MASTin J2000-koordinaatit), SetuHQ:n tallennetut näytöt, karkeat ARVIOT tarkkuudesta ja kierroksista, anonymisoidut luonnokset anonymiteettitarkistuksineen ja ESA:n vaiheittainen tarkistuslista. Lukee vain julkisia sivuja; ei koskaan kirjaudu sisään eikä lähetä. SetuHQ on riippumaton ESAsta ja CHEOPS-tehtävästä: virallinen haku ja ESA:n työkalut ovat ratkaisevia.",
+ "@mcp.tool.cheops_proposal_pack": {
+  "x-review": "machine",
+  "x-source": "d9fdc80788"
+ },
+ "mcp.tool.compute_fap": "Voimakkaimman jaksollisen signaalin empiirinen väärän hälytyksen todennäköisyys (``search.false_alarm_probability``): lohko-bootstrap-BLS-toistot, jotka säilyttävät punaisen kohinan. Rajattu: N yrityksellä sitä ei koskaan ilmoiteta pienemmäksi kuin 1/(N + 1), ja Gumbelin häntä merkitään suuntaa antavaksi. N on rajattu 2000:een kutsua kohden.",
+ "@mcp.tool.compute_fap": {
+  "x-review": "machine",
+  "x-source": "01f4019412"
+ },
+ "mcp.tool.find_eclipsing_binary": "Pimennysmuuttujat sekä ellipsoidiset tai heijastusmuuttujat valokäyrässä (``binaries.analyse``): ratajakso laatikkohausta ja periodogrammista (kaksinkertaistettu parillisen ja parittoman eron tai yhtä syvien minimien vuoksi, ja silloin ilmoitettu monitulkintaiseksi), ensisijainen ja toissijainen pimennys (vaihe, syvyys, leveys, merkitsevyys), toisiopimennyksen vaihe e·cosω-vihjeineen, heuristinen morfologialuokka ja pimennysmuuttujakandidaatin merkintä perusteluineen. Ylikulkukandidaatin jakson, epookin ja keston kanssa se palauttaa myös neuvoa-antavia seulontavihjeitä (parilliset/parittomat syvyydet, toisiopimennys missä tahansa vaiheessa, ellipsoidiset ja heijastusamplitudit), joita SetuHQ:n seulonta ei käytä. Aika päivinä (TESSille BTJD).",
+ "@mcp.tool.find_eclipsing_binary": {
+  "x-review": "machine",
+  "x-source": "e45be3cbe7"
+ },
+ "mcp.tool.find_flares": "Havaitse ja luonnehdi tähtien purkauksia valokäyrässä (``flares.detect_flares``): purkaukset säilyttävä trendinpoisto, kandidaatit sigma-leikkauksella (Chang et al. 2015 -kriteerit), valinnainen kohinanpoisto aallokkeilla (Poyatos et al. 2025), Mendoza et al. 2022 -mallisovitukset monikomponenttimalleilla BIC:n mukaan valittuina, nousu- ja laskuajat, amplitudi, FWHM, ekvivalenttikesto ja energiat (9000 K:n musta kappale), kun Teff ja säde annetaan. Ajaa myös käännetyn vuon nollatestin. Aika päivinä (TESSille BTJD); tehtävä TESS tai CHEOPS määrää oletukset.",
+ "@mcp.tool.find_flares": {
+  "x-review": "machine",
+  "x-source": "d650c20040"
+ },
+ "mcp.tool.find_transients": "Jaksottomat kirkastumiset valokäyrässä (``transients.find_transients``) kolmella aikaskaalalla, kullakin huippu, amplitudi, nousu- ja laskuajat, FWHM ja luokkavihje (purkauksen kaltainen, galaksien ulkopuolisen transientin kaltainen, asteroidin ohituksen kaltainen, momentum dumpin kaltainen, hajavalon kaltainen tai jaksollisen vaihtelun kaltainen) perusteluineen; neljä viimeistä ovat todennäköisesti vääriä hälytyksiä. difference_flux=True erotuskuvien valokäyrälle yksikössä e-/s. Momentum dumpien ja hajavalon ajat (TESSin laatubitit 32, 2048, 4096) terävöittävät suodattimia. Jokainen tapahtuma on transienttikandidaatti, ei koskaan uusi tai vahvistettu kohde. Aika päivinä (TESSille BTJD).",
+ "@mcp.tool.find_transients": {
+  "x-review": "machine",
+  "x-source": "54243a74ac"
+ },
+ "mcp.tool.fit_transit": "Sovita SetuHQ:n reunatummentuva ylikulkumalli (``transitfit.fit_transit``) yhden ylikulun ympärille: syvyys, T14, törmäysparametri b, keskihetki, Rp/R★ ja ylikulun tiheys ρ★, kukin virheineen ja väleineen. Reunatummennus Claret 2017:n mukaan tähden Teff- ja log g -arvoille (Auringon kaltainen, jos niitä ei anneta). t0, kesto ja syvyys ovat alkuarvoja.",
+ "@mcp.tool.fit_transit": {
+  "x-review": "machine",
+  "x-source": "3b77980915"
+ },
+ "mcp.tool.get_candidate": "Yksi konsensusnotkahdus koko alkuperineen: tallennettu kandidaatti (seulonta, sovitus, FAP, jokaisen arvioijan merkinnän tarkastus), ajon manifesti (koodi, määrityksen tiiviste, syötteet SHA-256:n kanssa, arvioijat palveluntarjoajineen ja malleineen) ja jokaisen arvioijan tallennettu luokitus sen segmentistä (merkintä, merkinnät, perustelu, palveluntarjoaja, malli).",
+ "@mcp.tool.get_candidate": {
+  "x-review": "machine",
+  "x-source": "78f0b83b1a"
+ },
+ "mcp.tool.get_cheops_lightcurve": "Kohteen julkiset CHEOPS DRP -valokäyrät CHEOPS-arkistosta DACEn kautta (``cheops.get_cheops_lightcurve``; vaatii ``pip install 'setuhq[cheops]'`` ja verkon, ellei välimuistissa): käynnit lueteltuina sijainnin mukaan, omistusoikeudelliset ohitettuina, kukin haettuna kerran ja välimuistiin tallennettuna, kallistuskulman, taustan ja painopisteen systematiikka dekorreloituna (termit BIC:n mukaan). Palauttaa kunkin käynnin alkuperän (ohjelma, tiedostoavain, havaintotunniste, maininta), trendinpoiston yhteenvedon ja include_points-valitsimella trendistä puhdistetut pisteet BTJD:nä. Sisältää ESA:n kiitosmaininnan ja SetuHQ:n vastuuvapauslausekkeen.",
+ "@mcp.tool.get_cheops_lightcurve": {
+  "x-review": "machine",
+  "x-source": "06ff3dcf79"
+ },
+ "mcp.tool.get_planet": "Planeetan tallennettu luettelotietue ja sen isäntätähden tietue (tarkka nimivastaavuus; käytä ensin search_catalogue-työkalua).",
+ "@mcp.tool.get_planet": {
+  "x-review": "machine",
+  "x-source": "97084f4fb5"
+ },
+ "mcp.tool.get_star": "Isäntätähden tallennettu tietue ja jokainen sen ympärillä oleva luetteloitu planeetta (tarkka tähden nimi).",
+ "@mcp.tool.get_star": {
+  "x-review": "machine",
+  "x-source": "df7232ade1"
+ },
+ "mcp.tool.habitable_zone": "Elinkelpoisen vyöhykkeen rajat AU:na tähdelle (``methods.hz_distance_au``, Kopparapu et al. 2014, 1 M⊕): lähimenneisyyden Venus ja karkaava kasvihuoneilmiö (sisäraja), suurin kasvihuoneilmiö ja varhainen Mars (ulkoraja).",
+ "@mcp.tool.habitable_zone": {
+  "x-review": "machine",
+  "x-source": "3608921db8"
+ },
+ "mcp.tool.list_candidates": "Tallennetun ajon konsensusnotkahdukset, kunkin seulonnan läpäisy ja merkinnät (``candidates.json``).",
+ "@mcp.tool.list_candidates": {
+  "x-review": "machine",
+  "x-source": "0443efd099"
+ },
+ "mcp.tool.microlensing_magnification": "Pistelinssin suurennus A(u) = (u² + 2) / (u √(u² + 4)) törmäysparametrilla u, Einsteinin säteinä (``methods.paczynski``).",
+ "@mcp.tool.microlensing_magnification": {
+  "x-review": "machine",
+  "x-source": "29faa074dc"
+ },
+ "mcp.tool.pulsation_spectrum": "Valokäyrän taajuusanalyysi (``pulsations.analyse``): Lomb-Scargle-amplitudispektri, iteratiivinen esivalkaisu epälineaarisella monisinisovituksella S/N 4:ään asti (Breger et al. 1993), yhdistelmätaajuuksien merkinnät, Harvey-profiilin granulaatiotausta, numax/Δν Auringon kaltaisille oskillaattoreille sekä heuristinen vaihtelutyyppi epävarmuuksineen. Taajuudet yksiköissä d⁻¹ ja µHz; aika päivinä. n_surrogates > 0 ajaa punaisen kohinan nollatestin (enintään 20).",
+ "@mcp.tool.pulsation_spectrum": {
+  "x-review": "machine",
+  "x-source": "97767afcfb"
+ },
+ "mcp.tool.rotation_period": "Tähden pyörimisjakso pilkkujen modulaatiosta (``rotation.measure``): Lomb-Scargle-periodogrammi ja autokorrelaatiofunktio, epävarmuus, puolikas- ja kaksinkertaisaliasten käsittely sekä havaintomerkintä. Yksi TESS-sektori ei voi mitata yli noin 13 päivän jaksoja; ne ilmoitetaan rajan ulkopuolisiksi. Anna yksi sektori (tai itse yhdistämäsi valokäyrä, sektorien välisiin siirtymiin huolellisesti suhtautuen). Aika päivinä.",
+ "@mcp.tool.rotation_period": {
+  "x-review": "machine",
+  "x-source": "2d6e72833f"
+ },
+ "mcp.tool.run_pipeline_csv": "Aja koko putki (``pipeline.run_pipeline``) CSV-valokäyrälle (time, flux[, flux_err]) ja kirjoita uusi ajohakemisto runs/mcp/<run_name> (hylätään, jos se on olemassa: mitään ei koskaan korvata). Vain Probes, ellei sentinels=True; Sentinels ajetaan silloin vain siellä, missä niiden avain, SDK tai CLI on saatavilla (manifesti luettelee ohitetut ja syyt).",
+ "@mcp.tool.run_pipeline_csv": {
+  "x-review": "machine",
+  "x-source": "6a2a86935b"
+ },
+ "mcp.tool.run_pipeline_tess": "Lataa TESS SPOC -valokäyrä MASTista (``loaders.load_tess``; vaatii verkon ja ``pip install -e '.[tess]'``) TIC-tunnisteelle ja sektoreille, ja aja putki sille uuteen hakemistoon runs/mcp/<run_name> (ei koskaan olemassa olevaan). Vain Probes, ellei sentinels=True.",
+ "@mcp.tool.run_pipeline_tess": {
+  "x-review": "machine",
+  "x-source": "421d6522fe"
+ },
+ "mcp.tool.rv_semi_amplitude": "Säteisnopeuden puoliamplitudi K (m/s) tähdelle, jolla on yksi planeetta (``methods.rv_semi_amplitude``).",
+ "@mcp.tool.rv_semi_amplitude": {
+  "x-review": "machine",
+  "x-source": "0342cc898c"
+ },
+ "mcp.tool.search_catalogue": "Hae eksoplaneettaluettelosta planeetan tai tähden nimellä (tai vaihtoehtoisella nimellä, esim. TIC-tunnisteella), valinnaisesti löytämismenetelmän mukaan (``transit``, ``rv``, ``imaging``, ``microlensing``, ``astrometry``, ``timing``). Kääre funktiolle ``catalogue.catalogue_filter``.",
+ "@mcp.tool.search_catalogue": {
+  "x-review": "machine",
+  "x-source": "27fc845629"
+ },
+ "mcp.tool.sentinel_providers": "SetuHQ:n tukemat Sentinel-palveluntarjoajat, miten kukin määritetään ja voiko se toimia täällä (sen avainmuuttuja on asetettu, sen SDK tai CLI on saatavilla). Ei koskaan palauta avainta.",
+ "@mcp.tool.sentinel_providers": {
+  "x-review": "machine",
+  "x-source": "d8e703706c"
+ },
+ "mcp.tool.transit_depth": "Keskeisen ylikulun syvyys: (Rp/R★)² geometrisesti sekä TESSin neliöllisellä reunatummennuksella tähden Teff-arvolle (``methods.transit_flux`` kohdassa z = 0, Claret 2017 -kertoimet). Anna Rp/R★ tai Rp Maan säteinä ja R★ Auringon säteinä.",
+ "@mcp.tool.transit_depth": {
+  "x-review": "machine",
+  "x-source": "6b52c6ad8e"
+ },
+ "mcp.tool.vet_lightcurve": "Etsi valokäyrästä jaksollinen ylikulku (BLS, ``search.bls_search``) ja seulo yksi notkahdus SetuHQ:n seulonnalla (``vet.vet_event``: SNR, kesto, reunat, parilliset/parittomat syvyydet, toisiopimennys). Anna notkahdus muodossa t_start/t_end tai jätä ne pois seuloaksesi voimakkaimman jaksollisen signaalin ensimmäisen ylikulun. Valokäyrä valmistellaan kuten putki sen valmistelee (puhdistus, trendinpoisto, ryhmittely).",
+ "@mcp.tool.vet_lightcurve": {
+  "x-review": "machine",
+  "x-source": "645c79cc54"
+ },
+ "methods.chapter_n": "Luku {i}/{n}",
+ "@methods.chapter_n": {
+  "x-review": "machine",
+  "x-source": "417be5d799"
+ },
+ "methods.h1": "Miten planeettoja löydetään.",
+ "@methods.h1": {
+  "x-review": "machine",
+  "x-source": "583ac6e306"
+ },
+ "methods.h1b": "Ja miten SetuHQ löytää niitä.",
+ "@methods.h1b": {
+  "x-review": "machine",
+  "x-source": "99b2b42598"
+ },
+ "methods.intro": "{n} lukua, kukin animoitu selitys fysiikkoineen ja lähteineen. Jokainen piirros kertoo, onko se havainnekuva, malli tallennetuista arvoista vai todellista aineistoa, ja kuinka paljon sitä on liioiteltu. Vain ylikulkuluku kuvaa jotain, mitä SetuHQ itse tekee.",
+ "@methods.intro": {
+  "x-review": "machine",
+  "x-source": "c0a3069175"
+ },
+ "methods.planets": "Tämän luvun planeetat",
+ "@methods.planets": {
+  "x-review": "machine",
+  "x-source": "6be85af173"
+ },
+ "methods.sources": "Lähteet",
+ "@methods.sources": {
+  "x-review": "machine",
+  "x-source": "caf85b0888"
+ },
+ "nav.candidates": "Kandidaatit",
+ "@nav.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "nav.docs": "Ohjeet",
+ "@nav.docs": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "nav.evidence": "Näytöt",
+ "@nav.evidence": {
+  "x-review": "machine",
+  "x-source": "03867aea70"
+ },
+ "nav.explore": "Tutki",
+ "@nav.explore": {
+  "x-review": "machine",
+  "x-source": "3b73900b8d"
+ },
+ "nav.how": "Näin se toimii",
+ "@nav.how": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "nf.candidates": "Jokainen esimerkkiajojen löytämä notkahdus tarkistuksineen.",
+ "@nf.candidates": {
+  "x-review": "machine",
+  "x-source": "1347c55237"
+ },
+ "nf.docs": "Asenna SetuHQ ja aja se itse.",
+ "@nf.docs": {
+  "x-review": "machine",
+  "x-source": "ae69454d62"
+ },
+ "nf.evidence": "Arvioijat, vertailuaineisto ja ajot.",
+ "@nf.evidence": {
+  "x-review": "machine",
+  "x-source": "b14b42d506"
+ },
+ "nf.explore": "Taivas, Linnunrata ja jokainen luetteloitu planeetta.",
+ "@nf.explore": {
+  "x-review": "machine",
+  "x-source": "05950074cc"
+ },
+ "nf.h1": "Tätä sivua ei ole täällä.",
+ "@nf.h1": {
+  "x-review": "machine",
+  "x-source": "3ba2f76d61"
+ },
+ "nf.home": "Siirry etusivulle",
+ "@nf.home": {
+  "x-review": "machine",
+  "x-source": "adceddedfd"
+ },
+ "nf.how": "Viisitoista lukua siitä, miten planeettoja löydetään.",
+ "@nf.how": {
+  "x-review": "machine",
+  "x-source": "b04ce55cc1"
+ },
+ "nf.intro": "Osoite voi olla kirjoitettu väärin, tai sivu on siirtynyt, kun sivustoa järjesteltiin uudelleen. Vanhat osoitteet ohjautuvat itsestään; tällä ei ole uutta paikkaa.",
+ "@nf.intro": {
+  "x-review": "machine",
+  "x-source": "76142af35c"
+ },
+ "nf.search": "Hae planeettoja, tähtiä ja sivuja",
+ "@nf.search": {
+  "x-review": "machine",
+  "x-source": "36738611e1"
+ },
+ "obj.cls.bymass": " (massan perusteella)",
+ "@obj.cls.bymass": {
+  "x-review": "machine",
+  "x-source": "0fefa83c19"
+ },
+ "obj.cls.earth": "Maan kokoinen",
+ "@obj.cls.earth": {
+  "x-review": "machine",
+  "x-source": "793cad2691"
+ },
+ "obj.cls.giant": "Kaasujättiläinen",
+ "@obj.cls.giant": {
+  "x-review": "machine",
+  "x-source": "dc4da1dee3"
+ },
+ "obj.cls.nep": "Neptunuksen kaltainen",
+ "@obj.cls.nep": {
+  "x-review": "machine",
+  "x-source": "d9aa819eb6"
+ },
+ "obj.cls.none": "luokkaa ei voi määrittää (ei tallennettua sädettä tai massaa)",
+ "@obj.cls.none": {
+  "x-review": "machine",
+  "x-source": "4c2ce50d4a"
+ },
+ "obj.cls.subnep": "Alineptunus",
+ "@obj.cls.subnep": {
+  "x-review": "machine",
+  "x-source": "a17b446d03"
+ },
+ "obj.cls.super": "Supermaa",
+ "@obj.cls.super": {
+  "x-review": "machine",
+  "x-source": "c9402130b8"
+ },
+ "obj.discovered": "löydetty {year}",
+ "@obj.discovered": {
+  "x-review": "machine",
+  "x-source": "aeef0079ed"
+ },
+ "obj.discovered_none": "löytövuotta ei tallennettu",
+ "@obj.discovered_none": {
+  "x-review": "machine",
+  "x-source": "ceb1245b3e"
+ },
+ "obj.host": "Sen tähti ja muut planeetat",
+ "@obj.host": {
+  "x-review": "machine",
+  "x-source": "c247cb467a"
+ },
+ "obj.nohost": "isäntätähteä ei tallennettu",
+ "@obj.nohost": {
+  "x-review": "machine",
+  "x-source": "1309987b39"
+ },
+ "obj.params": "Tallennetut parametrit",
+ "@obj.params": {
+  "x-review": "machine",
+  "x-source": "a060be301b"
+ },
+ "obj.planets": "Sen planeetat",
+ "@obj.planets": {
+  "x-review": "machine",
+  "x-source": "0b1b4bc5af"
+ },
+ "obj.refs": "Löytö ja viitteet",
+ "@obj.refs": {
+  "x-review": "machine",
+  "x-source": "11a5acd988"
+ },
+ "obj.row.a": "Isoakselin puolikas",
+ "@obj.row.a": {
+  "x-review": "machine",
+  "x-source": "7a98cb0909"
+ },
+ "obj.row.b": "Törmäysparametri",
+ "@obj.row.b": {
+  "x-review": "machine",
+  "x-source": "c30e761341"
+ },
+ "obj.row.dec": "Dek. (J2000)",
+ "@obj.row.dec": {
+  "x-review": "machine",
+  "x-source": "31451795ef"
+ },
+ "obj.row.dist": "Etäisyys",
+ "@obj.row.dist": {
+  "x-review": "machine",
+  "x-source": "b7bdf7a2d6"
+ },
+ "obj.row.e": "Eksentrisyys",
+ "@obj.row.e": {
+  "x-review": "machine",
+  "x-source": "3642eea73f"
+ },
+ "obj.row.incl": "Inklinaatio",
+ "@obj.row.incl": {
+  "x-review": "machine",
+  "x-source": "e1a57232e1"
+ },
+ "obj.row.k": "RV-puoliamplitudi K",
+ "@obj.row.k": {
+  "x-review": "machine",
+  "x-source": "4bc68f8d51"
+ },
+ "obj.row.lambda": "Pyörimis–rata-kulma λ",
+ "@obj.row.lambda": {
+  "x-review": "machine",
+  "x-source": "f4a2329657"
+ },
+ "obj.row.mass": "Massa",
+ "@obj.row.mass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.msini": "Vähimmäismassa (m sin i)",
+ "@obj.row.msini": {
+  "x-review": "machine",
+  "x-source": "0a0c24bec0"
+ },
+ "obj.row.period": "Kiertoaika",
+ "@obj.row.period": {
+  "x-review": "machine",
+  "x-source": "278785d733"
+ },
+ "obj.row.ra": "RA (J2000)",
+ "@obj.row.ra": {
+  "x-review": "machine",
+  "x-source": "9cee37a6a6"
+ },
+ "obj.row.radius": "Säde",
+ "@obj.row.radius": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.sage": "Ikä",
+ "@obj.row.sage": {
+  "x-review": "machine",
+  "x-source": "39b7370f30"
+ },
+ "obj.row.smass": "Massa",
+ "@obj.row.smass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.smet": "Metallisuus [Fe/H]",
+ "@obj.row.smet": {
+  "x-review": "machine",
+  "x-source": "b7e5ba6b1d"
+ },
+ "obj.row.srad": "Säde",
+ "@obj.row.srad": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.steff": "Efektiivinen lämpötila",
+ "@obj.row.steff": {
+  "x-review": "machine",
+  "x-source": "bcd5903c63"
+ },
+ "obj.row.teq": "Tasapainolämpötila",
+ "@obj.row.teq": {
+  "x-review": "machine",
+  "x-source": "a3016009fd"
+ },
+ "obj.row.tmeas": "Mitattu lämpötila",
+ "@obj.row.tmeas": {
+  "x-review": "machine",
+  "x-source": "592546ce16"
+ },
+ "obj.row.vmag": "V-magnitudi",
+ "@obj.row.vmag": {
+  "x-review": "machine",
+  "x-source": "963ef1a54e"
+ },
+ "obj.sysview": "Järjestelmänäkymä:",
+ "@obj.sysview": {
+  "x-review": "machine",
+  "x-source": "8f2681a95c"
+ },
+ "obj.units": "Yksiköt kuten {source} ne tallentaa. Virheet ovat tallennetut ala- ja ylärajat; mitään ei näytetä, missä mitään ei ole tallennettu.",
+ "@obj.units": {
+  "x-review": "machine",
+  "x-source": "1d415a6e1a"
+ },
+ "obj.where": "Missä se on",
+ "@obj.where": {
+  "x-review": "machine",
+  "x-source": "751c664982"
+ },
+ "out.dash.footer": "SetuHQ:n tuottama. Synteettisen aineiston tulokset eivät ole väitteitä todellisesta taivasaineistosta.",
+ "@out.dash.footer": {
+  "x-review": "machine",
+  "x-source": "98762ed655"
+ },
+ "out.feed.candidates": "Nämä ovat kandidaatteja.",
+ "@out.feed.candidates": {
+  "x-review": "machine",
+  "x-source": "ee9b7f2cdf"
+ },
+ "out.feed.h1": "Hakusyöte",
+ "@out.feed.h1": {
+  "x-review": "machine",
+  "x-source": "22bc3c8839"
+ },
+ "out.feed.held": "Pidätetty tarkastusta varten",
+ "@out.feed.held": {
+  "x-review": "machine",
+  "x-source": "57b7af20f8"
+ },
+ "out.feed.nights": "Merkinnät yöttäin",
+ "@out.feed.nights": {
+  "x-review": "machine",
+  "x-source": "6cd04f7bc5"
+ },
+ "out.plate.interval": "Notkahduksen konsensusväli on siellä, missä niiden merkinnät ovat samaa mieltä.",
+ "@out.plate.interval": {
+  "x-review": "machine",
+  "x-source": "1780c6e536"
+ },
+ "out.plate.others": "Muiden esimerkkitähtien kuvalaatat",
+ "@out.plate.others": {
+  "x-review": "machine",
+  "x-source": "df7ef77948"
+ },
+ "out.plate.panel": "Paneelissa ovat Sentinels ja Probes, ei ihmisiä.",
+ "@out.plate.panel": {
+  "x-review": "machine",
+  "x-source": "15066e34e3"
+ },
+ "out.report.benchmark": "Injektio ja palautus",
+ "@out.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "6da1d36286"
+ },
+ "out.report.candidates": "Kandidaatit",
+ "@out.report.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "out.report.panel": "Paneelin päätökset",
+ "@out.report.panel": {
+  "x-review": "machine",
+  "x-source": "a929a43913"
+ },
+ "out.report.panel.p": "Jokaisen arvioijan vastaus jokaiseen sokkokoodattuun segmenttiin. Erimielisyys pidetään näkyvissä, koska siellä konsensus ansaitaan.",
+ "@out.report.panel.p": {
+  "x-review": "machine",
+  "x-source": "da09405f36"
+ },
+ "out.report.pipeline": "Miten ajo toimii",
+ "@out.report.pipeline": {
+  "x-review": "machine",
+  "x-source": "baad56eb35"
+ },
+ "out.report.provenance": "Alkuperä",
+ "@out.report.provenance": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "out.report.validation": "Validointi tunnetuilla planeetoilla",
+ "@out.report.validation": {
+  "x-review": "machine",
+  "x-source": "4432fa961d"
+ },
+ "panel.both": "{s, plural, one {# Sentinel} other {# Sentinels}} ja {p, plural, one {# Probe} other {# Probes}}",
+ "@panel.both": {
+  "x-review": "machine",
+  "x-source": "c6e6d6aa5e"
+ },
+ "panel.probes": "{p, plural, one {# Probe} other {# Probes}}",
+ "@panel.probes": {
+  "x-review": "machine",
+  "x-source": "5dce100851"
+ },
+ "panel.sentinels": "{s, plural, one {# Sentinel} other {# Sentinels}}",
+ "@panel.sentinels": {
+  "x-review": "machine",
+  "x-source": "70f14c3441"
+ },
+ "pic.colour": "Tähden väri",
+ "@pic.colour": {
+  "x-review": "machine",
+  "x-source": "dfe6307835"
+ },
+ "pic.draw": "Tähti ja ylikulku",
+ "@pic.draw": {
+  "x-review": "machine",
+  "x-source": "e0d9fd74d5"
+ },
+ "pic.h1": "Miten kuvat piirretään.",
+ "@pic.h1": {
+  "x-review": "machine",
+  "x-source": "b56c1f91df"
+ },
+ "pic.intro": "Jokainen SetuHQ:n tähti piirretään mustan kappaleen värissään tallennetun lämpötilansa mukaan. Jokainen planeetta on taiteilijan näkemys: sen ulkonäkö valitaan kahden mitatun asian perusteella, sen säteen (tai ilman sitä sen massan) ja tähdeltä saamansa valon. Mitään kuvassa ei ole mitattu näiden lukujen lisäksi, eikä koostumusta koskaan.",
+ "@pic.intro": {
+  "x-review": "machine",
+  "x-source": "3cf76ad409"
+ },
+ "pic.labels": "Viisi merkintää",
+ "@pic.labels": {
+  "x-review": "machine",
+  "x-source": "51668dd62a"
+ },
+ "pic.labels.p": "Jokaisessa sivuston kuvassa on yksi niistä, itse kuvassa.",
+ "@pic.labels.p": {
+  "x-review": "machine",
+  "x-source": "880b424ff6"
+ },
+ "pic.real": "Mikä on todellista ja mikä piirrettyä",
+ "@pic.real": {
+  "x-review": "machine",
+  "x-source": "79bd58ea67"
+ },
+ "pic.rules": "Säännöt",
+ "@pic.rules": {
+  "x-review": "machine",
+  "x-source": "e3954c7ee3"
+ },
+ "pic.still": "Vähennetyllä liikkeellä",
+ "@pic.still": {
+  "x-review": "machine",
+  "x-source": "a42e838475"
+ },
+ "pic.still.p": "Kun laitteesi pyytää vähennettyä liikettä, mikään ei pyöri silmukassa: jokainen piirros näyttää yhden suunnitellun pysäytyskuvan, ja kaikki toistuva odottaa painikettaan.",
+ "@pic.still.p": {
+  "x-review": "machine",
+  "x-source": "b12a8bfb34"
+ },
+ "pic.table": "Ulkonäkötaulukko",
+ "@pic.table": {
+  "x-review": "machine",
+  "x-source": "5bf530d59d"
+ },
+ "pr.h1": "Valmistele CHEOPS-ehdotus.",
+ "@pr.h1": {
+  "x-review": "machine",
+  "x-source": "c189d495dd"
+ },
+ "pr.intro": "<code>setuhq propose cheops</code> kirjoittaa valmistelupaketin CHEOPS Guest Observers Running Call -hakuun: tarkistetut säännöt, kohteen tila, suunnitteluarviot, anonymisoidut luonnokset ja ESA:n seitsemän vaihetta tarkistuslistana. Ajat ESA:n työkalut ja lähetät itse.",
+ "@pr.intro": {
+  "x-review": "machine",
+  "x-source": "6893d1fea2"
+ },
+ "route.candidates.label": "Tapauskansio",
+ "@route.candidates.label": {
+  "x-review": "machine",
+  "x-source": "d12f22e06a"
+ },
+ "route.candidates.title": "Tapauskansio: {name} · Kandidaatit · SetuHQ",
+ "@route.candidates.title": {
+  "x-review": "machine",
+  "x-source": "6265efaa30"
+ },
+ "route.catalogue.label": "Luettelo",
+ "@route.catalogue.label": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "route.catalogue.title": "Tunnettujen eksoplaneettojen luettelo · SetuHQ",
+ "@route.catalogue.title": {
+  "x-review": "machine",
+  "x-source": "1d55d9e531"
+ },
+ "route.docs.label": "Ohjeet",
+ "@route.docs.label": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "route.docs.title": "Ohjeet: aloita SetuHQ:n käyttö · SetuHQ",
+ "@route.docs.title": {
+  "x-review": "machine",
+  "x-source": "273729a761"
+ },
+ "route.editions.label": "Versiot",
+ "@route.editions.label": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "route.editions.title": "Versiot: avoin ydin, SetuHQ Pro ja räätälöity tutkimus · SetuHQ",
+ "@route.editions.title": {
+  "x-review": "machine",
+  "x-source": "facd044991"
+ },
+ "route.explorer.label": "Kandidaatit",
+ "@route.explorer.label": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "route.explorer.title": "Kandidaatit · SetuHQ",
+ "@route.explorer.title": {
+  "x-review": "machine",
+  "x-source": "3377897bfa"
+ },
+ "route.galaxy.label": "Linnunrata",
+ "@route.galaxy.label": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "route.galaxy.title": "Linnunrata · Tutki · SetuHQ",
+ "@route.galaxy.title": {
+  "x-review": "machine",
+  "x-source": "ad11918632"
+ },
+ "route.leaderboard.label": "Tulostaulu",
+ "@route.leaderboard.label": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "route.leaderboard.title": "Tulostaulu · Näytöt · SetuHQ",
+ "@route.leaderboard.title": {
+  "x-review": "machine",
+  "x-source": "2b687acd99"
+ },
+ "route.methods.label": "Näin se toimii",
+ "@route.methods.label": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "route.methods.title": "{name} · Näin se toimii · SetuHQ",
+ "@route.methods.title": {
+  "x-review": "machine",
+  "x-source": "1cbf3454bd"
+ },
+ "route.mission.label": "Mission Control",
+ "@route.mission.label": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "route.mission.title": "Mission Control · Tutki · SetuHQ",
+ "@route.mission.title": {
+  "x-review": "machine",
+  "x-source": "3bbcc04226"
+ },
+ "route.notfound.label": "Sivua ei löytynyt",
+ "@route.notfound.label": {
+  "x-review": "machine",
+  "x-source": "a469ab4ca4"
+ },
+ "route.notfound.title": "Sivua ei löytynyt · SetuHQ",
+ "@route.notfound.title": {
+  "x-review": "machine",
+  "x-source": "9ba0459ab7"
+ },
+ "route.overview.label": "Etusivu",
+ "@route.overview.label": {
+  "x-review": "machine",
+  "x-source": "3a78695388"
+ },
+ "route.overview.title": "SetuHQ: taivas, arvioituna",
+ "@route.overview.title": {
+  "x-review": "machine",
+  "x-source": "1159339ef0"
+ },
+ "route.pictures.label": "Miten kuvat piirretään",
+ "@route.pictures.label": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "route.pictures.title": "Miten kuvat piirretään · Ohjeet · SetuHQ",
+ "@route.pictures.title": {
+  "x-review": "machine",
+  "x-source": "09b9052231"
+ },
+ "route.planet.label": "Planeetta",
+ "@route.planet.label": {
+  "x-review": "machine",
+  "x-source": "b6e3957877"
+ },
+ "route.planet.title": "{name} · Planeetat · SetuHQ",
+ "@route.planet.title": {
+  "x-review": "machine",
+  "x-source": "1fcbb7f176"
+ },
+ "route.planets.label": "Säteiden suhteet",
+ "@route.planets.label": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "route.planets.title": "Säteiden suhteet · Kandidaatit · SetuHQ",
+ "@route.planets.title": {
+  "x-review": "machine",
+  "x-source": "ac2e38c1f9"
+ },
+ "route.plates.label": "Kuvalaatat",
+ "@route.plates.label": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "route.propose.label": "CHEOPS-ehdotukset",
+ "@route.propose.label": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "route.propose.title": "Valmistele CHEOPS-ehdotus · Ohjeet · SetuHQ",
+ "@route.propose.title": {
+  "x-review": "machine",
+  "x-source": "6f87c679a9"
+ },
+ "route.report.label": "Ajoraportti",
+ "@route.report.label": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "route.runs.label": "Ajot",
+ "@route.runs.label": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "route.runs.title": "Ajot · Näytöt · SetuHQ",
+ "@route.runs.title": {
+  "x-review": "machine",
+  "x-source": "004653c043"
+ },
+ "route.sentinels.label": "Paneeli",
+ "@route.sentinels.label": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "route.sentinels.title": "Näytöt: paneeli mitattuna · SetuHQ",
+ "@route.sentinels.title": {
+  "x-review": "machine",
+  "x-source": "789dfd2a1e"
+ },
+ "route.sky.label": "Taivaankartta",
+ "@route.sky.label": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "route.sky.title": "Tutki taivasta · SetuHQ",
+ "@route.sky.title": {
+  "x-review": "machine",
+  "x-source": "8b6fb90a8b"
+ },
+ "route.star.label": "Tähti",
+ "@route.star.label": {
+  "x-review": "machine",
+  "x-source": "e357d39687"
+ },
+ "route.star.title": "{name} · Tähdet · SetuHQ",
+ "@route.star.title": {
+  "x-review": "machine",
+  "x-source": "fbb83b9cf8"
+ },
+ "route.stellar.label": "Tähdet",
+ "@route.stellar.label": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "route.stellar.title": "Tähdet mitattuina: purkaukset ja sykkeet · Näytöt · SetuHQ",
+ "@route.stellar.title": {
+  "x-review": "machine",
+  "x-source": "67e92dbcd1"
+ },
+ "route.stellardocs.label": "Purkaukset ja sykkeet",
+ "@route.stellardocs.label": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "route.stellardocs.title": "Purkaukset, sykkeet ja CHEOPS · Ohjeet · SetuHQ",
+ "@route.stellardocs.title": {
+  "x-review": "machine",
+  "x-source": "ed9c362b70"
+ },
+ "route.tessnow.label": "Missä TESS on nyt",
+ "@route.tessnow.label": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "route.tessnow.title": "Mihin TESS katsoo · Tutki · SetuHQ",
+ "@route.tessnow.title": {
+  "x-review": "machine",
+  "x-source": "b9141101d4"
+ },
+ "route.transit.label": "Kandidaatti",
+ "@route.transit.label": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
+ "route.transit.title": "{name} · Kandidaatit · SetuHQ",
+ "@route.transit.title": {
+  "x-review": "machine",
+  "x-source": "e3d2dd556b"
+ },
+ "route.variables.label": "Kaikki mikä himmenee",
+ "@route.variables.label": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "route.variables.title": "Kaikki mikä himmenee · Luettelo · SetuHQ",
+ "@route.variables.title": {
+  "x-review": "machine",
+  "x-source": "85fdb3c494"
+ },
+ "route.vetter.label": "Arvioi itse",
+ "@route.vetter.label": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "route.vetter.title": "Arvioi itse · Kandidaatit · SetuHQ",
+ "@route.vetter.title": {
+  "x-review": "machine",
+  "x-source": "f8e3bf1fc8"
+ },
+ "rr.h1": "Mitä kukin syvyys tarkoittaisi, jos se olisi planeetta.",
+ "@rr.h1": {
+  "x-review": "machine",
+  "x-source": "ff54ab4721"
+ },
+ "rr.intro": "Yksi kortti kutakin ajon tai syötteen tähteä kohden. Jokainen merkintä on {status}; alla oleva suhde on se, mitä sen tallennettu syvyys tarkoittaa, jos se olisi planeetta.",
+ "@rr.intro": {
+  "x-review": "machine",
+  "x-source": "9889e603bf"
+ },
+ "runs.h1": "Jokainen hakuajo, sen virheet tallennettuina ja näiden sivujen taustalla oleva määritys.",
+ "@runs.h1": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "runs.hist": "Hakuajot",
+ "@runs.hist": {
+  "x-review": "machine",
+  "x-source": "26d6d37f90"
+ },
+ "runs.intro": "Hakuajojen historia luettelosta ja ajon {run} määritys. Virheilmoitukset näytetään tallennettuina.",
+ "@runs.intro": {
+  "x-review": "machine",
+  "x-source": "95d99973c5"
+ },
+ "sd.h1": "Purkaukset, sykkeet ja CHEOPS.",
+ "@sd.h1": {
+  "x-review": "machine",
+  "x-source": "a0c598f487"
+ },
+ "sd.intro": "Kuusi komentoa katsoo tähteä eikä sen planeettoja. Kukin kirjoittaa yhden JSON-tietueen tuloksineen, alkuperineen (versio, koodin sormenjälki, jokaisen syötteen sha256) ja merkintöineen. Purkaus tai taajuus havaitaan ilmoitetulla merkitsevyydellä, ei koskaan vahvisteta; vaihtelutyyppi on todennäköinen tai kandidaatti.",
+ "@sd.intro": {
+  "x-review": "machine",
+  "x-source": "d9fdd750e3"
+ },
+ "sen.h1": "{n, plural, one {# arvioija.} other {# arvioijaa.}}",
+ "@sen.h1": {
+  "x-review": "machine",
+  "x-source": "18e2721f25"
+ },
+ "sen.h1b": "Jokainen ansaitsee äänensä.",
+ "@sen.h1b": {
+  "x-review": "machine",
+  "x-source": "67b1d265c9"
+ },
+ "sen.intro": "Paneeli, joka merkitsi notkahdukset ajossa {run}: Sentinels ja Probes, ei ihmisiä.",
+ "@sen.intro": {
+  "x-review": "machine",
+  "x-source": "cfd243554e"
+ },
+ "shell.bootnote": "Tämän sivun vuorovaikutteiset osat eivät latautuneet. Yllä oleva teksti on täydellinen; lataa uudelleen yrittääksesi uudestaan.",
+ "@shell.bootnote": {
+  "x-review": "machine",
+  "x-source": "a2f1ab571c"
+ },
+ "shell.breadcrumb": "Murupolku",
+ "@shell.breadcrumb": {
+  "x-review": "machine",
+  "x-source": "2bd873d6c7"
+ },
+ "shell.copy_view": "Kopioi linkki tähän näkymään",
+ "@shell.copy_view": {
+  "x-review": "machine",
+  "x-source": "709937ae3d"
+ },
+ "shell.home": "SetuHQ, etusivu",
+ "@shell.home": {
+  "x-review": "machine",
+  "x-source": "970b8e33a0"
+ },
+ "shell.in_section": "Tässä osiossa",
+ "@shell.in_section": {
+  "x-review": "machine",
+  "x-source": "a4b1dbff1e"
+ },
+ "shell.menu_close": "Sulje valikko",
+ "@shell.menu_close": {
+  "x-review": "machine",
+  "x-source": "d992820f3c"
+ },
+ "shell.menu_open": "Avaa valikko",
+ "@shell.menu_open": {
+  "x-review": "machine",
+  "x-source": "fc798c613b"
+ },
+ "shell.nav_main": "Päävalikko",
+ "@shell.nav_main": {
+  "x-review": "machine",
+  "x-source": "eb814be3ca"
+ },
+ "shell.search": "Hae planeettoja, tähtiä ja sivuja (näppäin /)",
+ "@shell.search": {
+  "x-review": "machine",
+  "x-source": "781eaaf920"
+ },
+ "shell.search_title": "Haku (/)",
+ "@shell.search_title": {
+  "x-review": "machine",
+  "x-source": "bae77fae53"
+ },
+ "shell.skip": "Siirry sisältöön",
+ "@shell.skip": {
+  "x-review": "machine",
+  "x-source": "ac576a66d4"
+ },
+ "shell.theme.dark": "tumma",
+ "@shell.theme.dark": {
+  "x-review": "machine",
+  "x-source": "e6bb5689be"
+ },
+ "shell.theme.label": "Väriteema: {t}. Vaihda: {next}",
+ "@shell.theme.label": {
+  "x-review": "machine",
+  "x-source": "c4ccc7de70"
+ },
+ "shell.theme.light": "vaalea",
+ "@shell.theme.light": {
+  "x-review": "machine",
+  "x-source": "99a7026172"
+ },
+ "shell.theme.system": "laitteesi asetus",
+ "@shell.theme.system": {
+  "x-review": "machine",
+  "x-source": "2b67477bad"
+ },
+ "shell.theme.title": "Teema: {t}",
+ "@shell.theme.title": {
+  "x-review": "machine",
+  "x-source": "79f90fbb1e"
+ },
+ "shell.view_link": "Linkki tähän näkymään",
+ "@shell.view_link": {
+  "x-review": "machine",
+  "x-source": "5fb2ec761c"
+ },
+ "sky.tl": "Planeetat löydettyinä vuosittain, menetelmän mukaan",
+ "@sky.tl": {
+  "x-review": "machine",
+  "x-source": "10dff603f9"
+ },
+ "st.figs": "Mitä ilmaisimet näkevät",
+ "@st.figs": {
+  "x-review": "machine",
+  "x-source": "ff3ec0553b"
+ },
+ "st.h1": "Tähdet, mitattuina.",
+ "@st.h1": {
+  "x-review": "machine",
+  "x-source": "ec1ba1f8f3"
+ },
+ "st.intro": "Planeettojen lisäksi SetuHQ havaitsee tähtien purkauksia, erottaa sykkeiden taajuuksia, lukee julkisia CHEOPS-valokäyriä ja löytää pimennysmuuttujia, pyörimisjaksoja ja transientteja. Kutakin kykyä verrattiin julkaistuihin tuloksiin ennen ajoa lukitun protokollan mukaan, ja jokainen sivu ja työkalun tuloste kertoo, kuinka pitkälle sen validointi ulottui.",
+ "@st.intro": {
+  "x-review": "machine",
+  "x-source": "7f59c8f0fc"
+ },
+ "subnav.candidates": "Tapauskansiot",
+ "@subnav.candidates": {
+  "x-review": "machine",
+  "x-source": "379b0a5b2b"
+ },
+ "subnav.catalogue": "Luettelo",
+ "@subnav.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "subnav.docs": "Aloita",
+ "@subnav.docs": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "subnav.editions": "Versiot",
+ "@subnav.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "subnav.explorer": "Kaikki kandidaatit",
+ "@subnav.explorer": {
+  "x-review": "machine",
+  "x-source": "e2df94228e"
+ },
+ "subnav.galaxy": "Linnunrata",
+ "@subnav.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "subnav.leaderboard": "Tulostaulu",
+ "@subnav.leaderboard": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "subnav.mission": "Mission Control",
+ "@subnav.mission": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "subnav.pictures": "Miten kuvat piirretään",
+ "@subnav.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "subnav.planets": "Säteiden suhteet",
+ "@subnav.planets": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "subnav.plates": "Kuvalaatat",
+ "@subnav.plates": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "subnav.propose": "CHEOPS-ehdotukset",
+ "@subnav.propose": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "subnav.report": "Ajoraportti",
+ "@subnav.report": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "subnav.runs": "Ajot",
+ "@subnav.runs": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "subnav.sentinels": "Paneeli",
+ "@subnav.sentinels": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "subnav.sky": "Taivaankartta",
+ "@subnav.sky": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "subnav.stellar": "Tähdet",
+ "@subnav.stellar": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "subnav.stellardocs": "Purkaukset ja sykkeet",
+ "@subnav.stellardocs": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "subnav.tessnow": "Missä TESS on nyt",
+ "@subnav.tessnow": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "subnav.transit": "Notkahdukset",
+ "@subnav.transit": {
+  "x-review": "machine",
+  "x-source": "25efb1bd33"
+ },
+ "subnav.variables": "Kaikki mikä himmenee",
+ "@subnav.variables": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "subnav.vetter": "Arvioi itse",
+ "@subnav.vetter": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "tn.h1": "Mihin TESS katsoo.",
+ "@tn.h1": {
+  "x-review": "machine",
+  "x-source": "33a70ec6b1"
+ },
+ "tn.intro": "NASAn TESS-satelliitti tarkkailee yhtä taivaan kaistaletta noin neljä viikkoa (sektori) neljällä kameralla, joista kunkin kenttä on 24° × 24°. Tämä kartta näyttää kaistaleet julkaistun aikataulun mukaan sekä niiden sisällä olevat tähdet, joilla on tunnettuja planeettoja.",
+ "@tn.intro": {
+  "x-review": "machine",
+  "x-source": "6cbf61a637"
+ },
+ "var.h1": "Kaikki mikä himmenee.",
+ "@var.h1": {
+  "x-review": "machine",
+  "x-source": "00cffacfe5"
+ },
+ "var.h1b": "{n, number} merkintää, mitään ei heitetty pois.",
+ "@var.h1b": {
+  "x-review": "machine",
+  "x-source": "af9b7536fe"
+ },
+ "var.intro": "Jokainen paneelin konsensusnotkahdus, jokainen kirkastuminen ja jokaisen tähden vaihtelu pyyhkäisystä, kukin luokiteltuna ilmoitetun säännön mukaan, varmuuksineen, vihjeineen ja alkuperineen: merkinnät, painot ja Sentinels-arvioijien omat sanat.",
+ "@var.intro": {
+  "x-review": "machine",
+  "x-source": "a3cde2962d"
+ },
+ "vt.h1": "Arvioi itse.",
+ "@vt.h1": {
+  "x-review": "machine",
+  "x-source": "bc56851e50"
+ },
+ "vt.intro": "Jokainen kortti on todellinen notkahdus, jonka jokin SetuHQ:n esimerkkiajoista on tallentanut. Katso sen valokäyrää, taitosta, parillisia ja parittomia syvyyksiä sekä syvyyttä puoli kierrosta myöhemmin, ja päätä sitten: hyväksytty, merkitty tai hylätty. Katso sitten, mitä seulonta päätti, ja miksi.",
+ "@vt.intro": {
+  "x-review": "machine",
+  "x-source": "2d2a3a79d4"
+ }
+}

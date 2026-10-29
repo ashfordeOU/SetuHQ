@@ -1,0 +1,3034 @@
+{
+ "@@locale": "cs",
+ "@@x-source-locale": "en",
+ "cat.h1": "Každá známá exoplaneta.",
+ "@cat.h1": {
+  "x-review": "machine",
+  "x-source": "c12b2894d2"
+ },
+ "cat.h1b": "{n, number} záznamů, s vyhledáváním.",
+ "@cat.h1b": {
+  "x-review": "machine",
+  "x-source": "0082f39a49"
+ },
+ "cat.intro": "Všechny planety ({n, number}) v {source}, včetně {nodist, number} bez uložené vzdálenosti, které mapa Galaxie nedokáže umístit. SetuHQ tyto planety neobjevil; katalogizuje je.",
+ "@cat.intro": {
+  "x-review": "machine",
+  "x-source": "ca9826547d"
+ },
+ "cf.h1": "Každý signál, jeho poklesy a kontroly za každým verdiktem.",
+ "@cf.h1": {
+  "x-review": "machine",
+  "x-source": "2b73eb58d2"
+ },
+ "cf.intro": "Spis běhu, ze kterého pokles pochází: každý signál a jeho poklesy, s výsledkem prověrky, pruhem tranzitu a knihou verdiktů. Každý signál, který prověrkou prošel, je {status}; zamítnutý nebo označený je pojmenován podle svého stavu.",
+ "@cf.intro": {
+  "x-review": "machine",
+  "x-source": "252d456e94"
+ },
+ "chapter.astrometry": "Astrometrie",
+ "@chapter.astrometry": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
+ "chapter.doppler": "K nám a od nás",
+ "@chapter.doppler": {
+  "x-review": "machine",
+  "x-source": "982502489b"
+ },
+ "chapter.equations": "Rovnice života",
+ "@chapter.equations": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
+ "chapter.falsepos": "Falešně pozitivní",
+ "@chapter.falsepos": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
+ "chapter.history": "Historie a články",
+ "@chapter.history": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "chapter.imaging": "Zakrytí světla hvězdy",
+ "@chapter.imaging": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
+ "chapter.microlensing": "Mikročočkování",
+ "@chapter.microlensing": {
+  "x-review": "machine",
+  "x-source": "7713c65bef"
+ },
+ "chapter.molecules": "Molekuly a život",
+ "@chapter.molecules": {
+  "x-review": "machine",
+  "x-source": "d0ac3c4b97"
+ },
+ "chapter.population": "Populace",
+ "@chapter.population": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
+ "chapter.radio": "Rádio",
+ "@chapter.radio": {
+  "x-review": "machine",
+  "x-source": "2a7dfeb2f2"
+ },
+ "chapter.rv": "Radiální rychlost",
+ "@chapter.rv": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
+ "chapter.spectroscopy": "Čtení atmosfér",
+ "@chapter.spectroscopy": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
+ },
+ "chapter.survey": "Jak funguje přehlídka",
+ "@chapter.survey": {
+  "x-review": "machine",
+  "x-source": "418a56729e"
+ },
+ "chapter.timing": "Časování a fáze",
+ "@chapter.timing": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
+ },
+ "chapter.transit": "Tranzit",
+ "@chapter.transit": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
+ },
+ "cli.argparse.argument": "argument %(argument_name)s: %(message)s",
+ "@cli.argparse.argument": {
+  "x-review": "machine",
+  "x-source": "2ee7b9a91a"
+ },
+ "cli.argparse.choice": "neplatná volba: %(value)r (vyberte z %(choices)s)",
+ "@cli.argparse.choice": {
+  "x-review": "machine",
+  "x-source": "9dbc964dd3"
+ },
+ "cli.argparse.error": "%(prog)s: chyba: %(message)s\n",
+ "@cli.argparse.error": {
+  "x-review": "machine",
+  "x-source": "954b9f0ae6"
+ },
+ "cli.argparse.help": "zobrazit tuto nápovědu a skončit",
+ "@cli.argparse.help": {
+  "x-review": "machine",
+  "x-source": "608017daf4"
+ },
+ "cli.argparse.one": "očekáván jeden argument",
+ "@cli.argparse.one": {
+  "x-review": "machine",
+  "x-source": "d5d4f7b111"
+ },
+ "cli.argparse.options": "volby",
+ "@cli.argparse.options": {
+  "x-review": "machine",
+  "x-source": "a793ab8fcc"
+ },
+ "cli.argparse.positional": "poziční argumenty",
+ "@cli.argparse.positional": {
+  "x-review": "machine",
+  "x-source": "a5f91c7a58"
+ },
+ "cli.argparse.required": "následující argumenty jsou povinné: %s",
+ "@cli.argparse.required": {
+  "x-review": "machine",
+  "x-source": "25fb5034ca"
+ },
+ "cli.argparse.unrecognized": "nerozpoznané argumenty: %s",
+ "@cli.argparse.unrecognized": {
+  "x-review": "machine",
+  "x-source": "5ed6ba5c37"
+ },
+ "cli.argparse.usage": "použití:",
+ "@cli.argparse.usage": {
+  "x-review": "machine",
+  "x-source": "d85f7a9a6f"
+ },
+ "cli.argparse.version": "zobrazit číslo verze programu a skončit",
+ "@cli.argparse.version": {
+  "x-review": "machine",
+  "x-source": "d534d67f66"
+ },
+ "cli.cmd.app": "totéž co 'setuhq site' (starý název z doby, kdy byl web jednou stránkou aplikace)",
+ "@cli.cmd.app": {
+  "x-review": "machine",
+  "x-source": "f119fa15f1"
+ },
+ "cli.cmd.batch": "spustit tok discover nad seznamem cílů, s mezipamětí a možností pokračovat",
+ "@cli.cmd.batch": {
+  "x-review": "machine",
+  "x-source": "40b27855e9"
+ },
+ "cli.cmd.benchmark": "benchmark vkládání a zpětného nalezení pro nakonfigurovaný panel",
+ "@cli.cmd.benchmark": {
+  "x-review": "machine",
+  "x-source": "4c26cdd1fc"
+ },
+ "cli.cmd.binaries": "zákrytové dvojhvězdy a elipsoidální nebo reflexní proměnné: perioda, zákryty, fáze sekundárního (nápověda e cos w), morfologie; příznak kandidáta s důvody",
+ "@cli.cmd.binaries": {
+  "x-review": "machine",
+  "x-source": "0abdc48c4a"
+ },
+ "cli.cmd.bundle": "exportovat záznam sektoru z průzkumu jako balíček příspěvku, zapečetěný otisky obsahu",
+ "@cli.cmd.bundle": {
+  "x-review": "machine",
+  "x-source": "9852df2e94"
+ },
+ "cli.cmd.calibrate": "odhadnout váhy posuzovatelů metodou vkládání",
+ "@cli.cmd.calibrate": {
+  "x-review": "machine",
+  "x-source": "207a6e9d1b"
+ },
+ "cli.cmd.check-sweep": "zkontrolovat, že každý příspěvek byl přijat a je neporušený a že katalog odpovídá tomu, co z něj sestaví ověřené zdroje",
+ "@cli.cmd.check-sweep": {
+  "x-review": "machine",
+  "x-source": "5634f750a9"
+ },
+ "cli.cmd.cheops": "CHEOPS Guest Observers Running Call: napsat přípravný balíček návrhu",
+ "@cli.cmd.cheops": {
+  "x-review": "machine",
+  "x-source": "4f36cba2a0"
+ },
+ "cli.cmd.crossmatch": "dotázat se NASA Exoplanet Archive na cíle běhu a uložit crossmatch.json",
+ "@cli.cmd.crossmatch": {
+  "x-review": "machine",
+  "x-source": "3b450e6853"
+ },
+ "cli.cmd.dashboard": "sestavit interaktivní přehled z běhu a volitelného katalogu objevů",
+ "@cli.cmd.dashboard": {
+  "x-review": "machine",
+  "x-source": "75a27378f8"
+ },
+ "cli.cmd.discover": "spustit jednu naplánovanou dávku hledání objevů a aktualizovat katalog",
+ "@cli.cmd.discover": {
+  "x-review": "machine",
+  "x-source": "c89cac74a5"
+ },
+ "cli.cmd.docket": "sestavit pohled spisů kandidátů pro běh",
+ "@cli.cmd.docket": {
+  "x-review": "machine",
+  "x-source": "6d3fd99980"
+ },
+ "cli.cmd.export": "zapsat tabulku ve stylu ExoFOP CTOI a předpovězená okna tranzitů pro běh",
+ "@cli.cmd.export": {
+  "x-review": "machine",
+  "x-source": "20cf1a8c0c"
+ },
+ "cli.cmd.flares": "detekovat hvězdné erupce: morfologie, energie, úplnost a nulový test",
+ "@cli.cmd.flares": {
+  "x-review": "machine",
+  "x-source": "9d57912ca7"
+ },
+ "cli.cmd.ingest": "ověřit balíček příspěvku a sloučit jej do katalogu, s uvedením autorství",
+ "@cli.cmd.ingest": {
+  "x-review": "machine",
+  "x-source": "d729fd0e7d"
+ },
+ "cli.cmd.leaderboard": "ohodnotit příspěvek na odložené polovině zmrazeného benchmarku skutečných TOI, nebo znovu sestavit docs/leaderboard ze všech uložených příspěvků",
+ "@cli.cmd.leaderboard": {
+  "x-review": "machine",
+  "x-source": "eff0c84e54"
+ },
+ "cli.cmd.lint": "prohledat text návrhu (nebo PDF, přes pypdf) na cokoli, co narušuje anonymitu; pomůcka, ne záruka",
+ "@cli.cmd.lint": {
+  "x-review": "machine",
+  "x-source": "dec0a3adc2"
+ },
+ "cli.cmd.mcp": "spustit server MCP přes stdio, jako setuhq-mcp (vyžaduje doplněk mcp: pip install 'setuhq[mcp]')",
+ "@cli.cmd.mcp": {
+  "x-review": "machine",
+  "x-source": "36efd33521"
+ },
+ "cli.cmd.plate": "sestavit stránku tabulí k tisku: jedna tabule na hvězdu, s popisky",
+ "@cli.cmd.plate": {
+  "x-review": "machine",
+  "x-source": "54445abdca"
+ },
+ "cli.cmd.propose": "připravit pozorovací návrh (přípravný balíček; nic se neodesílá)",
+ "@cli.cmd.propose": {
+  "x-review": "machine",
+  "x-source": "f565d45d49"
+ },
+ "cli.cmd.pulsations": "frekvenční analýza: předběžné bělení, kombinace, pozadí, numax/Δν, typ",
+ "@cli.cmd.pulsations": {
+  "x-review": "machine",
+  "x-source": "6f493bd600"
+ },
+ "cli.cmd.rebuild": "znovu prověřit uložený běh (fit, FAP, příznaky) z jeho uložených klasifikací",
+ "@cli.cmd.rebuild": {
+  "x-review": "machine",
+  "x-source": "aaf332ed6a"
+ },
+ "cli.cmd.report": "sestavit statický HTML report z adresáře běhu",
+ "@cli.cmd.report": {
+  "x-review": "machine",
+  "x-source": "52964d6b1b"
+ },
+ "cli.cmd.rotation": "rotační perioda ze skvrnové modulace (Lomb-Scargle a ACF), pro každý sektor; periody delší než asi 13 d se neměří",
+ "@cli.cmd.rotation": {
+  "x-review": "machine",
+  "x-source": "ce419593f9"
+ },
+ "cli.cmd.run": "spustit pipeline na cílech z konfiguračního souboru",
+ "@cli.cmd.run": {
+  "x-review": "machine",
+  "x-source": "ebbdd3027a"
+ },
+ "cli.cmd.site": "sestavit web (každou stránku, sdílené soubory, reporty, tabule a spisy) z jednoho či více běhů",
+ "@cli.cmd.site": {
+  "x-review": "machine",
+  "x-source": "bdfe2af14f"
+ },
+ "cli.cmd.sweep": "prohledat 2minutové cíle SPOC sektoru TESS (s možností pokračovat) do katalogu proměnnosti",
+ "@cli.cmd.sweep": {
+  "x-review": "machine",
+  "x-source": "7da0597b32"
+ },
+ "cli.cmd.transients": "neperiodická zjasnění: nárůst, pokles, amplituda, nápovědy třídy a filtry falešných poplachů, ve světelné křivce SPOC nebo výřezu TESScut libovolné polohy",
+ "@cli.cmd.transients": {
+  "x-review": "machine",
+  "x-source": "edf6a53e13"
+ },
+ "cli.desc.propose.cheops": "SetuHQ je nezávislý a není přidružen k ESA, misi CHEOPS ani konsorciu CHEOPS, není jimi schválen ani provozován jejich jménem. Nenahrazuje nástroje ESA Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker ani dokument Policies & Procedures; rozhodují oficiální výzva a nástroje.",
+ "@cli.desc.propose.cheops": {
+  "x-review": "machine",
+  "x-source": "cceac73b43"
+ },
+ "cli.desc.setuhq": "Rozhraní příkazové řádky: ``setuhq run``, ``setuhq benchmark``, ``setuhq calibrate``, ``setuhq site``, ``setuhq plate`` a další.",
+ "@cli.desc.setuhq": {
+  "x-review": "machine",
+  "x-source": "b77812ae01"
+ },
+ "cli.opt.batch.max-targets": "zastavit po tolika cílech v této relaci",
+ "@cli.opt.batch.max-targets": {
+  "x-review": "machine",
+  "x-source": "d73a203b72"
+ },
+ "cli.opt.batch.retries": "opakování neúspěšného cíle v dalších relacích",
+ "@cli.opt.batch.retries": {
+  "x-review": "machine",
+  "x-source": "c1df123c33"
+ },
+ "cli.opt.batch.sectors": "nejnovější sektory na cíl",
+ "@cli.opt.batch.sectors": {
+  "x-review": "machine",
+  "x-source": "9847836fea"
+ },
+ "cli.opt.batch.targets": "textový soubor s ID TIC, jedno na řádek",
+ "@cli.opt.batch.targets": {
+  "x-review": "machine",
+  "x-source": "12cb2ebf9d"
+ },
+ "cli.opt.batch.tic": "ID TIC",
+ "@cli.opt.batch.tic": {
+  "x-review": "machine",
+  "x-source": "1ec96f2b2c"
+ },
+ "cli.opt.batch.toi-cache": "uložená tabulka TOI z archivu, k označení položek kanálu jako known_toi nebo new_candidate",
+ "@cli.opt.batch.toi-cache": {
+  "x-review": "machine",
+  "x-source": "ce354b2d0e"
+ },
+ "cli.opt.batch.weights": "JSON vah posuzovatelů",
+ "@cli.opt.batch.weights": {
+  "x-review": "machine",
+  "x-source": "53409ff573"
+ },
+ "cli.opt.benchmark.out": "soubor markdown k zapsání",
+ "@cli.opt.benchmark.out": {
+  "x-review": "machine",
+  "x-source": "eb949f2129"
+ },
+ "cli.opt.benchmark.weights": "JSON vah",
+ "@cli.opt.benchmark.weights": {
+  "x-review": "machine",
+  "x-source": "5a7dbbe171"
+ },
+ "cli.opt.binaries.cache": "kořen mezipaměti (soubory MAST, hodnoty TIC)",
+ "@cli.opt.binaries.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.binaries.exptime": "kadence TESS v sekundách",
+ "@cli.opt.binaries.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.binaries.out": "zapsat záznam JSON sem",
+ "@cli.opt.binaries.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.binaries.sector": "sektory TESS (výchozí: každý sektor SPOC)",
+ "@cli.opt.binaries.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.binaries.target": "ID TIC (např. 'TIC 441420236'), soubor SPOC *_lc.fits nebo CSV (time, flux[, flux_err])",
+ "@cli.opt.binaries.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.binaries.transit-duration": "jeho délka (d)",
+ "@cli.opt.binaries.transit-duration": {
+  "x-review": "machine",
+  "x-source": "14084d1df6"
+ },
+ "cli.opt.binaries.transit-epoch": "čas středu jeho tranzitu (BTJD)",
+ "@cli.opt.binaries.transit-epoch": {
+  "x-review": "machine",
+  "x-source": "8e38587901"
+ },
+ "cli.opt.binaries.transit-period": "doporučující nápovědy prověrky při periodě kandidáta na tranzit (d)",
+ "@cli.opt.binaries.transit-period": {
+  "x-review": "machine",
+  "x-source": "2c253e7f29"
+ },
+ "cli.opt.bundle.contributor": "jméno k uvedení autorství (vaše volba; zobrazí se na webu)",
+ "@cli.opt.bundle.contributor": {
+  "x-review": "machine",
+  "x-source": "52709c8c8b"
+ },
+ "cli.opt.bundle.out": "adresář balíčku k zapsání",
+ "@cli.opt.bundle.out": {
+  "x-review": "machine",
+  "x-source": "0fd5207362"
+ },
+ "cli.opt.bundle.record": "záznam sektoru, např. my-sweep/sector_0005.json.gz",
+ "@cli.opt.bundle.record": {
+  "x-review": "machine",
+  "x-source": "277968793c"
+ },
+ "cli.opt.calibrate.image-dir": "kam vykreslit kalibrační obrázky, pokud je posuzovatelé potřebují",
+ "@cli.opt.calibrate.image-dir": {
+  "x-review": "machine",
+  "x-source": "8ddc793e3a"
+ },
+ "cli.opt.calibrate.out": "JSON vah k zapsání",
+ "@cli.opt.calibrate.out": {
+  "x-review": "machine",
+  "x-source": "d107a13850"
+ },
+ "cli.opt.check-sweep.fix": "znovu sestavit catalogue.json z ověřených zdrojů",
+ "@cli.opt.check-sweep.fix": {
+  "x-review": "machine",
+  "x-source": "f89150012c"
+ },
+ "cli.opt.check-sweep.ledger-base": "git ref, jehož knihu příjmů smí tato pouze rozšiřovat; 'auto' je merge-base se základní větví (SETUHQ_BASE, GITHUB_BASE_REF nebo výchozí větev vzdáleného repozitáře). Chybějící základ selže, je-li nastaveno CI",
+ "@cli.opt.check-sweep.ledger-base": {
+  "x-review": "machine",
+  "x-source": "f6b4b1fabb"
+ },
+ "cli.opt.cheops.denoise": "s --flares: nejprve vlnkové odšumění",
+ "@cli.opt.cheops.denoise": {
+  "x-review": "machine",
+  "x-source": "bd0a95d70e"
+ },
+ "cli.opt.cheops.file-key": "jedna návštěva (CH_PR..._TG..._V....)",
+ "@cli.opt.cheops.file-key": {
+  "x-review": "machine",
+  "x-source": "e108c5fdc1"
+ },
+ "cli.opt.cheops.flares": "detekovat také erupce v každé návštěvě",
+ "@cli.opt.cheops.flares": {
+  "x-review": "machine",
+  "x-source": "1b9e23c896"
+ },
+ "cli.opt.cheops.offline": "jen mezipaměť, bez sítě",
+ "@cli.opt.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "7fb233fb38"
+ },
+ "cli.opt.cheops.out": "zapsat záznam JSON sem",
+ "@cli.opt.cheops.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.cheops.points": "zahrnout do záznamu body po odstranění trendu",
+ "@cli.opt.cheops.points": {
+  "x-review": "machine",
+  "x-source": "de5db37740"
+ },
+ "cli.opt.cheops.target": "název hvězdy nebo 'RA DEC' ve stupních",
+ "@cli.opt.cheops.target": {
+  "x-review": "machine",
+  "x-source": "19a2fbdcf5"
+ },
+ "cli.opt.crossmatch.star": "název hvězdy (hostname nebo pl_name); cíle TIC se párují i podle tic_id",
+ "@cli.opt.crossmatch.star": {
+  "x-review": "machine",
+  "x-source": "25164e4aa2"
+ },
+ "cli.opt.dashboard.catalog": "JSON katalogu objevů k zahrnutí",
+ "@cli.opt.dashboard.catalog": {
+  "x-review": "machine",
+  "x-source": "941f727440"
+ },
+ "cli.opt.discover.publish-new": "jen soukromá nasazení: ponechat v katalogu signály, které neodpovídají žádnému známému TOI. Ve výchozím stavu jsou zadrženy ze všech veřejných výstupů (pro soukromé posouzení); veřejný tok tuto volbu nikdy nepředává",
+ "@cli.opt.discover.publish-new": {
+  "x-review": "machine",
+  "x-source": "fa834dcccf"
+ },
+ "cli.opt.docket.allow-missing-crossmatch": "sestavit i tehdy, když žádné uložené párování s archivem není použitelné; stránka pak vypíše uloženou chybu",
+ "@cli.opt.docket.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.docket.refresh-crossmatch": "nejprve spustit 'setuhq crossmatch': dotázat se archivu a uložit crossmatch.json",
+ "@cli.opt.docket.refresh-crossmatch": {
+  "x-review": "machine",
+  "x-source": "16850a4df3"
+ },
+ "cli.opt.docket.star": "název hvězdy pro párování s archivem (hostname nebo pl_name); cíle TIC se párují i podle tic_id",
+ "@cli.opt.docket.star": {
+  "x-review": "machine",
+  "x-source": "fa232a85fb"
+ },
+ "cli.opt.export.allow-unchecked": "exportovat i tehdy, když kontrolu duplicit TOI nelze provést (řádky to uvádějí)",
+ "@cli.opt.export.allow-unchecked": {
+  "x-review": "machine",
+  "x-source": "00695ab022"
+ },
+ "cli.opt.export.days": "jak daleko dopředu předpovídat okna tranzitů",
+ "@cli.opt.export.days": {
+  "x-review": "machine",
+  "x-source": "331c4f1544"
+ },
+ "cli.opt.export.toi-cache": "uložená tabulka TOI z archivu (při chybění stažena a zapsána sem)",
+ "@cli.opt.export.toi-cache": {
+  "x-review": "machine",
+  "x-source": "a99eb8c584"
+ },
+ "cli.opt.flares.cache": "kořen mezipaměti (soubory MAST, hodnoty TIC)",
+ "@cli.opt.flares.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.flares.completeness": "N pokusů vkládání a zpětného nalezení (po 10 erupcích)",
+ "@cli.opt.flares.completeness": {
+  "x-review": "machine",
+  "x-source": "138f48258e"
+ },
+ "cli.opt.flares.denoise": "nejprve stacionární vlnkové odšumění (vyžaduje setuhq[wavelets])",
+ "@cli.opt.flares.denoise": {
+  "x-review": "machine",
+  "x-source": "923a73f3ed"
+ },
+ "cli.opt.flares.distance-pc": "přepsat vzdálenost z TIC (pc)",
+ "@cli.opt.flares.distance-pc": {
+  "x-review": "machine",
+  "x-source": "5f618e8fe1"
+ },
+ "cli.opt.flares.exptime": "kadence TESS v sekundách",
+ "@cli.opt.flares.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.flares.mission": "nastavuje výchozí hodnoty detekce a pásmo",
+ "@cli.opt.flares.mission": {
+  "x-review": "machine",
+  "x-source": "707cfede2f"
+ },
+ "cli.opt.flares.no-null": "vynechat nulový test s obráceným tokem",
+ "@cli.opt.flares.no-null": {
+  "x-review": "machine",
+  "x-source": "15da4f002c"
+ },
+ "cli.opt.flares.out": "zapsat záznam JSON sem",
+ "@cli.opt.flares.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.flares.radius": "přepsat poloměr z TIC (poloměry Slunce)",
+ "@cli.opt.flares.radius": {
+  "x-review": "machine",
+  "x-source": "2333e6c1d4"
+ },
+ "cli.opt.flares.sector": "sektory TESS (výchozí: každý sektor SPOC)",
+ "@cli.opt.flares.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.flares.target": "ID TIC (např. 'TIC 441420236'), soubor SPOC *_lc.fits nebo CSV (time, flux[, flux_err])",
+ "@cli.opt.flares.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.flares.teff": "přepsat Teff z TIC (K)",
+ "@cli.opt.flares.teff": {
+  "x-review": "machine",
+  "x-source": "f8dce33e3f"
+ },
+ "cli.opt.flares.tmag": "přepsat magnitudu TESS z TIC",
+ "@cli.opt.flares.tmag": {
+  "x-review": "machine",
+  "x-source": "5d89050461"
+ },
+ "cli.opt.ingest.accept-sentinels": "přijmout balíček se Sentinels, jejichž poklesy zde nelze znovu prohledat (katalog to uvádí)",
+ "@cli.opt.ingest.accept-sentinels": {
+  "x-review": "machine",
+  "x-source": "43052bd204"
+ },
+ "cli.opt.ingest.attested-by": "přihlašovací jméno GitHub osoby, která balíček poslala (autora pull requestu)",
+ "@cli.opt.ingest.attested-by": {
+  "x-review": "machine",
+  "x-source": "99ebfcc35a"
+ },
+ "cli.opt.ingest.bundle": "adresář balíčku nebo .zip",
+ "@cli.opt.ingest.bundle": {
+  "x-review": "machine",
+  "x-source": "8a6728595c"
+ },
+ "cli.opt.ingest.verify-lightcurves": "kolik sektorů hvězd náhodně stáhnout a znovu prohledat, nad rámec každého s kandidátem na planetu nebo s položkou ve třídě, která překračuje svůj nulový test (výchozí: max(3, 5%%)); každá položka musí souhlasit",
+ "@cli.opt.ingest.verify-lightcurves": {
+  "x-review": "machine",
+  "x-source": "a8325b1730"
+ },
+ "cli.opt.leaderboard.submission": "JSON příspěvku (docs/leaderboard/README.md); vynechte pro znovusestavení tabulky",
+ "@cli.opt.leaderboard.submission": {
+  "x-review": "machine",
+  "x-source": "0a572af021"
+ },
+ "cli.opt.leaderboard.submissions": "adresář příspěvků k ohodnocení při znovusestavení",
+ "@cli.opt.leaderboard.submissions": {
+  "x-review": "machine",
+  "x-source": "d14c33cf89"
+ },
+ "cli.opt.plate.allow-missing-crossmatch": "sestavit i tehdy, když žádné uložené párování s archivem není použitelné; stránka pak vypíše uloženou chybu",
+ "@cli.opt.plate.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.plate.catalog": "JSON katalogu objevů: jeho hvězdy dostanou tabule a připojí se k řece času",
+ "@cli.opt.plate.catalog": {
+  "x-review": "machine",
+  "x-source": "e0f0c444fc"
+ },
+ "cli.opt.plate.star": "název hvězdy pro párování s archivem, jako v 'setuhq docket'",
+ "@cli.opt.plate.star": {
+  "x-review": "machine",
+  "x-source": "5a6e358f96"
+ },
+ "cli.opt.propose.cheops.author-name": "jméno, které musí lint anonymity označit (opakovatelné; nikdy se nezapíše do balíčku)",
+ "@cli.opt.propose.cheops.author-name": {
+  "x-review": "machine",
+  "x-source": "4155c649d2"
+ },
+ "cli.opt.propose.cheops.coord-source": "odkud pocházejí --ra/--dec (polohy z ExoFOP a Gaia se odmítají: špatná epocha)",
+ "@cli.opt.propose.cheops.coord-source": {
+  "x-review": "machine",
+  "x-source": "60a0952794"
+ },
+ "cli.opt.propose.cheops.cycle": "cyklus podání RRRR-MM (výchozí: další otevřený pro program)",
+ "@cli.opt.propose.cheops.cycle": {
+  "x-review": "machine",
+  "x-source": "0fd6ca07d8"
+ },
+ "cli.opt.propose.cheops.dec": "vaše deklinace ve stupních (ICRS, J2000)",
+ "@cli.opt.propose.cheops.dec": {
+  "x-review": "machine",
+  "x-source": "c89b51ca1f"
+ },
+ "cli.opt.propose.cheops.depth-ppm": "hloubka jevu (tranzit, zákryt) nebo amplituda erupce, ppm",
+ "@cli.opt.propose.cheops.depth-ppm": {
+  "x-review": "machine",
+  "x-source": "f68df536ad"
+ },
+ "cli.opt.propose.cheops.duration-hours": "délka jevu v hodinách",
+ "@cli.opt.propose.cheops.duration-hours": {
+  "x-review": "machine",
+  "x-source": "5e5ef3e71f"
+ },
+ "cli.opt.propose.cheops.efficiency": "předpokládaná efektivita pozorování (zástupná hodnota; vezměte svou z Visibility Tool)",
+ "@cli.opt.propose.cheops.efficiency": {
+  "x-review": "machine",
+  "x-source": "365381f043"
+ },
+ "cli.opt.propose.cheops.flare-rate": "erupce za den nad amplitudou (pro --event flare)",
+ "@cli.opt.propose.cheops.flare-rate": {
+  "x-review": "machine",
+  "x-source": "83b5c5aff0"
+ },
+ "cli.opt.propose.cheops.gmag": "magnituda Gaia G (výchozí: ze SIMBAD)",
+ "@cli.opt.propose.cheops.gmag": {
+  "x-review": "machine",
+  "x-source": "1501588e77"
+ },
+ "cli.opt.propose.cheops.institution": "instituce, kterou musí lint anonymity označit (opakovatelné; nikdy se nezapíše do balíčku)",
+ "@cli.opt.propose.cheops.institution": {
+  "x-review": "machine",
+  "x-source": "c02f921244"
+ },
+ "cli.opt.propose.cheops.name": "název balíčku pod runs/propose/ (výchozí cheops-<target>-<cycle>)",
+ "@cli.opt.propose.cheops.name": {
+  "x-review": "machine",
+  "x-source": "31cda5b062"
+ },
+ "cli.opt.propose.cheops.no-cache": "nečíst ani nezapisovat cache/cheops-propose/",
+ "@cli.opt.propose.cheops.no-cache": {
+  "x-review": "machine",
+  "x-source": "082b236e30"
+ },
+ "cli.opt.propose.cheops.offline": "žádné síťové požadavky (jen mezipaměť; kontroly pak hlásí 'not checked')",
+ "@cli.opt.propose.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "fa7a0c88a2"
+ },
+ "cli.opt.propose.cheops.orbits": "oběhy, o které chcete žádat (kontrolováno vůči limitům programu)",
+ "@cli.opt.propose.cheops.orbits": {
+  "x-review": "machine",
+  "x-source": "8d710414cd"
+ },
+ "cli.opt.propose.cheops.out": "adresář balíčku k vytvoření (výchozí runs/propose/<name>; nikdy se nepřepisuje)",
+ "@cli.opt.propose.cheops.out": {
+  "x-review": "machine",
+  "x-source": "fc29338ed1"
+ },
+ "cli.opt.propose.cheops.period": "perioda, dny",
+ "@cli.opt.propose.cheops.period": {
+  "x-review": "machine",
+  "x-source": "0f00d3ed0b"
+ },
+ "cli.opt.propose.cheops.period-err": "její chyba 1 sigma, dny",
+ "@cli.opt.propose.cheops.period-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.ra": "vaše rektascenze ve stupních (ICRS, J2000), místo té ze SIMBAD",
+ "@cli.opt.propose.cheops.ra": {
+  "x-review": "machine",
+  "x-source": "7452b9af9c"
+ },
+ "cli.opt.propose.cheops.snr": "cílový S/N jevu (výchozí 10)",
+ "@cli.opt.propose.cheops.snr": {
+  "x-review": "machine",
+  "x-source": "1bed72cce4"
+ },
+ "cli.opt.propose.cheops.t0": "čas středu tranzitu, BJD_TDB (nebo BTJD)",
+ "@cli.opt.propose.cheops.t0": {
+  "x-review": "machine",
+  "x-source": "3583f77acc"
+ },
+ "cli.opt.propose.cheops.t0-err": "jeho chyba 1 sigma, dny",
+ "@cli.opt.propose.cheops.t0-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.target": "název cíle, jak jej zná SIMBAD (např. 'TOI-1987', 'HD 39091', 'TIC 349088467')",
+ "@cli.opt.propose.cheops.target": {
+  "x-review": "machine",
+  "x-source": "dc643ed38a"
+ },
+ "cli.opt.propose.cheops.window-end": "poslední datum pozorování (výchozí 2029-12-31)",
+ "@cli.opt.propose.cheops.window-end": {
+  "x-review": "machine",
+  "x-source": "bb4ef3a3e8"
+ },
+ "cli.opt.propose.cheops.window-start": "první datum pozorování (výchozí: nejdřívější začátek cyklu)",
+ "@cli.opt.propose.cheops.window-start": {
+  "x-review": "machine",
+  "x-source": "f1537bbf4b"
+ },
+ "cli.opt.propose.lint.author-name": "jméno k označení, v obvyklých variantách (opakovatelné)",
+ "@cli.opt.propose.lint.author-name": {
+  "x-review": "machine",
+  "x-source": "896776ed61"
+ },
+ "cli.opt.propose.lint.institution": "instituce k označení (opakovatelné)",
+ "@cli.opt.propose.lint.institution": {
+  "x-review": "machine",
+  "x-source": "7dfbfc57ef"
+ },
+ "cli.opt.pulsations.cache": "kořen mezipaměti (soubory MAST, hodnoty TIC)",
+ "@cli.opt.pulsations.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.pulsations.exptime": "kadence TESS v sekundách",
+ "@cli.opt.pulsations.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.pulsations.fmax": "nejvyšší frekvence (d⁻¹; výchozí Nyquist)",
+ "@cli.opt.pulsations.fmax": {
+  "x-review": "machine",
+  "x-source": "1d96a068e1"
+ },
+ "cli.opt.pulsations.fmin": "nejnižší frekvence (d⁻¹)",
+ "@cli.opt.pulsations.fmin": {
+  "x-review": "machine",
+  "x-source": "e982706993"
+ },
+ "cli.opt.pulsations.out": "zapsat záznam JSON sem",
+ "@cli.opt.pulsations.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.pulsations.sector": "sektory TESS (výchozí: každý sektor SPOC)",
+ "@cli.opt.pulsations.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.pulsations.solar": "vždy provést analýzu numax/Δν",
+ "@cli.opt.pulsations.solar": {
+  "x-review": "machine",
+  "x-source": "0cc921a51c"
+ },
+ "cli.opt.pulsations.surrogates": "náhrady červeného šumu pro míru falešných frekvencí",
+ "@cli.opt.pulsations.surrogates": {
+  "x-review": "machine",
+  "x-source": "2d606e2fee"
+ },
+ "cli.opt.pulsations.target": "ID TIC (např. 'TIC 441420236'), soubor SPOC *_lc.fits nebo CSV (time, flux[, flux_err])",
+ "@cli.opt.pulsations.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.pulsations.teff": "Teff (K) pro heuristiku typu (výchozí: TIC)",
+ "@cli.opt.pulsations.teff": {
+  "x-review": "machine",
+  "x-source": "3cd47aa62d"
+ },
+ "cli.opt.report.benchmark": "markdown benchmarku k vložení",
+ "@cli.opt.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "50a27fedb7"
+ },
+ "cli.opt.report.out": "adresář webu k zapsání",
+ "@cli.opt.report.out": {
+  "x-review": "machine",
+  "x-source": "439462c999"
+ },
+ "cli.opt.report.validation": "markdown validace k vložení",
+ "@cli.opt.report.validation": {
+  "x-review": "machine",
+  "x-source": "8ea7211541"
+ },
+ "cli.opt.rotation.cache": "kořen mezipaměti (soubory MAST, hodnoty TIC)",
+ "@cli.opt.rotation.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.rotation.exptime": "kadence TESS v sekundách",
+ "@cli.opt.rotation.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.rotation.out": "zapsat záznam JSON sem",
+ "@cli.opt.rotation.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.rotation.sector": "sektory TESS (výchozí: každý sektor SPOC)",
+ "@cli.opt.rotation.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.rotation.target": "ID TIC (např. 'TIC 441420236'), soubor SPOC *_lc.fits nebo CSV (time, flux[, flux_err])",
+ "@cli.opt.rotation.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.run.cache": "kořen mezipaměti pro odpovědi Claude",
+ "@cli.opt.run.cache": {
+  "x-review": "machine",
+  "x-source": "eeda390458"
+ },
+ "cli.opt.run.calibrated-weights": "kalibrované váhy použité ve výchozím stavu, když jejich ID posuzovatelů odpovídají konfiguraci",
+ "@cli.opt.run.calibrated-weights": {
+  "x-review": "machine",
+  "x-source": "0d6473928d"
+ },
+ "cli.opt.run.out": "výstupní adresář",
+ "@cli.opt.run.out": {
+  "x-review": "machine",
+  "x-source": "7e0ee3625e"
+ },
+ "cli.opt.run.uniform-weights": "každý posuzovatel má váhu 1.0",
+ "@cli.opt.run.uniform-weights": {
+  "x-review": "machine",
+  "x-source": "db3384cb7c"
+ },
+ "cli.opt.run.weights": "soubor JSON s vahami posuzovatelů z 'setuhq calibrate' (přepisuje výchozí)",
+ "@cli.opt.run.weights": {
+  "x-review": "machine",
+  "x-source": "802d0e0a5b"
+ },
+ "cli.opt.setuhq.lang": "jazyk výstupu a nápovědy (en, nl, pl, pt, fi, sv, da, nb, cs, uk, ru, de, fr, es, et, ja, zh-Hans); jinak SETUHQ_LANG, LC_ALL, LC_MESSAGES nebo LANG; výchozí angličtina. Soubory a JSON zůstávají anglicky",
+ "@cli.opt.setuhq.lang": {
+  "x-review": "machine",
+  "x-source": "02f46f5ea1"
+ },
+ "cli.opt.site.allow-missing-crossmatch": "sestavit i tehdy, když žádné uložené párování s archivem není použitelné; stránka pak vypíše uloženou chybu",
+ "@cli.opt.site.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.site.benchmark": "poznámky k benchmarku pro report běhu",
+ "@cli.opt.site.benchmark": {
+  "x-review": "machine",
+  "x-source": "8c60c65795"
+ },
+ "cli.opt.site.catalog": "JSON katalogu objevů pro stránky Kandidáti a Běhy",
+ "@cli.opt.site.catalog": {
+  "x-review": "machine",
+  "x-source": "3c64583755"
+ },
+ "cli.opt.site.no-extras": "vynechat report běhu, tabule a samostatný spis",
+ "@cli.opt.site.no-extras": {
+  "x-review": "machine",
+  "x-source": "ea0dea2308"
+ },
+ "cli.opt.site.out": "kořenová složka webu (site/ pro setuhq.com)",
+ "@cli.opt.site.out": {
+  "x-review": "machine",
+  "x-source": "ff9482ee28"
+ },
+ "cli.opt.site.run_dir": "uložené běhy: nejprve hlavní běh (mapa oblohy, panel a referenční kontrola na domovské stránce), pak další ukázkové běhy; každý dostane stránky svých poklesů, spis, tabule a report",
+ "@cli.opt.site.run_dir": {
+  "x-review": "machine",
+  "x-source": "935df39235"
+ },
+ "cli.opt.site.showcase": "popisy ukázkových běhů a srovnání s literaturou (scripts/showcase_compare.py)",
+ "@cli.opt.site.showcase": {
+  "x-review": "machine",
+  "x-source": "a8d2fbc8b7"
+ },
+ "cli.opt.site.star": "název hvězdy pro párování spisu s archivem, jako v 'setuhq docket'",
+ "@cli.opt.site.star": {
+  "x-review": "machine",
+  "x-source": "3a81206f9b"
+ },
+ "cli.opt.site.sweep": "katalog průzkumu (setuhq sweep) pro Všechno, co slábne, počítadlo na domovské stránce a vrstvu oblohy",
+ "@cli.opt.site.sweep": {
+  "x-review": "machine",
+  "x-source": "2cbca7c299"
+ },
+ "cli.opt.site.validation": "poznámky k validaci pro report běhu",
+ "@cli.opt.site.validation": {
+  "x-review": "machine",
+  "x-source": "3aa3ee0254"
+ },
+ "cli.opt.site.weights": "JSON kalibrovaných vah posuzovatelů zobrazený na stránce Důkazy",
+ "@cli.opt.site.weights": {
+  "x-review": "machine",
+  "x-source": "17d9554285"
+ },
+ "cli.opt.sweep.cache": "kořen mezipaměti: seznamy cílů, soubory světelných křivek, záznamy po hvězdách",
+ "@cli.opt.sweep.cache": {
+  "x-review": "machine",
+  "x-source": "4ceefeb748"
+ },
+ "cli.opt.sweep.classified-commit": "s --reclassify: revize git, která takové záznamy naposledy klasifikovala",
+ "@cli.opt.sweep.classified-commit": {
+  "x-review": "machine",
+  "x-source": "a041546a77"
+ },
+ "cli.opt.sweep.config": "konfigurace průzkumu, např. configs/sweep.toml (Probes) nebo configs/sweep_sentinels.toml",
+ "@cli.opt.sweep.config": {
+  "x-review": "machine",
+  "x-source": "7d010ce268"
+ },
+ "cli.opt.sweep.contributor": "jméno uvedené u tohoto průzkumu",
+ "@cli.opt.sweep.contributor": {
+  "x-review": "machine",
+  "x-source": "2d65f8895f"
+ },
+ "cli.opt.sweep.limit": "kolik cílů sektoru, v pořadí průzkumu",
+ "@cli.opt.sweep.limit": {
+  "x-review": "machine",
+  "x-source": "b2105a1cbf"
+ },
+ "cli.opt.sweep.min-interval": "sekundy mezi požadavky na MAST (nejméně)",
+ "@cli.opt.sweep.min-interval": {
+  "x-review": "machine",
+  "x-source": "1e29475701"
+ },
+ "cli.opt.sweep.no-control": "vynechat kontrolní běh s obráceným tokem u každé hvězdy",
+ "@cli.opt.sweep.no-control": {
+  "x-review": "machine",
+  "x-source": "0af9322de6"
+ },
+ "cli.opt.sweep.out": "kam jde záznam sektoru a catalogue.json",
+ "@cli.opt.sweep.out": {
+  "x-review": "machine",
+  "x-source": "74a76b8e20"
+ },
+ "cli.opt.sweep.reclassify": "znovu použít klasifikační pravidla na uložené sektory hvězd (jen po změně ve variables.py)",
+ "@cli.opt.sweep.reclassify": {
+  "x-review": "machine",
+  "x-source": "86ff3a8c91"
+ },
+ "cli.opt.sweep.rule-change": "s --reclassify: co se v pravidlech změnilo (opakujte pro každou změnu)",
+ "@cli.opt.sweep.rule-change": {
+  "x-review": "machine",
+  "x-source": "a0203dbc98"
+ },
+ "cli.opt.sweep.search-commit": "s --reclassify: revize git, která prohledala záznamy uvádějící jen jeden kód",
+ "@cli.opt.sweep.search-commit": {
+  "x-review": "machine",
+  "x-source": "139e54a5b2"
+ },
+ "cli.opt.sweep.time-budget-min": "po tolika minutách nezačínat nové hvězdy",
+ "@cli.opt.sweep.time-budget-min": {
+  "x-review": "machine",
+  "x-source": "838fb96162"
+ },
+ "cli.opt.sweep.weights": "kalibrované váhy; posuzovatel, který v souboru není, má váhu 1.0",
+ "@cli.opt.sweep.weights": {
+  "x-review": "machine",
+  "x-source": "015b47d6f0"
+ },
+ "cli.opt.sweep.workers": "procesy prohledávající hvězdy současně (stahování zůstává po jednom)",
+ "@cli.opt.sweep.workers": {
+  "x-review": "machine",
+  "x-source": "8046b64f2f"
+ },
+ "cli.opt.transients.cache": "kořen mezipaměti (soubory MAST, hodnoty TIC, výřezy)",
+ "@cli.opt.transients.cache": {
+  "x-review": "machine",
+  "x-source": "4994163c4f"
+ },
+ "cli.opt.transients.dec": "Dec (°)",
+ "@cli.opt.transients.dec": {
+  "x-review": "machine",
+  "x-source": "9b73841e14"
+ },
+ "cli.opt.transients.exptime": "kadence TESS v sekundách",
+ "@cli.opt.transients.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.transients.keep-cutout": "ponechat stažený výřez v mezipaměti",
+ "@cli.opt.transients.keep-cutout": {
+  "x-review": "machine",
+  "x-source": "30d3ece3c5"
+ },
+ "cli.opt.transients.out": "zapsat záznam JSON sem",
+ "@cli.opt.transients.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.transients.ra": "RA (°): fotometrie na výřezu TESScut ze snímků celého pole",
+ "@cli.opt.transients.ra": {
+  "x-review": "machine",
+  "x-source": "80c280d2d9"
+ },
+ "cli.opt.transients.sector": "sektory TESS (s --ra/--dec: jeden sektor k výřezu)",
+ "@cli.opt.transients.sector": {
+  "x-review": "machine",
+  "x-source": "471c0813f6"
+ },
+ "cli.opt.transients.size": "velikost výřezu v pixelech (výchozí 11)",
+ "@cli.opt.transients.size": {
+  "x-review": "machine",
+  "x-source": "c0ba5e1825"
+ },
+ "cli.opt.transients.target": "ID TIC, soubor SPOC *_lc.fits nebo CSV (vynechte s --ra/--dec)",
+ "@cli.opt.transients.target": {
+  "x-review": "machine",
+  "x-source": "eb65265df5"
+ },
+ "cli.opt.transients.time": "s --ra/--dec a bez --sector: sektor obsahující tento BTJD",
+ "@cli.opt.transients.time": {
+  "x-review": "machine",
+  "x-source": "59af8e0810"
+ },
+ "cli.out.asset_budget": "překročen rozpočet souboru: {line}",
+ "@cli.out.asset_budget": {
+  "x-review": "machine",
+  "x-source": "1a08ee7ef2"
+ },
+ "cli.out.catalogue_site": "katalog {catalogue}, web {site}",
+ "@cli.out.catalogue_site": {
+  "x-review": "machine",
+  "x-source": "45ece88b52"
+ },
+ "cli.out.classifications": "klasifikace: {n}",
+ "@cli.out.classifications": {
+  "x-review": "machine",
+  "x-source": "0f32738b00"
+ },
+ "cli.out.consensus": "události konsenzu: {n} ({k} prošlo prověrkou)",
+ "@cli.out.consensus": {
+  "x-review": "machine",
+  "x-source": "0e7161a11f"
+ },
+ "cli.out.dashboard": "přehled zapsán do {path}",
+ "@cli.out.dashboard": {
+  "x-review": "machine",
+  "x-source": "794588aab9"
+ },
+ "cli.out.discover": "cíle posouzené v tomto běhu: {n}, shody se známými TOI: {k}",
+ "@cli.out.discover": {
+  "x-review": "machine",
+  "x-source": "e86d5ed05d"
+ },
+ "cli.out.docket": "spisy zapsány do {path}",
+ "@cli.out.docket": {
+  "x-review": "machine",
+  "x-source": "3461730266"
+ },
+ "cli.out.lightcurves": "světelné křivky: {n}",
+ "@cli.out.lightcurves": {
+  "x-review": "machine",
+  "x-source": "b98d2bfa2b"
+ },
+ "cli.out.outputs": "výstupy v {path}",
+ "@cli.out.outputs": {
+  "x-review": "machine",
+  "x-source": "ad5b1626c3"
+ },
+ "cli.out.page_budget": "překročen rozpočet stránky: {line}",
+ "@cli.out.page_budget": {
+  "x-review": "machine",
+  "x-source": "719f1ca170"
+ },
+ "cli.out.plates": "tabule zapsány do {path}",
+ "@cli.out.plates": {
+  "x-review": "machine",
+  "x-source": "3fd4254e8b"
+ },
+ "cli.out.rebuilt": "znovu sestaveno {n} událostí konsenzu ({k} prošlo prověrkou) v {path}",
+ "@cli.out.rebuilt": {
+  "x-review": "machine",
+  "x-source": "06707f0892"
+ },
+ "cli.out.site": "web zapsán do {path}",
+ "@cli.out.site": {
+  "x-review": "machine",
+  "x-source": "e59ebe1ee1"
+ },
+ "cli.out.subjects": "objekty:     {n}",
+ "@cli.out.subjects": {
+  "x-review": "machine",
+  "x-source": "184630bc2c"
+ },
+ "cli.out.weights": "váhy posuzovatelů: {source}",
+ "@cli.out.weights": {
+  "x-review": "machine",
+  "x-source": "1089f763c0"
+ },
+ "cli.out.weights_written": "váhy zapsány do {path}, míry do {rates}",
+ "@cli.out.weights_written": {
+  "x-review": "machine",
+  "x-source": "6828f69f91"
+ },
+ "desc.catalogue": "Každá planeta v exoplanet.eu, s vyhledáváním a řazením, každá s vlastní stránkou. SetuHQ tyto planety neobjevil.",
+ "@desc.catalogue": {
+  "x-review": "machine",
+  "x-source": "4321b00077"
+ },
+ "desc.docs": "Nainstalujte SetuHQ, prohledejte hvězdu, přispějte průzkumem, připojte AI asistenta přes MCP a stáhněte data.",
+ "@desc.docs": {
+  "x-review": "machine",
+  "x-source": "242925f427"
+ },
+ "desc.editions": "Edice SetuHQ: bezplatné otevřené jádro (AGPL-3.0 nebo komerční licence), SetuHQ Pro (ve vývoji, na základě smlouvy) a studie na zakázku. Žádné ceny; každá placená cesta začíná zprávou.",
+ "@desc.editions": {
+  "x-review": "machine",
+  "x-source": "34320f5c27"
+ },
+ "desc.explorer": "Poklesy z běhu a jejich spisy a {n, plural, one {# položka} few {# položky} many {# položky} other {# položek}} vyhledávacího kanálu. Kandidáti jsou nepotvrzení; žádný není potvrzenou planetou.",
+ "@desc.explorer": {
+  "x-review": "machine",
+  "x-source": "12bbc1141b"
+ },
+ "desc.galaxy": "Každá známá exoplaneta s uloženou vzdáleností, umístěná ve 3D kolem Slunce, podle metody a roku objevu.",
+ "@desc.galaxy": {
+  "x-review": "machine",
+  "x-source": "1d04a19fb8"
+ },
+ "desc.leaderboard": "Metody hodnocené naslepo na odložené polovině benchmarku skutečných TOI, s 95% Wilsonovými intervaly.",
+ "@desc.leaderboard": {
+  "x-review": "machine",
+  "x-source": "f63d09cd7f"
+ },
+ "desc.methods": "Kapitola {i} z {n} oddílu Jak to funguje: {title}. Animované vysvětlení s fyzikou a zdroji.",
+ "@desc.methods": {
+  "x-review": "machine",
+  "x-source": "72765a8c0c"
+ },
+ "desc.mission": "Dlaždicový pracovní prostor pohledů SetuHQ propojených jednou vybranou hvězdou: Galaxie, obloha, světelná křivka, katalog a kanál panelu.",
+ "@desc.mission": {
+  "x-review": "machine",
+  "x-source": "aea05e50d5"
+ },
+ "desc.overview": "{tagline} Kalibrovaný panel Sentinels a Probes čte světelné křivky TESS a vysvětluje každý verdikt. Každý výsledek SetuHQ je {status}.",
+ "@desc.overview": {
+  "x-review": "machine",
+  "x-source": "e4c31340b2"
+ },
+ "desc.pictures": "Jak SetuHQ kreslí své obrázky: hvězdy v barvě černého tělesa a planety jako umělecké představy zvolené podle změřeného poloměru a ozáření, s každým pravidlem a zdrojem.",
+ "@desc.pictures": {
+  "x-review": "machine",
+  "x-source": "f81ce510dd"
+ },
+ "desc.planets": "Co by hloubka každého kandidáta znamenala, kdyby šlo o planetu: poměr poloměru planety a hvězdy a proč se velikost planety neuvádí.",
+ "@desc.planets": {
+  "x-review": "machine",
+  "x-source": "33a6642674"
+ },
+ "desc.propose": "Připravte návrh CHEOPS Guest Observers příkazem setuhq propose cheops: pomůcka pro psaní, která kontroluje pravidla a cíl a nikdy nic neodesílá.",
+ "@desc.propose": {
+  "x-review": "machine",
+  "x-source": "415a0f0956"
+ },
+ "desc.runs": "Každý vyhledávací běh, jeho chyby tak, jak byly uloženy, a konfigurace za stránkami kandidátů.",
+ "@desc.runs": {
+  "x-review": "machine",
+  "x-source": "2fc865ecd8"
+ },
+ "desc.sentinels": "Posuzovatelé za každým verdiktem, jejich kalibrace a jak panel obstojí při hodnocení naslepo na skutečných TESS Objects of Interest. {attribution}",
+ "@desc.sentinels": {
+  "x-review": "machine",
+  "x-source": "6325eab793"
+ },
+ "desc.sky": "Hvězda z běhu na mapě celé oblohy, s poklesy, které panel označil, a s místy, kam se přehlídky dívaly. {headline}",
+ "@desc.sky": {
+  "x-review": "machine",
+  "x-source": "22c5e64296"
+ },
+ "desc.stellar": "Erupce, pulzace, světelné křivky CHEOPS, zákrytové dvojhvězdy, rotace a přechodné jevy: jak daleko je každý hvězdný nástroj SetuHQ validován, s každou započtenou kontrolou a grafy skutečných dat TESS.",
+ "@desc.stellar": {
+  "x-review": "machine",
+  "x-source": "fd3ad97a67"
+ },
+ "desc.stellardocs": "Spouštějte hvězdné příkazy SetuHQ: erupce, pulzace, veřejné světelné křivky CHEOPS, zákrytové dvojhvězdy, rotace a přechodné jevy, s jejich stavem validace a podmínkami ESA pro data CHEOPS.",
+ "@desc.stellardocs": {
+  "x-review": "machine",
+  "x-source": "69d64ce7ce"
+ },
+ "desc.tessnow": "Kam míří družice TESS, sektor po sektoru, podle zveřejněného plánu: čtyři pole kamer na mapě oblohy a katalogizované hvězdy v nich. Nejde o živou telemetrii.",
+ "@desc.tessnow": {
+  "x-review": "machine",
+  "x-source": "b892187187"
+ },
+ "desc.variables": "Průzkum sektorů TESS v SetuHQ: každý nalezený a klasifikovaný pokles, každá třída postavená proti vlastnímu nulovému testu.",
+ "@desc.variables": {
+  "x-review": "machine",
+  "x-source": "ec6feba9c3"
+ },
+ "desc.vetter": "Prohlédněte si skutečný uložený pokles z ukázkových běhů SetuHQ, ohodnoťte jej jako přijatý, označený nebo zamítnutý a pak uvidíte, co rozhodla prověrka. Cvičení; odpovědi se nesbírají.",
+ "@desc.vetter": {
+  "x-review": "machine",
+  "x-source": "a0ad69fc0e"
+ },
+ "dip.state.cand": "kandidát, nepotvrzený",
+ "@dip.state.cand": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "dip.state.open": "označený k posouzení, otevřený",
+ "@dip.state.open": {
+  "x-review": "machine",
+  "x-source": "5c42a6d0b9"
+ },
+ "dip.state.rej": "zamítnutý prověrkou, není kandidátem",
+ "@dip.state.rej": {
+  "x-review": "machine",
+  "x-source": "0c75827454"
+ },
+ "dip.tag.cand": "kandidát",
+ "@dip.tag.cand": {
+  "x-review": "machine",
+  "x-source": "dda18a0e21"
+ },
+ "dip.tag.open": "označený",
+ "@dip.tag.open": {
+  "x-review": "machine",
+  "x-source": "5588be887f"
+ },
+ "dip.tag.rej": "zamítnutý",
+ "@dip.tag.rej": {
+  "x-review": "machine",
+  "x-source": "20cd938a2e"
+ },
+ "docs.contribute": "Přispějte průzkumem",
+ "@docs.contribute": {
+  "x-review": "machine",
+  "x-source": "3118488db2"
+ },
+ "docs.contribute.a": "Jak přispět ›",
+ "@docs.contribute.a": {
+  "x-review": "machine",
+  "x-source": "fefd95f45c"
+ },
+ "docs.contribute.p": "Prohledejte část sektoru TESS na vlastním počítači a pošlete výsledek, s uvedením autorství.",
+ "@docs.contribute.p": {
+  "x-review": "machine",
+  "x-source": "7636e0e0dd"
+ },
+ "docs.data": "Data a soubory",
+ "@docs.data": {
+  "x-review": "machine",
+  "x-source": "1544ff48d7"
+ },
+ "docs.data.a": "Ke stažení ›",
+ "@docs.data.a": {
+  "x-review": "machine",
+  "x-source": "8e6ab2918b"
+ },
+ "docs.data.p": "Každý katalog tohoto webu ke stažení a reporty za důkazy.",
+ "@docs.data.p": {
+  "x-review": "machine",
+  "x-source": "a7dd9ada99"
+ },
+ "docs.editions": "Edice",
+ "@docs.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "docs.editions.a": "Porovnat edice ›",
+ "@docs.editions.a": {
+  "x-review": "machine",
+  "x-source": "90fe459127"
+ },
+ "docs.editions.p": "Otevřené jádro je zdarma. SetuHQ Pro (ve vývoji) a studie na zakázku jsou na základě smlouvy, bez cen: každá začíná zprávou.",
+ "@docs.editions.p": {
+  "x-review": "machine",
+  "x-source": "a4c5119805"
+ },
+ "docs.h1": "Spusťte si to sami.",
+ "@docs.h1": {
+  "x-review": "machine",
+  "x-source": "a1737d6898"
+ },
+ "docs.install": "Instalace a první spuštění",
+ "@docs.install": {
+  "x-review": "machine",
+  "x-source": "ea230bebae"
+ },
+ "docs.intro": "SetuHQ je open source. Nainstalujte jej, prohledejte světelnou křivku hvězdy stejným panelem, jaký ukazuje tento web, přispějte průzkumem oblohy, nebo jej nechte používat svého AI asistenta.",
+ "@docs.intro": {
+  "x-review": "machine",
+  "x-source": "7d1db3c963"
+ },
+ "docs.mcp": "Použití z asistenta",
+ "@docs.mcp": {
+  "x-review": "machine",
+  "x-source": "ee854c3928"
+ },
+ "docs.mcp.a": "Připojit přes MCP ›",
+ "@docs.mcp.a": {
+  "x-review": "machine",
+  "x-source": "c393096cc9"
+ },
+ "docs.mcp.h": "Použití z AI asistenta (MCP)",
+ "@docs.mcp.h": {
+  "x-review": "machine",
+  "x-source": "f46e936a3b"
+ },
+ "docs.mcp.p": "Server MCP umožňuje asistentovi spouštět vlastní kód SetuHQ a číst jeho výsledky.",
+ "@docs.mcp.p": {
+  "x-review": "machine",
+  "x-source": "eb88b7d692"
+ },
+ "docs.pictures": "Jak se kreslí obrázky",
+ "@docs.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "docs.pictures.a": "Obrázky ›",
+ "@docs.pictures.a": {
+  "x-review": "machine",
+  "x-source": "d4afb0f5d1"
+ },
+ "docs.pictures.p": "Hvězdy v barvě černého tělesa; planety jako umělecké představy zvolené podle změřeného poloměru a ozáření. Každé pravidlo a zdroj.",
+ "@docs.pictures.p": {
+  "x-review": "machine",
+  "x-source": "7c281d6576"
+ },
+ "docs.prov": "Technické podrobnosti: odkud pocházejí grafy",
+ "@docs.prov": {
+  "x-review": "machine",
+  "x-source": "1cfbcdad80"
+ },
+ "docs.python": "SetuHQ vyžaduje Python {v} nebo novější.",
+ "@docs.python": {
+  "x-review": "machine",
+  "x-source": "3159020543"
+ },
+ "docs.start": "Začínáme",
+ "@docs.start": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "docs.start.a": "Instalace a první spuštění ›",
+ "@docs.start.a": {
+  "x-review": "machine",
+  "x-source": "468f664b71"
+ },
+ "docs.start.p": "Nainstalujte a pak prohledejte světelnou křivku libovolné hvězdy TESS, jako to udělal každý ukázkový běh tohoto webu.",
+ "@docs.start.p": {
+  "x-review": "machine",
+  "x-source": "2e8b6ed67a"
+ },
+ "ed.compare": "Porovnat edice",
+ "@ed.compare": {
+  "x-review": "machine",
+  "x-source": "0a79392035"
+ },
+ "ed.compare.p": "Čtěte po řádcích a porovnejte všechny tři.",
+ "@ed.compare.p": {
+  "x-review": "machine",
+  "x-source": "59ba9870b5"
+ },
+ "ed.h1": "Edice.",
+ "@ed.h1": {
+  "x-review": "machine",
+  "x-source": "d98733b93e"
+ },
+ "ed.intro": "Celý engine je zdarma a zdarma zůstane. Ashforde OÜ jej udržuje komerční licencí, SetuHQ Pro a studiemi na zakázku, ne uzamčením funkcí. Na tomto webu nejsou žádné ceny: každá placená cesta začíná zprávou.",
+ "@ed.intro": {
+  "x-review": "machine",
+  "x-source": "d588b090c3"
+ },
+ "ex.h1": "{n, plural, one {# pokles} few {# poklesy} many {# poklesu} other {# poklesů}} k otevření, z {stars, plural, =1 {jedné ukázkové hvězdy} one {# ukázkové hvězdy} few {# ukázkových hvězd} many {# ukázkové hvězdy} other {# ukázkových hvězd}}.",
+ "@ex.h1": {
+  "x-review": "machine",
+  "x-source": "ad8e8b5e42"
+ },
+ "ex.intro": "Poklesy, které panel označil ve světelné křivce TESS každé ukázkové hvězdy, seskupené podle hvězdy a sečtené podle výsledku prověrky. Pokles, který prověrkou prošel, je {status}; označený je otevřený; zamítnutý není kandidátem. Žádný není potvrzenou planetou. Otevřete jeden a sledujte jeho přehrání, nebo jeho spis s každou kontrolou za verdiktem.",
+ "@ex.intro": {
+  "x-review": "machine",
+  "x-source": "3a25873c3b"
+ },
+ "ex.more": " Níže: {n} položek vyhledávacího kanálu z jiných hvězd, které zatím nemají spis.",
+ "@ex.more": {
+  "x-review": "machine",
+  "x-source": "96432c834d"
+ },
+ "footer.all_chapters": "Všechny kapitoly ({n})",
+ "@footer.all_chapters": {
+  "x-review": "machine",
+  "x-source": "177340a477"
+ },
+ "footer.contribute": "Přispívání průzkumem",
+ "@footer.contribute": {
+  "x-review": "machine",
+  "x-source": "960b0242d4"
+ },
+ "footer.data": "Data ke stažení",
+ "@footer.data": {
+  "x-review": "machine",
+  "x-source": "47e65bf65c"
+ },
+ "footer.nav": "Web",
+ "@footer.nav": {
+  "x-review": "machine",
+  "x-source": "fa7955814e"
+ },
+ "footer.overview": "Přehled",
+ "@footer.overview": {
+  "x-review": "machine",
+  "x-source": "d4b1ea5708"
+ },
+ "footer.pictures": "Jak se kreslí obrázky ›",
+ "@footer.pictures": {
+  "x-review": "machine",
+  "x-source": "f4d87c6ca3"
+ },
+ "footer.source": "Zdrojový kód",
+ "@footer.source": {
+  "x-review": "machine",
+  "x-source": "bf046c7395"
+ },
+ "gx.h1": "Každá známá exoplaneta",
+ "@gx.h1": {
+  "x-review": "machine",
+  "x-source": "22fff7c222"
+ },
+ "gx.h1b": "kolem Slunce.",
+ "@gx.h1b": {
+  "x-review": "machine",
+  "x-source": "0513cb70f1"
+ },
+ "gx.intro": "{n, number} planet kolem {hosts, number} hvězd, umístěných tam, kde jsou. SetuHQ tyto planety nenašel; mapuje je podle {source}.",
+ "@gx.intro": {
+  "x-review": "machine",
+  "x-source": "b60778b897"
+ },
+ "hint.dismiss": "Zavřít nápovědu: {h}",
+ "@hint.dismiss": {
+  "x-review": "machine",
+  "x-source": "704395b8f4"
+ },
+ "hint.orbits": "Velikosti nejsou v měřítku · fáze ilustrační",
+ "@hint.orbits": {
+  "x-review": "machine",
+  "x-source": "f31d20fed2"
+ },
+ "home.band.counters": "Důkazy, sečtené",
+ "@home.band.counters": {
+  "x-review": "machine",
+  "x-source": "5f2b5a53a9"
+ },
+ "home.band.counters.e": "Každé číslo odkazuje na svůj důkaz",
+ "@home.band.counters.e": {
+  "x-review": "machine",
+  "x-source": "6d25c68528"
+ },
+ "home.band.fold": "Jak se planeta skrývá v šumu",
+ "@home.band.fold": {
+  "x-review": "machine",
+  "x-source": "79677ced9c"
+ },
+ "home.band.fold.e": "Skutečná data",
+ "@home.band.fold.e": {
+  "x-review": "machine",
+  "x-source": "6a758a8937"
+ },
+ "home.band.lineup": "Planety z ukázek, v měřítku",
+ "@home.band.lineup": {
+  "x-review": "machine",
+  "x-source": "aaf6e55de4"
+ },
+ "home.band.lineup.e": "Planety v měřítku",
+ "@home.band.lineup.e": {
+  "x-review": "machine",
+  "x-source": "f48421d1f6"
+ },
+ "home.band.panel": "Kdo posuzuje pokles",
+ "@home.band.panel": {
+  "x-review": "machine",
+  "x-source": "fd782b5776"
+ },
+ "home.band.panel.e": "Panel",
+ "@home.band.panel.e": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "home.band.sky": "Hvězda každé známé planety, podle roku, kdy byla nalezena",
+ "@home.band.sky": {
+  "x-review": "machine",
+  "x-source": "25fe759e36"
+ },
+ "home.band.sky.e": "Obloha",
+ "@home.band.sky.e": {
+  "x-review": "machine",
+  "x-source": "587ffab2a1"
+ },
+ "home.band.tempstrip": "{n, plural, =1 {Barva ukázkové hvězdy} one {# ukázková hvězda: {lo, number, integer} K až {hi, number, integer} K, jedna pipeline} few {# ukázkové hvězdy: {lo, number, integer} K až {hi, number, integer} K, jedna pipeline} many {# ukázkové hvězdy: {lo, number, integer} K až {hi, number, integer} K, jedna pipeline} other {# ukázkových hvězd: {lo, number, integer} K až {hi, number, integer} K, jedna pipeline}}",
+ "@home.band.tempstrip": {
+  "x-review": "machine",
+  "x-source": "705ec8da04"
+ },
+ "home.band.tempstrip.e": "Barvy ukázkových hvězd",
+ "@home.band.tempstrip.e": {
+  "x-review": "machine",
+  "x-source": "d93001b796"
+ },
+ "home.ctr.benchmark": "skutečných TESS Objects of Interest v benchmarku naslepo",
+ "@home.ctr.benchmark": {
+  "x-review": "machine",
+  "x-source": "9672338f63"
+ },
+ "home.ctr.catalogue": "planet v katalogu, se kterým SetuHQ porovnává",
+ "@home.ctr.catalogue": {
+  "x-review": "machine",
+  "x-source": "01f04bca08"
+ },
+ "home.ctr.chapters": "ilustrovaných kapitol o tom, jak se hledají planety",
+ "@home.ctr.chapters": {
+  "x-review": "machine",
+  "x-source": "865afa5050"
+ },
+ "home.ctr.completeness": "odložených známých planet nalezených naslepo (95% Wilsonův interval)",
+ "@home.ctr.completeness": {
+  "x-review": "machine",
+  "x-source": "9439e30e8b"
+ },
+ "home.ctr.fetched": "{source}, staženo {date, date}",
+ "@home.ctr.fetched": {
+  "x-review": "machine",
+  "x-source": "3fd1f86614"
+ },
+ "home.ctr.fetched_file": "{source}, staženo {date, date} ({file})",
+ "@home.ctr.fetched_file": {
+  "x-review": "machine",
+  "x-source": "6d503bce8f"
+ },
+ "home.ctr.heldout": "odložená polovina benchmarku ({file})",
+ "@home.ctr.heldout": {
+  "x-review": "machine",
+  "x-source": "f9bd8675c1"
+ },
+ "home.do.docs": "Spusťte si to sami",
+ "@home.do.docs": {
+  "x-review": "machine",
+  "x-source": "b3ab2275bd"
+ },
+ "home.do.docs.d": "Nainstalujte SetuHQ, prohledejte hvězdu, přispějte průzkumem oblohy, nebo připojte svého AI asistenta přes MCP.",
+ "@home.do.docs.d": {
+  "x-review": "machine",
+  "x-source": "e150d9ac61"
+ },
+ "home.do.explorer": "Prohlédnout kandidáty",
+ "@home.do.explorer": {
+  "x-review": "machine",
+  "x-source": "db92ac3570"
+ },
+ "home.do.explorer.d": "Poklesy, které panel označil ve světelných křivkách TESS ukázkových hvězd, každý s úplným spisem. Kandidáti, nikdy potvrzené planety.",
+ "@home.do.explorer.d": {
+  "x-review": "machine",
+  "x-source": "b2310d28d3"
+ },
+ "home.do.methods": "Zjistit, jak to funguje",
+ "@home.do.methods": {
+  "x-review": "machine",
+  "x-source": "e2c2e9609b"
+ },
+ "home.do.methods.d": "Patnáct ilustrovaných kapitol o tom, jak se hledají planety, od kolébání hvězdy po čtení atmosféry.",
+ "@home.do.methods.d": {
+  "x-review": "machine",
+  "x-source": "a4ab0f8d7a"
+ },
+ "home.do.sentinels": "Prověřit důkazy",
+ "@home.do.sentinels": {
+  "x-review": "machine",
+  "x-source": "16cc8485e7"
+ },
+ "home.do.sentinels.d": "Jak panel obstojí na skutečných, známých objektech: benchmark naslepo, veřejný žebříček a kalibrace.",
+ "@home.do.sentinels.d": {
+  "x-review": "machine",
+  "x-source": "728efa2330"
+ },
+ "home.do.sky": "Prozkoumat oblohu",
+ "@home.do.sky": {
+  "x-review": "machine",
+  "x-source": "0e734b0e38"
+ },
+ "home.do.sky.d": "Každá známá exoplaneta na 3D mapě Galaxie, obloha pokrytá TESS a prohledávatelný katalog známých planet.",
+ "@home.do.sky.d": {
+  "x-review": "machine",
+  "x-source": "33d22aaaf3"
+ },
+ "home.dohere": "Co tu můžete dělat",
+ "@home.dohere": {
+  "x-review": "machine",
+  "x-source": "c2f1fa481b"
+ },
+ "home.examples": "Ukázky: {n, plural, one {# hvězda} few {# hvězdy} many {# hvězdy} other {# hvězd}}, jedna pipeline",
+ "@home.examples": {
+  "x-review": "machine",
+  "x-source": "31c4bc580e"
+ },
+ "home.examples.p": "Každá je uložený běh na veřejných světelných křivkách TESS z MAST, s daty, konfigurací a kódem opatřenými otisky. Každý pokles je započten podle výsledku prověrky; kandidát zůstává nepotvrzený a zamítnutý pokles není kandidátem.",
+ "@home.examples.p": {
+  "x-review": "machine",
+  "x-source": "d13aa1075e"
+ },
+ "home.hero.h1": "Obloha, posouzená.",
+ "@home.hero.h1": {
+  "x-review": "machine",
+  "x-source": "c537af3dcb"
+ },
+ "home.hero.more": "{n, plural, one {Zobrazit # ukázku ›} few {Zobrazit # ukázky ›} many {Zobrazit # ukázky ›} other {Zobrazit # ukázek ›}}",
+ "@home.hero.more": {
+  "x-review": "machine",
+  "x-source": "50e5398098"
+ },
+ "home.hero.sub": "SetuHQ prohledává veřejnou světelnou křivku libovolné hvězdy TESS a hledá tranzity. Kalibrovaný panel Sentinels (AI posuzovatelé) a Probes (deterministické detektory) označuje poklesy a prověrka vysvětluje každý verdikt. Nic se nenazývá planetou, dokud jí není.",
+ "@home.hero.sub": {
+  "x-review": "machine",
+  "x-source": "acf4d55d13"
+ },
+ "home.honest.archive": "<b>Jen hodnoty z archivu.</b> Tato stránka netvrdí žádnou detekci. Shoda s TOI nebo archivem porovnává uloženou periodu se zveřejněnými hodnotami.",
+ "@home.honest.archive": {
+  "x-review": "machine",
+  "x-source": "9caca54a23"
+ },
+ "home.honest.h": "Co tato stránka netvrdí",
+ "@home.honest.h": {
+  "x-review": "machine",
+  "x-source": "738097d05c"
+ },
+ "home.honest.image": "<b>Žádný snímek planety.</b> Obrázky planet jsou umělecké představy zvolené podle změřeného poloměru a ozáření; <a href=\"/docs/pictures/\">Jak se kreslí obrázky ›</a>",
+ "@home.honest.image": {
+  "x-review": "machine",
+  "x-source": "e6974ba935"
+ },
+ "home.honest.panel": "Panel tvoří Sentinels a Probes:",
+ "@home.honest.panel": {
+  "x-review": "machine",
+  "x-source": "a9433f2186"
+ },
+ "home.honest.people": "V panelu nejsou lidé.",
+ "@home.honest.people": {
+  "x-review": "machine",
+  "x-source": "7ffee760a9"
+ },
+ "home.honest.planet": "<b>Žádná potvrzená planeta.</b> Každý pokles, signál a položka kanálu je zde {status}. Projití prověrkou není potvrzení.{match, select, none {} other { Shoda s {match} říká, že planeta už je známá, ne že ji tento běh potvrdil.}}",
+ "@home.honest.planet": {
+  "x-review": "machine",
+  "x-source": "fddd51a0e3"
+ },
+ "home.honest.sizes": "<b>Žádné velikosti planet.</b> Poloměr hvězdy není uložen, takže hloubka dává jen poměr poloměrů planety a hvězdy. Stránka poměrů poloměrů ukazuje výpočet.",
+ "@home.honest.sizes": {
+  "x-review": "machine",
+  "x-source": "99d745ec98"
+ },
+ "home.honest.weights": " Jejich váhy stojí na kalibraci s {n} světelnými křivkami s vloženým signálem a {n} prázdnými pro každého, takže jsou hrubé.",
+ "@home.honest.weights": {
+  "x-review": "machine",
+  "x-source": "46497d8bc1"
+ },
+ "home.more.sky": "Prozkoumat oblohu ›",
+ "@home.more.sky": {
+  "x-review": "machine",
+  "x-source": "86786f5a19"
+ },
+ "home.more.transit": "Jak se hledají tranzity ›",
+ "@home.more.transit": {
+  "x-review": "machine",
+  "x-source": "04e504e9e8"
+ },
+ "home.refcheck": "Referenční kontrola: {planet}, známá planeta, nalezená znovu v běhu {run}",
+ "@home.refcheck": {
+  "x-review": "machine",
+  "x-source": "e700c0ebab"
+ },
+ "home.refrun": "Referenční běh: {run}",
+ "@home.refrun": {
+  "x-review": "machine",
+  "x-source": "b698a243c0"
+ },
+ "honesty.attribution": "Sentinels ve výchozím stavu běží na Claude (Anthropic); další poskytovatelé jsou podporováni a označeni. Probes jsou deterministické detektory s přizpůsobeným filtrem.",
+ "@honesty.attribution": {
+  "x-review": "machine",
+  "x-source": "7793394412"
+ },
+ "honesty.cheops_disclaimer": "SetuHQ je nezávislý a není přidružen k ESA, misi CHEOPS ani konsorciu CHEOPS, není jimi schválen ani provozován jejich jménem.",
+ "@honesty.cheops_disclaimer": {
+  "x-review": "machine",
+  "x-source": "f163955866"
+ },
+ "honesty.embargo": "Signály, které neodpovídají žádnému známému TOI, jsou zadrženy k soukromému posouzení; zveřejňují se až po posouzení a nahlášení.",
+ "@honesty.embargo": {
+  "x-review": "machine",
+  "x-source": "7ab637a8c0"
+ },
+ "honesty.footer": "Každý výsledek SetuHQ na tomto webu je kandidát, nikdy potvrzená planeta. Open source pod licencí AGPL-3.0; data SetuHQ pod CC BY 4.0. „SetuHQ“ a značka Setu jsou ochranné známky společnosti Ashforde OÜ.",
+ "@honesty.footer": {
+  "x-review": "machine",
+  "x-source": "69d7e6d4fb"
+ },
+ "honesty.no_detection": "Jen hodnoty z archivu. Tato stránka netvrdí žádnou detekci.",
+ "@honesty.no_detection": {
+  "x-review": "machine",
+  "x-source": "fe680cebf0"
+ },
+ "honesty.none_confirmed": "Žádný není potvrzenou planetou, dokud jej nezávislá následná pozorování nepotvrdí.",
+ "@honesty.none_confirmed": {
+  "x-review": "machine",
+  "x-source": "3509876ac0"
+ },
+ "honesty.probes_only": "Jen Probes; Sentinels v této ukázce neběželi",
+ "@honesty.probes_only": {
+  "x-review": "machine",
+  "x-source": "3cfb53c6a7"
+ },
+ "honesty.tess_pointing": "Zaměření podle zveřejněného plánu, ne živá telemetrie",
+ "@honesty.tess_pointing": {
+  "x-review": "machine",
+  "x-source": "6faac5a432"
+ },
+ "honesty.transients_aid": "Nástroje pro přechodné jevy jsou pomůckou při hledání a jejich kandidáty je třeba zkontrolovat okem; jejich detekce, nápovědy třídy a filtry falešných poplachů nejsou validovány.",
+ "@honesty.transients_aid": {
+  "x-review": "machine",
+  "x-source": "61272b381e"
+ },
+ "honesty.unconfirmed": "kandidát, nepotvrzený",
+ "@honesty.unconfirmed": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "i18n.mtnote": "Tento překlad vznikl s pomocí strojového překladu a zatím jej nezkontroloval rodilý mluvčí. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Opravy jsou vítány</a>.",
+ "@i18n.mtnote": {
+  "x-review": "machine",
+  "x-source": "3803a5c5dc"
+ },
+ "i18n.picker.label": "Jazyk: {name}",
+ "@i18n.picker.label": {
+  "x-review": "machine",
+  "x-source": "d99eed9b59"
+ },
+ "i18n.picker.note": "Všechny jazyky kromě angličtiny vznikly s pomocí strojového překladu a zatím je nezkontroloval rodilý mluvčí. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Opravy jsou vítány</a>.",
+ "@i18n.picker.note": {
+  "x-review": "machine",
+  "x-source": "b19e30478b"
+ },
+ "i18n.suggest.dismiss": "Zavřít",
+ "@i18n.suggest.dismiss": {
+  "x-review": "machine",
+  "x-source": "48845bff33"
+ },
+ "i18n.suggest.go": "Číst česky",
+ "@i18n.suggest.go": {
+  "x-review": "machine",
+  "x-source": "a9d0b8e36c"
+ },
+ "i18n.suggest.label": "Jazyk",
+ "@i18n.suggest.label": {
+  "x-review": "machine",
+  "x-source": "a4fe65264e"
+ },
+ "i18n.suggest.text": "Tato stránka je k dispozici i v češtině.",
+ "@i18n.suggest.text": {
+  "x-review": "machine",
+  "x-source": "4d512860c4"
+ },
+ "label.art": "Umělecká představa",
+ "@label.art": {
+  "x-review": "machine",
+  "x-source": "8b1a9bc32a"
+ },
+ "label.illustration": "Ilustrace",
+ "@label.illustration": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
+ },
+ "label.model": "Model z uložených hodnot",
+ "@label.model": {
+  "x-review": "machine",
+  "x-source": "f99882758e"
+ },
+ "label.real": "Skutečná data, se zdrojem",
+ "@label.real": {
+  "x-review": "machine",
+  "x-source": "6f75938cc8"
+ },
+ "label.speculative": "Spekulativní model",
+ "@label.speculative": {
+  "x-review": "machine",
+  "x-source": "d1d38cf39a"
+ },
+ "lb.h1": "Metody hodnocené naslepo na skutečných TOI.",
+ "@lb.h1": {
+  "x-review": "machine",
+  "x-source": "d7943ed0f0"
+ },
+ "lb.intro": "Veřejný žebříček na zmrazeném benchmarku skutečných TOI: detekované události každého příspěvku, hodnocené samotným žebříčkem pouze na odložené polovině, s 95% Wilsonovými intervaly. Nejde o prahový průzkum vkládáním (docs/threshold_sweep.md), který ladí prahy Probe na syntetických světelných křivkách.",
+ "@lb.intro": {
+  "x-review": "machine",
+  "x-source": "8e62d2c060"
+ },
+ "lb.note": "Změřeno na uvedeném benchmarku; nic zde není objev.",
+ "@lb.note": {
+  "x-review": "machine",
+  "x-source": "272d460db4"
+ },
+ "limits.art": "Nejde o pozorování: vzhled zvolený podle změřeného poloměru a ozáření.",
+ "@limits.art": {
+  "x-review": "machine",
+  "x-source": "ec71f17b2e"
+ },
+ "limits.caption": "jak uvádí popisek",
+ "@limits.caption": {
+  "x-review": "machine",
+  "x-source": "dee533d112"
+ },
+ "limits.illustration": "Vysvětluje myšlenku; nejde o data.",
+ "@limits.illustration": {
+  "x-review": "machine",
+  "x-source": "c4c6c22d05"
+ },
+ "limits.model": "Model nakreslený z uložených čísel; ne snímek objektu.",
+ "@limits.model": {
+  "x-review": "machine",
+  "x-source": "9f137900ab"
+ },
+ "limits.real": "Uložená měření, průměrovaná nebo složená tak, jak byla uložena.",
+ "@limits.real": {
+  "x-review": "machine",
+  "x-source": "1e9288318d"
+ },
+ "limits.source": "Zdroj: {s}.",
+ "@limits.source": {
+  "x-review": "machine",
+  "x-source": "cba3864e3a"
+ },
+ "limits.speculative": "Za hranicí změřeného: možnost, ne výsledek.",
+ "@limits.speculative": {
+  "x-review": "machine",
+  "x-source": "3fe7418bc2"
+ },
+ "limits.summary": "Zdroj / omezení",
+ "@limits.summary": {
+  "x-review": "machine",
+  "x-source": "ecbcc39e74"
+ },
+ "mc.intro": "Vyberte hvězdu v libovolném panelu; každý panel a každé vysunuté okno ji následuje.",
+ "@mc.intro": {
+  "x-review": "machine",
+  "x-source": "e6a5c8f840"
+ },
+ "mcp.honesty.candidate": "Kandidát, ne objev: SetuHQ hledá a prověřuje poklesy ve veřejných datech TESS. Potvrzení planety vyžaduje následná pozorování (radiální rychlosti, zobrazování, statistickou validaci) provedená jinými.",
+ "@mcp.honesty.candidate": {
+  "x-review": "machine",
+  "x-source": "2109188b0d"
+ },
+ "mcp.honesty.catalogue": "Hodnoty katalogu jsou měření zdroje, zobrazená tak, jak byla uložena; chybějící hodnota se neodhaduje. SetuHQ tyto planety neobjevil.",
+ "@mcp.honesty.catalogue": {
+  "x-review": "machine",
+  "x-source": "01e280f468"
+ },
+ "mcp.honesty.computed": "Spočítáno právě teď vlastním kódem SetuHQ ze zadaných vstupů; nejde o uložený, posouzený výsledek.",
+ "@mcp.honesty.computed": {
+  "x-review": "machine",
+  "x-source": "8ba17ff89a"
+ },
+ "mcp.honesty.formula": "Učebnicový vzorec vyhodnocený tak, jak je zapsán; popisuje idealizovaný případ, ne měření.",
+ "@mcp.honesty.formula": {
+  "x-review": "machine",
+  "x-source": "cd6187025a"
+ },
+ "mcp.honesty.panel": "Sentinels jsou modely AI, ne lidé (ve výchozím stavu Claude; další poskytovatelé jsou označeni). Benchmarkem prošel jen Claude. Probes jsou deterministické detektory s přizpůsobeným filtrem.",
+ "@mcp.honesty.panel": {
+  "x-review": "machine",
+  "x-source": "9d2e4debf5"
+ },
+ "mcp.honesty.stored": "Načteno z uložených souborů; nic nebylo přepočítáno.",
+ "@mcp.honesty.stored": {
+  "x-review": "machine",
+  "x-source": "333f8aa8d7"
+ },
+ "mcp.honesty.unreviewed": "Na tohle se žádný panel posuzovatelů nedíval: jde pouze o výstup detektoru a prověrky.",
+ "@mcp.honesty.unreviewed": {
+  "x-review": "machine",
+  "x-source": "832585f3e6"
+ },
+ "mcp.instructions": "SetuHQ prohledává veřejné světelné křivky NASA TESS a hledá tranzity s panelem posuzovatelů složeným ze Sentinels (modely AI; ve výchozím stavu Claude, další poskytovatelé označeni) a Probes (deterministické detektory), a pak každý pokles prověří a nafituje. Volejte tyto nástroje místo odhadování: spouštějí vlastní kód SetuHQ nebo čtou jeho uložené, posouzené výsledky. Každá odpověď nese původ a štítky poctivosti; zachovejte je ve své zprávě. Cokoli SetuHQ najde, je kandidát, ne objev. Nic neodesílejte, nezveřejňujte ani nepředávejte ven bez výslovného souhlasu uživatele.",
+ "@mcp.instructions": {
+  "x-review": "machine",
+  "x-source": "8dcede2e8e"
+ },
+ "mcp.tool.benchmark_results": "Uložený výsledek benchmarku nebo validace: real_tois (benchmark naslepo na 662 TOI), leaderboard (žebříček\nskutečných TOI), injection (vkládání a zpětné nalezení pro Probes), pi_men_validation, weights (kalibrace) nebo\nthreshold_sweep (syntetický, ne žebříček). Vrací se tak, jak je uložen.",
+ "@mcp.tool.benchmark_results": {
+  "x-review": "machine",
+  "x-source": "a8f12a0af7"
+ },
+ "mcp.tool.cheops_proposal_pack": "Zapíše PŘÍPRAVNÝ balíček návrhu CHEOPS Guest Observers (``propose.pack.build_pack``) do nového\nruns/propose/<run_name> (odmítnuto, pokud existuje; nic mimo něj se nezapisuje, bez mezipaměti): kontrola pravidel Running Call\n(limity oběhů, pravidlo duben/říjen pro programy Large, nejbližší termín v pařížském čase, nejdřívější začátek),\nstav cíle (veřejný Reserved Target List, metadata veřejného archivu CHEOPS, souřadnice SIMBAD/MAST J2000),\nuložené důkazy SetuHQ, hrubé ODHADY přesnosti a oběhů, anonymizované koncepty s lintem\nanonymity a kontrolní seznam ESA krok za krokem. Čte jen veřejné stránky; nikdy se nepřihlašuje ani nic neodesílá. SetuHQ je nezávislý\nna ESA a misi CHEOPS: rozhodují oficiální výzva a nástroje ESA.",
+ "@mcp.tool.cheops_proposal_pack": {
+  "x-review": "machine",
+  "x-source": "d9fdc80788"
+ },
+ "mcp.tool.compute_fap": "Empirická pravděpodobnost falešného poplachu nejsilnějšího periodického signálu (``search.false_alarm_probability``):\nopakované běhy BLS s blokovým bootstrapem, které zachovávají červený šum. Omezeno: při N pokusech se nikdy neuvádí pod 1/(N + 1),\na Gumbelův chvost je označen jako orientační. N je omezeno na 2000 na volání.",
+ "@mcp.tool.compute_fap": {
+  "x-review": "machine",
+  "x-source": "01f4019412"
+ },
+ "mcp.tool.find_eclipsing_binary": "Zákrytové dvojhvězdy a elipsoidální nebo reflexní proměnné ve světelné křivce (``binaries.analyse``):\noběžná perioda z boxového hledání a periodogramu (zdvojená při rozdílu sudé/liché nebo při stejných minimech, a pak\noznačená jako nejednoznačná), primární a sekundární zákryty (fáze, hloubka, šířka, významnost), fáze\nsekundárního s nápovědou e·cosω, heuristická morfologická třída a příznak kandidáta na zákrytovou dvojhvězdu\ns důvody. S periodou, epochou a délkou kandidáta na tranzit vrací také doporučující nápovědy prověrky\n(hloubky sudé/liché, sekundární zákryt v libovolné fázi, elipsoidální a reflexní amplitudy), které prověrka SetuHQ\nnepoužívá. Čas ve dnech (BTJD pro TESS).",
+ "@mcp.tool.find_eclipsing_binary": {
+  "x-review": "machine",
+  "x-source": "e45be3cbe7"
+ },
+ "mcp.tool.find_flares": "Detekuje a charakterizuje hvězdné erupce ve světelné křivce (``flares.detect_flares``): odstranění trendu\nšetrné k erupcím, kandidáti ze sigma-clippingu (kritéria Chang et al. 2015), volitelné vlnkové odšumění (Poyatos et al.\n2025), fity šablonou Mendoza et al. 2022 s vícesložkovými modely volenými podle BIC, časy nárůstu a poklesu,\namplituda, FWHM, ekvivalentní doba a energie (černé těleso 9000 K), jsou-li zadány Teff a poloměr. Provádí také\nnulový test s obráceným tokem. Čas ve dnech (BTJD pro TESS); mise TESS nebo CHEOPS nastavuje výchozí hodnoty.",
+ "@mcp.tool.find_flares": {
+  "x-review": "machine",
+  "x-source": "d650c20040"
+ },
+ "mcp.tool.find_transients": "Neperiodická zjasnění ve světelné křivce (``transients.find_transients``) ve třech časových škálách, každé\nse svým vrcholem, amplitudou, časy nárůstu a poklesu, FWHM a nápovědou třídy (flare-like, extragalactic-transient-like,\nasteroid-crossing-like, momentum-dump-like, scattered-light-like nebo periodic-variability-like) s důvody;\nposlední čtyři jsou pravděpodobně falešné poplachy. difference_flux=True pro světelnou křivku z diferenčního zobrazování v e-/s.\nČasy vybíjení momentu hybnosti a rozptýleného světla (bity kvality TESS 32, 2048, 4096) zpřesňují filtry. Každá událost je\nkandidát na přechodný jev, nikdy nový ani potvrzený objekt. Čas ve dnech (BTJD pro TESS).",
+ "@mcp.tool.find_transients": {
+  "x-review": "machine",
+  "x-source": "54243a74ac"
+ },
+ "mcp.tool.fit_transit": "Nafituje model tranzitu SetuHQ s okrajovým ztemněním (``transitfit.fit_transit``) kolem jednoho tranzitu: hloubka, T14,\nimpaktní parametr b, čas středu, Rp/R★ a hustota z tranzitu ρ★, každé s chybou a rozsahem. Okrajové ztemnění\npodle Claret 2017 pro Teff a log g hvězdy (jako Slunce, nejsou-li zadány). t0, délka a hloubka jsou počáteční odhady.",
+ "@mcp.tool.fit_transit": {
+  "x-review": "machine",
+  "x-source": "3b77980915"
+ },
+ "mcp.tool.get_candidate": "Jeden pokles konsenzu s úplným původem: uložený kandidát (prověrka, fit, FAP, audit označení\nkaždého posuzovatele), manifest běhu (kód, otisk konfigurace, vstupy se SHA-256, posuzovatelé s poskytovatelem a modelem) a každá\nuložená klasifikace jeho objektu posuzovatelem (štítek, označení, zdůvodnění, poskytovatel, model).",
+ "@mcp.tool.get_candidate": {
+  "x-review": "machine",
+  "x-source": "78f0b83b1a"
+ },
+ "mcp.tool.get_cheops_lightcurve": "Veřejné světelné křivky CHEOPS DRP cíle z archivu CHEOPS přes DACE (``cheops.get_cheops_lightcurve``;\nvyžaduje ``pip install 'setuhq[cheops]'`` a síť, pokud nejsou v mezipaměti): návštěvy vyhledané podle polohy, proprietární\nvynechány, každá stažena jednou a uložena, systematiky úhlu natočení/pozadí/centroidu dekorelovány (členy volené\npodle BIC). Vrací původ každé návštěvy (program, klíč souboru, id pozorování, poděkování), souhrn odstranění trendu a,\ns include_points, body po odstranění trendu v BTJD. Nese poděkování ESA a prohlášení SetuHQ.",
+ "@mcp.tool.get_cheops_lightcurve": {
+  "x-review": "machine",
+  "x-source": "06ff3dcf79"
+ },
+ "mcp.tool.get_planet": "Uložený katalogový záznam jedné planety a její mateřské hvězdy (přesná shoda názvu; nejprve použijte search_catalogue).",
+ "@mcp.tool.get_planet": {
+  "x-review": "machine",
+  "x-source": "97084f4fb5"
+ },
+ "mcp.tool.get_star": "Uložený záznam mateřské hvězdy a každá katalogizovaná planeta kolem ní (přesný název hvězdy).",
+ "@mcp.tool.get_star": {
+  "x-review": "machine",
+  "x-source": "df7232ade1"
+ },
+ "mcp.tool.habitable_zone": "Hranice obyvatelné zóny v AU pro hvězdu (``methods.hz_distance_au``, Kopparapu et al. 2014, 1 M⊕):\nnedávná Venuše a nekontrolovatelný skleníkový efekt (vnitřní), maximální skleníkový efekt a raný Mars (vnější).",
+ "@mcp.tool.habitable_zone": {
+  "x-review": "machine",
+  "x-source": "3608921db8"
+ },
+ "mcp.tool.list_candidates": "Poklesy konsenzu uloženého běhu, s tím, zda každý prošel prověrkou, a jeho příznaky (``candidates.json``).",
+ "@mcp.tool.list_candidates": {
+  "x-review": "machine",
+  "x-source": "0443efd099"
+ },
+ "mcp.tool.microlensing_magnification": "Zesílení bodové čočky A(u) = (u² + 2) / (u √(u² + 4)) při impaktním parametru u, v Einsteinových poloměrech\n(``methods.paczynski``).",
+ "@mcp.tool.microlensing_magnification": {
+  "x-review": "machine",
+  "x-source": "29faa074dc"
+ },
+ "mcp.tool.pulsation_spectrum": "Frekvenční analýza světelné křivky (``pulsations.analyse``): amplitudové spektrum Lomb-Scargle, iterativní\npředběžné bělení s nelineárním opakovaným fitem více sinusoid až do S/N 4 (Breger et al. 1993), příznaky kombinačních\nfrekvencí, granulační pozadí s Harveyho profilem, numax/Δν pro oscilátory slunečního typu a heuristický\ntyp proměnnosti s jeho nejistotou. Frekvence v d⁻¹ a µHz; čas ve dnech. n_surrogates > 0 spustí\nnulový test červeného šumu (nejvýše 20).",
+ "@mcp.tool.pulsation_spectrum": {
+  "x-review": "machine",
+  "x-source": "97767afcfb"
+ },
+ "mcp.tool.rotation_period": "Rotační perioda hvězdy ze skvrnové modulace (``rotation.measure``): periodogram Lomb-Scargle a\nautokorelační funkce, s nejistotou, ošetřením aliasů poloviny/dvojnásobku a příznakem detekce. Jeden sektor TESS\nneměří periody delší než asi 13 dní; ty se hlásí jako za limitem. Zadejte jeden sektor (nebo\nsvětelnou křivku, kterou jste sami spojili, s ohledem na posuny mezi sektory). Čas ve dnech.",
+ "@mcp.tool.rotation_period": {
+  "x-review": "machine",
+  "x-source": "2d6e72833f"
+ },
+ "mcp.tool.run_pipeline_csv": "Spustí celou pipeline (``pipeline.run_pipeline``) na světelné křivce CSV (time, flux[, flux_err]) a zapíše\nnový adresář běhu, runs/mcp/<run_name> (odmítnuto, pokud existuje: nic se nikdy nepřepisuje). Jen Probes,\npokud není sentinels=True; Sentinels pak běží jen tam, kde je jejich klíč, SDK nebo CLI (manifest uvádí\nvynechané a proč).",
+ "@mcp.tool.run_pipeline_csv": {
+  "x-review": "machine",
+  "x-source": "6a2a86935b"
+ },
+ "mcp.tool.run_pipeline_tess": "Stáhne světelnou křivku TESS SPOC z MAST (``loaders.load_tess``; vyžaduje síť a ``pip install -e '.[tess]'``)\npro ID TIC a sektory a spustí na ní pipeline do nového runs/mcp/<run_name> (nikdy do existujícího\nadresáře). Jen Probes, pokud není sentinels=True.",
+ "@mcp.tool.run_pipeline_tess": {
+  "x-review": "machine",
+  "x-source": "421d6522fe"
+ },
+ "mcp.tool.rv_semi_amplitude": "Poloamplituda radiální rychlosti K (m/s) hvězdy s jednou planetou (``methods.rv_semi_amplitude``).",
+ "@mcp.tool.rv_semi_amplitude": {
+  "x-review": "machine",
+  "x-source": "0342cc898c"
+ },
+ "mcp.tool.search_catalogue": "Prohledá katalog exoplanet podle názvu planety nebo hvězdy (nebo alternativního názvu, např. ID TIC), volitelně podle\nmetody objevu (``transit``, ``rv``, ``imaging``, ``microlensing``, ``astrometry``, ``timing``). Obaluje ``catalogue.catalogue_filter``.",
+ "@mcp.tool.search_catalogue": {
+  "x-review": "machine",
+  "x-source": "27fc845629"
+ },
+ "mcp.tool.sentinel_providers": "Poskytovatelé Sentinel podporovaní SetuHQ, jak se každý konfiguruje a zda zde může běžet (jeho proměnná\ns klíčem je nastavena, jeho SDK nebo CLI je přítomno). Nikdy nevrací klíč.",
+ "@mcp.tool.sentinel_providers": {
+  "x-review": "machine",
+  "x-source": "d8e703706c"
+ },
+ "mcp.tool.transit_depth": "Hloubka centrálního tranzitu: (Rp/R★)² geometricky a s kvadratickým okrajovým ztemněním TESS pro\nTeff hvězdy (``methods.transit_flux`` při z = 0, koeficienty Claret 2017). Zadejte Rp/R★, nebo Rp v poloměrech Země\na R★ v poloměrech Slunce.",
+ "@mcp.tool.transit_depth": {
+  "x-review": "machine",
+  "x-source": "6b52c6ad8e"
+ },
+ "mcp.tool.vet_lightcurve": "Prohledá světelnou křivku a hledá periodický tranzit (BLS, ``search.bls_search``) a prověří jeden pokles prověrkou SetuHQ\n(``vet.vet_event``: SNR, délka, okraje, hloubky sudé/liché, sekundární zákryt). Zadejte pokles jako\nt_start/t_end, nebo je vynechte a prověří se první tranzit nejsilnějšího periodického signálu. Světelná křivka se\npřipraví tak, jak ji připravuje pipeline (čištění, odstranění trendu, binování).",
+ "@mcp.tool.vet_lightcurve": {
+  "x-review": "machine",
+  "x-source": "645c79cc54"
+ },
+ "methods.chapter_n": "Kapitola {i} z {n}",
+ "@methods.chapter_n": {
+  "x-review": "machine",
+  "x-source": "417be5d799"
+ },
+ "methods.h1": "Jak se hledají planety.",
+ "@methods.h1": {
+  "x-review": "machine",
+  "x-source": "583ac6e306"
+ },
+ "methods.h1b": "A jak je hledá SetuHQ.",
+ "@methods.h1b": {
+  "x-review": "machine",
+  "x-source": "99b2b42598"
+ },
+ "methods.intro": "{n} kapitol, každá animované vysvětlení s fyzikou a zdroji. Každá kresba uvádí, zda jde o ilustraci, model z uložených hodnot nebo skutečná data, a jak moc je přehnaná. Jen kapitola o tranzitu popisuje něco, co SetuHQ dělá sám.",
+ "@methods.intro": {
+  "x-review": "machine",
+  "x-source": "c0a3069175"
+ },
+ "methods.planets": "Planety v této kapitole",
+ "@methods.planets": {
+  "x-review": "machine",
+  "x-source": "6be85af173"
+ },
+ "methods.sources": "Zdroje",
+ "@methods.sources": {
+  "x-review": "machine",
+  "x-source": "caf85b0888"
+ },
+ "nav.candidates": "Kandidáti",
+ "@nav.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "nav.docs": "Dokumentace",
+ "@nav.docs": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "nav.evidence": "Důkazy",
+ "@nav.evidence": {
+  "x-review": "machine",
+  "x-source": "03867aea70"
+ },
+ "nav.explore": "Prozkoumat",
+ "@nav.explore": {
+  "x-review": "machine",
+  "x-source": "3b73900b8d"
+ },
+ "nav.how": "Jak to funguje",
+ "@nav.how": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "nf.candidates": "Každý pokles, který ukázkové běhy našly, s jeho kontrolami.",
+ "@nf.candidates": {
+  "x-review": "machine",
+  "x-source": "1347c55237"
+ },
+ "nf.docs": "Nainstalujte SetuHQ a spusťte jej sami.",
+ "@nf.docs": {
+  "x-review": "machine",
+  "x-source": "ae69454d62"
+ },
+ "nf.evidence": "Posuzovatelé, benchmark a běhy.",
+ "@nf.evidence": {
+  "x-review": "machine",
+  "x-source": "b14b42d506"
+ },
+ "nf.explore": "Obloha, Galaxie a každá katalogizovaná planeta.",
+ "@nf.explore": {
+  "x-review": "machine",
+  "x-source": "05950074cc"
+ },
+ "nf.h1": "Tato stránka tu není.",
+ "@nf.h1": {
+  "x-review": "machine",
+  "x-source": "3ba2f76d61"
+ },
+ "nf.home": "Přejít na domovskou stránku",
+ "@nf.home": {
+  "x-review": "machine",
+  "x-source": "adceddedfd"
+ },
+ "nf.how": "Patnáct kapitol o tom, jak se hledají planety.",
+ "@nf.how": {
+  "x-review": "machine",
+  "x-source": "b04ce55cc1"
+ },
+ "nf.intro": "Adresa mohla být chybně napsána, nebo se stránka mohla přesunout při reorganizaci webu. Staré adresy přesměrovávají samy; tato nový domov nemá.",
+ "@nf.intro": {
+  "x-review": "machine",
+  "x-source": "76142af35c"
+ },
+ "nf.search": "Hledat planety, hvězdy a stránky",
+ "@nf.search": {
+  "x-review": "machine",
+  "x-source": "36738611e1"
+ },
+ "obj.cls.bymass": " (podle hmotnosti)",
+ "@obj.cls.bymass": {
+  "x-review": "machine",
+  "x-source": "0fefa83c19"
+ },
+ "obj.cls.earth": "Velikosti Země",
+ "@obj.cls.earth": {
+  "x-review": "machine",
+  "x-source": "793cad2691"
+ },
+ "obj.cls.giant": "Plynný obr",
+ "@obj.cls.giant": {
+  "x-review": "machine",
+  "x-source": "dc4da1dee3"
+ },
+ "obj.cls.nep": "Podobná Neptunu",
+ "@obj.cls.nep": {
+  "x-review": "machine",
+  "x-source": "d9aa819eb6"
+ },
+ "obj.cls.none": "třídu nelze určit (není uložen poloměr ani hmotnost)",
+ "@obj.cls.none": {
+  "x-review": "machine",
+  "x-source": "4c2ce50d4a"
+ },
+ "obj.cls.subnep": "Sub-Neptun",
+ "@obj.cls.subnep": {
+  "x-review": "machine",
+  "x-source": "a17b446d03"
+ },
+ "obj.cls.super": "Superzemě",
+ "@obj.cls.super": {
+  "x-review": "machine",
+  "x-source": "c9402130b8"
+ },
+ "obj.discovered": "objevena {year}",
+ "@obj.discovered": {
+  "x-review": "machine",
+  "x-source": "aeef0079ed"
+ },
+ "obj.discovered_none": "rok objevu není uložen",
+ "@obj.discovered_none": {
+  "x-review": "machine",
+  "x-source": "ceb1245b3e"
+ },
+ "obj.host": "Její hvězda a další planety",
+ "@obj.host": {
+  "x-review": "machine",
+  "x-source": "c247cb467a"
+ },
+ "obj.nohost": "mateřská hvězda není uložena",
+ "@obj.nohost": {
+  "x-review": "machine",
+  "x-source": "1309987b39"
+ },
+ "obj.params": "Uložené parametry",
+ "@obj.params": {
+  "x-review": "machine",
+  "x-source": "a060be301b"
+ },
+ "obj.planets": "Její planety",
+ "@obj.planets": {
+  "x-review": "machine",
+  "x-source": "0b1b4bc5af"
+ },
+ "obj.refs": "Objev a reference",
+ "@obj.refs": {
+  "x-review": "machine",
+  "x-source": "11a5acd988"
+ },
+ "obj.row.a": "Velká poloosa",
+ "@obj.row.a": {
+  "x-review": "machine",
+  "x-source": "7a98cb0909"
+ },
+ "obj.row.b": "Impaktní parametr",
+ "@obj.row.b": {
+  "x-review": "machine",
+  "x-source": "c30e761341"
+ },
+ "obj.row.dec": "Dec (J2000)",
+ "@obj.row.dec": {
+  "x-review": "machine",
+  "x-source": "31451795ef"
+ },
+ "obj.row.dist": "Vzdálenost",
+ "@obj.row.dist": {
+  "x-review": "machine",
+  "x-source": "b7bdf7a2d6"
+ },
+ "obj.row.e": "Excentricita",
+ "@obj.row.e": {
+  "x-review": "machine",
+  "x-source": "3642eea73f"
+ },
+ "obj.row.incl": "Sklon",
+ "@obj.row.incl": {
+  "x-review": "machine",
+  "x-source": "e1a57232e1"
+ },
+ "obj.row.k": "Poloamplituda RV K",
+ "@obj.row.k": {
+  "x-review": "machine",
+  "x-source": "4bc68f8d51"
+ },
+ "obj.row.lambda": "Úhel spin–orbita λ",
+ "@obj.row.lambda": {
+  "x-review": "machine",
+  "x-source": "f4a2329657"
+ },
+ "obj.row.mass": "Hmotnost",
+ "@obj.row.mass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.msini": "Minimální hmotnost (m sin i)",
+ "@obj.row.msini": {
+  "x-review": "machine",
+  "x-source": "0a0c24bec0"
+ },
+ "obj.row.period": "Oběžná perioda",
+ "@obj.row.period": {
+  "x-review": "machine",
+  "x-source": "278785d733"
+ },
+ "obj.row.ra": "RA (J2000)",
+ "@obj.row.ra": {
+  "x-review": "machine",
+  "x-source": "9cee37a6a6"
+ },
+ "obj.row.radius": "Poloměr",
+ "@obj.row.radius": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.sage": "Stáří",
+ "@obj.row.sage": {
+  "x-review": "machine",
+  "x-source": "39b7370f30"
+ },
+ "obj.row.smass": "Hmotnost",
+ "@obj.row.smass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.smet": "Metalicita [Fe/H]",
+ "@obj.row.smet": {
+  "x-review": "machine",
+  "x-source": "b7e5ba6b1d"
+ },
+ "obj.row.srad": "Poloměr",
+ "@obj.row.srad": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.steff": "Efektivní teplota",
+ "@obj.row.steff": {
+  "x-review": "machine",
+  "x-source": "bcd5903c63"
+ },
+ "obj.row.teq": "Rovnovážná teplota",
+ "@obj.row.teq": {
+  "x-review": "machine",
+  "x-source": "a3016009fd"
+ },
+ "obj.row.tmeas": "Změřená teplota",
+ "@obj.row.tmeas": {
+  "x-review": "machine",
+  "x-source": "592546ce16"
+ },
+ "obj.row.vmag": "Magnituda V",
+ "@obj.row.vmag": {
+  "x-review": "machine",
+  "x-source": "963ef1a54e"
+ },
+ "obj.sysview": "Pohled na soustavu",
+ "@obj.sysview": {
+  "x-review": "machine",
+  "x-source": "8f2681a95c"
+ },
+ "obj.units": "Jednotky tak, jak je uložil {source}. Chyby jsou uložené dolní a horní meze; kde nejsou uloženy, nezobrazují se.",
+ "@obj.units": {
+  "x-review": "machine",
+  "x-source": "1d415a6e1a"
+ },
+ "obj.where": "Kde se nachází",
+ "@obj.where": {
+  "x-review": "machine",
+  "x-source": "751c664982"
+ },
+ "out.dash.footer": "Vygenerováno SetuHQ. Výsledky na syntetických datech nejsou tvrzením o skutečných datech z oblohy.",
+ "@out.dash.footer": {
+  "x-review": "machine",
+  "x-source": "98762ed655"
+ },
+ "out.feed.candidates": "Toto jsou kandidáti.",
+ "@out.feed.candidates": {
+  "x-review": "machine",
+  "x-source": "ee9b7f2cdf"
+ },
+ "out.feed.h1": "Vyhledávací kanál",
+ "@out.feed.h1": {
+  "x-review": "machine",
+  "x-source": "22bc3c8839"
+ },
+ "out.feed.held": "Zadrženo k posouzení",
+ "@out.feed.held": {
+  "x-review": "machine",
+  "x-source": "57b7af20f8"
+ },
+ "out.feed.nights": "Položky za noc",
+ "@out.feed.nights": {
+  "x-review": "machine",
+  "x-source": "6cd04f7bc5"
+ },
+ "out.plate.interval": "Interval konsenzu poklesu je tam, kde se jejich označení shodují.",
+ "@out.plate.interval": {
+  "x-review": "machine",
+  "x-source": "1780c6e536"
+ },
+ "out.plate.others": "Tabule ostatních ukázkových hvězd",
+ "@out.plate.others": {
+  "x-review": "machine",
+  "x-source": "df7ef77948"
+ },
+ "out.plate.panel": "Panel tvoří Sentinels a Probes, žádní lidé.",
+ "@out.plate.panel": {
+  "x-review": "machine",
+  "x-source": "15066e34e3"
+ },
+ "out.report.benchmark": "Vkládání a zpětné nalezení",
+ "@out.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "6da1d36286"
+ },
+ "out.report.candidates": "Kandidáti",
+ "@out.report.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "out.report.panel": "Rozhodnutí panelu",
+ "@out.report.panel": {
+  "x-review": "machine",
+  "x-source": "a929a43913"
+ },
+ "out.report.panel.p": "Odpověď každého posuzovatele pro každý objekt kódovaný naslepo. Neshody zůstávají viditelné, protože právě v nich se konsenzus získává.",
+ "@out.report.panel.p": {
+  "x-review": "machine",
+  "x-source": "da09405f36"
+ },
+ "out.report.pipeline": "Jak běh funguje",
+ "@out.report.pipeline": {
+  "x-review": "machine",
+  "x-source": "baad56eb35"
+ },
+ "out.report.provenance": "Původ",
+ "@out.report.provenance": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "out.report.validation": "Validace na známých planetách",
+ "@out.report.validation": {
+  "x-review": "machine",
+  "x-source": "4432fa961d"
+ },
+ "panel.both": "{s, plural, one {# Sentinel} few {# Sentinels} many {# Sentinels} other {# Sentinels}} a {p, plural, one {# Probe} few {# Probes} many {# Probes} other {# Probes}}",
+ "@panel.both": {
+  "x-review": "machine",
+  "x-source": "c6e6d6aa5e"
+ },
+ "panel.probes": "{p, plural, one {# Probe} few {# Probes} many {# Probes} other {# Probes}}",
+ "@panel.probes": {
+  "x-review": "machine",
+  "x-source": "5dce100851"
+ },
+ "panel.sentinels": "{s, plural, one {# Sentinel} few {# Sentinels} many {# Sentinels} other {# Sentinels}}",
+ "@panel.sentinels": {
+  "x-review": "machine",
+  "x-source": "70f14c3441"
+ },
+ "pic.colour": "Barva hvězdy",
+ "@pic.colour": {
+  "x-review": "machine",
+  "x-source": "dfe6307835"
+ },
+ "pic.draw": "Hvězda a tranzit",
+ "@pic.draw": {
+  "x-review": "machine",
+  "x-source": "e0d9fd74d5"
+ },
+ "pic.h1": "Jak se kreslí obrázky.",
+ "@pic.h1": {
+  "x-review": "machine",
+  "x-source": "b56c1f91df"
+ },
+ "pic.intro": "Každá hvězda v SetuHQ je nakreslena v barvě černého tělesa podle své uložené teploty. Každá planeta je umělecká představa: její vzhled se volí podle dvou změřených veličin, poloměru (bez něj hmotnosti) a světla, které dostává od své hvězdy. Nic na obrázku není změřeno nad rámec těchto čísel, a složení nikdy.",
+ "@pic.intro": {
+  "x-review": "machine",
+  "x-source": "3cf76ad409"
+ },
+ "pic.labels": "Pět štítků",
+ "@pic.labels": {
+  "x-review": "machine",
+  "x-source": "51668dd62a"
+ },
+ "pic.labels.p": "Každý obrázek na webu nese jeden z nich, přímo na sobě.",
+ "@pic.labels.p": {
+  "x-review": "machine",
+  "x-source": "880b424ff6"
+ },
+ "pic.real": "Co je skutečné a co nakreslené",
+ "@pic.real": {
+  "x-review": "machine",
+  "x-source": "79bd58ea67"
+ },
+ "pic.rules": "Pravidla",
+ "@pic.rules": {
+  "x-review": "machine",
+  "x-source": "e3954c7ee3"
+ },
+ "pic.still": "Při omezeném pohybu",
+ "@pic.still": {
+  "x-review": "machine",
+  "x-source": "a42e838475"
+ },
+ "pic.still.p": "Když zařízení žádá o omezení pohybu, nic se neopakuje ve smyčce: každá kresba ukazuje jeden navržený snímek a vše, co se přehrává, čeká na své tlačítko.",
+ "@pic.still.p": {
+  "x-review": "machine",
+  "x-source": "b12a8bfb34"
+ },
+ "pic.table": "Tabulka vzhledů",
+ "@pic.table": {
+  "x-review": "machine",
+  "x-source": "5bf530d59d"
+ },
+ "pr.h1": "Připravte návrh pro CHEOPS.",
+ "@pr.h1": {
+  "x-review": "machine",
+  "x-source": "c189d495dd"
+ },
+ "pr.intro": "<code>setuhq propose cheops</code> píše přípravný balíček pro CHEOPS Guest Observers Running Call: zkontrolovaná pravidla, stav cíle, plánovací odhady, anonymizované koncepty a sedm kroků ESA jako kontrolní seznam. Nástroje ESA spouštíte a návrh podáváte sami.",
+ "@pr.intro": {
+  "x-review": "machine",
+  "x-source": "6893d1fea2"
+ },
+ "route.candidates.label": "Spis",
+ "@route.candidates.label": {
+  "x-review": "machine",
+  "x-source": "d12f22e06a"
+ },
+ "route.candidates.title": "Spis {name} · Kandidáti · SetuHQ",
+ "@route.candidates.title": {
+  "x-review": "machine",
+  "x-source": "6265efaa30"
+ },
+ "route.catalogue.label": "Katalog",
+ "@route.catalogue.label": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "route.catalogue.title": "Katalog známých exoplanet · SetuHQ",
+ "@route.catalogue.title": {
+  "x-review": "machine",
+  "x-source": "1d55d9e531"
+ },
+ "route.docs.label": "Dokumentace",
+ "@route.docs.label": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "route.docs.title": "Dokumentace: začínáme se SetuHQ · SetuHQ",
+ "@route.docs.title": {
+  "x-review": "machine",
+  "x-source": "273729a761"
+ },
+ "route.editions.label": "Edice",
+ "@route.editions.label": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "route.editions.title": "Edice: otevřené jádro, SetuHQ Pro a studie na zakázku · SetuHQ",
+ "@route.editions.title": {
+  "x-review": "machine",
+  "x-source": "facd044991"
+ },
+ "route.explorer.label": "Kandidáti",
+ "@route.explorer.label": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "route.explorer.title": "Kandidáti · SetuHQ",
+ "@route.explorer.title": {
+  "x-review": "machine",
+  "x-source": "3377897bfa"
+ },
+ "route.galaxy.label": "Galaxie",
+ "@route.galaxy.label": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "route.galaxy.title": "Galaxie · Prozkoumat · SetuHQ",
+ "@route.galaxy.title": {
+  "x-review": "machine",
+  "x-source": "ad11918632"
+ },
+ "route.leaderboard.label": "Žebříček",
+ "@route.leaderboard.label": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "route.leaderboard.title": "Žebříček · Důkazy · SetuHQ",
+ "@route.leaderboard.title": {
+  "x-review": "machine",
+  "x-source": "2b687acd99"
+ },
+ "route.methods.label": "Jak to funguje",
+ "@route.methods.label": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "route.methods.title": "{name} · Jak to funguje · SetuHQ",
+ "@route.methods.title": {
+  "x-review": "machine",
+  "x-source": "1cbf3454bd"
+ },
+ "route.mission.label": "Řídicí středisko",
+ "@route.mission.label": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "route.mission.title": "Řídicí středisko · Prozkoumat · SetuHQ",
+ "@route.mission.title": {
+  "x-review": "machine",
+  "x-source": "3bbcc04226"
+ },
+ "route.notfound.label": "Stránka nenalezena",
+ "@route.notfound.label": {
+  "x-review": "machine",
+  "x-source": "a469ab4ca4"
+ },
+ "route.notfound.title": "Stránka nenalezena · SetuHQ",
+ "@route.notfound.title": {
+  "x-review": "machine",
+  "x-source": "9ba0459ab7"
+ },
+ "route.overview.label": "Domů",
+ "@route.overview.label": {
+  "x-review": "machine",
+  "x-source": "3a78695388"
+ },
+ "route.overview.title": "SetuHQ: obloha, posouzená",
+ "@route.overview.title": {
+  "x-review": "machine",
+  "x-source": "1159339ef0"
+ },
+ "route.pictures.label": "Jak se kreslí obrázky",
+ "@route.pictures.label": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "route.pictures.title": "Jak se kreslí obrázky · Dokumentace · SetuHQ",
+ "@route.pictures.title": {
+  "x-review": "machine",
+  "x-source": "09b9052231"
+ },
+ "route.planet.label": "Planeta",
+ "@route.planet.label": {
+  "x-review": "machine",
+  "x-source": "b6e3957877"
+ },
+ "route.planet.title": "{name} · Planety · SetuHQ",
+ "@route.planet.title": {
+  "x-review": "machine",
+  "x-source": "1fcbb7f176"
+ },
+ "route.planets.label": "Poměry poloměrů",
+ "@route.planets.label": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "route.planets.title": "Poměry poloměrů · Kandidáti · SetuHQ",
+ "@route.planets.title": {
+  "x-review": "machine",
+  "x-source": "ac2e38c1f9"
+ },
+ "route.plates.label": "Tabule",
+ "@route.plates.label": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "route.propose.label": "Návrhy pro CHEOPS",
+ "@route.propose.label": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "route.propose.title": "Připravte návrh pro CHEOPS · Dokumentace · SetuHQ",
+ "@route.propose.title": {
+  "x-review": "machine",
+  "x-source": "6f87c679a9"
+ },
+ "route.report.label": "Report běhu",
+ "@route.report.label": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "route.runs.label": "Běhy",
+ "@route.runs.label": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "route.runs.title": "Běhy · Důkazy · SetuHQ",
+ "@route.runs.title": {
+  "x-review": "machine",
+  "x-source": "004653c043"
+ },
+ "route.sentinels.label": "Panel",
+ "@route.sentinels.label": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "route.sentinels.title": "Důkazy: panel, změřený · SetuHQ",
+ "@route.sentinels.title": {
+  "x-review": "machine",
+  "x-source": "789dfd2a1e"
+ },
+ "route.sky.label": "Mapa oblohy",
+ "@route.sky.label": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "route.sky.title": "Prozkoumat oblohu · SetuHQ",
+ "@route.sky.title": {
+  "x-review": "machine",
+  "x-source": "8b6fb90a8b"
+ },
+ "route.star.label": "Hvězda",
+ "@route.star.label": {
+  "x-review": "machine",
+  "x-source": "e357d39687"
+ },
+ "route.star.title": "{name} · Hvězdy · SetuHQ",
+ "@route.star.title": {
+  "x-review": "machine",
+  "x-source": "fbb83b9cf8"
+ },
+ "route.stellar.label": "Hvězdy",
+ "@route.stellar.label": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "route.stellar.title": "Hvězdy, změřené: erupce a pulzace · Důkazy · SetuHQ",
+ "@route.stellar.title": {
+  "x-review": "machine",
+  "x-source": "67e92dbcd1"
+ },
+ "route.stellardocs.label": "Erupce a pulzace",
+ "@route.stellardocs.label": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "route.stellardocs.title": "Erupce, pulzace a CHEOPS · Dokumentace · SetuHQ",
+ "@route.stellardocs.title": {
+  "x-review": "machine",
+  "x-source": "ed9c362b70"
+ },
+ "route.tessnow.label": "Kde je teď TESS",
+ "@route.tessnow.label": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "route.tessnow.title": "Kam se dívá TESS · Prozkoumat · SetuHQ",
+ "@route.tessnow.title": {
+  "x-review": "machine",
+  "x-source": "b9141101d4"
+ },
+ "route.transit.label": "Kandidát",
+ "@route.transit.label": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
+ "route.transit.title": "{name} · Kandidáti · SetuHQ",
+ "@route.transit.title": {
+  "x-review": "machine",
+  "x-source": "e3d2dd556b"
+ },
+ "route.variables.label": "Všechno, co slábne",
+ "@route.variables.label": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "route.variables.title": "Všechno, co slábne · Katalog · SetuHQ",
+ "@route.variables.title": {
+  "x-review": "machine",
+  "x-source": "85fdb3c494"
+ },
+ "route.vetter.label": "Buďte prověřovatelem",
+ "@route.vetter.label": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "route.vetter.title": "Buďte prověřovatelem · Kandidáti · SetuHQ",
+ "@route.vetter.title": {
+  "x-review": "machine",
+  "x-source": "f8e3bf1fc8"
+ },
+ "rr.h1": "Co by každá hloubka znamenala, kdyby šlo o planetu.",
+ "@rr.h1": {
+  "x-review": "machine",
+  "x-source": "ff54ab4721"
+ },
+ "rr.intro": "Jedna karta na hvězdu z běhu nebo kanálu. Každá položka je {status}; poměr níže ukazuje, co uložená hloubka znamená, kdyby šlo o planetu.",
+ "@rr.intro": {
+  "x-review": "machine",
+  "x-source": "9889e603bf"
+ },
+ "runs.h1": "Každý vyhledávací běh, jeho chyby tak, jak byly uloženy, a konfigurace za těmito stránkami.",
+ "@runs.h1": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "runs.hist": "Vyhledávací běhy",
+ "@runs.hist": {
+  "x-review": "machine",
+  "x-source": "26d6d37f90"
+ },
+ "runs.intro": "Historie vyhledávacích běhů z katalogu a konfigurace běhu {run}. Chybové zprávy jsou zobrazeny tak, jak byly uloženy.",
+ "@runs.intro": {
+  "x-review": "machine",
+  "x-source": "95d99973c5"
+ },
+ "sd.h1": "Erupce, pulzace a CHEOPS.",
+ "@sd.h1": {
+  "x-review": "machine",
+  "x-source": "a0c598f487"
+ },
+ "sd.intro": "Šest příkazů se dívá na hvězdu, ne na její planety. Každý zapíše jeden záznam JSON s výsledkem, původem (verze, otisk kódu, sha256 každého vstupu) a štítky. Erupce nebo frekvence je detekována s uvedenou významností, nikdy potvrzena; typ proměnnosti je pravděpodobný nebo kandidát.",
+ "@sd.intro": {
+  "x-review": "machine",
+  "x-source": "d9fdd750e3"
+ },
+ "sen.h1": "{n, plural, one {# posuzovatel.} few {# posuzovatelé.} many {# posuzovatele.} other {# posuzovatelů.}}",
+ "@sen.h1": {
+  "x-review": "machine",
+  "x-source": "18e2721f25"
+ },
+ "sen.h1b": "Každý si svůj hlas zaslouží.",
+ "@sen.h1b": {
+  "x-review": "machine",
+  "x-source": "67b1d265c9"
+ },
+ "sen.intro": "Panel, který označoval poklesy v běhu {run}: Sentinels a Probes, žádní lidé.",
+ "@sen.intro": {
+  "x-review": "machine",
+  "x-source": "cfd243554e"
+ },
+ "shell.bootnote": "Interaktivní části této stránky se nepodařilo načíst. Text výše je úplný; obnovte stránku a zkuste to znovu.",
+ "@shell.bootnote": {
+  "x-review": "machine",
+  "x-source": "a2f1ab571c"
+ },
+ "shell.breadcrumb": "Drobečková navigace",
+ "@shell.breadcrumb": {
+  "x-review": "machine",
+  "x-source": "2bd873d6c7"
+ },
+ "shell.copy_view": "Kopírovat odkaz na tento pohled",
+ "@shell.copy_view": {
+  "x-review": "machine",
+  "x-source": "709937ae3d"
+ },
+ "shell.home": "SetuHQ, domů",
+ "@shell.home": {
+  "x-review": "machine",
+  "x-source": "970b8e33a0"
+ },
+ "shell.in_section": "V této části",
+ "@shell.in_section": {
+  "x-review": "machine",
+  "x-source": "a4b1dbff1e"
+ },
+ "shell.menu_close": "Zavřít nabídku",
+ "@shell.menu_close": {
+  "x-review": "machine",
+  "x-source": "d992820f3c"
+ },
+ "shell.menu_open": "Otevřít nabídku",
+ "@shell.menu_open": {
+  "x-review": "machine",
+  "x-source": "fc798c613b"
+ },
+ "shell.nav_main": "Hlavní",
+ "@shell.nav_main": {
+  "x-review": "machine",
+  "x-source": "eb814be3ca"
+ },
+ "shell.search": "Hledat planety, hvězdy a stránky (stiskněte /)",
+ "@shell.search": {
+  "x-review": "machine",
+  "x-source": "781eaaf920"
+ },
+ "shell.search_title": "Hledat (/)",
+ "@shell.search_title": {
+  "x-review": "machine",
+  "x-source": "bae77fae53"
+ },
+ "shell.skip": "Přejít na obsah",
+ "@shell.skip": {
+  "x-review": "machine",
+  "x-source": "ac576a66d4"
+ },
+ "shell.theme.dark": "tmavý",
+ "@shell.theme.dark": {
+  "x-review": "machine",
+  "x-source": "e6bb5689be"
+ },
+ "shell.theme.label": "Barevný motiv: {t}. Přepnout na {next}",
+ "@shell.theme.label": {
+  "x-review": "machine",
+  "x-source": "c4ccc7de70"
+ },
+ "shell.theme.light": "světlý",
+ "@shell.theme.light": {
+  "x-review": "machine",
+  "x-source": "99a7026172"
+ },
+ "shell.theme.system": "nastavení zařízení",
+ "@shell.theme.system": {
+  "x-review": "machine",
+  "x-source": "2b67477bad"
+ },
+ "shell.theme.title": "Motiv: {t}",
+ "@shell.theme.title": {
+  "x-review": "machine",
+  "x-source": "79f90fbb1e"
+ },
+ "shell.view_link": "Odkaz na tento pohled",
+ "@shell.view_link": {
+  "x-review": "machine",
+  "x-source": "5fb2ec761c"
+ },
+ "sky.tl": "Planety nalezené v každém roce, podle metody",
+ "@sky.tl": {
+  "x-review": "machine",
+  "x-source": "10dff603f9"
+ },
+ "st.figs": "Co vidí detektory",
+ "@st.figs": {
+  "x-review": "machine",
+  "x-source": "ff3ec0553b"
+ },
+ "st.h1": "Hvězdy, změřené.",
+ "@st.h1": {
+  "x-review": "machine",
+  "x-source": "ec1ba1f8f3"
+ },
+ "st.intro": "Kromě planet SetuHQ detekuje hvězdné erupce, určuje frekvence pulzací, čte veřejné světelné křivky CHEOPS a hledá zákrytové dvojhvězdy, rotační periody a přechodné jevy. Každá schopnost byla porovnána se zveřejněnými výsledky podle protokolu zapsaného před jejím během a každá stránka i výstup nástroje uvádí, jak daleko validace došla.",
+ "@st.intro": {
+  "x-review": "machine",
+  "x-source": "7f59c8f0fc"
+ },
+ "subnav.candidates": "Spisy",
+ "@subnav.candidates": {
+  "x-review": "machine",
+  "x-source": "379b0a5b2b"
+ },
+ "subnav.catalogue": "Katalog",
+ "@subnav.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "subnav.docs": "Začínáme",
+ "@subnav.docs": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "subnav.editions": "Edice",
+ "@subnav.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "subnav.explorer": "Všichni kandidáti",
+ "@subnav.explorer": {
+  "x-review": "machine",
+  "x-source": "e2df94228e"
+ },
+ "subnav.galaxy": "Galaxie",
+ "@subnav.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "subnav.leaderboard": "Žebříček",
+ "@subnav.leaderboard": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "subnav.mission": "Řídicí středisko",
+ "@subnav.mission": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "subnav.pictures": "Jak se kreslí obrázky",
+ "@subnav.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "subnav.planets": "Poměry poloměrů",
+ "@subnav.planets": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "subnav.plates": "Tabule",
+ "@subnav.plates": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "subnav.propose": "Návrhy pro CHEOPS",
+ "@subnav.propose": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "subnav.report": "Report běhu",
+ "@subnav.report": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "subnav.runs": "Běhy",
+ "@subnav.runs": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "subnav.sentinels": "Panel",
+ "@subnav.sentinels": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "subnav.sky": "Mapa oblohy",
+ "@subnav.sky": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "subnav.stellar": "Hvězdy",
+ "@subnav.stellar": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "subnav.stellardocs": "Erupce a pulzace",
+ "@subnav.stellardocs": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "subnav.tessnow": "Kde je teď TESS",
+ "@subnav.tessnow": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "subnav.transit": "Poklesy",
+ "@subnav.transit": {
+  "x-review": "machine",
+  "x-source": "25efb1bd33"
+ },
+ "subnav.variables": "Všechno, co slábne",
+ "@subnav.variables": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "subnav.vetter": "Buďte prověřovatelem",
+ "@subnav.vetter": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "tn.h1": "Kam se dívá TESS.",
+ "@tn.h1": {
+  "x-review": "machine",
+  "x-source": "33a70ec6b1"
+ },
+ "tn.intro": "Družice NASA TESS sleduje jeden pás oblohy asi čtyři týdny (sektor) čtyřmi kamerami s polem 24° × 24° každá. Tato mapa ukazuje pásy podle zveřejněného plánu a hvězdy se známými planetami uvnitř nich.",
+ "@tn.intro": {
+  "x-review": "machine",
+  "x-source": "6cbf61a637"
+ },
+ "var.h1": "Všechno, co slábne.",
+ "@var.h1": {
+  "x-review": "machine",
+  "x-source": "00cffacfe5"
+ },
+ "var.h1b": "{n, number} položek, žádná nevyhozena.",
+ "@var.h1b": {
+  "x-review": "machine",
+  "x-source": "af9b7536fe"
+ },
+ "var.intro": "Každý pokles konsenzu panelu, každé zjasnění a proměnnost každé hvězdy z průzkumu, každé klasifikované podle uvedeného pravidla, s jistotou, vodítky a původem: označení, váhy a vlastní slova Sentinels.",
+ "@var.intro": {
+  "x-review": "machine",
+  "x-source": "a3cde2962d"
+ },
+ "vt.h1": "Buďte prověřovatelem.",
+ "@vt.h1": {
+  "x-review": "machine",
+  "x-source": "bc56851e50"
+ },
+ "vt.intro": "Každá karta je skutečný pokles, který uložil jeden z ukázkových běhů SetuHQ. Prohlédněte si jeho světelnou křivku, složení, sudé a liché hloubky a hloubku o půl oběhu později, a pak rozhodněte: přijatý, označený, nebo zamítnutý. Pak uvidíte, co rozhodla prověrka a proč.",
+ "@vt.intro": {
+  "x-review": "machine",
+  "x-source": "2d2a3a79d4"
+ }
+}
