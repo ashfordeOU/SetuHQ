@@ -4,7 +4,8 @@
 // built site (and a sample of the deploy-time planet and star pages) in Chromium, lets the scripts draw, and runs the
 // browser's own page-text walker (setuhq.i18n AUTO_JS) over the result. Every template it would look up is written to
 // src/setuhq/locales/js-templates.json, which `tools/i18n.py extract` adds to en.arb with the prefix "js.".
-// A block the server already writes on a main page (setuhq.i18n_auto, prefix "pg.") is left out.
+// On a main page, a block the server already writes (setuhq.i18n_auto, prefix "pg.") is left out: only what is still
+// English on its German twin (/de/...) is kept, which needs the German page text (pg.) translated first.
 //
 //   node tools/i18n_harvest.mjs --site path/to/site-with-stubs [--out src/setuhq/locales/js-templates.json]
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
@@ -30,38 +31,41 @@ const browser = await pw.chromium.launch({ args: ["--use-gl=swiftshader", "--ena
 // A reference (authors, journal, year) stays as published.
 const CITE = /\bet al\.|\b(ApJL?|ApJS|A&amp;A|MNRAS|AJ|PASP|Nature|Science|ARA&amp;A|PSJ|RNAAS)\b \{n\d+\}/;
 const found = {};
-for (const vp of [{ width: 1440, height: 900 }]) {
-  const ctx = await browser.newContext({ viewport: vp, reducedMotion: "reduce" });
-  for (const path of pages) {
-    const page = await ctx.newPage();
-    try {
-      const res = await page.goto(BASE + path, { waitUntil: "load", timeout: 30000 });
-      const raw = res ? await res.text() : "";
-      await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 700){ scrollTo(0, y); await new Promise(r => setTimeout(r, 40)); } scrollTo(0, 0); });
-      await page.waitForTimeout(800);
-      const got = await page.evaluate(async () => {
-        const SI = window.SetuI18n; if (!SI || !SI.conf.auto) return [];
-        if (!SI.auto){ await new Promise((ok, no) => { const x = document.createElement("script"); x.src = SI.conf.auto; x.onload = ok; x.onerror = no; document.head.appendChild(x); }); }
-        const h53 = SI.h53, out = new Map();
-        SI.lang = "xx"; SI.cat = {}; SI.hash = (t, h) => { const id = h53(t); if (!out.has(id)) out.set(id, [t, h]); return id; };
-        // Another view's markup rides hidden in the page (a /<lang>/ page opens other views from the server): not this page's text.
-        for (const r of document.querySelectorAll('[id^="route-"]')) if (r.hidden || r.closest("[hidden]")) r.remove();
-        for (const d of document.querySelectorAll("details")) d.open = true;
-        await new Promise(r => setTimeout(r, 300));
-        SI.auto(document);
-        return [...out.entries()];
-      });
-      const main = MAIN.has(path);
-      for (const [id, [t, h]] of got) {
-        if (main && raw.includes(h) || t.length > 3000 || CITE.test(t)) continue;  // the server writes this one (pg.); a data dump; a reference
-        const f = found[id] || (found[id] = { en: t, pages: [] });
-        if (f.pages.length < 4 && !f.pages.includes(path)) f.pages.push(path);
-      }
-    } catch (e) { console.warn(`${path}: ${e.message}`); }
-    await page.close();
-  }
-  await ctx.close();
+const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
+// The drawn text's own translations stay out, so that the German twin shows it in English.
+await ctx.route("**/assets/i18n/js-*/**", (r) => r.fulfill({ status: 200, contentType: "application/json", body: "{}" }));
+async function grab(url) {
+  const page = await ctx.newPage();
+  try {
+    await page.goto(BASE + url, { waitUntil: "networkidle", timeout: 30000 });
+    await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 700){ scrollTo(0, y); await new Promise(r => setTimeout(r, 40)); } scrollTo(0, 0); });
+    await page.waitForTimeout(2000);
+    return new Map(await page.evaluate(async () => {
+      const SI = window.SetuI18n; if (!SI || !SI.conf.auto) return [];
+      if (!SI.auto){ await new Promise((ok, no) => { const x = document.createElement("script"); x.src = SI.conf.auto; x.onload = ok; x.onerror = no; document.head.appendChild(x); }); }
+      const h53 = SI.h53, out = new Map();
+      SI.lang = "xx"; SI.cat = {}; SI.hash = (t, h) => { const id = h53(t); if (!out.has(id)) out.set(id, t); return id; };
+      // Another view's markup rides hidden in the page (a /<lang>/ page opens other views from the server): not this page's text.
+      for (const r of document.querySelectorAll('[id^="route-"]')) if (r.hidden || r.closest("[hidden]")) r.remove();
+      for (const d of document.querySelectorAll("details")) d.open = true;
+      await new Promise(r => setTimeout(r, 300));
+      SI.auto(document);
+      return [...out.entries()];
+    }));
+  } catch (e) { console.warn(`${url}: ${e.message}`); return new Map(); }
+  finally { await page.close(); }
 }
+for (const path of pages) {
+  const en = await grab(path);
+  // A main page: only what is still English on its German twin, where the server has written its page text.
+  const de = MAIN.has(path) ? await grab("/de" + path) : en;
+  for (const [id, t] of en) {
+    if (!de.has(id) || t.length > 3000 || CITE.test(t)) continue;  // the server writes it; a data dump; a reference
+    const f = found[id] || (found[id] = { en: t, pages: [] });
+    if (f.pages.length < 4 && !f.pages.includes(path)) f.pages.push(path);
+  }
+}
+await ctx.close();
 await browser.close(); server.close();
 const sorted = Object.fromEntries(Object.keys(found).sort().map(k => [k, found[k]]));
 writeFileSync(OUT, JSON.stringify(sorted, null, 1) + "\n");
