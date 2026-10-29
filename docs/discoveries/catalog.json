@@ -1849,10 +1849,47 @@
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 77, in load_tess\n    lc = search[i].download(flux_column=flux_column, download_dir=download_dir)\nlightkurve.utils.LightkurveError: Download of mast:TESS/product/tess2023069172124-s0063-0000000360714300-0255-s_lc.fits failed. MAST returns ERROR: HTTPError: 502 Server Error: Bad Gateway for url: https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:TESS/product/tess2023069172124-s0063-0000000360714300-0255-s_lc.fits\n"
       ],
       "reclassified": 0
+    },
+    {
+      "time": "2026-10-29T00:47:42+00:00",
+      "targets": [
+        360742636,
+        360816293,
+        360816296,
+        360822008,
+        361154154,
+        361176558,
+        361218772,
+        361219651,
+        361343239,
+        361344753,
+        361403927,
+        361413119,
+        361467239,
+        361710792,
+        361711730,
+        361998994,
+        362026280
+      ],
+      "errors": [
+        "TIC 361034196: LookupError: no SPOC 120s light curves found for 'TIC 361034196'",
+        "TIC 361944563: LookupError: no SPOC 120s light curves found for 'TIC 361944563'",
+        "TIC 362032529: ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      ],
+      "new": 0,
+      "known": 0,
+      "filtered_deep": 103,
+      "filtered_one_sector": 4,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 361034196'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 361944563'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 793, in urlopen\n    response = self._make_request(\n        conn,\n    ...<10 lines>...\n        **response_kw,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 540, in _make_request\n    response = conn.getresponse()\nConnectionResetError: [Errno 104] Connection reset by peer\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/requests/adapters.py\", line 696, in send\n    resp = conn.urlopen(\n        method=request.method,\n    ...<9 lines>...\n        chunked=chunked,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 847, in urlopen\n    retries = retries.increment(\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\n    )\nurllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nrequests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))\n"
+      ],
+      "reclassified": 0
     }
   ],
-  "targets_reviewed": 256,
-  "updated": "2026-10-28T18:28:02+00:00",
+  "targets_reviewed": 273,
+  "updated": "2026-10-29T00:47:42+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8"
 }
