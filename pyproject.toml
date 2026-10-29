@@ -85,7 +85,7 @@ where = ["src"]
 [tool.setuptools.package-data]
 # py.typed: the package ships its type hints (PEP 561). data/: the reference tables the fit and the vetting read,
 # byte-identical copies of their docs/results originals (tests/test_release.py checks that they stay so).
-setuhq = ["py.typed", "data/*.json", "data/stills/*.webp", "data/stills/*.json", "fonts/*.css", "fonts/*.txt", "fonts/files/*.woff2", "fonts/files/*.woff"]
+setuhq = ["py.typed", "locales/*.arb", "data/*.json", "data/stills/*.webp", "data/stills/*.json", "fonts/*.css", "fonts/*.txt", "fonts/files/*.woff2", "fonts/files/*.woff"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

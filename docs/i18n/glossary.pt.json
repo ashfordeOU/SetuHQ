@@ -1,0 +1,68 @@
+{
+ "lang": "pt",
+ "about": "Fixed terms for this language (docs/TRANSLATING.md). 'en' is the English pattern; a translation of a message that has it must match 'target' (case-insensitive). 'keep' are written exactly as in English. 'claims': this language's words for discover and confirm, which a translation may use only where the English does.",
+ "keep": [
+  "SetuHQ",
+  "Sentinels",
+  "Sentinel",
+  "Probes",
+  "Probe",
+  "TOI",
+  "TESS",
+  "CHEOPS",
+  "ESA",
+  "NASA",
+  "MAST",
+  "Claude",
+  "Anthropic",
+  "MCP"
+ ],
+ "terms": [
+  {
+   "term_en": "transit",
+   "en": "\\btransits?\\b",
+   "term": "trânsito",
+   "target": "trânsito"
+  },
+  {
+   "term_en": "light curve",
+   "en": "\\blight[ -]curves?\\b",
+   "term": "curva de luz",
+   "target": "curvas? de luz"
+  },
+  {
+   "term_en": "candidate",
+   "en": "\\bcandidates?\\b",
+   "term": "candidato",
+   "target": "candidat"
+  },
+  {
+   "term_en": "flagged",
+   "en": "\\bflagged\\b",
+   "term": "sinalizado",
+   "target": "sinalizad"
+  },
+  {
+   "term_en": "rejected",
+   "en": "\\brejected\\b",
+   "term": "rejeitado",
+   "target": "rejeitad"
+  },
+  {
+   "term_en": "false positive",
+   "en": "\\bfalse positives?\\b",
+   "term": "falso positivo",
+   "target": "falsos? positivos?"
+  },
+  {
+   "term_en": "confirmed (as in 'not a confirmed planet')",
+   "en": "\\bconfirm",
+   "term": "confirmado",
+   "target": "confirm"
+  }
+ ],
+ "claims": {
+  "confirm": "confirm",
+  "discover": "descob"
+ }
+}

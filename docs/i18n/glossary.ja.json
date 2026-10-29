@@ -1,0 +1,68 @@
+{
+ "lang": "ja",
+ "about": "Fixed terms for this language (docs/TRANSLATING.md). 'en' is the English pattern; a translation of a message that has it must match 'target' (case-insensitive). 'keep' are written exactly as in English. 'claims': this language's words for discover and confirm, which a translation may use only where the English does.",
+ "keep": [
+  "SetuHQ",
+  "Sentinels",
+  "Sentinel",
+  "Probes",
+  "Probe",
+  "TOI",
+  "TESS",
+  "CHEOPS",
+  "ESA",
+  "NASA",
+  "MAST",
+  "Claude",
+  "Anthropic",
+  "MCP"
+ ],
+ "terms": [
+  {
+   "term_en": "transit",
+   "en": "\\btransits?\\b",
+   "term": "トランジット",
+   "target": "トランジット"
+  },
+  {
+   "term_en": "light curve",
+   "en": "\\blight[ -]curves?\\b",
+   "term": "光度曲線",
+   "target": "光度曲線"
+  },
+  {
+   "term_en": "candidate",
+   "en": "\\bcandidates?\\b",
+   "term": "候補",
+   "target": "候補"
+  },
+  {
+   "term_en": "flagged",
+   "en": "\\bflagged\\b",
+   "term": "要レビュー",
+   "target": "要レビュー"
+  },
+  {
+   "term_en": "rejected",
+   "en": "\\brejected\\b",
+   "term": "棄却",
+   "target": "棄却"
+  },
+  {
+   "term_en": "false positive",
+   "en": "\\bfalse positives?\\b",
+   "term": "偽陽性",
+   "target": "偽陽性"
+  },
+  {
+   "term_en": "confirmed (as in 'not a confirmed planet')",
+   "en": "\\bconfirm",
+   "term": "確認された",
+   "target": "確認"
+  }
+ ],
+ "claims": {
+  "confirm": "確認",
+  "discover": "発見"
+ }
+}
