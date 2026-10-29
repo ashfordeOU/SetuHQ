@@ -62,7 +62,7 @@ def test_marks_weights_and_score_are_the_stored_ones(data):
         assert {r["id"] for r in m["reviewers"] if r["marked"]} == {ln["id"] for ln in d["lanes"] if ln["counted"]}
         for r in m["reviewers"]:
             assert r["weight"] == weights.get(r["id"]), r["id"]
-        page = P.html(m)
+        page = unkey(P.html(m))
         # The table under the figure lists every reviewer with its stored mark and weight.
         rows = re.findall(r'<tr><th scope="row">.*?</tr>', page)
         assert len(rows) == len(m["reviewers"])

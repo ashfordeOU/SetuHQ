@@ -67,7 +67,7 @@ def test_the_home_page_shows_every_example_with_its_dip_count(multi):
     data = _data(multi)
     for c in data["showcase"]:
         assert c["count"] == dip_count([d["outcome"] for d in c["dips"]])
-        assert c["count"] in gallery and c["star"] in gallery
+        assert c["count"] in re.sub(r"<[^>]+>", "", gallery) and c["star"] in gallery
         assert c["case_file"] in gallery
     assert PROBES_ONLY in gallery
     assert home.index('class="examples"') < home.index('class="proof"') < home.index('class="dohere"')

@@ -180,10 +180,10 @@ def sweep_line(meta: dict | None) -> str:
     c = meta["counts"]
     labels = {k["id"]: k["label"] for k in meta["classes"]}
     real = [labels[k].lower() for k in meta["order"] if k not in meta["noise_like"] and k != "unclassified"]
-    found = (f"{', '.join(real)} {'stands' if len(real) == 1 else 'stand'} out above chance so far" if real
-             else "nothing yet stands out above chance")
-    return (f'<p class="sweepline">We have searched {c["stars_searched"]:,} stars for anything that dims; {found}. '
-            f'<a href="#/variables">See the evidence ›</a></p>')
+    line = span("sweep.line", "We have searched {n, number} stars for anything that dims; {k, plural, =0 {nothing yet stands out above chance} "
+                "one {{list} stands out above chance so far} other {{list} stand out above chance so far}}.",
+                n=c["stars_searched"], k=len(real), list=", ".join(real))
+    return f'<p class="sweepline">{line} <a href="#/variables"{ik("sweep.evidence")}>{t("sweep.evidence", "See the evidence ›")}</a></p>'
 
 
 def sky_layer_svg(meta: dict | None) -> str:

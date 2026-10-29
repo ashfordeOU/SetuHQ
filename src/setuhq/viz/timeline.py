@@ -18,7 +18,8 @@ import json
 
 from setuhq.design import METHOD
 from setuhq.viz import require_source
-from setuhq.viz.skyyears import LABEL, METHODS, source_text
+from setuhq.i18n import N_, k as ik, ka, span
+from setuhq.viz.skyyears import LABEL, METHODS, NOT_OURS, method_label, source_text
 
 W, H_FULL, H_COMPACT = 1000, 300, 220
 L, R_, T, B = 48, 10, 14, 26  # plot margins in SVG units
@@ -98,14 +99,14 @@ def html(data: dict, **opts) -> str:
             c = c[:-1]
         return ".".join(map(str, c)) or "0"
     counts_attr = " ".join(word(list(c)) for c in cs)
-    legend = "".join(f'<li><i style="background:{METHOD[m][0]}"></i>{e(LABEL[m])}</li>' for k, m in enumerate(METHODS) if any(c[k] for c in cs))
-    head = "".join(f'<th scope="col">{e(LABEL[m])}</th>' for m in METHODS)
+    legend = "".join(f'<li><i style="background:{METHOD[m][0]}"></i>{method_label(m)}</li>' for k, m in enumerate(METHODS) if any(c[k] for c in cs))
+    head = "".join(f'<th scope="col">{method_label(m)}</th>' for m in METHODS)
     body = "".join(f'<tr><th scope="row">{y}</th><td>{tot[i]:,}</td>' + "".join(f"<td>{v:,}</td>" for v in cs[i]) + "</tr>" for i, y in enumerate(years))
-    noyear = f" {t['no_year']:,} records without a year are not drawn." if t["no_year"] else ""
+    noyear = " " + span("tl.noyear", "{n, number} records without a year are not drawn.", n=t["no_year"]) if t["no_year"] else ""
     # The compact band (the home page) leaves the table to the full chart on /explore/.
-    table = ('<p class="skysrc"><a href="/explore/#timeline">The counts by year and method, as a table ›</a></p>' if opts.get("compact") else
-             f'<details class="tltable"><summary>Planets by year and method</summary><div class="tablewrap" tabindex="0" role="region" '
-             f'aria-label="Planets by year and method"><table class="pltable"><thead><tr><th scope="col">Year</th><th scope="col">All</th>{head}</tr></thead>'
+    table = (f'<p class="skysrc"><a href="/explore/#timeline"{ik("tl.table_link")}>{N_("tl.table_link", "The counts by year and method, as a table ›")}</a></p>' if opts.get("compact") else
+             f'<details class="tltable"><summary{ik("tl.table")}>{N_("tl.table", "Planets by year and method")}</summary><div class="tablewrap" tabindex="0" role="region" '
+             f'aria-label="Planets by year and method"{ka(aria_label="tl.table")}><table class="pltable"><thead><tr><th scope="col"{ik("sky.year")}>Year</th><th scope="col"{ik("sky.all")}>All</th>{head}</tr></thead>'
              f'<tbody>{body}</tbody></table></div></details>')
     uid = e(opts.get("uid") or f"tl-{opts.get('where') or 'x'}")
     return (f'<figure class="timeline{" compact" if opts.get("compact") else ""}" id="{uid}" data-viz="timeline" data-x0="{x0:.4f}" data-x1="{x1:.4f}" '
@@ -113,10 +114,10 @@ def html(data: dict, **opts) -> str:
             f'<div class="stage tlstage"><svg class="tlsvg" viewBox="0 0 {W} {H}" role="img" aria-label="{e(aria)}">'
             f'<g class="tlgrid">{"".join(grid)}</g><g>{bars}</g><g class="tlx">{xl}</g></svg>'
             f'<span class="stage-tag" data-i18n="label.real">Real data, cited</span></div>'
-            f'<p class="xread tlread" aria-live="polite">Point at a year, or focus the chart and use the arrow keys.</p>'
-            f'<figcaption><ul class="skylegend" aria-label="Discovery method">{legend}</ul>'
-            f'<p class="skysrc">Planets per discovery year, stacked by the method that found them.{noyear} SetuHQ did not discover these planets. '
-            f'Source: {e(data["source"])}.</p></figcaption>'
+            f'<p class="xread tlread" aria-live="polite"{ik("tl.hint")}>{N_("tl.hint", "Point at a year, or focus the chart and use the arrow keys.")}</p>'
+            f'<figcaption><ul class="skylegend" aria-label="Discovery method"{ka(aria_label="sky.legend")}>{legend}</ul>'
+            f'<p class="skysrc">{span("tl.cap", "Planets per discovery year, stacked by the method that found them.")}{noyear} <span{ik("cat.not_ours")}>{e(NOT_OURS)}</span> '
+            f'{span("limits.source", "Source: {s}.", s=data["source"])}</p></figcaption>'
             f'{table}</figure>')
 
 
@@ -140,11 +141,12 @@ JS = r"""
   function wire(fig){
     if (fig._tl || !window.SetuUI || !SetuUI.crosshair) return; fig._tl = true;
     const y0 = +fig.dataset.y0, rows = fig.dataset.counts.split(' ').map((w, i) => { const c = w.split('.').map(Number); return [y0 + i, c.reduce((a, b) => a + b, 0)].concat(c); }), labels = __LABELS__, svg = fig.querySelector('.tlsvg');
-    const f = n => n.toLocaleString('en-GB');
+    const TT = (id, en, a) => (window.SetuI18n ? SetuI18n.T(id, en, a) : en.replace(/\{(\w+)[^}]*\}/g, (m, k) => a && k in a ? a[k] : m)).replace(/&#(\d+);/g, (x, d) => String.fromCharCode(d));
+    const L = (window.SetuI18n && SetuI18n.lang) || 'en', keys = __KEYS__, f = n => n.toLocaleString(L === 'en' ? 'en-GB' : L);
     SetuUI.crosshair(svg, {x0: +fig.dataset.x0, x1: +fig.dataset.x1, xs: rows.map(r => r[0]), readout: fig.querySelector('.tlread'),
-      fmt: i => { const r = rows[i]; return `${r[0]}: ${f(r[1])} planet${r[1] === 1 ? '' : 's'}` + (r[1] ? ' · ' + r.slice(2).map((v, k) => [v, k]).filter(a => a[0]).sort((a, b) => b[0] - a[0]).map(([v, k]) => `${labels[k]} ${f(v)}`).join(' · ') : ''); }});
+      fmt: i => { const r = rows[i]; return TT('tl.read', '{y}: {n, plural, one {# planet} other {# planets}}', {y: String(r[0]), n: r[1]}) + (r[1] ? ' · ' + r.slice(2).map((v, k) => [v, k]).filter(a => a[0]).sort((a, b) => b[0] - a[0]).map(([v, k]) => `${TT('method.' + keys[k], labels[k])} ${f(v)}`).join(' · ') : ''); }});
   }
   window.SetuTimeline = {wire: root => (root || document).querySelectorAll('[data-viz="timeline"]').forEach(wire)};
   window.SetuTimeline.wire();
 })();
-""".replace("__LABELS__", json.dumps([LABEL[m] for m in METHODS]))
+""".replace("__LABELS__", json.dumps([LABEL[m] for m in METHODS])).replace("__KEYS__", json.dumps(METHODS))

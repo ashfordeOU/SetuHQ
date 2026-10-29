@@ -36,7 +36,7 @@ export default async function ({ browser, BASE, check: ok }) {
   check("picker: stored", await page.evaluate(() => { try { return localStorage.getItem("setuhq-lang"); } catch (e) { return null; } }) === "uk");
   const stub = await page.evaluate(async () => (await (await fetch("/assets/pages.json")).json()).length);
   check("pages.json readable", stub > 0);
-  await page.goto(base + "/planets/kepler-1-b/", { waitUntil: "networkidle" });
+  await page.goto(base + "/planets/kepler-22-b/", { waitUntil: "networkidle" });
   await page.waitForFunction(() => document.documentElement.lang === "uk", null, { timeout: 8000 }).catch(() => {});
   check("stub: follows the stored choice", await page.evaluate(() => document.documentElement.lang) === "uk");
   check("stub: note shown", await page.locator(".sitefoot .mtnote").isVisible());
@@ -66,7 +66,7 @@ export default async function ({ browser, BASE, check: ok }) {
       await p3.screenshot({ path: shots + "/" + file });
     }
     await p3.evaluate(() => { try { localStorage.setItem("setuhq-lang", "uk"); } catch (e) {} });
-    await p3.goto(base + "/planets/kepler-1-b/", { waitUntil: "networkidle" }); await p3.waitForTimeout(1200);
+    await p3.goto(base + "/planets/kepler-22-b/", { waitUntil: "networkidle" }); await p3.waitForTimeout(1200);
     await p3.screenshot({ path: shots + "/stub-uk.png" });
     await c3.close();
   }

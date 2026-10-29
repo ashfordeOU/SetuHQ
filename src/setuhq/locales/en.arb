@@ -21,6 +21,10 @@
    "source": {}
   }
  },
+ "cat.not_ours": "SetuHQ did not discover these planets.",
+ "@cat.not_ours": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
  "cf.h1": "Every signal, its dips, and the checks behind each verdict.",
  "@cf.h1": {
   "x-file": "src/setuhq/app.py"
@@ -31,6 +35,10 @@
   "placeholders": {
    "status": {}
   }
+ },
+ "cf.link": "Case file ›",
+ "@cf.link": {
+  "x-file": "src/setuhq/app.py"
  },
  "chapter.astrometry": "Astrometry",
  "@chapter.astrometry": {
@@ -1150,6 +1158,30 @@
    "rates": {}
   }
  },
+ "cov.bulge": "Bulge microlensing",
+ "@cov.bulge": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.corot": "CoRoT zones",
+ "@cov.corot": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.k2": "K2 campaigns",
+ "@cov.k2": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.kepler": "Kepler field",
+ "@cov.kepler": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.tess": "TESS sectors",
+ "@cov.tess": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.unmapped": "Unmapped by transit surveys",
+ "@cov.unmapped": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
  "desc.catalogue": "Every planet in exoplanet.eu, searchable and sortable, each with its own page. SetuHQ did not discover these planets.",
  "@desc.catalogue": {
   "x-file": "src/setuhq/site.py"
@@ -1272,6 +1304,34 @@
  "@dip.tag.rej": {
   "x-file": "src/setuhq/names.py"
  },
+ "dips.cand": "{n, plural, one {# candidate} other {# candidates}}",
+ "@dips.cand": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "dips.flag": "{n, plural, other {# flagged}}",
+ "@dips.flag": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "dips.n": "{n, plural, one {# dip} other {# dips}}",
+ "@dips.n": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "dips.rej": "{n, plural, other {# rejected}}",
+ "@dips.rej": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
  "docs.contribute": "Contribute a sweep",
  "@docs.contribute": {
   "x-file": "src/setuhq/site.py"
@@ -1359,6 +1419,16 @@
    "v": {}
   }
  },
+ "docs.runfiles": "<a href=\"{report}\">the run report</a>, <a href=\"{plates}\">the plates</a> and <a href=\"{cf}\">the case file</a> of run {run}.",
+ "@docs.runfiles": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "cf": {},
+   "plates": {},
+   "report": {},
+   "run": {}
+  }
+ },
  "docs.start": "Get started",
  "@docs.start": {
   "x-file": "src/setuhq/site.py"
@@ -1409,6 +1479,68 @@
    "n": {}
   }
  },
+ "fold.a": "Unfolded: in time order",
+ "@fold.a": {
+  "x-file": "src/setuhq/viz/fold.py"
+ },
+ "fold.b": "Folded on the {p}-day period",
+ "@fold.b": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "p": {}
+  }
+ },
+ "fold.fold": "Fold on the period",
+ "@fold.fold": {
+  "x-file": "src/setuhq/viz/fold.py"
+ },
+ "fold.folded": "<b>Folded</b> on the {p}-day period",
+ "@fold.folded": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "p": {}
+  }
+ },
+ "fold.said": "Folded on {p} days: the dip appears at zero hours.",
+ "@fold.said": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "p": {}
+  }
+ },
+ "fold.said_time": "In time order: each transit is a handful of points among the rest.",
+ "@fold.said_time": {
+  "x-file": "src/setuhq/viz/fold.py"
+ },
+ "fold.short": "{n, number} points folded on {p} d: a {depth} ppm, {t14} h dip. Source: {run}.",
+ "@fold.short": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "depth": {},
+   "n": {},
+   "p": {},
+   "run": {},
+   "t14": {}
+  }
+ },
+ "fold.source": "Source: {s}",
+ "@fold.source": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "s": {}
+  }
+ },
+ "fold.unfold": "Unfold to time",
+ "@fold.unfold": {
+  "x-file": "src/setuhq/viz/fold.py"
+ },
+ "fold.unfolded": "<b>Unfolded</b> · {d} days in time order",
+ "@fold.unfolded": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "d": {}
+  }
+ },
  "footer.all_chapters": "All {n} chapters",
  "@footer.all_chapters": {
   "x-file": "src/setuhq/site.py",
@@ -1440,6 +1572,34 @@
  "@footer.source": {
   "x-file": "src/setuhq/site.py"
  },
+ "gal.example": "Example run",
+ "@gal.example": {
+  "x-file": "src/setuhq/viz/gallery.py"
+ },
+ "gal.noart": "No candidate is given planet art.",
+ "@gal.noart": {
+  "x-file": "src/setuhq/viz/gallery.py"
+ },
+ "gal.note": "Each stage: the star's disc in its blackbody colour at the Teff its run stores, and what the run measured as a shadow at its fitted Rp/R★ (a planet the run missed is a dashed outline). Sizes are to scale against the disc; where each sits on it is illustrative.",
+ "@gal.note": {
+  "x-file": "src/setuhq/viz/gallery.py"
+ },
+ "gal.sectors": "{mission} {n, plural, one {sector} other {sectors}} {list}",
+ "@gal.sectors": {
+  "x-file": "src/setuhq/viz/gallery.py",
+  "placeholders": {
+   "list": {},
+   "mission": {},
+   "n": {}
+  }
+ },
+ "gal.stages": "Stages: {s}.",
+ "@gal.stages": {
+  "x-file": "src/setuhq/viz/gallery.py",
+  "placeholders": {
+   "s": {}
+  }
+ },
  "gx.h1": "Every known exoplanet,",
  "@gx.h1": {
   "x-file": "src/setuhq/galaxy.py"
@@ -1456,6 +1616,22 @@
    "n": {},
    "source": {}
   }
+ },
+ "hero.disc": "{star}'s star disc is in its blackbody colour; the planet is an artist's impression ({look}).",
+ "@hero.disc": {
+  "x-file": "src/setuhq/viz/hero.py",
+  "placeholders": {
+   "look": {},
+   "star": {}
+  }
+ },
+ "hero.model": "Model from stored values.",
+ "@hero.model": {
+  "x-file": "src/setuhq/viz/hero.py"
+ },
+ "hero.pause": "Pause",
+ "@hero.pause": {
+  "x-file": "src/setuhq/viz/hero.py"
  },
  "hint.dismiss": "Dismiss the hint: {h}",
  "@hint.dismiss": {
@@ -1681,6 +1857,10 @@
  "@home.more.transit": {
   "x-file": "src/setuhq/home.py"
  },
+ "home.proof": "What the reference run shows",
+ "@home.proof": {
+  "x-file": "src/setuhq/home.py"
+ },
  "home.refcheck": "The reference check: {planet}, a known planet, found again in run {run}",
  "@home.refcheck": {
   "x-file": "src/setuhq/home.py",
@@ -1816,6 +1996,146 @@
  "@lb.note": {
   "x-file": "src/setuhq/app.py"
  },
+ "learn.again": "Start again from step 1",
+ "@learn.again": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.all": "All {n} steps",
+ "@learn.all": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "learn.back": "‹ Back",
+ "@learn.back": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.cleared": "Learn path progress cleared.",
+ "@learn.cleared": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.complete": " · path complete",
+ "@learn.complete": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.continue": "Continue: {step}",
+ "@learn.continue": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "step": {}
+  }
+ },
+ "learn.count": "{k} of {n} visited",
+ "@learn.count": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
+ },
+ "learn.finish": "Finish ›",
+ "@learn.finish": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.finish_label": "Finish the path",
+ "@learn.finish_label": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.h": "Learn path",
+ "@learn.h": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.intro": "{n} steps, from how a survey works to every known exoplanet. Optional: go in order or skip around; any page you open counts. Progress stays in this browser.",
+ "@learn.intro": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "learn.kind.catalogue": "Catalogue",
+ "@learn.kind.catalogue": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.kind.ch": "Methods chapter",
+ "@learn.kind.ch": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.kind.galaxy": "Galaxy",
+ "@learn.kind.galaxy": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.kind.run": "SetuHQ's run",
+ "@learn.kind.run": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.leave": "Leave",
+ "@learn.leave": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.leave_label": "Leave the path",
+ "@learn.leave_label": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.left": "Left the Learn path. Your progress is kept.",
+ "@learn.left": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.next": "Next",
+ "@learn.next": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.next_btn": "Next ›",
+ "@learn.next_btn": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.next_label": "Next: {step}",
+ "@learn.next_label": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "step": {}
+  }
+ },
+ "learn.pos": "{i} of {n}",
+ "@learn.pos": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "i": {},
+   "n": {}
+  }
+ },
+ "learn.progress": "Learn path progress",
+ "@learn.progress": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.reset": "Reset progress",
+ "@learn.reset": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.seen": ", visited",
+ "@learn.seen": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.start": "Start the path",
+ "@learn.start": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.step.catalogue": "Every record, searchable",
+ "@learn.step.catalogue": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.step.galaxy": "Every known exoplanet, around the Sun",
+ "@learn.step.galaxy": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.step.transit": "SetuHQ's own transit: the case file",
+ "@learn.step.transit": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.unseen": ", not visited yet",
+ "@learn.unseen": {
+  "x-file": "src/setuhq/learn.py"
+ },
  "limits.art": "Not an observation: a look chosen from measured radius and irradiation.",
  "@limits.art": {
   "x-file": "src/setuhq/features.py"
@@ -1850,6 +2170,28 @@
  "limits.summary": "Source / limits",
  "@limits.summary": {
   "x-file": "src/setuhq/features.py"
+ },
+ "lu.cap": "To scale: one Earth radius is the same width all along the row, so {big} is {x} times as wide as {small}. Each picture is an artist's impression chosen from the measured radius and the computed irradiation; composition is not measured. Earth, Neptune and Jupiter are the Solar System references (only Earth is drawn with oceans). Radii: {src} (1 RJ = 11.209 R⊕).",
+ "@lu.cap": {
+  "x-file": "src/setuhq/viz/lineup.py",
+  "placeholders": {
+   "big": {},
+   "small": {},
+   "src": {},
+   "x": {}
+  }
+ },
+ "lu.earth": "Earth",
+ "@lu.earth": {
+  "x-file": "src/setuhq/viz/lineup.py"
+ },
+ "lu.jupiter": "Jupiter",
+ "@lu.jupiter": {
+  "x-file": "src/setuhq/viz/lineup.py"
+ },
+ "lu.neptune": "Neptune",
+ "@lu.neptune": {
+  "x-file": "src/setuhq/viz/lineup.py"
  },
  "mc.intro": "Pick a star in any pane; every pane and every popped-out window follows.",
  "@mc.intro": {
@@ -2003,6 +2345,34 @@
   "x-file": "src/setuhq/tools.py",
   "description": "The MCP tool vet_lightcurve's description, read by AI assistants and people choosing a tool."
  },
+ "method.astrometry": "astrometry",
+ "@method.astrometry": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.imaging": "imaging",
+ "@method.imaging": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.microlensing": "microlensing",
+ "@method.microlensing": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.other": "other",
+ "@method.other": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.rv": "radial velocity",
+ "@method.rv": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.timing": "timing",
+ "@method.timing": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.transit": "transit",
+ "@method.transit": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
  "methods.chapter_n": "Chapter {i} of {n}",
  "@methods.chapter_n": {
   "x-file": "src/setuhq/methods.py",
@@ -2032,6 +2402,26 @@
  },
  "methods.sources": "Sources",
  "@methods.sources": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.from": "From",
+ "@mx.from": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.numbers": "Numbers in this chapter",
+ "@mx.numbers": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.quantity": "Quantity",
+ "@mx.quantity": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.speed": "Speed",
+ "@mx.speed": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.value": "Value",
+ "@mx.value": {
   "x-file": "src/setuhq/methods.py"
  },
  "nav.candidates": "Candidates",
@@ -2324,6 +2714,10 @@
    "p": {}
   }
  },
+ "panel.probes_sentinels": "Probes and Sentinels",
+ "@panel.probes_sentinels": {
+  "x-file": "src/setuhq/names.py"
+ },
  "panel.sentinels": "{s, plural, one {# Sentinel} other {# Sentinels}}",
  "@panel.sentinels": {
   "x-file": "src/setuhq/home.py",
@@ -2375,6 +2769,26 @@
  "@pic.table": {
   "x-file": "src/setuhq/site.py"
  },
+ "pr.col.marked": "Marked this dip",
+ "@pr.col.marked": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.col.provider": "Provider",
+ "@pr.col.provider": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.col.reviewer": "Reviewer",
+ "@pr.col.reviewer": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.col.role": "Role",
+ "@pr.col.role": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.col.weight": "Calibrated weight",
+ "@pr.col.weight": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
  "pr.h1": "Prepare a CHEOPS proposal.",
  "@pr.h1": {
   "x-file": "src/setuhq/stellarpages.py"
@@ -2382,6 +2796,55 @@
  "pr.intro": "<code>setuhq propose cheops</code> writes a preparation pack for the CHEOPS Guest Observers Running Call: the rules checked, the target's status, planning estimates, anonymised drafts and ESA's seven steps as a checklist. You run ESA's tools and submit yourself.",
  "@pr.intro": {
   "x-file": "src/setuhq/stellarpages.py"
+ },
+ "pr.marked": "{k} of {n} marked it · panel score {score}, as stored",
+ "@pr.marked": {
+  "x-file": "src/setuhq/viz/panelring.py",
+  "placeholders": {
+   "k": {},
+   "n": {},
+   "score": {}
+  }
+ },
+ "pr.marked_none": "{k} of {n} marked it · panel score not stored, as stored",
+ "@pr.marked_none": {
+  "x-file": "src/setuhq/viz/panelring.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
+ },
+ "pr.no": "no",
+ "@pr.no": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.reviewers": "reviewers",
+ "@pr.reviewers": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.score": "panel score",
+ "@pr.score": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.score_none": "score not stored",
+ "@pr.score_none": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.table": "The marks and weights as a table",
+ "@pr.table": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.what.dip": "Each reviewer's stored mark on this dip (a solid line: it marked the dip; dashed: no mark), each sized by its calibrated weight; the ring fills to the panel score as the run stored it.",
+ "@pr.what.dip": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.what.panel": "Every reviewer in the panel, sized by its calibrated weight; no dip is selected, so no score is drawn.",
+ "@pr.what.panel": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.yes": "yes",
+ "@pr.yes": {
+  "x-file": "src/setuhq/viz/panelring.py"
  },
  "route.candidates.label": "Case file",
  "@route.candidates.label": {
@@ -2617,6 +3080,27 @@
    "status": {}
   }
  },
+ "run.casefile": "The run's case file ›",
+ "@run.casefile": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "run.plates": "Plates ›",
+ "@run.plates": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "run.report": "Run report ›",
+ "@run.report": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "run.sectors": "Run {run}, TESS {n, plural, one {sector} other {sectors}} {list}.",
+ "@run.sectors": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "list": {},
+   "n": {},
+   "run": {}
+  }
+ },
  "runs.h1": "Every search run, its errors as stored, and the configuration behind these pages.",
  "@runs.h1": {
   "x-file": "src/setuhq/app.py"
@@ -2639,6 +3123,18 @@
  "sd.intro": "Six commands look at the star rather than its planets. Each writes one JSON record with its result, its provenance (version, code fingerprint, every input's sha256) and its labels. A flare or a frequency is detected at a stated significance, never confirmed; a variability type is likely or a candidate.",
  "@sd.intro": {
   "x-file": "src/setuhq/stellarpages.py"
+ },
+ "search.hint": "↑ ↓ to move · Enter to open · Esc to close",
+ "@search.hint": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "search.placeholder": "Search planets, stars, pages",
+ "@search.placeholder": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "search.results": "Results",
+ "@search.results": {
+  "x-file": "src/setuhq/catalogue.py"
  },
  "sen.h1": "{n, plural, =1 {One reviewer.} =2 {Two reviewers.} =3 {Three reviewers.} =4 {Four reviewers.} =5 {Five reviewers.} =6 {Six reviewers.} =7 {Seven reviewers.} =8 {Eight reviewers.} =9 {Nine reviewers.} =10 {Ten reviewers.} one {# reviewer.} other {# reviewers.}}",
  "@sen.h1": {
@@ -2733,9 +3229,252 @@
  "@shell.view_link": {
   "x-file": "src/setuhq/site.py"
  },
+ "showcase.tess-hd-15337-s4.caveat": "Found 1 of b's 5 transits and both of c's; neither published period was recovered (the BLS period on those dips is not the planet's).",
+ "@showcase.tess-hd-15337-s4.caveat": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its caveat, from docs/results/showcase.json."
+ },
+ "showcase.tess-hd-15337-s4.kind": "Small planets near the limit",
+ "@showcase.tess-hd-15337-s4.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-hd-15337-s4.outcome": "HD 15337 b: 1 of 5 transits (1 candidate; BLS period not the planet's); HD 15337 c: 2 of 2 transits (1 candidate, 1 flagged; BLS period not the planet's).",
+ "@showcase.tess-hd-15337-s4.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-hd-15337-s4.summary": "A bright K dwarf with two small known planets: b (about 1.6 Earth radii, 4.8 days, roughly 350 ppm deep) and c (17.2 days).",
+ "@showcase.tess-hd-15337-s4.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-hd-15337-s4.why": "A small planet whose single transits are near the noise of one sector: it shows what the panel and vetting do at the edge of what a 10-minute-binned search can see, and the page says what it missed.",
+ "@showcase.tess-hd-15337-s4.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its why, from docs/results/showcase.json."
+ },
+ "showcase.tess-pi-men-s1.kind": "Reference check",
+ "@showcase.tess-pi-men-s1.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example pi Men: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-pi-men-s1.outcome": "Rp/R★ and T14 within 5% of Huang et al. 2018 (docs/results/pi_men_validation.md).",
+ "@showcase.tess-pi-men-s1.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example pi Men: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-pi-men-s1.summary": "A sun-like star with a super-Earth on a 6.3-day orbit: the run checked in full against Huang et al. 2018.",
+ "@showcase.tess-pi-men-s1.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example pi Men: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-pi-men-s1.why": "The reference check: the one run with the Sentinels as well as the Probes, its limb-darkened fit compared with the discovery paper in docs/results/pi_men_validation.md.",
+ "@showcase.tess-pi-men-s1.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example pi Men: its why, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-236-s2.kind": "Known false positive",
+ "@showcase.tess-toi-236-s2.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-236: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-236-s2.outcome": "Caught: all 6 dips on the TOI ephemeris were rejected by vetting (secondary_any_phase, secondary_eclipse), so none is a candidate.",
+ "@showcase.tess-toi-236-s2.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-236: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-236-s2.summary": "A TESS Object of Interest the TOI table dispositions as a false positive (FP): a 2.4% dip every 4.5 days.",
+ "@showcase.tess-toi-236-s2.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-236: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-236-s2.why": "A test SetuHQ must fail to pass: TOI-236.01 is in the real-TOI benchmark's false-positive set. The page says what the vetting did with it, whatever it did.",
+ "@showcase.tess-toi-236-s2.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-236: its why, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.caveat": "Found all 5 of c's transits and both of d's; b not found; d seen twice, no period (one transit per 13-day piece of the light curve).",
+ "@showcase.tess-toi-270-s5.caveat": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its caveat, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.kind": "Multi-planet system",
+ "@showcase.tess-toi-270-s5.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.outcome": "TOI-270 b: none of 6 transits; TOI-270 c: 5 of 5 transits (5 candidates); TOI-270 d: 2 of 2 transits (2 flagged; no period).",
+ "@showcase.tess-toi-270-s5.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.summary": "An M dwarf with three known transiting planets at 3.4, 5.7 and 11.4 days: several periods in one star.",
+ "@showcase.tess-toi-270-s5.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.why": "One light curve, three periods. It shows what the search does when a star has more than one planet, and which of them a 13-day subject can hold.",
+ "@showcase.tess-toi-270-s5.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its why, from docs/results/showcase.json."
+ },
+ "showcase.tess-wasp-126-s1.kind": "Hot Jupiter",
+ "@showcase.tess-wasp-126-s1.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example WASP-126: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-wasp-126-s1.outcome": "WASP-126 b: 8 of 8 transits (8 candidates).",
+ "@showcase.tess-wasp-126-s1.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example WASP-126: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-wasp-126-s1.summary": "A Jupiter-sized planet on a 3.3-day orbit: deep, easy transits, in the TESS southern continuous viewing zone.",
+ "@showcase.tess-wasp-126-s1.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example WASP-126: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-wasp-126-s1.why": "The easy case: a transit about 0.6% deep that any search should find, so it shows the whole path from light curve to fit with little doubt about the signal.",
+ "@showcase.tess-wasp-126-s1.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example WASP-126: its why, from docs/results/showcase.json."
+ },
+ "sky.all": "All",
+ "@sky.all": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.cap": "Each dot is a catalogued planet at its host star's position (RA and Dec, J2000), coloured by the method that found it, appearing in its discovery year.",
+ "@sky.cap": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.col.method": "Method",
+ "@sky.col.method": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.col.planets": "Planets",
+ "@sky.col.planets": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.cov": "Survey coverage: TESS has observed {tess}% of the sky (sectors 1–{last}); {unm}% has never been in a TESS, Kepler or K2 footprint. Shading shows where surveys looked, not where planets are.",
+ "@sky.cov": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "last": {},
+   "tess": {},
+   "unm": {}
+  }
+ },
+ "sky.cov_label": "Survey coverage",
+ "@sky.cov_label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.cov_more": "Figures and sources in the Galaxy ›",
+ "@sky.cov_more": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.lc": "The run's light curve",
+ "@sky.lc": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.legend": "Discovery method",
+ "@sky.legend": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.nojs": "This still shows {k, number} of them (every {step}th); the full map draws when the page's script runs.",
+ "@sky.nojs": {
+  "x-file": "src/setuhq/viz/skyyears.py",
+  "placeholders": {
+   "k": {},
+   "step": {}
+  }
+ },
+ "sky.note.ecl": "dashed: the ecliptic",
+ "@sky.note.ecl": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.note.feed": "Feed stars not plotted (positions not stored)",
+ "@sky.note.feed": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.note.placed": "{star} placed from SIMBAD (ICRS J2000)",
+ "@sky.note.placed": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "star": {}
+  }
+ },
+ "sky.note.unplaced": "target not plotted (no position stored)",
+ "@sky.note.unplaced": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.open": "Open ›",
+ "@sky.open": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.pause": "Pause",
+ "@sky.pause": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "sky.play": "Play",
+ "@sky.play": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "sky.shown": "{n, number} planets shown",
+ "@sky.shown": {
+  "x-file": "src/setuhq/viz/skyyears.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "sky.sweep": "The setuhq sweep layer: one green dot per star-sector the sweep searched ({n, number} so far, positions from MAST), amber where it has an entry in a class that exceeds its null in this slice ({found, select, none {none} other {{found}}}).",
+ "@sky.sweep": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "found": {},
+   "n": {}
+  }
+ },
+ "sky.sweep_more": "Everything that dims ›",
+ "@sky.sweep_more": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.table": "Planets by discovery method, as of {y}",
+ "@sky.table": {
+  "x-file": "src/setuhq/viz/skyyears.py",
+  "placeholders": {
+   "y": {}
+  }
+ },
  "sky.tl": "Planets found each year, by method",
  "@sky.tl": {
   "x-file": "src/setuhq/app.py"
+ },
+ "sky.tonly": "Transits only",
+ "@sky.tonly": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.tonly_note": " (transits only)",
+ "@sky.tonly_note": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.valuetext": "{y}: {n, number} planets",
+ "@sky.valuetext": {
+  "x-file": "src/setuhq/viz/skyyears.py",
+  "placeholders": {
+   "n": {},
+   "y": {}
+  }
+ },
+ "sky.year": "Year",
+ "@sky.year": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.zoom": "Zoom into the {planet} system ›",
+ "@sky.zoom": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "planet": {}
+  }
  },
  "st.figs": "What the detectors see",
  "@st.figs": {
@@ -2748,6 +3487,83 @@
  "st.intro": "Beyond planets, SetuHQ detects stellar flares, extracts pulsation frequencies, reads public CHEOPS light curves, and finds eclipsing binaries, rotation periods and transients. Each capability was compared with published results under a protocol committed before its run, and each page and tool output says how far its validation went.",
  "@st.intro": {
   "x-file": "src/setuhq/stellarpages.py"
+ },
+ "status.known": "{planet} · known planet",
+ "@status.known": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "planet": {}
+  }
+ },
+ "status.open_cand": "Open · candidate, unconfirmed",
+ "@status.open_cand": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "status.open_flagged": "Open · flagged for review",
+ "@status.open_flagged": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "status.rejected": "Rejected by vetting",
+ "@status.rejected": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "story.both_passed": "Both Sentinels passed it by.",
+ "@story.both_passed": {
+  "x-file": "src/setuhq/story.py"
+ },
+ "story.feed": "entries from {stars, plural, one {# more star} other {# more stars}} in the search feed, {new, plural, =0 {matching known TOIs.} one {# at a new period.} other {# at a new period.}} Leads for review, not planets.",
+ "@story.feed": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "new": {},
+   "stars": {}
+  }
+ },
+ "story.no_probe": "No Probe marked it.",
+ "@story.no_probe": {
+  "x-file": "src/setuhq/story.py"
+ },
+ "story.open": "{n, plural, one {dip} other {dips}} still open.",
+ "@story.open": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "story.panel": "AI Sentinels and Probes read this run's light curve; each vote counts as much as it scored on planted test transits.",
+ "@story.panel": {
+  "x-file": "src/setuhq/story.py"
+ },
+ "story.probes_saw": "The Probes saw it ({k} of {n}).",
+ "@story.probes_saw": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
+ },
+ "story.recovered": "transits of {planet} found without being told where to look, each about {min} minutes from its published timing. A known planet, recovered.",
+ "@story.recovered": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "min": {},
+   "planet": {}
+  }
+ },
+ "story.recovered_period": "dips on the period of {planet}, a known planet. Recovered, not discovered.",
+ "@story.recovered_period": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "planet": {}
+  }
+ },
+ "story.sentinels": "{k} of {n} Sentinels marked it.",
+ "@story.sentinels": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
  },
  "subnav.candidates": "Case files",
  "@subnav.candidates": {
@@ -2837,6 +3653,50 @@
  "@subnav.vetter": {
   "x-file": "src/setuhq/app.py"
  },
+ "sweep.evidence": "See the evidence ›",
+ "@sweep.evidence": {
+  "x-file": "src/setuhq/everything.py"
+ },
+ "sweep.line": "We have searched {n, number} stars for anything that dims; {k, plural, =0 {nothing yet stands out above chance} one {{list} stands out above chance so far} other {{list} stand out above chance so far}}.",
+ "@sweep.line": {
+  "x-file": "src/setuhq/everything.py",
+  "placeholders": {
+   "k": {},
+   "list": {},
+   "n": {}
+  }
+ },
+ "tl.cap": "Planets per discovery year, stacked by the method that found them.",
+ "@tl.cap": {
+  "x-file": "src/setuhq/viz/timeline.py"
+ },
+ "tl.hint": "Point at a year, or focus the chart and use the arrow keys.",
+ "@tl.hint": {
+  "x-file": "src/setuhq/viz/timeline.py"
+ },
+ "tl.noyear": "{n, number} records without a year are not drawn.",
+ "@tl.noyear": {
+  "x-file": "src/setuhq/viz/timeline.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "tl.read": "{y}: {n, plural, one {# planet} other {# planets}}",
+ "@tl.read": {
+  "x-file": "src/setuhq/viz/timeline.py",
+  "placeholders": {
+   "n": {},
+   "y": {}
+  }
+ },
+ "tl.table": "Planets by year and method",
+ "@tl.table": {
+  "x-file": "src/setuhq/viz/timeline.py"
+ },
+ "tl.table_link": "The counts by year and method, as a table ›",
+ "@tl.table_link": {
+  "x-file": "src/setuhq/viz/timeline.py"
+ },
  "tn.h1": "Where TESS is looking.",
  "@tn.h1": {
   "x-file": "src/setuhq/tessnow.py"
@@ -2844,6 +3704,26 @@
  "tn.intro": "The NASA TESS satellite watches one strip of sky for about four weeks (a sector), with four cameras of 24° by 24° each. This map shows the strips from the published schedule, and the stars with known planets inside them.",
  "@tn.intro": {
   "x-file": "src/setuhq/tessnow.py"
+ },
+ "ts.hi": "Hottest star, in kelvin",
+ "@ts.hi": {
+  "x-file": "src/setuhq/viz/tempstrip.py"
+ },
+ "ts.lo": "Coolest star, in kelvin",
+ "@ts.lo": {
+  "x-file": "src/setuhq/viz/tempstrip.py"
+ },
+ "ts.src": "Star colour: a Planck spectrum through the CIE 1931 colour-matching functions, in sRGB, normalised to its brightest channel (a hue, not a brightness). Teff: each run's stellar.json (TESS Input Catalog v8.2, MAST); the Sun 5,772 K (IAU 2015 nominal).",
+ "@ts.src": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "ts.sun": "the Sun",
+ "@ts.sun": {
+  "x-file": "src/setuhq/viz/tempstrip.py"
+ },
+ "ts.title": "Star colour from 2,500 K to 10,000 K, with each star marked at its temperature",
+ "@ts.title": {
+  "x-file": "src/setuhq/viz/tempstrip.py"
  },
  "var.h1": "Everything that dims.",
  "@var.h1": {

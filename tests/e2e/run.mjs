@@ -177,10 +177,10 @@ for (const size of ["desktop", "phone"]) for (const theme of ["dark", "light"]) 
     if (app) check(f.h1s.length === 1, "exactly one visible h1", JSON.stringify(f.h1s));
     if (app && size === "desktop") {
       const html = readFileSync(join(SITE, p, "index.html"), "utf8");
-      const served = (html.match(/<title>([^<]*)<\/title>/) || [])[1].replace(/&amp;/g, "&").replace(/&#x27;/g, "'");
+      const served = (html.match(/<title[^>]*>([^<]*)<\/title>/) || [])[1].replace(/&amp;/g, "&").replace(/&#x27;/g, "'");
       check(f.title === served, "the app keeps the page's own title", `${f.title} vs ${served}`);
       // The page reads without JavaScript: its own view is in the HTML, with its heading.
-      check(/<h1 [^>]*>[^<]{3,}/.test(html.slice(html.indexOf('id="content"'))), "the HTML has its heading without JavaScript");
+      check(/<h1 [^>]*>(?:<[^>]+>)*[^<]{3,}/.test(html.slice(html.indexOf('id="content"'))), "the HTML has its heading without JavaScript");
     }
     if (size === "desktop" && theme === "dark") {
       await page.reload({ waitUntil: "load" });

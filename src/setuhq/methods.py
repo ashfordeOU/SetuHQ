@@ -781,9 +781,16 @@ def _num_rows(rows) -> str:
     out = []
     for label, value, how in rows:
         out.append(f"<tr><th scope='row'>{e(label)}</th><td class='num'>{e(value)}</td><td>{e(how)}</td></tr>")
-    return ("<div class='tablewrap' tabindex='0' role='region' aria-label='Numbers in this chapter'><table class='mxnums'>"
-            "<thead><tr><th scope='col'>Quantity</th><th scope='col' class='num'>Value</th><th scope='col'>From</th></tr></thead>"
+    return ("<div class='tablewrap' tabindex='0' role='region' aria-label='Numbers in this chapter' data-i18n-attr='aria-label:mx.numbers'><table class='mxnums'>"
+            "<thead><tr><th scope='col' data-i18n='mx.quantity'>Quantity</th><th scope='col' class='num' data-i18n='mx.value'>Value</th><th scope='col' data-i18n='mx.from'>From</th></tr></thead>"
             f"<tbody>{''.join(out)}</tbody></table></div>")
+
+
+N_("mx.numbers", "Numbers in this chapter")
+N_("mx.quantity", "Quantity")
+N_("mx.value", "Value")
+N_("mx.from", "From")
+N_("mx.speed", "Speed")
 
 
 def _fmt(x, d=2):
@@ -849,7 +856,7 @@ def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = Fal
           <div class="mxcanvas"><canvas role="img" aria-label="{e(desc)}"></canvas></div>
           <div class="mxbadges">{honesty_label(label)}{art_tag}<span class="mxexag" aria-live="polite"></span></div>
           <div class="mxctl" role="group" aria-label="{'Controls' if static else 'Animation controls'}">
-            {'' if static else '<button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the ' + TUNIT.get(vis, "cycle") + '">'}
+            {'' if static else '<button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span data-i18n="mx.speed">Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the ' + TUNIT.get(vis, "cycle") + '">'}
             {controls}
           </div>
           <figcaption class="mxdesc">{e(desc)}</figcaption>
@@ -1879,7 +1886,7 @@ function mxSetup(fig, extra){
 function mxPlay(st, on){
   if (st.still) return;
   st.playing = on;
-  const b = st.fig.querySelector('.mxplay'); b.textContent = on ? 'Pause' : 'Play'; b.setAttribute('aria-pressed', String(on));
+  const b = st.fig.querySelector('.mxplay'); b.textContent = on ? T('sky.pause', 'Pause') : T('sky.play', 'Play'); b.setAttribute('aria-pressed', String(on));
   mxKick(st);
 }
 function mxKick(st){ if (st.playing && st.on && st.visible && !document.hidden && !st.raf){ st.last = 0; st.raf = requestAnimationFrame(ts => mxFrame(st, ts)); } }

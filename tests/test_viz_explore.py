@@ -17,6 +17,7 @@ from setuhq.design import METHOD
 from setuhq.looks import RJ_IN_RE, find_planet, kepler_a, look, row, seed
 from setuhq.methods import CLARET_TESS
 from setuhq.viz import lineup, orbits, skyyears, timeline
+from setuhq.i18n import unkey
 
 SRC = "The Extrasolar Planets Encyclopaedia (exoplanet.eu), fetched 2026-10-18"
 SHOWCASE = [{"star": "pi Men", "planet": "pi Men c", "kind": "Reference check"},
@@ -70,7 +71,7 @@ def test_sky_map_without_javascript(app):
     assert svg.count("h0") <= skyyears.STATIC_MAX and len(svg) <= 25_000
     assert re.search(r'<input type="range" data-sky="year" min="\d{4}" max="2026"[^>]*aria-valuetext="2026: 8,376 planets"', h)
     assert 'data-sky="transit"' in h and "Transits only" in h and 'aria-live="polite"' in h and "<details" in h
-    assert "8,376 planets shown · transit 4,958" in h
+    assert "8,376 planets shown · transit 4,958" in re.sub(r"<[^>]+>", "", h)
     assert "SetuHQ did not discover these planets" in h
 
 
@@ -113,7 +114,7 @@ def test_lineup_radii_are_the_catalogues(cat, app):
 
 
 def test_lineup_html_draws_earth_only_as_the_reference(app):
-    h = lineup.html({"source": SRC, "app": app})
+    h = unkey(lineup.html({"source": SRC, "app": app}))
     assert "Artist's impression" in h and 'href="/docs/pictures/"' in h and SRC in h
     for ref in ("Earth", "Neptune", "Jupiter"):
         assert f"<b>{ref}</b>" in h

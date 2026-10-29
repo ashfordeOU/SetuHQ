@@ -1369,8 +1369,9 @@ function gxPinch(){ const p = [...gx.pointers.values()]; return Math.hypot(p[0][
 
 # ---------- survey coverage (scripts/survey_coverage.py writes it) ----------
 DEFAULT_COVERAGE = "docs/results/survey_coverage.json"
-COV_LAYERS = [("tess", "TESS sectors"), ("kepler", "Kepler field"), ("k2", "K2 campaigns"), ("corot", "CoRoT zones"),
-              ("bulge", "Bulge microlensing"), ("unmapped", "Unmapped by transit surveys")]
+COV_LAYERS = [("tess", N_("cov.tess", "TESS sectors")), ("kepler", N_("cov.kepler", "Kepler field")), ("k2", N_("cov.k2", "K2 campaigns")),
+              ("corot", N_("cov.corot", "CoRoT zones")), ("bulge", N_("cov.bulge", "Bulge microlensing")),
+              ("unmapped", N_("cov.unmapped", "Unmapped by transit surveys"))]
 COV_COLOUR = {"tess": "#0A84FF", "kepler": "#FFB340", "k2": "#30D158", "corot": "#BF5AF2", "bulge": "#FF6961",
               "unmapped": "#8E8E93"}
 
@@ -1556,7 +1557,7 @@ def coverage_chips(cov: dict | None, scope: str) -> str:
     if cov is None:
         return ""
     return (f'<div class="chips covchips" id="{scope}cov" role="group" aria-label="Survey coverage layers">'
-            + "".join(f'<button class="chip" type="button" data-cov="{k}" aria-pressed="false"><i style="background:{COV_COLOUR[k]}"></i>{html.escape(v)}</button>'
+            + "".join(f'<button class="chip" type="button" data-cov="{k}" aria-pressed="false"><i style="background:{COV_COLOUR[k]}"></i><span{ik("cov." + k)}>{html.escape(v)}</span></button>'
                       for k, v in COV_LAYERS) + "</div>")
 
 

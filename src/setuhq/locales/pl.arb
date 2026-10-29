@@ -16,6 +16,11 @@
   "x-review": "machine",
   "x-source": "ca9826547d"
  },
+ "cat.not_ours": "SetuHQ nie odkrył tych planet.",
+ "@cat.not_ours": {
+  "x-review": "machine",
+  "x-source": "759a661951"
+ },
  "cf.h1": "Każdy sygnał, jego spadki i sprawdzenia stojące za każdym werdyktem.",
  "@cf.h1": {
   "x-review": "machine",
@@ -25,6 +30,11 @@
  "@cf.intro": {
   "x-review": "machine",
   "x-source": "252d456e94"
+ },
+ "cf.link": "Teczka ›",
+ "@cf.link": {
+  "x-review": "machine",
+  "x-source": "ceac0b11e3"
  },
  "chapter.astrometry": "Astrometria",
  "@chapter.astrometry": {
@@ -1121,6 +1131,36 @@
   "x-review": "machine",
   "x-source": "6828f69f91"
  },
+ "cov.bulge": "Mikrosoczewkowanie w zgrubieniu",
+ "@cov.bulge": {
+  "x-review": "machine",
+  "x-source": "bd05242cca"
+ },
+ "cov.corot": "Strefy CoRoT",
+ "@cov.corot": {
+  "x-review": "machine",
+  "x-source": "41d07bad32"
+ },
+ "cov.k2": "Kampanie K2",
+ "@cov.k2": {
+  "x-review": "machine",
+  "x-source": "848c24db6a"
+ },
+ "cov.kepler": "Pole Keplera",
+ "@cov.kepler": {
+  "x-review": "machine",
+  "x-source": "147a21f59a"
+ },
+ "cov.tess": "Sektory TESS",
+ "@cov.tess": {
+  "x-review": "machine",
+  "x-source": "c63d55d777"
+ },
+ "cov.unmapped": "Poza przeglądami tranzytów",
+ "@cov.unmapped": {
+  "x-review": "machine",
+  "x-source": "261bc97dee"
+ },
  "desc.catalogue": "Każda planeta z exoplanet.eu, do przeszukiwania i sortowania, każda z własną stroną. SetuHQ nie odkrył tych planet.",
  "@desc.catalogue": {
   "x-review": "machine",
@@ -1251,6 +1291,26 @@
   "x-review": "machine",
   "x-source": "20cd938a2e"
  },
+ "dips.cand": "{n, plural, one {# kandydat} few {# kandydaci} many {# kandydatów} other {# kandydata}}",
+ "@dips.cand": {
+  "x-review": "machine",
+  "x-source": "0ff385febf"
+ },
+ "dips.flag": "{n, plural, one {# oznaczony} few {# oznaczone} many {# oznaczonych} other {# oznaczonego}}",
+ "@dips.flag": {
+  "x-review": "machine",
+  "x-source": "1d74535739"
+ },
+ "dips.n": "{n, plural, one {# spadek} few {# spadki} many {# spadków} other {# spadku}}",
+ "@dips.n": {
+  "x-review": "machine",
+  "x-source": "d34249d767"
+ },
+ "dips.rej": "{n, plural, one {# odrzucony} few {# odrzucone} many {# odrzuconych} other {# odrzuconego}}",
+ "@dips.rej": {
+  "x-review": "machine",
+  "x-source": "9fdbc5d13a"
+ },
  "docs.contribute": "Dołóż przegląd",
  "@docs.contribute": {
   "x-review": "machine",
@@ -1356,6 +1416,11 @@
   "x-review": "machine",
   "x-source": "3159020543"
  },
+ "docs.runfiles": "<a href=\"{report}\">raport z przebiegu</a>, <a href=\"{plates}\">tablice</a> i <a href=\"{cf}\">teczka</a> przebiegu {run}.",
+ "@docs.runfiles": {
+  "x-review": "machine",
+  "x-source": "065db1dbf8"
+ },
  "docs.start": "Pierwsze kroki",
  "@docs.start": {
   "x-review": "machine",
@@ -1406,6 +1471,56 @@
   "x-review": "machine",
   "x-source": "96432c834d"
  },
+ "fold.a": "Niezłożona: w kolejności czasu",
+ "@fold.a": {
+  "x-review": "machine",
+  "x-source": "ca7c3036c1"
+ },
+ "fold.b": "Złożona na okresie {p} dni",
+ "@fold.b": {
+  "x-review": "machine",
+  "x-source": "92616c60e0"
+ },
+ "fold.fold": "Złóż na okresie",
+ "@fold.fold": {
+  "x-review": "machine",
+  "x-source": "4458109b7d"
+ },
+ "fold.folded": "<b>Złożona</b> na okresie {p} dni",
+ "@fold.folded": {
+  "x-review": "machine",
+  "x-source": "4ed8a2a718"
+ },
+ "fold.said": "Złożona na {p} dni: spadek pojawia się w zerowej godzinie.",
+ "@fold.said": {
+  "x-review": "machine",
+  "x-source": "c0920801da"
+ },
+ "fold.said_time": "W kolejności czasu: każdy tranzyt to garść punktów wśród pozostałych.",
+ "@fold.said_time": {
+  "x-review": "machine",
+  "x-source": "a90b68372c"
+ },
+ "fold.short": "{n, number} punktów złożonych na {p} d: spadek {depth} ppm i {t14} h. Źródło: {run}.",
+ "@fold.short": {
+  "x-review": "machine",
+  "x-source": "8958c78471"
+ },
+ "fold.source": "Źródło: {s}",
+ "@fold.source": {
+  "x-review": "machine",
+  "x-source": "7015dd2710"
+ },
+ "fold.unfold": "Wróć do osi czasu",
+ "@fold.unfold": {
+  "x-review": "machine",
+  "x-source": "73824685c9"
+ },
+ "fold.unfolded": "<b>Niezłożona</b> · {d} dni w kolejności czasu",
+ "@fold.unfolded": {
+  "x-review": "machine",
+  "x-source": "5fc4a52069"
+ },
  "footer.all_chapters": "Wszystkie rozdziały ({n})",
  "@footer.all_chapters": {
   "x-review": "machine",
@@ -1441,6 +1556,31 @@
   "x-review": "machine",
   "x-source": "bf046c7395"
  },
+ "gal.example": "Przykładowy przebieg",
+ "@gal.example": {
+  "x-review": "machine",
+  "x-source": "ed62203839"
+ },
+ "gal.noart": "Żaden kandydat nie dostaje wizerunku planety.",
+ "@gal.noart": {
+  "x-review": "machine",
+  "x-source": "9d55cea042"
+ },
+ "gal.note": "Każda scena: tarcza gwiazdy w barwie ciała doskonale czarnego przy Teff zapisanej przez przebieg oraz to, co przebieg zmierzył jako cień przy dopasowanym Rp/R★ (planeta pominięta przez przebieg to przerywany kontur). Rozmiary są w skali względem tarczy; położenie każdej z nich na tarczy jest poglądowe.",
+ "@gal.note": {
+  "x-review": "machine",
+  "x-source": "bbb017f062"
+ },
+ "gal.sectors": "{mission} {n, plural, one {sektor} few {sektory} many {sektorów} other {sektora}} {list}",
+ "@gal.sectors": {
+  "x-review": "machine",
+  "x-source": "737f03f940"
+ },
+ "gal.stages": "Sceny: {s}.",
+ "@gal.stages": {
+  "x-review": "machine",
+  "x-source": "b469db30f4"
+ },
  "gx.h1": "Każda znana egzoplaneta",
  "@gx.h1": {
   "x-review": "machine",
@@ -1455,6 +1595,21 @@
  "@gx.intro": {
   "x-review": "machine",
   "x-source": "b60778b897"
+ },
+ "hero.disc": "Tarcza gwiazdy {star} jest w barwie ciała doskonale czarnego; planeta to wizja artystyczna ({look}).",
+ "@hero.disc": {
+  "x-review": "machine",
+  "x-source": "f391f5d10f"
+ },
+ "hero.model": "Model z zapisanych wartości.",
+ "@hero.model": {
+  "x-review": "machine",
+  "x-source": "761a8963d7"
+ },
+ "hero.pause": "Pauza",
+ "@hero.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
  },
  "hint.dismiss": "Zamknij wskazówkę: {h}",
  "@hint.dismiss": {
@@ -1691,6 +1846,11 @@
   "x-review": "machine",
   "x-source": "04e504e9e8"
  },
+ "home.proof": "Co pokazuje przebieg referencyjny",
+ "@home.proof": {
+  "x-review": "machine",
+  "x-source": "d58bf9bb5f"
+ },
  "home.refcheck": "Sprawdzenie referencyjne: {planet}, znana planeta, znaleziona ponownie w przebiegu {run}",
  "@home.refcheck": {
   "x-review": "machine",
@@ -1826,6 +1986,156 @@
   "x-review": "machine",
   "x-source": "272d460db4"
  },
+ "learn.again": "Zacznij od nowa od kroku 1",
+ "@learn.again": {
+  "x-review": "machine",
+  "x-source": "1b91302a8f"
+ },
+ "learn.all": "Wszystkie kroki ({n})",
+ "@learn.all": {
+  "x-review": "machine",
+  "x-source": "e15530dfee"
+ },
+ "learn.back": "‹ Wstecz",
+ "@learn.back": {
+  "x-review": "machine",
+  "x-source": "9c47d2b08c"
+ },
+ "learn.cleared": "Postęp ścieżki nauki wyczyszczony.",
+ "@learn.cleared": {
+  "x-review": "machine",
+  "x-source": "8b76618ea1"
+ },
+ "learn.complete": " · ścieżka ukończona",
+ "@learn.complete": {
+  "x-review": "machine",
+  "x-source": "d1a143524c"
+ },
+ "learn.continue": "Dalej: {step}",
+ "@learn.continue": {
+  "x-review": "machine",
+  "x-source": "859ee5370f"
+ },
+ "learn.count": "{k} z {n} odwiedzonych",
+ "@learn.count": {
+  "x-review": "machine",
+  "x-source": "5475c68b5f"
+ },
+ "learn.finish": "Zakończ ›",
+ "@learn.finish": {
+  "x-review": "machine",
+  "x-source": "d7473131de"
+ },
+ "learn.finish_label": "Zakończ ścieżkę",
+ "@learn.finish_label": {
+  "x-review": "machine",
+  "x-source": "b841a0b2c4"
+ },
+ "learn.h": "Ścieżka nauki",
+ "@learn.h": {
+  "x-review": "machine",
+  "x-source": "7f9d3aa634"
+ },
+ "learn.intro": "Kroki ({n}): od tego, jak działa przegląd nieba, po każdą znaną egzoplanetę. Opcjonalnie: po kolei albo w dowolnej kolejności; liczy się każda otwarta strona. Postęp zostaje w tej przeglądarce.",
+ "@learn.intro": {
+  "x-review": "machine",
+  "x-source": "b22e135d6a"
+ },
+ "learn.kind.catalogue": "Katalog",
+ "@learn.kind.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "learn.kind.ch": "Rozdział o metodach",
+ "@learn.kind.ch": {
+  "x-review": "machine",
+  "x-source": "8cb87af4b5"
+ },
+ "learn.kind.galaxy": "Galaktyka",
+ "@learn.kind.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "learn.kind.run": "Przebieg SetuHQ",
+ "@learn.kind.run": {
+  "x-review": "machine",
+  "x-source": "12eeea4754"
+ },
+ "learn.leave": "Opuść",
+ "@learn.leave": {
+  "x-review": "machine",
+  "x-source": "fc6e4a408d"
+ },
+ "learn.leave_label": "Opuść ścieżkę",
+ "@learn.leave_label": {
+  "x-review": "machine",
+  "x-source": "49324ad9ff"
+ },
+ "learn.left": "Opuszczono ścieżkę nauki. Twój postęp został zachowany.",
+ "@learn.left": {
+  "x-review": "machine",
+  "x-source": "9ef4f1079c"
+ },
+ "learn.next": "Dalej",
+ "@learn.next": {
+  "x-review": "machine",
+  "x-source": "1ff57a29d7"
+ },
+ "learn.next_btn": "Dalej ›",
+ "@learn.next_btn": {
+  "x-review": "machine",
+  "x-source": "868d16703d"
+ },
+ "learn.next_label": "Dalej: {step}",
+ "@learn.next_label": {
+  "x-review": "machine",
+  "x-source": "19282226b1"
+ },
+ "learn.pos": "{i} z {n}",
+ "@learn.pos": {
+  "x-review": "machine",
+  "x-source": "2eb6f9a3c3"
+ },
+ "learn.progress": "Postęp ścieżki nauki",
+ "@learn.progress": {
+  "x-review": "machine",
+  "x-source": "0e0d6f67aa"
+ },
+ "learn.reset": "Wyzeruj postęp",
+ "@learn.reset": {
+  "x-review": "machine",
+  "x-source": "0b026c02ba"
+ },
+ "learn.seen": ", odwiedzony",
+ "@learn.seen": {
+  "x-review": "machine",
+  "x-source": "bd1c8d37d4"
+ },
+ "learn.start": "Rozpocznij ścieżkę",
+ "@learn.start": {
+  "x-review": "machine",
+  "x-source": "43f89ceb20"
+ },
+ "learn.step.catalogue": "Każdy rekord, z wyszukiwaniem",
+ "@learn.step.catalogue": {
+  "x-review": "machine",
+  "x-source": "b6e0434eab"
+ },
+ "learn.step.galaxy": "Każda znana egzoplaneta wokół Słońca",
+ "@learn.step.galaxy": {
+  "x-review": "machine",
+  "x-source": "633c7d2992"
+ },
+ "learn.step.transit": "Własny tranzyt SetuHQ: teczka",
+ "@learn.step.transit": {
+  "x-review": "machine",
+  "x-source": "e521fd3e8b"
+ },
+ "learn.unseen": ", jeszcze nieodwiedzony",
+ "@learn.unseen": {
+  "x-review": "machine",
+  "x-source": "a9473125f4"
+ },
  "limits.art": "To nie obserwacja: wygląd dobrany według zmierzonego promienia i napromienienia.",
  "@limits.art": {
   "x-review": "machine",
@@ -1865,6 +2175,26 @@
  "@limits.summary": {
   "x-review": "machine",
   "x-source": "ecbcc39e74"
+ },
+ "lu.cap": "W skali: jeden promień Ziemi ma tę samą szerokość w całym rzędzie, więc {big} jest {x} razy szersza niż {small}. Każdy obraz to wizja artystyczna dobrana według zmierzonego promienia i obliczonego napromienienia; skład nie jest mierzony. Ziemia, Neptun i Jowisz to odniesienia z Układu Słonecznego (tylko Ziemia ma narysowane oceany). Promienie: {src} (1 RJ = 11,209 R⊕).",
+ "@lu.cap": {
+  "x-review": "machine",
+  "x-source": "3cdd1c02b9"
+ },
+ "lu.earth": "Ziemia",
+ "@lu.earth": {
+  "x-review": "machine",
+  "x-source": "b7c9b5ccd3"
+ },
+ "lu.jupiter": "Jowisz",
+ "@lu.jupiter": {
+  "x-review": "machine",
+  "x-source": "27ce2df068"
+ },
+ "lu.neptune": "Neptun",
+ "@lu.neptune": {
+  "x-review": "machine",
+  "x-source": "d98d070c39"
  },
  "mc.intro": "Wybierz gwiazdę w dowolnym panelu; każdy panel i każde wydzielone okno podąża za nią.",
  "@mc.intro": {
@@ -2026,6 +2356,41 @@
   "x-review": "machine",
   "x-source": "645c79cc54"
  },
+ "method.astrometry": "astrometria",
+ "@method.astrometry": {
+  "x-review": "machine",
+  "x-source": "ec74d70d9e"
+ },
+ "method.imaging": "obrazowanie bezpośrednie",
+ "@method.imaging": {
+  "x-review": "machine",
+  "x-source": "f6e9cec92c"
+ },
+ "method.microlensing": "mikrosoczewkowanie",
+ "@method.microlensing": {
+  "x-review": "machine",
+  "x-source": "8f7b755044"
+ },
+ "method.other": "inne",
+ "@method.other": {
+  "x-review": "machine",
+  "x-source": "d9298a10d1"
+ },
+ "method.rv": "prędkość radialna",
+ "@method.rv": {
+  "x-review": "machine",
+  "x-source": "0ec51a755a"
+ },
+ "method.timing": "pomiar czasu",
+ "@method.timing": {
+  "x-review": "machine",
+  "x-source": "f6cfb8c3f1"
+ },
+ "method.transit": "tranzyt",
+ "@method.transit": {
+  "x-review": "machine",
+  "x-source": "068b7e6c97"
+ },
  "methods.chapter_n": "Rozdział {i} z {n}",
  "@methods.chapter_n": {
   "x-review": "machine",
@@ -2055,6 +2420,31 @@
  "@methods.sources": {
   "x-review": "machine",
   "x-source": "caf85b0888"
+ },
+ "mx.from": "Źródło",
+ "@mx.from": {
+  "x-review": "machine",
+  "x-source": "2181976934"
+ },
+ "mx.numbers": "Liczby w tym rozdziale",
+ "@mx.numbers": {
+  "x-review": "machine",
+  "x-source": "2d0a4d13b4"
+ },
+ "mx.quantity": "Wielkość",
+ "@mx.quantity": {
+  "x-review": "machine",
+  "x-source": "822bab8d41"
+ },
+ "mx.speed": "Prędkość",
+ "@mx.speed": {
+  "x-review": "machine",
+  "x-source": "c372fee9b4"
+ },
+ "mx.value": "Wartość",
+ "@mx.value": {
+  "x-review": "machine",
+  "x-source": "8e37953d23"
  },
  "nav.candidates": "Kandydaci",
  "@nav.candidates": {
@@ -2401,6 +2791,11 @@
   "x-review": "machine",
   "x-source": "5dce100851"
  },
+ "panel.probes_sentinels": "Probes i Sentinels",
+ "@panel.probes_sentinels": {
+  "x-review": "machine",
+  "x-source": "300c2fe632"
+ },
  "panel.sentinels": "{s, plural, one {# Sentinel} few {# Sentinels} many {# Sentinels} other {# Sentinels}}",
  "@panel.sentinels": {
   "x-review": "machine",
@@ -2461,6 +2856,31 @@
   "x-review": "machine",
   "x-source": "5bf530d59d"
  },
+ "pr.col.marked": "Oznaczył ten spadek",
+ "@pr.col.marked": {
+  "x-review": "machine",
+  "x-source": "4a7a39ecf8"
+ },
+ "pr.col.provider": "Dostawca",
+ "@pr.col.provider": {
+  "x-review": "machine",
+  "x-source": "472590ae97"
+ },
+ "pr.col.reviewer": "Recenzent",
+ "@pr.col.reviewer": {
+  "x-review": "machine",
+  "x-source": "d29f46772c"
+ },
+ "pr.col.role": "Rola",
+ "@pr.col.role": {
+  "x-review": "machine",
+  "x-source": "14736a2eb9"
+ },
+ "pr.col.weight": "Skalibrowana waga",
+ "@pr.col.weight": {
+  "x-review": "machine",
+  "x-source": "2ff00b5847"
+ },
  "pr.h1": "Przygotuj wniosek CHEOPS.",
  "@pr.h1": {
   "x-review": "machine",
@@ -2470,6 +2890,56 @@
  "@pr.intro": {
   "x-review": "machine",
   "x-source": "6893d1fea2"
+ },
+ "pr.marked": "{k} z {n} go oznaczyło · wynik panelu {score}, jak zapisano",
+ "@pr.marked": {
+  "x-review": "machine",
+  "x-source": "59b2d88d9f"
+ },
+ "pr.marked_none": "{k} z {n} go oznaczyło · wynik panelu niezapisany",
+ "@pr.marked_none": {
+  "x-review": "machine",
+  "x-source": "6a75119056"
+ },
+ "pr.no": "nie",
+ "@pr.no": {
+  "x-review": "machine",
+  "x-source": "9390298f3f"
+ },
+ "pr.reviewers": "recenzentów",
+ "@pr.reviewers": {
+  "x-review": "machine",
+  "x-source": "f49dd73f5c"
+ },
+ "pr.score": "wynik panelu",
+ "@pr.score": {
+  "x-review": "machine",
+  "x-source": "cf91ab41dd"
+ },
+ "pr.score_none": "wynik niezapisany",
+ "@pr.score_none": {
+  "x-review": "machine",
+  "x-source": "4ac231ea2a"
+ },
+ "pr.table": "Oznaczenia i wagi w tabeli",
+ "@pr.table": {
+  "x-review": "machine",
+  "x-source": "7cf41c5c1b"
+ },
+ "pr.what.dip": "Zapisane oznaczenie każdego recenzenta dla tego spadku (linia ciągła: oznaczył spadek; przerywana: brak oznaczenia), każde w rozmiarze według skalibrowanej wagi; pierścień wypełnia się do wyniku panelu zapisanego przez przebieg.",
+ "@pr.what.dip": {
+  "x-review": "machine",
+  "x-source": "31dfe96fd5"
+ },
+ "pr.what.panel": "Każdy recenzent panelu, w rozmiarze według skalibrowanej wagi; nie wybrano spadku, więc wynik nie jest rysowany.",
+ "@pr.what.panel": {
+  "x-review": "machine",
+  "x-source": "881c9d4eaf"
+ },
+ "pr.yes": "tak",
+ "@pr.yes": {
+  "x-review": "machine",
+  "x-source": "8a798890fe"
  },
  "route.candidates.label": "Teczka",
  "@route.candidates.label": {
@@ -2741,6 +3211,26 @@
   "x-review": "machine",
   "x-source": "9889e603bf"
  },
+ "run.casefile": "Teczka przebiegu ›",
+ "@run.casefile": {
+  "x-review": "machine",
+  "x-source": "44cc301e33"
+ },
+ "run.plates": "Tablice ›",
+ "@run.plates": {
+  "x-review": "machine",
+  "x-source": "3a05204bd6"
+ },
+ "run.report": "Raport z przebiegu ›",
+ "@run.report": {
+  "x-review": "machine",
+  "x-source": "3f0278c3ff"
+ },
+ "run.sectors": "Przebieg {run}, {n, plural, one {sektor} few {sektory} many {sektory} other {sektory}} TESS {list}.",
+ "@run.sectors": {
+  "x-review": "machine",
+  "x-source": "cdff019405"
+ },
  "runs.h1": "Każdy przebieg wyszukiwania, jego błędy w zapisanej postaci i konfiguracja stojąca za tymi stronami.",
  "@runs.h1": {
   "x-review": "machine",
@@ -2765,6 +3255,21 @@
  "@sd.intro": {
   "x-review": "machine",
   "x-source": "d9fdd750e3"
+ },
+ "search.hint": "↑ ↓ aby przejść · Enter aby otworzyć · Esc aby zamknąć",
+ "@search.hint": {
+  "x-review": "machine",
+  "x-source": "4fefe7c452"
+ },
+ "search.placeholder": "Szukaj planet, gwiazd, stron",
+ "@search.placeholder": {
+  "x-review": "machine",
+  "x-source": "28a6ead8a4"
+ },
+ "search.results": "Wyniki",
+ "@search.results": {
+  "x-review": "machine",
+  "x-source": "219c4a6c86"
  },
  "sen.h1": "{n, plural, one {# recenzent.} few {# recenzentów.} many {# recenzentów.} other {# recenzenta.}}",
  "@sen.h1": {
@@ -2866,10 +3371,250 @@
   "x-review": "machine",
   "x-source": "5fb2ec761c"
  },
+ "showcase.tess-hd-15337-s4.caveat": "Znaleziono 1 z 5 tranzytów b i oba tranzyty c; żadnego opublikowanego okresu nie odtworzono (okres BLS tych spadków nie jest okresem planety).",
+ "@showcase.tess-hd-15337-s4.caveat": {
+  "x-review": "machine",
+  "x-source": "492b8ee5d0"
+ },
+ "showcase.tess-hd-15337-s4.kind": "Małe planety blisko granicy",
+ "@showcase.tess-hd-15337-s4.kind": {
+  "x-review": "machine",
+  "x-source": "decd7f2886"
+ },
+ "showcase.tess-hd-15337-s4.outcome": "HD 15337 b: 1 z 5 tranzytów (1 kandydat; okres BLS nie jest okresem planety); HD 15337 c: 2 z 2 tranzytów (1 kandydat, 1 oznaczony; okres BLS nie jest okresem planety).",
+ "@showcase.tess-hd-15337-s4.outcome": {
+  "x-review": "machine",
+  "x-source": "e894ab72ac"
+ },
+ "showcase.tess-hd-15337-s4.summary": "Jasny karzeł K z dwiema małymi znanymi planetami: b (około 1,6 promienia Ziemi, 4,8 dnia, głębokość około 350 ppm) i c (17,2 dnia).",
+ "@showcase.tess-hd-15337-s4.summary": {
+  "x-review": "machine",
+  "x-source": "edc1d3e217"
+ },
+ "showcase.tess-hd-15337-s4.why": "Mała planeta, której pojedyncze tranzyty są blisko szumu jednego sektora: pokazuje, co panel i weryfikacja robią na granicy tego, co widzi wyszukiwanie uśredniane w 10-minutowych przedziałach, a strona mówi, co zostało pominięte.",
+ "@showcase.tess-hd-15337-s4.why": {
+  "x-review": "machine",
+  "x-source": "97542c5ae2"
+ },
+ "showcase.tess-pi-men-s1.kind": "Sprawdzenie referencyjne",
+ "@showcase.tess-pi-men-s1.kind": {
+  "x-review": "machine",
+  "x-source": "70fa5c4aa7"
+ },
+ "showcase.tess-pi-men-s1.outcome": "Rp/R★ i T14 w granicach 5% wartości Huang et al. 2018 (docs/results/pi_men_validation.md).",
+ "@showcase.tess-pi-men-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "c09fef04d0"
+ },
+ "showcase.tess-pi-men-s1.summary": "Gwiazda podobna do Słońca z superziemią na orbicie 6,3 dnia: przebieg w pełni porównany z Huang et al. 2018.",
+ "@showcase.tess-pi-men-s1.summary": {
+  "x-review": "machine",
+  "x-source": "27c4facb20"
+ },
+ "showcase.tess-pi-men-s1.why": "Sprawdzenie referencyjne: jedyny przebieg z Sentinels oraz Probes, z dopasowaniem z pociemnieniem brzegowym porównanym z publikacją odkrycia w docs/results/pi_men_validation.md.",
+ "@showcase.tess-pi-men-s1.why": {
+  "x-review": "machine",
+  "x-source": "ae1c536ddb"
+ },
+ "showcase.tess-toi-236-s2.kind": "Znany fałszywy pozytyw",
+ "@showcase.tess-toi-236-s2.kind": {
+  "x-review": "machine",
+  "x-source": "e01d094660"
+ },
+ "showcase.tess-toi-236-s2.outcome": "Wychwycony: wszystkie 6 spadków na efemerydzie TOI zostało odrzuconych przez weryfikację (secondary_any_phase, secondary_eclipse), więc żaden nie jest kandydatem.",
+ "@showcase.tess-toi-236-s2.outcome": {
+  "x-review": "machine",
+  "x-source": "d59f7be2fe"
+ },
+ "showcase.tess-toi-236-s2.summary": "TESS Object of Interest, który tabela TOI klasyfikuje jako fałszywy pozytyw (FP): spadek 2,4% co 4,5 dnia.",
+ "@showcase.tess-toi-236-s2.summary": {
+  "x-review": "machine",
+  "x-source": "35157a3066"
+ },
+ "showcase.tess-toi-236-s2.why": "Test, którego SetuHQ ma nie zdać: TOI-236.01 należy do zbioru fałszywych pozytywów benchmarku prawdziwych TOI. Strona mówi, co weryfikacja z nim zrobiła, cokolwiek to było.",
+ "@showcase.tess-toi-236-s2.why": {
+  "x-review": "machine",
+  "x-source": "50637bce9d"
+ },
+ "showcase.tess-toi-270-s5.caveat": "Znaleziono wszystkie 5 tranzytów c i oba tranzyty d; b nie znaleziono; d widziany dwa razy, bez okresu (jeden tranzyt na każdy 13-dniowy fragment krzywej blasku).",
+ "@showcase.tess-toi-270-s5.caveat": {
+  "x-review": "machine",
+  "x-source": "09f285b361"
+ },
+ "showcase.tess-toi-270-s5.kind": "Układ wieloplanetarny",
+ "@showcase.tess-toi-270-s5.kind": {
+  "x-review": "machine",
+  "x-source": "7e5f73c9ed"
+ },
+ "showcase.tess-toi-270-s5.outcome": "TOI-270 b: żaden z 6 tranzytów; TOI-270 c: 5 z 5 tranzytów (5 kandydatów); TOI-270 d: 2 z 2 tranzytów (2 oznaczone; bez okresu).",
+ "@showcase.tess-toi-270-s5.outcome": {
+  "x-review": "machine",
+  "x-source": "64bc9f9e61"
+ },
+ "showcase.tess-toi-270-s5.summary": "Karzeł M z trzema znanymi planetami tranzytującymi przy 3,4, 5,7 i 11,4 dnia: kilka okresów w jednej gwieździe.",
+ "@showcase.tess-toi-270-s5.summary": {
+  "x-review": "machine",
+  "x-source": "3f5bb74bc0"
+ },
+ "showcase.tess-toi-270-s5.why": "Jedna krzywa blasku, trzy okresy. Pokazuje, co robi wyszukiwanie, gdy gwiazda ma więcej niż jedną planetę, i które z nich mieszczą się w 13-dniowym fragmencie.",
+ "@showcase.tess-toi-270-s5.why": {
+  "x-review": "machine",
+  "x-source": "a6cb0e9faa"
+ },
+ "showcase.tess-wasp-126-s1.kind": "Gorący Jowisz",
+ "@showcase.tess-wasp-126-s1.kind": {
+  "x-review": "machine",
+  "x-source": "f55d3631cf"
+ },
+ "showcase.tess-wasp-126-s1.outcome": "WASP-126 b: 8 z 8 tranzytów (8 kandydatów).",
+ "@showcase.tess-wasp-126-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "60440caba1"
+ },
+ "showcase.tess-wasp-126-s1.summary": "Planeta wielkości Jowisza na orbicie 3,3 dnia: głębokie, łatwe tranzyty w południowej strefie ciągłej obserwacji TESS.",
+ "@showcase.tess-wasp-126-s1.summary": {
+  "x-review": "machine",
+  "x-source": "55d843f795"
+ },
+ "showcase.tess-wasp-126-s1.why": "Łatwy przypadek: tranzyt o głębokości około 0,6%, który powinno znaleźć każde wyszukiwanie; pokazuje całą drogę od krzywej blasku do dopasowania przy niewielkich wątpliwościach co do sygnału.",
+ "@showcase.tess-wasp-126-s1.why": {
+  "x-review": "machine",
+  "x-source": "9768c89800"
+ },
+ "sky.all": "Wszystkie",
+ "@sky.all": {
+  "x-review": "machine",
+  "x-source": "a52ace420f"
+ },
+ "sky.cap": "Każdy punkt to skatalogowana planeta w miejscu swojej gwiazdy macierzystej (RA i Dec, J2000), w kolorze metody, którą ją znaleziono, pojawiająca się w roku odkrycia.",
+ "@sky.cap": {
+  "x-review": "machine",
+  "x-source": "f6c3623c32"
+ },
+ "sky.col.method": "Metoda",
+ "@sky.col.method": {
+  "x-review": "machine",
+  "x-source": "52a0f9b65b"
+ },
+ "sky.col.planets": "Planety",
+ "@sky.col.planets": {
+  "x-review": "machine",
+  "x-source": "c06c7c6bbd"
+ },
+ "sky.cov": "Pokrycie przeglądów: TESS obserwował {tess}% nieba (sektory 1–{last}); {unm}% nigdy nie znalazło się w polu widzenia TESS, Keplera ani K2. Cieniowanie pokazuje, gdzie patrzyły przeglądy, a nie gdzie są planety.",
+ "@sky.cov": {
+  "x-review": "machine",
+  "x-source": "7880d28ec6"
+ },
+ "sky.cov_label": "Pokrycie przeglądów",
+ "@sky.cov_label": {
+  "x-review": "machine",
+  "x-source": "67b9a456c5"
+ },
+ "sky.cov_more": "Liczby i źródła w Galaktyce ›",
+ "@sky.cov_more": {
+  "x-review": "machine",
+  "x-source": "50afd0241b"
+ },
+ "sky.lc": "Krzywa blasku przebiegu",
+ "@sky.lc": {
+  "x-review": "machine",
+  "x-source": "f6ebbca8e7"
+ },
+ "sky.legend": "Metoda odkrycia",
+ "@sky.legend": {
+  "x-review": "machine",
+  "x-source": "7f31ff7ee3"
+ },
+ "sky.nojs": "To nieruchome ujęcie pokazuje {k, number} z nich (co {step}.); pełna mapa rysuje się, gdy uruchomi się skrypt strony.",
+ "@sky.nojs": {
+  "x-review": "machine",
+  "x-source": "f5717a638d"
+ },
+ "sky.note.ecl": "przerywana: ekliptyka",
+ "@sky.note.ecl": {
+  "x-review": "machine",
+  "x-source": "a57d25f4fc"
+ },
+ "sky.note.feed": "Gwiazdy z kanału nienaniesione (pozycje niezapisane)",
+ "@sky.note.feed": {
+  "x-review": "machine",
+  "x-source": "5d62afd4b7"
+ },
+ "sky.note.placed": "{star} umieszczona według SIMBAD (ICRS J2000)",
+ "@sky.note.placed": {
+  "x-review": "machine",
+  "x-source": "fc21ca6c11"
+ },
+ "sky.note.unplaced": "cel nienaniesiony (brak zapisanej pozycji)",
+ "@sky.note.unplaced": {
+  "x-review": "machine",
+  "x-source": "2ba7ac0091"
+ },
+ "sky.open": "Otwórz ›",
+ "@sky.open": {
+  "x-review": "machine",
+  "x-source": "90fdccaabc"
+ },
+ "sky.pause": "Pauza",
+ "@sky.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
+ },
+ "sky.play": "Odtwórz",
+ "@sky.play": {
+  "x-review": "machine",
+  "x-source": "436e61016e"
+ },
+ "sky.shown": "Pokazane planety: {n, number}",
+ "@sky.shown": {
+  "x-review": "machine",
+  "x-source": "2f879fe4d1"
+ },
+ "sky.sweep": "Warstwa przeglądu setuhq: jeden zielony punkt na każdy przeszukany sektor gwiazdy (dotąd {n, number}, pozycje z MAST), bursztynowy tam, gdzie jest wpis w klasie przekraczającej swój test zerowy w tym wycinku ({found, select, none {brak} other {{found}}}).",
+ "@sky.sweep": {
+  "x-review": "machine",
+  "x-source": "6df4812450"
+ },
+ "sky.sweep_more": "Wszystko, co przygasa ›",
+ "@sky.sweep_more": {
+  "x-review": "machine",
+  "x-source": "a15059214f"
+ },
+ "sky.table": "Planety według metody odkrycia, stan na {y}",
+ "@sky.table": {
+  "x-review": "machine",
+  "x-source": "b101c75a14"
+ },
  "sky.tl": "Planety znalezione w każdym roku, według metody",
  "@sky.tl": {
   "x-review": "machine",
   "x-source": "10dff603f9"
+ },
+ "sky.tonly": "Tylko tranzyty",
+ "@sky.tonly": {
+  "x-review": "machine",
+  "x-source": "24f8dea1d4"
+ },
+ "sky.tonly_note": " (tylko tranzyty)",
+ "@sky.tonly_note": {
+  "x-review": "machine",
+  "x-source": "8e198c9572"
+ },
+ "sky.valuetext": "{y}: planety: {n, number}",
+ "@sky.valuetext": {
+  "x-review": "machine",
+  "x-source": "17dd24a14c"
+ },
+ "sky.year": "Rok",
+ "@sky.year": {
+  "x-review": "machine",
+  "x-source": "89f6832560"
+ },
+ "sky.zoom": "Przybliż układ {planet} ›",
+ "@sky.zoom": {
+  "x-review": "machine",
+  "x-source": "7c9d17cb1f"
  },
  "st.figs": "Co widzą detektory",
  "@st.figs": {
@@ -2885,6 +3630,71 @@
  "@st.intro": {
   "x-review": "machine",
   "x-source": "7f59c8f0fc"
+ },
+ "status.known": "{planet} · znana planeta",
+ "@status.known": {
+  "x-review": "machine",
+  "x-source": "f5b7664b3d"
+ },
+ "status.open_cand": "Otwarty · kandydat, niepotwierdzony",
+ "@status.open_cand": {
+  "x-review": "machine",
+  "x-source": "d4f9806249"
+ },
+ "status.open_flagged": "Otwarty · oznaczony do przeglądu",
+ "@status.open_flagged": {
+  "x-review": "machine",
+  "x-source": "17cedf349f"
+ },
+ "status.rejected": "Odrzucony przez weryfikację",
+ "@status.rejected": {
+  "x-review": "machine",
+  "x-source": "402f943e20"
+ },
+ "story.both_passed": "Oba Sentinels go pominęły.",
+ "@story.both_passed": {
+  "x-review": "machine",
+  "x-source": "240e9f6e70"
+ },
+ "story.feed": "wpisów z {stars, plural, one {# kolejnej gwiazdy} few {# kolejnych gwiazd} many {# kolejnych gwiazd} other {# kolejnej gwiazdy}} w kanale wyszukiwania, {new, plural, =0 {pasujących do znanych TOI.} one {# przy nowym okresie.} few {# przy nowym okresie.} many {# przy nowym okresie.} other {# przy nowym okresie.}} Tropy do przejrzenia, nie planety.",
+ "@story.feed": {
+  "x-review": "machine",
+  "x-source": "7a2c50f550"
+ },
+ "story.no_probe": "Żaden Probe go nie oznaczył.",
+ "@story.no_probe": {
+  "x-review": "machine",
+  "x-source": "181249a8c6"
+ },
+ "story.open": "{n, plural, one {spadek nadal otwarty.} few {spadki nadal otwarte.} many {spadków nadal otwartych.} other {spadku nadal otwartego.}}",
+ "@story.open": {
+  "x-review": "machine",
+  "x-source": "76a0fd06d3"
+ },
+ "story.panel": "Sentinels (AI) i Probes czytają krzywą blasku tego przebiegu; każdy głos waży tyle, ile uzyskał na podłożonych tranzytach testowych.",
+ "@story.panel": {
+  "x-review": "machine",
+  "x-source": "ca695f248f"
+ },
+ "story.probes_saw": "Probes go widziały ({k} z {n}).",
+ "@story.probes_saw": {
+  "x-review": "machine",
+  "x-source": "595da333cb"
+ },
+ "story.recovered": "tranzytów {planet} znalezionych bez wskazania, gdzie szukać, każdy około {min} minut od opublikowanego momentu. Znana planeta, odnaleziona ponownie.",
+ "@story.recovered": {
+  "x-review": "machine",
+  "x-source": "9d8d1e5460"
+ },
+ "story.recovered_period": "spadków na okresie {planet}, znanej planety. Odnaleziona ponownie, nie odkryta.",
+ "@story.recovered_period": {
+  "x-review": "machine",
+  "x-source": "7aa74cf44f"
+ },
+ "story.sentinels": "{k} z {n} Sentinels go oznaczyło.",
+ "@story.sentinels": {
+  "x-review": "machine",
+  "x-source": "c6be0b2e6b"
  },
  "subnav.candidates": "Teczki",
  "@subnav.candidates": {
@@ -2996,6 +3806,46 @@
   "x-review": "machine",
   "x-source": "e37b76fbec"
  },
+ "sweep.evidence": "Zobacz dowody ›",
+ "@sweep.evidence": {
+  "x-review": "machine",
+  "x-source": "17281a2fb3"
+ },
+ "sweep.line": "Przeszukaliśmy gwiazdy ({n, number}) pod kątem wszystkiego, co przygasa; {k, plural, =0 {na razie nic nie wyróżnia się ponad przypadek} one {{list} na razie wyróżnia się ponad przypadek} few {{list} na razie wyróżniają się ponad przypadek} many {{list} na razie wyróżniają się ponad przypadek} other {{list} na razie wyróżniają się ponad przypadek}}.",
+ "@sweep.line": {
+  "x-review": "machine",
+  "x-source": "2625a10311"
+ },
+ "tl.cap": "Planety według roku odkrycia, ułożone według metody, którą je znaleziono.",
+ "@tl.cap": {
+  "x-review": "machine",
+  "x-source": "abe7e1b656"
+ },
+ "tl.hint": "Wskaż rok albo ustaw fokus na wykresie i użyj strzałek.",
+ "@tl.hint": {
+  "x-review": "machine",
+  "x-source": "c0d70ad218"
+ },
+ "tl.noyear": "Rekordy bez roku ({n, number}) nie są rysowane.",
+ "@tl.noyear": {
+  "x-review": "machine",
+  "x-source": "90f8af3261"
+ },
+ "tl.read": "{y}: {n, plural, one {# planeta} few {# planety} many {# planet} other {# planety}}",
+ "@tl.read": {
+  "x-review": "machine",
+  "x-source": "7968ad0970"
+ },
+ "tl.table": "Planety według roku i metody",
+ "@tl.table": {
+  "x-review": "machine",
+  "x-source": "60ecd96d94"
+ },
+ "tl.table_link": "Liczby według roku i metody w tabeli ›",
+ "@tl.table_link": {
+  "x-review": "machine",
+  "x-source": "8d38020252"
+ },
  "tn.h1": "Gdzie patrzy TESS.",
  "@tn.h1": {
   "x-review": "machine",
@@ -3005,6 +3855,31 @@
  "@tn.intro": {
   "x-review": "machine",
   "x-source": "6cbf61a637"
+ },
+ "ts.hi": "Najgorętsza gwiazda, w kelwinach",
+ "@ts.hi": {
+  "x-review": "machine",
+  "x-source": "8f287e3909"
+ },
+ "ts.lo": "Najchłodniejsza gwiazda, w kelwinach",
+ "@ts.lo": {
+  "x-review": "machine",
+  "x-source": "ccde65937b"
+ },
+ "ts.src": "Barwa gwiazdy: widmo Plancka przez funkcje dopasowania barw CIE 1931, w sRGB, znormalizowane do najjaśniejszego kanału (odcień, nie jasność). Teff: stellar.json każdego przebiegu (TESS Input Catalog v8.2, MAST); Słońce 5772 K (wartość nominalna IAU 2015).",
+ "@ts.src": {
+  "x-review": "machine",
+  "x-source": "b9cdfdaa9f"
+ },
+ "ts.sun": "Słońce",
+ "@ts.sun": {
+  "x-review": "machine",
+  "x-source": "c15630ef0d"
+ },
+ "ts.title": "Barwa gwiazd od 2500 K do 10 000 K, każda gwiazda zaznaczona przy swojej temperaturze",
+ "@ts.title": {
+  "x-review": "machine",
+  "x-source": "1fd7f02e9a"
  },
  "var.h1": "Wszystko, co przygasa.",
  "@var.h1": {

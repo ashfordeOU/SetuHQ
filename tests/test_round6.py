@@ -87,7 +87,7 @@ def test_sky_names_simbad_in_its_note_and_its_pin(tmp_path):
     out = build_app(Path("runs/tess-pi-men-s1"), tmp_path / "app", title="t", catalog_path="docs/discoveries/catalog.json")
     page = (out.parent / "explore" / "index.html").read_text()
     assert ("Feed stars not plotted (positions not stored) · pi Men placed from SIMBAD "
-            "(ICRS J2000) · dashed: the ecliptic") in page
+            "(ICRS J2000) · dashed: the ecliptic") in re.sub(r"<[^>]+>", "", page)  # the note's text, keyed in parts
     pin = re.search(r'<a class="skypin"[^>]*>', page).group(0)
     assert 'title="pi Men placed from SIMBAD (ICRS J2000): RA 84.29°, Dec -80.47°"' in pin
 

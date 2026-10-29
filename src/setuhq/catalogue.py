@@ -323,11 +323,11 @@ SEARCH_BUTTON = ('<button class="iconbtn searchbtn" type="button" id="gsearchbtn
                  'aria-haspopup="dialog" title="' + N_("shell.search_title", "Search (/)") + '" data-i18n-attr="aria-label:shell.search|title:shell.search_title"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" '
                  'fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.7" '
                  'stroke-linecap="round"/></svg></button>')
-SEARCH_DIALOG = """<dialog class="gsearch" id="gsearch" aria-labelledby="gsearchlbl">
-  <label class="gsfield"><span class="sr" id="gsearchlbl">Search planets, stars and pages</span>
-    <input type="search" id="gsq" role="combobox" aria-expanded="true" aria-controls="gsresults" aria-autocomplete="list" placeholder="Search planets, stars, pages" autocomplete="off"></label>
-  <ul class="gsresults" id="gsresults" role="listbox" aria-label="Results"></ul>
-  <p class="gshint">↑ ↓ to move · Enter to open · Esc to close</p>
+SEARCH_DIALOG = f"""<dialog class="gsearch" id="gsearch" aria-labelledby="gsearchlbl">
+  <label class="gsfield"><span class="sr" id="gsearchlbl" data-i18n="nf.search">Search planets, stars and pages</span>
+    <input type="search" id="gsq" role="combobox" aria-expanded="true" aria-controls="gsresults" aria-autocomplete="list" placeholder="{N_("search.placeholder", "Search planets, stars, pages")}" data-i18n-attr="placeholder:search.placeholder" autocomplete="off"></label>
+  <ul class="gsresults" id="gsresults" role="listbox" aria-label="{N_("search.results", "Results")}" data-i18n-attr="aria-label:search.results"></ul>
+  <p class="gshint" data-i18n="search.hint">{N_("search.hint", "↑ ↓ to move · Enter to open · Esc to close")}</p>
 </dialog>"""
 
 

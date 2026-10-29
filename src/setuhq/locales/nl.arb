@@ -16,6 +16,11 @@
   "x-review": "machine",
   "x-source": "ca9826547d"
  },
+ "cat.not_ours": "SetuHQ heeft deze planeten niet ontdekt.",
+ "@cat.not_ours": {
+  "x-review": "machine",
+  "x-source": "759a661951"
+ },
  "cf.h1": "Elk signaal, zijn dips en de controles achter elk oordeel.",
  "@cf.h1": {
   "x-review": "machine",
@@ -25,6 +30,11 @@
  "@cf.intro": {
   "x-review": "machine",
   "x-source": "252d456e94"
+ },
+ "cf.link": "Dossier ›",
+ "@cf.link": {
+  "x-review": "machine",
+  "x-source": "ceac0b11e3"
  },
  "chapter.astrometry": "Astrometrie",
  "@chapter.astrometry": {
@@ -1121,6 +1131,36 @@
   "x-review": "machine",
   "x-source": "6828f69f91"
  },
+ "cov.bulge": "Microlensing in de bulge",
+ "@cov.bulge": {
+  "x-review": "machine",
+  "x-source": "bd05242cca"
+ },
+ "cov.corot": "CoRoT-zones",
+ "@cov.corot": {
+  "x-review": "machine",
+  "x-source": "41d07bad32"
+ },
+ "cov.k2": "K2-campagnes",
+ "@cov.k2": {
+  "x-review": "machine",
+  "x-source": "848c24db6a"
+ },
+ "cov.kepler": "Kepler-veld",
+ "@cov.kepler": {
+  "x-review": "machine",
+  "x-source": "147a21f59a"
+ },
+ "cov.tess": "TESS-sectoren",
+ "@cov.tess": {
+  "x-review": "machine",
+  "x-source": "c63d55d777"
+ },
+ "cov.unmapped": "Niet gedekt door transitsurveys",
+ "@cov.unmapped": {
+  "x-review": "machine",
+  "x-source": "261bc97dee"
+ },
  "desc.catalogue": "Elke planeet in exoplanet.eu, doorzoekbaar en sorteerbaar, elk met een eigen pagina. SetuHQ heeft deze planeten niet ontdekt.",
  "@desc.catalogue": {
   "x-review": "machine",
@@ -1251,6 +1291,26 @@
   "x-review": "machine",
   "x-source": "20cd938a2e"
  },
+ "dips.cand": "{n, plural, one {# kandidaat} other {# kandidaten}}",
+ "@dips.cand": {
+  "x-review": "machine",
+  "x-source": "0ff385febf"
+ },
+ "dips.flag": "{n, plural, one {# gemarkeerd} other {# gemarkeerd}}",
+ "@dips.flag": {
+  "x-review": "machine",
+  "x-source": "1d74535739"
+ },
+ "dips.n": "{n, plural, one {# dip} other {# dips}}",
+ "@dips.n": {
+  "x-review": "machine",
+  "x-source": "d34249d767"
+ },
+ "dips.rej": "{n, plural, one {# afgewezen} other {# afgewezen}}",
+ "@dips.rej": {
+  "x-review": "machine",
+  "x-source": "9fdbc5d13a"
+ },
  "docs.contribute": "Een sweep bijdragen",
  "@docs.contribute": {
   "x-review": "machine",
@@ -1356,6 +1416,11 @@
   "x-review": "machine",
   "x-source": "3159020543"
  },
+ "docs.runfiles": "<a href=\"{report}\">het runrapport</a>, <a href=\"{plates}\">de platen</a> en <a href=\"{cf}\">het dossier</a> van run {run}.",
+ "@docs.runfiles": {
+  "x-review": "machine",
+  "x-source": "065db1dbf8"
+ },
  "docs.start": "Aan de slag",
  "@docs.start": {
   "x-review": "machine",
@@ -1406,6 +1471,56 @@
   "x-review": "machine",
   "x-source": "96432c834d"
  },
+ "fold.a": "Niet gevouwen: in volgorde van tijd",
+ "@fold.a": {
+  "x-review": "machine",
+  "x-source": "ca7c3036c1"
+ },
+ "fold.b": "Gevouwen op de periode van {p} dagen",
+ "@fold.b": {
+  "x-review": "machine",
+  "x-source": "92616c60e0"
+ },
+ "fold.fold": "Vouwen op de periode",
+ "@fold.fold": {
+  "x-review": "machine",
+  "x-source": "4458109b7d"
+ },
+ "fold.folded": "<b>Gevouwen</b> op de periode van {p} dagen",
+ "@fold.folded": {
+  "x-review": "machine",
+  "x-source": "4ed8a2a718"
+ },
+ "fold.said": "Gevouwen op {p} dagen: de dip verschijnt bij nul uur.",
+ "@fold.said": {
+  "x-review": "machine",
+  "x-source": "c0920801da"
+ },
+ "fold.said_time": "In volgorde van tijd: elke transit is een handvol punten tussen de rest.",
+ "@fold.said_time": {
+  "x-review": "machine",
+  "x-source": "a90b68372c"
+ },
+ "fold.short": "{n, number} punten gevouwen op {p} d: een dip van {depth} ppm en {t14} u. Bron: {run}.",
+ "@fold.short": {
+  "x-review": "machine",
+  "x-source": "8958c78471"
+ },
+ "fold.source": "Bron: {s}",
+ "@fold.source": {
+  "x-review": "machine",
+  "x-source": "7015dd2710"
+ },
+ "fold.unfold": "Terug naar de tijd",
+ "@fold.unfold": {
+  "x-review": "machine",
+  "x-source": "73824685c9"
+ },
+ "fold.unfolded": "<b>Niet gevouwen</b> · {d} dagen in volgorde van tijd",
+ "@fold.unfolded": {
+  "x-review": "machine",
+  "x-source": "5fc4a52069"
+ },
  "footer.all_chapters": "Alle {n} hoofdstukken",
  "@footer.all_chapters": {
   "x-review": "machine",
@@ -1441,6 +1556,31 @@
   "x-review": "machine",
   "x-source": "bf046c7395"
  },
+ "gal.example": "Voorbeeldrun",
+ "@gal.example": {
+  "x-review": "machine",
+  "x-source": "ed62203839"
+ },
+ "gal.noart": "Geen enkele kandidaat krijgt een planeetafbeelding.",
+ "@gal.noart": {
+  "x-review": "machine",
+  "x-source": "9d55cea042"
+ },
+ "gal.note": "Elk podium: de schijf van de ster in haar zwartlichaamskleur bij de Teff die haar run opslaat, en wat de run als schaduw mat bij zijn gefitte Rp/R★ (een planeet die de run miste is een gestippelde omtrek). De afmetingen zijn op schaal ten opzichte van de schijf; waar elk erop staat is illustratief.",
+ "@gal.note": {
+  "x-review": "machine",
+  "x-source": "bbb017f062"
+ },
+ "gal.sectors": "{mission} {n, plural, one {sector} other {sectoren}} {list}",
+ "@gal.sectors": {
+  "x-review": "machine",
+  "x-source": "737f03f940"
+ },
+ "gal.stages": "Podia: {s}.",
+ "@gal.stages": {
+  "x-review": "machine",
+  "x-source": "b469db30f4"
+ },
  "gx.h1": "Elke bekende exoplaneet,",
  "@gx.h1": {
   "x-review": "machine",
@@ -1455,6 +1595,21 @@
  "@gx.intro": {
   "x-review": "machine",
   "x-source": "b60778b897"
+ },
+ "hero.disc": "De schijf van {star} is in haar zwartlichaamskleur; de planeet is een artistieke impressie ({look}).",
+ "@hero.disc": {
+  "x-review": "machine",
+  "x-source": "f391f5d10f"
+ },
+ "hero.model": "Model uit opgeslagen waarden.",
+ "@hero.model": {
+  "x-review": "machine",
+  "x-source": "761a8963d7"
+ },
+ "hero.pause": "Pauze",
+ "@hero.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
  },
  "hint.dismiss": "Hint sluiten: {h}",
  "@hint.dismiss": {
@@ -1691,6 +1846,11 @@
   "x-review": "machine",
   "x-source": "04e504e9e8"
  },
+ "home.proof": "Wat de referentierun laat zien",
+ "@home.proof": {
+  "x-review": "machine",
+  "x-source": "d58bf9bb5f"
+ },
  "home.refcheck": "De referentiecontrole: {planet}, een bekende planeet, teruggevonden in run {run}",
  "@home.refcheck": {
   "x-review": "machine",
@@ -1826,6 +1986,156 @@
   "x-review": "machine",
   "x-source": "272d460db4"
  },
+ "learn.again": "Opnieuw beginnen bij stap 1",
+ "@learn.again": {
+  "x-review": "machine",
+  "x-source": "1b91302a8f"
+ },
+ "learn.all": "Alle {n} stappen",
+ "@learn.all": {
+  "x-review": "machine",
+  "x-source": "e15530dfee"
+ },
+ "learn.back": "‹ Terug",
+ "@learn.back": {
+  "x-review": "machine",
+  "x-source": "9c47d2b08c"
+ },
+ "learn.cleared": "Voortgang van het leerpad gewist.",
+ "@learn.cleared": {
+  "x-review": "machine",
+  "x-source": "8b76618ea1"
+ },
+ "learn.complete": " · pad voltooid",
+ "@learn.complete": {
+  "x-review": "machine",
+  "x-source": "d1a143524c"
+ },
+ "learn.continue": "Verder: {step}",
+ "@learn.continue": {
+  "x-review": "machine",
+  "x-source": "859ee5370f"
+ },
+ "learn.count": "{k} van {n} bezocht",
+ "@learn.count": {
+  "x-review": "machine",
+  "x-source": "5475c68b5f"
+ },
+ "learn.finish": "Afronden ›",
+ "@learn.finish": {
+  "x-review": "machine",
+  "x-source": "d7473131de"
+ },
+ "learn.finish_label": "Het pad afronden",
+ "@learn.finish_label": {
+  "x-review": "machine",
+  "x-source": "b841a0b2c4"
+ },
+ "learn.h": "Leerpad",
+ "@learn.h": {
+  "x-review": "machine",
+  "x-source": "7f9d3aa634"
+ },
+ "learn.intro": "{n} stappen, van hoe een survey werkt tot elke bekende exoplaneet. Vrijblijvend: volg de volgorde of spring rond; elke pagina die je opent telt. De voortgang blijft in deze browser.",
+ "@learn.intro": {
+  "x-review": "machine",
+  "x-source": "b22e135d6a"
+ },
+ "learn.kind.catalogue": "Catalogus",
+ "@learn.kind.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "learn.kind.ch": "Methodehoofdstuk",
+ "@learn.kind.ch": {
+  "x-review": "machine",
+  "x-source": "8cb87af4b5"
+ },
+ "learn.kind.galaxy": "Melkweg",
+ "@learn.kind.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "learn.kind.run": "Run van SetuHQ",
+ "@learn.kind.run": {
+  "x-review": "machine",
+  "x-source": "12eeea4754"
+ },
+ "learn.leave": "Verlaten",
+ "@learn.leave": {
+  "x-review": "machine",
+  "x-source": "fc6e4a408d"
+ },
+ "learn.leave_label": "Het pad verlaten",
+ "@learn.leave_label": {
+  "x-review": "machine",
+  "x-source": "49324ad9ff"
+ },
+ "learn.left": "Het leerpad verlaten. Je voortgang blijft bewaard.",
+ "@learn.left": {
+  "x-review": "machine",
+  "x-source": "9ef4f1079c"
+ },
+ "learn.next": "Volgende",
+ "@learn.next": {
+  "x-review": "machine",
+  "x-source": "1ff57a29d7"
+ },
+ "learn.next_btn": "Volgende ›",
+ "@learn.next_btn": {
+  "x-review": "machine",
+  "x-source": "868d16703d"
+ },
+ "learn.next_label": "Volgende: {step}",
+ "@learn.next_label": {
+  "x-review": "machine",
+  "x-source": "19282226b1"
+ },
+ "learn.pos": "{i} van {n}",
+ "@learn.pos": {
+  "x-review": "machine",
+  "x-source": "2eb6f9a3c3"
+ },
+ "learn.progress": "Voortgang van het leerpad",
+ "@learn.progress": {
+  "x-review": "machine",
+  "x-source": "0e0d6f67aa"
+ },
+ "learn.reset": "Voortgang wissen",
+ "@learn.reset": {
+  "x-review": "machine",
+  "x-source": "0b026c02ba"
+ },
+ "learn.seen": ", bezocht",
+ "@learn.seen": {
+  "x-review": "machine",
+  "x-source": "bd1c8d37d4"
+ },
+ "learn.start": "Het pad beginnen",
+ "@learn.start": {
+  "x-review": "machine",
+  "x-source": "43f89ceb20"
+ },
+ "learn.step.catalogue": "Elk record, doorzoekbaar",
+ "@learn.step.catalogue": {
+  "x-review": "machine",
+  "x-source": "b6e0434eab"
+ },
+ "learn.step.galaxy": "Elke bekende exoplaneet, rond de zon",
+ "@learn.step.galaxy": {
+  "x-review": "machine",
+  "x-source": "633c7d2992"
+ },
+ "learn.step.transit": "De eigen transit van SetuHQ: het dossier",
+ "@learn.step.transit": {
+  "x-review": "machine",
+  "x-source": "e521fd3e8b"
+ },
+ "learn.unseen": ", nog niet bezocht",
+ "@learn.unseen": {
+  "x-review": "machine",
+  "x-source": "a9473125f4"
+ },
  "limits.art": "Geen waarneming: een uiterlijk gekozen op gemeten straal en instraling.",
  "@limits.art": {
   "x-review": "machine",
@@ -1865,6 +2175,26 @@
  "@limits.summary": {
   "x-review": "machine",
   "x-source": "ecbcc39e74"
+ },
+ "lu.cap": "Op schaal: één aardstraal is over de hele rij even breed, dus {big} is {x} keer zo breed als {small}. Elke afbeelding is een artistieke impressie, gekozen op basis van de gemeten straal en de berekende instraling; de samenstelling is niet gemeten. De aarde, Neptunus en Jupiter zijn de referenties uit het zonnestelsel (alleen de aarde is met oceanen getekend). Stralen: {src} (1 RJ = 11,209 R⊕).",
+ "@lu.cap": {
+  "x-review": "machine",
+  "x-source": "3cdd1c02b9"
+ },
+ "lu.earth": "de aarde",
+ "@lu.earth": {
+  "x-review": "machine",
+  "x-source": "b7c9b5ccd3"
+ },
+ "lu.jupiter": "Jupiter",
+ "@lu.jupiter": {
+  "x-review": "machine",
+  "x-source": "27ce2df068"
+ },
+ "lu.neptune": "Neptunus",
+ "@lu.neptune": {
+  "x-review": "machine",
+  "x-source": "d98d070c39"
  },
  "mc.intro": "Kies een ster in een willekeurig paneel; elk paneel en elk losgemaakt venster volgt.",
  "@mc.intro": {
@@ -2026,6 +2356,41 @@
   "x-review": "machine",
   "x-source": "645c79cc54"
  },
+ "method.astrometry": "astrometrie",
+ "@method.astrometry": {
+  "x-review": "machine",
+  "x-source": "ec74d70d9e"
+ },
+ "method.imaging": "directe beeldvorming",
+ "@method.imaging": {
+  "x-review": "machine",
+  "x-source": "f6e9cec92c"
+ },
+ "method.microlensing": "microlensing",
+ "@method.microlensing": {
+  "x-review": "machine",
+  "x-source": "8f7b755044"
+ },
+ "method.other": "overig",
+ "@method.other": {
+  "x-review": "machine",
+  "x-source": "d9298a10d1"
+ },
+ "method.rv": "radiële snelheid",
+ "@method.rv": {
+  "x-review": "machine",
+  "x-source": "0ec51a755a"
+ },
+ "method.timing": "timing",
+ "@method.timing": {
+  "x-review": "machine",
+  "x-source": "f6cfb8c3f1"
+ },
+ "method.transit": "transit",
+ "@method.transit": {
+  "x-review": "machine",
+  "x-source": "068b7e6c97"
+ },
  "methods.chapter_n": "Hoofdstuk {i} van {n}",
  "@methods.chapter_n": {
   "x-review": "machine",
@@ -2055,6 +2420,31 @@
  "@methods.sources": {
   "x-review": "machine",
   "x-source": "caf85b0888"
+ },
+ "mx.from": "Herkomst",
+ "@mx.from": {
+  "x-review": "machine",
+  "x-source": "2181976934"
+ },
+ "mx.numbers": "Getallen in dit hoofdstuk",
+ "@mx.numbers": {
+  "x-review": "machine",
+  "x-source": "2d0a4d13b4"
+ },
+ "mx.quantity": "Grootheid",
+ "@mx.quantity": {
+  "x-review": "machine",
+  "x-source": "822bab8d41"
+ },
+ "mx.speed": "Snelheid",
+ "@mx.speed": {
+  "x-review": "machine",
+  "x-source": "c372fee9b4"
+ },
+ "mx.value": "Waarde",
+ "@mx.value": {
+  "x-review": "machine",
+  "x-source": "8e37953d23"
  },
  "nav.candidates": "Kandidaten",
  "@nav.candidates": {
@@ -2401,6 +2791,11 @@
   "x-review": "machine",
   "x-source": "5dce100851"
  },
+ "panel.probes_sentinels": "Probes en Sentinels",
+ "@panel.probes_sentinels": {
+  "x-review": "machine",
+  "x-source": "300c2fe632"
+ },
  "panel.sentinels": "{s, plural, one {# Sentinel} other {# Sentinels}}",
  "@panel.sentinels": {
   "x-review": "machine",
@@ -2461,6 +2856,31 @@
   "x-review": "machine",
   "x-source": "5bf530d59d"
  },
+ "pr.col.marked": "Markeerde deze dip",
+ "@pr.col.marked": {
+  "x-review": "machine",
+  "x-source": "4a7a39ecf8"
+ },
+ "pr.col.provider": "Aanbieder",
+ "@pr.col.provider": {
+  "x-review": "machine",
+  "x-source": "472590ae97"
+ },
+ "pr.col.reviewer": "Beoordelaar",
+ "@pr.col.reviewer": {
+  "x-review": "machine",
+  "x-source": "d29f46772c"
+ },
+ "pr.col.role": "Rol",
+ "@pr.col.role": {
+  "x-review": "machine",
+  "x-source": "14736a2eb9"
+ },
+ "pr.col.weight": "Gekalibreerd gewicht",
+ "@pr.col.weight": {
+  "x-review": "machine",
+  "x-source": "2ff00b5847"
+ },
  "pr.h1": "Een CHEOPS-voorstel voorbereiden.",
  "@pr.h1": {
   "x-review": "machine",
@@ -2470,6 +2890,56 @@
  "@pr.intro": {
   "x-review": "machine",
   "x-source": "6893d1fea2"
+ },
+ "pr.marked": "{k} van {n} markeerden hem · panelscore {score}, zoals opgeslagen",
+ "@pr.marked": {
+  "x-review": "machine",
+  "x-source": "59b2d88d9f"
+ },
+ "pr.marked_none": "{k} van {n} markeerden hem · panelscore niet opgeslagen",
+ "@pr.marked_none": {
+  "x-review": "machine",
+  "x-source": "6a75119056"
+ },
+ "pr.no": "nee",
+ "@pr.no": {
+  "x-review": "machine",
+  "x-source": "9390298f3f"
+ },
+ "pr.reviewers": "beoordelaars",
+ "@pr.reviewers": {
+  "x-review": "machine",
+  "x-source": "f49dd73f5c"
+ },
+ "pr.score": "panelscore",
+ "@pr.score": {
+  "x-review": "machine",
+  "x-source": "cf91ab41dd"
+ },
+ "pr.score_none": "score niet opgeslagen",
+ "@pr.score_none": {
+  "x-review": "machine",
+  "x-source": "4ac231ea2a"
+ },
+ "pr.table": "De markeringen en gewichten als tabel",
+ "@pr.table": {
+  "x-review": "machine",
+  "x-source": "7cf41c5c1b"
+ },
+ "pr.what.dip": "De opgeslagen markering van elke beoordelaar voor deze dip (doorgetrokken lijn: markeerde de dip; gestippeld: geen markering), elk geschaald naar zijn gekalibreerde gewicht; de ring vult zich tot de panelscore zoals de run die opsloeg.",
+ "@pr.what.dip": {
+  "x-review": "machine",
+  "x-source": "31dfe96fd5"
+ },
+ "pr.what.panel": "Elke beoordelaar in het panel, geschaald naar zijn gekalibreerde gewicht; er is geen dip geselecteerd, dus er wordt geen score getekend.",
+ "@pr.what.panel": {
+  "x-review": "machine",
+  "x-source": "881c9d4eaf"
+ },
+ "pr.yes": "ja",
+ "@pr.yes": {
+  "x-review": "machine",
+  "x-source": "8a798890fe"
  },
  "route.candidates.label": "Dossier",
  "@route.candidates.label": {
@@ -2741,6 +3211,26 @@
   "x-review": "machine",
   "x-source": "9889e603bf"
  },
+ "run.casefile": "Het dossier van de run ›",
+ "@run.casefile": {
+  "x-review": "machine",
+  "x-source": "44cc301e33"
+ },
+ "run.plates": "Platen ›",
+ "@run.plates": {
+  "x-review": "machine",
+  "x-source": "3a05204bd6"
+ },
+ "run.report": "Runrapport ›",
+ "@run.report": {
+  "x-review": "machine",
+  "x-source": "3f0278c3ff"
+ },
+ "run.sectors": "Run {run}, TESS-{n, plural, one {sector} other {sectoren}} {list}.",
+ "@run.sectors": {
+  "x-review": "machine",
+  "x-source": "cdff019405"
+ },
  "runs.h1": "Elke zoekrun, zijn fouten zoals opgeslagen, en de configuratie achter deze pagina's.",
  "@runs.h1": {
   "x-review": "machine",
@@ -2765,6 +3255,21 @@
  "@sd.intro": {
   "x-review": "machine",
   "x-source": "d9fdd750e3"
+ },
+ "search.hint": "↑ ↓ om te bewegen · Enter om te openen · Esc om te sluiten",
+ "@search.hint": {
+  "x-review": "machine",
+  "x-source": "4fefe7c452"
+ },
+ "search.placeholder": "Zoek planeten, sterren, pagina's",
+ "@search.placeholder": {
+  "x-review": "machine",
+  "x-source": "28a6ead8a4"
+ },
+ "search.results": "Resultaten",
+ "@search.results": {
+  "x-review": "machine",
+  "x-source": "219c4a6c86"
  },
  "sen.h1": "{n, plural, one {# beoordelaar.} other {# beoordelaars.}}",
  "@sen.h1": {
@@ -2866,10 +3371,250 @@
   "x-review": "machine",
   "x-source": "5fb2ec761c"
  },
+ "showcase.tess-hd-15337-s4.caveat": "1 van de 5 transits van b en beide van c gevonden; geen van de gepubliceerde perioden werd teruggevonden (de BLS-periode van die dips is niet die van de planeet).",
+ "@showcase.tess-hd-15337-s4.caveat": {
+  "x-review": "machine",
+  "x-source": "492b8ee5d0"
+ },
+ "showcase.tess-hd-15337-s4.kind": "Kleine planeten bij de grens",
+ "@showcase.tess-hd-15337-s4.kind": {
+  "x-review": "machine",
+  "x-source": "decd7f2886"
+ },
+ "showcase.tess-hd-15337-s4.outcome": "HD 15337 b: 1 van 5 transits (1 kandidaat; BLS-periode niet die van de planeet); HD 15337 c: 2 van 2 transits (1 kandidaat, 1 gemarkeerd; BLS-periode niet die van de planeet).",
+ "@showcase.tess-hd-15337-s4.outcome": {
+  "x-review": "machine",
+  "x-source": "e894ab72ac"
+ },
+ "showcase.tess-hd-15337-s4.summary": "Een heldere K-dwerg met twee kleine bekende planeten: b (ongeveer 1,6 aardstralen, 4,8 dagen, zo'n 350 ppm diep) en c (17,2 dagen).",
+ "@showcase.tess-hd-15337-s4.summary": {
+  "x-review": "machine",
+  "x-source": "edc1d3e217"
+ },
+ "showcase.tess-hd-15337-s4.why": "Een kleine planeet waarvan de afzonderlijke transits dicht bij de ruis van één sector liggen: hij laat zien wat het panel en de vetting doen aan de rand van wat een op 10 minuten gebinde zoektocht kan zien, en de pagina zegt wat er gemist is.",
+ "@showcase.tess-hd-15337-s4.why": {
+  "x-review": "machine",
+  "x-source": "97542c5ae2"
+ },
+ "showcase.tess-pi-men-s1.kind": "Referentiecontrole",
+ "@showcase.tess-pi-men-s1.kind": {
+  "x-review": "machine",
+  "x-source": "70fa5c4aa7"
+ },
+ "showcase.tess-pi-men-s1.outcome": "Rp/R★ en T14 binnen 5% van Huang et al. 2018 (docs/results/pi_men_validation.md).",
+ "@showcase.tess-pi-men-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "c09fef04d0"
+ },
+ "showcase.tess-pi-men-s1.summary": "Een zonachtige ster met een superaarde in een baan van 6,3 dagen: de run volledig vergeleken met Huang et al. 2018.",
+ "@showcase.tess-pi-men-s1.summary": {
+  "x-review": "machine",
+  "x-source": "27c4facb20"
+ },
+ "showcase.tess-pi-men-s1.why": "De referentiecontrole: de enige run met de Sentinels naast de Probes, zijn fit met randverduistering vergeleken met het ontdekkingsartikel in docs/results/pi_men_validation.md.",
+ "@showcase.tess-pi-men-s1.why": {
+  "x-review": "machine",
+  "x-source": "ae1c536ddb"
+ },
+ "showcase.tess-toi-236-s2.kind": "Bekende fout-positieve",
+ "@showcase.tess-toi-236-s2.kind": {
+  "x-review": "machine",
+  "x-source": "e01d094660"
+ },
+ "showcase.tess-toi-236-s2.outcome": "Opgemerkt: alle 6 dips op de TOI-efemeride zijn door de vetting afgewezen (secondary_any_phase, secondary_eclipse), dus geen enkele is een kandidaat.",
+ "@showcase.tess-toi-236-s2.outcome": {
+  "x-review": "machine",
+  "x-source": "d59f7be2fe"
+ },
+ "showcase.tess-toi-236-s2.summary": "Een TESS Object of Interest dat de TOI-tabel als fout-positief (FP) classificeert: een dip van 2,4% elke 4,5 dagen.",
+ "@showcase.tess-toi-236-s2.summary": {
+  "x-review": "machine",
+  "x-source": "35157a3066"
+ },
+ "showcase.tess-toi-236-s2.why": "Een test waarvoor SetuHQ moet zakken: TOI-236.01 hoort bij de fout-positieve set van de echte-TOI-benchmark. De pagina zegt wat de vetting ermee deed, wat het ook was.",
+ "@showcase.tess-toi-236-s2.why": {
+  "x-review": "machine",
+  "x-source": "50637bce9d"
+ },
+ "showcase.tess-toi-270-s5.caveat": "Alle 5 transits van c en beide van d gevonden; b niet gevonden; d twee keer gezien, geen periode (één transit per stuk van 13 dagen van de lichtcurve).",
+ "@showcase.tess-toi-270-s5.caveat": {
+  "x-review": "machine",
+  "x-source": "09f285b361"
+ },
+ "showcase.tess-toi-270-s5.kind": "Systeem met meerdere planeten",
+ "@showcase.tess-toi-270-s5.kind": {
+  "x-review": "machine",
+  "x-source": "7e5f73c9ed"
+ },
+ "showcase.tess-toi-270-s5.outcome": "TOI-270 b: geen van 6 transits; TOI-270 c: 5 van 5 transits (5 kandidaten); TOI-270 d: 2 van 2 transits (2 gemarkeerd; geen periode).",
+ "@showcase.tess-toi-270-s5.outcome": {
+  "x-review": "machine",
+  "x-source": "64bc9f9e61"
+ },
+ "showcase.tess-toi-270-s5.summary": "Een M-dwerg met drie bekende transiterende planeten op 3,4, 5,7 en 11,4 dagen: meerdere perioden in één ster.",
+ "@showcase.tess-toi-270-s5.summary": {
+  "x-review": "machine",
+  "x-source": "3f5bb74bc0"
+ },
+ "showcase.tess-toi-270-s5.why": "Eén lichtcurve, drie perioden. Hij laat zien wat de zoektocht doet als een ster meer dan één planeet heeft, en welke daarvan in een stuk van 13 dagen passen.",
+ "@showcase.tess-toi-270-s5.why": {
+  "x-review": "machine",
+  "x-source": "a6cb0e9faa"
+ },
+ "showcase.tess-wasp-126-s1.kind": "Hete Jupiter",
+ "@showcase.tess-wasp-126-s1.kind": {
+  "x-review": "machine",
+  "x-source": "f55d3631cf"
+ },
+ "showcase.tess-wasp-126-s1.outcome": "WASP-126 b: 8 van 8 transits (8 kandidaten).",
+ "@showcase.tess-wasp-126-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "60440caba1"
+ },
+ "showcase.tess-wasp-126-s1.summary": "Een planeet zo groot als Jupiter in een baan van 3,3 dagen: diepe, makkelijke transits, in de zuidelijke continue zichtzone van TESS.",
+ "@showcase.tess-wasp-126-s1.summary": {
+  "x-review": "machine",
+  "x-source": "55d843f795"
+ },
+ "showcase.tess-wasp-126-s1.why": "Het makkelijke geval: een transit van zo'n 0,6% diep die elke zoektocht zou moeten vinden, die de hele weg van lichtcurve tot fit laat zien met weinig twijfel over het signaal.",
+ "@showcase.tess-wasp-126-s1.why": {
+  "x-review": "machine",
+  "x-source": "9768c89800"
+ },
+ "sky.all": "Alle",
+ "@sky.all": {
+  "x-review": "machine",
+  "x-source": "a52ace420f"
+ },
+ "sky.cap": "Elke stip is een gecatalogiseerde planeet op de positie van haar moederster (RA en Dec, J2000), gekleurd naar de methode waarmee ze gevonden is, en verschijnt in het jaar van ontdekking.",
+ "@sky.cap": {
+  "x-review": "machine",
+  "x-source": "f6c3623c32"
+ },
+ "sky.col.method": "Methode",
+ "@sky.col.method": {
+  "x-review": "machine",
+  "x-source": "52a0f9b65b"
+ },
+ "sky.col.planets": "Planeten",
+ "@sky.col.planets": {
+  "x-review": "machine",
+  "x-source": "c06c7c6bbd"
+ },
+ "sky.cov": "Surveydekking: TESS heeft {tess}% van de hemel waargenomen (sectoren 1–{last}); {unm}% lag nooit in het beeldveld van TESS, Kepler of K2. De arcering laat zien waar surveys keken, niet waar planeten zijn.",
+ "@sky.cov": {
+  "x-review": "machine",
+  "x-source": "7880d28ec6"
+ },
+ "sky.cov_label": "Surveydekking",
+ "@sky.cov_label": {
+  "x-review": "machine",
+  "x-source": "67b9a456c5"
+ },
+ "sky.cov_more": "Cijfers en bronnen in de Melkweg ›",
+ "@sky.cov_more": {
+  "x-review": "machine",
+  "x-source": "50afd0241b"
+ },
+ "sky.lc": "De lichtcurve van de run",
+ "@sky.lc": {
+  "x-review": "machine",
+  "x-source": "f6ebbca8e7"
+ },
+ "sky.legend": "Ontdekkingsmethode",
+ "@sky.legend": {
+  "x-review": "machine",
+  "x-source": "7f31ff7ee3"
+ },
+ "sky.nojs": "Dit stilstaande beeld toont er {k, number} (één op de {step}); de volledige kaart wordt getekend als het script van de pagina draait.",
+ "@sky.nojs": {
+  "x-review": "machine",
+  "x-source": "f5717a638d"
+ },
+ "sky.note.ecl": "gestippeld: de ecliptica",
+ "@sky.note.ecl": {
+  "x-review": "machine",
+  "x-source": "a57d25f4fc"
+ },
+ "sky.note.feed": "Sterren uit de feed niet getekend (posities niet opgeslagen)",
+ "@sky.note.feed": {
+  "x-review": "machine",
+  "x-source": "5d62afd4b7"
+ },
+ "sky.note.placed": "{star} geplaatst volgens SIMBAD (ICRS J2000)",
+ "@sky.note.placed": {
+  "x-review": "machine",
+  "x-source": "fc21ca6c11"
+ },
+ "sky.note.unplaced": "doel niet getekend (geen positie opgeslagen)",
+ "@sky.note.unplaced": {
+  "x-review": "machine",
+  "x-source": "2ba7ac0091"
+ },
+ "sky.open": "Openen ›",
+ "@sky.open": {
+  "x-review": "machine",
+  "x-source": "90fdccaabc"
+ },
+ "sky.pause": "Pauze",
+ "@sky.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
+ },
+ "sky.play": "Afspelen",
+ "@sky.play": {
+  "x-review": "machine",
+  "x-source": "436e61016e"
+ },
+ "sky.shown": "{n, number} planeten getoond",
+ "@sky.shown": {
+  "x-review": "machine",
+  "x-source": "2f879fe4d1"
+ },
+ "sky.sweep": "De laag van de setuhq-sweep: één groene stip per doorzochte ster-sector ({n, number} tot nu toe, posities van MAST), amber waar er een vermelding is in een klasse die in dit deel haar nultoets overschrijdt ({found, select, none {geen} other {{found}}}).",
+ "@sky.sweep": {
+  "x-review": "machine",
+  "x-source": "6df4812450"
+ },
+ "sky.sweep_more": "Alles wat zwakker wordt ›",
+ "@sky.sweep_more": {
+  "x-review": "machine",
+  "x-source": "a15059214f"
+ },
+ "sky.table": "Planeten per ontdekkingsmethode, stand {y}",
+ "@sky.table": {
+  "x-review": "machine",
+  "x-source": "b101c75a14"
+ },
  "sky.tl": "Planeten per jaar gevonden, per methode",
  "@sky.tl": {
   "x-review": "machine",
   "x-source": "10dff603f9"
+ },
+ "sky.tonly": "Alleen transits",
+ "@sky.tonly": {
+  "x-review": "machine",
+  "x-source": "24f8dea1d4"
+ },
+ "sky.tonly_note": " (alleen transits)",
+ "@sky.tonly_note": {
+  "x-review": "machine",
+  "x-source": "8e198c9572"
+ },
+ "sky.valuetext": "{y}: {n, number} planeten",
+ "@sky.valuetext": {
+  "x-review": "machine",
+  "x-source": "17dd24a14c"
+ },
+ "sky.year": "Jaar",
+ "@sky.year": {
+  "x-review": "machine",
+  "x-source": "89f6832560"
+ },
+ "sky.zoom": "Inzoomen op het systeem {planet} ›",
+ "@sky.zoom": {
+  "x-review": "machine",
+  "x-source": "7c9d17cb1f"
  },
  "st.figs": "Wat de detectoren zien",
  "@st.figs": {
@@ -2885,6 +3630,71 @@
  "@st.intro": {
   "x-review": "machine",
   "x-source": "7f59c8f0fc"
+ },
+ "status.known": "{planet} · bekende planeet",
+ "@status.known": {
+  "x-review": "machine",
+  "x-source": "f5b7664b3d"
+ },
+ "status.open_cand": "Open · kandidaat, onbevestigd",
+ "@status.open_cand": {
+  "x-review": "machine",
+  "x-source": "d4f9806249"
+ },
+ "status.open_flagged": "Open · gemarkeerd voor beoordeling",
+ "@status.open_flagged": {
+  "x-review": "machine",
+  "x-source": "17cedf349f"
+ },
+ "status.rejected": "Afgewezen door de vetting",
+ "@status.rejected": {
+  "x-review": "machine",
+  "x-source": "402f943e20"
+ },
+ "story.both_passed": "Beide Sentinels lieten hem passeren.",
+ "@story.both_passed": {
+  "x-review": "machine",
+  "x-source": "240e9f6e70"
+ },
+ "story.feed": "vermeldingen van {stars, plural, one {# andere ster} other {# andere sterren}} in de zoekfeed, {new, plural, =0 {passend bij bekende TOI's.} one {# op een nieuwe periode.} other {# op een nieuwe periode.}} Aanwijzingen om te beoordelen, geen planeten.",
+ "@story.feed": {
+  "x-review": "machine",
+  "x-source": "7a2c50f550"
+ },
+ "story.no_probe": "Geen enkele Probe markeerde hem.",
+ "@story.no_probe": {
+  "x-review": "machine",
+  "x-source": "181249a8c6"
+ },
+ "story.open": "{n, plural, one {dip nog open.} other {dips nog open.}}",
+ "@story.open": {
+  "x-review": "machine",
+  "x-source": "76a0fd06d3"
+ },
+ "story.panel": "AI-Sentinels en Probes lezen de lichtcurve van deze run; elke stem telt zo zwaar als hij scoorde op geplante testtransits.",
+ "@story.panel": {
+  "x-review": "machine",
+  "x-source": "ca695f248f"
+ },
+ "story.probes_saw": "De Probes zagen hem ({k} van {n}).",
+ "@story.probes_saw": {
+  "x-review": "machine",
+  "x-source": "595da333cb"
+ },
+ "story.recovered": "transits van {planet} gevonden zonder te weten waar te zoeken, elk ongeveer {min} minuten van het gepubliceerde tijdstip. Een bekende planeet, teruggevonden.",
+ "@story.recovered": {
+  "x-review": "machine",
+  "x-source": "9d8d1e5460"
+ },
+ "story.recovered_period": "dips op de periode van {planet}, een bekende planeet. Teruggevonden, niet ontdekt.",
+ "@story.recovered_period": {
+  "x-review": "machine",
+  "x-source": "7aa74cf44f"
+ },
+ "story.sentinels": "{k} van {n} Sentinels markeerden hem.",
+ "@story.sentinels": {
+  "x-review": "machine",
+  "x-source": "c6be0b2e6b"
  },
  "subnav.candidates": "Dossiers",
  "@subnav.candidates": {
@@ -2996,6 +3806,46 @@
   "x-review": "machine",
   "x-source": "e37b76fbec"
  },
+ "sweep.evidence": "Bekijk het bewijs ›",
+ "@sweep.evidence": {
+  "x-review": "machine",
+  "x-source": "17281a2fb3"
+ },
+ "sweep.line": "We hebben {n, number} sterren doorzocht op alles wat zwakker wordt; {k, plural, =0 {tot nu toe steekt niets boven het toeval uit} one {{list} steekt tot nu toe boven het toeval uit} other {{list} steken tot nu toe boven het toeval uit}}.",
+ "@sweep.line": {
+  "x-review": "machine",
+  "x-source": "2625a10311"
+ },
+ "tl.cap": "Planeten per ontdekkingsjaar, gestapeld naar de methode waarmee ze gevonden zijn.",
+ "@tl.cap": {
+  "x-review": "machine",
+  "x-source": "abe7e1b656"
+ },
+ "tl.hint": "Wijs een jaar aan, of focus de grafiek en gebruik de pijltjestoetsen.",
+ "@tl.hint": {
+  "x-review": "machine",
+  "x-source": "c0d70ad218"
+ },
+ "tl.noyear": "{n, number} records zonder jaar zijn niet getekend.",
+ "@tl.noyear": {
+  "x-review": "machine",
+  "x-source": "90f8af3261"
+ },
+ "tl.read": "{y}: {n, plural, one {# planeet} other {# planeten}}",
+ "@tl.read": {
+  "x-review": "machine",
+  "x-source": "7968ad0970"
+ },
+ "tl.table": "Planeten per jaar en methode",
+ "@tl.table": {
+  "x-review": "machine",
+  "x-source": "60ecd96d94"
+ },
+ "tl.table_link": "De aantallen per jaar en methode, als tabel ›",
+ "@tl.table_link": {
+  "x-review": "machine",
+  "x-source": "8d38020252"
+ },
  "tn.h1": "Waar TESS naar kijkt.",
  "@tn.h1": {
   "x-review": "machine",
@@ -3005,6 +3855,31 @@
  "@tn.intro": {
   "x-review": "machine",
   "x-source": "6cbf61a637"
+ },
+ "ts.hi": "Heetste ster, in kelvin",
+ "@ts.hi": {
+  "x-review": "machine",
+  "x-source": "8f287e3909"
+ },
+ "ts.lo": "Koelste ster, in kelvin",
+ "@ts.lo": {
+  "x-review": "machine",
+  "x-source": "ccde65937b"
+ },
+ "ts.src": "Sterkleur: een Planck-spectrum door de CIE 1931-kleurafstemmingsfuncties, in sRGB, genormaliseerd op het helderste kanaal (een tint, geen helderheid). Teff: de stellar.json van elke run (TESS Input Catalog v8.2, MAST); de zon 5772 K (nominale IAU-waarde 2015).",
+ "@ts.src": {
+  "x-review": "machine",
+  "x-source": "b9cdfdaa9f"
+ },
+ "ts.sun": "de zon",
+ "@ts.sun": {
+  "x-review": "machine",
+  "x-source": "c15630ef0d"
+ },
+ "ts.title": "Sterkleur van 2500 K tot 10.000 K, met elke ster gemarkeerd bij haar temperatuur",
+ "@ts.title": {
+  "x-review": "machine",
+  "x-source": "1fd7f02e9a"
  },
  "var.h1": "Alles wat dimt.",
  "@var.h1": {

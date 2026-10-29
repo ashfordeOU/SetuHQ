@@ -16,6 +16,11 @@
   "x-review": "machine",
   "x-source": "ca9826547d"
  },
+ "cat.not_ours": "SetuHQ upptäckte inte de här planeterna.",
+ "@cat.not_ours": {
+  "x-review": "machine",
+  "x-source": "759a661951"
+ },
  "cf.h1": "Varje signal, dess dippar och kontrollerna bakom varje utlåtande.",
  "@cf.h1": {
   "x-review": "machine",
@@ -25,6 +30,11 @@
  "@cf.intro": {
   "x-review": "machine",
   "x-source": "252d456e94"
+ },
+ "cf.link": "Ärendeakt ›",
+ "@cf.link": {
+  "x-review": "machine",
+  "x-source": "ceac0b11e3"
  },
  "chapter.astrometry": "Astrometri",
  "@chapter.astrometry": {
@@ -1121,6 +1131,36 @@
   "x-review": "machine",
   "x-source": "6828f69f91"
  },
+ "cov.bulge": "Mikrolinsning i bulgen",
+ "@cov.bulge": {
+  "x-review": "machine",
+  "x-source": "bd05242cca"
+ },
+ "cov.corot": "CoRoT-zoner",
+ "@cov.corot": {
+  "x-review": "machine",
+  "x-source": "41d07bad32"
+ },
+ "cov.k2": "K2-kampanjer",
+ "@cov.k2": {
+  "x-review": "machine",
+  "x-source": "848c24db6a"
+ },
+ "cov.kepler": "Keplerfältet",
+ "@cov.kepler": {
+  "x-review": "machine",
+  "x-source": "147a21f59a"
+ },
+ "cov.tess": "TESS-sektorer",
+ "@cov.tess": {
+  "x-review": "machine",
+  "x-source": "c63d55d777"
+ },
+ "cov.unmapped": "Ej täckt av transitkartläggningar",
+ "@cov.unmapped": {
+  "x-review": "machine",
+  "x-source": "261bc97dee"
+ },
  "desc.catalogue": "Varje planet i exoplanet.eu, sökbar och sorterbar, var och en med egen sida. SetuHQ har inte upptäckt dessa planeter.",
  "@desc.catalogue": {
   "x-review": "machine",
@@ -1251,6 +1291,26 @@
   "x-review": "machine",
   "x-source": "20cd938a2e"
  },
+ "dips.cand": "{n, plural, one {# kandidat} other {# kandidater}}",
+ "@dips.cand": {
+  "x-review": "machine",
+  "x-source": "0ff385febf"
+ },
+ "dips.flag": "{n, plural, one {# flaggad} other {# flaggade}}",
+ "@dips.flag": {
+  "x-review": "machine",
+  "x-source": "1d74535739"
+ },
+ "dips.n": "{n, plural, one {# dipp} other {# dippar}}",
+ "@dips.n": {
+  "x-review": "machine",
+  "x-source": "d34249d767"
+ },
+ "dips.rej": "{n, plural, one {# avvisad} other {# avvisade}}",
+ "@dips.rej": {
+  "x-review": "machine",
+  "x-source": "9fdbc5d13a"
+ },
  "docs.contribute": "Bidra med ett svep",
  "@docs.contribute": {
   "x-review": "machine",
@@ -1356,6 +1416,11 @@
   "x-review": "machine",
   "x-source": "3159020543"
  },
+ "docs.runfiles": "<a href=\"{report}\">körningsrapporten</a>, <a href=\"{plates}\">planscherna</a> och <a href=\"{cf}\">ärendeakten</a> för körning {run}.",
+ "@docs.runfiles": {
+  "x-review": "machine",
+  "x-source": "065db1dbf8"
+ },
  "docs.start": "Kom igång",
  "@docs.start": {
   "x-review": "machine",
@@ -1406,6 +1471,56 @@
   "x-review": "machine",
   "x-source": "96432c834d"
  },
+ "fold.a": "Ovikt: i tidsordning",
+ "@fold.a": {
+  "x-review": "machine",
+  "x-source": "ca7c3036c1"
+ },
+ "fold.b": "Vikt på perioden {p} dagar",
+ "@fold.b": {
+  "x-review": "machine",
+  "x-source": "92616c60e0"
+ },
+ "fold.fold": "Vik på perioden",
+ "@fold.fold": {
+  "x-review": "machine",
+  "x-source": "4458109b7d"
+ },
+ "fold.folded": "<b>Vikt</b> på perioden {p} dagar",
+ "@fold.folded": {
+  "x-review": "machine",
+  "x-source": "4ed8a2a718"
+ },
+ "fold.said": "Vikt på {p} dagar: dippen syns vid noll timmar.",
+ "@fold.said": {
+  "x-review": "machine",
+  "x-source": "c0920801da"
+ },
+ "fold.said_time": "I tidsordning: varje transit är en handfull punkter bland de andra.",
+ "@fold.said_time": {
+  "x-review": "machine",
+  "x-source": "a90b68372c"
+ },
+ "fold.short": "{n, number} punkter vikta på {p} d: en dipp på {depth} ppm och {t14} h. Källa: {run}.",
+ "@fold.short": {
+  "x-review": "machine",
+  "x-source": "8958c78471"
+ },
+ "fold.source": "Källa: {s}",
+ "@fold.source": {
+  "x-review": "machine",
+  "x-source": "7015dd2710"
+ },
+ "fold.unfold": "Tillbaka till tiden",
+ "@fold.unfold": {
+  "x-review": "machine",
+  "x-source": "73824685c9"
+ },
+ "fold.unfolded": "<b>Ovikt</b> · {d} dagar i tidsordning",
+ "@fold.unfolded": {
+  "x-review": "machine",
+  "x-source": "5fc4a52069"
+ },
  "footer.all_chapters": "Alla {n} kapitel",
  "@footer.all_chapters": {
   "x-review": "machine",
@@ -1441,6 +1556,31 @@
   "x-review": "machine",
   "x-source": "bf046c7395"
  },
+ "gal.example": "Exempelkörning",
+ "@gal.example": {
+  "x-review": "machine",
+  "x-source": "ed62203839"
+ },
+ "gal.noart": "Ingen kandidat får någon planetbild.",
+ "@gal.noart": {
+  "x-review": "machine",
+  "x-source": "9d55cea042"
+ },
+ "gal.note": "Varje scen: stjärnans skiva i dess svartkroppsfärg vid den Teff som körningen lagrar, och det körningen mätte som en skugga vid sitt anpassade Rp/R★ (en planet som körningen missade är en streckad kontur). Storlekarna är skalenliga mot skivan; var var och en sitter på den är illustrativt.",
+ "@gal.note": {
+  "x-review": "machine",
+  "x-source": "bbb017f062"
+ },
+ "gal.sectors": "{mission} {n, plural, one {sektor} other {sektorer}} {list}",
+ "@gal.sectors": {
+  "x-review": "machine",
+  "x-source": "737f03f940"
+ },
+ "gal.stages": "Scener: {s}.",
+ "@gal.stages": {
+  "x-review": "machine",
+  "x-source": "b469db30f4"
+ },
  "gx.h1": "Varje känd exoplanet,",
  "@gx.h1": {
   "x-review": "machine",
@@ -1455,6 +1595,21 @@
  "@gx.intro": {
   "x-review": "machine",
   "x-source": "b60778b897"
+ },
+ "hero.disc": "Stjärnskivan hos {star} har sin svartkroppsfärg; planeten är en konstnärlig tolkning ({look}).",
+ "@hero.disc": {
+  "x-review": "machine",
+  "x-source": "f391f5d10f"
+ },
+ "hero.model": "Modell från lagrade värden.",
+ "@hero.model": {
+  "x-review": "machine",
+  "x-source": "761a8963d7"
+ },
+ "hero.pause": "Paus",
+ "@hero.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
  },
  "hint.dismiss": "Stäng tipset: {h}",
  "@hint.dismiss": {
@@ -1691,6 +1846,11 @@
   "x-review": "machine",
   "x-source": "04e504e9e8"
  },
+ "home.proof": "Vad referenskörningen visar",
+ "@home.proof": {
+  "x-review": "machine",
+  "x-source": "d58bf9bb5f"
+ },
  "home.refcheck": "Referenskontrollen: {planet}, en känd planet, återfunnen i körning {run}",
  "@home.refcheck": {
   "x-review": "machine",
@@ -1826,6 +1986,156 @@
   "x-review": "machine",
   "x-source": "272d460db4"
  },
+ "learn.again": "Börja om från steg 1",
+ "@learn.again": {
+  "x-review": "machine",
+  "x-source": "1b91302a8f"
+ },
+ "learn.all": "Alla {n} steg",
+ "@learn.all": {
+  "x-review": "machine",
+  "x-source": "e15530dfee"
+ },
+ "learn.back": "‹ Tillbaka",
+ "@learn.back": {
+  "x-review": "machine",
+  "x-source": "9c47d2b08c"
+ },
+ "learn.cleared": "Framstegen på lärstigen har rensats.",
+ "@learn.cleared": {
+  "x-review": "machine",
+  "x-source": "8b76618ea1"
+ },
+ "learn.complete": " · stigen klar",
+ "@learn.complete": {
+  "x-review": "machine",
+  "x-source": "d1a143524c"
+ },
+ "learn.continue": "Fortsätt: {step}",
+ "@learn.continue": {
+  "x-review": "machine",
+  "x-source": "859ee5370f"
+ },
+ "learn.count": "{k} av {n} besökta",
+ "@learn.count": {
+  "x-review": "machine",
+  "x-source": "5475c68b5f"
+ },
+ "learn.finish": "Avsluta ›",
+ "@learn.finish": {
+  "x-review": "machine",
+  "x-source": "d7473131de"
+ },
+ "learn.finish_label": "Avsluta stigen",
+ "@learn.finish_label": {
+  "x-review": "machine",
+  "x-source": "b841a0b2c4"
+ },
+ "learn.h": "Lärstig",
+ "@learn.h": {
+  "x-review": "machine",
+  "x-source": "7f9d3aa634"
+ },
+ "learn.intro": "{n} steg, från hur en kartläggning fungerar till varje känd exoplanet. Frivilligt: följ ordningen eller hoppa runt; varje sida du öppnar räknas. Framstegen stannar i den här webbläsaren.",
+ "@learn.intro": {
+  "x-review": "machine",
+  "x-source": "b22e135d6a"
+ },
+ "learn.kind.catalogue": "Katalog",
+ "@learn.kind.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "learn.kind.ch": "Metodkapitel",
+ "@learn.kind.ch": {
+  "x-review": "machine",
+  "x-source": "8cb87af4b5"
+ },
+ "learn.kind.galaxy": "Vintergatan",
+ "@learn.kind.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "learn.kind.run": "SetuHQ:s körning",
+ "@learn.kind.run": {
+  "x-review": "machine",
+  "x-source": "12eeea4754"
+ },
+ "learn.leave": "Lämna",
+ "@learn.leave": {
+  "x-review": "machine",
+  "x-source": "fc6e4a408d"
+ },
+ "learn.leave_label": "Lämna stigen",
+ "@learn.leave_label": {
+  "x-review": "machine",
+  "x-source": "49324ad9ff"
+ },
+ "learn.left": "Du har lämnat lärstigen. Dina framsteg sparas.",
+ "@learn.left": {
+  "x-review": "machine",
+  "x-source": "9ef4f1079c"
+ },
+ "learn.next": "Nästa",
+ "@learn.next": {
+  "x-review": "machine",
+  "x-source": "1ff57a29d7"
+ },
+ "learn.next_btn": "Nästa ›",
+ "@learn.next_btn": {
+  "x-review": "machine",
+  "x-source": "868d16703d"
+ },
+ "learn.next_label": "Nästa: {step}",
+ "@learn.next_label": {
+  "x-review": "machine",
+  "x-source": "19282226b1"
+ },
+ "learn.pos": "{i} av {n}",
+ "@learn.pos": {
+  "x-review": "machine",
+  "x-source": "2eb6f9a3c3"
+ },
+ "learn.progress": "Framsteg på lärstigen",
+ "@learn.progress": {
+  "x-review": "machine",
+  "x-source": "0e0d6f67aa"
+ },
+ "learn.reset": "Nollställ framstegen",
+ "@learn.reset": {
+  "x-review": "machine",
+  "x-source": "0b026c02ba"
+ },
+ "learn.seen": ", besökt",
+ "@learn.seen": {
+  "x-review": "machine",
+  "x-source": "bd1c8d37d4"
+ },
+ "learn.start": "Börja stigen",
+ "@learn.start": {
+  "x-review": "machine",
+  "x-source": "43f89ceb20"
+ },
+ "learn.step.catalogue": "Varje post, sökbar",
+ "@learn.step.catalogue": {
+  "x-review": "machine",
+  "x-source": "b6e0434eab"
+ },
+ "learn.step.galaxy": "Varje känd exoplanet, runt solen",
+ "@learn.step.galaxy": {
+  "x-review": "machine",
+  "x-source": "633c7d2992"
+ },
+ "learn.step.transit": "SetuHQ:s egen transit: ärendeakten",
+ "@learn.step.transit": {
+  "x-review": "machine",
+  "x-source": "e521fd3e8b"
+ },
+ "learn.unseen": ", inte besökt än",
+ "@learn.unseen": {
+  "x-review": "machine",
+  "x-source": "a9473125f4"
+ },
  "limits.art": "Ingen observation: ett utseende valt efter uppmätt radie och instrålning.",
  "@limits.art": {
   "x-review": "machine",
@@ -1865,6 +2175,26 @@
  "@limits.summary": {
   "x-review": "machine",
   "x-source": "ecbcc39e74"
+ },
+ "lu.cap": "Skalenligt: en jordradie är lika bred längs hela raden, så {big} är {x} gånger så bred som {small}. Varje bild är en konstnärlig tolkning vald efter den uppmätta radien och den beräknade instrålningen; sammansättningen är inte uppmätt. Jorden, Neptunus och Jupiter är referenserna från solsystemet (bara jorden är ritad med hav). Radier: {src} (1 RJ = 11,209 R⊕).",
+ "@lu.cap": {
+  "x-review": "machine",
+  "x-source": "3cdd1c02b9"
+ },
+ "lu.earth": "jorden",
+ "@lu.earth": {
+  "x-review": "machine",
+  "x-source": "b7c9b5ccd3"
+ },
+ "lu.jupiter": "Jupiter",
+ "@lu.jupiter": {
+  "x-review": "machine",
+  "x-source": "27ce2df068"
+ },
+ "lu.neptune": "Neptunus",
+ "@lu.neptune": {
+  "x-review": "machine",
+  "x-source": "d98d070c39"
  },
  "mc.intro": "Välj en stjärna i valfri ruta; varje ruta och varje utbrutet fönster följer med.",
  "@mc.intro": {
@@ -2026,6 +2356,41 @@
   "x-review": "machine",
   "x-source": "645c79cc54"
  },
+ "method.astrometry": "astrometri",
+ "@method.astrometry": {
+  "x-review": "machine",
+  "x-source": "ec74d70d9e"
+ },
+ "method.imaging": "direkt avbildning",
+ "@method.imaging": {
+  "x-review": "machine",
+  "x-source": "f6e9cec92c"
+ },
+ "method.microlensing": "mikrolinsning",
+ "@method.microlensing": {
+  "x-review": "machine",
+  "x-source": "8f7b755044"
+ },
+ "method.other": "övrigt",
+ "@method.other": {
+  "x-review": "machine",
+  "x-source": "d9298a10d1"
+ },
+ "method.rv": "radialhastighet",
+ "@method.rv": {
+  "x-review": "machine",
+  "x-source": "0ec51a755a"
+ },
+ "method.timing": "tidsmätning",
+ "@method.timing": {
+  "x-review": "machine",
+  "x-source": "f6cfb8c3f1"
+ },
+ "method.transit": "transit",
+ "@method.transit": {
+  "x-review": "machine",
+  "x-source": "068b7e6c97"
+ },
  "methods.chapter_n": "Kapitel {i} av {n}",
  "@methods.chapter_n": {
   "x-review": "machine",
@@ -2055,6 +2420,31 @@
  "@methods.sources": {
   "x-review": "machine",
   "x-source": "caf85b0888"
+ },
+ "mx.from": "Källa",
+ "@mx.from": {
+  "x-review": "machine",
+  "x-source": "2181976934"
+ },
+ "mx.numbers": "Siffror i det här kapitlet",
+ "@mx.numbers": {
+  "x-review": "machine",
+  "x-source": "2d0a4d13b4"
+ },
+ "mx.quantity": "Storhet",
+ "@mx.quantity": {
+  "x-review": "machine",
+  "x-source": "822bab8d41"
+ },
+ "mx.speed": "Hastighet",
+ "@mx.speed": {
+  "x-review": "machine",
+  "x-source": "c372fee9b4"
+ },
+ "mx.value": "Värde",
+ "@mx.value": {
+  "x-review": "machine",
+  "x-source": "8e37953d23"
  },
  "nav.candidates": "Kandidater",
  "@nav.candidates": {
@@ -2401,6 +2791,11 @@
   "x-review": "machine",
   "x-source": "5dce100851"
  },
+ "panel.probes_sentinels": "Probes och Sentinels",
+ "@panel.probes_sentinels": {
+  "x-review": "machine",
+  "x-source": "300c2fe632"
+ },
  "panel.sentinels": "{s, plural, one {# Sentinel} other {# Sentinels}}",
  "@panel.sentinels": {
   "x-review": "machine",
@@ -2461,6 +2856,31 @@
   "x-review": "machine",
   "x-source": "5bf530d59d"
  },
+ "pr.col.marked": "Markerade den här dippen",
+ "@pr.col.marked": {
+  "x-review": "machine",
+  "x-source": "4a7a39ecf8"
+ },
+ "pr.col.provider": "Leverantör",
+ "@pr.col.provider": {
+  "x-review": "machine",
+  "x-source": "472590ae97"
+ },
+ "pr.col.reviewer": "Granskare",
+ "@pr.col.reviewer": {
+  "x-review": "machine",
+  "x-source": "d29f46772c"
+ },
+ "pr.col.role": "Roll",
+ "@pr.col.role": {
+  "x-review": "machine",
+  "x-source": "14736a2eb9"
+ },
+ "pr.col.weight": "Kalibrerad vikt",
+ "@pr.col.weight": {
+  "x-review": "machine",
+  "x-source": "2ff00b5847"
+ },
  "pr.h1": "Förbered ett CHEOPS-förslag.",
  "@pr.h1": {
   "x-review": "machine",
@@ -2470,6 +2890,56 @@
  "@pr.intro": {
   "x-review": "machine",
   "x-source": "6893d1fea2"
+ },
+ "pr.marked": "{k} av {n} markerade den · panelpoäng {score}, som lagrad",
+ "@pr.marked": {
+  "x-review": "machine",
+  "x-source": "59b2d88d9f"
+ },
+ "pr.marked_none": "{k} av {n} markerade den · panelpoäng inte lagrad",
+ "@pr.marked_none": {
+  "x-review": "machine",
+  "x-source": "6a75119056"
+ },
+ "pr.no": "nej",
+ "@pr.no": {
+  "x-review": "machine",
+  "x-source": "9390298f3f"
+ },
+ "pr.reviewers": "granskare",
+ "@pr.reviewers": {
+  "x-review": "machine",
+  "x-source": "f49dd73f5c"
+ },
+ "pr.score": "panelpoäng",
+ "@pr.score": {
+  "x-review": "machine",
+  "x-source": "cf91ab41dd"
+ },
+ "pr.score_none": "poäng inte lagrad",
+ "@pr.score_none": {
+  "x-review": "machine",
+  "x-source": "4ac231ea2a"
+ },
+ "pr.table": "Markeringarna och vikterna som tabell",
+ "@pr.table": {
+  "x-review": "machine",
+  "x-source": "7cf41c5c1b"
+ },
+ "pr.what.dip": "Varje granskares lagrade markering för den här dippen (heldragen linje: markerade dippen; streckad: ingen markering), var och en skalad efter sin kalibrerade vikt; ringen fylls till panelpoängen som körningen lagrade den.",
+ "@pr.what.dip": {
+  "x-review": "machine",
+  "x-source": "31dfe96fd5"
+ },
+ "pr.what.panel": "Varje granskare i panelen, skalad efter sin kalibrerade vikt; ingen dipp är vald, så ingen poäng ritas.",
+ "@pr.what.panel": {
+  "x-review": "machine",
+  "x-source": "881c9d4eaf"
+ },
+ "pr.yes": "ja",
+ "@pr.yes": {
+  "x-review": "machine",
+  "x-source": "8a798890fe"
  },
  "route.candidates.label": "Ärendeakt",
  "@route.candidates.label": {
@@ -2741,6 +3211,26 @@
   "x-review": "machine",
   "x-source": "9889e603bf"
  },
+ "run.casefile": "Körningens ärendeakt ›",
+ "@run.casefile": {
+  "x-review": "machine",
+  "x-source": "44cc301e33"
+ },
+ "run.plates": "Planscher ›",
+ "@run.plates": {
+  "x-review": "machine",
+  "x-source": "3a05204bd6"
+ },
+ "run.report": "Körningsrapport ›",
+ "@run.report": {
+  "x-review": "machine",
+  "x-source": "3f0278c3ff"
+ },
+ "run.sectors": "Körning {run}, TESS-{n, plural, one {sektor} other {sektorer}} {list}.",
+ "@run.sectors": {
+  "x-review": "machine",
+  "x-source": "cdff019405"
+ },
  "runs.h1": "Varje sökkörning, dess fel som de lagrades, och konfigurationen bakom de här sidorna.",
  "@runs.h1": {
   "x-review": "machine",
@@ -2765,6 +3255,21 @@
  "@sd.intro": {
   "x-review": "machine",
   "x-source": "d9fdd750e3"
+ },
+ "search.hint": "↑ ↓ för att flytta · Enter för att öppna · Esc för att stänga",
+ "@search.hint": {
+  "x-review": "machine",
+  "x-source": "4fefe7c452"
+ },
+ "search.placeholder": "Sök planeter, stjärnor, sidor",
+ "@search.placeholder": {
+  "x-review": "machine",
+  "x-source": "28a6ead8a4"
+ },
+ "search.results": "Resultat",
+ "@search.results": {
+  "x-review": "machine",
+  "x-source": "219c4a6c86"
  },
  "sen.h1": "{n, plural, one {# granskare.} other {# granskare.}}",
  "@sen.h1": {
@@ -2866,10 +3371,250 @@
   "x-review": "machine",
   "x-source": "5fb2ec761c"
  },
+ "showcase.tess-hd-15337-s4.caveat": "Hittade 1 av b:s 5 transiter och båda c:s; ingen publicerad period återfanns (BLS-perioden för de dipparna är inte planetens).",
+ "@showcase.tess-hd-15337-s4.caveat": {
+  "x-review": "machine",
+  "x-source": "492b8ee5d0"
+ },
+ "showcase.tess-hd-15337-s4.kind": "Små planeter nära gränsen",
+ "@showcase.tess-hd-15337-s4.kind": {
+  "x-review": "machine",
+  "x-source": "decd7f2886"
+ },
+ "showcase.tess-hd-15337-s4.outcome": "HD 15337 b: 1 av 5 transiter (1 kandidat; BLS-perioden inte planetens); HD 15337 c: 2 av 2 transiter (1 kandidat, 1 flaggad; BLS-perioden inte planetens).",
+ "@showcase.tess-hd-15337-s4.outcome": {
+  "x-review": "machine",
+  "x-source": "e894ab72ac"
+ },
+ "showcase.tess-hd-15337-s4.summary": "En ljusstark K-dvärg med två små kända planeter: b (cirka 1,6 jordradier, 4,8 dagar, ungefär 350 ppm djup) och c (17,2 dagar).",
+ "@showcase.tess-hd-15337-s4.summary": {
+  "x-review": "machine",
+  "x-source": "edc1d3e217"
+ },
+ "showcase.tess-hd-15337-s4.why": "En liten planet vars enstaka transiter ligger nära bruset i en sektor: den visar vad panelen och vettingen gör vid gränsen för vad en sökning i 10-minuterslådor kan se, och sidan säger vad som missades.",
+ "@showcase.tess-hd-15337-s4.why": {
+  "x-review": "machine",
+  "x-source": "97542c5ae2"
+ },
+ "showcase.tess-pi-men-s1.kind": "Referenskontroll",
+ "@showcase.tess-pi-men-s1.kind": {
+  "x-review": "machine",
+  "x-source": "70fa5c4aa7"
+ },
+ "showcase.tess-pi-men-s1.outcome": "Rp/R★ och T14 inom 5 % av Huang et al. 2018 (docs/results/pi_men_validation.md).",
+ "@showcase.tess-pi-men-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "c09fef04d0"
+ },
+ "showcase.tess-pi-men-s1.summary": "En solliknande stjärna med en superjord i en bana på 6,3 dagar: körningen fullständigt jämförd med Huang et al. 2018.",
+ "@showcase.tess-pi-men-s1.summary": {
+  "x-review": "machine",
+  "x-source": "27c4facb20"
+ },
+ "showcase.tess-pi-men-s1.why": "Referenskontrollen: den enda körningen med både Sentinels och Probes, dess anpassning med randfördunkling jämförd med upptäcktsartikeln i docs/results/pi_men_validation.md.",
+ "@showcase.tess-pi-men-s1.why": {
+  "x-review": "machine",
+  "x-source": "ae1c536ddb"
+ },
+ "showcase.tess-toi-236-s2.kind": "Känd falsk positiv",
+ "@showcase.tess-toi-236-s2.kind": {
+  "x-review": "machine",
+  "x-source": "e01d094660"
+ },
+ "showcase.tess-toi-236-s2.outcome": "Fångad: alla 6 dippar på TOI-efemeriden avvisades av vettingen (secondary_any_phase, secondary_eclipse), så ingen är en kandidat.",
+ "@showcase.tess-toi-236-s2.outcome": {
+  "x-review": "machine",
+  "x-source": "d59f7be2fe"
+ },
+ "showcase.tess-toi-236-s2.summary": "Ett TESS Object of Interest som TOI-tabellen klassar som falsk positiv (FP): en dipp på 2,4 % var 4,5:e dag.",
+ "@showcase.tess-toi-236-s2.summary": {
+  "x-review": "machine",
+  "x-source": "35157a3066"
+ },
+ "showcase.tess-toi-236-s2.why": "Ett test som SetuHQ måste misslyckas med: TOI-236.01 ingår i den falskt positiva mängden i riktmärket med riktiga TOI. Sidan säger vad vettingen gjorde med den, vad det än blev.",
+ "@showcase.tess-toi-236-s2.why": {
+  "x-review": "machine",
+  "x-source": "50637bce9d"
+ },
+ "showcase.tess-toi-270-s5.caveat": "Hittade alla 5 av c:s transiter och båda d:s; b hittades inte; d sågs två gånger, ingen period (en transit per 13-dagarsbit av ljuskurvan).",
+ "@showcase.tess-toi-270-s5.caveat": {
+  "x-review": "machine",
+  "x-source": "09f285b361"
+ },
+ "showcase.tess-toi-270-s5.kind": "Flerplanetssystem",
+ "@showcase.tess-toi-270-s5.kind": {
+  "x-review": "machine",
+  "x-source": "7e5f73c9ed"
+ },
+ "showcase.tess-toi-270-s5.outcome": "TOI-270 b: ingen av 6 transiter; TOI-270 c: 5 av 5 transiter (5 kandidater); TOI-270 d: 2 av 2 transiter (2 flaggade; ingen period).",
+ "@showcase.tess-toi-270-s5.outcome": {
+  "x-review": "machine",
+  "x-source": "64bc9f9e61"
+ },
+ "showcase.tess-toi-270-s5.summary": "En M-dvärg med tre kända transiterande planeter på 3,4, 5,7 och 11,4 dagar: flera perioder i en stjärna.",
+ "@showcase.tess-toi-270-s5.summary": {
+  "x-review": "machine",
+  "x-source": "3f5bb74bc0"
+ },
+ "showcase.tess-toi-270-s5.why": "En ljuskurva, tre perioder. Den visar vad sökningen gör när en stjärna har fler än en planet, och vilka av dem en 13-dagarsbit kan rymma.",
+ "@showcase.tess-toi-270-s5.why": {
+  "x-review": "machine",
+  "x-source": "a6cb0e9faa"
+ },
+ "showcase.tess-wasp-126-s1.kind": "Het Jupiter",
+ "@showcase.tess-wasp-126-s1.kind": {
+  "x-review": "machine",
+  "x-source": "f55d3631cf"
+ },
+ "showcase.tess-wasp-126-s1.outcome": "WASP-126 b: 8 av 8 transiter (8 kandidater).",
+ "@showcase.tess-wasp-126-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "60440caba1"
+ },
+ "showcase.tess-wasp-126-s1.summary": "En planet stor som Jupiter i en bana på 3,3 dagar: djupa, lätta transiter i TESS södra kontinuerliga observationszon.",
+ "@showcase.tess-wasp-126-s1.summary": {
+  "x-review": "machine",
+  "x-source": "55d843f795"
+ },
+ "showcase.tess-wasp-126-s1.why": "Det lätta fallet: en transit på cirka 0,6 % djup som varje sökning borde hitta, och som visar hela vägen från ljuskurva till anpassning med lite tvivel om signalen.",
+ "@showcase.tess-wasp-126-s1.why": {
+  "x-review": "machine",
+  "x-source": "9768c89800"
+ },
+ "sky.all": "Alla",
+ "@sky.all": {
+  "x-review": "machine",
+  "x-source": "a52ace420f"
+ },
+ "sky.cap": "Varje prick är en katalogiserad planet vid sin värdstjärnas position (RA och Dec, J2000), färgad efter metoden som hittade den, och syns från sitt upptäcktsår.",
+ "@sky.cap": {
+  "x-review": "machine",
+  "x-source": "f6c3623c32"
+ },
+ "sky.col.method": "Metod",
+ "@sky.col.method": {
+  "x-review": "machine",
+  "x-source": "52a0f9b65b"
+ },
+ "sky.col.planets": "Planeter",
+ "@sky.col.planets": {
+  "x-review": "machine",
+  "x-source": "c06c7c6bbd"
+ },
+ "sky.cov": "Kartläggningarnas täckning: TESS har observerat {tess} % av himlen (sektor 1–{last}); {unm} % har aldrig legat i TESS, Keplers eller K2:s synfält. Skuggningen visar var kartläggningarna tittade, inte var planeterna finns.",
+ "@sky.cov": {
+  "x-review": "machine",
+  "x-source": "7880d28ec6"
+ },
+ "sky.cov_label": "Kartläggningarnas täckning",
+ "@sky.cov_label": {
+  "x-review": "machine",
+  "x-source": "67b9a456c5"
+ },
+ "sky.cov_more": "Siffror och källor i Vintergatan ›",
+ "@sky.cov_more": {
+  "x-review": "machine",
+  "x-source": "50afd0241b"
+ },
+ "sky.lc": "Körningens ljuskurva",
+ "@sky.lc": {
+  "x-review": "machine",
+  "x-source": "f6ebbca8e7"
+ },
+ "sky.legend": "Upptäcktsmetod",
+ "@sky.legend": {
+  "x-review": "machine",
+  "x-source": "7f31ff7ee3"
+ },
+ "sky.nojs": "Den här stillbilden visar {k, number} av dem (var {step}:e); hela kartan ritas när sidans skript körs.",
+ "@sky.nojs": {
+  "x-review": "machine",
+  "x-source": "f5717a638d"
+ },
+ "sky.note.ecl": "streckad: ekliptikan",
+ "@sky.note.ecl": {
+  "x-review": "machine",
+  "x-source": "a57d25f4fc"
+ },
+ "sky.note.feed": "Flödets stjärnor inte utritade (positioner inte lagrade)",
+ "@sky.note.feed": {
+  "x-review": "machine",
+  "x-source": "5d62afd4b7"
+ },
+ "sky.note.placed": "{star} placerad enligt SIMBAD (ICRS J2000)",
+ "@sky.note.placed": {
+  "x-review": "machine",
+  "x-source": "fc21ca6c11"
+ },
+ "sky.note.unplaced": "målet inte utritat (ingen position lagrad)",
+ "@sky.note.unplaced": {
+  "x-review": "machine",
+  "x-source": "2ba7ac0091"
+ },
+ "sky.open": "Öppna ›",
+ "@sky.open": {
+  "x-review": "machine",
+  "x-source": "90fdccaabc"
+ },
+ "sky.pause": "Paus",
+ "@sky.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
+ },
+ "sky.play": "Spela",
+ "@sky.play": {
+  "x-review": "machine",
+  "x-source": "436e61016e"
+ },
+ "sky.shown": "{n, number} planeter visas",
+ "@sky.shown": {
+  "x-review": "machine",
+  "x-source": "2f879fe4d1"
+ },
+ "sky.sweep": "Lagret för setuhq-svepet: en grön prick per stjärnsektor som svepet sökte igenom ({n, number} hittills, positioner från MAST), bärnstensfärgad där den har en post i en klass som överskrider sitt nolltest i det här utsnittet ({found, select, none {ingen} other {{found}}}).",
+ "@sky.sweep": {
+  "x-review": "machine",
+  "x-source": "6df4812450"
+ },
+ "sky.sweep_more": "Allt som mörknar ›",
+ "@sky.sweep_more": {
+  "x-review": "machine",
+  "x-source": "a15059214f"
+ },
+ "sky.table": "Planeter per upptäcktsmetod, per {y}",
+ "@sky.table": {
+  "x-review": "machine",
+  "x-source": "b101c75a14"
+ },
  "sky.tl": "Planeter hittade varje år, efter metod",
  "@sky.tl": {
   "x-review": "machine",
   "x-source": "10dff603f9"
+ },
+ "sky.tonly": "Bara transiter",
+ "@sky.tonly": {
+  "x-review": "machine",
+  "x-source": "24f8dea1d4"
+ },
+ "sky.tonly_note": " (bara transiter)",
+ "@sky.tonly_note": {
+  "x-review": "machine",
+  "x-source": "8e198c9572"
+ },
+ "sky.valuetext": "{y}: {n, number} planeter",
+ "@sky.valuetext": {
+  "x-review": "machine",
+  "x-source": "17dd24a14c"
+ },
+ "sky.year": "År",
+ "@sky.year": {
+  "x-review": "machine",
+  "x-source": "89f6832560"
+ },
+ "sky.zoom": "Zooma in på systemet {planet} ›",
+ "@sky.zoom": {
+  "x-review": "machine",
+  "x-source": "7c9d17cb1f"
  },
  "st.figs": "Vad detektorerna ser",
  "@st.figs": {
@@ -2885,6 +3630,71 @@
  "@st.intro": {
   "x-review": "machine",
   "x-source": "7f59c8f0fc"
+ },
+ "status.known": "{planet} · känd planet",
+ "@status.known": {
+  "x-review": "machine",
+  "x-source": "f5b7664b3d"
+ },
+ "status.open_cand": "Öppen · kandidat, obekräftad",
+ "@status.open_cand": {
+  "x-review": "machine",
+  "x-source": "d4f9806249"
+ },
+ "status.open_flagged": "Öppen · flaggad för granskning",
+ "@status.open_flagged": {
+  "x-review": "machine",
+  "x-source": "17cedf349f"
+ },
+ "status.rejected": "Avvisad av vettingen",
+ "@status.rejected": {
+  "x-review": "machine",
+  "x-source": "402f943e20"
+ },
+ "story.both_passed": "Båda Sentinels lät den passera.",
+ "@story.both_passed": {
+  "x-review": "machine",
+  "x-source": "240e9f6e70"
+ },
+ "story.feed": "poster från {stars, plural, one {# stjärna till} other {# stjärnor till}} i sökflödet, {new, plural, =0 {som stämmer med kända TOI.} one {# vid en ny period.} other {# vid en ny period.}} Spår att granska, inte planeter.",
+ "@story.feed": {
+  "x-review": "machine",
+  "x-source": "7a2c50f550"
+ },
+ "story.no_probe": "Ingen Probe markerade den.",
+ "@story.no_probe": {
+  "x-review": "machine",
+  "x-source": "181249a8c6"
+ },
+ "story.open": "{n, plural, one {dipp fortfarande öppen.} other {dippar fortfarande öppna.}}",
+ "@story.open": {
+  "x-review": "machine",
+  "x-source": "76a0fd06d3"
+ },
+ "story.panel": "AI-Sentinels och Probes läser den här körningens ljuskurva; varje röst väger så mycket som den fick på inplanterade testtransiter.",
+ "@story.panel": {
+  "x-review": "machine",
+  "x-source": "ca695f248f"
+ },
+ "story.probes_saw": "Probes såg den ({k} av {n}).",
+ "@story.probes_saw": {
+  "x-review": "machine",
+  "x-source": "595da333cb"
+ },
+ "story.recovered": "transiter för {planet} hittade utan besked om var man skulle leta, var och en cirka {min} minuter från sin publicerade tidpunkt. En känd planet, återfunnen.",
+ "@story.recovered": {
+  "x-review": "machine",
+  "x-source": "9d8d1e5460"
+ },
+ "story.recovered_period": "dippar på perioden för {planet}, en känd planet. Återfunnen, inte upptäckt.",
+ "@story.recovered_period": {
+  "x-review": "machine",
+  "x-source": "7aa74cf44f"
+ },
+ "story.sentinels": "{k} av {n} Sentinels markerade den.",
+ "@story.sentinels": {
+  "x-review": "machine",
+  "x-source": "c6be0b2e6b"
  },
  "subnav.candidates": "Ärendeakter",
  "@subnav.candidates": {
@@ -2996,6 +3806,46 @@
   "x-review": "machine",
   "x-source": "e37b76fbec"
  },
+ "sweep.evidence": "Se belägget ›",
+ "@sweep.evidence": {
+  "x-review": "machine",
+  "x-source": "17281a2fb3"
+ },
+ "sweep.line": "Vi har sökt igenom {n, number} stjärnor efter allt som mörknar; {k, plural, =0 {än så länge sticker inget ut över slumpen} one {{list} sticker hittills ut över slumpen} other {{list} sticker hittills ut över slumpen}}.",
+ "@sweep.line": {
+  "x-review": "machine",
+  "x-source": "2625a10311"
+ },
+ "tl.cap": "Planeter per upptäcktsår, staplade efter metoden som hittade dem.",
+ "@tl.cap": {
+  "x-review": "machine",
+  "x-source": "abe7e1b656"
+ },
+ "tl.hint": "Peka på ett år, eller fokusera diagrammet och använd piltangenterna.",
+ "@tl.hint": {
+  "x-review": "machine",
+  "x-source": "c0d70ad218"
+ },
+ "tl.noyear": "{n, number} poster utan år ritas inte.",
+ "@tl.noyear": {
+  "x-review": "machine",
+  "x-source": "90f8af3261"
+ },
+ "tl.read": "{y}: {n, plural, one {# planet} other {# planeter}}",
+ "@tl.read": {
+  "x-review": "machine",
+  "x-source": "7968ad0970"
+ },
+ "tl.table": "Planeter per år och metod",
+ "@tl.table": {
+  "x-review": "machine",
+  "x-source": "60ecd96d94"
+ },
+ "tl.table_link": "Antalen per år och metod, som tabell ›",
+ "@tl.table_link": {
+  "x-review": "machine",
+  "x-source": "8d38020252"
+ },
  "tn.h1": "Var TESS tittar.",
  "@tn.h1": {
   "x-review": "machine",
@@ -3005,6 +3855,31 @@
  "@tn.intro": {
   "x-review": "machine",
   "x-source": "6cbf61a637"
+ },
+ "ts.hi": "Hetaste stjärnan, i kelvin",
+ "@ts.hi": {
+  "x-review": "machine",
+  "x-source": "8f287e3909"
+ },
+ "ts.lo": "Svalaste stjärnan, i kelvin",
+ "@ts.lo": {
+  "x-review": "machine",
+  "x-source": "ccde65937b"
+ },
+ "ts.src": "Stjärnfärg: ett Planckspektrum genom CIE 1931:s färgmatchningsfunktioner, i sRGB, normerat till sin ljusaste kanal (en nyans, inte en ljusstyrka). Teff: varje körnings stellar.json (TESS Input Catalog v8.2, MAST); solen 5 772 K (IAU 2015, nominellt).",
+ "@ts.src": {
+  "x-review": "machine",
+  "x-source": "b9cdfdaa9f"
+ },
+ "ts.sun": "solen",
+ "@ts.sun": {
+  "x-review": "machine",
+  "x-source": "c15630ef0d"
+ },
+ "ts.title": "Stjärnfärg från 2 500 K till 10 000 K, med varje stjärna markerad vid sin temperatur",
+ "@ts.title": {
+  "x-review": "machine",
+  "x-source": "1fd7f02e9a"
  },
  "var.h1": "Allt som dämpas.",
  "@var.h1": {

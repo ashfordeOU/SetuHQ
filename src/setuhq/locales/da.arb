@@ -16,6 +16,11 @@
   "x-review": "machine",
   "x-source": "ca9826547d"
  },
+ "cat.not_ours": "SetuHQ opdagede ikke disse planeter.",
+ "@cat.not_ours": {
+  "x-review": "machine",
+  "x-source": "759a661951"
+ },
  "cf.h1": "Hvert signal, dets dyk og kontrollerne bag hver afgørelse.",
  "@cf.h1": {
   "x-review": "machine",
@@ -25,6 +30,11 @@
  "@cf.intro": {
   "x-review": "machine",
   "x-source": "252d456e94"
+ },
+ "cf.link": "Sagsmappe ›",
+ "@cf.link": {
+  "x-review": "machine",
+  "x-source": "ceac0b11e3"
  },
  "chapter.astrometry": "Astrometri",
  "@chapter.astrometry": {
@@ -1121,6 +1131,36 @@
   "x-review": "machine",
   "x-source": "6828f69f91"
  },
+ "cov.bulge": "Mikrolinsning i bulen",
+ "@cov.bulge": {
+  "x-review": "machine",
+  "x-source": "bd05242cca"
+ },
+ "cov.corot": "CoRoT-zoner",
+ "@cov.corot": {
+  "x-review": "machine",
+  "x-source": "41d07bad32"
+ },
+ "cov.k2": "K2-kampagner",
+ "@cov.k2": {
+  "x-review": "machine",
+  "x-source": "848c24db6a"
+ },
+ "cov.kepler": "Kepler-feltet",
+ "@cov.kepler": {
+  "x-review": "machine",
+  "x-source": "147a21f59a"
+ },
+ "cov.tess": "TESS-sektorer",
+ "@cov.tess": {
+  "x-review": "machine",
+  "x-source": "c63d55d777"
+ },
+ "cov.unmapped": "Ikke dækket af transitkortlægninger",
+ "@cov.unmapped": {
+  "x-review": "machine",
+  "x-source": "261bc97dee"
+ },
  "desc.catalogue": "Hver planet i exoplanet.eu, søgbar og sorterbar, hver med sin egen side. SetuHQ har ikke opdaget disse planeter.",
  "@desc.catalogue": {
   "x-review": "machine",
@@ -1251,6 +1291,26 @@
   "x-review": "machine",
   "x-source": "20cd938a2e"
  },
+ "dips.cand": "{n, plural, one {# kandidat} other {# kandidater}}",
+ "@dips.cand": {
+  "x-review": "machine",
+  "x-source": "0ff385febf"
+ },
+ "dips.flag": "{n, plural, one {# markeret} other {# markeret}}",
+ "@dips.flag": {
+  "x-review": "machine",
+  "x-source": "1d74535739"
+ },
+ "dips.n": "{n, plural, one {# dyk} other {# dyk}}",
+ "@dips.n": {
+  "x-review": "machine",
+  "x-source": "d34249d767"
+ },
+ "dips.rej": "{n, plural, one {# afvist} other {# afvist}}",
+ "@dips.rej": {
+  "x-review": "machine",
+  "x-source": "9fdbc5d13a"
+ },
  "docs.contribute": "Bidrag med en gennemsøgning",
  "@docs.contribute": {
   "x-review": "machine",
@@ -1356,6 +1416,11 @@
   "x-review": "machine",
   "x-source": "3159020543"
  },
+ "docs.runfiles": "<a href=\"{report}\">kørselsrapporten</a>, <a href=\"{plates}\">pladerne</a> og <a href=\"{cf}\">sagsmappen</a> for kørsel {run}.",
+ "@docs.runfiles": {
+  "x-review": "machine",
+  "x-source": "065db1dbf8"
+ },
  "docs.start": "Kom i gang",
  "@docs.start": {
   "x-review": "machine",
@@ -1406,6 +1471,56 @@
   "x-review": "machine",
   "x-source": "96432c834d"
  },
+ "fold.a": "Ufoldet: i tidsrækkefølge",
+ "@fold.a": {
+  "x-review": "machine",
+  "x-source": "ca7c3036c1"
+ },
+ "fold.b": "Foldet på perioden på {p} dage",
+ "@fold.b": {
+  "x-review": "machine",
+  "x-source": "92616c60e0"
+ },
+ "fold.fold": "Fold på perioden",
+ "@fold.fold": {
+  "x-review": "machine",
+  "x-source": "4458109b7d"
+ },
+ "fold.folded": "<b>Foldet</b> på perioden på {p} dage",
+ "@fold.folded": {
+  "x-review": "machine",
+  "x-source": "4ed8a2a718"
+ },
+ "fold.said": "Foldet på {p} dage: dykket viser sig ved nul timer.",
+ "@fold.said": {
+  "x-review": "machine",
+  "x-source": "c0920801da"
+ },
+ "fold.said_time": "I tidsrækkefølge: hver transit er en håndfuld punkter blandt resten.",
+ "@fold.said_time": {
+  "x-review": "machine",
+  "x-source": "a90b68372c"
+ },
+ "fold.short": "{n, number} punkter foldet på {p} d: et dyk på {depth} ppm og {t14} t. Kilde: {run}.",
+ "@fold.short": {
+  "x-review": "machine",
+  "x-source": "8958c78471"
+ },
+ "fold.source": "Kilde: {s}",
+ "@fold.source": {
+  "x-review": "machine",
+  "x-source": "7015dd2710"
+ },
+ "fold.unfold": "Tilbage til tiden",
+ "@fold.unfold": {
+  "x-review": "machine",
+  "x-source": "73824685c9"
+ },
+ "fold.unfolded": "<b>Ufoldet</b> · {d} dage i tidsrækkefølge",
+ "@fold.unfolded": {
+  "x-review": "machine",
+  "x-source": "5fc4a52069"
+ },
  "footer.all_chapters": "Alle {n} kapitler",
  "@footer.all_chapters": {
   "x-review": "machine",
@@ -1441,6 +1556,31 @@
   "x-review": "machine",
   "x-source": "bf046c7395"
  },
+ "gal.example": "Eksempelkørsel",
+ "@gal.example": {
+  "x-review": "machine",
+  "x-source": "ed62203839"
+ },
+ "gal.noart": "Ingen kandidat får en planetillustration.",
+ "@gal.noart": {
+  "x-review": "machine",
+  "x-source": "9d55cea042"
+ },
+ "gal.note": "Hver scene: stjernens skive i dens sortlegemefarve ved den Teff, kørslen gemmer, og det, kørslen målte som en skygge ved sin tilpassede Rp/R★ (en planet, kørslen overså, er en stiplet omrids). Størrelserne er målfaste i forhold til skiven; hvor hver sidder på den, er illustrativt.",
+ "@gal.note": {
+  "x-review": "machine",
+  "x-source": "bbb017f062"
+ },
+ "gal.sectors": "{mission} {n, plural, one {sektor} other {sektorer}} {list}",
+ "@gal.sectors": {
+  "x-review": "machine",
+  "x-source": "737f03f940"
+ },
+ "gal.stages": "Scener: {s}.",
+ "@gal.stages": {
+  "x-review": "machine",
+  "x-source": "b469db30f4"
+ },
  "gx.h1": "Alle kendte exoplaneter,",
  "@gx.h1": {
   "x-review": "machine",
@@ -1455,6 +1595,21 @@
  "@gx.intro": {
   "x-review": "machine",
   "x-source": "b60778b897"
+ },
+ "hero.disc": "Stjerneskiven for {star} har sin sortlegemefarve; planeten er en kunstnerisk fremstilling ({look}).",
+ "@hero.disc": {
+  "x-review": "machine",
+  "x-source": "f391f5d10f"
+ },
+ "hero.model": "Model ud fra gemte værdier.",
+ "@hero.model": {
+  "x-review": "machine",
+  "x-source": "761a8963d7"
+ },
+ "hero.pause": "Pause",
+ "@hero.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
  },
  "hint.dismiss": "Luk tippet: {h}",
  "@hint.dismiss": {
@@ -1691,6 +1846,11 @@
   "x-review": "machine",
   "x-source": "04e504e9e8"
  },
+ "home.proof": "Hvad referencekørslen viser",
+ "@home.proof": {
+  "x-review": "machine",
+  "x-source": "d58bf9bb5f"
+ },
  "home.refcheck": "Referencekontrollen: {planet}, en kendt planet, fundet igen i kørsel {run}",
  "@home.refcheck": {
   "x-review": "machine",
@@ -1826,6 +1986,156 @@
   "x-review": "machine",
   "x-source": "272d460db4"
  },
+ "learn.again": "Start forfra fra trin 1",
+ "@learn.again": {
+  "x-review": "machine",
+  "x-source": "1b91302a8f"
+ },
+ "learn.all": "Alle {n} trin",
+ "@learn.all": {
+  "x-review": "machine",
+  "x-source": "e15530dfee"
+ },
+ "learn.back": "‹ Tilbage",
+ "@learn.back": {
+  "x-review": "machine",
+  "x-source": "9c47d2b08c"
+ },
+ "learn.cleared": "Fremskridt på læringsstien er slettet.",
+ "@learn.cleared": {
+  "x-review": "machine",
+  "x-source": "8b76618ea1"
+ },
+ "learn.complete": " · stien er gennemført",
+ "@learn.complete": {
+  "x-review": "machine",
+  "x-source": "d1a143524c"
+ },
+ "learn.continue": "Fortsæt: {step}",
+ "@learn.continue": {
+  "x-review": "machine",
+  "x-source": "859ee5370f"
+ },
+ "learn.count": "{k} af {n} besøgt",
+ "@learn.count": {
+  "x-review": "machine",
+  "x-source": "5475c68b5f"
+ },
+ "learn.finish": "Afslut ›",
+ "@learn.finish": {
+  "x-review": "machine",
+  "x-source": "d7473131de"
+ },
+ "learn.finish_label": "Afslut stien",
+ "@learn.finish_label": {
+  "x-review": "machine",
+  "x-source": "b841a0b2c4"
+ },
+ "learn.h": "Læringssti",
+ "@learn.h": {
+  "x-review": "machine",
+  "x-source": "7f9d3aa634"
+ },
+ "learn.intro": "{n} trin, fra hvordan en kortlægning fungerer, til hver kendt exoplanet. Frivilligt: følg rækkefølgen eller spring rundt; hver side, du åbner, tæller. Fremskridtet bliver i denne browser.",
+ "@learn.intro": {
+  "x-review": "machine",
+  "x-source": "b22e135d6a"
+ },
+ "learn.kind.catalogue": "Katalog",
+ "@learn.kind.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "learn.kind.ch": "Metodekapitel",
+ "@learn.kind.ch": {
+  "x-review": "machine",
+  "x-source": "8cb87af4b5"
+ },
+ "learn.kind.galaxy": "Mælkevejen",
+ "@learn.kind.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "learn.kind.run": "SetuHQ's kørsel",
+ "@learn.kind.run": {
+  "x-review": "machine",
+  "x-source": "12eeea4754"
+ },
+ "learn.leave": "Forlad",
+ "@learn.leave": {
+  "x-review": "machine",
+  "x-source": "fc6e4a408d"
+ },
+ "learn.leave_label": "Forlad stien",
+ "@learn.leave_label": {
+  "x-review": "machine",
+  "x-source": "49324ad9ff"
+ },
+ "learn.left": "Du har forladt læringsstien. Dit fremskridt gemmes.",
+ "@learn.left": {
+  "x-review": "machine",
+  "x-source": "9ef4f1079c"
+ },
+ "learn.next": "Næste",
+ "@learn.next": {
+  "x-review": "machine",
+  "x-source": "1ff57a29d7"
+ },
+ "learn.next_btn": "Næste ›",
+ "@learn.next_btn": {
+  "x-review": "machine",
+  "x-source": "868d16703d"
+ },
+ "learn.next_label": "Næste: {step}",
+ "@learn.next_label": {
+  "x-review": "machine",
+  "x-source": "19282226b1"
+ },
+ "learn.pos": "{i} af {n}",
+ "@learn.pos": {
+  "x-review": "machine",
+  "x-source": "2eb6f9a3c3"
+ },
+ "learn.progress": "Fremskridt på læringsstien",
+ "@learn.progress": {
+  "x-review": "machine",
+  "x-source": "0e0d6f67aa"
+ },
+ "learn.reset": "Nulstil fremskridt",
+ "@learn.reset": {
+  "x-review": "machine",
+  "x-source": "0b026c02ba"
+ },
+ "learn.seen": ", besøgt",
+ "@learn.seen": {
+  "x-review": "machine",
+  "x-source": "bd1c8d37d4"
+ },
+ "learn.start": "Start stien",
+ "@learn.start": {
+  "x-review": "machine",
+  "x-source": "43f89ceb20"
+ },
+ "learn.step.catalogue": "Hver post, søgbar",
+ "@learn.step.catalogue": {
+  "x-review": "machine",
+  "x-source": "b6e0434eab"
+ },
+ "learn.step.galaxy": "Hver kendt exoplanet, omkring Solen",
+ "@learn.step.galaxy": {
+  "x-review": "machine",
+  "x-source": "633c7d2992"
+ },
+ "learn.step.transit": "SetuHQ's egen transit: sagsmappen",
+ "@learn.step.transit": {
+  "x-review": "machine",
+  "x-source": "e521fd3e8b"
+ },
+ "learn.unseen": ", endnu ikke besøgt",
+ "@learn.unseen": {
+  "x-review": "machine",
+  "x-source": "a9473125f4"
+ },
  "limits.art": "Ikke en observation: et udseende valgt ud fra målt radius og indstråling.",
  "@limits.art": {
   "x-review": "machine",
@@ -1865,6 +2175,26 @@
  "@limits.summary": {
   "x-review": "machine",
   "x-source": "ecbcc39e74"
+ },
+ "lu.cap": "Målfast: én jordradius har samme bredde langs hele rækken, så {big} er {x} gange så bred som {small}. Hvert billede er en kunstnerisk fremstilling, valgt ud fra den målte radius og den beregnede indstråling; sammensætningen er ikke målt. Jorden, Neptun og Jupiter er referencerne fra Solsystemet (kun Jorden er tegnet med oceaner). Radier: {src} (1 RJ = 11,209 R⊕).",
+ "@lu.cap": {
+  "x-review": "machine",
+  "x-source": "3cdd1c02b9"
+ },
+ "lu.earth": "Jorden",
+ "@lu.earth": {
+  "x-review": "machine",
+  "x-source": "b7c9b5ccd3"
+ },
+ "lu.jupiter": "Jupiter",
+ "@lu.jupiter": {
+  "x-review": "machine",
+  "x-source": "27ce2df068"
+ },
+ "lu.neptune": "Neptun",
+ "@lu.neptune": {
+  "x-review": "machine",
+  "x-source": "d98d070c39"
  },
  "mc.intro": "Vælg en stjerne i et vilkårligt felt; hvert felt og hvert løsrevet vindue følger med.",
  "@mc.intro": {
@@ -2026,6 +2356,41 @@
   "x-review": "machine",
   "x-source": "645c79cc54"
  },
+ "method.astrometry": "astrometri",
+ "@method.astrometry": {
+  "x-review": "machine",
+  "x-source": "ec74d70d9e"
+ },
+ "method.imaging": "direkte billeddannelse",
+ "@method.imaging": {
+  "x-review": "machine",
+  "x-source": "f6e9cec92c"
+ },
+ "method.microlensing": "mikrolinsning",
+ "@method.microlensing": {
+  "x-review": "machine",
+  "x-source": "8f7b755044"
+ },
+ "method.other": "andet",
+ "@method.other": {
+  "x-review": "machine",
+  "x-source": "d9298a10d1"
+ },
+ "method.rv": "radialhastighed",
+ "@method.rv": {
+  "x-review": "machine",
+  "x-source": "0ec51a755a"
+ },
+ "method.timing": "tidsmåling",
+ "@method.timing": {
+  "x-review": "machine",
+  "x-source": "f6cfb8c3f1"
+ },
+ "method.transit": "transit",
+ "@method.transit": {
+  "x-review": "machine",
+  "x-source": "068b7e6c97"
+ },
  "methods.chapter_n": "Kapitel {i} af {n}",
  "@methods.chapter_n": {
   "x-review": "machine",
@@ -2055,6 +2420,31 @@
  "@methods.sources": {
   "x-review": "machine",
   "x-source": "caf85b0888"
+ },
+ "mx.from": "Kilde",
+ "@mx.from": {
+  "x-review": "machine",
+  "x-source": "2181976934"
+ },
+ "mx.numbers": "Tal i dette kapitel",
+ "@mx.numbers": {
+  "x-review": "machine",
+  "x-source": "2d0a4d13b4"
+ },
+ "mx.quantity": "Størrelse",
+ "@mx.quantity": {
+  "x-review": "machine",
+  "x-source": "822bab8d41"
+ },
+ "mx.speed": "Hastighed",
+ "@mx.speed": {
+  "x-review": "machine",
+  "x-source": "c372fee9b4"
+ },
+ "mx.value": "Værdi",
+ "@mx.value": {
+  "x-review": "machine",
+  "x-source": "8e37953d23"
  },
  "nav.candidates": "Kandidater",
  "@nav.candidates": {
@@ -2401,6 +2791,11 @@
   "x-review": "machine",
   "x-source": "5dce100851"
  },
+ "panel.probes_sentinels": "Probes og Sentinels",
+ "@panel.probes_sentinels": {
+  "x-review": "machine",
+  "x-source": "300c2fe632"
+ },
  "panel.sentinels": "{s, plural, one {# Sentinel} other {# Sentinels}}",
  "@panel.sentinels": {
   "x-review": "machine",
@@ -2461,6 +2856,31 @@
   "x-review": "machine",
   "x-source": "5bf530d59d"
  },
+ "pr.col.marked": "Markerede dette dyk",
+ "@pr.col.marked": {
+  "x-review": "machine",
+  "x-source": "4a7a39ecf8"
+ },
+ "pr.col.provider": "Udbyder",
+ "@pr.col.provider": {
+  "x-review": "machine",
+  "x-source": "472590ae97"
+ },
+ "pr.col.reviewer": "Bedømmer",
+ "@pr.col.reviewer": {
+  "x-review": "machine",
+  "x-source": "d29f46772c"
+ },
+ "pr.col.role": "Rolle",
+ "@pr.col.role": {
+  "x-review": "machine",
+  "x-source": "14736a2eb9"
+ },
+ "pr.col.weight": "Kalibreret vægt",
+ "@pr.col.weight": {
+  "x-review": "machine",
+  "x-source": "2ff00b5847"
+ },
  "pr.h1": "Forbered et CHEOPS-forslag.",
  "@pr.h1": {
   "x-review": "machine",
@@ -2470,6 +2890,56 @@
  "@pr.intro": {
   "x-review": "machine",
   "x-source": "6893d1fea2"
+ },
+ "pr.marked": "{k} af {n} markerede det · panelscore {score}, som gemt",
+ "@pr.marked": {
+  "x-review": "machine",
+  "x-source": "59b2d88d9f"
+ },
+ "pr.marked_none": "{k} af {n} markerede det · panelscore ikke gemt",
+ "@pr.marked_none": {
+  "x-review": "machine",
+  "x-source": "6a75119056"
+ },
+ "pr.no": "nej",
+ "@pr.no": {
+  "x-review": "machine",
+  "x-source": "9390298f3f"
+ },
+ "pr.reviewers": "bedømmere",
+ "@pr.reviewers": {
+  "x-review": "machine",
+  "x-source": "f49dd73f5c"
+ },
+ "pr.score": "panelscore",
+ "@pr.score": {
+  "x-review": "machine",
+  "x-source": "cf91ab41dd"
+ },
+ "pr.score_none": "score ikke gemt",
+ "@pr.score_none": {
+  "x-review": "machine",
+  "x-source": "4ac231ea2a"
+ },
+ "pr.table": "Markeringerne og vægtene som tabel",
+ "@pr.table": {
+  "x-review": "machine",
+  "x-source": "7cf41c5c1b"
+ },
+ "pr.what.dip": "Hver bedømmers gemte markering af dette dyk (fuldt optrukket linje: markerede dykket; stiplet: ingen markering), hver skaleret efter sin kalibrerede vægt; ringen fyldes op til panelscoren, som kørslen gemte den.",
+ "@pr.what.dip": {
+  "x-review": "machine",
+  "x-source": "31dfe96fd5"
+ },
+ "pr.what.panel": "Hver bedømmer i panelet, skaleret efter sin kalibrerede vægt; intet dyk er valgt, så der tegnes ingen score.",
+ "@pr.what.panel": {
+  "x-review": "machine",
+  "x-source": "881c9d4eaf"
+ },
+ "pr.yes": "ja",
+ "@pr.yes": {
+  "x-review": "machine",
+  "x-source": "8a798890fe"
  },
  "route.candidates.label": "Sagsmappe",
  "@route.candidates.label": {
@@ -2741,6 +3211,26 @@
   "x-review": "machine",
   "x-source": "9889e603bf"
  },
+ "run.casefile": "Kørslens sagsmappe ›",
+ "@run.casefile": {
+  "x-review": "machine",
+  "x-source": "44cc301e33"
+ },
+ "run.plates": "Plader ›",
+ "@run.plates": {
+  "x-review": "machine",
+  "x-source": "3a05204bd6"
+ },
+ "run.report": "Kørselsrapport ›",
+ "@run.report": {
+  "x-review": "machine",
+  "x-source": "3f0278c3ff"
+ },
+ "run.sectors": "Kørsel {run}, TESS-{n, plural, one {sektor} other {sektorer}} {list}.",
+ "@run.sectors": {
+  "x-review": "machine",
+  "x-source": "cdff019405"
+ },
  "runs.h1": "Hver søgekørsel, dens fejl som de blev gemt, og konfigurationen bag disse sider.",
  "@runs.h1": {
   "x-review": "machine",
@@ -2765,6 +3255,21 @@
  "@sd.intro": {
   "x-review": "machine",
   "x-source": "d9fdd750e3"
+ },
+ "search.hint": "↑ ↓ for at flytte · Enter for at åbne · Esc for at lukke",
+ "@search.hint": {
+  "x-review": "machine",
+  "x-source": "4fefe7c452"
+ },
+ "search.placeholder": "Søg planeter, stjerner, sider",
+ "@search.placeholder": {
+  "x-review": "machine",
+  "x-source": "28a6ead8a4"
+ },
+ "search.results": "Resultater",
+ "@search.results": {
+  "x-review": "machine",
+  "x-source": "219c4a6c86"
  },
  "sen.h1": "{n, plural, one {# bedømmer.} other {# bedømmere.}}",
  "@sen.h1": {
@@ -2866,10 +3371,250 @@
   "x-review": "machine",
   "x-source": "5fb2ec761c"
  },
+ "showcase.tess-hd-15337-s4.caveat": "Fandt 1 af b's 5 transitter og begge c's; ingen af de offentliggjorte perioder blev genfundet (BLS-perioden for de dyk er ikke planetens).",
+ "@showcase.tess-hd-15337-s4.caveat": {
+  "x-review": "machine",
+  "x-source": "492b8ee5d0"
+ },
+ "showcase.tess-hd-15337-s4.kind": "Små planeter nær grænsen",
+ "@showcase.tess-hd-15337-s4.kind": {
+  "x-review": "machine",
+  "x-source": "decd7f2886"
+ },
+ "showcase.tess-hd-15337-s4.outcome": "HD 15337 b: 1 af 5 transitter (1 kandidat; BLS-periode ikke planetens); HD 15337 c: 2 af 2 transitter (1 kandidat, 1 markeret; BLS-periode ikke planetens).",
+ "@showcase.tess-hd-15337-s4.outcome": {
+  "x-review": "machine",
+  "x-source": "e894ab72ac"
+ },
+ "showcase.tess-hd-15337-s4.summary": "En lysstærk K-dværg med to små kendte planeter: b (ca. 1,6 jordradier, 4,8 dage, omkring 350 ppm dyb) og c (17,2 dage).",
+ "@showcase.tess-hd-15337-s4.summary": {
+  "x-review": "machine",
+  "x-source": "edc1d3e217"
+ },
+ "showcase.tess-hd-15337-s4.why": "En lille planet, hvis enkelte transitter ligger tæt på støjen i én sektor: den viser, hvad panelet og vettingen gør ved grænsen for, hvad en søgning i 10-minutters-bins kan se, og siden siger, hvad der blev overset.",
+ "@showcase.tess-hd-15337-s4.why": {
+  "x-review": "machine",
+  "x-source": "97542c5ae2"
+ },
+ "showcase.tess-pi-men-s1.kind": "Referencetjek",
+ "@showcase.tess-pi-men-s1.kind": {
+  "x-review": "machine",
+  "x-source": "70fa5c4aa7"
+ },
+ "showcase.tess-pi-men-s1.outcome": "Rp/R★ og T14 inden for 5 % af Huang et al. 2018 (docs/results/pi_men_validation.md).",
+ "@showcase.tess-pi-men-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "c09fef04d0"
+ },
+ "showcase.tess-pi-men-s1.summary": "En sollignende stjerne med en superjord i en bane på 6,3 dage: kørslen fuldt sammenlignet med Huang et al. 2018.",
+ "@showcase.tess-pi-men-s1.summary": {
+  "x-review": "machine",
+  "x-source": "27c4facb20"
+ },
+ "showcase.tess-pi-men-s1.why": "Referencetjekket: den eneste kørsel med både Sentinels og Probes, dens tilpasning med randformørkelse sammenlignet med opdagelsesartiklen i docs/results/pi_men_validation.md.",
+ "@showcase.tess-pi-men-s1.why": {
+  "x-review": "machine",
+  "x-source": "ae1c536ddb"
+ },
+ "showcase.tess-toi-236-s2.kind": "Kendt falsk positiv",
+ "@showcase.tess-toi-236-s2.kind": {
+  "x-review": "machine",
+  "x-source": "e01d094660"
+ },
+ "showcase.tess-toi-236-s2.outcome": "Fanget: alle 6 dyk på TOI-efemeriden blev afvist af vettingen (secondary_any_phase, secondary_eclipse), så ingen er en kandidat.",
+ "@showcase.tess-toi-236-s2.outcome": {
+  "x-review": "machine",
+  "x-source": "d59f7be2fe"
+ },
+ "showcase.tess-toi-236-s2.summary": "Et TESS Object of Interest, som TOI-tabellen klassificerer som falsk positiv (FP): et dyk på 2,4 % hver 4,5. dag.",
+ "@showcase.tess-toi-236-s2.summary": {
+  "x-review": "machine",
+  "x-source": "35157a3066"
+ },
+ "showcase.tess-toi-236-s2.why": "En test, SetuHQ skal dumpe: TOI-236.01 er med i den falsk positive mængde i benchmarket med rigtige TOI'er. Siden siger, hvad vettingen gjorde med den, hvad det end var.",
+ "@showcase.tess-toi-236-s2.why": {
+  "x-review": "machine",
+  "x-source": "50637bce9d"
+ },
+ "showcase.tess-toi-270-s5.caveat": "Fandt alle 5 af c's transitter og begge d's; b ikke fundet; d set to gange, ingen periode (én transit pr. 13-dages stykke af lyskurven).",
+ "@showcase.tess-toi-270-s5.caveat": {
+  "x-review": "machine",
+  "x-source": "09f285b361"
+ },
+ "showcase.tess-toi-270-s5.kind": "Flerplanetsystem",
+ "@showcase.tess-toi-270-s5.kind": {
+  "x-review": "machine",
+  "x-source": "7e5f73c9ed"
+ },
+ "showcase.tess-toi-270-s5.outcome": "TOI-270 b: ingen af 6 transitter; TOI-270 c: 5 af 5 transitter (5 kandidater); TOI-270 d: 2 af 2 transitter (2 markeret; ingen periode).",
+ "@showcase.tess-toi-270-s5.outcome": {
+  "x-review": "machine",
+  "x-source": "64bc9f9e61"
+ },
+ "showcase.tess-toi-270-s5.summary": "En M-dværg med tre kendte transiterende planeter ved 3,4, 5,7 og 11,4 dage: flere perioder i én stjerne.",
+ "@showcase.tess-toi-270-s5.summary": {
+  "x-review": "machine",
+  "x-source": "3f5bb74bc0"
+ },
+ "showcase.tess-toi-270-s5.why": "Én lyskurve, tre perioder. Den viser, hvad søgningen gør, når en stjerne har mere end én planet, og hvilke af dem et 13-dages stykke kan rumme.",
+ "@showcase.tess-toi-270-s5.why": {
+  "x-review": "machine",
+  "x-source": "a6cb0e9faa"
+ },
+ "showcase.tess-wasp-126-s1.kind": "Varm Jupiter",
+ "@showcase.tess-wasp-126-s1.kind": {
+  "x-review": "machine",
+  "x-source": "f55d3631cf"
+ },
+ "showcase.tess-wasp-126-s1.outcome": "WASP-126 b: 8 af 8 transitter (8 kandidater).",
+ "@showcase.tess-wasp-126-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "60440caba1"
+ },
+ "showcase.tess-wasp-126-s1.summary": "En planet på størrelse med Jupiter i en bane på 3,3 dage: dybe, lette transitter i TESS' sydlige kontinuerlige observationszone.",
+ "@showcase.tess-wasp-126-s1.summary": {
+  "x-review": "machine",
+  "x-source": "55d843f795"
+ },
+ "showcase.tess-wasp-126-s1.why": "Det lette tilfælde: en transit på ca. 0,6 % dybde, som enhver søgning bør finde, og som viser hele vejen fra lyskurve til tilpasning med ringe tvivl om signalet.",
+ "@showcase.tess-wasp-126-s1.why": {
+  "x-review": "machine",
+  "x-source": "9768c89800"
+ },
+ "sky.all": "Alle",
+ "@sky.all": {
+  "x-review": "machine",
+  "x-source": "a52ace420f"
+ },
+ "sky.cap": "Hver prik er en katalogiseret planet ved sin værtsstjernes position (RA og Dec, J2000), farvet efter metoden, der fandt den, og vist fra sit opdagelsesår.",
+ "@sky.cap": {
+  "x-review": "machine",
+  "x-source": "f6c3623c32"
+ },
+ "sky.col.method": "Metode",
+ "@sky.col.method": {
+  "x-review": "machine",
+  "x-source": "52a0f9b65b"
+ },
+ "sky.col.planets": "Planeter",
+ "@sky.col.planets": {
+  "x-review": "machine",
+  "x-source": "c06c7c6bbd"
+ },
+ "sky.cov": "Kortlægningernes dækning: TESS har observeret {tess} % af himlen (sektor 1–{last}); {unm} % har aldrig været i TESS', Keplers eller K2's synsfelt. Skraveringen viser, hvor kortlægningerne kiggede, ikke hvor planeterne er.",
+ "@sky.cov": {
+  "x-review": "machine",
+  "x-source": "7880d28ec6"
+ },
+ "sky.cov_label": "Kortlægningernes dækning",
+ "@sky.cov_label": {
+  "x-review": "machine",
+  "x-source": "67b9a456c5"
+ },
+ "sky.cov_more": "Tal og kilder i Mælkevejen ›",
+ "@sky.cov_more": {
+  "x-review": "machine",
+  "x-source": "50afd0241b"
+ },
+ "sky.lc": "Kørslens lyskurve",
+ "@sky.lc": {
+  "x-review": "machine",
+  "x-source": "f6ebbca8e7"
+ },
+ "sky.legend": "Opdagelsesmetode",
+ "@sky.legend": {
+  "x-review": "machine",
+  "x-source": "7f31ff7ee3"
+ },
+ "sky.nojs": "Dette stillbillede viser {k, number} af dem (hver {step}.); hele kortet tegnes, når sidens script kører.",
+ "@sky.nojs": {
+  "x-review": "machine",
+  "x-source": "f5717a638d"
+ },
+ "sky.note.ecl": "stiplet: ekliptika",
+ "@sky.note.ecl": {
+  "x-review": "machine",
+  "x-source": "a57d25f4fc"
+ },
+ "sky.note.feed": "Feedets stjerner ikke indtegnet (positioner ikke gemt)",
+ "@sky.note.feed": {
+  "x-review": "machine",
+  "x-source": "5d62afd4b7"
+ },
+ "sky.note.placed": "{star} placeret efter SIMBAD (ICRS J2000)",
+ "@sky.note.placed": {
+  "x-review": "machine",
+  "x-source": "fc21ca6c11"
+ },
+ "sky.note.unplaced": "målet ikke indtegnet (ingen position gemt)",
+ "@sky.note.unplaced": {
+  "x-review": "machine",
+  "x-source": "2ba7ac0091"
+ },
+ "sky.open": "Åbn ›",
+ "@sky.open": {
+  "x-review": "machine",
+  "x-source": "90fdccaabc"
+ },
+ "sky.pause": "Pause",
+ "@sky.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
+ },
+ "sky.play": "Afspil",
+ "@sky.play": {
+  "x-review": "machine",
+  "x-source": "436e61016e"
+ },
+ "sky.shown": "{n, number} planeter vist",
+ "@sky.shown": {
+  "x-review": "machine",
+  "x-source": "2f879fe4d1"
+ },
+ "sky.sweep": "Laget for setuhq-gennemsøgningen: en grøn prik pr. stjernesektor, gennemsøgningen har søgt i ({n, number} indtil videre, positioner fra MAST), ravgul hvor den har en post i en klasse, der overstiger sin nulprøve i dette udsnit ({found, select, none {ingen} other {{found}}}).",
+ "@sky.sweep": {
+  "x-review": "machine",
+  "x-source": "6df4812450"
+ },
+ "sky.sweep_more": "Alt, der svækkes ›",
+ "@sky.sweep_more": {
+  "x-review": "machine",
+  "x-source": "a15059214f"
+ },
+ "sky.table": "Planeter efter opdagelsesmetode, pr. {y}",
+ "@sky.table": {
+  "x-review": "machine",
+  "x-source": "b101c75a14"
+ },
  "sky.tl": "Planeter fundet hvert år, efter metode",
  "@sky.tl": {
   "x-review": "machine",
   "x-source": "10dff603f9"
+ },
+ "sky.tonly": "Kun transitter",
+ "@sky.tonly": {
+  "x-review": "machine",
+  "x-source": "24f8dea1d4"
+ },
+ "sky.tonly_note": " (kun transitter)",
+ "@sky.tonly_note": {
+  "x-review": "machine",
+  "x-source": "8e198c9572"
+ },
+ "sky.valuetext": "{y}: {n, number} planeter",
+ "@sky.valuetext": {
+  "x-review": "machine",
+  "x-source": "17dd24a14c"
+ },
+ "sky.year": "År",
+ "@sky.year": {
+  "x-review": "machine",
+  "x-source": "89f6832560"
+ },
+ "sky.zoom": "Zoom ind på systemet {planet} ›",
+ "@sky.zoom": {
+  "x-review": "machine",
+  "x-source": "7c9d17cb1f"
  },
  "st.figs": "Hvad detektorerne ser",
  "@st.figs": {
@@ -2885,6 +3630,71 @@
  "@st.intro": {
   "x-review": "machine",
   "x-source": "7f59c8f0fc"
+ },
+ "status.known": "{planet} · kendt planet",
+ "@status.known": {
+  "x-review": "machine",
+  "x-source": "f5b7664b3d"
+ },
+ "status.open_cand": "Åben · kandidat, ubekræftet",
+ "@status.open_cand": {
+  "x-review": "machine",
+  "x-source": "d4f9806249"
+ },
+ "status.open_flagged": "Åben · markeret til gennemsyn",
+ "@status.open_flagged": {
+  "x-review": "machine",
+  "x-source": "17cedf349f"
+ },
+ "status.rejected": "Afvist af vettingen",
+ "@status.rejected": {
+  "x-review": "machine",
+  "x-source": "402f943e20"
+ },
+ "story.both_passed": "Begge Sentinels lod det passere.",
+ "@story.both_passed": {
+  "x-review": "machine",
+  "x-source": "240e9f6e70"
+ },
+ "story.feed": "poster fra {stars, plural, one {# stjerne mere} other {# stjerner mere}} i søgefeedet, {new, plural, =0 {der matcher kendte TOI'er.} one {# ved en ny periode.} other {# ved en ny periode.}} Spor til gennemsyn, ikke planeter.",
+ "@story.feed": {
+  "x-review": "machine",
+  "x-source": "7a2c50f550"
+ },
+ "story.no_probe": "Ingen Probe markerede det.",
+ "@story.no_probe": {
+  "x-review": "machine",
+  "x-source": "181249a8c6"
+ },
+ "story.open": "{n, plural, one {dyk stadig åbent.} other {dyk stadig åbne.}}",
+ "@story.open": {
+  "x-review": "machine",
+  "x-source": "76a0fd06d3"
+ },
+ "story.panel": "AI-Sentinels og Probes læser denne kørsels lyskurve; hver stemme tæller så meget, som den scorede på indplantede testtransitter.",
+ "@story.panel": {
+  "x-review": "machine",
+  "x-source": "ca695f248f"
+ },
+ "story.probes_saw": "Probes så det ({k} af {n}).",
+ "@story.probes_saw": {
+  "x-review": "machine",
+  "x-source": "595da333cb"
+ },
+ "story.recovered": "transitter af {planet} fundet uden at få at vide, hvor der skulle ledes, hver ca. {min} minutter fra sit offentliggjorte tidspunkt. En kendt planet, genfundet.",
+ "@story.recovered": {
+  "x-review": "machine",
+  "x-source": "9d8d1e5460"
+ },
+ "story.recovered_period": "dyk på perioden for {planet}, en kendt planet. Genfundet, ikke opdaget.",
+ "@story.recovered_period": {
+  "x-review": "machine",
+  "x-source": "7aa74cf44f"
+ },
+ "story.sentinels": "{k} af {n} Sentinels markerede det.",
+ "@story.sentinels": {
+  "x-review": "machine",
+  "x-source": "c6be0b2e6b"
  },
  "subnav.candidates": "Sagsmapper",
  "@subnav.candidates": {
@@ -2996,6 +3806,46 @@
   "x-review": "machine",
   "x-source": "e37b76fbec"
  },
+ "sweep.evidence": "Se beviserne ›",
+ "@sweep.evidence": {
+  "x-review": "machine",
+  "x-source": "17281a2fb3"
+ },
+ "sweep.line": "Vi har gennemsøgt {n, number} stjerner for alt, der svækkes; {k, plural, =0 {indtil videre skiller intet sig ud fra tilfældet} one {{list} skiller sig indtil videre ud fra tilfældet} other {{list} skiller sig indtil videre ud fra tilfældet}}.",
+ "@sweep.line": {
+  "x-review": "machine",
+  "x-source": "2625a10311"
+ },
+ "tl.cap": "Planeter pr. opdagelsesår, stablet efter metoden, der fandt dem.",
+ "@tl.cap": {
+  "x-review": "machine",
+  "x-source": "abe7e1b656"
+ },
+ "tl.hint": "Peg på et år, eller fokusér diagrammet og brug piletasterne.",
+ "@tl.hint": {
+  "x-review": "machine",
+  "x-source": "c0d70ad218"
+ },
+ "tl.noyear": "{n, number} poster uden år er ikke tegnet.",
+ "@tl.noyear": {
+  "x-review": "machine",
+  "x-source": "90f8af3261"
+ },
+ "tl.read": "{y}: {n, plural, one {# planet} other {# planeter}}",
+ "@tl.read": {
+  "x-review": "machine",
+  "x-source": "7968ad0970"
+ },
+ "tl.table": "Planeter efter år og metode",
+ "@tl.table": {
+  "x-review": "machine",
+  "x-source": "60ecd96d94"
+ },
+ "tl.table_link": "Tallene efter år og metode, som tabel ›",
+ "@tl.table_link": {
+  "x-review": "machine",
+  "x-source": "8d38020252"
+ },
  "tn.h1": "Hvor TESS kigger.",
  "@tn.h1": {
   "x-review": "machine",
@@ -3005,6 +3855,31 @@
  "@tn.intro": {
   "x-review": "machine",
   "x-source": "6cbf61a637"
+ },
+ "ts.hi": "Varmeste stjerne, i kelvin",
+ "@ts.hi": {
+  "x-review": "machine",
+  "x-source": "8f287e3909"
+ },
+ "ts.lo": "Koldeste stjerne, i kelvin",
+ "@ts.lo": {
+  "x-review": "machine",
+  "x-source": "ccde65937b"
+ },
+ "ts.src": "Stjernefarve: et Planck-spektrum gennem CIE 1931-farvematchningsfunktionerne, i sRGB, normaliseret til den lyseste kanal (en farvetone, ikke en lysstyrke). Teff: hver kørsels stellar.json (TESS Input Catalog v8.2, MAST); Solen 5.772 K (IAU 2015, nominel).",
+ "@ts.src": {
+  "x-review": "machine",
+  "x-source": "b9cdfdaa9f"
+ },
+ "ts.sun": "Solen",
+ "@ts.sun": {
+  "x-review": "machine",
+  "x-source": "c15630ef0d"
+ },
+ "ts.title": "Stjernefarve fra 2.500 K til 10.000 K, med hver stjerne markeret ved sin temperatur",
+ "@ts.title": {
+  "x-review": "machine",
+  "x-source": "1fd7f02e9a"
  },
  "var.h1": "Alt, der dæmpes.",
  "@var.h1": {

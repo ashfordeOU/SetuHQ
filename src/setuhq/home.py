@@ -25,7 +25,7 @@ import html
 import importlib
 
 from setuhq.app import BENCHMARK_JSON, NO_DETECTION, UNCONFIRMED
-from setuhq.i18n import N_, k as ik, span, t, th
+from setuhq.i18n import N_, k as ik, ka, span, t, th
 from setuhq.design import odometer_html
 from setuhq.everything import sweep_line
 from setuhq.learn import learn_card
@@ -170,9 +170,10 @@ def _temps(data: dict) -> str:
             marks.append({"name": c["star"], "teff": sp["teff"], "href": f"#ex-{c['slug']}"})
     if not marks:
         return ""
-    src = (f"Star colour: a Planck spectrum through the CIE 1931 colour-matching functions, in sRGB, normalised to its "
-           f"brightest channel (a hue, not a brightness). Teff: each run's stellar.json (TESS Input Catalog v8.2, MAST); "
-           f'the Sun 5,772 K (IAU 2015 nominal). <a href="{PICTURES}">How the pictures are drawn ›</a>')
+    src = (span("ts.src", "Star colour: a Planck spectrum through the CIE 1931 colour-matching functions, in sRGB, normalised to its "
+                "brightest channel (a hue, not a brightness). Teff: each run's stellar.json (TESS Input Catalog v8.2, MAST); "
+                "the Sun 5,772 K (IAU 2015 nominal).")
+           + f' <a href="{PICTURES}"{ik("footer.pictures")}>How the pictures are drawn ›</a>')
     body = tempstrip.html({"source": src, "markers": marks})
     lo, hi = min(m["teff"] for m in marks), max(m["teff"] for m in marks)
     # Only as wide as the stored examples: n stars from the coolest to the hottest Teff stored, never "any star".
@@ -234,12 +235,13 @@ def _overview(data: dict, with_view: bool = True) -> str:
               more=f'<p class="bandmore"><a href="#/sky"{ik("home.more.sky")}>{t("home.more.sky", "Explore the sky ›")}</a></p>') if sky else "",
         _counters_band(data),
     ]
-    proof = "".join(f'<div><b style="--c:{p["colour"]}">{e(p["big"])}</b><span>{e(p["text"])}</span></div>' for p in st["proof"])
+    N_("home.proof", "What the reference run shows")
+    proof = "".join(f'<div><b style="--c:{p["colour"]}">{e(p["big"])}</b><span>{p.get("html") or e(p["text"])}</span></div>' for p in st["proof"])
     ref = (th("home.refcheck", "The reference check: {planet}, a known planet, found again in run {run}", planet=planet, run=run) if planet
            else th("home.refrun", "The reference run: {run}", run=run))
     rk = ik("home.refcheck", planet=planet, run=run) if planet else ik("home.refrun", run=run)
     bands.append(f'<section class="refcheck" id="band-refcheck" aria-labelledby="h-refcheck"><div class="secthead"><h2 id="h-refcheck"{rk}>{ref}</h2></div>'
-                 f'<div class="proof" role="list" aria-label="What the reference run shows">{proof.replace("<div>", "<div role=" + chr(34) + "listitem" + chr(34) + ">")}</div></section>')
+                 f'<div class="proof" role="list" aria-label="What the reference run shows"{ka(aria_label="home.proof")}>{proof.replace("<div>", "<div role=" + chr(34) + "listitem" + chr(34) + ">")}</div></section>')
     sweep = sweep_line(data.get("sweep"))
     bands.append(f'<div class="homesweep" id="band-sweep">{sweep}</div>' if sweep else "")
     bands.append(_do_here())

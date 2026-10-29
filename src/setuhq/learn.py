@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import html
 
+from setuhq.i18n import N_, k, ka, span
 from setuhq.methods import CHAPTERS
 
 LEARN_KEY = "setuhq-learn"
@@ -22,35 +23,51 @@ def learn_steps() -> list[dict]:
     then the Galaxy and the Catalogue."""
     steps = []
     for cid, title in CHAPTERS:
-        steps.append({"id": "ch:" + cid, "label": title, "href": f"#/methods?ch={cid}", "kind": "Methods chapter"})
+        steps.append({"id": "ch:" + cid, "label": title, "lid": f"chapter.{cid}", "href": f"#/methods?ch={cid}", "kind": KIND["ch"], "kid": "learn.kind.ch"})
         if cid == "transit":
-            steps.append({"id": "transit", "label": "SetuHQ's own transit: the case file", "href": "#/transit", "kind": "SetuHQ's run"})
-    steps.append({"id": "galaxy", "label": "Every known exoplanet, around the Sun", "href": "#/galaxy", "kind": "Galaxy"})
-    steps.append({"id": "catalogue", "label": "Every record, searchable", "href": "#/catalogue", "kind": "Catalogue"})
+            steps.append({"id": "transit", "label": STEP["transit"], "lid": "learn.step.transit", "href": "#/transit", "kind": KIND["run"], "kid": "learn.kind.run"})
+    steps.append({"id": "galaxy", "label": STEP["galaxy"], "lid": "learn.step.galaxy", "href": "#/galaxy", "kind": KIND["galaxy"], "kid": "learn.kind.galaxy"})
+    steps.append({"id": "catalogue", "label": STEP["catalogue"], "lid": "learn.step.catalogue", "href": "#/catalogue", "kind": KIND["catalogue"], "kid": "learn.kind.catalogue"})
     return steps
+
+
+KIND = {"ch": N_("learn.kind.ch", "Methods chapter"), "run": N_("learn.kind.run", "SetuHQ's run"),
+        "galaxy": N_("learn.kind.galaxy", "Galaxy"), "catalogue": N_("learn.kind.catalogue", "Catalogue")}
+STEP = {"transit": N_("learn.step.transit", "SetuHQ's own transit: the case file"),
+        "galaxy": N_("learn.step.galaxy", "Every known exoplanet, around the Sun"),
+        "catalogue": N_("learn.step.catalogue", "Every record, searchable")}
 
 
 def learn_card() -> str:
     """The Overview's Learn path card. The page fills in progress and the next step."""
     e = html.escape
     steps = learn_steps()
-    items = "".join(f'<li data-step="{e(s["id"])}"><a href="{e(s["href"])}"><span class="lnum mono">{k + 1:02d}</span>'
-                    f'<span class="ltxt">{e(s["label"])}<span class="lkind">{e(s["kind"])}</span></span><span class="ltick" aria-hidden="true"></span>'
-                    f'<span class="sr lseen">, not visited yet</span></a></li>' for k, s in enumerate(steps))
+    items = "".join(f'<li data-step="{e(s["id"])}"><a href="{e(s["href"])}"><span class="lnum mono">{n + 1:02d}</span>'
+                    f'<span class="ltxt"><span{k(s["lid"])}>{e(s["label"])}</span><span class="lkind"{k(s["kid"])}>{e(s["kind"])}</span></span><span class="ltick" aria-hidden="true"></span>'
+                    f'<span class="sr lseen"{k("learn.unseen")}>, not visited yet</span></a></li>' for n, s in enumerate(steps))
     return f"""<section class="card learncard" id="learncard" aria-labelledby="h-learn">
-        <div class="learnhead"><div><h2 id="h-learn">Learn path</h2>
-          <p>{len(steps)} steps, from how a survey works to every known exoplanet. Optional: go in order or skip around; any page you open counts. Progress stays in this browser.</p></div>
-          <div class="learnbtns"><a class="btn primary" id="learngo" href="{e(steps[0]["href"])}">Start the path</a><button class="btn" type="button" id="learnreset">Reset progress</button></div></div>
-        <div class="learnmeter" role="progressbar" aria-label="Learn path progress" aria-valuemin="0" aria-valuemax="{len(steps)}" aria-valuenow="0"><i id="learnfill"></i></div>
-        <p class="mono learncount" id="learncount">0 of {len(steps)} visited</p>
-        <details class="learnlist"><summary>All {len(steps)} steps</summary><ol id="learnsteps">{items}</ol></details>
+        <div class="learnhead"><div><h2 id="h-learn"{k("learn.h")}>Learn path</h2>
+          <p>{span("learn.intro", "{n} steps, from how a survey works to every known exoplanet. Optional: go in order or skip around; any page you open counts. Progress stays in this browser.", n=len(steps))}</p></div>
+          <div class="learnbtns"><a class="btn primary" id="learngo" href="{e(steps[0]["href"])}"{k("learn.start")}>Start the path</a><button class="btn" type="button" id="learnreset"{k("learn.reset")}>Reset progress</button></div></div>
+        <div class="learnmeter" role="progressbar" aria-label="Learn path progress"{ka(aria_label="learn.progress")} aria-valuemin="0" aria-valuemax="{len(steps)}" aria-valuenow="0"><i id="learnfill"></i></div>
+        <p class="mono learncount" id="learncount">{span("learn.count", "{k} of {n} visited", k=0, n=len(steps))}</p>
+        <details class="learnlist"><summary>{span("learn.all", "All {n} steps", n=len(steps))}</summary><ol id="learnsteps">{items}</ol></details>
       </section>"""
 
 
-LEARN_BAR = """<nav class="learnbar" id="learnbar" aria-label="Learn path" hidden>
-  <span class="lpos mono" id="learnpos"></span><a class="btn" id="learnprev" href="#/">‹ Back</a><a class="btn primary" id="learnnext" href="#/">Next ›</a>
-  <button class="btn" type="button" id="learnleave" aria-label="Leave the path">Leave</button>
+LEARN_BAR = f"""<nav class="learnbar" id="learnbar" aria-label="Learn path"{ka(aria_label="learn.h")} hidden>
+  <span class="lpos mono" id="learnpos"></span><a class="btn" id="learnprev" href="#/"{k("learn.back")}>‹ Back</a><a class="btn primary" id="learnnext" href="#/"{k("learn.next_btn")}>Next ›</a>
+  <button class="btn" type="button" id="learnleave" aria-label="Leave the path"{ka(aria_label="learn.leave_label")}{k("learn.leave")}>Leave</button>
 </nav>"""
+N_("learn.h", "Learn path")
+N_("learn.start", "Start the path")
+N_("learn.reset", "Reset progress")
+N_("learn.progress", "Learn path progress")
+N_("learn.unseen", ", not visited yet")
+N_("learn.back", "‹ Back")
+N_("learn.next_btn", "Next ›")
+N_("learn.leave", "Leave")
+N_("learn.leave_label", "Leave the path")
 
 
 LEARN_CSS = r"""
@@ -120,12 +137,12 @@ function learnRender(){
     const nx = learnNext();
     $('#learnfill').style.width = (k / n * 100) + '%';
     card.querySelector('.learnmeter').setAttribute('aria-valuenow', String(k));
-    $('#learncount').textContent = `${k} of ${n} visited` + (k === n ? ' · path complete' : '');
+    $('#learncount').textContent = T('learn.count', '{k} of {n} visited', {k, n}) + (k === n ? T('learn.complete', ' · path complete') : '');
     const go = $('#learngo');
-    go.textContent = !k ? 'Start the path' : nx ? `Continue: ${nx.label}` : 'Start again from step 1';
+    go.textContent = !k ? T('learn.start', 'Start the path') : nx ? T('learn.continue', 'Continue: {step}', {step: T(nx.lid, nx.label)}) : T('learn.again', 'Start again from step 1');
     go.setAttribute('href', R((nx || LEARN[0]).href));
     $$('#learnsteps li').forEach(li => { const seen = learn.seen.includes(li.dataset.step); li.dataset.seen = seen ? '1' : '0'; li.dataset.next = nx && nx.id === li.dataset.step ? '1' : '0';
-      li.querySelector('.lseen').textContent = seen ? ', visited' : ', not visited yet'; });
+      li.querySelector('.lseen').textContent = seen ? T('learn.seen', ', visited') : T('learn.unseen', ', not visited yet'); });
   }
 }
 // The path bar: shown on a step's page once the viewer has started the path, with Back, Next and Leave.
@@ -133,13 +150,13 @@ function learnBar(step){
   const bar = $('#learnbar'), i = LEARN.findIndex(x => x.id === step), on = learn.active && i >= 0;
   bar.hidden = !on; document.body.classList.toggle('learning', on);
   if (!on) return;
-  $('#learnpos').innerHTML = `<span class="lpre">Learn path · </span>${i + 1} of ${LEARN.length} · ${esc(LEARN[i].label)}`;
+  $('#learnpos').innerHTML = `<span class="lpre">${esc(T('learn.h', 'Learn path'))} · </span>${esc(T('learn.pos', '{i} of {n}', {i: i + 1, n: LEARN.length}))} · ${esc(T(LEARN[i].lid, LEARN[i].label))}`;
   const prev = LEARN[i - 1], next = LEARN[i + 1];
   // Never hide the button that has focus: on step 1, Back hands focus to Next first.
   if (!prev && document.activeElement === $('#learnprev')) $('#learnnext').focus();
   $('#learnprev').hidden = !prev; if (prev) $('#learnprev').setAttribute('href', R(prev.href));
-  $('#learnnext').innerHTML = next ? `Next<span class="lnt">: ${esc(next.label)}</span> ›` : 'Finish ›';
-  $('#learnnext').setAttribute('aria-label', next ? `Next: ${next.label}` : 'Finish the path'); $('#learnnext').setAttribute('href', next ? R(next.href) : '/');
+  $('#learnnext').innerHTML = next ? `${esc(T('learn.next', 'Next'))}<span class="lnt">: ${esc(T(next.lid, next.label))}</span> ›` : esc(T('learn.finish', 'Finish ›'));
+  $('#learnnext').setAttribute('aria-label', next ? T('learn.next_label', 'Next: {step}', {step: T(next.lid, next.label)}) : T('learn.finish_label', 'Finish the path')); $('#learnnext').setAttribute('href', next ? R(next.href) : '/');
 }
 function learnVisit(p){
   const step = learnStepOf(p);
@@ -150,13 +167,13 @@ function learnVisit(p){
 if ($('#learncard')){
   $('#learngo').addEventListener('click', () => { learn.active = true; if (learn.seen.length === LEARN.length) learn.seen = []; learnSave(); });
   $('#learnsteps').addEventListener('click', e => { if (e.target.closest('a')){ learn.active = true; learnSave(); } });
-  $('#learnreset').addEventListener('click', () => { learn.seen = []; learn.active = false; learnSave(); learnRender(); say('Learn path progress cleared.'); });
+  $('#learnreset').addEventListener('click', () => { learn.seen = []; learn.active = false; learnSave(); learnRender(); say(T('learn.cleared', 'Learn path progress cleared.')); });
 }
 if ($('#learnbar')){
   // Leaving hides the bar, so focus moves to the page's heading (or main), not to <body>.
   $('#learnleave').addEventListener('click', () => { learn.active = false; learnSave(); learnBar(null);
     const h = $(`#route-${current} h1`) || $('#main'); if (h){ if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1'); h.focus({preventScroll: true}); }
-    say('Left the Learn path. Your progress is kept.'); });
+    say(T('learn.left', 'Left the Learn path. Your progress is kept.')); });
   $('#learnnext').addEventListener('click', () => { if ($('#learnnext').getAttribute('href') === '/'){ learn.active = false; learnSave(); } });
 }
 """

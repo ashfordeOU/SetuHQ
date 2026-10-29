@@ -163,6 +163,50 @@ def dip_state(outcome: str | None) -> tuple[str, str, str]:
     return DIP_STATE.get("passed" if outcome in FEED_STATUSES else outcome or "", DIP_STATE["flagged"])
 
 
+def status_html(label: str) -> str:
+    """A dip's status line (story.dip_status: "pi Men c · known planet", "Open · flagged for review", ...) as keyed markup."""
+    import html as _h
+
+    from setuhq.i18n import span
+
+    if label.endswith(" · known planet"):
+        return span("status.known", "{planet} · known planet", planet=label[:-len(" · known planet")])
+    for mid, en in (("status.rejected", "Rejected by vetting"), ("status.open_flagged", "Open · flagged for review"),
+                    ("status.open_cand", "Open · candidate, unconfirmed")):
+        if label == en:
+            return span(mid, en)
+    return _h.escape(label)
+
+
+N_("status.rejected", "Rejected by vetting")
+N_("status.open_flagged", "Open · flagged for review")
+N_("status.open_cand", "Open · candidate, unconfirmed")
+PROBES_AND_SENTINELS = N_("panel.probes_sentinels", "Probes and Sentinels")
+
+
+def panel_html(label: str) -> str:
+    """A run's panel ("Probes only; Sentinels not run on this example", or "Probes and Sentinels") as keyed markup."""
+    import html as _h
+
+    from setuhq.i18n import span
+
+    if label == PROBES_ONLY:
+        return span("honesty.probes_only", PROBES_ONLY)
+    return span("panel.probes_sentinels", PROBES_AND_SENTINELS) if label == PROBES_AND_SENTINELS else _h.escape(label)
+
+
+def dip_count_html(n: int, counts: dict[str, int]) -> str:
+    """:func:`dip_count` as keyed markup ("7 dips (5 candidates, 1 flagged, 1 rejected)"), each part its own message.
+    ``counts``: {"candidates": k, "flagged": k, "rejected": k}."""
+    from setuhq.i18n import span
+
+    parts = [span(mid, en, n=counts.get(key) or 0) for key, mid, en in (
+        ("candidates", "dips.cand", N_("dips.cand", "{n, plural, one {# candidate} other {# candidates}}")),
+        ("flagged", "dips.flag", N_("dips.flag", "{n, plural, other {# flagged}}")),
+        ("rejected", "dips.rej", N_("dips.rej", "{n, plural, other {# rejected}}"))) if counts.get(key)]
+    return span("dips.n", "{n, plural, one {# dip} other {# dips}}", n=n) + (f" ({', '.join(parts)})" if parts else "")
+
+
 def dip_count(outcomes: list[str | None]) -> str:
     """"7 dips (5 candidates, 1 flagged, 1 rejected)": a count that never calls a rejected dip a candidate."""
     words = [dip_state(o)[1] for o in outcomes]

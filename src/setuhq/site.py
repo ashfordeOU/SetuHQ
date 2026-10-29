@@ -644,7 +644,7 @@ setuhq-mcp --list-tools</code></pre>
         <ul>
           <li><a href="/{CATALOGUE_JSON}">The catalogue of known planets (JSON)</a> and <a href="/assets/data/{CSV_NAME}">every planet on the Galaxy map (CSV)</a>, from exoplanet.eu.</li>
           <li><a href="/{VARIABLES_JSON}">Everything that dims (JSON)</a>: every entry of SetuHQ's sweep, with its credit.</li>
-          {"".join(f'<li>{e(c["star"])} ({e(c["kind"] or c["run"])}): <a href="{e(c["report"])}">the run report</a>, <a href="{e(c["plates"])}">the plates</a> and <a href="{e(c["case_file"])}">the case file</a> of run {e(c["run"])}.</li>' for c in data.get("showcase") or [])}
+          {"".join(f'<li>{e(c["star"])} ({e(c["kind"] or c["run"])}): ' + i18n.span("docs.runfiles", '<a href="{report}">the run report</a>, <a href="{plates}">the plates</a> and <a href="{cf}">the case file</a> of run {run}.', report=c["report"], plates=c["plates"], cf=c["case_file"], run=c["run"]) + '</li>' for c in data.get("showcase") or [])}
           <li>The benchmark, the leaderboard and the paper: <a rel="noopener" href="{REPO_URL}/tree/main/docs">docs/ in the repository</a>.</li>
         </ul>
         <p>SetuHQ's own data, benchmark, leaderboard and paper are under CC BY 4.0; the code is under the AGPL-3.0 (a commercial licence is available). Cite it with <a rel="noopener" href="{REPO_URL}/blob/main/CITATION.cff">CITATION.cff</a>.</p>

@@ -48,6 +48,7 @@ CAVEATS = {
     "label.illustration": (),
     "label.speculative": (),
 }
+SHOWCASE_FIELDS = ("kind", "summary", "caveat", "why", "outcome")
 # Words that never translate, wherever the English has them.
 KEEP = ("SetuHQ", "Sentinel", "Probe", "TESS", "CHEOPS", "ESA", "NASA", "TOI", "Claude", "Anthropic", "MAST", "MCP")
 # English that may make a claim: a translation may use its word for these only where the English does.
@@ -72,7 +73,7 @@ def _calls(path: Path):
             continue
         f = node.func
         name = f.id if isinstance(f, ast.Name) else f.attr if isinstance(f, ast.Attribute) else None
-        if name not in ("t", "th", "T", "N_", "span") or len(node.args) < 2:
+        if name not in ("t", "th", "T", "N_", "span", "ispan") or len(node.args) < 2:
             continue
         a, b = node.args[0], node.args[1]
         if not (isinstance(a, ast.Constant) and isinstance(a.value, str) and isinstance(b, ast.Constant) and isinstance(b.value, str)):
@@ -111,6 +112,13 @@ def extract() -> dict:
         text = path.read_text(encoding="utf-8")
         for m in _JS_T.finditer(text):
             add(m.group(1), _js_unescape(m.group(2)), None, f"{rel}:{text.count(chr(10), 0, m.start()) + 1}")
+    showcase = ROOT / "docs" / "results" / "showcase.json"
+    if showcase.is_file():  # the worked examples' editorial lines (data, but prose a reader sees on the home page)
+        for r in json.loads(showcase.read_text(encoding="utf-8")).get("runs") or []:
+            for field in SHOWCASE_FIELDS:
+                if r.get(field):
+                    add(f"showcase.{r['run']}.{field}", r[field], f"The worked example {r.get('star') or r['run']}: its {field}, "
+                        "from docs/results/showcase.json.", "docs/results/showcase.json")
     from setuhq.i18n_cli import messages as cli_messages
 
     for mid, en in cli_messages().items():

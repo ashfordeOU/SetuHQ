@@ -18,6 +18,7 @@ import html as _html
 
 from setuhq.looks import REFERENCES, RJ_IN_RE, find_planet, look, row
 from setuhq.renderer import PICTURES, still_href
+from setuhq.i18n import N_, k as ik, span
 from setuhq.viz import require_source
 
 REF_ORDER = ("ref-earth", "ref-neptune", "ref-jupiter")
@@ -123,18 +124,23 @@ def html(data: dict, **opts) -> str:
         # The 160 px still, or the 512 px one for a disc drawn wider than 80 px (at one Earth radius per 8 px).
         px = 512 if p["rp_re"] / rmax * 90 > 40 else 160
         lis.append(f'<li class="{cls}" style="--re:{p["rp_re"]:.3f}"><img src="{still_href(lk, px)}" width="160" height="160" loading="lazy" '
-                   f'alt=""><b>{name}</b><span>{e(fmt_r(p["rp_re"]))}</span></li>')  # the name and radius beside it are the text
+                   f'alt=""><b{ik("lu." + p["name"].lower()) if p.get("ref") and p["name"] in ("Earth", "Neptune", "Jupiter") else ""}>{name}</b><span>{e(fmt_r(p["rp_re"]))}</span></li>')  # the name and radius beside it are the text
     big = max(its, key=lambda p: p["rp_re"])
     small = min(its, key=lambda p: p["rp_re"])
     title = e(data.get("title") or "Planets to scale")
     return (f'<figure class="lineup" data-viz="lineup" aria-label="{title}">'
             f'<div class="stage lustage" style="--rmax:{rmax:.3f}"><ol class="lurow">{"".join(lis)}</ol>'
             f'<a class="stage-tag" href="{PICTURES}" data-i18n="label.art">Artist\'s impression</a></div>'
-            f'<figcaption class="skysrc">To scale: one Earth radius is the same width all along the row, so {e(big["name"])} is '
-            f'{big["rp_re"] / small["rp_re"]:.1f} times as wide as {e(small["name"])}. Each picture is an artist\'s impression chosen from the '
-            f'measured radius and the computed irradiation; composition is not measured. Earth, Neptune and Jupiter are the Solar System '
-            f'references (only Earth is drawn with oceans). Radii: {e(data["source"])} (1 RJ = 11.209 R⊕). '
-            f'<a href="{PICTURES}">How the pictures are drawn ›</a></figcaption></figure>')
+            f'<figcaption class="skysrc">{span("lu.cap", "To scale: one Earth radius is the same width all along the row, so {big} is {x} times as wide as {small}. Each picture is an artist\'s impression chosen from the measured radius and the computed irradiation; composition is not measured. Earth, Neptune and Jupiter are the Solar System references (only Earth is drawn with oceans). Radii: {src} (1 RJ = 11.209 R⊕).", x=f"{big['rp_re'] / small['rp_re']:.1f}", src=data["source"], **_ref("big", big["name"]), **_ref("small", small["name"]))} '
+            f'<a href="{PICTURES}"{ik("footer.pictures")}>How the pictures are drawn ›</a></figcaption></figure>')
+
+
+REF_NAMES = {"Earth": N_("lu.earth", "Earth"), "Neptune": N_("lu.neptune", "Neptune"), "Jupiter": N_("lu.jupiter", "Jupiter")}
+
+
+def _ref(arg: str, name: str) -> dict:
+    """A planet name as a message argument; a Solar System reference also names its own message (translated)."""
+    return {arg: name, arg + "@": "lu." + name.lower()} if name in REF_NAMES else {arg: name}
 
 
 CSS = """

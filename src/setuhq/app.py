@@ -37,7 +37,7 @@ import math
 from pathlib import Path
 
 from setuhq import brand
-from setuhq.i18n import N_, k as ik, span, t, th
+from setuhq.i18n import N_, k as ik, ka, span, t, th
 from setuhq.design import BASE_CSS, MOTION_CSS, tokens_css
 from setuhq.benchmark_toi import wilson
 from setuhq.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS, held_line, load_public_catalog
@@ -54,7 +54,7 @@ from setuhq.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examp
 from setuhq.codenote import code_note
 from setuhq.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
 from setuhq import dipslugs, journey
-from setuhq.names import (ATTRIBUTION, DIP_STATE, PROBES_ONLY, PROVIDER_BY_KIND, dip_count, dip_state, panel_mode, public_text, SENTINEL_KINDS,
+from setuhq.names import (ATTRIBUTION, DIP_STATE, PROBES_AND_SENTINELS, PROBES_ONLY, PROVIDER_BY_KIND, dip_count, dip_count_html, dip_state, panel_html, panel_mode, status_html, public_text, SENTINEL_KINDS,
                           panel_phrase, reviewer_names, reviewer_provenance)
 from setuhq.objects import slugify
 from setuhq.routes import ALIASES, from_hash, route_table, set_dip_slugs
@@ -143,7 +143,7 @@ UNCONFIRMED = N_("honesty.unconfirmed", "candidate, unconfirmed", note="The stat
 
 def dip_tag(outcome: str | None) -> str:
     cls, word, phrase = dip_state(outcome)
-    return f'<span class="tag {cls}" title="{html.escape(phrase)}">{word}</span>'
+    return f'<span class="tag {cls}" title="{html.escape(phrase)}" data-i18n="dip.tag.{cls}" data-i18n-attr="title:dip.state.{cls}">{word}</span>'
 NO_DETECTION = N_("honesty.no_detection", "Archive values only. This page claims no detection.")
 NO_STELLAR_RADIUS = ("No stellar radius is stored in the run or the catalogue, so this page does not "
                      "convert the ratio to a planet radius in Earth or Jupiter units.")
@@ -734,7 +734,7 @@ def example_card(x: dict, meta: dict) -> dict:
         "n_dips": len(dips), "count": dip_count(outcomes),
         "counts": {k: sum(1 for o in outcomes if dip_state(o)[1] == w) for k, w in
                    (("candidates", "candidate"), ("flagged", "flagged"), ("rejected", "rejected"))},
-        "panel": mode, "panel_label": PROBES_ONLY if mode == "probes_only" else "Probes and Sentinels",
+        "panel": mode, "panel_label": PROBES_ONLY if mode == "probes_only" else PROBES_AND_SENTINELS,
         "lead": bool(x.get("lead")), "lead_dip": lead_dip,
         # Provenance: each input file's hash, the configuration's hash and the code that ran.
         "inputs": [{"file": i.get("file"), "file_sha256": i.get("file_sha256"), "sector": i.get("sector")} for i in m.get("inputs") or []],
@@ -1058,7 +1058,7 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1px;width:min(100%,1100px);margin:0 auto;background:var(--line);border-radius:22px;overflow:hidden;position:relative;text-align:left}
 .proof>div{background:color-mix(in oklab,var(--panel) 88%,transparent);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);padding:22px 24px}
 .proof b{display:block;font-size:40px;font-weight:600;letter-spacing:-.03em;line-height:1.05}
-.proof span{display:block;margin-top:8px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.proof>div>span{display:block;margin-top:8px;font-size:14px;line-height:1.45;color:var(--ink-2)}
 .honest{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.2fr);gap:12px 32px;border-top:1px solid var(--line);padding-top:22px}
 .honest h2{font-size:15px;color:var(--ink-3);font-weight:500}
 .honest ul{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
@@ -3075,10 +3075,11 @@ def _sky(data: dict) -> str:
     pin = marker = ""
     if geo.get("x") is not None:
         lead = st.get("lead_dip")
-        known = f"{e(st['planet'])} · known planet" if st.get("planet") else f"{len(st['dips'])} dips · {UNCONFIRMED}"
+        known = (status_html(f"{st['planet']} · known planet") if st.get("planet")
+                 else f"{dip_count_html(len(st['dips']), {})} · <span{ik('honesty.unconfirmed')}>{e(UNCONFIRMED)}</span>")
         pin = (f'<a class="skypin" href="#/transit?dip={e(lead or "")}" style="left:{(geo["x"] + 460) / 920 * 100:.1f}%;top:{(geo["y"] + 235) / 470 * 100:.1f}%" '
                f'title="{e(star["name"])} placed from SIMBAD (ICRS J2000): RA {star["ra_deg"]:.2f}°, Dec {star["dec_deg"]:.2f}°">'
-               f'<b>{e(star["name"])}</b><span>{known}</span><em>Open ›</em></a>')
+               f'<b>{e(star["name"])}</b><span>{known}</span><em{ik("sky.open")}>{N_("sky.open", "Open ›")}</em></a>')
         zoom = f' data-zoom="{e(st["planet"])}"' if st.get("planet") else ""
         marker = (f'<g class="skymark"{zoom}><circle class="pulse" cx="{geo["x"]}" cy="{geo["y"]}" r="22" fill="url(#pmg)"/>'
                   f'<circle cx="{geo["x"]}" cy="{geo["y"]}" r="10" fill="none" stroke="#64D2FF" stroke-width=".8"/>'
@@ -3086,7 +3087,8 @@ def _sky(data: dict) -> str:
         where = f"{e(star['name'])} at RA {star['ra_deg']:.2f}°, Dec {star['dec_deg']:.2f}° ({e(star['source'])})"
     else:
         where = "The target's sky position is not stored, so it is not plotted"
-    placed = f'{e(star["name"])} placed from SIMBAD (ICRS J2000) · ' if geo.get("x") is not None else "target not plotted (no position stored) · "
+    placed = (span("sky.note.placed", "{star} placed from SIMBAD (ICRS J2000)", star=star["name"]) + " · " if geo.get("x") is not None
+              else span("sky.note.unplaced", "target not plotted (no position stored)") + " · ")
     overlay = (f'<svg class="skyover" viewBox="-460 -235 920 470" role="img" aria-label="Survey coverage layers (hidden until chosen), the ecliptic, and the run\'s star: {where}.">'
                f'<defs><radialGradient id="pmg"><stop offset="0" stop-color="#64D2FF" stop-opacity=".9"/><stop offset="1" stop-color="#64D2FF" stop-opacity="0"/></radialGradient></defs>'
                f'{sky_layers_svg(data.get("coverage"))}{sky_layer_svg(data.get("sweep"))}'
@@ -3099,8 +3101,8 @@ def _sky(data: dict) -> str:
     tl = timeline.html({"source": src, "app": data}, where="explore", uid="timeline") if cat else ""
     links = "".join(obj_link(k, n, f"{n} ›") for k, n in (("star", star.get("name")), ("planet", st.get("planet"))) if n)
     if st.get("planet") and geo.get("x") is not None:
-        links += (f'<button class="btn skyzoom" type="button" data-zoom="{e(st["planet"])}" hidden>'
-                  f'Zoom into the {e(st["planet"])} system ›</button>')
+        links += (f'<button class="btn skyzoom" type="button" data-zoom="{e(st["planet"])}" hidden{ik("sky.zoom", planet=st["planet"])}>'
+                  f'{th("sky.zoom", "Zoom into the {planet} system ›", planet=st["planet"])}</button>')
     links = f'<div class="pllinks skylinks">{links}</div>' if links else ""
     t1, t2 = st["sky_title"]
     tl_sec = (f'<section class="sktl" aria-labelledby="h-sktl"><h2 id="h-sktl" class="secth"{ik("sky.tl")}>{t("sky.tl", "Planets found each year, by method")}</h2>{tl}</section>' if tl else "")
@@ -3111,13 +3113,13 @@ def _sky(data: dict) -> str:
       <p class="muted" style="margin:0;max-width:80ch">{e(h["lede"])} {e(h["qualifier"])} {e(h["archive"])}</p>
       <div class="row2">
         <section class="skymap" aria-labelledby="h-skymap">
-          <h2 id="h-skymap" class="sr">Sky map</h2>
+          <h2 id="h-skymap" class="sr"{ik("route.sky.label")}>Sky map</h2>
           {base}
-          <p class="skynote">Feed stars not plotted (positions not stored) · {placed}dashed: the ecliptic</p>
+          <p class="skynote">{span("sky.note.feed", "Feed stars not plotted (positions not stored)")} · {placed}{span("sky.note.ecl", "dashed: the ecliptic")}</p>
           {links}
         </section>
         <aside class="glass dipsbox" aria-labelledby="h-skydips">
-          <div class="dhead"><b id="h-skydips">Dips</b><span class="muted" id="skycount"></span></div>
+          <div class="dhead"><b id="h-skydips"{ik("subnav.transit")}>Dips</b><span class="muted" id="skycount"></span></div>
           <div class="segctl" id="skyrev" role="group" aria-label="Who marked it"></div>
           <div id="skydips"></div>
         </aside>
@@ -3125,7 +3127,7 @@ def _sky(data: dict) -> str:
       {_sky_coverage(data)}
       {tl_sec}
       <section class="glass runline" aria-labelledby="h-skytl">
-        <h2 id="h-skytl" class="sr">The run's light curve</h2>
+        <h2 id="h-skytl" class="sr"{ik("sky.lc")}>{N_("sky.lc", "The run's light curve")}</h2>
         <div class="cap" id="skytlcap"></div>
         <div id="skytimeline"></div>
         <p class="xread" id="skytlread" aria-live="polite"></p>
@@ -3145,14 +3147,18 @@ def _sky_coverage(data: dict) -> str:
     if not cov:
         return ""
     f = cov["fractions"]
-    return (f'<section class="glass skycov" aria-label="Survey coverage">{_with_sweep_chip(coverage_chips(cov, "sky"), data.get("sweep"))}<p>Survey coverage: TESS has observed {f["tess"] * 100:.1f}% of the sky '
-            f'(sectors 1–{cov["tess_last_sector"]}); {f["unmapped"] * 100:.1f}% has never been in a TESS, Kepler or K2 footprint. '
-            f'Shading shows where surveys looked, not where planets are. <a href="#/galaxy">Figures and sources in the Galaxy ›</a></p>'
-            + (f'<p>The setuhq sweep layer: one green dot per star-sector the sweep searched ({len(data["sweep"]["sky"]):,} so far, positions from MAST), '
-               f'amber where it has an entry in a class that exceeds its null in this slice '
-               f'({", ".join(c.replace("_", " ") for c in data["sweep"].get("sky_found_classes") or []) or "none"}). '
-               f'<a href="#/variables">Everything that dims ›</a></p>'
+    cov_p = span("sky.cov", "Survey coverage: TESS has observed {tess}% of the sky (sectors 1–{last}); {unm}% has never been in a TESS, Kepler or K2 "
+                 "footprint. Shading shows where surveys looked, not where planets are.", tess=f"{f['tess'] * 100:.1f}",
+                 last=str(cov["tess_last_sector"]), unm=f"{f['unmapped'] * 100:.1f}")
+    found = ", ".join(c.replace("_", " ") for c in data["sweep"].get("sky_found_classes") or []) if data.get("sweep") else ""
+    return (f'<section class="glass skycov" aria-label="Survey coverage"{ka(aria_label="sky.cov_label")}>{_with_sweep_chip(coverage_chips(cov, "sky"), data.get("sweep"))}<p>{cov_p} '
+            f'<a href="#/galaxy"{ik("sky.cov_more")}>{N_("sky.cov_more", "Figures and sources in the Galaxy ›")}</a></p>'
+            + (f'<p>{span("sky.sweep", "The setuhq sweep layer: one green dot per star-sector the sweep searched ({n, number} so far, positions from MAST), amber where it has an entry in a class that exceeds its null in this slice ({found, select, none {none} other {{found}}}).", n=len(data["sweep"]["sky"]), found=found or "none")} '
+               f'<a href="#/variables"{ik("sky.sweep_more")}>{N_("sky.sweep_more", "Everything that dims ›")}</a></p>'
                if data.get("sweep") and data["sweep"].get("sky") else "") + '</section>')
+
+
+N_("sky.cov_label", "Survey coverage")
 
 
 # The example kind (docs/results/showcase.json) whose dips get the system's orbits (V08) beside the playback.
@@ -3247,15 +3253,17 @@ def _explorer(data: dict) -> str:
         rows = []
         for d in c["dips"]:
             rows.append(f'<li><a class="rundip" href="#/transit?dip={e(d["id"])}"><b>{e(d["label"])}</b>'
-                        f'<span class="muted">{e(d.get("status_label") or "")} · {d.get("depth_ppm") or 0:,.0f} ppm · SNR {d.get("snr") or 0:.1f}</span>'
+                        f'<span class="muted">{status_html(d.get("status_label") or "")} · {d.get("depth_ppm") or 0:,.0f} ppm · SNR {d.get("snr") or 0:.1f}</span>'
                         f'{dip_tag(d.get("outcome"))}</a>'
-                        f'<a class="rundipcf" href="#/candidates?dip={e(d["id"])}" aria-label="Case file for {e(d["label"])}">Case file ›</a></li>')
+                        f'<a class="rundipcf" href="#/candidates?dip={e(d["id"])}" aria-label="Case file for {e(d["label"])}"{ik("cf.link")}>{N_("cf.link", "Case file ›")}</a></li>')
         hid = f'h-run-{e(c["slug"])}'
+        lines = "".join(f' <span{ik(f"showcase.{c['run']}.{field}")}>{e(c[key])}</span>'
+                        for key, field in (("outcome_line", "outcome"), ("caveat", "caveat")) if c[key])
         groups.append(f"""<section class="card rundips" aria-labelledby="{hid}">
-        <div class="rundiphead">{_star_disc(data, c["run"], 28, c["slug"], c["star"])}<h2 id="{hid}">{e(c["star"])}{f' · {e(c["kind"])}' if c["kind"] else ""}: {e(c["count"])}</h2></div>
-        <p class="small">Run {e(c["run"])}, TESS sector{"s" if len(c["sectors"]) != 1 else ""} {e(", ".join(str(x) for x in c["sectors"]))}. {e(c["panel_label"])}.{f" {e(c['outcome_line'])}" if c["outcome_line"] else ""}{f" {e(c['caveat'])}" if c["caveat"] else ""}</p>
+        <div class="rundiphead">{_star_disc(data, c["run"], 28, c["slug"], c["star"])}<h2 id="{hid}">{e(c["star"])}{f' · <span{ik(f"showcase.{c['run']}.kind")}>{e(c["kind"])}</span>' if c["kind"] else ""}: {dip_count_html(c["n_dips"], c["counts"])}</h2></div>
+        <p class="small">{span("run.sectors", "Run {run}, TESS {n, plural, one {sector} other {sectors}} {list}.", run=c["run"], n=len(c["sectors"]), list=", ".join(str(x) for x in c["sectors"]))} {panel_html(c["panel_label"])}.{lines}</p>
         <ul class="rundiplist">{"".join(rows)}</ul>
-        <p class="small runlinks"><a href="{e(c["case_file"])}">The run's case file ›</a> <a href="{e(c["plates"])}">Plates ›</a> <a href="{e(c["report"])}">Run report ›</a></p>
+        <p class="small runlinks"><a href="{e(c["case_file"])}"{ik("run.casefile")}>{N_("run.casefile", "The run's case file ›")}</a> <a href="{e(c["plates"])}"{ik("run.plates")}>{N_("run.plates", "Plates ›")}</a> <a href="{e(c["report"])}"{ik("run.report")}>{N_("run.report", "Run report ›")}</a></p>
       </section>""")
     more = (f" Further down: the search feed's {len(feed)} entries from other stars, which have no case file yet." if feed else "")
     return f"""<header>

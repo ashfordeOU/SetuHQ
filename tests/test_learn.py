@@ -161,4 +161,4 @@ def test_the_bar_never_covers_the_catalogue_or_the_galaxy_sheet():
     phone = css[css.index("@media (max-width:699.98px)"):]
     assert "body.learning .ctscroll{height:calc(70vh - 100px)}" in phone
     assert "body.learning .gxsheet{bottom:calc(98px + env(safe-area-inset-bottom,0px))}" in phone
-    assert ".learnbar .lnt,.learnbar .lpre{display:none}" in phone and '<span class="lpre">Learn path · </span>' in L.LEARN_JS
+    assert ".learnbar .lnt,.learnbar .lpre{display:none}" in phone and "<span class=\"lpre\">${esc(T('learn.h', 'Learn path'))} · </span>" in L.LEARN_JS

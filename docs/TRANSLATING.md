@@ -93,6 +93,9 @@ python tools/i18n.py check
 python tools/i18n.py tm
 ```
 
+The worked examples' editorial lines (their kind, summary, caveat, why and outcome in
+`docs/results/showcase.json`) are extracted too, as `showcase.<run>.<field>`; changing that file makes them stale.
+
 A message id is permanent: change the English under the same id when the meaning is the same, and use a new id
 when it is not.
 
