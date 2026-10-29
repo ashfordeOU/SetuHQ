@@ -13,6 +13,13 @@ name: discover
 #   the feed page `setuhq discover` writes with a forward to /candidates/) and runs the fast tests. A push made with GITHUB_TOKEN does not start ci.yml, so these checks run here.
 # * The feed's admissions are leads for review, not planets: under the pre-registered two-sector rule the
 #   feed is still dominated by false alarms (README, Evidence).
+# * Embargo. This repository, its Actions logs and its uploaded artifacts are public. `setuhq discover` withholds
+#   every signal that matches no known TOI (on by default): the committed catalogue, the site and everything
+#   this job prints are exactly what they would be had the signal not been found (no count, no date). Counts
+#   live only in the private review pipeline. New signals go to private review and reporting first; the search is deterministic, so the private
+#   pipeline re-searches those targets itself. This workflow must never pass --publish-new or use a config that
+#   sets `embargo = false` (tests/test_embargo.py checks it), and the check below stops the commit if the
+#   catalogue holds anything else.
 
 on:
   schedule:
@@ -57,6 +64,18 @@ jobs:
             --validation docs/results/pi_men_validation.md --benchmark docs/results/injection_recovery_simulated_panel.md
       - name: Fast tests before the push
         run: .venv/bin/python -m pytest -q tests/test_discover.py tests/test_codenote.py tests/test_brand.py tests/test_licensing.py tests/test_catalogue.py tests/test_site.py
+      - name: Embargo check (the catalogue holds only known-TOI matches)
+        run: |
+          .venv/bin/python - <<'PY'
+          import json, sys
+          c = json.load(open("docs/discoveries/catalog.json"))
+          bad = sum(1 for e in c.get("candidates", []) if e.get("status") != "known_toi")
+          if c.get("embargo") is not True or bad:
+              sys.exit(f"embargo check failed: {bad} entries are not known_toi matches; nothing is committed")
+          if any(k.startswith("held_") for k in c):
+              sys.exit("embargo check failed: the catalogue stores a held-signal field; nothing is committed")
+          print("embargo check passed")
+          PY
       - name: Commit catalogue and pages (as ashfordeOU)
         env:
           GIT_AUTHOR_NAME: ashfordeOU

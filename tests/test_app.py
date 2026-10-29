@@ -66,7 +66,9 @@ def catalog(tmp_path):
              "status": "new_candidate", "candidate_id": "tess-x-001", "found": "2026-10-17T00:00:00+00:00",
              "status_note": "candidate only, not confirmed"}
     known = dict(entry, tic=5678, candidate_id="tess-y-002", status="known_toi", depth_ppm=1600.0)
-    data = {"candidates": [entry, known], "targets_reviewed": 2, "updated": "2026-10-17T00:00:00+00:00",
+    # A private deployment's catalogue (embargo off), so the page's handling of a new_candidate entry is tested;
+    # the public catalogue never holds one (tests/test_embargo.py).
+    data = {"embargo": False, "candidates": [entry, known], "targets_reviewed": 2, "updated": "2026-10-17T00:00:00+00:00",
             "config": "discovery", "config_sha256": "abc",
             "runs": [{"time": "2026-10-17T00:00:00+00:00", "targets": [1234, 5678], "new": 1, "known": 1,
                       "errors": ["TIC 9: LookupError: no SPOC 120s light curves found for 'TIC 9'"]}]}
@@ -538,7 +540,8 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     # (and the theme choice, in applyTheme, and the Learn path's progress, in learnSave).
     # (and Mission Control's saved default, in its "Save as my default" handler).
     # (and, in sessionStorage only, that the Sky's or Galaxy's survey-scan intro has played, in mxIntroEnd).
-    assert APP_JS.count("setItem(") == 5 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
+    # (and Be the vetter's own answers, under their own key, in vtWire: never a layout).
+    assert APP_JS.count("setItem(") == 6 and APP_JS.count("localStorage.setItem('setuhq-vetter'") == 1 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
     assert "sessionStorage.setItem('setuhq-intro-' + I.key, 'done')" in re.search(r"function mxIntroEnd\(I, skipped\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LEARN_KEY" in re.search(r"function learnSave\(\)\{.*?\}\s*\}", APP_JS, re.S).group(0)
     from setuhq.site import SHELL_JS

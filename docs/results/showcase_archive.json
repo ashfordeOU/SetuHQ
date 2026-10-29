@@ -1,0 +1,203 @@
+{
+ "source": "NASA Exoplanet Archive (TAP)",
+ "url": "https://exoplanetarchive.ipac.caltech.edu/TAP/sync",
+ "tics": [
+  9727392,
+  25155310,
+  120896927,
+  259377017,
+  261136679
+ ],
+ "toi": {
+  "table": "toi",
+  "query": "select toi,tid,pl_orbper,pl_orbpererr1,pl_tranmid,pl_tranmiderr1,pl_trandurh,tfopwg_disp,rowupdate from toi where tid in (9727392,25155310,120896927,259377017,261136679) order by toi",
+  "fetched_at": "2026-10-24T18:31:45+00:00",
+  "rows": [
+   {
+    "toi": "114.01",
+    "tid": "25155310",
+    "pl_orbper": "3.2887898",
+    "pl_orbpererr1": "0.0000003",
+    "pl_tranmid": "2458327.5199580",
+    "pl_tranmiderr1": "0.000061",
+    "pl_trandurh": "3.4367717",
+    "tfopwg_disp": "KP",
+    "rowupdate": "2024-09-09 10:08:01"
+   },
+   {
+    "toi": "144.01",
+    "tid": "261136679",
+    "pl_orbper": "6.2678139",
+    "pl_orbpererr1": "0.0000031",
+    "pl_tranmid": "2460901.5782020",
+    "pl_tranmiderr1": "0.000721",
+    "pl_trandurh": "2.7890000",
+    "tfopwg_disp": "CP",
+    "rowupdate": "2026-08-13 16:00:02"
+   },
+   {
+    "toi": "236.01",
+    "tid": "9727392",
+    "pl_orbper": "4.5344510",
+    "pl_orbpererr1": "0.0001180",
+    "pl_tranmid": "2458355.3257110",
+    "pl_tranmiderr1": "0.000357",
+    "pl_trandurh": "4.9363910",
+    "tfopwg_disp": "FP",
+    "rowupdate": "2022-10-20 16:02:02"
+   },
+   {
+    "toi": "270.01",
+    "tid": "259377017",
+    "pl_orbper": "5.6604773",
+    "pl_orbpererr1": "0.0000017",
+    "pl_tranmid": "2460982.0047410",
+    "pl_tranmiderr1": "0.000611",
+    "pl_trandurh": "1.6617716",
+    "tfopwg_disp": "CP",
+    "rowupdate": "2026-04-17 10:08:01"
+   },
+   {
+    "toi": "270.02",
+    "tid": "259377017",
+    "pl_orbper": "11.3796991",
+    "pl_orbpererr1": "0.0000073",
+    "pl_tranmid": "2460984.2470910",
+    "pl_tranmiderr1": "0.001427",
+    "pl_trandurh": "2.0489434",
+    "tfopwg_disp": "CP",
+    "rowupdate": "2026-04-17 10:08:01"
+   },
+   {
+    "toi": "270.03",
+    "tid": "259377017",
+    "pl_orbper": "3.3601671",
+    "pl_orbpererr1": "0.0000035",
+    "pl_tranmid": "2460987.8584050",
+    "pl_tranmiderr1": "0.002243",
+    "pl_trandurh": "1.3266673",
+    "tfopwg_disp": "CP",
+    "rowupdate": "2026-03-04 16:00:01"
+   },
+   {
+    "toi": "402.01",
+    "tid": "120896927",
+    "pl_orbper": "4.7559995",
+    "pl_orbpererr1": "0.0000064",
+    "pl_tranmid": "2460984.4534420",
+    "pl_tranmiderr1": "0.002456",
+    "pl_trandurh": "2.4468544",
+    "tfopwg_disp": "CP",
+    "rowupdate": "2026-04-17 16:00:02"
+   },
+   {
+    "toi": "402.02",
+    "tid": "120896927",
+    "pl_orbper": "17.1796673",
+    "pl_orbpererr1": "0.0000283",
+    "pl_tranmid": "2460974.3243280",
+    "pl_tranmiderr1": "0.002889",
+    "pl_trandurh": "2.1061533",
+    "tfopwg_disp": "CP",
+    "rowupdate": "2026-03-03 10:08:02"
+   }
+  ]
+ },
+ "ps": {
+  "table": "ps (default_flag = 1)",
+  "query": "select pl_name,hostname,tic_id,pl_orbper,pl_tranmid,tran_flag,disc_year,disc_refname from ps where default_flag=1 and tic_id in ('TIC 9727392','TIC 25155310','TIC 120896927','TIC 259377017','TIC 261136679') order by pl_name",
+  "fetched_at": "2026-10-24T18:31:45+00:00",
+  "rows": [
+   {
+    "pl_name": "HD 15337 b",
+    "hostname": "HD 15337",
+    "tic_id": "TIC 120896927",
+    "pl_orbper": "4.75598040000",
+    "pl_tranmid": "2458411.46230000",
+    "tran_flag": "1",
+    "disc_year": "2019",
+    "disc_refname": "<a refstr=GANDOLFI_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract target=ref>Gandolfi et al. 2019</a>"
+   },
+   {
+    "pl_name": "HD 15337 c",
+    "hostname": "HD 15337",
+    "tic_id": "TIC 120896927",
+    "pl_orbper": "17.18054600000",
+    "pl_tranmid": "2458414.55162000",
+    "tran_flag": "1",
+    "disc_year": "2019",
+    "disc_refname": "<a refstr=GANDOLFI_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019ApJ...876L..24G/abstract target=ref>Gandolfi et al. 2019</a>"
+   },
+   {
+    "pl_name": "HD 39091 b",
+    "hostname": "HD 39091",
+    "tic_id": "TIC 261136679",
+    "pl_orbper": "2088.80000000000",
+    "pl_tranmid": "2458632.60000000",
+    "tran_flag": "0",
+    "disc_year": "2001",
+    "disc_refname": "<a refstr=JONES_ET_AL__2002 href=https://ui.adsabs.harvard.edu/abs/2002MNRAS.333..871J/abstract target=ref> Jones et al. 2002 </a>"
+   },
+   {
+    "pl_name": "TOI-270 b",
+    "hostname": "TOI-270",
+    "tic_id": "TIC 259377017",
+    "pl_orbper": "3.35992000000",
+    "pl_tranmid": "2458461.01464000",
+    "tran_flag": "1",
+    "disc_year": "2019",
+    "disc_refname": "<a refstr=G_UUML_NTHER_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract target=ref>G&uuml;nther et al. 2019</a>"
+   },
+   {
+    "pl_name": "TOI-270 c",
+    "hostname": "TOI-270",
+    "tic_id": "TIC 259377017",
+    "pl_orbper": "5.66051000000",
+    "pl_tranmid": "2458463.08056000",
+    "tran_flag": "1",
+    "disc_year": "2019",
+    "disc_refname": "<a refstr=G_UUML_NTHER_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract target=ref>G&uuml;nther et al. 2019</a>"
+   },
+   {
+    "pl_name": "TOI-270 d",
+    "hostname": "TOI-270",
+    "tic_id": "TIC 259377017",
+    "pl_orbper": "11.38194000000",
+    "pl_tranmid": "2458469.33823000",
+    "tran_flag": "1",
+    "disc_year": "2019",
+    "disc_refname": "<a refstr=G_UUML_NTHER_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019NatAs...3.1099G/abstract target=ref>G&uuml;nther et al. 2019</a>"
+   },
+   {
+    "pl_name": "WASP-126 b",
+    "hostname": "WASP-126",
+    "tic_id": "TIC 25155310",
+    "pl_orbper": "3.28883000000",
+    "pl_tranmid": null,
+    "tran_flag": "1",
+    "disc_year": "2016",
+    "disc_refname": "<a refstr=MAXTED_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016A&A...591A..55M/abstract target=ref>Maxted et al. 2016</a>"
+   },
+   {
+    "pl_name": "pi Men c",
+    "hostname": "HD 39091",
+    "tic_id": "TIC 261136679",
+    "pl_orbper": "6.26783990000",
+    "pl_tranmid": "2458425.78920400",
+    "tran_flag": "1",
+    "disc_year": "2018",
+    "disc_refname": "<a refstr=GANDOLFI_ET_AL__2018 href=https://ui.adsabs.harvard.edu/abs/2018A&A...619L..10G/abstract target=ref>Gandolfi et al. 2018</a>"
+   },
+   {
+    "pl_name": "pi Men d",
+    "hostname": "HD 39091",
+    "tic_id": "TIC 261136679",
+    "pl_orbper": "124.64000000000",
+    "pl_tranmid": null,
+    "tran_flag": "0",
+    "disc_year": "2022",
+    "disc_refname": "<a refstr=HATZES_ET_AL__2022 href=https://ui.adsabs.harvard.edu/abs/2022AJ....163..223H/abstract target=ref>Hatzes et al. 2022</a>"
+   }
+  ]
+ }
+}

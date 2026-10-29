@@ -40,10 +40,10 @@ from setuhq.methods import CHAPTER_PLANETS, CHAPTERS, system_stage
 from setuhq.names import ATTRIBUTION
 from setuhq.objects import slugify
 from setuhq.everything import VARIABLES_JSON
-from setuhq.routes import CHAPTER_SLUGS, LEGACY_PAGES, ROUTES_CORE_JS, from_hash, legacy_js, url_for
+from setuhq.routes import CHAPTER_SLUGS, LEGACY_PAGES, ROUTES_APP_JS, from_hash, legacy_js, url_for
 from setuhq.stubs import stored
 from setuhq.looks import BANDS, COMPOSITION_RULES, LOOKS, rule_words
-from setuhq import stellarpages, viz
+from setuhq import editions, features, journey, stellarpages, tessnow, vetter, viz
 
 REPO_URL = brand.REPO_URL
 # Each page's HTML (its own view, the shell, the head) stays under this many characters; everything shared is a
@@ -327,7 +327,7 @@ function bootApp(){
     if (bottom) document.getElementById('chrome-bottom').replaceWith(...bottom.childNodes);
   }).catch(err => console.warn('SetuHQ: the header could not load', err)).then(() => { initShell(); bootApp(); });
 })();
-""" + MOTION_JS + CROSSHAIR_JS
+""" + MOTION_JS + CROSSHAIR_JS + features.SHELL_JS
 
 
 def _sha(text: str | bytes) -> str:
@@ -540,6 +540,7 @@ def docs_section(data: dict) -> str:
         <section class="card"><h2>Use it from an assistant</h2><p>The MCP server lets an assistant run SetuHQ's own code and read its results.</p><a href="#mcp">Connect over MCP ›</a></section>
         <section class="card"><h2>Data and files</h2><p>Every catalogue on this site as a download, and the reports behind the evidence.</p><a href="#data">Downloads ›</a></section>
         <section class="card"><h2>How the pictures are drawn</h2><p>Stars in their blackbody colour; planets as artist's impressions chosen from measured radius and irradiation. Every rule and source.</p><a href="/docs/pictures/">The pictures ›</a></section>
+        <section class="card"><h2>Editions</h2><p>The open core is free. SetuHQ Pro (in development) and custom studies are under contract, with no prices: each starts with a message.</p><a href="/editions/">Compare the editions ›</a></section>
       </div>
       <div class="prose">
         <h2 id="start">Install and first run</h2>
@@ -728,6 +729,8 @@ def _dip_header(section: str, d: dict, label: str, caveat: str = "", panel: dict
         out = out.replace('<p class="note" id="txcaveat" hidden></p>', f'<p class="note" id="txcaveat">What this run did not recover: {e(caveat)}</p>', 1)
     if d.get("outcome") == "rejected":  # a rejected dip is not called a transit
         out = out.replace('<span id="txcapword">The transit, played back</span>', '<span id="txcapword">The dip, played back</span>', 1)
+    out = out.replace('<div id="txjourney"></div>', f'<div id="txjourney">{d.get("journey") or ""}</div>', 1)
+    out = out.replace('<p class="small" id="txlight"></p>', f'<p class="small" id="txlight">{e(d.get("light") or "")}</p>', 1)
     out = out.replace('<p class="casefile" id="txcase"></p>', f'<p class="casefile" id="txcase"><a class="btn primary" href="{e(url_for("candidates", {"dip": d["id"]}))}">Open the full case file ›</a></p>', 1)
     ring = viz.panelring.html(panel) if panel else ""
     verdict = f'<p class="txverdict">{e(d["verdict"])}</p>' if d.get("verdict") else ""
@@ -783,6 +786,9 @@ def _star_section(section: str, cat: dict, name: str, idx: list[int]) -> tuple[s
     P = cat["planets"]
     out = section.replace('<h1 class="lead-h" id="h-star" tabindex="-1">Star</h1><p id="stsub"></p>',
                           f'<h1 class="lead-h" id="h-star" tabindex="-1">{e(name)}</h1><p id="stsub">{len(idx)} known planet{"s" if len(idx) != 1 else ""} in {e(cat["source_short"])}</p>', 1)
+    first = sorted(idx, key=lambda j: P["period"][j] if P["period"][j] is not None else 1e99)[0]  # the page's script reads the innermost
+    light = journey.light_line(P["dist"][first], f"{cat['source_short']}, fetched {str(cat['fetched_at'])[:10]}", what="this star")
+    out = out.replace('<p class="small" id="stlight"></p>', f'<p class="small" id="stlight">{e(light)}</p>', 1)
     out = out.replace('<div id="stplanets"></div>', f'<div id="stplanets">{still_list(cat, idx)}</div>', 1)
     out = out.replace('<div class="plextra" id="stextra"></div>', f'<div class="plextra" id="stextra">{star_extras(cat, name, idx)}</div>', 1)
     return out, f"{name}: a star with {len(idx)} known planet{'s' if len(idx) != 1 else ''}, from {cat['source_short']}."
@@ -882,9 +888,12 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     sections["stellar"] = clean_links(stellarpages.evidence_section(), lead)
     sections["stellardocs"] = clean_links(stellarpages.docs_stellar_section(), lead)
     sections["propose"] = clean_links(stellarpages.docs_propose_section(), lead)
+    sections["tessnow"] = clean_links(tessnow.section(data), lead)
+    sections["vetter"] = clean_links(vetter.section(data), lead)
+    sections["editions"] = clean_links(editions.section(), lead)
     payload = json.dumps(app_payload(data), separators=(",", ":"), ensure_ascii=False, allow_nan=False)
-    app_js = APP_JS.replace("const RT = D.routes;\n", "const RT = D.routes;\n" + ROUTES_CORE_JS, 1)
-    css = APP_CSS + brand.LOGO_CSS + renderer.RENDER_CSS + SITE_CSS + viz.VIZ_CSS + stellarpages.CSS
+    app_js = APP_JS.replace("const RT = D.routes;\n", "const RT = D.routes;\n" + ROUTES_APP_JS, 1)
+    css = APP_CSS + brand.LOGO_CSS + renderer.RENDER_CSS + SITE_CSS + viz.VIZ_CSS + stellarpages.CSS + journey.CSS + features.CSS
     routes_html = "".join(f'<section class="route" id="route-{k}" data-route="{k}" aria-labelledby="h-{k}" hidden>{v}</section>'
                           for k, v in sections.items())
     # The shared system view's markup (the Galaxy's sheet copies it) rides in the shared views file, not in every page.
@@ -957,6 +966,9 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     view("stellar", _title("stellar"), "Flares, pulsations, CHEOPS light curves, eclipsing binaries, rotation and transients: how far each of SetuHQ's stellar tools is validated, with every counted check and figures of real TESS data.", "/evidence/stellar/", name="Stars")
     view("stellardocs", _title("stellardocs"), "Run SetuHQ's stellar commands: flares, pulsations, public CHEOPS light curves, eclipsing binaries, rotation and transients, with their validation status and ESA's terms for CHEOPS data.", "/docs/stellar/", name="Flares and pulsations")
     view("propose", _title("propose"), "Prepare a CHEOPS Guest Observers proposal with setuhq propose cheops: a drafting aid that checks the rules and the target and never submits anything.", "/docs/cheops-proposals/", name="CHEOPS proposals")
+    view("tessnow", _title("tessnow"), "Where the TESS satellite points, sector by sector, from its published schedule: the four camera fields on the sky map and the catalogued stars inside them. Not live telemetry.", "/explore/tess-now/", name="Where TESS is now")
+    view("vetter", _title("vetter"), "Look at a real stored dip from SetuHQ's example runs, call it pass, flag or reject, then see what the vetting decided. A learning exercise; answers are not collected.", "/candidates/be-the-vetter/", name="Be the vetter")
+    view("editions", _title("editions"), "SetuHQ's editions: the free open core (AGPL-3.0 or a commercial licence), SetuHQ Pro (in development, under contract) and custom studies. No prices; every paid route starts with a message.", "/editions/", name="Editions")
     view("pictures", _title("pictures"), "How SetuHQ draws its pictures: stars in their blackbody colour, and planets as artist's impressions chosen from measured radius and irradiation, with every rule and source.", "/docs/pictures/", name="How the pictures are drawn")
 
     # Planet and star pages for every object the site names.
@@ -1138,7 +1150,10 @@ def wrap_standalone(page_html: str, route: str, name: str, assets: dict, lead: s
 
 
 # The shared files' budgets (bytes), and two pages' own (characters), on top of PAGE_BUDGET and STANDALONE_BUDGET.
-ASSET_BUDGET = {"site-*.css": 140_000, "app-*.js": 430_000, "render-*.js": renderer.RENDER_BUDGET,
+# The shell's script (site-*.js: the header, menu and theme, and SetuUI's figure utilities) runs on every page, the
+# stand-alone pages and deploy-time stubs included, so it stays small.
+SHELL_BUDGET = 16_000
+ASSET_BUDGET = {"site-*.css": 140_000, "app-*.js": 430_000, "site-*.js": SHELL_BUDGET, "render-*.js": renderer.RENDER_BUDGET,
                 "data/sky-*.json": viz.DATA_BUDGET["sky"], "data/stories-*.json": viz.DATA_BUDGET["stories"]}
 PAGE_BUDGETS = {"index.html": 90_000, "explore/index.html": 160_000}
 STILL_BUDGET = {512: 40_000, 160: 8_000, "all": 850_000}
@@ -1146,7 +1161,7 @@ STUB_BUDGET = 4_096
 
 
 def check_asset_budget(out_dir: str | Path) -> list[str]:
-    """The shared files over their budgets (the stylesheet, the app's script, the renderer, the data files, each
+    """The shared files over their budgets (the stylesheet, the app's script, the shell's script, the renderer, the data files, each
     still and all of them) and the home and Explore pages over theirs, as 'path: size' lines."""
     out, bad = Path(out_dir), []
     for pattern, cap in ASSET_BUDGET.items():

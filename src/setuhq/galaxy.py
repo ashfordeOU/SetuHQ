@@ -345,6 +345,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
           {coverage_chips(cov, "gx")}
         </div>
       </details>
+      <div class="chips gxcam" id="gxcam" role="group" aria-label="Camera: focus and zoom"><button class="chip" type="button" data-gc="all">All</button><button class="chip" type="button" data-gc="star">Selected star</button><button class="chip" type="button" data-gc="in" aria-label="Zoom in">+</button><button class="chip" type="button" data-gc="out" aria-label="Zoom out">−</button><button class="chip" type="button" data-gc="reset">Reset view</button></div>
       <p class="gxkeys muted" id="gxkeys">Drag to orbit · scroll or pinch to zoom · double-click a star to centre on it · arrow keys orbit · + and − zoom · Enter selects the star under the reticle · Esc clears.</p>
       <div class="gxnotes">
         <p class="note"><b>{e(source_line(g))}</b> <a href="{e(g['url'])}" rel="noopener">{e(g['url'])}</a>.{note} {e(g['definition'])} The list includes {g['exocomets']} entries exoplanet.eu names as exocomets. {c['dropped_no_distance']:,} of its {c['rows']:,} planets have no stored distance and are not plotted.</p>{note_detail}
@@ -1319,6 +1320,9 @@ function gxStart(){
     const b = e.target.closest('button[data-gxp]'); if (!b) return;
     gxSelect(gx.sel, Number(b.dataset.gxp)); const nb = $(`#gxcard button[data-gxp="${b.dataset.gxp}"]`); if (nb) nb.focus();
   });
+  $('#gxcam').addEventListener('click', e => { const b = e.target.closest('[data-gc]'), o = b && b.dataset.gc; if (!o) return; if (gx.tour) gxTourEnd();
+    if (o === 'in' || o === 'out') gxZoom(o === 'in' ? .8 : 1.25); else if (o === 'star'){ if (gx.sel >= 0) gxFly(gxHostCam(gx.sel), 1400); else say('Select a star on the map first.'); }
+    else gxFly(gxPresetCam(o === 'all' ? 'galaxy' : gx.view.view), 1400); });
   $('#gxpresets').addEventListener('click', e => {
     const b = e.target.closest('button[data-gxview]'); if (!b) return;
     if (gx.tour) gxTourEnd();

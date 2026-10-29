@@ -74,6 +74,9 @@ One clean address per page; no `#/` routes and no view state in the address.
 | How the pictures are drawn | `/docs/pictures/` | (new) |
 | Flares, pulsations and CHEOPS (the commands) | `/docs/stellar/` | (new) |
 | CHEOPS proposals | `/docs/cheops-proposals/` | (new) |
+| Where TESS is now | `/explore/tess-now/` | (new) |
+| Be the vetter | `/candidates/be-the-vetter/` | (new) |
+| Editions | `/editions/` (in Docs' sub-navigation and the footer) | (new) |
 
 The table lives in `src/setuhq/routes.py` (`ROUTE_PATHS`, `CHAPTER_SLUGS`, `LEGACY_PAGES`), with its twin in the
 page's script. GitHub Pages cannot redirect, so each old directory (`/app/`, `/docket/`, `/plate/`, `/report/`,
@@ -203,12 +206,26 @@ same tokens.
   The canvases that are not renderer drawings keep their own loops under the same rules (only on screen and with the
   tab visible, a Pause or Play button, still under reduced motion): the sky by year (V04) and the orbits (V08) play
   with motion allowed; the fold (V05) folds once on arrival; the panel ring (V06) converges once.
+* **Source / limits and first-visit hints** (`setuhq.features`, in the shell's script as `SetuUI.limits`, which
+  the router calls for each view it shows and the catalogue's script for each figure it draws later): every stage
+  that carries a label gets a "Source / limits" disclosure (a `<details>`, so the keyboard opens it; Escape closes
+  it) that says what its label means and repeats the source its caption names. It overlays the stage, so nothing
+  moves. A figure with `data-hint` (the orbits, V08) shows its hint on the stage until it is dismissed; dismissals
+  are kept in localStorage inside try/catch. The orbits (V08) have focus buttons (All, Star, each planet), zoom and
+  Reset under the stage, each redrawing at once (so reduced motion changes nothing); the Galaxy has All, Selected
+  star, zoom and Reset view (a cut under reduced motion).
+* **A dip's journey and its light** (`setuhq.journey`): every dip page and case file shows the strip of six dated
+  steps (found, vetted, panel, TOI match, follow-up, in the literature), the last three from
+  `docs/results/showcase_archive.json` (NASA Exoplanet Archive, `scripts/fetch_showcase_archive.py`); a step with no
+  record is hollow. Dip and star pages say how long ago the light left the star, from the catalogue's distance, and
+  leave the line out when none is stored.
 * **Honesty rules**, each tested: real data shows its source; every picture carries one of five labels (Artist's
   impression, Model from stored values, Real data, cited, Illustration, Speculative model); SetuHQ's output is never
   called confirmed, discovered, a discovery or a new planet (a lint over every built page and 200 stubs,
   tests/test_honesty_lint.py); the attribution line is always `names.ATTRIBUTION`; a rate always shows its interval.
 * **Budgets** (`site.check_asset_budget`, run by `setuhq site`, which fails over any): the stylesheet 140,000 bytes,
-  the app's script 430,000, the renderer 64,000, `stories-*.json` 40,000 and `sky-*.json` 160,000, each still 40,000
+  the app's script 430,000, the shell's script (`site-*.js`: the header, menu and theme, and SetuUI's figure
+  utilities, on every page and stub) 16,000, the renderer 64,000, `stories-*.json` 40,000 and `sky-*.json` 160,000, each still 40,000
   (512 px) or 8,000 (160 px) and 850,000 in all, the home page 90,000 characters and `/explore/` 160,000, each
   deploy-time stub 4,096 bytes; every other page 200,000 characters and a stand-alone page 400,000.
 
@@ -222,15 +239,41 @@ same tokens.
 | Candidates: dips, case files, plates | `app.py` (Transit, Explorer), `docket.py`, `plate.py` | a dip's panel ring V06; orbits V08 on TOI-270's dips; the case file and plates draw the star with `renderer.star_svg` (no renderer, works offline) |
 | How it works, Evidence, Docs | `methods.py`, `learn.py`, `app.py` (Sentinels, leaderboard, runs), `site.py` | the fold V05 in the Transits chapter; V04 and V12 in Methods population; the panel ring in panel mode on `/evidence/`; `/docs/pictures/` prints every look, rule, source and still |
 | Evidence: stars; Docs: the stellar commands and CHEOPS proposals | `stellarpages.py` | `/evidence/stellar/`: a flaring M dwarf's TESS light curve and a δ Scuti star's amplitude spectrum (static SVG on a stage: Real data, cited, each with its source line, the detections and the published values), beside each star drawn by the renderer at its TIC v8.2 Teff (Model from stored values); the validation status of each capability read from `docs/results/stellar_validation.json`, always with its count (flares and pulsations partly validated, CHEOPS not validated); ESA's acknowledgement, programme credit lines, papers, DACE's acknowledgement, the disclaimer and the CC BY-NC 3.0 IGO carve-out. The figures' data: `docs/results/stellar_figures.json`, written by `scripts/stellar_figures.py` from public SPOC files (no CHEOPS data) |
+| Explore: Where TESS is now | `tessnow.py` | each saved sector's four camera fields on the sky map's Mollweide projection, with the catalogue's hosts and those in the fields highlighted (static SVG, a sector scrubber: Model from stored values, "Pointing from the published schedule, not live telemetry", schedule saved on its date, `docs/results/tess_schedule.json` from `scripts/fetch_tess_schedule.py`) |
+| Candidates: Be the vetter | `vetter.py` | eight stored dips, each a light curve, fold, odd/even and secondary as static SVG on a stage (Real data, cited); the stored vetting decision is revealed after the visitor's call |
+| Editions | `editions.py` | no figure: a comparison table, the licences and the CHEOPS carve-out |
 | Run report, search feed page, dashboard (CLI outputs) | `report.py`, `dashboard.py` | see "The CLI outputs" below |
 
 The five labels are the only ones used: Artist's impression, Model from stored values, Real data, cited, Illustration
 and Speculative model; an e2e check reads one on every stage of every page it visits.
 
+## The search feed and the embargo
+
+The feed on Candidates (and its card on the overview and in Mission Control, the stand-alone feed page,
+the dashboard and the plates) shows only signals that match a known TOI. A signal that matches no known
+TOI is held for private review and reporting, and is published only after that. Wherever the feed is
+summarised the site shows one static line, with no number: "Signals that match no known TOI are held for
+private review; they are published only after review and reporting."
+
+The rule is that a hold leaves no public trace at all. The catalogue `docs/discoveries/catalog.json`, its run
+logs, every page built from it, the command's output in the Actions log and the Pages artifact are byte for
+byte what they would be had the signal not been found: no count, no date, no marker, and an error on such a
+target is recorded exactly as any other error. Run logs count a batch's targets (`n_targets`) and do not list
+them. `tests/test_embargo.py` runs the same targets twice, once with a synthetic `new_candidate` and once
+without, and requires identical catalogue, run log, command output and site.
+
+Counts of held signals live only in the private review pipeline (setuhq-ops, v0.3), which re-searches the
+targets itself: the search is deterministic and reproducible from the data, the config and the code. `setuhq discover` withholds such signals when it
+writes the catalogue (`discover.embargo_catalog`), and every page reads the catalogue through
+`discover.public_catalog`, which withholds them again unless the catalogue was written by a private
+deployment that opted out (`"embargo": false`, from `--publish-new` or `[discover] embargo = false`).
+`discover.yml` never opts out and stops before its commit if the catalogue holds anything but known-TOI
+matches.
+
 ## The CLI outputs
 
 `setuhq report` (the run report, also served on the site at `/evidence/report/`), `setuhq discover` (its search
-feed page), `setuhq dashboard`, `setuhq docket` (the case file) and `setuhq plate` (the plates) write HTML that works
+feed page; see "The search feed and the embargo" below), `setuhq dashboard`, `setuhq docket` (the case file) and `setuhq plate` (the plates) write HTML that works
 opened from disk and printed:
 
 * the site's tokens inline, under each page's own names (`design.REPORT_ALIASES`, `DOCKET_ALIASES`,

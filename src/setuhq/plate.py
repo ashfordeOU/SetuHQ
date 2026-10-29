@@ -300,7 +300,9 @@ def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | No
     comparison = ((dock.get("crossmatch") or {}).get("comparison") or {}).get("by_candidate") or {}
     catalog = {}
     if catalog_path is not None and Path(catalog_path).exists():
-        catalog = json.loads(Path(catalog_path).read_text())
+        from setuhq.discover import load_public_catalog
+
+        catalog = load_public_catalog(catalog_path)  # the embargo: signals held for review never reach a plate
     feed = catalog.get("candidates") or []
 
     # Each run dip's name on the website ("pi Men, dip 5"), from the run's pinned addresses (setuhq.dipslugs); a dip

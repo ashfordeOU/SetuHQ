@@ -15,12 +15,11 @@ from __future__ import annotations
 
 import base64
 import importlib.util
-import os
 import time  # noqa: F401  (tests patch setuhq.reviewers.claude.time.sleep to skip the backoff)
 from pathlib import Path
 
 from setuhq.reviewers.http import ProviderRejected, redact
-from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer
+from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer, as_secret, key_value
 from setuhq.reviewers.task import (  # noqa: F401  (the shared task, re-exported for existing imports)
     OUTPUT_SCHEMA,
     PERSONAS,
@@ -40,15 +39,17 @@ class AnthropicBackend:
 
     provider = "anthropic"
 
-    def __init__(self, model: str = DEFAULT_MODEL, *, max_tokens: int = 1024, client: object | None = None):
+    def __init__(self, model: str = DEFAULT_MODEL, *, max_tokens: int = 1024, client: object | None = None,
+                 api_key: str | None = None):
         self.model = model
         self.max_tokens = max_tokens
         self.client = client
+        self._key = as_secret(api_key)  # a key passed in code; else ANTHROPIC_API_KEY
 
     def missing(self) -> str | None:
         if self.client is not None:
             return None
-        if not os.environ.get(KEY_ENV["anthropic"]):
+        if not key_value(self._key, KEY_ENV["anthropic"]):
             return f"{KEY_ENV['anthropic']} is not set"
         if importlib.util.find_spec("anthropic") is None:
             return "the anthropic package is not installed (pip install -e '.[claude]')"
@@ -64,7 +65,7 @@ class AnthropicBackend:
         if self.client is None:
             import anthropic
 
-            self.client = anthropic.Anthropic()
+            self.client = anthropic.Anthropic(api_key=self._key.reveal()) if self._key else anthropic.Anthropic()
         image_block = {"type": "image", "source": {"type": "base64", "media_type": "image/png",
                                                    "data": base64.b64encode(image.read_bytes()).decode("ascii")}}
         try:
@@ -77,7 +78,7 @@ class AnthropicBackend:
         except Exception as exc:  # the SDK's errors carry status_code: a bad key or model is not retried
             if fatal_status(getattr(exc, "status_code", None)):
                 raise ProviderRejected(redact(f"anthropic: HTTP {exc.status_code}: {exc}",
-                                              [os.environ.get(KEY_ENV["anthropic"], "")])[:300]) from None
+                                              [key_value(self._key, KEY_ENV["anthropic"])])[:300]) from None
             raise
         if getattr(response, "stop_reason", None) == "refusal":
             raise RefusalError("anthropic: the model declined to answer (stop_reason 'refusal')")
@@ -93,8 +94,8 @@ class ClaudeReviewer(SentinelReviewer):
 
     def __init__(self, reviewer_id: str, model: str = DEFAULT_MODEL, persona: str = "volunteer",
                  cache_dir: str | Path | None = None, max_tokens: int = 1024, retries: int = 3,
-                 client: object | None = None, kind: str = "claude"):
-        super().__init__(reviewer_id, AnthropicBackend(model, max_tokens=max_tokens, client=client),
+                 client: object | None = None, kind: str = "claude", api_key: str | None = None):
+        super().__init__(reviewer_id, AnthropicBackend(model, max_tokens=max_tokens, client=client, api_key=api_key),
                          persona=persona, cache_dir=cache_dir, retries=retries, kind=kind)
 
     @property

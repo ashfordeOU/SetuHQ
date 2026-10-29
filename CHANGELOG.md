@@ -29,6 +29,48 @@ breaking changes are called out explicitly.
   `docs/results/stellar_validation_v4.md`;
   `/evidence/stellar/` gains the three status cards, one "Real data, cited" figure each and every counted check, and
   `/docs/stellar/` the three commands.
+- **Each dip's journey, step by step.** Every dip page and case file shows six dated steps: found by SetuHQ, vetted
+  (passed, flagged or rejected), panel reviewed (or Probes only), whether it matches a TOI, follow-up ("not
+  announced" unless the TFOP Working Group's disposition is recorded) and whether the literature has a planet at its
+  period (with the reference). The last three are other teams' records from the NASA Exoplanet Archive, stored in
+  `docs/results/showcase_archive.json` by `scripts/fetch_showcase_archive.py`; a step with no record is hollow.
+  Dip and star pages also say how long ago the light left the star, from the catalogue's stored distance.
+- **Where TESS is now** (`/explore/tess-now/`): each sector's four camera fields from the published schedule, saved
+  on 2026-10-24 from the TESS Science Office's sector pages by `scripts/fetch_tess_schedule.py`
+  (`docs/results/tess_schedule.json`), on the sky map, with a sector scrubber and the catalogued stars inside the
+  fields highlighted. Labelled "Pointing from the published schedule, not live telemetry".
+- **Be the vetter** (`/candidates/be-the-vetter/`): eight stored dips from the example runs, each with its light
+  curve, fold, odd and even depths and secondary; the visitor calls pass, flag or reject, then sees the stored
+  vetting decision and its reasons. A learning exercise: answers stay in the browser and are never collected.
+- **Editions** (`/editions/`, linked from the footer and Docs): the open core, SetuHQ Pro (under contract, in
+  development) and a custom study compared row by row, the two licences and the CHEOPS carve-out. No prices; every
+  paid route starts with a message to contact@ashforde.org.
+- **Figures say their source and limits.** Every labelled figure has a "Source / limits" disclosure built from its
+  label and caption, and the orbit views carry a dismissible first-visit hint ("Sizes not to scale · phases
+  illustrative"). The orbit views (V08) gain focus (all, the star, each planet), zoom and reset buttons; the Galaxy
+  gains All, Selected star, zoom and Reset view buttons.
+- **A stable public API** (`setuhq.api`, [docs/API.md](docs/API.md)): the names code outside the repository may rely
+  on, pinned by `tests/test_api.py`. `setuhq.panel.standard_probes()` returns the standard Probe panel as
+  `configs/sweep.toml` lists it; the wheel ships the calibrated reviewer weights
+  (`setuhq/data/reviewer_weights_full_panel.json` and its calibration record), which an installed package uses by
+  default. Sentinels take a provider key per call (`api_key=` on `ClaudeReviewer`, `OpenAIReviewer`,
+  `OpenAICompatibleReviewer`, `GeminiReviewer` and their backends), held as a `Secret` that is never logged, cached,
+  pickled or written to a manifest; the environment variables stay the fallback, a config file still never holds
+  a key, and an endpoint whose URL or query holds the passed key (as a string or a `Secret`) is refused without
+  printing it.
+- **Feed embargo: new signals are held for private review and reporting.** `setuhq discover` no longer
+  publishes a signal that matches no known TOI (`new_candidate`). The public catalogue, the site (the
+  Candidates feed, the overview and Mission Control cards, the runs page), the feed page, the dashboard,
+  the plates and the command's output carry only known-TOI matches and one static line: "Signals that
+  match no known TOI are held for private review; they are published only after review and reporting."
+  A hold leaves no public trace, not even a count or a date: every public output is byte for byte what
+  it would be had the signal not been found (tested by running the same targets with and without a
+  synthetic `new_candidate`). Run logs keep a count of targets (`n_targets`) instead of their TIC list,
+  and an error is recorded the same way whether or not its target gave a held signal. Counts of held
+  signals will live only in the private review pipeline (setuhq-ops, v0.3). A held signal is not stored
+  publicly; the search is deterministic, so that pipeline re-searches those targets. On by default; a private deployment opts out with `--publish-new` or
+  `[discover] embargo = false`, which the public workflow never sets. `discover.yml` checks the
+  catalogue before it commits. Tests: `tests/test_embargo.py`.
 
 - **Beyond planets: stellar flares, pulsations and CHEOPS** ([docs/STELLAR.md](docs/STELLAR.md)).
   `setuhq flares`, `setuhq pulsations` and `setuhq cheops`, and the MCP tools `find_flares`,

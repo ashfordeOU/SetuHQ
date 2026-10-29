@@ -292,7 +292,7 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
           <a class="btn" href="/{VARIABLES_JSON}" download="setuhq-everything-that-dims.json">Download the catalogue (JSON)</a></div>
       </section>
       <section class="card vaobj" id="vaobj" aria-labelledby="h-vaobj" hidden><h2 id="h-vaobj" tabindex="-1">TIC</h2><div id="vaobjbody"></div></section>
-      <div class="valist" id="valist"></div>
+      <div class="valist" id="valist" role="region" aria-label="Entries"></div>
       <p class="ctempty" id="vaempty" role="status" hidden>No entries match these filters. <a href="#/variables">Clear filters</a></p>
       <div class="vamore"><button class="btn" type="button" id="vamore" hidden>Show more</button></div>
       <section class="card" aria-labelledby="h-varules" style="display:grid;gap:8px">

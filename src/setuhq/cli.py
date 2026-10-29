@@ -47,6 +47,10 @@ def resolve_weights(config, explicit: str | None, default: str | None = DEFAULT_
 
     if explicit:
         return json.loads(Path(explicit).read_text()), str(explicit)
+    if default == DEFAULT_WEIGHTS and not Path(default).exists():
+        from setuhq.panel import packaged_weights_path
+
+        default = str(packaged_weights_path() or default)  # an installed wheel: the calibrated weights it ships
     if default and Path(default).exists():
         calibrated = json.loads(Path(default).read_text())
         ids = {str(spec.get("id")) for spec in config.reviewers}
@@ -174,9 +178,13 @@ def cmd_discover(args) -> int:
         time_budget_s=args.time_budget_min * 60.0,
         work_dir=args.work_dir,
         cache_root=args.cache,
+        publish_new=args.publish_new,
     )
     site = build_discovery_site(args.catalog, args.site)
-    print(f"targets reviewed this run: {len(log['targets'])}, new candidates: {log['new']}, known: {log['known']}")
+    if "new" in log:  # --publish-new (a private deployment): new signals are kept and counted
+        print(f"targets reviewed this run: {len(log['targets'])}, new candidates: {log['new']}, known: {log['known']}")
+    else:  # embargo: this output is public (Actions logs), so it is the same whether or not a signal was held
+        print(f"targets reviewed this run: {log['n_targets']}, known TOI matches: {log['known']}")
     for error in log["errors"]:
         print(f"error: {error}")
     print(f"catalogue {args.catalog}, site {site}")
@@ -442,6 +450,10 @@ def build_parser() -> argparse.ArgumentParser:
     discover.add_argument("--time-budget-min", type=float, default=270.0)
     discover.add_argument("--work-dir", default="runs/discovery")
     discover.add_argument("--cache", default="cache")
+    discover.add_argument("--publish-new", action="store_true",
+                          help="private deployments only: keep signals that match no known TOI in the catalogue. By "
+                               "default they are withheld from every public output (held for private review); the public workflow "
+                               "never passes this")
     discover.set_defaults(func=cmd_discover)
 
     export = sub.add_parser("export", help="write an ExoFOP CTOI-style table and predicted transit windows for a run")

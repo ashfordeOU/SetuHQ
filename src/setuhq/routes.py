@@ -44,6 +44,9 @@ ROUTE_PATHS = {
     "pictures": "/docs/pictures/",
     "stellardocs": "/docs/stellar/",
     "propose": "/docs/cheops-proposals/",
+    "tessnow": "/explore/tess-now/",
+    "vetter": "/candidates/be-the-vetter/",
+    "editions": "/editions/",
 }
 # The parameter that names the page (it goes in the path, never in the query).
 IDENTITY = {"transit": "dip", "candidates": "dip", "planet": "id", "star": "id", "methods": "ch"}
@@ -226,6 +229,9 @@ function rtLegacy(pathname, hash){
   return null;
 }
 """
+
+# The app's copy leaves out rtLegacy: only the forwarding pages and 404.html (legacy_js) forward old addresses.
+ROUTES_APP_JS = ROUTES_CORE_JS[:ROUTES_CORE_JS.index("function rtLegacy(")]
 
 
 def legacy_js(lead: str | None = None) -> str:

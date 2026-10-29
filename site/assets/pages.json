@@ -1,6 +1,7 @@
 [
 "/",
 "/candidates/",
+"/candidates/be-the-vetter/",
 "/candidates/case-file/",
 "/candidates/hd-15337/case-file/",
 "/candidates/hd-15337/dip-1/",
@@ -75,6 +76,7 @@
 "/docs/cheops-proposals/",
 "/docs/pictures/",
 "/docs/stellar/",
+"/editions/",
 "/evidence/",
 "/evidence/leaderboard/",
 "/evidence/plates/",
@@ -92,6 +94,7 @@
 "/explore/",
 "/explore/galaxy/",
 "/explore/mission-control/",
+"/explore/tess-now/",
 "/how-it-works/",
 "/how-it-works/astrometry/",
 "/how-it-works/atmospheres/",

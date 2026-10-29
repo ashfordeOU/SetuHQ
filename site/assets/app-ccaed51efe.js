@@ -99,17 +99,6 @@ function rtParse(pathname, search){
   }
   return null;
 }
-function rtLegacy(pathname, hash){
-  let p = String(pathname || '/'); if (!p.endsWith('/')) p += '/';
-  hash = hash || '';
-  if (p === '/app/' || p === '/'){
-    if (hash.startsWith('#/') || hash === '#') return rtFromHash(hash);
-    return p === '/app/' ? '/' : null;
-  }
-  if (p === '/docket/' && hash.length > 1 && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/.test(hash.slice(1))) return rtUrl('candidates', {dip: hash.slice(1)});
-  if (p in RT.legacy) return RT.legacy[p] + (hash && hash !== '#' ? hash : '');
-  return null;
-}
 const R = h => String(h).startsWith('#/') ? rtFromHash(h, true) : h;
 function setAddress(url, push){
   url = String(url).startsWith('#/') ? rtFromHash(url, false) : url;
@@ -206,13 +195,14 @@ function widgetBody(id){
     const f = D.catalog.candidates, nNew = f.filter(x => x.status === 'new_candidate').length, nKnown = f.filter(x => x.status === 'known_toi').length;
     if (!D.catalog.path) return '<p class="empty">No search catalogue was given to this build.</p>';
     return `<div><span class="big">${f.length}</span> <span class="muted">feed entries</span></div>
-      <p style="margin:0">${nKnown} match a known TOI period · ${nNew} new candidate${nNew===1?'':'s'} · ${esc(D.catalog.targets_reviewed)} targets reviewed</p>
+      <p style="margin:0">${nKnown} match a known TOI period · ${D.catalog.embargo ? '' : `${nNew} new candidate${nNew===1?'':'s'} · `}${esc(D.catalog.targets_reviewed)} targets reviewed</p>
+      ${D.catalog.embargo ? `<p class="muted" style="margin:0">${esc(D.catalog.held_line)}</p>` : ''}
       <p class="muted" style="margin:0;font-size:12px">Catalogue updated ${when(D.catalog.updated)}.</p>`;
   }
   if (id === 'runs'){
     const runs = D.catalog.runs.slice(-5).reverse();
     if (!runs.length) return '<p class="empty">No search runs are stored in the catalogue.</p>';
-    return `<ul class="runlist">${runs.map(x => `<li><b>${when(x.time)}</b><span>${(x.targets||[]).length} targets · ${esc(x.new ?? '–')} new · ${esc(x.known ?? '–')} known · ${(x.errors||[]).length} error${(x.errors||[]).length===1?'':'s'}</span></li>`).join('')}</ul>
+    return `<ul class="runlist">${runs.map(x => `<li><b>${when(x.time)}</b><span>${x.n_targets ?? (x.targets||[]).length} targets · ${x.new == null ? '' : `${esc(x.new)} new · `}${esc(x.known ?? '–')} known · ${(x.errors||[]).length} error${(x.errors||[]).length===1?'':'s'}</span></li>`).join('')}</ul>
       <p class="muted" style="margin:0;font-size:12px">This page's run: ${esc(r.name)}, ${when(r.created_at)}.</p>`;
   }
   if (id === 'top'){
@@ -501,11 +491,11 @@ function feedCards(rows){
 function renderDiscHead(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length, ft = D.catalog.found_times;
   const found = !ft.length ? 'no stored find time' : ft.length === 1 ? `found in the catalogue run of ${when(ft[0])}` : `found between ${when(ft[0])} and ${when(ft[ft.length-1])}`;
-  $('#feedhead').innerHTML = f.length ? `${f.length} entries, ${found}. <b>${n('known_toi')} match a known TOI period</b>; ${n('new_candidate')} are new candidates. Every entry is a ${esc(D.unconfirmed)}.${n('known_toi') ? ` A TOI match is an archive comparison. ${esc(D.no_detection)}` : ''}` : 'The feed is empty.';
+  $('#feedhead').innerHTML = (f.length ? `${f.length} entries, ${found}. <b>${n('known_toi')} match a known TOI period</b>${D.catalog.embargo ? '' : `; ${n('new_candidate')} are new candidates`}. Every entry is a ${esc(D.unconfirmed)}.${n('known_toi') ? ` A TOI match is an archive comparison. ${esc(D.no_detection)}` : ''}` : 'The feed is empty.') + (D.catalog.embargo ? ` ${esc(D.catalog.held_line)}` : '');
 }
 function renderDiscChips(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length;
-  const chips = [['all', `all ${f.length}`], ['new_candidate', `new ${n('new_candidate')}`], ['known_toi', `known TOI ${n('known_toi')}`]];
+  const chips = [['all', `all ${f.length}`], ['new_candidate', `new ${n('new_candidate')}`], ['known_toi', `known TOI ${n('known_toi')}`]].filter(c => !(D.catalog.embargo && c[0] === 'new_candidate'));
   $('#discchips').innerHTML = chips.map(([k, l]) => `<button class="chip" data-f="${k}" aria-pressed="${disc.filter === k}">${esc(l)}</button>`).join('');
 }
 
@@ -757,7 +747,7 @@ function renderRuns(){
   const runs = D.catalog.runs.slice().reverse();
   const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
   $('#runtable').innerHTML = runs.length ? `<ol class="runlines">${runs.map(x => { const ne = (x.errors||[]).length; return `<li>
-      <div class="line"><b>${when(x.time)}</b><span>${plural((x.targets||[]).length, 'target')}</span><span>${esc(x.new ?? '–')} new</span><span>${esc(x.known ?? '–')} known TOI</span><span>${esc(x.filtered_deep ?? '–')} filtered as too deep</span><span>${esc(x.filtered_single ?? '–')} filtered for too few transits</span><span class="${ne ? 'err' : 'muted'}">${ne ? plural(ne, 'error') : 'no errors'}</span></div>
+      <div class="line"><b>${when(x.time)}</b><span>${plural(x.n_targets ?? (x.targets||[]).length, 'target')}</span>${x.new == null ? '' : `<span>${esc(x.new)} new</span>`}<span>${esc(x.known ?? '–')} known TOI</span><span>${esc(x.filtered_deep ?? '–')} filtered as too deep</span><span>${esc(x.filtered_single ?? '–')} filtered for too few transits</span><span class="${ne ? 'err' : 'muted'}">${ne ? plural(ne, 'error') : 'no errors'}</span></div>
       ${ne ? x.errors.map(e => `<pre class="err">${esc(e)}</pre>`).join('') : ''}
       ${(x.targets||[]).length ? `<details><summary>Targets</summary><p class="mono" style="margin:4px 0 0;font-size:12px">${(x.targets||[]).map(t => 'TIC ' + esc(t)).join(', ')}</p></details>` : ''}
       ${(x.tracebacks||[]).length ? `<details><summary>${plural(x.tracebacks.length, 'traceback')} (verbatim)</summary>${x.tracebacks.map(t => `<pre class="err">${esc(t)}</pre>`).join('')}</details>` : ''}</li>`; }).join('')}</ol>` : '<p class="empty">No search runs are stored in the catalogue.</p>';
@@ -1012,6 +1002,7 @@ function renderTransit(){
   $('#txorbit').innerHTML = orbitHTML(d) + trayHTML();
   $('#txcase').innerHTML = `<a class="btn primary" href="${esc(dipHref(d.id))}">Open the full case file ›</a><span>Every check, the stored measurements, the verdict ledger and the archive provenance.</span>`;
   $('#txarchive').textContent = d.archive_line ? `Archive comparison: ${d.archive_line}. ${D.no_detection}` : '';
+  $('#txjourney').innerHTML = d.journey || ''; $('#txlight').textContent = d.light || '';
   const cv = CTX(d).caveat; $('#txcaveat').hidden = !cv; $('#txcaveat').textContent = cv ? `What this run did not recover: ${cv}` + (wrongP(d) ? ' This dip\'s stored BLS period is not its planet\'s, so no period is given for it.' : '') : '';
 }
 function openTransit(dip){
@@ -1944,6 +1935,9 @@ function gxStart(){
     const b = e.target.closest('button[data-gxp]'); if (!b) return;
     gxSelect(gx.sel, Number(b.dataset.gxp)); const nb = $(`#gxcard button[data-gxp="${b.dataset.gxp}"]`); if (nb) nb.focus();
   });
+  $('#gxcam').addEventListener('click', e => { const b = e.target.closest('[data-gc]'), o = b && b.dataset.gc; if (!o) return; if (gx.tour) gxTourEnd();
+    if (o === 'in' || o === 'out') gxZoom(o === 'in' ? .8 : 1.25); else if (o === 'star'){ if (gx.sel >= 0) gxFly(gxHostCam(gx.sel), 1400); else say('Select a star on the map first.'); }
+    else gxFly(gxPresetCam(o === 'all' ? 'galaxy' : gx.view.view), 1400); });
   $('#gxpresets').addEventListener('click', e => {
     const b = e.target.closest('button[data-gxview]'); if (!b) return;
     if (gx.tour) gxTourEnd();
@@ -3685,7 +3679,7 @@ function plShow(slug){
     $('#h-planet').textContent = P.name[i]; if (current === 'planet') pageChrome('planet', new URLSearchParams({id: slug}));
     $('#plsub').innerHTML = `${star ? `<a href="${ctStarHref(star)}">${esc(star)}</a>` : 'host not stored'} · ${esc(CTM.method_label[P.method[i]] || P.method[i])} · discovered ${P.year[i] || 'year not stored'} · ${esc(clsName)}`;
     const ex = $('#plextra'), hero = ex && ex.querySelector('#plhero');
-    if (ex && !(hero && hero.dataset.slug === slug)){ ex.innerHTML = ctPlanetExtras(i); if (window.SetuRender) SetuRender.mount(ex); }
+    if (ex && !(hero && hero.dataset.slug === slug)){ ex.innerHTML = ctPlanetExtras(i); if (window.SetuRender) SetuRender.mount(ex); SetuUI.limits(ex); }
     ctSpin(ex);
     $('#plparams').innerHTML = ctTable(i, CT_ROWS) + `<p class="small">Units as stored by ${esc(ct.C.source_short)}. Errors are the stored lower and upper bounds; none is shown where none is stored.</p>`;
     const sibs = star ? ct.byStar[star].slice().sort((a, b) => (P.period[a] ?? 1e99) - (P.period[b] ?? 1e99)) : [i];
@@ -3797,11 +3791,13 @@ function stShow(slug){
     const teff = P.steff[i];
     const [cl, row] = teff !== null ? mxClass(teff) : [null, null];
     $('#stsub').textContent = `${ps.length} planet${ps.length === 1 ? '' : 's'} in ${ct.C.source_short}` + (P.sptype[i] ? ` · stored type ${P.sptype[i]}` : '') + (cl ? ` · class ${cl} from Teff (nearest ${row})` : '');
+    const pc = P.dist[i], ly = pc * 3.261563777, k = 10 ** Math.max(0, String(Math.trunc(ly)).length - 2);
+    $('#stlight').textContent = pc > 0 ? `The light from this star left it about ${Math.max(1, Math.round(ly / k) * k).toLocaleString('en-GB')} years ago (distance ${+pc.toPrecision(6)} pc, ${ctSrc()}).` : '';
     $('#stparams').innerHTML = ctTable(i, CT_STAR_ROWS) + (P.salt[i] ? `<p class="small">Also known as ${esc(P.salt[i])}.</p>` : '');
     const thumb = j => { const lk = window.SetuRender && SetuRender.look(ctRow(j)).name; return lk ? `<img class="plthumb" src="${ctStill(lk, 160)}" width="40" height="40" loading="lazy" alt="">` : '<span class="plthumb none" aria-hidden="true"></span>'; };
     $('#stplanets').innerHTML = `<ul class="pllist plthumbs">${ps.map(j => `<li><a href="${ctPlanetHref(j)}">${thumb(j)}<span>${esc(P.name[j])}</span><span class="mono">${esc(CTM.method_label[P.method[j]] || P.method[j])} · ${P.year[j] || '—'}</span></a></li>`).join('')}</ul><p class="small">Pictures: artist's impressions from the measured radius and irradiation. <a href="${CT_PIC}">How the pictures are drawn ›</a></p>`;
     const sx = $('#stextra'), sh = sx && sx.querySelector('#sthero');
-    if (sx && !(sh && sh.dataset.star === name)){ const f = ctStarFig(name, P.steff[i], P.srad[i]) + ctOrbits(name, ps); sx.innerHTML = f ? `<div class="sthero" id="sthero" data-star="${esc(name)}">${f}</div>` : ''; if (window.SetuRender) SetuRender.mount(sx); }
+    if (sx && !(sh && sh.dataset.star === name)){ const f = ctStarFig(name, P.steff[i], P.srad[i]) + ctOrbits(name, ps); sx.innerHTML = f ? `<div class="sthero" id="sthero" data-star="${esc(name)}">${f}</div>` : ''; if (window.SetuRender) SetuRender.mount(sx); SetuUI.limits(sx); }
     if (window.SetuOrbits) SetuOrbits.wire(sx);
     $('#stwhere').innerHTML = ctWhere(i, name) + ctSeen(name, R('#/sky'));
     if (typeof vaForStar === 'function') vaForStar(P.salt[i]);
@@ -4536,7 +4532,7 @@ window.SetuHero = window.SetuHero || {frames: 0};
     const cv = document.createElement('canvas'); if (!cv.getContext) return;
     cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', svg.getAttribute('aria-label'));
     box.classList.add('cv'); box.appendChild(cv); svg.setAttribute('hidden', '');
-    const S = fig._orb = {t: 0, playing: !RM(), vis: false, raf: 0, last: 0};
+    const S = fig._orb = {t: 0, playing: !RM(), vis: false, raf: 0, last: 0, fo: 'all', zm: 1}, cam = fig.querySelector('.orbcam');
     const ps = p.planets, T = ps[ps.length - 1].P, amax = Math.max(...ps.map(q => q.a)), dmax = Math.max(1, ...ps.map(q => q.d || 0));
     const rgb = window.SetuRender ? SetuRender.teffRGB(p.teff || 5772) : [255, 241, 234];
     function draw(){
@@ -4544,22 +4540,29 @@ window.SetuHero = window.SetuHero || {frames: 0};
       if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
       const c = cv.getContext('2d'), narrow = w / d < 600, days = S.t * p.speed, ph = (days % T) / T;
       c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
-      const cx = narrow ? w * .5 : w * .23, cy = narrow ? h * .25 : h * .48, R = narrow ? Math.min(w * .4, h * .18) : Math.min(h * .42, w * .2);
+      const R = narrow ? Math.min(w * .4, h * .18) : Math.min(h * .42, w * .2), k = S.zm * (S.fo === 'all' ? 1 : Math.min(40, amax / ps[S.fo === 'star' ? 0 : S.fo].a * (S.fo === 'star' ? .8 : 2.5)));
+      const pos = (q, i) => { const a = Math.PI / 2 + TAU * (days / q.P + q.f), r = R * q.a / amax * k; return [r * Math.cos(a), r * Math.sin(a), a, r]; }, fp = S.fo > -1 && ps[S.fo] ? pos(ps[S.fo], S.fo) : [0, 0];
+      const cx = (narrow ? w * .5 : w * .23) - fp[0], cy = (narrow ? h * .25 : h * .48) - fp[1];
+      c.save(); c.beginPath(); c.rect(0, 0, narrow ? w : w * .47, narrow ? h * .5 : h); c.clip();
       c.font = `${11 * d}px ${getComputedStyle(fig).fontFamily}`; c.lineWidth = d;
       c.strokeStyle = 'rgba(255,179,64,.5)'; c.setLineDash([4 * d, 5 * d]); c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy + R + 22 * d); c.stroke(); c.setLineDash([]);
       c.fillStyle = '#FFB340'; c.fillText('to the observer', cx + 8 * d, cy + R + 20 * d);
       const sR = Math.max(5 * d, R * .06);
       if (window.SetuRender) SetuRender.drawStar2D(c, cx, cy, sR, p.teff || 5772, 0, {flat: true, glow: 2.2}); else { c.fillStyle = `rgb(${rgb})`; c.beginPath(); c.arc(cx, cy, sR, 0, TAU); c.fill(); }
-      const gx = narrow ? w * .06 : w * .5, gw = narrow ? w * .88 : w * .46, top = narrow ? h * .58 : h * .14, lane = Math.min(64 * d, (narrow ? h * .27 : h * .78) / ps.length);
-      c.fillStyle = '#9AA3B5'; c.fillText(`one ${T.toFixed(2)}-day period · depth k² (ppm), one scale`, gx, top - 8 * d);
-      ps.forEach((q, i) => {
-        const rr = R * q.a / amax, th = Math.PI / 2 + TAU * (days / q.P + q.f), x = cx + rr * Math.cos(th), y = cy + rr * Math.sin(th);
+      const ons = ps.map((q, i) => {
+        const [px, py, th, rr] = pos(q, i), x = cx + px, y = cy + py;
         c.strokeStyle = 'rgba(255,255,255,.14)'; c.beginPath(); c.arc(cx, cy, rr, 0, TAU); c.stroke();
         const off = Math.abs(Math.atan2(Math.sin(th - Math.PI / 2), Math.cos(th - Math.PI / 2))), on = off < Math.max(.05, Math.PI * (q.w || 1) / 24 / q.P);
         c.fillStyle = q.c; c.beginPath(); c.arc(x, y, 4.5 * d, 0, TAU); c.fill();
         if (on){ c.strokeStyle = q.c; c.beginPath(); c.arc(x, y, 10 * d, 0, TAU); c.stroke(); }
         c.fillStyle = '#ECEFF5'; c.fillText(q.n, x + 8 * d, y - 7 * d);
-        const base = top + 18 * d + i * lane, hh = q.d ? Math.max(2 * d, q.d / dmax * (lane - 30 * d)) : 0, ww = Math.max(2 * d, (q.w || 1) / 24 / T * gw);
+        return on;
+      });
+      c.restore();
+      const gx = narrow ? w * .06 : w * .5, gw = narrow ? w * .88 : w * .46, top = narrow ? h * .58 : h * .14, lane = Math.min(64 * d, (narrow ? h * .27 : h * .78) / ps.length);
+      c.font = `${11 * d}px ${getComputedStyle(fig).fontFamily}`; c.fillStyle = '#9AA3B5'; c.fillText(`one ${T.toFixed(2)}-day period · depth k² (ppm), one scale`, gx, top - 8 * d);
+      ps.forEach((q, i) => {
+        const on = ons[i], base = top + 18 * d + i * lane, hh = q.d ? Math.max(2 * d, q.d / dmax * (lane - 30 * d)) : 0, ww = Math.max(2 * d, (q.w || 1) / 24 / T * gw);
         c.strokeStyle = q.c; c.lineWidth = 1.6 * d; c.beginPath(); c.moveTo(gx, base);
         for (let n = Math.ceil(q.f - 1e-9); (n - q.f) * q.P <= T; n++){ const tc = (n - q.f) * q.P; if (tc < 0 || !q.d) continue; const xc = gx + tc / T * gw; c.lineTo(xc - ww / 2, base); c.lineTo(xc - ww / 2, base + hh); c.lineTo(xc + ww / 2, base + hh); c.lineTo(xc + ww / 2, base); }
         c.lineTo(gx + gw, base); c.stroke(); c.lineWidth = d;
@@ -4571,6 +4574,9 @@ window.SetuHero = window.SetuHero || {frames: 0};
     function frame(now){ S.raf = 0; if (!S.playing || !S.vis || document.hidden) return; S.t += Math.min(.1, (now - (S.last || now)) / 1000); S.last = now; draw(); S.raf = requestAnimationFrame(frame); }
     function kick(){ if (!S.raf && S.playing && S.vis && !document.hidden){ S.last = 0; S.raf = requestAnimationFrame(frame); } }
     btn.addEventListener('click', () => { S.playing = !S.playing; setBtn(); kick(); });
+    if (cam){ cam.hidden = false; cam.addEventListener('click', e => { const b = e.target.closest('[data-oc]'); if (!b) return; const o = b.dataset.oc;
+      if (o === 'in' || o === 'out') S.zm = Math.max(.5, Math.min(8, S.zm * (o === 'in' ? 1.5 : 1 / 1.5))); else { S.fo = o === 'reset' ? 'all' : isNaN(o) ? o : +o; S.zm = 1; }
+      cam.querySelectorAll('[aria-pressed]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.oc === String(S.fo)))); draw(); }); }
     if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { S.vis = e.isIntersecting; if (S.vis){ draw(); kick(); } }), {rootMargin: '80px'}).observe(box);
     else { S.vis = true; kick(); }
     document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
@@ -4783,10 +4789,31 @@ window.SetuPanelRing = (function(){
     let rz = 0; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (F && fig.classList.contains('live')) draw(); }, 150); });
   });
 })();
+
+function tnWire(){
+  const f = $('#tnow'), r = $('#tnrange'); if (!f || f._w) return; f._w = 1;
+  const M = JSON.parse(f.dataset.meta), day = new Date().toISOString().slice(0, 10), now = M.findIndex(m => m.a <= day && day < m.b);
+  const set = i => { $$('.tnsec', f).forEach(g => g.classList.toggle('on', +g.dataset.i === i)); const m = M[i], t = `Sector ${m.s}: ${m.a} to ${m.b} · ${m.n} catalogued stars with known planets in its fields` + (m.x.length ? ' · in its fields: ' + m.x.join(', ') : ''); $('#tnread').textContent = t; r.setAttribute('aria-valuetext', t); };
+  if (now >= 0){ r.value = now; set(now); }
+  r.oninput = () => set(+r.value);
+}
+
+function vtWire(){
+  const root = $('#route-vetter'); if (!root || root._w) return; root._w = 1;
+  let A = {}; try { A = JSON.parse(localStorage.getItem('setuhq-vetter')) || {}; } catch (e) {}
+  const C = $$('.vtcard', root), W = {passed: 'pass', flagged: 'flag', rejected: 'reject'};
+  const show = (c, o) => { $$('[data-vt]', c).forEach(b => b.setAttribute('aria-pressed', b.dataset.vt === o)); $('.vtsay', c).textContent = o ? `You called it: ${W[o]}. The vetting: ${W[c.dataset.out]}.` : ''; $('.vtreveal', c).open = !!o; };
+  const score = () => { const a = C.filter(c => A[c.dataset.dip]); try { localStorage.setItem('setuhq-vetter', JSON.stringify(A)); } catch (e) {}
+    $('.vtscore', root).hidden = !a.length; $('#vtscore').textContent = `Your calls match the vetting on ${a.filter(c => A[c.dataset.dip] === c.dataset.out).length} of ${a.length} dips. Kept in this browser only.`; };
+  C.forEach(c => { $('.vtpick', c).hidden = false; show(c, A[c.dataset.dip]); });
+  root.addEventListener('click', e => { const b = e.target.closest('[data-vt]'), c = b && b.closest('.vtcard');
+    if (c){ A[c.dataset.dip] = b.dataset.vt; show(c, b.dataset.vt); score(); } else if (e.target.id === 'vtreset'){ A = {}; C.forEach(c => show(c)); score(); } });
+  score();
+}
 // ---------- router ----------
 const RENDER = {overview: () => {}, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, variables: renderVariables, transit: renderTransit,
   explorer: () => { renderExplorer(); renderDiscoveries(); }, sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns,
-  leaderboard: () => {}, docs: () => {}, pictures: () => {}, stellar: () => {}, stellardocs: () => {}, propose: () => {}, notfound: () => {}};
+  leaderboard: () => {}, docs: () => {}, pictures: () => {}, stellar: () => {}, stellardocs: () => {}, propose: () => {}, tessnow: tnWire, vetter: vtWire, editions: () => {}, notfound: () => {}};
 const rendered = new Set();
 const META = D.route_meta, MX_FIRST = Object.keys(D.chapter_titles)[0];
 const ROUTES = () => $$('#content > .route').map(s => s.dataset.route);
@@ -4852,7 +4879,7 @@ function show(r, moveFocus, params){
   // The shared renderer upgrades the view's pictures; the header settles; counters roll (setuhq.design, setuhq.renderer).
   const sec = $('#route-' + r);
   if (window.SetuRender && sec) SetuRender.mount(sec);
-  if (window.SetuUI){ SetuUI.settle(); SetuUI.odometer(sec); }
+  if (window.SetuUI){ SetuUI.settle(); SetuUI.odometer(sec); SetuUI.limits(sec); }
 }
 // A change of view in place is a view transition (V13), except under reduced motion or on the first draw.
 function viewTransition(f){

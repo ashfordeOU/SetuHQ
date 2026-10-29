@@ -39,7 +39,7 @@ from pathlib import Path
 from setuhq import brand
 from setuhq.design import BASE_CSS, MOTION_CSS, tokens_css
 from setuhq.benchmark_toi import wilson
-from setuhq.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS
+from setuhq.discover import MAX_FEED_DEPTH_PPM, MIN_FEED_TRANSITS, held_line, load_public_catalog
 from setuhq.galaxy import (CSV_NAME, DEFAULT_COVERAGE, DEFAULT_MAP, DEFAULT_NOTABLE, coverage_chips, load_coverage, sky_layers_svg, GALAXY_CSS, GALAXY_JS, galaxy_data,
                             galaxy_meta, galaxy_section, map_csv)
 from setuhq.catalogue import (CATALOGUE_CSS, CATALOGUE_JS, CATALOGUE_JSON, DEFAULT_CATALOGUE, SEARCH_BUTTON, SEARCH_DIALOG,
@@ -52,13 +52,14 @@ from setuhq.mission import GRIDS as MISSION_GRIDS, MISSION_CSS, MISSION_JS, PANE
 from setuhq.methods import DEFAULT_EXAMPLES, METHODS_CSS, METHODS_JS, load_examples, methods_meta, methods_section, system_stage, CHAPTERS, CHAPTER_PLANETS
 from setuhq.codenote import code_note
 from setuhq.docket import DOCKET_FONTS_CSS, OUTCOME_LABEL, docket_data, docket_page
-from setuhq import dipslugs
+from setuhq import dipslugs, journey
 from setuhq.names import (ATTRIBUTION, DIP_STATE, PROBES_ONLY, PROVIDER_BY_KIND, dip_count, dip_state, panel_mode, public_text, SENTINEL_KINDS,
                           panel_phrase, reviewer_names, reviewer_provenance)
 from setuhq.objects import slugify
 from setuhq.routes import ALIASES, from_hash, route_table, set_dip_slugs
 from setuhq.story import DEFAULT_TARGETS, decoration, number_words, sky_geometry, story_data
 from setuhq.viz import VIZ_JS
+from setuhq.features import JS as FEATURES_JS
 
 # The site's five sections, in the top bar, for its three audiences: visitors (Explore, How it works), researchers
 # (Candidates, Evidence) and contributors (Docs). docs/SITE.md gives the reasons. Each section's pages are listed in
@@ -68,13 +69,16 @@ NAV = [("explore", "Explore", "#/sky"), ("candidates", "Candidates", "#/explorer
 SUBNAV = {
     "explore": [("Sky map", "#/sky", ["sky"]), ("Galaxy", "#/galaxy", ["galaxy"]),
                 ("Catalogue", "#/catalogue", ["catalogue", "planet", "star"]),
-                ("Everything that dims", "#/variables", ["variables"]), ("Mission Control", "#/mission", ["mission"])],
+                ("Everything that dims", "#/variables", ["variables"]), ("Mission Control", "#/mission", ["mission"]),
+                ("Where TESS is now", "#/tessnow", ["tessnow"])],
     "candidates": [("All candidates", "#/explorer", ["explorer"]), ("Dips", "#/transit", ["transit"]),
-                   ("Case files", "#/candidates", ["candidates"]), ("Radius ratios", "#/planets", ["planets"])],
+                   ("Case files", "#/candidates", ["candidates"]), ("Radius ratios", "#/planets", ["planets"]),
+                   ("Be the vetter", "#/vetter", ["vetter"])],
     "evidence": [("The panel", "#/sentinels", ["sentinels"]), ("Leaderboard", "#/leaderboard", ["leaderboard"]),
                  ("Runs", "#/runs", ["runs"]), ("Stars", "#/stellar", ["stellar"]), ("Run report", "/evidence/report/", ["report"]), ("Plates", "/evidence/plates/", ["plates"])],
     "docs": [("Get started", "#/docs", ["docs"]), ("How the pictures are drawn", "#/pictures", ["pictures"]),
-             ("Flares and pulsations", "#/stellardocs", ["stellardocs"]), ("CHEOPS proposals", "#/propose", ["propose"])],
+             ("Flares and pulsations", "#/stellardocs", ["stellardocs"]), ("CHEOPS proposals", "#/propose", ["propose"]),
+             ("Editions", "#/editions", ["editions"])],
 }
 # Every view: its name, its section, its breadcrumbs (deep pages only: a list of (label, address)), and its title.
 # A title template's {name} is the page's own heading (a planet, a star, a dip).
@@ -103,6 +107,9 @@ ROUTE_META = {
     "pictures": {"label": "How the pictures are drawn", "nav": "docs", "title": "How the pictures are drawn · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
     "stellardocs": {"label": "Flares and pulsations", "nav": "docs", "title": "Flares, pulsations and CHEOPS · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
     "propose": {"label": "CHEOPS proposals", "nav": "docs", "title": "Prepare a CHEOPS proposal · Docs · SetuHQ", "crumbs": [("Docs", "#/docs")]},
+    "tessnow": {"label": "Where TESS is now", "nav": "explore", "title": "Where TESS is looking · Explore · SetuHQ", "crumbs": [("Explore", "#/sky")]},
+    "vetter": {"label": "Be the vetter", "nav": "candidates", "title": "Be the vetter · Candidates · SetuHQ", "crumbs": [("Candidates", "#/explorer")]},
+    "editions": {"label": "Editions", "nav": "docs", "title": "Editions: open core, SetuHQ Pro and custom study · SetuHQ", "crumbs": [("Docs", "#/docs")]},
     "notfound": {"label": "Page not found", "nav": None, "title": "Page not found · SetuHQ"},
 }
 SECTIONS = [(k, label) for k, label, _ in NAV]
@@ -759,7 +766,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     catalog = {"candidates": [], "runs": []}
     catalog_name = ""
     if catalog_path is not None and Path(catalog_path).exists():
-        catalog = json.loads(Path(catalog_path).read_text())
+        catalog = load_public_catalog(catalog_path)  # the embargo: signals held for review never reach a page
         catalog_name = str(catalog_path)
     calibrated, weights_name, record, record_name = None, "", None, ""
     if weights_path is not None and Path(weights_path).exists():
@@ -869,6 +876,7 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
             "path": catalog_name, "updated": catalog.get("updated", ""), "config": catalog.get("config", ""),
             "config_sha256": catalog.get("config_sha256", ""), "targets_reviewed": catalog.get("targets_reviewed", 0),
             "candidates": feed, "runs": catalog.get("runs") or [],
+            "embargo": catalog.get("embargo") is not False, "held_line": held_line(),
             "found_times": sorted({str(r["found"]) for r in feed if r.get("found")}),
         },
         "feed_rule": {"max_depth_ppm": MAX_FEED_DEPTH_PPM, "min_transits": MIN_FEED_TRANSITS},
@@ -924,6 +932,13 @@ def app_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | None
     for ctx in out["run_ctx"].values():
         ctx["star_page"] = bool(ctx["star"].get("name")) and slugify(ctx["star"]["name"]) in stars
         ctx["planet_page"] = bool(ctx.get("planet")) and ctx["planet"] in planets
+    # Each dip's journey strip (setuhq.journey, from its case file) and how long ago its light left the star.
+    jmap = {**dock.get("journey", {}), **{k: v for x in extras for k, v in x["dock"].get("journey", {}).items()}}
+    for d in story["dips"] + out["showcase_dips"]:
+        ctx = out["run_ctx"].get(d.get("run")) or {}
+        d["journey"] = jmap.get(d["id"], "")
+        d["light"] = journey.light_line(journey.star_distance(cat, [ctx.get("star", {}).get("name"), ctx.get("planet")]),
+                                        f"{cat['source_short']}, fetched {str(cat['fetched_at'])[:10]}") if cat else ""
     return out
 
 
@@ -1655,13 +1670,14 @@ function widgetBody(id){
     const f = D.catalog.candidates, nNew = f.filter(x => x.status === 'new_candidate').length, nKnown = f.filter(x => x.status === 'known_toi').length;
     if (!D.catalog.path) return '<p class="empty">No search catalogue was given to this build.</p>';
     return `<div><span class="big">${f.length}</span> <span class="muted">feed entries</span></div>
-      <p style="margin:0">${nKnown} match a known TOI period · ${nNew} new candidate${nNew===1?'':'s'} · ${esc(D.catalog.targets_reviewed)} targets reviewed</p>
+      <p style="margin:0">${nKnown} match a known TOI period · ${D.catalog.embargo ? '' : `${nNew} new candidate${nNew===1?'':'s'} · `}${esc(D.catalog.targets_reviewed)} targets reviewed</p>
+      ${D.catalog.embargo ? `<p class="muted" style="margin:0">${esc(D.catalog.held_line)}</p>` : ''}
       <p class="muted" style="margin:0;font-size:12px">Catalogue updated ${when(D.catalog.updated)}.</p>`;
   }
   if (id === 'runs'){
     const runs = D.catalog.runs.slice(-5).reverse();
     if (!runs.length) return '<p class="empty">No search runs are stored in the catalogue.</p>';
-    return `<ul class="runlist">${runs.map(x => `<li><b>${when(x.time)}</b><span>${(x.targets||[]).length} targets · ${esc(x.new ?? '–')} new · ${esc(x.known ?? '–')} known · ${(x.errors||[]).length} error${(x.errors||[]).length===1?'':'s'}</span></li>`).join('')}</ul>
+    return `<ul class="runlist">${runs.map(x => `<li><b>${when(x.time)}</b><span>${x.n_targets ?? (x.targets||[]).length} targets · ${x.new == null ? '' : `${esc(x.new)} new · `}${esc(x.known ?? '–')} known · ${(x.errors||[]).length} error${(x.errors||[]).length===1?'':'s'}</span></li>`).join('')}</ul>
       <p class="muted" style="margin:0;font-size:12px">This page's run: ${esc(r.name)}, ${when(r.created_at)}.</p>`;
   }
   if (id === 'top'){
@@ -1950,11 +1966,11 @@ function feedCards(rows){
 function renderDiscHead(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length, ft = D.catalog.found_times;
   const found = !ft.length ? 'no stored find time' : ft.length === 1 ? `found in the catalogue run of ${when(ft[0])}` : `found between ${when(ft[0])} and ${when(ft[ft.length-1])}`;
-  $('#feedhead').innerHTML = f.length ? `${f.length} entries, ${found}. <b>${n('known_toi')} match a known TOI period</b>; ${n('new_candidate')} are new candidates. Every entry is a ${esc(D.unconfirmed)}.${n('known_toi') ? ` A TOI match is an archive comparison. ${esc(D.no_detection)}` : ''}` : 'The feed is empty.';
+  $('#feedhead').innerHTML = (f.length ? `${f.length} entries, ${found}. <b>${n('known_toi')} match a known TOI period</b>${D.catalog.embargo ? '' : `; ${n('new_candidate')} are new candidates`}. Every entry is a ${esc(D.unconfirmed)}.${n('known_toi') ? ` A TOI match is an archive comparison. ${esc(D.no_detection)}` : ''}` : 'The feed is empty.') + (D.catalog.embargo ? ` ${esc(D.catalog.held_line)}` : '');
 }
 function renderDiscChips(){
   const f = D.catalog.candidates, n = s => f.filter(x => x.status === s).length;
-  const chips = [['all', `all ${f.length}`], ['new_candidate', `new ${n('new_candidate')}`], ['known_toi', `known TOI ${n('known_toi')}`]];
+  const chips = [['all', `all ${f.length}`], ['new_candidate', `new ${n('new_candidate')}`], ['known_toi', `known TOI ${n('known_toi')}`]].filter(c => !(D.catalog.embargo && c[0] === 'new_candidate'));
   $('#discchips').innerHTML = chips.map(([k, l]) => `<button class="chip" data-f="${k}" aria-pressed="${disc.filter === k}">${esc(l)}</button>`).join('');
 }
 
@@ -2206,7 +2222,7 @@ function renderRuns(){
   const runs = D.catalog.runs.slice().reverse();
   const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
   $('#runtable').innerHTML = runs.length ? `<ol class="runlines">${runs.map(x => { const ne = (x.errors||[]).length; return `<li>
-      <div class="line"><b>${when(x.time)}</b><span>${plural((x.targets||[]).length, 'target')}</span><span>${esc(x.new ?? '–')} new</span><span>${esc(x.known ?? '–')} known TOI</span><span>${esc(x.filtered_deep ?? '–')} filtered as too deep</span><span>${esc(x.filtered_single ?? '–')} filtered for too few transits</span><span class="${ne ? 'err' : 'muted'}">${ne ? plural(ne, 'error') : 'no errors'}</span></div>
+      <div class="line"><b>${when(x.time)}</b><span>${plural(x.n_targets ?? (x.targets||[]).length, 'target')}</span>${x.new == null ? '' : `<span>${esc(x.new)} new</span>`}<span>${esc(x.known ?? '–')} known TOI</span><span>${esc(x.filtered_deep ?? '–')} filtered as too deep</span><span>${esc(x.filtered_single ?? '–')} filtered for too few transits</span><span class="${ne ? 'err' : 'muted'}">${ne ? plural(ne, 'error') : 'no errors'}</span></div>
       ${ne ? x.errors.map(e => `<pre class="err">${esc(e)}</pre>`).join('') : ''}
       ${(x.targets||[]).length ? `<details><summary>Targets</summary><p class="mono" style="margin:4px 0 0;font-size:12px">${(x.targets||[]).map(t => 'TIC ' + esc(t)).join(', ')}</p></details>` : ''}
       ${(x.tracebacks||[]).length ? `<details><summary>${plural(x.tracebacks.length, 'traceback')} (verbatim)</summary>${x.tracebacks.map(t => `<pre class="err">${esc(t)}</pre>`).join('')}</details>` : ''}</li>`; }).join('')}</ol>` : '<p class="empty">No search runs are stored in the catalogue.</p>';
@@ -2461,6 +2477,7 @@ function renderTransit(){
   $('#txorbit').innerHTML = orbitHTML(d) + trayHTML();
   $('#txcase').innerHTML = `<a class="btn primary" href="${esc(dipHref(d.id))}">Open the full case file ›</a><span>Every check, the stored measurements, the verdict ledger and the archive provenance.</span>`;
   $('#txarchive').textContent = d.archive_line ? `Archive comparison: ${d.archive_line}. ${D.no_detection}` : '';
+  $('#txjourney').innerHTML = d.journey || ''; $('#txlight').textContent = d.light || '';
   const cv = CTX(d).caveat; $('#txcaveat').hidden = !cv; $('#txcaveat').textContent = cv ? `What this run did not recover: ${cv}` + (wrongP(d) ? ' This dip\'s stored BLS period is not its planet\'s, so no period is given for it.' : '') : '';
 }
 function openTransit(dip){
@@ -2596,7 +2613,7 @@ $('#route-sentinels').addEventListener('click', e => {
 // ---------- router ----------
 const RENDER = {overview: () => {}, sky: renderSky, galaxy: renderGalaxy, methods: renderMethods, mission: renderMission, catalogue: renderCatalogue, planet: () => {}, star: () => {}, variables: renderVariables, transit: renderTransit,
   explorer: () => { renderExplorer(); renderDiscoveries(); }, sentinels: () => { renderSentinels(); renderPanel(); }, candidates: renderCandidates, planets: renderPlanets, runs: renderRuns,
-  leaderboard: () => {}, docs: () => {}, pictures: () => {}, stellar: () => {}, stellardocs: () => {}, propose: () => {}, notfound: () => {}};
+  leaderboard: () => {}, docs: () => {}, pictures: () => {}, stellar: () => {}, stellardocs: () => {}, propose: () => {}, tessnow: tnWire, vetter: vtWire, editions: () => {}, notfound: () => {}};
 const rendered = new Set();
 const META = D.route_meta, MX_FIRST = Object.keys(D.chapter_titles)[0];
 const ROUTES = () => $$('#content > .route').map(s => s.dataset.route);
@@ -2662,7 +2679,7 @@ function show(r, moveFocus, params){
   // The shared renderer upgrades the view's pictures; the header settles; counters roll (setuhq.design, setuhq.renderer).
   const sec = $('#route-' + r);
   if (window.SetuRender && sec) SetuRender.mount(sec);
-  if (window.SetuUI){ SetuUI.settle(); SetuUI.odometer(sec); }
+  if (window.SetuUI){ SetuUI.settle(); SetuUI.odometer(sec); SetuUI.limits(sec); }
 }
 // A change of view in place is a view transition (V13), except under reduced motion or on the first draw.
 function viewTransition(f){
@@ -2769,7 +2786,7 @@ fromOldHash();
 go(parseLoc(), false);
 """
 # The Galaxy section's code sits ahead of the router, which calls it.
-APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + VARIABLES_JS + LEARN_JS + MISSION_JS + VIZ_JS + "// ---------- router ----------\n", 1)
+APP_JS = APP_JS.replace("// ---------- router ----------\n", GALAXY_JS + METHODS_JS + CATALOGUE_JS + VARIABLES_JS + LEARN_JS + MISSION_JS + VIZ_JS + FEATURES_JS + "// ---------- router ----------\n", 1)
 
 
 def _eyebrow(label: str, parent: tuple[str, str] | None = None) -> str:
@@ -3188,6 +3205,8 @@ def _transit(data: dict) -> str:
       <section class="row2" id="txorbit" aria-label="Orbit and compare"></section>
       {_orbit_insets(data)}
       <p class="note" id="txcaveat" hidden></p>
+      <div id="txjourney"></div>
+      <p class="small" id="txlight"></p>
       <p class="casefile" id="txcase"></p>
       <p class="small" id="txarchive"></p>
       <p class="small">Only a dip that passed vetting is a candidate, and it stays unconfirmed; a rejected dip is not one. Stored values only: the points, marks, scores, flags and words are as the run stored them.</p>"""
@@ -3336,6 +3355,9 @@ def route_sections(data: dict) -> dict[str, str]:
     nodet = html.escape(NO_DETECTION)
     feed = data["catalog"]["candidates"]
     n_known = sum(1 for r in feed if r.get("status") == "known_toi")
+    # The embargo: signals that match no known TOI are held for private review and reporting; one static line says so.
+    held = (" The feed shows only signals that match a known TOI. " + html.escape(data["catalog"]["held_line"])
+            if data["catalog"].get("embargo", True) else "")
     xm_targets = ", ".join(html.escape(str(t)) for t in data.get("crossmatch_targets") or []) or "no star"
     prov = provenance_note(data)
     out = {}
@@ -3357,7 +3379,7 @@ def route_sections(data: dict) -> dict[str, str]:
       </div>
       <div class="widgets" id="widgets"></div>
       <section class="feedsec" aria-labelledby="h-feedsec">
-      <div class="secthead"><h2 id="h-feedsec">From the search feed: {len(feed)} entr{"y" if len(feed) == 1 else "ies"} from {n_stars} other star{"" if n_stars == 1 else "s"}</h2><p>SetuHQ's search batches run the same panel over more TESS stars. These entries are leads for review: {n_known} of {len(feed)} match a known TOI period, and none has a case file yet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}</p></div>
+      <div class="secthead"><h2 id="h-feedsec">From the search feed: {len(feed)} entr{"y" if len(feed) == 1 else "ies"} from {n_stars} other star{"" if n_stars == 1 else "s"}</h2><p>SetuHQ's search batches run the same panel over more TESS stars. These entries are leads for review: {n_known} of {len(feed)} match a known TOI period, and none has a case file yet.{f" A TOI match is an archive comparison. {nodet}" if n_known else ""}{held}</p></div>
       <p class="note rule"><b>Feed rule.</b> An entry joins the feed when its depth is at most {rule["max_depth_ppm"]:,.0f} ppm and its signal has at least {rule["min_transits"]} transits. This is an admission rule, not a vetting result.</p>
       <div class="filters exfilters">
         <div class="chips" id="exstars" role="group" aria-label="Stars"></div>
