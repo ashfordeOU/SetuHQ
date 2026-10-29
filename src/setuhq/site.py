@@ -383,10 +383,11 @@ def _footer_html(lead: str | None) -> str:
         rel = ' rel="noopener"'
         lis = "".join(f'<li><a{rel if u.startswith("http") else ""} href="{html.escape(u)}"{i18n.k(m[0], **(m[2] if len(m) > 2 else {}))}>{html.escape(m[1])}</a></li>' for m, u in links)
         cols.append(f'<div><h2{i18n.k("nav." + k)}>{html.escape(label)}</h2><ul>{lis}</ul></div>')
+    footer_line = i18n.t("honesty.footer", 'Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ\'s data under CC BY 4.0. "SetuHQ" and the Setu mark are trademarks of Ashforde OÜ.', note="The footer's honesty line. Keep 'a candidate, never a confirmed planet' exactly as strong; licence names stay as written.")
     return f"""<footer class="sitefoot"><div class="fin">
   <nav class="footnav" aria-label="{i18n.t("footer.nav", "Site")}"{i18n.ka(aria_label="footer.nav")}>{"".join(cols)}</nav>
   <p class="attribution"{i18n.k("honesty.attribution")}>{html.escape(ATTRIBUTION)}</p>
-  <p{i18n.k("honesty.footer")}>{i18n.t("honesty.footer", 'Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ\'s data under CC BY 4.0. "SetuHQ" and the Setu mark are trademarks of Ashforde OÜ.', note="The footer's honesty line. Keep 'a candidate, never a confirmed planet' exactly as strong; licence names stay as written.")}</p>
+  <p{i18n.k("honesty.footer")}>{footer_line}</p>
   <p class="mtnote"{i18n.k("i18n.mtnote")} hidden>{i18n.t("i18n.mtnote", 'This translation is machine-assisted and has not yet been reviewed by a native speaker. <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md">Corrections are welcome</a>.', note="Shown on every translated page. Say plainly that the translation was made with machine assistance and is not yet reviewed.")}</p>
 </div></footer>"""
 

@@ -128,10 +128,11 @@ def html(data: dict, **opts) -> str:
     big = max(its, key=lambda p: p["rp_re"])
     small = min(its, key=lambda p: p["rp_re"])
     title = e(data.get("title") or "Planets to scale")
+    cap = span("lu.cap", "To scale: one Earth radius is the same width all along the row, so {big} is {x} times as wide as {small}. Each picture is an artist\'s impression chosen from the measured radius and the computed irradiation; composition is not measured. Earth, Neptune and Jupiter are the Solar System references (only Earth is drawn with oceans). Radii: {src} (1 RJ = 11.209 R⊕).", x=format(big["rp_re"] / small["rp_re"], ".1f"), src=data["source"], **_ref("big", big["name"]), **_ref("small", small["name"]))
     return (f'<figure class="lineup" data-viz="lineup" aria-label="{title}">'
             f'<div class="stage lustage" style="--rmax:{rmax:.3f}"><ol class="lurow">{"".join(lis)}</ol>'
             f'<a class="stage-tag" href="{PICTURES}" data-i18n="label.art">Artist\'s impression</a></div>'
-            f'<figcaption class="skysrc">{span("lu.cap", "To scale: one Earth radius is the same width all along the row, so {big} is {x} times as wide as {small}. Each picture is an artist\'s impression chosen from the measured radius and the computed irradiation; composition is not measured. Earth, Neptune and Jupiter are the Solar System references (only Earth is drawn with oceans). Radii: {src} (1 RJ = 11.209 R⊕).", x=f"{big['rp_re'] / small['rp_re']:.1f}", src=data["source"], **_ref("big", big["name"]), **_ref("small", small["name"]))} '
+            f'<figcaption class="skysrc">{cap} '
             f'<a href="{PICTURES}"{ik("footer.pictures")}>How the pictures are drawn ›</a></figcaption></figure>')
 
 

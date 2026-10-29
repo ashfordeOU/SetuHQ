@@ -135,10 +135,12 @@ def html(data: dict, **opts) -> str:
              f'<button class="btn" type="button" data-sky="transit" aria-pressed="false" hidden{ik("sky.tonly")}>{N_("sky.tonly", "Transits only")}</button>'
              f'<label class="skyscrub" hidden><span{ik("sky.year")}>{N_("sky.year", "Year")}</span><input type="range" data-sky="year" min="{y0}" max="{y1}" step="1" '
              f'value="{y1}" aria-valuetext="{y1}: {n:,} planets"></label></div>')
-    nojs = (f' <span class="skynojs">{span("sky.nojs", "This still shows {k, number} of them (every {step}th); the full map draws when the page\'s script runs.", k=shown, step=step)}</span>'
+    nojs_text = span("sky.nojs", "This still shows {k, number} of them (every {step}th); the full map draws when the page\'s script runs.", k=shown, step=step)
+    nojs = (f' <span class="skynojs">{nojs_text}</span>'
             if step > 1 else "")
+    sky_cap = span("sky.cap", "Each dot is a catalogued planet at its host star\'s position (RA and Dec, J2000), coloured by the method that found it, appearing in its discovery year.")
     cap = (f'<ul class="skylegend" aria-label="Discovery method"{ka(aria_label="sky.legend")}>{legend}</ul>'
-           f'<p class="skysrc">{span("sky.cap", "Each dot is a catalogued planet at its host star\'s position (RA and Dec, J2000), coloured by the method that found it, appearing in its discovery year.")}'
+           f'<p class="skysrc">{sky_cap}'
            f'{nojs} <span{ik("cat.not_ours")}>{e(NOT_OURS)}</span> {span("limits.source", "Source: {s}.", s=data["source"])}</p>')
     N_("sky.legend", "Discovery method")
     return (f'<figure class="skyyears{" compact" if opts.get("compact") else ""}" id="{uid}" data-viz="skyyears" data-src="{e(src)}" '

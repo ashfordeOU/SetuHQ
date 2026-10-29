@@ -3257,10 +3257,11 @@ def _explorer(data: dict) -> str:
                         f'{dip_tag(d.get("outcome"))}</a>'
                         f'<a class="rundipcf" href="#/candidates?dip={e(d["id"])}" aria-label="Case file for {e(d["label"])}"{ik("cf.link")}>{N_("cf.link", "Case file ›")}</a></li>')
         hid = f'h-run-{e(c["slug"])}'
-        lines = "".join(f' <span{ik(f"showcase.{c['run']}.{field}")}>{e(c[key])}</span>'
+        kind_html = f' · <span{ik("showcase." + c["run"] + ".kind")}>{e(c["kind"])}</span>' if c["kind"] else ""
+        lines = "".join(f' <span{ik("showcase." + c["run"] + "." + field)}>{e(c[key])}</span>'
                         for key, field in (("outcome_line", "outcome"), ("caveat", "caveat")) if c[key])
         groups.append(f"""<section class="card rundips" aria-labelledby="{hid}">
-        <div class="rundiphead">{_star_disc(data, c["run"], 28, c["slug"], c["star"])}<h2 id="{hid}">{e(c["star"])}{f' · <span{ik(f"showcase.{c['run']}.kind")}>{e(c["kind"])}</span>' if c["kind"] else ""}: {dip_count_html(c["n_dips"], c["counts"])}</h2></div>
+        <div class="rundiphead">{_star_disc(data, c["run"], 28, c["slug"], c["star"])}<h2 id="{hid}">{e(c["star"])}{kind_html}: {dip_count_html(c["n_dips"], c["counts"])}</h2></div>
         <p class="small">{span("run.sectors", "Run {run}, TESS {n, plural, one {sector} other {sectors}} {list}.", run=c["run"], n=len(c["sectors"]), list=", ".join(str(x) for x in c["sectors"]))} {panel_html(c["panel_label"])}.{lines}</p>
         <ul class="rundiplist">{"".join(rows)}</ul>
         <p class="small runlinks"><a href="{e(c["case_file"])}"{ik("run.casefile")}>{N_("run.casefile", "The run's case file ›")}</a> <a href="{e(c["plates"])}"{ik("run.plates")}>{N_("run.plates", "Plates ›")}</a> <a href="{e(c["report"])}"{ik("run.report")}>{N_("run.report", "Run report ›")}</a></p>
