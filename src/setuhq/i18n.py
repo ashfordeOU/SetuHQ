@@ -748,7 +748,7 @@ function fmt(m, a, L){
 }
 const SI = window.SetuI18n = {lang, page: P, cat: null, conf: C,
   T: (id, en, a) => { const m = (SI.cat && SI.cat[id]) || en || id; return lang === 'en' && !a && m.indexOf('{') < 0 ? m : fmt(m, a, lang); },
-  fmt: (m, a) => fmt(m, a, lang),
+  fmt: (m, a, L) => fmt(m, a, L || lang),
   href: h => { if (lang === 'en' || !h || h[0] !== '/' || h[1] === '/') return h; const u = h.split(/(?=[?#])/), p = u.shift(); return C.main.includes(p) ? '/' + lang + p + u.join('') : h; },
   apply(root){
     if (!SI.cat || !root) return;

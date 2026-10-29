@@ -55,6 +55,17 @@ step "README figures, brand files and screenshots are current (tools/gen_readme_
 "$VENV/bin/python" tools/gen_readme_assets.py --check 2>&1 | tee -a "$LOG"
 ok
 
+step "translations: en.arb is what the code declares, every language passes its checks, the memory is current (tools/i18n.py)"
+"$VENV/bin/python" tools/i18n.py extract --check 2>&1 | tee -a "$LOG"
+test "${PIPESTATUS[0]}" -eq 0
+"$VENV/bin/python" tools/i18n.py sync --check 2>&1 | tee -a "$LOG"
+test "${PIPESTATUS[0]}" -eq 0
+"$VENV/bin/python" tools/i18n.py check 2>&1 | tail -n 20 | tee -a "$LOG"
+test "${PIPESTATUS[0]}" -eq 0
+"$VENV/bin/python" tools/i18n.py tm --check 2>&1 | tee -a "$LOG"
+test "${PIPESTATUS[0]}" -eq 0
+ok
+
 if [[ "$QUICK" -eq 1 ]]; then
   echo "quick check passed" | tee -a "$LOG"
   exit 0
@@ -81,6 +92,10 @@ step "the site builds from the stored runs (setuhq site: every page, and each ru
 # shellcheck disable=SC2086
 "$EX" site "$RUN" $SHOWCASE_RUNS --catalog "$CAT" --out site --title "SetuHQ" \
   --validation docs/results/pi_men_validation.md --benchmark docs/results/injection_recovery_simulated_panel.md >> "$LOG" 2>&1
+ok
+
+step "translation coverage per language: messages, and the share of each language's page text (tools/i18n.py coverage)"
+"$VENV/bin/python" tools/i18n.py coverage --site site 2>&1 | tee -a "$LOG"
 ok
 
 step "no built page loads fonts or scripts from another site"

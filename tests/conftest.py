@@ -1,10 +1,15 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Ashforde OÜ
+import os
+
 import numpy as np
 import pytest
 
 from setuhq.injection import fixed_injection, synthetic_subject
 from setuhq.lightcurve import LightCurve
+
+# The tests read the tool's English output: a developer's locale (LANG=de_DE...) must not change it.
+os.environ["SETUHQ_LANG"] = "en"
 
 
 @pytest.fixture

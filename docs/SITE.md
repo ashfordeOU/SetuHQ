@@ -155,6 +155,19 @@ Each page stays under 200,000 characters of HTML (`setuhq.site.PAGE_BUDGET`; `se
 checks it). The old single app page was about 1.4 million. The stand-alone case file, plates and run report carry
 their own data inline so they work saved or printed; their budget is 400,000.
 
+### Languages
+
+The main pages (every value of `routes.ROUTE_PATHS` and the fifteen chapters, `site.MAIN_PATHS`) are written once
+in English and once per language under `/<lang>/` (`site.write_lang_pages`, which runs `i18n.localize_html` over
+each page: every element with `data-i18n` gets its message, links to main pages get the prefix, and `<html lang>`,
+the canonical link and `og:locale` change). Every main page lists hreflang alternates for all 17 languages and
+`x-default`; each language has `sitemap-lang-<lang>.xml`. Every other page keeps one address: the shell loads the
+localisation runtime (`assets/i18n-<hash>.js`) and the chosen language's catalogue (`assets/i18n/<lang>-<hash>.json`,
+without the CLI's and MCP server's messages) and applies them in place. The top bar's language picker stores the
+choice (`setuhq-lang`); the first-visit suggestion (`setuhq-lang-hint`) is a dismissible bar that never redirects.
+Japanese and Chinese use the system CJK fonts (no font is fetched). docs/TRANSLATING.md describes the catalogues,
+the checks and the review status.
+
 ## The visual system
 
 One source for the look of every page: `src/setuhq/design.py`. The site's stylesheet, the header and footer around
@@ -227,7 +240,10 @@ same tokens.
   the app's script 430,000, the shell's script (`site-*.js`: the header, menu and theme, and SetuUI's figure
   utilities, on every page and stub) 16,000, the renderer 64,000, `stories-*.json` 40,000 and `sky-*.json` 160,000, each still 40,000
   (512 px) or 8,000 (160 px) and 850,000 in all, the home page 90,000 characters and `/explore/` 160,000, each
-  deploy-time stub 4,096 bytes; every other page 200,000 characters and a stand-alone page 400,000.
+  deploy-time stub 4,096 bytes; every other page 200,000 characters and a stand-alone page 400,000. The localisation
+  runtime (`i18n-*.js`) 10,000 and each language's catalogue (`i18n/<lang>-*.json`) 160,000; every `/<lang>/` copy of
+  the home page and `/explore/` has the English page's budget. The built script and stylesheet are written without
+  comments (`setuhq.minify`).
 
 ### Inventory: what each surface draws
 

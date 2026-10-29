@@ -12,6 +12,24 @@ breaking changes are called out explicitly.
 
 ### Added
 
+- **SetuHQ in 17 languages** ([docs/TRANSLATING.md](docs/TRANSLATING.md)). The website and the tool speak English
+  and, machine-assisted and not yet reviewed by native speakers, Dutch, Polish, Portuguese, Finnish, Swedish, Danish,
+  Norwegian Bokmål, Czech, Ukrainian, Russian, German, French, Spanish, Estonian, Japanese and Simplified Chinese;
+  each language's picker and footer say so and link to the translation guide. Messages are ICU MessageFormat with
+  CLDR plural rules, numbers and dates are formatted per language, and one English catalogue
+  (`src/setuhq/locales/en.arb`, generated from the code, with stable ids and translator notes) feeds one ARB file
+  per language that Weblate reads, each string with its review status. Main pages have an address per language
+  (`/de/explore/`, English stays at `/`) with `html lang`, canonical and hreflang links and a sitemap per language;
+  the planet and star pages, dip pages, case files and reports keep one address and are localised in the browser. A
+  language picker in the top bar remembers the choice; a first-visit suggestion from the browser's language is
+  dismissible and never redirects. The CLI's output and help, its reports, dashboard, plates and case files, and the
+  MCP server's tool descriptions and honesty labels follow `--lang`, `SETUHQ_LANG` or the locale, English by
+  default; files, JSON keys and every machine-read field stay English. `tools/i18n.py` (and the tests and
+  `scripts/ci_local.sh`) checks every translation: placeholders, plural forms, markup, brand names, the glossary per
+  language (`docs/i18n/glossary.<lang>.json`), no stronger claim than the English, and every honesty caveat present
+  and complete; a missing string falls back to English, and coverage is reported per language. A translation memory
+  is kept in `docs/i18n/memory.tmx`.
+
 - **Eclipsing binaries, rotation and transients** ([docs/STELLAR.md](docs/STELLAR.md)). `setuhq binaries`,
   `setuhq rotation` and `setuhq transients`, and the MCP tools `find_eclipsing_binary`, `rotation_period` and
   `find_transients`. Binaries: period from a box search and a periodogram with odd/even and equal-minima rules,
@@ -127,6 +145,8 @@ breaking changes are called out explicitly.
 
 ### Changed
 
+- The built script and stylesheet are written without comments (`setuhq.minify`): the app's script from 429,046 to
+  about 378,000 bytes; the dead `_cap` helper is gone.
 - **The stellar commands print their validation status.** `setuhq flares`, `setuhq pulsations` and `setuhq cheops`
   print the capability's status with its count on every run and write it into the record (`validation_status`), as
   the MCP tools already did, so no output presents a detector as more validated than it is.

@@ -969,7 +969,6 @@ a:hover{color:var(--ink)}
 .nav ul{list-style:none;margin:0;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
 .nav a{display:flex;align-items:center;min-height:36px;padding:0 16px;border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:13px;font-weight:500;white-space:nowrap;transition:background-color var(--d-1) var(--ease),color var(--d-1) var(--ease)}
 .nav a:hover{color:var(--ink)}
-.nav a[aria-current="page"]{background:var(--seg-bg);color:var(--seg-ink)}
 main{min-width:0;padding:36px clamp(16px,3vw,40px) 56px}
 main:focus{outline:none}
 .route{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;min-width:0;max-width:1280px;margin:0 auto;animation:rise var(--d-2) var(--ease) both}
@@ -1344,7 +1343,6 @@ details summary{cursor:pointer}
 .rundisc{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--stage)}
 .rundisc svg{width:32px;height:32px}
 .rundisc.none{border:1px dashed var(--line-3);background:none}
-.t-data{font:var(--t-data);font-variant-numeric:tabular-nums}
 .kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;font-size:13px;margin:11px 0 0}
 .kv dt{color:var(--ink-3)}
 .kv dd{margin:0;font-family:var(--mono);overflow-wrap:anywhere;min-width:0}
