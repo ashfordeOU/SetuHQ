@@ -18,6 +18,7 @@ from native speakers, especially astronomers, are the most useful contribution y
 | `src/setuhq/locales/en.arb` | The English catalogue: every message the site, the CLI, its reports and the MCP server show, with a stable id, a note for translators (`description`), its placeholders and the source file that uses it (`x-file`). Generated from the code; never edit it by hand. |
 | `src/setuhq/locales/<lang>.arb` | One language: the translation of each id, with `x-review` (`machine` or `reviewed`) and `x-source` (a hash of the English it translates). |
 | `docs/i18n/glossary.<lang>.json` | The language's fixed terms (transit, light curve, candidate, flagged, rejected, false positive, confirmed), the brand names that never translate, and its words for *discover* and *confirm*. |
+| `src/setuhq/locales/js-templates.json` | The text the page scripts draw (written by `tools/i18n_harvest.mjs`), which `extract` adds to en.arb as `js.*` messages. |
 | `docs/i18n/memory.tmx` | The translation memory: every current translation beside its English, as TMX 1.4, each unit with its id and review status. |
 
 The catalogues are [ARB](https://github.com/google/app-resource-bundle) (JSON) files, which
@@ -99,6 +100,31 @@ The worked examples' editorial lines (their kind, summary, caveat, why and outco
 A message id is permanent: change the English under the same id when the meaning is the same, and use a new id
 when it is not.
 
+## Page text
+
+The long-form prose of the main pages (the *How it works* chapters, the evidence write-ups, the docs pages, the
+galaxy's explanations) and the text the page scripts compute have no hand-written id. Each block of it (a
+paragraph, list item, heading, caption or table cell whose content is text and inline markup only, with no
+`data-i18n` of its own) is a message whose id is a hash of its template:
+
+* numbers in the text become `{n0}`, `{n1}`, … (shown in the reader's number format, except years, counts without a
+  group separator, versions and licences), so a count that changes keeps the message and its translations;
+* in text the scripts draw, the page's names (its heading, planet and star links) become `{s0}`, `{s1}`, …;
+* inline markup (links, `<b>`, `<code>`) stays in the message with its attributes, and every translation keeps it.
+
+`pg.*` messages are the blocks of the committed English main pages (`site/`), collected by `extract` and written
+in their language when the `/<lang>/` pages are built (`setuhq.i18n_auto`). `js.*` messages are what the scripts
+draw, collected by `node tools/i18n_harvest.mjs --site <a built site with stubs>` into
+`src/setuhq/locales/js-templates.json` and put in place in the browser (`assets/i18n-auto-*.js`, loaded on
+non-English pages only). When the English of a block changes, its id changes: the old translation is no longer used
+and the block is English until it is translated again. On a `/<lang>/` page an in-app link to another page loads
+it from the server, so the page's prose is always the server's.
+
+Japanese and Chinese headings break only between phrases: they are set with `word-break: keep-all`, and
+`python tools/i18n.py phrases --site site` puts `<wbr>` between the phrases of every heading message (BudouX for
+Japanese, jieba and the glossary for Chinese; `pip install budoux jieba`, a tool dependency, never the site's).
+The markup check ignores `<wbr>`; run `phrases` again after translating a heading.
+
 ## How a language is chosen
 
 **Website.** The main pages (the five sections, their views and the fifteen *How it works* chapters) have an address
@@ -117,7 +143,6 @@ and honesty labels. Files, JSON and every machine-read field stay English.
 
 ## What is still English
 
-Long-form prose that is not yet in the catalogue (most of the *How it works* chapter text, the stellar evidence
-write-ups, the docs pages' installation instructions), data (planet and star names, catalogue values, references,
-stored error messages, the panel's own words) and some text the page scripts compute. `python tools/i18n.py coverage
---site site` reports, per language, the share of each language's page text that is translated.
+Data (planet and star names, catalogue values, references, stored error messages, the panel's own words), code,
+commands and file paths, and a block whose English changed since it was translated. `python tools/i18n.py coverage
+--site site` reports, per language, the share of each language's page text that is not English left in place.

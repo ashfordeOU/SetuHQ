@@ -1,4 +1,4 @@
-const I18N_CONF = {"locales":["en","nl","pl","pt","fi","sv","da","nb","cs","uk","ru","de","fr","es","et","ja","zh-Hans"],"cat":{"nl":"/assets/i18n/nl-8f0ff89d4c.json","pl":"/assets/i18n/pl-67d70f9089.json","pt":"/assets/i18n/pt-485bf859ea.json","fi":"/assets/i18n/fi-ea296222cb.json","sv":"/assets/i18n/sv-4cb83eaa21.json","da":"/assets/i18n/da-ca82bed23f.json","nb":"/assets/i18n/nb-33e6dbd123.json","cs":"/assets/i18n/cs-57d1d1a0eb.json","uk":"/assets/i18n/uk-a9c911ff9f.json","ru":"/assets/i18n/ru-6664a7ef1e.json","de":"/assets/i18n/de-2f8a7e00c6.json","fr":"/assets/i18n/fr-82224ff567.json","es":"/assets/i18n/es-9b2f55b361.json","et":"/assets/i18n/et-a1b655f027.json","ja":"/assets/i18n/ja-2913ac9317.json","zh-Hans":"/assets/i18n/zh-Hans-e385559262.json"},"main":["/","/candidates/","/candidates/be-the-vetter/","/candidates/radius-ratios/","/catalogue/","/catalogue/everything-that-dims/","/docs/","/docs/cheops-proposals/","/docs/pictures/","/docs/stellar/","/editions/","/evidence/","/evidence/leaderboard/","/evidence/runs/","/evidence/stellar/","/explore/","/explore/galaxy/","/explore/mission-control/","/explore/tess-now/","/how-it-works/","/how-it-works/astrometry/","/how-it-works/atmospheres/","/how-it-works/direct-imaging/","/how-it-works/doppler-shift/","/how-it-works/equations-of-life/","/how-it-works/false-positives/","/how-it-works/history/","/how-it-works/microlensing/","/how-it-works/molecules-and-life/","/how-it-works/population/","/how-it-works/radial-velocity/","/how-it-works/radio/","/how-it-works/timing/","/how-it-works/transits/"]};
+const I18N_CONF = {"locales":["en","nl","pl","pt","fi","sv","da","nb","cs","uk","ru","de","fr","es","et","ja","zh-Hans"],"cat":{"nl":"/assets/i18n/nl-8f0ff89d4c.json","pl":"/assets/i18n/pl-67d70f9089.json","pt":"/assets/i18n/pt-485bf859ea.json","fi":"/assets/i18n/fi-ea296222cb.json","sv":"/assets/i18n/sv-4cb83eaa21.json","da":"/assets/i18n/da-ca82bed23f.json","nb":"/assets/i18n/nb-33e6dbd123.json","cs":"/assets/i18n/cs-57d1d1a0eb.json","uk":"/assets/i18n/uk-a9c911ff9f.json","ru":"/assets/i18n/ru-6664a7ef1e.json","de":"/assets/i18n/de-2f8a7e00c6.json","fr":"/assets/i18n/fr-82224ff567.json","es":"/assets/i18n/es-9b2f55b361.json","et":"/assets/i18n/et-a1b655f027.json","ja":"/assets/i18n/ja-2913ac9317.json","zh-Hans":"/assets/i18n/zh-Hans-e385559262.json"},"main":["/","/candidates/","/candidates/be-the-vetter/","/candidates/radius-ratios/","/catalogue/","/catalogue/everything-that-dims/","/docs/","/docs/cheops-proposals/","/docs/pictures/","/docs/stellar/","/editions/","/evidence/","/evidence/leaderboard/","/evidence/runs/","/evidence/stellar/","/explore/","/explore/galaxy/","/explore/mission-control/","/explore/tess-now/","/how-it-works/","/how-it-works/astrometry/","/how-it-works/atmospheres/","/how-it-works/direct-imaging/","/how-it-works/doppler-shift/","/how-it-works/equations-of-life/","/how-it-works/false-positives/","/how-it-works/history/","/how-it-works/microlensing/","/how-it-works/molecules-and-life/","/how-it-works/population/","/how-it-works/radial-velocity/","/how-it-works/radio/","/how-it-works/timing/","/how-it-works/transits/"],"auto":"/assets/i18n-auto-58c1feb4e2.js"};
 (function(){
 const C = I18N_CONF, H = document.documentElement, K = 'setuhq-lang', st = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
 const P = C.locales.includes(H.lang) ? H.lang : 'en', auto = document.body && (document.body.hasAttribute('data-i18n-auto') || document.body.hasAttribute('data-chrome')), S = st(K);
@@ -53,12 +53,18 @@ const id = el.dataset.i18n; if (id && SI.cat[id]){ el.innerHTML = fmt(SI.cat[id]
 for (const s of (el.dataset.i18nAttr || '').split('|').filter(Boolean)){ const [n, k] = s.split(':'); if (SI.cat[k]) el.setAttribute(n, fmt(SI.cat[k], a, lang).replace(/&#(\d+);/g, (x, d) => String.fromCharCode(d))); }
 if (el.tagName === 'A'){ const h = el.getAttribute('href'), n = SI.href(h); if (n !== h) el.setAttribute('href', n); }
 }
+marks(root);
+if (SI.auto) SI.auto(root);
 }};
+function marks(root){
+if (!root.querySelectorAll) return;
+for (const n of root.querySelectorAll('.mtnote')) n.hidden = false;
+for (const n of root.querySelectorAll('.langcode')) n.textContent = lang === 'zh-Hans' ? 'ZH' : lang.toUpperCase();
+for (const a of root.querySelectorAll('.langmenu a[data-lang]')) if (a.dataset.lang === lang) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+}
 const load = L => fetch(C.cat[L]).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
 SI.ready = lang === 'en' ? Promise.resolve() : load(lang).then(c => { SI.cat = c; H.lang = lang; SI.apply(document);
-for (const n of document.querySelectorAll('.mtnote')) n.hidden = false;
-for (const n of document.querySelectorAll('.langcode')) n.textContent = lang === 'zh-Hans' ? 'ZH' : lang.toUpperCase();
-for (const a of document.querySelectorAll('.langmenu a[data-lang]')) if (a.dataset.lang === lang) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+if (C.auto){ const x = document.createElement('script'); x.src = C.auto; document.head.appendChild(x); }
 }).catch(e => console.warn('SetuHQ: the translation could not load', e));
 document.addEventListener('click', e => {
 const a = e.target.closest('a[data-lang]'); if (!a) return;

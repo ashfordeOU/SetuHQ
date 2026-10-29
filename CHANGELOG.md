@@ -28,7 +28,11 @@ breaking changes are called out explicitly.
   `scripts/ci_local.sh`) checks every translation: placeholders, plural forms, markup, brand names, the glossary per
   language (`docs/i18n/glossary.<lang>.json`), no stronger claim than the English, and every honesty caveat present
   and complete; a missing string falls back to English, and coverage is reported per language. A translation memory
-  is kept in `docs/i18n/memory.tmx`.
+  is kept in `docs/i18n/memory.tmx`. The long-form text is translated too: every block of prose on the main pages
+  (the *How it works* chapters, the evidence write-ups, *How the pictures are drawn*, the galaxy, the docs) and the
+  text the page scripts draw (case files, the docket, planet and star pages) is a message whose id is a hash of its
+  template, numbers and names as arguments in the reader's format; figure and hero captions are message templates
+  with their numbers, units and references as arguments. Japanese and Chinese headings break only between phrases.
 
 - **Eclipsing binaries, rotation and transients** ([docs/STELLAR.md](docs/STELLAR.md)). `setuhq binaries`,
   `setuhq rotation` and `setuhq transients`, and the MCP tools `find_eclipsing_binary`, `rotation_period` and

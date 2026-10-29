@@ -93,8 +93,25 @@ def _tool_docs() -> dict[str, str]:
     return {fn.__name__: inspect.cleandoc(fn.__doc__ or "") for fn, _ in TOOLS if fn.__doc__}
 
 
-def extract() -> dict:
-    """The source catalogue as the code declares it (an ARB dict). Raises on an id given two different texts."""
+def page_text(site: Path | None = None) -> dict[str, tuple[str, list[str]]]:
+    """The main pages' unkeyed prose (setuhq.i18n_auto), from the committed English site: {id: (template, paths)}."""
+    from setuhq import i18n_auto
+    from setuhq.site import MAIN_PATHS
+
+    site = site or ROOT / "site"
+    pages = {p: (site / p.strip("/") / "index.html").read_text(encoding="utf-8") for p in MAIN_PATHS
+             if (site / p.strip("/") / "index.html").is_file()}
+    return i18n_auto.harvest(pages)
+
+
+def code_part(cat: dict) -> dict:
+    """A catalogue without its page text (pg.*): what the code alone declares, which a check can compare."""
+    return {k: v for k, v in cat.items() if not k.lstrip("@").startswith("pg.")}
+
+
+def extract(pages: bool = True) -> dict:
+    """The source catalogue as the code declares it (an ARB dict), with the committed site's page text (pg.*) when
+    ``pages``. Raises on an id given two different texts."""
     found: dict[str, tuple[str, str | None, str]] = {}
 
     def add(mid: str, en: str, note: str | None, where: str):
@@ -127,6 +144,16 @@ def extract() -> dict:
     for name, doc in _tool_docs().items():
         add(f"mcp.tool.{name}", doc, f"The MCP tool {name}'s description, read by AI assistants and people choosing a tool.",
             "src/setuhq/tools.py")
+    if pages:
+        for mid, (tpl, paths) in page_text().items():
+            more = f" and {len(paths) - 3} more" if len(paths) > 3 else ""
+            add(mid, tpl, "Text on the page " + ", ".join(paths[:3]) + more + ". Keep every {nN} (a number from the page) "
+                "and every tag with its attributes; code, file names and commands stay as written.", "site" + paths[0])
+    drawn = ROOT / "src" / "setuhq" / "locales" / "js-templates.json"
+    if drawn.is_file():  # what the scripts draw (tools/i18n_harvest.mjs)
+        for mid, d in json.loads(drawn.read_text(encoding="utf-8")).items():
+            add(mid, d["en"], "Text a script draws on " + ", ".join(d["pages"][:3]) + ". Keep every {nN} (a number) and {sN} (a name) "
+                "and every tag with its attributes; code, file names and commands stay as written.", "tools/i18n_harvest.mjs")
     out: dict = {"@@locale": "en", "@@x-generated-by": "tools/i18n.py extract (do not edit by hand)"}
     for mid in sorted(found):
         en, note, where = found[mid]
@@ -178,6 +205,8 @@ def markup(msg: str) -> tuple[Counter, str | None]:
     tags, stack, err = Counter(), [], None
     for m in _TAGS.finditer(msg):
         closing, name, attrs, selfclose = m.group(1), m.group(2).lower(), m.group(3) or "", m.group(4)
+        if name == "wbr":  # a line-break opportunity a language adds (Japanese and Chinese phrases), not markup
+            continue
         if closing:
             if not stack or stack[-1] != name:
                 err = err or f"</{name}> does not close an open element"
@@ -302,30 +331,141 @@ def coverage() -> dict[str, dict]:
     return out
 
 
+def page_english(site: str | Path, lang: str) -> list[tuple[int, str, str]]:
+    """The English left on ``lang``'s pages of a built site: (characters, page, text) for each keyed element whose
+    message has no usable translation and each block of page text (setuhq.i18n_auto) still as on the English page."""
+    from setuhq import i18n_auto
+
+    site = Path(site)
+    usable = i18n.messages(lang)
+    english = set(i18n_auto.harvest({p: (site / p.strip("/") / "index.html").read_text(encoding="utf-8")
+                                     for p in _main_paths() if (site / p.strip("/") / "index.html").is_file()}))
+    out = []
+    for p in sorted((site / lang).rglob("index.html")) if (site / lang).is_dir() else []:
+        src = p.read_text(encoding="utf-8")
+        page = "/" + p.parent.relative_to(site).as_posix() + "/"
+        for _kind, s, e, tpl, _args in i18n_auto.blocks(src):
+            if i18n_auto.message_id(tpl) in english:
+                out.append((_textlen(src[s:e]), page, _plain_text(src[s:e])))
+        body = src[src.find("<body"):]
+        for m in i18n._TAG.finditer(body):
+            k = re.search(r'data-i18n="([^"]+)"', m.group(2) or "")
+            if k and k.group(1) not in usable:
+                end = i18n._close(body, m.group(1), m.end())
+                if end > 0 and _textlen(body[m.end():end]):
+                    out.append((_textlen(body[m.end():end]), page, _plain_text(body[m.end():end])))
+    return sorted(out, reverse=True)
+
+
 def page_coverage(site: str | Path) -> dict[str, float]:
-    """Per language: the share of the visible text of its pages (under /<lang>/) that is in its language, by
-    characters: text inside keyed elements against all text in each page's main content and header."""
+    """Per language: the share of the visible text of its pages (under /<lang>/, main content and header, by
+    characters) that is not English left in place (``page_english``)."""
     site = Path(site)
     out = {}
     for lang in i18n.TRANSLATIONS:
-        keyed = total = 0
+        total = 0
         for p in sorted((site / lang).rglob("index.html")) if (site / lang).is_dir() else []:
             s = re.sub(r"<(script|style|svg|template)\b.*?</\1>", "", p.read_text(encoding="utf-8"), flags=re.S | re.I)
-            body = s[s.find("<body"):]
-            total += _textlen(body)
-            for m in i18n._TAG.finditer(body):
-                if 'data-i18n="' in (m.group(2) or ""):
-                    end = i18n._close(body, m.group(1), m.end())
-                    if end > 0:
-                        keyed += _textlen(body[m.end():end])
-        out[lang] = round(100 * keyed / total, 1) if total else 0.0
+            total += _textlen(s[s.find("<body"):])
+        left = sum(n for n, _p, _t in page_english(site, lang))
+        out[lang] = round(100 * (1 - left / total), 1) if total else 0.0
     return out
+
+
+def _main_paths():
+    from setuhq.site import MAIN_PATHS
+
+    return MAIN_PATHS
+
+
+def _plain_text(s: str) -> str:
+    import html as h
+
+    return re.sub(r"\s+", " ", h.unescape(re.sub(r"<[^>]+>", " ", s))).strip()
 
 
 def _textlen(s: str) -> int:
     import html as h
 
     return len(re.sub(r"\s+", " ", h.unescape(re.sub(r"<[^>]+>", " ", s))).strip())
+
+
+_HEAD = re.compile(r'<(h[1-4])\b[^>]*>|<[a-z]+\b[^>]*\bclass="[^"]*\blead-h\b[^"]*"[^>]*>')
+_PHRASE_LANGS = ("ja", "zh-Hans")
+
+
+def heading_ids(site: str | Path) -> set[str]:
+    """The messages that are (or are in) a heading on the main pages of a built English site: keyed ones by id, page
+    text (setuhq.i18n_auto) by its template's id."""
+    from setuhq import i18n_auto
+
+    site, out = Path(site), set()
+    for path in _main_paths():
+        f = site / path.strip("/") / "index.html"
+        if not f.is_file():
+            continue
+        src = f.read_text(encoding="utf-8")
+        for m in _HEAD.finditer(src):
+            end = src.find("</" + (m.group(1) or "div"), m.end())
+            out.update(re.findall(r'data-i18n="([^"]+)"', src[m.start():end]))
+        for kind, s, _e, tpl, _args in i18n_auto.blocks(src):
+            if kind == "html" and _HEAD.match(src, src.rfind("<", 0, s)):
+                out.add(i18n_auto.message_id(tpl))
+    return out
+
+
+def phrases(text: str, lang: str) -> str:
+    """``text`` (a message: markup, {arguments}) with <wbr> between its phrases, where a line may break in a
+    heading set with word-break: keep-all (Japanese by BudouX's phrases, Chinese by jieba's words and the glossary's
+    terms). Needs the budoux and jieba packages (tools only, never the site)."""
+    if lang == "ja":
+        import budoux
+
+        cut = budoux.load_default_japanese_parser().parse
+    else:
+        import jieba
+
+        jieba.setLogLevel(60)
+        for term in {t.get("term", "") for t in glossary(lang).get("terms", [])} | {"凌星", "光变曲线", "系外行星", "假阳性", "候选体"}:
+            if re.search(r"[\u4e00-\u9fff]", term):
+                jieba.add_word(term)
+
+        def cut(s):  # a lone particle or punctuation stays with the word before it
+            out = []
+            for w in jieba.cut(s):
+                if out and (len(w) == 1 and w in "的了中和与及或吗呢吧，。、：；！？）」』”" or not re.search(r"[\u4e00-\u9fff]", w)):
+                    out[-1] += w
+                else:
+                    out.append(w)
+            return out
+    terms = sorted({t.get("term", "") for t in glossary(lang).get("terms", [])} | {"光度曲線", "光变曲线", "系外惑星", "系外行星"}, key=len, reverse=True)
+
+    def one(p):
+        w = "<wbr>".join(x for x in cut(p) if x)
+        for term in terms:  # never inside a glossary term
+            if len(term) > 1 and re.search(r"[\u3040-\u30ff\u4e00-\u9fff]", term):
+                w = re.sub("(?:<wbr>)?".join(map(re.escape, term)), term, w)
+        return re.sub(r"<wbr>(?=\s|$)|(?<=\s)<wbr>|^<wbr>", "", w)
+
+    text = text.replace("<wbr>", "")
+    parts = re.split(r"(<[^>]*>|\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})", text)
+    return "".join(p if p.startswith(("<", "{")) or not re.search(r"[\u3040-\u30ff\u4e00-\u9fff]", p) else one(p) for p in parts)
+
+
+def add_phrases(site: str | Path) -> dict[str, int]:
+    """<wbr> in every Japanese and Chinese heading message (``heading_ids``): the catalogues rewritten in place."""
+    ids, done = heading_ids(site), {}
+    for lang in _PHRASE_LANGS:
+        raw = i18n.raw_catalogue(lang)
+        n = 0
+        for mid in ids:
+            v = raw.get(mid)
+            if isinstance(v, str) and (w := phrases(v, lang)) != v:
+                raw[mid], n = w, n + 1
+        i18n.catalogue_path(lang).write_text(dumps(raw), encoding="utf-8")
+        done[lang] = n
+    i18n.reload()
+    return done
 
 
 def memory_tmx() -> str:

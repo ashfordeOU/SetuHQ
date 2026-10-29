@@ -33,9 +33,17 @@ from urllib.parse import quote
 
 from setuhq.looks import RJ_IN_RE, find_planet, look, row, seed, teff_rgb
 from setuhq.renderer import LABEL_ART, PICTURES, figure
-from setuhq.i18n import N_, k as ik, span
+from setuhq.i18n import N_, k as ik, span, th
 
 N_("hero.pause", "Pause")
+ALT = N_("hero.alt", "Model of {planet} crossing {star} ({teff, number, integer} K, {rstar, number, ::.00} R☉): depth "
+         "{depth, number, integer} ppm{t14, select, none {} other {, {t14h, number, ::.00} h}}. The planet is an artist's impression.")
+CAP = N_("hero.cap", "{shown}: Rp {rp, number, ::.00} R⊕ ({src}{fetched, select, none {} other {, fetched {fetched, date}}}) "
+         "over R★ {rstar, number, ::.00} R☉ and Teff {teff, number, integer} K ({tsrc}) give Rp/R★ {k, number, ::.0000}; "
+         "b {b, number, ::.00} ({bsrc, select, catalogue {exoplanet.eu} other {not stored: illustrative}}), "
+         "P {p, number, ::.000} d. Depth {depth, number, integer} ppm{t14, select, none {} other {, {t14h, number, ::.00} h}} "
+         "(quadratic limb darkening, Claret 2017).")
+DISC = N_("hero.disc", "{star}'s star disc is in its blackbody colour; the planet is an artist's impression ({look}).")
 from setuhq.viz import require_source
 
 RSUN_IN_RE = 109.076      # the Sun's radius in Earth radii (695,700 km / 6,378.137 km, the R⊕ that RJ_IN_RE uses)
@@ -110,24 +118,25 @@ def featured(app: dict, run: str, meta: dict | None = None) -> dict | None:
     slug = P["slug"][i]
     star = (ctx.get("star") or {}).get("name") or meta.get("star") or run
     shown = name if name == P["name"][i] else f"{name} ({P['name'][i]} in exoplanet.eu)"
-    dur = f", {t14:.2f} h" if t14 else ""
-    alt = (f"Model of {name} crossing {star} ({round(teff):,} K, {rstar:.2f} R☉): depth {depth:,.0f} ppm{dur}. "
-           f"The planet is an artist's impression.")
     fetched = (cat.get("fetched_at") or "")[:10]
-    src = f"{cat.get('source_short') or 'exoplanet.eu'}{', fetched ' + fetched if fetched else ''}"
-    e = _html.escape
-    bword = f"b {b:.2f} ({'exoplanet.eu' if b_src == 'catalogue' else 'not stored: illustrative'})"
-    caption = (f'<b{ik("hero.model")}>{N_("hero.model", "Model from stored values.")}</b> ' + f"{e(shown)}: Rp {rp_re:.2f} R⊕ ({e(src)}) over R★ {rstar:.2f} R☉ "
-               f"and Teff {round(teff):,} K ({e(sp.get('source') or 'stellar.json')}) give Rp/R★ {k:.4f}; {e(bword)}, "
-               f"P {period:.3f} d. Depth {depth:,.0f} ppm{dur} (quadratic limb darkening, Claret 2017). "
-               + span("hero.disc", "{star}'s star disc is in its blackbody colour; the planet is an artist's impression ({look}).",
-                      star=star, look=(lk['composition'] or 'not drawn') + (', ' + lk['band'] if lk['band'] else '')) + " "
+    look_words = (lk['composition'] or 'not drawn') + (', ' + lk['band'] if lk['band'] else '')
+    # The arguments ride in the page (data-rotate for the runs the hero rotates through): rounded to what is shown.
+    alt_args = {"planet": name, "star": star, "teff": round(teff), "rstar": round(rstar, 2), "depth": round(depth),
+                "t14": "yes" if t14 else "none", "t14h": round(t14 or 0, 2)}
+    cap_args = {"shown": shown, "rp": round(rp_re, 2), "src": cat.get("source_short") or "exoplanet.eu", "fetched": fetched or "none",
+                "rstar": round(rstar, 2), "teff": round(teff), "tsrc": sp.get("source") or "stellar.json", "k": round(k, 4),
+                "b": round(b, 2), "bsrc": b_src, "p": round(period, 3), "depth": round(depth), "t14": "yes" if t14 else "none",
+                "t14h": round(t14 or 0, 2)}
+    disc_args = {"star": star, "look": look_words}
+    alt = th("hero.alt", ALT, **alt_args)
+    caption = (f'<b{ik("hero.model")}>{N_("hero.model", "Model from stored values.")}</b> '
+               + span("hero.cap", CAP, **cap_args) + " " + span("hero.disc", DISC, **disc_args) + " "
                f'<a href="{PICTURES}"{ik("footer.pictures")}>How the pictures are drawn ›</a>')
     return {"run": run, "star": star, "planet": name, "slug": slug, "teff": round(teff, 1), "rstar": round(rstar, 4),
             "rp_re": round(rp_re, 4), "k": round(k, 6), "b": round(b, 4), "b_src": b_src, "period_d": round(period, 6),
             "a_rs": round(a_rs, 3) if a_rs else None, "t14_h": round(t14, 3) if t14 else None, "depth_ppm": round(depth, 1),
             "ld": [round(u1, 4), round(u2, 4)], "look": lk["name"] or "ambiguous", "seed": seed(slug), "alt": alt,
-            "caption": caption, "href": f"/planets/{slug}/"}
+            "caption": caption, "args": {"alt": alt_args, "cap": cap_args, "disc": disc_args}, "href": f"/planets/{slug}/"}
 
 
 def runs(app: dict) -> list[dict]:
@@ -179,7 +188,7 @@ def still_svg(m: dict) -> str:
            f'<circle cx="{cx:.0f}" cy="{cy + b * R:.1f}" r="{rp:.1f}" fill="#030406" stroke="rgba(170,210,255,.5)" stroke-width="1"/>'
            f'<path d="M{gx:.0f} {gy:.1f}H{gx + gw:.0f}" stroke="rgba(255,255,255,.14)" stroke-width="2"/>'
            f'<polyline points="{" ".join(pts)}" fill="none" stroke="#FFB340" stroke-width="3.2"/>'
-           f'<text x="{gx:.0f}" y="{gy - 12:.0f}" fill="#9AA3B5" font-family="sans-serif" font-size="20">depth {depth * 1e6:,.0f} ppm (model)</text></svg>')
+           f'<text x="{gx:.0f}" y="{gy - 12:.0f}" fill="#9AA3B5" font-family="sans-serif" font-size="20"{ik("hero.depth", d=round(depth * 1e6))}>{th("hero.depth", "depth {d, number, integer} ppm (model)", d=round(depth * 1e6))}</text></svg>')
     return "data:image/svg+xml," + quote(svg, safe=" ,.:;=/#()-'\"")
 
 
@@ -198,10 +207,12 @@ def html(data: dict, **opts) -> str:
     if not m:
         return ""
     e = _html.escape
-    rot = [{"run": x["run"], "p": params(x), "alt": x["alt"], "caption": x["caption"]} for x in data.get("runs") or [m]]
+    rot = [dict({"run": x["run"], "p": params(x)}, **x["args"]) for x in data.get("runs") or [m]]
     fig = figure("transit", params(m), m["alt"], m["caption"], label=LABEL_ART, size=512, uid="hero",
                  still=still_svg(m), priority=True)
     fig = fig.replace('class="stage rfig"', 'class="stage rfig herofig"', 1)
+    fig = fig.replace(f'alt="{e(m["alt"])}"', f'alt="{e(m["alt"])}" data-i18n-attr="alt:hero.alt"'
+                      f" data-i18n-args='{e(json.dumps(m['args']['alt'], separators=(',', ':'), ensure_ascii=False))}'", 1)
     fig = fig.replace('loading="lazy" ', "", 1)
     ctrls = '<div class="stage-ctrls heroctrls"><button class="btn" type="button" data-hero-pause aria-pressed="false" hidden data-i18n="hero.pause">Pause</button></div>'
     fig = fig.replace('<div class="rbox">', '<div class="rbox">' + ctrls, 1)
@@ -253,6 +264,7 @@ JS = r"""
 // ---------- viz.hero (V01): the featured star's transit, looped while on screen through the renderer's scheduler; Pause; a still under reduced motion ----------
 window.SetuHero = window.SetuHero || {frames: 0};
 (function(){
+  const EN = __HERO_EN__;
   const RMq = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
   function setup(st){
     if (st._hero) return; st._hero = true;
@@ -266,12 +278,14 @@ window.SetuHero = window.SetuHero || {frames: 0};
     Object.defineProperty(window.SetuHero, 'playing', {configurable: true, get: () => !!(window.SetuRender && SetuRender.playing && SetuRender.playing(fig))});
     function still(){ const t = T(); if (!t) return; t.p = S.p; try { SetuRender.transit(t.cv, Object.assign({}, S.p, {t: null})); } catch (e) { /* the frame stays */ } }
     // One featured run per UTC day (the same for every visitor that day); the page itself is rendered with the lead.
-    if (!RMq() && rot.length > 1){
+    if (!RMq() && rot.length > 1 && window.SetuI18n && SetuI18n.T){
       const pick = rot[Math.floor(Date.now() / 864e5) % rot.length];
       if (pick && pick.run !== st.dataset.run){
         S.p = pick.p; st.dataset.run = pick.run; fig.dataset.params = JSON.stringify(pick.p);
-        const img = fig.querySelector('img.rstill'), cap = fig.querySelector('figcaption');
-        if (img) img.alt = pick.alt; if (cap){ cap.innerHTML = pick.caption; if (window.SetuI18n) SetuI18n.apply(cap); }
+        const img = fig.querySelector('img.rstill'), T = (id, a) => SetuI18n.T(id, EN[id], a);
+        if (img){ img.alt = T('hero.alt', pick.alt); img.dataset.i18nArgs = JSON.stringify(pick.alt); }
+        for (const id of ['cap', 'disc']){ const el = fig.querySelector('[data-i18n="hero.' + id + '"]');
+          if (el){ el.textContent = T('hero.' + id, pick[id]); el.dataset.i18nArgs = JSON.stringify(pick[id]); } }
       }
     }
     function setBtn(){ if (!btn) return; btn.setAttribute('aria-pressed', S.paused ? 'true' : 'false'); btn.hidden = !T(); }
@@ -293,4 +307,4 @@ window.SetuHero = window.SetuHero || {frames: 0};
   window.SetuHero.setup = all;
   all();
 })();
-"""
+""".replace("__HERO_EN__", json.dumps({"hero.alt": ALT, "hero.cap": CAP, "hero.disc": DISC}, ensure_ascii=False))

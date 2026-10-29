@@ -30,6 +30,7 @@ from pathlib import Path
 
 from setuhq import brand, renderer
 from setuhq.design import CROSSHAIR_JS, FONT_PRELOAD, MOTION_JS, tokens_css
+from setuhq import i18n_auto
 from setuhq.i18n import N_
 from setuhq.minify import strip_css, strip_js
 from setuhq.app import (APP_CSS, APP_JS, DEFAULT_SHOWCASE, DEFAULT_SWEEP, DEFAULT_WEIGHTS, FONTS_DIR, GALAXY_JSON, NAV, ROUTE_META, SUBNAV,
@@ -940,6 +941,8 @@ I18N_CSS = """
 :root:lang(zh-Hans){--sans:"Geist","Geist Fallback","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC","Source Han Sans SC",system-ui,sans-serif}
 :lang(ja) *,:lang(zh-Hans) *{letter-spacing:0!important;word-break:normal;line-break:strict;overflow-wrap:anywhere}
 :lang(ja) h1,:lang(ja) h2,:lang(zh-Hans) h1,:lang(zh-Hans) h2{line-height:1.25}
+/* Headings break between phrases (the catalogues mark them with <wbr>), never inside a word; a phrase too wide for its line still wraps. */
+:lang(ja) :is(h1,h2,h3,h4,.lead-h),:lang(zh-Hans) :is(h1,h2,h3,h4,.lead-h){word-break:keep-all;overflow-wrap:anywhere}
 @media (max-width:420px){.langpick>summary .langcode{display:none}}
 """
 # Messages the shell's script declares (the suggestion bar, the theme and menu buttons).
@@ -962,10 +965,18 @@ def write_i18n_assets(out: Path) -> dict[str, str]:
     return urls
 
 
-def i18n_script(cat_urls: dict[str, str]) -> str:
+def i18n_auto_script(out: Path) -> str:
+    """The script that puts the page text the scripts draw in the reader's language (assets/i18n-auto-*.js); its address."""
+    text = strip_js(i18n.AUTO_JS)
+    rel = f"assets/i18n-auto-{_sha(text)}.js"
+    (out / rel).write_text(text)
+    return "/" + rel
+
+
+def i18n_script(cat_urls: dict[str, str], auto: str = "") -> str:
     """The languages' script (i18n-*.js, before the shell's on every page): its configuration (the languages, the
     catalogues' addresses and the pages that have an address in every language), then setuhq.i18n.SHELL_JS."""
-    conf = {"locales": list(i18n.LOCALES), "cat": cat_urls, "main": list(MAIN_PATHS)}
+    conf = {"locales": list(i18n.LOCALES), "cat": cat_urls, "main": list(MAIN_PATHS), "auto": auto}
     return "const I18N_CONF = " + json.dumps(conf, separators=(",", ":")) + ";\n" + i18n.SHELL_JS
 
 
@@ -982,6 +993,7 @@ def localize_page(src: str, lang: str, path: str) -> str:
         return lang_path(base[0], lang) + (h[len(base[0]):]) if base[0] in MAIN_PATHS else h
 
     out = i18n.localize_html(src, lang, link=link)
+    out = i18n_auto.localize(out, lang, i18n.messages(lang), link=link)  # the page's prose, by its text
     out = out.replace('<html lang="en"', f'<html lang="{lang}"', 1)
     url, nurl = html.escape(brand.SITE_URL + path), html.escape(brand.SITE_URL + new)
     out = out.replace(f'<link rel="canonical" href="{url}">', f'<link rel="canonical" href="{nurl}">', 1)
@@ -1070,7 +1082,8 @@ def _build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuH
     app_js = APP_JS.replace("const RT = D.routes;\n", "const RT = D.routes;\n" + ROUTES_APP_JS, 1)
     css = strip_css(APP_CSS + brand.LOGO_CSS + renderer.RENDER_CSS + SITE_CSS + I18N_CSS + viz.VIZ_CSS + stellarpages.CSS + journey.CSS + features.CSS)
     app_js = strip_js(app_js)
-    i18n_js = strip_js(i18n_script(write_i18n_assets(out)))
+    (out / "assets").mkdir(parents=True, exist_ok=True)
+    i18n_js = strip_js(i18n_script(write_i18n_assets(out), i18n_auto_script(out)))
     shell_js = strip_js(f"const I18N_SRC = '/assets/i18n-{_sha(i18n_js)}.js';\n" + SHELL_JS)
     routes_html = "".join(f'<section class="route" id="route-{k}" data-route="{k}" aria-labelledby="h-{k}" hidden>{v}</section>'
                           for k, v in sections.items())

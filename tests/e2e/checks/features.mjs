@@ -119,4 +119,25 @@ export default async function features(h) {
     check(await page.evaluate(() => document.querySelectorAll(".vtreveal").length > 0 && [...document.querySelectorAll(".vtpick")].every((x) => x.hidden)), "without JavaScript the vetter reveals, with no answer buttons");
     await ctx.close();
   }
+  {
+    // Source / limits never sits over its figure's caption (its text or its links), in English, Japanese and German
+    for (const size of ["desktop", "phone"]) {
+      const ctx = await context({ size });
+      const page = await ctx.newPage(), bad = [];
+      for (const url of ["/", "/ja/", "/de/", "/stars/toi-270/", "/ja/how-it-works/transits/"]) {
+        await page.goto(BASE + url); await ready(page); await page.waitForTimeout(400);
+        bad.push(...await page.evaluate((url) => [...document.querySelectorAll(".srclim>summary")].filter((s) => s.offsetWidth).flatMap((s) => {
+          const a = s.getBoundingClientRect(), fig = s.closest("figure") || s.parentElement, cap = fig && fig.querySelector("figcaption");
+          if (!cap) return [];
+          const r = document.createRange(), hits = [];
+          const w = document.createTreeWalker(cap, NodeFilter.SHOW_TEXT);
+          for (let n = w.nextNode(); n; n = w.nextNode()) { r.selectNodeContents(n);
+            for (const b of r.getClientRects()) if (b.width && a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1) hits.push(n.data.trim().slice(0, 30)); }
+          return hits.length ? [url + ": " + hits.slice(0, 2).join(" / ")] : [];
+        }), url));
+      }
+      check(bad.length === 0, `${size}: Source / limits clear of every caption's text and links`, bad.slice(0, 4).join(" || "));
+      await ctx.close();
+    }
+  }
 }

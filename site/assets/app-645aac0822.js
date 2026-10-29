@@ -3882,6 +3882,7 @@ if (!on) document.body.classList.remove('mcpop');
 }
 window.SetuHero = window.SetuHero || {frames: 0};
 (function(){
+const EN = {"hero.alt": "Model of {planet} crossing {star} ({teff, number, integer} K, {rstar, number, ::.00} R☉): depth {depth, number, integer} ppm{t14, select, none {} other {, {t14h, number, ::.00} h}}. The planet is an artist's impression.", "hero.cap": "{shown}: Rp {rp, number, ::.00} R⊕ ({src}{fetched, select, none {} other {, fetched {fetched, date}}}) over R★ {rstar, number, ::.00} R☉ and Teff {teff, number, integer} K ({tsrc}) give Rp/R★ {k, number, ::.0000}; b {b, number, ::.00} ({bsrc, select, catalogue {exoplanet.eu} other {not stored: illustrative}}), P {p, number, ::.000} d. Depth {depth, number, integer} ppm{t14, select, none {} other {, {t14h, number, ::.00} h}} (quadratic limb darkening, Claret 2017).", "hero.disc": "{star}'s star disc is in its blackbody colour; the planet is an artist's impression ({look})."};
 const RMq = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
 function setup(st){
 if (st._hero) return; st._hero = true;
@@ -3892,12 +3893,14 @@ try { S.p = JSON.parse(fig.dataset.params || '{}'); } catch (e) { S.p = {}; }
 const T = () => fig._sr;
 Object.defineProperty(window.SetuHero, 'playing', {configurable: true, get: () => !!(window.SetuRender && SetuRender.playing && SetuRender.playing(fig))});
 function still(){ const t = T(); if (!t) return; t.p = S.p; try { SetuRender.transit(t.cv, Object.assign({}, S.p, {t: null})); } catch (e) {  } }
-if (!RMq() && rot.length > 1){
+if (!RMq() && rot.length > 1 && window.SetuI18n && SetuI18n.T){
 const pick = rot[Math.floor(Date.now() / 864e5) % rot.length];
 if (pick && pick.run !== st.dataset.run){
 S.p = pick.p; st.dataset.run = pick.run; fig.dataset.params = JSON.stringify(pick.p);
-const img = fig.querySelector('img.rstill'), cap = fig.querySelector('figcaption');
-if (img) img.alt = pick.alt; if (cap){ cap.innerHTML = pick.caption; if (window.SetuI18n) SetuI18n.apply(cap); }
+const img = fig.querySelector('img.rstill'), T = (id, a) => SetuI18n.T(id, EN[id], a);
+if (img){ img.alt = T('hero.alt', pick.alt); img.dataset.i18nArgs = JSON.stringify(pick.alt); }
+for (const id of ['cap', 'disc']){ const el = fig.querySelector('[data-i18n="hero.' + id + '"]');
+if (el){ el.textContent = T('hero.' + id, pick[id]); el.dataset.i18nArgs = JSON.stringify(pick[id]); } }
 }
 }
 function setBtn(){ if (!btn) return; btn.setAttribute('aria-pressed', S.paused ? 'true' : 'false'); btn.hidden = !T(); }
@@ -4457,7 +4460,8 @@ function navTo(href){
 const u = new URL(R(href), location.href), p = u.origin === location.origin ? rtParse(u.pathname, u.search) : null;
 const gsd = $('#gsearch'); if (gsd && gsd.open) gsd.close();
 closeMenu();
-if (!p || !$('#route-' + p.route)){ location.href = u.href; return; }
+const other = window.SetuI18n && SetuI18n.lang !== 'en' && u.pathname !== location.pathname;
+if (!p || !$('#route-' + p.route) || other){ location.href = u.href; return; }
 try { history.pushState(null, '', u.pathname + u.search + u.hash); } catch (err) { location.href = u.href; return; }
 viewTransition(() => go(parseLoc(), true));
 }

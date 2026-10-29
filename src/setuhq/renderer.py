@@ -411,7 +411,7 @@ function transit(cv, p){
   for (let i = 0; i <= 200; i++){ const z = -1.6 + 3.2 * i / 200; if (!still && z > X) break; const v = transitFlux(Math.hypot(z, b), k, u1, u2); i ? ctx.lineTo(Xc(z), Y(v)) : ctx.moveTo(Xc(z), Y(v)); }
   ctx.stroke();
   ctx.fillStyle = '#9AA3B5'; ctx.font = `${11 * d}px ${font()}`; ctx.textAlign = 'left';
-  ctx.fillText(`depth ${fmt(depth * 1e6, 0)} ppm (model)`, gx, gy - 6 * d);
+  ctx.fillText(window.SetuI18n ? SetuI18n.T('hero.depth', 'depth {d, number, integer} ppm (model)', {d: Math.round(depth * 1e6)}) : `depth ${fmt(depth * 1e6, 0)} ppm (model)`, gx, gy - 6 * d);
 }
 function starfieldDraw(cv, p){
   const ctx = cv.getContext('2d'), [w, h, d] = fit(cv), r = rng(p.seed || 314), n = Math.round(w * h / (d * d) * (p.density || 1 / 2600)), par = p.par || [0, 0], layers = p.layers || 3;

@@ -83,7 +83,7 @@ def stage(card: dict, app: dict, meta: dict | None = None) -> dict:
     sp = ctx.get("star_params") or {}
     teff = _num(sp.get("teff"))
     bodies: list[dict] = []
-    note = ""
+    note = note_html = ""
     fp = meta.get("false_positive")
     if fp:
         s = fp.get("setuhq") or {}
@@ -93,12 +93,17 @@ def stage(card: dict, app: dict, meta: dict | None = None) -> dict:
         rej = (fp.get("outcomes") or {}).get("rejected")
         snr = _num(s.get("secondary_snr"))
         bits = []
+        hb = []
         if snr:
             bits.append(f"secondary eclipse at SNR {snr:.1f}")
+            hb.append(span("gal.secondary", "secondary eclipse at SNR {snr, number, ::.0}", snr=round(snr, 1)))
         if rej:
             n = fp.get("dips_on_ephemeris") or rej
             bits.append(f"all {rej} dips rejected by vetting" if rej == n else f"{rej} of {n} dips rejected by vetting")
+            hb.append(span("gal.allrej", "all {n} dips rejected by vetting", n=rej) if rej == n
+                      else span("gal.somerej", "{r} of {n} dips rejected by vetting", r=rej, n=n))
         note = "; ".join(bits)
+        note_html = "; ".join(hb)
     else:
         cat = app.get("catalogue")
         for p in meta.get("planets") or []:
@@ -114,7 +119,8 @@ def stage(card: dict, app: dict, meta: dict | None = None) -> dict:
                     rj, srad = _num(cat["planets"]["radius"][i]), _num(cat["planets"]["srad"][i])
                     if rj and srad:
                         bodies.append({"name": name, "k": rj * RJ_IN_RE / (srad * 109.076), "kind": "missed",
-                                       "src": f"{cat.get('source_short') or 'exoplanet.eu'}, not recovered by this run"})
+                                       "src": f"{cat.get('source_short') or 'exoplanet.eu'}, not recovered by this run",
+                                       "srcname": cat.get("source_short") or "exoplanet.eu"})
         if not bodies:
             k = _validation_k(meta, ctx.get("planet"))
             if k and ctx.get("planet"):
@@ -130,7 +136,7 @@ def stage(card: dict, app: dict, meta: dict | None = None) -> dict:
         b["y"] = 0.0 if b["kind"] == "occ" else (0.12 if j % 2 == 0 else -0.16)
         b["k"] = round(b["k"], 5)
     return {"run": run, "star": card["star"], "teff": round(teff, 1) if teff else None, "teff_src": sp.get("source") or "",
-            "bodies": bodies, "note": note}
+            "bodies": bodies, "note": note, "note_html": note_html}
 
 
 def caption(st: dict) -> str:
@@ -189,13 +195,34 @@ def svg(st: dict, uid: str) -> str:
     return "".join(out) + "</svg>"
 
 
+def caption_html(st: dict) -> str:
+    """:func:`caption` as keyed markup: each part a message, its numbers formatted in the reader's language."""
+    t = (span("gal.star", "Star {teff, number, integer} K (TIC v8.2)", teff=round(st["teff"])) if st["teff"]
+         else span("gal.noteff", "No Teff stored: neutral grey disc"))
+    parts = []
+    for b in st["bodies"]:
+        if b["kind"] == "occ":
+            parts.append(span("gal.occ", "occulter not identified, √depth {k, number, ::.000} (run fit)", k=b["k"]))
+        elif b["kind"] == "missed":
+            parts.append(span("gal.missed", "{p} dashed, Rp/R★ {k, number, ::.0000} ({src}, not recovered by this run)",
+                              p=_letter(b["name"]), k=b["k"], src=b.get("srcname") or "exoplanet.eu"))
+        else:
+            kind = {"run fit": "fit", "√depth of the lead signal": "lead"}.get(b["src"], "other")
+            parts.append(span("gal.sil", "{p} Rp/R★ {k, number, ::.0000} ({kind, select, fit {run fit} lead {√depth of the lead signal} other {{src}}})",
+                              p=_letter(b["name"]), k=b["k"], kind=kind, **({"src": b["src"]} if kind == "other" else {})))
+    body = " · ".join([t] + parts)
+    if st.get("note_html"):
+        body += f" · {st['note_html']}"
+    return body + "."
+
+
 def figure(st: dict, uid: str) -> str:
     e = _html.escape
-    cap = caption(st)
+    cap = caption_html(st)
     p = {"teff": st["teff"], "bodies": [{k: b[k] for k in ("x", "y", "k", "kind")} | {"l": _letter(b["name"])} for b in st["bodies"]]}
     return (f"<figure class=\"stage gstage\" data-viz=\"gstage\" data-params='{e(json.dumps(p, separators=(',', ':')))}' "
             f'aria-labelledby="gcap-{uid}"><div class="gbox">{svg(st, uid)}</div><span class="stage-tag" data-i18n="label.model">{LABEL}</span>'
-            f'<figcaption id="gcap-{uid}" class="readout">{e(cap)}</figcaption></figure>')
+            f'<figcaption id="gcap-{uid}" class="readout">{cap}</figcaption></figure>')
 
 
 def from_app(app: dict) -> dict:

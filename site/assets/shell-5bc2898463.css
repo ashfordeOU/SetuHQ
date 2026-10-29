@@ -191,4 +191,6 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 :root:lang(zh-Hans){--sans:"Geist","Geist Fallback","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC","Source Han Sans SC",system-ui,sans-serif}
 :lang(ja) *,:lang(zh-Hans) *{letter-spacing:0!important;word-break:normal;line-break:strict;overflow-wrap:anywhere}
 :lang(ja) h1,:lang(ja) h2,:lang(zh-Hans) h1,:lang(zh-Hans) h2{line-height:1.25}
+/* Headings break between phrases (the catalogues mark them with <wbr>), never inside a word; a phrase too wide for its line still wraps. */
+:lang(ja) :is(h1,h2,h3,h4,.lead-h),:lang(zh-Hans) :is(h1,h2,h3,h4,.lead-h){word-break:keep-all;overflow-wrap:anywhere}
 @media (max-width:420px){.langpick>summary .langcode{display:none}}

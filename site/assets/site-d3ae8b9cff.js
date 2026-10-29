@@ -1,4 +1,4 @@
-const I18N_SRC = '/assets/i18n-08949b3b6a.js';
+const I18N_SRC = '/assets/i18n-950de2c247.js';
 const SETUHQ_THEMES = ['dark', 'light', 'system'], TT = (id, en, a) => (window.SetuI18n ? SetuI18n.T(id, en, a) : en).replace(/&#(\d+);/g, (x, d) => String.fromCharCode(d));
 const THEME_SAY = {get dark(){ return TT('shell.theme.dark', 'dark'); }, get light(){ return TT('shell.theme.light', 'light'); }, get system(){ return TT('shell.theme.system', 'your device\'s setting'); }};
 function currentTheme(){ const t = document.documentElement.getAttribute('data-theme'); return SETUHQ_THEMES.includes(t) ? t : 'dark'; }
@@ -133,6 +133,7 @@ const st = tag.closest('.stage'); if (!st || st._sl || (st.offsetWidth && st.off
 const id = tag.dataset.i18n, en = LID[id] || tag.textContent.trim().toLowerCase(), fig = st.closest('figure') || st, lab = tag.textContent.trim(), cap = fig.querySelector('figcaption') || document.getElementById(fig.getAttribute('aria-labelledby') || '-'), h = fig.dataset.hint;
 const src = ((cap && cap.textContent.match(/Sources?:\s*([^]*?)(?:\.\s+(?=[A-Z])|\.?\s*$)/)) || [])[1];
 const lim = LIM[en] ? TT('limits.' + (id || '').slice(6), LIM[en]) : '', s = src ? esc(src) : TT('limits.caption', 'as the caption states');
+requestAnimationFrame(() => { const b = st.querySelector('.srclim>summary'); if (b && b.offsetWidth) st.style.setProperty('--slw', (b.offsetWidth + 16) + 'px'); });
 st.insertAdjacentHTML('beforeend', `<details class="srclim"><summary>${TT('limits.summary', 'Source / limits')}</summary><div><p><b>${esc(lab)}.</b> ${lim}</p><p>${TT('limits.source', 'Source: {s}.', {s})}</p></div></details>`
 + (h && !seen().includes(h) ? `<p class="fxhint">${esc(TT('hint.orbits', h))} <button type="button" class="btn" data-fxh="${esc(h)}" aria-label="${TT('hint.dismiss', 'Dismiss the hint: {h}', {h: TT('hint.orbits', h)})}">×</button></p>` : ''));
 });

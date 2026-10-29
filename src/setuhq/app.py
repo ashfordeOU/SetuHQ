@@ -2748,7 +2748,9 @@ function navTo(href){
   const u = new URL(R(href), location.href), p = u.origin === location.origin ? rtParse(u.pathname, u.search) : null;
   const gsd = $('#gsearch'); if (gsd && gsd.open) gsd.close();
   closeMenu();
-  if (!p || !$('#route-' + p.route)){ location.href = u.href; return; }
+  // In another language each page's prose is written into its own address (setuhq.i18n_auto): a new page loads whole.
+  const other = window.SetuI18n && SetuI18n.lang !== 'en' && u.pathname !== location.pathname;
+  if (!p || !$('#route-' + p.route) || other){ location.href = u.href; return; }
   try { history.pushState(null, '', u.pathname + u.search + u.hash); } catch (err) { location.href = u.href; return; }
   viewTransition(() => go(parseLoc(), true));
 }

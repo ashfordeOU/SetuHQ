@@ -21,7 +21,8 @@ ATTRIBUTION_EN = ("Sentinels run on Claude (Anthropic) by default; other provide
 
 # ---------- the catalogues ----------
 def test_the_english_catalogue_is_what_the_code_declares():
-    assert (ROOT / "src/setuhq/locales/en.arb").read_text(encoding="utf-8") == it.dumps(it.extract())
+    have = json.loads((ROOT / "src/setuhq/locales/en.arb").read_text(encoding="utf-8"))
+    assert it.dumps(it.code_part(have)) == it.dumps(it.code_part(it.extract(pages=False)))  # page text follows site/
     for lang in i18n.TRANSLATIONS:
         assert i18n.catalogue_path(lang).read_text(encoding="utf-8") == it.dumps(it.sync(lang)), lang
 
