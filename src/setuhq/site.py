@@ -967,8 +967,16 @@ def write_i18n_assets(out: Path) -> dict[str, str]:
 
 
 def i18n_auto_script(out: Path) -> str:
-    """The script that puts the page text the scripts draw in the reader's language (assets/i18n-auto-*.js); its address."""
-    text = strip_js(i18n.AUTO_JS)
+    """The script that puts the page text the scripts draw in the reader's language (assets/i18n-auto-*.js), and its
+    catalogues, one per language and part of the site (assets/i18n/js-<hash>/<lang>/<part>.json); its address."""
+    cats = {lang: {sec: json.dumps(c, ensure_ascii=False, separators=(",", ":")) for sec, c in i18n.js_catalogues(lang).items()}
+            for lang in i18n.TRANSLATIONS}
+    ver = _sha(json.dumps(cats, sort_keys=True))
+    for lang, secs in cats.items():
+        (out / "assets" / "i18n" / f"js-{ver}" / lang).mkdir(parents=True, exist_ok=True)
+        for sec, text in secs.items():
+            (out / "assets" / "i18n" / f"js-{ver}" / lang / f"{sec}.json").write_text(text, encoding="utf-8")
+    text = strip_js(i18n.AUTO_JS).replace("JS_VERSION", ver)
     rel = f"assets/i18n-auto-{_sha(text)}.js"
     (out / rel).write_text(text)
     return "/" + rel
@@ -1372,7 +1380,7 @@ SHELL_BUDGET = 16_000
 # catalogues themselves are separate files, one per language (assets/i18n/<lang>-*.json), fetched only when used.
 I18N_BUDGET = 10_000
 CATALOGUE_BUDGET = 160_000
-ASSET_BUDGET = {"site-*.css": 140_000, "app-*.js": 430_000, "site-*.js": SHELL_BUDGET, "i18n-*.js": I18N_BUDGET, "i18n/*.json": CATALOGUE_BUDGET,
+ASSET_BUDGET = {"site-*.css": 140_000, "app-*.js": 430_000, "site-*.js": SHELL_BUDGET, "i18n-*.js": I18N_BUDGET, "i18n/*.json": CATALOGUE_BUDGET, "i18n/js-*/*/*.json": CATALOGUE_BUDGET,
                 "render-*.js": renderer.RENDER_BUDGET,
                 "data/sky-*.json": viz.DATA_BUDGET["sky"], "data/stories-*.json": viz.DATA_BUDGET["stories"]}
 PAGE_BUDGETS = {"index.html": 90_000, "explore/index.html": 160_000}

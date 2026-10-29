@@ -697,7 +697,29 @@ def unkey(src: str) -> str:
 def client_catalogue(lang: str) -> dict[str, str]:
     """What a page's script loads for ``lang``: every usable message the site and its pages use (not the CLI's or
     the MCP server's)."""
-    return {k: v for k, v in sorted(messages(lang).items()) if not k.startswith(("cli.", "mcp.", "pg."))}
+    return {k: v for k, v in sorted(messages(lang).items()) if not k.startswith(("cli.", "mcp.", "pg.", "js."))}
+
+
+def section(path: str) -> str:
+    """The part of the site a page belongs to, for the text its scripts draw: its first folder ("home" for /)."""
+    seg = [x for x in path.split("/") if x]
+    if seg and seg[0] in TRANSLATIONS:
+        seg = seg[1:]
+    return seg[0] if seg else "home"
+
+
+def js_catalogues(lang: str) -> dict[str, dict[str, str]]:
+    """The translations of the text the page scripts draw (js.*, src/setuhq/locales/js-templates.json), one
+    catalogue per part of the site (``section``), so that a page loads only its own part's."""
+    drawn = Path(__file__).parent / "locales" / "js-templates.json"
+    if not drawn.is_file():
+        return {}
+    usable, out = messages(lang), {}
+    for mid, d in sorted(json.loads(drawn.read_text(encoding="utf-8")).items()):
+        if mid in usable:
+            for sec in {section(p) for p in d["pages"]}:
+                out.setdefault(sec, {})[mid] = usable[mid]
+    return out
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -861,6 +883,9 @@ let pend = null;
 new MutationObserver(ms => { if (SI.lang === 'en' || !SI.cat) return; for (const x of ms){ const e = x.target.nodeType === 1 ? x.target : x.target.parentElement, t = e && (e.parentElement || e); if (t) (pend = pend || new Set()).add(t); }
   if (pend && !pend.t){ pend.t = setTimeout(() => { const s = pend; pend = null; for (const t of s) if (t.isConnected) auto(t); }, 60); } }).observe(document.documentElement, {childList: true, subtree: true, characterData: true});
 Object.assign(SI, {auto, tpl, prose, h53, fill, hash: h53});
-auto(document);
+// This part of the site's drawn text (setuhq.i18n.js_catalogues), then the page.
+const seg = location.pathname.split('/').filter(Boolean); if (SI.conf.locales.includes(seg[0])) seg.shift();
+fetch('/assets/i18n/js-JS_VERSION/' + SI.lang + '/' + (seg[0] || 'home') + '.json').then(r => r.ok ? r.json() : {}).catch(() => ({}))
+  .then(c => { if (SI.cat) Object.assign(SI.cat, c); auto(document); });
 })();
 """

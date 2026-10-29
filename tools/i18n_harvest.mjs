@@ -27,6 +27,8 @@ const pw = await loadPlaywright();
 const server = await serve(SITE);
 const BASE = `http://127.0.0.1:${server.address().port}`;
 const browser = await pw.chromium.launch({ args: ["--use-gl=swiftshader", "--enable-unsafe-swiftshader"] });
+// A reference (authors, journal, year) stays as published.
+const CITE = /\bet al\.|\b(ApJL?|ApJS|A&amp;A|MNRAS|AJ|PASP|Nature|Science|ARA&amp;A|PSJ|RNAAS)\b \{n\d+\}/;
 const found = {};
 for (const vp of [{ width: 1440, height: 900 }]) {
   const ctx = await browser.newContext({ viewport: vp, reducedMotion: "reduce" });
@@ -51,7 +53,7 @@ for (const vp of [{ width: 1440, height: 900 }]) {
       });
       const main = MAIN.has(path);
       for (const [id, [t, h]] of got) {
-        if (main && raw.includes(h) || t.length > 3000) continue;  // the server writes this one (pg.); a data dump
+        if (main && raw.includes(h) || t.length > 3000 || CITE.test(t)) continue;  // the server writes this one (pg.); a data dump; a reference
         const f = found[id] || (found[id] = { en: t, pages: [] });
         if (f.pages.length < 4 && !f.pages.includes(path)) f.pages.push(path);
       }
