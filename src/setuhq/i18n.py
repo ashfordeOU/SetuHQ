@@ -726,7 +726,8 @@ def section(path: str) -> str:
 def js_catalogues(lang: str) -> dict[str, dict[str, str]]:
     """The translations of the text the page scripts draw (js.*, src/setuhq/locales/js-templates.json), one
     catalogue per part of the site (``section``), so that a page loads only its own part's, and "common": text seen
-    on four or more pages (the harvest lists four) in more than one part, which any page may draw."""
+    on four or more pages (the harvest lists four) in more than one part, and every short label, which any page may
+    draw."""
     drawn = Path(__file__).parent / "locales" / "js-templates.json"
     if not drawn.is_file():
         return {}
@@ -734,7 +735,8 @@ def js_catalogues(lang: str) -> dict[str, dict[str, str]]:
     for mid, d in sorted(json.loads(drawn.read_text(encoding="utf-8")).items()):
         if mid in usable:
             secs = {section(p) for p in d["pages"]}
-            for sec in secs if len(d["pages"]) < 4 or len(secs) == 1 else {"common"}:
+            short = len(d["en"]) <= 40 and "{s" not in d["en"]  # a label (Pause, Play, a unit), drawn anywhere
+            for sec in {"common"} if short or (len(d["pages"]) >= 4 and len(secs) > 1) else secs:
                 out.setdefault(sec, {})[mid] = usable[mid]
     return out
 
