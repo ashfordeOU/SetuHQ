@@ -2001,6 +2001,2546 @@
   "x-review": "machine",
   "x-source": "4d512860c4"
  },
+ "js.102gl10wq27": "Distikstofoxide",
+ "@js.102gl10wq27": {
+  "x-review": "machine",
+  "x-source": "06e62c3200"
+ },
+ "js.102u1nw0q2o": "exoplanet.eu Rp = {n0} RJ, R★ = {n1} R☉ [calc]",
+ "@js.102u1nw0q2o": {
+  "x-review": "machine",
+  "x-source": "3ddd07fdd3"
+ },
+ "js.103gjbgqyft": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">6d. <span class=\"mono\">tess-509c4134c6dd-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Aangemerkt door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.103gjbgqyft": {
+  "x-review": "machine",
+  "x-source": "acac77611f"
+ },
+ "js.103n82dja3r": "Catalogus bijgewerkt <time datetime=\"2026-10-29T00:47:42+00:00\" title=\"2026-10-29T00:47:42+00:00\">{n0} okt {n1}, {n2} UTC</time>.",
+ "@js.103n82dja3r": {
+  "x-review": "machine",
+  "x-source": "273b2777f8"
+ },
+ "js.104nn3vx4at": "Term",
+ "@js.104nn3vx4at": {
+  "x-review": "machine",
+  "x-source": "c6f3bfd456"
+ },
+ "js.106g3hdfp83": "TIC {n0} · afgewezen bij de vetting, geen kandidaat",
+ "@js.106g3hdfp83": {
+  "x-review": "machine",
+  "x-source": "9772d14ea9"
+ },
+ "js.106t6pg6coj": "{n0} planeet in exoplanet.eu · klasse G uit Teff (dichtstbij G5V)",
+ "@js.106t6pg6coj": {
+  "x-review": "machine",
+  "x-source": "4a42c39284"
+ },
+ "js.108ff31ozel": "Segmenten van {n0} dagen met ondoorzichtige ID's. De doelnaam bereikt nooit een beoordelaar",
+ "@js.108ff31ozel": {
+  "x-review": "machine",
+  "x-source": "5970fd0df8"
+ },
+ "js.10cuopbimg6": "<b>ν₄ asymmetrische buiging (drie)</b> · {n0} µm · infraroodactief · getekend ×{n1} · buiten het venster van {n2}–{n3} µm van Reading atmospheres",
+ "@js.10cuopbimg6": {
+  "x-review": "machine",
+  "x-source": "4d4ada7b03"
+ },
+ "js.10cz46v17yl": "[calc]",
+ "@js.10cz46v17yl": {
+  "x-review": "machine",
+  "x-source": "0e33bc83ea"
+ },
+ "js.10obdbskade": "Run-figuren omlaag verplaatsen",
+ "@js.10obdbskade": {
+  "x-review": "machine",
+  "x-source": "5e3f303389"
+ },
+ "js.10p3ix93avu": "TESS SPOC van MAST of CHEOPS FITS, tijdsysteem behouden zoals geleverd",
+ "@js.10p3ix93avu": {
+  "x-review": "machine",
+  "x-source": "ffa10fa912"
+ },
+ "js.10v4vkxqjry": "In deze build is geen lichtcurve voor deze ster opgeslagen: de zoekcatalogus bewaart alleen gemeten waarden, dus er is geen curve van het hele subject en geen gevouwen paneel.",
+ "@js.10v4vkxqjry": {
+  "x-review": "machine",
+  "x-source": "7fe57adca4"
+ },
+ "js.10vb2hszsy6": "<b>{n0}</b> van de {n1} planeten met een opgeslagen afstand in exoplanet.eu zijn gevonden via transit (de eerste vermelde methode). <a href=\"/explore/galaxy/?method=transit\">Toon ze op de Galaxy-kaart ›</a>",
+ "@js.10vb2hszsy6": {
+  "x-review": "machine",
+  "x-source": "01ac9f0ca4"
+ },
+ "js.10vrj8m3wjv": "CO <span>Koolmonoxide</span>",
+ "@js.10vrj8m3wjv": {
+  "x-review": "machine",
+  "x-source": "828d691c9b"
+ },
+ "js.10wj3xzpdgf": "De schijf van de zon, {n0} K, in haar zwartlichaamkleur met randverduistering.",
+ "@js.10wj3xzpdgf": {
+  "x-review": "machine",
+  "x-source": "ae27e2403d"
+ },
+ "js.10zmmlwb9xi": "<b>Lyot-coronagraaf.</b> Een ondoorzichtige schijf in het brandvlak blokkeert de kern van het beeld van de ster. Wat ze niet verwijdert, is het licht dat haar rand afbuigt, dat de volgende lens naar de rand van de opnieuw afgebeelde pupil stuurt; een Lyot-stop die iets kleiner is dan de pupil vangt die rand op (Lyot {n0}). Met een schijf van {n1} λ/D verlaagt het verkleinen van de stop van {n2}% naar {n3}% van de pupil het sterlicht op {n4} λ/D van {n5}×{n6}⁻⁵ naar {n7}×{n8}⁻⁷ van de piek van de ster (zonder coronagraaf: {n9}×{n10}⁻⁵) [calc], terwijl een planeet ruim buiten de schijf {n11}% van haar licht behoudt, het oppervlak van de stop.",
+ "@js.10zmmlwb9xi": {
+  "x-review": "machine",
+  "x-source": "d10dd5442e"
+ },
+ "js.1158am8gaw7": "Echt voorbeeld laden: WASP-{n0} b",
+ "@js.1158am8gaw7": {
+  "x-review": "machine",
+  "x-source": "f5b4ba83ed"
+ },
+ "js.115hip4cvhm": "Tijdstrook voor TIC {n0}, scrollt zijwaarts op een smal scherm",
+ "@js.115hip4cvhm": {
+  "x-review": "machine",
+  "x-source": "edf0adbe96"
+ },
+ "js.116569re5s1": "a uit exoplanet.eu; * uit de derde wet van Kepler (periode en de massa van de ster). — : straal niet opgeslagen.",
+ "@js.116569re5s1": {
+  "x-review": "machine",
+  "x-source": "ffe266b57f"
+ },
+ "js.119w2r7gi9c": "Aardetweeling {n0} cm/s",
+ "@js.119w2r7gi9c": {
+  "x-review": "machine",
+  "x-source": "2fbfe80216"
+ },
+ "js.11c7zjt23d6": "JWST MIRI LRS; NIRSpec ({n0} µm overlapt met methaan)",
+ "@js.11c7zjt23d6": {
+  "x-review": "machine",
+  "x-source": "ccba5cf32d"
+ },
+ "js.11gk6jbogvd": "Kepler-veld · Cygnus–Lyra<small>{n0} sterren · {n1} planeten (schijf van {n2}°)</small><small>Het enige diepe veld van Kepler, geen echte structuur.</small>",
+ "@js.11gk6jbogvd": {
+  "x-review": "machine",
+  "x-source": "d5be4c7fa2"
+ },
+ "js.11gxwv4kl1i": "<span class=\"word cand\">kandidaat</span><span class=\"word s-pass\">door de vetting gekomen</span><b class=\"fig\">1h. WASP-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-291acb98cabe-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Aangemerkt door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Ligt op een BLS-periode van {n15} dagen (t0 BTJD {n16}). Door de vetting gekomen. Archief: consistent met WASP-{n17} b: ΔP {n18}%, geen transitefemeride om mee te vergelijken. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.11gxwv4kl1i": {
+  "x-review": "machine",
+  "x-source": "8a839e68c5"
+ },
+ "js.11j1r7rva0k": "Gerelateerd ›",
+ "@js.11j1r7rva0k": {
+  "x-review": "machine",
+  "x-source": "71b91d8217"
+ },
+ "js.11jr6x9x7jd": "k² (diepte zonder randverduistering)",
+ "@js.11jr6x9x7jd": {
+  "x-review": "machine",
+  "x-source": "f44a5f4c47"
+ },
+ "js.11kdzzmc5nu": "JWST MIRI; ALMA en JCMT voor Venus",
+ "@js.11kdzzmc5nu": {
+  "x-review": "machine",
+  "x-source": "184a6800cc"
+ },
+ "js.11n6gzp7din": "{n0} (gedomineerd door de prior; geen fout opgegeven, omdat die alleen die van de prior zou herhalen)",
+ "@js.11n6gzp7din": {
+  "x-review": "machine",
+  "x-source": "8cd6ffa4c7"
+ },
+ "js.11o2ligqn02": "In de literatuur als planeet?",
+ "@js.11o2ligqn02": {
+  "x-review": "machine",
+  "x-source": "dd65cb6016"
+ },
+ "js.11o812dyoif": "pi Men c: per schaalhoogte, stoom (μ = {n0})",
+ "@js.11o812dyoif": {
+  "x-review": "machine",
+  "x-source": "549cb2140e"
+ },
+ "js.11o8mnty71w": "Fasegevouwen",
+ "@js.11o8mnty71w": {
+  "x-review": "machine",
+  "x-source": "b1f505926d"
+ },
+ "js.11otz3rkm6a": "Het beeld dat de beoordelaars zagen (zonder markeringen)",
+ "@js.11otz3rkm6a": {
+  "x-review": "machine",
+  "x-source": "f7f6a6e9e2"
+ },
+ "js.11u3wrcs6gy": "Opgeslagen id tess-a0ab3f99b16c-{n0}; geen dossier in deze run",
+ "@js.11u3wrcs6gy": {
+  "x-review": "machine",
+  "x-source": "f33f385cb8"
+ },
+ "js.11vqs1wwfs1": "Toon op de Galaxy-kaart ›",
+ "@js.11vqs1wwfs1": {
+  "x-review": "machine",
+  "x-source": "4e3116178e"
+ },
+ "js.11ypfnf3fx": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">3i. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Aangemerkt door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.11ypfnf3fx": {
+  "x-review": "machine",
+  "x-source": "9954b464fd"
+ },
+ "js.11z172uec4v": "{n0} dips ({n1} afgewezen). Elke dip is benoemd naar de uitkomst van de vetting: een kandidaat is door de vetting gekomen en is niet bevestigd; een gemarkeerde dip staat open; een afgewezen dip is geen kandidaat. Afgewezen en gemarkeerde dips worden bewust bewaard, zodat een lezer kan zien wat de vetting besliste en waarom. Elk beeld is de blind gecodeerde plot die de beoordelaars zagen, byte voor byte.",
+ "@js.11z172uec4v": {
+  "x-review": "machine",
+  "x-source": "22ce64db43"
+ },
+ "js.11z1x0tf8px": "Afspelen",
+ "@js.11z1x0tf8px": {
+  "x-review": "machine",
+  "x-source": "436e61016e"
+ },
+ "js.121qwge05zu": "Onderschept: alle {n0} dips op de TOI-efemeride zijn afgewezen bij de vetting (secondary_any_phase, secondary_eclipse), dus geen ervan is een kandidaat.",
+ "@js.121qwge05zu": {
+  "x-review": "machine",
+  "x-source": "ab8a45b358"
+ },
+ "js.122cnu5exbx": "<a href=\"/stars/51-peg/\">{s0}</a> · Radiële snelheid · ontdekt {n0} · Gasreus",
+ "@js.122cnu5exbx": {
+  "x-review": "machine",
+  "x-source": "f8acf4d692"
+ },
+ "js.122x1s0w9zz": "F_Q · F_HZ, logaritmische schaal",
+ "@js.122x1s0w9zz": {
+  "x-review": "machine",
+  "x-source": "2ce32c5ec7"
+ },
+ "js.127n9b2phx9": "Run tess-toi-{n0}-s2 (runs/tess-toi-{n1}-s2), aangemaakt {n2}-{n3}-22T17:{n4}+{n5}, config sha256 eef6f1318b3b1dac…",
+ "@js.127n9b2phx9": {
+  "x-review": "machine",
+  "x-source": "0a52b41e9e"
+ },
+ "js.127vxlxdz3p": "Modeldiepte voor een centrale overgang",
+ "@js.127vxlxdz3p": {
+  "x-review": "machine",
+  "x-source": "0ecc5f5362"
+ },
+ "js.12a550hoth0": "<a href=\"/stars/rx-j1511-6-3249b/\">{s0}</a> · Beeldvorming · ontdekt {n0} · Gasreus (naar massa)",
+ "@js.12a550hoth0": {
+  "x-review": "machine",
+  "x-source": "cc95c0003c"
+ },
+ "js.12cg9tt6w6b": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Sentinel-feed",
+ "@js.12cg9tt6w6b": {
+  "x-review": "machine",
+  "x-source": "2d63ad7563"
+ },
+ "js.12ed4zztqr8": "Artistieke impressie van {s0}: een Neptunusachtige planeet in de warme band, {n0} aardstralen, {n1} K.",
+ "@js.12ed4zztqr8": {
+  "x-review": "machine",
+  "x-source": "1769f7c7c0"
+ },
+ "js.12j7430bkz1": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">6e. <span class=\"mono\">tess-509c4134c6dd-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Aangemerkt door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.12j7430bkz1": {
+  "x-review": "machine",
+  "x-source": "50478c1f71"
+ },
+ "js.12jhooice5h": "Opgeslagen id tess-03a9e901682f-{n0}; geen dossier in deze run",
+ "@js.12jhooice5h": {
+  "x-review": "machine",
+  "x-source": "ab67d3a7b0"
+ },
+ "js.12lazfaqyny": "Het dossier kon in deze weergave niet laden. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-f28323a4aef6-001\">Open het op een eigen pagina.</a>",
+ "@js.12lazfaqyny": {
+  "x-review": "machine",
+  "x-source": "8ec36a17e7"
+ },
+ "js.12lth0d2p34": "In {n0} vonden Wolszczan en Frail planeten rond de millisecondepulsar PSR B1257+{n1} via de regelmatige schommeling in de aankomsttijden van zijn pulsen (Wolszczan &amp; Frail {n2}): de planeten trekken aan de pulsar, en de lichtreistijd verandert met milliseconden. Dat is radiotiming, geen radiostraling van een planeet. <a href=\"/explore/galaxy/?tour=13\">De kaart ervan in de Galaxy-rondleiding ›</a>",
+ "@js.12lth0d2p34": {
+  "x-review": "machine",
+  "x-source": "a919cbb3a4"
+ },
+ "js.12m26xazjm": "door de vetting gekomen; {n0}% van het gewicht van het panel bestempelde het subject als mogelijke planeet; op een periodiek signaal: {n1} transits, P = {n2} d",
+ "@js.12m26xazjm": {
+  "x-review": "machine",
+  "x-source": "8ec885602b"
+ },
+ "js.12ujqir6o8g": "JWST MIRI-coronagraaf",
+ "@js.12ujqir6o8g": {
+  "x-review": "machine",
+  "x-source": "6dec097902"
+ },
+ "js.12vi4vfunn8": "θ_E voor {n0} M☉ en π_rel = {n1} µas",
+ "@js.12vi4vfunn8": {
+  "x-review": "machine",
+  "x-source": "05ed847784"
+ },
+ "js.12y2sroyczu": "{n0} grondtoon",
+ "@js.12y2sroyczu": {
+  "x-review": "machine",
+  "x-source": "2b904f7e07"
+ },
+ "js.12yogapnv9x": "Blind gecodeerde subjectplot voor tess-291acb98cabe-{n0}: de lichtcurve die de beoordelaars aanmerkten, zonder doelnaam en zonder markeringen",
+ "@js.12yogapnv9x": {
+  "x-review": "machine",
+  "x-source": "391750cf7b"
+ },
+ "js.130c5b9waku": "beoordelaar-id claude-volunteer",
+ "@js.130c5b9waku": {
+  "x-review": "machine",
+  "x-source": "0eac85f70b"
+ },
+ "js.1327p03izgk": "Aantal in feed",
+ "@js.1327p03izgk": {
+  "x-review": "machine",
+  "x-source": "32ff78084e"
+ },
+ "js.135ebosllvm": "alle {n0}",
+ "@js.135ebosllvm": {
+  "x-review": "machine",
+  "x-source": "3dc4774801"
+ },
+ "js.135oou0xots": "Een survey richt een camera op veel sterren tegelijk en meet de helderheid van elke ster steeds opnieuw. De meeste sterren laten nooit een planeet zien. Alleen planeten waarvan de baan toevallig op één lijn met ons ligt, kunnen voor de schijf van hun ster langs trekken.",
+ "@js.135oou0xots": {
+  "x-review": "machine",
+  "x-source": "283ee0d22b"
+ },
+ "js.136ru1oswud": "(Mp/M_psr)·a/c met de massa uit exoplanet.eu 7e-{n0} MJ, a = {n1} AU, sin i = {n2}, en een aangenomen pulsar van {n3} M☉ (zijn massa is niet opgeslagen) [calc]",
+ "@js.136ru1oswud": {
+  "x-review": "machine",
+  "x-source": "bff9d47f59"
+ },
+ "js.136ul906qph": "Bron: de opgeslagen run van SetuHQ runs/tess-pi-men-s1 (TESS-sector {n0}, SPOC PDCSAP-flux van {n1} minuten, TIC {n2}; config sha256 585955d5e7a1…): {n3} opgeslagen punten, elk subject genormaliseerd op zijn mediaan en gebind in bins van {n4} minuten.",
+ "@js.136ul906qph": {
+  "x-review": "machine",
+  "x-source": "af8431ab78"
+ },
+ "js.138zpxk17ru": "f_i, logaritmische schaal",
+ "@js.138zpxk17ru": {
+  "x-review": "machine",
+  "x-source": "6c9e025828"
+ },
+ "js.139r14pkn82": "lineair, binding {n0} Å (CCCBDB)",
+ "@js.139r14pkn82": {
+  "x-review": "machine",
+  "x-source": "bb5e23856b"
+ },
+ "js.13a3cpa6ixl": "Runrapport · tess-wasp-{n0}-s1",
+ "@js.13a3cpa6ixl": {
+  "x-review": "machine",
+  "x-source": "e39c1a07d7"
+ },
+ "js.13ac253fetk": "<b>{n0}</b> van de {n1} planeten met een opgeslagen afstand in exoplanet.eu zijn gevonden via astrometrie (de eerste vermelde methode). <a href=\"/explore/galaxy/?method=astrometry\">Toon ze op de Galaxy-kaart ›</a>",
+ "@js.13ac253fetk": {
+  "x-review": "machine",
+  "x-source": "dc5877cdd7"
+ },
+ "js.13cdu73b6uc": "CO₂-fotolyse rond sommige sterren, of massale ontsnapping van waterstof na waterverlies.",
+ "@js.13cdu73b6uc": {
+  "x-review": "machine",
+  "x-source": "c8882d0205"
+ },
+ "js.13dkw0fx1t5": "Blind gecodeerde onderwerpplot voor tess-fa3483ce6f83-{n0}: de lichtcurve die de beoordelaars aanduidden, zonder doelnaam en zonder markeringen",
+ "@js.13dkw0fx1t5": {
+  "x-review": "machine",
+  "x-source": "61ec95d1ae"
+ },
+ "js.13ffhncz0ep": "geen archiefplaneet bij deze periode",
+ "@js.13ffhncz0ep": {
+  "x-review": "machine",
+  "x-source": "7b27994bc4"
+ },
+ "js.13i1elxloqt": "pi Men c: per schaalhoogte, H₂-rijk",
+ "@js.13i1elxloqt": {
+  "x-review": "machine",
+  "x-source": "dc879059e0"
+ },
+ "js.13ixfl5cuwe": "lage snr",
+ "@js.13ixfl5cuwe": {
+  "x-review": "machine",
+  "x-source": "e5fa05fd4c"
+ },
+ "js.13k8aizempe": "Gemeten invoer",
+ "@js.13k8aizempe": {
+  "x-review": "machine",
+  "x-source": "36f6331b1f"
+ },
+ "js.13kikmj1q17": "Wanneer een voorgrondster (de lens) bijna vóór een achtergrondster (de bron) langs trekt, buigt en versterkt haar zwaartekracht het licht van de bron gedurende dagen tot weken. Een planeet rond de lens voegt een korte extra piek toe. De lens zelf is vaak te zwak om te zien.",
+ "@js.13kikmj1q17": {
+  "x-review": "machine",
+  "x-source": "f5cca1ccc1"
+ },
+ "js.13mufrch5ly": "tess-38b5a559eee2-{n0}",
+ "@js.13mufrch5ly": {
+  "x-review": "machine",
+  "x-source": "a80efe9728"
+ },
+ "js.13oqb4u97gf": "{n0} planeet in exoplanet.eu · opgeslagen type M",
+ "@js.13oqb4u97gf": {
+  "x-review": "machine",
+  "x-source": "13d70bd449"
+ },
+ "js.13qdyotd10o": "Fotochemie uit abiotische O₂, begunstigd rond sommige M- en F-dwergen.",
+ "@js.13qdyotd10o": {
+  "x-review": "machine",
+  "x-source": "0ef63ca797"
+ },
+ "js.13quavnkc3i": "pi Men c: door SetuHQ opgeslagen transitdiepte",
+ "@js.13quavnkc3i": {
+  "x-review": "machine",
+  "x-source": "89d8aa4301"
+ },
+ "js.13sqdnq3im2": "Een bekende planeet die opnieuw wordt gevonden is een controle van de pipeline, geen ontdekking. HD {n0} b: {n1} van {n2} transits ({n3} kandidaat; BLS-periode niet die van de planeet); HD {n4} c: {n5} van {n6} transits ({n7} kandidaat, {n8} gemarkeerd; BLS-periode niet die van de planeet).",
+ "@js.13sqdnq3im2": {
+  "x-review": "machine",
+  "x-source": "118618889c"
+ },
+ "js.13t7ixpw2ky": "Topkandidaten",
+ "@js.13t7ixpw2ky": {
+  "x-review": "machine",
+  "x-source": "7021bb9b5f"
+ },
+ "js.13vqj4f8hh6": "Bij een instrumentele aanwijzing: een rand van het onderwerp; een momentum dump, een strooilichtvlag of een pointing- of handmatige-uitsluitingsvlag binnen {n0} d; een datagat van meer dan {n1} d binnen {n2} d; of de helft van het gewicht van het panel dat het instrumenteel noemt.",
+ "@js.13vqj4f8hh6": {
+  "x-review": "machine",
+  "x-source": "0495534488"
+ },
+ "js.13xevrqzvu7": "F_S (detecteerbaar gas)",
+ "@js.13xevrqzvu7": {
+  "x-review": "machine",
+  "x-source": "57a604b939"
+ },
+ "js.142ayq4xf90": "Opgeslagen id tess-0c9e4f75c237-{n0}; geen dossier in deze run",
+ "@js.142ayq4xf90": {
+  "x-review": "machine",
+  "x-source": "c96c9f789d"
+ },
+ "js.1463kg2y1hb": "Ook bekend als Gaia-ASOI-{n0}, Gaia DR3 {n1}.",
+ "@js.1463kg2y1hb": {
+  "x-review": "machine",
+  "x-source": "0059c8728c"
+ },
+ "js.1473r6pfqi4": "Periodieke aanwijzing",
+ "@js.1473r6pfqi4": {
+  "x-review": "machine",
+  "x-source": "b2990754ad"
+ },
+ "js.14ct4jjljtx": "Vorige stop",
+ "@js.14ct4jjljtx": {
+  "x-review": "machine",
+  "x-source": "36a5b03a4a"
+ },
+ "js.14d47apnawn": "configuratienaam",
+ "@js.14d47apnawn": {
+  "x-review": "machine",
+  "x-source": "8c398af6b2"
+ },
+ "js.14d4fmw1xk4": "Ook bekend als HD {n0}, V342 Peg.",
+ "@js.14d4fmw1xk4": {
+  "x-review": "machine",
+  "x-source": "2fc15de0d8"
+ },
+ "js.14eex7du4p": "<span class=\"word s-flag\">gemarkeerd voor beoordeling</span><b class=\"fig\">1f. pi Men, dip {n0}.</b> <span class=\"sid mono\">opgeslagen id tess-04b815001aa6-{n1}.</span> Dip bij BTJD {n2}, {n3} ppm, {n4} h, SNR {n5}. Consensusinterval BTJD {n6} tot {n7}. Aangeduid door {n8} van {n9} beoordelaars ({n10} van {n11} Sentinels, {n12} van {n13} Probes). Geen BLS-periode: een enkele dip. Gemarkeerd voor beoordeling (buiten de efemeride van zijn ster). Archief: geen archiefplaneet binnen de tolerantie (deze dip heeft geen BLS-periode om mee te vergelijken); pi Men c: geen transitefemeride om mee te vergelijken. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.14eex7du4p": {
+  "x-review": "machine",
+  "x-source": "f376745ec7"
+ },
+ "js.14et9ag2rnw": "*Kleine planeten nabij de grens.* Een heldere K-dwerg met twee kleine bekende planeten: b (ongeveer {n0} aardstralen, {n1} dagen, ruwweg {n2} ppm diep) en c ({n3} dagen).",
+ "@js.14et9ag2rnw": {
+  "x-review": "machine",
+  "x-source": "3e44f5ebc2"
+ },
+ "js.14fe8ebzk21": "Artistieke impressie · reus, warm · Straal {n0} R⊕ (exoplanet.eu) is minstens {n1} R⊕, dus wordt hij getekend als gasreus. Teq {n2} K, berekend uit a, R★ en Teff, valt in de warme band. Samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.14fe8ebzk21": {
+  "x-review": "machine",
+  "x-source": "365e781739"
+ },
+ "js.14iuxy783ms": "Ook bekend als EQ Peg A, BD+{n0} {n1} A, LMP {n2} A, WIR {n3} A.",
+ "@js.14iuxy783ms": {
+  "x-review": "machine",
+  "x-source": "e844eda34f"
+ },
+ "js.14j3rqoky0d": "Opgeslagen id tess-308a47f84167-{n0}; geen dossier in deze run",
+ "@js.14j3rqoky0d": {
+  "x-review": "machine",
+  "x-source": "57e8d28e84"
+ },
+ "js.14nibjkkx9k": "Atomair natrium in hete atmosferen; geen biosignatuur.",
+ "@js.14nibjkkx9k": {
+  "x-review": "machine",
+  "x-source": "cd14bc0ec3"
+ },
+ "js.14ob89qe6rk": "<a href=\"/stars/ogle-2005-blg-390l/\">{s0}</a> · Microlensing · ontdekt {n0} · Superaarde (op basis van massa)",
+ "@js.14ob89qe6rk": {
+  "x-review": "machine",
+  "x-source": "05a571c219"
+ },
+ "js.14ojvlsajll": "Artistieke impressie · reus, heet · Straal {n0} R⊕ (exoplanet.eu) is minstens {n1} R⊕, dus wordt hij getekend als gasreus. Teq {n2} K, berekend uit a, R★ en Teff, valt in de hete band. Samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.14ojvlsajll": {
+  "x-review": "machine",
+  "x-source": "de10acd2a6"
+ },
+ "js.14pa01y6ilo": "beoordelaar",
+ "@js.14pa01y6ilo": {
+  "x-review": "machine",
+  "x-source": "2d70999ae1"
+ },
+ "js.14qeew4ffmg": "{n0} dips ({n1} kandidaten, {n2} gemarkeerd) op {n3} ster, één plaat per ster, uit run tess-hd-{n4}-s4. Elke dip die de controle doorstond is een kandidaat, onbevestigd, en is als zodanig gelabeld; een afgewezen of gemarkeerde dip wordt alleen bij zijn status genoemd. Elk getal is een opgeslagen waarde.",
+ "@js.14qeew4ffmg": {
+  "x-review": "machine",
+  "x-source": "7a55f009d2"
+ },
+ "js.14u5un2et8e": "Ook bekend als HD {n0}.",
+ "@js.14u5un2et8e": {
+  "x-review": "machine",
+  "x-source": "f05f9470d5"
+ },
+ "js.14w6epkeaqf": "<a href=\"/stars/wasp-39/\">{s0}</a> · Transit · ontdekt {n0} · Gasreus",
+ "@js.14w6epkeaqf": {
+  "x-review": "machine",
+  "x-source": "978d10ffe5"
+ },
+ "js.14xkvt57e7j": "gebogen, binding {n0} Å, hoek {n1}° (CCCBDB)",
+ "@js.14xkvt57e7j": {
+  "x-review": "machine",
+  "x-source": "c727b854a0"
+ },
+ "js.14xq4uzajy2": "Timing",
+ "@js.14xq4uzajy2": {
+  "x-review": "machine",
+  "x-source": "fc4e84255a"
+ },
+ "js.14zcq6wvmrz": "Duur",
+ "@js.14zcq6wvmrz": {
+  "x-review": "machine",
+  "x-source": "4fc52a3c4c"
+ },
+ "js.15029saw3yd": "Waarom het ertoe doet",
+ "@js.15029saw3yd": {
+  "x-review": "machine",
+  "x-source": "b8bda68d85"
+ },
+ "js.15077kteiae": "Overeenstemming van het panel",
+ "@js.15077kteiae": {
+  "x-review": "machine",
+  "x-source": "5cb749bb4d"
+ },
+ "js.150fkxwcw3i": "Artistieke impressie · reus, instraling niet berekenbaar · Geen straal opgeslagen; minimale massa (m sin i) {n0} M⊕ (exoplanet.eu) is minstens {n1} M⊕, dus wordt hij getekend als gasreus. Straal niet gemeten: niet op schaal. Instraling niet berekenbaar: neutrale kleuren. Samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n2}-{n3}-{n4}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.150fkxwcw3i": {
+  "x-review": "machine",
+  "x-source": "77c3480345"
+ },
+ "js.15449mk04f6": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">5g. <span class=\"mono\">tess-bc9f59e5c3af-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Aangeduid door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.15449mk04f6": {
+  "x-review": "machine",
+  "x-source": "430ac7726a"
+ },
+ "js.154c84epqox": "<a href=\"/stars/k2-58/\">{s0}</a> · Transit · ontdekt {n0} · Sub-Neptunus",
+ "@js.154c84epqox": {
+  "x-review": "machine",
+  "x-source": "410274600f"
+ },
+ "js.155cuapz8x": "<a href=\"/stars/wasp-121/\">{s0}</a> · Transit · ontdekt {n0} · Gasreus",
+ "@js.155cuapz8x": {
+  "x-review": "machine",
+  "x-source": "c91b19e7ce"
+ },
+ "js.156xynonzor": "Probe",
+ "@js.156xynonzor": {
+  "x-review": "machine",
+  "x-source": "3bd51ab9c1"
+ },
+ "js.157pbw74lpa": "De contrastladder",
+ "@js.157pbw74lpa": {
+  "x-review": "machine",
+  "x-source": "7aded88b71"
+ },
+ "js.157zot03q6v": "Ook bekend als 2MASS J19424645+{n0}, KIC {n1}, KOI-{n2}, WISE J194246.44+{n3}.",
+ "@js.157zot03q6v": {
+  "x-review": "machine",
+  "x-source": "a14baca212"
+ },
+ "js.158ymafba4p": "{n0} · Controle",
+ "@js.158ymafba4p": {
+  "x-review": "machine",
+  "x-source": "c05be0b8d8"
+ },
+ "js.15btd8x8qps": "Elke familie hieronder wordt getekend als vier vlakken van één optische keten. De intensiteiten zijn berekend, niet geschilderd: Fraunhofer-optica van een ideale, monochromatische telescoop met een vrije cirkelvormige pupil, weergegeven op een logaritmische schaal van de piek van de ster tot een miljoenste. De masker- en diafragmagroottes, de apodiser en de helderheid van de planeten zijn illustratief en dat staat er ook bij.",
+ "@js.15btd8x8qps": {
+  "x-review": "machine",
+  "x-source": "14dc7cd464"
+ },
+ "js.15dcwc5ip85": "Alleen getekend uit opgeslagen waarden (exoplanet.eu). Niet opgeslagen: planeetstraal, omlooptijd, inclinatie; die delen zijn illustratief en dat staat op de tekening. Periode niet opgeslagen: de tijdas is illustratief.",
+ "@js.15dcwc5ip85": {
+  "x-review": "machine",
+  "x-source": "34398ac6d6"
+ },
+ "js.15h6ev7ggyb": "Zoals natrium; geen biosignatuur.",
+ "@js.15h6ev7ggyb": {
+  "x-review": "machine",
+  "x-source": "c38a1dc96b"
+ },
+ "js.15lo4xvieza": "Lichtcurve van onderwerp tess-fa3483ce6f83, scrolt zijwaarts op een smal scherm",
+ "@js.15lo4xvieza": {
+  "x-review": "machine",
+  "x-source": "bce823accd"
+ },
+ "js.15mpwgb6bsx": "i · volledig onderwerp tess-f28323a4aef6",
+ "@js.15mpwgb6bsx": {
+  "x-review": "machine",
+  "x-source": "bdd63a7999"
+ },
+ "js.15n2en39e6y": "Ruis per punt",
+ "@js.15n2en39e6y": {
+  "x-review": "machine",
+  "x-source": "377716fef1"
+ },
+ "js.15o0h98op9s": "Probe, deterministisch matched filter · <span class=\"mono\">volunteer-typical</span>",
+ "@js.15o0h98op9s": {
+  "x-review": "machine",
+  "x-source": "f3ffa16719"
+ },
+ "js.15o2q5hj1rd": "TOI-{n0}, dip {n1}",
+ "@js.15o2q5hj1rd": {
+  "x-review": "machine",
+  "x-source": "dd7d34d846"
+ },
+ "js.15r06e4vt70": "Run tess-hd-{n0}-s4 · {n1} dips ({n2} kandidaten, {n3} gemarkeerd) · {n4} onderwerpen.<span class=\"printonly\"> Elke kandidaat op deze plaat: kandidaat, onbevestigd.</span>",
+ "@js.15r06e4vt70": {
+  "x-review": "machine",
+  "x-source": "a8db1def47"
+ },
+ "js.15r6jmxd3x9": "Het dossier kon in deze weergave niet worden geladen. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-fa3483ce6f83-002\">Open het op een eigen pagina.</a>",
+ "@js.15r6jmxd3x9": {
+  "x-review": "machine",
+  "x-source": "fffbb62f1b"
+ },
+ "js.15rhin1ckwt": "Feed-telling omlaag verplaatsen",
+ "@js.15rhin1ckwt": {
+  "x-review": "machine",
+  "x-source": "1a2b73ffe0"
+ },
+ "js.15vez7zpk4h": "<b>ν₁ symmetrische strekvibratie</b> · infraroodstil (de dipool verandert niet) · geen golflengte in de atlas",
+ "@js.15vez7zpk4h": {
+  "x-review": "machine",
+  "x-source": "d4a367de3f"
+ },
+ "js.15zsmt411w4": "Sentinel · Scepticus <span class=\"mono idtag\" title=\"reviewer id\">claude-skeptic</span>",
+ "@js.15zsmt411w4": {
+  "x-review": "machine",
+  "x-source": "b732d52e24"
+ },
+ "js.161sousy7g0": "Impactparameter",
+ "@js.161sousy7g0": {
+  "x-review": "machine",
+  "x-source": "c30e761341"
+ },
+ "js.162eejl2jaq": "Deze dip tot nu toe",
+ "@js.162eejl2jaq": {
+  "x-review": "machine",
+  "x-source": "1c3dab36c4"
+ },
+ "js.164h8pg3w0r": "Ook bekend als 2MASS J19122295+{n0}, KIC {n1}, KOI-{n2}, WISE J191222.94+{n3}.",
+ "@js.164h8pg3w0r": {
+  "x-review": "machine",
+  "x-source": "911be9563f"
+ },
+ "js.164ub0m2i7g": "Markeringen en gewichten",
+ "@js.164ub0m2i7g": {
+  "x-review": "machine",
+  "x-source": "5e7a720d9d"
+ },
+ "js.165pvzxric8": "Kalibratiepercentages en gewichten per beoordelaar, zoals opgeslagen",
+ "@js.165pvzxric8": {
+  "x-review": "machine",
+  "x-source": "77ca9fa5ec"
+ },
+ "js.165wjv66ueq": "Feed-telling omhoog verplaatsen",
+ "@js.165wjv66ueq": {
+  "x-review": "machine",
+  "x-source": "2dec8e4f9d"
+ },
+ "js.1691ifphm2a": "Hoe een planeet zich verbergt in de ruis",
+ "@js.1691ifphm2a": {
+  "x-review": "machine",
+  "x-source": "79677ced9c"
+ },
+ "js.16apmio9n0e": "labels",
+ "@js.16apmio9n0e": {
+  "x-review": "machine",
+  "x-source": "d772ebb459"
+ },
+ "js.16fzz8vy4ta": "Methoden: geschiedenis en artikelen ›",
+ "@js.16fzz8vy4ta": {
+  "x-review": "machine",
+  "x-source": "3b661f9791"
+ },
+ "js.16hqbj09o4u": "veldlijnen, kegel en baan niet op schaal; uitbarstingstijden illustratief; afsnijding berekend",
+ "@js.16hqbj09o4u": {
+  "x-review": "machine",
+  "x-source": "80b95dfe9e"
+ },
+ "js.16m4sg77cr5": "{n0}% van het panel",
+ "@js.16m4sg77cr5": {
+  "x-review": "machine",
+  "x-source": "94ace6194c"
+ },
+ "js.16mxiyd8s0l": "onderwerpen",
+ "@js.16mxiyd8s0l": {
+  "x-review": "machine",
+  "x-source": "e223d8ec1e"
+ },
+ "js.16qlwwljm69": "<b>Pro Sweeps</b> <span class=\"eddev\">in ontwikkeling</span>: gehoste zoektochten over sectoren of doellijsten, met de eigen AI-providersleutel van de klant; resultaten komen terug als open bijdragebundels",
+ "@js.16qlwwljm69": {
+  "x-review": "machine",
+  "x-source": "31d3ac206f"
+ },
+ "js.16r0kn8gjyr": "De survey die SetuHQ leest.",
+ "@js.16r0kn8gjyr": {
+  "x-review": "machine",
+  "x-source": "63888948bd"
+ },
+ "js.16s5n6dngtb": "Geen detectiemethode voor exoplaneten",
+ "@js.16s5n6dngtb": {
+  "x-review": "machine",
+  "x-source": "6dc0ba52e8"
+ },
+ "js.16vlf4urwgi": "diep in de Zon [calc]",
+ "@js.16vlf4urwgi": {
+  "x-review": "machine",
+  "x-source": "b7b7f73a1e"
+ },
+ "js.16vo26f9hfu": "Zelfde invoer als pycheops: bij elk referentiebezoek komt onze decorrelatie tot op &lt; {n0} ppm rms overeen met die van pycheops, of bereikt een lagere rms op dezelfde punten en termen (versoepeld na v1)",
+ "@js.16vo26f9hfu": {
+  "x-review": "machine",
+  "x-source": "c88247e554"
+ },
+ "js.16x61d2zia4": "<span class=\"word s-rej\">afgewezen bij controle</span><b class=\"fig\">1d. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-01e315ee5ebf-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Aangeduid door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Ligt op een BLS-periode van {n15} dagen (t0 BTJD {n16}). Afgewezen bij controle (secundaire eclips, secundaire bij willekeurige fase). Archief: geen archiefplaneet binnen de tolerantie. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.16x61d2zia4": {
+  "x-review": "machine",
+  "x-source": "bfa29a1b01"
+ },
+ "js.16xd4uxov7b": "De planeten: periode, baan en dipdiepte",
+ "@js.16xd4uxov7b": {
+  "x-review": "machine",
+  "x-source": "6e2db4884e"
+ },
+ "js.16xkma5n6o5": "De controles bepalen of er gerangschikt wordt en tellen niet mee in J: alleen achtergehouden inzendingen met beide controlelijsten voor elke doorzochte ster worden gerangschikt, andere worden zonder rangschikking vermeld. De controlelijsten zijn het eigen rapport van de methode; het klassement kan ze zonder de lichtcurves niet herberekenen. De Sentinel-deelsteekproef wordt nooit gerangschikt.",
+ "@js.16xkma5n6o5": {
+  "x-review": "machine",
+  "x-source": "698a7fa611"
+ },
+ "js.16yau0dec1n": "Overal gevormd door gewone chemie en uitgassing. Geen biosignatuur.",
+ "@js.16yau0dec1n": {
+  "x-review": "machine",
+  "x-source": "4e8ee5db6c"
+ },
+ "js.16ydi2hl3i6": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">5h. <span class=\"mono\">tess-bc9f59e5c3af-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Aangeduid door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.16ydi2hl3i6": {
+  "x-review": "machine",
+  "x-source": "563fac9b3a"
+ },
+ "js.16z01ldqc0f": "gemiddelde timingverschuiving (min)",
+ "@js.16z01ldqc0f": {
+  "x-review": "machine",
+  "x-source": "7fe6294588"
+ },
+ "js.17013cyv2mu": "Run",
+ "@js.17013cyv2mu": {
+  "x-review": "machine",
+  "x-source": "00d60e31a4"
+ },
+ "js.170ttkobv": "<b>Illustratie.</b> Legt een idee uit; geen data.",
+ "@js.170ttkobv": {
+  "x-review": "machine",
+  "x-source": "f84dea2704"
+ },
+ "js.1752ocxoxow": "verhouding",
+ "@js.1752ocxoxow": {
+  "x-review": "machine",
+  "x-source": "2f04a79ef1"
+ },
+ "js.175a50uaz7u": "Wyman, Sloan &amp; Shirley {n0}, JCGT {n1}({n2}) (CIE-fit)",
+ "@js.175a50uaz7u": {
+  "x-review": "machine",
+  "x-source": "05e19aa7b7"
+ },
+ "js.17hw2mxavcy": "Kans dat een baan zoals die van de Aarde om de Zon een transit geeft",
+ "@js.17hw2mxavcy": {
+  "x-review": "machine",
+  "x-source": "d09fe56728"
+ },
+ "js.17hzhvra9q7": "Microlensingplaneten<small>{n0} planeten · gevonden in de richting van de Galactische bulge,</small><small>waar de meeste achtergrondsterren staan. Afstanden zijn modelafhankelijk.</small>",
+ "@js.17hzhvra9q7": {
+  "x-review": "machine",
+  "x-source": "99ba024e86"
+ },
+ "js.17i2t1362ws": "{n0} planeet in exoplanet.eu · opgeslagen type K4V · klasse K uit Teff (dichtstbijzijnde K0V)",
+ "@js.17i2t1362ws": {
+  "x-review": "machine",
+  "x-source": "77fa76d26a"
+ },
+ "js.17jtxbmmpz4": "Een test waarvoor SetuHQ moet falen om te slagen: TOI-{n0} zit in de fout-positieve set van de echte-TOI-benchmark. De pagina vermeldt wat de vetting ermee deed, wat dat ook was.",
+ "@js.17jtxbmmpz4": {
+  "x-review": "machine",
+  "x-source": "4a850645ed"
+ },
+ "js.17k76okut7k": "Artistieke impressie: het uiterlijk van een warme reus, voor een straal van {n0} R⊕ of meer, Teq {n1} tot {n2} K: witte wolkenbanden. Een stilstaand beeld van het uiterlijk, niet van een bepaalde planeet.",
+ "@js.17k76okut7k": {
+  "x-review": "machine",
+  "x-source": "6486ceb3f7"
+ },
+ "js.17nxghh8cwl": "Elke dip van elke voorbeeldrun, gegroepeerd per ster en genummerd in tijdsvolgorde, met de uitkomst van de vetting. Een dip die de vetting doorstond is een kandidaat, onbevestigd.",
+ "@js.17nxghh8cwl": {
+  "x-review": "machine",
+  "x-source": "8650a99c61"
+ },
+ "js.17pyp2bsko6": "Checklist voor biosignaturen",
+ "@js.17pyp2bsko6": {
+  "x-review": "machine",
+  "x-source": "89f2842c43"
+ },
+ "js.17t0odekp3w": "<a href=\"/stars/psr-b1257-12/\">{s0}</a> · Timing · ontdekt {n0} · Aardegrootte (naar massa)",
+ "@js.17t0odekp3w": {
+  "x-review": "machine",
+  "x-source": "863e56c4ab"
+ },
+ "js.17ucin3gnft": "{n0} planeten in exoplanet.eu · opgeslagen type G0V · klasse G uit Teff (dichtstbijzijnde G0V)",
+ "@js.17ucin3gnft": {
+  "x-review": "machine",
+  "x-source": "d8d4c90601"
+ },
+ "js.17ueog91k3k": "Bron: The Extrasolar Planets Encyclopaedia (exoplanet.eu), opgehaald {n0}-{n1}-{n2}.",
+ "@js.17ueog91k3k": {
+  "x-review": "machine",
+  "x-source": "4a10cd9947"
+ },
+ "js.17wumn3r8ed": "exoplanet.eu vermeldt hem als \"Published in a refereed paper\", gevonden via Primary Transit in {n0}; record bijgewerkt {n1}-{n2}-{n3}. Ook bekend als 2MASS J19021775+{n4} b, K00377.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J190217.77+{n8} b.",
+ "@js.17wumn3r8ed": {
+  "x-review": "machine",
+  "x-source": "ca1a10bec8"
+ },
+ "js.17y75sycukx": "Zarka {n0}, Planet. Space Sci. {n1}, {n2} (plasma-interacties tussen ster en planeet, en radio)",
+ "@js.17y75sycukx": {
+  "x-review": "machine",
+  "x-source": "c2243cf575"
+ },
+ "js.17z3emmt0vh": "F_L (leven; aangenomen), logaritmische schaal",
+ "@js.17z3emmt0vh": {
+  "x-review": "machine",
+  "x-source": "e58b7538c6"
+ },
+ "js.17zrrg9ty47": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">5c. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Aangeduid door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.17zrrg9ty47": {
+  "x-review": "machine",
+  "x-source": "58ad19f12e"
+ },
+ "js.1804ck1q8jq": "Het meest opvallende biosignatuurgas van de Aarde, maar alleen betekenisvol in context.",
+ "@js.1804ck1q8jq": {
+  "x-review": "machine",
+  "x-source": "a2aac83c9e"
+ },
+ "js.182x5hpzt5z": "Met duizenden planeten verschijnen er patronen. Twee ervan: een vallei in de groottes van kleine planeten, en de zone rond elke ster waar vloeibaar water zou kunnen blijven bestaan.",
+ "@js.182x5hpzt5z": {
+  "x-review": "machine",
+  "x-source": "b7312318e0"
+ },
+ "js.184alwhvm3u": "≈ {n0} dagen",
+ "@js.184alwhvm3u": {
+  "x-review": "machine",
+  "x-source": "ed17f1892a"
+ },
+ "js.186279a8u1a": "Volgende dip, BTJD {n0}",
+ "@js.186279a8u1a": {
+  "x-review": "machine",
+  "x-source": "017b7497b3"
+ },
+ "js.186uk0gjjtn": "Diepte",
+ "@js.186uk0gjjtn": {
+  "x-review": "machine",
+  "x-source": "f1dbc33978"
+ },
+ "js.18bbnn751ai": "exoplanet.eu P = {n0} d, m sin i = {n1} MJ, M★ = {n2} M☉, e = {n3} [berekend]",
+ "@js.18bbnn751ai": {
+  "x-review": "machine",
+  "x-source": "957bc25989"
+ },
+ "js.18buo83msat": "Configuratie",
+ "@js.18buo83msat": {
+  "x-review": "machine",
+  "x-source": "87e89abb4c"
+ },
+ "js.18cir4wk13n": "Opgeslagen id tess-d75a97d25377-{n0}; geen dossier in deze run",
+ "@js.18cir4wk13n": {
+  "x-review": "machine",
+  "x-source": "794d8777f1"
+ },
+ "js.18g48o42k8c": "id tic29257288-s1-var-{n0}<br>lichtcurve sha256 b44e4d280fddc0d2705f6687997736ebf67f9b0544e9711f880a21ebaa0bda05<br>code … · config a9d34c7079563183…<br>bron sector_0001.json.gz",
+ "@js.18g48o42k8c": {
+  "x-review": "machine",
+  "x-source": "cf58d4466d"
+ },
+ "js.18ll108aus0": "Er is geen zoekcatalogus aan deze build meegegeven.",
+ "@js.18ll108aus0": {
+  "x-review": "machine",
+  "x-source": "dece0e17ca"
+ },
+ "js.18n6es5ok3o": "markeringen (BTJD)",
+ "@js.18n6es5ok3o": {
+  "x-review": "machine",
+  "x-source": "f1956f0e9b"
+ },
+ "js.18ngchw0dhp": "<span class=\"word cand\">kandidaat</span><span class=\"word s-pass\">vetting doorstaan</span><b class=\"fig\">1d. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-4b369d3c6f09-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Aangeduid door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Ligt op een BLS-periode van {n15} dagen (t0 BTJD {n16}). Vetting doorstaan. Archief: consistent met TOI-{n17} c: ΔP {n18}%, verschuiving tot dichtstbijzijnde epoch {n19} min. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.18ngchw0dhp": {
+  "x-review": "machine",
+  "x-source": "4d904c05c7"
+ },
+ "js.18nqpcbusjm": "Planeet ×{n0}",
+ "@js.18nqpcbusjm": {
+  "x-review": "machine",
+  "x-source": "371fd89b31"
+ },
+ "js.18nzf06r1nk": "Pineda &amp; Villadsen {n0}, Nature Astronomy {n1}, {n2} (YZ Ceti)",
+ "@js.18nzf06r1nk": {
+  "x-review": "machine",
+  "x-source": "9ca7ead3fe"
+ },
+ "js.18o5x6sbdjj": "<b>{n0}</b> van de {n1} planeten met een opgeslagen afstand in exoplanet.eu zijn gevonden met microlensing (de eerste vermelde methode). <a href=\"/explore/galaxy/?method=microlensing\">Toon ze op de Melkwegkaart ›</a>",
+ "@js.18o5x6sbdjj": {
+  "x-review": "machine",
+  "x-source": "75b3704ae2"
+ },
+ "js.18oql4qf149": "verhouding (vrij / Huang)",
+ "@js.18oql4qf149": {
+  "x-review": "machine",
+  "x-source": "a32de90fca"
+ },
+ "js.18qifo210uh": "SetuHQ observeert niet in radio. De scène is een illustratie: veldlijnen, kegel en baan zijn niet op schaal, en de uitbarstingstijden zijn illustratief; alleen de afsnijfrequentie is berekend.",
+ "@js.18qifo210uh": {
+  "x-review": "machine",
+  "x-source": "2ec4bf3e03"
+ },
+ "js.18t9j6otbbt": "<a href=\"/stars/yz-cet/\">{s0}</a> · Radiële snelheid · ontdekt {n0} · Aardegrootte (naar massa)",
+ "@js.18t9j6otbbt": {
+  "x-review": "machine",
+  "x-source": "4acdd743d4"
+ },
+ "js.18tpci2jt91": "Overzicht",
+ "@js.18tpci2jt91": {
+  "x-review": "machine",
+  "x-source": "d4b1ea5708"
+ },
+ "js.18vd14rlm3a": "De opgeslagen lichtcurve van pi Men uit de run (TIC {n0}); streepjes markeren de dips.",
+ "@js.18vd14rlm3a": {
+  "x-review": "machine",
+  "x-source": "533655933b"
+ },
+ "js.18vmif5abb8": "Ook bekend als 2MASS J19371813+{n0}, KIC {n1}, KOI-{n2}, WISE J193718.14+{n3}.",
+ "@js.18vmif5abb8": {
+  "x-review": "machine",
+  "x-source": "e4b88edacd"
+ },
+ "js.18zokluh5yi": "tweeatomig, binding {n0} Å (CCCBDB)",
+ "@js.18zokluh5yi": {
+  "x-review": "machine",
+  "x-source": "b42f59139f"
+ },
+ "js.19105wxgncn": "sector {n0} · variabiliteit",
+ "@js.19105wxgncn": {
+  "x-review": "machine",
+  "x-source": "3a24d82644"
+ },
+ "js.191mx0teicl": "De conservatieve leefbare zone van pi Men",
+ "@js.191mx0teicl": {
+  "x-review": "machine",
+  "x-source": "f34ec70006"
+ },
+ "js.194y1fl67w": "<b class=\"flabel\">Plaat {n0}, paneel i.</b> De kandidaten van de catalogus voor TIC {n1} naar middentijd; de hoogte van een streepje is log SNR, kleur en woord geven de status.",
+ "@js.194y1fl67w": {
+  "x-review": "machine",
+  "x-source": "c11a942411"
+ },
+ "js.197t86p2mo2": "feed · periode komt overeen met een bekende TOI · P {n0} d · {n1} transits",
+ "@js.197t86p2mo2": {
+  "x-review": "machine",
+  "x-source": "d0e0fa5fee"
+ },
+ "js.199k9vutkk7": "{n0} dips ({n1} kandidaten, {n2} gemarkeerd, {n3} afgewezen)",
+ "@js.199k9vutkk7": {
+  "x-review": "machine",
+  "x-source": "14d5771087"
+ },
+ "js.19egy1xdd4z": "Een molecuul met N atomen heeft 3N − {n0} manieren om te trillen (3N − {n1} als het recht is): water heeft er drie, koolstofdioxide vier (zijn buiging komt twee keer voor, loodrecht op elkaar), methaan negen. Een modus absorbeert alleen infraroodlicht als hij het dipoolmoment van het molecuul verandert. Daarom zijn de symmetrische strekking van CO₂ ({n2} µm), de strekking van O₂ en twee van de vier fundamentele trillingen van methaan stil in het infrarood. De banden die de modi maken zijn de banden die het hoofdstuk {s0} aangeeft: de twee strekkingen van water bij {n3} en {n4} µm vormen zijn band bij {n5} µm, de ν₃ van methaan de band bij {n6} µm, de asymmetrische strekking van CO₂ de band bij {n7} µm, en de strekking van CO de band bij {n8} µm.",
+ "@js.19egy1xdd4z": {
+  "x-review": "machine",
+  "x-source": "34a40a6e3c"
+ },
+ "js.19gww8mixuh": "Hoe astrometrie werkt ›",
+ "@js.19gww8mixuh": {
+  "x-review": "machine",
+  "x-source": "46fd45b4dd"
+ },
+ "js.19jw454pxfj": "{n0} R☉ van het middelpunt van de Zon",
+ "@js.19jw454pxfj": {
+  "x-review": "machine",
+  "x-source": "06c30ededa"
+ },
+ "js.19lxxxxy9yw": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">2f. <span class=\"mono\">tess-fe04f0304e5e-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Aangeduid door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.19lxxxxy9yw": {
+  "x-review": "machine",
+  "x-source": "a0c765ac85"
+ },
+ "js.19qllgkqtm": "tess-f28323a4aef6-{n0} · Open · gemarkeerd voor beoordeling",
+ "@js.19qllgkqtm": {
+  "x-review": "machine",
+  "x-source": "2da13a412b"
+ },
+ "js.19spj3uo3he": "Toon nog {n0} vermeldingen voor TIC {n1}",
+ "@js.19spj3uo3he": {
+  "x-review": "machine",
+  "x-source": "1af3aca316"
+ },
+ "js.19ujgi4xfhe": "Overig (TTV, kinematisch, overig) · {n0}",
+ "@js.19ujgi4xfhe": {
+  "x-review": "machine",
+  "x-source": "1e8193aa67"
+ },
+ "js.19w066xbp5l": "Sentinels en Probes",
+ "@js.19w066xbp5l": {
+  "x-review": "machine",
+  "x-source": "bae5575fef"
+ },
+ "js.19xg7e5ysfo": "soort",
+ "@js.19xg7e5ysfo": {
+  "x-review": "machine",
+  "x-source": "0b27c158fe"
+ },
+ "js.19yumxqvwoe": "Ook bekend als 2MASS J19221591+{n0}, KIC {n1}, KOI-{n2}, WISE J192215.91+{n3}.",
+ "@js.19yumxqvwoe": {
+  "x-review": "machine",
+  "x-source": "2ed1f72947"
+ },
+ "js.19z1fsf6hyp": "{s0} in de rij",
+ "@js.19z1fsf6hyp": {
+  "x-review": "machine",
+  "x-source": "a3ece7ffee"
+ },
+ "js.1a0jkgccgzm": "Thema: donker",
+ "@js.1a0jkgccgzm": {
+  "x-review": "machine",
+  "x-source": "43908c5954"
+ },
+ "js.1a0xg5ig5jy": "ρ★ (g/cm³), {n0}σ-bereik",
+ "@js.1a0xg5ig5jy": {
+  "x-review": "machine",
+  "x-source": "08f49c79f1"
+ },
+ "js.1a1x00ubccj": "Bron: exoplanet.eu, opgehaald {n0}-{n1}-{n2}.",
+ "@js.1a1x00ubccj": {
+  "x-review": "machine",
+  "x-source": "24674580c7"
+ },
+ "js.1a3s98hj2an": "Run tess-pi-men-s1 (runs/tess-pi-men-s1), aangemaakt {n0}-{n1}-21T11:{n2}+{n3}, config sha256 585955d5e7a1d141…",
+ "@js.1a3s98hj2an": {
+  "x-review": "machine",
+  "x-source": "155c8d4119"
+ },
+ "js.1a47zlrm6jr": "TIC {n0} in zijn zwartlichaamskleur: {n1} K, {n2} R☉ (TESS Input Catalog v8.2 (MAST), de stellar.json van de run).",
+ "@js.1a47zlrm6jr": {
+  "x-review": "machine",
+  "x-source": "7cb381fdb4"
+ },
+ "js.1a6l9fjw5he": "Planeet: artistieke impressie ›",
+ "@js.1a6l9fjw5he": {
+  "x-review": "machine",
+  "x-source": "ee9b82ba9c"
+ },
+ "js.1a72u2erms1": "Lichtcurve van onderwerp tess-01e315ee5ebf, scrollt zijwaarts op een smal scherm",
+ "@js.1a72u2erms1": {
+  "x-review": "machine",
+  "x-source": "6e32429b69"
+ },
+ "js.1a7sj6vr9v2": "{n0} planeten in exoplanet.eu · opgeslagen type M2.5 V · klasse M uit Teff (dichtstbijzijnde M2V)",
+ "@js.1a7sj6vr9v2": {
+  "x-review": "machine",
+  "x-source": "24770ea8b7"
+ },
+ "js.1a879cvh3h3": "tess-997691b39aab",
+ "@js.1a879cvh3h3": {
+  "x-review": "machine",
+  "x-source": "1de9bff56a"
+ },
+ "js.1a8u3osmmzg": "exoplanet.eu vermeldt hem als \"Published in a refereed paper\", gevonden via Astrometry in {n0}; record bijgewerkt {n1}-{n2}-{n3}.",
+ "@js.1a8u3osmmzg": {
+  "x-review": "machine",
+  "x-source": "3b84b2c329"
+ },
+ "js.1ab7311cwb9": "Lichtcurve van subject tess-08a8c4eac6ff, scrolt zijwaarts op een smal scherm",
+ "@js.1ab7311cwb9": {
+  "x-review": "machine",
+  "x-source": "87a040aae7"
+ },
+ "js.1adhjzphkzz": "Deze browser heeft WebGL niet gestart, dus de 3D-kaart kan niet worden getekend. De tabel hieronder toont de dichtstbijzijnde systemen, en de CSV bevat elke weergegeven planeet.",
+ "@js.1adhjzphkzz": {
+  "x-review": "machine",
+  "x-source": "f128fd309f"
+ },
+ "js.1ae0amb86mk": "Bovengrens uit het opgeslagen bereik ({n0} tot deze waarde)",
+ "@js.1ae0amb86mk": {
+  "x-review": "machine",
+  "x-source": "fe3541b2cc"
+ },
+ "js.1agowlrjh8e": "Vettingvlaggen: <span class=\"mono\">odd_even_mismatch, secondary_eclipse</span> · vetting niet doorstaan",
+ "@js.1agowlrjh8e": {
+  "x-review": "machine",
+  "x-source": "0d7fa6d38f"
+ },
+ "js.1ajuoro6znp": "Aangemaakt",
+ "@js.1ajuoro6znp": {
+  "x-review": "machine",
+  "x-source": "d70b9e24bc"
+ },
+ "js.1al74ewy2g6": "periode —",
+ "@js.1al74ewy2g6": {
+  "x-review": "machine",
+  "x-source": "df55237fb1"
+ },
+ "js.1aqv49cd0kk": "gemarkeerd",
+ "@js.1aqv49cd0kk": {
+  "x-review": "machine",
+  "x-source": "5588be887f"
+ },
+ "js.1arodmjetn1": "Artistieke impressie · reus, koud · Geen straal opgeslagen; massa {n0} M⊕ (exoplanet.eu) is ten minste {n1} M⊕, dus wordt hij getekend als gasreus. Straal niet gemeten: niet op schaal. Teq {n2} K, berekend uit a, R★ en Teff, valt in de koude band. De samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.1arodmjetn1": {
+  "x-review": "machine",
+  "x-source": "04939862bf"
+ },
+ "js.1at399l872n": "{n0} uit M★, R★",
+ "@js.1at399l872n": {
+  "x-review": "machine",
+  "x-source": "05679c2680"
+ },
+ "js.1at3bcj5rrw": "Ook bekend als SDSS J090221.35+{n0}.",
+ "@js.1at3bcj5rrw": {
+  "x-review": "machine",
+  "x-source": "d2970669b9"
+ },
+ "js.1ate4mtuomu": "tess-01e315ee5ebf-{n0}",
+ "@js.1ate4mtuomu": {
+  "x-review": "machine",
+  "x-source": "b9524a7d99"
+ },
+ "js.1aujfbg8g11": "Kepler planet-detection mission: introduction and first results",
+ "@js.1aujfbg8g11": {
+  "x-review": "machine",
+  "x-source": "f735b5ae8d"
+ },
+ "js.1av4875wgq1": "voorspelde epochen binnen het tijdvak",
+ "@js.1av4875wgq1": {
+  "x-review": "machine",
+  "x-source": "531d865f9e"
+ },
+ "js.1aw9c3svutw": "betrouwbaarheid: gemiddeld",
+ "@js.1aw9c3svutw": {
+  "x-review": "machine",
+  "x-source": "bc1665242f"
+ },
+ "js.1awoez19if5": "Cyclotronfrequentie per gauss",
+ "@js.1awoez19if5": {
+  "x-review": "machine",
+  "x-source": "4c70390c3e"
+ },
+ "js.1axsu2x74nv": "Zonder leven?",
+ "@js.1axsu2x74nv": {
+  "x-review": "machine",
+  "x-source": "a319d4e725"
+ },
+ "js.1b2kne916t3": "<b>N–O-strekking, grotendeels</b> · {n0} µm · infraroodactief · getekend ×{n1} · buiten het venster van {n2}–{n3} µm van Atmosferen lezen",
+ "@js.1b2kne916t3": {
+  "x-review": "machine",
+  "x-source": "cf19de57c8"
+ },
+ "js.1b34x5dfa82": "Uitbarstingen van YZ Ceti bij {n0}–{n1} GHz",
+ "@js.1b34x5dfa82": {
+  "x-review": "machine",
+  "x-source": "a474a99642"
+ },
+ "js.1b3i7rfnhhz": "Dossier geopend voor dip tess-997691b39aab-{n0}.",
+ "@js.1b3i7rfnhhz": {
+  "x-review": "machine",
+  "x-source": "62a4183e00"
+ },
+ "js.1b73k3sepja": "Geselecteerd systeem",
+ "@js.1b73k3sepja": {
+  "x-review": "machine",
+  "x-source": "31f8eb106c"
+ },
+ "js.1b76ybi1v9r": "volunteer-typical",
+ "@js.1b76ybi1v9r": {
+  "x-review": "machine",
+  "x-source": "062861dc0e"
+ },
+ "js.1b82oqcf3l4": "Gegenereerd door SetuHQ. Code: AGPL-{n0}-only of een commerciële licentie van Ashforde OÜ; resultaten: CC BY {n1}. Resultaten op synthetische data zijn geen uitspraken over echte hemeldata.",
+ "@js.1b82oqcf3l4": {
+  "x-review": "machine",
+  "x-source": "6cc5558eec"
+ },
+ "js.1b82w4tf319": "Beeldvorming",
+ "@js.1b82w4tf319": {
+  "x-review": "machine",
+  "x-source": "60afdf5ecd"
+ },
+ "js.1bb10h57ym0": "volunteer-cautious, volunteer-sensitive, volunteer-typical",
+ "@js.1bb10h57ym0": {
+  "x-review": "machine",
+  "x-source": "bbfb7e473a"
+ },
+ "js.1bcz8vf2atn": "NH₃ <span>Ammoniak</span>",
+ "@js.1bcz8vf2atn": {
+  "x-review": "machine",
+  "x-source": "b95331b71d"
+ },
+ "js.1bd8hq4aw10": "Uitsluitend getekend op basis van opgeslagen waarden (exoplanet.eu). Niet opgeslagen: temperatuur van de ster, straal van de ster, straal van de planeet; die delen zijn illustratief en dat staat op de tekening vermeld. Kleur van de ster: die van de Zon, omdat de temperatuur niet is opgeslagen.",
+ "@js.1bd8hq4aw10": {
+  "x-review": "machine",
+  "x-source": "ef9ba92b03"
+ },
+ "js.1bg2y0ddi5p": "Aardgrootte (op basis van massa; geen straal opgeslagen)",
+ "@js.1bg2y0ddi5p": {
+  "x-review": "machine",
+  "x-source": "fd3cd0cdd5"
+ },
+ "js.1bggldp1zvq": "Artistieke impressie · reus, koud · Straal {n0} R⊕ (exoplanet.eu) is ten minste {n1} R⊕, dus wordt hij getekend als gasreus. Teq {n2} K, berekend uit a, R★ en Teff, valt in de koude band. De samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.1bggldp1zvq": {
+  "x-review": "machine",
+  "x-source": "c9a6bca81c"
+ },
+ "js.1bhkarus91o": "<b>ν-strekking</b> · {n0} µm · infraroodactief · getekend ×{n1} · <a href=\"/how-it-works/atmospheres/\">de band van {n2} µm in {s0} ›</a>",
+ "@js.1bhkarus91o": {
+  "x-review": "machine",
+  "x-source": "d76ad8b3b9"
+ },
+ "js.1bj34kz5aki": "Runrapport: HD {n0}",
+ "@js.1bj34kz5aki": {
+  "x-review": "machine",
+  "x-source": "b228d75e2a"
+ },
+ "js.1bjq8032x70": "a uit The Extrasolar Planets Encyclopaedia (exoplanet.eu); * uit de derde wet van Kepler (periode en massa van de ster). — : straal niet opgeslagen.",
+ "@js.1bjq8032x70": {
+  "x-review": "machine",
+  "x-source": "b4029dd3f4"
+ },
+ "js.1bl4r02a6zm": "diepte (ppm)¹",
+ "@js.1bl4r02a6zm": {
+  "x-review": "machine",
+  "x-source": "46de5dcf6c"
+ },
+ "js.1bmj916s3wv": "{n0} doelen · {n1} nieuw · {n2} bekend · {n3} fouten",
+ "@js.1bmj916s3wv": {
+  "x-review": "machine",
+  "x-source": "1349fbc62d"
+ },
+ "js.1bmrnmh35mi": "Recente runs verbergen",
+ "@js.1bmrnmh35mi": {
+  "x-review": "machine",
+  "x-source": "8ed056d8cf"
+ },
+ "js.1bnij80mme9": "{n0} · Inlezen",
+ "@js.1bnij80mme9": {
+  "x-review": "machine",
+  "x-source": "313437365e"
+ },
+ "js.1btem8lbl34": "{n0}% van de trekkingen tussen {n1}^{n2} en {n3}^{n4} [calc]",
+ "@js.1btem8lbl34": {
+  "x-review": "machine",
+  "x-source": "ae647b9bdc"
+ },
+ "js.1bvs13e31e4": "De curve is een model getekend uit opgeslagen waarden (kleine-planeetbenadering van Mandel &amp; Agol {n0}, cirkelvormige baan), geen waargenomen data. De punten zijn SetuHQ's eigen opgeslagen punten voor zijn belangrijkste dip. De baan is niet op schaal; de helling is zo ingesteld dat de planeet passeert bij de opgeslagen impactparameter.",
+ "@js.1bvs13e31e4": {
+  "x-review": "machine",
+  "x-source": "e8dcd899ad"
+ },
+ "js.1bvy7andjxs": "tess-04b815001aa6",
+ "@js.1bvy7andjxs": {
+  "x-review": "machine",
+  "x-source": "41847b20a1"
+ },
+ "js.1c0ercd7wb1": "Secties",
+ "@js.1c0ercd7wb1": {
+  "x-review": "machine",
+  "x-source": "9bae918add"
+ },
+ "js.1c2gi5t3ppv": "oneven en even transits verschillen in diepte (vet.py); een significante dip bij fase {n0} (vet.py)",
+ "@js.1c2gi5t3ppv": {
+  "x-review": "machine",
+  "x-source": "734f2ee779"
+ },
+ "js.1c43a5mbtcb": "periode komt overeen met een bekende TOI-<span class=\"tag cand\" title=\"candidate, unconfirmed\">kandidaat</span>",
+ "@js.1c43a5mbtcb": {
+  "x-review": "machine",
+  "x-source": "e0828d838c"
+ },
+ "js.1c7794vgcfx": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">4h. <span class=\"mono\">tess-3b0eb3c81ad6-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Gemarkeerd door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1c7794vgcfx": {
+  "x-review": "machine",
+  "x-source": "2c0d9e509e"
+ },
+ "js.1c7ha7v4lg3": "Een transitzoektocht waarbij een panel van onafhankelijke beoordelaars dips markeert in blind gecodeerde lichtcurves, de consensus naar vaardigheid wordt gewogen en elke kandidaat zijn herkomst behoudt. Alleen een dip die de vetting heeft doorstaan is een kandidaat, en een kandidaat is niet bevestigd.",
+ "@js.1c7ha7v4lg3": {
+  "x-review": "machine",
+  "x-source": "a46525e165"
+ },
+ "js.1cdfpz69lxl": "Microlensing",
+ "@js.1cdfpz69lxl": {
+  "x-review": "machine",
+  "x-source": "7713c65bef"
+ },
+ "js.1ce66q4pp1n": "Het dossier kon in deze weergave niet worden geladen. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-fa3483ce6f83-000\">Open het op een eigen pagina.</a>",
+ "@js.1ce66q4pp1n": {
+  "x-review": "machine",
+  "x-source": "4ffcf977f1"
+ },
+ "js.1cef0p0jlfb": "Gevonden door SetuHQ",
+ "@js.1cef0p0jlfb": {
+  "x-review": "machine",
+  "x-source": "f2daf95102"
+ },
+ "js.1cibvcqhi96": "Een transit is één moment in een baan. De rest van de baan bevat ook informatie: wanneer transits plaatsvinden, hoe de planeet gloeit terwijl hij draait, wanneer hij achter zijn ster verdwijnt en welke helft van de draaiende ster hij bedekt.",
+ "@js.1cibvcqhi96": {
+  "x-review": "machine",
+  "x-source": "dcd3b3c030"
+ },
+ "js.1cj5f6isk29": "<b>ν₂-buiging (twee, loodrecht op elkaar)</b> · {n0} µm · infraroodactief · getekend ×{n1} · buiten het venster van {n2}–{n3} µm van {s0}",
+ "@js.1cj5f6isk29": {
+  "x-review": "machine",
+  "x-source": "fffacfe81d"
+ },
+ "js.1ckbr2brf2r": "Opgeslagen id tess-bc9f59e5c3af-{n0}; geen dossier in deze run",
+ "@js.1ckbr2brf2r": {
+  "x-review": "machine",
+  "x-source": "c4598b499c"
+ },
+ "js.1clmexejrlr": "Kleurthema: donker. Overschakelen naar licht",
+ "@js.1clmexejrlr": {
+  "x-review": "machine",
+  "x-source": "8a07e9e968"
+ },
+ "js.1coc893jlc0": "P = {n0} yr, e = {n1}, nominale IAU-massa's [calc]",
+ "@js.1coc893jlc0": {
+  "x-review": "machine",
+  "x-source": "57235966e6"
+ },
+ "js.1cofru2l9k4": "buiten efemeride",
+ "@js.1cofru2l9k4": {
+  "x-review": "machine",
+  "x-source": "e159e923e5"
+ },
+ "js.1cpg6mkanpo": "De tekening is een illustratie: de schalen zijn gekozen om de drie bewegingen apart te tonen, en de schommeling van de planeet is vergroot en gelabeld. Er wordt geen meetprecisie van Gaia vermeld: de onderzoeksatlas van het project bevat geen onderbouwd cijfer per meting voor Gaia DR3, dus wordt er hier geen gegeven.",
+ "@js.1cpg6mkanpo": {
+  "x-review": "machine",
+  "x-source": "c687f7d0c4"
+ },
+ "js.1cu2yjjb0li": "Het dossier kon in deze weergave niet worden geladen. <a id=\"blockedlink\" href=\"/candidates/toi-236/case-file/#tess-01e315ee5ebf-004\">Open het op een eigen pagina.</a>",
+ "@js.1cu2yjjb0li": {
+  "x-review": "machine",
+  "x-source": "dcfa5999dc"
+ },
+ "js.1cx2mlrh2q7": "python",
+ "@js.1cx2mlrh2q7": {
+  "x-review": "machine",
+  "x-source": "11a4a60b51"
+ },
+ "js.1cy89xikthl": "<b>Gemeten op een vermelde benchmark, geen ontdekkingen.</b> {n0} bevestigde of bekende planeten (CP/KP), {n1} fout-positieven en {n2} valse alarmen uit de TOI-tabel (opgehaald {n3}-{n4}-{n5}, seed {n6}), één TOI per ster; de achtergehouden helft wordt getoond. Panel: de drie Probes (deterministische detectoren) met hun bevroren gekalibreerde gewichten; sectorbrede BLS; vetting; fit met randverduistering; de tabel op feedniveau voegt de FAP van de feed toe ({n7} pogingen).",
+ "@js.1cy89xikthl": {
+  "x-review": "machine",
+  "x-source": "2db2bd3746"
+ },
+ "js.1d2fjcit5ne": "Familie",
+ "@js.1d2fjcit5ne": {
+  "x-review": "machine",
+  "x-source": "bd2d677b2e"
+ },
+ "js.1d342irzdqu": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">5a. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Gemarkeerd door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1d342irzdqu": {
+  "x-review": "machine",
+  "x-source": "5d4d2534d3"
+ },
+ "js.1d409xju7mw": "{s0} getekend in zijn zwartlichaamskleur, {n0} K, straal {n1} R☉.",
+ "@js.1d409xju7mw": {
+  "x-review": "machine",
+  "x-source": "204c713d90"
+ },
+ "js.1d4p9lgr47l": "exoplanet.eu vermeldt het als \"Published in a refereed paper\", gevonden via radiële snelheid, astrometrie in {n0}; record bijgewerkt {n1}-{n2}-{n3}.",
+ "@js.1d4p9lgr47l": {
+  "x-review": "machine",
+  "x-source": "812c23934b"
+ },
+ "js.1d5qdd4h59": "De Seager-vergelijking",
+ "@js.1d5qdd4h59": {
+  "x-review": "machine",
+  "x-source": "85664938da"
+ },
+ "js.1d74zx9busa": "id tic92980022-s1-dip-{n0} · subject tess-d4bcaf73fe87<br>lichtcurve sha256 4ce57e9643d6e98f1a9f38fb78a35a1dceec2525ce930d560a11166b0fd995f2<br>code … · config a9d34c7079563183…<br>bron sector_0001.json.gz",
+ "@js.1d74zx9busa": {
+  "x-review": "machine",
+  "x-source": "e22110aea8"
+ },
+ "js.1d7jo8w3ppc": "Grootte van Feedtelling",
+ "@js.1d7jo8w3ppc": {
+  "x-review": "machine",
+  "x-source": "d4fa08ec64"
+ },
+ "js.1db41wmk3hn": "Grootte van Recente runs",
+ "@js.1db41wmk3hn": {
+  "x-review": "machine",
+  "x-source": "6d27900233"
+ },
+ "js.1dbkcqukzan": "<b>{n0} van {n1} beoordelaars</b> markeerden hem: {n2} van {n3} Sentinels, {n4} van {n5} Probes<small class=\"muted\" style=\"display:block;font-size:11px\"><span title=\"reviewer id volunteer-sensitive\">Probe · Gevoelig</span>, <span title=\"reviewer id volunteer-typical\">Probe · Typisch</span>, <span title=\"reviewer id volunteer-cautious\">Probe · Voorzichtig</span>, <span title=\"reviewer id claude-volunteer\">Sentinel · Vrijwilliger</span>, <span title=\"reviewer id claude-skeptic\">Sentinel · Scepticus</span></small>",
+ "@js.1dbkcqukzan": {
+  "x-review": "machine",
+  "x-source": "04a1d0a0c8"
+ },
+ "js.1dcsl4f0wrb": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s0}</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">run tess-pi-men-s1 · {n1} items</span>",
+ "@js.1dcsl4f0wrb": {
+  "x-review": "machine",
+  "x-source": "d3862be740"
+ },
+ "js.1dd353vmae5": "Een planeet ter grootte van de Aarde in de bewoonbare zone van zijn ster.",
+ "@js.1dd353vmae5": {
+  "x-review": "machine",
+  "x-source": "d59ad4e6f2"
+ },
+ "js.1df9e27tbd4": "{n0} geïnjecteerd, {n1} leeg",
+ "@js.1df9e27tbd4": {
+  "x-review": "machine",
+  "x-source": "7fa5c15b5f"
+ },
+ "js.1dgthbrjf29": "{n0} · Beoordelingspanel",
+ "@js.1dgthbrjf29": {
+  "x-review": "machine",
+  "x-source": "f5e443e926"
+ },
+ "js.1dhlcy8pba3": "Ruw manifest",
+ "@js.1dhlcy8pba3": {
+  "x-review": "machine",
+  "x-source": "6d991b32f2"
+ },
+ "js.1dk6abh2nc7": "pi Men, dip {n0}",
+ "@js.1dk6abh2nc7": {
+  "x-review": "machine",
+  "x-source": "1f3e2a57c7"
+ },
+ "js.1dkpy2i7b0u": "WASP-{n0} b · bekende planeet",
+ "@js.1dkpy2i7b0u": {
+  "x-review": "machine",
+  "x-source": "5b106801b0"
+ },
+ "js.1dl1gn0fqgb": "Hoe goed we het kennen",
+ "@js.1dl1gn0fqgb": {
+  "x-review": "machine",
+  "x-source": "52c4a39fb1"
+ },
+ "js.1dmmcbt7p3j": "Straalverhoudingen",
+ "@js.1dmmcbt7p3j": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "js.1dolwz0lg7v": "Een binaire eclips van {n0}%, {n1} keer verdund",
+ "@js.1dolwz0lg7v": {
+  "x-review": "machine",
+  "x-source": "96b82055fc"
+ },
+ "js.1dqxh7u7wiv": "Twee scènes. Poollicht op een planeet: de magnetische veldlijnen van een planeet, met emissie die in een holle kegel vanaf de pool wordt uitgestraald; wanneer de kegel langs de waarnemer strijkt, verschijnt er een uitbarsting in het dynamische spectrum hieronder, tot aan de cyclotronfrequentie die door het veld wordt bepaald. Ster–planeetinteractie: de planeet draait binnen het magnetisch veld van zijn ster, een fluxbuis verbindt hem met de ster en de emissie komt van het voetpunt op de ster. De veldschuif stelt de cyclotronafsnijding in, berekend als {n0} MHz per gauss.",
+ "@js.1dqxh7u7wiv": {
+  "x-review": "machine",
+  "x-source": "36f58b562c"
+ },
+ "js.1dun7yzi7jq": "Barnard's star c",
+ "@js.1dun7yzi7jq": {
+  "x-review": "machine",
+  "x-source": "b246b1abef"
+ },
+ "js.1dyc0ulqh2e": "Winn {n0} vgl. {n1}–{n2} uit a/R★ = {n3}, b = {n4} [calc]; Huang {n5} publiceert {n6} ± {n7} h",
+ "@js.1dyc0ulqh2e": {
+  "x-review": "machine",
+  "x-source": "a2ce1b75e7"
+ },
+ "js.1dz1x8iy86j": "Eerste microlensingplaneet",
+ "@js.1dz1x8iy86j": {
+  "x-review": "machine",
+  "x-source": "b9802e327f"
+ },
+ "js.1dzw0ko7c5h": "Controlevlaggen: <span class=\"mono\">low_snr, odd_even_mismatch</span> · controle niet doorstaan",
+ "@js.1dzw0ko7c5h": {
+  "x-review": "machine",
+  "x-source": "8a0d9e2efe"
+ },
+ "js.1e0thu83q1m": "<b>ν₁ symmetrische strekvibratie</b> · {n0} µm · infraroodinactief (het dipoolmoment verandert niet) · getekend ×{n1} · buiten het venster van {n2}–{n3} µm van {s0}",
+ "@js.1e0thu83q1m": {
+  "x-review": "machine",
+  "x-source": "b5a09a9656"
+ },
+ "js.1e1cj7tvww2": "Probe · Gevoelig <span class=\"sub mono\" title=\"reviewer id\">volunteer-sensitive</span>",
+ "@js.1e1cj7tvww2": {
+  "x-review": "machine",
+  "x-source": "b9b4c27050"
+ },
+ "js.1e4aq4nvmgn": "Labels en motiveringen van beoordelaars",
+ "@js.1e4aq4nvmgn": {
+  "x-review": "machine",
+  "x-source": "5832a081c3"
+ },
+ "js.1e56a73uu7n": "mogelijke planeet",
+ "@js.1e56a73uu7n": {
+  "x-review": "machine",
+  "x-source": "8f67315316"
+ },
+ "js.1e99n2yar5c": "{n0} planeten in exoplanet.eu · opgeslagen type G9/K0V · klasse K uit Teff (dichtstbijzijnde K0V)",
+ "@js.1e99n2yar5c": {
+  "x-review": "machine",
+  "x-source": "5acf5925b9"
+ },
+ "js.1ea3o7os4iv": "De controlevlaggen van SetuHQ, alleen op basis van de lichtcurve: <code>odd_even_mismatch</code> (oneven en even dieptes verschillen), <code>secondary_eclipse</code> (een dip bij fase {n0}), <code>low_snr</code>, <code>too_short</code>, <code>edge_event</code> en <code>insufficient_points</code>. Er is geen centroïde- of verschilbeeldcontrole op pixelniveau en geen statistische validatie, dus een vermengde achtergronddubbelster kan erdoor komen. <a href=\"/evidence/\">Bekijk de beoordelaars ›</a> · <a href=\"/candidates/pi-men/dip-2/\">Bekijk een gecontroleerd geval ›</a>",
+ "@js.1ea3o7os4iv": {
+  "x-review": "machine",
+  "x-source": "9c325d6228"
+ },
+ "js.1eb7589ltee": "Archiefvergelijking: geen archiefplaneet binnen de tolerantie (deze dip heeft geen BLS-periode om te vergelijken); {s0}: geen transitefemeride om te vergelijken. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1eb7589ltee": {
+  "x-review": "machine",
+  "x-source": "1e8af2cf5f"
+ },
+ "js.1ecof5fze2u": "Alle controles doorstaan. Gemarkeerd door {n0} van {n1} Probes en {n2} van {n3} Sentinels. Kandidaat, niet bevestigd.",
+ "@js.1ecof5fze2u": {
+  "x-review": "machine",
+  "x-source": "40aae5e99d"
+ },
+ "js.1eene14vys1": "platform",
+ "@js.1eene14vys1": {
+  "x-review": "machine",
+  "x-source": "d294fcce0c"
+ },
+ "js.1efahsmd18j": "Run tess-wasp-{n0}-s1 (runs/tess-wasp-{n1}-s1), aangemaakt {n2}-{n3}-22T17:{n4}+{n5}, config sha256 23bb51a268efd59e…",
+ "@js.1efahsmd18j": {
+  "x-review": "machine",
+  "x-source": "9013260126"
+ },
+ "js.1eg1hfp0rb9": "Sentinel · Vrijwilliger",
+ "@js.1eg1hfp0rb9": {
+  "x-review": "machine",
+  "x-source": "bcdb9702f4"
+ },
+ "js.1eh5clg574l": "exoplanet.eu vermeldt deze als \"Published in a refereed paper\", gevonden via Primary Transit in {n0}; record bijgewerkt {n1}-{n2}-{n3}. Ook bekend als HD {n4} b, HD {n5} Ab, TOI-{n6} b, TOI-{n7}.",
+ "@js.1eh5clg574l": {
+  "x-review": "machine",
+  "x-source": "dcb89ac8b0"
+ },
+ "js.1einsfs6j8p": "Door SetuHQ gefitte diepte, voornaamste dip",
+ "@js.1einsfs6j8p": {
+  "x-review": "machine",
+  "x-source": "160436a7fc"
+ },
+ "js.1ej6chqj84m": "Grootte van run-figuren",
+ "@js.1ej6chqj84m": {
+  "x-review": "machine",
+  "x-source": "abcf8162d5"
+ },
+ "js.1ellrod4539": "Tijd",
+ "@js.1ellrod4539": {
+  "x-review": "machine",
+  "x-source": "33b93476cf"
+ },
+ "js.1enwsy4nse5": "De dip, afgespeeld",
+ "@js.1enwsy4nse5": {
+  "x-review": "machine",
+  "x-source": "90f1f94ab7"
+ },
+ "js.1eontgorvdh": "exoplanet.eu (The Extrasolar Planets Encyclopaedia (exoplanet.eu), opgehaald {n0}-{n1}-{n2})",
+ "@js.1eontgorvdh": {
+  "x-review": "machine",
+  "x-source": "859ffd0750"
+ },
+ "js.1epnpfakkif": "Waarom aardetweelingen moeilijk zijn",
+ "@js.1epnpfakkif": {
+  "x-review": "machine",
+  "x-source": "fea3832148"
+ },
+ "js.1eqp1j4uar9": "{n0} planeet in exoplanet.eu · opgeslagen type K3V · klasse K uit Teff (dichtstbijzijnde K0V)",
+ "@js.1eqp1j4uar9": {
+  "x-review": "machine",
+  "x-source": "45ef298afc"
+ },
+ "js.1eqtzlgohp1": "Strooilicht: er is geen gelabelde echte steekproef gevonden; de screening (kwaliteitsvlaggen en controle-apertures) is beschreven en getest op synthetische gebeurtenissen en op de controle-apertures van de supernova-uitsneden, niet gevalideerd tegen een catalogus van strooilichtgebeurtenissen.",
+ "@js.1eqtzlgohp1": {
+  "x-review": "machine",
+  "x-source": "cef1f20086"
+ },
+ "js.1etlbcax1sp": "ii · volledig subject tess-4b369d3c6f09",
+ "@js.1etlbcax1sp": {
+  "x-review": "machine",
+  "x-source": "421f241fd1"
+ },
+ "js.1evq7bi5mn5": "Opgeslagen id tess-9ee4d1595a06-{n0}; geen dossier in deze run",
+ "@js.1evq7bi5mn5": {
+  "x-review": "machine",
+  "x-source": "7552522c47"
+ },
+ "js.1evwtutwph4": "Artistieke impressie · reus, ultraheet · Straal {n0} R⊕ (exoplanet.eu) is minstens {n1} R⊕, dus wordt hij getekend als gasreus. Teq {n2} K, berekend uit a, R★ en Teff, valt in de ultrahete band. De samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.1evwtutwph4": {
+  "x-review": "machine",
+  "x-source": "072b52babb"
+ },
+ "js.1exxny8r2d": "{n0} planeet in exoplanet.eu · opgeslagen type K3 V · klasse K uit Teff (dichtstbijzijnde K0V)",
+ "@js.1exxny8r2d": {
+  "x-review": "machine",
+  "x-source": "9353b24794"
+ },
+ "js.1ezjhyo6d8d": "source MAST · author SPOC · sector {n0} · exptime_s {n1} · flux_column pdcsap_flux · time_unit BTJD · lightkurve_version {n2} · file tess2018206045859-s0001-{n3}-{n4}-s_lc.fits · file_sha256 1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609 · target TIC {n5} · mission TESS",
+ "@js.1ezjhyo6d8d": {
+  "x-review": "machine",
+  "x-source": "b7e118d85b"
+ },
+ "js.1ezxmjp2el4": "exoplanet.eu vermeldt deze als \"Published in a refereed paper\", gevonden via Primary Transit in {n0}; record bijgewerkt {n1}-{n2}-{n3}. Ook bekend als K2-{n4} b, TOI-{n5} b, TOI-{n6}.",
+ "@js.1ezxmjp2el4": {
+  "x-review": "machine",
+  "x-source": "57de1033f9"
+ },
+ "js.1f0uxtws1ab": "Wees de beoordelaar",
+ "@js.1f0uxtws1ab": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "js.1f208h2gzzx": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · gemarkeerd voor beoordeling, open",
+ "@js.1f208h2gzzx": {
+  "x-review": "machine",
+  "x-source": "bfe3196ddb"
+ },
+ "js.1f3str9e5jr": "niet op schaal; naar Lyot {n0}",
+ "@js.1f3str9e5jr": {
+  "x-review": "machine",
+  "x-source": "9c52358f50"
+ },
+ "js.1f423dts634": "Inzoomen",
+ "@js.1f423dts634": {
+  "x-review": "machine",
+  "x-source": "0e47f09a74"
+ },
+ "js.1f5jrzkwrow": "Rangschikking: Youden's J op de doorzoekbare set die de benchmark vastlegde (sterren met een SPOC-lichtcurve van {n0} minuten), met één predicaat aan beide kanten, een schone kandidaat (op de efemeride, controle doorstaan, geen vlag voor eclipsende dubbelster): J = het aandeel CP/KP-sterren dat als schone kandidaat wordt aangeboden + het aandeel FP-sterren dat niet wordt aangeboden − {n1}, met een Wilson-interval via kwadrateren en optellen. Elke TOI een planeet noemen, met of zonder vlag, geeft J = {n2}; een doorzoekbare ster die als niet doorzocht wordt aangemerkt, telt als niet aangeboden. J over alle sterren binnen de reikwijdte staat ernaast. Waar intervallen overlappen, is de volgorde geen gemeten verschil.",
+ "@js.1f5jrzkwrow": {
+  "x-review": "machine",
+  "x-source": "5fa0572ae2"
+ },
+ "js.1f71ffjmfo5": "Minimale massa (m sin i)",
+ "@js.1f71ffjmfo5": {
+  "x-review": "machine",
+  "x-source": "0a0c24bec0"
+ },
+ "js.1f7ia1vev8v": "F_S (detecteerbaar gas), logaritmische schaal",
+ "@js.1f7ia1vev8v": {
+  "x-review": "machine",
+  "x-source": "f07bf1e7d9"
+ },
+ "js.1f7jrs7y7q6": "Rotatie",
+ "@js.1f7jrs7y7q6": {
+  "x-review": "machine",
+  "x-source": "b9e96ae52a"
+ },
+ "js.1f84decza55": "Gemaakt door leven op aarde, met weinig abiotische bronnen op dat niveau.",
+ "@js.1f84decza55": {
+  "x-review": "machine",
+  "x-source": "7bb250633d"
+ },
+ "js.1faz9a47wga": "K_R ≈ V sin I · k² met V sin I = {n0} km/s en k = {n1}, beide uit Gaudi &amp; Winn {n2} Tabel {n3}, die {n4} m/s vermeldt [calc]",
+ "@js.1faz9a47wga": {
+  "x-review": "machine",
+  "x-source": "f02094ff34"
+ },
+ "js.1fbm3rzx3x2": "<span class=\"word cand\">kandidaat</span><span class=\"word s-pass\">controle doorstaan</span><b class=\"fig\">1g. WASP-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-291acb98cabe-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Gemarkeerd door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Ligt op een BLS-periode van {n15} dagen (t0 BTJD {n16}). Controle doorstaan. Archief: consistent met WASP-{n17} b: ΔP {n18}%, geen transitefemeride om te vergelijken. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1fbm3rzx3x2": {
+  "x-review": "machine",
+  "x-source": "7e32a4dd21"
+ },
+ "js.1fddifbaybt": "Alleen getekend op basis van opgeslagen waarden (exoplanet.eu). Niet opgeslagen: planeetstraal, halve lange as, inclinatie; die delen zijn illustratief en dat staat op de tekening.",
+ "@js.1fddifbaybt": {
+  "x-review": "machine",
+  "x-source": "c25fee037f"
+ },
+ "js.1fegpc0901l": "id tic139256217-s1-var-{n0}<br>lichtcurve sha256 f11b4e243439bf24ffd3c740162a76f0cdadd8a9160094e3eb2a3487101f6c2c<br>code … · config a9d34c7079563183…<br>bron sector_0001.json.gz",
+ "@js.1fegpc0901l": {
+  "x-review": "machine",
+  "x-source": "4f25b2cf55"
+ },
+ "js.1fkntmdm4qk": "Open de systeemweergave ›",
+ "@js.1fkntmdm4qk": {
+  "x-review": "machine",
+  "x-source": "a10a88d671"
+ },
+ "js.1fkxu404uvq": "Kepler (gelanceerd {n0}) keek vier jaar lang naar één veld.",
+ "@js.1fkxu404uvq": {
+  "x-review": "machine",
+  "x-source": "34b05494d7"
+ },
+ "js.1fn542fm5ad": "Het licht in deze dip verliet de ster ongeveer {n0} jaar geleden (afstand {n1} pc, exoplanet.eu, opgehaald {n2}-{n3}-{n4}).",
+ "@js.1fn542fm5ad": {
+  "x-review": "machine",
+  "x-source": "c6b9a506e0"
+ },
+ "js.1fo0ybrjcxn": "<b>Gegevens: The Extrasolar Planets Encyclopaedia (exoplanet.eu), opgehaald {n0} okt {n1}; {n2} planeten met een opgeslagen afstand, rond {n3} sterren.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. Het NASA Exoplanet Archive was niet bereikbaar toen deze lijst werd opgehaald, dus komt ze alleen van exoplanet.eu. exoplanet.eu vermeldt als bevestigd elk object dat het als planeet behandelt: lichamen tot {n4} Jupitermassa's (binnen hun onzekerheid), gepubliceerd of aangekondigd. Die lijst is ruimer dan die van het NASA Exoplanet Archive, dat objecten tot {n5} Jupitermassa's uit gerefereerde artikelen opneemt. De lijst bevat {n6} items die exoplanet.eu als exokometen aanduidt. {n7} van de {n8} planeten hebben geen opgeslagen afstand en worden niet weergegeven.",
+ "@js.1fo0ybrjcxn": {
+  "x-review": "machine",
+  "x-source": "8798787570"
+ },
+ "js.1fppcyzgola": "<a href=\"/stars/barnard-s-star/\">{s0}</a> · Radiële snelheid · ontdekt {n0} · aardegrootte (naar massa)",
+ "@js.1fppcyzgola": {
+  "x-review": "machine",
+  "x-source": "1bbef93fee"
+ },
+ "js.1frapy57cm7": "Een waarnemer onderaan. Een ster beweegt langs de gezichtslijn naar de waarnemer toe en ervan af, en daarna dwars erop. Daaronder schuift een strook met vijf absorptielijnen naar blauw als de ster nadert en naar rood als ze zich verwijdert, en blijft op haar plaats als ze dwars beweegt. De verschuiving is een miljoen keer overdreven en zo gelabeld.",
+ "@js.1frapy57cm7": {
+  "x-review": "machine",
+  "x-source": "85cd6c7e34"
+ },
+ "js.1fujm79pdmr": "exoplanet.eu vermeldt deze als \"Announced on a website\", gevonden via Primary Transit in {n0}; record bijgewerkt {n1}-{n2}-{n3}. Ook bekend als 2MASS J19135511+{n4} b, K02313.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J191355.11+{n8} b.",
+ "@js.1fujm79pdmr": {
+  "x-review": "machine",
+  "x-source": "7448fb18a7"
+ },
+ "js.1fvwjcy4spf": "Drempels, gewichten en alle invoer worden weggeschreven naar <code>manifest.json</code>, zodat een resultaat exact opnieuw kan worden uitgevoerd.",
+ "@js.1fvwjcy4spf": {
+  "x-review": "machine",
+  "x-source": "7a257f6e1d"
+ },
+ "js.1fw1zwmztcc": "{s0} in zijn zwartlichaamkleur: {n0} K, straal {n1} R☉ (exoplanet.eu, opgehaald {n2}-{n3}-{n4}). Helderheid genormaliseerd; de oppervlaktetextuur is decoratief.",
+ "@js.1fw1zwmztcc": {
+  "x-review": "machine",
+  "x-source": "4ffb9625b0"
+ },
+ "js.1g0smg3jibl": "met de TIC-dichtheidsprior",
+ "@js.1g0smg3jibl": {
+  "x-review": "machine",
+  "x-source": "ee7a7029f9"
+ },
+ "js.1g5lkun156f": "Planeetschijf op schaal uit de diepte: Rp/R* {n0} · baan niet op schaal · geen sterstraal opgeslagen",
+ "@js.1g5lkun156f": {
+  "x-review": "machine",
+  "x-source": "2ab87c5b6b"
+ },
+ "js.1g6tiagn74l": "valse alarmen (FPR)",
+ "@js.1g6tiagn74l": {
+  "x-review": "machine",
+  "x-source": "89253e8c41"
+ },
+ "js.1g7pjuw7ctt": "Sentinel, draait op Claude (Anthropic) · <span class=\"mono\">claude-skeptic</span>",
+ "@js.1g7pjuw7ctt": {
+  "x-review": "machine",
+  "x-source": "60ef876253"
+ },
+ "js.1g84cijrj33": "Artistieke impressie van {s0}: een planeet met een gasomhulsel in de gematigde band, {n0} aardstralen, {n1} K.",
+ "@js.1g84cijrj33": {
+  "x-review": "machine",
+  "x-source": "0e01cd3f7f"
+ },
+ "js.1g9epty6h1c": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">6c. <span class=\"mono\">tess-17eb2b9186b9-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Aangeduid door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1g9epty6h1c": {
+  "x-review": "machine",
+  "x-source": "c06ff37b55"
+ },
+ "js.1gaxihgxb1s": "Jupiter-tweeling {n0} m/s",
+ "@js.1gaxihgxb1s": {
+  "x-review": "machine",
+  "x-source": "de4babe516"
+ },
+ "js.1gfjykpfboh": "DMS op K2-{n0} b: voorlopig, omstreden",
+ "@js.1gfjykpfboh": {
+  "x-review": "machine",
+  "x-source": "f751ff9fd0"
+ },
+ "js.1girgzthypn": "f_p, logaritmische schaal",
+ "@js.1girgzthypn": {
+  "x-review": "machine",
+  "x-source": "9b029cd7b7"
+ },
+ "js.1glb8bx3pmp": "curven tonen vormen, niet op een gemeenschappelijke diepteschaal; pixelraster op schaal",
+ "@js.1glb8bx3pmp": {
+  "x-review": "machine",
+  "x-source": "38e0857f2a"
+ },
+ "js.1gqocj9qj3p": "<a href=\"/stars/toi-700/\">{s0}</a> · Transit · ontdekt {n0} · Aardgrootte",
+ "@js.1gqocj9qj3p": {
+  "x-review": "machine",
+  "x-source": "2de6bdff41"
+ },
+ "js.1gqpivhc7fe": "{n0}–{n1} (C–H-strekvibraties), {n2}–{n3}, ≈{n4}, ≈{n5}",
+ "@js.1gqpivhc7fe": {
+  "x-review": "machine",
+  "x-source": "b7233d7898"
+ },
+ "js.1gsbmq4ww7m": "Runrapport: WASP-{n0}",
+ "@js.1gsbmq4ww7m": {
+  "x-review": "machine",
+  "x-source": "b84e25deb5"
+ },
+ "js.1gt0clt09gj": "Artistieke impressie · reus, koud · Geen straal opgeslagen; massa {n0} M⊕ (exoplanet.eu) is minstens {n1} M⊕, dus wordt hij getekend als gasreus. Straal niet gemeten: niet op schaal. Teq {n2} K, berekend uit de periode, M★, R★ en Teff, valt in de koude band. Samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.1gt0clt09gj": {
+  "x-review": "machine",
+  "x-source": "b259fda840"
+ },
+ "js.1gultxlg0je": "config-hash (sha256)",
+ "@js.1gultxlg0je": {
+  "x-review": "machine",
+  "x-source": "7c6dc9add8"
+ },
+ "js.1gw28sr6vp1": "Runrapport: TOI-{n0}",
+ "@js.1gw28sr6vp1": {
+  "x-review": "machine",
+  "x-source": "897beb3051"
+ },
+ "js.1gyrdyj3c9d": "Het dossier kon in deze weergave niet worden geladen. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-003\">Open het op een eigen pagina.</a>",
+ "@js.1gyrdyj3c9d": {
+  "x-review": "machine",
+  "x-source": "f079dca731"
+ },
+ "js.1h0po5rmoo7": "{n0} dips ({n1} kandidaten) op {n2} ster, één plaat per ster, uit run tess-wasp-{n3}-s1. Elke dip die de vetting doorstond is een kandidaat, onbevestigd, en is als zodanig gelabeld; een afgewezen of gemarkeerde dip wordt alleen bij zijn status genoemd. Elk getal is een opgeslagen waarde.",
+ "@js.1h0po5rmoo7": {
+  "x-review": "machine",
+  "x-source": "5649e537ed"
+ },
+ "js.1h43vbqp0av": "<span class=\"word s-flag\">gemarkeerd voor beoordeling</span><b class=\"fig\">1f. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-4b369d3c6f09-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Aangeduid door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Geen BLS-periode: een enkele dip. Gemarkeerd voor beoordeling (buiten de efemeride van zijn ster). Archief: geen archiefplaneet binnen de tolerantie (deze dip heeft geen BLS-periode om te vergelijken). Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1h43vbqp0av": {
+  "x-review": "machine",
+  "x-source": "193cbe4d6a"
+ },
+ "js.1h44lp33s4c": "De eerste planeet gevonden rond een zonachtige ster.",
+ "@js.1h44lp33s4c": {
+  "x-review": "machine",
+  "x-source": "feb3bd1f81"
+ },
+ "js.1h4xi7q0do8": "Wie het aanduidde",
+ "@js.1h4xi7q0do8": {
+  "x-review": "machine",
+  "x-source": "76e5609bc5"
+ },
+ "js.1h5l7f9fhw8": "Middentijd",
+ "@js.1h5l7f9fhw8": {
+  "x-review": "machine",
+  "x-source": "bc69a9c0d1"
+ },
+ "js.1h6y371d8qq": "Het dossier kon in deze weergave niet worden geladen. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-007\">Open het op een eigen pagina.</a>",
+ "@js.1h6y371d8qq": {
+  "x-review": "machine",
+  "x-source": "ea852a6941"
+ },
+ "js.1h7c5ky138p": "deze run · vetting doorstaan · P {n0} d · {n1} transits",
+ "@js.1h7c5ky138p": {
+  "x-review": "machine",
+  "x-source": "405e92b37a"
+ },
+ "js.1hanjmcicv2": "De deelsteekproef van de Sentinels <span class=\"sub\">{n0} achtergehouden sterren · niet gerangschikt</span>",
+ "@js.1hanjmcicv2": {
+  "x-review": "machine",
+  "x-source": "07839908d1"
+ },
+ "js.1hc8gmjgdot": "TOI-tabel",
+ "@js.1hc8gmjgdot": {
+  "x-review": "machine",
+  "x-source": "69cec4abc6"
+ },
+ "js.1hfl9sordrk": "Model van {s0} die voor pi Men langs trekt ({n0} K, {n1} R☉): diepte {n2} ppm, {n3} h. De planeet is een artistieke impressie.",
+ "@js.1hfl9sordrk": {
+  "x-review": "machine",
+  "x-source": "9f7804c19a"
+ },
+ "js.1hfm3qhujst": "<a href=\"/stars/gj-1214/\">{s0}</a> · Transit · ontdekt {n0} · Sub-Neptunus",
+ "@js.1hfm3qhujst": {
+  "x-review": "machine",
+  "x-source": "ae81036e31"
+ },
+ "js.1hg9mna8pnn": "<b>Waar deze dip ligt op de baan van het leidende signaal.</b><br>Fase {n0} op de opgeslagen BLS-periode van het leidende signaal ({n1} d), t0 {n2}. Op het transitpunt, naar ons toe gericht. De baan is getekend om alleen de fase te tonen; niet op schaal.",
+ "@js.1hg9mna8pnn": {
+  "x-review": "machine",
+  "x-source": "47e407cf4e"
+ },
+ "js.1hgx7iqchnp": "Het dossier kon in deze weergave niet worden geladen. <a id=\"blockedlink\" href=\"/candidates/toi-236/case-file/#tess-01e315ee5ebf-005\">Open het op een eigen pagina.</a>",
+ "@js.1hgx7iqchnp": {
+  "x-review": "machine",
+  "x-source": "eec770a12d"
+ },
+ "js.1hh2d8szzb1": "Gezien door",
+ "@js.1hh2d8szzb1": {
+  "x-review": "machine",
+  "x-source": "7fb44fd2c9"
+ },
+ "js.1ho5fuy8kqi": "{n0} planeten in exoplanet.eu · opgeslagen type K2II · klasse M uit Teff (dichtstbijzijnde M0V)",
+ "@js.1ho5fuy8kqi": {
+  "x-review": "machine",
+  "x-source": "5cb58dc630"
+ },
+ "js.1hoy0myg2tq": "Microlensing · {n0}",
+ "@js.1hoy0myg2tq": {
+  "x-review": "machine",
+  "x-source": "5b7562778d"
+ },
+ "js.1hqdavb0dhz": "Ook bekend als EPIC {n0}, 2MASS J11301450+{n1}, WISE J113014.45+{n2}.",
+ "@js.1hqdavb0dhz": {
+  "x-review": "machine",
+  "x-source": "45cc1ca2f3"
+ },
+ "js.1hqwmvldepk": "Panelscore en oordeel",
+ "@js.1hqwmvldepk": {
+  "x-review": "machine",
+  "x-source": "2c40f96451"
+ },
+ "js.1hrc7wsoaso": "Theoretische transmissiespectra tijdens transits van extrasolaire reuzenplaneten",
+ "@js.1hrc7wsoaso": {
+  "x-review": "machine",
+  "x-source": "d75d99e996"
+ },
+ "js.1hsyugfc111": "{n0} planeten in exoplanet.eu · opgeslagen type M2V · klasse M uit Teff (dichtstbijzijnde M2V)",
+ "@js.1hsyugfc111": {
+  "x-review": "machine",
+  "x-source": "8e2acb56a0"
+ },
+ "js.1htlk5oprkj": "hun priors",
+ "@js.1htlk5oprkj": {
+  "x-review": "machine",
+  "x-source": "ee03efb686"
+ },
+ "js.1hw9pj2cjy7": "{n0} items, gevonden tussen <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1} okt {n2}, {n3} UTC</time> en <time datetime=\"2026-10-27T06:46:11+00:00\" title=\"2026-10-27T06:46:11+00:00\">{n4} okt {n5}, {n6} UTC</time>. <b>{n7} komen overeen met een bekende TOI-periode</b>. Elk item is een kandidaat, onbevestigd. Een TOI-overeenkomst is een archiefvergelijking. Alleen archiefwaarden. Deze pagina claimt geen detectie. Signalen die met geen enkele bekende TOI overeenkomen, worden aangehouden voor besloten beoordeling; ze worden pas na beoordeling en rapportage gepubliceerd.",
+ "@js.1hw9pj2cjy7": {
+  "x-review": "machine",
+  "x-source": "e5e81ce489"
+ },
+ "js.1i0hezn1dvy": "Sentinel · Vrijwilliger: {n0} bereik in dit venster, meegeteld voor deze dip",
+ "@js.1i0hezn1dvy": {
+  "x-review": "machine",
+  "x-source": "c97f6573b3"
+ },
+ "js.1i1bqizwemp": "Elke cel: de ratio, dan k/n en het Wilson-{n0}%-interval, getekend als balk van {n1} tot {n2}% (Youden J van {n3} tot {n4}, met een markering bij {n5}). Gerangschikt op Youdens J op de doorzoekbare set die de benchmark vastlegde, met één predicaat aan beide kanten (een schone kandidaat: op de efemeride, doorstaan, geen vlag voor eclipserende dubbelster), zodat elke TOI een planeet noemen, gemarkeerd of niet, nul scoort. De controles bepalen of er gerangschikt wordt en tellen niet mee in J, en de controlelijsten zijn het eigen rapport van de methode. Waar intervallen overlappen, is de volgorde geen gemeten verschil.",
+ "@js.1i1bqizwemp": {
+  "x-review": "machine",
+  "x-source": "9b6f9451ca"
+ },
+ "js.1i1fwe1y4dt": "Ozon",
+ "@js.1i1fwe1y4dt": {
+  "x-review": "machine",
+  "x-source": "f557968410"
+ },
+ "js.1i5lkrdcbq9": "Geen gegevens. Elke waarde is een mening.",
+ "@js.1i5lkrdcbq9": {
+  "x-review": "machine",
+  "x-source": "6dae7ec62b"
+ },
+ "js.1i6ejfrb6yd": "Ook bekend als KMT-{n0}-BLG-{n1}.",
+ "@js.1i6ejfrb6yd": {
+  "x-review": "machine",
+  "x-source": "369d3806ba"
+ },
+ "js.1i7kffol3t7": "“Drie vergelijkbare dips van ongeveer {n0} diepte, die elk enkele uren duren, keren terug met een tussenruimte van ruwweg {n1} dagen (nabij {n2}, {n3} en {n4}). De eerste valt aan het begin van de gegevens en de laatste aan het eind, dus de vormen zijn slechts deels gedekt, maar de herhaling en de diepte passen bij een transit.”",
+ "@js.1i7kffol3t7": {
+  "x-review": "machine",
+  "x-source": "e5b80d48c3"
+ },
+ "js.1i7zt01er07": "Elk gas absorbeert bij zijn eigen golflengten. De vorm van een molecuul bepaalt hoe het trilt, en zijn trillingen bepalen waar het in het infrarood absorbeert. Geen enkel gas bewijst leven; een biosignatuur vraagt om context.",
+ "@js.1i7zt01er07": {
+  "x-review": "machine",
+  "x-source": "06a99d2287"
+ },
+ "js.1i982dt0un9": "Elk onderwerp onafhankelijk aangeduid en gelabeld door iedere beoordelaar",
+ "@js.1i982dt0un9": {
+  "x-review": "machine",
+  "x-source": "cc3ff7cfea"
+ },
+ "js.1i9syzrgr9a": "ii · volledig onderwerp tess-04b815001aa6",
+ "@js.1i9syzrgr9a": {
+  "x-review": "machine",
+  "x-source": "37330b4c55"
+ },
+ "js.1icw4qayopx": "Het {s0}-systeem van bovenaf: elke planeet verzwakt het licht van de ster wanneer hij de zichtlijn naar de waarnemer kruist. Baangroottes zijn de opgeslagen halve lange assen (of de derde wet van Kepler uit de periode en de massa van de ster); de dipdiepte is (Rp/R★)² uit de opgeslagen stralen. Cirkelvormige banen, ster en planeten niet op schaal, fasen illustratief (er zijn geen transittijden opgeslagen). Bron: exoplanet.eu, opgehaald {n0}-{n1}-{n2}.",
+ "@js.1icw4qayopx": {
+  "x-review": "machine",
+  "x-source": "205c36c39e"
+ },
+ "js.1ieyn16xm99": "Alleen getekend op basis van opgeslagen waarden (exoplanet.eu). Niet opgeslagen: stertemperatuur, sterstraal, planeetstraal, inclinatie; die delen zijn illustratief en dat staat op de tekening. Sterkleur: die van de Zon, omdat de temperatuur niet is opgeslagen.",
+ "@js.1ieyn16xm99": {
+  "x-review": "machine",
+  "x-source": "91db423a60"
+ },
+ "js.1ihhmnrn5bs": "Transits voorspeld in de opgeslagen lichtcurve: {n0}; met een dip erop: {n1} ({n2} dips; geen).",
+ "@js.1ihhmnrn5bs": {
+  "x-review": "machine",
+  "x-source": "74b4543d12"
+ },
+ "js.1in998fjxka": "Elke SNR",
+ "@js.1in998fjxka": {
+  "x-review": "machine",
+  "x-source": "5d8760ebee"
+ },
+ "js.1inrxj82qqn": "{s0}, dip {n0} ({n1} d)",
+ "@js.1inrxj82qqn": {
+  "x-review": "machine",
+  "x-source": "6d7c168703"
+ },
+ "js.1iub0nyp6f9": "gesimuleerd",
+ "@js.1iub0nyp6f9": {
+  "x-review": "machine",
+  "x-source": "daeb30e06d"
+ },
+ "js.1iuej85qe31": "de Zon",
+ "@js.1iuej85qe31": {
+  "x-review": "machine",
+  "x-source": "c15630ef0d"
+ },
+ "js.1ix9rk536yo": "Opgeslagen helderheid gedurende de run, {n0} punten; streepjes: de hierboven getoonde dips",
+ "@js.1ix9rk536yo": {
+  "x-review": "machine",
+  "x-source": "1314f76b87"
+ },
+ "js.1ixtevk7a4o": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">2e. <span class=\"mono\">tess-fe04f0304e5e-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Aangeduid door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1ixtevk7a4o": {
+  "x-review": "machine",
+  "x-source": "6a6805a079"
+ },
+ "js.1j6l7y2byt3": "pi Men b<span>{n0} · Radiële snelheid · Gasreus (op basis van massa; geen straal opgeslagen)</span>",
+ "@js.1j6l7y2byt3": {
+  "x-review": "machine",
+  "x-source": "1b9da02825"
+ },
+ "js.1j7cxmqt26w": "de onze vs. gepubliceerd; de catalogus combineert waarden uit verschillende artikelen",
+ "@js.1j7cxmqt26w": {
+  "x-review": "machine",
+  "x-source": "e54519602f"
+ },
+ "js.1j9g5n75pzw": "Illustratie: Rp/R★ = {n0}, b = {n1}, een ster van {n2} K; de curve is het kleine-planeetmodel van Mandel &amp; Agol ({n3}) met kwadratische randverduistering.",
+ "@js.1j9g5n75pzw": {
+  "x-review": "machine",
+  "x-source": "2071874ebf"
+ },
+ "js.1ja46ec6bci": "<span class=\"word s-flag\">gemarkeerd voor beoordeling</span><b class=\"fig\">1c. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-f28323a4aef6-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Aangeduid door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Geen BLS-periode: een enkele dip. Gemarkeerd voor beoordeling (buiten de efemeride van zijn ster). Archief: geen archiefplaneet binnen de tolerantie (deze dip heeft geen BLS-periode om te vergelijken). Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1ja46ec6bci": {
+  "x-review": "machine",
+  "x-source": "7096ee16ea"
+ },
+ "js.1jcgipn3cvi": "BTJD {n0} · {n1} ppm · {n2} uur · SNR {n3} · afgewezen bij de toetsing, geen kandidaat",
+ "@js.1jcgipn3cvi": {
+  "x-review": "machine",
+  "x-source": "b3e430bdfb"
+ },
+ "js.1jf5acxmjmf": "Een vaak aangehaalde reeks",
+ "@js.1jf5acxmjmf": {
+  "x-review": "machine",
+  "x-source": "525713fbe2"
+ },
+ "js.1jggp0tbnmk": "bedekker niet geïdentificeerd",
+ "@js.1jggp0tbnmk": {
+  "x-review": "machine",
+  "x-source": "7d5ac95656"
+ },
+ "js.1jih1nx96s5": "tess-f28323a4aef6-{n0}",
+ "@js.1jih1nx96s5": {
+  "x-review": "machine",
+  "x-source": "49696e46af"
+ },
+ "js.1jltb46ahiz": "TOI-{n0}: de sterschijf in haar zwarte-stralerkleur bij {n1} K, met daarop een neutraal grijze schijf met het label bedekker niet geïdentificeerd. secundaire eclips bij SNR {n2}; alle {n3} dips afgewezen bij de toetsing.",
+ "@js.1jltb46ahiz": {
+  "x-review": "machine",
+  "x-source": "640f125f41"
+ },
+ "js.1jnlql1jvxr": "<span class=\"word s-rej\">afgewezen bij de toetsing</span><b class=\"fig\">1e. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-01e315ee5ebf-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Gemarkeerd door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Ligt op een BLS-periode van {n15} dagen (t0 BTJD {n16}). Afgewezen bij de toetsing (secundaire eclips, secundaire bij willekeurige fase). Archief: geen archiefplaneet binnen de tolerantie. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1jnlql1jvxr": {
+  "x-review": "machine",
+  "x-source": "43edc57b50"
+ },
+ "js.1jqjb1ecf85": "<a href=\"/stars/kepler-292/\">{s0}</a> · Transit · ontdekt {n0} · Sub-Neptunus",
+ "@js.1jqjb1ecf85": {
+  "x-review": "machine",
+  "x-source": "6780404868"
+ },
+ "js.1jr0gf267bw": "lijnverschuiving ×{n0} (werkelijke Δλ/λ ≤ {n1}.9e-{n2}); sterkleur ongewijzigd",
+ "@js.1jr0gf267bw": {
+  "x-review": "machine",
+  "x-source": "01faa2a9d9"
+ },
+ "js.1jraf5dokx2": "Gewichten: volunteer-cautious={n0}, volunteer-sensitive={n1}, volunteer-typical={n2}",
+ "@js.1jraf5dokx2": {
+  "x-review": "machine",
+  "x-source": "41496626fd"
+ },
+ "js.1jrzc14iqia": "tetraëdrisch, binding {n0} Å, hoek {n1}° (CCCBDB)",
+ "@js.1jrzc14iqia": {
+  "x-review": "machine",
+  "x-source": "6a78315f54"
+ },
+ "js.1jus34ldb5x": "Een perspectiefraster van de ruimte, ingedeukt onder een lensster op de voorgrond en haar planeet, met een verre bronster erachter en een telescoop ervoor. De lens drijft door de gezichtslijn; daaronder stijgt en daalt de helderheid van de bron in een symmetrische vergrotingscurve met een korte planetaire piek. De afbuiging is een miljoen keer overdreven.",
+ "@js.1jus34ldb5x": {
+  "x-review": "machine",
+  "x-source": "a9eb0b5cd4"
+ },
+ "js.1juvy6cu7si": "Artistieke impressie · omhulsel, warm · Straal {n0} R⊕ (exoplanet.eu) is ten minste {n1} R⊕, dus wordt hij getekend met een gasomhulsel. Teq {n2} K, zoals de catalogus die opslaat, valt in de warme band. De samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.1juvy6cu7si": {
+  "x-review": "machine",
+  "x-source": "9a556d102c"
+ },
+ "js.1jvo3dtjn73": "Sentinel · Scepticus <span class=\"sub mono\" title=\"reviewer id\">claude-skeptic</span>",
+ "@js.1jvo3dtjn73": {
+  "x-review": "machine",
+  "x-source": "254fff303e"
+ },
+ "js.1jvq989drn7": "Artistieke impressie: het uiterlijk reus-koel, voor een straal van {n0} R⊕ of meer, Teq onder {n1} K: crèmekleurige en lichtbruine wolkenbanden. Een stilstaand beeld van het uiterlijk, niet van een bepaalde planeet.",
+ "@js.1jvq989drn7": {
+  "x-review": "machine",
+  "x-source": "76e2586629"
+ },
+ "js.1k05nntjzg8": "atmosfeer ×{n0} dikker getekend; planeet en ster niet op schaal",
+ "@js.1k05nntjzg8": {
+  "x-review": "machine",
+  "x-source": "300d578389"
+ },
+ "js.1k0svcvf8si": "Ook bekend als K2-{n0}, TOI-{n1}, 2MASS J23062928-{n2}.",
+ "@js.1k0svcvf8si": {
+  "x-review": "machine",
+  "x-source": "b966f30421"
+ },
+ "js.1k18cgh1lsd": "Gegevens waar we die hebben",
+ "@js.1k18cgh1lsd": {
+  "x-review": "machine",
+  "x-source": "34d5cef3cb"
+ },
+ "js.1k2in4l826k": "Bron: NASA Exoplanet Archive, tabel toi, opgehaald {n0}-{n1}-{n2} (de bevroren steekproef van de real-TOI-benchmark, sha256 6f0e111ec8d2c38d…).",
+ "@js.1k2in4l826k": {
+  "x-review": "machine",
+  "x-source": "75b7e948dd"
+ },
+ "js.1k548hzbh61": "<b>ν₃ asymmetrische strekking (drie)</b> · {n0} µm · infraroodactief · ×{n1} getekend · <a href=\"/how-it-works/atmospheres/\">de band bij {n2} µm in Atmosferen lezen ›</a>",
+ "@js.1k548hzbh61": {
+  "x-review": "machine",
+  "x-source": "371bca6192"
+ },
+ "js.1kch3o41dk9": "Config SHA-{n0}",
+ "@js.1kch3o41dk9": {
+  "x-review": "machine",
+  "x-source": "24563e9f39"
+ },
+ "js.1kdpriilk47": "exoplanet.eu vermeldt hem als \"Published in a refereed paper\", gevonden via Primary Transit in {n0}; record bijgewerkt {n1}-{n2}-{n3}. Ook bekend als 2MASS J13263339-{n4} b, EPIC {n5} b, EPIC {n6}, WISE J132633.39-{n7} b.",
+ "@js.1kdpriilk47": {
+  "x-review": "machine",
+  "x-source": "4573b13db3"
+ },
+ "js.1kgnejjnpnf": "Artistieke impressie van {s0}: een gasreus in de warme band, {n0} aardstralen, {n1} K.",
+ "@js.1kgnejjnpnf": {
+  "x-review": "machine",
+  "x-source": "3c145ea9c2"
+ },
+ "js.1kii456sf31": "Markeringen, gewichten, woorden en herkomst",
+ "@js.1kii456sf31": {
+  "x-review": "machine",
+  "x-source": "253c9b16db"
+ },
+ "js.1kkanabympe": "Dossier geopend voor dip tess-5935bad1a3b4-{n0}.",
+ "@js.1kkanabympe": {
+  "x-review": "machine",
+  "x-source": "f972b8b6cd"
+ },
+ "js.1kkkrzpa8a7": "Eén rij per ster, een streepje per kandidaat. De hoogte is log SNR; de kleur is de status, en elke rij noemt haar statussen in woorden. Trajecten van meer dan {n0} dagen zonder kandidaat zijn weggeknipt, dus de segmenten zijn niet op een gemeenschappelijke tijdschaal getekend: elk heeft een eigen schaal, gelabeld aan begin en eind, met de spanwijdte in dagen (d) eronder. Een bekende TOI-periode is een archiefwaarde: Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1kkkrzpa8a7": {
+  "x-review": "machine",
+  "x-source": "ebd8b037ad"
+ },
+ "js.1km44yew691": "{n0} planeten in exoplanet.eu · opgeslagen type M4.5 · klasse M uit Teff (dichtstbij M5V)",
+ "@js.1km44yew691": {
+  "x-review": "machine",
+  "x-source": "434ca9e4f6"
+ },
+ "js.1kmgitrwaz7": "Het dossier kon in deze weergave niet worden geladen. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-004\">Open het op een eigen pagina.</a>",
+ "@js.1kmgitrwaz7": {
+  "x-review": "machine",
+  "x-source": "3aa0cae98b"
+ },
+ "js.1kp2izcvxel": "getoonde planeten",
+ "@js.1kp2izcvxel": {
+  "x-review": "machine",
+  "x-source": "bd2c577243"
+ },
+ "js.1kq6p1y5nu": "In de opgeslagen lichtcurve voorspelde transits: {n0}; met een dip erop: {n1} ({n2} dips; {n3} door de toetsing gekomen; gemiddelde afwijking {n4} min).",
+ "@js.1kq6p1y5nu": {
+  "x-review": "machine",
+  "x-source": "8f4b34bdeb"
+ },
+ "js.1kqiosopfrm": "Runrapport · tess-hd-{n0}-s4",
+ "@js.1kqiosopfrm": {
+  "x-review": "machine",
+  "x-source": "50f447ece0"
+ },
+ "js.1kth4gy2kpd": "Artistieke impressie · neptunus, warm · Straal {n0} R⊕ (exoplanet.eu) is {n1} tot {n2} R⊕, dus wordt hij getekend als een Neptunus-achtige planeet. Teq {n3} K, berekend uit a, R★ en Teff, valt in de warme band. De samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n4}-{n5}-{n6}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.1kth4gy2kpd": {
+  "x-review": "machine",
+  "x-source": "6c3088500d"
+ },
+ "js.1kukdzlwmzz": "<b>ν₂ paraplu</b> · {n0} µm · infraroodactief · ×{n1} getekend · buiten het venster van {n2}–{n3} µm van {s0}",
+ "@js.1kukdzlwmzz": {
+  "x-review": "machine",
+  "x-source": "ba3a4e2e62"
+ },
+ "js.1kvmnyghvke": "Artistieke impressie van {s0}: een rotsachtige planeet, straal niet gemeten ({n0} aardmassa's), instraling niet te berekenen.",
+ "@js.1kvmnyghvke": {
+  "x-review": "machine",
+  "x-source": "4dadf82942"
+ },
+ "js.1kwnthdgog6": "Veel transitachtige dips zijn geen planeten bij de doelster. Een dip is bewijs; de toetsing vraagt wat hem verder nog zou kunnen veroorzaken. Hier staan de eigen controles van SetuHQ.",
+ "@js.1kwnthdgog6": {
+  "x-review": "machine",
+  "x-source": "af4fb58c42"
+ },
+ "js.1l1ykyl9gjt": "Een hete Jupiter waarvan de diepblauwe kleur met Hubble is gemeten.",
+ "@js.1l1ykyl9gjt": {
+  "x-review": "machine",
+  "x-source": "4b88f1da1a"
+ },
+ "js.1l32g36rs6f": "De hemelkaart van de run ›",
+ "@js.1l32g36rs6f": {
+  "x-review": "machine",
+  "x-source": "32e91da595"
+ },
+ "js.1l3aylknsal": "{n0} planeet in exoplanet.eu · opgeslagen type F8IV · klasse G uit Teff (dichtstbij G0V)",
+ "@js.1l3aylknsal": {
+  "x-review": "machine",
+  "x-source": "2ea8e3e662"
+ },
+ "js.1l3d1qn4lzf": "geen fouten",
+ "@js.1l3d1qn4lzf": {
+  "x-review": "machine",
+  "x-source": "07e5463c85"
+ },
+ "js.1l4kxm2w5br": "Archiefvergelijking: geen archiefplaneet binnen de tolerantie (deze dip heeft geen BLS-periode om te vergelijken); pi Men c: geen transitefemeride om te vergelijken. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1l4kxm2w5br": {
+  "x-review": "machine",
+  "x-source": "c0ca4ab327"
+ },
+ "js.1l4u62ej5fc": "Een waarschuwing: een beeld kan stof zijn.",
+ "@js.1l4u62ej5fc": {
+  "x-review": "machine",
+  "x-source": "f7bc5c08f0"
+ },
+ "js.1l95agsp46q": "bekende TOI-periode",
+ "@js.1l95agsp46q": {
+  "x-review": "machine",
+  "x-source": "a21918d7eb"
+ },
+ "js.1lacsml4zc1": "Kepler-kandidaten die fout-positief bleken",
+ "@js.1lacsml4zc1": {
+  "x-review": "machine",
+  "x-source": "01302d7a6d"
+ },
+ "js.1lb13933831": "<a href=\"/stars/trappist-1/\">{s0}</a> · Transit · ontdekt {n0} · Aardgrootte",
+ "@js.1lb13933831": {
+  "x-review": "machine",
+  "x-source": "0216bca3d8"
+ },
+ "js.1liecym8jw": "<span class=\"word cand\">kandidaat</span><span class=\"word s-pass\">toetsing doorstaan</span><b class=\"fig\">1d. WASP-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-5935bad1a3b4-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Gemarkeerd door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Ligt op een BLS-periode van {n15} dagen (t0 BTJD {n16}). Toetsing doorstaan. Archief: consistent met WASP-{n17} b: ΔP {n18}%, geen transitefemeride om te vergelijken. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1liecym8jw": {
+  "x-review": "machine",
+  "x-source": "715d53b450"
+ },
+ "js.1liiq258xy2": "gewicht in deze run",
+ "@js.1liiq258xy2": {
+  "x-review": "machine",
+  "x-source": "312cb6962a"
+ },
+ "js.1ljctz67g4t": "HD {n0} b gezien tijdens transit",
+ "@js.1ljctz67g4t": {
+  "x-review": "machine",
+  "x-source": "7fec9c309c"
+ },
+ "js.1lkjqc3ama8": "&lt; {n0} cm/s in een nacht",
+ "@js.1lkjqc3ama8": {
+  "x-review": "machine",
+  "x-source": "fa62c7936b"
+ },
+ "js.1lsf2peh7gm": "V sin I = {n0} km/s, k = {n1} (Gaudi &amp; Winn {n2} vermelden {n3} m/s) [berekend]",
+ "@js.1lsf2peh7gm": {
+  "x-review": "machine",
+  "x-source": "f9df108f80"
+ },
+ "js.1lssrjmbfo8": "Probe · Voorzichtig <span class=\"mono idtag\" title=\"reviewer id\">volunteer-cautious</span>",
+ "@js.1lssrjmbfo8": {
+  "x-review": "machine",
+  "x-source": "c559928285"
+ },
+ "js.1ly4plg316f": "Het dossier kon in deze weergave niet worden geladen. <a id=\"blockedlink\" href=\"/candidates/hd-15337/case-file/#tess-38b5a559eee2-001\">Open het op een eigen pagina.</a>",
+ "@js.1ly4plg316f": {
+  "x-review": "machine",
+  "x-source": "8cc62ac658"
+ },
+ "js.1lygr27nppg": "Beginwaarden: N★ = {n0} M-dwergen die helder genoeg zijn voor JWST, F_Q · F_HZ = {n1}, F_O = {n2}, F_L = {n3}, F_S = {n4}, wat N ≈ {n5} geeft. Ze komen uit secundaire samenvattingen van Seagers lezing en artikel en zijn hier niet aan het artikel getoetst; F_L = {n6} is een aanname, geen meting. De fractie in de bewoonbare zone verwijst naar de figuren van het hoofdstuk Populatie.",
+ "@js.1lygr27nppg": {
+  "x-review": "machine",
+  "x-source": "cc21a5b798"
+ },
+ "js.1lzjhakfy55": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">3b. <span class=\"mono\">tess-d64ea73e32ac-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Gemarkeerd door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1lzjhakfy55": {
+  "x-review": "machine",
+  "x-source": "2641c95b5f"
+ },
+ "js.1lzwpwb6gee": "Artistieke impressie van {s0}: een gasreus, straal niet gemeten ({n0} aardmassa's), instraling niet te berekenen.",
+ "@js.1lzwpwb6gee": {
+  "x-review": "machine",
+  "x-source": "670ae89778"
+ },
+ "js.1m0gojlrli4": "logaritmische helderheidsschaal; omlooptijd samengedrukt; planeten als stippen getekend",
+ "@js.1m0gojlrli4": {
+  "x-review": "machine",
+  "x-source": "aa15ce0bc3"
+ },
+ "js.1m7nga73mrk": "Radiële-snelheidsschaal: Aarde-tweeling ongeveer {n0} centimeter per seconde; ESPRESSO binnen een nacht onder {n1} centimeter per seconde; ruis van het steroppervlak in de orde van {n2} meter per seconde; pi Men c ongeveer {n3} meter per seconde; Jupiter-tweeling {n4} meter per seconde; {n5} Peg b {n6} meter per seconde.",
+ "@js.1m7nga73mrk": {
+  "x-review": "machine",
+  "x-source": "f3592c4241"
+ },
+ "js.1m8z1t3ted1": "{n0} planeten in exoplanet.eu · opgeslagen type M3.0V · klasse M uit Teff (dichtstbijzijnde M2V)",
+ "@js.1m8z1t3ted1": {
+  "x-review": "machine",
+  "x-source": "8a2f6062a1"
+ },
+ "js.1mbwvh0e5be": "<b class=\"flabel\">Plaat {n0}, paneel i.</b> Opgeslagen flux van subject tess-fa3483ce6f83 (BTJD {n1} tot {n2}), relatieve flux − {n3} in ppm. Gearceerde banden zijn consensusintervallen, met letters zoals in de bijschriften; driehoeken zijn de BLS-epochs. Rechts: gevouwen op de opgeslagen BLS-periode {n4} d en t0 BTJD {n5}; de gearceerde band is de opgeslagen BLS-duur ({n6} h).",
+ "@js.1mbwvh0e5be": {
+  "x-review": "machine",
+  "x-source": "94f4aed5ee"
+ },
+ "js.1mfsedhnkek": "Een draaiend bal-en-stokmodel van het geselecteerde molecuul met de gemeten bindingslengtes en -hoeken (NIST CCCBDB), trillend in de gekozen normaalmode: pijlen tonen in welke richting elk atoom beweegt. Een golflengte-as eronder markeert de fundamentele banden van het molecuul, gevuld wanneer infrarood ze ziet en hol wanneer de mode infrarood-stil is, met het bereik dat het hoofdstuk {s0} tekent gearceerd.",
+ "@js.1mfsedhnkek": {
+  "x-review": "machine",
+  "x-source": "751951289b"
+ },
+ "js.1mi5uvq4hd0": "deze run · afgewezen bij vetting · geen periode",
+ "@js.1mi5uvq4hd0": {
+  "x-review": "machine",
+  "x-source": "0fc6ada48d"
+ },
+ "js.1mi9l1aqyq9": "pi Men, sterpagina",
+ "@js.1mi9l1aqyq9": {
+  "x-review": "machine",
+  "x-source": "af079a71c8"
+ },
+ "js.1mk4xq21j8n": "{n0} Peg b {n1} m/s",
+ "@js.1mk4xq21j8n": {
+  "x-review": "machine",
+  "x-source": "66b7d81f43"
+ },
+ "js.1mkodngoi66": "Neptunusachtig (op basis van massa; geen straal opgeslagen)",
+ "@js.1mkodngoi66": {
+  "x-review": "machine",
+  "x-source": "932ae89059"
+ },
+ "js.1mo3qu9d3sy": "{n0} komen overeen met een bekende TOI-periode · {n1} doelen beoordeeld",
+ "@js.1mo3qu9d3sy": {
+  "x-review": "machine",
+  "x-source": "a88d49c5fc"
+ },
+ "js.1mq0omhy5p6": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">3e. <span class=\"mono\">tess-d64ea73e32ac-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Gemarkeerd door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1mq0omhy5p6": {
+  "x-review": "machine",
+  "x-source": "4cf06a3459"
+ },
+ "js.1mrtv5truqv": "<span class=\"word s-rej\">afgewezen bij vetting</span><b class=\"fig\">1a. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-997691b39aab-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Gemarkeerd door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Ligt op een BLS-periode van {n15} dagen (t0 BTJD {n16}). Afgewezen bij vetting (secundaire eclips). Archief: geen archiefplaneet binnen de tolerantie. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1mrtv5truqv": {
+  "x-review": "machine",
+  "x-source": "5acefca984"
+ },
+ "js.1mv7har0j7g": "<a href=\"/stars/kepler-1955/\">{s0}</a> · Transit · ontdekt {n0} · Aardegrootte",
+ "@js.1mv7har0j7g": {
+  "x-review": "machine",
+  "x-source": "bb8860a9ac"
+ },
+ "js.1myonl6ry65": "Methoden: Hoe een survey werkt ›",
+ "@js.1myonl6ry65": {
+  "x-review": "machine",
+  "x-source": "927599ad1a"
+ },
+ "js.1mzrogjvr87": "Het dossier kon in deze weergave niet laden. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-003\">Open het op een eigen pagina.</a>",
+ "@js.1mzrogjvr87": {
+  "x-review": "machine",
+  "x-source": "d440ec8bbf"
+ },
+ "js.1mzv57jfnxc": "Een planeet met {n0}% van de massa van zijn ster, zichtbaar gemaakt door een korte extra opheldering tijdens een lensgebeurtenis.",
+ "@js.1mzv57jfnxc": {
+  "x-review": "machine",
+  "x-source": "af235ddd7a"
+ },
+ "js.1mzybh32shz": "<span class=\"word cand\">kandidaat</span><span class=\"word s-known\">bekende TOI-periode</span><b class=\"fig\">4g. <span class=\"mono\">tess-68e93d0b9530-{n0}</span>.</b> Dip bij BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Gemarkeerd door {n5} beoordelaars (de catalogus slaat de panelgrootte en het consensusinterval niet op). Ligt op een BLS-periode van {n6} dagen met {n7} transits. Status: periode komt overeen met een bekende TOI. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1mzybh32shz": {
+  "x-review": "machine",
+  "x-source": "c950eef3c3"
+ },
+ "js.1n084yomupc": "{n0} planeten in exoplanet.eu · opgeslagen type F9/G0V · klasse G uit Teff (dichtstbijzijnde G0V)",
+ "@js.1n084yomupc": {
+  "x-review": "machine",
+  "x-source": "6f30467f11"
+ },
+ "js.1n1b8hwkomg": "ruispunten illustratief (een geseede willekeurige trekking); granulatietextuur niet op schaal",
+ "@js.1n1b8hwkomg": {
+  "x-review": "machine",
+  "x-source": "f5acbbe006"
+ },
+ "js.1n4fl0a9ymj": "volunteer-cautious, volunteer-sensitive",
+ "@js.1n4fl0a9ymj": {
+  "x-review": "machine",
+  "x-source": "8976720851"
+ },
+ "js.1n6p2i28xzx": "Twee regels. **Vrij**: diepte, T14 en k zijn robuust; b, a/R★ en ρ★ zijn gedegenereerd bij vijf TESS-transits, dus b is een bovengrens wanneer de {n0}σ-verzameling {n1} bereikt en ρ★ is een bereik. **Met de TIC-dichtheidsprior** (een Gaussische verdeling op ρ★, {n2} ± {n3} g/cm³): b, a/R★ en T23/T14, ter vergelijking met Huangs b = {n4}. Gelijkwaardige vergelijkingen staan voorop: k en T14.",
+ "@js.1n6p2i28xzx": {
+  "x-review": "machine",
+  "x-source": "f649e17892"
+ },
+ "js.1n7qezolhqv": "Het dossier kon in deze weergave niet laden. <a id=\"blockedlink\" href=\"/candidates/hd-15337/case-file/#tess-08a8c4eac6ff-002\">Open het op een eigen pagina.</a>",
+ "@js.1n7qezolhqv": {
+  "x-review": "machine",
+  "x-source": "44bcb3203a"
+ },
+ "js.1na1bnia6vd": "Probe · Voorzichtig: {n0} intervallen in dit venster, meegeteld voor deze dip",
+ "@js.1na1bnia6vd": {
+  "x-review": "machine",
+  "x-source": "645d3a5db3"
+ },
+ "js.1nayubou11x": "gemiddeld",
+ "@js.1nayubou11x": {
+  "x-review": "machine",
+  "x-source": "c082456a77"
+ },
+ "js.1nb3elx2i52": "<span class=\"word s-rej\">afgewezen bij vetting</span><b class=\"fig\">1f. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">opgeslagen id tess-01e315ee5ebf-{n2}.</span> Dip bij BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensusinterval BTJD {n7} tot {n8}. Gemarkeerd door {n9} van {n10} beoordelaars ({n11} van {n12} Sentinels, {n13} van {n14} Probes). Ligt op een BLS-periode van {n15} dagen (t0 BTJD {n16}). Afgewezen bij vetting (secundaire eclips, secundaire op willekeurige fase). Archief: geen archiefplaneet binnen de tolerantie. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1nb3elx2i52": {
+  "x-review": "machine",
+  "x-source": "f9497b740d"
+ },
+ "js.1nfprkwjljx": "Aardetweeling op {n0} pc",
+ "@js.1nfprkwjljx": {
+  "x-review": "machine",
+  "x-source": "b942866d86"
+ },
+ "js.1nghe8p78x7": "Percentages: docs/results/reviewer_weights_full_panel.calibration.json. Percentages per beoordelaar, afgedrukt door 'setuhq calibrate' toen het reviewer_weights_full_panel.json schreef op {n0}-{n1}-{n2}, met de code van commit 03f23bd (de commit die de gewichten toevoegde): n = {n3} geïnjecteerde en {n4} lege subjects per beoordelaar, seed {n5}.",
+ "@js.1nghe8p78x7": {
+  "x-review": "machine",
+  "x-source": "2d7cf9cb6f"
+ },
+ "js.1ngow2u9m0z": "tess-wasp-{n0}-s1",
+ "@js.1ngow2u9m0z": {
+  "x-review": "machine",
+  "x-source": "d829b53a36"
+ },
+ "js.1njw7as7ggq": "Artistieke impressie · rots, warm · Geen straal opgeslagen; minimale massa (m sin i) {n0} M⊕ (exoplanet.eu) ligt onder {n1} M⊕, dus wordt hij als rots getekend. Straal niet gemeten: niet op schaal. Teq {n2} K, berekend uit a, R★ en Teff, valt in de warme band. Samenstelling is niet gemeten. Bron: exoplanet.eu, opgehaald {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@js.1njw7as7ggq": {
+  "x-review": "machine",
+  "x-source": "ed25878435"
+ },
+ "js.1nlihv4t4dw": "Bron: docs/results/showcase.json.",
+ "@js.1nlihv4t4dw": {
+  "x-review": "machine",
+  "x-source": "321e67bf81"
+ },
+ "js.1nm81nug7zg": "Overgeslagen (hier niet beschikbaar): geen",
+ "@js.1nm81nug7zg": {
+  "x-review": "machine",
+  "x-source": "abb39a4547"
+ },
+ "js.1nnt72vxjvc": "Wat de vorm van de dip bepaalt",
+ "@js.1nnt72vxjvc": {
+  "x-review": "machine",
+  "x-source": "fdd186856d"
+ },
+ "js.1noidu8sqp0": "Eén getal verbergt de onzekerheid. In navolging van Sandberg, Drexler &amp; Ord ({n0}) wordt elke term in plaats daarvan uit een bereik getrokken: R★ {n1}–{n2}, f_p {n3}–{n4}, n_e {n5}–{n6}, f_i {n7}–{n8}, f_c {n9}–{n10}, L {n11}–{n12}¹⁰ jaar, alle log-uniform. Hun f_l komt uit een log-normaal model van de snelheid waarmee leven ontstaat; hier is f_l een log-uniforme vervanger van {n13}⁻ᵏ tot {n14}, met k op de schuifregelaar. De trekkingen zijn geseed, dus het resultaat is herhaalbaar.",
+ "@js.1noidu8sqp0": {
+  "x-review": "machine",
+  "x-source": "d05c4d3a40"
+ },
+ "js.1nr7id6n51s": "Hoe vaak, en wat SetuHQ controleert",
+ "@js.1nr7id6n51s": {
+  "x-review": "machine",
+  "x-source": "76d2a45355"
+ },
+ "js.1nsffm21b0f": "Doorstond elke vetting-controle. De periode komt overeen met pi Men c in de opgeslagen archiefkoppeling (ΔP {n0}%): een bekende planeet, teruggevonden, geen ontdekking. De dip zelf blijft een kandidaat, niet bevestigd als onafhankelijke detectie.",
+ "@js.1nsffm21b0f": {
+  "x-review": "machine",
+  "x-source": "1a295a1bae"
+ },
+ "js.1nuj8nr6koq": "exoplanet.eu vermeldt hem als \"Published in a refereed paper\", gevonden via Primary Transit in {n0}; record bijgewerkt {n1}-{n2}-{n3}. Ook bekend als Kepler-4ee b, 2MASS J19130109+{n4} b, K00192.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J191301.09+{n8} b.",
+ "@js.1nuj8nr6koq": {
+  "x-review": "machine",
+  "x-source": "91fb084a47"
+ },
+ "js.1nuvlh0ma79": "tess-5935bad1a3b4",
+ "@js.1nuvlh0ma79": {
+  "x-review": "machine",
+  "x-source": "14550b8a45"
+ },
+ "js.1nz44lzwv0o": "tess-fa3483ce6f83-{n0}",
+ "@js.1nz44lzwv0o": {
+  "x-review": "machine",
+  "x-source": "b932ff9bfb"
+ },
+ "js.1o0b3yflq21": "Zoektochten naar technosignaturen (SETI)",
+ "@js.1o0b3yflq21": {
+  "x-review": "machine",
+  "x-source": "c0b6115048"
+ },
+ "js.1o0gzzpcrw7": "Een overeenkomst met een bekende TOI vergelijkt een opgeslagen BLS-periode met archiefwaarden. Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@js.1o0gzzpcrw7": {
+  "x-review": "machine",
+  "x-source": "2bd3890263"
+ },
+ "js.1o0hq0mhsmi": "Naar de feedtabel",
+ "@js.1o0hq0mhsmi": {
+  "x-review": "machine",
+  "x-source": "eb676d17e6"
+ },
+ "js.1o0iwk3mcfb": "lightkurve",
+ "@js.1o0iwk3mcfb": {
+  "x-review": "machine",
+  "x-source": "7c4b4de937"
+ },
+ "js.1o10ig353uo": "Serpentinisatie van ultramafisch gesteente (tegenwoordig de belangrijkste abiotische bron op Aarde) en thermochemie in koele H₂-atmosferen.",
+ "@js.1o10ig353uo": {
+  "x-review": "machine",
+  "x-source": "3cadb3e928"
+ },
+ "js.1o3jbn4vmep": "Probe · Gevoelig",
+ "@js.1o3jbn4vmep": {
+  "x-review": "machine",
+  "x-source": "f06db03064"
+ },
+ "js.1o4nlixlng4": "Opgeslagen id tess-68e93d0b9530-{n0}; geen dossier in deze run",
+ "@js.1o4nlixlng4": {
+  "x-review": "machine",
+  "x-source": "ffb8a10800"
+ },
+ "js.1oflx09locz": "Het dossier kon in deze weergave niet laden. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-000\">Open het op een eigen pagina.</a>",
+ "@js.1oflx09locz": {
+  "x-review": "machine",
+  "x-source": "1974777780"
+ },
+ "js.1ofu4p8me4m": "Hetzelfde, ster en planeet als zwarte straler",
+ "@js.1ofu4p8me4m": {
+  "x-review": "machine",
+  "x-source": "0a7c17edf3"
+ },
+ "js.1oi39dp7ehn": "tess-4b369d3c6f09-{n0} · {s0} · bekende planeet",
+ "@js.1oi39dp7ehn": {
+  "x-review": "machine",
+  "x-source": "24562a2a17"
+ },
+ "js.1ojq6mpxesf": "Komt overeen met een TOI?",
+ "@js.1ojq6mpxesf": {
+  "x-review": "machine",
+  "x-source": "13bd83fa4a"
+ },
+ "js.1ooqb09tka": "Diepteverschil oneven/even of secundaire eclips; of een diepte van {n0} ppm of meer; of V-vormig en {n1} ppm of meer; of een afwijkende stellaire dichtheid bij een periode onder {n2} d; of de helft van het gewicht van het panel dat op een eclipsende dubbelster wijst. Variabiliteit op de periode van een eclipsende dubbelster, of de helft daarvan.",
+ "@js.1ooqb09tka": {
+  "x-review": "machine",
+  "x-source": "d16ff6ea5a"
+ },
+ "js.1oqf3bvj4qe": "Het dossier op een eigen pagina, bij dezelfde dip.",
+ "@js.1oqf3bvj4qe": {
+  "x-review": "machine",
+  "x-source": "a79cf2c0b7"
+ },
+ "js.1orad1crh46": "Ook bekend als 2MASS J13492388-{n0}, EPIC {n1}, WISE J134923.91-{n2}.",
+ "@js.1orad1crh46": {
+  "x-review": "machine",
+  "x-source": "0df791031e"
+ },
+ "js.1osr79bkt98": "Diepte is de modeldiepte halverwege de transit; foutmarges zijn conservatief, zoals hierboven. De fit van elk subject laat de periode vrij rond de BLS-periode van dat subject.",
+ "@js.1osr79bkt98": {
+  "x-review": "machine",
+  "x-source": "9542977ce0"
+ },
+ "js.1otoimtw2we": "<i style=\"background:#30D158\"></i>Beeldvorming",
+ "@js.1otoimtw2we": {
+  "x-review": "machine",
+  "x-source": "37abb9bd8b"
+ },
  "label.art": "Artistieke impressie",
  "@label.art": {
   "x-review": "machine",

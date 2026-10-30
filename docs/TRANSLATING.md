@@ -109,7 +109,7 @@ paragraph, list item, heading, caption or table cell whose content is text and i
 
 * numbers in the text become `{n0}`, `{n1}`, … (shown in the reader's number format, except years, counts without a
   group separator, versions and licences), so a count that changes keeps the message and its translations;
-* in text the scripts draw, the page's names (its heading, planet and star links) become `{s0}`, `{s1}`, …;
+* in text the scripts draw on a planet, star, dip or case-file page, the page's names (its heading, its planet and star links) become `{s0}`, `{s1}`, …;
 * inline markup (links, `<b>`, `<code>`) stays in the message with its attributes, and every translation keeps it.
 
 `pg.*` messages are the blocks of the committed English main pages (`site/`), collected by `extract` and written

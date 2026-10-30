@@ -35,7 +35,8 @@ const f = (v.split('.')[1] || '').length; return new Intl.NumberFormat(SI.lang, 
 }
 function auto(root){
 if (SI.lang === 'en' || !SI.cat || !root || !root.querySelectorAll) return;
-const names = [...new Set([...document.querySelectorAll('h1, a[href^="/planets/"], a[href^="/stars/"]')].map(e => e.textContent.trim()).filter(n => n.length > 2 && n.length < 60))].sort((x, y) => y.length - x.length);
+const p = location.pathname.replace(/^\/[^/]+(?=\/)/, x => SI.conf.locales.includes(x.slice(1)) ? '' : x);
+const names = SI.conf.main.includes(p) ? [] : [...new Set([...document.querySelectorAll('h1, a[href^="/planets/"], a[href^="/stars/"]')].map(e => e.textContent.trim()).filter(n => n.length > 2 && n.length < 60))].sort((x, y) => y.length - x.length);
 const walk = el => {
 for (const c of el.children){
 if (c.matches(SKX)) continue;

@@ -864,7 +864,10 @@ function fill(m, a){
 }
 function auto(root){
   if (SI.lang === 'en' || !SI.cat || !root || !root.querySelectorAll) return;
-  const names = [...new Set([...document.querySelectorAll('h1, a[href^="/planets/"], a[href^="/stars/"]')].map(e => e.textContent.trim()).filter(n => n.length > 2 && n.length < 60))].sort((x, y) => y.length - x.length);
+  // The page's names (a planet or star page's heading, its links to planets and stars), not on a main page, whose
+  // headings are in the reader's language: the same text gives the same template in every language.
+  const p = location.pathname.replace(/^\/[^/]+(?=\/)/, x => SI.conf.locales.includes(x.slice(1)) ? '' : x);
+  const names = SI.conf.main.includes(p) ? [] : [...new Set([...document.querySelectorAll('h1, a[href^="/planets/"], a[href^="/stars/"]')].map(e => e.textContent.trim()).filter(n => n.length > 2 && n.length < 60))].sort((x, y) => y.length - x.length);
   const walk = el => {
     for (const c of el.children){
       if (c.matches(SKX)) continue;

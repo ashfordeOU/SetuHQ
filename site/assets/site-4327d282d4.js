@@ -1,4 +1,4 @@
-const I18N_SRC = '/assets/i18n-a967e539f3.js';
+const I18N_SRC = '/assets/i18n-10f46477da.js';
 const SETUHQ_THEMES = ['dark', 'light', 'system'], TT = (id, en, a) => (window.SetuI18n ? SetuI18n.T(id, en, a) : en).replace(/&#(\d+);/g, (x, d) => String.fromCharCode(d));
 const THEME_SAY = {get dark(){ return TT('shell.theme.dark', 'dark'); }, get light(){ return TT('shell.theme.light', 'light'); }, get system(){ return TT('shell.theme.system', 'your device\'s setting'); }};
 function currentTheme(){ const t = document.documentElement.getAttribute('data-theme'); return SETUHQ_THEMES.includes(t) ? t : 'dark'; }
