@@ -1,12 +1,12 @@
 {
  "@@locale": "ja",
  "@@x-source-locale": "en",
- "cat.h1": "既知のすべての系外惑星。",
+ "cat.h1": "既知の<wbr>すべての<wbr>系外惑星。",
  "@cat.h1": {
   "x-review": "machine",
   "x-source": "c12b2894d2"
  },
- "cat.h1b": "{n, number} 件の記録を検索できます。",
+ "cat.h1b": "{n, number} 件の<wbr>記録を<wbr>検索できます。",
  "@cat.h1b": {
   "x-review": "machine",
   "x-source": "0082f39a49"
@@ -41,12 +41,12 @@
   "x-review": "machine",
   "x-source": "8a0961eea7"
  },
- "chapter.doppler": "近づき、遠ざかる",
+ "chapter.doppler": "近づき、<wbr>遠ざかる",
  "@chapter.doppler": {
   "x-review": "machine",
   "x-source": "982502489b"
  },
- "chapter.equations": "生命の方程式",
+ "chapter.equations": "生命の<wbr>方程式",
  "@chapter.equations": {
   "x-review": "machine",
   "x-source": "a586047366"
@@ -56,12 +56,12 @@
   "x-review": "machine",
   "x-source": "04819af0c8"
  },
- "chapter.history": "歴史と論文",
+ "chapter.history": "歴史と<wbr>論文",
  "@chapter.history": {
   "x-review": "machine",
   "x-source": "c6638a4574"
  },
- "chapter.imaging": "星の光をさえぎる",
+ "chapter.imaging": "星の<wbr>光を<wbr>さえぎる",
  "@chapter.imaging": {
   "x-review": "machine",
   "x-source": "6464ce5238"
@@ -71,12 +71,12 @@
   "x-review": "machine",
   "x-source": "7713c65bef"
  },
- "chapter.molecules": "分子と生命",
+ "chapter.molecules": "分子と<wbr>生命",
  "@chapter.molecules": {
   "x-review": "machine",
   "x-source": "d0ac3c4b97"
  },
- "chapter.population": "惑星の集団",
+ "chapter.population": "惑星の<wbr>集団",
  "@chapter.population": {
   "x-review": "machine",
   "x-source": "5b828861ae"
@@ -91,17 +91,17 @@
   "x-review": "machine",
   "x-source": "5605460ec2"
  },
- "chapter.spectroscopy": "大気を読む",
+ "chapter.spectroscopy": "大気を<wbr>読む",
  "@chapter.spectroscopy": {
   "x-review": "machine",
   "x-source": "e57371d577"
  },
- "chapter.survey": "サーベイのしくみ",
+ "chapter.survey": "サーベイの<wbr>しく<wbr>み",
  "@chapter.survey": {
   "x-review": "machine",
   "x-source": "418a56729e"
  },
- "chapter.timing": "タイミングと位相",
+ "chapter.timing": "タイミングと<wbr>位相",
  "@chapter.timing": {
   "x-review": "machine",
   "x-source": "f5f7adb77b"
@@ -1311,7 +1311,7 @@
   "x-review": "machine",
   "x-source": "9fdbc5d13a"
  },
- "docs.contribute": "スイープを貢献する",
+ "docs.contribute": "スイープを<wbr>貢献する",
  "@docs.contribute": {
   "x-review": "machine",
   "x-source": "3118488db2"
@@ -1326,7 +1326,7 @@
   "x-review": "machine",
   "x-source": "7636e0e0dd"
  },
- "docs.data": "データとファイル",
+ "docs.data": "データと<wbr>ファイル",
  "@docs.data": {
   "x-review": "machine",
   "x-source": "1544ff48d7"
@@ -1356,12 +1356,12 @@
   "x-review": "machine",
   "x-source": "a4c5119805"
  },
- "docs.h1": "自分で動かす。",
+ "docs.h1": "自分で<wbr>動かす。",
  "@docs.h1": {
   "x-review": "machine",
   "x-source": "a1737d6898"
  },
- "docs.install": "インストールと初回の実行",
+ "docs.install": "インストールと<wbr>初回の<wbr>実行",
  "@docs.install": {
   "x-review": "machine",
   "x-source": "ea230bebae"
@@ -1371,7 +1371,7 @@
   "x-review": "machine",
   "x-source": "7d1db3c963"
  },
- "docs.mcp": "アシスタントから使う",
+ "docs.mcp": "アシスタントから<wbr>使う",
  "@docs.mcp": {
   "x-review": "machine",
   "x-source": "ee854c3928"
@@ -1381,7 +1381,7 @@
   "x-review": "machine",
   "x-source": "c393096cc9"
  },
- "docs.mcp.h": "AI アシスタントから使う (MCP)",
+ "docs.mcp.h": "AI アシスタントから<wbr>使う (MCP)",
  "@docs.mcp.h": {
   "x-review": "machine",
   "x-source": "f46e936a3b"
@@ -1391,7 +1391,7 @@
   "x-review": "machine",
   "x-source": "eb88b7d692"
  },
- "docs.pictures": "絵の描き方",
+ "docs.pictures": "絵の<wbr>描き方",
  "@docs.pictures": {
   "x-review": "machine",
   "x-source": "e2d864dc53"
@@ -1406,7 +1406,7 @@
   "x-review": "machine",
   "x-source": "7c281d6576"
  },
- "docs.prov": "技術的な詳細: 図の出どころ",
+ "docs.prov": "技術的な<wbr>詳細: 図の<wbr>出どころ",
  "@docs.prov": {
   "x-review": "machine",
   "x-source": "1cfbcdad80"
@@ -1436,7 +1436,7 @@
   "x-review": "machine",
   "x-source": "2e8b6ed67a"
  },
- "ed.compare": "エディションを比べる",
+ "ed.compare": "エディションを<wbr>比べる",
  "@ed.compare": {
   "x-review": "machine",
   "x-source": "0a79392035"
@@ -1456,7 +1456,7 @@
   "x-review": "machine",
   "x-source": "d588b090c3"
  },
- "ex.h1": "{stars, plural, =1 {1 つの例の星} other {# つの例の星}}から開ける {n, plural, other {# 件の減光}}。",
+ "ex.h1": "{stars, plural, =1 {1 つの例の星} other {# つの例の星}}から<wbr>開ける {n, plural, other {# 件の減光}}。",
  "@ex.h1": {
   "x-review": "machine",
   "x-source": "ad8e8b5e42"
@@ -1621,12 +1621,12 @@
   "x-review": "machine",
   "x-source": "0620019806"
  },
- "gx.h1": "既知のすべての系外惑星を、",
+ "gx.h1": "既知の<wbr>すべての<wbr>系外惑星を、",
  "@gx.h1": {
   "x-review": "machine",
   "x-source": "22fff7c222"
  },
- "gx.h1b": "太陽のまわりに。",
+ "gx.h1b": "太陽の<wbr>まわりに。",
  "@gx.h1b": {
   "x-review": "machine",
   "x-source": "0513cb70f1"
@@ -1676,7 +1676,7 @@
   "x-review": "machine",
   "x-source": "f31d20fed2"
  },
- "home.band.counters": "数えた証拠",
+ "home.band.counters": "数えた<wbr>証拠",
  "@home.band.counters": {
   "x-review": "machine",
   "x-source": "5f2b5a53a9"
@@ -1686,7 +1686,7 @@
   "x-review": "machine",
   "x-source": "6d25c68528"
  },
- "home.band.fold": "惑星はどうやってノイズに隠れるか",
+ "home.band.fold": "惑星は<wbr>どうやって<wbr>ノイズに<wbr>隠れるか",
  "@home.band.fold": {
   "x-review": "machine",
   "x-source": "79677ced9c"
@@ -1696,7 +1696,7 @@
   "x-review": "machine",
   "x-source": "6a758a8937"
  },
- "home.band.lineup": "例の惑星を縮尺どおりに",
+ "home.band.lineup": "例の<wbr>惑星を<wbr>縮尺どおりに",
  "@home.band.lineup": {
   "x-review": "machine",
   "x-source": "aaf6e55de4"
@@ -1706,7 +1706,7 @@
   "x-review": "machine",
   "x-source": "f48421d1f6"
  },
- "home.band.panel": "誰が減光をレビューするか",
+ "home.band.panel": "誰が<wbr>減光を<wbr>レビューするか",
  "@home.band.panel": {
   "x-review": "machine",
   "x-source": "fd782b5776"
@@ -1716,7 +1716,7 @@
   "x-review": "machine",
   "x-source": "5326ad997a"
  },
- "home.band.sky": "既知の各惑星の主星を、見つかった年ごとに",
+ "home.band.sky": "既知の<wbr>各惑星の<wbr>主星を、<wbr>見つかった<wbr>年ごとに",
  "@home.band.sky": {
   "x-review": "machine",
   "x-source": "25fe759e36"
@@ -1821,12 +1821,12 @@
   "x-review": "machine",
   "x-source": "33d22aaaf3"
  },
- "home.dohere": "ここでできること",
+ "home.dohere": "ここで<wbr>できる<wbr>こと",
  "@home.dohere": {
   "x-review": "machine",
   "x-source": "c2f1fa481b"
  },
- "home.examples": "実例: {n, plural, other {# つの星}}、1 つのパイプライン",
+ "home.examples": "実<wbr>例: {n, plural, other {# つの星}}、<wbr>1 つの<wbr>パイプライン",
  "@home.examples": {
   "x-review": "machine",
   "x-source": "31c4bc580e"
@@ -1836,7 +1836,7 @@
   "x-review": "machine",
   "x-source": "d13aa1075e"
  },
- "home.hero.h1": "空を、レビューする。",
+ "home.hero.h1": "空を、<wbr>レビューする。",
  "@home.hero.h1": {
   "x-review": "machine",
   "x-source": "c537af3dcb"
@@ -1856,7 +1856,7 @@
   "x-review": "machine",
   "x-source": "9caca54a23"
  },
- "home.honest.h": "このページが主張しないこと",
+ "home.honest.h": "この<wbr>ページが<wbr>主張しない<wbr>こと",
  "@home.honest.h": {
   "x-review": "machine",
   "x-source": "738097d05c"
@@ -1906,7 +1906,7 @@
   "x-review": "machine",
   "x-source": "d58bf9bb5f"
  },
- "home.refcheck": "参照チェック: 既知の惑星 {planet} を実行 {run} で再び検出",
+ "home.refcheck": "参照チェック: 既知の<wbr>惑星 {planet} を<wbr>実行 {run} で<wbr>再び検出",
  "@home.refcheck": {
   "x-review": "machine",
   "x-source": "e700c0ebab"
@@ -2016,20 +2016,10 @@
   "x-review": "machine",
   "x-source": "acac77611f"
  },
- "js.103n82dja3r": "カタログ更新：<time datetime=\"2026-10-29T00:47:42+00:00\" title=\"2026-10-29T00:47:42+00:00\">{n1}年10月{n0}日 {n2} UTC</time>。",
- "@js.103n82dja3r": {
-  "x-review": "machine",
-  "x-source": "273b2777f8"
- },
  "js.104nn3vx4at": "用語",
  "@js.104nn3vx4at": {
   "x-review": "machine",
   "x-source": "c6f3bfd456"
- },
- "js.106g3hdfp83": "TIC {n0} · 審査で棄却、候補ではない",
- "@js.106g3hdfp83": {
-  "x-review": "machine",
-  "x-source": "9772d14ea9"
  },
  "js.106t6pg6coj": "exoplanet.eu の惑星 {n0} 個 · Teff から G 型（最も近いのは G5V）",
  "@js.106t6pg6coj": {
@@ -2061,25 +2051,20 @@
   "x-review": "machine",
   "x-source": "ffa10fa912"
  },
+ "js.10so4x5ppkr": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知のTOI周期</span><b class=\"fig\">7a. <span class=\"mono\">tess-eaab33b6b763-{n0}</span>.</b> BTJD {n1} の減光、{n2} ppm、{n3} h、SNR {n4}。{n5} 人のレビュアーがマーク（カタログにはパネルの人数とコンセンサス区間は保存されていない）。{n7} 回のトランジットを含む {n6} 日の BLS 周期上にある。ステータス: 周期が既知のTOIと一致。値はアーカイブのもののみ。このページは検出を主張しない。",
+ "@js.10so4x5ppkr": {
+  "x-review": "machine",
+  "x-source": "789c4ff542"
+ },
  "js.10v4vkxqjry": "このビルドではこの星の光度曲線は保存されていない：検索カタログは測定値のみを保持するため、対象全体の曲線も位相折り畳みパネルもない。",
  "@js.10v4vkxqjry": {
   "x-review": "machine",
   "x-source": "7fe57adca4"
  },
- "js.10vb2hszsy6": "exoplanet.eu に距離が保存されている {n1} 個の惑星のうち、<b>{n0}</b> 個はトランジット法で見つかった（最初に記載された手法）。<a href=\"/explore/galaxy/?method=transit\">銀河マップに表示 ›</a>",
- "@js.10vb2hszsy6": {
-  "x-review": "machine",
-  "x-source": "01ac9f0ca4"
- },
  "js.10vrj8m3wjv": "CO <span>一酸化炭素</span>",
  "@js.10vrj8m3wjv": {
   "x-review": "machine",
   "x-source": "828d691c9b"
- },
- "js.10wj3xzpdgf": "太陽の円盤、{n0} K、黒体の色と周辺減光で表示。",
- "@js.10wj3xzpdgf": {
-  "x-review": "machine",
-  "x-source": "ae27e2403d"
  },
  "js.10zmmlwb9xi": "<b>Lyot コロナグラフ。</b>焦点面に置いた不透明な円盤が星像の中心部を遮る。円盤が取り除けないのはその縁で回折した光で、次のレンズがそれを再結像した瞳の縁へ送る。瞳よりわずかに小さい Lyot ストップがその縁の光を捉える（Lyot {n0}）。{n1} λ/D の円盤では、ストップを瞳の {n2}% から {n3}% に絞ると、{n4} λ/D における星の光は星のピークの {n5}×{n6}⁻⁵ から {n7}×{n8}⁻⁷ に下がる（コロナグラフなし：{n9}×{n10}⁻⁵）[計算]。一方、円盤から十分離れた惑星は光の {n11}%、つまりストップの面積分を保つ。",
  "@js.10zmmlwb9xi": {
@@ -2135,6 +2120,11 @@
  "@js.11kdzzmc5nu": {
   "x-review": "machine",
   "x-source": "184a6800cc"
+ },
+ "js.11n5kdywh3l": "Teff",
+ "@js.11n5kdywh3l": {
+  "x-review": "machine",
+  "x-source": "4b0fa3b17f"
  },
  "js.11n6gzp7din": "{n0}（事前分布が支配的。誤差は事前分布の誤差を繰り返すだけになるため示さない）",
  "@js.11n6gzp7din": {
@@ -2196,6 +2186,11 @@
   "x-review": "machine",
   "x-source": "f8acf4d692"
  },
+ "js.122id4bsvl0": "<i style=\"background:#FFD60A\"></i>アストロメトリ <span class=\"mono\">{n0}</span>",
+ "@js.122id4bsvl0": {
+  "x-review": "machine",
+  "x-source": "8013870b43"
+ },
  "js.122x1s0w9zz": "F_Q · F_HZ、対数スケール",
  "@js.122x1s0w9zz": {
   "x-review": "machine",
@@ -2216,10 +2211,10 @@
   "x-review": "machine",
   "x-source": "cc95c0003c"
  },
- "js.12cg9tt6w6b": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Sentinel フィード",
- "@js.12cg9tt6w6b": {
+ "js.12cis2bjlup": "電波",
+ "@js.12cis2bjlup": {
   "x-review": "machine",
-  "x-source": "2d63ad7563"
+  "x-source": "2a7dfeb2f2"
  },
  "js.12ed4zztqr8": "{s0} の想像図：温暖帯にある海王星型の惑星、地球半径の {n0} 倍、{n1} K。",
  "@js.12ed4zztqr8": {
@@ -2241,15 +2236,20 @@
   "x-review": "machine",
   "x-source": "8ec36a17e7"
  },
- "js.12lth0d2p34": "{n0} 年、Wolszczan と Frail は、ミリ秒パルサー PSR B1257+{n1} のパルス到着時刻の規則的な揺れから、その周りの惑星を見つけた（Wolszczan &amp; Frail {n2}）：惑星がパルサーを引っ張り、光の伝播時間がミリ秒単位で変化する。これは電波によるタイミング計測であり、惑星からの電波ではない。<a href=\"/explore/galaxy/?tour=13\">銀河ツアーのカード ›</a>",
- "@js.12lth0d2p34": {
-  "x-review": "machine",
-  "x-source": "a919cbb3a4"
- },
  "js.12m26xazjm": "審査を通過。パネルの重みの {n0}% がこの対象を潜在的な惑星とラベル付けした。周期信号上：{n1} 回のトランジット、P = {n2} d",
  "@js.12m26xazjm": {
   "x-review": "machine",
   "x-source": "8ec885602b"
+ },
+ "js.12ooi6yhl0h": "Kepler-{n0} b",
+ "@js.12ooi6yhl0h": {
+  "x-review": "machine",
+  "x-source": "5d97744685"
+ },
+ "js.12q7to7nkw0": "接近と後退",
+ "@js.12q7to7nkw0": {
+  "x-review": "machine",
+  "x-source": "982502489b"
  },
  "js.12ujqir6o8g": "JWST MIRI コロナグラフ",
  "@js.12ujqir6o8g": {
@@ -2260,6 +2260,11 @@
  "@js.12vi4vfunn8": {
   "x-review": "machine",
   "x-source": "05ed847784"
+ },
+ "js.12w6m38pgra": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知のTOI周期</span><b class=\"fig\">7b. <span class=\"mono\">tess-1c554332c266-{n0}</span>.</b> BTJD {n1} の減光、{n2} ppm、{n3} h、SNR {n4}。{n5} 人のレビュアーがマーク（カタログにはパネルの人数とコンセンサス区間は保存されていない）。{n7} 回のトランジットを含む {n6} 日の BLS 周期上にある。ステータス: 周期が既知のTOIと一致。値はアーカイブのもののみ。このページは検出を主張しない。",
+ "@js.12w6m38pgra": {
+  "x-review": "machine",
+  "x-source": "961ae19d5c"
  },
  "js.12y2sroyczu": "{n0} 基本振動",
  "@js.12y2sroyczu": {
@@ -2296,11 +2301,6 @@
   "x-review": "machine",
   "x-source": "bff9d47f59"
  },
- "js.136ul906qph": "出典：SetuHQ の保存済み実行 runs/tess-pi-men-s1（TESS セクター {n0}、SPOC {n1} 分 PDCSAP フラックス、TIC {n2}、config sha256 585955d5e7a1…）：保存された {n3} 点、各対象をその中央値で規格化し {n4} 分にビン化。",
- "@js.136ul906qph": {
-  "x-review": "machine",
-  "x-source": "af8431ab78"
- },
  "js.138zpxk17ru": "f_i、対数スケール",
  "@js.138zpxk17ru": {
   "x-review": "machine",
@@ -2316,11 +2316,6 @@
   "x-review": "machine",
   "x-source": "e39c1a07d7"
  },
- "js.13ac253fetk": "exoplanet.eu に距離が保存されている {n1} 個の惑星のうち、<b>{n0}</b> 個はアストロメトリ法で見つかった（最初に記載された手法）。<a href=\"/explore/galaxy/?method=astrometry\">銀河マップに表示 ›</a>",
- "@js.13ac253fetk": {
-  "x-review": "machine",
-  "x-source": "dc5877cdd7"
- },
  "js.13cdu73b6uc": "一部の恒星の周囲でのCO₂の光分解、または水の喪失後の大量の水素散逸。",
  "@js.13cdu73b6uc": {
   "x-review": "machine",
@@ -2335,6 +2330,11 @@
  "@js.13ffhncz0ep": {
   "x-review": "machine",
   "x-source": "7b27994bc4"
+ },
+ "js.13gocj2fnda": "docs/results/reviewer_weights_full_panel.json",
+ "@js.13gocj2fnda": {
+  "x-review": "machine",
+  "x-source": "5134ba8327"
  },
  "js.13i1elxloqt": "pi Men c：スケールハイトあたり、H₂に富む",
  "@js.13i1elxloqt": {
@@ -2355,6 +2355,11 @@
  "@js.13kikmj1q17": {
   "x-review": "machine",
   "x-source": "f5cca1ccc1"
+ },
+ "js.13lcq3b40tl": "イラスト",
+ "@js.13lcq3b40tl": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
  },
  "js.13mufrch5ly": "tess-38b5a559eee2-{n0}",
  "@js.13mufrch5ly": {
@@ -2381,15 +2386,20 @@
   "x-review": "machine",
   "x-source": "118618889c"
  },
+ "js.13swdwmmbmi": "実行と設定 ›",
+ "@js.13swdwmmbmi": {
+  "x-review": "machine",
+  "x-source": "c610f2888d"
+ },
  "js.13t7ixpw2ky": "上位の候補",
  "@js.13t7ixpw2ky": {
   "x-review": "machine",
   "x-source": "7021bb9b5f"
  },
- "js.13vqj4f8hh6": "機器由来の手がかりがある場合：対象データの端；{n0} 日以内のモーメンタムダンプ、散乱光フラグ、指向フラグまたは手動除外フラグ；{n2} 日以内にある {n1} 日を超えるデータギャップ；またはパネルの重みの半分が機器由来と判断した場合。",
- "@js.13vqj4f8hh6": {
+ "js.13x58b3mwwa": "Wolf {n0} c",
+ "@js.13x58b3mwwa": {
   "x-review": "machine",
-  "x-source": "0495534488"
+  "x-source": "560cd4bbe1"
  },
  "js.13xevrqzvu7": "F_S（検出可能なガス）",
  "@js.13xevrqzvu7": {
@@ -2410,6 +2420,11 @@
  "@js.1473r6pfqi4": {
   "x-review": "machine",
   "x-source": "b2990754ad"
+ },
+ "js.14cls39i1sb": "Luhman {n0} B",
+ "@js.14cls39i1sb": {
+  "x-review": "machine",
+  "x-source": "f04427416b"
  },
  "js.14ct4jjljtx": "前のストップ",
  "@js.14ct4jjljtx": {
@@ -2440,6 +2455,16 @@
  "@js.14fe8ebzk21": {
   "x-review": "machine",
   "x-source": "365e781739"
+ },
+ "js.14huikxe5ha": "Luyten's Star e",
+ "@js.14huikxe5ha": {
+  "x-review": "machine",
+  "x-source": "5a24593e14"
+ },
+ "js.14isgauchsm": "YZ Cet",
+ "@js.14isgauchsm": {
+  "x-review": "machine",
+  "x-source": "f80e6fd49c"
  },
  "js.14iuxy783ms": "別名 EQ Peg A、BD+{n0} {n1} A、LMP {n2} A、WIR {n3} A。",
  "@js.14iuxy783ms": {
@@ -2591,6 +2616,16 @@
   "x-review": "machine",
   "x-source": "dd7d34d846"
  },
+ "js.15phwu441vo": "Lalande {n0} c",
+ "@js.15phwu441vo": {
+  "x-review": "machine",
+  "x-source": "5aa41e4960"
+ },
+ "js.15pp5ycbnhi": "超過（{n0}%）",
+ "@js.15pp5ycbnhi": {
+  "x-review": "machine",
+  "x-source": "8cd023e1a1"
+ },
  "js.15r06e4vt70": "実行 tess-hd-{n0}-s4 · {n1} 個のディップ（候補 {n2}、要レビュー {n3}）· 対象 {n4} 件。<span class=\"printonly\"> この図版のすべての候補：候補、未確認。</span>",
  "@js.15r06e4vt70": {
   "x-review": "machine",
@@ -2661,6 +2696,11 @@
   "x-review": "machine",
   "x-source": "3b661f9791"
  },
+ "js.16h8d5mlpjp": "Probes",
+ "@js.16h8d5mlpjp": {
+  "x-review": "machine",
+  "x-source": "8f6e567898"
+ },
  "js.16hqbj09o4u": "磁力線、円錐、軌道は縮尺どおりではない；バースト時刻は説明用；カットオフは計算値",
  "@js.16hqbj09o4u": {
   "x-review": "machine",
@@ -2675,11 +2715,6 @@
  "@js.16mxiyd8s0l": {
   "x-review": "machine",
   "x-source": "e223d8ec1e"
- },
- "js.16qlwwljm69": "<b>Pro Sweeps</b> <span class=\"eddev\">開発中</span>：セクターまたはターゲットリストを対象とするホスト型探索で、顧客自身のAIプロバイダーキーを使用する；結果はオープンな貢献バンドルとして返される",
- "@js.16qlwwljm69": {
-  "x-review": "machine",
-  "x-source": "31d3ac206f"
  },
  "js.16r0kn8gjyr": "SetuHQ が読み込むサーベイ。",
  "@js.16r0kn8gjyr": {
@@ -2696,11 +2731,6 @@
   "x-review": "machine",
   "x-source": "b7b7f73a1e"
  },
- "js.16vo26f9hfu": "pycheops と同じ入力：すべての参照観測で、我々のデコリレーションは pycheops のものと rms &lt; {n0} ppm で一致するか、同じ点と項でより低い rms に達する（v1 以降は緩和）",
- "@js.16vo26f9hfu": {
-  "x-review": "machine",
-  "x-source": "c88247e554"
- },
  "js.16x61d2zia4": "<span class=\"word s-rej\">審査で棄却</span><b class=\"fig\">1d. TOI-{n0}、ディップ {n1}。</b> <span class=\"sid mono\">保存ID tess-01e315ee5ebf-{n2}。</span> BTJD {n3} のディップ、{n4} ppm、{n5} h、SNR {n6}。合意区間は BTJD {n7} から {n8}。{n10} 人のレビュアーのうち {n9} 人が印を付けた（Sentinels {n12} 体のうち {n11} 体、Probes {n14} 体のうち {n13} 体）。{n15} 日のBLS周期上にある（t0 BTJD {n16}）。審査で棄却（二次食、任意位相での二次食）。アーカイブ：許容範囲内にアーカイブ惑星はない。アーカイブの値のみ。このページは検出を主張しない。",
  "@js.16x61d2zia4": {
   "x-review": "machine",
@@ -2710,11 +2740,6 @@
  "@js.16xd4uxov7b": {
   "x-review": "machine",
   "x-source": "6e2db4884e"
- },
- "js.16xkma5n6o5": "対照はランキングの可否を決めるが、J には含まれない：探索したすべての恒星で両方の対照リストを持つ保留（held-out）エントリだけがランク付けされ、それ以外はランクなしで掲載される。対照リストは手法自身の報告であり、リーダーボードは光度曲線なしにそれを再計算できない。Sentinel のサブサンプルはランク付けされない。",
- "@js.16xkma5n6o5": {
-  "x-review": "machine",
-  "x-source": "698a7fa611"
  },
  "js.16yau0dec1n": "ありふれた化学反応と脱ガスによって至るところで生成される。バイオシグネチャーではない。",
  "@js.16yau0dec1n": {
@@ -2736,11 +2761,6 @@
   "x-review": "machine",
   "x-source": "00d60e31a4"
  },
- "js.170ttkobv": "<b>イラスト。</b> 考え方を説明するもので、データではない。",
- "@js.170ttkobv": {
-  "x-review": "machine",
-  "x-source": "f84dea2704"
- },
  "js.1752ocxoxow": "比",
  "@js.1752ocxoxow": {
   "x-review": "machine",
@@ -2750,6 +2770,11 @@
  "@js.175a50uaz7u": {
   "x-review": "machine",
   "x-source": "05e19aa7b7"
+ },
+ "js.176wwpyjrg6": "eps Eridani b",
+ "@js.176wwpyjrg6": {
+  "x-review": "machine",
+  "x-source": "d935a49c88"
  },
  "js.17hw2mxavcy": "地球–太陽型の軌道がトランジットを起こす確率",
  "@js.17hw2mxavcy": {
@@ -2771,10 +2796,10 @@
   "x-review": "machine",
   "x-source": "4a850645ed"
  },
- "js.17k76okut7k": "想像図：半径 {n0} R⊕ 以上、Teq {n1}〜{n2} K の暖かい巨大惑星の外観：白い雲の帯。この外観を示す静止画であり、特定の惑星のものではない。",
- "@js.17k76okut7k": {
+ "js.17ntl740ako": "YZ Cet c",
+ "@js.17ntl740ako": {
   "x-review": "machine",
-  "x-source": "6486ceb3f7"
+  "x-source": "5120e910b2"
  },
  "js.17nxghh8cwl": "各サンプル実行のすべての減光を、恒星ごとにまとめて時刻順に番号を付け、審査結果とともに示す。審査を通過した減光は候補であり、確認されていない。",
  "@js.17nxghh8cwl": {
@@ -2831,6 +2856,11 @@
   "x-review": "machine",
   "x-source": "b7312318e0"
  },
+ "js.183wr165iky": "保存 id tess-7b97e468b60b-{n0}。この実行にはケースファイルがない",
+ "@js.183wr165iky": {
+  "x-review": "machine",
+  "x-source": "2cfabb7955"
+ },
  "js.184alwhvm3u": "≈ {n0} 日",
  "@js.184alwhvm3u": {
   "x-review": "machine",
@@ -2871,6 +2901,11 @@
   "x-review": "machine",
   "x-source": "dece0e17ca"
  },
+ "js.18lwk9i51zo": "tau Cet h",
+ "@js.18lwk9i51zo": {
+  "x-review": "machine",
+  "x-source": "f7da4e8eac"
+ },
  "js.18n6es5ok3o": "マーク（BTJD）",
  "@js.18n6es5ok3o": {
   "x-review": "machine",
@@ -2891,15 +2926,15 @@
   "x-review": "machine",
   "x-source": "9ca7ead3fe"
  },
- "js.18o5x6sbdjj": "exoplanet.eu で距離が保存されている {n1} 個の惑星のうち、<b>{n0}</b> 個はマイクロレンズ法（最初に記載された手法）で見つかった。 <a href=\"/explore/galaxy/?method=microlensing\">銀河マップに表示 ›</a>",
- "@js.18o5x6sbdjj": {
-  "x-review": "machine",
-  "x-source": "75b3704ae2"
- },
  "js.18oql4qf149": "比（free / Huang）",
  "@js.18oql4qf149": {
   "x-review": "machine",
   "x-source": "a32de90fca"
+ },
+ "js.18otqbloli3": "Luyten's Star c",
+ "@js.18otqbloli3": {
+  "x-review": "machine",
+  "x-source": "de5d475f55"
  },
  "js.18qifo210uh": "SetuHQ は電波での観測を行わない。この場面はイラストである：磁力線、放射コーン、軌道の縮尺は正確ではなく、バーストの時刻も説明用である。計算されているのはカットオフ周波数のみ。",
  "@js.18qifo210uh": {
@@ -2946,6 +2981,11 @@
   "x-review": "machine",
   "x-source": "c11a942411"
  },
+ "js.196px5ez5bg": "Lalande {n0} b",
+ "@js.196px5ez5bg": {
+  "x-review": "machine",
+  "x-source": "9228522611"
+ },
  "js.197t86p2mo2": "フィード · 周期が既知の TOI と一致 · P {n0} d · トランジット {n1} 回",
  "@js.197t86p2mo2": {
   "x-review": "machine",
@@ -2955,11 +2995,6 @@
  "@js.199k9vutkk7": {
   "x-review": "machine",
   "x-source": "14d5771087"
- },
- "js.19egy1xdd4z": "N 個の原子からなる分子には 3N − {n0} 通りの振動のしかたがある（直線形なら 3N − {n1}）：水は三つ、二酸化炭素は四つ（変角振動が直交する二方向に現れる）、メタンは九つ。振動モードが赤外線を吸収するのは、分子の双極子を変化させる場合に限られる。そのため、CO₂ の対称伸縮（{n2} µm）、O₂ の伸縮、メタンの四つの基本振動のうち二つは赤外線では不活性である。これらのモードがつくるバンドは {s0} の章で示すものである：水の二つの伸縮（{n3} µm と {n4} µm）が {n5} µm バンドを、メタンの ν₃ が {n6} µm バンドを、CO₂ の非対称伸縮が {n7} µm バンドを、CO の伸縮が {n8} µm バンドをつくる。",
- "@js.19egy1xdd4z": {
-  "x-review": "machine",
-  "x-source": "34a40a6e3c"
  },
  "js.19gww8mixuh": "アストロメトリ法の仕組み ›",
  "@js.19gww8mixuh": {
@@ -3036,6 +3071,11 @@
   "x-review": "machine",
   "x-source": "7cb381fdb4"
  },
+ "js.1a5z9qhmjgc": "Sentinels",
+ "@js.1a5z9qhmjgc": {
+  "x-review": "machine",
+  "x-source": "2e1e6f1301"
+ },
  "js.1a6l9fjw5he": "惑星：想像図 ›",
  "@js.1a6l9fjw5he": {
   "x-review": "machine",
@@ -3090,6 +3130,11 @@
  "@js.1al74ewy2g6": {
   "x-review": "machine",
   "x-source": "df55237fb1"
+ },
+ "js.1aol2kz2k2l": "トランジット",
+ "@js.1aol2kz2k2l": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
  },
  "js.1aqv49cd0kk": "要レビュー",
  "@js.1aqv49cd0kk": {
@@ -3201,11 +3246,6 @@
   "x-review": "machine",
   "x-source": "c9a6bca81c"
  },
- "js.1bhkarus91o": "<b>ν 伸縮</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · <a href=\"/how-it-works/atmospheres/\">{s0} の {n2} µm バンド ›</a>",
- "@js.1bhkarus91o": {
-  "x-review": "machine",
-  "x-source": "d76ad8b3b9"
- },
  "js.1bj34kz5aki": "実行レポート: HD {n0}",
  "@js.1bj34kz5aki": {
   "x-review": "machine",
@@ -3261,10 +3301,10 @@
   "x-review": "machine",
   "x-source": "734f2ee779"
  },
- "js.1c43a5mbtcb": "周期が既知の TOI <span class=\"tag cand\" title=\"candidate, unconfirmed\">候補</span>と一致",
- "@js.1c43a5mbtcb": {
+ "js.1c5e6ri6127": "Wolf {n0}",
+ "@js.1c5e6ri6127": {
   "x-review": "machine",
-  "x-source": "e0828d838c"
+  "x-source": "40c0e1f8f4"
  },
  "js.1c7794vgcfx": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知の TOI 周期</span><b class=\"fig\">4h. <span class=\"mono\">tess-3b0eb3c81ad6-{n0}</span>.</b> BTJD {n1} の減光、{n2} ppm、{n3} 時間、SNR {n4}。{n5} 名のレビュアーがマーク（カタログにはパネルの規模とコンセンサス区間は保存されていない）。{n7} 回のトランジットを含む {n6} 日の BLS 周期上にある。ステータス: 周期が既知の TOI と一致。アーカイブの値のみ。このページは検出を主張しない。",
  "@js.1c7794vgcfx": {
@@ -3286,15 +3326,15 @@
   "x-review": "machine",
   "x-source": "4ffcf977f1"
  },
+ "js.1cef0p0jlfb": "SetuHQ が見つけたもの",
+ "@js.1cef0p0jlfb": {
+  "x-review": "machine",
+  "x-source": "f2daf95102"
+ },
  "js.1cibvcqhi96": "トランジットは軌道の中の一瞬にすぎない。軌道の残りの部分も情報を持っている。トランジットがいつ起こるか、惑星が回転するにつれてどう輝くか、いつ恒星の背後に隠れるか、そして自転する恒星のどちら側の半分を覆うか。",
  "@js.1cibvcqhi96": {
   "x-review": "machine",
   "x-source": "dcd3b3c030"
- },
- "js.1cj5f6isk29": "<b>ν₂ 変角（直交する 2 つ）</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} の {n2}–{n3} µm の範囲外",
- "@js.1cj5f6isk29": {
-  "x-review": "machine",
-  "x-source": "fffacfe81d"
  },
  "js.1ckbr2brf2r": "保存された id tess-bc9f59e5c3af-{n0}。この実行にはケースファイルがない",
  "@js.1ckbr2brf2r": {
@@ -3305,6 +3345,11 @@
  "@js.1clmexejrlr": {
   "x-review": "machine",
   "x-source": "8a07e9e968"
+ },
+ "js.1cmc1ajakjd": "eps Ind B",
+ "@js.1cmc1ajakjd": {
+  "x-review": "machine",
+  "x-source": "a7c8e06a1d"
  },
  "js.1coc893jlc0": "P = {n0} 年、e = {n1}、IAU 公称質量 [calc]",
  "@js.1coc893jlc0": {
@@ -3330,11 +3375,6 @@
  "@js.1cx2mlrh2q7": {
   "x-review": "machine",
   "x-source": "11a4a60b51"
- },
- "js.1cy89xikthl": "<b>既定のベンチマークでの測定であり、発見ではない。</b> TOI 表（{n3}-{n4}-{n5} 取得、シード {n6}）からの確認済みまたは既知の惑星（CP/KP）{n0} 件、偽陽性 {n1} 件、誤警報 {n2} 件。恒星 1 つにつき TOI 1 件。検証用に取り分けた半分を表示。パネル: 3 つの Probes（決定論的検出器）とその固定された較正済み重み、セクター全体の BLS、検証、周辺減光を考慮したフィット。フィード単位の表ではフィードの FAP（{n7} 回の試行）を加えている。",
- "@js.1cy89xikthl": {
-  "x-review": "machine",
-  "x-source": "2db2bd3746"
  },
  "js.1d2fjcit5ne": "系統",
  "@js.1d2fjcit5ne": {
@@ -3380,11 +3420,6 @@
  "@js.1dbkcqukzan": {
   "x-review": "machine",
   "x-source": "04a1d0a0c8"
- },
- "js.1dcsl4f0wrb": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s0}</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">実行 tess-pi-men-s1 · {n1} 件</span>",
- "@js.1dcsl4f0wrb": {
-  "x-review": "machine",
-  "x-source": "d3862be740"
  },
  "js.1dd353vmae5": "恒星のハビタブルゾーンにある地球サイズの惑星。",
  "@js.1dd353vmae5": {
@@ -3456,15 +3491,15 @@
   "x-review": "machine",
   "x-source": "8a0d9e2efe"
  },
- "js.1e0thu83q1m": "<b>ν₁ 対称伸縮</b> · {n0} µm · 赤外不活性（双極子は変化しない）· ×{n1} で描画 · {s0} の {n2}–{n3} µm 観測範囲外",
- "@js.1e0thu83q1m": {
-  "x-review": "machine",
-  "x-source": "b5a09a9656"
- },
  "js.1e1cj7tvww2": "Probe · 高感度 <span class=\"sub mono\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1e1cj7tvww2": {
   "x-review": "machine",
   "x-source": "b9b4c27050"
+ },
+ "js.1e34rrpji4d": "サンプル中の TOI {n0} 件",
+ "@js.1e34rrpji4d": {
+  "x-review": "machine",
+  "x-source": "f87cb7f911"
  },
  "js.1e4aq4nvmgn": "レビュアーのラベルと根拠",
  "@js.1e4aq4nvmgn": {
@@ -3481,15 +3516,10 @@
   "x-review": "machine",
   "x-source": "5acf5925b9"
  },
- "js.1ea3o7os4iv": "SetuHQ の審査フラグは光度曲線のみに基づく: <code>odd_even_mismatch</code>（奇数番と偶数番の深さが異なる）、<code>secondary_eclipse</code>（位相 {n0} の減光）、<code>low_snr</code>、<code>too_short</code>、<code>edge_event</code>、<code>insufficient_points</code>。ピクセルレベルの重心チェックや差分画像チェック、統計的検証は行わないため、混入した背景の連星が通過する可能性がある。<a href=\"/evidence/\">レビュアーを見る ›</a> · <a href=\"/candidates/pi-men/dip-2/\">審査済みの事例を見る ›</a>",
- "@js.1ea3o7os4iv": {
+ "js.1ecc8oy35i4": "Teegarden's d",
+ "@js.1ecc8oy35i4": {
   "x-review": "machine",
-  "x-source": "9c325d6228"
- },
- "js.1eb7589ltee": "アーカイブとの比較: 許容範囲内にアーカイブの惑星はない（この減光には比較する BLS 周期がない）; {s0}: 比較するトランジットのエフェメリスがない。アーカイブの値のみ。このページは検出を主張しない。",
- "@js.1eb7589ltee": {
-  "x-review": "machine",
-  "x-source": "1e8af2cf5f"
+  "x-source": "461cf62f48"
  },
  "js.1ecof5fze2u": "すべての審査チェックを通過。Probes {n1} 中 {n0}、Sentinels {n3} 中 {n2} がマーク。候補、未確認。",
  "@js.1ecof5fze2u": {
@@ -3510,6 +3540,11 @@
  "@js.1eg1hfp0rb9": {
   "x-review": "machine",
   "x-source": "bcdb9702f4"
+ },
+ "js.1eh5clg574l": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: HD {n4} b、HD {n5} Ab、TOI-{n6} b、TOI-{n7}。",
+ "@js.1eh5clg574l": {
+  "x-review": "machine",
+  "x-source": "dcb89ac8b0"
  },
  "js.1einsfs6j8p": "SetuHQ によるフィット深さ（主要な減光）",
  "@js.1einsfs6j8p": {
@@ -3546,11 +3581,6 @@
   "x-review": "machine",
   "x-source": "45ef298afc"
  },
- "js.1eqtzlgohp1": "散乱光: ラベル付きの実サンプルは見つからなかった。スクリーニング（品質フラグと対照アパーチャ）は説明され、合成イベントと超新星カットアウトの対照アパーチャで試されているが、散乱光イベントのカタログに対しては検証されていない。",
- "@js.1eqtzlgohp1": {
-  "x-review": "machine",
-  "x-source": "cef1f20086"
- },
  "js.1etlbcax1sp": "ii · 対象全体 tess-4b369d3c6f09",
  "@js.1etlbcax1sp": {
   "x-review": "machine",
@@ -3576,15 +3606,15 @@
   "x-review": "machine",
   "x-source": "b7e118d85b"
  },
+ "js.1ezxmjp2el4": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: K2-{n4} b、TOI-{n5} b、TOI-{n6}。",
+ "@js.1ezxmjp2el4": {
+  "x-review": "machine",
+  "x-source": "57de1033f9"
+ },
  "js.1f0uxtws1ab": "審査者になってみよう",
  "@js.1f0uxtws1ab": {
   "x-review": "machine",
   "x-source": "e37b76fbec"
- },
- "js.1f208h2gzzx": "{n0} ppm · {n1} h · Probes {n2}、Sentinels {n3} · 要レビュー、未解決",
- "@js.1f208h2gzzx": {
-  "x-review": "machine",
-  "x-source": "bfe3196ddb"
  },
  "js.1f3str9e5jr": "縮尺は正確ではない; Lyot {n0} に基づく",
  "@js.1f3str9e5jr": {
@@ -3595,11 +3625,6 @@
  "@js.1f423dts634": {
   "x-review": "machine",
   "x-source": "0e47f09a74"
- },
- "js.1f5jrzkwrow": "順位: ベンチマークが定めた探索可能セット（SPOC {n0} 分光度曲線を持つ恒星）における Youden の J。両側に同一の述語、すなわちクリーンな候補（エフェメリス上にあり、審査を通過し、食連星フラグがない）を用いる: J = クリーンな候補として提示された CP/KP 恒星の割合 + 提示されなかった FP 恒星の割合 − {n1}。区間は square-and-add の Wilson 区間。すべての TOI をフラグの有無にかかわらず惑星と判定すると J = {n2} となる。探索可能な恒星を「未探索」とした場合は提示なしとして数える。対象範囲の全恒星に対する J も併記する。区間が重なる場合、その順序は測定された差ではない。",
- "@js.1f5jrzkwrow": {
-  "x-review": "machine",
-  "x-source": "5fa0572ae2"
  },
  "js.1f71ffjmfo5": "最小質量 (m sin i)",
  "@js.1f71ffjmfo5": {
@@ -3620,6 +3645,11 @@
  "@js.1f84decza55": {
   "x-review": "machine",
   "x-source": "7bb250633d"
+ },
+ "js.1fa3dkre7ep": "温暖",
+ "@js.1fa3dkre7ep": {
+  "x-review": "machine",
+  "x-source": "0f0aa408c1"
  },
  "js.1faz9a47wga": "K_R ≈ V sin I · k²、V sin I = {n0} km/s と k = {n1} はいずれも Gaudi &amp; Winn {n2} の表 {n3} による。同表の値は {n4} m/s [calc]",
  "@js.1faz9a47wga": {
@@ -3656,11 +3686,6 @@
   "x-review": "machine",
   "x-source": "c6b9a506e0"
  },
- "js.1fo0ybrjcxn": "<b>データ: The Extrasolar Planets Encyclopaedia (exoplanet.eu)、{n1} 年 10 月 {n0} 日取得; 距離が保存されている惑星 {n2} 個、恒星約 {n3} 個。</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>。このリストの取得時に NASA Exoplanet Archive に接続できなかったため、リストは exoplanet.eu のみに基づく。exoplanet.eu は惑星として扱うすべての天体を確認済みとして掲載している: 木星質量の {n4} 倍まで（不確かさの範囲内）の天体で、出版済みまたは発表済みのもの。そのリストは、査読論文に基づき木星質量の {n5} 倍までの天体を収録する NASA Exoplanet Archive のものより広い。リストには exoplanet.eu が系外彗星とする {n6} 件の項目が含まれる。{n8} 個の惑星のうち {n7} 個は距離が保存されておらず、プロットされていない。",
- "@js.1fo0ybrjcxn": {
-  "x-review": "machine",
-  "x-source": "8798787570"
- },
  "js.1fppcyzgola": "<a href=\"/stars/barnard-s-star/\">{s0}</a> · 視線速度法 · {n0} 年発見 · 地球サイズ（質量による）",
  "@js.1fppcyzgola": {
   "x-review": "machine",
@@ -3670,6 +3695,11 @@
  "@js.1frapy57cm7": {
   "x-review": "machine",
   "x-source": "85cd6c7e34"
+ },
+ "js.1fujm79pdmr": "exoplanet.eu では「ウェブサイトで公表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: 2MASS J19135511+{n4} b、K02313.01、KIC {n5} b、KOI-{n6} b、KOI-{n7}、WISE J191355.11+{n8} b。",
+ "@js.1fujm79pdmr": {
+  "x-review": "machine",
+  "x-source": "7448fb18a7"
  },
  "js.1fvwjcy4spf": "閾値、重み、すべての入力は <code>manifest.json</code> に書き出されるため、結果を正確に再実行できる。",
  "@js.1fvwjcy4spf": {
@@ -3681,10 +3711,20 @@
   "x-review": "machine",
   "x-source": "4ffb9625b0"
  },
+ "js.1fwz3jtwilc": "{n0} Eri b",
+ "@js.1fwz3jtwilc": {
+  "x-review": "machine",
+  "x-source": "ae488e35a4"
+ },
  "js.1g0smg3jibl": "TIC の密度事前分布を用いた場合",
  "@js.1g0smg3jibl": {
   "x-review": "machine",
   "x-source": "ee7a7029f9"
+ },
+ "js.1g4l9awxfep": "探索カタログ docs/discoveries/catalog.json、更新 {n0}-{n1}-30T06:{n2}+{n3}、{n4} エントリ。",
+ "@js.1g4l9awxfep": {
+  "x-review": "machine",
+  "x-source": "070c993100"
  },
  "js.1g5lkun156f": "惑星円盤は深さに基づき縮尺どおり: Rp/R* {n0} · 軌道の縮尺は正確ではない · 恒星半径は保存されていない",
  "@js.1g5lkun156f": {
@@ -3801,20 +3841,10 @@
   "x-review": "machine",
   "x-source": "405e92b37a"
  },
- "js.1hanjmcicv2": "Sentinelsのサブサンプル <span class=\"sub\">ホールドアウトした恒星{n0}個 · 順位付けなし</span>",
- "@js.1hanjmcicv2": {
-  "x-review": "machine",
-  "x-source": "07839908d1"
- },
  "js.1hc8gmjgdot": "TOI表",
  "@js.1hc8gmjgdot": {
   "x-review": "machine",
   "x-source": "69cec4abc6"
- },
- "js.1hfl9sordrk": "{s0}がpi Men（{n0} K、{n1} R☉）の前を横切るモデル：深さ{n2} ppm、{n3} h。惑星は想像図である。",
- "@js.1hfl9sordrk": {
-  "x-review": "machine",
-  "x-source": "9f7804c19a"
  },
  "js.1hfm3qhujst": "<a href=\"/stars/gj-1214/\">{s0}</a> · トランジット · 発見 {n0} · サブネプチューン",
  "@js.1hfm3qhujst": {
@@ -3856,6 +3886,11 @@
   "x-review": "machine",
   "x-source": "2c40f96451"
  },
+ "js.1hrc7wsoaso": "系外巨大惑星のトランジット中の理論的透過スペクトル",
+ "@js.1hrc7wsoaso": {
+  "x-review": "machine",
+  "x-source": "d75d99e996"
+ },
  "js.1hsyugfc111": "exoplanet.euの惑星{n0}個 · 保存タイプ M2V · TeffからのクラスM（最も近いのはM2V）",
  "@js.1hsyugfc111": {
   "x-review": "machine",
@@ -3866,20 +3901,10 @@
   "x-review": "machine",
   "x-source": "ee03efb686"
  },
- "js.1hw9pj2cjy7": "{n0}件のエントリ。<time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n2}年10月{n1}日 {n3} UTC</time>から<time datetime=\"2026-10-27T06:46:11+00:00\" title=\"2026-10-27T06:46:11+00:00\">{n5}年10月{n4}日 {n6} UTC</time>の間に見つかった。<b>{n7}件が既知のTOI周期と一致</b>。すべてのエントリは未確認の候補である。TOIとの一致はアーカイブとの比較である。アーカイブ値のみ。このページは検出を主張しない。既知のTOIと一致しないシグナルは非公開レビューのため保留され、レビューと報告の後にのみ公開される。",
- "@js.1hw9pj2cjy7": {
-  "x-review": "machine",
-  "x-source": "e5e81ce489"
- },
  "js.1i0hezn1dvy": "Sentinel · ボランティア：このウィンドウ内に{n0}スパン、この減光に計上",
  "@js.1i0hezn1dvy": {
   "x-review": "machine",
   "x-source": "c97f6573b3"
- },
- "js.1i1bqizwemp": "各セル：率、次にk/nとWilson {n0}%区間。区間は{n1}から{n2}%のバーとして描かれる（Youden Jは{n3}から{n4}、{n5}に目印）。ベンチマークが定めた探索可能セット上のYoudenのJで順位付けし、両側に同一の述語（クリーンな候補：エフェメリス上にあり、審査を通過し、食連星フラグなし）を用いるため、要レビューかどうかにかかわらずすべてのTOIを惑星とするとスコアはゼロになる。対照は順位付けの関門となるがJには入らず、対照リストは手法自身の報告である。区間が重なる場合、順序は測定された差ではない。",
- "@js.1i1bqizwemp": {
-  "x-review": "machine",
-  "x-source": "9b6f9451ca"
  },
  "js.1i1fwe1y4dt": "オゾン",
  "@js.1i1fwe1y4dt": {
@@ -3911,6 +3936,11 @@
   "x-review": "machine",
   "x-source": "cc3ff7cfea"
  },
+ "js.1i9gd4nyiqb": "視線速度",
+ "@js.1i9gd4nyiqb": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
  "js.1i9syzrgr9a": "ii · 対象全体 tess-04b815001aa6",
  "@js.1i9syzrgr9a": {
   "x-review": "machine",
@@ -3936,10 +3966,10 @@
   "x-review": "machine",
   "x-source": "5d8760ebee"
  },
- "js.1inrxj82qqn": "{s0}、減光{n0}（{n1} d）",
- "@js.1inrxj82qqn": {
+ "js.1ispru3ub0k": "Proxima Centauri b ›",
+ "@js.1ispru3ub0k": {
   "x-review": "machine",
-  "x-source": "6d7c168703"
+  "x-source": "48383a87b1"
  },
  "js.1iub0nyp6f9": "シミュレーション",
  "@js.1iub0nyp6f9": {
@@ -3971,11 +4001,6 @@
   "x-review": "machine",
   "x-source": "e54519602f"
  },
- "js.1j9g5n75pzw": "図解：Rp/R★ = {n0}、b = {n1}、{n2} Kの恒星。曲線は二次の周辺減光を含む小型惑星近似のMandel &amp; Agol（{n3}）モデル。",
- "@js.1j9g5n75pzw": {
-  "x-review": "machine",
-  "x-source": "2071874ebf"
- },
  "js.1ja46ec6bci": "<span class=\"word s-flag\">要レビュー</span><b class=\"fig\">1c. TOI-{n0}、減光{n1}。</b> <span class=\"sid mono\">保存ID tess-f28323a4aef6-{n2}。</span> BTJD {n3}の減光、{n4} ppm、{n5} h、SNR {n6}。コンセンサス区間 BTJD {n7}～{n8}。レビュアー{n10}中{n9}がマーク（Sentinels {n12}中{n11}、Probes {n14}中{n13}）。BLS周期なし：単一の減光。要レビュー（恒星のエフェメリスから外れている）。アーカイブ：許容範囲内にアーカイブの惑星なし（この減光には比較するBLS周期がない）。アーカイブ値のみ。このページは検出を主張しない。",
  "@js.1ja46ec6bci": {
   "x-review": "machine",
@@ -4001,6 +4026,11 @@
   "x-review": "machine",
   "x-source": "49696e46af"
  },
+ "js.1jl27lqn1et": "半径 (RJ)",
+ "@js.1jl27lqn1et": {
+  "x-review": "machine",
+  "x-source": "f32d9b82e5"
+ },
  "js.1jltb46ahiz": "TOI-{n0}：{n1} K の黒体色で描いた恒星円盤に、「掩蔽天体は特定されていない」と記した中間色の灰色の円盤が重なっている。SNR {n2} の二次食。{n3} 個のディップはすべて審査で棄却。",
  "@js.1jltb46ahiz": {
   "x-review": "machine",
@@ -4010,6 +4040,11 @@
  "@js.1jnlql1jvxr": {
   "x-review": "machine",
   "x-source": "43edc57b50"
+ },
+ "js.1jpqv79tmp8": "Teegarden's c",
+ "@js.1jpqv79tmp8": {
+  "x-review": "machine",
+  "x-source": "d987d14509"
  },
  "js.1jqjb1ecf85": "<a href=\"/stars/kepler-292/\">{s0}</a> · トランジット · 発見 {n0} · サブネプチューン",
  "@js.1jqjb1ecf85": {
@@ -4046,11 +4081,6 @@
   "x-review": "machine",
   "x-source": "254fff303e"
  },
- "js.1jvq989drn7": "想像図：巨大・低温の外観。半径 {n0} R⊕ 以上、Teq {n1} K 未満の場合で、クリーム色と黄褐色の雲の帯をもつ。特定の惑星ではなく、この外観を示す静止画である。",
- "@js.1jvq989drn7": {
-  "x-review": "machine",
-  "x-source": "76e2586629"
- },
  "js.1k05nntjzg8": "大気は ×{n0} 厚く描画。惑星と恒星の縮尺は正確ではない",
  "@js.1k05nntjzg8": {
   "x-review": "machine",
@@ -4071,15 +4101,15 @@
   "x-review": "machine",
   "x-source": "75b7e948dd"
  },
- "js.1k548hzbh61": "<b>ν₃ 非対称伸縮（三重縮退）</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · <a href=\"/how-it-works/atmospheres/\">「大気を読む」の {n2} µm バンド ›</a>",
- "@js.1k548hzbh61": {
-  "x-review": "machine",
-  "x-source": "371bca6192"
- },
  "js.1kch3o41dk9": "設定 SHA-{n0}",
  "@js.1kch3o41dk9": {
   "x-review": "machine",
   "x-source": "24563e9f39"
+ },
+ "js.1kdpriilk47": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: 2MASS J13263339-{n4} b、EPIC {n5} b、EPIC {n6}、WISE J132633.39-{n7} b。",
+ "@js.1kdpriilk47": {
+  "x-review": "machine",
+  "x-source": "4573b13db3"
  },
  "js.1kgnejjnpnf": "{s0} の想像図：温暖帯の巨大ガス惑星、地球半径の {n0} 倍、{n1} K。",
  "@js.1kgnejjnpnf": {
@@ -4131,11 +4161,6 @@
   "x-review": "machine",
   "x-source": "6c3088500d"
  },
- "js.1kukdzlwmzz": "<b>ν₂ 傘型振動</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} の {n2}–{n3} µm の観測範囲外",
- "@js.1kukdzlwmzz": {
-  "x-review": "machine",
-  "x-source": "ba3a4e2e62"
- },
  "js.1kvmnyghvke": "{s0} の想像図：岩石惑星、半径は未測定（地球質量の {n0} 倍）、照射量は計算できない。",
  "@js.1kvmnyghvke": {
   "x-review": "machine",
@@ -4166,6 +4191,11 @@
   "x-review": "machine",
   "x-source": "07e5463c85"
  },
+ "js.1l4atyo906i": "候補",
+ "@js.1l4atyo906i": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
  "js.1l4kxm2w5br": "アーカイブ比較：許容範囲内にアーカイブ惑星なし（このディップには比較する BLS 周期がない）。pi Men c：比較するトランジット暦がない。アーカイブ値のみ。このページは検出を主張しない。",
  "@js.1l4kxm2w5br": {
   "x-review": "machine",
@@ -4175,6 +4205,16 @@
  "@js.1l4u62ej5fc": {
   "x-review": "machine",
   "x-source": "f7bc5c08f0"
+ },
+ "js.1l8c78nkfe5": "Teq",
+ "@js.1l8c78nkfe5": {
+  "x-review": "machine",
+  "x-source": "bd1f380888"
+ },
+ "js.1l8lt88zlnn": "<i aria-hidden=\"true\"></i>食連星",
+ "@js.1l8lt88zlnn": {
+  "x-review": "machine",
+  "x-source": "a07a5fab5c"
  },
  "js.1l95agsp46q": "既知の TOI 周期",
  "@js.1l95agsp46q": {
@@ -4190,6 +4230,11 @@
  "@js.1lb13933831": {
   "x-review": "machine",
   "x-source": "0216bca3d8"
+ },
+ "js.1lbuxx1akb8": "<i style=\"background:#64D2FF\"></i>トランジット <span class=\"mono\">{n0}</span>",
+ "@js.1lbuxx1akb8": {
+  "x-review": "machine",
+  "x-source": "35c7f262c0"
  },
  "js.1liecym8jw": "<span class=\"word cand\">候補</span><span class=\"word s-pass\">審査通過</span><b class=\"fig\">1d. WASP-{n0}、ディップ {n1}。</b> <span class=\"sid mono\">保存 ID tess-5935bad1a3b4-{n2}。</span> ディップは BTJD {n3}、{n4} ppm、{n5} h、SNR {n6}。合意区間は BTJD {n7} から {n8}。{n10} 人のレビュアーのうち {n9} 人がマーク（Sentinels は {n12} 中 {n11}、Probes は {n14} 中 {n13}）。{n15} 日の BLS 周期上にある（t0 BTJD {n16}）。審査通過。アーカイブ：WASP-{n17} b と整合（ΔP {n18}%、比較するトランジット暦なし）。アーカイブ値のみ。このページは検出を主張しない。",
  "@js.1liecym8jw": {
@@ -4246,6 +4291,11 @@
   "x-review": "machine",
   "x-source": "aa15ce0bc3"
  },
+ "js.1m6gonlbh23": "Proxima Centauri",
+ "@js.1m6gonlbh23": {
+  "x-review": "machine",
+  "x-source": "07ddace0bc"
+ },
  "js.1m7nga73mrk": "視線速度のスケール：地球の双子は約 {n0} センチメートル毎秒。ESPRESSO は一晩で {n1} センチメートル毎秒未満。恒星表面のノイズは {n2} メートル毎秒程度。pi Men c は約 {n3} メートル毎秒。木星の双子は {n4} メートル毎秒。{n5} Peg b は {n6} メートル毎秒。",
  "@js.1m7nga73mrk": {
   "x-review": "machine",
@@ -4261,11 +4311,6 @@
   "x-review": "machine",
   "x-source": "94f4aed5ee"
  },
- "js.1mfsedhnkek": "選択した分子の回転する球棒モデル。測定された結合長と結合角（NIST CCCBDB）を用い、選んだ基準振動モードで振動する。矢印は各原子が動く向きを示す。下の波長軸には分子の基本振動バンドを示し、赤外で観測できるものは塗りつぶし、赤外不活性のモードは中抜きで表す。{s0} の章で描く範囲は網掛けで示す。",
- "@js.1mfsedhnkek": {
-  "x-review": "machine",
-  "x-source": "751951289b"
- },
  "js.1mi5uvq4hd0": "この実行 · 審査で棄却 · 周期なし",
  "@js.1mi5uvq4hd0": {
   "x-review": "machine",
@@ -4275,6 +4320,11 @@
  "@js.1mi9l1aqyq9": {
   "x-review": "machine",
   "x-source": "af079a71c8"
+ },
+ "js.1mjsdzuqt7u": "単一の星ではない",
+ "@js.1mjsdzuqt7u": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
  },
  "js.1mk4xq21j8n": "{n0} Peg b {n1} m/s",
  "@js.1mk4xq21j8n": {
@@ -4310,6 +4360,11 @@
  "@js.1myonl6ry65": {
   "x-review": "machine",
   "x-source": "927599ad1a"
+ },
+ "js.1mz5xi30e6k": "{n0} Peg b",
+ "@js.1mz5xi30e6k": {
+  "x-review": "machine",
+  "x-source": "07473ed79b"
  },
  "js.1mzrogjvr87": "このビューではケースファイルを読み込めなかった。<a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-003\">単独のページで開く。</a>",
  "@js.1mzrogjvr87": {
@@ -4386,11 +4441,6 @@
   "x-review": "machine",
   "x-source": "ed25878435"
  },
- "js.1nlihv4t4dw": "出典：docs/results/showcase.json。",
- "@js.1nlihv4t4dw": {
-  "x-review": "machine",
-  "x-source": "321e67bf81"
- },
  "js.1nm81nug7zg": "スキップ（ここでは利用不可）：なし",
  "@js.1nm81nug7zg": {
   "x-review": "machine",
@@ -4415,6 +4465,11 @@
  "@js.1nsffm21b0f": {
   "x-review": "machine",
   "x-source": "1a295a1bae"
+ },
+ "js.1nuj8nr6koq": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: Kepler-4ee b、2MASS J19130109+{n4} b、K00192.01、KIC {n5} b、KOI-{n6} b、KOI-{n7}、WISE J191301.09+{n8} b。",
+ "@js.1nuj8nr6koq": {
+  "x-review": "machine",
+  "x-source": "91fb084a47"
  },
  "js.1nuvlh0ma79": "tess-5935bad1a3b4",
  "@js.1nuvlh0ma79": {
@@ -4461,6 +4516,11 @@
   "x-review": "machine",
   "x-source": "ffb8a10800"
  },
+ "js.1o6iiyvkzt4": "Teq (K)",
+ "@js.1o6iiyvkzt4": {
+  "x-review": "machine",
+  "x-source": "250f80cb14"
+ },
  "js.1oflx09locz": "このビューではケースファイルを読み込めなかった。<a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-000\">単独のページで開く。</a>",
  "@js.1oflx09locz": {
   "x-review": "machine",
@@ -4480,11 +4540,6 @@
  "@js.1ojq6mpxesf": {
   "x-review": "machine",
   "x-source": "13bd83fa4a"
- },
- "js.1ooqb09tka": "奇数/偶数の深さの不一致または二次食。あるいは深さ {n0} ppm 以上。あるいは V 字型かつ {n1} ppm 以上。あるいは周期 {n2} d 未満での恒星密度の不一致。あるいはパネルの重みの半分が食連星と判断。食連星の周期、またはその半分での変光。",
- "@js.1ooqb09tka": {
-  "x-review": "machine",
-  "x-source": "d16ff6ea5a"
  },
  "js.1oqf3bvj4qe": "単独ページのケースファイル、同じ減光の位置。",
  "@js.1oqf3bvj4qe": {
@@ -4551,6 +4606,11 @@
   "x-review": "machine",
   "x-source": "393e0bcc0a"
  },
+ "js.1pduw01bhpw": "Winn {n0}、トランジットと掩蔽（Transits and occultations）",
+ "@js.1pduw01bhpw": {
+  "x-review": "machine",
+  "x-source": "5cdffcb70b"
+ },
  "js.1pf0nh0ccp2": "id tic139256217-s1-dip-{n0} · サブジェクト tess-9bf59e37005b<br>光度曲線 sha256 f11b4e243439bf24ffd3c740162a76f0cdadd8a9160094e3eb2a3487101f6c2c<br>コード … · 設定 a9d34c7079563183…<br>ソース sector_0001.json.gz",
  "@js.1pf0nh0ccp2": {
   "x-review": "machine",
@@ -4565,6 +4625,11 @@
  "@js.1phapwj9j76": {
   "x-review": "machine",
   "x-source": "b39d933ba4"
+ },
+ "js.1phito7oxf6": "exoplanet.eu では「ウェブサイトで公表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: 2MASS J19050106+{n4} b、K02802.01、KIC {n5} b、KOI-{n6} b、KOI-{n7}、WISE J190501.05+{n8} b。",
+ "@js.1phito7oxf6": {
+  "x-review": "machine",
+  "x-source": "7d211a72f3"
  },
  "js.1pjllnj81v8": "銀河北極",
  "@js.1pjllnj81v8": {
@@ -4621,6 +4686,11 @@
   "x-review": "machine",
   "x-source": "10a0c5f853"
  },
+ "js.1pzot5psr3w": "Luhman {n0} A",
+ "@js.1pzot5psr3w": {
+  "x-review": "machine",
+  "x-source": "215b9c6a31"
+ },
  "js.1q0vba1x3qp": "新規 {n0}件",
  "@js.1q0vba1x3qp": {
   "x-review": "machine",
@@ -4650,6 +4720,11 @@
  "@js.1q6lxx1z74p": {
   "x-review": "machine",
   "x-source": "3052af115e"
+ },
+ "js.1q8o1852my1": "exoplanet.eu では「ウェブサイトで公表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: 2MASS J19250134+{n4} b、K03220.01、KIC {n5} b、KOI-{n6} b、KOI-{n7}、WISE J192501.34+{n8} b。",
+ "@js.1q8o1852my1": {
+  "x-review": "machine",
+  "x-source": "1c98a66056"
  },
  "js.1qaq2fxvw7f": "exoplanet.eu の惑星半径{n0}個（周期{n1}日未満）のヒストグラム。{n2}から{n3}地球半径までの対数ビンで、{n4}–{n5}地球半径の谷を示し、pi Men c の半径を表示している。",
  "@js.1qaq2fxvw7f": {
@@ -4686,11 +4761,6 @@
   "x-review": "machine",
   "x-source": "dd3330cc6f"
  },
- "js.1qq8e2zp8tb": "惑星の審査：変更なし。食連星モジュールの審査ヒントは参考情報であり、どの審査判断にも使われておらず、評価もされていない。審査に使うには、それ専用の事前登録された評価が必要である。",
- "@js.1qq8e2zp8tb": {
-  "x-review": "machine",
-  "x-source": "6e0c8bb669"
- },
  "js.1qr7pmpqgem": "TIC {n0}、周期{n1}日、深さ{n2} ppm、SNR {n3}、周期が既知の TOI と一致、候補、未確認",
  "@js.1qr7pmpqgem": {
   "x-review": "machine",
@@ -4706,10 +4776,20 @@
   "x-review": "machine",
   "x-source": "42da84247d"
  },
+ "js.1r0q7nepkoi": "較正済みの重み",
+ "@js.1r0q7nepkoi": {
+  "x-review": "machine",
+  "x-source": "0a6b72180c"
+ },
  "js.1r46y9nqy47": "最初の3ステップは SetuHQ 自身のもの、最後の3ステップは他チームの記録（NASA Exoplanet Archive (TAP)：toi テーブルと ps テーブル）であり、SetuHQ の結果ではない。中空の点は記録のないステップを示す。TFOPWG：TESS Follow-up Observing Program Working Group。",
  "@js.1r46y9nqy47": {
   "x-review": "machine",
   "x-source": "f16d5662c6"
+ },
+ "js.1r4fphlxxtr": "{n0} エントリ。<time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n2}年10月{n1}日 {n3} UTC</time> から <time datetime=\"2026-10-30T00:48:15+00:00\" title=\"2026-10-30T00:48:15+00:00\">{n5}年10月{n4}日 {n6} UTC</time> の間に見つかった。<b>{n7} 件が既知のTOI周期と一致</b>。すべてのエントリは候補であり、確認されていない。TOI一致はアーカイブとの比較である。値はアーカイブのもののみ。このページは検出を主張しない。既知のTOIに一致しないシグナルは非公開レビューのため保留され、レビューと報告を経た後にのみ公開される。",
+ "@js.1r4fphlxxtr": {
+  "x-review": "machine",
+  "x-source": "3f8fc5c963"
  },
  "js.1r7q1f2otd9": "図版：TOI-{n0}",
  "@js.1r7q1f2otd9": {
@@ -4731,11 +4811,6 @@
   "x-review": "machine",
   "x-source": "ea025f8c30"
  },
- "js.1rehm8o052v": "{s0}ing Exoplanet Survey Satellite",
- "@js.1rehm8o052v": {
-  "x-review": "machine",
-  "x-source": "f64ceb6be5"
- },
  "js.1rervwi8ill": "このビューではケースファイルを読み込めなかった。<a id=\"blockedlink\" href=\"/candidates/case-file/#tess-fa3483ce6f83-001\">専用ページで開く。</a>",
  "@js.1rervwi8ill": {
   "x-review": "machine",
@@ -4756,6 +4831,11 @@
   "x-review": "machine",
   "x-source": "7006d67bfe"
  },
+ "js.1rhozdhu0s6": "{n0} Eri",
+ "@js.1rhozdhu0s6": {
+  "x-review": "machine",
+  "x-source": "cd858f1566"
+ },
  "js.1rhxz6cr57l": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知の TOI 周期</span><b class=\"fig\">3g. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> BTJD {n1} の減光、{n2} ppm、{n3} h、SNR {n4}。{n5}人のレビュアーがマーク（カタログにはパネルの人数とコンセンサス区間が保存されていない）。トランジット{n7}回を含む{n6}日の BLS 周期上にある。ステータス：周期が既知の TOI と一致。アーカイブの値のみ。本ページは検出を主張しない。",
  "@js.1rhxz6cr57l": {
   "x-review": "machine",
@@ -4771,10 +4851,10 @@
   "x-review": "machine",
   "x-source": "f857503a68"
  },
- "js.1rk4ie4w0t9": "アーティストによる想像図：高温巨大惑星型の外観（半径 {n0} R⊕ 以上、Teq {n1}〜{n2} K）：錆色の雲の帯。外観を示す静止画であり、特定の惑星を描いたものではない。",
- "@js.1rk4ie4w0t9": {
+ "js.1rncc50vod0": "はじめる",
+ "@js.1rncc50vod0": {
   "x-review": "machine",
-  "x-source": "8aeca1d984"
+  "x-source": "61e8d44ad4"
  },
  "js.1rniehwfgn9": "Wolszczan &amp; Frail",
  "@js.1rniehwfgn9": {
@@ -4800,11 +4880,6 @@
  "@js.1rrhtxb4sk8": {
   "x-review": "machine",
   "x-source": "1b1094a886"
- },
- "js.1rsb50hzlde": "アーティストによる想像図：高温海王星型の外観（半径 {n0}〜{n1} R⊕、Teq {n2} K 以上）：橙灰色のもや。外観を示す静止画であり、特定の惑星を描いたものではない。",
- "@js.1rsb50hzlde": {
-  "x-review": "machine",
-  "x-source": "fd1e7e0678"
  },
  "js.1rsch1xr0lt": "トランジット · {n0} d",
  "@js.1rsch1xr0lt": {
@@ -4836,15 +4911,15 @@
   "x-review": "machine",
   "x-source": "a1c625de42"
  },
+ "js.1rwj8ey7hae": "Kepler-{n0} · {n1} K",
+ "@js.1rwj8ey7hae": {
+  "x-review": "machine",
+  "x-source": "eb98d7eea9"
+ },
  "js.1rxrndp257b": "星の光の遮断を4つの場面で示す。太陽型の遮蔽体（SOHO LASCO に基づくイラスト）。コロナグラフのマスクが恒星の上を滑り、まぶしい光が残留スペックルへと収まって、HR {n0} の4つの惑星が模式的な軌道上に現れる様子。望遠鏡のはるか前方を飛行するスターシェード（縮尺は正確ではない）。そして暗い干渉縞で恒星の光を打ち消す2望遠鏡のナリング干渉計。",
  "@js.1rxrndp257b": {
   "x-review": "machine",
   "x-source": "cce2248704"
- },
- "js.1ryrg8dmxoz": "<b>ν₄ 非対称変角（3つ）</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} の {n2}–{n3} µm の波長範囲外",
- "@js.1ryrg8dmxoz": {
-  "x-review": "machine",
-  "x-source": "b2cd029465"
  },
  "js.1s3bgxbwlkh": "すべて",
  "@js.1s3bgxbwlkh": {
@@ -4856,10 +4931,10 @@
   "x-review": "machine",
   "x-source": "95206d6b8a"
  },
- "js.1sdkh60m4rv": "{s0}、減光 {n0}",
- "@js.1sdkh60m4rv": {
+ "js.1s8dkmip4e3": "cheops",
+ "@js.1s8dkmip4e3": {
   "x-review": "machine",
-  "x-source": "335e296600"
+  "x-source": "0eeb4fd483"
  },
  "js.1sg8cj3fgn0": "惑星を偽装する5つの方法。それぞれについて、TESS ピクセル（1ピクセル {n0} 秒角、縮尺どおり）のグリッド上の天空配置と、それが生む光度曲線を示す：V字型のかすめ食を起こす食連星、ターゲットの光で希釈された背景の食連星、階層的三重連星、周期を真の値の半分としたときに深さの異なる奇数番目と偶数番目の食、そしてモーメンタムダンプなどの機器起因の跳び。",
  "@js.1sg8cj3fgn0": {
@@ -4916,10 +4991,20 @@
   "x-review": "machine",
   "x-source": "f51d196f08"
  },
+ "js.1szdkpleyt1": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: TOI-{n4} b。",
+ "@js.1szdkpleyt1": {
+  "x-review": "machine",
+  "x-source": "923f1f0f7f"
+ },
  "js.1t1emvbqy9r": "{n0} · クリーニングとトレンド除去",
  "@js.1t1emvbqy9r": {
   "x-review": "machine",
   "x-source": "2d4dfc6ae5"
+ },
+ "js.1t30u96twwz": "シグナル",
+ "@js.1t30u96twwz": {
+  "x-review": "machine",
+  "x-source": "c1d2c1df9e"
  },
  "js.1t47rnb1yty": "大規模な統計的検証。",
  "@js.1t47rnb1yty": {
@@ -4931,10 +5016,20 @@
   "x-review": "machine",
   "x-source": "ea298d3769"
  },
+ "js.1takbn7z5i5": "pi Men b ›",
+ "@js.1takbn7z5i5": {
+  "x-review": "machine",
+  "x-source": "095aa55e59"
+ },
  "js.1tanbk5cfbb": "{n0} {n1} / {n2} dex",
  "@js.1tanbk5cfbb": {
   "x-review": "machine",
   "x-source": "6d564d1ad1"
+ },
+ "js.1tbllix94q1": "分子",
+ "@js.1tbllix94q1": {
+  "x-review": "machine",
+  "x-source": "bfdd800ffc"
  },
  "js.1tbul4ef62r": "exoplanet.eu の惑星 {n0} 個",
  "@js.1tbul4ef62r": {
@@ -4986,11 +5081,6 @@
   "x-review": "machine",
   "x-source": "9c116a7ee6"
  },
- "js.1tpmj2xl8sk": "{n0} ppm · {n1} h · Probes {n2}、Sentinels {n3} · 審査で棄却、候補ではない",
- "@js.1tpmj2xl8sk": {
-  "x-review": "machine",
-  "x-source": "77664f0d7c"
- },
  "js.1trrebrltbg": "保存された値（exoplanet.eu）のみから描画。保存されていないもの：恒星の温度、恒星の半径。該当部分は説明用であり、図中にその旨を記している。恒星の色：温度が保存されていないため太陽の色。",
  "@js.1trrebrltbg": {
   "x-review": "machine",
@@ -5021,25 +5111,20 @@
   "x-review": "machine",
   "x-source": "9ee6b5ae54"
  },
+ "js.1u1inxhnivr": "偽陽性",
+ "@js.1u1inxhnivr": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
  "js.1u2k1jai0us": "1つの光度曲線、3つの周期。恒星に複数の惑星がある場合に探索が何を行うか、そして {n0} 日の対象がそのうちどれを含みうるかを示す。",
  "@js.1u2k1jai0us": {
   "x-review": "machine",
   "x-source": "ac34f619e1"
  },
- "js.1u2q9tbst8u": "アーティストによる想像図：高温エンベロープ型の外観（半径 {n0}〜{n1} R⊕、Teq {n2} K 以上）：黄褐色のもやと暖かい縁。外観を示す静止画であり、特定の惑星を描いたものではない。",
- "@js.1u2q9tbst8u": {
-  "x-review": "machine",
-  "x-source": "80eb7867e5"
- },
  "js.1u4yg0u12mv": "exoplanet.eu には発見論文の DOI や文献が保存されていないため、表示していない。",
  "@js.1u4yg0u12mv": {
   "x-review": "machine",
   "x-source": "02110b7c79"
- },
- "js.1u50uo7y5g3": "<b>ν₁ 対称伸縮</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} の {n2}–{n3} µm の波長範囲外",
- "@js.1u50uo7y5g3": {
-  "x-review": "machine",
-  "x-source": "84c034c9f3"
  },
  "js.1u59hy4lwt0": "CO₂ <span>二酸化炭素</span>",
  "@js.1u59hy4lwt0": {
@@ -5061,11 +5146,6 @@
   "x-review": "machine",
   "x-source": "27b99ccdde"
  },
- "js.1ua3tz5fxe0": "ハッシュは申告（attestation）にすぎない：保留ラベルはリポジトリで公開されているため、リーダーボードはそれらが読まれていないことを証明できず、手法の合格判定と対照イベントはその手法自身の報告である。メンテナーが保持するデコイ光度曲線と、まだ判定されていない TOI に対する前向きスコアリングがあればこれらの欠落は埋まるが、どちらもまだ存在しない。",
- "@js.1ua3tz5fxe0": {
-  "x-review": "machine",
-  "x-source": "9f55ae4547"
- },
  "js.1uaz0vrw4ly": "発生源（恒星上）での最小磁場（Pineda &amp; Villadsen {n0} 帯）[calc]",
  "@js.1uaz0vrw4ly": {
   "x-review": "machine",
@@ -5075,11 +5155,6 @@
  "@js.1ucljc3glwo": {
   "x-review": "machine",
   "x-source": "5e270de316"
- },
- "js.1uekblhme1p": "{n0} ppm · {n1} h · レビュアー {n2} 人全員 · 候補、未確認",
- "@js.1uekblhme1p": {
-  "x-review": "machine",
-  "x-source": "73ac412687"
  },
  "js.1ug611r5qd8": "CH₄ <span>メタン</span>",
  "@js.1ug611r5qd8": {
@@ -5116,6 +5191,11 @@
   "x-review": "machine",
   "x-source": "263beb630a"
  },
+ "js.1utmguftbbw": "TESS セクター {n0}–{n1}。この星のフィードエントリ {n2}（保存 id <span class=\"mono\">tess-7b97e468b60b-{n3}</span>）。TOI一致は保存された周期をアーカイブ値と比較したものである。値はアーカイブのもののみ。このページは検出を主張しない。",
+ "@js.1utmguftbbw": {
+  "x-review": "machine",
+  "x-source": "965b94f3d8"
+ },
  "js.1uugayqarlm": "TESS のミッション設計。観測は {n0} 年に始まった。",
  "@js.1uugayqarlm": {
   "x-review": "machine",
@@ -5125,11 +5205,6 @@
  "@js.1uwk3dmvuym": {
   "x-review": "machine",
   "x-source": "e7e8d3a00f"
- },
- "js.1v15owfc4cr": "<b>ν₃ 逆対称伸縮（2 つ）</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} では描画なし",
- "@js.1v15owfc4cr": {
-  "x-review": "machine",
-  "x-source": "451f9e06fd"
  },
  "js.1v2k5bzmb2a": "{n0} ± {n1} ppm",
  "@js.1v2k5bzmb2a": {
@@ -5141,25 +5216,25 @@
   "x-review": "machine",
   "x-source": "c6c35d2486"
  },
- "js.1va1yqqf83l": "太陽に最も近い恒星の一つである {s0} を回る、地球より質量の小さい惑星。",
- "@js.1va1yqqf83l": {
+ "js.1vf8wchy7cx": "フレア",
+ "@js.1vf8wchy7cx": {
   "x-review": "machine",
-  "x-source": "0c6a1cbb68"
+  "x-source": "bdad8ef87b"
  },
  "js.1vn1k0hsfr": "カタログ",
  "@js.1vn1k0hsfr": {
   "x-review": "machine",
   "x-source": "1034513950"
  },
- "js.1vo3z8v0kr3": "{n1} 恒星セクターあたり {n0} <span class=\"muted\">（{n3} 中 {n2}。フィードの基準適用前に審査された減光 {n4} 件）</span>",
- "@js.1vo3z8v0kr3": {
-  "x-review": "machine",
-  "x-source": "0cf0192aad"
- },
  "js.1vs3qyoxlvt": "別名：2MASS J19021775+{n0}、KIC {n1}、KOI-{n2}、WISE J190217.77+{n3}。",
  "@js.1vs3qyoxlvt": {
   "x-review": "machine",
   "x-source": "a3072cbabc"
+ },
+ "js.1vseruufigw": "tau Cet",
+ "@js.1vseruufigw": {
+  "x-review": "machine",
+  "x-source": "d76cfc3187"
  },
  "js.1vtn0jl0t29": "ページ全体を開く",
  "@js.1vtn0jl0t29": {
@@ -5281,6 +5356,11 @@
   "x-review": "machine",
   "x-source": "6b412a8780"
  },
+ "js.1wqsruj6sy4": "Teegarden's b",
+ "@js.1wqsruj6sy4": {
+  "x-review": "machine",
+  "x-source": "88f6565053"
+ },
  "js.1wr1t67roz9": "多惑星系の候補はほぼ常に本物であることを示し、{n1} 個の系で {n0} 個の惑星を検証した。",
  "@js.1wr1t67roz9": {
   "x-review": "machine",
@@ -5341,6 +5421,11 @@
   "x-review": "machine",
   "x-source": "01d784a95a"
  },
+ "js.1xjf25ez4ea": "アストロメトリ",
+ "@js.1xjf25ez4ea": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
  "js.1xjgislb1gr": "{n0}（D 線、{n1} および {n2} nm）",
  "@js.1xjgislb1gr": {
   "x-review": "machine",
@@ -5350,6 +5435,11 @@
  "@js.1xjihe7xm1n": {
   "x-review": "machine",
   "x-source": "68a749778a"
+ },
+ "js.1xjlu6r0tws": "惑星候補",
+ "@js.1xjlu6r0tws": {
+  "x-review": "machine",
+  "x-source": "f40d9fd559"
  },
  "js.1xludg6i4sq": "別名：EPIC {n0}。",
  "@js.1xludg6i4sq": {
@@ -5366,11 +5456,6 @@
   "x-review": "machine",
   "x-source": "d17f5d38ec"
  },
- "js.1xqmq7gc51u": "フィードの水準（完全な基準、FAP &lt; {n0}）での、スクランブルした光度曲線上の誤警報",
- "@js.1xqmq7gc51u": {
-  "x-review": "machine",
-  "x-source": "31b60ba44a"
- },
  "js.1xs9ztk2l36": "銀河ツアー、立ち寄り先 {n0} ›",
  "@js.1xs9ztk2l36": {
   "x-review": "machine",
@@ -5386,15 +5471,15 @@
   "x-review": "machine",
   "x-source": "43c265eda9"
  },
- "js.1xy8j3ygiad": "想像図：半径 {n0}〜{n1} R⊕、Teq {n2} K 未満の「冷たい外層」の外観。淡い青白のもや、かすかな縞。特定の惑星ではなく、外観の静止画である。",
- "@js.1xy8j3ygiad": {
-  "x-review": "machine",
-  "x-source": "7be8bc6ed2"
- },
  "js.1y1gk0z56gg": "エフェメリス上の減光（審査結果別）",
  "@js.1y1gk0z56gg": {
   "x-review": "machine",
   "x-source": "4f0bf37c8c"
+ },
+ "js.1y218zo6cqq": "<i style=\"background:#30D158\"></i>直接撮像 <span class=\"mono\">{n0}</span>",
+ "@js.1y218zo6cqq": {
+  "x-review": "machine",
+  "x-source": "d614bb1db6"
  },
  "js.1y39iwfnbwn": "実行 tess-hd-{n0}-s4（runs/tess-hd-{n1}-s4）、作成 {n2}-{n3}-22T18:{n4}+{n5}、設定 sha256 e21c63a794b2aeb3…",
  "@js.1y39iwfnbwn": {
@@ -5446,6 +5531,11 @@
   "x-review": "machine",
   "x-source": "519941f399"
  },
+ "js.1yt1laezm0g": "Kepler-{n0} d",
+ "@js.1yt1laezm0g": {
+  "x-review": "machine",
+  "x-source": "5c8bf604a0"
+ },
  "js.1ytljjhkuxb": "格納された値のみから描画（exoplanet.eu）。",
  "@js.1ytljjhkuxb": {
   "x-review": "machine",
@@ -5496,11 +5586,6 @@
   "x-review": "machine",
   "x-source": "9fdea8a620"
  },
- "js.1z0tecbo6q6": "想像図：半径 {n0} R⊕ 以上、Teq {n1} K 以上の場合の「超高温巨大惑星」の外観：暗く、コントラストが低く、昼側が発光している。縞模様はない。外観のイメージであり、特定の惑星の図ではない。",
- "@js.1z0tecbo6q6": {
-  "x-review": "machine",
-  "x-source": "236fde016b"
- },
  "js.1z3sctga608": "約 {n0} ppm の短く底の平らな 2 つのディップが ~{n1} と ~{n2}（間隔 ~{n3} d）にあり、深さと継続時間が一致している。これは周期的なトランジットに予想されるとおりである。どちらにも V 字形、二次食、ランプ、ステップは見られないが、2 つ目のディップ周辺のデータは",
  "@js.1z3sctga608": {
   "x-review": "machine",
@@ -5516,10 +5601,10 @@
   "x-review": "machine",
   "x-source": "7d9eb7acb1"
  },
- "js.1z5yw0q2c2w": "ホームページのトランジット",
- "@js.1z5yw0q2c2w": {
+ "js.1z5qoomb94b": "YZ Cet b",
+ "@js.1z5qoomb94b": {
   "x-review": "machine",
-  "x-source": "be1b030722"
+  "x-source": "fca0c283f7"
  },
  "js.1z8tasie2wo": "Probe · 高感度 <span class=\"mono idtag\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1z8tasie2wo": {
@@ -5601,11 +5686,6 @@
   "x-review": "machine",
   "x-source": "1c3db44c80"
  },
- "js.2050o3pgkvz": "出典：TESS Science Office（MIT）、tess.mit.edu/observations/ の公開セクターページ：https://tess.mit.edu/observations/、スケジュールは {n0}-{n1}-{n2} に保存。",
- "@js.2050o3pgkvz": {
-  "x-review": "machine",
-  "x-source": "e758c6851a"
- },
  "js.206lvynaoyq": "恒星の運動は ×{n0} に誇張；実際の a★ = {n1} km ≈ {n2}.1e-{n3} R★",
  "@js.206lvynaoyq": {
   "x-review": "machine",
@@ -5651,11 +5731,6 @@
   "x-review": "machine",
   "x-source": "f77390e131"
  },
- "js.20iu1oobrgo": "想像図：半径なし、質量 {n0}～{n1} M⊕、任意の Teq の場合の「判別不能」の外観：中間的な灰青色の円盤と柔らかな縁。岩石か外層かは不明。外観のイメージであり、特定の惑星の図ではない。",
- "@js.20iu1oobrgo": {
-  "x-review": "machine",
-  "x-source": "b435c16b54"
- },
  "js.20jq5c41tkh": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知の TOI 周期</span><b class=\"fig\">3j. <span class=\"mono\">tess-66d1837768dd-{n0}</span>。</b> BTJD {n1} のディップ、{n2} ppm、{n3} h、SNR {n4}。{n5} 人のレビュアーがマーク（カタログにはパネルの人数と合意区間が保存されていない）。{n7} 回のトランジットを含む {n6} 日の BLS 周期上にある。状態：周期が既知の TOI と一致。アーカイブの値のみ。このページは検出を主張しない。",
  "@js.20jq5c41tkh": {
   "x-review": "machine",
@@ -5665,6 +5740,11 @@
  "@js.20l5be8crj": {
   "x-review": "machine",
   "x-source": "ab9c1a76a4"
+ },
+ "js.20lcnwrpq7u": "トランジット <span class=\"mono\" data-cmn=\"transit\">{n0}</span>",
+ "@js.20lcnwrpq7u": {
+  "x-review": "machine",
+  "x-source": "5b3df4c9fd"
  },
  "js.20lxdwfofp9": "この実行 · 要レビュー · 周期なし",
  "@js.20lxdwfofp9": {
@@ -5690,6 +5770,11 @@
  "@js.20q2sjzozas": {
   "x-review": "machine",
   "x-source": "7fb66e3610"
+ },
+ "js.20rbpsp5ug3": "<i aria-hidden=\"true\"></i>未分類 <span class=\"mono\">{n0}</span>",
+ "@js.20rbpsp5ug3": {
+  "x-review": "machine",
+  "x-source": "8de4c52f48"
  },
  "js.20rkrumvokl": "Sentinel プロンプトのバージョン",
  "@js.20rkrumvokl": {
@@ -5741,11 +5826,6 @@
   "x-review": "machine",
   "x-source": "b2f84631c5"
  },
- "js.217aul87gdd": "<b>主に N–O 伸縮</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} の {n2}–{n3} µm の範囲外",
- "@js.217aul87gdd": {
-  "x-review": "machine",
-  "x-source": "cea6ecc8bf"
- },
  "js.217mi4h3ox4": "審査を通過した減光だけが候補であり、それも未確認のままである。棄却された減光は候補ではない。保存値のみ：点、マーク、スコア、フラグ、文言は実行時に保存されたとおりである。",
  "@js.217mi4h3ox4": {
   "x-review": "machine",
@@ -5775,6 +5855,11 @@
  "@js.21hezc7ksw1": {
   "x-review": "machine",
   "x-source": "508aa5b9d1"
+ },
+ "js.21i2i0paoel": "exoplanet.eu では「ウェブサイトで公表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: 2MASS J19213888+{n4} b、K01629.01、KIC {n5} b、KOI-{n6} b、KOI-{n7}、WISE J192138.89+{n8} b。",
+ "@js.21i2i0paoel": {
+  "x-review": "machine",
+  "x-source": "8c0bd3393c"
  },
  "js.21katdb2hhv": "exoplanet.eu に惑星 {n0} 個 · 保存されたスペクトル型 M8V · Teff によるクラス M（最も近いのは M8V）",
  "@js.21katdb2hhv": {
@@ -5836,11 +5921,6 @@
   "x-review": "machine",
   "x-source": "752ea43d7e"
  },
- "js.21ylkyb62a9": "TIC {n0} · 候補、未確認",
- "@js.21ylkyb62a9": {
-  "x-review": "machine",
-  "x-source": "7cf98eee62"
- },
  "js.222kde6gcmc": "保存値のみから描画（exoplanet.eu）。保存されていないもの：惑星半径。その部分は説明用の図示であり、図中にその旨を記している。保存された軌道傾斜角では、この惑星はトランジットしない。この図は手法を説明するためにトランジットを示している。",
  "@js.222kde6gcmc": {
   "x-review": "machine",
@@ -5850,6 +5930,11 @@
  "@js.223085agofs": {
   "x-review": "machine",
   "x-source": "606268600d"
+ },
+ "js.225qy6re67g": "Kepler-{n0} c",
+ "@js.225qy6re67g": {
+  "x-review": "machine",
+  "x-source": "d1e5b9aa4a"
  },
  "js.2274ir70e91": "審査で棄却",
  "@js.2274ir70e91": {
@@ -5906,6 +5991,11 @@
   "x-review": "machine",
   "x-source": "f16b203139"
  },
+ "js.22noo09k9nh": "<i style=\"background:#7D7AFF\"></i>タイミング <span class=\"mono\">{n0}</span>",
+ "@js.22noo09k9nh": {
+  "x-review": "machine",
+  "x-source": "79248df554"
+ },
  "js.22qe07fgd2k": "セクター全体 · 周期 {n0} d · 半振幅 {n1} ppm",
  "@js.22qe07fgd2k": {
   "x-review": "machine",
@@ -5950,6 +6040,11 @@
  "@js.2309k4jhst": {
   "x-review": "machine",
   "x-source": "99ec08944c"
+ },
+ "js.231hbrwsvbe": "フレア",
+ "@js.231hbrwsvbe": {
+  "x-review": "machine",
+  "x-source": "38e9b86f2b"
  },
  "js.232hnla7mfp": "BTJD {n0} · {n1} ppm · {n2} 時間 · SNR {n3} · 候補、未確認",
  "@js.232hnla7mfp": {
@@ -6006,6 +6101,11 @@
   "x-review": "machine",
   "x-source": "ab4cea2845"
  },
+ "js.23ezpg5gqp0": "<a href=\"/stars/wasp-126/\">{s0}</a> · トランジット · {n0} 年に発見 · 巨大ガス惑星",
+ "@js.23ezpg5gqp0": {
+  "x-review": "machine",
+  "x-source": "001f68b960"
+ },
  "js.23fkk0ybsjl": "Gaudi {n0}",
  "@js.23fkk0ybsjl": {
   "x-review": "machine",
@@ -6015,6 +6115,11 @@
  "@js.23gjnmoqo35": {
   "x-review": "machine",
   "x-source": "f7b940e003"
+ },
+ "js.23gvqgvfk3h": "eps Eridani",
+ "@js.23gvqgvfk3h": {
+  "x-review": "machine",
+  "x-source": "9a7f2f950b"
  },
  "js.23iejmgi1b9": "<span class=\"word cand\">候補</span><span class=\"word s-pass\">審査通過</span><b class=\"fig\">1d. pi Men、減光 {n0}。</b> <span class=\"sid mono\">保存 id tess-04b815001aa6-{n1}。</span> BTJD {n2} の減光、{n3} ppm、{n4} h、SNR {n5}。合意区間 BTJD {n6}〜{n7}。レビュアー {n9} のうち {n8} がマーク（Sentinels {n11} のうち {n10}、Probes {n13} のうち {n12}）。{n14} 日の BLS 周期上にある（t0 BTJD {n15}）。審査通過。アーカイブ：pi Men c と整合：ΔP {n16}%、検証ノートによるタイミングのずれ：{n18} エポックの平均で {n17} 分。アーカイブ値のみ。このページは検出を主張しない。",
  "@js.23iejmgi1b9": {
@@ -6061,6 +6166,16 @@
   "x-review": "machine",
   "x-source": "09e2a66ca8"
  },
+ "js.248br10ykpu": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。",
+ "@js.248br10ykpu": {
+  "x-review": "machine",
+  "x-source": "2c5e82e81c"
+ },
+ "js.248fckis1nx": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">実行 tess-pi-men-s1 · {n1} エントリ</span>",
+ "@js.248fckis1nx": {
+  "x-review": "machine",
+  "x-source": "91c42c8548"
+ },
  "js.249yvv2lisi": "このビューではケースファイルを読み込めなかった。<a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-4b369d3c6f09-004\">単独のページで開く。</a>",
  "@js.249yvv2lisi": {
   "x-review": "machine",
@@ -6085,16 +6200,6 @@
  "@js.24fb2cdopd2": {
   "x-review": "machine",
   "x-source": "f76311c5f2"
- },
- "js.24fnxph6nhs": "NASA Exoplanet Archive、テーブル ps（default_flag = {n0}）。scripts/validate_known_planets.py が docs/results/pi_men_validation.md に記録した値である（アーカイブへのライブ照会、commit 0f6dbdc）。そこには {s0} しか記録されていないため、{s1} のみを掲載する。トランジット中心時刻は記録されていないため、ここではエポックごとのずれを計算しない。代わりに検証ノートの平均タイミングずれ（{n3} エポック中 {n2} エポックで {n1} 分）を引用する。アーカイブが応答したら 'setuhq crossmatch runs/tess-pi-men-s1' の出力に置き換えること。記録日時 <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n5}年10月{n4}日 {n6} UTC</time>（commit 0f6dbdc）、docs/results/pi_men_crossmatch.json。この実行自体のクロスマッチは実行されなかった（保存されたエラー、原文のまま：<code>ModuleNotFoundError: No module named 'astroquery'</code>）。",
- "@js.24fnxph6nhs": {
-  "x-review": "machine",
-  "x-source": "2709781e4a"
- },
- "js.24gwd0vxjg3": "<b>ライセンス。</b> CHEOPS のデータおよびそこから導出された出力は ESA の条件に従う。ESA Space Science Archives のデータは CC BY-NC {n0} IGO ライセンスで配布されており、間接的に金銭的利益を生む利用を含むあらゆる商用利用には ESA の事前許可（data.licences@esa.int）が必要である。SetuHQ の商用ライセンスと SetuHQ Pro が対象とするのは SetuHQ のコードとサービスであり、CHEOPS のデータや CHEOPS 由来の出力は対象外である。",
- "@js.24gwd0vxjg3": {
-  "x-review": "machine",
-  "x-source": "027b9f1def"
  },
  "js.24jrww0gdzl": "想像図 · 岩石、超高温 · 半径 {n0} R⊕（exoplanet.eu）は {n1} R⊕ 未満のため、岩石として描いている。a、R★、Teff から計算した Teq {n2} K は超高温の帯に入る。組成は測定されていない。出典：exoplanet.eu、{n3}-{n4}-{n5} 取得。<a href=\"/docs/pictures/\">絵の描き方 ›</a>",
  "@js.24jrww0gdzl": {
@@ -6226,11 +6331,6 @@
   "x-review": "machine",
   "x-source": "f3d6bee517"
  },
- "js.25v5j8df6ue": "初期値：N★ = JWST に十分な明るさの M 型矮星 {n0} 個、F_Q · F_HZ = {n1}、F_O = {n2}、F_L = {n3}、F_S = {n4}、これにより N ≈ {n5}。これらは Seager の講演と論文の二次的な要約によるもので、ここでは論文と照合していない。F_L = {n6} は仮定であり、測定値ではない。ハビタブルゾーンの割合は {s0} の章の図にリンクしている。",
- "@js.25v5j8df6ue": {
-  "x-review": "machine",
-  "x-source": "0c766c3029"
- },
  "js.25vec9roei3": "tess-f28323a4aef6-{n0} · {s0} · 既知の惑星",
  "@js.25vec9roei3": {
   "x-review": "machine",
@@ -6246,10 +6346,10 @@
   "x-review": "machine",
   "x-source": "8e26be0f72"
  },
- "js.2688tn5ytet": "{n1} 日間にわたる保存済みの明るさ測定値 {n0} 件。パネル（{n2} Sentinels と {n3} Probes、人間は含まない）が {n4} 個の減光に印を付け、審査コードがそれらを {n5} 個のシグナルにまとめた：合格 {n6}、要レビュー {n7}、棄却 {n8}。各減光はこのパイプライン自身の候補であり、独立した検出としては確認されていない。アーカイブとの一致は惑星が既知であることを示すものであり、この実行がそれを確認したことを示すものではない。保存されたアーカイブのクロスマッチ（リポジトリに保存されたコピー）では、主要シグナルは既発表の惑星 pi Men c と整合する：既知の惑星であり、発見ではない。アーカイブの値のみ。このページは検出を主張しない。",
- "@js.2688tn5ytet": {
+ "js.267fwx4rrxg": "カタログ",
+ "@js.267fwx4rrxg": {
   "x-review": "machine",
-  "x-source": "737d181458"
+  "x-source": "d2504e52b8"
  },
  "js.269wyn7yehy": "系外惑星の大気で初めて観測された光化学生成物：恒星の光が化学反応を駆動している。",
  "@js.269wyn7yehy": {
@@ -6281,6 +6381,16 @@
   "x-review": "machine",
   "x-source": "ad1170b8cc"
  },
+ "js.26jkejmj23b": "直接撮像 <span class=\"mono\" data-cmn=\"imaging\">{n0}</span>",
+ "@js.26jkejmj23b": {
+  "x-review": "machine",
+  "x-source": "d8c9828b8c"
+ },
+ "js.26jwv5q9ef3": "食連星",
+ "@js.26jwv5q9ef3": {
+  "x-review": "machine",
+  "x-source": "8df8a39f8e"
+ },
  "js.26lvjxq29mz": "上位候補を隠す",
  "@js.26lvjxq29mz": {
   "x-review": "machine",
@@ -6301,15 +6411,25 @@
   "x-review": "machine",
   "x-source": "eaacfcf2d5"
  },
+ "js.26pv2ld5al": "YZ Cet d",
+ "@js.26pv2ld5al": {
+  "x-review": "machine",
+  "x-source": "92120cfb4f"
+ },
+ "js.26pzvkix2mc": "恒星ページ ›",
+ "@js.26pzvkix2mc": {
+  "x-review": "machine",
+  "x-source": "e1fbb1c217"
+ },
  "js.26sdy1tcm5m": "このビューではケースファイルを読み込めなかった。<a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-005\">単独のページで開く。</a>",
  "@js.26sdy1tcm5m": {
   "x-review": "machine",
   "x-source": "5d3d4fce99"
  },
- "js.26svlut4n1y": "SetuHQ は TESS の光度曲線を読み込む：一度に1つの恒星、1セクターあたり約 {n0} 日。<a href=\"/explore/galaxy/?layers=tess\">TESS の天空カバー範囲を見る ›</a>",
- "@js.26svlut4n1y": {
+ "js.26seob0sso6": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: EPIC {n4}。",
+ "@js.26seob0sso6": {
   "x-review": "machine",
-  "x-source": "7675cbd084"
+  "x-source": "f2c44d90f7"
  },
  "js.26upx7lksz5": "TFOPWG の判定 CP（追観測チームによれば惑星）、{n0}-{n1}-{n2} 更新",
  "@js.26upx7lksz5": {
@@ -6331,11 +6451,6 @@
   "x-review": "machine",
   "x-source": "5332f7c6da"
  },
- "js.26zs3bh9z5t": "高：装置由来の手がかりが二つ以上。中：一つ。低：パネルの理由のみ。",
- "@js.26zs3bh9z5t": {
-  "x-review": "machine",
-  "x-source": "eaf598efdb"
- },
  "js.27070gzrt8g": "numpy",
  "@js.27070gzrt8g": {
   "x-review": "machine",
@@ -6356,20 +6471,10 @@
   "x-review": "machine",
   "x-source": "bfeaf40123"
  },
- "js.275p8l49gz9": "発見方法",
- "@js.275p8l49gz9": {
-  "x-review": "machine",
-  "x-source": "7f31ff7ee3"
- },
  "js.27d1pzwqqg5": "{n0}個のディップ（候補{n1}、要レビュー{n2}）。各ディップは審査結果で名付けられている：候補は審査を通過した未確認のもの、要レビューのディップは未決、棄却されたディップは候補ではない。棄却・要レビューのディップは意図的に残しており、審査が何をなぜ判断したかを読者が見られるようにしている。各画像はレビュアーが見たブラインド化されたプロットそのもの（バイト単位で同一）である。",
  "@js.27d1pzwqqg5": {
   "x-review": "machine",
   "x-source": "f52c6bc4a9"
- },
- "js.27eugex8tue": "想像図：半径{n0}〜{n1} R⊕、Teq {n2}〜{n3} Kに対するneptune-warmの外観：青緑のもや。外観の静止画であり、特定の惑星のものではない。",
- "@js.27eugex8tue": {
-  "x-review": "machine",
-  "x-source": "2d58d10911"
  },
  "js.27fyvwqvgk2": "id tic197575514-s1-dip-{n0} · 対象 tess-b9ee497ace57<br>光度曲線 sha256 6cdb3d033119539b3dd9a07e89379098ee77c137584a467d88efe3b74e7c0913<br>コード … · 設定 a9d34c7079563183…<br>ソース sector_0001.json.gz",
  "@js.27fyvwqvgk2": {
@@ -6390,6 +6495,11 @@
  "@js.27jlutunzon": {
   "x-review": "machine",
   "x-source": "de7cd804ae"
+ },
+ "js.27kx8tn6apn": "タイミングと位相",
+ "@js.27kx8tn6apn": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
  },
  "js.27n9asbnx55": "上位候補を並べ替え",
  "@js.27n9asbnx55": {
@@ -6430,6 +6540,11 @@
  "@js.27y132h50m1": {
   "x-review": "machine",
   "x-source": "734a43293e"
+ },
+ "js.280bcq6hfxu": "Kepler-{n0} b と c の周期",
+ "@js.280bcq6hfxu": {
+  "x-review": "machine",
+  "x-source": "de18f16db8"
  },
  "js.283unm3lnxq": "Sentinel · Skeptic <span class=\"mono\">claude-skeptic</span>",
  "@js.283unm3lnxq": {
@@ -6475,11 +6590,6 @@
  "@js.28hrtzpigjb": {
   "x-review": "machine",
   "x-source": "1f2470675c"
- },
- "js.28ictyar11j": "学習用の演習であり、科学への貢献ではない。回答はこのブラウザ内にとどまり、収集されることもどこかに送信されることもない。ディップはSetuHQの実行例から保存されたもので、すでにその審査で判定済みである。",
- "@js.28ictyar11j": {
-  "x-review": "machine",
-  "x-source": "5a6ae14a11"
  },
  "js.28iqhboa34b": "N個の原子からなる分子には3N − {n0}通りの振動のしかたがある（直線分子なら3N − {n1}）：水は三つ、二酸化炭素は四つ（変角振動が直角方向に二回現れる）、メタンは九つ。振動モードが赤外光を吸収するのは、分子の双極子を変化させる場合に限られる。そのため、CO₂の対称伸縮（{n2} µm）、O₂の伸縮、メタンの四つの基本振動のうち二つは赤外で不活性である。これらのモードがつくるバンドは「大気を読む」章で示すものである：水の二つの伸縮振動（{n3}と{n4} µm）が{n5} µmバンドを、メタンのν₃が{n6} µmバンドを、CO₂の逆対称伸縮が{n7} µmバンドを、COの伸縮が{n8} µmバンドをつくる。",
  "@js.28iqhboa34b": {
@@ -6696,6 +6806,11 @@
   "x-review": "machine",
   "x-source": "258011d66c"
  },
+ "js.2a56wvwnc5o": "HN Lib",
+ "@js.2a56wvwnc5o": {
+  "x-review": "machine",
+  "x-source": "6993fd96af"
+ },
  "js.2a9g9u8ogm5": "発生源における場",
  "@js.2a9g9u8ogm5": {
   "x-review": "machine",
@@ -6716,6 +6831,11 @@
   "x-review": "machine",
   "x-source": "50621e7fe0"
  },
+ "js.2ad5lvvd821": "Gaia-{n0} b ›",
+ "@js.2ad5lvvd821": {
+  "x-review": "machine",
+  "x-source": "fb287f3d63"
+ },
  "js.2ahfv5ecid": "id tic177082055-s1-dip-{n0} · サブジェクト tess-9ff47a35552d<br>光度曲線 sha256 ad0dc350aa11e6edee9ef4c25cad43f094f52a98ab9010ca3c0ec0aaadafe861<br>コード … · 設定 a9d34c7079563183…<br>ソース sector_0001.json.gz",
  "@js.2ahfv5ecid": {
   "x-review": "machine",
@@ -6731,11 +6851,6 @@
   "x-review": "machine",
   "x-source": "88117143a4"
  },
- "js.2aj3droma9q": "カタログと引用論文、数値は各章の表に記載",
- "@js.2aj3droma9q": {
-  "x-review": "machine",
-  "x-source": "3cf2224205"
- },
  "js.2apzy7fqrqe": "アーカイブとの比較: 許容範囲内にアーカイブの惑星はない。アーカイブ値のみ。このページは検出を主張しない。",
  "@js.2apzy7fqrqe": {
   "x-review": "machine",
@@ -6750,11 +6865,6 @@
  "@js.2avziyt7hbv": {
   "x-review": "machine",
   "x-source": "5eab0aea69"
- },
- "js.2b0kq1u0yok": "<b>ν 伸縮</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · <a href=\"/how-it-works/atmospheres/\">「大気を読む」の {n2} µm バンド ›</a>",
- "@js.2b0kq1u0yok": {
-  "x-review": "machine",
-  "x-source": "9f2fb710c1"
  },
  "js.2b1w1bhtwi6": "WASP-{n0} b のスケールハイト（μ = {n1}）",
  "@js.2b1w1bhtwi6": {
@@ -6831,6 +6941,11 @@
   "x-review": "machine",
   "x-source": "1dfa560d9d"
  },
+ "js.2brjxhf24py": "{n0} Eri d",
+ "@js.2brjxhf24py": {
+  "x-review": "machine",
+  "x-source": "3f3cad2fcc"
+ },
  "js.2btmnnqnpty": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知の TOI 周期</span><b class=\"fig\">3k. <span class=\"mono\">tess-03a9e901682f-{n0}</span>.</b> BTJD {n1} の減光、{n2} ppm、{n3} h、SNR {n4}。{n5} のレビュアーがマーク（カタログにはパネルの規模とコンセンサス区間は保存されていない）。トランジット {n7} 回を含む {n6} 日の BLS 周期上にある。状態: 周期が既知の TOI と一致。アーカイブ値のみ。このページは検出を主張しない。",
  "@js.2btmnnqnpty": {
   "x-review": "machine",
@@ -6840,6 +6955,11 @@
  "@js.2bvrlx4bioc": {
   "x-review": "machine",
   "x-source": "18fccc4254"
+ },
+ "js.2c181tpjjvc": "Luyten's Star b",
+ "@js.2c181tpjjvc": {
+  "x-review": "machine",
+  "x-source": "23d6b3c963"
  },
  "js.2c70ie4ixet": "図版",
  "@js.2c70ie4ixet": {
@@ -6876,11 +6996,6 @@
   "x-review": "machine",
   "x-source": "439b98f6cf"
  },
- "js.2cazwqoadoq": "カタログに二次食があり周期が一致する、検証用に除外した EB: 二次食の位相がカタログ値から {n0} 以内、{n1}% 区間の下限 &gt;= {n2}（見つからない二次食は見逃しとする）",
- "@js.2cazwqoadoq": {
-  "x-review": "machine",
-  "x-source": "71d0ca28d6"
- },
  "js.2cc0e9v7uvs": "<i style=\"background:#FF6961\"></i>{n0} Peg b",
  "@js.2cc0e9v7uvs": {
   "x-review": "machine",
@@ -6900,6 +7015,11 @@
  "@js.2cektxt2twi": {
   "x-review": "machine",
   "x-source": "4662bb50f1"
+ },
+ "js.2cg943adi3e": "実在TOIリーダーボード ›",
+ "@js.2cg943adi3e": {
+  "x-review": "machine",
+  "x-source": "cd1d193d20"
  },
  "js.2cjkfyfegp8": "マーク（✓ はカウント対象）",
  "@js.2cjkfyfegp8": {
@@ -6926,6 +7046,16 @@
   "x-review": "machine",
   "x-source": "2e5aaa9889"
  },
+ "js.2cs8n7gldpd": "SetuHQ Pro",
+ "@js.2cs8n7gldpd": {
+  "x-review": "machine",
+  "x-source": "fcca2f700b"
+ },
+ "js.2cserx0e05n": "Proxima Centauri d",
+ "@js.2cserx0e05n": {
+  "x-review": "machine",
+  "x-source": "8213996948"
+ },
  "js.2ct9t5541vf": "2つのチームが、同じ惑星が恒星の前を横切るところを独立に捉えた。",
  "@js.2ct9t5541vf": {
   "x-review": "machine",
@@ -6946,15 +7076,15 @@
   "x-review": "machine",
   "x-source": "171311b12c"
  },
+ "js.2cxnseek7ep": "exoplanet.eu に惑星 {n0} 個 · 保存済みの型 B3V",
+ "@js.2cxnseek7ep": {
+  "x-review": "machine",
+  "x-source": "946b65c19b"
+ },
  "js.2d4zwgwbh8u": "温かい惑星の大気で最もありふれた分子。ほとんどのスペクトルの形を決める。",
  "@js.2d4zwgwbh8u": {
   "x-review": "machine",
   "x-source": "00265f6a9d"
- },
- "js.2d5lr3nor8a": "<b>データ: The Extrasolar Planets Encyclopaedia (exoplanet.eu)、取得 {n0}-{n1}-{n2}。</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>。このリストの取得時に NASA Exoplanet Archive に接続できなかったため、このリストは exoplanet.eu のみに基づく。exoplanet.eu は惑星として扱うすべての天体を「確認された」惑星として掲載している: 質量が (不確かさの範囲内で) 木星質量の {n3} 倍までの天体で、出版済みまたは発表済みのもの。そのリストは NASA Exoplanet Archive より範囲が広く、NASA Exoplanet Archive は査読論文に基づく木星質量の {n4} 倍までの天体を収録している。出典が値を与えていない項目は「記録なし」と表示する。",
- "@js.2d5lr3nor8a": {
-  "x-review": "machine",
-  "x-source": "4ddb24b25e"
  },
  "js.2d5x5vtgqx3": "{n0} {n1} / {n2} MJ <span class=\"na\">· 理論的推定値</span>",
  "@js.2d5x5vtgqx3": {
@@ -6971,11 +7101,6 @@
   "x-review": "machine",
   "x-source": "a2e862e82e"
  },
- "js.2d87qst4jdj": "検索カタログ docs/discoveries/catalog.json、更新 {n0}-{n1}-29T00:{n2}+{n3}、{n4} 件。",
- "@js.2d87qst4jdj": {
-  "x-review": "machine",
-  "x-source": "c5e3fcc2c6"
- },
  "js.2d8lw4ky362": "モード",
  "@js.2d8lw4ky362": {
   "x-review": "machine",
@@ -6986,16 +7111,6 @@
   "x-review": "machine",
   "x-source": "d356f1d9dd"
  },
- "js.2d97owpwxwe": "<b>ν₃ 非対称伸縮</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} の {n2}–{n3} µm の範囲外",
- "@js.2d97owpwxwe": {
-  "x-review": "machine",
-  "x-source": "426504275f"
- },
- "js.2d9cg0jtcpa": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>光度曲線",
- "@js.2d9cg0jtcpa": {
-  "x-review": "machine",
-  "x-source": "6c965e2b87"
- },
  "js.2dbh8x9y8de": "周期",
  "@js.2dbh8x9y8de": {
   "x-review": "machine",
@@ -7005,6 +7120,11 @@
  "@js.2dcer0ylq6r": {
   "x-review": "machine",
   "x-source": "731f74e2f3"
+ },
+ "js.2dcmry1hh6z": "Kepler-{n0} c ›",
+ "@js.2dcmry1hh6z": {
+  "x-review": "machine",
+  "x-source": "afae7ed80f"
  },
  "js.2deel2ps6ig": "τ Boötis、{n0}–{n1} MHz での暫定的なバースト",
  "@js.2deel2ps6ig": {
@@ -7091,11 +7211,6 @@
   "x-review": "machine",
   "x-source": "63210331f9"
  },
- "js.2eluxgdu08m": "この章の数値",
- "@js.2eluxgdu08m": {
-  "x-review": "machine",
-  "x-source": "2d0a4d13b4"
- },
  "js.2en1x3cmvoa": "{n0} Peg b: 本サイトの式による K",
  "@js.2en1x3cmvoa": {
   "x-review": "machine",
@@ -7116,15 +7231,10 @@
   "x-review": "machine",
   "x-source": "dcfc6e0cb1"
  },
- "js.2etjlw57rtv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>銀河",
- "@js.2etjlw57rtv": {
+ "js.2ew51rdrin6": "減光 {n0}/{n1}",
+ "@js.2ew51rdrin6": {
   "x-review": "machine",
-  "x-source": "5dbc898c01"
- },
- "js.2eujifl0hnp": "高: 偶奇の不一致または二次食; 中: 深さ、V 字形、短周期での密度の不一致、または食の周期; 低: パネルの理由のみ。",
- "@js.2eujifl0hnp": {
-  "x-review": "machine",
-  "x-source": "4d1f3f27e2"
+  "x-source": "50a1297714"
  },
  "js.2exbs04rc3y": "後に衝突で生じた膨張する塵の雲と説明された「惑星」の可視光画像。",
  "@js.2exbs04rc3y": {
@@ -7171,6 +7281,11 @@
   "x-review": "machine",
   "x-source": "fd6553a3e6"
  },
+ "js.2fkkbj5qfsy": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s2</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.2fkkbj5qfsy": {
+  "x-review": "machine",
+  "x-source": "26c1586964"
+ },
  "js.2fmavt7k5j5": "上位候補を上へ移動",
  "@js.2fmavt7k5j5": {
   "x-review": "machine",
@@ -7191,11 +7306,6 @@
   "x-review": "machine",
   "x-source": "eb8caa0866"
  },
- "js.2ftwr4ebakn": "<b>実データ、出典付き。</b> 記録された測定値を、記録どおりにビン化または折り畳んだもの。",
- "@js.2ftwr4ebakn": {
-  "x-review": "machine",
-  "x-source": "349da91d3d"
- },
  "js.2fu72b3rkst": "<b>ν₂ 変角 (直交する 2 つ)</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · 「大気を読む」の {n2}–{n3} µm の範囲外",
  "@js.2fu72b3rkst": {
   "x-review": "machine",
@@ -7210,6 +7320,11 @@
  "@js.2fy47ry25d8": {
   "x-review": "machine",
   "x-source": "745f476a5f"
+ },
+ "js.2fye5c973kf": "マーク済み",
+ "@js.2fye5c973kf": {
+  "x-review": "machine",
+  "x-source": "d9b2fe68b6"
  },
  "js.2fyxww7qwgs": "太陽",
  "@js.2fyxww7qwgs": {
@@ -7261,6 +7376,11 @@
   "x-review": "machine",
   "x-source": "9dbffce8e5"
  },
+ "js.2gbggujxcvs": "なし",
+ "@js.2gbggujxcvs": {
+  "x-review": "machine",
+  "x-source": "140bedbf9c"
+ },
  "js.2gbrnw08yjn": "項目<span aria-hidden=\"true\"></span>",
  "@js.2gbrnw08yjn": {
   "x-review": "machine",
@@ -7290,6 +7410,11 @@
  "@js.2gz7mzl8po": {
   "x-review": "machine",
   "x-source": "8c1759d61c"
+ },
+ "js.2jt13jfskg": "Lalande {n0} d",
+ "@js.2jt13jfskg": {
+  "x-review": "machine",
+  "x-source": "142bf3b80d"
  },
  "js.2jxe56kfgj": "検索 (/)",
  "@js.2jxe56kfgj": {
@@ -7351,15 +7476,15 @@
   "x-review": "machine",
   "x-source": "c95d84d8a8"
  },
- "js.32jc7egs68": "exoplanet.eu に距離が保存されている {n1} 個の惑星のうち <b>{n0}</b> 個は視線速度法（最初に記載された手法）で見つかった。<a href=\"/explore/galaxy/?method=rv\">銀河マップで表示 ›</a>",
- "@js.32jc7egs68": {
-  "x-review": "machine",
-  "x-source": "3d287892f0"
- },
  "js.33d16tnf44": "{n0} 個の惑星のマップを読み込み中…",
  "@js.33d16tnf44": {
   "x-review": "machine",
   "x-source": "8ee7f0a3c8"
+ },
+ "js.34vy39gbpt": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: 2MASS J19021775+{n4} c、K00377.02、KIC {n5} c、KOI-{n6} c、KOI-{n7}、WISE J190217.77+{n8} c。",
+ "@js.34vy39gbpt": {
+  "x-review": "machine",
+  "x-source": "09699aac30"
  },
  "js.36fdi65pg1": "惑星であると仮定した場合の Rp/R★ {n0} = √深さ でのシルエット、TIC {n1} 上（温度が保存されていないため灰色で描画）",
  "@js.36fdi65pg1": {
@@ -7396,11 +7521,6 @@
   "x-review": "machine",
   "x-source": "0b61a77801"
  },
- "js.3d44eg16pj": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>天球上の位置",
- "@js.3d44eg16pj": {
-  "x-review": "machine",
-  "x-source": "4f904b0fbc"
- },
  "js.3dua6scdtg": "{n1} 個の対象にわたる {n0} 区間",
  "@js.3dua6scdtg": {
   "x-review": "machine",
@@ -7425,6 +7545,11 @@
  "@js.3iebm2jaty": {
   "x-review": "machine",
   "x-source": "0455ae374d"
+ },
+ "js.3kjkwe2xdx": "ターゲット {n0} · 既知 {n1} · エラー {n2}",
+ "@js.3kjkwe2xdx": {
+  "x-review": "machine",
+  "x-source": "15dfef1f1e"
  },
  "js.3o5vubwdr": "{n0} dex",
  "@js.3o5vubwdr": {
@@ -7456,10 +7581,10 @@
   "x-review": "machine",
   "x-source": "770680c692"
  },
- "js.3tu868pwb6": "TIC {n0} · 要レビュー、未解決",
- "@js.3tu868pwb6": {
+ "js.3ub2we0j81": "Teegarden's",
+ "@js.3ub2we0j81": {
   "x-review": "machine",
-  "x-source": "58e453def1"
+  "x-source": "d49a311c27"
  },
  "js.3wqc4ug47j": "手法：大気を読み解く ›",
  "@js.3wqc4ug47j": {
@@ -7501,11 +7626,6 @@
   "x-review": "machine",
   "x-source": "8e52c2a95a"
  },
- "js.45gidy2yfd": "下限：メタデータのみのベースラインは光度曲線を一切使わず、公開されている TOI 番号、周期、継続時間、エフェメリス誤差、エポックのみを用い、チューニング用の半分で当てはめたロジスティック回帰を使う。これを上回らない手法は、カタログ自体のメタデータが判定を予測する以上に光度曲線を読めることが示されていない。",
- "@js.45gidy2yfd": {
-  "x-review": "machine",
-  "x-source": "d4a42c8dbc"
- },
  "js.46fy9vwje9": "任意の位相の二次食",
  "@js.46fy9vwje9": {
   "x-review": "machine",
@@ -7540,11 +7660,6 @@
  "@js.4axuq93fet": {
   "x-review": "machine",
   "x-source": "b4faa12d85"
- },
- "js.4b8yjime2n": "想像図：半径 {n0} R⊕ 未満、Teq {n1}〜{n2} K の岩石・温暖型の外観。灰褐色の岩石と薄い無彩色の縁。海、大陸、雲はない。この外観の静止画であり、特定の惑星のものではない。",
- "@js.4b8yjime2n": {
-  "x-review": "machine",
-  "x-source": "9c1d8d98c4"
  },
  "js.4ccm3arc4r": "exoplanet.eu に {n0} 個の惑星 · 保存されているタイプ K0V · Teff からクラス K（最も近いのは K0V）",
  "@js.4ccm3arc4r": {
@@ -7606,15 +7721,15 @@
   "x-review": "machine",
   "x-source": "5caba079cd"
  },
+ "js.4sxy414d9c": "サンプル",
+ "@js.4sxy414d9c": {
+  "x-review": "machine",
+  "x-source": "af2bdbe1aa"
+ },
  "js.4t9xjok0e6": "想像図 · 岩石、放射照度は計算不能 · 半径は保存されていない。質量 {n0} M⊕（exoplanet.eu）は {n1} M⊕ 未満であるため、岩石惑星として描画している。半径は未測定：縮尺どおりではない。放射照度は計算不能：無彩色で描画。組成は測定されていない。出典：exoplanet.eu、取得 {n2}-{n3}-{n4}。<a href=\"/docs/pictures/\">絵の描き方 ›</a>",
  "@js.4t9xjok0e6": {
   "x-review": "machine",
   "x-source": "3975c0da56"
- },
- "js.4u1k8v564x": "Baluev FAP が {n0} 未満で、半振幅が {n2} 分ビンのばらつきの {n1} 倍以上あり、コヒーレントなピリオドグラムのピーク：同じ周期（{n3}% 以内）が光度曲線の各半分で最良のピークとなり、探索した最長周期の {n4}% 以内ではないこと。あるセクターの {n5} 個以上の恒星に共通する周期は系統的なものである。その周期の {n6} 以上続くディップはその谷であり、パネルの重みの半分が恒星の変動と判断したディップも同様である。",
- "@js.4u1k8v564x": {
-  "x-review": "machine",
-  "x-source": "9c7dd08245"
  },
  "js.4v6zv9397m": "信頼度 {n0}",
  "@js.4v6zv9397m": {
@@ -7641,10 +7756,10 @@
   "x-review": "machine",
   "x-source": "0e17d0a129"
  },
- "js.50cw8uea6": "保留EB：周期がカタログ値の{n0}%以内（要レビューとされなかったEBは見逃しとする）、{n1}%区間の下限 &gt;= {n2}",
- "@js.50cw8uea6": {
+ "js.4xy18gdl7w": "カタログ更新: <time datetime=\"2026-10-30T06:34:41+00:00\" title=\"2026-10-30T06:34:41+00:00\">{n1}年10月{n0}日 {n2} UTC</time>。",
+ "@js.4xy18gdl7w": {
   "x-review": "machine",
-  "x-source": "75081a4bd7"
+  "x-source": "d9bccf18dc"
  },
  "js.537weqdx92": "TIC {n0} · P {n1} d · {n2} ppm · SNR {n3}",
  "@js.537weqdx92": {
@@ -7671,15 +7786,25 @@
   "x-review": "machine",
   "x-source": "d40d0e920c"
  },
+ "js.5cuofh1x2k": "このスライスではノイズと区別できない",
+ "@js.5cuofh1x2k": {
+  "x-review": "machine",
+  "x-source": "7dfa2254b3"
+ },
+ "js.5eim8yf4c": "Lalande {n0}",
+ "@js.5eim8yf4c": {
+  "x-review": "machine",
+  "x-source": "7a73b4b548"
+ },
+ "js.5j6snvvuuk": "レイアウト",
+ "@js.5j6snvvuuk": {
+  "x-review": "machine",
+  "x-source": "a511909161"
+ },
  "js.5k1okfy1y2": "サイト",
  "@js.5k1okfy1y2": {
   "x-review": "machine",
   "x-source": "fa7955814e"
- },
- "js.5limoap242": "<b>ν₄ 非対称変角振動（2つ）</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} の {n2}–{n3} µm 波長域の外",
- "@js.5limoap242": {
-  "x-review": "machine",
-  "x-source": "c1aa83b41c"
  },
  "js.5m1n02zglj": "系外惑星大気における二酸化炭素の同定",
  "@js.5m1n02zglj": {
@@ -7705,11 +7830,6 @@
  "@js.5qqcw21as6": {
   "x-review": "machine",
   "x-source": "f4a2329657"
- },
- "js.5tmt3hrss9": "カタログのサイズ分類の境界（巨大ガス惑星は {n0} R⊕ 以上）",
- "@js.5tmt3hrss9": {
-  "x-review": "machine",
-  "x-source": "7807f33d37"
  },
  "js.5x2cvaysve": "視線速度半振幅 K",
  "@js.5x2cvaysve": {
@@ -7746,6 +7866,11 @@
   "x-review": "machine",
   "x-source": "bf11fecb30"
  },
+ "js.64gjc6ygey": "星の光を遮る",
+ "@js.64gjc6ygey": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
  "js.65pxt8ib9c": "連星の周りで撮像されたスーパージュピター。",
  "@js.65pxt8ib9c": {
   "x-review": "machine",
@@ -7775,11 +7900,6 @@
  "@js.6j56seqj8": {
   "x-review": "machine",
   "x-source": "7e69af06bb"
- },
- "js.6n8ndyybfz": "提出物は、対象範囲の各恒星について、その手法が実際の光度曲線と、フラックス反転およびブロックスクランブルの対照データで検出したイベント（時刻、継続時間、周期、自身の合否判定とフラグ）を列挙する。どのイベントが TOI の天体暦上にあるかはリーダーボードが判定し（ベンチマークの score_star と match_toi）、対照データでの誤警報もリーダーボード自身が数える。自己申告の結果は受け付けない。",
- "@js.6n8ndyybfz": {
-  "x-review": "machine",
-  "x-source": "7c4b789f62"
  },
  "js.6qolz1acje": "出典：キャプションに記載のとおり。",
  "@js.6qolz1acje": {
@@ -7836,6 +7956,11 @@
   "x-review": "machine",
   "x-source": "217afade12"
  },
+ "js.78llqc69gh": "Proxima Centauri b",
+ "@js.78llqc69gh": {
+  "x-review": "machine",
+  "x-source": "c5626ab780"
+ },
  "js.78r4r7906c": "地球上では、ほぼ海洋生物によってのみ作られる。",
  "@js.78r4r7906c": {
   "x-review": "machine",
@@ -7871,15 +7996,15 @@
   "x-review": "machine",
   "x-source": "1aca80e8b5"
  },
- "js.7czfymv28r": "外観テーブルに基づく想像図。サイズが縮尺どおりなのは半径が格納されている場合のみ",
- "@js.7czfymv28r": {
-  "x-review": "machine",
-  "x-source": "326ba9455b"
- },
  "js.7f3lidyc7s": "トランジットの再生",
  "@js.7f3lidyc7s": {
   "x-review": "machine",
   "x-source": "40686f7e63"
+ },
+ "js.7i6tnzxffe": "Wolf {n0} b",
+ "@js.7i6tnzxffe": {
+  "x-review": "machine",
+  "x-source": "03eb21d076"
  },
  "js.7nrzzc658q": "ブラインド符号化された対象",
  "@js.7nrzzc658q": {
@@ -7935,6 +8060,11 @@
  "@js.843gyvqmqu": {
   "x-review": "machine",
   "x-source": "3e17a94f61"
+ },
+ "js.87fibqymmi": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">pi Men c</a></b> · 主星 <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> · P {n0} d · トランジットあり",
+ "@js.87fibqymmi": {
+  "x-review": "machine",
+  "x-source": "f7c50ba965"
  },
  "js.886176wzks": "exoplanet.eu に惑星{n0}個 · 格納されたスペクトル型 F6V · Teff からクラス F（最も近いのは F5V）",
  "@js.886176wzks": {
@@ -7996,11 +8126,6 @@
   "x-review": "machine",
   "x-source": "a4c44f4a8f"
  },
- "js.8wmiyv0zzd": "想像図：岩石・低温の外観。半径 {n0} R⊕ 未満、Teq {n1} K 未満の場合：淡い灰色の岩石、緯度 {n2}° までの氷冠、大気なし。特定の惑星ではなく、この外観の静止画である。",
- "@js.8wmiyv0zzd": {
-  "x-review": "machine",
-  "x-source": "c1497fc8a0"
- },
  "js.8wxh5amfez": "サブネプチューン",
  "@js.8wxh5amfez": {
   "x-review": "machine",
@@ -8011,10 +8136,20 @@
   "x-review": "machine",
   "x-source": "10af6c250a"
  },
+ "js.905p7mrgke": "Ross {n0} b",
+ "@js.905p7mrgke": {
+  "x-review": "machine",
+  "x-source": "eec00b75d8"
+ },
  "js.90yyx3asv8": "{n0} Psc c",
  "@js.90yyx3asv8": {
   "x-review": "machine",
   "x-source": "f0cbc33340"
+ },
+ "js.92zm5mb6ic": "エントリ",
+ "@js.92zm5mb6ic": {
+  "x-review": "machine",
+  "x-source": "923fe53966"
  },
  "js.94m77w54ls": "対象 S2（BTJD {n0}〜{n1}）について保存された根拠。ディップごとではなく対象ごとに一つ。このディップに印を付けた。Sentinel は AI モデル（Claude Code CLI (Claude, Anthropic) · default）であり、人ではない。",
  "@js.94m77w54ls": {
@@ -8076,15 +8211,15 @@
   "x-review": "machine",
   "x-source": "6c293b1c67"
  },
- "js.9g29b1hwza": "JWST {s0}ing Exoplanet Community ERS Team",
- "@js.9g29b1hwza": {
-  "x-review": "machine",
-  "x-source": "d6a491c51e"
- },
  "js.9ipi38tplb": "恒星",
  "@js.9ipi38tplb": {
   "x-review": "machine",
   "x-source": "e357d39687"
+ },
+ "js.9j28j4tmyg": "Barnard's star b",
+ "@js.9j28j4tmyg": {
+  "x-review": "machine",
+  "x-source": "af09ab2ca6"
  },
  "js.9je9lv8f9w": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知の TOI 周期</span><b class=\"fig\">5i. <span class=\"mono\">tess-bc9f59e5c3af-{n0}</span>。</b> BTJD {n1} のディップ、{n2} ppm、{n3} h、SNR {n4}。{n5} のレビュアーが印を付けた（カタログにはパネルの規模も合意区間も保存されていない）。トランジット {n7} 回の {n6} 日 BLS 周期上にある。ステータス：周期が既知の TOI と一致。アーカイブ値のみ。このページは検出を主張しない。",
  "@js.9je9lv8f9w": {
@@ -8121,6 +8256,11 @@
   "x-review": "machine",
   "x-source": "ef80c9cc7c"
  },
+ "js.9xo5dpvs8f": "{n0} Eri c",
+ "@js.9xo5dpvs8f": {
+  "x-review": "machine",
+  "x-source": "b644412ed5"
+ },
  "js.9yvkaakdvn": "この実行では、これらの行の資料は保存されていない。",
  "@js.9yvkaakdvn": {
   "x-review": "machine",
@@ -8145,11 +8285,6 @@
  "@js.a5ik0d45ok": {
   "x-review": "machine",
   "x-source": "76a48996a7"
- },
- "js.a5x17kv5tz": "{n0} 個の惑星を表示 · トランジット法 {n1} · 視線速度法 {n2} · 直接撮像法 {n3} · マイクロレンズ法 {n4}",
- "@js.a5x17kv5tz": {
-  "x-review": "machine",
-  "x-source": "3372d51309"
  },
  "js.a6wp5hntda": "審査フラグ：<span class=\"mono\">odd_even_mismatch, v_shape</span> · 審査不合格",
  "@js.a6wp5hntda": {
@@ -8185,11 +8320,6 @@
  "@js.ai6mp83zpi": {
   "x-review": "machine",
   "x-source": "73d5db9ed8"
- },
- "js.ak7b9gcem6": "高：FAP が 1e-{n0} 未満、かつ半振幅がビン化した散らばりの {n1} 倍以上；中：半振幅が {n2} 倍以上；低：それ以外（またはパネルの理由のみによるディップ）。",
- "@js.ak7b9gcem6": {
-  "x-review": "machine",
-  "x-source": "4c775dba32"
  },
  "js.am5y46ghie": "exoplanet.eu では「査読論文で公表済み」と記載されており、{n0} 年に主トランジットで見つかった。記録更新 {n1}-{n2}-{n3}。別名 TOI-{n4}。",
  "@js.am5y46ghie": {
@@ -8236,11 +8366,6 @@
   "x-review": "machine",
   "x-source": "d69fa08242"
  },
- "js.aztpkxejok": "カタログのサイズ区分の境界（海王星型 {n0}–{n1} R⊕）",
- "@js.aztpkxejok": {
-  "x-review": "machine",
-  "x-source": "0a47054ebb"
- },
  "js.b2yn41cpri": "このビューではケースファイルを読み込めなかった。<a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-f28323a4aef6-006\">専用ページで開く。</a>",
  "@js.b2yn41cpri": {
   "x-review": "machine",
@@ -8255,11 +8380,6 @@
  "@js.b81xuwkvhb": {
   "x-review": "machine",
   "x-source": "fa1b7822f3"
- },
- "js.ba6i75z9zb": "ほか {n0} 件は<a href=\"/candidates/\">Explorer ›</a>で",
- "@js.ba6i75z9zb": {
-  "x-review": "machine",
-  "x-source": "378a1efe43"
  },
  "js.bcz7f7521k": "tess-toi-{n0}-s5",
  "@js.bcz7f7521k": {
@@ -8291,11 +8411,6 @@
   "x-review": "machine",
   "x-source": "9d7801b23a"
  },
- "js.bm1842qxn6": "<b>ライブフィードの新しいシグナルはノイズと矛盾しない。</b> ノイズだけでも、レビューした{n1}ターゲットあたり約{n0}件の偽の new_candidate シグナルが生じるはずであり、これに対しライブフィードでは{n3}あたり{n2}件である。以前のこのルールの下では、フィード上の new_candidate はシグナルよりもノイズである可能性が高かった。",
- "@js.bm1842qxn6": {
-  "x-review": "machine",
-  "x-source": "c59881f8e5"
- },
  "js.bn4w24un71": "≤：上限値。保存された範囲（{n0}からその値まで）による。",
  "@js.bn4w24un71": {
   "x-review": "machine",
@@ -8316,10 +8431,10 @@
   "x-review": "machine",
   "x-source": "d1ec927942"
  },
- "js.buyt9rgrrs": "審査を通過し、パネルの重みの半分によって惑星の可能性ありとラベル付けされ、恒星自身の周期シグナルに由来するものではなく、上記のどのルールにも該当しない。候補であり、未確認である。",
- "@js.buyt9rgrrs": {
+ "js.bvhiyb18bf": "小型",
+ "@js.bvhiyb18bf": {
   "x-review": "machine",
-  "x-source": "2488197a47"
+  "x-source": "81db8ebbbb"
  },
  "js.bvrmk1ex4g": "発見",
  "@js.bvrmk1ex4g": {
@@ -8346,10 +8461,10 @@
   "x-review": "machine",
   "x-source": "c7e1272291"
  },
- "js.cbv0lkfgz8": "{s0}のケースを開く ›",
- "@js.cbv0lkfgz8": {
+ "js.cb7mp7y3o9": "保存 id tess-1c554332c266-{n0}。この実行にはケースファイルがない",
+ "@js.cb7mp7y3o9": {
   "x-review": "machine",
-  "x-source": "248441ab0d"
+  "x-source": "64026e0de1"
  },
  "js.cbz7kbs8l0": "id tic29257288-s1-dip-{n0} · 対象 tess-6cf3bf1771b3<br>光度曲線 sha256 b44e4d280fddc0d2705f6687997736ebf67f9b0544e9711f880a21ebaa0bda05<br>コード … · 設定 a9d34c7079563183…<br>ソース sector_0001.json.gz",
  "@js.cbz7kbs8l0": {
@@ -8416,6 +8531,11 @@
   "x-review": "machine",
   "x-source": "bbc7feceee"
  },
+ "js.d6qkqwv24q": "{n0} Peg · {n1} K",
+ "@js.d6qkqwv24q": {
+  "x-review": "machine",
+  "x-source": "e5f1ee0a62"
+ },
  "js.d72yz71kxc": "フィード（snr の降順）。すべての項目は候補であり、未確認である。",
  "@js.d72yz71kxc": {
   "x-review": "machine",
@@ -8435,11 +8555,6 @@
  "@js.db3tsr98n3": {
   "x-review": "machine",
   "x-source": "aa93d0c8f4"
- },
- "js.dcedelaavp": "<b>ν₂ 変角</b> · {n0} µm · 赤外活性 · ×{n1}で描画 · {s0}の{n2}–{n3} µmの範囲外",
- "@js.dcedelaavp": {
-  "x-review": "machine",
-  "x-source": "9dbd92a5c8"
  },
  "js.dcp2jzpjk": "<i style=\"background:#30D158\"></i>beta Pic b",
  "@js.dcp2jzpjk": {
@@ -8496,6 +8611,11 @@
   "x-review": "machine",
   "x-source": "b6940405a0"
  },
+ "js.dvqr7huse3": "eps Ind Bb",
+ "@js.dvqr7huse3": {
+  "x-review": "machine",
+  "x-source": "e8e7d5bf66"
+ },
  "js.dvwoo1e05r": "WASP-{n0} b の JWST NIRSpec PRISM 透過スペクトル：誤差棒付きの{n1}個のビン化した点と論文の最適モデル。最も深い点は{n2}マイクロメートルにあり、二酸化炭素のバンドである。",
  "@js.dvwoo1e05r": {
   "x-review": "machine",
@@ -8535,11 +8655,6 @@
  "@js.e1cnrnc88l": {
   "x-review": "machine",
   "x-source": "7a72e5d7b0"
- },
- "js.e1q7qs4zzq": "<b>ν₃ 逆対称伸縮（3）</b> · {n0} µm · 赤外活性 · ×{n1}で描画 · <a href=\"/how-it-works/atmospheres/\">{s0}における{n2} µmバンド ›</a>",
- "@js.e1q7qs4zzq": {
-  "x-review": "machine",
-  "x-source": "71ad84105e"
  },
  "js.e2y47rpcbh": "不明",
  "@js.e2y47rpcbh": {
@@ -8696,6 +8811,11 @@
   "x-review": "machine",
   "x-source": "09cd47b417"
  },
+ "js.f2v9rtmf85": "コード",
+ "@js.f2v9rtmf85": {
+  "x-review": "machine",
+  "x-source": "340f463033"
+ },
  "js.f38k3bw5h7": "<b class=\"flabel\">図版{n0}、パネルi。</b> 対象 tess-38b5a559eee2 の保存されたフラックス（BTJD {n1}～{n2}）、相対フラックス − {n3}（ppm）。網掛けの帯はコンセンサス区間で、キャプションと同じ文字で示す。三角形はBLSのエポック。右：保存されたBLS周期 {n4} d と t0 BTJD {n5} で折り畳んだもの。網掛けの帯は保存されたBLS継続時間（{n6} h）。フラックス範囲外の{n7}点は描画していない。",
  "@js.f38k3bw5h7": {
   "x-review": "machine",
@@ -8710,11 +8830,6 @@
  "@js.f6sm069d1p": {
   "x-review": "machine",
   "x-source": "4b1c53ca4a"
- },
- "js.f7l0xvrbgu": "<b>主に N–N 伸縮振動</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} では描画されない",
- "@js.f7l0xvrbgu": {
-  "x-review": "machine",
-  "x-source": "099bdfda01"
  },
  "js.f7onc16rky": "データ中で予測されるトランジット / ディップを伴うもの",
  "@js.f7onc16rky": {
@@ -8735,11 +8850,6 @@
  "@js.fakckuaz74": {
   "x-review": "machine",
   "x-source": "deaf714e0c"
- },
- "js.fbjnqepq3y": "<b>各クラスをそれ自身の帰無と比較</b>。同じ {n0} 個の恒星・セクターで測定し、そのシグナルが存在し得ない場所でそのルールが何を見つけるかを見る。ディップ：フラックスを上下反転したもの（実際のディップは隆起になり、実際のフレアや脈動の極大はディップになるため、この帰無には実際のシグナルが含まれ得る）。フレア：実際のディップをマスクした下向きのイベント。変動：恒星の赤色雑音コピー（そのビンにフィットした AR({n1})）を同じルールに通したもの。このルールは光度曲線の前半と後半の両方で同じ最良周期（{n2}% 以内）を必要とする。連星の周期にないピリオドグラムのピークのうち、{n3} 個がコヒーレントである。未分類は、半分の長さで検定できるより長いもの {n4} 個（コヒーレンスは未検定）、周期グリッドの端にあるもの {n5} 個、前半と後半で周期がずれるもの {n6} 個である。限界：強い赤色雑音中の {n7} ppm の正弦波を見つけるのは {n8}/{n9} 回のみであり（scripts/variability_rule_check.py）、1 セクターでは約 {n10} d より長い周期を検定できない。同種同士を比較し、恒星・セクターを単位とする。{n11}% 区間は恒星・セクターに対するペア付きブートストラップで、McNemar 検定と併記する。両方を通過しないクラスは、このスライスではノイズと区別できない：惑星候補、食連星、フレア、脈動変光星または自転変光星、系統誤差。フレアクラスの {n12} 個の増光のうち、{n13} 個は減衰より速く立ち上がり、{n14} 個はその逆である（{n15} 個は同じ）。実際のフレアは速く立ち上がるが、ノイズには特定の方向がない。",
- "@js.fbjnqepq3y": {
-  "x-review": "machine",
-  "x-source": "edcc450583"
  },
  "js.fbyrtfuuuu": "pi Men",
  "@js.fbyrtfuuuu": {
@@ -8781,11 +8891,6 @@
   "x-review": "machine",
   "x-source": "8e4a1eb431"
  },
- "js.ftkov6vbui": "ディップのシルエット（候補、半径比）",
- "@js.ftkov6vbui": {
-  "x-review": "machine",
-  "x-source": "2cbc25cbe4"
- },
  "js.fv6055pnqa": "周期が既知の TOI と一致",
  "@js.fv6055pnqa": {
   "x-review": "machine",
@@ -8826,10 +8931,10 @@
   "x-review": "machine",
   "x-source": "ab87f8473e"
  },
- "js.g1lwglngw7": "アーカイブとの比較：{s0} と整合的。ΔP {n0}%、検証ノートによるタイミングのずれ：{n2} エポックの平均で {n1} 分。アーカイブの値のみ。このページは検出を主張しない。",
- "@js.g1lwglngw7": {
+ "js.g2cghw07hl": "自転",
+ "@js.g2cghw07hl": {
   "x-review": "machine",
-  "x-source": "dff14c09d4"
+  "x-source": "57b5e2fc1b"
  },
  "js.g3w1e5hqnc": "最高の分光器安定度",
  "@js.g3w1e5hqnc": {
@@ -8840,6 +8945,11 @@
  "@js.g6lwhkyils": {
   "x-review": "machine",
   "x-source": "0574b94b3e"
+ },
+ "js.g6m1eyxsdn": "分子",
+ "@js.g6m1eyxsdn": {
+  "x-review": "machine",
+  "x-source": "49a6356091"
  },
  "js.g6m8lmxer6": "典型的なアインシュタイン横断時間",
  "@js.g6m8lmxer6": {
@@ -8860,6 +8970,11 @@
  "@js.gbaq8jky1n": {
   "x-review": "machine",
   "x-source": "49aaab944b"
+ },
+ "js.gc28rpxiwc": "Luyten's Star",
+ "@js.gc28rpxiwc": {
+  "x-review": "machine",
+  "x-source": "f84d36433e"
  },
  "js.gc92hxaxrj": "Sentinel · Skeptic：このウィンドウ内に {n0} 区間、このディップに計上",
  "@js.gc92hxaxrj": {
@@ -8906,20 +9021,10 @@
   "x-review": "machine",
   "x-source": "8ab8377cb2"
  },
- "js.gf2k29wf2u": "フレア、脈動、および公開 CHEOPS 光度曲線（CHEOPS データは ESA の規約に従う）",
- "@js.gf2k29wf2u": {
-  "x-review": "machine",
-  "x-source": "7636d9cad3"
- },
  "js.gfd1bpovje": "{n0} 個のディップ（{n1} 個は棄却）",
  "@js.gfd1bpovje": {
   "x-review": "machine",
   "x-source": "f9153844c1"
- },
- "js.ggh3kiowd3": "想像図：高温岩石の外観。半径 {n0} R⊕ 未満かつ Teq {n1} K 以上の場合で、昼側の亀裂が光る暗い岩石として描く。この外観の静止画であり、特定の惑星を描いたものではない。",
- "@js.ggh3kiowd3": {
-  "x-review": "machine",
-  "x-source": "082ec2b77a"
  },
  "js.gizr3gwvyr": "別名 {n0}、KOI-{n1}、2MASS J19323620+{n2}。",
  "@js.gizr3gwvyr": {
@@ -8965,6 +9070,11 @@
  "@js.gplu2k76y8": {
   "x-review": "machine",
   "x-source": "6f0127f52b"
+ },
+ "js.gpznjdo7y3": "pi Men · {n0} K",
+ "@js.gpznjdo7y3": {
+  "x-review": "machine",
+  "x-source": "899a850a1e"
  },
  "js.griyfzkg7e": "<b>ν₂ 変角振動</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · 「大気を読む」の {n2}–{n3} µm の範囲外",
  "@js.griyfzkg7e": {
@@ -9026,6 +9136,11 @@
   "x-review": "machine",
   "x-source": "ed2c6ec6d2"
  },
+ "js.hfecdi2gfn": "tau Cet g",
+ "@js.hfecdi2gfn": {
+  "x-review": "machine",
+  "x-source": "5a095c9a36"
+ },
  "js.hi7kyj244t": "太陽系外で見つかった最初期の惑星の一つ。ミリ秒パルサーのタイミング計測によるもの。",
  "@js.hi7kyj244t": {
   "x-review": "machine",
@@ -9060,6 +9175,11 @@
  "@js.hrans2nscc": {
   "x-review": "machine",
   "x-source": "476f15a932"
+ },
+ "js.ht99op5pxg": "NASA Exoplanet Archive、テーブル ps（default_flag = {n0}）。scripts/validate_known_planets.py により docs/results/pi_men_validation.md に記録されたもの（アーカイブへのライブクエリ、commit 0f6dbdc）。そこに記録されているのは pi Men c のみであるため、pi Men c のみを掲載する。トランジット中心時刻は記録されていないため、ここではエポックごとのオフセットは計算せず、代わりに検証ノートの平均タイミングオフセット（{n3} エポック中 {n2} エポックで {n1} min）を引用する。アーカイブが応答したら 'setuhq crossmatch runs/tess-pi-men-s1' の出力で置き換えること。<time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n5}年10月{n4}日 {n6} UTC</time> に docs/results/pi_men_crossmatch.json へ記録（commit 0f6dbdc）。この実行自体のクロスマッチは実行されなかった（保存されたエラー、原文のまま: <code>ModuleNotFoundError: No module named 'astroquery'</code>）。",
+ "@js.ht99op5pxg": {
+  "x-review": "machine",
+  "x-source": "4653c87d87"
  },
  "js.hv6t0hplex": "実行レポート · tess-toi-{n0}-s2",
  "@js.hv6t0hplex": {
@@ -9151,10 +9271,10 @@
   "x-review": "machine",
   "x-source": "8c601dc48e"
  },
- "js.ioyj9009pb": "<a href=\"/assets/data/exoplanet_map.csv\" download=\"\">プロットされたすべての惑星をダウンロード（CSV、{n0} 行）</a>。保存された exoplanet.eu マップから作成。",
- "@js.ioyj9009pb": {
+ "js.iqpr6oou3c": "セクター {n0}: {n1}-{n2}-{n3} から {n4}-{n5}-{n6} · 視野内に既知の惑星をもつカタログ掲載の恒星 {n7} 個",
+ "@js.iqpr6oou3c": {
   "x-review": "machine",
-  "x-source": "0669d7463c"
+  "x-source": "61eb698124"
  },
  "js.ir7824frtx": "tess-08a8c4eac6ff-{n0} · 未決 · 候補、未確認",
  "@js.ir7824frtx": {
@@ -9165,6 +9285,11 @@
  "@js.irvrs2dlo3": {
   "x-review": "machine",
   "x-source": "c1c91c0c5c"
+ },
+ "js.it3yfm2mls": "WASP-{n0}<br><span class=\"muted mono t-data\">tess-wasp-{n1}-s1</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.it3yfm2mls": {
+  "x-review": "machine",
+  "x-source": "be84b6d521"
  },
  "js.it7w3r4cx": "保存された光度曲線で予測されるトランジット：{n0}。そのうち減光があるもの：{n1}（減光 {n2} 件、要レビュー {n3} 件、平均オフセット {n4} min）。",
  "@js.it7w3r4cx": {
@@ -9291,6 +9416,11 @@
   "x-review": "machine",
   "x-source": "90e37abec4"
  },
+ "js.k2p8kaiegs": "HN Lib b",
+ "@js.k2p8kaiegs": {
+  "x-review": "machine",
+  "x-source": "1b00eabfcb"
+ },
  "js.k3btdf81ur": "離心率",
  "@js.k3btdf81ur": {
   "x-review": "machine",
@@ -9305,11 +9435,6 @@
  "@js.k6wgj1vf42": {
   "x-review": "machine",
   "x-source": "3a6449de5f"
- },
- "js.k73o4aajts": "4つの場面。{s0} タイミング：周期比 {n0} 付近の2つの惑星が互いに引き合うため、内側の惑星のトランジットが早まったり遅れたりし、O−C 図が描かれていく。二次食：惑星はトランジットの半公転後に恒星の背後に隠れ、はるかに小さな減光が生じる（10倍深く描画）。位相曲線：潮汐固定された惑星は掩蔽に近づくほど高温の昼側をより多く見せ、そのピークは風によってずれる。Rossiter–McLaughlin 効果：惑星が自転する恒星の近づく側、続いて遠ざかる側の半分を覆うため、トランジット中に恒星の測定速度が振れる。",
- "@js.k73o4aajts": {
-  "x-review": "machine",
-  "x-source": "21a7dc3be9"
  },
  "js.k81gpwo3bo": "{n0} −-{n1} / {n2} Gyr",
  "@js.k81gpwo3bo": {
@@ -9401,10 +9526,20 @@
   "x-review": "machine",
   "x-source": "5bd78577ba"
  },
+ "js.l361fmbsuc": "保存済み id tess-eaab33b6b763-{n0}。この実行にはケースファイルがない",
+ "@js.l361fmbsuc": {
+  "x-review": "machine",
+  "x-source": "75a96bab8f"
+ },
  "js.l3je4rzt3v": "{n0} Pegasi b。公転周期 {n1} 日の巨大惑星で、恒星のふらつきから見つかった。",
  "@js.l3je4rzt3v": {
   "x-review": "machine",
   "x-source": "783b55a817"
+ },
+ "js.l5edhw6c5o": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知の TOI 周期</span><b class=\"fig\">7c. <span class=\"mono\">tess-7b97e468b60b-{n0}</span>.</b> BTJD {n1} の減光、{n2} ppm、{n3} h、SNR {n4}。{n5} 人のレビュアーが印を付けた（カタログにはパネルの人数も合意区間も保存されていない）。{n6} 日の BLS 周期上にあり、トランジットは {n7} 回。ステータス: 周期が既知の TOI と一致する。アーカイブの値のみ。このページは検出を主張しない。",
+ "@js.l5edhw6c5o": {
+  "x-review": "machine",
+  "x-source": "84eea9bb2e"
  },
  "js.l66csoi3se": "ドレイク方程式計算機",
  "@js.l66csoi3se": {
@@ -9436,6 +9571,11 @@
   "x-review": "machine",
   "x-source": "bcb2e28ac7"
  },
+ "js.le6i0lhisz": "母集団",
+ "@js.le6i0lhisz": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
  "js.lg9kxjhees": "*既知の偽陽性。* TOI表が偽陽性 (FP) と判定しているTESS Object of Interest:{n1}日ごとに{n0}%の減光。",
  "@js.lg9kxjhees": {
   "x-review": "machine",
@@ -9446,6 +9586,11 @@
   "x-review": "machine",
   "x-source": "2b91c1afd2"
  },
+ "js.lh8m0vnna6": "マイクロレンズ <span class=\"mono\" data-cmn=\"microlensing\">{n0}</span>",
+ "@js.lh8m0vnna6": {
+  "x-review": "machine",
+  "x-source": "6ebe002adb"
+ },
  "js.lj02ml1du2": "別名 GJ {n0}、V2500 Oph。",
  "@js.lj02ml1du2": {
   "x-review": "machine",
@@ -9455,21 +9600,6 @@
  "@js.lj5zi4x2mb": {
   "x-review": "machine",
   "x-source": "a266923843"
- },
- "js.lmqc5cetjp": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>システム表示",
- "@js.lmqc5cetjp": {
-  "x-review": "machine",
-  "x-source": "b55e8878de"
- },
- "js.loxdmylfqk": "FP棄却:TOIの減光を手法がクリーンな候補として提示しなかったFP星(回収され、要レビューとならなかったもの)。信頼性:TOIの減光上のクリーンな候補のうちCP/KPである割合。このサンプルのクラス構成に基づくもので、TOIカタログのクラス構成ではない。すべての率にWilson {n0}%区間を付している。TFOPWGの判定は基準であり、すべてのTOIについての真値ではない。",
- "@js.loxdmylfqk": {
-  "x-review": "machine",
-  "x-source": "65f89a23b5"
- },
- "js.lpvg4u78fv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>カタログ",
- "@js.lpvg4u78fv": {
-  "x-review": "machine",
-  "x-source": "a3cf22621a"
  },
  "js.lugtea4b2c": "表(狭い画面では横にスクロール)",
  "@js.lugtea4b2c": {
@@ -9516,6 +9646,11 @@
   "x-review": "machine",
   "x-source": "6ba2097d7d"
  },
+ "js.m1r0pwwc2c": "Eps Ind Ab",
+ "@js.m1r0pwwc2c": {
+  "x-review": "machine",
+  "x-source": "f49ed6b253"
+ },
  "js.m3r8wny6k9": "{s0}の想像図:寒冷帯の巨大ガス惑星、半径は測定されていない(地球質量の{n0}倍)、{n1} K。",
  "@js.m3r8wny6k9": {
   "x-review": "machine",
@@ -9561,11 +9696,6 @@
   "x-review": "machine",
   "x-source": "be67c2df8b"
  },
- "js.me79v4kzjl": "<b>フィードのより厳しい規則(事前登録済み、このコードで再測定)。</b> シグナルは、レビューされた両方のセクターで、{n1}回の試行に対してFAPが{n0}未満で通過しなければならない。保留した半分では、ノイズのみで{n3}ターゲットあたり{n2}個の偽シグナルが生じ({n4}% CI {n5}–{n6})、{n7}({n8}–{n9})から減少した。それでも実際の光度曲線が与える{n11}ターゲットあたり{n10}個の新規シグナルを大きく上回るため、フィードは依然として誤警報が大半を占めており、フィードレベルの完全性は{n12}%から{n13}%に低下した。フィードへの採用は人によるレビューまたはフォローアップレビューのための手がかりであり、いかなる確認状態の候補でもない。このコードで再実行すると、ライブフィードの{n14}ターゲットから{n15}個の新規シグナルが採用される。",
- "@js.me79v4kzjl": {
-  "x-review": "machine",
-  "x-source": "1b6a64cd4a"
- },
  "js.meqp2x3ji6": "exoplanet.euでは「査読論文で発表済み」と記載されており、{n0}年に直接撮像により見つかった。記録更新 {n1}-{n2}-{n3}。別名 bet Pic b、HIP {n4} b。",
  "@js.meqp2x3ji6": {
   "x-review": "machine",
@@ -9586,25 +9716,25 @@
   "x-review": "machine",
   "x-source": "6a7bc0cac6"
  },
- "js.mi2tgjiiqn": "<b>Pro Follow-up</b> <span class=\"eddev\">開発中</span>:候補ごとのフォローアップパケット:ExoFOP形式のエクスポート、不確かさ付きの天体暦、そして顧客の望遠鏡からターゲットが観測可能となる時期",
- "@js.mi2tgjiiqn": {
-  "x-review": "machine",
-  "x-source": "e944e5aba3"
- },
  "js.mimntzdewz": "手法:接近と後退 ›",
  "@js.mimntzdewz": {
   "x-review": "machine",
   "x-source": "3f269a446d"
  },
- "js.mk4mulcwso": "<b>ν₃ 逆対称伸縮</b> · {n0} µm · 赤外活性 · ×{n1}で描画 · <a href=\"/how-it-works/atmospheres/\">{s0}の{n2} µm帯 ›</a>",
- "@js.mk4mulcwso": {
+ "js.mkc9jxfgbz": "印を付けた減光",
+ "@js.mkc9jxfgbz": {
   "x-review": "machine",
-  "x-source": "518c8ddc31"
+  "x-source": "94e146b4e3"
  },
  "js.mlrhcayzxr": "状態はすべての色の横に文字で記されている。",
  "@js.mlrhcayzxr": {
   "x-review": "machine",
   "x-source": "4775478abc"
+ },
+ "js.mmnswive1w": "<i aria-hidden=\"true\"></i>フレア",
+ "@js.mmnswive1w": {
+  "x-review": "machine",
+  "x-source": "e7a022e38b"
  },
  "js.mmu67oe6q3": "地球–太陽の重心",
  "@js.mmu67oe6q3": {
@@ -9621,10 +9751,25 @@
   "x-review": "machine",
   "x-source": "0882c3b8b4"
  },
+ "js.mqj6wfaw6h": "Ross {n0}",
+ "@js.mqj6wfaw6h": {
+  "x-review": "machine",
+  "x-source": "817ee35ea0"
+ },
+ "js.mskkijl1h9": "eps Ind A",
+ "@js.mskkijl1h9": {
+  "x-review": "machine",
+  "x-source": "0cf3bf4b89"
+ },
  "js.msr7a8c18z": "バンド(µm)",
  "@js.msr7a8c18z": {
   "x-review": "machine",
   "x-source": "482e628874"
+ },
+ "js.mtnvg3zz1c": "HD {n0}<br><span class=\"muted mono t-data\">tess-hd-{n1}-s4</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.mtnvg3zz1c": {
+  "x-review": "machine",
+  "x-source": "7cc6c4ce56"
  },
  "js.mwjxjvzia1": "並べ替え",
  "@js.mwjxjvzia1": {
@@ -9635,6 +9780,11 @@
  "@js.mwv88v3dkm": {
   "x-review": "machine",
   "x-source": "f1df8fd039"
+ },
+ "js.mxcgzchu7z": "YZ Cet b ›",
+ "@js.mxcgzchu7z": {
+  "x-review": "machine",
+  "x-source": "a3d4d803bc"
  },
  "js.n10imi0en": "制約なし",
  "@js.n10imi0en": {
@@ -9691,6 +9841,11 @@
   "x-review": "machine",
   "x-source": "520a2101da"
  },
+ "js.njyq57a914": "b Cen (AB)b",
+ "@js.njyq57a914": {
+  "x-review": "machine",
+  "x-source": "d5e094d32f"
+ },
  "js.nk8m1nny5r": "tess-4b369d3c6f09-{n0}のブラインド化されたサブジェクトプロット:レビュアーがマークした光度曲線(ターゲット名もマーカーもなし)",
  "@js.nk8m1nny5r": {
   "x-review": "machine",
@@ -9711,6 +9866,11 @@
   "x-review": "machine",
   "x-source": "7a0d984887"
  },
+ "js.nrcbxny9wa": "ステータス",
+ "@js.nrcbxny9wa": {
+  "x-review": "machine",
+  "x-source": "073c1634c4"
+ },
  "js.ns1wjk2bkh": "未決 · 候補、未確認",
  "@js.ns1wjk2bkh": {
   "x-review": "machine",
@@ -9720,6 +9880,11 @@
  "@js.nt7jpblt1w": {
   "x-review": "machine",
   "x-source": "82765e23c7"
+ },
+ "js.ntaw7nc8vt": "手法の章",
+ "@js.ntaw7nc8vt": {
+  "x-review": "machine",
+  "x-source": "31932e7289"
  },
  "js.ntp7tqnx1h": "{n1}件中{n0}件を表示。",
  "@js.ntp7tqnx1h": {
@@ -9735,6 +9900,11 @@
  "@js.nvauo0t95d": {
   "x-review": "machine",
   "x-source": "0906640b92"
+ },
+ "js.ny28knfv0a": "大気を読み解く",
+ "@js.ny28knfv0a": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
  },
  "js.ny97ialxx0": "Sentinel · Skeptic:このウィンドウ内にマークなし",
  "@js.ny97ialxx0": {
@@ -9781,6 +9951,11 @@
   "x-review": "machine",
   "x-source": "67071927f6"
  },
+ "js.o7m15kbsi5": "pi Men<br><span class=\"muted mono t-data\">tess-pi-men-s1</span><br><span class=\"muted\">TIC Teff {n0} K</span>",
+ "@js.o7m15kbsi5": {
+  "x-review": "machine",
+  "x-source": "8b203e2083"
+ },
  "js.o99izf3z1n": "あり: TOI {n0}",
  "@js.o99izf3z1n": {
   "x-review": "machine",
@@ -9805,11 +9980,6 @@
  "@js.op9ipohoso": {
   "x-review": "machine",
   "x-source": "703dfd613f"
- },
- "js.oqpbaoboao": "<b>ν₁ 対称伸縮</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} では描画されない",
- "@js.oqpbaoboao": {
-  "x-review": "machine",
-  "x-source": "2474d10b70"
  },
  "js.osjdukhlhf": "<b>スターシェード。</b>望遠鏡のはるか前方に飛ばす花の形をした遮蔽板（Cash {n0}）。Roman Starshade Rendezvous 構想: {n2} km の位置に {n1} m、HabEx: 約 {n4} km の位置に {n3} m（HabEx Final Report）。",
  "@js.osjdukhlhf": {
@@ -9871,11 +10041,6 @@
   "x-review": "machine",
   "x-source": "6f82ddb801"
  },
- "js.p4u8g14ecp": "増光: {n2} 日の移動中央値より {n1}σ 以上高い点が {n0} 点以上連続し、ピークが {n3}σ 以上であるもの。恒星の散らばりと {n4} d 以内の散らばりの両方に対して判定し、装置由来の兆候とは一致しない。",
- "@js.p4u8g14ecp": {
-  "x-review": "machine",
-  "x-source": "286b750a5a"
- },
  "js.p4vg8hpjdy": "来歴",
  "@js.p4vg8hpjdy": {
   "x-review": "machine",
@@ -9906,6 +10071,16 @@
   "x-review": "machine",
   "x-source": "149058a461"
  },
+ "js.pahnbc3987": "星野の図。サーベイが各ターゲットを調べるように、照準リングが恒星を一つずつ捉えていく。捉えられた各恒星には、その想定上の惑星の軌道が我々の視線方向とそろうかどうかが示される。pi Men c のような軌道では、そろうのはおよそ13個に1個である。恒星の色は各恒星の温度に従う。",
+ "@js.pahnbc3987": {
+  "x-review": "machine",
+  "x-source": "d807e5a457"
+ },
+ "js.pauic2u0rw": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: EPIC {n4} b、2MASS J11301450+{n5} b、EPIC {n6}、WISE J113014.45+{n7} b。",
+ "@js.pauic2u0rw": {
+  "x-review": "machine",
+  "x-source": "1817856093"
+ },
  "js.pbsogd4kq5": "紫外/可視では HWO、{n0} µm では LIFE などの中間赤外ミッション",
  "@js.pbsogd4kq5": {
   "x-review": "machine",
@@ -9915,6 +10090,11 @@
  "@js.pd4w5w3ixh": {
   "x-review": "machine",
   "x-source": "a838a779e2"
+ },
+ "js.pd6ew3rt19": "<i style=\"background:#BF5AF2\"></i>マイクロレンズ <span class=\"mono\">{n0}</span>",
+ "@js.pd6ew3rt19": {
+  "x-review": "machine",
+  "x-source": "59e3047926"
  },
  "js.pf82vwrzvm": "惑星の可能性 {n0}",
  "@js.pf82vwrzvm": {
@@ -9931,11 +10111,6 @@
   "x-review": "machine",
   "x-source": "59a33e9ea7"
  },
- "js.piby2721pq": "{n0} 星 <span class=\"muted\">（CP/KP {n1}、FP {n2}、FA {n3}）</span> <b>FP に偏っている</b>: FP の行は {n4} 分データのみを持つ FP 星を表す",
- "@js.piby2721pq": {
-  "x-review": "machine",
-  "x-source": "52d7acd8f3"
- },
  "js.pj7ep1wjt3": "<b>主に N–N 伸縮</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · 「Reading atmospheres」では描画されない",
  "@js.pj7ep1wjt3": {
   "x-review": "machine",
@@ -9951,10 +10126,20 @@
   "x-review": "machine",
   "x-source": "21e389771e"
  },
- "js.pn78q0jveb": "エンドツーエンド（DACE DRP 配列と pycheops の DRP プロダクトの比較）: すべての参照観測で相関 &gt;= {n0}",
- "@js.pn78q0jveb": {
+ "js.plrluloqs0": "pi Men c ›",
+ "@js.plrluloqs0": {
   "x-review": "machine",
-  "x-source": "cec6167f00"
+  "x-source": "3d841d792f"
+ },
+ "js.pm8m1jqibi": "減光",
+ "@js.pm8m1jqibi": {
+  "x-review": "machine",
+  "x-source": "9b9a2cbe44"
+ },
+ "js.pn2cym3dnm": "再生 {n0}–{n1}",
+ "@js.pn2cym3dnm": {
+  "x-review": "machine",
+  "x-source": "04f22f0879"
  },
  "js.pnrbaagjqb": "進化した K 型巨星を回る非常に重い伴星で、視線速度法で見つかった。",
  "@js.pnrbaagjqb": {
@@ -9976,15 +10161,10 @@
   "x-review": "machine",
   "x-source": "7c33bc2692"
  },
- "js.q8vb9a162v": "SetuHQ は独立したプロジェクトであり、ESA、CHEOPS ミッション、CHEOPS Consortium と提携しておらず、それらの承認を受けておらず、それらに代わって運営されてもいない。ESA の Target Checker、Visibility Tool、Exposure Time Calculator、Scheduling Feasibility Checker、Policies &amp; Procedures 文書に代わるものではなく、公式の募集要項とツールが優先する。",
- "@js.q8vb9a162v": {
+ "js.q3zvdlmvza": "{n0} Peg b ›",
+ "@js.q3zvdlmvza": {
   "x-review": "machine",
-  "x-source": "e5417cf525"
- },
- "js.q95vajnmsz": "TESS セクター {n0}–{n1}。この星のフィード項目 {n2}（保存 ID <span class=\"mono\">tess-d64ea73e32ac-{n3}</span>）。TOI との一致は、保存された周期をアーカイブの値と比較したものである。アーカイブの値のみ。このページは検出を主張しない。",
- "@js.q95vajnmsz": {
-  "x-review": "machine",
-  "x-source": "52af58fde0"
+  "x-source": "8136a9c855"
  },
  "js.qad4ea3nk7": "Rossiter–McLaughlin 効果、HD {n0} b（測定された V sin I）",
  "@js.qad4ea3nk7": {
@@ -10000,6 +10180,16 @@
  "@js.qcwtbaf2e5": {
   "x-review": "machine",
   "x-source": "3091d416b9"
+ },
+ "js.qcyhotnwyb": "Kepler-{n0} b ›",
+ "@js.qcyhotnwyb": {
+  "x-review": "machine",
+  "x-source": "6ec7331b16"
+ },
+ "js.qegfutpzid": "Barnard's Star",
+ "@js.qegfutpzid": {
+  "x-review": "machine",
+  "x-source": "04db49fbfb"
  },
  "js.qezo9f8bhr": "exoplanet.eu の惑星 {n0} 個 · 保存されたタイプ G2IV-V · Teff からクラス G（最も近いのは G2V）",
  "@js.qezo9f8bhr": {
@@ -10020,6 +10210,11 @@
  "@js.qjpeah132b": {
   "x-review": "machine",
   "x-source": "d7e942e6f6"
+ },
+ "js.qmvvg78xp": "tau Cet f",
+ "@js.qmvvg78xp": {
+  "x-review": "machine",
+  "x-source": "e99f6ebd4f"
  },
  "js.qnq290e1mh": "恒星ノイズ ~{n0} m/s",
  "@js.qnq290e1mh": {
@@ -10081,10 +10276,10 @@
   "x-review": "machine",
   "x-source": "17f710cec5"
  },
- "js.r6b0ke5ddb": "測定データを保存されたままプロットし、その出典を下に記している:SetuHQ の光度曲線、カタログの件数。",
- "@js.r6b0ke5ddb": {
+ "js.r7r5ll60un": "印",
+ "@js.r7r5ll60un": {
   "x-review": "machine",
-  "x-source": "aa17f78b83"
+  "x-source": "e3d11da4dd"
  },
  "js.r8opy5qens": "n_e、対数目盛",
  "@js.r8opy5qens": {
@@ -10105,6 +10300,11 @@
  "@js.regiehtwzu": {
   "x-review": "machine",
   "x-source": "b4cb7439b1"
+ },
+ "js.rmcqh280p3": "章",
+ "@js.rmcqh280p3": {
+  "x-review": "machine",
+  "x-source": "9831375bc6"
  },
  "js.roj6ijskxu": "別名 V452 Vul、TOI-{n0}。",
  "@js.roj6ijskxu": {
@@ -10140,11 +10340,6 @@
  "@js.s5dkmlriz2": {
   "x-review": "machine",
   "x-source": "a0a30e125c"
- },
- "js.s66tykdpyv": "想像図:「岩石・温暖」の外観。半径 {n0} R⊕ 未満、Teq {n1}〜{n2} K 向け:クレーターのある暗い裸の岩石で、縁の光はない。特定の惑星ではなく、この外観の静止画である。",
- "@js.s66tykdpyv": {
-  "x-review": "machine",
-  "x-source": "c058d804c9"
  },
  "js.s6e71sj3nh": "<b>{n1} 人中 {n0} 人のレビュアー</b>がマークした:Sentinels {n3} 人中 {n2} 人、Probes {n5} 人中 {n4} 人<small class=\"muted\" style=\"display:block;font-size:11px\"><span title=\"reviewer id volunteer-sensitive\">Probe · 敏感</span>、<span title=\"reviewer id volunteer-typical\">Probe · 標準</span>、<span title=\"reviewer id volunteer-cautious\">Probe · 慎重</span></small>",
  "@js.s6e71sj3nh": {
@@ -10266,6 +10461,11 @@
   "x-review": "machine",
   "x-source": "9d9fb0ef55"
  },
+ "js.t39my5dsyh": "タイミング <span class=\"mono\" data-cmn=\"timing\">{n0}</span>",
+ "@js.t39my5dsyh": {
+  "x-review": "machine",
+  "x-source": "eaf800daff"
+ },
  "js.t60qw9cha2": "想像図 · 海王星型、放射照度は計算不可 · 半径は保存されていない。質量 {n0} M⊕(exoplanet.eu)は {n1}〜{n2} M⊕ の範囲にあるため、海王星型惑星として描いている。半径は未測定:縮尺は正確でない。放射照度は計算不可:中間色で描いている。組成は測定されていない。出典:exoplanet.eu、{n3}-{n4}-{n5} 取得。<a href=\"/docs/pictures/\">絵の描き方 ›</a>",
  "@js.t60qw9cha2": {
   "x-review": "machine",
@@ -10276,10 +10476,10 @@
   "x-review": "machine",
   "x-source": "eb9b70b39c"
  },
- "js.tbam84ybce": "星の黒体放射の色と周縁減光。粒状斑はテクスチャである",
- "@js.tbam84ybce": {
+ "js.tchjn2r4y9": "系統誤差",
+ "@js.tchjn2r4y9": {
   "x-review": "machine",
-  "x-source": "90cf191e4f"
+  "x-source": "5a9bb62240"
  },
  "js.tcofm5lh0s": "exoplanet.eu では「ウェブサイトで発表」と記載されており、{n0} 年に主トランジット法で見つかった。記録の更新日 {n1}-{n2}-{n3}。別名 2MASS J19430387+{n4} d、K01364.02、KIC {n5} d、KOI-{n6} d、KOI-{n7}、WISE J194303.88+{n8} d。",
  "@js.tcofm5lh0s": {
@@ -10306,15 +10506,25 @@
   "x-review": "machine",
   "x-source": "164d6a71cd"
  },
+ "js.tjzc53y07u": "すべての探索実行、保存されたままのエラー、そしてこれらのページの元になった設定。",
+ "@js.tjzc53y07u": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "js.tmvyhylhnp": "脈動星または自転変光星",
+ "@js.tmvyhylhnp": {
+  "x-review": "machine",
+  "x-source": "1d4898f020"
+ },
  "js.toi5vq5s4d": "{n0} pc(exoplanet.eu の記載値)",
  "@js.toi5vq5s4d": {
   "x-review": "machine",
   "x-source": "08aa2d3dc6"
  },
- "js.trnbddk8fe": "exoplanet.eu で距離が保存されている {n1} 個の惑星のうち <b>{n0}</b> 個は直接撮像で見つかった(最初に記載された手法)。<a href=\"/explore/galaxy/?method=imaging\">銀河マップに表示 ›</a>",
- "@js.trnbddk8fe": {
+ "js.trg2sd40ob": "設定",
+ "@js.trg2sd40ob": {
   "x-review": "machine",
-  "x-source": "dd5674802f"
+  "x-source": "b79606fb3a"
  },
  "js.trzuzwcopk": "パイプライン",
  "@js.trzuzwcopk": {
@@ -10466,10 +10676,10 @@
   "x-review": "machine",
   "x-source": "943077f050"
  },
- "js.v5sdm14eih": "<b>ν₁ 対称伸縮</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · <a href=\"/how-it-works/atmospheres/\">「大気を読む」の {n2} µm バンド ›</a>",
- "@js.v5sdm14eih": {
+ "js.v3cmzn255c": "SetuHQ の各設定と、提出されたあらゆる手法を、取り置いた半分のデータでブラインド評価したもの。",
+ "@js.v3cmzn255c": {
   "x-review": "machine",
-  "x-source": "5a958a6168"
+  "x-source": "1e91ab197b"
  },
  "js.vbyk5xwnrv": "以前に用いていた箱型の尺度（パネルが印を付けたウィンドウ内の平均フラックス）: 深さ {n0} ppm、継続時間 {n1} h、Huang {n4} に対する比は **{n2}** と **{n3}**（README がかつて引用していたアーカイブのデフォルト行に対しては {n5} と {n6}）。",
  "@js.vbyk5xwnrv": {
@@ -10501,11 +10711,6 @@
   "x-review": "machine",
   "x-source": "8d34629003"
  },
- "js.vm9rqq85fe": "{s0} と c の周期",
- "@js.vm9rqq85fe": {
-  "x-review": "machine",
-  "x-source": "da9014d7f4"
- },
  "js.vmsox3cj56": "このビューへのリンク",
  "@js.vmsox3cj56": {
   "x-review": "machine",
@@ -10535,11 +10740,6 @@
  "@js.vsh0ajf78": {
   "x-review": "machine",
   "x-source": "93eedb88e2"
- },
- "js.vtdvzcy89i": "各実行で保存された対象とフィット",
- "@js.vtdvzcy89i": {
-  "x-review": "machine",
-  "x-source": "f6d62e6cda"
  },
  "js.vtnlfvcu18": "巨大ガス惑星（質量による。半径は未保存）",
  "@js.vtnlfvcu18": {
@@ -10586,10 +10786,10 @@
   "x-review": "machine",
   "x-source": "d2f1847f96"
  },
- "js.w084p1vq7y": "反転した光度曲線における、フィードの水準での誤警報（その完全な規則、FAP &lt; {n0}）",
- "@js.w084p1vq7y": {
+ "js.w21u8mgncr": "{n0} Eri e",
+ "@js.w21u8mgncr": {
   "x-review": "machine",
-  "x-source": "9936d6f964"
+  "x-source": "a9bda9193e"
  },
  "js.w635vpthea": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知の TOI 周期</span><b class=\"fig\">5d. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> BTJD {n1} のディップ、{n2} ppm、{n3} h、SNR {n4}。{n5} 人のレビュアーが印を付けた（カタログはパネルの人数や合意区間を保存していない）。{n7} 回のトランジットを持つ {n6} 日の BLS 周期上にある。状態: 周期が既知の TOI と一致。アーカイブの値のみ。このページは検出を主張しない。",
  "@js.w635vpthea": {
@@ -10616,6 +10816,16 @@
   "x-review": "machine",
   "x-source": "cc87a8d326"
  },
+ "js.w7mxe1jjf7": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s5</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.w7mxe1jjf7": {
+  "x-review": "machine",
+  "x-source": "1cc92f722d"
+ },
+ "js.w9mpw0gpum": "pi Men ›",
+ "@js.w9mpw0gpum": {
+  "x-review": "machine",
+  "x-source": "4de3e057f1"
+ },
  "js.wafeswebdi": "実行 tess-toi-{n0}-s2 · {n1} 個のディップ（{n2} 個棄却）· {n3} 個の対象。<span class=\"printonly\"> この図版上のすべての候補: 候補、未確認。</span>",
  "@js.wafeswebdi": {
   "x-review": "machine",
@@ -10630,6 +10840,11 @@
  "@js.wbhr5y7ltz": {
   "x-review": "machine",
   "x-source": "efa246c3ed"
+ },
+ "js.wcsqg4x5f": "アストロメトリ <span class=\"mono\" data-cmn=\"astrometry\">{n0}</span>",
+ "@js.wcsqg4x5f": {
+  "x-review": "machine",
+  "x-source": "9043a3475b"
  },
  "js.wge5c60gnw": "Gaia-{n0} b",
  "@js.wge5c60gnw": {
@@ -10650,6 +10865,11 @@
  "@js.wkrls1dk3c": {
   "x-review": "machine",
   "x-source": "0a0c72b4d4"
+ },
+ "js.wldr50kzra": "Luyten's Star d",
+ "@js.wldr50kzra": {
+  "x-review": "machine",
+  "x-source": "f978f22f3a"
  },
  "js.wmpk5bhzf9": "アストロメトリ · {n0}",
  "@js.wmpk5bhzf9": {
@@ -10691,6 +10911,11 @@
   "x-review": "machine",
   "x-source": "30ccca4a89"
  },
+ "js.wtj60yojsq": "exoplanet.eu では「ウェブサイトで公表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: 2MASS J18515610+{n4} b、K00739.01、KIC {n5} b、KOI-{n6} b、KOI-{n7}、WISE J185156.07+{n8} b。",
+ "@js.wtj60yojsq": {
+  "x-review": "machine",
+  "x-source": "6ee7be1c7c"
+ },
  "js.wvis3dlfyh": "地球サイズ",
  "@js.wvis3dlfyh": {
   "x-review": "machine",
@@ -10705,11 +10930,6 @@
  "@js.wyws1u3mmf": {
   "x-review": "machine",
   "x-source": "db544a9e58"
- },
- "js.x0f76panzs": "想像図：neptune-cool の外観。半径 {n0}〜{n1} R⊕、Teq {n2} K 未満：深い青の縞と暗い斑点。この外観の静止画であり、特定の惑星の画像ではない。",
- "@js.x0f76panzs": {
-  "x-review": "machine",
-  "x-source": "e72124962b"
  },
  "js.x177ygvldr": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知のTOI周期</span><b class=\"fig\">5b. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> BTJD {n1} のディップ、{n2} ppm、{n3} h、SNR {n4}。{n5} 人のレビュアーがマークした（カタログにはパネルの人数とコンセンサス区間が保存されていない）。{n7} 回のトランジットを含む {n6} 日の BLS 周期上にある。ステータス：周期が既知のTOIと一致。アーカイブの値のみ。このページは検出を主張しない。",
  "@js.x177ygvldr": {
@@ -10786,20 +11006,30 @@
   "x-review": "machine",
   "x-source": "39ac347e42"
  },
+ "js.xi9v7ksndn": "Wolf {n0} d",
+ "@js.xi9v7ksndn": {
+  "x-review": "machine",
+  "x-source": "1268b30fc7"
+ },
  "js.xjghoq101i": "対数強度ストレッチ（{n0}〜{n1}⁻⁶）。惑星は説明用の {n2}⁻³ に配置。理想的な単色光学系。マスクと絞りのサイズは説明用",
  "@js.xjghoq101i": {
   "x-review": "machine",
   "x-source": "907c200b96"
  },
+ "js.xll7y1ynl0": "歴史と論文",
+ "@js.xll7y1ynl0": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "js.xngfkgukjg": "生命の方程式",
+ "@js.xngfkgukjg": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
  "js.xp4h2ofbdl": "· TIC {n0} · 周期のない信号（トランジット1回）· 上位ディップのうち {n1} 個",
  "@js.xp4h2ofbdl": {
   "x-review": "machine",
   "x-source": "21f82eff3f"
- },
- "js.xpg4i01qhj": "想像図：envelope-warm の外観。半径 {n0}〜{n1} R⊕、Teq {n2}〜{n3} K：青灰色のもや。この外観の静止画であり、特定の惑星の画像ではない。",
- "@js.xpg4i01qhj": {
-  "x-review": "machine",
-  "x-source": "7ef97acea7"
  },
  "js.xpmiaupaaj": "{n1} 件中 {n0} 件を表示",
  "@js.xpmiaupaaj": {
@@ -10815,6 +11045,11 @@
  "@js.xtdd9w23g6": {
   "x-review": "machine",
   "x-source": "3be7d1cc73"
+ },
+ "js.xvtyf8wl1b": "beta Pic b",
+ "@js.xvtyf8wl1b": {
+  "x-review": "machine",
+  "x-source": "e38549f8ed"
  },
  "js.xx7wry1e2": "岩石惑星のバイオシグネチャーとして提案されている。岩石惑星では生命なしに作ることが難しいためである。",
  "@js.xx7wry1e2": {
@@ -10845,6 +11080,16 @@
  "@js.y2sii8ag7z": {
   "x-review": "machine",
   "x-source": "1c8b900d94"
+ },
+ "js.y3xy9eepgg": "帰無 {n0} · 超過 {n1}（{n2}%: {n3}〜{n4}）",
+ "@js.y3xy9eepgg": {
+  "x-review": "machine",
+  "x-source": "01f79dcd20"
+ },
+ "js.y9ptrwfobi": "docs/discoveries/catalog.json",
+ "@js.y9ptrwfobi": {
+  "x-review": "machine",
+  "x-source": "81e814ecc7"
  },
  "js.yef3d1ma9p": "{n0} 件を深すぎるとして除外",
  "@js.yef3d1ma9p": {
@@ -10881,30 +11126,20 @@
   "x-review": "machine",
   "x-source": "fe1b093c33"
  },
- "js.yob3llgolf": "年・手法別の惑星",
- "@js.yob3llgolf": {
-  "x-review": "machine",
-  "x-source": "60ecd96d94"
- },
  "js.yq2bbta4k2": "<span class=\"word cand\">候補</span><span class=\"word s-known\">既知のTOI周期</span><b class=\"fig\">4a. <span class=\"mono\">tess-308a47f84167-{n0}</span>.</b> BTJD {n1} のディップ、{n2} ppm、{n3} h、SNR {n4}。{n5} 人のレビュアーがマークした（カタログにはパネルの人数とコンセンサス区間が保存されていない）。{n7} 回のトランジットを含む {n6} 日の BLS 周期上にある。ステータス：周期が既知のTOIと一致。アーカイブの値のみ。このページは検出を主張しない。",
  "@js.yq2bbta4k2": {
   "x-review": "machine",
   "x-source": "4aebb10343"
  },
- "js.yv746p7ayh": "<b>変角振動（2つ、互いに直角）</b> · {n0} µm · 赤外活性 · ×{n1} で描画 · {s0} の {n2}–{n3} µm の範囲外",
- "@js.yv746p7ayh": {
+ "js.yrhnt8o7w9": "分子と生命",
+ "@js.yrhnt8o7w9": {
   "x-review": "machine",
-  "x-source": "67a09bbd02"
+  "x-source": "d0ac3c4b97"
  },
  "js.yw1cg6z6ba": "小さなトランジット惑星で、その低い密度から当初は水に富む天体であることが示唆された。",
  "@js.yw1cg6z6ba": {
   "x-review": "machine",
   "x-source": "9d636cbdc1"
- },
- "js.ywghy58587": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">{s0}</a></b> · 主星 <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s1}</a> · P {n0} d · トランジットあり",
- "@js.ywghy58587": {
-  "x-review": "machine",
-  "x-source": "40c55c5a8e"
  },
  "js.yx8blcjbm": "Teff: exoplanet.eu、取得日 {n0}-{n1}-{n2}。星の色: プランクスペクトルを CIE {n3} 等色関数に通したもの",
  "@js.yx8blcjbm": {
@@ -10915,6 +11150,11 @@
  "@js.yza9eps8ud": {
   "x-review": "machine",
   "x-source": "871e79db9b"
+ },
+ "js.yzugi1nrhx": "exoplanet.eu では「査読論文で発表」として掲載されており、{n0}年に主トランジット法で検出された。記録の更新日は{n1}-{n2}-{n3}。別名: HD {n4} c。",
+ "@js.yzugi1nrhx": {
+  "x-review": "machine",
+  "x-source": "aee1648ae2"
  },
  "js.z0e3dbqjze": "– トランジット数が少なすぎるため除外",
  "@js.z0e3dbqjze": {
@@ -10936,25 +11176,10 @@
   "x-review": "machine",
   "x-source": "a9d66a33c2"
  },
- "js.z7hoxivdkf": "<b>ν 伸縮</b> · {n0} µm · 赤外不活性（双極子が変化しない） · 描画 ×{n1} · {s0} の {n2}–{n3} µm の波長範囲外",
- "@js.z7hoxivdkf": {
-  "x-review": "machine",
-  "x-source": "1bcc8097d6"
- },
  "js.zae6h8rkk6": "Sentinel: 描画された光度曲線を読み取り、減光をマークする AI モデル（Claude Code CLI (Claude, Anthropic) · デフォルト）。人間ではない。",
  "@js.zae6h8rkk6": {
   "x-review": "machine",
   "x-source": "adeac0a395"
- },
- "js.zb00gkwd2w": "<b>ν₁ 対称伸縮</b> · {n0} µm · 赤外活性 · 描画 ×{n1} · <a href=\"/how-it-works/atmospheres/\">{s0} における {n2} µm バンド ›</a>",
- "@js.zb00gkwd2w": {
-  "x-review": "machine",
-  "x-source": "5b5f436da5"
- },
- "js.zbm91l3rcx": "<b>ν₃ 逆対称伸縮</b> · {n0} µm · 赤外活性 · 描画 ×{n1} · <a href=\"/how-it-works/atmospheres/\">「大気を読む」における {n2} µm バンド ›</a>",
- "@js.zbm91l3rcx": {
-  "x-review": "machine",
-  "x-source": "a265a49ab4"
  },
  "js.zdvz2hwho1": "既知の TOI {n0} 件",
  "@js.zdvz2hwho1": {
@@ -10975,6 +11200,11 @@
  "@js.zhegcnbaps": {
   "x-review": "machine",
   "x-source": "43c883da28"
+ },
+ "js.zjf4m6pas4": "tau Boo Ab ›",
+ "@js.zjf4m6pas4": {
+  "x-review": "machine",
+  "x-source": "5487f582ec"
  },
  "js.zknme5264y": "審査フラグ: <span class=\"mono\">density_mismatch</span> · 審査通過",
  "@js.zknme5264y": {
@@ -11031,6 +11261,11 @@
   "x-review": "machine",
   "x-source": "c369fc08d2"
  },
+ "js.zzww829dur": "大",
+ "@js.zzww829dur": {
+  "x-review": "machine",
+  "x-source": "d35c416a85"
+ },
  "label.art": "想像図",
  "@label.art": {
   "x-review": "machine",
@@ -11056,7 +11291,7 @@
   "x-review": "machine",
   "x-source": "d1d38cf39a"
  },
- "lb.h1": "実際の TOI で盲検採点した手法。",
+ "lb.h1": "実際の TOI で<wbr>盲検採点した<wbr>手法。",
  "@lb.h1": {
   "x-review": "machine",
   "x-source": "d7943ed0f0"
@@ -11481,12 +11716,12 @@
   "x-review": "machine",
   "x-source": "417be5d799"
  },
- "methods.h1": "惑星はどう見つかるか。",
+ "methods.h1": "惑星は<wbr>どう<wbr>見つかるか。",
  "@methods.h1": {
   "x-review": "machine",
   "x-source": "583ac6e306"
  },
- "methods.h1b": "そして SetuHQ はどう見つけるか。",
+ "methods.h1b": "そして SetuHQ は<wbr>どう<wbr>見つけるか。",
  "@methods.h1b": {
   "x-review": "machine",
   "x-source": "99b2b42598"
@@ -11551,7 +11786,7 @@
   "x-review": "machine",
   "x-source": "3b73900b8d"
  },
- "nav.how": "しくみ",
+ "nav.how": "しく<wbr>み",
  "@nav.how": {
   "x-review": "machine",
   "x-source": "9c870aa6e5"
@@ -12046,7 +12281,7 @@
   "x-review": "machine",
   "x-source": "04074c80bf"
  },
- "pg.045ec8ea24": "注目の惑星",
+ "pg.045ec8ea24": "注目の<wbr>惑星",
  "@pg.045ec8ea24": {
   "x-review": "machine",
   "x-source": "045ec8ea24"
@@ -12191,7 +12426,7 @@
   "x-review": "machine",
   "x-source": "09a3126379"
  },
- "pg.09cd47b417": "TESS セクター{n0}のブラインド探索で回収された pi Men c",
+ "pg.09cd47b417": "TESS セクター{n0}の<wbr>ブラインド探索で<wbr>回収された pi Men c",
  "@pg.09cd47b417": {
   "x-review": "machine",
   "x-source": "09cd47b417"
@@ -12271,7 +12506,7 @@
   "x-review": "machine",
   "x-source": "0cbf9cb4d4"
  },
- "pg.0d33838a26": "規則と、各クラスとその帰無モデルとの比較",
+ "pg.0d33838a26": "規則と、<wbr>各クラスと<wbr>その<wbr>帰無モデルとの<wbr>比較",
  "@pg.0d33838a26": {
   "x-review": "machine",
   "x-source": "0d33838a26"
@@ -12766,7 +13001,7 @@
   "x-review": "machine",
   "x-source": "1daaa38f33"
  },
- "pg.1ddb4f971b": "Sentinels のサブサンプル <span class=\"sub\">ホールドアウトの恒星 {n0} 個 · 順位付けなし</span>",
+ "pg.1ddb4f971b": "Sentinels の<wbr>サブサンプル <span class=\"sub\">ホールドアウトの<wbr>恒星 {n0} 個 · 順位付けなし</span>",
  "@pg.1ddb4f971b": {
   "x-review": "machine",
   "x-source": "1ddb4f971b"
@@ -12911,7 +13146,7 @@
   "x-review": "machine",
   "x-source": "211099717c"
  },
- "pg.218584c780": "Fomalhaut b、その後の再解釈",
+ "pg.218584c780": "Fomalhaut b、<wbr>その後の<wbr>再解釈",
  "@pg.218584c780": {
   "x-review": "machine",
   "x-source": "218584c780"
@@ -12976,7 +13211,7 @@
   "x-review": "machine",
   "x-source": "23b1174728"
  },
- "pg.23c1665678": "トランジットするのがわずかである理由",
+ "pg.23c1665678": "トランジットするのが<wbr>わずかである<wbr>理由",
  "@pg.23c1665678": {
   "x-review": "machine",
   "x-source": "23c1665678"
@@ -13071,7 +13306,7 @@
   "x-review": "machine",
   "x-source": "2773b5c178"
  },
- "pg.2785d0a312": "この実行の設定",
+ "pg.2785d0a312": "この<wbr>実行の<wbr>設定",
  "@pg.2785d0a312": {
   "x-review": "machine",
   "x-source": "2785d0a312"
@@ -13106,7 +13341,7 @@
   "x-review": "machine",
   "x-source": "28dc5c9ff1"
  },
- "pg.294ae8b20d": "集計対象のすべてのチェック",
+ "pg.294ae8b20d": "集計対象の<wbr>すべての<wbr>チェック",
  "@pg.294ae8b20d": {
   "x-review": "machine",
   "x-source": "294ae8b20d"
@@ -13266,7 +13501,7 @@
   "x-review": "machine",
   "x-source": "305af37e3f"
  },
- "pg.305e1bb50b": "CHEOPS データは Pro および商用ライセンスの対象外である",
+ "pg.305e1bb50b": "CHEOPS データは Pro および商用ライセンスの<wbr>対象外である",
  "@pg.305e1bb50b": {
   "x-review": "machine",
   "x-source": "305e1bb50b"
@@ -13531,6 +13766,11 @@
   "x-review": "machine",
   "x-source": "39a5ae06fe"
  },
+ "pg.39b16a9877": "<a href=\"https://arxiv.org/abs/1001.2010\" rel=\"noopener\">Winn {n0}、トランジットと掩蔽（Transits and occultations）</a>",
+ "@pg.39b16a9877": {
+  "x-review": "machine",
+  "x-source": "39b16a9877"
+ },
  "pg.39de4731ee": "描画",
  "@pg.39de4731ee": {
   "x-review": "machine",
@@ -13641,7 +13881,7 @@
   "x-review": "machine",
   "x-source": "3ddd07fdd3"
  },
- "pg.3e119175f1": "星ごとのタイムライン",
+ "pg.3e119175f1": "星ごとの<wbr>タイムライン",
  "@pg.3e119175f1": {
   "x-review": "machine",
   "x-source": "3e119175f1"
@@ -13655,6 +13895,11 @@
  "@pg.3eb13bfe85": {
   "x-review": "machine",
   "x-source": "3eb13bfe85"
+ },
+ "pg.3eced47803": "HR {n0} の S2 と S29: ランダムな周波数が結合周波数として要レビューとなるのは、最大でも {n1}% である",
+ "@pg.3eced47803": {
+  "x-review": "machine",
+  "x-source": "3eced47803"
  },
  "pg.3f1b06de43": "BTJD {n0} · 深さ{n1} ppm · {n2}時間 · SNR {n3}",
  "@pg.3f1b06de43": {
@@ -13806,7 +14051,7 @@
   "x-review": "machine",
   "x-source": "444a9aa5b6"
  },
- "pg.444da116ef": "CHEOPSの光度曲線",
+ "pg.444da116ef": "CHEOPSの<wbr>光度曲線",
  "@pg.444da116ef": {
   "x-review": "machine",
   "x-source": "444da116ef"
@@ -13886,7 +14131,7 @@
   "x-review": "machine",
   "x-source": "47aa4201cd"
  },
- "pg.47be0a453a": "ライセンス：1つのエンジン、2つのライセンス",
+ "pg.47be0a453a": "ライセンス：1つの<wbr>エンジン、<wbr>2つの<wbr>ライセンス",
  "@pg.47be0a453a": {
   "x-review": "machine",
   "x-source": "47be0a453a"
@@ -14696,7 +14941,7 @@
   "x-review": "machine",
   "x-source": "6455867f98"
  },
- "pg.6464ce5238": "星の光を遮る",
+ "pg.6464ce5238": "星の<wbr>光を<wbr>遮る",
  "@pg.6464ce5238": {
   "x-review": "machine",
   "x-source": "6464ce5238"
@@ -14761,7 +15006,7 @@
   "x-review": "machine",
   "x-source": "667e520d72"
  },
- "pg.66e5cc26bd": "実際の TOI で測定",
+ "pg.66e5cc26bd": "実際の TOI で<wbr>測定",
  "@pg.66e5cc26bd": {
   "x-review": "machine",
   "x-source": "66e5cc26bd"
@@ -14906,7 +15151,7 @@
   "x-review": "machine",
   "x-source": "6b34fed81e"
  },
- "pg.6b83f8e2fe": "Kepler の複数惑星候補の検証",
+ "pg.6b83f8e2fe": "Kepler の<wbr>複数惑星候補の<wbr>検証",
  "@pg.6b83f8e2fe": {
   "x-review": "machine",
   "x-source": "6b83f8e2fe"
@@ -15176,7 +15421,7 @@
   "x-review": "machine",
   "x-source": "739889b27a"
  },
- "pg.73dbd015c3": "参照実行（tess-pi-men-s1）の概要",
+ "pg.73dbd015c3": "参照実行<wbr>（tess-pi-men-s1）の<wbr>概要",
  "@pg.73dbd015c3": {
   "x-review": "machine",
   "x-source": "73dbd015c3"
@@ -15286,7 +15531,7 @@
   "x-review": "machine",
   "x-source": "76a702e1fc"
  },
- "pg.76d2a45355": "頻度と SetuHQ のチェック内容",
+ "pg.76d2a45355": "頻度と SetuHQ の<wbr>チェック内容",
  "@pg.76d2a45355": {
   "x-review": "machine",
   "x-source": "76d2a45355"
@@ -15361,7 +15606,7 @@
   "x-review": "machine",
   "x-source": "789fba55cf"
  },
- "pg.79677ced9c": "惑星はノイズの中にどう隠れるか",
+ "pg.79677ced9c": "惑星は<wbr>ノイズの<wbr>中に<wbr>どう<wbr>隠れるか",
  "@pg.79677ced9c": {
   "x-review": "machine",
   "x-source": "79677ced9c"
@@ -15406,7 +15651,7 @@
   "x-review": "machine",
   "x-source": "7ab61da809"
  },
- "pg.7aded88b71": "コントラストのはしご",
+ "pg.7aded88b71": "コントラストのは<wbr>しご",
  "@pg.7aded88b71": {
   "x-review": "machine",
   "x-source": "7aded88b71"
@@ -15486,7 +15731,7 @@
   "x-review": "machine",
   "x-source": "7e82eaf177"
  },
- "pg.7e892de66c": "pi Menの26日間。<br><span class=\"grey\">1つの惑星を再び検出。1つの減光は説明されていない。</span>",
+ "pg.7e892de66c": "pi Menの<wbr>26日間。<br><span class=\"grey\">1つの<wbr>惑星を<wbr>再び検出。<wbr>1つの<wbr>減光は<wbr>説明されていない。</span>",
  "@pg.7e892de66c": {
   "x-review": "machine",
   "x-source": "7e892de66c"
@@ -15501,7 +15746,7 @@
   "x-review": "machine",
   "x-source": "7ece39e4bd"
  },
- "pg.7f0f81b74b": "このカタログで各手法が届く範囲",
+ "pg.7f0f81b74b": "この<wbr>カタログで<wbr>各手法が<wbr>届く<wbr>範囲",
  "@pg.7f0f81b74b": {
   "x-review": "machine",
   "x-source": "7f0f81b74b"
@@ -15541,12 +15786,12 @@
   "x-review": "machine",
   "x-source": "7fcd2e3be7"
  },
- "pg.7fe7bf5ec1": "分布",
+ "pg.7fe7bf5ec1": "分<wbr>布",
  "@pg.7fe7bf5ec1": {
   "x-review": "machine",
   "x-source": "7fe7bf5ec1"
  },
- "pg.7fec9c309c": "トランジット中に観測されたHD {n0} b",
+ "pg.7fec9c309c": "トランジット中に<wbr>観測された<wbr>HD {n0} b",
  "@pg.7fec9c309c": {
   "x-review": "machine",
   "x-source": "7fec9c309c"
@@ -15586,7 +15831,7 @@
   "x-review": "machine",
   "x-source": "82765e23c7"
  },
- "pg.828d691c9b": "CO <span>一酸化炭素</span>",
+ "pg.828d691c9b": "CO <span>一酸<wbr>化炭素</span>",
  "@pg.828d691c9b": {
   "x-review": "machine",
   "x-source": "828d691c9b"
@@ -15651,7 +15896,7 @@
   "x-review": "machine",
   "x-source": "854ab4765d"
  },
- "pg.85664938da": "Seagerの式",
+ "pg.85664938da": "Seagerの<wbr>式",
  "@pg.85664938da": {
   "x-review": "machine",
   "x-source": "85664938da"
@@ -15791,7 +16036,7 @@
   "x-review": "machine",
   "x-source": "8985e38ca6"
  },
- "pg.89f2842c43": "バイオシグネチャーのチェックリスト",
+ "pg.89f2842c43": "バイオシグネチャーの<wbr>チェックリスト",
  "@pg.89f2842c43": {
   "x-review": "machine",
   "x-source": "89f2842c43"
@@ -16101,12 +16346,12 @@
   "x-review": "machine",
   "x-source": "97e968c96c"
  },
- "pg.97f2d5f563": "CHEOPSのデータと利用条件",
+ "pg.97f2d5f563": "CHEOPSの<wbr>データと<wbr>利用条件",
  "@pg.97f2d5f563": {
   "x-review": "machine",
   "x-source": "97f2d5f563"
  },
- "pg.982502489b": "近づく動きと遠ざかる動き",
+ "pg.982502489b": "近づく<wbr>動きと<wbr>遠ざかる<wbr>動き",
  "@pg.982502489b": {
   "x-review": "machine",
   "x-source": "982502489b"
@@ -16481,7 +16726,7 @@
   "x-review": "machine",
   "x-source": "a5710ea055"
  },
- "pg.a586047366": "生命の方程式",
+ "pg.a586047366": "生命の<wbr>方程式",
  "@pg.a586047366": {
   "x-review": "machine",
   "x-source": "a586047366"
@@ -16511,7 +16756,7 @@
   "x-review": "machine",
   "x-source": "a6451b99f7"
  },
- "pg.a687771d70": "電波は別の方法で最初の惑星を見つけた",
+ "pg.a687771d70": "電波は<wbr>別の<wbr>方法で<wbr>最初の<wbr>惑星を<wbr>見つけた",
  "@pg.a687771d70": {
   "x-review": "machine",
   "x-source": "a687771d70"
@@ -17041,7 +17286,7 @@
   "x-review": "machine",
   "x-source": "bc48c53d53"
  },
- "pg.bc77bf1be2": "主張とその現状",
+ "pg.bc77bf1be2": "主張と<wbr>その<wbr>現状",
  "@pg.bc77bf1be2": {
   "x-review": "machine",
   "x-source": "bc77bf1be2"
@@ -17116,7 +17361,7 @@
   "x-review": "machine",
   "x-source": "bdb632937d"
  },
- "pg.bdbcaf26dd": "<span class=\"mcnum mono\" aria-hidden=\"true\"></span>天球上の位置",
+ "pg.bdbcaf26dd": "<span class=\"mcnum mono\" aria-hidden=\"true\"></span>天球上の<wbr>位置",
  "@pg.bdbcaf26dd": {
   "x-review": "machine",
   "x-source": "bdbcaf26dd"
@@ -17146,7 +17391,7 @@
   "x-review": "machine",
   "x-source": "bec69036aa"
  },
- "pg.bef83c57c0": "パックの中身",
+ "pg.bef83c57c0": "パックの<wbr>中身",
  "@pg.bef83c57c0": {
   "x-review": "machine",
   "x-source": "bef83c57c0"
@@ -17156,7 +17401,7 @@
   "x-review": "machine",
   "x-source": "befe0f654f"
  },
- "pg.bf11fecb30": "ミリ秒パルサー PSR B1257+{n0} を回る惑星系",
+ "pg.bf11fecb30": "ミリ秒パルサー PSR B1257+{n0} を<wbr>回る<wbr>惑星系",
  "@pg.bf11fecb30": {
   "x-review": "machine",
   "x-source": "bf11fecb30"
@@ -17266,7 +17511,7 @@
   "x-review": "machine",
   "x-source": "c38a1dc96b"
  },
- "pg.c3b5790c5c": "カタログを検索",
+ "pg.c3b5790c5c": "カタログを<wbr>検索",
  "@pg.c3b5790c5c": {
   "x-review": "machine",
   "x-source": "c3b5790c5c"
@@ -17336,7 +17581,7 @@
   "x-review": "machine",
   "x-source": "c659a0d0ed"
  },
- "pg.c6638a4574": "歴史と論文",
+ "pg.c6638a4574": "歴史と<wbr>論文",
  "@pg.c6638a4574": {
   "x-review": "machine",
   "x-source": "c6638a4574"
@@ -17441,7 +17686,7 @@
   "x-review": "machine",
   "x-source": "c807c70a7b"
  },
- "pg.c82862b830": "金星のホスフィン: 議論が続いている",
+ "pg.c82862b830": "金星の<wbr>ホスフィン: 議論が<wbr>続いている",
  "@pg.c82862b830": {
   "x-review": "machine",
   "x-source": "c82862b830"
@@ -17611,7 +17856,7 @@
   "x-review": "machine",
   "x-source": "cd5d4dfad1"
  },
- "pg.cd844994a3": "検索フィードから：他の{n1}個の恒星の{n0}件",
+ "pg.cd844994a3": "検索フィードから<wbr>：他の{n1}個の<wbr>恒星の{n0}件",
  "@pg.cd844994a3": {
   "x-review": "machine",
   "x-source": "cd844994a3"
@@ -17621,7 +17866,7 @@
   "x-review": "machine",
   "x-source": "cd9d28a205"
  },
- "pg.cdaa852be4": "計数されたすべてのチェック、プロトコルv4",
+ "pg.cdaa852be4": "計数された<wbr>すべての<wbr>チェック、<wbr>プロトコルv4",
  "@pg.cdaa852be4": {
   "x-review": "machine",
   "x-source": "cdaa852be4"
@@ -17631,7 +17876,7 @@
   "x-review": "machine",
   "x-source": "cdeddf2945"
  },
- "pg.cdefdf338c": "太陽型星を回る木星質量の伴星",
+ "pg.cdefdf338c": "太陽型星を<wbr>回る<wbr>木星質量の<wbr>伴星",
  "@pg.cdefdf338c": {
   "x-review": "machine",
   "x-source": "cdefdf338c"
@@ -17711,7 +17956,7 @@
   "x-review": "machine",
   "x-source": "d0a97698a2"
  },
- "pg.d0ac3c4b97": "分子と生命",
+ "pg.d0ac3c4b97": "分子と<wbr>生命",
  "@pg.d0ac3c4b97": {
   "x-review": "machine",
   "x-source": "d0ac3c4b97"
@@ -17796,7 +18041,7 @@
   "x-review": "machine",
   "x-source": "d35c9a219c"
  },
- "pg.d36afae90f": "系外惑星大気の検出",
+ "pg.d36afae90f": "系外惑星大気の<wbr>検出",
  "@pg.d36afae90f": {
   "x-review": "machine",
   "x-source": "d36afae90f"
@@ -17826,12 +18071,12 @@
   "x-review": "machine",
   "x-source": "d3e77c16e7"
  },
- "pg.d40e9e1077": "これまでのスイープ",
+ "pg.d40e9e1077": "これまでの<wbr>スイープ",
  "@pg.d40e9e1077": {
   "x-review": "machine",
   "x-source": "d40e9e1077"
  },
- "pg.d418c6a735": "コロナグラフの方式を面ごとに",
+ "pg.d418c6a735": "コロナグラフの<wbr>方式を<wbr>面ごとに",
  "@pg.d418c6a735": {
   "x-review": "machine",
   "x-source": "d418c6a735"
@@ -17921,7 +18166,7 @@
   "x-review": "machine",
   "x-source": "d6733454b8"
  },
- "pg.d69fa08242": "実際のスペクトル：JWST による WASP-{n0} b",
+ "pg.d69fa08242": "実際の<wbr>スペクトル：JWST に<wbr>よる WASP-{n0} b",
  "@pg.d69fa08242": {
   "x-review": "machine",
   "x-source": "d69fa08242"
@@ -17951,7 +18196,7 @@
   "x-review": "machine",
   "x-source": "d74ff0ee8d"
  },
- "pg.d75d99e996": "系外巨大惑星のトランジット時の理論透過スペクトル",
+ "pg.d75d99e996": "系外巨大惑星の<wbr>トランジット時の<wbr>理論透過スペクトル",
  "@pg.d75d99e996": {
   "x-review": "machine",
   "x-source": "d75d99e996"
@@ -18226,7 +18471,7 @@
   "x-review": "machine",
   "x-source": "de1e182991"
  },
- "pg.de30d45160": "連星、自転、突発天体",
+ "pg.de30d45160": "連星、<wbr>自転、<wbr>突発天体",
  "@pg.de30d45160": {
   "x-review": "machine",
   "x-source": "de30d45160"
@@ -18311,7 +18556,7 @@
   "x-review": "machine",
   "x-source": "e1246c0c52"
  },
- "pg.e169f1326a": "HR {n0} を周回する複数の惑星の直接撮像",
+ "pg.e169f1326a": "HR {n0} を<wbr>周回する<wbr>複数の<wbr>惑星の<wbr>直接<wbr>撮像",
  "@pg.e169f1326a": {
   "x-review": "machine",
   "x-source": "e169f1326a"
@@ -18401,7 +18646,7 @@
   "x-review": "machine",
   "x-source": "e4401dca56"
  },
- "pg.e4404397b5": "シフトはどれほど小さいか",
+ "pg.e4404397b5": "シフトは<wbr>どれほど<wbr>小さいか",
  "@pg.e4404397b5": {
   "x-review": "machine",
   "x-source": "e4404397b5"
@@ -18456,7 +18701,7 @@
   "x-review": "machine",
   "x-source": "e55fe37737"
  },
- "pg.e57371d577": "大気を読み解く",
+ "pg.e57371d577": "大気を<wbr>読み解く",
  "@pg.e57371d577": {
   "x-review": "machine",
   "x-source": "e57371d577"
@@ -18496,7 +18741,7 @@
   "x-review": "machine",
   "x-source": "e7601d69ae"
  },
- "pg.e77abd0eeb": "{n0}つの見え方",
+ "pg.e77abd0eeb": "{n0}つの<wbr>見え方",
  "@pg.e77abd0eeb": {
   "x-review": "machine",
   "x-source": "e77abd0eeb"
@@ -18746,7 +18991,7 @@
   "x-review": "machine",
   "x-source": "ef39278051"
  },
- "pg.ef5d646b55": "検証用に取り分けた半分 <span class=\"sub\">取り分けたすべての恒星</span>",
+ "pg.ef5d646b55": "検証用に<wbr>取り分けた<wbr>半分 <span class=\"sub\">取り分けた<wbr>すべての<wbr>恒星</span>",
  "@pg.ef5d646b55": {
   "x-review": "machine",
   "x-source": "ef5d646b55"
@@ -18771,7 +19016,7 @@
   "x-review": "machine",
   "x-source": "efe954e906"
  },
- "pg.effa4e5a43": "系外惑星大気における二酸化炭素の同定",
+ "pg.effa4e5a43": "系外惑星大気に<wbr>おける<wbr>二酸化炭素の<wbr>同定",
  "@pg.effa4e5a43": {
   "x-review": "machine",
   "x-source": "effa4e5a43"
@@ -18811,7 +19056,7 @@
   "x-review": "machine",
   "x-source": "f18fba8357"
  },
- "pg.f19b419392": "決して行わないこと",
+ "pg.f19b419392": "決して行わない<wbr>こと",
  "@pg.f19b419392": {
   "x-review": "machine",
   "x-source": "f19b419392"
@@ -18821,7 +19066,7 @@
   "x-review": "machine",
   "x-source": "f1df8fd039"
  },
- "pg.f1ec0a4dc7": "CHEOPS：検証されていない（{n1} 項目中 {n0} 項目が合格）",
+ "pg.f1ec0a4dc7": "CHEOPS：<wbr>検証されていない<wbr>（{n1} 項目中 {n0} 項目が<wbr>合格）",
  "@pg.f1ec0a4dc7": {
   "x-review": "machine",
   "x-source": "f1ec0a4dc7"
@@ -18856,7 +19101,7 @@
   "x-review": "machine",
   "x-source": "f319cb2f5b"
  },
- "pg.f326ee4fe3": "減光ごとのマーク",
+ "pg.f326ee4fe3": "減光ごとの<wbr>マーク",
  "@pg.f326ee4fe3": {
   "x-review": "machine",
   "x-source": "f326ee4fe3"
@@ -18966,7 +19211,7 @@
   "x-review": "machine",
   "x-source": "f4fbe188c2"
  },
- "pg.f503849f5d": "較正面",
+ "pg.f503849f5d": "較正<wbr>面",
  "@pg.f503849f5d": {
   "x-review": "machine",
   "x-source": "f503849f5d"
@@ -18996,7 +19241,7 @@
   "x-review": "machine",
   "x-source": "f5cca1ccc1"
  },
- "pg.f5f7adb77b": "タイミングと位相",
+ "pg.f5f7adb77b": "タイミングと<wbr>位相",
  "@pg.f5f7adb77b": {
   "x-review": "machine",
   "x-source": "f5f7adb77b"
@@ -19031,12 +19276,12 @@
   "x-review": "machine",
   "x-source": "f72f2581be"
  },
- "pg.f735b5ae8d": "Kepler 惑星検出ミッション：概要と初期成果",
+ "pg.f735b5ae8d": "Kepler 惑星検出ミッション：概要と<wbr>初期成果",
  "@pg.f735b5ae8d": {
   "x-review": "machine",
   "x-source": "f735b5ae8d"
  },
- "pg.f751ff9fd0": "K2-{n0} b の DMS：暫定的、議論あり",
+ "pg.f751ff9fd0": "K2-{n0} b の DMS：暫定的、<wbr>議論あり",
  "@pg.f751ff9fd0": {
   "x-review": "machine",
   "x-source": "f751ff9fd0"
@@ -19091,7 +19336,7 @@
   "x-review": "machine",
   "x-source": "f86ea9d880"
  },
- "pg.f88f69c671": "これまでに調べた範囲",
+ "pg.f88f69c671": "これまでに<wbr>調べた<wbr>範囲",
  "@pg.f88f69c671": {
   "x-review": "machine",
   "x-source": "f88f69c671"
@@ -19246,7 +19491,7 @@
   "x-review": "machine",
   "x-source": "fd9a8c7798"
  },
- "pg.fdd186856d": "減光の形を決めるもの",
+ "pg.fdd186856d": "減光の<wbr>形を<wbr>決める<wbr>もの",
  "@pg.fdd186856d": {
   "x-review": "machine",
   "x-source": "fdd186856d"
@@ -19276,7 +19521,7 @@
   "x-review": "machine",
   "x-source": "fe9c2a4371"
  },
- "pg.fea3832148": "地球の双子が難しい理由",
+ "pg.fea3832148": "地球の<wbr>双子が<wbr>難しい<wbr>理由",
  "@pg.fea3832148": {
   "x-review": "machine",
   "x-source": "fea3832148"
@@ -19306,17 +19551,17 @@
   "x-review": "machine",
   "x-source": "ff9cc7d8a3"
  },
- "pic.colour": "星の色",
+ "pic.colour": "星の<wbr>色",
  "@pic.colour": {
   "x-review": "machine",
   "x-source": "dfe6307835"
  },
- "pic.draw": "星とトランジット",
+ "pic.draw": "星と<wbr>トランジット",
  "@pic.draw": {
   "x-review": "machine",
   "x-source": "e0d9fd74d5"
  },
- "pic.h1": "絵の描き方。",
+ "pic.h1": "絵の<wbr>描き方。",
  "@pic.h1": {
   "x-review": "machine",
   "x-source": "b56c1f91df"
@@ -19326,7 +19571,7 @@
   "x-review": "machine",
   "x-source": "3cf76ad409"
  },
- "pic.labels": "5 つのラベル",
+ "pic.labels": "5 つの<wbr>ラベル",
  "@pic.labels": {
   "x-review": "machine",
   "x-source": "51668dd62a"
@@ -19336,7 +19581,7 @@
   "x-review": "machine",
   "x-source": "880b424ff6"
  },
- "pic.real": "何が本物で、何が描かれたものか",
+ "pic.real": "何が<wbr>本物で、<wbr>何が<wbr>描かれた<wbr>ものか",
  "@pic.real": {
   "x-review": "machine",
   "x-source": "79bd58ea67"
@@ -19346,7 +19591,7 @@
   "x-review": "machine",
   "x-source": "e3954c7ee3"
  },
- "pic.still": "動きを減らす設定では",
+ "pic.still": "動きを<wbr>減らす設定では",
  "@pic.still": {
   "x-review": "machine",
   "x-source": "a42e838475"
@@ -19356,7 +19601,7 @@
   "x-review": "machine",
   "x-source": "b12a8bfb34"
  },
- "pic.table": "見た目の表",
+ "pic.table": "見た<wbr>目の<wbr>表",
  "@pic.table": {
   "x-review": "machine",
   "x-source": "5bf530d59d"
@@ -19386,7 +19631,7 @@
   "x-review": "machine",
   "x-source": "2ff00b5847"
  },
- "pr.h1": "CHEOPS の提案を準備する。",
+ "pr.h1": "CHEOPS の<wbr>提案を<wbr>準備する。",
  "@pr.h1": {
   "x-review": "machine",
   "x-source": "c189d495dd"
@@ -19706,7 +19951,7 @@
   "x-review": "machine",
   "x-source": "f8e3bf1fc8"
  },
- "rr.h1": "それぞれの深さが惑星だったら何を意味するか。",
+ "rr.h1": "それぞれの<wbr>深さが<wbr>惑星だったら<wbr>何を<wbr>意味するか。",
  "@rr.h1": {
   "x-review": "machine",
   "x-source": "ff54ab4721"
@@ -19736,7 +19981,7 @@
   "x-review": "machine",
   "x-source": "cdff019405"
  },
- "runs.h1": "すべての探索実行、保存されたままのエラー、これらのページの裏にある設定。",
+ "runs.h1": "すべての<wbr>探索実行、<wbr>保存されたままの<wbr>エラー、<wbr>これらの<wbr>ページの<wbr>裏に<wbr>ある<wbr>設定。",
  "@runs.h1": {
   "x-review": "machine",
   "x-source": "db1e81a5b2"
@@ -19751,7 +19996,7 @@
   "x-review": "machine",
   "x-source": "95d99973c5"
  },
- "sd.h1": "フレア、脈動、CHEOPS。",
+ "sd.h1": "フレア、<wbr>脈動、<wbr>CHEOPS。",
  "@sd.h1": {
   "x-review": "machine",
   "x-source": "a0c598f487"
@@ -19781,7 +20026,7 @@
   "x-review": "machine",
   "x-source": "18e2721f25"
  },
- "sen.h1b": "それぞれが票に値することを示します。",
+ "sen.h1b": "それぞれが<wbr>票に<wbr>値する<wbr>ことを<wbr>示します。",
  "@sen.h1b": {
   "x-review": "machine",
   "x-source": "67b1d265c9"
@@ -19881,7 +20126,7 @@
   "x-review": "machine",
   "x-source": "492b8ee5d0"
  },
- "showcase.tess-hd-15337-s4.kind": "限界近くの小さな惑星",
+ "showcase.tess-hd-15337-s4.kind": "限界近くの<wbr>小さな<wbr>惑星",
  "@showcase.tess-hd-15337-s4.kind": {
   "x-review": "machine",
   "x-source": "decd7f2886"
@@ -19921,7 +20166,7 @@
   "x-review": "machine",
   "x-source": "ae1c536ddb"
  },
- "showcase.tess-toi-236-s2.kind": "既知の偽陽性",
+ "showcase.tess-toi-236-s2.kind": "既知の<wbr>偽陽性",
  "@showcase.tess-toi-236-s2.kind": {
   "x-review": "machine",
   "x-source": "e01d094660"
@@ -19946,7 +20191,7 @@
   "x-review": "machine",
   "x-source": "09f285b361"
  },
- "showcase.tess-toi-270-s5.kind": "多惑星系",
+ "showcase.tess-toi-270-s5.kind": "多惑<wbr>星系",
  "@showcase.tess-toi-270-s5.kind": {
   "x-review": "machine",
   "x-source": "7e5f73c9ed"
@@ -20021,7 +20266,7 @@
   "x-review": "machine",
   "x-source": "50afd0241b"
  },
- "sky.lc": "実行の光度曲線",
+ "sky.lc": "実行の<wbr>光度曲線",
  "@sky.lc": {
   "x-review": "machine",
   "x-source": "f6ebbca8e7"
@@ -20091,7 +20336,7 @@
   "x-review": "machine",
   "x-source": "b101c75a14"
  },
- "sky.tl": "年ごとに見つかった惑星 (手法別)",
+ "sky.tl": "年ごとに<wbr>見つかった<wbr>惑星 (手法<wbr>別<wbr>)",
  "@sky.tl": {
   "x-review": "machine",
   "x-source": "10dff603f9"
@@ -20121,12 +20366,12 @@
   "x-review": "machine",
   "x-source": "7c9d17cb1f"
  },
- "st.figs": "検出器に見えるもの",
+ "st.figs": "検出器に<wbr>見える<wbr>もの",
  "@st.figs": {
   "x-review": "machine",
   "x-source": "ff3ec0553b"
  },
- "st.h1": "恒星を測る。",
+ "st.h1": "恒星を<wbr>測る。",
  "@st.h1": {
   "x-review": "machine",
   "x-source": "ec1ba1f8f3"
@@ -20351,7 +20596,7 @@
   "x-review": "machine",
   "x-source": "8d38020252"
  },
- "tn.h1": "TESS が見ている場所。",
+ "tn.h1": "TESS が<wbr>見ている<wbr>場所。",
  "@tn.h1": {
   "x-review": "machine",
   "x-source": "33a70ec6b1"
@@ -20386,12 +20631,12 @@
   "x-review": "machine",
   "x-source": "1fd7f02e9a"
  },
- "var.h1": "暗くなるものすべて。",
+ "var.h1": "暗くなる<wbr>ものすべて。",
  "@var.h1": {
   "x-review": "machine",
   "x-source": "00cffacfe5"
  },
- "var.h1b": "{n, number} 件の項目、捨てたものはありません。",
+ "var.h1b": "{n, number} 件の<wbr>項目、<wbr>捨てた<wbr>ものは<wbr>ありません。",
  "@var.h1b": {
   "x-review": "machine",
   "x-source": "af9b7536fe"

@@ -2016,20 +2016,10 @@
   "x-review": "machine",
   "x-source": "acac77611f"
  },
- "js.103n82dja3r": "Каталог оновлено <time datetime=\"2026-10-29T00:47:42+00:00\" title=\"2026-10-29T00:47:42+00:00\">{n0} жовт. {n1}, {n2} UTC</time>.",
- "@js.103n82dja3r": {
-  "x-review": "machine",
-  "x-source": "273b2777f8"
- },
  "js.104nn3vx4at": "Термін",
  "@js.104nn3vx4at": {
   "x-review": "machine",
   "x-source": "c6f3bfd456"
- },
- "js.106g3hdfp83": "TIC {n0} · відхилено перевіркою, не кандидат",
- "@js.106g3hdfp83": {
-  "x-review": "machine",
-  "x-source": "9772d14ea9"
  },
  "js.106t6pg6coj": "Планет в exoplanet.eu: {n0} · клас G за Teff (найближчий G5V)",
  "@js.106t6pg6coj": {
@@ -2061,25 +2051,20 @@
   "x-review": "machine",
   "x-source": "ffa10fa912"
  },
+ "js.10so4x5ppkr": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">7a. <span class=\"mono\">tess-eaab33b6b763-{n0}</span>.</b> Провал на BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Позначено {n5} рецензентами (каталог не зберігає розмір панелі чи інтервал консенсусу). Лежить на BLS-періоді {n6} днів із {n7} транзитами. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
+ "@js.10so4x5ppkr": {
+  "x-review": "machine",
+  "x-source": "789c4ff542"
+ },
  "js.10v4vkxqjry": "Для цієї зорі в цій збірці не збережено кривої блиску: пошуковий каталог зберігає лише виміряні значення, тож немає кривої для всього об’єкта і немає згорнутої панелі.",
  "@js.10v4vkxqjry": {
   "x-review": "machine",
   "x-source": "7fe57adca4"
  },
- "js.10vb2hszsy6": "<b>{n0}</b> з {n1} планет зі збереженою відстанню в exoplanet.eu знайдено методом транзитів (перший зазначений метод). <a href=\"/explore/galaxy/?method=transit\">Показати їх на мапі Галактики ›</a>",
- "@js.10vb2hszsy6": {
-  "x-review": "machine",
-  "x-source": "01ac9f0ca4"
- },
  "js.10vrj8m3wjv": "CO <span>Монооксид вуглецю</span>",
  "@js.10vrj8m3wjv": {
   "x-review": "machine",
   "x-source": "828d691c9b"
- },
- "js.10wj3xzpdgf": "Диск Сонця, {n0} K, у кольорі чорного тіла з потемнінням до краю.",
- "@js.10wj3xzpdgf": {
-  "x-review": "machine",
-  "x-source": "ae27e2403d"
  },
  "js.10zmmlwb9xi": "<b>Коронограф Lyot.</b> Непрозорий диск у фокальній площині блокує ядро зображення зорі. Він не прибирає світла, яке дифрагує його край і яке наступна лінза спрямовує на обідок повторно відображеної зіниці; діафрагма Lyot, трохи менша за зіницю, перехоплює цей обідок (Lyot {n0}). З диском {n1} λ/D звуження діафрагми з {n2}% до {n3}% зіниці зменшує світло зорі на {n4} λ/D з {n5}×{n6}⁻⁵ до {n7}×{n8}⁻⁷ від піку зорі (без коронографа: {n9}×{n10}⁻⁵) [розрах.], тоді як планета далеко за межами диска зберігає {n11}% свого світла, тобто частку площі діафрагми.",
  "@js.10zmmlwb9xi": {
@@ -2135,6 +2120,11 @@
  "@js.11kdzzmc5nu": {
   "x-review": "machine",
   "x-source": "184a6800cc"
+ },
+ "js.11n5kdywh3l": "Teff",
+ "@js.11n5kdywh3l": {
+  "x-review": "machine",
+  "x-source": "4b0fa3b17f"
  },
  "js.11n6gzp7din": "{n0} (визначається апріорним розподілом; похибку не наведено, бо вона лише повторювала б похибку апріорного розподілу)",
  "@js.11n6gzp7din": {
@@ -2196,6 +2186,11 @@
   "x-review": "machine",
   "x-source": "f8acf4d692"
  },
+ "js.122id4bsvl0": "<i style=\"background:#FFD60A\"></i>Астрометрія <span class=\"mono\">{n0}</span>",
+ "@js.122id4bsvl0": {
+  "x-review": "machine",
+  "x-source": "8013870b43"
+ },
  "js.122x1s0w9zz": "F_Q · F_HZ, логарифмічна шкала",
  "@js.122x1s0w9zz": {
   "x-review": "machine",
@@ -2216,10 +2211,10 @@
   "x-review": "machine",
   "x-source": "cc95c0003c"
  },
- "js.12cg9tt6w6b": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Стрічка Sentinel",
- "@js.12cg9tt6w6b": {
+ "js.12cis2bjlup": "Радіо",
+ "@js.12cis2bjlup": {
   "x-review": "machine",
-  "x-source": "2d63ad7563"
+  "x-source": "2a7dfeb2f2"
  },
  "js.12ed4zztqr8": "Художнє зображення {s0}: схожа на Нептун планета в теплому поясі, {n0} радіусів Землі, {n1} K.",
  "@js.12ed4zztqr8": {
@@ -2241,15 +2236,20 @@
   "x-review": "machine",
   "x-source": "8ec36a17e7"
  },
- "js.12lth0d2p34": "У {n0} році Wolszczan і Frail знайшли планети навколо мілісекундного пульсара PSR B1257+{n1} за регулярними коливаннями часу надходження його імпульсів (Wolszczan &amp; Frail {n2}): планети смикають пульсар, і час поширення світла змінюється на мілісекунди. Це радіохронометраж, а не радіовипромінювання від планети. <a href=\"/explore/galaxy/?tour=13\">Його картка в турі Галактикою ›</a>",
- "@js.12lth0d2p34": {
-  "x-review": "machine",
-  "x-source": "a919cbb3a4"
- },
  "js.12m26xazjm": "пройшов перевірку; {n0}% ваги панелі віднесли об’єкт до потенційних планет; на періодичному сигналі: транзитів {n1}, P = {n2} d",
  "@js.12m26xazjm": {
   "x-review": "machine",
   "x-source": "8ec885602b"
+ },
+ "js.12ooi6yhl0h": "Kepler-{n0} b",
+ "@js.12ooi6yhl0h": {
+  "x-review": "machine",
+  "x-source": "5d97744685"
+ },
+ "js.12q7to7nkw0": "До нас і від нас",
+ "@js.12q7to7nkw0": {
+  "x-review": "machine",
+  "x-source": "982502489b"
  },
  "js.12ujqir6o8g": "Коронограф JWST MIRI",
  "@js.12ujqir6o8g": {
@@ -2260,6 +2260,11 @@
  "@js.12vi4vfunn8": {
   "x-review": "machine",
   "x-source": "05ed847784"
+ },
+ "js.12w6m38pgra": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">7b. <span class=\"mono\">tess-1c554332c266-{n0}</span>.</b> Провал на BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Позначено {n5} рецензентами (каталог не зберігає розмір панелі чи інтервал консенсусу). Лежить на BLS-періоді {n6} днів із {n7} транзитами. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
+ "@js.12w6m38pgra": {
+  "x-review": "machine",
+  "x-source": "961ae19d5c"
  },
  "js.12y2sroyczu": "{n0}, основна смуга",
  "@js.12y2sroyczu": {
@@ -2296,11 +2301,6 @@
   "x-review": "machine",
   "x-source": "bff9d47f59"
  },
- "js.136ul906qph": "Джерело: збережений запуск SetuHQ runs/tess-pi-men-s1 (сектор TESS {n0}, SPOC, {n1}-хвилинний потік PDCSAP, TIC {n2}; config sha256 585955d5e7a1…): збережених точок: {n3}, кожен об'єкт нормовано на його медіану й згруповано в біни по {n4} хвилин.",
- "@js.136ul906qph": {
-  "x-review": "machine",
-  "x-source": "af8431ab78"
- },
  "js.138zpxk17ru": "f_i, логарифмічна шкала",
  "@js.138zpxk17ru": {
   "x-review": "machine",
@@ -2316,11 +2316,6 @@
   "x-review": "machine",
   "x-source": "e39c1a07d7"
  },
- "js.13ac253fetk": "<b>{n0}</b> з {n1} планет, для яких у exoplanet.eu збережено відстань, було знайдено астрометрією (перший зазначений метод). <a href=\"/explore/galaxy/?method=astrometry\">Показати їх на карті Галактики ›</a>",
- "@js.13ac253fetk": {
-  "x-review": "machine",
-  "x-source": "dc5877cdd7"
- },
  "js.13cdu73b6uc": "Фотоліз CO₂ біля деяких зір або масова втрата водню після втрати води.",
  "@js.13cdu73b6uc": {
   "x-review": "machine",
@@ -2335,6 +2330,11 @@
  "@js.13ffhncz0ep": {
   "x-review": "machine",
   "x-source": "7b27994bc4"
+ },
+ "js.13gocj2fnda": "docs/results/reviewer_weights_full_panel.json",
+ "@js.13gocj2fnda": {
+  "x-review": "machine",
+  "x-source": "5134ba8327"
  },
  "js.13i1elxloqt": "pi Men c: на одну висоту однорідної атмосфери, багата на H₂",
  "@js.13i1elxloqt": {
@@ -2355,6 +2355,11 @@
  "@js.13kikmj1q17": {
   "x-review": "machine",
   "x-source": "f5cca1ccc1"
+ },
+ "js.13lcq3b40tl": "Ілюстрація",
+ "@js.13lcq3b40tl": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
  },
  "js.13mufrch5ly": "tess-38b5a559eee2-{n0}",
  "@js.13mufrch5ly": {
@@ -2381,15 +2386,20 @@
   "x-review": "machine",
   "x-source": "118618889c"
  },
+ "js.13swdwmmbmi": "Запуски та конфігурація ›",
+ "@js.13swdwmmbmi": {
+  "x-review": "machine",
+  "x-source": "c610f2888d"
+ },
  "js.13t7ixpw2ky": "Найкращі кандидати",
  "@js.13t7ixpw2ky": {
   "x-review": "machine",
   "x-source": "7021bb9b5f"
  },
- "js.13vqj4f8hh6": "За інструментальною ознакою: край об'єкта; скидання моменту імпульсу, позначка розсіяного світла або позначка наведення чи ручного виключення в межах {n0} d; пропуск у даних понад {n1} d у межах {n2} d; або половина ваги панелі вважає це інструментальним.",
- "@js.13vqj4f8hh6": {
+ "js.13x58b3mwwa": "Wolf {n0} c",
+ "@js.13x58b3mwwa": {
   "x-review": "machine",
-  "x-source": "0495534488"
+  "x-source": "560cd4bbe1"
  },
  "js.13xevrqzvu7": "F_S (виявний газ)",
  "@js.13xevrqzvu7": {
@@ -2410,6 +2420,11 @@
  "@js.1473r6pfqi4": {
   "x-review": "machine",
   "x-source": "b2990754ad"
+ },
+ "js.14cls39i1sb": "Luhman {n0} B",
+ "@js.14cls39i1sb": {
+  "x-review": "machine",
+  "x-source": "f04427416b"
  },
  "js.14ct4jjljtx": "Попередня зупинка",
  "@js.14ct4jjljtx": {
@@ -2440,6 +2455,16 @@
  "@js.14fe8ebzk21": {
   "x-review": "machine",
   "x-source": "365e781739"
+ },
+ "js.14huikxe5ha": "Luyten's Star e",
+ "@js.14huikxe5ha": {
+  "x-review": "machine",
+  "x-source": "5a24593e14"
+ },
+ "js.14isgauchsm": "YZ Cet",
+ "@js.14isgauchsm": {
+  "x-review": "machine",
+  "x-source": "f80e6fd49c"
  },
  "js.14iuxy783ms": "Також відома як EQ Peg A, BD+{n0} {n1} A, LMP {n2} A, WIR {n3} A.",
  "@js.14iuxy783ms": {
@@ -2591,6 +2616,16 @@
   "x-review": "machine",
   "x-source": "dd7d34d846"
  },
+ "js.15phwu441vo": "Lalande {n0} c",
+ "@js.15phwu441vo": {
+  "x-review": "machine",
+  "x-source": "5aa41e4960"
+ },
+ "js.15pp5ycbnhi": "Надлишок ({n0}%)",
+ "@js.15pp5ycbnhi": {
+  "x-review": "machine",
+  "x-source": "8cd023e1a1"
+ },
  "js.15r06e4vt70": "Запуск tess-hd-{n0}-s4 · провалів: {n1} (кандидатів: {n2}, позначених: {n3}) · об'єктів: {n4}.<span class=\"printonly\"> Кожен кандидат на цій таблиці: кандидат, не підтверджений.</span>",
  "@js.15r06e4vt70": {
   "x-review": "machine",
@@ -2661,6 +2696,11 @@
   "x-review": "machine",
   "x-source": "3b661f9791"
  },
+ "js.16h8d5mlpjp": "Probes",
+ "@js.16h8d5mlpjp": {
+  "x-review": "machine",
+  "x-source": "8f6e567898"
+ },
  "js.16hqbj09o4u": "силові лінії, конус і орбіта не в масштабі; моменти сплесків ілюстративні; частоту зрізу обчислено",
  "@js.16hqbj09o4u": {
   "x-review": "machine",
@@ -2675,11 +2715,6 @@
  "@js.16mxiyd8s0l": {
   "x-review": "machine",
   "x-source": "e223d8ec1e"
- },
- "js.16qlwwljm69": "<b>Pro Sweeps</b> <span class=\"eddev\">у розробці</span>: хостовані пошуки за секторами або списками цілей із власним ключем AI-провайдера клієнта; результати повертаються як відкриті пакети внесків",
- "@js.16qlwwljm69": {
-  "x-review": "machine",
-  "x-source": "31d3ac206f"
  },
  "js.16r0kn8gjyr": "Огляд неба, дані якого читає SetuHQ.",
  "@js.16r0kn8gjyr": {
@@ -2696,11 +2731,6 @@
   "x-review": "machine",
   "x-source": "b7b7f73a1e"
  },
- "js.16vo26f9hfu": "Ті самі вхідні дані, що й у pycheops: на кожному еталонному візиті наша декореляція збігається з декореляцією pycheops до &lt; {n0} ppm rms або досягає нижчого rms на тих самих точках і членах (послаблено після v1)",
- "@js.16vo26f9hfu": {
-  "x-review": "machine",
-  "x-source": "c88247e554"
- },
  "js.16x61d2zia4": "<span class=\"word s-rej\">відхилений під час перевірки</span><b class=\"fig\">1d. TOI-{n0}, спад {n1}.</b> <span class=\"sid mono\">збережений id tess-01e315ee5ebf-{n2}.</span> Спад при BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Консенсусний інтервал BTJD від {n7} до {n8}. Позначено {n9} з {n10} рецензентів ({n11} з {n12} Sentinels, {n13} з {n14} Probes). Лежить на BLS-періоді {n15} діб (t0 BTJD {n16}). Відхилений під час перевірки (вторинне затемнення, вторинне на будь-якій фазі). Архів: у межах допуску немає архівної планети. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
  "@js.16x61d2zia4": {
   "x-review": "machine",
@@ -2710,11 +2740,6 @@
  "@js.16xd4uxov7b": {
   "x-review": "machine",
   "x-source": "6e2db4884e"
- },
- "js.16xkma5n6o5": "Контролі є умовою для ранжування і не входять до J: ранжуються лише відкладені записи з обома контрольними списками для кожної дослідженої зорі, інші наведено без рангу. Контрольні списки є власним звітом методу; таблиця лідерів не може переобчислити їх без кривих блиску. Підвибірка Sentinel ніколи не ранжується.",
- "@js.16xkma5n6o5": {
-  "x-review": "machine",
-  "x-source": "698a7fa611"
  },
  "js.16yau0dec1n": "Утворюється всюди внаслідок звичайної хімії та дегазації. Не є біосигнатурою.",
  "@js.16yau0dec1n": {
@@ -2736,11 +2761,6 @@
   "x-review": "machine",
   "x-source": "00d60e31a4"
  },
- "js.170ttkobv": "<b>Ілюстрація.</b> Пояснює ідею; не дані.",
- "@js.170ttkobv": {
-  "x-review": "machine",
-  "x-source": "f84dea2704"
- },
  "js.1752ocxoxow": "відношення",
  "@js.1752ocxoxow": {
   "x-review": "machine",
@@ -2750,6 +2770,11 @@
  "@js.175a50uaz7u": {
   "x-review": "machine",
   "x-source": "05e19aa7b7"
+ },
+ "js.176wwpyjrg6": "eps Eridani b",
+ "@js.176wwpyjrg6": {
+  "x-review": "machine",
+  "x-source": "d935a49c88"
  },
  "js.17hw2mxavcy": "Імовірність транзиту для орбіти типу Земля–Сонце",
  "@js.17hw2mxavcy": {
@@ -2771,10 +2796,10 @@
   "x-review": "machine",
   "x-source": "4a850645ed"
  },
- "js.17k76okut7k": "Художнє уявлення: вигляд теплого гіганта для радіуса {n0} R⊕ або більше, Teq від {n1} до {n2} K: білі смуги хмар. Кадр цього вигляду, а не конкретної планети.",
- "@js.17k76okut7k": {
+ "js.17ntl740ako": "YZ Cet c",
+ "@js.17ntl740ako": {
   "x-review": "machine",
-  "x-source": "6486ceb3f7"
+  "x-source": "5120e910b2"
  },
  "js.17nxghh8cwl": "Кожен спад кожного прикладового запуску, згрупований за зорею та пронумерований у часовому порядку, з результатом перевірки. Спад, що пройшов перевірку, є кандидатом, не підтвердженим.",
  "@js.17nxghh8cwl": {
@@ -2801,6 +2826,11 @@
   "x-review": "machine",
   "x-source": "4a10cd9947"
  },
+ "js.17wumn3r8ed": "exoplanet.eu подає її зі статусом «Опубліковано в рецензованій статті», знайдена методом первинного транзиту у {n0}; запис оновлено {n1}-{n2}-{n3}. Також відома як 2MASS J19021775+{n4} b, K00377.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J190217.77+{n8} b.",
+ "@js.17wumn3r8ed": {
+  "x-review": "machine",
+  "x-source": "ca1a10bec8"
+ },
  "js.17y75sycukx": "Zarka {n0}, Planet. Space Sci. {n1}, {n2} (плазмові взаємодії зоря–планета та радіовипромінювання)",
  "@js.17y75sycukx": {
   "x-review": "machine",
@@ -2825,6 +2855,11 @@
  "@js.182x5hpzt5z": {
   "x-review": "machine",
   "x-source": "b7312318e0"
+ },
+ "js.183wr165iky": "Збережений id tess-7b97e468b60b-{n0}; у цьому запуску немає файлу справи",
+ "@js.183wr165iky": {
+  "x-review": "machine",
+  "x-source": "2cfabb7955"
  },
  "js.184alwhvm3u": "≈ {n0} діб",
  "@js.184alwhvm3u": {
@@ -2866,6 +2901,11 @@
   "x-review": "machine",
   "x-source": "dece0e17ca"
  },
+ "js.18lwk9i51zo": "tau Cet h",
+ "@js.18lwk9i51zo": {
+  "x-review": "machine",
+  "x-source": "f7da4e8eac"
+ },
  "js.18n6es5ok3o": "позначки (BTJD)",
  "@js.18n6es5ok3o": {
   "x-review": "machine",
@@ -2886,15 +2926,15 @@
   "x-review": "machine",
   "x-source": "9ca7ead3fe"
  },
- "js.18o5x6sbdjj": "<b>{n0}</b> з {n1} планет зі збереженою відстанню в exoplanet.eu знайдено мікролінзуванням (перший зазначений метод). <a href=\"/explore/galaxy/?method=microlensing\">Показати їх на мапі Галактики ›</a>",
- "@js.18o5x6sbdjj": {
-  "x-review": "machine",
-  "x-source": "75b3704ae2"
- },
  "js.18oql4qf149": "відношення (вільний / Huang)",
  "@js.18oql4qf149": {
   "x-review": "machine",
   "x-source": "a32de90fca"
+ },
+ "js.18otqbloli3": "Luyten's Star c",
+ "@js.18otqbloli3": {
+  "x-review": "machine",
+  "x-source": "de5d475f55"
  },
  "js.18qifo210uh": "SetuHQ не спостерігає в радіодіапазоні. Сцена є ілюстрацією: силові лінії, конус і орбіта не в масштабі, а моменти сплесків ілюстративні; обчислено лише частоту зрізу.",
  "@js.18qifo210uh": {
@@ -2941,6 +2981,11 @@
   "x-review": "machine",
   "x-source": "c11a942411"
  },
+ "js.196px5ez5bg": "Lalande {n0} b",
+ "@js.196px5ez5bg": {
+  "x-review": "machine",
+  "x-source": "9228522611"
+ },
  "js.197t86p2mo2": "стрічка · період збігається з відомим TOI · P {n0} d · {n1} транзитів",
  "@js.197t86p2mo2": {
   "x-review": "machine",
@@ -2950,11 +2995,6 @@
  "@js.199k9vutkk7": {
   "x-review": "machine",
   "x-source": "14d5771087"
- },
- "js.19egy1xdd4z": "Молекула з N атомів має 3N − {n0} способів коливатися (3N − {n1}, якщо вона лінійна): вода має три, вуглекислий газ — чотири (його деформаційне коливання присутнє двічі, під прямим кутом), метан — дев'ять. Мода поглинає інфрачервоне світло, лише якщо вона змінює дипольний момент молекули. Ось чому симетричне валентне коливання CO₂ ({n2} µm), валентне коливання O₂ і дві з чотирьох основних мод метану неактивні в інфрачервоному діапазоні. Смуги, які утворюють ці моди, — це ті, що позначає розділ {s0}: два валентні коливання води при {n3} і {n4} µm утворюють її смугу {n5} µm, ν₃ метану — смугу {n6} µm, асиметричне валентне коливання CO₂ — смугу {n7} µm, а валентне коливання CO — смугу {n8} µm.",
- "@js.19egy1xdd4z": {
-  "x-review": "machine",
-  "x-source": "34a40a6e3c"
  },
  "js.19gww8mixuh": "Як працює астрометрія ›",
  "@js.19gww8mixuh": {
@@ -3031,6 +3071,11 @@
   "x-review": "machine",
   "x-source": "7cb381fdb4"
  },
+ "js.1a5z9qhmjgc": "Sentinels",
+ "@js.1a5z9qhmjgc": {
+  "x-review": "machine",
+  "x-source": "2e1e6f1301"
+ },
  "js.1a6l9fjw5he": "Планета: художнє зображення ›",
  "@js.1a6l9fjw5he": {
   "x-review": "machine",
@@ -3085,6 +3130,11 @@
  "@js.1al74ewy2g6": {
   "x-review": "machine",
   "x-source": "df55237fb1"
+ },
+ "js.1aol2kz2k2l": "Транзит",
+ "@js.1aol2kz2k2l": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
  },
  "js.1aqv49cd0kk": "позначений",
  "@js.1aqv49cd0kk": {
@@ -3196,11 +3246,6 @@
   "x-review": "machine",
   "x-source": "c9a6bca81c"
  },
- "js.1bhkarus91o": "<b>Розтягнення ν</b> · {n0} мкм · активне в інфрачервоному діапазоні · намальовано ×{n1} · <a href=\"/how-it-works/atmospheres/\">смуга {n2} мкм у {s0} ›</a>",
- "@js.1bhkarus91o": {
-  "x-review": "machine",
-  "x-source": "d76ad8b3b9"
- },
  "js.1bj34kz5aki": "Звіт про запуск: HD {n0}",
  "@js.1bj34kz5aki": {
   "x-review": "machine",
@@ -3256,6 +3301,11 @@
   "x-review": "machine",
   "x-source": "734f2ee779"
  },
+ "js.1c5e6ri6127": "Wolf {n0}",
+ "@js.1c5e6ri6127": {
+  "x-review": "machine",
+  "x-source": "40c0e1f8f4"
+ },
  "js.1c7794vgcfx": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">4h. <span class=\"mono\">tess-3b0eb3c81ad6-{n0}</span>.</b> Провал на BTJD {n1}, {n2} ppm, {n3} год, SNR {n4}. Позначено {n5} рецензентами (каталог не зберігає розмір панелі чи інтервал консенсусу). Лежить на BLS-періоді {n6} діб із {n7} транзитами. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про виявлення.",
  "@js.1c7794vgcfx": {
   "x-review": "machine",
@@ -3286,11 +3336,6 @@
   "x-review": "machine",
   "x-source": "dcd3b3c030"
  },
- "js.1cj5f6isk29": "<b>Згин ν₂ (два, під прямим кутом)</b> · {n0} мкм · активне в інфрачервоному діапазоні · намальовано ×{n1} · за межами вікна {n2}–{n3} мкм у {s0}",
- "@js.1cj5f6isk29": {
-  "x-review": "machine",
-  "x-source": "fffacfe81d"
- },
  "js.1ckbr2brf2r": "Збережений id tess-bc9f59e5c3af-{n0}; у цьому запуску немає справи",
  "@js.1ckbr2brf2r": {
   "x-review": "machine",
@@ -3300,6 +3345,11 @@
  "@js.1clmexejrlr": {
   "x-review": "machine",
   "x-source": "8a07e9e968"
+ },
+ "js.1cmc1ajakjd": "eps Ind B",
+ "@js.1cmc1ajakjd": {
+  "x-review": "machine",
+  "x-source": "a7c8e06a1d"
  },
  "js.1coc893jlc0": "P = {n0} р., e = {n1}, номінальні маси IAU [розр.]",
  "@js.1coc893jlc0": {
@@ -3311,6 +3361,11 @@
   "x-review": "machine",
   "x-source": "e159e923e5"
  },
+ "js.1cpg6mkanpo": "Рисунок є ілюстрацією: його масштаби вибрано так, щоб показати три рухи окремо, а коливання планети збільшено й підписано. У ньому не наведено точності вимірювань Gaia: дослідницький атлас проєкту не містить значення для окремого вимірювання Gaia DR3 із зазначеним джерелом, тому тут воно не наводиться.",
+ "@js.1cpg6mkanpo": {
+  "x-review": "machine",
+  "x-source": "c687f7d0c4"
+ },
  "js.1cu2yjjb0li": "Справу не вдалося завантажити в цьому поданні. <a id=\"blockedlink\" href=\"/candidates/toi-236/case-file/#tess-01e315ee5ebf-004\">Відкрийте її на окремій сторінці.</a>",
  "@js.1cu2yjjb0li": {
   "x-review": "machine",
@@ -3320,11 +3375,6 @@
  "@js.1cx2mlrh2q7": {
   "x-review": "machine",
   "x-source": "11a4a60b51"
- },
- "js.1cy89xikthl": "<b>Виміряно на заявленому еталонному наборі, а не на відкриттях.</b> {n0} підтверджених або відомих планет (CP/KP), {n1} хибнопозитивних і {n2} хибних тривог із таблиці TOI (отримано {n3}-{n4}-{n5}, seed {n6}), один TOI на зорю; показано відкладену половину. Панель: три Probes (детерміновані детектори) з їхніми зафіксованими каліброваними вагами; BLS по всьому сектору; перевірка; припасування з потемнінням до краю; таблиця рівня стрічки додає FAP стрічки ({n7} спроб).",
- "@js.1cy89xikthl": {
-  "x-review": "machine",
-  "x-source": "2db2bd3746"
  },
  "js.1d2fjcit5ne": "Родина",
  "@js.1d2fjcit5ne": {
@@ -3370,11 +3420,6 @@
  "@js.1dbkcqukzan": {
   "x-review": "machine",
   "x-source": "04a1d0a0c8"
- },
- "js.1dcsl4f0wrb": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s0}</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">запуск tess-pi-men-s1 · {n1} записів</span>",
- "@js.1dcsl4f0wrb": {
-  "x-review": "machine",
-  "x-source": "d3862be740"
  },
  "js.1dd353vmae5": "Планета розміром із Землю в зоні придатності до життя своєї зорі.",
  "@js.1dd353vmae5": {
@@ -3446,15 +3491,15 @@
   "x-review": "machine",
   "x-source": "8a0d9e2efe"
  },
- "js.1e0thu83q1m": "<b>ν₁ симетричне валентне коливання</b> · {n0} µm · неактивне в інфрачервоному діапазоні (дипольний момент не змінюється) · намальовано ×{n1} · за межами вікна {n2}–{n3} µm приладу {s0}",
- "@js.1e0thu83q1m": {
-  "x-review": "machine",
-  "x-source": "b5a09a9656"
- },
  "js.1e1cj7tvww2": "Probe · Чутливий <span class=\"sub mono\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1e1cj7tvww2": {
   "x-review": "machine",
   "x-source": "b9b4c27050"
+ },
+ "js.1e34rrpji4d": "{n0} TOI у вибірці",
+ "@js.1e34rrpji4d": {
+  "x-review": "machine",
+  "x-source": "f87cb7f911"
  },
  "js.1e4aq4nvmgn": "Мітки й обґрунтування рецензентів",
  "@js.1e4aq4nvmgn": {
@@ -3471,15 +3516,10 @@
   "x-review": "machine",
   "x-source": "5acf5925b9"
  },
- "js.1ea3o7os4iv": "Прапорці перевірки SetuHQ, лише за кривою блиску: <code>odd_even_mismatch</code> (глибини непарних і парних провалів різняться), <code>secondary_eclipse</code> (провал на фазі {n0}), <code>low_snr</code>, <code>too_short</code>, <code>edge_event</code> та <code>insufficient_points</code>. У ньому немає перевірки центроїда на рівні пікселів чи різницевого зображення і немає статистичної валідації, тож змішана фонова подвійна зоря може пройти перевірку. <a href=\"/evidence/\">Переглянути рецензентів ›</a> · <a href=\"/candidates/pi-men/dip-2/\">Переглянути перевірений випадок ›</a>",
- "@js.1ea3o7os4iv": {
+ "js.1ecc8oy35i4": "Teegarden's d",
+ "@js.1ecc8oy35i4": {
   "x-review": "machine",
-  "x-source": "9c325d6228"
- },
- "js.1eb7589ltee": "Порівняння з архівом: немає архівної планети в межах допуску (для цього провалу немає періоду BLS для порівняння); {s0}: немає ефемериди транзиту для порівняння. Лише архівні значення. Ця сторінка не заявляє про виявлення.",
- "@js.1eb7589ltee": {
-  "x-review": "machine",
-  "x-source": "1e8af2cf5f"
+  "x-source": "461cf62f48"
  },
  "js.1ecof5fze2u": "Пройшов усі перевірки. Позначений {n0} з {n1} Probes і {n2} з {n3} Sentinels. Кандидат, непідтверджений.",
  "@js.1ecof5fze2u": {
@@ -3500,6 +3540,11 @@
  "@js.1eg1hfp0rb9": {
   "x-review": "machine",
   "x-source": "bcdb9702f4"
+ },
+ "js.1eh5clg574l": "exoplanet.eu подає її зі статусом «Опубліковано в рецензованій статті», знайдена методом первинного транзиту у {n0}; запис оновлено {n1}-{n2}-{n3}. Також відома як HD {n4} b, HD {n5} Ab, TOI-{n6} b, TOI-{n7}.",
+ "@js.1eh5clg574l": {
+  "x-review": "machine",
+  "x-source": "dcb89ac8b0"
  },
  "js.1einsfs6j8p": "Глибина, підібрана SetuHQ, головний провал",
  "@js.1einsfs6j8p": {
@@ -3536,11 +3581,6 @@
   "x-review": "machine",
   "x-source": "45ef298afc"
  },
- "js.1eqtzlgohp1": "Розсіяне світло: розміченої реальної вибірки не знайдено; відсіювання (прапорці якості та контрольні апертури) описано й випробувано на синтетичних подіях і контрольних апертурах вирізок наднових, але не валідовано за каталогом подій розсіяного світла.",
- "@js.1eqtzlgohp1": {
-  "x-review": "machine",
-  "x-source": "cef1f20086"
- },
  "js.1etlbcax1sp": "ii · увесь об'єкт tess-4b369d3c6f09",
  "@js.1etlbcax1sp": {
   "x-review": "machine",
@@ -3566,15 +3606,15 @@
   "x-review": "machine",
   "x-source": "b7e118d85b"
  },
+ "js.1ezxmjp2el4": "exoplanet.eu подає її зі статусом «Опубліковано в рецензованій статті», знайдена методом первинного транзиту у {n0}; запис оновлено {n1}-{n2}-{n3}. Також відома як K2-{n4} b, TOI-{n5} b, TOI-{n6}.",
+ "@js.1ezxmjp2el4": {
+  "x-review": "machine",
+  "x-source": "57de1033f9"
+ },
  "js.1f0uxtws1ab": "Перевірте самі",
  "@js.1f0uxtws1ab": {
   "x-review": "machine",
   "x-source": "e37b76fbec"
- },
- "js.1f208h2gzzx": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · позначений для перегляду, відкритий",
- "@js.1f208h2gzzx": {
-  "x-review": "machine",
-  "x-source": "bfe3196ddb"
  },
  "js.1f3str9e5jr": "не в масштабі; за Lyot {n0}",
  "@js.1f3str9e5jr": {
@@ -3585,11 +3625,6 @@
  "@js.1f423dts634": {
   "x-review": "machine",
   "x-source": "0e47f09a74"
- },
- "js.1f5jrzkwrow": "Ранжування: Youden's J на придатній для пошуку множині, зафіксованій бенчмарком (зорі з кривою блиску SPOC з каденцією {n0} хвилин), з одним предикатом для обох сторін — чистий кандидат (на ефемериді, пройшов перевірку, без прапорця затемнюваної подвійної): J = частка зір CP/KP, запропонованих як чисті кандидати + частка зір FP, не запропонованих − {n1}, з інтервалом Wilson за схемою square-and-add. Якщо назвати кожен TOI планетою, з прапорцем чи без, J = {n2}; придатна для пошуку зоря, позначена як непошукана, вважається не запропонованою. Поруч показано J для всіх зір області. Там, де інтервали перекриваються, порядок не є виміряною різницею.",
- "@js.1f5jrzkwrow": {
-  "x-review": "machine",
-  "x-source": "5fa0572ae2"
  },
  "js.1f71ffjmfo5": "Мінімальна маса (m sin i)",
  "@js.1f71ffjmfo5": {
@@ -3610,6 +3645,11 @@
  "@js.1f84decza55": {
   "x-review": "machine",
   "x-source": "7bb250633d"
+ },
+ "js.1fa3dkre7ep": "теплий",
+ "@js.1fa3dkre7ep": {
+  "x-review": "machine",
+  "x-source": "0f0aa408c1"
  },
  "js.1faz9a47wga": "K_R ≈ V sin I · k² з V sin I = {n0} km/s і k = {n1}, обидва з Gaudi &amp; Winn {n2}, табл. {n3}, де наведено {n4} m/s [calc]",
  "@js.1faz9a47wga": {
@@ -3646,11 +3686,6 @@
   "x-review": "machine",
   "x-source": "c6b9a506e0"
  },
- "js.1fo0ybrjcxn": "<b>Дані: The Extrasolar Planets Encyclopaedia (exoplanet.eu), отримано {n0} жовт. {n1}; {n2} планет зі збереженою відстанню навколо {n3} зір.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. Під час отримання цього списку NASA Exoplanet Archive був недоступний, тому список походить лише з exoplanet.eu. exoplanet.eu вносить до підтверджених кожен об’єкт, який вважає планетою: тіла масою до {n4} мас Юпітера (у межах їхньої похибки), опубліковані або оголошені. Його список ширший, ніж у NASA Exoplanet Archive, який містить об’єкти масою до {n5} мас Юпітера з рецензованих статей. Список містить {n6} записів, які exoplanet.eu називає екзокометами. {n7} з його {n8} планет не мають збереженої відстані й не нанесені на графік.",
- "@js.1fo0ybrjcxn": {
-  "x-review": "machine",
-  "x-source": "8798787570"
- },
  "js.1fppcyzgola": "<a href=\"/stars/barnard-s-star/\">{s0}</a> · Радіальна швидкість · відкрито {n0} · розміру Землі (за масою)",
  "@js.1fppcyzgola": {
   "x-review": "machine",
@@ -3676,10 +3711,20 @@
   "x-review": "machine",
   "x-source": "4ffb9625b0"
  },
+ "js.1fwz3jtwilc": "{n0} Eri b",
+ "@js.1fwz3jtwilc": {
+  "x-review": "machine",
+  "x-source": "ae488e35a4"
+ },
  "js.1g0smg3jibl": "з апріорним розподілом густини TIC",
  "@js.1g0smg3jibl": {
   "x-review": "machine",
   "x-source": "ee7a7029f9"
+ },
+ "js.1g4l9awxfep": "Каталог пошуку docs/discoveries/catalog.json, оновлено {n0}-{n1}-30T06:{n2}+{n3}, записів: {n4}.",
+ "@js.1g4l9awxfep": {
+  "x-review": "machine",
+  "x-source": "070c993100"
  },
  "js.1g5lkun156f": "Диск планети в масштабі за глибиною: Rp/R* {n0} · орбіта не в масштабі · радіус зорі не збережено",
  "@js.1g5lkun156f": {
@@ -3796,20 +3841,10 @@
   "x-review": "machine",
   "x-source": "405e92b37a"
  },
- "js.1hanjmcicv2": "Підвибірка Sentinels <span class=\"sub\">{n0} відкладених зір · без ранжування</span>",
- "@js.1hanjmcicv2": {
-  "x-review": "machine",
-  "x-source": "07839908d1"
- },
  "js.1hc8gmjgdot": "Таблиця TOI",
  "@js.1hc8gmjgdot": {
   "x-review": "machine",
   "x-source": "69cec4abc6"
- },
- "js.1hfl9sordrk": "Модель проходження {s0} диском pi Men ({n0} K, {n1} R☉): глибина {n2} ppm, {n3} h. Планета — художнє зображення.",
- "@js.1hfl9sordrk": {
-  "x-review": "machine",
-  "x-source": "9f7804c19a"
  },
  "js.1hfm3qhujst": "<a href=\"/stars/gj-1214/\">{s0}</a> · Транзит · відкрито {n0} · Субнептун",
  "@js.1hfm3qhujst": {
@@ -3866,20 +3901,10 @@
   "x-review": "machine",
   "x-source": "ee03efb686"
  },
- "js.1hw9pj2cjy7": "{n0} записів, знайдених між <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1} жовт. {n2}, {n3} UTC</time> та <time datetime=\"2026-10-27T06:46:11+00:00\" title=\"2026-10-27T06:46:11+00:00\">{n4} жовт. {n5}, {n6} UTC</time>. <b>{n7} збігаються з періодом відомого TOI</b>. Кожен запис — кандидат, непідтверджений. Збіг із TOI — це порівняння з архівом. Лише архівні значення. Ця сторінка не заявляє про виявлення. Сигнали, що не збігаються з жодним відомим TOI, зберігаються для закритого перегляду; їх публікують лише після перегляду та звітування.",
- "@js.1hw9pj2cjy7": {
-  "x-review": "machine",
-  "x-source": "e5e81ce489"
- },
  "js.1i0hezn1dvy": "Sentinel · Волонтер: проміжків у цьому вікні: {n0}, зараховано для цього провалу",
  "@js.1i0hezn1dvy": {
   "x-review": "machine",
   "x-source": "c97f6573b3"
- },
- "js.1i1bqizwemp": "Кожна клітинка: частка, потім k/n та {n0}% інтервал Wilson, показаний смугою від {n1} до {n2}% (J Youden від {n3} до {n4}, з позначкою на {n5}). Ранжовано за J Youden на множині для пошуку, зафіксованій бенчмарком, з одним предикатом для обох сторін (чистий кандидат: на ефемериді, пройшов перевірку, без прапорця затемнюваної подвійної), тож визнання кожного TOI планетою, позначеного чи ні, дає нуль балів. Контрольні вибірки обмежують ранжування й не входять до J, а списки контролів є власним звітом методу. Там, де інтервали перекриваються, порядок не є виміряною різницею.",
- "@js.1i1bqizwemp": {
-  "x-review": "machine",
-  "x-source": "9b6f9451ca"
  },
  "js.1i1fwe1y4dt": "Озон",
  "@js.1i1fwe1y4dt": {
@@ -3911,6 +3936,11 @@
   "x-review": "machine",
   "x-source": "cc3ff7cfea"
  },
+ "js.1i9gd4nyiqb": "Променева швидкість",
+ "@js.1i9gd4nyiqb": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
  "js.1i9syzrgr9a": "ii · увесь об'єкт tess-04b815001aa6",
  "@js.1i9syzrgr9a": {
   "x-review": "machine",
@@ -3936,10 +3966,10 @@
   "x-review": "machine",
   "x-source": "5d8760ebee"
  },
- "js.1inrxj82qqn": "{s0}, провал {n0} ({n1} d)",
- "@js.1inrxj82qqn": {
+ "js.1ispru3ub0k": "Proxima Centauri b ›",
+ "@js.1ispru3ub0k": {
   "x-review": "machine",
-  "x-source": "6d7c168703"
+  "x-source": "48383a87b1"
  },
  "js.1iub0nyp6f9": "змодельовано",
  "@js.1iub0nyp6f9": {
@@ -3971,11 +4001,6 @@
   "x-review": "machine",
   "x-source": "e54519602f"
  },
- "js.1j9g5n75pzw": "Ілюстрація: Rp/R★ = {n0}, b = {n1}, зоря з температурою {n2} K; крива — модель Mandel &amp; Agol ({n3}) для малої планети з квадратичним потемнінням до краю.",
- "@js.1j9g5n75pzw": {
-  "x-review": "machine",
-  "x-source": "2071874ebf"
- },
  "js.1ja46ec6bci": "<span class=\"word s-flag\">позначений для розгляду</span><b class=\"fig\">1c. TOI-{n0}, провал {n1}.</b> <span class=\"sid mono\">збережений id tess-f28323a4aef6-{n2}.</span> Провал на BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Інтервал консенсусу від BTJD {n7} до {n8}. Позначили {n9} з {n10} рецензентів ({n11} з {n12} Sentinels, {n13} з {n14} Probes). Немає BLS-періоду: одиночний провал. Позначений для розгляду (поза ефемеридою своєї зорі). Архів: немає архівної планети в межах допуску (для цього провалу немає BLS-періоду для порівняння). Лише архівні значення. Ця сторінка не заявляє про виявлення.",
  "@js.1ja46ec6bci": {
   "x-review": "machine",
@@ -4001,6 +4026,11 @@
   "x-review": "machine",
   "x-source": "49696e46af"
  },
+ "js.1jl27lqn1et": "Радіус (RJ)",
+ "@js.1jl27lqn1et": {
+  "x-review": "machine",
+  "x-source": "f32d9b82e5"
+ },
  "js.1jltb46ahiz": "TOI-{n0}: диск зорі в кольорі абсолютно чорного тіла при {n1} K, на ньому нейтральний сірий диск із підписом «затуляюче тіло не ідентифіковано». Вторинне затемнення при SNR {n2}; усі провали ({n3}) відхилені під час перевірки.",
  "@js.1jltb46ahiz": {
   "x-review": "machine",
@@ -4010,6 +4040,11 @@
  "@js.1jnlql1jvxr": {
   "x-review": "machine",
   "x-source": "43edc57b50"
+ },
+ "js.1jpqv79tmp8": "Teegarden's c",
+ "@js.1jpqv79tmp8": {
+  "x-review": "machine",
+  "x-source": "d987d14509"
  },
  "js.1jqjb1ecf85": "<a href=\"/stars/kepler-292/\">{s0}</a> · Транзит · відкрито {n0} · Субнептун",
  "@js.1jqjb1ecf85": {
@@ -4046,11 +4081,6 @@
   "x-review": "machine",
   "x-source": "254fff303e"
  },
- "js.1jvq989drn7": "Художнє уявлення: вигляд «холодний гігант», для радіуса від {n0} R⊕, Teq нижче {n1} K: кремові й бежево-коричневі хмарні смуги. Кадр вигляду, а не конкретної планети.",
- "@js.1jvq989drn7": {
-  "x-review": "machine",
-  "x-source": "76e2586629"
- },
  "js.1k05nntjzg8": "атмосферу намальовано товщою ×{n0}; планета й зоря не в масштабі",
  "@js.1k05nntjzg8": {
   "x-review": "machine",
@@ -4070,11 +4100,6 @@
  "@js.1k2in4l826k": {
   "x-review": "machine",
   "x-source": "75b7e948dd"
- },
- "js.1k548hzbh61": "<b>ν₃ асиметричне розтягування (три)</b> · {n0} µm · активне в інфрачервоному · намальовано ×{n1} · <a href=\"/how-it-works/atmospheres/\">смуга {n2} µm у розділі «Читання атмосфер» ›</a>",
- "@js.1k548hzbh61": {
-  "x-review": "machine",
-  "x-source": "371bca6192"
  },
  "js.1kch3o41dk9": "Конфігурація SHA-{n0}",
  "@js.1kch3o41dk9": {
@@ -4136,11 +4161,6 @@
   "x-review": "machine",
   "x-source": "6c3088500d"
  },
- "js.1kukdzlwmzz": "<b>ν₂ «парасолька»</b> · {n0} µm · активне в інфрачервоному · намальовано ×{n1} · поза вікном {n2}–{n3} µm для {s0}",
- "@js.1kukdzlwmzz": {
-  "x-review": "machine",
-  "x-source": "ba3a4e2e62"
- },
  "js.1kvmnyghvke": "Художнє уявлення {s0}: кам'яниста планета, радіус не виміряно ({n0} мас Землі), опромінення неможливо обчислити.",
  "@js.1kvmnyghvke": {
   "x-review": "machine",
@@ -4171,6 +4191,11 @@
   "x-review": "machine",
   "x-source": "07e5463c85"
  },
+ "js.1l4atyo906i": "Кандидат",
+ "@js.1l4atyo906i": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
  "js.1l4kxm2w5br": "Порівняння з архівом: немає архівної планети в межах допуску (для цього провалу немає BLS-періоду для порівняння); pi Men c: немає ефемериди транзиту для порівняння. Лише архівні значення. Ця сторінка не заявляє про виявлення.",
  "@js.1l4kxm2w5br": {
   "x-review": "machine",
@@ -4180,6 +4205,16 @@
  "@js.1l4u62ej5fc": {
   "x-review": "machine",
   "x-source": "f7bc5c08f0"
+ },
+ "js.1l8c78nkfe5": "Teq",
+ "@js.1l8c78nkfe5": {
+  "x-review": "machine",
+  "x-source": "bd1f380888"
+ },
+ "js.1l8lt88zlnn": "<i aria-hidden=\"true\"></i>Затемнювана подвійна",
+ "@js.1l8lt88zlnn": {
+  "x-review": "machine",
+  "x-source": "a07a5fab5c"
  },
  "js.1l95agsp46q": "відомий період TOI",
  "@js.1l95agsp46q": {
@@ -4195,6 +4230,11 @@
  "@js.1lb13933831": {
   "x-review": "machine",
   "x-source": "0216bca3d8"
+ },
+ "js.1lbuxx1akb8": "<i style=\"background:#64D2FF\"></i>Транзит <span class=\"mono\">{n0}</span>",
+ "@js.1lbuxx1akb8": {
+  "x-review": "machine",
+  "x-source": "35c7f262c0"
  },
  "js.1liecym8jw": "<span class=\"word cand\">кандидат</span><span class=\"word s-pass\">пройшов перевірку</span><b class=\"fig\">1d. WASP-{n0}, спад {n1}.</b> <span class=\"sid mono\">збережений id tess-5935bad1a3b4-{n2}.</span> Спад на BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Консенсусний інтервал BTJD {n7}–{n8}. Позначили {n9} з {n10} рецензентів ({n11} з {n12} Sentinels, {n13} з {n14} Probes). Лежить на BLS-періоді {n15} діб (t0 BTJD {n16}). Пройшов перевірку. Архів: узгоджується з WASP-{n17} b: ΔP {n18}%, немає ефемериди транзиту для порівняння. Лише архівні значення. Ця сторінка не заявляє про виявлення.",
  "@js.1liecym8jw": {
@@ -4251,6 +4291,11 @@
   "x-review": "machine",
   "x-source": "aa15ce0bc3"
  },
+ "js.1m6gonlbh23": "Proxima Centauri",
+ "@js.1m6gonlbh23": {
+  "x-review": "machine",
+  "x-source": "07ddace0bc"
+ },
  "js.1m7nga73mrk": "Шкала променевої швидкості: двійник Землі — близько {n0} сантиметрів на секунду; ESPRESSO за ніч — менше {n1} сантиметрів на секунду; шум поверхні зорі — порядку {n2} метра на секунду; pi Men c — близько {n3} метрів на секунду; двійник Юпітера — {n4} метрів на секунду; {n5} Peg b — {n6} метрів на секунду.",
  "@js.1m7nga73mrk": {
   "x-review": "machine",
@@ -4266,11 +4311,6 @@
   "x-review": "machine",
   "x-source": "94f4aed5ee"
  },
- "js.1mfsedhnkek": "Обертова кулестержнева модель вибраної молекули з виміряними довжинами зв'язків і кутами (NIST CCCBDB), що коливається у вибраній нормальній моді: стрілки показують, у який бік рухається кожен атом. Вісь довжин хвиль нижче позначає фундаментальні смуги молекули: зафарбовані, коли їх видно в інфрачервоному діапазоні, і порожні, коли мода неактивна в інфрачервоному діапазоні; діапазон, який показує розділ {s0}, заштриховано.",
- "@js.1mfsedhnkek": {
-  "x-review": "machine",
-  "x-source": "751951289b"
- },
  "js.1mi5uvq4hd0": "цей запуск · відхилений перевіркою · без періоду",
  "@js.1mi5uvq4hd0": {
   "x-review": "machine",
@@ -4280,6 +4320,11 @@
  "@js.1mi9l1aqyq9": {
   "x-review": "machine",
   "x-source": "af079a71c8"
+ },
+ "js.1mjsdzuqt7u": "немає окремої зорі",
+ "@js.1mjsdzuqt7u": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
  },
  "js.1mk4xq21j8n": "{n0} Peg b {n1} m/s",
  "@js.1mk4xq21j8n": {
@@ -4315,6 +4360,11 @@
  "@js.1myonl6ry65": {
   "x-review": "machine",
   "x-source": "927599ad1a"
+ },
+ "js.1mz5xi30e6k": "{n0} Peg b",
+ "@js.1mz5xi30e6k": {
+  "x-review": "machine",
+  "x-source": "07473ed79b"
  },
  "js.1mzrogjvr87": "Файл справи не вдалося завантажити в цьому поданні. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-003\">Відкрийте його на окремій сторінці.</a>",
  "@js.1mzrogjvr87": {
@@ -4391,11 +4441,6 @@
   "x-review": "machine",
   "x-source": "ed25878435"
  },
- "js.1nlihv4t4dw": "Джерело: docs/results/showcase.json.",
- "@js.1nlihv4t4dw": {
-  "x-review": "machine",
-  "x-source": "321e67bf81"
- },
  "js.1nm81nug7zg": "Пропущено (тут недоступно): немає",
  "@js.1nm81nug7zg": {
   "x-review": "machine",
@@ -4471,6 +4516,11 @@
   "x-review": "machine",
   "x-source": "ffb8a10800"
  },
+ "js.1o6iiyvkzt4": "Teq (K)",
+ "@js.1o6iiyvkzt4": {
+  "x-review": "machine",
+  "x-source": "250f80cb14"
+ },
  "js.1oflx09locz": "Справу не вдалося завантажити в цьому поданні. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-000\">Відкрити її на окремій сторінці.</a>",
  "@js.1oflx09locz": {
   "x-review": "machine",
@@ -4490,11 +4540,6 @@
  "@js.1ojq6mpxesf": {
   "x-review": "machine",
   "x-source": "13bd83fa4a"
- },
- "js.1ooqb09tka": "Розбіжність глибин непарних/парних провалів або вторинне затемнення; або глибина {n0} ppm чи більше; або V-подібна форма і {n1} ppm чи більше; або розбіжність густини зорі за періоду менше {n2} d; або половина ваги панелі вказує на затемнювану подвійну. Змінність на періоді затемнюваної подвійної або на його половині.",
- "@js.1ooqb09tka": {
-  "x-review": "machine",
-  "x-source": "d16ff6ea5a"
  },
  "js.1oqf3bvj4qe": "Справа на окремій сторінці, на тому самому провалі.",
  "@js.1oqf3bvj4qe": {
@@ -4560,6 +4605,11 @@
  "@js.1pagkp933nd": {
   "x-review": "machine",
   "x-source": "393e0bcc0a"
+ },
+ "js.1pduw01bhpw": "Winn {n0}, Транзити та покриття",
+ "@js.1pduw01bhpw": {
+  "x-review": "machine",
+  "x-source": "5cdffcb70b"
  },
  "js.1pf0nh0ccp2": "id tic139256217-s1-dip-{n0} · об'єкт tess-9bf59e37005b<br>sha256 кривої блиску f11b4e243439bf24ffd3c740162a76f0cdadd8a9160094e3eb2a3487101f6c2c<br>код … · конфігурація a9d34c7079563183…<br>джерело sector_0001.json.gz",
  "@js.1pf0nh0ccp2": {
@@ -4636,6 +4686,11 @@
   "x-review": "machine",
   "x-source": "10a0c5f853"
  },
+ "js.1pzot5psr3w": "Luhman {n0} A",
+ "@js.1pzot5psr3w": {
+  "x-review": "machine",
+  "x-source": "215b9c6a31"
+ },
  "js.1q0vba1x3qp": "{n0} нових",
  "@js.1q0vba1x3qp": {
   "x-review": "machine",
@@ -4706,11 +4761,6 @@
   "x-review": "machine",
   "x-source": "dd3330cc6f"
  },
- "js.1qq8e2zp8tb": "Перевірка планет: без змін. Підказки модуля затемнюваних подвійних щодо перевірки мають лише дорадчий характер, жодне рішення перевірки їх не використовує, і їх не оцінювали; їхнє використання в перевірці потребує окремої попередньо зареєстрованої оцінки.",
- "@js.1qq8e2zp8tb": {
-  "x-review": "machine",
-  "x-source": "6e0c8bb669"
- },
  "js.1qr7pmpqgem": "TIC {n0}, період {n1} днів, глибина {n2} ppm, SNR {n3}, період збігається з відомим TOI, кандидат, не підтверджений",
  "@js.1qr7pmpqgem": {
   "x-review": "machine",
@@ -4726,10 +4776,20 @@
   "x-review": "machine",
   "x-source": "42da84247d"
  },
+ "js.1r0q7nepkoi": "каліброва вага",
+ "@js.1r0q7nepkoi": {
+  "x-review": "machine",
+  "x-source": "0a6b72180c"
+ },
  "js.1r46y9nqy47": "Перші три кроки виконує сам SetuHQ; останні три є записами інших команд (NASA Exoplanet Archive (TAP): таблиці toi і ps), а не результатами SetuHQ. Порожня точка означає крок без запису. TFOPWG: TESS Follow-up Observing Program Working Group.",
  "@js.1r46y9nqy47": {
   "x-review": "machine",
   "x-source": "f16d5662c6"
+ },
+ "js.1r4fphlxxtr": "Записів: {n0}, знайдених між <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1} жовт. {n2}, {n3} UTC</time> і <time datetime=\"2026-10-30T00:48:15+00:00\" title=\"2026-10-30T00:48:15+00:00\">{n4} жовт. {n5}, {n6} UTC</time>. <b>{n7} збігаються з періодом відомого TOI</b>. Кожен запис є кандидатом, непідтвердженим. Збіг із TOI — це порівняння з архівом. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення. Сигнали, що не збігаються з жодним відомим TOI, утримуються для закритого перегляду; їх публікують лише після перегляду та звітування.",
+ "@js.1r4fphlxxtr": {
+  "x-review": "machine",
+  "x-source": "3f8fc5c963"
  },
  "js.1r7q1f2otd9": "Таблиці: TOI-{n0}",
  "@js.1r7q1f2otd9": {
@@ -4751,11 +4811,6 @@
   "x-review": "machine",
   "x-source": "ea025f8c30"
  },
- "js.1rehm8o052v": "{s0}ing Exoplanet Survey Satellite",
- "@js.1rehm8o052v": {
-  "x-review": "machine",
-  "x-source": "f64ceb6be5"
- },
  "js.1rervwi8ill": "Матеріали справи не вдалося завантажити в цьому поданні. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-fa3483ce6f83-001\">Відкрийте їх на окремій сторінці.</a>",
  "@js.1rervwi8ill": {
   "x-review": "machine",
@@ -4776,6 +4831,11 @@
   "x-review": "machine",
   "x-source": "7006d67bfe"
  },
+ "js.1rhozdhu0s6": "{n0} Eri",
+ "@js.1rhozdhu0s6": {
+  "x-review": "machine",
+  "x-source": "cd858f1566"
+ },
  "js.1rhxz6cr57l": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">період відомого TOI</span><b class=\"fig\">3g. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Провал при BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Позначено рецензентами: {n5} (каталог не зберігає розмір панелі чи консенсусний інтервал). Лежить на періоді BLS {n6} днів, транзитів: {n7}. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
  "@js.1rhxz6cr57l": {
   "x-review": "machine",
@@ -4791,10 +4851,10 @@
   "x-review": "machine",
   "x-source": "f857503a68"
  },
- "js.1rk4ie4w0t9": "Художнє уявлення: вигляд гарячого гіганта для радіуса {n0} R⊕ або більше, Teq від {n1} до {n2} K: іржаві смуги хмар. Кадр, що показує цей вигляд, а не конкретну планету.",
- "@js.1rk4ie4w0t9": {
+ "js.1rncc50vod0": "Почати",
+ "@js.1rncc50vod0": {
   "x-review": "machine",
-  "x-source": "8aeca1d984"
+  "x-source": "61e8d44ad4"
  },
  "js.1rniehwfgn9": "Wolszczan &amp; Frail",
  "@js.1rniehwfgn9": {
@@ -4820,11 +4880,6 @@
  "@js.1rrhtxb4sk8": {
   "x-review": "machine",
   "x-source": "1b1094a886"
- },
- "js.1rsb50hzlde": "Художнє уявлення: вигляд гарячого нептуна для радіуса від {n0} до {n1} R⊕, Teq {n2} K або більше: оранжево-сірий серпанок. Кадр, що показує цей вигляд, а не конкретну планету.",
- "@js.1rsb50hzlde": {
-  "x-review": "machine",
-  "x-source": "fd1e7e0678"
  },
  "js.1rsch1xr0lt": "Транзит · {n0} d",
  "@js.1rsch1xr0lt": {
@@ -4856,15 +4911,15 @@
   "x-review": "machine",
   "x-source": "a1c625de42"
  },
+ "js.1rwj8ey7hae": "Kepler-{n0} · {n1} K",
+ "@js.1rwj8ey7hae": {
+  "x-review": "machine",
+  "x-source": "eb98d7eea9"
+ },
  "js.1rxrndp257b": "Блокування світла зорі в чотирьох сценах. Сонцеподібний окультер (ілюстрація на основі SOHO LASCO); маска коронографа насувається на зорю, відблиск розпадається на залишкові спекли, і чотири планети HR {n0} з'являються на схематичних орбітах; зоряний екран (starshade) летить далеко перед телескопом, не в масштабі; і двотелескопний нуль-інтерферометр, темна смуга якого гасить світло зорі.",
  "@js.1rxrndp257b": {
   "x-review": "machine",
   "x-source": "cce2248704"
- },
- "js.1ryrg8dmxoz": "<b>ν₄ асиметричне згинальне (три)</b> · {n0} µm · активне в інфрачервоному діапазоні · намальовано ×{n1} · поза вікном {n2}–{n3} µm {s0}",
- "@js.1ryrg8dmxoz": {
-  "x-review": "machine",
-  "x-source": "b2cd029465"
  },
  "js.1s3bgxbwlkh": "Усі",
  "@js.1s3bgxbwlkh": {
@@ -4876,10 +4931,10 @@
   "x-review": "machine",
   "x-source": "95206d6b8a"
  },
- "js.1sdkh60m4rv": "{s0}, провал {n0}",
- "@js.1sdkh60m4rv": {
+ "js.1s8dkmip4e3": "cheops",
+ "@js.1s8dkmip4e3": {
   "x-review": "machine",
-  "x-source": "335e296600"
+  "x-source": "0eeb4fd483"
  },
  "js.1sg8cj3fgn0": "П'ять способів підробити планету, кожен показано з геометрією на небі на сітці пікселів TESS (по {n0} кутових секунд, у масштабі) і з кривою блиску, яку він дає: затемнювана подвійна з V-подібним дотичним затемненням; фонова затемнювана подвійна, світло якої розбавлене світлом цілі; ієрархічна потрійна система; непарні й парні затемнення різної глибини, коли період становить половину справжнього; та інструментальний стрибок, як-от скидання моменту імпульсу.",
  "@js.1sg8cj3fgn0": {
@@ -4936,10 +4991,20 @@
   "x-review": "machine",
   "x-source": "f51d196f08"
  },
+ "js.1szdkpleyt1": "exoplanet.eu подає її зі статусом «Опубліковано в рецензованій статті», знайдена методом первинного транзиту у {n0}; запис оновлено {n1}-{n2}-{n3}. Також відома як TOI-{n4} b.",
+ "@js.1szdkpleyt1": {
+  "x-review": "machine",
+  "x-source": "923f1f0f7f"
+ },
  "js.1t1emvbqy9r": "{n0} · Очищення та усунення тренду",
  "@js.1t1emvbqy9r": {
   "x-review": "machine",
   "x-source": "2d4dfc6ae5"
+ },
+ "js.1t30u96twwz": "сигнали",
+ "@js.1t30u96twwz": {
+  "x-review": "machine",
+  "x-source": "c1d2c1df9e"
  },
  "js.1t47rnb1yty": "Статистична валідація у великому масштабі.",
  "@js.1t47rnb1yty": {
@@ -4951,10 +5016,20 @@
   "x-review": "machine",
   "x-source": "ea298d3769"
  },
+ "js.1takbn7z5i5": "pi Men b ›",
+ "@js.1takbn7z5i5": {
+  "x-review": "machine",
+  "x-source": "095aa55e59"
+ },
  "js.1tanbk5cfbb": "{n0} {n1} / {n2} dex",
  "@js.1tanbk5cfbb": {
   "x-review": "machine",
   "x-source": "6d564d1ad1"
+ },
+ "js.1tbllix94q1": "Молекули",
+ "@js.1tbllix94q1": {
+  "x-review": "machine",
+  "x-source": "bfdd800ffc"
  },
  "js.1tbul4ef62r": "Планет в exoplanet.eu: {n0}",
  "@js.1tbul4ef62r": {
@@ -5006,11 +5081,6 @@
   "x-review": "machine",
   "x-source": "9c116a7ee6"
  },
- "js.1tpmj2xl8sk": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · відхилений перевіркою, не кандидат",
- "@js.1tpmj2xl8sk": {
-  "x-review": "machine",
-  "x-source": "77664f0d7c"
- },
  "js.1trrebrltbg": "Побудовано лише за збереженими значеннями (exoplanet.eu). Не збережено: температура зорі, радіус зорі; ці частини ілюстративні, і на малюнку це зазначено. Колір зорі: колір Сонця, оскільки температура не збережена.",
  "@js.1trrebrltbg": {
   "x-review": "machine",
@@ -5041,25 +5111,20 @@
   "x-review": "machine",
   "x-source": "9ee6b5ae54"
  },
+ "js.1u1inxhnivr": "Хибнопозитивні",
+ "@js.1u1inxhnivr": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
  "js.1u2k1jai0us": "Одна крива блиску, три періоди. Вона показує, що робить пошук, коли зоря має більше ніж одну планету, і яку з них може вмістити об’єкт спостереження тривалістю {n0} днів.",
  "@js.1u2k1jai0us": {
   "x-review": "machine",
   "x-source": "ac34f619e1"
  },
- "js.1u2q9tbst8u": "Художнє уявлення: вигляд «гаряча оболонка» для радіуса від {n0} до {n1} R⊕, Teq {n2} K або більше: світло-коричневий серпанок і теплий обідок. Кадр вигляду, а не конкретної планети.",
- "@js.1u2q9tbst8u": {
-  "x-review": "machine",
-  "x-source": "80eb7867e5"
- },
  "js.1u4yg0u12mv": "exoplanet.eu не зберігає DOI чи посилання на статтю про відкриття, тому їх не показано.",
  "@js.1u4yg0u12mv": {
   "x-review": "machine",
   "x-source": "02110b7c79"
- },
- "js.1u50uo7y5g3": "<b>ν₁ симетричне розтягування</b> · {n0} µm · активне в ІЧ · намальовано ×{n1} · за межами вікна {n2}–{n3} µm {s0}",
- "@js.1u50uo7y5g3": {
-  "x-review": "machine",
-  "x-source": "84c034c9f3"
  },
  "js.1u59hy4lwt0": "CO₂ <span>Вуглекислий газ</span>",
  "@js.1u59hy4lwt0": {
@@ -5081,11 +5146,6 @@
   "x-review": "machine",
   "x-source": "27b99ccdde"
  },
- "js.1ua3tz5fxe0": "Хеш — це засвідчення: відкладені мітки є публічними в репозиторії, тож таблиця лідерів не може довести, що їх не читали, а вердикти «пройшов» і контрольні події методу — це його власний звіт. Ці прогалини закрили б криві блиску-приманки, що зберігаються в мейнтейнерів, і проспективне оцінювання на TOI, які ще не мають диспозиції; ні того, ні іншого поки не існує.",
- "@js.1ua3tz5fxe0": {
-  "x-review": "machine",
-  "x-source": "9f55ae4547"
- },
  "js.1uaz0vrw4ly": "найменше поле в джерелі, на зорі (смуга Pineda &amp; Villadsen {n0}) [calc]",
  "@js.1uaz0vrw4ly": {
   "x-review": "machine",
@@ -5095,11 +5155,6 @@
  "@js.1ucljc3glwo": {
   "x-review": "machine",
   "x-source": "5e270de316"
- },
- "js.1uekblhme1p": "{n0} ppm · {n1} h · усі {n2} рецензентів · кандидат, непідтверджений",
- "@js.1uekblhme1p": {
-  "x-review": "machine",
-  "x-source": "73ac412687"
  },
  "js.1ug611r5qd8": "CH₄ <span>Метан</span>",
  "@js.1ug611r5qd8": {
@@ -5136,6 +5191,11 @@
   "x-review": "machine",
   "x-source": "263beb630a"
  },
+ "js.1utmguftbbw": "Сектори TESS {n0}–{n1}. Запис стрічки {n2} для цієї зорі (збережений id <span class=\"mono\">tess-7b97e468b60b-{n3}</span>). Збіг із TOI порівнює збережений період з архівними значеннями. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
+ "@js.1utmguftbbw": {
+  "x-review": "machine",
+  "x-source": "965b94f3d8"
+ },
  "js.1uugayqarlm": "Проєкт місії TESS, яка почала спостереження в {n0}.",
  "@js.1uugayqarlm": {
   "x-review": "machine",
@@ -5145,11 +5205,6 @@
  "@js.1uwk3dmvuym": {
   "x-review": "machine",
   "x-source": "e7e8d3a00f"
- },
- "js.1v15owfc4cr": "<b>ν₃ асиметричне розтягування (два)</b> · {n0} µm · активне в ІЧ · намальовано ×{n1} · не намальовано в {s0}",
- "@js.1v15owfc4cr": {
-  "x-review": "machine",
-  "x-source": "451f9e06fd"
  },
  "js.1v2k5bzmb2a": "{n0} ± {n1} ppm",
  "@js.1v2k5bzmb2a": {
@@ -5161,25 +5216,25 @@
   "x-review": "machine",
   "x-source": "c6c35d2486"
  },
- "js.1va1yqqf83l": "Планета з масою, меншою за земну, біля {s0}, одного з найближчих сусідів Сонця.",
- "@js.1va1yqqf83l": {
+ "js.1vf8wchy7cx": "Спалахи",
+ "@js.1vf8wchy7cx": {
   "x-review": "machine",
-  "x-source": "0c6a1cbb68"
+  "x-source": "bdad8ef87b"
  },
  "js.1vn1k0hsfr": "Каталог",
  "@js.1vn1k0hsfr": {
   "x-review": "machine",
   "x-source": "1034513950"
  },
- "js.1vo3z8v0kr3": "{n0} на {n1} зоря-секторів <span class=\"muted\">({n2} на {n3}; {n4} перевірених провалів до правила стрічки)</span>",
- "@js.1vo3z8v0kr3": {
-  "x-review": "machine",
-  "x-source": "0cf0192aad"
- },
  "js.1vs3qyoxlvt": "Також відома як 2MASS J19021775+{n0}, KIC {n1}, KOI-{n2}, WISE J190217.77+{n3}.",
  "@js.1vs3qyoxlvt": {
   "x-review": "machine",
   "x-source": "a3072cbabc"
+ },
+ "js.1vseruufigw": "tau Cet",
+ "@js.1vseruufigw": {
+  "x-review": "machine",
+  "x-source": "d76cfc3187"
  },
  "js.1vtn0jl0t29": "Відкрити повну сторінку",
  "@js.1vtn0jl0t29": {
@@ -5301,6 +5356,11 @@
   "x-review": "machine",
   "x-source": "6b412a8780"
  },
+ "js.1wqsruj6sy4": "Teegarden's b",
+ "@js.1wqsruj6sy4": {
+  "x-review": "machine",
+  "x-source": "88f6565053"
+ },
  "js.1wr1t67roz9": "Показало, що кандидати в багатопланетних системах майже завжди реальні, валідувавши {n0} планет у {n1} системах.",
  "@js.1wr1t67roz9": {
   "x-review": "machine",
@@ -5361,6 +5421,11 @@
   "x-review": "machine",
   "x-source": "01d784a95a"
  },
+ "js.1xjf25ez4ea": "Астрометрія",
+ "@js.1xjf25ez4ea": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
  "js.1xjgislb1gr": "{n0} (лінії D, {n1} і {n2} nm)",
  "@js.1xjgislb1gr": {
   "x-review": "machine",
@@ -5370,6 +5435,11 @@
  "@js.1xjihe7xm1n": {
   "x-review": "machine",
   "x-source": "68a749778a"
+ },
+ "js.1xjlu6r0tws": "Кандидат у планети",
+ "@js.1xjlu6r0tws": {
+  "x-review": "machine",
+  "x-source": "f40d9fd559"
  },
  "js.1xludg6i4sq": "Також відома як EPIC {n0}.",
  "@js.1xludg6i4sq": {
@@ -5386,11 +5456,6 @@
   "x-review": "machine",
   "x-source": "d17f5d38ec"
  },
- "js.1xqmq7gc51u": "Хибні тривоги на перемішаних кривих блиску на рівні стрічки (її повне правило, FAP &lt; {n0})",
- "@js.1xqmq7gc51u": {
-  "x-review": "machine",
-  "x-source": "31b60ba44a"
- },
  "js.1xs9ztk2l36": "Тур Галактикою, зупинка {n0} ›",
  "@js.1xs9ztk2l36": {
   "x-review": "machine",
@@ -5406,15 +5471,15 @@
   "x-review": "machine",
   "x-source": "43c265eda9"
  },
- "js.1xy8j3ygiad": "Художнє уявлення: вигляд «прохолодна оболонка» для радіуса від {n0} до {n1} R⊕, Teq нижче {n2} K: блідий блакитно-білий серпанок, слабкі смуги. Кадр вигляду, а не конкретної планети.",
- "@js.1xy8j3ygiad": {
-  "x-review": "machine",
-  "x-source": "7be8bc6ed2"
- },
  "js.1y1gk0z56gg": "провали на ефемериді, за результатом перевірки",
  "@js.1y1gk0z56gg": {
   "x-review": "machine",
   "x-source": "4f0bf37c8c"
+ },
+ "js.1y218zo6cqq": "<i style=\"background:#30D158\"></i>Зображення <span class=\"mono\">{n0}</span>",
+ "@js.1y218zo6cqq": {
+  "x-review": "machine",
+  "x-source": "d614bb1db6"
  },
  "js.1y39iwfnbwn": "Запуск tess-hd-{n0}-s4 (runs/tess-hd-{n1}-s4), створено {n2}-{n3}-22T18:{n4}+{n5}, конфігурація sha256 e21c63a794b2aeb3…",
  "@js.1y39iwfnbwn": {
@@ -5466,6 +5531,11 @@
   "x-review": "machine",
   "x-source": "519941f399"
  },
+ "js.1yt1laezm0g": "Kepler-{n0} d",
+ "@js.1yt1laezm0g": {
+  "x-review": "machine",
+  "x-source": "5c8bf604a0"
+ },
  "js.1ytljjhkuxb": "Намальовано лише за збереженими значеннями (exoplanet.eu).",
  "@js.1ytljjhkuxb": {
   "x-review": "machine",
@@ -5516,11 +5586,6 @@
   "x-review": "machine",
   "x-source": "9fdea8a620"
  },
- "js.1z0tecbo6q6": "Художнє уявлення: вигляд ультрагарячого гіганта, для радіуса {n0} R⊕ або більше, Teq {n1} K або більше: темний, малоконтрастний, світиться на денному боці; без смуг. Кадр вигляду, а не конкретної планети.",
- "@js.1z0tecbo6q6": {
-  "x-review": "machine",
-  "x-source": "236fde016b"
- },
  "js.1z3sctga608": "Два короткі провали з плоским дном глибиною близько {n0} ppm при ~{n1} і ~{n2} (інтервал ~{n3} d) мають однакову глибину й тривалість, як і очікується для періодичного транзиту. Жоден не має V-подібної форми, вторинного затемнення, рампи чи сходинки, але дані навколо другого провалу",
  "@js.1z3sctga608": {
   "x-review": "machine",
@@ -5536,10 +5601,10 @@
   "x-review": "machine",
   "x-source": "7d9eb7acb1"
  },
- "js.1z5yw0q2c2w": "Транзит на головній сторінці",
- "@js.1z5yw0q2c2w": {
+ "js.1z5qoomb94b": "YZ Cet b",
+ "@js.1z5qoomb94b": {
   "x-review": "machine",
-  "x-source": "be1b030722"
+  "x-source": "fca0c283f7"
  },
  "js.1z8tasie2wo": "Probe · Чутливий <span class=\"mono idtag\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1z8tasie2wo": {
@@ -5621,11 +5686,6 @@
   "x-review": "machine",
   "x-source": "1c3db44c80"
  },
- "js.2050o3pgkvz": "Джерело: TESS Science Office (MIT), публічні сторінки секторів на tess.mit.edu/observations/: https://tess.mit.edu/observations/, розклад збережено {n0}-{n1}-{n2}.",
- "@js.2050o3pgkvz": {
-  "x-review": "machine",
-  "x-source": "e758c6851a"
- },
  "js.206lvynaoyq": "рух зорі перебільшено ×{n0}; справжнє a★ = {n1} km ≈ {n2}.1e-{n3} R★",
  "@js.206lvynaoyq": {
   "x-review": "machine",
@@ -5671,11 +5731,6 @@
   "x-review": "machine",
   "x-source": "f77390e131"
  },
- "js.20iu1oobrgo": "Художнє уявлення: неоднозначний вигляд, для випадку без радіуса, маси від {n0} до {n1} M⊕, будь-якої Teq: нейтральний сіро-блакитний диск і м'який обідок: кам'яна чи з оболонкою, невідомо. Кадр вигляду, а не конкретної планети.",
- "@js.20iu1oobrgo": {
-  "x-review": "machine",
-  "x-source": "b435c16b54"
- },
  "js.20jq5c41tkh": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">3j. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Провал на BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Позначили рецензенти: {n5} (каталог не зберігає розмір панелі чи інтервал консенсусу). Лежить на BLS-періоді {n6} діб; транзитів: {n7}. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про виявлення.",
  "@js.20jq5c41tkh": {
   "x-review": "machine",
@@ -5685,6 +5740,11 @@
  "@js.20l5be8crj": {
   "x-review": "machine",
   "x-source": "ab9c1a76a4"
+ },
+ "js.20lcnwrpq7u": "Транзит <span class=\"mono\" data-cmn=\"transit\">{n0}</span>",
+ "@js.20lcnwrpq7u": {
+  "x-review": "machine",
+  "x-source": "5b3df4c9fd"
  },
  "js.20lxdwfofp9": "цей запуск · позначений для перевірки · без періоду",
  "@js.20lxdwfofp9": {
@@ -5710,6 +5770,11 @@
  "@js.20q2sjzozas": {
   "x-review": "machine",
   "x-source": "7fb66e3610"
+ },
+ "js.20rbpsp5ug3": "<i aria-hidden=\"true\"></i>Некласифіковані <span class=\"mono\">{n0}</span>",
+ "@js.20rbpsp5ug3": {
+  "x-review": "machine",
+  "x-source": "8de4c52f48"
  },
  "js.20rkrumvokl": "Версія промпту Sentinel",
  "@js.20rkrumvokl": {
@@ -5760,11 +5825,6 @@
  "@js.216y488ncvw": {
   "x-review": "machine",
   "x-source": "b2f84631c5"
- },
- "js.217aul87gdd": "<b>переважно валентне коливання N–O</b> · {n0} µm · активне в інфрачервоному діапазоні · намальовано ×{n1} · поза вікном {n2}–{n3} µm для {s0}",
- "@js.217aul87gdd": {
-  "x-review": "machine",
-  "x-source": "cea6ecc8bf"
  },
  "js.217mi4h3ox4": "Кандидатом є лише провал, що пройшов перевірку, і він залишається непідтвердженим; відхилений провал кандидатом не є. Лише збережені значення: точки, позначки, оцінки, прапорці та слова наведено так, як їх зберіг запуск.",
  "@js.217mi4h3ox4": {
@@ -5861,11 +5921,6 @@
   "x-review": "machine",
   "x-source": "752ea43d7e"
  },
- "js.21ylkyb62a9": "TIC {n0} · кандидат, непідтверджений",
- "@js.21ylkyb62a9": {
-  "x-review": "machine",
-  "x-source": "7cf98eee62"
- },
  "js.222kde6gcmc": "Побудовано лише за збереженими значеннями (exoplanet.eu). Не збережено: радіус планети; ці частини ілюстративні, і на рисунку це зазначено. За збереженого нахилу орбіти ця планета не проходить транзитом; подання показує транзит, щоб пояснити метод.",
  "@js.222kde6gcmc": {
   "x-review": "machine",
@@ -5875,6 +5930,11 @@
  "@js.223085agofs": {
   "x-review": "machine",
   "x-source": "606268600d"
+ },
+ "js.225qy6re67g": "Kepler-{n0} c",
+ "@js.225qy6re67g": {
+  "x-review": "machine",
+  "x-source": "d1e5b9aa4a"
  },
  "js.2274ir70e91": "Відхилено під час перевірки",
  "@js.2274ir70e91": {
@@ -5931,6 +5991,11 @@
   "x-review": "machine",
   "x-source": "f16b203139"
  },
+ "js.22noo09k9nh": "<i style=\"background:#7D7AFF\"></i>Хронометраж <span class=\"mono\">{n0}</span>",
+ "@js.22noo09k9nh": {
+  "x-review": "machine",
+  "x-source": "79248df554"
+ },
  "js.22qe07fgd2k": "весь сектор · період {n0} d · напівамплітуда {n1} ppm",
  "@js.22qe07fgd2k": {
   "x-review": "machine",
@@ -5975,6 +6040,11 @@
  "@js.2309k4jhst": {
   "x-review": "machine",
   "x-source": "99ec08944c"
+ },
+ "js.231hbrwsvbe": "Спалах",
+ "@js.231hbrwsvbe": {
+  "x-review": "machine",
+  "x-source": "38e9b86f2b"
  },
  "js.232hnla7mfp": "BTJD {n0} · {n1} ppm · {n2} год · SNR {n3} · кандидат, непідтверджений",
  "@js.232hnla7mfp": {
@@ -6046,6 +6116,11 @@
   "x-review": "machine",
   "x-source": "f7b940e003"
  },
+ "js.23gvqgvfk3h": "eps Eridani",
+ "@js.23gvqgvfk3h": {
+  "x-review": "machine",
+  "x-source": "9a7f2f950b"
+ },
  "js.23iejmgi1b9": "<span class=\"word cand\">кандидат</span><span class=\"word s-pass\">пройшов перевірку</span><b class=\"fig\">1d. pi Men, спад {n0}.</b> <span class=\"sid mono\">збережений id tess-04b815001aa6-{n1}.</span> Спад при BTJD {n2}, {n3} ppm, {n4} h, SNR {n5}. Консенсусний інтервал: BTJD від {n6} до {n7}. Відмітили {n8} з {n9} рецензентів ({n10} з {n11} Sentinels, {n12} з {n13} Probes). Лежить на BLS-періоді {n14} діб (t0 BTJD {n15}). Пройшов перевірку. Архів: узгоджується з pi Men c: ΔP {n16}%, часовий зсув за приміткою про валідацію: у середньому {n17} min за {n18} епох. Лише значення з архіву. Ця сторінка не заявляє про виявлення.",
  "@js.23iejmgi1b9": {
   "x-review": "machine",
@@ -6091,6 +6166,16 @@
   "x-review": "machine",
   "x-source": "09e2a66ca8"
  },
+ "js.248br10ykpu": "exoplanet.eu подає її зі статусом «Опубліковано в рецензованій статті», знайдена методом первинного транзиту у {n0}; запис оновлено {n1}-{n2}-{n3}.",
+ "@js.248br10ykpu": {
+  "x-review": "machine",
+  "x-source": "2c5e82e81c"
+ },
+ "js.248fckis1nx": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">запуск tess-pi-men-s1 · записів: {n1}</span>",
+ "@js.248fckis1nx": {
+  "x-review": "machine",
+  "x-source": "91c42c8548"
+ },
  "js.249yvv2lisi": "Матеріали справи не вдалося завантажити в цьому поданні. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-4b369d3c6f09-004\">Відкрийте їх на окремій сторінці.</a>",
  "@js.249yvv2lisi": {
   "x-review": "machine",
@@ -6115,16 +6200,6 @@
  "@js.24fb2cdopd2": {
   "x-review": "machine",
   "x-source": "f76311c5f2"
- },
- "js.24fnxph6nhs": "NASA Exoplanet Archive, таблиця ps (default_flag = {n0}), як записано в docs/results/pi_men_validation.md скриптом scripts/validate_known_planets.py (живий запит до архіву, коміт 0f6dbdc). Там записано лише {s0}, тож наведено лише {s1}; час середини її транзиту не записано, тому зсув для кожної епохи тут не обчислюється; натомість наведено середній часовий зсув із примітки про валідацію ({n1} min за {n2} з {n3} епох). Замініть його результатом 'setuhq crossmatch runs/tess-pi-men-s1', коли архів відповість., записано <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4} жовт. {n5}, {n6} UTC</time> (коміт 0f6dbdc) у docs/results/pi_men_crossmatch.json; власне перехресне зіставлення цього запуску не виконалося (збережена помилка, дослівно: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
- "@js.24fnxph6nhs": {
-  "x-review": "machine",
-  "x-source": "2709781e4a"
- },
- "js.24gwd0vxjg3": "<b>Ліцензія.</b> Дані CHEOPS і похідні від них результати залишаються на умовах ESA: дані в ESA Space Science Archives поширюються за ліцензією CC BY-NC {n0} IGO, а будь-яке комерційне використання, зокрема таке, що опосередковано приносить фінансову вигоду, потребує попереднього дозволу ESA (data.licences@esa.int). Комерційна ліцензія SetuHQ і SetuHQ Pro охоплюють код і сервіси SetuHQ, але не дані CHEOPS і не похідні від них результати.",
- "@js.24gwd0vxjg3": {
-  "x-review": "machine",
-  "x-source": "027b9f1def"
  },
  "js.24jrww0gdzl": "Уявлення художника · кам'яна, ультрагаряча · Радіус {n0} R⊕ (exoplanet.eu) менший за {n1} R⊕, тому її намальовано кам'яною. Teq {n2} K, обчислена з a, R★ і Teff, лежить в ультрагарячому діапазоні. Склад не виміряно. Джерело: exoplanet.eu, отримано {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Як намальовано зображення ›</a>",
  "@js.24jrww0gdzl": {
@@ -6256,11 +6331,6 @@
   "x-review": "machine",
   "x-source": "f3d6bee517"
  },
- "js.25v5j8df6ue": "Початкові значення: N★ = {n0} M-карликів, достатньо яскравих для JWST, F_Q · F_HZ = {n1}, F_O = {n2}, F_L = {n3}, F_S = {n4}, що дає N ≈ {n5}. Їх узято з вторинних викладів доповіді та статті Seager, тут їх не звіряли зі статтею; F_L = {n6} — це припущення, а не вимірювання. Частка зони, придатної для життя, посилається на рисунки розділу {s0}.",
- "@js.25v5j8df6ue": {
-  "x-review": "machine",
-  "x-source": "0c766c3029"
- },
  "js.25vec9roei3": "tess-f28323a4aef6-{n0} · {s0} · відома планета",
  "@js.25vec9roei3": {
   "x-review": "machine",
@@ -6276,10 +6346,10 @@
   "x-review": "machine",
   "x-source": "8e26be0f72"
  },
- "js.2688tn5ytet": "{n0} збережених вимірювань яскравості за {n1} днів. Панель ({n2} Sentinels і {n3} Probes, без людей) відмітила {n4} провалів, які код перевірки згрупував у {n5} сигналів: {n6} пройшли перевірку, {n7} позначені, {n8} відхилені. Кожен провал — власний кандидат цього конвеєра, не підтверджений як незалежне виявлення; збіг з архівом означає, що планета вже відома, а не що цей запуск її підтвердив. Збережене перехресне зіставлення з архівом (збережена копія в репозиторії) показує, що головний сигнал узгоджується з pi Men c, опублікованою планетою: це відома планета, а не відкриття. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
- "@js.2688tn5ytet": {
+ "js.267fwx4rrxg": "каталог",
+ "@js.267fwx4rrxg": {
   "x-review": "machine",
-  "x-source": "737d181458"
+  "x-source": "d2504e52b8"
  },
  "js.269wyn7yehy": "Перший продукт фотохімії, помічений в атмосфері екзопланети: світло зорі запускає хімічні реакції.",
  "@js.269wyn7yehy": {
@@ -6311,6 +6381,16 @@
   "x-review": "machine",
   "x-source": "ad1170b8cc"
  },
+ "js.26jkejmj23b": "Зображення <span class=\"mono\" data-cmn=\"imaging\">{n0}</span>",
+ "@js.26jkejmj23b": {
+  "x-review": "machine",
+  "x-source": "d8c9828b8c"
+ },
+ "js.26jwv5q9ef3": "Затемнювана подвійна",
+ "@js.26jwv5q9ef3": {
+  "x-review": "machine",
+  "x-source": "8df8a39f8e"
+ },
  "js.26lvjxq29mz": "Сховати «Найкращі кандидати»",
  "@js.26lvjxq29mz": {
   "x-review": "machine",
@@ -6331,6 +6411,16 @@
   "x-review": "machine",
   "x-source": "eaacfcf2d5"
  },
+ "js.26pv2ld5al": "YZ Cet d",
+ "@js.26pv2ld5al": {
+  "x-review": "machine",
+  "x-source": "92120cfb4f"
+ },
+ "js.26pzvkix2mc": "Сторінка зорі ›",
+ "@js.26pzvkix2mc": {
+  "x-review": "machine",
+  "x-source": "e1fbb1c217"
+ },
  "js.26sdy1tcm5m": "Файл справи не вдалося завантажити в цьому поданні. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-005\">Відкрийте його на окремій сторінці.</a>",
  "@js.26sdy1tcm5m": {
   "x-review": "machine",
@@ -6340,11 +6430,6 @@
  "@js.26seob0sso6": {
   "x-review": "machine",
   "x-source": "f2c44d90f7"
- },
- "js.26svlut4n1y": "SetuHQ читає криві блиску TESS: по одній зорі за раз, приблизно {n0} днів на сектор. <a href=\"/explore/galaxy/?layers=tess\">Дивіться покриття неба TESS ›</a>",
- "@js.26svlut4n1y": {
-  "x-review": "machine",
-  "x-source": "7675cbd084"
  },
  "js.26upx7lksz5": "Висновок TFOPWG: CP (планета, за даними команд подальших спостережень), оновлено {n0}-{n1}-{n2}",
  "@js.26upx7lksz5": {
@@ -6366,11 +6451,6 @@
   "x-review": "machine",
   "x-source": "5332f7c6da"
  },
- "js.26zs3bh9z5t": "висока: дві або більше інструментальних ознак; середня: одна; низька: лише пояснення панелі.",
- "@js.26zs3bh9z5t": {
-  "x-review": "machine",
-  "x-source": "eaf598efdb"
- },
  "js.27070gzrt8g": "numpy",
  "@js.27070gzrt8g": {
   "x-review": "machine",
@@ -6391,20 +6471,10 @@
   "x-review": "machine",
   "x-source": "bfeaf40123"
  },
- "js.275p8l49gz9": "Метод відкриття",
- "@js.275p8l49gz9": {
-  "x-review": "machine",
-  "x-source": "7f31ff7ee3"
- },
  "js.27d1pzwqqg5": "{n0} провалів ({n1} кандидатів, {n2} позначених). Кожен провал названо за результатом перевірки: кандидат пройшов перевірку й не підтверджений; позначений провал залишається відкритим; відхилений провал не є кандидатом. Відхилені та позначені провали збережено навмисно, щоб читач міг бачити, що вирішила перевірка і чому. Кожне зображення — це сліпо закодований графік, який бачили рецензенти, байт у байт.",
  "@js.27d1pzwqqg5": {
   "x-review": "machine",
   "x-source": "f52c6bc4a9"
- },
- "js.27eugex8tue": "Художнє зображення: вигляд neptune-warm для радіуса від {n0} до {n1} R⊕, Teq від {n2} до {n3} K: бірюзовий серпанок. Кадр цього вигляду, а не конкретної планети.",
- "@js.27eugex8tue": {
-  "x-review": "machine",
-  "x-source": "2d58d10911"
  },
  "js.27fyvwqvgk2": "id tic197575514-s1-dip-{n0} · об'єкт tess-b9ee497ace57<br>крива блиску sha256 6cdb3d033119539b3dd9a07e89379098ee77c137584a467d88efe3b74e7c0913<br>код … · конфігурація a9d34c7079563183…<br>джерело sector_0001.json.gz",
  "@js.27fyvwqvgk2": {
@@ -6416,10 +6486,20 @@
   "x-review": "machine",
   "x-source": "b5d59f3f13"
  },
+ "js.27iuqqo6cr": "Probe · Обережний <span class=\"mono idtag\" title=\"reviewer id\">volunteer-cautious</span> <span class=\"tag sim\">Probe · не людина</span>",
+ "@js.27iuqqo6cr": {
+  "x-review": "machine",
+  "x-source": "228d32446b"
+ },
  "js.27jlutunzon": "Художнє зображення {s0}: газовий гігант у помірній смузі, {n0} радіусів Землі, {n1} K.",
  "@js.27jlutunzon": {
   "x-review": "machine",
   "x-source": "de7cd804ae"
+ },
+ "js.27kx8tn6apn": "Хронометраж і фаза",
+ "@js.27kx8tn6apn": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
  },
  "js.27n9asbnx55": "Упорядкувати «Найкращі кандидати»",
  "@js.27n9asbnx55": {
@@ -6460,6 +6540,11 @@
  "@js.27y132h50m1": {
   "x-review": "machine",
   "x-source": "734a43293e"
+ },
+ "js.280bcq6hfxu": "Періоди Kepler-{n0} b і c",
+ "@js.280bcq6hfxu": {
+  "x-review": "machine",
+  "x-source": "de18f16db8"
  },
  "js.283unm3lnxq": "Sentinel · Скептик <span class=\"mono\">claude-skeptic</span>",
  "@js.283unm3lnxq": {
@@ -6505,11 +6590,6 @@
  "@js.28hrtzpigjb": {
   "x-review": "machine",
   "x-source": "1f2470675c"
- },
- "js.28ictyar11j": "Навчальна вправа, а не внесок у науку. Ваші відповіді залишаються в цьому браузері й нікуди не збираються та не надсилаються; провали — це збережені провали з прикладних запусків SetuHQ, щодо яких її перевірка вже ухвалила рішення.",
- "@js.28ictyar11j": {
-  "x-review": "machine",
-  "x-source": "5a6ae14a11"
  },
  "js.28iqhboa34b": "Молекула з N атомів має 3N − {n0} способів коливатися (3N − {n1}, якщо вона лінійна): вода має три, вуглекислий газ — чотири (його згинальне коливання трапляється двічі, під прямим кутом), метан — дев'ять. Мода поглинає інфрачервоне світло, лише якщо вона змінює дипольний момент молекули. Тому симетричне валентне коливання CO₂ ({n2} µm), валентне коливання O₂ і дві з чотирьох фундаментальних мод метану неактивні в інфрачервоному діапазоні. Смуги, які утворюють ці моди, — саме ті, що позначені в розділі «Читання атмосфер»: два валентні коливання води при {n3} і {n4} µm утворюють її смугу {n5} µm, ν₃ метану — смугу {n6} µm, асиметричне валентне коливання CO₂ — смугу {n7} µm, а валентне коливання CO — смугу {n8} µm.",
  "@js.28iqhboa34b": {
@@ -6726,6 +6806,11 @@
   "x-review": "machine",
   "x-source": "258011d66c"
  },
+ "js.2a56wvwnc5o": "HN Lib",
+ "@js.2a56wvwnc5o": {
+  "x-review": "machine",
+  "x-source": "6993fd96af"
+ },
  "js.2a9g9u8ogm5": "Поле в джерелі",
  "@js.2a9g9u8ogm5": {
   "x-review": "machine",
@@ -6746,6 +6831,11 @@
   "x-review": "machine",
   "x-source": "50621e7fe0"
  },
+ "js.2ad5lvvd821": "Gaia-{n0} b ›",
+ "@js.2ad5lvvd821": {
+  "x-review": "machine",
+  "x-source": "fb287f3d63"
+ },
  "js.2ahfv5ecid": "id tic177082055-s1-dip-{n0} · об'єкт tess-9ff47a35552d<br>крива блиску sha256 ad0dc350aa11e6edee9ef4c25cad43f094f52a98ab9010ca3c0ec0aaadafe861<br>код … · конфігурація a9d34c7079563183…<br>джерело sector_0001.json.gz",
  "@js.2ahfv5ecid": {
   "x-review": "machine",
@@ -6761,11 +6851,6 @@
   "x-review": "machine",
   "x-source": "88117143a4"
  },
- "js.2aj3droma9q": "каталог і цитовані статті, числа в таблиці кожного розділу",
- "@js.2aj3droma9q": {
-  "x-review": "machine",
-  "x-source": "3cf2224205"
- },
  "js.2apzy7fqrqe": "Порівняння з архівом: у межах допуску немає жодної архівної планети. Лише архівні значення. Ця сторінка не заявляє про виявлення.",
  "@js.2apzy7fqrqe": {
   "x-review": "machine",
@@ -6780,11 +6865,6 @@
  "@js.2avziyt7hbv": {
   "x-review": "machine",
   "x-source": "5eab0aea69"
- },
- "js.2b0kq1u0yok": "<b>Валентне коливання ν</b> · {n0} µm · активне в інфрачервоному діапазоні · зображено ×{n1} · <a href=\"/how-it-works/atmospheres/\">смуга {n2} µm у розділі «Читання атмосфер» ›</a>",
- "@js.2b0kq1u0yok": {
-  "x-review": "machine",
-  "x-source": "9f2fb710c1"
  },
  "js.2b1w1bhtwi6": "Висота шкали WASP-{n0} b (μ = {n1})",
  "@js.2b1w1bhtwi6": {
@@ -6861,6 +6941,11 @@
   "x-review": "machine",
   "x-source": "1dfa560d9d"
  },
+ "js.2brjxhf24py": "{n0} Eri d",
+ "@js.2brjxhf24py": {
+  "x-review": "machine",
+  "x-source": "3f3cad2fcc"
+ },
  "js.2btmnnqnpty": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">3k. <span class=\"mono\">tess-03a9e901682f-{n0}</span>.</b> Провал на BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Відмічено {n5} рецензентами (каталог не зберігає розмір панелі чи консенсусний інтервал). Лежить на BLS-періоді {n6} днів із {n7} транзитами. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
  "@js.2btmnnqnpty": {
   "x-review": "machine",
@@ -6870,6 +6955,11 @@
  "@js.2bvrlx4bioc": {
   "x-review": "machine",
   "x-source": "18fccc4254"
+ },
+ "js.2c181tpjjvc": "Luyten's Star b",
+ "@js.2c181tpjjvc": {
+  "x-review": "machine",
+  "x-source": "23d6b3c963"
  },
  "js.2c70ie4ixet": "Ілюстрації",
  "@js.2c70ie4ixet": {
@@ -6906,11 +6996,6 @@
   "x-review": "machine",
   "x-source": "439b98f6cf"
  },
- "js.2cazwqoadoq": "Відкладені EB із вторинним затемненням у каталозі та збігом періоду: фаза вторинного затемнення в межах {n0} від каталожної, нижня межа {n1}% інтервалу &gt;= {n2} (вторинне затемнення, яке ми не знаходимо, вважається промахом)",
- "@js.2cazwqoadoq": {
-  "x-review": "machine",
-  "x-source": "71d0ca28d6"
- },
  "js.2cc0e9v7uvs": "<i style=\"background:#FF6961\"></i>{n0} Peg b",
  "@js.2cc0e9v7uvs": {
   "x-review": "machine",
@@ -6930,6 +7015,11 @@
  "@js.2cektxt2twi": {
   "x-review": "machine",
   "x-source": "4662bb50f1"
+ },
+ "js.2cg943adi3e": "Рейтинг за реальними TOI ›",
+ "@js.2cg943adi3e": {
+  "x-review": "machine",
+  "x-source": "cd1d193d20"
  },
  "js.2cjkfyfegp8": "Відмітки (✓ враховано)",
  "@js.2cjkfyfegp8": {
@@ -6955,6 +7045,16 @@
  "@js.2cqrtx9qqhe": {
   "x-review": "machine",
   "x-source": "2e5aaa9889"
+ },
+ "js.2cs8n7gldpd": "SetuHQ Pro",
+ "@js.2cs8n7gldpd": {
+  "x-review": "machine",
+  "x-source": "fcca2f700b"
+ },
+ "js.2cserx0e05n": "Proxima Centauri d",
+ "@js.2cserx0e05n": {
+  "x-review": "machine",
+  "x-source": "8213996948"
  },
  "js.2ct9t5541vf": "Дві команди незалежно зафіксували проходження тієї самої планети перед її зорею.",
  "@js.2ct9t5541vf": {
@@ -6986,11 +7086,6 @@
   "x-review": "machine",
   "x-source": "00265f6a9d"
  },
- "js.2d5lr3nor8a": "<b>Дані: The Extrasolar Planets Encyclopaedia (exoplanet.eu), отримано {n0}-{n1}-{n2}.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. NASA Exoplanet Archive був недоступний під час отримання цього списку, тому він походить лише з exoplanet.eu. exoplanet.eu вказує як підтверджений кожен об'єкт, який вважає планетою: тіла масою до {n3} мас Юпітера (у межах їхньої похибки), опубліковані або оголошені. Його список ширший, ніж у NASA Exoplanet Archive, який містить об'єкти масою до {n4} мас Юпітера з рецензованих статей. Значення, якого джерело не надає, позначено як «не збережено».",
- "@js.2d5lr3nor8a": {
-  "x-review": "machine",
-  "x-source": "4ddb24b25e"
- },
  "js.2d5x5vtgqx3": "{n0} {n1} / {n2} MJ <span class=\"na\">· теоретична оцінка</span>",
  "@js.2d5x5vtgqx3": {
   "x-review": "machine",
@@ -7006,11 +7101,6 @@
   "x-review": "machine",
   "x-source": "a2e862e82e"
  },
- "js.2d87qst4jdj": "Пошуковий каталог docs/discoveries/catalog.json, оновлено {n0}-{n1}-29T00:{n2}+{n3}, записів: {n4}.",
- "@js.2d87qst4jdj": {
-  "x-review": "machine",
-  "x-source": "c5e3fcc2c6"
- },
  "js.2d8lw4ky362": "Режим",
  "@js.2d8lw4ky362": {
   "x-review": "machine",
@@ -7021,16 +7111,6 @@
   "x-review": "machine",
   "x-source": "d356f1d9dd"
  },
- "js.2d97owpwxwe": "<b>ν₃ асиметричне валентне коливання</b> · {n0} µm · активне в ІЧ-діапазоні · намальовано ×{n1} · поза вікном {n2}–{n3} µm для {s0}",
- "@js.2d97owpwxwe": {
-  "x-review": "machine",
-  "x-source": "426504275f"
- },
- "js.2d9cg0jtcpa": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Крива блиску",
- "@js.2d9cg0jtcpa": {
-  "x-review": "machine",
-  "x-source": "6c965e2b87"
- },
  "js.2dbh8x9y8de": "Період",
  "@js.2dbh8x9y8de": {
   "x-review": "machine",
@@ -7040,6 +7120,11 @@
  "@js.2dcer0ylq6r": {
   "x-review": "machine",
   "x-source": "731f74e2f3"
+ },
+ "js.2dcmry1hh6z": "Kepler-{n0} c ›",
+ "@js.2dcmry1hh6z": {
+  "x-review": "machine",
+  "x-source": "afae7ed80f"
  },
  "js.2deel2ps6ig": "τ Boötis, непевні сплески на {n0}–{n1} MHz",
  "@js.2deel2ps6ig": {
@@ -7126,11 +7211,6 @@
   "x-review": "machine",
   "x-source": "63210331f9"
  },
- "js.2eluxgdu08m": "Числа в цьому розділі",
- "@js.2eluxgdu08m": {
-  "x-review": "machine",
-  "x-source": "2d0a4d13b4"
- },
  "js.2en1x3cmvoa": "{n0} Peg b: K за нашою формулою",
  "@js.2en1x3cmvoa": {
   "x-review": "machine",
@@ -7151,15 +7231,10 @@
   "x-review": "machine",
   "x-source": "dcfc6e0cb1"
  },
- "js.2etjlw57rtv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Галактика",
- "@js.2etjlw57rtv": {
+ "js.2ew51rdrin6": "Провал {n0} з {n1}",
+ "@js.2ew51rdrin6": {
   "x-review": "machine",
-  "x-source": "5dbc898c01"
- },
- "js.2eujifl0hnp": "високий: невідповідність парних/непарних або вторинне затемнення; середній: глибина, V-подібна форма, невідповідність густини для короткого періоду або період затемнення; низький: лише причина, вказана панеллю.",
- "@js.2eujifl0hnp": {
-  "x-review": "machine",
-  "x-source": "4d1f3f27e2"
+  "x-source": "50a1297714"
  },
  "js.2exbs04rc3y": "Оптичне зображення «планети», яке пізніше пояснили як хмару пилу, що розширюється після зіткнення.",
  "@js.2exbs04rc3y": {
@@ -7206,6 +7281,11 @@
   "x-review": "machine",
   "x-source": "fd6553a3e6"
  },
+ "js.2fkkbj5qfsy": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s2</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.2fkkbj5qfsy": {
+  "x-review": "machine",
+  "x-source": "26c1586964"
+ },
  "js.2fmavt7k5j5": "Перемістити «Найкращі кандидати» вгору",
  "@js.2fmavt7k5j5": {
   "x-review": "machine",
@@ -7226,11 +7306,6 @@
   "x-review": "machine",
   "x-source": "eb8caa0866"
  },
- "js.2ftwr4ebakn": "<b>Реальні дані з посиланнями на джерела.</b> Збережені вимірювання, згруповані або згорнуті за фазою так, як збережено.",
- "@js.2ftwr4ebakn": {
-  "x-review": "machine",
-  "x-source": "349da91d3d"
- },
  "js.2fu72b3rkst": "<b>ν₂ згин (два, під прямим кутом)</b> · {n0} µm · активне в ІЧ · намальовано ×{n1} · поза вікном {n2}–{n3} µm сторінки «Читання атмосфер»",
  "@js.2fu72b3rkst": {
   "x-review": "machine",
@@ -7245,6 +7320,11 @@
  "@js.2fy47ry25d8": {
   "x-review": "machine",
   "x-source": "745f476a5f"
+ },
+ "js.2fye5c973kf": "позначено",
+ "@js.2fye5c973kf": {
+  "x-review": "machine",
+  "x-source": "d9b2fe68b6"
  },
  "js.2fyxww7qwgs": "Сонце",
  "@js.2fyxww7qwgs": {
@@ -7296,6 +7376,11 @@
   "x-review": "machine",
   "x-source": "9dbffce8e5"
  },
+ "js.2gbggujxcvs": "немає",
+ "@js.2gbggujxcvs": {
+  "x-review": "machine",
+  "x-source": "140bedbf9c"
+ },
  "js.2gbrnw08yjn": "запис<span aria-hidden=\"true\"></span>",
  "@js.2gbrnw08yjn": {
   "x-review": "machine",
@@ -7325,6 +7410,11 @@
  "@js.2gz7mzl8po": {
   "x-review": "machine",
   "x-source": "8c1759d61c"
+ },
+ "js.2jt13jfskg": "Lalande {n0} d",
+ "@js.2jt13jfskg": {
+  "x-review": "machine",
+  "x-source": "142bf3b80d"
  },
  "js.2jxe56kfgj": "Пошук (/)",
  "@js.2jxe56kfgj": {
@@ -7386,11 +7476,6 @@
   "x-review": "machine",
   "x-source": "c95d84d8a8"
  },
- "js.32jc7egs68": "<b>{n0}</b> з {n1} планет зі збереженою відстанню в exoplanet.eu знайдено методом променевих швидкостей (перший зазначений метод). <a href=\"/explore/galaxy/?method=rv\">Показати їх на карті Галактики ›</a>",
- "@js.32jc7egs68": {
-  "x-review": "machine",
-  "x-source": "3d287892f0"
- },
  "js.33d16tnf44": "Завантаження карти з {n0} планет…",
  "@js.33d16tnf44": {
   "x-review": "machine",
@@ -7436,11 +7521,6 @@
   "x-review": "machine",
   "x-source": "0b61a77801"
  },
- "js.3d44eg16pj": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Положення на небі",
- "@js.3d44eg16pj": {
-  "x-review": "machine",
-  "x-source": "4f904b0fbc"
- },
  "js.3dua6scdtg": "{n0} проміжків на {n1} об'єктах",
  "@js.3dua6scdtg": {
   "x-review": "machine",
@@ -7465,6 +7545,11 @@
  "@js.3iebm2jaty": {
   "x-review": "machine",
   "x-source": "0455ae374d"
+ },
+ "js.3kjkwe2xdx": "цілей: {n0} · відомих: {n1} · помилок: {n2}",
+ "@js.3kjkwe2xdx": {
+  "x-review": "machine",
+  "x-source": "15dfef1f1e"
  },
  "js.3o5vubwdr": "{n0} dex",
  "@js.3o5vubwdr": {
@@ -7496,10 +7581,10 @@
   "x-review": "machine",
   "x-source": "770680c692"
  },
- "js.3tu868pwb6": "TIC {n0} · позначений для перегляду, відкрито",
- "@js.3tu868pwb6": {
+ "js.3ub2we0j81": "Teegarden's",
+ "@js.3ub2we0j81": {
   "x-review": "machine",
-  "x-source": "58e453def1"
+  "x-source": "d49a311c27"
  },
  "js.3wqc4ug47j": "Методи: Читання атмосфер ›",
  "@js.3wqc4ug47j": {
@@ -7541,11 +7626,6 @@
   "x-review": "machine",
   "x-source": "8e52c2a95a"
  },
- "js.45gidy2yfd": "Нижня межа: базова модель лише на метаданих зовсім не використовує кривих блиску, лише публічний номер TOI, період, тривалість, похибки ефемериди та епоху, з логістичною регресією, підібраною на половині для налаштування. Метод, який її не перевершує, не показує, що читає криві блиску краще, ніж власні метадані каталогу передбачають статуси.",
- "@js.45gidy2yfd": {
-  "x-review": "machine",
-  "x-source": "d4a42c8dbc"
- },
  "js.46fy9vwje9": "вторинне затемнення, будь-яка фаза",
  "@js.46fy9vwje9": {
   "x-review": "machine",
@@ -7580,11 +7660,6 @@
  "@js.4axuq93fet": {
   "x-review": "machine",
   "x-source": "b4faa12d85"
- },
- "js.4b8yjime2n": "Уявлення художника: вигляд скелястої помірної планети для радіуса менше {n0} R⊕, Teq від {n1} до {n2} K: сіро-коричневі скелі й тонкий нейтральний обідок; без океанів, континентів і хмар. Це кадр цього вигляду, а не конкретної планети.",
- "@js.4b8yjime2n": {
-  "x-review": "machine",
-  "x-source": "9c1d8d98c4"
  },
  "js.4ccm3arc4r": "{n0} планет в exoplanet.eu · збережений тип K0V · клас K за Teff (найближчий K0V)",
  "@js.4ccm3arc4r": {
@@ -7646,15 +7721,15 @@
   "x-review": "machine",
   "x-source": "5caba079cd"
  },
+ "js.4sxy414d9c": "вибірка",
+ "@js.4sxy414d9c": {
+  "x-review": "machine",
+  "x-source": "af2bdbe1aa"
+ },
  "js.4t9xjok0e6": "Уявлення художника · скеля, опромінення не обчислюється · Радіус не збережено; маса {n0} M⊕ (exoplanet.eu) менша за {n1} M⊕, тому планету намальовано скелястою. Радіус не виміряно: не в масштабі. Опромінення не обчислюється: нейтральні кольори. Склад не виміряно. Джерело: exoplanet.eu, отримано {n2}-{n3}-{n4}. <a href=\"/docs/pictures/\">Як малюються зображення ›</a>",
  "@js.4t9xjok0e6": {
   "x-review": "machine",
   "x-source": "3975c0da56"
- },
- "js.4u1k8v564x": "Пік періодограми з Baluev FAP нижче {n0} і напівамплітудою щонайменше в {n1}× більшою за розкид {n2}-хвилинних бінів, когерентний: той самий період (у межах {n3}%) є найкращим піком кожної половини кривої блиску і не лежить у межах {n4}% від найдовшого досліджуваного періоду; період, спільний для {n5} або більше зір сектора, є систематичним. Провал тривалістю {n6} цього періоду або більше є його мінімумом; так само й провал, який половина ваги панелі назвала зоряною змінністю.",
- "@js.4u1k8v564x": {
-  "x-review": "machine",
-  "x-source": "9c7dd08245"
  },
  "js.4v6zv9397m": "достовірність {n0}",
  "@js.4v6zv9397m": {
@@ -7681,10 +7756,10 @@
   "x-review": "machine",
   "x-source": "0e17d0a129"
  },
- "js.50cw8uea6": "Відкладені EB: період у межах {n0}% від каталожного (непозначена EB вважається пропуском), нижня межа {n1}% інтервалу &gt;= {n2}",
- "@js.50cw8uea6": {
+ "js.4xy18gdl7w": "Каталог оновлено <time datetime=\"2026-10-30T06:34:41+00:00\" title=\"2026-10-30T06:34:41+00:00\">{n0} жовт. {n1}, {n2} UTC</time>.",
+ "@js.4xy18gdl7w": {
   "x-review": "machine",
-  "x-source": "75081a4bd7"
+  "x-source": "d9bccf18dc"
  },
  "js.537weqdx92": "TIC {n0} · P {n1} д · {n2} ppm · SNR {n3}",
  "@js.537weqdx92": {
@@ -7711,15 +7786,25 @@
   "x-review": "machine",
   "x-source": "d40d0e920c"
  },
+ "js.5cuofh1x2k": "не відрізняється від шуму в цьому фрагменті",
+ "@js.5cuofh1x2k": {
+  "x-review": "machine",
+  "x-source": "7dfa2254b3"
+ },
+ "js.5eim8yf4c": "Lalande {n0}",
+ "@js.5eim8yf4c": {
+  "x-review": "machine",
+  "x-source": "7a73b4b548"
+ },
+ "js.5j6snvvuuk": "Компонування",
+ "@js.5j6snvvuuk": {
+  "x-review": "machine",
+  "x-source": "a511909161"
+ },
  "js.5k1okfy1y2": "Сайт",
  "@js.5k1okfy1y2": {
   "x-review": "machine",
   "x-source": "fa7955814e"
- },
- "js.5limoap242": "<b>ν₄ асиметричне деформаційне (дві)</b> · {n0} мкм · активне в інфрачервоному діапазоні · намальовано ×{n1} · за межами вікна {n2}–{n3} мкм {s0}",
- "@js.5limoap242": {
-  "x-review": "machine",
-  "x-source": "c1aa83b41c"
  },
  "js.5m1n02zglj": "Ідентифікація вуглекислого газу в атмосфері екзопланети",
  "@js.5m1n02zglj": {
@@ -7745,11 +7830,6 @@
  "@js.5qqcw21as6": {
   "x-review": "machine",
   "x-source": "f4a2329657"
- },
- "js.5tmt3hrss9": "межа класу розміру в каталозі (газовий гігант — {n0} R⊕ або більше)",
- "@js.5tmt3hrss9": {
-  "x-review": "machine",
-  "x-source": "7807f33d37"
  },
  "js.5x2cvaysve": "Напівамплітуда RV K",
  "@js.5x2cvaysve": {
@@ -7786,6 +7866,11 @@
   "x-review": "machine",
   "x-source": "bf11fecb30"
  },
+ "js.64gjc6ygey": "Затулення світла зорі",
+ "@js.64gjc6ygey": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
  "js.65pxt8ib9c": "Суперюпітер, сфотографований навколо подвійної зорі.",
  "@js.65pxt8ib9c": {
   "x-review": "machine",
@@ -7815,11 +7900,6 @@
  "@js.6j56seqj8": {
   "x-review": "machine",
   "x-source": "7e69af06bb"
- },
- "js.6n8ndyybfz": "Подання містить для кожної зорі зі своєї області події, які його метод виявив на реальній кривій блиску та на контролях з інвертованим потоком і перемішаними блоками (час, тривалість, період, власний вердикт проходження і прапорці). Таблиця лідерів вирішує, які події лежать на ефемериді TOI (score_star і match_toi бенчмарку), і сама підраховує хибні тривоги на контролях. Самостійно повідомлені результати не приймаються.",
- "@js.6n8ndyybfz": {
-  "x-review": "machine",
-  "x-source": "7c4b789f62"
  },
  "js.6qolz1acje": "Джерело: як зазначено в підписі.",
  "@js.6qolz1acje": {
@@ -7876,6 +7956,11 @@
   "x-review": "machine",
   "x-source": "217afade12"
  },
+ "js.78llqc69gh": "Proxima Centauri b",
+ "@js.78llqc69gh": {
+  "x-review": "machine",
+  "x-source": "c5626ab780"
+ },
  "js.78r4r7906c": "На Землі це виробляють майже лише морські організми.",
  "@js.78r4r7906c": {
   "x-review": "machine",
@@ -7911,15 +7996,15 @@
   "x-review": "machine",
   "x-source": "1aca80e8b5"
  },
- "js.7czfymv28r": "художнє уявлення з таблиці вигляду; розмір у масштабі лише тоді, коли збережено радіус",
- "@js.7czfymv28r": {
-  "x-review": "machine",
-  "x-source": "326ba9455b"
- },
  "js.7f3lidyc7s": "Відтворення транзиту",
  "@js.7f3lidyc7s": {
   "x-review": "machine",
   "x-source": "40686f7e63"
+ },
+ "js.7i6tnzxffe": "Wolf {n0} b",
+ "@js.7i6tnzxffe": {
+  "x-review": "machine",
+  "x-source": "03eb21d076"
  },
  "js.7nrzzc658q": "сліпо закодовані об'єкти",
  "@js.7nrzzc658q": {
@@ -7976,6 +8061,11 @@
   "x-review": "machine",
   "x-source": "3e17a94f61"
  },
+ "js.87fibqymmi": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">pi Men c</a></b> · зоря-господар <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> · P {n0} d · транзитна",
+ "@js.87fibqymmi": {
+  "x-review": "machine",
+  "x-source": "f7c50ba965"
+ },
  "js.886176wzks": "Планет в exoplanet.eu: {n0} · збережений тип F6V · клас F за Teff (найближчий F5V)",
  "@js.886176wzks": {
   "x-review": "machine",
@@ -8026,11 +8116,6 @@
   "x-review": "machine",
   "x-source": "f39f7254a3"
  },
- "js.8v4t373n3v": "<span class=\"tag cand\" title=\"candidate, unconfirmed\">кандидат</span> середина {n0} BTJD",
- "@js.8v4t373n3v": {
-  "x-review": "machine",
-  "x-source": "fd4ae8b1e8"
- },
  "js.8w8ak8xloi": "BTJD {n0} · {n1} h · глибина {n2} ppm · SNR {n3} · P {n4} d (транзитів: {n5})",
  "@js.8w8ak8xloi": {
   "x-review": "machine",
@@ -8040,11 +8125,6 @@
  "@js.8wdver3jml": {
   "x-review": "machine",
   "x-source": "a4c44f4a8f"
- },
- "js.8wmiyv0zzd": "Художнє уявлення: вигляд «холодна кам'яна» для радіуса менше {n0} R⊕ і Teq нижче {n1} K: блідо-сіра порода, льодові шапки до широти {n2}°, атмосфери немає. Кадр вигляду, а не конкретної планети.",
- "@js.8wmiyv0zzd": {
-  "x-review": "machine",
-  "x-source": "c1497fc8a0"
  },
  "js.8wxh5amfez": "Субнептун",
  "@js.8wxh5amfez": {
@@ -8056,10 +8136,20 @@
   "x-review": "machine",
   "x-source": "10af6c250a"
  },
+ "js.905p7mrgke": "Ross {n0} b",
+ "@js.905p7mrgke": {
+  "x-review": "machine",
+  "x-source": "eec00b75d8"
+ },
  "js.90yyx3asv8": "{n0} Psc c",
  "@js.90yyx3asv8": {
   "x-review": "machine",
   "x-source": "f0cbc33340"
+ },
+ "js.92zm5mb6ic": "запис",
+ "@js.92zm5mb6ic": {
+  "x-review": "machine",
+  "x-source": "923fe53966"
  },
  "js.94m77w54ls": "Його збережене обґрунтування для об'єкта S2 (BTJD від {n0} до {n1}), одне на об'єкт, а не на провал. Він позначив цей провал. Sentinel — це модель ШІ (Claude Code CLI (Claude, Anthropic) · default), а не людина.",
  "@js.94m77w54ls": {
@@ -8121,15 +8211,15 @@
   "x-review": "machine",
   "x-source": "6c293b1c67"
  },
- "js.9g29b1hwza": "JWST {s0}ing Exoplanet Community ERS Team",
- "@js.9g29b1hwza": {
-  "x-review": "machine",
-  "x-source": "d6a491c51e"
- },
  "js.9ipi38tplb": "Зоря",
  "@js.9ipi38tplb": {
   "x-review": "machine",
   "x-source": "e357d39687"
+ },
+ "js.9j28j4tmyg": "Barnard's star b",
+ "@js.9j28j4tmyg": {
+  "x-review": "machine",
+  "x-source": "af09ab2ca6"
  },
  "js.9je9lv8f9w": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">5i. <span class=\"mono\">tess-bc9f59e5c3af-{n0}</span>.</b> Провал при BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Кількість рецензентів, що позначили: {n5} (каталог не зберігає розмір панелі чи консенсусний інтервал). Лежить на BLS-періоді {n6} діб; транзитів: {n7}. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про виявлення.",
  "@js.9je9lv8f9w": {
@@ -8166,6 +8256,11 @@
   "x-review": "machine",
   "x-source": "ef80c9cc7c"
  },
+ "js.9xo5dpvs8f": "{n0} Eri c",
+ "@js.9xo5dpvs8f": {
+  "x-review": "machine",
+  "x-source": "b644412ed5"
+ },
  "js.9yvkaakdvn": "Для цих рядків у цьому запуску досьє не збережено.",
  "@js.9yvkaakdvn": {
   "x-review": "machine",
@@ -8190,11 +8285,6 @@
  "@js.a5ik0d45ok": {
   "x-review": "machine",
   "x-source": "76a48996a7"
- },
- "js.a5x17kv5tz": "Показано планет: {n0} · транзит {n1} · радіальна швидкість {n2} · пряме зображення {n3} · мікролінзування {n4}",
- "@js.a5x17kv5tz": {
-  "x-review": "machine",
-  "x-source": "3372d51309"
  },
  "js.a6wp5hntda": "Прапорці перевірки: <span class=\"mono\">odd_even_mismatch, v_shape</span> · не пройшов перевірку",
  "@js.a6wp5hntda": {
@@ -8230,11 +8320,6 @@
  "@js.ai6mp83zpi": {
   "x-review": "machine",
   "x-source": "73d5db9ed8"
- },
- "js.ak7b9gcem6": "високий: FAP нижче 1e-{n0} і напівамплітуда щонайменше в {n1}× більша за розкид у бінах; середній: напівамплітуда {n2}× або більше; низький: в інших випадках (або провал лише з причини, вказаної панеллю).",
- "@js.ak7b9gcem6": {
-  "x-review": "machine",
-  "x-source": "4c775dba32"
  },
  "js.am5y46ghie": "exoplanet.eu вказує її як «Опубліковано в рецензованій статті», знайдено методом первинного транзиту в {n0}; запис оновлено {n1}-{n2}-{n3}. Також відома як TOI-{n4}.",
  "@js.am5y46ghie": {
@@ -8281,11 +8366,6 @@
   "x-review": "machine",
   "x-source": "d69fa08242"
  },
- "js.aztpkxejok": "межа класу розмірів у каталозі (подібні до Нептуна {n0}–{n1} R⊕)",
- "@js.aztpkxejok": {
-  "x-review": "machine",
-  "x-source": "0a47054ebb"
- },
  "js.b2yn41cpri": "Справу не вдалося завантажити в цьому поданні. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-f28323a4aef6-006\">Відкрийте її на окремій сторінці.</a>",
  "@js.b2yn41cpri": {
   "x-review": "machine",
@@ -8300,11 +8380,6 @@
  "@js.b81xuwkvhb": {
   "x-review": "machine",
   "x-source": "fa1b7822f3"
- },
- "js.ba6i75z9zb": "Ще {n0} в <a href=\"/candidates/\">Оглядачі ›</a>",
- "@js.ba6i75z9zb": {
-  "x-review": "machine",
-  "x-source": "378a1efe43"
  },
  "js.bcz7f7521k": "tess-toi-{n0}-s5",
  "@js.bcz7f7521k": {
@@ -8336,11 +8411,6 @@
   "x-review": "machine",
   "x-source": "9d7801b23a"
  },
- "js.bm1842qxn6": "<b>Нові сигнали живої стрічки узгоджуються з шумом.</b> Сам лише шум мав би давати близько {n0} хибних сигналів new_candidate на {n1} переглянутих цілей, порівняно з {n2} на {n3} у живій стрічці. За тим попереднім правилом new_candidate у стрічці з більшою ймовірністю був шумом, ніж сигналом.",
- "@js.bm1842qxn6": {
-  "x-review": "machine",
-  "x-source": "c59881f8e5"
- },
  "js.bn4w24un71": "≤: верхня межа, зі збереженого діапазону (від {n0} до значення).",
  "@js.bn4w24un71": {
   "x-review": "machine",
@@ -8361,10 +8431,10 @@
   "x-review": "machine",
   "x-source": "d1ec927942"
  },
- "js.buyt9rgrrs": "Пройшов перевірку, позначений як потенційна планета половиною ваги панелі, не є відгалуженням власного періодичного сигналу зорі й не охоплений жодним правилом вище. Кандидат, не підтверджений.",
- "@js.buyt9rgrrs": {
+ "js.bvhiyb18bf": "малий",
+ "@js.bvhiyb18bf": {
   "x-review": "machine",
-  "x-source": "2488197a47"
+  "x-source": "81db8ebbbb"
  },
  "js.bvrmk1ex4g": "відкриття",
  "@js.bvrmk1ex4g": {
@@ -8391,10 +8461,10 @@
   "x-review": "machine",
   "x-source": "c7e1272291"
  },
- "js.cbv0lkfgz8": "Відкрити справу {s0} ›",
- "@js.cbv0lkfgz8": {
+ "js.cb7mp7y3o9": "Збережений id tess-1c554332c266-{n0}; у цьому запуску немає файлу справи",
+ "@js.cb7mp7y3o9": {
   "x-review": "machine",
-  "x-source": "248441ab0d"
+  "x-source": "64026e0de1"
  },
  "js.cbz7kbs8l0": "id tic29257288-s1-dip-{n0} · об'єкт tess-6cf3bf1771b3<br>крива блиску sha256 b44e4d280fddc0d2705f6687997736ebf67f9b0544e9711f880a21ebaa0bda05<br>код … · конфігурація a9d34c7079563183…<br>джерело sector_0001.json.gz",
  "@js.cbz7kbs8l0": {
@@ -8461,6 +8531,11 @@
   "x-review": "machine",
   "x-source": "bbc7feceee"
  },
+ "js.d6qkqwv24q": "{n0} Peg · {n1} K",
+ "@js.d6qkqwv24q": {
+  "x-review": "machine",
+  "x-source": "e5f1ee0a62"
+ },
  "js.d72yz71kxc": "Стрічка, відсортована за snr за спаданням. Кожен запис — кандидат, не підтверджений.",
  "@js.d72yz71kxc": {
   "x-review": "machine",
@@ -8480,11 +8555,6 @@
  "@js.db3tsr98n3": {
   "x-review": "machine",
   "x-source": "aa93d0c8f4"
- },
- "js.dcedelaavp": "<b>ν₂ згинальне коливання</b> · {n0} µm · активне в інфрачервоному діапазоні · намальовано ×{n1} · поза вікном {n2}–{n3} µm розділу {s0}",
- "@js.dcedelaavp": {
-  "x-review": "machine",
-  "x-source": "9dbd92a5c8"
  },
  "js.dcp2jzpjk": "<i style=\"background:#30D158\"></i>beta Pic b",
  "@js.dcp2jzpjk": {
@@ -8541,6 +8611,11 @@
   "x-review": "machine",
   "x-source": "b6940405a0"
  },
+ "js.dvqr7huse3": "eps Ind Bb",
+ "@js.dvqr7huse3": {
+  "x-review": "machine",
+  "x-source": "e8e7d5bf66"
+ },
  "js.dvwoo1e05r": "Спектр пропускання WASP-{n0} b за JWST NIRSpec PRISM: усереднені точки ({n1}) з похибками і найкраща модель зі статті; найглибша точка — на {n2} мікрометрах, у смузі вуглекислого газу.",
  "@js.dvwoo1e05r": {
   "x-review": "machine",
@@ -8580,11 +8655,6 @@
  "@js.e1cnrnc88l": {
   "x-review": "machine",
   "x-source": "7a72e5d7b0"
- },
- "js.e1q7qs4zzq": "<b>ν₃ асиметричне валентне коливання (три)</b> · {n0} µm · активне в інфрачервоному діапазоні · намальовано ×{n1} · <a href=\"/how-it-works/atmospheres/\">смуга {n2} µm у {s0} ›</a>",
- "@js.e1q7qs4zzq": {
-  "x-review": "machine",
-  "x-source": "71ad84105e"
  },
  "js.e2y47rpcbh": "Невідомо",
  "@js.e2y47rpcbh": {
@@ -8741,6 +8811,11 @@
   "x-review": "machine",
   "x-source": "09cd47b417"
  },
+ "js.f2v9rtmf85": "Код",
+ "@js.f2v9rtmf85": {
+  "x-review": "machine",
+  "x-source": "340f463033"
+ },
  "js.f38k3bw5h7": "<b class=\"flabel\">Таблиця {n0}, панель i.</b> Збережений потік об'єкта tess-38b5a559eee2 (BTJD від {n1} до {n2}), відносний потік − {n3} у ppm. Затінені смуги — інтервали консенсусу, позначені літерами, як у підписах; трикутники — епохи BLS. Праворуч: згорнуто за збереженим періодом BLS {n4} d і t0 BTJD {n5}; затінена смуга — збережена тривалість BLS ({n6} h). {n7} точок поза діапазоном потоку не показано.",
  "@js.f38k3bw5h7": {
   "x-review": "machine",
@@ -8755,11 +8830,6 @@
  "@js.f6sm069d1p": {
   "x-review": "machine",
   "x-source": "4b1c53ca4a"
- },
- "js.f7l0xvrbgu": "<b>Переважно валентне коливання N–N</b> · {n0} µm · активне в інфрачервоному діапазоні · намальовано ×{n1} · не намальовано в {s0}",
- "@js.f7l0xvrbgu": {
-  "x-review": "machine",
-  "x-source": "099bdfda01"
  },
  "js.f7onc16rky": "транзити, передбачені в даних / з провалом",
  "@js.f7onc16rky": {
@@ -8780,11 +8850,6 @@
  "@js.fakckuaz74": {
   "x-review": "machine",
   "x-source": "deaf714e0c"
- },
- "js.fbjnqepq3y": "<b>Кожен клас проти власної нульової моделі</b>, виміряно на тих самих {n0} зоре-секторах: що знаходить його правило там, де його сигналу бути не може. Провали: потік, перевернутий догори дном (справжній провал стає горбом; справжній спалах або максимум пульсації стає провалом, тож ця нульова модель не вільна від реальних сигналів). Спалахи: події, спрямовані вниз, із замаскованими справжніми провалами. Змінність: копія зорі з червоним шумом (AR({n1}), підігнана до її бінів), пропущена через те саме правило, яке вимагає того самого найкращого періоду (у межах {n2}%) в обох половинах кривої блиску. З піків його періодограми, що не припадають на період подвійної зорі, {n3} когерентні; некласифіковані: {n4} довші, ніж може перевірити половина (когерентність не перевірялася), {n5} на краю сітки періодів і {n6}, що блукають між половинами. Обмеження: воно знаходить синусоїду {n7} ppm у сильному червоному шумі лише {n8}/{n9} разів (scripts/variability_rule_check.py) і не може перевірити періоди, довші приблизно за {n10} d, в одному секторі. Вид порівнюється з видом, одиницею є зоре-сектор: {n11}% інтервал — це парний бутстреп за зоре-секторами, поряд із тестом McNemar. Клас, який не проходить обох перевірок, не відрізняється від шуму в цьому зрізі: Кандидат у планети, Затемнювана подвійна, Спалах, Пульсатор або ротаційно змінна, Систематика. З {n12} просвітлень класу спалахів {n13} зростають швидше, ніж згасають, і {n14} навпаки ({n15} рівні); справжні спалахи зростають швидко, шум не має переважного напрямку.",
- "@js.fbjnqepq3y": {
-  "x-review": "machine",
-  "x-source": "edcc450583"
  },
  "js.fbyrtfuuuu": "pi Men",
  "@js.fbyrtfuuuu": {
@@ -8826,11 +8891,6 @@
   "x-review": "machine",
   "x-source": "8e4a1eb431"
  },
- "js.ftkov6vbui": "Силует провалу (кандидати, відношення радіусів)",
- "@js.ftkov6vbui": {
-  "x-review": "machine",
-  "x-source": "2cbc25cbe4"
- },
  "js.fv6055pnqa": "період збігається з відомим TOI",
  "@js.fv6055pnqa": {
   "x-review": "machine",
@@ -8871,10 +8931,10 @@
   "x-review": "machine",
   "x-source": "ab87f8473e"
  },
- "js.g1lwglngw7": "Порівняння з архівом: узгоджується з {s0}: ΔP {n0}%, зсув у часі за нотаткою валідації: {n1} min у середньому за {n2} епох. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
- "@js.g1lwglngw7": {
+ "js.g2cghw07hl": "Обертання",
+ "@js.g2cghw07hl": {
   "x-review": "machine",
-  "x-source": "dff14c09d4"
+  "x-source": "57b5e2fc1b"
  },
  "js.g3w1e5hqnc": "Найкраща стабільність спектрографа",
  "@js.g3w1e5hqnc": {
@@ -8885,6 +8945,11 @@
  "@js.g6lwhkyils": {
   "x-review": "machine",
   "x-source": "0574b94b3e"
+ },
+ "js.g6m1eyxsdn": "Молекула",
+ "@js.g6m1eyxsdn": {
+  "x-review": "machine",
+  "x-source": "49a6356091"
  },
  "js.g6m8lmxer6": "Типовий час перетину радіуса Ейнштейна",
  "@js.g6m8lmxer6": {
@@ -8905,6 +8970,11 @@
  "@js.gbaq8jky1n": {
   "x-review": "machine",
   "x-source": "49aaab944b"
+ },
+ "js.gc28rpxiwc": "Luyten's Star",
+ "@js.gc28rpxiwc": {
+  "x-review": "machine",
+  "x-source": "f84d36433e"
  },
  "js.gc92hxaxrj": "Sentinel · Skeptic: {n0} інтервал у цьому вікні, зараховано для цього провалу",
  "@js.gc92hxaxrj": {
@@ -8951,20 +9021,10 @@
   "x-review": "machine",
   "x-source": "8ab8377cb2"
  },
- "js.gf2k29wf2u": "Спалахи, пульсації та публічні криві блиску CHEOPS (дані CHEOPS на умовах ESA)",
- "@js.gf2k29wf2u": {
-  "x-review": "machine",
-  "x-source": "7636d9cad3"
- },
  "js.gfd1bpovje": "{n0} провалів ({n1} відхилено)",
  "@js.gfd1bpovje": {
   "x-review": "machine",
   "x-source": "f9153844c1"
- },
- "js.ggh3kiowd3": "Уявлення художника: вигляд «розпечена скеля» для радіуса менше {n0} R⊕ і Teq {n1} K або більше — темна скеля зі світними тріщинами на денному боці. Кадр цього вигляду, а не конкретної планети.",
- "@js.ggh3kiowd3": {
-  "x-review": "machine",
-  "x-source": "082ec2b77a"
  },
  "js.gizr3gwvyr": "Інші позначення: {n0}, KOI-{n1}, 2MASS J19323620+{n2}.",
  "@js.gizr3gwvyr": {
@@ -9010,6 +9070,11 @@
  "@js.gplu2k76y8": {
   "x-review": "machine",
   "x-source": "6f0127f52b"
+ },
+ "js.gpznjdo7y3": "pi Men · {n0} K",
+ "@js.gpznjdo7y3": {
+  "x-review": "machine",
+  "x-source": "899a850a1e"
  },
  "js.griyfzkg7e": "<b>ν₂ згинальне коливання</b> · {n0} µm · активне в інфрачервоному діапазоні · намальовано ×{n1} · поза вікном {n2}–{n3} µm розділу «Читаючи атмосфери»",
  "@js.griyfzkg7e": {
@@ -9071,6 +9136,11 @@
   "x-review": "machine",
   "x-source": "ed2c6ec6d2"
  },
+ "js.hfecdi2gfn": "tau Cet g",
+ "@js.hfecdi2gfn": {
+  "x-review": "machine",
+  "x-source": "5a095c9a36"
+ },
  "js.hi7kyj244t": "Одна з перших планет, знайдених поза Сонячною системою, — за хронометражем мілісекундного пульсара.",
  "@js.hi7kyj244t": {
   "x-review": "machine",
@@ -9105,6 +9175,11 @@
  "@js.hrans2nscc": {
   "x-review": "machine",
   "x-source": "476f15a932"
+ },
+ "js.ht99op5pxg": "NASA Exoplanet Archive, таблиця ps (default_flag = {n0}), як записано в docs/results/pi_men_validation.md скриптом scripts/validate_known_planets.py (живий запит до архіву, коміт 0f6dbdc). Там записано лише pi Men c, тому наведено лише pi Men c; її час середини транзиту не записано, тож зміщення для окремих епох тут не обчислюється; натомість наведено середнє зміщення хронометражу з нотатки про валідацію ({n1} min для {n2} з {n3} епох). Замініть це результатом 'setuhq crossmatch runs/tess-pi-men-s1', коли архів відповість., записано <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4} жовт. {n5}, {n6} UTC</time> (коміт 0f6dbdc) у docs/results/pi_men_crossmatch.json; власне перехресне зіставлення цього запуску не виконалося (збережена помилка, дослівно: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
+ "@js.ht99op5pxg": {
+  "x-review": "machine",
+  "x-source": "4653c87d87"
  },
  "js.hv6t0hplex": "Звіт про запуск · tess-toi-{n0}-s2",
  "@js.hv6t0hplex": {
@@ -9196,10 +9271,10 @@
   "x-review": "machine",
   "x-source": "8c601dc48e"
  },
- "js.ioyj9009pb": "<a href=\"/assets/data/exoplanet_map.csv\" download=\"\">Завантажити всі нанесені планети (CSV, {n0} рядків)</a>, отримані зі збереженої карти exoplanet.eu.",
- "@js.ioyj9009pb": {
+ "js.iqpr6oou3c": "Сектор {n0}: з {n1}-{n2}-{n3} до {n4}-{n5}-{n6} · каталогізованих зір із відомими планетами в його полях: {n7}",
+ "@js.iqpr6oou3c": {
   "x-review": "machine",
-  "x-source": "0669d7463c"
+  "x-source": "61eb698124"
  },
  "js.ir7824frtx": "tess-08a8c4eac6ff-{n0} · Відкритий · кандидат, непідтверджений",
  "@js.ir7824frtx": {
@@ -9210,6 +9285,11 @@
  "@js.irvrs2dlo3": {
   "x-review": "machine",
   "x-source": "c1c91c0c5c"
+ },
+ "js.it3yfm2mls": "WASP-{n0}<br><span class=\"muted mono t-data\">tess-wasp-{n1}-s1</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.it3yfm2mls": {
+  "x-review": "machine",
+  "x-source": "be84b6d521"
  },
  "js.it7w3r4cx": "Транзитів, передбачених у збереженій кривій блиску: {n0}; зі спадом на них: {n1} ({n2} спадів; {n3} позначених; середній зсув {n4} min).",
  "@js.it7w3r4cx": {
@@ -9336,6 +9416,11 @@
   "x-review": "machine",
   "x-source": "90e37abec4"
  },
+ "js.k2p8kaiegs": "HN Lib b",
+ "@js.k2p8kaiegs": {
+  "x-review": "machine",
+  "x-source": "1b00eabfcb"
+ },
  "js.k3btdf81ur": "Ексцентриситет",
  "@js.k3btdf81ur": {
   "x-review": "machine",
@@ -9350,11 +9435,6 @@
  "@js.k6wgj1vf42": {
   "x-review": "machine",
   "x-source": "3a6449de5f"
- },
- "js.k73o4aajts": "Чотири сцени. Хронометраж {s0}: дві планети поблизу співвідношення періодів {n0} притягують одна одну, тож транзити внутрішньої планети настають то раніше, то пізніше, і вибудовується діаграма O−C. Вторинне затемнення: планета заходить за свою зорю через пів орбіти після транзиту — набагато менший спад, намальований у десять разів глибшим. Фазова крива: припливно захоплена планета показує дедалі більше свого гарячого денного боку перед покриттям, а її максимум зміщений вітрами. Rossiter–McLaughlin: планета закриває спершу наближувану, а потім віддалювану половину обертової зорі, тож виміряна швидкість зорі коливається під час транзиту.",
- "@js.k73o4aajts": {
-  "x-review": "machine",
-  "x-source": "21a7dc3be9"
  },
  "js.k81gpwo3bo": "{n0} −-{n1} / {n2} Gyr",
  "@js.k81gpwo3bo": {
@@ -9446,10 +9526,20 @@
   "x-review": "machine",
   "x-source": "5bd78577ba"
  },
+ "js.l361fmbsuc": "Збережений id tess-eaab33b6b763-{n0}; у цьому запуску немає файлу справи",
+ "@js.l361fmbsuc": {
+  "x-review": "machine",
+  "x-source": "75a96bab8f"
+ },
  "js.l3je4rzt3v": "{n0} Pegasi b, гігант на {n1}-денній орбіті, знайдений за коливаннями своєї зорі.",
  "@js.l3je4rzt3v": {
   "x-review": "machine",
   "x-source": "783b55a817"
+ },
+ "js.l5edhw6c5o": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">7c. <span class=\"mono\">tess-7b97e468b60b-{n0}</span>.</b> Провал на BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Позначено {n5} рецензентами (каталог не зберігає розмір панелі чи інтервал консенсусу). Лежить на BLS-періоді {n6} днів із {n7} транзитами. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
+ "@js.l5edhw6c5o": {
+  "x-review": "machine",
+  "x-source": "84eea9bb2e"
  },
  "js.l66csoi3se": "Калькулятор рівняння Drake",
  "@js.l66csoi3se": {
@@ -9481,6 +9571,11 @@
   "x-review": "machine",
   "x-source": "bcb2e28ac7"
  },
+ "js.le6i0lhisz": "Популяція",
+ "@js.le6i0lhisz": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
  "js.lg9kxjhees": "*Відомий хибнопозитивний.* Об'єкт інтересу TESS (TESS Object of Interest), який таблиця TOI класифікує як хибнопозитивний (FP): спад на {n0}% кожні {n1} днів.",
  "@js.lg9kxjhees": {
   "x-review": "machine",
@@ -9491,6 +9586,11 @@
   "x-review": "machine",
   "x-source": "2b91c1afd2"
  },
+ "js.lh8m0vnna6": "Мікролінзування <span class=\"mono\" data-cmn=\"microlensing\">{n0}</span>",
+ "@js.lh8m0vnna6": {
+  "x-review": "machine",
+  "x-source": "6ebe002adb"
+ },
  "js.lj02ml1du2": "Також відома як GJ {n0}, V2500 Oph.",
  "@js.lj02ml1du2": {
   "x-review": "machine",
@@ -9500,21 +9600,6 @@
  "@js.lj5zi4x2mb": {
   "x-review": "machine",
   "x-source": "a266923843"
- },
- "js.lmqc5cetjp": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Вигляд системи",
- "@js.lmqc5cetjp": {
-  "x-review": "machine",
-  "x-source": "b55e8878de"
- },
- "js.loxdmylfqk": "Відхилення FP: зорі FP, чий спад TOI метод не запропонував як чистого кандидата (відновлений і не позначений). Надійність: частка чистих кандидатів на спадах TOI, які є CP/KP, за класовим складом цієї вибірки, що відрізняється від складу каталогу TOI. Усі частки наведено з інтервалами Wilson {n0}%. Класифікації TFOPWG є еталоном, а не абсолютною істиною для кожного TOI.",
- "@js.loxdmylfqk": {
-  "x-review": "machine",
-  "x-source": "65f89a23b5"
- },
- "js.lpvg4u78fv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Каталог",
- "@js.lpvg4u78fv": {
-  "x-review": "machine",
-  "x-source": "a3cf22621a"
  },
  "js.lugtea4b2c": "Таблиця, прокручується вбік на вузькому екрані",
  "@js.lugtea4b2c": {
@@ -9561,6 +9646,11 @@
   "x-review": "machine",
   "x-source": "6ba2097d7d"
  },
+ "js.m1r0pwwc2c": "Eps Ind Ab",
+ "@js.m1r0pwwc2c": {
+  "x-review": "machine",
+  "x-source": "f49ed6b253"
+ },
  "js.m3r8wny6k9": "Художнє зображення {s0}: газовий гігант у холодному діапазоні, радіус не виміряно ({n0} мас Землі), {n1} K.",
  "@js.m3r8wny6k9": {
   "x-review": "machine",
@@ -9606,11 +9696,6 @@
   "x-review": "machine",
   "x-source": "be67c2df8b"
  },
- "js.me79v4kzjl": "<b>Суворіше правило стрічки, попередньо зареєстроване й повторно виміряне на цьому коді.</b> Тепер сигнал має пройти в обох переглянутих секторах із FAP нижче {n0} за {n1} спроб. На відкладеній половині сам лише шум дає {n2} хибних сигналів на {n3} цілей ({n4}% CI {n5}–{n6}), тоді як раніше було {n7} ({n8}–{n9}). Це все ще значно більше за {n10} нових сигналів на {n11} цілей, які дають реальні криві блиску, тож у стрічці досі переважають хибні тривоги, а повнота на рівні стрічки знизилася з {n12}% до {n13}%. Допуск до стрічки — це зачіпка для перевірки людиною чи подальших спостережень, а не кандидат будь-якого підтвердженого статусу. Після повторного запуску на цьому коді {n14} цілей живої стрічки допускають {n15} нових сигналів.",
- "@js.me79v4kzjl": {
-  "x-review": "machine",
-  "x-source": "1b6a64cd4a"
- },
  "js.meqp2x3ji6": "exoplanet.eu вказує її статус як \"Published in a refereed paper\", знайдена методом прямого зображення у {n0}; запис оновлено {n1}-{n2}-{n3}. Також відома як bet Pic b, HIP {n4} b.",
  "@js.meqp2x3ji6": {
   "x-review": "machine",
@@ -9631,25 +9716,25 @@
   "x-review": "machine",
   "x-source": "6a7bc0cac6"
  },
- "js.mi2tgjiiqn": "<b>Pro Follow-up</b> <span class=\"eddev\">у розробці</span>: пакет подальших спостережень для кожного кандидата: експорт у стилі ExoFOP, ефемериди з їхньою невизначеністю, а також час, коли ціль можна спостерігати з телескопів клієнта",
- "@js.mi2tgjiiqn": {
-  "x-review": "machine",
-  "x-source": "e944e5aba3"
- },
  "js.mimntzdewz": "Методи: до нас і від нас ›",
  "@js.mimntzdewz": {
   "x-review": "machine",
   "x-source": "3f269a446d"
  },
- "js.mk4mulcwso": "<b>ν₃ асиметричне валентне коливання</b> · {n0} µm · активне в ІЧ · намальовано ×{n1} · <a href=\"/how-it-works/atmospheres/\">смуга {n2} µm у {s0} ›</a>",
- "@js.mk4mulcwso": {
+ "js.mkc9jxfgbz": "позначено провали",
+ "@js.mkc9jxfgbz": {
   "x-review": "machine",
-  "x-source": "518c8ddc31"
+  "x-source": "94e146b4e3"
  },
  "js.mlrhcayzxr": "Статус подано словом поруч із кожним кольором.",
  "@js.mlrhcayzxr": {
   "x-review": "machine",
   "x-source": "4775478abc"
+ },
+ "js.mmnswive1w": "<i aria-hidden=\"true\"></i>Спалах",
+ "@js.mmnswive1w": {
+  "x-review": "machine",
+  "x-source": "e7a022e38b"
  },
  "js.mmu67oe6q3": "Барицентр Земля–Сонце",
  "@js.mmu67oe6q3": {
@@ -9666,10 +9751,25 @@
   "x-review": "machine",
   "x-source": "0882c3b8b4"
  },
+ "js.mqj6wfaw6h": "Ross {n0}",
+ "@js.mqj6wfaw6h": {
+  "x-review": "machine",
+  "x-source": "817ee35ea0"
+ },
+ "js.mskkijl1h9": "eps Ind A",
+ "@js.mskkijl1h9": {
+  "x-review": "machine",
+  "x-source": "0cf3bf4b89"
+ },
  "js.msr7a8c18z": "Смуги (µm)",
  "@js.msr7a8c18z": {
   "x-review": "machine",
   "x-source": "482e628874"
+ },
+ "js.mtnvg3zz1c": "HD {n0}<br><span class=\"muted mono t-data\">tess-hd-{n1}-s4</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.mtnvg3zz1c": {
+  "x-review": "machine",
+  "x-source": "7cc6c4ce56"
  },
  "js.mwjxjvzia1": "Сортувати за",
  "@js.mwjxjvzia1": {
@@ -9680,6 +9780,11 @@
  "@js.mwv88v3dkm": {
   "x-review": "machine",
   "x-source": "f1df8fd039"
+ },
+ "js.mxcgzchu7z": "YZ Cet b ›",
+ "@js.mxcgzchu7z": {
+  "x-review": "machine",
+  "x-source": "a3d4d803bc"
  },
  "js.n10imi0en": "не обмежено",
  "@js.n10imi0en": {
@@ -9696,10 +9801,20 @@
   "x-review": "machine",
   "x-source": "7790fa8642"
  },
+ "js.n794msf49i": "exoplanet.eu подає статус «Опубліковано в рецензованій статті», знайдено методами радіальних швидкостей і первинного транзиту в {n0}; запис оновлено {n1}-{n2}-{n3}. Інші назви: TOI-{n4} e, HD {n5} e, rho1 Cnc Ae.",
+ "@js.n794msf49i": {
+  "x-review": "machine",
+  "x-source": "c37b76a542"
+ },
  "js.n8ku2ga21": "N = {n0} планет із виявним газом-біосигнатурою (за цих припущень)",
  "@js.n8ku2ga21": {
   "x-review": "machine",
   "x-source": "e5c09dee94"
+ },
+ "js.nb8kni7i3e": "exoplanet.eu подає статус «Оголошено на вебсайті», знайдено методом первинного транзиту в {n0}; запис оновлено {n1}-{n2}-{n3}. Інші назви: KOI-{n4} b, KOI-{n5}.",
+ "@js.nb8kni7i3e": {
+  "x-review": "machine",
+  "x-source": "9ddf41fe09"
  },
  "js.ncy2vl0chu": "Невелика орбіта зорі також зміщує її положення на небі. Астрометрія вимірює цю крихітну петлю, що дає нахил орбіти і, отже, справжню масу планети. Сигнал зростає з масою планети та розміром орбіти і зменшується з відстанню.",
  "@js.ncy2vl0chu": {
@@ -9726,6 +9841,11 @@
   "x-review": "machine",
   "x-source": "520a2101da"
  },
+ "js.njyq57a914": "b Cen (AB)b",
+ "@js.njyq57a914": {
+  "x-review": "machine",
+  "x-source": "d5e094d32f"
+ },
  "js.nk8m1nny5r": "Графік закодованого наосліп об'єкта для tess-4b369d3c6f09-{n0}: крива блиску, яку позначили рецензенти, без назви цілі та без позначок",
  "@js.nk8m1nny5r": {
   "x-review": "machine",
@@ -9746,6 +9866,11 @@
   "x-review": "machine",
   "x-source": "7a0d984887"
  },
+ "js.nrcbxny9wa": "статус",
+ "@js.nrcbxny9wa": {
+  "x-review": "machine",
+  "x-source": "073c1634c4"
+ },
  "js.ns1wjk2bkh": "Відкритий · кандидат, не підтверджений",
  "@js.ns1wjk2bkh": {
   "x-review": "machine",
@@ -9755,6 +9880,11 @@
  "@js.nt7jpblt1w": {
   "x-review": "machine",
   "x-source": "82765e23c7"
+ },
+ "js.ntaw7nc8vt": "Розділи про методи",
+ "@js.ntaw7nc8vt": {
+  "x-review": "machine",
+  "x-source": "31932e7289"
  },
  "js.ntp7tqnx1h": "Показано {n0} з {n1} записів.",
  "@js.ntp7tqnx1h": {
@@ -9770,6 +9900,11 @@
  "@js.nvauo0t95d": {
   "x-review": "machine",
   "x-source": "0906640b92"
+ },
+ "js.ny28knfv0a": "Читання атмосфер",
+ "@js.ny28knfv0a": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
  },
  "js.ny97ialxx0": "Sentinel · Скептик: у цьому вікні позначки немає",
  "@js.ny97ialxx0": {
@@ -9816,6 +9951,11 @@
   "x-review": "machine",
   "x-source": "67071927f6"
  },
+ "js.o7m15kbsi5": "pi Men<br><span class=\"muted mono t-data\">tess-pi-men-s1</span><br><span class=\"muted\">TIC Teff {n0} K</span>",
+ "@js.o7m15kbsi5": {
+  "x-review": "machine",
+  "x-source": "8b203e2083"
+ },
  "js.o99izf3z1n": "так: TOI {n0}",
  "@js.o99izf3z1n": {
   "x-review": "machine",
@@ -9840,11 +9980,6 @@
  "@js.op9ipohoso": {
   "x-review": "machine",
   "x-source": "703dfd613f"
- },
- "js.oqpbaoboao": "<b>ν₁ симетричне валентне коливання</b> · {n0} µm · активне в ІЧ · намальовано ×{n1} · не намальовано в {s0}",
- "@js.oqpbaoboao": {
-  "x-review": "machine",
-  "x-source": "2474d10b70"
  },
  "js.osjdukhlhf": "<b>Зоряний екран (starshade).</b> Екран у формі квітки, що летить далеко перед телескопом (Cash {n0}). Концепція Roman Starshade Rendezvous: {n1} m на відстані {n2} km; HabEx: {n3} m на відстані близько {n4} km (HabEx Final Report).",
  "@js.osjdukhlhf": {
@@ -9906,11 +10041,6 @@
   "x-review": "machine",
   "x-source": "6f82ddb801"
  },
- "js.p4u8g14ecp": "Підвищення яскравості: {n0} або більше послідовних точок щонайменше на {n1}σ вище {n2}-денної ковзної медіани, з піком {n3}σ або більше, відносно як розкиду зорі, так і розкиду в межах {n4} d; не на інструментальній ознаці.",
- "@js.p4u8g14ecp": {
-  "x-review": "machine",
-  "x-source": "286b750a5a"
- },
  "js.p4vg8hpjdy": "Походження",
  "@js.p4vg8hpjdy": {
   "x-review": "machine",
@@ -9946,6 +10076,11 @@
   "x-review": "machine",
   "x-source": "d807e5a457"
  },
+ "js.pauic2u0rw": "exoplanet.eu подає статус «Опубліковано в рецензованій статті», знайдено методом первинного транзиту в {n0}; запис оновлено {n1}-{n2}-{n3}. Інші назви: EPIC {n4} b, 2MASS J11301450+{n5} b, EPIC {n6}, WISE J113014.45+{n7} b.",
+ "@js.pauic2u0rw": {
+  "x-review": "machine",
+  "x-source": "1817856093"
+ },
  "js.pbsogd4kq5": "HWO в УФ/видимому діапазоні; місії середнього ІЧ-діапазону, як-от LIFE, на {n0} µm",
  "@js.pbsogd4kq5": {
   "x-review": "machine",
@@ -9955,6 +10090,11 @@
  "@js.pd4w5w3ixh": {
   "x-review": "machine",
   "x-source": "a838a779e2"
+ },
+ "js.pd6ew3rt19": "<i style=\"background:#BF5AF2\"></i>Мікролінзування <span class=\"mono\">{n0}</span>",
+ "@js.pd6ew3rt19": {
+  "x-review": "machine",
+  "x-source": "59e3047926"
  },
  "js.pf82vwrzvm": "потенційна планета {n0}",
  "@js.pf82vwrzvm": {
@@ -9971,11 +10111,6 @@
   "x-review": "machine",
   "x-source": "59a33e9ea7"
  },
- "js.piby2721pq": "{n0} зір <span class=\"muted\">({n1} CP/KP, {n2} FP, {n3} FA)</span> <b>зміщено в бік FP</b>: рядки FP описують зорі FP лише з {n4}-хвилинними даними",
- "@js.piby2721pq": {
-  "x-review": "machine",
-  "x-source": "52d7acd8f3"
- },
  "js.pj7ep1wjt3": "<b>Валентне коливання N–N, переважно</b> · {n0} µm · активне в ІЧ · намальовано ×{n1} · не намальовано в «Читання атмосфер»",
  "@js.pj7ep1wjt3": {
   "x-review": "machine",
@@ -9991,10 +10126,20 @@
   "x-review": "machine",
   "x-source": "21e389771e"
  },
- "js.pn78q0jveb": "Від початку до кінця (масиви DACE DRP проти продукту DRP з pycheops): кореляція &gt;= {n0} для кожного еталонного візиту",
- "@js.pn78q0jveb": {
+ "js.plrluloqs0": "pi Men c ›",
+ "@js.plrluloqs0": {
   "x-review": "machine",
-  "x-source": "cec6167f00"
+  "x-source": "3d841d792f"
+ },
+ "js.pm8m1jqibi": "провали",
+ "@js.pm8m1jqibi": {
+  "x-review": "machine",
+  "x-source": "9b9a2cbe44"
+ },
+ "js.pn2cym3dnm": "Відтворити {n0}–{n1}",
+ "@js.pn2cym3dnm": {
+  "x-review": "machine",
+  "x-source": "04f22f0879"
  },
  "js.pnrbaagjqb": "Дуже масивний компаньйон еволюціонованої зорі-гіганта класу K, знайдений методом променевих швидкостей.",
  "@js.pnrbaagjqb": {
@@ -10016,15 +10161,10 @@
   "x-review": "machine",
   "x-source": "7c33bc2692"
  },
- "js.q8vb9a162v": "SetuHQ є незалежним проєктом і не пов'язаний з ESA, місією CHEOPS чи Консорціумом CHEOPS, не схвалений ними й не діє від їхнього імені. Він не замінює Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker чи документ Policies &amp; Procedures від ESA; визначальними є офіційний конкурс заявок та офіційні інструменти.",
- "@js.q8vb9a162v": {
+ "js.q3zvdlmvza": "{n0} Peg b ›",
+ "@js.q3zvdlmvza": {
   "x-review": "machine",
-  "x-source": "e5417cf525"
- },
- "js.q95vajnmsz": "Сектори TESS {n0}–{n1}. Запис стрічки {n2} для цієї зорі (збережений id <span class=\"mono\">tess-d64ea73e32ac-{n3}</span>). Збіг із TOI порівнює збережений період зі значеннями з архіву. Лише значення з архіву. Ця сторінка не заявляє про жодне виявлення.",
- "@js.q95vajnmsz": {
-  "x-review": "machine",
-  "x-source": "52af58fde0"
+  "x-source": "8136a9c855"
  },
  "js.qad4ea3nk7": "Rossiter–McLaughlin, HD {n0} b (виміряне V sin I)",
  "@js.qad4ea3nk7": {
@@ -10040,6 +10180,16 @@
  "@js.qcwtbaf2e5": {
   "x-review": "machine",
   "x-source": "3091d416b9"
+ },
+ "js.qcyhotnwyb": "Kepler-{n0} b ›",
+ "@js.qcyhotnwyb": {
+  "x-review": "machine",
+  "x-source": "6ec7331b16"
+ },
+ "js.qegfutpzid": "Barnard's Star",
+ "@js.qegfutpzid": {
+  "x-review": "machine",
+  "x-source": "04db49fbfb"
  },
  "js.qezo9f8bhr": "Планет в exoplanet.eu: {n0} · збережений тип G2IV-V · клас G за Teff (найближчий G2V)",
  "@js.qezo9f8bhr": {
@@ -10060,6 +10210,11 @@
  "@js.qjpeah132b": {
   "x-review": "machine",
   "x-source": "d7e942e6f6"
+ },
+ "js.qmvvg78xp": "tau Cet f",
+ "@js.qmvvg78xp": {
+  "x-review": "machine",
+  "x-source": "e99f6ebd4f"
  },
  "js.qnq290e1mh": "зоряний шум ~{n0} m/s",
  "@js.qnq290e1mh": {
@@ -10121,10 +10276,10 @@
   "x-review": "machine",
   "x-source": "17f710cec5"
  },
- "js.r6b0ke5ddb": "Виміряні дані, нанесені на графік у збереженому вигляді, з джерелом, указаним під ними: криві блиску SetuHQ, підрахунки каталогу.",
- "@js.r6b0ke5ddb": {
+ "js.r7r5ll60un": "позначки",
+ "@js.r7r5ll60un": {
   "x-review": "machine",
-  "x-source": "aa17f78b83"
+  "x-source": "e3d11da4dd"
  },
  "js.r8opy5qens": "n_e, логарифмічна шкала",
  "@js.r8opy5qens": {
@@ -10145,6 +10300,11 @@
  "@js.regiehtwzu": {
   "x-review": "machine",
   "x-source": "b4cb7439b1"
+ },
+ "js.rmcqh280p3": "Розділи",
+ "@js.rmcqh280p3": {
+  "x-review": "machine",
+  "x-source": "9831375bc6"
  },
  "js.roj6ijskxu": "Також відома як V452 Vul, TOI-{n0}.",
  "@js.roj6ijskxu": {
@@ -10180,11 +10340,6 @@
  "@js.s5dkmlriz2": {
   "x-review": "machine",
   "x-source": "a0a30e125c"
- },
- "js.s66tykdpyv": "Художнє зображення: вигляд «теплий камінь» для радіуса менше {n0} R⊕, Teq від {n1} до {n2} K: гола темна порода з кратерами, без обідка. Кадр цього вигляду, а не конкретної планети.",
- "@js.s66tykdpyv": {
-  "x-review": "machine",
-  "x-source": "c058d804c9"
  },
  "js.s6e71sj3nh": "<b>{n0} з {n1} рецензентів</b> відмітили його: {n2} з {n3} Sentinels, {n4} з {n5} Probes<small class=\"muted\" style=\"display:block;font-size:11px\"><span title=\"reviewer id volunteer-sensitive\">Probe · Чутливий</span>, <span title=\"reviewer id volunteer-typical\">Probe · Типовий</span>, <span title=\"reviewer id volunteer-cautious\">Probe · Обережний</span></small>",
  "@js.s6e71sj3nh": {
@@ -10306,6 +10461,11 @@
   "x-review": "machine",
   "x-source": "9d9fb0ef55"
  },
+ "js.t39my5dsyh": "Таймінг <span class=\"mono\" data-cmn=\"timing\">{n0}</span>",
+ "@js.t39my5dsyh": {
+  "x-review": "machine",
+  "x-source": "eaf800daff"
+ },
  "js.t60qw9cha2": "Художнє зображення · нептуноподібна, опромінення неможливо обчислити · Радіус не збережено; маса {n0} M⊕ (exoplanet.eu) лежить у межах від {n1} до {n2} M⊕, тому її зображено як нептуноподібну планету. Радіус не виміряно: не в масштабі. Опромінення неможливо обчислити: нейтральні кольори. Склад не виміряно. Джерело: exoplanet.eu, отримано {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Як створено зображення ›</a>",
  "@js.t60qw9cha2": {
   "x-review": "machine",
@@ -10316,10 +10476,15 @@
   "x-review": "machine",
   "x-source": "eb9b70b39c"
  },
- "js.tbam84ybce": "колір абсолютно чорного тіла зорі та потемніння до краю; грануляція — це текстура",
- "@js.tbam84ybce": {
+ "js.tchjn2r4y9": "Систематичний",
+ "@js.tchjn2r4y9": {
   "x-review": "machine",
-  "x-source": "90cf191e4f"
+  "x-source": "5a9bb62240"
+ },
+ "js.tcofm5lh0s": "exoplanet.eu подає статус «Оголошено на вебсайті», знайдено методом первинного транзиту в {n0}; запис оновлено {n1}-{n2}-{n3}. Інші назви: 2MASS J19430387+{n4} d, K01364.02, KIC {n5} d, KOI-{n6} d, KOI-{n7}, WISE J194303.88+{n8} d.",
+ "@js.tcofm5lh0s": {
+  "x-review": "machine",
+  "x-source": "ffcad92d23"
  },
  "js.tel2igj1g8": "Шкала контрасту в логарифмічному масштабі від 1e-{n0} до 1e-{n1}: наземна АО (GPI), необроблений 1e-{n2} (досягнуто); коронограф JWST NIRCam 1e-{n3} (досягнуто); коронограф JWST MIRI 2e-{n4} (досягнуто); коронограф Roman 1e-{n5} (вимога); HWO 1e-{n6} (мета); двійник Землі, відбите світло 1e-{n7} (ціль)",
  "@js.tel2igj1g8": {
@@ -10341,15 +10506,25 @@
   "x-review": "machine",
   "x-source": "164d6a71cd"
  },
+ "js.tjzc53y07u": "Кожен запуск пошуку, його помилки у збереженому вигляді та конфігурація, на якій побудовано ці сторінки.",
+ "@js.tjzc53y07u": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "js.tmvyhylhnp": "Пульсуюча або обертально-змінна зоря",
+ "@js.tmvyhylhnp": {
+  "x-review": "machine",
+  "x-source": "1d4898f020"
+ },
  "js.toi5vq5s4d": "{n0} pc, як зазначено в exoplanet.eu",
  "@js.toi5vq5s4d": {
   "x-review": "machine",
   "x-source": "08aa2d3dc6"
  },
- "js.trnbddk8fe": "<b>{n0}</b> з {n1} планет зі збереженою відстанню в exoplanet.eu знайдено методом прямого зображення (перший зазначений метод). <a href=\"/explore/galaxy/?method=imaging\">Показати їх на мапі Галактики ›</a>",
- "@js.trnbddk8fe": {
+ "js.trg2sd40ob": "конфігурація",
+ "@js.trg2sd40ob": {
   "x-review": "machine",
-  "x-source": "dd5674802f"
+  "x-source": "b79606fb3a"
  },
  "js.trzuzwcopk": "Конвеєр",
  "@js.trzuzwcopk": {
@@ -10501,10 +10676,10 @@
   "x-review": "machine",
   "x-source": "943077f050"
  },
- "js.v5sdm14eih": "<b>ν₁ симетричне валентне коливання</b> · {n0} µm · активне в інфрачервоному діапазоні · зображено ×{n1} · <a href=\"/how-it-works/atmospheres/\">смуга {n2} µm у розділі «Читання атмосфер» ›</a>",
- "@js.v5sdm14eih": {
+ "js.v3cmzn255c": "Конфігурації SetuHQ і будь-який надісланий метод, оцінені наосліп на відкладеній половині.",
+ "@js.v3cmzn255c": {
   "x-review": "machine",
-  "x-source": "5a958a6168"
+  "x-source": "1e91ab197b"
  },
  "js.vbyk5xwnrv": "Прямокутна міра, яку використовували раніше (середній потік у позначеному панеллю вікні): глибина {n0} ppm, тривалість {n1} год, відношення **{n2}** і **{n3}** відносно Huang {n4} ({n5} і {n6} відносно типового рядка архіву, який раніше цитував README).",
  "@js.vbyk5xwnrv": {
@@ -10536,11 +10711,6 @@
   "x-review": "machine",
   "x-source": "8d34629003"
  },
- "js.vm9rqq85fe": "Періоди {s0} і c",
- "@js.vm9rqq85fe": {
-  "x-review": "machine",
-  "x-source": "da9014d7f4"
- },
  "js.vmsox3cj56": "Посилання на цей вигляд",
  "@js.vmsox3cj56": {
   "x-review": "machine",
@@ -10570,11 +10740,6 @@
  "@js.vsh0ajf78": {
   "x-review": "machine",
   "x-source": "93eedb88e2"
- },
- "js.vtdvzcy89i": "збережені об'єкти та апроксимації запусків",
- "@js.vtdvzcy89i": {
-  "x-review": "machine",
-  "x-source": "f6d62e6cda"
  },
  "js.vtnlfvcu18": "Газовий гігант (за масою; радіус не збережено)",
  "@js.vtnlfvcu18": {
@@ -10621,10 +10786,10 @@
   "x-review": "machine",
   "x-source": "d2f1847f96"
  },
- "js.w084p1vq7y": "Хибні тривоги на інвертованих кривих блиску на рівні стрічки (її повне правило, FAP &lt; {n0})",
- "@js.w084p1vq7y": {
+ "js.w21u8mgncr": "{n0} Eri e",
+ "@js.w21u8mgncr": {
   "x-review": "machine",
-  "x-source": "9936d6f964"
+  "x-source": "a9bda9193e"
  },
  "js.w635vpthea": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">5d. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Спад на BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Позначено рецензентами: {n5} (каталог не зберігає розмір панелі чи інтервал консенсусу). Лежить на BLS-періоді {n6} днів, транзитів: {n7}. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
  "@js.w635vpthea": {
@@ -10651,6 +10816,16 @@
   "x-review": "machine",
   "x-source": "cc87a8d326"
  },
+ "js.w7mxe1jjf7": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s5</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.w7mxe1jjf7": {
+  "x-review": "machine",
+  "x-source": "1cc92f722d"
+ },
+ "js.w9mpw0gpum": "pi Men ›",
+ "@js.w9mpw0gpum": {
+  "x-review": "machine",
+  "x-source": "4de3e057f1"
+ },
  "js.wafeswebdi": "Запуск tess-toi-{n0}-s2 · спадів: {n1} (відхилених: {n2}) · об'єктів: {n3}.<span class=\"printonly\"> Кожен кандидат на цій таблиці: кандидат, не підтверджений.</span>",
  "@js.wafeswebdi": {
   "x-review": "machine",
@@ -10665,6 +10840,11 @@
  "@js.wbhr5y7ltz": {
   "x-review": "machine",
   "x-source": "efa246c3ed"
+ },
+ "js.wcsqg4x5f": "Астрометрія <span class=\"mono\" data-cmn=\"astrometry\">{n0}</span>",
+ "@js.wcsqg4x5f": {
+  "x-review": "machine",
+  "x-source": "9043a3475b"
  },
  "js.wge5c60gnw": "Gaia-{n0} b",
  "@js.wge5c60gnw": {
@@ -10685,6 +10865,11 @@
  "@js.wkrls1dk3c": {
   "x-review": "machine",
   "x-source": "0a0c72b4d4"
+ },
+ "js.wldr50kzra": "Luyten's Star d",
+ "@js.wldr50kzra": {
+  "x-review": "machine",
+  "x-source": "f978f22f3a"
  },
  "js.wmpk5bhzf9": "Астрометрія · {n0}",
  "@js.wmpk5bhzf9": {
@@ -10745,11 +10930,6 @@
  "@js.wyws1u3mmf": {
   "x-review": "machine",
   "x-source": "db544a9e58"
- },
- "js.x0f76panzs": "Художнє зображення: вигляд «нептун, прохолодний» для радіуса від {n0} до {n1} R⊕, Teq нижче {n2} K: глибокі сині смуги й темна пляма. Кадр цього вигляду, а не конкретної планети.",
- "@js.x0f76panzs": {
-  "x-review": "machine",
-  "x-source": "e72124962b"
  },
  "js.x177ygvldr": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">5b. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Спад на BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Позначено рецензентами: {n5} (каталог не зберігає розмір панелі чи інтервал консенсусу). Лежить на BLS-періоді {n6} днів, транзитів: {n7}. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
  "@js.x177ygvldr": {
@@ -10826,20 +11006,30 @@
   "x-review": "machine",
   "x-source": "39ac347e42"
  },
+ "js.xi9v7ksndn": "Wolf {n0} d",
+ "@js.xi9v7ksndn": {
+  "x-review": "machine",
+  "x-source": "1268b30fc7"
+ },
  "js.xjghoq101i": "логарифмічне розтягування інтенсивності (від {n0} до {n1}⁻⁶); планета на ілюстративному рівні {n2}⁻³; ідеальна монохроматична оптика; розміри маски та діафрагми ілюстративні",
  "@js.xjghoq101i": {
   "x-review": "machine",
   "x-source": "907c200b96"
  },
+ "js.xll7y1ynl0": "Історія та статті",
+ "@js.xll7y1ynl0": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "js.xngfkgukjg": "Рівняння життя",
+ "@js.xngfkgukjg": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
  "js.xp4h2ofbdl": "· TIC {n0} · сигнал без періоду (один транзит) · {n1} з найглибших спадів",
  "@js.xp4h2ofbdl": {
   "x-review": "machine",
   "x-source": "21f82eff3f"
- },
- "js.xpg4i01qhj": "Художнє уявлення: вигляд «тепла оболонка», для радіуса від {n0} до {n1} R⊕, Teq від {n2} до {n3} K: блакитно-сірий серпанок. Кадр цього вигляду, а не конкретної планети.",
- "@js.xpg4i01qhj": {
-  "x-review": "machine",
-  "x-source": "7ef97acea7"
  },
  "js.xpmiaupaaj": "Показано {n0} з {n1}",
  "@js.xpmiaupaaj": {
@@ -10855,6 +11045,11 @@
  "@js.xtdd9w23g6": {
   "x-review": "machine",
   "x-source": "3be7d1cc73"
+ },
+ "js.xvtyf8wl1b": "beta Pic b",
+ "@js.xvtyf8wl1b": {
+  "x-review": "machine",
+  "x-source": "e38549f8ed"
  },
  "js.xx7wry1e2": "Запропонований як біосигнатура для кам'янистих планет, де його важко утворити без життя.",
  "@js.xx7wry1e2": {
@@ -10885,6 +11080,16 @@
  "@js.y2sii8ag7z": {
   "x-review": "machine",
   "x-source": "1c8b900d94"
+ },
+ "js.y3xy9eepgg": "нуль {n0} · надлишок {n1} ({n2}%: від {n3} до {n4})",
+ "@js.y3xy9eepgg": {
+  "x-review": "machine",
+  "x-source": "01f79dcd20"
+ },
+ "js.y9ptrwfobi": "docs/discoveries/catalog.json",
+ "@js.y9ptrwfobi": {
+  "x-review": "machine",
+  "x-source": "81e814ecc7"
  },
  "js.yef3d1ma9p": "{n0} відфільтровано як надто глибокі",
  "@js.yef3d1ma9p": {
@@ -10921,30 +11126,20 @@
   "x-review": "machine",
   "x-source": "fe1b093c33"
  },
- "js.yob3llgolf": "Планети за роком і методом",
- "@js.yob3llgolf": {
-  "x-review": "machine",
-  "x-source": "60ecd96d94"
- },
  "js.yq2bbta4k2": "<span class=\"word cand\">кандидат</span><span class=\"word s-known\">відомий період TOI</span><b class=\"fig\">4a. <span class=\"mono\">tess-308a47f84167-{n0}</span>.</b> Спад при BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Відмітили {n5} рецензентів (каталог не зберігає розмір панелі чи консенсусний інтервал). Лежить на {n6}-денному періоді BLS з {n7} транзитами. Статус: період збігається з відомим TOI. Лише архівні значення. Ця сторінка не заявляє про жодне виявлення.",
  "@js.yq2bbta4k2": {
   "x-review": "machine",
   "x-source": "4aebb10343"
  },
- "js.yv746p7ayh": "<b>деформаційне коливання (два, під прямим кутом)</b> · {n0} µm · активне в інфрачервоному діапазоні · зображено ×{n1} · поза вікном {n2}–{n3} µm сторінки {s0}",
- "@js.yv746p7ayh": {
+ "js.yrhnt8o7w9": "Молекули та життя",
+ "@js.yrhnt8o7w9": {
   "x-review": "machine",
-  "x-source": "67a09bbd02"
+  "x-source": "d0ac3c4b97"
  },
  "js.yw1cg6z6ba": "Мала транзитна планета, чия низька густина вперше вказала на багатий на воду світ.",
  "@js.yw1cg6z6ba": {
   "x-review": "machine",
   "x-source": "9d636cbdc1"
- },
- "js.ywghy58587": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">{s0}</a></b> · зоря <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s1}</a> · P {n0} d · транзитна",
- "@js.ywghy58587": {
-  "x-review": "machine",
-  "x-source": "40c55c5a8e"
  },
  "js.yx8blcjbm": "Teff: exoplanet.eu, отримано {n0}-{n1}-{n2}; колір зорі: планківський спектр через функції узгодження кольорів CIE {n3}",
  "@js.yx8blcjbm": {
@@ -10955,6 +11150,11 @@
  "@js.yza9eps8ud": {
   "x-review": "machine",
   "x-source": "871e79db9b"
+ },
+ "js.yzugi1nrhx": "exoplanet.eu подає статус «Опубліковано в рецензованій статті», знайдено методом первинного транзиту в {n0}; запис оновлено {n1}-{n2}-{n3}. Інша назва: HD {n4} c.",
+ "@js.yzugi1nrhx": {
+  "x-review": "machine",
+  "x-source": "aee1648ae2"
  },
  "js.z0e3dbqjze": "– відфільтровано через замалу кількість транзитів",
  "@js.z0e3dbqjze": {
@@ -10976,25 +11176,10 @@
   "x-review": "machine",
   "x-source": "a9d66a33c2"
  },
- "js.z7hoxivdkf": "<b>ν валентне коливання</b> · {n0} µm · неактивне в інфрачервоному діапазоні (диполь не змінюється) · зображено ×{n1} · поза вікном {n2}–{n3} µm сторінки {s0}",
- "@js.z7hoxivdkf": {
-  "x-review": "machine",
-  "x-source": "1bcc8097d6"
- },
  "js.zae6h8rkk6": "Sentinel: модель ШІ (Claude Code CLI (Claude, Anthropic) · default), яка читає побудовану криву блиску й відмічає спади. Це не людина.",
  "@js.zae6h8rkk6": {
   "x-review": "machine",
   "x-source": "adeac0a395"
- },
- "js.zb00gkwd2w": "<b>ν₁ симетричне валентне коливання</b> · {n0} µm · активне в інфрачервоному діапазоні · зображено ×{n1} · <a href=\"/how-it-works/atmospheres/\">смуга {n2} µm на сторінці {s0} ›</a>",
- "@js.zb00gkwd2w": {
-  "x-review": "machine",
-  "x-source": "5b5f436da5"
- },
- "js.zbm91l3rcx": "<b>ν₃ асиметричне валентне коливання</b> · {n0} µm · активне в інфрачервоному діапазоні · зображено ×{n1} · <a href=\"/how-it-works/atmospheres/\">смуга {n2} µm на сторінці «Читання атмосфер» ›</a>",
- "@js.zbm91l3rcx": {
-  "x-review": "machine",
-  "x-source": "a265a49ab4"
  },
  "js.zdvz2hwho1": "{n0} відомих TOI",
  "@js.zdvz2hwho1": {
@@ -11015,6 +11200,11 @@
  "@js.zhegcnbaps": {
   "x-review": "machine",
   "x-source": "43c883da28"
+ },
+ "js.zjf4m6pas4": "tau Boo Ab ›",
+ "@js.zjf4m6pas4": {
+  "x-review": "machine",
+  "x-source": "5487f582ec"
  },
  "js.zknme5264y": "Прапорці перевірки: <span class=\"mono\">density_mismatch</span> · пройшов перевірку",
  "@js.zknme5264y": {
@@ -11070,6 +11260,11 @@
  "@js.zwdwnqegck": {
   "x-review": "machine",
   "x-source": "c369fc08d2"
+ },
+ "js.zzww829dur": "великий",
+ "@js.zzww829dur": {
+  "x-review": "machine",
+  "x-source": "d35c416a85"
  },
  "label.art": "Художнє бачення",
  "@label.art": {
@@ -13570,6 +13765,11 @@
  "@pg.39a5ae06fe": {
   "x-review": "machine",
   "x-source": "39a5ae06fe"
+ },
+ "pg.39b16a9877": "<a href=\"https://arxiv.org/abs/1001.2010\" rel=\"noopener\">Winn {n0}, Транзити та покриття</a>",
+ "@pg.39b16a9877": {
+  "x-review": "machine",
+  "x-source": "39b16a9877"
  },
  "pg.39de4731ee": "Малюнок",
  "@pg.39de4731ee": {
@@ -18925,6 +19125,11 @@
  "@pg.f3592c4241": {
   "x-review": "machine",
   "x-source": "f3592c4241"
+ },
+ "pg.f3856d19f1": "{n0} d і {n1} d",
+ "@pg.f3856d19f1": {
+  "x-review": "machine",
+  "x-source": "f3856d19f1"
  },
  "pg.f3ab85e317": "K для Земля–Сонце",
  "@pg.f3ab85e317": {

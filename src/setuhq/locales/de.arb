@@ -2016,20 +2016,10 @@
   "x-review": "machine",
   "x-source": "acac77611f"
  },
- "js.103n82dja3r": "Katalog aktualisiert am <time datetime=\"2026-10-29T00:47:42+00:00\" title=\"2026-10-29T00:47:42+00:00\">{n0}. Okt. {n1}, {n2} UTC</time>.",
- "@js.103n82dja3r": {
-  "x-review": "machine",
-  "x-source": "273b2777f8"
- },
  "js.104nn3vx4at": "Begriff",
  "@js.104nn3vx4at": {
   "x-review": "machine",
   "x-source": "c6f3bfd456"
- },
- "js.106g3hdfp83": "TIC {n0} · bei der Prüfung verworfen, kein Kandidat",
- "@js.106g3hdfp83": {
-  "x-review": "machine",
-  "x-source": "9772d14ea9"
  },
  "js.106t6pg6coj": "{n0} Planet in exoplanet.eu · Klasse G aus Teff (nächster: G5V)",
  "@js.106t6pg6coj": {
@@ -2061,25 +2051,20 @@
   "x-review": "machine",
   "x-source": "ffa10fa912"
  },
+ "js.10so4x5ppkr": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">7a. <span class=\"mono\">tess-eaab33b6b763-{n0}</span>.</b> Helligkeitseinbruch bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Von {n5} Prüfern markiert (der Katalog speichert weder die Größe des Gremiums noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
+ "@js.10so4x5ppkr": {
+  "x-review": "machine",
+  "x-source": "789c4ff542"
+ },
  "js.10v4vkxqjry": "Für diesen Stern ist in diesem Build keine Lichtkurve gespeichert: Der Suchkatalog speichert nur Messwerte, daher gibt es weder eine Kurve des gesamten Subjekts noch ein gefaltetes Panel.",
  "@js.10v4vkxqjry": {
   "x-review": "machine",
   "x-source": "7fe57adca4"
  },
- "js.10vb2hszsy6": "<b>{n0}</b> der {n1} Planeten mit gespeicherter Entfernung in exoplanet.eu wurden per Transit gefunden (die erste angegebene Methode). <a href=\"/explore/galaxy/?method=transit\">Auf der Galaxy-Karte zeigen ›</a>",
- "@js.10vb2hszsy6": {
-  "x-review": "machine",
-  "x-source": "01ac9f0ca4"
- },
  "js.10vrj8m3wjv": "CO <span>Kohlenmonoxid</span>",
  "@js.10vrj8m3wjv": {
   "x-review": "machine",
   "x-source": "828d691c9b"
- },
- "js.10wj3xzpdgf": "Die Sonnenscheibe, {n0} K, in ihrer Schwarzkörperfarbe mit Randverdunkelung.",
- "@js.10wj3xzpdgf": {
-  "x-review": "machine",
-  "x-source": "ae27e2403d"
  },
  "js.10zmmlwb9xi": "<b>Lyot-Koronagraph.</b> Eine undurchsichtige Scheibe in der Fokalebene blockiert den Kern des Sternbilds. Was sie nicht entfernt, ist das an ihrem Rand gebeugte Licht, das die nächste Linse an den Rand der neu abgebildeten Pupille lenkt; eine Lyot-Blende, etwas kleiner als die Pupille, fängt diesen Rand ab (Lyot {n0}). Bei einer Scheibe von {n1} λ/D senkt das Schließen der Blende von {n2} % auf {n3} % der Pupille das Sternlicht bei {n4} λ/D von {n5}×{n6}⁻⁵ auf {n7}×{n8}⁻⁷ des Sternmaximums (ohne Koronagraph: {n9}×{n10}⁻⁵) [ber.], während ein Planet weit außerhalb der Scheibe {n11} % seines Lichts behält, die Fläche der Blende.",
  "@js.10zmmlwb9xi": {
@@ -2135,6 +2120,11 @@
  "@js.11kdzzmc5nu": {
   "x-review": "machine",
   "x-source": "184a6800cc"
+ },
+ "js.11n5kdywh3l": "Teff",
+ "@js.11n5kdywh3l": {
+  "x-review": "machine",
+  "x-source": "4b0fa3b17f"
  },
  "js.11n6gzp7din": "{n0} (vom Prior dominiert; kein Fehler angegeben, da er nur den des Priors wiedergeben würde)",
  "@js.11n6gzp7din": {
@@ -2196,6 +2186,11 @@
   "x-review": "machine",
   "x-source": "f8acf4d692"
  },
+ "js.122id4bsvl0": "<i style=\"background:#FFD60A\"></i>Astrometrie <span class=\"mono\">{n0}</span>",
+ "@js.122id4bsvl0": {
+  "x-review": "machine",
+  "x-source": "8013870b43"
+ },
  "js.122x1s0w9zz": "F_Q · F_HZ, logarithmische Skala",
  "@js.122x1s0w9zz": {
   "x-review": "machine",
@@ -2216,10 +2211,10 @@
   "x-review": "machine",
   "x-source": "cc95c0003c"
  },
- "js.12cg9tt6w6b": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Sentinel-Feed",
- "@js.12cg9tt6w6b": {
+ "js.12cis2bjlup": "Radio",
+ "@js.12cis2bjlup": {
   "x-review": "machine",
-  "x-source": "2d63ad7563"
+  "x-source": "2a7dfeb2f2"
  },
  "js.12ed4zztqr8": "Künstlerische Darstellung von {s0}: ein Neptun-ähnlicher Planet im warmen Bereich, {n0} Erdradien, {n1} K.",
  "@js.12ed4zztqr8": {
@@ -2241,15 +2236,20 @@
   "x-review": "machine",
   "x-source": "8ec36a17e7"
  },
- "js.12lth0d2p34": "Im Jahr {n0} fanden Wolszczan und Frail Planeten um den Millisekundenpulsar PSR B1257+{n1} anhand des regelmäßigen Schwankens der Ankunftszeiten seiner Pulse (Wolszczan &amp; Frail {n2}): Die Planeten ziehen am Pulsar, und die Lichtlaufzeit ändert sich um Millisekunden. Das ist Radio-Timing, keine Radiostrahlung von einem Planeten. <a href=\"/explore/galaxy/?tour=13\">Seine Karte in der Galaxy-Tour ›</a>",
- "@js.12lth0d2p34": {
-  "x-review": "machine",
-  "x-source": "a919cbb3a4"
- },
  "js.12m26xazjm": "Prüfung bestanden; {n0} % des Gewichts des Panels stuften das Subjekt als potenziellen Planeten ein; auf einem periodischen Signal: {n1} Transits, P = {n2} d",
  "@js.12m26xazjm": {
   "x-review": "machine",
   "x-source": "8ec885602b"
+ },
+ "js.12ooi6yhl0h": "Kepler-{n0} b",
+ "@js.12ooi6yhl0h": {
+  "x-review": "machine",
+  "x-source": "5d97744685"
+ },
+ "js.12q7to7nkw0": "Auf uns zu und von uns weg",
+ "@js.12q7to7nkw0": {
+  "x-review": "machine",
+  "x-source": "982502489b"
  },
  "js.12ujqir6o8g": "JWST-MIRI-Koronagraph",
  "@js.12ujqir6o8g": {
@@ -2260,6 +2260,11 @@
  "@js.12vi4vfunn8": {
   "x-review": "machine",
   "x-source": "05ed847784"
+ },
+ "js.12w6m38pgra": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">7b. <span class=\"mono\">tess-1c554332c266-{n0}</span>.</b> Helligkeitseinbruch bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Von {n5} Prüfern markiert (der Katalog speichert weder die Größe des Gremiums noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
+ "@js.12w6m38pgra": {
+  "x-review": "machine",
+  "x-source": "961ae19d5c"
  },
  "js.12y2sroyczu": "{n0} Grundschwingung",
  "@js.12y2sroyczu": {
@@ -2296,11 +2301,6 @@
   "x-review": "machine",
   "x-source": "bff9d47f59"
  },
- "js.136ul906qph": "Quelle: SetuHQs gespeicherter Lauf runs/tess-pi-men-s1 (TESS-Sektor {n0}, SPOC-PDCSAP-Fluss mit {n1}-Minuten-Kadenz, TIC {n2}; Konfiguration sha256 585955d5e7a1…): {n3} gespeicherte Punkte, jedes Subjekt auf seinen Median normiert und auf {n4} Minuten gebinnt.",
- "@js.136ul906qph": {
-  "x-review": "machine",
-  "x-source": "af8431ab78"
- },
  "js.138zpxk17ru": "f_i, logarithmische Skala",
  "@js.138zpxk17ru": {
   "x-review": "machine",
@@ -2316,11 +2316,6 @@
   "x-review": "machine",
   "x-source": "e39c1a07d7"
  },
- "js.13ac253fetk": "<b>{n0}</b> der {n1} Planeten mit gespeicherter Entfernung in exoplanet.eu wurden per Astrometrie gefunden (die erste angegebene Methode). <a href=\"/explore/galaxy/?method=astrometry\">Auf der Galaxy-Karte zeigen ›</a>",
- "@js.13ac253fetk": {
-  "x-review": "machine",
-  "x-source": "dc5877cdd7"
- },
  "js.13cdu73b6uc": "CO₂-Photolyse um manche Sterne oder massives Entweichen von Wasserstoff nach Wasserverlust.",
  "@js.13cdu73b6uc": {
   "x-review": "machine",
@@ -2335,6 +2330,11 @@
  "@js.13ffhncz0ep": {
   "x-review": "machine",
   "x-source": "7b27994bc4"
+ },
+ "js.13gocj2fnda": "docs/results/reviewer_weights_full_panel.json",
+ "@js.13gocj2fnda": {
+  "x-review": "machine",
+  "x-source": "5134ba8327"
  },
  "js.13i1elxloqt": "pi Men c: pro Skalenhöhe, H₂-reich",
  "@js.13i1elxloqt": {
@@ -2355,6 +2355,11 @@
  "@js.13kikmj1q17": {
   "x-review": "machine",
   "x-source": "f5cca1ccc1"
+ },
+ "js.13lcq3b40tl": "Illustration",
+ "@js.13lcq3b40tl": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
  },
  "js.13mufrch5ly": "tess-38b5a559eee2-{n0}",
  "@js.13mufrch5ly": {
@@ -2381,15 +2386,20 @@
   "x-review": "machine",
   "x-source": "118618889c"
  },
+ "js.13swdwmmbmi": "Läufe und Konfiguration ›",
+ "@js.13swdwmmbmi": {
+  "x-review": "machine",
+  "x-source": "c610f2888d"
+ },
  "js.13t7ixpw2ky": "Top-Kandidaten",
  "@js.13t7ixpw2ky": {
   "x-review": "machine",
   "x-source": "7021bb9b5f"
  },
- "js.13vqj4f8hh6": "Bei einem instrumentellen Hinweis: ein Subjektrand; ein Momentum-Dump, ein Streulicht-Flag oder ein Pointing- bzw. Manual-Exclude-Flag innerhalb von {n0} d; eine Datenlücke von über {n1} d innerhalb von {n2} d; oder wenn die Hälfte des Panel-Gewichts es als instrumentell einstuft.",
- "@js.13vqj4f8hh6": {
+ "js.13x58b3mwwa": "Wolf {n0} c",
+ "@js.13x58b3mwwa": {
   "x-review": "machine",
-  "x-source": "0495534488"
+  "x-source": "560cd4bbe1"
  },
  "js.13xevrqzvu7": "F_S (nachweisbares Gas)",
  "@js.13xevrqzvu7": {
@@ -2410,6 +2420,11 @@
  "@js.1473r6pfqi4": {
   "x-review": "machine",
   "x-source": "b2990754ad"
+ },
+ "js.14cls39i1sb": "Luhman {n0} B",
+ "@js.14cls39i1sb": {
+  "x-review": "machine",
+  "x-source": "f04427416b"
  },
  "js.14ct4jjljtx": "Vorherige Station",
  "@js.14ct4jjljtx": {
@@ -2440,6 +2455,16 @@
  "@js.14fe8ebzk21": {
   "x-review": "machine",
   "x-source": "365e781739"
+ },
+ "js.14huikxe5ha": "Luyten's Star e",
+ "@js.14huikxe5ha": {
+  "x-review": "machine",
+  "x-source": "5a24593e14"
+ },
+ "js.14isgauchsm": "YZ Cet",
+ "@js.14isgauchsm": {
+  "x-review": "machine",
+  "x-source": "f80e6fd49c"
  },
  "js.14iuxy783ms": "Auch bekannt als EQ Peg A, BD+{n0} {n1} A, LMP {n2} A, WIR {n3} A.",
  "@js.14iuxy783ms": {
@@ -2591,6 +2616,16 @@
   "x-review": "machine",
   "x-source": "dd7d34d846"
  },
+ "js.15phwu441vo": "Lalande {n0} c",
+ "@js.15phwu441vo": {
+  "x-review": "machine",
+  "x-source": "5aa41e4960"
+ },
+ "js.15pp5ycbnhi": "Überschuss ({n0}%)",
+ "@js.15pp5ycbnhi": {
+  "x-review": "machine",
+  "x-source": "8cd023e1a1"
+ },
  "js.15r06e4vt70": "Lauf tess-hd-{n0}-s4 · {n1} Dips ({n2} Kandidaten, {n3} markiert) · {n4} Subjekte.<span class=\"printonly\"> Jeder Kandidat auf dieser Tafel: Kandidat, unbestätigt.</span>",
  "@js.15r06e4vt70": {
   "x-review": "machine",
@@ -2610,6 +2645,11 @@
  "@js.15vez7zpk4h": {
   "x-review": "machine",
   "x-source": "d4a367de3f"
+ },
+ "js.15zsmt411w4": "Sentinel · Skeptiker <span class=\"mono idtag\" title=\"reviewer id\">claude-skeptic</span>",
+ "@js.15zsmt411w4": {
+  "x-review": "machine",
+  "x-source": "b732d52e24"
  },
  "js.161sousy7g0": "Stoßparameter",
  "@js.161sousy7g0": {
@@ -2656,6 +2696,11 @@
   "x-review": "machine",
   "x-source": "3b661f9791"
  },
+ "js.16h8d5mlpjp": "Probes",
+ "@js.16h8d5mlpjp": {
+  "x-review": "machine",
+  "x-source": "8f6e567898"
+ },
  "js.16hqbj09o4u": "Feldlinien, Kegel und Umlaufbahn nicht maßstabsgetreu; Ausbruchszeiten illustrativ; Grenzfrequenz berechnet",
  "@js.16hqbj09o4u": {
   "x-review": "machine",
@@ -2670,11 +2715,6 @@
  "@js.16mxiyd8s0l": {
   "x-review": "machine",
   "x-source": "e223d8ec1e"
- },
- "js.16qlwwljm69": "<b>Pro Sweeps</b> <span class=\"eddev\">in Entwicklung</span>: gehostete Suchen über Sektoren oder Ziellisten, mit dem eigenen KI-Anbieterschlüssel des Kunden; die Ergebnisse kommen als offene Beitragspakete zurück",
- "@js.16qlwwljm69": {
-  "x-review": "machine",
-  "x-source": "31d3ac206f"
  },
  "js.16r0kn8gjyr": "Die Durchmusterung, die SetuHQ ausliest.",
  "@js.16r0kn8gjyr": {
@@ -2691,11 +2731,6 @@
   "x-review": "machine",
   "x-source": "b7b7f73a1e"
  },
- "js.16vo26f9hfu": "Gleiche Eingabe wie pycheops: bei jedem Referenzbesuch stimmt unsere Dekorrelation mit der von pycheops auf &lt; {n0} ppm rms überein oder erreicht einen niedrigeren rms-Wert auf denselben Punkten und Termen (gelockert nach v1)",
- "@js.16vo26f9hfu": {
-  "x-review": "machine",
-  "x-source": "c88247e554"
- },
  "js.16x61d2zia4": "<span class=\"word s-rej\">durch Prüfung verworfen</span><b class=\"fig\">1d. TOI-{n0}, Dip {n1}.</b> <span class=\"sid mono\">gespeicherte ID tess-01e315ee5ebf-{n2}.</span> Dip bei BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsensintervall BTJD {n7} bis {n8}. Markiert von {n9} von {n10} Reviewern ({n11} von {n12} Sentinels, {n13} von {n14} Probes). Liegt auf einer BLS-Periode von {n15} Tagen (t0 BTJD {n16}). Durch Prüfung verworfen (Sekundärbedeckung, Sekundärbedeckung bei beliebiger Phase). Archiv: kein Archivplanet innerhalb der Toleranz. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
  "@js.16x61d2zia4": {
   "x-review": "machine",
@@ -2705,11 +2740,6 @@
  "@js.16xd4uxov7b": {
   "x-review": "machine",
   "x-source": "6e2db4884e"
- },
- "js.16xkma5n6o5": "Die Kontrollen entscheiden über die Aufnahme ins Ranking und gehen nicht in J ein: Nur zurückgehaltene Einträge mit beiden Kontrolllisten für jeden durchsuchten Stern werden gerankt, andere werden ohne Rang aufgeführt. Die Kontrolllisten sind der eigene Bericht der Methode; die Rangliste kann sie ohne die Lichtkurven nicht neu berechnen. Die Sentinel-Teilstichprobe wird nie gerankt.",
- "@js.16xkma5n6o5": {
-  "x-review": "machine",
-  "x-source": "698a7fa611"
  },
  "js.16yau0dec1n": "Überall durch gewöhnliche Chemie und Ausgasung erzeugt. Keine Biosignatur.",
  "@js.16yau0dec1n": {
@@ -2731,11 +2761,6 @@
   "x-review": "machine",
   "x-source": "00d60e31a4"
  },
- "js.170ttkobv": "<b>Illustration.</b> Erklärt eine Idee; keine Daten.",
- "@js.170ttkobv": {
-  "x-review": "machine",
-  "x-source": "f84dea2704"
- },
  "js.1752ocxoxow": "Verhältnis",
  "@js.1752ocxoxow": {
   "x-review": "machine",
@@ -2745,6 +2770,11 @@
  "@js.175a50uaz7u": {
   "x-review": "machine",
   "x-source": "05e19aa7b7"
+ },
+ "js.176wwpyjrg6": "eps Eridani b",
+ "@js.176wwpyjrg6": {
+  "x-review": "machine",
+  "x-source": "d935a49c88"
  },
  "js.17hw2mxavcy": "Wahrscheinlichkeit, dass eine Erde-Sonne-Umlaufbahn einen Transit zeigt",
  "@js.17hw2mxavcy": {
@@ -2766,10 +2796,10 @@
   "x-review": "machine",
   "x-source": "4a850645ed"
  },
- "js.17k76okut7k": "Künstlerische Darstellung: das Aussehen eines warmen Riesen, für Radius {n0} R⊕ oder mehr, Teq {n1} bis {n2} K: weiße Wolkenbänder. Ein Standbild des Aussehens, nicht eines bestimmten Planeten.",
- "@js.17k76okut7k": {
+ "js.17ntl740ako": "YZ Cet c",
+ "@js.17ntl740ako": {
   "x-review": "machine",
-  "x-source": "6486ceb3f7"
+  "x-source": "5120e910b2"
  },
  "js.17nxghh8cwl": "Jeder Einbruch jedes Beispiellaufs, nach Stern gruppiert und in zeitlicher Reihenfolge nummeriert, mit seinem Prüfergebnis. Ein Einbruch, der die Prüfung bestanden hat, ist ein Kandidat, unbestätigt.",
  "@js.17nxghh8cwl": {
@@ -2826,6 +2856,11 @@
   "x-review": "machine",
   "x-source": "b7312318e0"
  },
+ "js.183wr165iky": "Gespeicherte ID tess-7b97e468b60b-{n0}; keine Falldatei in diesem Lauf",
+ "@js.183wr165iky": {
+  "x-review": "machine",
+  "x-source": "2cfabb7955"
+ },
  "js.184alwhvm3u": "≈ {n0} Tage",
  "@js.184alwhvm3u": {
   "x-review": "machine",
@@ -2866,6 +2901,11 @@
   "x-review": "machine",
   "x-source": "dece0e17ca"
  },
+ "js.18lwk9i51zo": "tau Cet h",
+ "@js.18lwk9i51zo": {
+  "x-review": "machine",
+  "x-source": "f7da4e8eac"
+ },
  "js.18n6es5ok3o": "Markierungen (BTJD)",
  "@js.18n6es5ok3o": {
   "x-review": "machine",
@@ -2886,15 +2926,15 @@
   "x-review": "machine",
   "x-source": "9ca7ead3fe"
  },
- "js.18o5x6sbdjj": "<b>{n0}</b> der {n1} Planeten mit gespeicherter Entfernung in exoplanet.eu wurden durch Mikrolinseneffekt gefunden (die erste aufgeführte Methode). <a href=\"/explore/galaxy/?method=microlensing\">Auf der Galaxienkarte zeigen ›</a>",
- "@js.18o5x6sbdjj": {
-  "x-review": "machine",
-  "x-source": "75b3704ae2"
- },
  "js.18oql4qf149": "Verhältnis (frei / Huang)",
  "@js.18oql4qf149": {
   "x-review": "machine",
   "x-source": "a32de90fca"
+ },
+ "js.18otqbloli3": "Luyten's Star c",
+ "@js.18otqbloli3": {
+  "x-review": "machine",
+  "x-source": "de5d475f55"
  },
  "js.18qifo210uh": "SetuHQ beobachtet nicht im Radiobereich. Die Szene ist eine Illustration: Feldlinien, Kegel und Umlaufbahn sind nicht maßstabsgetreu, und die Ausbruchszeiten sind illustrativ; nur die Grenzfrequenz ist berechnet.",
  "@js.18qifo210uh": {
@@ -2941,6 +2981,11 @@
   "x-review": "machine",
   "x-source": "c11a942411"
  },
+ "js.196px5ez5bg": "Lalande {n0} b",
+ "@js.196px5ez5bg": {
+  "x-review": "machine",
+  "x-source": "9228522611"
+ },
  "js.197t86p2mo2": "Feed · Periode stimmt mit einem bekannten TOI überein · P {n0} d · {n1} Transits",
  "@js.197t86p2mo2": {
   "x-review": "machine",
@@ -2950,11 +2995,6 @@
  "@js.199k9vutkk7": {
   "x-review": "machine",
   "x-source": "14d5771087"
- },
- "js.19egy1xdd4z": "Ein Molekül mit N Atomen hat 3N − {n0} Schwingungsmöglichkeiten (3N − {n1}, wenn es linear ist): Wasser hat drei, Kohlendioxid vier (seine Biegeschwingung tritt zweimal auf, im rechten Winkel zueinander), Methan neun. Eine Mode absorbiert Infrarotlicht nur, wenn sie das Dipolmoment des Moleküls ändert. Deshalb sind die symmetrische Streckschwingung von CO₂ ({n2} µm), die Streckschwingung von O₂ und zwei der vier Grundschwingungen von Methan im Infraroten stumm. Die Banden, die die Moden erzeugen, sind die, die das Kapitel {s0} markiert: Die beiden Streckschwingungen von Wasser bei {n3} und {n4} µm bilden seine {n5}-µm-Bande, ν₃ von Methan die {n6}-µm-Bande, die asymmetrische Streckschwingung von CO₂ die {n7}-µm-Bande und die Streckschwingung von CO die {n8}-µm-Bande.",
- "@js.19egy1xdd4z": {
-  "x-review": "machine",
-  "x-source": "34a40a6e3c"
  },
  "js.19gww8mixuh": "Wie Astrometrie funktioniert ›",
  "@js.19gww8mixuh": {
@@ -3031,6 +3071,11 @@
   "x-review": "machine",
   "x-source": "7cb381fdb4"
  },
+ "js.1a5z9qhmjgc": "Sentinels",
+ "@js.1a5z9qhmjgc": {
+  "x-review": "machine",
+  "x-source": "2e1e6f1301"
+ },
  "js.1a6l9fjw5he": "Planet: künstlerische Darstellung ›",
  "@js.1a6l9fjw5he": {
   "x-review": "machine",
@@ -3085,6 +3130,11 @@
  "@js.1al74ewy2g6": {
   "x-review": "machine",
   "x-source": "df55237fb1"
+ },
+ "js.1aol2kz2k2l": "Transit",
+ "@js.1aol2kz2k2l": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
  },
  "js.1aqv49cd0kk": "markiert",
  "@js.1aqv49cd0kk": {
@@ -3196,11 +3246,6 @@
   "x-review": "machine",
   "x-source": "c9a6bca81c"
  },
- "js.1bhkarus91o": "<b>ν-Streckschwingung</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">die {n2}-µm-Bande in {s0} ›</a>",
- "@js.1bhkarus91o": {
-  "x-review": "machine",
-  "x-source": "d76ad8b3b9"
- },
  "js.1bj34kz5aki": "Laufbericht: HD {n0}",
  "@js.1bj34kz5aki": {
   "x-review": "machine",
@@ -3256,10 +3301,10 @@
   "x-review": "machine",
   "x-source": "734f2ee779"
  },
- "js.1c43a5mbtcb": "Periode stimmt mit einem bekannten TOI-<span class=\"tag cand\" title=\"candidate, unconfirmed\">Kandidaten</span> überein",
- "@js.1c43a5mbtcb": {
+ "js.1c5e6ri6127": "Wolf {n0}",
+ "@js.1c5e6ri6127": {
   "x-review": "machine",
-  "x-source": "e0828d838c"
+  "x-source": "40c0e1f8f4"
  },
  "js.1c7794vgcfx": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">4h. <span class=\"mono\">tess-3b0eb3c81ad6-{n0}</span>.</b> Dip bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markiert von {n5} Prüfern (der Katalog speichert weder die Größe des Gremiums noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
  "@js.1c7794vgcfx": {
@@ -3291,11 +3336,6 @@
   "x-review": "machine",
   "x-source": "dcd3b3c030"
  },
- "js.1cj5f6isk29": "<b>ν₂-Biegeschwingung (zwei, rechtwinklig zueinander)</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · außerhalb des {n2}–{n3}-µm-Fensters von {s0}",
- "@js.1cj5f6isk29": {
-  "x-review": "machine",
-  "x-source": "fffacfe81d"
- },
  "js.1ckbr2brf2r": "Gespeicherte ID tess-bc9f59e5c3af-{n0}; keine Fallakte in diesem Lauf",
  "@js.1ckbr2brf2r": {
   "x-review": "machine",
@@ -3305,6 +3345,11 @@
  "@js.1clmexejrlr": {
   "x-review": "machine",
   "x-source": "8a07e9e968"
+ },
+ "js.1cmc1ajakjd": "eps Ind B",
+ "@js.1cmc1ajakjd": {
+  "x-review": "machine",
+  "x-source": "a7c8e06a1d"
  },
  "js.1coc893jlc0": "P = {n0} a, e = {n1}, nominelle IAU-Massen [calc]",
  "@js.1coc893jlc0": {
@@ -3330,11 +3375,6 @@
  "@js.1cx2mlrh2q7": {
   "x-review": "machine",
   "x-source": "11a4a60b51"
- },
- "js.1cy89xikthl": "<b>Gemessen an einem angegebenen Benchmark, keine Entdeckungen.</b> {n0} bestätigte oder bekannte Planeten (CP/KP), {n1} Falsch-Positive und {n2} Fehlalarme aus der TOI-Tabelle (abgerufen am {n3}-{n4}-{n5}, Seed {n6}), ein TOI pro Stern; die zurückgehaltene Hälfte wird gezeigt. Gremium: die drei Probes (deterministische Detektoren) mit ihren eingefrorenen kalibrierten Gewichten; sektorweites BLS; Prüfung; Fit mit Randverdunkelung; die Tabelle auf Feed-Ebene ergänzt die FAP des Feeds ({n7} Versuche).",
- "@js.1cy89xikthl": {
-  "x-review": "machine",
-  "x-source": "2db2bd3746"
  },
  "js.1d2fjcit5ne": "Familie",
  "@js.1d2fjcit5ne": {
@@ -3380,11 +3420,6 @@
  "@js.1dbkcqukzan": {
   "x-review": "machine",
   "x-source": "04a1d0a0c8"
- },
- "js.1dcsl4f0wrb": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s0}</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">Lauf tess-pi-men-s1 · {n1} Einträge</span>",
- "@js.1dcsl4f0wrb": {
-  "x-review": "machine",
-  "x-source": "d3862be740"
  },
  "js.1dd353vmae5": "Ein erdgroßer Planet in der habitablen Zone seines Sterns.",
  "@js.1dd353vmae5": {
@@ -3456,15 +3491,15 @@
   "x-review": "machine",
   "x-source": "8a0d9e2efe"
  },
- "js.1e0thu83q1m": "<b>ν₁ symmetrische Streckschwingung</b> · {n0} µm · infrarot-inaktiv (das Dipolmoment ändert sich nicht) · ×{n1} gezeichnet · außerhalb des Fensters {n2}–{n3} µm von {s0}",
- "@js.1e0thu83q1m": {
-  "x-review": "machine",
-  "x-source": "b5a09a9656"
- },
  "js.1e1cj7tvww2": "Probe · Empfindlich <span class=\"sub mono\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1e1cj7tvww2": {
   "x-review": "machine",
   "x-source": "b9b4c27050"
+ },
+ "js.1e34rrpji4d": "{n0} TOIs in der Stichprobe",
+ "@js.1e34rrpji4d": {
+  "x-review": "machine",
+  "x-source": "f87cb7f911"
  },
  "js.1e4aq4nvmgn": "Labels und Begründungen der Prüfer",
  "@js.1e4aq4nvmgn": {
@@ -3481,15 +3516,10 @@
   "x-review": "machine",
   "x-source": "5acf5925b9"
  },
- "js.1ea3o7os4iv": "SetuHQs Prüf-Flags, allein aus der Lichtkurve: <code>odd_even_mismatch</code> (ungerade und gerade Tiefen unterscheiden sich), <code>secondary_eclipse</code> (ein Einbruch bei Phase {n0}), <code>low_snr</code>, <code>too_short</code>, <code>edge_event</code> und <code>insufficient_points</code>. Es gibt keine Schwerpunkt- oder Differenzbildprüfung auf Pixelebene und keine statistische Validierung, sodass ein überlagerter Hintergrund-Doppelstern durchkommen kann. <a href=\"/evidence/\">Zu den Prüfern ›</a> · <a href=\"/candidates/pi-men/dip-2/\">Einen geprüften Fall ansehen ›</a>",
- "@js.1ea3o7os4iv": {
+ "js.1ecc8oy35i4": "Teegarden's d",
+ "@js.1ecc8oy35i4": {
   "x-review": "machine",
-  "x-source": "9c325d6228"
- },
- "js.1eb7589ltee": "Archivvergleich: kein Archivplanet innerhalb der Toleranz (dieser Einbruch hat keine BLS-Periode zum Vergleich); {s0}: keine Transit-Ephemeride zum Vergleich. Nur Archivwerte. Diese Seite beansprucht keine Detektion.",
- "@js.1eb7589ltee": {
-  "x-review": "machine",
-  "x-source": "1e8af2cf5f"
+  "x-source": "461cf62f48"
  },
  "js.1ecof5fze2u": "Alle Prüfungen bestanden. Markiert von {n0} von {n1} Probes und {n2} von {n3} Sentinels. Kandidat, unbestätigt.",
  "@js.1ecof5fze2u": {
@@ -3551,11 +3581,6 @@
   "x-review": "machine",
   "x-source": "45ef298afc"
  },
- "js.1eqtzlgohp1": "Streulicht: Es wurde keine gelabelte reale Stichprobe gefunden; das Screening (Qualitäts-Flags und Kontrollaperturen) ist beschrieben und an synthetischen Ereignissen sowie den Kontrollaperturen der Supernova-Ausschnitte erprobt, nicht gegen einen Katalog von Streulichtereignissen validiert.",
- "@js.1eqtzlgohp1": {
-  "x-review": "machine",
-  "x-source": "cef1f20086"
- },
  "js.1etlbcax1sp": "ii · gesamtes Objekt tess-4b369d3c6f09",
  "@js.1etlbcax1sp": {
   "x-review": "machine",
@@ -3591,11 +3616,6 @@
   "x-review": "machine",
   "x-source": "e37b76fbec"
  },
- "js.1f208h2gzzx": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · zur Prüfung markiert, offen",
- "@js.1f208h2gzzx": {
-  "x-review": "machine",
-  "x-source": "bfe3196ddb"
- },
  "js.1f3str9e5jr": "nicht maßstabsgetreu; nach Lyot {n0}",
  "@js.1f3str9e5jr": {
   "x-review": "machine",
@@ -3605,11 +3625,6 @@
  "@js.1f423dts634": {
   "x-review": "machine",
   "x-source": "0e47f09a74"
- },
- "js.1f5jrzkwrow": "Rang: Youdens J auf der durchsuchbaren Menge, die der Benchmark festgelegt hat (Sterne mit einer SPOC-{n0}-Minuten-Lichtkurve), mit einem Prädikat auf beiden Seiten, einem sauberen Kandidaten (auf der Ephemeride, Prüfung bestanden, kein Bedeckungsveränderlichen-Flag): J = der Anteil der CP/KP-Sterne, die als saubere Kandidaten angeboten werden, + der Anteil der FP-Sterne, die nicht angeboten werden, − {n1}, mit einem Wilson-Intervall nach Quadrieren und Addieren. Wer jedes TOI als Planeten bezeichnet, mit oder ohne Flag, erzielt J = {n2}; ein durchsuchbarer Stern, der als nicht durchsucht gemeldet wird, zählt als nicht angeboten. J über alle Sterne des Umfangs wird daneben gezeigt. Wo sich Intervalle überlappen, ist die Reihenfolge kein gemessener Unterschied.",
- "@js.1f5jrzkwrow": {
-  "x-review": "machine",
-  "x-source": "5fa0572ae2"
  },
  "js.1f71ffjmfo5": "Mindestmasse (m sin i)",
  "@js.1f71ffjmfo5": {
@@ -3630,6 +3645,11 @@
  "@js.1f84decza55": {
   "x-review": "machine",
   "x-source": "7bb250633d"
+ },
+ "js.1fa3dkre7ep": "warm",
+ "@js.1fa3dkre7ep": {
+  "x-review": "machine",
+  "x-source": "0f0aa408c1"
  },
  "js.1faz9a47wga": "K_R ≈ V sin I · k² mit V sin I = {n0} km/s und k = {n1}, beide aus Gaudi &amp; Winn {n2} Tabelle {n3}, die {n4} m/s angibt [calc]",
  "@js.1faz9a47wga": {
@@ -3666,11 +3686,6 @@
   "x-review": "machine",
   "x-source": "c6b9a506e0"
  },
- "js.1fo0ybrjcxn": "<b>Daten: The Extrasolar Planets Encyclopaedia (exoplanet.eu), abgerufen am {n0}. Okt. {n1}; {n2} Planeten mit gespeicherter Entfernung, um {n3} Sterne.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. Das NASA Exoplanet Archive war beim Abruf dieser Liste nicht erreichbar, daher stammt sie allein von exoplanet.eu. exoplanet.eu führt jedes Objekt, das es als Planeten behandelt, als bestätigt: Körper bis zu {n4} Jupitermassen (innerhalb ihrer Unsicherheit), veröffentlicht oder angekündigt. Seine Liste ist breiter als die des NASA Exoplanet Archive, das Objekte bis zu {n5} Jupitermassen aus begutachteten Fachartikeln aufnimmt. Die Liste enthält {n6} Einträge, die exoplanet.eu als Exokometen bezeichnet. {n7} seiner {n8} Planeten haben keine gespeicherte Entfernung und sind nicht dargestellt.",
- "@js.1fo0ybrjcxn": {
-  "x-review": "machine",
-  "x-source": "8798787570"
- },
  "js.1fppcyzgola": "<a href=\"/stars/barnard-s-star/\">{s0}</a> · Radialgeschwindigkeit · entdeckt {n0} · erdgroß (nach Masse)",
  "@js.1fppcyzgola": {
   "x-review": "machine",
@@ -3696,10 +3711,20 @@
   "x-review": "machine",
   "x-source": "4ffb9625b0"
  },
+ "js.1fwz3jtwilc": "{n0} Eri b",
+ "@js.1fwz3jtwilc": {
+  "x-review": "machine",
+  "x-source": "ae488e35a4"
+ },
  "js.1g0smg3jibl": "mit dem TIC-Dichte-Prior",
  "@js.1g0smg3jibl": {
   "x-review": "machine",
   "x-source": "ee7a7029f9"
+ },
+ "js.1g4l9awxfep": "Suchkatalog docs/discoveries/catalog.json, aktualisiert {n0}-{n1}-30T06:{n2}+{n3}, {n4} Einträge.",
+ "@js.1g4l9awxfep": {
+  "x-review": "machine",
+  "x-source": "070c993100"
  },
  "js.1g5lkun156f": "Planetenscheibe maßstabsgetreu aus der Tiefe: Rp/R* {n0} · Umlaufbahn nicht maßstabsgetreu · kein Sternradius gespeichert",
  "@js.1g5lkun156f": {
@@ -3816,20 +3841,10 @@
   "x-review": "machine",
   "x-source": "405e92b37a"
  },
- "js.1hanjmcicv2": "Die Teilstichprobe der Sentinels <span class=\"sub\">{n0} zurückgehaltene Sterne · nicht eingestuft</span>",
- "@js.1hanjmcicv2": {
-  "x-review": "machine",
-  "x-source": "07839908d1"
- },
  "js.1hc8gmjgdot": "TOI-Tabelle",
  "@js.1hc8gmjgdot": {
   "x-review": "machine",
   "x-source": "69cec4abc6"
- },
- "js.1hfl9sordrk": "Modell von {s0} beim Durchgang vor pi Men ({n0} K, {n1} R☉): Tiefe {n2} ppm, {n3} h. Der Planet ist eine künstlerische Darstellung.",
- "@js.1hfl9sordrk": {
-  "x-review": "machine",
-  "x-source": "9f7804c19a"
  },
  "js.1hfm3qhujst": "<a href=\"/stars/gj-1214/\">{s0}</a> · Transit · entdeckt {n0} · Sub-Neptun",
  "@js.1hfm3qhujst": {
@@ -3886,20 +3901,10 @@
   "x-review": "machine",
   "x-source": "ee03efb686"
  },
- "js.1hw9pj2cjy7": "{n0} Einträge, gefunden zwischen <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1}. Okt. {n2}, {n3} UTC</time> und <time datetime=\"2026-10-27T06:46:11+00:00\" title=\"2026-10-27T06:46:11+00:00\">{n4}. Okt. {n5}, {n6} UTC</time>. <b>{n7} stimmen mit einer bekannten TOI-Periode überein</b>. Jeder Eintrag ist ein Kandidat, unbestätigt. Ein TOI-Treffer ist ein Archivvergleich. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis. Signale, die keinem bekannten TOI entsprechen, werden für eine nicht öffentliche Prüfung zurückgehalten; sie werden erst nach Prüfung und Meldung veröffentlicht.",
- "@js.1hw9pj2cjy7": {
-  "x-review": "machine",
-  "x-source": "e5e81ce489"
- },
  "js.1i0hezn1dvy": "Sentinel · Freiwillige(r): {n0} Spanne in diesem Fenster, für diesen Einbruch gezählt",
  "@js.1i0hezn1dvy": {
   "x-review": "machine",
   "x-source": "c97f6573b3"
- },
- "js.1i1bqizwemp": "Jede Zelle: die Rate, dann k/n und das Wilson-{n0}%-Intervall, als Balken von {n1} bis {n2}% gezeichnet (Youden-J von {n3} bis {n4}, mit einer Markierung bei {n5}). Eingestuft nach Youdens J auf der durchsuchbaren Menge, die der Benchmark festgelegt hat, mit einem Prädikat auf beiden Seiten (ein sauberer Kandidat: auf der Ephemeride, bestanden, keine Kennzeichnung als Bedeckungsveränderlicher), sodass es null Punkte ergibt, jeden TOI als Planeten zu bezeichnen, ob markiert oder nicht. Die Kontrollen sind Voraussetzung für die Einstufung und gehen nicht in J ein, und die Kontrolllisten sind der eigene Bericht der Methode. Wo sich Intervalle überlappen, ist die Reihenfolge kein gemessener Unterschied.",
- "@js.1i1bqizwemp": {
-  "x-review": "machine",
-  "x-source": "9b6f9451ca"
  },
  "js.1i1fwe1y4dt": "Ozon",
  "@js.1i1fwe1y4dt": {
@@ -3931,6 +3936,11 @@
   "x-review": "machine",
   "x-source": "cc3ff7cfea"
  },
+ "js.1i9gd4nyiqb": "Radialgeschwindigkeit",
+ "@js.1i9gd4nyiqb": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
  "js.1i9syzrgr9a": "ii · gesamtes Objekt tess-04b815001aa6",
  "@js.1i9syzrgr9a": {
   "x-review": "machine",
@@ -3956,10 +3966,10 @@
   "x-review": "machine",
   "x-source": "5d8760ebee"
  },
- "js.1inrxj82qqn": "{s0}, Einbruch {n0} ({n1} d)",
- "@js.1inrxj82qqn": {
+ "js.1ispru3ub0k": "Proxima Centauri b ›",
+ "@js.1ispru3ub0k": {
   "x-review": "machine",
-  "x-source": "6d7c168703"
+  "x-source": "48383a87b1"
  },
  "js.1iub0nyp6f9": "simuliert",
  "@js.1iub0nyp6f9": {
@@ -3991,11 +4001,6 @@
   "x-review": "machine",
   "x-source": "e54519602f"
  },
- "js.1j9g5n75pzw": "Illustration: Rp/R★ = {n0}, b = {n1}, ein {n2}-K-Stern; die Kurve ist das Kleinplaneten-Modell von Mandel &amp; Agol ({n3}) mit quadratischer Randverdunkelung.",
- "@js.1j9g5n75pzw": {
-  "x-review": "machine",
-  "x-source": "2071874ebf"
- },
  "js.1ja46ec6bci": "<span class=\"word s-flag\">zur Prüfung markiert</span><b class=\"fig\">1c. TOI-{n0}, Einbruch {n1}.</b> <span class=\"sid mono\">gespeicherte ID tess-f28323a4aef6-{n2}.</span> Einbruch bei BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsensintervall BTJD {n7} bis {n8}. Von {n9} von {n10} Prüfern markiert ({n11} von {n12} Sentinels, {n13} von {n14} Probes). Keine BLS-Periode: ein einzelner Einbruch. Zur Prüfung markiert (abseits der Ephemeride seines Sterns). Archiv: kein Archivplanet innerhalb der Toleranz (für diesen Einbruch gibt es keine BLS-Periode zum Vergleich). Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
  "@js.1ja46ec6bci": {
   "x-review": "machine",
@@ -4021,6 +4026,11 @@
   "x-review": "machine",
   "x-source": "49696e46af"
  },
+ "js.1jl27lqn1et": "Radius (RJ)",
+ "@js.1jl27lqn1et": {
+  "x-review": "machine",
+  "x-source": "f32d9b82e5"
+ },
  "js.1jltb46ahiz": "TOI-{n0}: die Sternscheibe in ihrer Schwarzkörperfarbe bei {n1} K, darauf eine neutrale graue Scheibe mit der Beschriftung „Bedeckender Körper nicht identifiziert“. Sekundäre Bedeckung bei SNR {n2}; alle {n3} Einbrüche bei der Prüfung verworfen.",
  "@js.1jltb46ahiz": {
   "x-review": "machine",
@@ -4030,6 +4040,11 @@
  "@js.1jnlql1jvxr": {
   "x-review": "machine",
   "x-source": "43edc57b50"
+ },
+ "js.1jpqv79tmp8": "Teegarden's c",
+ "@js.1jpqv79tmp8": {
+  "x-review": "machine",
+  "x-source": "d987d14509"
  },
  "js.1jqjb1ecf85": "<a href=\"/stars/kepler-292/\">{s0}</a> · Transit · entdeckt {n0} · Sub-Neptun",
  "@js.1jqjb1ecf85": {
@@ -4066,11 +4081,6 @@
   "x-review": "machine",
   "x-source": "254fff303e"
  },
- "js.1jvq989drn7": "Künstlerische Darstellung: das Erscheinungsbild „Riese, kühl“ für Radien ab {n0} R⊕ und Teq unter {n1} K: cremefarbene und hellbraune Wolkenbänder. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.1jvq989drn7": {
-  "x-review": "machine",
-  "x-source": "76e2586629"
- },
  "js.1k05nntjzg8": "Atmosphäre ×{n0} dicker gezeichnet; Planet und Stern nicht maßstabsgetreu",
  "@js.1k05nntjzg8": {
   "x-review": "machine",
@@ -4090,11 +4100,6 @@
  "@js.1k2in4l826k": {
   "x-review": "machine",
   "x-source": "75b7e948dd"
- },
- "js.1k548hzbh61": "<b>ν₃ asymmetrische Streckschwingung (drei)</b> · {n0} µm · infrarotaktiv · ×{n1} gezeichnet · <a href=\"/how-it-works/atmospheres/\">die {n2}-µm-Bande in „Atmosphären lesen“ ›</a>",
- "@js.1k548hzbh61": {
-  "x-review": "machine",
-  "x-source": "371bca6192"
  },
  "js.1kch3o41dk9": "Konfiguration SHA-{n0}",
  "@js.1kch3o41dk9": {
@@ -4156,11 +4161,6 @@
   "x-review": "machine",
   "x-source": "6c3088500d"
  },
- "js.1kukdzlwmzz": "<b>ν₂ Regenschirmschwingung</b> · {n0} µm · infrarotaktiv · ×{n1} gezeichnet · außerhalb des {n2}–{n3}-µm-Fensters von {s0}",
- "@js.1kukdzlwmzz": {
-  "x-review": "machine",
-  "x-source": "ba3a4e2e62"
- },
  "js.1kvmnyghvke": "Künstlerische Darstellung von {s0}: ein Gesteinsplanet, Radius nicht gemessen ({n0} Erdmassen), Einstrahlung nicht berechenbar.",
  "@js.1kvmnyghvke": {
   "x-review": "machine",
@@ -4191,6 +4191,11 @@
   "x-review": "machine",
   "x-source": "07e5463c85"
  },
+ "js.1l4atyo906i": "Kandidat",
+ "@js.1l4atyo906i": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
  "js.1l4kxm2w5br": "Archivvergleich: kein Archivplanet innerhalb der Toleranz (dieser Einbruch hat keine BLS-Periode zum Vergleich); pi Men c: keine Transit-Ephemeride zum Vergleich. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
  "@js.1l4kxm2w5br": {
   "x-review": "machine",
@@ -4200,6 +4205,16 @@
  "@js.1l4u62ej5fc": {
   "x-review": "machine",
   "x-source": "f7bc5c08f0"
+ },
+ "js.1l8c78nkfe5": "Teq",
+ "@js.1l8c78nkfe5": {
+  "x-review": "machine",
+  "x-source": "bd1f380888"
+ },
+ "js.1l8lt88zlnn": "<i aria-hidden=\"true\"></i>Bedeckungsveränderlicher",
+ "@js.1l8lt88zlnn": {
+  "x-review": "machine",
+  "x-source": "a07a5fab5c"
  },
  "js.1l95agsp46q": "bekannte TOI-Periode",
  "@js.1l95agsp46q": {
@@ -4215,6 +4230,11 @@
  "@js.1lb13933831": {
   "x-review": "machine",
   "x-source": "0216bca3d8"
+ },
+ "js.1lbuxx1akb8": "<i style=\"background:#64D2FF\"></i>Transit <span class=\"mono\">{n0}</span>",
+ "@js.1lbuxx1akb8": {
+  "x-review": "machine",
+  "x-source": "35c7f262c0"
  },
  "js.1liecym8jw": "<span class=\"word cand\">Kandidat</span><span class=\"word s-pass\">Prüfung bestanden</span><b class=\"fig\">1d. WASP-{n0}, Einbruch {n1}.</b> <span class=\"sid mono\">gespeicherte ID tess-5935bad1a3b4-{n2}.</span> Einbruch bei BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsensintervall BTJD {n7} bis {n8}. Markiert von {n9} von {n10} Prüfern ({n11} von {n12} Sentinels, {n13} von {n14} Probes). Liegt auf einer BLS-Periode von {n15} Tagen (t0 BTJD {n16}). Prüfung bestanden. Archiv: vereinbar mit WASP-{n17} b: ΔP {n18} %, keine Transit-Ephemeride zum Vergleich. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
  "@js.1liecym8jw": {
@@ -4271,6 +4291,11 @@
   "x-review": "machine",
   "x-source": "aa15ce0bc3"
  },
+ "js.1m6gonlbh23": "Proxima Centauri",
+ "@js.1m6gonlbh23": {
+  "x-review": "machine",
+  "x-source": "07ddace0bc"
+ },
  "js.1m7nga73mrk": "Radialgeschwindigkeitsskala: Erdzwilling etwa {n0} Zentimeter pro Sekunde; ESPRESSO innerhalb einer Nacht unter {n1} Zentimetern pro Sekunde; stellares Oberflächenrauschen in der Größenordnung von {n2} Meter pro Sekunde; pi Men c etwa {n3} Meter pro Sekunde; Jupiterzwilling {n4} Meter pro Sekunde; {n5} Peg b {n6} Meter pro Sekunde.",
  "@js.1m7nga73mrk": {
   "x-review": "machine",
@@ -4286,11 +4311,6 @@
   "x-review": "machine",
   "x-source": "94f4aed5ee"
  },
- "js.1mfsedhnkek": "Ein rotierendes Kugel-Stab-Modell des ausgewählten Moleküls mit seinen gemessenen Bindungslängen und -winkeln (NIST CCCBDB), schwingend in der gewählten Normalmode: Pfeile zeigen, in welche Richtung sich jedes Atom bewegt. Eine Wellenlängenachse darunter markiert die Grundbanden des Moleküls, gefüllt, wenn das Infrarot sie sieht, und hohl, wenn die Mode infrarot-inaktiv ist; der Bereich, den das Kapitel {s0} zeigt, ist schattiert.",
- "@js.1mfsedhnkek": {
-  "x-review": "machine",
-  "x-source": "751951289b"
- },
  "js.1mi5uvq4hd0": "dieser Lauf · bei der Prüfung verworfen · keine Periode",
  "@js.1mi5uvq4hd0": {
   "x-review": "machine",
@@ -4300,6 +4320,11 @@
  "@js.1mi9l1aqyq9": {
   "x-review": "machine",
   "x-source": "af079a71c8"
+ },
+ "js.1mjsdzuqt7u": "kein Einzelstern",
+ "@js.1mjsdzuqt7u": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
  },
  "js.1mk4xq21j8n": "{n0} Peg b {n1} m/s",
  "@js.1mk4xq21j8n": {
@@ -4335,6 +4360,11 @@
  "@js.1myonl6ry65": {
   "x-review": "machine",
   "x-source": "927599ad1a"
+ },
+ "js.1mz5xi30e6k": "{n0} Peg b",
+ "@js.1mz5xi30e6k": {
+  "x-review": "machine",
+  "x-source": "07473ed79b"
  },
  "js.1mzrogjvr87": "Die Fallakte konnte in dieser Ansicht nicht geladen werden. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-003\">Auf eigener Seite öffnen.</a>",
  "@js.1mzrogjvr87": {
@@ -4411,11 +4441,6 @@
   "x-review": "machine",
   "x-source": "ed25878435"
  },
- "js.1nlihv4t4dw": "Quelle: docs/results/showcase.json.",
- "@js.1nlihv4t4dw": {
-  "x-review": "machine",
-  "x-source": "321e67bf81"
- },
  "js.1nm81nug7zg": "Übersprungen (hier nicht verfügbar): keine",
  "@js.1nm81nug7zg": {
   "x-review": "machine",
@@ -4491,6 +4516,11 @@
   "x-review": "machine",
   "x-source": "ffb8a10800"
  },
+ "js.1o6iiyvkzt4": "Teq (K)",
+ "@js.1o6iiyvkzt4": {
+  "x-review": "machine",
+  "x-source": "250f80cb14"
+ },
  "js.1oflx09locz": "Die Fallakte konnte in dieser Ansicht nicht geladen werden. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-000\">Auf eigener Seite öffnen.</a>",
  "@js.1oflx09locz": {
   "x-review": "machine",
@@ -4510,11 +4540,6 @@
  "@js.1ojq6mpxesf": {
   "x-review": "machine",
   "x-source": "13bd83fa4a"
- },
- "js.1ooqb09tka": "Tiefenunterschied zwischen ungeraden und geraden Transits oder Sekundärfinsternis; oder eine Tiefe von {n0} ppm oder mehr; oder V-förmig und {n1} ppm oder mehr; oder eine Abweichung der Sterndichte bei einer Periode unter {n2} d; oder die Hälfte des Gewichts des Gremiums spricht für einen bedeckungsveränderlichen Doppelstern. Variabilität bei der Periode eines bedeckungsveränderlichen Doppelsterns oder bei deren Hälfte.",
- "@js.1ooqb09tka": {
-  "x-review": "machine",
-  "x-source": "d16ff6ea5a"
  },
  "js.1oqf3bvj4qe": "Die Fallakte auf eigener Seite, beim selben Einbruch.",
  "@js.1oqf3bvj4qe": {
@@ -4661,6 +4686,11 @@
   "x-review": "machine",
   "x-source": "10a0c5f853"
  },
+ "js.1pzot5psr3w": "Luhman {n0} A",
+ "@js.1pzot5psr3w": {
+  "x-review": "machine",
+  "x-source": "215b9c6a31"
+ },
  "js.1q0vba1x3qp": "{n0} neu",
  "@js.1q0vba1x3qp": {
   "x-review": "machine",
@@ -4731,11 +4761,6 @@
   "x-review": "machine",
   "x-source": "dd3330cc6f"
  },
- "js.1qq8e2zp8tb": "Planetenprüfung: unverändert. Die Prüfhinweise des Moduls für bedeckungsveränderliche Doppelsterne sind nur beratend, keine Prüfentscheidung verwendet sie, und sie wurden nicht evaluiert; ihre Verwendung in der Prüfung erfordert eine eigene, vorab registrierte Evaluation.",
- "@js.1qq8e2zp8tb": {
-  "x-review": "machine",
-  "x-source": "6e0c8bb669"
- },
  "js.1qr7pmpqgem": "TIC {n0}, Periode {n1} Tage, Tiefe {n2} ppm, SNR {n3}, Periode stimmt mit einem bekannten TOI überein, Kandidat, unbestätigt",
  "@js.1qr7pmpqgem": {
   "x-review": "machine",
@@ -4751,10 +4776,20 @@
   "x-review": "machine",
   "x-source": "42da84247d"
  },
+ "js.1r0q7nepkoi": "kalibriertes Gewicht",
+ "@js.1r0q7nepkoi": {
+  "x-review": "machine",
+  "x-source": "0a6b72180c"
+ },
  "js.1r46y9nqy47": "Die ersten drei Schritte sind SetuHQs eigene; die letzten drei sind Aufzeichnungen anderer Teams (NASA Exoplanet Archive (TAP): die Tabellen toi und ps), niemals Ergebnisse von SetuHQ. Ein hohler Punkt ist ein Schritt ohne Aufzeichnung. TFOPWG: die TESS Follow-up Observing Program Working Group.",
  "@js.1r46y9nqy47": {
   "x-review": "machine",
   "x-source": "f16d5662c6"
+ },
+ "js.1r4fphlxxtr": "{n0} Einträge, gefunden zwischen <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1}. Okt. {n2}, {n3} UTC</time> und <time datetime=\"2026-10-30T00:48:15+00:00\" title=\"2026-10-30T00:48:15+00:00\">{n4}. Okt. {n5}, {n6} UTC</time>. <b>{n7} stimmen mit einer bekannten TOI-Periode überein</b>. Jeder Eintrag ist ein Kandidat, unbestätigt. Ein TOI-Abgleich ist ein Archivvergleich. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis. Signale, die zu keinem bekannten TOI passen, werden für eine nicht öffentliche Prüfung zurückgehalten; sie werden erst nach Prüfung und Meldung veröffentlicht.",
+ "@js.1r4fphlxxtr": {
+  "x-review": "machine",
+  "x-source": "3f8fc5c963"
  },
  "js.1r7q1f2otd9": "Tafeln: TOI-{n0}",
  "@js.1r7q1f2otd9": {
@@ -4776,11 +4811,6 @@
   "x-review": "machine",
   "x-source": "ea025f8c30"
  },
- "js.1rehm8o052v": "{s0}ing Exoplanet Survey Satellite",
- "@js.1rehm8o052v": {
-  "x-review": "machine",
-  "x-source": "f64ceb6be5"
- },
  "js.1rervwi8ill": "Die Fallakte konnte in dieser Ansicht nicht geladen werden. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-fa3483ce6f83-001\">Auf eigener Seite öffnen.</a>",
  "@js.1rervwi8ill": {
   "x-review": "machine",
@@ -4801,6 +4831,11 @@
   "x-review": "machine",
   "x-source": "7006d67bfe"
  },
+ "js.1rhozdhu0s6": "{n0} Eri",
+ "@js.1rhozdhu0s6": {
+  "x-review": "machine",
+  "x-source": "cd858f1566"
+ },
  "js.1rhxz6cr57l": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">3g. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Einbruch bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Von {n5} Prüfern gekennzeichnet (der Katalog speichert weder die Größe des Gremiums noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keine Detektion.",
  "@js.1rhxz6cr57l": {
   "x-review": "machine",
@@ -4816,10 +4851,10 @@
   "x-review": "machine",
   "x-source": "f857503a68"
  },
- "js.1rk4ie4w0t9": "Künstlerische Darstellung: das Aussehen „heißer Riese“, für Radius {n0} R⊕ oder mehr, Teq {n1} bis {n2} K: rostfarbene Wolkenbänder. Ein Standbild des Aussehens, nicht eines bestimmten Planeten.",
- "@js.1rk4ie4w0t9": {
+ "js.1rncc50vod0": "Erste Schritte",
+ "@js.1rncc50vod0": {
   "x-review": "machine",
-  "x-source": "8aeca1d984"
+  "x-source": "61e8d44ad4"
  },
  "js.1rniehwfgn9": "Wolszczan &amp; Frail",
  "@js.1rniehwfgn9": {
@@ -4845,11 +4880,6 @@
  "@js.1rrhtxb4sk8": {
   "x-review": "machine",
   "x-source": "1b1094a886"
- },
- "js.1rsb50hzlde": "Künstlerische Darstellung: das Aussehen „heißer Neptun“, für Radius {n0} bis {n1} R⊕, Teq {n2} K oder mehr: orange-grauer Dunst. Ein Standbild des Aussehens, nicht eines bestimmten Planeten.",
- "@js.1rsb50hzlde": {
-  "x-review": "machine",
-  "x-source": "fd1e7e0678"
  },
  "js.1rsch1xr0lt": "Transit · {n0} d",
  "@js.1rsch1xr0lt": {
@@ -4881,15 +4911,15 @@
   "x-review": "machine",
   "x-source": "a1c625de42"
  },
+ "js.1rwj8ey7hae": "Kepler-{n0} · {n1} K",
+ "@js.1rwj8ey7hae": {
+  "x-review": "machine",
+  "x-source": "eb98d7eea9"
+ },
  "js.1rxrndp257b": "Abschirmung von Sternenlicht, in vier Szenen. Ein sonnenähnlicher Okkulter (eine Illustration nach SOHO LASCO); eine Koronografenmaske, die über einen Stern gleitet, sodass das Blendlicht zu Rest-Speckles zusammenfällt und die vier Planeten von HR {n0} auf schematischen Bahnen erscheinen; ein Sternschirm (Starshade), der weit vor einem Teleskop fliegt, nicht maßstabsgetreu; und ein Nulling-Interferometer aus zwei Teleskopen, dessen dunkler Streifen den Stern auslöscht.",
  "@js.1rxrndp257b": {
   "x-review": "machine",
   "x-source": "cce2248704"
- },
- "js.1ryrg8dmxoz": "<b>ν₄ asymmetrische Biegeschwingung (dreifach)</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · jenseits des {n2}–{n3}-µm-Fensters von {s0}",
- "@js.1ryrg8dmxoz": {
-  "x-review": "machine",
-  "x-source": "b2cd029465"
  },
  "js.1s3bgxbwlkh": "Alle",
  "@js.1s3bgxbwlkh": {
@@ -4901,10 +4931,10 @@
   "x-review": "machine",
   "x-source": "95206d6b8a"
  },
- "js.1sdkh60m4rv": "{s0}, Einbruch {n0}",
- "@js.1sdkh60m4rv": {
+ "js.1s8dkmip4e3": "cheops",
+ "@js.1s8dkmip4e3": {
   "x-review": "machine",
-  "x-source": "335e296600"
+  "x-source": "0eeb4fd483"
  },
  "js.1sg8cj3fgn0": "Fünf Arten, einen Planeten vorzutäuschen, jeweils mit ihrer Himmelsgeometrie auf einem Raster von TESS-Pixeln (je {n0} Bogensekunden, maßstabsgetreu gezeichnet) und der Lichtkurve, die sie erzeugt: ein bedeckungsveränderlicher Doppelstern mit V-förmiger streifender Bedeckung; ein bedeckungsveränderlicher Hintergrund-Doppelstern, verdünnt durch das Licht des Zielsterns; ein hierarchisches Dreifachsystem; ungerade und gerade Bedeckungen unterschiedlicher Tiefe, wenn die Periode die Hälfte der wahren ist; und ein instrumenteller Sprung wie ein Momentum Dump.",
  "@js.1sg8cj3fgn0": {
@@ -4971,6 +5001,11 @@
   "x-review": "machine",
   "x-source": "2d4dfc6ae5"
  },
+ "js.1t30u96twwz": "Signale",
+ "@js.1t30u96twwz": {
+  "x-review": "machine",
+  "x-source": "c1d2c1df9e"
+ },
  "js.1t47rnb1yty": "Statistische Validierung im großen Maßstab.",
  "@js.1t47rnb1yty": {
   "x-review": "machine",
@@ -4981,10 +5016,20 @@
   "x-review": "machine",
   "x-source": "ea298d3769"
  },
+ "js.1takbn7z5i5": "pi Men b ›",
+ "@js.1takbn7z5i5": {
+  "x-review": "machine",
+  "x-source": "095aa55e59"
+ },
  "js.1tanbk5cfbb": "{n0} {n1} / {n2} dex",
  "@js.1tanbk5cfbb": {
   "x-review": "machine",
   "x-source": "6d564d1ad1"
+ },
+ "js.1tbllix94q1": "Moleküle",
+ "@js.1tbllix94q1": {
+  "x-review": "machine",
+  "x-source": "bfdd800ffc"
  },
  "js.1tbul4ef62r": "{n0} Planeten in exoplanet.eu",
  "@js.1tbul4ef62r": {
@@ -5036,11 +5081,6 @@
   "x-review": "machine",
   "x-source": "9c116a7ee6"
  },
- "js.1tpmj2xl8sk": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · durch Prüfung verworfen, kein Kandidat",
- "@js.1tpmj2xl8sk": {
-  "x-review": "machine",
-  "x-source": "77664f0d7c"
- },
  "js.1trrebrltbg": "Nur aus gespeicherten Werten gezeichnet (exoplanet.eu). Nicht gespeichert: Sterntemperatur, Sternradius; diese Teile sind illustrativ und in der Zeichnung als solche gekennzeichnet. Sternfarbe: die der Sonne, da die Temperatur nicht gespeichert ist.",
  "@js.1trrebrltbg": {
   "x-review": "machine",
@@ -5071,25 +5111,20 @@
   "x-review": "machine",
   "x-source": "9ee6b5ae54"
  },
+ "js.1u1inxhnivr": "Falsch-Positive",
+ "@js.1u1inxhnivr": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
  "js.1u2k1jai0us": "Eine Lichtkurve, drei Perioden. Sie zeigt, was die Suche tut, wenn ein Stern mehr als einen Planeten hat, und welche davon ein {n0}-Tage-Objekt enthalten kann.",
  "@js.1u2k1jai0us": {
   "x-review": "machine",
   "x-source": "ac34f619e1"
  },
- "js.1u2q9tbst8u": "Künstlerische Darstellung: das Aussehen „heiße Hülle“, für Radius {n0} bis {n1} R⊕, Teq {n2} K oder mehr: hellbrauner Dunst und ein warmer Rand. Ein Standbild des Aussehens, nicht eines bestimmten Planeten.",
- "@js.1u2q9tbst8u": {
-  "x-review": "machine",
-  "x-source": "80eb7867e5"
- },
  "js.1u4yg0u12mv": "exoplanet.eu speichert keinen DOI und keine Referenz für die Entdeckungsarbeit, daher wird keine angezeigt.",
  "@js.1u4yg0u12mv": {
   "x-review": "machine",
   "x-source": "02110b7c79"
- },
- "js.1u50uo7y5g3": "<b>ν₁ symmetrische Streckschwingung</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · jenseits des {n2}–{n3}-µm-Fensters von {s0}",
- "@js.1u50uo7y5g3": {
-  "x-review": "machine",
-  "x-source": "84c034c9f3"
  },
  "js.1u59hy4lwt0": "CO₂ <span>Kohlenstoffdioxid</span>",
  "@js.1u59hy4lwt0": {
@@ -5111,11 +5146,6 @@
   "x-review": "machine",
   "x-source": "27b99ccdde"
  },
- "js.1ua3tz5fxe0": "Der Hash ist eine Zusicherung: Die zurückgehaltenen Labels sind im Repository öffentlich, daher kann die Rangliste nicht beweisen, dass sie nicht gelesen wurden, und die Bestanden-Urteile und Kontrollereignisse einer Methode sind deren eigene Angabe. Vom Maintainer zurückgehaltene Köder-Lichtkurven und eine prospektive Bewertung an noch nicht eingestuften TOIs würden diese Lücken schließen; beides existiert noch nicht.",
- "@js.1ua3tz5fxe0": {
-  "x-review": "machine",
-  "x-source": "9f55ae4547"
- },
  "js.1uaz0vrw4ly": "geringstes Feld an der Quelle, am Stern (Pineda &amp; Villadsen {n0}-Band) [berechnet]",
  "@js.1uaz0vrw4ly": {
   "x-review": "machine",
@@ -5125,11 +5155,6 @@
  "@js.1ucljc3glwo": {
   "x-review": "machine",
   "x-source": "5e270de316"
- },
- "js.1uekblhme1p": "{n0} ppm · {n1} h · alle {n2} Prüfer · Kandidat, unbestätigt",
- "@js.1uekblhme1p": {
-  "x-review": "machine",
-  "x-source": "73ac412687"
  },
  "js.1ug611r5qd8": "CH₄ <span>Methan</span>",
  "@js.1ug611r5qd8": {
@@ -5166,6 +5191,11 @@
   "x-review": "machine",
   "x-source": "263beb630a"
  },
+ "js.1utmguftbbw": "TESS-Sektoren {n0}–{n1}. Feed-Eintrag {n2} für diesen Stern (gespeicherte ID <span class=\"mono\">tess-7b97e468b60b-{n3}</span>). Ein TOI-Abgleich vergleicht eine gespeicherte Periode mit Archivwerten. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
+ "@js.1utmguftbbw": {
+  "x-review": "machine",
+  "x-source": "965b94f3d8"
+ },
  "js.1uugayqarlm": "Das Missionsdesign von TESS (Beobachtungsbeginn {n0}).",
  "@js.1uugayqarlm": {
   "x-review": "machine",
@@ -5175,11 +5205,6 @@
  "@js.1uwk3dmvuym": {
   "x-review": "machine",
   "x-source": "e7e8d3a00f"
- },
- "js.1v15owfc4cr": "<b>ν₃ asymmetrische Streckschwingung (zwei)</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · nicht gezeichnet in {s0}",
- "@js.1v15owfc4cr": {
-  "x-review": "machine",
-  "x-source": "451f9e06fd"
  },
  "js.1v2k5bzmb2a": "{n0} ± {n1} ppm",
  "@js.1v2k5bzmb2a": {
@@ -5191,25 +5216,25 @@
   "x-review": "machine",
   "x-source": "c6c35d2486"
  },
- "js.1va1yqqf83l": "Ein Planet mit weniger als einer Erdmasse um {s0}, einen der nächsten Nachbarn der Sonne.",
- "@js.1va1yqqf83l": {
+ "js.1vf8wchy7cx": "Flares",
+ "@js.1vf8wchy7cx": {
   "x-review": "machine",
-  "x-source": "0c6a1cbb68"
+  "x-source": "bdad8ef87b"
  },
  "js.1vn1k0hsfr": "Katalog",
  "@js.1vn1k0hsfr": {
   "x-review": "machine",
   "x-source": "1034513950"
  },
- "js.1vo3z8v0kr3": "{n0} pro {n1} Stern-Sektoren <span class=\"muted\">({n2} über {n3}; {n4} geprüfte Einbrüche vor der Regel des Feeds)</span>",
- "@js.1vo3z8v0kr3": {
-  "x-review": "machine",
-  "x-source": "0cf0192aad"
- },
  "js.1vs3qyoxlvt": "Auch bekannt als 2MASS J19021775+{n0}, KIC {n1}, KOI-{n2}, WISE J190217.77+{n3}.",
  "@js.1vs3qyoxlvt": {
   "x-review": "machine",
   "x-source": "a3072cbabc"
+ },
+ "js.1vseruufigw": "tau Cet",
+ "@js.1vseruufigw": {
+  "x-review": "machine",
+  "x-source": "d76cfc3187"
  },
  "js.1vtn0jl0t29": "Ganze Seite öffnen",
  "@js.1vtn0jl0t29": {
@@ -5331,6 +5356,11 @@
   "x-review": "machine",
   "x-source": "6b412a8780"
  },
+ "js.1wqsruj6sy4": "Teegarden's b",
+ "@js.1wqsruj6sy4": {
+  "x-review": "machine",
+  "x-source": "88f6565053"
+ },
  "js.1wr1t67roz9": "Zeigte, dass Kandidaten in Mehrplanetensystemen fast immer echt sind, und validierte {n0} Planeten in {n1} Systemen.",
  "@js.1wr1t67roz9": {
   "x-review": "machine",
@@ -5391,6 +5421,11 @@
   "x-review": "machine",
   "x-source": "01d784a95a"
  },
+ "js.1xjf25ez4ea": "Astrometrie",
+ "@js.1xjf25ez4ea": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
  "js.1xjgislb1gr": "{n0} (D-Linien, {n1} und {n2} nm)",
  "@js.1xjgislb1gr": {
   "x-review": "machine",
@@ -5400,6 +5435,11 @@
  "@js.1xjihe7xm1n": {
   "x-review": "machine",
   "x-source": "68a749778a"
+ },
+ "js.1xjlu6r0tws": "Planetenkandidat",
+ "@js.1xjlu6r0tws": {
+  "x-review": "machine",
+  "x-source": "f40d9fd559"
  },
  "js.1xludg6i4sq": "Auch bekannt als EPIC {n0}.",
  "@js.1xludg6i4sq": {
@@ -5416,11 +5456,6 @@
   "x-review": "machine",
   "x-source": "d17f5d38ec"
  },
- "js.1xqmq7gc51u": "Fehlalarme in verwürfelten Lichtkurven auf dem Niveau des Feeds (seine vollständige Regel, FAP &lt; {n0})",
- "@js.1xqmq7gc51u": {
-  "x-review": "machine",
-  "x-source": "31b60ba44a"
- },
  "js.1xs9ztk2l36": "Galaxie-Tour, Station {n0} ›",
  "@js.1xs9ztk2l36": {
   "x-review": "machine",
@@ -5436,15 +5471,15 @@
   "x-review": "machine",
   "x-source": "43c265eda9"
  },
- "js.1xy8j3ygiad": "Künstlerische Darstellung: das Erscheinungsbild „kühle Hülle“, für Radius {n0} bis {n1} R⊕, Teq unter {n2} K: blassblau-weißer Dunst, schwache Bänder. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.1xy8j3ygiad": {
-  "x-review": "machine",
-  "x-source": "7be8bc6ed2"
- },
  "js.1y1gk0z56gg": "Einbrüche auf der Ephemeride, nach Vetting-Ergebnis",
  "@js.1y1gk0z56gg": {
   "x-review": "machine",
   "x-source": "4f0bf37c8c"
+ },
+ "js.1y218zo6cqq": "<i style=\"background:#30D158\"></i>Direktabbildung <span class=\"mono\">{n0}</span>",
+ "@js.1y218zo6cqq": {
+  "x-review": "machine",
+  "x-source": "d614bb1db6"
  },
  "js.1y39iwfnbwn": "Lauf tess-hd-{n0}-s4 (runs/tess-hd-{n1}-s4), erstellt {n2}-{n3}-22T18:{n4}+{n5}, Konfiguration sha256 e21c63a794b2aeb3…",
  "@js.1y39iwfnbwn": {
@@ -5496,6 +5531,11 @@
   "x-review": "machine",
   "x-source": "519941f399"
  },
+ "js.1yt1laezm0g": "Kepler-{n0} d",
+ "@js.1yt1laezm0g": {
+  "x-review": "machine",
+  "x-source": "5c8bf604a0"
+ },
  "js.1ytljjhkuxb": "Nur aus gespeicherten Werten gezeichnet (exoplanet.eu).",
  "@js.1ytljjhkuxb": {
   "x-review": "machine",
@@ -5546,11 +5586,6 @@
   "x-review": "machine",
   "x-source": "9fdea8a620"
  },
- "js.1z0tecbo6q6": "Künstlerische Darstellung: das Erscheinungsbild „ultraheißer Riese“, für Radius {n0} R⊕ oder mehr, Teq {n1} K oder mehr: dunkel, kontrastarm und auf der Tagseite glühend; keine Bänder. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.1z0tecbo6q6": {
-  "x-review": "machine",
-  "x-source": "236fde016b"
- },
  "js.1z3sctga608": "Zwei kurze Einbrüche mit flachem Boden von etwa {n0} ppm bei ~{n1} und ~{n2} (Abstand ~{n3} d) haben übereinstimmende Tiefe und Dauer, wie für einen periodischen Transit erwartet. Keiner zeigt eine V-Form, eine Sekundärbedeckung, eine Rampe oder eine Stufe, aber die Daten um den zweiten Einbruch sind",
  "@js.1z3sctga608": {
   "x-review": "machine",
@@ -5566,10 +5601,10 @@
   "x-review": "machine",
   "x-source": "7d9eb7acb1"
  },
- "js.1z5yw0q2c2w": "Der Transit der Startseite",
- "@js.1z5yw0q2c2w": {
+ "js.1z5qoomb94b": "YZ Cet b",
+ "@js.1z5qoomb94b": {
   "x-review": "machine",
-  "x-source": "be1b030722"
+  "x-source": "fca0c283f7"
  },
  "js.1z8tasie2wo": "Probe · Empfindlich <span class=\"mono idtag\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1z8tasie2wo": {
@@ -5651,11 +5686,6 @@
   "x-review": "machine",
   "x-source": "1c3db44c80"
  },
- "js.2050o3pgkvz": "Quelle: TESS Science Office (MIT), öffentliche Sektorseiten unter tess.mit.edu/observations/: https://tess.mit.edu/observations/, Zeitplan gespeichert am {n0}-{n1}-{n2}.",
- "@js.2050o3pgkvz": {
-  "x-review": "machine",
-  "x-source": "e758c6851a"
- },
  "js.206lvynaoyq": "Bewegung des Sterns ×{n0} überzeichnet; wahres a★ = {n1} km ≈ {n2}.1e-{n3} R★",
  "@js.206lvynaoyq": {
   "x-review": "machine",
@@ -5701,11 +5731,6 @@
   "x-review": "machine",
   "x-source": "f77390e131"
  },
- "js.20iu1oobrgo": "Künstlerische Darstellung: das mehrdeutige Erscheinungsbild, ohne Radius, Masse {n0} bis {n1} M⊕, beliebige Teq: eine neutrale graublaue Scheibe und ein weicher Rand: Gestein oder Hülle, unbekannt. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.20iu1oobrgo": {
-  "x-review": "machine",
-  "x-source": "b435c16b54"
- },
  "js.20jq5c41tkh": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">3j. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Einbruch bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markiert von {n5} Prüfenden (der Katalog speichert weder die Panelgröße noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
  "@js.20jq5c41tkh": {
   "x-review": "machine",
@@ -5715,6 +5740,11 @@
  "@js.20l5be8crj": {
   "x-review": "machine",
   "x-source": "ab9c1a76a4"
+ },
+ "js.20lcnwrpq7u": "Transit <span class=\"mono\" data-cmn=\"transit\">{n0}</span>",
+ "@js.20lcnwrpq7u": {
+  "x-review": "machine",
+  "x-source": "5b3df4c9fd"
  },
  "js.20lxdwfofp9": "dieser Lauf · zur Prüfung markiert · keine Periode",
  "@js.20lxdwfofp9": {
@@ -5740,6 +5770,11 @@
  "@js.20q2sjzozas": {
   "x-review": "machine",
   "x-source": "7fb66e3610"
+ },
+ "js.20rbpsp5ug3": "<i aria-hidden=\"true\"></i>Nicht klassifiziert <span class=\"mono\">{n0}</span>",
+ "@js.20rbpsp5ug3": {
+  "x-review": "machine",
+  "x-source": "8de4c52f48"
  },
  "js.20rkrumvokl": "Sentinel-Prompt-Version",
  "@js.20rkrumvokl": {
@@ -5790,11 +5825,6 @@
  "@js.216y488ncvw": {
   "x-review": "machine",
   "x-source": "b2f84631c5"
- },
- "js.217aul87gdd": "<b>N–O-Streckschwingung, überwiegend</b> · {n0} µm · infrarot-aktiv · ×{n1} gezeichnet · außerhalb des {n2}–{n3}-µm-Fensters von {s0}",
- "@js.217aul87gdd": {
-  "x-review": "machine",
-  "x-source": "cea6ecc8bf"
  },
  "js.217mi4h3ox4": "Nur ein Einbruch, der die Prüfung bestanden hat, ist ein Kandidat, und er bleibt unbestätigt; ein verworfener Einbruch ist keiner. Nur gespeicherte Werte: Punkte, Markierungen, Scores, Hinweise und Wörter sind so, wie der Lauf sie gespeichert hat.",
  "@js.217mi4h3ox4": {
@@ -5891,11 +5921,6 @@
   "x-review": "machine",
   "x-source": "752ea43d7e"
  },
- "js.21ylkyb62a9": "TIC {n0} · Kandidat, unbestätigt",
- "@js.21ylkyb62a9": {
-  "x-review": "machine",
-  "x-source": "7cf98eee62"
- },
  "js.222kde6gcmc": "Nur aus gespeicherten Werten gezeichnet (exoplanet.eu). Nicht gespeichert: Planetenradius; diese Teile sind illustrativ und in der Zeichnung als solche gekennzeichnet. Bei der gespeicherten Inklination zeigt dieser Planet keinen Transit; die Ansicht zeigt einen Transit, um die Methode zu erklären.",
  "@js.222kde6gcmc": {
   "x-review": "machine",
@@ -5905,6 +5930,11 @@
  "@js.223085agofs": {
   "x-review": "machine",
   "x-source": "606268600d"
+ },
+ "js.225qy6re67g": "Kepler-{n0} c",
+ "@js.225qy6re67g": {
+  "x-review": "machine",
+  "x-source": "d1e5b9aa4a"
  },
  "js.2274ir70e91": "Bei der Prüfung verworfen",
  "@js.2274ir70e91": {
@@ -5961,6 +5991,11 @@
   "x-review": "machine",
   "x-source": "f16b203139"
  },
+ "js.22noo09k9nh": "<i style=\"background:#7D7AFF\"></i>Timing <span class=\"mono\">{n0}</span>",
+ "@js.22noo09k9nh": {
+  "x-review": "machine",
+  "x-source": "79248df554"
+ },
  "js.22qe07fgd2k": "ganzer Sektor · Periode {n0} d · Halbamplitude {n1} ppm",
  "@js.22qe07fgd2k": {
   "x-review": "machine",
@@ -6005,6 +6040,11 @@
  "@js.2309k4jhst": {
   "x-review": "machine",
   "x-source": "99ec08944c"
+ },
+ "js.231hbrwsvbe": "Flare",
+ "@js.231hbrwsvbe": {
+  "x-review": "machine",
+  "x-source": "38e9b86f2b"
  },
  "js.232hnla7mfp": "BTJD {n0} · {n1} ppm · {n2} Stunden · SNR {n3} · Kandidat, unbestätigt",
  "@js.232hnla7mfp": {
@@ -6076,6 +6116,11 @@
   "x-review": "machine",
   "x-source": "f7b940e003"
  },
+ "js.23gvqgvfk3h": "eps Eridani",
+ "@js.23gvqgvfk3h": {
+  "x-review": "machine",
+  "x-source": "9a7f2f950b"
+ },
  "js.23iejmgi1b9": "<span class=\"word cand\">Kandidat</span><span class=\"word s-pass\">Prüfung bestanden</span><b class=\"fig\">1d. pi Men, Einbruch {n0}.</b> <span class=\"sid mono\">gespeicherte ID tess-04b815001aa6-{n1}.</span> Einbruch bei BTJD {n2}, {n3} ppm, {n4} h, SNR {n5}. Konsensintervall BTJD {n6} bis {n7}. Markiert von {n8} von {n9} Prüfern ({n10} von {n11} Sentinels, {n12} von {n13} Probes). Liegt auf einer BLS-Periode von {n14} Tagen (t0 BTJD {n15}). Prüfung bestanden. Archiv: konsistent mit pi Men c: ΔP {n16}%, Zeitversatz laut Validierungsnotiz: {n17} min Mittelwert über {n18} Epochen. Nur Archivwerte. Diese Seite beansprucht keine Detektion.",
  "@js.23iejmgi1b9": {
   "x-review": "machine",
@@ -6126,6 +6171,11 @@
   "x-review": "machine",
   "x-source": "2c5e82e81c"
  },
+ "js.248fckis1nx": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">Lauf tess-pi-men-s1 · {n1} Einträge</span>",
+ "@js.248fckis1nx": {
+  "x-review": "machine",
+  "x-source": "91c42c8548"
+ },
  "js.249yvv2lisi": "Die Fallakte konnte in dieser Ansicht nicht geladen werden. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-4b369d3c6f09-004\">Auf eigener Seite öffnen.</a>",
  "@js.249yvv2lisi": {
   "x-review": "machine",
@@ -6150,16 +6200,6 @@
  "@js.24fb2cdopd2": {
   "x-review": "machine",
   "x-source": "f76311c5f2"
- },
- "js.24fnxph6nhs": "NASA Exoplanet Archive, Tabelle ps (default_flag = {n0}), wie in docs/results/pi_men_validation.md von scripts/validate_known_planets.py festgehalten (Live-Abfrage des Archivs, Commit 0f6dbdc). Dort ist nur {s0} festgehalten, daher wird nur {s1} aufgeführt; seine Transit-Mittelzeit wurde nicht festgehalten, daher wird hier kein Versatz pro Epoche berechnet; stattdessen wird der mittlere Zeitversatz aus der Validierungsnotiz ({n1} min über {n2} von {n3} Epochen) angegeben. Ersetzen Sie ihn durch die Ausgabe von 'setuhq crossmatch runs/tess-pi-men-s1', sobald das Archiv antwortet., festgehalten <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4}. Okt. {n5}, {n6} UTC</time> (Commit 0f6dbdc) in docs/results/pi_men_crossmatch.json; der eigene Abgleich dieses Laufs wurde nicht ausgeführt (gespeicherter Fehler, wörtlich: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
- "@js.24fnxph6nhs": {
-  "x-review": "machine",
-  "x-source": "2709781e4a"
- },
- "js.24gwd0vxjg3": "<b>Lizenz.</b> CHEOPS-Daten und daraus abgeleitete Ergebnisse unterliegen weiterhin den Bedingungen der ESA: Daten in den ESA Space Science Archives werden unter der Lizenz CC BY-NC {n0} IGO verbreitet, und jede kommerzielle Nutzung, auch eine, die indirekt finanziellen Gewinn erzeugt, bedarf der vorherigen Genehmigung der ESA (data.licences@esa.int). Die kommerzielle Lizenz von SetuHQ und SetuHQ Pro umfassen den Code und die Dienste von SetuHQ, nicht CHEOPS-Daten oder aus CHEOPS abgeleitete Ergebnisse.",
- "@js.24gwd0vxjg3": {
-  "x-review": "machine",
-  "x-source": "027b9f1def"
  },
  "js.24jrww0gdzl": "Künstlerische Darstellung · Gestein, ultraheiß · Der Radius von {n0} R⊕ (exoplanet.eu) liegt unter {n1} R⊕, daher wird er als Gesteinsplanet gezeichnet. Teq {n2} K, berechnet aus a, R★ und Teff, liegt im ultraheißen Bereich. Die Zusammensetzung ist nicht gemessen. Quelle: exoplanet.eu, abgerufen am {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Wie die Bilder gezeichnet werden ›</a>",
  "@js.24jrww0gdzl": {
@@ -6291,11 +6331,6 @@
   "x-review": "machine",
   "x-source": "f3d6bee517"
  },
- "js.25v5j8df6ue": "Startwerte: N★ = {n0} M-Zwerge, hell genug für JWST, F_Q · F_HZ = {n1}, F_O = {n2}, F_L = {n3}, F_S = {n4}, ergibt N ≈ {n5}. Sie stammen aus Sekundärzusammenfassungen von Seagers Vortrag und Artikel und wurden hier nicht mit dem Artikel abgeglichen; F_L = {n6} ist eine Annahme, keine Messung. Der Anteil in der habitablen Zone verweist auf die Abbildungen des Kapitels {s0}.",
- "@js.25v5j8df6ue": {
-  "x-review": "machine",
-  "x-source": "0c766c3029"
- },
  "js.25vec9roei3": "tess-f28323a4aef6-{n0} · {s0} · bekannter Planet",
  "@js.25vec9roei3": {
   "x-review": "machine",
@@ -6311,10 +6346,10 @@
   "x-review": "machine",
   "x-source": "8e26be0f72"
  },
- "js.2688tn5ytet": "{n0} gespeicherte Helligkeitsmessungen über {n1} Tage. Das Gremium, {n2} Sentinels und {n3} Probes (keine Menschen), markierte {n4} Einbrüche, die der Prüfcode zu {n5} Signalen gruppierte: {n6} bestanden, {n7} markiert, {n8} verworfen. Jeder Einbruch ist ein eigener Kandidat dieser Pipeline, nicht als unabhängige Detektion bestätigt; die Archivübereinstimmung besagt, dass der Planet bereits bekannt ist, nicht dass dieser Lauf ihn bestätigt hat. Der gespeicherte Archivabgleich (die im Repository gespeicherte Kopie) findet das führende Signal vereinbar mit pi Men c, einem veröffentlichten Planeten: ein bekannter Planet, keine Entdeckung. Nur Archivwerte. Diese Seite beansprucht keine Detektion.",
- "@js.2688tn5ytet": {
+ "js.267fwx4rrxg": "Katalog",
+ "@js.267fwx4rrxg": {
   "x-review": "machine",
-  "x-source": "737d181458"
+  "x-source": "d2504e52b8"
  },
  "js.269wyn7yehy": "Das erste in einer Exoplanetenatmosphäre beobachtete photochemische Produkt: Sternlicht treibt Chemie an.",
  "@js.269wyn7yehy": {
@@ -6346,6 +6381,16 @@
   "x-review": "machine",
   "x-source": "ad1170b8cc"
  },
+ "js.26jkejmj23b": "Direktabbildung <span class=\"mono\" data-cmn=\"imaging\">{n0}</span>",
+ "@js.26jkejmj23b": {
+  "x-review": "machine",
+  "x-source": "d8c9828b8c"
+ },
+ "js.26jwv5q9ef3": "Bedeckungsveränderlicher",
+ "@js.26jwv5q9ef3": {
+  "x-review": "machine",
+  "x-source": "8df8a39f8e"
+ },
  "js.26lvjxq29mz": "Top-Kandidaten ausblenden",
  "@js.26lvjxq29mz": {
   "x-review": "machine",
@@ -6366,6 +6411,16 @@
   "x-review": "machine",
   "x-source": "eaacfcf2d5"
  },
+ "js.26pv2ld5al": "YZ Cet d",
+ "@js.26pv2ld5al": {
+  "x-review": "machine",
+  "x-source": "92120cfb4f"
+ },
+ "js.26pzvkix2mc": "Sternseite ›",
+ "@js.26pzvkix2mc": {
+  "x-review": "machine",
+  "x-source": "e1fbb1c217"
+ },
  "js.26sdy1tcm5m": "Die Fallakte konnte in dieser Ansicht nicht geladen werden. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-005\">Auf eigener Seite öffnen.</a>",
  "@js.26sdy1tcm5m": {
   "x-review": "machine",
@@ -6375,11 +6430,6 @@
  "@js.26seob0sso6": {
   "x-review": "machine",
   "x-source": "f2c44d90f7"
- },
- "js.26svlut4n1y": "SetuHQ liest TESS-Lichtkurven: jeweils einen Stern, etwa {n0} Tage pro Sektor. <a href=\"/explore/galaxy/?layers=tess\">Himmelsabdeckung von TESS ansehen ›</a>",
- "@js.26svlut4n1y": {
-  "x-review": "machine",
-  "x-source": "7675cbd084"
  },
  "js.26upx7lksz5": "TFOPWG-Einstufung CP (ein Planet, laut Follow-up-Teams), aktualisiert am {n0}-{n1}-{n2}",
  "@js.26upx7lksz5": {
@@ -6401,11 +6451,6 @@
   "x-review": "machine",
   "x-source": "5332f7c6da"
  },
- "js.26zs3bh9z5t": "hoch: zwei oder mehr instrumentelle Hinweise; mittel: einer; niedrig: allein die Begründung des Panels.",
- "@js.26zs3bh9z5t": {
-  "x-review": "machine",
-  "x-source": "eaf598efdb"
- },
  "js.27070gzrt8g": "numpy",
  "@js.27070gzrt8g": {
   "x-review": "machine",
@@ -6426,20 +6471,10 @@
   "x-review": "machine",
   "x-source": "bfeaf40123"
  },
- "js.275p8l49gz9": "Entdeckungsmethode",
- "@js.275p8l49gz9": {
-  "x-review": "machine",
-  "x-source": "7f31ff7ee3"
- },
  "js.27d1pzwqqg5": "{n0} Einbrüche ({n1} Kandidaten, {n2} markiert). Jeder Einbruch ist nach seinem Prüfergebnis benannt: Ein Kandidat hat die Prüfung bestanden und ist unbestätigt; ein markierter Einbruch ist offen; ein verworfener Einbruch ist kein Kandidat. Verworfene und markierte Einbrüche werden bewusst beibehalten, damit Lesende sehen können, was die Prüfung entschieden hat und warum. Jedes Bild ist der blind codierte Plot, den die Prüfer gesehen haben, Byte für Byte.",
  "@js.27d1pzwqqg5": {
   "x-review": "machine",
   "x-source": "f52c6bc4a9"
- },
- "js.27eugex8tue": "Künstlerische Darstellung: das Erscheinungsbild „neptune-warm“, für Radius {n0} bis {n1} R⊕, Teq {n2} bis {n3} K: blaugrüner Dunst. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.27eugex8tue": {
-  "x-review": "machine",
-  "x-source": "2d58d10911"
  },
  "js.27fyvwqvgk2": "id tic197575514-s1-dip-{n0} · Objekt tess-b9ee497ace57<br>Lichtkurve sha256 6cdb3d033119539b3dd9a07e89379098ee77c137584a467d88efe3b74e7c0913<br>Code … · Konfiguration a9d34c7079563183…<br>Quelle sector_0001.json.gz",
  "@js.27fyvwqvgk2": {
@@ -6460,6 +6495,11 @@
  "@js.27jlutunzon": {
   "x-review": "machine",
   "x-source": "de7cd804ae"
+ },
+ "js.27kx8tn6apn": "Timing und Phase",
+ "@js.27kx8tn6apn": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
  },
  "js.27n9asbnx55": "Top-Kandidaten anordnen",
  "@js.27n9asbnx55": {
@@ -6500,6 +6540,11 @@
  "@js.27y132h50m1": {
   "x-review": "machine",
   "x-source": "734a43293e"
+ },
+ "js.280bcq6hfxu": "Perioden von Kepler-{n0} b und c",
+ "@js.280bcq6hfxu": {
+  "x-review": "machine",
+  "x-source": "de18f16db8"
  },
  "js.283unm3lnxq": "Sentinel · Skeptiker <span class=\"mono\">claude-skeptic</span>",
  "@js.283unm3lnxq": {
@@ -6545,11 +6590,6 @@
  "@js.28hrtzpigjb": {
   "x-review": "machine",
   "x-source": "1f2470675c"
- },
- "js.28ictyar11j": "Eine Lernübung, kein Beitrag zur Wissenschaft. Ihre Antworten bleiben in diesem Browser und werden weder gesammelt noch irgendwohin gesendet; die Einbrüche sind gespeicherte Einbrüche aus den Beispielläufen von SetuHQ, über die dessen Prüfung bereits entschieden hat.",
- "@js.28ictyar11j": {
-  "x-review": "machine",
-  "x-source": "5a6ae14a11"
  },
  "js.28iqhboa34b": "Ein Molekül mit N Atomen hat 3N − {n0} Schwingungsmöglichkeiten (3N − {n1}, wenn es linear ist): Wasser hat drei, Kohlendioxid vier (seine Biegeschwingung tritt zweimal auf, im rechten Winkel zueinander), Methan neun. Eine Mode absorbiert nur dann Infrarotlicht, wenn sie das Dipolmoment des Moleküls ändert. Deshalb sind die symmetrische Streckschwingung von CO₂ ({n2} µm), die Streckschwingung von O₂ und zwei der vier Grundschwingungen von Methan im Infraroten stumm. Die Banden, die diese Moden erzeugen, sind die im Kapitel „Atmosphären lesen“ markierten: Die beiden Streckschwingungen von Wasser bei {n3} und {n4} µm bilden seine {n5}-µm-Bande, die ν₃ von Methan die {n6}-µm-Bande, die asymmetrische Streckschwingung von CO₂ die {n7}-µm-Bande und die Streckschwingung von CO die {n8}-µm-Bande.",
  "@js.28iqhboa34b": {
@@ -6766,6 +6806,11 @@
   "x-review": "machine",
   "x-source": "258011d66c"
  },
+ "js.2a56wvwnc5o": "HN Lib",
+ "@js.2a56wvwnc5o": {
+  "x-review": "machine",
+  "x-source": "6993fd96af"
+ },
  "js.2a9g9u8ogm5": "Feld an der Quelle",
  "@js.2a9g9u8ogm5": {
   "x-review": "machine",
@@ -6786,6 +6831,11 @@
   "x-review": "machine",
   "x-source": "50621e7fe0"
  },
+ "js.2ad5lvvd821": "Gaia-{n0} b ›",
+ "@js.2ad5lvvd821": {
+  "x-review": "machine",
+  "x-source": "fb287f3d63"
+ },
  "js.2ahfv5ecid": "id tic177082055-s1-dip-{n0} · Subjekt tess-9ff47a35552d<br>Lichtkurve sha256 ad0dc350aa11e6edee9ef4c25cad43f094f52a98ab9010ca3c0ec0aaadafe861<br>Code … · config a9d34c7079563183…<br>Quelle sector_0001.json.gz",
  "@js.2ahfv5ecid": {
   "x-review": "machine",
@@ -6801,11 +6851,6 @@
   "x-review": "machine",
   "x-source": "88117143a4"
  },
- "js.2aj3droma9q": "der Katalog und zitierte Arbeiten, Zahlen in der Tabelle jedes Kapitels",
- "@js.2aj3droma9q": {
-  "x-review": "machine",
-  "x-source": "3cf2224205"
- },
  "js.2apzy7fqrqe": "Archivvergleich: kein Archivplanet innerhalb der Toleranz. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
  "@js.2apzy7fqrqe": {
   "x-review": "machine",
@@ -6820,11 +6865,6 @@
  "@js.2avziyt7hbv": {
   "x-review": "machine",
   "x-source": "5eab0aea69"
- },
- "js.2b0kq1u0yok": "<b>ν-Streckschwingung</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">die {n2}-µm-Bande in „Atmosphären lesen“ ›</a>",
- "@js.2b0kq1u0yok": {
-  "x-review": "machine",
-  "x-source": "9f2fb710c1"
  },
  "js.2b1w1bhtwi6": "Skalenhöhe von WASP-{n0} b (μ = {n1})",
  "@js.2b1w1bhtwi6": {
@@ -6901,6 +6941,11 @@
   "x-review": "machine",
   "x-source": "1dfa560d9d"
  },
+ "js.2brjxhf24py": "{n0} Eri d",
+ "@js.2brjxhf24py": {
+  "x-review": "machine",
+  "x-source": "3f3cad2fcc"
+ },
  "js.2btmnnqnpty": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">3k. <span class=\"mono\">tess-03a9e901682f-{n0}</span>.</b> Einbruch bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markiert von {n5} Prüfern (der Katalog speichert weder die Gremiengröße noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
  "@js.2btmnnqnpty": {
   "x-review": "machine",
@@ -6910,6 +6955,11 @@
  "@js.2bvrlx4bioc": {
   "x-review": "machine",
   "x-source": "18fccc4254"
+ },
+ "js.2c181tpjjvc": "Luyten's Star b",
+ "@js.2c181tpjjvc": {
+  "x-review": "machine",
+  "x-source": "23d6b3c963"
  },
  "js.2c70ie4ixet": "Tafeln",
  "@js.2c70ie4ixet": {
@@ -6946,11 +6996,6 @@
   "x-review": "machine",
   "x-source": "439b98f6cf"
  },
- "js.2cazwqoadoq": "Zurückgehaltene EBs mit einer Sekundärbedeckung im Katalog und Periodenübereinstimmung: Sekundärphase innerhalb von {n0} der des Katalogs, untere Grenze des {n1}-%-Intervalls &gt;= {n2} (eine Sekundärbedeckung, die wir nicht finden, zählt als Fehlschlag)",
- "@js.2cazwqoadoq": {
-  "x-review": "machine",
-  "x-source": "71d0ca28d6"
- },
  "js.2cc0e9v7uvs": "<i style=\"background:#FF6961\"></i>{n0} Peg b",
  "@js.2cc0e9v7uvs": {
   "x-review": "machine",
@@ -6970,6 +7015,11 @@
  "@js.2cektxt2twi": {
   "x-review": "machine",
   "x-source": "4662bb50f1"
+ },
+ "js.2cg943adi3e": "Die Rangliste mit echten TOIs ›",
+ "@js.2cg943adi3e": {
+  "x-review": "machine",
+  "x-source": "cd1d193d20"
  },
  "js.2cjkfyfegp8": "Markierungen (✓ gezählt)",
  "@js.2cjkfyfegp8": {
@@ -6995,6 +7045,16 @@
  "@js.2cqrtx9qqhe": {
   "x-review": "machine",
   "x-source": "2e5aaa9889"
+ },
+ "js.2cs8n7gldpd": "SetuHQ Pro",
+ "@js.2cs8n7gldpd": {
+  "x-review": "machine",
+  "x-source": "fcca2f700b"
+ },
+ "js.2cserx0e05n": "Proxima Centauri d",
+ "@js.2cserx0e05n": {
+  "x-review": "machine",
+  "x-source": "8213996948"
  },
  "js.2ct9t5541vf": "Zwei Teams haben unabhängig voneinander denselben Planeten beim Durchgang vor seinem Stern beobachtet.",
  "@js.2ct9t5541vf": {
@@ -7026,11 +7086,6 @@
   "x-review": "machine",
   "x-source": "00265f6a9d"
  },
- "js.2d5lr3nor8a": "<b>Daten: The Extrasolar Planets Encyclopaedia (exoplanet.eu), abgerufen am {n0}-{n1}-{n2}.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. Das NASA Exoplanet Archive war beim Abruf dieser Liste nicht erreichbar, daher stammt sie allein von exoplanet.eu. exoplanet.eu führt jedes Objekt, das es als Planeten behandelt, als bestätigt: Körper bis zu {n3} Jupitermassen (im Rahmen ihrer Unsicherheit), veröffentlicht oder angekündigt. Die Liste ist breiter als die des NASA Exoplanet Archive, das Objekte bis zu {n4} Jupitermassen aus begutachteten Fachartikeln führt. Ein Wert, den die Quelle nicht angibt, wird als „nicht gespeichert“ angezeigt.",
- "@js.2d5lr3nor8a": {
-  "x-review": "machine",
-  "x-source": "4ddb24b25e"
- },
  "js.2d5x5vtgqx3": "{n0} {n1} / {n2} MJ <span class=\"na\">· theoretische Schätzung</span>",
  "@js.2d5x5vtgqx3": {
   "x-review": "machine",
@@ -7046,11 +7101,6 @@
   "x-review": "machine",
   "x-source": "a2e862e82e"
  },
- "js.2d87qst4jdj": "Suchkatalog docs/discoveries/catalog.json, aktualisiert am {n0}-{n1}-29T00:{n2}+{n3}, {n4} Einträge.",
- "@js.2d87qst4jdj": {
-  "x-review": "machine",
-  "x-source": "c5e3fcc2c6"
- },
  "js.2d8lw4ky362": "Modus",
  "@js.2d8lw4ky362": {
   "x-review": "machine",
@@ -7061,16 +7111,6 @@
   "x-review": "machine",
   "x-source": "d356f1d9dd"
  },
- "js.2d97owpwxwe": "<b>ν₃ asymmetrische Streckschwingung</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · außerhalb des {n2}–{n3} µm-Fensters von {s0}",
- "@js.2d97owpwxwe": {
-  "x-review": "machine",
-  "x-source": "426504275f"
- },
- "js.2d9cg0jtcpa": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Lichtkurve",
- "@js.2d9cg0jtcpa": {
-  "x-review": "machine",
-  "x-source": "6c965e2b87"
- },
  "js.2dbh8x9y8de": "Periode",
  "@js.2dbh8x9y8de": {
   "x-review": "machine",
@@ -7080,6 +7120,11 @@
  "@js.2dcer0ylq6r": {
   "x-review": "machine",
   "x-source": "731f74e2f3"
+ },
+ "js.2dcmry1hh6z": "Kepler-{n0} c ›",
+ "@js.2dcmry1hh6z": {
+  "x-review": "machine",
+  "x-source": "afae7ed80f"
  },
  "js.2deel2ps6ig": "τ Boötis, vorläufige Ausbrüche bei {n0}–{n1} MHz",
  "@js.2deel2ps6ig": {
@@ -7166,11 +7211,6 @@
   "x-review": "machine",
   "x-source": "63210331f9"
  },
- "js.2eluxgdu08m": "Zahlen in diesem Kapitel",
- "@js.2eluxgdu08m": {
-  "x-review": "machine",
-  "x-source": "2d0a4d13b4"
- },
  "js.2en1x3cmvoa": "{n0} Peg b: K aus unserer Formel",
  "@js.2en1x3cmvoa": {
   "x-review": "machine",
@@ -7191,15 +7231,10 @@
   "x-review": "machine",
   "x-source": "dcfc6e0cb1"
  },
- "js.2etjlw57rtv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Galaxie",
- "@js.2etjlw57rtv": {
+ "js.2ew51rdrin6": "Helligkeitseinbruch {n0} von {n1}",
+ "@js.2ew51rdrin6": {
   "x-review": "machine",
-  "x-source": "5dbc898c01"
- },
- "js.2eujifl0hnp": "hoch: Ungleichheit gerade/ungerade oder sekundäre Bedeckung; mittel: Tiefe, V-Form, Dichteabweichung bei kurzer Periode oder die Bedeckungsperiode; niedrig: allein die Begründung des Gremiums.",
- "@js.2eujifl0hnp": {
-  "x-review": "machine",
-  "x-source": "4d1f3f27e2"
+  "x-source": "50a1297714"
  },
  "js.2exbs04rc3y": "Ein optisches Bild eines „Planeten“, das später als sich ausdehnende Staubwolke aus einer Kollision erklärt wurde.",
  "@js.2exbs04rc3y": {
@@ -7246,6 +7281,11 @@
   "x-review": "machine",
   "x-source": "fd6553a3e6"
  },
+ "js.2fkkbj5qfsy": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s2</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.2fkkbj5qfsy": {
+  "x-review": "machine",
+  "x-source": "26c1586964"
+ },
  "js.2fmavt7k5j5": "Top-Kandidaten nach oben verschieben",
  "@js.2fmavt7k5j5": {
   "x-review": "machine",
@@ -7266,11 +7306,6 @@
   "x-review": "machine",
   "x-source": "eb8caa0866"
  },
- "js.2ftwr4ebakn": "<b>Echte Daten, mit Quellenangabe.</b> Gespeicherte Messungen, gebinnt oder gefaltet wie gespeichert.",
- "@js.2ftwr4ebakn": {
-  "x-review": "machine",
-  "x-source": "349da91d3d"
- },
  "js.2fu72b3rkst": "<b>ν₂ Biegeschwingung (zwei, rechtwinklig zueinander)</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · außerhalb des {n2}–{n3} µm-Fensters von Atmosphären lesen",
  "@js.2fu72b3rkst": {
   "x-review": "machine",
@@ -7285,6 +7320,11 @@
  "@js.2fy47ry25d8": {
   "x-review": "machine",
   "x-source": "745f476a5f"
+ },
+ "js.2fye5c973kf": "markiert",
+ "@js.2fye5c973kf": {
+  "x-review": "machine",
+  "x-source": "d9b2fe68b6"
  },
  "js.2fyxww7qwgs": "Sonne",
  "@js.2fyxww7qwgs": {
@@ -7336,6 +7376,11 @@
   "x-review": "machine",
   "x-source": "9dbffce8e5"
  },
+ "js.2gbggujxcvs": "keine",
+ "@js.2gbggujxcvs": {
+  "x-review": "machine",
+  "x-source": "140bedbf9c"
+ },
  "js.2gbrnw08yjn": "Eintrag<span aria-hidden=\"true\"></span>",
  "@js.2gbrnw08yjn": {
   "x-review": "machine",
@@ -7365,6 +7410,11 @@
  "@js.2gz7mzl8po": {
   "x-review": "machine",
   "x-source": "8c1759d61c"
+ },
+ "js.2jt13jfskg": "Lalande {n0} d",
+ "@js.2jt13jfskg": {
+  "x-review": "machine",
+  "x-source": "142bf3b80d"
  },
  "js.2jxe56kfgj": "Suche (/)",
  "@js.2jxe56kfgj": {
@@ -7426,11 +7476,6 @@
   "x-review": "machine",
   "x-source": "c95d84d8a8"
  },
- "js.32jc7egs68": "<b>{n0}</b> der {n1} Planeten mit gespeicherter Entfernung in exoplanet.eu wurden per Radialgeschwindigkeit gefunden (die erste aufgeführte Methode). <a href=\"/explore/galaxy/?method=rv\">Auf der Galaxie-Karte anzeigen ›</a>",
- "@js.32jc7egs68": {
-  "x-review": "machine",
-  "x-source": "3d287892f0"
- },
  "js.33d16tnf44": "Karte mit {n0} Planeten wird geladen…",
  "@js.33d16tnf44": {
   "x-review": "machine",
@@ -7476,11 +7521,6 @@
   "x-review": "machine",
   "x-source": "0b61a77801"
  },
- "js.3d44eg16pj": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Himmelsposition",
- "@js.3d44eg16pj": {
-  "x-review": "machine",
-  "x-source": "4f904b0fbc"
- },
  "js.3dua6scdtg": "{n0} Intervalle auf {n1} Subjekten",
  "@js.3dua6scdtg": {
   "x-review": "machine",
@@ -7505,6 +7545,11 @@
  "@js.3iebm2jaty": {
   "x-review": "machine",
   "x-source": "0455ae374d"
+ },
+ "js.3kjkwe2xdx": "{n0} Ziele · {n1} bekannt · {n2} Fehler",
+ "@js.3kjkwe2xdx": {
+  "x-review": "machine",
+  "x-source": "15dfef1f1e"
  },
  "js.3o5vubwdr": "{n0} dex",
  "@js.3o5vubwdr": {
@@ -7536,10 +7581,10 @@
   "x-review": "machine",
   "x-source": "770680c692"
  },
- "js.3tu868pwb6": "TIC {n0} · zur Überprüfung markiert, offen",
- "@js.3tu868pwb6": {
+ "js.3ub2we0j81": "Teegarden's",
+ "@js.3ub2we0j81": {
   "x-review": "machine",
-  "x-source": "58e453def1"
+  "x-source": "d49a311c27"
  },
  "js.3wqc4ug47j": "Methoden: Atmosphären lesen ›",
  "@js.3wqc4ug47j": {
@@ -7581,11 +7626,6 @@
   "x-review": "machine",
   "x-source": "8e52c2a95a"
  },
- "js.45gidy2yfd": "Eine Untergrenze: Die reine Metadaten-Baseline verwendet überhaupt keine Lichtkurve, nur die öffentliche TOI-Nummer, Periode, Dauer, Ephemeridenfehler und Epoche, mit einer logistischen Regression, angepasst an die Tuning-Hälfte. Bei einer Methode, die sie nicht übertrifft, ist nicht gezeigt, dass sie die Lichtkurven besser liest, als die eigenen Metadaten des Katalogs die Dispositionen vorhersagen.",
- "@js.45gidy2yfd": {
-  "x-review": "machine",
-  "x-source": "d4a42c8dbc"
- },
  "js.46fy9vwje9": "Sekundär, beliebige Phase",
  "@js.46fy9vwje9": {
   "x-review": "machine",
@@ -7620,11 +7660,6 @@
  "@js.4axuq93fet": {
   "x-review": "machine",
   "x-source": "b4faa12d85"
- },
- "js.4b8yjime2n": "Künstlerische Darstellung: das Aussehen „Gestein, gemäßigt“, für Radien unter {n0} R⊕, Teq {n1} bis {n2} K: grau-braunes Gestein und ein dünner neutraler Rand; keine Ozeane, Kontinente oder Wolken. Ein Standbild des Aussehens, nicht eines bestimmten Planeten.",
- "@js.4b8yjime2n": {
-  "x-review": "machine",
-  "x-source": "9c1d8d98c4"
  },
  "js.4ccm3arc4r": "{n0} Planeten in exoplanet.eu · gespeicherter Typ K0V · Klasse K aus Teff (nächster K0V)",
  "@js.4ccm3arc4r": {
@@ -7686,15 +7721,15 @@
   "x-review": "machine",
   "x-source": "5caba079cd"
  },
+ "js.4sxy414d9c": "Stichprobe",
+ "@js.4sxy414d9c": {
+  "x-review": "machine",
+  "x-source": "af2bdbe1aa"
+ },
  "js.4t9xjok0e6": "Künstlerische Darstellung · Gestein, Einstrahlung nicht berechenbar · Kein Radius gespeichert; die Masse von {n0} M⊕ (exoplanet.eu) liegt unter {n1} M⊕, daher wird er als Gestein gezeichnet. Radius nicht gemessen: nicht maßstabsgetreu. Einstrahlung nicht berechenbar: neutrale Farben. Die Zusammensetzung ist nicht gemessen. Quelle: exoplanet.eu, abgerufen {n2}-{n3}-{n4}. <a href=\"/docs/pictures/\">So werden die Bilder gezeichnet ›</a>",
  "@js.4t9xjok0e6": {
   "x-review": "machine",
   "x-source": "3975c0da56"
- },
- "js.4u1k8v564x": "Ein Periodogramm-Maximum mit Baluev-FAP unter {n0} und einer Halbamplitude von mindestens dem {n1}-Fachen der Streuung von {n2}-Minuten-Bins, kohärent: Dieselbe Periode (innerhalb von {n3} %) ist das beste Maximum jeder Hälfte der Lichtkurve und liegt nicht innerhalb von {n4} % der längsten durchsuchten Periode; eine Periode, die {n5} oder mehr Sterne eines Sektors teilen, ist systematisch. Ein Einbruch, der {n6} dieser Periode oder länger dauert, ist ein Tal davon; ebenso ein Einbruch, den das Panel mit der Hälfte des Gewichts als stellare Variabilität eingestuft hat.",
- "@js.4u1k8v564x": {
-  "x-review": "machine",
-  "x-source": "9c7dd08245"
  },
  "js.4v6zv9397m": "Konfidenz {n0}",
  "@js.4v6zv9397m": {
@@ -7721,10 +7756,10 @@
   "x-review": "machine",
   "x-source": "0e17d0a129"
  },
- "js.50cw8uea6": "Zurückgehaltene EBs: Periode innerhalb von {n0}% der Katalogperiode (ein nicht markierter EB zählt als Fehltreffer), untere Grenze des {n1}%-Intervalls &gt;= {n2}",
- "@js.50cw8uea6": {
+ "js.4xy18gdl7w": "Katalog aktualisiert am <time datetime=\"2026-10-30T06:34:41+00:00\" title=\"2026-10-30T06:34:41+00:00\">{n0}. Okt. {n1}, {n2} UTC</time>.",
+ "@js.4xy18gdl7w": {
   "x-review": "machine",
-  "x-source": "75081a4bd7"
+  "x-source": "d9bccf18dc"
  },
  "js.537weqdx92": "TIC {n0} · P {n1} d · {n2} ppm · SNR {n3}",
  "@js.537weqdx92": {
@@ -7751,15 +7786,25 @@
   "x-review": "machine",
   "x-source": "d40d0e920c"
  },
+ "js.5cuofh1x2k": "in diesem Ausschnitt nicht vom Rauschen unterscheidbar",
+ "@js.5cuofh1x2k": {
+  "x-review": "machine",
+  "x-source": "7dfa2254b3"
+ },
+ "js.5eim8yf4c": "Lalande {n0}",
+ "@js.5eim8yf4c": {
+  "x-review": "machine",
+  "x-source": "7a73b4b548"
+ },
+ "js.5j6snvvuuk": "Layout",
+ "@js.5j6snvvuuk": {
+  "x-review": "machine",
+  "x-source": "a511909161"
+ },
  "js.5k1okfy1y2": "Website",
  "@js.5k1okfy1y2": {
   "x-review": "machine",
   "x-source": "fa7955814e"
- },
- "js.5limoap242": "<b>ν₄ asymmetrische Biegeschwingung (zweifach)</b> · {n0} µm · infrarotaktiv · ×{n1} gezeichnet · außerhalb des Fensters {n2}–{n3} µm von {s0}",
- "@js.5limoap242": {
-  "x-review": "machine",
-  "x-source": "c1aa83b41c"
  },
  "js.5m1n02zglj": "Nachweis von Kohlendioxid in einer Exoplanetenatmosphäre",
  "@js.5m1n02zglj": {
@@ -7785,11 +7830,6 @@
  "@js.5qqcw21as6": {
   "x-review": "machine",
   "x-source": "f4a2329657"
- },
- "js.5tmt3hrss9": "die Grenze der Größenklasse im Katalog (Gasriese ab {n0} R⊕)",
- "@js.5tmt3hrss9": {
-  "x-review": "machine",
-  "x-source": "7807f33d37"
  },
  "js.5x2cvaysve": "RV-Halbamplitude K",
  "@js.5x2cvaysve": {
@@ -7826,6 +7866,11 @@
   "x-review": "machine",
   "x-source": "bf11fecb30"
  },
+ "js.64gjc6ygey": "Verdecktes Sternlicht",
+ "@js.64gjc6ygey": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
  "js.65pxt8ib9c": "Ein Super-Jupiter, abgebildet um einen Doppelstern.",
  "@js.65pxt8ib9c": {
   "x-review": "machine",
@@ -7855,11 +7900,6 @@
  "@js.6j56seqj8": {
   "x-review": "machine",
   "x-source": "7e69af06bb"
- },
- "js.6n8ndyybfz": "Eine Einreichung listet für jeden Stern ihres Umfangs die Ereignisse auf, die ihre Methode in der echten Lichtkurve und in den fluss-invertierten und blockweise verwürfelten Kontrollen erkannt hat (Zeit, Dauer, Periode, eigenes Bestanden-Urteil und Markierungen). Die Rangliste entscheidet, welche Ereignisse auf der Ephemeride des TOI liegen (score_star und match_toi des Benchmarks), und zählt Fehlalarme in den Kontrollen selbst. Selbst gemeldete Ergebnisse werden nicht akzeptiert.",
- "@js.6n8ndyybfz": {
-  "x-review": "machine",
-  "x-source": "7c4b789f62"
  },
  "js.6qolz1acje": "Quelle: wie in der Bildunterschrift angegeben.",
  "@js.6qolz1acje": {
@@ -7916,6 +7956,11 @@
   "x-review": "machine",
   "x-source": "217afade12"
  },
+ "js.78llqc69gh": "Proxima Centauri b",
+ "@js.78llqc69gh": {
+  "x-review": "machine",
+  "x-source": "c5626ab780"
+ },
  "js.78r4r7906c": "Auf der Erde wird es fast ausschließlich von Meereslebewesen erzeugt.",
  "@js.78r4r7906c": {
   "x-review": "machine",
@@ -7951,15 +7996,15 @@
   "x-review": "machine",
   "x-source": "1aca80e8b5"
  },
- "js.7czfymv28r": "eine künstlerische Darstellung aus der Darstellungstabelle; maßstabsgetreue Größe nur, wenn ein Radius gespeichert ist",
- "@js.7czfymv28r": {
-  "x-review": "machine",
-  "x-source": "326ba9455b"
- },
  "js.7f3lidyc7s": "Der Transit, abgespielt",
  "@js.7f3lidyc7s": {
   "x-review": "machine",
   "x-source": "40686f7e63"
+ },
+ "js.7i6tnzxffe": "Wolf {n0} b",
+ "@js.7i6tnzxffe": {
+  "x-review": "machine",
+  "x-source": "03eb21d076"
  },
  "js.7nrzzc658q": "blind kodierte Subjekte",
  "@js.7nrzzc658q": {
@@ -8016,6 +8061,11 @@
   "x-review": "machine",
   "x-source": "3e17a94f61"
  },
+ "js.87fibqymmi": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">pi Men c</a></b> · Wirtsstern <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> · P {n0} d · transitierend",
+ "@js.87fibqymmi": {
+  "x-review": "machine",
+  "x-source": "f7c50ba965"
+ },
  "js.886176wzks": "{n0} Planet in exoplanet.eu · gespeicherter Typ F6V · Klasse F aus Teff (nächster F5V)",
  "@js.886176wzks": {
   "x-review": "machine",
@@ -8066,11 +8116,6 @@
   "x-review": "machine",
   "x-source": "f39f7254a3"
  },
- "js.8v4t373n3v": "<span class=\"tag cand\" title=\"candidate, unconfirmed\">Kandidat</span> Mittzeitpunkt {n0} BTJD",
- "@js.8v4t373n3v": {
-  "x-review": "machine",
-  "x-source": "fd4ae8b1e8"
- },
  "js.8w8ak8xloi": "BTJD {n0} · {n1} h · {n2} ppm tief · SNR {n3} · P {n4} d ({n5} Transits)",
  "@js.8w8ak8xloi": {
   "x-review": "machine",
@@ -8080,11 +8125,6 @@
  "@js.8wdver3jml": {
   "x-review": "machine",
   "x-source": "a4c44f4a8f"
- },
- "js.8wmiyv0zzd": "Künstlerische Darstellung: das Erscheinungsbild „Gestein, kalt“, für Radius unter {n0} R⊕, Teq unter {n1} K: blassgraues Gestein, Eiskappen bis {n2}° Breite, keine Atmosphäre. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.8wmiyv0zzd": {
-  "x-review": "machine",
-  "x-source": "c1497fc8a0"
  },
  "js.8wxh5amfez": "Sub-Neptun",
  "@js.8wxh5amfez": {
@@ -8096,10 +8136,20 @@
   "x-review": "machine",
   "x-source": "10af6c250a"
  },
+ "js.905p7mrgke": "Ross {n0} b",
+ "@js.905p7mrgke": {
+  "x-review": "machine",
+  "x-source": "eec00b75d8"
+ },
  "js.90yyx3asv8": "{n0} Psc c",
  "@js.90yyx3asv8": {
   "x-review": "machine",
   "x-source": "f0cbc33340"
+ },
+ "js.92zm5mb6ic": "Eintrag",
+ "@js.92zm5mb6ic": {
+  "x-review": "machine",
+  "x-source": "923fe53966"
  },
  "js.94m77w54ls": "Seine gespeicherte Begründung für Objekt S2 (BTJD {n0} bis {n1}), eine pro Objekt, nicht pro Einbruch. Er hat diesen Einbruch markiert. Ein Sentinel ist ein KI-Modell (Claude Code CLI (Claude, Anthropic) · Standard), keine Person.",
  "@js.94m77w54ls": {
@@ -8161,15 +8211,15 @@
   "x-review": "machine",
   "x-source": "6c293b1c67"
  },
- "js.9g29b1hwza": "JWST {s0}ing Exoplanet Community ERS Team",
- "@js.9g29b1hwza": {
-  "x-review": "machine",
-  "x-source": "d6a491c51e"
- },
  "js.9ipi38tplb": "Stern",
  "@js.9ipi38tplb": {
   "x-review": "machine",
   "x-source": "e357d39687"
+ },
+ "js.9j28j4tmyg": "Barnard's star b",
+ "@js.9j28j4tmyg": {
+  "x-review": "machine",
+  "x-source": "af09ab2ca6"
  },
  "js.9je9lv8f9w": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">5i. <span class=\"mono\">tess-bc9f59e5c3af-{n0}</span>.</b> Einbruch bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markiert von {n5} Prüfern (der Katalog speichert weder die Panelgröße noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
  "@js.9je9lv8f9w": {
@@ -8206,6 +8256,11 @@
   "x-review": "machine",
   "x-source": "ef80c9cc7c"
  },
+ "js.9xo5dpvs8f": "{n0} Eri c",
+ "@js.9xo5dpvs8f": {
+  "x-review": "machine",
+  "x-source": "b644412ed5"
+ },
  "js.9yvkaakdvn": "Für diese Zeilen ist in diesem Lauf kein Dossier gespeichert.",
  "@js.9yvkaakdvn": {
   "x-review": "machine",
@@ -8230,11 +8285,6 @@
  "@js.a5ik0d45ok": {
   "x-review": "machine",
   "x-source": "76a48996a7"
- },
- "js.a5x17kv5tz": "{n0} Planeten dargestellt · Transit {n1} · Radialgeschwindigkeit {n2} · direkte Abbildung {n3} · Mikrolinseneffekt {n4}",
- "@js.a5x17kv5tz": {
-  "x-review": "machine",
-  "x-source": "3372d51309"
  },
  "js.a6wp5hntda": "Vetting-Flags: <span class=\"mono\">odd_even_mismatch, v_shape</span> · Prüfung nicht bestanden",
  "@js.a6wp5hntda": {
@@ -8270,11 +8320,6 @@
  "@js.ai6mp83zpi": {
   "x-review": "machine",
   "x-source": "73d5db9ed8"
- },
- "js.ak7b9gcem6": "hoch: FAP unter 1e-{n0} und eine Halbamplitude von mindestens dem {n1}-Fachen der gebinnten Streuung; mittel: Halbamplitude mindestens {n2}×; niedrig: sonst (oder ein Einbruch allein aufgrund der Begründung des Panels).",
- "@js.ak7b9gcem6": {
-  "x-review": "machine",
-  "x-source": "4c775dba32"
  },
  "js.am5y46ghie": "exoplanet.eu führt ihn als \"Published in a refereed paper\", gefunden per Primärtransit im Jahr {n0}; Eintrag aktualisiert {n1}-{n2}-{n3}. Auch bekannt als TOI-{n4}.",
  "@js.am5y46ghie": {
@@ -8321,11 +8366,6 @@
   "x-review": "machine",
   "x-source": "d69fa08242"
  },
- "js.aztpkxejok": "die Größenklassengrenze des Katalogs (Neptun-ähnlich {n0}–{n1} R⊕)",
- "@js.aztpkxejok": {
-  "x-review": "machine",
-  "x-source": "0a47054ebb"
- },
  "js.b2yn41cpri": "Die Fallakte konnte in dieser Ansicht nicht geladen werden. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-f28323a4aef6-006\">Auf eigener Seite öffnen.</a>",
  "@js.b2yn41cpri": {
   "x-review": "machine",
@@ -8340,11 +8380,6 @@
  "@js.b81xuwkvhb": {
   "x-review": "machine",
   "x-source": "fa1b7822f3"
- },
- "js.ba6i75z9zb": "{n0} weitere im <a href=\"/candidates/\">Explorer ›</a>",
- "@js.ba6i75z9zb": {
-  "x-review": "machine",
-  "x-source": "378a1efe43"
  },
  "js.bcz7f7521k": "tess-toi-{n0}-s5",
  "@js.bcz7f7521k": {
@@ -8376,11 +8411,6 @@
   "x-review": "machine",
   "x-source": "9d7801b23a"
  },
- "js.bm1842qxn6": "<b>Die neuen Signale im Live-Feed sind mit Rauschen vereinbar.</b> Rauschen allein sollte etwa {n0} falsche new_candidate-Signale pro {n1} geprüfte Ziele ergeben, gegenüber {n2} pro {n3} im Live-Feed. Unter dieser früheren Regel war ein new_candidate im Feed eher Rauschen als ein Signal.",
- "@js.bm1842qxn6": {
-  "x-review": "machine",
-  "x-source": "c59881f8e5"
- },
  "js.bn4w24un71": "≤: eine Obergrenze, aus dem gespeicherten Bereich ({n0} bis zum Wert).",
  "@js.bn4w24un71": {
   "x-review": "machine",
@@ -8401,10 +8431,10 @@
   "x-review": "machine",
   "x-source": "d1ec927942"
  },
- "js.buyt9rgrrs": "Hat die Prüfung bestanden, wurde von der Hälfte des Panelgewichts als potenzieller Planet eingestuft, liegt nicht auf dem eigenen periodischen Signal seines Sterns und wurde von keiner der obigen Regeln erfasst. Ein Kandidat, unbestätigt.",
- "@js.buyt9rgrrs": {
+ "js.bvhiyb18bf": "klein",
+ "@js.bvhiyb18bf": {
   "x-review": "machine",
-  "x-source": "2488197a47"
+  "x-source": "81db8ebbbb"
  },
  "js.bvrmk1ex4g": "Entdeckung",
  "@js.bvrmk1ex4g": {
@@ -8431,10 +8461,10 @@
   "x-review": "machine",
   "x-source": "c7e1272291"
  },
- "js.cbv0lkfgz8": "Den Fall {s0} öffnen ›",
- "@js.cbv0lkfgz8": {
+ "js.cb7mp7y3o9": "Gespeicherte ID tess-1c554332c266-{n0}; keine Falldatei in diesem Lauf",
+ "@js.cb7mp7y3o9": {
   "x-review": "machine",
-  "x-source": "248441ab0d"
+  "x-source": "64026e0de1"
  },
  "js.cbz7kbs8l0": "id tic29257288-s1-dip-{n0} · Subjekt tess-6cf3bf1771b3<br>Lichtkurve sha256 b44e4d280fddc0d2705f6687997736ebf67f9b0544e9711f880a21ebaa0bda05<br>Code … · Config a9d34c7079563183…<br>Quelle sector_0001.json.gz",
  "@js.cbz7kbs8l0": {
@@ -8501,6 +8531,11 @@
   "x-review": "machine",
   "x-source": "bbc7feceee"
  },
+ "js.d6qkqwv24q": "{n0} Peg · {n1} K",
+ "@js.d6qkqwv24q": {
+  "x-review": "machine",
+  "x-source": "e5f1ee0a62"
+ },
  "js.d72yz71kxc": "Feed, absteigend nach snr sortiert. Jeder Eintrag ist ein Kandidat, unbestätigt.",
  "@js.d72yz71kxc": {
   "x-review": "machine",
@@ -8520,11 +8555,6 @@
  "@js.db3tsr98n3": {
   "x-review": "machine",
   "x-source": "aa93d0c8f4"
- },
- "js.dcedelaavp": "<b>ν₂ Biegeschwingung</b> · {n0} µm · infrarot-aktiv · gezeichnet ×{n1} · außerhalb des {n2}–{n3}-µm-Fensters von {s0}",
- "@js.dcedelaavp": {
-  "x-review": "machine",
-  "x-source": "9dbd92a5c8"
  },
  "js.dcp2jzpjk": "<i style=\"background:#30D158\"></i>beta Pic b",
  "@js.dcp2jzpjk": {
@@ -8581,6 +8611,11 @@
   "x-review": "machine",
   "x-source": "b6940405a0"
  },
+ "js.dvqr7huse3": "eps Ind Bb",
+ "@js.dvqr7huse3": {
+  "x-review": "machine",
+  "x-source": "e8e7d5bf66"
+ },
  "js.dvwoo1e05r": "JWST-NIRSpec-PRISM-Transmissionsspektrum von WASP-{n0} b: {n1} gebinnte Punkte mit Fehlerbalken und dem bestangepassten Modell der Veröffentlichung; der tiefste Punkt liegt bei {n2} Mikrometern, der Kohlendioxidbande.",
  "@js.dvwoo1e05r": {
   "x-review": "machine",
@@ -8620,11 +8655,6 @@
  "@js.e1cnrnc88l": {
   "x-review": "machine",
   "x-source": "7a72e5d7b0"
- },
- "js.e1q7qs4zzq": "<b>ν₃ asymmetrische Streckschwingung (drei)</b> · {n0} µm · infrarot-aktiv · gezeichnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">die {n2}-µm-Bande in {s0} ›</a>",
- "@js.e1q7qs4zzq": {
-  "x-review": "machine",
-  "x-source": "71ad84105e"
  },
  "js.e2y47rpcbh": "Unbekannt",
  "@js.e2y47rpcbh": {
@@ -8781,6 +8811,11 @@
   "x-review": "machine",
   "x-source": "09cd47b417"
  },
+ "js.f2v9rtmf85": "Code",
+ "@js.f2v9rtmf85": {
+  "x-review": "machine",
+  "x-source": "340f463033"
+ },
  "js.f38k3bw5h7": "<b class=\"flabel\">Tafel {n0}, Teilbild i.</b> Gespeicherter Fluss des Subjekts tess-38b5a559eee2 (BTJD {n1} bis {n2}), relativer Fluss − {n3} in ppm. Schattierte Bänder sind Konsensintervalle, beschriftet wie in den Bildunterschriften; Dreiecke sind die BLS-Epochen. Rechts: gefaltet auf die gespeicherte BLS-Periode {n4} d und t0 BTJD {n5}; das schattierte Band ist die gespeicherte BLS-Dauer ({n6} h). {n7} Punkte außerhalb des Flussbereichs werden nicht gezeigt.",
  "@js.f38k3bw5h7": {
   "x-review": "machine",
@@ -8795,11 +8830,6 @@
  "@js.f6sm069d1p": {
   "x-review": "machine",
   "x-source": "4b1c53ca4a"
- },
- "js.f7l0xvrbgu": "<b>N–N-Streckschwingung, überwiegend</b> · {n0} µm · infrarotaktiv · ×{n1} gezeichnet · nicht gezeichnet in {s0}",
- "@js.f7l0xvrbgu": {
-  "x-review": "machine",
-  "x-source": "099bdfda01"
  },
  "js.f7onc16rky": "in den Daten vorhergesagte Transits / mit Einbruch",
  "@js.f7onc16rky": {
@@ -8820,11 +8850,6 @@
  "@js.fakckuaz74": {
   "x-review": "machine",
   "x-source": "deaf714e0c"
- },
- "js.fbjnqepq3y": "<b>Jede Klasse gegen ihre eigene Nullprobe</b>, gemessen an denselben {n0} Stern-Sektoren: was ihre Regel dort findet, wo ihr Signal nicht sein kann. Einbrüche: der Fluss auf den Kopf gestellt (ein echter Einbruch wird zur Erhebung; ein echter Flare oder ein Pulsationsmaximum wird zum Einbruch, daher ist diese Nullprobe nicht frei von echten Signalen). Flares: abwärts gerichtete Ereignisse bei maskierten echten Einbrüchen. Variabilität: eine Kopie des Sterns mit rotem Rauschen (AR({n1}), an seine Bins angepasst) durch dieselbe Regel, die in beiden Hälften der Lichtkurve dieselbe beste Periode (innerhalb von {n2} %) verlangt. Von ihren Periodogramm-Maxima, die nicht bei der Periode eines Doppelsterns liegen, sind {n3} kohärent; nicht klassifiziert sind {n4}, die länger sind, als eine Hälfte testen kann (Kohärenz nicht getestet), {n5} am Rand des Periodengitters und {n6}, die zwischen den Hälften wandern. Grenzen: Sie findet eine Sinuskurve von {n7} ppm in starkem rotem Rauschen nur {n8}/{n9}-mal (scripts/variability_rule_check.py) und kann Perioden länger als etwa {n10} d in einem Sektor nicht testen. Verglichen wird Gleiches mit Gleichem, der Stern-Sektor ist die Einheit: Das {n11}-%-Intervall ist ein gepaarter Bootstrap über Stern-Sektoren, neben dem McNemar-Test. Eine Klasse, die nicht beide besteht, ist in diesem Ausschnitt nicht von Rauschen unterscheidbar: Planetenkandidat, Bedeckungsveränderlicher Doppelstern, Flare, Pulsator oder Rotationsveränderlicher, Systematik. Von den {n12} Aufhellungen der Flare-Klasse steigen {n13} schneller an, als sie abklingen, und {n14} umgekehrt ({n15} gleich); echte Flares steigen schnell an, Rauschen hat keine bevorzugte Richtung.",
- "@js.fbjnqepq3y": {
-  "x-review": "machine",
-  "x-source": "edcc450583"
  },
  "js.fbyrtfuuuu": "pi Men",
  "@js.fbyrtfuuuu": {
@@ -8866,11 +8891,6 @@
   "x-review": "machine",
   "x-source": "8e4a1eb431"
  },
- "js.ftkov6vbui": "Die Silhouette eines Einbruchs (Kandidaten, Radienverhältnisse)",
- "@js.ftkov6vbui": {
-  "x-review": "machine",
-  "x-source": "2cbc25cbe4"
- },
  "js.fv6055pnqa": "Periode stimmt mit einem bekannten TOI überein",
  "@js.fv6055pnqa": {
   "x-review": "machine",
@@ -8911,10 +8931,10 @@
   "x-review": "machine",
   "x-source": "ab87f8473e"
  },
- "js.g1lwglngw7": "Archivvergleich: konsistent mit {s0}: ΔP {n0} %, Timing-Versatz laut Validierungsnotiz: {n1} min im Mittel über {n2} Epochen. Nur Archivwerte. Diese Seite beansprucht keine Detektion.",
- "@js.g1lwglngw7": {
+ "js.g2cghw07hl": "Rotation",
+ "@js.g2cghw07hl": {
   "x-review": "machine",
-  "x-source": "dff14c09d4"
+  "x-source": "57b5e2fc1b"
  },
  "js.g3w1e5hqnc": "Beste Spektrographenstabilität",
  "@js.g3w1e5hqnc": {
@@ -8925,6 +8945,11 @@
  "@js.g6lwhkyils": {
   "x-review": "machine",
   "x-source": "0574b94b3e"
+ },
+ "js.g6m1eyxsdn": "Molekül",
+ "@js.g6m1eyxsdn": {
+  "x-review": "machine",
+  "x-source": "49a6356091"
  },
  "js.g6m8lmxer6": "Typische Einstein-Kreuzungszeit",
  "@js.g6m8lmxer6": {
@@ -8945,6 +8970,11 @@
  "@js.gbaq8jky1n": {
   "x-review": "machine",
   "x-source": "49aaab944b"
+ },
+ "js.gc28rpxiwc": "Luyten's Star",
+ "@js.gc28rpxiwc": {
+  "x-review": "machine",
+  "x-source": "f84d36433e"
  },
  "js.gc92hxaxrj": "Sentinel · Skeptic: {n0} Spanne in diesem Fenster, für diesen Einbruch gezählt",
  "@js.gc92hxaxrj": {
@@ -8991,20 +9021,10 @@
   "x-review": "machine",
   "x-source": "8ab8377cb2"
  },
- "js.gf2k29wf2u": "Flares, Pulsationen und öffentliche CHEOPS-Lichtkurven (CHEOPS-Daten unter den Bedingungen der ESA)",
- "@js.gf2k29wf2u": {
-  "x-review": "machine",
-  "x-source": "7636d9cad3"
- },
  "js.gfd1bpovje": "{n0} Einbrüche ({n1} verworfen)",
  "@js.gfd1bpovje": {
   "x-review": "machine",
   "x-source": "f9153844c1"
- },
- "js.ggh3kiowd3": "Künstlerische Darstellung: das Erscheinungsbild „heißer Fels“, für Radius unter {n0} R⊕ und Teq von {n1} K oder mehr: dunkles Gestein mit glühenden Rissen auf der Tagseite. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.ggh3kiowd3": {
-  "x-review": "machine",
-  "x-source": "082ec2b77a"
  },
  "js.gizr3gwvyr": "Auch bekannt als {n0}, KOI-{n1}, 2MASS J19323620+{n2}.",
  "@js.gizr3gwvyr": {
@@ -9050,6 +9070,11 @@
  "@js.gplu2k76y8": {
   "x-review": "machine",
   "x-source": "6f0127f52b"
+ },
+ "js.gpznjdo7y3": "pi Men · {n0} K",
+ "@js.gpznjdo7y3": {
+  "x-review": "machine",
+  "x-source": "899a850a1e"
  },
  "js.griyfzkg7e": "<b>ν₂-Biegeschwingung</b> · {n0} µm · infrarotaktiv · ×{n1} gezeichnet · außerhalb des Fensters von {n2}–{n3} µm in „Atmosphären lesen“",
  "@js.griyfzkg7e": {
@@ -9111,6 +9136,11 @@
   "x-review": "machine",
   "x-source": "ed2c6ec6d2"
  },
+ "js.hfecdi2gfn": "tau Cet g",
+ "@js.hfecdi2gfn": {
+  "x-review": "machine",
+  "x-source": "5a095c9a36"
+ },
  "js.hi7kyj244t": "Einer der ersten Planeten, die jenseits der Sonne gefunden wurden, durch Timing eines Millisekundenpulsars.",
  "@js.hi7kyj244t": {
   "x-review": "machine",
@@ -9145,6 +9175,11 @@
  "@js.hrans2nscc": {
   "x-review": "machine",
   "x-source": "476f15a932"
+ },
+ "js.ht99op5pxg": "NASA Exoplanet Archive, Tabelle ps (default_flag = {n0}), wie in docs/results/pi_men_validation.md durch scripts/validate_known_planets.py festgehalten (Live-Archivabfrage, Commit 0f6dbdc). Dort ist nur pi Men c festgehalten, daher wird nur pi Men c aufgeführt; seine Transitmittenzeit wurde nicht festgehalten, daher wird hier kein Versatz pro Epoche berechnet; stattdessen wird der mittlere Timing-Versatz aus der Validierungsnotiz ({n1} min über {n2} von {n3} Epochen) zitiert. Durch die Ausgabe von 'setuhq crossmatch runs/tess-pi-men-s1' ersetzen, sobald das Archiv antwortet., festgehalten am <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4}. Okt. {n5}, {n6} UTC</time> (Commit 0f6dbdc) in docs/results/pi_men_crossmatch.json; der eigene Abgleich dieses Laufs wurde nicht ausgeführt (gespeicherter Fehler, wörtlich: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
+ "@js.ht99op5pxg": {
+  "x-review": "machine",
+  "x-source": "4653c87d87"
  },
  "js.hv6t0hplex": "Laufbericht · tess-toi-{n0}-s2",
  "@js.hv6t0hplex": {
@@ -9236,10 +9271,10 @@
   "x-review": "machine",
   "x-source": "8c601dc48e"
  },
- "js.ioyj9009pb": "<a href=\"/assets/data/exoplanet_map.csv\" download=\"\">Alle dargestellten Planeten herunterladen (CSV, {n0} Zeilen)</a>, abgeleitet aus der gespeicherten exoplanet.eu-Karte.",
- "@js.ioyj9009pb": {
+ "js.iqpr6oou3c": "Sektor {n0}: {n1}-{n2}-{n3} bis {n4}-{n5}-{n6} · {n7} katalogisierte Sterne mit bekannten Planeten in seinen Feldern",
+ "@js.iqpr6oou3c": {
   "x-review": "machine",
-  "x-source": "0669d7463c"
+  "x-source": "61eb698124"
  },
  "js.ir7824frtx": "tess-08a8c4eac6ff-{n0} · Offen · Kandidat, unbestätigt",
  "@js.ir7824frtx": {
@@ -9250,6 +9285,11 @@
  "@js.irvrs2dlo3": {
   "x-review": "machine",
   "x-source": "c1c91c0c5c"
+ },
+ "js.it3yfm2mls": "WASP-{n0}<br><span class=\"muted mono t-data\">tess-wasp-{n1}-s1</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.it3yfm2mls": {
+  "x-review": "machine",
+  "x-source": "be84b6d521"
  },
  "js.it7w3r4cx": "In der gespeicherten Lichtkurve vorhergesagte Transits: {n0}; davon mit einem Einbruch: {n1} ({n2} Einbrüche; {n3} markiert; mittlere Abweichung {n4} min).",
  "@js.it7w3r4cx": {
@@ -9376,6 +9416,11 @@
   "x-review": "machine",
   "x-source": "90e37abec4"
  },
+ "js.k2p8kaiegs": "HN Lib b",
+ "@js.k2p8kaiegs": {
+  "x-review": "machine",
+  "x-source": "1b00eabfcb"
+ },
  "js.k3btdf81ur": "Exzentrizität",
  "@js.k3btdf81ur": {
   "x-review": "machine",
@@ -9390,11 +9435,6 @@
  "@js.k6wgj1vf42": {
   "x-review": "machine",
   "x-source": "3a6449de5f"
- },
- "js.k73o4aajts": "Vier Szenen. {s0}-Zeitmessung: Zwei Planeten nahe einem Periodenverhältnis von {n0} ziehen aneinander, sodass die Transits des inneren Planeten zu früh und zu spät eintreffen und sich ein O−C-Diagramm aufbaut. Sekundärbedeckung: Der Planet verschwindet eine halbe Umlaufbahn nach dem Transit hinter seinem Stern, ein viel kleinerer Einbruch, zehnmal tiefer gezeichnet. Phasenkurve: Ein gebunden rotierender Planet zeigt zur Bedeckung hin mehr von seiner heißen Tagseite, wobei sein Maximum durch Winde verschoben ist. Rossiter–McLaughlin: Der Planet bedeckt erst die sich nähernde und dann die sich entfernende Hälfte des rotierenden Sterns, sodass die gemessene Geschwindigkeit des Sterns während des Transits ausschlägt.",
- "@js.k73o4aajts": {
-  "x-review": "machine",
-  "x-source": "21a7dc3be9"
  },
  "js.k81gpwo3bo": "{n0} −-{n1} / {n2} Gyr",
  "@js.k81gpwo3bo": {
@@ -9486,10 +9526,20 @@
   "x-review": "machine",
   "x-source": "5bd78577ba"
  },
+ "js.l361fmbsuc": "Gespeicherte ID tess-eaab33b6b763-{n0}; keine Falldatei in diesem Lauf",
+ "@js.l361fmbsuc": {
+  "x-review": "machine",
+  "x-source": "75a96bab8f"
+ },
  "js.l3je4rzt3v": "{n0} Pegasi b, ein Riese auf einer {n1}-Tage-Umlaufbahn, gefunden anhand des Taumelns seines Sterns.",
  "@js.l3je4rzt3v": {
   "x-review": "machine",
   "x-source": "783b55a817"
+ },
+ "js.l5edhw6c5o": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">7c. <span class=\"mono\">tess-7b97e468b60b-{n0}</span>.</b> Helligkeitseinbruch bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Von {n5} Prüfern markiert (der Katalog speichert weder die Größe des Gremiums noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keinen Nachweis.",
+ "@js.l5edhw6c5o": {
+  "x-review": "machine",
+  "x-source": "84eea9bb2e"
  },
  "js.l66csoi3se": "Drake-Gleichungsrechner",
  "@js.l66csoi3se": {
@@ -9521,6 +9571,11 @@
   "x-review": "machine",
   "x-source": "bcb2e28ac7"
  },
+ "js.le6i0lhisz": "Population",
+ "@js.le6i0lhisz": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
  "js.lg9kxjhees": "*Bekanntes Falsch-Positiv.* Ein TESS Object of Interest, das die TOI-Tabelle als Falsch-Positiv (FP) einstuft: ein Einbruch von {n0} % alle {n1} Tage.",
  "@js.lg9kxjhees": {
   "x-review": "machine",
@@ -9531,6 +9586,11 @@
   "x-review": "machine",
   "x-source": "2b91c1afd2"
  },
+ "js.lh8m0vnna6": "Mikrolinseneffekt <span class=\"mono\" data-cmn=\"microlensing\">{n0}</span>",
+ "@js.lh8m0vnna6": {
+  "x-review": "machine",
+  "x-source": "6ebe002adb"
+ },
  "js.lj02ml1du2": "Auch bekannt als GJ {n0}, V2500 Oph.",
  "@js.lj02ml1du2": {
   "x-review": "machine",
@@ -9540,21 +9600,6 @@
  "@js.lj5zi4x2mb": {
   "x-review": "machine",
   "x-source": "a266923843"
- },
- "js.lmqc5cetjp": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Systemansicht",
- "@js.lmqc5cetjp": {
-  "x-review": "machine",
-  "x-source": "b55e8878de"
- },
- "js.loxdmylfqk": "FP-Verwerfung: FP-Sterne, deren TOI-Einbruch die Methode nicht als sauberen Kandidaten angeboten hat (wiedergefunden und nicht markiert). Zuverlässigkeit: der Anteil sauberer Kandidaten auf TOI-Einbrüchen, die CP/KP sind, beim Klassenmix dieser Stichprobe, der nicht dem des TOI-Katalogs entspricht. Alle Raten werden mit Wilson-Intervallen ({n0} %) angegeben. TFOPWG-Einstufungen sind die Referenz, nicht die Grundwahrheit für jedes TOI.",
- "@js.loxdmylfqk": {
-  "x-review": "machine",
-  "x-source": "65f89a23b5"
- },
- "js.lpvg4u78fv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Katalog",
- "@js.lpvg4u78fv": {
-  "x-review": "machine",
-  "x-source": "a3cf22621a"
  },
  "js.lugtea4b2c": "Tabelle, auf schmalem Bildschirm seitlich scrollbar",
  "@js.lugtea4b2c": {
@@ -9601,6 +9646,11 @@
   "x-review": "machine",
   "x-source": "6ba2097d7d"
  },
+ "js.m1r0pwwc2c": "Eps Ind Ab",
+ "@js.m1r0pwwc2c": {
+  "x-review": "machine",
+  "x-source": "f49ed6b253"
+ },
  "js.m3r8wny6k9": "Künstlerische Darstellung von {s0}: ein Gasriese im kalten Bereich, Radius nicht gemessen ({n0} Erdmassen), {n1} K.",
  "@js.m3r8wny6k9": {
   "x-review": "machine",
@@ -9646,11 +9696,6 @@
   "x-review": "machine",
   "x-source": "be67c2df8b"
  },
- "js.me79v4kzjl": "<b>Die strengere Regel des Feeds, vorab registriert und mit diesem Code erneut gemessen.</b> Das Signal muss nun in beiden begutachteten Sektoren mit einer FAP unter {n0} über {n1} Versuche bestehen. Auf der zurückgehaltenen Hälfte erzeugt Rauschen allein {n2} falsche Signale pro {n3} Ziele ({n4}-%-KI {n5}–{n6}), gesunken von {n7} ({n8}–{n9}). Das liegt immer noch weit über den {n10} neuen Signalen pro {n11} Zielen, die die echten Lichtkurven liefern, daher wird der Feed weiterhin von Fehlalarmen dominiert, und die Vollständigkeit auf Feed-Ebene sank von {n12} % auf {n13} %. Eine Aufnahme in den Feed ist ein Hinweis für menschliche Prüfung oder Nachbeobachtung, kein Kandidat mit irgendeinem bestätigten Status. Mit diesem Code erneut ausgeführt, nehmen die {n14} Ziele des Live-Feeds {n15} neue Signale auf.",
- "@js.me79v4kzjl": {
-  "x-review": "machine",
-  "x-source": "1b6a64cd4a"
- },
  "js.meqp2x3ji6": "exoplanet.eu führt ihn als „Published in a refereed paper“, gefunden {n0} mittels Imaging; Datensatz aktualisiert am {n1}-{n2}-{n3}. Auch bekannt als bet Pic b, HIP {n4} b.",
  "@js.meqp2x3ji6": {
   "x-review": "machine",
@@ -9671,25 +9716,25 @@
   "x-review": "machine",
   "x-source": "6a7bc0cac6"
  },
- "js.mi2tgjiiqn": "<b>Pro Follow-up</b> <span class=\"eddev\">in Entwicklung</span>: ein Follow-up-Paket pro Kandidat: ein Export im ExoFOP-Stil, eine Ephemeride mit ihrer Unsicherheit und wann das Ziel von den Teleskopen des Kunden aus beobachtbar ist",
- "@js.mi2tgjiiqn": {
-  "x-review": "machine",
-  "x-source": "e944e5aba3"
- },
  "js.mimntzdewz": "Methoden: Auf uns zu und von uns weg ›",
  "@js.mimntzdewz": {
   "x-review": "machine",
   "x-source": "3f269a446d"
  },
- "js.mk4mulcwso": "<b>ν₃ asymmetrische Streckschwingung</b> · {n0} µm · infrarotaktiv · ×{n1} gezeichnet · <a href=\"/how-it-works/atmospheres/\">die {n2}-µm-Bande in {s0} ›</a>",
- "@js.mk4mulcwso": {
+ "js.mkc9jxfgbz": "markierte Helligkeitseinbrüche",
+ "@js.mkc9jxfgbz": {
   "x-review": "machine",
-  "x-source": "518c8ddc31"
+  "x-source": "94e146b4e3"
  },
  "js.mlrhcayzxr": "Der Status steht als Wort neben jeder Farbe.",
  "@js.mlrhcayzxr": {
   "x-review": "machine",
   "x-source": "4775478abc"
+ },
+ "js.mmnswive1w": "<i aria-hidden=\"true\"></i>Flare",
+ "@js.mmnswive1w": {
+  "x-review": "machine",
+  "x-source": "e7a022e38b"
  },
  "js.mmu67oe6q3": "Baryzentrum Erde–Sonne",
  "@js.mmu67oe6q3": {
@@ -9706,10 +9751,25 @@
   "x-review": "machine",
   "x-source": "0882c3b8b4"
  },
+ "js.mqj6wfaw6h": "Ross {n0}",
+ "@js.mqj6wfaw6h": {
+  "x-review": "machine",
+  "x-source": "817ee35ea0"
+ },
+ "js.mskkijl1h9": "eps Ind A",
+ "@js.mskkijl1h9": {
+  "x-review": "machine",
+  "x-source": "0cf3bf4b89"
+ },
  "js.msr7a8c18z": "Banden (µm)",
  "@js.msr7a8c18z": {
   "x-review": "machine",
   "x-source": "482e628874"
+ },
+ "js.mtnvg3zz1c": "HD {n0}<br><span class=\"muted mono t-data\">tess-hd-{n1}-s4</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.mtnvg3zz1c": {
+  "x-review": "machine",
+  "x-source": "7cc6c4ce56"
  },
  "js.mwjxjvzia1": "Sortieren nach",
  "@js.mwjxjvzia1": {
@@ -9720,6 +9780,11 @@
  "@js.mwv88v3dkm": {
   "x-review": "machine",
   "x-source": "f1df8fd039"
+ },
+ "js.mxcgzchu7z": "YZ Cet b ›",
+ "@js.mxcgzchu7z": {
+  "x-review": "machine",
+  "x-source": "a3d4d803bc"
  },
  "js.n10imi0en": "nicht eingeschränkt",
  "@js.n10imi0en": {
@@ -9776,6 +9841,11 @@
   "x-review": "machine",
   "x-source": "520a2101da"
  },
+ "js.njyq57a914": "b Cen (AB)b",
+ "@js.njyq57a914": {
+  "x-review": "machine",
+  "x-source": "d5e094d32f"
+ },
  "js.nk8m1nny5r": "Blind codierter Subjekt-Plot für tess-4b369d3c6f09-{n0}: die Lichtkurve, die die Begutachtenden markiert haben, ohne Zielnamen und ohne Markierungen",
  "@js.nk8m1nny5r": {
   "x-review": "machine",
@@ -9796,6 +9866,11 @@
   "x-review": "machine",
   "x-source": "7a0d984887"
  },
+ "js.nrcbxny9wa": "Status",
+ "@js.nrcbxny9wa": {
+  "x-review": "machine",
+  "x-source": "073c1634c4"
+ },
  "js.ns1wjk2bkh": "Offen · Kandidat, unbestätigt",
  "@js.ns1wjk2bkh": {
   "x-review": "machine",
@@ -9805,6 +9880,11 @@
  "@js.nt7jpblt1w": {
   "x-review": "machine",
   "x-source": "82765e23c7"
+ },
+ "js.ntaw7nc8vt": "Methodenkapitel",
+ "@js.ntaw7nc8vt": {
+  "x-review": "machine",
+  "x-source": "31932e7289"
  },
  "js.ntp7tqnx1h": "{n0} von {n1} Einträgen angezeigt.",
  "@js.ntp7tqnx1h": {
@@ -9820,6 +9900,11 @@
  "@js.nvauo0t95d": {
   "x-review": "machine",
   "x-source": "0906640b92"
+ },
+ "js.ny28knfv0a": "Atmosphären lesen",
+ "@js.ny28knfv0a": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
  },
  "js.ny97ialxx0": "Sentinel · Skeptic: keine Markierung in diesem Fenster",
  "@js.ny97ialxx0": {
@@ -9866,6 +9951,11 @@
   "x-review": "machine",
   "x-source": "67071927f6"
  },
+ "js.o7m15kbsi5": "pi Men<br><span class=\"muted mono t-data\">tess-pi-men-s1</span><br><span class=\"muted\">TIC Teff {n0} K</span>",
+ "@js.o7m15kbsi5": {
+  "x-review": "machine",
+  "x-source": "8b203e2083"
+ },
  "js.o99izf3z1n": "ja: TOI {n0}",
  "@js.o99izf3z1n": {
   "x-review": "machine",
@@ -9890,11 +9980,6 @@
  "@js.op9ipohoso": {
   "x-review": "machine",
   "x-source": "703dfd613f"
- },
- "js.oqpbaoboao": "<b>ν₁ symmetrische Streckschwingung</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · nicht gezeichnet in {s0}",
- "@js.oqpbaoboao": {
-  "x-review": "machine",
-  "x-source": "2474d10b70"
  },
  "js.osjdukhlhf": "<b>Starshade.</b> Ein blütenförmiger Schirm, der weit vor einem Teleskop fliegt (Cash {n0}). Das Konzept Roman Starshade Rendezvous: {n1} m in {n2} km Abstand; HabEx: {n3} m in etwa {n4} km Abstand (HabEx Final Report).",
  "@js.osjdukhlhf": {
@@ -9956,11 +10041,6 @@
   "x-review": "machine",
   "x-source": "6f82ddb801"
  },
- "js.p4u8g14ecp": "Eine Aufhellung: {n0} oder mehr aufeinanderfolgende Punkte mindestens {n1}σ über einem gleitenden Median über {n2} Tage, mit einem Maximum von {n3}σ oder mehr, gemessen sowohl an der Streuung des Sterns als auch an der Streuung innerhalb von {n4} d; nicht auf einem instrumentellen Signal.",
- "@js.p4u8g14ecp": {
-  "x-review": "machine",
-  "x-source": "286b750a5a"
- },
  "js.p4vg8hpjdy": "Herkunft",
  "@js.p4vg8hpjdy": {
   "x-review": "machine",
@@ -10011,6 +10091,11 @@
   "x-review": "machine",
   "x-source": "a838a779e2"
  },
+ "js.pd6ew3rt19": "<i style=\"background:#BF5AF2\"></i>Mikrolinseneffekt <span class=\"mono\">{n0}</span>",
+ "@js.pd6ew3rt19": {
+  "x-review": "machine",
+  "x-source": "59e3047926"
+ },
  "js.pf82vwrzvm": "potenzieller Planet {n0}",
  "@js.pf82vwrzvm": {
   "x-review": "machine",
@@ -10025,11 +10110,6 @@
  "@js.pi29c0a6g9": {
   "x-review": "machine",
   "x-source": "59a33e9ea7"
- },
- "js.piby2721pq": "{n0} Sterne <span class=\"muted\">({n1} CP/KP, {n2} FP, {n3} FA)</span> <b>zugunsten von FP verzerrt</b>: die FP-Zeilen beschreiben FP-Sterne nur mit {n4}-Minuten-Daten",
- "@js.piby2721pq": {
-  "x-review": "machine",
-  "x-source": "52d7acd8f3"
  },
  "js.pj7ep1wjt3": "<b>Überwiegend N–N-Streckschwingung</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · nicht gezeichnet in Atmosphären lesen",
  "@js.pj7ep1wjt3": {
@@ -10046,10 +10126,20 @@
   "x-review": "machine",
   "x-source": "21e389771e"
  },
- "js.pn78q0jveb": "Durchgängig (DACE-DRP-Arrays vs. DRP-Produkt von pycheops): Korrelation &gt;= {n0} bei jedem Referenzbesuch",
- "@js.pn78q0jveb": {
+ "js.plrluloqs0": "pi Men c ›",
+ "@js.plrluloqs0": {
   "x-review": "machine",
-  "x-source": "cec6167f00"
+  "x-source": "3d841d792f"
+ },
+ "js.pm8m1jqibi": "Helligkeitseinbrüche",
+ "@js.pm8m1jqibi": {
+  "x-review": "machine",
+  "x-source": "9b9a2cbe44"
+ },
+ "js.pn2cym3dnm": "Abspielen {n0}–{n1}",
+ "@js.pn2cym3dnm": {
+  "x-review": "machine",
+  "x-source": "04f22f0879"
  },
  "js.pnrbaagjqb": "Ein sehr massereicher Begleiter eines entwickelten K-Riesensterns, gefunden durch Radialgeschwindigkeit.",
  "@js.pnrbaagjqb": {
@@ -10071,15 +10161,10 @@
   "x-review": "machine",
   "x-source": "7c33bc2692"
  },
- "js.q8vb9a162v": "SetuHQ ist unabhängig und weder mit ESA, der CHEOPS-Mission oder dem CHEOPS Consortium verbunden noch von ihnen unterstützt oder in ihrem Auftrag betrieben. Es ersetzt weder ESAs Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker noch das Dokument Policies &amp; Procedures; maßgeblich sind die offizielle Ausschreibung und die offiziellen Tools.",
- "@js.q8vb9a162v": {
+ "js.q3zvdlmvza": "{n0} Peg b ›",
+ "@js.q3zvdlmvza": {
   "x-review": "machine",
-  "x-source": "e5417cf525"
- },
- "js.q95vajnmsz": "TESS-Sektoren {n0}–{n1}. Feed-Eintrag {n2} für diesen Stern (gespeicherte ID <span class=\"mono\">tess-d64ea73e32ac-{n3}</span>). Ein TOI-Abgleich vergleicht eine gespeicherte Periode mit Archivwerten. Nur Archivwerte. Diese Seite beansprucht keine Detektion.",
- "@js.q95vajnmsz": {
-  "x-review": "machine",
-  "x-source": "52af58fde0"
+  "x-source": "8136a9c855"
  },
  "js.qad4ea3nk7": "Rossiter–McLaughlin, HD {n0} b (gemessenes V sin I)",
  "@js.qad4ea3nk7": {
@@ -10095,6 +10180,16 @@
  "@js.qcwtbaf2e5": {
   "x-review": "machine",
   "x-source": "3091d416b9"
+ },
+ "js.qcyhotnwyb": "Kepler-{n0} b ›",
+ "@js.qcyhotnwyb": {
+  "x-review": "machine",
+  "x-source": "6ec7331b16"
+ },
+ "js.qegfutpzid": "Barnard's Star",
+ "@js.qegfutpzid": {
+  "x-review": "machine",
+  "x-source": "04db49fbfb"
  },
  "js.qezo9f8bhr": "{n0} Planeten in exoplanet.eu · gespeicherter Typ G2IV-V · Klasse G aus Teff (nächstliegend G2V)",
  "@js.qezo9f8bhr": {
@@ -10115,6 +10210,11 @@
  "@js.qjpeah132b": {
   "x-review": "machine",
   "x-source": "d7e942e6f6"
+ },
+ "js.qmvvg78xp": "tau Cet f",
+ "@js.qmvvg78xp": {
+  "x-review": "machine",
+  "x-source": "e99f6ebd4f"
  },
  "js.qnq290e1mh": "stellares Rauschen ~{n0} m/s",
  "@js.qnq290e1mh": {
@@ -10176,10 +10276,10 @@
   "x-review": "machine",
   "x-source": "17f710cec5"
  },
- "js.r6b0ke5ddb": "Messdaten, wie gespeichert dargestellt, mit der darunter angegebenen Quelle: die Lichtkurven von SetuHQ, die Zählungen des Katalogs.",
- "@js.r6b0ke5ddb": {
+ "js.r7r5ll60un": "Markierungen",
+ "@js.r7r5ll60un": {
   "x-review": "machine",
-  "x-source": "aa17f78b83"
+  "x-source": "e3d11da4dd"
  },
  "js.r8opy5qens": "n_e, logarithmische Skala",
  "@js.r8opy5qens": {
@@ -10200,6 +10300,11 @@
  "@js.regiehtwzu": {
   "x-review": "machine",
   "x-source": "b4cb7439b1"
+ },
+ "js.rmcqh280p3": "Kapitel",
+ "@js.rmcqh280p3": {
+  "x-review": "machine",
+  "x-source": "9831375bc6"
  },
  "js.roj6ijskxu": "Auch bekannt als V452 Vul, TOI-{n0}.",
  "@js.roj6ijskxu": {
@@ -10235,11 +10340,6 @@
  "@js.s5dkmlriz2": {
   "x-review": "machine",
   "x-source": "a0a30e125c"
- },
- "js.s66tykdpyv": "Künstlerische Darstellung: das Erscheinungsbild „Gestein, warm“, für Radien unter {n0} R⊕, Teq {n1} bis {n2} K: nackter dunkler Fels mit Kratern, kein Rand. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.s66tykdpyv": {
-  "x-review": "machine",
-  "x-source": "c058d804c9"
  },
  "js.s6e71sj3nh": "<b>{n0} von {n1} Prüfern</b> haben ihn markiert: {n2} von {n3} Sentinels, {n4} von {n5} Probes<small class=\"muted\" style=\"display:block;font-size:11px\"><span title=\"reviewer id volunteer-sensitive\">Probe · Empfindlich</span>, <span title=\"reviewer id volunteer-typical\">Probe · Typisch</span>, <span title=\"reviewer id volunteer-cautious\">Probe · Vorsichtig</span></small>",
  "@js.s6e71sj3nh": {
@@ -10361,6 +10461,11 @@
   "x-review": "machine",
   "x-source": "9d9fb0ef55"
  },
+ "js.t39my5dsyh": "Timing <span class=\"mono\" data-cmn=\"timing\">{n0}</span>",
+ "@js.t39my5dsyh": {
+  "x-review": "machine",
+  "x-source": "eaf800daff"
+ },
  "js.t60qw9cha2": "Künstlerische Darstellung · Neptun, Einstrahlung nicht berechenbar · Kein Radius gespeichert; die Masse von {n0} M⊕ (exoplanet.eu) liegt zwischen {n1} und {n2} M⊕, daher wird er als neptunartiger Planet gezeichnet. Radius nicht gemessen: nicht maßstabsgetreu. Einstrahlung nicht berechenbar: neutrale Farben. Die Zusammensetzung ist nicht gemessen. Quelle: exoplanet.eu, abgerufen {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Wie die Bilder gezeichnet werden ›</a>",
  "@js.t60qw9cha2": {
   "x-review": "machine",
@@ -10371,10 +10476,10 @@
   "x-review": "machine",
   "x-source": "eb9b70b39c"
  },
- "js.tbam84ybce": "die Schwarzkörperfarbe und Randverdunkelung des Sterns; die Granulation ist Textur",
- "@js.tbam84ybce": {
+ "js.tchjn2r4y9": "Systematischer Effekt",
+ "@js.tchjn2r4y9": {
   "x-review": "machine",
-  "x-source": "90cf191e4f"
+  "x-source": "5a9bb62240"
  },
  "js.tcofm5lh0s": "exoplanet.eu führt ihn als „auf einer Website angekündigt“, gefunden durch Primärtransit im Jahr {n0}; Eintrag aktualisiert {n1}-{n2}-{n3}. Auch bekannt als 2MASS J19430387+{n4} d, K01364.02, KIC {n5} d, KOI-{n6} d, KOI-{n7}, WISE J194303.88+{n8} d.",
  "@js.tcofm5lh0s": {
@@ -10401,15 +10506,25 @@
   "x-review": "machine",
   "x-source": "164d6a71cd"
  },
+ "js.tjzc53y07u": "Jeder Suchlauf, seine Fehler wie gespeichert und die Konfiguration hinter diesen Seiten.",
+ "@js.tjzc53y07u": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "js.tmvyhylhnp": "Pulsator oder Rotationsveränderlicher",
+ "@js.tmvyhylhnp": {
+  "x-review": "machine",
+  "x-source": "1d4898f020"
+ },
  "js.toi5vq5s4d": "{n0} pc, wie in exoplanet.eu angegeben",
  "@js.toi5vq5s4d": {
   "x-review": "machine",
   "x-source": "08aa2d3dc6"
  },
- "js.trnbddk8fe": "<b>{n0}</b> der {n1} Planeten mit gespeicherter Entfernung in exoplanet.eu wurden durch direkte Abbildung gefunden (die erste angegebene Methode). <a href=\"/explore/galaxy/?method=imaging\">Auf der Galaxienkarte zeigen ›</a>",
- "@js.trnbddk8fe": {
+ "js.trg2sd40ob": "Konfiguration",
+ "@js.trg2sd40ob": {
   "x-review": "machine",
-  "x-source": "dd5674802f"
+  "x-source": "b79606fb3a"
  },
  "js.trzuzwcopk": "Pipeline",
  "@js.trzuzwcopk": {
@@ -10561,10 +10676,10 @@
   "x-review": "machine",
   "x-source": "943077f050"
  },
- "js.v5sdm14eih": "<b>ν₁ symmetrische Streckschwingung</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">die {n2}-µm-Bande in „Atmosphären lesen“ ›</a>",
- "@js.v5sdm14eih": {
+ "js.v3cmzn255c": "Die Konfigurationen von SetuHQ und jede eingereichte Methode, blind auf der zurückgehaltenen Hälfte bewertet.",
+ "@js.v3cmzn255c": {
   "x-review": "machine",
-  "x-source": "5a958a6168"
+  "x-source": "1e91ab197b"
  },
  "js.vbyk5xwnrv": "Das zuvor verwendete Kastenmaß (der mittlere Fluss über dem vom Panel markierten Fenster): Tiefe {n0} ppm, Dauer {n1} h, Verhältnisse **{n2}** und **{n3}** gegenüber Huang {n4} ({n5} und {n6} gegenüber der Standardzeile des Archivs, die das README früher zitierte).",
  "@js.vbyk5xwnrv": {
@@ -10596,11 +10711,6 @@
   "x-review": "machine",
   "x-source": "8d34629003"
  },
- "js.vm9rqq85fe": "Perioden von {s0} und c",
- "@js.vm9rqq85fe": {
-  "x-review": "machine",
-  "x-source": "da9014d7f4"
- },
  "js.vmsox3cj56": "Link zu dieser Ansicht",
  "@js.vmsox3cj56": {
   "x-review": "machine",
@@ -10630,11 +10740,6 @@
  "@js.vsh0ajf78": {
   "x-review": "machine",
   "x-source": "93eedb88e2"
- },
- "js.vtdvzcy89i": "die gespeicherten Subjekte und Fits der Läufe",
- "@js.vtdvzcy89i": {
-  "x-review": "machine",
-  "x-source": "f6d62e6cda"
  },
  "js.vtnlfvcu18": "Gasriese (nach Masse; kein Radius gespeichert)",
  "@js.vtnlfvcu18": {
@@ -10681,10 +10786,10 @@
   "x-review": "machine",
   "x-source": "d2f1847f96"
  },
- "js.w084p1vq7y": "Fehlalarme auf invertierten Lichtkurven auf dem Niveau des Feeds (seine vollständige Regel, FAP &lt; {n0})",
- "@js.w084p1vq7y": {
+ "js.w21u8mgncr": "{n0} Eri e",
+ "@js.w21u8mgncr": {
   "x-review": "machine",
-  "x-source": "9936d6f964"
+  "x-source": "a9bda9193e"
  },
  "js.w635vpthea": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">5d. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Einbruch bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markiert von {n5} Prüfern (der Katalog speichert weder die Panelgröße noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keine Detektion.",
  "@js.w635vpthea": {
@@ -10711,6 +10816,16 @@
   "x-review": "machine",
   "x-source": "cc87a8d326"
  },
+ "js.w7mxe1jjf7": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s5</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.w7mxe1jjf7": {
+  "x-review": "machine",
+  "x-source": "1cc92f722d"
+ },
+ "js.w9mpw0gpum": "pi Men ›",
+ "@js.w9mpw0gpum": {
+  "x-review": "machine",
+  "x-source": "4de3e057f1"
+ },
  "js.wafeswebdi": "Lauf tess-toi-{n0}-s2 · {n1} Einbrüche ({n2} verworfen) · {n3} Subjekte.<span class=\"printonly\"> Jeder Kandidat auf dieser Tafel: Kandidat, nicht bestätigt.</span>",
  "@js.wafeswebdi": {
   "x-review": "machine",
@@ -10725,6 +10840,11 @@
  "@js.wbhr5y7ltz": {
   "x-review": "machine",
   "x-source": "efa246c3ed"
+ },
+ "js.wcsqg4x5f": "Astrometrie <span class=\"mono\" data-cmn=\"astrometry\">{n0}</span>",
+ "@js.wcsqg4x5f": {
+  "x-review": "machine",
+  "x-source": "9043a3475b"
  },
  "js.wge5c60gnw": "Gaia-{n0} b",
  "@js.wge5c60gnw": {
@@ -10745,6 +10865,11 @@
  "@js.wkrls1dk3c": {
   "x-review": "machine",
   "x-source": "0a0c72b4d4"
+ },
+ "js.wldr50kzra": "Luyten's Star d",
+ "@js.wldr50kzra": {
+  "x-review": "machine",
+  "x-source": "f978f22f3a"
  },
  "js.wmpk5bhzf9": "Astrometrie · {n0}",
  "@js.wmpk5bhzf9": {
@@ -10805,11 +10930,6 @@
  "@js.wyws1u3mmf": {
   "x-review": "machine",
   "x-source": "db544a9e58"
- },
- "js.x0f76panzs": "Künstlerische Darstellung: das Erscheinungsbild „neptune-cool“ für Radien von {n0} bis {n1} R⊕, Teq unter {n2} K: tiefblaue Bänder und ein dunkler Fleck. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.x0f76panzs": {
-  "x-review": "machine",
-  "x-source": "e72124962b"
  },
  "js.x177ygvldr": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">5b. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Absenkung bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Von {n5} Prüfenden markiert (der Katalog speichert weder die Größe des Gremiums noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keine Detektion.",
  "@js.x177ygvldr": {
@@ -10886,20 +11006,30 @@
   "x-review": "machine",
   "x-source": "39ac347e42"
  },
+ "js.xi9v7ksndn": "Wolf {n0} d",
+ "@js.xi9v7ksndn": {
+  "x-review": "machine",
+  "x-source": "1268b30fc7"
+ },
  "js.xjghoq101i": "logarithmische Intensitätsstreckung ({n0} bis {n1}⁻⁶); Planet bei illustrativen {n2}⁻³; ideale monochromatische Optik; Masken- und Blendengrößen illustrativ",
  "@js.xjghoq101i": {
   "x-review": "machine",
   "x-source": "907c200b96"
  },
+ "js.xll7y1ynl0": "Geschichte und Fachartikel",
+ "@js.xll7y1ynl0": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "js.xngfkgukjg": "Gleichungen des Lebens",
+ "@js.xngfkgukjg": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
  "js.xp4h2ofbdl": "· TIC {n0} · Signal ohne Periode (ein Transit) · {n1} der stärksten Absenkungen",
  "@js.xp4h2ofbdl": {
   "x-review": "machine",
   "x-source": "21f82eff3f"
- },
- "js.xpg4i01qhj": "Künstlerische Darstellung: das Erscheinungsbild „envelope-warm“ für Radien von {n0} bis {n1} R⊕, Teq {n2} bis {n3} K: blaugrauer Dunst. Ein Standbild des Erscheinungsbilds, nicht eines bestimmten Planeten.",
- "@js.xpg4i01qhj": {
-  "x-review": "machine",
-  "x-source": "7ef97acea7"
  },
  "js.xpmiaupaaj": "{n0} von {n1} angezeigt",
  "@js.xpmiaupaaj": {
@@ -10915,6 +11045,11 @@
  "@js.xtdd9w23g6": {
   "x-review": "machine",
   "x-source": "3be7d1cc73"
+ },
+ "js.xvtyf8wl1b": "beta Pic b",
+ "@js.xvtyf8wl1b": {
+  "x-review": "machine",
+  "x-source": "e38549f8ed"
  },
  "js.xx7wry1e2": "Als Biosignatur für Gesteinsplaneten vorgeschlagen, wo es ohne Leben schwer zu erzeugen ist.",
  "@js.xx7wry1e2": {
@@ -10945,6 +11080,16 @@
  "@js.y2sii8ag7z": {
   "x-review": "machine",
   "x-source": "1c8b900d94"
+ },
+ "js.y3xy9eepgg": "Null {n0} · Überschuss {n1} ({n2}%: {n3} bis {n4})",
+ "@js.y3xy9eepgg": {
+  "x-review": "machine",
+  "x-source": "01f79dcd20"
+ },
+ "js.y9ptrwfobi": "docs/discoveries/catalog.json",
+ "@js.y9ptrwfobi": {
+  "x-review": "machine",
+  "x-source": "81e814ecc7"
  },
  "js.yef3d1ma9p": "{n0} als zu tief gefiltert",
  "@js.yef3d1ma9p": {
@@ -10981,30 +11126,20 @@
   "x-review": "machine",
   "x-source": "fe1b093c33"
  },
- "js.yob3llgolf": "Planeten nach Jahr und Methode",
- "@js.yob3llgolf": {
-  "x-review": "machine",
-  "x-source": "60ecd96d94"
- },
  "js.yq2bbta4k2": "<span class=\"word cand\">Kandidat</span><span class=\"word s-known\">bekannte TOI-Periode</span><b class=\"fig\">4a. <span class=\"mono\">tess-308a47f84167-{n0}</span>.</b> Absenkung bei BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Von {n5} Prüfenden markiert (der Katalog speichert weder die Größe des Gremiums noch das Konsensintervall). Liegt auf einer BLS-Periode von {n6} Tagen mit {n7} Transits. Status: Periode stimmt mit einem bekannten TOI überein. Nur Archivwerte. Diese Seite beansprucht keine Detektion.",
  "@js.yq2bbta4k2": {
   "x-review": "machine",
   "x-source": "4aebb10343"
  },
- "js.yv746p7ayh": "<b>Biegeschwingung (zweifach, rechtwinklig)</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · außerhalb des Fensters von {n2}–{n3} µm von {s0}",
- "@js.yv746p7ayh": {
+ "js.yrhnt8o7w9": "Moleküle und Leben",
+ "@js.yrhnt8o7w9": {
   "x-review": "machine",
-  "x-source": "67a09bbd02"
+  "x-source": "d0ac3c4b97"
  },
  "js.yw1cg6z6ba": "Ein kleiner Transitplanet, dessen geringe Dichte zuerst auf eine wasserreiche Welt hindeutete.",
  "@js.yw1cg6z6ba": {
   "x-review": "machine",
   "x-source": "9d636cbdc1"
- },
- "js.ywghy58587": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">{s0}</a></b> · Stern <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s1}</a> · P {n0} d · transitierend",
- "@js.ywghy58587": {
-  "x-review": "machine",
-  "x-source": "40c55c5a8e"
  },
  "js.yx8blcjbm": "Teff: exoplanet.eu, abgerufen {n0}-{n1}-{n2}; Sternfarbe: ein Planck-Spektrum, gefaltet mit den CIE-{n3}-Farbabgleichsfunktionen",
  "@js.yx8blcjbm": {
@@ -11041,25 +11176,10 @@
   "x-review": "machine",
   "x-source": "a9d66a33c2"
  },
- "js.z7hoxivdkf": "<b>ν-Streckschwingung</b> · {n0} µm · im Infrarot stumm (der Dipol ändert sich nicht) · dargestellt ×{n1} · außerhalb des Fensters von {n2}–{n3} µm von {s0}",
- "@js.z7hoxivdkf": {
-  "x-review": "machine",
-  "x-source": "1bcc8097d6"
- },
  "js.zae6h8rkk6": "Ein Sentinel: ein KI-Modell (Claude Code CLI (Claude, Anthropic) · Standard), das die geplottete Lichtkurve liest und Einbrüche markiert. Es ist keine Person.",
  "@js.zae6h8rkk6": {
   "x-review": "machine",
   "x-source": "adeac0a395"
- },
- "js.zb00gkwd2w": "<b>ν₁ symmetrische Streckschwingung</b> · {n0} µm · infrarotaktiv · dargestellt ×{n1} · <a href=\"/how-it-works/atmospheres/\">die {n2}-µm-Bande in {s0} ›</a>",
- "@js.zb00gkwd2w": {
-  "x-review": "machine",
-  "x-source": "5b5f436da5"
- },
- "js.zbm91l3rcx": "<b>ν₃ asymmetrische Streckschwingung</b> · {n0} µm · infrarotaktiv · dargestellt ×{n1} · <a href=\"/how-it-works/atmospheres/\">die {n2}-µm-Bande in „Atmosphären lesen“ ›</a>",
- "@js.zbm91l3rcx": {
-  "x-review": "machine",
-  "x-source": "a265a49ab4"
  },
  "js.zdvz2hwho1": "{n0} bekannte TOI",
  "@js.zdvz2hwho1": {
@@ -11080,6 +11200,11 @@
  "@js.zhegcnbaps": {
   "x-review": "machine",
   "x-source": "43c883da28"
+ },
+ "js.zjf4m6pas4": "tau Boo Ab ›",
+ "@js.zjf4m6pas4": {
+  "x-review": "machine",
+  "x-source": "5487f582ec"
  },
  "js.zknme5264y": "Vetting-Flags: <span class=\"mono\">density_mismatch</span> · Vetting bestanden",
  "@js.zknme5264y": {
@@ -11135,6 +11260,11 @@
  "@js.zwdwnqegck": {
   "x-review": "machine",
   "x-source": "c369fc08d2"
+ },
+ "js.zzww829dur": "groß",
+ "@js.zzww829dur": {
+  "x-review": "machine",
+  "x-source": "d35c416a85"
  },
  "label.art": "Künstlerische Darstellung",
  "@label.art": {

@@ -2016,20 +2016,10 @@
   "x-review": "machine",
   "x-source": "acac77611f"
  },
- "js.103n82dja3r": "Katalogen oppdatert <time datetime=\"2026-10-29T00:47:42+00:00\" title=\"2026-10-29T00:47:42+00:00\">{n0}. okt. {n1}, {n2} UTC</time>.",
- "@js.103n82dja3r": {
-  "x-review": "machine",
-  "x-source": "273b2777f8"
- },
  "js.104nn3vx4at": "Begrep",
  "@js.104nn3vx4at": {
   "x-review": "machine",
   "x-source": "c6f3bfd456"
- },
- "js.106g3hdfp83": "TIC {n0} · avvist av vurderingen, ikke en kandidat",
- "@js.106g3hdfp83": {
-  "x-review": "machine",
-  "x-source": "9772d14ea9"
  },
  "js.106t6pg6coj": "{n0} planet i exoplanet.eu · klasse G ut fra Teff (nærmeste G5V)",
  "@js.106t6pg6coj": {
@@ -2061,25 +2051,20 @@
   "x-review": "machine",
   "x-source": "ffa10fa912"
  },
+ "js.10so4x5ppkr": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">7a. <span class=\"mono\">tess-eaab33b6b763-{n0}</span>.</b> Dypp ved BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markert av {n5} vurderere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
+ "@js.10so4x5ppkr": {
+  "x-review": "machine",
+  "x-source": "789c4ff542"
+ },
  "js.10v4vkxqjry": "Ingen lyskurve er lagret for denne stjernen i denne versjonen: søkekatalogen beholder bare målte verdier, så det finnes ingen lyskurve for hele subjektet og ikke noe foldet panel.",
  "@js.10v4vkxqjry": {
   "x-review": "machine",
   "x-source": "7fe57adca4"
  },
- "js.10vb2hszsy6": "<b>{n0}</b> av de {n1} planetene med lagret avstand i exoplanet.eu ble funnet ved transitt (den første metoden som er oppført). <a href=\"/explore/galaxy/?method=transit\">Vis dem på galaksekartet ›</a>",
- "@js.10vb2hszsy6": {
-  "x-review": "machine",
-  "x-source": "01ac9f0ca4"
- },
  "js.10vrj8m3wjv": "CO <span>Karbonmonoksid</span>",
  "@js.10vrj8m3wjv": {
   "x-review": "machine",
   "x-source": "828d691c9b"
- },
- "js.10wj3xzpdgf": "Solskiven, {n0} K, i sin svartlegemefarge med randfordunkling.",
- "@js.10wj3xzpdgf": {
-  "x-review": "machine",
-  "x-source": "ae27e2403d"
  },
  "js.10zmmlwb9xi": "<b>Lyot-koronagraf.</b> En ugjennomsiktig skive i fokalplanet blokkerer kjernen av stjernens bilde. Det den ikke fjerner, er lyset som kanten dens diffrakterer, og som neste linse sender til randen av den gjenavbildede pupillen; en Lyot-stopp litt mindre enn pupillen fanger opp denne randen (Lyot {n0}). Med en skive på {n1} λ/D kutter en innsnevring av stoppen fra {n2} % til {n3} % av pupillen stjernelyset ved {n4} λ/D fra {n5}×{n6}⁻⁵ til {n7}×{n8}⁻⁷ av stjernens topp (uten koronagraf: {n9}×{n10}⁻⁵) [calc], mens en planet godt utenfor skiven beholder {n11} % av lyset sitt, stoppens areal.",
  "@js.10zmmlwb9xi": {
@@ -2135,6 +2120,11 @@
  "@js.11kdzzmc5nu": {
   "x-review": "machine",
   "x-source": "184a6800cc"
+ },
+ "js.11n5kdywh3l": "Teff",
+ "@js.11n5kdywh3l": {
+  "x-review": "machine",
+  "x-source": "4b0fa3b17f"
  },
  "js.11n6gzp7din": "{n0} (dominert av prioren; ingen usikkerhet oppgitt, da den bare ville gjenta priorens)",
  "@js.11n6gzp7din": {
@@ -2196,6 +2186,11 @@
   "x-review": "machine",
   "x-source": "f8acf4d692"
  },
+ "js.122id4bsvl0": "<i style=\"background:#FFD60A\"></i>Astrometri <span class=\"mono\">{n0}</span>",
+ "@js.122id4bsvl0": {
+  "x-review": "machine",
+  "x-source": "8013870b43"
+ },
  "js.122x1s0w9zz": "F_Q · F_HZ, logaritmisk skala",
  "@js.122x1s0w9zz": {
   "x-review": "machine",
@@ -2216,10 +2211,10 @@
   "x-review": "machine",
   "x-source": "cc95c0003c"
  },
- "js.12cg9tt6w6b": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Sentinel-strøm",
- "@js.12cg9tt6w6b": {
+ "js.12cis2bjlup": "Radio",
+ "@js.12cis2bjlup": {
   "x-review": "machine",
-  "x-source": "2d63ad7563"
+  "x-source": "2a7dfeb2f2"
  },
  "js.12ed4zztqr8": "Kunstnerisk framstilling av {s0}: en Neptun-lignende planet i det varme beltet, {n0} jordradier, {n1} K.",
  "@js.12ed4zztqr8": {
@@ -2241,15 +2236,20 @@
   "x-review": "machine",
   "x-source": "8ec36a17e7"
  },
- "js.12lth0d2p34": "I {n0} fant Wolszczan og Frail planeter rundt millisekundpulsaren PSR B1257+{n1} ut fra den regelmessige vaklingen i ankomsttidene til pulsene (Wolszczan &amp; Frail {n2}): planetene drar i pulsaren, og lysets gangtid endres med millisekunder. Det er radiotiming, ikke radiostråling fra en planet. <a href=\"/explore/galaxy/?tour=13\">Kortet dens i galakseomvisningen ›</a>",
- "@js.12lth0d2p34": {
-  "x-review": "machine",
-  "x-source": "a919cbb3a4"
- },
  "js.12m26xazjm": "besto vurderingen; {n0} % av panelets vekt merket subjektet som en mulig planet; på et periodisk signal: {n1} transitter, P = {n2} d",
  "@js.12m26xazjm": {
   "x-review": "machine",
   "x-source": "8ec885602b"
+ },
+ "js.12ooi6yhl0h": "Kepler-{n0} b",
+ "@js.12ooi6yhl0h": {
+  "x-review": "machine",
+  "x-source": "5d97744685"
+ },
+ "js.12q7to7nkw0": "Mot oss og bort fra oss",
+ "@js.12q7to7nkw0": {
+  "x-review": "machine",
+  "x-source": "982502489b"
  },
  "js.12ujqir6o8g": "JWST MIRI-koronagraf",
  "@js.12ujqir6o8g": {
@@ -2260,6 +2260,11 @@
  "@js.12vi4vfunn8": {
   "x-review": "machine",
   "x-source": "05ed847784"
+ },
+ "js.12w6m38pgra": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">7b. <span class=\"mono\">tess-1c554332c266-{n0}</span>.</b> Dypp ved BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markert av {n5} vurderere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
+ "@js.12w6m38pgra": {
+  "x-review": "machine",
+  "x-source": "961ae19d5c"
  },
  "js.12y2sroyczu": "{n0} fundamentalbånd",
  "@js.12y2sroyczu": {
@@ -2296,11 +2301,6 @@
   "x-review": "machine",
   "x-source": "bff9d47f59"
  },
- "js.136ul906qph": "Kilde: SetuHQs lagrede kjøring runs/tess-pi-men-s1 (TESS-sektor {n0}, SPOC {n1}-minutters PDCSAP-fluks, TIC {n2}; config sha256 585955d5e7a1…): {n3} lagrede punkter, hvert objekt normalisert til sin median og binnet til {n4} minutter.",
- "@js.136ul906qph": {
-  "x-review": "machine",
-  "x-source": "af8431ab78"
- },
  "js.138zpxk17ru": "f_i, logaritmisk skala",
  "@js.138zpxk17ru": {
   "x-review": "machine",
@@ -2316,11 +2316,6 @@
   "x-review": "machine",
   "x-source": "e39c1a07d7"
  },
- "js.13ac253fetk": "<b>{n0}</b> av de {n1} planetene med lagret avstand i exoplanet.eu ble funnet med astrometri (den første metoden som er oppført). <a href=\"/explore/galaxy/?method=astrometry\">Vis dem på galaksekartet ›</a>",
- "@js.13ac253fetk": {
-  "x-review": "machine",
-  "x-source": "dc5877cdd7"
- },
  "js.13cdu73b6uc": "CO₂-fotolyse rundt enkelte stjerner, eller massiv unnslipping av hydrogen etter vanntap.",
  "@js.13cdu73b6uc": {
   "x-review": "machine",
@@ -2335,6 +2330,11 @@
  "@js.13ffhncz0ep": {
   "x-review": "machine",
   "x-source": "7b27994bc4"
+ },
+ "js.13gocj2fnda": "docs/results/reviewer_weights_full_panel.json",
+ "@js.13gocj2fnda": {
+  "x-review": "machine",
+  "x-source": "5134ba8327"
  },
  "js.13i1elxloqt": "pi Men c: per skalahøyde, H₂-rik",
  "@js.13i1elxloqt": {
@@ -2355,6 +2355,11 @@
  "@js.13kikmj1q17": {
   "x-review": "machine",
   "x-source": "f5cca1ccc1"
+ },
+ "js.13lcq3b40tl": "Illustrasjon",
+ "@js.13lcq3b40tl": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
  },
  "js.13mufrch5ly": "tess-38b5a559eee2-{n0}",
  "@js.13mufrch5ly": {
@@ -2381,15 +2386,20 @@
   "x-review": "machine",
   "x-source": "118618889c"
  },
+ "js.13swdwmmbmi": "Kjøringer og konfigurasjon ›",
+ "@js.13swdwmmbmi": {
+  "x-review": "machine",
+  "x-source": "c610f2888d"
+ },
  "js.13t7ixpw2ky": "Toppkandidater",
  "@js.13t7ixpw2ky": {
   "x-review": "machine",
   "x-source": "7021bb9b5f"
  },
- "js.13vqj4f8hh6": "Ved et instrumentelt tegn: en objektkant; en momentumdumping, et flagg for spredt lys eller et peke- eller manuelt ekskluderingsflagg innenfor {n0} d; et datagap på over {n1} d innenfor {n2} d; eller at halvparten av panelets vekt kaller det instrumentelt.",
- "@js.13vqj4f8hh6": {
+ "js.13x58b3mwwa": "Wolf {n0} c",
+ "@js.13x58b3mwwa": {
   "x-review": "machine",
-  "x-source": "0495534488"
+  "x-source": "560cd4bbe1"
  },
  "js.13xevrqzvu7": "F_S (påvisbar gass)",
  "@js.13xevrqzvu7": {
@@ -2410,6 +2420,11 @@
  "@js.1473r6pfqi4": {
   "x-review": "machine",
   "x-source": "b2990754ad"
+ },
+ "js.14cls39i1sb": "Luhman {n0} B",
+ "@js.14cls39i1sb": {
+  "x-review": "machine",
+  "x-source": "f04427416b"
  },
  "js.14ct4jjljtx": "Forrige stopp",
  "@js.14ct4jjljtx": {
@@ -2440,6 +2455,16 @@
  "@js.14fe8ebzk21": {
   "x-review": "machine",
   "x-source": "365e781739"
+ },
+ "js.14huikxe5ha": "Luyten's Star e",
+ "@js.14huikxe5ha": {
+  "x-review": "machine",
+  "x-source": "5a24593e14"
+ },
+ "js.14isgauchsm": "YZ Cet",
+ "@js.14isgauchsm": {
+  "x-review": "machine",
+  "x-source": "f80e6fd49c"
  },
  "js.14iuxy783ms": "Også kjent som EQ Peg A, BD+{n0} {n1} A, LMP {n2} A, WIR {n3} A.",
  "@js.14iuxy783ms": {
@@ -2591,6 +2616,16 @@
   "x-review": "machine",
   "x-source": "dd7d34d846"
  },
+ "js.15phwu441vo": "Lalande {n0} c",
+ "@js.15phwu441vo": {
+  "x-review": "machine",
+  "x-source": "5aa41e4960"
+ },
+ "js.15pp5ycbnhi": "Overskudd ({n0}%)",
+ "@js.15pp5ycbnhi": {
+  "x-review": "machine",
+  "x-source": "8cd023e1a1"
+ },
  "js.15r06e4vt70": "Kjøring tess-hd-{n0}-s4 · {n1} dipper ({n2} kandidater, {n3} flagget) · {n4} objekter.<span class=\"printonly\"> Hver kandidat på denne platen: kandidat, ubekreftet.</span>",
  "@js.15r06e4vt70": {
   "x-review": "machine",
@@ -2610,6 +2645,11 @@
  "@js.15vez7zpk4h": {
   "x-review": "machine",
   "x-source": "d4a367de3f"
+ },
+ "js.15zsmt411w4": "Sentinel · Skeptiker <span class=\"mono idtag\" title=\"reviewer id\">claude-skeptic</span>",
+ "@js.15zsmt411w4": {
+  "x-review": "machine",
+  "x-source": "b732d52e24"
  },
  "js.161sousy7g0": "Støtparameter",
  "@js.161sousy7g0": {
@@ -2656,6 +2696,11 @@
   "x-review": "machine",
   "x-source": "3b661f9791"
  },
+ "js.16h8d5mlpjp": "Probes",
+ "@js.16h8d5mlpjp": {
+  "x-review": "machine",
+  "x-source": "8f6e567898"
+ },
  "js.16hqbj09o4u": "feltlinjer, kjegle og bane ikke i målestokk; utbruddstider illustrative; grenseverdi beregnet",
  "@js.16hqbj09o4u": {
   "x-review": "machine",
@@ -2670,11 +2715,6 @@
  "@js.16mxiyd8s0l": {
   "x-review": "machine",
   "x-source": "e223d8ec1e"
- },
- "js.16qlwwljm69": "<b>Pro Sweeps</b> <span class=\"eddev\">under utvikling</span>: hostede søk over sektorer eller mållister, med kundens egen AI-leverandørnøkkel; resultatene kommer tilbake som åpne bidragspakker",
- "@js.16qlwwljm69": {
-  "x-review": "machine",
-  "x-source": "31d3ac206f"
  },
  "js.16r0kn8gjyr": "Kartleggingen SetuHQ leser.",
  "@js.16r0kn8gjyr": {
@@ -2691,11 +2731,6 @@
   "x-review": "machine",
   "x-source": "b7b7f73a1e"
  },
- "js.16vo26f9hfu": "Samme inndata som pycheops: på hvert referansebesøk samsvarer dekorrelasjonen vår med den til pycheops til &lt; {n0} ppm rms, eller når en lavere rms på de samme punktene og leddene (lempet etter v1)",
- "@js.16vo26f9hfu": {
-  "x-review": "machine",
-  "x-source": "c88247e554"
- },
  "js.16x61d2zia4": "<span class=\"word s-rej\">avvist ved kontroll</span><b class=\"fig\">1d. TOI-{n0}, dipp {n1}.</b> <span class=\"sid mono\">lagret id tess-01e315ee5ebf-{n2}.</span> Dipp ved BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsensusintervall BTJD {n7} til {n8}. Markert av {n9} av {n10} vurderere ({n11} av {n12} Sentinels, {n13} av {n14} Probes). Ligger på en BLS-periode på {n15} dager (t0 BTJD {n16}). Avvist ved kontroll (sekundær formørkelse, sekundær i vilkårlig fase). Arkiv: ingen arkivplanet innenfor toleransen. Kun arkivverdier. Denne siden hevder ingen påvisning.",
  "@js.16x61d2zia4": {
   "x-review": "machine",
@@ -2705,11 +2740,6 @@
  "@js.16xd4uxov7b": {
   "x-review": "machine",
   "x-source": "6e2db4884e"
- },
- "js.16xkma5n6o5": "Kontrollene avgjør rangeringen og inngår ikke i J: bare tilbakeholdte oppføringer med begge kontrollistene på hver søkte stjerne rangeres, andre listes urangert. Kontrollistene er metodens egen rapport; topplisten kan ikke beregne dem på nytt uten lyskurvene. Sentinel-utvalget rangeres aldri.",
- "@js.16xkma5n6o5": {
-  "x-review": "machine",
-  "x-source": "698a7fa611"
  },
  "js.16yau0dec1n": "Dannes overalt ved vanlig kjemi og avgassing. Ikke en biosignatur.",
  "@js.16yau0dec1n": {
@@ -2731,11 +2761,6 @@
   "x-review": "machine",
   "x-source": "00d60e31a4"
  },
- "js.170ttkobv": "<b>Illustrasjon.</b> Forklarer en idé; ikke data.",
- "@js.170ttkobv": {
-  "x-review": "machine",
-  "x-source": "f84dea2704"
- },
  "js.1752ocxoxow": "forhold",
  "@js.1752ocxoxow": {
   "x-review": "machine",
@@ -2745,6 +2770,11 @@
  "@js.175a50uaz7u": {
   "x-review": "machine",
   "x-source": "05e19aa7b7"
+ },
+ "js.176wwpyjrg6": "eps Eridani b",
+ "@js.176wwpyjrg6": {
+  "x-review": "machine",
+  "x-source": "d935a49c88"
  },
  "js.17hw2mxavcy": "Sjansen for at en Jord–Sol-bane gir transitt",
  "@js.17hw2mxavcy": {
@@ -2766,10 +2796,10 @@
   "x-review": "machine",
   "x-source": "4a850645ed"
  },
- "js.17k76okut7k": "Kunstnerens framstilling: det varme kjempeutseendet, for radius {n0} R⊕ eller mer, Teq {n1} til {n2} K: hvite skybånd. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.17k76okut7k": {
+ "js.17ntl740ako": "YZ Cet c",
+ "@js.17ntl740ako": {
   "x-review": "machine",
-  "x-source": "6486ceb3f7"
+  "x-source": "5120e910b2"
  },
  "js.17nxghh8cwl": "Hver dipp i hver eksempelkjøring, gruppert etter stjerne og nummerert i tidsrekkefølge, med utfallet av kontrollen. En dipp som besto kontrollen, er en kandidat, ubekreftet.",
  "@js.17nxghh8cwl": {
@@ -2796,6 +2826,11 @@
   "x-review": "machine",
   "x-source": "4a10cd9947"
  },
+ "js.17wumn3r8ed": "exoplanet.eu oppfører den som «Publisert i en fagfellevurdert artikkel», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som 2MASS J19021775+{n4} b, K00377.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J190217.77+{n8} b.",
+ "@js.17wumn3r8ed": {
+  "x-review": "machine",
+  "x-source": "ca1a10bec8"
+ },
  "js.17y75sycukx": "Zarka {n0}, Planet. Space Sci. {n1}, {n2} (plasmavekselvirkninger mellom stjerne og planet, og radio)",
  "@js.17y75sycukx": {
   "x-review": "machine",
@@ -2820,6 +2855,11 @@
  "@js.182x5hpzt5z": {
   "x-review": "machine",
   "x-source": "b7312318e0"
+ },
+ "js.183wr165iky": "Lagret id tess-7b97e468b60b-{n0}; ingen saksfil i denne kjøringen",
+ "@js.183wr165iky": {
+  "x-review": "machine",
+  "x-source": "2cfabb7955"
  },
  "js.184alwhvm3u": "≈ {n0} dager",
  "@js.184alwhvm3u": {
@@ -2861,6 +2901,11 @@
   "x-review": "machine",
   "x-source": "dece0e17ca"
  },
+ "js.18lwk9i51zo": "tau Cet h",
+ "@js.18lwk9i51zo": {
+  "x-review": "machine",
+  "x-source": "f7da4e8eac"
+ },
  "js.18n6es5ok3o": "markeringer (BTJD)",
  "@js.18n6es5ok3o": {
   "x-review": "machine",
@@ -2881,15 +2926,15 @@
   "x-review": "machine",
   "x-source": "9ca7ead3fe"
  },
- "js.18o5x6sbdjj": "<b>{n0}</b> av de {n1} planetene med en lagret avstand i exoplanet.eu ble funnet ved mikrolinsing (den første metoden som er oppført). <a href=\"/explore/galaxy/?method=microlensing\">Vis dem på Galakse-kartet ›</a>",
- "@js.18o5x6sbdjj": {
-  "x-review": "machine",
-  "x-source": "75b3704ae2"
- },
  "js.18oql4qf149": "forhold (fri / Huang)",
  "@js.18oql4qf149": {
   "x-review": "machine",
   "x-source": "a32de90fca"
+ },
+ "js.18otqbloli3": "Luyten's Star c",
+ "@js.18otqbloli3": {
+  "x-review": "machine",
+  "x-source": "de5d475f55"
  },
  "js.18qifo210uh": "SetuHQ observerer ikke i radio. Scenen er en illustrasjon: feltlinjer, kjegle og bane er ikke i målestokk, og utbruddstidene er illustrative; bare grensefrekvensen er beregnet.",
  "@js.18qifo210uh": {
@@ -2936,6 +2981,11 @@
   "x-review": "machine",
   "x-source": "c11a942411"
  },
+ "js.196px5ez5bg": "Lalande {n0} b",
+ "@js.196px5ez5bg": {
+  "x-review": "machine",
+  "x-source": "9228522611"
+ },
  "js.197t86p2mo2": "feed · perioden samsvarer med en kjent TOI · P {n0} d · {n1} transitter",
  "@js.197t86p2mo2": {
   "x-review": "machine",
@@ -2945,11 +2995,6 @@
  "@js.199k9vutkk7": {
   "x-review": "machine",
   "x-source": "14d5771087"
- },
- "js.19egy1xdd4z": "Et molekyl med N atomer har 3N − {n0} måter å vibrere på (3N − {n1} hvis det er rett): vann har tre, karbondioksid fire (bøyningen forekommer to ganger, vinkelrett på hverandre), metan ni. En modus absorberer infrarødt lys bare hvis den endrer molekylets dipol. Det er derfor CO₂s symmetriske strekk ({n2} µm), O₂s strekk og to av metans fire grunnmoduser er tause i infrarødt. Båndene modusene gir, er de som kapitlet {s0} markerer: vannets to strekk ved {n3} og {n4} µm gir dets {n5} µm-bånd, metans ν₃ {n6} µm-båndet, CO₂s asymmetriske strekk {n7} µm-båndet, og COs strekk {n8} µm-båndet.",
- "@js.19egy1xdd4z": {
-  "x-review": "machine",
-  "x-source": "34a40a6e3c"
  },
  "js.19gww8mixuh": "Slik fungerer astrometri ›",
  "@js.19gww8mixuh": {
@@ -3026,6 +3071,11 @@
   "x-review": "machine",
   "x-source": "7cb381fdb4"
  },
+ "js.1a5z9qhmjgc": "Sentinels",
+ "@js.1a5z9qhmjgc": {
+  "x-review": "machine",
+  "x-source": "2e1e6f1301"
+ },
  "js.1a6l9fjw5he": "Planet: kunstnerisk framstilling ›",
  "@js.1a6l9fjw5he": {
   "x-review": "machine",
@@ -3080,6 +3130,11 @@
  "@js.1al74ewy2g6": {
   "x-review": "machine",
   "x-source": "df55237fb1"
+ },
+ "js.1aol2kz2k2l": "Transitt",
+ "@js.1aol2kz2k2l": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
  },
  "js.1aqv49cd0kk": "flagget",
  "@js.1aqv49cd0kk": {
@@ -3191,11 +3246,6 @@
   "x-review": "machine",
   "x-source": "c9a6bca81c"
  },
- "js.1bhkarus91o": "<b>ν-strekk</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">{n2} µm-båndet i {s0} ›</a>",
- "@js.1bhkarus91o": {
-  "x-review": "machine",
-  "x-source": "d76ad8b3b9"
- },
  "js.1bj34kz5aki": "Kjøringsrapport: HD {n0}",
  "@js.1bj34kz5aki": {
   "x-review": "machine",
@@ -3251,6 +3301,11 @@
   "x-review": "machine",
   "x-source": "734f2ee779"
  },
+ "js.1c5e6ri6127": "Wolf {n0}",
+ "@js.1c5e6ri6127": {
+  "x-review": "machine",
+  "x-source": "40c0e1f8f4"
+ },
  "js.1c7794vgcfx": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">4h. <span class=\"mono\">tess-3b0eb3c81ad6-{n0}</span>.</b> Dypp ved BTJD {n1}, {n2} ppm, {n3} t, SNR {n4}. Markert av {n5} granskere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.1c7794vgcfx": {
   "x-review": "machine",
@@ -3281,11 +3336,6 @@
   "x-review": "machine",
   "x-source": "dcd3b3c030"
  },
- "js.1cj5f6isk29": "<b>ν₂-bøy (to, vinkelrett på hverandre)</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · utenfor vinduet {n2}–{n3} µm i {s0}",
- "@js.1cj5f6isk29": {
-  "x-review": "machine",
-  "x-source": "fffacfe81d"
- },
  "js.1ckbr2brf2r": "Lagret id tess-bc9f59e5c3af-{n0}; ingen saksmappe i denne kjøringen",
  "@js.1ckbr2brf2r": {
   "x-review": "machine",
@@ -3295,6 +3345,11 @@
  "@js.1clmexejrlr": {
   "x-review": "machine",
   "x-source": "8a07e9e968"
+ },
+ "js.1cmc1ajakjd": "eps Ind B",
+ "@js.1cmc1ajakjd": {
+  "x-review": "machine",
+  "x-source": "a7c8e06a1d"
  },
  "js.1coc893jlc0": "P = {n0} år, e = {n1}, IAU nominelle masser [calc]",
  "@js.1coc893jlc0": {
@@ -3320,11 +3375,6 @@
  "@js.1cx2mlrh2q7": {
   "x-review": "machine",
   "x-source": "11a4a60b51"
- },
- "js.1cy89xikthl": "<b>Målt på en oppgitt referansetest, ikke oppdagelser.</b> {n0} bekreftede eller kjente planeter (CP/KP), {n1} falske positiver og {n2} falske alarmer fra TOI-tabellen (hentet {n3}-{n4}-{n5}, seed {n6}), én TOI per stjerne; den holdt-ut-halvdelen vises. Panel: de tre Probes (deterministiske detektorer) med sine frosne kalibrerte vekter; sektorvid BLS; kontroll; tilpasning med randfordunkling; tabellen på strømnivå legger til strømmens FAP ({n7} forsøk).",
- "@js.1cy89xikthl": {
-  "x-review": "machine",
-  "x-source": "2db2bd3746"
  },
  "js.1d2fjcit5ne": "Familie",
  "@js.1d2fjcit5ne": {
@@ -3370,11 +3420,6 @@
  "@js.1dbkcqukzan": {
   "x-review": "machine",
   "x-source": "04a1d0a0c8"
- },
- "js.1dcsl4f0wrb": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s0}</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">kjøring tess-pi-men-s1 · {n1} oppføringer</span>",
- "@js.1dcsl4f0wrb": {
-  "x-review": "machine",
-  "x-source": "d3862be740"
  },
  "js.1dd353vmae5": "En planet på størrelse med Jorden i den beboelige sonen til stjernen sin.",
  "@js.1dd353vmae5": {
@@ -3446,15 +3491,15 @@
   "x-review": "machine",
   "x-source": "8a0d9e2efe"
  },
- "js.1e0thu83q1m": "<b>ν₁ symmetrisk strekk</b> · {n0} µm · infrarødt stille (dipolen endres ikke) · tegnet ×{n1} · utenfor {n2}–{n3} µm-vinduet til {s0}",
- "@js.1e0thu83q1m": {
-  "x-review": "machine",
-  "x-source": "b5a09a9656"
- },
  "js.1e1cj7tvww2": "Probe · Følsom <span class=\"sub mono\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1e1cj7tvww2": {
   "x-review": "machine",
   "x-source": "b9b4c27050"
+ },
+ "js.1e34rrpji4d": "{n0} TOI-er i utvalget",
+ "@js.1e34rrpji4d": {
+  "x-review": "machine",
+  "x-source": "f87cb7f911"
  },
  "js.1e4aq4nvmgn": "Vurderernes merkelapper og begrunnelser",
  "@js.1e4aq4nvmgn": {
@@ -3471,15 +3516,10 @@
   "x-review": "machine",
   "x-source": "5acf5925b9"
  },
- "js.1ea3o7os4iv": "SetuHQs kontrollflagg, kun fra lyskurven: <code>odd_even_mismatch</code> (odde og like dybder er ulike), <code>secondary_eclipse</code> (en dipp ved fase {n0}), <code>low_snr</code>, <code>too_short</code>, <code>edge_event</code> og <code>insufficient_points</code>. Den har ingen sentroide- eller differansebildekontroll på pikselnivå og ingen statistisk validering, så en blandet bakgrunnsdobbeltstjerne kan slippe gjennom. <a href=\"/evidence/\">Se vurdererne ›</a> · <a href=\"/candidates/pi-men/dip-2/\">Se et kontrollert tilfelle ›</a>",
- "@js.1ea3o7os4iv": {
+ "js.1ecc8oy35i4": "Teegarden's d",
+ "@js.1ecc8oy35i4": {
   "x-review": "machine",
-  "x-source": "9c325d6228"
- },
- "js.1eb7589ltee": "Arkivsammenligning: ingen arkivplanet innenfor toleransen (denne dippen har ingen BLS-periode å sammenligne); {s0}: ingen transittefemeride å sammenligne. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
- "@js.1eb7589ltee": {
-  "x-review": "machine",
-  "x-source": "1e8af2cf5f"
+  "x-source": "461cf62f48"
  },
  "js.1ecof5fze2u": "Besto alle kontroller. Markert av {n0} av {n1} Probes og {n2} av {n3} Sentinels. Kandidat, ubekreftet.",
  "@js.1ecof5fze2u": {
@@ -3500,6 +3540,11 @@
  "@js.1eg1hfp0rb9": {
   "x-review": "machine",
   "x-source": "bcdb9702f4"
+ },
+ "js.1eh5clg574l": "exoplanet.eu oppfører den som «Publisert i en fagfellevurdert artikkel», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som HD {n4} b, HD {n5} Ab, TOI-{n6} b, TOI-{n7}.",
+ "@js.1eh5clg574l": {
+  "x-review": "machine",
+  "x-source": "dcb89ac8b0"
  },
  "js.1einsfs6j8p": "SetuHQs tilpassede dybde, ledende dipp",
  "@js.1einsfs6j8p": {
@@ -3536,11 +3581,6 @@
   "x-review": "machine",
   "x-source": "45ef298afc"
  },
- "js.1eqtzlgohp1": "Spredt lys: ingen merket ekte prøve ble funnet; filteret (kvalitetsflagg og kontrollaperturer) er beskrevet og utprøvd på syntetiske hendelser og på kontrollaperturene i supernovautsnittene, ikke validert mot en katalog over spredtlyshendelser.",
- "@js.1eqtzlgohp1": {
-  "x-review": "machine",
-  "x-source": "cef1f20086"
- },
  "js.1etlbcax1sp": "ii · hele subjektet tess-4b369d3c6f09",
  "@js.1etlbcax1sp": {
   "x-review": "machine",
@@ -3566,15 +3606,15 @@
   "x-review": "machine",
   "x-source": "b7e118d85b"
  },
+ "js.1ezxmjp2el4": "exoplanet.eu oppfører den som «Publisert i en fagfellevurdert artikkel», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som K2-{n4} b, TOI-{n5} b, TOI-{n6}.",
+ "@js.1ezxmjp2el4": {
+  "x-review": "machine",
+  "x-source": "57de1033f9"
+ },
  "js.1f0uxtws1ab": "Vær kontrolløren",
  "@js.1f0uxtws1ab": {
   "x-review": "machine",
   "x-source": "e37b76fbec"
- },
- "js.1f208h2gzzx": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · flagget for vurdering, åpen",
- "@js.1f208h2gzzx": {
-  "x-review": "machine",
-  "x-source": "bfe3196ddb"
  },
  "js.1f3str9e5jr": "ikke i målestokk; etter Lyot {n0}",
  "@js.1f3str9e5jr": {
@@ -3585,11 +3625,6 @@
  "@js.1f423dts634": {
   "x-review": "machine",
   "x-source": "0e47f09a74"
- },
- "js.1f5jrzkwrow": "Rangering: Youdens J på det søkbare utvalget som referansetesten fastsatte (stjerner med en SPOC-lyskurve på {n0} minutter), med ett predikat på begge sider, en ren kandidat (på efemeriden, bestått, uten flagg for formørkelsesdobbeltstjerne): J = andelen CP/KP-stjerner som tilbys som rene kandidater + andelen FP-stjerner som ikke tilbys − {n1}, med et Wilson-intervall kombinert ved kvadrering og addering. Å kalle hver TOI en planet, med eller uten flagg, gir J = {n2}; en søkbar stjerne som er oppgitt som ikke søkt, teller som ikke tilbudt. J over alle stjerner i omfanget vises ved siden av. Der intervallene overlapper, er rekkefølgen ikke en målt forskjell.",
- "@js.1f5jrzkwrow": {
-  "x-review": "machine",
-  "x-source": "5fa0572ae2"
  },
  "js.1f71ffjmfo5": "Minimumsmasse (m sin i)",
  "@js.1f71ffjmfo5": {
@@ -3610,6 +3645,11 @@
  "@js.1f84decza55": {
   "x-review": "machine",
   "x-source": "7bb250633d"
+ },
+ "js.1fa3dkre7ep": "varm",
+ "@js.1fa3dkre7ep": {
+  "x-review": "machine",
+  "x-source": "0f0aa408c1"
  },
  "js.1faz9a47wga": "K_R ≈ V sin I · k² med V sin I = {n0} km/s og k = {n1}, begge fra Gaudi &amp; Winn {n2} tabell {n3}, som oppgir {n4} m/s [calc]",
  "@js.1faz9a47wga": {
@@ -3646,11 +3686,6 @@
   "x-review": "machine",
   "x-source": "c6b9a506e0"
  },
- "js.1fo0ybrjcxn": "<b>Data: The Extrasolar Planets Encyclopaedia (exoplanet.eu), hentet {n0}. okt. {n1}; {n2} planeter med lagret avstand, rundt {n3} stjerner.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. NASA Exoplanet Archive kunne ikke nås da denne listen ble hentet, så den kommer bare fra exoplanet.eu. exoplanet.eu oppfører som bekreftet alle objekter den regner som planeter: legemer opptil {n4} Jupiter-masser (innenfor usikkerheten), publisert eller kunngjort. Listen er bredere enn NASA Exoplanet Archive sin, som tar med objekter opptil {n5} Jupiter-masser fra fagfellevurderte artikler. Listen inneholder {n6} oppføringer som exoplanet.eu kaller eksokometer. {n7} av de {n8} planetene har ingen lagret avstand og er ikke plottet.",
- "@js.1fo0ybrjcxn": {
-  "x-review": "machine",
-  "x-source": "8798787570"
- },
  "js.1fppcyzgola": "<a href=\"/stars/barnard-s-star/\">{s0}</a> · Radialhastighet · oppdaget {n0} · Jordstørrelse (etter masse)",
  "@js.1fppcyzgola": {
   "x-review": "machine",
@@ -3660,6 +3695,11 @@
  "@js.1frapy57cm7": {
   "x-review": "machine",
   "x-source": "85cd6c7e34"
+ },
+ "js.1fujm79pdmr": "exoplanet.eu oppfører den som «Kunngjort på et nettsted», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som 2MASS J19135511+{n4} b, K02313.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J191355.11+{n8} b.",
+ "@js.1fujm79pdmr": {
+  "x-review": "machine",
+  "x-source": "7448fb18a7"
  },
  "js.1fvwjcy4spf": "Terskler, vekter og alle inndata skrives til <code>manifest.json</code>, slik at et resultat kan kjøres på nytt nøyaktig.",
  "@js.1fvwjcy4spf": {
@@ -3671,10 +3711,20 @@
   "x-review": "machine",
   "x-source": "4ffb9625b0"
  },
+ "js.1fwz3jtwilc": "{n0} Eri b",
+ "@js.1fwz3jtwilc": {
+  "x-review": "machine",
+  "x-source": "ae488e35a4"
+ },
  "js.1g0smg3jibl": "med TIC-tetthetsprioren",
  "@js.1g0smg3jibl": {
   "x-review": "machine",
   "x-source": "ee7a7029f9"
+ },
+ "js.1g4l9awxfep": "Søkekatalog docs/discoveries/catalog.json, oppdatert {n0}-{n1}-30T06:{n2}+{n3}, {n4} oppføringer.",
+ "@js.1g4l9awxfep": {
+  "x-review": "machine",
+  "x-source": "070c993100"
  },
  "js.1g5lkun156f": "Planetskive i skala ut fra dybden: Rp/R* {n0} · bane ikke i skala · ingen stjerneradius lagret",
  "@js.1g5lkun156f": {
@@ -3791,20 +3841,10 @@
   "x-review": "machine",
   "x-source": "405e92b37a"
  },
- "js.1hanjmcicv2": "Sentinels' delutvalg <span class=\"sub\">{n0} tilbakeholdte stjerner · ikke rangert</span>",
- "@js.1hanjmcicv2": {
-  "x-review": "machine",
-  "x-source": "07839908d1"
- },
  "js.1hc8gmjgdot": "TOI-tabell",
  "@js.1hc8gmjgdot": {
   "x-review": "machine",
   "x-source": "69cec4abc6"
- },
- "js.1hfl9sordrk": "Modell av {s0} som passerer foran pi Men ({n0} K, {n1} R☉): dybde {n2} ppm, {n3} t. Planeten er en kunstnerisk fremstilling.",
- "@js.1hfl9sordrk": {
-  "x-review": "machine",
-  "x-source": "9f7804c19a"
  },
  "js.1hfm3qhujst": "<a href=\"/stars/gj-1214/\">{s0}</a> · Transitt · oppdaget {n0} · Sub-Neptun",
  "@js.1hfm3qhujst": {
@@ -3861,20 +3901,10 @@
   "x-review": "machine",
   "x-source": "ee03efb686"
  },
- "js.1hw9pj2cjy7": "{n0} oppføringer, funnet mellom <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1}. okt. {n2}, {n3} UTC</time> og <time datetime=\"2026-10-27T06:46:11+00:00\" title=\"2026-10-27T06:46:11+00:00\">{n4}. okt. {n5}, {n6} UTC</time>. <b>{n7} samsvarer med en kjent TOI-periode</b>. Hver oppføring er en kandidat, ubekreftet. Et TOI-samsvar er en sammenligning med arkivet. Kun arkivverdier. Denne siden hevder ingen deteksjon. Signaler som ikke samsvarer med noen kjent TOI holdes tilbake for privat vurdering; de publiseres først etter vurdering og rapportering.",
- "@js.1hw9pj2cjy7": {
-  "x-review": "machine",
-  "x-source": "e5e81ce489"
- },
  "js.1i0hezn1dvy": "Sentinel · Frivillig: {n0} spenn i dette vinduet, telt for denne dippen",
  "@js.1i0hezn1dvy": {
   "x-review": "machine",
   "x-source": "c97f6573b3"
- },
- "js.1i1bqizwemp": "Hver celle: raten, deretter k/n og Wilson-intervallet på {n0} %, tegnet som en stolpe fra {n1} til {n2} % (Youden J fra {n3} til {n4}, med en markering ved {n5}). Rangert etter Youdens J på det søkbare settet som referansetesten fastsatte, med ett predikat på begge sider (en ren kandidat: på efemeriden, bestått, uten flagg for formørkelsesdobbeltstjerne), slik at det å kalle hver TOI en planet, flagget eller ikke, gir null poeng. Kontrollene avgjør om noe rangeres og inngår ikke i J, og kontrollistene er metodens egen rapport. Der intervallene overlapper, er rekkefølgen ikke en målt forskjell.",
- "@js.1i1bqizwemp": {
-  "x-review": "machine",
-  "x-source": "9b6f9451ca"
  },
  "js.1i1fwe1y4dt": "Ozon",
  "@js.1i1fwe1y4dt": {
@@ -3906,6 +3936,11 @@
   "x-review": "machine",
   "x-source": "cc3ff7cfea"
  },
+ "js.1i9gd4nyiqb": "Radialhastighet",
+ "@js.1i9gd4nyiqb": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
  "js.1i9syzrgr9a": "ii · hele objektet tess-04b815001aa6",
  "@js.1i9syzrgr9a": {
   "x-review": "machine",
@@ -3931,10 +3966,10 @@
   "x-review": "machine",
   "x-source": "5d8760ebee"
  },
- "js.1inrxj82qqn": "{s0}, dipp {n0} ({n1} d)",
- "@js.1inrxj82qqn": {
+ "js.1ispru3ub0k": "Proxima Centauri b ›",
+ "@js.1ispru3ub0k": {
   "x-review": "machine",
-  "x-source": "6d7c168703"
+  "x-source": "48383a87b1"
  },
  "js.1iub0nyp6f9": "simulert",
  "@js.1iub0nyp6f9": {
@@ -3966,11 +4001,6 @@
   "x-review": "machine",
   "x-source": "e54519602f"
  },
- "js.1j9g5n75pzw": "Illustrasjon: Rp/R★ = {n0}, b = {n1}, en stjerne på {n2} K; kurven er Mandel &amp; Agol ({n3})-modellen for små planeter med kvadratisk randfordunkling.",
- "@js.1j9g5n75pzw": {
-  "x-review": "machine",
-  "x-source": "2071874ebf"
- },
  "js.1ja46ec6bci": "<span class=\"word s-flag\">flagget for vurdering</span><b class=\"fig\">1c. TOI-{n0}, dipp {n1}.</b> <span class=\"sid mono\">lagret id tess-f28323a4aef6-{n2}.</span> Dipp ved BTJD {n3}, {n4} ppm, {n5} t, SNR {n6}. Konsensusintervall BTJD {n7} til {n8}. Markert av {n9} av {n10} vurderere ({n11} av {n12} Sentinels, {n13} av {n14} Probes). Ingen BLS-periode: en enkelt dipp. Flagget for vurdering (utenfor stjernens efemeride). Arkiv: ingen arkivplanet innenfor toleransen (denne dippen har ingen BLS-periode å sammenligne). Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.1ja46ec6bci": {
   "x-review": "machine",
@@ -3996,6 +4026,11 @@
   "x-review": "machine",
   "x-source": "49696e46af"
  },
+ "js.1jl27lqn1et": "Radius (RJ)",
+ "@js.1jl27lqn1et": {
+  "x-review": "machine",
+  "x-source": "f32d9b82e5"
+ },
  "js.1jltb46ahiz": "TOI-{n0}: stjerneskiven i sin svartlegemefarge ved {n1} K, med en nøytral grå skive på seg merket okkulterende objekt ikke identifisert. sekundær formørkelse ved SNR {n2}; alle {n3} dipper avvist ved vetting.",
  "@js.1jltb46ahiz": {
   "x-review": "machine",
@@ -4005,6 +4040,11 @@
  "@js.1jnlql1jvxr": {
   "x-review": "machine",
   "x-source": "43edc57b50"
+ },
+ "js.1jpqv79tmp8": "Teegarden's c",
+ "@js.1jpqv79tmp8": {
+  "x-review": "machine",
+  "x-source": "d987d14509"
  },
  "js.1jqjb1ecf85": "<a href=\"/stars/kepler-292/\">{s0}</a> · Transitt · oppdaget {n0} · Sub-Neptun",
  "@js.1jqjb1ecf85": {
@@ -4036,10 +4076,10 @@
   "x-review": "machine",
   "x-source": "9a556d102c"
  },
- "js.1jvq989drn7": "Kunstnerisk framstilling: utseendet kjempe-kald, for radius {n0} R⊕ eller mer, Teq under {n1} K: kremfargede og brunlige skybånd. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.1jvq989drn7": {
+ "js.1jvo3dtjn73": "Sentinel · Skeptiker <span class=\"sub mono\" title=\"reviewer id\">claude-skeptic</span>",
+ "@js.1jvo3dtjn73": {
   "x-review": "machine",
-  "x-source": "76e2586629"
+  "x-source": "254fff303e"
  },
  "js.1k05nntjzg8": "atmosfæren tegnet ×{n0} tykkere; planet og stjerne ikke i målestokk",
  "@js.1k05nntjzg8": {
@@ -4061,15 +4101,15 @@
   "x-review": "machine",
   "x-source": "75b7e948dd"
  },
- "js.1k548hzbh61": "<b>ν₃ asymmetrisk strekk (tre)</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">{n2} µm-båndet i Å lese atmosfærer ›</a>",
- "@js.1k548hzbh61": {
-  "x-review": "machine",
-  "x-source": "371bca6192"
- },
  "js.1kch3o41dk9": "Konfigurasjon SHA-{n0}",
  "@js.1kch3o41dk9": {
   "x-review": "machine",
   "x-source": "24563e9f39"
+ },
+ "js.1kdpriilk47": "exoplanet.eu oppfører den som «Publisert i en fagfellevurdert artikkel», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som 2MASS J13263339-{n4} b, EPIC {n5} b, EPIC {n6}, WISE J132633.39-{n7} b.",
+ "@js.1kdpriilk47": {
+  "x-review": "machine",
+  "x-source": "4573b13db3"
  },
  "js.1kgnejjnpnf": "Kunstnerisk framstilling av {s0}: en gasskjempe i det varme båndet, {n0} jordradier, {n1} K.",
  "@js.1kgnejjnpnf": {
@@ -4121,11 +4161,6 @@
   "x-review": "machine",
   "x-source": "6c3088500d"
  },
- "js.1kukdzlwmzz": "<b>ν₂ paraply</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · utenfor {n2}–{n3} µm-vinduet til {s0}",
- "@js.1kukdzlwmzz": {
-  "x-review": "machine",
-  "x-source": "ba3a4e2e62"
- },
  "js.1kvmnyghvke": "Kunstnerisk framstilling av {s0}: en steinplanet, radius ikke målt ({n0} jordmasser), innstråling ikke beregnbar.",
  "@js.1kvmnyghvke": {
   "x-review": "machine",
@@ -4156,6 +4191,11 @@
   "x-review": "machine",
   "x-source": "07e5463c85"
  },
+ "js.1l4atyo906i": "Kandidat",
+ "@js.1l4atyo906i": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
  "js.1l4kxm2w5br": "Arkivsammenligning: ingen arkivplanet innenfor toleransen (denne dippen har ingen BLS-periode å sammenligne); pi Men c: ingen transittefemeride å sammenligne. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.1l4kxm2w5br": {
   "x-review": "machine",
@@ -4165,6 +4205,16 @@
  "@js.1l4u62ej5fc": {
   "x-review": "machine",
   "x-source": "f7bc5c08f0"
+ },
+ "js.1l8c78nkfe5": "Teq",
+ "@js.1l8c78nkfe5": {
+  "x-review": "machine",
+  "x-source": "bd1f380888"
+ },
+ "js.1l8lt88zlnn": "<i aria-hidden=\"true\"></i>Formørkelsesdobbeltstjerne",
+ "@js.1l8lt88zlnn": {
+  "x-review": "machine",
+  "x-source": "a07a5fab5c"
  },
  "js.1l95agsp46q": "kjent TOI-periode",
  "@js.1l95agsp46q": {
@@ -4180,6 +4230,11 @@
  "@js.1lb13933831": {
   "x-review": "machine",
   "x-source": "0216bca3d8"
+ },
+ "js.1lbuxx1akb8": "<i style=\"background:#64D2FF\"></i>Transitt <span class=\"mono\">{n0}</span>",
+ "@js.1lbuxx1akb8": {
+  "x-review": "machine",
+  "x-source": "35c7f262c0"
  },
  "js.1liecym8jw": "<span class=\"word cand\">kandidat</span><span class=\"word s-pass\">besto granskingen</span><b class=\"fig\">1d. WASP-{n0}, dipp {n1}.</b> <span class=\"sid mono\">lagret id tess-5935bad1a3b4-{n2}.</span> Dipp ved BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsensusintervall BTJD {n7} til {n8}. Markert av {n9} av {n10} vurderere ({n11} av {n12} Sentinels, {n13} av {n14} Probes). Ligger på en BLS-periode på {n15} dager (t0 BTJD {n16}). Besto granskingen. Arkiv: forenlig med WASP-{n17} b: ΔP {n18}%, ingen transittefemeride å sammenligne med. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.1liecym8jw": {
@@ -4236,6 +4291,11 @@
   "x-review": "machine",
   "x-source": "aa15ce0bc3"
  },
+ "js.1m6gonlbh23": "Proxima Centauri",
+ "@js.1m6gonlbh23": {
+  "x-review": "machine",
+  "x-source": "07ddace0bc"
+ },
  "js.1m7nga73mrk": "Radialhastighetsskala: Jord-tvilling omtrent {n0} centimeter per sekund; ESPRESSO i løpet av én natt under {n1} centimeter per sekund; støy fra stjerneoverflaten i størrelsesorden {n2} meter per sekund; pi Men c omtrent {n3} meter per sekund; Jupiter-tvilling {n4} meter per sekund; {n5} Peg b {n6} meter per sekund.",
  "@js.1m7nga73mrk": {
   "x-review": "machine",
@@ -4251,11 +4311,6 @@
   "x-review": "machine",
   "x-source": "94f4aed5ee"
  },
- "js.1mfsedhnkek": "En roterende kule-og-pinne-modell av det valgte molekylet med målte bindingslengder og bindingsvinkler (NIST CCCBDB), som vibrerer i den valgte normalmodusen: piler viser hvilken vei hvert atom beveger seg. En bølgelengdeakse nedenfor markerer molekylets fundamentalbånd, fylt når de er synlige i infrarødt og hule når modusen er infrarødt-inaktiv, med området som {s0}-kapitlet viser, skravert.",
- "@js.1mfsedhnkek": {
-  "x-review": "machine",
-  "x-source": "751951289b"
- },
  "js.1mi5uvq4hd0": "denne kjøringen · avvist ved gransking · ingen periode",
  "@js.1mi5uvq4hd0": {
   "x-review": "machine",
@@ -4265,6 +4320,11 @@
  "@js.1mi9l1aqyq9": {
   "x-review": "machine",
   "x-source": "af079a71c8"
+ },
+ "js.1mjsdzuqt7u": "ingen enkeltstjerne",
+ "@js.1mjsdzuqt7u": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
  },
  "js.1mk4xq21j8n": "{n0} Peg b {n1} m/s",
  "@js.1mk4xq21j8n": {
@@ -4300,6 +4360,11 @@
  "@js.1myonl6ry65": {
   "x-review": "machine",
   "x-source": "927599ad1a"
+ },
+ "js.1mz5xi30e6k": "{n0} Peg b",
+ "@js.1mz5xi30e6k": {
+  "x-review": "machine",
+  "x-source": "07473ed79b"
  },
  "js.1mzrogjvr87": "Saksmappen kunne ikke lastes i denne visningen. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-003\">Åpne den på en egen side.</a>",
  "@js.1mzrogjvr87": {
@@ -4376,11 +4441,6 @@
   "x-review": "machine",
   "x-source": "ed25878435"
  },
- "js.1nlihv4t4dw": "Kilde: docs/results/showcase.json.",
- "@js.1nlihv4t4dw": {
-  "x-review": "machine",
-  "x-source": "321e67bf81"
- },
  "js.1nm81nug7zg": "Hoppet over (ikke tilgjengelig her): ingen",
  "@js.1nm81nug7zg": {
   "x-review": "machine",
@@ -4405,6 +4465,11 @@
  "@js.1nsffm21b0f": {
   "x-review": "machine",
   "x-source": "1a295a1bae"
+ },
+ "js.1nuj8nr6koq": "exoplanet.eu oppfører den som «Publisert i en fagfellevurdert artikkel», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som Kepler-4ee b, 2MASS J19130109+{n4} b, K00192.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J191301.09+{n8} b.",
+ "@js.1nuj8nr6koq": {
+  "x-review": "machine",
+  "x-source": "91fb084a47"
  },
  "js.1nuvlh0ma79": "tess-5935bad1a3b4",
  "@js.1nuvlh0ma79": {
@@ -4451,6 +4516,11 @@
   "x-review": "machine",
   "x-source": "ffb8a10800"
  },
+ "js.1o6iiyvkzt4": "Teq (K)",
+ "@js.1o6iiyvkzt4": {
+  "x-review": "machine",
+  "x-source": "250f80cb14"
+ },
  "js.1oflx09locz": "Saksmappen kunne ikke lastes i denne visningen. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-000\">Åpne den på en egen side.</a>",
  "@js.1oflx09locz": {
   "x-review": "machine",
@@ -4470,11 +4540,6 @@
  "@js.1ojq6mpxesf": {
   "x-review": "machine",
   "x-source": "13bd83fa4a"
- },
- "js.1ooqb09tka": "Dybdeavvik mellom odde og like transitter eller sekundærformørkelse; eller en dybde på {n0} ppm eller mer; eller V-formet og {n1} ppm eller mer; eller avvik i stjernetetthet ved en periode under {n2} d; eller at halvparten av panelets vekt sier formørkelsesdobbeltstjerne. Variabilitet ved en formørkelsesdobbeltstjernes periode, eller halvparten av den.",
- "@js.1ooqb09tka": {
-  "x-review": "machine",
-  "x-source": "d16ff6ea5a"
  },
  "js.1oqf3bvj4qe": "Saksmappen på en egen side, ved samme dipp.",
  "@js.1oqf3bvj4qe": {
@@ -4541,6 +4606,11 @@
   "x-review": "machine",
   "x-source": "393e0bcc0a"
  },
+ "js.1pduw01bhpw": "Winn {n0}, Transitter og okkultasjoner",
+ "@js.1pduw01bhpw": {
+  "x-review": "machine",
+  "x-source": "5cdffcb70b"
+ },
  "js.1pf0nh0ccp2": "id tic139256217-s1-dip-{n0} · objekt tess-9bf59e37005b<br>lyskurve sha256 f11b4e243439bf24ffd3c740162a76f0cdadd8a9160094e3eb2a3487101f6c2c<br>kode … · konfig a9d34c7079563183…<br>kilde sector_0001.json.gz",
  "@js.1pf0nh0ccp2": {
   "x-review": "machine",
@@ -4555,6 +4625,11 @@
  "@js.1phapwj9j76": {
   "x-review": "machine",
   "x-source": "b39d933ba4"
+ },
+ "js.1phito7oxf6": "exoplanet.eu oppfører den som «Kunngjort på et nettsted», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som 2MASS J19050106+{n4} b, K02802.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J190501.05+{n8} b.",
+ "@js.1phito7oxf6": {
+  "x-review": "machine",
+  "x-source": "7d211a72f3"
  },
  "js.1pjllnj81v8": "Den galaktiske nordpolen",
  "@js.1pjllnj81v8": {
@@ -4611,6 +4686,11 @@
   "x-review": "machine",
   "x-source": "10a0c5f853"
  },
+ "js.1pzot5psr3w": "Luhman {n0} A",
+ "@js.1pzot5psr3w": {
+  "x-review": "machine",
+  "x-source": "215b9c6a31"
+ },
  "js.1q0vba1x3qp": "{n0} nye",
  "@js.1q0vba1x3qp": {
   "x-review": "machine",
@@ -4640,6 +4720,11 @@
  "@js.1q6lxx1z74p": {
   "x-review": "machine",
   "x-source": "3052af115e"
+ },
+ "js.1q8o1852my1": "exoplanet.eu oppfører den som «Kunngjort på et nettsted», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som 2MASS J19250134+{n4} b, K03220.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J192501.34+{n8} b.",
+ "@js.1q8o1852my1": {
+  "x-review": "machine",
+  "x-source": "1c98a66056"
  },
  "js.1qaq2fxvw7f": "Histogram over {n0} planetradier fra exoplanet.eu (periode under {n1} dager), i logaritmiske intervaller fra {n2} til {n3} jordradier, med radiusdalen ved {n4}–{n5} jordradier markert og radien til pi Men c vist.",
  "@js.1qaq2fxvw7f": {
@@ -4676,11 +4761,6 @@
   "x-review": "machine",
   "x-source": "dd3330cc6f"
  },
- "js.1qq8e2zp8tb": "Planetvetting: uendret. Vettinghintene fra formørkelsesdobbeltstjerne-modulen er kun veiledende, ingen vettingbeslutning bruker dem, og de ble ikke evaluert; å bruke dem i vetting krever en egen forhåndsregistrert evaluering.",
- "@js.1qq8e2zp8tb": {
-  "x-review": "machine",
-  "x-source": "6e0c8bb669"
- },
  "js.1qr7pmpqgem": "TIC {n0}, periode {n1} dager, dybde {n2} ppm, SNR {n3}, perioden samsvarer med en kjent TOI, kandidat, ikke bekreftet",
  "@js.1qr7pmpqgem": {
   "x-review": "machine",
@@ -4696,10 +4776,20 @@
   "x-review": "machine",
   "x-source": "42da84247d"
  },
+ "js.1r0q7nepkoi": "kalibrert vekt",
+ "@js.1r0q7nepkoi": {
+  "x-review": "machine",
+  "x-source": "0a6b72180c"
+ },
  "js.1r46y9nqy47": "De tre første trinnene er SetuHQs egne; de tre siste er andre teams registreringer (NASA Exoplanet Archive (TAP): tabellene toi og ps), aldri SetuHQ-resultater. En hul prikk er et trinn uten registrering. TFOPWG: TESS Follow-up Observing Program Working Group.",
  "@js.1r46y9nqy47": {
   "x-review": "machine",
   "x-source": "f16d5662c6"
+ },
+ "js.1r4fphlxxtr": "{n0} oppføringer, funnet mellom <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1}. okt. {n2}, {n3} UTC</time> og <time datetime=\"2026-10-30T00:48:15+00:00\" title=\"2026-10-30T00:48:15+00:00\">{n4}. okt. {n5}, {n6} UTC</time>. <b>{n7} samsvarer med en kjent TOI-periode</b>. Hver oppføring er en kandidat, ubekreftet. Et TOI-samsvar er en arkivsammenligning. Kun arkivverdier. Denne siden hevder ingen deteksjon. Signaler som ikke samsvarer med noen kjent TOI, holdes tilbake for privat gjennomgang; de publiseres først etter gjennomgang og rapportering.",
+ "@js.1r4fphlxxtr": {
+  "x-review": "machine",
+  "x-source": "3f8fc5c963"
  },
  "js.1r7q1f2otd9": "Plansjer: TOI-{n0}",
  "@js.1r7q1f2otd9": {
@@ -4721,11 +4811,6 @@
   "x-review": "machine",
   "x-source": "ea025f8c30"
  },
- "js.1rehm8o052v": "{s0}ing Exoplanet Survey Satellite",
- "@js.1rehm8o052v": {
-  "x-review": "machine",
-  "x-source": "f64ceb6be5"
- },
  "js.1rervwi8ill": "Saksmappen kunne ikke lastes i denne visningen. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-fa3483ce6f83-001\">Åpne den på en egen side.</a>",
  "@js.1rervwi8ill": {
   "x-review": "machine",
@@ -4746,6 +4831,11 @@
   "x-review": "machine",
   "x-source": "7006d67bfe"
  },
+ "js.1rhozdhu0s6": "{n0} Eri",
+ "@js.1rhozdhu0s6": {
+  "x-review": "machine",
+  "x-source": "cd858f1566"
+ },
  "js.1rhxz6cr57l": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">3g. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Dipp ved BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markert av {n5} granskere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.1rhxz6cr57l": {
   "x-review": "machine",
@@ -4761,10 +4851,10 @@
   "x-review": "machine",
   "x-source": "f857503a68"
  },
- "js.1rk4ie4w0t9": "Kunstnerisk framstilling: det varme kjempeutseendet, for radius {n0} R⊕ eller mer, Teq {n1} til {n2} K: rustfargede skybånd. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.1rk4ie4w0t9": {
+ "js.1rncc50vod0": "Kom i gang",
+ "@js.1rncc50vod0": {
   "x-review": "machine",
-  "x-source": "8aeca1d984"
+  "x-source": "61e8d44ad4"
  },
  "js.1rniehwfgn9": "Wolszczan &amp; Frail",
  "@js.1rniehwfgn9": {
@@ -4790,11 +4880,6 @@
  "@js.1rrhtxb4sk8": {
   "x-review": "machine",
   "x-source": "1b1094a886"
- },
- "js.1rsb50hzlde": "Kunstnerisk framstilling: det varme neptunutseendet, for radius {n0} til {n1} R⊕, Teq {n2} K eller mer: oransjegrått dis. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.1rsb50hzlde": {
-  "x-review": "machine",
-  "x-source": "fd1e7e0678"
  },
  "js.1rsch1xr0lt": "Transitt · {n0} d",
  "@js.1rsch1xr0lt": {
@@ -4826,15 +4911,15 @@
   "x-review": "machine",
   "x-source": "a1c625de42"
  },
+ "js.1rwj8ey7hae": "Kepler-{n0} · {n1} K",
+ "@js.1rwj8ey7hae": {
+  "x-review": "machine",
+  "x-source": "eb98d7eea9"
+ },
  "js.1rxrndp257b": "Blokkering av stjernelys, i fire scener. En sollignende okkultør (en illustrasjon basert på SOHO LASCO); en koronagrafmaske som glir over en stjerne slik at gjenskinnet faller sammen til gjenværende flekker og de fire HR {n0}-planetene vises i skjematiske baner; en stjerneskjerm som flyr langt foran et teleskop, ikke i målestokk; og et nullings-interferometer med to teleskoper der den mørke interferensstripen kansellerer stjernen.",
  "@js.1rxrndp257b": {
   "x-review": "machine",
   "x-source": "cce2248704"
- },
- "js.1ryrg8dmxoz": "<b>ν₄ asymmetrisk bøyning (tre)</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · utenfor {n2}–{n3} µm-vinduet til {s0}",
- "@js.1ryrg8dmxoz": {
-  "x-review": "machine",
-  "x-source": "b2cd029465"
  },
  "js.1s3bgxbwlkh": "Alle",
  "@js.1s3bgxbwlkh": {
@@ -4846,10 +4931,10 @@
   "x-review": "machine",
   "x-source": "95206d6b8a"
  },
- "js.1sdkh60m4rv": "{s0}, dipp {n0}",
- "@js.1sdkh60m4rv": {
+ "js.1s8dkmip4e3": "cheops",
+ "@js.1s8dkmip4e3": {
   "x-review": "machine",
-  "x-source": "335e296600"
+  "x-source": "0eeb4fd483"
  },
  "js.1sg8cj3fgn0": "Fem måter å etterligne en planet på, hver med sin himmelgeometri på et rutenett av TESS-piksler ({n0} buesekunder hver, tegnet i målestokk) og lyskurven den gir: en formørkende dobbeltstjerne med en V-formet streifende formørkelse; en formørkende dobbeltstjerne i bakgrunnen, fortynnet av lyset fra målet; et hierarkisk trippelsystem; odde og jevne formørkelser med ulik dybde når perioden er halvparten av den sanne; og et instrumentelt sprang, for eksempel en momentumdump.",
  "@js.1sg8cj3fgn0": {
@@ -4906,10 +4991,20 @@
   "x-review": "machine",
   "x-source": "f51d196f08"
  },
+ "js.1szdkpleyt1": "exoplanet.eu oppfører den som «Publisert i en fagfellevurdert artikkel», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som TOI-{n4} b.",
+ "@js.1szdkpleyt1": {
+  "x-review": "machine",
+  "x-source": "923f1f0f7f"
+ },
  "js.1t1emvbqy9r": "{n0} · Rens &amp; fjern trend",
  "@js.1t1emvbqy9r": {
   "x-review": "machine",
   "x-source": "2d4dfc6ae5"
+ },
+ "js.1t30u96twwz": "signaler",
+ "@js.1t30u96twwz": {
+  "x-review": "machine",
+  "x-source": "c1d2c1df9e"
  },
  "js.1t47rnb1yty": "Statistisk validering i stor skala.",
  "@js.1t47rnb1yty": {
@@ -4921,10 +5016,20 @@
   "x-review": "machine",
   "x-source": "ea298d3769"
  },
+ "js.1takbn7z5i5": "pi Men b ›",
+ "@js.1takbn7z5i5": {
+  "x-review": "machine",
+  "x-source": "095aa55e59"
+ },
  "js.1tanbk5cfbb": "{n0} {n1} / {n2} dex",
  "@js.1tanbk5cfbb": {
   "x-review": "machine",
   "x-source": "6d564d1ad1"
+ },
+ "js.1tbllix94q1": "Molekyler",
+ "@js.1tbllix94q1": {
+  "x-review": "machine",
+  "x-source": "bfdd800ffc"
  },
  "js.1tbul4ef62r": "{n0} planeter i exoplanet.eu",
  "@js.1tbul4ef62r": {
@@ -4976,11 +5081,6 @@
   "x-review": "machine",
   "x-source": "9c116a7ee6"
  },
- "js.1tpmj2xl8sk": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · avvist ved vetting, ikke en kandidat",
- "@js.1tpmj2xl8sk": {
-  "x-review": "machine",
-  "x-source": "77664f0d7c"
- },
  "js.1trrebrltbg": "Tegnet kun ut fra lagrede verdier (exoplanet.eu). Ikke lagret: stjernetemperatur, stjerneradius; de delene er illustrative og er merket slik på tegningen. Stjernefarge: Solens, siden temperaturen ikke er lagret.",
  "@js.1trrebrltbg": {
   "x-review": "machine",
@@ -5011,25 +5111,20 @@
   "x-review": "machine",
   "x-source": "9ee6b5ae54"
  },
+ "js.1u1inxhnivr": "Falske positiver",
+ "@js.1u1inxhnivr": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
  "js.1u2k1jai0us": "Én lyskurve, tre perioder. Den viser hva søket gjør når en stjerne har mer enn én planet, og hvilke av dem et {n0}-dagers objekt kan romme.",
  "@js.1u2k1jai0us": {
   "x-review": "machine",
   "x-source": "ac34f619e1"
  },
- "js.1u2q9tbst8u": "Kunstnerisk framstilling: det varme hylsterutseendet, for radius {n0} til {n1} R⊕, Teq {n2} K eller mer: brunlig dis og en varm rand. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.1u2q9tbst8u": {
-  "x-review": "machine",
-  "x-source": "80eb7867e5"
- },
  "js.1u4yg0u12mv": "exoplanet.eu lagrer ingen DOI eller referanse til oppdagelsesartikkelen, så ingen vises.",
  "@js.1u4yg0u12mv": {
   "x-review": "machine",
   "x-source": "02110b7c79"
- },
- "js.1u50uo7y5g3": "<b>ν₁ symmetrisk strekk</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · utenfor {n2}–{n3} µm-vinduet til {s0}",
- "@js.1u50uo7y5g3": {
-  "x-review": "machine",
-  "x-source": "84c034c9f3"
  },
  "js.1u59hy4lwt0": "CO₂ <span>Karbondioksid</span>",
  "@js.1u59hy4lwt0": {
@@ -5051,11 +5146,6 @@
   "x-review": "machine",
   "x-source": "27b99ccdde"
  },
- "js.1ua3tz5fxe0": "Hashen er en attestasjon: de tilbakeholdte etikettene er offentlige i repositoriet, så resultattavlen kan ikke bevise at de ikke ble lest, og en metodes godkjenningsvurderinger og kontrollhendelser er dens egen rapport. Lokkelyskurver holdt av vedlikeholderne og prospektiv poengsetting på TOI-er som ennå ikke er klassifisert, ville tette disse hullene; ingen av delene finnes ennå.",
- "@js.1ua3tz5fxe0": {
-  "x-review": "machine",
-  "x-source": "9f55ae4547"
- },
  "js.1uaz0vrw4ly": "minste felt ved kilden, på stjernen (Pineda &amp; Villadsen {n0}-bånd) [beregnet]",
  "@js.1uaz0vrw4ly": {
   "x-review": "machine",
@@ -5065,11 +5155,6 @@
  "@js.1ucljc3glwo": {
   "x-review": "machine",
   "x-source": "5e270de316"
- },
- "js.1uekblhme1p": "{n0} ppm · {n1} t · alle {n2} vurderere · kandidat, ubekreftet",
- "@js.1uekblhme1p": {
-  "x-review": "machine",
-  "x-source": "73ac412687"
  },
  "js.1ug611r5qd8": "CH₄ <span>Metan</span>",
  "@js.1ug611r5qd8": {
@@ -5106,6 +5191,11 @@
   "x-review": "machine",
   "x-source": "263beb630a"
  },
+ "js.1utmguftbbw": "TESS-sektorer {n0}–{n1}. Feed-oppføring {n2} for denne stjernen (lagret id <span class=\"mono\">tess-7b97e468b60b-{n3}</span>). Et TOI-samsvar sammenligner en lagret periode med arkivverdier. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
+ "@js.1utmguftbbw": {
+  "x-review": "machine",
+  "x-source": "965b94f3d8"
+ },
  "js.1uugayqarlm": "Oppdragsdesignet til TESS, som begynte å observere i {n0}.",
  "@js.1uugayqarlm": {
   "x-review": "machine",
@@ -5115,11 +5205,6 @@
  "@js.1uwk3dmvuym": {
   "x-review": "machine",
   "x-source": "e7e8d3a00f"
- },
- "js.1v15owfc4cr": "<b>ν₃ asymmetrisk strekk (to)</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · ikke tegnet i {s0}",
- "@js.1v15owfc4cr": {
-  "x-review": "machine",
-  "x-source": "451f9e06fd"
  },
  "js.1v2k5bzmb2a": "{n0} ± {n1} ppm",
  "@js.1v2k5bzmb2a": {
@@ -5131,25 +5216,25 @@
   "x-review": "machine",
   "x-source": "c6c35d2486"
  },
- "js.1va1yqqf83l": "En planet med under jordmasse rundt {s0}, en av Solens nærmeste naboer.",
- "@js.1va1yqqf83l": {
+ "js.1vf8wchy7cx": "Utbrudd",
+ "@js.1vf8wchy7cx": {
   "x-review": "machine",
-  "x-source": "0c6a1cbb68"
+  "x-source": "bdad8ef87b"
  },
  "js.1vn1k0hsfr": "Katalog",
  "@js.1vn1k0hsfr": {
   "x-review": "machine",
   "x-source": "1034513950"
  },
- "js.1vo3z8v0kr3": "{n0} per {n1} stjernesektorer <span class=\"muted\">({n2} over {n3}; {n4} vurderte dipper før strømmens regel)</span>",
- "@js.1vo3z8v0kr3": {
-  "x-review": "machine",
-  "x-source": "0cf0192aad"
- },
  "js.1vs3qyoxlvt": "Også kjent som 2MASS J19021775+{n0}, KIC {n1}, KOI-{n2}, WISE J190217.77+{n3}.",
  "@js.1vs3qyoxlvt": {
   "x-review": "machine",
   "x-source": "a3072cbabc"
+ },
+ "js.1vseruufigw": "tau Cet",
+ "@js.1vseruufigw": {
+  "x-review": "machine",
+  "x-source": "d76cfc3187"
  },
  "js.1vtn0jl0t29": "Åpne hele siden",
  "@js.1vtn0jl0t29": {
@@ -5271,6 +5356,11 @@
   "x-review": "machine",
   "x-source": "6b412a8780"
  },
+ "js.1wqsruj6sy4": "Teegarden's b",
+ "@js.1wqsruj6sy4": {
+  "x-review": "machine",
+  "x-source": "88f6565053"
+ },
  "js.1wr1t67roz9": "Viste at kandidater i flerplanetsystemer nesten alltid er ekte, og validerte {n0} planeter i {n1} systemer.",
  "@js.1wr1t67roz9": {
   "x-review": "machine",
@@ -5331,6 +5421,11 @@
   "x-review": "machine",
   "x-source": "01d784a95a"
  },
+ "js.1xjf25ez4ea": "Astrometri",
+ "@js.1xjf25ez4ea": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
  "js.1xjgislb1gr": "{n0} (D-linjer, {n1} og {n2} nm)",
  "@js.1xjgislb1gr": {
   "x-review": "machine",
@@ -5340,6 +5435,11 @@
  "@js.1xjihe7xm1n": {
   "x-review": "machine",
   "x-source": "68a749778a"
+ },
+ "js.1xjlu6r0tws": "Planetkandidat",
+ "@js.1xjlu6r0tws": {
+  "x-review": "machine",
+  "x-source": "f40d9fd559"
  },
  "js.1xludg6i4sq": "Også kjent som EPIC {n0}.",
  "@js.1xludg6i4sq": {
@@ -5356,11 +5456,6 @@
   "x-review": "machine",
   "x-source": "d17f5d38ec"
  },
- "js.1xqmq7gc51u": "Falske alarmer på omstokkede lyskurver på strømmens nivå (dens fulle regel, FAP &lt; {n0})",
- "@js.1xqmq7gc51u": {
-  "x-review": "machine",
-  "x-source": "31b60ba44a"
- },
  "js.1xs9ztk2l36": "Galaksetur, stopp {n0} ›",
  "@js.1xs9ztk2l36": {
   "x-review": "machine",
@@ -5376,15 +5471,15 @@
   "x-review": "machine",
   "x-source": "43c265eda9"
  },
- "js.1xy8j3ygiad": "Kunstnerisk framstilling: det kjølige hylsterutseendet, for radius {n0} til {n1} R⊕, Teq under {n2} K: blek blåhvit dis, svake bånd. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.1xy8j3ygiad": {
-  "x-review": "machine",
-  "x-source": "7be8bc6ed2"
- },
  "js.1y1gk0z56gg": "dipper på efemeriden, etter vurderingsutfall",
  "@js.1y1gk0z56gg": {
   "x-review": "machine",
   "x-source": "4f0bf37c8c"
+ },
+ "js.1y218zo6cqq": "<i style=\"background:#30D158\"></i>Avbildning <span class=\"mono\">{n0}</span>",
+ "@js.1y218zo6cqq": {
+  "x-review": "machine",
+  "x-source": "d614bb1db6"
  },
  "js.1y39iwfnbwn": "Kjøring tess-hd-{n0}-s4 (runs/tess-hd-{n1}-s4), opprettet {n2}-{n3}-22T18:{n4}+{n5}, konfigurasjon sha256 e21c63a794b2aeb3…",
  "@js.1y39iwfnbwn": {
@@ -5436,6 +5531,11 @@
   "x-review": "machine",
   "x-source": "519941f399"
  },
+ "js.1yt1laezm0g": "Kepler-{n0} d",
+ "@js.1yt1laezm0g": {
+  "x-review": "machine",
+  "x-source": "5c8bf604a0"
+ },
  "js.1ytljjhkuxb": "Tegnet kun fra lagrede verdier (exoplanet.eu).",
  "@js.1ytljjhkuxb": {
   "x-review": "machine",
@@ -5486,11 +5586,6 @@
   "x-review": "machine",
   "x-source": "9fdea8a620"
  },
- "js.1z0tecbo6q6": "Kunstnerisk framstilling: det ultravarme kjempeutseendet, for radius {n0} R⊕ eller mer, Teq {n1} K eller mer: mørk, lav kontrast og glødende på dagsiden; ingen bånd. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.1z0tecbo6q6": {
-  "x-review": "machine",
-  "x-source": "236fde016b"
- },
  "js.1z3sctga608": "To korte dipper med flat bunn på omtrent {n0} ppm ved ~{n1} og ~{n2} (avstand ~{n3} d) har samsvarende dybde og varighet, som forventet for en periodisk transitt. Ingen av dem viser V-form, sekundærformørkelse, rampe eller trinn, men dataene rundt den andre dippen er",
  "@js.1z3sctga608": {
   "x-review": "machine",
@@ -5506,10 +5601,10 @@
   "x-review": "machine",
   "x-source": "7d9eb7acb1"
  },
- "js.1z5yw0q2c2w": "Forsidens transitt",
- "@js.1z5yw0q2c2w": {
+ "js.1z5qoomb94b": "YZ Cet b",
+ "@js.1z5qoomb94b": {
   "x-review": "machine",
-  "x-source": "be1b030722"
+  "x-source": "fca0c283f7"
  },
  "js.1z8tasie2wo": "Probe · Følsom <span class=\"mono idtag\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1z8tasie2wo": {
@@ -5591,11 +5686,6 @@
   "x-review": "machine",
   "x-source": "1c3db44c80"
  },
- "js.2050o3pgkvz": "Kilde: TESS Science Office (MIT), offentlige sektorsider på tess.mit.edu/observations/: https://tess.mit.edu/observations/, plan lagret {n0}-{n1}-{n2}.",
- "@js.2050o3pgkvz": {
-  "x-review": "machine",
-  "x-source": "e758c6851a"
- },
  "js.206lvynaoyq": "stjernens bevegelse overdrevet ×{n0}; sann a★ = {n1} km ≈ {n2}.1e-{n3} R★",
  "@js.206lvynaoyq": {
   "x-review": "machine",
@@ -5641,11 +5731,6 @@
   "x-review": "machine",
   "x-source": "f77390e131"
  },
- "js.20iu1oobrgo": "Kunstnerisk framstilling: det tvetydige utseendet, for ingen radius, masse {n0} til {n1} M⊕, hvilken som helst Teq: en nøytral gråblå skive og en myk kant: stein eller gasshylster, ukjent. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.20iu1oobrgo": {
-  "x-review": "machine",
-  "x-source": "b435c16b54"
- },
  "js.20jq5c41tkh": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">3j. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Dipp ved BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markert av {n5} granskere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.20jq5c41tkh": {
   "x-review": "machine",
@@ -5655,6 +5740,11 @@
  "@js.20l5be8crj": {
   "x-review": "machine",
   "x-source": "ab9c1a76a4"
+ },
+ "js.20lcnwrpq7u": "Transitt <span class=\"mono\" data-cmn=\"transit\">{n0}</span>",
+ "@js.20lcnwrpq7u": {
+  "x-review": "machine",
+  "x-source": "5b3df4c9fd"
  },
  "js.20lxdwfofp9": "denne kjøringen · flagget for gjennomgang · ingen periode",
  "@js.20lxdwfofp9": {
@@ -5680,6 +5770,11 @@
  "@js.20q2sjzozas": {
   "x-review": "machine",
   "x-source": "7fb66e3610"
+ },
+ "js.20rbpsp5ug3": "<i aria-hidden=\"true\"></i>Uklassifisert <span class=\"mono\">{n0}</span>",
+ "@js.20rbpsp5ug3": {
+  "x-review": "machine",
+  "x-source": "8de4c52f48"
  },
  "js.20rkrumvokl": "Sentinel-promptversjon",
  "@js.20rkrumvokl": {
@@ -5731,11 +5826,6 @@
   "x-review": "machine",
   "x-source": "b2f84631c5"
  },
- "js.217aul87gdd": "<b>N–O-strekk, hovedsakelig</b> · {n0} µm · infrarød-aktiv · tegnet ×{n1} · utenfor vinduet {n2}–{n3} µm i {s0}",
- "@js.217aul87gdd": {
-  "x-review": "machine",
-  "x-source": "cea6ecc8bf"
- },
  "js.217mi4h3ox4": "Bare en dipp som besto kontrollen er en kandidat, og den forblir ubekreftet; en avvist dipp er ikke det. Kun lagrede verdier: punktene, markeringene, poengsummene, flaggene og ordene er slik kjøringen lagret dem.",
  "@js.217mi4h3ox4": {
   "x-review": "machine",
@@ -5765,6 +5855,11 @@
  "@js.21hezc7ksw1": {
   "x-review": "machine",
   "x-source": "508aa5b9d1"
+ },
+ "js.21i2i0paoel": "exoplanet.eu oppfører den som «Kunngjort på et nettsted», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som 2MASS J19213888+{n4} b, K01629.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J192138.89+{n8} b.",
+ "@js.21i2i0paoel": {
+  "x-review": "machine",
+  "x-source": "8c0bd3393c"
  },
  "js.21katdb2hhv": "{n0} planeter i exoplanet.eu · lagret type M8V · klasse M fra Teff (nærmest M8V)",
  "@js.21katdb2hhv": {
@@ -5826,11 +5921,6 @@
   "x-review": "machine",
   "x-source": "752ea43d7e"
  },
- "js.21ylkyb62a9": "TIC {n0} · kandidat, ubekreftet",
- "@js.21ylkyb62a9": {
-  "x-review": "machine",
-  "x-source": "7cf98eee62"
- },
  "js.222kde6gcmc": "Tegnet kun fra lagrede verdier (exoplanet.eu). Ikke lagret: planetradius; de delene er illustrative og sier det på tegningen. Ved den lagrede inklinasjonen går denne planeten ikke i transitt; visningen viser en transitt for å forklare metoden.",
  "@js.222kde6gcmc": {
   "x-review": "machine",
@@ -5840,6 +5930,11 @@
  "@js.223085agofs": {
   "x-review": "machine",
   "x-source": "606268600d"
+ },
+ "js.225qy6re67g": "Kepler-{n0} c",
+ "@js.225qy6re67g": {
+  "x-review": "machine",
+  "x-source": "d1e5b9aa4a"
  },
  "js.2274ir70e91": "Avvist av kontrollen",
  "@js.2274ir70e91": {
@@ -5896,6 +5991,11 @@
   "x-review": "machine",
   "x-source": "f16b203139"
  },
+ "js.22noo09k9nh": "<i style=\"background:#7D7AFF\"></i>Timing <span class=\"mono\">{n0}</span>",
+ "@js.22noo09k9nh": {
+  "x-review": "machine",
+  "x-source": "79248df554"
+ },
  "js.22qe07fgd2k": "hele sektoren · periode {n0} d · semiamplitude {n1} ppm",
  "@js.22qe07fgd2k": {
   "x-review": "machine",
@@ -5940,6 +6040,11 @@
  "@js.2309k4jhst": {
   "x-review": "machine",
   "x-source": "99ec08944c"
+ },
+ "js.231hbrwsvbe": "Utbrudd",
+ "@js.231hbrwsvbe": {
+  "x-review": "machine",
+  "x-source": "38e9b86f2b"
  },
  "js.232hnla7mfp": "BTJD {n0} · {n1} ppm · {n2} timer · SNR {n3} · kandidat, ubekreftet",
  "@js.232hnla7mfp": {
@@ -6011,6 +6116,11 @@
   "x-review": "machine",
   "x-source": "f7b940e003"
  },
+ "js.23gvqgvfk3h": "eps Eridani",
+ "@js.23gvqgvfk3h": {
+  "x-review": "machine",
+  "x-source": "9a7f2f950b"
+ },
  "js.23iejmgi1b9": "<span class=\"word cand\">kandidat</span><span class=\"word s-pass\">bestod kontrollen</span><b class=\"fig\">1d. pi Men, dipp {n0}.</b> <span class=\"sid mono\">lagret id tess-04b815001aa6-{n1}.</span> Dipp ved BTJD {n2}, {n3} ppm, {n4} h, SNR {n5}. Konsensusintervall BTJD {n6} til {n7}. Markert av {n8} av {n9} vurderere ({n10} av {n11} Sentinels, {n12} av {n13} Probes). Ligger på en BLS-periode på {n14} dager (t0 BTJD {n15}). Bestod kontrollen. Arkiv: forenlig med pi Men c: ΔP {n16}%, tidsforskyvning fra valideringsnotatet: {n17} min i gjennomsnitt over {n18} epoker. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.23iejmgi1b9": {
   "x-review": "machine",
@@ -6061,6 +6171,11 @@
   "x-review": "machine",
   "x-source": "2c5e82e81c"
  },
+ "js.248fckis1nx": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">kjøring tess-pi-men-s1 · {n1} oppføringer</span>",
+ "@js.248fckis1nx": {
+  "x-review": "machine",
+  "x-source": "91c42c8548"
+ },
  "js.249yvv2lisi": "Saksmappen kunne ikke lastes i denne visningen. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-4b369d3c6f09-004\">Åpne den på en egen side.</a>",
  "@js.249yvv2lisi": {
   "x-review": "machine",
@@ -6085,16 +6200,6 @@
  "@js.24fb2cdopd2": {
   "x-review": "machine",
   "x-source": "f76311c5f2"
- },
- "js.24fnxph6nhs": "NASA Exoplanet Archive, tabell ps (default_flag = {n0}), slik det er registrert i docs/results/pi_men_validation.md av scripts/validate_known_planets.py (direkte arkivspørring, commit 0f6dbdc). Bare {s0} er registrert der, så bare {s1} er oppført; midttransittiden ble ikke registrert, så ingen forskyvning per epoke beregnes her; valideringsnotatets gjennomsnittlige tidsforskyvning ({n1} min over {n2} av {n3} epoker) siteres i stedet. Erstatt den med utdata fra 'setuhq crossmatch runs/tess-pi-men-s1' når arkivet svarer., registrert <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4}. okt. {n5}, {n6} UTC</time> (commit 0f6dbdc) i docs/results/pi_men_crossmatch.json; denne kjøringens egen krysskobling ble ikke kjørt (lagret feil, ordrett: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
- "@js.24fnxph6nhs": {
-  "x-review": "machine",
-  "x-source": "2709781e4a"
- },
- "js.24gwd0vxjg3": "<b>Lisens.</b> CHEOPS-data, og resultater avledet fra dem, forblir underlagt ESAs vilkår: data i ESA Space Science Archives distribueres under lisensen CC BY-NC {n0} IGO, og all kommersiell bruk, inkludert bruk som indirekte gir økonomisk gevinst, krever ESAs forhåndsgodkjenning (data.licences@esa.int). SetuHQs kommersielle lisens og SetuHQ Pro dekker SetuHQs kode og tjenester, ikke CHEOPS-data eller CHEOPS-avledede resultater.",
- "@js.24gwd0vxjg3": {
-  "x-review": "machine",
-  "x-source": "027b9f1def"
  },
  "js.24jrww0gdzl": "Kunstnerisk fremstilling · stein, ultravarm · Radius {n0} R⊕ (exoplanet.eu) er under {n1} R⊕, så den tegnes som stein. Teq {n2} K, beregnet fra a, R★ og Teff, ligger i det ultravarme båndet. Sammensetningen er ikke målt. Kilde: exoplanet.eu, hentet {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Slik tegnes bildene ›</a>",
  "@js.24jrww0gdzl": {
@@ -6226,11 +6331,6 @@
   "x-review": "machine",
   "x-source": "f3d6bee517"
  },
- "js.25v5j8df6ue": "Startverdier: N★ = {n0} M-dverger som er lyse nok for JWST, F_Q · F_HZ = {n1}, F_O = {n2}, F_L = {n3}, F_S = {n4}, som gir N ≈ {n5}. De kommer fra sekundære sammendrag av Seagers foredrag og artikkel og er ikke kontrollert mot artikkelen her; F_L = {n6} er en antakelse, ikke en måling. Andelen i den beboelige sonen lenker til figurene i kapitlet {s0}.",
- "@js.25v5j8df6ue": {
-  "x-review": "machine",
-  "x-source": "0c766c3029"
- },
  "js.25vec9roei3": "tess-f28323a4aef6-{n0} · {s0} · kjent planet",
  "@js.25vec9roei3": {
   "x-review": "machine",
@@ -6246,10 +6346,10 @@
   "x-review": "machine",
   "x-source": "8e26be0f72"
  },
- "js.2688tn5ytet": "{n0} lagrede lysstyrkemålinger over {n1} dager. Panelet, {n2} Sentinels og {n3} Probes (ingen mennesker), markerte {n4} dypp, som kontrollkoden grupperte i {n5} signaler: {n6} besto, {n7} flagget, {n8} avvist. Hvert dypp er denne pipelinens egen kandidat og er ikke bekreftet som en uavhengig deteksjon; arkivtreffet sier at planeten allerede er kjent, ikke at denne kjøringen bekreftet den. Den lagrede arkivkryssmatchingen (repositoriets lagrede kopi) finner at hovedsignalet er forenlig med pi Men c, en publisert planet: en kjent planet, ikke en oppdagelse. Bare arkivverdier. Denne siden hevder ingen deteksjon.",
- "@js.2688tn5ytet": {
+ "js.267fwx4rrxg": "katalog",
+ "@js.267fwx4rrxg": {
   "x-review": "machine",
-  "x-source": "737d181458"
+  "x-source": "d2504e52b8"
  },
  "js.269wyn7yehy": "Det første fotokjemiske produktet sett i en eksoplanetatmosfære: stjernelys som driver kjemi.",
  "@js.269wyn7yehy": {
@@ -6281,6 +6381,16 @@
   "x-review": "machine",
   "x-source": "ad1170b8cc"
  },
+ "js.26jkejmj23b": "Avbildning <span class=\"mono\" data-cmn=\"imaging\">{n0}</span>",
+ "@js.26jkejmj23b": {
+  "x-review": "machine",
+  "x-source": "d8c9828b8c"
+ },
+ "js.26jwv5q9ef3": "Formørkelsesdobbeltstjerne",
+ "@js.26jwv5q9ef3": {
+  "x-review": "machine",
+  "x-source": "8df8a39f8e"
+ },
  "js.26lvjxq29mz": "Skjul toppkandidater",
  "@js.26lvjxq29mz": {
   "x-review": "machine",
@@ -6301,15 +6411,25 @@
   "x-review": "machine",
   "x-source": "eaacfcf2d5"
  },
+ "js.26pv2ld5al": "YZ Cet d",
+ "@js.26pv2ld5al": {
+  "x-review": "machine",
+  "x-source": "92120cfb4f"
+ },
+ "js.26pzvkix2mc": "Stjerneside ›",
+ "@js.26pzvkix2mc": {
+  "x-review": "machine",
+  "x-source": "e1fbb1c217"
+ },
  "js.26sdy1tcm5m": "Saksmappen kunne ikke lastes i denne visningen. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-005\">Åpne den på egen side.</a>",
  "@js.26sdy1tcm5m": {
   "x-review": "machine",
   "x-source": "5d3d4fce99"
  },
- "js.26svlut4n1y": "SetuHQ leser TESS-lyskurver: én stjerne om gangen, omtrent {n0} dager per sektor. <a href=\"/explore/galaxy/?layers=tess\">Se TESS' himmeldekning ›</a>",
- "@js.26svlut4n1y": {
+ "js.26seob0sso6": "exoplanet.eu oppfører den som «Publisert i en fagfellevurdert artikkel», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som EPIC {n4}.",
+ "@js.26seob0sso6": {
   "x-review": "machine",
-  "x-source": "7675cbd084"
+  "x-source": "f2c44d90f7"
  },
  "js.26upx7lksz5": "TFOPWG-disposisjon CP (en planet, ifølge oppfølgingsteamene), oppdatert {n0}-{n1}-{n2}",
  "@js.26upx7lksz5": {
@@ -6331,11 +6451,6 @@
   "x-review": "machine",
   "x-source": "5332f7c6da"
  },
- "js.26zs3bh9z5t": "høy: to eller flere instrumentelle tegn; middels: ett; lav: bare panelets begrunnelse.",
- "@js.26zs3bh9z5t": {
-  "x-review": "machine",
-  "x-source": "eaf598efdb"
- },
  "js.27070gzrt8g": "numpy",
  "@js.27070gzrt8g": {
   "x-review": "machine",
@@ -6356,20 +6471,10 @@
   "x-review": "machine",
   "x-source": "bfeaf40123"
  },
- "js.275p8l49gz9": "Oppdagelsesmetode",
- "@js.275p8l49gz9": {
-  "x-review": "machine",
-  "x-source": "7f31ff7ee3"
- },
  "js.27d1pzwqqg5": "{n0} dypp ({n1} kandidater, {n2} flagget). Hvert dypp er navngitt etter kontrollutfallet: en kandidat besto kontrollen og er ikke bekreftet; et flagget dypp er åpent; et avvist dypp er ikke en kandidat. Avviste og flaggede dypp beholdes med vilje, slik at en leser kan se hva kontrollen avgjorde og hvorfor. Hvert bilde er det blindkodede plottet vurdererne så, byte for byte.",
  "@js.27d1pzwqqg5": {
   "x-review": "machine",
   "x-source": "f52c6bc4a9"
- },
- "js.27eugex8tue": "Kunstnerisk framstilling: neptune-warm-utseendet, for radius {n0} til {n1} R⊕, Teq {n2} til {n3} K: blågrønt dis. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.27eugex8tue": {
-  "x-review": "machine",
-  "x-source": "2d58d10911"
  },
  "js.27fyvwqvgk2": "id tic197575514-s1-dip-{n0} · objekt tess-b9ee497ace57<br>lyskurve sha256 6cdb3d033119539b3dd9a07e89379098ee77c137584a467d88efe3b74e7c0913<br>kode … · konfig a9d34c7079563183…<br>kilde sector_0001.json.gz",
  "@js.27fyvwqvgk2": {
@@ -6390,6 +6495,11 @@
  "@js.27jlutunzon": {
   "x-review": "machine",
   "x-source": "de7cd804ae"
+ },
+ "js.27kx8tn6apn": "Timing og fase",
+ "@js.27kx8tn6apn": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
  },
  "js.27n9asbnx55": "Ordne toppkandidater",
  "@js.27n9asbnx55": {
@@ -6430,6 +6540,11 @@
  "@js.27y132h50m1": {
   "x-review": "machine",
   "x-source": "734a43293e"
+ },
+ "js.280bcq6hfxu": "Perioder for Kepler-{n0} b og c",
+ "@js.280bcq6hfxu": {
+  "x-review": "machine",
+  "x-source": "de18f16db8"
  },
  "js.283unm3lnxq": "Sentinel · Skeptiker <span class=\"mono\">claude-skeptic</span>",
  "@js.283unm3lnxq": {
@@ -6475,11 +6590,6 @@
  "@js.28hrtzpigjb": {
   "x-review": "machine",
   "x-source": "1f2470675c"
- },
- "js.28ictyar11j": "En læringsøvelse, ikke et bidrag til vitenskapen. Svarene dine blir i denne nettleseren og blir ikke samlet inn eller sendt noe sted; dyppene er lagrede dypp fra SetuHQs eksempelkjøringer, allerede avgjort av kontrollen.",
- "@js.28ictyar11j": {
-  "x-review": "machine",
-  "x-source": "5a6ae14a11"
  },
  "js.28iqhboa34b": "Et molekyl med N atomer har 3N − {n0} måter å vibrere på (3N − {n1} hvis det er rett): vann har tre, karbondioksid fire (bøyningen forekommer to ganger, vinkelrett på hverandre), metan ni. En modus absorberer infrarødt lys bare hvis den endrer molekylets dipol. Derfor er CO₂s symmetriske strekk ({n2} µm), O₂s strekk og to av metans fire grunnmoduser stille i infrarødt. Båndene modusene gir, er de som kapitlet Lese atmosfærer markerer: vanns to strekk ved {n3} og {n4} µm gir {n5} µm-båndet, metans ν₃ gir {n6} µm-båndet, CO₂s asymmetriske strekk gir {n7} µm-båndet, og COs strekk gir {n8} µm-båndet.",
  "@js.28iqhboa34b": {
@@ -6696,6 +6806,11 @@
   "x-review": "machine",
   "x-source": "258011d66c"
  },
+ "js.2a56wvwnc5o": "HN Lib",
+ "@js.2a56wvwnc5o": {
+  "x-review": "machine",
+  "x-source": "6993fd96af"
+ },
  "js.2a9g9u8ogm5": "Felt ved kilden",
  "@js.2a9g9u8ogm5": {
   "x-review": "machine",
@@ -6716,6 +6831,11 @@
   "x-review": "machine",
   "x-source": "50621e7fe0"
  },
+ "js.2ad5lvvd821": "Gaia-{n0} b ›",
+ "@js.2ad5lvvd821": {
+  "x-review": "machine",
+  "x-source": "fb287f3d63"
+ },
  "js.2ahfv5ecid": "id tic177082055-s1-dip-{n0} · objekt tess-9ff47a35552d<br>lyskurve sha256 ad0dc350aa11e6edee9ef4c25cad43f094f52a98ab9010ca3c0ec0aaadafe861<br>kode … · konfig a9d34c7079563183…<br>kilde sector_0001.json.gz",
  "@js.2ahfv5ecid": {
   "x-review": "machine",
@@ -6731,11 +6851,6 @@
   "x-review": "machine",
   "x-source": "88117143a4"
  },
- "js.2aj3droma9q": "katalogen og siterte artikler, tall i tabellen i hvert kapittel",
- "@js.2aj3droma9q": {
-  "x-review": "machine",
-  "x-source": "3cf2224205"
- },
  "js.2apzy7fqrqe": "Arkivsammenligning: ingen arkivplanet innenfor toleransen. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.2apzy7fqrqe": {
   "x-review": "machine",
@@ -6750,11 +6865,6 @@
  "@js.2avziyt7hbv": {
   "x-review": "machine",
   "x-source": "5eab0aea69"
- },
- "js.2b0kq1u0yok": "<b>ν-strekk</b> · {n0} µm · infrarødt-aktiv · tegnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">{n2} µm-båndet i Lese atmosfærer ›</a>",
- "@js.2b0kq1u0yok": {
-  "x-review": "machine",
-  "x-source": "9f2fb710c1"
  },
  "js.2b1w1bhtwi6": "Skalahøyde for WASP-{n0} b (μ = {n1})",
  "@js.2b1w1bhtwi6": {
@@ -6831,6 +6941,11 @@
   "x-review": "machine",
   "x-source": "1dfa560d9d"
  },
+ "js.2brjxhf24py": "{n0} Eri d",
+ "@js.2brjxhf24py": {
+  "x-review": "machine",
+  "x-source": "3f3cad2fcc"
+ },
  "js.2btmnnqnpty": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">3k. <span class=\"mono\">tess-03a9e901682f-{n0}</span>.</b> Dipp ved BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markert av {n5} granskere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.2btmnnqnpty": {
   "x-review": "machine",
@@ -6841,10 +6956,20 @@
   "x-review": "machine",
   "x-source": "18fccc4254"
  },
+ "js.2c181tpjjvc": "Luyten's Star b",
+ "@js.2c181tpjjvc": {
+  "x-review": "machine",
+  "x-source": "23d6b3c963"
+ },
  "js.2c70ie4ixet": "Plansjer",
  "@js.2c70ie4ixet": {
   "x-review": "machine",
   "x-source": "4fb4c6f38a"
+ },
+ "js.2c82c0gwjki": "Probe · Typisk <span class=\"mono idtag\" title=\"reviewer id\">volunteer-typical</span> <span class=\"tag sim\">Probe · ikke en person</span>",
+ "@js.2c82c0gwjki": {
+  "x-review": "machine",
+  "x-source": "c3559921c8"
  },
  "js.2c85dsjz3dx": "Kontrollflagg: <span class=\"mono\">low_snr, odd_even_mismatch, secondary_eclipse, density_mismatch</span> · besto ikke kontrollen",
  "@js.2c85dsjz3dx": {
@@ -6871,11 +6996,6 @@
   "x-review": "machine",
   "x-source": "439b98f6cf"
  },
- "js.2cazwqoadoq": "Tilbakeholdte EB-er med en sekundærformørkelse i katalogen og samsvarende periode: sekundærfase innenfor {n0} av katalogens, nedre grense for {n1}%-intervallet &gt;= {n2} (en sekundærformørkelse vi ikke finner, regnes som bom)",
- "@js.2cazwqoadoq": {
-  "x-review": "machine",
-  "x-source": "71d0ca28d6"
- },
  "js.2cc0e9v7uvs": "<i style=\"background:#FF6961\"></i>{n0} Peg b",
  "@js.2cc0e9v7uvs": {
   "x-review": "machine",
@@ -6895,6 +7015,11 @@
  "@js.2cektxt2twi": {
   "x-review": "machine",
   "x-source": "4662bb50f1"
+ },
+ "js.2cg943adi3e": "Resultattavlen for ekte TOI-er ›",
+ "@js.2cg943adi3e": {
+  "x-review": "machine",
+  "x-source": "cd1d193d20"
  },
  "js.2cjkfyfegp8": "Markeringer (✓ talt med)",
  "@js.2cjkfyfegp8": {
@@ -6920,6 +7045,16 @@
  "@js.2cqrtx9qqhe": {
   "x-review": "machine",
   "x-source": "2e5aaa9889"
+ },
+ "js.2cs8n7gldpd": "SetuHQ Pro",
+ "@js.2cs8n7gldpd": {
+  "x-review": "machine",
+  "x-source": "fcca2f700b"
+ },
+ "js.2cserx0e05n": "Proxima Centauri d",
+ "@js.2cserx0e05n": {
+  "x-review": "machine",
+  "x-source": "8213996948"
  },
  "js.2ct9t5541vf": "To team fanget uavhengig av hverandre opp den samme planeten mens den passerte foran stjernen sin.",
  "@js.2ct9t5541vf": {
@@ -6951,11 +7086,6 @@
   "x-review": "machine",
   "x-source": "00265f6a9d"
  },
- "js.2d5lr3nor8a": "<b>Data: The Extrasolar Planets Encyclopaedia (exoplanet.eu), hentet {n0}-{n1}-{n2}.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. NASA Exoplanet Archive kunne ikke nås da denne listen ble hentet, så den kommer fra exoplanet.eu alene. exoplanet.eu oppfører som bekreftet ethvert objekt den behandler som en planet: legemer opptil {n3} Jupitermasser (innenfor usikkerheten), publisert eller kunngjort. Listen er bredere enn den til NASA Exoplanet Archive, som tar med objekter opptil {n4} Jupitermasser fra fagfellevurderte artikler. En verdi kilden ikke oppgir, vises som «ikke lagret».",
- "@js.2d5lr3nor8a": {
-  "x-review": "machine",
-  "x-source": "4ddb24b25e"
- },
  "js.2d5x5vtgqx3": "{n0} {n1} / {n2} MJ <span class=\"na\">· teoretisk anslag</span>",
  "@js.2d5x5vtgqx3": {
   "x-review": "machine",
@@ -6971,11 +7101,6 @@
   "x-review": "machine",
   "x-source": "a2e862e82e"
  },
- "js.2d87qst4jdj": "Søkekatalog docs/discoveries/catalog.json, oppdatert {n0}-{n1}-29T00:{n2}+{n3}, {n4} oppføringer.",
- "@js.2d87qst4jdj": {
-  "x-review": "machine",
-  "x-source": "c5e3fcc2c6"
- },
  "js.2d8lw4ky362": "Modus",
  "@js.2d8lw4ky362": {
   "x-review": "machine",
@@ -6986,16 +7111,6 @@
   "x-review": "machine",
   "x-source": "d356f1d9dd"
  },
- "js.2d97owpwxwe": "<b>ν₃ asymmetrisk strekk</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · utenfor {n2}–{n3} µm-vinduet til {s0}",
- "@js.2d97owpwxwe": {
-  "x-review": "machine",
-  "x-source": "426504275f"
- },
- "js.2d9cg0jtcpa": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Lyskurve",
- "@js.2d9cg0jtcpa": {
-  "x-review": "machine",
-  "x-source": "6c965e2b87"
- },
  "js.2dbh8x9y8de": "Periode",
  "@js.2dbh8x9y8de": {
   "x-review": "machine",
@@ -7005,6 +7120,11 @@
  "@js.2dcer0ylq6r": {
   "x-review": "machine",
   "x-source": "731f74e2f3"
+ },
+ "js.2dcmry1hh6z": "Kepler-{n0} c ›",
+ "@js.2dcmry1hh6z": {
+  "x-review": "machine",
+  "x-source": "afae7ed80f"
  },
  "js.2deel2ps6ig": "τ Boötis, usikre utbrudd ved {n0}–{n1} MHz",
  "@js.2deel2ps6ig": {
@@ -7091,11 +7211,6 @@
   "x-review": "machine",
   "x-source": "63210331f9"
  },
- "js.2eluxgdu08m": "Tall i dette kapitlet",
- "@js.2eluxgdu08m": {
-  "x-review": "machine",
-  "x-source": "2d0a4d13b4"
- },
  "js.2en1x3cmvoa": "{n0} Peg b: K fra vår formel",
  "@js.2en1x3cmvoa": {
   "x-review": "machine",
@@ -7116,15 +7231,10 @@
   "x-review": "machine",
   "x-source": "dcfc6e0cb1"
  },
- "js.2etjlw57rtv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Galakse",
- "@js.2etjlw57rtv": {
+ "js.2ew51rdrin6": "Dypp {n0} av {n1}",
+ "@js.2ew51rdrin6": {
   "x-review": "machine",
-  "x-source": "5dbc898c01"
- },
- "js.2eujifl0hnp": "høy: odde/like-avvik eller sekundærformørkelse; middels: dybde, V-form, tetthetsavvik ved kort periode, eller formørkelsesperioden; lav: bare panelets begrunnelse.",
- "@js.2eujifl0hnp": {
-  "x-review": "machine",
-  "x-source": "4d1f3f27e2"
+  "x-source": "50a1297714"
  },
  "js.2exbs04rc3y": "Et optisk bilde av en «planet» som senere ble forklart som en ekspanderende støvsky etter en kollisjon.",
  "@js.2exbs04rc3y": {
@@ -7171,6 +7281,11 @@
   "x-review": "machine",
   "x-source": "fd6553a3e6"
  },
+ "js.2fkkbj5qfsy": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s2</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.2fkkbj5qfsy": {
+  "x-review": "machine",
+  "x-source": "26c1586964"
+ },
  "js.2fmavt7k5j5": "Flytt Toppkandidater opp",
  "@js.2fmavt7k5j5": {
   "x-review": "machine",
@@ -7191,11 +7306,6 @@
   "x-review": "machine",
   "x-source": "eb8caa0866"
  },
- "js.2ftwr4ebakn": "<b>Ekte data, med kilde.</b> Lagrede målinger, binnet eller foldet slik de er lagret.",
- "@js.2ftwr4ebakn": {
-  "x-review": "machine",
-  "x-source": "349da91d3d"
- },
  "js.2fu72b3rkst": "<b>ν₂ bøy (to, vinkelrett på hverandre)</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · utenfor vinduet {n2}–{n3} µm i «Å lese atmosfærer»",
  "@js.2fu72b3rkst": {
   "x-review": "machine",
@@ -7205,6 +7315,16 @@
  "@js.2fwg4iyxx2n": {
   "x-review": "machine",
   "x-source": "551fe213aa"
+ },
+ "js.2fy47ry25d8": "exoplanet.eu oppfører den som «Publisert i en fagfellevurdert artikkel», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som K2-{n4} e, TOI-{n5} e.",
+ "@js.2fy47ry25d8": {
+  "x-review": "machine",
+  "x-source": "745f476a5f"
+ },
+ "js.2fye5c973kf": "markert",
+ "@js.2fye5c973kf": {
+  "x-review": "machine",
+  "x-source": "d9b2fe68b6"
  },
  "js.2fyxww7qwgs": "Solen",
  "@js.2fyxww7qwgs": {
@@ -7256,6 +7376,11 @@
   "x-review": "machine",
   "x-source": "9dbffce8e5"
  },
+ "js.2gbggujxcvs": "ingen",
+ "@js.2gbggujxcvs": {
+  "x-review": "machine",
+  "x-source": "140bedbf9c"
+ },
  "js.2gbrnw08yjn": "oppføring<span aria-hidden=\"true\"></span>",
  "@js.2gbrnw08yjn": {
   "x-review": "machine",
@@ -7285,6 +7410,11 @@
  "@js.2gz7mzl8po": {
   "x-review": "machine",
   "x-source": "8c1759d61c"
+ },
+ "js.2jt13jfskg": "Lalande {n0} d",
+ "@js.2jt13jfskg": {
+  "x-review": "machine",
+  "x-source": "142bf3b80d"
  },
  "js.2jxe56kfgj": "Søk (/)",
  "@js.2jxe56kfgj": {
@@ -7346,15 +7476,15 @@
   "x-review": "machine",
   "x-source": "c95d84d8a8"
  },
- "js.32jc7egs68": "<b>{n0}</b> av de {n1} planetene med lagret avstand i exoplanet.eu ble funnet med radialhastighet (den første metoden som er oppført). <a href=\"/explore/galaxy/?method=rv\">Vis dem på galaksekartet ›</a>",
- "@js.32jc7egs68": {
-  "x-review": "machine",
-  "x-source": "3d287892f0"
- },
  "js.33d16tnf44": "Laster kartet over {n0} planeter…",
  "@js.33d16tnf44": {
   "x-review": "machine",
   "x-source": "8ee7f0a3c8"
+ },
+ "js.34vy39gbpt": "exoplanet.eu oppfører den som «Publisert i en fagfellevurdert artikkel», funnet ved primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som 2MASS J19021775+{n4} c, K00377.02, KIC {n5} c, KOI-{n6} c, KOI-{n7}, WISE J190217.77+{n8} c.",
+ "@js.34vy39gbpt": {
+  "x-review": "machine",
+  "x-source": "09699aac30"
  },
  "js.36fdi65pg1": "Silhuett ved Rp/R★ {n0} = √dybde, hvis det var en planet, på TIC {n1}, der temperaturen ikke er lagret (tegnet grå)",
  "@js.36fdi65pg1": {
@@ -7391,11 +7521,6 @@
   "x-review": "machine",
   "x-source": "0b61a77801"
  },
- "js.3d44eg16pj": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Himmelposisjon",
- "@js.3d44eg16pj": {
-  "x-review": "machine",
-  "x-source": "4f904b0fbc"
- },
  "js.3dua6scdtg": "{n0} spenn på {n1} subjekter",
  "@js.3dua6scdtg": {
   "x-review": "machine",
@@ -7420,6 +7545,11 @@
  "@js.3iebm2jaty": {
   "x-review": "machine",
   "x-source": "0455ae374d"
+ },
+ "js.3kjkwe2xdx": "{n0} mål · {n1} kjente · {n2} feil",
+ "@js.3kjkwe2xdx": {
+  "x-review": "machine",
+  "x-source": "15dfef1f1e"
  },
  "js.3o5vubwdr": "{n0} dex",
  "@js.3o5vubwdr": {
@@ -7451,10 +7581,10 @@
   "x-review": "machine",
   "x-source": "770680c692"
  },
- "js.3tu868pwb6": "TIC {n0} · flagget for gjennomgang, åpen",
- "@js.3tu868pwb6": {
+ "js.3ub2we0j81": "Teegarden's",
+ "@js.3ub2we0j81": {
   "x-review": "machine",
-  "x-source": "58e453def1"
+  "x-source": "d49a311c27"
  },
  "js.3wqc4ug47j": "Metoder: Å lese atmosfærer ›",
  "@js.3wqc4ug47j": {
@@ -7496,11 +7626,6 @@
   "x-review": "machine",
   "x-source": "8e52c2a95a"
  },
- "js.45gidy2yfd": "Et gulv: grunnlinjen med kun metadata bruker ingen lyskurve i det hele tatt, bare det offentlige TOI-nummeret, periode, varighet, efemeridefeil og epoke, med en logistisk regresjon tilpasset på innstillingshalvdelen. En metode som ikke slår den, er ikke vist å lese lyskurvene bedre enn katalogens egne metadata forutsier disposisjoner.",
- "@js.45gidy2yfd": {
-  "x-review": "machine",
-  "x-source": "d4a42c8dbc"
- },
  "js.46fy9vwje9": "sekundær, vilkårlig fase",
  "@js.46fy9vwje9": {
   "x-review": "machine",
@@ -7535,11 +7660,6 @@
  "@js.4axuq93fet": {
   "x-review": "machine",
   "x-source": "b4faa12d85"
- },
- "js.4b8yjime2n": "Kunstnerisk framstilling: steinplanet-utseendet i temperert sone, for radius under {n0} R⊕, Teq {n1} til {n2} K: gråbrun stein og en tynn, nøytral kant; ingen hav, kontinenter eller skyer. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.4b8yjime2n": {
-  "x-review": "machine",
-  "x-source": "9c1d8d98c4"
  },
  "js.4ccm3arc4r": "{n0} planeter i exoplanet.eu · lagret type K0V · klasse K fra Teff (nærmest K0V)",
  "@js.4ccm3arc4r": {
@@ -7601,15 +7721,15 @@
   "x-review": "machine",
   "x-source": "5caba079cd"
  },
+ "js.4sxy414d9c": "utvalg",
+ "@js.4sxy414d9c": {
+  "x-review": "machine",
+  "x-source": "af2bdbe1aa"
+ },
  "js.4t9xjok0e6": "Kunstnerisk framstilling · stein, innstråling kan ikke beregnes · Ingen radius lagret; massen {n0} M⊕ (exoplanet.eu) er under {n1} M⊕, så den er tegnet som stein. Radius ikke målt: ikke i målestokk. Innstråling kan ikke beregnes: nøytrale farger. Sammensetningen er ikke målt. Kilde: exoplanet.eu, hentet {n2}-{n3}-{n4}. <a href=\"/docs/pictures/\">Slik tegnes bildene ›</a>",
  "@js.4t9xjok0e6": {
   "x-review": "machine",
   "x-source": "3975c0da56"
- },
- "js.4u1k8v564x": "En periodogramtopp med Baluev-FAP under {n0} og en semiamplitude på minst {n1}× spredningen i {n2}-minutters binner, koherent: samme periode (innenfor {n3} %) er den beste toppen i hver halvdel av lyskurven, og ikke innenfor {n4} % av den lengste perioden som er søkt; en periode som deles av {n5} eller flere stjerner i en sektor, er systematisk. En dipp som varer {n6} av den perioden eller mer, er et bunnpunkt i den; det samme er en dipp som halve panelets vekt kalte stjernevariabilitet.",
- "@js.4u1k8v564x": {
-  "x-review": "machine",
-  "x-source": "9c7dd08245"
  },
  "js.4v6zv9397m": "konfidens {n0}",
  "@js.4v6zv9397m": {
@@ -7636,10 +7756,10 @@
   "x-review": "machine",
   "x-source": "0e17d0a129"
  },
- "js.50cw8uea6": "Tilbakeholdte EB-er: periode innenfor {n0} % av katalogens (en EB som ikke er flagget, er en bom), nedre grense for {n1} %-intervallet &gt;= {n2}",
- "@js.50cw8uea6": {
+ "js.4xy18gdl7w": "Katalog oppdatert <time datetime=\"2026-10-30T06:34:41+00:00\" title=\"2026-10-30T06:34:41+00:00\">{n0}. okt. {n1}, {n2} UTC</time>.",
+ "@js.4xy18gdl7w": {
   "x-review": "machine",
-  "x-source": "75081a4bd7"
+  "x-source": "d9bccf18dc"
  },
  "js.537weqdx92": "TIC {n0} · P {n1} d · {n2} ppm · SNR {n3}",
  "@js.537weqdx92": {
@@ -7666,15 +7786,25 @@
   "x-review": "machine",
   "x-source": "d40d0e920c"
  },
+ "js.5cuofh1x2k": "ikke til å skille fra støy i dette utsnittet",
+ "@js.5cuofh1x2k": {
+  "x-review": "machine",
+  "x-source": "7dfa2254b3"
+ },
+ "js.5eim8yf4c": "Lalande {n0}",
+ "@js.5eim8yf4c": {
+  "x-review": "machine",
+  "x-source": "7a73b4b548"
+ },
+ "js.5j6snvvuuk": "Oppsett",
+ "@js.5j6snvvuuk": {
+  "x-review": "machine",
+  "x-source": "a511909161"
+ },
  "js.5k1okfy1y2": "Nettsted",
  "@js.5k1okfy1y2": {
   "x-review": "machine",
   "x-source": "fa7955814e"
- },
- "js.5limoap242": "<b>ν₄ asymmetrisk bøyning (to)</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · utenfor {n2}–{n3} µm-vinduet til {s0}",
- "@js.5limoap242": {
-  "x-review": "machine",
-  "x-source": "c1aa83b41c"
  },
  "js.5m1n02zglj": "Identifisering av karbondioksid i en eksoplanetatmosfære",
  "@js.5m1n02zglj": {
@@ -7700,11 +7830,6 @@
  "@js.5qqcw21as6": {
   "x-review": "machine",
   "x-source": "f4a2329657"
- },
- "js.5tmt3hrss9": "katalogens grense for størrelsesklasse (gasskjempe: {n0} R⊕ eller mer)",
- "@js.5tmt3hrss9": {
-  "x-review": "machine",
-  "x-source": "7807f33d37"
  },
  "js.5x2cvaysve": "RV-semiamplitude K",
  "@js.5x2cvaysve": {
@@ -7741,6 +7866,11 @@
   "x-review": "machine",
   "x-source": "bf11fecb30"
  },
+ "js.64gjc6ygey": "Blokkerer stjernelys",
+ "@js.64gjc6ygey": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
  "js.65pxt8ib9c": "En superjupiter avbildet rundt en dobbeltstjerne.",
  "@js.65pxt8ib9c": {
   "x-review": "machine",
@@ -7770,11 +7900,6 @@
  "@js.6j56seqj8": {
   "x-review": "machine",
   "x-source": "7e69af06bb"
- },
- "js.6n8ndyybfz": "En innsending lister, for hver stjerne i sitt omfang, hendelsene metoden detekterte i den virkelige lyskurven og i kontrollene med invertert fluks og blokkomstokking (tid, varighet, periode, egen bestått-vurdering og flagg). Ledertavlen avgjør hvilke hendelser som ligger på TOI-ens efemeride (benchmarkens score_star og match_toi) og teller selv falske alarmer i kontrollene. Selvrapporterte utfall godtas ikke.",
- "@js.6n8ndyybfz": {
-  "x-review": "machine",
-  "x-source": "7c4b789f62"
  },
  "js.6qolz1acje": "Kilde: som angitt i bildeteksten.",
  "@js.6qolz1acje": {
@@ -7831,6 +7956,11 @@
   "x-review": "machine",
   "x-source": "217afade12"
  },
+ "js.78llqc69gh": "Proxima Centauri b",
+ "@js.78llqc69gh": {
+  "x-review": "machine",
+  "x-source": "c5626ab780"
+ },
  "js.78r4r7906c": "På jorden dannes det nesten bare av liv i havet.",
  "@js.78r4r7906c": {
   "x-review": "machine",
@@ -7866,15 +7996,15 @@
   "x-review": "machine",
   "x-source": "1aca80e8b5"
  },
- "js.7czfymv28r": "en kunstnerisk fremstilling fra utseendetabellen; størrelse i riktig skala bare når en radius er lagret",
- "@js.7czfymv28r": {
-  "x-review": "machine",
-  "x-source": "326ba9455b"
- },
  "js.7f3lidyc7s": "Transitten, avspilt",
  "@js.7f3lidyc7s": {
   "x-review": "machine",
   "x-source": "40686f7e63"
+ },
+ "js.7i6tnzxffe": "Wolf {n0} b",
+ "@js.7i6tnzxffe": {
+  "x-review": "machine",
+  "x-source": "03eb21d076"
  },
  "js.7nrzzc658q": "blindkodede utsnitt",
  "@js.7nrzzc658q": {
@@ -7930,6 +8060,11 @@
  "@js.843gyvqmqu": {
   "x-review": "machine",
   "x-source": "3e17a94f61"
+ },
+ "js.87fibqymmi": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">pi Men c</a></b> · vertsstjerne <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> · P {n0} d · transitterende",
+ "@js.87fibqymmi": {
+  "x-review": "machine",
+  "x-source": "f7c50ba965"
  },
  "js.886176wzks": "{n0} planet i exoplanet.eu · lagret type F6V · klasse F ut fra Teff (nærmest F5V)",
  "@js.886176wzks": {
@@ -7991,11 +8126,6 @@
   "x-review": "machine",
   "x-source": "a4c44f4a8f"
  },
- "js.8wmiyv0zzd": "Kunstnerisk fremstilling: utseendet kald stein, for radius under {n0} R⊕, Teq under {n1} K: blekgrå stein, iskapper ned til breddegrad {n2}°, ingen atmosfære. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.8wmiyv0zzd": {
-  "x-review": "machine",
-  "x-source": "c1497fc8a0"
- },
  "js.8wxh5amfez": "Sub-Neptun",
  "@js.8wxh5amfez": {
   "x-review": "machine",
@@ -8006,10 +8136,20 @@
   "x-review": "machine",
   "x-source": "10af6c250a"
  },
+ "js.905p7mrgke": "Ross {n0} b",
+ "@js.905p7mrgke": {
+  "x-review": "machine",
+  "x-source": "eec00b75d8"
+ },
  "js.90yyx3asv8": "{n0} Psc c",
  "@js.90yyx3asv8": {
   "x-review": "machine",
   "x-source": "f0cbc33340"
+ },
+ "js.92zm5mb6ic": "oppføring",
+ "@js.92zm5mb6ic": {
+  "x-review": "machine",
+  "x-source": "923fe53966"
  },
  "js.94m77w54ls": "Dens lagrede begrunnelse for utsnitt S2 (BTJD {n0} til {n1}), én per utsnitt, ikke per nedgang. Den markerte denne nedgangen. En Sentinel er en AI-modell (Claude Code CLI (Claude, Anthropic) · standard), ikke en person.",
  "@js.94m77w54ls": {
@@ -8071,15 +8211,15 @@
   "x-review": "machine",
   "x-source": "6c293b1c67"
  },
- "js.9g29b1hwza": "JWST {s0}ing Exoplanet Community ERS Team",
- "@js.9g29b1hwza": {
-  "x-review": "machine",
-  "x-source": "d6a491c51e"
- },
  "js.9ipi38tplb": "Stjerne",
  "@js.9ipi38tplb": {
   "x-review": "machine",
   "x-source": "e357d39687"
+ },
+ "js.9j28j4tmyg": "Barnard's star b",
+ "@js.9j28j4tmyg": {
+  "x-review": "machine",
+  "x-source": "af09ab2ca6"
  },
  "js.9je9lv8f9w": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">5i. <span class=\"mono\">tess-bc9f59e5c3af-{n0}</span>.</b> Nedgang ved BTJD {n1}, {n2} ppm, {n3} t, SNR {n4}. Markert av {n5} granskere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.9je9lv8f9w": {
@@ -8111,6 +8251,16 @@
   "x-review": "machine",
   "x-source": "933fd8a226"
  },
+ "js.9wrdy2us22": "<a href=\"/stars/ogle-2012-blg-0026l/\">{s0}</a> · Mikrolinsing · oppdaget {n0} · Neptun-lignende (etter masse)",
+ "@js.9wrdy2us22": {
+  "x-review": "machine",
+  "x-source": "ef80c9cc7c"
+ },
+ "js.9xo5dpvs8f": "{n0} Eri c",
+ "@js.9xo5dpvs8f": {
+  "x-review": "machine",
+  "x-source": "b644412ed5"
+ },
  "js.9yvkaakdvn": "Ingen dossier lagret for disse radene i denne kjøringen.",
  "@js.9yvkaakdvn": {
   "x-review": "machine",
@@ -8135,11 +8285,6 @@
  "@js.a5ik0d45ok": {
   "x-review": "machine",
   "x-source": "76a48996a7"
- },
- "js.a5x17kv5tz": "{n0} planeter vist · transitt {n1} · radialhastighet {n2} · avbildning {n3} · mikrolinsing {n4}",
- "@js.a5x17kv5tz": {
-  "x-review": "machine",
-  "x-source": "3372d51309"
  },
  "js.a6wp5hntda": "Kontrollflagg: <span class=\"mono\">odd_even_mismatch, v_shape</span> · strøk i kontrollen",
  "@js.a6wp5hntda": {
@@ -8176,10 +8321,10 @@
   "x-review": "machine",
   "x-source": "73d5db9ed8"
  },
- "js.ak7b9gcem6": "høy: FAP under 1e-{n0} og en semiamplitude på {n1}× den binnede spredningen eller mer; middels: semiamplitude på {n2}× eller mer; lav: ellers (eller et dykk kun på grunn av panelets begrunnelse).",
- "@js.ak7b9gcem6": {
+ "js.am5y46ghie": "exoplanet.eu oppgir den som \"Publisert i en fagfellevurdert artikkel\", funnet med primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som TOI-{n4}.",
+ "@js.am5y46ghie": {
   "x-review": "machine",
-  "x-source": "4c775dba32"
+  "x-source": "741870750e"
  },
  "js.anpgj5gce0": "<b class=\"flabel\">Plansje {n0}, panel ii.</b> Lagret fluks for subjekt tess-01e315ee5ebf (BTJD {n1} til {n2}), relativ fluks − {n3} i ppm. Skraverte bånd er konsensusintervaller, merket med bokstaver som i bildetekstene; trekanter er BLS-epokene. Høyre: foldet på sin lagrede BLS-periode {n4} d og t0 BTJD {n5}; det skraverte båndet er den lagrede BLS-varigheten ({n6} h).",
  "@js.anpgj5gce0": {
@@ -8221,11 +8366,6 @@
   "x-review": "machine",
   "x-source": "d69fa08242"
  },
- "js.aztpkxejok": "katalogens grense for størrelsesklasse (Neptun-lignende {n0}–{n1} R⊕)",
- "@js.aztpkxejok": {
-  "x-review": "machine",
-  "x-source": "0a47054ebb"
- },
  "js.b2yn41cpri": "Saksmappen kunne ikke lastes i denne visningen. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-f28323a4aef6-006\">Åpne den på en egen side.</a>",
  "@js.b2yn41cpri": {
   "x-review": "machine",
@@ -8240,11 +8380,6 @@
  "@js.b81xuwkvhb": {
   "x-review": "machine",
   "x-source": "fa1b7822f3"
- },
- "js.ba6i75z9zb": "{n0} til i <a href=\"/candidates/\">Utforskeren ›</a>",
- "@js.ba6i75z9zb": {
-  "x-review": "machine",
-  "x-source": "378a1efe43"
  },
  "js.bcz7f7521k": "tess-toi-{n0}-s5",
  "@js.bcz7f7521k": {
@@ -8276,11 +8411,6 @@
   "x-review": "machine",
   "x-source": "9d7801b23a"
  },
- "js.bm1842qxn6": "<b>Live-strømmens nye signaler er forenlige med støy.</b> Støy alene burde gi omtrent {n0} falske new_candidate-signaler per {n1} gjennomgåtte mål, mot {n2} per {n3} i live-strømmen. Under den tidligere regelen var en new_candidate i strømmen mer sannsynlig støy enn et signal.",
- "@js.bm1842qxn6": {
-  "x-review": "machine",
-  "x-source": "c59881f8e5"
- },
  "js.bn4w24un71": "≤: en øvre grense, fra det lagrede intervallet ({n0} til verdien).",
  "@js.bn4w24un71": {
   "x-review": "machine",
@@ -8301,10 +8431,10 @@
   "x-review": "machine",
   "x-source": "d1ec927942"
  },
- "js.buyt9rgrrs": "Besto kontrollen, merket som mulig planet av halvparten av panelets vekt, ikke forårsaket av stjernens eget periodiske signal, og ikke fanget opp av noen regel ovenfor. En kandidat, ubekreftet.",
- "@js.buyt9rgrrs": {
+ "js.bvhiyb18bf": "liten",
+ "@js.bvhiyb18bf": {
   "x-review": "machine",
-  "x-source": "2488197a47"
+  "x-source": "81db8ebbbb"
  },
  "js.bvrmk1ex4g": "oppdagelse",
  "@js.bvrmk1ex4g": {
@@ -8331,10 +8461,10 @@
   "x-review": "machine",
   "x-source": "c7e1272291"
  },
- "js.cbv0lkfgz8": "Åpne saken {s0} ›",
- "@js.cbv0lkfgz8": {
+ "js.cb7mp7y3o9": "Lagret id tess-1c554332c266-{n0}; ingen saksfil i denne kjøringen",
+ "@js.cb7mp7y3o9": {
   "x-review": "machine",
-  "x-source": "248441ab0d"
+  "x-source": "64026e0de1"
  },
  "js.cbz7kbs8l0": "id tic29257288-s1-dip-{n0} · subjekt tess-6cf3bf1771b3<br>lyskurve sha256 b44e4d280fddc0d2705f6687997736ebf67f9b0544e9711f880a21ebaa0bda05<br>kode … · config a9d34c7079563183…<br>kilde sector_0001.json.gz",
  "@js.cbz7kbs8l0": {
@@ -8401,6 +8531,11 @@
   "x-review": "machine",
   "x-source": "bbc7feceee"
  },
+ "js.d6qkqwv24q": "{n0} Peg · {n1} K",
+ "@js.d6qkqwv24q": {
+  "x-review": "machine",
+  "x-source": "e5f1ee0a62"
+ },
  "js.d72yz71kxc": "Strøm, sortert etter snr synkende. Hver oppføring er en kandidat, ubekreftet.",
  "@js.d72yz71kxc": {
   "x-review": "machine",
@@ -8420,11 +8555,6 @@
  "@js.db3tsr98n3": {
   "x-review": "machine",
   "x-source": "aa93d0c8f4"
- },
- "js.dcedelaavp": "<b>ν₂ bøyning</b> · {n0} µm · infrarød-aktiv · tegnet ×{n1} · utenfor vinduet på {n2}–{n3} µm i {s0}",
- "@js.dcedelaavp": {
-  "x-review": "machine",
-  "x-source": "9dbd92a5c8"
  },
  "js.dcp2jzpjk": "<i style=\"background:#30D158\"></i>beta Pic b",
  "@js.dcp2jzpjk": {
@@ -8481,6 +8611,11 @@
   "x-review": "machine",
   "x-source": "b6940405a0"
  },
+ "js.dvqr7huse3": "eps Ind Bb",
+ "@js.dvqr7huse3": {
+  "x-review": "machine",
+  "x-source": "e8e7d5bf66"
+ },
  "js.dvwoo1e05r": "JWST NIRSpec PRISM-transmisjonsspektrum av WASP-{n0} b: {n1} binnede punkter med feilstolper og artikkelens best tilpassede modell; det dypeste punktet er ved {n2} mikrometer, karbondioksidbåndet.",
  "@js.dvwoo1e05r": {
   "x-review": "machine",
@@ -8520,11 +8655,6 @@
  "@js.e1cnrnc88l": {
   "x-review": "machine",
   "x-source": "7a72e5d7b0"
- },
- "js.e1q7qs4zzq": "<b>ν₃ asymmetrisk strekkvibrasjon (tre)</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">{n2} µm-båndet i {s0} ›</a>",
- "@js.e1q7qs4zzq": {
-  "x-review": "machine",
-  "x-source": "71ad84105e"
  },
  "js.e2y47rpcbh": "Ukjent",
  "@js.e2y47rpcbh": {
@@ -8681,6 +8811,11 @@
   "x-review": "machine",
   "x-source": "09cd47b417"
  },
+ "js.f2v9rtmf85": "Kode",
+ "@js.f2v9rtmf85": {
+  "x-review": "machine",
+  "x-source": "340f463033"
+ },
  "js.f38k3bw5h7": "<b class=\"flabel\">Plate {n0}, panel i.</b> Lagret fluks for subjekt tess-38b5a559eee2 (BTJD {n1} til {n2}), relativ fluks − {n3} i ppm. Skraverte bånd er konsensusintervaller, merket med bokstaver som i bildetekstene; trekanter er BLS-epokene. Til høyre: foldet på den lagrede BLS-perioden {n4} d og t0 BTJD {n5}; det skraverte båndet er den lagrede BLS-varigheten ({n6} h). {n7} punkter utenfor fluksområdet er ikke tegnet.",
  "@js.f38k3bw5h7": {
   "x-review": "machine",
@@ -8695,11 +8830,6 @@
  "@js.f6sm069d1p": {
   "x-review": "machine",
   "x-source": "4b1c53ca4a"
- },
- "js.f7l0xvrbgu": "<b>N–N-strekkvibrasjon, hovedsakelig</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · ikke tegnet i {s0}",
- "@js.f7l0xvrbgu": {
-  "x-review": "machine",
-  "x-source": "099bdfda01"
  },
  "js.f7onc16rky": "transitter forutsagt i dataene / med en dipp",
  "@js.f7onc16rky": {
@@ -8720,11 +8850,6 @@
  "@js.fakckuaz74": {
   "x-review": "machine",
   "x-source": "deaf714e0c"
- },
- "js.fbjnqepq3y": "<b>Hver klasse mot sin egen nullmodell</b>, målt på de samme {n0} stjerne-sektorene: hva regelen finner der signalet ikke kan være. Dipper: fluksen snudd opp ned (en reell dipp blir en pukkel; et reelt utbrudd eller pulsasjonsmaksimum blir en dipp, så denne nullmodellen er ikke tom for reelle signaler). Utbrudd: nedadgående hendelser med de reelle dippene maskert. Variabilitet: en rødstøykopi av stjernen (AR({n1}) tilpasset dens binger) gjennom den samme regelen, som krever den samme beste perioden (innenfor {n2} %) i begge halvdeler av lyskurven. Av periodogramtoppene som ikke ligger ved en dobbeltstjernes periode, er {n3} koherente; uklassifisert er {n4} som er lengre enn en halvdel kan teste (koherens ikke testet), {n5} ved kanten av periodegitteret og {n6} som vandrer mellom halvdelene. Begrensninger: den finner en sinusoide på {n7} ppm i sterk rødstøy bare {n8}/{n9} ganger (scripts/variability_rule_check.py), og kan ikke teste perioder lengre enn omtrent {n10} d i én sektor. Type sammenlignes med type, og stjerne-sektor er enheten: {n11} %-intervallet er en parvis bootstrap over stjerne-sektorer, ved siden av McNemars test. En klasse som ikke består begge, kan ikke skilles fra støy i dette utvalget: Planetkandidat, Formørkelsesdobbeltstjerne, Utbrudd, Pulsator eller rotasjonsvariabel, Systematikk. Av de {n12} oppblussingene i utbruddsklassen stiger {n13} raskere enn de avtar og {n14} omvendt ({n15} like); reelle utbrudd stiger raskt, støy har ingen foretrukket retning.",
- "@js.fbjnqepq3y": {
-  "x-review": "machine",
-  "x-source": "edcc450583"
  },
  "js.fbyrtfuuuu": "pi Men",
  "@js.fbyrtfuuuu": {
@@ -8766,11 +8891,6 @@
   "x-review": "machine",
   "x-source": "8e4a1eb431"
  },
- "js.ftkov6vbui": "En dipps silhuett (kandidater, radiusforhold)",
- "@js.ftkov6vbui": {
-  "x-review": "machine",
-  "x-source": "2cbc25cbe4"
- },
  "js.fv6055pnqa": "perioden samsvarer med en kjent TOI",
  "@js.fv6055pnqa": {
   "x-review": "machine",
@@ -8811,10 +8931,10 @@
   "x-review": "machine",
   "x-source": "ab87f8473e"
  },
- "js.g1lwglngw7": "Arkivsammenligning: forenlig med {s0}: ΔP {n0} %, tidsforskyvning fra valideringsnotatet: {n1} min i snitt over {n2} epoker. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
- "@js.g1lwglngw7": {
+ "js.g2cghw07hl": "Rotasjon",
+ "@js.g2cghw07hl": {
   "x-review": "machine",
-  "x-source": "dff14c09d4"
+  "x-source": "57b5e2fc1b"
  },
  "js.g3w1e5hqnc": "Beste spektrografstabilitet",
  "@js.g3w1e5hqnc": {
@@ -8825,6 +8945,11 @@
  "@js.g6lwhkyils": {
   "x-review": "machine",
   "x-source": "0574b94b3e"
+ },
+ "js.g6m1eyxsdn": "Molekyl",
+ "@js.g6m1eyxsdn": {
+  "x-review": "machine",
+  "x-source": "49a6356091"
  },
  "js.g6m8lmxer6": "Typisk Einstein-krysningstid",
  "@js.g6m8lmxer6": {
@@ -8845,6 +8970,11 @@
  "@js.gbaq8jky1n": {
   "x-review": "machine",
   "x-source": "49aaab944b"
+ },
+ "js.gc28rpxiwc": "Luyten's Star",
+ "@js.gc28rpxiwc": {
+  "x-review": "machine",
+  "x-source": "f84d36433e"
  },
  "js.gc92hxaxrj": "Sentinel · Skeptic: {n0} spenn i dette vinduet, telt for denne dippen",
  "@js.gc92hxaxrj": {
@@ -8891,20 +9021,10 @@
   "x-review": "machine",
   "x-source": "8ab8377cb2"
  },
- "js.gf2k29wf2u": "Utbrudd, pulsasjoner og offentlige CHEOPS-lyskurver (CHEOPS-data under ESAs vilkår)",
- "@js.gf2k29wf2u": {
-  "x-review": "machine",
-  "x-source": "7636d9cad3"
- },
  "js.gfd1bpovje": "{n0} dipper ({n1} avvist)",
  "@js.gfd1bpovje": {
   "x-review": "machine",
   "x-source": "f9153844c1"
- },
- "js.ggh3kiowd3": "Kunstnerens inntrykk: det steinhete utseendet, for radius under {n0} R⊕, Teq {n1} K eller mer: mørk stein med glødende sprekker på dagsiden. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.ggh3kiowd3": {
-  "x-review": "machine",
-  "x-source": "082ec2b77a"
  },
  "js.gizr3gwvyr": "Også kjent som {n0}, KOI-{n1}, 2MASS J19323620+{n2}.",
  "@js.gizr3gwvyr": {
@@ -8950,6 +9070,11 @@
  "@js.gplu2k76y8": {
   "x-review": "machine",
   "x-source": "6f0127f52b"
+ },
+ "js.gpznjdo7y3": "pi Men · {n0} K",
+ "@js.gpznjdo7y3": {
+  "x-review": "machine",
+  "x-source": "899a850a1e"
  },
  "js.griyfzkg7e": "<b>ν₂-bøyning</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · utenfor vinduet {n2}–{n3} µm i Å lese atmosfærer",
  "@js.griyfzkg7e": {
@@ -9011,6 +9136,11 @@
   "x-review": "machine",
   "x-source": "ed2c6ec6d2"
  },
+ "js.hfecdi2gfn": "tau Cet g",
+ "@js.hfecdi2gfn": {
+  "x-review": "machine",
+  "x-source": "5a095c9a36"
+ },
  "js.hi7kyj244t": "Blant de første planetene funnet utenfor Solen, ved tidsmåling av en millisekundpulsar.",
  "@js.hi7kyj244t": {
   "x-review": "machine",
@@ -9045,6 +9175,11 @@
  "@js.hrans2nscc": {
   "x-review": "machine",
   "x-source": "476f15a932"
+ },
+ "js.ht99op5pxg": "NASA Exoplanet Archive, tabell ps (default_flag = {n0}), slik det er registrert i docs/results/pi_men_validation.md av scripts/validate_known_planets.py (live arkivspørring, commit 0f6dbdc). Bare pi Men c er registrert der, så bare pi Men c er oppført; transittens midttid ble ikke registrert, så ingen avvik per epoke beregnes her; valideringsnotatets gjennomsnittlige tidsavvik ({n1} min over {n2} av {n3} epoker) siteres i stedet. Erstatt det med utdataene fra 'setuhq crossmatch runs/tess-pi-men-s1' når arkivet svarer., registrert <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4} okt. {n5}, {n6} UTC</time> (commit 0f6dbdc) i docs/results/pi_men_crossmatch.json; denne kjøringens egen kryssmatching ble ikke kjørt (lagret feil, ordrett: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
+ "@js.ht99op5pxg": {
+  "x-review": "machine",
+  "x-source": "4653c87d87"
  },
  "js.hv6t0hplex": "Kjørerapport · tess-toi-{n0}-s2",
  "@js.hv6t0hplex": {
@@ -9136,10 +9271,10 @@
   "x-review": "machine",
   "x-source": "8c601dc48e"
  },
- "js.ioyj9009pb": "<a href=\"/assets/data/exoplanet_map.csv\" download=\"\">Last ned alle plottede planeter (CSV, {n0} rader)</a>, avledet fra det lagrede exoplanet.eu-kartet.",
- "@js.ioyj9009pb": {
+ "js.iqpr6oou3c": "Sektor {n0}: {n1}-{n2}-{n3} til {n4}-{n5}-{n6} · {n7} katalogiserte stjerner med kjente planeter i feltene",
+ "@js.iqpr6oou3c": {
   "x-review": "machine",
-  "x-source": "0669d7463c"
+  "x-source": "61eb698124"
  },
  "js.ir7824frtx": "tess-08a8c4eac6ff-{n0} · Åpen · kandidat, ubekreftet",
  "@js.ir7824frtx": {
@@ -9150,6 +9285,11 @@
  "@js.irvrs2dlo3": {
   "x-review": "machine",
   "x-source": "c1c91c0c5c"
+ },
+ "js.it3yfm2mls": "WASP-{n0}<br><span class=\"muted mono t-data\">tess-wasp-{n1}-s1</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.it3yfm2mls": {
+  "x-review": "machine",
+  "x-source": "be84b6d521"
  },
  "js.it7w3r4cx": "Transitter forutsagt i den lagrede lyskurven: {n0}; med en dipp på seg: {n1} ({n2} dipper; {n3} flagget; gjennomsnittlig forskyvning {n4} min).",
  "@js.it7w3r4cx": {
@@ -9276,6 +9416,11 @@
   "x-review": "machine",
   "x-source": "90e37abec4"
  },
+ "js.k2p8kaiegs": "HN Lib b",
+ "@js.k2p8kaiegs": {
+  "x-review": "machine",
+  "x-source": "1b00eabfcb"
+ },
  "js.k3btdf81ur": "Eksentrisitet",
  "@js.k3btdf81ur": {
   "x-review": "machine",
@@ -9290,11 +9435,6 @@
  "@js.k6wgj1vf42": {
   "x-review": "machine",
   "x-source": "3a6449de5f"
- },
- "js.k73o4aajts": "Fire scener. {s0}-tidsmåling: to planeter nær et periodeforhold på {n0} drar i hverandre, så den indre planetens transitter kommer tidlig og sent, og et O−C-diagram bygges opp. Sekundærformørkelse: planeten glir bak stjernen en halv omløpstid etter transitten, en mye mindre dipp, tegnet ti ganger dypere. Fasekurve: en tidevannslåst planet viser mer av den varme dagsiden mot okkultasjonen, med toppen forskjøvet av vinder. Rossiter–McLaughlin: planeten dekker først den nærmende og så den fjernende halvdelen av den roterende stjernen, så stjernens målte hastighet svinger under transitten.",
- "@js.k73o4aajts": {
-  "x-review": "machine",
-  "x-source": "21a7dc3be9"
  },
  "js.k81gpwo3bo": "{n0} −-{n1} / {n2} Gyr",
  "@js.k81gpwo3bo": {
@@ -9386,10 +9526,20 @@
   "x-review": "machine",
   "x-source": "5bd78577ba"
  },
+ "js.l361fmbsuc": "Lagret id tess-eaab33b6b763-{n0}; ingen saksfil i denne kjøringen",
+ "@js.l361fmbsuc": {
+  "x-review": "machine",
+  "x-source": "75a96bab8f"
+ },
  "js.l3je4rzt3v": "{n0} Pegasi b, en kjempe i en {n1}-dagers bane, funnet ut fra stjernens slingring.",
  "@js.l3je4rzt3v": {
   "x-review": "machine",
   "x-source": "783b55a817"
+ },
+ "js.l5edhw6c5o": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">7c. <span class=\"mono\">tess-7b97e468b60b-{n0}</span>.</b> Dipp ved BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markert av {n5} vurderere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
+ "@js.l5edhw6c5o": {
+  "x-review": "machine",
+  "x-source": "84eea9bb2e"
  },
  "js.l66csoi3se": "Drake-ligningskalkulator",
  "@js.l66csoi3se": {
@@ -9421,6 +9571,11 @@
   "x-review": "machine",
   "x-source": "bcb2e28ac7"
  },
+ "js.le6i0lhisz": "Populasjon",
+ "@js.le6i0lhisz": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
  "js.lg9kxjhees": "*Kjent falsk positiv.* Et TESS Object of Interest som TOI-tabellen klassifiserer som falsk positiv (FP): et dypp på {n0}% med {n1} dagers mellomrom.",
  "@js.lg9kxjhees": {
   "x-review": "machine",
@@ -9431,6 +9586,11 @@
   "x-review": "machine",
   "x-source": "2b91c1afd2"
  },
+ "js.lh8m0vnna6": "Mikrolinsing <span class=\"mono\" data-cmn=\"microlensing\">{n0}</span>",
+ "@js.lh8m0vnna6": {
+  "x-review": "machine",
+  "x-source": "6ebe002adb"
+ },
  "js.lj02ml1du2": "Også kjent som GJ {n0}, V2500 Oph.",
  "@js.lj02ml1du2": {
   "x-review": "machine",
@@ -9440,21 +9600,6 @@
  "@js.lj5zi4x2mb": {
   "x-review": "machine",
   "x-source": "a266923843"
- },
- "js.lmqc5cetjp": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Systemvisning",
- "@js.lmqc5cetjp": {
-  "x-review": "machine",
-  "x-source": "b55e8878de"
- },
- "js.loxdmylfqk": "FP-avvisning: FP-stjerner der metoden ikke tilbød TOI-dyppet som en ren kandidat (gjenfunnet og ikke flagget). Pålitelighet: andelen rene kandidater på TOI-dypp som er CP/KP, med dette utvalgets klassefordeling, som ikke er TOI-katalogens. Alle rater har Wilson-intervaller på {n0}%. TFOPWG-klassifiseringene er referansen, ikke sann fasit for hver TOI.",
- "@js.loxdmylfqk": {
-  "x-review": "machine",
-  "x-source": "65f89a23b5"
- },
- "js.lpvg4u78fv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Katalog",
- "@js.lpvg4u78fv": {
-  "x-review": "machine",
-  "x-source": "a3cf22621a"
  },
  "js.lugtea4b2c": "Tabell, kan rulles sideveis på smal skjerm",
  "@js.lugtea4b2c": {
@@ -9501,6 +9646,11 @@
   "x-review": "machine",
   "x-source": "6ba2097d7d"
  },
+ "js.m1r0pwwc2c": "Eps Ind Ab",
+ "@js.m1r0pwwc2c": {
+  "x-review": "machine",
+  "x-source": "f49ed6b253"
+ },
  "js.m3r8wny6k9": "Kunstnerens framstilling av {s0}: en gasskjempe i det kalde båndet, radius ikke målt ({n0} jordmasser), {n1} K.",
  "@js.m3r8wny6k9": {
   "x-review": "machine",
@@ -9546,11 +9696,6 @@
   "x-review": "machine",
   "x-source": "be67c2df8b"
  },
- "js.me79v4kzjl": "<b>Feedens strengere regel, forhåndsregistrert og målt på nytt med denne koden.</b> Signalet må nå bestå i begge gjennomgåtte sektorer med en FAP under {n0} over {n1} forsøk. På den tilbakeholdte halvdelen gir støy alene {n2} falske signaler per {n3} mål ({n4}% KI {n5}–{n6}), ned fra {n7} ({n8}–{n9}). Det er fortsatt langt over de {n10} nye signalene per {n11} mål som de ekte lyskurvene gir, så feeden er fortsatt dominert av falske alarmer, og kompletthet på feednivå falt fra {n12}% til {n13}%. Et opptak i feeden er et spor for menneskelig gjennomgang eller oppfølging, ikke en kandidat med noen bekreftet status. Kjørt på nytt med denne koden slipper den direkte feedens {n14} mål inn {n15} nye signaler.",
- "@js.me79v4kzjl": {
-  "x-review": "machine",
-  "x-source": "1b6a64cd4a"
- },
  "js.meqp2x3ji6": "exoplanet.eu oppfører den som «Published in a refereed paper», funnet ved avbildning i {n0}; posten oppdatert {n1}-{n2}-{n3}. Også kjent som bet Pic b, HIP {n4} b.",
  "@js.meqp2x3ji6": {
   "x-review": "machine",
@@ -9571,25 +9716,25 @@
   "x-review": "machine",
   "x-source": "6a7bc0cac6"
  },
- "js.mi2tgjiiqn": "<b>Pro Follow-up</b> <span class=\"eddev\">under utvikling</span>: en oppfølgingspakke per kandidat: en eksport i ExoFOP-stil, en efemeride med usikkerhet, og når målet kan observeres fra kundens teleskoper",
- "@js.mi2tgjiiqn": {
-  "x-review": "machine",
-  "x-source": "e944e5aba3"
- },
  "js.mimntzdewz": "Metoder: Mot og bort ›",
  "@js.mimntzdewz": {
   "x-review": "machine",
   "x-source": "3f269a446d"
  },
- "js.mk4mulcwso": "<b>ν₃ asymmetrisk strekk</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">{n2} µm-båndet i {s0} ›</a>",
- "@js.mk4mulcwso": {
+ "js.mkc9jxfgbz": "dipper markert",
+ "@js.mkc9jxfgbz": {
   "x-review": "machine",
-  "x-source": "518c8ddc31"
+  "x-source": "94e146b4e3"
  },
  "js.mlrhcayzxr": "Status står skrevet som et ord ved siden av hver farge.",
  "@js.mlrhcayzxr": {
   "x-review": "machine",
   "x-source": "4775478abc"
+ },
+ "js.mmnswive1w": "<i aria-hidden=\"true\"></i>Utbrudd",
+ "@js.mmnswive1w": {
+  "x-review": "machine",
+  "x-source": "e7a022e38b"
  },
  "js.mmu67oe6q3": "Jord–Sol-barysenteret",
  "@js.mmu67oe6q3": {
@@ -9606,10 +9751,25 @@
   "x-review": "machine",
   "x-source": "0882c3b8b4"
  },
+ "js.mqj6wfaw6h": "Ross {n0}",
+ "@js.mqj6wfaw6h": {
+  "x-review": "machine",
+  "x-source": "817ee35ea0"
+ },
+ "js.mskkijl1h9": "eps Ind A",
+ "@js.mskkijl1h9": {
+  "x-review": "machine",
+  "x-source": "0cf3bf4b89"
+ },
  "js.msr7a8c18z": "Bånd (µm)",
  "@js.msr7a8c18z": {
   "x-review": "machine",
   "x-source": "482e628874"
+ },
+ "js.mtnvg3zz1c": "HD {n0}<br><span class=\"muted mono t-data\">tess-hd-{n1}-s4</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.mtnvg3zz1c": {
+  "x-review": "machine",
+  "x-source": "7cc6c4ce56"
  },
  "js.mwjxjvzia1": "Sorter etter",
  "@js.mwjxjvzia1": {
@@ -9620,6 +9780,11 @@
  "@js.mwv88v3dkm": {
   "x-review": "machine",
   "x-source": "f1df8fd039"
+ },
+ "js.mxcgzchu7z": "YZ Cet b ›",
+ "@js.mxcgzchu7z": {
+  "x-review": "machine",
+  "x-source": "a3d4d803bc"
  },
  "js.n10imi0en": "ubegrenset",
  "@js.n10imi0en": {
@@ -9676,6 +9841,11 @@
   "x-review": "machine",
   "x-source": "520a2101da"
  },
+ "js.njyq57a914": "b Cen (AB)b",
+ "@js.njyq57a914": {
+  "x-review": "machine",
+  "x-source": "d5e094d32f"
+ },
  "js.nk8m1nny5r": "Blindkodet subjektplott for tess-4b369d3c6f09-{n0}: lyskurven som vurdererne markerte, uten målnavn og uten markører",
  "@js.nk8m1nny5r": {
   "x-review": "machine",
@@ -9696,6 +9866,11 @@
   "x-review": "machine",
   "x-source": "7a0d984887"
  },
+ "js.nrcbxny9wa": "status",
+ "@js.nrcbxny9wa": {
+  "x-review": "machine",
+  "x-source": "073c1634c4"
+ },
  "js.ns1wjk2bkh": "Åpen · kandidat, ikke bekreftet",
  "@js.ns1wjk2bkh": {
   "x-review": "machine",
@@ -9705,6 +9880,11 @@
  "@js.nt7jpblt1w": {
   "x-review": "machine",
   "x-source": "82765e23c7"
+ },
+ "js.ntaw7nc8vt": "Metodekapitler",
+ "@js.ntaw7nc8vt": {
+  "x-review": "machine",
+  "x-source": "31932e7289"
  },
  "js.ntp7tqnx1h": "{n0} av {n1} oppføringer vist.",
  "@js.ntp7tqnx1h": {
@@ -9720,6 +9900,11 @@
  "@js.nvauo0t95d": {
   "x-review": "machine",
   "x-source": "0906640b92"
+ },
+ "js.ny28knfv0a": "Å lese atmosfærer",
+ "@js.ny28knfv0a": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
  },
  "js.ny97ialxx0": "Sentinel · Skeptic: ingen markering i dette vinduet",
  "@js.ny97ialxx0": {
@@ -9766,6 +9951,11 @@
   "x-review": "machine",
   "x-source": "67071927f6"
  },
+ "js.o7m15kbsi5": "pi Men<br><span class=\"muted mono t-data\">tess-pi-men-s1</span><br><span class=\"muted\">TIC Teff {n0} K</span>",
+ "@js.o7m15kbsi5": {
+  "x-review": "machine",
+  "x-source": "8b203e2083"
+ },
  "js.o99izf3z1n": "ja: TOI {n0}",
  "@js.o99izf3z1n": {
   "x-review": "machine",
@@ -9790,11 +9980,6 @@
  "@js.op9ipohoso": {
   "x-review": "machine",
   "x-source": "703dfd613f"
- },
- "js.oqpbaoboao": "<b>ν₁ symmetrisk strekk</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · ikke tegnet i {s0}",
- "@js.oqpbaoboao": {
-  "x-review": "machine",
-  "x-source": "2474d10b70"
  },
  "js.osjdukhlhf": "<b>Stjerneskjerm.</b> En blomsterformet skjerm som flys langt foran et teleskop (Cash {n0}). Konseptet Roman Starshade Rendezvous: {n1} m på {n2} km; HabEx: {n3} m på omtrent {n4} km (HabEx Final Report).",
  "@js.osjdukhlhf": {
@@ -9856,11 +10041,6 @@
   "x-review": "machine",
   "x-source": "6f82ddb801"
  },
- "js.p4u8g14ecp": "En lysøkning: {n0} eller flere påfølgende punkter minst {n1}σ over en løpende median over {n2} dager, med topp på {n3}σ eller mer, målt mot både stjernens spredning og spredningen innenfor {n4} d; ikke på et instrumentelt signal.",
- "@js.p4u8g14ecp": {
-  "x-review": "machine",
-  "x-source": "286b750a5a"
- },
  "js.p4vg8hpjdy": "Opphav",
  "@js.p4vg8hpjdy": {
   "x-review": "machine",
@@ -9911,6 +10091,11 @@
   "x-review": "machine",
   "x-source": "a838a779e2"
  },
+ "js.pd6ew3rt19": "<i style=\"background:#BF5AF2\"></i>Mikrolinsing <span class=\"mono\">{n0}</span>",
+ "@js.pd6ew3rt19": {
+  "x-review": "machine",
+  "x-source": "59e3047926"
+ },
  "js.pf82vwrzvm": "mulig planet {n0}",
  "@js.pf82vwrzvm": {
   "x-review": "machine",
@@ -9925,11 +10110,6 @@
  "@js.pi29c0a6g9": {
   "x-review": "machine",
   "x-source": "59a33e9ea7"
- },
- "js.piby2721pq": "{n0} stjerner <span class=\"muted\">({n1} CP/KP, {n2} FP, {n3} FA)</span> <b>forskjøvet mot FP</b>: FP-radene beskriver FP-stjerner med bare {n4}-minuttersdata",
- "@js.piby2721pq": {
-  "x-review": "machine",
-  "x-source": "52d7acd8f3"
  },
  "js.pj7ep1wjt3": "<b>N–N-strekk, for det meste</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · ikke tegnet i Lese atmosfærer",
  "@js.pj7ep1wjt3": {
@@ -9946,10 +10126,20 @@
   "x-review": "machine",
   "x-source": "21e389771e"
  },
- "js.pn78q0jveb": "Ende til ende (DACE DRP-matriser mot pycheops' DRP-produkt): korrelasjon &gt;= {n0} på hvert referansebesøk",
- "@js.pn78q0jveb": {
+ "js.plrluloqs0": "pi Men c ›",
+ "@js.plrluloqs0": {
   "x-review": "machine",
-  "x-source": "cec6167f00"
+  "x-source": "3d841d792f"
+ },
+ "js.pm8m1jqibi": "dipper",
+ "@js.pm8m1jqibi": {
+  "x-review": "machine",
+  "x-source": "9b9a2cbe44"
+ },
+ "js.pn2cym3dnm": "Spill av {n0}–{n1}",
+ "@js.pn2cym3dnm": {
+  "x-review": "machine",
+  "x-source": "04f22f0879"
  },
  "js.pnrbaagjqb": "En svært massiv følgesvenn til en utviklet K-kjempestjerne, funnet med radialhastighet.",
  "@js.pnrbaagjqb": {
@@ -9971,15 +10161,10 @@
   "x-review": "machine",
   "x-source": "7c33bc2692"
  },
- "js.q8vb9a162v": "SetuHQ er uavhengig og er ikke tilknyttet, godkjent av eller drevet på vegne av ESA, CHEOPS-oppdraget eller CHEOPS-konsortiet. Det erstatter ikke ESAs Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker eller dokumentet Policies &amp; Procedures; den offisielle utlysningen og de offisielle verktøyene gjelder.",
- "@js.q8vb9a162v": {
+ "js.q3zvdlmvza": "{n0} Peg b ›",
+ "@js.q3zvdlmvza": {
   "x-review": "machine",
-  "x-source": "e5417cf525"
- },
- "js.q95vajnmsz": "TESS-sektorer {n0}–{n1}. Feed-oppføring {n2} for denne stjernen (lagret id <span class=\"mono\">tess-d64ea73e32ac-{n3}</span>). Et TOI-treff sammenligner en lagret periode med arkivverdier. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
- "@js.q95vajnmsz": {
-  "x-review": "machine",
-  "x-source": "52af58fde0"
+  "x-source": "8136a9c855"
  },
  "js.qad4ea3nk7": "Rossiter–McLaughlin, HD {n0} b (målt V sin I)",
  "@js.qad4ea3nk7": {
@@ -9995,6 +10180,16 @@
  "@js.qcwtbaf2e5": {
   "x-review": "machine",
   "x-source": "3091d416b9"
+ },
+ "js.qcyhotnwyb": "Kepler-{n0} b ›",
+ "@js.qcyhotnwyb": {
+  "x-review": "machine",
+  "x-source": "6ec7331b16"
+ },
+ "js.qegfutpzid": "Barnard's Star",
+ "@js.qegfutpzid": {
+  "x-review": "machine",
+  "x-source": "04db49fbfb"
  },
  "js.qezo9f8bhr": "{n0} planeter i exoplanet.eu · lagret type G2IV-V · klasse G fra Teff (nærmeste G2V)",
  "@js.qezo9f8bhr": {
@@ -10015,6 +10210,11 @@
  "@js.qjpeah132b": {
   "x-review": "machine",
   "x-source": "d7e942e6f6"
+ },
+ "js.qmvvg78xp": "tau Cet f",
+ "@js.qmvvg78xp": {
+  "x-review": "machine",
+  "x-source": "e99f6ebd4f"
  },
  "js.qnq290e1mh": "stjernestøy ~{n0} m/s",
  "@js.qnq290e1mh": {
@@ -10076,10 +10276,10 @@
   "x-review": "machine",
   "x-source": "17f710cec5"
  },
- "js.r6b0ke5ddb": "Målte data plottet slik de er lagret, med kilden skrevet under: SetuHQs lyskurver, katalogens antall.",
- "@js.r6b0ke5ddb": {
+ "js.r7r5ll60un": "markeringer",
+ "@js.r7r5ll60un": {
   "x-review": "machine",
-  "x-source": "aa17f78b83"
+  "x-source": "e3d11da4dd"
  },
  "js.r8opy5qens": "n_e, logaritmisk skala",
  "@js.r8opy5qens": {
@@ -10100,6 +10300,11 @@
  "@js.regiehtwzu": {
   "x-review": "machine",
   "x-source": "b4cb7439b1"
+ },
+ "js.rmcqh280p3": "Kapitler",
+ "@js.rmcqh280p3": {
+  "x-review": "machine",
+  "x-source": "9831375bc6"
  },
  "js.roj6ijskxu": "Også kjent som V452 Vul, TOI-{n0}.",
  "@js.roj6ijskxu": {
@@ -10135,11 +10340,6 @@
  "@js.s5dkmlriz2": {
   "x-review": "machine",
   "x-source": "a0a30e125c"
- },
- "js.s66tykdpyv": "Kunstnerens framstilling: utseendet varm stein, for radius under {n0} R⊕, Teq {n1} til {n2} K: bar, mørk stein med kratere, ingen rand. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.s66tykdpyv": {
-  "x-review": "machine",
-  "x-source": "c058d804c9"
  },
  "js.s6e71sj3nh": "<b>{n0} av {n1} vurderere</b> markerte den: {n2} av {n3} Sentinels, {n4} av {n5} Probes<small class=\"muted\" style=\"display:block;font-size:11px\"><span title=\"reviewer id volunteer-sensitive\">Probe · Følsom</span>, <span title=\"reviewer id volunteer-typical\">Probe · Typisk</span>, <span title=\"reviewer id volunteer-cautious\">Probe · Forsiktig</span></small>",
  "@js.s6e71sj3nh": {
@@ -10261,6 +10461,11 @@
   "x-review": "machine",
   "x-source": "9d9fb0ef55"
  },
+ "js.t39my5dsyh": "Tidsmåling <span class=\"mono\" data-cmn=\"timing\">{n0}</span>",
+ "@js.t39my5dsyh": {
+  "x-review": "machine",
+  "x-source": "eaf800daff"
+ },
  "js.t60qw9cha2": "Kunstnerisk framstilling · neptun, innstråling kan ikke beregnes · Ingen radius lagret; massen {n0} M⊕ (exoplanet.eu) er {n1} til {n2} M⊕, så den er tegnet som en Neptun-lignende planet. Radius ikke målt: ikke i målestokk. Innstråling kan ikke beregnes: nøytrale farger. Sammensetningen er ikke målt. Kilde: exoplanet.eu, hentet {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Slik tegnes bildene ›</a>",
  "@js.t60qw9cha2": {
   "x-review": "machine",
@@ -10271,10 +10476,15 @@
   "x-review": "machine",
   "x-source": "eb9b70b39c"
  },
- "js.tbam84ybce": "stjernens svartlegemefarge og randformørkelse; granulasjonen er tekstur",
- "@js.tbam84ybce": {
+ "js.tchjn2r4y9": "Systematisk",
+ "@js.tchjn2r4y9": {
   "x-review": "machine",
-  "x-source": "90cf191e4f"
+  "x-source": "5a9bb62240"
+ },
+ "js.tcofm5lh0s": "exoplanet.eu oppgir den som \"Kunngjort på et nettsted\", funnet med primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som 2MASS J19430387+{n4} d, K01364.02, KIC {n5} d, KOI-{n6} d, KOI-{n7}, WISE J194303.88+{n8} d.",
+ "@js.tcofm5lh0s": {
+  "x-review": "machine",
+  "x-source": "ffcad92d23"
  },
  "js.tel2igj1g8": "Kontraststige på logaritmisk skala fra 1e-{n0} til 1e-{n1}: Bakkebasert AO (GPI), rå 1e-{n2} (oppnådd); JWST NIRCam-koronagraf 1e-{n3} (oppnådd); JWST MIRI-koronagraf 2e-{n4} (oppnådd); Roman Coronagraph 1e-{n5} (krav); HWO 1e-{n6} (mål); Jordtvilling, reflektert lys 1e-{n7} (siktemål)",
  "@js.tel2igj1g8": {
@@ -10296,15 +10506,25 @@
   "x-review": "machine",
   "x-source": "164d6a71cd"
  },
+ "js.tjzc53y07u": "Hver søkekjøring, feilene slik de er lagret, og konfigurasjonen bak disse sidene.",
+ "@js.tjzc53y07u": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "js.tmvyhylhnp": "Pulsator eller rotasjonsvariabel",
+ "@js.tmvyhylhnp": {
+  "x-review": "machine",
+  "x-source": "1d4898f020"
+ },
  "js.toi5vq5s4d": "{n0} pc, slik det er oppført i exoplanet.eu",
  "@js.toi5vq5s4d": {
   "x-review": "machine",
   "x-source": "08aa2d3dc6"
  },
- "js.trnbddk8fe": "<b>{n0}</b> av de {n1} planetene med lagret avstand i exoplanet.eu ble funnet ved avbildning (den første metoden som er oppført). <a href=\"/explore/galaxy/?method=imaging\">Vis dem på galaksekartet ›</a>",
- "@js.trnbddk8fe": {
+ "js.trg2sd40ob": "konfigurasjon",
+ "@js.trg2sd40ob": {
   "x-review": "machine",
-  "x-source": "dd5674802f"
+  "x-source": "b79606fb3a"
  },
  "js.trzuzwcopk": "Pipeline",
  "@js.trzuzwcopk": {
@@ -10456,10 +10676,10 @@
   "x-review": "machine",
   "x-source": "943077f050"
  },
- "js.v5sdm14eih": "<b>ν₁ symmetrisk strekk</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">{n2} µm-båndet i Å lese atmosfærer ›</a>",
- "@js.v5sdm14eih": {
+ "js.v3cmzn255c": "SetuHQs konfigurasjoner, og enhver innsendt metode, vurdert blindt på den tilbakeholdte halvdelen.",
+ "@js.v3cmzn255c": {
   "x-review": "machine",
-  "x-source": "5a958a6168"
+  "x-source": "1e91ab197b"
  },
  "js.vbyk5xwnrv": "Boksmålet som ble brukt før (gjennomsnittlig fluks over panelets markerte vindu): dybde {n0} ppm, varighet {n1} h, forhold **{n2}** og **{n3}** mot Huang {n4} ({n5} og {n6} mot arkivets standardrad som README tidligere siterte).",
  "@js.vbyk5xwnrv": {
@@ -10491,11 +10711,6 @@
   "x-review": "machine",
   "x-source": "8d34629003"
  },
- "js.vm9rqq85fe": "Periodene til {s0} og c",
- "@js.vm9rqq85fe": {
-  "x-review": "machine",
-  "x-source": "da9014d7f4"
- },
  "js.vmsox3cj56": "Lenke til denne visningen",
  "@js.vmsox3cj56": {
   "x-review": "machine",
@@ -10525,11 +10740,6 @@
  "@js.vsh0ajf78": {
   "x-review": "machine",
   "x-source": "93eedb88e2"
- },
- "js.vtdvzcy89i": "kjøringenes lagrede subjekter og tilpasninger",
- "@js.vtdvzcy89i": {
-  "x-review": "machine",
-  "x-source": "f6d62e6cda"
  },
  "js.vtnlfvcu18": "Gasskjempe (etter masse; ingen radius lagret)",
  "@js.vtnlfvcu18": {
@@ -10576,10 +10786,10 @@
   "x-review": "machine",
   "x-source": "d2f1847f96"
  },
- "js.w084p1vq7y": "Falske alarmer på inverterte lyskurver på feedens nivå (dens fulle regel, FAP &lt; {n0})",
- "@js.w084p1vq7y": {
+ "js.w21u8mgncr": "{n0} Eri e",
+ "@js.w21u8mgncr": {
   "x-review": "machine",
-  "x-source": "9936d6f964"
+  "x-source": "a9bda9193e"
  },
  "js.w635vpthea": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">5d. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Dipp ved BTJD {n1}, {n2} ppm, {n3} t, SNR {n4}. Markert av {n5} vurderere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.w635vpthea": {
@@ -10606,6 +10816,16 @@
   "x-review": "machine",
   "x-source": "cc87a8d326"
  },
+ "js.w7mxe1jjf7": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s5</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.w7mxe1jjf7": {
+  "x-review": "machine",
+  "x-source": "1cc92f722d"
+ },
+ "js.w9mpw0gpum": "pi Men ›",
+ "@js.w9mpw0gpum": {
+  "x-review": "machine",
+  "x-source": "4de3e057f1"
+ },
  "js.wafeswebdi": "Kjøring tess-toi-{n0}-s2 · {n1} dipper ({n2} avvist) · {n3} subjekter.<span class=\"printonly\"> Hver kandidat på denne plansjen: kandidat, ubekreftet.</span>",
  "@js.wafeswebdi": {
   "x-review": "machine",
@@ -10620,6 +10840,11 @@
  "@js.wbhr5y7ltz": {
   "x-review": "machine",
   "x-source": "efa246c3ed"
+ },
+ "js.wcsqg4x5f": "Astrometri <span class=\"mono\" data-cmn=\"astrometry\">{n0}</span>",
+ "@js.wcsqg4x5f": {
+  "x-review": "machine",
+  "x-source": "9043a3475b"
  },
  "js.wge5c60gnw": "Gaia-{n0} b",
  "@js.wge5c60gnw": {
@@ -10640,6 +10865,11 @@
  "@js.wkrls1dk3c": {
   "x-review": "machine",
   "x-source": "0a0c72b4d4"
+ },
+ "js.wldr50kzra": "Luyten's Star d",
+ "@js.wldr50kzra": {
+  "x-review": "machine",
+  "x-source": "f978f22f3a"
  },
  "js.wmpk5bhzf9": "Astrometri · {n0}",
  "@js.wmpk5bhzf9": {
@@ -10665,6 +10895,11 @@
  "@js.wrpcbbr3ow": {
   "x-review": "machine",
   "x-source": "dcce1d924e"
+ },
+ "js.wsnihdiwdm": "Den teller planeter der en biosignaturgass kan påvises, ikke sivilisasjoner (Seager {n0}): stjerner observert, andelen som er rolige, med steinplaneter i den beboelige sonen, observerbare, med liv, og der livet lager en påvisbar gass.",
+ "@js.wsnihdiwdm": {
+  "x-review": "machine",
+  "x-source": "c7b5b24a16"
  },
  "js.wspydiftcg": "docs/results/pi_men_crossmatch.json (reserve; kjøringens egen: not_run, ModuleNotFoundError: No module named 'astroquery')",
  "@js.wspydiftcg": {
@@ -10695,11 +10930,6 @@
  "@js.wyws1u3mmf": {
   "x-review": "machine",
   "x-source": "db544a9e58"
- },
- "js.x0f76panzs": "Kunstnerisk fremstilling: det kjølige neptun-utseendet, for radius {n0} til {n1} R⊕, Teq under {n2} K: dypblå bånd og en mørk flekk. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.x0f76panzs": {
-  "x-review": "machine",
-  "x-source": "e72124962b"
  },
  "js.x177ygvldr": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">5b. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Dipp ved BTJD {n1}, {n2} ppm, {n3} t, SNR {n4}. Markert av {n5} vurderere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.x177ygvldr": {
@@ -10776,20 +11006,30 @@
   "x-review": "machine",
   "x-source": "39ac347e42"
  },
+ "js.xi9v7ksndn": "Wolf {n0} d",
+ "@js.xi9v7ksndn": {
+  "x-review": "machine",
+  "x-source": "1268b30fc7"
+ },
  "js.xjghoq101i": "logaritmisk intensitetsstrekk ({n0} til {n1}⁻⁶); planet ved et illustrativt {n2}⁻³; ideell monokromatisk optikk; maske- og blendestørrelser er illustrative",
  "@js.xjghoq101i": {
   "x-review": "machine",
   "x-source": "907c200b96"
  },
+ "js.xll7y1ynl0": "Historie og artikler",
+ "@js.xll7y1ynl0": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "js.xngfkgukjg": "Livets ligninger",
+ "@js.xngfkgukjg": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
  "js.xp4h2ofbdl": "· TIC {n0} · signal uten periode (én transitt) · {n1} av de største dykkene",
  "@js.xp4h2ofbdl": {
   "x-review": "machine",
   "x-source": "21f82eff3f"
- },
- "js.xpg4i01qhj": "Kunstnerisk framstilling: utseendet «varm gasskappe», for radius {n0} til {n1} R⊕, Teq {n2} til {n3} K: blågrå dis. Et stillbilde av utseendet, ikke av en bestemt planet.",
- "@js.xpg4i01qhj": {
-  "x-review": "machine",
-  "x-source": "7ef97acea7"
  },
  "js.xpmiaupaaj": "{n0} av {n1} vist",
  "@js.xpmiaupaaj": {
@@ -10805,6 +11045,11 @@
  "@js.xtdd9w23g6": {
   "x-review": "machine",
   "x-source": "3be7d1cc73"
+ },
+ "js.xvtyf8wl1b": "beta Pic b",
+ "@js.xvtyf8wl1b": {
+  "x-review": "machine",
+  "x-source": "e38549f8ed"
  },
  "js.xx7wry1e2": "Foreslått som biosignatur for steinplaneter, der den er vanskelig å danne uten liv.",
  "@js.xx7wry1e2": {
@@ -10835,6 +11080,16 @@
  "@js.y2sii8ag7z": {
   "x-review": "machine",
   "x-source": "1c8b900d94"
+ },
+ "js.y3xy9eepgg": "null {n0} · overskudd {n1} ({n2}%: {n3} til {n4})",
+ "@js.y3xy9eepgg": {
+  "x-review": "machine",
+  "x-source": "01f79dcd20"
+ },
+ "js.y9ptrwfobi": "docs/discoveries/catalog.json",
+ "@js.y9ptrwfobi": {
+  "x-review": "machine",
+  "x-source": "81e814ecc7"
  },
  "js.yef3d1ma9p": "{n0} filtrert bort som for dype",
  "@js.yef3d1ma9p": {
@@ -10871,30 +11126,20 @@
   "x-review": "machine",
   "x-source": "fe1b093c33"
  },
- "js.yob3llgolf": "Planeter etter år og metode",
- "@js.yob3llgolf": {
-  "x-review": "machine",
-  "x-source": "60ecd96d94"
- },
  "js.yq2bbta4k2": "<span class=\"word cand\">kandidat</span><span class=\"word s-known\">kjent TOI-periode</span><b class=\"fig\">4a. <span class=\"mono\">tess-308a47f84167-{n0}</span>.</b> Dykk ved BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Markert av {n5} vurderere (katalogen lagrer ikke panelstørrelsen eller konsensusintervallet). Ligger på en BLS-periode på {n6} dager med {n7} transitter. Status: perioden samsvarer med en kjent TOI. Kun arkivverdier. Denne siden hevder ingen deteksjon.",
  "@js.yq2bbta4k2": {
   "x-review": "machine",
   "x-source": "4aebb10343"
  },
- "js.yv746p7ayh": "<b>bøyning (to, i rett vinkel)</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · utenfor {n2}–{n3} µm-vinduet i {s0}",
- "@js.yv746p7ayh": {
+ "js.yrhnt8o7w9": "Molekyler og liv",
+ "@js.yrhnt8o7w9": {
   "x-review": "machine",
-  "x-source": "67a09bbd02"
+  "x-source": "d0ac3c4b97"
  },
  "js.yw1cg6z6ba": "En liten transitterende planet der lav tetthet først antydet en vannrik verden.",
  "@js.yw1cg6z6ba": {
   "x-review": "machine",
   "x-source": "9d636cbdc1"
- },
- "js.ywghy58587": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">{s0}</a></b> · vert <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s1}</a> · P {n0} d · transitterende",
- "@js.ywghy58587": {
-  "x-review": "machine",
-  "x-source": "40c55c5a8e"
  },
  "js.yx8blcjbm": "Teff: exoplanet.eu, hentet {n0}-{n1}-{n2}; stjernefarge: et Planck-spektrum gjennom CIE {n3}-fargetilpasningsfunksjonene",
  "@js.yx8blcjbm": {
@@ -10905,6 +11150,11 @@
  "@js.yza9eps8ud": {
   "x-review": "machine",
   "x-source": "871e79db9b"
+ },
+ "js.yzugi1nrhx": "exoplanet.eu oppgir den som \"Publisert i en fagfellevurdert artikkel\", funnet med primærtransitt i {n0}; oppføringen oppdatert {n1}-{n2}-{n3}. Også kjent som HD {n4} c.",
+ "@js.yzugi1nrhx": {
+  "x-review": "machine",
+  "x-source": "aee1648ae2"
  },
  "js.z0e3dbqjze": "– filtrert bort for få transitter",
  "@js.z0e3dbqjze": {
@@ -10926,25 +11176,10 @@
   "x-review": "machine",
   "x-source": "a9d66a33c2"
  },
- "js.z7hoxivdkf": "<b>ν-strekk</b> · {n0} µm · infrarødinaktiv (dipolen endres ikke) · tegnet ×{n1} · utenfor {n2}–{n3} µm-vinduet i {s0}",
- "@js.z7hoxivdkf": {
-  "x-review": "machine",
-  "x-source": "1bcc8097d6"
- },
  "js.zae6h8rkk6": "En Sentinel: en AI-modell (Claude Code CLI (Claude, Anthropic) · standard) som leser den plottede lyskurven og markerer dykk. Den er ikke en person.",
  "@js.zae6h8rkk6": {
   "x-review": "machine",
   "x-source": "adeac0a395"
- },
- "js.zb00gkwd2w": "<b>ν₁ symmetrisk strekk</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">{n2} µm-båndet i {s0} ›</a>",
- "@js.zb00gkwd2w": {
-  "x-review": "machine",
-  "x-source": "5b5f436da5"
- },
- "js.zbm91l3rcx": "<b>ν₃ asymmetrisk strekk</b> · {n0} µm · infrarødaktiv · tegnet ×{n1} · <a href=\"/how-it-works/atmospheres/\">{n2} µm-båndet i Å lese atmosfærer ›</a>",
- "@js.zbm91l3rcx": {
-  "x-review": "machine",
-  "x-source": "a265a49ab4"
  },
  "js.zdvz2hwho1": "{n0} kjent TOI",
  "@js.zdvz2hwho1": {
@@ -10965,6 +11200,11 @@
  "@js.zhegcnbaps": {
   "x-review": "machine",
   "x-source": "43c883da28"
+ },
+ "js.zjf4m6pas4": "tau Boo Ab ›",
+ "@js.zjf4m6pas4": {
+  "x-review": "machine",
+  "x-source": "5487f582ec"
  },
  "js.zknme5264y": "Kontrollflagg: <span class=\"mono\">density_mismatch</span> · besto kontrollen",
  "@js.zknme5264y": {
@@ -11020,6 +11260,11 @@
  "@js.zwdwnqegck": {
   "x-review": "machine",
   "x-source": "c369fc08d2"
+ },
+ "js.zzww829dur": "stor",
+ "@js.zzww829dur": {
+  "x-review": "machine",
+  "x-source": "d35c416a85"
  },
  "label.art": "Kunstnerisk framstilling",
  "@label.art": {
@@ -13521,6 +13766,11 @@
   "x-review": "machine",
   "x-source": "39a5ae06fe"
  },
+ "pg.39b16a9877": "<a href=\"https://arxiv.org/abs/1001.2010\" rel=\"noopener\">Winn {n0}, Transitter og okkultasjoner</a>",
+ "@pg.39b16a9877": {
+  "x-review": "machine",
+  "x-source": "39b16a9877"
+ },
  "pg.39de4731ee": "Tegning",
  "@pg.39de4731ee": {
   "x-review": "machine",
@@ -14800,6 +15050,11 @@
  "@pg.67e7b10ed4": {
   "x-review": "machine",
   "x-source": "67e7b10ed4"
+ },
+ "pg.6811b8bfa5": "Formørkelsesdobbeltstjerne (dipper)",
+ "@pg.6811b8bfa5": {
+  "x-review": "machine",
+  "x-source": "6811b8bfa5"
  },
  "pg.682e64a23a": "To scener. Planetarisk nordlys: en planets magnetfeltlinjer, med stråling sendt ut i en hul kjegle fra polen; når kjeglen sveiper over observatøren, vises et utbrudd i det dynamiske spekteret nedenfor, opp til syklotronfrekvensen som feltet bestemmer. Stjerne–planet-vekselvirkning: planeten går i bane inne i stjernens magnetfelt, et fluksrør forbinder den med stjernen, og strålingen kommer fra stjernens fotpunkt. Feltglidebryteren setter syklotron-grensefrekvensen, beregnet som {n0} MHz per gauss.",
  "@pg.682e64a23a": {
@@ -17545,6 +17800,11 @@
  "@pg.cc21a5b798": {
   "x-review": "machine",
   "x-source": "cc21a5b798"
+ },
+ "pg.cc3ef42d5c": "Dette var <a href=\"/candidates/hd-15337/dip-1/\">HD {n0}, dipp {n1}</a>. Panelpoengsum {n2}, markert av {n3} vurderere. Kun Probes; Sentinels ble ikke kjørt på dette eksempelet.",
+ "@pg.cc3ef42d5c": {
+  "x-review": "machine",
+  "x-source": "cc3ef42d5c"
  },
  "pg.cc5c2c6320": "Flytt Katalog lenger fram",
  "@pg.cc5c2c6320": {

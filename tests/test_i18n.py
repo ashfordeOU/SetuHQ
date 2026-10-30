@@ -221,7 +221,7 @@ def test_stubs_stay_single_url_and_load_the_language_from_the_shell(site):
     tpl = (site / "assets" / "stub-template.html").read_text()
     assert "data-chrome" in tpl and "hreflang" not in tpl and "i18n-" not in tpl  # one address; the shell fetches the rest
     shell = next(site.glob("assets/site-*.js")).read_text()
-    i18n_js = next(site.glob("assets/i18n-*.js")).name
+    i18n_js = next(p for p in site.glob("assets/i18n-*.js") if not p.name.startswith("i18n-auto-")).name
     assert f"/assets/{i18n_js}" in shell and "setuhq-lang" in (site / "assets" / i18n_js).read_text()
     assert not (site / "de" / "planets").exists()
 

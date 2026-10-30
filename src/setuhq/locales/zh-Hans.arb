@@ -1,12 +1,12 @@
 {
  "@@locale": "zh-Hans",
  "@@x-source-locale": "en",
- "cat.h1": "每一颗已知的系外行星。",
+ "cat.h1": "每<wbr>一颗<wbr>已知的<wbr>系外行星。",
  "@cat.h1": {
   "x-review": "machine",
   "x-source": "c12b2894d2"
  },
- "cat.h1b": "{n, number} 条记录，可搜索。",
+ "cat.h1b": "{n, number} 条<wbr>记录，<wbr>可<wbr>搜索。",
  "@cat.h1b": {
   "x-review": "machine",
   "x-source": "0082f39a49"
@@ -36,17 +36,17 @@
   "x-review": "machine",
   "x-source": "ceac0b11e3"
  },
- "chapter.astrometry": "天体测量",
+ "chapter.astrometry": "天体<wbr>测量",
  "@chapter.astrometry": {
   "x-review": "machine",
   "x-source": "8a0961eea7"
  },
- "chapter.doppler": "靠近与远离",
+ "chapter.doppler": "靠近与<wbr>远离",
  "@chapter.doppler": {
   "x-review": "machine",
   "x-source": "982502489b"
  },
- "chapter.equations": "生命方程",
+ "chapter.equations": "生命<wbr>方程",
  "@chapter.equations": {
   "x-review": "machine",
   "x-source": "a586047366"
@@ -56,27 +56,27 @@
   "x-review": "machine",
   "x-source": "04819af0c8"
  },
- "chapter.history": "历史与论文",
+ "chapter.history": "历史与<wbr>论文",
  "@chapter.history": {
   "x-review": "machine",
   "x-source": "c6638a4574"
  },
- "chapter.imaging": "遮挡星光",
+ "chapter.imaging": "遮挡<wbr>星光",
  "@chapter.imaging": {
   "x-review": "machine",
   "x-source": "6464ce5238"
  },
- "chapter.microlensing": "微引力透镜",
+ "chapter.microlensing": "微<wbr>引力<wbr>透镜",
  "@chapter.microlensing": {
   "x-review": "machine",
   "x-source": "7713c65bef"
  },
- "chapter.molecules": "分子与生命",
+ "chapter.molecules": "分子与<wbr>生命",
  "@chapter.molecules": {
   "x-review": "machine",
   "x-source": "d0ac3c4b97"
  },
- "chapter.population": "行星族群",
+ "chapter.population": "行星<wbr>族群",
  "@chapter.population": {
   "x-review": "machine",
   "x-source": "5b828861ae"
@@ -86,22 +86,22 @@
   "x-review": "machine",
   "x-source": "2a7dfeb2f2"
  },
- "chapter.rv": "视向速度",
+ "chapter.rv": "视向<wbr>速度",
  "@chapter.rv": {
   "x-review": "machine",
   "x-source": "5605460ec2"
  },
- "chapter.spectroscopy": "解读大气",
+ "chapter.spectroscopy": "解读<wbr>大气",
  "@chapter.spectroscopy": {
   "x-review": "machine",
   "x-source": "e57371d577"
  },
- "chapter.survey": "巡天如何进行",
+ "chapter.survey": "巡天<wbr>如何<wbr>进行",
  "@chapter.survey": {
   "x-review": "machine",
   "x-source": "418a56729e"
  },
- "chapter.timing": "计时与相位",
+ "chapter.timing": "计时与<wbr>相位",
  "@chapter.timing": {
   "x-review": "machine",
   "x-source": "f5f7adb77b"
@@ -1311,7 +1311,7 @@
   "x-review": "machine",
   "x-source": "9fdbc5d13a"
  },
- "docs.contribute": "贡献一次扫描",
+ "docs.contribute": "贡献<wbr>一次<wbr>扫描",
  "@docs.contribute": {
   "x-review": "machine",
   "x-source": "3118488db2"
@@ -1326,7 +1326,7 @@
   "x-review": "machine",
   "x-source": "7636e0e0dd"
  },
- "docs.data": "数据和文件",
+ "docs.data": "数据和<wbr>文件",
  "@docs.data": {
   "x-review": "machine",
   "x-source": "1544ff48d7"
@@ -1356,12 +1356,12 @@
   "x-review": "machine",
   "x-source": "a4c5119805"
  },
- "docs.h1": "自己运行。",
+ "docs.h1": "自己<wbr>运行。",
  "@docs.h1": {
   "x-review": "machine",
   "x-source": "a1737d6898"
  },
- "docs.install": "安装与首次运行",
+ "docs.install": "安装与<wbr>首次<wbr>运行",
  "@docs.install": {
   "x-review": "machine",
   "x-source": "ea230bebae"
@@ -1371,7 +1371,7 @@
   "x-review": "machine",
   "x-source": "7d1db3c963"
  },
- "docs.mcp": "在助手中使用",
+ "docs.mcp": "在<wbr>助手中<wbr>使用",
  "@docs.mcp": {
   "x-review": "machine",
   "x-source": "ee854c3928"
@@ -1381,7 +1381,7 @@
   "x-review": "machine",
   "x-source": "c393096cc9"
  },
- "docs.mcp.h": "在 AI 助手中使用（MCP）",
+ "docs.mcp.h": "在 AI 助手中<wbr>使用（MCP）",
  "@docs.mcp.h": {
   "x-review": "machine",
   "x-source": "f46e936a3b"
@@ -1391,7 +1391,7 @@
   "x-review": "machine",
   "x-source": "eb88b7d692"
  },
- "docs.pictures": "图是如何绘制的",
+ "docs.pictures": "图是<wbr>如何<wbr>绘制的",
  "@docs.pictures": {
   "x-review": "machine",
   "x-source": "e2d864dc53"
@@ -1406,7 +1406,7 @@
   "x-review": "machine",
   "x-source": "7c281d6576"
  },
- "docs.prov": "技术细节：图的来源",
+ "docs.prov": "技术细节：<wbr>图的<wbr>来源",
  "@docs.prov": {
   "x-review": "machine",
   "x-source": "1cfbcdad80"
@@ -1436,7 +1436,7 @@
   "x-review": "machine",
   "x-source": "2e8b6ed67a"
  },
- "ed.compare": "比较各版本",
+ "ed.compare": "比较<wbr>各<wbr>版本",
  "@ed.compare": {
   "x-review": "machine",
   "x-source": "0a79392035"
@@ -1456,7 +1456,7 @@
   "x-review": "machine",
   "x-source": "d588b090c3"
  },
- "ex.h1": "来自{stars, plural, =1 {一颗示例恒星} other {# 颗示例恒星}}、可以打开的 {n, plural, other {# 个凹陷}}。",
+ "ex.h1": "来自{stars, plural, =1 {一颗示例恒星} other {# 颗示例恒星}}、<wbr>可以<wbr>打开的 {n, plural, other {# 个凹陷}}。",
  "@ex.h1": {
   "x-review": "machine",
   "x-source": "ad8e8b5e42"
@@ -1621,12 +1621,12 @@
   "x-review": "machine",
   "x-source": "0620019806"
  },
- "gx.h1": "每一颗已知的系外行星，",
+ "gx.h1": "每<wbr>一颗<wbr>已知的<wbr>系外行星，",
  "@gx.h1": {
   "x-review": "machine",
   "x-source": "22fff7c222"
  },
- "gx.h1b": "环绕太阳。",
+ "gx.h1b": "环绕<wbr>太阳。",
  "@gx.h1b": {
   "x-review": "machine",
   "x-source": "0513cb70f1"
@@ -1676,7 +1676,7 @@
   "x-review": "machine",
   "x-source": "f31d20fed2"
  },
- "home.band.counters": "证据，逐一计数",
+ "home.band.counters": "证据，<wbr>逐一<wbr>计数",
  "@home.band.counters": {
   "x-review": "machine",
   "x-source": "5f2b5a53a9"
@@ -1686,7 +1686,7 @@
   "x-review": "machine",
   "x-source": "6d25c68528"
  },
- "home.band.fold": "行星如何隐藏在噪声中",
+ "home.band.fold": "行星<wbr>如何<wbr>隐藏<wbr>在<wbr>噪声中",
  "@home.band.fold": {
   "x-review": "machine",
   "x-source": "79677ced9c"
@@ -1696,7 +1696,7 @@
   "x-review": "machine",
   "x-source": "6a758a8937"
  },
- "home.band.lineup": "示例中的行星，按比例",
+ "home.band.lineup": "示例中的<wbr>行星，<wbr>按<wbr>比例",
  "@home.band.lineup": {
   "x-review": "machine",
   "x-source": "aaf6e55de4"
@@ -1706,7 +1706,7 @@
   "x-review": "machine",
   "x-source": "f48421d1f6"
  },
- "home.band.panel": "谁来评审一个凹陷",
+ "home.band.panel": "谁<wbr>来<wbr>评审<wbr>一个<wbr>凹陷",
  "@home.band.panel": {
   "x-review": "machine",
   "x-source": "fd782b5776"
@@ -1716,7 +1716,7 @@
   "x-review": "machine",
   "x-source": "5326ad997a"
  },
- "home.band.sky": "每颗已知行星的恒星，按其被找到的年份",
+ "home.band.sky": "每颗<wbr>已知<wbr>行星的<wbr>恒星，<wbr>按<wbr>其<wbr>被<wbr>找到的<wbr>年份",
  "@home.band.sky": {
   "x-review": "machine",
   "x-source": "25fe759e36"
@@ -1821,12 +1821,12 @@
   "x-review": "machine",
   "x-source": "33d22aaaf3"
  },
- "home.dohere": "在这里可以做什么",
+ "home.dohere": "在<wbr>这里<wbr>可以<wbr>做<wbr>什么",
  "@home.dohere": {
   "x-review": "machine",
   "x-source": "c2f1fa481b"
  },
- "home.examples": "实例：{n, plural, other {# 颗恒星}}，同一条流水线",
+ "home.examples": "实例：{n, plural, other {# 颗恒星}}，<wbr>同<wbr>一条<wbr>流水线",
  "@home.examples": {
   "x-review": "machine",
   "x-source": "31c4bc580e"
@@ -1836,7 +1836,7 @@
   "x-review": "machine",
   "x-source": "d13aa1075e"
  },
- "home.hero.h1": "天空，经过评审。",
+ "home.hero.h1": "天空，<wbr>经过<wbr>评审。",
  "@home.hero.h1": {
   "x-review": "machine",
   "x-source": "c537af3dcb"
@@ -1856,7 +1856,7 @@
   "x-review": "machine",
   "x-source": "9caca54a23"
  },
- "home.honest.h": "本页不声称什么",
+ "home.honest.h": "本页<wbr>不<wbr>声称<wbr>什么",
  "@home.honest.h": {
   "x-review": "machine",
   "x-source": "738097d05c"
@@ -1906,7 +1906,7 @@
   "x-review": "machine",
   "x-source": "d58bf9bb5f"
  },
- "home.refcheck": "参考检查：已知行星 {planet}，在运行 {run} 中再次找到",
+ "home.refcheck": "参考<wbr>检查：<wbr>已知<wbr>行星 {planet}，<wbr>在<wbr>运行 {run} 中<wbr>再次<wbr>找到",
  "@home.refcheck": {
   "x-review": "machine",
   "x-source": "e700c0ebab"
@@ -2016,20 +2016,10 @@
   "x-review": "machine",
   "x-source": "acac77611f"
  },
- "js.103n82dja3r": "目录更新于 <time datetime=\"2026-10-29T00:47:42+00:00\" title=\"2026-10-29T00:47:42+00:00\">{n1} 年 10 月 {n0} 日 {n2} UTC</time>。",
- "@js.103n82dja3r": {
-  "x-review": "machine",
-  "x-source": "273b2777f8"
- },
  "js.104nn3vx4at": "术语",
  "@js.104nn3vx4at": {
   "x-review": "machine",
   "x-source": "c6f3bfd456"
- },
- "js.106g3hdfp83": "TIC {n0} · 经审核否决，不是候选",
- "@js.106g3hdfp83": {
-  "x-review": "machine",
-  "x-source": "9772d14ea9"
  },
  "js.106t6pg6coj": "exoplanet.eu 中有 {n0} 颗行星 · 由 Teff 定为 G 类（最接近 G5V）",
  "@js.106t6pg6coj": {
@@ -2061,25 +2051,20 @@
   "x-review": "machine",
   "x-source": "ffa10fa912"
  },
+ "js.10so4x5ppkr": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">7a. <span class=\"mono\">tess-eaab33b6b763-{n0}</span>.</b> 凹陷位于 BTJD {n1}，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 位审核者标记（目录未存储评审组规模或共识区间）。位于一个 {n6} 天、含 {n7} 次凌星的 BLS 周期上。状态：周期与一个已知 TOI 匹配。仅为档案数值。本页面不声称任何探测。",
+ "@js.10so4x5ppkr": {
+  "x-review": "machine",
+  "x-source": "789c4ff542"
+ },
  "js.10v4vkxqjry": "此版本未存储该恒星的光变曲线：搜索目录只保留测量值，因此没有完整对象的曲线，也没有折叠面板。",
  "@js.10v4vkxqjry": {
   "x-review": "machine",
   "x-source": "7fe57adca4"
  },
- "js.10vb2hszsy6": "exoplanet.eu 中存有距离的 {n1} 颗行星里，有 <b>{n0}</b> 颗是通过凌星法探测到的（所列的第一种方法）。<a href=\"/explore/galaxy/?method=transit\">在银河地图上显示 ›</a>",
- "@js.10vb2hszsy6": {
-  "x-review": "machine",
-  "x-source": "01ac9f0ca4"
- },
  "js.10vrj8m3wjv": "CO <span>一氧化碳</span>",
  "@js.10vrj8m3wjv": {
   "x-review": "machine",
   "x-source": "828d691c9b"
- },
- "js.10wj3xzpdgf": "太阳圆面，{n0} K，以其黑体颜色呈现并带有临边昏暗。",
- "@js.10wj3xzpdgf": {
-  "x-review": "machine",
-  "x-source": "ae27e2403d"
  },
  "js.10zmmlwb9xi": "<b>Lyot 日冕仪。</b>焦平面上的不透明圆盘挡住恒星像的核心。它无法去除的是圆盘边缘衍射的光，下一块透镜将这些光送到重成像光瞳的边缘；一个略小于光瞳的 Lyot 光阑可拦截该边缘（Lyot {n0}）。使用 {n1} λ/D 的圆盘时，将光阑从光瞳的 {n2}% 收窄到 {n3}%，可使 {n4} λ/D 处的星光从恒星峰值的 {n5}×{n6}⁻⁵ 降至 {n7}×{n8}⁻⁷（无日冕仪：{n9}×{n10}⁻⁵）[calc]，而远在圆盘之外的行星保留其 {n11}% 的光，即光阑的面积比。",
  "@js.10zmmlwb9xi": {
@@ -2135,6 +2120,11 @@
  "@js.11kdzzmc5nu": {
   "x-review": "machine",
   "x-source": "184a6800cc"
+ },
+ "js.11n5kdywh3l": "Teff",
+ "@js.11n5kdywh3l": {
+  "x-review": "machine",
+  "x-source": "4b0fa3b17f"
  },
  "js.11n6gzp7din": "{n0}（受先验主导；未给出误差，因为它只会重复先验的误差）",
  "@js.11n6gzp7din": {
@@ -2196,6 +2186,11 @@
   "x-review": "machine",
   "x-source": "f8acf4d692"
  },
+ "js.122id4bsvl0": "<i style=\"background:#FFD60A\"></i>天体测量 <span class=\"mono\">{n0}</span>",
+ "@js.122id4bsvl0": {
+  "x-review": "machine",
+  "x-source": "8013870b43"
+ },
  "js.122x1s0w9zz": "F_Q · F_HZ，对数刻度",
  "@js.122x1s0w9zz": {
   "x-review": "machine",
@@ -2216,10 +2211,10 @@
   "x-review": "machine",
   "x-source": "cc95c0003c"
  },
- "js.12cg9tt6w6b": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Sentinel 信息流",
- "@js.12cg9tt6w6b": {
+ "js.12cis2bjlup": "射电",
+ "@js.12cis2bjlup": {
   "x-review": "machine",
-  "x-source": "2d63ad7563"
+  "x-source": "2a7dfeb2f2"
  },
  "js.12ed4zztqr8": "{s0} 的艺术想象图：一颗位于温暖带的类海王星行星，{n0} 个地球半径，{n1} K。",
  "@js.12ed4zztqr8": {
@@ -2241,15 +2236,20 @@
   "x-review": "machine",
   "x-source": "8ec36a17e7"
  },
- "js.12lth0d2p34": "{n0} 年，Wolszczan 和 Frail 根据毫秒脉冲星 PSR B1257+{n1} 脉冲到达时间的规律摆动，在其周围找到了行星（Wolszczan &amp; Frail {n2}）：行星牵引脉冲星，光行时间随之变化数毫秒。这是射电计时，而不是来自行星的射电。<a href=\"/explore/galaxy/?tour=13\">银河导览中的对应卡片 ›</a>",
- "@js.12lth0d2p34": {
-  "x-review": "machine",
-  "x-source": "a919cbb3a4"
- },
  "js.12m26xazjm": "通过审核；评审组 {n0}% 的权重将该对象标为潜在行星；位于周期信号上：{n1} 次凌星，P = {n2} d",
  "@js.12m26xazjm": {
   "x-review": "machine",
   "x-source": "8ec885602b"
+ },
+ "js.12ooi6yhl0h": "Kepler-{n0} b",
+ "@js.12ooi6yhl0h": {
+  "x-review": "machine",
+  "x-source": "5d97744685"
+ },
+ "js.12q7to7nkw0": "朝向与远离",
+ "@js.12q7to7nkw0": {
+  "x-review": "machine",
+  "x-source": "982502489b"
  },
  "js.12ujqir6o8g": "JWST MIRI 日冕仪",
  "@js.12ujqir6o8g": {
@@ -2260,6 +2260,11 @@
  "@js.12vi4vfunn8": {
   "x-review": "machine",
   "x-source": "05ed847784"
+ },
+ "js.12w6m38pgra": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">7b. <span class=\"mono\">tess-1c554332c266-{n0}</span>.</b> 凹陷位于 BTJD {n1}，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 位审核者标记（目录未存储评审组规模或共识区间）。位于一个 {n6} 天、含 {n7} 次凌星的 BLS 周期上。状态：周期与一个已知 TOI 匹配。仅为档案数值。本页面不声称任何探测。",
+ "@js.12w6m38pgra": {
+  "x-review": "machine",
+  "x-source": "961ae19d5c"
  },
  "js.12y2sroyczu": "{n0} 基频",
  "@js.12y2sroyczu": {
@@ -2296,11 +2301,6 @@
   "x-review": "machine",
   "x-source": "bff9d47f59"
  },
- "js.136ul906qph": "来源：SetuHQ 存储的运行 runs/tess-pi-men-s1（TESS 第 {n0} 扇区，SPOC {n1} 分钟 PDCSAP 流量，TIC {n2}；config sha256 585955d5e7a1…）：{n3} 个存储数据点，每个对象按其中位数归一化，并按 {n4} 分钟分箱。",
- "@js.136ul906qph": {
-  "x-review": "machine",
-  "x-source": "af8431ab78"
- },
  "js.138zpxk17ru": "f_i，对数刻度",
  "@js.138zpxk17ru": {
   "x-review": "machine",
@@ -2316,11 +2316,6 @@
   "x-review": "machine",
   "x-source": "e39c1a07d7"
  },
- "js.13ac253fetk": "exoplanet.eu 中存有距离的 {n1} 颗行星里，有 <b>{n0}</b> 颗是通过天体测量法探测到的（所列的第一种方法）。<a href=\"/explore/galaxy/?method=astrometry\">在银河地图上显示 ›</a>",
- "@js.13ac253fetk": {
-  "x-review": "machine",
-  "x-source": "dc5877cdd7"
- },
  "js.13cdu73b6uc": "某些恒星周围的 CO₂ 光解，或失水后的大规模氢逃逸。",
  "@js.13cdu73b6uc": {
   "x-review": "machine",
@@ -2335,6 +2330,11 @@
  "@js.13ffhncz0ep": {
   "x-review": "machine",
   "x-source": "7b27994bc4"
+ },
+ "js.13gocj2fnda": "docs/results/reviewer_weights_full_panel.json",
+ "@js.13gocj2fnda": {
+  "x-review": "machine",
+  "x-source": "5134ba8327"
  },
  "js.13i1elxloqt": "pi Men c：每标高，富含 H₂",
  "@js.13i1elxloqt": {
@@ -2355,6 +2355,11 @@
  "@js.13kikmj1q17": {
   "x-review": "machine",
   "x-source": "f5cca1ccc1"
+ },
+ "js.13lcq3b40tl": "示意图",
+ "@js.13lcq3b40tl": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
  },
  "js.13mufrch5ly": "tess-38b5a559eee2-{n0}",
  "@js.13mufrch5ly": {
@@ -2381,15 +2386,20 @@
   "x-review": "machine",
   "x-source": "118618889c"
  },
+ "js.13swdwmmbmi": "运行与配置 ›",
+ "@js.13swdwmmbmi": {
+  "x-review": "machine",
+  "x-source": "c610f2888d"
+ },
  "js.13t7ixpw2ky": "主要候选",
  "@js.13t7ixpw2ky": {
   "x-review": "machine",
   "x-source": "7021bb9b5f"
  },
- "js.13vqj4f8hh6": "出现仪器线索时：样本边缘；{n0} d 内有动量卸载、散射光标记或指向/手动排除标记；{n2} d 内有超过 {n1} d 的数据间隙；或审阅组半数权重判定为仪器效应。",
- "@js.13vqj4f8hh6": {
+ "js.13x58b3mwwa": "Wolf {n0} c",
+ "@js.13x58b3mwwa": {
   "x-review": "machine",
-  "x-source": "0495534488"
+  "x-source": "560cd4bbe1"
  },
  "js.13xevrqzvu7": "F_S（可探测气体）",
  "@js.13xevrqzvu7": {
@@ -2410,6 +2420,11 @@
  "@js.1473r6pfqi4": {
   "x-review": "machine",
   "x-source": "b2990754ad"
+ },
+ "js.14cls39i1sb": "Luhman {n0} B",
+ "@js.14cls39i1sb": {
+  "x-review": "machine",
+  "x-source": "f04427416b"
  },
  "js.14ct4jjljtx": "上一站",
  "@js.14ct4jjljtx": {
@@ -2440,6 +2455,16 @@
  "@js.14fe8ebzk21": {
   "x-review": "machine",
   "x-source": "365e781739"
+ },
+ "js.14huikxe5ha": "Luyten's Star e",
+ "@js.14huikxe5ha": {
+  "x-review": "machine",
+  "x-source": "5a24593e14"
+ },
+ "js.14isgauchsm": "YZ Cet",
+ "@js.14isgauchsm": {
+  "x-review": "machine",
+  "x-source": "f80e6fd49c"
  },
  "js.14iuxy783ms": "又名 EQ Peg A、BD+{n0} {n1} A、LMP {n2} A、WIR {n3} A。",
  "@js.14iuxy783ms": {
@@ -2591,6 +2616,16 @@
   "x-review": "machine",
   "x-source": "dd7d34d846"
  },
+ "js.15phwu441vo": "Lalande {n0} c",
+ "@js.15phwu441vo": {
+  "x-review": "machine",
+  "x-source": "5aa41e4960"
+ },
+ "js.15pp5ycbnhi": "超出（{n0}%）",
+ "@js.15pp5ycbnhi": {
+  "x-review": "machine",
+  "x-source": "8cd023e1a1"
+ },
  "js.15r06e4vt70": "运行 tess-hd-{n0}-s4 · {n1} 个凹陷（{n2} 个候选，{n3} 个待复核）· {n4} 个样本。<span class=\"printonly\"> 本图版上的每个候选：候选，未经确认。</span>",
  "@js.15r06e4vt70": {
   "x-review": "machine",
@@ -2610,6 +2645,11 @@
  "@js.15vez7zpk4h": {
   "x-review": "machine",
   "x-source": "d4a367de3f"
+ },
+ "js.15zsmt411w4": "Sentinel · 怀疑者 <span class=\"mono idtag\" title=\"reviewer id\">claude-skeptic</span>",
+ "@js.15zsmt411w4": {
+  "x-review": "machine",
+  "x-source": "b732d52e24"
  },
  "js.161sousy7g0": "碰撞参数",
  "@js.161sousy7g0": {
@@ -2656,6 +2696,11 @@
   "x-review": "machine",
   "x-source": "3b661f9791"
  },
+ "js.16h8d5mlpjp": "Probes",
+ "@js.16h8d5mlpjp": {
+  "x-review": "machine",
+  "x-source": "8f6e567898"
+ },
  "js.16hqbj09o4u": "磁力线、锥体和轨道未按比例；爆发时间为示意；截止值为计算所得",
  "@js.16hqbj09o4u": {
   "x-review": "machine",
@@ -2670,11 +2715,6 @@
  "@js.16mxiyd8s0l": {
   "x-review": "machine",
   "x-source": "e223d8ec1e"
- },
- "js.16qlwwljm69": "<b>Pro Sweeps</b> <span class=\"eddev\">开发中</span>：对扇区或目标列表进行托管搜索，使用客户自己的 AI 提供商密钥；结果以开放贡献包的形式返回",
- "@js.16qlwwljm69": {
-  "x-review": "machine",
-  "x-source": "31d3ac206f"
  },
  "js.16r0kn8gjyr": "SetuHQ 读取的巡天。",
  "@js.16r0kn8gjyr": {
@@ -2691,11 +2731,6 @@
   "x-review": "machine",
   "x-source": "b7b7f73a1e"
  },
- "js.16vo26f9hfu": "与 pycheops 输入相同：在每次参考观测中，我们的去相关与 pycheops 的差异 &lt; {n0} ppm rms，或在相同数据点和项上达到更低的 rms（v1 之后放宽）",
- "@js.16vo26f9hfu": {
-  "x-review": "machine",
-  "x-source": "c88247e554"
- },
  "js.16x61d2zia4": "<span class=\"word s-rej\">经审核否决</span><b class=\"fig\">1d. TOI-{n0}，凹陷 {n1}。</b> <span class=\"sid mono\">存储 id tess-01e315ee5ebf-{n2}。</span> 凹陷位于 BTJD {n3}，{n4} ppm，{n5} h，信噪比 {n6}。共识区间 BTJD {n7} 至 {n8}。由 {n10} 位审阅者中的 {n9} 位标记（{n12} 个 Sentinels 中的 {n11} 个，{n14} 个 Probes 中的 {n13} 个）。位于 {n15} 天的 BLS 周期上（t0 BTJD {n16}）。经审核否决（次食，任意相位次食）。档案：容差范围内无档案行星。仅为档案值。本页不声称任何探测。",
  "@js.16x61d2zia4": {
   "x-review": "machine",
@@ -2705,11 +2740,6 @@
  "@js.16xd4uxov7b": {
   "x-review": "machine",
   "x-source": "6e2db4884e"
- },
- "js.16xkma5n6o5": "对照检验决定能否参与排名，但不计入 J：只有在每颗被搜索恒星上都具备两份对照列表的留出条目才参与排名，其余条目列出但不排名。对照列表由方法自行报告；排行榜没有光变曲线，无法重新计算这些列表。Sentinel 子样本从不参与排名。",
- "@js.16xkma5n6o5": {
-  "x-review": "machine",
-  "x-source": "698a7fa611"
  },
  "js.16yau0dec1n": "普通化学过程和脱气作用在各处都会产生它。不是生物标志物。",
  "@js.16yau0dec1n": {
@@ -2731,11 +2761,6 @@
   "x-review": "machine",
   "x-source": "00d60e31a4"
  },
- "js.170ttkobv": "<b>示意图。</b>用于解释概念；不是数据。",
- "@js.170ttkobv": {
-  "x-review": "machine",
-  "x-source": "f84dea2704"
- },
  "js.1752ocxoxow": "比值",
  "@js.1752ocxoxow": {
   "x-review": "machine",
@@ -2745,6 +2770,11 @@
  "@js.175a50uaz7u": {
   "x-review": "machine",
   "x-source": "05e19aa7b7"
+ },
+ "js.176wwpyjrg6": "eps Eridani b",
+ "@js.176wwpyjrg6": {
+  "x-review": "machine",
+  "x-source": "d935a49c88"
  },
  "js.17hw2mxavcy": "地日式轨道发生凌星的概率",
  "@js.17hw2mxavcy": {
@@ -2766,10 +2796,10 @@
   "x-review": "machine",
   "x-source": "4a850645ed"
  },
- "js.17k76okut7k": "艺术想象图：温暖巨行星外观，适用于半径 {n0} R⊕ 及以上、Teq {n1} 至 {n2} K：白色云带。这是该外观的静态图，并非某颗特定行星。",
- "@js.17k76okut7k": {
+ "js.17ntl740ako": "YZ Cet c",
+ "@js.17ntl740ako": {
   "x-review": "machine",
-  "x-source": "6486ceb3f7"
+  "x-source": "5120e910b2"
  },
  "js.17nxghh8cwl": "每次示例运行中的每个亮度下降，按恒星分组并按时间顺序编号，附审核结果。通过审核的亮度下降为候选，未经确认。",
  "@js.17nxghh8cwl": {
@@ -2826,6 +2856,11 @@
   "x-review": "machine",
   "x-source": "b7312318e0"
  },
+ "js.183wr165iky": "存储 id tess-7b97e468b60b-{n0}；本次运行中无案例文件",
+ "@js.183wr165iky": {
+  "x-review": "machine",
+  "x-source": "2cfabb7955"
+ },
  "js.184alwhvm3u": "≈ {n0} 天",
  "@js.184alwhvm3u": {
   "x-review": "machine",
@@ -2866,6 +2901,11 @@
   "x-review": "machine",
   "x-source": "dece0e17ca"
  },
+ "js.18lwk9i51zo": "tau Cet h",
+ "@js.18lwk9i51zo": {
+  "x-review": "machine",
+  "x-source": "f7da4e8eac"
+ },
  "js.18n6es5ok3o": "标记（BTJD）",
  "@js.18n6es5ok3o": {
   "x-review": "machine",
@@ -2886,15 +2926,15 @@
   "x-review": "machine",
   "x-source": "9ca7ead3fe"
  },
- "js.18o5x6sbdjj": "在 exoplanet.eu 中存有距离的 {n1} 颗行星里，有 <b>{n0}</b> 颗是通过微引力透镜找到的（按所列第一种方法）。<a href=\"/explore/galaxy/?method=microlensing\">在银河系地图上显示 ›</a>",
- "@js.18o5x6sbdjj": {
-  "x-review": "machine",
-  "x-source": "75b3704ae2"
- },
  "js.18oql4qf149": "比值（自由 / Huang）",
  "@js.18oql4qf149": {
   "x-review": "machine",
   "x-source": "a32de90fca"
+ },
+ "js.18otqbloli3": "Luyten's Star c",
+ "@js.18otqbloli3": {
+  "x-review": "machine",
+  "x-source": "de5d475f55"
  },
  "js.18qifo210uh": "SetuHQ 不进行射电观测。该场景为示意图：磁力线、辐射锥和轨道均未按比例绘制，爆发时间仅为示意；只有截止频率是计算得出的。",
  "@js.18qifo210uh": {
@@ -2941,6 +2981,11 @@
   "x-review": "machine",
   "x-source": "c11a942411"
  },
+ "js.196px5ez5bg": "Lalande {n0} b",
+ "@js.196px5ez5bg": {
+  "x-review": "machine",
+  "x-source": "9228522611"
+ },
  "js.197t86p2mo2": "数据流 · 周期与一个已知 TOI 相符 · P {n0} d · {n1} 次凌星",
  "@js.197t86p2mo2": {
   "x-review": "machine",
@@ -2950,11 +2995,6 @@
  "@js.199k9vutkk7": {
   "x-review": "machine",
   "x-source": "14d5771087"
- },
- "js.19egy1xdd4z": "由 N 个原子组成的分子有 3N − {n0} 种振动方式（若为直线形则为 3N − {n1}）：水有三种，二氧化碳有四种（其弯曲振动以互相垂直的方式出现两次），甲烷有九种。只有改变分子偶极矩的振动模式才吸收红外光。因此 CO₂ 的对称伸缩（{n2} µm）、O₂ 的伸缩以及甲烷四个基频中的两个在红外中不活跃。这些模式形成的谱带正是 {s0} 章节所标出的：水的两种伸缩形成其 {n3} 和 {n4} µm 处的 {n5} µm 谱带，甲烷的 ν₃ 形成 {n6} µm 谱带，CO₂ 的不对称伸缩形成 {n7} µm 谱带，CO 的伸缩形成 {n8} µm 谱带。",
- "@js.19egy1xdd4z": {
-  "x-review": "machine",
-  "x-source": "34a40a6e3c"
  },
  "js.19gww8mixuh": "天体测量法的原理 ›",
  "@js.19gww8mixuh": {
@@ -3031,6 +3071,11 @@
   "x-review": "machine",
   "x-source": "7cb381fdb4"
  },
+ "js.1a5z9qhmjgc": "Sentinels",
+ "@js.1a5z9qhmjgc": {
+  "x-review": "machine",
+  "x-source": "2e1e6f1301"
+ },
  "js.1a6l9fjw5he": "行星：艺术想象图 ›",
  "@js.1a6l9fjw5he": {
   "x-review": "machine",
@@ -3085,6 +3130,11 @@
  "@js.1al74ewy2g6": {
   "x-review": "machine",
   "x-source": "df55237fb1"
+ },
+ "js.1aol2kz2k2l": "凌星",
+ "@js.1aol2kz2k2l": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
  },
  "js.1aqv49cd0kk": "待复核",
  "@js.1aqv49cd0kk": {
@@ -3196,11 +3246,6 @@
   "x-review": "machine",
   "x-source": "c9a6bca81c"
  },
- "js.1bhkarus91o": "<b>ν 伸缩</b> · {n0} µm · 红外活性 · 放大 ×{n1} 绘制 · <a href=\"/how-it-works/atmospheres/\">{s0} 中的 {n2} µm 谱带 ›</a>",
- "@js.1bhkarus91o": {
-  "x-review": "machine",
-  "x-source": "d76ad8b3b9"
- },
  "js.1bj34kz5aki": "运行报告：HD {n0}",
  "@js.1bj34kz5aki": {
   "x-review": "machine",
@@ -3256,10 +3301,10 @@
   "x-review": "machine",
   "x-source": "734f2ee779"
  },
- "js.1c43a5mbtcb": "周期与一个已知 TOI 相符 <span class=\"tag cand\" title=\"candidate, unconfirmed\">候选</span>",
- "@js.1c43a5mbtcb": {
+ "js.1c5e6ri6127": "Wolf {n0}",
+ "@js.1c5e6ri6127": {
   "x-review": "machine",
-  "x-source": "e0828d838c"
+  "x-source": "40c0e1f8f4"
  },
  "js.1c7794vgcfx": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">4h. <span class=\"mono\">tess-3b0eb3c81ad6-{n0}</span>.</b> 凹陷位于 BTJD {n1}，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 名评审者标记（目录未存储评审组规模或共识区间）。位于 {n6} 天的 BLS 周期上，共 {n7} 次凌星。状态：周期与一个已知 TOI 相符。仅为存档值。本页不声称任何探测结果。",
  "@js.1c7794vgcfx": {
@@ -3291,11 +3336,6 @@
   "x-review": "machine",
   "x-source": "dcd3b3c030"
  },
- "js.1cj5f6isk29": "<b>ν₂ 弯曲（两个，相互垂直）</b> · {n0} µm · 红外活性 · 放大 ×{n1} 绘制 · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.1cj5f6isk29": {
-  "x-review": "machine",
-  "x-source": "fffacfe81d"
- },
  "js.1ckbr2brf2r": "存储的 id tess-bc9f59e5c3af-{n0}；本次运行无案卷",
  "@js.1ckbr2brf2r": {
   "x-review": "machine",
@@ -3305,6 +3345,11 @@
  "@js.1clmexejrlr": {
   "x-review": "machine",
   "x-source": "8a07e9e968"
+ },
+ "js.1cmc1ajakjd": "eps Ind B",
+ "@js.1cmc1ajakjd": {
+  "x-review": "machine",
+  "x-source": "a7c8e06a1d"
  },
  "js.1coc893jlc0": "P = {n0} yr，e = {n1}，IAU 标称质量 [calc]",
  "@js.1coc893jlc0": {
@@ -3330,11 +3375,6 @@
  "@js.1cx2mlrh2q7": {
   "x-review": "machine",
   "x-source": "11a4a60b51"
- },
- "js.1cy89xikthl": "<b>在既定基准上测得，并非发现。</b>来自 TOI 表（获取于 {n3}-{n4}-{n5}，种子 {n6}）的 {n0} 颗确认或已知行星（CP/KP）、{n1} 个假阳性和 {n2} 个误报，每颗恒星一个 TOI；显示留出的一半。评审组：三个 Probes（确定性探测器）及其冻结的校准权重；全扇区 BLS；审查；临边昏暗拟合；信息流层级的表格另加入信息流的 FAP（{n7} 次试验）。",
- "@js.1cy89xikthl": {
-  "x-review": "machine",
-  "x-source": "2db2bd3746"
  },
  "js.1d2fjcit5ne": "类别",
  "@js.1d2fjcit5ne": {
@@ -3380,11 +3420,6 @@
  "@js.1dbkcqukzan": {
   "x-review": "machine",
   "x-source": "04a1d0a0c8"
- },
- "js.1dcsl4f0wrb": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s0}</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">运行 tess-pi-men-s1 · {n1} 条记录</span>",
- "@js.1dcsl4f0wrb": {
-  "x-review": "machine",
-  "x-source": "d3862be740"
  },
  "js.1dd353vmae5": "一颗位于其恒星宜居带内的地球大小行星。",
  "@js.1dd353vmae5": {
@@ -3456,15 +3491,15 @@
   "x-review": "machine",
   "x-source": "8a0d9e2efe"
  },
- "js.1e0thu83q1m": "<b>ν₁ 对称伸缩</b> · {n0} µm · 红外非活性（偶极矩不变）· 绘制放大 ×{n1} · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.1e0thu83q1m": {
-  "x-review": "machine",
-  "x-source": "b5a09a9656"
- },
  "js.1e1cj7tvww2": "Probe · 敏感型 <span class=\"sub mono\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1e1cj7tvww2": {
   "x-review": "machine",
   "x-source": "b9b4c27050"
+ },
+ "js.1e34rrpji4d": "样本中有 {n0} 个 TOI",
+ "@js.1e34rrpji4d": {
+  "x-review": "machine",
+  "x-source": "f87cb7f911"
  },
  "js.1e4aq4nvmgn": "审核者标签与理由",
  "@js.1e4aq4nvmgn": {
@@ -3481,15 +3516,10 @@
   "x-review": "machine",
   "x-source": "5acf5925b9"
  },
- "js.1ea3o7os4iv": "SetuHQ 的审核标记，仅基于光变曲线：<code>odd_even_mismatch</code>（奇数次与偶数次深度不同）、<code>secondary_eclipse</code>（相位 {n0} 处的下降）、<code>low_snr</code>、<code>too_short</code>、<code>edge_event</code> 和 <code>insufficient_points</code>。它没有像素级质心或差分图像检查，也没有统计验证，因此混叠的背景双星可能通过。<a href=\"/evidence/\">查看审核者 ›</a> · <a href=\"/candidates/pi-men/dip-2/\">查看一个已审核案例 ›</a>",
- "@js.1ea3o7os4iv": {
+ "js.1ecc8oy35i4": "Teegarden's d",
+ "@js.1ecc8oy35i4": {
   "x-review": "machine",
-  "x-source": "9c325d6228"
- },
- "js.1eb7589ltee": "档案对比：容差范围内没有档案行星（此下降没有可供比较的 BLS 周期）；{s0}：没有可供比较的凌星星历。仅为档案值。本页面不声称任何探测。",
- "@js.1eb7589ltee": {
-  "x-review": "machine",
-  "x-source": "1e8af2cf5f"
+  "x-source": "461cf62f48"
  },
  "js.1ecof5fze2u": "通过了所有审核检查。被 {n1} 个 Probes 中的 {n0} 个和 {n3} 个 Sentinels 中的 {n2} 个标记。候选，未经确认。",
  "@js.1ecof5fze2u": {
@@ -3551,11 +3581,6 @@
   "x-review": "machine",
   "x-source": "45ef298afc"
  },
- "js.1eqtzlgohp1": "散射光：未找到带标签的真实样本；该筛查（质量标记和对照孔径）已有描述，并在合成事件和超新星切图的对照孔径上进行了运用，但未针对散射光事件目录进行验证。",
- "@js.1eqtzlgohp1": {
-  "x-review": "machine",
-  "x-source": "cef1f20086"
- },
  "js.1etlbcax1sp": "ii · 完整对象 tess-4b369d3c6f09",
  "@js.1etlbcax1sp": {
   "x-review": "machine",
@@ -3591,11 +3616,6 @@
   "x-review": "machine",
   "x-source": "e37b76fbec"
  },
- "js.1f208h2gzzx": "{n0} ppm · {n1} h · {n2} 个 Probes，{n3} 个 Sentinels · 待复核，未关闭",
- "@js.1f208h2gzzx": {
-  "x-review": "machine",
-  "x-source": "bfe3196ddb"
- },
  "js.1f3str9e5jr": "未按比例；依据 Lyot {n0}",
  "@js.1f3str9e5jr": {
   "x-review": "machine",
@@ -3605,11 +3625,6 @@
  "@js.1f423dts634": {
   "x-review": "machine",
   "x-source": "0e47f09a74"
- },
- "js.1f5jrzkwrow": "排名：在基准固定的可搜索集合（拥有 SPOC {n0} 分钟光变曲线的恒星）上计算 Youden's J，两侧使用同一判定条件，即干净候选（位于星历上、通过审核、无食双星标记）：J = 作为干净候选给出的 CP/KP 恒星比例 + 未被给出的 FP 恒星比例 − {n1}，并采用平方相加的 Wilson 区间。将每个 TOI 都判为行星（无论是否带标记）得分 J = {n2}；被判为未搜索的可搜索恒星计为未给出。旁边显示了范围内所有恒星上的 J。区间重叠时，排序并不代表测得的差异。",
- "@js.1f5jrzkwrow": {
-  "x-review": "machine",
-  "x-source": "5fa0572ae2"
  },
  "js.1f71ffjmfo5": "最小质量（m sin i）",
  "@js.1f71ffjmfo5": {
@@ -3630,6 +3645,11 @@
  "@js.1f84decza55": {
   "x-review": "machine",
   "x-source": "7bb250633d"
+ },
+ "js.1fa3dkre7ep": "温暖",
+ "@js.1fa3dkre7ep": {
+  "x-review": "machine",
+  "x-source": "0f0aa408c1"
  },
  "js.1faz9a47wga": "K_R ≈ V sin I · k²，其中 V sin I = {n0} km/s，k = {n1}，均取自 Gaudi &amp; Winn {n2} 表 {n3}，该表列出 {n4} m/s [calc]",
  "@js.1faz9a47wga": {
@@ -3666,11 +3686,6 @@
   "x-review": "machine",
   "x-source": "c6b9a506e0"
  },
- "js.1fo0ybrjcxn": "<b>数据：The Extrasolar Planets Encyclopaedia (exoplanet.eu)，获取于 {n1} 年 10 月 {n0} 日；{n2} 颗有存储距离的行星，围绕 {n3} 颗恒星。</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>。获取此列表时无法访问 NASA Exoplanet Archive，因此列表仅来自 exoplanet.eu。exoplanet.eu 将其视为行星的每个天体都列为确认：质量最高 {n4} 倍木星质量（在不确定度范围内）、已发表或已公布的天体。其列表比 NASA Exoplanet Archive 的更宽泛，后者保留来自同行评审论文、质量最高 {n5} 倍木星质量的天体。该列表包含 {n6} 个被 exoplanet.eu 称为系外彗星的条目。其 {n8} 颗行星中有 {n7} 颗没有存储距离，未绘制。",
- "@js.1fo0ybrjcxn": {
-  "x-review": "machine",
-  "x-source": "8798787570"
- },
  "js.1fppcyzgola": "<a href=\"/stars/barnard-s-star/\">{s0}</a> · 视向速度 · 发现于 {n0} 年 · 地球大小（按质量）",
  "@js.1fppcyzgola": {
   "x-review": "machine",
@@ -3696,10 +3711,20 @@
   "x-review": "machine",
   "x-source": "4ffb9625b0"
  },
+ "js.1fwz3jtwilc": "{n0} Eri b",
+ "@js.1fwz3jtwilc": {
+  "x-review": "machine",
+  "x-source": "ae488e35a4"
+ },
  "js.1g0smg3jibl": "使用 TIC 密度先验",
  "@js.1g0smg3jibl": {
   "x-review": "machine",
   "x-source": "ee7a7029f9"
+ },
+ "js.1g4l9awxfep": "搜索目录 docs/discoveries/catalog.json，更新于 {n0}-{n1}-30T06:{n2}+{n3}，共 {n4} 个条目。",
+ "@js.1g4l9awxfep": {
+  "x-review": "machine",
+  "x-source": "070c993100"
  },
  "js.1g5lkun156f": "行星圆盘按深度换算的比例绘制：Rp/R* {n0} · 轨道未按比例 · 未存储恒星半径",
  "@js.1g5lkun156f": {
@@ -3816,20 +3841,10 @@
   "x-review": "machine",
   "x-source": "405e92b37a"
  },
- "js.1hanjmcicv2": "Sentinels 子样本 <span class=\"sub\">{n0} 颗留出恒星 · 未排名</span>",
- "@js.1hanjmcicv2": {
-  "x-review": "machine",
-  "x-source": "07839908d1"
- },
  "js.1hc8gmjgdot": "TOI 表",
  "@js.1hc8gmjgdot": {
   "x-review": "machine",
   "x-source": "69cec4abc6"
- },
- "js.1hfl9sordrk": "{s0} 穿越 pi Men（{n0} K，{n1} R☉）的模型：深度 {n2} ppm，{n3} h。该行星为艺术想象图。",
- "@js.1hfl9sordrk": {
-  "x-review": "machine",
-  "x-source": "9f7804c19a"
  },
  "js.1hfm3qhujst": "<a href=\"/stars/gj-1214/\">{s0}</a> · 凌星 · 发现于 {n0} 年 · 亚海王星",
  "@js.1hfm3qhujst": {
@@ -3886,20 +3901,10 @@
   "x-review": "machine",
   "x-source": "ee03efb686"
  },
- "js.1hw9pj2cjy7": "{n0} 个条目，于 <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n2} 年 10 月 {n1} 日 {n3} UTC</time> 至 <time datetime=\"2026-10-27T06:46:11+00:00\" title=\"2026-10-27T06:46:11+00:00\">{n5} 年 10 月 {n4} 日 {n6} UTC</time> 之间找到。<b>{n7} 个与已知 TOI 周期相符</b>。每个条目均为候选，未经确认。TOI 匹配是一种档案比对。仅为档案数值。本页不声称任何探测。与任何已知 TOI 均不相符的信号留待私下审查；仅在审查和报告之后才会发布。",
- "@js.1hw9pj2cjy7": {
-  "x-review": "machine",
-  "x-source": "e5e81ce489"
- },
  "js.1i0hezn1dvy": "Sentinel · 志愿者：此窗口中 {n0} 个区间，计入此亮度下降",
  "@js.1i0hezn1dvy": {
   "x-review": "machine",
   "x-source": "c97f6573b3"
- },
- "js.1i1bqizwemp": "每个单元格：比率，然后是 k/n 和 Wilson {n0}% 区间，以从 {n1} 到 {n2}% 的条形绘制（Youden J 从 {n3} 到 {n4}，在 {n5} 处有标记）。按基准测试固定的可搜索集上的 Youden J 排名，两侧使用同一判定条件（干净候选：位于星历上、通过审查、无食双星标志），因此将每个 TOI 都称为行星（无论是否待复核）得分为零。对照组用于把关排名，不计入 J，对照列表是该方法自身的报告。区间重叠之处，排序并非测得的差异。",
- "@js.1i1bqizwemp": {
-  "x-review": "machine",
-  "x-source": "9b6f9451ca"
  },
  "js.1i1fwe1y4dt": "臭氧",
  "@js.1i1fwe1y4dt": {
@@ -3931,6 +3936,11 @@
   "x-review": "machine",
   "x-source": "cc3ff7cfea"
  },
+ "js.1i9gd4nyiqb": "视向速度",
+ "@js.1i9gd4nyiqb": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
  "js.1i9syzrgr9a": "ii · 完整对象 tess-04b815001aa6",
  "@js.1i9syzrgr9a": {
   "x-review": "machine",
@@ -3956,10 +3966,10 @@
   "x-review": "machine",
   "x-source": "5d8760ebee"
  },
- "js.1inrxj82qqn": "{s0}，亮度下降 {n0}（{n1} d）",
- "@js.1inrxj82qqn": {
+ "js.1ispru3ub0k": "Proxima Centauri b ›",
+ "@js.1ispru3ub0k": {
   "x-review": "machine",
-  "x-source": "6d7c168703"
+  "x-source": "48383a87b1"
  },
  "js.1iub0nyp6f9": "模拟",
  "@js.1iub0nyp6f9": {
@@ -3991,11 +4001,6 @@
   "x-review": "machine",
   "x-source": "e54519602f"
  },
- "js.1j9g5n75pzw": "示意：Rp/R★ = {n0}，b = {n1}，一颗 {n2} K 的恒星；曲线为采用二次临边昏暗的小行星近似 Mandel &amp; Agol（{n3}）模型。",
- "@js.1j9g5n75pzw": {
-  "x-review": "machine",
-  "x-source": "2071874ebf"
- },
  "js.1ja46ec6bci": "<span class=\"word s-flag\">待复核</span><b class=\"fig\">1c. TOI-{n0}，亮度下降 {n1}。</b> <span class=\"sid mono\">存储 id tess-f28323a4aef6-{n2}。</span> 亮度下降位于 BTJD {n3}，{n4} ppm，{n5} h，SNR {n6}。共识区间 BTJD {n7} 至 {n8}。由 {n10} 名审阅者中的 {n9} 名标记（{n12} 个 Sentinels 中的 {n11} 个，{n14} 个 Probes 中的 {n13} 个）。无 BLS 周期：单次亮度下降。待复核（偏离其恒星的星历）。档案：容差范围内无档案行星（此亮度下降无 BLS 周期可供比较）。仅为档案数值。本页不声称任何探测。",
  "@js.1ja46ec6bci": {
   "x-review": "machine",
@@ -4021,6 +4026,11 @@
   "x-review": "machine",
   "x-source": "49696e46af"
  },
+ "js.1jl27lqn1et": "半径（RJ）",
+ "@js.1jl27lqn1et": {
+  "x-review": "machine",
+  "x-source": "f32d9b82e5"
+ },
  "js.1jltb46ahiz": "TOI-{n0}：以 {n1} K 黑体颜色绘制的恒星圆盘，其上有一个中性灰色圆盘，标注为“遮挡体未识别”。次食 SNR {n2}；全部 {n3} 个凹陷均经审查否决。",
  "@js.1jltb46ahiz": {
   "x-review": "machine",
@@ -4030,6 +4040,11 @@
  "@js.1jnlql1jvxr": {
   "x-review": "machine",
   "x-source": "43edc57b50"
+ },
+ "js.1jpqv79tmp8": "Teegarden's c",
+ "@js.1jpqv79tmp8": {
+  "x-review": "machine",
+  "x-source": "d987d14509"
  },
  "js.1jqjb1ecf85": "<a href=\"/stars/kepler-292/\">{s0}</a> · 凌星 · 发现于 {n0} 年 · 亚海王星",
  "@js.1jqjb1ecf85": {
@@ -4066,11 +4081,6 @@
   "x-review": "machine",
   "x-source": "254fff303e"
  },
- "js.1jvq989drn7": "艺术想象图：冷巨行星外观，适用于半径 {n0} R⊕ 及以上、Teq 低于 {n1} K：奶油色与棕褐色云带。这是该外观的示意图，并非某颗特定行星。",
- "@js.1jvq989drn7": {
-  "x-review": "machine",
-  "x-source": "76e2586629"
- },
  "js.1k05nntjzg8": "大气层加厚 ×{n0} 绘制；行星与恒星未按比例",
  "@js.1k05nntjzg8": {
   "x-review": "machine",
@@ -4091,15 +4101,15 @@
   "x-review": "machine",
   "x-source": "75b7e948dd"
  },
- "js.1k548hzbh61": "<b>ν₃ 反对称伸缩（三）</b> · {n0} µm · 红外活性 · 绘制 ×{n1} · <a href=\"/how-it-works/atmospheres/\">《解读大气》中的 {n2} µm 谱带 ›</a>",
- "@js.1k548hzbh61": {
-  "x-review": "machine",
-  "x-source": "371bca6192"
- },
  "js.1kch3o41dk9": "配置 SHA-{n0}",
  "@js.1kch3o41dk9": {
   "x-review": "machine",
   "x-source": "24563e9f39"
+ },
+ "js.1kdpriilk47": "exoplanet.eu 将其列为“已发表于同行评审论文”，于 {n0} 年通过主凌星法找到；记录更新于 {n1}-{n2}-{n3}。别名：2MASS J13263339-{n4} b、EPIC {n5} b、EPIC {n6}、WISE J132633.39-{n7} b。",
+ "@js.1kdpriilk47": {
+  "x-review": "machine",
+  "x-source": "4573b13db3"
  },
  "js.1kgnejjnpnf": "{s0} 的艺术想象图：一颗位于温暖区间的气态巨行星，{n0} 个地球半径，{n1} K。",
  "@js.1kgnejjnpnf": {
@@ -4151,11 +4161,6 @@
   "x-review": "machine",
   "x-source": "6c3088500d"
  },
- "js.1kukdzlwmzz": "<b>ν₂ 伞式振动</b> · {n0} µm · 红外活性 · 绘制 ×{n1} · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.1kukdzlwmzz": {
-  "x-review": "machine",
-  "x-source": "ba3a4e2e62"
- },
  "js.1kvmnyghvke": "{s0} 的艺术想象图：一颗岩质行星，半径未测量（{n0} 个地球质量），辐照无法计算。",
  "@js.1kvmnyghvke": {
   "x-review": "machine",
@@ -4186,6 +4191,11 @@
   "x-review": "machine",
   "x-source": "07e5463c85"
  },
+ "js.1l4atyo906i": "候选",
+ "@js.1l4atyo906i": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
  "js.1l4kxm2w5br": "档案比对：容差范围内没有档案行星（该凹陷没有可比较的 BLS 周期）；pi Men c：没有可比较的凌星历表。仅为档案值。本页不声称任何探测。",
  "@js.1l4kxm2w5br": {
   "x-review": "machine",
@@ -4195,6 +4205,16 @@
  "@js.1l4u62ej5fc": {
   "x-review": "machine",
   "x-source": "f7bc5c08f0"
+ },
+ "js.1l8c78nkfe5": "Teq",
+ "@js.1l8c78nkfe5": {
+  "x-review": "machine",
+  "x-source": "bd1f380888"
+ },
+ "js.1l8lt88zlnn": "<i aria-hidden=\"true\"></i>食双星",
+ "@js.1l8lt88zlnn": {
+  "x-review": "machine",
+  "x-source": "a07a5fab5c"
  },
  "js.1l95agsp46q": "已知 TOI 周期",
  "@js.1l95agsp46q": {
@@ -4210,6 +4230,11 @@
  "@js.1lb13933831": {
   "x-review": "machine",
   "x-source": "0216bca3d8"
+ },
+ "js.1lbuxx1akb8": "<i style=\"background:#64D2FF\"></i>凌星 <span class=\"mono\">{n0}</span>",
+ "@js.1lbuxx1akb8": {
+  "x-review": "machine",
+  "x-source": "35c7f262c0"
  },
  "js.1liecym8jw": "<span class=\"word cand\">候选</span><span class=\"word s-pass\">通过审查</span><b class=\"fig\">1d. WASP-{n0}，凹陷 {n1}。</b> <span class=\"sid mono\">存储 id tess-5935bad1a3b4-{n2}。</span> 凹陷位于 BTJD {n3}，{n4} ppm，{n5} h，SNR {n6}。共识区间 BTJD {n7} 至 {n8}。{n10} 位审阅者中有 {n9} 位标记（{n12} 个 Sentinels 中 {n11} 个，{n14} 个 Probes 中 {n13} 个）。位于 {n15} 天的 BLS 周期上（t0 BTJD {n16}）。通过审查。档案：与 WASP-{n17} b 一致：ΔP {n18}%，没有可比较的凌星历表。仅为档案值。本页不声称任何探测。",
  "@js.1liecym8jw": {
@@ -4266,6 +4291,11 @@
   "x-review": "machine",
   "x-source": "aa15ce0bc3"
  },
+ "js.1m6gonlbh23": "Proxima Centauri",
+ "@js.1m6gonlbh23": {
+  "x-review": "machine",
+  "x-source": "07ddace0bc"
+ },
  "js.1m7nga73mrk": "视向速度尺度：地球孪生约 {n0} 厘米每秒；ESPRESSO 一夜内低于 {n1} 厘米每秒；恒星表面噪声约为 {n2} 米每秒量级；pi Men c 约 {n3} 米每秒；木星孪生 {n4} 米每秒；{n5} Peg b {n6} 米每秒。",
  "@js.1m7nga73mrk": {
   "x-review": "machine",
@@ -4281,11 +4311,6 @@
   "x-review": "machine",
   "x-source": "94f4aed5ee"
  },
- "js.1mfsedhnkek": "所选分子的旋转球棍模型，采用其实测键长和键角（NIST CCCBDB），按所选简正模式振动：箭头表示各原子的运动方向。下方的波长轴标出该分子的基频带：红外可探测的为实心，红外非活性模式为空心；{s0} 章节所绘范围以阴影标出。",
- "@js.1mfsedhnkek": {
-  "x-review": "machine",
-  "x-source": "751951289b"
- },
  "js.1mi5uvq4hd0": "本次运行 · 经审核否决 · 无周期",
  "@js.1mi5uvq4hd0": {
   "x-review": "machine",
@@ -4295,6 +4320,11 @@
  "@js.1mi9l1aqyq9": {
   "x-review": "machine",
   "x-source": "af079a71c8"
+ },
+ "js.1mjsdzuqt7u": "非单一恒星",
+ "@js.1mjsdzuqt7u": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
  },
  "js.1mk4xq21j8n": "{n0} Peg b {n1} m/s",
  "@js.1mk4xq21j8n": {
@@ -4330,6 +4360,11 @@
  "@js.1myonl6ry65": {
   "x-review": "machine",
   "x-source": "927599ad1a"
+ },
+ "js.1mz5xi30e6k": "{n0} Peg b",
+ "@js.1mz5xi30e6k": {
+  "x-review": "machine",
+  "x-source": "07473ed79b"
  },
  "js.1mzrogjvr87": "案例档案无法在此视图中加载。<a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-003\">在其独立页面中打开。</a>",
  "@js.1mzrogjvr87": {
@@ -4406,11 +4441,6 @@
   "x-review": "machine",
   "x-source": "ed25878435"
  },
- "js.1nlihv4t4dw": "来源：docs/results/showcase.json。",
- "@js.1nlihv4t4dw": {
-  "x-review": "machine",
-  "x-source": "321e67bf81"
- },
  "js.1nm81nug7zg": "已跳过（此处不可用）：无",
  "@js.1nm81nug7zg": {
   "x-review": "machine",
@@ -4435,6 +4465,11 @@
  "@js.1nsffm21b0f": {
   "x-review": "machine",
   "x-source": "1a295a1bae"
+ },
+ "js.1nuj8nr6koq": "exoplanet.eu 将其列为“已发表于同行评审论文”，于 {n0} 年通过主凌星法找到；记录更新于 {n1}-{n2}-{n3}。别名：Kepler-4ee b、2MASS J19130109+{n4} b、K00192.01、KIC {n5} b、KOI-{n6} b、KOI-{n7}、WISE J191301.09+{n8} b。",
+ "@js.1nuj8nr6koq": {
+  "x-review": "machine",
+  "x-source": "91fb084a47"
  },
  "js.1nuvlh0ma79": "tess-5935bad1a3b4",
  "@js.1nuvlh0ma79": {
@@ -4481,6 +4516,11 @@
   "x-review": "machine",
   "x-source": "ffb8a10800"
  },
+ "js.1o6iiyvkzt4": "Teq (K)",
+ "@js.1o6iiyvkzt4": {
+  "x-review": "machine",
+  "x-source": "250f80cb14"
+ },
  "js.1oflx09locz": "案例档案无法在此视图中加载。<a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-000\">在其独立页面中打开。</a>",
  "@js.1oflx09locz": {
   "x-review": "machine",
@@ -4500,11 +4540,6 @@
  "@js.1ojq6mpxesf": {
   "x-review": "machine",
   "x-source": "13bd83fa4a"
- },
- "js.1ooqb09tka": "奇/偶深度不一致或存在次食；或深度达 {n0} ppm 及以上；或呈 V 形且深度达 {n1} ppm 及以上；或周期短于 {n2} d 时恒星密度不一致；或审阅组半数权重判定为食双星。在食双星周期或其一半处存在变化性。",
- "@js.1ooqb09tka": {
-  "x-review": "machine",
-  "x-source": "d16ff6ea5a"
  },
  "js.1oqf3bvj4qe": "独立页面中的案例档案，定位于同一下降处。",
  "@js.1oqf3bvj4qe": {
@@ -4651,6 +4686,11 @@
   "x-review": "machine",
   "x-source": "10a0c5f853"
  },
+ "js.1pzot5psr3w": "Luhman {n0} A",
+ "@js.1pzot5psr3w": {
+  "x-review": "machine",
+  "x-source": "215b9c6a31"
+ },
  "js.1q0vba1x3qp": "{n0} 个新增",
  "@js.1q0vba1x3qp": {
   "x-review": "machine",
@@ -4721,11 +4761,6 @@
   "x-review": "machine",
   "x-source": "dd3330cc6f"
  },
- "js.1qq8e2zp8tb": "行星审查：未改变。食双星模块的审查提示仅供参考，任何审查决定均不使用它们，且它们未经评估；若要在审查中使用，需要单独的预注册评估。",
- "@js.1qq8e2zp8tb": {
-  "x-review": "machine",
-  "x-source": "6e0c8bb669"
- },
  "js.1qr7pmpqgem": "TIC {n0}，周期 {n1} 天，深度 {n2} ppm，SNR {n3}，周期与一个已知 TOI 相符，候选，未经确认",
  "@js.1qr7pmpqgem": {
   "x-review": "machine",
@@ -4741,10 +4776,20 @@
   "x-review": "machine",
   "x-source": "42da84247d"
  },
+ "js.1r0q7nepkoi": "校准权重",
+ "@js.1r0q7nepkoi": {
+  "x-review": "machine",
+  "x-source": "0a6b72180c"
+ },
  "js.1r46y9nqy47": "前三个步骤为 SetuHQ 自身的；后三个是其他团队的记录（NASA Exoplanet Archive (TAP)：toi 和 ps 表），绝非 SetuHQ 的结果。空心点表示该步骤无记录。TFOPWG：TESS 后续观测计划工作组（TESS Follow-up Observing Program Working Group）。",
  "@js.1r46y9nqy47": {
   "x-review": "machine",
   "x-source": "f16d5662c6"
+ },
+ "js.1r4fphlxxtr": "{n0} 个条目，找到时间介于 <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n2} 年 10 月 {n1} 日 {n3} UTC</time> 与 <time datetime=\"2026-10-30T00:48:15+00:00\" title=\"2026-10-30T00:48:15+00:00\">{n5} 年 10 月 {n4} 日 {n6} UTC</time> 之间。<b>{n7} 个与已知 TOI 周期匹配</b>。每个条目均为候选，未经确认。TOI 匹配只是与档案的比对。仅为档案数值。本页面不声称任何探测。与任何已知 TOI 均不匹配的信号留待内部审核；仅在审核和报告之后才会公布。",
+ "@js.1r4fphlxxtr": {
+  "x-review": "machine",
+  "x-source": "3f8fc5c963"
  },
  "js.1r7q1f2otd9": "图版：TOI-{n0}",
  "@js.1r7q1f2otd9": {
@@ -4766,11 +4811,6 @@
   "x-review": "machine",
   "x-source": "ea025f8c30"
  },
- "js.1rehm8o052v": "{s0}ing Exoplanet Survey Satellite（凌星系外行星巡天卫星）",
- "@js.1rehm8o052v": {
-  "x-review": "machine",
-  "x-source": "f64ceb6be5"
- },
  "js.1rervwi8ill": "案例文件无法在此视图中加载。<a id=\"blockedlink\" href=\"/candidates/case-file/#tess-fa3483ce6f83-001\">在单独页面中打开。</a>",
  "@js.1rervwi8ill": {
   "x-review": "machine",
@@ -4791,6 +4831,11 @@
   "x-review": "machine",
   "x-source": "7006d67bfe"
  },
+ "js.1rhozdhu0s6": "{n0} Eri",
+ "@js.1rhozdhu0s6": {
+  "x-review": "machine",
+  "x-source": "cd858f1566"
+ },
  "js.1rhxz6cr57l": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">3g. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> 凹陷位于 BTJD {n1}，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 位评审者标记（星表未存储评审组规模或共识区间）。位于一个含 {n7} 次凌星的 {n6} 天 BLS 周期上。状态：周期与一个已知 TOI 相符。仅为档案值。本页不声称任何探测。",
  "@js.1rhxz6cr57l": {
   "x-review": "machine",
@@ -4806,10 +4851,10 @@
   "x-review": "machine",
   "x-source": "f857503a68"
  },
- "js.1rk4ie4w0t9": "艺术构想图：热巨行星外观，适用于半径 {n0} R⊕ 及以上、Teq {n1} 至 {n2} K：铁锈色云带。这是该外观的静态图，并非某颗特定行星。",
- "@js.1rk4ie4w0t9": {
+ "js.1rncc50vod0": "开始使用",
+ "@js.1rncc50vod0": {
   "x-review": "machine",
-  "x-source": "8aeca1d984"
+  "x-source": "61e8d44ad4"
  },
  "js.1rniehwfgn9": "Wolszczan &amp; Frail",
  "@js.1rniehwfgn9": {
@@ -4835,11 +4880,6 @@
  "@js.1rrhtxb4sk8": {
   "x-review": "machine",
   "x-source": "1b1094a886"
- },
- "js.1rsb50hzlde": "艺术构想图：热海王星外观，适用于半径 {n0} 至 {n1} R⊕、Teq {n2} K 及以上：橙灰色雾霾。这是该外观的静态图，并非某颗特定行星。",
- "@js.1rsb50hzlde": {
-  "x-review": "machine",
-  "x-source": "fd1e7e0678"
  },
  "js.1rsch1xr0lt": "凌星 · {n0} d",
  "@js.1rsch1xr0lt": {
@@ -4871,15 +4911,15 @@
   "x-review": "machine",
   "x-source": "a1c625de42"
  },
+ "js.1rwj8ey7hae": "Kepler-{n0} · {n1} K",
+ "@js.1rwj8ey7hae": {
+  "x-review": "machine",
+  "x-source": "eb98d7eea9"
+ },
  "js.1rxrndp257b": "遮挡星光，分四个场景。一个类太阳的遮挡体（基于 SOHO LASCO 的示意图）；一块日冕仪掩模滑过恒星，眩光坍缩为残余散斑，HR {n0} 的四颗行星出现在示意轨道上；一个星影遮挡器在望远镜前方远处飞行，未按比例；以及一台双望远镜消零干涉仪，其暗条纹抵消了恒星的光。",
  "@js.1rxrndp257b": {
   "x-review": "machine",
   "x-source": "cce2248704"
- },
- "js.1ryrg8dmxoz": "<b>ν₄ 反对称弯曲（三重）</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.1ryrg8dmxoz": {
-  "x-review": "machine",
-  "x-source": "b2cd029465"
  },
  "js.1s3bgxbwlkh": "全部",
  "@js.1s3bgxbwlkh": {
@@ -4891,10 +4931,10 @@
   "x-review": "machine",
   "x-source": "95206d6b8a"
  },
- "js.1sdkh60m4rv": "{s0}，凹陷 {n0}",
- "@js.1sdkh60m4rv": {
+ "js.1s8dkmip4e3": "cheops",
+ "@js.1s8dkmip4e3": {
   "x-review": "machine",
-  "x-source": "335e296600"
+  "x-source": "0eeb4fd483"
  },
  "js.1sg8cj3fgn0": "伪装成行星的五种方式，每种都在 TESS 像素网格（每像素 {n0} 角秒，按比例绘制）上展示其天空几何及所产生的光变曲线：呈 V 形掠食的食双星；被目标星光稀释的背景食双星；等级式三合星；周期取为真实周期一半时深度不同的奇偶食；以及仪器跳变，例如动量卸载。",
  "@js.1sg8cj3fgn0": {
@@ -4951,10 +4991,20 @@
   "x-review": "machine",
   "x-source": "f51d196f08"
  },
+ "js.1szdkpleyt1": "exoplanet.eu 将其列为“已发表于同行评审论文”，于 {n0} 年通过主凌星法找到；记录更新于 {n1}-{n2}-{n3}。别名：TOI-{n4} b。",
+ "@js.1szdkpleyt1": {
+  "x-review": "machine",
+  "x-source": "923f1f0f7f"
+ },
  "js.1t1emvbqy9r": "{n0} · 清理与去趋势",
  "@js.1t1emvbqy9r": {
   "x-review": "machine",
   "x-source": "2d4dfc6ae5"
+ },
+ "js.1t30u96twwz": "信号",
+ "@js.1t30u96twwz": {
+  "x-review": "machine",
+  "x-source": "c1d2c1df9e"
  },
  "js.1t47rnb1yty": "大规模统计验证。",
  "@js.1t47rnb1yty": {
@@ -4966,10 +5016,20 @@
   "x-review": "machine",
   "x-source": "ea298d3769"
  },
+ "js.1takbn7z5i5": "pi Men b ›",
+ "@js.1takbn7z5i5": {
+  "x-review": "machine",
+  "x-source": "095aa55e59"
+ },
  "js.1tanbk5cfbb": "{n0} {n1} / {n2} dex",
  "@js.1tanbk5cfbb": {
   "x-review": "machine",
   "x-source": "6d564d1ad1"
+ },
+ "js.1tbllix94q1": "分子",
+ "@js.1tbllix94q1": {
+  "x-review": "machine",
+  "x-source": "bfdd800ffc"
  },
  "js.1tbul4ef62r": "exoplanet.eu 中有 {n0} 颗行星",
  "@js.1tbul4ef62r": {
@@ -5021,11 +5081,6 @@
   "x-review": "machine",
   "x-source": "9c116a7ee6"
  },
- "js.1tpmj2xl8sk": "{n0} ppm · {n1} h · {n2} 个 Probes，{n3} 个 Sentinels · 被筛查否决，非候选",
- "@js.1tpmj2xl8sk": {
-  "x-review": "machine",
-  "x-source": "77664f0d7c"
- },
  "js.1trrebrltbg": "仅根据存储数值绘制（exoplanet.eu）。未存储：恒星温度、恒星半径；这些部分为示意，并在图中注明。恒星颜色：采用太阳的颜色，因为温度未存储。",
  "@js.1trrebrltbg": {
   "x-review": "machine",
@@ -5056,25 +5111,20 @@
   "x-review": "machine",
   "x-source": "9ee6b5ae54"
  },
+ "js.1u1inxhnivr": "假阳性",
+ "@js.1u1inxhnivr": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
  "js.1u2k1jai0us": "一条光变曲线，三个周期。它展示了当一颗恒星拥有不止一颗行星时搜索会如何处理，以及一个 {n0} 天的目标能容纳其中哪些行星。",
  "@js.1u2k1jai0us": {
   "x-review": "machine",
   "x-source": "ac34f619e1"
  },
- "js.1u2q9tbst8u": "艺术构想图：热包层外观，适用于半径 {n0} 至 {n1} R⊕、Teq {n2} K 及以上：棕褐色雾霾和温暖的边缘。这是该外观的静态图，并非某颗特定行星。",
- "@js.1u2q9tbst8u": {
-  "x-review": "machine",
-  "x-source": "80eb7867e5"
- },
  "js.1u4yg0u12mv": "exoplanet.eu 未存储发现论文的 DOI 或参考文献，因此不显示。",
  "@js.1u4yg0u12mv": {
   "x-review": "machine",
   "x-source": "02110b7c79"
- },
- "js.1u50uo7y5g3": "<b>ν₁ 对称伸缩</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.1u50uo7y5g3": {
-  "x-review": "machine",
-  "x-source": "84c034c9f3"
  },
  "js.1u59hy4lwt0": "CO₂ <span>二氧化碳</span>",
  "@js.1u59hy4lwt0": {
@@ -5096,11 +5146,6 @@
   "x-review": "machine",
   "x-source": "27b99ccdde"
  },
- "js.1ua3tz5fxe0": "该哈希值只是一种声明：保留的标签在仓库中公开，因此排行榜无法证明它们未被读取，而某一方法的通过判定和对照事件均为其自行报告。由维护者持有的诱饵光变曲线，以及对仍未处置的 TOI 进行前瞻性评分，可以弥补这些缺口；但两者目前都尚不存在。",
- "@js.1ua3tz5fxe0": {
-  "x-review": "machine",
-  "x-source": "9f55ae4547"
- },
  "js.1uaz0vrw4ly": "源处（恒星上）的最小磁场（Pineda &amp; Villadsen {n0} 波段）[calc]",
  "@js.1uaz0vrw4ly": {
   "x-review": "machine",
@@ -5110,11 +5155,6 @@
  "@js.1ucljc3glwo": {
   "x-review": "machine",
   "x-source": "5e270de316"
- },
- "js.1uekblhme1p": "{n0} ppm · {n1} h · 全部 {n2} 位审核者 · 候选，未经确认",
- "@js.1uekblhme1p": {
-  "x-review": "machine",
-  "x-source": "73ac412687"
  },
  "js.1ug611r5qd8": "CH₄ <span>甲烷</span>",
  "@js.1ug611r5qd8": {
@@ -5151,6 +5191,11 @@
   "x-review": "machine",
   "x-source": "263beb630a"
  },
+ "js.1utmguftbbw": "TESS 第 {n0}–{n1} 扇区。此恒星的第 {n2} 条推送条目（存储 id <span class=\"mono\">tess-7b97e468b60b-{n3}</span>）。TOI 匹配是将存储的周期与档案数值进行比较。仅为档案数值。本页面不声称任何探测。",
+ "@js.1utmguftbbw": {
+  "x-review": "machine",
+  "x-source": "965b94f3d8"
+ },
  "js.1uugayqarlm": "TESS 的任务设计，该任务于 {n0} 开始观测。",
  "@js.1uugayqarlm": {
   "x-review": "machine",
@@ -5160,11 +5205,6 @@
  "@js.1uwk3dmvuym": {
   "x-review": "machine",
   "x-source": "e7e8d3a00f"
- },
- "js.1v15owfc4cr": "<b>ν₃ 不对称伸缩（二）</b> · {n0} µm · 红外活性 · 绘制 ×{n1} · 在 {s0} 中未绘制",
- "@js.1v15owfc4cr": {
-  "x-review": "machine",
-  "x-source": "451f9e06fd"
  },
  "js.1v2k5bzmb2a": "{n0} ± {n1} ppm",
  "@js.1v2k5bzmb2a": {
@@ -5176,25 +5216,25 @@
   "x-review": "machine",
   "x-source": "c6c35d2486"
  },
- "js.1va1yqqf83l": "{s0} 周围的一颗质量小于地球的行星，{s0} 是离太阳最近的恒星之一。",
- "@js.1va1yqqf83l": {
+ "js.1vf8wchy7cx": "耀斑",
+ "@js.1vf8wchy7cx": {
   "x-review": "machine",
-  "x-source": "0c6a1cbb68"
+  "x-source": "bdad8ef87b"
  },
  "js.1vn1k0hsfr": "星表",
  "@js.1vn1k0hsfr": {
   "x-review": "machine",
   "x-source": "1034513950"
  },
- "js.1vo3z8v0kr3": "每 {n1} 个恒星-扇区 {n0} 个 <span class=\"muted\">（{n2}，共 {n3}；在该信息流规则之前有 {n4} 个已审查的凹陷）</span>",
- "@js.1vo3z8v0kr3": {
-  "x-review": "machine",
-  "x-source": "0cf0192aad"
- },
  "js.1vs3qyoxlvt": "又名 2MASS J19021775+{n0}、KIC {n1}、KOI-{n2}、WISE J190217.77+{n3}。",
  "@js.1vs3qyoxlvt": {
   "x-review": "machine",
   "x-source": "a3072cbabc"
+ },
+ "js.1vseruufigw": "tau Cet",
+ "@js.1vseruufigw": {
+  "x-review": "machine",
+  "x-source": "d76cfc3187"
  },
  "js.1vtn0jl0t29": "打开完整页面",
  "@js.1vtn0jl0t29": {
@@ -5316,6 +5356,11 @@
   "x-review": "machine",
   "x-source": "6b412a8780"
  },
+ "js.1wqsruj6sy4": "Teegarden's b",
+ "@js.1wqsruj6sy4": {
+  "x-review": "machine",
+  "x-source": "88f6565053"
+ },
  "js.1wr1t67roz9": "表明多行星系统中的候选几乎总是真实的，验证了 {n1} 个系统中的 {n0} 颗行星。",
  "@js.1wr1t67roz9": {
   "x-review": "machine",
@@ -5376,6 +5421,11 @@
   "x-review": "machine",
   "x-source": "01d784a95a"
  },
+ "js.1xjf25ez4ea": "天体测量",
+ "@js.1xjf25ez4ea": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
  "js.1xjgislb1gr": "{n0}（D 线，{n1} 和 {n2} nm）",
  "@js.1xjgislb1gr": {
   "x-review": "machine",
@@ -5385,6 +5435,11 @@
  "@js.1xjihe7xm1n": {
   "x-review": "machine",
   "x-source": "68a749778a"
+ },
+ "js.1xjlu6r0tws": "行星候选",
+ "@js.1xjlu6r0tws": {
+  "x-review": "machine",
+  "x-source": "f40d9fd559"
  },
  "js.1xludg6i4sq": "又名 EPIC {n0}。",
  "@js.1xludg6i4sq": {
@@ -5401,11 +5456,6 @@
   "x-review": "machine",
   "x-source": "d17f5d38ec"
  },
- "js.1xqmq7gc51u": "打乱后的光变曲线在该信息流水平上的虚警（其完整规则，FAP &lt; {n0}）",
- "@js.1xqmq7gc51u": {
-  "x-review": "machine",
-  "x-source": "31b60ba44a"
- },
  "js.1xs9ztk2l36": "银河之旅，第 {n0} 站 ›",
  "@js.1xs9ztk2l36": {
   "x-review": "machine",
@@ -5421,15 +5471,15 @@
   "x-review": "machine",
   "x-source": "43c265eda9"
  },
- "js.1xy8j3ygiad": "艺术想象图：包层-低温外观，适用于半径 {n0} 至 {n1} R⊕、Teq 低于 {n2} K：淡蓝白色雾霾，微弱条带。这是该外观的示意图，并非某颗特定行星。",
- "@js.1xy8j3ygiad": {
-  "x-review": "machine",
-  "x-source": "7be8bc6ed2"
- },
  "js.1y1gk0z56gg": "星历上的凹陷，按审查结果",
  "@js.1y1gk0z56gg": {
   "x-review": "machine",
   "x-source": "4f0bf37c8c"
+ },
+ "js.1y218zo6cqq": "<i style=\"background:#30D158\"></i>成像 <span class=\"mono\">{n0}</span>",
+ "@js.1y218zo6cqq": {
+  "x-review": "machine",
+  "x-source": "d614bb1db6"
  },
  "js.1y39iwfnbwn": "运行 tess-hd-{n0}-s4（runs/tess-hd-{n1}-s4），创建于 {n2}-{n3}-22T18:{n4}+{n5}，配置 sha256 e21c63a794b2aeb3…",
  "@js.1y39iwfnbwn": {
@@ -5481,6 +5531,11 @@
   "x-review": "machine",
   "x-source": "519941f399"
  },
+ "js.1yt1laezm0g": "Kepler-{n0} d",
+ "@js.1yt1laezm0g": {
+  "x-review": "machine",
+  "x-source": "5c8bf604a0"
+ },
  "js.1ytljjhkuxb": "仅根据存储值绘制（exoplanet.eu）。",
  "@js.1ytljjhkuxb": {
   "x-review": "machine",
@@ -5531,11 +5586,6 @@
   "x-review": "machine",
   "x-source": "9fdea8a620"
  },
- "js.1z0tecbo6q6": "艺术想象图：巨型超热外观，适用于半径 {n0} R⊕ 或以上、Teq {n1} K 或以上：昼侧暗淡、低对比度并发光；无条带。这是该外观的示意图，并非某颗特定行星。",
- "@js.1z0tecbo6q6": {
-  "x-review": "machine",
-  "x-source": "236fde016b"
- },
  "js.1z3sctga608": "在 ~{n1} 和 ~{n2} 处有两个约 {n0} ppm 的短暂平底凹陷（间隔 ~{n3} d），深度和持续时间相符，符合周期性凌星的预期。两者均未呈现 V 形、次食、斜坡或阶跃，但第二个凹陷附近的数据",
  "@js.1z3sctga608": {
   "x-review": "machine",
@@ -5551,10 +5601,15 @@
   "x-review": "machine",
   "x-source": "7d9eb7acb1"
  },
- "js.1z5yw0q2c2w": "首页的凌星",
- "@js.1z5yw0q2c2w": {
+ "js.1z5qoomb94b": "YZ Cet b",
+ "@js.1z5qoomb94b": {
   "x-review": "machine",
-  "x-source": "be1b030722"
+  "x-source": "fca0c283f7"
+ },
+ "js.1z8tasie2wo": "Probe · 敏感型 <span class=\"mono idtag\" title=\"reviewer id\">volunteer-sensitive</span>",
+ "@js.1z8tasie2wo": {
+  "x-review": "machine",
+  "x-source": "20bf9a2780"
  },
  "js.1zazhg34gyv": "已为凹陷 tess-291acb98cabe-{n0} 打开审议记录。",
  "@js.1zazhg34gyv": {
@@ -5631,11 +5686,6 @@
   "x-review": "machine",
   "x-source": "1c3db44c80"
  },
- "js.2050o3pgkvz": "来源：TESS Science Office（MIT），tess.mit.edu/observations/ 上的公开观测扇区页面：https://tess.mit.edu/observations/，观测计划保存于 {n0}-{n1}-{n2}。",
- "@js.2050o3pgkvz": {
-  "x-review": "machine",
-  "x-source": "e758c6851a"
- },
  "js.206lvynaoyq": "恒星运动放大 ×{n0}；真实 a★ = {n1} km ≈ {n2}.1e-{n3} R★",
  "@js.206lvynaoyq": {
   "x-review": "machine",
@@ -5681,11 +5731,6 @@
   "x-review": "machine",
   "x-source": "f77390e131"
  },
- "js.20iu1oobrgo": "艺术想象图：不确定外观，适用于无半径数据、质量 {n0} 至 {n1} M⊕、任意 Teq：中性灰蓝色圆盘和柔和边缘：岩石还是包层，未知。这是该外观的示意图，并非某颗特定行星。",
- "@js.20iu1oobrgo": {
-  "x-review": "machine",
-  "x-source": "b435c16b54"
- },
  "js.20jq5c41tkh": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">3j. <span class=\"mono\">tess-66d1837768dd-{n0}</span>。</b> 凹陷位于 BTJD {n1}，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 名审阅者标记（目录未存储小组规模或共识区间）。位于 {n6} 天的 BLS 周期上，含 {n7} 次凌星。状态：周期与已知 TOI 相符。仅为档案数值。本页不声称任何探测。",
  "@js.20jq5c41tkh": {
   "x-review": "machine",
@@ -5695,6 +5740,11 @@
  "@js.20l5be8crj": {
   "x-review": "machine",
   "x-source": "ab9c1a76a4"
+ },
+ "js.20lcnwrpq7u": "凌星 <span class=\"mono\" data-cmn=\"transit\">{n0}</span>",
+ "@js.20lcnwrpq7u": {
+  "x-review": "machine",
+  "x-source": "5b3df4c9fd"
  },
  "js.20lxdwfofp9": "本次运行 · 待复核 · 无周期",
  "@js.20lxdwfofp9": {
@@ -5720,6 +5770,11 @@
  "@js.20q2sjzozas": {
   "x-review": "machine",
   "x-source": "7fb66e3610"
+ },
+ "js.20rbpsp5ug3": "<i aria-hidden=\"true\"></i>未分类 <span class=\"mono\">{n0}</span>",
+ "@js.20rbpsp5ug3": {
+  "x-review": "machine",
+  "x-source": "8de4c52f48"
  },
  "js.20rkrumvokl": "Sentinel 提示词版本",
  "@js.20rkrumvokl": {
@@ -5771,11 +5826,6 @@
   "x-review": "machine",
   "x-source": "b2f84631c5"
  },
- "js.217aul87gdd": "<b>主要为 N–O 伸缩</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.217aul87gdd": {
-  "x-review": "machine",
-  "x-source": "cea6ecc8bf"
- },
  "js.217mi4h3ox4": "只有通过审核的凹陷才是候选，且仍未经确认；被否决的凹陷不是候选。仅为存储值：数据点、标记、评分、旗标和文字均与运行时存储的一致。",
  "@js.217mi4h3ox4": {
   "x-review": "machine",
@@ -5805,6 +5855,11 @@
  "@js.21hezc7ksw1": {
   "x-review": "machine",
   "x-source": "508aa5b9d1"
+ },
+ "js.21i2i0paoel": "exoplanet.eu 将其列为“已在网站上公布”，于 {n0} 年通过主凌星法找到；记录更新于 {n1}-{n2}-{n3}。别名：2MASS J19213888+{n4} b、K01629.01、KIC {n5} b、KOI-{n6} b、KOI-{n7}、WISE J192138.89+{n8} b。",
+ "@js.21i2i0paoel": {
+  "x-review": "machine",
+  "x-source": "8c0bd3393c"
  },
  "js.21katdb2hhv": "exoplanet.eu 中有 {n0} 颗行星 · 存储类型 M8V · 按 Teff 归为 M 型（最接近 M8V）",
  "@js.21katdb2hhv": {
@@ -5866,11 +5921,6 @@
   "x-review": "machine",
   "x-source": "752ea43d7e"
  },
- "js.21ylkyb62a9": "TIC {n0} · 候选，未经确认",
- "@js.21ylkyb62a9": {
-  "x-review": "machine",
-  "x-source": "7cf98eee62"
- },
  "js.222kde6gcmc": "仅根据存储值绘制（exoplanet.eu）。未存储：行星半径；这些部分为示意，并已在图中注明。按存储的倾角，这颗行星不会发生凌星；该视图显示凌星仅为说明方法。",
  "@js.222kde6gcmc": {
   "x-review": "machine",
@@ -5880,6 +5930,11 @@
  "@js.223085agofs": {
   "x-review": "machine",
   "x-source": "606268600d"
+ },
+ "js.225qy6re67g": "Kepler-{n0} c",
+ "@js.225qy6re67g": {
+  "x-review": "machine",
+  "x-source": "d1e5b9aa4a"
  },
  "js.2274ir70e91": "审核中被否决",
  "@js.2274ir70e91": {
@@ -5936,6 +5991,11 @@
   "x-review": "machine",
   "x-source": "f16b203139"
  },
+ "js.22noo09k9nh": "<i style=\"background:#7D7AFF\"></i>计时 <span class=\"mono\">{n0}</span>",
+ "@js.22noo09k9nh": {
+  "x-review": "machine",
+  "x-source": "79248df554"
+ },
  "js.22qe07fgd2k": "整个扇区 · 周期 {n0} d · 半振幅 {n1} ppm",
  "@js.22qe07fgd2k": {
   "x-review": "machine",
@@ -5980,6 +6040,11 @@
  "@js.2309k4jhst": {
   "x-review": "machine",
   "x-source": "99ec08944c"
+ },
+ "js.231hbrwsvbe": "耀斑",
+ "@js.231hbrwsvbe": {
+  "x-review": "machine",
+  "x-source": "38e9b86f2b"
  },
  "js.232hnla7mfp": "BTJD {n0} · {n1} ppm · {n2} 小时 · SNR {n3} · 候选，未经确认",
  "@js.232hnla7mfp": {
@@ -6051,6 +6116,11 @@
   "x-review": "machine",
   "x-source": "f7b940e003"
  },
+ "js.23gvqgvfk3h": "eps Eridani",
+ "@js.23gvqgvfk3h": {
+  "x-review": "machine",
+  "x-source": "9a7f2f950b"
+ },
  "js.23iejmgi1b9": "<span class=\"word cand\">候选</span><span class=\"word s-pass\">通过审核</span><b class=\"fig\">1d. pi Men，凹陷 {n0}。</b> <span class=\"sid mono\">存储 id tess-04b815001aa6-{n1}。</span> 凹陷位于 BTJD {n2}，{n3} ppm，{n4} h，SNR {n5}。共识区间 BTJD {n6} 至 {n7}。{n9} 名评审者中有 {n8} 名标记（{n11} 个 Sentinels 中有 {n10} 个，{n13} 个 Probes 中有 {n12} 个）。位于 {n14} 天的 BLS 周期上（t0 BTJD {n15}）。通过审核。存档：与 pi Men c 一致：ΔP {n16}%，验证说明中的时间偏移：{n18} 个历元平均 {n17} 分钟。仅为存档值。本页不声称任何探测。",
  "@js.23iejmgi1b9": {
   "x-review": "machine",
@@ -6096,6 +6166,16 @@
   "x-review": "machine",
   "x-source": "09e2a66ca8"
  },
+ "js.248br10ykpu": "exoplanet.eu 将其列为“已发表于同行评审论文”，于 {n0} 年通过主凌星法找到；记录更新于 {n1}-{n2}-{n3}。",
+ "@js.248br10ykpu": {
+  "x-review": "machine",
+  "x-source": "2c5e82e81c"
+ },
+ "js.248fckis1nx": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">运行 tess-pi-men-s1 · {n1} 个条目</span>",
+ "@js.248fckis1nx": {
+  "x-review": "machine",
+  "x-source": "91c42c8548"
+ },
  "js.249yvv2lisi": "案例文件无法在此视图中加载。<a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-4b369d3c6f09-004\">在单独页面中打开。</a>",
  "@js.249yvv2lisi": {
   "x-review": "machine",
@@ -6120,16 +6200,6 @@
  "@js.24fb2cdopd2": {
   "x-review": "machine",
   "x-source": "f76311c5f2"
- },
- "js.24fnxph6nhs": "NASA Exoplanet Archive，表 ps（default_flag = {n0}），由 scripts/validate_known_planets.py 记录于 docs/results/pi_men_validation.md（实时档案查询，commit 0f6dbdc）。该处只记录了 {s0}，因此这里只列出 {s1}；其凌星中点时刻未被记录，因此这里不计算逐历元偏移，而是引用验证说明中的平均计时偏移（{n1} min，基于 {n3} 个历元中的 {n2} 个）。档案服务可用时，请用 'setuhq crossmatch runs/tess-pi-men-s1' 的输出替换它。记录于 <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4} Oct {n5}, {n6} UTC</time>（commit 0f6dbdc），见 docs/results/pi_men_crossmatch.json；本次运行自身的交叉匹配未运行（存储的错误，原文：<code>ModuleNotFoundError: No module named 'astroquery'</code>）。",
- "@js.24fnxph6nhs": {
-  "x-review": "machine",
-  "x-source": "2709781e4a"
- },
- "js.24gwd0vxjg3": "<b>许可。</b>CHEOPS 数据及由其派生的输出仍受 ESA 条款约束：ESA Space Science Archives 中的数据以 CC BY-NC {n0} IGO 许可分发，任何商业用途（包括间接产生经济收益的用途）都需事先获得 ESA 授权（data.licences@esa.int）。SetuHQ 的商业许可和 SetuHQ Pro 涵盖的是 SetuHQ 的代码和服务，不包括 CHEOPS 数据或 CHEOPS 派生输出。",
- "@js.24gwd0vxjg3": {
-  "x-review": "machine",
-  "x-source": "027b9f1def"
  },
  "js.24jrww0gdzl": "艺术想象图 · 岩质，极热 · 半径 {n0} R⊕（exoplanet.eu）小于 {n1} R⊕，因此绘制为岩质。Teq {n2} K 由 a、R★ 和 Teff 计算得出，处于极热区间。成分未经测量。来源：exoplanet.eu，获取于 {n3}-{n4}-{n5}。<a href=\"/docs/pictures/\">图片的绘制方法 ›</a>",
  "@js.24jrww0gdzl": {
@@ -6261,11 +6331,6 @@
   "x-review": "machine",
   "x-source": "f3d6bee517"
  },
- "js.25v5j8df6ue": "初始值：N★ = {n0} 颗亮度足以供 JWST 观测的 M 矮星，F_Q · F_HZ = {n1}，F_O = {n2}，F_L = {n3}，F_S = {n4}，得出 N ≈ {n5}。这些值来自对 Seager 的报告和论文的二手概述，此处未与论文核对；F_L = {n6} 是假设，而非测量值。宜居带比例链接到 {s0} 章节的图表。",
- "@js.25v5j8df6ue": {
-  "x-review": "machine",
-  "x-source": "0c766c3029"
- },
  "js.25vec9roei3": "tess-f28323a4aef6-{n0} · {s0} · 已知行星",
  "@js.25vec9roei3": {
   "x-review": "machine",
@@ -6281,10 +6346,10 @@
   "x-review": "machine",
   "x-source": "8e26be0f72"
  },
- "js.2688tn5ytet": "{n1} 天内的 {n0} 个存储亮度测量值。评审组由 {n2} 个 Sentinels 和 {n3} 个 Probes 组成（无人类），标记了 {n4} 个凹陷，审核代码将其归为 {n5} 个信号：{n6} 个通过，{n7} 个待复核，{n8} 个否决。每个凹陷都是本流程自己的候选，未经确认为独立探测；档案匹配说明该行星已为人所知，并不表示本次运行确认了它。存储的档案交叉匹配（仓库中的存储副本）显示主信号与已发表行星 pi Men c 一致：这是一颗已知行星，不是新发现。仅为档案值。本页不声称任何探测结果。",
- "@js.2688tn5ytet": {
+ "js.267fwx4rrxg": "目录",
+ "@js.267fwx4rrxg": {
   "x-review": "machine",
-  "x-source": "737d181458"
+  "x-source": "d2504e52b8"
  },
  "js.269wyn7yehy": "在系外行星大气中观测到的首个光化学产物：星光驱动的化学反应。",
  "@js.269wyn7yehy": {
@@ -6316,6 +6381,16 @@
   "x-review": "machine",
   "x-source": "ad1170b8cc"
  },
+ "js.26jkejmj23b": "成像 <span class=\"mono\" data-cmn=\"imaging\">{n0}</span>",
+ "@js.26jkejmj23b": {
+  "x-review": "machine",
+  "x-source": "d8c9828b8c"
+ },
+ "js.26jwv5q9ef3": "食双星",
+ "@js.26jwv5q9ef3": {
+  "x-review": "machine",
+  "x-source": "8df8a39f8e"
+ },
  "js.26lvjxq29mz": "隐藏主要候选",
  "@js.26lvjxq29mz": {
   "x-review": "machine",
@@ -6336,15 +6411,25 @@
   "x-review": "machine",
   "x-source": "eaacfcf2d5"
  },
+ "js.26pv2ld5al": "YZ Cet d",
+ "@js.26pv2ld5al": {
+  "x-review": "machine",
+  "x-source": "92120cfb4f"
+ },
+ "js.26pzvkix2mc": "恒星页面 ›",
+ "@js.26pzvkix2mc": {
+  "x-review": "machine",
+  "x-source": "e1fbb1c217"
+ },
  "js.26sdy1tcm5m": "案例档案无法在此视图中加载。<a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-005\">在单独页面中打开。</a>",
  "@js.26sdy1tcm5m": {
   "x-review": "machine",
   "x-source": "5d3d4fce99"
  },
- "js.26svlut4n1y": "SetuHQ 读取 TESS 光变曲线：一次一颗恒星，每个扇区约 {n0} 天。<a href=\"/explore/galaxy/?layers=tess\">查看 TESS 的天区覆盖 ›</a>",
- "@js.26svlut4n1y": {
+ "js.26seob0sso6": "exoplanet.eu 将其列为“已发表于同行评审论文”，于 {n0} 年通过主凌星法找到；记录更新于 {n1}-{n2}-{n3}。别名：EPIC {n4}。",
+ "@js.26seob0sso6": {
   "x-review": "machine",
-  "x-source": "7675cbd084"
+  "x-source": "f2c44d90f7"
  },
  "js.26upx7lksz5": "TFOPWG 处置 CP（据后续观测团队判定为行星），更新于 {n0}-{n1}-{n2}",
  "@js.26upx7lksz5": {
@@ -6366,11 +6451,6 @@
   "x-review": "machine",
   "x-source": "5332f7c6da"
  },
- "js.26zs3bh9z5t": "高：两条或更多仪器线索；中：一条；低：仅凭评审组给出的理由。",
- "@js.26zs3bh9z5t": {
-  "x-review": "machine",
-  "x-source": "eaf598efdb"
- },
  "js.27070gzrt8g": "numpy",
  "@js.27070gzrt8g": {
   "x-review": "machine",
@@ -6391,20 +6471,10 @@
   "x-review": "machine",
   "x-source": "bfeaf40123"
  },
- "js.275p8l49gz9": "发现方法",
- "@js.275p8l49gz9": {
-  "x-review": "machine",
-  "x-source": "7f31ff7ee3"
- },
  "js.27d1pzwqqg5": "{n0} 个凹陷（{n1} 个候选，{n2} 个待复核）。每个凹陷按其审核结果命名：候选表示已通过审核但未经确认；待复核的凹陷仍未定论；否决的凹陷不是候选。否决和待复核的凹陷是有意保留的，以便读者看到审核的判定及其理由。每张图都是评审者所见的盲编码图，逐字节一致。",
  "@js.27d1pzwqqg5": {
   "x-review": "machine",
   "x-source": "f52c6bc4a9"
- },
- "js.27eugex8tue": "艺术想象图：neptune-warm 外观，适用于半径 {n0} 至 {n1} R⊕、Teq {n2} 至 {n3} K：青绿色薄雾。这是该外观的示意图，而非某颗特定行星。",
- "@js.27eugex8tue": {
-  "x-review": "machine",
-  "x-source": "2d58d10911"
  },
  "js.27fyvwqvgk2": "编号 tic197575514-s1-dip-{n0} · 对象 tess-b9ee497ace57<br>光变曲线 sha256 6cdb3d033119539b3dd9a07e89379098ee77c137584a467d88efe3b74e7c0913<br>代码 … · 配置 a9d34c7079563183…<br>来源 sector_0001.json.gz",
  "@js.27fyvwqvgk2": {
@@ -6425,6 +6495,11 @@
  "@js.27jlutunzon": {
   "x-review": "machine",
   "x-source": "de7cd804ae"
+ },
+ "js.27kx8tn6apn": "计时与相位",
+ "@js.27kx8tn6apn": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
  },
  "js.27n9asbnx55": "排列首要候选",
  "@js.27n9asbnx55": {
@@ -6465,6 +6540,11 @@
  "@js.27y132h50m1": {
   "x-review": "machine",
   "x-source": "734a43293e"
+ },
+ "js.280bcq6hfxu": "Kepler-{n0} b 与 c 的周期",
+ "@js.280bcq6hfxu": {
+  "x-review": "machine",
+  "x-source": "de18f16db8"
  },
  "js.283unm3lnxq": "Sentinel · 怀疑者 <span class=\"mono\">claude-skeptic</span>",
  "@js.283unm3lnxq": {
@@ -6510,11 +6590,6 @@
  "@js.28hrtzpigjb": {
   "x-review": "machine",
   "x-source": "1f2470675c"
- },
- "js.28ictyar11j": "这是一项学习练习，并非对科学的贡献。你的答案只保存在本浏览器中，不会被收集或发送到任何地方；这些凹陷是 SetuHQ 示例运行中存储的凹陷，已由其审核作出判定。",
- "@js.28ictyar11j": {
-  "x-review": "machine",
-  "x-source": "5a6ae14a11"
  },
  "js.28iqhboa34b": "含 N 个原子的分子有 3N − {n0} 种振动方式（若为直线形则为 3N − {n1}）：水有三种，二氧化碳有四种（其弯曲振动出现两次，互成直角），甲烷有九种。只有改变分子偶极矩的振动模式才会吸收红外光。这就是 CO₂ 的对称伸缩（{n2} µm）、O₂ 的伸缩以及甲烷四个基频中的两个在红外中不活跃的原因。这些模式产生的谱带正是“解读大气”一章所标出的：水的两种伸缩振动位于 {n3} 和 {n4} µm，构成其 {n5} µm 谱带；甲烷的 ν₃ 构成 {n6} µm 谱带；CO₂ 的不对称伸缩构成 {n7} µm 谱带；CO 的伸缩构成 {n8} µm 谱带。",
  "@js.28iqhboa34b": {
@@ -6731,6 +6806,11 @@
   "x-review": "machine",
   "x-source": "258011d66c"
  },
+ "js.2a56wvwnc5o": "HN Lib",
+ "@js.2a56wvwnc5o": {
+  "x-review": "machine",
+  "x-source": "6993fd96af"
+ },
  "js.2a9g9u8ogm5": "源处的场",
  "@js.2a9g9u8ogm5": {
   "x-review": "machine",
@@ -6751,6 +6831,11 @@
   "x-review": "machine",
   "x-source": "50621e7fe0"
  },
+ "js.2ad5lvvd821": "Gaia-{n0} b ›",
+ "@js.2ad5lvvd821": {
+  "x-review": "machine",
+  "x-source": "fb287f3d63"
+ },
  "js.2ahfv5ecid": "id tic177082055-s1-dip-{n0} · 对象 tess-9ff47a35552d<br>光变曲线 sha256 ad0dc350aa11e6edee9ef4c25cad43f094f52a98ab9010ca3c0ec0aaadafe861<br>代码 … · 配置 a9d34c7079563183…<br>来源 sector_0001.json.gz",
  "@js.2ahfv5ecid": {
   "x-review": "machine",
@@ -6766,11 +6851,6 @@
   "x-review": "machine",
   "x-source": "88117143a4"
  },
- "js.2aj3droma9q": "目录和所引论文，数值见各章表格",
- "@js.2aj3droma9q": {
-  "x-review": "machine",
-  "x-source": "3cf2224205"
- },
  "js.2apzy7fqrqe": "档案比对：容差范围内无档案行星。仅为档案数值。本页不声称任何探测。",
  "@js.2apzy7fqrqe": {
   "x-review": "machine",
@@ -6785,11 +6865,6 @@
  "@js.2avziyt7hbv": {
   "x-review": "machine",
   "x-source": "5eab0aea69"
- },
- "js.2b0kq1u0yok": "<b>ν 伸缩</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · <a href=\"/how-it-works/atmospheres/\">“解读大气”中的 {n2} µm 谱带 ›</a>",
- "@js.2b0kq1u0yok": {
-  "x-review": "machine",
-  "x-source": "9f2fb710c1"
  },
  "js.2b1w1bhtwi6": "WASP-{n0} b 标高（μ = {n1}）",
  "@js.2b1w1bhtwi6": {
@@ -6866,6 +6941,11 @@
   "x-review": "machine",
   "x-source": "1dfa560d9d"
  },
+ "js.2brjxhf24py": "{n0} Eri d",
+ "@js.2brjxhf24py": {
+  "x-review": "machine",
+  "x-source": "3f3cad2fcc"
+ },
  "js.2btmnnqnpty": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">3k. <span class=\"mono\">tess-03a9e901682f-{n0}</span>.</b> BTJD {n1} 处的凹陷，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 名审阅者标记（目录未存储评审组规模或共识区间）。位于 {n6} 天的 BLS 周期上，含 {n7} 次凌星。状态：周期与已知 TOI 相符。仅为档案数值。本页不声称任何探测。",
  "@js.2btmnnqnpty": {
   "x-review": "machine",
@@ -6875,6 +6955,11 @@
  "@js.2bvrlx4bioc": {
   "x-review": "machine",
   "x-source": "18fccc4254"
+ },
+ "js.2c181tpjjvc": "Luyten's Star b",
+ "@js.2c181tpjjvc": {
+  "x-review": "machine",
+  "x-source": "23d6b3c963"
  },
  "js.2c70ie4ixet": "图版",
  "@js.2c70ie4ixet": {
@@ -6911,11 +6996,6 @@
   "x-review": "machine",
   "x-source": "439b98f6cf"
  },
- "js.2cazwqoadoq": "留出的、具有目录次食且周期匹配的 EB：次食相位与目录值相差在 {n0} 以内，{n1}% 区间下限 &gt;= {n2}（未找到的次食计为漏检）",
- "@js.2cazwqoadoq": {
-  "x-review": "machine",
-  "x-source": "71d0ca28d6"
- },
  "js.2cc0e9v7uvs": "<i style=\"background:#FF6961\"></i>{n0} Peg b",
  "@js.2cc0e9v7uvs": {
   "x-review": "machine",
@@ -6935,6 +7015,11 @@
  "@js.2cektxt2twi": {
   "x-review": "machine",
   "x-source": "4662bb50f1"
+ },
+ "js.2cg943adi3e": "真实 TOI 排行榜 ›",
+ "@js.2cg943adi3e": {
+  "x-review": "machine",
+  "x-source": "cd1d193d20"
  },
  "js.2cjkfyfegp8": "标记（✓ 已计入）",
  "@js.2cjkfyfegp8": {
@@ -6960,6 +7045,16 @@
  "@js.2cqrtx9qqhe": {
   "x-review": "machine",
   "x-source": "2e5aaa9889"
+ },
+ "js.2cs8n7gldpd": "SetuHQ Pro",
+ "@js.2cs8n7gldpd": {
+  "x-review": "machine",
+  "x-source": "fcca2f700b"
+ },
+ "js.2cserx0e05n": "Proxima Centauri d",
+ "@js.2cserx0e05n": {
+  "x-review": "machine",
+  "x-source": "8213996948"
  },
  "js.2ct9t5541vf": "两个团队独立地观测到同一颗行星从其恒星前方经过。",
  "@js.2ct9t5541vf": {
@@ -6991,11 +7086,6 @@
   "x-review": "machine",
   "x-source": "00265f6a9d"
  },
- "js.2d5lr3nor8a": "<b>数据：The Extrasolar Planets Encyclopaedia（exoplanet.eu），获取于 {n0}-{n1}-{n2}。</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>。获取此列表时无法访问 NASA Exoplanet Archive，因此列表仅来自 exoplanet.eu。exoplanet.eu 把它视为行星的每个天体都列为已确认：质量不超过 {n3} 个木星质量（在不确定度范围内）、已发表或已宣布的天体。它的列表比 NASA Exoplanet Archive 更宽泛，后者只收录同行评审论文中质量不超过 {n4} 个木星质量的天体。来源未给出的数值显示为“未存储”。",
- "@js.2d5lr3nor8a": {
-  "x-review": "machine",
-  "x-source": "4ddb24b25e"
- },
  "js.2d5x5vtgqx3": "{n0} {n1} / {n2} MJ <span class=\"na\">· 理论估计</span>",
  "@js.2d5x5vtgqx3": {
   "x-review": "machine",
@@ -7011,11 +7101,6 @@
   "x-review": "machine",
   "x-source": "a2e862e82e"
  },
- "js.2d87qst4jdj": "搜索目录 docs/discoveries/catalog.json，更新于 {n0}-{n1}-29T00:{n2}+{n3}，共 {n4} 个条目。",
- "@js.2d87qst4jdj": {
-  "x-review": "machine",
-  "x-source": "c5e3fcc2c6"
- },
  "js.2d8lw4ky362": "模式",
  "@js.2d8lw4ky362": {
   "x-review": "machine",
@@ -7026,16 +7111,6 @@
   "x-review": "machine",
   "x-source": "d356f1d9dd"
  },
- "js.2d97owpwxwe": "<b>ν₃ 反对称伸缩</b> · {n0} µm · 红外活性 · 放大 ×{n1} 绘制 · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.2d97owpwxwe": {
-  "x-review": "machine",
-  "x-source": "426504275f"
- },
- "js.2d9cg0jtcpa": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>光变曲线",
- "@js.2d9cg0jtcpa": {
-  "x-review": "machine",
-  "x-source": "6c965e2b87"
- },
  "js.2dbh8x9y8de": "周期",
  "@js.2dbh8x9y8de": {
   "x-review": "machine",
@@ -7045,6 +7120,11 @@
  "@js.2dcer0ylq6r": {
   "x-review": "machine",
   "x-source": "731f74e2f3"
+ },
+ "js.2dcmry1hh6z": "Kepler-{n0} c ›",
+ "@js.2dcmry1hh6z": {
+  "x-review": "machine",
+  "x-source": "afae7ed80f"
  },
  "js.2deel2ps6ig": "τ Boötis，{n0}–{n1} MHz 处尚待证实的爆发",
  "@js.2deel2ps6ig": {
@@ -7131,11 +7211,6 @@
   "x-review": "machine",
   "x-source": "63210331f9"
  },
- "js.2eluxgdu08m": "本章中的数值",
- "@js.2eluxgdu08m": {
-  "x-review": "machine",
-  "x-source": "2d0a4d13b4"
- },
  "js.2en1x3cmvoa": "{n0} Peg b：由我们的公式得出的 K",
  "@js.2en1x3cmvoa": {
   "x-review": "machine",
@@ -7156,15 +7231,10 @@
   "x-review": "machine",
   "x-source": "dcfc6e0cb1"
  },
- "js.2etjlw57rtv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>银河系",
- "@js.2etjlw57rtv": {
+ "js.2ew51rdrin6": "第 {n0} 个凹陷（共 {n1} 个）",
+ "@js.2ew51rdrin6": {
   "x-review": "machine",
-  "x-source": "5dbc898c01"
- },
- "js.2eujifl0hnp": "高：奇偶不匹配或次食；中：深度、V 形、短周期密度不匹配或食的周期；低：仅凭评审组给出的理由。",
- "@js.2eujifl0hnp": {
-  "x-review": "machine",
-  "x-source": "4d1f3f27e2"
+  "x-source": "50a1297714"
  },
  "js.2exbs04rc3y": "一张“行星”的光学图像，后来被解释为碰撞产生的膨胀尘埃云。",
  "@js.2exbs04rc3y": {
@@ -7211,6 +7281,11 @@
   "x-review": "machine",
   "x-source": "fd6553a3e6"
  },
+ "js.2fkkbj5qfsy": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s2</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.2fkkbj5qfsy": {
+  "x-review": "machine",
+  "x-source": "26c1586964"
+ },
  "js.2fmavt7k5j5": "上移“首选候选”",
  "@js.2fmavt7k5j5": {
   "x-review": "machine",
@@ -7231,11 +7306,6 @@
   "x-review": "machine",
   "x-source": "eb8caa0866"
  },
- "js.2ftwr4ebakn": "<b>真实数据，附引用。</b> 存储的测量值，按存储方式分箱或折叠。",
- "@js.2ftwr4ebakn": {
-  "x-review": "machine",
-  "x-source": "349da91d3d"
- },
  "js.2fu72b3rkst": "<b>ν₂ 弯曲（两个，相互垂直）</b> · {n0} µm · 红外活性 · 放大 ×{n1} 绘制 · 超出“解读大气”的 {n2}–{n3} µm 窗口",
  "@js.2fu72b3rkst": {
   "x-review": "machine",
@@ -7250,6 +7320,11 @@
  "@js.2fy47ry25d8": {
   "x-review": "machine",
   "x-source": "745f476a5f"
+ },
+ "js.2fye5c973kf": "已标记",
+ "@js.2fye5c973kf": {
+  "x-review": "machine",
+  "x-source": "d9b2fe68b6"
  },
  "js.2fyxww7qwgs": "太阳",
  "@js.2fyxww7qwgs": {
@@ -7301,6 +7376,11 @@
   "x-review": "machine",
   "x-source": "9dbffce8e5"
  },
+ "js.2gbggujxcvs": "无",
+ "@js.2gbggujxcvs": {
+  "x-review": "machine",
+  "x-source": "140bedbf9c"
+ },
  "js.2gbrnw08yjn": "条目<span aria-hidden=\"true\"></span>",
  "@js.2gbrnw08yjn": {
   "x-review": "machine",
@@ -7330,6 +7410,11 @@
  "@js.2gz7mzl8po": {
   "x-review": "machine",
   "x-source": "8c1759d61c"
+ },
+ "js.2jt13jfskg": "Lalande {n0} d",
+ "@js.2jt13jfskg": {
+  "x-review": "machine",
+  "x-source": "142bf3b80d"
  },
  "js.2jxe56kfgj": "搜索 (/)",
  "@js.2jxe56kfgj": {
@@ -7391,11 +7476,6 @@
   "x-review": "machine",
   "x-source": "c95d84d8a8"
  },
- "js.32jc7egs68": "在 exoplanet.eu 中存有距离的 {n1} 颗行星里，有 <b>{n0}</b> 颗是通过视向速度法（所列的第一种方法）检出的。<a href=\"/explore/galaxy/?method=rv\">在银河地图上显示它们 ›</a>",
- "@js.32jc7egs68": {
-  "x-review": "machine",
-  "x-source": "3d287892f0"
- },
  "js.33d16tnf44": "正在加载 {n0} 颗行星的地图…",
  "@js.33d16tnf44": {
   "x-review": "machine",
@@ -7441,11 +7521,6 @@
   "x-review": "machine",
   "x-source": "0b61a77801"
  },
- "js.3d44eg16pj": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>天球位置",
- "@js.3d44eg16pj": {
-  "x-review": "machine",
-  "x-source": "4f904b0fbc"
- },
  "js.3dua6scdtg": "{n1} 个对象上的 {n0} 个区间",
  "@js.3dua6scdtg": {
   "x-review": "machine",
@@ -7470,6 +7545,11 @@
  "@js.3iebm2jaty": {
   "x-review": "machine",
   "x-source": "0455ae374d"
+ },
+ "js.3kjkwe2xdx": "{n0} 个目标 · {n1} 个已知 · {n2} 个错误",
+ "@js.3kjkwe2xdx": {
+  "x-review": "machine",
+  "x-source": "15dfef1f1e"
  },
  "js.3o5vubwdr": "{n0} dex",
  "@js.3o5vubwdr": {
@@ -7501,10 +7581,10 @@
   "x-review": "machine",
   "x-source": "770680c692"
  },
- "js.3tu868pwb6": "TIC {n0} · 待复核，未结",
- "@js.3tu868pwb6": {
+ "js.3ub2we0j81": "Teegarden's",
+ "@js.3ub2we0j81": {
   "x-review": "machine",
-  "x-source": "58e453def1"
+  "x-source": "d49a311c27"
  },
  "js.3wqc4ug47j": "方法：解读大气 ›",
  "@js.3wqc4ug47j": {
@@ -7546,11 +7626,6 @@
   "x-review": "machine",
   "x-source": "8e52c2a95a"
  },
- "js.45gidy2yfd": "基准下限：仅元数据基线完全不使用光变曲线，只使用公开的 TOI 编号、周期、持续时间、星历误差和历元，并在调参半数据上拟合逻辑回归。未能超过它的方法，并不能表明其解读光变曲线的能力优于仅凭目录自身元数据预测处置结果。",
- "@js.45gidy2yfd": {
-  "x-review": "machine",
-  "x-source": "d4a42c8dbc"
- },
  "js.46fy9vwje9": "任意相位的次食",
  "@js.46fy9vwje9": {
   "x-review": "machine",
@@ -7585,11 +7660,6 @@
  "@js.4axuq93fet": {
   "x-review": "machine",
   "x-source": "b4faa12d85"
- },
- "js.4b8yjime2n": "艺术想象图：岩质-温和外观，适用于半径小于 {n0} R⊕、Teq {n1} 至 {n2} K：灰褐色岩石和一圈薄的中性边缘；无海洋、大陆或云。这是该外观的示意，并非某颗特定行星。",
- "@js.4b8yjime2n": {
-  "x-review": "machine",
-  "x-source": "9c1d8d98c4"
  },
  "js.4ccm3arc4r": "exoplanet.eu 中 {n0} 颗行星 · 存储类型 K0V · 按 Teff 归为 K 类（最接近 K0V）",
  "@js.4ccm3arc4r": {
@@ -7651,15 +7721,15 @@
   "x-review": "machine",
   "x-source": "5caba079cd"
  },
+ "js.4sxy414d9c": "样本",
+ "@js.4sxy414d9c": {
+  "x-review": "machine",
+  "x-source": "af2bdbe1aa"
+ },
  "js.4t9xjok0e6": "艺术想象图 · 岩质，辐照无法计算 · 未存储半径；质量 {n0} M⊕（exoplanet.eu）低于 {n1} M⊕，因此绘为岩质。半径未测量：未按比例。辐照无法计算：使用中性颜色。成分未测量。来源：exoplanet.eu，获取于 {n2}-{n3}-{n4}。<a href=\"/docs/pictures/\">图像的绘制方法 ›</a>",
  "@js.4t9xjok0e6": {
   "x-review": "machine",
   "x-source": "3975c0da56"
- },
- "js.4u1k8v564x": "周期图峰值的 Baluev FAP 低于 {n0}，且半振幅至少为 {n2} 分钟分箱弥散的 {n1} 倍，并且具有一致性：同一周期（相差 {n3}% 以内）是光变曲线每一半中的最佳峰值，且不在所搜索最长周期的 {n4}% 以内；一个扇区中 {n5} 颗或更多恒星共有的周期属于系统误差。持续时间达到该周期 {n6} 或更长的凹陷是其波谷；评审组半数权重判定为恒星变化的凹陷亦然。",
- "@js.4u1k8v564x": {
-  "x-review": "machine",
-  "x-source": "9c7dd08245"
  },
  "js.4v6zv9397m": "置信度 {n0}",
  "@js.4v6zv9397m": {
@@ -7686,10 +7756,10 @@
   "x-review": "machine",
   "x-source": "0e17d0a129"
  },
- "js.50cw8uea6": "留出的食双星：周期与星表值相差在 {n0}% 以内（未标为待复核的食双星计为漏检），{n1}% 区间下界 &gt;= {n2}",
- "@js.50cw8uea6": {
+ "js.4xy18gdl7w": "目录更新于 <time datetime=\"2026-10-30T06:34:41+00:00\" title=\"2026-10-30T06:34:41+00:00\">{n1} 年 10 月 {n0} 日 {n2} UTC</time>。",
+ "@js.4xy18gdl7w": {
   "x-review": "machine",
-  "x-source": "75081a4bd7"
+  "x-source": "d9bccf18dc"
  },
  "js.537weqdx92": "TIC {n0} · P {n1} d · {n2} ppm · SNR {n3}",
  "@js.537weqdx92": {
@@ -7716,15 +7786,25 @@
   "x-review": "machine",
   "x-source": "d40d0e920c"
  },
+ "js.5cuofh1x2k": "在此片段中无法与噪声区分",
+ "@js.5cuofh1x2k": {
+  "x-review": "machine",
+  "x-source": "7dfa2254b3"
+ },
+ "js.5eim8yf4c": "Lalande {n0}",
+ "@js.5eim8yf4c": {
+  "x-review": "machine",
+  "x-source": "7a73b4b548"
+ },
+ "js.5j6snvvuuk": "布局",
+ "@js.5j6snvvuuk": {
+  "x-review": "machine",
+  "x-source": "a511909161"
+ },
  "js.5k1okfy1y2": "站点",
  "@js.5k1okfy1y2": {
   "x-review": "machine",
   "x-source": "fa7955814e"
- },
- "js.5limoap242": "<b>ν₄ 不对称弯曲（二重）</b> · {n0} µm · 红外活性 · 放大 ×{n1} 绘制 · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.5limoap242": {
-  "x-review": "machine",
-  "x-source": "c1aa83b41c"
  },
  "js.5m1n02zglj": "在一颗系外行星大气中识别出二氧化碳",
  "@js.5m1n02zglj": {
@@ -7750,11 +7830,6 @@
  "@js.5qqcw21as6": {
   "x-review": "machine",
   "x-source": "f4a2329657"
- },
- "js.5tmt3hrss9": "星表的尺寸类别边界（气态巨行星为 {n0} R⊕ 及以上）",
- "@js.5tmt3hrss9": {
-  "x-review": "machine",
-  "x-source": "7807f33d37"
  },
  "js.5x2cvaysve": "视向速度半振幅 K",
  "@js.5x2cvaysve": {
@@ -7791,6 +7866,11 @@
   "x-review": "machine",
   "x-source": "bf11fecb30"
  },
+ "js.64gjc6ygey": "遮挡星光",
+ "@js.64gjc6ygey": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
  "js.65pxt8ib9c": "在一个双星周围成像的一颗超级木星。",
  "@js.65pxt8ib9c": {
   "x-review": "machine",
@@ -7820,11 +7900,6 @@
  "@js.6j56seqj8": {
   "x-review": "machine",
   "x-source": "7e69af06bb"
- },
- "js.6n8ndyybfz": "一份提交需针对其范围内的每颗恒星，列出其方法在真实光变曲线以及通量反转和分块打乱的对照数据上检测到的事件（时间、持续时间、周期、其自身的通过判定和标记）。排行榜自行判定哪些事件位于 TOI 的星历上（基准测试的 score_star 和 match_toi），并自行统计对照数据中的误报。不接受自报的结果。",
- "@js.6n8ndyybfz": {
-  "x-review": "machine",
-  "x-source": "7c4b789f62"
  },
  "js.6qolz1acje": "来源：见图注。",
  "@js.6qolz1acje": {
@@ -7881,6 +7956,11 @@
   "x-review": "machine",
   "x-source": "217afade12"
  },
+ "js.78llqc69gh": "Proxima Centauri b",
+ "@js.78llqc69gh": {
+  "x-review": "machine",
+  "x-source": "c5626ab780"
+ },
  "js.78r4r7906c": "在地球上，它几乎只由海洋生物产生。",
  "@js.78r4r7906c": {
   "x-review": "machine",
@@ -7916,15 +7996,15 @@
   "x-review": "machine",
   "x-source": "1aca80e8b5"
  },
- "js.7czfymv28r": "根据外观表生成的艺术构想图；仅在存储了半径时尺寸才按比例",
- "@js.7czfymv28r": {
-  "x-review": "machine",
-  "x-source": "326ba9455b"
- },
  "js.7f3lidyc7s": "凌星回放",
  "@js.7f3lidyc7s": {
   "x-review": "machine",
   "x-source": "40686f7e63"
+ },
+ "js.7i6tnzxffe": "Wolf {n0} b",
+ "@js.7i6tnzxffe": {
+  "x-review": "machine",
+  "x-source": "03eb21d076"
  },
  "js.7nrzzc658q": "盲编码主体",
  "@js.7nrzzc658q": {
@@ -7981,6 +8061,11 @@
   "x-review": "machine",
   "x-source": "3e17a94f61"
  },
+ "js.87fibqymmi": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">pi Men c</a></b> · 主星 <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> · P {n0} d · 凌星",
+ "@js.87fibqymmi": {
+  "x-review": "machine",
+  "x-source": "f7c50ba965"
+ },
  "js.886176wzks": "exoplanet.eu 中的 {n0} 颗行星 · 存储类型 F6V · 由 Teff 推得 F 型（最接近 F5V）",
  "@js.886176wzks": {
   "x-review": "machine",
@@ -8031,11 +8116,6 @@
   "x-review": "machine",
   "x-source": "f39f7254a3"
  },
- "js.8v4t373n3v": "<span class=\"tag cand\" title=\"candidate, unconfirmed\">候选</span> 中间时刻 {n0} BTJD",
- "@js.8v4t373n3v": {
-  "x-review": "machine",
-  "x-source": "fd4ae8b1e8"
- },
  "js.8w8ak8xloi": "BTJD {n0} · {n1} h · 深 {n2} ppm · SNR {n3} · P {n4} d（{n5} 次凌星）",
  "@js.8w8ak8xloi": {
   "x-review": "machine",
@@ -8045,11 +8125,6 @@
  "@js.8wdver3jml": {
   "x-review": "machine",
   "x-source": "a4c44f4a8f"
- },
- "js.8wmiyv0zzd": "艺术想象图：冷岩质外观，适用于半径小于 {n0} R⊕、Teq 低于 {n1} K 的情形：浅灰色岩石，冰盖延伸至纬度 {n2}°，无大气。这是该外观的示意图，并非某颗特定行星。",
- "@js.8wmiyv0zzd": {
-  "x-review": "machine",
-  "x-source": "c1497fc8a0"
  },
  "js.8wxh5amfez": "亚海王星",
  "@js.8wxh5amfez": {
@@ -8061,10 +8136,20 @@
   "x-review": "machine",
   "x-source": "10af6c250a"
  },
+ "js.905p7mrgke": "Ross {n0} b",
+ "@js.905p7mrgke": {
+  "x-review": "machine",
+  "x-source": "eec00b75d8"
+ },
  "js.90yyx3asv8": "{n0} Psc c",
  "@js.90yyx3asv8": {
   "x-review": "machine",
   "x-source": "f0cbc33340"
+ },
+ "js.92zm5mb6ic": "条目",
+ "@js.92zm5mb6ic": {
+  "x-review": "machine",
+  "x-source": "923fe53966"
  },
  "js.94m77w54ls": "它为对象 S2（BTJD {n0} 至 {n1}）存储的理由，每个对象一条，而非每个凹陷一条。它标记了这个凹陷。Sentinel 是一个 AI 模型（Claude Code CLI (Claude, Anthropic) · 默认），而不是人。",
  "@js.94m77w54ls": {
@@ -8126,15 +8211,15 @@
   "x-review": "machine",
   "x-source": "6c293b1c67"
  },
- "js.9g29b1hwza": "JWST {s0}ing Exoplanet Community ERS Team",
- "@js.9g29b1hwza": {
-  "x-review": "machine",
-  "x-source": "d6a491c51e"
- },
  "js.9ipi38tplb": "恒星",
  "@js.9ipi38tplb": {
   "x-review": "machine",
   "x-source": "e357d39687"
+ },
+ "js.9j28j4tmyg": "Barnard's star b",
+ "@js.9j28j4tmyg": {
+  "x-review": "machine",
+  "x-source": "af09ab2ca6"
  },
  "js.9je9lv8f9w": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">5i. <span class=\"mono\">tess-bc9f59e5c3af-{n0}</span>。</b> 凹陷位于 BTJD {n1}，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 位审阅者标记（目录未存储审阅组规模或共识区间）。位于 {n6} 天的 BLS 周期上，含 {n7} 次凌星。状态：周期与已知 TOI 相符。仅为档案数值。本页不声称任何探测结果。",
  "@js.9je9lv8f9w": {
@@ -8171,6 +8256,11 @@
   "x-review": "machine",
   "x-source": "ef80c9cc7c"
  },
+ "js.9xo5dpvs8f": "{n0} Eri c",
+ "@js.9xo5dpvs8f": {
+  "x-review": "machine",
+  "x-source": "b644412ed5"
+ },
  "js.9yvkaakdvn": "本次运行未为这些行存储档案。",
  "@js.9yvkaakdvn": {
   "x-review": "machine",
@@ -8195,11 +8285,6 @@
  "@js.a5ik0d45ok": {
   "x-review": "machine",
   "x-source": "76a48996a7"
- },
- "js.a5x17kv5tz": "显示 {n0} 颗行星 · 凌星 {n1} · 视向速度 {n2} · 成像 {n3} · 微引力透镜 {n4}",
- "@js.a5x17kv5tz": {
-  "x-review": "machine",
-  "x-source": "3372d51309"
  },
  "js.a6wp5hntda": "审核标记：<span class=\"mono\">odd_even_mismatch, v_shape</span> · 未通过审核",
  "@js.a6wp5hntda": {
@@ -8235,11 +8320,6 @@
  "@js.ai6mp83zpi": {
   "x-review": "machine",
   "x-source": "73d5db9ed8"
- },
- "js.ak7b9gcem6": "高：FAP 低于 1e-{n0}，且半振幅不小于分箱离散度的 {n1} 倍；中：半振幅不小于 {n2} 倍；低：其他情况（或仅凭审阅组理由标记的凹陷）。",
- "@js.ak7b9gcem6": {
-  "x-review": "machine",
-  "x-source": "4c775dba32"
  },
  "js.am5y46ghie": "exoplanet.eu 将其列为“已发表于同行评审论文”，{n0} 年通过主凌星法检出；记录更新于 {n1}-{n2}-{n3}。又名 TOI-{n4}。",
  "@js.am5y46ghie": {
@@ -8286,11 +8366,6 @@
   "x-review": "machine",
   "x-source": "d69fa08242"
  },
- "js.aztpkxejok": "目录的尺寸类别边界（类海王星 {n0}–{n1} R⊕）",
- "@js.aztpkxejok": {
-  "x-review": "machine",
-  "x-source": "0a47054ebb"
- },
  "js.b2yn41cpri": "案卷无法在此视图中加载。<a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-f28323a4aef6-006\">在单独页面中打开。</a>",
  "@js.b2yn41cpri": {
   "x-review": "machine",
@@ -8305,11 +8380,6 @@
  "@js.b81xuwkvhb": {
   "x-review": "machine",
   "x-source": "fa1b7822f3"
- },
- "js.ba6i75z9zb": "另有 {n0} 条见<a href=\"/candidates/\">浏览器 ›</a>",
- "@js.ba6i75z9zb": {
-  "x-review": "machine",
-  "x-source": "378a1efe43"
  },
  "js.bcz7f7521k": "tess-toi-{n0}-s5",
  "@js.bcz7f7521k": {
@@ -8341,11 +8411,6 @@
   "x-review": "machine",
   "x-source": "9d7801b23a"
  },
- "js.bm1842qxn6": "<b>实时信息流中的新信号与噪声相符。</b>仅凭噪声，每审查 {n1} 个目标应产生约 {n0} 个虚假 new_candidate 信号，而实时信息流上为每 {n3} 个目标 {n2} 个。在先前的规则下，信息流上的 new_candidate 更可能是噪声而非信号。",
- "@js.bm1842qxn6": {
-  "x-review": "machine",
-  "x-source": "c59881f8e5"
- },
  "js.bn4w24un71": "≤：上限，取自存储的范围（{n0} 至该值）。",
  "@js.bn4w24un71": {
   "x-review": "machine",
@@ -8366,10 +8431,10 @@
   "x-review": "machine",
   "x-source": "d1ec927942"
  },
- "js.buyt9rgrrs": "通过审核，按权重计获得审查小组一半的标记为潜在行星，并非源自其恒星自身的周期性信号，且未被上述任何规则采纳。候选，未经确认。",
- "@js.buyt9rgrrs": {
+ "js.bvhiyb18bf": "小",
+ "@js.bvhiyb18bf": {
   "x-review": "machine",
-  "x-source": "2488197a47"
+  "x-source": "81db8ebbbb"
  },
  "js.bvrmk1ex4g": "发现",
  "@js.bvrmk1ex4g": {
@@ -8396,10 +8461,10 @@
   "x-review": "machine",
   "x-source": "c7e1272291"
  },
- "js.cbv0lkfgz8": "打开 {s0} 案卷 ›",
- "@js.cbv0lkfgz8": {
+ "js.cb7mp7y3o9": "存储 id tess-1c554332c266-{n0}；本次运行中无案例文件",
+ "@js.cb7mp7y3o9": {
   "x-review": "machine",
-  "x-source": "248441ab0d"
+  "x-source": "64026e0de1"
  },
  "js.cbz7kbs8l0": "id tic29257288-s1-dip-{n0} · 对象 tess-6cf3bf1771b3<br>光变曲线 sha256 b44e4d280fddc0d2705f6687997736ebf67f9b0544e9711f880a21ebaa0bda05<br>代码 … · 配置 a9d34c7079563183…<br>来源 sector_0001.json.gz",
  "@js.cbz7kbs8l0": {
@@ -8466,6 +8531,11 @@
   "x-review": "machine",
   "x-source": "bbc7feceee"
  },
+ "js.d6qkqwv24q": "{n0} Peg · {n1} K",
+ "@js.d6qkqwv24q": {
+  "x-review": "machine",
+  "x-source": "e5f1ee0a62"
+ },
  "js.d72yz71kxc": "信息流，按 snr 降序排列。每个条目均为候选，未经确认。",
  "@js.d72yz71kxc": {
   "x-review": "machine",
@@ -8485,11 +8555,6 @@
  "@js.db3tsr98n3": {
   "x-review": "machine",
   "x-source": "aa93d0c8f4"
- },
- "js.dcedelaavp": "<b>ν₂ 弯曲</b> · {n0} µm · 红外活性 · 放大 ×{n1} 绘制 · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.dcedelaavp": {
-  "x-review": "machine",
-  "x-source": "9dbd92a5c8"
  },
  "js.dcp2jzpjk": "<i style=\"background:#30D158\"></i>beta Pic b",
  "@js.dcp2jzpjk": {
@@ -8546,6 +8611,11 @@
   "x-review": "machine",
   "x-source": "b6940405a0"
  },
+ "js.dvqr7huse3": "eps Ind Bb",
+ "@js.dvqr7huse3": {
+  "x-review": "machine",
+  "x-source": "e8e7d5bf66"
+ },
  "js.dvwoo1e05r": "WASP-{n0} b 的 JWST NIRSpec PRISM 透射光谱：{n1} 个带误差棒的分箱数据点及论文的最佳拟合模型；最深的点位于 {n2} 微米处，即二氧化碳谱带。",
  "@js.dvwoo1e05r": {
   "x-review": "machine",
@@ -8585,11 +8655,6 @@
  "@js.e1cnrnc88l": {
   "x-review": "machine",
   "x-source": "7a72e5d7b0"
- },
- "js.e1q7qs4zzq": "<b>ν₃ 反对称伸缩（三）</b> · {n0} µm · 红外活性 · 放大 ×{n1} 绘制 · <a href=\"/how-it-works/atmospheres/\">{s0} 中的 {n2} µm 谱带 ›</a>",
- "@js.e1q7qs4zzq": {
-  "x-review": "machine",
-  "x-source": "71ad84105e"
  },
  "js.e2y47rpcbh": "未知",
  "@js.e2y47rpcbh": {
@@ -8746,6 +8811,11 @@
   "x-review": "machine",
   "x-source": "09cd47b417"
  },
+ "js.f2v9rtmf85": "代码",
+ "@js.f2v9rtmf85": {
+  "x-review": "machine",
+  "x-source": "340f463033"
+ },
  "js.f38k3bw5h7": "<b class=\"flabel\">图版 {n0}，子图 i。</b>对象 tess-38b5a559eee2 的存储流量（BTJD {n1} 至 {n2}），相对流量 − {n3}，单位 ppm。阴影带为共识区间，字母标注与图注一致；三角形为 BLS 历元。右：按其存储的 BLS 周期 {n4} d 和 t0 BTJD {n5} 折叠；阴影带为存储的 BLS 持续时间（{n6} h）。流量范围外的 {n7} 个点未绘出。",
  "@js.f38k3bw5h7": {
   "x-review": "machine",
@@ -8760,11 +8830,6 @@
  "@js.f6sm069d1p": {
   "x-review": "machine",
   "x-source": "4b1c53ca4a"
- },
- "js.f7l0xvrbgu": "<b>主要为 N–N 伸缩</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · 未在 {s0} 中绘制",
- "@js.f7l0xvrbgu": {
-  "x-review": "machine",
-  "x-source": "099bdfda01"
  },
  "js.f7onc16rky": "数据中预测的凌星 / 有凹陷的凌星",
  "@js.f7onc16rky": {
@@ -8785,11 +8850,6 @@
  "@js.fakckuaz74": {
   "x-review": "machine",
   "x-source": "deaf714e0c"
- },
- "js.fbjnqepq3y": "<b>每一类与其自身的零假设对照</b>，在相同的 {n0} 个恒星-扇区上测量：其规则在其信号不可能存在之处找到了什么。凹陷：将流量上下翻转（真实凹陷变为凸起；真实耀发或脉动极大变为凹陷，因此该零假设并非不含真实信号）。耀发：遮蔽真实凹陷后的向下事件。变光：恒星的红噪声副本（对其分箱数据拟合 AR({n1})）经过同一规则，该规则要求光变曲线前后两半给出相同的最佳周期（相差 {n2}% 以内）。在其不位于双星周期的周期图峰中，{n3} 个是相干的；未分类的有：{n4} 个长于半段可检验的范围（未检验相干性），{n5} 个位于周期网格边缘，{n6} 个在两半之间漂移。局限：在强红噪声中，它仅 {n8}/{n9} 次找到 {n7} ppm 的正弦信号（scripts/variability_rule_check.py），且无法在单个扇区中检验长于约 {n10} d 的周期。同类与同类比较，以恒星-扇区为单位：{n11}% 区间是对恒星-扇区的配对自助法，并附 McNemar 检验。未同时通过两项的类别在此切片中无法与噪声区分：行星候选、食双星、耀发、脉动或自转变星、系统误差。在 {n12} 个耀发类增亮事件中，{n13} 个上升快于衰减，{n14} 个相反（{n15} 个相等）；真实耀发上升快，噪声没有偏好方向。",
- "@js.fbjnqepq3y": {
-  "x-review": "machine",
-  "x-source": "edcc450583"
  },
  "js.fbyrtfuuuu": "pi Men",
  "@js.fbyrtfuuuu": {
@@ -8831,11 +8891,6 @@
   "x-review": "machine",
   "x-source": "8e4a1eb431"
  },
- "js.ftkov6vbui": "凹陷的轮廓（候选，半径比）",
- "@js.ftkov6vbui": {
-  "x-review": "machine",
-  "x-source": "2cbc25cbe4"
- },
  "js.fv6055pnqa": "周期与已知 TOI 相符",
  "@js.fv6055pnqa": {
   "x-review": "machine",
@@ -8876,10 +8931,10 @@
   "x-review": "machine",
   "x-source": "ab87f8473e"
  },
- "js.g1lwglngw7": "档案比较：与 {s0} 一致：ΔP {n0}%，验证说明中的时间偏移：{n2} 个历元平均 {n1} min。仅为档案数值。本页不声称任何探测。",
- "@js.g1lwglngw7": {
+ "js.g2cghw07hl": "自转",
+ "@js.g2cghw07hl": {
   "x-review": "machine",
-  "x-source": "dff14c09d4"
+  "x-source": "57b5e2fc1b"
  },
  "js.g3w1e5hqnc": "最佳光谱仪稳定性",
  "@js.g3w1e5hqnc": {
@@ -8890,6 +8945,11 @@
  "@js.g6lwhkyils": {
   "x-review": "machine",
   "x-source": "0574b94b3e"
+ },
+ "js.g6m1eyxsdn": "分子",
+ "@js.g6m1eyxsdn": {
+  "x-review": "machine",
+  "x-source": "49a6356091"
  },
  "js.g6m8lmxer6": "典型爱因斯坦穿越时间",
  "@js.g6m8lmxer6": {
@@ -8910,6 +8970,11 @@
  "@js.gbaq8jky1n": {
   "x-review": "machine",
   "x-source": "49aaab944b"
+ },
+ "js.gc28rpxiwc": "Luyten's Star",
+ "@js.gc28rpxiwc": {
+  "x-review": "machine",
+  "x-source": "f84d36433e"
  },
  "js.gc92hxaxrj": "Sentinel · Skeptic：此窗口中有 {n0} 个跨度，计入此凹陷",
  "@js.gc92hxaxrj": {
@@ -8956,20 +9021,10 @@
   "x-review": "machine",
   "x-source": "8ab8377cb2"
  },
- "js.gf2k29wf2u": "耀发、脉动与公开的 CHEOPS 光变曲线（CHEOPS 数据遵循 ESA 的条款）",
- "@js.gf2k29wf2u": {
-  "x-review": "machine",
-  "x-source": "7636d9cad3"
- },
  "js.gfd1bpovje": "{n0} 个凹陷（{n1} 个否决）",
  "@js.gfd1bpovje": {
   "x-review": "machine",
   "x-source": "f9153844c1"
- },
- "js.ggh3kiowd3": "艺术想象图：炽热岩石外观，适用于半径小于 {n0} R⊕、Teq 不低于 {n1} K：深色岩石，日侧有发光裂缝。这是该外观的静态图，并非某颗特定行星。",
- "@js.ggh3kiowd3": {
-  "x-review": "machine",
-  "x-source": "082ec2b77a"
  },
  "js.gizr3gwvyr": "又名 {n0}、KOI-{n1}、2MASS J19323620+{n2}。",
  "@js.gizr3gwvyr": {
@@ -9015,6 +9070,11 @@
  "@js.gplu2k76y8": {
   "x-review": "machine",
   "x-source": "6f0127f52b"
+ },
+ "js.gpznjdo7y3": "pi Men · {n0} K",
+ "@js.gpznjdo7y3": {
+  "x-review": "machine",
+  "x-source": "899a850a1e"
  },
  "js.griyfzkg7e": "<b>ν₂ 弯曲</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · 超出《解读大气》的 {n2}–{n3} µm 窗口",
  "@js.griyfzkg7e": {
@@ -9076,6 +9136,11 @@
   "x-review": "machine",
   "x-source": "ed2c6ec6d2"
  },
+ "js.hfecdi2gfn": "tau Cet g",
+ "@js.hfecdi2gfn": {
+  "x-review": "machine",
+  "x-source": "5a095c9a36"
+ },
  "js.hi7kyj244t": "最早在太阳系外找到的行星之一，通过对毫秒脉冲星计时找到。",
  "@js.hi7kyj244t": {
   "x-review": "machine",
@@ -9110,6 +9175,11 @@
  "@js.hrans2nscc": {
   "x-review": "machine",
   "x-source": "476f15a932"
+ },
+ "js.ht99op5pxg": "NASA Exoplanet Archive，表 ps（default_flag = {n0}），由 scripts/validate_known_planets.py 记录于 docs/results/pi_men_validation.md（实时档案查询，commit 0f6dbdc）。该处仅记录了 pi Men c，因此仅列出 pi Men c；其凌星中心时刻未被记录，因此此处不计算逐历元偏移，而是引用验证说明中的平均计时偏移（{n1} min，基于 {n3} 个历元中的 {n2} 个）。待档案响应后，请用 'setuhq crossmatch runs/tess-pi-men-s1' 的输出替换。记录于 <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n5} 年 10 月 {n4} 日 {n6} UTC</time>（commit 0f6dbdc），见 docs/results/pi_men_crossmatch.json；本次运行自身的交叉匹配未执行（存储的错误，原文：<code>ModuleNotFoundError: No module named 'astroquery'</code>）。",
+ "@js.ht99op5pxg": {
+  "x-review": "machine",
+  "x-source": "4653c87d87"
  },
  "js.hv6t0hplex": "运行报告 · tess-toi-{n0}-s2",
  "@js.hv6t0hplex": {
@@ -9201,10 +9271,10 @@
   "x-review": "machine",
   "x-source": "8c601dc48e"
  },
- "js.ioyj9009pb": "<a href=\"/assets/data/exoplanet_map.csv\" download=\"\">下载所有已绘制的行星（CSV，{n0} 行）</a>，源自存储的 exoplanet.eu 图谱。",
- "@js.ioyj9009pb": {
+ "js.iqpr6oou3c": "第 {n0} 扇区：{n1}-{n2}-{n3} 至 {n4}-{n5}-{n6} · 其视场内有 {n7} 颗已编目且拥有已知行星的恒星",
+ "@js.iqpr6oou3c": {
   "x-review": "machine",
-  "x-source": "0669d7463c"
+  "x-source": "61eb698124"
  },
  "js.ir7824frtx": "tess-08a8c4eac6ff-{n0} · 未结 · 候选，未确认",
  "@js.ir7824frtx": {
@@ -9215,6 +9285,11 @@
  "@js.irvrs2dlo3": {
   "x-review": "machine",
   "x-source": "c1c91c0c5c"
+ },
+ "js.it3yfm2mls": "WASP-{n0}<br><span class=\"muted mono t-data\">tess-wasp-{n1}-s1</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.it3yfm2mls": {
+  "x-review": "machine",
+  "x-source": "be84b6d521"
  },
  "js.it7w3r4cx": "存储的光变曲线中预测的凌星：{n0}；其上有凹陷的：{n1}（{n2} 个凹陷；{n3} 个待复核；平均偏移 {n4} min）。",
  "@js.it7w3r4cx": {
@@ -9341,6 +9416,11 @@
   "x-review": "machine",
   "x-source": "90e37abec4"
  },
+ "js.k2p8kaiegs": "HN Lib b",
+ "@js.k2p8kaiegs": {
+  "x-review": "machine",
+  "x-source": "1b00eabfcb"
+ },
  "js.k3btdf81ur": "偏心率",
  "@js.k3btdf81ur": {
   "x-review": "machine",
@@ -9355,11 +9435,6 @@
  "@js.k6wgj1vf42": {
   "x-review": "machine",
   "x-source": "3a6449de5f"
- },
- "js.k73o4aajts": "四个场景。{s0} 计时：两颗周期比接近 {n0} 的行星相互牵引，使内侧行星的凌星时而提前、时而推迟，从而逐渐形成 O−C 图。次食：行星在凌星后半个轨道周期时滑到恒星背后，形成一个小得多的凹陷，此处绘制时加深了十倍。相位曲线：潮汐锁定的行星在接近掩食时显示出更多炽热的日面，其峰值因风而偏移。Rossiter–McLaughlin：行星先后遮挡自转恒星朝向我们运动的一半和远离我们运动的一半，因此恒星的测量速度在凌星期间发生摆动。",
- "@js.k73o4aajts": {
-  "x-review": "machine",
-  "x-source": "21a7dc3be9"
  },
  "js.k81gpwo3bo": "{n0} −-{n1} / {n2} Gyr",
  "@js.k81gpwo3bo": {
@@ -9451,10 +9526,20 @@
   "x-review": "machine",
   "x-source": "5bd78577ba"
  },
+ "js.l361fmbsuc": "存储 id tess-eaab33b6b763-{n0}；本次运行中无案例文件",
+ "@js.l361fmbsuc": {
+  "x-review": "machine",
+  "x-source": "75a96bab8f"
+ },
  "js.l3je4rzt3v": "{n0} Pegasi b，一颗轨道周期 {n1} 天的巨行星，通过其恒星的摆动被探测到。",
  "@js.l3je4rzt3v": {
   "x-review": "machine",
   "x-source": "783b55a817"
+ },
+ "js.l5edhw6c5o": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">7c. <span class=\"mono\">tess-7b97e468b60b-{n0}</span>.</b> 凹陷位于 BTJD {n1}，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 位审核者标记（目录未存储评审组规模或共识区间）。位于一个 {n6} 天、含 {n7} 次凌星的 BLS 周期上。状态：周期与一个已知 TOI 匹配。仅为档案数值。本页面不声称任何探测。",
+ "@js.l5edhw6c5o": {
+  "x-review": "machine",
+  "x-source": "84eea9bb2e"
  },
  "js.l66csoi3se": "Drake 方程计算器",
  "@js.l66csoi3se": {
@@ -9486,6 +9571,11 @@
   "x-review": "machine",
   "x-source": "bcb2e28ac7"
  },
+ "js.le6i0lhisz": "族群",
+ "@js.le6i0lhisz": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
  "js.lg9kxjhees": "*已知假阳性。* TOI 表将其处置为假阳性（FP）的 TESS 关注天体：每 {n1} 天出现一次 {n0}% 的凹陷。",
  "@js.lg9kxjhees": {
   "x-review": "machine",
@@ -9496,6 +9586,11 @@
   "x-review": "machine",
   "x-source": "2b91c1afd2"
  },
+ "js.lh8m0vnna6": "微引力透镜 <span class=\"mono\" data-cmn=\"microlensing\">{n0}</span>",
+ "@js.lh8m0vnna6": {
+  "x-review": "machine",
+  "x-source": "6ebe002adb"
+ },
  "js.lj02ml1du2": "又称 GJ {n0}、V2500 Oph。",
  "@js.lj02ml1du2": {
   "x-review": "machine",
@@ -9505,21 +9600,6 @@
  "@js.lj5zi4x2mb": {
   "x-review": "machine",
   "x-source": "a266923843"
- },
- "js.lmqc5cetjp": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>系统视图",
- "@js.lmqc5cetjp": {
-  "x-review": "machine",
-  "x-source": "b55e8878de"
- },
- "js.loxdmylfqk": "FP 否决：其 TOI 凹陷未被该方法作为干净候选给出的 FP 恒星（已找回且未待复核）。可靠性：TOI 凹陷上的干净候选中属于 CP/KP 的比例，基于本样本的类别构成，而非 TOI 目录的类别构成。所有比率均附 Wilson {n0}% 区间。TFOPWG 处置为参考，并非每个 TOI 的真实情况。",
- "@js.loxdmylfqk": {
-  "x-review": "machine",
-  "x-source": "65f89a23b5"
- },
- "js.lpvg4u78fv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>目录",
- "@js.lpvg4u78fv": {
-  "x-review": "machine",
-  "x-source": "a3cf22621a"
  },
  "js.lugtea4b2c": "表格，窄屏上可横向滚动",
  "@js.lugtea4b2c": {
@@ -9566,6 +9646,11 @@
   "x-review": "machine",
   "x-source": "6ba2097d7d"
  },
+ "js.m1r0pwwc2c": "Eps Ind Ab",
+ "@js.m1r0pwwc2c": {
+  "x-review": "machine",
+  "x-source": "f49ed6b253"
+ },
  "js.m3r8wny6k9": "{s0} 的艺术想象图：一颗位于冷区间的气态巨行星，半径未经测量（{n0} 地球质量），{n1} K。",
  "@js.m3r8wny6k9": {
   "x-review": "machine",
@@ -9611,40 +9696,45 @@
   "x-review": "machine",
   "x-source": "be67c2df8b"
  },
- "js.me79v4kzjl": "<b>信息流更严格的规则，已预先注册并在此代码上重新测量。</b>信号现在必须在两个已审核的扇区中均通过，且在 {n1} 次试验中 FAP 低于 {n0}。在留出的一半数据上，仅噪声即可在每 {n3} 个目标中产生 {n2} 个假信号（{n4}% CI {n5}–{n6}），低于此前的 {n7}（{n8}–{n9}）。这仍远高于真实光变曲线给出的每 {n11} 个目标 {n10} 个新信号，因此信息流仍以误报为主，且信息流层面的完备度从 {n12}% 降至 {n13}%。信息流收录的只是供人工或后续审核的线索，并非任何确认状态的候选。在此代码上重新运行，实时信息流的 {n14} 个目标收录了 {n15} 个新信号。",
- "@js.me79v4kzjl": {
+ "js.meqp2x3ji6": "exoplanet.eu 将其列为“发表于同行评审论文”，于 {n0} 年通过成像法检出；记录更新于 {n1}-{n2}-{n3}。别名 bet Pic b、HIP {n4} b。",
+ "@js.meqp2x3ji6": {
   "x-review": "machine",
-  "x-source": "1b6a64cd4a"
+  "x-source": "f3c70ef44a"
  },
  "js.mfzn4pvae2": "案例档案无法在此视图中加载。<a id=\"blockedlink\" href=\"/candidates/toi-236/case-file/#tess-01e315ee5ebf-003\">在单独页面中打开。</a>",
  "@js.mfzn4pvae2": {
   "x-review": "machine",
   "x-source": "69b4fd5575"
  },
+ "js.mg421357or": "exoplanet.eu 将其列为“发表于同行评审论文”，于 {n0} 年通过主凌星法检出；记录更新于 {n1}-{n2}-{n3}。别名 TOI-{n4} b、TOI-{n5}。",
+ "@js.mg421357or": {
+  "x-review": "machine",
+  "x-source": "cb65d7e764"
+ },
  "js.mh4olooj3o": "Probe · Sensitive：此窗口内有 {n0} 个区段，计入此次凹陷",
  "@js.mh4olooj3o": {
   "x-review": "machine",
   "x-source": "6a7bc0cac6"
- },
- "js.mi2tgjiiqn": "<b>Pro Follow-up</b> <span class=\"eddev\">开发中</span>：为每个候选提供后续观测资料包：ExoFOP 格式的导出、附不确定度的星历，以及目标何时可从客户的望远镜观测",
- "@js.mi2tgjiiqn": {
-  "x-review": "machine",
-  "x-source": "e944e5aba3"
  },
  "js.mimntzdewz": "方法：朝向与远离 ›",
  "@js.mimntzdewz": {
   "x-review": "machine",
   "x-source": "3f269a446d"
  },
- "js.mk4mulcwso": "<b>ν₃ 反对称伸缩</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · <a href=\"/how-it-works/atmospheres/\">{s0} 中的 {n2} µm 谱带 ›</a>",
- "@js.mk4mulcwso": {
+ "js.mkc9jxfgbz": "已标记的下陷",
+ "@js.mkc9jxfgbz": {
   "x-review": "machine",
-  "x-source": "518c8ddc31"
+  "x-source": "94e146b4e3"
  },
  "js.mlrhcayzxr": "每种颜色旁都以文字标明状态。",
  "@js.mlrhcayzxr": {
   "x-review": "machine",
   "x-source": "4775478abc"
+ },
+ "js.mmnswive1w": "<i aria-hidden=\"true\"></i>耀斑",
+ "@js.mmnswive1w": {
+  "x-review": "machine",
+  "x-source": "e7a022e38b"
  },
  "js.mmu67oe6q3": "地球–太阳质心",
  "@js.mmu67oe6q3": {
@@ -9661,10 +9751,25 @@
   "x-review": "machine",
   "x-source": "0882c3b8b4"
  },
+ "js.mqj6wfaw6h": "Ross {n0}",
+ "@js.mqj6wfaw6h": {
+  "x-review": "machine",
+  "x-source": "817ee35ea0"
+ },
+ "js.mskkijl1h9": "eps Ind A",
+ "@js.mskkijl1h9": {
+  "x-review": "machine",
+  "x-source": "0cf3bf4b89"
+ },
  "js.msr7a8c18z": "谱带（µm）",
  "@js.msr7a8c18z": {
   "x-review": "machine",
   "x-source": "482e628874"
+ },
+ "js.mtnvg3zz1c": "HD {n0}<br><span class=\"muted mono t-data\">tess-hd-{n1}-s4</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.mtnvg3zz1c": {
+  "x-review": "machine",
+  "x-source": "7cc6c4ce56"
  },
  "js.mwjxjvzia1": "排序方式",
  "@js.mwjxjvzia1": {
@@ -9675,6 +9780,11 @@
  "@js.mwv88v3dkm": {
   "x-review": "machine",
   "x-source": "f1df8fd039"
+ },
+ "js.mxcgzchu7z": "YZ Cet b ›",
+ "@js.mxcgzchu7z": {
+  "x-review": "machine",
+  "x-source": "a3d4d803bc"
  },
  "js.n10imi0en": "无约束",
  "@js.n10imi0en": {
@@ -9691,10 +9801,20 @@
   "x-review": "machine",
   "x-source": "7790fa8642"
  },
+ "js.n794msf49i": "exoplanet.eu 将其列为“发表于同行评审论文”，于 {n0} 年通过视向速度法、主凌星法检出；记录更新于 {n1}-{n2}-{n3}。别名 TOI-{n4} e、HD {n5} e、rho1 Cnc Ae。",
+ "@js.n794msf49i": {
+  "x-review": "machine",
+  "x-source": "c37b76a542"
+ },
  "js.n8ku2ga21": "N = {n0} 颗具有可探测生物标志气体的行星（基于这些假设）",
  "@js.n8ku2ga21": {
   "x-review": "machine",
   "x-source": "e5c09dee94"
+ },
+ "js.nb8kni7i3e": "exoplanet.eu 将其列为“在网站上公布”，于 {n0} 年通过主凌星法检出；记录更新于 {n1}-{n2}-{n3}。别名 KOI-{n4} b、KOI-{n5}。",
+ "@js.nb8kni7i3e": {
+  "x-review": "machine",
+  "x-source": "9ddf41fe09"
  },
  "js.ncy2vl0chu": "恒星的小轨道也会使其在天空中的位置移动。天体测量法测量这个微小的环形轨迹，从而得到轨道倾角，进而得到行星的真实质量。信号随行星质量和轨道增大而增强，随距离增大而减弱。",
  "@js.ncy2vl0chu": {
@@ -9721,6 +9841,11 @@
   "x-review": "machine",
   "x-source": "520a2101da"
  },
+ "js.njyq57a914": "b Cen (AB)b",
+ "@js.njyq57a914": {
+  "x-review": "machine",
+  "x-source": "d5e094d32f"
+ },
  "js.nk8m1nny5r": "tess-4b369d3c6f09-{n0} 的盲编码对象图：审核者标记的光变曲线，不含目标名称和标记",
  "@js.nk8m1nny5r": {
   "x-review": "machine",
@@ -9741,6 +9866,11 @@
   "x-review": "machine",
   "x-source": "7a0d984887"
  },
+ "js.nrcbxny9wa": "状态",
+ "@js.nrcbxny9wa": {
+  "x-review": "machine",
+  "x-source": "073c1634c4"
+ },
  "js.ns1wjk2bkh": "未结 · 候选，未确认",
  "@js.ns1wjk2bkh": {
   "x-review": "machine",
@@ -9750,6 +9880,11 @@
  "@js.nt7jpblt1w": {
   "x-review": "machine",
   "x-source": "82765e23c7"
+ },
+ "js.ntaw7nc8vt": "方法章节",
+ "@js.ntaw7nc8vt": {
+  "x-review": "machine",
+  "x-source": "31932e7289"
  },
  "js.ntp7tqnx1h": "显示 {n1} 条中的 {n0} 条。",
  "@js.ntp7tqnx1h": {
@@ -9765,6 +9900,11 @@
  "@js.nvauo0t95d": {
   "x-review": "machine",
   "x-source": "0906640b92"
+ },
+ "js.ny28knfv0a": "解读大气",
+ "@js.ny28knfv0a": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
  },
  "js.ny97ialxx0": "Sentinel · Skeptic：此窗口内无标记",
  "@js.ny97ialxx0": {
@@ -9811,6 +9951,11 @@
   "x-review": "machine",
   "x-source": "67071927f6"
  },
+ "js.o7m15kbsi5": "pi Men<br><span class=\"muted mono t-data\">tess-pi-men-s1</span><br><span class=\"muted\">TIC Teff {n0} K</span>",
+ "@js.o7m15kbsi5": {
+  "x-review": "machine",
+  "x-source": "8b203e2083"
+ },
  "js.o99izf3z1n": "是：TOI {n0}",
  "@js.o99izf3z1n": {
   "x-review": "machine",
@@ -9835,11 +9980,6 @@
  "@js.op9ipohoso": {
   "x-review": "machine",
   "x-source": "703dfd613f"
- },
- "js.oqpbaoboao": "<b>ν₁ 对称伸缩振动</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · 未在 {s0} 中绘制",
- "@js.oqpbaoboao": {
-  "x-review": "machine",
-  "x-source": "2474d10b70"
  },
  "js.osjdukhlhf": "<b>星罩（Starshade）。</b> 一种花瓣形遮光屏，在望远镜前方很远处飞行（Cash {n0}）。Roman Starshade Rendezvous 概念：{n1} m，距离 {n2} km；HabEx：{n3} m，距离约 {n4} km（HabEx Final Report）。",
  "@js.osjdukhlhf": {
@@ -9901,11 +10041,6 @@
   "x-review": "machine",
   "x-source": "6f82ddb801"
  },
- "js.p4u8g14ecp": "增亮：连续 {n0} 个或更多数据点比 {n2} 天滑动中值高出至少 {n1}σ，峰值达 {n3}σ 或以上，相对于恒星自身的离散度和 {n4} d 内的离散度均如此；且不落在仪器提示时刻上。",
- "@js.p4u8g14ecp": {
-  "x-review": "machine",
-  "x-source": "286b750a5a"
- },
  "js.p4vg8hpjdy": "来源记录",
  "@js.p4vg8hpjdy": {
   "x-review": "machine",
@@ -9956,6 +10091,11 @@
   "x-review": "machine",
   "x-source": "a838a779e2"
  },
+ "js.pd6ew3rt19": "<i style=\"background:#BF5AF2\"></i>微引力透镜 <span class=\"mono\">{n0}</span>",
+ "@js.pd6ew3rt19": {
+  "x-review": "machine",
+  "x-source": "59e3047926"
+ },
  "js.pf82vwrzvm": "潜在行星 {n0}",
  "@js.pf82vwrzvm": {
   "x-review": "machine",
@@ -9970,11 +10110,6 @@
  "@js.pi29c0a6g9": {
   "x-review": "machine",
   "x-source": "59a33e9ea7"
- },
- "js.piby2721pq": "{n0} 颗恒星 <span class=\"muted\">（{n1} CP/KP，{n2} FP，{n3} FA）</span> <b>偏向 FP</b>：FP 行描述的仅是具有 {n4} 分钟数据的 FP 恒星",
- "@js.piby2721pq": {
-  "x-review": "machine",
-  "x-source": "52d7acd8f3"
  },
  "js.pj7ep1wjt3": "<b>主要为 N–N 伸缩振动</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · 未在 Reading atmospheres 中绘制",
  "@js.pj7ep1wjt3": {
@@ -9991,10 +10126,20 @@
   "x-review": "machine",
   "x-source": "21e389771e"
  },
- "js.pn78q0jveb": "端到端（DACE DRP 数组 vs pycheops 的 DRP 产品）：每个参考观测的相关系数 &gt;= {n0}",
- "@js.pn78q0jveb": {
+ "js.plrluloqs0": "pi Men c ›",
+ "@js.plrluloqs0": {
   "x-review": "machine",
-  "x-source": "cec6167f00"
+  "x-source": "3d841d792f"
+ },
+ "js.pm8m1jqibi": "下陷",
+ "@js.pm8m1jqibi": {
+  "x-review": "machine",
+  "x-source": "9b9a2cbe44"
+ },
+ "js.pn2cym3dnm": "播放 {n0}–{n1}",
+ "@js.pn2cym3dnm": {
+  "x-review": "machine",
+  "x-source": "04f22f0879"
  },
  "js.pnrbaagjqb": "一颗演化 K 型巨星的质量很大的伴天体，通过视向速度法检出。",
  "@js.pnrbaagjqb": {
@@ -10016,15 +10161,10 @@
   "x-review": "machine",
   "x-source": "7c33bc2692"
  },
- "js.q8vb9a162v": "SetuHQ 是独立项目，与 ESA、CHEOPS 任务或 CHEOPS Consortium 无隶属关系，未获其认可，也不代表其运营。它不能替代 ESA 的 Target Checker、Visibility Tool、Exposure Time Calculator、Scheduling Feasibility Checker 或 Policies &amp; Procedures 文件；以官方征集和工具为准。",
- "@js.q8vb9a162v": {
+ "js.q3zvdlmvza": "{n0} Peg b ›",
+ "@js.q3zvdlmvza": {
   "x-review": "machine",
-  "x-source": "e5417cf525"
- },
- "js.q95vajnmsz": "TESS 扇区 {n0}–{n1}。该恒星的第 {n2} 条信息流条目（存储 id <span class=\"mono\">tess-d64ea73e32ac-{n3}</span>）。TOI 匹配是将存储的周期与档案值进行比较。仅为档案值。本页不声称任何探测。",
- "@js.q95vajnmsz": {
-  "x-review": "machine",
-  "x-source": "52af58fde0"
+  "x-source": "8136a9c855"
  },
  "js.qad4ea3nk7": "Rossiter–McLaughlin 效应，HD {n0} b（实测 V sin I）",
  "@js.qad4ea3nk7": {
@@ -10040,6 +10180,16 @@
  "@js.qcwtbaf2e5": {
   "x-review": "machine",
   "x-source": "3091d416b9"
+ },
+ "js.qcyhotnwyb": "Kepler-{n0} b ›",
+ "@js.qcyhotnwyb": {
+  "x-review": "machine",
+  "x-source": "6ec7331b16"
+ },
+ "js.qegfutpzid": "Barnard's Star",
+ "@js.qegfutpzid": {
+  "x-review": "machine",
+  "x-source": "04db49fbfb"
  },
  "js.qezo9f8bhr": "exoplanet.eu 中有 {n0} 颗行星 · 存储类型 G2IV-V · 由 Teff 得出 G 类（最接近 G2V）",
  "@js.qezo9f8bhr": {
@@ -10060,6 +10210,11 @@
  "@js.qjpeah132b": {
   "x-review": "machine",
   "x-source": "d7e942e6f6"
+ },
+ "js.qmvvg78xp": "tau Cet f",
+ "@js.qmvvg78xp": {
+  "x-review": "machine",
+  "x-source": "e99f6ebd4f"
  },
  "js.qnq290e1mh": "恒星噪声 ~{n0} m/s",
  "@js.qnq290e1mh": {
@@ -10121,10 +10276,10 @@
   "x-review": "machine",
   "x-source": "17f710cec5"
  },
- "js.r6b0ke5ddb": "按存储原样绘制的测量数据，下方注明其来源：SetuHQ 的光变曲线、目录的计数。",
- "@js.r6b0ke5ddb": {
+ "js.r7r5ll60un": "标记",
+ "@js.r7r5ll60un": {
   "x-review": "machine",
-  "x-source": "aa17f78b83"
+  "x-source": "e3d11da4dd"
  },
  "js.r8opy5qens": "n_e，对数坐标",
  "@js.r8opy5qens": {
@@ -10145,6 +10300,11 @@
  "@js.regiehtwzu": {
   "x-review": "machine",
   "x-source": "b4cb7439b1"
+ },
+ "js.rmcqh280p3": "章节",
+ "@js.rmcqh280p3": {
+  "x-review": "machine",
+  "x-source": "9831375bc6"
  },
  "js.roj6ijskxu": "又名 V452 Vul、TOI-{n0}。",
  "@js.roj6ijskxu": {
@@ -10180,11 +10340,6 @@
  "@js.s5dkmlriz2": {
   "x-review": "machine",
   "x-source": "a0a30e125c"
- },
- "js.s66tykdpyv": "艺术构想图：岩质-温暖外观，适用于半径小于 {n0} R⊕、Teq 为 {n1} 至 {n2} K 的情况：裸露的深色岩石，带有陨石坑，无边缘。这是该外观的静态示意图，并非某颗特定行星。",
- "@js.s66tykdpyv": {
-  "x-review": "machine",
-  "x-source": "c058d804c9"
  },
  "js.s6e71sj3nh": "<b>{n1} 位审阅者中有 {n0} 位</b>标记了它：{n3} 个 Sentinels 中有 {n2} 个，{n5} 个 Probes 中有 {n4} 个<small class=\"muted\" style=\"display:block;font-size:11px\"><span title=\"reviewer id volunteer-sensitive\">Probe · 敏感</span>，<span title=\"reviewer id volunteer-typical\">Probe · 典型</span>，<span title=\"reviewer id volunteer-cautious\">Probe · 谨慎</span></small>",
  "@js.s6e71sj3nh": {
@@ -10306,6 +10461,11 @@
   "x-review": "machine",
   "x-source": "9d9fb0ef55"
  },
+ "js.t39my5dsyh": "计时 <span class=\"mono\" data-cmn=\"timing\">{n0}</span>",
+ "@js.t39my5dsyh": {
+  "x-review": "machine",
+  "x-source": "eaf800daff"
+ },
  "js.t60qw9cha2": "艺术构想图 · 海王星型，辐照无法计算 · 未存储半径；质量 {n0} M⊕（exoplanet.eu）介于 {n1} 至 {n2} M⊕ 之间，因此绘制为类海王星行星。半径未测量：未按比例绘制。辐照无法计算：使用中性色。成分未经测量。来源：exoplanet.eu，获取于 {n3}-{n4}-{n5}。<a href=\"/docs/pictures/\">图像的绘制方式 ›</a>",
  "@js.t60qw9cha2": {
   "x-review": "machine",
@@ -10316,10 +10476,10 @@
   "x-review": "machine",
   "x-source": "eb9b70b39c"
  },
- "js.tbam84ybce": "恒星的黑体颜色与临边昏暗；米粒组织为纹理效果",
- "@js.tbam84ybce": {
+ "js.tchjn2r4y9": "系统性",
+ "@js.tchjn2r4y9": {
   "x-review": "machine",
-  "x-source": "90cf191e4f"
+  "x-source": "5a9bb62240"
  },
  "js.tcofm5lh0s": "exoplanet.eu 将其列为“在网站上公布”，于 {n0} 年通过主凌星法找到；记录更新于 {n1}-{n2}-{n3}。又名 2MASS J19430387+{n4} d、K01364.02、KIC {n5} d、KOI-{n6} d、KOI-{n7}、WISE J194303.88+{n8} d。",
  "@js.tcofm5lh0s": {
@@ -10346,15 +10506,25 @@
   "x-review": "machine",
   "x-source": "164d6a71cd"
  },
+ "js.tjzc53y07u": "每一次搜索运行、其存储的误差，以及这些页面背后的配置。",
+ "@js.tjzc53y07u": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "js.tmvyhylhnp": "脉动星或自转变星",
+ "@js.tmvyhylhnp": {
+  "x-review": "machine",
+  "x-source": "1d4898f020"
+ },
  "js.toi5vq5s4d": "{n0} pc，据 exoplanet.eu 所列",
  "@js.toi5vq5s4d": {
   "x-review": "machine",
   "x-source": "08aa2d3dc6"
  },
- "js.trnbddk8fe": "在 exoplanet.eu 中存有距离的 {n1} 颗行星中，有 <b>{n0}</b> 颗是通过成像法找到的（按所列的第一种方法）。<a href=\"/explore/galaxy/?method=imaging\">在银河地图上显示 ›</a>",
- "@js.trnbddk8fe": {
+ "js.trg2sd40ob": "配置",
+ "@js.trg2sd40ob": {
   "x-review": "machine",
-  "x-source": "dd5674802f"
+  "x-source": "b79606fb3a"
  },
  "js.trzuzwcopk": "管线",
  "@js.trzuzwcopk": {
@@ -10506,10 +10676,10 @@
   "x-review": "machine",
   "x-source": "943077f050"
  },
- "js.v5sdm14eih": "<b>ν₁ 对称伸缩</b> · {n0} µm · 红外活性 · 放大 ×{n1} 绘制 · <a href=\"/how-it-works/atmospheres/\">“解读大气”中的 {n2} µm 波段 ›</a>",
- "@js.v5sdm14eih": {
+ "js.v3cmzn255c": "SetuHQ 的各项配置以及任何提交的方法，均在留出的一半数据上进行盲评。",
+ "@js.v3cmzn255c": {
   "x-review": "machine",
-  "x-source": "5a958a6168"
+  "x-source": "1e91ab197b"
  },
  "js.vbyk5xwnrv": "此前使用的方框测量（评审组所标记窗口内的平均通量）：深度 {n0} ppm，持续时间 {n1} h，相对 Huang {n4} 的比值为 **{n2}** 和 **{n3}**（相对 README 过去引用的存档默认行为 {n5} 和 {n6}）。",
  "@js.vbyk5xwnrv": {
@@ -10541,11 +10711,6 @@
   "x-review": "machine",
   "x-source": "8d34629003"
  },
- "js.vm9rqq85fe": "{s0} 与 c 的周期",
- "@js.vm9rqq85fe": {
-  "x-review": "machine",
-  "x-source": "da9014d7f4"
- },
  "js.vmsox3cj56": "链接到此视图",
  "@js.vmsox3cj56": {
   "x-review": "machine",
@@ -10575,11 +10740,6 @@
  "@js.vsh0ajf78": {
   "x-review": "machine",
   "x-source": "93eedb88e2"
- },
- "js.vtdvzcy89i": "各次运行存储的样本与拟合",
- "@js.vtdvzcy89i": {
-  "x-review": "machine",
-  "x-source": "f6d62e6cda"
  },
  "js.vtnlfvcu18": "气态巨行星（按质量；未存储半径）",
  "@js.vtnlfvcu18": {
@@ -10626,10 +10786,10 @@
   "x-review": "machine",
   "x-source": "d2f1847f96"
  },
- "js.w084p1vq7y": "在该数据流水平下（其完整规则，FAP &lt; {n0}）反转光变曲线上的误报",
- "@js.w084p1vq7y": {
+ "js.w21u8mgncr": "{n0} Eri e",
+ "@js.w21u8mgncr": {
   "x-review": "machine",
-  "x-source": "9936d6f964"
+  "x-source": "a9bda9193e"
  },
  "js.w635vpthea": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">5d. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> 位于 BTJD {n1} 的凹陷，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 名评审者标记（目录未存储评审组规模或共识区间）。位于一个 {n6} 天的 BLS 周期上，含 {n7} 次凌星。状态：周期与一个已知 TOI 相符。仅为存档数值。本页不声称任何探测。",
  "@js.w635vpthea": {
@@ -10656,6 +10816,16 @@
   "x-review": "machine",
   "x-source": "cc87a8d326"
  },
+ "js.w7mxe1jjf7": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s5</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.w7mxe1jjf7": {
+  "x-review": "machine",
+  "x-source": "1cc92f722d"
+ },
+ "js.w9mpw0gpum": "pi Men ›",
+ "@js.w9mpw0gpum": {
+  "x-review": "machine",
+  "x-source": "4de3e057f1"
+ },
  "js.wafeswebdi": "运行 tess-toi-{n0}-s2 · {n1} 个凹陷（{n2} 个否决）· {n3} 个样本。<span class=\"printonly\"> 本图版上的每个候选：候选，未确认。</span>",
  "@js.wafeswebdi": {
   "x-review": "machine",
@@ -10670,6 +10840,11 @@
  "@js.wbhr5y7ltz": {
   "x-review": "machine",
   "x-source": "efa246c3ed"
+ },
+ "js.wcsqg4x5f": "天体测量 <span class=\"mono\" data-cmn=\"astrometry\">{n0}</span>",
+ "@js.wcsqg4x5f": {
+  "x-review": "machine",
+  "x-source": "9043a3475b"
  },
  "js.wge5c60gnw": "Gaia-{n0} b",
  "@js.wge5c60gnw": {
@@ -10690,6 +10865,11 @@
  "@js.wkrls1dk3c": {
   "x-review": "machine",
   "x-source": "0a0c72b4d4"
+ },
+ "js.wldr50kzra": "Luyten's Star d",
+ "@js.wldr50kzra": {
+  "x-review": "machine",
+  "x-source": "f978f22f3a"
  },
  "js.wmpk5bhzf9": "天体测量 · {n0}",
  "@js.wmpk5bhzf9": {
@@ -10731,6 +10911,11 @@
   "x-review": "machine",
   "x-source": "30ccca4a89"
  },
+ "js.wtj60yojsq": "exoplanet.eu 将其列为“在网站上公布”，于 {n0} 年通过主凌星法检出；记录更新于 {n1}-{n2}-{n3}。别名 2MASS J18515610+{n4} b、K00739.01、KIC {n5} b、KOI-{n6} b、KOI-{n7}、WISE J185156.07+{n8} b。",
+ "@js.wtj60yojsq": {
+  "x-review": "machine",
+  "x-source": "6ee7be1c7c"
+ },
  "js.wvis3dlfyh": "地球大小",
  "@js.wvis3dlfyh": {
   "x-review": "machine",
@@ -10745,11 +10930,6 @@
  "@js.wyws1u3mmf": {
   "x-review": "machine",
   "x-source": "db544a9e58"
- },
- "js.x0f76panzs": "艺术想象图：neptune-cool 外观，适用于半径 {n0} 至 {n1} R⊕、Teq 低于 {n2} K：深蓝色条带和一个暗斑。这是该外观的示意静帧，并非某颗特定行星。",
- "@js.x0f76panzs": {
-  "x-review": "machine",
-  "x-source": "e72124962b"
  },
  "js.x177ygvldr": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">5b. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> 凹陷位于 BTJD {n1}，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 位审阅者标记（星表不存储审阅组规模或共识区间）。位于 {n6} 天的 BLS 周期上，含 {n7} 次凌星。状态：周期与一个已知 TOI 相符。仅为档案数值。本页不声称任何探测。",
  "@js.x177ygvldr": {
@@ -10826,20 +11006,30 @@
   "x-review": "machine",
   "x-source": "39ac347e42"
  },
+ "js.xi9v7ksndn": "Wolf {n0} d",
+ "@js.xi9v7ksndn": {
+  "x-review": "machine",
+  "x-source": "1268b30fc7"
+ },
  "js.xjghoq101i": "对数强度拉伸（{n0} 至 {n1}⁻⁶）；行星位于示意性的 {n2}⁻³；理想单色光学系统；掩模和光阑尺寸为示意",
  "@js.xjghoq101i": {
   "x-review": "machine",
   "x-source": "907c200b96"
  },
+ "js.xll7y1ynl0": "历史与论文",
+ "@js.xll7y1ynl0": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "js.xngfkgukjg": "生命方程",
+ "@js.xngfkgukjg": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
  "js.xp4h2ofbdl": "· TIC {n0} · 无周期信号（单次凌星）· 最显著凹陷中的 {n1} 个",
  "@js.xp4h2ofbdl": {
   "x-review": "machine",
   "x-source": "21f82eff3f"
- },
- "js.xpg4i01qhj": "艺术想象图：envelope-warm 外观，适用于半径 {n0} 至 {n1} R⊕、Teq {n2} 至 {n3} K：蓝灰色雾霾。这是该外观的示意静帧，并非某颗特定行星。",
- "@js.xpg4i01qhj": {
-  "x-review": "machine",
-  "x-source": "7ef97acea7"
  },
  "js.xpmiaupaaj": "显示 {n1} 个中的 {n0} 个",
  "@js.xpmiaupaaj": {
@@ -10855,6 +11045,11 @@
  "@js.xtdd9w23g6": {
   "x-review": "machine",
   "x-source": "3be7d1cc73"
+ },
+ "js.xvtyf8wl1b": "beta Pic b",
+ "@js.xvtyf8wl1b": {
+  "x-review": "machine",
+  "x-source": "e38549f8ed"
  },
  "js.xx7wry1e2": "被提议作为岩质行星的生物标志物，因为在这类行星上没有生命很难产生它。",
  "@js.xx7wry1e2": {
@@ -10885,6 +11080,16 @@
  "@js.y2sii8ag7z": {
   "x-review": "machine",
   "x-source": "1c8b900d94"
+ },
+ "js.y3xy9eepgg": "零假设 {n0} · 超出 {n1}（{n2}%：{n3} 至 {n4}）",
+ "@js.y3xy9eepgg": {
+  "x-review": "machine",
+  "x-source": "01f79dcd20"
+ },
+ "js.y9ptrwfobi": "docs/discoveries/catalog.json",
+ "@js.y9ptrwfobi": {
+  "x-review": "machine",
+  "x-source": "81e814ecc7"
  },
  "js.yef3d1ma9p": "{n0} 个因过深被过滤",
  "@js.yef3d1ma9p": {
@@ -10921,30 +11126,20 @@
   "x-review": "machine",
   "x-source": "fe1b093c33"
  },
- "js.yob3llgolf": "按年份和方法划分的行星",
- "@js.yob3llgolf": {
-  "x-review": "machine",
-  "x-source": "60ecd96d94"
- },
  "js.yq2bbta4k2": "<span class=\"word cand\">候选</span><span class=\"word s-known\">已知 TOI 周期</span><b class=\"fig\">4a. <span class=\"mono\">tess-308a47f84167-{n0}</span>.</b> 凹陷位于 BTJD {n1}，{n2} ppm，{n3} h，SNR {n4}。由 {n5} 位审阅者标记（星表不存储审阅组规模或共识区间）。位于 {n6} 天的 BLS 周期上，含 {n7} 次凌星。状态：周期与一个已知 TOI 相符。仅为档案数值。本页不声称任何探测。",
  "@js.yq2bbta4k2": {
   "x-review": "machine",
   "x-source": "4aebb10343"
  },
- "js.yv746p7ayh": "<b>弯曲（二重，成直角）</b> · {n0} µm · 红外活性 · 绘制 ×{n1} · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.yv746p7ayh": {
+ "js.yrhnt8o7w9": "分子与生命",
+ "@js.yrhnt8o7w9": {
   "x-review": "machine",
-  "x-source": "67a09bbd02"
+  "x-source": "d0ac3c4b97"
  },
  "js.yw1cg6z6ba": "一颗小型凌星行星，其低密度最初表明它可能是一个富水世界。",
  "@js.yw1cg6z6ba": {
   "x-review": "machine",
   "x-source": "9d636cbdc1"
- },
- "js.ywghy58587": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">{s0}</a></b> · 宿主恒星 <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s1}</a> · P {n0} d · 发生凌星",
- "@js.ywghy58587": {
-  "x-review": "machine",
-  "x-source": "40c55c5a8e"
  },
  "js.yx8blcjbm": "Teff：exoplanet.eu，获取于 {n0}-{n1}-{n2}；恒星颜色：普朗克谱经 CIE {n3} 配色函数换算",
  "@js.yx8blcjbm": {
@@ -10981,25 +11176,10 @@
   "x-review": "machine",
   "x-source": "a9d66a33c2"
  },
- "js.z7hoxivdkf": "<b>ν 伸缩振动</b> · {n0} µm · 红外非活性（偶极矩不变）· 绘制放大 ×{n1} · 超出 {s0} 的 {n2}–{n3} µm 窗口",
- "@js.z7hoxivdkf": {
-  "x-review": "machine",
-  "x-source": "1bcc8097d6"
- },
  "js.zae6h8rkk6": "Sentinel：一个 AI 模型（Claude Code CLI (Claude, Anthropic) · 默认），读取绘制出的光变曲线并标记亮度下降。它不是人。",
  "@js.zae6h8rkk6": {
   "x-review": "machine",
   "x-source": "adeac0a395"
- },
- "js.zb00gkwd2w": "<b>ν₁ 对称伸缩振动</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · <a href=\"/how-it-works/atmospheres/\">{s0} 中的 {n2} µm 谱带 ›</a>",
- "@js.zb00gkwd2w": {
-  "x-review": "machine",
-  "x-source": "5b5f436da5"
- },
- "js.zbm91l3rcx": "<b>ν₃ 反对称伸缩振动</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · <a href=\"/how-it-works/atmospheres/\">《解读大气》中的 {n2} µm 谱带 ›</a>",
- "@js.zbm91l3rcx": {
-  "x-review": "machine",
-  "x-source": "a265a49ab4"
  },
  "js.zdvz2hwho1": "{n0} 个已知 TOI",
  "@js.zdvz2hwho1": {
@@ -11020,6 +11200,11 @@
  "@js.zhegcnbaps": {
   "x-review": "machine",
   "x-source": "43c883da28"
+ },
+ "js.zjf4m6pas4": "tau Boo Ab ›",
+ "@js.zjf4m6pas4": {
+  "x-review": "machine",
+  "x-source": "5487f582ec"
  },
  "js.zknme5264y": "筛查标记：<span class=\"mono\">density_mismatch</span> · 通过筛查",
  "@js.zknme5264y": {
@@ -11076,6 +11261,11 @@
   "x-review": "machine",
   "x-source": "c369fc08d2"
  },
+ "js.zzww829dur": "大",
+ "@js.zzww829dur": {
+  "x-review": "machine",
+  "x-source": "d35c416a85"
+ },
  "label.art": "艺术想象图",
  "@label.art": {
   "x-review": "machine",
@@ -11101,7 +11291,7 @@
   "x-review": "machine",
   "x-source": "d1d38cf39a"
  },
- "lb.h1": "在真实 TOI 上盲评的方法。",
+ "lb.h1": "在<wbr>真实 TOI 上<wbr>盲评的<wbr>方法。",
  "@lb.h1": {
   "x-review": "machine",
   "x-source": "d7943ed0f0"
@@ -11161,7 +11351,7 @@
   "x-review": "machine",
   "x-source": "b841a0b2c4"
  },
- "learn.h": "学习路径",
+ "learn.h": "学习<wbr>路径",
  "@learn.h": {
   "x-review": "machine",
   "x-source": "7f9d3aa634"
@@ -11526,12 +11716,12 @@
   "x-review": "machine",
   "x-source": "417be5d799"
  },
- "methods.h1": "行星是如何被找到的。",
+ "methods.h1": "行星<wbr>是<wbr>如何<wbr>被<wbr>找到的。",
  "@methods.h1": {
   "x-review": "machine",
   "x-source": "583ac6e306"
  },
- "methods.h1b": "以及 SetuHQ 如何找到它们。",
+ "methods.h1b": "以及 SetuHQ 如何<wbr>找到<wbr>它们。",
  "@methods.h1b": {
   "x-review": "machine",
   "x-source": "99b2b42598"
@@ -11596,7 +11786,7 @@
   "x-review": "machine",
   "x-source": "3b73900b8d"
  },
- "nav.how": "工作原理",
+ "nav.how": "工作<wbr>原理",
  "@nav.how": {
   "x-review": "machine",
   "x-source": "9c870aa6e5"
@@ -11956,7 +12146,7 @@
   "x-review": "machine",
   "x-source": "00a053d4c5"
  },
- "pg.00c4828435": "示例运行",
+ "pg.00c4828435": "示例<wbr>运行",
  "@pg.00c4828435": {
   "x-review": "machine",
   "x-source": "00c4828435"
@@ -12091,7 +12281,7 @@
   "x-review": "machine",
   "x-source": "04074c80bf"
  },
- "pg.045ec8ea24": "值得关注的行星",
+ "pg.045ec8ea24": "值得<wbr>关注的<wbr>行星",
  "@pg.045ec8ea24": {
   "x-review": "machine",
   "x-source": "045ec8ea24"
@@ -12236,7 +12426,7 @@
   "x-review": "machine",
   "x-source": "09a3126379"
  },
- "pg.09cd47b417": "在 TESS 第 {n0} 扇区的盲搜中重新检出 pi Men c",
+ "pg.09cd47b417": "在 TESS 第 {n0} 扇区的<wbr>盲<wbr>搜中<wbr>重新<wbr>检出 pi Men c",
  "@pg.09cd47b417": {
   "x-review": "machine",
   "x-source": "09cd47b417"
@@ -12316,7 +12506,7 @@
   "x-review": "machine",
   "x-source": "0cbf9cb4d4"
  },
- "pg.0d33838a26": "规则，以及每个类别与其零假设的对照",
+ "pg.0d33838a26": "规则，<wbr>以及<wbr>每个<wbr>类别<wbr>与其<wbr>零<wbr>假设的<wbr>对照",
  "@pg.0d33838a26": {
   "x-review": "machine",
   "x-source": "0d33838a26"
@@ -12741,7 +12931,7 @@
   "x-review": "machine",
   "x-source": "1a9994dfb9"
  },
- "pg.1a9a658b5d": "任务控制",
+ "pg.1a9a658b5d": "任务<wbr>控制",
  "@pg.1a9a658b5d": {
   "x-review": "machine",
   "x-source": "1a9a658b5d"
@@ -12811,7 +13001,7 @@
   "x-review": "machine",
   "x-source": "1daaa38f33"
  },
- "pg.1ddb4f971b": "Sentinels 的子样本 <span class=\"sub\">{n0} 颗留出恒星 · 未排名</span>",
+ "pg.1ddb4f971b": "Sentinels 的<wbr>子样本 <span class=\"sub\">{n0} 颗<wbr>留出<wbr>恒星 · 未<wbr>排名</span>",
  "@pg.1ddb4f971b": {
   "x-review": "machine",
   "x-source": "1ddb4f971b"
@@ -12956,7 +13146,7 @@
   "x-review": "machine",
   "x-source": "211099717c"
  },
- "pg.218584c780": "Fomalhaut b，后被重新解释",
+ "pg.218584c780": "Fomalhaut b，<wbr>后<wbr>被<wbr>重新<wbr>解释",
  "@pg.218584c780": {
   "x-review": "machine",
   "x-source": "218584c780"
@@ -13021,7 +13211,7 @@
   "x-review": "machine",
   "x-source": "23b1174728"
  },
- "pg.23c1665678": "为何只有少数会凌星",
+ "pg.23c1665678": "为何<wbr>只有<wbr>少数<wbr>会<wbr>凌星",
  "@pg.23c1665678": {
   "x-review": "machine",
   "x-source": "23c1665678"
@@ -13111,12 +13301,12 @@
   "x-review": "machine",
   "x-source": "276df9d05f"
  },
- "pg.2773b5c178": "未经验证",
+ "pg.2773b5c178": "未经<wbr>验证",
  "@pg.2773b5c178": {
   "x-review": "machine",
   "x-source": "2773b5c178"
  },
- "pg.2785d0a312": "本次运行的配置",
+ "pg.2785d0a312": "本次<wbr>运行的<wbr>配置",
  "@pg.2785d0a312": {
   "x-review": "machine",
   "x-source": "2785d0a312"
@@ -13151,7 +13341,7 @@
   "x-review": "machine",
   "x-source": "28dc5c9ff1"
  },
- "pg.294ae8b20d": "每项计入的检查",
+ "pg.294ae8b20d": "每<wbr>项<wbr>计入的<wbr>检查",
  "@pg.294ae8b20d": {
   "x-review": "machine",
   "x-source": "294ae8b20d"
@@ -13186,7 +13376,7 @@
   "x-review": "machine",
   "x-source": "2a9fd6e958"
  },
- "pg.2aa4c42adf": "搜索者",
+ "pg.2aa4c42adf": "搜索<wbr>者",
  "@pg.2aa4c42adf": {
   "x-review": "machine",
   "x-source": "2aa4c42adf"
@@ -13311,7 +13501,7 @@
   "x-review": "machine",
   "x-source": "305af37e3f"
  },
- "pg.305e1bb50b": "CHEOPS 数据不属于 Pro 和商业许可的范围",
+ "pg.305e1bb50b": "CHEOPS 数据<wbr>不<wbr>属于 Pro 和<wbr>商业<wbr>许可的<wbr>范围",
  "@pg.305e1bb50b": {
   "x-review": "machine",
   "x-source": "305e1bb50b"
@@ -13381,7 +13571,7 @@
   "x-review": "machine",
   "x-source": "32b052964e"
  },
- "pg.33214c5d63": "暂现源",
+ "pg.33214c5d63": "暂现<wbr>源",
  "@pg.33214c5d63": {
   "x-review": "machine",
   "x-source": "33214c5d63"
@@ -13576,6 +13766,11 @@
   "x-review": "machine",
   "x-source": "39a5ae06fe"
  },
+ "pg.39b16a9877": "<a href=\"https://arxiv.org/abs/1001.2010\" rel=\"noopener\">Winn {n0}，凌星与掩星（Transits and occultations）</a>",
+ "@pg.39b16a9877": {
+  "x-review": "machine",
+  "x-source": "39b16a9877"
+ },
  "pg.39de4731ee": "绘图",
  "@pg.39de4731ee": {
   "x-review": "machine",
@@ -13646,7 +13841,7 @@
   "x-review": "machine",
   "x-source": "3cadb3e928"
  },
- "pg.3ce30ed25a": "<span class=\"mcnum mono\" aria-hidden=\"true\"></span>系统视图",
+ "pg.3ce30ed25a": "<span class=\"mcnum mono\" aria-hidden=\"true\"></span>系统<wbr>视图",
  "@pg.3ce30ed25a": {
   "x-review": "machine",
   "x-source": "3ce30ed25a"
@@ -13686,7 +13881,7 @@
   "x-review": "machine",
   "x-source": "3ddd07fdd3"
  },
- "pg.3e119175f1": "按恒星排列的时间线",
+ "pg.3e119175f1": "按<wbr>恒星<wbr>排列的<wbr>时间<wbr>线",
  "@pg.3e119175f1": {
   "x-review": "machine",
   "x-source": "3e119175f1"
@@ -13700,6 +13895,11 @@
  "@pg.3eb13bfe85": {
   "x-review": "machine",
   "x-source": "3eb13bfe85"
+ },
+ "pg.3eced47803": "HR {n0} S2 与 S29：随机频率被列为待复核组合频率的概率至多为 {n1}%",
+ "@pg.3eced47803": {
+  "x-review": "machine",
+  "x-source": "3eced47803"
  },
  "pg.3f1b06de43": "BTJD {n0} · 深度 {n1} ppm · {n2} 小时 · SNR {n3}",
  "@pg.3f1b06de43": {
@@ -13931,7 +14131,7 @@
   "x-review": "machine",
   "x-source": "47aa4201cd"
  },
- "pg.47be0a453a": "许可：一个引擎，两种许可证",
+ "pg.47be0a453a": "许可：<wbr>一个<wbr>引擎，<wbr>两种<wbr>许可证",
  "@pg.47be0a453a": {
   "x-review": "machine",
   "x-source": "47be0a453a"
@@ -14026,7 +14226,7 @@
   "x-review": "machine",
   "x-source": "4b0fa3b17f"
  },
- "pg.4b1c53ca4a": "大气实验室",
+ "pg.4b1c53ca4a": "大气<wbr>实验室",
  "@pg.4b1c53ca4a": {
   "x-review": "machine",
   "x-source": "4b1c53ca4a"
@@ -14741,7 +14941,7 @@
   "x-review": "machine",
   "x-source": "6455867f98"
  },
- "pg.6464ce5238": "遮挡星光",
+ "pg.6464ce5238": "遮挡<wbr>星光",
  "@pg.6464ce5238": {
   "x-review": "machine",
   "x-source": "6464ce5238"
@@ -14750,6 +14950,11 @@
  "@pg.648636ce6a": {
   "x-review": "machine",
   "x-source": "648636ce6a"
+ },
+ "pg.64c8e5d5ef": "留出的 EB 被列为待复核候选：是否为分离型与 Morph &lt; {n0} 一致，{n1}% 区间下限 &gt;= {n2}",
+ "@pg.64c8e5d5ef": {
+  "x-review": "machine",
+  "x-source": "64c8e5d5ef"
  },
  "pg.64d8fc673a": "<b>JWST MIRI 日冕仪</b> <span class=\"mono\">2e-{n0}</span><span class=\"cond\">于 {n1}″，{n2} µm（HIP {n3}）· 已实现 · <a href=\"https://doi.org/10.3847/2041-8213/acd93e\" rel=\"noopener\">Carter et al. {n4}, ApJL {n5}, L20</a></span>",
  "@pg.64d8fc673a": {
@@ -14801,7 +15006,7 @@
   "x-review": "machine",
   "x-source": "667e520d72"
  },
- "pg.66e5cc26bd": "在真实 TOI 上测量",
+ "pg.66e5cc26bd": "在<wbr>真实 TOI 上<wbr>测量",
  "@pg.66e5cc26bd": {
   "x-review": "machine",
   "x-source": "66e5cc26bd"
@@ -14946,7 +15151,7 @@
   "x-review": "machine",
   "x-source": "6b34fed81e"
  },
- "pg.6b83f8e2fe": "Kepler 多行星候选的验证",
+ "pg.6b83f8e2fe": "Kepler 多<wbr>行星<wbr>候选的<wbr>验证",
  "@pg.6b83f8e2fe": {
   "x-review": "machine",
   "x-source": "6b83f8e2fe"
@@ -15216,7 +15421,7 @@
   "x-review": "machine",
   "x-source": "739889b27a"
  },
- "pg.73dbd015c3": "参考运行（tess-pi-men-s1）概览",
+ "pg.73dbd015c3": "参考<wbr>运行（tess-pi-men-s1）<wbr>概览",
  "@pg.73dbd015c3": {
   "x-review": "machine",
   "x-source": "73dbd015c3"
@@ -15326,7 +15531,7 @@
   "x-review": "machine",
   "x-source": "76a702e1fc"
  },
- "pg.76d2a45355": "频率，以及 SetuHQ 检查的内容",
+ "pg.76d2a45355": "频率，<wbr>以及 SetuHQ 检查的<wbr>内容",
  "@pg.76d2a45355": {
   "x-review": "machine",
   "x-source": "76d2a45355"
@@ -15336,7 +15541,7 @@
   "x-review": "machine",
   "x-source": "76e5609bc5"
  },
- "pg.7713c65bef": "微引力透镜",
+ "pg.7713c65bef": "微<wbr>引力<wbr>透镜",
  "@pg.7713c65bef": {
   "x-review": "machine",
   "x-source": "7713c65bef"
@@ -15401,7 +15606,7 @@
   "x-review": "machine",
   "x-source": "789fba55cf"
  },
- "pg.79677ced9c": "行星如何隐藏在噪声中",
+ "pg.79677ced9c": "行星<wbr>如何<wbr>隐藏<wbr>在<wbr>噪声中",
  "@pg.79677ced9c": {
   "x-review": "machine",
   "x-source": "79677ced9c"
@@ -15416,7 +15621,7 @@
   "x-review": "machine",
   "x-source": "79e17e29c4"
  },
- "pg.79fbf9c89f": "食双星",
+ "pg.79fbf9c89f": "食<wbr>双星",
  "@pg.79fbf9c89f": {
   "x-review": "machine",
   "x-source": "79fbf9c89f"
@@ -15436,12 +15641,17 @@
   "x-review": "machine",
   "x-source": "7aad0f6b26"
  },
+ "pg.7ab298f5b0": "留出的 Prša et al.（{n0}）EB：被列为待复核食双星候选，{n1}% 区间下限 &gt;= {n2}",
+ "@pg.7ab298f5b0": {
+  "x-review": "machine",
+  "x-source": "7ab298f5b0"
+ },
  "pg.7ab61da809": "排名：在基准测试固定的可搜索集合（拥有 SPOC {n0} 分钟光变曲线的恒星）上计算 Youden&#x27;s J，两侧使用同一判定条件，即干净候选（符合星历、已通过、无食双星标记）：J = 作为干净候选给出的 CP/KP 恒星比例 + 未给出的 FP 恒星比例 − {n1}，并附平方相加 Wilson 区间。把每个 TOI 都判为行星（无论有无标记）得分 J = {n2}；被判为未搜索的可搜索恒星计为未给出。旁边显示了覆盖范围内全部恒星的 J。区间重叠时，排序并不代表测得的差异。",
  "@pg.7ab61da809": {
   "x-review": "machine",
   "x-source": "7ab61da809"
  },
- "pg.7aded88b71": "对比度阶梯",
+ "pg.7aded88b71": "对比度<wbr>阶梯",
  "@pg.7aded88b71": {
   "x-review": "machine",
   "x-source": "7aded88b71"
@@ -15471,7 +15681,7 @@
   "x-review": "machine",
   "x-source": "7bdde36a88"
  },
- "pg.7c33bc2692": "DMS <span>二甲基硫醚</span>",
+ "pg.7c33bc2692": "DMS <span>二甲基<wbr>硫醚</span>",
  "@pg.7c33bc2692": {
   "x-review": "machine",
   "x-source": "7c33bc2692"
@@ -15521,7 +15731,7 @@
   "x-review": "machine",
   "x-source": "7e82eaf177"
  },
- "pg.7e892de66c": "pi Men 的二十六天。<br><span class=\"grey\">再次找到一颗行星。一次亮度下降无法解释。</span>",
+ "pg.7e892de66c": "pi Men 的<wbr>二十六<wbr>天。<br><span class=\"grey\">再次<wbr>找到<wbr>一颗<wbr>行星。<wbr>一次<wbr>亮度<wbr>下降<wbr>无法解释。</span>",
  "@pg.7e892de66c": {
   "x-review": "machine",
   "x-source": "7e892de66c"
@@ -15536,7 +15746,7 @@
   "x-review": "machine",
   "x-source": "7ece39e4bd"
  },
- "pg.7f0f81b74b": "在本星表中各方法的探测范围",
+ "pg.7f0f81b74b": "在<wbr>本星表中<wbr>各<wbr>方法的<wbr>探测<wbr>范围",
  "@pg.7f0f81b74b": {
   "x-review": "machine",
   "x-source": "7f0f81b74b"
@@ -15551,7 +15761,7 @@
   "x-review": "machine",
   "x-source": "7f608948f5"
  },
- "pg.7f91598488": "运行它们",
+ "pg.7f91598488": "运行<wbr>它们",
  "@pg.7f91598488": {
   "x-review": "machine",
   "x-source": "7f91598488"
@@ -15581,7 +15791,7 @@
   "x-review": "machine",
   "x-source": "7fe7bf5ec1"
  },
- "pg.7fec9c309c": "凌星中观测到的 HD {n0} b",
+ "pg.7fec9c309c": "凌星中<wbr>观测<wbr>到的 HD {n0} b",
  "@pg.7fec9c309c": {
   "x-review": "machine",
   "x-source": "7fec9c309c"
@@ -15826,7 +16036,7 @@
   "x-review": "machine",
   "x-source": "8985e38ca6"
  },
- "pg.89f2842c43": "生物印迹清单",
+ "pg.89f2842c43": "生物<wbr>印迹<wbr>清单",
  "@pg.89f2842c43": {
   "x-review": "machine",
   "x-source": "89f2842c43"
@@ -15836,7 +16046,7 @@
   "x-review": "machine",
   "x-source": "89f6832560"
  },
- "pg.8a0961eea7": "天体测量",
+ "pg.8a0961eea7": "天体<wbr>测量",
  "@pg.8a0961eea7": {
   "x-review": "machine",
   "x-source": "8a0961eea7"
@@ -16136,12 +16346,12 @@
   "x-review": "machine",
   "x-source": "97e968c96c"
  },
- "pg.97f2d5f563": "CHEOPS 数据及其使用条款",
+ "pg.97f2d5f563": "CHEOPS 数据<wbr>及其<wbr>使用<wbr>条款",
  "@pg.97f2d5f563": {
   "x-review": "machine",
   "x-source": "97f2d5f563"
  },
- "pg.982502489b": "朝向与远离",
+ "pg.982502489b": "朝向与<wbr>远离",
  "@pg.982502489b": {
   "x-review": "machine",
   "x-source": "982502489b"
@@ -16346,7 +16556,7 @@
   "x-review": "machine",
   "x-source": "9ea4ff30fa"
  },
- "pg.9ee6b5ae54": "频率标度",
+ "pg.9ee6b5ae54": "频率<wbr>标度",
  "@pg.9ee6b5ae54": {
   "x-review": "machine",
   "x-source": "9ee6b5ae54"
@@ -16516,7 +16726,7 @@
   "x-review": "machine",
   "x-source": "a5710ea055"
  },
- "pg.a586047366": "生命方程",
+ "pg.a586047366": "生命<wbr>方程",
  "@pg.a586047366": {
   "x-review": "machine",
   "x-source": "a586047366"
@@ -16531,6 +16741,11 @@
   "x-review": "machine",
   "x-source": "a59d37243c"
  },
+ "pg.a5ec353b4a": "FP 否决：其 TOI 下陷未被该方法作为干净候选给出的 FP 恒星（已找回且未标为待复核）。可靠性：TOI 下陷上的干净候选中属于 CP/KP 的比例，基于本样本的类别构成，而非 TOI 星表的类别构成。所有比率均附 Wilson {n0}% 区间。TFOPWG 处置结论仅作参考，并非对每个 TOI 都是真实情况。",
+ "@pg.a5ec353b4a": {
+  "x-review": "machine",
+  "x-source": "a5ec353b4a"
+ },
  "pg.a639a1cbcd": "艺术家想象图：neptune-hot 外观，适用于半径 {n0} 至 {n1} R⊕、Teq 为 {n2} K 或以上：橙灰色雾霾。这是该外观的静态图，并非某颗特定行星。",
  "@pg.a639a1cbcd": {
   "x-review": "machine",
@@ -16541,7 +16756,7 @@
   "x-review": "machine",
   "x-source": "a6451b99f7"
  },
- "pg.a687771d70": "射电以另一种方式找到了最早的行星",
+ "pg.a687771d70": "射电<wbr>以<wbr>另<wbr>一种<wbr>方式<wbr>找到了<wbr>最早的<wbr>行星",
  "@pg.a687771d70": {
   "x-review": "machine",
   "x-source": "a687771d70"
@@ -16576,7 +16791,7 @@
   "x-review": "machine",
   "x-source": "a743b849cc"
  },
- "pg.a7a638aaaa": "动态条目",
+ "pg.a7a638aaaa": "动态<wbr>条目",
  "@pg.a7a638aaaa": {
   "x-review": "machine",
   "x-source": "a7a638aaaa"
@@ -16951,7 +17166,7 @@
   "x-review": "machine",
   "x-source": "b77c030671"
  },
- "pg.b7879848dd": "冻结样本",
+ "pg.b7879848dd": "冻结<wbr>样本",
  "@pg.b7879848dd": {
   "x-review": "machine",
   "x-source": "b7879848dd"
@@ -17071,7 +17286,7 @@
   "x-review": "machine",
   "x-source": "bc48c53d53"
  },
- "pg.bc77bf1be2": "各项论断及其现状",
+ "pg.bc77bf1be2": "各项<wbr>论断<wbr>及其<wbr>现状",
  "@pg.bc77bf1be2": {
   "x-review": "machine",
   "x-source": "bc77bf1be2"
@@ -17146,7 +17361,7 @@
   "x-review": "machine",
   "x-source": "bdb632937d"
  },
- "pg.bdbcaf26dd": "<span class=\"mcnum mono\" aria-hidden=\"true\"></span>天空位置",
+ "pg.bdbcaf26dd": "<span class=\"mcnum mono\" aria-hidden=\"true\"></span>天空<wbr>位置",
  "@pg.bdbcaf26dd": {
   "x-review": "machine",
   "x-source": "bdbcaf26dd"
@@ -17176,7 +17391,7 @@
   "x-review": "machine",
   "x-source": "bec69036aa"
  },
- "pg.bef83c57c0": "数据包包含什么",
+ "pg.bef83c57c0": "数据包<wbr>包含<wbr>什么",
  "@pg.bef83c57c0": {
   "x-review": "machine",
   "x-source": "bef83c57c0"
@@ -17186,7 +17401,7 @@
   "x-review": "machine",
   "x-source": "befe0f654f"
  },
- "pg.bf11fecb30": "毫秒脉冲星 PSR B1257+{n0} 周围的行星系统",
+ "pg.bf11fecb30": "毫秒<wbr>脉冲星 PSR B1257+{n0} 周围的<wbr>行星<wbr>系统",
  "@pg.bf11fecb30": {
   "x-review": "machine",
   "x-source": "bf11fecb30"
@@ -17251,7 +17466,7 @@
   "x-review": "machine",
   "x-source": "c0880b0246"
  },
- "pg.c0b6115048": "技术特征搜索（SETI）",
+ "pg.c0b6115048": "技术<wbr>特征<wbr>搜索（SETI）",
  "@pg.c0b6115048": {
   "x-review": "machine",
   "x-source": "c0b6115048"
@@ -17296,7 +17511,7 @@
   "x-review": "machine",
   "x-source": "c38a1dc96b"
  },
- "pg.c3b5790c5c": "搜索星表",
+ "pg.c3b5790c5c": "搜索<wbr>星表",
  "@pg.c3b5790c5c": {
   "x-review": "machine",
   "x-source": "c3b5790c5c"
@@ -17366,7 +17581,7 @@
   "x-review": "machine",
   "x-source": "c659a0d0ed"
  },
- "pg.c6638a4574": "历史与论文",
+ "pg.c6638a4574": "历史与<wbr>论文",
  "@pg.c6638a4574": {
   "x-review": "machine",
   "x-source": "c6638a4574"
@@ -17471,7 +17686,7 @@
   "x-review": "machine",
   "x-source": "c807c70a7b"
  },
- "pg.c82862b830": "金星上的磷化氢：存在争议",
+ "pg.c82862b830": "金星<wbr>上的<wbr>磷化氢：<wbr>存在<wbr>争议",
  "@pg.c82862b830": {
   "x-review": "machine",
   "x-source": "c82862b830"
@@ -17641,7 +17856,7 @@
   "x-review": "machine",
   "x-source": "cd5d4dfad1"
  },
- "pg.cd844994a3": "来自搜索动态：{n1} 颗其他恒星的 {n0} 个条目",
+ "pg.cd844994a3": "来自<wbr>搜索<wbr>动态：{n1} 颗<wbr>其他<wbr>恒星的 {n0} 个<wbr>条目",
  "@pg.cd844994a3": {
   "x-review": "machine",
   "x-source": "cd844994a3"
@@ -17651,7 +17866,7 @@
   "x-review": "machine",
   "x-source": "cd9d28a205"
  },
- "pg.cdaa852be4": "每项计入的检验，协议 v4",
+ "pg.cdaa852be4": "每<wbr>项<wbr>计入的<wbr>检验，<wbr>协议 v4",
  "@pg.cdaa852be4": {
   "x-review": "machine",
   "x-source": "cdaa852be4"
@@ -17661,7 +17876,7 @@
   "x-review": "machine",
   "x-source": "cdeddf2945"
  },
- "pg.cdefdf338c": "一颗类太阳恒星的木星质量伴星",
+ "pg.cdefdf338c": "一颗<wbr>类<wbr>太阳<wbr>恒星的<wbr>木星<wbr>质量<wbr>伴星",
  "@pg.cdefdf338c": {
   "x-review": "machine",
   "x-source": "cdefdf338c"
@@ -17741,7 +17956,7 @@
   "x-review": "machine",
   "x-source": "d0a97698a2"
  },
- "pg.d0ac3c4b97": "分子与生命",
+ "pg.d0ac3c4b97": "分子与<wbr>生命",
  "@pg.d0ac3c4b97": {
   "x-review": "machine",
   "x-source": "d0ac3c4b97"
@@ -17826,7 +18041,7 @@
   "x-review": "machine",
   "x-source": "d35c9a219c"
  },
- "pg.d36afae90f": "系外行星大气的探测",
+ "pg.d36afae90f": "系外行星<wbr>大气的<wbr>探测",
  "@pg.d36afae90f": {
   "x-review": "machine",
   "x-source": "d36afae90f"
@@ -17856,12 +18071,12 @@
   "x-review": "machine",
   "x-source": "d3e77c16e7"
  },
- "pg.d40e9e1077": "目前的扫描",
+ "pg.d40e9e1077": "目前的<wbr>扫描",
  "@pg.d40e9e1077": {
   "x-review": "machine",
   "x-source": "d40e9e1077"
  },
- "pg.d418c6a735": "日冕仪类型，逐个平面",
+ "pg.d418c6a735": "日冕仪<wbr>类型，<wbr>逐个<wbr>平面",
  "@pg.d418c6a735": {
   "x-review": "machine",
   "x-source": "d418c6a735"
@@ -17951,7 +18166,7 @@
   "x-review": "machine",
   "x-source": "d6733454b8"
  },
- "pg.d69fa08242": "真实光谱：JWST 观测的 WASP-{n0} b",
+ "pg.d69fa08242": "真实<wbr>光谱：JWST 观测的 WASP-{n0} b",
  "@pg.d69fa08242": {
   "x-review": "machine",
   "x-source": "d69fa08242"
@@ -17981,7 +18196,7 @@
   "x-review": "machine",
   "x-source": "d74ff0ee8d"
  },
- "pg.d75d99e996": "系外巨行星凌星期间的理论透射光谱",
+ "pg.d75d99e996": "系外<wbr>巨<wbr>行星<wbr>凌星<wbr>期间的<wbr>理论<wbr>透射<wbr>光谱",
  "@pg.d75d99e996": {
   "x-review": "machine",
   "x-source": "d75d99e996"
@@ -18256,7 +18471,7 @@
   "x-review": "machine",
   "x-source": "de1e182991"
  },
- "pg.de30d45160": "双星、自转与暂现源",
+ "pg.de30d45160": "双星、<wbr>自转与<wbr>暂<wbr>现源",
  "@pg.de30d45160": {
   "x-review": "machine",
   "x-source": "de30d45160"
@@ -18341,7 +18556,7 @@
   "x-review": "machine",
   "x-source": "e1246c0c52"
  },
- "pg.e169f1326a": "恒星 HR {n0} 周围多颗行星的直接成像",
+ "pg.e169f1326a": "恒星 HR {n0} 周围<wbr>多颗<wbr>行星的<wbr>直接<wbr>成像",
  "@pg.e169f1326a": {
   "x-review": "machine",
   "x-source": "e169f1326a"
@@ -18431,7 +18646,7 @@
   "x-review": "machine",
   "x-source": "e4401dca56"
  },
- "pg.e4404397b5": "偏移有多小",
+ "pg.e4404397b5": "偏移<wbr>有<wbr>多<wbr>小",
  "@pg.e4404397b5": {
   "x-review": "machine",
   "x-source": "e4404397b5"
@@ -18486,7 +18701,7 @@
   "x-review": "machine",
   "x-source": "e55fe37737"
  },
- "pg.e57371d577": "解读大气",
+ "pg.e57371d577": "解读<wbr>大气",
  "@pg.e57371d577": {
   "x-review": "machine",
   "x-source": "e57371d577"
@@ -18526,7 +18741,7 @@
   "x-review": "machine",
   "x-source": "e7601d69ae"
  },
- "pg.e77abd0eeb": "这 {n0} 种外观",
+ "pg.e77abd0eeb": "这 {n0} 种<wbr>外观",
  "@pg.e77abd0eeb": {
   "x-review": "machine",
   "x-source": "e77abd0eeb"
@@ -18776,7 +18991,7 @@
   "x-review": "machine",
   "x-source": "ef39278051"
  },
- "pg.ef5d646b55": "留出的一半 <span class=\"sub\">每颗留出的恒星</span>",
+ "pg.ef5d646b55": "留出的<wbr>一半 <span class=\"sub\">每颗<wbr>留出的<wbr>恒星</span>",
  "@pg.ef5d646b55": {
   "x-review": "machine",
   "x-source": "ef5d646b55"
@@ -18801,7 +19016,7 @@
   "x-review": "machine",
   "x-source": "efe954e906"
  },
- "pg.effa4e5a43": "在一颗系外行星大气中识别出二氧化碳",
+ "pg.effa4e5a43": "在<wbr>一颗<wbr>系外行星<wbr>大气中<wbr>识别<wbr>出<wbr>二氧化碳",
  "@pg.effa4e5a43": {
   "x-review": "machine",
   "x-source": "effa4e5a43"
@@ -18841,7 +19056,7 @@
   "x-review": "machine",
   "x-source": "f18fba8357"
  },
- "pg.f19b419392": "它从不做的事",
+ "pg.f19b419392": "它<wbr>从不<wbr>做的<wbr>事",
  "@pg.f19b419392": {
   "x-review": "machine",
   "x-source": "f19b419392"
@@ -18851,7 +19066,7 @@
   "x-review": "machine",
   "x-source": "f1df8fd039"
  },
- "pg.f1ec0a4dc7": "CHEOPS：未验证（{n1} 项检查中通过 {n0} 项）",
+ "pg.f1ec0a4dc7": "CHEOPS：<wbr>未<wbr>验证（{n1} 项<wbr>检查中<wbr>通过 {n0} 项）",
  "@pg.f1ec0a4dc7": {
   "x-review": "machine",
   "x-source": "f1ec0a4dc7"
@@ -18886,7 +19101,7 @@
   "x-review": "machine",
   "x-source": "f319cb2f5b"
  },
- "pg.f326ee4fe3": "每个凹陷的标记",
+ "pg.f326ee4fe3": "每个<wbr>凹陷的<wbr>标记",
  "@pg.f326ee4fe3": {
   "x-review": "machine",
   "x-source": "f326ee4fe3"
@@ -18996,7 +19211,7 @@
   "x-review": "machine",
   "x-source": "f4fbe188c2"
  },
- "pg.f503849f5d": "校准平面",
+ "pg.f503849f5d": "校准<wbr>平面",
  "@pg.f503849f5d": {
   "x-review": "machine",
   "x-source": "f503849f5d"
@@ -19026,7 +19241,7 @@
   "x-review": "machine",
   "x-source": "f5cca1ccc1"
  },
- "pg.f5f7adb77b": "时间与相位",
+ "pg.f5f7adb77b": "时间与<wbr>相位",
  "@pg.f5f7adb77b": {
   "x-review": "machine",
   "x-source": "f5f7adb77b"
@@ -19061,12 +19276,12 @@
   "x-review": "machine",
   "x-source": "f72f2581be"
  },
- "pg.f735b5ae8d": "Kepler 行星探测任务：简介与首批结果",
+ "pg.f735b5ae8d": "Kepler 行星<wbr>探测<wbr>任务：<wbr>简介与<wbr>首批<wbr>结果",
  "@pg.f735b5ae8d": {
   "x-review": "machine",
   "x-source": "f735b5ae8d"
  },
- "pg.f751ff9fd0": "K2-{n0} b 上的 DMS：初步，有争议",
+ "pg.f751ff9fd0": "K2-{n0} b 上的 DMS：<wbr>初步，<wbr>有<wbr>争议",
  "@pg.f751ff9fd0": {
   "x-review": "machine",
   "x-source": "f751ff9fd0"
@@ -19121,7 +19336,7 @@
   "x-review": "machine",
   "x-source": "f86ea9d880"
  },
- "pg.f88f69c671": "我们已搜索过的区域",
+ "pg.f88f69c671": "我们<wbr>已<wbr>搜索<wbr>过的<wbr>区域",
  "@pg.f88f69c671": {
   "x-review": "machine",
   "x-source": "f88f69c671"
@@ -19276,7 +19491,7 @@
   "x-review": "machine",
   "x-source": "fd9a8c7798"
  },
- "pg.fdd186856d": "决定凹陷形状的因素",
+ "pg.fdd186856d": "决定<wbr>凹陷<wbr>形状的<wbr>因素",
  "@pg.fdd186856d": {
   "x-review": "machine",
   "x-source": "fdd186856d"
@@ -19306,7 +19521,7 @@
   "x-review": "machine",
   "x-source": "fe9c2a4371"
  },
- "pg.fea3832148": "为何类地孪生行星难以探测",
+ "pg.fea3832148": "为何<wbr>类地<wbr>孪生<wbr>行星<wbr>难以<wbr>探测",
  "@pg.fea3832148": {
   "x-review": "machine",
   "x-source": "fea3832148"
@@ -19336,17 +19551,17 @@
   "x-review": "machine",
   "x-source": "ff9cc7d8a3"
  },
- "pic.colour": "恒星颜色",
+ "pic.colour": "恒星<wbr>颜色",
  "@pic.colour": {
   "x-review": "machine",
   "x-source": "dfe6307835"
  },
- "pic.draw": "恒星与凌星",
+ "pic.draw": "恒星与<wbr>凌星",
  "@pic.draw": {
   "x-review": "machine",
   "x-source": "e0d9fd74d5"
  },
- "pic.h1": "图是如何绘制的。",
+ "pic.h1": "图是<wbr>如何<wbr>绘制的。",
  "@pic.h1": {
   "x-review": "machine",
   "x-source": "b56c1f91df"
@@ -19356,7 +19571,7 @@
   "x-review": "machine",
   "x-source": "3cf76ad409"
  },
- "pic.labels": "五种标签",
+ "pic.labels": "五种<wbr>标签",
  "@pic.labels": {
   "x-review": "machine",
   "x-source": "51668dd62a"
@@ -19366,7 +19581,7 @@
   "x-review": "machine",
   "x-source": "880b424ff6"
  },
- "pic.real": "什么是真实的，什么是绘制的",
+ "pic.real": "什么<wbr>是<wbr>真实的，<wbr>什么<wbr>是<wbr>绘制的",
  "@pic.real": {
   "x-review": "machine",
   "x-source": "79bd58ea67"
@@ -19376,7 +19591,7 @@
   "x-review": "machine",
   "x-source": "e3954c7ee3"
  },
- "pic.still": "减少动态效果时",
+ "pic.still": "减少<wbr>动态效果<wbr>时",
  "@pic.still": {
   "x-review": "machine",
   "x-source": "a42e838475"
@@ -19386,7 +19601,7 @@
   "x-review": "machine",
   "x-source": "b12a8bfb34"
  },
- "pic.table": "外观表",
+ "pic.table": "外观<wbr>表",
  "@pic.table": {
   "x-review": "machine",
   "x-source": "5bf530d59d"
@@ -19656,7 +19871,7 @@
   "x-review": "machine",
   "x-source": "789dfd2a1e"
  },
- "route.sky.label": "天图",
+ "route.sky.label": "天<wbr>图",
  "@route.sky.label": {
   "x-review": "machine",
   "x-source": "762d3baf8a"
@@ -19736,7 +19951,7 @@
   "x-review": "machine",
   "x-source": "f8e3bf1fc8"
  },
- "rr.h1": "如果是行星，每个深度意味着什么。",
+ "rr.h1": "如果<wbr>是<wbr>行星，<wbr>每个<wbr>深度<wbr>意味着<wbr>什么。",
  "@rr.h1": {
   "x-review": "machine",
   "x-source": "ff54ab4721"
@@ -19766,12 +19981,12 @@
   "x-review": "machine",
   "x-source": "cdff019405"
  },
- "runs.h1": "每次搜索运行、按存储原样显示的错误，以及这些页面背后的配置。",
+ "runs.h1": "每次<wbr>搜索<wbr>运行、<wbr>按<wbr>存储<wbr>原样<wbr>显示的<wbr>错误，<wbr>以及<wbr>这些<wbr>页面<wbr>背后的<wbr>配置。",
  "@runs.h1": {
   "x-review": "machine",
   "x-source": "db1e81a5b2"
  },
- "runs.hist": "搜索运行",
+ "runs.hist": "搜索<wbr>运行",
  "@runs.hist": {
   "x-review": "machine",
   "x-source": "26d6d37f90"
@@ -19781,7 +19996,7 @@
   "x-review": "machine",
   "x-source": "95d99973c5"
  },
- "sd.h1": "耀发、脉动和 CHEOPS。",
+ "sd.h1": "耀发、<wbr>脉动和 CHEOPS。",
  "@sd.h1": {
   "x-review": "machine",
   "x-source": "a0c598f487"
@@ -19811,7 +20026,7 @@
   "x-review": "machine",
   "x-source": "18e2721f25"
  },
- "sen.h1b": "每一位都要赢得自己的一票。",
+ "sen.h1b": "每<wbr>一位<wbr>都<wbr>要<wbr>赢得<wbr>自己的<wbr>一票。",
  "@sen.h1b": {
   "x-review": "machine",
   "x-source": "67b1d265c9"
@@ -19911,7 +20126,7 @@
   "x-review": "machine",
   "x-source": "492b8ee5d0"
  },
- "showcase.tess-hd-15337-s4.kind": "接近极限的小行星",
+ "showcase.tess-hd-15337-s4.kind": "接近<wbr>极限的<wbr>小行星",
  "@showcase.tess-hd-15337-s4.kind": {
   "x-review": "machine",
   "x-source": "decd7f2886"
@@ -19931,7 +20146,7 @@
   "x-review": "machine",
   "x-source": "97542c5ae2"
  },
- "showcase.tess-pi-men-s1.kind": "参考检查",
+ "showcase.tess-pi-men-s1.kind": "参考<wbr>检查",
  "@showcase.tess-pi-men-s1.kind": {
   "x-review": "machine",
   "x-source": "70fa5c4aa7"
@@ -19951,7 +20166,7 @@
   "x-review": "machine",
   "x-source": "ae1c536ddb"
  },
- "showcase.tess-toi-236-s2.kind": "已知假阳性",
+ "showcase.tess-toi-236-s2.kind": "已知<wbr>假阳性",
  "@showcase.tess-toi-236-s2.kind": {
   "x-review": "machine",
   "x-source": "e01d094660"
@@ -19976,7 +20191,7 @@
   "x-review": "machine",
   "x-source": "09f285b361"
  },
- "showcase.tess-toi-270-s5.kind": "多行星系统",
+ "showcase.tess-toi-270-s5.kind": "多<wbr>行星<wbr>系统",
  "@showcase.tess-toi-270-s5.kind": {
   "x-review": "machine",
   "x-source": "7e5f73c9ed"
@@ -19996,7 +20211,7 @@
   "x-review": "machine",
   "x-source": "a6cb0e9faa"
  },
- "showcase.tess-wasp-126-s1.kind": "热木星",
+ "showcase.tess-wasp-126-s1.kind": "热<wbr>木星",
  "@showcase.tess-wasp-126-s1.kind": {
   "x-review": "machine",
   "x-source": "f55d3631cf"
@@ -20051,7 +20266,7 @@
   "x-review": "machine",
   "x-source": "50afd0241b"
  },
- "sky.lc": "该运行的光变曲线",
+ "sky.lc": "该<wbr>运行的<wbr>光变曲线",
  "@sky.lc": {
   "x-review": "machine",
   "x-source": "f6ebbca8e7"
@@ -20121,7 +20336,7 @@
   "x-review": "machine",
   "x-source": "b101c75a14"
  },
- "sky.tl": "每年找到的行星，按方法",
+ "sky.tl": "每年<wbr>找到的<wbr>行星，<wbr>按<wbr>方法",
  "@sky.tl": {
   "x-review": "machine",
   "x-source": "10dff603f9"
@@ -20151,12 +20366,12 @@
   "x-review": "machine",
   "x-source": "7c9d17cb1f"
  },
- "st.figs": "检测器看到了什么",
+ "st.figs": "检测器<wbr>看到了<wbr>什么",
  "@st.figs": {
   "x-review": "machine",
   "x-source": "ff3ec0553b"
  },
- "st.h1": "恒星，测量。",
+ "st.h1": "恒星，<wbr>测量。",
  "@st.h1": {
   "x-review": "machine",
   "x-source": "ec1ba1f8f3"
@@ -20381,7 +20596,7 @@
   "x-review": "machine",
   "x-source": "8d38020252"
  },
- "tn.h1": "TESS 在看哪里。",
+ "tn.h1": "TESS 在<wbr>看<wbr>哪里。",
  "@tn.h1": {
   "x-review": "machine",
   "x-source": "33a70ec6b1"
@@ -20416,12 +20631,12 @@
   "x-review": "machine",
   "x-source": "1fd7f02e9a"
  },
- "var.h1": "一切变暗之物。",
+ "var.h1": "一切<wbr>变暗<wbr>之物。",
  "@var.h1": {
   "x-review": "machine",
   "x-source": "00cffacfe5"
  },
- "var.h1b": "{n, number} 个条目，一个都没有丢弃。",
+ "var.h1b": "{n, number} 个<wbr>条目，<wbr>一个<wbr>都<wbr>没有<wbr>丢弃。",
  "@var.h1b": {
   "x-review": "machine",
   "x-source": "af9b7536fe"
@@ -20431,7 +20646,7 @@
   "x-review": "machine",
   "x-source": "a3cde2962d"
  },
- "vt.h1": "当一回审查者。",
+ "vt.h1": "当<wbr>一回<wbr>审查<wbr>者。",
  "@vt.h1": {
   "x-review": "machine",
   "x-source": "bc56851e50"

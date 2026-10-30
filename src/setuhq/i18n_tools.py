@@ -445,7 +445,7 @@ def phrases(text: str, lang: str) -> str:
         for term in terms:  # never inside a glossary term
             if len(term) > 1 and re.search(r"[\u3040-\u30ff\u4e00-\u9fff]", term):
                 w = re.sub("(?:<wbr>)?".join(map(re.escape, term)), term, w)
-        return re.sub(r"<wbr>(?=\s|$)|(?<=\s)<wbr>|^<wbr>", "", w)
+        return re.sub(r"<wbr>(?=\s|$)|(?<=\s)<wbr>|^<wbr>|(?<=[\x21-\x7e])<wbr>(?=[\x21-\x7e])", "", w)  # never inside Latin text
 
     text = text.replace("<wbr>", "")
     parts = re.split(r"(<[^>]*>|\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})", text)

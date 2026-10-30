@@ -23,12 +23,6 @@
    "/evidence/plates/"
   ]
  },
- "js.103n82dja3r": {
-  "en": "Catalogue updated <time datetime=\"2026-10-29T00:47:42+00:00\" title=\"2026-10-29T00:47:42+00:00\">{n0} Oct {n1}, {n2} UTC</time>.",
-  "pages": [
-   "/candidates/"
-  ]
- },
  "js.104nn3vx4at": {
   "en": "Term",
   "pages": [
@@ -36,12 +30,6 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
-  ]
- },
- "js.106g3hdfp83": {
-  "en": "TIC {n0} · rejected by vetting, not a candidate",
-  "pages": [
-   "/evidence/"
   ]
  },
  "js.106t6pg6coj": {
@@ -64,15 +52,17 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.10cz46v17yl": {
   "en": "[calc]",
   "pages": [
-   "/how-it-works/history/",
-   "/how-it-works/molecules-and-life/"
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.10obdbskade": {
@@ -90,19 +80,16 @@
    "/evidence/report/toi-270/"
   ]
  },
- "js.10v4vkxqjry": {
-  "en": "No light curve is stored for this star in this build: the search catalogue keeps measured values only, so there is no whole-subject curve and no folded panel.",
+ "js.10so4x5ppkr": {
+  "en": "<span class=\"word cand\">candidate</span><span class=\"word s-known\">known TOI period</span><b class=\"fig\">7a. <span class=\"mono\">tess-eaab33b6b763-{n0}</span>.</b> Dip at BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Marked by {n5} reviewers (the catalogue does not store the panel size or the consensus interval). Lies on a {n6}-day BLS period with {n7} transits. Status: period matches a known TOI. Archive values only. This page claims no detection.",
   "pages": [
    "/evidence/plates/"
   ]
  },
- "js.10vb2hszsy6": {
-  "en": "<b>{n0}</b> of the {n1} planets with a stored distance in exoplanet.eu were found by transit (the first method listed). <a href=\"/explore/galaxy/?method=transit\">Show them on the Galaxy map ›</a>",
+ "js.10v4vkxqjry": {
+  "en": "No light curve is stored for this star in this build: the search catalogue keeps measured values only, so there is no whole-subject curve and no folded panel.",
   "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
+   "/evidence/plates/"
   ]
  },
  "js.10vrj8m3wjv": {
@@ -114,19 +101,13 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.10wj3xzpdgf": {
-  "en": "The Sun's disc, {n0} K, in its blackbody colour with limb darkening.",
-  "pages": [
-   "/docs/pictures/"
-  ]
- },
  "js.10zmmlwb9xi": {
   "en": "<b>Lyot coronagraph.</b> An opaque disc in the focal plane blocks the core of the star's image. What it does not remove is the light its edge diffracts, which the next lens sends to the rim of the re-imaged pupil; a Lyot stop slightly smaller than the pupil catches that rim (Lyot {n0}). With a {n1} λ/D disc, closing the stop from {n2}% to {n3}% of the pupil cuts the starlight at {n4} λ/D from {n5}×{n6}⁻⁵ to {n7}×{n8}⁻⁷ of the star's peak (no coronagraph: {n9}×{n10}⁻⁵) [calc], while a planet well outside the disc keeps {n11}% of its light, the stop's area.",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1158am8gaw7": {
@@ -134,8 +115,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.115hip4cvhm": {
@@ -211,6 +192,12 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.11n5kdywh3l": {
+  "en": "Teff",
+  "pages": [
+   "/docs/pictures/"
+  ]
+ },
  "js.11n6gzp7din": {
   "en": "{n0} (prior-dominated; no error quoted, as it would only restate the prior's)",
   "pages": [
@@ -231,8 +218,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.11o8mnty71w": {
@@ -302,6 +289,12 @@
    "/planets/51-peg-b/"
   ]
  },
+ "js.122id4bsvl0": {
+  "en": "<i style=\"background:#FFD60A\"></i>Astrometry <span class=\"mono\">{n0}</span>",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.122x1s0w9zz": {
   "en": "F_Q · F_HZ, log scale",
   "pages": [
@@ -329,10 +322,10 @@
    "/planets/rx-j1511-6-3249b-b/"
   ]
  },
- "js.12cg9tt6w6b": {
-  "en": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Sentinel feed",
+ "js.12cis2bjlup": {
+  "en": "Radio",
   "pages": [
-   "/explore/mission-control/"
+   "/how-it-works/radio/"
   ]
  },
  "js.12ed4zztqr8": {
@@ -361,19 +354,25 @@
    "/candidates/toi-270/dip-2/case-file/"
   ]
  },
- "js.12lth0d2p34": {
-  "en": "In {n0}, Wolszczan and Frail found planets around the millisecond pulsar PSR B1257+{n1} from the regular wobble in its pulses' arrival times (Wolszczan &amp; Frail {n2}): the planets tug the pulsar, and the light-travel time changes by milliseconds. That is radio timing, not radio from a planet. <a href=\"/explore/galaxy/?tour=13\">Its card on the Galaxy tour ›</a>",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
-  ]
- },
  "js.12m26xazjm": {
   "en": "passed vetting; {n0}% of the panel's weight labelled the subject a potential planet; on a periodic signal: {n1} transits, P = {n2} d",
   "pages": [
    "/catalogue/everything-that-dims/"
+  ]
+ },
+ "js.12ooi6yhl0h": {
+  "en": "Kepler-{n0} b",
+  "pages": [
+   "/explore/galaxy/",
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/"
+  ]
+ },
+ "js.12q7to7nkw0": {
+  "en": "Toward and away",
+  "pages": [
+   "/how-it-works/doppler-shift/"
   ]
  },
  "js.12ujqir6o8g": {
@@ -382,7 +381,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.12vi4vfunn8": {
@@ -392,6 +391,12 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.12w6m38pgra": {
+  "en": "<span class=\"word cand\">candidate</span><span class=\"word s-known\">known TOI period</span><b class=\"fig\">7b. <span class=\"mono\">tess-1c554332c266-{n0}</span>.</b> Dip at BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Marked by {n5} reviewers (the catalogue does not store the panel size or the consensus interval). Lies on a {n6}-day BLS period with {n7} transits. Status: period matches a known TOI. Archive values only. This page claims no detection.",
+  "pages": [
+   "/evidence/plates/"
   ]
  },
  "js.12y2sroyczu": {
@@ -433,23 +438,14 @@
  "js.135oou0xots": {
   "en": "A survey points a camera at many stars at once and measures each one's brightness again and again. Most stars never show a planet. Only planets whose orbits happen to line up with us can cross their star's face.",
   "pages": [
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
-  ]
- },
- "js.136ru1oswud": {
-  "en": "(Mp/M_psr)·a/c with exoplanet.eu's mass 7e-{n0} MJ, a = {n1} AU, sin i = {n2}, and an assumed {n3} M☉ pulsar (its mass is not stored) [calc]",
-  "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.136ul906qph": {
-  "en": "Source: SetuHQ's stored run runs/tess-pi-men-s1 (TESS sector {n0}, SPOC {n1}-minute PDCSAP flux, TIC {n2}; config sha256 585955d5e7a1…): {n3} stored points, each subject normalised to its median and binned to {n4} minutes.",
+ "js.136ru1oswud": {
+  "en": "(Mp/M_psr)·a/c with exoplanet.eu's mass 7e-{n0} MJ, a = {n1} AU, sin i = {n2}, and an assumed {n3} M☉ pulsar (its mass is not stored) [calc]",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
@@ -478,15 +474,6 @@
    "/evidence/report/wasp-126/"
   ]
  },
- "js.13ac253fetk": {
-  "en": "<b>{n0}</b> of the {n1} planets with a stored distance in exoplanet.eu were found by astrometry (the first method listed). <a href=\"/explore/galaxy/?method=astrometry\">Show them on the Galaxy map ›</a>",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
-  ]
- },
  "js.13cdu73b6uc": {
   "en": "CO₂ photolysis around some stars, or massive hydrogen escape after water loss.",
   "pages": [
@@ -511,13 +498,19 @@
    "/candidates/pi-men/dip-5/"
   ]
  },
+ "js.13gocj2fnda": {
+  "en": "docs/results/reviewer_weights_full_panel.json",
+  "pages": [
+   "/evidence/"
+  ]
+ },
  "js.13i1elxloqt": {
   "en": "pi Men c: per scale height, H₂-rich",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.13ixfl5cuwe": {
@@ -539,6 +532,12 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.13lcq3b40tl": {
+  "en": "Illustration",
+  "pages": [
+   "/docs/pictures/"
   ]
  },
  "js.13mufrch5ly": {
@@ -577,16 +576,22 @@
    "/evidence/report/hd-15337/"
   ]
  },
+ "js.13swdwmmbmi": {
+  "en": "Runs and configuration ›",
+  "pages": [
+   "/evidence/"
+  ]
+ },
  "js.13t7ixpw2ky": {
   "en": "Top candidates",
   "pages": [
    "/candidates/"
   ]
  },
- "js.13vqj4f8hh6": {
-  "en": "On an instrumental cue: a subject edge; a momentum dump, a scattered-light flag or a pointing or manual-exclude flag within {n0} d; a data gap over {n1} d within {n2} d; or half the panel's weight calling it instrumental.",
+ "js.13x58b3mwwa": {
+  "en": "Wolf {n0} c",
   "pages": [
-   "/catalogue/everything-that-dims/"
+   "/explore/galaxy/"
   ]
  },
  "js.13xevrqzvu7": {
@@ -615,6 +620,12 @@
    "/evidence/report/hd-15337/",
    "/evidence/report/toi-236/",
    "/evidence/report/toi-270/"
+  ]
+ },
+ "js.14cls39i1sb": {
+  "en": "Luhman {n0} B",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.14ct4jjljtx": {
@@ -651,6 +662,18 @@
   "en": "Artist's impression · giant, warm · Radius {n0} R⊕ (exoplanet.eu) is at least {n1} R⊕, so it is drawn as a gas giant. Teq {n2} K, computed from a, R★ and Teff, is in the warm band. Composition is not measured. Source: exoplanet.eu, fetched {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">How the pictures are drawn ›</a>",
   "pages": [
    "/planets/hd-80606-b/"
+  ]
+ },
+ "js.14huikxe5ha": {
+  "en": "Luyten's Star e",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
+ "js.14isgauchsm": {
+  "en": "YZ Cet",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.14iuxy783ms": {
@@ -694,10 +717,10 @@
  "js.14pa01y6ilo": {
   "en": "reviewer",
   "pages": [
+   "/evidence/",
    "/evidence/report/",
    "/evidence/report/hd-15337/",
-   "/evidence/report/toi-236/",
-   "/evidence/report/toi-270/"
+   "/evidence/report/toi-236/"
   ]
  },
  "js.14qeew4ffmg": {
@@ -732,6 +755,7 @@
  "js.14xq4uzajy2": {
   "en": "Timing",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -789,10 +813,10 @@
  "js.156xynonzor": {
   "en": "Probe",
   "pages": [
+   "/",
    "/candidates/hd-15337/dip-1/",
    "/candidates/hd-15337/dip-2/",
-   "/candidates/hd-15337/dip-3/",
-   "/candidates/pi-men/dip-1/"
+   "/candidates/hd-15337/dip-3/"
   ]
  },
  "js.157pbw74lpa": {
@@ -801,7 +825,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.157zot03q6v": {
@@ -825,7 +849,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.15dcwc5ip85": {
@@ -876,6 +900,18 @@
   "pages": [
    "/candidates/toi-270/dip-3/case-file/",
    "/candidates/toi-270/dip-6/case-file/"
+  ]
+ },
+ "js.15phwu441vo": {
+  "en": "Lalande {n0} c",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
+ "js.15pp5ycbnhi": {
+  "en": "Excess ({n0}%)",
+  "pages": [
+   "/catalogue/everything-that-dims/"
   ]
  },
  "js.15r06e4vt70": {
@@ -976,6 +1012,12 @@
    "/planets/kepler-9-b/"
   ]
  },
+ "js.16h8d5mlpjp": {
+  "en": "Probes",
+  "pages": [
+   "/evidence/"
+  ]
+ },
  "js.16hqbj09o4u": {
   "en": "field lines, cone and orbit not to scale; burst times illustrative; cut-off computed",
   "pages": [
@@ -998,12 +1040,6 @@
    "/evidence/report/",
    "/evidence/report/hd-15337/",
    "/evidence/report/toi-236/"
-  ]
- },
- "js.16qlwwljm69": {
-  "en": "<b>Pro Sweeps</b> <span class=\"eddev\">in development</span>: hosted searches over sectors or target lists, with the customer's own AI provider key; results come back as open contribution bundles",
-  "pages": [
-   "/editions/"
   ]
  },
  "js.16r0kn8gjyr": {
@@ -1033,12 +1069,6 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.16vo26f9hfu": {
-  "en": "Same input as pycheops: on every reference visit our decorrelation matches pycheops' to &lt; {n0} ppm rms, or reaches a lower rms on the same points and terms (relaxed after v1)",
-  "pages": [
-   "/evidence/stellar/"
-  ]
- },
  "js.16x61d2zia4": {
   "en": "<span class=\"word s-rej\">rejected by vetting</span><b class=\"fig\">1d. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">stored id tess-01e315ee5ebf-{n2}.</span> Dip at BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensus interval BTJD {n7} to {n8}. Marked by {n9} of {n10} reviewers ({n11} of {n12} Sentinels, {n13} of {n14} Probes). Lies on a {n15}-day BLS period (t0 BTJD {n16}). Rejected by vetting (secondary eclipse, secondary any phase). Archive: no archive planet within tolerance. Archive values only. This page claims no detection.",
   "pages": [
@@ -1052,12 +1082,6 @@
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-3/",
    "/candidates/pi-men/dip-1/"
-  ]
- },
- "js.16xkma5n6o5": {
-  "en": "The controls gate ranking and do not enter J: only held-out entries with both control lists on every searched star are ranked, others are listed unranked. The control lists are the method's own report; the leaderboard cannot recompute them without the light curves. The Sentinel subsample is never ranked.",
-  "pages": [
-   "/evidence/leaderboard/"
   ]
  },
  "js.16yau0dec1n": {
@@ -1090,15 +1114,6 @@
    "/evidence/report/toi-270/"
   ]
  },
- "js.170ttkobv": {
-  "en": "<b>Illustration.</b> Explains an idea; not data.",
-  "pages": [
-   "/docs/pictures/",
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/"
-  ]
- },
  "js.1752ocxoxow": {
   "en": "ratio",
   "pages": [
@@ -1111,19 +1126,25 @@
  "js.175a50uaz7u": {
   "en": "Wyman, Sloan &amp; Shirley {n0}, JCGT {n1}({n2}) (CIE fit)",
   "pages": [
+   "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.176wwpyjrg6": {
+  "en": "eps Eridani b",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.17hw2mxavcy": {
   "en": "Chance an Earth–Sun orbit transits",
   "pages": [
+   "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.17hzhvra9q7": {
@@ -1145,10 +1166,10 @@
    "/evidence/report/toi-236/"
   ]
  },
- "js.17k76okut7k": {
-  "en": "Artist's impression: the giant-warm look, for radius {n0} R⊕ or more, Teq {n1} to {n2} K: white cloud bands. A still of the look, not of a particular planet.",
+ "js.17ntl740ako": {
+  "en": "YZ Cet c",
   "pages": [
-   "/docs/pictures/"
+   "/explore/galaxy/"
   ]
  },
  "js.17nxghh8cwl": {
@@ -1235,6 +1256,14 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.183wr165iky": {
+  "en": "Stored id tess-7b97e468b60b-{n0}; no case file in this run",
+  "pages": [
+   "/candidates/",
+   "/candidates/radius-ratios/",
+   "/explore/mission-control/"
+  ]
+ },
  "js.184alwhvm3u": {
   "en": "≈ {n0} days",
   "pages": [
@@ -1256,10 +1285,10 @@
  "js.186uk0gjjtn": {
   "en": "Depth",
   "pages": [
+   "/candidates/",
    "/evidence/report/",
    "/evidence/report/hd-15337/",
-   "/evidence/report/toi-236/",
-   "/evidence/report/toi-270/"
+   "/evidence/report/toi-236/"
   ]
  },
  "js.18bbnn751ai": {
@@ -1303,6 +1332,12 @@
    "/evidence/plates/wasp-126/"
   ]
  },
+ "js.18lwk9i51zo": {
+  "en": "tau Cet h",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.18n6es5ok3o": {
   "en": "marks (BTJD)",
   "pages": [
@@ -1336,19 +1371,16 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.18o5x6sbdjj": {
-  "en": "<b>{n0}</b> of the {n1} planets with a stored distance in exoplanet.eu were found by microlensing (the first method listed). <a href=\"/explore/galaxy/?method=microlensing\">Show them on the Galaxy map ›</a>",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
-  ]
- },
  "js.18oql4qf149": {
   "en": "ratio (free / Huang)",
   "pages": [
    "/evidence/report/"
+  ]
+ },
+ "js.18otqbloli3": {
+  "en": "Luyten's Star c",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.18qifo210uh": {
@@ -1417,6 +1449,12 @@
    "/evidence/plates/"
   ]
  },
+ "js.196px5ez5bg": {
+  "en": "Lalande {n0} b",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.197t86p2mo2": {
   "en": "feed · period matches a known TOI · P {n0} d · {n1} transits",
   "pages": [
@@ -1427,12 +1465,6 @@
   "en": "{n0} dips ({n1} candidates, {n2} flagged, {n3} rejected)",
   "pages": [
    "/evidence/report/"
-  ]
- },
- "js.19egy1xdd4z": {
-  "en": "A molecule with N atoms has 3N − {n0} ways to vibrate (3N − {n1} if it is straight): water has three, carbon dioxide four (its bend comes twice, at right angles), methane nine. A mode absorbs infrared light only if it changes the molecule's dipole. That is why CO₂'s symmetric stretch ({n2} µm), O₂'s stretch and two of methane's four fundamentals are silent in the infrared. The bands the modes make are the ones the {s0} chapter marks: water's two stretches at {n3} and {n4} µm make its {n5} µm band, methane's ν₃ the {n6} µm band, CO₂'s asymmetric stretch the {n7} µm band, and CO's stretch the {n8} µm band.",
-  "pages": [
-   "/how-it-works/atmospheres/"
   ]
  },
  "js.19gww8mixuh": {
@@ -1551,6 +1583,13 @@
    "/evidence/report/toi-270/"
   ]
  },
+ "js.1a5z9qhmjgc": {
+  "en": "Sentinels",
+  "pages": [
+   "/evidence/",
+   "/explore/"
+  ]
+ },
  "js.1a6l9fjw5he": {
   "en": "Planet: artist's impression ›",
   "pages": [
@@ -1629,10 +1668,18 @@
    "/planets/hr-8799-c/"
   ]
  },
+ "js.1aol2kz2k2l": {
+  "en": "Transit",
+  "pages": [
+   "/explore/galaxy/",
+   "/explore/mission-control/",
+   "/how-it-works/transits/"
+  ]
+ },
  "js.1aqv49cd0kk": {
   "en": "flagged",
   "pages": [
-   "/candidates/radius-ratios/",
+   "/candidates/",
    "/evidence/report/",
    "/evidence/report/hd-15337/",
    "/evidence/report/toi-270/"
@@ -1708,8 +1755,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1b34x5dfa82": {
@@ -1756,6 +1803,7 @@
  "js.1b82w4tf319": {
   "en": "Imaging",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -1800,12 +1848,6 @@
    "/planets/hr-8799-b/",
    "/planets/hr-8799-c/",
    "/planets/hr-8799-d/"
-  ]
- },
- "js.1bhkarus91o": {
-  "en": "<b>ν stretch</b> · {n0} µm · infrared-active · drawn ×{n1} · <a href=\"/how-it-works/atmospheres/\">the {n2} µm band in {s0} ›</a>",
-  "pages": [
-   "/how-it-works/atmospheres/"
   ]
  },
  "js.1bj34kz5aki": {
@@ -1889,10 +1931,10 @@
    "/catalogue/everything-that-dims/"
   ]
  },
- "js.1c43a5mbtcb": {
-  "en": "period matches a known TOI <span class=\"tag cand\" title=\"candidate, unconfirmed\">candidate</span>",
+ "js.1c5e6ri6127": {
+  "en": "Wolf {n0}",
   "pages": [
-   "/candidates/"
+   "/explore/galaxy/"
   ]
  },
  "js.1c7794vgcfx": {
@@ -1913,7 +1955,9 @@
  "js.1cdfpz69lxl": {
   "en": "Microlensing",
   "pages": [
-   "/explore/mission-control/"
+   "/explore/galaxy/",
+   "/explore/mission-control/",
+   "/how-it-works/microlensing/"
   ]
  },
  "js.1ce66q4pp1n": {
@@ -1940,18 +1984,11 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.1cj5f6isk29": {
-  "en": "<b>ν₂ bend (two, at right angles)</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
-  ]
- },
  "js.1ckbr2brf2r": {
   "en": "Stored id tess-bc9f59e5c3af-{n0}; no case file in this run",
   "pages": [
    "/candidates/",
-   "/candidates/radius-ratios/",
-   "/explore/mission-control/"
+   "/candidates/radius-ratios/"
   ]
  },
  "js.1clmexejrlr": {
@@ -1961,6 +1998,12 @@
    "/candidates/hd-15337/dip-1/case-file/",
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-2/case-file/"
+  ]
+ },
+ "js.1cmc1ajakjd": {
+  "en": "eps Ind B",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.1coc893jlc0": {
@@ -1983,9 +2026,9 @@
   "en": "The drawing is an illustration: its scales are chosen to show the three motions apart, and the planet's wobble is enlarged and labelled. It quotes no Gaia measurement precision: the project's research atlas holds no sourced per-measurement figure for Gaia DR3, so none is given here.",
   "pages": [
    "/how-it-works/",
+   "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1cu2yjjb0li": {
@@ -2000,19 +2043,13 @@
    "/evidence/runs/"
   ]
  },
- "js.1cy89xikthl": {
-  "en": "<b>Measured on a stated benchmark, not discoveries.</b> {n0} confirmed or known planets (CP/KP), {n1} false positives and {n2} false alarms from the TOI table (fetched {n3}-{n4}-{n5}, seed {n6}), one TOI per star; held-out half shown. Panel: the three Probes (deterministic detectors) with their frozen calibrated weights; sector-wide BLS; vetting; limb-darkened fit; the feed-level table adds the feed's FAP ({n7} trials).",
-  "pages": [
-   "/evidence/"
-  ]
- },
  "js.1d2fjcit5ne": {
   "en": "Family",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1d342irzdqu": {
@@ -2069,12 +2106,6 @@
    "/evidence/"
   ]
  },
- "js.1dcsl4f0wrb": {
-  "en": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s0}</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">run tess-pi-men-s1 · {n1} entries</span>",
-  "pages": [
-   "/candidates/radius-ratios/"
-  ]
- },
  "js.1dd353vmae5": {
   "en": "An Earth-size planet in its star's habitable zone.",
   "pages": [
@@ -2109,9 +2140,10 @@
  "js.1dk6abh2nc7": {
   "en": "pi Men, dip {n0}",
   "pages": [
+   "/candidates/",
    "/candidates/pi-men/dip-5/case-file/",
    "/candidates/pi-men/dip-6/case-file/",
-   "/evidence/"
+   "/candidates/radius-ratios/"
   ]
  },
  "js.1dkpy2i7b0u": {
@@ -2162,6 +2194,7 @@
  "js.1dun7yzi7jq": {
   "en": "Barnard's star c",
   "pages": [
+   "/explore/galaxy/",
    "/planets/barnard-s-star-b/"
   ]
  },
@@ -2189,14 +2222,14 @@
    "/catalogue/everything-that-dims/"
   ]
  },
- "js.1e0thu83q1m": {
-  "en": "<b>ν₁ symmetric stretch</b> · {n0} µm · infrared-silent (the dipole does not change) · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
-  ]
- },
  "js.1e1cj7tvww2": {
   "en": "Probe · Sensitive <span class=\"sub mono\" title=\"reviewer id\">volunteer-sensitive</span>",
+  "pages": [
+   "/evidence/"
+  ]
+ },
+ "js.1e34rrpji4d": {
+  "en": "{n0} TOIs in the sample",
   "pages": [
    "/evidence/"
   ]
@@ -2225,19 +2258,10 @@
    "/stars/kepler-326-a/"
   ]
  },
- "js.1ea3o7os4iv": {
-  "en": "SetuHQ's vetting flags, from the light curve alone: <code>odd_even_mismatch</code> (odd and even depths differ), <code>secondary_eclipse</code> (a dip at phase {n0}), <code>low_snr</code>, <code>too_short</code>, <code>edge_event</code> and <code>insufficient_points</code>. It has no pixel-level centroid or difference-image check and no statistical validation, so a blended background binary can pass. <a href=\"/evidence/\">See the reviewers ›</a> · <a href=\"/candidates/pi-men/dip-2/\">See a vetted case ›</a>",
+ "js.1ecc8oy35i4": {
+  "en": "Teegarden's d",
   "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
-  ]
- },
- "js.1eb7589ltee": {
-  "en": "Archive comparison: no archive planet within tolerance (this dip has no BLS period to compare); {s0}: no transit ephemeris to compare. Archive values only. This page claims no detection.",
-  "pages": [
-   "/candidates/radius-ratios/"
+   "/explore/galaxy/"
   ]
  },
  "js.1ecof5fze2u": {
@@ -2331,12 +2355,6 @@
    "/stars/hat-p-10-a/"
   ]
  },
- "js.1eqtzlgohp1": {
-  "en": "Scattered light: no labelled real sample was found; the screen (quality flags and control apertures) is described and exercised on synthetic events and the supernova cutouts' control apertures, not validated against a catalogue of scattered-light events.",
-  "pages": [
-   "/evidence/stellar/"
-  ]
- },
  "js.1etlbcax1sp": {
   "en": "ii · whole subject tess-4b369d3c6f09",
   "pages": [
@@ -2384,19 +2402,13 @@
    "/candidates/hd-15337/dip-2/case-file/"
   ]
  },
- "js.1f208h2gzzx": {
-  "en": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · flagged for review, open",
-  "pages": [
-   "/explore/"
-  ]
- },
  "js.1f3str9e5jr": {
   "en": "not to scale; after Lyot {n0}",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1f423dts634": {
@@ -2406,12 +2418,6 @@
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-3/",
    "/candidates/pi-men/dip-1/"
-  ]
- },
- "js.1f5jrzkwrow": {
-  "en": "Rank: Youden's J on the searchable set the benchmark fixed (stars with a SPOC {n0}-minute light curve), with one predicate on both sides, a clean candidate (on the ephemeris, passed, no eclipsing-binary flag): J = the share of CP/KP stars offered as clean candidates + the share of FP stars not offered − {n1}, with a square-and-add Wilson interval. Calling every TOI a planet, with or without a flag, scores J = {n2}; a searchable star called not searched counts as not offered. J over every star of the scope is shown beside it. Where intervals overlap, the order is not a measured difference.",
-  "pages": [
-   "/evidence/leaderboard/"
   ]
  },
  "js.1f71ffjmfo5": {
@@ -2445,6 +2451,12 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.1fa3dkre7ep": {
+  "en": "warm",
+  "pages": [
+   "/docs/pictures/"
   ]
  },
  "js.1faz9a47wga": {
@@ -2499,12 +2511,6 @@
    "/candidates/pi-men/dip-1/"
   ]
  },
- "js.1fo0ybrjcxn": {
-  "en": "<b>Data: The Extrasolar Planets Encyclopaedia (exoplanet.eu), fetched {n0} Oct {n1}; {n2} planets with a stored distance, around {n3} stars.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. The NASA Exoplanet Archive could not be reached when this list was fetched, so it comes from exoplanet.eu alone. exoplanet.eu lists as confirmed every object it treats as a planet: bodies up to {n4} Jupiter masses (within their uncertainty), published or announced. Its list is broader than the NASA Exoplanet Archive's, which keeps objects up to {n5} Jupiter masses from refereed papers. The list includes {n6} entries exoplanet.eu names as exocomets. {n7} of its {n8} planets have no stored distance and are not plotted.",
-  "pages": [
-   "/explore/galaxy/"
-  ]
- },
  "js.1fppcyzgola": {
   "en": "<a href=\"/stars/barnard-s-star/\">{s0}</a> · Radial velocity · discovered {n0} · Earth-size (by mass)",
   "pages": [
@@ -2544,10 +2550,22 @@
    "/planets/gaia-4-b/"
   ]
  },
+ "js.1fwz3jtwilc": {
+  "en": "{n0} Eri b",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.1g0smg3jibl": {
   "en": "with the TIC density prior",
   "pages": [
    "/evidence/report/"
+  ]
+ },
+ "js.1g4l9awxfep": {
+  "en": "Search catalogue docs/discoveries/catalog.json, updated {n0}-{n1}-30T06:{n2}+{n3}, {n4} entries.",
+  "pages": [
+   "/evidence/plates/"
   ]
  },
  "js.1g5lkun156f": {
@@ -2672,6 +2690,7 @@
  "js.1h44lp33s4c": {
   "en": "The first planet found around a Sun-like star.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -2705,22 +2724,10 @@
    "/candidates/radius-ratios/"
   ]
  },
- "js.1hanjmcicv2": {
-  "en": "The Sentinels' subsample <span class=\"sub\">{n0} held-out stars · not ranked</span>",
-  "pages": [
-   "/evidence/leaderboard/"
-  ]
- },
  "js.1hc8gmjgdot": {
   "en": "TOI table",
   "pages": [
    "/evidence/report/toi-236/"
-  ]
- },
- "js.1hfl9sordrk": {
-  "en": "Model of {s0} crossing pi Men ({n0} K, {n1} R☉): depth {n2} ppm, {n3} h. The planet is an artist's impression.",
-  "pages": [
-   "/"
   ]
  },
  "js.1hfm3qhujst": {
@@ -2806,12 +2813,6 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.1hw9pj2cjy7": {
-  "en": "{n0} entries, found between <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1} Oct {n2}, {n3} UTC</time> and <time datetime=\"2026-10-27T06:46:11+00:00\" title=\"2026-10-27T06:46:11+00:00\">{n4} Oct {n5}, {n6} UTC</time>. <b>{n7} match a known TOI period</b>. Every entry is a candidate, unconfirmed. A TOI match is an archive comparison. Archive values only. This page claims no detection. Signals that match no known TOI are held for private review; they are published only after review and reporting.",
-  "pages": [
-   "/candidates/"
-  ]
- },
  "js.1i0hezn1dvy": {
   "en": "Sentinel · Volunteer: {n0} span in this window, counted for this dip",
   "pages": [
@@ -2819,12 +2820,6 @@
    "/candidates/pi-men/dip-2/",
    "/candidates/pi-men/dip-3/",
    "/candidates/pi-men/dip-4/"
-  ]
- },
- "js.1i1bqizwemp": {
-  "en": "Each cell: the rate, then k/n and the Wilson {n0}% interval, drawn as a bar from {n1} to {n2}% (Youden J from {n3} to {n4}, with a mark at {n5}). Ranked by Youden's J on the searchable set the benchmark fixed, with one predicate on both sides (a clean candidate: on the ephemeris, passed, no eclipsing-binary flag), so calling every TOI a planet, flagged or not, scores zero. The controls gate ranking and do not enter J, and the control lists are the method's own report. Where intervals overlap the order is not a measured difference.",
-  "pages": [
-   "/evidence/leaderboard/"
   ]
  },
  "js.1i1fwe1y4dt": {
@@ -2877,6 +2872,14 @@
    "/evidence/report/toi-270/"
   ]
  },
+ "js.1i9gd4nyiqb": {
+  "en": "Radial velocity",
+  "pages": [
+   "/explore/galaxy/",
+   "/explore/mission-control/",
+   "/how-it-works/radial-velocity/"
+  ]
+ },
  "js.1i9syzrgr9a": {
   "en": "ii · whole subject tess-04b815001aa6",
   "pages": [
@@ -2913,10 +2916,13 @@
    "/candidates/"
   ]
  },
- "js.1inrxj82qqn": {
-  "en": "{s0}, dip {n0} ({n1} d)",
+ "js.1ispru3ub0k": {
+  "en": "Proxima Centauri b ›",
   "pages": [
-   "/candidates/radius-ratios/"
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1iub0nyp6f9": {
@@ -2934,7 +2940,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1ix9rk536yo": {
@@ -2963,12 +2969,6 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
-  ]
- },
- "js.1j9g5n75pzw": {
-  "en": "Illustration: Rp/R★ = {n0}, b = {n1}, a {n2} K star; the curve is the small-planet Mandel &amp; Agol ({n3}) model with quadratic limb darkening.",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.1ja46ec6bci": {
@@ -3010,6 +3010,12 @@
    "/evidence/report/toi-270/"
   ]
  },
+ "js.1jl27lqn1et": {
+  "en": "Radius (RJ)",
+  "pages": [
+   "/catalogue/"
+  ]
+ },
  "js.1jltb46ahiz": {
   "en": "TOI-{n0}: the star disc in its blackbody colour at {n1} K, with a neutral grey disc on it labelled occulter not identified. secondary eclipse at SNR {n2}; all {n3} dips rejected by vetting.",
   "pages": [
@@ -3023,6 +3029,12 @@
   "en": "<span class=\"word s-rej\">rejected by vetting</span><b class=\"fig\">1e. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">stored id tess-01e315ee5ebf-{n2}.</span> Dip at BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensus interval BTJD {n7} to {n8}. Marked by {n9} of {n10} reviewers ({n11} of {n12} Sentinels, {n13} of {n14} Probes). Lies on a {n15}-day BLS period (t0 BTJD {n16}). Rejected by vetting (secondary eclipse, secondary any phase). Archive: no archive planet within tolerance. Archive values only. This page claims no detection.",
   "pages": [
    "/evidence/plates/toi-236/"
+  ]
+ },
+ "js.1jpqv79tmp8": {
+  "en": "Teegarden's c",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.1jqjb1ecf85": {
@@ -3076,12 +3088,6 @@
    "/evidence/"
   ]
  },
- "js.1jvq989drn7": {
-  "en": "Artist's impression: the giant-cool look, for radius {n0} R⊕ or more, Teq below {n1} K: cream and tan cloud bands. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
-  ]
- },
  "js.1k05nntjzg8": {
   "en": "atmosphere drawn ×{n0} thicker; planet and star not to scale",
   "pages": [
@@ -3107,15 +3113,6 @@
   "en": "Source: NASA Exoplanet Archive, table toi, fetched {n0}-{n1}-{n2} (the real-TOI benchmark's frozen sample, sha256 6f0e111ec8d2c38d…).",
   "pages": [
    "/evidence/report/toi-236/"
-  ]
- },
- "js.1k548hzbh61": {
-  "en": "<b>ν₃ asymmetric stretch (three)</b> · {n0} µm · infrared-active · drawn ×{n1} · <a href=\"/how-it-works/atmospheres/\">the {n2} µm band in Reading atmospheres ›</a>",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
   ]
  },
  "js.1kch3o41dk9": {
@@ -3201,12 +3198,6 @@
    "/planets/kepler-9-c/"
   ]
  },
- "js.1kukdzlwmzz": {
-  "en": "<b>ν₂ umbrella</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
-  ]
- },
  "js.1kvmnyghvke": {
   "en": "Artist's impression of {s0}: a rocky planet, radius not measured ({n0} Earth masses), irradiation not computable.",
   "pages": [
@@ -3225,6 +3216,7 @@
  "js.1l1ykyl9gjt": {
   "en": "A hot Jupiter whose deep-blue colour was measured with Hubble.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -3249,11 +3241,21 @@
    "/evidence/runs/"
   ]
  },
+ "js.1l4atyo906i": {
+  "en": "Candidate",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
  "js.1l4kxm2w5br": {
   "en": "Archive comparison: no archive planet within tolerance (this dip has no BLS period to compare); pi Men c: no transit ephemeris to compare. Archive values only. This page claims no detection.",
   "pages": [
    "/candidates/pi-men/dip-5/",
-   "/candidates/pi-men/dip-6/"
+   "/candidates/pi-men/dip-6/",
+   "/candidates/radius-ratios/"
   ]
  },
  "js.1l4u62ej5fc": {
@@ -3263,6 +3265,18 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.1l8c78nkfe5": {
+  "en": "Teq",
+  "pages": [
+   "/docs/pictures/"
+  ]
+ },
+ "js.1l8lt88zlnn": {
+  "en": "<i aria-hidden=\"true\"></i>Eclipsing binary",
+  "pages": [
+   "/catalogue/everything-that-dims/"
   ]
  },
  "js.1l95agsp46q": {
@@ -3285,6 +3299,12 @@
   "pages": [
    "/planets/trappist-1-b/",
    "/planets/trappist-1-e/"
+  ]
+ },
+ "js.1lbuxx1akb8": {
+  "en": "<i style=\"background:#64D2FF\"></i>Transit <span class=\"mono\">{n0}</span>",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.1liecym8jw": {
@@ -3367,6 +3387,12 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.1m6gonlbh23": {
+  "en": "Proxima Centauri",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.1m7nga73mrk": {
   "en": "Radial-velocity scale: Earth twin about {n0} centimetres per second; ESPRESSO within a night under {n1} centimetres per second; stellar surface noise of order {n2} metre per second; pi Men c about {n3} metres per second; Jupiter twin {n4} metres per second; {n5} Peg b {n6} metres per second.",
   "pages": [
@@ -3388,12 +3414,6 @@
    "/evidence/plates/"
   ]
  },
- "js.1mfsedhnkek": {
-  "en": "A rotating ball-and-stick model of the selected molecule at its measured bond lengths and angles (NIST CCCBDB), vibrating in the chosen normal mode: arrows show which way each atom moves. A wavelength axis below marks the molecule's fundamental bands, filled when infrared sees them and hollow when the mode is infrared-silent, with the range the {s0} chapter draws shaded.",
-  "pages": [
-   "/how-it-works/atmospheres/"
-  ]
- },
  "js.1mi5uvq4hd0": {
   "en": "this run · rejected by vetting · no period",
   "pages": [
@@ -3404,6 +3424,15 @@
   "en": "pi Men, star page",
   "pages": [
    "/explore/mission-control/"
+  ]
+ },
+ "js.1mjsdzuqt7u": {
+  "en": "no single star",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1mk4xq21j8n": {
@@ -3450,6 +3479,12 @@
   "en": "Methods: How a survey works ›",
   "pages": [
    "/planets/pi-men-c/"
+  ]
+ },
+ "js.1mz5xi30e6k": {
+  "en": "{n0} Peg b",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.1mzrogjvr87": {
@@ -3527,9 +3562,9 @@
   "en": "Earth twin at {n0} pc",
   "pages": [
    "/how-it-works/",
+   "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1nghe8p78x7": {
@@ -3549,15 +3584,6 @@
   "pages": [
    "/planets/barnard-s-star-b/",
    "/planets/yz-cet-b/"
-  ]
- },
- "js.1nlihv4t4dw": {
-  "en": "Source: docs/results/showcase.json.",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1nm81nug7zg": {
@@ -3676,6 +3702,12 @@
    "/explore/mission-control/"
   ]
  },
+ "js.1o6iiyvkzt4": {
+  "en": "Teq (K)",
+  "pages": [
+   "/catalogue/"
+  ]
+ },
  "js.1oflx09locz": {
   "en": "The case file could not load in this view. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-000\">Open it on its own page.</a>",
   "pages": [
@@ -3707,12 +3739,6 @@
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-3/",
    "/candidates/pi-men/dip-1/"
-  ]
- },
- "js.1ooqb09tka": {
-  "en": "Odd/even depth mismatch or secondary eclipse; or a depth of {n0} ppm or more; or V-shaped and {n1} ppm or more; or a stellar-density mismatch at a period under {n2} d; or half the panel's weight saying eclipsing binary. Variability at an eclipsing binary's period, or half of it.",
-  "pages": [
-   "/catalogue/everything-that-dims/"
   ]
  },
  "js.1oqf3bvj4qe": {
@@ -3810,10 +3836,10 @@
  "js.1pduw01bhpw": {
   "en": "Winn {n0}, Transits and occultations",
   "pages": [
+   "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/",
-   "/how-it-works/equations-of-life/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1pf0nh0ccp2": {
@@ -3861,8 +3887,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1pnfihdfe07": {
@@ -3898,7 +3924,9 @@
  "js.1pujjt7cut5": {
   "en": "pi Men c",
   "pages": [
+   "/",
    "/evidence/report/",
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -3924,6 +3952,12 @@
    "/planets/b-cen-ab-b/",
    "/planets/barnard-s-star-b/",
    "/planets/bd-20-2457-b/"
+  ]
+ },
+ "js.1pzot5psr3w": {
+  "en": "Luhman {n0} A",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.1q0vba1x3qp": {
@@ -4030,12 +4064,6 @@
    "/candidates/pi-men/dip-1/"
   ]
  },
- "js.1qq8e2zp8tb": {
-  "en": "Planet vetting: unchanged. The eclipsing-binary module's vetting hints are advisory, no vetting decision uses them, and they were not evaluated; using them in vetting needs its own pre-registered evaluation.",
-  "pages": [
-   "/evidence/stellar/"
-  ]
- },
  "js.1qr7pmpqgem": {
   "en": "TIC {n0}, period {n1} days, depth {n2} ppm, SNR {n3}, period matches a known TOI, candidate, unconfirmed",
   "pages": [
@@ -4058,6 +4086,12 @@
    "/explore/mission-control/"
   ]
  },
+ "js.1r0q7nepkoi": {
+  "en": "calibrated weight",
+  "pages": [
+   "/evidence/"
+  ]
+ },
  "js.1r46y9nqy47": {
   "en": "The first three steps are SetuHQ's own; the last three are other teams' records (NASA Exoplanet Archive (TAP): the toi and ps tables), never SetuHQ results. A hollow dot is a step with no record. TFOPWG: the TESS Follow-up Observing Program Working Group.",
   "pages": [
@@ -4065,6 +4099,12 @@
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-3/",
    "/candidates/pi-men/dip-1/"
+  ]
+ },
+ "js.1r4fphlxxtr": {
+  "en": "{n0} entries, found between <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1} Oct {n2}, {n3} UTC</time> and <time datetime=\"2026-10-30T00:48:15+00:00\" title=\"2026-10-30T00:48:15+00:00\">{n4} Oct {n5}, {n6} UTC</time>. <b>{n7} match a known TOI period</b>. Every entry is a candidate, unconfirmed. A TOI match is an archive comparison. Archive values only. This page claims no detection. Signals that match no known TOI are held for private review; they are published only after review and reporting.",
+  "pages": [
+   "/candidates/"
   ]
  },
  "js.1r7q1f2otd9": {
@@ -4095,12 +4135,6 @@
    "/how-it-works/equations-of-life/"
   ]
  },
- "js.1rehm8o052v": {
-  "en": "{s0}ing Exoplanet Survey Satellite",
-  "pages": [
-   "/how-it-works/transits/"
-  ]
- },
  "js.1rervwi8ill": {
   "en": "The case file could not load in this view. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-fa3483ce6f83-001\">Open it on its own page.</a>",
   "pages": [
@@ -4110,10 +4144,10 @@
  "js.1rfc5ifvp8a": {
   "en": "Source / limits",
   "pages": [
-   "/",
-   "/candidates/be-the-vetter/",
    "/candidates/hd-15337/dip-1/",
-   "/candidates/hd-15337/dip-2/"
+   "/candidates/hd-15337/dip-2/",
+   "/candidates/hd-15337/dip-3/",
+   "/candidates/pi-men/dip-1/"
   ]
  },
  "js.1rhcftn0j4b": {
@@ -4129,6 +4163,12 @@
    "/candidates/wasp-126/dip-2/",
    "/candidates/wasp-126/dip-3/",
    "/candidates/wasp-126/dip-4/"
+  ]
+ },
+ "js.1rhozdhu0s6": {
+  "en": "{n0} Eri",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.1rhxz6cr57l": {
@@ -4149,10 +4189,10 @@
    "/evidence/report/hd-15337/"
   ]
  },
- "js.1rk4ie4w0t9": {
-  "en": "Artist's impression: the giant-hot look, for radius {n0} R⊕ or more, Teq {n1} to {n2} K: rust cloud bands. A still of the look, not of a particular planet.",
+ "js.1rncc50vod0": {
+  "en": "Get started",
   "pages": [
-   "/docs/pictures/"
+   "/editions/"
   ]
  },
  "js.1rniehwfgn9": {
@@ -4195,12 +4235,6 @@
   "en": "stellar density inconsistent with the star (transitfit.py) at P = {n0} d, under {n1} d",
   "pages": [
    "/catalogue/everything-that-dims/"
-  ]
- },
- "js.1rsb50hzlde": {
-  "en": "Artist's impression: the neptune-hot look, for radius {n0} to {n1} R⊕, Teq {n2} K or more: orange-grey haze. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.1rsch1xr0lt": {
@@ -4248,19 +4282,22 @@
    "/evidence/plates/toi-236/"
   ]
  },
+ "js.1rwj8ey7hae": {
+  "en": "Kepler-{n0} · {n1} K",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
  "js.1rxrndp257b": {
   "en": "Starlight blocking, in four scenes. A sun-like occulter (an illustration based on SOHO LASCO); a coronagraph mask sliding over a star so the glare collapses into residual speckles and the four HR {n0} planets appear on schematic orbits; a starshade flying far in front of a telescope, not to scale; and a two-telescope nulling interferometer whose dark fringe cancels the star.",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
-  ]
- },
- "js.1ryrg8dmxoz": {
-  "en": "<b>ν₄ asymmetric bend (three)</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1s3bgxbwlkh": {
@@ -4278,10 +4315,10 @@
    "/evidence/plates/wasp-126/"
   ]
  },
- "js.1sdkh60m4rv": {
-  "en": "{s0}, dip {n0}",
+ "js.1s8dkmip4e3": {
+  "en": "cheops",
   "pages": [
-   "/candidates/radius-ratios/"
+   "/evidence/stellar/"
   ]
  },
  "js.1sg8cj3fgn0": {
@@ -4383,6 +4420,12 @@
    "/evidence/report/toi-270/"
   ]
  },
+ "js.1t30u96twwz": {
+  "en": "signals",
+  "pages": [
+   "/candidates/"
+  ]
+ },
  "js.1t47rnb1yty": {
   "en": "Statistical validation at scale.",
   "pages": [
@@ -4401,6 +4444,12 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.1takbn7z5i5": {
+  "en": "pi Men b ›",
+  "pages": [
+   "/explore/mission-control/"
+  ]
+ },
  "js.1tanbk5cfbb": {
   "en": "{n0} {n1} / {n2} dex",
   "pages": [
@@ -4408,6 +4457,15 @@
    "/stars/kepler-1067/",
    "/stars/kepler-1279/",
    "/stars/kepler-1490/"
+  ]
+ },
+ "js.1tbllix94q1": {
+  "en": "Molecules",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1tbul4ef62r": {
@@ -4493,12 +4551,6 @@
    "/candidates/toi-270/dip-4/"
   ]
  },
- "js.1tpmj2xl8sk": {
-  "en": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · rejected by vetting, not a candidate",
-  "pages": [
-   "/explore/"
-  ]
- },
  "js.1trrebrltbg": {
   "en": "Drawn from stored values only (exoplanet.eu). Not stored: star temperature, star radius; those parts are illustrative and say so on the drawing. Star colour: the Sun’s, as the temperature is not stored.",
   "pages": [
@@ -4521,7 +4573,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1tubinygxk4": {
@@ -4548,16 +4600,16 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.1u1inxhnivr": {
+  "en": "False positives",
+  "pages": [
+   "/how-it-works/false-positives/"
+  ]
+ },
  "js.1u2k1jai0us": {
   "en": "One light curve, three periods. It shows what the search does when a star has more than one planet, and which of them a {n0}-day subject can hold.",
   "pages": [
    "/evidence/report/toi-270/"
-  ]
- },
- "js.1u2q9tbst8u": {
-  "en": "Artist's impression: the envelope-hot look, for radius {n0} to {n1} R⊕, Teq {n2} K or more: tan haze and a warm rim. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.1u4yg0u12mv": {
@@ -4567,12 +4619,6 @@
    "/planets/gj-1151-c/",
    "/planets/hd-209458-b/",
    "/planets/hd-80606-b/"
-  ]
- },
- "js.1u50uo7y5g3": {
-  "en": "<b>ν₁ symmetric stretch</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
   ]
  },
  "js.1u59hy4lwt0": {
@@ -4605,12 +4651,6 @@
    "/catalogue/everything-that-dims/"
   ]
  },
- "js.1ua3tz5fxe0": {
-  "en": "The hash is an attestation: the held-out labels are public in the repository, so the leaderboard cannot prove they were not read, and a method's pass verdicts and control events are its own report. Maintainer-held decoy light curves and prospective scoring on TOIs still undispositioned would close these gaps; neither exists yet.",
-  "pages": [
-   "/evidence/leaderboard/"
-  ]
- },
  "js.1uaz0vrw4ly": {
   "en": "least field at the source, on the star (Pineda &amp; Villadsen {n0} band) [calc]",
   "pages": [
@@ -4624,12 +4664,6 @@
   "en": "Probe · Typical <span class=\"sub mono\" title=\"reviewer id\">volunteer-typical</span>",
   "pages": [
    "/evidence/"
-  ]
- },
- "js.1uekblhme1p": {
-  "en": "{n0} ppm · {n1} h · all {n2} reviewers · candidate, unconfirmed",
-  "pages": [
-   "/explore/"
   ]
  },
  "js.1ug611r5qd8": {
@@ -4684,6 +4718,12 @@
    "/catalogue/everything-that-dims/"
   ]
  },
+ "js.1utmguftbbw": {
+  "en": "TESS sectors {n0}–{n1}. Feed entry {n2} for this star (stored id <span class=\"mono\">tess-7b97e468b60b-{n3}</span>). A TOI match compares a stored period with archive values. Archive values only. This page claims no detection.",
+  "pages": [
+   "/candidates/"
+  ]
+ },
  "js.1uugayqarlm": {
   "en": "The mission design of TESS, which began observing in {n0}.",
   "pages": [
@@ -4697,12 +4737,6 @@
   "en": "{n0} / {n1} (fit, per signal)",
   "pages": [
    "/evidence/report/toi-236/"
-  ]
- },
- "js.1v15owfc4cr": {
-  "en": "<b>ν₃ asymmetric stretch (two)</b> · {n0} µm · infrared-active · drawn ×{n1} · not drawn in {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
   ]
  },
  "js.1v2k5bzmb2a": {
@@ -4721,10 +4755,11 @@
    "/explore/mission-control/"
   ]
  },
- "js.1va1yqqf83l": {
-  "en": "A sub-Earth-mass planet around {s0}, one of the Sun's nearest neighbours.",
+ "js.1vf8wchy7cx": {
+  "en": "Flares",
   "pages": [
-   "/explore/galaxy/"
+   "/docs/stellar/",
+   "/evidence/stellar/"
   ]
  },
  "js.1vn1k0hsfr": {
@@ -4736,16 +4771,16 @@
    "/planets/bd-20-2457-b/"
   ]
  },
- "js.1vo3z8v0kr3": {
-  "en": "{n0} per {n1} star-sectors <span class=\"muted\">({n2} over {n3}; {n4} vetted dips before the feed's rule)</span>",
-  "pages": [
-   "/evidence/"
-  ]
- },
  "js.1vs3qyoxlvt": {
   "en": "Also known as 2MASS J19021775+{n0}, KIC {n1}, KOI-{n2}, WISE J190217.77+{n3}.",
   "pages": [
    "/stars/kepler-9/"
+  ]
+ },
+ "js.1vseruufigw": {
+  "en": "tau Cet",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.1vtn0jl0t29": {
@@ -4768,8 +4803,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1vwmg3fodw0": {
@@ -4777,8 +4812,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.1w0jtm7384a": {
@@ -4851,6 +4886,7 @@
  "js.1wazwmrpsyg": {
   "en": "Pause",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -4929,6 +4965,12 @@
    "/planets/kelt-9-ab/"
   ]
  },
+ "js.1wqsruj6sy4": {
+  "en": "Teegarden's b",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.1wr1t67roz9": {
   "en": "Showed that candidates in multi-planet systems are almost always real, validating {n0} planets in {n1} systems.",
   "pages": [
@@ -4998,6 +5040,7 @@
  "js.1xaww50znhh": {
   "en": "<i style=\"background:#FF6961\"></i>Proxima Centauri b",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -5021,6 +5064,14 @@
    "/evidence/report/toi-270/"
   ]
  },
+ "js.1xjf25ez4ea": {
+  "en": "Astrometry",
+  "pages": [
+   "/explore/galaxy/",
+   "/explore/mission-control/",
+   "/how-it-works/astrometry/"
+  ]
+ },
  "js.1xjgislb1gr": {
   "en": "{n0} (D lines, {n1} and {n2} nm)",
   "pages": [
@@ -5034,6 +5085,12 @@
   "en": "L (years), log scale",
   "pages": [
    "/how-it-works/equations-of-life/"
+  ]
+ },
+ "js.1xjlu6r0tws": {
+  "en": "Planet candidate",
+  "pages": [
+   "/catalogue/everything-that-dims/"
   ]
  },
  "js.1xludg6i4sq": {
@@ -5055,12 +5112,6 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
-  ]
- },
- "js.1xqmq7gc51u": {
-  "en": "False alarms on scrambled light curves at the feed's level (its full rule, FAP &lt; {n0})",
-  "pages": [
-   "/evidence/"
   ]
  },
  "js.1xs9ztk2l36": {
@@ -5088,16 +5139,16 @@
    "/candidates/wasp-126/dip-4/"
   ]
  },
- "js.1xy8j3ygiad": {
-  "en": "Artist's impression: the envelope-cool look, for radius {n0} to {n1} R⊕, Teq below {n2} K: pale blue-white haze, faint bands. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
-  ]
- },
  "js.1y1gk0z56gg": {
   "en": "dips on the ephemeris, by vetting outcome",
   "pages": [
    "/evidence/report/toi-236/"
+  ]
+ },
+ "js.1y218zo6cqq": {
+  "en": "<i style=\"background:#30D158\"></i>Imaging <span class=\"mono\">{n0}</span>",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.1y39iwfnbwn": {
@@ -5170,6 +5221,15 @@
    "/evidence/plates/"
   ]
  },
+ "js.1yt1laezm0g": {
+  "en": "Kepler-{n0} d",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
  "js.1ytljjhkuxb": {
   "en": "Drawn from stored values only (exoplanet.eu).",
   "pages": [
@@ -5209,6 +5269,7 @@
  "js.1yxippiwqzq": {
   "en": "Barnard's star e",
   "pages": [
+   "/explore/galaxy/",
    "/planets/barnard-s-star-b/"
   ]
  },
@@ -5240,12 +5301,6 @@
    "/candidates/pi-men/dip-4/"
   ]
  },
- "js.1z0tecbo6q6": {
-  "en": "Artist's impression: the giant-ultrahot look, for radius {n0} R⊕ or more, Teq {n1} K or more: dark, low-contrast and glowing on the day side; no bands. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
-  ]
- },
  "js.1z3sctga608": {
   "en": "Two short, flat-bottomed dips of about {n0} ppm at ~{n1} and ~{n2} (spacing ~{n3} d) have matching depth and duration, as expected for a periodic transit. Neither shows a V shape, a secondary eclipse, a ramp or a step, but the data around the second dip is",
   "pages": [
@@ -5267,10 +5322,10 @@
    "/explore/mission-control/"
   ]
  },
- "js.1z5yw0q2c2w": {
-  "en": "The home page's transit",
+ "js.1z5qoomb94b": {
+  "en": "YZ Cet b",
   "pages": [
-   "/docs/pictures/"
+   "/explore/galaxy/"
   ]
  },
  "js.1z8tasie2wo": {
@@ -5380,13 +5435,8 @@
  "js.203922okg7y": {
   "en": "Orbits Proxima Centauri, the nearest star to the Sun.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
-  ]
- },
- "js.2050o3pgkvz": {
-  "en": "Source: TESS Science Office (MIT), public sector pages at tess.mit.edu/observations/: https://tess.mit.edu/observations/, schedule saved on {n0}-{n1}-{n2}.",
-  "pages": [
-   "/explore/tess-now/"
   ]
  },
  "js.206lvynaoyq": {
@@ -5452,12 +5502,6 @@
    "/planets/psr-b1257-12-d/"
   ]
  },
- "js.20iu1oobrgo": {
-  "en": "Artist's impression: the ambiguous look, for no radius, mass {n0} to {n1} M⊕, any Teq: a neutral grey-blue disc and a soft rim: rock or envelope, unknown. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
-  ]
- },
  "js.20jq5c41tkh": {
   "en": "<span class=\"word cand\">candidate</span><span class=\"word s-known\">known TOI period</span><b class=\"fig\">3j. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Dip at BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Marked by {n5} reviewers (the catalogue does not store the panel size or the consensus interval). Lies on a {n6}-day BLS period with {n7} transits. Status: period matches a known TOI. Archive values only. This page claims no detection.",
   "pages": [
@@ -5468,6 +5512,12 @@
   "en": "<span class=\"word cand\">candidate</span><span class=\"word s-known\">known TOI period</span><b class=\"fig\">4b. <span class=\"mono\">tess-308a47f84167-{n0}</span>.</b> Dip at BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Marked by {n5} reviewers (the catalogue does not store the panel size or the consensus interval). Lies on a {n6}-day BLS period with {n7} transits. Status: period matches a known TOI. Archive values only. This page claims no detection.",
   "pages": [
    "/evidence/plates/"
+  ]
+ },
+ "js.20lcnwrpq7u": {
+  "en": "Transit <span class=\"mono\" data-cmn=\"transit\">{n0}</span>",
+  "pages": [
+   "/catalogue/"
   ]
  },
  "js.20lxdwfofp9": {
@@ -5505,6 +5555,12 @@
   "en": "The case file could not load in this view. <a id=\"blockedlink\" href=\"/candidates/toi-236/case-file/#tess-997691b39aab-000\">Open it on its own page.</a>",
   "pages": [
    "/candidates/toi-236/dip-3/case-file/"
+  ]
+ },
+ "js.20rbpsp5ug3": {
+  "en": "<i aria-hidden=\"true\"></i>Unclassified <span class=\"mono\">{n0}</span>",
+  "pages": [
+   "/catalogue/everything-that-dims/"
   ]
  },
  "js.20rkrumvokl": {
@@ -5551,8 +5607,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.20zfxed05sf": {
@@ -5586,12 +5642,6 @@
    "/candidates/pi-men/dip-2/",
    "/candidates/pi-men/dip-3/",
    "/candidates/pi-men/dip-4/"
-  ]
- },
- "js.217aul87gdd": {
-  "en": "<b>N–O stretch, mostly</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
   ]
  },
  "js.217mi4h3ox4": {
@@ -5654,10 +5704,10 @@
  "js.21le9difort": {
   "en": "R☉/{n0} AU, IAU nominal values [calc]",
   "pages": [
+   "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.21mhsdlzlqh": {
@@ -5726,12 +5776,6 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.21ylkyb62a9": {
-  "en": "TIC {n0} · candidate, unconfirmed",
-  "pages": [
-   "/evidence/"
-  ]
- },
  "js.222kde6gcmc": {
   "en": "Drawn from stored values only (exoplanet.eu). Not stored: planet radius; those parts are illustrative and say so on the drawing. At the stored inclination this planet does not transit; the view shows a transit to explain the method.",
   "pages": [
@@ -5745,6 +5789,15 @@
    "/evidence/report/hd-15337/",
    "/evidence/report/toi-236/",
    "/evidence/report/toi-270/"
+  ]
+ },
+ "js.225qy6re67g": {
+  "en": "Kepler-{n0} c",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2274ir70e91": {
@@ -5810,6 +5863,7 @@
  "js.22hxue21a75": {
   "en": "A hot Jupiter transiting an evolved F-type star, confirmed with SOPHIE radial velocities.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -5823,6 +5877,12 @@
   "en": "{n0} planet in exoplanet.eu · stored type K1.5V · class K from Teff (nearest K0V)",
   "pages": [
    "/stars/hd-189733-a/"
+  ]
+ },
+ "js.22noo09k9nh": {
+  "en": "<i style=\"background:#7D7AFF\"></i>Timing <span class=\"mono\">{n0}</span>",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.22qe07fgd2k": {
@@ -5885,6 +5945,12 @@
    "/catalogue/everything-that-dims/"
   ]
  },
+ "js.231hbrwsvbe": {
+  "en": "Flare",
+  "pages": [
+   "/catalogue/everything-that-dims/"
+  ]
+ },
  "js.232hnla7mfp": {
   "en": "BTJD {n0} · {n1} ppm · {n2} hours · SNR {n3} · candidate, unconfirmed",
   "pages": [
@@ -5933,10 +5999,10 @@
  "js.23c271ii31v": {
   "en": "Mission Control",
   "pages": [
-   "/planets/51-peg-b/",
-   "/planets/b-cen-ab-b/",
-   "/planets/barnard-s-star-b/",
-   "/planets/bd-20-2457-b/"
+   "/catalogue/",
+   "/catalogue/everything-that-dims/",
+   "/explore/",
+   "/explore/galaxy/"
   ]
  },
  "js.23cug3twug5": {
@@ -5988,6 +6054,12 @@
    "/stars/b-cen-ab/",
    "/stars/barnard-s-star/",
    "/stars/bd-20-2457/"
+  ]
+ },
+ "js.23gvqgvfk3h": {
+  "en": "eps Eridani",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.23iejmgi1b9": {
@@ -6062,6 +6134,12 @@
    "/planets/wasp-121-b/"
   ]
  },
+ "js.248fckis1nx": {
+  "en": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">run tess-pi-men-s1 · {n1} entries</span>",
+  "pages": [
+   "/candidates/radius-ratios/"
+  ]
+ },
  "js.249yvv2lisi": {
   "en": "The case file could not load in this view. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-4b369d3c6f09-004\">Open it on its own page.</a>",
   "pages": [
@@ -6096,19 +6174,6 @@
    "/evidence/plates/hd-15337/",
    "/evidence/plates/toi-236/",
    "/evidence/plates/toi-270/"
-  ]
- },
- "js.24fnxph6nhs": {
-  "en": "NASA Exoplanet Archive, table ps (default_flag = {n0}), as recorded in docs/results/pi_men_validation.md by scripts/validate_known_planets.py (live archive query, commit 0f6dbdc). Only {s0} is recorded there, so only {s1} is listed; its transit mid-time was not recorded, so no per-epoch offset is computed here; the validation note's mean timing offset ({n1} min over {n2} of {n3} epochs) is cited instead. Replace it with the output of 'setuhq crossmatch runs/tess-pi-men-s1' when the archive answers., recorded <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4} Oct {n5}, {n6} UTC</time> (commit 0f6dbdc) in docs/results/pi_men_crossmatch.json; this run's own cross-match did not run (stored error, verbatim: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
-  "pages": [
-   "/candidates/radius-ratios/"
-  ]
- },
- "js.24gwd0vxjg3": {
-  "en": "<b>Licence.</b> CHEOPS data, and outputs derived from them, stay under ESA's terms: data in the ESA Space Science Archives are distributed under the CC BY-NC {n0} IGO licence, and any commercial use, including use that indirectly generates financial gain, needs ESA's prior authorisation (data.licences@esa.int). SetuHQ's commercial licence and SetuHQ Pro cover SetuHQ's code and services, not CHEOPS data or CHEOPS-derived outputs.",
-  "pages": [
-   "/docs/stellar/",
-   "/evidence/stellar/"
   ]
  },
  "js.24jrww0gdzl": {
@@ -6298,12 +6363,6 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.25v5j8df6ue": {
-  "en": "Starting values: N★ = {n0} M dwarfs bright enough for JWST, F_Q · F_HZ = {n1}, F_O = {n2}, F_L = {n3}, F_S = {n4}, giving N ≈ {n5}. They come from secondary summaries of Seager's talk and paper, not checked against the paper here; F_L = {n6} is an assumption, not a measurement. The habitable-zone fraction links to the {s0} chapter's figures.",
-  "pages": [
-   "/how-it-works/population/"
-  ]
- },
  "js.25vec9roei3": {
   "en": "tess-f28323a4aef6-{n0} · {s0} · known planet",
   "pages": [
@@ -6328,10 +6387,10 @@
    "/evidence/report/wasp-126/"
   ]
  },
- "js.2688tn5ytet": {
-  "en": "{n0} stored brightness measurements over {n1} days. The panel, {n2} Sentinels and {n3} Probes (no people), marked {n4} dips, which the vetting code grouped into {n5} signals: {n6} passed, {n7} flagged, {n8} rejected. Each dip is this pipeline's own candidate, unconfirmed as an independent detection; the archive match says the planet is already known, not that this run confirmed it. The stored archive cross-match (the repository's stored copy) finds the lead signal consistent with pi Men c, a published planet: a known planet, not a discovery. Archive values only. This page claims no detection.",
+ "js.267fwx4rrxg": {
+  "en": "catalogue",
   "pages": [
-   "/explore/"
+   "/evidence/runs/"
   ]
  },
  "js.269wyn7yehy": {
@@ -6382,6 +6441,18 @@
    "/evidence/report/toi-270/"
   ]
  },
+ "js.26jkejmj23b": {
+  "en": "Imaging <span class=\"mono\" data-cmn=\"imaging\">{n0}</span>",
+  "pages": [
+   "/catalogue/"
+  ]
+ },
+ "js.26jwv5q9ef3": {
+  "en": "Eclipsing binary",
+  "pages": [
+   "/catalogue/everything-that-dims/"
+  ]
+ },
  "js.26lvjxq29mz": {
   "en": "Hide Top candidates",
   "pages": [
@@ -6410,6 +6481,18 @@
    "/how-it-works/equations-of-life/"
   ]
  },
+ "js.26pv2ld5al": {
+  "en": "YZ Cet d",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
+ "js.26pzvkix2mc": {
+  "en": "Star page ›",
+  "pages": [
+   "/explore/mission-control/"
+  ]
+ },
  "js.26sdy1tcm5m": {
   "en": "The case file could not load in this view. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-005\">Open it on its own page.</a>",
   "pages": [
@@ -6420,15 +6503,6 @@
   "en": "exoplanet.eu lists it as \"Published in a refereed paper\", found by Primary Transit in {n0}; record updated {n1}-{n2}-{n3}. Also known as EPIC {n4}.",
   "pages": [
    "/planets/k2-58-b/"
-  ]
- },
- "js.26svlut4n1y": {
-  "en": "SetuHQ reads TESS light curves: one star at a time, about {n0} days per sector. <a href=\"/explore/galaxy/?layers=tess\">See TESS's sky coverage ›</a>",
-  "pages": [
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
   ]
  },
  "js.26upx7lksz5": {
@@ -6461,12 +6535,6 @@
    "/catalogue/"
   ]
  },
- "js.26zs3bh9z5t": {
-  "en": "high: two or more instrumental cues; medium: one; low: the panel's reason alone.",
-  "pages": [
-   "/catalogue/everything-that-dims/"
-  ]
- },
  "js.27070gzrt8g": {
   "en": "numpy",
   "pages": [
@@ -6494,26 +6562,11 @@
    "/planets/kepler-1186-b/"
   ]
  },
- "js.275p8l49gz9": {
-  "en": "Discovery method",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/",
-   "/how-it-works/equations-of-life/"
-  ]
- },
  "js.27d1pzwqqg5": {
   "en": "{n0} dips ({n1} candidates, {n2} flagged). Each dip is named by its vetting outcome: a candidate passed vetting and is unconfirmed; a flagged dip is open; a rejected dip is not a candidate. Rejected and flagged dips are kept on purpose, so a reader can see what the vetting decided and why. Each image is the blind-coded plot the reviewers saw, byte for byte.",
   "pages": [
    "/evidence/report/hd-15337/",
    "/evidence/report/toi-270/"
-  ]
- },
- "js.27eugex8tue": {
-  "en": "Artist's impression: the neptune-warm look, for radius {n0} to {n1} R⊕, Teq {n2} to {n3} K: teal haze. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.27fyvwqvgk2": {
@@ -6525,10 +6578,10 @@
  "js.27ieblxey36": {
   "en": "passed vetting",
   "pages": [
+   "/candidates/",
    "/evidence/plates/",
    "/evidence/plates/hd-15337/",
-   "/evidence/plates/toi-270/",
-   "/evidence/plates/wasp-126/"
+   "/evidence/plates/toi-270/"
   ]
  },
  "js.27iuqqo6cr": {
@@ -6541,6 +6594,12 @@
   "en": "Artist's impression of {s0}: a gas giant in the temperate band, {n0} Earth radii, {n1} K.",
   "pages": [
    "/planets/109-psc-b/"
+  ]
+ },
+ "js.27kx8tn6apn": {
+  "en": "Timing and phase",
+  "pages": [
+   "/how-it-works/timing/"
   ]
  },
  "js.27n9asbnx55": {
@@ -6600,6 +6659,15 @@
    "/stars/kelt-9-a/"
   ]
  },
+ "js.280bcq6hfxu": {
+  "en": "Kepler-{n0} b and c periods",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
  "js.283unm3lnxq": {
   "en": "Sentinel · Skeptic <span class=\"mono\">claude-skeptic</span>",
   "pages": [
@@ -6621,7 +6689,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.28dafyxc9ih": {
@@ -6644,8 +6712,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.28esx5aenqy": {
@@ -6671,19 +6739,13 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.28ictyar11j": {
-  "en": "A learning exercise, not a contribution to the science. Your answers stay in this browser and are not collected or sent anywhere; the dips are stored dips from SetuHQ's example runs, already decided by its vetting.",
-  "pages": [
-   "/candidates/be-the-vetter/"
-  ]
- },
  "js.28iqhboa34b": {
   "en": "A molecule with N atoms has 3N − {n0} ways to vibrate (3N − {n1} if it is straight): water has three, carbon dioxide four (its bend comes twice, at right angles), methane nine. A mode absorbs infrared light only if it changes the molecule's dipole. That is why CO₂'s symmetric stretch ({n2} µm), O₂'s stretch and two of methane's four fundamentals are silent in the infrared. The bands the modes make are the ones the Reading atmospheres chapter marks: water's two stretches at {n3} and {n4} µm make its {n5} µm band, methane's ν₃ the {n6} µm band, CO₂'s asymmetric stretch the {n7} µm band, and CO's stretch the {n8} µm band.",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.28ivzcwj7sm": {
@@ -6795,7 +6857,6 @@
  "js.292xvf3dsck": {
   "en": "flagged for review, open",
   "pages": [
-   "/candidates/radius-ratios/",
    "/evidence/report/",
    "/evidence/report/hd-15337/",
    "/evidence/report/toi-270/"
@@ -6889,10 +6950,10 @@
  "js.29k8xk63vsz": {
   "en": "Dips",
   "pages": [
+   "/candidates/",
+   "/candidates/be-the-vetter/",
    "/candidates/hd-15337/dip-1/",
-   "/candidates/hd-15337/dip-1/case-file/",
-   "/candidates/hd-15337/dip-2/",
-   "/candidates/hd-15337/dip-2/case-file/"
+   "/candidates/hd-15337/dip-1/case-file/"
   ]
  },
  "js.29kns1zival": {
@@ -6961,8 +7022,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.29x6wi6pnrw": {
@@ -7001,6 +7062,12 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.2a56wvwnc5o": {
+  "en": "HN Lib",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.2a9g9u8ogm5": {
   "en": "Field at the source",
   "pages": [
@@ -7022,7 +7089,8 @@
  "js.2aau1iubg45": {
   "en": "tess-pi-men-s1",
   "pages": [
-   "/evidence/report/"
+   "/evidence/report/",
+   "/evidence/runs/"
   ]
  },
  "js.2aczoqcuk40": {
@@ -7032,6 +7100,15 @@
    "/candidates/wasp-126/dip-2/",
    "/candidates/wasp-126/dip-3/",
    "/candidates/wasp-126/dip-4/"
+  ]
+ },
+ "js.2ad5lvvd821": {
+  "en": "Gaia-{n0} b ›",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2ahfv5ecid": {
@@ -7050,12 +7127,6 @@
   "en": "{n0} hits in {n1} planted transits; {n2} false alarms in {n3} empty light curves",
   "pages": [
    "/evidence/"
-  ]
- },
- "js.2aj3droma9q": {
-  "en": "the catalogue and cited papers, numbers in each chapter's table",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.2apzy7fqrqe": {
@@ -7079,16 +7150,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
-  ]
- },
- "js.2b0kq1u0yok": {
-  "en": "<b>ν stretch</b> · {n0} µm · infrared-active · drawn ×{n1} · <a href=\"/how-it-works/atmospheres/\">the {n2} µm band in Reading atmospheres ›</a>",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2b1w1bhtwi6": {
@@ -7096,8 +7158,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2b2f1zu1w3l": {
@@ -7144,10 +7206,10 @@
  "js.2b9k1qfuxg4": {
   "en": "weight",
   "pages": [
+   "/evidence/",
    "/evidence/report/",
    "/evidence/report/hd-15337/",
-   "/evidence/report/toi-236/",
-   "/evidence/report/toi-270/"
+   "/evidence/report/toi-236/"
   ]
  },
  "js.2bcxglitume": {
@@ -7213,6 +7275,12 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.2brjxhf24py": {
+  "en": "{n0} Eri d",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.2btmnnqnpty": {
   "en": "<span class=\"word cand\">candidate</span><span class=\"word s-known\">known TOI period</span><b class=\"fig\">3k. <span class=\"mono\">tess-03a9e901682f-{n0}</span>.</b> Dip at BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Marked by {n5} reviewers (the catalogue does not store the panel size or the consensus interval). Lies on a {n6}-day BLS period with {n7} transits. Status: period matches a known TOI. Archive values only. This page claims no detection.",
   "pages": [
@@ -7223,6 +7291,12 @@
   "en": "Also known as OGLE-{n0}-BUL-{n1}.",
   "pages": [
    "/stars/ogle-2005-blg-390l/"
+  ]
+ },
+ "js.2c181tpjjvc": {
+  "en": "Luyten's Star b",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.2c70ie4ixet": {
@@ -7270,12 +7344,6 @@
    "/evidence/plates/toi-236/"
   ]
  },
- "js.2cazwqoadoq": {
-  "en": "Held-out EBs with a catalogue secondary and a period match: secondary phase within {n0} of the catalogue's, {n1}% interval lower bound &gt;= {n2} (a secondary we do not find is a miss)",
-  "pages": [
-   "/evidence/stellar/"
-  ]
- },
  "js.2cc0e9v7uvs": {
   "en": "<i style=\"background:#FF6961\"></i>{n0} Peg b",
   "pages": [
@@ -7300,6 +7368,12 @@
  },
  "js.2cektxt2twi": {
   "en": "{n0} of {n1} planted transits found · {n2} of {n3} empty light curves marked",
+  "pages": [
+   "/evidence/"
+  ]
+ },
+ "js.2cg943adi3e": {
+  "en": "The real-TOI leaderboard ›",
   "pages": [
    "/evidence/"
   ]
@@ -7343,6 +7417,18 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.2cs8n7gldpd": {
+  "en": "SetuHQ Pro",
+  "pages": [
+   "/editions/"
+  ]
+ },
+ "js.2cserx0e05n": {
+  "en": "Proxima Centauri d",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.2ct9t5541vf": {
@@ -7390,12 +7476,6 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.2d5lr3nor8a": {
-  "en": "<b>Data: The Extrasolar Planets Encyclopaedia (exoplanet.eu), fetched {n0}-{n1}-{n2}.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. The NASA Exoplanet Archive could not be reached when this list was fetched, so it comes from exoplanet.eu alone. exoplanet.eu lists as confirmed every object it treats as a planet: bodies up to {n3} Jupiter masses (within their uncertainty), published or announced. Its list is broader than the NASA Exoplanet Archive's, which keeps objects up to {n4} Jupiter masses from refereed papers. A value the source does not give reads \"not stored\".",
-  "pages": [
-   "/catalogue/"
-  ]
- },
  "js.2d5x5vtgqx3": {
   "en": "{n0} {n1} / {n2} MJ <span class=\"na\">· theoretical estimate</span>",
   "pages": [
@@ -7416,37 +7496,19 @@
    "/planets/proxima-centauri-b/"
   ]
  },
- "js.2d87qst4jdj": {
-  "en": "Search catalogue docs/discoveries/catalog.json, updated {n0}-{n1}-29T00:{n2}+{n3}, {n4} entries.",
-  "pages": [
-   "/evidence/plates/"
-  ]
- },
  "js.2d8lw4ky362": {
   "en": "Mode",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2d946h0gxw8": {
   "en": "Hide Feed count",
   "pages": [
    "/candidates/"
-  ]
- },
- "js.2d97owpwxwe": {
-  "en": "<b>ν₃ asymmetric stretch</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
-  ]
- },
- "js.2d9cg0jtcpa": {
-  "en": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Light curve",
-  "pages": [
-   "/explore/mission-control/"
   ]
  },
  "js.2dbh8x9y8de": {
@@ -7462,6 +7524,15 @@
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-3/",
    "/candidates/toi-236/dip-1/"
+  ]
+ },
+ "js.2dcmry1hh6z": {
+  "en": "Kepler-{n0} c ›",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2deel2ps6ig": {
@@ -7509,8 +7580,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2dt3lzdu6zn": {
@@ -7522,10 +7593,10 @@
  "js.2dwqejnve1i": {
   "en": "R★/a from exoplanet.eu R★ = {n0} R☉, a = {n1} AU [calc]",
   "pages": [
+   "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2dxa7uskig0": {
@@ -7592,14 +7663,6 @@
    "/how-it-works/astrometry/"
   ]
  },
- "js.2eluxgdu08m": {
-  "en": "Numbers in this chapter",
-  "pages": [
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/history/",
-   "/how-it-works/molecules-and-life/"
-  ]
- },
  "js.2en1x3cmvoa": {
   "en": "{n0} Peg b: K from our formula",
   "pages": [
@@ -7636,16 +7699,10 @@
    "/stars/beta-pic/"
   ]
  },
- "js.2etjlw57rtv": {
-  "en": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Galaxy",
+ "js.2ew51rdrin6": {
+  "en": "Dip {n0} of {n1}",
   "pages": [
-   "/explore/mission-control/"
-  ]
- },
- "js.2eujifl0hnp": {
-  "en": "high: odd/even mismatch or secondary eclipse; medium: depth, V shape, a short-period density mismatch, or the eclipse period; low: the panel's reason alone.",
-  "pages": [
-   "/catalogue/everything-that-dims/"
+   "/candidates/be-the-vetter/"
   ]
  },
  "js.2exbs04rc3y": {
@@ -7668,8 +7725,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2fc7nbkyf61": {
@@ -7720,6 +7777,12 @@
    "/stars/hr-8799/"
   ]
  },
+ "js.2fkkbj5qfsy": {
+  "en": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s2</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+  "pages": [
+   "/evidence/runs/"
+  ]
+ },
  "js.2fmavt7k5j5": {
   "en": "Move Top candidates up",
   "pages": [
@@ -7752,22 +7815,13 @@
    "/planets/psr-b1257-12-d/"
   ]
  },
- "js.2ftwr4ebakn": {
-  "en": "<b>Real data, cited.</b> Stored measurements, binned or folded as stored.",
-  "pages": [
-   "/",
-   "/candidates/be-the-vetter/",
-   "/evidence/",
-   "/evidence/stellar/"
-  ]
- },
  "js.2fu72b3rkst": {
   "en": "<b>ν₂ bend (two, at right angles)</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of Reading atmospheres",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2fwg4iyxx2n": {
@@ -7782,9 +7836,16 @@
    "/planets/trappist-1-e/"
   ]
  },
+ "js.2fye5c973kf": {
+  "en": "marked",
+  "pages": [
+   "/evidence/"
+  ]
+ },
  "js.2fyxww7qwgs": {
   "en": "Sun",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -7851,6 +7912,12 @@
    "/evidence/"
   ]
  },
+ "js.2gbggujxcvs": {
+  "en": "none",
+  "pages": [
+   "/evidence/runs/"
+  ]
+ },
  "js.2gbrnw08yjn": {
   "en": "entry<span aria-hidden=\"true\"></span>",
   "pages": [
@@ -7881,6 +7948,7 @@
  "js.2ghrdrj2xgd": {
   "en": "<i style=\"background:#FF6961\"></i>Barnard's star b",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -7888,6 +7956,12 @@
   "en": "<b>Archive.</b> Host of published planets TOI-{n0} b (P {n1} d), TOI-{n2} c (P {n3} d), TOI-{n4} d (P {n5} d), from NASA Exoplanet Archive, table ps (default_flag = {n6}), fetched {n7}-{n8}-22T18:{n9}+{n10}. Archive values only. This page claims no detection.",
   "pages": [
    "/evidence/plates/toi-270/"
+  ]
+ },
+ "js.2jt13jfskg": {
+  "en": "Lalande {n0} d",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.2jxe56kfgj": {
@@ -7919,18 +7993,18 @@
   "en": "Show",
   "pages": [
    "/how-it-works/",
+   "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/",
-   "/how-it-works/equations-of-life/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2qfmg1csqa": {
   "en": "Why only a few transit",
   "pages": [
+   "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.2qpo4kk45p": {
@@ -7982,15 +8056,6 @@
   "en": "Also known as HD {n0}, TOI-{n1}.",
   "pages": [
    "/stars/kelt-9-a/"
-  ]
- },
- "js.32jc7egs68": {
-  "en": "<b>{n0}</b> of the {n1} planets with a stored distance in exoplanet.eu were found by radial velocity (the first method listed). <a href=\"/explore/galaxy/?method=rv\">Show them on the Galaxy map ›</a>",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
   ]
  },
  "js.33d16tnf44": {
@@ -8062,12 +8127,6 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.3d44eg16pj": {
-  "en": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Sky position",
-  "pages": [
-   "/explore/mission-control/"
-  ]
- },
  "js.3dua6scdtg": {
   "en": "{n0} spans on {n1} subjects",
   "pages": [
@@ -8100,6 +8159,12 @@
   "en": "<i></i>Open <span class=\"n\">{n0}</span>",
   "pages": [
    "/explore/"
+  ]
+ },
+ "js.3kjkwe2xdx": {
+  "en": "{n0} targets · {n1} known · {n2} errors",
+  "pages": [
+   "/candidates/"
   ]
  },
  "js.3o5vubwdr": {
@@ -8141,10 +8206,10 @@
    "/evidence/plates/"
   ]
  },
- "js.3tu868pwb6": {
-  "en": "TIC {n0} · flagged for review, open",
+ "js.3ub2we0j81": {
+  "en": "Teegarden's",
   "pages": [
-   "/evidence/"
+   "/explore/galaxy/"
   ]
  },
  "js.3wqc4ug47j": {
@@ -8159,10 +8224,10 @@
  "js.3x1hu0psa1": {
   "en": "Sentinel",
   "pages": [
+   "/",
    "/candidates/pi-men/dip-1/",
    "/candidates/pi-men/dip-2/",
-   "/candidates/pi-men/dip-3/",
-   "/candidates/pi-men/dip-4/"
+   "/candidates/pi-men/dip-3/"
   ]
  },
  "js.3z43dyauhf": {
@@ -8207,12 +8272,6 @@
    "/stars/kepler-40/",
    "/stars/pm-j13580-3141/",
    "/stars/tau-boo-a/"
-  ]
- },
- "js.45gidy2yfd": {
-  "en": "A floor: the metadata-only baseline uses no light curve at all, only the public TOI number, period, duration, ephemeris errors and epoch, with a logistic regression fitted on the tuning half. A method that does not beat it is not shown to read the light curves better than the catalogue's own metadata predicts dispositions.",
-  "pages": [
-   "/evidence/leaderboard/"
   ]
  },
  "js.46fy9vwje9": {
@@ -8262,12 +8321,6 @@
   "en": "End tour",
   "pages": [
    "/explore/mission-control/"
-  ]
- },
- "js.4b8yjime2n": {
-  "en": "Artist's impression: the rock-temperate look, for radius below {n0} R⊕, Teq {n1} to {n2} K: grey-brown rock and a thin neutral rim; no oceans, continents or clouds. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.4ccm3arc4r": {
@@ -8354,16 +8407,16 @@
    "/candidates/toi-270/dip-5/"
   ]
  },
+ "js.4sxy414d9c": {
+  "en": "sample",
+  "pages": [
+   "/evidence/"
+  ]
+ },
  "js.4t9xjok0e6": {
   "en": "Artist's impression · rock, irradiation not computable · No radius stored; mass {n0} M⊕ (exoplanet.eu) is below {n1} M⊕, so it is drawn as rock. Radius not measured: not to scale. Irradiation not computable: neutral colours. Composition is not measured. Source: exoplanet.eu, fetched {n2}-{n3}-{n4}. <a href=\"/docs/pictures/\">How the pictures are drawn ›</a>",
   "pages": [
    "/planets/psr-b1257-12-b/"
-  ]
- },
- "js.4u1k8v564x": {
-  "en": "A periodogram peak with Baluev FAP below {n0} and a semi-amplitude at least {n1}× the scatter of {n2}-minute bins, coherent: the same period (within {n3}%) is the best peak of each half of the light curve, and not within {n4}% of the longest period searched; a period shared by {n5} or more stars of a sector is systematic. A dip lasting {n6} of that period or more is a trough of it; so is a dip half the panel's weight called stellar variability.",
-  "pages": [
-   "/catalogue/everything-that-dims/"
   ]
  },
  "js.4v6zv9397m": {
@@ -8402,10 +8455,10 @@
    "/evidence/plates/"
   ]
  },
- "js.50cw8uea6": {
-  "en": "Held-out EBs: period within {n0}% of the catalogue's (an EB not flagged is a miss), {n1}% interval lower bound &gt;= {n2}",
+ "js.4xy18gdl7w": {
+  "en": "Catalogue updated <time datetime=\"2026-10-30T06:34:41+00:00\" title=\"2026-10-30T06:34:41+00:00\">{n0} Oct {n1}, {n2} UTC</time>.",
   "pages": [
-   "/evidence/stellar/"
+   "/candidates/"
   ]
  },
  "js.537weqdx92": {
@@ -8420,8 +8473,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.55ua359fuk": {
@@ -8444,8 +8497,26 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.5cuofh1x2k": {
+  "en": "not distinguishable from noise in this slice",
+  "pages": [
+   "/catalogue/everything-that-dims/"
+  ]
+ },
+ "js.5eim8yf4c": {
+  "en": "Lalande {n0}",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
+ "js.5j6snvvuuk": {
+  "en": "Layout",
+  "pages": [
+   "/explore/mission-control/"
   ]
  },
  "js.5k1okfy1y2": {
@@ -8455,12 +8526,6 @@
    "/candidates/hd-15337/dip-1/case-file/",
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-2/case-file/"
-  ]
- },
- "js.5limoap242": {
-  "en": "<b>ν₄ asymmetric bend (two)</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
   ]
  },
  "js.5m1n02zglj": {
@@ -8497,12 +8562,6 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
-  ]
- },
- "js.5tmt3hrss9": {
-  "en": "the catalogue's size-class boundary (gas giant {n0} R⊕ or more)",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.5x2cvaysve": {
@@ -8561,9 +8620,19 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.64gjc6ygey": {
+  "en": "Blocking starlight",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
  "js.65pxt8ib9c": {
   "en": "A super-Jupiter imaged around a binary star.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -8585,10 +8654,10 @@
  "js.6b1x1x93fi": {
   "en": "passed",
   "pages": [
+   "/candidates/",
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-3/",
-   "/candidates/pi-men/dip-1/",
-   "/candidates/pi-men/dip-2/"
+   "/candidates/pi-men/dip-1/"
   ]
  },
  "js.6c0cyre215": {
@@ -8609,19 +8678,13 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.6n8ndyybfz": {
-  "en": "A submission lists, for every star of its scope, the events its method detected on the real light curve and on the flux-inverted and block-scrambled controls (time, duration, period, its own pass verdict and flags). The leaderboard decides which events lie on the TOI's ephemeris (the benchmark's score_star and match_toi) and counts control false alarms itself. Self-reported outcomes are not accepted.",
-  "pages": [
-   "/evidence/leaderboard/"
-  ]
- },
  "js.6qolz1acje": {
   "en": "Source: as the caption states.",
   "pages": [
-   "/",
-   "/docs/pictures/",
    "/planets/51-peg-b/",
-   "/planets/barnard-s-star-b/"
+   "/planets/barnard-s-star-b/",
+   "/planets/bd-20-2457-b/",
+   "/planets/beta-pic-b/"
   ]
  },
  "js.6usro7yus": {
@@ -8700,6 +8763,12 @@
    "/stars/psr-b1257-12/"
   ]
  },
+ "js.78llqc69gh": {
+  "en": "Proxima Centauri b",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.78r4r7906c": {
   "en": "On Earth it is made almost only by marine life.",
   "pages": [
@@ -8752,12 +8821,6 @@
    "/evidence/report/toi-270/"
   ]
  },
- "js.7czfymv28r": {
-  "en": "an artist's impression from the look table; size to scale only when a radius is stored",
-  "pages": [
-   "/docs/pictures/"
-  ]
- },
  "js.7f3lidyc7s": {
   "en": "The transit, played back",
   "pages": [
@@ -8765,6 +8828,12 @@
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-3/",
    "/candidates/pi-men/dip-1/"
+  ]
+ },
+ "js.7i6tnzxffe": {
+  "en": "Wolf {n0} b",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.7nrzzc658q": {
@@ -8786,9 +8855,9 @@
   "en": "Jupiter twin at {n0} pc",
   "pages": [
    "/how-it-works/",
+   "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.7s6xro72rt": {
@@ -8833,10 +8902,10 @@
  "js.7x6xaiq9e3": {
   "en": "<b>Model from stored values.</b> A model drawn from stored numbers; not an image of the object.",
   "pages": [
-   "/",
    "/candidates/hd-15337/dip-1/",
    "/candidates/hd-15337/dip-2/",
-   "/candidates/hd-15337/dip-3/"
+   "/candidates/hd-15337/dip-3/",
+   "/candidates/pi-men/dip-1/"
   ]
  },
  "js.83t0fxq80": {
@@ -8849,6 +8918,12 @@
   "en": "<span class=\"word cand\">candidate</span><span class=\"word s-pass\">passed vetting</span><b class=\"fig\">1e. TOI-{n0}, dip {n1}.</b> <span class=\"sid mono\">stored id tess-4b369d3c6f09-{n2}.</span> Dip at BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Consensus interval BTJD {n7} to {n8}. Marked by {n9} of {n10} reviewers ({n11} of {n12} Sentinels, {n13} of {n14} Probes). Lies on a {n15}-day BLS period (t0 BTJD {n16}). Passed vetting. Archive: consistent with TOI-{n17} c: ΔP {n18}%, nearest epoch offset {n19} min. Archive values only. This page claims no detection.",
   "pages": [
    "/evidence/plates/toi-270/"
+  ]
+ },
+ "js.87fibqymmi": {
+  "en": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">pi Men c</a></b> · host <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> · P {n0} d · transiting",
+  "pages": [
+   "/candidates/radius-ratios/"
   ]
  },
  "js.886176wzks": {
@@ -8873,10 +8948,10 @@
  "js.8jhk98cyq1": {
   "en": "not stored",
   "pages": [
+   "/catalogue/",
    "/planets/51-peg-b/",
    "/planets/b-cen-ab-b/",
-   "/planets/barnard-s-star-b/",
-   "/planets/bd-20-2457-b/"
+   "/planets/barnard-s-star-b/"
   ]
  },
  "js.8kerd23auj": {
@@ -8921,13 +8996,6 @@
    "/planets/nu2-lup-d/"
   ]
  },
- "js.8v4t373n3v": {
-  "en": "<span class=\"tag cand\" title=\"candidate, unconfirmed\">candidate</span> mid-time {n0} BTJD",
-  "pages": [
-   "/candidates/",
-   "/explore/mission-control/"
-  ]
- },
  "js.8w8ak8xloi": {
   "en": "BTJD {n0} · {n1} h · {n2} ppm deep · SNR {n3} · P {n4} d ({n5} transits)",
   "pages": [
@@ -8938,12 +9006,6 @@
   "en": "Light curve of subject tess-291acb98cabe, scrolls sideways on a narrow screen",
   "pages": [
    "/evidence/plates/wasp-126/"
-  ]
- },
- "js.8wmiyv0zzd": {
-  "en": "Artist's impression: the rock-cold look, for radius below {n0} R⊕, Teq below {n1} K: pale grey rock, ice caps to latitude {n2}°, no atmosphere. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.8wxh5amfez": {
@@ -8959,13 +9021,25 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.905p7mrgke": {
+  "en": "Ross {n0} b",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.90yyx3asv8": {
   "en": "{n0} Psc c",
   "pages": [
    "/catalogue/"
+  ]
+ },
+ "js.92zm5mb6ic": {
+  "en": "entry",
+  "pages": [
+   "/candidates/"
   ]
  },
  "js.94m77w54ls": {
@@ -9054,12 +9128,6 @@
    "/evidence/plates/toi-270/"
   ]
  },
- "js.9g29b1hwza": {
-  "en": "JWST {s0}ing Exoplanet Community ERS Team",
-  "pages": [
-   "/how-it-works/transits/"
-  ]
- },
  "js.9ipi38tplb": {
   "en": "Star",
   "pages": [
@@ -9067,6 +9135,12 @@
    "/candidates/hd-15337/dip-2/",
    "/candidates/hd-15337/dip-3/",
    "/candidates/pi-men/dip-1/"
+  ]
+ },
+ "js.9j28j4tmyg": {
+  "en": "Barnard's star b",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.9je9lv8f9w": {
@@ -9114,6 +9188,12 @@
    "/planets/ogle-2012-blg-0026l-b/"
   ]
  },
+ "js.9xo5dpvs8f": {
+  "en": "{n0} Eri c",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.9yvkaakdvn": {
   "en": "No dossier stored for these rows in this run.",
   "pages": [
@@ -9132,6 +9212,7 @@
  "js.a0kta3s7na": {
   "en": "A sub-Earth-mass planet around Barnard's Star, one of the Sun's nearest neighbours.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -9151,14 +9232,6 @@
    "/planets/k2-58-b/",
    "/planets/kepler-292-d/",
    "/stars/k2-339/"
-  ]
- },
- "js.a5x17kv5tz": {
-  "en": "{n0} planets shown · transit {n1} · radial velocity {n2} · imaging {n3} · microlensing {n4}",
-  "pages": [
-   "/",
-   "/explore/",
-   "/how-it-works/population/"
   ]
  },
  "js.a6wp5hntda": {
@@ -9203,7 +9276,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.ai6mp83zpi": {
@@ -9213,12 +9286,6 @@
    "/candidates/pi-men/dip-6/",
    "/candidates/toi-270/dip-3/",
    "/candidates/toi-270/dip-6/"
-  ]
- },
- "js.ak7b9gcem6": {
-  "en": "high: FAP below 1e-{n0} and a semi-amplitude {n1}× the binned scatter or more; medium: semi-amplitude {n2}× or more; low: otherwise (or a dip by the panel's reason alone).",
-  "pages": [
-   "/catalogue/everything-that-dims/"
   ]
  },
  "js.am5y46ghie": {
@@ -9282,14 +9349,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
-  ]
- },
- "js.aztpkxejok": {
-  "en": "the catalogue's size-class boundary (Neptune-like {n0}–{n1} R⊕)",
-  "pages": [
-   "/docs/pictures/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.b2yn41cpri": {
@@ -9309,12 +9370,6 @@
  },
  "js.b81xuwkvhb": {
   "en": "Sweep <b>{n0}</b> stars · <b>{n1}</b> star-sectors · <b>{n2}</b> dips reviewed · <b>{n3}</b> entries: planet candidate {n4}, eclipsing binary {n5}, flare {n6}, pulsator or rotational variable {n7}, systematic {n8}, unclassified {n9}",
-  "pages": [
-   "/explore/mission-control/"
-  ]
- },
- "js.ba6i75z9zb": {
-  "en": "{n0} more in <a href=\"/candidates/\">the Explorer ›</a>",
   "pages": [
    "/explore/mission-control/"
   ]
@@ -9367,12 +9422,6 @@
    "/planets/toi-2977-ab/"
   ]
  },
- "js.bm1842qxn6": {
-  "en": "<b>The live feed's new signals are consistent with noise.</b> Noise alone should give about {n0} false new_candidate signals per {n1} targets reviewed, against {n2} per {n3} on the live feed. Under that earlier rule a new_candidate on the feed was more likely noise than a signal.",
-  "pages": [
-   "/evidence/"
-  ]
- },
  "js.bn4w24un71": {
   "en": "≤: an upper limit, from the stored range ({n0} to the value).",
   "pages": [
@@ -9403,10 +9452,10 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.buyt9rgrrs": {
-  "en": "Passed vetting, labelled a potential planet by half the panel's weight, not off its star's own periodic signal, and taken by no rule above. A candidate, unconfirmed.",
+ "js.bvhiyb18bf": {
+  "en": "small",
   "pages": [
-   "/catalogue/everything-that-dims/"
+   "/candidates/"
   ]
  },
  "js.bvrmk1ex4g": {
@@ -9421,7 +9470,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.c30puo64cs": {
@@ -9429,17 +9478,17 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.c8c4q46yd5": {
   "en": "Sky TESS had observed by {n0} Oct {n1}",
   "pages": [
+   "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.cb64xtn8rx": {
@@ -9451,10 +9500,12 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.cbv0lkfgz8": {
-  "en": "Open the {s0} case ›",
+ "js.cb7mp7y3o9": {
+  "en": "Stored id tess-1c554332c266-{n0}; no case file in this run",
   "pages": [
-   "/how-it-works/transits/"
+   "/candidates/",
+   "/candidates/radius-ratios/",
+   "/explore/mission-control/"
   ]
  },
  "js.cbz7kbs8l0": {
@@ -9468,8 +9519,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.cjlgm738p9": {
@@ -9502,10 +9553,10 @@
  "js.cr81vw3yu4": {
   "en": "Artist's impression",
   "pages": [
-   "/docs/pictures/",
    "/explore/mission-control/",
    "/planets/109-psc-b/",
-   "/planets/55-cnc-ae/"
+   "/planets/55-cnc-ae/",
+   "/planets/epic-201390927-b/"
   ]
  },
  "js.cv7qqmlqvk": {
@@ -9513,8 +9564,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.cw741ej04i": {
@@ -9568,6 +9619,15 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.d6qkqwv24q": {
+  "en": "{n0} Peg · {n1} K",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
  "js.d72yz71kxc": {
   "en": "Feed, sorted by snr descending. Every entry is a candidate, unconfirmed.",
   "pages": [
@@ -9588,20 +9648,14 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.db3tsr98n3": {
   "en": "Probe · not a person",
   "pages": [
    "/evidence/"
-  ]
- },
- "js.dcedelaavp": {
-  "en": "<b>ν₂ bend</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
   ]
  },
  "js.dcp2jzpjk": {
@@ -9617,7 +9671,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.de2cofak4o": {
@@ -9685,6 +9739,12 @@
    "/stars/hd-80606/"
   ]
  },
+ "js.dvqr7huse3": {
+  "en": "eps Ind Bb",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.dvwoo1e05r": {
   "en": "JWST NIRSpec PRISM transmission spectrum of WASP-{n0} b: {n1} binned points with error bars and the paper's best-fit model; the deepest point is at {n2} micrometres, the carbon dioxide band.",
   "pages": [
@@ -9725,6 +9785,7 @@
  "js.e0f9kn9mvn": {
   "en": "flagged for review",
   "pages": [
+   "/candidates/",
    "/evidence/plates/",
    "/evidence/plates/hd-15337/",
    "/evidence/plates/toi-270/"
@@ -9743,12 +9804,6 @@
   "en": "{n0} planet in exoplanet.eu · stored type G8V · class K from Teff (nearest K0V)",
   "pages": [
    "/stars/kepler-1917-a/"
-  ]
- },
- "js.e1q7qs4zzq": {
-  "en": "<b>ν₃ asymmetric stretch (three)</b> · {n0} µm · infrared-active · drawn ×{n1} · <a href=\"/how-it-works/atmospheres/\">the {n2} µm band in {s0} ›</a>",
-  "pages": [
-   "/how-it-works/atmospheres/"
   ]
  },
  "js.e2y47rpcbh": {
@@ -9984,6 +10039,12 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.f2v9rtmf85": {
+  "en": "Code",
+  "pages": [
+   "/evidence/runs/"
+  ]
+ },
  "js.f38k3bw5h7": {
   "en": "<b class=\"flabel\">Plate {n0}, panel i.</b> Stored flux of subject tess-38b5a559eee2 (BTJD {n1} to {n2}), relative flux − {n3} in ppm. Shaded bands are consensus intervals, lettered as in the captions; triangles are the BLS epochs. Right: folded on its stored BLS period {n4} d and t0 BTJD {n5}; the shaded band is the stored BLS duration ({n6} h). {n7} points outside the flux range are not drawn.",
   "pages": [
@@ -10004,14 +10065,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
-  ]
- },
- "js.f7l0xvrbgu": {
-  "en": "<b>N–N stretch, mostly</b> · {n0} µm · infrared-active · drawn ×{n1} · not drawn in {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.f7onc16rky": {
@@ -10025,8 +10080,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.f7w0lkgde9": {
@@ -10044,19 +10099,13 @@
    "/candidates/radius-ratios/"
   ]
  },
- "js.fbjnqepq3y": {
-  "en": "<b>Each class against its own null</b>, measured on the same {n0} star-sectors: what its rule finds where its signal cannot be. Dips: the flux turned upside down (a real dip becomes a bump; a real flare or pulsation maximum becomes a dip, so this null is not empty of real signals). Flares: downward events with the real dips masked. Variability: a red-noise copy of the star (AR({n1}) fitted to its bins) through the same rule, which needs the same best period (within {n2}%) in both halves of the light curve. Of its periodogram peaks not at a binary's period, {n3} are coherent; unclassified are {n4} longer than a half can test (coherence not tested), {n5} at the edge of the period grid and {n6} that wander between halves. Limits: it finds a {n7} ppm sinusoid in strong red noise only {n8}/{n9} times (scripts/variability_rule_check.py), and cannot test periods longer than about {n10} d in one sector. Kind is compared with kind, star-sector is the unit: the {n11}% interval is a paired bootstrap over star-sectors, beside McNemar's test. A class that does not pass both is not distinguishable from noise in this slice: Planet candidate, Eclipsing binary, Flare, Pulsator or rotational variable, Systematic. Of the {n12} flare-class brightenings, {n13} rise faster than they decay and {n14} the other way ({n15} equal); real flares rise fast, noise has no preferred direction.",
-  "pages": [
-   "/catalogue/everything-that-dims/"
-  ]
- },
  "js.fbyrtfuuuu": {
   "en": "pi Men",
   "pages": [
+   "/",
+   "/candidates/",
    "/evidence/plates/hd-15337/",
-   "/evidence/plates/toi-236/",
-   "/evidence/plates/toi-270/",
-   "/evidence/plates/wasp-126/"
+   "/evidence/plates/toi-236/"
   ]
  },
  "js.ffa7ye3nho": {
@@ -10068,10 +10117,10 @@
  "js.fftzrfdp8e": {
   "en": "<b>Artist's impression.</b> Not an observation: a look chosen from measured radius and irradiation.",
   "pages": [
-   "/",
-   "/docs/pictures/",
    "/planets/51-peg-b/",
-   "/planets/b-cen-ab-b/"
+   "/planets/b-cen-ab-b/",
+   "/planets/barnard-s-star-b/",
+   "/planets/bd-20-2457-b/"
   ]
  },
  "js.ffvv371yyn": {
@@ -10113,15 +10162,10 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.ftkov6vbui": {
-  "en": "A dip's silhouette (candidates, radius ratios)",
-  "pages": [
-   "/docs/pictures/"
-  ]
- },
  "js.fv6055pnqa": {
   "en": "period matches a known TOI",
   "pages": [
+   "/candidates/",
    "/explore/mission-control/"
   ]
  },
@@ -10175,10 +10219,11 @@
    "/candidates/"
   ]
  },
- "js.g1lwglngw7": {
-  "en": "Archive comparison: consistent with {s0}: ΔP {n0}%, timing offset from the validation note: {n1} min mean over {n2} epochs. Archive values only. This page claims no detection.",
+ "js.g2cghw07hl": {
+  "en": "Rotation",
   "pages": [
-   "/candidates/radius-ratios/"
+   "/docs/stellar/",
+   "/evidence/stellar/"
   ]
  },
  "js.g3w1e5hqnc": {
@@ -10192,6 +10237,15 @@
  },
  "js.g6lwhkyils": {
   "en": "JWST NIRSpec; ground high-resolution spectrographs near {n0} µm",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.g6m1eyxsdn": {
+  "en": "Molecule",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
@@ -10234,6 +10288,12 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.gc28rpxiwc": {
+  "en": "Luyten's Star",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.gc92hxaxrj": {
   "en": "Sentinel · Skeptic: {n0} span in this window, counted for this dip",
   "pages": [
@@ -10248,8 +10308,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.gcvd3aopju": {
@@ -10304,25 +10364,13 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
-  ]
- },
- "js.gf2k29wf2u": {
-  "en": "Flares, pulsations and public CHEOPS light curves (CHEOPS data under ESA's terms)",
-  "pages": [
-   "/editions/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.gfd1bpovje": {
   "en": "{n0} dips ({n1} rejected)",
   "pages": [
    "/evidence/report/toi-236/"
-  ]
- },
- "js.ggh3kiowd3": {
-  "en": "Artist's impression: the rock-hot look, for radius below {n0} R⊕, Teq {n1} K or more: dark rock with glowing day-side cracks. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.gizr3gwvyr": {
@@ -10349,7 +10397,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.gm2l5q12w9": {
@@ -10394,13 +10442,22 @@
    "/evidence/report/toi-270/"
   ]
  },
+ "js.gpznjdo7y3": {
+  "en": "pi Men · {n0} K",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
  "js.griyfzkg7e": {
   "en": "<b>ν₂ bend</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of Reading atmospheres",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.gsldb1oi8w": {
@@ -10436,6 +10493,7 @@
  "js.gzyxhbiu50": {
   "en": "A hot Jupiter with metals escaping from its upper atmosphere.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -10486,9 +10544,16 @@
    "/planets/k2-58-b/"
   ]
  },
+ "js.hfecdi2gfn": {
+  "en": "tau Cet g",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.hi7kyj244t": {
   "en": "Among the first planets found beyond the Sun, by timing a millisecond pulsar.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -10531,6 +10596,12 @@
   "en": "subject length",
   "pages": [
    "/evidence/runs/"
+  ]
+ },
+ "js.ht99op5pxg": {
+  "en": "NASA Exoplanet Archive, table ps (default_flag = {n0}), as recorded in docs/results/pi_men_validation.md by scripts/validate_known_planets.py (live archive query, commit 0f6dbdc). Only pi Men c is recorded there, so only pi Men c is listed; its transit mid-time was not recorded, so no per-epoch offset is computed here; the validation note's mean timing offset ({n1} min over {n2} of {n3} epochs) is cited instead. Replace it with the output of 'setuhq crossmatch runs/tess-pi-men-s1' when the archive answers., recorded <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4} Oct {n5}, {n6} UTC</time> (commit 0f6dbdc) in docs/results/pi_men_crossmatch.json; this run's own cross-match did not run (stored error, verbatim: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
+  "pages": [
+   "/candidates/radius-ratios/"
   ]
  },
  "js.hv6t0hplex": {
@@ -10587,6 +10658,7 @@
  "js.i4oze3hmf": {
   "en": "Earth-size, one of seven planets around TRAPPIST-{n0}.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -10626,10 +10698,10 @@
  "js.ihg2rdut1v": {
   "en": "{n0} ppm",
   "pages": [
+   "/candidates/",
    "/evidence/report/",
    "/evidence/report/hd-15337/",
-   "/evidence/report/toi-236/",
-   "/evidence/report/toi-270/"
+   "/evidence/report/toi-236/"
   ]
  },
  "js.ii3uc5z6f4": {
@@ -10660,13 +10732,13 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
- "js.ioyj9009pb": {
-  "en": "<a href=\"/assets/data/exoplanet_map.csv\" download=\"\">Download every plotted planet (CSV, {n0} rows)</a>, derived from the stored exoplanet.eu map.",
+ "js.iqpr6oou3c": {
+  "en": "Sector {n0}: {n1}-{n2}-{n3} to {n4}-{n5}-{n6} · {n7} catalogued stars with known planets in its fields",
   "pages": [
-   "/explore/galaxy/"
+   "/explore/tess-now/"
   ]
  },
  "js.ir7824frtx": {
@@ -10683,6 +10755,12 @@
    "/how-it-works/equations-of-life/"
   ]
  },
+ "js.it3yfm2mls": {
+  "en": "WASP-{n0}<br><span class=\"muted mono t-data\">tess-wasp-{n1}-s1</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+  "pages": [
+   "/evidence/runs/"
+  ]
+ },
  "js.it7w3r4cx": {
   "en": "Transits predicted in the stored light curve: {n0}; with a dip on them: {n1} ({n2} dips; {n3} flagged; mean offset {n4} min).",
   "pages": [
@@ -10694,8 +10772,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.iwzb9hrlb1": {
@@ -10793,8 +10871,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.jl92gnkaes": {
@@ -10870,6 +10948,12 @@
    "/explore/mission-control/"
   ]
  },
+ "js.k2p8kaiegs": {
+  "en": "HN Lib b",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.k3btdf81ur": {
   "en": "Eccentricity",
   "pages": [
@@ -10889,12 +10973,6 @@
   "en": "a significant dip at phase {n0} (vet.py); stellar density inconsistent with the star (transitfit.py) at P = {n1} d, under {n2} d",
   "pages": [
    "/catalogue/everything-that-dims/"
-  ]
- },
- "js.k73o4aajts": {
-  "en": "Four scenes. {s0} timing: two planets near a {n0} period ratio tug each other, so the inner planet's transits arrive early and late and an O−C diagram builds up. Secondary eclipse: the planet slips behind its star half an orbit after transit, a much smaller dip, drawn ten times deeper. Phase curve: a tidally locked planet shows more of its hot day side towards occultation, with its peak shifted by winds. Rossiter–McLaughlin: the planet covers the approaching and then the receding half of the rotating star, so the star's measured velocity swings during transit.",
-  "pages": [
-   "/how-it-works/transits/"
   ]
  },
  "js.k81gpwo3bo": {
@@ -11025,15 +11103,24 @@
  "js.ky3ihq9npw": {
   "en": "exoplanet.eu",
   "pages": [
-   "/how-it-works/equations-of-life/",
-   "/how-it-works/false-positives/",
-   "/how-it-works/molecules-and-life/"
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.ky7q8rogqc": {
   "en": "Recorded by scripts/validate_known_planets.py at commit 0f6dbdc from a live query of the archive's default row then. Its timing columns stand; its depth and duration ratios came from the box measure and are superseded by the fit above.",
   "pages": [
    "/evidence/report/"
+  ]
+ },
+ "js.l361fmbsuc": {
+  "en": "Stored id tess-eaab33b6b763-{n0}; no case file in this run",
+  "pages": [
+   "/candidates/",
+   "/candidates/radius-ratios/",
+   "/explore/mission-control/"
   ]
  },
  "js.l3je4rzt3v": {
@@ -11043,6 +11130,12 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.l5edhw6c5o": {
+  "en": "<span class=\"word cand\">candidate</span><span class=\"word s-known\">known TOI period</span><b class=\"fig\">7c. <span class=\"mono\">tess-7b97e468b60b-{n0}</span>.</b> Dip at BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Marked by {n5} reviewers (the catalogue does not store the panel size or the consensus interval). Lies on a {n6}-day BLS period with {n7} transits. Status: period matches a known TOI. Archive values only. This page claims no detection.",
+  "pages": [
+   "/evidence/plates/"
   ]
  },
  "js.l66csoi3se": {
@@ -11087,6 +11180,12 @@
    "/evidence/plates/toi-270/"
   ]
  },
+ "js.le6i0lhisz": {
+  "en": "Population",
+  "pages": [
+   "/how-it-works/population/"
+  ]
+ },
  "js.lg9kxjhees": {
   "en": "*Known false positive.* A TESS Object of Interest the TOI table dispositions as a false positive (FP): a {n0}% dip every {n1} days.",
   "pages": [
@@ -11100,6 +11199,12 @@
    "/candidates/toi-270/dip-6/"
   ]
  },
+ "js.lh8m0vnna6": {
+  "en": "Microlensing <span class=\"mono\" data-cmn=\"microlensing\">{n0}</span>",
+  "pages": [
+   "/catalogue/"
+  ]
+ },
  "js.lj02ml1du2": {
   "en": "Also known as GJ {n0}, V2500 Oph.",
   "pages": [
@@ -11110,24 +11215,6 @@
   "en": "i · whole subject tess-fa3483ce6f83",
   "pages": [
    "/evidence/plates/"
-  ]
- },
- "js.lmqc5cetjp": {
-  "en": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>System view",
-  "pages": [
-   "/explore/mission-control/"
-  ]
- },
- "js.loxdmylfqk": {
-  "en": "FP rejection: FP stars whose TOI dip the method did not offer as a clean candidate (recovered and not flagged). Reliability: the share of clean candidates on TOI dips that are CP/KP, on this sample's class mix, which is not the TOI catalogue's. All rates carry Wilson {n0}% intervals. TFOPWG dispositions are the reference, not ground truth for every TOI.",
-  "pages": [
-   "/evidence/leaderboard/"
-  ]
- },
- "js.lpvg4u78fv": {
-  "en": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Catalogue",
-  "pages": [
-   "/explore/mission-control/"
   ]
  },
  "js.lugtea4b2c": {
@@ -11199,6 +11286,12 @@
    "/candidates/pi-men/dip-5/"
   ]
  },
+ "js.m1r0pwwc2c": {
+  "en": "Eps Ind Ab",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.m3r8wny6k9": {
   "en": "Artist's impression of {s0}: a gas giant in the cold band, radius not measured ({n0} Earth masses), {n1} K.",
   "pages": [
@@ -11265,12 +11358,6 @@
    "/candidates/pi-men/dip-4/"
   ]
  },
- "js.me79v4kzjl": {
-  "en": "<b>The feed's stricter rule, pre-registered and measured again on this code.</b> The signal must now pass in both reviewed sectors with a FAP below {n0} over {n1} trials. On the held-out half, noise alone gives {n2} false signals per {n3} targets ({n4}% CI {n5}–{n6}), down from {n7} ({n8}–{n9}). That is still far above the {n10} new signals per {n11} targets the real light curves give, so the feed is still dominated by false alarms, and feed-level completeness fell from {n12}% to {n13}%. A feed admission is a lead for human or follow-up review, not a candidate of any confirmed status. Re-run on this code, the live feed's {n14} targets admit {n15} new signals.",
-  "pages": [
-   "/evidence/"
-  ]
- },
  "js.meqp2x3ji6": {
   "en": "exoplanet.eu lists it as \"Published in a refereed paper\", found by Imaging in {n0}; record updated {n1}-{n2}-{n3}. Also known as bet Pic b, HIP {n4} b.",
   "pages": [
@@ -11298,22 +11385,16 @@
    "/candidates/pi-men/dip-1/"
   ]
  },
- "js.mi2tgjiiqn": {
-  "en": "<b>Pro Follow-up</b> <span class=\"eddev\">in development</span>: a follow-up packet per candidate: an ExoFOP-style export, an ephemeris with its uncertainty, and when the target is observable from the customer's telescopes",
-  "pages": [
-   "/editions/"
-  ]
- },
  "js.mimntzdewz": {
   "en": "Methods: Toward and away ›",
   "pages": [
    "/planets/51-peg-b/"
   ]
  },
- "js.mk4mulcwso": {
-  "en": "<b>ν₃ asymmetric stretch</b> · {n0} µm · infrared-active · drawn ×{n1} · <a href=\"/how-it-works/atmospheres/\">the {n2} µm band in {s0} ›</a>",
+ "js.mkc9jxfgbz": {
+  "en": "dips marked",
   "pages": [
-   "/how-it-works/atmospheres/"
+   "/evidence/"
   ]
  },
  "js.mlrhcayzxr": {
@@ -11323,6 +11404,12 @@
    "/evidence/plates/hd-15337/",
    "/evidence/plates/toi-236/",
    "/evidence/plates/toi-270/"
+  ]
+ },
+ "js.mmnswive1w": {
+  "en": "<i aria-hidden=\"true\"></i>Flare",
+  "pages": [
+   "/catalogue/everything-that-dims/"
   ]
  },
  "js.mmu67oe6q3": {
@@ -11346,6 +11433,18 @@
    "/evidence/runs/"
   ]
  },
+ "js.mqj6wfaw6h": {
+  "en": "Ross {n0}",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
+ "js.mskkijl1h9": {
+  "en": "eps Ind A",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.msr7a8c18z": {
   "en": "Bands (µm)",
   "pages": [
@@ -11353,6 +11452,12 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.mtnvg3zz1c": {
+  "en": "HD {n0}<br><span class=\"muted mono t-data\">tess-hd-{n1}-s4</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+  "pages": [
+   "/evidence/runs/"
   ]
  },
  "js.mwjxjvzia1": {
@@ -11363,6 +11468,15 @@
  },
  "js.mwv88v3dkm": {
   "en": "δ_obs = δ_true · F_target/F_total [calc]: the depth of a small planet",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.mxcgzchu7z": {
+  "en": "YZ Cet b ›",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
@@ -11410,9 +11524,9 @@
   "en": "The star's small orbit also moves its position on the sky. Astrometry measures that tiny loop, which gives the orbit's tilt and so the planet's true mass. The signal grows with the planet's mass and orbit and shrinks with distance.",
   "pages": [
    "/how-it-works/",
+   "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.ngynhkw1zt": {
@@ -11440,6 +11554,12 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.njyq57a914": {
+  "en": "b Cen (AB)b",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.nk8m1nny5r": {
@@ -11472,6 +11592,12 @@
    "/catalogue/everything-that-dims/"
   ]
  },
+ "js.nrcbxny9wa": {
+  "en": "status",
+  "pages": [
+   "/candidates/"
+  ]
+ },
  "js.ns1wjk2bkh": {
   "en": "Open · candidate, unconfirmed",
   "pages": [
@@ -11481,6 +11607,15 @@
  },
  "js.nt7jpblt1w": {
   "en": "{n0} (A band), {n1}, {n2}; O₂–O₂ pairs at {n3} and {n4}; the {n5} µm vibrational fundamental is IR-silent",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.ntaw7nc8vt": {
+  "en": "Methods chapters",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
@@ -11506,6 +11641,12 @@
   "en": "Light curve of subject tess-38b5a559eee2, scrolls sideways on a narrow screen",
   "pages": [
    "/evidence/plates/hd-15337/"
+  ]
+ },
+ "js.ny28knfv0a": {
+  "en": "Reading atmospheres",
+  "pages": [
+   "/how-it-works/atmospheres/"
   ]
  },
  "js.ny97ialxx0": {
@@ -11572,6 +11713,12 @@
    "/planets/pi-men-c/"
   ]
  },
+ "js.o7m15kbsi5": {
+  "en": "pi Men<br><span class=\"muted mono t-data\">tess-pi-men-s1</span><br><span class=\"muted\">TIC Teff {n0} K</span>",
+  "pages": [
+   "/evidence/runs/"
+  ]
+ },
  "js.o99izf3z1n": {
   "en": "yes: TOI {n0}",
   "pages": [
@@ -11611,19 +11758,13 @@
    "/stars/proxima-centauri/"
   ]
  },
- "js.oqpbaoboao": {
-  "en": "<b>ν₁ symmetric stretch</b> · {n0} µm · infrared-active · drawn ×{n1} · not drawn in {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
-  ]
- },
  "js.osjdukhlhf": {
   "en": "<b>Starshade.</b> A flower-shaped screen flown far in front of a telescope (Cash {n0}). The Roman Starshade Rendezvous concept: {n1} m at {n2} km; HabEx: {n3} m at about {n4} km (HabEx Final Report).",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.osy93ejy9g": {
@@ -11650,10 +11791,10 @@
  "js.oupwk6przu": {
   "en": "System",
   "pages": [
+   "/explore/galaxy/",
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
+   "/how-it-works/atmospheres/"
   ]
  },
  "js.owcet74poz": {
@@ -11711,12 +11852,6 @@
    "/candidates/hd-15337/dip-1/case-file/"
   ]
  },
- "js.p4u8g14ecp": {
-  "en": "A brightening: {n0} or more consecutive points at least {n1}σ above a {n2}-day running median, peaking at {n3}σ or more, against both the star's scatter and the scatter within {n4} d; not on an instrumental cue.",
-  "pages": [
-   "/catalogue/everything-that-dims/"
-  ]
- },
  "js.p4vg8hpjdy": {
   "en": "Provenance",
   "pages": [
@@ -11759,6 +11894,7 @@
  "js.pa3oyjty9d": {
   "en": "One of a pair of giant planets found together by microlensing.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -11795,6 +11931,12 @@
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.pd6ew3rt19": {
+  "en": "<i style=\"background:#BF5AF2\"></i>Microlensing <span class=\"mono\">{n0}</span>",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.pf82vwrzvm": {
   "en": "potential planet {n0}",
   "pages": [
@@ -11813,19 +11955,13 @@
    "/stars/ogle-2015-blg-0051l/"
   ]
  },
- "js.piby2721pq": {
-  "en": "{n0} stars <span class=\"muted\">({n1} CP/KP, {n2} FP, {n3} FA)</span> <b>skewed toward FP</b>: the FP rows describe FP stars with {n4}-minute data only",
-  "pages": [
-   "/evidence/"
-  ]
- },
  "js.pj7ep1wjt3": {
   "en": "<b>N–N stretch, mostly</b> · {n0} µm · infrared-active · drawn ×{n1} · not drawn in Reading atmospheres",
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.plc8aabpyy": {
@@ -11843,25 +11979,41 @@
    "/evidence/plates/toi-270/"
   ]
  },
- "js.pn78q0jveb": {
-  "en": "End to end (DACE DRP arrays vs pycheops' DRP product): correlation &gt;= {n0} on every reference visit",
+ "js.plrluloqs0": {
+  "en": "pi Men c ›",
   "pages": [
-   "/evidence/stellar/"
+   "/explore/",
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/"
+  ]
+ },
+ "js.pm8m1jqibi": {
+  "en": "dips",
+  "pages": [
+   "/candidates/"
+  ]
+ },
+ "js.pn2cym3dnm": {
+  "en": "Play {n0}–{n1}",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.pnrbaagjqb": {
   "en": "A very massive companion to an evolved K giant star, found by radial velocity.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
  "js.ptbumfozit": {
   "en": "A planet transits only if its orbit is aligned closely enough with our line of sight. For random orientations the chance is about R★/a, the star's radius over the orbit's size (Winn {n0}). Close-in planets around large stars transit more often.",
   "pages": [
+   "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.q16nkjtwd0": {
@@ -11879,16 +12031,13 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.q8vb9a162v": {
-  "en": "SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium. It does not replace ESA's Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker or the Policies &amp; Procedures document; the official call and tools govern.",
+ "js.q3zvdlmvza": {
+  "en": "{n0} Peg b ›",
   "pages": [
-   "/docs/cheops-proposals/"
-  ]
- },
- "js.q95vajnmsz": {
-  "en": "TESS sectors {n0}–{n1}. Feed entry {n2} for this star (stored id <span class=\"mono\">tess-d64ea73e32ac-{n3}</span>). A TOI match compares a stored period with archive values. Archive values only. This page claims no detection.",
-  "pages": [
-   "/candidates/"
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.qad4ea3nk7": {
@@ -11910,6 +12059,21 @@
   "en": "exoplanet.eu lists it as \"Published in a refereed paper\", found by Radial Velocity, Astrometry in {n0}; record updated {n1}-{n2}-{n3}. Also known as HD {n4} b.",
   "pages": [
    "/planets/109-psc-b/"
+  ]
+ },
+ "js.qcyhotnwyb": {
+  "en": "Kepler-{n0} b ›",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.qegfutpzid": {
+  "en": "Barnard's Star",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.qezo9f8bhr": {
@@ -11940,6 +12104,12 @@
    "/candidates/pi-men/dip-2/",
    "/candidates/pi-men/dip-3/",
    "/candidates/pi-men/dip-4/"
+  ]
+ },
+ "js.qmvvg78xp": {
+  "en": "tau Cet f",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.qnq290e1mh": {
@@ -12023,10 +12193,10 @@
    "/evidence/plates/"
   ]
  },
- "js.r6b0ke5ddb": {
-  "en": "Measured data plotted as stored, with its source printed under it: SetuHQ's light curves, the catalogue's counts.",
+ "js.r7r5ll60un": {
+  "en": "marks",
   "pages": [
-   "/docs/pictures/"
+   "/evidence/"
   ]
  },
  "js.r8opy5qens": {
@@ -12054,6 +12224,15 @@
   "en": "Blind-coded subject plot for tess-01e315ee5ebf-{n0}: the light curve the reviewers marked, with no target name and no markers",
   "pages": [
    "/evidence/report/toi-236/"
+  ]
+ },
+ "js.rmcqh280p3": {
+  "en": "Chapters",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.roj6ijskxu": {
@@ -12105,12 +12284,6 @@
    "/evidence/"
   ]
  },
- "js.s66tykdpyv": {
-  "en": "Artist's impression: the rock-warm look, for radius below {n0} R⊕, Teq {n1} to {n2} K: bare dark rock with craters, no rim. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
-  ]
- },
  "js.s6e71sj3nh": {
   "en": "<b>{n0} of {n1} reviewers</b> marked it: {n2} of {n3} Sentinels, {n4} of {n5} Probes<small class=\"muted\" style=\"display:block;font-size:11px\"><span title=\"reviewer id volunteer-sensitive\">Probe · Sensitive</span>, <span title=\"reviewer id volunteer-typical\">Probe · Typical</span>, <span title=\"reviewer id volunteer-cautious\">Probe · Cautious</span></small>",
   "pages": [
@@ -12122,8 +12295,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.s80xbd596t": {
@@ -12144,6 +12317,7 @@
  "js.s8equpqjjs": {
   "en": "Among the hottest known planets: its dayside is near {n0} K.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -12172,9 +12346,9 @@
   "en": "rejected",
   "pages": [
    "/candidates/pi-men/dip-5/",
-   "/candidates/radius-ratios/",
    "/candidates/toi-236/dip-1/",
-   "/candidates/toi-236/dip-2/"
+   "/candidates/toi-236/dip-2/",
+   "/candidates/toi-236/dip-3/"
   ]
  },
  "js.sccalgxdkf": {
@@ -12264,10 +12438,10 @@
  "js.ssjong2hii": {
   "en": "Star colour from {n0} K to {n1} K, with each star marked at its temperature",
   "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
+   "/stars/51-peg/",
+   "/stars/barnard-s-star/",
+   "/stars/bd-20-2457/",
+   "/stars/beta-pic/"
   ]
  },
  "js.sstxat53o6": {
@@ -12292,6 +12466,12 @@
    "/planets/yz-cet-b/"
   ]
  },
+ "js.t39my5dsyh": {
+  "en": "Timing <span class=\"mono\" data-cmn=\"timing\">{n0}</span>",
+  "pages": [
+   "/catalogue/"
+  ]
+ },
  "js.t60qw9cha2": {
   "en": "Artist's impression · neptune, irradiation not computable · No radius stored; mass {n0} M⊕ (exoplanet.eu) is {n1} to {n2} M⊕, so it is drawn as a Neptune-like planet. Radius not measured: not to scale. Irradiation not computable: neutral colours. Composition is not measured. Source: exoplanet.eu, fetched {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">How the pictures are drawn ›</a>",
   "pages": [
@@ -12305,10 +12485,10 @@
    "/planets/psr-b1257-12-d/"
   ]
  },
- "js.tbam84ybce": {
-  "en": "the star's blackbody colour and limb darkening; granulation is texture",
+ "js.tchjn2r4y9": {
+  "en": "Systematic",
   "pages": [
-   "/docs/pictures/"
+   "/catalogue/everything-that-dims/"
   ]
  },
  "js.tcofm5lh0s": {
@@ -12323,7 +12503,7 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.tfatewsysq": {
@@ -12346,8 +12526,20 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.tjzc53y07u": {
+  "en": "Every search run, its errors as stored, and the configuration behind these pages.",
+  "pages": [
+   "/evidence/"
+  ]
+ },
+ "js.tmvyhylhnp": {
+  "en": "Pulsator or rotational variable",
+  "pages": [
+   "/catalogue/everything-that-dims/"
   ]
  },
  "js.toi5vq5s4d": {
@@ -12357,13 +12549,10 @@
    "/explore/mission-control/"
   ]
  },
- "js.trnbddk8fe": {
-  "en": "<b>{n0}</b> of the {n1} planets with a stored distance in exoplanet.eu were found by imaging (the first method listed). <a href=\"/explore/galaxy/?method=imaging\">Show them on the Galaxy map ›</a>",
+ "js.trg2sd40ob": {
+  "en": "config",
   "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/evidence/runs/"
   ]
  },
  "js.trzuzwcopk": {
@@ -12481,8 +12670,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.uffquh1b3r": {
@@ -12540,16 +12729,16 @@
    "/how-it-works/",
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.uupibuquwk": {
   "en": "candidate, unconfirmed",
   "pages": [
+   "/candidates/radius-ratios/",
    "/evidence/report/",
    "/evidence/report/hd-15337/",
-   "/evidence/report/toi-270/",
-   "/evidence/report/wasp-126/"
+   "/evidence/report/toi-270/"
   ]
  },
  "js.uw4ehyu5nb": {
@@ -12566,8 +12755,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.v3b7vkx8p8": {
@@ -12579,13 +12768,10 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.v5sdm14eih": {
-  "en": "<b>ν₁ symmetric stretch</b> · {n0} µm · infrared-active · drawn ×{n1} · <a href=\"/how-it-works/atmospheres/\">the {n2} µm band in Reading atmospheres ›</a>",
+ "js.v3cmzn255c": {
+  "en": "SetuHQ's configurations, and any method submitted, scored blind on the held-out half.",
   "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/evidence/"
   ]
  },
  "js.vbyk5xwnrv": {
@@ -12631,15 +12817,6 @@
    "/candidates/pi-men/dip-2/",
    "/candidates/pi-men/dip-3/",
    "/candidates/pi-men/dip-4/"
-  ]
- },
- "js.vm9rqq85fe": {
-  "en": "{s0} and c periods",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
   ]
  },
  "js.vmsox3cj56": {
@@ -12690,12 +12867,6 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.vtdvzcy89i": {
-  "en": "the runs' stored subjects and fits",
-  "pages": [
-   "/docs/pictures/"
-  ]
- },
  "js.vtnlfvcu18": {
   "en": "Gas giant (by mass; no radius stored)",
   "pages": [
@@ -12708,8 +12879,8 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.vvco0142vq": {
@@ -12721,7 +12892,6 @@
  "js.vvzqhy995y": {
   "en": "rejected by vetting, not a candidate",
   "pages": [
-   "/candidates/radius-ratios/",
    "/evidence/report/",
    "/evidence/report/toi-236/"
   ]
@@ -12735,6 +12905,7 @@
  "js.vwse3jbukr": {
   "en": "Barnard's star d",
   "pages": [
+   "/explore/galaxy/",
    "/planets/barnard-s-star-b/"
   ]
  },
@@ -12765,10 +12936,10 @@
    "/planets/toi-2977-ab/"
   ]
  },
- "js.w084p1vq7y": {
-  "en": "False alarms on inverted light curves at the feed's level (its full rule, FAP &lt; {n0})",
+ "js.w21u8mgncr": {
+  "en": "{n0} Eri e",
   "pages": [
-   "/evidence/"
+   "/explore/galaxy/"
   ]
  },
  "js.w635vpthea": {
@@ -12797,16 +12968,29 @@
  "js.w6ysoj0kj4": {
   "en": "Status",
   "pages": [
+   "/candidates/",
    "/evidence/report/",
    "/evidence/report/hd-15337/",
-   "/evidence/report/toi-236/",
-   "/evidence/report/toi-270/"
+   "/evidence/report/toi-236/"
   ]
  },
  "js.w7gt3tl988": {
   "en": "mid-time<span aria-hidden=\"true\"></span>",
   "pages": [
    "/candidates/"
+  ]
+ },
+ "js.w7mxe1jjf7": {
+  "en": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s5</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+  "pages": [
+   "/evidence/runs/"
+  ]
+ },
+ "js.w9mpw0gpum": {
+  "en": "pi Men ›",
+  "pages": [
+   "/explore/",
+   "/explore/mission-control/"
   ]
  },
  "js.wafeswebdi": {
@@ -12828,6 +13012,12 @@
    "/how-it-works/astrometry/",
    "/how-it-works/atmospheres/",
    "/how-it-works/direct-imaging/"
+  ]
+ },
+ "js.wcsqg4x5f": {
+  "en": "Astrometry <span class=\"mono\" data-cmn=\"astrometry\">{n0}</span>",
+  "pages": [
+   "/catalogue/"
   ]
  },
  "js.wge5c60gnw": {
@@ -12853,6 +13043,12 @@
   "en": "{n0} planets in exoplanet.eu · stored type M5.5V · class M from Teff (nearest M5V)",
   "pages": [
    "/stars/proxima-centauri/"
+  ]
+ },
+ "js.wldr50kzra": {
+  "en": "Luyten's Star d",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.wmpk5bhzf9": {
@@ -12923,6 +13119,7 @@
  "js.wvis3dlfyh": {
   "en": "Earth-size",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
   ]
  },
@@ -12936,12 +13133,6 @@
   "en": "confidence: high",
   "pages": [
    "/catalogue/everything-that-dims/"
-  ]
- },
- "js.x0f76panzs": {
-  "en": "Artist's impression: the neptune-cool look, for radius {n0} to {n1} R⊕, Teq below {n2} K: deep blue bands and a dark spot. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.x177ygvldr": {
@@ -13047,22 +13238,34 @@
    "/candidates/toi-270/dip-5/"
   ]
  },
+ "js.xi9v7ksndn": {
+  "en": "Wolf {n0} d",
+  "pages": [
+   "/explore/galaxy/"
+  ]
+ },
  "js.xjghoq101i": {
   "en": "log intensity stretch ({n0} to {n1}⁻⁶); planet at an illustrative {n2}⁻³; ideal monochromatic optics; mask and stop sizes illustrative",
   "pages": [
    "/how-it-works/direct-imaging/"
   ]
  },
+ "js.xll7y1ynl0": {
+  "en": "History and papers",
+  "pages": [
+   "/how-it-works/history/"
+  ]
+ },
+ "js.xngfkgukjg": {
+  "en": "Equations of life",
+  "pages": [
+   "/how-it-works/equations-of-life/"
+  ]
+ },
  "js.xp4h2ofbdl": {
   "en": "· TIC {n0} · signal with no period (one transit) · {n1} of the top dips",
   "pages": [
    "/candidates/"
-  ]
- },
- "js.xpg4i01qhj": {
-  "en": "Artist's impression: the envelope-warm look, for radius {n0} to {n1} R⊕, Teq {n2} to {n3} K: blue-grey haze. A still of the look, not of a particular planet.",
-  "pages": [
-   "/docs/pictures/"
   ]
  },
  "js.xpmiaupaaj": {
@@ -13076,14 +13279,20 @@
   "pages": [
    "/how-it-works/",
    "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.xtdd9w23g6": {
   "en": "{n0} dips ({n1} candidates, {n2} flagged) on {n3} star, one plate per star, from run tess-toi-{n4}-s5. Each dip that passed vetting is a candidate, unconfirmed, and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.",
   "pages": [
    "/evidence/plates/toi-270/"
+  ]
+ },
+ "js.xvtyf8wl1b": {
+  "en": "beta Pic b",
+  "pages": [
+   "/explore/galaxy/"
   ]
  },
  "js.xx7wry1e2": {
@@ -13114,10 +13323,10 @@
  "js.y26gzgnjuv": {
   "en": "Radius",
   "pages": [
+   "/docs/pictures/",
    "/planets/51-peg-b/",
    "/planets/b-cen-ab-b/",
-   "/planets/barnard-s-star-b/",
-   "/planets/bd-20-2457-b/"
+   "/planets/barnard-s-star-b/"
   ]
  },
  "js.y2d7yanbm0": {
@@ -13136,6 +13345,18 @@
    "/planets/beta-pic-b/",
    "/planets/hr-8799-b/",
    "/planets/hr-8799-c/"
+  ]
+ },
+ "js.y3xy9eepgg": {
+  "en": "null {n0} · excess {n1} ({n2}%: {n3} to {n4})",
+  "pages": [
+   "/catalogue/everything-that-dims/"
+  ]
+ },
+ "js.y9ptrwfobi": {
+  "en": "docs/discoveries/catalog.json",
+  "pages": [
+   "/evidence/runs/"
   ]
  },
  "js.yef3d1ma9p": {
@@ -13189,37 +13410,23 @@
    "/evidence/plates/"
   ]
  },
- "js.yob3llgolf": {
-  "en": "Planets by year and method",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/atmospheres/",
-   "/how-it-works/direct-imaging/"
-  ]
- },
  "js.yq2bbta4k2": {
   "en": "<span class=\"word cand\">candidate</span><span class=\"word s-known\">known TOI period</span><b class=\"fig\">4a. <span class=\"mono\">tess-308a47f84167-{n0}</span>.</b> Dip at BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Marked by {n5} reviewers (the catalogue does not store the panel size or the consensus interval). Lies on a {n6}-day BLS period with {n7} transits. Status: period matches a known TOI. Archive values only. This page claims no detection.",
   "pages": [
    "/evidence/plates/"
   ]
  },
- "js.yv746p7ayh": {
-  "en": "<b>bend (two, at right angles)</b> · {n0} µm · infrared-active · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
+ "js.yrhnt8o7w9": {
+  "en": "Molecules and life",
   "pages": [
-   "/how-it-works/atmospheres/"
+   "/how-it-works/molecules-and-life/"
   ]
  },
  "js.yw1cg6z6ba": {
   "en": "A small transiting planet whose low density first suggested a water-rich world.",
   "pages": [
+   "/explore/galaxy/",
    "/explore/mission-control/"
-  ]
- },
- "js.ywghy58587": {
-  "en": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">{s0}</a></b> · host <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s1}</a> · P {n0} d · transiting",
-  "pages": [
-   "/candidates/radius-ratios/"
   ]
  },
  "js.yx8blcjbm": {
@@ -13276,31 +13483,10 @@
    "/how-it-works/direct-imaging/"
   ]
  },
- "js.z7hoxivdkf": {
-  "en": "<b>ν stretch</b> · {n0} µm · infrared-silent (the dipole does not change) · drawn ×{n1} · beyond the {n2}–{n3} µm window of {s0}",
-  "pages": [
-   "/how-it-works/atmospheres/"
-  ]
- },
  "js.zae6h8rkk6": {
   "en": "A Sentinel: an AI model (Claude Code CLI (Claude, Anthropic) · default) that reads the plotted light curve and marks dips. It is not a person.",
   "pages": [
    "/evidence/"
-  ]
- },
- "js.zb00gkwd2w": {
-  "en": "<b>ν₁ symmetric stretch</b> · {n0} µm · infrared-active · drawn ×{n1} · <a href=\"/how-it-works/atmospheres/\">the {n2} µm band in {s0} ›</a>",
-  "pages": [
-   "/how-it-works/atmospheres/"
-  ]
- },
- "js.zbm91l3rcx": {
-  "en": "<b>ν₃ asymmetric stretch</b> · {n0} µm · infrared-active · drawn ×{n1} · <a href=\"/how-it-works/atmospheres/\">the {n2} µm band in Reading atmospheres ›</a>",
-  "pages": [
-   "/how-it-works/",
-   "/how-it-works/astrometry/",
-   "/how-it-works/direct-imaging/",
-   "/how-it-works/doppler-shift/"
   ]
  },
  "js.zdvz2hwho1": {
@@ -13324,10 +13510,19 @@
  "js.zhegcnbaps": {
   "en": "pi Men, dip {n0} ({n1} d)",
   "pages": [
+   "/candidates/",
    "/candidates/pi-men/dip-1/case-file/",
    "/candidates/pi-men/dip-2/case-file/",
-   "/candidates/pi-men/dip-3/case-file/",
-   "/candidates/pi-men/dip-4/case-file/"
+   "/candidates/pi-men/dip-3/case-file/"
+  ]
+ },
+ "js.zjf4m6pas4": {
+  "en": "tau Boo Ab ›",
+  "pages": [
+   "/how-it-works/",
+   "/how-it-works/astrometry/",
+   "/how-it-works/atmospheres/",
+   "/how-it-works/direct-imaging/"
   ]
  },
  "js.zknme5264y": {
@@ -13408,6 +13603,12 @@
    "/evidence/report/hd-15337/",
    "/evidence/report/toi-236/",
    "/evidence/report/toi-270/"
+  ]
+ },
+ "js.zzww829dur": {
+  "en": "large",
+  "pages": [
+   "/candidates/"
   ]
  }
 }

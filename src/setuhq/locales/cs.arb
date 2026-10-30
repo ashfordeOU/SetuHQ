@@ -2016,20 +2016,10 @@
   "x-review": "machine",
   "x-source": "acac77611f"
  },
- "js.103n82dja3r": "Katalog aktualizován <time datetime=\"2026-10-29T00:47:42+00:00\" title=\"2026-10-29T00:47:42+00:00\">{n0}. října {n1}, {n2} UTC</time>.",
- "@js.103n82dja3r": {
-  "x-review": "machine",
-  "x-source": "273b2777f8"
- },
  "js.104nn3vx4at": "Termín",
  "@js.104nn3vx4at": {
   "x-review": "machine",
   "x-source": "c6f3bfd456"
- },
- "js.106g3hdfp83": "TIC {n0} · zamítnutý při prověřování, není kandidát",
- "@js.106g3hdfp83": {
-  "x-review": "machine",
-  "x-source": "9772d14ea9"
  },
  "js.106t6pg6coj": "{n0} planeta v exoplanet.eu · třída G podle Teff (nejbližší G5V)",
  "@js.106t6pg6coj": {
@@ -2061,25 +2051,20 @@
   "x-review": "machine",
   "x-source": "ffa10fa912"
  },
+ "js.10so4x5ppkr": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">7a. <span class=\"mono\">tess-eaab33b6b763-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Označeno recenzenty, počet: {n5} (katalog neukládá velikost panelu ani interval konsenzu). Leží na BLS periodě {n6} d, počet tranzitů: {n7}. Stav: perioda odpovídá známému TOI. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
+ "@js.10so4x5ppkr": {
+  "x-review": "machine",
+  "x-source": "789c4ff542"
+ },
  "js.10v4vkxqjry": "Pro tuto hvězdu není v tomto sestavení uložena žádná světelná křivka: vyhledávací katalog uchovává pouze naměřené hodnoty, takže neexistuje křivka celého subjektu ani složený panel.",
  "@js.10v4vkxqjry": {
   "x-review": "machine",
   "x-source": "7fe57adca4"
  },
- "js.10vb2hszsy6": "<b>{n0}</b> z {n1} planet s uloženou vzdáleností v exoplanet.eu bylo nalezeno tranzitní metodou (první uvedená metoda). <a href=\"/explore/galaxy/?method=transit\">Zobrazit je na mapě Galaxie ›</a>",
- "@js.10vb2hszsy6": {
-  "x-review": "machine",
-  "x-source": "01ac9f0ca4"
- },
  "js.10vrj8m3wjv": "CO <span>Oxid uhelnatý</span>",
  "@js.10vrj8m3wjv": {
   "x-review": "machine",
   "x-source": "828d691c9b"
- },
- "js.10wj3xzpdgf": "Sluneční disk, {n0} K, v barvě černého tělesa s okrajovým ztemněním.",
- "@js.10wj3xzpdgf": {
-  "x-review": "machine",
-  "x-source": "ae27e2403d"
  },
  "js.10zmmlwb9xi": "<b>Lyotův koronograf.</b> Neprůhledný disk v ohniskové rovině blokuje jádro obrazu hvězdy. Neodstraní však světlo ohnuté na jeho okraji, které další čočka pošle na okraj znovu zobrazené pupily; Lyotova clona o něco menší než pupila tento okraj zachytí (Lyot {n0}). S diskem {n1} λ/D snižuje zúžení clony z {n2} % na {n3} % pupily hvězdné světlo ve vzdálenosti {n4} λ/D z {n5}×{n6}⁻⁵ na {n7}×{n8}⁻⁷ vrcholu hvězdy (bez koronografu: {n9}×{n10}⁻⁵) [výpočet], zatímco planeta daleko mimo disk si ponechá {n11} % svého světla, tedy plochu clony.",
  "@js.10zmmlwb9xi": {
@@ -2135,6 +2120,11 @@
  "@js.11kdzzmc5nu": {
   "x-review": "machine",
   "x-source": "184a6800cc"
+ },
+ "js.11n5kdywh3l": "Teff",
+ "@js.11n5kdywh3l": {
+  "x-review": "machine",
+  "x-source": "4b0fa3b17f"
  },
  "js.11n6gzp7din": "{n0} (určeno převážně apriorním rozdělením; chyba neuvedena, protože by jen opakovala chybu apriorního rozdělení)",
  "@js.11n6gzp7din": {
@@ -2196,6 +2186,11 @@
   "x-review": "machine",
   "x-source": "f8acf4d692"
  },
+ "js.122id4bsvl0": "<i style=\"background:#FFD60A\"></i>Astrometrie <span class=\"mono\">{n0}</span>",
+ "@js.122id4bsvl0": {
+  "x-review": "machine",
+  "x-source": "8013870b43"
+ },
  "js.122x1s0w9zz": "F_Q · F_HZ, logaritmická škála",
  "@js.122x1s0w9zz": {
   "x-review": "machine",
@@ -2216,10 +2211,10 @@
   "x-review": "machine",
   "x-source": "cc95c0003c"
  },
- "js.12cg9tt6w6b": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Kanál Sentinel",
- "@js.12cg9tt6w6b": {
+ "js.12cis2bjlup": "Rádio",
+ "@js.12cis2bjlup": {
   "x-review": "machine",
-  "x-source": "2d63ad7563"
+  "x-source": "2a7dfeb2f2"
  },
  "js.12ed4zztqr8": "Umělecká představa planety {s0}: planeta podobná Neptunu v teplém pásmu, {n0} poloměrů Země, {n1} K.",
  "@js.12ed4zztqr8": {
@@ -2241,15 +2236,20 @@
   "x-review": "machine",
   "x-source": "8ec36a17e7"
  },
- "js.12lth0d2p34": "V roce {n0} nalezli Wolszczan a Frail planety kolem milisekundového pulsaru PSR B1257+{n1} podle pravidelného kolísání časů příchodu jeho pulzů (Wolszczan &amp; Frail {n2}): planety pulsarem pohybují a doba šíření světla se mění o milisekundy. Jde o rádiové časování, nikoli o rádiové záření z planety. <a href=\"/explore/galaxy/?tour=13\">Jeho karta v prohlídce Galaxie ›</a>",
- "@js.12lth0d2p34": {
-  "x-review": "machine",
-  "x-source": "a919cbb3a4"
- },
  "js.12m26xazjm": "prošel prověřováním; {n0} % váhy panelu označilo subjekt jako potenciální planetu; na periodickém signálu: tranzitů {n1}, P = {n2} d",
  "@js.12m26xazjm": {
   "x-review": "machine",
   "x-source": "8ec885602b"
+ },
+ "js.12ooi6yhl0h": "Kepler-{n0} b",
+ "@js.12ooi6yhl0h": {
+  "x-review": "machine",
+  "x-source": "5d97744685"
+ },
+ "js.12q7to7nkw0": "K pozorovateli a od něj",
+ "@js.12q7to7nkw0": {
+  "x-review": "machine",
+  "x-source": "982502489b"
  },
  "js.12ujqir6o8g": "Koronograf JWST MIRI",
  "@js.12ujqir6o8g": {
@@ -2260,6 +2260,11 @@
  "@js.12vi4vfunn8": {
   "x-review": "machine",
   "x-source": "05ed847784"
+ },
+ "js.12w6m38pgra": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">7b. <span class=\"mono\">tess-1c554332c266-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Označeno recenzenty, počet: {n5} (katalog neukládá velikost panelu ani interval konsenzu). Leží na BLS periodě {n6} d, počet tranzitů: {n7}. Stav: perioda odpovídá známému TOI. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
+ "@js.12w6m38pgra": {
+  "x-review": "machine",
+  "x-source": "961ae19d5c"
  },
  "js.12y2sroyczu": "{n0} základní",
  "@js.12y2sroyczu": {
@@ -2296,11 +2301,6 @@
   "x-review": "machine",
   "x-source": "bff9d47f59"
  },
- "js.136ul906qph": "Zdroj: uložený běh SetuHQ runs/tess-pi-men-s1 (TESS sektor {n0}, SPOC {n1}minutový tok PDCSAP, TIC {n2}; config sha256 585955d5e7a1…): {n3} uložených bodů, každý subjekt normalizován na svůj medián a binován po {n4} minutách.",
- "@js.136ul906qph": {
-  "x-review": "machine",
-  "x-source": "af8431ab78"
- },
  "js.138zpxk17ru": "f_i, logaritmická škála",
  "@js.138zpxk17ru": {
   "x-review": "machine",
@@ -2316,11 +2316,6 @@
   "x-review": "machine",
   "x-source": "e39c1a07d7"
  },
- "js.13ac253fetk": "<b>{n0}</b> z {n1} planet s uloženou vzdáleností v exoplanet.eu bylo nalezeno astrometrií (první uvedená metoda). <a href=\"/explore/galaxy/?method=astrometry\">Zobrazit je na mapě Galaxie ›</a>",
- "@js.13ac253fetk": {
-  "x-review": "machine",
-  "x-source": "dc5877cdd7"
- },
  "js.13cdu73b6uc": "Fotolýza CO₂ u některých hvězd nebo masivní únik vodíku po ztrátě vody.",
  "@js.13cdu73b6uc": {
   "x-review": "machine",
@@ -2335,6 +2330,11 @@
  "@js.13ffhncz0ep": {
   "x-review": "machine",
   "x-source": "7b27994bc4"
+ },
+ "js.13gocj2fnda": "docs/results/reviewer_weights_full_panel.json",
+ "@js.13gocj2fnda": {
+  "x-review": "machine",
+  "x-source": "5134ba8327"
  },
  "js.13i1elxloqt": "pi Men c: na výškovou škálu, bohatá na H₂",
  "@js.13i1elxloqt": {
@@ -2355,6 +2355,11 @@
  "@js.13kikmj1q17": {
   "x-review": "machine",
   "x-source": "f5cca1ccc1"
+ },
+ "js.13lcq3b40tl": "Ilustrace",
+ "@js.13lcq3b40tl": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
  },
  "js.13mufrch5ly": "tess-38b5a559eee2-{n0}",
  "@js.13mufrch5ly": {
@@ -2381,15 +2386,20 @@
   "x-review": "machine",
   "x-source": "118618889c"
  },
+ "js.13swdwmmbmi": "Běhy a konfigurace ›",
+ "@js.13swdwmmbmi": {
+  "x-review": "machine",
+  "x-source": "c610f2888d"
+ },
  "js.13t7ixpw2ky": "Nejlepší kandidáti",
  "@js.13t7ixpw2ky": {
   "x-review": "machine",
   "x-source": "7021bb9b5f"
  },
- "js.13vqj4f8hh6": "Při instrumentálním signálu: okraj subjektu; odlehčení momentu hybnosti, příznak rozptýleného světla nebo příznak zaměření či ručního vyloučení do {n0} d; mezera v datech delší než {n1} d do {n2} d; nebo polovina váhy panelu jej označuje za instrumentální.",
- "@js.13vqj4f8hh6": {
+ "js.13x58b3mwwa": "Wolf {n0} c",
+ "@js.13x58b3mwwa": {
   "x-review": "machine",
-  "x-source": "0495534488"
+  "x-source": "560cd4bbe1"
  },
  "js.13xevrqzvu7": "F_S (detekovatelný plyn)",
  "@js.13xevrqzvu7": {
@@ -2410,6 +2420,11 @@
  "@js.1473r6pfqi4": {
   "x-review": "machine",
   "x-source": "b2990754ad"
+ },
+ "js.14cls39i1sb": "Luhman {n0} B",
+ "@js.14cls39i1sb": {
+  "x-review": "machine",
+  "x-source": "f04427416b"
  },
  "js.14ct4jjljtx": "Předchozí zastávka",
  "@js.14ct4jjljtx": {
@@ -2440,6 +2455,16 @@
  "@js.14fe8ebzk21": {
   "x-review": "machine",
   "x-source": "365e781739"
+ },
+ "js.14huikxe5ha": "Luyten's Star e",
+ "@js.14huikxe5ha": {
+  "x-review": "machine",
+  "x-source": "5a24593e14"
+ },
+ "js.14isgauchsm": "YZ Cet",
+ "@js.14isgauchsm": {
+  "x-review": "machine",
+  "x-source": "f80e6fd49c"
  },
  "js.14iuxy783ms": "Jiná označení: EQ Peg A, BD+{n0} {n1} A, LMP {n2} A, WIR {n3} A.",
  "@js.14iuxy783ms": {
@@ -2591,6 +2616,16 @@
   "x-review": "machine",
   "x-source": "dd7d34d846"
  },
+ "js.15phwu441vo": "Lalande {n0} c",
+ "@js.15phwu441vo": {
+  "x-review": "machine",
+  "x-source": "5aa41e4960"
+ },
+ "js.15pp5ycbnhi": "Přebytek ({n0} %)",
+ "@js.15pp5ycbnhi": {
+  "x-review": "machine",
+  "x-source": "8cd023e1a1"
+ },
  "js.15r06e4vt70": "Běh tess-hd-{n0}-s4 · poklesy: {n1} (kandidáti: {n2}, označené: {n3}) · subjekty: {n4}.<span class=\"printonly\"> Každý kandidát na této tabuli: kandidát, nepotvrzený.</span>",
  "@js.15r06e4vt70": {
   "x-review": "machine",
@@ -2661,6 +2696,11 @@
   "x-review": "machine",
   "x-source": "3b661f9791"
  },
+ "js.16h8d5mlpjp": "Probes",
+ "@js.16h8d5mlpjp": {
+  "x-review": "machine",
+  "x-source": "8f6e567898"
+ },
  "js.16hqbj09o4u": "siločáry, kužel a dráha nejsou v měřítku; časy vzplanutí jsou ilustrativní; mezní frekvence je vypočtená",
  "@js.16hqbj09o4u": {
   "x-review": "machine",
@@ -2675,11 +2715,6 @@
  "@js.16mxiyd8s0l": {
   "x-review": "machine",
   "x-source": "e223d8ec1e"
- },
- "js.16qlwwljm69": "<b>Pro Sweeps</b> <span class=\"eddev\">ve vývoji</span>: hostovaná prohledávání sektorů nebo seznamů cílů s vlastním klíčem zákazníka k poskytovateli AI; výsledky se vracejí jako otevřené balíčky příspěvků",
- "@js.16qlwwljm69": {
-  "x-review": "machine",
-  "x-source": "31d3ac206f"
  },
  "js.16r0kn8gjyr": "Přehlídka, jejíž data SetuHQ čte.",
  "@js.16r0kn8gjyr": {
@@ -2696,11 +2731,6 @@
   "x-review": "machine",
   "x-source": "b7b7f73a1e"
  },
- "js.16vo26f9hfu": "Stejný vstup jako pycheops: při každé referenční návštěvě se naše dekorelace shoduje s dekorelací pycheops na &lt; {n0} ppm rms, nebo dosahuje nižšího rms na stejných bodech a členech (zmírněno po v1)",
- "@js.16vo26f9hfu": {
-  "x-review": "machine",
-  "x-source": "c88247e554"
- },
  "js.16x61d2zia4": "<span class=\"word s-rej\">zamítnutý prověrkou</span><b class=\"fig\">1d. TOI-{n0}, pokles {n1}.</b> <span class=\"sid mono\">uložené id tess-01e315ee5ebf-{n2}.</span> Pokles v BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsenzuální interval BTJD {n7} až {n8}. Vyznačilo {n9} z {n10} posuzovatelů ({n11} z {n12} Sentinels, {n13} z {n14} Probes). Leží na BLS periodě {n15} dní (t0 BTJD {n16}). Zamítnuto prověrkou (sekundární zákryt, sekundární v libovolné fázi). Archiv: v rámci tolerance žádná archivní planeta. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.16x61d2zia4": {
   "x-review": "machine",
@@ -2710,11 +2740,6 @@
  "@js.16xd4uxov7b": {
   "x-review": "machine",
   "x-source": "6e2db4884e"
- },
- "js.16xkma5n6o5": "Kontroly podmiňují pořadí a nevstupují do J: řazeny jsou jen odložené záznamy s oběma kontrolními seznamy u každé prohledávané hvězdy, ostatní jsou uvedeny bez pořadí. Kontrolní seznamy jsou vlastní zprávou metody; žebříček je bez světelných křivek nemůže přepočítat. Podvzorek Sentinel se nikdy neřadí.",
- "@js.16xkma5n6o5": {
-  "x-review": "machine",
-  "x-source": "698a7fa611"
  },
  "js.16yau0dec1n": "Vzniká všude běžnou chemií a odplyňováním. Není to biosignatura.",
  "@js.16yau0dec1n": {
@@ -2736,11 +2761,6 @@
   "x-review": "machine",
   "x-source": "00d60e31a4"
  },
- "js.170ttkobv": "<b>Ilustrace.</b> Vysvětluje myšlenku; nejde o data.",
- "@js.170ttkobv": {
-  "x-review": "machine",
-  "x-source": "f84dea2704"
- },
  "js.1752ocxoxow": "poměr",
  "@js.1752ocxoxow": {
   "x-review": "machine",
@@ -2750,6 +2770,11 @@
  "@js.175a50uaz7u": {
   "x-review": "machine",
   "x-source": "05e19aa7b7"
+ },
+ "js.176wwpyjrg6": "eps Eridani b",
+ "@js.176wwpyjrg6": {
+  "x-review": "machine",
+  "x-source": "d935a49c88"
  },
  "js.17hw2mxavcy": "Pravděpodobnost, že dráha typu Země–Slunce vykazuje tranzit",
  "@js.17hw2mxavcy": {
@@ -2771,10 +2796,10 @@
   "x-review": "machine",
   "x-source": "4a850645ed"
  },
- "js.17k76okut7k": "Umělecká představa: vzhled teplého obra, pro poloměr {n0} R⊕ nebo více, Teq {n1} až {n2} K: bílé oblačné pásy. Snímek vzhledu, nikoli konkrétní planety.",
- "@js.17k76okut7k": {
+ "js.17ntl740ako": "YZ Cet c",
+ "@js.17ntl740ako": {
   "x-review": "machine",
-  "x-source": "6486ceb3f7"
+  "x-source": "5120e910b2"
  },
  "js.17nxghh8cwl": "Každý pokles každého ukázkového běhu, seskupený podle hvězdy a číslovaný v časovém pořadí, s výsledkem prověrky. Pokles, který prověrkou prošel, je kandidát, nepotvrzený.",
  "@js.17nxghh8cwl": {
@@ -2801,6 +2826,11 @@
   "x-review": "machine",
   "x-source": "4a10cd9947"
  },
+ "js.17wumn3r8ed": "exoplanet.eu jej uvádí jako „Publikováno v recenzovaném článku“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako 2MASS J19021775+{n4} b, K00377.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J190217.77+{n8} b.",
+ "@js.17wumn3r8ed": {
+  "x-review": "machine",
+  "x-source": "ca1a10bec8"
+ },
  "js.17y75sycukx": "Zarka {n0}, Planet. Space Sci. {n1}, {n2} (plazmové interakce hvězda–planeta a rádiové vyzařování)",
  "@js.17y75sycukx": {
   "x-review": "machine",
@@ -2820,6 +2850,16 @@
  "@js.1804ck1q8jq": {
   "x-review": "machine",
   "x-source": "a2aac83c9e"
+ },
+ "js.182x5hpzt5z": "S tisíci planet začínají být patrné vzorce. Dva z nich: údolí ve velikostech malých planet a zóna kolem každé hvězdy, kde by mohla vydržet kapalná voda.",
+ "@js.182x5hpzt5z": {
+  "x-review": "machine",
+  "x-source": "b7312318e0"
+ },
+ "js.183wr165iky": "Uložené id tess-7b97e468b60b-{n0}; v tomto běhu není soubor případu",
+ "@js.183wr165iky": {
+  "x-review": "machine",
+  "x-source": "2cfabb7955"
  },
  "js.184alwhvm3u": "≈ {n0} dní",
  "@js.184alwhvm3u": {
@@ -2861,6 +2901,11 @@
   "x-review": "machine",
   "x-source": "dece0e17ca"
  },
+ "js.18lwk9i51zo": "tau Cet h",
+ "@js.18lwk9i51zo": {
+  "x-review": "machine",
+  "x-source": "f7da4e8eac"
+ },
  "js.18n6es5ok3o": "značky (BTJD)",
  "@js.18n6es5ok3o": {
   "x-review": "machine",
@@ -2881,15 +2926,15 @@
   "x-review": "machine",
   "x-source": "9ca7ead3fe"
  },
- "js.18o5x6sbdjj": "<b>{n0}</b> z {n1} planet s uloženou vzdáleností v exoplanet.eu bylo nalezeno mikročočkováním (první uvedená metoda). <a href=\"/explore/galaxy/?method=microlensing\">Zobrazit je na mapě Galaxie ›</a>",
- "@js.18o5x6sbdjj": {
-  "x-review": "machine",
-  "x-source": "75b3704ae2"
- },
  "js.18oql4qf149": "poměr (volný / Huang)",
  "@js.18oql4qf149": {
   "x-review": "machine",
   "x-source": "a32de90fca"
+ },
+ "js.18otqbloli3": "Luyten's Star c",
+ "@js.18otqbloli3": {
+  "x-review": "machine",
+  "x-source": "de5d475f55"
  },
  "js.18qifo210uh": "SetuHQ nepozoruje v rádiovém oboru. Scéna je ilustrace: siločáry, kužel a dráha nejsou v měřítku a časy vzplanutí jsou ilustrativní; vypočtena je pouze mezní frekvence.",
  "@js.18qifo210uh": {
@@ -2936,6 +2981,11 @@
   "x-review": "machine",
   "x-source": "c11a942411"
  },
+ "js.196px5ez5bg": "Lalande {n0} b",
+ "@js.196px5ez5bg": {
+  "x-review": "machine",
+  "x-source": "9228522611"
+ },
  "js.197t86p2mo2": "feed · perioda odpovídá známému TOI · P {n0} d · {n1} tranzitů",
  "@js.197t86p2mo2": {
   "x-review": "machine",
@@ -2945,11 +2995,6 @@
  "@js.199k9vutkk7": {
   "x-review": "machine",
   "x-source": "14d5771087"
- },
- "js.19egy1xdd4z": "Molekula s N atomy má 3N − {n0} způsobů vibrace (3N − {n1}, je-li lineární): voda jich má tři, oxid uhličitý čtyři (jeho ohyb se vyskytuje dvakrát, v pravém úhlu), metan devět. Mód pohlcuje infračervené světlo, jen pokud mění dipól molekuly. Proto jsou symetrická valenční vibrace CO₂ ({n2} µm), valenční vibrace O₂ a dvě ze čtyř základních vibrací metanu v infračerveném oboru neaktivní. Pásy, které módy vytvářejí, jsou ty, které vyznačuje kapitola {s0}: dvě valenční vibrace vody při {n3} a {n4} µm tvoří její pás {n5} µm, ν₃ metanu pás {n6} µm, asymetrická valenční vibrace CO₂ pás {n7} µm a valenční vibrace CO pás {n8} µm.",
- "@js.19egy1xdd4z": {
-  "x-review": "machine",
-  "x-source": "34a40a6e3c"
  },
  "js.19gww8mixuh": "Jak funguje astrometrie ›",
  "@js.19gww8mixuh": {
@@ -3026,6 +3071,11 @@
   "x-review": "machine",
   "x-source": "7cb381fdb4"
  },
+ "js.1a5z9qhmjgc": "Sentinels",
+ "@js.1a5z9qhmjgc": {
+  "x-review": "machine",
+  "x-source": "2e1e6f1301"
+ },
  "js.1a6l9fjw5he": "Planeta: umělecká představa ›",
  "@js.1a6l9fjw5he": {
   "x-review": "machine",
@@ -3080,6 +3130,11 @@
  "@js.1al74ewy2g6": {
   "x-review": "machine",
   "x-source": "df55237fb1"
+ },
+ "js.1aol2kz2k2l": "Tranzit",
+ "@js.1aol2kz2k2l": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
  },
  "js.1aqv49cd0kk": "označený",
  "@js.1aqv49cd0kk": {
@@ -3191,11 +3246,6 @@
   "x-review": "machine",
   "x-source": "c9a6bca81c"
  },
- "js.1bhkarus91o": "<b>Valenční vibrace ν</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · <a href=\"/how-it-works/atmospheres/\">pás {n2} µm v {s0} ›</a>",
- "@js.1bhkarus91o": {
-  "x-review": "machine",
-  "x-source": "d76ad8b3b9"
- },
  "js.1bj34kz5aki": "Zpráva o běhu: HD {n0}",
  "@js.1bj34kz5aki": {
   "x-review": "machine",
@@ -3251,6 +3301,11 @@
   "x-review": "machine",
   "x-source": "734f2ee779"
  },
+ "js.1c5e6ri6127": "Wolf {n0}",
+ "@js.1c5e6ri6127": {
+  "x-review": "machine",
+  "x-source": "40c0e1f8f4"
+ },
  "js.1c7794vgcfx": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">4h. <span class=\"mono\">tess-3b0eb3c81ad6-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Označilo {n5} posuzovatelů (katalog neukládá velikost panelu ani interval shody). Leží na BLS periodě {n6} dní s {n7} tranzity. Stav: perioda odpovídá známému TOI. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.1c7794vgcfx": {
   "x-review": "machine",
@@ -3281,11 +3336,6 @@
   "x-review": "machine",
   "x-source": "dcd3b3c030"
  },
- "js.1cj5f6isk29": "<b>Deformační vibrace ν₂ (dvě, navzájem kolmé)</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · mimo okno {n2}–{n3} µm stránky {s0}",
- "@js.1cj5f6isk29": {
-  "x-review": "machine",
-  "x-source": "fffacfe81d"
- },
  "js.1ckbr2brf2r": "Uložené id tess-bc9f59e5c3af-{n0}; v tomto běhu žádný spis",
  "@js.1ckbr2brf2r": {
   "x-review": "machine",
@@ -3295,6 +3345,11 @@
  "@js.1clmexejrlr": {
   "x-review": "machine",
   "x-source": "8a07e9e968"
+ },
+ "js.1cmc1ajakjd": "eps Ind B",
+ "@js.1cmc1ajakjd": {
+  "x-review": "machine",
+  "x-source": "a7c8e06a1d"
  },
  "js.1coc893jlc0": "P = {n0} r, e = {n1}, nominální hmotnosti IAU [výpočet]",
  "@js.1coc893jlc0": {
@@ -3320,11 +3375,6 @@
  "@js.1cx2mlrh2q7": {
   "x-review": "machine",
   "x-source": "11a4a60b51"
- },
- "js.1cy89xikthl": "<b>Měřeno na uvedeném srovnávacím souboru, nejde o objevy.</b> {n0} potvrzených nebo známých planet (CP/KP), {n1} falešně pozitivních a {n2} planých poplachů z tabulky TOI (staženo {n3}-{n4}-{n5}, seed {n6}), jeden TOI na hvězdu; zobrazena odložená polovina. Panel: tři Probes (deterministické detektory) s jejich zmrazenými kalibrovanými vahami; BLS přes celý sektor; prověření; fit s okrajovým ztemněním; tabulka na úrovni feedu přidává FAP feedu ({n7} pokusů).",
- "@js.1cy89xikthl": {
-  "x-review": "machine",
-  "x-source": "2db2bd3746"
  },
  "js.1d2fjcit5ne": "Rodina",
  "@js.1d2fjcit5ne": {
@@ -3371,11 +3421,6 @@
   "x-review": "machine",
   "x-source": "04a1d0a0c8"
  },
- "js.1dcsl4f0wrb": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s0}</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">běh tess-pi-men-s1 · {n1} záznamů</span>",
- "@js.1dcsl4f0wrb": {
-  "x-review": "machine",
-  "x-source": "d3862be740"
- },
  "js.1dd353vmae5": "Planeta velikosti Země v obyvatelné zóně své hvězdy.",
  "@js.1dd353vmae5": {
   "x-review": "machine",
@@ -3421,6 +3466,11 @@
   "x-review": "machine",
   "x-source": "96b82055fc"
  },
+ "js.1dqxh7u7wiv": "Dvě scény. Polární záře planety: siločáry magnetického pole planety s emisí vyzařovanou v dutém kuželu z jejího pólu; když kužel přejde přes pozorovatele, ukáže se v dynamickém spektru níže záblesk, sahající až k cyklotronové frekvenci dané polem. Interakce hvězda–planeta: planeta obíhá uvnitř magnetického pole své hvězdy, magnetická trubice ji spojuje s hvězdou a emise vychází z patního bodu na hvězdě. Posuvník pole nastavuje cyklotronovou mezní frekvenci, počítanou jako {n0} MHz na gauss.",
+ "@js.1dqxh7u7wiv": {
+  "x-review": "machine",
+  "x-source": "36f58b562c"
+ },
  "js.1dun7yzi7jq": "Barnard's star c",
  "@js.1dun7yzi7jq": {
   "x-review": "machine",
@@ -3441,15 +3491,15 @@
   "x-review": "machine",
   "x-source": "8a0d9e2efe"
  },
- "js.1e0thu83q1m": "<b>ν₁ symetrická valenční vibrace</b> · {n0} µm · v infračervené oblasti neaktivní (dipól se nemění) · vykresleno ×{n1} · mimo okno {n2}–{n3} µm přístroje {s0}",
- "@js.1e0thu83q1m": {
-  "x-review": "machine",
-  "x-source": "b5a09a9656"
- },
  "js.1e1cj7tvww2": "Probe · Citlivý <span class=\"sub mono\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1e1cj7tvww2": {
   "x-review": "machine",
   "x-source": "b9b4c27050"
+ },
+ "js.1e34rrpji4d": "TOI ve vzorku: {n0}",
+ "@js.1e34rrpji4d": {
+  "x-review": "machine",
+  "x-source": "f87cb7f911"
  },
  "js.1e4aq4nvmgn": "Štítky a zdůvodnění posuzovatelů",
  "@js.1e4aq4nvmgn": {
@@ -3466,15 +3516,10 @@
   "x-review": "machine",
   "x-source": "5acf5925b9"
  },
- "js.1ea3o7os4iv": "Příznaky prověrky SetuHQ, pouze ze světelné křivky: <code>odd_even_mismatch</code> (hloubky lichých a sudých poklesů se liší), <code>secondary_eclipse</code> (pokles ve fázi {n0}), <code>low_snr</code>, <code>too_short</code>, <code>edge_event</code> a <code>insufficient_points</code>. Nemá kontrolu centroidu na úrovni pixelů ani rozdílového snímku a žádnou statistickou validaci, takže splývající dvojhvězda v pozadí může projít. <a href=\"/evidence/\">Zobrazit posuzovatele ›</a> · <a href=\"/candidates/pi-men/dip-2/\">Zobrazit prověřený případ ›</a>",
- "@js.1ea3o7os4iv": {
+ "js.1ecc8oy35i4": "Teegarden's d",
+ "@js.1ecc8oy35i4": {
   "x-review": "machine",
-  "x-source": "9c325d6228"
- },
- "js.1eb7589ltee": "Porovnání s archivem: v rámci tolerance není žádná archivní planeta (tento pokles nemá periodu BLS k porovnání); {s0}: žádné efemeridy tranzitu k porovnání. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
- "@js.1eb7589ltee": {
-  "x-review": "machine",
-  "x-source": "1e8af2cf5f"
+  "x-source": "461cf62f48"
  },
  "js.1ecof5fze2u": "Prošel všemi kontrolami prověrky. Vyznačilo jej {n0} z {n1} Probes a {n2} z {n3} Sentinels. Kandidát, nepotvrzený.",
  "@js.1ecof5fze2u": {
@@ -3495,6 +3540,11 @@
  "@js.1eg1hfp0rb9": {
   "x-review": "machine",
   "x-source": "bcdb9702f4"
+ },
+ "js.1eh5clg574l": "exoplanet.eu jej uvádí jako „Publikováno v recenzovaném článku“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako HD {n4} b, HD {n5} Ab, TOI-{n6} b, TOI-{n7}.",
+ "@js.1eh5clg574l": {
+  "x-review": "machine",
+  "x-source": "dcb89ac8b0"
  },
  "js.1einsfs6j8p": "Hloubka fitovaná SetuHQ, hlavní pokles",
  "@js.1einsfs6j8p": {
@@ -3531,11 +3581,6 @@
   "x-review": "machine",
   "x-source": "45ef298afc"
  },
- "js.1eqtzlgohp1": "Rozptýlené světlo: nebyl nalezen žádný anotovaný reálný vzorek; filtr (příznaky kvality a kontrolní apertury) je popsán a vyzkoušen na syntetických událostech a na kontrolních aperturách výřezů supernov, nikoli validován vůči katalogu událostí rozptýleného světla.",
- "@js.1eqtzlgohp1": {
-  "x-review": "machine",
-  "x-source": "cef1f20086"
- },
  "js.1etlbcax1sp": "ii · celý subjekt tess-4b369d3c6f09",
  "@js.1etlbcax1sp": {
   "x-review": "machine",
@@ -3561,15 +3606,15 @@
   "x-review": "machine",
   "x-source": "b7e118d85b"
  },
+ "js.1ezxmjp2el4": "exoplanet.eu jej uvádí jako „Publikováno v recenzovaném článku“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako K2-{n4} b, TOI-{n5} b, TOI-{n6}.",
+ "@js.1ezxmjp2el4": {
+  "x-review": "machine",
+  "x-source": "57de1033f9"
+ },
  "js.1f0uxtws1ab": "Staňte se prověřovatelem",
  "@js.1f0uxtws1ab": {
   "x-review": "machine",
   "x-source": "e37b76fbec"
- },
- "js.1f208h2gzzx": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · označený k posouzení, otevřený",
- "@js.1f208h2gzzx": {
-  "x-review": "machine",
-  "x-source": "bfe3196ddb"
  },
  "js.1f3str9e5jr": "není v měřítku; podle Lyot {n0}",
  "@js.1f3str9e5jr": {
@@ -3580,11 +3625,6 @@
  "@js.1f423dts634": {
   "x-review": "machine",
   "x-source": "0e47f09a74"
- },
- "js.1f5jrzkwrow": "Pořadí: Youdenovo J na prohledatelné množině, kterou stanovil benchmark (hvězdy s {n0}minutovou světelnou křivkou SPOC), s jedním predikátem na obou stranách, čistý kandidát (na efemeridě, prošel prověrkou, bez příznaku zákrytové dvojhvězdy): J = podíl hvězd CP/KP nabídnutých jako čistí kandidáti + podíl hvězd FP nenabídnutých − {n1}, s Wilsonovým intervalem metodou square-and-add. Prohlásit každý TOI za planetu, s příznakem či bez, dává J = {n2}; prohledatelná hvězda vyhodnocená jako neprohledaná se počítá jako nenabídnutá. Vedle je uvedeno J přes všechny hvězdy v rozsahu. Kde se intervaly překrývají, pořadí není změřený rozdíl.",
- "@js.1f5jrzkwrow": {
-  "x-review": "machine",
-  "x-source": "5fa0572ae2"
  },
  "js.1f71ffjmfo5": "Minimální hmotnost (m sin i)",
  "@js.1f71ffjmfo5": {
@@ -3605,6 +3645,11 @@
  "@js.1f84decza55": {
   "x-review": "machine",
   "x-source": "7bb250633d"
+ },
+ "js.1fa3dkre7ep": "teplá",
+ "@js.1fa3dkre7ep": {
+  "x-review": "machine",
+  "x-source": "0f0aa408c1"
  },
  "js.1faz9a47wga": "K_R ≈ V sin I · k², kde V sin I = {n0} km/s a k = {n1}, obojí z Gaudi &amp; Winn {n2}, tabulka {n3}, která uvádí {n4} m/s [calc]",
  "@js.1faz9a47wga": {
@@ -3641,11 +3686,6 @@
   "x-review": "machine",
   "x-source": "c6b9a506e0"
  },
- "js.1fo0ybrjcxn": "<b>Data: The Extrasolar Planets Encyclopaedia (exoplanet.eu), staženo {n0}. října {n1}; {n2} planet s uloženou vzdáleností, kolem {n3} hvězd.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. NASA Exoplanet Archive nebyl při stahování tohoto seznamu dostupný, proto seznam pochází pouze z exoplanet.eu. exoplanet.eu uvádí jako potvrzený každý objekt, který považuje za planetu: tělesa do {n4} hmotností Jupiteru (v rámci jejich nejistoty), publikovaná nebo oznámená. Jeho seznam je širší než seznam NASA Exoplanet Archive, který vede objekty do {n5} hmotností Jupiteru z recenzovaných článků. Seznam obsahuje {n6} položek, které exoplanet.eu označuje jako exokomety. {n7} z jeho {n8} planet nemá uloženou vzdálenost a nejsou vykresleny.",
- "@js.1fo0ybrjcxn": {
-  "x-review": "machine",
-  "x-source": "8798787570"
- },
  "js.1fppcyzgola": "<a href=\"/stars/barnard-s-star/\">{s0}</a> · Radiální rychlost · objeveno {n0} · Velikost Země (podle hmotnosti)",
  "@js.1fppcyzgola": {
   "x-review": "machine",
@@ -3655,6 +3695,11 @@
  "@js.1frapy57cm7": {
   "x-review": "machine",
   "x-source": "85cd6c7e34"
+ },
+ "js.1fujm79pdmr": "exoplanet.eu jej uvádí jako „Oznámeno na webu“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako 2MASS J19135511+{n4} b, K02313.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J191355.11+{n8} b.",
+ "@js.1fujm79pdmr": {
+  "x-review": "machine",
+  "x-source": "7448fb18a7"
  },
  "js.1fvwjcy4spf": "Prahy, váhy a všechny vstupy se zapisují do <code>manifest.json</code>, takže výsledek lze přesně zopakovat.",
  "@js.1fvwjcy4spf": {
@@ -3666,10 +3711,20 @@
   "x-review": "machine",
   "x-source": "4ffb9625b0"
  },
+ "js.1fwz3jtwilc": "{n0} Eri b",
+ "@js.1fwz3jtwilc": {
+  "x-review": "machine",
+  "x-source": "ae488e35a4"
+ },
  "js.1g0smg3jibl": "s apriorní hustotou z TIC",
  "@js.1g0smg3jibl": {
   "x-review": "machine",
   "x-source": "ee7a7029f9"
+ },
+ "js.1g4l9awxfep": "Katalog vyhledávání docs/discoveries/catalog.json, aktualizován {n0}-{n1}-30T06:{n2}+{n3}, počet záznamů: {n4}.",
+ "@js.1g4l9awxfep": {
+  "x-review": "machine",
+  "x-source": "070c993100"
  },
  "js.1g5lkun156f": "Disk planety v měřítku podle hloubky: Rp/R* {n0} · oběžná dráha není v měřítku · poloměr hvězdy není uložen",
  "@js.1g5lkun156f": {
@@ -3786,20 +3841,10 @@
   "x-review": "machine",
   "x-source": "405e92b37a"
  },
- "js.1hanjmcicv2": "Podvzorek Sentinels <span class=\"sub\">{n0} vyčleněných hvězd · neseřazeno</span>",
- "@js.1hanjmcicv2": {
-  "x-review": "machine",
-  "x-source": "07839908d1"
- },
  "js.1hc8gmjgdot": "Tabulka TOI",
  "@js.1hc8gmjgdot": {
   "x-review": "machine",
   "x-source": "69cec4abc6"
- },
- "js.1hfl9sordrk": "Model {s0} přecházejícího přes pi Men ({n0} K, {n1} R☉): hloubka {n2} ppm, {n3} h. Planeta je umělecká představa.",
- "@js.1hfl9sordrk": {
-  "x-review": "machine",
-  "x-source": "9f7804c19a"
  },
  "js.1hfm3qhujst": "<a href=\"/stars/gj-1214/\">{s0}</a> · Tranzit · objeveno {n0} · Sub-Neptun",
  "@js.1hfm3qhujst": {
@@ -3841,6 +3886,11 @@
   "x-review": "machine",
   "x-source": "2c40f96451"
  },
+ "js.1hrc7wsoaso": "Teoretická transmisní spektra během tranzitů extrasolárních obřích planet",
+ "@js.1hrc7wsoaso": {
+  "x-review": "machine",
+  "x-source": "d75d99e996"
+ },
  "js.1hsyugfc111": "{n0} planet v exoplanet.eu · uložený typ M2V · třída M podle Teff (nejbližší M2V)",
  "@js.1hsyugfc111": {
   "x-review": "machine",
@@ -3851,20 +3901,10 @@
   "x-review": "machine",
   "x-source": "ee03efb686"
  },
- "js.1hw9pj2cjy7": "{n0} položek, nalezených mezi <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1}. října {n2}, {n3} UTC</time> a <time datetime=\"2026-10-27T06:46:11+00:00\" title=\"2026-10-27T06:46:11+00:00\">{n4}. října {n5}, {n6} UTC</time>. <b>{n7} odpovídá periodě známého TOI</b>. Každá položka je kandidát, nepotvrzený. Shoda s TOI je porovnání s archivem. Pouze hodnoty z archivu. Tato stránka netvrdí žádnou detekci. Signály, které neodpovídají žádnému známému TOI, jsou drženy k neveřejnému posouzení; zveřejňují se až po posouzení a nahlášení.",
- "@js.1hw9pj2cjy7": {
-  "x-review": "machine",
-  "x-source": "e5e81ce489"
- },
  "js.1i0hezn1dvy": "Sentinel · Dobrovolník: {n0} úsek v tomto okně, započítán pro tento pokles",
  "@js.1i0hezn1dvy": {
   "x-review": "machine",
   "x-source": "c97f6573b3"
- },
- "js.1i1bqizwemp": "Každá buňka: míra, poté k/n a Wilsonův {n0}% interval, vykreslený jako pruh od {n1} do {n2} % (Youdenovo J od {n3} do {n4}, se značkou v {n5}). Seřazeno podle Youdenova J na prohledávatelné množině stanovené benchmarkem, s jedním predikátem na obou stranách (čistý kandidát: na efemeridě, prošel, bez příznaku zákrytové dvojhvězdy), takže označení každého TOI za planetu, ať označeného, či ne, dává skóre nula. Kontroly podmiňují zařazení do pořadí a do J nevstupují; seznamy kontrol jsou vlastní zprávou metody. Kde se intervaly překrývají, pořadí není změřený rozdíl.",
- "@js.1i1bqizwemp": {
-  "x-review": "machine",
-  "x-source": "9b6f9451ca"
  },
  "js.1i1fwe1y4dt": "Ozon",
  "@js.1i1fwe1y4dt": {
@@ -3896,6 +3936,11 @@
   "x-review": "machine",
   "x-source": "cc3ff7cfea"
  },
+ "js.1i9gd4nyiqb": "Radiální rychlost",
+ "@js.1i9gd4nyiqb": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
  "js.1i9syzrgr9a": "ii · celý subjekt tess-04b815001aa6",
  "@js.1i9syzrgr9a": {
   "x-review": "machine",
@@ -3921,10 +3966,10 @@
   "x-review": "machine",
   "x-source": "5d8760ebee"
  },
- "js.1inrxj82qqn": "{s0}, pokles {n0} ({n1} d)",
- "@js.1inrxj82qqn": {
+ "js.1ispru3ub0k": "Proxima Centauri b ›",
+ "@js.1ispru3ub0k": {
   "x-review": "machine",
-  "x-source": "6d7c168703"
+  "x-source": "48383a87b1"
  },
  "js.1iub0nyp6f9": "simulováno",
  "@js.1iub0nyp6f9": {
@@ -3956,11 +4001,6 @@
   "x-review": "machine",
   "x-source": "e54519602f"
  },
- "js.1j9g5n75pzw": "Ilustrace: Rp/R★ = {n0}, b = {n1}, hvězda {n2} K; křivka je model Mandel &amp; Agol ({n3}) pro malé planety s kvadratickým okrajovým ztemněním.",
- "@js.1j9g5n75pzw": {
-  "x-review": "machine",
-  "x-source": "2071874ebf"
- },
  "js.1ja46ec6bci": "<span class=\"word s-flag\">označeno k posouzení</span><b class=\"fig\">1c. TOI-{n0}, pokles {n1}.</b> <span class=\"sid mono\">uložené id tess-f28323a4aef6-{n2}.</span> Pokles v BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsenzuální interval BTJD {n7} až {n8}. Vyznačen {n9} z {n10} posuzovatelů ({n11} z {n12} Sentinels, {n13} z {n14} Probes). Žádná perioda BLS: jediný pokles. Označen k posouzení (mimo efemeridu své hvězdy). Archiv: žádná archivní planeta v rámci tolerance (tento pokles nemá periodu BLS k porovnání). Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.1ja46ec6bci": {
   "x-review": "machine",
@@ -3986,6 +4026,11 @@
   "x-review": "machine",
   "x-source": "49696e46af"
  },
+ "js.1jl27lqn1et": "Poloměr (RJ)",
+ "@js.1jl27lqn1et": {
+  "x-review": "machine",
+  "x-source": "f32d9b82e5"
+ },
  "js.1jltb46ahiz": "TOI-{n0}: disk hvězdy v barvě černého tělesa při {n1} K, na něm neutrálně šedý disk s popiskem zakrývající těleso neidentifikováno. sekundární zákryt při SNR {n2}; všech {n3} poklesů zamítnuto při prověrce.",
  "@js.1jltb46ahiz": {
   "x-review": "machine",
@@ -3995,6 +4040,11 @@
  "@js.1jnlql1jvxr": {
   "x-review": "machine",
   "x-source": "43edc57b50"
+ },
+ "js.1jpqv79tmp8": "Teegarden's c",
+ "@js.1jpqv79tmp8": {
+  "x-review": "machine",
+  "x-source": "d987d14509"
  },
  "js.1jqjb1ecf85": "<a href=\"/stars/kepler-292/\">{s0}</a> · Tranzit · objeveno {n0} · Sub-Neptun",
  "@js.1jqjb1ecf85": {
@@ -4026,10 +4076,10 @@
   "x-review": "machine",
   "x-source": "9a556d102c"
  },
- "js.1jvq989drn7": "Umělecká představa: vzhled chladného obra, pro poloměr {n0} R⊕ nebo více a Teq pod {n1} K: krémové a žlutohnědé oblačné pásy. Ukázka vzhledu, nikoli konkrétní planety.",
- "@js.1jvq989drn7": {
+ "js.1jvo3dtjn73": "Sentinel · Skeptik <span class=\"sub mono\" title=\"reviewer id\">claude-skeptic</span>",
+ "@js.1jvo3dtjn73": {
   "x-review": "machine",
-  "x-source": "76e2586629"
+  "x-source": "254fff303e"
  },
  "js.1k05nntjzg8": "atmosféra nakreslena ×{n0} silnější; planeta a hvězda nejsou v měřítku",
  "@js.1k05nntjzg8": {
@@ -4051,15 +4101,15 @@
   "x-review": "machine",
   "x-source": "75b7e948dd"
  },
- "js.1k548hzbh61": "<b>ν₃ asymetrická valenční vibrace (tři)</b> · {n0} µm · aktivní v infračervené oblasti · nakresleno ×{n1} · <a href=\"/how-it-works/atmospheres/\">pás {n2} µm v části Čtení atmosfér ›</a>",
- "@js.1k548hzbh61": {
-  "x-review": "machine",
-  "x-source": "371bca6192"
- },
  "js.1kch3o41dk9": "SHA-{n0} konfigurace",
  "@js.1kch3o41dk9": {
   "x-review": "machine",
   "x-source": "24563e9f39"
+ },
+ "js.1kdpriilk47": "exoplanet.eu jej uvádí jako „Publikováno v recenzovaném článku“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako 2MASS J13263339-{n4} b, EPIC {n5} b, EPIC {n6}, WISE J132633.39-{n7} b.",
+ "@js.1kdpriilk47": {
+  "x-review": "machine",
+  "x-source": "4573b13db3"
  },
  "js.1kgnejjnpnf": "Umělecká představa {s0}: plynný obr v teplém pásmu, {n0} poloměrů Země, {n1} K.",
  "@js.1kgnejjnpnf": {
@@ -4111,11 +4161,6 @@
   "x-review": "machine",
   "x-source": "6c3088500d"
  },
- "js.1kukdzlwmzz": "<b>ν₂ deštníková vibrace</b> · {n0} µm · aktivní v infračervené oblasti · nakresleno ×{n1} · mimo okno {n2}–{n3} µm pro {s0}",
- "@js.1kukdzlwmzz": {
-  "x-review": "machine",
-  "x-source": "ba3a4e2e62"
- },
  "js.1kvmnyghvke": "Umělecká představa {s0}: kamenná planeta, poloměr nezměřen ({n0} hmotností Země), ozáření nelze spočítat.",
  "@js.1kvmnyghvke": {
   "x-review": "machine",
@@ -4146,6 +4191,11 @@
   "x-review": "machine",
   "x-source": "07e5463c85"
  },
+ "js.1l4atyo906i": "Kandidát",
+ "@js.1l4atyo906i": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
  "js.1l4kxm2w5br": "Porovnání s archivem: žádná archivní planeta v rámci tolerance (tento pokles nemá periodu BLS k porovnání); pi Men c: žádná tranzitní efemerida k porovnání. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.1l4kxm2w5br": {
   "x-review": "machine",
@@ -4155,6 +4205,16 @@
  "@js.1l4u62ej5fc": {
   "x-review": "machine",
   "x-source": "f7bc5c08f0"
+ },
+ "js.1l8c78nkfe5": "Teq",
+ "@js.1l8c78nkfe5": {
+  "x-review": "machine",
+  "x-source": "bd1f380888"
+ },
+ "js.1l8lt88zlnn": "<i aria-hidden=\"true\"></i>Zákrytová dvojhvězda",
+ "@js.1l8lt88zlnn": {
+  "x-review": "machine",
+  "x-source": "a07a5fab5c"
  },
  "js.1l95agsp46q": "známá perioda TOI",
  "@js.1l95agsp46q": {
@@ -4170,6 +4230,11 @@
  "@js.1lb13933831": {
   "x-review": "machine",
   "x-source": "0216bca3d8"
+ },
+ "js.1lbuxx1akb8": "<i style=\"background:#64D2FF\"></i>Tranzit <span class=\"mono\">{n0}</span>",
+ "@js.1lbuxx1akb8": {
+  "x-review": "machine",
+  "x-source": "35c7f262c0"
  },
  "js.1liecym8jw": "<span class=\"word cand\">kandidát</span><span class=\"word s-pass\">prošel prověrkou</span><b class=\"fig\">1d. WASP-{n0}, pokles {n1}.</b> <span class=\"sid mono\">uložené id tess-5935bad1a3b4-{n2}.</span> Pokles v BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsenzuální interval BTJD {n7} až {n8}. Vyznačilo {n9} z {n10} posuzovatelů ({n11} z {n12} Sentinels, {n13} z {n14} Probes). Leží na BLS periodě {n15} dní (t0 BTJD {n16}). Prošel prověrkou. Archiv: v souladu s WASP-{n17} b: ΔP {n18} %, žádná efemerida tranzitu ke srovnání. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.1liecym8jw": {
@@ -4226,6 +4291,11 @@
   "x-review": "machine",
   "x-source": "aa15ce0bc3"
  },
+ "js.1m6gonlbh23": "Proxima Centauri",
+ "@js.1m6gonlbh23": {
+  "x-review": "machine",
+  "x-source": "07ddace0bc"
+ },
  "js.1m7nga73mrk": "Škála radiálních rychlostí: dvojče Země asi {n0} centimetrů za sekundu; ESPRESSO během jedné noci pod {n1} centimetrů za sekundu; šum hvězdného povrchu řádově {n2} metr za sekundu; pi Men c asi {n3} metrů za sekundu; dvojče Jupiteru {n4} metrů za sekundu; {n5} Peg b {n6} metrů za sekundu.",
  "@js.1m7nga73mrk": {
   "x-review": "machine",
@@ -4241,11 +4311,6 @@
   "x-review": "machine",
   "x-source": "94f4aed5ee"
  },
- "js.1mfsedhnkek": "Rotující kuličkový model vybrané molekuly s naměřenými délkami vazeb a vazebnými úhly (NIST CCCBDB), vibrující ve zvoleném normálním módu: šipky ukazují, kterým směrem se každý atom pohybuje. Osa vlnových délek pod ním vyznačuje základní pásy molekuly, vyplněné, když je infračervená oblast zachytí, a prázdné, když je mód v infračervené oblasti neaktivní; rozsah, který vykresluje kapitola {s0}, je stínovaný.",
- "@js.1mfsedhnkek": {
-  "x-review": "machine",
-  "x-source": "751951289b"
- },
  "js.1mi5uvq4hd0": "tento běh · zamítnutý prověrkou · bez periody",
  "@js.1mi5uvq4hd0": {
   "x-review": "machine",
@@ -4255,6 +4320,11 @@
  "@js.1mi9l1aqyq9": {
   "x-review": "machine",
   "x-source": "af079a71c8"
+ },
+ "js.1mjsdzuqt7u": "žádná jednotlivá hvězda",
+ "@js.1mjsdzuqt7u": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
  },
  "js.1mk4xq21j8n": "{n0} Peg b {n1} m/s",
  "@js.1mk4xq21j8n": {
@@ -4290,6 +4360,11 @@
  "@js.1myonl6ry65": {
   "x-review": "machine",
   "x-source": "927599ad1a"
+ },
+ "js.1mz5xi30e6k": "{n0} Peg b",
+ "@js.1mz5xi30e6k": {
+  "x-review": "machine",
+  "x-source": "07473ed79b"
  },
  "js.1mzrogjvr87": "Spis případu se v tomto zobrazení nepodařilo načíst. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-003\">Otevřete jej na samostatné stránce.</a>",
  "@js.1mzrogjvr87": {
@@ -4366,11 +4441,6 @@
   "x-review": "machine",
   "x-source": "ed25878435"
  },
- "js.1nlihv4t4dw": "Zdroj: docs/results/showcase.json.",
- "@js.1nlihv4t4dw": {
-  "x-review": "machine",
-  "x-source": "321e67bf81"
- },
  "js.1nm81nug7zg": "Přeskočeno (zde nedostupné): žádné",
  "@js.1nm81nug7zg": {
   "x-review": "machine",
@@ -4395,6 +4465,11 @@
  "@js.1nsffm21b0f": {
   "x-review": "machine",
   "x-source": "1a295a1bae"
+ },
+ "js.1nuj8nr6koq": "exoplanet.eu jej uvádí jako „Publikováno v recenzovaném článku“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako Kepler-4ee b, 2MASS J19130109+{n4} b, K00192.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J191301.09+{n8} b.",
+ "@js.1nuj8nr6koq": {
+  "x-review": "machine",
+  "x-source": "91fb084a47"
  },
  "js.1nuvlh0ma79": "tess-5935bad1a3b4",
  "@js.1nuvlh0ma79": {
@@ -4441,6 +4516,11 @@
   "x-review": "machine",
   "x-source": "ffb8a10800"
  },
+ "js.1o6iiyvkzt4": "Teq (K)",
+ "@js.1o6iiyvkzt4": {
+  "x-review": "machine",
+  "x-source": "250f80cb14"
+ },
  "js.1oflx09locz": "Spis případu se v tomto zobrazení nepodařilo načíst. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-000\">Otevřete jej na samostatné stránce.</a>",
  "@js.1oflx09locz": {
   "x-review": "machine",
@@ -4460,11 +4540,6 @@
  "@js.1ojq6mpxesf": {
   "x-review": "machine",
   "x-source": "13bd83fa4a"
- },
- "js.1ooqb09tka": "Nesoulad hloubek lichých a sudých tranzitů nebo sekundární zákryt; nebo hloubka {n0} ppm či více; nebo tvar V a {n1} ppm či více; nebo nesoulad hustoty hvězdy při periodě pod {n2} d; nebo polovina váhy panelu hlasující pro zákrytovou dvojhvězdu. Proměnnost s periodou zákrytové dvojhvězdy nebo její polovinou.",
- "@js.1ooqb09tka": {
-  "x-review": "machine",
-  "x-source": "d16ff6ea5a"
  },
  "js.1oqf3bvj4qe": "Spis případu na samostatné stránce, u stejného poklesu.",
  "@js.1oqf3bvj4qe": {
@@ -4531,6 +4606,11 @@
   "x-review": "machine",
   "x-source": "393e0bcc0a"
  },
+ "js.1pduw01bhpw": "Winn {n0}, Tranzity a zákryty",
+ "@js.1pduw01bhpw": {
+  "x-review": "machine",
+  "x-source": "5cdffcb70b"
+ },
  "js.1pf0nh0ccp2": "id tic139256217-s1-dip-{n0} · subjekt tess-9bf59e37005b<br>světelná křivka sha256 f11b4e243439bf24ffd3c740162a76f0cdadd8a9160094e3eb2a3487101f6c2c<br>kód … · config a9d34c7079563183…<br>zdroj sector_0001.json.gz",
  "@js.1pf0nh0ccp2": {
   "x-review": "machine",
@@ -4545,6 +4625,11 @@
  "@js.1phapwj9j76": {
   "x-review": "machine",
   "x-source": "b39d933ba4"
+ },
+ "js.1phito7oxf6": "exoplanet.eu jej uvádí jako „Oznámeno na webu“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako 2MASS J19050106+{n4} b, K02802.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J190501.05+{n8} b.",
+ "@js.1phito7oxf6": {
+  "x-review": "machine",
+  "x-source": "7d211a72f3"
  },
  "js.1pjllnj81v8": "Severní galaktický pól",
  "@js.1pjllnj81v8": {
@@ -4601,6 +4686,11 @@
   "x-review": "machine",
   "x-source": "10a0c5f853"
  },
+ "js.1pzot5psr3w": "Luhman {n0} A",
+ "@js.1pzot5psr3w": {
+  "x-review": "machine",
+  "x-source": "215b9c6a31"
+ },
  "js.1q0vba1x3qp": "Nové: {n0}",
  "@js.1q0vba1x3qp": {
   "x-review": "machine",
@@ -4630,6 +4720,11 @@
  "@js.1q6lxx1z74p": {
   "x-review": "machine",
   "x-source": "3052af115e"
+ },
+ "js.1q8o1852my1": "exoplanet.eu jej uvádí jako „Oznámeno na webu“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako 2MASS J19250134+{n4} b, K03220.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J192501.34+{n8} b.",
+ "@js.1q8o1852my1": {
+  "x-review": "machine",
+  "x-source": "1c98a66056"
  },
  "js.1qaq2fxvw7f": "Histogram {n0} poloměrů planet z exoplanet.eu (perioda pod {n1} dní) v logaritmických intervalech od {n2} do {n3} poloměrů Země, s vyznačeným údolím {n4}–{n5} poloměrů Země a zobrazeným poloměrem pi Men c.",
  "@js.1qaq2fxvw7f": {
@@ -4666,11 +4761,6 @@
   "x-review": "machine",
   "x-source": "dd3330cc6f"
  },
- "js.1qq8e2zp8tb": "Prověřování planet: beze změny. Vodítka pro prověřování z modulu zákrytových dvojhvězd jsou pouze doporučující, žádné rozhodnutí při prověřování je nepoužívá a nebyla vyhodnocena; jejich použití při prověřování vyžaduje vlastní předem registrované vyhodnocení.",
- "@js.1qq8e2zp8tb": {
-  "x-review": "machine",
-  "x-source": "6e0c8bb669"
- },
  "js.1qr7pmpqgem": "TIC {n0}, perioda {n1} dní, hloubka {n2} ppm, SNR {n3}, perioda odpovídá známému TOI, kandidát, nepotvrzený",
  "@js.1qr7pmpqgem": {
   "x-review": "machine",
@@ -4686,10 +4776,20 @@
   "x-review": "machine",
   "x-source": "42da84247d"
  },
+ "js.1r0q7nepkoi": "kalibrovaná váha",
+ "@js.1r0q7nepkoi": {
+  "x-review": "machine",
+  "x-source": "0a6b72180c"
+ },
  "js.1r46y9nqy47": "První tři kroky jsou vlastní kroky SetuHQ; poslední tři jsou záznamy jiných týmů (NASA Exoplanet Archive (TAP): tabulky toi a ps), nikdy výsledky SetuHQ. Prázdná tečka označuje krok bez záznamu. TFOPWG: TESS Follow-up Observing Program Working Group.",
  "@js.1r46y9nqy47": {
   "x-review": "machine",
   "x-source": "f16d5662c6"
+ },
+ "js.1r4fphlxxtr": "Počet záznamů: {n0}, nalezeny mezi <time datetime=\"2026-10-21T10:35:00+00:00\" title=\"2026-10-21T10:35:00+00:00\">{n1}. října {n2}, {n3} UTC</time> a <time datetime=\"2026-10-30T00:48:15+00:00\" title=\"2026-10-30T00:48:15+00:00\">{n4}. října {n5}, {n6} UTC</time>. <b>Periodě známého TOI odpovídá: {n7}</b>. Každý záznam je kandidát, nepotvrzený. Shoda s TOI je srovnání s archivem. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci. Signály, které neodpovídají žádnému známému TOI, jsou drženy pro neveřejnou kontrolu; zveřejňují se až po kontrole a nahlášení.",
+ "@js.1r4fphlxxtr": {
+  "x-review": "machine",
+  "x-source": "3f8fc5c963"
  },
  "js.1r7q1f2otd9": "Tabule: TOI-{n0}",
  "@js.1r7q1f2otd9": {
@@ -4711,11 +4811,6 @@
   "x-review": "machine",
   "x-source": "ea025f8c30"
  },
- "js.1rehm8o052v": "{s0}ing Exoplanet Survey Satellite",
- "@js.1rehm8o052v": {
-  "x-review": "machine",
-  "x-source": "f64ceb6be5"
- },
  "js.1rervwi8ill": "Spis případu se v tomto zobrazení nepodařilo načíst. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-fa3483ce6f83-001\">Otevřete jej na samostatné stránce.</a>",
  "@js.1rervwi8ill": {
   "x-review": "machine",
@@ -4736,6 +4831,11 @@
   "x-review": "machine",
   "x-source": "7006d67bfe"
  },
+ "js.1rhozdhu0s6": "{n0} Eri",
+ "@js.1rhozdhu0s6": {
+  "x-review": "machine",
+  "x-source": "cd858f1566"
+ },
  "js.1rhxz6cr57l": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">perioda známého TOI</span><b class=\"fig\">3g. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Označilo {n5} posuzovatelů (katalog neukládá velikost panelu ani interval konsenzu). Leží na {n6}denní periodě BLS s {n7} tranzity. Stav: perioda odpovídá známému TOI. Pouze hodnoty z archivu. Tato stránka netvrdí žádnou detekci.",
  "@js.1rhxz6cr57l": {
   "x-review": "machine",
@@ -4751,10 +4851,10 @@
   "x-review": "machine",
   "x-source": "f857503a68"
  },
- "js.1rk4ie4w0t9": "Umělecká představa: vzhled horkého obra, pro poloměr {n0} R⊕ nebo více, Teq {n1} až {n2} K: rezavé pásy oblaků. Ukázka vzhledu, nikoli konkrétní planety.",
- "@js.1rk4ie4w0t9": {
+ "js.1rncc50vod0": "Začínáme",
+ "@js.1rncc50vod0": {
   "x-review": "machine",
-  "x-source": "8aeca1d984"
+  "x-source": "61e8d44ad4"
  },
  "js.1rniehwfgn9": "Wolszczan &amp; Frail",
  "@js.1rniehwfgn9": {
@@ -4780,11 +4880,6 @@
  "@js.1rrhtxb4sk8": {
   "x-review": "machine",
   "x-source": "1b1094a886"
- },
- "js.1rsb50hzlde": "Umělecká představa: vzhled horkého neptunu, pro poloměr {n0} až {n1} R⊕, Teq {n2} K nebo více: oranžovošedý opar. Ukázka vzhledu, nikoli konkrétní planety.",
- "@js.1rsb50hzlde": {
-  "x-review": "machine",
-  "x-source": "fd1e7e0678"
  },
  "js.1rsch1xr0lt": "Tranzit · {n0} d",
  "@js.1rsch1xr0lt": {
@@ -4816,10 +4911,15 @@
   "x-review": "machine",
   "x-source": "a1c625de42"
  },
- "js.1ryrg8dmxoz": "<b>ν₄ asymetrický ohyb (tři)</b> · {n0} µm · aktivní v infračervené oblasti · zakresleno ×{n1} · mimo okno {n2}–{n3} µm přístroje {s0}",
- "@js.1ryrg8dmxoz": {
+ "js.1rwj8ey7hae": "Kepler-{n0} · {n1} K",
+ "@js.1rwj8ey7hae": {
   "x-review": "machine",
-  "x-source": "b2cd029465"
+  "x-source": "eb98d7eea9"
+ },
+ "js.1rxrndp257b": "Blokování světla hvězdy ve čtyřech scénách. Zakrývací těleso podobné Slunci (ilustrace založená na SOHO LASCO); maska koronografu, která se přesune přes hvězdu, takže oslnění se zhroutí do zbytkových skvrn a čtyři planety HR {n0} se ukážou na schematických drahách; hvězdné stínítko letící daleko před dalekohledem, není v měřítku; a nulující interferometr se dvěma dalekohledy, jehož tmavý proužek ruší světlo hvězdy.",
+ "@js.1rxrndp257b": {
+  "x-review": "machine",
+  "x-source": "cce2248704"
  },
  "js.1s3bgxbwlkh": "Vše",
  "@js.1s3bgxbwlkh": {
@@ -4831,10 +4931,10 @@
   "x-review": "machine",
   "x-source": "95206d6b8a"
  },
- "js.1sdkh60m4rv": "{s0}, pokles {n0}",
- "@js.1sdkh60m4rv": {
+ "js.1s8dkmip4e3": "cheops",
+ "@js.1s8dkmip4e3": {
   "x-review": "machine",
-  "x-source": "335e296600"
+  "x-source": "0eeb4fd483"
  },
  "js.1sg8cj3fgn0": "Pět způsobů, jak napodobit planetu, každý s geometrií na obloze na mřížce pixelů TESS (každý {n0} úhlových vteřin, v měřítku) a světelnou křivkou, kterou vytváří: zákrytová dvojhvězda s tečným zákrytem tvaru V; zákrytová dvojhvězda v pozadí zředěná světlem cíle; hierarchická trojhvězda; liché a sudé zákryty různé hloubky, když je perioda poloviční oproti skutečné; a instrumentální skok, například vyrovnání hybnosti.",
  "@js.1sg8cj3fgn0": {
@@ -4891,10 +4991,20 @@
   "x-review": "machine",
   "x-source": "f51d196f08"
  },
+ "js.1szdkpleyt1": "exoplanet.eu jej uvádí jako „Publikováno v recenzovaném článku“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako TOI-{n4} b.",
+ "@js.1szdkpleyt1": {
+  "x-review": "machine",
+  "x-source": "923f1f0f7f"
+ },
  "js.1t1emvbqy9r": "{n0} · Vyčištění a odstranění trendu",
  "@js.1t1emvbqy9r": {
   "x-review": "machine",
   "x-source": "2d4dfc6ae5"
+ },
+ "js.1t30u96twwz": "signály",
+ "@js.1t30u96twwz": {
+  "x-review": "machine",
+  "x-source": "c1d2c1df9e"
  },
  "js.1t47rnb1yty": "Statistická validace ve velkém měřítku.",
  "@js.1t47rnb1yty": {
@@ -4906,10 +5016,20 @@
   "x-review": "machine",
   "x-source": "ea298d3769"
  },
+ "js.1takbn7z5i5": "pi Men b ›",
+ "@js.1takbn7z5i5": {
+  "x-review": "machine",
+  "x-source": "095aa55e59"
+ },
  "js.1tanbk5cfbb": "{n0} {n1} / {n2} dex",
  "@js.1tanbk5cfbb": {
   "x-review": "machine",
   "x-source": "6d564d1ad1"
+ },
+ "js.1tbllix94q1": "Molekuly",
+ "@js.1tbllix94q1": {
+  "x-review": "machine",
+  "x-source": "bfdd800ffc"
  },
  "js.1tbul4ef62r": "{n0} planet v exoplanet.eu",
  "@js.1tbul4ef62r": {
@@ -4961,11 +5081,6 @@
   "x-review": "machine",
   "x-source": "9c116a7ee6"
  },
- "js.1tpmj2xl8sk": "{n0} ppm · {n1} h · {n2} Probes, {n3} Sentinels · zamítnutý při prověření, není kandidát",
- "@js.1tpmj2xl8sk": {
-  "x-review": "machine",
-  "x-source": "77664f0d7c"
- },
  "js.1trrebrltbg": "Zakresleno pouze z uložených hodnot (exoplanet.eu). Neuloženo: teplota hvězdy, poloměr hvězdy; tyto části jsou ilustrativní a na nákresu je to uvedeno. Barva hvězdy: barva Slunce, protože teplota není uložena.",
  "@js.1trrebrltbg": {
   "x-review": "machine",
@@ -4996,25 +5111,20 @@
   "x-review": "machine",
   "x-source": "9ee6b5ae54"
  },
+ "js.1u1inxhnivr": "Falešně pozitivní",
+ "@js.1u1inxhnivr": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
  "js.1u2k1jai0us": "Jedna světelná křivka, tři periody. Ukazuje, co hledání dělá, když má hvězda více než jednu planetu, a kterou z nich může obsahovat subjekt o délce {n0} dní.",
  "@js.1u2k1jai0us": {
   "x-review": "machine",
   "x-source": "ac34f619e1"
  },
- "js.1u2q9tbst8u": "Umělecká představa: vzhled „horká obálka“, pro poloměr {n0} až {n1} R⊕, Teq {n2} K nebo více: žlutohnědý opar a teplý okraj. Snímek vzhledu, nikoli konkrétní planety.",
- "@js.1u2q9tbst8u": {
-  "x-review": "machine",
-  "x-source": "80eb7867e5"
- },
  "js.1u4yg0u12mv": "exoplanet.eu neuchovává DOI ani odkaz na článek o objevu, proto se žádný nezobrazuje.",
  "@js.1u4yg0u12mv": {
   "x-review": "machine",
   "x-source": "02110b7c79"
- },
- "js.1u50uo7y5g3": "<b>ν₁ symetrická valenční vibrace</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · mimo okno {n2}–{n3} µm pro {s0}",
- "@js.1u50uo7y5g3": {
-  "x-review": "machine",
-  "x-source": "84c034c9f3"
  },
  "js.1u59hy4lwt0": "CO₂ <span>Oxid uhličitý</span>",
  "@js.1u59hy4lwt0": {
@@ -5036,11 +5146,6 @@
   "x-review": "machine",
   "x-source": "27b99ccdde"
  },
- "js.1ua3tz5fxe0": "Hash je atestace: odložené štítky jsou veřejné v repozitáři, takže žebříček nemůže prokázat, že nebyly přečteny, a verdikty „prošlo“ a kontrolní události metody jsou jejím vlastním hlášením. Tyto mezery by uzavřely návnadové světelné křivky držené správci a prospektivní hodnocení na TOI, které dosud nemají dispozici; nic z toho zatím neexistuje.",
- "@js.1ua3tz5fxe0": {
-  "x-review": "machine",
-  "x-source": "9f55ae4547"
- },
  "js.1uaz0vrw4ly": "nejmenší pole u zdroje, na hvězdě (pásmo Pineda &amp; Villadsen {n0}) [calc]",
  "@js.1uaz0vrw4ly": {
   "x-review": "machine",
@@ -5050,11 +5155,6 @@
  "@js.1ucljc3glwo": {
   "x-review": "machine",
   "x-source": "5e270de316"
- },
- "js.1uekblhme1p": "{n0} ppm · {n1} h · všech {n2} posuzovatelů · kandidát, nepotvrzený",
- "@js.1uekblhme1p": {
-  "x-review": "machine",
-  "x-source": "73ac412687"
  },
  "js.1ug611r5qd8": "CH₄ <span>Metan</span>",
  "@js.1ug611r5qd8": {
@@ -5091,6 +5191,11 @@
   "x-review": "machine",
   "x-source": "263beb630a"
  },
+ "js.1utmguftbbw": "Sektory TESS {n0}–{n1}. Záznam ve feedu {n2} pro tuto hvězdu (uložené id <span class=\"mono\">tess-7b97e468b60b-{n3}</span>). Shoda s TOI porovnává uloženou periodu s archivními hodnotami. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
+ "@js.1utmguftbbw": {
+  "x-review": "machine",
+  "x-source": "965b94f3d8"
+ },
  "js.1uugayqarlm": "Návrh mise TESS, která začala pozorovat v roce {n0}.",
  "@js.1uugayqarlm": {
   "x-review": "machine",
@@ -5100,11 +5205,6 @@
  "@js.1uwk3dmvuym": {
   "x-review": "machine",
   "x-source": "e7e8d3a00f"
- },
- "js.1v15owfc4cr": "<b>ν₃ asymetrická valenční vibrace (dvě)</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · nevykresleno v {s0}",
- "@js.1v15owfc4cr": {
-  "x-review": "machine",
-  "x-source": "451f9e06fd"
  },
  "js.1v2k5bzmb2a": "{n0} ± {n1} ppm",
  "@js.1v2k5bzmb2a": {
@@ -5116,25 +5216,25 @@
   "x-review": "machine",
   "x-source": "c6c35d2486"
  },
- "js.1va1yqqf83l": "Planeta s hmotností menší než Země u hvězdy {s0}, jednoho z nejbližších sousedů Slunce.",
- "@js.1va1yqqf83l": {
+ "js.1vf8wchy7cx": "Erupce",
+ "@js.1vf8wchy7cx": {
   "x-review": "machine",
-  "x-source": "0c6a1cbb68"
+  "x-source": "bdad8ef87b"
  },
  "js.1vn1k0hsfr": "Katalog",
  "@js.1vn1k0hsfr": {
   "x-review": "machine",
   "x-source": "1034513950"
  },
- "js.1vo3z8v0kr3": "{n0} na {n1} hvězdo-sektorů <span class=\"muted\">({n2} za {n3}; {n4} prověřených poklesů před pravidlem kanálu)</span>",
- "@js.1vo3z8v0kr3": {
-  "x-review": "machine",
-  "x-source": "0cf0192aad"
- },
  "js.1vs3qyoxlvt": "Také známá jako 2MASS J19021775+{n0}, KIC {n1}, KOI-{n2}, WISE J190217.77+{n3}.",
  "@js.1vs3qyoxlvt": {
   "x-review": "machine",
   "x-source": "a3072cbabc"
+ },
+ "js.1vseruufigw": "tau Cet",
+ "@js.1vseruufigw": {
+  "x-review": "machine",
+  "x-source": "d76cfc3187"
  },
  "js.1vtn0jl0t29": "Otevřít celou stránku",
  "@js.1vtn0jl0t29": {
@@ -5256,6 +5356,11 @@
   "x-review": "machine",
   "x-source": "6b412a8780"
  },
+ "js.1wqsruj6sy4": "Teegarden's b",
+ "@js.1wqsruj6sy4": {
+  "x-review": "machine",
+  "x-source": "88f6565053"
+ },
  "js.1wr1t67roz9": "Ukázáno, že kandidáti v systémech s více planetami jsou téměř vždy skuteční; validováno {n0} planet v {n1} systémech.",
  "@js.1wr1t67roz9": {
   "x-review": "machine",
@@ -5316,6 +5421,11 @@
   "x-review": "machine",
   "x-source": "01d784a95a"
  },
+ "js.1xjf25ez4ea": "Astrometrie",
+ "@js.1xjf25ez4ea": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
  "js.1xjgislb1gr": "{n0} (čáry D, {n1} a {n2} nm)",
  "@js.1xjgislb1gr": {
   "x-review": "machine",
@@ -5325,6 +5435,11 @@
  "@js.1xjihe7xm1n": {
   "x-review": "machine",
   "x-source": "68a749778a"
+ },
+ "js.1xjlu6r0tws": "Kandidát na planetu",
+ "@js.1xjlu6r0tws": {
+  "x-review": "machine",
+  "x-source": "f40d9fd559"
  },
  "js.1xludg6i4sq": "Také známá jako EPIC {n0}.",
  "@js.1xludg6i4sq": {
@@ -5341,11 +5456,6 @@
   "x-review": "machine",
   "x-source": "d17f5d38ec"
  },
- "js.1xqmq7gc51u": "Falešné poplachy na promíchaných světelných křivkách na úrovni kanálu (jeho úplné pravidlo, FAP &lt; {n0})",
- "@js.1xqmq7gc51u": {
-  "x-review": "machine",
-  "x-source": "31b60ba44a"
- },
  "js.1xs9ztk2l36": "Prohlídka Galaxie, zastávka {n0} ›",
  "@js.1xs9ztk2l36": {
   "x-review": "machine",
@@ -5361,15 +5471,15 @@
   "x-review": "machine",
   "x-source": "43c265eda9"
  },
- "js.1xy8j3ygiad": "Umělecká představa: vzhled „chladná obálka“, pro poloměr {n0} až {n1} R⊕, Teq pod {n2} K: bledý modrobílý opar, slabé pásy. Snímek vzhledu, nikoli konkrétní planety.",
- "@js.1xy8j3ygiad": {
-  "x-review": "machine",
-  "x-source": "7be8bc6ed2"
- },
  "js.1y1gk0z56gg": "poklesy na efemeridě podle výsledku prověrky",
  "@js.1y1gk0z56gg": {
   "x-review": "machine",
   "x-source": "4f0bf37c8c"
+ },
+ "js.1y218zo6cqq": "<i style=\"background:#30D158\"></i>Zobrazování <span class=\"mono\">{n0}</span>",
+ "@js.1y218zo6cqq": {
+  "x-review": "machine",
+  "x-source": "d614bb1db6"
  },
  "js.1y39iwfnbwn": "Běh tess-hd-{n0}-s4 (runs/tess-hd-{n1}-s4), vytvořen {n2}-{n3}-22T18:{n4}+{n5}, konfigurace sha256 e21c63a794b2aeb3…",
  "@js.1y39iwfnbwn": {
@@ -5421,6 +5531,11 @@
   "x-review": "machine",
   "x-source": "519941f399"
  },
+ "js.1yt1laezm0g": "Kepler-{n0} d",
+ "@js.1yt1laezm0g": {
+  "x-review": "machine",
+  "x-source": "5c8bf604a0"
+ },
  "js.1ytljjhkuxb": "Vykresleno pouze z uložených hodnot (exoplanet.eu).",
  "@js.1ytljjhkuxb": {
   "x-review": "machine",
@@ -5471,11 +5586,6 @@
   "x-review": "machine",
   "x-source": "9fdea8a620"
  },
- "js.1z0tecbo6q6": "Umělecká představa: vzhled ultrahorkého obra, pro poloměr {n0} R⊕ nebo více a Teq {n1} K nebo více: tmavý, nízkokontrastní a na denní straně žhnoucí; bez pásů. Statický záběr vzhledu, nikoli konkrétní planety.",
- "@js.1z0tecbo6q6": {
-  "x-review": "machine",
-  "x-source": "236fde016b"
- },
  "js.1z3sctga608": "Dva krátké poklesy s plochým dnem o hloubce asi {n0} ppm v ~{n1} a ~{n2} (rozestup ~{n3} d) mají shodnou hloubku i trvání, jak se očekává u periodického tranzitu. Ani jeden nevykazuje tvar V, sekundární zákryt, rampu ani skok, ale data kolem druhého poklesu jsou",
  "@js.1z3sctga608": {
   "x-review": "machine",
@@ -5491,10 +5601,10 @@
   "x-review": "machine",
   "x-source": "7d9eb7acb1"
  },
- "js.1z5yw0q2c2w": "Tranzit z domovské stránky",
- "@js.1z5yw0q2c2w": {
+ "js.1z5qoomb94b": "YZ Cet b",
+ "@js.1z5qoomb94b": {
   "x-review": "machine",
-  "x-source": "be1b030722"
+  "x-source": "fca0c283f7"
  },
  "js.1z8tasie2wo": "Probe · Citlivý <span class=\"mono idtag\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1z8tasie2wo": {
@@ -5576,11 +5686,6 @@
   "x-review": "machine",
   "x-source": "1c3db44c80"
  },
- "js.2050o3pgkvz": "Zdroj: TESS Science Office (MIT), veřejné stránky sektorů na tess.mit.edu/observations/: https://tess.mit.edu/observations/, rozvrh uložen {n0}-{n1}-{n2}.",
- "@js.2050o3pgkvz": {
-  "x-review": "machine",
-  "x-source": "e758c6851a"
- },
  "js.206lvynaoyq": "pohyb hvězdy zveličen ×{n0}; skutečné a★ = {n1} km ≈ {n2}.1e-{n3} R★",
  "@js.206lvynaoyq": {
   "x-review": "machine",
@@ -5626,11 +5731,6 @@
   "x-review": "machine",
   "x-source": "f77390e131"
  },
- "js.20iu1oobrgo": "Umělecká představa: nejednoznačný vzhled, pro žádný poloměr, hmotnost {n0} až {n1} M⊕ a libovolnou Teq: neutrální šedomodrý disk a měkký okraj: hornina, nebo obal, neznámo. Statický záběr vzhledu, nikoli konkrétní planety.",
- "@js.20iu1oobrgo": {
-  "x-review": "machine",
-  "x-source": "b435c16b54"
- },
  "js.20jq5c41tkh": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">3j. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Vyznačilo jej {n5} posuzovatelů (katalog neukládá velikost panelu ani konsenzuální interval). Leží na periodě BLS {n6} d s {n7} tranzity. Stav: perioda odpovídá známému TOI. Pouze hodnoty z archivu. Tato stránka netvrdí žádnou detekci.",
  "@js.20jq5c41tkh": {
   "x-review": "machine",
@@ -5640,6 +5740,11 @@
  "@js.20l5be8crj": {
   "x-review": "machine",
   "x-source": "ab9c1a76a4"
+ },
+ "js.20lcnwrpq7u": "Tranzit <span class=\"mono\" data-cmn=\"transit\">{n0}</span>",
+ "@js.20lcnwrpq7u": {
+  "x-review": "machine",
+  "x-source": "5b3df4c9fd"
  },
  "js.20lxdwfofp9": "tento běh · označený k posouzení · bez periody",
  "@js.20lxdwfofp9": {
@@ -5665,6 +5770,11 @@
  "@js.20q2sjzozas": {
   "x-review": "machine",
   "x-source": "7fb66e3610"
+ },
+ "js.20rbpsp5ug3": "<i aria-hidden=\"true\"></i>Nezařazeno <span class=\"mono\">{n0}</span>",
+ "@js.20rbpsp5ug3": {
+  "x-review": "machine",
+  "x-source": "8de4c52f48"
  },
  "js.20rkrumvokl": "Verze promptu Sentinel",
  "@js.20rkrumvokl": {
@@ -5716,11 +5826,6 @@
   "x-review": "machine",
   "x-source": "b2f84631c5"
  },
- "js.217aul87gdd": "<b>převážně valenční vibrace N–O</b> · {n0} µm · v infračerveném oboru aktivní · vykresleno ×{n1} · mimo okno {n2}–{n3} µm v části {s0}",
- "@js.217aul87gdd": {
-  "x-review": "machine",
-  "x-source": "cea6ecc8bf"
- },
  "js.217mi4h3ox4": "Kandidátem je pouze pokles, který prošel prověřováním, a i ten zůstává nepotvrzený; zamítnutý pokles kandidátem není. Pouze uložené hodnoty: body, značky, skóre, příznaky a slova jsou taková, jak je běh uložil.",
  "@js.217mi4h3ox4": {
   "x-review": "machine",
@@ -5750,6 +5855,11 @@
  "@js.21hezc7ksw1": {
   "x-review": "machine",
   "x-source": "508aa5b9d1"
+ },
+ "js.21i2i0paoel": "exoplanet.eu jej uvádí jako „Oznámeno na webu“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známý také jako 2MASS J19213888+{n4} b, K01629.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J192138.89+{n8} b.",
+ "@js.21i2i0paoel": {
+  "x-review": "machine",
+  "x-source": "8c0bd3393c"
  },
  "js.21katdb2hhv": "{n0} planet v exoplanet.eu · uložený typ M8V · třída M podle Teff (nejbližší M8V)",
  "@js.21katdb2hhv": {
@@ -5811,11 +5921,6 @@
   "x-review": "machine",
   "x-source": "752ea43d7e"
  },
- "js.21ylkyb62a9": "TIC {n0} · kandidát, nepotvrzený",
- "@js.21ylkyb62a9": {
-  "x-review": "machine",
-  "x-source": "7cf98eee62"
- },
  "js.222kde6gcmc": "Vykresleno pouze z uložených hodnot (exoplanet.eu). Neuloženo: poloměr planety; tyto části jsou ilustrativní a nákres to uvádí. Při uloženém sklonu tato planeta netranzituje; pohled ukazuje tranzit pro vysvětlení metody.",
  "@js.222kde6gcmc": {
   "x-review": "machine",
@@ -5825,6 +5930,11 @@
  "@js.223085agofs": {
   "x-review": "machine",
   "x-source": "606268600d"
+ },
+ "js.225qy6re67g": "Kepler-{n0} c",
+ "@js.225qy6re67g": {
+  "x-review": "machine",
+  "x-source": "d1e5b9aa4a"
  },
  "js.2274ir70e91": "Zamítnuto při prověřování",
  "@js.2274ir70e91": {
@@ -5881,6 +5991,11 @@
   "x-review": "machine",
   "x-source": "f16b203139"
  },
+ "js.22noo09k9nh": "<i style=\"background:#7D7AFF\"></i>Časování <span class=\"mono\">{n0}</span>",
+ "@js.22noo09k9nh": {
+  "x-review": "machine",
+  "x-source": "79248df554"
+ },
  "js.22qe07fgd2k": "celý sektor · perioda {n0} d · semi-amplituda {n1} ppm",
  "@js.22qe07fgd2k": {
   "x-review": "machine",
@@ -5925,6 +6040,11 @@
  "@js.2309k4jhst": {
   "x-review": "machine",
   "x-source": "99ec08944c"
+ },
+ "js.231hbrwsvbe": "Erupce",
+ "@js.231hbrwsvbe": {
+  "x-review": "machine",
+  "x-source": "38e9b86f2b"
  },
  "js.232hnla7mfp": "BTJD {n0} · {n1} ppm · {n2} hodin · SNR {n3} · kandidát, nepotvrzený",
  "@js.232hnla7mfp": {
@@ -5996,6 +6116,11 @@
   "x-review": "machine",
   "x-source": "f7b940e003"
  },
+ "js.23gvqgvfk3h": "eps Eridani",
+ "@js.23gvqgvfk3h": {
+  "x-review": "machine",
+  "x-source": "9a7f2f950b"
+ },
  "js.23iejmgi1b9": "<span class=\"word cand\">kandidát</span><span class=\"word s-pass\">prošel prověrkou</span><b class=\"fig\">1d. pi Men, pokles {n0}.</b> <span class=\"sid mono\">uložené id tess-04b815001aa6-{n1}.</span> Pokles v BTJD {n2}, {n3} ppm, {n4} h, SNR {n5}. Konsenzuální interval BTJD {n6} až {n7}. Vyznačilo {n8} z {n9} posuzovatelů ({n10} z {n11} Sentinels, {n12} z {n13} Probes). Leží na BLS periodě {n14} dní (t0 BTJD {n15}). Prošel prověrkou. Archiv: v souladu s pi Men c: ΔP {n16}%, časový posun podle validační poznámky: průměr {n17} min přes {n18} epoch. Pouze hodnoty z archivu. Tato stránka netvrdí žádnou detekci.",
  "@js.23iejmgi1b9": {
   "x-review": "machine",
@@ -6041,6 +6166,16 @@
   "x-review": "machine",
   "x-source": "09e2a66ca8"
  },
+ "js.248br10ykpu": "exoplanet.eu jej uvádí jako „Publikováno v recenzovaném článku“, nalezen metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}.",
+ "@js.248br10ykpu": {
+  "x-review": "machine",
+  "x-source": "2c5e82e81c"
+ },
+ "js.248fckis1nx": "TIC {n0} · <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> <span class=\"muted\" style=\"font:500 11px var(--mono)\">běh tess-pi-men-s1 · záznamů: {n1}</span>",
+ "@js.248fckis1nx": {
+  "x-review": "machine",
+  "x-source": "91c42c8548"
+ },
  "js.249yvv2lisi": "Spis případu se v tomto zobrazení nepodařilo načíst. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-4b369d3c6f09-004\">Otevřete jej na samostatné stránce.</a>",
  "@js.249yvv2lisi": {
   "x-review": "machine",
@@ -6065,16 +6200,6 @@
  "@js.24fb2cdopd2": {
   "x-review": "machine",
   "x-source": "f76311c5f2"
- },
- "js.24fnxph6nhs": "NASA Exoplanet Archive, tabulka ps (default_flag = {n0}), jak je zaznamenáno v docs/results/pi_men_validation.md skriptem scripts/validate_known_planets.py (živý dotaz do archivu, commit 0f6dbdc). Je tam zaznamenána pouze planeta {s0}, proto je uvedena jen planeta {s1}; její čas středu tranzitu nebyl zaznamenán, takže se zde nepočítá posun pro jednotlivé epochy; místo toho je citován průměrný časový posun z validační poznámky ({n1} min přes {n2} z {n3} epoch). Nahraďte jej výstupem 'setuhq crossmatch runs/tess-pi-men-s1', až archiv odpoví., zaznamenáno <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4}. října {n5}, {n6} UTC</time> (commit 0f6dbdc) v docs/results/pi_men_crossmatch.json; vlastní křížové porovnání tohoto běhu neproběhlo (uložená chyba, doslovně: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
- "@js.24fnxph6nhs": {
-  "x-review": "machine",
-  "x-source": "2709781e4a"
- },
- "js.24gwd0vxjg3": "<b>Licence.</b> Data CHEOPS a výstupy z nich odvozené zůstávají pod podmínkami ESA: data v ESA Space Science Archives jsou šířena pod licencí CC BY-NC {n0} IGO a jakékoli komerční využití, včetně využití, které nepřímo generuje finanční zisk, vyžaduje předchozí svolení ESA (data.licences@esa.int). Komerční licence SetuHQ a SetuHQ Pro pokrývají kód a služby SetuHQ, nikoli data CHEOPS ani výstupy odvozené z CHEOPS.",
- "@js.24gwd0vxjg3": {
-  "x-review": "machine",
-  "x-source": "027b9f1def"
  },
  "js.24jrww0gdzl": "Umělecká představa · kamenná, ultrahorká · Poloměr {n0} R⊕ (exoplanet.eu) je menší než {n1} R⊕, proto je vykreslena jako kamenná. Teq {n2} K, vypočtená z a, R★ a Teff, spadá do ultrahorkého pásma. Složení není změřeno. Zdroj: exoplanet.eu, staženo {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Jak se obrázky kreslí ›</a>",
  "@js.24jrww0gdzl": {
@@ -6206,11 +6331,6 @@
   "x-review": "machine",
   "x-source": "f3d6bee517"
  },
- "js.25v5j8df6ue": "Výchozí hodnoty: N★ = {n0} M trpaslíků dostatečně jasných pro JWST, F_Q · F_HZ = {n1}, F_O = {n2}, F_L = {n3}, F_S = {n4}, což dává N ≈ {n5}. Pocházejí ze sekundárních shrnutí přednášky a článku Seagerové, zde nebyly ověřeny proti článku; F_L = {n6} je předpoklad, nikoli měření. Podíl obyvatelné zóny odkazuje na obrázky kapitoly {s0}.",
- "@js.25v5j8df6ue": {
-  "x-review": "machine",
-  "x-source": "0c766c3029"
- },
  "js.25vec9roei3": "tess-f28323a4aef6-{n0} · {s0} · známá planeta",
  "@js.25vec9roei3": {
   "x-review": "machine",
@@ -6226,10 +6346,10 @@
   "x-review": "machine",
   "x-source": "8e26be0f72"
  },
- "js.2688tn5ytet": "{n0} uložených měření jasnosti za {n1} dní. Panel, {n2} Sentinels a {n3} Probes (žádní lidé), vyznačil {n4} poklesů, které kód prověřování seskupil do {n5} signálů: {n6} prošlo, {n7} označeno, {n8} zamítnuto. Každý pokles je vlastním kandidátem tohoto zpracovatelského řetězce, nepotvrzeným jako nezávislá detekce; shoda s archivem říká, že planeta je již známá, nikoli že ji tento běh potvrdil. Uložené křížové porovnání s archivem (uložená kopie v repozitáři) shledává hlavní signál konzistentním s pi Men c, publikovanou planetou: známá planeta, nikoli objev. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
- "@js.2688tn5ytet": {
+ "js.267fwx4rrxg": "katalog",
+ "@js.267fwx4rrxg": {
   "x-review": "machine",
-  "x-source": "737d181458"
+  "x-source": "d2504e52b8"
  },
  "js.269wyn7yehy": "První fotochemický produkt pozorovaný v atmosféře exoplanety: chemie poháněná světlem hvězdy.",
  "@js.269wyn7yehy": {
@@ -6261,6 +6381,16 @@
   "x-review": "machine",
   "x-source": "ad1170b8cc"
  },
+ "js.26jkejmj23b": "Zobrazování <span class=\"mono\" data-cmn=\"imaging\">{n0}</span>",
+ "@js.26jkejmj23b": {
+  "x-review": "machine",
+  "x-source": "d8c9828b8c"
+ },
+ "js.26jwv5q9ef3": "Zákrytová dvojhvězda",
+ "@js.26jwv5q9ef3": {
+  "x-review": "machine",
+  "x-source": "8df8a39f8e"
+ },
  "js.26lvjxq29mz": "Skrýt Nejlepší kandidáty",
  "@js.26lvjxq29mz": {
   "x-review": "machine",
@@ -6281,6 +6411,16 @@
   "x-review": "machine",
   "x-source": "eaacfcf2d5"
  },
+ "js.26pv2ld5al": "YZ Cet d",
+ "@js.26pv2ld5al": {
+  "x-review": "machine",
+  "x-source": "92120cfb4f"
+ },
+ "js.26pzvkix2mc": "Stránka hvězdy ›",
+ "@js.26pzvkix2mc": {
+  "x-review": "machine",
+  "x-source": "e1fbb1c217"
+ },
  "js.26sdy1tcm5m": "Spis případu se v tomto zobrazení nepodařilo načíst. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-005\">Otevřete jej na samostatné stránce.</a>",
  "@js.26sdy1tcm5m": {
   "x-review": "machine",
@@ -6290,11 +6430,6 @@
  "@js.26seob0sso6": {
   "x-review": "machine",
   "x-source": "f2c44d90f7"
- },
- "js.26svlut4n1y": "SetuHQ čte světelné křivky TESS: jednu hvězdu po druhé, přibližně {n0} dní na sektor. <a href=\"/explore/galaxy/?layers=tess\">Zobrazit pokrytí oblohy TESS ›</a>",
- "@js.26svlut4n1y": {
-  "x-review": "machine",
-  "x-source": "7675cbd084"
  },
  "js.26upx7lksz5": "Dispozice TFOPWG CP (planeta podle týmů následných pozorování), aktualizováno {n0}-{n1}-{n2}",
  "@js.26upx7lksz5": {
@@ -6316,11 +6451,6 @@
   "x-review": "machine",
   "x-source": "5332f7c6da"
  },
- "js.26zs3bh9z5t": "vysoká: dvě či více instrumentálních indicií; střední: jedna; nízká: pouze zdůvodnění panelu.",
- "@js.26zs3bh9z5t": {
-  "x-review": "machine",
-  "x-source": "eaf598efdb"
- },
  "js.27070gzrt8g": "numpy",
  "@js.27070gzrt8g": {
   "x-review": "machine",
@@ -6341,20 +6471,10 @@
   "x-review": "machine",
   "x-source": "bfeaf40123"
  },
- "js.275p8l49gz9": "Metoda objevu",
- "@js.275p8l49gz9": {
-  "x-review": "machine",
-  "x-source": "7f31ff7ee3"
- },
  "js.27d1pzwqqg5": "{n0} poklesů ({n1} kandidátů, {n2} označených). Každý pokles je pojmenován podle výsledku prověřování: kandidát prošel prověřováním a je nepotvrzený; označený pokles je otevřený; zamítnutý pokles není kandidát. Zamítnuté a označené poklesy jsou ponechány záměrně, aby čtenář viděl, co prověřování rozhodlo a proč. Každý obrázek je naslepo kódovaný graf, který viděli recenzenti, bajt po bajtu.",
  "@js.27d1pzwqqg5": {
   "x-review": "machine",
   "x-source": "f52c6bc4a9"
- },
- "js.27eugex8tue": "Umělecká představa: vzhled neptune-warm pro poloměr {n0} až {n1} R⊕, Teq {n2} až {n3} K: modrozelený opar. Snímek vzhledu, nikoli konkrétní planety.",
- "@js.27eugex8tue": {
-  "x-review": "machine",
-  "x-source": "2d58d10911"
  },
  "js.27fyvwqvgk2": "id tic197575514-s1-dip-{n0} · subjekt tess-b9ee497ace57<br>světelná křivka sha256 6cdb3d033119539b3dd9a07e89379098ee77c137584a467d88efe3b74e7c0913<br>kód … · konfigurace a9d34c7079563183…<br>zdroj sector_0001.json.gz",
  "@js.27fyvwqvgk2": {
@@ -6375,6 +6495,11 @@
  "@js.27jlutunzon": {
   "x-review": "machine",
   "x-source": "de7cd804ae"
+ },
+ "js.27kx8tn6apn": "Časování a fáze",
+ "@js.27kx8tn6apn": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
  },
  "js.27n9asbnx55": "Uspořádat Nejlepší kandidáty",
  "@js.27n9asbnx55": {
@@ -6415,6 +6540,11 @@
  "@js.27y132h50m1": {
   "x-review": "machine",
   "x-source": "734a43293e"
+ },
+ "js.280bcq6hfxu": "Periody Kepler-{n0} b a c",
+ "@js.280bcq6hfxu": {
+  "x-review": "machine",
+  "x-source": "de18f16db8"
  },
  "js.283unm3lnxq": "Sentinel · Skeptik <span class=\"mono\">claude-skeptic</span>",
  "@js.283unm3lnxq": {
@@ -6460,11 +6590,6 @@
  "@js.28hrtzpigjb": {
   "x-review": "machine",
   "x-source": "1f2470675c"
- },
- "js.28ictyar11j": "Cvičení pro učení, nikoli příspěvek k vědě. Vaše odpovědi zůstávají v tomto prohlížeči a nejsou nikam sbírány ani odesílány; poklesy jsou uložené poklesy z ukázkových běhů SetuHQ, o nichž již rozhodlo jeho prověřování.",
- "@js.28ictyar11j": {
-  "x-review": "machine",
-  "x-source": "5a6ae14a11"
  },
  "js.28iqhboa34b": "Molekula s N atomy má 3N − {n0} způsobů vibrace (3N − {n1}, je-li lineární): voda má tři, oxid uhličitý čtyři (jeho ohybová vibrace se vyskytuje dvakrát, v pravých úhlech), methan devět. Mód pohlcuje infračervené světlo, jen pokud mění dipól molekuly. Proto jsou symetrická valenční vibrace CO₂ ({n2} µm), valenční vibrace O₂ a dvě ze čtyř základních vibrací methanu v infračervené oblasti neaktivní. Pásy, které tyto módy vytvářejí, jsou ty, které vyznačuje kapitola Čtení atmosfér: dvě valenční vibrace vody při {n3} a {n4} µm tvoří její pás {n5} µm, ν₃ methanu pás {n6} µm, asymetrická valenční vibrace CO₂ pás {n7} µm a valenční vibrace CO pás {n8} µm.",
  "@js.28iqhboa34b": {
@@ -6681,6 +6806,11 @@
   "x-review": "machine",
   "x-source": "258011d66c"
  },
+ "js.2a56wvwnc5o": "HN Lib",
+ "@js.2a56wvwnc5o": {
+  "x-review": "machine",
+  "x-source": "6993fd96af"
+ },
  "js.2a9g9u8ogm5": "Pole u zdroje",
  "@js.2a9g9u8ogm5": {
   "x-review": "machine",
@@ -6701,6 +6831,11 @@
   "x-review": "machine",
   "x-source": "50621e7fe0"
  },
+ "js.2ad5lvvd821": "Gaia-{n0} b ›",
+ "@js.2ad5lvvd821": {
+  "x-review": "machine",
+  "x-source": "fb287f3d63"
+ },
  "js.2ahfv5ecid": "id tic177082055-s1-dip-{n0} · subjekt tess-9ff47a35552d<br>sha256 světelné křivky ad0dc350aa11e6edee9ef4c25cad43f094f52a98ab9010ca3c0ec0aaadafe861<br>kód … · konfigurace a9d34c7079563183…<br>zdroj sector_0001.json.gz",
  "@js.2ahfv5ecid": {
   "x-review": "machine",
@@ -6716,11 +6851,6 @@
   "x-review": "machine",
   "x-source": "88117143a4"
  },
- "js.2aj3droma9q": "katalog a citované články, čísla v tabulce každé kapitoly",
- "@js.2aj3droma9q": {
-  "x-review": "machine",
-  "x-source": "3cf2224205"
- },
  "js.2apzy7fqrqe": "Porovnání s archivem: v rámci tolerance není žádná archivní planeta. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.2apzy7fqrqe": {
   "x-review": "machine",
@@ -6735,11 +6865,6 @@
  "@js.2avziyt7hbv": {
   "x-review": "machine",
   "x-source": "5eab0aea69"
- },
- "js.2b0kq1u0yok": "<b>ν valenční</b> · {n0} µm · infračerveně aktivní · vykresleno ×{n1} · <a href=\"/how-it-works/atmospheres/\">pás {n2} µm v kapitole Čtení atmosfér ›</a>",
- "@js.2b0kq1u0yok": {
-  "x-review": "machine",
-  "x-source": "9f2fb710c1"
  },
  "js.2b1w1bhtwi6": "Výšková škála WASP-{n0} b (μ = {n1})",
  "@js.2b1w1bhtwi6": {
@@ -6816,6 +6941,11 @@
   "x-review": "machine",
   "x-source": "1dfa560d9d"
  },
+ "js.2brjxhf24py": "{n0} Eri d",
+ "@js.2brjxhf24py": {
+  "x-review": "machine",
+  "x-source": "3f3cad2fcc"
+ },
  "js.2btmnnqnpty": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">3k. <span class=\"mono\">tess-03a9e901682f-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Označen {n5} posuzovateli (katalog neukládá velikost panelu ani konsenzuální interval). Leží na BLS periodě {n6} d s {n7} tranzity. Stav: perioda odpovídá známému TOI. Pouze hodnoty z archivu. Tato stránka si nečiní nárok na žádnou detekci.",
  "@js.2btmnnqnpty": {
   "x-review": "machine",
@@ -6826,10 +6956,20 @@
   "x-review": "machine",
   "x-source": "18fccc4254"
  },
+ "js.2c181tpjjvc": "Luyten's Star b",
+ "@js.2c181tpjjvc": {
+  "x-review": "machine",
+  "x-source": "23d6b3c963"
+ },
  "js.2c70ie4ixet": "Tabule",
  "@js.2c70ie4ixet": {
   "x-review": "machine",
   "x-source": "4fb4c6f38a"
+ },
+ "js.2c82c0gwjki": "Probe · Typický <span class=\"mono idtag\" title=\"reviewer id\">volunteer-typical</span> <span class=\"tag sim\">Probe · není osoba</span>",
+ "@js.2c82c0gwjki": {
+  "x-review": "machine",
+  "x-source": "c3559921c8"
  },
  "js.2c85dsjz3dx": "Příznaky prověrky: <span class=\"mono\">low_snr, odd_even_mismatch, secondary_eclipse, density_mismatch</span> · neprošel prověrkou",
  "@js.2c85dsjz3dx": {
@@ -6856,11 +6996,6 @@
   "x-review": "machine",
   "x-source": "439b98f6cf"
  },
- "js.2cazwqoadoq": "Odložené EB se sekundárním zákrytem v katalogu a shodou periody: fáze sekundárního zákrytu do {n0} od katalogové, dolní mez {n1}% intervalu &gt;= {n2} (sekundární zákryt, který nenajdeme, se počítá jako minutí)",
- "@js.2cazwqoadoq": {
-  "x-review": "machine",
-  "x-source": "71d0ca28d6"
- },
  "js.2cc0e9v7uvs": "<i style=\"background:#FF6961\"></i>{n0} Peg b",
  "@js.2cc0e9v7uvs": {
   "x-review": "machine",
@@ -6880,6 +7015,11 @@
  "@js.2cektxt2twi": {
   "x-review": "machine",
   "x-source": "4662bb50f1"
+ },
+ "js.2cg943adi3e": "Žebříček skutečných TOI ›",
+ "@js.2cg943adi3e": {
+  "x-review": "machine",
+  "x-source": "cd1d193d20"
  },
  "js.2cjkfyfegp8": "Označení (✓ započteno)",
  "@js.2cjkfyfegp8": {
@@ -6905,6 +7045,16 @@
  "@js.2cqrtx9qqhe": {
   "x-review": "machine",
   "x-source": "2e5aaa9889"
+ },
+ "js.2cs8n7gldpd": "SetuHQ Pro",
+ "@js.2cs8n7gldpd": {
+  "x-review": "machine",
+  "x-source": "fcca2f700b"
+ },
+ "js.2cserx0e05n": "Proxima Centauri d",
+ "@js.2cserx0e05n": {
+  "x-review": "machine",
+  "x-source": "8213996948"
  },
  "js.2ct9t5541vf": "Dva týmy nezávisle zachytily tutéž planetu při přechodu přes její hvězdu.",
  "@js.2ct9t5541vf": {
@@ -6936,11 +7086,6 @@
   "x-review": "machine",
   "x-source": "00265f6a9d"
  },
- "js.2d5lr3nor8a": "<b>Data: The Extrasolar Planets Encyclopaedia (exoplanet.eu), staženo {n0}-{n1}-{n2}.</b> <a href=\"https://exoplanet.eu/catalog/\" rel=\"noopener\">https://exoplanet.eu/catalog/</a>. NASA Exoplanet Archive nebyl při stahování tohoto seznamu dostupný, takže seznam pochází pouze z exoplanet.eu. exoplanet.eu uvádí jako potvrzený každý objekt, který považuje za planetu: tělesa do {n3} hmotností Jupiteru (v rámci nejistoty), publikovaná nebo oznámená. Jeho seznam je širší než seznam NASA Exoplanet Archive, který vede objekty do {n4} hmotností Jupiteru z recenzovaných článků. Hodnota, kterou zdroj neuvádí, se zobrazuje jako „neuloženo“.",
- "@js.2d5lr3nor8a": {
-  "x-review": "machine",
-  "x-source": "4ddb24b25e"
- },
  "js.2d5x5vtgqx3": "{n0} {n1} / {n2} MJ <span class=\"na\">· teoretický odhad</span>",
  "@js.2d5x5vtgqx3": {
   "x-review": "machine",
@@ -6956,11 +7101,6 @@
   "x-review": "machine",
   "x-source": "a2e862e82e"
  },
- "js.2d87qst4jdj": "Vyhledávací katalog docs/discoveries/catalog.json, aktualizováno {n0}-{n1}-29T00:{n2}+{n3}, počet položek: {n4}.",
- "@js.2d87qst4jdj": {
-  "x-review": "machine",
-  "x-source": "c5e3fcc2c6"
- },
  "js.2d8lw4ky362": "Režim",
  "@js.2d8lw4ky362": {
   "x-review": "machine",
@@ -6971,16 +7111,6 @@
   "x-review": "machine",
   "x-source": "d356f1d9dd"
  },
- "js.2d97owpwxwe": "<b>ν₃ asymetrická valenční vibrace</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · mimo okno {n2}–{n3} µm v {s0}",
- "@js.2d97owpwxwe": {
-  "x-review": "machine",
-  "x-source": "426504275f"
- },
- "js.2d9cg0jtcpa": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Světelná křivka",
- "@js.2d9cg0jtcpa": {
-  "x-review": "machine",
-  "x-source": "6c965e2b87"
- },
  "js.2dbh8x9y8de": "Perioda",
  "@js.2dbh8x9y8de": {
   "x-review": "machine",
@@ -6990,6 +7120,11 @@
  "@js.2dcer0ylq6r": {
   "x-review": "machine",
   "x-source": "731f74e2f3"
+ },
+ "js.2dcmry1hh6z": "Kepler-{n0} c ›",
+ "@js.2dcmry1hh6z": {
+  "x-review": "machine",
+  "x-source": "afae7ed80f"
  },
  "js.2deel2ps6ig": "τ Boötis, nejisté záblesky na {n0}–{n1} MHz",
  "@js.2deel2ps6ig": {
@@ -7076,11 +7211,6 @@
   "x-review": "machine",
   "x-source": "63210331f9"
  },
- "js.2eluxgdu08m": "Čísla v této kapitole",
- "@js.2eluxgdu08m": {
-  "x-review": "machine",
-  "x-source": "2d0a4d13b4"
- },
  "js.2en1x3cmvoa": "{n0} Peg b: K z našeho vzorce",
  "@js.2en1x3cmvoa": {
   "x-review": "machine",
@@ -7101,15 +7231,10 @@
   "x-review": "machine",
   "x-source": "dcfc6e0cb1"
  },
- "js.2etjlw57rtv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Galaxie",
- "@js.2etjlw57rtv": {
+ "js.2ew51rdrin6": "Pokles {n0} z {n1}",
+ "@js.2ew51rdrin6": {
   "x-review": "machine",
-  "x-source": "5dbc898c01"
- },
- "js.2eujifl0hnp": "vysoká: nesoulad lichých/sudých nebo sekundární zákryt; střední: hloubka, tvar V, nesoulad hustoty u krátké periody nebo perioda zákrytu; nízká: pouze důvod panelu.",
- "@js.2eujifl0hnp": {
-  "x-review": "machine",
-  "x-source": "4d1f3f27e2"
+  "x-source": "50a1297714"
  },
  "js.2exbs04rc3y": "Optický snímek „planety“, později vysvětlený jako rozpínající se oblak prachu po srážce.",
  "@js.2exbs04rc3y": {
@@ -7156,6 +7281,11 @@
   "x-review": "machine",
   "x-source": "fd6553a3e6"
  },
+ "js.2fkkbj5qfsy": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s2</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.2fkkbj5qfsy": {
+  "x-review": "machine",
+  "x-source": "26c1586964"
+ },
  "js.2fmavt7k5j5": "Posunout Nejlepší kandidáty nahoru",
  "@js.2fmavt7k5j5": {
   "x-review": "machine",
@@ -7176,11 +7306,6 @@
   "x-review": "machine",
   "x-source": "eb8caa0866"
  },
- "js.2ftwr4ebakn": "<b>Skutečná data, s citací.</b> Uložená měření, binovaná nebo složená tak, jak jsou uložena.",
- "@js.2ftwr4ebakn": {
-  "x-review": "machine",
-  "x-source": "349da91d3d"
- },
  "js.2fu72b3rkst": "<b>ν₂ deformační vibrace (dvě, navzájem kolmé)</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · mimo okno {n2}–{n3} µm v části Čtení atmosfér",
  "@js.2fu72b3rkst": {
   "x-review": "machine",
@@ -7195,6 +7320,11 @@
  "@js.2fy47ry25d8": {
   "x-review": "machine",
   "x-source": "745f476a5f"
+ },
+ "js.2fye5c973kf": "označený",
+ "@js.2fye5c973kf": {
+  "x-review": "machine",
+  "x-source": "d9b2fe68b6"
  },
  "js.2fyxww7qwgs": "Slunce",
  "@js.2fyxww7qwgs": {
@@ -7246,6 +7376,11 @@
   "x-review": "machine",
   "x-source": "9dbffce8e5"
  },
+ "js.2gbggujxcvs": "žádné",
+ "@js.2gbggujxcvs": {
+  "x-review": "machine",
+  "x-source": "140bedbf9c"
+ },
  "js.2gbrnw08yjn": "záznam<span aria-hidden=\"true\"></span>",
  "@js.2gbrnw08yjn": {
   "x-review": "machine",
@@ -7275,6 +7410,11 @@
  "@js.2gz7mzl8po": {
   "x-review": "machine",
   "x-source": "8c1759d61c"
+ },
+ "js.2jt13jfskg": "Lalande {n0} d",
+ "@js.2jt13jfskg": {
+  "x-review": "machine",
+  "x-source": "142bf3b80d"
  },
  "js.2jxe56kfgj": "Hledat (/)",
  "@js.2jxe56kfgj": {
@@ -7336,11 +7476,6 @@
   "x-review": "machine",
   "x-source": "c95d84d8a8"
  },
- "js.32jc7egs68": "<b>{n0}</b> z {n1} planet s uloženou vzdáleností v exoplanet.eu bylo nalezeno metodou radiálních rychlostí (první uvedená metoda). <a href=\"/explore/galaxy/?method=rv\">Zobrazit je na mapě Galaxie ›</a>",
- "@js.32jc7egs68": {
-  "x-review": "machine",
-  "x-source": "3d287892f0"
- },
  "js.33d16tnf44": "Načítání mapy {n0} planet…",
  "@js.33d16tnf44": {
   "x-review": "machine",
@@ -7386,11 +7521,6 @@
   "x-review": "machine",
   "x-source": "0b61a77801"
  },
- "js.3d44eg16pj": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Poloha na obloze",
- "@js.3d44eg16pj": {
-  "x-review": "machine",
-  "x-source": "4f904b0fbc"
- },
  "js.3dua6scdtg": "{n0} úseků na {n1} subjektech",
  "@js.3dua6scdtg": {
   "x-review": "machine",
@@ -7415,6 +7545,11 @@
  "@js.3iebm2jaty": {
   "x-review": "machine",
   "x-source": "0455ae374d"
+ },
+ "js.3kjkwe2xdx": "cílů: {n0} · známých: {n1} · chyb: {n2}",
+ "@js.3kjkwe2xdx": {
+  "x-review": "machine",
+  "x-source": "15dfef1f1e"
  },
  "js.3o5vubwdr": "{n0} dex",
  "@js.3o5vubwdr": {
@@ -7446,10 +7581,10 @@
   "x-review": "machine",
   "x-source": "770680c692"
  },
- "js.3tu868pwb6": "TIC {n0} · označený k posouzení, otevřené",
- "@js.3tu868pwb6": {
+ "js.3ub2we0j81": "Teegarden's",
+ "@js.3ub2we0j81": {
   "x-review": "machine",
-  "x-source": "58e453def1"
+  "x-source": "d49a311c27"
  },
  "js.3wqc4ug47j": "Metody: Čtení atmosfér ›",
  "@js.3wqc4ug47j": {
@@ -7491,11 +7626,6 @@
   "x-review": "machine",
   "x-source": "8e52c2a95a"
  },
- "js.45gidy2yfd": "Spodní hranice: základní model pouze z metadat nepoužívá vůbec žádnou světelnou křivku, jen veřejné číslo TOI, periodu, dobu trvání, chyby efemeridy a epochu, s logistickou regresí natrénovanou na ladicí polovině. U metody, která jej nepřekoná, není prokázáno, že čte světelné křivky lépe, než jak dispozice předpovídají metadata samotného katalogu.",
- "@js.45gidy2yfd": {
-  "x-review": "machine",
-  "x-source": "d4a42c8dbc"
- },
  "js.46fy9vwje9": "sekundární, libovolná fáze",
  "@js.46fy9vwje9": {
   "x-review": "machine",
@@ -7530,11 +7660,6 @@
  "@js.4axuq93fet": {
   "x-review": "machine",
   "x-source": "b4faa12d85"
- },
- "js.4b8yjime2n": "Umělecká představa: vzhled „kamenná, mírná“ pro poloměr pod {n0} R⊕, Teq {n1} až {n2} K: šedohnědá hornina a tenký neutrální okraj; žádné oceány, kontinenty ani mraky. Ukázka vzhledu, nikoli konkrétní planety.",
- "@js.4b8yjime2n": {
-  "x-review": "machine",
-  "x-source": "9c1d8d98c4"
  },
  "js.4ccm3arc4r": "Planety v exoplanet.eu: {n0} · uložený typ K0V · třída K podle Teff (nejbližší K0V)",
  "@js.4ccm3arc4r": {
@@ -7596,15 +7721,15 @@
   "x-review": "machine",
   "x-source": "5caba079cd"
  },
+ "js.4sxy414d9c": "vzorek",
+ "@js.4sxy414d9c": {
+  "x-review": "machine",
+  "x-source": "af2bdbe1aa"
+ },
  "js.4t9xjok0e6": "Umělecká představa · hornina, ozáření nelze spočítat · Poloměr není uložen; hmotnost {n0} M⊕ (exoplanet.eu) je pod {n1} M⊕, proto je zobrazena jako kamenná. Poloměr nebyl změřen: není v měřítku. Ozáření nelze spočítat: neutrální barvy. Složení není změřeno. Zdroj: exoplanet.eu, staženo {n2}-{n3}-{n4}. <a href=\"/docs/pictures/\">Jak se obrázky kreslí ›</a>",
  "@js.4t9xjok0e6": {
   "x-review": "machine",
   "x-source": "3975c0da56"
- },
- "js.4u1k8v564x": "Vrchol periodogramu s FAP (Baluev) pod {n0} a semiamplitudou alespoň {n1}× rozptyl binů o délce {n2} minut, koherentní: stejná perioda (v rámci {n3} %) je nejlepším vrcholem každé poloviny světelné křivky a neleží v rámci {n4} % od nejdelší prohledávané periody; perioda sdílená {n5} nebo více hvězdami jednoho sektoru je systematická. Pokles trvající {n6} této periody nebo déle je jejím minimem; stejně tak pokles, který polovina váhy panelu označila za hvězdnou proměnnost.",
- "@js.4u1k8v564x": {
-  "x-review": "machine",
-  "x-source": "9c7dd08245"
  },
  "js.4v6zv9397m": "spolehlivost {n0}",
  "@js.4v6zv9397m": {
@@ -7631,10 +7756,10 @@
   "x-review": "machine",
   "x-source": "0e17d0a129"
  },
- "js.50cw8uea6": "Odložené EB: perioda v rámci {n0} % od katalogové (neoznačená EB je minutí), dolní mez {n1}% intervalu &gt;= {n2}",
- "@js.50cw8uea6": {
+ "js.4xy18gdl7w": "Katalog aktualizován <time datetime=\"2026-10-30T06:34:41+00:00\" title=\"2026-10-30T06:34:41+00:00\">{n0}. října {n1}, {n2} UTC</time>.",
+ "@js.4xy18gdl7w": {
   "x-review": "machine",
-  "x-source": "75081a4bd7"
+  "x-source": "d9bccf18dc"
  },
  "js.537weqdx92": "TIC {n0} · P {n1} d · {n2} ppm · SNR {n3}",
  "@js.537weqdx92": {
@@ -7661,15 +7786,25 @@
   "x-review": "machine",
   "x-source": "d40d0e920c"
  },
+ "js.5cuofh1x2k": "v tomto úseku nerozlišitelné od šumu",
+ "@js.5cuofh1x2k": {
+  "x-review": "machine",
+  "x-source": "7dfa2254b3"
+ },
+ "js.5eim8yf4c": "Lalande {n0}",
+ "@js.5eim8yf4c": {
+  "x-review": "machine",
+  "x-source": "7a73b4b548"
+ },
+ "js.5j6snvvuuk": "Rozvržení",
+ "@js.5j6snvvuuk": {
+  "x-review": "machine",
+  "x-source": "a511909161"
+ },
  "js.5k1okfy1y2": "Web",
  "@js.5k1okfy1y2": {
   "x-review": "machine",
   "x-source": "fa7955814e"
- },
- "js.5limoap242": "<b>ν₄ asymetrické ohybové (dvě)</b> · {n0} µm · aktivní v infračervené oblasti · zobrazeno ×{n1} · mimo okno {n2}–{n3} µm pro {s0}",
- "@js.5limoap242": {
-  "x-review": "machine",
-  "x-source": "c1aa83b41c"
  },
  "js.5m1n02zglj": "Identifikace oxidu uhličitého v atmosféře exoplanety",
  "@js.5m1n02zglj": {
@@ -7695,11 +7830,6 @@
  "@js.5qqcw21as6": {
   "x-review": "machine",
   "x-source": "f4a2329657"
- },
- "js.5tmt3hrss9": "hranice velikostní třídy katalogu (plynný obr {n0} R⊕ nebo více)",
- "@js.5tmt3hrss9": {
-  "x-review": "machine",
-  "x-source": "7807f33d37"
  },
  "js.5x2cvaysve": "Semiamplituda RV K",
  "@js.5x2cvaysve": {
@@ -7736,6 +7866,11 @@
   "x-review": "machine",
   "x-source": "bf11fecb30"
  },
+ "js.64gjc6ygey": "Blokování světla hvězd",
+ "@js.64gjc6ygey": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
  "js.65pxt8ib9c": "Super-Jupiter zobrazený u dvojhvězdy.",
  "@js.65pxt8ib9c": {
   "x-review": "machine",
@@ -7765,11 +7900,6 @@
  "@js.6j56seqj8": {
   "x-review": "machine",
   "x-source": "7e69af06bb"
- },
- "js.6n8ndyybfz": "Příspěvek uvádí pro každou hvězdu ve svém rozsahu události, které jeho metoda detekovala na skutečné světelné křivce a na kontrolách s invertovaným tokem a s blokově zamíchanými daty (čas, trvání, perioda, vlastní verdikt o splnění a příznaky). Žebříček rozhoduje, které události leží na efemeridě TOI (score_star a match_toi benchmarku), a falešné poplachy kontrol počítá sám. Výsledky hlášené samotnými autory se nepřijímají.",
- "@js.6n8ndyybfz": {
-  "x-review": "machine",
-  "x-source": "7c4b789f62"
  },
  "js.6qolz1acje": "Zdroj: jak uvádí popisek.",
  "@js.6qolz1acje": {
@@ -7826,6 +7956,11 @@
   "x-review": "machine",
   "x-source": "217afade12"
  },
+ "js.78llqc69gh": "Proxima Centauri b",
+ "@js.78llqc69gh": {
+  "x-review": "machine",
+  "x-source": "c5626ab780"
+ },
  "js.78r4r7906c": "Na Zemi ji vytváří téměř výhradně mořský život.",
  "@js.78r4r7906c": {
   "x-review": "machine",
@@ -7861,15 +7996,15 @@
   "x-review": "machine",
   "x-source": "1aca80e8b5"
  },
- "js.7czfymv28r": "umělecká představa z tabulky vzhledů; velikost v měřítku jen tehdy, je-li uložen poloměr",
- "@js.7czfymv28r": {
-  "x-review": "machine",
-  "x-source": "326ba9455b"
- },
  "js.7f3lidyc7s": "Tranzit v přehrávání",
  "@js.7f3lidyc7s": {
   "x-review": "machine",
   "x-source": "40686f7e63"
+ },
+ "js.7i6tnzxffe": "Wolf {n0} b",
+ "@js.7i6tnzxffe": {
+  "x-review": "machine",
+  "x-source": "03eb21d076"
  },
  "js.7nrzzc658q": "naslepo kódované subjekty",
  "@js.7nrzzc658q": {
@@ -7925,6 +8060,11 @@
  "@js.843gyvqmqu": {
   "x-review": "machine",
   "x-source": "3e17a94f61"
+ },
+ "js.87fibqymmi": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">pi Men c</a></b> · hvězda <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> · P {n0} d · tranzituje",
+ "@js.87fibqymmi": {
+  "x-review": "machine",
+  "x-source": "f7c50ba965"
  },
  "js.886176wzks": "{n0} planeta v exoplanet.eu · uložený typ F6V · třída F z Teff (nejbližší F5V)",
  "@js.886176wzks": {
@@ -7986,11 +8126,6 @@
   "x-review": "machine",
   "x-source": "a4c44f4a8f"
  },
- "js.8wmiyv0zzd": "Umělecká představa: vzhled „chladná hornina“ pro poloměr pod {n0} R⊕ a Teq pod {n1} K: světle šedá hornina, ledové čepičky do šířky {n2}°, bez atmosféry. Ukázka vzhledu, nikoli konkrétní planety.",
- "@js.8wmiyv0zzd": {
-  "x-review": "machine",
-  "x-source": "c1497fc8a0"
- },
  "js.8wxh5amfez": "Sub-Neptun",
  "@js.8wxh5amfez": {
   "x-review": "machine",
@@ -8001,10 +8136,20 @@
   "x-review": "machine",
   "x-source": "10af6c250a"
  },
+ "js.905p7mrgke": "Ross {n0} b",
+ "@js.905p7mrgke": {
+  "x-review": "machine",
+  "x-source": "eec00b75d8"
+ },
  "js.90yyx3asv8": "{n0} Psc c",
  "@js.90yyx3asv8": {
   "x-review": "machine",
   "x-source": "f0cbc33340"
+ },
+ "js.92zm5mb6ic": "záznam",
+ "@js.92zm5mb6ic": {
+  "x-review": "machine",
+  "x-source": "923fe53966"
  },
  "js.94m77w54ls": "Jeho uložené zdůvodnění pro subjekt S2 (BTJD {n0} až {n1}), jedno na subjekt, ne na pokles. Tento pokles označil. Sentinel je model AI (Claude Code CLI (Claude, Anthropic) · default), nikoli člověk.",
  "@js.94m77w54ls": {
@@ -8066,15 +8211,15 @@
   "x-review": "machine",
   "x-source": "6c293b1c67"
  },
- "js.9g29b1hwza": "JWST {s0}ing Exoplanet Community ERS Team",
- "@js.9g29b1hwza": {
-  "x-review": "machine",
-  "x-source": "d6a491c51e"
- },
  "js.9ipi38tplb": "Hvězda",
  "@js.9ipi38tplb": {
   "x-review": "machine",
   "x-source": "e357d39687"
+ },
+ "js.9j28j4tmyg": "Barnard's star b",
+ "@js.9j28j4tmyg": {
+  "x-review": "machine",
+  "x-source": "af09ab2ca6"
  },
  "js.9je9lv8f9w": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">5i. <span class=\"mono\">tess-bc9f59e5c3af-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Označilo {n5} posuzovatelů (katalog neukládá velikost panelu ani konsenzuální interval). Leží na BLS periodě {n6} dne s {n7} tranzity. Stav: perioda odpovídá známému TOI. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.9je9lv8f9w": {
@@ -8111,6 +8256,11 @@
   "x-review": "machine",
   "x-source": "ef80c9cc7c"
  },
+ "js.9xo5dpvs8f": "{n0} Eri c",
+ "@js.9xo5dpvs8f": {
+  "x-review": "machine",
+  "x-source": "b644412ed5"
+ },
  "js.9yvkaakdvn": "Pro tyto řádky není v tomto běhu uložena žádná složka.",
  "@js.9yvkaakdvn": {
   "x-review": "machine",
@@ -8135,11 +8285,6 @@
  "@js.a5ik0d45ok": {
   "x-review": "machine",
   "x-source": "76a48996a7"
- },
- "js.a5x17kv5tz": "Zobrazeno planet: {n0} · tranzit {n1} · radiální rychlost {n2} · přímé zobrazení {n3} · mikročočkování {n4}",
- "@js.a5x17kv5tz": {
-  "x-review": "machine",
-  "x-source": "3372d51309"
  },
  "js.a6wp5hntda": "Příznaky prověřování: <span class=\"mono\">odd_even_mismatch, v_shape</span> · neprošel prověřováním",
  "@js.a6wp5hntda": {
@@ -8175,11 +8320,6 @@
  "@js.ai6mp83zpi": {
   "x-review": "machine",
   "x-source": "73d5db9ed8"
- },
- "js.ak7b9gcem6": "vysoká: FAP pod 1e-{n0} a semiamplituda alespoň {n1}× binovaný rozptyl; střední: semiamplituda {n2}× nebo více; nízká: jinak (nebo pokles pouze z důvodu panelu).",
- "@js.ak7b9gcem6": {
-  "x-review": "machine",
-  "x-source": "4c775dba32"
  },
  "js.am5y46ghie": "exoplanet.eu ji uvádí jako „Publikováno v recenzovaném článku“, nalezena metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známá také jako TOI-{n4}.",
  "@js.am5y46ghie": {
@@ -8226,11 +8366,6 @@
   "x-review": "machine",
   "x-source": "d69fa08242"
  },
- "js.aztpkxejok": "hranice třídy velikosti v katalogu (neptunovského typu {n0}–{n1} R⊕)",
- "@js.aztpkxejok": {
-  "x-review": "machine",
-  "x-source": "0a47054ebb"
- },
  "js.b2yn41cpri": "Spis případu se v tomto zobrazení nepodařilo načíst. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-f28323a4aef6-006\">Otevřete jej na samostatné stránce.</a>",
  "@js.b2yn41cpri": {
   "x-review": "machine",
@@ -8245,11 +8380,6 @@
  "@js.b81xuwkvhb": {
   "x-review": "machine",
   "x-source": "fa1b7822f3"
- },
- "js.ba6i75z9zb": "Dalších {n0} v <a href=\"/candidates/\">Průzkumníku ›</a>",
- "@js.ba6i75z9zb": {
-  "x-review": "machine",
-  "x-source": "378a1efe43"
  },
  "js.bcz7f7521k": "tess-toi-{n0}-s5",
  "@js.bcz7f7521k": {
@@ -8281,11 +8411,6 @@
   "x-review": "machine",
   "x-source": "9d7801b23a"
  },
- "js.bm1842qxn6": "<b>Nové signály živého kanálu jsou slučitelné se šumem.</b> Samotný šum by měl dát přibližně {n0} falešných signálů new_candidate na {n1} posouzených cílů, oproti {n2} na {n3} v živém kanálu. Podle tohoto dřívějšího pravidla byl new_candidate v kanálu spíše šum než signál.",
- "@js.bm1842qxn6": {
-  "x-review": "machine",
-  "x-source": "c59881f8e5"
- },
  "js.bn4w24un71": "≤: horní mez, z uloženého rozsahu ({n0} až hodnota).",
  "@js.bn4w24un71": {
   "x-review": "machine",
@@ -8306,10 +8431,10 @@
   "x-review": "machine",
   "x-source": "d1ec927942"
  },
- "js.buyt9rgrrs": "Prošel prověřováním, polovina váhy panelu jej označila za potenciální planetu, nevychází z vlastního periodického signálu své hvězdy a nezachytilo jej žádné z výše uvedených pravidel. Kandidát, nepotvrzený.",
- "@js.buyt9rgrrs": {
+ "js.bvhiyb18bf": "malý",
+ "@js.bvhiyb18bf": {
   "x-review": "machine",
-  "x-source": "2488197a47"
+  "x-source": "81db8ebbbb"
  },
  "js.bvrmk1ex4g": "objev",
  "@js.bvrmk1ex4g": {
@@ -8336,10 +8461,10 @@
   "x-review": "machine",
   "x-source": "c7e1272291"
  },
- "js.cbv0lkfgz8": "Otevřít případ {s0} ›",
- "@js.cbv0lkfgz8": {
+ "js.cb7mp7y3o9": "Uložené id tess-1c554332c266-{n0}; v tomto běhu žádný soubor případu",
+ "@js.cb7mp7y3o9": {
   "x-review": "machine",
-  "x-source": "248441ab0d"
+  "x-source": "64026e0de1"
  },
  "js.cbz7kbs8l0": "id tic29257288-s1-dip-{n0} · subjekt tess-6cf3bf1771b3<br>sha256 světelné křivky b44e4d280fddc0d2705f6687997736ebf67f9b0544e9711f880a21ebaa0bda05<br>kód … · konfigurace a9d34c7079563183…<br>zdroj sector_0001.json.gz",
  "@js.cbz7kbs8l0": {
@@ -8406,6 +8531,11 @@
   "x-review": "machine",
   "x-source": "bbc7feceee"
  },
+ "js.d6qkqwv24q": "{n0} Peg · {n1} K",
+ "@js.d6qkqwv24q": {
+  "x-review": "machine",
+  "x-source": "e5f1ee0a62"
+ },
  "js.d72yz71kxc": "Kanál seřazený podle snr sestupně. Každý záznam je kandidát, nepotvrzený.",
  "@js.d72yz71kxc": {
   "x-review": "machine",
@@ -8425,11 +8555,6 @@
  "@js.db3tsr98n3": {
   "x-review": "machine",
   "x-source": "aa93d0c8f4"
- },
- "js.dcedelaavp": "<b>ν₂ ohybová vibrace</b> · {n0} µm · infračerveně aktivní · vykresleno ×{n1} · mimo okno {n2}–{n3} µm stránky {s0}",
- "@js.dcedelaavp": {
-  "x-review": "machine",
-  "x-source": "9dbd92a5c8"
  },
  "js.dcp2jzpjk": "<i style=\"background:#30D158\"></i>beta Pic b",
  "@js.dcp2jzpjk": {
@@ -8486,6 +8611,11 @@
   "x-review": "machine",
   "x-source": "b6940405a0"
  },
+ "js.dvqr7huse3": "eps Ind Bb",
+ "@js.dvqr7huse3": {
+  "x-review": "machine",
+  "x-source": "e8e7d5bf66"
+ },
  "js.dvwoo1e05r": "Transmisní spektrum WASP-{n0} b z JWST NIRSpec PRISM: {n1} binovaných bodů s chybovými úsečkami a nejlépe odpovídající model z článku; nejhlubší bod je na {n2} mikrometrech, v pásu oxidu uhličitého.",
  "@js.dvwoo1e05r": {
   "x-review": "machine",
@@ -8525,11 +8655,6 @@
  "@js.e1cnrnc88l": {
   "x-review": "machine",
   "x-source": "7a72e5d7b0"
- },
- "js.e1q7qs4zzq": "<b>ν₃ asymetrická valenční vibrace (tři)</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · <a href=\"/how-it-works/atmospheres/\">pás {n2} µm v {s0} ›</a>",
- "@js.e1q7qs4zzq": {
-  "x-review": "machine",
-  "x-source": "71ad84105e"
  },
  "js.e2y47rpcbh": "Neznámé",
  "@js.e2y47rpcbh": {
@@ -8686,6 +8811,11 @@
   "x-review": "machine",
   "x-source": "09cd47b417"
  },
+ "js.f2v9rtmf85": "Kód",
+ "@js.f2v9rtmf85": {
+  "x-review": "machine",
+  "x-source": "340f463033"
+ },
  "js.f38k3bw5h7": "<b class=\"flabel\">Tabule {n0}, panel i.</b> Uložený tok subjektu tess-38b5a559eee2 (BTJD {n1} až {n2}), relativní tok − {n3} v ppm. Stínované pásy jsou konsenzuální intervaly, označené písmeny jako v popiscích; trojúhelníky jsou epochy BLS. Vpravo: složeno podle uložené periody BLS {n4} d a t0 BTJD {n5}; stínovaný pás je uložená doba trvání BLS ({n6} h). Body mimo rozsah toku ({n7}) nejsou vykresleny.",
  "@js.f38k3bw5h7": {
   "x-review": "machine",
@@ -8700,11 +8830,6 @@
  "@js.f6sm069d1p": {
   "x-review": "machine",
   "x-source": "4b1c53ca4a"
- },
- "js.f7l0xvrbgu": "<b>Převážně valenční vibrace N–N</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · v {s0} nevykresleno",
- "@js.f7l0xvrbgu": {
-  "x-review": "machine",
-  "x-source": "099bdfda01"
  },
  "js.f7onc16rky": "tranzity předpovězené v datech / s poklesem",
  "@js.f7onc16rky": {
@@ -8725,11 +8850,6 @@
  "@js.fakckuaz74": {
   "x-review": "machine",
   "x-source": "deaf714e0c"
- },
- "js.fbjnqepq3y": "<b>Každá třída proti své vlastní nulové hypotéze</b>, měřeno na stejných {n0} hvězdných sektorech: co její pravidlo najde tam, kde její signál být nemůže. Poklesy: tok obrácený vzhůru nohama (skutečný pokles se stane hrbolem; skutečné vzplanutí nebo maximum pulzace se stane poklesem, takže tato nulová hypotéza není prostá skutečných signálů). Vzplanutí: události směrem dolů se zamaskovanými skutečnými poklesy. Proměnnost: kopie hvězdy s červeným šumem (AR({n1}) nafitovaný na její biny) prošlá stejným pravidlem, které vyžaduje stejnou nejlepší periodu (v rozmezí {n2} %) v obou polovinách světelné křivky. Z jejích vrcholů periodogramu, které neleží na periodě dvojhvězdy, je koherentních {n3}; neklasifikovaných je {n4} delších, než může polovina otestovat (koherence netestována), {n5} na okraji mřížky period a {n6}, které mezi polovinami putují. Omezení: sinusoidu {n7} ppm v silném červeném šumu najde jen {n8}/{n9}krát (scripts/variability_rule_check.py) a v jednom sektoru nemůže testovat periody delší než asi {n10} d. Porovnává se druh s druhem, jednotkou je hvězdný sektor: {n11}% interval je párový bootstrap přes hvězdné sektory, vedle McNemarova testu. Třída, která neprojde oběma, není v tomto výřezu odlišitelná od šumu: Kandidát na planetu, Zákrytová dvojhvězda, Vzplanutí, Pulzátor nebo rotační proměnná, Systematika. Z {n12} zjasnění třídy vzplanutí jich {n13} stoupá rychleji, než klesá, a {n14} naopak ({n15} stejně); skutečná vzplanutí stoupají rychle, šum nemá preferovaný směr.",
- "@js.fbjnqepq3y": {
-  "x-review": "machine",
-  "x-source": "edcc450583"
  },
  "js.fbyrtfuuuu": "pi Men",
  "@js.fbyrtfuuuu": {
@@ -8771,11 +8891,6 @@
   "x-review": "machine",
   "x-source": "8e4a1eb431"
  },
- "js.ftkov6vbui": "Silueta poklesu (kandidáti, poměry poloměrů)",
- "@js.ftkov6vbui": {
-  "x-review": "machine",
-  "x-source": "2cbc25cbe4"
- },
  "js.fv6055pnqa": "perioda odpovídá známému TOI",
  "@js.fv6055pnqa": {
   "x-review": "machine",
@@ -8816,10 +8931,10 @@
   "x-review": "machine",
   "x-source": "ab87f8473e"
  },
- "js.g1lwglngw7": "Archivní srovnání: konzistentní s {s0}: ΔP {n0} %, časový posun podle validační poznámky: průměr {n1} min přes {n2} epoch. Pouze archivní hodnoty. Tato stránka si nenárokuje žádnou detekci.",
- "@js.g1lwglngw7": {
+ "js.g2cghw07hl": "Rotace",
+ "@js.g2cghw07hl": {
   "x-review": "machine",
-  "x-source": "dff14c09d4"
+  "x-source": "57b5e2fc1b"
  },
  "js.g3w1e5hqnc": "Nejlepší stabilita spektrografu",
  "@js.g3w1e5hqnc": {
@@ -8830,6 +8945,11 @@
  "@js.g6lwhkyils": {
   "x-review": "machine",
   "x-source": "0574b94b3e"
+ },
+ "js.g6m1eyxsdn": "Molekula",
+ "@js.g6m1eyxsdn": {
+  "x-review": "machine",
+  "x-source": "49a6356091"
  },
  "js.g6m8lmxer6": "Typická doba Einsteinova přechodu",
  "@js.g6m8lmxer6": {
@@ -8850,6 +8970,11 @@
  "@js.gbaq8jky1n": {
   "x-review": "machine",
   "x-source": "49aaab944b"
+ },
+ "js.gc28rpxiwc": "Luyten's Star",
+ "@js.gc28rpxiwc": {
+  "x-review": "machine",
+  "x-source": "f84d36433e"
  },
  "js.gc92hxaxrj": "Sentinel · Skeptic: úseků v tomto okně: {n0}, započteno pro tento pokles",
  "@js.gc92hxaxrj": {
@@ -8896,20 +9021,10 @@
   "x-review": "machine",
   "x-source": "8ab8377cb2"
  },
- "js.gf2k29wf2u": "Vzplanutí, pulzace a veřejné světelné křivky CHEOPS (data CHEOPS podle podmínek ESA)",
- "@js.gf2k29wf2u": {
-  "x-review": "machine",
-  "x-source": "7636d9cad3"
- },
  "js.gfd1bpovje": "Poklesy: {n0} (zamítnuté: {n1})",
  "@js.gfd1bpovje": {
   "x-review": "machine",
   "x-source": "f9153844c1"
- },
- "js.ggh3kiowd3": "Umělecká představa: vzhled rozžhavené horniny pro poloměr pod {n0} R⊕ a Teq {n1} K nebo více: tmavá hornina se žhnoucími trhlinami na denní straně. Ukázka tohoto vzhledu, nikoli konkrétní planety.",
- "@js.ggh3kiowd3": {
-  "x-review": "machine",
-  "x-source": "082ec2b77a"
  },
  "js.gizr3gwvyr": "Jiná označení: {n0}, KOI-{n1}, 2MASS J19323620+{n2}.",
  "@js.gizr3gwvyr": {
@@ -8955,6 +9070,11 @@
  "@js.gplu2k76y8": {
   "x-review": "machine",
   "x-source": "6f0127f52b"
+ },
+ "js.gpznjdo7y3": "pi Men · {n0} K",
+ "@js.gpznjdo7y3": {
+  "x-review": "machine",
+  "x-source": "899a850a1e"
  },
  "js.griyfzkg7e": "<b>deformační ν₂</b> · {n0} µm · aktivní v infračerveném oboru · zakresleno ×{n1} · mimo okno {n2}–{n3} µm stránky Čtení atmosfér",
  "@js.griyfzkg7e": {
@@ -9016,6 +9136,11 @@
   "x-review": "machine",
   "x-source": "ed2c6ec6d2"
  },
+ "js.hfecdi2gfn": "tau Cet g",
+ "@js.hfecdi2gfn": {
+  "x-review": "machine",
+  "x-source": "5a095c9a36"
+ },
  "js.hi7kyj244t": "Jedny z prvních planet nalezených mimo Sluneční soustavu, a to měřením časování milisekundového pulsaru.",
  "@js.hi7kyj244t": {
   "x-review": "machine",
@@ -9050,6 +9175,11 @@
  "@js.hrans2nscc": {
   "x-review": "machine",
   "x-source": "476f15a932"
+ },
+ "js.ht99op5pxg": "NASA Exoplanet Archive, tabulka ps (default_flag = {n0}), jak je zaznamenáno v docs/results/pi_men_validation.md skriptem scripts/validate_known_planets.py (živý dotaz do archivu, commit 0f6dbdc). Zaznamenána je tam pouze pi Men c, proto je uvedena pouze pi Men c; její střední čas tranzitu nebyl zaznamenán, takže se zde nepočítá odchylka pro jednotlivé epochy; místo toho se cituje průměrná časová odchylka z validační poznámky ({n1} min přes {n2} z {n3} epoch). Nahraďte ji výstupem 'setuhq crossmatch runs/tess-pi-men-s1', až archiv odpoví., zaznamenáno <time datetime=\"2026-10-16T22:59:37+00:00\" title=\"2026-10-16T22:59:37+00:00\">{n4}. října {n5}, {n6} UTC</time> (commit 0f6dbdc) v docs/results/pi_men_crossmatch.json; vlastní křížové porovnání tohoto běhu neproběhlo (uložená chyba, doslovně: <code>ModuleNotFoundError: No module named 'astroquery'</code>).",
+ "@js.ht99op5pxg": {
+  "x-review": "machine",
+  "x-source": "4653c87d87"
  },
  "js.hv6t0hplex": "Zpráva o běhu · tess-toi-{n0}-s2",
  "@js.hv6t0hplex": {
@@ -9141,10 +9271,10 @@
   "x-review": "machine",
   "x-source": "8c601dc48e"
  },
- "js.ioyj9009pb": "<a href=\"/assets/data/exoplanet_map.csv\" download=\"\">Stáhnout všechny zobrazené planety (CSV, {n0} řádků)</a>, odvozeno z uložené mapy exoplanet.eu.",
- "@js.ioyj9009pb": {
+ "js.iqpr6oou3c": "Sektor {n0}: {n1}-{n2}-{n3} až {n4}-{n5}-{n6} · katalogizovaných hvězd se známými planetami v jeho polích: {n7}",
+ "@js.iqpr6oou3c": {
   "x-review": "machine",
-  "x-source": "0669d7463c"
+  "x-source": "61eb698124"
  },
  "js.ir7824frtx": "tess-08a8c4eac6ff-{n0} · Otevřené · kandidát, nepotvrzený",
  "@js.ir7824frtx": {
@@ -9155,6 +9285,11 @@
  "@js.irvrs2dlo3": {
   "x-review": "machine",
   "x-source": "c1c91c0c5c"
+ },
+ "js.it3yfm2mls": "WASP-{n0}<br><span class=\"muted mono t-data\">tess-wasp-{n1}-s1</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.it3yfm2mls": {
+  "x-review": "machine",
+  "x-source": "be84b6d521"
  },
  "js.it7w3r4cx": "Tranzity předpovězené v uložené světelné křivce: {n0}; s poklesem na nich: {n1} ({n2} poklesů; {n3} označených; průměrný posun {n4} min).",
  "@js.it7w3r4cx": {
@@ -9281,6 +9416,11 @@
   "x-review": "machine",
   "x-source": "90e37abec4"
  },
+ "js.k2p8kaiegs": "HN Lib b",
+ "@js.k2p8kaiegs": {
+  "x-review": "machine",
+  "x-source": "1b00eabfcb"
+ },
  "js.k3btdf81ur": "Excentricita",
  "@js.k3btdf81ur": {
   "x-review": "machine",
@@ -9295,11 +9435,6 @@
  "@js.k6wgj1vf42": {
   "x-review": "machine",
   "x-source": "3a6449de5f"
- },
- "js.k73o4aajts": "Čtyři scény. Časování {s0}: dvě planety blízko poměru period {n0} se navzájem gravitačně ovlivňují, takže tranzity vnitřní planety přicházejí dříve a později a postupně vzniká diagram O−C. Sekundární zákryt: planeta zajde za svou hvězdu půl oběhu po tranzitu, což je mnohem menší pokles, zde zakreslený desetkrát hlubší. Fázová křivka: slapově vázaná planeta ukazuje směrem k zákrytu více své horké denní strany, přičemž maximum je posunuto větry. Rossiterův–McLaughlinův jev: planeta zakrývá nejprve přibližující se a poté vzdalující se polovinu rotující hvězdy, takže se měřená rychlost hvězdy během tranzitu mění.",
- "@js.k73o4aajts": {
-  "x-review": "machine",
-  "x-source": "21a7dc3be9"
  },
  "js.k81gpwo3bo": "{n0} −-{n1} / {n2} Gyr",
  "@js.k81gpwo3bo": {
@@ -9391,10 +9526,20 @@
   "x-review": "machine",
   "x-source": "5bd78577ba"
  },
+ "js.l361fmbsuc": "Uložené id tess-eaab33b6b763-{n0}; v tomto běhu žádný soubor případu",
+ "@js.l361fmbsuc": {
+  "x-review": "machine",
+  "x-source": "75a96bab8f"
+ },
  "js.l3je4rzt3v": "{n0} Pegasi b, obr na {n1}denní oběžné dráze, nalezený podle kolísání své hvězdy.",
  "@js.l3je4rzt3v": {
   "x-review": "machine",
   "x-source": "783b55a817"
+ },
+ "js.l5edhw6c5o": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">7c. <span class=\"mono\">tess-7b97e468b60b-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Označilo jej {n5} posuzovatelů (katalog neukládá velikost panelu ani interval shody). Leží na BLS periodě {n6} dní s {n7} tranzity. Stav: perioda odpovídá známému TOI. Pouze hodnoty z archivu. Tato stránka netvrdí žádnou detekci.",
+ "@js.l5edhw6c5o": {
+  "x-review": "machine",
+  "x-source": "84eea9bb2e"
  },
  "js.l66csoi3se": "Kalkulačka Drakeovy rovnice",
  "@js.l66csoi3se": {
@@ -9426,6 +9571,11 @@
   "x-review": "machine",
   "x-source": "bcb2e28ac7"
  },
+ "js.le6i0lhisz": "Populace",
+ "@js.le6i0lhisz": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
  "js.lg9kxjhees": "*Známý falešně pozitivní případ.* TESS Object of Interest, který tabulka TOI klasifikuje jako falešně pozitivní (FP): pokles o {n0} % každých {n1} dní.",
  "@js.lg9kxjhees": {
   "x-review": "machine",
@@ -9436,6 +9586,11 @@
   "x-review": "machine",
   "x-source": "2b91c1afd2"
  },
+ "js.lh8m0vnna6": "Mikročočkování <span class=\"mono\" data-cmn=\"microlensing\">{n0}</span>",
+ "@js.lh8m0vnna6": {
+  "x-review": "machine",
+  "x-source": "6ebe002adb"
+ },
  "js.lj02ml1du2": "Také známa jako GJ {n0}, V2500 Oph.",
  "@js.lj02ml1du2": {
   "x-review": "machine",
@@ -9445,21 +9600,6 @@
  "@js.lj5zi4x2mb": {
   "x-review": "machine",
   "x-source": "a266923843"
- },
- "js.lmqc5cetjp": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Pohled na soustavu",
- "@js.lmqc5cetjp": {
-  "x-review": "machine",
-  "x-source": "b55e8878de"
- },
- "js.loxdmylfqk": "Zamítání FP: hvězdy FP, jejichž pokles TOI metoda nenabídla jako čistého kandidáta (zachycen a neoznačen). Spolehlivost: podíl čistých kandidátů na poklesech TOI, které jsou CP/KP, při zastoupení tříd v tomto vzorku, které neodpovídá katalogu TOI. Všechny míry jsou uvedeny s Wilsonovými {n0}% intervaly. Dispozice TFOPWG jsou referencí, nikoli spolehlivou pravdou pro každé TOI.",
- "@js.loxdmylfqk": {
-  "x-review": "machine",
-  "x-source": "65f89a23b5"
- },
- "js.lpvg4u78fv": "<span class=\"mcnum mono\" aria-hidden=\"true\">{n0}</span>Katalog",
- "@js.lpvg4u78fv": {
-  "x-review": "machine",
-  "x-source": "a3cf22621a"
  },
  "js.lugtea4b2c": "Tabulka, na úzké obrazovce se posouvá do strany",
  "@js.lugtea4b2c": {
@@ -9506,6 +9646,11 @@
   "x-review": "machine",
   "x-source": "6ba2097d7d"
  },
+ "js.m1r0pwwc2c": "Eps Ind Ab",
+ "@js.m1r0pwwc2c": {
+  "x-review": "machine",
+  "x-source": "f49ed6b253"
+ },
  "js.m3r8wny6k9": "Umělecká představa {s0}: plynný obr v chladném pásmu, poloměr nebyl změřen ({n0} hmotností Země), {n1} K.",
  "@js.m3r8wny6k9": {
   "x-review": "machine",
@@ -9551,11 +9696,6 @@
   "x-review": "machine",
   "x-source": "be67c2df8b"
  },
- "js.me79v4kzjl": "<b>Přísnější pravidlo feedu, předem registrované a znovu změřené na tomto kódu.</b> Signál nyní musí projít v obou posuzovaných sektorech s FAP pod {n0} při {n1} pokusech. Na odložené polovině dává samotný šum {n2} falešných signálů na {n3} cílů ({n4}% CI {n5}–{n6}), oproti dřívějším {n7} ({n8}–{n9}). To je stále vysoko nad {n10} novými signály na {n11} cílů, které dávají skutečné světelné křivky, takže ve feedu stále převládají falešné poplachy, a úplnost na úrovni feedu klesla z {n12} % na {n13} %. Přijetí do feedu je podnět k lidskému nebo navazujícímu posouzení, nikoli kandidát s jakýmkoli potvrzeným statusem. Při novém spuštění na tomto kódu přijme {n14} cílů živého feedu {n15} nových signálů.",
- "@js.me79v4kzjl": {
-  "x-review": "machine",
-  "x-source": "1b6a64cd4a"
- },
  "js.meqp2x3ji6": "exoplanet.eu ji uvádí jako \"Published in a refereed paper\", nalezena přímým zobrazením v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Také známa jako bet Pic b, HIP {n4} b.",
  "@js.meqp2x3ji6": {
   "x-review": "machine",
@@ -9576,25 +9716,25 @@
   "x-review": "machine",
   "x-source": "6a7bc0cac6"
  },
- "js.mi2tgjiiqn": "<b>Pro Follow-up</b> <span class=\"eddev\">ve vývoji</span>: balíček pro následná pozorování ke každému kandidátovi: export ve stylu ExoFOP, efemerida s její nejistotou a údaj, kdy je cíl pozorovatelný z dalekohledů zákazníka",
- "@js.mi2tgjiiqn": {
-  "x-review": "machine",
-  "x-source": "e944e5aba3"
- },
  "js.mimntzdewz": "Metody: Směrem k nám a od nás ›",
  "@js.mimntzdewz": {
   "x-review": "machine",
   "x-source": "3f269a446d"
  },
- "js.mk4mulcwso": "<b>ν₃ asymetrická valenční vibrace</b> · {n0} µm · aktivní v infračervené oblasti · zobrazeno ×{n1} · <a href=\"/how-it-works/atmospheres/\">pás {n2} µm v {s0} ›</a>",
- "@js.mk4mulcwso": {
+ "js.mkc9jxfgbz": "označené poklesy",
+ "@js.mkc9jxfgbz": {
   "x-review": "machine",
-  "x-source": "518c8ddc31"
+  "x-source": "94e146b4e3"
  },
  "js.mlrhcayzxr": "Stav je u každé barvy uveden také slovem.",
  "@js.mlrhcayzxr": {
   "x-review": "machine",
   "x-source": "4775478abc"
+ },
+ "js.mmnswive1w": "<i aria-hidden=\"true\"></i>Erupce",
+ "@js.mmnswive1w": {
+  "x-review": "machine",
+  "x-source": "e7a022e38b"
  },
  "js.mmu67oe6q3": "Barycentrum Země–Slunce",
  "@js.mmu67oe6q3": {
@@ -9611,10 +9751,25 @@
   "x-review": "machine",
   "x-source": "0882c3b8b4"
  },
+ "js.mqj6wfaw6h": "Ross {n0}",
+ "@js.mqj6wfaw6h": {
+  "x-review": "machine",
+  "x-source": "817ee35ea0"
+ },
+ "js.mskkijl1h9": "eps Ind A",
+ "@js.mskkijl1h9": {
+  "x-review": "machine",
+  "x-source": "0cf3bf4b89"
+ },
  "js.msr7a8c18z": "Pásma (µm)",
  "@js.msr7a8c18z": {
   "x-review": "machine",
   "x-source": "482e628874"
+ },
+ "js.mtnvg3zz1c": "HD {n0}<br><span class=\"muted mono t-data\">tess-hd-{n1}-s4</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.mtnvg3zz1c": {
+  "x-review": "machine",
+  "x-source": "7cc6c4ce56"
  },
  "js.mwjxjvzia1": "Řadit podle",
  "@js.mwjxjvzia1": {
@@ -9625,6 +9780,11 @@
  "@js.mwv88v3dkm": {
   "x-review": "machine",
   "x-source": "f1df8fd039"
+ },
+ "js.mxcgzchu7z": "YZ Cet b ›",
+ "@js.mxcgzchu7z": {
+  "x-review": "machine",
+  "x-source": "a3d4d803bc"
  },
  "js.n10imi0en": "neomezený",
  "@js.n10imi0en": {
@@ -9641,10 +9801,20 @@
   "x-review": "machine",
   "x-source": "7790fa8642"
  },
+ "js.n794msf49i": "exoplanet.eu ji uvádí jako „Published in a refereed paper“, nalezena metodami radiální rychlost, primární tranzit v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známa též jako TOI-{n4} e, HD {n5} e, rho1 Cnc Ae.",
+ "@js.n794msf49i": {
+  "x-review": "machine",
+  "x-source": "c37b76a542"
+ },
  "js.n8ku2ga21": "N = {n0} planet s detekovatelným biosignaturním plynem (za těchto předpokladů)",
  "@js.n8ku2ga21": {
   "x-review": "machine",
   "x-source": "e5c09dee94"
+ },
+ "js.nb8kni7i3e": "exoplanet.eu ji uvádí jako „Announced on a website“, nalezena metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známa též jako KOI-{n4} b, KOI-{n5}.",
+ "@js.nb8kni7i3e": {
+  "x-review": "machine",
+  "x-source": "9ddf41fe09"
  },
  "js.ncy2vl0chu": "Malá oběžná dráha hvězdy posouvá také její polohu na obloze. Astrometrie měří tuto drobnou smyčku, z níž plyne sklon dráhy, a tím skutečná hmotnost planety. Signál roste s hmotností planety a velikostí její dráhy a klesá se vzdáleností.",
  "@js.ncy2vl0chu": {
@@ -9671,6 +9841,11 @@
   "x-review": "machine",
   "x-source": "520a2101da"
  },
+ "js.njyq57a914": "b Cen (AB)b",
+ "@js.njyq57a914": {
+  "x-review": "machine",
+  "x-source": "d5e094d32f"
+ },
  "js.nk8m1nny5r": "Graf slepě kódovaného subjektu pro tess-4b369d3c6f09-{n0}: světelná křivka, kterou recenzenti označili, bez názvu cíle a bez značek",
  "@js.nk8m1nny5r": {
   "x-review": "machine",
@@ -9691,6 +9866,11 @@
   "x-review": "machine",
   "x-source": "7a0d984887"
  },
+ "js.nrcbxny9wa": "stav",
+ "@js.nrcbxny9wa": {
+  "x-review": "machine",
+  "x-source": "073c1634c4"
+ },
  "js.ns1wjk2bkh": "Otevřený · kandidát, nepotvrzený",
  "@js.ns1wjk2bkh": {
   "x-review": "machine",
@@ -9700,6 +9880,11 @@
  "@js.nt7jpblt1w": {
   "x-review": "machine",
   "x-source": "82765e23c7"
+ },
+ "js.ntaw7nc8vt": "Kapitoly o metodách",
+ "@js.ntaw7nc8vt": {
+  "x-review": "machine",
+  "x-source": "31932e7289"
  },
  "js.ntp7tqnx1h": "Zobrazeno {n0} z {n1} záznamů.",
  "@js.ntp7tqnx1h": {
@@ -9715,6 +9900,11 @@
  "@js.nvauo0t95d": {
   "x-review": "machine",
   "x-source": "0906640b92"
+ },
+ "js.ny28knfv0a": "Čtení atmosfér",
+ "@js.ny28knfv0a": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
  },
  "js.ny97ialxx0": "Sentinel · Skeptic: v tomto okně bez značky",
  "@js.ny97ialxx0": {
@@ -9761,6 +9951,11 @@
   "x-review": "machine",
   "x-source": "67071927f6"
  },
+ "js.o7m15kbsi5": "pi Men<br><span class=\"muted mono t-data\">tess-pi-men-s1</span><br><span class=\"muted\">TIC Teff {n0} K</span>",
+ "@js.o7m15kbsi5": {
+  "x-review": "machine",
+  "x-source": "8b203e2083"
+ },
  "js.o99izf3z1n": "ano: TOI {n0}",
  "@js.o99izf3z1n": {
   "x-review": "machine",
@@ -9785,11 +9980,6 @@
  "@js.op9ipohoso": {
   "x-review": "machine",
   "x-source": "703dfd613f"
- },
- "js.oqpbaoboao": "<b>ν₁ symetrická valenční vibrace</b> · {n0} µm · aktivní v infračervené oblasti · zobrazeno ×{n1} · nezobrazeno v {s0}",
- "@js.oqpbaoboao": {
-  "x-review": "machine",
-  "x-source": "2474d10b70"
  },
  "js.osjdukhlhf": "<b>Starshade.</b> Clona tvaru květu letící daleko před dalekohledem (Cash {n0}). Koncept Roman Starshade Rendezvous: {n1} m ve vzdálenosti {n2} km; HabEx: {n3} m ve vzdálenosti asi {n4} km (HabEx Final Report).",
  "@js.osjdukhlhf": {
@@ -9851,11 +10041,6 @@
   "x-review": "machine",
   "x-source": "6f82ddb801"
  },
- "js.p4u8g14ecp": "Zjasnění: {n0} nebo více po sobě jdoucích bodů alespoň {n1}σ nad {n2}denním klouzavým mediánem, s vrcholem {n3}σ nebo více, vůči rozptylu hvězdy i rozptylu v rámci {n4} d; nikoli na instrumentálním podnětu.",
- "@js.p4u8g14ecp": {
-  "x-review": "machine",
-  "x-source": "286b750a5a"
- },
  "js.p4vg8hpjdy": "Původ dat",
  "@js.p4vg8hpjdy": {
   "x-review": "machine",
@@ -9891,6 +10076,11 @@
   "x-review": "machine",
   "x-source": "d807e5a457"
  },
+ "js.pauic2u0rw": "exoplanet.eu ji uvádí jako „Published in a refereed paper“, nalezena metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známa též jako EPIC {n4} b, 2MASS J11301450+{n5} b, EPIC {n6}, WISE J113014.45+{n7} b.",
+ "@js.pauic2u0rw": {
+  "x-review": "machine",
+  "x-source": "1817856093"
+ },
  "js.pbsogd4kq5": "HWO v UV/viditelné oblasti; mise ve střední IR, jako je LIFE, na {n0} µm",
  "@js.pbsogd4kq5": {
   "x-review": "machine",
@@ -9900,6 +10090,11 @@
  "@js.pd4w5w3ixh": {
   "x-review": "machine",
   "x-source": "a838a779e2"
+ },
+ "js.pd6ew3rt19": "<i style=\"background:#BF5AF2\"></i>Mikročočkování <span class=\"mono\">{n0}</span>",
+ "@js.pd6ew3rt19": {
+  "x-review": "machine",
+  "x-source": "59e3047926"
  },
  "js.pf82vwrzvm": "možná planeta {n0}",
  "@js.pf82vwrzvm": {
@@ -9916,11 +10111,6 @@
   "x-review": "machine",
   "x-source": "59a33e9ea7"
  },
- "js.piby2721pq": "{n0} hvězd <span class=\"muted\">({n1} CP/KP, {n2} FP, {n3} FA)</span> <b>vychýleno k FP</b>: řádky FP popisují hvězdy FP pouze s {n4}minutovými daty",
- "@js.piby2721pq": {
-  "x-review": "machine",
-  "x-source": "52d7acd8f3"
- },
  "js.pj7ep1wjt3": "<b>Převážně valenční vibrace N–N</b> · {n0} µm · aktivní v infračervené oblasti · zobrazeno ×{n1} · nezobrazeno v Čtení atmosfér",
  "@js.pj7ep1wjt3": {
   "x-review": "machine",
@@ -9936,10 +10126,20 @@
   "x-review": "machine",
   "x-source": "21e389771e"
  },
- "js.pn78q0jveb": "Od začátku do konce (pole DACE DRP vs. produkt DRP z pycheops): korelace &gt;= {n0} při každé referenční návštěvě",
- "@js.pn78q0jveb": {
+ "js.plrluloqs0": "pi Men c ›",
+ "@js.plrluloqs0": {
   "x-review": "machine",
-  "x-source": "cec6167f00"
+  "x-source": "3d841d792f"
+ },
+ "js.pm8m1jqibi": "poklesy",
+ "@js.pm8m1jqibi": {
+  "x-review": "machine",
+  "x-source": "9b9a2cbe44"
+ },
+ "js.pn2cym3dnm": "Přehrát {n0}–{n1}",
+ "@js.pn2cym3dnm": {
+  "x-review": "machine",
+  "x-source": "04f22f0879"
  },
  "js.pnrbaagjqb": "Velmi hmotný průvodce vyvinutého obra spektrálního typu K, nalezený metodou radiálních rychlostí.",
  "@js.pnrbaagjqb": {
@@ -9961,15 +10161,10 @@
   "x-review": "machine",
   "x-source": "7c33bc2692"
  },
- "js.q8vb9a162v": "SetuHQ je nezávislý projekt a není přidružen k ESA, misi CHEOPS ani konsorciu CHEOPS, není jimi podporován ani provozován jejich jménem. Nenahrazuje nástroje ESA Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker ani dokument Policies &amp; Procedures; rozhodující jsou oficiální výzva a nástroje.",
- "@js.q8vb9a162v": {
+ "js.q3zvdlmvza": "{n0} Peg b ›",
+ "@js.q3zvdlmvza": {
   "x-review": "machine",
-  "x-source": "e5417cf525"
- },
- "js.q95vajnmsz": "Sektory TESS {n0}–{n1}. Záznam ve feedu {n2} pro tuto hvězdu (uložené id <span class=\"mono\">tess-d64ea73e32ac-{n3}</span>). Shoda s TOI porovnává uloženou periodu s hodnotami z archivu. Pouze hodnoty z archivu. Tato stránka netvrdí žádnou detekci.",
- "@js.q95vajnmsz": {
-  "x-review": "machine",
-  "x-source": "52af58fde0"
+  "x-source": "8136a9c855"
  },
  "js.qad4ea3nk7": "Rossiterův–McLaughlinův jev, HD {n0} b (měřené V sin I)",
  "@js.qad4ea3nk7": {
@@ -9985,6 +10180,16 @@
  "@js.qcwtbaf2e5": {
   "x-review": "machine",
   "x-source": "3091d416b9"
+ },
+ "js.qcyhotnwyb": "Kepler-{n0} b ›",
+ "@js.qcyhotnwyb": {
+  "x-review": "machine",
+  "x-source": "6ec7331b16"
+ },
+ "js.qegfutpzid": "Barnard's Star",
+ "@js.qegfutpzid": {
+  "x-review": "machine",
+  "x-source": "04db49fbfb"
  },
  "js.qezo9f8bhr": "{n0} planet v exoplanet.eu · uložený typ G2IV-V · třída G podle Teff (nejbližší G2V)",
  "@js.qezo9f8bhr": {
@@ -10005,6 +10210,11 @@
  "@js.qjpeah132b": {
   "x-review": "machine",
   "x-source": "d7e942e6f6"
+ },
+ "js.qmvvg78xp": "tau Cet f",
+ "@js.qmvvg78xp": {
+  "x-review": "machine",
+  "x-source": "e99f6ebd4f"
  },
  "js.qnq290e1mh": "hvězdný šum ~{n0} m/s",
  "@js.qnq290e1mh": {
@@ -10066,10 +10276,10 @@
   "x-review": "machine",
   "x-source": "17f710cec5"
  },
- "js.r6b0ke5ddb": "Naměřená data vykreslená tak, jak jsou uložena, se zdrojem uvedeným pod nimi: světelné křivky SetuHQ, počty z katalogu.",
- "@js.r6b0ke5ddb": {
+ "js.r7r5ll60un": "označení",
+ "@js.r7r5ll60un": {
   "x-review": "machine",
-  "x-source": "aa17f78b83"
+  "x-source": "e3d11da4dd"
  },
  "js.r8opy5qens": "n_e, logaritmická škála",
  "@js.r8opy5qens": {
@@ -10090,6 +10300,11 @@
  "@js.regiehtwzu": {
   "x-review": "machine",
   "x-source": "b4cb7439b1"
+ },
+ "js.rmcqh280p3": "Kapitoly",
+ "@js.rmcqh280p3": {
+  "x-review": "machine",
+  "x-source": "9831375bc6"
  },
  "js.roj6ijskxu": "Známá také jako V452 Vul, TOI-{n0}.",
  "@js.roj6ijskxu": {
@@ -10125,11 +10340,6 @@
  "@js.s5dkmlriz2": {
   "x-review": "machine",
   "x-source": "a0a30e125c"
- },
- "js.s66tykdpyv": "Umělecká představa: vzhled „kamenná, teplá“ pro poloměr pod {n0} R⊕, Teq {n1} až {n2} K: holá tmavá hornina s krátery, bez okraje. Ukázka vzhledu, nikoli konkrétní planety.",
- "@js.s66tykdpyv": {
-  "x-review": "machine",
-  "x-source": "c058d804c9"
  },
  "js.s6e71sj3nh": "<b>{n0} z {n1} hodnotitelů</b> ho označilo: {n2} z {n3} Sentinels, {n4} z {n5} Probes<small class=\"muted\" style=\"display:block;font-size:11px\"><span title=\"reviewer id volunteer-sensitive\">Probe · Citlivý</span>, <span title=\"reviewer id volunteer-typical\">Probe · Typický</span>, <span title=\"reviewer id volunteer-cautious\">Probe · Opatrný</span></small>",
  "@js.s6e71sj3nh": {
@@ -10251,6 +10461,11 @@
   "x-review": "machine",
   "x-source": "9d9fb0ef55"
  },
+ "js.t39my5dsyh": "Časování <span class=\"mono\" data-cmn=\"timing\">{n0}</span>",
+ "@js.t39my5dsyh": {
+  "x-review": "machine",
+  "x-source": "eaf800daff"
+ },
  "js.t60qw9cha2": "Umělecká představa · neptun, ozáření nelze spočítat · Poloměr není uložen; hmotnost {n0} M⊕ (exoplanet.eu) je v rozmezí {n1} až {n2} M⊕, proto je zobrazena jako planeta podobná Neptunu. Poloměr nezměřen: není v měřítku. Ozáření nelze spočítat: neutrální barvy. Složení není změřeno. Zdroj: exoplanet.eu, staženo {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Jak se obrázky kreslí ›</a>",
  "@js.t60qw9cha2": {
   "x-review": "machine",
@@ -10261,10 +10476,10 @@
   "x-review": "machine",
   "x-source": "eb9b70b39c"
  },
- "js.tbam84ybce": "barva černého tělesa hvězdy a okrajové ztemnění; granulace je textura",
- "@js.tbam84ybce": {
+ "js.tchjn2r4y9": "Systematický efekt",
+ "@js.tchjn2r4y9": {
   "x-review": "machine",
-  "x-source": "90cf191e4f"
+  "x-source": "5a9bb62240"
  },
  "js.tcofm5lh0s": "exoplanet.eu ji uvádí jako „Oznámeno na webu“, nalezena metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známa také jako 2MASS J19430387+{n4} d, K01364.02, KIC {n5} d, KOI-{n6} d, KOI-{n7}, WISE J194303.88+{n8} d.",
  "@js.tcofm5lh0s": {
@@ -10291,15 +10506,25 @@
   "x-review": "machine",
   "x-source": "164d6a71cd"
  },
+ "js.tjzc53y07u": "Každý běh hledání, jeho chyby tak, jak byly uloženy, a konfigurace, z níž tyto stránky vycházejí.",
+ "@js.tjzc53y07u": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "js.tmvyhylhnp": "Pulzující nebo rotační proměnná hvězda",
+ "@js.tmvyhylhnp": {
+  "x-review": "machine",
+  "x-source": "1d4898f020"
+ },
  "js.toi5vq5s4d": "{n0} pc, jak uvádí exoplanet.eu",
  "@js.toi5vq5s4d": {
   "x-review": "machine",
   "x-source": "08aa2d3dc6"
  },
- "js.trnbddk8fe": "<b>{n0}</b> z {n1} planet s uloženou vzdáleností v exoplanet.eu bylo nalezeno přímým zobrazením (první uvedená metoda). <a href=\"/explore/galaxy/?method=imaging\">Zobrazit je na mapě Galaxie ›</a>",
- "@js.trnbddk8fe": {
+ "js.trg2sd40ob": "konfigurace",
+ "@js.trg2sd40ob": {
   "x-review": "machine",
-  "x-source": "dd5674802f"
+  "x-source": "b79606fb3a"
  },
  "js.trzuzwcopk": "Pipeline",
  "@js.trzuzwcopk": {
@@ -10451,10 +10676,10 @@
   "x-review": "machine",
   "x-source": "943077f050"
  },
- "js.v5sdm14eih": "<b>ν₁ symetrická valenční vibrace</b> · {n0} µm · aktivní v infračerveném oboru · kresleno ×{n1} · <a href=\"/how-it-works/atmospheres/\">pás {n2} µm v části Čtení atmosfér ›</a>",
- "@js.v5sdm14eih": {
+ "js.v3cmzn255c": "Konfigurace SetuHQ a jakákoli předložená metoda, hodnocené naslepo na odložené polovině.",
+ "@js.v3cmzn255c": {
   "x-review": "machine",
-  "x-source": "5a958a6168"
+  "x-source": "1e91ab197b"
  },
  "js.vbyk5xwnrv": "Dříve používaná obdélníková míra (střední tok v okně označeném panelem): hloubka {n0} ppm, trvání {n1} h, poměry **{n2}** a **{n3}** vůči Huang {n4} ({n5} a {n6} vůči výchozímu řádku archivu, který dříve citoval README).",
  "@js.vbyk5xwnrv": {
@@ -10486,11 +10711,6 @@
   "x-review": "machine",
   "x-source": "8d34629003"
  },
- "js.vm9rqq85fe": "Periody {s0} a c",
- "@js.vm9rqq85fe": {
-  "x-review": "machine",
-  "x-source": "da9014d7f4"
- },
  "js.vmsox3cj56": "Odkaz na toto zobrazení",
  "@js.vmsox3cj56": {
   "x-review": "machine",
@@ -10520,11 +10740,6 @@
  "@js.vsh0ajf78": {
   "x-review": "machine",
   "x-source": "93eedb88e2"
- },
- "js.vtdvzcy89i": "uložené subjekty a proložení jednotlivých běhů",
- "@js.vtdvzcy89i": {
-  "x-review": "machine",
-  "x-source": "f6d62e6cda"
  },
  "js.vtnlfvcu18": "Plynný obr (podle hmotnosti; poloměr není uložen)",
  "@js.vtnlfvcu18": {
@@ -10571,10 +10786,10 @@
   "x-review": "machine",
   "x-source": "d2f1847f96"
  },
- "js.w084p1vq7y": "Falešné poplachy na invertovaných světelných křivkách na úrovni kanálu (jeho úplné pravidlo, FAP &lt; {n0})",
- "@js.w084p1vq7y": {
+ "js.w21u8mgncr": "{n0} Eri e",
+ "@js.w21u8mgncr": {
   "x-review": "machine",
-  "x-source": "9936d6f964"
+  "x-source": "a9bda9193e"
  },
  "js.w635vpthea": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">5d. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Označen {n5} posuzovateli (katalog neuvádí velikost panelu ani konsenzuální interval). Leží na periodě BLS {n6} dní s {n7} tranzity. Stav: perioda odpovídá známému TOI. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.w635vpthea": {
@@ -10601,6 +10816,16 @@
   "x-review": "machine",
   "x-source": "cc87a8d326"
  },
+ "js.w7mxe1jjf7": "TOI-{n0}<br><span class=\"muted mono t-data\">tess-toi-{n1}-s5</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
+ "@js.w7mxe1jjf7": {
+  "x-review": "machine",
+  "x-source": "1cc92f722d"
+ },
+ "js.w9mpw0gpum": "pi Men ›",
+ "@js.w9mpw0gpum": {
+  "x-review": "machine",
+  "x-source": "4de3e057f1"
+ },
  "js.wafeswebdi": "Běh tess-toi-{n0}-s2 · {n1} poklesů ({n2} zamítnutých) · {n3} subjektů.<span class=\"printonly\"> Každý kandidát na této tabuli: kandidát, nepotvrzený.</span>",
  "@js.wafeswebdi": {
   "x-review": "machine",
@@ -10615,6 +10840,11 @@
  "@js.wbhr5y7ltz": {
   "x-review": "machine",
   "x-source": "efa246c3ed"
+ },
+ "js.wcsqg4x5f": "Astrometrie <span class=\"mono\" data-cmn=\"astrometry\">{n0}</span>",
+ "@js.wcsqg4x5f": {
+  "x-review": "machine",
+  "x-source": "9043a3475b"
  },
  "js.wge5c60gnw": "Gaia-{n0} b",
  "@js.wge5c60gnw": {
@@ -10635,6 +10865,11 @@
  "@js.wkrls1dk3c": {
   "x-review": "machine",
   "x-source": "0a0c72b4d4"
+ },
+ "js.wldr50kzra": "Luyten's Star d",
+ "@js.wldr50kzra": {
+  "x-review": "machine",
+  "x-source": "f978f22f3a"
  },
  "js.wmpk5bhzf9": "Astrometrie · {n0}",
  "@js.wmpk5bhzf9": {
@@ -10695,11 +10930,6 @@
  "@js.wyws1u3mmf": {
   "x-review": "machine",
   "x-source": "db544a9e58"
- },
- "js.x0f76panzs": "Umělecká představa: vzhled „chladný neptun“ pro poloměr {n0} až {n1} R⊕ a Teq pod {n2} K: tmavomodré pásy a tmavá skvrna. Statický snímek vzhledu, ne konkrétní planety.",
- "@js.x0f76panzs": {
-  "x-review": "machine",
-  "x-source": "e72124962b"
  },
  "js.x177ygvldr": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">5b. <span class=\"mono\">tess-eed8740fc4f2-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Označen {n5} posuzovateli (katalog neuvádí velikost panelu ani konsenzuální interval). Leží na periodě BLS {n6} dní s {n7} tranzity. Stav: perioda odpovídá známému TOI. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.x177ygvldr": {
@@ -10776,20 +11006,30 @@
   "x-review": "machine",
   "x-source": "39ac347e42"
  },
+ "js.xi9v7ksndn": "Wolf {n0} d",
+ "@js.xi9v7ksndn": {
+  "x-review": "machine",
+  "x-source": "1268b30fc7"
+ },
  "js.xjghoq101i": "logaritmické roztažení intenzity ({n0} až {n1}⁻⁶); planeta při ilustrativní hodnotě {n2}⁻³; ideální monochromatická optika; velikosti masky a clony jsou ilustrativní",
  "@js.xjghoq101i": {
   "x-review": "machine",
   "x-source": "907c200b96"
  },
+ "js.xll7y1ynl0": "Historie a publikace",
+ "@js.xll7y1ynl0": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "js.xngfkgukjg": "Rovnice života",
+ "@js.xngfkgukjg": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
  "js.xp4h2ofbdl": "· TIC {n0} · signál bez periody (jeden tranzit) · {n1} z nejvýraznějších poklesů",
  "@js.xp4h2ofbdl": {
   "x-review": "machine",
   "x-source": "21f82eff3f"
- },
- "js.xpg4i01qhj": "Umělecká představa: vzhled teplé obálky pro poloměr {n0} až {n1} R⊕, Teq {n2} až {n3} K: modrošedý opar. Snímek vzhledu, nikoli konkrétní planety.",
- "@js.xpg4i01qhj": {
-  "x-review": "machine",
-  "x-source": "7ef97acea7"
  },
  "js.xpmiaupaaj": "Zobrazeno {n0} z {n1}",
  "@js.xpmiaupaaj": {
@@ -10805,6 +11045,11 @@
  "@js.xtdd9w23g6": {
   "x-review": "machine",
   "x-source": "3be7d1cc73"
+ },
+ "js.xvtyf8wl1b": "beta Pic b",
+ "@js.xvtyf8wl1b": {
+  "x-review": "machine",
+  "x-source": "e38549f8ed"
  },
  "js.xx7wry1e2": "Navržen jako biosignatura pro kamenné planety, kde je obtížné jej vytvořit bez života.",
  "@js.xx7wry1e2": {
@@ -10835,6 +11080,16 @@
  "@js.y2sii8ag7z": {
   "x-review": "machine",
   "x-source": "1c8b900d94"
+ },
+ "js.y3xy9eepgg": "nulová hodnota {n0} · přebytek {n1} ({n2}%: {n3} až {n4})",
+ "@js.y3xy9eepgg": {
+  "x-review": "machine",
+  "x-source": "01f79dcd20"
+ },
+ "js.y9ptrwfobi": "docs/discoveries/catalog.json",
+ "@js.y9ptrwfobi": {
+  "x-review": "machine",
+  "x-source": "81e814ecc7"
  },
  "js.yef3d1ma9p": "{n0} vyřazeno jako příliš hluboké",
  "@js.yef3d1ma9p": {
@@ -10871,30 +11126,20 @@
   "x-review": "machine",
   "x-source": "fe1b093c33"
  },
- "js.yob3llgolf": "Planety podle roku a metody",
- "@js.yob3llgolf": {
-  "x-review": "machine",
-  "x-source": "60ecd96d94"
- },
  "js.yq2bbta4k2": "<span class=\"word cand\">kandidát</span><span class=\"word s-known\">známá perioda TOI</span><b class=\"fig\">4a. <span class=\"mono\">tess-308a47f84167-{n0}</span>.</b> Pokles v BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Vyznačilo {n5} posuzovatelů (katalog neukládá velikost panelu ani konsenzuální interval). Leží na BLS periodě {n6} dní s {n7} tranzity. Stav: perioda odpovídá známému TOI. Pouze archivní hodnoty. Tato stránka netvrdí žádnou detekci.",
  "@js.yq2bbta4k2": {
   "x-review": "machine",
   "x-source": "4aebb10343"
  },
- "js.yv746p7ayh": "<b>ohybová (dvě, v pravém úhlu)</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · mimo okno {n2}–{n3} µm stránky {s0}",
- "@js.yv746p7ayh": {
+ "js.yrhnt8o7w9": "Molekuly a život",
+ "@js.yrhnt8o7w9": {
   "x-review": "machine",
-  "x-source": "67a09bbd02"
+  "x-source": "d0ac3c4b97"
  },
  "js.yw1cg6z6ba": "Malá tranzitující planeta, jejíž nízká hustota jako první naznačila svět bohatý na vodu.",
  "@js.yw1cg6z6ba": {
   "x-review": "machine",
   "x-source": "9d636cbdc1"
- },
- "js.ywghy58587": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">{s0}</a></b> · hostitel <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">{s1}</a> · P {n0} d · tranzitující",
- "@js.ywghy58587": {
-  "x-review": "machine",
-  "x-source": "40c55c5a8e"
  },
  "js.yx8blcjbm": "Teff: exoplanet.eu, staženo {n0}-{n1}-{n2}; barva hvězdy: Planckovo spektrum přes funkce shody barev CIE {n3}",
  "@js.yx8blcjbm": {
@@ -10905,6 +11150,11 @@
  "@js.yza9eps8ud": {
   "x-review": "machine",
   "x-source": "871e79db9b"
+ },
+ "js.yzugi1nrhx": "exoplanet.eu ji uvádí jako „Published in a refereed paper“, nalezena metodou primárního tranzitu v roce {n0}; záznam aktualizován {n1}-{n2}-{n3}. Známa též jako HD {n4} c.",
+ "@js.yzugi1nrhx": {
+  "x-review": "machine",
+  "x-source": "aee1648ae2"
  },
  "js.z0e3dbqjze": "– vyřazeno kvůli příliš malému počtu tranzitů",
  "@js.z0e3dbqjze": {
@@ -10926,25 +11176,10 @@
   "x-review": "machine",
   "x-source": "a9d66a33c2"
  },
- "js.z7hoxivdkf": "<b>ν valenční</b> · {n0} µm · neaktivní v infračervené oblasti (dipól se nemění) · vykresleno ×{n1} · mimo okno {n2}–{n3} µm stránky {s0}",
- "@js.z7hoxivdkf": {
-  "x-review": "machine",
-  "x-source": "1bcc8097d6"
- },
  "js.zae6h8rkk6": "Sentinel: model AI (Claude Code CLI (Claude, Anthropic) · default), který čte vykreslenou světelnou křivku a vyznačuje poklesy. Není to člověk.",
  "@js.zae6h8rkk6": {
   "x-review": "machine",
   "x-source": "adeac0a395"
- },
- "js.zb00gkwd2w": "<b>ν₁ symetrická valenční</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · <a href=\"/how-it-works/atmospheres/\">pás {n2} µm na stránce {s0} ›</a>",
- "@js.zb00gkwd2w": {
-  "x-review": "machine",
-  "x-source": "5b5f436da5"
- },
- "js.zbm91l3rcx": "<b>ν₃ asymetrická valenční</b> · {n0} µm · aktivní v infračervené oblasti · vykresleno ×{n1} · <a href=\"/how-it-works/atmospheres/\">pás {n2} µm na stránce Čtení atmosfér ›</a>",
- "@js.zbm91l3rcx": {
-  "x-review": "machine",
-  "x-source": "a265a49ab4"
  },
  "js.zdvz2hwho1": "{n0} známý TOI",
  "@js.zdvz2hwho1": {
@@ -10965,6 +11200,11 @@
  "@js.zhegcnbaps": {
   "x-review": "machine",
   "x-source": "43c883da28"
+ },
+ "js.zjf4m6pas4": "tau Boo Ab ›",
+ "@js.zjf4m6pas4": {
+  "x-review": "machine",
+  "x-source": "5487f582ec"
  },
  "js.zknme5264y": "Příznaky prověření: <span class=\"mono\">density_mismatch</span> · prošel prověřením",
  "@js.zknme5264y": {
@@ -11020,6 +11260,11 @@
  "@js.zwdwnqegck": {
   "x-review": "machine",
   "x-source": "c369fc08d2"
+ },
+ "js.zzww829dur": "velký",
+ "@js.zzww829dur": {
+  "x-review": "machine",
+  "x-source": "d35c416a85"
  },
  "label.art": "Umělecká představa",
  "@label.art": {
@@ -12736,6 +12981,11 @@
   "x-review": "machine",
   "x-source": "1d0d1e9ed1"
  },
+ "pg.1d29309f1c": "<b>Plánovací odhady</b> z publikovaného výkonu za letu (Fortier et al. {n0}): odhady pouze pro přípravu návrhu, které je třeba potvrdit pomocí ESA Exposure Time Calculator, Visibility Tool a Scheduling Feasibility Checker.",
+ "@pg.1d29309f1c": {
+  "x-review": "machine",
+  "x-source": "1d29309f1c"
+ },
  "pg.1d38ad0a76": "Hvězdy v poli",
  "@pg.1d38ad0a76": {
   "x-review": "machine",
@@ -12765,6 +13015,11 @@
  "@pg.1de16983ab": {
   "x-review": "machine",
   "x-source": "1de16983ab"
+ },
+ "pg.1df79bd835": "{n0} bodů v rozsahu BTJD {n1}–{n2}, seskupeno po {n3} minutách. Po složení s periodou {n4} d je vidět pokles o {n5} ppm trvající {n6} h. Skutečná data, uložený běh SetuHQ.",
+ "@pg.1df79bd835": {
+  "x-review": "machine",
+  "x-source": "1df79bd835"
  },
  "pg.1e08c053df": "{n0} Peg b: K z našeho vzorce",
  "@pg.1e08c053df": {
@@ -13510,6 +13765,11 @@
  "@pg.39a5ae06fe": {
   "x-review": "machine",
   "x-source": "39a5ae06fe"
+ },
+ "pg.39b16a9877": "<a href=\"https://arxiv.org/abs/1001.2010\" rel=\"noopener\">Winn {n0}, Tranzity a zákryty</a>",
+ "@pg.39b16a9877": {
+  "x-review": "machine",
+  "x-source": "39b16a9877"
  },
  "pg.39de4731ee": "Kresba",
  "@pg.39de4731ee": {
@@ -14796,6 +15056,11 @@
   "x-review": "machine",
   "x-source": "6811b8bfa5"
  },
+ "pg.682e64a23a": "Dvě scény. Polární záře planety: siločáry magnetického pole planety, přičemž emise je vyzařována v dutém kuželu z jejího pólu; když kužel přejde přes pozorovatele, v dynamickém spektru níže se ukáže záblesk, sahající až k cyklotronové frekvenci dané polem. Interakce hvězdy a planety: planeta obíhá uvnitř magnetického pole své hvězdy, magnetická trubice ji spojuje s hvězdou a emise vychází z patního bodu na hvězdě. Posuvník pole nastavuje cyklotronovou mezní frekvenci, počítanou jako {n0} MHz na gauss.",
+ "@pg.682e64a23a": {
+  "x-review": "machine",
+  "x-source": "682e64a23a"
+ },
  "pg.684715ba6c": "Zmrazený benchmark na skutečných TOI a veřejný žebříček",
  "@pg.684715ba6c": {
   "x-review": "machine",
@@ -15425,6 +15690,11 @@
  "@pg.7c5486ea64": {
   "x-review": "machine",
   "x-source": "7c5486ea64"
+ },
+ "pg.7cb76b4af1": "Záznamy",
+ "@pg.7cb76b4af1": {
+  "x-review": "machine",
+  "x-source": "7cb76b4af1"
  },
  "pg.7cc6c4ce56": "HD {n0}<br><span class=\"muted mono t-data\">tess-hd-{n1}-s4</span><br><span class=\"muted\">TIC Teff {n2} K</span>",
  "@pg.7cc6c4ce56": {
@@ -16140,6 +16410,11 @@
  "@pg.9964e3c6d3": {
   "x-review": "machine",
   "x-source": "9964e3c6d3"
+ },
+ "pg.996805742b": "sha256 zmrazeného vzorku",
+ "@pg.996805742b": {
+  "x-review": "machine",
+  "x-source": "996805742b"
  },
  "pg.99cc76b2a5": "Probes + Sentinels, kterýkoli z nich (pravidlo na úrovni hvězdy, stanovené před hodnocením, nikoli konsenzus panelu)<span class=\"kd\">probes-or-sentinel · laděno na: nic</span>",
  "@pg.99cc76b2a5": {
@@ -16871,6 +17146,11 @@
   "x-review": "machine",
   "x-source": "b72804afef"
  },
+ "pg.b7312318e0": "U tisíců planet se ukazují určité vzorce. Dva z nich: údolí ve velikostech malých planet a oblast kolem každé hvězdy, kde by mohla vydržet kapalná voda.",
+ "@pg.b7312318e0": {
+  "x-review": "machine",
+  "x-source": "b7312318e0"
+ },
  "pg.b7490be205": "neutrální šedomodrý disk a měkký lem: hornina nebo obal, neznámo",
  "@pg.b7490be205": {
   "x-review": "machine",
@@ -17556,6 +17836,11 @@
   "x-review": "machine",
   "x-source": "cce0f3e156"
  },
+ "pg.cce2248704": "Blokování světla hvězdy ve čtyřech scénách. Zakrývač podobný Slunci (ilustrace podle SOHO LASCO); maska koronografu, která se přesouvá přes hvězdu, takže oslnění se zhroutí do zbytkových skvrn a na schematických drahách jsou vidět čtyři planety HR {n0}; hvězdné stínítko letící daleko před dalekohledem, není v měřítku; a nulovací interferometr se dvěma dalekohledy, jehož tmavý proužek ruší světlo hvězdy.",
+ "@pg.cce2248704": {
+  "x-review": "machine",
+  "x-source": "cce2248704"
+ },
  "pg.cd14bc0ec3": "Atomární sodík v horkých atmosférách; nejde o biosignaturu.",
  "@pg.cd14bc0ec3": {
   "x-review": "machine",
@@ -17750,6 +18035,11 @@
  "@pg.d35aa7caba": {
   "x-review": "machine",
   "x-source": "d35aa7caba"
+ },
+ "pg.d35c9a219c": "Složeno s periodou {n0} dní: tytéž body podle hodin od středu tranzitu, od {n1} do {n2} h. V nule je vidět pokles hluboký {n3} ppm a dlouhý {n4} hodin; čára je průměr bodů v půlhodinových krocích.",
+ "@pg.d35c9a219c": {
+  "x-review": "machine",
+  "x-source": "d35c9a219c"
  },
  "pg.d36afae90f": "Detekce atmosféry extrasolární planety",
  "@pg.d36afae90f": {
