@@ -12,7 +12,7 @@
 .nav{flex:1 1 auto;display:flex;justify-content:center;min-width:0}
 .nav ul{padding:3px}
 .nav a{min-height:38px;padding:0 16px;font-size:14px}
-.nav a[aria-current="page"]{background:var(--seg-bg);color:var(--seg-ink)}
+.nav a[aria-current="page"]{background:var(--seg-bg);color:var(--seg-ink);transition:none}  /* the current section shows at once: no colour mid-way for a reader or axe */
 .tools{display:flex;align-items:center;gap:2px;margin-left:auto;flex:none}
 .iconbtn{width:44px;height:44px;border-radius:999px;border:1px solid transparent;background:transparent;color:var(--ink-2);display:inline-grid;place-items:center;cursor:pointer;padding:0;transition:background-color var(--d-1) var(--ease),color var(--d-1) var(--ease)}
 .iconbtn:hover{color:var(--ink);background:var(--panel-2)}

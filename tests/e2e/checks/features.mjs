@@ -8,7 +8,7 @@
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
 export default async function features(h) {
-  const { BASE, check, setGroup, context, watch, ready, AXE } = h;
+  const { BASE, check, setGroup, context, watch, ready, AXE, BROWSER } = h;
   const axe = async (page) => { await page.addScriptTag({ content: AXE });
     return page.evaluate(async (tags) => (await window.axe.run(document, { runOnly: { type: "tag", values: tags }, resultTypes: ["violations"] }))
       .violations.filter((x) => x.impact === "serious" || x.impact === "critical").map((x) => x.id + ": " + x.nodes.slice(0, 2).map((n) => n.target.join(" ")).join(", ")), AXE_TAGS); };
@@ -90,7 +90,10 @@ export default async function features(h) {
     const v3 = await axe(page);
     check(v3.length === 0, `${tag}: axe on Be the vetter`, v3.join(" | "));
 
-    // Editions
+    // Editions, with animations at a tenth of their speed (a slow runner): a view's entrance must never fade its text,
+    // so axe reads full contrast whenever it runs.
+    const slow = BROWSER === "chromium" ? await page.context().newCDPSession(page) : null;
+    if (slow) { await slow.send("Animation.enable"); await slow.send("Animation.setPlaybackRate", { playbackRate: 0.1 }); }
     await page.goto(BASE + "/editions/"); await ready(page);
     const e = await page.evaluate(() => ({ text: document.querySelector("#route-editions").innerText, codes: [...document.querySelectorAll(".edaddr")].map((c) => c.textContent),
       copy: document.querySelectorAll("button[data-copy]").length, foot: !!document.querySelector('.sitefoot a[href="/editions/"]') }));
@@ -99,6 +102,7 @@ export default async function features(h) {
     check(e.text.includes("in development") && e.text.includes("CC BY-NC 3.0 IGO"), `${tag}: Pro in development; the CHEOPS carve-out`);
     const v4 = await axe(page);
     check(v4.length === 0, `${tag}: axe on Editions`, v4.join(" | "));
+    if (slow) { await slow.send("Animation.setPlaybackRate", { playbackRate: 1 }); await slow.detach(); }
 
     // the Galaxy camera buttons
     await page.goto(BASE + "/explore/galaxy/"); await ready(page);

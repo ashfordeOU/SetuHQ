@@ -1042,7 +1042,8 @@ h3{font:600 15px/1.3 var(--sans);letter-spacing:-.01em;margin:0}
 .side{flex:1 1 320px;min-width:0}
 .small{margin:0;font-size:12px;color:var(--ink-3)}
 /* motion: all of it decorative, all of it off under prefers-reduced-motion */
-@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* A view rises into place by movement only: its text is never drawn faded, so its contrast holds at every frame (axe, and a reader, may read it mid-animation). */
+@keyframes rise{from{transform:translateY(14px)}to{transform:none}}
 @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.75}}
 @keyframes orbit{to{transform:rotate(360deg)}}
 @keyframes drift{from{transform:translateX(0)}to{transform:translateX(-400px)}}
