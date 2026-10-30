@@ -19,7 +19,8 @@ model's text and the model id the provider reports. The reviewer does the rest:
   ``prompt_version``, ``persona`` and ``cached``.
 
 Keys are read from the environment, one variable per provider (:data:`KEY_ENV`), unless code passes one to a
-reviewer's or backend's constructor (``api_key=``; a config file never holds one). Either way a key is never
+reviewer's or backend's constructor (``api_key=``; a config file never holds one). With ``env_fallback=False`` a
+Sentinel reads no environment variable at all, and is refused when it is built without ``api_key=``. Either way a key is never
 written to the cache, the manifest, a log or an error message: a passed key is held as a :class:`Secret`.
 """
 
@@ -73,6 +74,14 @@ class Secret:
 def as_secret(api_key) -> Secret | None:
     """``api_key`` (a string, a :class:`Secret` or None) as a :class:`Secret`, or None."""
     return api_key if isinstance(api_key, Secret) or api_key is None else Secret(api_key)
+
+
+def refuse_env_fallback(secret: Secret | None, env: str | None, provider: str, env_fallback: bool) -> None:
+    """With ``env_fallback=False`` a Sentinel never reads its provider's environment variable: without a key passed in
+    code (``api_key=``) it is refused here, when it is built, instead of reading ``env`` later."""
+    if not env_fallback and secret is None and env:
+        raise ValueError(f"{provider}: env_fallback=False needs a key passed as api_key=; "
+                         f"the {env} environment variable is not read")
 
 
 def key_value(secret: Secret | None, env: str | None) -> str:

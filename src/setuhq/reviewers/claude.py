@@ -19,7 +19,7 @@ import time  # noqa: F401  (tests patch setuhq.reviewers.claude.time.sleep to sk
 from pathlib import Path
 
 from setuhq.reviewers.http import ProviderRejected, redact
-from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer, as_secret, key_value
+from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer, as_secret, key_value, refuse_env_fallback
 from setuhq.reviewers.task import (  # noqa: F401  (the shared task, re-exported for existing imports)
     OUTPUT_SCHEMA,
     PERSONAS,
@@ -40,11 +40,13 @@ class AnthropicBackend:
     provider = "anthropic"
 
     def __init__(self, model: str = DEFAULT_MODEL, *, max_tokens: int = 1024, client: object | None = None,
-                 api_key: str | None = None):
+                 api_key: str | None = None, env_fallback: bool = True):
         self.model = model
         self.max_tokens = max_tokens
         self.client = client
-        self._key = as_secret(api_key)  # a key passed in code; else ANTHROPIC_API_KEY
+        self._key = as_secret(api_key)  # a key passed in code; else ANTHROPIC_API_KEY (unless env_fallback=False)
+        if client is None:  # a client passed in code carries its own key
+            refuse_env_fallback(self._key, KEY_ENV["anthropic"], self.provider, env_fallback)
 
     def missing(self) -> str | None:
         if self.client is not None:
@@ -94,8 +96,10 @@ class ClaudeReviewer(SentinelReviewer):
 
     def __init__(self, reviewer_id: str, model: str = DEFAULT_MODEL, persona: str = "volunteer",
                  cache_dir: str | Path | None = None, max_tokens: int = 1024, retries: int = 3,
-                 client: object | None = None, kind: str = "claude", api_key: str | None = None):
-        super().__init__(reviewer_id, AnthropicBackend(model, max_tokens=max_tokens, client=client, api_key=api_key),
+                 client: object | None = None, kind: str = "claude", api_key: str | None = None, *,
+                 env_fallback: bool = True):
+        super().__init__(reviewer_id, AnthropicBackend(model, max_tokens=max_tokens, client=client, api_key=api_key,
+                                                       env_fallback=env_fallback),
                          persona=persona, cache_dir=cache_dir, retries=retries, kind=kind)
 
     @property

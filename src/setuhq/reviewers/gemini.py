@@ -15,7 +15,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from setuhq.reviewers.http import Transport, check_endpoint, post_json, redact
-from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer, as_secret, key_value
+from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer, as_secret, key_value, refuse_env_fallback
 from setuhq.reviewers.task import ReviewError
 
 GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
@@ -27,10 +27,12 @@ class GeminiBackend:
     provider = "gemini"
 
     def __init__(self, model: str, *, base_url: str = GEMINI_BASE_URL, max_tokens: int = 8192,
-                 timeout: float = 120.0, transport: Transport | None = None, api_key: str | None = None):
+                 timeout: float = 120.0, transport: Transport | None = None, api_key: str | None = None,
+                 env_fallback: bool = True):
         if not model:
             raise ValueError("a gemini Sentinel needs a 'model' (a vision model id)")
-        self._key = as_secret(api_key)  # a key passed in code; else GEMINI_API_KEY
+        self._key = as_secret(api_key)  # a key passed in code; else GEMINI_API_KEY (unless env_fallback=False)
+        refuse_env_fallback(self._key, KEY_ENV["gemini"], self.provider, env_fallback)
         check_endpoint(base_url, extra_keys=[api_key] if api_key else ())
         self.model = model
         self.base_url = base_url.rstrip("/")
@@ -96,7 +98,7 @@ class GeminiReviewer(SentinelReviewer):
     def __init__(self, reviewer_id: str, model: str = "", persona: str = "volunteer",
                  cache_dir: str | Path | None = None, max_tokens: int = 8192, retries: int = 3,
                  timeout: float = 120.0, base_url: str = GEMINI_BASE_URL, transport: Transport | None = None,
-                 kind: str = "gemini", api_key: str | None = None):
+                 kind: str = "gemini", api_key: str | None = None, *, env_fallback: bool = True):
         super().__init__(reviewer_id, GeminiBackend(model, base_url=base_url, max_tokens=max_tokens, timeout=timeout,
-                                                    transport=transport, api_key=api_key),
+                                                    transport=transport, api_key=api_key, env_fallback=env_fallback),
                          persona=persona, cache_dir=cache_dir, retries=retries, kind=kind)
