@@ -475,7 +475,8 @@ def test_docket_frame_reports_its_dip_and_section_to_the_shell(run_dir, tmp_path
     # Apart from the injected block, the copy differs from the Docket only in its font families.
     expected = (docket_mod.docket_page(docket_mod.docket_data(run_dir, title="t · candidates"))
                 .replace(DOCKET_FONTS, FRAME_FONTS_HREF).replace('"Inter Tight"', '"Geist"').replace('"JetBrains Mono"', '"Geist Mono"'))
-    assert docket_html.replace(injected, "") == expected
+    # site_bundle unkeys the bundle, which takes the arguments of the keyed markup in the data (the journey strip's) too.
+    assert docket_html.replace(injected, "") == re.sub(r" data-i18n-args='[^']*'", "", expected)
     assert FRAME_THEME_CSS not in standalone
     # The bridge reports every selection (the Docket selects by history.replaceState) and section anchors.
     assert "if (window.parent === window) return;" in FRAME_BRIDGE_JS

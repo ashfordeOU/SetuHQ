@@ -511,6 +511,7 @@ def keyed_mismatches(src: str, where: str = "") -> list[str]:
     wrong text, or a message that drifted from what the code writes. Also every key the source does not have."""
     en = i18n.messages(i18n.SOURCE)
     probs = []
+    src = re.sub(r"<script\b[^>]*>.*?</script>", "", src, flags=re.S)  # markup inside a script's data is the script's
     for m in i18n._TAG.finditer(src):
         raw = m.group(2) or ""
         if "data-i18n" not in raw:
