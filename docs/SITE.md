@@ -165,8 +165,13 @@ the canonical link and `og:locale` change). Every main page lists hreflang alter
 localisation runtime (`assets/i18n-<hash>.js`) and the chosen language's catalogue (`assets/i18n/<lang>-<hash>.json`,
 without the CLI's and MCP server's messages) and applies them in place. The top bar's language picker stores the
 choice (`setuhq-lang`); the first-visit suggestion (`setuhq-lang-hint`) is a dismissible bar that never redirects.
-Japanese and Chinese use the system CJK fonts (no font is fetched). docs/TRANSLATING.md describes the catalogues,
-the checks and the review status.
+The long-form prose has no hand-written key: each block of text on a main page is a message named by a hash of its
+template (`pg.*`, `setuhq.i18n_auto`, written by the server into the `/<lang>/` pages), and each block the scripts
+draw is one too (`js.*`, put in place in the browser by `assets/i18n-auto-<hash>.js`, which loads on non-English
+pages only, from `assets/i18n/js-<hash>/<lang>/common.json` and the page's part of the site, `<part>.json`). The case
+file's frame takes the shell's catalogue through its bridge. On a `/<lang>/` page an in-app link to another page
+loads it from the server. Japanese and Chinese use the system CJK fonts (no font is fetched); their headings keep
+each phrase on one line. docs/TRANSLATING.md describes the catalogues, the checks and the review status.
 
 ## The visual system
 
@@ -241,7 +246,8 @@ same tokens.
   utilities, on every page and stub) 16,000, the renderer 64,000, `stories-*.json` 40,000 and `sky-*.json` 160,000, each still 40,000
   (512 px) or 8,000 (160 px) and 850,000 in all, the home page 90,000 characters and `/explore/` 160,000, each
   deploy-time stub 4,096 bytes; every other page 200,000 characters and a stand-alone page 400,000. The localisation
-  runtime (`i18n-*.js`) 10,000 and each language's catalogue (`i18n/<lang>-*.json`) 160,000; every `/<lang>/` copy of
+  runtime and its page-text script (`i18n-*.js`) 10,000 each, and each language's catalogue (`i18n/<lang>-*.json`)
+  and each part of its drawn-text catalogue (`i18n/js-*/<lang>/*.json`) 160,000; every `/<lang>/` copy of
   the home page and `/explore/` has the English page's budget. The built script and stylesheet are written without
   comments (`setuhq.minify`).
 

@@ -601,7 +601,8 @@ FRAME_BRIDGE_JS = r"""
   // script draws in that language too, as the drawing changes.
   try {
     var SI = P.SetuI18n;
-    if (SI && SI.lang !== 'en' && SI.ready) SI.ready.then(function(){
+    var loaded = new Promise(function(ok){ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ok); else ok(); });
+    if (SI && SI.lang !== 'en' && SI.ready) Promise.all([SI.ready, loaded]).then(function(){
       document.documentElement.lang = SI.lang; SI.apply(document);
       var n = 0, t = null, wait = function(){
         if (!SI.auto){ if (n++ < 40) setTimeout(wait, 250); return; }

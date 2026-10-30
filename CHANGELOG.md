@@ -30,7 +30,7 @@ breaking changes are called out explicitly.
   and complete; a missing string falls back to English, and coverage is reported per language. A translation memory
   is kept in `docs/i18n/memory.tmx`. The long-form text is translated too: every block of prose on the main pages
   (the *How it works* chapters, the evidence write-ups, *How the pictures are drawn*, the galaxy, the docs) and the
-  text the page scripts draw (case files, the docket, planet and star pages) is a message whose id is a hash of its
+  text the page scripts draw (the case file and its docket, dip, planet and star pages) is a message whose id is a hash of its
   template, numbers and names as arguments in the reader's format; figure and hero captions are message templates
   with their numbers, units and references as arguments. Japanese and Chinese headings break only between phrases.
 

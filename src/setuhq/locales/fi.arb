@@ -2001,6 +2001,11 @@
   "x-review": "machine",
   "x-source": "4d512860c4"
  },
+ "js.100lzsd0h94": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notko E7 · tess-291acb98cabe-{n2}</span>",
+ "@js.100lzsd0h94": {
+  "x-review": "machine",
+  "x-source": "4c66a62aca"
+ },
  "js.102gl10wq27": "Dityppioksidi",
  "@js.102gl10wq27": {
   "x-review": "machine",
@@ -2031,10 +2036,20 @@
   "x-review": "machine",
   "x-source": "5970fd0df8"
  },
+ "js.10bagx104fr": "{n0} signaalia hylätty",
+ "@js.10bagx104fr": {
+  "x-review": "machine",
+  "x-source": "da33b17870"
+ },
  "js.10cuopbimg6": "<b>ν₄ epäsymmetrinen taivutus (kolme)</b> · {n0} µm · infrapuna-aktiivinen · piirretty ×{n1} · sivun Ilmakehien lukeminen {n2}–{n3} µm:n ikkunan ulkopuolella",
  "@js.10cuopbimg6": {
   "x-review": "machine",
   "x-source": "4d4ada7b03"
+ },
+ "js.10cx1d5dgs": "Probe · Tyypillinen <span class=\"mono hint\">volunteer-typical</span>: päällekkäisyys {n0} % ikkunasta, ei merkintää ikkunan alueella · ei laskettu mukaan",
+ "@js.10cx1d5dgs": {
+  "x-review": "machine",
+  "x-source": "ee8e684dd5"
  },
  "js.10cz46v17yl": "[laskettu]",
  "@js.10cz46v17yl": {
@@ -2086,6 +2101,11 @@
   "x-review": "machine",
   "x-source": "ffe266b57f"
  },
+ "js.116mmry5ba1": "Sentinels käyttävät oletuksena mallia Claude (Anthropic); myös muita palveluntarjoajia tuetaan, ja ne on nimetty. Probes ovat deterministisiä, sovitettuun suodattimeen perustuvia ilmaisimia. Vain Probes; Sentinels-ajoa ei tehty tälle esimerkille.<br>ajo {n0}-{n1}-22T18:{n2}+{n3} · konfiguraatio e60af3c4e98d4a76 · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-f28323a4aef6-{n8} · signaali tess-4b369d3c6f09-P5.6561+{n9} · kohde tess-f28323a4aef6<br>ristiintunnistus: NASA Exoplanet Archive, taulu ps (default_flag = {n10}) · tila: täsmätty",
+ "@js.116mmry5ba1": {
+  "x-review": "machine",
+  "x-source": "66f9d391f9"
+ },
  "js.119w2r7gi9c": "Maan kaksonen {n0} cm/s",
  "@js.119w2r7gi9c": {
   "x-review": "machine",
@@ -2120,6 +2140,11 @@
  "@js.11kdzzmc5nu": {
   "x-review": "machine",
   "x-source": "184a6800cc"
+ },
+ "js.11m85yyq354": "Seulonnan tulos kohteelle tess-fa3483ce6f83-{n0}: läpäisi seulonnan",
+ "@js.11m85yyq354": {
+  "x-review": "machine",
+  "x-source": "c71cec5bbe"
  },
  "js.11n5kdywh3l": "Teff",
  "@js.11n5kdywh3l": {
@@ -2161,6 +2186,11 @@
   "x-review": "machine",
   "x-source": "4e3116178e"
  },
+ "js.11y6psfhqjp": "epookki E-{n0} · {n1}",
+ "@js.11y6psfhqjp": {
+  "x-review": "machine",
+  "x-source": "26c189c9a0"
+ },
  "js.11ypfnf3fx": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">3i. <span class=\"mono\">tess-66d1837768dd-{n0}</span>.</b> Notkahdus hetkellä BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinnyt {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Sijoittuu {n6} päivän BLS-jaksolle, jossa on {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvoja. Tämä sivu ei väitä mitään havaituksi.",
  "@js.11ypfnf3fx": {
   "x-review": "machine",
@@ -2175,6 +2205,11 @@
  "@js.11z1x0tf8px": {
   "x-review": "machine",
   "x-source": "436e61016e"
+ },
+ "js.121as3248fy": "signaali: <span class=\"badge g-flag\"><span class=\"glyph\" aria-hidden=\"true\">!</span> merkitty tarkistettavaksi</span>",
+ "@js.121as3248fy": {
+  "x-review": "machine",
+  "x-source": "f03197953d"
  },
  "js.121qwge05zu": "Pysäytetty: kaikki {n0} TOI-efemeridin notkahdusta hylättiin tarkastuksessa (secondary_any_phase, secondary_eclipse), joten mikään niistä ei ole kandidaatti.",
  "@js.121qwge05zu": {
@@ -2201,6 +2236,11 @@
   "x-review": "machine",
   "x-source": "0a52b41e9e"
  },
+ "js.127p6ahyreg": "efemeridillä",
+ "@js.127p6ahyreg": {
+  "x-review": "machine",
+  "x-source": "50aaad9202"
+ },
  "js.127vxlxdz3p": "Mallisyvyys keskeiselle ylitykselle",
  "@js.127vxlxdz3p": {
   "x-review": "machine",
@@ -2220,6 +2260,11 @@
  "@js.12ed4zztqr8": {
   "x-review": "machine",
   "x-source": "1769f7c7c0"
+ },
+ "js.12hfqfovs12": "kohteet tess-997691b39aab, tess-01e315ee5ebf · {n0} notkoa · {n1} + {n2} BLS-ylikulkua",
+ "@js.12hfqfovs12": {
+  "x-review": "machine",
+  "x-source": "e27d5bc35c"
  },
  "js.12j7430bkz1": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">6e. <span class=\"mono\">tess-509c4134c6dd-{n0}</span>.</b> Notkahdus hetkellä BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinnyt {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Sijoittuu {n6} päivän BLS-jaksolle, jossa on {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvoja. Tämä sivu ei väitä mitään havaituksi.",
  "@js.12j7430bkz1": {
@@ -2286,6 +2331,11 @@
   "x-review": "machine",
   "x-source": "32ff78084e"
  },
+ "js.133vntob8p1": "<kbd>j</kbd>/<kbd>k</kbd> siirry · <kbd>{n0}</kbd><kbd>{n1}</kbd><kbd>{n2}</kbd> suodata, <kbd>{n3}</kbd> kaikki · <kbd>s</kbd> nauha",
+ "@js.133vntob8p1": {
+  "x-review": "machine",
+  "x-source": "9517e9b112"
+ },
  "js.135ebosllvm": "kaikki {n0}",
  "@js.135ebosllvm": {
   "x-review": "machine",
@@ -2306,6 +2356,11 @@
   "x-review": "machine",
   "x-source": "6c9e025828"
  },
+ "js.1398mzwrur2": "epookki E5 · {n0}",
+ "@js.1398mzwrur2": {
+  "x-review": "machine",
+  "x-source": "6e2f14bbd8"
+ },
  "js.139r14pkn82": "lineaarinen, sidos {n0} Å (CCCBDB)",
  "@js.139r14pkn82": {
   "x-review": "machine",
@@ -2320,6 +2375,11 @@
  "@js.13cdu73b6uc": {
   "x-review": "machine",
   "x-source": "c8882d0205"
+ },
+ "js.13d1x1h00ia": "Jokainen ylikulku laskostettuna jaksolle. Planeetta toistuu samassa vaiheessa.",
+ "@js.13d1x1h00ia": {
+  "x-review": "machine",
+  "x-source": "d2683154ff"
  },
  "js.13dkw0fx1t5": "Sokkokoodattu kohdekuvaaja tunnisteelle tess-fa3483ce6f83-{n0}: arvioijien merkitsemä valokäyrä ilman kohteen nimeä ja merkintöjä",
  "@js.13dkw0fx1t5": {
@@ -2356,6 +2416,11 @@
   "x-review": "machine",
   "x-source": "f5cca1ccc1"
  },
+ "js.13kki9ctub8": "mitattu: {n0} ± {n1} ppm signaalin epookissa E6 + {n2} (S2-epookki {n3} + {n4}, parillinen kohteessaan)",
+ "@js.13kki9ctub8": {
+  "x-review": "machine",
+  "x-source": "89c3766f32"
+ },
  "js.13lcq3b40tl": "Kuvitus",
  "@js.13lcq3b40tl": {
   "x-review": "machine",
@@ -2365,6 +2430,11 @@
  "@js.13mufrch5ly": {
   "x-review": "machine",
   "x-source": "a80efe9728"
+ },
+ "js.13nit2nr5om": "yksi sektori tarkasteltu",
+ "@js.13nit2nr5om": {
+  "x-review": "machine",
+  "x-source": "b7a97de588"
  },
  "js.13oqb4u97gf": "{n0} planeetta exoplanet.eu:ssa · tallennettu tyyppi M",
  "@js.13oqb4u97gf": {
@@ -2380,6 +2450,11 @@
  "@js.13quavnkc3i": {
   "x-review": "machine",
   "x-source": "89d8aa4301"
+ },
+ "js.13sc89ovu45": "Signaali: yksittäinen notko, ei BLS-jaksoa <span class=\"dipid\">· notko tess-f28323a4aef6-{n0}</span>",
+ "@js.13sc89ovu45": {
+  "x-review": "machine",
+  "x-source": "658fdad125"
  },
  "js.13sqdnq3im2": "Tunnetun planeetan löytyminen uudelleen on putken tarkistus, ei löytö. HD {n0} b: {n1}/{n2} ylikulkua ({n3} kandidaatti; BLS-jakso ei ole planeetan); HD {n4} c: {n5}/{n6} ylikulkua ({n7} kandidaatti, {n8} merkitty; BLS-jakso ei ole planeetan).",
  "@js.13sqdnq3im2": {
@@ -2421,6 +2496,11 @@
   "x-review": "machine",
   "x-source": "b2990754ad"
  },
+ "js.14aozs834pe": "Suodata signaalit seulonnan tuloksen mukaan",
+ "@js.14aozs834pe": {
+  "x-review": "machine",
+  "x-source": "694da010e5"
+ },
  "js.14cls39i1sb": "Luhman {n0} B",
  "@js.14cls39i1sb": {
   "x-review": "machine",
@@ -2440,6 +2520,11 @@
  "@js.14d4fmw1xk4": {
   "x-review": "machine",
   "x-source": "2fc15de0d8"
+ },
+ "js.14d5b4akiol": "E1 · {n0} · {n1} ppm · <span class=\"g-fail\"><span aria-hidden=\"true\">✕</span> hylätty</span>",
+ "@js.14d5b4akiol": {
+  "x-review": "machine",
+  "x-source": "85b8885beb"
  },
  "js.14eex7du4p": "<span class=\"word s-flag\">merkitty tarkistettavaksi</span><b class=\"fig\">1f. pi Men, notkahdus {n0}.</b> <span class=\"sid mono\">tallennettu tunniste tess-04b815001aa6-{n1}.</span> Notkahdus hetkellä BTJD {n2}, {n3} ppm, {n4} h, SNR {n5}. Konsensusväli BTJD {n6}–{n7}. Merkinnyt {n8}/{n9} arvioijaa ({n10}/{n11} Sentinels, {n12}/{n13} Probes). Ei BLS-jaksoa: yksittäinen notkahdus. Merkitty tarkistettavaksi (poikkeaa tähtensä efemeridistä). Arkisto: toleranssin sisällä ei arkiston planeettaa (tällä notkahduksella ei ole BLS-jaksoa verrattavaksi); pi Men c: ei ylikulkuefemeridiä verrattavaksi. Vain arkiston arvoja. Tämä sivu ei väitä havaintoa.",
  "@js.14eex7du4p": {
@@ -2476,6 +2561,11 @@
   "x-review": "machine",
   "x-source": "57e8d28e84"
  },
+ "js.14ljetk73lh": "<span>keskiaika</span>{n0} BTJD",
+ "@js.14ljetk73lh": {
+  "x-review": "machine",
+  "x-source": "f9f33d1d15"
+ },
  "js.14nibjkkx9k": "Atomaarinen natrium kuumissa kaasukehissä; ei biosignatuuri.",
  "@js.14nibjkkx9k": {
   "x-review": "machine",
@@ -2490,6 +2580,11 @@
  "@js.14ojvlsajll": {
   "x-review": "machine",
   "x-source": "de10acd2a6"
+ },
+ "js.14oz0auqccy": "Ratkaisuloki kohteelle tess-f28323a4aef6-{n0}",
+ "@js.14oz0auqccy": {
+  "x-review": "machine",
+  "x-source": "a61c13ed4a"
  },
  "js.14pa01y6ilo": "arvioija",
  "@js.14pa01y6ilo": {
@@ -2561,6 +2656,11 @@
   "x-review": "machine",
   "x-source": "3bd51ab9c1"
  },
+ "js.1571d5xqg1v": "Signaali: yksittäinen notko, ei BLS-jaksoa <span class=\"dipid\">· notko tess-04b815001aa6-{n0}</span>",
+ "@js.1571d5xqg1v": {
+  "x-review": "machine",
+  "x-source": "b46d3f10f0"
+ },
  "js.157pbw74lpa": "Kontrastitikkaat",
  "@js.157pbw74lpa": {
   "x-review": "machine",
@@ -2570,6 +2670,16 @@
  "@js.157zot03q6v": {
   "x-review": "machine",
   "x-source": "a14baca212"
+ },
+ "js.1580lfgft7d": "Probe, deterministinen sovitettuun suodattimeen perustuva ilmaisin, ei ihminen: {n0} merkintä tässä kohteessa SNR-kynnyksen ja konfiguraatiossa asetetun ohitusosuuden perusteella.",
+ "@js.1580lfgft7d": {
+  "x-review": "machine",
+  "x-source": "20f7c4aa02"
+ },
+ "js.15887if0zos": "Ratkaisuloki kohteelle tess-38b5a559eee2-{n0}",
+ "@js.15887if0zos": {
+  "x-review": "machine",
+  "x-source": "605f35bd67"
  },
  "js.158ymafba4p": "{n0} · Seulonta",
  "@js.158ymafba4p": {
@@ -2585,6 +2695,11 @@
  "@js.15dcwc5ip85": {
   "x-review": "machine",
   "x-source": "34398ac6d6"
+ },
+ "js.15h3jgzxqzv": "Notko on riittävän voimakas luotettavaksi.",
+ "@js.15h3jgzxqzv": {
+  "x-review": "machine",
+  "x-source": "bd9646677c"
  },
  "js.15h6ev7ggyb": "Kuten natrium; ei biosignatuuri.",
  "@js.15h6ev7ggyb": {
@@ -2626,6 +2741,11 @@
   "x-review": "machine",
   "x-source": "8cd023e1a1"
  },
+ "js.15qbr4m8ok9": "kohde tess-fa3483ce6f83: BLS P {n0} d, t0 {n1}, kesto {n2} h, {n3} ylikulkua, {n4} notkoa · epookkinumeroiden viite",
+ "@js.15qbr4m8ok9": {
+  "x-review": "machine",
+  "x-source": "31df3d5e48"
+ },
  "js.15r06e4vt70": "Ajo tess-hd-{n0}-s4 · {n1} notkahdusta ({n2} kandidaattia, {n3} merkitty) · {n4} kohdetta.<span class=\"printonly\"> Jokainen tämän levyn kandidaatti: kandidaatti, vahvistamaton.</span>",
  "@js.15r06e4vt70": {
   "x-review": "machine",
@@ -2646,6 +2766,11 @@
   "x-review": "machine",
   "x-source": "d4a367de3f"
  },
+ "js.15xk4ybtx9o": "tess-04b815001aa6-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, läpäisi seulonnan",
+ "@js.15xk4ybtx9o": {
+  "x-review": "machine",
+  "x-source": "423f355533"
+ },
  "js.15zsmt411w4": "Sentinel · Skeptikko <span class=\"mono idtag\" title=\"reviewer id\">claude-skeptic</span>",
  "@js.15zsmt411w4": {
   "x-review": "machine",
@@ -2660,6 +2785,11 @@
  "@js.162eejl2jaq": {
   "x-review": "machine",
   "x-source": "1c3dab36c4"
+ },
+ "js.163afp81z91": "Seulonnan tulos kohteelle tess-01e315ee5ebf-{n0}: hylätty seulonnassa",
+ "@js.163afp81z91": {
+  "x-review": "machine",
+  "x-source": "9c8d570e15"
  },
  "js.164h8pg3w0r": "Tunnetaan myös nimillä 2MASS J19122295+{n0}, KIC {n1}, KOI-{n2}, WISE J191222.94+{n3}.",
  "@js.164h8pg3w0r": {
@@ -2716,6 +2846,11 @@
   "x-review": "machine",
   "x-source": "e223d8ec1e"
  },
+ "js.16p9cxevrat": "<span class=\"tagcand\">merkitty</span> TIC {n0} · TESS · kohde tess-38b5a559eee2",
+ "@js.16p9cxevrat": {
+  "x-review": "machine",
+  "x-source": "5922eeb20b"
+ },
  "js.16r0kn8gjyr": "Kartoitus, jota SetuHQ lukee.",
  "@js.16r0kn8gjyr": {
   "x-review": "machine",
@@ -2726,10 +2861,20 @@
   "x-review": "machine",
   "x-source": "6dc0ba52e8"
  },
+ "js.16vasc18vmu": "Seulonnan tulos kohteelle tess-f28323a4aef6-{n0}: merkitty tarkistettavaksi",
+ "@js.16vasc18vmu": {
+  "x-review": "machine",
+  "x-source": "3d1cbab823"
+ },
  "js.16vlf4urwgi": "syvällä Auringon sisällä [calc]",
  "@js.16vlf4urwgi": {
   "x-review": "machine",
   "x-source": "b7b7f73a1e"
+ },
+ "js.16vpil9tur1": "<span class=\"caret\" aria-hidden=\"true\"></span>Ratkaisuloki",
+ "@js.16vpil9tur1": {
+  "x-review": "machine",
+  "x-source": "e5cf9406bd"
  },
  "js.16x61d2zia4": "<span class=\"word s-rej\">hylätty seulonnassa</span><b class=\"fig\">1d. TOI-{n0}, notkahdus {n1}.</b> <span class=\"sid mono\">tallennettu tunniste tess-01e315ee5ebf-{n2}.</span> Notkahdus hetkellä BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsensusväli BTJD {n7}–{n8}. Merkinnyt {n9}/{n10} arvioijaa ({n11}/{n12} Sentinels, {n13}/{n14} Probes). Sijoittuu {n15} päivän BLS-jaksolle (t0 BTJD {n16}). Hylätty seulonnassa (sekundaaripimennys, sekundaari missä tahansa vaiheessa). Arkisto: toleranssin sisällä ei arkiston planeettaa. Vain arkiston arvoja. Tämä sivu ei väitä havaintoa.",
  "@js.16x61d2zia4": {
@@ -2760,6 +2905,11 @@
  "@js.17013cyv2mu": {
   "x-review": "machine",
   "x-source": "00d60e31a4"
+ },
+ "js.174i093ntso": "Seulontatarkistukset (vain valokäyrä) · tulos: läpäisi seulonnan",
+ "@js.174i093ntso": {
+  "x-review": "machine",
+  "x-source": "b4404dcac8"
  },
  "js.1752ocxoxow": "suhde",
  "@js.1752ocxoxow": {
@@ -2866,6 +3016,11 @@
   "x-review": "machine",
   "x-source": "ed17f1892a"
  },
+ "js.184f6w0gx7u": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisi</span></span> syvyyden yläraja",
+ "@js.184f6w0gx7u": {
+  "x-review": "machine",
+  "x-source": "3dd3f8ac43"
+ },
  "js.186279a8u1a": "Seuraava notko, BTJD {n0}",
  "@js.186279a8u1a": {
   "x-review": "machine",
@@ -2875,6 +3030,11 @@
  "@js.186uk0gjjtn": {
   "x-review": "machine",
   "x-source": "f1dbc33978"
+ },
+ "js.189jlhbupui": "kohde tess-04b815001aa6: BLS P {n0} d, t0 {n1}, kesto {n2} h, {n3} ylikulkua, {n4} notkoa",
+ "@js.189jlhbupui": {
+  "x-review": "machine",
+  "x-source": "95b9dfb13e"
  },
  "js.18bbnn751ai": "exoplanet.eu P = {n0} d, m sin i = {n1} MJ, M★ = {n2} M☉, e = {n3} [laskettu]",
  "@js.18bbnn751ai": {
@@ -2890,6 +3050,11 @@
  "@js.18cir4wk13n": {
   "x-review": "machine",
   "x-source": "794d8777f1"
+ },
+ "js.18db5z0hy32": "Vuorottelevat syvyydet viittaavat kaksoistähteen, jonka jakso on kaksinkertainen. Putki tallentaa kunkin arvon kohteensa BLS:n ennustamassa epookissa. Akselin numerot ovat signaalin epookkeja E viite-efemeridillä; kunkin alla on kohde (S1, S2 aikajärjestyksessä) ja epookin pariteetti siinä kohteessa, jota pariton/parillinen-testi käyttää.",
+ "@js.18db5z0hy32": {
+  "x-review": "machine",
+  "x-source": "5751020c44"
  },
  "js.18g48o42k8c": "tunniste tic29257288-s1-var-{n0}<br>valokäyrän sha256 b44e4d280fddc0d2705f6687997736ebf67f9b0544e9711f880a21ebaa0bda05<br>koodi … · asetukset a9d34c7079563183…<br>lähde sector_0001.json.gz",
  "@js.18g48o42k8c": {
@@ -2966,6 +3131,11 @@
   "x-review": "machine",
   "x-source": "b42f59139f"
  },
+ "js.190hsnmhzjx": "Julkaistujen planeettojen HD {n0} b (P {n1} d) ja HD {n2} c (P {n3} d) isäntätähti.",
+ "@js.190hsnmhzjx": {
+  "x-review": "machine",
+  "x-source": "3371937833"
+ },
  "js.19105wxgncn": "sektori {n0} · muuttuvuus",
  "@js.19105wxgncn": {
   "x-review": "machine",
@@ -3006,10 +3176,30 @@
   "x-review": "machine",
   "x-source": "06c30ededa"
  },
+ "js.19kvxmegodh": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notko E4 · tess-291acb98cabe-{n2}</span>",
+ "@js.19kvxmegodh": {
+  "x-review": "machine",
+  "x-source": "b48177bb81"
+ },
  "js.19lxxxxy9yw": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">2f. <span class=\"mono\">tess-fe04f0304e5e-{n0}</span>.</b> Notko hetkellä BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinnyt {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Sijoittuu {n6} päivän BLS-jaksolle, jolla on {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvoja. Tämä sivu ei väitä havainneensa mitään.",
  "@js.19lxxxxy9yw": {
   "x-review": "machine",
   "x-source": "a0c765ac85"
+ },
+ "js.19mwifjg1tt": "ei efemeridiä tässä kohteessa: yksittäinen tapahtuma, ei mitattu",
+ "@js.19mwifjg1tt": {
+  "x-review": "machine",
+  "x-source": "c4a697e6ce"
+ },
+ "js.19nel0drcf2": "≤ {n0} ppm",
+ "@js.19nel0drcf2": {
+  "x-review": "machine",
+  "x-source": "f798b2bdc0"
+ },
+ "js.19p1k4rlcq8": "Vuorottelevat syvyydet tarkoittaisivat kaksoistähteä, jonka jakso on kaksinkertainen. Mitattu kerran kutakin BLS-efemeridiä kohden kaikista sen epookeista kohteessa, ei notkoittain.",
+ "@js.19p1k4rlcq8": {
+  "x-review": "machine",
+  "x-source": "92aebc966d"
  },
  "js.19qllgkqtm": "tess-f28323a4aef6-{n0} · Avoin · merkitty tarkistettavaksi",
  "@js.19qllgkqtm": {
@@ -3035,6 +3225,11 @@
  "@js.19xg7e5ysfo": {
   "x-review": "machine",
   "x-source": "0b27c158fe"
+ },
+ "js.19xkrbq2unx": "Signaali P {n0} d <span class=\"dipid\">· notko E0 · tess-38b5a559eee2-{n1}</span>",
+ "@js.19xkrbq2unx": {
+  "x-review": "machine",
+  "x-source": "43455a592e"
  },
  "js.19yumxqvwoe": "Tunnetaan myös nimillä 2MASS J19221591+{n0}, KIC {n1}, KOI-{n2}, WISE J192215.91+{n3}.",
  "@js.19yumxqvwoe": {
@@ -3071,6 +3266,11 @@
   "x-review": "machine",
   "x-source": "7cb381fdb4"
  },
+ "js.1a5f8tf124": "Julkaistujen planeettojen TOI-{n0} b (P {n1} d), TOI-{n2} c (P {n3} d) ja TOI-{n4} d (P {n5} d) isäntätähti.",
+ "@js.1a5f8tf124": {
+  "x-review": "machine",
+  "x-source": "eb0025506a"
+ },
  "js.1a5z9qhmjgc": "Sentinels",
  "@js.1a5z9qhmjgc": {
   "x-review": "machine",
@@ -3090,6 +3290,11 @@
  "@js.1a7sj6vr9v2": {
   "x-review": "machine",
   "x-source": "24770ea8b7"
+ },
+ "js.1a813jfgyfo": "Mitä tämä ajo ei tunnistanut uudelleen: Löytyi {n0} b:n {n1} ylikulusta ja molemmat c:n ylikulut; kumpaakaan julkaistua jaksoa ei saatu uudelleen esiin (näiden notkojen BLS-jakso ei ole planeetan jakso).",
+ "@js.1a813jfgyfo": {
+  "x-review": "machine",
+  "x-source": "26c5db4ac3"
  },
  "js.1a879cvh3h3": "tess-997691b39aab",
  "@js.1a879cvh3h3": {
@@ -3131,10 +3336,20 @@
   "x-review": "machine",
   "x-source": "df55237fb1"
  },
+ "js.1ao4uqwmy13": "palveluntarjoaja · malli ilmoitetun mukaisesti · kalibrointi",
+ "@js.1ao4uqwmy13": {
+  "x-review": "machine",
+  "x-source": "d7da6ec1e4"
+ },
  "js.1aol2kz2k2l": "Ylikulku",
  "@js.1aol2kz2k2l": {
   "x-review": "machine",
   "x-source": "99da84d9ad"
+ },
+ "js.1aqan8px9wr": "Sentinels käyttävät oletuksena mallia Claude (Anthropic); myös muita palveluntarjoajia tuetaan, ja ne on nimetty. Probes ovat deterministisiä, sovitettuun suodattimeen perustuvia ilmaisimia.<br>ajo {n0}-{n1}-21T11:{n2}+{n3} · konfiguraatio 585955d5e7a1d141 · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7} · Sentinels: Claude Code CLI (Claude, Anthropic) oletus; Claude Code CLI (Claude, Anthropic) oletus<br>kandidaatti tess-fa3483ce6f83-{n8} · signaali tess-fa3483ce6f83-P6.2726+{n9} · kohde tess-fa3483ce6f83<br>ristiintunnistus: NASA Exoplanet Archive, taulu ps (default_flag = {n10}), kuten scripts/validate_known_planets.py on tallentanut tiedostoon docs/results/pi_men_validation.md (reaaliaikainen arkistokysely, commit 0f6dbdc). Siihen on tallennettu vain pi Men c, joten vain pi Men c on listattu; sen ylikulun keskiaikaa ei tallennettu, joten epookkikohtaista poikkeamaa ei lasketa tässä; sen sijaan viitataan validointimuistiinpanon keskimääräiseen ajoituspoikkeamaan ({n11} min, {n12} epookista {n13}:stä). Korvaa se komennon 'setuhq crossmatch runs/tess-pi-men-s1' tulosteella, kun arkisto vastaa. · tila: täsmätty",
+ "@js.1aqan8px9wr": {
+  "x-review": "machine",
+  "x-source": "1e06dc81b5"
  },
  "js.1aqv49cd0kk": "merkitty",
  "@js.1aqv49cd0kk": {
@@ -3145,6 +3360,11 @@
  "@js.1arodmjetn1": {
   "x-review": "machine",
   "x-source": "04939862bf"
+ },
+ "js.1asa93pvvie": "sisempi",
+ "@js.1asa93pvvie": {
+  "x-review": "machine",
+  "x-source": "6b6b85aed8"
  },
  "js.1at399l872n": "{n0} arvoista M★, R★",
  "@js.1at399l872n": {
@@ -3221,6 +3441,11 @@
   "x-review": "machine",
   "x-source": "60afdf5ecd"
  },
+ "js.1ba6683vd38": "mitattu: {n0} ± {n1} ppm signaalin epookissa E0 + {n2} (S2-epookki {n3} + {n4}, parillinen kohteessaan)",
+ "@js.1ba6683vd38": {
+  "x-review": "machine",
+  "x-source": "0e01f8a273"
+ },
  "js.1bb10h57ym0": "volunteer-cautious, volunteer-sensitive, volunteer-typical",
  "@js.1bb10h57ym0": {
   "x-review": "machine",
@@ -3281,6 +3506,11 @@
   "x-review": "machine",
   "x-source": "ae647b9bdc"
  },
+ "js.1btf664zy2w": "<span>BLS-jakso</span>{n0} d (tämä kohde) (ei planeetan jakso)",
+ "@js.1btf664zy2w": {
+  "x-review": "machine",
+  "x-source": "05305d5723"
+ },
  "js.1bvs13e31e4": "Käyrä on malli, joka on piirretty tallennetuista arvoista (pienen planeetan approksimaatio, Mandel &amp; Agol {n0}, ympyräkiertorata), ei havaittua dataa. Pisteet ovat SetuHQ:n omia tallennettuja pisteitä sen pääasialliselle notkahdukselle. Kiertorata ei ole mittakaavassa; sen kallistus on asetettu niin, että planeetta kulkee tähden editse tallennetulla törmäysparametrilla.",
  "@js.1bvs13e31e4": {
   "x-review": "machine",
@@ -3291,10 +3521,20 @@
   "x-review": "machine",
   "x-source": "41847b20a1"
  },
+ "js.1c09zliav6g": "Seulonnan tulos kohteelle tess-4b369d3c6f09-{n0}: merkitty tarkistettavaksi",
+ "@js.1c09zliav6g": {
+  "x-review": "machine",
+  "x-source": "b212c885ad"
+ },
  "js.1c0ercd7wb1": "Osiot",
  "@js.1c0ercd7wb1": {
   "x-review": "machine",
   "x-source": "9bae918add"
+ },
+ "js.1c0xaunng2i": "<span class=\"caret\" aria-hidden=\"true\"></span>Vertailut",
+ "@js.1c0xaunng2i": {
+  "x-review": "machine",
+  "x-source": "2f90d77df1"
  },
  "js.1c2gi5t3ppv": "parittomat ja parilliset ylikulut eroavat syvyydeltään (vet.py); merkitsevä notkahdus vaiheessa {n0} (vet.py)",
  "@js.1c2gi5t3ppv": {
@@ -3306,15 +3546,30 @@
   "x-review": "machine",
   "x-source": "40c0e1f8f4"
  },
+ "js.1c6z9sbndnk": "<i class=\"k-band\"></i>merkitty ikkuna (konsensus)",
+ "@js.1c6z9sbndnk": {
+  "x-review": "machine",
+  "x-source": "0ca3a31c49"
+ },
  "js.1c7794vgcfx": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">4h. <span class=\"mono\">tess-3b0eb3c81ad6-{n0}</span>.</b> Notkahdus hetkellä BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinnyt {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Sijoittuu {n6} päivän BLS-jaksolle, jolla on {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvoja. Tämä sivu ei väitä havaintoa.",
  "@js.1c7794vgcfx": {
   "x-review": "machine",
   "x-source": "2c0d9e509e"
  },
+ "js.1c7fju1ecnu": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notko E1 · tess-5935bad1a3b4-{n2}</span>",
+ "@js.1c7fju1ecnu": {
+  "x-review": "machine",
+  "x-source": "0bf72c5ce1"
+ },
  "js.1c7ha7v4lg3": "Ylikulkuhaku, jossa riippumattomien arvioijien paneeli merkitsee notkahduksia sokkokoodatuista valokäyristä, konsensus painotetaan taitojen mukaan ja jokainen kandidaatti säilyttää alkuperätietonsa. Vain tarkastuksen läpäissyt notkahdus on kandidaatti, ja kandidaatti on vahvistamaton.",
  "@js.1c7ha7v4lg3": {
   "x-review": "machine",
   "x-source": "a46525e165"
+ },
+ "js.1cc8vlbtonu": "Signaali P {n0} d <span class=\"dipid\">· notko E0 · tess-08a8c4eac6ff-{n1}</span>",
+ "@js.1cc8vlbtonu": {
+  "x-review": "machine",
+  "x-source": "a2aa0cd539"
  },
  "js.1cdfpz69lxl": "Mikrolinssi-ilmiö",
  "@js.1cdfpz69lxl": {
@@ -3376,6 +3631,16 @@
   "x-review": "machine",
   "x-source": "11a4a60b51"
  },
+ "js.1cxhsl1qm9y": "≥ {n0} ylikulkua",
+ "@js.1cxhsl1qm9y": {
+  "x-review": "machine",
+  "x-source": "6c3cd25b64"
+ },
+ "js.1cyz2gfbz06": "Kaksi lyhyttä, jyrkkää, noin {n0} ppm:n pudotusta näkyy lähellä kohtia {n1} ja {n2}; kumpikin kestää noin {n3} tuntia ja koostuu useista peräkkäisistä pisteistä. Ne voisivat olla ylikulkuja, mutta hajonta on suurta ja kasvaa valokäyrän loppuosassa, joten ne voivat olla myös instrumentaalisia.",
+ "@js.1cyz2gfbz06": {
+  "x-review": "machine",
+  "x-source": "3c47f50551"
+ },
  "js.1d2fjcit5ne": "Perhe",
  "@js.1d2fjcit5ne": {
   "x-review": "machine",
@@ -3385,6 +3650,11 @@
  "@js.1d342irzdqu": {
   "x-review": "machine",
   "x-source": "5d4d2534d3"
+ },
+ "js.1d3n8p9jye6": "Probe: deterministinen sovitettuun suodattimeen perustuva ilmaisin, ei ihminen",
+ "@js.1d3n8p9jye6": {
+  "x-review": "machine",
+  "x-source": "cb891c510f"
  },
  "js.1d409xju7mw": "{s0}piirretty mustan kappaleen värissään, {n0} K, säde {n1} R☉.",
  "@js.1d409xju7mw": {
@@ -3411,6 +3681,11 @@
   "x-review": "machine",
   "x-source": "d4fa08ec64"
  },
+ "js.1d9l6sncvsj": "Ylikulkunauha kohteelle tess-997691b39aab-{n0}. Siirry tallennettujen lokeroiden läpi vasemmalla ja oikealla nuolinäppäimellä, Shiftillä kymmenen kerrallaan, Home- ja End-näppäimillä päihin.",
+ "@js.1d9l6sncvsj": {
+  "x-review": "machine",
+  "x-source": "9ed73f7ffb"
+ },
  "js.1db41wmk3hn": "Viimeisimpien ajojen koko",
  "@js.1db41wmk3hn": {
   "x-review": "machine",
@@ -3425,6 +3700,16 @@
  "@js.1dd353vmae5": {
   "x-review": "machine",
   "x-source": "d59ad4e6f2"
+ },
+ "js.1ddb17xrgs2": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notko E3 · tess-01e315ee5ebf-{n2}</span>",
+ "@js.1ddb17xrgs2": {
+  "x-review": "machine",
+  "x-source": "45c482dd24"
+ },
+ "js.1debqcg0skq": "<span class=\"glyph g-fail\"><span aria-hidden=\"true\">✕</span> <span class=\"word\">ei läpäissyt</span></span> nähty molemmissa sektoreissa",
+ "@js.1debqcg0skq": {
+  "x-review": "machine",
+  "x-source": "e9e4c52a8b"
  },
  "js.1df9e27tbd4": "{n0} injektoitua, {n1} tyhjää",
  "@js.1df9e27tbd4": {
@@ -3496,6 +3781,11 @@
   "x-review": "machine",
   "x-source": "b9b4c27050"
  },
+ "js.1e34dqtdzt2": "signaali: <span class=\"badge g-fail\"><span class=\"glyph\" aria-hidden=\"true\">✕</span> hylätty seulonnassa</span>",
+ "@js.1e34dqtdzt2": {
+  "x-review": "machine",
+  "x-source": "2db22c6df1"
+ },
  "js.1e34rrpji4d": "{n0} TOI:ta otoksessa",
  "@js.1e34rrpji4d": {
   "x-review": "machine",
@@ -3515,6 +3805,21 @@
  "@js.1e99n2yar5c": {
   "x-review": "machine",
   "x-source": "5acf5925b9"
+ },
+ "js.1ea185n7y78": "tess-04b815001aa6-{n0}, {n1} BTJD, {n2} ppm, SNR {n3}, hylätty seulonnassa",
+ "@js.1ea185n7y78": {
+  "x-review": "machine",
+  "x-source": "3f454301f6"
+ },
+ "js.1ebcrnzug2h": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notko E0 · tess-fa3483ce6f83-{n2}</span>",
+ "@js.1ebcrnzug2h": {
+  "x-review": "machine",
+  "x-source": "a6ba076984"
+ },
+ "js.1ebo66nf6yl": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notko E1 · tess-997691b39aab-{n2}</span>",
+ "@js.1ebo66nf6yl": {
+  "x-review": "machine",
+  "x-source": "b2f155451b"
  },
  "js.1ecc8oy35i4": "Teegarden's d",
  "@js.1ecc8oy35i4": {
@@ -3561,6 +3866,11 @@
   "x-review": "machine",
   "x-source": "33b93476cf"
  },
+ "js.1elxyqbh955": "tess-4b369d3c6f09-{n0}, {n1} BTJD, {n2} ppm, SNR {n3}, merkitty tarkistettavaksi",
+ "@js.1elxyqbh955": {
+  "x-review": "machine",
+  "x-source": "acf6e25145"
+ },
  "js.1enwsy4nse5": "Notkahdus toistettuna",
  "@js.1enwsy4nse5": {
   "x-review": "machine",
@@ -3580,6 +3890,16 @@
  "@js.1eqp1j4uar9": {
   "x-review": "machine",
   "x-source": "45ef298afc"
+ },
+ "js.1es04iebmzu": "<span class=\"glyph g-fail\"><span aria-hidden=\"true\">✕</span> <span class=\"word\">ei läpäissyt</span></span> jaksollinen tuki",
+ "@js.1es04iebmzu": {
+  "x-review": "machine",
+  "x-source": "7edf8a5d53"
+ },
+ "js.1et5ct5d2ds": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisi</span></span> pisteitä ylikulussa",
+ "@js.1et5ct5d2ds": {
+  "x-review": "machine",
+  "x-source": "ba51d80159"
  },
  "js.1etlbcax1sp": "ii · koko kohde tess-4b369d3c6f09",
  "@js.1etlbcax1sp": {
@@ -3646,6 +3966,11 @@
   "x-review": "machine",
   "x-source": "7bb250633d"
  },
+ "js.1f8spng1a1r": "jokainen tarkistus, mitattu arvo, sääntö",
+ "@js.1f8spng1a1r": {
+  "x-review": "machine",
+  "x-source": "aadb04c6ef"
+ },
  "js.1fa3dkre7ep": "lämmin",
  "@js.1fa3dkre7ep": {
   "x-review": "machine",
@@ -3671,6 +3996,16 @@
   "x-review": "machine",
   "x-source": "4f25b2cf55"
  },
+ "js.1ffpb5rwi1w": "SNR: läpäisi. arvo {n0}. sääntö ≥ {n1}. Notko on riittävän voimakas luotettavaksi.",
+ "@js.1ffpb5rwi1w": {
+  "x-review": "machine",
+  "x-source": "903d34a545"
+ },
+ "js.1fk1p3wyhky": "ei BLS-jaksoa: tämä notko on oma signaalinsa",
+ "@js.1fk1p3wyhky": {
+  "x-review": "machine",
+  "x-source": "17d3e57697"
+ },
  "js.1fkntmdm4qk": "Avaa planeettakunnan näkymä ›",
  "@js.1fkntmdm4qk": {
   "x-review": "machine",
@@ -3691,10 +4026,20 @@
   "x-review": "machine",
   "x-source": "1bbef93fee"
  },
+ "js.1fqi7e1kf5p": "Signaalit ja niiden notkot",
+ "@js.1fqi7e1kf5p": {
+  "x-review": "machine",
+  "x-source": "525d10413d"
+ },
  "js.1frapy57cm7": "Tarkkailija alhaalla. Tähti liikkuu tarkkailijaa kohti ja tästä poispäin näkösäteen suunnassa ja sitten sen poikki. Alla viiden absorptioviivan kaista siirtyy siniseen päin, kun tähti lähestyy, ja punaiseen päin, kun se loittonee, ja pysyy paikallaan, kun se liikkuu poikittain. Siirtymää on liioiteltu miljoonakertaisesti, ja se on merkitty kuvaan.",
  "@js.1frapy57cm7": {
   "x-review": "machine",
   "x-source": "85cd6c7e34"
+ },
+ "js.1fsr87nkofj": "nähty molemmissa sektoreissa: ei läpäissyt. arvo yksi sektori tarkasteltu. sääntö sama jakso {n0} %:n sisällä toisessa sektorissa. Signaalin on täytettävä sääntö molemmissa tarkastelluissa sektoreissa (ennalta rekisteröity, docs/results/feed_rule_preregistration.json).",
+ "@js.1fsr87nkofj": {
+  "x-review": "machine",
+  "x-source": "6ee6d06732"
  },
  "js.1fujm79pdmr": "exoplanet.eu merkitsee sen tilaan \"ilmoitettu verkkosivustolla\", havaittu menetelmällä Primary Transit (ensisijainen ylikulku) vuonna {n0}; tietue päivitetty {n1}-{n2}-{n3}. Tunnetaan myös nimillä 2MASS J19135511+{n4} b, K02313.01, KIC {n5} b, KOI-{n6} b, KOI-{n7}, WISE J191355.11+{n8} b.",
  "@js.1fujm79pdmr": {
@@ -3715,6 +4060,11 @@
  "@js.1fwz3jtwilc": {
   "x-review": "machine",
   "x-source": "ae488e35a4"
+ },
+ "js.1fxn6y95g2d": "Ratkaisuloki kohteelle tess-291acb98cabe-{n0}",
+ "@js.1fxn6y95g2d": {
+  "x-review": "machine",
+  "x-source": "dc04828ceb"
  },
  "js.1g0smg3jibl": "TIC-tiheyspriorin kanssa",
  "@js.1g0smg3jibl": {
@@ -3746,6 +4096,11 @@
   "x-review": "machine",
   "x-source": "0e01cd3f7f"
  },
+ "js.1g9bdzmnfcb": "<span class=\"tagcand\">kandidaatti</span> TIC {n0} · TESS · kohde tess-f28323a4aef6",
+ "@js.1g9bdzmnfcb": {
+  "x-review": "machine",
+  "x-source": "72a749c721"
+ },
  "js.1g9epty6h1c": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">6c. <span class=\"mono\">tess-17eb2b9186b9-{n0}</span>.</b> Notkahdus hetkellä BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinneet: {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Osuu {n6} vuorokauden BLS-jaksolle, jolla on {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI-kohdetta. Vain arkiston arvoja. Tämä sivu ei väitä havaintoa.",
  "@js.1g9epty6h1c": {
   "x-review": "machine",
@@ -3766,6 +4121,11 @@
   "x-review": "machine",
   "x-source": "9b029cd7b7"
  },
+ "js.1gjs2p1tr80": "kohde tess-38b5a559eee2 · {n0} notkahdus · {n1} BLS-ylikulkua",
+ "@js.1gjs2p1tr80": {
+  "x-review": "machine",
+  "x-source": "e15c1b4945"
+ },
  "js.1glb8bx3pmp": "käyrät ovat muotoja, eivät yhteisessä syvyysasteikossa; pikseliruudukko mittakaavassa",
  "@js.1glb8bx3pmp": {
   "x-review": "machine",
@@ -3780,6 +4140,11 @@
  "@js.1gqpivhc7fe": {
   "x-review": "machine",
   "x-source": "b7233d7898"
+ },
+ "js.1gr9hdwkdb9": "Tämän ajon oma ristiinvertailu, tallennettu virhe sanatarkasti: <code>ModuleNotFoundError: No module named 'astroquery'</code>",
+ "@js.1gr9hdwkdb9": {
+  "x-review": "machine",
+  "x-source": "4f21de9e21"
  },
  "js.1gsbmq4ww7m": "Ajoraportti: WASP-{n0}",
  "@js.1gsbmq4ww7m": {
@@ -3796,15 +4161,35 @@
   "x-review": "machine",
   "x-source": "7c6dc9add8"
  },
+ "js.1gvrpwoizbn": "yksittäinen notkahdus, ei BLS-jaksoa",
+ "@js.1gvrpwoizbn": {
+  "x-review": "machine",
+  "x-source": "0b74ba9e1f"
+ },
+ "js.1gvzqeahynq": "ei hylkäävää merkintää, efemeridin mukainen: epäonnistui. arvo ei. sääntö passed and not off_ephemeris. Syöte ottaa vain notkahdukset, jotka koodi hyväksyi ja jotka osuvat tähtensä jaksolliseen signaaliin.",
+ "@js.1gvzqeahynq": {
+  "x-review": "machine",
+  "x-source": "a300425350"
+ },
  "js.1gw28sr6vp1": "Ajoraportti: TOI-{n0}",
  "@js.1gw28sr6vp1": {
   "x-review": "machine",
   "x-source": "897beb3051"
  },
+ "js.1gxjbn40582": "sama jakso {n0} %:n tarkkuudella toisessa sektorissa",
+ "@js.1gxjbn40582": {
+  "x-review": "machine",
+  "x-source": "3cd812b6c2"
+ },
  "js.1gyrdyj3c9d": "Tapauskansio ei latautunut tässä näkymässä. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-003\">Avaa se omalla sivullaan.</a>",
  "@js.1gyrdyj3c9d": {
   "x-review": "machine",
   "x-source": "f079dca731"
+ },
+ "js.1h02s2sakd7": "Probe · Tyypillinen <span class=\"mono hint\">volunteer-typical</span>: päällekkäisyys {n0} % ikkunasta, keskikohtien ero {n1} d · laskettu",
+ "@js.1h02s2sakd7": {
+  "x-review": "machine",
+  "x-source": "81daab6ff2"
  },
  "js.1h0po5rmoo7": "{n0} notkahdusta ({n1} kandidaattia) {n2} tähdellä, yksi kuvalevy tähteä kohden, ajosta tess-wasp-{n3}-s1. Jokainen seulonnan läpäissyt notkahdus on kandidaatti, vahvistamaton, ja sillä on vastaava tunniste; hylätty tai merkitty notkahdus nimetään pelkän tilansa perusteella. Jokainen luku on tallennettu arvo.",
  "@js.1h0po5rmoo7": {
@@ -3866,6 +4251,11 @@
   "x-review": "machine",
   "x-source": "7fb44fd2c9"
  },
+ "js.1hnychvujid": "tess-fa3483ce6f83-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, läpäisi seulonnan",
+ "@js.1hnychvujid": {
+  "x-review": "machine",
+  "x-source": "c7f15f78ac"
+ },
  "js.1ho5fuy8kqi": "{n0} planeettaa exoplanet.eu:ssa · tallennettu tyyppi K2II · luokka M Teff:n perusteella (lähin M0V)",
  "@js.1ho5fuy8kqi": {
   "x-review": "machine",
@@ -3916,6 +4306,11 @@
   "x-review": "machine",
   "x-source": "6dae7ec62b"
  },
+ "js.1i64cavlvjb": "<span class=\"glyph\" aria-hidden=\"true\">!</span> merkitty tarkistettavaksi",
+ "@js.1i64cavlvjb": {
+  "x-review": "machine",
+  "x-source": "fcd7867bcc"
+ },
  "js.1i6ejfrb6yd": "Tunnetaan myös nimellä KMT-{n0}-BLG-{n1}.",
  "@js.1i6ejfrb6yd": {
   "x-review": "machine",
@@ -3930,6 +4325,11 @@
  "@js.1i7zt01er07": {
   "x-review": "machine",
   "x-source": "06a99d2287"
+ },
+ "js.1i80ijc5mb1": "Arkisto: yhteensopiva kohteen pi Men c kanssa (P {n0} d, ΔP {n1} %), repositorion tallennetusta ristiinvertailusta docs/results/pi_men_crossmatch.json; tämän ajon omaa ristiinvertailua ei ajettu. <span class=\"hint\">Vain arkiston arvoja; tämä sivu ei väitä havaintoa suuntaan eikä toiseen.</span>",
+ "@js.1i80ijc5mb1": {
+  "x-review": "machine",
+  "x-source": "a481cefb39"
  },
  "js.1i982dt0un9": "Jokainen arvioija merkitsi ja luokitteli jokaisen kohteen itsenäisesti",
  "@js.1i982dt0un9": {
@@ -3951,6 +4351,11 @@
   "x-review": "machine",
   "x-source": "205c36c39e"
  },
+ "js.1ievbx48kpj": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E1 · tess-4b369d3c6f09-{n2}</span>",
+ "@js.1ievbx48kpj": {
+  "x-review": "machine",
+  "x-source": "f5b1d390c2"
+ },
  "js.1ieyn16xm99": "Piirretty vain tallennetuista arvoista (exoplanet.eu). Ei tallennettu: tähden lämpötila, tähden säde, planeetan säde, inklinaatio; nämä osat ovat havainnollistavia, ja piirroksessa kerrotaan se. Tähden väri: Auringon, koska lämpötilaa ei ole tallennettu.",
  "@js.1ieyn16xm99": {
   "x-review": "machine",
@@ -3965,6 +4370,16 @@
  "@js.1in998fjxka": {
   "x-review": "machine",
   "x-source": "5d8760ebee"
+ },
+ "js.1irbdaelbh1": "Vuorottelevat syvyydet viittaavat kaksoistähteen kaksinkertaisella jaksolla. Putki tallentaa kunkin arvon kohteensa BLS:n ennustamalla epookilla. Akselin numerot ovat signaalin epookkeja E viite-efemeridillä; kunkin alla on kohde (S1, S2 aikajärjestyksessä) ja epookin pariteetti kyseisessä kohteessa, jota pariton/parillinen-testi käyttää. Pariton/parillinen- ja sekundaaritesti tehtiin vain kunkin kohteen sisällä; pariteetti numeroidaan kohteittain. Kohteiden välistä testiä ei ajettu.",
+ "@js.1irbdaelbh1": {
+  "x-review": "machine",
+  "x-source": "0ae288800a"
+ },
+ "js.1irp3ffpmtd": "<span class=\"glyph g-fail\"><span aria-hidden=\"true\">✕</span> <span class=\"word\">epäonnistui</span></span> ei hylkäävää merkintää, efemeridin mukainen",
+ "@js.1irp3ffpmtd": {
+  "x-review": "machine",
+  "x-source": "3e17d6aeb0"
  },
  "js.1ispru3ub0k": "Proxima Centauri b ›",
  "@js.1ispru3ub0k": {
@@ -3990,6 +4405,11 @@
  "@js.1ixtevk7a4o": {
   "x-review": "machine",
   "x-source": "6a6805a079"
+ },
+ "js.1iy0wi8ofs": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisi</span></span> jaksollinen tuki",
+ "@js.1iy0wi8ofs": {
+  "x-review": "machine",
+  "x-source": "c7516baa65"
  },
  "js.1j6l7y2byt3": "pi Men b<span>{n0} · Radiaalinopeus · Kaasujättiläinen (massan perusteella; sädettä ei tallennettu)</span>",
  "@js.1j6l7y2byt3": {
@@ -4040,6 +4460,11 @@
  "@js.1jnlql1jvxr": {
   "x-review": "machine",
   "x-source": "43edc57b50"
+ },
+ "js.1jpcdjilh8u": "mitattu: {n0} ± {n1} ppm signaalin epookilla E3 (S1:n epookki {n2}, pariton kohteessaan)",
+ "@js.1jpcdjilh8u": {
+  "x-review": "machine",
+  "x-source": "63c9812ba3"
  },
  "js.1jpqv79tmp8": "Teegarden's c",
  "@js.1jpqv79tmp8": {
@@ -4131,6 +4556,11 @@
   "x-review": "machine",
   "x-source": "ebd8b037ad"
  },
+ "js.1klraea2kgg": "E5 · {n0} · {n1} ppm · <span class=\"g-pass\"><span aria-hidden=\"true\">✓</span> läpäisi</span>",
+ "@js.1klraea2kgg": {
+  "x-review": "machine",
+  "x-source": "9d87e98b6c"
+ },
  "js.1km44yew691": "{n0} planeettaa exoplanet.eu:ssa · tallennettu tyyppi M4.5 · luokka M Teff:n perusteella (lähin M5V)",
  "@js.1km44yew691": {
   "x-review": "machine",
@@ -4156,6 +4586,11 @@
   "x-review": "machine",
   "x-source": "50f447ece0"
  },
+ "js.1krmnv5jxsc": "{n0} / {n1} ppm (ei tallennettuja virheitä)",
+ "@js.1krmnv5jxsc": {
+  "x-review": "machine",
+  "x-source": "c98a6c06d5"
+ },
  "js.1kth4gy2kpd": "Taiteilijan näkemys · neptunus, lämmin · Säde {n0} R⊕ (exoplanet.eu) on {n1}–{n2} R⊕, joten se on piirretty Neptunuksen kaltaisena planeettana. Teq {n3} K, laskettu a:sta, R★:sta ja Teff:stä, on lämpimällä vyöhykkeellä. Koostumusta ei ole mitattu. Lähde: exoplanet.eu, haettu {n4}-{n5}-{n6}. <a href=\"/docs/pictures/\">Miten kuvat piirretään ›</a>",
  "@js.1kth4gy2kpd": {
   "x-review": "machine",
@@ -4170,6 +4605,11 @@
  "@js.1kwnthdgog6": {
   "x-review": "machine",
   "x-source": "af4fb58c42"
+ },
+ "js.1l117hwcnb0": "Seulonnan tulos kohteelle tess-f28323a4aef6-{n0}: läpäisi seulonnan",
+ "@js.1l117hwcnb0": {
+  "x-review": "machine",
+  "x-source": "227b6fec7a"
  },
  "js.1l1ykyl9gjt": "Kuuma Jupiter, jonka syvänsininen väri mitattiin Hubblella.",
  "@js.1l1ykyl9gjt": {
@@ -4206,6 +4646,11 @@
   "x-review": "machine",
   "x-source": "f7bc5c08f0"
  },
+ "js.1l8bcjhuhsq": "<span class=\"tagcand\">kandidaatti</span> TIC {n0} · TESS · kohde tess-04b815001aa6",
+ "@js.1l8bcjhuhsq": {
+  "x-review": "machine",
+  "x-source": "e917f5d299"
+ },
  "js.1l8c78nkfe5": "Teq",
  "@js.1l8c78nkfe5": {
   "x-review": "machine",
@@ -4236,6 +4681,11 @@
   "x-review": "machine",
   "x-source": "35c7f262c0"
  },
+ "js.1lekjyfbko1": "Seulonnan läpäisevä signaali on kandidaatti, vahvistamaton; hylätty signaali ei ole kandidaatti.",
+ "@js.1lekjyfbko1": {
+  "x-review": "machine",
+  "x-source": "a0aff3d706"
+ },
  "js.1liecym8jw": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-pass\">läpäisi tarkastuksen</span><b class=\"fig\">1d. WASP-{n0}, notko {n1}.</b> <span class=\"sid mono\">tallennettu tunniste tess-5935bad1a3b4-{n2}.</span> Notko hetkellä BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsensusväli BTJD {n7}–{n8}. Merkinneet {n9}/{n10} arvioijaa ({n11}/{n12} Sentinels, {n13}/{n14} Probes). Sijoittuu {n15} päivän BLS-jaksolle (t0 BTJD {n16}). Läpäisi tarkastuksen. Arkisto: yhdenmukainen kohteen WASP-{n17} b kanssa: ΔP {n18}%, ei ylikulkuefemeridiä vertailtavaksi. Vain arkiston arvoja. Tämä sivu ei väitä havaintoa.",
  "@js.1liecym8jw": {
   "x-review": "machine",
@@ -4251,6 +4701,16 @@
   "x-review": "machine",
   "x-source": "7fec9c309c"
  },
+ "js.1lk919dm5a1": "mitattu: {n0} ± {n1} ppm signaalin epookilla E1 (S1:n epookki {n2}, pariton kohteessaan)",
+ "@js.1lk919dm5a1": {
+  "x-review": "machine",
+  "x-source": "c1dbff2767"
+ },
+ "js.1lkhj6rcwta": "<span class=\"tagcand\">merkitty</span> TIC {n0} · TESS · kohde tess-04b815001aa6",
+ "@js.1lkhj6rcwta": {
+  "x-review": "machine",
+  "x-source": "e00d32c61b"
+ },
  "js.1lkjqc3ama8": "&lt; {n0} cm/s yhden yön aikana",
  "@js.1lkjqc3ama8": {
   "x-review": "machine",
@@ -4265,6 +4725,11 @@
  "@js.1lssrjmbfo8": {
   "x-review": "machine",
   "x-source": "c559928285"
+ },
+ "js.1lxvun2fb0t": "pois",
+ "@js.1lxvun2fb0t": {
+  "x-review": "machine",
+  "x-source": "b4dc66dde8"
  },
  "js.1ly4plg316f": "Tapaustiedosto ei latautunut tässä näkymässä. <a id=\"blockedlink\" href=\"/candidates/hd-15337/case-file/#tess-38b5a559eee2-001\">Avaa se omalla sivullaan.</a>",
  "@js.1ly4plg316f": {
@@ -4311,10 +4776,20 @@
   "x-review": "machine",
   "x-source": "94f4aed5ee"
  },
+ "js.1mccs2nefgb": "Syötteeseen tarvitaan toistuva notkahdus.",
+ "@js.1mccs2nefgb": {
+  "x-review": "machine",
+  "x-source": "c981509122"
+ },
  "js.1mi5uvq4hd0": "tämä ajo · hylätty seulonnassa · ei jaksoa",
  "@js.1mi5uvq4hd0": {
   "x-review": "machine",
   "x-source": "0fc6ada48d"
+ },
+ "js.1mi8vvz1c78": "<span class=\"tagcand\">hylätty</span> TIC {n0} · TESS · kohde tess-04b815001aa6",
+ "@js.1mi8vvz1c78": {
+  "x-review": "machine",
+  "x-source": "f1dbc6685d"
  },
  "js.1mi9l1aqyq9": "pi Men, tähden sivu",
  "@js.1mi9l1aqyq9": {
@@ -4350,6 +4825,11 @@
  "@js.1mrtv5truqv": {
   "x-review": "machine",
   "x-source": "5acefca984"
+ },
+ "js.1mu0hpfws55": "Laajuus: BLS-haku ja sen epookit koskevat kutakin {n0} päivän kohdetta, eivät kutakin TESS-sektoria. BLS-jakso {n1} d, t0 {n2}, kesto {n3} h; tässä kohteessa mitattiin {n4} ennustettua epookkia. Tämä signaali yhdistää {n5} kohdekohtaista BLS-tulosta; epookkinumerot E lasketaan viitekohteen efemeridillä. Syvyys ja kesto ovat konsensusikkunan mitattuja arvoja.",
+ "@js.1mu0hpfws55": {
+  "x-review": "machine",
+  "x-source": "26e1e2a6ac"
  },
  "js.1mv7har0j7g": "<a href=\"/stars/kepler-1955/\">{s0}</a> · Ylikulku · löydetty {n0} · Maan kokoinen",
  "@js.1mv7har0j7g": {
@@ -4421,6 +4901,11 @@
   "x-review": "machine",
   "x-source": "f9497b740d"
  },
+ "js.1nejvycfii2": "E0 · {n0} · {n1} ppm · <span class=\"g-fail\"><span aria-hidden=\"true\">✕</span> hylätty</span>",
+ "@js.1nejvycfii2": {
+  "x-review": "machine",
+  "x-source": "82f7862b90"
+ },
  "js.1nfprkwjljx": "Maan kaksonen {n0} pc:n etäisyydellä",
  "@js.1nfprkwjljx": {
   "x-review": "machine",
@@ -4435,6 +4920,11 @@
  "@js.1ngow2u9m0z": {
   "x-review": "machine",
   "x-source": "d829b53a36"
+ },
+ "js.1nhda7ekpqs": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E4 · tess-04b815001aa6-{n2}</span>",
+ "@js.1nhda7ekpqs": {
+  "x-review": "machine",
+  "x-source": "951664613c"
  },
  "js.1njw7as7ggq": "Taiteilijan näkemys · kivi, lämmin · Sädettä ei tallennettu; minimimassa (m sin i) {n0} M⊕ (exoplanet.eu) on alle {n1} M⊕, joten se piirretään kivisenä. Sädettä ei ole mitattu: ei mittakaavassa. Teq {n2} K, laskettu a:sta, R★:sta ja Teff:stä, on lämpimällä vyöhykkeellä. Koostumusta ei ole mitattu. Lähde: exoplanet.eu, haettu {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Miten kuvat piirretään ›</a>",
  "@js.1njw7as7ggq": {
@@ -4481,6 +4971,11 @@
   "x-review": "machine",
   "x-source": "b932ff9bfb"
  },
+ "js.1nzm3zru137": "Signaali yksittäinen notkahdus, ei BLS-jaksoa <span class=\"dipid\">· notkahdus tess-4b369d3c6f09-{n0}</span>",
+ "@js.1nzm3zru137": {
+  "x-review": "machine",
+  "x-source": "7dd74d478f"
+ },
  "js.1o0b3yflq21": "Teknosignatuurihaut (SETI)",
  "@js.1o0b3yflq21": {
   "x-review": "machine",
@@ -4521,6 +5016,11 @@
   "x-review": "machine",
   "x-source": "250f80cb14"
  },
+ "js.1o8kup9kzlv": "Signaalitasoisiksi merkityt rivit mitataan kerran kutakin BLS-efemeridiä kohden kaikilla sen epookeilla kohteessa, ei notkahduksittain, joten jokainen kyseisen kohteen notkahdus näyttää saman arvon (yhdistetty signaali näyttää kunkin kohteen oman arvon). σ-arvot ovat tallennetut virheet; Δ käyttää kaavaa √(σ_odd² + σ_even²), kuten seulontakoodikin.",
+ "@js.1o8kup9kzlv": {
+  "x-review": "machine",
+  "x-source": "cfc169235f"
+ },
  "js.1oflx09locz": "Tapaustiedosto ei latautunut tässä näkymässä. <a id=\"blockedlink\" href=\"/candidates/wasp-126/case-file/#tess-5935bad1a3b4-000\">Avaa se omalla sivullaan.</a>",
  "@js.1oflx09locz": {
   "x-review": "machine",
@@ -4531,10 +5031,30 @@
   "x-review": "machine",
   "x-source": "0a7c17edf3"
  },
+ "js.1ofusk0r9jt": "mitattu: {n0} ± {n1} ppm signaalin epookilla E5 (S2:n epookki {n2}, parillinen kohteessaan)",
+ "@js.1ofusk0r9jt": {
+  "x-review": "machine",
+  "x-source": "12bf3a76b8"
+ },
+ "js.1og9gl7i57s": "sekundaaripimennys (signaalitaso): ei mitattu. arvo –. sääntö syvyys ≤ {n0}σ (yksipuolinen). Notkahdus vaiheessa {n1} tarkoittaisi pimentävää kaksoistähteä. Mitataan kerran kutakin BLS-efemeridiä kohden vaiheessa {n2} kohteessa, ei notkahduksittain. Tätä tarkistusta ei ajettu, joten se ei ole läpäisy.",
+ "@js.1og9gl7i57s": {
+  "x-review": "machine",
+  "x-source": "04777bf608"
+ },
+ "js.1ogkci6hi0f": "koska: merkintä off_ephemeris · pariton / parillinen (signaalitaso) ei mitattu · sekundaaripimennys (signaalitaso) ei mitattu",
+ "@js.1ogkci6hi0f": {
+  "x-review": "machine",
+  "x-source": "fcf1a68d8d"
+ },
  "js.1oi39dp7ehn": "tess-4b369d3c6f09-{n0} · {s0} · tunnettu planeetta",
  "@js.1oi39dp7ehn": {
   "x-review": "machine",
   "x-source": "24562a2a17"
+ },
+ "js.1oivh7f6ibq": "Vertailu tälle notkahdukselle: yhteensopiva kohteen WASP-{n0} b kanssa: ΔP {n1} %, ei ylikulun efemeridiä vertailtavaksi.",
+ "@js.1oivh7f6ibq": {
+  "x-review": "machine",
+  "x-source": "6a536ec25c"
  },
  "js.1ojq6mpxesf": "Vastaa TOI:ta?",
  "@js.1ojq6mpxesf": {
@@ -4560,6 +5080,11 @@
  "@js.1otoimtw2we": {
   "x-review": "machine",
   "x-source": "37abb9bd8b"
+ },
+ "js.1ow1hsw515g": "E0 · {n0} · {n1} ppm · <span class=\"g-flag\"><span aria-hidden=\"true\">!</span> merkitty</span>",
+ "@js.1ow1hsw515g": {
+  "x-review": "machine",
+  "x-source": "a8d5399ab7"
  },
  "js.1owgocb596g": "Järjestä ajon kuvat",
  "@js.1owgocb596g": {
@@ -4616,6 +5141,11 @@
   "x-review": "machine",
   "x-source": "cabd85fcd8"
  },
+ "js.1pfbz0gdk0m": "<span class=\"glyph\" aria-hidden=\"true\">✓</span> läpäisi seulonnan",
+ "@js.1pfbz0gdk0m": {
+  "x-review": "machine",
+  "x-source": "70cf7503eb"
+ },
  "js.1pgnlf1ujkv": "Kaksi lyhyttä, terävää noin {n0} ppm:n pudotusta näkyy kohtien {n1} ja {n2} lähellä; kumpikin kestää noin {n3} tuntia ja koostuu useista peräkkäisistä pisteistä. Ne voivat olla ylikulkuja, mutta hajonta on suurta ja kasvaa valokäyrän loppuosassa, joten ne",
  "@js.1pgnlf1ujkv": {
   "x-review": "machine",
@@ -4630,6 +5160,11 @@
  "@js.1phito7oxf6": {
   "x-review": "machine",
   "x-source": "7d211a72f3"
+ },
+ "js.1pissq7xoy0": "kohteet tess-5935bad1a3b4, tess-291acb98cabe · {n0} notkahdusta · {n1} + {n2} BLS-ylikulkua",
+ "@js.1pissq7xoy0": {
+  "x-review": "machine",
+  "x-source": "2c0dc25e99"
  },
  "js.1pjllnj81v8": "Galaksin pohjoisnapa",
  "@js.1pjllnj81v8": {
@@ -4646,6 +5181,11 @@
   "x-review": "machine",
   "x-source": "799c269135"
  },
+ "js.1pmp8wz8a0n": "Vertailu tälle notkahdukselle: yhteensopiva kohteen pi Men c kanssa: ΔP {n0} %, ajoituspoikkeama validointimuistiosta: keskimäärin {n1} min {n2} epookin yli.",
+ "@js.1pmp8wz8a0n": {
+  "x-review": "machine",
+  "x-source": "92b96a0005"
+ },
  "js.1pnfihdfe07": "arvioijan tunniste volunteer-cautious",
  "@js.1pnfihdfe07": {
   "x-review": "machine",
@@ -4656,6 +5196,11 @@
   "x-review": "machine",
   "x-source": "c61622c67a"
  },
+ "js.1pnzipc391i": "Lähde: NASA Exoplanet Archive, taulu ps (default_flag = {n0})",
+ "@js.1pnzipc391i": {
+  "x-review": "machine",
+  "x-source": "b409ac4ed8"
+ },
  "js.1pp7ubpom66": "ii · koko kohde tess-291acb98cabe",
  "@js.1pp7ubpom66": {
   "x-review": "machine",
@@ -4665,6 +5210,11 @@
  "@js.1prxglt6kmm": {
   "x-review": "machine",
   "x-source": "38d8dccca9"
+ },
+ "js.1pt0cnrspx9": "{n0} ylikulkua",
+ "@js.1pt0cnrspx9": {
+  "x-review": "machine",
+  "x-source": "45c22bb496"
  },
  "js.1pujjt7cut5": "pi Men c",
  "@js.1pujjt7cut5": {
@@ -4710,6 +5260,11 @@
  "@js.1q51sfm27by": {
   "x-review": "machine",
   "x-source": "38d3b9991d"
+ },
+ "js.1q57t4rb6b6": "Claude Code CLI (Claude, Anthropic) · oletus",
+ "@js.1q57t4rb6b6": {
+  "x-review": "machine",
+  "x-source": "fc7ae3fc3c"
  },
  "js.1q597uzdf8t": "Pistelinssin suurennuskerroin: A(u) = (u² + {n0})/(u√(u² + {n1})), missä u on linssin ja lähteen välinen etäisyys Einsteinin säteinä; A({n2}) = {n3}. Einsteinin kulma on θ_E = √(κ M π_rel), κ ≈ {n4} mas/M☉ (Gaudi {n5}). Planeetan aiheuttama piikki kestää noin √q · t_E, missä q on planeetan ja tähden massasuhde. <b>Tapahtuma ei koskaan toistu</b>, joten planeettaa ei voi havaita uudelleen tällä tavalla.",
  "@js.1q597uzdf8t": {
@@ -4761,10 +5316,30 @@
   "x-review": "machine",
   "x-source": "dd3330cc6f"
  },
+ "js.1qna9yay9bh": "<span>syvyys</span>{n0} ppm (ikkunan keskiarvo) · sovitus {n1} ppm",
+ "@js.1qna9yay9bh": {
+  "x-review": "machine",
+  "x-source": "6c62277161"
+ },
  "js.1qr7pmpqgem": "TIC {n0}, jakso {n1} päivää, syvyys {n2} ppm, SNR {n3}, jakso vastaa tunnettua TOI:ta, kandidaatti, vahvistamaton",
  "@js.1qr7pmpqgem": {
   "x-review": "machine",
   "x-source": "9b7233a419"
+ },
+ "js.1qvt2thxmi3": "Sentinels toimivat oletuksena Claudella (Anthropic); muita palveluntarjoajia tuetaan ja ne merkitään. Probes ovat deterministisiä sovitettuun suodattimeen perustuvia ilmaisimia. Vain Probes; Sentinels-tarkistusta ei ajettu tässä esimerkissä.<br>ajo {n0}-{n1}-22T17:{n2}+{n3} · konfiguraatio eef6f1318b3b1dac · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-01e315ee5ebf-{n8} · signaali tess-997691b39aab-P4.5366+{n9} · kohde tess-01e315ee5ebf<br>ristiinvertailu: NASA Exoplanet Archive, taulu ps (default_flag = {n10}) · tila no_match",
+ "@js.1qvt2thxmi3": {
+  "x-review": "machine",
+  "x-source": "dc68598e4e"
+ },
+ "js.1qwk6e3p4uf": "Sentinels toimivat oletuksena Claudella (Anthropic); muita palveluntarjoajia tuetaan ja ne merkitään. Probes ovat deterministisiä sovitettuun suodattimeen perustuvia ilmaisimia.<br>ajo {n0}-{n1}-21T11:{n2}+{n3} · konfiguraatio 585955d5e7a1d141 · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7} · Sentinels: Claude Code CLI (Claude, Anthropic) oletus; Claude Code CLI (Claude, Anthropic) oletus<br>kandidaatti tess-04b815001aa6-{n8} · signaali tess-04b815001aa6-{n9}-single · kohde tess-04b815001aa6<br>ristiinvertailu: NASA Exoplanet Archive, taulu ps (default_flag = {n10}), kirjattuna tiedostoon docs/results/pi_men_validation.md skriptillä scripts/validate_known_planets.py (suora arkistokysely, commit 0f6dbdc). Siellä on kirjattu vain pi Men c, joten vain pi Men c on lueteltu; sen ylikulun keskiaikaa ei kirjattu, joten epookkikohtaista poikkeamaa ei lasketa tässä; sen sijaan viitataan validointimuistion keskimääräiseen ajoituspoikkeamaan ({n11} min {n12}/{n13} epookin yli). Korvaa se komennon 'setuhq crossmatch runs/tess-pi-men-s1' tulosteella, kun arkisto vastaa. · tila matched",
+ "@js.1qwk6e3p4uf": {
+  "x-review": "machine",
+  "x-source": "880af92353"
+ },
+ "js.1qy7rgdhvfy": "mahdollinen planeetta · {n0} merkintä",
+ "@js.1qy7rgdhvfy": {
+  "x-review": "machine",
+  "x-source": "e043a938c8"
  },
  "js.1qyh6wvoe6y": "Vain Probes; Sentinels-malleja ei ajettu tässä esimerkissä: Probes merkitsivät tämän ajon, eikä yksikään Sentinel ollut sen konfiguraatiossa, joten Sentinelin sanoja ei ole tallennettu.",
  "@js.1qyh6wvoe6y": {
@@ -4871,6 +5446,11 @@
   "x-review": "machine",
   "x-source": "943a48963f"
  },
+ "js.1rotm5903bf": "<span>BLS-jakso</span>ei mitään",
+ "@js.1rotm5903bf": {
+  "x-review": "machine",
+  "x-source": "6d0609d26c"
+ },
  "js.1rpd7kf82c0": "Galaksi",
  "@js.1rpd7kf82c0": {
   "x-review": "machine",
@@ -4880,6 +5460,11 @@
  "@js.1rrhtxb4sk8": {
   "x-review": "machine",
   "x-source": "1b1094a886"
+ },
+ "js.1rrsxmt3k4s": "<span class=\"caret\" aria-hidden=\"true\"></span>Arvioijat",
+ "@js.1rrsxmt3k4s": {
+  "x-review": "machine",
+  "x-source": "2fe6d1e5c5"
  },
  "js.1rsch1xr0lt": "Ylikulku · {n0} d",
  "@js.1rsch1xr0lt": {
@@ -4900,6 +5485,16 @@
  "@js.1rszrq79rlx": {
   "x-review": "machine",
   "x-source": "ead67bbf42"
+ },
+ "js.1rt2qwszrou": "tess-997691b39aab-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, hylätty seulonnassa",
+ "@js.1rt2qwszrou": {
+  "x-review": "machine",
+  "x-source": "5fbf2107d5"
+ },
+ "js.1runfdcs9z6": "Arkisto: tälle tähdelle ei ole julkaistua planeettaa, tämän ajon tallennetusta ristiinvertailusta, haettu {n0}. lokakuuta {n1}. <span class=\"hint\">Vain arkiston arvoja; tämä sivu ei väitä havaintoa suuntaan eikä toiseen.</span>",
+ "@js.1runfdcs9z6": {
+  "x-review": "machine",
+  "x-source": "c568508726"
  },
  "js.1rvebdsblwe": "Planeetta",
  "@js.1rvebdsblwe": {
@@ -4931,10 +5526,25 @@
   "x-review": "machine",
   "x-source": "95206d6b8a"
  },
+ "js.1s472fn5rv4": "Seulontatarkistukset (vain valokäyrä) · tulos: hylätty seulonnassa",
+ "@js.1s472fn5rv4": {
+  "x-review": "machine",
+  "x-source": "c742b1345b"
+ },
  "js.1s8dkmip4e3": "cheops",
  "@js.1s8dkmip4e3": {
   "x-review": "machine",
   "x-source": "0eeb4fd483"
+ },
+ "js.1sazvct45au": "Arkisto: yhteensopiva kohteen WASP-{n0} b kanssa (P {n1} d, ΔP {n2} %), tämän ajon tallennetusta ristiinvertailusta, haettu {n3}. lokakuuta {n4}. <span class=\"hint\">Vain arkiston arvoja; tämä sivu ei väitä havaintoa suuntaan eikä toiseen.</span>",
+ "@js.1sazvct45au": {
+  "x-review": "machine",
+  "x-source": "fa411bb522"
+ },
+ "js.1scbnipp2su": "Ratkaisukirjanpito kohteelle tess-5935bad1a3b4-{n0}",
+ "@js.1scbnipp2su": {
+  "x-review": "machine",
+  "x-source": "bca6f8d8d4"
  },
  "js.1sg8cj3fgn0": "Viisi tapaa jäljitellä planeettaa, kukin taivaan geometrioineen TESS-pikseliruudukolla (kukin pikseli {n0} kaarisekuntia, piirretty mittakaavassa) ja tuottamansa valokäyrän kanssa: pimennysmuuttuja, jolla on V-muotoinen hipaiseva pimennys; taustalla oleva pimennysmuuttuja, jota kohteen valo laimentaa; hierarkkinen kolmoisjärjestelmä; eri syvyiset parittomat ja parilliset pimennykset, kun jakso on puolet todellisesta; sekä instrumentaalinen hyppy, kuten liikemäärän purku (momentum dump).",
  "@js.1sg8cj3fgn0": {
@@ -4966,6 +5576,11 @@
   "x-review": "machine",
   "x-source": "1f61c7a25e"
  },
+ "js.1snz60lrrkk": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E5 · tess-01e315ee5ebf-{n2}</span>",
+ "@js.1snz60lrrkk": {
+  "x-review": "machine",
+  "x-source": "99d7e584d6"
+ },
  "js.1sp7u9xfn8o": "Taivaskartta",
  "@js.1sp7u9xfn8o": {
   "x-review": "machine",
@@ -4985,6 +5600,11 @@
  "@js.1sxvok0hgfe": {
   "x-review": "machine",
   "x-source": "ee2e4dcd65"
+ },
+ "js.1sy7oqwxniq": "signaalin epookki E1 (S1:n epookki {n0}, pariton kohteessaan): ei tallennettuja pisteitä ikkunassa ({n1} pistettä)",
+ "@js.1sy7oqwxniq": {
+  "x-review": "machine",
+  "x-source": "a8e83d8465"
  },
  "js.1sz1n18f5w5": "tess-997691b39aab-{n0}",
  "@js.1sz1n18f5w5": {
@@ -5016,6 +5636,11 @@
   "x-review": "machine",
   "x-source": "ea298d3769"
  },
+ "js.1t7mdq14v0e": "Kolme samankaltaista tasapohjaista notkahdusta, syvyydeltään noin {n0}-{n1} ppm, toistuu noin {n2} päivän välein, eikä vuorottelevaa syvyyttä tai sekundaaripimennystä ole. Ensimmäinen ja viimeinen notkahdus ovat datan reunoilla, joten ne ovat vain osittain katettuja, mutta jaksollinen toistuminen puoltaa ylikulkevaa planeettaa.",
+ "@js.1t7mdq14v0e": {
+  "x-review": "machine",
+  "x-source": "8135f89eec"
+ },
  "js.1takbn7z5i5": "pi Men b ›",
  "@js.1takbn7z5i5": {
   "x-review": "machine",
@@ -5035,6 +5660,11 @@
  "@js.1tbul4ef62r": {
   "x-review": "machine",
   "x-source": "1718cd0faa"
+ },
+ "js.1tc2979cm45": "Kolme samankaltaista, noin {n0} syvyistä notkahdusta, joista kukin kestää muutaman tunnin, toistuu noin {n1} päivän välein (lähellä hetkiä {n2}, {n3} ja {n4}). Ensimmäinen osuu datan alkuun ja viimeinen sen loppuun, joten muodot ovat vain osittain katettuja, mutta toistuvuus ja syvyys sopivat ylikulkuun.",
+ "@js.1tc2979cm45": {
+  "x-review": "machine",
+  "x-source": "eaf7e2465b"
  },
  "js.1tee8shei2w": "Kaistojen paikat: atlaksen NIST CCCBDB -perustaajuudet, λ = {n0}⁴/ν̃. Siirtymät ovat symmetrialtaan oikeita luonnoksia, joissa massakeskipiste on kiinteä eikä nettopyörimistä ole, eivät voimakenttälaskelma. Jokaisessa moodissa eniten liikkuva atomi heilahtaa {n1} Å, ja näkymä kertoo, kuinka paljon tämä liioittelee sen nollapisteliikettä eli moodin taajuudella ħ/{n2}ω:sta laskettua neliöllistä keskiarvosiirtymää: veden vedyille ν₁:ssä se on {n3} Å, joten ne piirretään ×{n4}. Aikaa on hidastettu {n5}¹³–{n6}¹⁴-kertaisesti, ja näkymä ilmoittaa kertoimen kullekin moodille.",
  "@js.1tee8shei2w": {
@@ -5116,10 +5746,20 @@
   "x-review": "machine",
   "x-source": "04819af0c8"
  },
+ "js.1u2j0a6t91o": "Sääntö",
+ "@js.1u2j0a6t91o": {
+  "x-review": "machine",
+  "x-source": "62845f31a2"
+ },
  "js.1u2k1jai0us": "Yksi valokäyrä, kolme jaksoa. Se näyttää, mitä haku tekee, kun tähdellä on useampi kuin yksi planeetta, ja mitkä niistä {n0} päivän kohde voi sisältää.",
  "@js.1u2k1jai0us": {
   "x-review": "machine",
   "x-source": "ac34f619e1"
+ },
+ "js.1u46qjq8omr": "Signaalin on täytettävä sääntö molemmissa tarkastetuissa sektoreissa (ennalta rekisteröity, docs/results/feed_rule_preregistration.json).",
+ "@js.1u46qjq8omr": {
+  "x-review": "machine",
+  "x-source": "12f364c753"
  },
  "js.1u4yg0u12mv": "exoplanet.eu ei tallenna löytöartikkelin DOI:ta tai viitettä, joten mitään ei näytetä.",
  "@js.1u4yg0u12mv": {
@@ -5130,6 +5770,16 @@
  "@js.1u59hy4lwt0": {
   "x-review": "machine",
   "x-source": "d30524ecd0"
+ },
+ "js.1u5x4ayxfub": "kohde tess-f28323a4aef6: BLS P {n0} d, t0 {n1}, kesto {n2} h, {n3} ylikulkua, {n4} notkahdusta",
+ "@js.1u5x4ayxfub": {
+  "x-review": "machine",
+  "x-source": "e94234132d"
+ },
+ "js.1u67j66j7q1": "<span class=\"glyph g-nm\"><span aria-hidden=\"true\">–</span> <span class=\"word\">ei mitattu</span></span> sekundaarinen pimennys (signaalitaso)",
+ "@js.1u67j66j7q1": {
+  "x-review": "machine",
+  "x-source": "b23e038136"
  },
  "js.1u7ff7pa4h0": "{n0} (laatikko); {n1} / {n2} (sovitus, signaalikohtainen)",
  "@js.1u7ff7pa4h0": {
@@ -5171,10 +5821,20 @@
   "x-review": "machine",
   "x-source": "603ab6e43e"
  },
+ "js.1upzychsxjb": "<span class=\"tagcand\">merkitty</span> TIC {n0} · TESS · kohde tess-4b369d3c6f09",
+ "@js.1upzychsxjb": {
+  "x-review": "machine",
+  "x-source": "37e53de34f"
+ },
  "js.1uq71yrzqjw": "TIC {n0} mustan kappaleen värissään: {n1} K, {n2} R☉ (TESS Input Catalog v8.2 (MAST)).",
  "@js.1uq71yrzqjw": {
   "x-review": "machine",
   "x-source": "557743ae41"
+ },
+ "js.1urddrz23uz": "Vuorottelevat syvyydet viittaisivat kaksoistähteen kaksinkertaisella jaksolla. Mitattu kerran kutakin BLS-efemeridiä kohden kaikilta sen epookeilta kohteessa, ei notkahduskohtaisesti. Tätä tarkistusta ei ajettu, joten se ei ole läpäisty.",
+ "@js.1urddrz23uz": {
+  "x-review": "machine",
+  "x-source": "79d69d33a0"
  },
  "js.1ustq5qh406": "exoplanet.eu luokittelee sen tilaan \"Published in a refereed paper\", menetelmä Microlensing, vuonna {n0}; tietue päivitetty {n1}-{n2}-{n3}.",
  "@js.1ustq5qh406": {
@@ -5201,15 +5861,30 @@
   "x-review": "machine",
   "x-source": "62ce2cecfe"
  },
+ "js.1uuxhptu7lu": "epookki E6 · {n0}",
+ "@js.1uuxhptu7lu": {
+  "x-review": "machine",
+  "x-source": "a91dbaf261"
+ },
  "js.1uwk3dmvuym": "{n0} / {n1} (sovitus, signaalikohtainen)",
  "@js.1uwk3dmvuym": {
   "x-review": "machine",
   "x-source": "e7e8d3a00f"
  },
+ "js.1v2ctc3yw9q": "mitattu: {n0} ± {n1} ppm signaalin epookilla E3 + {n2} (S2:n epookki {n3} + {n4}, parillinen kohteessaan)",
+ "@js.1v2ctc3yw9q": {
+  "x-review": "machine",
+  "x-source": "659789595e"
+ },
  "js.1v2k5bzmb2a": "{n0} ± {n1} ppm",
  "@js.1v2k5bzmb2a": {
   "x-review": "machine",
   "x-source": "e0a61e2307"
+ },
+ "js.1v5ald7sw7c": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E2 · tess-fa3483ce6f83-{n2}</span>",
+ "@js.1v5ald7sw7c": {
+  "x-review": "machine",
+  "x-source": "caaa92a15b"
  },
  "js.1v982qqcuae": "→ Galaksin keskusta",
  "@js.1v982qqcuae": {
@@ -5220,6 +5895,16 @@
  "@js.1vf8wchy7cx": {
   "x-review": "machine",
   "x-source": "bdad8ef87b"
+ },
+ "js.1vi0dmaost0": "Arkisto: ei julkaistua planeettaa toleranssin sisällä tästä notkahduksesta (Julkaistun planeetan pi Men c isäntä (P {n0} d)), repositorion tallennetusta ristiintunnistuksesta docs/results/pi_men_crossmatch.json; tämän ajon omaa ristiintunnistusta ei ajettu. <span class=\"hint\">Vain arkistoarvoja; tämä sivu ei väitä havaintoa suuntaan eikä toiseen.</span>",
+ "@js.1vi0dmaost0": {
+  "x-review": "machine",
+  "x-source": "5888a123eb"
+ },
+ "js.1vi60fwuvst": "tess-04b815001aa6-{n0}, {n1} BTJD, {n2} ppm, SNR {n3}, merkitty tarkastettavaksi",
+ "@js.1vi60fwuvst": {
+  "x-review": "machine",
+  "x-source": "110aa22e2e"
  },
  "js.1vn1k0hsfr": "Luettelo",
  "@js.1vn1k0hsfr": {
@@ -5250,6 +5935,11 @@
  "@js.1vumr9yiy9i": {
   "x-review": "machine",
   "x-source": "4af81b4ddb"
+ },
+ "js.1vwm5g16ng2": "tallennetut mittaukset ja tallennettu sovitus · <kbd>s</kbd> pienentää",
+ "@js.1vwm5g16ng2": {
+  "x-review": "machine",
+  "x-source": "04a3b4f3a6"
  },
  "js.1vwmg3fodw0": "R★ = {n0} R☉ [lask.]",
  "@js.1vwmg3fodw0": {
@@ -5291,6 +5981,11 @@
   "x-review": "machine",
   "x-source": "9904b3b2a9"
  },
+ "js.1w7bydasvu": "koska: pariton / parillinen (signaalitaso) ei mitattu",
+ "@js.1w7bydasvu": {
+  "x-review": "machine",
+  "x-source": "4f62d09483"
+ },
  "js.1w8i6weiu89": "{n0} Peg b: K julkaistu",
  "@js.1w8i6weiu89": {
   "x-review": "machine",
@@ -5325,6 +6020,11 @@
  "@js.1wgbwgkflgk": {
   "x-review": "machine",
   "x-source": "db2ea32ce1"
+ },
+ "js.1wiqr3plo3q": "Sentinels käyttävät oletuksena mallia Claude (Anthropic); muita palveluntarjoajia tuetaan ja ne merkitään. Probes ovat deterministisiä sovitetun suodattimen ilmaisimia. Vain Probes; Sentinels-tarkastajia ei ajettu tässä esimerkissä.<br>ajo {n0}-{n1}-22T18:{n2}+{n3} · konfiguraatio e21c63a794b2aeb3 · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-08a8c4eac6ff-{n8} · signaali tess-08a8c4eac6ff-P5.9787 · kohde tess-08a8c4eac6ff<br>ristiintunnistus: NASA Exoplanet Archive, taulu ps (default_flag = {n9}) · tila täsmätty",
+ "@js.1wiqr3plo3q": {
+  "x-review": "machine",
+  "x-source": "0996561f99"
  },
  "js.1wmwhj93gxc": "Piirretty vain tallennetuista arvoista (exoplanet.eu). Tallennetulla inklinaatiolla tämä planeetta ei tee ylikulkua; näkymä näyttää ylikulun menetelmän selittämiseksi.",
  "@js.1wmwhj93gxc": {
@@ -5376,6 +6076,11 @@
   "x-review": "machine",
   "x-source": "fcc0f3e3a9"
  },
+ "js.1x1wskbo0u3": "E4 · {n0} · {n1} ppm · <span class=\"g-fail\"><span aria-hidden=\"true\">✕</span> hylätty</span>",
+ "@js.1x1wskbo0u3": {
+  "x-review": "machine",
+  "x-source": "19e7edbf73"
+ },
  "js.1x2r7sc01g4": "Sentinel · Vapaaehtoinen <span class=\"sub mono\" title=\"reviewer id\">claude-volunteer</span>",
  "@js.1x2r7sc01g4": {
   "x-review": "machine",
@@ -5400,6 +6105,11 @@
  "@js.1x8jgmgya27": {
   "x-review": "machine",
   "x-source": "d886f58a28"
+ },
+ "js.1x9qv08xqxv": "tallennettu {n0}. lokakuuta {n1} (commit 0f6dbdc).",
+ "@js.1x9qv08xqxv": {
+  "x-review": "machine",
+  "x-source": "759f80e683"
  },
  "js.1xaww50znhh": "<i style=\"background:#FF6961\"></i>Proxima Centauri b",
  "@js.1xaww50znhh": {
@@ -5466,6 +6176,11 @@
   "x-review": "machine",
   "x-source": "ee2c1d77c2"
  },
+ "js.1xtzt9afumt": "<span class=\"caret\" aria-hidden=\"true\"></span>Signaali · {n0} notkahdus",
+ "@js.1xtzt9afumt": {
+  "x-review": "machine",
+  "x-source": "e191fbeabc"
+ },
  "js.1xxhqd87jut": "tess-291acb98cabe-{n0} · WASP-{n1} b · tunnettu planeetta",
  "@js.1xxhqd87jut": {
   "x-review": "machine",
@@ -5486,6 +6201,11 @@
   "x-review": "machine",
   "x-source": "383e9a39ee"
  },
+ "js.1y45ese6uav": "E5 · {n0} · {n1} ppm · <span class=\"g-fail\"><span aria-hidden=\"true\">✕</span> hylätty</span>",
+ "@js.1y45ese6uav": {
+  "x-review": "machine",
+  "x-source": "7314f51d71"
+ },
  "js.1y9918dbjrf": "Tallennettu tunniste tess-d09712061195-{n0}; ei tapaustiedostoa tässä ajossa",
  "@js.1y9918dbjrf": {
   "x-review": "machine",
@@ -5495,6 +6215,21 @@
  "@js.1yaxoyxaznn": {
   "x-review": "machine",
   "x-source": "f1a70861ee"
+ },
+ "js.1ybcchmno3t": "Seulonnan tulos kohteelle tess-4b369d3c6f09-{n0}: läpäisi seulonnan",
+ "@js.1ybcchmno3t": {
+  "x-review": "machine",
+  "x-source": "69201cccce"
+ },
+ "js.1ybeiwj23tv": "mitattu: {n0} ± {n1} ppm signaalin epookilla E6 (S2:n epookki {n2}, parillinen kohteessaan)",
+ "@js.1ybeiwj23tv": {
+  "x-review": "machine",
+  "x-source": "ad9404bf3d"
+ },
+ "js.1yber837qny": "epookki E2 · {n0}",
+ "@js.1yber837qny": {
+  "x-review": "machine",
+  "x-source": "8dd75d65ff"
  },
  "js.1yd1k6xf6rt": "Arkistovertailu: ei arkistoplaneettaa toleranssin sisällä (tällä notkahduksella ei ole BLS-jaksoa vertailtavaksi). Vain arkistoarvoja. Tämä sivu ei väitä havaintoa.",
  "@js.1yd1k6xf6rt": {
@@ -5506,6 +6241,11 @@
   "x-review": "machine",
   "x-source": "83813e1ab5"
  },
+ "js.1yf0fbwre8j": "Ylikulkukaistale kohteelle tess-fa3483ce6f83-{n0}. Siirry tallennettujen lokeroiden läpi vasemmalla ja oikealla nuolinäppäimellä, Shift-näppäimellä kymmenen kerrallaan, Home- ja End-näppäimillä päihin.",
+ "@js.1yf0fbwre8j": {
+  "x-review": "machine",
+  "x-source": "ea516017c9"
+ },
  "js.1yh4or5vb3j": "Luettelon planeetat konservatiivisella vyöhykkeellä",
  "@js.1yh4or5vb3j": {
   "x-review": "machine",
@@ -5516,10 +6256,20 @@
   "x-review": "machine",
   "x-source": "a2750db0f1"
  },
+ "js.1yhkrdfl4ri": "jaksollinen tuki: ei läpäissyt. arvo ei BLS-jaksoa. sääntö ≥ {n0} ylikulkua. Syötteeseen tarvitaan toistuva notkahdus.",
+ "@js.1yhkrdfl4ri": {
+  "x-review": "machine",
+  "x-source": "bcab0fb0b4"
+ },
  "js.1yhv9xp49t2": "Luvut",
  "@js.1yhv9xp49t2": {
   "x-review": "machine",
   "x-source": "2d915f82c8"
+ },
+ "js.1yk9jy3mc6v": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E2 · tess-4b369d3c6f09-{n2}</span>",
+ "@js.1yk9jy3mc6v": {
+  "x-review": "machine",
+  "x-source": "523fcdd8b0"
  },
  "js.1ynmnujm2vp": "{n0} planeetta exoplanet.eu:ssa · luokka K Teff:n perusteella (lähin K5V)",
  "@js.1ynmnujm2vp": {
@@ -5530,6 +6280,11 @@
  "@js.1yqvxubpzsn": {
   "x-review": "machine",
   "x-source": "519941f399"
+ },
+ "js.1yrsgg8y381": "Julkaistun planeetan pi Men c isäntä (P {n0} d).",
+ "@js.1yrsgg8y381": {
+  "x-review": "machine",
+  "x-source": "ed19c658d0"
  },
  "js.1yt1laezm0g": "Kepler-{n0} d",
  "@js.1yt1laezm0g": {
@@ -5545,6 +6300,11 @@
  "@js.1ytxzfj5dvx": {
   "x-review": "machine",
   "x-source": "552676fe2f"
+ },
+ "js.1yv1833snz3": "ei hylkäävää merkintää, efemeridillä: läpäisi. arvo kyllä. sääntö läpäisty eikä off_ephemeris. Syöte ottaa vain notkahdukset, jotka koodi hyväksyi ja jotka osuvat tähtensä jaksolliseen signaaliin.",
+ "@js.1yv1833snz3": {
+  "x-review": "machine",
+  "x-source": "e8ec782bc0"
  },
  "js.1yvfjvszv8l": "Rajattu",
  "@js.1yvfjvszv8l": {
@@ -5606,6 +6366,11 @@
   "x-review": "machine",
   "x-source": "fca0c283f7"
  },
+ "js.1z5zodf261e": "Notkahdus vaiheessa {n0} viittaisi pimentävään kaksoistähteen. Mitattu kerran kutakin BLS-efemeridiä kohden vaiheessa {n1} kohteessa, ei notkahduskohtaisesti. Tätä tarkistusta ei ajettu, joten se ei ole läpäisty.",
+ "@js.1z5zodf261e": {
+  "x-review": "machine",
+  "x-source": "64203d393e"
+ },
  "js.1z8tasie2wo": "Probe · Herkkä <span class=\"mono idtag\" title=\"reviewer id\">volunteer-sensitive</span>",
  "@js.1z8tasie2wo": {
   "x-review": "machine",
@@ -5615,6 +6380,11 @@
  "@js.1zazhg34gyv": {
   "x-review": "machine",
   "x-source": "35388e7c15"
+ },
+ "js.1zdi0dxaa2j": "<span class=\"tagcand\">kandidaatti</span> TIC {n0} · TESS · kohde tess-08a8c4eac6ff",
+ "@js.1zdi0dxaa2j": {
+  "x-review": "machine",
+  "x-source": "c555ead639"
  },
  "js.1zdum6ttjv2": "tarkastetut kohteet",
  "@js.1zdum6ttjv2": {
@@ -5650,6 +6420,16 @@
  "@js.1zj2sphntfc": {
   "x-review": "machine",
   "x-source": "0bf539dff6"
+ },
+ "js.1zmf4hah9kt": "mitattu: {n0} ± {n1} ppm signaalin epookilla E2 + {n2} (S1:n epookki {n3} + {n4}, parillinen kohteessaan)",
+ "@js.1zmf4hah9kt": {
+  "x-review": "machine",
+  "x-source": "b7a97f67b1"
+ },
+ "js.1zmr4xkux6b": "E7 · {n0} · {n1} ppm · <span class=\"g-pass\"><span aria-hidden=\"true\">✓</span> läpäisi</span>",
+ "@js.1zmr4xkux6b": {
+  "x-review": "machine",
+  "x-source": "3eec046173"
  },
  "js.1zpfnu5iy2q": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-pass\">läpäisi tarkastuksen</span><b class=\"fig\">1b. WASP-{n0}, notko {n1}.</b> <span class=\"sid mono\">tallennettu tunniste tess-5935bad1a3b4-{n2}.</span> Notko hetkellä BTJD {n3}, {n4} ppm, {n5} h, SNR {n6}. Konsensusväli BTJD {n7}–{n8}. Merkinneet {n9}/{n10} arvioijaa ({n11}/{n12} Sentinels, {n13}/{n14} Probes). Osuu {n15} päivän BLS-jaksolle (t0 BTJD {n16}). Läpäisi tarkastuksen. Arkisto: yhdenmukainen kohteen WASP-{n17} b kanssa: ΔP {n18}%, ei ylikulun efemeridiä vertailuun. Vain arkistoarvoja. Tämä sivu ei väitä havaintoa.",
  "@js.1zpfnu5iy2q": {
@@ -5736,6 +6516,11 @@
   "x-review": "machine",
   "x-source": "fed9923a7f"
  },
+ "js.20l2qus44jb": "mitattu: {n0} ± {n1} ppm signaalin epookilla E-{n2} (S1:n epookki {n3}, pariton kohteessaan)",
+ "@js.20l2qus44jb": {
+  "x-review": "machine",
+  "x-source": "a48634013d"
+ },
  "js.20l5be8crj": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">4b. <span class=\"mono\">tess-308a47f84167-{n0}</span>.</b> Notko hetkellä BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinneet {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Osuu {n6} päivän BLS-jaksolle, jossa {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvoja. Tämä sivu ei väitä havaintoa.",
  "@js.20l5be8crj": {
   "x-review": "machine",
@@ -5791,6 +6576,11 @@
   "x-review": "machine",
   "x-source": "09b2d9cd11"
  },
+ "js.20uu2hdkmhd": "Probe, deterministinen sovitetun suodattimen ilmaisin, ei ihminen: {n0} merkintää tässä kohteessa SNR-kynnyksen ja konfiguraatiossa asetetun hukkaosuuden perusteella.",
+ "@js.20uu2hdkmhd": {
+  "x-review": "machine",
+  "x-source": "c0026d45c6"
+ },
  "js.20wefgwhv1e": "Tässä osiossa",
  "@js.20wefgwhv1e": {
   "x-review": "machine",
@@ -5800,6 +6590,16 @@
  "@js.20xda5zsr3k": {
   "x-review": "machine",
   "x-source": "ac2c210d18"
+ },
+ "js.20yjsgejhx1": "yksi signaali {n0} yhtäpitävästä kohdekohtaisesta BLS-tuloksesta; jokainen notkahdus seulottu erikseen",
+ "@js.20yjsgejhx1": {
+  "x-review": "machine",
+  "x-source": "b08a3c2e1c"
+ },
+ "js.20yxmv1rqyj": "Seulontatarkistukset (vain valokäyrä) · tulos: merkitty tarkastettavaksi",
+ "@js.20yxmv1rqyj": {
+  "x-review": "machine",
+  "x-source": "39210387a4"
  },
  "js.20za4mm5inn": "<b>ν-venytys</b> · {n0} µm · infrapunassa näkymätön (dipoli ei muutu) · piirretty ×{n1} · osion Reading atmospheres {n2}–{n3} µm:n ikkunan ulkopuolella",
  "@js.20za4mm5inn": {
@@ -5815,6 +6615,21 @@
  "@js.20zh37tqiti": {
   "x-review": "machine",
   "x-source": "151671f9a1"
+ },
+ "js.21237fteigh": "Arkisto: yhdenmukainen kohteen TOI-{n0} c kanssa (P {n1} d, ΔP {n2}%), tämän ajon tallennetusta ristiintunnistuksesta, haettu {n3}. lokakuuta {n4}. <span class=\"hint\">Vain arkistoarvoja; tämä sivu ei väitä havaintoa suuntaan eikä toiseen.</span>",
+ "@js.21237fteigh": {
+  "x-review": "machine",
+  "x-source": "9b130f3a87"
+ },
+ "js.2124i9wtlja": "mitattu: {n0} ± {n1} ppm signaalin epookilla E4 + {n2} (S2:n epookki {n3} + {n4}, pariton kohteessaan)",
+ "@js.2124i9wtlja": {
+  "x-review": "machine",
+  "x-source": "31fc7db64c"
+ },
+ "js.213wvcnambx": "kaikki seulontatarkistukset mitattu ja läpäisty",
+ "@js.213wvcnambx": {
+  "x-review": "machine",
+  "x-source": "2eaa702b63"
  },
  "js.214emqayrd3": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">2a. <span class=\"mono\">tess-d75a97d25377-{n0}</span>.</b> Notko hetkellä BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinneet {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Osuu {n6} päivän BLS-jaksolle, jossa {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvoja. Tämä sivu ei väitä havaintoa.",
  "@js.214emqayrd3": {
@@ -5835,6 +6650,11 @@
  "@js.2184447ifps": {
   "x-review": "machine",
   "x-source": "2068461359"
+ },
+ "js.218hs2t7lyu": "<span>BLS-jakso</span>{n0} d (tämä kohde)",
+ "@js.218hs2t7lyu": {
+  "x-review": "machine",
+  "x-source": "8043083f98"
  },
  "js.21ab9f013f6": "Ajo runs/tess-pi-men-s1 (TESS SPOC -sektori {n0}, {n1} minuutin binit), ajettu nykyisellä koodilla (scripts/rerun_pi_men.py), reunatummenemisen huomioivalla sovituksella (src/setuhq/transitfit.py). Paneeli tunnistaa uudelleen {n2}/{n3} ennustetusta epookista. Reunatummeneminen: Claret {n4} TESS, kvadraattinen u₁ = {n5}, u₂ = {n6} TIC:n arvoille Teff {n7} K ja log g {n8}. Viite: NASA Exoplanet Archive, taulu ps, pl_name = 'pi Men c', haettu {n9}-{n10}-{n11} (docs/results/pi_men_reference.json).",
  "@js.21ab9f013f6": {
@@ -5871,6 +6691,11 @@
   "x-review": "machine",
   "x-source": "dd3e7ab019"
  },
+ "js.21mhej564lb": "Syvemmät notkahdukset ovat lähes aina kaksoistähtiä; ne pidetään syötteen ulkopuolella.",
+ "@js.21mhej564lb": {
+  "x-review": "machine",
+  "x-source": "86f870af32"
+ },
  "js.21mhsdlzlqh": "Murupolku",
  "@js.21mhsdlzlqh": {
   "x-review": "machine",
@@ -5901,6 +6726,11 @@
   "x-review": "machine",
   "x-source": "1d6ce6a5c4"
  },
+ "js.21qpidc43wo": "E-{n0} · {n1} · {n2} ppm · <span class=\"g-pass\"><span aria-hidden=\"true\">✓</span> läpäisi</span>",
+ "@js.21qpidc43wo": {
+  "x-review": "machine",
+  "x-source": "e622377144"
+ },
  "js.21skmtc31id": "<i></i>Hylätyt <span class=\"n\">{n0}</span>",
  "@js.21skmtc31id": {
   "x-review": "machine",
@@ -5916,10 +6746,20 @@
   "x-review": "machine",
   "x-source": "1795cdb5aa"
  },
+ "js.21vivl2m3yv": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisi</span></span> kesto",
+ "@js.21vivl2m3yv": {
+  "x-review": "machine",
+  "x-source": "be4b19b7fd"
+ },
  "js.21wrtvzrk83": "HST/WFC3 noin {n0} µm:n kohdalla; JWST NIRISS, NIRSpec, MIRI",
  "@js.21wrtvzrk83": {
   "x-review": "machine",
   "x-source": "752ea43d7e"
+ },
+ "js.21yvmealg4m": "<span class=\"glyph g-flag\"><span aria-hidden=\"true\">!</span> <span class=\"word\">merkitty</span></span> efemeridi",
+ "@js.21yvmealg4m": {
+  "x-review": "machine",
+  "x-source": "aa37d49294"
  },
  "js.222kde6gcmc": "Piirretty vain tallennetuista arvoista (exoplanet.eu). Ei tallennettu: planeetan säde; nämä osat ovat havainnollistavia, ja piirroksessa kerrotaan se. Tallennetulla inklinaatiolla tämä planeetta ei tee ylikulkua; näkymä esittää ylikulun menetelmän selittämiseksi.",
  "@js.222kde6gcmc": {
@@ -5945,6 +6785,11 @@
  "@js.227r4fi1p5l": {
   "x-review": "machine",
   "x-source": "e6b49f0ef6"
+ },
+ "js.2280c5j9qb3": "mitattu: {n0} ± {n1} ppm signaalin epookilla E2 (S2:n epookki {n2}, parillinen kohteessaan)",
+ "@js.2280c5j9qb3": {
+  "x-review": "machine",
+  "x-source": "3a86bd8943"
  },
  "js.22a7qdihfh4": "Probe · Herkkä <span class=\"mono idtag\" title=\"reviewer id\">volunteer-sensitive</span> <span class=\"tag sim\">Probe · ei ihminen</span>",
  "@js.22a7qdihfh4": {
@@ -5986,6 +6831,11 @@
   "x-review": "machine",
   "x-source": "9131327391"
  },
+ "js.22jh0r0nt4n": "tess-f28323a4aef6-{n0}, {n1} BTJD, {n2} ppm, SNR {n3}, merkitty tarkastettavaksi",
+ "@js.22jh0r0nt4n": {
+  "x-review": "machine",
+  "x-source": "3becaf9d31"
+ },
  "js.22lz70pqujl": "{n0} planeetta exoplanet.eu:ssa · tallennettu tyyppi K1.5V · luokka K Teff:n perusteella (lähin K0V)",
  "@js.22lz70pqujl": {
   "x-review": "machine",
@@ -6006,6 +6856,11 @@
   "x-review": "machine",
   "x-source": "9e0b119e6f"
  },
+ "js.22rjwelo97e": "mitattu: {n0} ± {n1} ppm signaalin epookilla E1 (S2:n epookki {n2}, pariton kohteessaan)",
+ "@js.22rjwelo97e": {
+  "x-review": "machine",
+  "x-source": "7d566bd80d"
+ },
  "js.22u36jfqh2x": "Piilota",
  "@js.22u36jfqh2x": {
   "x-review": "machine",
@@ -6020,6 +6875,11 @@
  "@js.22vhng3vcvt": {
   "x-review": "machine",
   "x-source": "7a98cb0909"
+ },
+ "js.22vo4dutqub": "Seulonnan tulos kohteelle tess-08a8c4eac6ff-{n0}: läpäisi seulonnan",
+ "@js.22vo4dutqub": {
+  "x-review": "machine",
+  "x-source": "f3942fe4d9"
  },
  "js.22xvqqhemnp": "O−C-amplitudi havainnollistava; ratoja ei ole piirretty mittakaavassa",
  "@js.22xvqqhemnp": {
@@ -6061,6 +6921,11 @@
   "x-review": "machine",
   "x-source": "252814e021"
  },
+ "js.235xbih4xuh": "kohde tess-08a8c4eac6ff: BLS P {n0} d, t0 {n1}, kesto {n2} h, {n3} ylikulkua, {n4} notkahdusta · epookkinumeroiden viite",
+ "@js.235xbih4xuh": {
+  "x-review": "machine",
+  "x-source": "13b6209689"
+ },
  "js.2377erd9rpv": "kyllä",
  "@js.2377erd9rpv": {
   "x-review": "machine",
@@ -6070,6 +6935,11 @@
  "@js.237i4oc373g": {
   "x-review": "machine",
   "x-source": "58acd86256"
+ },
+ "js.239mq7tgcs9": "mitattu: {n0} ± {n1} ppm signaalin epookilla E0 (S1:n epookki {n2}, parillinen kohteessaan)",
+ "@js.239mq7tgcs9": {
+  "x-review": "machine",
+  "x-source": "434c2c155d"
  },
  "js.23avbf1c2p0": "numpy {n0} · scipy {n1} · astropy {n2} · matplotlib {n3} · lightkurve {n4}",
  "@js.23avbf1c2p0": {
@@ -6111,6 +6981,11 @@
   "x-review": "machine",
   "x-source": "44b183bf4e"
  },
+ "js.23fs8ezi274": "Signaalit ↑",
+ "@js.23fs8ezi274": {
+  "x-review": "machine",
+  "x-source": "12ac1331e9"
+ },
  "js.23gjnmoqo35": "Tämän tähden valo lähti siitä noin {n0} vuotta sitten (etäisyys {n1} pc, exoplanet.eu, haettu {n2}-{n3}-{n4}).",
  "@js.23gjnmoqo35": {
   "x-review": "machine",
@@ -6121,15 +6996,30 @@
   "x-review": "machine",
   "x-source": "9a7f2f950b"
  },
+ "js.23htz2emzh8": "mitattu: {n0} ± {n1} ppm signaalin epookilla E2 + {n2} (S2:n epookki {n3} + {n4}, pariton kohteessaan)",
+ "@js.23htz2emzh8": {
+  "x-review": "machine",
+  "x-source": "ab81a58e21"
+ },
  "js.23iejmgi1b9": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-pass\">läpäisi seulonnan</span><b class=\"fig\">1d. pi Men, notkahdus {n0}.</b> <span class=\"sid mono\">tallennettu tunniste tess-04b815001aa6-{n1}.</span> Notkahdus kohdassa BTJD {n2}, {n3} ppm, {n4} h, SNR {n5}. Konsensusväli BTJD {n6}–{n7}. Merkinneet {n8}/{n9} tarkastajaa ({n10}/{n11} Sentinels, {n12}/{n13} Probes). Osuu {n14} päivän BLS-jaksolle (t0 BTJD {n15}). Läpäisi seulonnan. Arkisto: yhteensopiva pi Men c:n kanssa: ΔP {n16}%, ajoitusero validointimuistion mukaan: keskimäärin {n17} min {n18} epookin yli. Vain arkistoarvoja. Tämä sivu ei väitä havaintoa.",
  "@js.23iejmgi1b9": {
   "x-review": "machine",
   "x-source": "61456a0319"
  },
+ "js.23ktd9rj0md": "E1 · {n0} · {n1} ppm · <span class=\"g-pass\"><span aria-hidden=\"true\">✓</span> läpäisi</span>",
+ "@js.23ktd9rj0md": {
+  "x-review": "machine",
+  "x-source": "26b5b99daf"
+ },
  "js.23m6r8cdw5u": "Etäisyyttä ei ole tallennettu, joten Linnunrata-kartta ei voi sijoittaa sitä.",
  "@js.23m6r8cdw5u": {
   "x-review": "machine",
   "x-source": "1eff3ba525"
+ },
+ "js.23pfgyfetd0": "<span class=\"xm-k\">Syötteen hyväksymissääntö (discover.py), ei seulonta:</span> ei hyväksytty · nähty molemmissa sektoreissa",
+ "@js.23pfgyfetd0": {
+  "x-review": "machine",
+  "x-source": "4f5026eef5"
  },
  "js.23qzqmdt9le": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">4d. <span class=\"mono\">tess-68e93d0b9530-{n0}</span>.</b> Notkahdus kohdassa BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinneet {n5} tarkastajaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Osuu {n6} päivän BLS-jaksolle, jossa {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvoja. Tämä sivu ei väitä havaintoa.",
  "@js.23qzqmdt9le": {
@@ -6150,6 +7040,11 @@
  "@js.241jxm2p5yt": {
   "x-review": "machine",
   "x-source": "9bb442568a"
+ },
+ "js.2430l0k0fdf": "E3 · {n0} · {n1} ppm · <span class=\"g-fail\"><span aria-hidden=\"true\">✕</span> hylätty</span>",
+ "@js.2430l0k0fdf": {
+  "x-review": "machine",
+  "x-source": "a4d1f30c76"
  },
  "js.244igmoo21t": "{n0} planeettaa exoplanet.eu:ssa · luokka G Teff:n perusteella (lähin G2V)",
  "@js.244igmoo21t": {
@@ -6175,6 +7070,11 @@
  "@js.248fckis1nx": {
   "x-review": "machine",
   "x-source": "91c42c8548"
+ },
+ "js.2498ovnd06t": "kaikki {n0} signaali",
+ "@js.2498ovnd06t": {
+  "x-review": "machine",
+  "x-source": "8a6613f65f"
  },
  "js.249yvv2lisi": "Tapauskansiota ei voitu ladata tässä näkymässä. <a id=\"blockedlink\" href=\"/candidates/toi-270/case-file/#tess-4b369d3c6f09-004\">Avaa se omalla sivullaan.</a>",
  "@js.249yvv2lisi": {
@@ -6211,6 +7111,11 @@
   "x-review": "machine",
   "x-source": "49117984cd"
  },
+ "js.24mldn7l3yf": "Kunkin tarkastajan päällekkäisyys konsensusikkunan kanssa",
+ "@js.24mldn7l3yf": {
+  "x-review": "machine",
+  "x-source": "88c896a698"
+ },
  "js.24n0sanwog8": "{s0} mustan kappaleen värissään: {n0} K (exoplanet.eu, haettu {n1}-{n2}-{n3}). Kirkkaus normalisoitu; pinnan tekstuuri on koristeellinen.",
  "@js.24n0sanwog8": {
   "x-review": "machine",
@@ -6221,15 +7126,30 @@
   "x-review": "machine",
   "x-source": "145a7c2ee8"
  },
+ "js.24nktwuqbx9": "Notkahdus vaiheessa {n0} viittaisi pimentävään kaksoistähteen. Mitattu kerran kutakin BLS-efemeridiä kohden vaiheessa {n1} kohteessa, ei notkahduskohtaisesti.",
+ "@js.24nktwuqbx9": {
+  "x-review": "machine",
+  "x-source": "bd3fdb6845"
+ },
  "js.24o9scua3kc": "Viimeisimmät ajot",
  "@js.24o9scua3kc": {
   "x-review": "machine",
   "x-source": "237112b89b"
  },
+ "js.24pqz74ew69": "Sentinel: tekoälymalliin perustuva tarkastaja (Claude (Claude Code CLI)), ei ihminen",
+ "@js.24pqz74ew69": {
+  "x-review": "machine",
+  "x-source": "fb2fab575e"
+ },
  "js.24rttejmspf": "Planeetta ja sen tähti kiertävät molemmat yhteistä massakeskipistettään, barysentriä. Tähden pieni rata saa sen valon siirtymään edestakaisin: radiaalinopeuskäyrä. Sen amplitudi K antaa planeetan minimimassan, m sin i.",
  "@js.24rttejmspf": {
   "x-review": "machine",
   "x-source": "1e96a165c2"
+ },
+ "js.24s08hmswn5": "Sentinels käyttävät oletuksena mallia Claude (Anthropic); muita palveluntarjoajia tuetaan ja ne merkitään. Probes ovat deterministisiä sovitetun suodattimen ilmaisimia. Vain Probes; Sentinels-tarkastajia ei ajettu tässä esimerkissä.<br>ajo {n0}-{n1}-22T18:{n2}+{n3} · konfiguraatio e60af3c4e98d4a76 · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-4b369d3c6f09-{n8} · signaali tess-4b369d3c6f09-{n9}-single · kohde tess-4b369d3c6f09<br>ristiintunnistus: NASA Exoplanet Archive, taulu ps (default_flag = {n10}) · tila täsmätty",
+ "@js.24s08hmswn5": {
+  "x-review": "machine",
+  "x-source": "9101d55c53"
  },
  "js.24uhc1w9ess": "Vesi",
  "@js.24uhc1w9ess": {
@@ -6240,6 +7160,11 @@
  "@js.24woi7lkxcx": {
   "x-review": "machine",
   "x-source": "8610cbe409"
+ },
+ "js.24yhx6k3lf4": "Vertailu tälle notkahdukselle: ei arkistoplaneettaa toleranssin sisällä (tällä notkahduksella ei ole BLS-jaksoa vertailtavaksi).",
+ "@js.24yhx6k3lf4": {
+  "x-review": "machine",
+  "x-source": "87dc56cbb3"
  },
  "js.24yi6qssfy0": "pi Men c ja sen tähti sellaisina kuin The Extrasolar Planets Encyclopaedia (exoplanet.eu) ne tallentaa (haettu {n0}-{n1}-{n2}): viiva on näistä arvoista laskettu reunatummenemamalli, ei sovite tähän notkahdukseen; törmäysparametri tallennetun mukaan. Vastaavuus kertoo, että planeetta on jo tunnettu; se ei vahvista notkahdusta. Pisteet: {n3} tallennettua vuoarvoa {n4} tunnin sisällä keskiajankohdasta (BTJD {n5}). Katkoviiva: signaalin tallennettu reunatummenemasovite tässä notkahduksessa. Tähden pinnan tekstuuri on koristeellinen.",
  "@js.24yi6qssfy0": {
@@ -6266,6 +7191,11 @@
   "x-review": "machine",
   "x-source": "fc9e88a2a3"
  },
+ "js.256rrd38ihe": "<span class=\"glyph g-fail\"><span aria-hidden=\"true\">✕</span> <span class=\"word\">ei läpäissyt</span></span> SNR",
+ "@js.256rrd38ihe": {
+  "x-review": "machine",
+  "x-source": "6285da0c94"
+ },
  "js.258crswwx1": "Kukin {n0} päivän kohde sisältää vain yhden ylikulkunsa, joten haku ei löytänyt jaksoa näille notkahduksille; seulonta merkitsee kunkin tilaan off_ephemeris (avoin, ei kandidaatti). Jaksoa ei verrata.",
  "@js.258crswwx1": {
   "x-review": "machine",
@@ -6291,10 +7221,20 @@
   "x-review": "machine",
   "x-source": "27df78272a"
  },
+ "js.25l2fmcaj0y": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisi</span></span> sekundaarinen pimennys (signaalitaso)",
+ "@js.25l2fmcaj0y": {
+  "x-review": "machine",
+  "x-source": "fee543a01f"
+ },
  "js.25lfjonbjo1": "tess-4b369d3c6f09-{n0}",
  "@js.25lfjonbjo1": {
   "x-review": "machine",
   "x-source": "0fc36f6f35"
+ },
+ "js.25n39p3q883": "<span class=\"xm-k\">Syötteen hyväksymissääntö (discover.py), ei seulonta:</span> ei hyväksytty · jaksollinen tuki, nähty molemmissa sektoreissa",
+ "@js.25n39p3q883": {
+  "x-review": "machine",
+  "x-source": "aeee0cac10"
  },
  "js.25n68clise8": "Tunnetaan myös nimellä 2MASS11004017+{n0}.",
  "@js.25n68clise8": {
@@ -6305,6 +7245,11 @@
  "@js.25nje51xky": {
   "x-review": "machine",
   "x-source": "e2df94228e"
+ },
+ "js.25o04vy0rn4": "ei reunalla",
+ "@js.25o04vy0rn4": {
+  "x-review": "machine",
+  "x-source": "4ca96b0d84"
  },
  "js.25o51kmozwv": "BLS-jaksot ja epookit määritetään kullekin {n0} päivän kohteelle (sektorista leikattu kiinteäpituinen osa), ei sektoreittain.",
  "@js.25o51kmozwv": {
@@ -6321,6 +7266,11 @@
   "x-review": "machine",
   "x-source": "e8ff38f798"
  },
+ "js.25q3wqzo2b5": "reuna: läpäisi. arvo sisäosa. sääntö ei reunalla. Osittain havaittu notkahdus merkitään, ei hylätä.",
+ "@js.25q3wqzo2b5": {
+  "x-review": "machine",
+  "x-source": "c5448bf28a"
+ },
  "js.25sbt61exrd": "Tallennettu tunniste tess-509c4134c6dd-{n0}; tässä ajossa ei tapaustiedostoa",
  "@js.25sbt61exrd": {
   "x-review": "machine",
@@ -6336,6 +7286,16 @@
   "x-review": "machine",
   "x-source": "a265aa9020"
  },
+ "js.25xtg9epooe": "kohteet tess-fa3483ce6f83, tess-04b815001aa6 · {n0} notkahdusta · {n1} + {n2} BLS-ylikulkua",
+ "@js.25xtg9epooe": {
+  "x-review": "machine",
+  "x-source": "be8ad17c86"
+ },
+ "js.25z7wip8d9v": "Arviokirjanpito kohteelle tess-4b369d3c6f09-{n0}",
+ "@js.25z7wip8d9v": {
+  "x-review": "machine",
+  "x-source": "208762c86f"
+ },
  "js.25zf62ou7ws": "Hae planeettoja, tähtiä, sivuja",
  "@js.25zf62ou7ws": {
   "x-review": "machine",
@@ -6345,6 +7305,11 @@
  "@js.263tbvxo4jb": {
   "x-review": "machine",
   "x-source": "8e26be0f72"
+ },
+ "js.267795x3u76": "<span>sovitus</span>vain tämä notkahdus",
+ "@js.267795x3u76": {
+  "x-review": "machine",
+  "x-source": "53db59562b"
  },
  "js.267fwx4rrxg": "luettelo",
  "@js.267fwx4rrxg": {
@@ -6376,6 +7341,16 @@
   "x-review": "machine",
   "x-source": "4458109b7d"
  },
+ "js.26g2irok7fk": "mitattu: {n0} ± {n1} ppm signaalin epookilla E0 + {n2} (S1:n epookki {n3} + {n4}, parillinen kohteessaan)",
+ "@js.26g2irok7fk": {
+  "x-review": "machine",
+  "x-source": "72abf973a2"
+ },
+ "js.26ifeqstcgp": "{n0} ± {n1} / {n2} ± {n3} ppm, Δ = {n4}σ",
+ "@js.26ifeqstcgp": {
+  "x-review": "machine",
+  "x-source": "5c96869483"
+ },
  "js.26iw5naq1yx": "{n0} % taitopainotetuista arvioijista, {n1} merkitsi sen",
  "@js.26iw5naq1yx": {
   "x-review": "machine",
@@ -6390,6 +7365,11 @@
  "@js.26jwv5q9ef3": {
   "x-review": "machine",
   "x-source": "8df8a39f8e"
+ },
+ "js.26kp9bm8kvn": "{n0} · {n1} ppm · <span class=\"g-flag\"><span aria-hidden=\"true\">!</span> merkitty</span>",
+ "@js.26kp9bm8kvn": {
+  "x-review": "machine",
+  "x-source": "acd988963e"
  },
  "js.26lvjxq29mz": "Piilota Parhaat kandidaatit",
  "@js.26lvjxq29mz": {
@@ -6411,6 +7391,11 @@
   "x-review": "machine",
   "x-source": "eaacfcf2d5"
  },
+ "js.26nvevds4tq": "pariton / parillinen (signaalitaso): ei mitattu. arvo {n0} / {n1} ppm (ei tallennettuja virheitä). sääntö |Δ| ≤ {n2}σ, σ = √(σ_odd² + σ_even²). Vuorottelevat syvyydet viittaisivat kaksoistähteen, jonka jakso on kaksinkertainen. Mitataan kerran kutakin BLS-efemeridiä kohden kaikista sen epookeista kohteessa, ei notkahduskohtaisesti. (toisella pariteetilla ei ole notkahdusta tasolla ≥ {n3}σ, joten vertailua ei tehty) Tätä tarkistusta ei ajettu, joten se ei ole läpäisy.",
+ "@js.26nvevds4tq": {
+  "x-review": "machine",
+  "x-source": "cbf94c3932"
+ },
  "js.26pv2ld5al": "YZ Cet d",
  "@js.26pv2ld5al": {
   "x-review": "machine",
@@ -6420,6 +7405,16 @@
  "@js.26pzvkix2mc": {
   "x-review": "machine",
   "x-source": "e1fbb1c217"
+ },
+ "js.26q9yhjllws": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E0 · tess-5935bad1a3b4-{n2}</span>",
+ "@js.26q9yhjllws": {
+  "x-review": "machine",
+  "x-source": "890079bb02"
+ },
+ "js.26rxash8dq1": "jaksollinen tuki: ei läpäissyt. arvo {n0} ylikulkua. sääntö ≥ {n1} ylikulkua. Syötteeseen tarvitaan toistuva notkahdus.",
+ "@js.26rxash8dq1": {
+  "x-review": "machine",
+  "x-source": "03e87e1500"
  },
  "js.26sdy1tcm5m": "Tapaustiedostoa ei voitu ladata tässä näkymässä. <a id=\"blockedlink\" href=\"/candidates/case-file/#tess-04b815001aa6-005\">Avaa se omalla sivullaan.</a>",
  "@js.26sdy1tcm5m": {
@@ -6435,6 +7430,11 @@
  "@js.26upx7lksz5": {
   "x-review": "machine",
   "x-source": "496709bb7a"
+ },
+ "js.26wiuqbz2mh": "<span class=\"caret\" aria-hidden=\"true\"></span>Ylikulkunauha",
+ "@js.26wiuqbz2mh": {
+  "x-review": "machine",
+  "x-source": "adb72616fd"
  },
  "js.26xbeqzhkyg": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">5m. <span class=\"mono\">tess-d09712061195-{n0}</span>.</b> Notkahdus kohdassa BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinnyt {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Sijoittuu {n6} päivän BLS-jaksolle, jossa on {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvoja. Tämä sivu ei väitä havaintoa.",
  "@js.26xbeqzhkyg": {
@@ -6456,6 +7456,16 @@
   "x-review": "machine",
   "x-source": "73dd0baf8e"
  },
+ "js.270dlfr83pl": "Arkistosta ei löytynyt vastaavaa julkaistua planeettaa.",
+ "@js.270dlfr83pl": {
+  "x-review": "machine",
+  "x-source": "fe92b55e6a"
+ },
+ "js.273gu7390ph": "{n0} signaali läpäisi",
+ "@js.273gu7390ph": {
+  "x-review": "machine",
+  "x-source": "8b5ab93f5f"
+ },
  "js.274dsglb7un": "Seulonnassa hylätty: toissijainen pimennys (signaalitaso) {n0} ± {n1} ppm ({n2}σ) (sääntö: syvyys ≤ {n3}σ (yksisuuntainen)). Merkitsijät: {n4} / {n5} Probes ja {n6} / {n7} Sentinels. Ei kandidaatti.",
  "@js.274dsglb7un": {
   "x-review": "machine",
@@ -6471,15 +7481,40 @@
   "x-review": "machine",
   "x-source": "bfeaf40123"
  },
+ "js.2792y0o9r8r": "väärän hälytyksen todennäköisyys: ei mitattu. arvo –. sääntö &lt; {n0}. Notkahduksen jaksollisen signaalin lohkobootstrap-kokeet; {n1} kokeella se läpäisee, kun k ≤ {n2}. Tätä tarkistusta ei ajettu, joten se ei ole läpäisy.",
+ "@js.2792y0o9r8r": {
+  "x-review": "machine",
+  "x-source": "530ce43eec"
+ },
+ "js.27btc7oba6z": "Vuorottelevat syvyydet viittaisivat kaksoistähteen, jonka jakso on kaksinkertainen. Mitataan kerran kutakin BLS-efemeridiä kohden kaikista sen epookeista kohteessa, ei notkahduskohtaisesti. (toisella pariteetilla ei ole notkahdusta tasolla ≥ {n0}σ, joten vertailua ei tehty) Tätä tarkistusta ei ajettu, joten se ei ole läpäisy.",
+ "@js.27btc7oba6z": {
+  "x-review": "machine",
+  "x-source": "8ccee63d9b"
+ },
  "js.27d1pzwqqg5": "{n0} notkahdusta ({n1} kandidaattia, {n2} merkittyä). Kukin notkahdus nimetään seulonnan tuloksen mukaan: kandidaatti läpäisi seulonnan eikä ole vahvistettu; merkitty notkahdus on avoin; hylätty notkahdus ei ole kandidaatti. Hylätyt ja merkityt notkahdukset säilytetään tarkoituksella, jotta lukija näkee, mitä seulonta päätti ja miksi. Kukin kuva on sokkokoodattu kuvaaja, jonka arvioijat näkivät, tavu tavulta.",
  "@js.27d1pzwqqg5": {
   "x-review": "machine",
   "x-source": "f52c6bc4a9"
  },
+ "js.27evtacjp8d": "koska: merkintä low_snr · merkintä off_ephemeris · pariton / parillinen (signaalitaso) ei mitattu · sekundaaripimennys (signaalitaso) ei mitattu",
+ "@js.27evtacjp8d": {
+  "x-review": "machine",
+  "x-source": "df9c1cc343"
+ },
+ "js.27eynogdlxv": "haettu {n0}. lokakuuta {n1}.",
+ "@js.27eynogdlxv": {
+  "x-review": "machine",
+  "x-source": "b8c780f40b"
+ },
  "js.27fyvwqvgk2": "tunniste tic197575514-s1-dip-{n0} · kohde tess-b9ee497ace57<br>valokäyrän sha256 6cdb3d033119539b3dd9a07e89379098ee77c137584a467d88efe3b74e7c0913<br>koodi … · konfiguraatio a9d34c7079563183…<br>lähde sector_0001.json.gz",
  "@js.27fyvwqvgk2": {
   "x-review": "machine",
   "x-source": "7b46b18d0a"
+ },
+ "js.27gs9vr3b3d": "tarkastajan tunniste",
+ "@js.27gs9vr3b3d": {
+  "x-review": "machine",
+  "x-source": "a0fc7b80d8"
  },
  "js.27ieblxey36": "läpäisi seulonnan",
  "@js.27ieblxey36": {
@@ -6516,10 +7551,20 @@
   "x-review": "machine",
   "x-source": "d8db12a8ef"
  },
+ "js.27ov9f85mbm": "Arvo",
+ "@js.27ov9f85mbm": {
+  "x-review": "machine",
+  "x-source": "8e37953d23"
+ },
  "js.27rsk9qtcia": "Keskeisiä artikkeleita ja virstanpylväitä omin sanoin tiivistettyinä. Kukin linkittää artikkeliinsa (DOI) ja siihen SetuHQ:n osaan, johon se liittyy.",
  "@js.27rsk9qtcia": {
   "x-review": "machine",
   "x-source": "f7f274459e"
+ },
+ "js.27tj9brckpw": "Vertailu tälle notkahdukselle: arkistossa ei ole planeettaa toleranssin sisällä.",
+ "@js.27tj9brckpw": {
+  "x-review": "machine",
+  "x-source": "42a68f9649"
  },
  "js.27u45mug7pq": "Pineda &amp; Villadsen {n0}",
  "@js.27u45mug7pq": {
@@ -6545,6 +7590,11 @@
  "@js.280bcq6hfxu": {
   "x-review": "machine",
   "x-source": "de18f16db8"
+ },
+ "js.282dtqm5p5o": "syvyys ≤ {n0}σ (yksisuuntainen)",
+ "@js.282dtqm5p5o": {
+  "x-review": "machine",
+  "x-source": "55b7ac79a6"
  },
  "js.283unm3lnxq": "Sentinel · Skeptikko <span class=\"mono\">claude-skeptic</span>",
  "@js.283unm3lnxq": {
@@ -6585,6 +7635,11 @@
  "@js.28eyibb42ax": {
   "x-review": "machine",
   "x-source": "5ef2297e8b"
+ },
+ "js.28h2vz1uo5s": "Sentinels toimivat oletuksena Claude-mallilla (Anthropic); muita palveluntarjoajia tuetaan, ja ne mainitaan erikseen. Probes ovat deterministisiä sovitettuun suodattimeen perustuvia ilmaisimia. Vain Probes; Sentinels-agentteja ei ajettu tässä esimerkissä.<br>ajo {n0}-{n1}-22T17:{n2}+{n3} · config eef6f1318b3b1dac · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-997691b39aab-{n8} · signaali tess-997691b39aab-P4.5366+{n9} · kohde tess-997691b39aab<br>ristiintunnistus: NASA Exoplanet Archive, taulu ps (default_flag = {n10}) · tila no_match",
+ "@js.28h2vz1uo5s": {
+  "x-review": "machine",
+  "x-source": "9cfbaca973"
  },
  "js.28hrtzpigjb": "Jupiterin ja Auringon painopiste",
  "@js.28hrtzpigjb": {
@@ -6646,15 +7701,40 @@
   "x-review": "machine",
   "x-source": "e549a0e924"
  },
+ "js.28q7fuao63m": "Vie osoitin nauhan päälle tai kohdista siihen ja käytä näppäimiä ← →, niin voit lukea lokeron arvon.",
+ "@js.28q7fuao63m": {
+  "x-review": "machine",
+  "x-source": "9072b43ee6"
+ },
+ "js.28qkjso1r60": "Notkahduksen jaksollisen signaalin lohkobootstrap-kokeet; {n0} kokeella se läpäisee, kun k ≤ {n1}. Tätä tarkistusta ei ajettu, joten se ei ole läpäisy.",
+ "@js.28qkjso1r60": {
+  "x-review": "machine",
+  "x-source": "f4d6d321fe"
+ },
+ "js.28tte1ap3tx": "väärän hälytyksen todennäköisyys: läpäisi. arvo &lt; {n0}.0e-{n1} ({n2} koetta). sääntö &lt; {n3}. Notkahduksen jaksollisen signaalin lohkobootstrap-kokeet; {n4} kokeella se läpäisee, kun k ≤ {n5}.",
+ "@js.28tte1ap3tx": {
+  "x-review": "machine",
+  "x-source": "d20a3daa90"
+ },
  "js.28uemow6tsi": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">4f. <span class=\"mono\">tess-68e93d0b9530-{n0}</span>.</b> Notko kohdassa BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinnyt {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Sijoittuu {n6} päivän BLS-jaksolle, jossa on {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvot. Tämä sivu ei väitä havaintoa.",
  "@js.28uemow6tsi": {
   "x-review": "machine",
   "x-source": "1a5e83f903"
  },
+ "js.28ufhm59hqt": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E6 · tess-291acb98cabe-{n2}</span>",
+ "@js.28ufhm59hqt": {
+  "x-review": "machine",
+  "x-source": "056b829899"
+ },
  "js.28xt1sul88a": "<a href=\"/stars/b-cen-ab/\">{s0}</a> · Kuvantaminen · löydetty {n0} · Kaasujättiläinen (massan perusteella)",
  "@js.28xt1sul88a": {
   "x-review": "machine",
   "x-source": "7ae613c46d"
+ },
+ "js.28y72nrfrvn": "kohde tess-38b5a559eee2: BLS P {n0} d, t0 {n1}, kesto {n2} h, {n3} ylikulkua, {n4} notkahdus · viite epookkien numeroille",
+ "@js.28y72nrfrvn": {
+  "x-review": "machine",
+  "x-source": "f2ac04cef8"
  },
  "js.28zwvvpp2tp": "{n0} (sovite)",
  "@js.28zwvvpp2tp": {
@@ -6670,6 +7750,11 @@
  "@js.2918it81ock": {
   "x-review": "machine",
   "x-source": "72ffbceb76"
+ },
+ "js.2926zk6sy6t": "Notkahduksen sisällä on riittävästi näytteitä sen mittaamiseen.",
+ "@js.2926zk6sy6t": {
+  "x-review": "machine",
+  "x-source": "1850f0551f"
  },
  "js.292xvf3dsck": "merkitty tarkistettavaksi, avoin",
  "@js.292xvf3dsck": {
@@ -6756,10 +7841,20 @@
   "x-review": "machine",
   "x-source": "55cc08dc35"
  },
+ "js.29mcpxgpkvv": "Tarkastuksen tulos kohteelle tess-38b5a559eee2-{n0}: merkitty tarkistettavaksi",
+ "@js.29mcpxgpkvv": {
+  "x-review": "machine",
+  "x-source": "74c29795ee"
+ },
  "js.29qbejq6r1y": "Menetelmät: Elämän yhtälöt ›",
  "@js.29qbejq6r1y": {
   "x-review": "machine",
   "x-source": "1c2d6326bb"
+ },
+ "js.29qeu8eiwwk": "{n0} min",
+ "@js.29qeu8eiwwk": {
+  "x-review": "machine",
+  "x-source": "71d1903135"
  },
  "js.29qi38c8nof": "Runsas viileissä jättiläisplaneetoissa; sen vähenemistä on käytetty sisäisen lämmön päättelyyn.",
  "@js.29qi38c8nof": {
@@ -6776,6 +7871,11 @@
   "x-review": "machine",
   "x-source": "d381732276"
  },
+ "js.29wbaa5nwq3": "E4 · {n0} · {n1} ppm · <span class=\"g-pass\"><span aria-hidden=\"true\">✓</span> läpäisi</span>",
+ "@js.29wbaa5nwq3": {
+  "x-review": "machine",
+  "x-source": "ca3e9eda94"
+ },
  "js.29wgw6h6dx3": "ii · koko kohde tess-08a8c4eac6ff",
  "@js.29wgw6h6dx3": {
   "x-review": "machine",
@@ -6790,6 +7890,11 @@
  "@js.29x6wi6pnrw": {
   "x-review": "machine",
   "x-source": "208edb701b"
+ },
+ "js.29zirb1uy5w": "&lt; {n0}.0e-{n1} ({n2} koetta)",
+ "@js.29zirb1uy5w": {
+  "x-review": "machine",
+  "x-source": "8307392eec"
  },
  "js.2a077d6g382": "{n0}σ:n CO₂-piirre aallonpituudella {n1} µm planeetassa WASP-{n2} b.",
  "@js.2a077d6g382": {
@@ -6856,6 +7961,11 @@
   "x-review": "machine",
   "x-source": "33a6ddff05"
  },
+ "js.2aqfvxlf80": "Piilota signaaliluettelo",
+ "@js.2aqfvxlf80": {
+  "x-review": "machine",
+  "x-source": "051625087f"
+ },
  "js.2audv8awl6x": "pi Men exoplanet.eu:ssa:",
  "@js.2audv8awl6x": {
   "x-review": "machine",
@@ -6885,6 +7995,11 @@
  "@js.2b4j9jfw2tq": {
   "x-review": "machine",
   "x-source": "b89a8347da"
+ },
+ "js.2b7rt2b8wlr": "epookki E3 · {n0}",
+ "@js.2b7rt2b8wlr": {
+  "x-review": "machine",
+  "x-source": "edc5c9ad51"
  },
  "js.2b7zboqjuuj": "exoplanet.eu listaa sen tilassa \"Published in a refereed paper\", löydetty säteisnopeusmenetelmällä vuonna {n0}; tietue päivitetty {n1}-{n2}-{n3}.",
  "@js.2b7zboqjuuj": {
@@ -6961,6 +8076,11 @@
   "x-review": "machine",
   "x-source": "23d6b3c963"
  },
+ "js.2c473aal7d2": "läpäisi eikä off_ephemeris",
+ "@js.2c473aal7d2": {
+  "x-review": "machine",
+  "x-source": "2329fcf665"
+ },
  "js.2c70ie4ixet": "Kuvataulut",
  "@js.2c70ie4ixet": {
   "x-review": "machine",
@@ -6980,6 +8100,11 @@
  "@js.2c8rwgvxgrs": {
   "x-review": "machine",
   "x-source": "fc8ceec630"
+ },
+ "js.2c9ogyf2rm1": "Laajuus: BLS-haku ja sen epookit koskevat kutakin {n0} päivän kohdetta, eivät kutakin TESS-sektoria. Mikään BLS-efemeridi ei kata tätä notkahdusta. Syvyys ja kesto ovat konsensusikkunan mitattuja arvoja.",
+ "@js.2c9ogyf2rm1": {
+  "x-review": "machine",
+  "x-source": "fcd4155fe8"
  },
  "js.2caciptciqj": "Kuvataulut: HD {n0}",
  "@js.2caciptciqj": {
@@ -7021,10 +8146,20 @@
   "x-review": "machine",
   "x-source": "cd1d193d20"
  },
+ "js.2cieco3oa3n": "koska: merkintä secondary_eclipse",
+ "@js.2cieco3oa3n": {
+  "x-review": "machine",
+  "x-source": "c8e4d699bc"
+ },
  "js.2cjkfyfegp8": "Merkinnät (✓ laskettu)",
  "@js.2cjkfyfegp8": {
   "x-review": "machine",
   "x-source": "fb0ca11f5c"
+ },
+ "js.2clm1fxsc59": "mitattu: {n0} ± {n1} ppm signaalin epookissa E2 (S1:n epookki {n2}, parillinen kohteessaan)",
+ "@js.2clm1fxsc59": {
+  "x-review": "machine",
+  "x-source": "6688a567f4"
  },
  "js.2cmcxjywji7": "Tämä sivu, k = {n0}: N:n mediaani",
  "@js.2cmcxjywji7": {
@@ -7080,6 +8215,16 @@
  "@js.2cxnseek7ep": {
   "x-review": "machine",
   "x-source": "946b65c19b"
+ },
+ "js.2d0dwnxcl12": "SNR: ei läpäissyt. arvo {n0}. sääntö ≥ {n1}. Notkahdus on riittävän voimakas ollakseen luotettava.",
+ "@js.2d0dwnxcl12": {
+  "x-review": "machine",
+  "x-source": "f6edebd7af"
+ },
+ "js.2d452xig46v": "pariton / parillinen (signaalitaso): läpäisi. arvo {n0} ± {n1} / {n2} ± {n3} ppm, Δ = {n4}σ. sääntö |Δ| ≤ {n5}σ, σ = √(σ_odd² + σ_even²). Vuorottelevat syvyydet viittaisivat kaksoistähteen, jonka jakso on kaksinkertainen. Mitataan kerran kutakin BLS-efemeridiä kohden kaikista sen epookeista kohteessa, ei notkahduskohtaisesti.",
+ "@js.2d452xig46v": {
+  "x-review": "machine",
+  "x-source": "6d0913266b"
  },
  "js.2d4zwgwbh8u": "Yleisin molekyyli lämpimien planeettojen ilmakehissä; määrää useimpien spektrien muodon.",
  "@js.2d4zwgwbh8u": {
@@ -7151,10 +8296,20 @@
   "x-review": "machine",
   "x-source": "54104d65dc"
  },
+ "js.2dlzcgdv31o": "Tarkastuksen tulos kohteelle tess-04b815001aa6-{n0}: hylätty tarkastuksessa",
+ "@js.2dlzcgdv31o": {
+  "x-review": "machine",
+  "x-source": "818db1b45c"
+ },
  "js.2dpe0j1q4wd": "<b>ν₁ symmetrinen venytys</b> · {n0} µm · infrapuna-aktiivinen · piirretty ×{n1} · Reading atmospheres -osion {n2}–{n3} µm:n ikkunan ulkopuolella",
  "@js.2dpe0j1q4wd": {
   "x-review": "machine",
   "x-source": "d467dc0970"
+ },
+ "js.2ds63hdzob8": "tess-291acb98cabe-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, läpäisi tarkastuksen",
+ "@js.2ds63hdzob8": {
+  "x-review": "machine",
+  "x-source": "46257ea83b"
  },
  "js.2dt3lzdu6zn": "Tapauskansiota ei voitu ladata tässä näkymässä. <a id=\"blockedlink\" href=\"/candidates/toi-236/case-file/#tess-997691b39aab-001\">Avaa se omalla sivullaan.</a>",
  "@js.2dt3lzdu6zn": {
@@ -7171,20 +8326,40 @@
   "x-review": "machine",
   "x-source": "999ca82b04"
  },
+ "js.2dy5ekzudyx": "tess-5935bad1a3b4-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, läpäisi tarkastuksen",
+ "@js.2dy5ekzudyx": {
+  "x-review": "machine",
+  "x-source": "074452576c"
+ },
  "js.2dz2y2chdd0": "Mallin syvyys tallennetulla b:n arvolla",
  "@js.2dz2y2chdd0": {
   "x-review": "machine",
   "x-source": "facf06378a"
+ },
+ "js.2e166ycbgr3": "<span class=\"caret\" aria-hidden=\"true\"></span>Signaali · {n0} notkahdusta",
+ "@js.2e166ycbgr3": {
+  "x-review": "machine",
+  "x-source": "23e963c817"
  },
  "js.2e1u7py27x0": "{n0} notkahdusta ({n1} kandidaattia, {n2} merkittyä, {n3} hylättyä). Jokainen notkahdus on nimetty seulonnan tuloksen mukaan: kandidaatti läpäisi seulonnan eikä ole vahvistettu; merkitty notkahdus on avoin; hylätty notkahdus ei ole kandidaatti. Hylätyt ja merkityt notkahdukset säilytetään tarkoituksella, jotta lukija näkee, mitä seulonnassa päätettiin ja miksi. Jokainen kuva on sokkokoodattu kuvaaja, jonka arvioijat näkivät, tavu tavulta.",
  "@js.2e1u7py27x0": {
   "x-review": "machine",
   "x-source": "8495604c60"
  },
+ "js.2e4r0ammsb0": "kohde tess-04b815001aa6 · {n0} notkahdus",
+ "@js.2e4r0ammsb0": {
+  "x-review": "machine",
+  "x-source": "75ff927781"
+ },
  "js.2e6r6gbr56l": "¹ Syvyyden määritelmät eroavat: SetuHQ:n syvyys on reunatummenemismallin syvyys ylikulun keskikohdassa; arkiston pl_trandep on julkaistu ylikulun syvyys kunkin artikkelin määritelmän mukaan. Vertaa ensin k:ta ja T14:ää.",
  "@js.2e6r6gbr56l": {
   "x-review": "machine",
   "x-source": "80bb5d5e29"
+ },
+ "js.2e9qw53y4r": "<span class=\"tagcand\">kandidaatti</span> TIC {n0} · TESS · kohde tess-fa3483ce6f83",
+ "@js.2e9qw53y4r": {
+  "x-review": "machine",
+  "x-source": "22e2894d05"
  },
  "js.2eacop0poxq": "Ajo runs/tess-wasp-{n0}-s1 (TESS SPOC {n1} minuutin, sektori {n2}; konfiguraatio configs/showcase/tess-wasp-{n3}-s1.toml, sha256 23bb51a268efd59e…; koodi v0.1.0-{n4}-g0c029a2). Valokäyrät: julkista TESS-dataa MAST-arkistosta tess2018206045859-s0001-{n5}-{n6}-s_lc.fits (sha256 12ddd623b04bdd35…).",
  "@js.2eacop0poxq": {
@@ -7195,6 +8370,11 @@
  "@js.2ecc8z1pehf": {
   "x-review": "machine",
   "x-source": "af749622cf"
+ },
+ "js.2edazeo1avr": "signaalin epookki E3 + {n0} (S2:n epookki {n1} + {n2}, pariton kohteessaan): ikkunassa ei tallennettuja pisteitä ({n3} pistettä)",
+ "@js.2edazeo1avr": {
+  "x-review": "machine",
+  "x-source": "20865d5bec"
  },
  "js.2edghjfjyb9": "Etäisyys",
  "@js.2edghjfjyb9": {
@@ -7211,6 +8391,11 @@
   "x-review": "machine",
   "x-source": "63210331f9"
  },
+ "js.2eko4mp2cji": "kohde tess-5935bad1a3b4: BLS P {n0} d, t0 {n1}, kesto {n2} h, {n3} ylikulkua, {n4} notkahdusta · viite epookkien numeroille",
+ "@js.2eko4mp2cji": {
+  "x-review": "machine",
+  "x-source": "f85eb264eb"
+ },
  "js.2en1x3cmvoa": "{n0} Peg b: K kaavastamme",
  "@js.2en1x3cmvoa": {
   "x-review": "machine",
@@ -7220,6 +8405,11 @@
  "@js.2eok5yhujsp": {
   "x-review": "machine",
   "x-source": "d6aefd4fb0"
+ },
+ "js.2equeykr6fc": "{n0} BTJD · {n1} ppm · SNR {n2}",
+ "@js.2equeykr6fc": {
+  "x-review": "machine",
+  "x-source": "abbcadd4f2"
  },
  "js.2er3nzikmdc": "Rossiter–McLaughlin, HD {n0} b",
  "@js.2er3nzikmdc": {
@@ -7240,6 +8430,11 @@
  "@js.2exbs04rc3y": {
   "x-review": "machine",
   "x-source": "aba8973205"
+ },
+ "js.2f2vrpwk59u": "sininen: tämä notkahdus · vaaleansininen: sama signaali · harmaa: muut notkahdukset tässä",
+ "@js.2f2vrpwk59u": {
+  "x-review": "machine",
+  "x-source": "002b2c6fff"
  },
  "js.2f7m0fde6ij": "exoplanet.eu luettelee sen tilassa \"Published in a refereed paper\", löydetty astrometrialla vuonna {n0}; tietue päivitetty {n1}-{n2}-{n3}. Tunnetaan myös nimellä HD {n4} b.",
  "@js.2f7m0fde6ij": {
@@ -7266,10 +8461,30 @@
   "x-review": "machine",
   "x-source": "fb060d8af7"
  },
+ "js.2fd5nn9gi": "<span class=\"tagcand\">hylätty</span> TIC {n0} · TESS · kohde tess-997691b39aab",
+ "@js.2fd5nn9gi": {
+  "x-review": "machine",
+  "x-source": "6eff92aeba"
+ },
+ "js.2fd79nvc7yx": "Syöte ottaa vain notkahdukset, jotka koodi hyväksyi ja jotka osuvat tähtensä jaksolliseen signaaliin.",
+ "@js.2fd79nvc7yx": {
+  "x-review": "machine",
+  "x-source": "35dba33204"
+ },
  "js.2fdib3ab586": "{n0} (UV), {n1}–{n2} (Chappuis), {n3} (voimakkain keski-IR); perusvärähtelyt {n4}, {n5} ja {n6}",
  "@js.2fdib3ab586": {
   "x-review": "machine",
   "x-source": "77b0ba2aa0"
+ },
+ "js.2fgum9ydqi6": "Sentinels toimivat oletuksena Claude-mallilla (Anthropic); muita palveluntarjoajia tuetaan, ja ne mainitaan erikseen. Probes ovat deterministisiä sovitettuun suodattimeen perustuvia ilmaisimia.",
+ "@js.2fgum9ydqi6": {
+  "x-review": "machine",
+  "x-source": "7793394412"
+ },
+ "js.2fhkkv4wk33": "Kaksi lyhyttä, tasapohjaista noin {n0} ppm:n notkahdusta kohdissa ~{n1} ja ~{n2} (väli ~{n3} d) ovat syvyydeltään ja kestoltaan yhteneviä, kuten jaksolliselta ylikululta odotetaan. Kummassakaan ei näy V-muotoa, sekundaaripimennystä, ramppia tai porrasta, mutta toisen notkahduksen ympärillä data on hajanaista, joten olen vain kohtalaisen varm",
+ "@js.2fhkkv4wk33": {
+  "x-review": "machine",
+  "x-source": "00801a11ad"
  },
  "js.2fjw1kucr0y": "F_L (elämä; oletettu)",
  "@js.2fjw1kucr0y": {
@@ -7300,6 +8515,11 @@
  "@js.2fowx8abdlq": {
   "x-review": "machine",
   "x-source": "c82862b830"
+ },
+ "js.2frolzbrc3m": "Muuten liian lyhyt ollakseen ylikulku.",
+ "@js.2frolzbrc3m": {
+  "x-review": "machine",
+  "x-source": "5579d91372"
  },
  "js.2fsva6nz10e": "exoplanet.eu luettelee sen tilassa \"Published in a refereed paper\", löydetty ajoitusmenetelmällä vuonna {n0}; tietue päivitetty {n1}-{n2}-{n3}.",
  "@js.2fsva6nz10e": {
@@ -7356,6 +8576,16 @@
   "x-review": "machine",
   "x-source": "7f0b857bf3"
  },
+ "js.2g5zvkms65q": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E2 · tess-997691b39aab-{n2}</span>",
+ "@js.2g5zvkms65q": {
+  "x-review": "machine",
+  "x-source": "163304df02"
+ },
+ "js.2g6ptpk6cnp": "<span class=\"glyph g-nm\"><span aria-hidden=\"true\">–</span> <span class=\"word\">ei mitattu</span></span> väärän hälytyksen todennäköisyys",
+ "@js.2g6ptpk6cnp": {
+  "x-review": "machine",
+  "x-source": "6409e2561e"
+ },
  "js.2g922f6427v": "Ylikulkuteatteri",
  "@js.2g922f6427v": {
   "x-review": "machine",
@@ -7365,6 +8595,11 @@
  "@js.2g9e487z1xe": {
   "x-review": "machine",
   "x-source": "bc77bf1be2"
+ },
+ "js.2g9znxjz0kz": "kaikki {n0} signaalia",
+ "@js.2g9znxjz0kz": {
+  "x-review": "machine",
+  "x-source": "fcfdaa9ca2"
  },
  "js.2gax90p8nk0": "{n0} planeetta exoplanet.eu:ssa · tallennettu tyyppi F6IV · luokka F Teff:n perusteella (lähin F5V)",
  "@js.2gax90p8nk0": {
@@ -7380,6 +8615,11 @@
  "@js.2gbggujxcvs": {
   "x-review": "machine",
   "x-source": "140bedbf9c"
+ },
+ "js.2gbhx6ze3o0": "Päätöskirjanpito: tess-997691b39aab-{n0}",
+ "@js.2gbhx6ze3o0": {
+  "x-review": "machine",
+  "x-source": "d844373c39"
  },
  "js.2gbrnw08yjn": "merkintä<span aria-hidden=\"true\"></span>",
  "@js.2gbrnw08yjn": {
@@ -7406,6 +8646,16 @@
   "x-review": "machine",
   "x-source": "bd20fde17f"
  },
+ "js.2gjp9c9jyig": "tess-08a8c4eac6ff-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, läpäisi tarkastuksen",
+ "@js.2gjp9c9jyig": {
+  "x-review": "machine",
+  "x-source": "3eb5dc5d1d"
+ },
+ "js.2goo2981lvu": "epookki E1 · {n0}",
+ "@js.2goo2981lvu": {
+  "x-review": "machine",
+  "x-source": "6c8d1ee94c"
+ },
  "js.2gz7mzl8po": "<b>Arkisto.</b> Julkaistujen planeettojen TOI-{n0} b (P {n1} d), TOI-{n2} c (P {n3} d) ja TOI-{n4} d (P {n5} d) isäntätähti, lähde NASA Exoplanet Archive, taulu ps (default_flag = {n6}), haettu {n7}-{n8}-22T18:{n9}+{n10}. Vain arkiston arvoja. Tämä sivu ei väitä havaintoa.",
  "@js.2gz7mzl8po": {
   "x-review": "machine",
@@ -7420,6 +8670,11 @@
  "@js.2jxe56kfgj": {
   "x-review": "machine",
   "x-source": "bae77fae53"
+ },
+ "js.2k83ac8325": "kesto: läpäisi. arvo {n0} min. sääntö ≥ {n1} min. Muuten liian lyhyt ollakseen ylikulku.",
+ "@js.2k83ac8325": {
+  "x-review": "machine",
+  "x-source": "43783c04f4"
  },
  "js.2kon1gnzy2": "tess-997691b39aab-{n0} · Hylätty seulonnassa",
  "@js.2kon1gnzy2": {
@@ -7451,6 +8706,21 @@
   "x-review": "machine",
   "x-source": "785c1472f3"
  },
+ "js.2r6l9str46": "koska: merkintä secondary_eclipse · merkintä secondary_any_phase",
+ "@js.2r6l9str46": {
+  "x-review": "machine",
+  "x-source": "85ef00a8cb"
+ },
+ "js.2rle5ep9bl": "{n0} signaalia läpäisi",
+ "@js.2rle5ep9bl": {
+  "x-review": "machine",
+  "x-source": "af89c36e8f"
+ },
+ "js.2s5m12u5r9": "yksi BLS-jakso kohteessa tess-38b5a559eee2; jokainen notkahdus tarkastettu erikseen",
+ "@js.2s5m12u5r9": {
+  "x-review": "machine",
+  "x-source": "e108a43e18"
+ },
  "js.2sg97xux8l": "τ Boo Ab, tallennettu massa ja jakso",
  "@js.2sg97xux8l": {
   "x-review": "machine",
@@ -7465,6 +8735,11 @@
  "@js.2tegf4ezgw": {
   "x-review": "machine",
   "x-source": "c7f726293c"
+ },
+ "js.2uwjshe1op": "mitattu: {n0} ± {n1} ppm signaalin epookissa E5 + {n2} (S2:n epookki {n3} + {n4}, pariton kohteessaan)",
+ "@js.2uwjshe1op": {
+  "x-review": "machine",
+  "x-source": "c0123c4e8f"
  },
  "js.2zmwu5apma": "Näytä {n0} lisää, yhteensä {n1}",
  "@js.2zmwu5apma": {
@@ -7536,6 +8811,11 @@
   "x-review": "machine",
   "x-source": "39540d23df"
  },
+ "js.3eid1krh": "yksi BLS-jakso kohteessa tess-08a8c4eac6ff; jokainen notkahdus tarkastettu erikseen",
+ "@js.3eid1krh": {
+  "x-review": "machine",
+  "x-source": "e0f202f409"
+ },
  "js.3grd1yv8rk": "<i style=\"background:#64D2FF\"></i>pi Men c",
  "@js.3grd1yv8rk": {
   "x-review": "machine",
@@ -7551,10 +8831,25 @@
   "x-review": "machine",
   "x-source": "15dfef1f1e"
  },
+ "js.3mpdp464xb": "<span class=\"tagcand\">kandidaatti</span> TIC {n0} · TESS · kohde tess-291acb98cabe",
+ "@js.3mpdp464xb": {
+  "x-review": "machine",
+  "x-source": "7e22f4e9ff"
+ },
  "js.3o5vubwdr": "{n0} dex",
  "@js.3o5vubwdr": {
   "x-review": "machine",
   "x-source": "e45296106d"
+ },
+ "js.3or4l5w8wk": "SetuHQ · kandidaatit",
+ "@js.3or4l5w8wk": {
+  "x-review": "machine",
+  "x-source": "9d565d3e2f"
+ },
+ "js.3p4k7a44zf": "E0 · {n0} · {n1} ppm · <span class=\"g-pass\"><span aria-hidden=\"true\">✓</span> läpäisi</span>",
+ "@js.3p4k7a44zf": {
+  "x-review": "machine",
+  "x-source": "fa279f8757"
  },
  "js.3pk58kjqbq": "ei julkistettu",
  "@js.3pk58kjqbq": {
@@ -7636,6 +8931,11 @@
   "x-review": "machine",
   "x-source": "71546250b2"
  },
+ "js.47bcdhu4bu": "Ylikulkunauha kohteelle tess-5935bad1a3b4-{n0}. Siirry tallennettujen lokeroiden välillä vasemmalla ja oikealla nuolinäppäimellä, Shiftillä kymmenen kerrallaan, Home- ja End-näppäimillä päihin.",
+ "@js.47bcdhu4bu": {
+  "x-review": "machine",
+  "x-source": "4f93cb217a"
+ },
  "js.47eh62thmz": "id tic140045537-s1-dip-{n0} · kohde tess-ddac3bd0d6ca<br>valokäyrän sha256 a061c00740cfe310fdc3472c7dc9e2f5557827377e30ec292b276382b34f17cb<br>koodi … · konfiguraatio a9d34c7079563183…<br>lähde sector_0001.json.gz",
  "@js.47eh62thmz": {
   "x-review": "machine",
@@ -7645,6 +8945,11 @@
  "@js.47ia9lfhtr": {
   "x-review": "machine",
   "x-source": "7c93a8fd69"
+ },
+ "js.47rgwwwxh6": "≥ {n0} min",
+ "@js.47rgwwwxh6": {
+  "x-review": "machine",
+  "x-source": "72e90f9301"
  },
  "js.47wb8fwq6l": "Ensimmäinen ylikulkeva planeetta: säde, tiheys ja reitti kaasukehien tutkimukseen.",
  "@js.47wb8fwq6l": {
@@ -7686,6 +8991,11 @@
   "x-review": "machine",
   "x-source": "fcf52eeba9"
  },
+ "js.4ilj9m83qo": "tess-01e315ee5ebf-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, hylätty tarkastuksessa",
+ "@js.4ilj9m83qo": {
+  "x-review": "machine",
+  "x-source": "9a395320ab"
+ },
  "js.4keqel9mfd": "tasapohjainen (U), ei V [laskettu ylikulkuluvun perusteella]",
  "@js.4keqel9mfd": {
   "x-review": "machine",
@@ -7710,6 +9020,16 @@
  "@js.4ngr76s51f": {
   "x-review": "machine",
   "x-source": "f7a4a699b0"
+ },
+ "js.4otrwtue4g": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E4 · tess-01e315ee5ebf-{n2}</span>",
+ "@js.4otrwtue4g": {
+  "x-review": "machine",
+  "x-source": "88f966558b"
+ },
+ "js.4q0mtwwj97": "Tarkastuksen tulos kohteelle tess-04b815001aa6-{n0}: läpäisi tarkastuksen",
+ "@js.4q0mtwwj97": {
+  "x-review": "machine",
+  "x-source": "0cf4b1f187"
  },
  "js.4shg8ecxtn": "tunnettu TOI {n0}",
  "@js.4shg8ecxtn": {
@@ -7766,6 +9086,11 @@
   "x-review": "machine",
   "x-source": "b40861c4cb"
  },
+ "js.53pb7bhnlm": "kohde tess-4b369d3c6f09 · {n0} notkahdus",
+ "@js.53pb7bhnlm": {
+  "x-review": "machine",
+  "x-source": "bb7a687272"
+ },
  "js.54nifvgzcz": "Lämpötila",
  "@js.54nifvgzcz": {
   "x-review": "machine",
@@ -7796,6 +9121,11 @@
   "x-review": "machine",
   "x-source": "7a73b4b548"
  },
+ "js.5ep92p065t": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisi</span></span> efemeridi",
+ "@js.5ep92p065t": {
+  "x-review": "machine",
+  "x-source": "52765b700f"
+ },
  "js.5j6snvvuuk": "Asettelu",
  "@js.5j6snvvuuk": {
   "x-review": "machine",
@@ -7805,6 +9135,11 @@
  "@js.5k1okfy1y2": {
   "x-review": "machine",
   "x-source": "fa7955814e"
+ },
+ "js.5kjwyb404d": "Yhdistetty, koska nämä kohdekohtaiset tulokset koskevat samaa havaintokohdetta, niiden jaksot ovat yhtäpitäviä {n0} prosentin tarkkuudella ja kummankin ennustamat epookit osuvat yhden ylikulun keston sisälle toisen epookeista. Kukin BLS-tulos säilytetään sellaisenaan; yhdistettyä jaksoa ei sovitettu.",
+ "@js.5kjwyb404d": {
+  "x-review": "machine",
+  "x-source": "0bb56ea8be"
  },
  "js.5m1n02zglj": "Hiilidioksidin tunnistaminen eksoplaneetan kaasukehästä",
  "@js.5m1n02zglj": {
@@ -7830,6 +9165,11 @@
  "@js.5qqcw21as6": {
   "x-review": "machine",
   "x-source": "f4a2329657"
+ },
+ "js.5ri6qung4s": "efemeridi: merkintä. arvo poissa. sääntö efemeridillä. Tähden voimakas jaksollinen signaali ei selitä sitä.",
+ "@js.5ri6qung4s": {
+  "x-review": "machine",
+  "x-source": "4c068dba44"
  },
  "js.5x2cvaysve": "Säteisnopeuden puoliamplitudi K",
  "@js.5x2cvaysve": {
@@ -7866,6 +9206,11 @@
   "x-review": "machine",
   "x-source": "bf11fecb30"
  },
+ "js.649v4tdkoo": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E3 · tess-5935bad1a3b4-{n2}</span>",
+ "@js.649v4tdkoo": {
+  "x-review": "machine",
+  "x-source": "4a880c958f"
+ },
  "js.64gjc6ygey": "Tähdenvalon peittäminen",
  "@js.64gjc6ygey": {
   "x-review": "machine",
@@ -7891,6 +9236,11 @@
   "x-review": "machine",
   "x-source": "284d1e8c49"
  },
+ "js.6bpm7lj4rt": "mitattu: {n0} ± {n1} ppm signaalin epookissa E4 (S2:n epookki {n2}, parillinen kohteessaan)",
+ "@js.6bpm7lj4rt": {
+  "x-review": "machine",
+  "x-source": "317d926227"
+ },
  "js.6c0cyre215": "Taiteilijan näkemys kohteesta {s0}: kaasukehäplaneetta kuumalla vyöhykkeellä, {n0} Maan sädettä, {n1} K.",
  "@js.6c0cyre215": {
   "x-review": "machine",
@@ -7900,6 +9250,11 @@
  "@js.6j56seqj8": {
   "x-review": "machine",
   "x-source": "7e69af06bb"
+ },
+ "js.6m82nf22ot": "Päätöskirjanpito: tess-04b815001aa6-{n0}",
+ "@js.6m82nf22ot": {
+  "x-review": "machine",
+  "x-source": "c754e484e4"
  },
  "js.6qolz1acje": "Lähde: kuten kuvatekstissä todetaan.",
  "@js.6qolz1acje": {
@@ -7926,6 +9281,11 @@
   "x-review": "machine",
   "x-source": "d3316f6bac"
  },
+ "js.6z056hfmwf": "Miksi",
+ "@js.6z056hfmwf": {
+  "x-review": "machine",
+  "x-source": "d3ae14a50b"
+ },
  "js.71pi1zlit2": "Ensimmäinen havaittu eksoplaneetan kaasukehä.",
  "@js.71pi1zlit2": {
   "x-review": "machine",
@@ -7941,6 +9301,11 @@
   "x-review": "machine",
   "x-source": "53c5a38443"
  },
+ "js.731h9yt55r": "kohde tess-08a8c4eac6ff · {n0} notkahdusta · {n1} BLS-ylikulkua",
+ "@js.731h9yt55r": {
+  "x-review": "machine",
+  "x-source": "8be831a82f"
+ },
  "js.73m5l1hmvg": "SO₂ <span>Rikkidioksidi</span>",
  "@js.73m5l1hmvg": {
   "x-review": "machine",
@@ -7955,6 +9320,11 @@
  "@js.76iozdp0jh": {
   "x-review": "machine",
   "x-source": "217afade12"
+ },
+ "js.7865y0p3j6": "mitattu: {n0} ± {n1} ppm signaalin epookissa E0 (S2:n epookki {n2}, parillinen kohteessaan)",
+ "@js.7865y0p3j6": {
+  "x-review": "machine",
+  "x-source": "fc7102e44b"
  },
  "js.78llqc69gh": "Proxima Centauri b",
  "@js.78llqc69gh": {
@@ -8000,6 +9370,11 @@
  "@js.7f3lidyc7s": {
   "x-review": "machine",
   "x-source": "40686f7e63"
+ },
+ "js.7g8ukzkx40": "Seulonnan tulos kohteelle tess-5935bad1a3b4-{n0}: läpäisi seulonnan",
+ "@js.7g8ukzkx40": {
+  "x-review": "machine",
+  "x-source": "ac22d2380a"
  },
  "js.7i6tnzxffe": "Wolf {n0} b",
  "@js.7i6tnzxffe": {
@@ -8051,6 +9426,21 @@
   "x-review": "machine",
   "x-source": "3d9919cae1"
  },
+ "js.7yfrg3y07d": "<span class=\"tagcand\">kandidaatti</span> TIC {n0} · TESS · kohde tess-4b369d3c6f09",
+ "@js.7yfrg3y07d": {
+  "x-review": "machine",
+  "x-source": "d1c0c1c8c1"
+ },
+ "js.7z107dqle5": "Osittain havaittu notkahdus merkitään, ei hylätä.",
+ "@js.7z107dqle5": {
+  "x-review": "machine",
+  "x-source": "c35f3f1f5c"
+ },
+ "js.82n0m86s1w": "pisteitä ylikulussa: läpäisty. arvo {n0}. sääntö ≥ {n1}. Notkahduksen sisällä on riittävästi näytteitä sen mittaamiseen.",
+ "@js.82n0m86s1w": {
+  "x-review": "machine",
+  "x-source": "744a3860ff"
+ },
  "js.83t0fxq80": "Järjestelmä {s0} ylhäältä: kukin planeetta himmentää tähden valoa ylittäessään näkölinjan havaitsijaan. Ratojen koot ovat tallennetut isoakselin puolikkaat (tai Keplerin kolmas laki jaksosta ja tähden massasta); notkahduksen syvyys on (Rp/R★)² tallennetuista säteistä. Ympyräradat, tähti ja planeetat eivät mittakaavassa, vaiheet havainnollistavia (ylikulkuaikoja ei ole tallennettu). Ei piirretty (ei jaksoa tai ei a:ta eikä tähden massaa): {s1} f. Lähde: exoplanet.eu, haettu {n0}-{n1}-{n2}.",
  "@js.83t0fxq80": {
   "x-review": "machine",
@@ -8060,6 +9450,11 @@
  "@js.843gyvqmqu": {
   "x-review": "machine",
   "x-source": "3e17a94f61"
+ },
+ "js.85o20tl248": "Vain Probes; Sentinels-arvioijia ei ajettu tässä esimerkissä.",
+ "@js.85o20tl248": {
+  "x-review": "machine",
+  "x-source": "51cdd6b9aa"
  },
  "js.87fibqymmi": "<b><a class=\"objlink\" data-planet=\"pi Men c\" href=\"/planets/pi-men-c/\">pi Men c</a></b> · isäntä <a class=\"objlink\" data-star=\"pi Men\" href=\"/stars/pi-men/\">pi Men</a> · P {n0} d · ylikulkeva",
  "@js.87fibqymmi": {
@@ -8071,10 +9466,20 @@
   "x-review": "machine",
   "x-source": "525240d9dd"
  },
+ "js.8dsi5vgdwn": "Kaistan lukema",
+ "@js.8dsi5vgdwn": {
+  "x-review": "machine",
+  "x-source": "bdee4599c8"
+ },
  "js.8egpktovvs": "Sen tallennettu perustelu kohteelle tess-04b815001aa6 (BTJD {n0}–{n1}), yksi kohdetta eikä notkahdusta kohden. Se ei merkinnyt tätä notkahdusta. Sentinel on tekoälymalli (Claude Code CLI (Claude, Anthropic) · oletus), ei ihminen.",
  "@js.8egpktovvs": {
   "x-review": "machine",
   "x-source": "c83add66bd"
+ },
+ "js.8gi70kbc2t": "Arviokirjanpito kohteelle tess-08a8c4eac6ff-{n0}",
+ "@js.8gi70kbc2t": {
+  "x-review": "machine",
+  "x-source": "87fb522f8a"
  },
  "js.8hvxg3y4pk": "exoplanet.eu merkitsee sen tilaan \"julkaistu vertaisarvioidussa artikkelissa\", havaittu menetelmällä Primary Transit (ensisijainen ylikulku) vuonna {n0}; tietue päivitetty {n1}-{n2}-{n3}. Tunnetaan myös nimellä {s0}.01.",
  "@js.8hvxg3y4pk": {
@@ -8086,6 +9491,11 @@
   "x-review": "machine",
   "x-source": "55c2123b04"
  },
+ "js.8jr233x5kb": "vaihetaitos · tallennetut epookkikohtaiset syvyydet · sekundaari-ikkuna",
+ "@js.8jr233x5kb": {
+  "x-review": "machine",
+  "x-source": "696c5c3ddd"
+ },
  "js.8kerd23auj": "Skenaario",
  "@js.8kerd23auj": {
   "x-review": "machine",
@@ -8096,10 +9506,20 @@
   "x-review": "machine",
   "x-source": "9f038999ec"
  },
+ "js.8m4io9irfs": "Seulonnan tulos kohteelle tess-291acb98cabe-{n0}: läpäisi seulonnan",
+ "@js.8m4io9irfs": {
+  "x-review": "machine",
+  "x-source": "2d2453a583"
+ },
  "js.8mxto2ce1b": "Zarka {n0}, JGR {n1}, {n2} (ulkoplaneettojen revontulten radiosäteily)",
  "@js.8mxto2ce1b": {
   "x-review": "machine",
   "x-source": "2369b5140e"
+ },
+ "js.8p2mas99a7": "Hylättyjä signaaleja: {n0}",
+ "@js.8p2mas99a7": {
+  "x-review": "machine",
+  "x-source": "e439fcbee0"
  },
  "js.8p7cdm54de": "amplitudi ×{n0} (H:n nollapisteen RMS ≈ {n1} Å); aikaa hidastettu ≈{n2}¹⁴-kertaisesti; atomien koot havainnollistavia",
  "@js.8p7cdm54de": {
@@ -8146,6 +9566,11 @@
   "x-review": "machine",
   "x-source": "f0cbc33340"
  },
+ "js.91p541h8ez": "Ylikulkukaista kohteelle tess-291acb98cabe-{n0}. Siirry tallennettujen lokeroiden läpi vasemmalla ja oikealla nuolinäppäimellä, Shiftillä kymmenen kerrallaan, Homella ja Endillä ääripäihin.",
+ "@js.91p541h8ez": {
+  "x-review": "machine",
+  "x-source": "62dcc86e76"
+ },
  "js.92zm5mb6ic": "merkintä",
  "@js.92zm5mb6ic": {
   "x-review": "machine",
@@ -8155,6 +9580,11 @@
  "@js.94m77w54ls": {
   "x-review": "machine",
   "x-source": "1bfdfd6128"
+ },
+ "js.96ov40dcc1": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E-{n2} · tess-f28323a4aef6-{n3}</span>",
+ "@js.96ov40dcc1": {
+  "x-review": "machine",
+  "x-source": "5e062e5c11"
  },
  "js.99gke0ye23": "Tunnetaan myös nimillä 2MASS J20012910+{n0}, KIC {n1}, KOI-{n2}, WISE J200129.09+{n3}.",
  "@js.99gke0ye23": {
@@ -8170,6 +9600,11 @@
  "@js.99l92touyk": {
   "x-review": "machine",
   "x-source": "fe909891f5"
+ },
+ "js.9a0000ypnt": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E1 · tess-fa3483ce6f83-{n2}</span>",
+ "@js.9a0000ypnt": {
+  "x-review": "machine",
+  "x-source": "3e91dc8c22"
  },
  "js.9btznf2bph": "Petigura, Howard &amp; Marcy {n0}, PNAS {n1}, {n2}",
  "@js.9btznf2bph": {
@@ -8201,6 +9636,11 @@
   "x-review": "machine",
   "x-source": "c59de88d11"
  },
+ "js.9dtnyisxfz": "<i class=\"k-pt\"></i>lokeroitu vuo ±{n0}σ (tallennettu)",
+ "@js.9dtnyisxfz": {
+  "x-review": "machine",
+  "x-source": "0acc9330c4"
+ },
  "js.9fd77kyg88": "Piirretty vain tallennetuista arvoista (exoplanet.eu). Ei tallennettu: planeetan säde, isoakselin puolikas; nämä osat ovat havainnollistavia, ja piirroksessa kerrotaan se.",
  "@js.9fd77kyg88": {
   "x-review": "machine",
@@ -8210,6 +9650,16 @@
  "@js.9fjwcrl3m8": {
   "x-review": "machine",
   "x-source": "6c293b1c67"
+ },
+ "js.9i8au7tt50": "<span class=\"glyph g-nm\"><span aria-hidden=\"true\">–</span> <span class=\"word\">ei mitattu</span></span> pariton / parillinen (signaalitaso)",
+ "@js.9i8au7tt50": {
+  "x-review": "machine",
+  "x-source": "c1b727c891"
+ },
+ "js.9icfdi1opf": "Vertailu tälle notkahdukselle: arkistossa ei planeettaa toleranssin sisällä (tällä notkahduksella ei ole BLS-jaksoa vertailtavaksi); pi Men c: ei ylikulkuefemeridiä vertailtavaksi.",
+ "@js.9icfdi1opf": {
+  "x-review": "machine",
+  "x-source": "d11e53c80a"
  },
  "js.9ipi38tplb": "Tähti",
  "@js.9ipi38tplb": {
@@ -8230,6 +9680,16 @@
  "@js.9k8z6cb24a": {
   "x-review": "machine",
   "x-source": "0b7a17f4f4"
+ },
+ "js.9km30r9ajz": "sekundaaripimennys (signaalitaso): ei läpäissyt. arvo {n0} ± {n1} ppm ({n2}σ). sääntö syvyys ≤ {n3}σ (yksisuuntainen). Notkahdus vaiheessa {n4} tarkoittaisi pimentävää kaksoistähteä. Mitataan kerran BLS-efemeridiä kohden vaiheessa {n5} kohteessa, ei notkahduskohtaisesti.",
+ "@js.9km30r9ajz": {
+  "x-review": "machine",
+  "x-source": "3931a5f508"
+ },
+ "js.9lmdiohpwt": "mitattu: {n0} ± {n1} ppm signaaliepookissa E-{n2} (S1-epookki {n3}, parillinen kohteessaan)",
+ "@js.9lmdiohpwt": {
+  "x-review": "machine",
+  "x-source": "f39997f4ad"
  },
  "js.9rxxbyaoyr": "Menetelmät: Populaatio ›",
  "@js.9rxxbyaoyr": {
@@ -8281,6 +9741,16 @@
   "x-review": "machine",
   "x-source": "7341e7aeeb"
  },
+ "js.a3ku47oknp": "tess-38b5a559eee2-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, merkitty tarkistettavaksi",
+ "@js.a3ku47oknp": {
+  "x-review": "machine",
+  "x-source": "bb7b5188d4"
+ },
+ "js.a4fn2pawxx": "tess-4b369d3c6f09-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, läpäisi seulonnan",
+ "@js.a4fn2pawxx": {
+  "x-review": "machine",
+  "x-source": "9b85c7b812"
+ },
  "js.a5ik0d45ok": "Piirretty vain tallennetuista arvoista (exoplanet.eu). Ei tallennettu: inklinaatio; nämä osat ovat havainnollistavia, ja piirroksessa kerrotaan se.",
  "@js.a5ik0d45ok": {
   "x-review": "machine",
@@ -8320,6 +9790,11 @@
  "@js.ai6mp83zpi": {
   "x-review": "machine",
   "x-source": "73d5db9ed8"
+ },
+ "js.al5vfqqan3": "Signaalitasoiksi merkityt rivit mitataan kerran BLS-efemeridiä kohden sen kaikkien epookkien yli kohteessa, ei notkahduskohtaisesti, joten jokainen saman kohteen notkahdus näyttää saman arvon (yhdistetty signaali näyttää kunkin kohteen oman arvon). σ-arvot ovat tallennettuja virheitä; Δ käyttää kaavaa √(σ_odd² + σ_even²), kuten seulontakoodi. <b>Pariton/parillinen- ja sekundaaritestit tehtiin vain kunkin kohteen sisällä; pariteetti numeroidaan kohteittain. Kohteiden välistä testiä ei ajettu.</b>",
+ "@js.al5vfqqan3": {
+  "x-review": "machine",
+  "x-source": "470c480137"
  },
  "js.am5y46ghie": "exoplanet.eu ilmoittaa sen tilaksi \"Julkaistu vertaisarvioidussa artikkelissa\", havaittu ensisijaisen ylikulun menetelmällä vuonna {n0}; tietue päivitetty {n1}-{n2}-{n3}. Tunnetaan myös nimellä TOI-{n4}.",
  "@js.am5y46ghie": {
@@ -8381,6 +9856,11 @@
   "x-review": "machine",
   "x-source": "fa1b7822f3"
  },
+ "js.b9esyveze4": "Ylikulkukaista kohteelle tess-04b815001aa6-{n0}. Siirry tallennettujen lokeroiden läpi vasemmalla ja oikealla nuolinäppäimellä, Shiftillä kymmenen kerrallaan, Homella ja Endillä ääripäihin.",
+ "@js.b9esyveze4": {
+  "x-review": "machine",
+  "x-source": "918e4a45f1"
+ },
  "js.bcz7f7521k": "tess-toi-{n0}-s5",
  "@js.bcz7f7521k": {
   "x-review": "machine",
@@ -8395,6 +9875,16 @@
  "@js.bh89hzwxey": {
   "x-review": "machine",
   "x-source": "dbb63ab7d4"
+ },
+ "js.bhjbxa1g2f": "epookki E7 · {n0}",
+ "@js.bhjbxa1g2f": {
+  "x-review": "machine",
+  "x-source": "f0de96425e"
+ },
+ "js.bkouiwyicw": "Sentinel · Skeptic <span class=\"mono hint\">claude-skeptic</span>: päällekkäisyys {n0} % ikkunasta, keskipisteiden ero {n1} d · laskettu",
+ "@js.bkouiwyicw": {
+  "x-review": "machine",
+  "x-source": "9849657e2d"
  },
  "js.ble3a04xr5": "v/c [laskettu]",
  "@js.ble3a04xr5": {
@@ -8415,6 +9905,16 @@
  "@js.bn4w24un71": {
   "x-review": "machine",
   "x-source": "717695fe17"
+ },
+ "js.bnd354do54": "Notkahduksen jaksollisen signaalin lohkobootstrap-kokeet; {n0} kokeella se läpäisee, kun k ≤ {n1}.",
+ "@js.bnd354do54": {
+  "x-review": "machine",
+  "x-source": "e016523874"
+ },
+ "js.bnk1ww0ail": "<span class=\"tagcand\">kandidaatti</span> TIC {n0} · TESS · kohde tess-5935bad1a3b4",
+ "@js.bnk1ww0ail": {
+  "x-review": "machine",
+  "x-source": "04fa97e175"
  },
  "js.bow0wbjsns": "Arvioija",
  "@js.bow0wbjsns": {
@@ -8441,6 +9941,11 @@
   "x-review": "machine",
   "x-source": "fa44132b23"
  },
+ "js.c0dyn81rg0": "Julkaistun planeetan WASP-{n0} b (P {n1} d) isäntätähti.",
+ "@js.c0dyn81rg0": {
+  "x-review": "machine",
+  "x-source": "8be46fbcbc"
+ },
  "js.c2ukn7s663": "HR {n0}:n planeetat kuvassa käyttävät exoplanet.eu:n isoakselin puolikkaita ja eksentrisyyksiä; niiden suunta taivaalla on havainnollistava, ja aikaa on tiivistetty. Eri instrumenttien kontrastit on mitattu eri erotuksilla, aallonpituuksilla ja merkitsevyyksillä, joten portaat eivät ole suoraan vertailukelpoisia.",
  "@js.c2ukn7s663": {
   "x-review": "machine",
@@ -8455,6 +9960,11 @@
  "@js.c8c4q46yd5": {
   "x-review": "machine",
   "x-source": "4c1a75f724"
+ },
+ "js.c9vxd72mro": "Arvioijia {n0}: Probes {n1}",
+ "@js.c9vxd72mro": {
+  "x-review": "machine",
+  "x-source": "37998faacb"
  },
  "js.cb64xtn8rx": "Mayor &amp; Queloz",
  "@js.cb64xtn8rx": {
@@ -8476,15 +9986,40 @@
   "x-review": "machine",
   "x-source": "ee9a9f279f"
  },
+ "js.ci9h2zgja2": "Seulonnan tulos kohteelle tess-997691b39aab-{n0}: hylätty seulonnassa",
+ "@js.ci9h2zgja2": {
+  "x-review": "machine",
+  "x-source": "4ff00942dc"
+ },
  "js.cjlgm738p9": "{n0} d ja {n1} d",
  "@js.cjlgm738p9": {
   "x-review": "machine",
   "x-source": "f3856d19f1"
  },
+ "js.cjrmwxopqm": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E0 · tess-997691b39aab-{n2}</span>",
+ "@js.cjrmwxopqm": {
+  "x-review": "machine",
+  "x-source": "014c57dd8d"
+ },
+ "js.clgbin9su7": "<b>Laskentasääntö:</b> merkinnät käsitellään alkamisajan mukaisessa järjestyksessä, ja merkintä liittyy klusteriin, kun sen väli on päällekkäinen klusterin välin kanssa tai sen keskipiste on enintään {n0} d:n päässä edellisen merkinnän keskipisteestä (välien single-linkage-klusterointi, aggregate.py); kukin arvioija lasketaan kerran, klusterin mediaanikeskipistettä lähimmällä merkinnällään; klusteri, jonka painotettu osuus on alle {n1}, hylätään, ja kahdesta samaa notkahdusta koskevasta klusterista säilytetään vain vahvempi.",
+ "@js.clgbin9su7": {
+  "x-review": "machine",
+  "x-source": "b901247ffb"
+ },
+ "js.cluml1d58n": "Arkisto: ei julkaistua planeettaa tämän notkahduksen toleranssin sisällä (julkaistujen planeettojen HD {n0} b (P {n1} d), HD {n2} c (P {n3} d) isäntätähti), tämän ajon tallennetusta ristiintunnistuksesta, haettu {n4}. lokakuuta {n5}. <span class=\"hint\">Vain arkiston arvot; tämä sivu ei väitä havaintoa kumpaankaan suuntaan.</span>",
+ "@js.cluml1d58n": {
+  "x-review": "machine",
+  "x-source": "3b7a8f11ad"
+ },
  "js.cmltxx23qe": "Erotus",
  "@js.cmltxx23qe": {
   "x-review": "machine",
   "x-source": "4d280a451d"
+ },
+ "js.cnmue1iwpb": "<span class=\"tagcand\">hylätty</span> TIC {n0} · TESS · kohde tess-01e315ee5ebf",
+ "@js.cnmue1iwpb": {
+  "x-review": "machine",
+  "x-source": "523d21b4cc"
  },
  "js.cqbvuhg505": "{n0} ± {n1} dex",
  "@js.cqbvuhg505": {
@@ -8510,6 +10045,11 @@
  "@js.cw9mds71rd": {
   "x-review": "machine",
   "x-source": "9a887fa10e"
+ },
+ "js.cxwqxvvox6": "ei BLS-jaksoa",
+ "@js.cxwqxvvox6": {
+  "x-review": "machine",
+  "x-source": "4e37c104d8"
  },
  "js.cy1n137jrs": "kohde",
  "@js.cy1n137jrs": {
@@ -8561,6 +10101,11 @@
   "x-review": "machine",
   "x-source": "cce102ab9f"
  },
+ "js.ddjgi6bm9a": "Vertailu tälle notkahdukselle: yhdenmukainen kohteen TOI-{n0} c kanssa: ΔP {n1} %, lähimmän epookin poikkeama {n2} min.",
+ "@js.ddjgi6bm9a": {
+  "x-review": "machine",
+  "x-source": "5ef0d78689"
+ },
  "js.ddkyfhp64x": "Roman Coronagraph -vaatimus (arXiv:{n0})",
  "@js.ddkyfhp64x": {
   "x-review": "machine",
@@ -8590,6 +10135,11 @@
  "@js.doh3ty5sx0": {
   "x-review": "machine",
   "x-source": "543066db36"
+ },
+ "js.dpc3qngai7": "<span class=\"glyph g-fail\"><span aria-hidden=\"true\">✕</span> <span class=\"word\">ei läpäissyt</span></span> syvyysraja",
+ "@js.dpc3qngai7": {
+  "x-review": "machine",
+  "x-source": "4611eb1cbf"
  },
  "js.dqusk8943q": "Taiteilijan näkemys kohteesta {s0}: kaasuvaipallinen planeetta lämpimällä vyöhykkeellä, {n0} Maan sädettä, {n1} K.",
  "@js.dqusk8943q": {
@@ -8635,6 +10185,11 @@
  "@js.dxzw3uw3f1": {
   "x-review": "machine",
   "x-source": "375e57748b"
+ },
+ "js.dy01eskd7v": "<span class=\"tagcand\">merkitty</span> TIC {n0} · TESS · kohde tess-f28323a4aef6",
+ "@js.dy01eskd7v": {
+  "x-review": "machine",
+  "x-source": "3814b49fbf"
  },
  "js.dyvum5yzhg": "pi Men c · tunnettu planeetta",
  "@js.dyvum5yzhg": {
@@ -8716,6 +10271,16 @@
   "x-review": "machine",
   "x-source": "886758e046"
  },
+ "js.eedp0q903q": "<span class=\"glyph g-fail\"><span aria-hidden=\"true\">✕</span> <span class=\"word\">ei läpäissyt</span></span> sekundaaripimennys (signaalitaso)",
+ "@js.eedp0q903q": {
+  "x-review": "machine",
+  "x-source": "b6166b2c51"
+ },
+ "js.ef23ref5bc": "Arviokirjanpito kohteelle tess-01e315ee5ebf-{n0}",
+ "@js.ef23ref5bc": {
+  "x-review": "machine",
+  "x-source": "96e97d0986"
+ },
  "js.efp4gp0ik9": "eB/({n0}π m_e), jossa SI {n1} e ja CODATA {n2} m_e [calc]",
  "@js.efp4gp0ik9": {
   "x-review": "machine",
@@ -8796,6 +10361,11 @@
   "x-review": "machine",
   "x-source": "a8d090dca5"
  },
+ "js.eywh1cnj1v": "Notkahdus tässä viittaisi pimentävään kaksoistähteen.",
+ "@js.eywh1cnj1v": {
+  "x-review": "machine",
+  "x-source": "414ef68930"
+ },
  "js.ezj0j9r7qc": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">3a. <span class=\"mono\">tess-d64ea73e32ac-{n0}</span>.</b> Notkahdus kohdassa BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkitsijöinä {n5} arvioijaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Sijoittuu {n6} päivän BLS-jaksolle, jossa {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkistoarvot. Tämä sivu ei väitä havaintoa.",
  "@js.ezj0j9r7qc": {
   "x-review": "machine",
@@ -8805,6 +10375,11 @@
  "@js.ezvtcsjukr": {
   "x-review": "machine",
   "x-source": "5cc29bec2d"
+ },
+ "js.f1b59f170t": "Ylikulkukaista kohteelle tess-4b369d3c6f09-{n0}. Siirry tallennettujen lokeroiden läpi vasemmalla ja oikealla nuolinäppäimellä, Shiftillä kymmenen kerrallaan, Homella ja Endillä ääripäihin.",
+ "@js.f1b59f170t": {
+  "x-review": "machine",
+  "x-source": "007084818b"
  },
  "js.f2cqt9wqlh": "pi Men c tunnistettiin uudelleen TESS-sektorin {n0} sokkohaussa",
  "@js.f2cqt9wqlh": {
@@ -8886,6 +10461,16 @@
   "x-review": "machine",
   "x-source": "4b95bb5814"
  },
+ "js.fmvsh6r3bg": "Sentinel · Volunteer <span class=\"mono hint\">claude-volunteer</span>: päällekkäisyys {n0} % ikkunasta, keskipisteiden ero {n1} d · laskettu",
+ "@js.fmvsh6r3bg": {
+  "x-review": "machine",
+  "x-source": "e452476e8c"
+ },
+ "js.frrzx43mfw": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisty</span></span> reuna",
+ "@js.frrzx43mfw": {
+  "x-review": "machine",
+  "x-source": "3496f4a752"
+ },
  "js.fthng1f5d1": "PSR B1257+{n0} b: ajoitusamplitudi",
  "@js.fthng1f5d1": {
   "x-review": "machine",
@@ -8955,6 +10540,11 @@
  "@js.g6m8lmxer6": {
   "x-review": "machine",
   "x-source": "afddd8da0f"
+ },
+ "js.g7xfgx0pr": "kohde tess-291acb98cabe: BLS P {n0} d, t0 {n1}, kesto {n2} h, ylikulkuja {n3}, notkahduksia {n4}",
+ "@js.g7xfgx0pr": {
+  "x-review": "machine",
+  "x-source": "efb1e538b2"
  },
  "js.g8babm0gur": "merkintä {n0}",
  "@js.g8babm0gur": {
@@ -9031,6 +10621,11 @@
   "x-review": "machine",
   "x-source": "7d18c2bfa7"
  },
+ "js.gk8bxjg8d1": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisty</span></span> ei hylkäävää merkintää, efemeridin mukainen",
+ "@js.gk8bxjg8d1": {
+  "x-review": "machine",
+  "x-source": "0ebcd3efe2"
+ },
  "js.gkpczuxku3": "Menetelmät: Radiaalinopeus ›",
  "@js.gkpczuxku3": {
   "x-review": "machine",
@@ -9061,6 +10656,11 @@
   "x-review": "machine",
   "x-source": "cb61f74667"
  },
+ "js.gpeimsxr4u": "E2 · {n0} · {n1} ppm · <span class=\"g-fail\"><span aria-hidden=\"true\">✕</span> hylätty</span>",
+ "@js.gpeimsxr4u": {
+  "x-review": "machine",
+  "x-source": "091854d5a5"
+ },
  "js.gpgvbld6hu": "O₂:n kanssa se muodostaa klassisen epätasapainoparin, jota biosfääri voisi ylläpitää.",
  "@js.gpgvbld6hu": {
   "x-review": "machine",
@@ -9070,6 +10670,11 @@
  "@js.gplu2k76y8": {
   "x-review": "machine",
   "x-source": "6f0127f52b"
+ },
+ "js.gpwfcr19ox": "Kohdekohtaiset BLS-tulokset",
+ "@js.gpwfcr19ox": {
+  "x-review": "machine",
+  "x-source": "3693abb251"
  },
  "js.gpznjdo7y3": "pi Men · {n0} K",
  "@js.gpznjdo7y3": {
@@ -9121,6 +10726,11 @@
   "x-review": "machine",
   "x-source": "0558cdcc17"
  },
+ "js.h52wrpq6jf": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E2 · tess-5935bad1a3b4-{n2}</span>",
+ "@js.h52wrpq6jf": {
+  "x-review": "machine",
+  "x-source": "70ec09f706"
+ },
  "js.h7w0aucqz0": "{s0} piirrettynä mustan kappaleen värissään, {n0} K, säde {n1} R☉.",
  "@js.h7w0aucqz0": {
   "x-review": "machine",
@@ -9156,6 +10766,11 @@
   "x-review": "machine",
   "x-source": "5e98272f4a"
  },
+ "js.hk6ayt0h9f": "sekundaaripimennys (signaalitaso): läpäisty. arvo {n0} ± {n1} ppm ({n2}σ). sääntö syvyys ≤ {n3}σ (yksisuuntainen). Notkahdus vaiheessa {n4} tarkoittaisi pimentävää kaksoistähteä. Mitataan kerran BLS-efemeridiä kohden vaiheessa {n5} kohteessa, ei notkahduskohtaisesti.",
+ "@js.hk6ayt0h9f": {
+  "x-review": "machine",
+  "x-source": "b3913480e6"
+ },
  "js.hm9hgq68bx": "vaihtelu, jonka jakso on puolet pimennyskaksoisen notkahduksen jaksosta ({n0} d)",
  "@js.hm9hgq68bx": {
   "x-review": "machine",
@@ -9181,10 +10796,25 @@
   "x-review": "machine",
   "x-source": "4653c87d87"
  },
+ "js.hu3q15qrtx": "Signaali P {n0} d <span class=\"dipid\">· notkahdus E1 · tess-08a8c4eac6ff-{n1}</span>",
+ "@js.hu3q15qrtx": {
+  "x-review": "machine",
+  "x-source": "2da292b84d"
+ },
+ "js.hubexyw5jk": "Sentinels-arvioijat toimivat oletuksena Claude-mallilla (Anthropic); muita palveluntarjoajia tuetaan, ja ne merkitään. Probes ovat deterministisiä sovitetun suodattimen ilmaisimia. Vain Probes; Sentinels-arvioijia ei ajettu tässä esimerkissä.<br>ajo {n0}-{n1}-22T17:{n2}+{n3} · konfiguraatio 23bb51a268efd59e · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-5935bad1a3b4-{n8} · signaali tess-5935bad1a3b4-P3.2875+{n9} · kohde tess-5935bad1a3b4<br>ristiintunnistus: NASA Exoplanet Archive, taulu ps (default_flag = {n10}) · tila: täsmätty",
+ "@js.hubexyw5jk": {
+  "x-review": "machine",
+  "x-source": "38aa3d5b59"
+ },
  "js.hv6t0hplex": "Ajoraportti · tess-toi-{n0}-s2",
  "@js.hv6t0hplex": {
   "x-review": "machine",
   "x-source": "6e8136a410"
+ },
+ "js.hwu1vdqh9t": "Tarkistus",
+ "@js.hwu1vdqh9t": {
+  "x-review": "machine",
+  "x-source": "9d60841e0a"
  },
  "js.hxrze2tp9n": "TOI-{n0}: jakso, rata ja notkahduksen syvyys",
  "@js.hxrze2tp9n": {
@@ -9205,6 +10835,11 @@
  "@js.i0oslgmnao": {
   "x-review": "machine",
   "x-source": "f7ffe43a9a"
+ },
+ "js.i1bhirm7mf": "E3 · {n0} · {n1} ppm · <span class=\"g-pass\"><span aria-hidden=\"true\">✓</span> läpäisi</span>",
+ "@js.i1bhirm7mf": {
+  "x-review": "machine",
+  "x-source": "a4d70d395f"
  },
  "js.i26lmqs302": "<a href=\"/stars/kelt-9-a/\">{s0}</a> · Ylikulku · löydetty {n0} · Kaasujättiläinen",
  "@js.i26lmqs302": {
@@ -9231,6 +10866,11 @@
   "x-review": "machine",
   "x-source": "a70d06f895"
  },
+ "js.i8831xy9nr": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E0 · tess-4b369d3c6f09-{n2}</span>",
+ "@js.i8831xy9nr": {
+  "x-review": "machine",
+  "x-source": "3a4f9de6a3"
+ },
  "js.i9szuac1he": "Radiaalinopeus · {n0} d",
  "@js.i9szuac1he": {
   "x-review": "machine",
@@ -9245,6 +10885,16 @@
  "@js.ia1ptwkzz5": {
   "x-review": "machine",
   "x-source": "fdf9b0497f"
+ },
+ "js.idkkr0ieib": "Merkittyjä signaaleja: {n0}",
+ "@js.idkkr0ieib": {
+  "x-review": "machine",
+  "x-source": "ab6be0264e"
+ },
+ "js.ifj3cm6qgx": "mitattu: {n0} ± {n1} ppm signaaliepookissa E-{n2} + {n3} (S1-epookki {n4} + {n5}, pariton kohteessaan)",
+ "@js.ifj3cm6qgx": {
+  "x-review": "machine",
+  "x-source": "9164676bc2"
  },
  "js.ihg2rdut1v": "{n0} ppm",
  "@js.ihg2rdut1v": {
@@ -9300,6 +10950,16 @@
  "@js.ivmc2ewvqs": {
   "x-review": "machine",
   "x-source": "823e292dd5"
+ },
+ "js.ivpj3eeifm": "kesto",
+ "@js.ivpj3eeifm": {
+  "x-review": "machine",
+  "x-source": "caa79af4db"
+ },
+ "js.iwecr5gk7a": "kohde tess-01e315ee5ebf: BLS P {n0} d, t0 {n1}, kesto {n2} h, ylikulkuja {n3}, notkahduksia {n4}",
+ "@js.iwecr5gk7a": {
+  "x-review": "machine",
+  "x-source": "1ff4aad453"
  },
  "js.iwzb9hrlb1": "Tähti mustan kappaleen värissään planeetan ylittäessä sen sekä reunapimennetty mallivalokäyrä, jonka päälle on piirretty tämän notkahduksen tallennetut pisteet.",
  "@js.iwzb9hrlb1": {
@@ -9361,15 +11021,35 @@
   "x-review": "machine",
   "x-source": "dc4da1dee3"
  },
+ "js.jfk9ux7wcb": "Sentinels-arvioijat toimivat oletuksena Claude-mallilla (Anthropic); muita palveluntarjoajia tuetaan, ja ne merkitään. Probes ovat deterministisiä sovitetun suodattimen ilmaisimia.<br>ajo {n0}-{n1}-21T11:{n2}+{n3} · konfiguraatio 585955d5e7a1d141 · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7} · Sentinels: Claude Code CLI (Claude, Anthropic) oletus; Claude Code CLI (Claude, Anthropic) oletus<br>kandidaatti tess-04b815001aa6-{n8} · signaali tess-fa3483ce6f83-P6.2726+{n9} · kohde tess-04b815001aa6<br>ristiintunnistus: NASA Exoplanet Archive, taulu ps (default_flag = {n10}), sellaisena kuin scripts/validate_known_planets.py on sen kirjannut tiedostoon docs/results/pi_men_validation.md (suora arkistokysely, commit 0f6dbdc). Siihen on kirjattu vain pi Men c, joten vain pi Men c luetellaan; sen ylikulun keskiaikaa ei kirjattu, joten epookkikohtaista poikkeamaa ei lasketa tässä; sen sijaan viitataan validointimuistion keskimääräiseen ajoituspoikkeamaan ({n11} min, {n12} epookista {n13}:stä). Korvaa se komennon 'setuhq crossmatch runs/tess-pi-men-s1' tulosteella, kun arkisto vastaa. · tila: täsmätty",
+ "@js.jfk9ux7wcb": {
+  "x-review": "machine",
+  "x-source": "f7ca78a797"
+ },
  "js.jk0yg8jlaw": "<b>ν₃ epäsymmetrinen venytysvärähtely (kaksi)</b> · {n0} µm · infrapuna-aktiivinen · piirretty ×{n1} · ei piirretty sivulla Ilmakehien tulkinta",
  "@js.jk0yg8jlaw": {
   "x-review": "machine",
   "x-source": "e60eee2c2f"
  },
+ "js.jk219zcx7e": "mahdollinen planeetta · {n0} merkintää",
+ "@js.jk219zcx7e": {
+  "x-review": "machine",
+  "x-source": "99ca571286"
+ },
  "js.jl92gnkaes": "vaihtelua pimennysmuuttujan notkahduksen jaksolla ({n0} d)",
  "@js.jl92gnkaes": {
   "x-review": "machine",
   "x-source": "6e5bb6434b"
+ },
+ "js.jlftd1zxir": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E5 · tess-291acb98cabe-{n2}</span>",
+ "@js.jlftd1zxir": {
+  "x-review": "machine",
+  "x-source": "55e691f734"
+ },
+ "js.jlrdlin7l6": "mitattu: {n0} ± {n1} ppm signaalin epookissa E1 + {n2} (S1-epookki {n3} + {n4}, pariton kohteessaan)",
+ "@js.jlrdlin7l6": {
+  "x-review": "machine",
+  "x-source": "9932e8f4b9"
  },
  "js.jpr5disfh3": "{n0} km Auringon keskipisteestä",
  "@js.jpr5disfh3": {
@@ -9441,10 +11121,25 @@
   "x-review": "machine",
   "x-source": "315be86206"
  },
+ "js.kb23bgbcgb": "kohde tess-4b369d3c6f09: BLS P {n0} d, t0 {n1}, kesto {n2} h, {n3} ylikulkua, {n4} notkahdusta · epookkinumeroiden viite",
+ "@js.kb23bgbcgb": {
+  "x-review": "machine",
+  "x-source": "2fd11ddaad"
+ },
+ "js.kbcz9t2thd": "tess-f28323a4aef6-{n0}, epookki {n1}, {n2} BTJD, {n3} ppm, SNR {n4}, läpäisi tarkastuksen",
+ "@js.kbcz9t2thd": {
+  "x-review": "machine",
+  "x-source": "c89a7cc5dd"
+ },
  "js.kd9esqd5jz": "Inklinaatio",
  "@js.kd9esqd5jz": {
   "x-review": "machine",
   "x-source": "e1a57232e1"
+ },
+ "js.kfqpegy69d": "<i class=\"k-lane\"></i>arvioijien merkinnät, kullakin oma kaistansa · SEN = Sentinel (tekoälymalli, oletuksena Claude; palveluntarjoaja kunkin nimen vieressä; ei ihminen), PRB = Probe (deterministinen sovitetun suotimen ilmaisin; ei ihminen)",
+ "@js.kfqpegy69d": {
+  "x-review": "machine",
+  "x-source": "ee522e6254"
  },
  "js.kfwzhau4zj": "Avoin · merkitty tarkistettavaksi",
  "@js.kfwzhau4zj": {
@@ -9516,6 +11211,11 @@
   "x-review": "machine",
   "x-source": "3719e30dec"
  },
+ "js.kx9sqgkpy8": "mitattu: {n0} ± {n1} ppm signaalin epookissa E-{n2} + {n3} (S1-epookki {n4} + {n5}, parillinen kohteessaan)",
+ "@js.kx9sqgkpy8": {
+  "x-review": "machine",
+  "x-source": "ea11ab6d9e"
+ },
  "js.ky3ihq9npw": "exoplanet.eu",
  "@js.ky3ihq9npw": {
   "x-review": "machine",
@@ -9561,6 +11261,16 @@
   "x-review": "machine",
   "x-source": "1320fb8345"
  },
+ "js.l9gmjq4pdn": "Sentinel · Volunteer <span class=\"mono hint\">claude-volunteer</span>: päällekkäisyys {n0} % ikkunasta, ei merkintää ikkunan kohdalla · ei laskettu",
+ "@js.l9gmjq4pdn": {
+  "x-review": "machine",
+  "x-source": "6e77396472"
+ },
+ "js.lb4iqtekyx": "Laajuus: BLS-haku ja sen epookit koskevat {n0} päivän kohdetta, eivät yksittäistä TESS-sektoria. BLS-jakso {n1} d (ei planeetan), t0 {n2}, kesto {n3} h; tässä kohteessa mitattiin {n4} ennustettua epookkia. Syvyys ja kesto ovat konsensusikkunan mitattuja arvoja.",
+ "@js.lb4iqtekyx": {
+  "x-review": "machine",
+  "x-source": "7ef1e31bc1"
+ },
  "js.ld9w44gi97": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-known\">tunnettu TOI-jakso</span><b class=\"fig\">2l. <span class=\"mono\">tess-9ee4d1595a06-{n0}</span>.</b> Notkahdus hetkellä BTJD {n1}, {n2} ppm, {n3} h, SNR {n4}. Merkinnyt {n5} tarkastajaa (luettelo ei tallenna paneelin kokoa eikä konsensusväliä). Osuu {n6} päivän BLS-jaksolle, jolla on {n7} ylikulkua. Tila: jakso vastaa tunnettua TOI:ta. Vain arkiston arvot. Tämä sivu ei väitä havaintoa.",
  "@js.ld9w44gi97": {
   "x-review": "machine",
@@ -9601,6 +11311,21 @@
   "x-review": "machine",
   "x-source": "a266923843"
  },
+ "js.loo0g2tfa4": "Sentinels käyttävät oletuksena mallia Claude (Anthropic); muita palveluntarjoajia tuetaan ja ne merkitään. Probes ovat deterministisiä sovitetun suotimen ilmaisimia. Vain Probes; Sentinels-arvioijia ei ajettu tässä esimerkissä.<br>ajo {n0}-{n1}-22T18:{n2}+{n3} · konfiguraatio e60af3c4e98d4a76 · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-4b369d3c6f09-{n8} · signaali tess-4b369d3c6f09-P5.6561+{n9} · kohde tess-4b369d3c6f09<br>ristiintunnistus: NASA Exoplanet Archive, taulukko ps (default_flag = {n10}) · tila: täsmätty",
+ "@js.loo0g2tfa4": {
+  "x-review": "machine",
+  "x-source": "7905190112"
+ },
+ "js.lrqy5iom6r": "<i class=\"k-hatch\"></i>ei laskettu: ei päällekkäin minkään lasketun merkinnän kanssa ja keskikohta yli {n0} d jokaisesta lasketusta merkinnästä",
+ "@js.lrqy5iom6r": {
+  "x-review": "machine",
+  "x-source": "83139b79e4"
+ },
+ "js.lu397nr60r": "Syötteeseen ottamisen säännöt (discover.py), eivät tarkastussääntöjä · ei otettu syötteeseen",
+ "@js.lu397nr60r": {
+  "x-review": "machine",
+  "x-source": "c11b2d822f"
+ },
  "js.lugtea4b2c": "Taulukko, vierittyy sivuttain kapealla näytöllä",
  "@js.lugtea4b2c": {
   "x-review": "machine",
@@ -9630,6 +11355,11 @@
  "@js.lw65o9fun9": {
   "x-review": "machine",
   "x-source": "aaeef432b6"
+ },
+ "js.lw8lrhp5d1": "Arkisto: tämän notkahduksen toleranssin sisällä ei ole julkaistua planeettaa (julkaistujen planeettojen TOI-{n0} b (P {n1} d), TOI-{n2} c (P {n3} d), TOI-{n4} d (P {n5} d) isäntä), tämän ajon tallennetusta ristiintunnistuksesta, haettu {n6}. lokakuuta {n7}. <span class=\"hint\">Vain arkiston arvoja; tämä sivu ei väitä havaintoa suuntaan eikä toiseen.</span>",
+ "@js.lw8lrhp5d1": {
+  "x-review": "machine",
+  "x-source": "066312e135"
  },
  "js.lwgs6hcwj2": "{n0} planeetta exoplanet.eu:ssa · tallennettu tyyppi DA · luokka B Teff:n perusteella (lähin B5V)",
  "@js.lwgs6hcwj2": {
@@ -9721,15 +11451,30 @@
   "x-review": "machine",
   "x-source": "3f269a446d"
  },
+ "js.mjqr35yoho": "efemeridi: läpäisty. arvo: efemeridillä. sääntö: efemeridillä. Ei selity tähden voimakkaalla jaksollisella signaalilla.",
+ "@js.mjqr35yoho": {
+  "x-review": "machine",
+  "x-source": "7c3cd69356"
+ },
  "js.mkc9jxfgbz": "merkityt notkahdukset",
  "@js.mkc9jxfgbz": {
   "x-review": "machine",
   "x-source": "94e146b4e3"
  },
+ "js.mlkt5jeoyp": "Ylikulkunauha kohteelle tess-08a8c4eac6ff-{n0}. Siirry tallennettujen lokeroiden läpi vasemmalla ja oikealla nuolinäppäimellä, Shift-näppäimellä kymmenen kerrallaan, Home- ja End-näppäimillä päihin.",
+ "@js.mlkt5jeoyp": {
+  "x-review": "machine",
+  "x-source": "f3355d9373"
+ },
  "js.mlrhcayzxr": "Tila on kirjoitettu sanana jokaisen värin viereen.",
  "@js.mlrhcayzxr": {
   "x-review": "machine",
   "x-source": "4775478abc"
+ },
+ "js.mmkfbu9i9m": "Ylikulkunauha kohteelle tess-f28323a4aef6-{n0}. Siirry tallennettujen lokeroiden läpi vasemmalla ja oikealla nuolinäppäimellä, Shift-näppäimellä kymmenen kerrallaan, Home- ja End-näppäimillä päihin.",
+ "@js.mmkfbu9i9m": {
+  "x-review": "machine",
+  "x-source": "771dc0d534"
  },
  "js.mmnswive1w": "<i aria-hidden=\"true\"></i>Purkaus",
  "@js.mmnswive1w": {
@@ -9750,6 +11495,11 @@
  "@js.mnc4jsexu9": {
   "x-review": "machine",
   "x-source": "0882c3b8b4"
+ },
+ "js.mpabb4gyfm": "pariton / parillinen (signaalitaso): ei mitattu. arvo –. sääntö |Δ| ≤ {n0}σ, σ = √(σ_odd² + σ_even²). Vuorottelevat syvyydet tarkoittaisivat kaksoistähteä kaksinkertaisella jaksolla. Mitataan kerran kutakin BLS-efemeridiä kohden kaikista sen epookeista kohteessa, ei notkahduskohtaisesti. Tätä tarkistusta ei ajettu, joten se ei ole läpäisty.",
+ "@js.mpabb4gyfm": {
+  "x-review": "machine",
+  "x-source": "b129fd1f07"
  },
  "js.mqj6wfaw6h": "Ross {n0}",
  "@js.mqj6wfaw6h": {
@@ -9775,6 +11525,11 @@
  "@js.mwjxjvzia1": {
   "x-review": "machine",
   "x-source": "c9129025bd"
+ },
+ "js.mwnz1nvt8r": "mitattu: {n0} ± {n1} ppm signaalin epookissa E4 + {n2} (S2-epookki {n3} + {n4}, parillinen kohteessaan)",
+ "@js.mwnz1nvt8r": {
+  "x-review": "machine",
+  "x-source": "1e89fc718c"
  },
  "js.mwv88v3dkm": "δ_obs = δ_true · F_target/F_total [calc]: pienen planeetan syvyys",
  "@js.mwv88v3dkm": {
@@ -9810,6 +11565,11 @@
  "@js.n8ku2ga21": {
   "x-review": "machine",
   "x-source": "e5c09dee94"
+ },
+ "js.nb0h0yhll8": "syvyysraja: läpäisty. arvo {n0} ppm. sääntö ≤ {n1} ppm. Syvemmät notkahdukset ovat lähes aina kaksoistähtiä; ne pidetään syötteen ulkopuolella.",
+ "@js.nb0h0yhll8": {
+  "x-review": "machine",
+  "x-source": "798ce125ab"
  },
  "js.nb8kni7i3e": "exoplanet.eu luettelee sen tilalla \"Ilmoitettu verkkosivustolla\", havaittu ensisijaisen ylikulun menetelmällä vuonna {n0}; tietue päivitetty {n1}-{n2}-{n3}. Tunnetaan myös nimillä KOI-{n4} b, KOI-{n5}.",
  "@js.nb8kni7i3e": {
@@ -10006,6 +11766,11 @@
   "x-review": "machine",
   "x-source": "6725e7bbcd"
  },
+ "js.outlb7jg7g": "Signaali P {n0} / {n1} d <span class=\"dipid\">· notkahdus E3 · tess-04b815001aa6-{n2}</span>",
+ "@js.outlb7jg7g": {
+  "x-review": "machine",
+  "x-source": "06198ff084"
+ },
  "js.owcet74poz": "Arvo ja lähde",
  "@js.owcet74poz": {
   "x-review": "machine",
@@ -10040,6 +11805,11 @@
  "@js.p2avw012dk": {
   "x-review": "machine",
   "x-source": "6f82ddb801"
+ },
+ "js.p3shwgggn1": "{n0} signaali · {n1} notkahdusta",
+ "@js.p3shwgggn1": {
+  "x-review": "machine",
+  "x-source": "896db85b45"
  },
  "js.p4vg8hpjdy": "Alkuperä",
  "@js.p4vg8hpjdy": {
@@ -10081,10 +11851,20 @@
   "x-review": "machine",
   "x-source": "1817856093"
  },
+ "js.pbciipy0jt": "kohde tess-f28323a4aef6 · {n0} notkahdus",
+ "@js.pbciipy0jt": {
+  "x-review": "machine",
+  "x-source": "4b67f392a5"
+ },
  "js.pbsogd4kq5": "HWO UV- ja näkyvän valon alueella; keski-infrapunan missiot, kuten LIFE, {n0} µm:ssä",
  "@js.pbsogd4kq5": {
   "x-review": "machine",
   "x-source": "7ebfa8be42"
+ },
+ "js.pcpx14s6yq": "Siirry signaalien ja notkahdusten luetteloon",
+ "@js.pcpx14s6yq": {
+  "x-review": "machine",
+  "x-source": "4defa0d393"
  },
  "js.pd4w5w3ixh": "Aurinko <span class=\"tsk\">{n0} K</span>",
  "@js.pd4w5w3ixh": {
@@ -10116,6 +11896,11 @@
   "x-review": "machine",
   "x-source": "8af0e1186f"
  },
+ "js.pj7ff6n4ud": "<i class=\"k-box\"></i>reunatummenemasovitus (tallennettu)",
+ "@js.pj7ff6n4ud": {
+  "x-review": "machine",
+  "x-source": "1a062c541d"
+ },
  "js.plc8aabpyy": "Kaasukehälaboratorio: mallinnettu transmissiospektri väliltä {n0}–{n1} mikrometriä päälle kytketyille molekyyleille valitulla lämpötilalla, keskimääräisellä molekyylipainolla ja vöiden voimakkuudella, ja WASP-{n2} b:n JWST-pisteet päällä, kun ne on ladattu.",
  "@js.plc8aabpyy": {
   "x-review": "machine",
@@ -10146,10 +11931,25 @@
   "x-review": "machine",
   "x-source": "d10a0bbe1b"
  },
+ "js.psdvzd0bzs": "mitattu: {n0} ± {n1} ppm signaalin epookissa E7 (S2-epookki {n2}, pariton kohteessaan)",
+ "@js.psdvzd0bzs": {
+  "x-review": "machine",
+  "x-source": "3a888f66ec"
+ },
  "js.ptbumfozit": "Planeetta tekee ylikulun vain, jos sen rata on riittävän tarkasti linjassa näkösäteemme kanssa. Satunnaisilla asennoilla todennäköisyys on noin R★/a, eli tähden säde jaettuna radan koolla (Winn {n0}). Lähellä suuria tähtiä kiertävät planeetat tekevät ylikulkuja useammin.",
  "@js.ptbumfozit": {
   "x-review": "machine",
   "x-source": "f328a02e1b"
+ },
+ "js.py04u4jy1h": "mitattu: {n0} ± {n1} ppm signaalin epookissa E5 (S2-epookki {n2}, pariton kohteessaan)",
+ "@js.py04u4jy1h": {
+  "x-review": "machine",
+  "x-source": "1fc7dd980c"
+ },
+ "js.pyplgwqgpn": "Probe · Cautious <span class=\"mono hint\">volunteer-cautious</span>: päällekkäisyys {n0} % ikkunasta, keskikohtien ero {n1} d · laskettu",
+ "@js.pyplgwqgpn": {
+  "x-review": "machine",
+  "x-source": "863eb96d8f"
  },
  "js.q16nkjtwd0": "tess-291acb98cabe-{n0}",
  "@js.q16nkjtwd0": {
@@ -10165,6 +11965,16 @@
  "@js.q3zvdlmvza": {
   "x-review": "machine",
   "x-source": "8136a9c855"
+ },
+ "js.q7cw1hh8gs": "kohde tess-997691b39aab: BLS P {n0} d, t0 {n1}, kesto {n2} h, {n3} ylikulkua, {n4} notkahdusta · epookkinumeroiden viite",
+ "@js.q7cw1hh8gs": {
+  "x-review": "machine",
+  "x-source": "e9eba3f515"
+ },
+ "js.q9ptga95x9": "mitattu: {n0} ± {n1} ppm signaalin epookissa E1 + {n2} (S2-epookki {n3} + {n4}, pariton kohteessaan)",
+ "@js.q9ptga95x9": {
+  "x-review": "machine",
+  "x-source": "4db3f8e5c1"
  },
  "js.qad4ea3nk7": "Rossiter–McLaughlin, HD {n0} b (mitattu V sin I)",
  "@js.qad4ea3nk7": {
@@ -10196,6 +12006,11 @@
   "x-review": "machine",
   "x-source": "c9229a2831"
  },
+ "js.qgw6f4ykqg": "<span>sovitus</span>yhteinen signaalin {n0} epookin yli (V-muoto- ja tiheysliput ovat signaalitasoisia; pariton/parillinen on edelleen notkahduskohtainen tarkistus)",
+ "@js.qgw6f4ykqg": {
+  "x-review": "machine",
+  "x-source": "4b35e7f51b"
+ },
  "js.qhdabq6seu": "{n0} kohdetta",
  "@js.qhdabq6seu": {
   "x-review": "machine",
@@ -10220,6 +12035,16 @@
  "@js.qnq290e1mh": {
   "x-review": "machine",
   "x-source": "236e694611"
+ },
+ "js.qp6299lvyb": "<span class=\"caret\" aria-hidden=\"true\"></span>Kohde asiayhteydessään",
+ "@js.qp6299lvyb": {
+  "x-review": "machine",
+  "x-source": "e8a7863523"
+ },
+ "js.qqxv4fq3oj": "Lähde: NASA Exoplanet Archive, taulukko ps (default_flag = {n0}), sellaisena kuin scripts/validate_known_planets.py on sen kirjannut tiedostoon docs/results/pi_men_validation.md (reaaliaikainen arkistokysely, commit 0f6dbdc). Sinne on kirjattu vain pi Men c, joten vain pi Men c on luettelossa; sen ylikulun keskiaikaa ei kirjattu, joten epookkikohtaista poikkeamaa ei lasketa tässä; sen sijaan viitataan validointimuistion keskimääräiseen ajoituspoikkeamaan ({n1} min, {n2} epookkia {n3}:sta). Korvaa se komennon 'setuhq crossmatch runs/tess-pi-men-s1' tulosteella, kun arkisto vastaa.",
+ "@js.qqxv4fq3oj": {
+  "x-review": "machine",
+  "x-source": "af7294379a"
  },
  "js.qqyyhp10qa": "Taiteilijan näkemys · kaasuverho, lauhkea · Säde {n0} R⊕ (exoplanet.eu) on vähintään {n1} R⊕, joten se on piirretty kaasuverhon kanssa. Teq {n2} K, laskettu arvoista a, R★ ja Teff, on lauhkealla vyöhykkeellä. Koostumusta ei ole mitattu. Lähde: exoplanet.eu, haettu {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Miten kuvat piirretään ›</a>",
  "@js.qqyyhp10qa": {
@@ -10251,6 +12076,11 @@
   "x-review": "machine",
   "x-source": "6b5c209e01"
  },
+ "js.qwtcnyujbh": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisty</span></span> väärän hälytyksen todennäköisyys",
+ "@js.qwtcnyujbh": {
+  "x-review": "machine",
+  "x-source": "5262b32a70"
+ },
  "js.qzjv361uum": "Taiteilijan näkemys kohteesta {s0}: koostumukseltaan tuntematon planeetta, sädettä ei mitattu ({n0} Maan massaa), säteilytystä ei voida laskea.",
  "@js.qzjv361uum": {
   "x-review": "machine",
@@ -10280,6 +12110,11 @@
  "@js.r7r5ll60un": {
   "x-review": "machine",
   "x-source": "e3d11da4dd"
+ },
+ "js.r8flbiq2o1": "Ei selity tähden voimakkaalla jaksollisella signaalilla.",
+ "@js.r8flbiq2o1": {
+  "x-review": "machine",
+  "x-source": "59f098b231"
  },
  "js.r8opy5qens": "n_e, logaritminen asteikko",
  "@js.r8opy5qens": {
@@ -10311,6 +12146,16 @@
   "x-review": "machine",
   "x-source": "7423c8db69"
  },
+ "js.rpy0uj05ln": "{n0} signaalia · {n1} notkahdusta",
+ "@js.rpy0uj05ln": {
+  "x-review": "machine",
+  "x-source": "5ccb71fbff"
+ },
+ "js.rwst3hu41u": "signaalin epookki E1 + {n0} (S1-epookki {n1} + {n2}, pariton kohteessaan): ikkunassa ei tallennettuja pisteitä ({n3} pistettä)",
+ "@js.rwst3hu41u": {
+  "x-review": "machine",
+  "x-source": "8a6e849b28"
+ },
  "js.rxmggywrd4": "Taiteilijan näkemys kohteesta {s0}: kivinen planeetta kuumalla vyöhykkeellä, {n0} Maan sädettä, {n1} K.",
  "@js.rxmggywrd4": {
   "x-review": "machine",
@@ -10320,6 +12165,11 @@
  "@js.ryok7teocf": {
   "x-review": "machine",
   "x-source": "35fb682c2e"
+ },
+ "js.ryu4jkzjgm": "mitattu: {n0} ± {n1} ppm signaalin epookissa E3 (S2-epookki {n2}, parillinen kohteessaan)",
+ "@js.ryu4jkzjgm": {
+  "x-review": "machine",
+  "x-source": "257f33bfdb"
  },
  "js.rz4muj7f3d": "tunniste tic197760286-s1-dip-{n0} · kohde tess-1620392725df<br>valokäyrän sha256 493ab33d71db6f3f75a9a0f717eb87e3d6540ac6bbc1ccf9e7ca4d2fd8153ba9<br>koodi … · konfiguraatio a9d34c7079563183…<br>lähde sector_0001.json.gz",
  "@js.rz4muj7f3d": {
@@ -10436,6 +12286,11 @@
   "x-review": "machine",
   "x-source": "bcd5903c63"
  },
+ "js.sroztg6p4u": "<span class=\"xm-k\">Syötteeseen ottamisen sääntö (discover.py), ei tarkastussääntö:</span> ei otettu syötteeseen · ei poissulkevaa lippua, efemeridillä, jaksollinen tuki, väärän hälytyksen todennäköisyys, nähty molemmissa sektoreissa",
+ "@js.sroztg6p4u": {
+  "x-review": "machine",
+  "x-source": "d06bc59f7f"
+ },
  "js.sryiimcij": "Kepler-{n0}-järjestelmä ylhäältä: kukin planeetta himmentää tähden valoa, kun se ylittää näkösäteen havaitsijaan. Ratojen koot ovat tallennetut isoakselin puolikkaat (tai Keplerin kolmannesta laista jakson ja tähden massan perusteella); notkon syvyys on (Rp/R★)² tallennetuista säteistä. Ympyräradat, tähti ja planeetat eivät ole mittakaavassa, vaiheet ovat havainnollistavia (ylikulkuaikoja ei ole tallennettu). Lähde: The Extrasolar Planets Encyclopaedia (exoplanet.eu), haettu {n1}-{n2}-{n3}.",
  "@js.sryiimcij": {
   "x-review": "machine",
@@ -10451,6 +12306,16 @@
   "x-review": "machine",
   "x-source": "bb075a5d27"
  },
+ "js.sthx1pt86x": "E6 · {n0} · {n1} ppm · <span class=\"g-pass\"><span aria-hidden=\"true\">✓</span> läpäisty</span>",
+ "@js.sthx1pt86x": {
+  "x-review": "machine",
+  "x-source": "1fb2626c5f"
+ },
+ "js.sttuc214to": "{n0} ± {n1} ppm ({n2}σ)",
+ "@js.sttuc214to": {
+  "x-review": "machine",
+  "x-source": "521ad1ba50"
+ },
  "js.syr5rwjx8s": "<a href=\"/stars/hd-189733-a/\">{s0}</a> · Ylikulku · löydetty {n0} · Kaasujättiläinen",
  "@js.syr5rwjx8s": {
   "x-review": "machine",
@@ -10461,10 +12326,20 @@
   "x-review": "machine",
   "x-source": "9d9fb0ef55"
  },
+ "js.t1o2loqjv2": "Sentinels käyttävät oletuksena mallia Claude (Anthropic); muita palveluntarjoajia tuetaan ja ne merkitään. Probes ovat deterministisiä sovitetun suotimen ilmaisimia. Vain Probes; Sentinels-arvioijia ei ajettu tässä esimerkissä.<br>ajo {n0}-{n1}-22T17:{n2}+{n3} · konfiguraatio 23bb51a268efd59e · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-291acb98cabe-{n8} · signaali tess-5935bad1a3b4-P3.2875+{n9} · kohde tess-291acb98cabe<br>ristiintunnistus: NASA Exoplanet Archive, taulukko ps (default_flag = {n10}) · tila: täsmätty",
+ "@js.t1o2loqjv2": {
+  "x-review": "machine",
+  "x-source": "b76b13924b"
+ },
  "js.t39my5dsyh": "Ajoitus <span class=\"mono\" data-cmn=\"timing\">{n0}</span>",
  "@js.t39my5dsyh": {
   "x-review": "machine",
   "x-source": "eaf800daff"
+ },
+ "js.t3dphpk6xb": "{n0} signaali merkitty",
+ "@js.t3dphpk6xb": {
+  "x-review": "machine",
+  "x-source": "0489a65122"
  },
  "js.t60qw9cha2": "Taiteilijan näkemys · neptunus, säteilytystä ei voi laskea · Sädettä ei ole tallennettu; massa {n0} M⊕ (exoplanet.eu) on välillä {n1}–{n2} M⊕, joten se piirretään Neptunuksen kaltaisena planeettana. Sädettä ei ole mitattu: ei mittakaavassa. Säteilytystä ei voi laskea: neutraalit värit. Koostumusta ei ole mitattu. Lähde: exoplanet.eu, haettu {n3}-{n4}-{n5}. <a href=\"/docs/pictures/\">Miten kuvat piirretään ›</a>",
  "@js.t60qw9cha2": {
@@ -10521,6 +12396,11 @@
   "x-review": "machine",
   "x-source": "08aa2d3dc6"
  },
+ "js.tqf8a8uxs4": "<span class=\"xm-k\">Syötteeseen ottamisen sääntö (discover.py), ei tarkastussääntö:</span> ei otettu syötteeseen · ei poissulkevaa lippua, efemeridillä, syvyysraja, nähty molemmissa sektoreissa",
+ "@js.tqf8a8uxs4": {
+  "x-review": "machine",
+  "x-source": "d4645eb473"
+ },
  "js.trg2sd40ob": "config",
  "@js.trg2sd40ob": {
   "x-review": "machine",
@@ -10545,6 +12425,11 @@
  "@js.twp1jy2rda": {
   "x-review": "machine",
   "x-source": "8d37ca1311"
+ },
+ "js.txd2en4k6r": "jaksollinen tuki: läpäisty. arvo {n0} ylikulkua. sääntö ≥ {n1} ylikulkua. Syötteeseen tarvitaan toistuva notkahdus.",
+ "@js.txd2en4k6r": {
+  "x-review": "machine",
+  "x-source": "f05165f4a7"
  },
  "js.txk14p5ox3": "<a href=\"/stars/kepler-1442/\">{s0}</a> · Ylikulku · löydetty {n0} · Sub-Neptunus",
  "@js.txk14p5ox3": {
@@ -10571,6 +12456,16 @@
   "x-review": "machine",
   "x-source": "cca29fe066"
  },
+ "js.u40oqupce8": "Tarkastuksen tulos kohteelle tess-04b815001aa6-{n0}: merkitty tarkistettavaksi",
+ "@js.u40oqupce8": {
+  "x-review": "machine",
+  "x-source": "ecb79d172c"
+ },
+ "js.u4ei3r445q": "Ylikulkunauha kohteelle tess-01e315ee5ebf-{n0}. Siirry tallennettujen lokeroiden läpi vasemmalla ja oikealla nuolinäppäimellä, Shift-näppäimellä kymmenen kerrallaan, Home- ja End-näppäimillä päihin.",
+ "@js.u4ei3r445q": {
+  "x-review": "machine",
+  "x-source": "2960024d60"
+ },
  "js.u5ihxlvexo": "Maan kokoinen (m sin i:n perusteella; sädettä ei ole tallennettu)",
  "@js.u5ihxlvexo": {
   "x-review": "machine",
@@ -10580,6 +12475,11 @@
  "@js.u66ksxeq0o": {
   "x-review": "machine",
   "x-source": "b30a239f01"
+ },
+ "js.u7071hound": "Probe · Sensitive <span class=\"mono hint\">volunteer-sensitive</span>: päällekkäisyys {n0} % ikkunasta, keskikohtien ero {n1} d · laskettu",
+ "@js.u7071hound": {
+  "x-review": "machine",
+  "x-source": "b8ca59703e"
  },
  "js.u81ar6klej": "id tic79171381-s1-dip-{n0} · kohde tess-f91c237d779b<br>valokäyrä sha256 ffae9dec6dfb6230eb6402e19917541f8beabcd4af3b863d76d6c94eed75059d<br>koodi … · konfiguraatio a9d34c7079563183…<br>lähde sector_0001.json.gz",
  "@js.u81ar6klej": {
@@ -10621,15 +12521,30 @@
   "x-review": "machine",
   "x-source": "cec5a5ad69"
  },
+ "js.uglmqr3fek": "Sentinels käyttävät oletuksena mallia Claude (Anthropic); muita palveluntarjoajia tuetaan ja ne merkitään. Probes ovat deterministisiä sovitetun suotimen ilmaisimia. Vain Probes; Sentinels-arvioijia ei ajettu tässä esimerkissä.<br>ajo {n0}-{n1}-22T18:{n2}+{n3} · konfiguraatio e60af3c4e98d4a76 · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-f28323a4aef6-{n8} · signaali tess-f28323a4aef6-{n9}-single · kohde tess-f28323a4aef6<br>ristiintunnistus: NASA Exoplanet Archive, taulukko ps (default_flag = {n10}) · tila: täsmätty",
+ "@js.uglmqr3fek": {
+  "x-review": "machine",
+  "x-source": "40c3ec935e"
+ },
  "js.uhfjveyo27": "Kalibroidut painot: Sentinels {n0}; Probes {n1}–{n2}. <b>Sentinels kalibroitiin vain {n3} injektoidulla ja {n4} tyhjällä kohteella.</b> Probes (koodia, ei ihmisiä) {n5} injektoidulla ja {n6} tyhjällä. Kun injektoituja kohteita on {n7}, saanto (recall) muuttuu {n8}:n askelin, joten yksi kohde enemmän tai vähemmän muuttaa painoa saman verran. Nämä painot ovat karkeita.",
  "@js.uhfjveyo27": {
   "x-review": "machine",
   "x-source": "1b1d87ce23"
  },
+ "js.ui0abk2ly0": "Sentinel · Skeptic <span class=\"mono hint\">claude-skeptic</span>: päällekkäisyys {n0} % ikkunasta, ei merkintää ikkunan kohdalla · ei laskettu",
+ "@js.ui0abk2ly0": {
+  "x-review": "machine",
+  "x-source": "c7c031d6d4"
+ },
  "js.ukh9ghao83": "Taiteilijan näkemys kohteesta {s0}: kivinen planeetta lämpimällä vyöhykkeellä, {n0} Maan sädettä, {n1} K.",
  "@js.ukh9ghao83": {
   "x-review": "machine",
   "x-source": "98f04ef85a"
+ },
+ "js.ulosajotr3": "Signaalit ja notkahdukset",
+ "@js.ulosajotr3": {
+  "x-review": "machine",
+  "x-source": "f789477bf9"
  },
  "js.unhdb2yxcr": "Siluetti suhteella Rp/R★ {n0} = √syvyys, jos se olisi planeetta, tähden TIC {n1} päällä, joka on piirretty mustan kappaleen värissään, {n2} K",
  "@js.unhdb2yxcr": {
@@ -10661,6 +12576,11 @@
   "x-review": "machine",
   "x-source": "fda6f263a4"
  },
+ "js.uvcfum02ke": "E2 · {n0} · {n1} ppm · <span class=\"g-pass\"><span aria-hidden=\"true\">✓</span> läpäisty</span>",
+ "@js.uvcfum02ke": {
+  "x-review": "machine",
+  "x-source": "a60fcb3fbc"
+ },
  "js.uw4ehyu5nb": "Keplerin usean planeetan kandidaattien validointi",
  "@js.uw4ehyu5nb": {
   "x-review": "machine",
@@ -10680,6 +12600,11 @@
  "@js.v3cmzn255c": {
   "x-review": "machine",
   "x-source": "1e91ab197b"
+ },
+ "js.v81kk2hojs": "epookki E0 · {n0}",
+ "@js.v81kk2hojs": {
+  "x-review": "machine",
+  "x-source": "1e2a3c4fb2"
  },
  "js.vbyk5xwnrv": "Aiemmin käytetty laatikkomitta (keskimääräinen vuo paneelin merkitsemässä ikkunassa): syvyys {n0} ppm, kesto {n1} h, suhteet **{n2}** ja **{n3}** verrattuna Huang {n4} -arvoihin ({n5} ja {n6} verrattuna arkiston oletusriviin, johon README aiemmin viittasi).",
  "@js.vbyk5xwnrv": {
@@ -10721,6 +12646,11 @@
   "x-review": "machine",
   "x-source": "fc798c613b"
  },
+ "js.voowg5nndh": "kohteet tess-f28323a4aef6, tess-4b369d3c6f09 · {n0} notkahdusta · {n1} + {n2} BLS-ylikulkua",
+ "@js.voowg5nndh": {
+  "x-review": "machine",
+  "x-source": "00b7e36469"
+ },
  "js.vopc7hg160": "<a href=\"/stars/toi-270/\">{s0}</a> · Ylikulku · löydetty {n0} · Sub-Neptunus",
  "@js.vopc7hg160": {
   "x-review": "machine",
@@ -10745,6 +12675,11 @@
  "@js.vtnlfvcu18": {
   "x-review": "machine",
   "x-source": "7f2279dda2"
+ },
+ "js.vtsq6xprwz": "Ylikulkunauha kohteelle tess-38b5a559eee2-{n0}. Selaa tallennettuja lokeroita vasemmalla ja oikealla nuolinäppäimellä, Shift-näppäimellä kymmenen kerrallaan, Home- ja End-näppäimillä alkuun ja loppuun.",
+ "@js.vtsq6xprwz": {
+  "x-review": "machine",
+  "x-source": "52a12e57ec"
  },
  "js.vu8sw2zv41": "<b>taivutus (kaksi, suorassa kulmassa toisiinsa)</b> · {n0} µm · infrapuna-aktiivinen · piirretty ×{n1} · sivun Ilmakehien lukeminen {n2}–{n3} µm:n ikkunan ulkopuolella",
  "@js.vu8sw2zv41": {
@@ -10846,10 +12781,20 @@
   "x-review": "machine",
   "x-source": "9043a3475b"
  },
+ "js.we8tzd2xbm": "signaali: <span class=\"badge g-pass\"><span class=\"glyph\" aria-hidden=\"true\">✓</span> läpäisi seulonnan</span>",
+ "@js.we8tzd2xbm": {
+  "x-review": "machine",
+  "x-source": "03591b9e50"
+ },
  "js.wge5c60gnw": "Gaia-{n0} b",
  "@js.wge5c60gnw": {
   "x-review": "machine",
   "x-source": "90208869d2"
+ },
+ "js.wh6dm8n35d": "{n0} · {n1} ppm · <span class=\"g-fail\"><span aria-hidden=\"true\">✕</span> hylätty</span>",
+ "@js.wh6dm8n35d": {
+  "x-review": "machine",
+  "x-source": "ce4129a732"
  },
  "js.wi80ajeguf": "ρ★-tarkistus (vapaa sovitus): ylikulun tiheys verrattuna TIC:n arvoon {n0} g/cm³ (yhdenmukainen havainnollistavan välin {n1}–{n2} sisällä tasolla {n3}σ). V-muototesti: U-muotoinen (ei hipaiseva).",
  "@js.wi80ajeguf": {
@@ -10865,6 +12810,11 @@
  "@js.wkrls1dk3c": {
   "x-review": "machine",
   "x-source": "0a0c72b4d4"
+ },
+ "js.wlbxmnxg1v": "<span class=\"xm-k\">Syötteeseen ottamisen sääntö (discover.py), ei seulonta:</span> ei otettu mukaan · syvyysraja, havaittu molemmissa sektoreissa",
+ "@js.wlbxmnxg1v": {
+  "x-review": "machine",
+  "x-source": "06a1315c90"
  },
  "js.wldr50kzra": "Luyten's Star d",
  "@js.wldr50kzra": {
@@ -10920,6 +12870,11 @@
  "@js.wvis3dlfyh": {
   "x-review": "machine",
   "x-source": "793cad2691"
+ },
+ "js.wxh27xidle": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisi</span></span> SNR",
+ "@js.wxh27xidle": {
+  "x-review": "machine",
+  "x-source": "5240708226"
  },
  "js.wyatq8buaf": "<a href=\"/stars/bd-20-2457/\">{s0}</a> · Radiaalinopeus · löydetty {n0} · Kaasujättiläinen (massan perusteella)",
  "@js.wyatq8buaf": {
@@ -11001,6 +12956,11 @@
   "x-review": "machine",
   "x-source": "7e8ec24b4d"
  },
+ "js.xfhdid88s": "Päätösloki kohteelle tess-fa3483ce6f83-{n0}",
+ "@js.xfhdid88s": {
+  "x-review": "machine",
+  "x-source": "aa95e2977e"
+ },
  "js.xg1roa8hi1": "{s0} · tunnettu planeetta",
  "@js.xg1roa8hi1": {
   "x-review": "machine",
@@ -11021,6 +12981,16 @@
   "x-review": "machine",
   "x-source": "c6638a4574"
  },
+ "js.xm6hger4a8": "syvyysraja: ei läpäissyt. arvo {n0} ppm. sääntö ≤ {n1} ppm. Syvemmät notkahdukset ovat lähes aina kaksoistähtiä; pidetään pois syötteestä.",
+ "@js.xm6hger4a8": {
+  "x-review": "machine",
+  "x-source": "b0d367cdc3"
+ },
+ "js.xn746cnkdw": "paneeli",
+ "@js.xn746cnkdw": {
+  "x-review": "machine",
+  "x-source": "320e00e73a"
+ },
  "js.xngfkgukjg": "Elämän yhtälöt",
  "@js.xngfkgukjg": {
   "x-review": "machine",
@@ -11035,6 +13005,11 @@
  "@js.xpmiaupaaj": {
   "x-review": "machine",
   "x-source": "a925e71c9f"
+ },
+ "js.xr8boddavk": "Sentinels toimivat oletuksena Claude-mallilla (Anthropic); muita palveluntarjoajia tuetaan ja ne on merkitty. Probes ovat deterministisiä sovitetun suodattimen ilmaisimia. Vain Probes; Sentinels-tarkastajia ei ajettu tälle esimerkille.<br>ajo {n0}-{n1}-22T18:{n2}+{n3} · konfiguraatio e21c63a794b2aeb3 · putki {n4} · Sentinel-kehote {n5}-{n6}-{n7}<br>kandidaatti tess-38b5a559eee2-{n8} · signaali tess-38b5a559eee2-P4.0429 · kohde tess-38b5a559eee2<br>ristiintunnistus: NASA Exoplanet Archive, taulu ps (default_flag = {n9}) · tila: täsmätty",
+ "@js.xr8boddavk": {
+  "x-review": "machine",
+  "x-source": "c38f3d8f62"
  },
  "js.xsve43hukk": "<b>ν₄ epäsymmetrinen taivutus (kaksi)</b> · {n0} µm · infrapuna-aktiivinen · piirretty ×{n1} · sivun Reading atmospheres ikkunan {n2}–{n3} µm ulkopuolella",
  "@js.xsve43hukk": {
@@ -11060,6 +13035,11 @@
  "@js.xy2x43n5j6": {
   "x-review": "machine",
   "x-source": "32264c0ba9"
+ },
+ "js.y1h7mxohmi": "mitattu: {n0} ± {n1} ppm signaalin epookissa E4 (S2:n epookki {n2}, pariton kohteessaan)",
+ "@js.y1h7mxohmi": {
+  "x-review": "machine",
+  "x-source": "6a1795bb2d"
  },
  "js.y1kndozn4": "Valitse; isäntätähden kortti avaa sen järjestelmänäkymän",
  "@js.y1kndozn4": {
@@ -11121,6 +13101,11 @@
   "x-review": "machine",
   "x-source": "c86fc476fa"
  },
+ "js.ymb79iv6xu": "<span class=\"glyph g-pass\"><span aria-hidden=\"true\">✓</span> <span class=\"word\">läpäisi</span></span> pariton / parillinen (signaalitaso)",
+ "@js.ymb79iv6xu": {
+  "x-review": "machine",
+  "x-source": "71c6feaa2a"
+ },
  "js.ynbmjt950g": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-pass\">läpäisi seulonnan</span><b class=\"fig\">1c. pi Men, notkahdus {n0}.</b> <span class=\"sid mono\">tallennettu tunniste tess-fa3483ce6f83-{n1}.</span> Notkahdus kohdassa BTJD {n2}, {n3} ppm, {n4} h, SNR {n5}. Konsensusväli BTJD {n6}–{n7}. Merkinneet {n8} / {n9} arvioijaa ({n10} / {n11} Sentinels, {n12} / {n13} Probes). Sijoittuu {n14} päivän BLS-jaksoon (t0 BTJD {n15}). Läpäisi seulonnan. Arkisto: yhteensopiva planeetan pi Men c kanssa: ΔP {n16}%, ajoituspoikkeama validointimuistiinpanosta: keskimäärin {n17} min {n18} epookin yli. Vain arkiston arvoja. Tämä sivu ei esitä havaintoa.",
  "@js.ynbmjt950g": {
   "x-review": "machine",
@@ -11130,6 +13115,11 @@
  "@js.yq2bbta4k2": {
   "x-review": "machine",
   "x-source": "4aebb10343"
+ },
+ "js.yq6f6lnmye": "<span class=\"glyph\" aria-hidden=\"true\">✕</span> hylätty seulonnassa",
+ "@js.yq6f6lnmye": {
+  "x-review": "machine",
+  "x-source": "c4e46f8b76"
  },
  "js.yrhnt8o7w9": "Molekyylit ja elämä",
  "@js.yrhnt8o7w9": {
@@ -11181,10 +13171,20 @@
   "x-review": "machine",
   "x-source": "adeac0a395"
  },
+ "js.zcbezdozf2": "epookki E4 · {n0}",
+ "@js.zcbezdozf2": {
+  "x-review": "machine",
+  "x-source": "eec795f2f7"
+ },
  "js.zdvz2hwho1": "{n0} tunnettu TOI",
  "@js.zdvz2hwho1": {
   "x-review": "machine",
   "x-source": "b2200a4768"
+ },
+ "js.zejl0cf8tt": "{n0} arvioijaa: {n1} Sentinels ja {n2} Probes",
+ "@js.zejl0cf8tt": {
+  "x-review": "machine",
+  "x-source": "2f56eed12a"
  },
  "js.zft0ml7zl7": "<span class=\"word cand\">kandidaatti</span><span class=\"word s-pass\">läpäisi seulonnan</span><b class=\"fig\">1b. pi Men, notkahdus {n0}.</b> <span class=\"sid mono\">tallennettu tunniste tess-fa3483ce6f83-{n1}.</span> Notkahdus kohdassa BTJD {n2}, {n3} ppm, {n4} h, SNR {n5}. Konsensusväli BTJD {n6}–{n7}. Merkinneet {n8} / {n9} arvioijaa ({n10} / {n11} Sentinels, {n12} / {n13} Probes). Sijoittuu {n14} päivän BLS-jaksoon (t0 BTJD {n15}). Läpäisi seulonnan. Arkisto: yhteensopiva planeetan pi Men c kanssa: ΔP {n16}%, ajoituspoikkeama validointimuistiinpanosta: keskimäärin {n17} min {n18} epookin yli. Vain arkiston arvoja. Tämä sivu ei esitä havaintoa.",
  "@js.zft0ml7zl7": {

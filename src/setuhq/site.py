@@ -972,6 +972,9 @@ def i18n_auto_script(out: Path) -> str:
     cats = {lang: {sec: json.dumps(c, ensure_ascii=False, separators=(",", ":")) for sec, c in i18n.js_catalogues(lang).items()}
             for lang in i18n.TRANSLATIONS}
     ver = _sha(json.dumps(cats, sort_keys=True))
+    for old in (out / "assets" / "i18n").glob("js-*"):  # an earlier build's
+        if old.name != f"js-{ver}":
+            shutil.rmtree(old)
     for lang, secs in cats.items():
         (out / "assets" / "i18n" / f"js-{ver}" / lang).mkdir(parents=True, exist_ok=True)
         for sec, text in secs.items():
