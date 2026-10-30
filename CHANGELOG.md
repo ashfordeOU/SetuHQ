@@ -80,6 +80,25 @@ breaking changes are called out explicitly.
   pickled or written to a manifest; the environment variables stay the fallback, a config file still never holds
   a key, and an endpoint whose URL or query holds the passed key (as a string or a `Secret`) is refused without
   printing it.
+- **The stable API covers what SetuHQ Pro and other library users need** ([docs/API.md](docs/API.md), pinned by
+  `tests/test_api.py`). The stellar capabilities have stable entry points (`find_flares`, `pulsation_spectrum`,
+  `find_eclipsing_binary`, `rotation_period`, `find_transients`), each returning a `StellarResult` with its honesty
+  labels and its validation status as the committed record states it ("partly validated (5 of 8 checks pass)",
+  "not validated (1 of 9 checks pass)"); the wheel ships a copy of those statuses
+  (`setuhq/data/stellar_validation_status.json`). CHEOPS stays out: its data are CC BY-NC 3.0 IGO. The honesty
+  labels are exported (`TRANSIENT_SEARCH_AID`, `TRANSIENTS_LABEL`, `BINARIES_LABEL`, `BINARIES_VETTING_NOTE`,
+  `ROTATION_LABEL`, `STELLAR_DETECTION_LABEL`, `FLARE_ENERGY_LABEL`), unchanged, with `HONESTY_LABELS`, a frozenset
+  of every label and wording constant, so an output filter can exempt exact matches; callers carry them verbatim.
+  `use_lang(lang)` sets the language for one block, thread or asyncio task through a context variable, never the
+  environment (`--lang` and `SETUHQ_LANG` stay the default), with `attribution_text()`, `probes_only_text()` and
+  `dip_state_text()` for the localised wording. `default_calibration()` loads the calibration record next to the
+  weights, and `packaged_only=True` reads the packaged weights whatever the current directory holds. Every
+  Sentinel takes a keyword-only `env_fallback=` (default `True`): with `False` it never reads its provider's
+  environment variable and is refused without `api_key=`. `RunSummary` gains `provider_calls` and
+  `cached_answers` per Sentinel, and `Candidate.as_row()` an `outcome` field (passed, flagged or rejected, by the
+  report's rule), so `candidates.json` of a new run has it too. `RunSummary`'s fields, the stable `as_row()`
+  fields, the provider key variables, the default Sentinel models and the `transport=` type (`Transport`) are
+  documented as stable. `pipeline.py` and `reviewers/claude.py` changed, so the search code fingerprint changes.
 - **Feed embargo: new signals are held for private review and reporting.** `setuhq discover` no longer
   publishes a signal that matches no known TOI (`new_candidate`). The public catalogue, the site (the
   Candidates feed, the overview and Mission Control cards, the runs page), the feed page, the dashboard,

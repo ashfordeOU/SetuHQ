@@ -179,8 +179,10 @@ def test_the_fit_and_the_vetting_read_the_package_copies():
     assert transitfit.LD_TABLE.read_bytes() == (ROOT / "docs/results/claret2017_tess_quadratic.json").read_bytes()
     assert dvtests.CALIBRATION_FILE.read_bytes() == (ROOT / "docs/results/secondary_calibration.json").read_bytes()
     assert "src/setuhq/data" in str(transitfit.LD_TABLE).replace("\\", "/")
-    # Besides the reference tables: the renderer's stills (setuhq.renderer; drawn by tools/render_stills.mjs).
-    assert sorted(p.name for p in (ROOT / "src/setuhq/data").iterdir()) == sorted(PACKAGE_DATA + ("stills",))
+    # Besides the reference tables: the renderer's stills (setuhq.renderer; drawn by tools/render_stills.mjs), and
+    # the stellar validation statuses setuhq.api reads without a checkout (tests/test_api.py keeps them in step).
+    assert sorted(p.name for p in (ROOT / "src/setuhq/data").iterdir()) == sorted(
+        PACKAGE_DATA + ("stills", "stellar_validation_status.json"))
     assert {p.suffix for p in (ROOT / "src/setuhq/data/stills").iterdir()} == {".webp", ".json"}
 
 
@@ -512,6 +514,15 @@ def test_joss_paper_cites_only_what_its_bibliography_holds():
     assert cited and cited <= keys, cited - keys
     low = body.lower()
     assert "superintelligence" not in low and "we discovered" not in low
+    # Every result the paper quotes is a value of docs/paper/numbers.json, copied verbatim; a stale one fails here.
+    numbers = json.loads((ROOT / "docs" / "paper" / "numbers.json").read_text(encoding="utf-8"))["numbers"]
+    flat = " ".join(body.split())
+    for key in ("sample_total", "sample_pos", "sample_fp", "sample_fa", "ho_completeness", "ho_rad_r0", "ho_fp_seen",
+                "ho_fp_flagged", "lb_metadata_baseline_j", "lb_probes_j", "sen_agree", "sen_n", "sen_phi"):
+        assert str(numbers[key]) in flat, (key, numbers[key])
+    # The paired floor test is quoted up to its P(ΔJ ≤ 0), which the paper spells out (the JOSS font has no ≤).
+    floor, p_le = re.fullmatch(r"(.*), P\(ΔJ ≤ 0\) = (\S+)", numbers["floor_dj"]).groups()
+    assert f"({floor}; the probability that ΔJ is zero or below is {p_le})" in flat
 
 
 # ---------------------------------------------------------------- setuhq mcp

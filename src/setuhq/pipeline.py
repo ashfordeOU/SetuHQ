@@ -121,7 +121,18 @@ class Candidate:
         val = (self.metrics or {}).get("validation") or {}
         row["fpp"], row["nfpp"], row["fpp_method"] = val.get("fpp"), val.get("nfpp"), val.get("method")
         row["validation_label"] = val.get("label", "")
+        row["outcome"] = self.outcome
         return row
+
+    @property
+    def outcome(self) -> str:
+        """The dip's vetting outcome, ``passed``, ``flagged`` or ``rejected``, by the rule the report and the case file
+        use (``docket.outcome`` over ``docket.vetting_checks``): a disqualifying flag or a failed check rejects, any
+        other flag or an unmeasured check flags for review, and only every check measured and passing passes."""
+        from setuhq.docket import outcome, vetting_checks
+
+        c = {"metrics": self.metrics or {}, "flags": [f for f in self.flags if f], "period_days": self.period_days}
+        return outcome(vetting_checks(c), c["flags"], bool(self.passed))
 
 
 @dataclass
@@ -134,6 +145,10 @@ class RunSummary:
     n_passed: int
     skipped_reviewers: list[str] = field(default_factory=list)
     candidates: list[Candidate] = field(default_factory=list)
+    # Per Sentinel ({reviewer id: n}): answers that took a call to the provider, and answers read from the reviewer's
+    # answer cache (no call). A review that failed after its retries gave no answer and is in neither.
+    provider_calls: dict[str, int] = field(default_factory=dict)
+    cached_answers: dict[str, int] = field(default_factory=dict)
 
 
 def prepare_lightcurves(lightcurves: list[LightCurve], config: RunConfig) -> list[LightCurve]:
@@ -612,7 +627,18 @@ def run_pipeline(
         n_passed=sum(c.passed for c in candidates),
         skipped_reviewers=skipped,
         candidates=candidates,
+        **_call_counts(active, classifications),
     )
+
+
+def _call_counts(active, classifications: list[Classification]) -> dict:
+    """Each active Sentinel's provider calls and cached answers in this run, from its classifications' metadata."""
+    sentinels = [r.reviewer_id for r in active if getattr(r, "describe", None) is not None]
+    calls, cached = dict.fromkeys(sentinels, 0), dict.fromkeys(sentinels, 0)
+    for c in classifications:
+        if c.reviewer_id in calls:
+            (cached if (c.metadata or {}).get("cached") else calls)[c.reviewer_id] += 1
+    return {"provider_calls": calls, "cached_answers": cached}
 
 
 def rebuild_run(config: RunConfig, lightcurves: list[LightCurve], run_dir: str | Path, *, weights: dict[str, float] | None = None) -> list[Candidate]:

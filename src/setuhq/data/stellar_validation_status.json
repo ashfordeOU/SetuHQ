@@ -1,0 +1,25 @@
+{
+  "note": "The validation status of the stellar capabilities in setuhq.api, as their records in docs/results state it (tests/test_api.py keeps the two in step). A copy for an installed package, which has no docs/results.",
+  "capabilities": {
+    "flares": {
+      "label": "partly validated (5 of 8 checks pass)",
+      "record": "docs/results/stellar_validation.json"
+    },
+    "pulsations": {
+      "label": "partly validated (7 of 9 checks pass)",
+      "record": "docs/results/stellar_validation.json"
+    },
+    "binaries": {
+      "label": "partly validated (5 of 8 checks pass)",
+      "record": "docs/results/stellar_validation_v4.json"
+    },
+    "rotation": {
+      "label": "not validated (3 of 6 checks pass)",
+      "record": "docs/results/stellar_validation_v4.json"
+    },
+    "transients": {
+      "label": "not validated (1 of 9 checks pass)",
+      "record": "docs/results/stellar_validation_v4.json"
+    }
+  }
+}

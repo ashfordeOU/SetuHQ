@@ -5,7 +5,8 @@
 * :func:`standard_probes`: the three Probes of the standard panel (deterministic matched-filter detectors), exactly as
   ``configs/sweep.toml`` lists them (a test keeps the two in step). Pass them as a config's ``reviewers`` or to
   :func:`setuhq.config.build_reviewers`.
-* :func:`default_weights` and :func:`packaged_weights_path`: the calibrated reviewer weights. The wheel ships a copy of
+* :func:`default_weights`, :func:`default_calibration` and :func:`packaged_weights_path`: the calibrated reviewer weights
+  and their calibration record. The wheel ships a copy of
   ``docs/results/reviewer_weights_full_panel.json`` (and its ``.calibration.json`` record) as package data, so a run
   from an installed package uses the calibrated weights by default, as a run from a checkout does.
 
@@ -42,16 +43,27 @@ def packaged_weights_path() -> Path | None:
     return p if p.is_file() else None
 
 
-def default_weights_path(checkout: str | Path = CHECKOUT_WEIGHTS) -> str | None:
+def default_weights_path(checkout: str | Path = CHECKOUT_WEIGHTS, *, packaged_only: bool = False) -> str | None:
     """The weights file a run uses by default: the checkout's ``docs/results`` copy when it exists (a run from the
-    repository), else the packaged copy (an installed wheel), else None."""
-    if Path(checkout).exists():
+    repository), else the packaged copy (an installed wheel), else None. With ``packaged_only=True`` the packaged
+    copy only, whatever the current directory holds (for a service)."""
+    if not packaged_only and Path(checkout).exists():
         return str(checkout)
     p = packaged_weights_path()
     return str(p) if p else None
 
 
-def default_weights() -> dict[str, float]:
+def default_weights(*, packaged_only: bool = False) -> dict[str, float]:
     """The calibrated weight of each reviewer of the full panel ({reviewer id: weight}); {} when none is shipped."""
-    path = default_weights_path()
+    path = default_weights_path(packaged_only=packaged_only)
     return {k: float(v) for k, v in json.loads(Path(path).read_text()).items()} if path else {}
+
+
+def default_calibration(*, packaged_only: bool = False) -> dict | None:
+    """The calibration record stored next to :func:`default_weights_path` (``x.json`` -> ``x.calibration.json``):
+    each reviewer's measured rates, provider and model, for ``run_pipeline(calibration=...)``. None without one."""
+    from setuhq.calibrate import calibration_path
+
+    path = default_weights_path(packaged_only=packaged_only)
+    record = calibration_path(path) if path else None
+    return json.loads(record.read_text()) if record and record.is_file() else None

@@ -19,7 +19,7 @@ import os
 from pathlib import Path
 
 from setuhq.reviewers.http import Transport, check_endpoint, post_json, redact
-from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer, as_secret, key_value
+from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer, as_secret, key_value, refuse_env_fallback
 from setuhq.reviewers.task import ReviewError
 
 OPENAI_BASE_URL = "https://api.openai.com/v1"
@@ -31,7 +31,7 @@ class ChatCompletionsBackend:
     def __init__(self, *, provider: str, model: str, base_url: str, api_key_env: str | None,
                  auth: str = "bearer", query: dict | None = None, max_tokens: int = 4096,
                  json_mode: bool = False, timeout: float = 120.0, transport: Transport | None = None,
-                 api_key: str | None = None):
+                 api_key: str | None = None, env_fallback: bool = True):
         if not model:
             raise ValueError(f"a {provider} Sentinel needs a 'model' (a vision model id)")
         if not base_url:
@@ -41,6 +41,7 @@ class ChatCompletionsBackend:
         # no key in the URL or the query: from the environment, or passed in code (api_key)
         check_endpoint(base_url, query, api_key_env, extra_keys=[api_key] if api_key else ())
         self._key = as_secret(api_key)
+        refuse_env_fallback(self._key, api_key_env if auth != "none" else None, provider, env_fallback)
         self.provider = provider
         self.model = model
         self.base_url = base_url.rstrip("/")
@@ -131,10 +132,10 @@ class OpenAIReviewer(SentinelReviewer):
     def __init__(self, reviewer_id: str, model: str = "", persona: str = "volunteer",
                  cache_dir: str | Path | None = None, max_tokens: int = 4096, retries: int = 3,
                  timeout: float = 120.0, base_url: str = OPENAI_BASE_URL, transport: Transport | None = None,
-                 kind: str = "openai", api_key: str | None = None):
+                 kind: str = "openai", api_key: str | None = None, *, env_fallback: bool = True):
         backend = ChatCompletionsBackend(provider="openai", model=model, base_url=base_url, api_key_env=KEY_ENV["openai"],
                                          max_tokens=max_tokens, json_mode=True, timeout=timeout, transport=transport,
-                                         api_key=api_key)
+                                         api_key=api_key, env_fallback=env_fallback)
         super().__init__(reviewer_id, backend, persona=persona, cache_dir=cache_dir, retries=retries, kind=kind)
 
 
@@ -145,9 +146,9 @@ class OpenAICompatibleReviewer(SentinelReviewer):
                  auth: str = "bearer", query: dict | None = None, persona: str = "volunteer",
                  cache_dir: str | Path | None = None, max_tokens: int = 4096, json_mode: bool = False,
                  retries: int = 3, timeout: float = 300.0, transport: Transport | None = None,
-                 kind: str = "openai_compatible", api_key: str | None = None):
+                 kind: str = "openai_compatible", api_key: str | None = None, *, env_fallback: bool = True):
         backend = ChatCompletionsBackend(provider="openai-compatible", model=model, base_url=base_url,
                                          api_key_env=api_key_env, auth=auth if (api_key_env or api_key) else "none", query=query,
                                          max_tokens=max_tokens, json_mode=json_mode, timeout=timeout, transport=transport,
-                                         api_key=api_key)
+                                         api_key=api_key, env_fallback=env_fallback)
         super().__init__(reviewer_id, backend, persona=persona, cache_dir=cache_dir, retries=retries, kind=kind)

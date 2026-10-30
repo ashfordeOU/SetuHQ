@@ -13,6 +13,21 @@ public issue. Conduct is governed by [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 **Before your first pull request can be merged, you agree to the
 [Contributor Licence Agreement](CLA.md)** (see [Licence and the CLA](#licence-and-the-cla) below).
 
+## Reporting a problem and getting help
+
+Issues are public and readable without an account; open one at
+<https://github.com/ashfordeOU/SetuHQ/issues/new/choose>.
+
+- **A bug**, a wrong number or a broken page: the *Bug report* form. Give the SetuHQ version
+  (`setuhq --version`), the command you ran and, for a result, the run's config hash and code fingerprint.
+- **A question about a candidate or a result** (why a dip was marked, vetted or rejected; a benchmark or
+  leaderboard number): the *Candidate or result question* form.
+- **An idea or a missing feature**: the *Feature request* form.
+- **Help installing or using SetuHQ**: first the [README](README.md) (Install, Quick start, Worked
+  examples) and [docs/QUICKSTART.md](docs/QUICKSTART.md); then whichever issue form fits.
+- **A security problem**: never a public issue; follow [`SECURITY.md`](SECURITY.md).
+- **Licensing or commercial questions**: contact@ashforde.org ([`LICENSING.md`](LICENSING.md)).
+
 ## Development
 
 ```bash
