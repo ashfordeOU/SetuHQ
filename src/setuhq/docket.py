@@ -221,6 +221,10 @@ DOCKET_JS = r"""
 const D = JSON.parse(document.getElementById('data').textContent);
 const $ = (s, e=document) => e.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// A message in the shell's language when this page is the case file's frame (setuhq.i18n), else its English; the
+// arguments are plain text.
+const TT = (id, en, a) => { try { const S = window.parent !== window && window.parent.SetuI18n; if (S && S.lang !== 'en' && S.cat) return S.T(id, en, a); } catch (e) { /* another origin */ }
+  return en.replace(/\{(\w+)\}/g, (m, k) => a && k in a ? esc(a[k]) : m); };
 const fmt = (x, d=2) => (x === null || x === undefined || Number.isNaN(x)) ? '–' : Number(x).toFixed(d);
 const NS = 'http://www.w3.org/2000/svg';
 function el(tag, a={}, p){ const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
@@ -711,16 +715,19 @@ function crossmatchLine(c, feedLine){
   const cls = x.status === 'matched' ? 'xm-hit' : x.status === 'no_match' ? 'xm-none' : 'xm-notrun';
   const ran = x.status === 'matched' || x.status === 'no_match';
   // A fallback file was recorded from a validation note, not fetched for this page: say which.
-  const dated = x.fallback_from ? `recorded ${dayUTC(x.fetched_at)}${x.recorded_commit ? ` (commit ${esc(x.recorded_commit)})` : ''}` : (x.fetched_at ? `fetched ${dayUTC(x.fetched_at)}` : '');
+  const dated = x.fallback_from ? (x.recorded_commit ? TT('docket.xm.recorded_commit', 'recorded {day} (commit {c})', {day: dayUTC(x.fetched_at), c: x.recorded_commit})
+      : TT('docket.xm.recorded', 'recorded {day}', {day: dayUTC(x.fetched_at)})) : (x.fetched_at ? TT('docket.xm.fetched', 'fetched {day}', {day: dayUTC(x.fetched_at)}) : '');
   let sentence;
-  if (!ran) sentence = 'Archive: known-planet cross-match not run.';
+  if (!ran) sentence = TT('docket.xm.notrun', 'Archive: known-planet cross-match not run.');
   else {
     const hit = cmp && cmp.consistent_with ? (cmp.planets || []).find(p => p.pl_name === cmp.consistent_with) : null;
-    const what = hit ? `consistent with ${esc(hit.pl_name)} (P ${fmt(hit.pl_orbper,3)} d, ΔP ${fmt(hit.dP_pct,2)}%)`
-      : x.status === 'no_match' ? 'no published planet for this star' : `no published planet within tolerance of this dip (${esc(x.line)})`;
-    const where = x.fallback_from ? `from the repository's stored cross-match ${esc(x.fallback_from)}; this run's own cross-match ${x.run_status === 'not_run' ? 'did not run' : 'is ' + esc(x.run_status || 'not stored')}`
-      : `from this run's stored cross-match, ${dated}`;
-    sentence = `Archive: ${what}, ${where}.`;
+    const what = hit ? TT('docket.xm.consistent', 'consistent with {name} (P {p} d, ΔP {dp}%)', {name: hit.pl_name, p: fmt(hit.pl_orbper,3), dp: fmt(hit.dP_pct,2)})
+      : x.status === 'no_match' ? TT('docket.xm.nomatch', 'no published planet for this star') : TT('docket.xm.notol', 'no published planet within tolerance of this dip ({line})', {line: x.line});
+    const where = x.fallback_from ? (x.run_status === 'not_run'
+        ? TT('docket.xm.fallback', 'from the repository\'s stored cross-match {file}; this run\'s own cross-match did not run', {file: x.fallback_from})
+        : TT('docket.xm.fallback_status', 'from the repository\'s stored cross-match {file}; this run\'s own cross-match is {status}', {file: x.fallback_from, status: x.run_status || 'not stored'}))
+      : TT('docket.xm.thisrun', 'from this run\'s stored cross-match, {dated}', {dated});
+    sentence = TT('docket.xm.sentence', 'Archive: {what}, {where}.', {what: '\u0001', where: '\u0002'}).replace('\u0001', what).replace('\u0002', where);
   }
   const prov = [
     feedLine ? `<li class="out-feed">${feedLine}</li>` : '',
@@ -731,7 +738,7 @@ function crossmatchLine(c, feedLine){
     !ran ? `<li>Stored error, verbatim: <code>${esc(x.error || 'none stored')}</code></li>` : '',
     x.fallback_from && x.run_error ? `<li>This run's own cross-match, stored error, verbatim: <code>${esc(x.run_error)}</code></li>` : '',
   ].join('');
-  return `<div class="xm ${cls}"><p class="xm-one">${sentence} <span class="hint">Archive values only; this page claims no detection either way.</span></p><details class="xm-prov"><summary>Provenance</summary><ul>${prov}</ul></details></div>`;
+  return `<div class="xm ${cls}"><p class="xm-one">${sentence} <span class="hint">${TT('docket.xm.hint', 'Archive values only; this page claims no detection either way.')}</span></p><details class="xm-prov"><summary>${TT('docket.xm.prov', 'Provenance')}</summary><ul>${prov}</ul></details></div>`;
 }
 
 function sec(key, title, sub, body){

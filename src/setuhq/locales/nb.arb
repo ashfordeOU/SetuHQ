@@ -1311,6 +1311,71 @@
   "x-review": "machine",
   "x-source": "9fdbc5d13a"
  },
+ "docket.xm.consistent": "forenlig med {name} (P {p} d, ΔP {dp}%)",
+ "@docket.xm.consistent": {
+  "x-review": "machine",
+  "x-source": "3226149bc1"
+ },
+ "docket.xm.fallback": "fra repositoriets lagrede krysskobling {file}; denne kjøringens egen krysskobling ble ikke kjørt",
+ "@docket.xm.fallback": {
+  "x-review": "machine",
+  "x-source": "e3b7cb6091"
+ },
+ "docket.xm.fallback_status": "fra repositoriets lagrede krysskobling {file}; denne kjøringens egen krysskobling er {status}",
+ "@docket.xm.fallback_status": {
+  "x-review": "machine",
+  "x-source": "f257e76377"
+ },
+ "docket.xm.fetched": "hentet {day}",
+ "@docket.xm.fetched": {
+  "x-review": "machine",
+  "x-source": "73b792e4cd"
+ },
+ "docket.xm.hint": "Kun arkivverdier; denne siden hevder ingen deteksjon, verken den ene eller den andre veien.",
+ "@docket.xm.hint": {
+  "x-review": "machine",
+  "x-source": "c315680495"
+ },
+ "docket.xm.nomatch": "ingen publisert planet for denne stjernen",
+ "@docket.xm.nomatch": {
+  "x-review": "machine",
+  "x-source": "fa1c4bc148"
+ },
+ "docket.xm.notol": "ingen publisert planet innenfor toleransen for dette fallet ({line})",
+ "@docket.xm.notol": {
+  "x-review": "machine",
+  "x-source": "ae73d82e90"
+ },
+ "docket.xm.notrun": "Arkiv: krysskobling mot kjente planeter ikke kjørt.",
+ "@docket.xm.notrun": {
+  "x-review": "machine",
+  "x-source": "a5925294e5"
+ },
+ "docket.xm.prov": "Opphav",
+ "@docket.xm.prov": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "docket.xm.recorded": "registrert {day}",
+ "@docket.xm.recorded": {
+  "x-review": "machine",
+  "x-source": "741bf61048"
+ },
+ "docket.xm.recorded_commit": "registrert {day} (commit {c})",
+ "@docket.xm.recorded_commit": {
+  "x-review": "machine",
+  "x-source": "c8f9b533a8"
+ },
+ "docket.xm.sentence": "Arkiv: {what}, {where}.",
+ "@docket.xm.sentence": {
+  "x-review": "machine",
+  "x-source": "129aac7010"
+ },
+ "docket.xm.thisrun": "fra denne kjøringens lagrede krysskobling, {dated}",
+ "@docket.xm.thisrun": {
+  "x-review": "machine",
+  "x-source": "e59eed1ac4"
+ },
  "docs.contribute": "Bidra med et sveip",
  "@docs.contribute": {
   "x-review": "machine",
@@ -2000,6 +2065,16 @@
  "@i18n.suggest.text": {
   "x-review": "machine",
   "x-source": "4d512860c4"
+ },
+ "journey.asof": "per {d}",
+ "@journey.asof": {
+  "x-review": "machine",
+  "x-source": "2b5ade6c41"
+ },
+ "journey.nodate": "ingen dato: ikke registrert",
+ "@journey.nodate": {
+  "x-review": "machine",
+  "x-source": "8a0525a991"
  },
  "js.100lzsd0h94": "Signal P {n0} / {n1} d <span class=\"dipid\">· dipp E7 · tess-291acb98cabe-{n2}</span>",
  "@js.100lzsd0h94": {

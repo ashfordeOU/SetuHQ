@@ -25,6 +25,8 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
+from setuhq.i18n import k as ik, t
+
 ARCHIVE = "docs/results/showcase_archive.json"
 PC_TO_LY = 3.261563777  # light years per parsec (IAU)
 LABELS = ("Found by SetuHQ", "Vetted", "Panel reviewed", "Matches a TOI?", "Follow-up", "In the literature as a planet?")
@@ -131,7 +133,8 @@ def strip_html(st: list[dict], *, archive: dict | None = None) -> str:
         txt = e(s["text"])
         if s.get("href"):
             txt = f'<a rel="noopener" href="{e(s["href"])}">{txt}</a>'
-        asof = f'<small>as of {e(s["asof"])}</small>' if s.get("asof") else "<small>no date: not recorded</small>"
+        asof = (f'<small{ik("journey.asof", d=s["asof"])}>{t("journey.asof", "as of {d}", d=s["asof"])}</small>' if s.get("asof")
+                else f'<small{ik("journey.nodate")}>{t("journey.nodate", "no date: not recorded")}</small>')
         lis.append(f'<li class="j-{s["state"]}"><i aria-hidden="true">{mark[s["state"]]}</i><b>{e(s["label"])}</b><span>{txt}</span>{asof}</li>')
     src = e(arch.get("source") or "NASA Exoplanet Archive")
     return (f'<div class="journey"><h2 class="jh">This dip so far</h2><ol>{"".join(lis)}</ol>'

@@ -479,14 +479,16 @@ def test_candidates_store_mark_audit_and_counting_rule(run_dir, tmp_path):
 
 def test_verdict_card_archive_is_one_sentence_with_provenance_behind_a_disclosure():
     fn = re.search(r"function crossmatchLine\(c, feedLine\)\{.*?\n\}\n", DOCKET_JS, re.S).group(0)
-    assert '<p class="xm-one">${sentence}' in fn and "<details class=\"xm-prov\"><summary>Provenance</summary>" in fn
-    assert "from the repository's stored cross-match ${esc(x.fallback_from)}; this run's own cross-match ${x.run_status === 'not_run' ? 'did not run'" in fn
-    assert "consistent with ${esc(hit.pl_name)} (P ${fmt(hit.pl_orbper,3)} d, ΔP ${fmt(hit.dP_pct,2)}%)" in fn
+    assert '<p class="xm-one">${sentence}' in fn and "<details class=\"xm-prov\"><summary>${TT('docket.xm.prov', 'Provenance')}</summary>" in fn
+    # Each part is a message (in the shell's language inside the case file's frame), its English as before.
+    assert "'from the repository\\'s stored cross-match {file}; this run\\'s own cross-match did not run', {file: x.fallback_from}" in fn
+    assert "'consistent with {name} (P {p} d, ΔP {dp}%)', {name: hit.pl_name, p: fmt(hit.pl_orbper,3), dp: fmt(hit.dP_pct,2)}" in fn
+    assert "TT('docket.xm.sentence', 'Archive: {what}, {where}.'" in fn
     # The full source and the verbatim errors sit in the disclosure.
     assert "Source: ${esc(x.source)}" in fn and "Stored error, verbatim" in fn and "esc(x.run_error)" in fn
     # A fallback was recorded, not fetched for this page.
-    assert "recorded ${dayUTC(x.fetched_at)}${x.recorded_commit ? ` (commit ${esc(x.recorded_commit)})` : ''}" in fn
-    assert "fetched ${dayUTC(x.fetched_at)}" in fn
+    assert "'recorded {day} (commit {c})', {day: dayUTC(x.fetched_at), c: x.recorded_commit}" in fn
+    assert "'fetched {day}', {day: dayUTC(x.fetched_at)}" in fn
 
 
 def test_validation_note_supplies_the_timing_offset():

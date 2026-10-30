@@ -1311,6 +1311,71 @@
   "x-review": "machine",
   "x-source": "9fdbc5d13a"
  },
+ "docket.xm.consistent": "compatible avec {name} (P {p} j, ΔP {dp} %)",
+ "@docket.xm.consistent": {
+  "x-review": "machine",
+  "x-source": "3226149bc1"
+ },
+ "docket.xm.fallback": "issu du cross-match enregistré dans le dépôt {file} ; le cross-match propre à cette exécution n’a pas été lancé",
+ "@docket.xm.fallback": {
+  "x-review": "machine",
+  "x-source": "e3b7cb6091"
+ },
+ "docket.xm.fallback_status": "issu du cross-match enregistré dans le dépôt {file} ; le cross-match propre à cette exécution est {status}",
+ "@docket.xm.fallback_status": {
+  "x-review": "machine",
+  "x-source": "f257e76377"
+ },
+ "docket.xm.fetched": "récupéré le {day}",
+ "@docket.xm.fetched": {
+  "x-review": "machine",
+  "x-source": "73b792e4cd"
+ },
+ "docket.xm.hint": "Valeurs de l’archive uniquement ; cette page n’affirme aucune détection, dans un sens ou dans l’autre.",
+ "@docket.xm.hint": {
+  "x-review": "machine",
+  "x-source": "c315680495"
+ },
+ "docket.xm.nomatch": "aucune planète publiée pour cette étoile",
+ "@docket.xm.nomatch": {
+  "x-review": "machine",
+  "x-source": "fa1c4bc148"
+ },
+ "docket.xm.notol": "aucune planète publiée dans la tolérance de ce creux ({line})",
+ "@docket.xm.notol": {
+  "x-review": "machine",
+  "x-source": "ae73d82e90"
+ },
+ "docket.xm.notrun": "Archive : cross-match avec les planètes connues non lancé.",
+ "@docket.xm.notrun": {
+  "x-review": "machine",
+  "x-source": "a5925294e5"
+ },
+ "docket.xm.prov": "Provenance",
+ "@docket.xm.prov": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "docket.xm.recorded": "enregistré le {day}",
+ "@docket.xm.recorded": {
+  "x-review": "machine",
+  "x-source": "741bf61048"
+ },
+ "docket.xm.recorded_commit": "enregistré le {day} (commit {c})",
+ "@docket.xm.recorded_commit": {
+  "x-review": "machine",
+  "x-source": "c8f9b533a8"
+ },
+ "docket.xm.sentence": "Archive : {what}, {where}.",
+ "@docket.xm.sentence": {
+  "x-review": "machine",
+  "x-source": "129aac7010"
+ },
+ "docket.xm.thisrun": "issu du cross-match enregistré de cette exécution, {dated}",
+ "@docket.xm.thisrun": {
+  "x-review": "machine",
+  "x-source": "e59eed1ac4"
+ },
  "docs.contribute": "Contribuer un balayage",
  "@docs.contribute": {
   "x-review": "machine",
@@ -2000,6 +2065,16 @@
  "@i18n.suggest.text": {
   "x-review": "machine",
   "x-source": "4d512860c4"
+ },
+ "journey.asof": "au {d}",
+ "@journey.asof": {
+  "x-review": "machine",
+  "x-source": "2b5ade6c41"
+ },
+ "journey.nodate": "pas de date : non enregistrée",
+ "@journey.nodate": {
+  "x-review": "machine",
+  "x-source": "8a0525a991"
  },
  "js.100lzsd0h94": "Signal P {n0} / {n1} d <span class=\"dipid\">· creux E7 · tess-291acb98cabe-{n2}</span>",
  "@js.100lzsd0h94": {

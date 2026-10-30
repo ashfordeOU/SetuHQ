@@ -1311,6 +1311,71 @@
   "x-review": "machine",
   "x-source": "9fdbc5d13a"
  },
+ "docket.xm.consistent": "consistente com {name} (P {p} d, ΔP {dp}%)",
+ "@docket.xm.consistent": {
+  "x-review": "machine",
+  "x-source": "3226149bc1"
+ },
+ "docket.xm.fallback": "a partir do cross-match guardado no repositório {file}; o cross-match desta execução não foi executado",
+ "@docket.xm.fallback": {
+  "x-review": "machine",
+  "x-source": "e3b7cb6091"
+ },
+ "docket.xm.fallback_status": "a partir do cross-match guardado no repositório {file}; o cross-match desta execução está {status}",
+ "@docket.xm.fallback_status": {
+  "x-review": "machine",
+  "x-source": "f257e76377"
+ },
+ "docket.xm.fetched": "obtido em {day}",
+ "@docket.xm.fetched": {
+  "x-review": "machine",
+  "x-source": "73b792e4cd"
+ },
+ "docket.xm.hint": "Apenas valores do arquivo; esta página não afirma qualquer deteção, nem positiva nem negativa.",
+ "@docket.xm.hint": {
+  "x-review": "machine",
+  "x-source": "c315680495"
+ },
+ "docket.xm.nomatch": "nenhum planeta publicado para esta estrela",
+ "@docket.xm.nomatch": {
+  "x-review": "machine",
+  "x-source": "fa1c4bc148"
+ },
+ "docket.xm.notol": "nenhum planeta publicado dentro da tolerância desta queda ({line})",
+ "@docket.xm.notol": {
+  "x-review": "machine",
+  "x-source": "ae73d82e90"
+ },
+ "docket.xm.notrun": "Arquivo: cross-match com planetas conhecidos não executado.",
+ "@docket.xm.notrun": {
+  "x-review": "machine",
+  "x-source": "a5925294e5"
+ },
+ "docket.xm.prov": "Proveniência",
+ "@docket.xm.prov": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "docket.xm.recorded": "registado em {day}",
+ "@docket.xm.recorded": {
+  "x-review": "machine",
+  "x-source": "741bf61048"
+ },
+ "docket.xm.recorded_commit": "registado em {day} (commit {c})",
+ "@docket.xm.recorded_commit": {
+  "x-review": "machine",
+  "x-source": "c8f9b533a8"
+ },
+ "docket.xm.sentence": "Arquivo: {what}, {where}.",
+ "@docket.xm.sentence": {
+  "x-review": "machine",
+  "x-source": "129aac7010"
+ },
+ "docket.xm.thisrun": "a partir do cross-match guardado desta execução, {dated}",
+ "@docket.xm.thisrun": {
+  "x-review": "machine",
+  "x-source": "e59eed1ac4"
+ },
  "docs.contribute": "Contribuir com uma varredura",
  "@docs.contribute": {
   "x-review": "machine",
@@ -2000,6 +2065,16 @@
  "@i18n.suggest.text": {
   "x-review": "machine",
   "x-source": "4d512860c4"
+ },
+ "journey.asof": "à data de {d}",
+ "@journey.asof": {
+  "x-review": "machine",
+  "x-source": "2b5ade6c41"
+ },
+ "journey.nodate": "sem data: não registada",
+ "@journey.nodate": {
+  "x-review": "machine",
+  "x-source": "8a0525a991"
  },
  "js.100lzsd0h94": "Sinal P {n0} / {n1} d <span class=\"dipid\">· queda E7 · tess-291acb98cabe-{n2}</span>",
  "@js.100lzsd0h94": {

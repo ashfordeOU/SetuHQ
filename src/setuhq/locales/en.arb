@@ -1332,6 +1332,90 @@
    "n": {}
   }
  },
+ "docket.xm.consistent": "consistent with {name} (P {p} d, ΔP {dp}%)",
+ "@docket.xm.consistent": {
+  "x-file": "src/setuhq/docket.py",
+  "placeholders": {
+   "dp": {},
+   "name": {},
+   "p": {}
+  }
+ },
+ "docket.xm.fallback": "from the repository's stored cross-match {file}; this run's own cross-match did not run",
+ "@docket.xm.fallback": {
+  "x-file": "src/setuhq/docket.py",
+  "placeholders": {
+   "file": {}
+  }
+ },
+ "docket.xm.fallback_status": "from the repository's stored cross-match {file}; this run's own cross-match is {status}",
+ "@docket.xm.fallback_status": {
+  "x-file": "src/setuhq/docket.py",
+  "placeholders": {
+   "file": {},
+   "status": {}
+  }
+ },
+ "docket.xm.fetched": "fetched {day}",
+ "@docket.xm.fetched": {
+  "x-file": "src/setuhq/docket.py",
+  "placeholders": {
+   "day": {}
+  }
+ },
+ "docket.xm.hint": "Archive values only; this page claims no detection either way.",
+ "@docket.xm.hint": {
+  "x-file": "src/setuhq/docket.py"
+ },
+ "docket.xm.nomatch": "no published planet for this star",
+ "@docket.xm.nomatch": {
+  "x-file": "src/setuhq/docket.py"
+ },
+ "docket.xm.notol": "no published planet within tolerance of this dip ({line})",
+ "@docket.xm.notol": {
+  "x-file": "src/setuhq/docket.py",
+  "placeholders": {
+   "line": {}
+  }
+ },
+ "docket.xm.notrun": "Archive: known-planet cross-match not run.",
+ "@docket.xm.notrun": {
+  "x-file": "src/setuhq/docket.py"
+ },
+ "docket.xm.prov": "Provenance",
+ "@docket.xm.prov": {
+  "x-file": "src/setuhq/docket.py"
+ },
+ "docket.xm.recorded": "recorded {day}",
+ "@docket.xm.recorded": {
+  "x-file": "src/setuhq/docket.py",
+  "placeholders": {
+   "day": {}
+  }
+ },
+ "docket.xm.recorded_commit": "recorded {day} (commit {c})",
+ "@docket.xm.recorded_commit": {
+  "x-file": "src/setuhq/docket.py",
+  "placeholders": {
+   "c": {},
+   "day": {}
+  }
+ },
+ "docket.xm.sentence": "Archive: {what}, {where}.",
+ "@docket.xm.sentence": {
+  "x-file": "src/setuhq/docket.py",
+  "placeholders": {
+   "what": {},
+   "where": {}
+  }
+ },
+ "docket.xm.thisrun": "from this run's stored cross-match, {dated}",
+ "@docket.xm.thisrun": {
+  "x-file": "src/setuhq/docket.py",
+  "placeholders": {
+   "dated": {}
+  }
+ },
  "docs.contribute": "Contribute a sweep",
  "@docs.contribute": {
   "x-file": "src/setuhq/site.py"
@@ -2057,6 +2141,17 @@
  "@i18n.suggest.text": {
   "x-file": "src/setuhq/site.py",
   "description": "Said in the language it offers: 'This page is also in German.' in German."
+ },
+ "journey.asof": "as of {d}",
+ "@journey.asof": {
+  "x-file": "src/setuhq/journey.py",
+  "placeholders": {
+   "d": {}
+  }
+ },
+ "journey.nodate": "no date: not recorded",
+ "@journey.nodate": {
+  "x-file": "src/setuhq/journey.py"
  },
  "js.100lzsd0h94": "Signal P {n0} / {n1} d <span class=\"dipid\">· dip E7 · tess-291acb98cabe-{n2}</span>",
  "@js.100lzsd0h94": {
