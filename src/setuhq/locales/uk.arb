@@ -13816,6 +13816,26 @@
   "x-review": "machine",
   "x-source": "caf85b0888"
  },
+ "methods.tag.does": "SetuHQ робить це",
+ "@methods.tag.does": {
+  "x-review": "machine",
+  "x-source": "3a52cd63a6"
+ },
+ "methods.tag.explainer": "пояснення: SetuHQ цього не робить",
+ "@methods.tag.explainer": {
+  "x-review": "machine",
+  "x-source": "71d2040771"
+ },
+ "methods.toc.nostar": "немає однієї зорі",
+ "@methods.toc.nostar": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
+ },
+ "methods.toc.teff": "{t, number, integer} K",
+ "@methods.toc.teff": {
+  "x-review": "machine",
+  "x-source": "8ab4c4ee91"
+ },
  "mx.from": "Джерело",
  "@mx.from": {
   "x-review": "machine",
@@ -18130,11 +18150,6 @@
  "@pg.8a302c5890": {
   "x-review": "machine",
   "x-source": "8a302c5890"
- },
- "pg.8a57c58eb1": "не одна окрема зоря",
- "@pg.8a57c58eb1": {
-  "x-review": "machine",
-  "x-source": "8a57c58eb1"
  },
  "pg.8af0e1186f": "<b>Переважно розтягнення N–N</b> · {n0} µm · активне в ІЧ-діапазоні · намальовано ×{n1} · не намальовано в Reading atmospheres",
  "@pg.8af0e1186f": {

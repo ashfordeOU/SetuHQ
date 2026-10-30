@@ -86,7 +86,7 @@
   "x-review": "machine",
   "x-source": "2a7dfeb2f2"
  },
- "chapter.rv": "Radialgeschwindigkeit",
+ "chapter.rv": "Radial­geschwindigkeit",
  "@chapter.rv": {
   "x-review": "machine",
   "x-source": "5605460ec2"
@@ -13816,6 +13816,26 @@
   "x-review": "machine",
   "x-source": "caf85b0888"
  },
+ "methods.tag.does": "SetuHQ macht das",
+ "@methods.tag.does": {
+  "x-review": "machine",
+  "x-source": "3a52cd63a6"
+ },
+ "methods.tag.explainer": "Erklärung: SetuHQ macht das nicht",
+ "@methods.tag.explainer": {
+  "x-review": "machine",
+  "x-source": "71d2040771"
+ },
+ "methods.toc.nostar": "kein einzelner Stern",
+ "@methods.toc.nostar": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
+ },
+ "methods.toc.teff": "{t, number, integer} K",
+ "@methods.toc.teff": {
+  "x-review": "machine",
+  "x-source": "8ab4c4ee91"
+ },
  "mx.from": "Herkunft",
  "@mx.from": {
   "x-review": "machine",
@@ -18130,11 +18150,6 @@
  "@pg.8a302c5890": {
   "x-review": "machine",
   "x-source": "8a302c5890"
- },
- "pg.8a57c58eb1": "kein einzelner Stern",
- "@pg.8a57c58eb1": {
-  "x-review": "machine",
-  "x-source": "8a57c58eb1"
  },
  "pg.8af0e1186f": "<b>Überwiegend N–N-Streckschwingung</b> · {n0} µm · infrarotaktiv · gezeichnet ×{n1} · in Reading atmospheres nicht gezeichnet",
  "@pg.8af0e1186f": {

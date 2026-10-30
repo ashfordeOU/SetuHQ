@@ -102,6 +102,28 @@ export default async function ({ browser, BASE, check: ok }) {
     await c4.close();
   }
 
+  // The chapter cards in every language: a title wraps (never clipped) and the star's temperature is never cut.
+  const langs = ["", ...new Set(mains.map(p => p.split("/")[1]))];
+  const allLangs = [...new Set([...langs, ...(await page.evaluate(() => SetuI18n.conf.locales.filter(l => l !== "en")))])];
+  for (const vp of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+    const c5 = await browser.newContext({ viewport: vp }), p5 = await c5.newPage(), bad = [];
+    let cards = 0;
+    for (const l of allLangs) {
+      await p5.goto(base + (l ? "/" + l : "") + "/how-it-works/transits/", { waitUntil: "load" }); await p5.waitForTimeout(150);
+      const r = await p5.evaluate(() => { const out = []; let n = 0;
+        for (const a of document.querySelectorAll(".mxtoc a")) {
+          n++; const box = a.getBoundingClientRect(), t = a.querySelector(".mxtoct"), tr = t.getBoundingClientRect();
+          if (t.scrollWidth > t.clientWidth + 1 || tr.right > box.right + 1) out.push("title " + t.textContent.trim());
+          const k = a.querySelector(".mxtocs > :last-child"), kr = k && k.getBoundingClientRect(), s = a.querySelector(".mxtocs").getBoundingClientRect();
+          if (kr && (kr.right > s.right + 1 || kr.right > box.right + 1)) out.push("star line " + a.querySelector(".mxtocs").textContent.trim());
+        }
+        return { out, n }; });
+      cards += r.n; for (const b of r.out) bad.push((l || "en") + ": " + b);
+    }
+    check(`chapter cards: titles wrap and temperatures show in every language (${vp.width}px, ${cards} cards)`, cards >= 17 * 15 && bad.length === 0, bad.slice(0, 4).join(" || "));
+    await c5.close();
+  }
+
   const shots = process.env.SETUHQ_I18N_SHOTS;
   if (shots) {
     const c3 = await browser.newContext({ viewport: { width: 1440, height: 900 } });

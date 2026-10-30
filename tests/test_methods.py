@@ -564,7 +564,10 @@ def test_the_chapter_list_is_cards_with_the_chapters_star(page_html):
     assert [c for c, _ in cards] == [c for c, _ in M.CHAPTERS]
     pm = EX["planets"]["pi Men c"]
     transit = dict(cards)["transit"]
-    assert 'class="stardisc"' in transit and f"pi Men · {pm['star_teff']:,.0f} K" in transit
+    # The star's name, then its temperature as a message (a number in the reader's format).
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", transit).replace("&nbsp;", " "))
+    assert 'class="stardisc"' in transit and f"pi Men · {pm['star_teff']:,.0f} K" in text
+    assert 'class="mxtocn" translate="no">pi Men<' in transit  # the name gives way before the temperature
 
 
 def test_the_transit_chapter_folds_pi_mens_light_curve_above_the_lab(page_html):

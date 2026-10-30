@@ -20454,6 +20454,25 @@
  "@methods.sources": {
   "x-file": "src/setuhq/methods.py"
  },
+ "methods.tag.does": "SetuHQ does this",
+ "@methods.tag.does": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "methods.tag.explainer": "explainer: SetuHQ does not do this",
+ "@methods.tag.explainer": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "methods.toc.nostar": "no single star",
+ "@methods.toc.nostar": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "methods.toc.teff": "{t, number, integer} K",
+ "@methods.toc.teff": {
+  "x-file": "src/setuhq/methods.py",
+  "placeholders": {
+   "t": {}
+  }
+ },
  "mx.from": "From",
  "@mx.from": {
   "x-file": "src/setuhq/methods.py"
@@ -26366,11 +26385,6 @@
    "n1": {},
    "n2": {}
   }
- },
- "pg.8a57c58eb1": "no single star",
- "@pg.8a57c58eb1": {
-  "x-file": "site/how-it-works/",
-  "description": "Text on the page /how-it-works/, /how-it-works/astrometry/, /how-it-works/atmospheres/ and 12 more. Keep every {nN} (a number from the page) and every tag with its attributes; code, file names and commands stay as written."
  },
  "pg.8af0e1186f": "<b>N–N stretch, mostly</b> · {n0} µm · infrared-active · drawn ×{n1} · not drawn in Reading atmospheres",
  "@pg.8af0e1186f": {

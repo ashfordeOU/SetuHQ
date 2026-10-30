@@ -1050,12 +1050,15 @@ def _toc(ex: dict) -> str:
 
     e = html.escape
     items = []
-    for i, (c, t) in enumerate(CHAPTERS):
+    for i, (c, title) in enumerate(CHAPTERS):
         st = _toc_star(c, ex)
         art = (f'<span class="mxtocart">{star_svg(st[1], 32, uid=f"toc-{c}")}</span>' if st
                else f'<span class="mxtocart none" aria-hidden="true"></span>')
-        star = f'<span class="mxtocs">{e(st[0])} · {st[1]:,.0f} K</span>' if st else '<span class="mxtocs">no single star</span>'
-        items.append(f'<li><a href="#/methods?ch={c}" data-ch="{c}">{art}<span class="mxtoct"><span class="mono">{i + 1:02d}</span> <span{ik("chapter." + c)}>{e(t)}</span></span>{star}</a></li>')
+        # The star's name gives way (an ellipsis) before its temperature, which is a message in the reader's format.
+        star = (f'<span class="mxtocs"><span class="mxtocn" translate="no">{e(st[0])}</span><span>&nbsp;·&nbsp;</span>'
+                f'<span{ik("methods.toc.teff", t=round(st[1]))}>{t("methods.toc.teff", "{t, number, integer} K", t=round(st[1]))}</span></span>'
+                if st else f'<span class="mxtocs none"><span{ik("methods.toc.nostar")}>{t("methods.toc.nostar", "no single star")}</span></span>')
+        items.append(f'<li><a href="#/methods?ch={c}" data-ch="{c}">{art}<span class="mxtoct"><span class="mono">{i + 1:02d}</span> <span{ik("chapter." + c)}>{e(title)}</span></span>{star}</a></li>')
     return "".join(items)
 
 
@@ -1539,7 +1542,8 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         "spectroscopy": ["seager", "winn", "faedi", "ers", "carter24", "carter24data", "schwieterman", "cccbdb"],
         "molecules": ["cccbdb", "schwieterman", "meadows", "catling", "krissansen"], "history": [],
     }
-    tags = {"transit": "SetuHQ does this", "spectroscopy": "explainer: SetuHQ does not do this"}
+    tags = {"transit": f'<span{ik("methods.tag.does")}>{t("methods.tag.does", "SetuHQ does this")}</span>',
+            "spectroscopy": f'<span{ik("methods.tag.explainer")}>{t("methods.tag.explainer", "explainer: SetuHQ does not do this")}</span>'}
     sections = []
     for i, (cid, title) in enumerate(CHAPTERS):
         prev = CHAPTERS[i - 1] if i else None
@@ -1552,7 +1556,7 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
                + (f'<a class="btn" href="#/methods?ch={prev[0]}">‹ <span{ik("chapter." + prev[0])}>{e(prev[1])}</span></a>' if prev else "<span></span>")
                + (f'<a class="btn primary" href="#/methods?ch={nxt[0]}"><span{ik("chapter." + nxt[0])}>{e(nxt[1])}</span> ›</a>' if nxt else "") + "</nav>")
         sections.append(f'<article class="mxch" id="mx-{cid}" data-ch="{cid}" aria-labelledby="h-mx-{cid}" hidden>'
-                        f'<header><p class="eyebrow"><span{ik("methods.chapter_n", i=i + 1, n=len(CHAPTERS))}>{t("methods.chapter_n", "Chapter {i} of {n}", i=i + 1, n=len(CHAPTERS))}</span>{(" · " + e(tags[cid])) if cid in tags else ""}</p>'
+                        f'<header><p class="eyebrow"><span{ik("methods.chapter_n", i=i + 1, n=len(CHAPTERS))}>{t("methods.chapter_n", "Chapter {i} of {n}", i=i + 1, n=len(CHAPTERS))}</span>{(" · " + tags[cid]) if cid in tags else ""}</p>'
                         f'<h2 id="h-mx-{cid}"{ik("chapter." + cid)}>{e(title)}</h2></header>{ch[cid]}{cnt}{planets}{srcs}{nav}</article>')
     return f"""<header class="headrow">
         <div>{eyebrow}<h1 class="lead-h" id="h-methods" tabindex="-1"><span{ik("methods.h1")}>{t("methods.h1", "How planets are found.")}</span><br><span class="grey"{ik("methods.h1b")}>{t("methods.h1b", "And how SetuHQ finds them.")}</span></h1>
@@ -3153,9 +3157,11 @@ METHODS_CSS = r"""
 .mxtocart{grid-row:1/3;display:grid;place-items:center;width:64px;height:64px;border-radius:var(--r-xs);background:var(--stage)}
 .mxtocart svg{width:56px;height:56px;display:block}
 .mxtocart.none::after{content:"";width:28px;height:28px;border-radius:50%;border:1px dashed var(--stage-dim)}
-.mxtoct{align-self:end}
+.mxtoct{align-self:end;overflow-wrap:break-word;hyphens:auto}  /* a long word (Radialgeschwindigkeit) wraps, never clipped */
 .mxtoct .mono{font:var(--t-data);color:var(--ink-3);font-weight:400}
-.mxtocs{align-self:start;font:var(--t-data);font-size:11.5px;color:var(--ink-3);font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mxtocs{align-self:start;display:flex;min-width:0;font:var(--t-data);font-size:11.5px;color:var(--ink-3);font-weight:400;white-space:nowrap}
+.mxtocs>*{flex:none}.mxtocs>.mxtocn{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.mxtocs.none{white-space:normal}.mxtocs.none>*{flex:0 1 auto;min-width:0}  /* "no single star" wraps in a longer language */
 .mxtoc a[aria-current="step"]{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
 .mxtoc a[aria-current="step"] .mono{color:var(--blue)}
 .mxch{display:grid;gap:16px}

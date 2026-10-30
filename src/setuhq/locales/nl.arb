@@ -13816,6 +13816,26 @@
   "x-review": "machine",
   "x-source": "caf85b0888"
  },
+ "methods.tag.does": "SetuHQ doet dit",
+ "@methods.tag.does": {
+  "x-review": "machine",
+  "x-source": "3a52cd63a6"
+ },
+ "methods.tag.explainer": "uitleg: SetuHQ doet dit niet",
+ "@methods.tag.explainer": {
+  "x-review": "machine",
+  "x-source": "71d2040771"
+ },
+ "methods.toc.nostar": "geen enkele ster",
+ "@methods.toc.nostar": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
+ },
+ "methods.toc.teff": "{t, number, integer} K",
+ "@methods.toc.teff": {
+  "x-review": "machine",
+  "x-source": "8ab4c4ee91"
+ },
  "mx.from": "Herkomst",
  "@mx.from": {
   "x-review": "machine",
@@ -18130,11 +18150,6 @@
  "@pg.8a302c5890": {
   "x-review": "machine",
   "x-source": "8a302c5890"
- },
- "pg.8a57c58eb1": "geen afzonderlijke ster",
- "@pg.8a57c58eb1": {
-  "x-review": "machine",
-  "x-source": "8a57c58eb1"
  },
  "pg.8af0e1186f": "<b>N–N-strekking, grotendeels</b> · {n0} µm · infraroodactief · getekend ×{n1} · niet getekend in Atmosferen lezen",
  "@pg.8af0e1186f": {

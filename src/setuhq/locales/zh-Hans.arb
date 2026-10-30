@@ -13816,6 +13816,26 @@
   "x-review": "machine",
   "x-source": "caf85b0888"
  },
+ "methods.tag.does": "SetuHQ 执行此项",
+ "@methods.tag.does": {
+  "x-review": "machine",
+  "x-source": "3a52cd63a6"
+ },
+ "methods.tag.explainer": "说明：SetuHQ 不执行此项",
+ "@methods.tag.explainer": {
+  "x-review": "machine",
+  "x-source": "71d2040771"
+ },
+ "methods.toc.nostar": "无单一恒星",
+ "@methods.toc.nostar": {
+  "x-review": "machine",
+  "x-source": "8a57c58eb1"
+ },
+ "methods.toc.teff": "{t, number, integer} K",
+ "@methods.toc.teff": {
+  "x-review": "machine",
+  "x-source": "8ab4c4ee91"
+ },
  "mx.from": "出处",
  "@mx.from": {
   "x-review": "machine",
@@ -18130,11 +18150,6 @@
  "@pg.8a302c5890": {
   "x-review": "machine",
   "x-source": "8a302c5890"
- },
- "pg.8a57c58eb1": "无单一恒星",
- "@pg.8a57c58eb1": {
-  "x-review": "machine",
-  "x-source": "8a57c58eb1"
  },
  "pg.8af0e1186f": "<b>主要为 N–N 伸缩</b> · {n0} µm · 红外活性 · 绘制放大 ×{n1} · 未在“解读大气”一章中绘出",
  "@pg.8af0e1186f": {
