@@ -16,14 +16,14 @@
 <link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/site-0b14134a46.css">
-<link rel="preload" href="/assets/data/app-e91ba0fdc9.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/data/app-735386a5c4.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-645aac0822.js" as="script">
 <script src="/assets/render-9a18655b86.js" defer></script>
-<script src="/assets/i18n-950de2c247.js" defer></script>
-<script src="/assets/site-d3ae8b9cff.js" defer></script>
+<script src="/assets/i18n-a967e539f3.js" defer></script>
+<script src="/assets/site-a066e4d1e4.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":["/candidates/*/case-file/","/evidence/plates/*","/evidence/report/*"]},"eagerness":"moderate"}]}</script>
 </head>
-<body class="page-docs" data-page="docs" data-route="docs" data-data="/assets/data/app-e91ba0fdc9.json" data-routes="/assets/views-01c5af27ac.html" data-app="/assets/app-645aac0822.js">
+<body class="page-docs" data-page="docs" data-route="docs" data-data="/assets/data/app-735386a5c4.json" data-routes="/assets/views-467becfb8c.html" data-app="/assets/app-645aac0822.js">
 <div class="starfield" data-render="starfield" data-params='{"seed":314}' aria-hidden="true"><img class="rstill" src="/assets/starfield-e45ec374c5.svg" alt=""></div>
 <a class="skip" href="#content" data-i18n="shell.skip">本文へスキップ</a>
 <header class="topbar">
@@ -60,26 +60,26 @@
 setuhq run configs/showcase/tess-wasp-126-s1.toml --out runs/tess-wasp-126-s1   # or any star: copy a config, change its TIC and sectors
 setuhq crossmatch runs/tess-wasp-126-s1          # the NASA Exoplanet Archive's planets for the star
 setuhq site runs/tess-wasp-126-s1 --out site     # a website from your run (several runs: list them all)</code></pre>
-        <p>Every example on this site has its configuration in <code>configs/</code> and its one-line command in <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/SHOWCASE.md">docs/SHOWCASE.md</a>. The run downloads the light curve from MAST, cleans it, lets the panel mark dips, vets each signal and writes every result with its provenance. The Probes run with no account; the Sentinels need an API key for their provider. Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+        <p>このサイトのすべての例は、設定が <code>configs/</code> に、1 行のコマンドが <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/SHOWCASE.md">docs/SHOWCASE.md</a> にある。実行すると MAST から光度曲線をダウンロードしてクリーニングし、パネルに減光をマークさせ、各シグナルを審査し、すべての結果を来歴とともに書き出す。Probes はアカウントなしで実行できる。Sentinels にはプロバイダーの API キーが必要である。Sentinels はデフォルトで Claude（Anthropic）上で動作する。他のプロバイダーにも対応しており、その旨が表示される。Probes は決定論的なマッチドフィルター検出器である。</p>
         <h2 id="contribute" data-i18n="docs.contribute">スイープを貢献する</h2>
-        <p>A sweep searches every 2-minute target of a TESS sector and keeps every dip it finds, classified, with nothing thrown away. You can run a slice and send it in:</p>
+        <p>スイープはTESSセクターの2分ケイデンスの全ターゲットを探索し、見つかったすべての減光を分類して保持し、何も捨てない。一部を実行して送ることができる：</p>
         <pre tabindex="0"><code>setuhq sweep configs/sweep.toml --sector 5 --limit 200 --workers 3
 setuhq bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out bundle/</code></pre>
         <p>Open a pull request with the bundle. A maintainer checks it and merges it into <a href="/ja/catalogue/everything-that-dims/">Everything that dims</a>, with your name on every entry it brings. See <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
         <h2 id="mcp" data-i18n="docs.mcp.h">AI アシスタントから使う (MCP)</h2>
         <pre tabindex="0"><code>pip install "setuhq[tess,mcp] @ git+https://github.com/ashfordeOU/SetuHQ"
 setuhq-mcp --list-tools</code></pre>
-        <p>Set-up for each assistant is in <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/MCP-INSTALL.md">docs/MCP-INSTALL.md</a>.</p>
+        <p>各アシスタントの設定方法は <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/MCP-INSTALL.md">docs/MCP-INSTALL.md</a> にある。</p>
         <h2 id="data" data-i18n="docs.data">データとファイル</h2>
         <ul>
-          <li><a href="/assets/data/catalogue.json">The catalogue of known planets (JSON)</a> and <a href="/assets/data/exoplanet_map.csv">every planet on the Galaxy map (CSV)</a>, from exoplanet.eu.</li>
-          <li><a href="/assets/data/variables.json">Everything that dims (JSON)</a>: every entry of SetuHQ's sweep, with its credit.</li>
+          <li><a href="/assets/data/catalogue.json">既知の惑星のカタログ（JSON）</a>と<a href="/assets/data/exoplanet_map.csv">銀河マップ上のすべての惑星（CSV）</a>、exoplanet.eu より。</li>
+          <li><a href="/assets/data/variables.json">減光するものすべて (JSON)</a>: SetuHQ の掃引の全エントリとそのクレジット。</li>
           <li>WASP-126 (Hot Jupiter): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/wasp-126/","plates":"/evidence/plates/wasp-126/","cf":"/candidates/wasp-126/case-file/","run":"tess-wasp-126-s1"}'>実行 tess-wasp-126-s1 の<a href="/evidence/report/wasp-126/">実行レポート</a>、<a href="/evidence/plates/wasp-126/">プレート</a>、<a href="/candidates/wasp-126/case-file/">ケースファイル</a>。</span></li><li>TOI-270 (Multi-planet system): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/toi-270/","plates":"/evidence/plates/toi-270/","cf":"/candidates/toi-270/case-file/","run":"tess-toi-270-s5"}'>実行 tess-toi-270-s5 の<a href="/evidence/report/toi-270/">実行レポート</a>、<a href="/evidence/plates/toi-270/">プレート</a>、<a href="/candidates/toi-270/case-file/">ケースファイル</a>。</span></li><li>HD 15337 (Small planets near the limit): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/hd-15337/","plates":"/evidence/plates/hd-15337/","cf":"/candidates/hd-15337/case-file/","run":"tess-hd-15337-s4"}'>実行 tess-hd-15337-s4 の<a href="/evidence/report/hd-15337/">実行レポート</a>、<a href="/evidence/plates/hd-15337/">プレート</a>、<a href="/candidates/hd-15337/case-file/">ケースファイル</a>。</span></li><li>TOI-236 (Known false positive): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/toi-236/","plates":"/evidence/plates/toi-236/","cf":"/candidates/toi-236/case-file/","run":"tess-toi-236-s2"}'>実行 tess-toi-236-s2 の<a href="/evidence/report/toi-236/">実行レポート</a>、<a href="/evidence/plates/toi-236/">プレート</a>、<a href="/candidates/toi-236/case-file/">ケースファイル</a>。</span></li><li>pi Men (Reference check): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/","plates":"/evidence/plates/","cf":"/candidates/case-file/","run":"tess-pi-men-s1"}'>実行 tess-pi-men-s1 の<a href="/evidence/report/">実行レポート</a>、<a href="/evidence/plates/">プレート</a>、<a href="/candidates/case-file/">ケースファイル</a>。</span></li>
-          <li>The benchmark, the leaderboard and the paper: <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/tree/main/docs">docs/ in the repository</a>.</li>
+          <li>ベンチマーク、リーダーボード、論文:<a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/tree/main/docs">リポジトリ内のdocs/</a>。</li>
         </ul>
-        <p>SetuHQ's own data, benchmark, leaderboard and paper are under CC BY 4.0; the code is under the AGPL-3.0 (a commercial licence is available). Cite it with <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/CITATION.cff">CITATION.cff</a>.</p>
+        <p>SetuHQ 独自のデータ、ベンチマーク、リーダーボード、論文は CC BY 4.0 のもとで、コードは AGPL-3.0 のもとで公開されている（商用ライセンスも利用可能）。引用には <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/CITATION.cff">CITATION.cff</a> を使用すること。</p>
         <h2 id="provenance" data-i18n="docs.prov">技術的な詳細: 図の出どころ</h2>
-        <p>The candidate pages show figures from the stored runs (<code>tess-wasp-126-s1</code>, <code>tess-toi-270-s5</code>, <code>tess-hd-15337-s4</code>, <code>tess-toi-236-s2</code>, <code>tess-pi-men-s1</code>), made with the current code.</p>
+        <p>候補のページには、保存された実行（<code>tess-wasp-126-s1</code>、<code>tess-toi-270-s5</code>、<code>tess-hd-15337-s4</code>、<code>tess-toi-236-s2</code>、<code>tess-pi-men-s1</code>）から現在のコードで作成した図を掲載している。</p>
         <p>Every number on the candidate and evidence pages is read from stored files: the run directory, the search catalogue and the calibrated reviewer weights. <a href="/ja/evidence/runs/">Runs and configuration</a> lists the files, the configuration and its hash.</p>
       </div>
 </section>

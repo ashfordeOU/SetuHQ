@@ -16,14 +16,14 @@
 <link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/site-0b14134a46.css">
-<link rel="preload" href="/assets/data/app-e91ba0fdc9.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/data/app-735386a5c4.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-645aac0822.js" as="script">
 <script src="/assets/render-9a18655b86.js" defer></script>
-<script src="/assets/i18n-950de2c247.js" defer></script>
-<script src="/assets/site-d3ae8b9cff.js" defer></script>
+<script src="/assets/i18n-a967e539f3.js" defer></script>
+<script src="/assets/site-a066e4d1e4.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":["/candidates/*/case-file/","/evidence/plates/*","/evidence/report/*"]},"eagerness":"moderate"}]}</script>
 </head>
-<body class="page-planets" data-page="planets" data-route="planets" data-data="/assets/data/app-e91ba0fdc9.json" data-routes="/assets/views-01c5af27ac.html" data-app="/assets/app-645aac0822.js">
+<body class="page-planets" data-page="planets" data-route="planets" data-data="/assets/data/app-735386a5c4.json" data-routes="/assets/views-467becfb8c.html" data-app="/assets/app-645aac0822.js">
 <div class="starfield" data-render="starfield" data-params='{"seed":314}' aria-hidden="true"><img class="rstill" src="/assets/starfield-e45ec374c5.svg" alt=""></div>
 <a class="skip" href="#content" data-i18n="shell.skip">本文へスキップ</a>
 <header class="topbar">
@@ -45,9 +45,9 @@
 <section class="route" id="route-planets" data-route="planets" aria-labelledby="h-planets">
 <header><h1 class="lead-h" id="h-planets" tabindex="-1" data-i18n="rr.h1">それぞれの深さが惑星だったら何を意味するか。</h1><p data-i18n="rr.intro" data-i18n-args='{"status":"candidate, unconfirmed","status@":"honesty.unconfirmed"}'>実行またはフィードの星ごとに 1 枚のカード。各項目は候補、未確認です。下の比は、保存された深さが惑星だった場合に意味するものです。</p></header>
       
-      <p class="note"><b>Radius ratio only.</b> Rp/R* = √depth, with depth as a fraction (ppm × 10⁻⁶). This assumes a full, undiluted transit and ignores limb darkening. No stellar radius is stored in the run or the catalogue, so this page does not convert the ratio to a planet radius in Earth or Jupiter units. Each bar is a ratio scale from 0 to 0.10, the same on every card.</p>
-      <p class="note">Published planets come from the stored archive cross-match, which covers TIC 261136679. The other stars have no stored cross-match, so their cards have no archive box. Archive values only. This page claims no detection.</p>
-      <p class="note"><b>Silhouettes.</b> Beside each ratio, the star in its blackbody colour (its TIC temperature, where the run stores one; grey where none is stored) with a black disc at Rp/R★ = √depth: the silhouette at Rp/R★ = √depth, if it were a planet. These are not planets, so none is drawn as one.</p>
+      <p class="note"><b>半径比のみ。</b> Rp/R* = √depth で、depthは割合(ppm × 10⁻⁶)。これは希釈のない完全なトランジットを仮定し、周縁減光を無視している。実行結果にもカタログにも恒星半径は保存されていないため、このページは比を地球単位や木星単位の惑星半径に変換しない。各バーは0から0.10までの比のスケールで、すべてのカードで共通である。</p>
+      <p class="note">公表された惑星は、保存済みのアーカイブ照合（TIC 261136679 が対象）に基づく。他の恒星には保存済みの照合がないため、そのカードにはアーカイブ欄がない。値はアーカイブのもののみである。このページは検出を主張しない。</p>
+      <p class="note"><b>シルエット。</b>各比の横に、恒星を黒体色（実行で保存されている場合はそのTIC温度、保存されていない場合は灰色）で描き、Rp/R★ = √depthの黒い円盤を重ねている：仮に惑星だった場合の、Rp/R★ = √depthでのシルエットである。これらは惑星ではないため、惑星としては描いていない。</p>
       <template id="rrdiscs"><span data-star="TIC 261136679" data-teff="5992"><svg class="stardisc" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><defs><radialGradient id="sd-rr0"><stop offset="0" stop-color="#fff3f0"/><stop offset="0.1" stop-color="#fff3f0"/><stop offset="0.2" stop-color="#fdf1ee"/><stop offset="0.3" stop-color="#fbefec"/><stop offset="0.4" stop-color="#f7ece9"/><stop offset="0.5" stop-color="#f3e7e4"/><stop offset="0.6" stop-color="#ece0de"/><stop offset="0.7" stop-color="#e2d7d5"/><stop offset="0.8" stop-color="#d4cac7"/><stop offset="0.9" stop-color="#bcb3b1"/><stop offset="1" stop-color="#787371"/></radialGradient></defs><circle cx="20" cy="20" r="20" fill="url(#sd-rr0)"/></svg></span></template>
       <div class="cards" id="planetcards"></div>
 </section>

@@ -16,14 +16,14 @@
 <link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/site-0b14134a46.css">
-<link rel="preload" href="/assets/data/app-e91ba0fdc9.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/data/app-735386a5c4.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-645aac0822.js" as="script">
 <script src="/assets/render-9a18655b86.js" defer></script>
-<script src="/assets/i18n-950de2c247.js" defer></script>
-<script src="/assets/site-d3ae8b9cff.js" defer></script>
+<script src="/assets/i18n-a967e539f3.js" defer></script>
+<script src="/assets/site-a066e4d1e4.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":["/candidates/*/case-file/","/evidence/plates/*","/evidence/report/*"]},"eagerness":"moderate"}]}</script>
 </head>
-<body class="page-propose" data-page="propose" data-route="propose" data-data="/assets/data/app-e91ba0fdc9.json" data-routes="/assets/views-01c5af27ac.html" data-app="/assets/app-645aac0822.js">
+<body class="page-propose" data-page="propose" data-route="propose" data-data="/assets/data/app-735386a5c4.json" data-routes="/assets/views-467becfb8c.html" data-app="/assets/app-645aac0822.js">
 <div class="starfield" data-render="starfield" data-params='{"seed":314}' aria-hidden="true"><img class="rstill" src="/assets/starfield-e45ec374c5.svg" alt=""></div>
 <a class="skip" href="#content" data-i18n="shell.skip">Перейти к содержимому</a>
 <header class="topbar">
@@ -45,25 +45,25 @@
 <section class="route" id="route-propose" data-route="propose" aria-labelledby="h-propose">
 <header><h1 class="lead-h" id="h-propose" tabindex="-1" data-i18n="pr.h1">Подготовьте заявку на CHEOPS.</h1>
         <p data-i18n="pr.intro"><code>setuhq propose cheops</code> пишет подготовительный пакет для CHEOPS Guest Observers Running Call: проверенные правила, статус цели, плановые оценки, анонимизированные черновики и семь шагов ESA как контрольный список. Инструменты ESA вы запускаете и заявку подаёте сами.</p></header>
-      <p class="note"><b>SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium. It does not replace ESA&#x27;s Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker or the Policies &amp; Procedures document; the official call and tools govern.</b></p>
+      <p class="note"><b>SetuHQ — независимый проект: он не связан с ESA, миссией CHEOPS или CHEOPS Consortium, не одобрен ими и не работает от их имени. Он не заменяет Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker от ESA или документ Policies &amp; Procedures; определяющими являются официальный конкурс заявок и официальные инструменты.</b></p>
       <div class="prose">
         <pre tabindex="0"><code>setuhq propose cheops "TOI-1987" --orbits 30
 setuhq propose lint my-justification.md --author-name "Your Name"</code></pre>
-        <p>This is a proposal preparation pack: a drafting aid. It does not submit anything, it does not log in to any ESA system, and it makes no claim of ESA approval, feasibility or visibility.</p>
-        <h2 id="pr-pack">What a pack holds</h2>
+        <p>Это пакет подготовки заявки: вспомогательное средство для её составления. Он ничего не отправляет, не входит ни в какую систему ESA и не заявляет об одобрении ESA, выполнимости или видимости.</p>
+        <h2 id="pr-pack">Что содержит пакет</h2>
         <ul>
-          <li><b>The rules</b> of the Running Call: cycles and deadlines in Paris time, programme sizes, visit limits.</li>
-          <li><b>The target's status</b>: SIMBAD coordinates, a match against ESA's Reserved Target List (downloaded at run time and never committed to the repository), and prior public visits from DACE's public metadata (the University of Geneva's public API, not designated by ESA). ESA's Target Checker and Mission Archive stay definitive.</li>
-          <li><b>Planning estimates</b> from published in-flight performance (Fortier et al. 2024): estimates for drafting only, to confirm with ESA's Exposure Time Calculator, Visibility Tool and Scheduling Feasibility Checker.</li>
-          <li><b>Anonymised drafts</b> with generic headings, and an <b>anonymity lint</b>: an aid, not a guarantee.</li>
+          <li><b>Правила</b> Running Call: циклы и сроки по парижскому времени, размеры программ, ограничения на визиты.</li>
+          <li><b>Статус цели</b>: координаты SIMBAD, сверка с Reserved Target List ESA (загружается во время выполнения и никогда не фиксируется в репозитории) и предыдущие публичные наблюдения по открытым метаданным DACE (публичный API Женевского университета, не назначенный ESA). Окончательными остаются Target Checker и Mission Archive ESA.</li>
+          <li><b>Плановые оценки</b> по опубликованным характеристикам в полёте (Fortier et al. 2024): оценки только для составления заявки, подлежат подтверждению с помощью Exposure Time Calculator, Visibility Tool и Scheduling Feasibility Checker от ESA.</li>
+          <li><b>Анонимизированные черновики</b> с обобщёнными заголовками и <b>проверка анонимности</b>: подспорье, а не гарантия.</li>
         </ul>
-        <h2 id="pr-limits">What it never does</h2>
+        <h2 id="pr-limits">Чего он никогда не делает</h2>
         <ul>
-          <li>It never logs in, submits, or automates any ESA system; there is no form submission and no Proposal Handling Tool interaction.</li>
-          <li>It stores no proprietary data and no PI name or id: archive answers are filtered in memory before anything reaches disk, and the names you give the lint are never written into the pack.</li>
-          <li>It reproduces no ESA template, logo or figure. CHEOPS data stay under ESA's terms (CC BY-NC 3.0 IGO), outside SetuHQ's CC BY 4.0, its commercial licence and Pro.</li>
+          <li>Он никогда не входит в систему, ничего не отправляет и не автоматизирует ни одну систему ESA; нет отправки форм и нет взаимодействия с Proposal Handling Tool.</li>
+          <li>Он не хранит проприетарных данных, а также имени или идентификатора PI: ответы архива фильтруются в памяти до того, как что-либо попадёт на диск, а имена, которые вы передаёте линтеру, никогда не записываются в пакет.</li>
+          <li>Здесь не воспроизводятся шаблоны, логотипы или рисунки ESA. Данные CHEOPS остаются на условиях ESA (CC BY-NC 3,0 IGO), вне CC BY 4.0 SetuHQ, его коммерческой лицензии и Pro.</li>
         </ul>
-        <p>Every rule, source and limit: <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/CHEOPS-PROPOSALS.md">docs/CHEOPS-PROPOSALS.md</a>. Questions about the call go to ESA; questions about this helper go to SetuHQ's issue tracker.</p>
+        <p>Все правила, источники и ограничения: <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/CHEOPS-PROPOSALS.md">docs/CHEOPS-PROPOSALS.md</a>. Вопросы о конкурсе направляйте в ESA; вопросы об этом помощнике — в трекер задач SetuHQ.</p>
       </div>
 </section>
  </div>

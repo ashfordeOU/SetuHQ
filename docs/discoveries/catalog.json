@@ -1,6 +1,78 @@
 {
   "candidates": [
     {
+      "tic": 362709886,
+      "sector_span": [
+        102,
+        103
+      ],
+      "t_center": 4168.455710729502,
+      "time_unit": "BTJD",
+      "duration_hours": 2.566206778756168,
+      "depth_ppm": 4396.433317893522,
+      "snr": 41.07318954491916,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 4.720338976790236,
+      "n_transits": 2,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-7b97e468b60b-000",
+      "found": "2026-10-30T00:48:15+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "4420.01",
+      "toi_offset_hours": -0.03169608861207962,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 362709886,
+      "sector_span": [
+        102,
+        103
+      ],
+      "t_center": 4144.815199228568,
+      "time_unit": "BTJD",
+      "duration_hours": 1.9945629751018714,
+      "depth_ppm": 4950.282042241017,
+      "snr": 37.51361505839377,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 4.7266402719119185,
+      "n_transits": 2,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-1c554332c266-004",
+      "found": "2026-10-30T00:48:15+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "4420.01",
+      "toi_offset_hours": -0.29216812178492546,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 362709886,
+      "sector_span": [
+        102,
+        103
+      ],
+      "t_center": 4140.087032962795,
+      "time_unit": "BTJD",
+      "duration_hours": 2.0909611932729604,
+      "depth_ppm": 3845.713152698549,
+      "snr": 13.263341607804666,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 4.720973241528782,
+      "n_transits": 3,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-eaab33b6b763-002",
+      "found": "2026-10-30T00:48:15+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "4420.01",
+      "toi_offset_hours": -0.34579769521951675,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
       "tic": 349088467,
       "sector_span": [
         90,
@@ -1204,27 +1276,6 @@
   "runs": [
     {
       "time": "2026-10-21T10:35:00+00:00",
-      "targets": [
-        348684813,
-        348684814,
-        348755723,
-        348755728,
-        348756659,
-        348770361,
-        348835438,
-        348844154,
-        348995212,
-        349071261,
-        349088467,
-        349095149,
-        349312122,
-        349373192,
-        349408306,
-        349410350,
-        349440621,
-        349488688,
-        349503728
-      ],
       "errors": [],
       "new": 0,
       "known": 24,
@@ -1232,63 +1283,21 @@
       "filtered_fap": 2,
       "filtered_one_sector": 2,
       "filtered_single": 1,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 19
     },
     {
       "time": "2026-10-24T17:07:13+00:00",
-      "targets": [
-        355703913,
-        355732304,
-        355748785,
-        355796887,
-        355800238,
-        355867695,
-        355895977,
-        355953198,
-        356016119,
-        356146869,
-        356158613,
-        356200601,
-        356206412,
-        356235833,
-        356311210,
-        356322454,
-        356453768,
-        356461227,
-        356472238,
-        356473034
-      ],
       "errors": [],
       "new": 0,
       "known": 21,
       "filtered_deep": 59,
       "filtered_one_sector": 6,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 20
     },
     {
       "time": "2026-10-25T01:04:02+00:00",
-      "targets": [
-        356539624,
-        356590734,
-        356682805,
-        356700488,
-        356710041,
-        356736743,
-        356747847,
-        356786657,
-        356822426,
-        356835341,
-        356867115,
-        356868487,
-        356871098,
-        356916207,
-        356919658,
-        356921678,
-        356978132,
-        356990855,
-        357048995,
-        357145112
-      ],
       "errors": [],
       "new": 0,
       "known": 0,
@@ -1296,32 +1305,11 @@
       "filtered_fap": 1,
       "filtered_one_sector": 1,
       "filtered_single": 1,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 20
     },
     {
       "time": "2026-10-25T06:41:37+00:00",
-      "targets": [
-        356539624,
-        356590734,
-        356682805,
-        356700488,
-        356710041,
-        356736743,
-        356747847,
-        356786657,
-        356822426,
-        356835341,
-        356867115,
-        356868487,
-        356871098,
-        356916207,
-        356919658,
-        356921678,
-        356978132,
-        356990855,
-        357048995,
-        357145112
-      ],
       "errors": [],
       "new": 0,
       "known": 0,
@@ -1329,32 +1317,11 @@
       "filtered_fap": 1,
       "filtered_one_sector": 1,
       "filtered_single": 1,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 20
     },
     {
       "time": "2026-10-25T12:36:21+00:00",
-      "targets": [
-        356539624,
-        356590734,
-        356682805,
-        356700488,
-        356710041,
-        356736743,
-        356747847,
-        356786657,
-        356822426,
-        356835341,
-        356867115,
-        356868487,
-        356871098,
-        356916207,
-        356919658,
-        356921678,
-        356978132,
-        356990855,
-        357048995,
-        357145112
-      ],
       "errors": [],
       "new": 0,
       "known": 0,
@@ -1362,32 +1329,11 @@
       "filtered_fap": 1,
       "filtered_one_sector": 1,
       "filtered_single": 1,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 20
     },
     {
       "time": "2026-10-25T18:31:50+00:00",
-      "targets": [
-        356539624,
-        356590734,
-        356682805,
-        356700488,
-        356710041,
-        356736743,
-        356747847,
-        356786657,
-        356822426,
-        356835341,
-        356867115,
-        356868487,
-        356871098,
-        356916207,
-        356919658,
-        356921678,
-        356978132,
-        356990855,
-        357048995,
-        357145112
-      ],
       "errors": [],
       "new": 0,
       "known": 0,
@@ -1395,20 +1341,11 @@
       "filtered_fap": 1,
       "filtered_one_sector": 1,
       "filtered_single": 1,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 20
     },
     {
       "time": "2026-10-26T01:03:31+00:00",
-      "targets": [
-        357202877,
-        357244603,
-        357299852,
-        357312511,
-        357373216,
-        357416482,
-        357457104,
-        357501308
-      ],
       "errors": [
         "TIC 357347296: LookupError: no SPOC 120s light curves found for 'TIC 357347296'",
         "TIC 357536526: ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f025d222710>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))",
@@ -1442,15 +1379,11 @@
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connection.py\", line 239, in _new_conn\n    sock = connection.create_connection(\n        (self._dns_host, self.port),\n    ...<2 lines>...\n        socket_options=self.socket_options,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/util/connection.py\", line 85, in create_connection\n    raise err\nTimeoutError: [Errno 110] Connection timed out\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 793, in urlopen\n    response = self._make_request(\n        conn,\n    ...<10 lines>...\n        **response_kw,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 494, in _make_request\n    raise new_e\nurllib3.exceptions.ConnectTimeoutError: (<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f025d223c50>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)')\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/requests/adapters.py\", line 696, in send\n    resp = conn.urlopen(\n        method=request.method,\n    ...<9 lines>...\n        chunked=chunked,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 847, in urlopen\n    retries = retries.increment(\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\n    )\nurllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f025d223c50>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nrequests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f025d223c50>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n"
       ],
       "filtered_fap": 1,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 8
     },
     {
       "time": "2026-10-26T06:58:18+00:00",
-      "targets": [
-        357202877,
-        357244603,
-        357299852
-      ],
       "errors": [
         "TIC 357312511: ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7fd489352710>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))",
         "TIC 357347296: ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7fd484c1bed0>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))",
@@ -1492,29 +1425,11 @@
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connection.py\", line 239, in _new_conn\n    sock = connection.create_connection(\n        (self._dns_host, self.port),\n    ...<2 lines>...\n        socket_options=self.socket_options,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/util/connection.py\", line 85, in create_connection\n    raise err\nTimeoutError: [Errno 110] Connection timed out\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 793, in urlopen\n    response = self._make_request(\n        conn,\n    ...<10 lines>...\n        **response_kw,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 494, in _make_request\n    raise new_e\nurllib3.exceptions.ConnectTimeoutError: (<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7fd4a8da8050>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)')\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/requests/adapters.py\", line 696, in send\n    resp = conn.urlopen(\n        method=request.method,\n    ...<9 lines>...\n        chunked=chunked,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 847, in urlopen\n    retries = retries.increment(\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\n    )\nurllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7fd4a8da8050>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nrequests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7fd4a8da8050>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n",
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connection.py\", line 239, in _new_conn\n    sock = connection.create_connection(\n        (self._dns_host, self.port),\n    ...<2 lines>...\n        socket_options=self.socket_options,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/util/connection.py\", line 85, in create_connection\n    raise err\nTimeoutError: [Errno 110] Connection timed out\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 793, in urlopen\n    response = self._make_request(\n        conn,\n    ...<10 lines>...\n        **response_kw,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 494, in _make_request\n    raise new_e\nurllib3.exceptions.ConnectTimeoutError: (<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7fd4a8da8550>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)')\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/requests/adapters.py\", line 696, in send\n    resp = conn.urlopen(\n        method=request.method,\n    ...<9 lines>...\n        chunked=chunked,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 847, in urlopen\n    retries = retries.increment(\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\n    )\nurllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7fd4a8da8550>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nrequests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7fd4a8da8550>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n"
       ],
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 3
     },
     {
       "time": "2026-10-26T14:07:47+00:00",
-      "targets": [
-        357202877,
-        357244603,
-        357299852,
-        357312511,
-        357373216,
-        357416482,
-        357457104,
-        357501308,
-        357536526,
-        357538688,
-        357634632,
-        357661805,
-        357801293,
-        357872559,
-        357896777,
-        357972447,
-        358070912
-      ],
       "errors": [
         "TIC 357347296: LookupError: no SPOC 120s light curves found for 'TIC 357347296'",
         "TIC 357858008: LookupError: no SPOC 120s light curves found for 'TIC 357858008'",
@@ -1530,28 +1445,11 @@
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 357956179'\n"
       ],
       "filtered_fap": 1,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 17
     },
     {
       "time": "2026-10-26T18:44:10+00:00",
-      "targets": [
-        357202877,
-        357244603,
-        357299852,
-        357373216,
-        357416482,
-        357457104,
-        357501308,
-        357536526,
-        357538688,
-        357634632,
-        357661805,
-        357801293,
-        357872559,
-        357896777,
-        357972447,
-        358070912
-      ],
       "errors": [
         "TIC 357312511: ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
         "TIC 357347296: LookupError: no SPOC 120s light curves found for 'TIC 357347296'",
@@ -1569,29 +1467,11 @@
       ],
       "filtered_fap": 1,
       "filtered_one_sector": 3,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 16
     },
     {
       "time": "2026-10-27T06:46:11+00:00",
-      "targets": [
-        358072664,
-        358107516,
-        358164738,
-        358186451,
-        358248442,
-        358253047,
-        358289302,
-        358460246,
-        358516596,
-        358557578,
-        358579111,
-        358613376,
-        358631536,
-        358838026,
-        358938714,
-        359271092,
-        359321688
-      ],
       "errors": [
         "TIC 358111035: LookupError: no SPOC 120s light curves found for 'TIC 358111035'",
         "TIC 358340733: LookupError: no SPOC 120s light curves found for 'TIC 358340733'",
@@ -1607,23 +1487,11 @@
       ],
       "filtered_one_sector": 5,
       "filtered_single": 1,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 17
     },
     {
       "time": "2026-10-27T12:43:02+00:00",
-      "targets": [
-        358072664,
-        358107516,
-        358164738,
-        358186451,
-        358248442,
-        358253047,
-        358289302,
-        358460246,
-        358557578,
-        359271092,
-        359321688
-      ],
       "errors": [
         "TIC 358111035: LookupError: no SPOC 120s light curves found for 'TIC 358111035'",
         "TIC 358340733: LookupError: no SPOC 120s light curves found for 'TIC 358340733'",
@@ -1650,26 +1518,11 @@
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 358975793'\n"
       ],
       "filtered_one_sector": 5,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 11
     },
     {
       "time": "2026-10-27T18:26:00+00:00",
-      "targets": [
-        358072664,
-        358107516,
-        358164738,
-        358186451,
-        358248442,
-        358253047,
-        358289302,
-        358460246,
-        358516596,
-        358557578,
-        358579111,
-        358613376,
-        358631536,
-        358838026
-      ],
       "errors": [
         "TIC 358111035: LookupError: no SPOC 120s light curves found for 'TIC 358111035'",
         "TIC 358340733: LookupError: no SPOC 120s light curves found for 'TIC 358340733'",
@@ -1691,55 +1544,22 @@
       ],
       "filtered_one_sector": 4,
       "filtered_single": 1,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 14
     },
     {
       "time": "2026-10-28T00:48:23+00:00",
-      "targets": [
-        359357695,
-        359388309,
-        359403471,
-        359426909,
-        359469754,
-        359496368,
-        359523751,
-        359572563,
-        359629653,
-        359735804,
-        360142739,
-        360156606,
-        360221713,
-        360224870,
-        360286627,
-        360473750,
-        360475034,
-        360630575,
-        360706000,
-        360714300
-      ],
       "errors": [],
       "new": 0,
       "known": 0,
       "filtered_deep": 54,
       "filtered_fap": 2,
       "filtered_one_sector": 3,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 20
     },
     {
       "time": "2026-10-28T06:34:31+00:00",
-      "targets": [
-        359357695,
-        359388309,
-        359403471,
-        359426909,
-        359469754,
-        359496368,
-        359523751,
-        359572563,
-        359629653,
-        360142739,
-        360156606
-      ],
       "errors": [
         "TIC 359735804: ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f9a4ce2e850>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))",
         "TIC 360221713: ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f9a6c7f4e10>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))",
@@ -1765,43 +1585,22 @@
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connection.py\", line 239, in _new_conn\n    sock = connection.create_connection(\n        (self._dns_host, self.port),\n    ...<2 lines>...\n        socket_options=self.socket_options,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/util/connection.py\", line 85, in create_connection\n    raise err\nTimeoutError: [Errno 110] Connection timed out\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 793, in urlopen\n    response = self._make_request(\n        conn,\n    ...<10 lines>...\n        **response_kw,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 494, in _make_request\n    raise new_e\nurllib3.exceptions.ConnectTimeoutError: (<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f9a6c9cee90>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)')\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/requests/adapters.py\", line 696, in send\n    resp = conn.urlopen(\n        method=request.method,\n    ...<9 lines>...\n        chunked=chunked,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 847, in urlopen\n    retries = retries.increment(\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\n    )\nurllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f9a6c9cee90>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nrequests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f9a6c9cee90>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n",
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connection.py\", line 239, in _new_conn\n    sock = connection.create_connection(\n        (self._dns_host, self.port),\n    ...<2 lines>...\n        socket_options=self.socket_options,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/util/connection.py\", line 85, in create_connection\n    raise err\nTimeoutError: [Errno 110] Connection timed out\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 793, in urlopen\n    response = self._make_request(\n        conn,\n    ...<10 lines>...\n        **response_kw,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 494, in _make_request\n    raise new_e\nurllib3.exceptions.ConnectTimeoutError: (<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f9a6c9cf9d0>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)')\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/requests/adapters.py\", line 696, in send\n    resp = conn.urlopen(\n        method=request.method,\n    ...<9 lines>...\n        chunked=chunked,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 847, in urlopen\n    retries = retries.increment(\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\n    )\nurllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f9a6c9cf9d0>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nrequests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='mast.stsci.edu', port=443): Max retries exceeded with url: /api/v0/invoke (Caused by ConnectTimeoutError(<HTTPSConnection(host='mast.stsci.edu', port=443) at 0x7f9a6c9cf9d0>, 'Connection to mast.stsci.edu timed out. (connect timeout=None)'))\n"
       ],
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 11
     },
     {
       "time": "2026-10-28T12:31:38+00:00",
-      "targets": [
-        359357695,
-        359388309,
-        359403471,
-        359426909,
-        359469754,
-        359496368,
-        359523751,
-        359572563,
-        359629653,
-        359735804,
-        360142739,
-        360156606,
-        360221713,
-        360224870,
-        360286627,
-        360473750,
-        360475034,
-        360630575,
-        360706000,
-        360714300
-      ],
       "errors": [],
       "new": 0,
       "known": 0,
       "filtered_deep": 54,
       "filtered_fap": 2,
       "filtered_one_sector": 3,
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 20
     },
     {
       "time": "2026-10-28T18:28:02+00:00",
-      "targets": [],
       "errors": [
         "TIC 359357695: LightkurveError: Download of mast:TESS/product/tess2021118034608-s0038-0000000359357695-0209-s_lc.fits failed. MAST returns ERROR: HTTPError: 502 Server Error: Bad Gateway for url: https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:TESS/product/tess2021118034608-s0038-0000000359357695-0209-s_lc.fits",
         "TIC 359388309: LightkurveError: Download of mast:TESS/product/tess2021364111932-s0047-0000000359388309-0218-s_lc.fits failed. MAST returns ERROR: HTTPError: 502 Server Error: Bad Gateway for url: https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:TESS/product/tess2021364111932-s0047-0000000359388309-0218-s_lc.fits",
@@ -1848,29 +1647,11 @@
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 77, in load_tess\n    lc = search[i].download(flux_column=flux_column, download_dir=download_dir)\nlightkurve.utils.LightkurveError: Download of mast:TESS/product/tess2023069172124-s0063-0000000360706000-0255-s_lc.fits failed. MAST returns ERROR: HTTPError: 502 Server Error: Bad Gateway for url: https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:TESS/product/tess2023069172124-s0063-0000000360706000-0255-s_lc.fits\n",
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 77, in load_tess\n    lc = search[i].download(flux_column=flux_column, download_dir=download_dir)\nlightkurve.utils.LightkurveError: Download of mast:TESS/product/tess2023069172124-s0063-0000000360714300-0255-s_lc.fits failed. MAST returns ERROR: HTTPError: 502 Server Error: Bad Gateway for url: https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:TESS/product/tess2023069172124-s0063-0000000360714300-0255-s_lc.fits\n"
       ],
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 0
     },
     {
       "time": "2026-10-29T00:47:42+00:00",
-      "targets": [
-        360742636,
-        360816293,
-        360816296,
-        360822008,
-        361154154,
-        361176558,
-        361218772,
-        361219651,
-        361343239,
-        361344753,
-        361403927,
-        361413119,
-        361467239,
-        361710792,
-        361711730,
-        361998994,
-        362026280
-      ],
       "errors": [
         "TIC 361034196: LookupError: no SPOC 120s light curves found for 'TIC 361034196'",
         "TIC 361944563: LookupError: no SPOC 120s light curves found for 'TIC 361944563'",
@@ -1885,11 +1666,53 @@
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 361944563'\n",
         "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 793, in urlopen\n    response = self._make_request(\n        conn,\n    ...<10 lines>...\n        **response_kw,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 540, in _make_request\n    response = conn.getresponse()\nConnectionResetError: [Errno 104] Connection reset by peer\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/requests/adapters.py\", line 696, in send\n    resp = conn.urlopen(\n        method=request.method,\n    ...<9 lines>...\n        chunked=chunked,\n    )\n  File \"/home/runner/work/SetuHQ/SetuHQ/.venv/lib/python3.13/site-packages/urllib3/connectionpool.py\", line 847, in urlopen\n    retries = retries.increment(\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\n    )\nurllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 338, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nrequests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))\n"
       ],
-      "reclassified": 0
+      "reclassified": 0,
+      "n_targets": 17
+    },
+    {
+      "time": "2026-10-30T00:48:15+00:00",
+      "errors": [
+        "TIC 362264027: LookupError: no SPOC 120s light curves found for 'TIC 362264027'",
+        "TIC 362360634: LookupError: no SPOC 120s light curves found for 'TIC 362360634'",
+        "TIC 363040636: LookupError: no SPOC 120s light curves found for 'TIC 363040636'",
+        "TIC 363417404: LookupError: no SPOC 120s light curves found for 'TIC 363417404'"
+      ],
+      "known": 3,
+      "filtered_deep": 24,
+      "filtered_one_sector": 10,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 362264027'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 362360634'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 363040636'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 363417404'\n"
+      ],
+      "reclassified": 0,
+      "n_targets": 16
+    },
+    {
+      "time": "2026-10-30T06:34:41+00:00",
+      "errors": [
+        "TIC 362264027: LookupError: no SPOC 120s light curves found for 'TIC 362264027'",
+        "TIC 362360634: LookupError: no SPOC 120s light curves found for 'TIC 362360634'",
+        "TIC 363040636: LookupError: no SPOC 120s light curves found for 'TIC 363040636'",
+        "TIC 363417404: LookupError: no SPOC 120s light curves found for 'TIC 363417404'"
+      ],
+      "known": 0,
+      "filtered_deep": 24,
+      "filtered_one_sector": 10,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 362264027'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 362360634'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 363040636'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 363417404'\n"
+      ],
+      "reclassified": 0,
+      "n_targets": 16
     }
   ],
-  "targets_reviewed": 273,
-  "updated": "2026-10-29T00:47:42+00:00",
+  "targets_reviewed": 305,
+  "updated": "2026-10-30T06:34:41+00:00",
   "config": "discovery",
-  "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8"
+  "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8",
+  "embargo": true
 }

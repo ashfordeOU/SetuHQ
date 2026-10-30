@@ -16,14 +16,14 @@
 <link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/site-0b14134a46.css">
-<link rel="preload" href="/assets/data/app-e91ba0fdc9.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/data/app-735386a5c4.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-645aac0822.js" as="script">
 <script src="/assets/render-9a18655b86.js" defer></script>
-<script src="/assets/i18n-950de2c247.js" defer></script>
-<script src="/assets/site-d3ae8b9cff.js" defer></script>
+<script src="/assets/i18n-a967e539f3.js" defer></script>
+<script src="/assets/site-a066e4d1e4.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":["/candidates/*/case-file/","/evidence/plates/*","/evidence/report/*"]},"eagerness":"moderate"}]}</script>
 </head>
-<body class="page-stellardocs" data-page="stellardocs" data-route="stellardocs" data-data="/assets/data/app-e91ba0fdc9.json" data-routes="/assets/views-01c5af27ac.html" data-app="/assets/app-645aac0822.js">
+<body class="page-stellardocs" data-page="stellardocs" data-route="stellardocs" data-data="/assets/data/app-735386a5c4.json" data-routes="/assets/views-467becfb8c.html" data-app="/assets/app-645aac0822.js">
 <div class="starfield" data-render="starfield" data-params='{"seed":314}' aria-hidden="true"><img class="rstill" src="/assets/starfield-e45ec374c5.svg" alt=""></div>
 <a class="skip" href="#content" data-i18n="shell.skip">Przejdź do treści</a>
 <header class="topbar">
@@ -46,15 +46,15 @@
 <header><h1 class="lead-h" id="h-stellardocs" tabindex="-1" data-i18n="sd.h1">Rozbłyski, pulsacje i CHEOPS.</h1>
         <p data-i18n="sd.intro">Sześć poleceń przygląda się gwieździe, a nie jej planetom. Każde zapisuje jeden rekord JSON z wynikiem, pochodzeniem (wersja, odcisk kodu, sha256 każdego wejścia) i etykietami. Rozbłysk lub częstotliwość są wykrywane na podanym poziomie istotności, nigdy potwierdzane; typ zmienności jest prawdopodobny albo jest kandydatem.</p></header>
       <div class="docgrid">
-        <section class="card"><h2>Flares</h2><p>Detection, template fits with multi-component models, energies for a 9000 K blackbody, completeness and nulls.</p><p class="stword part">partly validated (5 of 8 checks pass)</p></section>
-        <section class="card"><h2>Pulsations</h2><p>Pre-whitening, combination flags, the granulation background, numax and Δν, a heuristic type.</p><p class="stword part">partly validated (7 of 9 checks pass)</p></section>
-        <section class="card"><h2>CHEOPS light curves</h2><p>Public CHEOPS visits, detrended against roll angle, on one timeline with TESS.</p><p class="stword no">not validated (2 of 5 checks pass)</p></section>
-        <section class="card"><h2>Eclipsing binaries</h2><p>Period, primary and secondary eclipses, the secondary's phase with an e·cosω hint, a morphology class, and a candidate flag with its reasons.</p><p class="stword part">partly validated (5 of 8 checks pass)</p></section>
-        <section class="card"><h2>Rotation</h2><p>Spot-modulation periods from a periodogram and the autocorrelation function, with uncertainties and half/double handling; up to about 13 days in one sector.</p><p class="stword no">not validated (3 of 6 checks pass)</p></section>
-        <section class="card"><h2>Transients</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids. <span data-i18n="honesty.transients_aid">Narzędzia do zjawisk przejściowych są pomocą w wyszukiwaniu, a ich kandydatów trzeba sprawdzić wzrokowo; ich detekcje, wskazówki klasy i filtry fałszywych alarmów nie są zwalidowane.</span></p><p class="stword no">not validated (1 of 9 checks pass)</p></section>
+        <section class="card"><h2>Rozbłyski</h2><p>Detekcja, dopasowania szablonów modelami wieloskładnikowymi, energie dla ciała doskonale czarnego o temperaturze 9000 K, kompletność i próby zerowe.</p><p class="stword part">częściowo zwalidowany (zaliczone testy: 5 z 8)</p></section>
+        <section class="card"><h2>Pulsacje</h2><p>Pre-whitening, flagi kombinacji, tło granulacji, numax i Δν, typ heurystyczny.</p><p class="stword part">częściowo zwalidowany (zaliczone testy: 7 z 9)</p></section>
+        <section class="card"><h2>Krzywe blasku CHEOPS</h2><p>Publiczne wizyty CHEOPS, z usuniętym trendem względem kąta obrotu, na jednej osi czasu z TESS.</p><p class="stword no">niezwalidowany (przechodzi 2 z 5 testów)</p></section>
+        <section class="card"><h2>Układy podwójne zaćmieniowe</h2><p>Okres, zaćmienia główne i wtórne, faza zaćmienia wtórnego ze wskazówką e·cosω, klasa morfologiczna oraz flaga kandydata wraz z uzasadnieniem.</p><p class="stword part">częściowo zwalidowany (zaliczone testy: 5 z 8)</p></section>
+        <section class="card"><h2>Rotacja</h2><p>Okresy modulacji plamami z periodogramu i funkcji autokorelacji, z niepewnościami i obsługą połowy/podwojenia okresu; do około 13 dni w jednym sektorze.</p><p class="stword no">niezwalidowany (przechodzi 3 z 6 testów)</p></section>
+        <section class="card"><h2>Zjawiska przejściowe</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids. <span data-i18n="honesty.transients_aid">Narzędzia do zjawisk przejściowych są pomocą w wyszukiwaniu, a ich kandydatów trzeba sprawdzić wzrokowo; ich detekcje, wskazówki klasy i filtry fałszywych alarmów nie są zwalidowane.</span></p><p class="stword no">niezwalidowany (przechodzi 1 z 9 testów)</p></section>
       </div>
       <div class="prose">
-        <h2 id="st-run">Run them</h2>
+        <h2 id="st-run">Uruchom je</h2>
         <pre tabindex="0"><code>pip install "setuhq[tess,wavelets,cheops]"     # lightkurve (MAST), PyWavelets (denoising), DACE's client (CHEOPS)
 setuhq flares "TIC 150359500" --sector 2 --out flares.json
 setuhq pulsations "TIC 270577175" --sector 5 --out beta-pic.json
@@ -62,13 +62,13 @@ setuhq cheops "HR 10" --max-visits 1 --out hr10_cheops.json
 setuhq binaries "TIC 79225651" --sector 1 --out eb.json
 setuhq rotation "TIC 44797824" --sector 4 --out rotation.json
 setuhq transients --ra 64.52583 --dec -63.61567 --time 1360.4 --out transient.json   # a TESScut cutout, 11 x 11 pixels</code></pre>
-        <p>An eclipsing binary or a transient these commands find is a candidate, never new and never confirmed. <code>setuhq binaries</code> also gives advisory hints for a transit candidate's ephemeris (<code>--transit-period</code>, <code>--transit-epoch</code>); SetuHQ's planet vetting does not use them. <code>setuhq rotation</code> works on one sector at a time and reports periods beyond about 13 days as beyond its limit. <code>setuhq transients</code> reads a SPOC light curve, or with <code>--ra</code> and <code>--dec</code> a small cutout of the full-frame images from MAST's TESScut, deleted after use unless <code>--keep-cutout</code>.</p>
+        <p>Układ podwójny zaćmieniowy lub zjawisko przejściowe znalezione przez te polecenia jest kandydatem, nigdy nowym i nigdy potwierdzonym. <code>setuhq binaries</code> podaje też pomocnicze wskazówki dotyczące efemerydy kandydata na tranzyt (<code>--transit-period</code>, <code>--transit-epoch</code>); weryfikacja planet w SetuHQ z nich nie korzysta. <code>setuhq rotation</code> działa na jednym sektorze naraz i okresy dłuższe niż około 13 dni zgłasza jako przekraczające jego limit. <code>setuhq transients</code> odczytuje krzywą blasku SPOC lub, z <code>--ra</code> i <code>--dec</code>, mały wycinek obrazów pełnoklatkowych z TESScut w MAST, usuwany po użyciu, chyba że podano <code>--keep-cutout</code>.</p>
         <p>The same tools are available to an AI assistant over MCP: <code>find_flares</code>, <code>pulsation_spectrum</code>, <code>get_cheops_lightcurve</code>, <code>find_eclipsing_binary</code>, <code>rotation_period</code> and <code>find_transients</code>. Every answer carries its capability's validation status. The methods, their sources and every limit are in <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/STELLAR.md">docs/STELLAR.md</a>; the checks are on <a href="/pl/evidence/stellar/">Evidence: stars, measured</a>.</p>
-        <h2 id="st-cheops">CHEOPS data and its terms</h2>
+        <h2 id="st-cheops">Dane CHEOPS i warunki ich użycia</h2>
         <ul>
-          <li><b>Public data only.</b> Visits are read through DACE (dace.unige.ch), the University of Geneva's public API in front of the CHEOPS Mission Archive, in public mode with no key. ESA does not designate DACE; each record names the source that served it. Proprietary visits are skipped and never cached; no raw CHEOPS file is stored in the repository or shipped in the package.</li>
-          <li><b>Credit on every output.</b> Each CHEOPS record and summary carries ESA's acknowledgement, each visit's programme ID and file key, the archive's credit line "Credit: ESA, &lt;proposal PI&gt;", and the papers to cite: Benz, W., et al. 2021, Experimental Astronomy, 51, 109 (the CHEOPS mission); Hoyer, S., et al. 2020, A&amp;A, 635, A24 (the CHEOPS Data Reduction Pipeline); Fortier, A., et al. 2024, A&amp;A, 687, A302 (CHEOPS in-flight performance).</li>
-          <li><b>Licence.</b> CHEOPS data, and outputs derived from them, stay under ESA&#x27;s terms: data in the ESA Space Science Archives are distributed under the CC BY-NC 3.0 IGO licence, and any commercial use, including use that indirectly generates financial gain, needs ESA&#x27;s prior authorisation (data.licences@esa.int). SetuHQ&#x27;s commercial licence and SetuHQ Pro cover SetuHQ&#x27;s code and services, not CHEOPS data or CHEOPS-derived outputs.</li>
+          <li><b>Tylko dane publiczne.</b> Wizyty są odczytywane przez DACE (dace.unige.ch), publiczne API Uniwersytetu Genewskiego działające przed CHEOPS Mission Archive, w trybie publicznym bez klucza. ESA nie wyznacza DACE; każdy rekord podaje źródło, które go udostępniło. Wizyty zastrzeżone są pomijane i nigdy nie trafiają do pamięci podręcznej; żaden surowy plik CHEOPS nie jest przechowywany w repozytorium ani dołączany do pakietu.</li>
+          <li><b>Uznanie autorstwa na każdym wyniku.</b> Każdy rekord i podsumowanie CHEOPS zawiera podziękowanie ESA, ID programu i klucz pliku każdej wizyty, linię uznania archiwum "Credit: ESA, &lt;proposal PI&gt;" oraz prace do cytowania: Benz, W., et al. 2021, Experimental Astronomy, 51, 109 (misja CHEOPS); Hoyer, S., et al. 2020, A&amp;A, 635, A24 (CHEOPS Data Reduction Pipeline); Fortier, A., et al. 2024, A&amp;A, 687, A302 (wydajność CHEOPS w locie).</li>
+          <li><b>Licencja.</b> Dane CHEOPS oraz wyniki z nich wyprowadzone podlegają warunkom ESA: dane w ESA Space Science Archives są rozpowszechniane na licencji CC BY-NC 3,0 IGO, a każde użycie komercyjne, w tym użycie pośrednio przynoszące korzyści finansowe, wymaga uprzedniej zgody ESA (data.licences@esa.int). Licencja komercyjna SetuHQ i SetuHQ Pro obejmują kod i usługi SetuHQ, a nie dane CHEOPS ani wyniki wyprowadzone z danych CHEOPS.</li>
           <li><b data-i18n="honesty.cheops_disclaimer">SetuHQ jest niezależny i nie jest powiązany z ESA, misją CHEOPS ani Konsorcjum CHEOPS, nie jest przez nie popierany ani prowadzony w ich imieniu.</b> No ESA logo, template or copied figure is used.</li>
         </ul>
         <p>Preparing an observing proposal instead? <a href="/pl/docs/cheops-proposals/">CHEOPS proposals ›</a></p>

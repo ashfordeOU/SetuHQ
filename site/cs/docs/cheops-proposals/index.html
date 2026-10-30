@@ -16,14 +16,14 @@
 <link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/site-0b14134a46.css">
-<link rel="preload" href="/assets/data/app-e91ba0fdc9.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/data/app-735386a5c4.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-645aac0822.js" as="script">
 <script src="/assets/render-9a18655b86.js" defer></script>
-<script src="/assets/i18n-950de2c247.js" defer></script>
-<script src="/assets/site-d3ae8b9cff.js" defer></script>
+<script src="/assets/i18n-a967e539f3.js" defer></script>
+<script src="/assets/site-a066e4d1e4.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":["/candidates/*/case-file/","/evidence/plates/*","/evidence/report/*"]},"eagerness":"moderate"}]}</script>
 </head>
-<body class="page-propose" data-page="propose" data-route="propose" data-data="/assets/data/app-e91ba0fdc9.json" data-routes="/assets/views-01c5af27ac.html" data-app="/assets/app-645aac0822.js">
+<body class="page-propose" data-page="propose" data-route="propose" data-data="/assets/data/app-735386a5c4.json" data-routes="/assets/views-467becfb8c.html" data-app="/assets/app-645aac0822.js">
 <div class="starfield" data-render="starfield" data-params='{"seed":314}' aria-hidden="true"><img class="rstill" src="/assets/starfield-e45ec374c5.svg" alt=""></div>
 <a class="skip" href="#content" data-i18n="shell.skip">Přejít na obsah</a>
 <header class="topbar">
@@ -45,25 +45,25 @@
 <section class="route" id="route-propose" data-route="propose" aria-labelledby="h-propose">
 <header><h1 class="lead-h" id="h-propose" tabindex="-1" data-i18n="pr.h1">Připravte návrh pro CHEOPS.</h1>
         <p data-i18n="pr.intro"><code>setuhq propose cheops</code> píše přípravný balíček pro CHEOPS Guest Observers Running Call: zkontrolovaná pravidla, stav cíle, plánovací odhady, anonymizované koncepty a sedm kroků ESA jako kontrolní seznam. Nástroje ESA spouštíte a návrh podáváte sami.</p></header>
-      <p class="note"><b>SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium. It does not replace ESA&#x27;s Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker or the Policies &amp; Procedures document; the official call and tools govern.</b></p>
+      <p class="note"><b>SetuHQ je nezávislý a není přidružen k ESA, misi CHEOPS ani CHEOPS Consortium, není jimi schválen ani provozován jejich jménem. Nenahrazuje nástroje ESA Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker ani dokument Policies &amp; Procedures; rozhodující jsou oficiální výzva a nástroje.</b></p>
       <div class="prose">
         <pre tabindex="0"><code>setuhq propose cheops "TOI-1987" --orbits 30
 setuhq propose lint my-justification.md --author-name "Your Name"</code></pre>
-        <p>This is a proposal preparation pack: a drafting aid. It does not submit anything, it does not log in to any ESA system, and it makes no claim of ESA approval, feasibility or visibility.</p>
-        <h2 id="pr-pack">What a pack holds</h2>
+        <p>Toto je balíček pro přípravu návrhu: pomůcka pro sestavení textu. Nic neodesílá, nepřihlašuje se do žádného systému ESA a netvrdí, že by jej ESA schválila, ani že je proveditelný či viditelný.</p>
+        <h2 id="pr-pack">Co balíček obsahuje</h2>
         <ul>
-          <li><b>The rules</b> of the Running Call: cycles and deadlines in Paris time, programme sizes, visit limits.</li>
-          <li><b>The target's status</b>: SIMBAD coordinates, a match against ESA's Reserved Target List (downloaded at run time and never committed to the repository), and prior public visits from DACE's public metadata (the University of Geneva's public API, not designated by ESA). ESA's Target Checker and Mission Archive stay definitive.</li>
+          <li><b>Pravidla</b> průběžné výzvy Running Call: cykly a termíny v pařížském čase, velikosti programů, limity návštěv.</li>
+          <li><b>Stav cíle</b>: souřadnice ze SIMBAD, porovnání s Reserved Target List ESA (stahovaným za běhu a nikdy neukládaným do repozitáře) a předchozí veřejná pozorování z veřejných metadat DACE (veřejné API Univerzity v Ženevě, neurčené ESA). Rozhodující zůstávají Target Checker a Mission Archive ESA.</li>
           <li><b>Planning estimates</b> from published in-flight performance (Fortier et al. 2024): estimates for drafting only, to confirm with ESA's Exposure Time Calculator, Visibility Tool and Scheduling Feasibility Checker.</li>
-          <li><b>Anonymised drafts</b> with generic headings, and an <b>anonymity lint</b>: an aid, not a guarantee.</li>
+          <li><b>Anonymizované koncepty</b> s obecnými nadpisy a <b>kontrola anonymity</b>: pomůcka, nikoli záruka.</li>
         </ul>
-        <h2 id="pr-limits">What it never does</h2>
+        <h2 id="pr-limits">Co nikdy nedělá</h2>
         <ul>
-          <li>It never logs in, submits, or automates any ESA system; there is no form submission and no Proposal Handling Tool interaction.</li>
-          <li>It stores no proprietary data and no PI name or id: archive answers are filtered in memory before anything reaches disk, and the names you give the lint are never written into the pack.</li>
-          <li>It reproduces no ESA template, logo or figure. CHEOPS data stay under ESA's terms (CC BY-NC 3.0 IGO), outside SetuHQ's CC BY 4.0, its commercial licence and Pro.</li>
+          <li>Nikdy se nepřihlašuje, nic neodesílá ani neautomatizuje žádný systém ESA; neodesílá žádné formuláře a nijak nepracuje s nástrojem Proposal Handling Tool.</li>
+          <li>Neukládá žádná proprietární data ani jméno či ID PI: odpovědi archivu se filtrují v paměti dříve, než cokoli dorazí na disk, a jména, která zadáte lintu, se do balíčku nikdy nezapisují.</li>
+          <li>Nereprodukuje žádnou šablonu, logo ani obrázek ESA. Data CHEOPS zůstávají pod podmínkami ESA (CC BY-NC 3,0 IGO), mimo CC BY 4.0 SetuHQ, jeho komerční licenci a Pro.</li>
         </ul>
-        <p>Every rule, source and limit: <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/CHEOPS-PROPOSALS.md">docs/CHEOPS-PROPOSALS.md</a>. Questions about the call go to ESA; questions about this helper go to SetuHQ's issue tracker.</p>
+        <p>Všechna pravidla, zdroje a limity: <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/CHEOPS-PROPOSALS.md">docs/CHEOPS-PROPOSALS.md</a>. Dotazy k výzvě směřujte na ESA; dotazy k tomuto pomocníkovi do issue trackeru SetuHQ.</p>
       </div>
 </section>
  </div>

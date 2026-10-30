@@ -16,14 +16,14 @@
 <link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/site-0b14134a46.css">
-<link rel="preload" href="/assets/data/app-e91ba0fdc9.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/data/app-735386a5c4.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-645aac0822.js" as="script">
 <script src="/assets/render-9a18655b86.js" defer></script>
-<script src="/assets/i18n-950de2c247.js" defer></script>
-<script src="/assets/site-d3ae8b9cff.js" defer></script>
+<script src="/assets/i18n-a967e539f3.js" defer></script>
+<script src="/assets/site-a066e4d1e4.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":["/candidates/*/case-file/","/evidence/plates/*","/evidence/report/*"]},"eagerness":"moderate"}]}</script>
 </head>
-<body class="page-stellardocs" data-page="stellardocs" data-route="stellardocs" data-data="/assets/data/app-e91ba0fdc9.json" data-routes="/assets/views-01c5af27ac.html" data-app="/assets/app-645aac0822.js">
+<body class="page-stellardocs" data-page="stellardocs" data-route="stellardocs" data-data="/assets/data/app-735386a5c4.json" data-routes="/assets/views-467becfb8c.html" data-app="/assets/app-645aac0822.js">
 <div class="starfield" data-render="starfield" data-params='{"seed":314}' aria-hidden="true"><img class="rstill" src="/assets/starfield-e45ec374c5.svg" alt=""></div>
 <a class="skip" href="#content" data-i18n="shell.skip">本文へスキップ</a>
 <header class="topbar">
@@ -46,15 +46,15 @@
 <header><h1 class="lead-h" id="h-stellardocs" tabindex="-1" data-i18n="sd.h1">フレア、脈動、CHEOPS。</h1>
         <p data-i18n="sd.intro">6 つのコマンドは惑星ではなく星そのものを見ます。それぞれ結果、来歴 (バージョン、コードの指紋、各入力の sha256)、ラベルを含む JSON 記録を 1 つ書きます。フレアや周波数は明示した有意性で検出されるもので、決して確認されたものではありません。変光タイプは「可能性が高い」か「候補」です。</p></header>
       <div class="docgrid">
-        <section class="card"><h2>Flares</h2><p>Detection, template fits with multi-component models, energies for a 9000 K blackbody, completeness and nulls.</p><p class="stword part">partly validated (5 of 8 checks pass)</p></section>
-        <section class="card"><h2>Pulsations</h2><p>Pre-whitening, combination flags, the granulation background, numax and Δν, a heuristic type.</p><p class="stword part">partly validated (7 of 9 checks pass)</p></section>
-        <section class="card"><h2>CHEOPS light curves</h2><p>Public CHEOPS visits, detrended against roll angle, on one timeline with TESS.</p><p class="stword no">not validated (2 of 5 checks pass)</p></section>
-        <section class="card"><h2>Eclipsing binaries</h2><p>Period, primary and secondary eclipses, the secondary's phase with an e·cosω hint, a morphology class, and a candidate flag with its reasons.</p><p class="stword part">partly validated (5 of 8 checks pass)</p></section>
-        <section class="card"><h2>Rotation</h2><p>Spot-modulation periods from a periodogram and the autocorrelation function, with uncertainties and half/double handling; up to about 13 days in one sector.</p><p class="stword no">not validated (3 of 6 checks pass)</p></section>
-        <section class="card"><h2>Transients</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids. <span data-i18n="honesty.transients_aid">突発天体ツールは探索の補助であり、その候補は目で見てチェックする必要があります。検出、クラスの手がかり、誤警報の選別は検証されていません。</span></p><p class="stword no">not validated (1 of 9 checks pass)</p></section>
+        <section class="card"><h2>フレア</h2><p>検出、多成分モデルによるテンプレートフィット、9000 K 黒体に対するエネルギー、完全性と帰無結果。</p><p class="stword part">部分的に検証済み（8 件中 5 件のチェックに合格）</p></section>
+        <section class="card"><h2>脈動</h2><p>プリホワイトニング、組み合わせ周波数のフラグ、粒状斑バックグラウンド、numax と Δν、ヒューリスティックな型分類。</p><p class="stword part">部分的に検証済み（9 件中 7 件のチェックに合格）</p></section>
+        <section class="card"><h2>CHEOPSの光度曲線</h2><p>公開されているCHEOPSの観測(ロール角に対してトレンド除去済み)を、TESSと同じタイムライン上に表示。</p><p class="stword no">未検証（5項目中2項目のチェックに合格）</p></section>
+        <section class="card"><h2>食連星</h2><p>周期、主食と副食、e·cosω の手がかりを伴う副食の位相、形態分類、そして理由付きの候補フラグ。</p><p class="stword part">部分的に検証済み（8 件中 5 件のチェックに合格）</p></section>
+        <section class="card"><h2>自転</h2><p>ピリオドグラムと自己相関関数から求めた黒点変調周期。不確かさと半分・倍周期の処理付き。1 セクターで最大約 13 日。</p><p class="stword no">未検証（6項目中3項目のチェックに合格）</p></section>
+        <section class="card"><h2>突発天体</h2><p>Brightenings that do not repeat: rise, decay and amplitude, a flare-like or supernova-like hint, and screens for momentum dumps, scattered light and asteroids. <span data-i18n="honesty.transients_aid">突発天体ツールは探索の補助であり、その候補は目で見てチェックする必要があります。検出、クラスの手がかり、誤警報の選別は検証されていません。</span></p><p class="stword no">未検証（9項目中1項目のチェックに合格）</p></section>
       </div>
       <div class="prose">
-        <h2 id="st-run">Run them</h2>
+        <h2 id="st-run">実行する</h2>
         <pre tabindex="0"><code>pip install "setuhq[tess,wavelets,cheops]"     # lightkurve (MAST), PyWavelets (denoising), DACE's client (CHEOPS)
 setuhq flares "TIC 150359500" --sector 2 --out flares.json
 setuhq pulsations "TIC 270577175" --sector 5 --out beta-pic.json
@@ -62,13 +62,13 @@ setuhq cheops "HR 10" --max-visits 1 --out hr10_cheops.json
 setuhq binaries "TIC 79225651" --sector 1 --out eb.json
 setuhq rotation "TIC 44797824" --sector 4 --out rotation.json
 setuhq transients --ra 64.52583 --dec -63.61567 --time 1360.4 --out transient.json   # a TESScut cutout, 11 x 11 pixels</code></pre>
-        <p>An eclipsing binary or a transient these commands find is a candidate, never new and never confirmed. <code>setuhq binaries</code> also gives advisory hints for a transit candidate's ephemeris (<code>--transit-period</code>, <code>--transit-epoch</code>); SetuHQ's planet vetting does not use them. <code>setuhq rotation</code> works on one sector at a time and reports periods beyond about 13 days as beyond its limit. <code>setuhq transients</code> reads a SPOC light curve, or with <code>--ra</code> and <code>--dec</code> a small cutout of the full-frame images from MAST's TESScut, deleted after use unless <code>--keep-cutout</code>.</p>
+        <p>これらのコマンドが見つけた食連星や突発天体は候補であり、新規でも確認されたものでもない。<code>setuhq binaries</code> は、トランジット候補の暦（<code>--transit-period</code>、<code>--transit-epoch</code>）に関する参考ヒントも出すが、SetuHQ の惑星審査はそれを使わない。<code>setuhq rotation</code> は一度に1セクターを扱い、約 13 日を超える周期は限界外として報告する。<code>setuhq transients</code> は SPOC 光度曲線を読み込むか、<code>--ra</code> と <code>--dec</code> を指定した場合は MAST の TESScut からフルフレーム画像の小さな切り出しを読み込む。切り出しは <code>--keep-cutout</code> を指定しない限り使用後に削除する。</p>
         <p>The same tools are available to an AI assistant over MCP: <code>find_flares</code>, <code>pulsation_spectrum</code>, <code>get_cheops_lightcurve</code>, <code>find_eclipsing_binary</code>, <code>rotation_period</code> and <code>find_transients</code>. Every answer carries its capability's validation status. The methods, their sources and every limit are in <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/STELLAR.md">docs/STELLAR.md</a>; the checks are on <a href="/ja/evidence/stellar/">Evidence: stars, measured</a>.</p>
-        <h2 id="st-cheops">CHEOPS data and its terms</h2>
+        <h2 id="st-cheops">CHEOPSのデータと利用条件</h2>
         <ul>
-          <li><b>Public data only.</b> Visits are read through DACE (dace.unige.ch), the University of Geneva's public API in front of the CHEOPS Mission Archive, in public mode with no key. ESA does not designate DACE; each record names the source that served it. Proprietary visits are skipped and never cached; no raw CHEOPS file is stored in the repository or shipped in the package.</li>
-          <li><b>Credit on every output.</b> Each CHEOPS record and summary carries ESA's acknowledgement, each visit's programme ID and file key, the archive's credit line "Credit: ESA, &lt;proposal PI&gt;", and the papers to cite: Benz, W., et al. 2021, Experimental Astronomy, 51, 109 (the CHEOPS mission); Hoyer, S., et al. 2020, A&amp;A, 635, A24 (the CHEOPS Data Reduction Pipeline); Fortier, A., et al. 2024, A&amp;A, 687, A302 (CHEOPS in-flight performance).</li>
-          <li><b>Licence.</b> CHEOPS data, and outputs derived from them, stay under ESA&#x27;s terms: data in the ESA Space Science Archives are distributed under the CC BY-NC 3.0 IGO licence, and any commercial use, including use that indirectly generates financial gain, needs ESA&#x27;s prior authorisation (data.licences@esa.int). SetuHQ&#x27;s commercial licence and SetuHQ Pro cover SetuHQ&#x27;s code and services, not CHEOPS data or CHEOPS-derived outputs.</li>
+          <li><b>公開データのみ。</b> 観測（visit）は、CHEOPS Mission Archive の前段にあるジュネーブ大学の公開 API である DACE（dace.unige.ch）を通じ、キーなしの公開モードで読み込む。ESA は DACE を指定していない。各レコードには、それを提供した情報源を記載している。非公開の観測はスキップし、キャッシュもしない。CHEOPS の生ファイルはリポジトリに保存せず、パッケージにも含めない。</li>
+          <li><b>すべての出力にクレジットを付す。</b>各 CHEOPS レコードとサマリーには、ESA の謝辞、各ビジットのプログラム ID とファイルキー、アーカイブのクレジット表記 "Credit: ESA, &lt;proposal PI&gt;"、および引用すべき論文を記載する：Benz, W., et al. 2021, Experimental Astronomy, 51, 109（CHEOPS ミッション）；Hoyer, S., et al. 2020, A&amp;A, 635, A24（CHEOPS データ処理パイプライン）；Fortier, A., et al. 2024, A&amp;A, 687, A302（CHEOPS の軌道上性能）。</li>
+          <li><b>ライセンス。</b> CHEOPS データとそこから派生した出力は ESA の条件に従う：ESA Space Science Archives のデータは CC BY-NC 3.0 IGO ライセンスで配布されており、間接的に金銭的利益を生む利用を含むあらゆる商用利用には ESA の事前許可（data.licences@esa.int）が必要である。SetuHQ の商用ライセンスと SetuHQ Pro は SetuHQ のコードとサービスを対象とし、CHEOPS データや CHEOPS 由来の出力は対象外である。</li>
           <li><b data-i18n="honesty.cheops_disclaimer">SetuHQ は独立しており、ESA、CHEOPS ミッション、CHEOPS コンソーシアムとは提携しておらず、それらの承認を受けておらず、それらに代わって運営されてもいません。</b> No ESA logo, template or copied figure is used.</li>
         </ul>
         <p>Preparing an observing proposal instead? <a href="/ja/docs/cheops-proposals/">CHEOPS proposals ›</a></p>

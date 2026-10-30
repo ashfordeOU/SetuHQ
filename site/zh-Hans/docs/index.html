@@ -16,14 +16,14 @@
 <link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/site-0b14134a46.css">
-<link rel="preload" href="/assets/data/app-e91ba0fdc9.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/data/app-735386a5c4.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-645aac0822.js" as="script">
 <script src="/assets/render-9a18655b86.js" defer></script>
-<script src="/assets/i18n-950de2c247.js" defer></script>
-<script src="/assets/site-d3ae8b9cff.js" defer></script>
+<script src="/assets/i18n-a967e539f3.js" defer></script>
+<script src="/assets/site-a066e4d1e4.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":["/candidates/*/case-file/","/evidence/plates/*","/evidence/report/*"]},"eagerness":"moderate"}]}</script>
 </head>
-<body class="page-docs" data-page="docs" data-route="docs" data-data="/assets/data/app-e91ba0fdc9.json" data-routes="/assets/views-01c5af27ac.html" data-app="/assets/app-645aac0822.js">
+<body class="page-docs" data-page="docs" data-route="docs" data-data="/assets/data/app-735386a5c4.json" data-routes="/assets/views-467becfb8c.html" data-app="/assets/app-645aac0822.js">
 <div class="starfield" data-render="starfield" data-params='{"seed":314}' aria-hidden="true"><img class="rstill" src="/assets/starfield-e45ec374c5.svg" alt=""></div>
 <a class="skip" href="#content" data-i18n="shell.skip">跳到内容</a>
 <header class="topbar">
@@ -60,26 +60,26 @@
 setuhq run configs/showcase/tess-wasp-126-s1.toml --out runs/tess-wasp-126-s1   # or any star: copy a config, change its TIC and sectors
 setuhq crossmatch runs/tess-wasp-126-s1          # the NASA Exoplanet Archive's planets for the star
 setuhq site runs/tess-wasp-126-s1 --out site     # a website from your run (several runs: list them all)</code></pre>
-        <p>Every example on this site has its configuration in <code>configs/</code> and its one-line command in <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/SHOWCASE.md">docs/SHOWCASE.md</a>. The run downloads the light curve from MAST, cleans it, lets the panel mark dips, vets each signal and writes every result with its provenance. The Probes run with no account; the Sentinels need an API key for their provider. Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.</p>
+        <p>本站每个示例的配置都位于 <code>configs/</code>，其单行命令见 <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/SHOWCASE.md">docs/SHOWCASE.md</a>。运行会从 MAST 下载光变曲线，进行清理，由评审组标记凹陷，审核每个信号，并连同其来源信息写出每一个结果。Probes 无需账户即可运行；Sentinels 需要其服务提供方的 API 密钥。Sentinels 默认运行在 Claude（Anthropic）上；也支持其他提供方并会加以标注。Probes 是确定性的匹配滤波探测器。</p>
         <h2 id="contribute" data-i18n="docs.contribute">贡献一次扫描</h2>
-        <p>A sweep searches every 2-minute target of a TESS sector and keeps every dip it finds, classified, with nothing thrown away. You can run a slice and send it in:</p>
+        <p>一次全扫描会搜索某个 TESS 扇区中每个 2 分钟目标，并保留找到的每个凹陷，逐一分类，不丢弃任何结果。你可以运行其中一部分并提交：</p>
         <pre tabindex="0"><code>setuhq sweep configs/sweep.toml --sector 5 --limit 200 --workers 3
 setuhq bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out bundle/</code></pre>
         <p>Open a pull request with the bundle. A maintainer checks it and merges it into <a href="/zh-Hans/catalogue/everything-that-dims/">Everything that dims</a>, with your name on every entry it brings. See <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
         <h2 id="mcp" data-i18n="docs.mcp.h">在 AI 助手中使用（MCP）</h2>
         <pre tabindex="0"><code>pip install "setuhq[tess,mcp] @ git+https://github.com/ashfordeOU/SetuHQ"
 setuhq-mcp --list-tools</code></pre>
-        <p>Set-up for each assistant is in <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/MCP-INSTALL.md">docs/MCP-INSTALL.md</a>.</p>
+        <p>各助手的设置说明见 <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/MCP-INSTALL.md">docs/MCP-INSTALL.md</a>。</p>
         <h2 id="data" data-i18n="docs.data">数据和文件</h2>
         <ul>
-          <li><a href="/assets/data/catalogue.json">The catalogue of known planets (JSON)</a> and <a href="/assets/data/exoplanet_map.csv">every planet on the Galaxy map (CSV)</a>, from exoplanet.eu.</li>
-          <li><a href="/assets/data/variables.json">Everything that dims (JSON)</a>: every entry of SetuHQ's sweep, with its credit.</li>
+          <li><a href="/assets/data/catalogue.json">已知行星目录（JSON）</a>和<a href="/assets/data/exoplanet_map.csv">银河地图上的所有行星（CSV）</a>，数据来自 exoplanet.eu。</li>
+          <li><a href="/assets/data/variables.json">所有会变暗的天体（JSON）</a>：SetuHQ 巡查中的每一条目，附其来源署名。</li>
           <li>WASP-126 (Hot Jupiter): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/wasp-126/","plates":"/evidence/plates/wasp-126/","cf":"/candidates/wasp-126/case-file/","run":"tess-wasp-126-s1"}'>运行 tess-wasp-126-s1 的<a href="/evidence/report/wasp-126/">运行报告</a>、<a href="/evidence/plates/wasp-126/">图版</a>和<a href="/candidates/wasp-126/case-file/">案卷</a>。</span></li><li>TOI-270 (Multi-planet system): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/toi-270/","plates":"/evidence/plates/toi-270/","cf":"/candidates/toi-270/case-file/","run":"tess-toi-270-s5"}'>运行 tess-toi-270-s5 的<a href="/evidence/report/toi-270/">运行报告</a>、<a href="/evidence/plates/toi-270/">图版</a>和<a href="/candidates/toi-270/case-file/">案卷</a>。</span></li><li>HD 15337 (Small planets near the limit): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/hd-15337/","plates":"/evidence/plates/hd-15337/","cf":"/candidates/hd-15337/case-file/","run":"tess-hd-15337-s4"}'>运行 tess-hd-15337-s4 的<a href="/evidence/report/hd-15337/">运行报告</a>、<a href="/evidence/plates/hd-15337/">图版</a>和<a href="/candidates/hd-15337/case-file/">案卷</a>。</span></li><li>TOI-236 (Known false positive): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/toi-236/","plates":"/evidence/plates/toi-236/","cf":"/candidates/toi-236/case-file/","run":"tess-toi-236-s2"}'>运行 tess-toi-236-s2 的<a href="/evidence/report/toi-236/">运行报告</a>、<a href="/evidence/plates/toi-236/">图版</a>和<a href="/candidates/toi-236/case-file/">案卷</a>。</span></li><li>pi Men (Reference check): <span data-i18n="docs.runfiles" data-i18n-args='{"report":"/evidence/report/","plates":"/evidence/plates/","cf":"/candidates/case-file/","run":"tess-pi-men-s1"}'>运行 tess-pi-men-s1 的<a href="/evidence/report/">运行报告</a>、<a href="/evidence/plates/">图版</a>和<a href="/candidates/case-file/">案卷</a>。</span></li>
-          <li>The benchmark, the leaderboard and the paper: <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/tree/main/docs">docs/ in the repository</a>.</li>
+          <li>基准测试、排行榜和论文：<a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/tree/main/docs">仓库中的 docs/</a>。</li>
         </ul>
-        <p>SetuHQ's own data, benchmark, leaderboard and paper are under CC BY 4.0; the code is under the AGPL-3.0 (a commercial licence is available). Cite it with <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/CITATION.cff">CITATION.cff</a>.</p>
+        <p>SetuHQ 自己的数据、基准、排行榜和论文采用 CC BY 4.0；代码采用 AGPL-3.0（可获得商业许可）。引用时请使用 <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/CITATION.cff">CITATION.cff</a>。</p>
         <h2 id="provenance" data-i18n="docs.prov">技术细节：图的来源</h2>
-        <p>The candidate pages show figures from the stored runs (<code>tess-wasp-126-s1</code>, <code>tess-toi-270-s5</code>, <code>tess-hd-15337-s4</code>, <code>tess-toi-236-s2</code>, <code>tess-pi-men-s1</code>), made with the current code.</p>
+        <p>候选页面展示的是由存储的运行（<code>tess-wasp-126-s1</code>、<code>tess-toi-270-s5</code>、<code>tess-hd-15337-s4</code>、<code>tess-toi-236-s2</code>、<code>tess-pi-men-s1</code>）用当前代码生成的图。</p>
         <p>Every number on the candidate and evidence pages is read from stored files: the run directory, the search catalogue and the calibrated reviewer weights. <a href="/zh-Hans/evidence/runs/">Runs and configuration</a> lists the files, the configuration and its hash.</p>
       </div>
 </section>

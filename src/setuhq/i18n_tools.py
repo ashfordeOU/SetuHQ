@@ -488,10 +488,12 @@ def memory_tmx() -> str:
 
 
 def tool_description(name: str, doc: str) -> str:
-    """An MCP tool's description in the current language (its docstring as written, in English)."""
+    """An MCP tool's description in the current language (its docstring in English, its indentation removed with
+    inspect.cleandoc, as Python 3.13 does when it compiles a docstring and 3.11 and 3.12 do not)."""
+    doc = inspect.cleandoc(doc or "")
     if i18n.current() == i18n.SOURCE:
-        return (doc or "").strip()
-    return i18n.messages(i18n.current()).get(f"mcp.tool.{name}") or (doc or "").strip()
+        return doc
+    return i18n.messages(i18n.current()).get(f"mcp.tool.{name}") or doc
 
 
 def cleandoc(doc: str) -> str:

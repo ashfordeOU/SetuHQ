@@ -16,14 +16,14 @@
 <link rel="preload" href="/assets/fonts/files/geist-gyByhwUxId8gMEwcGFWNOITd.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <link rel="stylesheet" href="/assets/site-0b14134a46.css">
-<link rel="preload" href="/assets/data/app-e91ba0fdc9.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="/assets/data/app-735386a5c4.json" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="/assets/app-645aac0822.js" as="script">
 <script src="/assets/render-9a18655b86.js" defer></script>
-<script src="/assets/i18n-950de2c247.js" defer></script>
-<script src="/assets/site-d3ae8b9cff.js" defer></script>
+<script src="/assets/i18n-a967e539f3.js" defer></script>
+<script src="/assets/site-a066e4d1e4.js" defer></script>
 <script type="speculationrules">{"prefetch":[{"where":{"href_matches":["/candidates/*/case-file/","/evidence/plates/*","/evidence/report/*"]},"eagerness":"moderate"}]}</script>
 </head>
-<body class="page-propose" data-page="propose" data-route="propose" data-data="/assets/data/app-e91ba0fdc9.json" data-routes="/assets/views-01c5af27ac.html" data-app="/assets/app-645aac0822.js">
+<body class="page-propose" data-page="propose" data-route="propose" data-data="/assets/data/app-735386a5c4.json" data-routes="/assets/views-467becfb8c.html" data-app="/assets/app-645aac0822.js">
 <div class="starfield" data-render="starfield" data-params='{"seed":314}' aria-hidden="true"><img class="rstill" src="/assets/starfield-e45ec374c5.svg" alt=""></div>
 <a class="skip" href="#content" data-i18n="shell.skip">本文へスキップ</a>
 <header class="topbar">
@@ -45,25 +45,25 @@
 <section class="route" id="route-propose" data-route="propose" aria-labelledby="h-propose">
 <header><h1 class="lead-h" id="h-propose" tabindex="-1" data-i18n="pr.h1">CHEOPS の提案を準備する。</h1>
         <p data-i18n="pr.intro"><code>setuhq propose cheops</code> は CHEOPS Guest Observers Running Call の準備パックを書きます: チェック済みの規則、ターゲットの状況、計画用の見積もり、匿名化した草稿、そしてチェックリストとしての ESA の 7 つの手順。ESA のツールの実行と提出はご自身で行います。</p></header>
-      <p class="note"><b>SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium. It does not replace ESA&#x27;s Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker or the Policies &amp; Procedures document; the official call and tools govern.</b></p>
+      <p class="note"><b>SetuHQは独立したものであり、ESA、CHEOPSミッション、CHEOPS Consortiumと提携しておらず、承認も受けておらず、それらに代わって運営されているものでもない。ESAのTarget Checker、Visibility Tool、Exposure Time Calculator、Scheduling Feasibility Checker、Policies &amp; Procedures文書に代わるものではなく、公式の公募とツールが優先する。</b></p>
       <div class="prose">
         <pre tabindex="0"><code>setuhq propose cheops "TOI-1987" --orbits 30
 setuhq propose lint my-justification.md --author-name "Your Name"</code></pre>
-        <p>This is a proposal preparation pack: a drafting aid. It does not submit anything, it does not log in to any ESA system, and it makes no claim of ESA approval, feasibility or visibility.</p>
-        <h2 id="pr-pack">What a pack holds</h2>
+        <p>これはプロポーザル準備パック、すなわち作成補助ツールである。何も提出せず、ESA のいかなるシステムにもログインせず、ESA による承認、実現可能性、可視性を主張するものでもない。</p>
+        <h2 id="pr-pack">パックの中身</h2>
         <ul>
-          <li><b>The rules</b> of the Running Call: cycles and deadlines in Paris time, programme sizes, visit limits.</li>
-          <li><b>The target's status</b>: SIMBAD coordinates, a match against ESA's Reserved Target List (downloaded at run time and never committed to the repository), and prior public visits from DACE's public metadata (the University of Geneva's public API, not designated by ESA). ESA's Target Checker and Mission Archive stay definitive.</li>
-          <li><b>Planning estimates</b> from published in-flight performance (Fortier et al. 2024): estimates for drafting only, to confirm with ESA's Exposure Time Calculator, Visibility Tool and Scheduling Feasibility Checker.</li>
-          <li><b>Anonymised drafts</b> with generic headings, and an <b>anonymity lint</b>: an aid, not a guarantee.</li>
+          <li>Running Callの<b>規則</b>：パリ時間でのサイクルと締め切り、プログラム規模、ビジット数の上限。</li>
+          <li><b>ターゲットのステータス</b>：SIMBADの座標、ESAのReserved Target Listとの照合（実行時にダウンロードし、リポジトリには一切コミットしない）、およびDACEの公開メタデータに基づく過去の公開観測（ジュネーブ大学の公開APIであり、ESAが指定したものではない）。最終的な判断はESAのTarget CheckerとMission Archiveによる。</li>
+          <li><b>計画用の見積もり</b>：公表された軌道上性能（Fortier et al. 2024）に基づく。草案作成専用の見積もりであり、ESA の Exposure Time Calculator、Visibility Tool、Scheduling Feasibility Checker で確認すること。</li>
+          <li>一般的な見出しを用いた<b>匿名化草稿</b>と、<b>匿名性リンター</b>：補助であり、保証ではない。</li>
         </ul>
-        <h2 id="pr-limits">What it never does</h2>
+        <h2 id="pr-limits">決して行わないこと</h2>
         <ul>
-          <li>It never logs in, submits, or automates any ESA system; there is no form submission and no Proposal Handling Tool interaction.</li>
-          <li>It stores no proprietary data and no PI name or id: archive answers are filtered in memory before anything reaches disk, and the names you give the lint are never written into the pack.</li>
-          <li>It reproduces no ESA template, logo or figure. CHEOPS data stay under ESA's terms (CC BY-NC 3.0 IGO), outside SetuHQ's CC BY 4.0, its commercial licence and Pro.</li>
+          <li>ESAのシステムへのログイン、送信、自動操作は一切行わない。フォームの送信も、Proposal Handling Toolとのやり取りもない。</li>
+          <li>専有データやPIの名前・IDは一切保存しない:アーカイブからの応答はディスクに届く前にメモリ上でフィルタされ、lintに渡した名前がパックに書き込まれることはない。</li>
+          <li>ESA のテンプレート、ロゴ、図は一切複製していない。CHEOPS データは ESA の条件（CC BY-NC 3.0 IGO）の下にあり、SetuHQ の CC BY 4.0、商用ライセンス、Pro の対象外である。</li>
         </ul>
-        <p>Every rule, source and limit: <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/CHEOPS-PROPOSALS.md">docs/CHEOPS-PROPOSALS.md</a>. Questions about the call go to ESA; questions about this helper go to SetuHQ's issue tracker.</p>
+        <p>すべての規則、出典、制限：<a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/CHEOPS-PROPOSALS.md">docs/CHEOPS-PROPOSALS.md</a>。公募に関する質問は ESA へ、このヘルパーに関する質問は SetuHQ の issue トラッカーへ。</p>
       </div>
 </section>
  </div>
