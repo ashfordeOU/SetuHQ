@@ -122,7 +122,7 @@
     }
   },
   "repo_counts": {
-    "modules": 80,
+    "modules": 81,
     "tests": 1275,
     "network": 3,
     "slow": 4,
