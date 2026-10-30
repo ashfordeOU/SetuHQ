@@ -725,14 +725,15 @@ def section(path: str) -> str:
 
 def js_catalogues(lang: str) -> dict[str, dict[str, str]]:
     """The translations of the text the page scripts draw (js.*, src/setuhq/locales/js-templates.json), one
-    catalogue per part of the site (``section``), so that a page loads only its own part's."""
+    catalogue per part of the site (``section``), so that a page loads only its own part's, and "common": text seen
+    on four or more pages (the harvest lists four), which any page may draw."""
     drawn = Path(__file__).parent / "locales" / "js-templates.json"
     if not drawn.is_file():
         return {}
     usable, out = messages(lang), {}
     for mid, d in sorted(json.loads(drawn.read_text(encoding="utf-8")).items()):
         if mid in usable:
-            for sec in {section(p) for p in d["pages"]}:
+            for sec in {section(p) for p in d["pages"]} if len(d["pages"]) < 4 else {"common"}:
                 out.setdefault(sec, {})[mid] = usable[mid]
     return out
 
@@ -906,7 +907,7 @@ new MutationObserver(ms => { if (SI.lang === 'en' || !SI.cat) return; for (const
 Object.assign(SI, {auto, tpl, prose, h53, fill, hash: h53});
 // This part of the site's drawn text (setuhq.i18n.js_catalogues), then the page.
 const seg = location.pathname.split('/').filter(Boolean); if (SI.conf.locales.includes(seg[0])) seg.shift();
-fetch('/assets/i18n/js-JS_VERSION/' + SI.lang + '/' + (seg[0] || 'home') + '.json').then(r => r.ok ? r.json() : {}).catch(() => ({}))
-  .then(c => { if (SI.cat) Object.assign(SI.cat, c); auto(document); });
+const get = s => fetch('/assets/i18n/js-JS_VERSION/' + SI.lang + '/' + s + '.json').then(r => r.ok ? r.json() : {}).catch(() => ({}));
+Promise.all([get('common'), get(seg[0] || 'home')]).then(cs => { if (SI.cat) Object.assign(SI.cat, ...cs); auto(document); });
 })();
 """

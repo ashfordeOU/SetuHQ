@@ -50,6 +50,7 @@ async function grab(url) {
       for (const d of document.querySelectorAll("details")) d.open = true;
       await new Promise(r => setTimeout(r, 300));
       SI.auto(document);
+      for (const f of document.querySelectorAll("iframe")) try { if (f.contentDocument && f.contentDocument.body) SI.auto(f.contentDocument); } catch (e) { /* another origin */ }
       return [...out.entries()];
     }));
   } catch (e) { console.warn(`${url}: ${e.message}`); return new Map(); }

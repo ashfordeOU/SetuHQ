@@ -597,6 +597,21 @@ FRAME_BRIDGE_JS = r"""
   document.addEventListener('DOMContentLoaded', function(){
     send({kind: 'ready'});
   });
+  // The reader's language (setuhq.i18n): the shell's catalogue puts this document's keyed text and the text its
+  // script draws in that language too, as the drawing changes.
+  try {
+    var SI = P.SetuI18n;
+    if (SI && SI.lang !== 'en' && SI.ready) SI.ready.then(function(){
+      document.documentElement.lang = SI.lang; SI.apply(document);
+      var n = 0, t = null, wait = function(){
+        if (!SI.auto){ if (n++ < 40) setTimeout(wait, 250); return; }
+        SI.auto(document);
+        new MutationObserver(function(){ clearTimeout(t); t = setTimeout(function(){ SI.auto(document); }, 120); })
+          .observe(document.body, {childList: true, subtree: true, characterData: true});
+      };
+      wait();
+    });
+  } catch (e) { /* another origin: English */ }
 })();
 """
 
