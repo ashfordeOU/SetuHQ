@@ -16,7 +16,7 @@ authors:
 affiliations:
   - index: 1
     name: Ashforde OÜ, Estonia
-date: 24 October 2026
+date: 30 October 2026
 bibliography: paper.bib
 ---
 
@@ -37,8 +37,7 @@ exactly how each candidate was found. It copies the Planet Hunters task [@fische
 the start and end of every dip in a blind-coded stretch of a light curve, then label it a potential planet
 or noise. The volunteers are replaced by a *reviewer panel* of two kinds. *Probes* are deterministic, seeded
 matched-filter detectors (a single-event search and box least squares, BLS, @kovacs2002) with stated
-thresholds. *Sentinels* are vision-capable language models (Claude by default; OpenAI, Gemini and any
-OpenAI-compatible endpoint are supported and labelled) that read the same plot and task text and return
+thresholds. *Sentinels* are vision-capable language models that read the same plot and task text and return
 strict, validated JSON with their marks and a sentence of reasoning.
 
 Marks are clustered and scored by skill-weighted consensus, with each reviewer's weight measured on injected
@@ -46,8 +45,9 @@ transits. Every consensus dip is then vetted from the light curve alone (signal-
 odd/even and secondary-eclipse tests in the spirit of the Kepler and TESS Data Validation reports,
 @twicken2018), fitted with a quadratic limb-darkened transit model [@mandel2002] using @claret2017
 coefficients for the star's catalogue parameters [@stassun2019], and given a block-bootstrap false-alarm
-probability never quoted below the resolution of its trials. Every output is labelled a *candidate*;
-SetuHQ never calls anything it finds a confirmed or validated planet.
+probability never quoted below the resolution of its trials. Every output is labelled a *candidate*; SetuHQ
+never calls anything it finds a confirmed or validated planet. Version 0.2 (unreleased) adds tools for other
+stellar signals, each with a measured validation status.
 
 # Statement of need
 
@@ -58,11 +58,10 @@ Language models that read plots and explain themselves are being tried on astron
 [@stoppa2025], but we found no open benchmark that measures such reviewers on TESS transit vetting with
 false-alarm controls and a held-out split, beside deterministic detectors whose behaviour is known exactly.
 
-SetuHQ provides both. For citizen-science teams, educators and researchers it is a transparent pipeline
-whose every verdict can be inspected in a browser. For anyone building a vetter (a model, a pipeline or a
-person) it provides a frozen, blind benchmark of real TESS Objects of Interest [@guerrero2021], a public
-leaderboard that scores submissions itself, and a catalogue-metadata baseline that a method reading the
-light curve should beat.
+SetuHQ provides both. For citizen-science teams, educators and researchers it is a transparent pipeline whose
+every verdict can be inspected in a browser. For anyone building a vetter it provides a frozen, blind
+benchmark of real TESS Objects of Interest [@guerrero2021], a public leaderboard that scores submissions
+itself, and a catalogue-metadata baseline that a method reading the light curve should beat.
 
 # State of the field
 
@@ -78,62 +77,70 @@ by eye [@eisner2020; @eisner2021], and LATTE gives its vetters diagnostic plots 
 [@eisner2020latte]. General-purpose libraries make the data accessible
 [@lightkurve2018; @astroquery2019; @astropy2022].
 
-*Build or contribute.* SetuHQ builds on these rather than replacing them: it reads SPOC light curves
-through lightkurve and astroquery, and wraps TRICERATOPS as an optional validation step. What it adds does
-not fit inside any of them, because it is a different kind of object: a reviewer *panel* with measured
-weights, a benchmark with controls that scores whole pipelines (including the panel's own Sentinels) from
-light curve to vetted dip, and a provenance record for every verdict. A vetter library has no place for
-blind review by several kinds of reviewer, and a benchmark kept inside one method's code could not stay
-neutral.
+*Build or contribute.* SetuHQ builds on these rather than replacing them: it reads SPOC light curves through
+lightkurve and astroquery, and wraps TRICERATOPS as an optional validation step. What it adds does not fit
+inside any of them: a reviewer *panel* with measured weights, a benchmark with controls that scores whole
+pipelines (including the panel's own Sentinels) from light curve to vetted dip, and a provenance record for
+every verdict. A vetter library has no place for blind review by several kinds of reviewer, and a benchmark
+kept inside one method's code could not stay neutral.
 
 # Software design
 
 Three trade-offs shape the code.
 
 *Honesty over coverage.* A vetting check that did not run is shown as *not measured*, never as a pass; a
-false-alarm probability is never quoted below the resolution of its trials; a Sentinel whose provider and
-model have not been calibrated votes at the floor weight and is labelled so. This costs completeness on
-paper and buys results a reader can take at their word.
+false-alarm probability is never quoted below the resolution of its trials. A signal that matches no known TOI
+is held for private review, with no public trace, until it is reviewed and reported. This costs completeness
+and buys results a reader can trust.
 
 *One interface for unlike reviewers.* Probes and Sentinels return the same `Classification`, so a panel can
-mix deterministic detectors with any AI provider, and the aggregation and calibration code never knows
-which is which. The price is that a Sentinel's answer must be forced into strict JSON, validated and
-clipped; the gain is that adding a provider is a small adapter, and its effect on the benchmark is measured
-the same way as any other change.
+mix deterministic detectors with any AI provider, and the aggregation and calibration code never knows which
+is which. The price is that a Sentinel's answer must be forced into strict, validated JSON; the gain is that
+adding a provider is a small adapter.
 
 *Provenance as data.* A run stores the SHA-256 of every light curve, the configuration hash, a fingerprint
 of the result-making code and every reviewer's marks, labels and reasons, and Sentinel answers are cached
 by a hash of the request. A stored run can therefore be re-vetted with new code without asking the
-reviewers again, and the benchmark records which commit produced each number. Fingerprints hash canonical
-source text, so they survive renames and licence headers but not a change to the code.
+reviewers again, and the benchmark records which commit produced each number.
 
-The same functions serve four surfaces: the `setuhq` command line, self-contained HTML pages (the Docket,
-print-ready plates and an app of every known exoplanet with tested Methods chapters), the frozen real-TOI
-benchmark and its leaderboard (`setuhq leaderboard`, ranked by Youden's J [@youden1950] with Wilson
-intervals [@wilson1927]), and an MCP server (`setuhq mcp`) whose tools are those public functions, so an AI
-assistant runs SetuHQ's code instead of guessing. SetuHQ is written in Python on NumPy [@harris2020], SciPy
+The same functions serve five surfaces: the `setuhq` command line; self-contained HTML pages (the Docket,
+print-ready plates, a dated record of each dip's path, and an app of every known exoplanet with tested Methods
+chapters); the frozen real-TOI benchmark and its leaderboard (`setuhq leaderboard`, ranked by Youden's J
+[@youden1950] with Wilson intervals [@wilson1927]); an MCP server (`setuhq mcp`) whose tools are those public
+functions; and a stable library API, `setuhq.api`, pinned by tests. The site and command line are being
+localised (machine-assisted, not yet reviewed by native speakers).
+
+*Beyond transits.* Version 0.2 adds tools for stellar flares [@chang2015; @mendoza2022], pulsations, eclipsing
+binaries, rotation [@lomb1976; @scargle1982; @mcquillan2013], transients and public CHEOPS light curves
+[@benz2021], with a helper that prepares, but never submits, a CHEOPS observing proposal. Each was compared
+with published results under a protocol committed before the run: flares are partly validated (5 of 8 checks
+pass), pulsations partly validated (7 of 9 checks pass) and eclipsing binaries partly validated (5 of 8 checks
+pass); CHEOPS (2 of 5), rotation (3 of 6) and transients (1 of 9) are not validated, and the transient tools
+are a search aid whose candidates need checking by eye. These tools leave the planet vetting and the frozen
+benchmark unchanged.
+
+SetuHQ is written in Python on NumPy [@harris2020], SciPy
 [@virtanen2020], Astropy [@astropy2022] and Matplotlib [@hunter2007]; it is distributed on PyPI as `setuhq`
 under the AGPL-3.0-only or a commercial licence from Ashforde OÜ, and each release is archived on Zenodo
 [@setuhq]. SetuHQ's own data, benchmark and papers are under CC BY 4.0.
 
 # Research impact statement
 
-SetuHQ is new, and we claim no realized impact yet: no external publication uses it so far. Its near-term
-significance rests on results that exist and can be rebuilt from the repository today, including the
-negative ones. The frozen benchmark holds 662 TESS Objects of Interest (300 confirmed or known planets, 300
-false positives and 62 false alarms), split by star into tuning and held-out halves, with flux-inverted and
-block-scrambled copies of every light curve as controls. On the held-out half the Probes recover
-60% (90/150; 95% CI 52–67%) of the confirmed or known planets on stars with 2-minute data, but only
-10% (2/20; 95% CI 3–30%) below 2 Earth radii; they find the dip of 77% (96/124; 95% CI 69–84%) of the false
-positives with 2-minute data and reject or flag 68% (65/96; 95% CI 58–76%) of those. On the leaderboard a baseline that never
-reads a light curve, a logistic regression on catalogue metadata, scores J = +0.39 (+0.27 to +0.49) against
-+0.35 (+0.23 to +0.45) for the Probes, and the benchmark cannot show that the Probes beat it
-(paired ΔJ (floor − Probes) = +0.039, 95% CI -0.096 to +0.173; the probability that ΔJ is zero or
-below is 0.29). The two Sentinel
-personas agree on 35 of 37 subsample stars (φ = 0.88), so they act as one correlated voter. A stored worked
-example (TESS sector 1 of pi Mensae, checked against @huang2018) reproduces offline. These results, with
-their intervals, are in the methods paper in the repository (`docs/paper/paper.md`); the open leaderboard,
-the MCP server and a contribution path for community sector sweeps are how others can test their own
+We claim no realized impact yet: no external publication uses SetuHQ so far. Its near-term significance rests
+on results that exist and can be rebuilt from the repository today, including the negative ones. The frozen
+benchmark holds 662 TESS Objects of Interest (300 confirmed or known planets, 300 false positives and 62 false
+alarms), split by star into tuning and held-out halves, with flux-inverted and block-scrambled copies of every
+light curve as controls. On the held-out half the Probes recover 60% (90/150; 95% CI 52–67%) of the confirmed
+or known planets on stars with 2-minute data, but only 10% (2/20; 95% CI 3–30%) below 2 Earth radii; they find
+the dip of 77% (96/124; 95% CI 69–84%) of the false positives with 2-minute data and reject or flag 68%
+(65/96; 95% CI 58–76%) of those. On the leaderboard a baseline that never reads a light curve, a logistic
+regression on catalogue metadata, scores J = +0.39 (+0.27 to +0.49) against +0.35 (+0.23 to +0.45) for the
+Probes, and the benchmark cannot show that the Probes beat it (paired ΔJ (floor − Probes) = +0.039, 95% CI
+-0.096 to +0.173; the probability that ΔJ is zero or below is 0.29). The two Sentinel personas agree on 35 of
+37 subsample stars (φ = 0.88), so they act as one correlated voter. A stored worked example (TESS sector 1 of
+pi Mensae, checked against @huang2018) reproduces offline. These results, with their intervals, are in the
+methods paper in the repository (`docs/paper/paper.md`), and every counted check of the stellar tools,
+failures included, is in `docs/results/`; the open leaderboard and the MCP server let others test their own
 vetters against the same floor.
 
 # AI usage disclosure
@@ -171,8 +178,9 @@ AI tool is used in correspondence with JOSS editors or reviewers.
 This work uses data from the TESS mission, funded by NASA's Science Mission Directorate, obtained from the
 Mikulski Archive for Space Telescopes (MAST), and the NASA Exoplanet Archive, operated by the California
 Institute of Technology under contract with NASA. It uses the Encyclopaedia of exoplanetary systems
-(exoplanet.eu). We thank the Planet Hunters teams, whose task and published results SetuHQ is built to be
-compared with. SetuHQ is developed and maintained by Ashforde OÜ and has received no external grant funding.
+(exoplanet.eu). SetuHQ's CHEOPS reader uses public ESA data served by the Data & Analysis Center for
+Exoplanets (DACE) at the University of Geneva; SetuHQ is independent of ESA and the CHEOPS Consortium. We
+thank the Planet Hunters teams, whose task and published results SetuHQ is built to be compared with. SetuHQ is developed and maintained by Ashforde OÜ and has received no external grant funding.
 <!-- OWNER: confirm the funding sentence above; JOSS asks papers to acknowledge any financial support. -->
 
 # References
