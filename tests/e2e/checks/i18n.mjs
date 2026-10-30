@@ -11,7 +11,8 @@
 const BREAKS = () => {
   const out = [];
   for (const h of document.querySelectorAll("main h1, main h2, main h3, main h4, main .lead-h")) {
-    if (!h.offsetParent || !/[\u3040-\u30ff\u4e00-\u9fff]/.test(h.textContent)) continue;
+    if (!h.offsetParent || !h.querySelector("wbr")) continue;  // a heading with marked phrases (tools/i18n.py phrases)
+    out.n = (out.n || 0) + 1;
     const marks = new Set(), chars = [];  // marks: indexes where a break is allowed
     const walk = n => { for (const c of n.childNodes) {
       if (c.nodeType === 3) { for (let i = 0; i < c.data.length; i++) chars.push([c, i]); }
@@ -32,7 +33,7 @@ const BREAKS = () => {
       top = b.top;
     }
   }
-  return out;
+  return { bad: out, n: out.n || 0 };
 };
 
 export default async function ({ browser, BASE, check: ok }) {
@@ -91,11 +92,13 @@ export default async function ({ browser, BASE, check: ok }) {
   const mains = await page.evaluate(async () => (await (await fetch("/assets/pages-i18n.json")).json()).filter(p => /^\/(ja|zh-Hans)\//.test(p)));
   for (const vp of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
     const c4 = await browser.newContext({ viewport: vp }), p4 = await c4.newPage(), bad = [];
+    let seen = 0;
     for (const url of mains) {
       await p4.goto(base + url, { waitUntil: "load" }); await p4.waitForTimeout(150);
-      for (const b of await p4.evaluate(BREAKS)) bad.push(url + ": " + b);
+      const r = await p4.evaluate(BREAKS); seen += r.n;
+      for (const b of r.bad) bad.push(url + ": " + b);
     }
-    check(`CJK headings break between phrases (${vp.width}px, ${mains.length} pages)`, mains.length >= 60 && bad.length === 0, bad.slice(0, 4).join(" || "));
+    check(`CJK headings break only between phrases (${vp.width}px, ${mains.length} pages, ${seen} headings)`, mains.length >= 60 && seen >= 100 && bad.length === 0, bad.slice(0, 4).join(" || "));
     await c4.close();
   }
 

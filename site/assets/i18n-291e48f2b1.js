@@ -60,6 +60,8 @@ function marks(root){
 if (!root.querySelectorAll) return;
 for (const n of root.querySelectorAll('.mtnote')) n.hidden = false;
 for (const n of root.querySelectorAll('.langcode')) n.textContent = lang === 'zh-Hans' ? 'ZH' : lang.toUpperCase();
+if (/^(ja|zh)/.test(lang)) for (const h of root.querySelectorAll('h1,h2,h3,h4')) if (h.querySelector('wbr'))
+for (const t of [...h.querySelectorAll('*'), h].flatMap(e => [...e.childNodes]).filter(n => n.nodeType === 3 && n.data.trim() && n.parentElement.className !== 'ph')){ const s = document.createElement('span'); s.className = 'ph'; t.replaceWith(s); s.append(t); }
 for (const a of root.querySelectorAll('.langmenu a[data-lang]')) if (a.dataset.lang === lang) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
 }
 const load = L => fetch(C.cat[L]).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });

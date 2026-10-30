@@ -943,7 +943,7 @@ I18N_CSS = """
 :lang(ja) *,:lang(zh-Hans) *{letter-spacing:0!important;word-break:normal;line-break:strict;overflow-wrap:anywhere}
 :lang(ja) h1,:lang(ja) h2,:lang(zh-Hans) h1,:lang(zh-Hans) h2{line-height:1.25}
 /* Headings break between phrases (the catalogues mark them with <wbr>), never inside a word; a phrase too wide for its line still wraps. */
-:lang(ja) :is(h1,h2,h3,h4,.lead-h),:lang(zh-Hans) :is(h1,h2,h3,h4,.lead-h){word-break:keep-all;overflow-wrap:anywhere}
+:lang(ja) :is(h1,h2,h3,h4,.lead-h),:lang(zh-Hans) :is(h1,h2,h3,h4,.lead-h){word-break:keep-all;overflow-wrap:break-word}.ph{white-space:nowrap}
 @media (max-width:420px){.langpick>summary .langcode{display:none}}
 """
 # Messages the shell's script declares (the suggestion bar, the theme and menu buttons).
@@ -1008,6 +1008,8 @@ def localize_page(src: str, lang: str, path: str) -> str:
     out = out.replace(f'<link rel="canonical" href="{url}">', f'<link rel="canonical" href="{nurl}">', 1)
     out = out.replace(f'<meta property="og:url" content="{url}">', f'<meta property="og:url" content="{nurl}"><meta property="og:locale" content="{i18n.OG_LOCALE[lang]}">', 1)
     out = re.sub(r'<details class="langpick">.*?</details>', lambda m: langpick(path, lang), out, count=1, flags=re.S)
+    if lang in ("ja", "zh-Hans"):
+        out = i18n.phrase_spans(out)
     return out.replace('<p class="mtnote" data-i18n="i18n.mtnote" hidden>', '<p class="mtnote" data-i18n="i18n.mtnote">', 1)
 
 

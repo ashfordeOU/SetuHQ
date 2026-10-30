@@ -192,5 +192,5 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 :lang(ja) *,:lang(zh-Hans) *{letter-spacing:0!important;word-break:normal;line-break:strict;overflow-wrap:anywhere}
 :lang(ja) h1,:lang(ja) h2,:lang(zh-Hans) h1,:lang(zh-Hans) h2{line-height:1.25}
 /* Headings break between phrases (the catalogues mark them with <wbr>), never inside a word; a phrase too wide for its line still wraps. */
-:lang(ja) :is(h1,h2,h3,h4,.lead-h),:lang(zh-Hans) :is(h1,h2,h3,h4,.lead-h){word-break:keep-all;overflow-wrap:anywhere}
+:lang(ja) :is(h1,h2,h3,h4,.lead-h),:lang(zh-Hans) :is(h1,h2,h3,h4,.lead-h){word-break:keep-all;overflow-wrap:break-word}.ph{white-space:nowrap}
 @media (max-width:420px){.langpick>summary .langcode{display:none}}

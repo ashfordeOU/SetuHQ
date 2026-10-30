@@ -124,7 +124,7 @@ export default async function features(h) {
     for (const size of ["desktop", "phone"]) {
       const ctx = await context({ size });
       const page = await ctx.newPage(), bad = [];
-      for (const url of ["/", "/ja/", "/de/", "/stars/toi-270/", "/ja/how-it-works/transits/"]) {
+      for (const url of ["/", "/ja/", "/de/", "/stars/toi-270/", "/ja/how-it-works/transits/", "/planets/kepler-22-b/", "/stars/kepler-22/"]) {
         await page.goto(BASE + url); await ready(page); await page.waitForTimeout(400);
         bad.push(...await page.evaluate((url) => [...document.querySelectorAll(".srclim>summary")].filter((s) => s.offsetWidth).flatMap((s) => {
           const a = s.getBoundingClientRect(), fig = s.closest("figure") || s.parentElement, cap = fig && fig.querySelector("figcaption");

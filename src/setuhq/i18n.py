@@ -694,6 +694,21 @@ def unkey(src: str) -> str:
     return _KEY_ATTRS.sub("", src)
 
 
+_HEADING = re.compile(r"(<(h[1-4])\b[^>]*>)(.*?)(</\2>)", re.S)
+
+
+def phrase_spans(src: str) -> str:
+    """Japanese and Chinese headings with each phrase (the text between two <wbr>) kept on one line: Chromium's
+    word-break: keep-all still breaks between kana, so every phrase is a nowrap span and a line breaks only at <wbr>."""
+    def one(m):
+        inner = m.group(3)
+        if "<wbr>" not in inner:
+            return m.group(0)
+        inner = "".join(p if p.startswith("<") or not p.strip() else f'<span class="ph">{p}</span>' for p in re.split(r"(<[^>]*>)", inner))
+        return m.group(1) + inner + m.group(4)
+    return _HEADING.sub(one, src)
+
+
 def client_catalogue(lang: str) -> dict[str, str]:
     """What a page's script loads for ``lang``: every usable message the site and its pages use (not the CLI's or
     the MCP server's)."""
@@ -791,6 +806,9 @@ function marks(root){
   if (!root.querySelectorAll) return;
   for (const n of root.querySelectorAll('.mtnote')) n.hidden = false;
   for (const n of root.querySelectorAll('.langcode')) n.textContent = lang === 'zh-Hans' ? 'ZH' : lang.toUpperCase();
+  // Japanese and Chinese headings: each phrase on one line (setuhq.i18n.phrase_spans).
+  if (/^(ja|zh)/.test(lang)) for (const h of root.querySelectorAll('h1,h2,h3,h4')) if (h.querySelector('wbr'))
+    for (const t of [...h.querySelectorAll('*'), h].flatMap(e => [...e.childNodes]).filter(n => n.nodeType === 3 && n.data.trim() && n.parentElement.className !== 'ph')){ const s = document.createElement('span'); s.className = 'ph'; t.replaceWith(s); s.append(t); }
   for (const a of root.querySelectorAll('.langmenu a[data-lang]')) if (a.dataset.lang === lang) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
 }
 const load = L => fetch(C.cat[L]).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
